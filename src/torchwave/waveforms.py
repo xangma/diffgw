@@ -9,11 +9,19 @@ import torch
 
 from torchwave.approximants.taylorf2 import TaylorF2
 from torchwave.approximants.imrphenomd import IMRPhenomD
+from torchwave.approximants.eob.waveform import SEOBNR_ODE
+from torchwave.approximants.rom.surrogate import SEOBNR_ROM
 
 
 _APPROXIMANTS = {
     "taylorf2": TaylorF2,
     "imrphenomd": IMRPhenomD,
+    "seobnr": SEOBNR_ODE,
+    "seobnrode": SEOBNR_ODE,
+    "seobnrv5": SEOBNR_ODE,
+    "seobnrrom": SEOBNR_ROM,
+    "seobnrv4rom": SEOBNR_ROM,
+    "seobnrv5rom": SEOBNR_ROM,
 }
 
 
@@ -40,7 +48,7 @@ def get_fd_waveform(
     """Generate frequency-domain gravitational-wave polarizations h_plus(f) and h_cross(f).
 
     Args:
-        approximant: Name of the waveform approximant (e.g. 'TaylorF2', 'IMRPhenomD')
+        approximant: Name of the waveform approximant (e.g. 'TaylorF2', 'IMRPhenomD', 'SEOBNR_ODE', 'SEOBNR_ROM')
         mass1: Primary mass in solar masses (m1 >= m2)
         mass2: Secondary mass in solar masses
         chi1: Dimensionless aligned spin of primary mass (-1 <= chi1 <= 1)
@@ -102,7 +110,20 @@ def get_fd_waveform(
             lambda2=lambda2,
             **kwargs,
         )
-    elif key == "imrphenomd":
+    elif key in ("imrphenomd", "seobnrrom", "seobnrv4rom", "seobnrv5rom"):
+        return model(
+            f=f,
+            mass1=mass1,
+            mass2=mass2,
+            chi1=chi1,
+            chi2=chi2,
+            distance=distance,
+            inclination=inclination,
+            phic=phic,
+            tc=tc,
+            **kwargs,
+        )
+    elif key in ("seobnr", "seobnrode", "seobnrv5"):
         return model(
             f=f,
             mass1=mass1,

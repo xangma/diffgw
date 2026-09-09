@@ -148,3 +148,79 @@ If you use `torchwave` in scientific work, please cite the underlying models and
     year = "2006"
 }
 ```
+
+---
+
+## 3. Effective-One-Body (SEOBNR) Theory & Models
+
+```bibtex
+@article{Bohe:2016gbl,
+    author = "Boh{\'e}, Alejandro and others",
+    title = "{An improved effective-one-body model of spinning, nonprecessing binary black holes for the era of gravitational-wave astrophysics with advanced detectors}",
+    eprint = "1611.03703",
+    archivePrefix = "arXiv",
+    primaryClass = "gr-qc",
+    doi = "10.1103/PhysRevD.95.044028",
+    journal = "Phys. Rev. D",
+    volume = "95",
+    number = "4",
+    pages = "044028",
+    year = "2017"
+}
+
+@article{Pompili:2023tfa,
+    author = "Pompili, Lorenzo and others",
+    title = "{Laying the foundation of the effective-one-body waveform models SEOBNRv5: Improved accuracy and efficiency for spinning nonprecessing binary black holes}",
+    eprint = "2303.18039",
+    archivePrefix = "arXiv",
+    primaryClass = "gr-qc",
+    doi = "10.1103/PhysRevD.108.124035",
+    journal = "Phys. Rev. D",
+    volume = "108",
+    number = "12",
+    pages = "124035",
+    year = "2023"
+}
+
+@article{Ramos-Buades:2023ehm,
+    author = "Ramos-Buades, Antoni and others",
+    title = "{SEOBNRv5PHM: Next generation of accurate and efficient multipolar precessing-spin effective-one-body waveforms for binary black holes}",
+    eprint = "2303.18046",
+    archivePrefix = "arXiv",
+    primaryClass = "gr-qc",
+    doi = "10.1103/PhysRevD.108.124040",
+    journal = "Phys. Rev. D",
+    volume = "108",
+    number = "12",
+    pages = "124040",
+    year = "2023"
+}
+
+@article{Purrer:2014fza,
+    author = "P{\"u}rrer, Michael",
+    title = "{Frequency domain reduced order models for gravitational waves from aligned-spin compact binaries}",
+    eprint = "1402.4146",
+    archivePrefix = "arXiv",
+    primaryClass = "gr-qc",
+    doi = "10.1088/0264-9381/31/19/195010",
+    journal = "Class. Quant. Grav.",
+    volume = "31",
+    number = "19",
+    pages = "195010",
+    year = "2014"
+}
+
+@article{Purrer:2015tud,
+    author = "P{\"u}rrer, Michael",
+    title = "{Frequency domain reduced order model of aligned-spin effective-one-body waveforms with generic mass-ratios and spins}",
+    eprint = "1512.02248",
+    archivePrefix = "arXiv",
+    primaryClass = "gr-qc",
+    doi = "10.1103/PhysRevD.93.064041",
+    journal = "Phys. Rev. D",
+    volume = "93",
+    number = "6",
+    pages = "064041",
+    year = "2016"
+}
+```
