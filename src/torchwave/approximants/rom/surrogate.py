@@ -9,7 +9,7 @@ Strict Clean-Room Implementation based on published peer-reviewed literature:
 
 import os
 import glob
-from typing import Dict, List, Optional, Tuple, Union
+from typing import Any, Dict, List, Optional, Tuple, Union
 import torch
 import math
 
@@ -26,6 +26,8 @@ from torchwave.conversions import (
 )
 from torchwave.approximants.taylorf2 import TaylorF2
 from torchwave.approximants.imrphenomd import IMRPhenomD
+from torchwave.approximants.eob.waveform import _interp1d
+from torchwave.approximants.rom.generator import poly_features
 
 
 class HDF5ROMSurrogate:
@@ -86,19 +88,47 @@ class SEOBNR_ROM:
     """Frequency-Domain Reduced-Order Model (ROM) Surrogate Engine for SEOBNR Waveforms.
 
     Provides microsecond-latency evaluation and smooth autograd differentiability
-    via empirical interpolation and basis projection. Supports both self-contained
-    clean-room analytical basis and optional external HDF5 surrogate loading.
+    via empirical interpolation and basis projection.
+
+    Supports:
+    1. Native clean-room PyTorch surrogate model (default, trained from SEOBNR_ODE).
+    2. Optional external HDF5 surrogate loading (via HDF5ROMSurrogate).
+    3. Self-contained analytical Chebyshev reduced basis fallback.
     """
+
+    _CACHED_SURROGATE: Optional[Dict[str, Any]] = None
 
     def __init__(
         self,
         num_basis_modes: int = 8,
+        use_native_surrogate: bool = True,
         use_hdf5: bool = False,
         hdf5_path: Optional[str] = None,
     ):
         self.num_basis_modes = num_basis_modes
+        self.use_native_surrogate = use_native_surrogate
         self.use_hdf5 = use_hdf5
         self.hdf5_surrogate = HDF5ROMSurrogate(hdf5_path) if use_hdf5 else None
+
+        self.surrogate_data = None
+        if use_native_surrogate and not use_hdf5:
+            self.surrogate_data = self._get_native_surrogate()
+
+    @classmethod
+    def _get_native_surrogate(cls) -> Optional[Dict[str, Any]]:
+        """Load and cache native bundled PyTorch surrogate model."""
+        if cls._CACHED_SURROGATE is not None:
+            return cls._CACHED_SURROGATE
+
+        base_dir = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+        model_path = os.path.join(base_dir, "data", "seobnr_surrogate.pt")
+        if os.path.isfile(model_path):
+            try:
+                cls._CACHED_SURROGATE = torch.load(model_path, weights_only=False)
+                return cls._CACHED_SURROGATE
+            except Exception:
+                return None
+        return None
 
     @staticmethod
     def evaluate_surrogate_coefficients(
@@ -249,28 +279,6 @@ class SEOBNR_ROM:
 
         mf = m_sec_eval * f_eval  # Dimensionless frequency M*f
 
-        # Evaluate surrogate coefficients
-        c_amp, c_phase = self.evaluate_surrogate_coefficients(
-            eta=eta,
-            chi_pn=chi_pn,
-            num_modes=self.num_basis_modes,
-        )
-
-        # Evaluate orthonormal basis across frequency
-        b_amp, b_phase = self.evaluate_basis_functions(
-            mf=mf,
-            num_modes=self.num_basis_modes,
-        )
-
-        if is_batched:
-            # c_amp is (B, M), b_amp is (B, M, N_f)
-            # Batched dot product: sum_k c[b, k] * b[b, k, n] -> (B, N_f)
-            amp_rom = torch.einsum("bm,bmn->bn", c_amp, b_amp)
-            phase_rom = torch.einsum("bm,bmn->bn", c_phase, b_phase)
-        else:
-            amp_rom = torch.einsum("m,mn->n", c_amp, b_amp)
-            phase_rom = torch.einsum("m,mn->n", c_phase, b_phase)
-
         # Baseline Leading 0PN Amplitude and Phase
         d_sec = (dist_eval * MPC_SI) / C_SI
         prefactor = torch.sqrt(5.0 * eta_eval / 24.0) / (PI ** (2.0 / 3.0) * d_sec)
@@ -281,7 +289,55 @@ class SEOBNR_ROM:
         v5 = v ** 5.0
         phi_0pn = 3.0 / (128.0 * eta_eval * v5)
 
-        full_amplitude = a0_phys * (1.0 + 0.1 * amp_rom)
+        if self.surrogate_data is not None:
+            # Native PyTorch surrogate evaluation
+            deg = self.surrogate_data["degree"]
+            w_a = self.surrogate_data["amp_weights"].to(device=device, dtype=dtype)
+            w_p = self.surrogate_data["phase_weights"].to(device=device, dtype=dtype)
+            v_a = self.surrogate_data["amp_basis"].to(device=device, dtype=dtype)
+            v_p = self.surrogate_data["phase_basis"].to(device=device, dtype=dtype)
+            grid_mf = self.surrogate_data["mf_grid"].to(device=device, dtype=dtype)
+
+            # Features shape: (B, num_features) or (1, num_features)
+            phi = poly_features(eta, chi_pn, degree=deg).to(device=device, dtype=dtype)
+            c_amp = phi @ w_a
+            c_phase = phi @ w_p
+
+            amp_nodes = c_amp @ v_a
+            phase_nodes = c_phase @ v_p
+
+            amp_rom = _interp1d(mf, grid_mf, amp_nodes)
+            phase_rom = _interp1d(mf, grid_mf, phase_nodes)
+
+            if not is_batched and amp_rom.dim() > 1:
+                amp_rom = amp_rom.squeeze(0)
+                phase_rom = phase_rom.squeeze(0)
+
+            scaled_amp = a0_phys * (1.0 + amp_rom)
+        else:
+            # Fallback to analytical Chebyshev reduced basis
+            c_amp, c_phase = self.evaluate_surrogate_coefficients(
+                eta=eta,
+                chi_pn=chi_pn,
+                num_modes=self.num_basis_modes,
+            )
+
+            # Evaluate orthonormal basis across frequency
+            b_amp, b_phase = self.evaluate_basis_functions(
+                mf=mf,
+                num_modes=self.num_basis_modes,
+            )
+
+            if is_batched:
+                amp_rom = torch.einsum("bm,bmn->bn", c_amp, b_amp)
+                phase_rom = torch.einsum("bm,bmn->bn", c_phase, b_phase)
+            else:
+                amp_rom = torch.einsum("m,mn->n", c_amp, b_amp)
+                phase_rom = torch.einsum("m,mn->n", c_phase, b_phase)
+
+            scaled_amp = a0_phys * (1.0 + 0.1 * amp_rom)
+
+        full_amplitude = scaled_amp
         full_phase = (
             2.0 * PI * f_eval * t_c_eval
             - phi_c_eval
