@@ -336,7 +336,8 @@ class IMRPhenomD:
         delta = component_masses_to_delta(m1, m2)
         chi_s, chi_a, chi_pn, chi_hat = spin_combinations(m1, m2, s1, s2)
 
-        # Evaluate Table V phenomenological coefficients
+        # Evaluate Table V phenomenological coefficients using unscaled reduced spin chi_pn
+        # (Khan et al. 2016 arXiv:1508.07253, Eq. 24 and Tab. V)
         rho1 = IMRPhenomD.eval_table_v("rho1", eta, chi_pn)
         rho2 = IMRPhenomD.eval_table_v("rho2", eta, chi_pn)
         rho3 = IMRPhenomD.eval_table_v("rho3", eta, chi_pn)

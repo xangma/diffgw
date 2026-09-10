@@ -134,6 +134,7 @@ def tidal_combinations(
     l_diff = lambda1 - lambda2
 
     eta2 = eta * eta
+    eta3 = eta2 * eta
 
     # Lambda_tilde (Eq. 5 of Wade et al. 2014)
     lambda_tilde = (8.0 / 13.0) * (
@@ -144,7 +145,7 @@ def tidal_combinations(
     # delta_Lambda_tilde (Eq. 6 of Wade et al. 2014)
     delta_lambda_tilde = 0.5 * (
         delta * (1.0 - (13272.0 / 1319.0) * eta + (8944.0 / 1319.0) * eta2) * l_sum
-        + (1.0 - (15910.0 / 1319.0) * eta + (32850.0 / 1319.0) * eta2) * l_diff
+        + (1.0 - (15910.0 / 1319.0) * eta + (32850.0 / 1319.0) * eta2 + (3380.0 / 1319.0) * eta3) * l_diff
     )
 
     return lambda_tilde, delta_lambda_tilde

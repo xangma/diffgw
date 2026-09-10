@@ -25,6 +25,18 @@ def test_taylorf2_phase_coefficients():
     assert torch.isclose(phi2, torch.tensor(expected_phi2))
     # 1.5PN: -16*pi
     assert torch.isclose(phi3, torch.tensor(-16.0 * torch.pi))
+    # 3PN: Buonanno et al. 2009 / Arun et al. 2008
+    from torchwave.constants import EULER_GAMMA, PI
+    expected_phi6 = (
+        (11583231236531.0 / 4694215680.0)
+        - (6848.0 / 21.0) * EULER_GAMMA
+        - (640.0 / 3.0) * (PI * PI)
+        + ((-15737765635.0 / 3048192.0) + (2255.0 / 12.0) * (PI * PI)) * 0.25
+        + (76055.0 / 1728.0) * (0.25**2)
+        - (127825.0 / 1296.0) * (0.25**3)
+    )
+    assert torch.isclose(phi6, torch.tensor(expected_phi6, dtype=phi6.dtype))
+    assert torch.isclose(phi6_log, torch.tensor(-6848.0 / 21.0, dtype=phi6.dtype))
 
 
 def test_taylorf2_distance_scaling():

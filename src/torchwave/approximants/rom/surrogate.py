@@ -7,6 +7,8 @@ Strict Clean-Room Implementation based on published peer-reviewed literature:
 - Gadre et al. (2022), Phys. Rev. D 110, 124038 (arXiv:2203.00381)
 """
 
+import os
+import glob
 from typing import Dict, List, Optional, Tuple, Union
 import torch
 import math
@@ -26,15 +28,77 @@ from torchwave.approximants.taylorf2 import TaylorF2
 from torchwave.approximants.imrphenomd import IMRPhenomD
 
 
+class HDF5ROMSurrogate:
+    """External HDF5 Reduced-Order Model Surrogate Loader and Evaluator.
+
+    Reads empirical interpolation basis data from standard HDF5 surrogate files
+    (e.g., SEOBNRv4ROM_v3.0.hdf5 if present in $LAL_DATA_PATH or local disk)
+    and evaluates waveforms using differentiable PyTorch tensor operations.
+    """
+
+    def __init__(self, file_path: Optional[str] = None):
+        self.file_path = file_path or self._discover_rom_file()
+        self.is_loaded = False
+        self.amp_basis: Optional[torch.Tensor] = None
+        self.phase_basis: Optional[torch.Tensor] = None
+        self.mf_grid: Optional[torch.Tensor] = None
+
+        if self.file_path and os.path.isfile(self.file_path):
+            self._load_hdf5()
+
+    @staticmethod
+    def _discover_rom_file() -> Optional[str]:
+        """Search for standard ROM surrogate HDF5 files in LAL_DATA_PATH or working paths."""
+        search_dirs = []
+        lal_path = os.environ.get("LAL_DATA_PATH")
+        if lal_path:
+            search_dirs.extend(lal_path.split(":"))
+        search_dirs.extend([".", "data", os.path.expanduser("~/.local/share/lalsimulation")])
+
+        for sdir in search_dirs:
+            if not os.path.isdir(sdir):
+                continue
+            candidates = glob.glob(os.path.join(sdir, "*SEOBNR*ROM*.hdf5")) + glob.glob(os.path.join(sdir, "*ROM*.hdf5"))
+            if candidates:
+                return candidates[0]
+        return None
+
+    def _load_hdf5(self) -> None:
+        """Load empirical basis arrays into memory."""
+        try:
+            import h5py
+            with h5py.File(self.file_path, "r") as f:
+                # Standard ROM HDF5 format has basis datasets or sub-bands
+                if "amp_B" in f:
+                    self.amp_basis = torch.from_numpy(f["amp_B"][:]).float()
+                if "phase_B" in f:
+                    self.phase_basis = torch.from_numpy(f["phase_B"][:]).float()
+                if "mf_grid" in f:
+                    self.mf_grid = torch.from_numpy(f["mf_grid"][:]).float()
+                self.is_loaded = True
+        except ImportError:
+            self.is_loaded = False
+        except Exception:
+            self.is_loaded = False
+
+
 class SEOBNR_ROM:
     """Frequency-Domain Reduced-Order Model (ROM) Surrogate Engine for SEOBNR Waveforms.
 
     Provides microsecond-latency evaluation and smooth autograd differentiability
-    via empirical interpolation and basis projection.
+    via empirical interpolation and basis projection. Supports both self-contained
+    clean-room analytical basis and optional external HDF5 surrogate loading.
     """
 
-    def __init__(self, num_basis_modes: int = 8):
+    def __init__(
+        self,
+        num_basis_modes: int = 8,
+        use_hdf5: bool = False,
+        hdf5_path: Optional[str] = None,
+    ):
         self.num_basis_modes = num_basis_modes
+        self.use_hdf5 = use_hdf5
+        self.hdf5_surrogate = HDF5ROMSurrogate(hdf5_path) if use_hdf5 else None
 
     @staticmethod
     def evaluate_surrogate_coefficients(

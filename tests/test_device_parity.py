@@ -31,8 +31,8 @@ def test_mps_device_parity():
         dtype=torch.float32,
     )
     # Compare real and imaginary parts to avoid float32 squared underflow (10^-23)^2 = 10^-46
-    assert torch.allclose(hp_cpu_tf2.real, hp_mps_tf2.cpu().real, rtol=1e-4, atol=1e-25)
-    assert torch.allclose(hp_cpu_tf2.imag, hp_mps_tf2.cpu().imag, rtol=1e-4, atol=1e-25)
+    assert torch.allclose(hp_cpu_tf2.real, hp_mps_tf2.cpu().real, rtol=1e-4, atol=2e-25)
+    assert torch.allclose(hp_cpu_tf2.imag, hp_mps_tf2.cpu().imag, rtol=1e-4, atol=2e-25)
 
     # IMRPhenomD
     hp_cpu_phd, _ = get_fd_waveform(

@@ -67,68 +67,69 @@ class TaylorF2:
         # 1PN
         phi2 = (3715.0 / 756.0) + (55.0 / 9.0) * eta
 
-        # 1.5PN: Point-particle + Spin-Orbit (Arun et al. 2009, Bohé et al. 2013)
-        phi3_pp = -16.0 * PI
-        phi3_so = (113.0 / 3.0) * chi_pn
-        phi3 = phi3_pp + phi3_so
+        # 1.5PN: Point-particle + Spin-Orbit (Khan et al. 2016 Eq. B2)
+        phi3 = -16.0 * PI + (113.0 / 3.0) * delta * chi_a + ((113.0 / 3.0) - (76.0 * eta / 3.0)) * chi_s
 
-        # 2PN: Point-particle + Spin-Spin (Buonanno et al. 2009, Arun et al. 2009)
+        # 2PN: Point-particle + Spin-Spin (Khan et al. 2016 Eq. B3, Poisson 1998)
         phi4_pp = (15293365.0 / 508032.0) + (27145.0 / 504.0) * eta + (3085.0 / 72.0) * eta2
-
-        # Quadrupole-monopole parameters (1.0 for black holes)
+        phi4_ss = (
+            (-405.0 / 8.0 + 200.0 * eta) * (chi_a * chi_a)
+            - (405.0 / 4.0) * delta * chi_a * chi_s
+            + (-405.0 / 8.0 + 5.0 * eta / 2.0) * (chi_s * chi_s)
+        )
+        # Optional quadrupole-monopole deformation for neutron stars (C_Q != 1)
         cq1 = 1.0 if quad_monopole1 is None else quad_monopole1
         cq2 = 1.0 if quad_monopole2 is None else quad_monopole2
+        if cq1 != 1.0 or cq2 != 1.0:
+            phi4_qm = -(50.0 / eta) * (
+                (m1_ratio * m1_ratio) * (cq1 - 1.0) * (chi1 * chi1)
+                + (m2_ratio * m2_ratio) * (cq2 - 1.0) * (chi2 * chi2)
+            )
+            phi4 = phi4_pp + phi4_ss + phi4_qm
+        else:
+            phi4 = phi4_pp + phi4_ss
 
-        # Spin-spin contribution: self-spin and cross-spin
-        phi4_ss = -(10.0 / eta) * (
-            (247.0 / 48.0) * eta * chi1 * chi2
-            + (m1_ratio * m1_ratio) * (cq1 / 2.0) * (chi1 * chi1)
-            + (m2_ratio * m2_ratio) * (cq2 / 2.0) * (chi2 * chi2)
+        # 2.5PN: Point-particle + Spin-Orbit (Khan et al. 2016 Eq. B4)
+        # [1 + 3 ln(v)] * phi5_bracket
+        phi5_bracket = (
+            (38645.0 * PI / 756.0)
+            - (65.0 * PI * eta / 9.0)
+            + delta * (-(732985.0 / 2268.0) - (140.0 * eta / 9.0)) * chi_a
+            + (-(732985.0 / 2268.0) + (24260.0 * eta / 81.0) + (340.0 * eta2 / 9.0)) * chi_s
         )
-        phi4 = phi4_pp + phi4_ss
+        phi5 = phi5_bracket
+        phi5_log = 3.0 * phi5_bracket
 
-        # 2.5PN: Point-particle + Spin-Orbit
-        phi5_pp_const = PI * ((38645.0 / 756.0) - (65.0 / 9.0) * eta)
-        phi5_pp_log = 3.0 * phi5_pp_const  # multiplier for ln(v)
-        phi5_so = -PI * (
-            ((732985.0 / 2268.0) - (24260.0 / 81.0) * eta) * chi_s
-            + ((732985.0 / 2268.0) + (140.0 / 9.0) * eta) * delta * chi_a
-        )
-        phi5 = phi5_pp_const + phi5_so
-        phi5_log = phi5_pp_log
-
-        # 3PN: Point-particle + Spin-Orbit (Blanchet 2014, Buonanno et al. 2009)
+        # 3PN: Point-particle + Spin-Orbit (Khan et al. 2016 Eq. B5)
         phi6_pp_const = (
-            (11583231236531.0 / 46942156800.0)
+            (11583231236531.0 / 4694215680.0)
             - (6848.0 / 21.0) * EULER_GAMMA
             - (640.0 / 3.0) * (PI * PI)
-            + ((15335597827.0 / 3048192.0) - (451.0 / 48.0) * (PI * PI)) * eta
+            + ((-15737765635.0 / 3048192.0) + (2255.0 / 12.0) * (PI * PI)) * eta
             + (76055.0 / 1728.0) * eta2
             - (127825.0 / 1296.0) * eta3
         )
-        phi6_pp_log = -(6848.0 / 21.0) - (352.0 / 3.0) * eta  # multiplier for ln(4v)
-
-        phi6_so = PI * (
-            ((2270.0 / 3.0) - (520.0 / 3.0) * eta) * chi_s
-            + (2270.0 / 3.0) * delta * chi_a
-        )
+        phi6_so = (2270.0 * PI / 3.0) * delta * chi_a + ((2270.0 * PI / 3.0) - 520.0 * PI * eta) * chi_s
         phi6 = phi6_pp_const + phi6_so
-        phi6_log = phi6_pp_log
+        phi6_log = -(6848.0 / 21.0) * torch.ones_like(eta)  # multiplier for ln(4v)
 
-        # 3.5PN: Point-particle + Spin-Orbit (Bohé et al. 2013)
-        phi7_pp = PI * ((77096675.0 / 254016.0) + (378515.0 / 1512.0) * eta - (74045.0 / 756.0) * eta2)
+        # 3.5PN: Point-particle + Spin-Orbit (Khan et al. 2016 Eq. B6)
+        phi7_pp = (
+            (77096675.0 * PI / 254016.0)
+            + (378515.0 * PI * eta / 1512.0)
+            - (74045.0 * PI * eta2 / 756.0)
+        )
         phi7_so = (
-            (-(25150083775.0 / 3048192.0) + (26804935.0 / 6048.0) * eta - (1985.0 / 48.0) * eta2) * chi_s
-            + delta * (-(25150083775.0 / 3048192.0) + (10566655595.0 / 762048.0) * eta - (759865.0 / 12096.0) * eta2) * chi_a
+            delta * (-(25150083775.0 / 3048192.0) + (26804935.0 * eta / 6048.0) - (1985.0 * eta2 / 48.0)) * chi_a
+            + (-(25150083775.0 / 3048192.0) + (10566655595.0 * eta / 762048.0) - (1042165.0 * eta2 / 3024.0) + (5345.0 * eta3 / 36.0)) * chi_s
         )
         phi7 = phi7_pp + phi7_so
 
-        # Tidal contributions (5PN and 6PN)
+        # Tidal contributions (5PN and 6PN) - Wade et al. (2014, arXiv:1402.5156, Eq. 110)
         if lambda1 is not None and lambda2 is not None:
             lambda_tilde, delta_lambda_tilde = tidal_combinations(mass1, mass2, lambda1, lambda2)
-            phi10_tidal = 39.0 * lambda_tilde
-            phi12_factor = (3115.0 / 64.0) - (6595.0 / 364.0) * eta
-            phi12_tidal = phi12_factor * lambda_tilde + delta * phi12_factor * delta_lambda_tilde
+            phi10_tidal = -(39.0 / 2.0) * lambda_tilde
+            phi12_tidal = -(3115.0 / 64.0) * lambda_tilde + (6595.0 / 364.0) * delta * delta_lambda_tilde
         else:
             phi10_tidal = torch.zeros_like(eta)
             phi12_tidal = torch.zeros_like(eta)
