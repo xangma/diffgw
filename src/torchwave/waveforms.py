@@ -8,6 +8,7 @@ from typing import Optional, Tuple, Union
 import torch
 
 from torchwave.approximants.taylorf2 import TaylorF2
+from torchwave.approximants.taylorf2_hm import TaylorF2_HM
 from torchwave.approximants.imrphenomd import IMRPhenomD
 from torchwave.approximants.imrphenomp import IMRPhenomP
 from torchwave.approximants.eob.waveform import SEOBNR_ODE
@@ -16,6 +17,8 @@ from torchwave.approximants.rom.surrogate import SEOBNR_ROM
 
 _APPROXIMANTS = {
     "taylorf2": TaylorF2,
+    "taylorf2hm": TaylorF2_HM,
+    "taylorf2_hm": TaylorF2_HM,
     "imrphenomd": IMRPhenomD,
     "imrphenomp": IMRPhenomP,
     "imrphenompv2": IMRPhenomP,
@@ -106,7 +109,7 @@ def get_fd_waveform(
     model_cls = _APPROXIMANTS[key]
     model = model_cls()
 
-    if key == "taylorf2":
+    if key in ("taylorf2", "taylorf2hm", "taylorf2_hm"):
         return model(
             f=f,
             mass1=mass1,

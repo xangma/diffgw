@@ -7,7 +7,10 @@ All conversions strictly implement peer-reviewed formulations:
 """
 
 from typing import Tuple, Union
+import math
 import torch
+
+from torchwave.constants import MSUN_SEC, PI
 
 
 def as_tensor(
@@ -149,3 +152,51 @@ def tidal_combinations(
     )
 
     return lambda_tilde, delta_lambda_tilde
+
+
+def kerr_isco_radius(chi: torch.Tensor) -> torch.Tensor:
+    """Compute equatorial innermost stable circular orbit (ISCO) radius in units of M.
+
+    Formula from Bardeen, Press, Teukolsky (1972) Eq. 2.10.
+    Includes Taylor expansion around chi=0 to preserve C1 autograd continuity without NaN gradients.
+
+    Args:
+        chi: Dimensionless Kerr spin parameter (-1 <= chi <= 1), where chi > 0 is prograde.
+    """
+    chi_clamped = torch.clamp(chi, -0.9999, 0.9999)
+    abs_chi = torch.abs(chi_clamped)
+
+    # General Bardeen et al. formula
+    one_minus_chi2 = torch.clamp(1.0 - chi_clamped * chi_clamped, min=1e-8)
+    term_cubed = (
+        torch.pow(torch.clamp(1.0 + chi_clamped, min=1e-8), 1.0 / 3.0)
+        + torch.pow(torch.clamp(1.0 - chi_clamped, min=1e-8), 1.0 / 3.0)
+    )
+    z1 = 1.0 + torch.pow(one_minus_chi2, 1.0 / 3.0) * term_cubed
+    z2 = torch.sqrt(3.0 * chi_clamped * chi_clamped + z1 * z1)
+
+    radicand = torch.clamp((3.0 - z1) * (3.0 + z1 + 2.0 * z2), min=0.0)
+    safe_sqrt = torch.sqrt(radicand + 1e-18)
+    r_general = 3.0 + z2 - torch.sign(chi_clamped) * safe_sqrt
+
+    # Linear expansion around chi=0: r(chi) = 6 - 4*sqrt(2/3)*chi
+    # Eliminates the sqrt(0) singular branch cut at chi=0 for autograd
+    c1 = 4.0 * math.sqrt(2.0 / 3.0)
+    r_taylor = 6.0 - c1 * chi_clamped
+
+    return torch.where(abs_chi < 1e-4, r_taylor, r_general)
+
+
+def kerr_isco_frequency(total_mass: torch.Tensor, chi: torch.Tensor) -> torch.Tensor:
+    """Compute gravitational-wave quadrupole frequency at equatorial Kerr ISCO in Hz.
+
+    f_GW,ISCO = c^3 / (pi * G * M * ((r_ISCO/M)^(3/2) + chi))
+
+    Args:
+        total_mass: Total binary mass in solar masses
+        chi: Effective dimensionless spin parameter (-1 <= chi <= 1)
+    """
+    m_sec = total_mass * MSUN_SEC
+    r_isco = kerr_isco_radius(chi)
+    omega = 1.0 / (torch.pow(r_isco, 1.5) + chi)
+    return omega / (PI * m_sec)

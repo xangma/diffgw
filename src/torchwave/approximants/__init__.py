@@ -1,6 +1,7 @@
 """Waveform approximant implementations for torchwave."""
 
 from torchwave.approximants.taylorf2 import TaylorF2
+from torchwave.approximants.taylorf2_hm import TaylorF2_HM
 from torchwave.approximants.imrphenomd import IMRPhenomD
 from torchwave.approximants.imrphenomp import IMRPhenomP
 from torchwave.approximants.eob.waveform import SEOBNR_ODE
@@ -8,6 +9,7 @@ from torchwave.approximants.rom.surrogate import SEOBNR_ROM
 
 __all__ = [
     "TaylorF2",
+    "TaylorF2_HM",
     "IMRPhenomD",
     "IMRPhenomP",
     "SEOBNR_ODE",

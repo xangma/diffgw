@@ -31,6 +31,7 @@ from torchwave.conversions import (
     component_masses_to_chirp_mass,
     spin_combinations,
     tidal_combinations,
+    kerr_isco_frequency,
 )
 
 
@@ -323,6 +324,7 @@ class TaylorF2:
         lambda1: Optional[Union[float, torch.Tensor]] = None,
         lambda2: Optional[Union[float, torch.Tensor]] = None,
         f_isco_cutoff: bool = True,
+        isco_type: str = "schwarzschild",
         spin_order: int = 7,
     ) -> Tuple[torch.Tensor, torch.Tensor]:
         """Generate frequency-domain polarizations (h_plus, h_cross) using TaylorF2.
@@ -339,7 +341,8 @@ class TaylorF2:
             tc: Coalescence time in seconds
             lambda1: Primary tidal deformability
             lambda2: Secondary tidal deformability
-            f_isco_cutoff: If True, set signal to zero above Schwarzschild ISCO
+            f_isco_cutoff: If True, set signal to zero above ISCO
+            isco_type: ISCO formulation ("schwarzschild" or "kerr")
             spin_order: Highest PN spin order (default 7 for 3.5PN spin, -1 for all)
 
         Returns:
@@ -378,12 +381,25 @@ class TaylorF2:
             distance=dist,
         )
 
-        # Cutoff above Schwarzschild ISCO: f_ISCO = 1 / (6^(3/2) * pi * M_sec)
+        # Cutoff above ISCO:
+        # Schwarzschild: f_ISCO = 1 / (6^(3/2) * pi * M_sec)
+        # Kerr: f_ISCO = 1 / (pi * M_sec * (r_ISCO^(3/2) + chi_eff)) (Bardeen et al. 1972)
         if f_isco_cutoff:
-            m_sec = (m1 + m2) * MSUN_SEC
+            total_m = m1 + m2
+            m_sec = total_m * MSUN_SEC
             if m_sec.dim() >= 1 and amp.dim() > m_sec.dim():
                 m_sec = m_sec.unsqueeze(-1)
-            f_isco = 1.0 / (6.0 ** 1.5 * PI * m_sec)
+                total_m_for_cutoff = total_m.unsqueeze(-1)
+                chi_eff = ((m1 * s1 + m2 * s2) / total_m).unsqueeze(-1)
+            else:
+                total_m_for_cutoff = total_m
+                chi_eff = (m1 * s1 + m2 * s2) / total_m
+
+            if isco_type.lower() == "kerr":
+                f_isco = kerr_isco_frequency(total_m_for_cutoff, chi_eff)
+            else:
+                f_isco = 1.0 / (6.0 ** 1.5 * PI * m_sec)
+
             f_eval = f.unsqueeze(0) if (m1.dim() >= 1 and f.dim() == 1) else f
             mask = (f_eval <= f_isco) & (f_eval > 0.0)
             amp = torch.where(mask, amp, torch.zeros_like(amp))
@@ -403,7 +419,7 @@ class TaylorF2:
 
         h_plus = (plus_factor * amp).to(exp_minus_i_psi.dtype) * exp_minus_i_psi
         h_cross = torch.complex(
-            cross_factor * amp * torch.sin(psi),
+            -cross_factor * amp * torch.sin(psi),
             -cross_factor * amp * torch.cos(psi),
         )
 
