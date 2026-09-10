@@ -8,6 +8,9 @@ Strict Clean-Room Implementation based exclusively on published literature:
 - Flanagan & Hinderer (2008), Phys. Rev. D 77, 021502 (arXiv:0709.1915)
 - Vines, Flanagan, Hinderer (2011), Phys. Rev. D 83, 084051 (arXiv:1101.1673)
 - Wade et al. (2014), Phys. Rev. D 89, 103012 (arXiv:1402.5156)
+- Bohé et al. (2015), Z. Angew. Math. Phys. 66, 1729 (arXiv:1501.01529)
+- Marsat (2015), Class. Quantum Grav. 32, 085008 (arXiv:1411.4118)
+- Pratten et al. (2020), Phys. Rev. D 102, 064001 (arXiv:2001.11412)
 """
 
 from typing import Optional, Tuple, Union
@@ -44,6 +47,7 @@ class TaylorF2:
         lambda2: Optional[torch.Tensor] = None,
         quad_monopole1: Optional[torch.Tensor] = None,
         quad_monopole2: Optional[torch.Tensor] = None,
+        spin_order: int = 7,
     ) -> Tuple[torch.Tensor, ...]:
         """Compute the 3.5PN point-particle, spin, and tidal phase coefficients.
 
@@ -68,7 +72,9 @@ class TaylorF2:
         phi2 = (3715.0 / 756.0) + (55.0 / 9.0) * eta
 
         # 1.5PN: Point-particle + Spin-Orbit (Khan et al. 2016 Eq. B2)
-        phi3 = -16.0 * PI + (113.0 / 3.0) * delta * chi_a + ((113.0 / 3.0) - (76.0 * eta / 3.0)) * chi_s
+        phi3_pp = -16.0 * PI
+        phi3_so = (113.0 / 3.0) * delta * chi_a + ((113.0 / 3.0) - (76.0 * eta / 3.0)) * chi_s
+        phi3 = phi3_pp + (phi3_so if (spin_order >= 3 or spin_order < 0) else torch.zeros_like(eta))
 
         # 2PN: Point-particle + Spin-Spin (Khan et al. 2016 Eq. B3, Poisson 1998)
         phi4_pp = (15293365.0 / 508032.0) + (27145.0 / 504.0) * eta + (3085.0 / 72.0) * eta2
@@ -85,22 +91,25 @@ class TaylorF2:
                 (m1_ratio * m1_ratio) * (cq1 - 1.0) * (chi1 * chi1)
                 + (m2_ratio * m2_ratio) * (cq2 - 1.0) * (chi2 * chi2)
             )
-            phi4 = phi4_pp + phi4_ss + phi4_qm
         else:
-            phi4 = phi4_pp + phi4_ss
+            phi4_qm = torch.zeros_like(eta)
+
+        phi4 = phi4_pp
+        if spin_order >= 4 or spin_order < 0:
+            phi4 = phi4 + phi4_ss + phi4_qm
 
         # 2.5PN: Point-particle + Spin-Orbit (Khan et al. 2016 Eq. B4)
         # [1 + 3 ln(v)] * phi5_bracket
-        phi5_bracket = (
-            (38645.0 * PI / 756.0)
-            - (65.0 * PI * eta / 9.0)
-            + delta * (-(732985.0 / 2268.0) - (140.0 * eta / 9.0)) * chi_a
+        phi5_pp = (38645.0 * PI / 756.0) - (65.0 * PI * eta / 9.0)
+        phi5_so = (
+            delta * (-(732985.0 / 2268.0) - (140.0 * eta / 9.0)) * chi_a
             + (-(732985.0 / 2268.0) + (24260.0 * eta / 81.0) + (340.0 * eta2 / 9.0)) * chi_s
         )
+        phi5_bracket = phi5_pp + (phi5_so if (spin_order >= 5 or spin_order < 0) else torch.zeros_like(eta))
         phi5 = phi5_bracket
         phi5_log = 3.0 * phi5_bracket
 
-        # 3PN: Point-particle + Spin-Orbit (Khan et al. 2016 Eq. B5)
+        # 3PN: Point-particle + Spin-Orbit (Khan et al. 2016 Eq. B5) + Spin-Spin (Bohé et al. 2015 Eq. 4.13, Pratten et al. 2020 Eq. A13)
         phi6_pp_const = (
             (11583231236531.0 / 4694215680.0)
             - (6848.0 / 21.0) * EULER_GAMMA
@@ -110,10 +119,17 @@ class TaylorF2:
             - (127825.0 / 1296.0) * eta3
         )
         phi6_so = (2270.0 * PI / 3.0) * delta * chi_a + ((2270.0 * PI / 3.0) - 520.0 * PI * eta) * chi_s
-        phi6 = phi6_pp_const + phi6_so
+        phi6_ss = (
+            chi_s * chi_a * (75515.0 * delta / 144.0 - 8225.0 * delta * eta / 18.0)
+            + (chi_a * chi_a) * (-480.0 * eta2 - 263245.0 * eta / 252.0 + 75515.0 / 288.0)
+            + (chi_s * chi_s) * (1255.0 * eta2 / 9.0 - 232415.0 * eta / 504.0 + 75515.0 / 288.0)
+        )
+        phi6 = phi6_pp_const
+        if spin_order >= 6 or spin_order < 0:
+            phi6 = phi6 + phi6_so + phi6_ss
         phi6_log = -(6848.0 / 21.0) * torch.ones_like(eta)  # multiplier for ln(4v)
 
-        # 3.5PN: Point-particle + Spin-Orbit (Khan et al. 2016 Eq. B6)
+        # 3.5PN: Point-particle + Spin-Orbit (Khan et al. 2016 Eq. B6) + Cubic-Spin / SSO (Marsat 2015 Eq. 6.22, Pratten et al. 2020 Eq. A14)
         phi7_pp = (
             (77096675.0 * PI / 254016.0)
             + (378515.0 * PI * eta / 1512.0)
@@ -123,7 +139,16 @@ class TaylorF2:
             delta * (-(25150083775.0 / 3048192.0) + (26804935.0 * eta / 6048.0) - (1985.0 * eta2 / 48.0)) * chi_a
             + (-(25150083775.0 / 3048192.0) + (10566655595.0 * eta / 762048.0) - (1042165.0 * eta2 / 3024.0) + (5345.0 * eta3 / 36.0)) * chi_s
         )
-        phi7 = phi7_pp + phi7_so
+        phi7_sss = (
+            chi_s * (-1140.0 * PI * delta * chi_a + (80.0 * eta2 - 7270.0 * eta + 14585.0 / 8.0) * (chi_a * chi_a))
+            + (chi_a * chi_a * chi_a) * (14585.0 * delta / 24.0 - 2380.0 * delta * eta)
+            + (chi_s * chi_s) * (chi_a * (14585.0 * delta / 8.0 - 215.0 * delta * eta / 2.0) + 40.0 * PI * eta - 570.0 * PI)
+            + (chi_s * chi_s * chi_s) * (100.0 * eta2 / 3.0 - 475.0 * eta / 6.0 + 14585.0 / 24.0)
+            + (2240.0 * PI * eta - 570.0 * PI) * (chi_a * chi_a)
+        )
+        phi7 = phi7_pp
+        if spin_order >= 7 or spin_order < 0:
+            phi7 = phi7 + phi7_so + phi7_sss
 
         # Tidal contributions (5PN and 6PN) - Wade et al. (2014, arXiv:1402.5156, Eq. 110)
         if lambda1 is not None and lambda2 is not None:
@@ -149,6 +174,7 @@ class TaylorF2:
         phic: torch.Tensor = 0.0,
         quad_monopole1: Optional[torch.Tensor] = None,
         quad_monopole2: Optional[torch.Tensor] = None,
+        spin_order: int = 7,
     ) -> torch.Tensor:
         """Compute the full SPA phase Psi(f).
 
@@ -159,6 +185,8 @@ class TaylorF2:
             lambda1, lambda2: Dimensionless tidal deformabilities, shape (B,) or ()
             tc: Coalescence time in seconds
             phic: Coalescence phase in radians
+            quad_monopole1, quad_monopole2: Quadrupole-monopole parameters
+            spin_order: Highest PN spin order (default 7 for 3.5PN spin, -1 for all)
 
         Returns:
             Phase tensor Psi(f) with broadcast shape (B, N_f)
@@ -200,6 +228,7 @@ class TaylorF2:
             lambda2=lambda2,
             quad_monopole1=quad_monopole1,
             quad_monopole2=quad_monopole2,
+            spin_order=spin_order,
         )
 
         def unsqueeze_if_needed(t: torch.Tensor) -> torch.Tensor:
@@ -294,6 +323,7 @@ class TaylorF2:
         lambda1: Optional[Union[float, torch.Tensor]] = None,
         lambda2: Optional[Union[float, torch.Tensor]] = None,
         f_isco_cutoff: bool = True,
+        spin_order: int = 7,
     ) -> Tuple[torch.Tensor, torch.Tensor]:
         """Generate frequency-domain polarizations (h_plus, h_cross) using TaylorF2.
 
@@ -310,6 +340,7 @@ class TaylorF2:
             lambda1: Primary tidal deformability
             lambda2: Secondary tidal deformability
             f_isco_cutoff: If True, set signal to zero above Schwarzschild ISCO
+            spin_order: Highest PN spin order (default 7 for 3.5PN spin, -1 for all)
 
         Returns:
             (h_plus, h_cross) complex tensors
@@ -338,6 +369,7 @@ class TaylorF2:
             lambda2=l2,
             tc=tc,
             phic=phic,
+            spin_order=spin_order,
         )
         amp = TaylorF2.evaluate_amplitude(
             f=f,

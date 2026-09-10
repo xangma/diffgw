@@ -359,8 +359,11 @@ class IMRPhenomD:
         # Remnant black hole properties & QNM frequencies
         m_final, a_final, f_rd, f_damp = IMRPhenomD.remnant_properties(m1, m2, s1, s2)
 
-        # Amplitude peak frequency (Eq. eq:fpeak of Khan et al. 2016)
-        term_peak = torch.sqrt(torch.clamp(1.0 - gamma2 * gamma2, min=1e-8)) - 1.0
+        # Amplitude peak frequency (Khan et al. 2016, arXiv:1508.07253)
+        # Differentiable root formulation avoiding NaN gradients when gamma2 >= 1.0
+        diff_gamma = torch.clamp(1.0 - gamma2 * gamma2, min=0.0)
+        safe_sqrt = torch.sqrt(diff_gamma + 1e-12)
+        term_peak = torch.where(diff_gamma > 1e-10, safe_sqrt, torch.zeros_like(gamma2)) - 1.0
         f_peak = torch.abs(f_rd + (f_damp * gamma3 * term_peak) / gamma2)
 
         # Transition boundaries
@@ -563,9 +566,12 @@ class IMRPhenomD:
 
         if f.dim() == 1 and is_batched:
             f_eval = f.unsqueeze(0)  # (1, N_f)
-            m_sec_eval = m_sec.unsqueeze(-1)  # (B, 1)
         else:
             f_eval = f
+
+        if is_batched and f_eval.dim() > m_sec.dim():
+            m_sec_eval = m_sec.unsqueeze(-1)  # (B, 1)
+        else:
             m_sec_eval = m_sec
 
         mf = m_sec_eval * f_eval  # Dimensionless frequency M*f

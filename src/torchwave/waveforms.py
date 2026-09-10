@@ -9,6 +9,7 @@ import torch
 
 from torchwave.approximants.taylorf2 import TaylorF2
 from torchwave.approximants.imrphenomd import IMRPhenomD
+from torchwave.approximants.imrphenomp import IMRPhenomP
 from torchwave.approximants.eob.waveform import SEOBNR_ODE
 from torchwave.approximants.rom.surrogate import SEOBNR_ROM
 
@@ -16,6 +17,8 @@ from torchwave.approximants.rom.surrogate import SEOBNR_ROM
 _APPROXIMANTS = {
     "taylorf2": TaylorF2,
     "imrphenomd": IMRPhenomD,
+    "imrphenomp": IMRPhenomP,
+    "imrphenompv2": IMRPhenomP,
     "seobnr": SEOBNR_ODE,
     "seobnrode": SEOBNR_ODE,
     "seobnrv5": SEOBNR_ODE,
@@ -31,6 +34,12 @@ def get_fd_waveform(
     mass2: Union[float, torch.Tensor],
     chi1: Union[float, torch.Tensor] = 0.0,
     chi2: Union[float, torch.Tensor] = 0.0,
+    spin1x: Union[float, torch.Tensor] = 0.0,
+    spin1y: Union[float, torch.Tensor] = 0.0,
+    spin1z: Optional[Union[float, torch.Tensor]] = None,
+    spin2x: Union[float, torch.Tensor] = 0.0,
+    spin2y: Union[float, torch.Tensor] = 0.0,
+    spin2z: Optional[Union[float, torch.Tensor]] = None,
     distance: Union[float, torch.Tensor] = 100.0,
     inclination: Union[float, torch.Tensor] = 0.0,
     phic: Union[float, torch.Tensor] = 0.0,
@@ -48,11 +57,13 @@ def get_fd_waveform(
     """Generate frequency-domain gravitational-wave polarizations h_plus(f) and h_cross(f).
 
     Args:
-        approximant: Name of the waveform approximant (e.g. 'TaylorF2', 'IMRPhenomD', 'SEOBNR_ODE', 'SEOBNR_ROM')
+        approximant: Name of the waveform approximant (e.g. 'TaylorF2', 'IMRPhenomD', 'IMRPhenomP', 'SEOBNR_ODE', 'SEOBNR_ROM')
         mass1: Primary mass in solar masses (m1 >= m2)
         mass2: Secondary mass in solar masses
         chi1: Dimensionless aligned spin of primary mass (-1 <= chi1 <= 1)
         chi2: Dimensionless aligned spin of secondary mass (-1 <= chi2 <= 1)
+        spin1x, spin1y, spin1z: 3D dimensionless spin components for primary mass
+        spin2x, spin2y, spin2z: 3D dimensionless spin components for secondary mass
         distance: Luminosity distance in Mpc (default 100.0)
         inclination: Orbital inclination angle in radians (default 0.0)
         phic: Coalescence phase in radians (default 0.0)
@@ -108,6 +119,25 @@ def get_fd_waveform(
             tc=tc,
             lambda1=lambda1,
             lambda2=lambda2,
+            **kwargs,
+        )
+    elif key in ("imrphenomp", "imrphenompv2"):
+        s1z = chi1 if spin1z is None else spin1z
+        s2z = chi2 if spin2z is None else spin2z
+        return model(
+            f=f,
+            mass1=mass1,
+            mass2=mass2,
+            spin1x=spin1x,
+            spin1y=spin1y,
+            spin1z=s1z,
+            spin2x=spin2x,
+            spin2y=spin2y,
+            spin2z=s2z,
+            distance=distance,
+            inclination=inclination,
+            phic=phic,
+            tc=tc,
             **kwargs,
         )
     elif key in ("imrphenomd", "seobnrrom", "seobnrv4rom", "seobnrv5rom"):
