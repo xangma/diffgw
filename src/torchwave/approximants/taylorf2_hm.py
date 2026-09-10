@@ -116,12 +116,15 @@ class TaylorF2_HM(nn.Module):
         inclination: Union[float, torch.Tensor] = 0.0,
         phic: Union[float, torch.Tensor] = 0.0,
         tc: Union[float, torch.Tensor] = 0.0,
+        f_ref: Optional[Union[float, torch.Tensor]] = None,
         phi0: Union[float, torch.Tensor] = 0.0,
         lambda1: Optional[Union[float, torch.Tensor]] = None,
         lambda2: Optional[Union[float, torch.Tensor]] = None,
         modes: Optional[Sequence[Tuple[int, int]]] = None,
         f_isco_cutoff: bool = True,
         isco_type: str = "schwarzschild",
+        smooth_cutoff: bool = False,
+        roll_off_delta: float = 0.1,
         spin_order: int = 7,
         return_modes: bool = False,
     ) -> Union[
@@ -230,6 +233,7 @@ class TaylorF2_HM(nn.Module):
         for l, m in active_modes:
             # Frequency scaling for SPA phase: F_22 = (2 / m) * f
             f_scaled = (2.0 / float(m)) * f_eval
+            f_ref_scaled = (2.0 / float(m)) * as_tensor(f_ref, device=device, dtype=dtype) if f_ref is not None else None
 
             # Base TaylorF2 phase evaluated at f_scaled
             psi_base = TaylorF2.evaluate_phase(
@@ -242,6 +246,7 @@ class TaylorF2_HM(nn.Module):
                 lambda2=l2,
                 tc=t_c,
                 phic=phi_c,
+                f_ref=f_ref_scaled,
                 spin_order=spin_order,
             )
 
@@ -272,8 +277,17 @@ class TaylorF2_HM(nn.Module):
             # Apply mode-specific ISCO cutoff: f_cut,m = (m / 2) * f_ISCO_22
             if f_isco_cutoff:
                 f_cut_m = (float(m) / 2.0) * f_isco_22
-                mask = (f_eval <= f_cut_m) & (f_eval > 0.0)
-                amp_lm = torch.where(mask, amp_lm, torch.zeros_like(amp_lm))
+                if not smooth_cutoff:
+                    mask = (f_eval <= f_cut_m) & (f_eval > 0.0)
+                    amp_lm = torch.where(mask, amp_lm, torch.zeros_like(amp_lm))
+                else:
+                    f_start_m = (1.0 - roll_off_delta) * f_cut_m
+                    x = torch.clamp((f_eval - f_start_m) / (f_cut_m - f_start_m + 1e-30), 0.0, 1.0)
+                    w = 0.5 * (1.0 + torch.cos(PI * x))
+                    w = torch.where(f_eval <= f_start_m, torch.ones_like(w), w)
+                    w = torch.where(f_eval >= f_cut_m, torch.zeros_like(w), w)
+                    w = torch.where(f_eval > 0.0, w, torch.zeros_like(w))
+                    amp_lm = amp_lm * w
 
             # Complex mode waveform h_{l, -m}(f) = amp_lm * exp(-i * psi_lm)
             exp_neg_i_psi = torch.complex(torch.cos(psi_lm), -torch.sin(psi_lm))

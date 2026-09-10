@@ -49,6 +49,7 @@ class TaylorF2:
         quad_monopole1: Optional[torch.Tensor] = None,
         quad_monopole2: Optional[torch.Tensor] = None,
         spin_order: int = 7,
+        phenom_d_calibration: bool = False,
     ) -> Tuple[torch.Tensor, ...]:
         """Compute the 3.5PN point-particle, spin, and tidal phase coefficients.
 
@@ -126,8 +127,10 @@ class TaylorF2:
             + (chi_s * chi_s) * (1255.0 * eta2 / 9.0 - 232415.0 * eta / 504.0 + 75515.0 / 288.0)
         )
         phi6 = phi6_pp_const
-        if spin_order >= 6 or spin_order < 0:
-            phi6 = phi6 + phi6_so + phi6_ss
+        if spin_order >= 5 or spin_order < 0:
+            phi6 = phi6 + phi6_so
+        if not phenom_d_calibration and (spin_order >= 6 or spin_order < 0):
+            phi6 = phi6 + phi6_ss
         phi6_log = -(6848.0 / 21.0) * torch.ones_like(eta)  # multiplier for ln(4v)
 
         # 3.5PN: Point-particle + Spin-Orbit (Khan et al. 2016 Eq. B6) + Cubic-Spin / SSO (Marsat 2015 Eq. 6.22, Pratten et al. 2020 Eq. A14)
@@ -148,8 +151,10 @@ class TaylorF2:
             + (2240.0 * PI * eta - 570.0 * PI) * (chi_a * chi_a)
         )
         phi7 = phi7_pp
-        if spin_order >= 7 or spin_order < 0:
-            phi7 = phi7 + phi7_so + phi7_sss
+        if spin_order >= 5 or spin_order < 0:
+            phi7 = phi7 + phi7_so
+        if not phenom_d_calibration and spin_order >= 8:
+            phi7 = phi7 + phi7_sss
 
         # Tidal contributions (5PN and 6PN) - Wade et al. (2014, arXiv:1402.5156, Eq. 110)
         if lambda1 is not None and lambda2 is not None:
@@ -163,6 +168,126 @@ class TaylorF2:
         return phi0, phi2, phi3, phi4, phi5, phi5_log, phi6, phi6_log, phi7, phi10_tidal, phi12_tidal
 
     @staticmethod
+    def evaluate_phase_derivative(
+        f: torch.Tensor,
+        mass1: torch.Tensor,
+        mass2: torch.Tensor,
+        chi1: torch.Tensor,
+        chi2: torch.Tensor,
+        lambda1: Optional[torch.Tensor] = None,
+        lambda2: Optional[torch.Tensor] = None,
+        tc: torch.Tensor = 0.0,
+        f_ref: Optional[Union[float, torch.Tensor]] = None,
+        quad_monopole1: Optional[torch.Tensor] = None,
+        quad_monopole2: Optional[torch.Tensor] = None,
+        spin_order: int = 7,
+        phenom_d_calibration: bool = False,
+        phasing_convention: Optional[str] = None,
+        reference_frame: Optional[str] = None,
+    ) -> torch.Tensor:
+        """Compute the analytical phase derivative dPsi/df in seconds with optional f_ref conditioning.
+
+        dPsi/df = 2*pi*tc + (3 / (128 * eta)) * (d_pn_sum_dv) * (dv/df)
+        """
+        total_mass = mass1 + mass2
+        eta = component_masses_to_eta(mass1, mass2)
+
+        if f.dim() == 1 and total_mass.dim() >= 1:
+            f = f.unsqueeze(0)
+
+        m_sec = total_mass * MSUN_SEC
+        if m_sec.dim() >= 1 and f.dim() > m_sec.dim():
+            m_sec = m_sec.unsqueeze(-1)
+            eta = eta.unsqueeze(-1)
+
+        v = (PI * m_sec * f) ** (1.0 / 3.0)
+        dv_df = (PI * m_sec / 3.0) * (PI * m_sec * f) ** (-2.0 / 3.0)
+
+        (
+            phi0, phi2, phi3, phi4, phi5, phi5_log,
+            phi6, phi6_log, phi7, phi10_t, phi12_t
+        ) = TaylorF2.phase_coefficients(
+            mass1=mass1,
+            mass2=mass2,
+            chi1=chi1,
+            chi2=chi2,
+            lambda1=lambda1,
+            lambda2=lambda2,
+            quad_monopole1=quad_monopole1,
+            quad_monopole2=quad_monopole2,
+            spin_order=spin_order,
+            phenom_d_calibration=phenom_d_calibration,
+        )
+
+        def unsqueeze_if_needed(t: torch.Tensor) -> torch.Tensor:
+            if t.dim() >= 1 and f.dim() > t.dim():
+                return t.unsqueeze(-1)
+            return t
+
+        phi0 = unsqueeze_if_needed(phi0)
+        phi2 = unsqueeze_if_needed(phi2)
+        phi3 = unsqueeze_if_needed(phi3)
+        phi4 = unsqueeze_if_needed(phi4)
+        phi5 = unsqueeze_if_needed(phi5)
+        phi5_log = unsqueeze_if_needed(phi5_log)
+        phi6 = unsqueeze_if_needed(phi6)
+        phi6_log = unsqueeze_if_needed(phi6_log)
+        phi7 = unsqueeze_if_needed(phi7)
+        phi10_t = unsqueeze_if_needed(phi10_t)
+        phi12_t = unsqueeze_if_needed(phi12_t)
+
+        ln_4v = torch.log(4.0 * v)
+
+        # d/dv [ pn_sum / v^5 ]
+        d_pn_sum_dv = (
+            -5.0 * phi0 * (v ** -6)
+            - 3.0 * phi2 * (v ** -4)
+            - 2.0 * phi3 * (v ** -3)
+            - phi4 * (v ** -2)
+            + phi5_log * (v ** -1)
+            + (phi6 + phi6_log * ln_4v + phi6_log)
+            + 2.0 * phi7 * v
+            + 5.0 * phi10_t * (v ** 4)
+            + 7.0 * phi12_t * (v ** 6)
+        )
+
+        dpsi_raw = (3.0 / (128.0 * eta)) * d_pn_sum_dv * dv_df
+        t_c_t = unsqueeze_if_needed(as_tensor(tc, device=f.device, dtype=f.dtype))
+
+        conv = reference_frame if reference_frame is not None else (
+            phasing_convention if phasing_convention is not None else ("reference_frequency" if f_ref is not None else "coalescence")
+        )
+        conv = conv.lower()
+
+        if conv in ("reference_frequency", "reffreq", "ref"):
+            ref_f = f_ref if f_ref is not None else (f.reshape(-1)[0] if f.numel() > 0 else 20.0)
+            f_ref_t = as_tensor(ref_f, device=f.device, dtype=f.dtype)
+            f_ref_eval = f_ref_t.reshape(1) if f_ref_t.dim() == 0 else f_ref_t
+            dpsi_ref = TaylorF2.evaluate_phase_derivative(
+                f=f_ref_eval,
+                mass1=mass1,
+                mass2=mass2,
+                chi1=chi1,
+                chi2=chi2,
+                lambda1=lambda1,
+                lambda2=lambda2,
+                tc=torch.zeros_like(t_c_t),
+                f_ref=None,
+                quad_monopole1=quad_monopole1,
+                quad_monopole2=quad_monopole2,
+                spin_order=spin_order,
+                phenom_d_calibration=phenom_d_calibration,
+                phasing_convention="coalescence",
+            )
+            if total_mass.dim() >= 1 and f.dim() > total_mass.dim():
+                dpsi_ref = unsqueeze_if_needed(dpsi_ref)
+            dpsi_df = dpsi_raw - dpsi_ref + 2.0 * PI * t_c_t
+        else:
+            dpsi_df = 2.0 * PI * t_c_t + dpsi_raw
+
+        return dpsi_df
+
+    @staticmethod
     def evaluate_phase(
         f: torch.Tensor,
         mass1: torch.Tensor,
@@ -173,11 +298,15 @@ class TaylorF2:
         lambda2: Optional[torch.Tensor] = None,
         tc: torch.Tensor = 0.0,
         phic: torch.Tensor = 0.0,
+        f_ref: Optional[Union[float, torch.Tensor]] = None,
         quad_monopole1: Optional[torch.Tensor] = None,
         quad_monopole2: Optional[torch.Tensor] = None,
-        spin_order: int = 7,
+        spin_order: int = 5,
+        phenom_d_calibration: bool = False,
+        phasing_convention: Optional[str] = None,
+        reference_frame: Optional[str] = None,
     ) -> torch.Tensor:
-        """Compute the full SPA phase Psi(f).
+        """Compute the full SPA phase Psi(f) with configurable phasing convention.
 
         Args:
             f: Frequency tensor in Hz, shape (N_f,) or (B, N_f)
@@ -186,8 +315,12 @@ class TaylorF2:
             lambda1, lambda2: Dimensionless tidal deformabilities, shape (B,) or ()
             tc: Coalescence time in seconds
             phic: Coalescence phase in radians
+            f_ref: Reference frequency in Hz
             quad_monopole1, quad_monopole2: Quadrupole-monopole parameters
-            spin_order: Highest PN spin order (default 7 for 3.5PN spin, -1 for all)
+            spin_order: Highest PN spin order (default 5 for LAL baseline, 7 for full PN)
+            phenom_d_calibration: If True, use Khan et al. 2016 Appendix B terms only
+            phasing_convention: 'coalescence' or 'reference_frequency'
+            reference_frame: Alias for phasing_convention
 
         Returns:
             Phase tensor Psi(f) with broadcast shape (B, N_f)
@@ -198,9 +331,6 @@ class TaylorF2:
         # Broadcast parameters to allow batching
         if f.dim() == 1 and total_mass.dim() >= 1:
             f = f.unsqueeze(0)  # (1, N_f)
-        for p in [total_mass, eta]:
-            if p.dim() >= 1 and f.dim() > p.dim():
-                pass
 
         # Total mass in seconds
         m_sec = total_mass * MSUN_SEC
@@ -230,6 +360,7 @@ class TaylorF2:
             quad_monopole1=quad_monopole1,
             quad_monopole2=quad_monopole2,
             spin_order=spin_order,
+            phenom_d_calibration=phenom_d_calibration,
         )
 
         def unsqueeze_if_needed(t: torch.Tensor) -> torch.Tensor:
@@ -265,13 +396,71 @@ class TaylorF2:
             + phi12_t * (v6 * v6)  # 6PN tidal (v^12)
         )
 
-        # Standard SPA phasing: Psi(f) = 2*pi*f*t_c - phi_c - pi/4 + 3/(128*eta*v^5) * pn_sum
-        psi = (
-            2.0 * PI * f * unsqueeze_if_needed(as_tensor(tc, device=f.device, dtype=f.dtype))
-            - unsqueeze_if_needed(as_tensor(phic, device=f.device, dtype=f.dtype))
-            - (PI / 4.0)
-            + (3.0 / (128.0 * eta * v5)) * pn_sum
+        # Raw SPA phasing (t_c=0, phi_c=0): Psi_raw(f) = -pi/4 + 3/(128*eta*v^5) * pn_sum
+        psi_raw = -(PI / 4.0) + (3.0 / (128.0 * eta * v5)) * pn_sum
+
+        t_c_t = unsqueeze_if_needed(as_tensor(tc, device=f.device, dtype=f.dtype))
+        phi_c_t = unsqueeze_if_needed(as_tensor(phic, device=f.device, dtype=f.dtype))
+
+        conv = reference_frame if reference_frame is not None else (
+            phasing_convention if phasing_convention is not None else ("reference_frequency" if f_ref is not None else "coalescence")
         )
+        conv = conv.lower()
+
+        if conv in ("reference_frequency", "reffreq", "ref"):
+            ref_f = f_ref if f_ref is not None else (f.reshape(-1)[0] if f.numel() > 0 else 20.0)
+            f_ref_t = as_tensor(ref_f, device=f.device, dtype=f.dtype)
+            if f_ref_t.dim() == 0:
+                f_ref_eval = f_ref_t.reshape(1)
+            else:
+                f_ref_eval = f_ref_t
+
+            # Reference phase and reference time shift evaluated at tc=0, phic=0
+            psi_ref = TaylorF2.evaluate_phase(
+                f=f_ref_eval,
+                mass1=mass1,
+                mass2=mass2,
+                chi1=chi1,
+                chi2=chi2,
+                lambda1=lambda1,
+                lambda2=lambda2,
+                tc=torch.zeros_like(t_c_t),
+                phic=torch.zeros_like(phi_c_t),
+                f_ref=None,
+                quad_monopole1=quad_monopole1,
+                quad_monopole2=quad_monopole2,
+                spin_order=spin_order,
+                phenom_d_calibration=phenom_d_calibration,
+                phasing_convention="coalescence",
+            )
+            dpsi_ref = TaylorF2.evaluate_phase_derivative(
+                f=f_ref_eval,
+                mass1=mass1,
+                mass2=mass2,
+                chi1=chi1,
+                chi2=chi2,
+                lambda1=lambda1,
+                lambda2=lambda2,
+                tc=torch.zeros_like(t_c_t),
+                quad_monopole1=quad_monopole1,
+                quad_monopole2=quad_monopole2,
+                spin_order=spin_order,
+                phenom_d_calibration=phenom_d_calibration,
+                phasing_convention="coalescence",
+            )
+            t_ref = dpsi_ref / (2.0 * PI)
+
+            if total_mass.dim() >= 1 and f.dim() > total_mass.dim():
+                f_ref_t = unsqueeze_if_needed(f_ref_t)
+                psi_ref = unsqueeze_if_needed(psi_ref)
+                t_ref = unsqueeze_if_needed(t_ref)
+
+            # Transformed SPA phase: Psi(f) -> Psi(f) - 2*pi*(f - f_ref)*t(f_ref) - Psi(f_ref) + 2*pi*f*t_c - phi_c
+            psi = psi_raw - 2.0 * PI * (f - f_ref_t) * t_ref - psi_ref + 2.0 * PI * f * t_c_t - phi_c_t
+        else:
+            # Default 'coalescence': Psi(f) = 2*pi*f*tc - phic + Psi_carrier(f)
+            psi = psi_raw + 2.0 * PI * f * t_c_t - phi_c_t
+
         return psi
 
     @staticmethod
@@ -321,11 +510,16 @@ class TaylorF2:
         inclination: Union[float, torch.Tensor] = 0.0,
         phic: Union[float, torch.Tensor] = 0.0,
         tc: Union[float, torch.Tensor] = 0.0,
+        f_ref: Optional[Union[float, torch.Tensor]] = None,
         lambda1: Optional[Union[float, torch.Tensor]] = None,
         lambda2: Optional[Union[float, torch.Tensor]] = None,
         f_isco_cutoff: bool = True,
         isco_type: str = "schwarzschild",
+        smooth_cutoff: bool = False,
+        roll_off_delta: float = 0.1,
         spin_order: int = 7,
+        phasing_convention: Optional[str] = None,
+        reference_frame: Optional[str] = None,
     ) -> Tuple[torch.Tensor, torch.Tensor]:
         """Generate frequency-domain polarizations (h_plus, h_cross) using TaylorF2.
 
@@ -339,11 +533,16 @@ class TaylorF2:
             inclination: Orbital inclination in radians
             phic: Coalescence phase in radians
             tc: Coalescence time in seconds
+            f_ref: Reference frequency in Hz for physical reference phasing
             lambda1: Primary tidal deformability
             lambda2: Secondary tidal deformability
             f_isco_cutoff: If True, set signal to zero above ISCO
             isco_type: ISCO formulation ("schwarzschild" or "kerr")
+            smooth_cutoff: If True, smoothly roll off amplitude to zero at ISCO
+            roll_off_delta: Fractional width of smooth roll-off window below ISCO
             spin_order: Highest PN spin order (default 7 for 3.5PN spin, -1 for all)
+            phasing_convention: Phasing convention ('coalescence' or 'reference_frequency')
+            reference_frame: Alias for phasing_convention
 
         Returns:
             (h_plus, h_cross) complex tensors
@@ -372,7 +571,10 @@ class TaylorF2:
             lambda2=l2,
             tc=tc,
             phic=phic,
+            f_ref=f_ref,
             spin_order=spin_order,
+            phasing_convention=phasing_convention,
+            reference_frame=reference_frame,
         )
         amp = TaylorF2.evaluate_amplitude(
             f=f,
@@ -401,8 +603,18 @@ class TaylorF2:
                 f_isco = 1.0 / (6.0 ** 1.5 * PI * m_sec)
 
             f_eval = f.unsqueeze(0) if (m1.dim() >= 1 and f.dim() == 1) else f
-            mask = (f_eval <= f_isco) & (f_eval > 0.0)
-            amp = torch.where(mask, amp, torch.zeros_like(amp))
+
+            if not smooth_cutoff:
+                mask = (f_eval <= f_isco) & (f_eval > 0.0)
+                amp = torch.where(mask, amp, torch.zeros_like(amp))
+            else:
+                f_start = (1.0 - roll_off_delta) * f_isco
+                x = torch.clamp((f_eval - f_start) / (f_isco - f_start + 1e-30), 0.0, 1.0)
+                w = 0.5 * (1.0 + torch.cos(PI * x))
+                w = torch.where(f_eval <= f_start, torch.ones_like(w), w)
+                w = torch.where(f_eval >= f_isco, torch.zeros_like(w), w)
+                w = torch.where(f_eval > 0.0, w, torch.zeros_like(w))
+                amp = amp * w
 
         # Inclination projections:
         # h_plus = 0.5 * (1 + cos^2(iota)) * A(f) * exp(-i * Psi(f))

@@ -6,7 +6,7 @@ Strict Clean-Room Implementation based exclusively on published literature:
 - Berti, Cardoso, Will (2006), Phys. Rev. D 73, 064030 (arXiv:gr-qc/0512160) [QNM ringdown fits]
 """
 
-from typing import Dict, Tuple, Union
+from typing import Dict, Optional, Tuple, Union
 import torch
 import math
 
@@ -302,6 +302,10 @@ class IMRPhenomD:
         inclination: Union[float, torch.Tensor] = 0.0,
         phic: Union[float, torch.Tensor] = 0.0,
         tc: Union[float, torch.Tensor] = 0.0,
+        f_ref: Optional[Union[float, torch.Tensor]] = None,
+        window_type: str = "cosine",
+        phasing_convention: Optional[str] = None,
+        reference_frame: Optional[str] = None,
     ) -> Tuple[torch.Tensor, torch.Tensor]:
         """Generate frequency-domain polarizations (h_plus, h_cross) using IMRPhenomD.
 
@@ -315,6 +319,10 @@ class IMRPhenomD:
             inclination: Binary inclination angle in radians
             phic: Coalescence phase in radians
             tc: Coalescence time in seconds
+            f_ref: Reference frequency in Hz for physical reference phasing
+            window_type: High-frequency roll-off window ('cosine' or 'planck')
+            phasing_convention: Phasing convention ('coalescence' or 'reference_frequency')
+            reference_frame: Alias for phasing_convention
 
         Returns:
             (h_plus, h_cross) complex tensors with shape (B, N_f) or (N_f,)
@@ -402,8 +410,6 @@ class IMRPhenomD:
 
         def eval_scaled_amp_ins_deriv(mf_val: float) -> torch.Tensor:
             mf = torch.as_tensor(mf_val, dtype=dtype, device=device)
-            v = (PI * mf) ** (1.0 / 3.0)
-            # d/d(Mf) [v^k] = (k/3) * pi^(k/3) * (Mf)^(k/3 - 1)
             dpn = (
                 (2.0 / 3.0) * a_pn[2] * (PI ** (2.0 / 3.0)) * (mf ** (-1.0 / 3.0))
                 + a_pn[3] * PI
@@ -443,10 +449,11 @@ class IMRPhenomD:
         # -------------------------------------------------------------
         # Phase Matching (C1 continuity at f1_ph and f2_ph)
         # -------------------------------------------------------------
+        # Use exact Khan et al. 2016 Paper II Appendix B inspiral calibration
         (
             tf2_0, tf2_2, tf2_3, tf2_4, tf2_5, tf2_5_log,
             tf2_6, tf2_6_log, tf2_7, _, _
-        ) = TaylorF2.phase_coefficients(m1, m2, s1, s2)
+        ) = TaylorF2.phase_coefficients(m1, m2, s1, s2, phenom_d_calibration=True)
 
         def eval_tf2_at(mf: Union[float, torch.Tensor]) -> Tuple[torch.Tensor, torch.Tensor]:
             u = torch.as_tensor(mf, dtype=dtype, device=device)
@@ -674,14 +681,42 @@ class IMRPhenomD:
         a0_phys = prefactor * (m_sec_eval ** (5.0 / 6.0)) * (f_eval ** (-7.0 / 6.0))
         full_amp = a0_phys * scaled_amp
 
-        # 2. Piecewise Phase
+        # Task B: High-frequency physical windowing and cutoff:
+        # f_cut = (f_RD + 5.0 * f_damp) / M_sec
+        # Interval: [f_cut - 2.0*f_damp, f_cut] = [f_RD + 3.0*f_damp, f_RD + 5.0*f_damp] / M_sec
+        mf_cut = f_rd_u + 5.0 * f_damp_u
+        mf_start = mf_cut - 2.0 * f_damp_u
+        f_cut_phys = mf_cut / m_sec_eval
+        f_start_phys = mf_start / m_sec_eval
+
+        x_win = torch.clamp((f_eval - f_start_phys) / (f_cut_phys - f_start_phys + 1e-30), 0.0, 1.0)
+        if window_type.lower() == "planck":
+            x_safe = torch.clamp(x_win, 1e-7, 1.0 - 1e-7)
+            sigma_win = (1.0 / x_safe) + (1.0 / (x_safe - 1.0))
+            w_cutoff = 1.0 / (torch.exp(torch.clamp(sigma_win, -50.0, 50.0)) + 1.0)
+        else:
+            w_cutoff = 0.5 * (1.0 + torch.cos(PI * x_win))
+
+        w_cutoff = torch.where(f_eval <= f_start_phys, torch.ones_like(w_cutoff), w_cutoff)
+        w_cutoff = torch.where(f_eval >= f_cut_phys, torch.zeros_like(w_cutoff), w_cutoff)
+
+        full_amp = full_amp * w_cutoff
+        full_amp = torch.where(f_eval < f_cut_phys, full_amp, torch.zeros_like(full_amp))
+
+        # 2. Piecewise Phase & Analytical Derivative
         # Region I: Inspiral (Mf <= 0.018)
-        phi_tf2_grid, _ = eval_tf2_at(mf)
+        phi_tf2_grid, dphi_tf2_grid = eval_tf2_at(mf)
         phi_ins_grid = phi_tf2_grid + (1.0 / eta_u) * (
             sigma1_u * mf
             + (3.0 / 4.0) * sigma2_u * (mf ** (4.0 / 3.0))
             + (3.0 / 5.0) * sigma3_u * (mf ** (5.0 / 3.0))
             + 0.5 * sigma4_u * (mf ** 2.0)
+        )
+        dphi_ins_grid = dphi_tf2_grid + (1.0 / eta_u) * (
+            sigma1_u
+            + sigma2_u * (mf ** (1.0 / 3.0))
+            + sigma3_u * (mf ** (2.0 / 3.0))
+            + sigma4_u * mf
         )
 
         # Region IIa: Intermediate (0.018 < Mf <= 0.5 * f_rd)
@@ -690,6 +725,11 @@ class IMRPhenomD:
             + beta1_u * mf
             + beta2_u * torch.log(mf)
             - (beta3_u / 3.0) * (mf ** -3.0)
+        )
+        dphi_int_grid = (1.0 / eta_u) * (
+            beta1_u
+            + beta2_u * (mf ** -1.0)
+            + beta3_u * (mf ** -4.0)
         )
 
         # Region IIb: Merger-Ringdown (Mf > 0.5 * f_rd)
@@ -700,6 +740,13 @@ class IMRPhenomD:
             - alpha2_u * (mf ** -1.0)
             + (4.0 / 3.0) * alpha3_u * (mf ** 0.75)
             + alpha4_u * torch.atan(atan_arg_grid)
+        )
+        d_atan_grid = (alpha4_u / f_damp_u) / (1.0 + atan_arg_grid * atan_arg_grid)
+        dphi_mr_grid = (1.0 / eta_u) * (
+            alpha1_u
+            + alpha2_u * (mf ** -2.0)
+            + alpha3_u * (mf ** -0.25)
+            + d_atan_grid
         )
 
         phi_imr = torch.where(
@@ -712,13 +759,96 @@ class IMRPhenomD:
             ),
         )
 
-        # Complete waveform phase including user time and phase shifts
-        total_phase = (
-            2.0 * PI * f_eval * unsqueeze_param(t_c)
-            - unsqueeze_param(phi_c)
-            - (PI / 4.0)
-            + phi_imr
+        # Task A: Reference Frequency Phasing Transformation
+        # Psi_raw(f) = -pi/4 + phi_imr
+        psi_raw = -(PI / 4.0) + phi_imr
+
+        t_c_u = unsqueeze_param(t_c)
+        phi_c_u = unsqueeze_param(phi_c)
+
+        conv = reference_frame if reference_frame is not None else (
+            phasing_convention if phasing_convention is not None else ("reference_frequency" if f_ref is not None else "coalescence")
         )
+        conv = conv.lower()
+
+        if conv in ("reference_frequency", "reffreq", "ref"):
+            ref_f = f_ref if f_ref is not None else (f_eval.reshape(-1)[0] if f_eval.numel() > 0 else 20.0)
+            fref_t = as_tensor(ref_f, device=device, dtype=dtype)
+            if is_batched and f_eval.dim() > fref_t.dim():
+                fref_u = fref_t.unsqueeze(-1)
+            else:
+                fref_u = fref_t
+
+            mf_ref = m_sec_eval * fref_u
+            phi_tf2_ref, dphi_tf2_ref = eval_tf2_at(mf_ref)
+
+            phi_ins_ref = phi_tf2_ref + (1.0 / eta_u) * (
+                sigma1_u * mf_ref
+                + (3.0 / 4.0) * sigma2_u * (mf_ref ** (4.0 / 3.0))
+                + (3.0 / 5.0) * sigma3_u * (mf_ref ** (5.0 / 3.0))
+                + 0.5 * sigma4_u * (mf_ref ** 2.0)
+            )
+            dphi_ins_ref = dphi_tf2_ref + (1.0 / eta_u) * (
+                sigma1_u
+                + sigma2_u * (mf_ref ** (1.0 / 3.0))
+                + sigma3_u * (mf_ref ** (2.0 / 3.0))
+                + sigma4_u * mf_ref
+            )
+
+            phi_int_ref = (1.0 / eta_u) * (
+                beta0_u
+                + beta1_u * mf_ref
+                + beta2_u * torch.log(mf_ref)
+                - (beta3_u / 3.0) * (mf_ref ** -3.0)
+            )
+            dphi_int_ref = (1.0 / eta_u) * (
+                beta1_u
+                + beta2_u * (mf_ref ** -1.0)
+                + beta3_u * (mf_ref ** -4.0)
+            )
+
+            atan_arg_ref = (mf_ref - alpha5_u * f_rd_u) / f_damp_u
+            phi_mr_ref = (1.0 / eta_u) * (
+                alpha0_u
+                + alpha1_u * mf_ref
+                - alpha2_u * (mf_ref ** -1.0)
+                + (4.0 / 3.0) * alpha3_u * (mf_ref ** 0.75)
+                + alpha4_u * torch.atan(atan_arg_ref)
+            )
+            d_atan_ref = (alpha4_u / f_damp_u) / (1.0 + atan_arg_ref * atan_arg_ref)
+            dphi_mr_ref = (1.0 / eta_u) * (
+                alpha1_u
+                + alpha2_u * (mf_ref ** -2.0)
+                + alpha3_u * (mf_ref ** -0.25)
+                + d_atan_ref
+            )
+
+            phi_imr_ref = torch.where(
+                mf_ref <= f1_ph,
+                phi_ins_ref,
+                torch.where(
+                    mf_ref <= f2_ph_u,
+                    phi_int_ref,
+                    phi_mr_ref,
+                ),
+            )
+            dphi_imr_ref = torch.where(
+                mf_ref <= f1_ph,
+                dphi_ins_ref,
+                torch.where(
+                    mf_ref <= f2_ph_u,
+                    dphi_int_ref,
+                    dphi_mr_ref,
+                ),
+            )
+
+            # Exact analytical reference time delay: t(f_ref) = (1 / 2pi) * dPsi/df = (M_sec / 2pi) * dPhi/d(Mf)
+            psi_ref = -(PI / 4.0) + phi_imr_ref
+            t_ref = (m_sec_eval / (2.0 * PI)) * dphi_imr_ref
+
+            total_phase = psi_raw - 2.0 * PI * (f_eval - fref_u) * t_ref - psi_ref + 2.0 * PI * f_eval * t_c_u - phi_c_u
+        else:
+            total_phase = 2.0 * PI * f_eval * t_c_u - phi_c_u + psi_raw
 
         # Inclination projections
         cos_inc = torch.cos(unsqueeze_param(inc))

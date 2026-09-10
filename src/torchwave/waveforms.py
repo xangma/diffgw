@@ -22,6 +22,7 @@ _APPROXIMANTS = {
     "imrphenomd": IMRPhenomD,
     "imrphenomp": IMRPhenomP,
     "imrphenompv2": IMRPhenomP,
+    "imrphenomxp": IMRPhenomP,
     "seobnr": SEOBNR_ODE,
     "seobnrode": SEOBNR_ODE,
     "seobnrv5": SEOBNR_ODE,
@@ -49,6 +50,9 @@ def get_fd_waveform(
     tc: Union[float, torch.Tensor] = 0.0,
     lambda1: Optional[Union[float, torch.Tensor]] = None,
     lambda2: Optional[Union[float, torch.Tensor]] = None,
+    f_ref: Optional[Union[float, torch.Tensor]] = None,
+    phasing_convention: Optional[str] = None,
+    reference_frame: Optional[str] = None,
     f_lower: Optional[float] = None,
     f_final: Optional[float] = None,
     delta_f: Optional[float] = None,
@@ -60,7 +64,7 @@ def get_fd_waveform(
     """Generate frequency-domain gravitational-wave polarizations h_plus(f) and h_cross(f).
 
     Args:
-        approximant: Name of the waveform approximant (e.g. 'TaylorF2', 'IMRPhenomD', 'IMRPhenomP', 'SEOBNR_ODE', 'SEOBNR_ROM')
+        approximant: Name of the waveform approximant (e.g. 'TaylorF2', 'IMRPhenomD', 'IMRPhenomP', 'IMRPhenomXP', 'SEOBNR_ODE', 'SEOBNR_ROM')
         mass1: Primary mass in solar masses (m1 >= m2)
         mass2: Secondary mass in solar masses
         chi1: Dimensionless aligned spin of primary mass (-1 <= chi1 <= 1)
@@ -73,6 +77,9 @@ def get_fd_waveform(
         tc: Coalescence time in seconds (default 0.0)
         lambda1: Dimensionless tidal deformability of primary (for neutron stars)
         lambda2: Dimensionless tidal deformability of secondary (for neutron stars)
+        f_ref: Reference frequency in Hz for phase and spin orientation alignment
+        phasing_convention: Phasing convention ('coalescence' or 'reference_frequency')
+        reference_frame: Alias for phasing_convention
         f_lower: Starting frequency for evaluation grid in Hz
         f_final: Ending frequency for evaluation grid in Hz
         delta_f: Frequency spacing for uniform evaluation grid in Hz
@@ -109,6 +116,14 @@ def get_fd_waveform(
     model_cls = _APPROXIMANTS[key]
     model = model_cls()
 
+    model_kwargs = dict(kwargs)
+    if f_ref is not None:
+        model_kwargs["f_ref"] = f_ref
+    if phasing_convention is not None:
+        model_kwargs["phasing_convention"] = phasing_convention
+    if reference_frame is not None:
+        model_kwargs["reference_frame"] = reference_frame
+
     if key in ("taylorf2", "taylorf2hm", "taylorf2_hm"):
         return model(
             f=f,
@@ -122,11 +137,15 @@ def get_fd_waveform(
             tc=tc,
             lambda1=lambda1,
             lambda2=lambda2,
-            **kwargs,
+            **model_kwargs,
         )
-    elif key in ("imrphenomp", "imrphenompv2"):
+    elif key in ("imrphenomp", "imrphenompv2", "imrphenomxp"):
         s1z = chi1 if spin1z is None else spin1z
         s2z = chi2 if spin2z is None else spin2z
+        if key == "imrphenomxp" and "precession_version" not in model_kwargs:
+            model_kwargs["precession_version"] = "xp"
+        elif key in ("imrphenomp", "imrphenompv2") and "precession_version" not in model_kwargs:
+            model_kwargs["precession_version"] = "v2"
         return model(
             f=f,
             mass1=mass1,
@@ -141,7 +160,7 @@ def get_fd_waveform(
             inclination=inclination,
             phic=phic,
             tc=tc,
-            **kwargs,
+            **model_kwargs,
         )
     elif key in ("imrphenomd", "seobnrrom", "seobnrv4rom", "seobnrv5rom"):
         return model(
@@ -154,7 +173,7 @@ def get_fd_waveform(
             inclination=inclination,
             phic=phic,
             tc=tc,
-            **kwargs,
+            **model_kwargs,
         )
     elif key in ("seobnr", "seobnrode", "seobnrv5"):
         return model(
@@ -167,7 +186,7 @@ def get_fd_waveform(
             inclination=inclination,
             phic=phic,
             tc=tc,
-            **kwargs,
+            **model_kwargs,
         )
     else:
         raise NotImplementedError(f"Approximant {approximant} not yet wired.")

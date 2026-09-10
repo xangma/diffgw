@@ -11,6 +11,7 @@ References:
 - Bohé et al. (2017), Phys. Rev. D 95, 044028 (arXiv:1611.03703)
 """
 
+import math
 import os
 from typing import Dict, Optional, Tuple, Union
 import torch
@@ -43,15 +44,28 @@ def unwrap_phase(p: torch.Tensor, dim: int = -1) -> torch.Tensor:
     return p + torch.cat([zeros, cum_corr], dim=dim)
 
 
-def poly_features(eta: torch.Tensor, chi: torch.Tensor, degree: int = 3) -> torch.Tensor:
-    """Compute 2D polynomial expansion features for (eta, chi) up to given degree."""
+def poly_features(
+    eta: torch.Tensor,
+    chi1: torch.Tensor,
+    chi2: Optional[torch.Tensor] = None,
+    degree: int = 3,
+) -> torch.Tensor:
+    """Compute polynomial expansion features for (eta, chi1) or (eta, chi1, chi2) up to given degree."""
     eta_flat = eta.reshape(-1)
-    chi_flat = chi.reshape(-1)
+    chi1_flat = chi1.reshape(-1)
     cols = [torch.ones_like(eta_flat)]
-    for d in range(1, degree + 1):
-        for i in range(d + 1):
-            j = d - i
-            cols.append((eta_flat ** i) * (chi_flat ** j))
+    if chi2 is None:
+        for d in range(1, degree + 1):
+            for i in range(d + 1):
+                j = d - i
+                cols.append((eta_flat ** i) * (chi1_flat ** j))
+    else:
+        chi2_flat = chi2.reshape(-1)
+        for d in range(1, degree + 1):
+            for i in range(d + 1):
+                for j in range(d - i + 1):
+                    k = d - i - j
+                    cols.append((eta_flat ** i) * (chi1_flat ** j) * (chi2_flat ** k))
     return torch.stack(cols, dim=-1)
 
 
@@ -61,25 +75,34 @@ def generate_eob_training_grid(
     num_q: int = 8,
     chi_min: float = -0.6,
     chi_max: float = 0.6,
-    num_spins: int = 7,
-    mf_min: float = 0.01,
-    mf_max: float = 0.12,
+    num_spins: Optional[int] = None,
+    num_chi1: int = 5,
+    num_chi2: int = 3,
+    mf_min: float = 0.0002,
+    mf_max: float = 0.3,
     num_freq_nodes: int = 128,
     num_ode_steps: int = 800,
     device: str = "cpu",
     dtype: torch.dtype = torch.float64,
-) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]:
-    """Generate a regular grid of SEOBNR_ODE waveforms for surrogate training.
+) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]:
+    """Generate a regular grid of SEOBNR_ODE waveforms for surrogate training on logarithmic Mf grid.
 
     Returns:
         mf_grid: Dimensionless frequency tensor of shape (num_freq_nodes,)
         eta: Symmetric mass ratio tensor of shape (N_samples,)
-        chi_pn: Reduced spin tensor of shape (N_samples,)
+        s1: Primary aligned spin tensor of shape (N_samples,)
+        s2: Secondary aligned spin tensor of shape (N_samples,)
         amp_red: Reduced amplitude tensor of shape (N_samples, num_freq_nodes)
         phase_red: Residual phase tensor of shape (N_samples, num_freq_nodes)
     """
     dev = torch.device(device)
-    mf_grid = torch.linspace(mf_min, mf_max, num_freq_nodes, dtype=dtype, device=dev)
+    mf_grid = torch.logspace(
+        math.log10(mf_min),
+        math.log10(mf_max),
+        num_freq_nodes,
+        dtype=dtype,
+        device=dev,
+    )
 
     # Fixed fiducial total mass for geometric dimensionless conversion
     m_total = 50.0
@@ -87,18 +110,23 @@ def generate_eob_training_grid(
     f_grid = mf_grid / (m_sec * PI)
 
     q_vals = torch.linspace(q_min, q_max, num_q, dtype=dtype, device=dev)
-    s_vals = torch.linspace(chi_min, chi_max, num_spins, dtype=dtype, device=dev)
+    if num_spins is not None:
+        num_chi1 = num_spins
+        num_chi2 = max(1, num_spins // 2)
+
+    s1_vals = torch.linspace(chi_min, chi_max, num_chi1, dtype=dtype, device=dev)
+    s2_vals = torch.linspace(chi_min, chi_max, num_chi2, dtype=dtype, device=dev)
 
     m1_list, m2_list, s1_list, s2_list = [], [], [], []
     for q in q_vals:
-        for c in s_vals:
-            m1 = m_total * q / (1.0 + q)
-            m2 = m_total / (1.0 + q)
-            m1_list.append(m1)
-            m2_list.append(m2)
-            s1_list.append(c)
-            # Second spin equal or moderate ratio
-            s2_list.append(c * 0.7)
+        for c1 in s1_vals:
+            for c2 in s2_vals:
+                m1 = m_total * q / (1.0 + q)
+                m2 = m_total / (1.0 + q)
+                m1_list.append(m1)
+                m2_list.append(m2)
+                s1_list.append(c1)
+                s2_list.append(c2)
 
     m1 = torch.stack(m1_list)
     m2 = torch.stack(m2_list)
@@ -106,7 +134,6 @@ def generate_eob_training_grid(
     s2 = torch.stack(s2_list)
 
     eta = component_masses_to_eta(m1, m2)
-    _, _, chi_pn, _ = spin_combinations(m1, m2, s1, s2)
 
     # Generate batch of waveforms via pure PyTorch ODE integrator
     hp, _ = SEOBNR_ODE.__call__(
@@ -137,7 +164,7 @@ def generate_eob_training_grid(
     phi_0pn = 3.0 / (128.0 * eta.unsqueeze(-1) * v5)
     phase_red = phase - phi_0pn
 
-    return mf_grid, eta, chi_pn, amp_red, phase_red
+    return mf_grid, eta, s1, s2, amp_red, phase_red
 
 
 def compute_svd_reduced_basis(
@@ -185,7 +212,9 @@ def fit_parameter_mapping(
 def train_and_export_surrogate(
     output_path: Optional[str] = None,
     num_q: int = 8,
-    num_spins: int = 7,
+    num_spins: Optional[int] = None,
+    num_chi1: int = 5,
+    num_chi2: int = 3,
     num_freq_nodes: int = 128,
     num_modes: int = 8,
     degree: int = 3,
@@ -197,10 +226,14 @@ def train_and_export_surrogate(
     Args:
         output_path: Target .pt file path (defaults to src/torchwave/data/seobnr_surrogate.pt)
         num_q: Number of mass-ratio grid points
-        num_spins: Number of spin grid points
+        num_spins: Optional shortcut to set number of spin grid points
+        num_chi1: Number of primary spin grid points
+        num_chi2: Number of secondary spin grid points
         num_freq_nodes: Number of dimensionless frequency nodes
-        num_modes: Number of SVD basis modes
+        num_modes: Number of SVD basis modes (default 8)
         degree: Polynomial feature degree
+        num_ode_steps: Number of ODE integration steps
+        device: PyTorch device ('cpu' or 'cuda'/'mps')
 
     Returns:
         Absolute path to saved model file
@@ -212,9 +245,11 @@ def train_and_export_surrogate(
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
 
     # 1. Generate EOB training grid
-    mf_grid, eta, chi_pn, amp_red, phase_red = generate_eob_training_grid(
+    mf_grid, eta, s1, s2, amp_red, phase_red = generate_eob_training_grid(
         num_q=num_q,
         num_spins=num_spins,
+        num_chi1=num_chi1,
+        num_chi2=num_chi2,
         num_freq_nodes=num_freq_nodes,
         num_ode_steps=num_ode_steps,
         device=device,
@@ -224,8 +259,8 @@ def train_and_export_surrogate(
     v_a, c_a = compute_svd_reduced_basis(amp_red, num_modes=num_modes)
     v_p, c_p = compute_svd_reduced_basis(phase_red, num_modes=num_modes)
 
-    # 3. Fit parameter-space polynomial mappings
-    phi = poly_features(eta, chi_pn, degree=degree)
+    # 3. Fit parameter-space polynomial mappings covering (eta, chi1, chi2)
+    phi = poly_features(eta, s1, s2, degree=degree)
     w_a = fit_parameter_mapping(phi, c_a)
     w_p = fit_parameter_mapping(phi, c_p)
 
@@ -237,13 +272,15 @@ def train_and_export_surrogate(
         "amp_weights": w_a.detach().cpu().to(torch.float32),
         "phase_weights": w_p.detach().cpu().to(torch.float32),
         "degree": degree,
+        "has_two_spins": True,
         "metadata": {
-            "model_name": "torchwave_seobnr_rom_v1",
+            "model_name": "torchwave_seobnr_rom_v2",
             "approximant": "SEOBNR_ROM",
             "generator": "torchwave.approximants.eob.SEOBNR_ODE",
             "license": "MIT",
             "num_modes": num_modes,
             "degree": degree,
+            "parameters": ["eta", "chi1", "chi2"],
         },
     }
 

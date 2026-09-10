@@ -139,3 +139,37 @@ def test_autograd_differentiability_taylorf2():
         assert not torch.isnan(param.grad).any()
         assert param.grad.abs().item() > 0.0
 
+
+def test_autograd_with_fref():
+    """Verify gradients propagate with f_ref specified across all frequency-domain models."""
+    f = torch.linspace(25.0, 200.0, 40, dtype=torch.float64)
+
+    for approx in ("TaylorF2", "IMRPhenomD", "IMRPhenomP", "SEOBNR_ROM"):
+        m1 = torch.tensor(30.0 if "Phenom" in approx or "ROM" in approx else 1.5, dtype=torch.float64, requires_grad=True)
+        m2 = torch.tensor(20.0 if "Phenom" in approx or "ROM" in approx else 1.3, dtype=torch.float64, requires_grad=True)
+        c1 = torch.tensor(0.2, dtype=torch.float64, requires_grad=True)
+        c2 = torch.tensor(-0.1, dtype=torch.float64, requires_grad=True)
+        t_c = torch.tensor(0.01, dtype=torch.float64, requires_grad=True)
+        phi_c = torch.tensor(0.5, dtype=torch.float64, requires_grad=True)
+
+        hp, hc = get_fd_waveform(
+            approx,
+            mass1=m1,
+            mass2=m2,
+            chi1=c1,
+            chi2=c2,
+            tc=t_c,
+            phic=phi_c,
+            sample_frequencies=f,
+            f_ref=30.0,
+        )
+
+        loss = (hp.abs() ** 2 + hc.abs() ** 2 + (hp * torch.conj(hc)).real).sum()
+        loss.backward()
+
+        for p_name, param in [("m1", m1), ("m2", m2), ("c1", c1), ("c2", c2), ("tc", t_c), ("phic", phi_c)]:
+            assert param.grad is not None, f"{approx}: Gradient for {p_name} is None"
+            assert torch.isfinite(param.grad), f"{approx}: Gradient for {p_name} is not finite: {param.grad}"
+            assert param.grad.item() != 0.0, f"{approx}: Gradient for {p_name} is zero"
+
+

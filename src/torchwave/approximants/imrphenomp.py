@@ -6,7 +6,7 @@ Strict Clean-Room Implementation based exclusively on published literature:
 - Pratten et al. (2021), Phys. Rev. D 103, 104056 (arXiv:2004.06503), Appendix B & D
 """
 
-from typing import Tuple, Union
+from typing import Optional, Tuple, Union
 import torch
 import torch.nn as nn
 import math
@@ -188,6 +188,9 @@ class IMRPhenomP:
         phic: Union[float, torch.Tensor] = 0.0,
         tc: Union[float, torch.Tensor] = 0.0,
         f_ref: Union[float, torch.Tensor] = 20.0,
+        precession_version: str = "v2",
+        phasing_convention: Optional[str] = None,
+        reference_frame: Optional[str] = None,
     ) -> Tuple[torch.Tensor, torch.Tensor]:
         """Generate frequency-domain polarizations (h_plus, h_cross) using IMRPhenomP.
 
@@ -202,6 +205,9 @@ class IMRPhenomP:
             phic: Coalescence phase in radians (default 0.0)
             tc: Coalescence time in seconds (default 0.0)
             f_ref: Reference frequency in Hz (default 20.0)
+            precession_version: Precession model ('v2' for NLO angles or 'xp' for NNLO angles)
+            phasing_convention: Phasing convention ('coalescence' or 'reference_frequency')
+            reference_frame: Alias for phasing_convention
 
         Returns:
             (h_plus, h_cross) complex tensors
@@ -242,13 +248,18 @@ class IMRPhenomP:
         s_p = torch.maximum(a1_coeff * s1_perp, a2_coeff * s2_perp)
         chip = s_p / (a1_coeff * m1 * m1)
 
-        # In-plane spin initial orientation angle
-        phi_s1 = torch.atan2(s1y, s1x)
+        # In-plane spin initial orientation angle at f_ref: alpha(f_ref) = phi_s1
+        s1_perp_sq = s1x * s1x + s1y * s1y
+        phi_s1 = torch.where(
+            s1_perp_sq > 1e-12,
+            torch.atan2(s1y, s1x),
+            torch.atan2(s2y, s2x),
+        )
 
         # Aligned spin components in coprecessing frame
         chi_l = m1_norm * s1z + m2_norm * s2z
 
-        # Generate face-on co-precessing frame waveform using IMRPhenomD
+        # Generate face-on co-precessing frame waveform using IMRPhenomD conditioned at f_ref
         h22, _ = self.phenom_d(
             f=f,
             mass1=m1,
@@ -259,6 +270,9 @@ class IMRPhenomP:
             inclination=torch.zeros_like(inc),
             phic=phi_c,
             tc=t_c,
+            f_ref=fref,
+            phasing_convention=phasing_convention,
+            reference_frame=reference_frame,
         )
 
         # Broadcasting setup
@@ -287,7 +301,7 @@ class IMRPhenomP:
         fref_u = unsqueeze_param(fref)
         phi_s1_u = unsqueeze_param(phi_s1)
 
-        # NNLO coefficients
+        # Precession angle polynomial coefficients
         (
             a_m3, a_m2, a_m1, a_1, a_log,
             e_m3, e_m2, e_m1, e_1, e_log
@@ -298,6 +312,13 @@ class IMRPhenomP:
             chip=chip_u,
             chi_l=chil_u,
         )
+
+        # Truncate to NLO angles for IMRPhenomPv2 (Schmidt et al. 2015)
+        if precession_version.lower() in ("v2", "phenompv2", "imrphenompv2"):
+            a_1 = torch.zeros_like(a_1)
+            a_log = torch.zeros_like(a_log)
+            e_1 = torch.zeros_like(e_1)
+            e_log = torch.zeros_like(e_log)
 
         # Expansion parameter v = (pi * M_sec * f)^(1/3)
         v = (PI * m_sec_u * f_eval) ** (1.0 / 3.0)
