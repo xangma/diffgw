@@ -28,84 +28,20 @@ from torchwave.approximants.taylorf2 import TaylorF2
 from torchwave.approximants.kerr_qnm_interp import evaluate_kerr_qnm_220
 
 
+from torchwave.approximants.phenomd_unrounded_fits import (
+    TABLE_V_UNROUNDED_COEFFS,
+    FINAL_SPIN_ETA_POLY,
+    FINAL_SPIN_S_COEFFS,
+    ERAD_ETA_NUMERATOR,
+    ERAD_S_NUMERATOR,
+    ERAD_S_DENOMINATOR,
+)
+
+
 # Table V of Khan et al. (2016), arXiv:1508.07253
-# Coefficients lambda_{i,j} for the 17 phenomenological parameters:
-# Columns: [lambda_00, lambda_10, lambda_01, lambda_11, lambda_21,
-#           lambda_02, lambda_12, lambda_22, lambda_03, lambda_13, lambda_23]
-TABLE_V_COEFFS: Dict[str, Tuple[float, ...]] = {
-    "rho1": (
-        3931.9, -17395.8, 3132.38, 343966.0, -1216260.0,
-        -70698.0, 1383910.0, -3966280.0, -60017.5, 803515.0, -2091710.0
-    ),
-    "rho2": (
-        -40105.5, 112253.0, 23561.7, -3476180.0, 11375900.0,
-        754313.0, -13084800.0, 36444600.0, 596227.0, -7427790.0, 18929000.0
-    ),
-    "rho3": (
-        83208.4, -191238.0, -210916.0, 8717980.0, -26914900.0,
-        -1988980.0, 30888000.0, -83908700.0, -1453500.0, 17063500.0, -42748700.0
-    ),
-    "v2": (
-        0.814984, 2.57476, 1.16102, -2.36278, 6.77104,
-        0.757078, -2.72569, 7.11404, 0.176693, -0.797869, 2.11624
-    ),
-    "gamma1": (
-        0.0069274, 0.0302047, 0.00630802, -0.120741, 0.262716,
-        0.00341518, -0.107793, 0.27099, 0.000737419, -0.0274962, 0.0733151
-    ),
-    "gamma2": (
-        1.01034, 0.000899312, 0.283949, -4.04975, 13.2078,
-        0.103963, -7.02506, 24.7849, 0.030932, -2.6924, 9.60937
-    ),
-    "gamma3": (
-        1.30816, -0.00553773, -0.0678292, -0.668983, 3.40315,
-        -0.0529658, -0.992379, 4.82068, -0.00613414, -0.384293, 1.75618
-    ),
-    "sigma1": (
-        2096.55, 1463.75, 1312.55, 18307.3, -43534.1,
-        -833.289, 32047.3, -108609.0, 452.251, 8353.44, -44531.3
-    ),
-    "sigma2": (
-        -10114.1, -44631.0, -6541.31, -266959.0, 686328.0,
-        3405.64, -437508.0, 1631820.0, -7462.65, -114585.0, 674402.0
-    ),
-    "sigma3": (
-        22933.7, 230960.0, 14961.1, 1194020.0, -3104220.0,
-        -3038.17, 1872030.0, -7309150.0, 42738.2, 467502.0, -3064850.0
-    ),
-    "sigma4": (
-        -14621.7, -377813.0, -9608.68, -1710890.0, 4332920.0,
-        -22366.7, -2501970.0, 10274500.0, -85360.3, -570025.0, 4396840.0
-    ),
-    "beta2": (
-        -3.2827, -9.05138, -12.4154, 55.4716, -106.051,
-        -11.953, 76.807, -155.332, -3.41293, 25.5724, -54.408
-    ),
-    "beta3": (
-        -2.51564e-05, 1.97503e-05, -1.83707e-05, 2.18863e-05, 8.25024e-05,
-        7.15737e-06, -5.578e-05, 0.000191421, 5.44717e-06, -3.22061e-05, 7.97402e-05
-    ),
-    "alpha1": (
-        43.3151, 638.633, -32.8577, 2415.89, -5766.88,
-        -61.8546, 2953.97, -8986.29, -21.5714, 981.216, -3239.57
-    ),
-    "alpha2": (
-        -0.0702021, -0.162698, -0.187251, 1.13831, -2.83342,
-        -0.17138, 1.71975, -4.53972, -0.0499834, 0.606207, -1.68277
-    ),
-    "alpha3": (
-        9.59881, -397.054, 16.2021, -1574.83, 3600.34,
-        27.0924, -1786.48, 5152.92, 11.1757, -577.8, 1808.73
-    ),
-    "alpha4": (
-        -0.0298949, 1.40221, -0.0735605, 0.833701, 0.224001,
-        -0.0552029, 0.566719, 0.718693, -0.0155074, 0.157503, 0.210768
-    ),
-    "alpha5": (
-        0.997441, -0.00788445, -0.0590469, 1.39587, -4.51663,
-        -0.0558534, 1.75166, -5.99021, -0.0179453, 0.59651, -2.06089
-    ),
-}
+# Authoritative unrounded IEEE FP64 fitting coefficients
+TABLE_V_COEFFS: Dict[str, Tuple[float, ...]] = TABLE_V_UNROUNDED_COEFFS
+
 
 
 class IMRPhenomD:
@@ -160,21 +96,26 @@ class IMRPhenomD:
         s3 = s2 * s
         s4 = s3 * s
 
-        # Final spin fit (Eq. 16 of Husa et al. 2016)
+        # Final spin fit (Eq. 16 of Husa et al. 2016) with unrounded fits
+        p_eta = FINAL_SPIN_ETA_POLY
+        s_c = FINAL_SPIN_S_COEFFS
         a_final = (
-            s + 2.0 * math.sqrt(3.0) * eta - 4.399 * eta2 + 9.397 * eta3 - 13.181 * eta4
-            + (-0.085 * s + 0.102 * s2 - 1.355 * s3 - 0.868 * s4) * eta
-            + (-5.837 * s - 2.097 * s2 + 4.109 * s3 + 2.064 * s4) * eta2
+            s + p_eta[0] * eta + p_eta[1] * eta2 + p_eta[2] * eta3 + p_eta[3] * eta4
+            + (s_c[0][0] * s + s_c[1][0] * s2 + s_c[2][0] * s3 + s_c[3][0] * s4) * eta
+            + (s_c[0][1] * s + s_c[1][1] * s2 + s_c[2][1] * s3 + s_c[3][1] * s4) * eta2
         )
         # Physical Kerr limit clamping to avoid complex QNM roots
         a_final = torch.clamp(a_final, -0.999, 0.999)
 
         # Radiated energy non-spinning fit
-        erad_ns = 0.0559745 * eta + 0.580951 * eta2 - 0.960673 * eta3 + 3.35241 * eta4
+        e_eta = ERAD_ETA_NUMERATOR
+        erad_ns = e_eta[0] * eta + e_eta[1] * eta2 + e_eta[2] * eta3 + e_eta[3] * eta4
 
         # Radiated energy full fit (Eq. 17 of Husa et al. 2016)
-        num = 1.0 + s_hat * (-0.00303023 - 2.00661 * eta + 7.70506 * eta2)
-        den = 1.0 + s_hat * (-0.67144 - 1.47569 * eta + 7.30468 * eta2)
+        e_num = ERAD_S_NUMERATOR
+        e_den = ERAD_S_DENOMINATOR
+        num = 1.0 + s_hat * (e_num[0] + e_num[1] * eta + e_num[2] * eta2)
+        den = 1.0 + s_hat * (e_den[0] + e_den[1] * eta + e_den[2] * eta2)
         erad_over_m = erad_ns * (num / den)
 
         m_final = total_mass * (1.0 - erad_over_m)

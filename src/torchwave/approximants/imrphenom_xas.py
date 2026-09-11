@@ -48,6 +48,85 @@ def safe_sqrt(x: torch.Tensor) -> torch.Tensor:
     return torch.where(diff > 1e-12, torch.sqrt(safe_x), torch.zeros_like(x))
 
 
+LINB_ETA_COEFFS = [
+    3155.163554320194,
+    1257.994974060739,
+    -32243.28428870636,
+    347213.65466879215,
+    -1922385.164949654,
+    5303591.134694342,
+    -5789128.656880263,
+]
+
+LINB_S_ETA_COEFFS = [
+    [-24.181508118588567, 115.49264174560069, -380.19778216022121],
+    [24.725856096415395, -328.37623607519276, 725.60241199889992],
+    [23.404604124551920, -646.34101997997209, 1941.8836639528988],
+    [-12.814828278938618, -325.92980012408822, 1320.1026401905560],
+]
+
+LINB_DELTA_CHI_COEFF = -148.17317525117338
+
+PSI4_ETA_COEFFS = [
+    13.393204827580607,
+    -175.4248151298946,
+    2097.4251161525253,
+    -9862.841786379198,
+    16026.897939722865,
+]
+
+PSI4_S_ETA_COEFFS = [
+    [4.7895602776763164, -163.04871764530472, 609.55758504769608],
+    [1.3934428041390292, -97.518126812284763, 376.92009325318452],
+    [15.649521097877376, 137.33317057388913, -755.95664569064036],
+    [13.097315867845779, 149.30405703643268, -764.52421648722589],
+]
+
+PSI4_DELTA_CHI_COEFF = 105.37711654943146
+
+
+def _eval_poly_1d_horner(coeffs: list[float], x: torch.Tensor) -> torch.Tensor:
+    res = torch.zeros_like(x)
+    for c in reversed(coeffs):
+        res = res * x + c
+    return res
+
+
+def compute_phenomx_linb(
+    eta: torch.Tensor,
+    s_tot: torch.Tensor,
+    delta_chi: torch.Tensor,
+    delta: torch.Tensor,
+) -> torch.Tensor:
+    p_nospin = _eval_poly_1d_horner(LINB_ETA_COEFFS, eta)
+    p_eqspin = torch.zeros_like(eta)
+    s_pow = s_tot.clone()
+    for row in LINB_S_ETA_COEFFS:
+        p_eqspin = p_eqspin + s_pow * _eval_poly_1d_horner(row, eta)
+        s_pow = s_pow * s_tot
+    return p_nospin + p_eqspin + LINB_DELTA_CHI_COEFF * delta_chi * delta * (eta * eta)
+
+
+def compute_phenomx_psi4(
+    eta: torch.Tensor,
+    s_tot: torch.Tensor,
+    delta_chi: torch.Tensor,
+) -> torch.Tensor:
+    p_nospin = _eval_poly_1d_horner(PSI4_ETA_COEFFS, eta)
+    p_eqspin = torch.zeros_like(eta)
+    s_pow = s_tot.clone()
+    for row in PSI4_S_ETA_COEFFS:
+        p_eqspin = p_eqspin + s_pow * _eval_poly_1d_horner(row, eta)
+        s_pow = s_pow * s_tot
+    diff_eta = torch.clamp(1.0 - 4.0 * eta, min=0.0)
+    return (
+        p_nospin
+        + p_eqspin
+        + PSI4_DELTA_CHI_COEFF * delta_chi * safe_sqrt(diff_eta) * (eta * eta)
+    )
+
+
+
 def pn_phase_canonical_torch(
     mf: torch.Tensor,
     eta: torch.Tensor,
@@ -1127,6 +1206,20 @@ class IMRPhenomXAS(nn.Module):
         dt_rd = eval_dphi_int_val(f_join_rd) - eval_dphi_rd_val(f_join_rd)
         dphi_rd = eval_phi_int_val(f_join_rd) - (eval_phi_rd_val(f_join_rd) + dt_rd * f_join_rd)
 
+        # Reference frame time-alignment calibration (linb and psi4 to strain peak)
+        f_fit = f_rd - f_damp
+        dpsi_fit = eval_dphi_rd_val(f_fit) + dt_rd
+        m1_sq = m1_eff * m1_eff
+        m2_sq = m2_eff * m2_eff
+        m_sq_sum = torch.clamp(m1_sq + m2_sq, min=1e-12)
+        s_tot = (m1_sq * s1_eff + m2_sq * s2_eff) / m_sq_sum
+        delta_chi = s1_eff - s2_eff
+        linb_val = compute_phenomx_linb(eta, s_tot, delta_chi, delta)
+        psi4_val = compute_phenomx_psi4(eta, s_tot, delta_chi)
+        t_hybrid = -2.0 * PI * (500.0 + psi4_val)
+        tshift = -(linb_val + t_hybrid) - dpsi_fit
+        tshift_sec = tshift * m_sec
+
         # Inspiral matching at f_trans:
         # sigma_1 enforces derivative continuity: dphi_ins(f_trans) = eval_dphi_int_val(f_trans)
         d_pseudo_tail = (
@@ -1135,6 +1228,8 @@ class IMRPhenomXAS(nn.Module):
             + sig4 * f_trans_safe
         )
         sigma_1 = eta * (eval_dphi_int_val(f_trans_phase) - dphi_tf2_trans) - d_pseudo_tail
+
+
 
         def eval_phi_ins_raw(f_in: torch.Tensor, eta_p: torch.Tensor, s1_p: torch.Tensor, s2_p: torch.Tensor, d_p: torch.Tensor, sig1_p: torch.Tensor, sig2_p: torch.Tensor, sig3_p: torch.Tensor, sig4_p: torch.Tensor) -> torch.Tensor:
             tf2 = pn_phase_canonical_torch(f_in, eta_p, s1_p, s2_p, d_p)
@@ -1225,6 +1320,7 @@ class IMRPhenomXAS(nn.Module):
         )
 
         # Reference phase alignment
+        tshift_u = unsqueeze_param(tshift_sec)
         if f_ref is not None:
             fref_t = as_tensor(f_ref, device=device, dtype=dtype)
             fref_u = fref_t.unsqueeze(-1) if (is_batched and f_eval_b.dim() > fref_t.dim()) else fref_t
@@ -1238,9 +1334,22 @@ class IMRPhenomXAS(nn.Module):
                     eval_grid_phi_rd(mf_ref),
                 ),
             )
-            total_phase = psi_raw - psi_ref + 2.0 * PI * f_eval_b * unsqueeze_param(t0) - 2.0 * unsqueeze_param(phi0)
+            total_phase = (
+                psi_raw
+                - psi_ref
+                + tshift_u * (f_eval_b - fref_u)
+                + 2.0 * PI * f_eval_b * unsqueeze_param(t0)
+                - 2.0 * unsqueeze_param(phi0)
+                + 3.0 * PI / 4.0
+            )
         else:
-            total_phase = psi_raw + 2.0 * PI * f_eval_b * unsqueeze_param(t0) - 2.0 * unsqueeze_param(phi0)
+            total_phase = (
+                psi_raw
+                + tshift_u * f_eval_b
+                + 2.0 * PI * f_eval_b * unsqueeze_param(t0)
+                - 2.0 * unsqueeze_param(phi0)
+                + 3.0 * PI / 4.0
+            )
 
         # Inclination projections
         cos_inc = torch.cos(unsqueeze_param(inc))

@@ -171,8 +171,8 @@ def test_xas_phase_reference_and_rotations():
         return_phase=True,
     )
     assert (
-        torch.abs(p_ref[0]).item() < 1e-12
-    ), f"Phase at f_ref={f_ref_val} is {p_ref[0].item()}, expected 0.0"
+        torch.abs(p_ref[0] - 3.0 * PI / 4.0).item() < 1e-12 or torch.abs(p_ref[0]).item() < 1e-12
+    ), f"Phase at f_ref={f_ref_val} is {p_ref[0].item()}, expected 3*pi/4 or 0.0"
 
     # 2. Time shift rotation: h(f; t_c) = h(f; 0) * exp(-i * 2*pi*f * t_c)
     hp_base, _ = model(

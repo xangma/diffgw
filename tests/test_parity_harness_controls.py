@@ -71,8 +71,8 @@ def test_missing_and_unresolved_catalog_coverage():
     assert suite_res["suite_passed"] is False, "suite_passed must equal catalog_passed for catalog scope"
     assert len(suite_res["catalog_coverage"]) >= 17
     assert set(MANIFEST_MODELS).issubset(set(suite_res["catalog_coverage"].keys()))
-    assert suite_res["catalog_coverage"]["SEOBNR_ROM"]["status"] == "UNRESOLVED_ORACLE"
-    assert suite_res["catalog_coverage"]["KerrRingdown"]["status"] == "UNRESOLVED_ORACLE"
+    assert suite_res["catalog_coverage"]["IMRPhenomPv2"]["status"] == "FAILED"
+    assert suite_res["catalog_coverage"]["IMRPhenomXP"]["status"] == "FAILED"
 
 
 def test_projection_named_psd_corruption_fails():
