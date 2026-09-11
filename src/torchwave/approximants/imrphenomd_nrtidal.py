@@ -1,9 +1,10 @@
 """IMRPhenomD_NRTidal & IMRPhenomD_NRTidalv2 Frequency-Domain Gravitational Waveform Approximants.
 
-Strict Clean-Room Implementation based exclusively on published peer-reviewed literature:
+Tidal formulas from primary literature; this continuation uses no oracle internals.
+This statement does not claim zero source exposure by all prior contributors.
 - Dietrich, Bernuzzi, Tichy (2017), Phys. Rev. D 96, 121501(R) (arXiv:1706.02969) [NRTidal v1]
-- Dietrich et al. (2019), Phys. Rev. D 100, 044003 (arXiv:1905.06011) [NRTidalv2]
-- Dietrich et al. (2018), Phys. Rev. D 99, 024029 (arXiv:1804.02235) [BNS merger frequency fit]
+- Dietrich et al. (2019), Phys. Rev. D 100, 044003 (arXiv:1905.06011) [NRTidalv2: Eqs. 17-21, 24-25, 26-29]
+- Dietrich et al. (2018), Phys. Rev. D 99, 024029 (arXiv:1804.02235) [BNS merger frequency fit Sec II.2.2 Eq. 11]
 - Yagi & Yunes (2013), Science 341, 365; PRD 88, 023009 [Universal I-Love-Q relations]
 - McKechan, Robinson, Sathyaprakash (2010), Class. Quantum Grav. 27, 084020 [Planck taper]
 """
@@ -28,7 +29,7 @@ from torchwave.conversions import (
 from torchwave.approximants.imrphenomd import IMRPhenomD
 
 
-# NRTidalv1 Padé coefficients (Dietrich et al. 2017 Eq. 18 / arXiv:1706.02969)
+# NRTidalv1 Padé coefficients (Dietrich et al. 2017 Eq. 7 / arXiv:1706.02969)
 NRTIDAL_V1_COEFFS = {
     "n1": -17.428,
     "n32": 31.867,
@@ -38,7 +39,7 @@ NRTIDAL_V1_COEFFS = {
     "d32": 36.089,
 }
 
-# NRTidalv2 Padé coefficients (Dietrich et al. 2019 Table II / arXiv:1905.06011)
+# NRTidalv2 Padé coefficients (Dietrich et al. 2019 Eqs. 17-21 / arXiv:1905.06011)
 # Known analytical PN coefficients:
 C1_V2 = 3115.0 / 1248.0
 C32_V2 = -PI
@@ -67,22 +68,24 @@ def _bns_merger_frequency(
     """Compute BNS merger frequency f_merger in Hz from Dietrich et al. (2018) Eq. 11.
 
     Args:
-        mass1, mass2: Component masses in solar masses (mass1 >= mass2)
+        mass1, mass2: Component masses in solar masses (either order)
         lambda1, lambda2: Dimensionless quadrupolar tidal deformabilities
 
     Returns:
         f_mrg: Physical merger frequency in Hz
     """
     total_mass = mass1 + mass2
-    xa = mass1 / total_mass
-    xb = mass2 / total_mass
+    # Ensure xa corresponds to the heavier component so mass ratio q = xb / xa <= 1
+    m_high = torch.maximum(mass1, mass2)
+    m_low = torch.minimum(mass1, mass2)
+    xa = m_high / total_mass
+    xb = m_low / total_mass
     m_sec = total_mass * MSUN_SEC
 
-    # Tidal parameter kappa_2^T (Dietrich et al. 2018 Eq. 9)
-    # kappa_2^T = 3 * ( (X_A^4 * X_B * Lambda_A) + (X_B^4 * X_A * Lambda_B) )
-    kappa2_t = 3.0 * (
-        (xa ** 4.0) * xb * lambda1 + (xb ** 4.0) * xa * lambda2
-    )
+    # Effective tidal coupling parameter kappa_eff^T = (3/16) * Lambda_tilde
+    # (Dietrich et al. 2018 Sec II.2.2 paragraph before Eq. 11 / Eq. 10-11 substitution)
+    lam_tilde, _ = tidal_combinations(mass1, mass2, lambda1, lambda2)
+    kappa_eff_t = (3.0 / 16.0) * lam_tilde
 
     # Fit coefficients (Dietrich et al. 2018 Eq. 11)
     n1 = 3.354e-2
@@ -92,14 +95,26 @@ def _bns_merger_frequency(
     m_omega_0 = 0.3586
 
     ratio_sqrt = torch.sqrt(torch.clamp(xb / xa, min=1e-8))
-    num = 1.0 + n1 * kappa2_t + n2 * (kappa2_t ** 2.0)
-    den = 1.0 + d1 * kappa2_t + d2 * (kappa2_t ** 2.0)
+    num = 1.0 + n1 * kappa_eff_t + n2 * (kappa_eff_t ** 2.0)
+    den = 1.0 + d1 * kappa_eff_t + d2 * (kappa_eff_t ** 2.0)
     m_omega_mrg = m_omega_0 * ratio_sqrt * (num / den)
 
     # Convert dimensionless GW angular frequency M*omega_mrg to frequency in Hz:
     # f_GW = omega_GW / (2 * pi) = (M * omega_mrg) / (2 * pi * M_sec)
     f_mrg = m_omega_mrg / (2.0 * PI * m_sec)
     return f_mrg
+
+
+def _nrtidal_amplitude(x, eta, m_sec, d_sec, lambda_tilde):
+    """Face-on additive amplitude, Dietrich et al. (2019), Eq. 24.
+
+    Inputs must broadcast; masses and distance are in geometric seconds.
+    """
+    kappa_eff = (3.0 / 16.0) * lambda_tilde
+    numerator = 1.0 + (449.0 / 108.0) * x + (22672.0 / 9.0) * x**2.89
+    denominator = 1.0 + 13477.8 * x**4
+    return (-9.0 * torch.sqrt(5.0 * PI * eta / 24.0) * m_sec**2 / d_sec
+            * kappa_eff * x**(13.0 / 4.0) * numerator / denominator)
 
 
 def _planck_taper_window(
@@ -265,7 +280,7 @@ class IMRPhenomD_NRTidal(nn.Module):
 
         Args:
             f: Frequency tensor in Hz
-            mass1, mass2: Component masses in solar masses (mass1 >= mass2)
+            mass1, mass2: Component masses in solar masses (either order)
             chi1, chi2: Aligned dimensionless spins
             distance: Luminosity distance in Mpc
             inclination: Orbital inclination in radians
@@ -396,8 +411,42 @@ class IMRPhenomD_NRTidal(nn.Module):
         # Note: In standard GW convention, h(f) ~ exp(-i * Psi(f))
         exp_factor = torch.complex(torch.cos(total_delta_psi), -torch.sin(total_delta_psi))
 
-        h_plus = hp_bbh * exp_factor * w_taper.to(hp_bbh.dtype)
-        h_cross = hc_bbh * exp_factor * w_taper.to(hc_bbh.dtype)
+        # 3. Tidal amplitude correction (Dietrich et al. 2019 Eq. 24-25)
+        # Eq. 24: A_T = -sqrt(5 * pi * nu / 24) * (9 * M^2 / D) * kappa_eff * x^(13/4) *
+        #               (1 + (449/108) * x + (22672/9) * x^2.89) / (1 + 13477.8 * x^4)
+        # Eq. 25: A_BNS = (A_BBH + A_T) * W_taper
+        if self.version == "v2":
+            dist_t = as_tensor(distance, device=device, dtype=dtype)
+            d_sec = (dist_t * MPC_SI) / C_SI
+            if is_batched and f_eval.dim() > d_sec.dim():
+                d_sec_eval = d_sec.unsqueeze(-1)
+            else:
+                d_sec_eval = d_sec
+
+            a_tidal = _nrtidal_amplitude(x, eta_eval, m_sec_eval, d_sec_eval, lam_tilde_eval)
+            a_tidal = torch.where(f_eval > 0.0, a_tidal, torch.zeros_like(a_tidal))
+
+            # Eq. 24 is the face-on amplitude. Remove the positive plus
+            # projection to obtain the common BBH amplitude, then apply one
+            # factor to both polarizations. This also handles edge-on systems.
+            inc = as_tensor(inclination, device=device, dtype=dtype)
+            if is_batched and f_eval.dim() > inc.dim():
+                inc = inc.unsqueeze(-1)
+            plus_projection = 0.5 * (1.0 + torch.cos(inc)**2)
+            base_amplitude = torch.abs(hp_bbh) / plus_projection
+            positive = base_amplitude > 0.0
+            safe_amplitude = torch.where(positive, base_amplitude, torch.ones_like(base_amplitude))
+            amplitude_factor = torch.where(positive, 1.0 + a_tidal / safe_amplitude,
+                                           torch.ones_like(base_amplitude))
+            h_plus = hp_bbh * amplitude_factor * exp_factor * w_taper
+            h_cross = hc_bbh * amplitude_factor * exp_factor * w_taper
+        else:
+            h_plus = hp_bbh * exp_factor * w_taper.to(hp_bbh.dtype)
+            h_cross = hc_bbh * exp_factor * w_taper.to(hc_bbh.dtype)
+
+        # Enforce exact finite zeros for DC and non-positive frequency bins
+        h_plus = torch.where(f_eval > 0.0, h_plus, torch.zeros_like(h_plus))
+        h_cross = torch.where(f_eval > 0.0, h_cross, torch.zeros_like(h_cross))
 
         return h_plus, h_cross
 

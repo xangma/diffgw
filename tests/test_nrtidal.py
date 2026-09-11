@@ -47,6 +47,11 @@ def test_bns_merger_frequency():
     f_merg_stiff = _bns_merger_frequency(m1, m2, lam_stiff, lam_stiff)
     assert f_merg_stiff < f_merg
 
+    # Exact body-swap symmetry check
+    m_a, m_b = torch.tensor(1.5, dtype=torch.float64), torch.tensor(1.2, dtype=torch.float64)
+    l_a, l_b = torch.tensor(300.0, dtype=torch.float64), torch.tensor(500.0, dtype=torch.float64)
+    assert torch.isclose(_bns_merger_frequency(m_a, m_b, l_a, l_b), _bns_merger_frequency(m_b, m_a, l_b, l_a))
+
 
 def test_planck_taper_properties():
     """Verify Planck taper properties: 1 below f1, 0 above f2, smooth in between."""
