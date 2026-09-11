@@ -62,7 +62,7 @@ def test_nsbh_frequencies_disruption_regimes():
 def test_imrphenom_nsbh_disruption_cutoff():
     """Verify exponential suppression of high-frequency amplitude for disrupting systems."""
     # High frequency grid covering post-ISCO
-    f = torch.linspace(40.0, 4000.0, 400, dtype=torch.float64)
+    f = torch.linspace(40.0, 6000.0, 600, dtype=torch.float64)
 
     # Disrupting parameters
     m1, m2 = 3.0, 1.2
