@@ -30,15 +30,30 @@ def test_taylorf2_ref_phasing_exact_zero():
     psi = tf2.evaluate_phase(f, m1_t, m2_t, c1_t, c2_t, tc=0.0, phic=0.0, f_ref=f_ref)
     dpsi_df = tf2.evaluate_phase_derivative(f, m1_t, m2_t, c1_t, c2_t, tc=0.0, f_ref=f_ref)
 
-    # At f = f_ref, Psi(f_ref) should be identically 0
-    assert abs(psi[1].item()) < 1e-12, f"Psi(f_ref) = {psi[1].item()} != 0"
+    # At f = f_ref, Psi(f_ref) should be 3*pi/4 under LAL/SPA convention
+    expected_psi = 3.0 * PI / 4.0
+    assert abs(psi[1].item() - expected_psi) < 1e-12, f"Psi(f_ref) = {psi[1].item()} != {expected_psi}"
 
-    # At f = f_ref, dPsi/df(f_ref) should be identically 0
-    assert abs(dpsi_df[1].item()) < 1e-12, f"dPsi/df(f_ref) = {dpsi_df[1].item()} != 0"
+    # At f = f_ref, dPsi/df(f_ref) is the physical coalescing time derivative
+    # Verify against converged central finite differences
+    eps1 = 1e-5
+    f_fd1 = torch.tensor([f_ref - eps1, f_ref + eps1], dtype=torch.float64)
+    psi_fd1 = tf2.evaluate_phase(f_fd1, m1_t, m2_t, c1_t, c2_t, tc=0.0, phic=0.0, f_ref=f_ref)
+    fd1 = (psi_fd1[1] - psi_fd1[0]) / (2.0 * eps1)
+
+    eps2 = 5e-6
+    f_fd2 = torch.tensor([f_ref - eps2, f_ref + eps2], dtype=torch.float64)
+    psi_fd2 = tf2.evaluate_phase(f_fd2, m1_t, m2_t, c1_t, c2_t, tc=0.0, phic=0.0, f_ref=f_ref)
+    fd2 = (psi_fd2[1] - psi_fd2[0]) / (2.0 * eps2)
+
+    assert abs((fd2 - fd1).item()) / abs(fd1.item()) < 1e-6, f"TaylorF2 finite difference not converged: {fd1.item()} vs {fd2.item()}"
+    assert torch.allclose(dpsi_df[1], fd2, rtol=1e-6, atol=1e-6), (
+        f"Analytical dPsi/df {dpsi_df[1].item()} != converged finite difference {fd2.item()}"
+    )
 
 
 def test_imrphenomd_ref_phasing_exact_zero():
-    """Verify IMRPhenomD phase and time alignment: Psi(f_ref) = 0 and dPsi/df(f_ref) = 0."""
+    """Verify IMRPhenomD phase and time alignment: Psi(f_ref) = 0 and converged physical derivative."""
     phd = IMRPhenomD()
     m1, m2 = 30.0, 20.0
     chi1, chi2 = 0.3, -0.2
@@ -52,13 +67,33 @@ def test_imrphenomd_ref_phasing_exact_zero():
     phase_at_fref = torch.angle(hp[1]).item()
     assert abs(phase_at_fref) < 1e-10, f"IMRPhenomD phase at f_ref = {phase_at_fref} != 0"
 
-    # Numerical derivative of phase around f_ref
-    eps = 1e-5
-    f_eps = torch.tensor([f_ref - eps, f_ref + eps], dtype=torch.float64)
-    hp_eps, _ = phd(f_eps, m1, m2, chi1, chi2, distance=100.0, inclination=0.0, tc=0.0, phic=0.0, f_ref=f_ref)
-    phase_eps = -torch.angle(hp_eps)
-    num_deriv = (phase_eps[1] - phase_eps[0]) / (2.0 * eps)
-    assert abs(num_deriv.item()) < 1e-5, f"IMRPhenomD dPsi/df(f_ref) = {num_deriv.item()} != 0"
+    # Numerical derivative of phase around f_ref with convergence assertion
+    eps1 = 1e-5
+    f_eps1 = torch.tensor([f_ref - eps1, f_ref + eps1], dtype=torch.float64)
+    hp_eps1, _ = phd(f_eps1, m1, m2, chi1, chi2, distance=100.0, inclination=0.0, tc=0.0, phic=0.0, f_ref=f_ref)
+    phase_eps1 = -torch.angle(hp_eps1)
+    num_deriv1 = (phase_eps1[1] - phase_eps1[0]) / (2.0 * eps1)
+
+    eps2 = 5e-6
+    f_eps2 = torch.tensor([f_ref - eps2, f_ref + eps2], dtype=torch.float64)
+    hp_eps2, _ = phd(f_eps2, m1, m2, chi1, chi2, distance=100.0, inclination=0.0, tc=0.0, phic=0.0, f_ref=f_ref)
+    phase_eps2 = -torch.angle(hp_eps2)
+    num_deriv2 = (phase_eps2[1] - phase_eps2[0]) / (2.0 * eps2)
+
+    assert abs((num_deriv2 - num_deriv1).item()) < 1e-6, (
+        f"IMRPhenomD finite difference not converged: {num_deriv1.item()} vs {num_deriv2.item()}"
+    )
+
+    # PyTorch Autograd exact derivative comparison
+    f_var = torch.tensor([f_ref], dtype=torch.float64, requires_grad=True)
+    hp_var, _ = phd(f_var, m1, m2, chi1, chi2, distance=100.0, inclination=0.0, tc=0.0, phic=0.0, f_ref=f_ref)
+    phase_var = -torch.angle(hp_var[0])
+    phase_var.backward()
+    autograd_deriv = f_var.grad.item()
+
+    assert abs(autograd_deriv - num_deriv2.item()) < 1e-8, (
+        f"Autograd dPsi/df {autograd_deriv} differs from converged finite difference {num_deriv2.item()}"
+    )
 
 
 def test_seobnr_rom_ref_phasing_exact_zero():
@@ -178,4 +213,5 @@ def test_batched_reference_phasing():
                 phic=0.0,
             )
             phase_at_ref = torch.angle(hp[1]).item()
-            assert abs(phase_at_ref) < 1e-4, f'{approx} batch {b}: phase at f_ref = {phase_at_ref}'
+            expected_phase = -3.0 * PI / 4.0 if approx == 'TaylorF2' else 0.0
+            assert abs(phase_at_ref - expected_phase) < 1e-4, f'{approx} batch {b}: phase at f_ref = {phase_at_ref} != {expected_phase}'

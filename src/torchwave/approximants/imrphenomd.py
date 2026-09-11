@@ -3,7 +3,7 @@
 Strict Clean-Room Implementation based exclusively on published literature:
 - Husa, Khan, Hannam, Pürrer, Ohme, Forteza, Bohé (2016), Phys. Rev. D 93, 044006 (arXiv:1508.07250) [Paper I]
 - Khan, Husa, Hannam, Ohme, Pürrer, Forteza, Bohé (2016), Phys. Rev. D 93, 044007 (arXiv:1508.07253) [Paper II]
-- Berti, Cardoso, Will (2006), Phys. Rev. D 73, 064030 (arXiv:gr-qc/0512160) [QNM ringdown fits]
+- Stein (2019), JOSS 4(42), 1683 [independent Kerr eigenproblem solves]
 """
 
 from typing import Dict, Optional, Tuple, Union
@@ -25,6 +25,7 @@ from torchwave.conversions import (
     total_spin_for_remnant,
 )
 from torchwave.approximants.taylorf2 import TaylorF2
+from torchwave.approximants.kerr_qnm_interp import evaluate_kerr_qnm_220
 
 
 # Table V of Khan et al. (2016), arXiv:1508.07253
@@ -84,6 +85,10 @@ TABLE_V_COEFFS: Dict[str, Tuple[float, ...]] = {
         -2.51564e-05, 1.97503e-05, -1.83707e-05, 2.18863e-05, 8.25024e-05,
         7.15737e-06, -5.578e-05, 0.000191421, 5.44717e-06, -3.22061e-05, 7.97402e-05
     ),
+    "alpha1": (
+        43.3151, 638.633, -32.8577, 2415.89, -5766.88,
+        -61.8546, 2953.97, -8986.29, -21.5714, 981.216, -3239.57
+    ),
     "alpha2": (
         -0.0702021, -0.162698, -0.187251, 1.13831, -2.83342,
         -0.17138, 1.71975, -4.53972, -0.0499834, 0.606207, -1.68277
@@ -136,7 +141,7 @@ class IMRPhenomD:
 
         References:
         - Husa et al. (2016) PRD 93, 044006 (arXiv:1508.07250, Eqs. 16, 17)
-        - Berti et al. (2006) PRD 73, 064030 (arXiv:gr-qc/0512160, Table VIII for l=2, m=2, n=0)
+        - Stein (2019), JOSS 4(42), 1683, independent Kerr eigenproblem solves
 
         Returns:
             m_final: Remnant mass in solar masses
@@ -174,18 +179,15 @@ class IMRPhenomD:
 
         m_final = total_mass * (1.0 - erad_over_m)
 
-        # Berti et al. (2006) QNM fit parameters (l=2, m=2, n=0)
-        f1, f2, f3 = 1.5251, -1.1568, 0.1292
-        q1, q2, q3 = 0.7000, 1.4187, -0.4990
+        # Primary numerical Kerr QNM evaluation (l=2, m=2, n=0).
+        # f_RD = (M / M_f) * Re(omega) / (2 * pi)
+        # f_damp = (M / M_f) * (-Im(omega)) / (2 * pi)
+        omega_r, omega_i_abs = evaluate_kerr_qnm_220(a_final)
 
-        one_minus_af = 1.0 - a_final
-        omega_qnm = f1 + f2 * (one_minus_af ** f3)
-        quality_qnm = q1 + q2 * (one_minus_af ** q3)
-
-        # Dimensionless QNM frequency: M * f_RD = (M / M_f) * (omega_qnm / (2 * pi))
+        # Dimensionless QNM frequencies scaled to total binary mass M:
         m_ratio = total_mass / m_final
-        f_rd = m_ratio * (omega_qnm / (2.0 * PI))
-        f_damp = f_rd / (2.0 * quality_qnm)
+        f_rd = m_ratio * (omega_r / (2.0 * PI))
+        f_damp = m_ratio * (omega_i_abs / (2.0 * PI))
 
         return m_final, a_final, f_rd, f_damp
 
@@ -213,12 +215,12 @@ class IMRPhenomD:
             + (105271.0 / 24192.0) * eta2
             + (-(81.0 / 32.0) + 8.0 * eta) * chi_a2
             - (81.0 / 16.0) * delta * chi_a * chi_s
-            + (-(81.0 / 32.0) - (17.0 / 8.0) * eta) * chi_s2
+            + (-(81.0 / 32.0) + (17.0 / 8.0) * eta) * chi_s2
         )
         a5 = (
             -(85.0 * PI / 64.0) + (85.0 * PI / 16.0) * eta
             + delta * ((285197.0 / 16128.0) - (1579.0 / 4032.0) * eta) * chi_a
-            + ((285197.0 / 16128.0) - (15317.0 / 672.0) * eta - (22261.0 / 1008.0) * eta2) * chi_s
+            + ((285197.0 / 16128.0) - (15317.0 / 672.0) * eta - (2227.0 / 1008.0) * eta2) * chi_s
         )
         a6 = (
             -(177520268561.0 / 8583708672.0)
@@ -303,10 +305,11 @@ class IMRPhenomD:
         phic: Union[float, torch.Tensor] = 0.0,
         tc: Union[float, torch.Tensor] = 0.0,
         f_ref: Optional[Union[float, torch.Tensor]] = None,
-        window_type: str = "cosine",
+        window_type: Optional[str] = "planck",
         phasing_convention: Optional[str] = None,
         reference_frame: Optional[str] = None,
-    ) -> Tuple[torch.Tensor, torch.Tensor]:
+        return_phase: bool = False,
+    ) -> Union[Tuple[torch.Tensor, torch.Tensor], Tuple[torch.Tensor, torch.Tensor, torch.Tensor]]:
         """Generate frequency-domain polarizations (h_plus, h_cross) using IMRPhenomD.
 
         Args:
@@ -359,6 +362,7 @@ class IMRPhenomD:
         sigma4 = IMRPhenomD.eval_table_v("sigma4", eta, chi_pn)
         beta2 = IMRPhenomD.eval_table_v("beta2", eta, chi_pn)
         beta3 = IMRPhenomD.eval_table_v("beta3", eta, chi_pn)
+        alpha1_raw = IMRPhenomD.eval_table_v("alpha1", eta, chi_pn)
         alpha2 = IMRPhenomD.eval_table_v("alpha2", eta, chi_pn)
         alpha3 = IMRPhenomD.eval_table_v("alpha3", eta, chi_pn)
         alpha4 = IMRPhenomD.eval_table_v("alpha4", eta, chi_pn)
@@ -452,7 +456,7 @@ class IMRPhenomD:
         # Use exact Khan et al. 2016 Paper II Appendix B inspiral calibration
         (
             tf2_0, tf2_2, tf2_3, tf2_4, tf2_5, tf2_5_log,
-            tf2_6, tf2_6_log, tf2_7, _, _
+            tf2_6, tf2_6_log, tf2_7, *_
         ) = TaylorF2.phase_coefficients(m1, m2, s1, s2, phenom_d_calibration=True)
 
         def eval_tf2_at(mf: Union[float, torch.Tensor]) -> Tuple[torch.Tensor, torch.Tensor]:
@@ -581,7 +585,8 @@ class IMRPhenomD:
         else:
             m_sec_eval = m_sec
 
-        mf = m_sec_eval * f_eval  # Dimensionless frequency M*f
+        f_eval_safe = torch.clamp(f_eval, min=1e-8)
+        mf = m_sec_eval * f_eval_safe  # Dimensionless frequency M*f
 
         def unsqueeze_param(t: torch.Tensor) -> torch.Tensor:
             if is_batched and f_eval.dim() > t.dim():
@@ -624,6 +629,17 @@ class IMRPhenomD:
         alpha3_u = unsqueeze_param(alpha3)
         alpha4_u = unsqueeze_param(alpha4)
         alpha5_u = unsqueeze_param(alpha5)
+
+        # Paper merger-ringdown phase derivative dPsi/d(Mf) evaluated at f_peak using raw fitted alpha1
+        # slope = (alpha1_raw + alpha2 / f_peak**2 + alpha3 / f_peak**0.25 + alpha4 * f_damp / (f_damp**2 + (f_peak - alpha5 * f_rd)**2)) / eta
+        atan_lorentz_peak = (alpha4 * f_damp) / (f_damp * f_damp + (f_peak - alpha5 * f_rd) ** 2)
+        slope_peak = (
+            alpha1_raw
+            + alpha2 * (f_peak ** -2.0)
+            + alpha3 * (f_peak ** -0.25)
+            + atan_lorentz_peak
+        ) / eta
+        slope_peak_u = unsqueeze_param(slope_peak)
 
         # 1. Piecewise Scaled Amplitude
         # Region I: Inspiral (Mf <= 0.014)
@@ -678,30 +694,35 @@ class IMRPhenomD:
         # Physical leading Newtonian amplitude A0(f)
         d_sec = (unsqueeze_param(dist) * MPC_SI) / C_SI
         prefactor = torch.sqrt(5.0 * eta_u / 24.0) / (PI ** (2.0 / 3.0) * d_sec)
-        a0_phys = prefactor * (m_sec_eval ** (5.0 / 6.0)) * (f_eval ** (-7.0 / 6.0))
+        a0_phys = prefactor * (m_sec_eval ** (5.0 / 6.0)) * (f_eval_safe ** (-7.0 / 6.0))
         full_amp = a0_phys * scaled_amp
 
-        # Task B: High-frequency physical windowing and cutoff:
-        # f_cut = (f_RD + 5.0 * f_damp) / M_sec
-        # Interval: [f_cut - 2.0*f_damp, f_cut] = [f_RD + 3.0*f_damp, f_RD + 5.0*f_damp] / M_sec
-        mf_cut = f_rd_u + 5.0 * f_damp_u
-        mf_start = mf_cut - 2.0 * f_damp_u
-        f_cut_phys = mf_cut / m_sec_eval
-        f_start_phys = mf_start / m_sec_eval
+        # High-frequency physical windowing and cutoff:
+        # Canonical PhenomD (Khan et al. 2016) is calibrated up to Mf = 0.2
+        if window_type is not None and window_type.lower() in ("planck", "cosine"):
+            mf_cut = f_rd_u + 5.0 * f_damp_u
+            mf_start = mf_cut - 2.0 * f_damp_u
+            f_cut_phys = mf_cut / m_sec_eval
+            f_start_phys = mf_start / m_sec_eval
 
-        x_win = torch.clamp((f_eval - f_start_phys) / (f_cut_phys - f_start_phys + 1e-30), 0.0, 1.0)
-        if window_type.lower() == "planck":
-            x_safe = torch.clamp(x_win, 1e-7, 1.0 - 1e-7)
-            sigma_win = (1.0 / x_safe) + (1.0 / (x_safe - 1.0))
-            w_cutoff = 1.0 / (torch.exp(torch.clamp(sigma_win, -50.0, 50.0)) + 1.0)
+            x_win = torch.clamp((f_eval - f_start_phys) / (f_cut_phys - f_start_phys + 1e-30), 0.0, 1.0)
+            if window_type.lower() == "planck":
+                z = 1.0 - x_win
+                z_safe = torch.clamp(z, 1e-7, 1.0 - 1e-7)
+                sigma_win = (1.0 / z_safe) + (1.0 / (z_safe - 1.0))
+                w_cutoff = 1.0 / (torch.exp(torch.clamp(sigma_win, -50.0, 50.0)) + 1.0)
+            else:
+                w_cutoff = 0.5 * (1.0 + torch.cos(PI * x_win))
+
+            w_cutoff = torch.where(f_eval <= f_start_phys, torch.ones_like(w_cutoff), w_cutoff)
+            w_cutoff = torch.where(f_eval >= f_cut_phys, torch.zeros_like(w_cutoff), w_cutoff)
+
+            full_amp = full_amp * w_cutoff
+            full_amp = torch.where(f_eval < f_cut_phys, full_amp, torch.zeros_like(full_amp))
         else:
-            w_cutoff = 0.5 * (1.0 + torch.cos(PI * x_win))
-
-        w_cutoff = torch.where(f_eval <= f_start_phys, torch.ones_like(w_cutoff), w_cutoff)
-        w_cutoff = torch.where(f_eval >= f_cut_phys, torch.zeros_like(w_cutoff), w_cutoff)
-
-        full_amp = full_amp * w_cutoff
-        full_amp = torch.where(f_eval < f_cut_phys, full_amp, torch.zeros_like(full_amp))
+            mf_cut = 0.2 * torch.ones_like(f_rd_u)
+            f_cut_phys = mf_cut / m_sec_eval
+            full_amp = torch.where(f_eval <= f_cut_phys, full_amp, torch.zeros_like(full_amp))
 
         # 2. Piecewise Phase & Analytical Derivative
         # Region I: Inspiral (Mf <= 0.018)
@@ -842,13 +863,25 @@ class IMRPhenomD:
                 ),
             )
 
-            # Exact analytical reference time delay: t(f_ref) = (1 / 2pi) * dPsi/df = (M_sec / 2pi) * dPhi/d(Mf)
+            # Phasing convention: reference_frequency aligns phase to reference frequency
             psi_ref = -(PI / 4.0) + phi_imr_ref
-            t_ref = (m_sec_eval / (2.0 * PI)) * dphi_imr_ref
 
-            total_phase = psi_raw - 2.0 * PI * (f_eval - fref_u) * t_ref - psi_ref + 2.0 * PI * f_eval * t_c_u - phi_c_u
+            # Intrinsic global time gauge: subtract slope * (Mf - Mf_ref) where slope is the
+            # paper merger-ringdown phase derivative dPsi/d(Mf) evaluated at f_peak using raw fitted alpha1.
+            total_phase = (
+                psi_raw
+                - psi_ref
+                - slope_peak_u * (mf - mf_ref)
+                + 2.0 * PI * f_eval * t_c_u
+                - 2.0 * phi_c_u
+            )
         else:
-            total_phase = 2.0 * PI * f_eval * t_c_u - phi_c_u + psi_raw
+            total_phase = (
+                psi_raw
+                - slope_peak_u * mf
+                + 2.0 * PI * f_eval * t_c_u
+                - 2.0 * phi_c_u
+            )
 
         # Inclination projections
         cos_inc = torch.cos(unsqueeze_param(inc))
@@ -860,8 +893,15 @@ class IMRPhenomD:
 
         h_plus = (plus_factor * full_amp).to(exp_minus_i_phase.dtype) * exp_minus_i_phase
         h_cross = torch.complex(
-            cross_factor * full_amp * torch.sin(total_phase),
+            -cross_factor * full_amp * torch.sin(total_phase),
             -cross_factor * full_amp * torch.cos(total_phase),
         )
+
+        # Enforce exact finite zeros for DC and non-positive frequency bins
+        h_plus = torch.where(f_eval > 0.0, h_plus, torch.zeros_like(h_plus))
+        h_cross = torch.where(f_eval > 0.0, h_cross, torch.zeros_like(h_cross))
+
+        if return_phase:
+            return h_plus, h_cross, total_phase
 
         return h_plus, h_cross

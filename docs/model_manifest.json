@@ -1,0 +1,311 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "manifest_version": "1.0.0",
+  "project": "torchwave",
+  "description": "Clean-room PyTorch gravitational waveform modeling library with literature provenance and explicitly scoped LALSimulation oracle verification; full catalog parity is unmet.",
+  "acceptance_gates": {
+    "direct_cpu_fp64": {
+      "complex_relative_l2": 1.0e-6,
+      "relative_norm_error": 1.0e-6,
+      "flat_mismatch": 1.0e-8,
+      "psd_mismatch": 1.0e-8
+    },
+    "precessing_and_hm_tolerance": {
+      "optimized_match": 0.995,
+      "role": "diagnostic reference only; does not replace direct complex, norm, or mismatch gates"
+    }
+  },
+  "global_conventions": {
+    "units": {
+      "mass": "Solar masses (M_sun, 1 M_sun = 4.925491025543576e-6 s)",
+      "distance": "Megaparsecs (Mpc, 1 Mpc = 3.085677581491367e22 m)",
+      "frequency": "Hertz (Hz)",
+      "time": "Seconds (s)",
+      "spin": "Dimensionless [-1, 1]",
+      "tidal_deformability": "Dimensionless Lambda >= 0",
+      "eccentricity": "Dimensionless e0 in [0, 0.4)"
+    },
+    "polarizations": "Complex Fourier strain h_plus(f) and h_cross(f) in physical geometric units (G/c^2 / distance)",
+    "time_translation": "Strictly linear Fourier time shift: h(f; tc) = h(f; 0) * exp(-2*pi*i*f*tc)",
+    "reference_phasing": "Aligned such that at reference frequency f_ref, SPA phase convention satisfies Psi(f_ref) = 3*pi/4 (LAL convention) or 0 (pure reference convention)"
+  },
+  "models": {
+    "TaylorF2": {
+      "name": "TaylorF2",
+      "aliases": ["taylorf2"],
+      "lal_approximant": "TaylorF2",
+      "domain": "frequency_domain",
+      "spins": "aligned",
+      "modes": ["(2,2)"],
+      "pn_orders": {
+        "spin_order": "Up to 7 (3.5PN spin-orbit, spin-spin, and self-spin)",
+        "tidal_order": "Up to 13 (6.5PN electric quadrupole and octupole tides)"
+      },
+      "parameters": {
+        "required": ["mass1", "mass2"],
+        "optional": ["chi1", "chi2", "spin1z", "spin2z", "distance", "inclination", "phic", "tc", "f_ref", "lambda1", "lambda2", "spin_order", "tidal_order"]
+      },
+      "status": "verified_parity",
+      "notes": "Strict CPU FP64 parity passed only on the 4 declared TaylorF2 cases. Both polarizations have complex relative L2 < 1.64e-12; the six detector/sky projections per case have complex relative L2 < 3.08e-7. These measurements do not certify the full parameter domain. Evidence: docs/reviews/2026-09-11-agy/verification/strict-catalog.json.",
+      "direct_fp64_parity": {
+        "complex_relative_l2": 1.6394511672528196e-12,
+        "relative_norm_error": 8.557465858376769e-16,
+        "mismatch": 2.220446049250313e-16,
+        "scope": "maximum over both polarizations of declared cases; detector projections recorded separately",
+        "case_ids": [
+          "TF2_point_particle_bns",
+          "TF2_unequal_spinning",
+          "TF2_tidal_6PN",
+          "TF2_tidal_6.5PN"
+        ]
+      },
+      "primary_references": [
+        {"citation": "Buonanno, Iyer, Ochsner, Pan, Sathyaprakash (2009), Phys. Rev. D 80, 084043", "doi": "10.1103/PhysRevD.80.084043"},
+        {"citation": "Mishra, Kaviraj, Arun (2016), Phys. Rev. D 93, 084039", "doi": "10.1103/PhysRevD.93.084039"},
+        {"citation": "Vines, Flanagan, Hinderer (2011), Phys. Rev. D 83, 084051", "doi": "10.1103/PhysRevD.83.084051"}
+      ]
+    },
+    "TaylorF2_HM": {
+      "name": "TaylorF2_HM",
+      "aliases": ["taylorf2hm", "taylorf2_hm"],
+      "lal_approximant": "TaylorF2 (higher mode expansion)",
+      "domain": "frequency_domain",
+      "spins": "aligned",
+      "modes": ["(2,2)", "(2,1)", "(3,3)", "(4,4)"],
+      "status": "unresolved_oracle",
+      "notes": "This harness has no independently validated external oracle mapping for the higher-mode expansion.",
+      "primary_references": [
+        {"citation": "García-Quirós et al. (2020), Phys. Rev. D 102, 064002", "doi": "10.1103/PhysRevD.102.064002", "equations": "Eq. (3)"}
+      ]
+    },
+    "TaylorF2_Eccentric": {
+      "name": "TaylorF2_Eccentric",
+      "aliases": ["taylorf2eccentric", "taylorf2_eccentric", "eccentrictaylorf2"],
+      "lal_approximant": "TaylorF2Ecc",
+      "domain": "frequency_domain",
+      "spins": "aligned",
+      "modes": ["(2,2)"],
+      "eccentricity_range": "[0, 0.4)",
+      "pn_orders": {
+        "ecc_order": "Up to 6 (3PN eccentric phase expansion)"
+      },
+      "status": "verified_parity",
+      "notes": "Strict CPU FP64 parity passed only on the 2 declared TaylorF2_Eccentric cases. Both polarizations have complex relative L2 < 1.64e-12; the six detector/sky projections per case have complex relative L2 < 3.08e-7. These measurements do not certify the full parameter domain. Evidence: docs/reviews/2026-09-11-agy/verification/strict-catalog.json.",
+      "direct_fp64_parity": {
+        "complex_relative_l2": 1.6385727303663531e-12,
+        "relative_norm_error": 7.182497756436873e-16,
+        "mismatch": 2.220446049250313e-16,
+        "scope": "maximum over both polarizations of declared cases; detector projections recorded separately",
+        "case_ids": [
+          "TF2Ecc_circular_limit",
+          "TF2Ecc_eccentric_spinning"
+        ]
+      },
+      "primary_references": [
+        {"citation": "Moore, Favata, Arun, Mishra (2016), Phys. Rev. D 93, 124061", "doi": "10.1103/PhysRevD.93.124061", "equations": "Eqs. (4.17)-(4.18)"}
+      ]
+    },
+    "IMRPhenomD": {
+      "name": "IMRPhenomD",
+      "aliases": ["imrphenomd"],
+      "lal_approximant": "IMRPhenomD",
+      "domain": "frequency_domain",
+      "spins": "aligned",
+      "modes": ["(2,2)"],
+      "status": "partial_parity",
+      "notes": "Partial parity against LALSimulation IMRPhenomD. Diagnostic catalog verification configuration yields plus magnitude relative L2 error 0.0014835; full strict direct complex L2 <= 1e-6 gate is unmet.",
+      "primary_references": [
+        {"citation": "Husa et al. (2016), Phys. Rev. D 93, 044006", "doi": "10.1103/PhysRevD.93.044006"},
+        {"citation": "Khan et al. (2016), Phys. Rev. D 93, 044007", "doi": "10.1103/PhysRevD.93.044007", "tables": "Table V", "equations": "Eqs. (24), (28)-(32)"},
+        {"citation": "Berti, Cardoso, Will (2006), Phys. Rev. D 73, 064030", "doi": "10.1103/PhysRevD.73.064030", "tables": "Table VIII"}
+      ]
+    },
+    "IMRPhenomPv2": {
+      "name": "IMRPhenomPv2",
+      "aliases": ["imrphenomp", "imrphenompv2"],
+      "lal_approximant": "IMRPhenomPv2",
+      "domain": "frequency_domain",
+      "spins": "precessing",
+      "modes": ["(2,2) coprecessing"],
+      "frame_convention": "P-frame precession angle twisting via single effective precession parameter chi_p",
+      "status": "partial_parity",
+      "notes": "Partial parity against LALSimulation IMRPhenomPv2. Uses single-effective-spin twisting approximation; diagnostic catalog configuration yields plus magnitude relative L2 error 0.1182047, strict direct complex L2 <= 1e-6 gate is unmet.",
+      "primary_references": [
+        {"citation": "Hannam et al. (2014), Phys. Rev. Lett. 113, 151101", "doi": "10.1103/PhysRevLett.113.151101"},
+        {"citation": "Schmidt et al. (2015), Phys. Rev. D 91, 024043", "doi": "10.1103/PhysRevD.91.024043"}
+      ]
+    },
+    "IMRPhenomXP": {
+      "name": "IMRPhenomXP",
+      "aliases": ["imrphenomxp"],
+      "lal_approximant": "IMRPhenomXP",
+      "domain": "frequency_domain",
+      "spins": "precessing",
+      "modes": ["(2,2) coprecessing"],
+      "frame_convention": "Multispin P-frame twisting angles with NNLO spin-orbit angles (Chatziioannou et al. 2017, Pratten et al. 2021)",
+      "status": "partial_parity",
+      "notes": "Partial parity against LALSimulation IMRPhenomXP. 4th-generation precessing model using Pratten et al. (2021) angles; diagnostic catalog configuration yields plus magnitude relative L2 error 0.1177515, strict direct complex L2 <= 1e-6 gate is unmet.",
+      "primary_references": [
+        {"citation": "Pratten et al. (2021), Phys. Rev. D 103, 104056", "doi": "10.1103/PhysRevD.103.104056", "equations": "Appendix B, Eqs. (B1)-(B2)"}
+      ]
+    },
+    "IMRPhenomHM": {
+      "name": "IMRPhenomHM",
+      "aliases": ["imrphenomhm"],
+      "lal_approximant": "IMRPhenomHM",
+      "domain": "frequency_domain",
+      "spins": "aligned",
+      "modes": ["(2,2)", "(2,1)", "(3,3)", "(3,2)", "(4,4)"],
+      "frame_convention": "Co-orbital to radiation frame SWSH projection with London et al. (2018) mode mixing",
+      "status": "partial_parity",
+      "notes": "Partial parity against LALSimulation IMRPhenomHM. Multipolar model with SWSH projection; diagnostic catalog configuration yields plus magnitude relative L2 error 0.1973065, strict direct complex L2 <= 1e-6 gate is unmet.",
+      "primary_references": [
+        {"citation": "London et al. (2018), Phys. Rev. Lett. 120, 161102", "doi": "10.1103/PhysRevLett.120.161102"}
+      ]
+    },
+    "IMRPhenomXHM": {
+      "name": "IMRPhenomXHM",
+      "aliases": ["imrphenomxhm"],
+      "lal_approximant": "IMRPhenomXHM",
+      "domain": "frequency_domain",
+      "spins": "aligned",
+      "modes": ["(2,2)", "(2,1)", "(3,3)", "(3,2)", "(4,4)"],
+      "frame_convention": "García-Quirós et al. (2020) spherical harmonic decomposition and collocation reconstruction",
+      "status": "partial_parity",
+      "notes": "Partial parity against LALSimulation IMRPhenomXHM. Multipolar approximant built on native IMRPhenomXAS carrier; diagnostic catalog configuration yields plus magnitude relative L2 error 0.1164806, strict direct complex L2 <= 1e-6 gate is unmet.",
+      "primary_references": [
+        {"citation": "García-Quirós et al. (2020), Phys. Rev. D 102, 064002", "doi": "10.1103/PhysRevD.102.064002", "equations": "Eq. (3)"},
+        {"citation": "Pratten et al. (2020), Phys. Rev. D 102, 064001", "doi": "10.1103/PhysRevD.102.064001"}
+      ]
+    },
+    "IMRPhenomXPHM": {
+      "name": "IMRPhenomXPHM",
+      "aliases": ["imrphenomxphm", "xphm"],
+      "lal_approximant": "IMRPhenomXPHM",
+      "domain": "frequency_domain",
+      "spins": "precessing",
+      "modes": ["(2,2)", "(2,1)", "(3,3)", "(3,2)", "(4,4) coprecessing"],
+      "frame_convention": "Time-dependent Wigner-D rotation from coprecessing frame to inertial detector frame (Pratten et al. 2021)",
+      "status": "partial_parity",
+      "notes": "Partial parity against LALSimulation IMRPhenomXPHM. 4th-generation precessing higher-multipole model; diagnostic catalog configuration yields plus magnitude relative L2 error 0.1067059, strict direct complex L2 <= 1e-6 gate is unmet.",
+      "primary_references": [
+        {"citation": "Pratten et al. (2021), Phys. Rev. D 103, 104056", "doi": "10.1103/PhysRevD.103.104056"},
+        {"citation": "García-Quirós et al. (2020), Phys. Rev. D 102, 064002", "doi": "10.1103/PhysRevD.102.064002"}
+      ]
+    },
+    "IMRPhenomXAS": {
+      "name": "IMRPhenomXAS",
+      "aliases": ["imrphenomxas", "phenomxas", "xas"],
+      "lal_approximant": "IMRPhenomXAS",
+      "domain": "frequency_domain",
+      "spins": "aligned",
+      "modes": ["(2,2)"],
+      "status": "partial_parity",
+      "notes": "Clean-room aligned-spin model using author-released version 104 fits and an analytic inspiral amplitude boundary derivative. The catalog case has plus magnitude relative L2 0.0974379 and component-optimized match 0.9960015; strict direct complex parity remains unmet. The derivative tests do not establish continuity of the complete piecewise amplitude or parameter-domain parity.",
+      "primary_references": [
+        {"citation": "Pratten et al. (2020), Phys. Rev. D 102, 064001", "doi": "10.1103/PhysRevD.102.064001"},
+        {"citation": "Mathematica public release candidate: IMRPhenomXAS_Parameter_Space_Fits_Public_Release_Candidate.m", "url": "https://journals.aps.org/prd/supplemental/10.1103/PhysRevD.102.064001/IMRPhenomXAS_Parameter_Space_Fits_Public_Release_Candidate.m"}
+      ]
+    },
+    "IMRPhenomD_NRTidal": {
+      "name": "IMRPhenomD_NRTidal",
+      "aliases": ["imrphenomdnrtidal", "nrtidal"],
+      "lal_approximant": "IMRPhenomD_NRTidal",
+      "domain": "frequency_domain",
+      "spins": "aligned",
+      "modes": ["(2,2)"],
+      "status": "partial_parity",
+      "notes": "Partial parity against LALSimulation IMRPhenomD_NRTidal; diagnostic catalog configuration yields plus magnitude relative L2 error 3.94859e-6, strict direct complex L2 <= 1e-6 gate is unmet.",
+      "primary_references": [
+        {"citation": "Dietrich et al. (2017), Phys. Rev. D 96, 121501", "doi": "10.1103/PhysRevD.96.121501"}
+      ]
+    },
+    "IMRPhenomD_NRTidalv2": {
+      "name": "IMRPhenomD_NRTidalv2",
+      "aliases": ["imrphenomdnrtidalv2", "nrtidalv2"],
+      "lal_approximant": "IMRPhenomD_NRTidalv2",
+      "domain": "frequency_domain",
+      "spins": "aligned",
+      "modes": ["(2,2)"],
+      "status": "partial_parity",
+      "notes": "Partial parity against LALSimulation IMRPhenomD_NRTidalv2; diagnostic catalog configuration yields plus magnitude relative L2 error 0.00202194, strict direct complex L2 <= 1e-6 gate is unmet.",
+      "primary_references": [
+        {"citation": "Dietrich et al. (2019), Phys. Rev. D 100, 044003", "doi": "10.1103/PhysRevD.100.044003", "equations": "Eqs. (15)-(21)"}
+      ]
+    },
+    "IMRPhenomNSBH": {
+      "name": "IMRPhenomNSBH",
+      "aliases": ["imrphenomnsbh", "nsbh"],
+      "lal_approximant": "IMRPhenomNSBH",
+      "domain": "frequency_domain",
+      "spins": "aligned",
+      "modes": ["(2,2)"],
+      "status": "partial_parity",
+      "notes": "Partial parity against LALSimulation IMRPhenomNSBH; diagnostic catalog configuration yields plus magnitude relative L2 error 0.0080058, strict direct complex L2 <= 1e-6 gate is unmet.",
+      "primary_references": [
+        {"citation": "Pannarale et al. (2015), Phys. Rev. D 92, 084041", "doi": "10.1103/PhysRevD.92.084041"},
+        {"citation": "Thompson et al. (2020), Phys. Rev. D 101, 124059", "doi": "10.1103/PhysRevD.101.124059"}
+      ]
+    },
+    "KerrRingdown": {
+      "name": "KerrRingdown",
+      "aliases": ["kerrringdown", "ringdown"],
+      "lal_approximant": "Kerr ringdown QNM",
+      "domain": "time_domain and frequency_domain",
+      "spins": "aligned Kerr remnant",
+      "modes": ["(2,2)", "(3,3)", "(4,4)"],
+      "status": "unresolved_oracle",
+      "notes": "Standalone Kerr ringdown model using Berti et al. (2006) Table VIII fits. This harness has no independently validated oracle mapping; formula tests do not establish external parity.",
+      "primary_references": [
+        {"citation": "Berti, Cardoso, Will (2006), Phys. Rev. D 73, 064030", "doi": "10.1103/PhysRevD.73.064030", "tables": "Table VIII"}
+      ]
+    },
+    "SEOBNR_ODE": {
+      "name": "SEOBNR_ODE",
+      "aliases": ["seobnr", "seobnrode", "seobnrv5"],
+      "lal_approximant": "SEOBNR time-domain integrator",
+      "domain": "time_domain",
+      "spins": "aligned",
+      "modes": ["(2,2)"],
+      "status": "standalone_differentiable",
+      "notes": "Pure PyTorch time-domain ODE integrator with autograd support; serves as ground truth for torchwave's native ROM surrogate.",
+      "primary_references": [
+        {"citation": "Buonanno & Damour (1999), Phys. Rev. D 59, 084006", "doi": "10.1103/PhysRevD.59.084006"},
+        {"citation": "Bohé et al. (2017), Phys. Rev. D 95, 044028", "doi": "10.1103/PhysRevD.95.044028"}
+      ]
+    },
+    "SEOBNR_ROM": {
+      "name": "SEOBNR_ROM",
+      "aliases": ["seobnrrom", "seobnrv4rom", "seobnrv5rom"],
+      "lal_approximant": "SEOBNR Reduced-Order Model",
+      "domain": "frequency_domain",
+      "spins": "aligned",
+      "modes": ["(2,2)"],
+      "asset": {
+        "file": "src/torchwave/data/seobnr_surrogate.pt",
+        "sha256": "8316be966b297f474be810024a6add2d5e64559ee3c506302e8ea83372085414",
+        "frequency_coordinate": "Dimensionless geometric M*f in [0.0002, 0.30]",
+        "generator": "torchwave.approximants.eob.SEOBNR_ODE",
+        "license": "MIT"
+      },
+      "status": "standalone_surrogate",
+      "notes": "Evaluates native clean-room PyTorch surrogate model trained on SEOBNR_ODE; generator fidelity is strictly distinguished from LAL SEOBNRv4_ROM parity.",
+      "primary_references": [
+        {"citation": "Pürrer (2014), Class. Quantum Grav. 31, 195010", "doi": "10.1088/0264-9381/31/19/195010"},
+        {"citation": "Pürrer (2016), Phys. Rev. D 93, 064041", "doi": "10.1103/PhysRevD.93.064041"}
+      ]
+    },
+    "TEOBResumS": {
+      "name": "TEOBResumS",
+      "aliases": ["teobresums"],
+      "lal_approximant": "TEOBResumS",
+      "domain": "time_domain",
+      "spins": "aligned",
+      "status": "standalone_prototype",
+      "notes": "Differentiable EOB prototype; uses leading quadrupole strain.",
+      "primary_references": [
+        {"citation": "Nagar et al. (2018), Phys. Rev. D 98, 104052", "doi": "10.1103/PhysRevD.98.104052"}
+      ]
+    }
+  }
+}

@@ -16,7 +16,7 @@ def test_taylorf2_phase_coefficients():
 
     (
         phi0, phi2, phi3, phi4, phi5, phi5_log,
-        phi6, phi6_log, phi7, phi10_t, phi12_t
+        phi6, phi6_log, phi7, phi10_t, phi12_t, *_
     ) = TaylorF2.phase_coefficients(m1, m2, chi1, chi2)
 
     assert torch.isclose(phi0, torch.tensor(1.0))

@@ -1,0 +1,325 @@
+{
+  "TaylorF2": {
+    "case_count": 4,
+    "case_ids": [
+      "TF2_point_particle_bns",
+      "TF2_unequal_spinning",
+      "TF2_tidal_6PN",
+      "TF2_tidal_6.5PN"
+    ],
+    "polarizations": {
+      "complex_relative_l2": 1.6394511672528196e-12,
+      "relative_norm_error": 8.557465858376769e-16,
+      "magnitude_relative_l2": 8.117156058146666e-16,
+      "flat_mismatch": 2.220446049250313e-16,
+      "psd_mismatch": 1.1102230246251565e-16
+    },
+    "projections": {
+      "complex_relative_l2": 3.071394309601549e-07,
+      "relative_norm_error": 4.1580506129563935e-08,
+      "magnitude_relative_l2": 4.1580506097337143e-08,
+      "flat_mismatch": 4.718447854656915e-14,
+      "psd_mismatch": 4.729550084903167e-14
+    }
+  },
+  "TaylorF2_Eccentric": {
+    "case_count": 2,
+    "case_ids": [
+      "TF2Ecc_circular_limit",
+      "TF2Ecc_eccentric_spinning"
+    ],
+    "polarizations": {
+      "complex_relative_l2": 1.6385727303663531e-12,
+      "relative_norm_error": 7.182497756436873e-16,
+      "magnitude_relative_l2": 8.031111752526115e-16,
+      "flat_mismatch": 2.220446049250313e-16,
+      "psd_mismatch": 0.0
+    },
+    "projections": {
+      "complex_relative_l2": 3.070359773503361e-07,
+      "relative_norm_error": 4.1547993423263016e-08,
+      "magnitude_relative_l2": 4.154799405676556e-08,
+      "flat_mismatch": 4.718447854656915e-14,
+      "psd_mismatch": 4.718447854656915e-14
+    }
+  },
+  "non_analytic_cases": [
+    {
+      "case_id": "IMRPhenomD_diagnostic",
+      "model": "IMRPhenomD",
+      "status": "FAILED",
+      "plus": {
+        "complex_relative_l2": 1.0397082359552545,
+        "relative_norm_error": 0.0001178678685132934,
+        "magnitude_relative_l2": 0.0014835356161027938,
+        "flat_mismatch": 0.5405603157023908,
+        "psd_mismatch": 1.0711730709976977,
+        "optimized_match": 0.9999976225029221,
+        "finite": true,
+        "dc_zero": true,
+        "out_of_band_zero": true
+      },
+      "cross": {
+        "complex_relative_l2": 1.0397082359552536,
+        "relative_norm_error": 0.00011786786851390319,
+        "magnitude_relative_l2": 0.0014835356161027953,
+        "flat_mismatch": 0.540560315702391,
+        "psd_mismatch": 1.0711730709976977,
+        "optimized_match": 0.9999976225029219,
+        "finite": true,
+        "dc_zero": true,
+        "out_of_band_zero": true
+      }
+    },
+    {
+      "case_id": "IMRPhenomXAS_diagnostic",
+      "model": "IMRPhenomXAS",
+      "status": "FAILED",
+      "plus": {
+        "complex_relative_l2": 1.4410288252607177,
+        "relative_norm_error": 0.04809199921495855,
+        "magnitude_relative_l2": 0.09743785515367273,
+        "flat_mismatch": 0.9895368137517664,
+        "psd_mismatch": 0.9905332980206564,
+        "optimized_match": 0.9960015371823999,
+        "finite": true,
+        "dc_zero": true,
+        "out_of_band_zero": true
+      },
+      "cross": {
+        "complex_relative_l2": 1.4410288252607109,
+        "relative_norm_error": 0.048091999214958235,
+        "magnitude_relative_l2": 0.09743785515367287,
+        "flat_mismatch": 0.9895368137517664,
+        "psd_mismatch": 0.9905332980206564,
+        "optimized_match": 0.9960015371823999,
+        "finite": true,
+        "dc_zero": true,
+        "out_of_band_zero": true
+      }
+    },
+    {
+      "case_id": "IMRPhenomHM_diagnostic",
+      "model": "IMRPhenomHM",
+      "status": "FAILED",
+      "plus": {
+        "complex_relative_l2": 1.1409812903630552,
+        "relative_norm_error": 0.0017832040674765058,
+        "magnitude_relative_l2": 0.19730654519966553,
+        "flat_mismatch": 0.6497589098399933,
+        "psd_mismatch": 1.077395872524449,
+        "optimized_match": 0.9578824607426114,
+        "finite": true,
+        "dc_zero": true,
+        "out_of_band_zero": true
+      },
+      "cross": {
+        "complex_relative_l2": 1.1360247403018247,
+        "relative_norm_error": 0.005599660783608764,
+        "magnitude_relative_l2": 0.19730174514674956,
+        "flat_mismatch": 0.648894013548853,
+        "psd_mismatch": 1.0768047812178032,
+        "optimized_match": 0.9579267693490634,
+        "finite": true,
+        "dc_zero": true,
+        "out_of_band_zero": true
+      }
+    },
+    {
+      "case_id": "IMRPhenomXHM_diagnostic",
+      "model": "IMRPhenomXHM",
+      "status": "FAILED",
+      "plus": {
+        "complex_relative_l2": 1.427749959706866,
+        "relative_norm_error": 0.052164980333063986,
+        "magnitude_relative_l2": 0.11648057609705571,
+        "flat_mismatch": 0.9674094844068061,
+        "psd_mismatch": 0.9988171830035678,
+        "optimized_match": 0.9906326815885523,
+        "finite": true,
+        "dc_zero": true,
+        "out_of_band_zero": true
+      },
+      "cross": {
+        "complex_relative_l2": 1.4142696439690128,
+        "relative_norm_error": 0.03211615987946494,
+        "magnitude_relative_l2": 0.09433392881527622,
+        "flat_mismatch": 0.9684603612641363,
+        "psd_mismatch": 1.0010168727140756,
+        "optimized_match": 0.9928966445629482,
+        "finite": true,
+        "dc_zero": true,
+        "out_of_band_zero": true
+      }
+    },
+    {
+      "case_id": "IMRPhenomPv2_diagnostic",
+      "model": "IMRPhenomPv2",
+      "status": "FAILED",
+      "plus": {
+        "complex_relative_l2": 1.2647583152968562,
+        "relative_norm_error": 0.058490559593549755,
+        "magnitude_relative_l2": 0.1182047138423527,
+        "flat_mismatch": 0.8476773476970647,
+        "psd_mismatch": 0.9643116103768568,
+        "optimized_match": 0.9891429360385379,
+        "finite": true,
+        "dc_zero": true,
+        "out_of_band_zero": true
+      },
+      "cross": {
+        "complex_relative_l2": 1.4743879845743655,
+        "relative_norm_error": 0.0648942854064799,
+        "magnitude_relative_l2": 0.15347183409050486,
+        "flat_mismatch": 1.1600873713631092,
+        "psd_mismatch": 1.0367683640243863,
+        "optimized_match": 0.9798820662442592,
+        "finite": true,
+        "dc_zero": true,
+        "out_of_band_zero": true
+      }
+    },
+    {
+      "case_id": "IMRPhenomXP_diagnostic",
+      "model": "IMRPhenomXP",
+      "status": "FAILED",
+      "plus": {
+        "complex_relative_l2": 1.7392219245898553,
+        "relative_norm_error": 0.06567880612766987,
+        "magnitude_relative_l2": 0.11775148738952289,
+        "flat_mismatch": 1.6164565340109571,
+        "psd_mismatch": 0.9246101563541392,
+        "optimized_match": 0.9902498553936311,
+        "finite": true,
+        "dc_zero": true,
+        "out_of_band_zero": true
+      },
+      "cross": {
+        "complex_relative_l2": 0.8538014216925792,
+        "relative_norm_error": 0.07046041706922111,
+        "magnitude_relative_l2": 0.1496478011431073,
+        "flat_mismatch": 0.3894466737112683,
+        "psd_mismatch": 1.0740975428380666,
+        "optimized_match": 0.9817529709599745,
+        "finite": true,
+        "dc_zero": true,
+        "out_of_band_zero": true
+      }
+    },
+    {
+      "case_id": "IMRPhenomXPHM_diagnostic",
+      "model": "IMRPhenomXPHM",
+      "status": "FAILED",
+      "plus": {
+        "complex_relative_l2": 1.627134389617891,
+        "relative_norm_error": 0.04121525064004382,
+        "magnitude_relative_l2": 0.10670589513999344,
+        "flat_mismatch": 1.3798027277541374,
+        "psd_mismatch": 1.0113174090167996,
+        "optimized_match": 0.9894126704741631,
+        "finite": true,
+        "dc_zero": true,
+        "out_of_band_zero": true
+      },
+      "cross": {
+        "complex_relative_l2": 1.6155870850747853,
+        "relative_norm_error": 0.05004961261444476,
+        "magnitude_relative_l2": 0.13993007514647274,
+        "flat_mismatch": 1.372501501322741,
+        "psd_mismatch": 1.0098229703912571,
+        "optimized_match": 0.9804748314299947,
+        "finite": true,
+        "dc_zero": true,
+        "out_of_band_zero": true
+      }
+    },
+    {
+      "case_id": "IMRPhenomD_NRTidal_diagnostic",
+      "model": "IMRPhenomD_NRTidal",
+      "status": "FAILED",
+      "plus": {
+        "complex_relative_l2": 0.31626089058303286,
+        "relative_norm_error": 5.270969333682578e-07,
+        "magnitude_relative_l2": 3.948592364503738e-06,
+        "flat_mismatch": 0.050010501816429964,
+        "psd_mismatch": 0.09750879778390531,
+        "optimized_match": 0.9999999981853648,
+        "finite": true,
+        "dc_zero": true,
+        "out_of_band_zero": true
+      },
+      "cross": {
+        "complex_relative_l2": 0.3162608905830334,
+        "relative_norm_error": 5.270969305494763e-07,
+        "magnitude_relative_l2": 3.94859236450356e-06,
+        "flat_mismatch": 0.050010501816430075,
+        "psd_mismatch": 0.09750879778390531,
+        "optimized_match": 0.9999999981853648,
+        "finite": true,
+        "dc_zero": true,
+        "out_of_band_zero": true
+      }
+    },
+    {
+      "case_id": "IMRPhenomD_NRTidalv2_diagnostic",
+      "model": "IMRPhenomD_NRTidalv2",
+      "status": "FAILED",
+      "plus": {
+        "complex_relative_l2": 0.28093330101409825,
+        "relative_norm_error": 0.00022309177399817037,
+        "magnitude_relative_l2": 0.0020219388993354534,
+        "flat_mismatch": 0.039452933299489956,
+        "psd_mismatch": 0.06425937467107423,
+        "optimized_match": 0.9999979796896818,
+        "finite": true,
+        "dc_zero": true,
+        "out_of_band_zero": true
+      },
+      "cross": {
+        "complex_relative_l2": 0.2809333010140972,
+        "relative_norm_error": 0.00022309177399560217,
+        "magnitude_relative_l2": 0.0020219388993354542,
+        "flat_mismatch": 0.039452933299489845,
+        "psd_mismatch": 0.06425937467107412,
+        "optimized_match": 0.9999979796896821,
+        "finite": true,
+        "dc_zero": true,
+        "out_of_band_zero": true
+      }
+    },
+    {
+      "case_id": "IMRPhenomNSBH_diagnostic",
+      "model": "IMRPhenomNSBH",
+      "status": "FAILED",
+      "plus": {
+        "complex_relative_l2": 1.9696263107241816,
+        "relative_norm_error": 0.0013233015026908057,
+        "magnitude_relative_l2": 0.008005785424662482,
+        "flat_mismatch": 1.9422832527320268,
+        "psd_mismatch": 1.8695931948224875,
+        "optimized_match": 0.99996877229129,
+        "finite": true,
+        "dc_zero": true,
+        "out_of_band_zero": true
+      },
+      "cross": {
+        "complex_relative_l2": 1.9696263107241787,
+        "relative_norm_error": 0.0013233015026903727,
+        "magnitude_relative_l2": 0.008005785424662475,
+        "flat_mismatch": 1.9422832527320266,
+        "psd_mismatch": 1.8695931948224875,
+        "optimized_match": 0.9999687722912902,
+        "finite": true,
+        "dc_zero": true,
+        "out_of_band_zero": true
+      }
+    }
+  ],
+  "evidence_structure_checked": {
+    "cases_with_both_polarizations_and_full_parameters": 16,
+    "detector_sky_projections_per_case": 6,
+    "named_psds_per_component": 3,
+    "manifest_models": 17,
+    "unresolved_models": 5
+  }
+}

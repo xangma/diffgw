@@ -9,6 +9,7 @@ References:
 - Pürrer (2014), Class. Quantum Grav. 31, 195010 (arXiv:1402.4146)
 - Pürrer (2016), Phys. Rev. D 93, 064041 (arXiv:1512.02248)
 - Bohé et al. (2017), Phys. Rev. D 95, 044028 (arXiv:1611.03703)
+- Cotesta et al. (2018), Phys. Rev. D 98, 084028 (arXiv:1803.10701)
 """
 
 import math
@@ -69,6 +70,50 @@ def poly_features(
     return torch.stack(cols, dim=-1)
 
 
+def chebyshev_features(
+    eta: torch.Tensor,
+    chi1: torch.Tensor,
+    chi2: Optional[torch.Tensor] = None,
+    degree: int = 3,
+) -> torch.Tensor:
+    """Compute tensor-product Chebyshev polynomial features up to given total degree."""
+    eta_flat = eta.reshape(-1)
+    chi1_flat = chi1.reshape(-1)
+
+    # Normalize eta from [0.03, 0.25] to [-1, 1]
+    eta_norm = torch.clamp(2.0 * (eta_flat - 0.03) / (0.25 - 0.03) - 1.0, -1.0, 1.0)
+    chi1_norm = torch.clamp(chi1_flat, -1.0, 1.0)
+
+    def cheb_1d(x: torch.Tensor, deg: int) -> list:
+        polys = [torch.ones_like(x)]
+        if deg >= 1:
+            polys.append(x)
+        for _ in range(2, deg + 1):
+            polys.append(2.0 * x * polys[-1] - polys[-2])
+        return polys
+
+    t_eta = cheb_1d(eta_norm, degree)
+    t_c1 = cheb_1d(chi1_norm, degree)
+
+    cols = []
+    if chi2 is None:
+        for d in range(degree + 1):
+            for i in range(d + 1):
+                j = d - i
+                cols.append(t_eta[i] * t_c1[j])
+    else:
+        chi2_flat = chi2.reshape(-1)
+        chi2_norm = torch.clamp(chi2_flat, -1.0, 1.0)
+        t_c2 = cheb_1d(chi2_norm, degree)
+        for d in range(degree + 1):
+            for i in range(d + 1):
+                for j in range(d - i + 1):
+                    k = d - i - j
+                    cols.append(t_eta[i] * t_c1[j] * t_c2[k])
+
+    return torch.stack(cols, dim=-1)
+
+
 def generate_eob_training_grid(
     q_min: float = 1.0,
     q_max: float = 6.0,
@@ -80,7 +125,7 @@ def generate_eob_training_grid(
     num_chi2: int = 3,
     mf_min: float = 0.0002,
     mf_max: float = 0.3,
-    num_freq_nodes: int = 128,
+    num_freq_nodes: int = 256,
     num_ode_steps: int = 800,
     device: str = "cpu",
     dtype: torch.dtype = torch.float64,
@@ -107,7 +152,7 @@ def generate_eob_training_grid(
     # Fixed fiducial total mass for geometric dimensionless conversion
     m_total = 50.0
     m_sec = m_total * MSUN_SEC
-    f_grid = mf_grid / (m_sec * PI)
+    f_grid = mf_grid / m_sec
 
     q_vals = torch.linspace(q_min, q_max, num_q, dtype=dtype, device=dev)
     if num_spins is not None:
@@ -169,7 +214,7 @@ def generate_eob_training_grid(
 
 def compute_svd_reduced_basis(
     data: torch.Tensor,
-    num_modes: int = 8,
+    num_modes: int = 12,
 ) -> Tuple[torch.Tensor, torch.Tensor]:
     """Perform SVD reduced basis decomposition on waveform data matrix.
 
@@ -215,11 +260,14 @@ def train_and_export_surrogate(
     num_spins: Optional[int] = None,
     num_chi1: int = 5,
     num_chi2: int = 3,
-    num_freq_nodes: int = 128,
-    num_modes: int = 8,
+    num_freq_nodes: int = 256,
+    num_modes: Optional[Union[int, Tuple[int, int]]] = None,
+    num_modes_amp: int = 12,
+    num_modes_phase: int = 16,
     degree: int = 3,
     num_ode_steps: int = 800,
     device: str = "cpu",
+    feature_type: str = "chebyshev",
 ) -> str:
     """Train native PyTorch SEOBNR ROM surrogate and save weights dictionary.
 
@@ -229,11 +277,14 @@ def train_and_export_surrogate(
         num_spins: Optional shortcut to set number of spin grid points
         num_chi1: Number of primary spin grid points
         num_chi2: Number of secondary spin grid points
-        num_freq_nodes: Number of dimensionless frequency nodes
-        num_modes: Number of SVD basis modes (default 8)
+        num_freq_nodes: Number of dimensionless frequency nodes (default 256)
+        num_modes: Optional shortcut: if int, sets both amp and phase modes
+        num_modes_amp: Number of SVD amplitude basis modes (default 12)
+        num_modes_phase: Number of SVD phase basis modes (default 16)
         degree: Polynomial feature degree
         num_ode_steps: Number of ODE integration steps
         device: PyTorch device ('cpu' or 'cuda'/'mps')
+        feature_type: 'chebyshev' or 'poly'
 
     Returns:
         Absolute path to saved model file
@@ -243,6 +294,16 @@ def train_and_export_surrogate(
         output_path = os.path.join(base_dir, "data", "seobnr_surrogate.pt")
 
     os.makedirs(os.path.dirname(output_path), exist_ok=True)
+
+    if num_modes is not None:
+        if isinstance(num_modes, (list, tuple)):
+            n_amp, n_phase = num_modes[0], num_modes[1]
+        else:
+            n_amp = num_modes
+            n_phase = num_modes
+    else:
+        n_amp = num_modes_amp
+        n_phase = num_modes_phase
 
     # 1. Generate EOB training grid
     mf_grid, eta, s1, s2, amp_red, phase_red = generate_eob_training_grid(
@@ -256,11 +317,15 @@ def train_and_export_surrogate(
     )
 
     # 2. Extract orthonormal reduced bases via SVD
-    v_a, c_a = compute_svd_reduced_basis(amp_red, num_modes=num_modes)
-    v_p, c_p = compute_svd_reduced_basis(phase_red, num_modes=num_modes)
+    v_a, c_a = compute_svd_reduced_basis(amp_red, num_modes=n_amp)
+    v_p, c_p = compute_svd_reduced_basis(phase_red, num_modes=n_phase)
 
-    # 3. Fit parameter-space polynomial mappings covering (eta, chi1, chi2)
-    phi = poly_features(eta, s1, s2, degree=degree)
+    # 3. Fit parameter-space mappings covering (eta, chi1, chi2)
+    if feature_type.lower() == "chebyshev":
+        phi = chebyshev_features(eta, s1, s2, degree=degree)
+    else:
+        phi = poly_features(eta, s1, s2, degree=degree)
+
     w_a = fit_parameter_mapping(phi, c_a)
     w_p = fit_parameter_mapping(phi, c_p)
 
@@ -272,13 +337,15 @@ def train_and_export_surrogate(
         "amp_weights": w_a.detach().cpu().to(torch.float32),
         "phase_weights": w_p.detach().cpu().to(torch.float32),
         "degree": degree,
+        "feature_type": feature_type,
         "has_two_spins": True,
         "metadata": {
             "model_name": "torchwave_seobnr_rom_v2",
             "approximant": "SEOBNR_ROM",
             "generator": "torchwave.approximants.eob.SEOBNR_ODE",
             "license": "MIT",
-            "num_modes": num_modes,
+            "num_modes_amp": n_amp,
+            "num_modes_phase": n_phase,
             "degree": degree,
             "parameters": ["eta", "chi1", "chi2"],
         },

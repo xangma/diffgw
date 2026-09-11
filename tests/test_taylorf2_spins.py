@@ -113,3 +113,58 @@ def test_taylorf2_lal_parity():
         tw_series = FrequencySeries(hp_tw.detach().cpu().numpy(), delta_f=df)
         overlap, _ = match(lal_series, tw_series, low_frequency_cutoff=f_min, high_frequency_cutoff=f_max)
         assert overlap >= min_match, f"Match {overlap:.6f} below expected {min_match} for {m1_val},{m2_val} spins {chi1_val},{chi2_val}"
+
+
+@pytest.mark.parametrize("model_name", ["TaylorF2", "IMRPhenomD", "TaylorF2_Eccentric"])
+def test_spin_alias_routing(model_name):
+    """Verify spin1z and chi1 are consistent aliases and reject conflicts."""
+    f = torch.arange(20.0, 300.0, 0.5, dtype=torch.float64)
+    cfg = dict(mass1=30.0, mass2=20.0, f_ref=30.0, sample_frequencies=f)
+
+    # Base zero-spin waveform
+    h_zero = get_fd_waveform(model_name, **cfg)[0]
+
+    # Passing spin1z should produce spinning waveform
+    h_s1z = get_fd_waveform(model_name, **cfg, spin1z=0.3)[0]
+    assert not torch.equal(h_zero, h_s1z), f"{model_name}: spin1z=0.3 was ignored"
+
+    # Passing chi1 should produce identical spinning waveform to exact equality
+    h_chi1 = get_fd_waveform(model_name, **cfg, chi1=0.3)[0]
+    assert torch.equal(h_s1z, h_chi1), f"{model_name}: spin1z and chi1 do not match"
+
+    # Conflicting definitions must raise ValueError
+    with pytest.raises(ValueError, match="Conflicting spin1"):
+        get_fd_waveform(model_name, **cfg, chi1=0.3, spin1z=0.1)
+
+    # Explicit zero on chi1 with non-zero spin1z must raise ValueError
+    with pytest.raises(ValueError, match="Conflicting spin1"):
+        get_fd_waveform(model_name, **cfg, chi1=0.0, spin1z=0.3)
+
+    # Unknown keywords must be rejected
+    with pytest.raises((ValueError, TypeError)):
+        get_fd_waveform(model_name, **cfg, misspelled_spin=0.3)
+
+
+@pytest.mark.parametrize("model_name", ["TaylorF2", "IMRPhenomD", "TaylorF2_Eccentric"])
+def test_spin_alias_batch_routing(model_name):
+    """Verify batched spin aliases broadcast and resolve without tensor boolean ambiguity."""
+    f = torch.arange(20.0, 300.0, 0.5, dtype=torch.float64)
+    cfg = dict(mass1=torch.tensor([30.0, 30.0]), mass2=torch.tensor([20.0, 20.0]), f_ref=30.0, sample_frequencies=f)
+    spins = torch.tensor([0.1, 0.2])
+
+    hp, hc = get_fd_waveform(model_name, **cfg, chi1=spins, spin1z=spins)
+    assert hp.shape == (2, len(f))
+    assert hc.shape == (2, len(f))
+
+
+@pytest.mark.parametrize("model_name", ["TaylorF2", "IMRPhenomD", "TaylorF2_Eccentric"])
+def test_aligned_in_plane_spin_rejection(model_name):
+    """Verify aligned-spin models explicitly reject non-zero in-plane spins."""
+    f = torch.arange(20.0, 200.0, 1.0, dtype=torch.float64)
+    cfg = dict(mass1=30.0, mass2=20.0, sample_frequencies=f)
+
+    with pytest.raises(ValueError, match="only supports aligned spins"):
+        get_fd_waveform(model_name, **cfg, spin1x=0.1)
+
+    with pytest.raises(ValueError, match="only supports aligned spins"):
+        get_fd_waveform(model_name, **cfg, spin2y=0.2)

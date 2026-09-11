@@ -23,7 +23,7 @@ from torchwave.conversions import (
     spin_combinations,
 )
 from torchwave.approximants.eob.waveform import _interp1d
-from torchwave.approximants.rom.generator import poly_features
+from torchwave.approximants.rom.generator import poly_features, chebyshev_features
 
 
 class SEOBNR_ROM:
@@ -154,10 +154,13 @@ class SEOBNR_ROM:
         grid_mf = self.surrogate_data["mf_grid"].to(device=device, dtype=dtype)
 
         # Features shape: (B, num_features) or (1, num_features)
+        feat_type = self.surrogate_data.get("feature_type", "poly").lower()
+        feat_fn = chebyshev_features if feat_type == "chebyshev" else poly_features
+
         if self.surrogate_data.get("has_two_spins", False):
-            phi = poly_features(eta, s1, s2, degree=deg).to(device=device, dtype=dtype)
+            phi = feat_fn(eta, s1, s2, degree=deg).to(device=device, dtype=dtype)
         else:
-            phi = poly_features(eta, chi_pn, degree=deg).to(device=device, dtype=dtype)
+            phi = feat_fn(eta, chi_pn, degree=deg).to(device=device, dtype=dtype)
         c_amp = phi @ w_a
         c_phase = phi @ w_p
 

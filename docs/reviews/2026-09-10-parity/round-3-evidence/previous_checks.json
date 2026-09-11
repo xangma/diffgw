@@ -1,0 +1,116 @@
+{
+  "versions": {
+    "host": "client-3792.default.vpn.port.ac.uk",
+    "torch": "2.9.1",
+    "lal": "7.7.0",
+    "lalsimulation": "6.2.0"
+  },
+  "explicit_option_oracle": {
+    "TF2 point particle": {
+      "plus": {
+        "complex_relative_l2": 1.6466284659550815e-12,
+        "dc_zero": true,
+        "finite": true
+      },
+      "cross": {
+        "complex_relative_l2": 1.6466269418736741e-12,
+        "dc_zero": true,
+        "finite": true
+      }
+    },
+    "TF2 6PN tides": {
+      "plus": {
+        "complex_relative_l2": 1.6574096875728857e-12,
+        "dc_zero": true,
+        "finite": true
+      },
+      "cross": {
+        "complex_relative_l2": 1.657409591710313e-12,
+        "dc_zero": true,
+        "finite": true
+      }
+    },
+    "TF2 6.5PN tides": {
+      "plus": {
+        "complex_relative_l2": 1.6478593289292285e-12,
+        "dc_zero": true,
+        "finite": true
+      },
+      "cross": {
+        "complex_relative_l2": 1.6478605372271143e-12,
+        "dc_zero": true,
+        "finite": true
+      }
+    },
+    "TF2 unequal spinning": {
+      "plus": {
+        "complex_relative_l2": 1.593214024037683e-12,
+        "dc_zero": true,
+        "finite": true
+      },
+      "cross": {
+        "complex_relative_l2": 1.5932180266905524e-12,
+        "dc_zero": true,
+        "finite": true
+      }
+    },
+    "Ecc explicit references": {
+      "plus": {
+        "complex_relative_l2": 1.9762777644389554e-12,
+        "dc_zero": true,
+        "finite": true
+      },
+      "cross": {
+        "complex_relative_l2": 1.9762717416252024e-12,
+        "dc_zero": true,
+        "finite": true
+      }
+    },
+    "Ecc unequal spinning": {
+      "plus": {
+        "complex_relative_l2": 1.582532647910519e-12,
+        "dc_zero": true,
+        "finite": true
+      },
+      "cross": {
+        "complex_relative_l2": 1.5825274991551954e-12,
+        "dc_zero": true,
+        "finite": true
+      }
+    }
+  },
+  "ecc_default_on_dc_grid": {
+    "equals_explicit_f0_0p25": false,
+    "rel_l2_vs_explicit_f0_30_in_band": 0.0
+  },
+  "ecc_vector_fref": {
+    "error": null
+  },
+  "spin_alias": {
+    "TaylorF2": {
+      "spin1z_equals_zero_spin": false,
+      "chi1_changes_waveform": true
+    },
+    "IMRPhenomD": {
+      "spin1z_equals_zero_spin": false,
+      "chi1_changes_waveform": true
+    }
+  },
+  "ecc_dc_gradient": {
+    "torch.float32": {
+      "forward_finite": true,
+      "gradient_finite": true
+    },
+    "torch.float64": {
+      "forward_finite": true,
+      "gradient_finite": true
+    }
+  },
+  "hm_common_time_shift": {
+    "(2, 2)": 2.059116240568612e-15,
+    "(2, 1)": 2.4225615677284606e-15,
+    "(3, 3)": 1.3910543879445678e-14,
+    "(3, 2)": 2.1574351769913558e-15,
+    "(4, 4)": 1.1415836086859935e-14
+  }
+}

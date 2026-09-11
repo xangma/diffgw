@@ -1,0 +1,27 @@
+{
+  "cwd": "/Users/xangma/repos/torchwave",
+  "host": "client-3792.default.vpn.port.ac.uk",
+  "python": "/Users/xangma/miniconda3/envs/pycbcorig313/bin/python",
+  "runs": [
+    {
+      "command": "PYTHONPATH=src:/tmp/torchwave-parity-review-20260910/pytest-runner PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 <python> -m pytest -q -p no:cacheprovider --tb=short",
+      "exit_code": 0,
+      "log": "final-pytest.log"
+    },
+    {
+      "command": "PYTHONPATH=src <python> tests/parity_harness.py --strict --json-out <run>/final-catalog.json",
+      "exit_code": 1,
+      "log": "final-catalog.log"
+    },
+    {
+      "command": "PYTHONPATH=src:tests <python> <run>/check_d_holdouts.py <run>/final-d-holdouts.json",
+      "exit_code": 0,
+      "note": "Driver completion; all five returned FAILED"
+    },
+    {
+      "command": "<python> -m pip wheel --no-deps --no-build-isolation . --wheel-dir <run>/wheel",
+      "exit_code": 0,
+      "log": "wheel.log"
+    }
+  ]
+}

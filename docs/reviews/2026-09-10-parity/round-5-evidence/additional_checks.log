@@ -1,0 +1,191 @@
+{
+  "execution_contexts": {
+    "IMRPhenomD": {
+      "normal": {
+        "finite": true,
+        "shape": [
+          1968
+        ]
+      },
+      "no_grad": {
+        "finite": true,
+        "shape": [
+          1968
+        ]
+      },
+      "inference_mode": {
+        "finite": true,
+        "shape": [
+          1968
+        ]
+      }
+    },
+    "IMRPhenomXAS": {
+      "normal": {
+        "finite": true,
+        "shape": [
+          1968
+        ]
+      },
+      "no_grad": "RuntimeError('element 0 of tensors does not require grad and does not have a grad_fn')",
+      "inference_mode": "RuntimeError('element 0 of tensors does not require grad and does not have a grad_fn')"
+    },
+    "IMRPhenomHM": {
+      "normal": {
+        "finite": true,
+        "shape": [
+          1968
+        ]
+      },
+      "no_grad": {
+        "finite": true,
+        "shape": [
+          1968
+        ]
+      },
+      "inference_mode": {
+        "finite": true,
+        "shape": [
+          1968
+        ]
+      }
+    },
+    "IMRPhenomXHM": {
+      "normal": {
+        "finite": true,
+        "shape": [
+          1968
+        ]
+      },
+      "no_grad": "RuntimeError('element 0 of tensors does not require grad and does not have a grad_fn')",
+      "inference_mode": "RuntimeError('element 0 of tensors does not require grad and does not have a grad_fn')"
+    },
+    "IMRPhenomXPHM": {
+      "normal": {
+        "finite": true,
+        "shape": [
+          1968
+        ]
+      },
+      "no_grad": "RuntimeError('element 0 of tensors does not require grad and does not have a grad_fn')",
+      "inference_mode": "RuntimeError('element 0 of tensors does not require grad and does not have a grad_fn')"
+    }
+  },
+  "xas_unknown_keyword": {
+    "misspelled_spin": {
+      "accepted": true,
+      "identical": true
+    },
+    "unrecognized_option": {
+      "accepted": true,
+      "identical": true
+    }
+  },
+  "pytest_empty_suite": "PASSED",
+  "six_duplicate_cases": {
+    "suite_passed": true,
+    "num_cases": 6,
+    "num_passed": 6,
+    "case_ids": [
+      "TF2_point_particle_bns",
+      "TF2_point_particle_bns",
+      "TF2_point_particle_bns",
+      "TF2_point_particle_bns",
+      "TF2_point_particle_bns",
+      "TF2_point_particle_bns"
+    ]
+  },
+  "nan_psd_array": {
+    "status": "PASSED",
+    "reported_psd_mismatch": 0.0
+  },
+  "negative_infinite_psd_metric": {
+    "status": "PASSED"
+  },
+  "detector_public_oracle": [
+    {
+      "gps": 1126259462.0,
+      "wrapped_gmst_error_radians": 1.8441208419810397e-05,
+      "detectors": {
+        "H1": {
+          "fp_error": 7.861840607026327e-06,
+          "fc_error": 1.856385081389078e-05,
+          "delay_error_seconds": -1.8362593836272756e-07
+        },
+        "L1": {
+          "fp_error": -1.002024245910782e-05,
+          "fc_error": -1.3483783296242002e-05,
+          "delay_error_seconds": -1.002685546848403e-07
+        },
+        "V1": {
+          "fp_error": 1.2921293145284896e-05,
+          "fc_error": -6.258367945988219e-06,
+          "delay_error_seconds": 2.59733454787206e-07
+        }
+      }
+    },
+    {
+      "gps": 1126345862.0,
+      "wrapped_gmst_error_radians": 1.7828917736123013e-05,
+      "detectors": {
+        "H1": {
+          "fp_error": 8.077857431065816e-06,
+          "fc_error": 1.7678156782885424e-05,
+          "delay_error_seconds": -1.7469623276450408e-07
+        },
+        "L1": {
+          "fp_error": -1.00315431241782e-05,
+          "fc_error": -1.2712802678005453e-05,
+          "delay_error_seconds": -9.202155028253944e-08
+        },
+        "V1": {
+          "fp_error": 1.2069255169305793e-05,
+          "fc_error": -6.198714399219263e-06,
+          "delay_error_seconds": 2.51641436630097e-07
+        }
+      }
+    },
+    {
+      "gps": 1187008882.0,
+      "wrapped_gmst_error_radians": -0.0003391492509298422,
+      "detectors": {
+        "H1": {
+          "fp_error": -0.00026985665520856683,
+          "fc_error": -0.00022674116077125994,
+          "delay_error_seconds": 2.4182747920750702e-06
+        },
+        "L1": {
+          "fp_error": 0.0002726704691314308,
+          "fc_error": 0.00013226458689230558,
+          "delay_error_seconds": 3.1829608305652957e-07
+        },
+        "V1": {
+          "fp_error": -9.68309321035532e-05,
+          "fc_error": 0.00013201723905731377,
+          "delay_error_seconds": -4.7699856352005805e-06
+        }
+      }
+    },
+    {
+      "gps": 1470000000.0,
+      "wrapped_gmst_error_radians": -0.002344691196499973,
+      "detectors": {
+        "H1": {
+          "fp_error": 0.0024353834442843725,
+          "fc_error": 0.000738931093178602,
+          "delay_error_seconds": -3.1637457409532284e-05
+        },
+        "L1": {
+          "fp_error": -0.0020624834089123245,
+          "fc_error": -0.0004070133201344306,
+          "delay_error_seconds": -3.5955305781042255e-05
+        },
+        "V1": {
+          "fp_error": -0.0009157071679456452,
+          "fc_error": 0.0008458452679104278,
+          "delay_error_seconds": 1.959909545562466e-05
+        }
+      }
+    }
+  ]
+}

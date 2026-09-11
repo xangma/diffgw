@@ -1,0 +1,421 @@
+{
+  "metadata": {
+    "host": "client-3792.default.vpn.port.ac.uk",
+    "python": "/Users/xangma/miniconda3/envs/pycbcorig313/bin/python",
+    "torch": "2.9.1",
+    "numpy": "2.3.5",
+    "lal": "7.7.0",
+    "lalsimulation": "6.2.0",
+    "pycbc": "2.10.0",
+    "precision": "float64/complex128 CPU",
+    "psd": "flat",
+    "band": "flow <= f < fhigh",
+    "shared_fref": "both=flow",
+    "raw_l2_caveat": "Raw errors include phase/time convention differences; these are diagnostic overlaps, not certification.",
+    "optimized_match_caveat": "Time/phase maximized independently per polarization, using PyCBC optimized_match."
+  },
+  "results": [
+    {
+      "label": "D 30.0/30.0 0.8/0.8",
+      "torch_model": "IMRPhenomD",
+      "lal_model": "IMRPhenomD",
+      "parameters": {
+        "flow": 20.0,
+        "fhigh": 1024.0,
+        "df": 0.25,
+        "m1": 30.0,
+        "m2": 30.0,
+        "c1": 0.8,
+        "c2": 0.8,
+        "distance": 410.0,
+        "tw_extra": {
+          "f_ref": 20.0
+        }
+      },
+      "plus": {
+        "match": 0.9993710261643827,
+        "sample_shift": 25,
+        "optimized_match": 0.9999743630953625,
+        "optimized_sample_shift": 25.176326459183343,
+        "reference_nonfinite_bins": [],
+        "torch_nonfinite_bins": [],
+        "norm_ratio": 1.0001503757573984,
+        "magnitude_relative_l2": 0.004308618310738278,
+        "raw_relative_l2": 1.1355946985626033
+      },
+      "cross": {
+        "match": 0.9993710261643827,
+        "sample_shift": 25,
+        "optimized_match": 0.9999743630953627,
+        "optimized_sample_shift": 25.17632658104668,
+        "reference_nonfinite_bins": [],
+        "torch_nonfinite_bins": [],
+        "norm_ratio": 1.0001503757573984,
+        "magnitude_relative_l2": 0.004308618310738278,
+        "raw_relative_l2": 1.1355946985626033
+      }
+    },
+    {
+      "label": "D 36.0/29.0 0.3/-0.2",
+      "torch_model": "IMRPhenomD",
+      "lal_model": "IMRPhenomD",
+      "parameters": {
+        "flow": 20.0,
+        "fhigh": 1024.0,
+        "df": 0.25,
+        "m1": 36.0,
+        "m2": 29.0,
+        "c1": 0.3,
+        "c2": -0.2,
+        "distance": 410.0,
+        "tw_extra": {
+          "f_ref": 20.0
+        }
+      },
+      "plus": {
+        "match": 0.999957499031852,
+        "sample_shift": 27,
+        "optimized_match": 0.9999965559789851,
+        "optimized_sample_shift": 27.0600976620974,
+        "reference_nonfinite_bins": [],
+        "torch_nonfinite_bins": [],
+        "norm_ratio": 0.9998152504287574,
+        "magnitude_relative_l2": 0.0018491883842539508,
+        "raw_relative_l2": 1.1035648456682858
+      },
+      "cross": {
+        "match": 0.999957499031852,
+        "sample_shift": 27,
+        "optimized_match": 0.9999965559789852,
+        "optimized_sample_shift": 27.060097722770415,
+        "reference_nonfinite_bins": [],
+        "torch_nonfinite_bins": [],
+        "norm_ratio": 0.9998152504287574,
+        "magnitude_relative_l2": 0.0018491883842539508,
+        "raw_relative_l2": 1.1035648456682858
+      }
+    },
+    {
+      "label": "D 30.0/10.0 0.5/-0.3",
+      "torch_model": "IMRPhenomD",
+      "lal_model": "IMRPhenomD",
+      "parameters": {
+        "flow": 20.0,
+        "fhigh": 1024.0,
+        "df": 0.25,
+        "m1": 30.0,
+        "m2": 10.0,
+        "c1": 0.5,
+        "c2": -0.3,
+        "distance": 410.0,
+        "tw_extra": {
+          "f_ref": 20.0
+        }
+      },
+      "plus": {
+        "match": 0.9963505549080331,
+        "sample_shift": 22,
+        "optimized_match": 0.9999992144481804,
+        "optimized_sample_shift": 22.49362775436524,
+        "reference_nonfinite_bins": [],
+        "torch_nonfinite_bins": [],
+        "norm_ratio": 0.9999608979890522,
+        "magnitude_relative_l2": 0.000831154967909325,
+        "raw_relative_l2": 1.0610735828701492
+      },
+      "cross": {
+        "match": 0.9963505549080331,
+        "sample_shift": 22,
+        "optimized_match": 0.9999992144481803,
+        "optimized_sample_shift": 22.49362764127105,
+        "reference_nonfinite_bins": [],
+        "torch_nonfinite_bins": [],
+        "norm_ratio": 0.9999608979890522,
+        "magnitude_relative_l2": 0.000831154967909325,
+        "raw_relative_l2": 1.0610735828701492
+      }
+    },
+    {
+      "label": "XAS 35.0/30.0 0.2/-0.3",
+      "torch_model": "IMRPhenomXAS",
+      "lal_model": "IMRPhenomXAS",
+      "parameters": {
+        "flow": 20.0,
+        "fhigh": 512.0,
+        "df": 0.125,
+        "m1": 35.0,
+        "m2": 30.0,
+        "c1": 0.2,
+        "c2": -0.3,
+        "distance": 500.0,
+        "tw_extra": {
+          "f_ref": 20.0
+        }
+      },
+      "plus": {
+        "match": 0.9897486320759254,
+        "sample_shift": 15,
+        "optimized_match": 0.9960014696343134,
+        "optimized_sample_shift": 15.384623981253558,
+        "reference_nonfinite_bins": [],
+        "torch_nonfinite_bins": [],
+        "norm_ratio": 1.0480923361583856,
+        "magnitude_relative_l2": 0.09743874988596869,
+        "raw_relative_l2": 1.4410289987683922
+      },
+      "cross": {
+        "match": 0.9897486320759254,
+        "sample_shift": 15,
+        "optimized_match": 0.9960014696343134,
+        "optimized_sample_shift": 15.384623981253558,
+        "reference_nonfinite_bins": [],
+        "torch_nonfinite_bins": [],
+        "norm_ratio": 1.0480923361583856,
+        "magnitude_relative_l2": 0.09743874988596869,
+        "raw_relative_l2": 1.4410289987683922
+      }
+    },
+    {
+      "label": "XAS 50.0/15.0 0.6/0.4",
+      "torch_model": "IMRPhenomXAS",
+      "lal_model": "IMRPhenomXAS",
+      "parameters": {
+        "flow": 20.0,
+        "fhigh": 512.0,
+        "df": 0.125,
+        "m1": 50.0,
+        "m2": 15.0,
+        "c1": 0.6,
+        "c2": 0.4,
+        "distance": 500.0,
+        "tw_extra": {
+          "f_ref": 20.0
+        }
+      },
+      "plus": {
+        "match": 0.995087130708374,
+        "sample_shift": 25,
+        "optimized_match": 0.9988285760576023,
+        "optimized_sample_shift": 24.705509630037913,
+        "reference_nonfinite_bins": [],
+        "torch_nonfinite_bins": [],
+        "norm_ratio": 1.0237284158571391,
+        "magnitude_relative_l2": 0.05066882342302033,
+        "raw_relative_l2": 1.3749093735967401
+      },
+      "cross": {
+        "match": 0.995087130708374,
+        "sample_shift": 25,
+        "optimized_match": 0.9988285760576023,
+        "optimized_sample_shift": 24.705509659164054,
+        "reference_nonfinite_bins": [],
+        "torch_nonfinite_bins": [],
+        "norm_ratio": 1.0237284158571391,
+        "magnitude_relative_l2": 0.05066882342302033,
+        "raw_relative_l2": 1.3749093735967401
+      }
+    },
+    {
+      "label": "XAS 60.0/7.5 -0.4/0.1",
+      "torch_model": "IMRPhenomXAS",
+      "lal_model": "IMRPhenomXAS",
+      "parameters": {
+        "flow": 20.0,
+        "fhigh": 512.0,
+        "df": 0.125,
+        "m1": 60.0,
+        "m2": 7.5,
+        "c1": -0.4,
+        "c2": 0.1,
+        "distance": 500.0,
+        "tw_extra": {
+          "f_ref": 20.0
+        }
+      },
+      "plus": {
+        "match": 0.9983919757919231,
+        "sample_shift": 44,
+        "optimized_match": 0.9985795023192137,
+        "optimized_sample_shift": 43.87876749779285,
+        "reference_nonfinite_bins": [],
+        "torch_nonfinite_bins": [],
+        "norm_ratio": 1.0084191237635978,
+        "magnitude_relative_l2": 0.04760005944077363,
+        "raw_relative_l2": 1.3396887965446767
+      },
+      "cross": {
+        "match": 0.9983919757919231,
+        "sample_shift": 44,
+        "optimized_match": 0.9985795023192137,
+        "optimized_sample_shift": 43.87876749779285,
+        "reference_nonfinite_bins": [],
+        "torch_nonfinite_bins": [],
+        "norm_ratio": 1.0084191237635978,
+        "magnitude_relative_l2": 0.04760005944077363,
+        "raw_relative_l2": 1.3396887965446767
+      }
+    },
+    {
+      "label": "XAS 75.0/5.0 0.5/-0.2",
+      "torch_model": "IMRPhenomXAS",
+      "lal_model": "IMRPhenomXAS",
+      "parameters": {
+        "flow": 20.0,
+        "fhigh": 512.0,
+        "df": 0.125,
+        "m1": 75.0,
+        "m2": 5.0,
+        "c1": 0.5,
+        "c2": -0.2,
+        "distance": 500.0,
+        "tw_extra": {
+          "f_ref": 20.0
+        }
+      },
+      "plus": {
+        "match": 0.9985193661301758,
+        "sample_shift": 102,
+        "optimized_match": 0.9990367956227577,
+        "optimized_sample_shift": 102.19736030345135,
+        "reference_nonfinite_bins": [],
+        "torch_nonfinite_bins": [],
+        "norm_ratio": 1.009423085281597,
+        "magnitude_relative_l2": 0.03206456203214877,
+        "raw_relative_l2": 1.370224210577194
+      },
+      "cross": {
+        "match": 0.9985193661301758,
+        "sample_shift": 102,
+        "optimized_match": 0.9990367956227577,
+        "optimized_sample_shift": 102.19736030342295,
+        "reference_nonfinite_bins": [],
+        "torch_nonfinite_bins": [],
+        "norm_ratio": 1.009423085281597,
+        "magnitude_relative_l2": 0.03206456203214877,
+        "raw_relative_l2": 1.370224210577194
+      }
+    },
+    {
+      "label": "XAS 30.0/30.0 0.8/0.8",
+      "torch_model": "IMRPhenomXAS",
+      "lal_model": "IMRPhenomXAS",
+      "parameters": {
+        "flow": 20.0,
+        "fhigh": 512.0,
+        "df": 0.125,
+        "m1": 30.0,
+        "m2": 30.0,
+        "c1": 0.8,
+        "c2": 0.8,
+        "distance": 500.0,
+        "tw_extra": {
+          "f_ref": 20.0
+        }
+      },
+      "plus": {
+        "match": 0.9974979515284798,
+        "sample_shift": 14,
+        "optimized_match": 0.9988152114342418,
+        "optimized_sample_shift": 13.873986741789704,
+        "reference_nonfinite_bins": [],
+        "torch_nonfinite_bins": [],
+        "norm_ratio": 1.026162523701469,
+        "magnitude_relative_l2": 0.05422154957531954,
+        "raw_relative_l2": 1.4212054924070283
+      },
+      "cross": {
+        "match": 0.9974979515284798,
+        "sample_shift": 14,
+        "optimized_match": 0.9988152114342418,
+        "optimized_sample_shift": 13.873986748189651,
+        "reference_nonfinite_bins": [],
+        "torch_nonfinite_bins": [],
+        "norm_ratio": 1.026162523701469,
+        "magnitude_relative_l2": 0.05422154957531954,
+        "raw_relative_l2": 1.4212054924070283
+      }
+    },
+    {
+      "label": "IMRPhenomHM inclined",
+      "torch_model": "IMRPhenomHM",
+      "lal_model": "IMRPhenomHM",
+      "parameters": {
+        "flow": 20.0,
+        "fhigh": 512.0,
+        "df": 0.125,
+        "m1": 40.0,
+        "m2": 20.0,
+        "c1": 0.3,
+        "c2": -0.1,
+        "inc": 1.0,
+        "distance": 500.0,
+        "tw_extra": {
+          "f_ref": 20.0
+        }
+      },
+      "plus": {
+        "match": 0.966874741034703,
+        "sample_shift": 14,
+        "optimized_match": 0.9674440136927718,
+        "optimized_sample_shift": 14.114461585512135,
+        "reference_nonfinite_bins": [],
+        "torch_nonfinite_bins": [],
+        "norm_ratio": 1.01851776107223,
+        "magnitude_relative_l2": 0.17707333040089654,
+        "raw_relative_l2": 1.1383672526524542
+      },
+      "cross": {
+        "match": 0.9667421461958107,
+        "sample_shift": 14,
+        "optimized_match": 0.9672781321524658,
+        "optimized_sample_shift": 14.113074811486644,
+        "reference_nonfinite_bins": [],
+        "torch_nonfinite_bins": [],
+        "norm_ratio": 1.0016661684709145,
+        "magnitude_relative_l2": 0.17591568536052726,
+        "raw_relative_l2": 1.1283221984185923
+      }
+    },
+    {
+      "label": "IMRPhenomXHM inclined",
+      "torch_model": "IMRPhenomXHM",
+      "lal_model": "IMRPhenomXHM",
+      "parameters": {
+        "flow": 20.0,
+        "fhigh": 512.0,
+        "df": 0.125,
+        "m1": 40.0,
+        "m2": 20.0,
+        "c1": 0.3,
+        "c2": -0.1,
+        "inc": 1.0,
+        "distance": 500.0,
+        "tw_extra": {
+          "f_ref": 20.0
+        }
+      },
+      "plus": {
+        "match": 0.9904923309109332,
+        "sample_shift": 17,
+        "optimized_match": 0.9907479190835183,
+        "optimized_sample_shift": 17.07360369012361,
+        "reference_nonfinite_bins": [],
+        "torch_nonfinite_bins": [],
+        "norm_ratio": 1.0537856138769792,
+        "magnitude_relative_l2": 0.11511289668877116,
+        "raw_relative_l2": 1.4277475273748255
+      },
+      "cross": {
+        "match": 0.9927132655199645,
+        "sample_shift": 17,
+        "optimized_match": 0.9929751563858832,
+        "optimized_sample_shift": 17.073774327828318,
+        "reference_nonfinite_bins": [],
+        "torch_nonfinite_bins": [],
+        "norm_ratio": 1.0335944568288549,
+        "magnitude_relative_l2": 0.09284430721436127,
+        "raw_relative_l2": 1.4137803457171527
+      }
+    }
+  ]
+}

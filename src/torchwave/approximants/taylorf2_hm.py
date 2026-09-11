@@ -37,7 +37,7 @@ def _swsh_projection_coefficients(
     """Compute the polarization projection coefficients d_plus and d_cross.
 
     For positive frequencies, the contribution of modes (l, m) and (l, -m)
-    to h_+ and h_x is given by (García-Quirós et al. 2020 Eqs. 296-298):
+    to h_+ and h_x is given by (García-Quirós et al. (2020), Phys. Rev. D 102, 064002, Eq. 3):
         d_plus  = 0.5 * (Y_{l,-m} + (-1)^l * conj(Y_{l,m}))
         d_cross = 0.5i * (Y_{l,-m} - (-1)^l * conj(Y_{l,m}))
     where Y_{l,m} = {}_{-2}Y_{lm}(\\iota, \\phi_0).

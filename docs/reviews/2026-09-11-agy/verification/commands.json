@@ -1,0 +1,73 @@
+[
+  {
+    "name": "pytest",
+    "host": "client-3792.default.vpn.port.ac.uk",
+    "cwd": "/Users/xangma/repos/torchwave",
+    "command": [
+      "/Users/xangma/miniconda3/envs/pycbcorig313/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "-p",
+      "no:cacheprovider",
+      "tests/",
+      "--tb=short",
+      "-rA"
+    ],
+    "pid": 86963,
+    "log": "/Users/xangma/repos/torchwave/docs/reviews/2026-09-11-agy/verification/pytest.log",
+    "started_utc": "2026-09-11T03:26:58Z",
+    "environment": {
+      "PYTHONPATH": "src:/tmp/torchwave-parity-review-20260910/pytest-runner",
+      "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1"
+    },
+    "stop_command": "kill -TERM -- -86963",
+    "exit_code": 0,
+    "finished_utc": "2026-09-11T03:27:14Z"
+  },
+  {
+    "name": "strict-analytic",
+    "host": "client-3792.default.vpn.port.ac.uk",
+    "cwd": "/Users/xangma/repos/torchwave",
+    "command": [
+      "/Users/xangma/miniconda3/envs/pycbcorig313/bin/python",
+      "tests/parity_harness.py",
+      "--strict",
+      "--analytic-only",
+      "--json-out",
+      "/Users/xangma/repos/torchwave/docs/reviews/2026-09-11-agy/verification/strict-analytic.json"
+    ],
+    "pid": 86964,
+    "log": "/Users/xangma/repos/torchwave/docs/reviews/2026-09-11-agy/verification/strict-analytic.log",
+    "started_utc": "2026-09-11T03:26:58Z",
+    "environment": {
+      "PYTHONPATH": "src:/tmp/torchwave-parity-review-20260910/pytest-runner",
+      "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1"
+    },
+    "stop_command": "kill -TERM -- -86964",
+    "exit_code": 0,
+    "finished_utc": "2026-09-11T03:27:14Z"
+  },
+  {
+    "name": "strict-catalog",
+    "host": "client-3792.default.vpn.port.ac.uk",
+    "cwd": "/Users/xangma/repos/torchwave",
+    "command": [
+      "/Users/xangma/miniconda3/envs/pycbcorig313/bin/python",
+      "tests/parity_harness.py",
+      "--strict",
+      "--json-out",
+      "/Users/xangma/repos/torchwave/docs/reviews/2026-09-11-agy/verification/strict-catalog.json"
+    ],
+    "pid": 86965,
+    "log": "/Users/xangma/repos/torchwave/docs/reviews/2026-09-11-agy/verification/strict-catalog.log",
+    "started_utc": "2026-09-11T03:26:58Z",
+    "environment": {
+      "PYTHONPATH": "src:/tmp/torchwave-parity-review-20260910/pytest-runner",
+      "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1"
+    },
+    "stop_command": "kill -TERM -- -86965",
+    "exit_code": 1,
+    "finished_utc": "2026-09-11T03:27:14Z"
+  }
+]

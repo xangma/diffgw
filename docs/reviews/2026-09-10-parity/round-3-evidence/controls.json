@@ -1,0 +1,104 @@
+{
+  "baseline_support": {
+    "status": "PASSED",
+    "plus": {
+      "complex_relative_l2": 1.6385727303663531e-12,
+      "relative_norm_error": 7.182497756436873e-16,
+      "magnitude_relative_l2": 8.031111752526115e-16,
+      "flat_mismatch": 2.220446049250313e-16,
+      "psd_mismatch": 0.0,
+      "optimized_match": 0.9999999999999998,
+      "finite": true,
+      "dc_zero": true,
+      "out_of_band_zero": false
+    },
+    "cross": {
+      "complex_relative_l2": 1.6385727303663531e-12,
+      "relative_norm_error": 7.182497756436873e-16,
+      "magnitude_relative_l2": 8.031111752526115e-16,
+      "flat_mismatch": 2.220446049250313e-16,
+      "psd_mismatch": 0.0,
+      "optimized_match": 0.9999999999999998,
+      "finite": true,
+      "dc_zero": true,
+      "out_of_band_zero": false
+    },
+    "detector_h1": {
+      "complex_relative_l2": 1.6385745021034958e-12,
+      "relative_norm_error": 8.627953686678978e-16,
+      "magnitude_relative_l2": 8.10685616278667e-16,
+      "flat_mismatch": 0.0,
+      "psd_mismatch": 0.0,
+      "optimized_match": 0.9999999999999998,
+      "finite": true,
+      "dc_zero": true,
+      "out_of_band_zero": false
+    }
+  },
+  "nonzero_dc_negative_control": {
+    "status": "PASSED",
+    "plus_dc_zero": false,
+    "cross_dc_zero": false
+  },
+  "psd_gate_negative_control": {
+    "status": "PASSED",
+    "psd_mismatch": 0.5
+  },
+  "projection_gate_negative_control": {
+    "status": "PASSED",
+    "projected_complex_relative_l2": 0.9999999999999984
+  },
+  "strict_missing_pycbc": {
+    "status": "PASSED",
+    "optimized_match": null
+  },
+  "detector_argument": {
+    "H1": [
+      -0.4989668038630205,
+      -0.022657568480817264
+    ],
+    "L1": [
+      -0.4989668038630205,
+      -0.022657568480817264
+    ],
+    "V1": [
+      -0.4989668038630205,
+      -0.022657568480817264
+    ],
+    "not-a-detector": [
+      -0.4989668038630205,
+      -0.022657568480817264
+    ]
+  },
+  "spin_alias_edges": {
+    "TaylorF2": {
+      "matching_batch_alias": {
+        "error": "Boolean value of Tensor with more than one value is ambiguous"
+      },
+      "explicit_zero_conflict_rejected": false,
+      "unknown_keyword_ignored": false
+    },
+    "IMRPhenomD": {
+      "matching_batch_alias": {
+        "error": "Boolean value of Tensor with more than one value is ambiguous"
+      },
+      "explicit_zero_conflict_rejected": false,
+      "unknown_keyword_ignored": false
+    },
+    "TaylorF2_Eccentric": {
+      "matching_batch_alias": {
+        "error": "Boolean value of Tensor with more than one value is ambiguous"
+      },
+      "explicit_zero_conflict_rejected": false,
+      "unknown_keyword_ignored": true
+    }
+  },
+  "existing_alias_test_tolerance_control": {
+    "max_waveform_magnitude": 3.023452786176715e-22,
+    "zero_waveform_passes_existing_allclose": true
+  },
+  "ecc_model_alias_reference": {
+    "relative_l2_vs_canonical": 1.244022780035545,
+    "alias_equals_explicit_f0_20": true
+  }
+}

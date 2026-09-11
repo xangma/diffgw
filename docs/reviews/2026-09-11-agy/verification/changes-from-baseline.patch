@@ -1,0 +1,2421 @@
+--- baseline/.github/workflows/parity_oracle.yml
++++ current/.github/workflows/parity_oracle.yml
+@@ -40,6 +40,7 @@
+           PYTHONPATH=src pytest -v tests/
+ 
+       - name: Execute Strict Parity Harness
++        if: always()
+         shell: bash -el {0}
+         env:
+           STRICT_PARITY: "1"
+--- baseline/docs/model_manifest.json
++++ current/docs/model_manifest.json
+@@ -2,7 +2,7 @@
+   "$schema": "https://json-schema.org/draft/2020-12/schema",
+   "manifest_version": "1.0.0",
+   "project": "torchwave",
+-  "description": "Clean-room PyTorch gravitational waveform modeling library with literature provenance and verified LALSimulation oracle parity.",
++  "description": "Clean-room PyTorch gravitational waveform modeling library with literature provenance and explicitly scoped LALSimulation oracle verification; full catalog parity is unmet.",
+   "acceptance_gates": {
+     "direct_cpu_fp64": {
+       "complex_relative_l2": 1.0e-6,
+@@ -11,7 +11,8 @@
+       "psd_mismatch": 1.0e-8
+     },
+     "precessing_and_hm_tolerance": {
+-      "optimized_match": 0.995
++      "optimized_match": 0.995,
++      "role": "diagnostic reference only; does not replace direct complex, norm, or mismatch gates"
+     }
+   },
+   "global_conventions": {
+@@ -45,10 +46,18 @@
+         "optional": ["chi1", "chi2", "spin1z", "spin2z", "distance", "inclination", "phic", "tc", "f_ref", "lambda1", "lambda2", "spin_order", "tidal_order"]
+       },
+       "status": "verified_parity",
++      "notes": "Strict CPU FP64 parity passed only on the 4 declared TaylorF2 cases. Both polarizations have complex relative L2 < 1.64e-12; the six detector/sky projections per case have complex relative L2 < 3.08e-7. These measurements do not certify the full parameter domain. Evidence: docs/reviews/2026-09-11-agy/verification/strict-catalog.json.",
+       "direct_fp64_parity": {
+-        "complex_relative_l2": 1.6e-12,
+-        "relative_norm_error": 8.0e-16,
+-        "mismatch": 1.0e-16
++        "complex_relative_l2": 1.6394511672528196e-12,
++        "relative_norm_error": 8.557465858376769e-16,
++        "mismatch": 2.220446049250313e-16,
++        "scope": "maximum over both polarizations of declared cases; detector projections recorded separately",
++        "case_ids": [
++          "TF2_point_particle_bns",
++          "TF2_unequal_spinning",
++          "TF2_tidal_6PN",
++          "TF2_tidal_6.5PN"
++        ]
+       },
+       "primary_references": [
+         {"citation": "Buonanno, Iyer, Ochsner, Pan, Sathyaprakash (2009), Phys. Rev. D 80, 084043", "doi": "10.1103/PhysRevD.80.084043"},
+@@ -63,7 +72,8 @@
+       "domain": "frequency_domain",
+       "spins": "aligned",
+       "modes": ["(2,2)", "(2,1)", "(3,3)", "(4,4)"],
+-      "status": "partial_parity",
++      "status": "unresolved_oracle",
++      "notes": "This harness has no independently validated external oracle mapping for the higher-mode expansion.",
+       "primary_references": [
+         {"citation": "García-Quirós et al. (2020), Phys. Rev. D 102, 064002", "doi": "10.1103/PhysRevD.102.064002", "equations": "Eq. (3)"}
+       ]
+@@ -80,10 +90,16 @@
+         "ecc_order": "Up to 6 (3PN eccentric phase expansion)"
+       },
+       "status": "verified_parity",
++      "notes": "Strict CPU FP64 parity passed only on the 2 declared TaylorF2_Eccentric cases. Both polarizations have complex relative L2 < 1.64e-12; the six detector/sky projections per case have complex relative L2 < 3.08e-7. These measurements do not certify the full parameter domain. Evidence: docs/reviews/2026-09-11-agy/verification/strict-catalog.json.",
+       "direct_fp64_parity": {
+-        "complex_relative_l2": 1.9e-12,
+-        "relative_norm_error": 7.0e-16,
+-        "mismatch": 1.0e-16
++        "complex_relative_l2": 1.6385727303663531e-12,
++        "relative_norm_error": 7.182497756436873e-16,
++        "mismatch": 2.220446049250313e-16,
++        "scope": "maximum over both polarizations of declared cases; detector projections recorded separately",
++        "case_ids": [
++          "TF2Ecc_circular_limit",
++          "TF2Ecc_eccentric_spinning"
++        ]
+       },
+       "primary_references": [
+         {"citation": "Moore, Favata, Arun, Mishra (2016), Phys. Rev. D 93, 124061", "doi": "10.1103/PhysRevD.93.124061", "equations": "Eqs. (4.17)-(4.18)"}
+@@ -97,7 +113,7 @@
+       "spins": "aligned",
+       "modes": ["(2,2)"],
+       "status": "partial_parity",
+-      "notes": "Low and moderate spin regimes pass with match >= 0.999999. High-spin corner (30,30,0.8,0.8) achieves optimized match 0.9999744, with magnitude relative L2 error 0.004309 and norm ratio 1.000150 across [20, 1024) Hz, df=0.25, distance 410 Mpc.",
++      "notes": "Partial parity against LALSimulation IMRPhenomD. Diagnostic catalog verification configuration yields plus magnitude relative L2 error 0.0014835; full strict direct complex L2 <= 1e-6 gate is unmet.",
+       "primary_references": [
+         {"citation": "Husa et al. (2016), Phys. Rev. D 93, 044006", "doi": "10.1103/PhysRevD.93.044006"},
+         {"citation": "Khan et al. (2016), Phys. Rev. D 93, 044007", "doi": "10.1103/PhysRevD.93.044007", "tables": "Table V", "equations": "Eqs. (24), (28)-(32)"},
+@@ -113,7 +129,7 @@
+       "modes": ["(2,2) coprecessing"],
+       "frame_convention": "P-frame precession angle twisting via single effective precession parameter chi_p",
+       "status": "partial_parity",
+-      "notes": "Achieves match >= 0.998 across precessing test cases using Hannam et al. (2014) and Schmidt et al. (2015).",
++      "notes": "Partial parity against LALSimulation IMRPhenomPv2. Uses single-effective-spin twisting approximation; diagnostic catalog configuration yields plus magnitude relative L2 error 0.1182047, strict direct complex L2 <= 1e-6 gate is unmet.",
+       "primary_references": [
+         {"citation": "Hannam et al. (2014), Phys. Rev. Lett. 113, 151101", "doi": "10.1103/PhysRevLett.113.151101"},
+         {"citation": "Schmidt et al. (2015), Phys. Rev. D 91, 024043", "doi": "10.1103/PhysRevD.91.024043"}
+@@ -128,7 +144,7 @@
+       "modes": ["(2,2) coprecessing"],
+       "frame_convention": "Multispin P-frame twisting angles with NNLO spin-orbit angles (Chatziioannou et al. 2017, Pratten et al. 2021)",
+       "status": "partial_parity",
+-      "notes": "4th-generation precessing model using Pratten et al. (2021) angles.",
++      "notes": "Partial parity against LALSimulation IMRPhenomXP. 4th-generation precessing model using Pratten et al. (2021) angles; diagnostic catalog configuration yields plus magnitude relative L2 error 0.1177515, strict direct complex L2 <= 1e-6 gate is unmet.",
+       "primary_references": [
+         {"citation": "Pratten et al. (2021), Phys. Rev. D 103, 104056", "doi": "10.1103/PhysRevD.103.104056", "equations": "Appendix B, Eqs. (B1)-(B2)"}
+       ]
+@@ -142,7 +158,7 @@
+       "modes": ["(2,2)", "(2,1)", "(3,3)", "(3,2)", "(4,4)"],
+       "frame_convention": "Co-orbital to radiation frame SWSH projection with London et al. (2018) mode mixing",
+       "status": "partial_parity",
+-      "notes": "Matches LALSimulation with overlap >= 0.99. Common time translation exp(-2*pi*i*f*tc) verified to machine precision (< 1e-13).",
++      "notes": "Partial parity against LALSimulation IMRPhenomHM. Multipolar model with SWSH projection; diagnostic catalog configuration yields plus magnitude relative L2 error 0.1973065, strict direct complex L2 <= 1e-6 gate is unmet.",
+       "primary_references": [
+         {"citation": "London et al. (2018), Phys. Rev. Lett. 120, 161102", "doi": "10.1103/PhysRevLett.120.161102"}
+       ]
+@@ -156,7 +172,7 @@
+       "modes": ["(2,2)", "(2,1)", "(3,3)", "(3,2)", "(4,4)"],
+       "frame_convention": "García-Quirós et al. (2020) spherical harmonic decomposition and collocation reconstruction",
+       "status": "partial_parity",
+-      "notes": "Clean-room 4th-generation higher multipole approximant built upon IMRPhenomXAS carrier (distinct from IMRPhenomHM which uses PhenomD carrier). Diagnostic overlap match >= 0.990-0.993 against LALSimulation across modes and inclinations.",
++      "notes": "Partial parity against LALSimulation IMRPhenomXHM. Multipolar approximant built on native IMRPhenomXAS carrier; diagnostic catalog configuration yields plus magnitude relative L2 error 0.1164806, strict direct complex L2 <= 1e-6 gate is unmet.",
+       "primary_references": [
+         {"citation": "García-Quirós et al. (2020), Phys. Rev. D 102, 064002", "doi": "10.1103/PhysRevD.102.064002", "equations": "Eq. (3)"},
+         {"citation": "Pratten et al. (2020), Phys. Rev. D 102, 064001", "doi": "10.1103/PhysRevD.102.064001"}
+@@ -171,7 +187,7 @@
+       "modes": ["(2,2)", "(2,1)", "(3,3)", "(3,2)", "(4,4) coprecessing"],
+       "frame_convention": "Time-dependent Wigner-D rotation from coprecessing frame to inertial detector frame (Pratten et al. 2021)",
+       "status": "partial_parity",
+-      "notes": "4th-generation precessing higher-multipole model; combines IMRPhenomXHM multipolar coprecessing waveforms with MSA/Euler precession angles.",
++      "notes": "Partial parity against LALSimulation IMRPhenomXPHM. 4th-generation precessing higher-multipole model; diagnostic catalog configuration yields plus magnitude relative L2 error 0.1067059, strict direct complex L2 <= 1e-6 gate is unmet.",
+       "primary_references": [
+         {"citation": "Pratten et al. (2021), Phys. Rev. D 103, 104056", "doi": "10.1103/PhysRevD.103.104056"},
+         {"citation": "García-Quirós et al. (2020), Phys. Rev. D 102, 064002", "doi": "10.1103/PhysRevD.102.064002"}
+@@ -185,7 +201,7 @@
+       "spins": "aligned",
+       "modes": ["(2,2)"],
+       "status": "partial_parity",
+-      "notes": "Clean-room 4th-generation aligned-spin model with canonical version 104 fits and verified C1 continuous phasing ported to native PyTorch from author-released Mathematica release candidate (G. Pratten et al. 2019, SHA256: 94b9334c...). Diagnostic overlap against LALSimulation achieves match >= 0.996-0.999 across parameter space (35/30: 0.9960, 50/15: 0.9988, 60/7.5: 0.9986, 75/5: 0.9990, 30/30: 0.9988), norm ratio 1.008-1.048, magnitude relative L2 error 0.032-0.097. Fully differentiable under PyTorch autograd without forward graph hooks.",
++      "notes": "Clean-room aligned-spin model using author-released version 104 fits and an analytic inspiral amplitude boundary derivative. The catalog case has plus magnitude relative L2 0.0974379 and component-optimized match 0.9960015; strict direct complex parity remains unmet. The derivative tests do not establish continuity of the complete piecewise amplitude or parameter-domain parity.",
+       "primary_references": [
+         {"citation": "Pratten et al. (2020), Phys. Rev. D 102, 064001", "doi": "10.1103/PhysRevD.102.064001"},
+         {"citation": "Mathematica public release candidate: IMRPhenomXAS_Parameter_Space_Fits_Public_Release_Candidate.m", "url": "https://journals.aps.org/prd/supplemental/10.1103/PhysRevD.102.064001/IMRPhenomXAS_Parameter_Space_Fits_Public_Release_Candidate.m"}
+@@ -199,7 +215,7 @@
+       "spins": "aligned",
+       "modes": ["(2,2)"],
+       "status": "partial_parity",
+-      "notes": "Overlap >= 0.99999 against LAL; unnormalized direct L2 residual remains under investigation.",
++      "notes": "Partial parity against LALSimulation IMRPhenomD_NRTidal; diagnostic catalog configuration yields plus magnitude relative L2 error 3.94859e-6, strict direct complex L2 <= 1e-6 gate is unmet.",
+       "primary_references": [
+         {"citation": "Dietrich et al. (2017), Phys. Rev. D 96, 121501", "doi": "10.1103/PhysRevD.96.121501"}
+       ]
+@@ -212,7 +228,7 @@
+       "spins": "aligned",
+       "modes": ["(2,2)"],
+       "status": "partial_parity",
+-      "notes": "Optimized match >= 0.999996; unnormalized residual remains under investigation.",
++      "notes": "Partial parity against LALSimulation IMRPhenomD_NRTidalv2; diagnostic catalog configuration yields plus magnitude relative L2 error 0.00202194, strict direct complex L2 <= 1e-6 gate is unmet.",
+       "primary_references": [
+         {"citation": "Dietrich et al. (2019), Phys. Rev. D 100, 044003", "doi": "10.1103/PhysRevD.100.044003", "equations": "Eqs. (15)-(21)"}
+       ]
+@@ -225,7 +241,7 @@
+       "spins": "aligned",
+       "modes": ["(2,2)"],
+       "status": "partial_parity",
+-      "notes": "Corrected 2*pi frequency coordinate scaling; match >= 0.99994. Torus remnant disruption model pending full calibration.",
++      "notes": "Partial parity against LALSimulation IMRPhenomNSBH; diagnostic catalog configuration yields plus magnitude relative L2 error 0.0080058, strict direct complex L2 <= 1e-6 gate is unmet.",
+       "primary_references": [
+         {"citation": "Pannarale et al. (2015), Phys. Rev. D 92, 084041", "doi": "10.1103/PhysRevD.92.084041"},
+         {"citation": "Thompson et al. (2020), Phys. Rev. D 101, 124059", "doi": "10.1103/PhysRevD.101.124059"}
+@@ -238,8 +254,8 @@
+       "domain": "time_domain and frequency_domain",
+       "spins": "aligned Kerr remnant",
+       "modes": ["(2,2)", "(3,3)", "(4,4)"],
+-      "status": "verified_parity",
+-      "notes": "Frequencies and damping times derived from Berti et al. (2006) Table VIII published fits.",
++      "status": "unresolved_oracle",
++      "notes": "Standalone Kerr ringdown model using Berti et al. (2006) Table VIII fits. This harness has no independently validated oracle mapping; formula tests do not establish external parity.",
+       "primary_references": [
+         {"citation": "Berti, Cardoso, Will (2006), Phys. Rev. D 73, 064030", "doi": "10.1103/PhysRevD.73.064030", "tables": "Table VIII"}
+       ]
+--- baseline/docs/provenance_ledger.md
++++ current/docs/provenance_ledger.md
+@@ -82,9 +82,16 @@
+     - **SHA256**: `94b9334c19f3a7909864891ea278ab9a411e4f33b7b7e17cc01d927056d9ac52`
+     - **Size**: 61,053 bytes
+     - **Access Status**: Freely downloadable public supplemental deposit.
+-    - **Integration Status**: Canonical version 104 fits + exact analytical pseudo-PN derivative + C1 continuous phasing across boundaries ported to native clean-room PyTorch with autograd differentiability and batch broadcasting. Evaluated against LALSimulation oracle: diagnostic overlap achieves match $\ge 0.996 - 0.999$ across parameter space (35/30: 0.9960, 50/15: 0.9988, 60/7.5: 0.9986, 75/5: 0.9990, 30/30: 0.9988), norm ratio $1.008 - 1.048$, magnitude relative $L_2$ error $0.032 - 0.097$.
++    - **Integration Status**: Canonical version 104 fits and analytic inspiral amplitude boundary derivative are implemented in native PyTorch with parameter gradients and batch broadcasting. Five tested XAS configurations yielded component-optimized diagnostic matches 0.9960, 0.9988, 0.9986, 0.9990, and 0.9988, with magnitude relative $L_2$ errors $0.032 - 0.097$. This finite sample does not establish parameter-domain parity or continuity of the complete piecewise amplitude. See the [September 11 verification report](reviews/2026-09-11-agy/report.md) for current acceptance results.
++  - **Phase 1 Clean-Room Parity Updates (2026-09-11)**:
++    - *Analytic Amplitude Derivative*: Replaced the forward finite difference at the inspiral boundary $f_{\rm trans, amp}$ with analytic derivatives of the 3PN amplitude (Eq. 69) and pseudo-PN terms (Eq. 68). The PN helper was checked against independent complex-step differentiation to $< 10^{-11}$ relative error at five configurations; this does not independently verify the complete boundary construction.
++    - *Intermediate Phase Collocation Weighted Average*: Checked published Eq. (95), $v_2^{\rm int} = 0.75(v_4^{\rm RD} + \Delta v_2^{\rm RD,4}) + 0.25 v_2^{\rm direct}$. The pre-dispatch formula was already correct; an attempted removal was rejected and restored during review.
++    - *Parity Status*: Full acceptance gates ($10^{-6}$ relative $L_2$, $10^{-8}$ mismatch) remain unresolved; remaining amplitude discrepancies are not attributed to a single cause and require further investigation.
++  - **Phase 2 Clean-Room Parity Acceptance Hardening (2026-09-11)**:
++    - *Scoped Parity Verification*: Overhauled `tests/parity_harness.py` to enforce declarative frozen inventory validation, multi-detector (H1/L1/V1) projections using public LAL binary APIs (`lal.ComputeDetAMResponse`, `lal.TimeDelayFromEarthCenter`) at physical GPS times, multi-PSD coverage, and physical bounds checks.
++    - *Catalog Scope*: Executed 16 deterministic cases covering 12 of the 17 manifest models: 6 analytic cases passed and 10 non-analytic cases failed. Five models without independently validated oracle mappings in this harness (`TaylorF2_HM`, `KerrRingdown`, `SEOBNR_ODE`, `SEOBNR_ROM`, `TEOBResumS`) are tracked as `UNRESOLVED_ORACLE`. Full catalog parity (`catalog_passed`) is `False`.
+ - **IMRPhenomXHM Multipolar Integration**:
+-  - `IMRPhenomXHM` specializes to the native `IMRPhenomXAS` carrier for the $(2, 2)$ base mode, producing waveforms distinct from `IMRPhenomHM` (which specializes to `IMRPhenomD`), achieving match $\ge 0.990 - 0.993$ against LALSimulation.
++  - `IMRPhenomXHM` uses the native `IMRPhenomXAS` carrier for the $(2, 2)$ base mode; `IMRPhenomHM` uses `IMRPhenomD`. The September 11 XHM catalog case has plus magnitude relative $L_2=0.11648$ and a component-optimized match of 0.99063. Strict parity remains unmet.
+ 
+ ### 2.7 SEOBNR Reduced-Order Model (ROM Surrogate)
+ - **Primary References**:
+@@ -117,4 +124,3 @@
+ |---|---|---|---|
+ | Native SEOBNR ROM Surrogate | `src/torchwave/data/seobnr_surrogate.pt` | `8316be966b297f474be810024a6add2d5e64559ee3c506302e8ea83372085414` | Trained via `torchwave.approximants.eob.SEOBNR_ODE` on CPU |
+ | APS IMRPhenomXAS Parameter Space Fits | `src/torchwave/data/IMRPhenomXAS_Parameter_Space_Fits_Public_Release_Candidate.m` | `94b9334c19f3a7909864891ea278ab9a411e4f33b7b7e17cc01d927056d9ac52` | APS PRD Supplemental Material (Pratten et al. 2020) |
+-
+--- baseline/docs/reviews/2026-09-10-parity/completion_report.md
++++ current/docs/reviews/2026-09-10-parity/completion_report.md
+@@ -1,110 +1,12 @@
+-# TorchWave Parity Completion and Verification Report
++# TorchWave parity status — superseded September 11, 2026
+ 
+-**Date**: September 10, 2026  
+-**Audited HEAD**: `1ed8d50db7fe6b2220f86e41082a2f79764f9330` (uncommitted user modifications preserved)  
+-**Verification Environment**: Python 3.13.9, PyTorch 2.9.1, LAL 7.7.0, LALSimulation 6.2.0, PyCBC 2.10.0  
+-**Machine**: Apple Silicon (CPU FP64 / complex128, MPS FP32 tested)
++The current report is [the September 11 Agy review and verification](../2026-09-11-agy/report.md). Full catalog parity is **not complete**.
+ 
+----
++- Final regression suite: **238 passed**.
++- Strict analytic acceptance: **6/6 passed**, comprising four TaylorF2 cases and two TaylorF2_Eccentric cases.
++- Strict catalog acceptance: **6/16 cases passed**, ten failed, and five of the 17 manifest models have no independently validated oracle mapping in the harness.
++- Direct complex/norm gates remain `1e-6`; direct flat and named-PSD mismatch gates remain `1e-8`, on both polarizations and six detector/sky projections per case.
+ 
+-## 1. Executive Summary and Parity Gate Status
++Optimized matches are diagnostics and do not establish unnormalized amplitude parity. Earlier claims of verification across parameter space, blanket high overlaps for higher modes/precession, and external Kerr ringdown parity exceeded the recorded evidence. The current report and manifest restrict claims to measured configurations.
+ 
+-This report provides a strict, honest accounting of numerical parity between TorchWave and LALSimulation.
+-
+-**Crucial Distinction**: Test-suite passing status is distinguished from full waveform numerical parity. While **215 tests pass cleanly** across the test suite, full numerical parity across the catalog is rigorously tracked:
+-- **Verified Strict Parity**: `TaylorF2` and `TaylorF2_Eccentric` achieve near-machine-precision parity with LALSimulation on CPU FP64, with direct unnormalized complex relative $L_2 \le 1.6\times 10^{-12} - 2.0\times 10^{-12}$, relative norm error $\le 8.5\times 10^{-16}$, and flat/PSD mismatch $\le 10^{-16}$.
+-- **High Diagnostic Overlap (Phenom 4th Gen)**: `IMRPhenomXAS` and `IMRPhenomXHM` achieve diagnostic match $\ge 0.990 - 0.999$ across parameter space against LALSimulation with canonical version 104 parameter-space fits + 2 QNM fits ported to native PyTorch from public author-released tables (SHA256: `94b9334c...`) and verified $C^1$ continuous phasing. Strict parity gates ($10^{-6}$ relative $L_2$) are unmet and remain under active development.
+-- **Partial Parity / Literature Residuals**: `IMRPhenomD` passes in low and moderate spin regimes (optimized match $\ge 0.999999$; inspiral amplitude error dropped to $0.05\%$ with corrected Khan et al. Eqs. 2581 & 2587), but exhibits an unmet gate in the high-spin corner `(30, 30, 0.8, 0.8)` with magnitude relative $L_2 \approx 0.014$ and norm ratio $0.9891$. `IMRPhenomP`/`Pv2`/`XP`, `IMRPhenomHM`, `NRTidal`/`NRTidalv2`, and `IMRPhenomNSBH` achieve high overlap ($\ge 0.995 - 0.99999$).
+-- **Standalone Differentiable Models**: `SEOBNR_ROM` evaluates a native clean-room PyTorch surrogate model trained on `SEOBNR_ODE` (SHA256: `8316be96...`), which is intentionally distinguished from LAL's `SEOBNRv4_ROM`.
+-
+----
+-
+-## 2. Acceptance Gates and Benchmark Results
+-
+-### Acceptance Gates (Direct CPU FP64)
+-- **Complex Relative $L_2$ Error**: $\|h_{\rm test} - h_{\rm ref}\|_2 / \|h_{\rm ref}\|_2 \le 1.0 \times 10^{-6}$
+-- **Relative Norm Error**: $| \|h_{\rm test}\|_2 - \|h_{\rm ref}\|_2 | / \|h_{\rm ref}\|_2 \le 1.0 \times 10^{-6}$
+-- **Flat-Noise Mismatch**: $1 - \langle h_{\rm test}, h_{\rm ref} \rangle / (\|h_{\rm test}\| \|h_{\rm ref}\|) \le 1.0 \times 10^{-8}$
+-- **PSD Mismatch**: $1 - \langle h_{\rm test}, h_{\rm ref} \rangle_{S_n} / (\|h_{\rm test}\|_{S_n} \|h_{\rm ref}\|_{S_n}) \le 1.0 \times 10^{-8}$
+-- **Precessing / Multipolar Models**: Continuous time/phase optimized match $\ge 0.995$
+-
+-### Deterministic Held-Out Verification Suite Results (`tests/parity_harness.py`)
+-All 6 held-out cases passed strict verification gates:
+-
+-| Case ID | Approximant | LAL Oracle | Complex Rel $L_2$ | Relative Norm Err | Flat Mismatch | aLIGO PSD Mismatch | Optimized Match | Status |
+-|---|---|---|---:|---:|---:|---:|---:|:---:|
+-| `TF2_point_particle_bns` | `TaylorF2` | `TaylorF2` | $1.639 \times 10^{-12}$ | $7.18 \times 10^{-16}$ | $2.22 \times 10^{-16}$ | $0.0$ | $1.0000000$ | **PASSED** |
+-| `TF2_unequal_spinning` | `TaylorF2` | `TaylorF2` | $1.626 \times 10^{-12}$ | $6.11 \times 10^{-16}$ | $0.0$ | $0.0$ | $1.0000000$ | **PASSED** |
+-| `TF2_tidal_6PN` | `TaylorF2` | `TaylorF2` | $1.639 \times 10^{-12}$ | $8.56 \times 10^{-16}$ | $2.22 \times 10^{-16}$ | $0.0$ | $1.0000000$ | **PASSED** |
+-| `TF2_tidal_6.5PN` | `TaylorF2` | `TaylorF2` | $1.601 \times 10^{-12}$ | $8.56 \times 10^{-16}$ | $0.0$ | $0.0$ | $1.0000000$ | **PASSED** |
+-| `TF2Ecc_circular_limit` | `TaylorF2_Eccentric` | `TaylorF2Ecc` | $1.639 \times 10^{-12}$ | $7.18 \times 10^{-16}$ | $2.22 \times 10^{-16}$ | $0.0$ | $1.0000000$ | **PASSED** |
+-| `TF2Ecc_eccentric_spinning` | `TaylorF2_Eccentric` | `TaylorF2Ecc` | $1.573 \times 10^{-12}$ | $4.44 \times 10^{-16}$ | $0.0$ | $0.0$ | $1.0000000$ | **PASSED** |
+-
+----
+-
+-## 3. Concrete Defect Resolutions and Regressions
+-
+-### 3.1 Eccentric Reference Resolution on DC Grid (`ecc_default_on_dc_grid`)
+-- **Defect**: With `sample_frequencies=0:0.25:500`, `f_lower=30`, `e0=0.05`, and no explicit `f0_ecc`, the reference frequency defaulted to the DC spacing $0.25\text{ Hz}$.
+-- **Resolution**: Implemented hierarchical physical resolution: explicit $f_{0,\rm ecc} \to f_{\rm lower} \to f_{\rm ref} \to 20.0\text{ Hz}$. Evaluation is now completely independent of sampling density and DC padding.
+-- **Regression**: Added `test_ecc_default_on_dc_grid` in `tests/test_eccentric.py`. In-band relative $L_2$ error vs explicit $30\text{ Hz}$ is identically $0.0$.
+-
+-### 3.2 Batched Eccentric Vector `f_ref` (`ecc_vector_fref`)
+-- **Defect**: Batched `f_ref=[30, 50]` raised `a Tensor with 2 elements cannot be converted to Scalar` due to scalar `.item()` conversions.
+-- **Resolution**: Removed scalar-only conversions, supported batched $(B, 1)$ broadcast reference tensors across all phase terms.
+-- **Regression**: Added `test_ecc_vector_fref` in `tests/test_eccentric.py`, verifying broadcast outputs match scalar evaluations.
+-
+-### 3.3 Spin Alias Routing and In-Plane Spin Rejection (`spin_alias`)
+-- **Defect**: `spin1z=0.3` was silently ignored for TaylorF2 and PhenomD while `chi1=0.3` modified the waveform. In-plane spins on aligned-spin models were silently ignored.
+-- **Resolution**: Routed `spin1z`/`spin2z` to `chi1`/`chi2` consistently across `waveforms.py` and underlying approximants; validated conflicting definitions with explicit `ValueError`; added strict validation rejecting non-zero in-plane spins (`spin1x, spin1y, spin2x, spin2y`) on aligned-spin approximants.
+-- **Regression**: Added `test_spin_alias_routing` and `test_aligned_in_plane_spin_rejection` in `tests/test_taylorf2_spins.py`.
+-
+-### 3.4 Higher Modes Common Time Translation Invariance (`hm_common_time_shift`)
+-- **Defect**: Higher harmonics in `IMRPhenomHM` violated linear time translation due to a spurious $(1 - 2/m) t_c$ term in `imrphenom_hm.py`. Relative errors for $(2,1), (3,3), (4,4)$ were $0.47 - 0.83$.
+-- **Resolution**: Removed the spurious phase term; enforced continuous intrinsic phase and exact linear time translation $\tilde{h}_{\ell m}(f; t_c) = \tilde{h}_{\ell m}(f; 0) e^{-2\pi i f t_c}$.
+-- **Regression**: Added `test_hm_common_time_shift` in `tests/test_imrphenom_hm.py`. Time translation error dropped to $< 1.4 \times 10^{-14}$ across all supported modes $(2,2), (2,1), (3,3), (3,2), (4,4)$.
+-
+-### 3.5 Phase Derivative Assertions
+-- **Defect**: Tests in `tests/test_conditioning_and_phasing.py` only checked derivative finiteness, masking potential sign or convention bugs.
+-- **Resolution**: Upgraded phase derivative assertions to test convergence against central finite differences ($h = 10^{-5}, 5\times 10^{-6}$), matching analytical derivatives to $< 10^{-6}$.
+-
+-### 3.6 Literature Citations Corrected
+-- Replaced LaTeX source line numbers with true published equation numbers:
+-  - `taylorf2_eccentric.py`: Moore et al. (2016) PRD 93, 124061 Eqs. (4.17)–(4.18)
+-  - `imrphenomp.py`: Pratten et al. (2021) PRD 103, 104056 Appendix B, Eqs. (B1)–(B2)
+-  - `imrphenom_hm.py` & `taylorf2_hm.py`: García-Quirós et al. (2020) PRD 102, 064002 Eq. (3)
+-  - `imrphenomd.py`: Khan et al. (2016) PRD 93, 044007 Table V and Eqs. (24), (28)–(32)
+-
+----
+-
+-## 4. Per-Target Parity Status and Unfinished Work Table
+-
+-| Approximant | LAL Oracle Equivalent | Test Suite | Waveform Parity Status | Current Best Metric | Unresolved Defect / Blocker / Next Action |
+-|---|---|:---:|:---:|---|---|
+-| **TaylorF2** | `TaylorF2` | 25 PASSED | **VERIFIED PARITY** | Complex rel $L_2 \le 1.6 \times 10^{-12}$, match $1.0$ | None. Fully verified to near machine precision. |
+-| **TaylorF2_Eccentric** | `TaylorF2Ecc` | 10 PASSED | **VERIFIED PARITY** | Complex rel $L_2 \le 1.9 \times 10^{-12}$, match $1.0$ | None. Fully verified to near machine precision. |
+-| **IMRPhenomD** | `IMRPhenomD` | 18 PASSED | **PARTIAL PARITY** | Match $\ge 0.999999$ (moderate spin); match $0.9999436$ (high spin) | **Unmet Gate**: High-spin corner `(30,30,0.8,0.8)` has magnitude relative $L_2 = 0.014$ and norm ratio $0.9891$. Root cause traced to Khan et al. (2016) Table V polynomial fit vs collocation points. |
+-| **IMRPhenomP / Pv2** | `IMRPhenomPv2` | 8 PASSED | **PARTIAL PARITY** | Optimized match $\ge 0.9982$ | Angle formulation uses single-effective-spin approximation; full MSA two-spin twisting model pending. |
+-| **IMRPhenomXP** | `IMRPhenomXP` | 4 PASSED | **PARTIAL PARITY** | Optimized match $\ge 0.9982$ | Simplified XP angle formulation; unnormalized direct $L_2$ gate unmet. |
+-| **IMRPhenomHM** | `IMRPhenomHM` | 7 PASSED | **PARTIAL PARITY** | Match $\ge 0.990$; time translation err $< 1.4 \times 10^{-14}$ | Higher modes use leading-order PN scaling rather than independently calibrated PhenomHM collocation points. |
+-| **IMRPhenomXHM** | `IMRPhenomXHM` | 3 PASSED | **PARTIAL PARITY** | Match $\ge 0.990$ | 4th-generation multipolar approximant built upon native IMRPhenomXAS carrier; diagnostic match $\ge 0.990-0.993$, strict $10^{-6}$ $L_2$ gate unmet. |
+-| **IMRPhenomXAS** | `IMRPhenomXAS` | 8 PASSED | **PARTIAL PARITY** | Match $\ge 0.996 - 0.999$ | Canonical version 104 fits + exact analytical pseudo-PN derivative + $C^1$ continuous phasing; diagnostic match $\ge 0.996 - 0.999$, strict $10^{-6}$ $L_2$ gate unmet. |
+-| **IMRPhenomXPHM** | `IMRPhenomXPHM` | 4 PASSED | **PARTIAL PARITY** | Match $\ge 0.985$ | Built on simplified HM and precession angles; full XPHM twisting pending. |
+-| **IMRPhenomD_NRTidal** | `IMRPhenomD_NRTidal` | 7 PASSED | **PARTIAL PARITY** | Match $\ge 0.99999$ | Direct unnormalized $L_2$ error gate unmet. |
+-| **IMRPhenomD_NRTidalv2** | `IMRPhenomD_NRTidalv2` | 7 PASSED | **PARTIAL PARITY** | Optimized match $\ge 0.999996$ | Unnormalized direct $L_2$ residual remains under investigation. |
+-| **IMRPhenomNSBH** | `IMRPhenomNSBH` | 6 PASSED | **PARTIAL PARITY** | Match $\ge 0.99994$ | Corrected $2\pi$ ringdown frequency coordinate scaling ($M f_{\rm RD} / M_{\rm sec}$); remnant torus disruption model pending full calibration. |
+-| **KerrRingdown** | Kerr QNM | 6 PASSED | **VERIFIED PARITY** | Frequency error $< 10^{-10}$ | Verified directly against Berti et al. (2006) Table VIII published QNM fits. |
+-| **SEOBNR_ODE** | SEOBNR Integrator | 5 PASSED | **STANDALONE DIFFERENTIABLE** | Self-consistent ODE solution | Native clean-room time-domain ODE integrator; ground truth for native ROM. |
+-| **SEOBNR_ROM** | `SEOBNRv4_ROM` | 4 PASSED | **STANDALONE SURROGATE** | Generator relative $L_2 \le 10^{-5}$ | Native PyTorch surrogate trained on `SEOBNR_ODE` (SHA256: `8316be96...`). Generator fidelity is strictly distinguished from LAL fidelity. |
+-| **TEOBResumS** | `TEOBResumS` | 4 PASSED | **STANDALONE PROTOTYPE** | N/A | Differentiable EOB prototype; uses leading quadrupole strain. |
+-
+----
+-
+-## 5. Artifacts and Provenance Deliverables
+-
+-1. **Model & Convention Manifest**: `docs/model_manifest.json`
+-2. **Literature Provenance Ledger**: `docs/provenance_ledger.md`
+-3. **Reusable Verification Harness**: `tests/parity_harness.py`
+-4. **Pinned-Oracle CI Workflow**: `.github/workflows/parity_oracle.yml`
+-5. **Machine-Readable Hash Ledger**: `docs/reviews/2026-09-10-parity/updated-hashes.json`
+-6. **Machine-Readable Harness Results**: `docs/reviews/2026-09-10-parity/parity_harness_results.json`
++Historical [round 6 evidence](round-6-evidence/harness.json) and earlier round evidence bundles remain unchanged. The old six-case result was an analytic subset, not a catalog acceptance result. The pre-dispatch editable report was retained with the dirty-workspace baseline in the local Agy run directory.
+--- baseline/src/torchwave/approximants/imrphenom_xas.py
++++ current/src/torchwave/approximants/imrphenom_xas.py
+@@ -473,8 +473,22 @@
+         super().__init__()
+ 
+     @staticmethod
+-    def pn_amp_func(eta_u: torch.Tensor, s1_u: torch.Tensor, s2_u: torch.Tensor, pi_mf: torch.Tensor, d_u: torch.Tensor) -> torch.Tensor:
+-        """3PN TaylorF2 amplitude expansion per Pratten et al. (2020) and Mathematica PNAmplitude."""
++    def pn_amp_func(
++        eta_u: torch.Tensor,
++        s1_u: torch.Tensor,
++        s2_u: torch.Tensor,
++        pi_mf: torch.Tensor,
++        d_u: torch.Tensor,
++        *,
++        derivative: bool = False,
++        return_both: bool = False,
++    ) -> Union[torch.Tensor, Tuple[torch.Tensor, torch.Tensor]]:
++        """3PN TaylorF2 amplitude expansion per Pratten et al. (2020) and Mathematica PNAmplitude.
++        
++        Powers of x = pi * M * f are 0, 2/3, 1, 4/3, 5/3, 2 for terms t1..t6.
++        Exact frequency derivative w.r.t. dimensionless M*f is:
++        d(A_PN)/d(Mf) = pi * d(A_PN)/dx = pi * ((2/3)*t2 + t3 + (4/3)*t4 + (5/3)*t5 + 2*t6) / x.
++        """
+         t1 = torch.ones_like(pi_mf)
+         t2 = (1.0 / 672.0) * (pi_mf ** (2.0 / 3.0)) * (-969.0 + 1804.0 * eta_u)
+         t3 = (1.0 / 48.0) * pi_mf * ((81.0 * (1.0 + d_u) - 44.0 * eta_u) * s1_u + (81.0 - 81.0 * d_u - 44.0 * eta_u) * s2_u)
+@@ -495,7 +509,15 @@
+             + 12.0 * eta_u * (-545384828789.0 + 21384760320.0 * PI**2 + 77616.0 * (-158633.0 + 282718.0 * d_u) * s1_u**2 + 49568837472.0 * s1_u * s2_u - 12312458928.0 * s2_u**2 - 21943440288.0 * d_u * s2_u**2 - 8345272320.0 * PI * (s1_u + s2_u))
+             + 7.0 * (177520268561.0 + 29362199328.0 * (1.0 + d_u) * s1_u**2 + 29362199328.0 * s2_u**2 - 29362199328.0 * d_u * s2_u**2 + 12160253952.0 * PI * (s1_u + d_u * s1_u + s2_u - d_u * s2_u))
+         )
+-        return t1 + t2 + t3 + t4 + t5 + t6
++        amp = t1 + t2 + t3 + t4 + t5 + t6
++        if derivative or return_both:
++            x_safe = torch.clamp(pi_mf, min=1e-12)
++            dpn_dx = ((2.0 / 3.0) * t2 + t3 + (4.0 / 3.0) * t4 + (5.0 / 3.0) * t5 + 2.0 * t6) / x_safe
++            dpn_d_mf = PI * dpn_dx
++            if return_both:
++                return amp, dpn_d_mf
++            return dpn_d_mf
++        return amp
+ 
+     def forward(
+         self,
+@@ -721,7 +743,9 @@
+         f3_col = f1_col + (2.0 / 3.0) * delta_f_int
+ 
+         x1_pi = PI * f1_col
+-        pn_at_trans = self.pn_amp_func(eta, s1_eff, s2_eff, x1_pi, delta)
++        pn_at_trans, dpn_trans = self.pn_amp_func(
++            eta, s1_eff, s2_eff, x1_pi, delta, return_both=True
++        )
+         val1 = (
+             pn_at_trans
+             + rho1 * (x1_pi ** (7.0 / 3.0))
+@@ -730,16 +754,14 @@
+         )
+         val4 = v1_rd
+ 
+-        df_eps = 1e-6
+-        x1_pi_plus = PI * (f1_col + df_eps)
+-        pn_plus = self.pn_amp_func(eta, s1_eff, s2_eff, x1_pi_plus, delta)
+-        val1_plus = (
+-            pn_plus
+-            + rho1 * (x1_pi_plus ** (7.0 / 3.0))
+-            + rho2 * (x1_pi_plus ** (8.0 / 3.0))
+-            + rho3 * (x1_pi_plus ** 3.0)
+-        )
+-        d1_val = (val1_plus - val1) / df_eps
++        # Exact analytic frequency derivative d/d(Mf) [A_ins] at f1_col per Pratten et al. (2020) Eqs. (68)-(69), (72), (77)
++        # Eliminates O(1e-6) finite-difference step-size truncation error in C1 inverse-amplitude boundary match
++        dpseudo_trans = PI * (
++            (7.0 / 3.0) * rho1 * (x1_pi ** (4.0 / 3.0))
++            + (8.0 / 3.0) * rho2 * (x1_pi ** (5.0 / 3.0))
++            + 3.0 * rho3 * (x1_pi ** 2.0)
++        )
++        d1_val = dpn_trans + dpseudo_trans
+ 
+         # Scale author unscaled amplitude fits to match normalized amplitude convention (factoring out A0)
+         pi_factor = PI ** (1.0 / 6.0)
+@@ -940,7 +962,8 @@
+         v3_int = v4_rd + v3m_rdv4
+         v2m_rdv4 = -XASParameterFits.fit_int_phase_v2m_rdv4(eta, s1_eff, s2_eff)
+         v2_direct = -XASParameterFits.fit_int_phase_v2(eta, s1_eff, s2_eff)
+-        v2_int = 0.75 * (v2m_rdv4 + v4_rd) + 0.25 * v2_direct
++        # Pratten et al. (2020) arXiv:2001.11412v1 Eq. (95): weighted average for intermediate collocation point v2
++        v2_int = 0.75 * (v4_rd + v2m_rdv4) + 0.25 * v2_direct
+         d43_int = -XASParameterFits.fit_int_phase_d43(eta, s1_eff, s2_eff)
+         v4_int = v3_int + d43_int
+ 
+--- baseline/tests/parity_harness.py
++++ current/tests/parity_harness.py
+@@ -3,7 +3,8 @@
+ Strict Clean-Room Literature Implementation:
+ Computes direct unnormalized complex relative L2 error, relative norm error,
+ magnitude relative L2 error, flat-noise mismatch, and named detector PSD mismatches
+-(e.g., Advanced LIGO Zero Detuning High Power, Cosmic Explorer, Einstein Telescope).
++(e.g., Advanced LIGO Zero Detuning High Power, Cosmic Explorer, Einstein Telescope)
++across multiple detectors (H1, L1, V1) and sky locations.
+ 
+ Acceptance Gates (Direct CPU FP64):
+ - complex_relative_l2 <= 1.0e-6
+@@ -11,9 +12,12 @@
+ - mismatch <= 1.0e-8
+ """
+ 
++import copy
+ import json
+ import math
+ import os
++from pathlib import Path
++import platform
+ import sys
+ from typing import Any, Dict, List, Optional, Sequence, Tuple, Union
+ 
+@@ -83,10 +87,14 @@
+     ip = flat_inner_product(h1, h2)
+     norm1 = math.sqrt(max(flat_inner_product(h1, h1), 0.0))
+     norm2 = math.sqrt(max(flat_inner_product(h2, h2), 0.0))
+-    if norm1 == 0.0 or norm2 == 0.0:
++    if norm1 == 0.0 or norm2 == 0.0 or not math.isfinite(norm1) or not math.isfinite(norm2) or not math.isfinite(ip):
+         return 1.0
+     overlap = ip / (norm1 * norm2)
+-    return max(0.0, 1.0 - overlap)
++    if not math.isfinite(overlap) or overlap > 1.0 + 1.0e-12 or overlap < -1.0 - 1.0e-12:
++        return float("nan")
++    if overlap > 1.0:
++        overlap = 1.0
++    return 1.0 - overlap
+ 
+ 
+ def psd_weighted_inner_product(
+@@ -96,8 +104,7 @@
+     df: float,
+ ) -> float:
+     """Compute PSD-weighted inner product: 4 * Re(sum(h1 * conj(h2) / psd)) * df."""
+-    safe_psd = torch.clamp(psd, min=1.0e-50)
+-    integrand = (h1 * torch.conj(h2)).real / safe_psd
++    integrand = (h1 * torch.conj(h2)).real / psd
+     return float(4.0 * torch.sum(integrand).item() * df)
+ 
+ 
+@@ -110,26 +117,139 @@
+     """Compute PSD-weighted mismatch: 1 - <h1, h2>_Sn / (||h1||_Sn * ||h2||_Sn)."""
+     if not (torch.is_tensor(psd) and torch.isfinite(psd).all() and (psd > 0.0).all()):
+         return 1.0
++    if h1.shape != psd.shape or h2.shape != psd.shape:
++        return 1.0
++    if not (torch.isfinite(h1).all() and torch.isfinite(h2).all()):
++        return 1.0
+     ip = psd_weighted_inner_product(h1, h2, psd, df)
+     norm1 = math.sqrt(max(psd_weighted_inner_product(h1, h1, psd, df), 0.0))
+     norm2 = math.sqrt(max(psd_weighted_inner_product(h2, h2, psd, df), 0.0))
+     if norm1 == 0.0 or norm2 == 0.0 or not math.isfinite(norm1) or not math.isfinite(norm2) or not math.isfinite(ip):
+         return 1.0
+     overlap = ip / (norm1 * norm2)
+-    return max(0.0, 1.0 - overlap)
++    if not math.isfinite(overlap) or overlap > 1.0 + 1.0e-12 or overlap < -1.0 - 1.0e-12:
++        return float("nan")
++    if overlap > 1.0:
++        overlap = 1.0
++    return 1.0 - overlap
++
++
++def validate_physical_overlap(val: Any) -> bool:
++    """Validate that overlap satisfies physical bounds -1.0 <= val <= 1.0 within 1e-12 FP tolerance."""
++    if val is None:
++        return True
++    if not (isinstance(val, (int, float)) and math.isfinite(val)):
++        return False
++    return -1.0 - 1.0e-12 <= val <= 1.0 + 1.0e-12
++
++
++def validate_waveform_and_grid(
++    h_tw: Any,
++    h_ref: Any,
++    freqs: Any,
++    df: float,
++    flow: float,
++    fhigh: float,
++    label: str = "waveform",
++) -> Tuple[bool, Optional[str]]:
++    """Strictly validate waveform arrays and frequency grid prior to metric computations.
++
++    Enforces:
++    - Finite CPU complex128 1D tensors for h_tw and h_ref
++    - Finite CPU float64 1D tensor for freqs, strictly increasing and uniform with step df
++    - Identical shapes between waveforms and grid
++    - Nonempty in-band support with positive finite energy
++    - Zero DC component when freqs[0] == 0.0
++    """
++    if not isinstance(freqs, torch.Tensor):
++        return False, f"[{label}] freqs must be a torch.Tensor, got {type(freqs).__name__}"
++    if freqs.ndim != 1:
++        return False, f"[{label}] freqs must be 1D, got ndim={freqs.ndim}"
++    if freqs.dtype != torch.float64:
++        return False, f"[{label}] freqs dtype must be torch.float64, got {freqs.dtype}"
++    if freqs.device.type != "cpu":
++        return False, f"[{label}] freqs must be on CPU, got {freqs.device}"
++    if len(freqs) < 2:
++        return False, f"[{label}] freqs must have at least 2 points, got length {len(freqs)}"
++    if not bool(torch.isfinite(freqs).all().item()):
++        return False, f"[{label}] freqs contains non-finite values (NaN or Inf)"
++
++    diffs = freqs[1:] - freqs[:-1]
++    if bool((diffs <= 0.0).any().item()):
++        return False, f"[{label}] freqs must be strictly increasing"
++    if not bool(torch.allclose(diffs, torch.tensor(df, dtype=torch.float64), atol=1e-12, rtol=1e-7)):
++        return False, f"[{label}] freqs step size is not uniformly equal to df={df}"
++
++    if not (0.0 <= flow < fhigh <= float(freqs[-1].item()) + df * 0.5):
++        return False, f"[{label}] frequency bounds invalid: flow={flow}, fhigh={fhigh}, f_max={float(freqs[-1].item())}"
++
++    for name, wf in [(f"{label}_tw", h_tw), (f"{label}_ref", h_ref)]:
++        if not isinstance(wf, torch.Tensor):
++            return False, f"[{name}] must be a torch.Tensor, got {type(wf).__name__}"
++        if wf.ndim != 1:
++            return False, f"[{name}] must be 1D, got ndim={wf.ndim}"
++        if wf.dtype != torch.complex128:
++            return False, f"[{name}] dtype must be torch.complex128, got {wf.dtype}"
++        if wf.device.type != "cpu":
++            return False, f"[{name}] must be on CPU, got {wf.device}"
++        if wf.shape != freqs.shape:
++            return False, f"[{name}] shape {wf.shape} does not match freqs shape {freqs.shape}"
++        if not bool(torch.isfinite(wf).all().item()):
++            return False, f"[{name}] contains non-finite values (NaN or Inf)"
++
++    sel = (freqs >= flow) & (freqs < fhigh)
++    if not bool(sel.any().item()):
++        return False, f"[{label}] in-band support is empty for flow={flow}, fhigh={fhigh}"
++
++    energy_tw = float(torch.sum(torch.abs(h_tw[sel]) ** 2).item())
++    energy_ref = float(torch.sum(torch.abs(h_ref[sel]) ** 2).item())
++    if energy_tw <= 0.0 or not math.isfinite(energy_tw):
++        return False, f"[{label}_tw] has zero or non-finite in-band energy: {energy_tw}"
++    if energy_ref <= 0.0 or not math.isfinite(energy_ref):
++        return False, f"[{label}_ref] has zero or non-finite in-band energy: {energy_ref}"
++
++    if freqs[0] == 0.0:
++        if h_tw[0] != 0.0:
++            return False, f"[{label}_tw] DC bin at f=0 must be zero, got {h_tw[0]}"
++        if h_ref[0] != 0.0:
++            return False, f"[{label}_ref] DC bin at f=0 must be zero, got {h_ref[0]}"
++
++    return True, None
++
++
++def validate_psd(
++    psd: Any,
++    expected_len: int,
++    label: str = "psd",
++) -> Tuple[bool, Optional[str]]:
++    """Validate PSD array is a 1D, finite, strictly positive CPU float64 tensor matching in-band size."""
++    if not isinstance(psd, torch.Tensor):
++        return False, f"[{label}] must be a torch.Tensor, got {type(psd).__name__}"
++    if psd.ndim != 1:
++        return False, f"[{label}] must be 1D, got ndim={psd.ndim}"
++    if psd.dtype != torch.float64:
++        return False, f"[{label}] dtype must be torch.float64, got {psd.dtype}"
++    if psd.device.type != "cpu":
++        return False, f"[{label}] must be on CPU, got {psd.device}"
++    if len(psd) != expected_len:
++        return False, f"[{label}] length {len(psd)} does not match expected in-band length {expected_len}"
++    if not bool(torch.isfinite(psd).all().item()):
++        return False, f"[{label}] contains non-finite values (NaN or Inf)"
++    if bool((psd <= 0.0).any().item()):
++        return False, f"[{label}] contains non-positive values (must be strictly > 0 without floor clamping)"
++    return True, None
+ 
+ 
+ def compute_antenna_factors(
+     ra: float,
+     dec: float,
+     psi: float,
+-    gmst: float = 0.0,
++    t_gps: float = 1126259462.0,
+     detector: str = "H1",
+ ) -> Tuple[float, float]:
+-    """Compute detector antenna response factors (F_plus, F_cross) from literature geometry."""
+-    from torchwave.detectors.network import Detector, GPS_REF_TIME, GMST_REF_RAD, OMEGA_EARTH
++    """Compute detector antenna response factors (F_plus, F_cross) from literature geometry using explicit GPS time."""
++    from torchwave.detectors.network import Detector
+     det = Detector(detector)
+-    t_gps = GPS_REF_TIME + (gmst - GMST_REF_RAD) / OMEGA_EARTH
+     fp, fc = det.antenna_patterns(ra, dec, psi, t_gps)
+     return float(fp.item()), float(fc.item())
+ 
+@@ -140,17 +260,16 @@
+     ra: float = 1.2,
+     dec: float = 0.4,
+     psi: float = 0.3,
+-    gmst: float = 0.0,
++    t_gps: float = 1126259462.0,
+     detector: str = "H1",
+     freqs: Optional[torch.Tensor] = None,
+ ) -> torch.Tensor:
+     """Project plus and cross polarizations onto a detector strain h(f) = (F_+ h_+ + F_x h_x) * exp(-2*pi*i*f*dt)."""
+-    fp, fc = compute_antenna_factors(ra=ra, dec=dec, psi=psi, gmst=gmst, detector=detector)
++    fp, fc = compute_antenna_factors(ra=ra, dec=dec, psi=psi, t_gps=t_gps, detector=detector)
+     h_comb = fp * hp + fc * hc
+     if freqs is not None:
+-        from torchwave.detectors.network import Detector, GPS_REF_TIME, GMST_REF_RAD, OMEGA_EARTH
++        from torchwave.detectors.network import Detector
+         det = Detector(detector)
+-        t_gps = GPS_REF_TIME + (gmst - GMST_REF_RAD) / OMEGA_EARTH
+         dt = det.time_delay_from_earth_center(ra, dec, t_gps)
+         phase = -2.0 * PI * freqs * dt
+         shift = torch.complex(torch.cos(phase), torch.sin(phase))
+@@ -165,7 +284,7 @@
+     df: float,
+     flow: float,
+     fhigh: float,
+-    psd_name: str = "aLIGOZeroDetHighPower",
++    compute_opt_match: bool = True,
+ ) -> Dict[str, Any]:
+     """Evaluate full suite of parity metrics between test and reference waveforms."""
+     sel = (freqs >= flow) & (freqs < fhigh)
+@@ -187,33 +306,24 @@
+     mag_l2 = direct_magnitude_relative_l2(t_in, r_in)
+     flat_mism = flat_mismatch(t_in, r_in)
+ 
+-    if psd_name == "aLIGOZeroDetHighPower":
+-        psd_vals = aLIGOZeroDetHighPower(f_in)
+-    elif psd_name == "CosmicExplorer":
+-        psd_vals = CosmicExplorer(f_in)
+-    elif psd_name == "EinsteinTelescope":
+-        psd_vals = EinsteinTelescope(f_in)
+-    elif psd_name == "flat":
+-        psd_vals = torch.ones_like(f_in)
+-    else:
+-        raise ValueError(f"Unknown PSD '{psd_name}'. Supported: ['aLIGOZeroDetHighPower', 'CosmicExplorer', 'EinsteinTelescope', 'flat']")
+-
+-    psd_mism = psd_mismatch(t_in, r_in, psd_vals, df)
++    psd_vals_aligo = aLIGOZeroDetHighPower(f_in)
++    psd_mism = psd_mismatch(t_in, r_in, psd_vals_aligo, df)
+ 
+     opt_match = None
+-    try:
+-        from pycbc.types import FrequencySeries
+-        from pycbc.filter.matchedfilter import optimized_match
+-
+-        s_test = FrequencySeries(np.zeros(len(freqs), dtype=np.complex128), delta_f=df)
+-        s_ref = FrequencySeries(np.zeros(len(freqs), dtype=np.complex128), delta_f=df)
+-        s_test.data[sel.cpu().numpy()] = t_in.detach().cpu().numpy()
+-        s_ref.data[sel.cpu().numpy()] = r_in.detach().cpu().numpy()
+-
+-        m_val, _ = optimized_match(s_ref, s_test, low_frequency_cutoff=flow, high_frequency_cutoff=fhigh)
+-        opt_match = float(m_val)
+-    except ImportError:
+-        pass
++    if compute_opt_match:
++        try:
++            from pycbc.types import FrequencySeries
++            from pycbc.filter.matchedfilter import optimized_match
++
++            s_test = FrequencySeries(np.zeros(len(freqs), dtype=np.complex128), delta_f=df)
++            s_ref = FrequencySeries(np.zeros(len(freqs), dtype=np.complex128), delta_f=df)
++            s_test.data[sel.cpu().numpy()] = t_in.detach().cpu().numpy()
++            s_ref.data[sel.cpu().numpy()] = r_in.detach().cpu().numpy()
++
++            m_val, _ = optimized_match(s_ref, s_test, low_frequency_cutoff=flow, high_frequency_cutoff=fhigh)
++            opt_match = float(m_val)
++        except ImportError:
++            pass
+ 
+     return {
+         "complex_relative_l2": comp_l2,
+@@ -228,136 +338,455 @@
+     }
+ 
+ 
+-DETERMINISTIC_HELD_OUT_CASES = [
+-    {
+-        "id": "TF2_point_particle_bns",
+-        "torch_name": "TaylorF2",
+-        "lal_name": "TaylorF2",
+-        "params": {
+-            "mass1": 1.4,
+-            "mass2": 1.4,
+-            "chi1": 0.0,
+-            "chi2": 0.0,
+-            "f_ref": 30.0,
+-            "distance": 100.0,
+-            "inclination": 0.0,
+-            "phic": 0.0,
+-            "tc": 0.0,
+-            "spin_order": 7,
+-            "tidal_order": 0,
+-        },
+-        "grid": {"flow": 30.0, "fhigh": 500.0, "df": 0.25},
+-        "expected_gate": {"complex_relative_l2": 1.0e-6, "mismatch": 1.0e-8},
+-    },
+-    {
+-        "id": "TF2_unequal_spinning",
+-        "torch_name": "TaylorF2",
+-        "lal_name": "TaylorF2",
+-        "params": {
+-            "mass1": 1.7,
+-            "mass2": 1.2,
+-            "chi1": 0.15,
+-            "chi2": -0.08,
+-            "f_ref": 50.0,
+-            "distance": 100.0,
+-            "inclination": 0.4,
+-            "phic": 0.5,
+-            "tc": 0.0,
+-            "spin_order": 7,
+-            "tidal_order": 0,
+-        },
+-        "grid": {"flow": 30.0, "fhigh": 600.0, "df": 0.25},
+-        "expected_gate": {"complex_relative_l2": 1.0e-6, "mismatch": 1.0e-8},
+-    },
+-    {
+-        "id": "TF2_tidal_6PN",
+-        "torch_name": "TaylorF2",
+-        "lal_name": "TaylorF2",
+-        "params": {
+-            "mass1": 1.4,
+-            "mass2": 1.4,
+-            "chi1": 0.0,
+-            "chi2": 0.0,
+-            "lambda1": 400.0,
+-            "lambda2": 400.0,
+-            "f_ref": 30.0,
+-            "distance": 100.0,
+-            "inclination": 0.0,
+-            "phic": 0.0,
+-            "tc": 0.0,
+-            "spin_order": 7,
+-            "tidal_order": 12,
+-        },
+-        "grid": {"flow": 30.0, "fhigh": 1000.0, "df": 0.25},
+-        "expected_gate": {"complex_relative_l2": 1.0e-6, "mismatch": 1.0e-8},
+-    },
+-    {
+-        "id": "TF2_tidal_6.5PN",
+-        "torch_name": "TaylorF2",
+-        "lal_name": "TaylorF2",
+-        "params": {
+-            "mass1": 1.4,
+-            "mass2": 1.4,
+-            "chi1": 0.0,
+-            "chi2": 0.0,
+-            "lambda1": 400.0,
+-            "lambda2": 400.0,
+-            "f_ref": 30.0,
+-            "distance": 100.0,
+-            "inclination": 0.0,
+-            "phic": 0.0,
+-            "tc": 0.0,
+-            "spin_order": 7,
+-            "tidal_order": 13,
+-        },
+-        "grid": {"flow": 30.0, "fhigh": 1000.0, "df": 0.25},
+-        "expected_gate": {"complex_relative_l2": 1.0e-6, "mismatch": 1.0e-8},
+-    },
+-    {
+-        "id": "TF2Ecc_circular_limit",
+-        "torch_name": "TaylorF2_Eccentric",
+-        "lal_name": "TaylorF2Ecc",
+-        "params": {
+-            "mass1": 1.4,
+-            "mass2": 1.4,
+-            "chi1": 0.0,
+-            "chi2": 0.0,
+-            "e0": 0.0,
+-            "f0_ecc": 30.0,
+-            "f_ref": 30.0,
+-            "distance": 100.0,
+-            "inclination": 0.0,
+-            "phic": 0.0,
+-            "tc": 0.0,
+-            "spin_order": 7,
+-            "ecc_order": 6,
+-        },
+-        "grid": {"flow": 30.0, "fhigh": 500.0, "df": 0.25},
+-        "expected_gate": {"complex_relative_l2": 1.0e-6, "mismatch": 1.0e-8},
+-    },
+-    {
+-        "id": "TF2Ecc_eccentric_spinning",
+-        "torch_name": "TaylorF2_Eccentric",
+-        "lal_name": "TaylorF2Ecc",
+-        "params": {
+-            "mass1": 1.7,
+-            "mass2": 1.2,
+-            "chi1": 0.15,
+-            "chi2": -0.08,
+-            "e0": 0.03,
+-            "f0_ecc": 30.0,
+-            "f_ref": 50.0,
+-            "distance": 100.0,
+-            "inclination": 0.3,
+-            "phic": 0.2,
+-            "tc": 0.0,
+-            "spin_order": 7,
+-            "ecc_order": 6,
+-        },
+-        "grid": {"flow": 30.0, "fhigh": 500.0, "df": 0.25},
+-        "expected_gate": {"complex_relative_l2": 1.0e-6, "mismatch": 1.0e-8},
+-    },
++# Immutable serialized specifications of required canonical cases
++_FROZEN_CANONICAL_ANALYTIC_JSON = json.dumps(
++    [
++        {
++            "id": "TF2_point_particle_bns",
++            "torch_name": "TaylorF2",
++            "lal_name": "TaylorF2",
++            "params": {
++                "mass1": 1.4,
++                "mass2": 1.4,
++                "chi1": 0.0,
++                "chi2": 0.0,
++                "f_ref": 30.0,
++                "distance": 100.0,
++                "inclination": 0.0,
++                "phic": 0.0,
++                "tc": 0.0,
++                "spin_order": 7,
++                "tidal_order": 0,
++            },
++            "grid": {"flow": 30.0, "fhigh": 500.0, "df": 0.25},
++            "expected_gate": {"complex_relative_l2": 1.0e-6, "mismatch": 1.0e-8},
++        },
++        {
++            "id": "TF2_unequal_spinning",
++            "torch_name": "TaylorF2",
++            "lal_name": "TaylorF2",
++            "params": {
++                "mass1": 1.7,
++                "mass2": 1.2,
++                "chi1": 0.15,
++                "chi2": -0.08,
++                "f_ref": 50.0,
++                "distance": 100.0,
++                "inclination": 0.4,
++                "phic": 0.5,
++                "tc": 0.0,
++                "spin_order": 7,
++                "tidal_order": 0,
++            },
++            "grid": {"flow": 30.0, "fhigh": 600.0, "df": 0.25},
++            "expected_gate": {"complex_relative_l2": 1.0e-6, "mismatch": 1.0e-8},
++        },
++        {
++            "id": "TF2_tidal_6PN",
++            "torch_name": "TaylorF2",
++            "lal_name": "TaylorF2",
++            "params": {
++                "mass1": 1.4,
++                "mass2": 1.4,
++                "chi1": 0.0,
++                "chi2": 0.0,
++                "lambda1": 400.0,
++                "lambda2": 400.0,
++                "f_ref": 30.0,
++                "distance": 100.0,
++                "inclination": 0.0,
++                "phic": 0.0,
++                "tc": 0.0,
++                "spin_order": 7,
++                "tidal_order": 12,
++            },
++            "grid": {"flow": 30.0, "fhigh": 1000.0, "df": 0.25},
++            "expected_gate": {"complex_relative_l2": 1.0e-6, "mismatch": 1.0e-8},
++        },
++        {
++            "id": "TF2_tidal_6.5PN",
++            "torch_name": "TaylorF2",
++            "lal_name": "TaylorF2",
++            "params": {
++                "mass1": 1.4,
++                "mass2": 1.4,
++                "chi1": 0.0,
++                "chi2": 0.0,
++                "lambda1": 400.0,
++                "lambda2": 400.0,
++                "f_ref": 30.0,
++                "distance": 100.0,
++                "inclination": 0.0,
++                "phic": 0.0,
++                "tc": 0.0,
++                "spin_order": 7,
++                "tidal_order": 13,
++            },
++            "grid": {"flow": 30.0, "fhigh": 1000.0, "df": 0.25},
++            "expected_gate": {"complex_relative_l2": 1.0e-6, "mismatch": 1.0e-8},
++        },
++        {
++            "id": "TF2Ecc_circular_limit",
++            "torch_name": "TaylorF2_Eccentric",
++            "lal_name": "TaylorF2Ecc",
++            "params": {
++                "mass1": 1.4,
++                "mass2": 1.4,
++                "chi1": 0.0,
++                "chi2": 0.0,
++                "e0": 0.0,
++                "f0_ecc": 30.0,
++                "f_ref": 30.0,
++                "distance": 100.0,
++                "inclination": 0.0,
++                "phic": 0.0,
++                "tc": 0.0,
++                "spin_order": 7,
++                "ecc_order": 6,
++            },
++            "grid": {"flow": 30.0, "fhigh": 500.0, "df": 0.25},
++            "expected_gate": {"complex_relative_l2": 1.0e-6, "mismatch": 1.0e-8},
++        },
++        {
++            "id": "TF2Ecc_eccentric_spinning",
++            "torch_name": "TaylorF2_Eccentric",
++            "lal_name": "TaylorF2Ecc",
++            "params": {
++                "mass1": 1.7,
++                "mass2": 1.2,
++                "chi1": 0.15,
++                "chi2": -0.08,
++                "e0": 0.03,
++                "f0_ecc": 30.0,
++                "f_ref": 50.0,
++                "distance": 100.0,
++                "inclination": 0.3,
++                "phic": 0.2,
++                "tc": 0.0,
++                "spin_order": 7,
++                "ecc_order": 6,
++            },
++            "grid": {"flow": 30.0, "fhigh": 500.0, "df": 0.25},
++            "expected_gate": {"complex_relative_l2": 1.0e-6, "mismatch": 1.0e-8},
++        },
++    ],
++    indent=2,
++    sort_keys=True,
++)
++
++_FROZEN_CANONICAL_MODEL_JSON = json.dumps(
++    [
++        {
++            "id": "IMRPhenomD_diagnostic",
++            "torch_name": "IMRPhenomD",
++            "lal_name": "IMRPhenomD",
++            "params": {
++                "mass1": 30.0,
++                "mass2": 20.0,
++                "chi1": 0.3,
++                "chi2": -0.2,
++                "f_ref": 20.0,
++                "distance": 400.0,
++                "inclination": 0.5,
++                "phic": 0.3,
++                "tc": 0.0,
++            },
++            "grid": {"flow": 20.0, "fhigh": 512.0, "df": 0.25},
++            "expected_gate": {"complex_relative_l2": 1.0e-6, "mismatch": 1.0e-8},
++        },
++        {
++            "id": "IMRPhenomXAS_diagnostic",
++            "torch_name": "IMRPhenomXAS",
++            "lal_name": "IMRPhenomXAS",
++            "params": {
++                "mass1": 35.0,
++                "mass2": 30.0,
++                "chi1": 0.2,
++                "chi2": -0.3,
++                "f_ref": 20.0,
++                "distance": 500.0,
++                "inclination": 0.6,
++                "phic": 0.4,
++                "tc": 0.0,
++            },
++            "grid": {"flow": 20.0, "fhigh": 512.0, "df": 0.125},
++            "expected_gate": {"complex_relative_l2": 1.0e-6, "mismatch": 1.0e-8},
++        },
++        {
++            "id": "IMRPhenomHM_diagnostic",
++            "torch_name": "IMRPhenomHM",
++            "lal_name": "IMRPhenomHM",
++            "params": {
++                "mass1": 40.0,
++                "mass2": 15.0,
++                "chi1": 0.3,
++                "chi2": -0.2,
++                "f_ref": 20.0,
++                "distance": 500.0,
++                "inclination": 0.8,
++                "phic": 0.2,
++                "tc": 0.0,
++            },
++            "grid": {"flow": 20.0, "fhigh": 512.0, "df": 0.25},
++            "expected_gate": {"complex_relative_l2": 1.0e-6, "mismatch": 1.0e-8},
++        },
++        {
++            "id": "IMRPhenomXHM_diagnostic",
++            "torch_name": "IMRPhenomXHM",
++            "lal_name": "IMRPhenomXHM",
++            "params": {
++                "mass1": 40.0,
++                "mass2": 20.0,
++                "chi1": 0.3,
++                "chi2": -0.1,
++                "f_ref": 20.0,
++                "distance": 500.0,
++                "inclination": 1.0,
++                "phic": 0.5,
++                "tc": 0.0,
++            },
++            "grid": {"flow": 20.0, "fhigh": 512.0, "df": 0.25},
++            "expected_gate": {"complex_relative_l2": 1.0e-6, "mismatch": 1.0e-8},
++        },
++        {
++            "id": "IMRPhenomPv2_diagnostic",
++            "torch_name": "IMRPhenomPv2",
++            "lal_name": "IMRPhenomPv2",
++            "params": {
++                "mass1": 35.0,
++                "mass2": 25.0,
++                "chi1": 0.2,
++                "chi2": -0.1,
++                "spin1x": 0.2,
++                "spin1y": 0.1,
++                "spin1z": 0.2,
++                "spin2x": -0.1,
++                "spin2y": 0.15,
++                "spin2z": -0.1,
++                "f_ref": 20.0,
++                "distance": 500.0,
++                "inclination": 0.7,
++                "phic": 0.3,
++                "tc": 0.0,
++            },
++            "grid": {"flow": 20.0, "fhigh": 512.0, "df": 0.25},
++            "expected_gate": {"complex_relative_l2": 1.0e-6, "mismatch": 1.0e-8},
++        },
++        {
++            "id": "IMRPhenomXP_diagnostic",
++            "torch_name": "IMRPhenomXP",
++            "lal_name": "IMRPhenomXP",
++            "params": {
++                "mass1": 35.0,
++                "mass2": 25.0,
++                "chi1": 0.2,
++                "chi2": -0.1,
++                "spin1x": 0.2,
++                "spin1y": 0.1,
++                "spin1z": 0.2,
++                "spin2x": -0.1,
++                "spin2y": 0.15,
++                "spin2z": -0.1,
++                "f_ref": 20.0,
++                "distance": 500.0,
++                "inclination": 0.7,
++                "phic": 0.3,
++                "tc": 0.0,
++            },
++            "grid": {"flow": 20.0, "fhigh": 512.0, "df": 0.25},
++            "expected_gate": {"complex_relative_l2": 1.0e-6, "mismatch": 1.0e-8},
++        },
++        {
++            "id": "IMRPhenomXPHM_diagnostic",
++            "torch_name": "IMRPhenomXPHM",
++            "lal_name": "IMRPhenomXPHM",
++            "params": {
++                "mass1": 35.0,
++                "mass2": 25.0,
++                "chi1": 0.2,
++                "chi2": -0.1,
++                "spin1x": 0.2,
++                "spin1y": 0.1,
++                "spin1z": 0.2,
++                "spin2x": -0.1,
++                "spin2y": 0.15,
++                "spin2z": -0.1,
++                "f_ref": 20.0,
++                "distance": 500.0,
++                "inclination": 0.7,
++                "phic": 0.3,
++                "tc": 0.0,
++            },
++            "grid": {"flow": 20.0, "fhigh": 512.0, "df": 0.25},
++            "expected_gate": {"complex_relative_l2": 1.0e-6, "mismatch": 1.0e-8},
++        },
++        {
++            "id": "IMRPhenomD_NRTidal_diagnostic",
++            "torch_name": "IMRPhenomD_NRTidal",
++            "lal_name": "IMRPhenomD_NRTidal",
++            "params": {
++                "mass1": 1.4,
++                "mass2": 1.3,
++                "chi1": 0.05,
++                "chi2": -0.02,
++                "lambda1": 350.0,
++                "lambda2": 420.0,
++                "f_ref": 30.0,
++                "distance": 100.0,
++                "inclination": 0.4,
++                "phic": 0.2,
++                "tc": 0.0,
++            },
++            "grid": {"flow": 30.0, "fhigh": 1024.0, "df": 0.25},
++            "expected_gate": {"complex_relative_l2": 1.0e-6, "mismatch": 1.0e-8},
++        },
++        {
++            "id": "IMRPhenomD_NRTidalv2_diagnostic",
++            "torch_name": "IMRPhenomD_NRTidalv2",
++            "lal_name": "IMRPhenomD_NRTidalv2",
++            "params": {
++                "mass1": 1.4,
++                "mass2": 1.3,
++                "chi1": 0.05,
++                "chi2": -0.02,
++                "lambda1": 350.0,
++                "lambda2": 420.0,
++                "f_ref": 30.0,
++                "distance": 100.0,
++                "inclination": 0.4,
++                "phic": 0.2,
++                "tc": 0.0,
++            },
++            "grid": {"flow": 30.0, "fhigh": 1024.0, "df": 0.25},
++            "expected_gate": {"complex_relative_l2": 1.0e-6, "mismatch": 1.0e-8},
++        },
++        {
++            "id": "IMRPhenomNSBH_diagnostic",
++            "torch_name": "IMRPhenomNSBH",
++            "lal_name": "IMRPhenomNSBH",
++            "params": {
++                "mass1": 5.0,
++                "mass2": 1.4,
++                "chi1": 0.2,
++                "chi2": 0.0,
++                "lambda2": 400.0,
++                "f_ref": 30.0,
++                "distance": 100.0,
++                "inclination": 0.5,
++                "phic": 0.3,
++                "tc": 0.0,
++            },
++            "grid": {"flow": 30.0, "fhigh": 1024.0, "df": 0.25},
++            "expected_gate": {"complex_relative_l2": 1.0e-6, "mismatch": 1.0e-8},
++        },
++    ],
++    indent=2,
++    sort_keys=True,
++)
++
++
++def get_canonical_analytic_cases() -> List[Dict[str, Any]]:
++    """Return a fresh, independent deserialized list of canonical analytic cases."""
++    return json.loads(_FROZEN_CANONICAL_ANALYTIC_JSON)
++
++
++def get_canonical_model_cases() -> List[Dict[str, Any]]:
++    """Return a fresh, independent deserialized list of canonical model cases."""
++    return json.loads(_FROZEN_CANONICAL_MODEL_JSON)
++
++
++def get_canonical_catalog_cases() -> List[Dict[str, Any]]:
++    """Return a fresh, independent deserialized list of canonical full-catalog cases."""
++    return get_canonical_analytic_cases() + get_canonical_model_cases()
++
++
++# Module-level convenience exposures (fresh copies)
++CANONICAL_ANALYTIC_CASES = get_canonical_analytic_cases()
++CANONICAL_MODEL_CASES = get_canonical_model_cases()
++CANONICAL_FULL_CATALOG_CASES = get_canonical_catalog_cases()
++DETERMINISTIC_HELD_OUT_CASES = get_canonical_catalog_cases()
++
++# Exact seventeen (17) manifest models from docs/model_manifest.json
++MANIFEST_MODELS = [
++    "TaylorF2",
++    "TaylorF2_HM",
++    "TaylorF2_Eccentric",
++    "IMRPhenomD",
++    "IMRPhenomPv2",
++    "IMRPhenomXP",
++    "IMRPhenomHM",
++    "IMRPhenomXHM",
++    "IMRPhenomXPHM",
++    "IMRPhenomXAS",
++    "IMRPhenomD_NRTidal",
++    "IMRPhenomD_NRTidalv2",
++    "IMRPhenomNSBH",
++    "KerrRingdown",
++    "SEOBNR_ODE",
++    "SEOBNR_ROM",
++    "TEOBResumS",
+ ]
++assert len(MANIFEST_MODELS) == 17, f"Expected exactly 17 manifest models, found {len(MANIFEST_MODELS)}"
++
++UNRESOLVED_ORACLE_REASONS = {
++    "TaylorF2_HM": "Multipolar expansion model has no standalone LAL FD approximant string in SimInspiralChooseFDWaveform",
++    "KerrRingdown": "Standalone time/frequency QNM model without independent external LAL FD choosing interface",
++    "SEOBNR_ODE": "Standalone clean-room time-domain ODE integrator; ground truth for native surrogate, not an external LAL FD approximant",
++    "SEOBNR_ROM": "Standalone native PyTorch surrogate trained on SEOBNR_ODE; intentionally distinguished from LAL SEOBNRv4_ROM",
++    "TEOBResumS": "Standalone clean-room time-domain EOB prototype without external LAL FD approximant mapping in harness",
++}
++
++
++def get_manifest_models() -> List[str]:
++    """Dynamically read declared models from docs/model_manifest.json to detect catalog drift."""
++    manifest_path = Path(__file__).resolve().parents[1] / "docs" / "model_manifest.json"
++    if not manifest_path.exists():
++        raise FileNotFoundError(f"Model manifest not found at {manifest_path}")
++    with open(manifest_path, "r") as f:
++        data = json.load(f)
++    if "models" in data and isinstance(data["models"], dict):
++        return sorted(list(data["models"].keys()))
++    raise ValueError(f"Invalid model manifest structure in {manifest_path}")
++
++
++def validate_case_inventory(
++    cases: Sequence[Dict[str, Any]],
++    scope: str = "catalog",
++) -> Tuple[bool, List[str]]:
++    """Strictly guard that the cases list matches the declared frozen required inventory."""
++    if scope == "analytic":
++        expected_inventory = get_canonical_analytic_cases()
++    elif scope == "catalog":
++        expected_inventory = get_canonical_catalog_cases()
++    else:
++        return False, [f"Unknown scope: {scope}"]
++
++    errors = []
++    if len(cases) != len(expected_inventory):
++        errors.append(f"Case count mismatch: got {len(cases)}, expected {len(expected_inventory)}")
++
++    actual_ids = [c.get("id") for c in cases if isinstance(c, dict)]
++    if len(actual_ids) != len(set(actual_ids)):
++        errors.append("Duplicate case IDs detected in input cases")
++
++    for idx, (exp, act) in enumerate(zip(expected_inventory, cases)):
++        if not isinstance(act, dict):
++            errors.append(f"Case at index {idx} is not a dict")
++            continue
++        if act.get("id") != exp["id"]:
++            errors.append(f"Case {idx} ID mismatch: got '{act.get('id')}', expected '{exp['id']}'")
++        if act.get("torch_name") != exp["torch_name"]:
++            errors.append(f"Case '{exp['id']}' torch_name mismatch: got '{act.get('torch_name')}', expected '{exp['torch_name']}'")
++        if act.get("lal_name") != exp["lal_name"]:
++            errors.append(f"Case '{exp['id']}' lal_name mismatch: got '{act.get('lal_name')}', expected '{exp['lal_name']}'")
++        if act.get("params") != exp["params"]:
++            errors.append(f"Case '{exp['id']}' physical parameters do not match required inventory")
++        if act.get("grid") != exp["grid"]:
++            errors.append(f"Case '{exp['id']}' grid parameters do not match required inventory")
++        if act.get("expected_gate") != exp["expected_gate"]:
++            errors.append(f"Case '{exp['id']}' gate parameters do not match required inventory")
++
++    return len(errors) == 0, errors
+ 
+ 
+ def run_oracle_comparison(
+@@ -365,111 +794,235 @@
+     strict: bool = False,
+ ) -> Dict[str, Any]:
+     """Execute parity comparison for a specific configuration against LALSimulation."""
++    gate = case.get("expected_gate", {"complex_relative_l2": 1.0e-6, "mismatch": 1.0e-8})
++    p = copy.deepcopy(case.get("params", {}))
++    g = copy.deepcopy(case.get("grid", {}))
++    torch_name = case.get("torch_name", "")
++    lal_name = case.get("lal_name", "")
++
+     try:
+         import lal
+         import lalsimulation as lalsim
+     except ImportError as e:
+         if strict:
+-            raise RuntimeError(
+-                f"Strict parity verification failed: LALSimulation oracle not installed ({e})"
+-            )
+-        return {"status": "SKIPPED", "reason": "LALSimulation not installed"}
+-
+-    torch_name = case["torch_name"]
+-    lal_name = case["lal_name"]
+-    p = case["params"]
+-    g = case["grid"]
+-
+-    flow = float(g["flow"])
+-    fhigh = float(g["fhigh"])
+-    df = float(g["df"])
+-    fref = float(p.get("f_ref", flow))
+-
++            return {
++                "status": "FAILED",
++                "case_id": case.get("id"),
++                "strict": strict,
++                "torch_name": torch_name,
++                "lal_name": lal_name,
++                "params": p,
++                "grid": g,
++                "reason": f"Strict parity verification failed: LALSimulation oracle not installed ({e})",
++                "gate": gate,
++            }
++        return {
++            "status": "SKIPPED",
++            "case_id": case.get("id"),
++            "strict": strict,
++            "torch_name": torch_name,
++            "lal_name": lal_name,
++            "params": p,
++            "grid": g,
++            "reason": "LALSimulation not installed",
++            "gate": gate,
++        }
++
++    def invalid_case(reason):
++        return {"status": "FAILED", "case_id": case.get("id"), "strict": strict,
++                "torch_name": torch_name, "lal_name": lal_name, "params": p,
++                "grid": g, "reason": reason, "gate": gate}
++
++    try:
++        flow, fhigh, df = (float(g[key]) for key in ("flow", "fhigh", "df"))
++        fref = float(p.get("f_ref", flow))
++    except (KeyError, TypeError, ValueError) as exc:
++        return invalid_case(f"Invalid frequency grid: {exc}")
++    if not (all(math.isfinite(v) for v in (flow, fhigh, df, fref))
++            and df > 0 and 0 <= flow < fhigh and fref >= 0):
++        return invalid_case("Invalid frequency bounds/grid: require finite df > 0, 0 <= flow < fhigh, f_ref >= 0")
++
++    # Configure LAL parameters safely
+     extra = lal.CreateDict()
+-    spin_order = p.get("spin_order", 7)
+-    tidal_order = p.get("tidal_order", 12)
+-    lalsim.SimInspiralWaveformParamsInsertPNSpinOrder(extra, spin_order)
++    if "spin_order" in p:
++        lalsim.SimInspiralWaveformParamsInsertPNSpinOrder(extra, int(p["spin_order"]))
++    if "tidal_order" in p:
++        lalsim.SimInspiralWaveformParamsInsertPNTidalOrder(extra, int(p["tidal_order"]))
+     if "lambda1" in p:
+-        lalsim.SimInspiralWaveformParamsInsertPNTidalOrder(extra, tidal_order)
+         lalsim.SimInspiralWaveformParamsInsertTidalLambda1(extra, float(p["lambda1"]))
++    if "lambda2" in p:
+         lalsim.SimInspiralWaveformParamsInsertTidalLambda2(extra, float(p["lambda2"]))
+ 
+     ecc = float(p.get("e0", 0.0))
+     if ecc > 0.0:
+-        lalsim.SimInspiralWaveformParamsInsertEccentricityFreq(extra, float(p.get("f0_ecc", flow)))
+-        lalsim.SimInspiralWaveformParamsInsertPNEccentricityOrder(extra, p.get("ecc_order", 6))
+-
+-    lal_approx = lalsim.GetApproximantFromString(lal_name)
++        if "f0_ecc" in p or "f_ref" in p:
++            lalsim.SimInspiralWaveformParamsInsertEccentricityFreq(extra, float(p.get("f0_ecc", p.get("f_ref", flow))))
++        if "ecc_order" in p:
++            lalsim.SimInspiralWaveformParamsInsertPNEccentricityOrder(extra, int(p["ecc_order"]))
++
++    try:
++        lal_approx = lalsim.GetApproximantFromString(lal_name)
++    except Exception as e:
++        return {
++            "status": "FAILED",
++            "case_id": case.get("id"),
++            "strict": strict,
++            "torch_name": torch_name,
++            "lal_name": lal_name,
++            "params": p,
++            "grid": g,
++            "reason": f"Unknown or unsupported LAL approximant '{lal_name}': {e}",
++            "gate": gate,
++        }
++
+     m1_si = float(p["mass1"]) * lal.MSUN_SI
+     m2_si = float(p["mass2"]) * lal.MSUN_SI
+-    s1z = float(p.get("chi1", 0.0))
+-    s2z = float(p.get("chi2", 0.0))
++    s1x = float(p.get("spin1x", 0.0))
++    s1y = float(p.get("spin1y", 0.0))
++    s1z = float(p.get("spin1z", p.get("chi1", 0.0)))
++    s2x = float(p.get("spin2x", 0.0))
++    s2y = float(p.get("spin2y", 0.0))
++    s2z = float(p.get("spin2z", p.get("chi2", 0.0)))
+     dist_si = float(p.get("distance", 100.0)) * 1e6 * lal.PC_SI
+     inc = float(p.get("inclination", 0.0))
+     phi_c = float(p.get("phic", 0.0))
+ 
+-    hp_lal, hc_lal = lalsim.SimInspiralChooseFDWaveform(
+-        m1_si,
+-        m2_si,
+-        0.0,
+-        0.0,
+-        s1z,
+-        0.0,
+-        0.0,
+-        s2z,
+-        dist_si,
+-        inc,
+-        phi_c,
+-        0.0,
+-        ecc,
+-        0.0,
+-        df,
+-        flow,
+-        fhigh,
+-        fref,
+-        extra,
+-        lal_approx,
+-    )
++    try:
++        hp_lal, hc_lal = lalsim.SimInspiralChooseFDWaveform(
++            m1_si,
++            m2_si,
++            s1x,
++            s1y,
++            s1z,
++            s2x,
++            s2y,
++            s2z,
++            dist_si,
++            inc,
++            phi_c,
++            0.0,
++            ecc,
++            0.0,
++            df,
++            flow,
++            fhigh,
++            fref,
++            extra,
++            lal_approx,
++        )
++    except Exception as e:
++        return {
++            "status": "FAILED",
++            "case_id": case.get("id"),
++            "strict": strict,
++            "torch_name": torch_name,
++            "lal_name": lal_name,
++            "params": p,
++            "grid": g,
++            "reason": f"LALSimulation generation error: {e}",
++            "gate": gate,
++        }
+ 
+     n_pts = len(hp_lal.data.data)
+     freqs = torch.arange(n_pts, dtype=torch.float64) * df
+ 
+-    tw_kwargs = {k: v for k, v in p.items()}
+-    tw_kwargs.pop("f_lower", None)
+-    tw_kwargs.pop("f_final", None)
+-    hp_tw, hc_tw = get_fd_waveform(
+-        torch_name,
+-        sample_frequencies=freqs,
+-        f_lower=flow,
+-        f_final=fhigh,
+-        dtype=torch.float64,
+-        **tw_kwargs,
+-    )
++    try:
++        tw_kwargs = {k: v for k, v in p.items()}
++        tw_kwargs.pop("f_lower", None)
++        tw_kwargs.pop("f_final", None)
++        hp_tw, hc_tw = get_fd_waveform(
++            torch_name,
++            sample_frequencies=freqs,
++            f_lower=flow,
++            f_final=fhigh,
++            dtype=torch.float64,
++            **tw_kwargs,
++        )
++    except Exception as e:
++        return {
++            "status": "FAILED",
++            "case_id": case.get("id"),
++            "strict": strict,
++            "torch_name": torch_name,
++            "lal_name": lal_name,
++            "params": p,
++            "grid": g,
++            "reason": f"TorchWave generation error: {e}",
++            "gate": gate,
++        }
+ 
+     h_ref_p = torch.tensor(hp_lal.data.data, dtype=torch.complex128)
+     h_ref_c = torch.tensor(hc_lal.data.data, dtype=torch.complex128)
+ 
+-    metrics_p = evaluate_waveform_metrics(hp_tw, h_ref_p, freqs, df, flow, fhigh)
+-    metrics_c = evaluate_waveform_metrics(hc_tw, h_ref_c, freqs, df, flow, fhigh)
+-
+-    h_proj_tw = project_strain(hp_tw, hc_tw, ra=1.2, dec=0.4, psi=0.3, gmst=0.0, detector="H1", freqs=freqs)
+-
++    # Validate waveforms and grid prior to slicing, norms, and metrics
++    for wf_label, (tw_wf, ref_wf) in [("plus", (hp_tw, h_ref_p)), ("cross", (hc_tw, h_ref_c))]:
++        ok, err_msg = validate_waveform_and_grid(tw_wf, ref_wf, freqs, df, flow, fhigh, label=wf_label)
++        if not ok:
++            return {
++                "status": "FAILED",
++                "case_id": case.get("id"),
++                "strict": strict,
++                "torch_name": torch_name,
++                "lal_name": lal_name,
++                "params": p,
++                "grid": g,
++                "reason": f"Waveform validation failed: {err_msg}",
++                "gate": gate,
++            }
++
++    sel = (freqs >= flow) & (freqs < fhigh)
++    f_in = freqs[sel]
++    t_in_p = hp_tw[sel]
++    r_in_p = h_ref_p[sel]
++    t_in_c = hc_tw[sel]
++    r_in_c = h_ref_c[sel]
++
++    # Evaluate and strictly validate named PSDs
++    psd_results_p = {}
++    psd_results_c = {}
++    named_psds = {
++        "aLIGOZeroDetHighPower": aLIGOZeroDetHighPower(f_in),
++        "CosmicExplorer": CosmicExplorer(f_in),
++        "EinsteinTelescope": EinsteinTelescope(f_in),
++    }
++    for psd_name, psd_t in named_psds.items():
++        psd_ok, psd_err = validate_psd(psd_t, len(f_in), label=psd_name)
++        if not psd_ok:
++            return {
++                "status": "FAILED",
++                "case_id": case.get("id"),
++                "strict": strict,
++                "torch_name": torch_name,
++                "lal_name": lal_name,
++                "params": p,
++                "grid": g,
++                "reason": f"PSD validation failed: {psd_err}",
++                "gate": gate,
++            }
++        psd_results_p[psd_name] = psd_mismatch(t_in_p, r_in_p, psd_t, df)
++        psd_results_c[psd_name] = psd_mismatch(t_in_c, r_in_c, psd_t, df)
++
++    metrics_p = evaluate_waveform_metrics(hp_tw, h_ref_p, freqs, df, flow, fhigh, compute_opt_match=True)
++    metrics_c = evaluate_waveform_metrics(hc_tw, h_ref_c, freqs, df, flow, fhigh, compute_opt_match=True)
++
++    # Multi-detector projection evaluation using public LAL binary APIs
++    t_shared_gps = 1126259462.0
++    gps_lal = lal.LIGOTimeGPS(t_shared_gps)
++    gmst_lal = float(lal.GreenwichMeanSiderealTime(gps_lal))
++
++    sky_points = [
++        {"ra": 1.2, "dec": 0.4, "psi": 0.3},
++        {"ra": 3.8, "dec": -0.6, "psi": 1.1},
++    ]
+     det_map = {
+         "H1": lal.CachedDetectors[lal.LALDetectorIndexLHODIFF],
+         "L1": lal.CachedDetectors[lal.LALDetectorIndexLLODIFF],
+         "V1": lal.CachedDetectors[lal.LALDetectorIndexVIRGODIFF],
+     }
+-    det_lal = det_map["H1"]
+-    fp_lal, fc_lal = lal.ComputeDetAMResponse(det_lal.response, 1.2, 0.4, 0.3, 0.0)
+-    s_earth = np.array([np.cos(0.4) * np.cos(1.2), np.cos(0.4) * np.sin(1.2), np.sin(0.4)])
+-    dt_lal = -float(np.dot(det_lal.location, s_earth) / lal.C_SI)
+-    phase_lal = -2.0 * np.pi * freqs.cpu().numpy() * dt_lal
+-    shift_lal = torch.tensor(np.exp(1j * phase_lal), dtype=torch.complex128)
+-    h_proj_lal = (fp_lal * h_ref_p + fc_lal * h_ref_c) * shift_lal
+-
+-    metrics_proj = evaluate_waveform_metrics(h_proj_tw, h_proj_lal, freqs, df, flow, fhigh)
+-
+-    gate = case.get("expected_gate", {"complex_relative_l2": 1.0e-6, "mismatch": 1.0e-8})
++
++    proj_metrics_by_det = {}
++    all_proj_passed = True
++
+     max_l2 = gate["complex_relative_l2"]
+     max_norm = gate.get("relative_norm_error", max_l2)
+     max_mism = gate["mismatch"]
+@@ -477,99 +1030,347 @@
+     def check_bound(val: Any, max_val: float) -> bool:
+         return isinstance(val, (int, float)) and math.isfinite(val) and 0.0 <= val <= max_val
+ 
++    for det_key in ["H1", "L1", "V1"]:
++        det_lal = det_map[det_key]
++        for idx_sky, sky in enumerate(sky_points):
++            h_proj_tw = project_strain(
++                hp_tw, hc_tw,
++                ra=sky["ra"], dec=sky["dec"], psi=sky["psi"],
++                t_gps=t_shared_gps, detector=det_key, freqs=freqs,
++            )
++            fp_lal, fc_lal = lal.ComputeDetAMResponse(det_lal.response, sky["ra"], sky["dec"], sky["psi"], gmst_lal)
++            dt_lal = float(lal.TimeDelayFromEarthCenter(det_lal.location, sky["ra"], sky["dec"], gps_lal))
++            phase_lal = -2.0 * np.pi * freqs.cpu().numpy() * dt_lal
++            shift_lal = torch.tensor(np.exp(1j * phase_lal), dtype=torch.complex128)
++            h_proj_lal = (fp_lal * h_ref_p + fc_lal * h_ref_c) * shift_lal
++
++            key = f"{det_key}_sky{idx_sky}"
++            ok_proj, err_proj = validate_waveform_and_grid(
++                h_proj_tw, h_proj_lal, freqs, df, flow, fhigh, label=f"projection_{key}"
++            )
++            if not ok_proj:
++                return invalid_case(f"Projection validation failed: {err_proj}")
++
++            m_proj = evaluate_waveform_metrics(h_proj_tw, h_proj_lal, freqs, df, flow, fhigh, compute_opt_match=True)
++
++            # Compute and gate all THREE named PSDs for each projection
++            proj_named_psds = {}
++            for psd_name, psd_t in named_psds.items():
++                val = psd_mismatch(h_proj_tw[sel], h_proj_lal[sel], psd_t, df)
++                proj_named_psds[psd_name] = val
++                if not check_bound(val, max_mism):
++                    all_proj_passed = False
++            m_proj["psd_mismatches"] = proj_named_psds
++            proj_metrics_by_det[key] = m_proj
++
++            opt_proj = m_proj.get("optimized_match")
++            if opt_proj is not None and not validate_physical_overlap(opt_proj):
++                all_proj_passed = False
++
++            if not (
++                m_proj["finite"]
++                and m_proj["dc_zero"]
++                and m_proj["out_of_band_zero"]
++                and check_bound(m_proj["complex_relative_l2"], max_l2)
++                and check_bound(m_proj["magnitude_relative_l2"], max_l2)
++                and check_bound(m_proj["relative_norm_error"], max_norm)
++                and check_bound(m_proj["flat_mismatch"], max_mism)
++                and check_bound(m_proj["psd_mismatch"], max_mism)
++            ):
++                all_proj_passed = False
++
++            if strict:
++                if opt_proj is None or not math.isfinite(opt_proj) or (1.0 - opt_proj) > max_mism:
++                    all_proj_passed = False
++
++    # Physical bounds check on polarizations
++    for m in [metrics_p, metrics_c]:
++        opt = m.get("optimized_match")
++        if opt is not None and not validate_physical_overlap(opt):
++            return {
++                "status": "FAILED",
++                "case_id": case.get("id"),
++                "strict": strict,
++                "torch_name": torch_name,
++                "lal_name": lal_name,
++                "params": p,
++                "grid": g,
++                "reason": f"Grossly unphysical optimized_match value: {opt}",
++                "gate": gate,
++            }
++
+     passed = (
+         metrics_p["finite"]
+         and metrics_c["finite"]
+-        and metrics_proj["finite"]
+         and metrics_p["dc_zero"]
+         and metrics_c["dc_zero"]
+-        and metrics_proj["dc_zero"]
+         and metrics_p["out_of_band_zero"]
+         and metrics_c["out_of_band_zero"]
+-        and metrics_proj["out_of_band_zero"]
+         and check_bound(metrics_p["complex_relative_l2"], max_l2)
+         and check_bound(metrics_c["complex_relative_l2"], max_l2)
+-        and check_bound(metrics_proj["complex_relative_l2"], max_l2)
++        and check_bound(metrics_p["magnitude_relative_l2"], max_l2)
++        and check_bound(metrics_c["magnitude_relative_l2"], max_l2)
+         and check_bound(metrics_p["relative_norm_error"], max_norm)
+         and check_bound(metrics_c["relative_norm_error"], max_norm)
+-        and check_bound(metrics_proj["relative_norm_error"], max_norm)
+         and check_bound(metrics_p["flat_mismatch"], max_mism)
+         and check_bound(metrics_c["flat_mismatch"], max_mism)
+-        and check_bound(metrics_proj["flat_mismatch"], max_mism)
+         and check_bound(metrics_p["psd_mismatch"], max_mism)
+         and check_bound(metrics_c["psd_mismatch"], max_mism)
+-        and check_bound(metrics_proj["psd_mismatch"], max_mism)
++        and all_proj_passed
+     )
++
++    for p_m in list(psd_results_p.values()) + list(psd_results_c.values()):
++        if not check_bound(p_m, max_mism):
++            passed = False
++
+     if strict:
+         opt_p = metrics_p.get("optimized_match")
+         opt_c = metrics_c.get("optimized_match")
+-        opt_proj = metrics_proj.get("optimized_match")
+-        for opt in (opt_p, opt_c, opt_proj):
++        for opt in (opt_p, opt_c):
+             if opt is None or not math.isfinite(opt) or (1.0 - opt) > max_mism:
+                 passed = False
+                 break
+ 
+     return {
+         "status": "PASSED" if passed else "FAILED",
+-        "case_id": case["id"],
++        "case_id": case.get("id"),
++        "strict": strict,
++        "torch_name": torch_name,
++        "lal_name": lal_name,
++        "params": p,
++        "grid": g,
+         "plus": metrics_p,
+         "cross": metrics_c,
+-        "detector_h1": metrics_proj,
++        "psd_mismatches_plus": psd_results_p,
++        "psd_mismatches_cross": psd_results_c,
++        "projections": proj_metrics_by_det,
+         "gate": gate,
+     }
+ 
+ 
+-def run_full_parity_suite(strict: bool = False) -> Dict[str, Any]:
+-    """Execute all held-out cases and compile results."""
++def run_full_parity_suite(
++    scope: str = "catalog",
++    strict: bool = False,
++    cases: Optional[Sequence[Dict[str, Any]]] = None,
++) -> Dict[str, Any]:
++    """Execute parity suite under explicit required scope ('analytic' or 'catalog')."""
++    if scope == "analytic":
++        expected_inventory = get_canonical_analytic_cases()
++    elif scope == "catalog":
++        expected_inventory = get_canonical_catalog_cases()
++    else:
++        raise ValueError(f"Unknown parity suite scope: '{scope}'. Supported: ['analytic', 'catalog']")
++
++    cases_to_run = copy.deepcopy(cases) if cases is not None else copy.deepcopy(expected_inventory)
++
++    is_valid, inv_errors = validate_case_inventory(cases_to_run, scope=scope)
++    if not is_valid:
++        return {
++            "scope": scope,
++            "strict": strict,
++            "suite_passed": False,
++            "catalog_passed": False,
++            "cases_passed": False,
++            "inventory_valid": False,
++            "inventory_errors": inv_errors,
++            "metadata": {
++                "required_inventory": copy.deepcopy(expected_inventory),
++                "executed_inventory": copy.deepcopy(cases_to_run),
++            },
++            "num_cases": len(cases_to_run),
++            "num_passed": 0,
++            "results": [],
++            "catalog_coverage": {m: {"status": "INVENTORY_ERROR"} for m in MANIFEST_MODELS},
++        }
++
+     results = []
+     all_passed = True
+ 
+-    case_ids = [c.get("id") for c in DETERMINISTIC_HELD_OUT_CASES if isinstance(c, dict)]
+-    if len(case_ids) != len(set(case_ids)):
+-        all_passed = False
+-
+-    for case in DETERMINISTIC_HELD_OUT_CASES:
+-        res = run_oracle_comparison(case, strict=strict)
++    for case in cases_to_run:
++        try:
++            res = run_oracle_comparison(case, strict=strict)
++        except RuntimeError as e:
++            res = {
++                "status": "FAILED",
++                "case_id": case.get("id"),
++                "strict": strict,
++                "torch_name": case.get("torch_name"),
++                "lal_name": case.get("lal_name"),
++                "params": case.get("params"),
++                "grid": case.get("grid"),
++                "reason": str(e),
++                "gate": case.get("expected_gate"),
++            }
+         results.append(res)
+         if res.get("status") != "PASSED":
+             all_passed = False
+ 
+-    if len(results) < 6:
+-        all_passed = False
++    # Compile exact 17-model catalog coverage record
++    coverage = {}
++    passed_cases_by_torch_name = {}
++    for r in results:
++        t_name = r.get("torch_name")
++        if t_name:
++            if t_name not in passed_cases_by_torch_name:
++                passed_cases_by_torch_name[t_name] = []
++            passed_cases_by_torch_name[t_name].append(r.get("status") == "PASSED")
++
++    for model in MANIFEST_MODELS:
++        if model in UNRESOLVED_ORACLE_REASONS:
++            coverage[model] = {
++                "status": "UNRESOLVED_ORACLE",
++                "reason": UNRESOLVED_ORACLE_REASONS[model],
++            }
++        elif model in passed_cases_by_torch_name:
++            model_passed = all(passed_cases_by_torch_name[model])
++            coverage[model] = {
++                "status": "PASSED" if model_passed else "FAILED",
++                "cases_evaluated": len(passed_cases_by_torch_name[model]),
++            }
++        else:
++            coverage[model] = {
++                "status": "MISSING_COVERAGE",
++                "reason": "No test case configured for model in this scope",
++            }
++
++    # Dynamically verify docs/model_manifest.json against harness MANIFEST_MODELS to catch catalog drift
++    manifest_drift_errors = []
++    try:
++        manifest_models = get_manifest_models()
++        if set(manifest_models) != set(MANIFEST_MODELS):
++            manifest_drift_errors.append(
++                f"Manifest drift detected: docs/model_manifest.json has {sorted(list(manifest_models))}, "
++                f"while harness MANIFEST_MODELS has {sorted(list(MANIFEST_MODELS))}"
++            )
++    except Exception as e:
++        manifest_drift_errors.append(f"Failed to read docs/model_manifest.json: {e}")
++
++    if manifest_drift_errors:
++        coverage["_manifest_drift"] = {
++            "status": "MANIFEST_DRIFT_ERROR",
++            "errors": manifest_drift_errors,
++        }
++
++    assert len(MANIFEST_MODELS) == 17, f"Expected 17 catalog models, got {len(MANIFEST_MODELS)}"
++
++    unresolved_or_failing = any(v["status"] != "PASSED" for v in coverage.values())
++    catalog_passed = (
++        (scope == "catalog")
++        and all_passed
++        and (not unresolved_or_failing)
++        and (len(manifest_drift_errors) == 0)
++    )
++
++    suite_passed = catalog_passed if scope == "catalog" else all_passed
++
++    versions = {
++        "python": sys.version.split()[0],
++        "torch": torch.__version__,
++        "numpy": np.__version__,
++    }
++    try:
++        import lal
++        versions["lal"] = getattr(lal, "__version__", "installed")
++    except Exception:
++        versions["lal"] = None
++    try:
++        import lalsimulation
++        versions["lalsimulation"] = getattr(lalsimulation, "__version__", "installed")
++    except Exception:
++        versions["lalsimulation"] = None
++    try:
++        import pycbc
++        versions["pycbc"] = getattr(pycbc, "__version__", "installed")
++    except Exception:
++        versions["pycbc"] = None
++
++    actual_gmst = None
++    try:
++        import lal
++        actual_gmst = float(lal.GreenwichMeanSiderealTime(lal.LIGOTimeGPS(1126259462.0)))
++    except Exception:
++        pass
++
++    metadata = {
++        "precision": "CPU FP64 / complex128",
++        "platform": platform.platform(),
++        "versions": versions,
++        "geometry_and_time_conventions": {
++            "t_shared_gps": 1126259462.0,
++            "gmst_rad": actual_gmst,
++            "gmst_calculation": "lal.GreenwichMeanSiderealTime(lal.LIGOTimeGPS(t_shared_gps))",
++            "antenna_response_api": "lal.ComputeDetAMResponse",
++            "time_delay_api": "lal.TimeDelayFromEarthCenter",
++            "detectors": ["H1", "L1", "V1"],
++            "sky_points": [
++                {"ra": 1.2, "dec": 0.4, "psi": 0.3},
++                {"ra": 3.8, "dec": -0.6, "psi": 1.1},
++            ],
++        },
++        "waveform_conventions": {
++            "raw_complex_errors": "unaligned",
++            "physical_parameters": "tc, phic, and f_ref forwarded directly as declared without internal shifts",
++            "amplitude_scaling": "no amplitude rescaling or normalization factor applied",
++            "optimized_match_role": "diagnostic metric independently optimized over time and phase per component; never a convention correction or amplitude certification",
++            "model_conventions_status": "unresolved for non-TaylorF2 models; only TaylorF2/TaylorF2Ecc conventions are verified against LAL",
++        },
++        "manifest_drift_errors": manifest_drift_errors,
++        "required_inventory": copy.deepcopy(expected_inventory),
++        "executed_inventory": copy.deepcopy(cases_to_run),
++    }
+ 
+     return {
+-        "suite_passed": all_passed,
++        "scope": scope,
++        "strict": strict,
++        "suite_passed": suite_passed,
++        "catalog_passed": catalog_passed,
++        "cases_passed": all_passed,
++        "inventory_valid": True,
++        "inventory_errors": [],
++        "manifest_drift_errors": manifest_drift_errors,
++        "metadata": metadata,
+         "num_cases": len(results),
+         "num_passed": sum(1 for r in results if r.get("status") == "PASSED"),
+         "results": results,
++        "catalog_coverage": coverage,
+     }
+ 
+ 
+-def test_parity_harness_held_out():
+-    """Pytest entrypoint for the parity harness held-out verification cases."""
++def test_parity_harness_analytic():
++    """Pytest entrypoint for the verified analytic 6-case baseline suite."""
+     is_strict = ("--strict" in sys.argv) or (os.environ.get("STRICT_PARITY") == "1")
+-    suite = run_full_parity_suite(strict=is_strict)
+-    assert suite["suite_passed"], f"Parity verification suite failed: {suite}"
+-    assert suite["num_cases"] >= 6, f"Parity suite has fewer than 6 cases: {suite['num_cases']}"
+-    for res in suite["results"]:
+-        if res.get("status") == "SKIPPED":
+-            if is_strict:
+-                raise RuntimeError(f"Strict parity requires oracle, but case was skipped: {res}")
+-            import pytest
+-            pytest.skip(res.get("reason", "Oracle not installed"))
+-        assert res.get("status") == "PASSED", f"Case {res.get('case_id')} failed parity gates: {res}"
++    suite = run_full_parity_suite(scope="analytic", strict=is_strict)
++    assert suite["inventory_valid"], f"Inventory validation failed: {suite['inventory_errors']}"
++    assert suite["suite_passed"], f"Analytic parity suite failed: {suite}"
++    assert suite["num_cases"] == 6
++
++
++def test_parity_harness_catalog():
++    """Pytest acceptance entrypoint for the full catalog parity verification suite."""
++    is_strict = ("--strict" in sys.argv) or (os.environ.get("STRICT_PARITY") == "1")
++    suite = run_full_parity_suite(scope="catalog", strict=is_strict)
++    assert suite["inventory_valid"], f"Inventory validation failed: {suite['inventory_errors']}"
++    assert suite["num_cases"] == 16
++    assert suite["catalog_passed"] is True, (
++        f"Catalog acceptance failed: {suite.get('num_passed')}/{suite.get('num_cases')} cases passed. "
++        f"Unresolved or failing models: {[k for k, v in suite.get('catalog_coverage', {}).items() if v.get('status') != 'PASSED']}"
++    )
+ 
+ 
+ if __name__ == "__main__":
+     is_strict = ("--strict" in sys.argv) or (os.environ.get("STRICT_PARITY") == "1")
++    scope = "catalog"
++    if "--analytic-only" in sys.argv or "--scope=analytic" in sys.argv:
++        scope = "analytic"
++
+     output_file = None
+     if "--json-out" in sys.argv:
+         idx = sys.argv.index("--json-out")
+         if idx + 1 < len(sys.argv):
+             output_file = sys.argv[idx + 1]
+ 
+-    print(f"Running TorchWave Parity Verification Suite (strict={is_strict})...")
+-    suite_res = run_full_parity_suite(strict=is_strict)
++    print(f"Running TorchWave Parity Verification Suite (scope={scope}, strict={is_strict})...")
++    suite_res = run_full_parity_suite(scope=scope, strict=is_strict)
+ 
+     summary_json = json.dumps(suite_res, indent=2)
+     if output_file:
+@@ -579,9 +1380,17 @@
+     else:
+         print(summary_json)
+ 
+-    if not suite_res["suite_passed"]:
+-        print("\nPARITY SUITE FAILED!")
+-        sys.exit(1)
++    if scope == "catalog":
++        if not suite_res["catalog_passed"]:
++            print("\nCATALOG PARITY SUITE FAILED (unresolved models or mathematical parity gaps remain)!")
++            sys.exit(1)
++        else:
++            print(f"\nCATALOG PARITY SUITE PASSED: {suite_res['num_passed']}/{suite_res['num_cases']} cases verified.")
++            sys.exit(0)
+     else:
+-        print(f"\nPARITY SUITE PASSED: {suite_res['num_passed']}/{suite_res['num_cases']} cases verified.")
+-        sys.exit(0)
++        if not suite_res["suite_passed"]:
++            print("\nANALYTIC PARITY SUITE FAILED!")
++            sys.exit(1)
++        else:
++            print(f"\nANALYTIC PARITY SUITE PASSED: {suite_res['num_passed']}/{suite_res['num_cases']} cases verified.")
++            sys.exit(0)
+--- /dev/null
++++ current/tests/test_xas_amplitude_derivative.py
+@@ -0,0 +1,190 @@
++"""Focused tests for IMRPhenomXAS exact analytic amplitude frequency derivative.
++
++Validates:
++1. Exact analytic derivative of pn_amp_func against independent complex-step differentiation.
++2. Parity across execution contexts (normal, torch.no_grad(), torch.inference_mode()).
++3. Batched vs scalar evaluation consistency with scale-aware tolerances.
++4. Non-zero, finite autograd parameter gradients w.r.t. (m1, m2, chi1, chi2) agreeing with finite differences.
++
++Literature citations:
++- Pratten et al. (2020), Phys. Rev. D 102, 064001 (arXiv:2001.11412v1) Eqs. (68)-(69), (72), (77), (95)
++"""
++
++import math
++import pytest
++import torch
++
++from torchwave.approximants.imrphenom_xas import IMRPhenomXAS, compute_spin_variables, PI
++
++
++def _eval_pn_amp_complex_step(eta: float, s1: float, s2: float, x: float, h: float = 1e-25) -> float:
++    """Independent complex-step derivative of 3PN TaylorF2 amplitude w.r.t. x = pi * M * f."""
++    eta_t = torch.tensor(eta, dtype=torch.complex128)
++    s1_t = torch.tensor(s1, dtype=torch.complex128)
++    s2_t = torch.tensor(s2, dtype=torch.complex128)
++    d_t = torch.sqrt(1.0 - 4.0 * eta_t)
++    x_c = torch.tensor(complex(x, h), dtype=torch.complex128)
++
++    amp_c = IMRPhenomXAS.pn_amp_func(eta_t, s1_t, s2_t, x_c, d_t, derivative=False)
++    return float(amp_c.imag.item() / h)
++
++
++@pytest.mark.parametrize(
++    "eta, s1, s2, mf",
++    [
++        (0.25, 0.0, 0.0, 0.018),
++        (0.24, 0.3, -0.2, 0.015),
++        (0.20, 0.6, 0.4, 0.020),
++        (0.12, -0.4, 0.1, 0.022),
++        (0.08, 0.8, -0.6, 0.025),
++    ],
++)
++def test_pn_amp_exact_derivative_vs_complex_step(eta, s1, s2, mf):
++    """Verify exact analytic derivative of pn_amp_func matches complex-step differentiation to < 1e-11."""
++    x = math.pi * mf
++    eta_t = torch.tensor(eta, dtype=torch.float64)
++    s1_t = torch.tensor(s1, dtype=torch.float64)
++    s2_t = torch.tensor(s2, dtype=torch.float64)
++    d_t = torch.sqrt(1.0 - 4.0 * eta_t)
++    x_t = torch.tensor(x, dtype=torch.float64)
++
++    # Analytic derivative w.r.t. dimensionless Mf
++    dpn_dmf_analytic = IMRPhenomXAS.pn_amp_func(
++        eta_t, s1_t, s2_t, x_t, d_t, derivative=True
++    ).item()
++
++    # Complex-step derivative w.r.t. x, scaled by dx/d(Mf) = pi
++    dpn_dx_cs = _eval_pn_amp_complex_step(eta, s1, s2, x, h=1e-25)
++    dpn_dmf_cs = math.pi * dpn_dx_cs
++
++    rel_err = abs(dpn_dmf_analytic - dpn_dmf_cs) / abs(dpn_dmf_cs)
++    assert rel_err < 1e-11, (
++        f"Analytic derivative {dpn_dmf_analytic} disagrees with complex step {dpn_dmf_cs} "
++        f"(rel err: {rel_err:.2e})"
++    )
++
++
++def test_pn_amp_func_return_both():
++    """Verify pn_amp_func with return_both=True returns identical values to separate calls."""
++    eta_t = torch.tensor(0.222, dtype=torch.float64)
++    s1_t = torch.tensor(0.35, dtype=torch.float64)
++    s2_t = torch.tensor(-0.15, dtype=torch.float64)
++    d_t = torch.sqrt(1.0 - 4.0 * eta_t)
++    x_t = torch.tensor(math.pi * 0.019, dtype=torch.float64)
++
++    amp_single = IMRPhenomXAS.pn_amp_func(eta_t, s1_t, s2_t, x_t, d_t, derivative=False)
++    deriv_single = IMRPhenomXAS.pn_amp_func(eta_t, s1_t, s2_t, x_t, d_t, derivative=True)
++    amp_both, deriv_both = IMRPhenomXAS.pn_amp_func(eta_t, s1_t, s2_t, x_t, d_t, return_both=True)
++
++    assert torch.equal(amp_single, amp_both)
++    assert torch.equal(deriv_single, deriv_both)
++
++
++def test_xas_execution_contexts():
++    """Verify identical waveforms across normal, torch.no_grad(), and torch.inference_mode()."""
++    model = IMRPhenomXAS()
++    f = torch.linspace(20.0, 400.0, 200, dtype=torch.float64)
++    args = {
++        "sample_frequencies": f,
++        "mass1": 36.0,
++        "mass2": 29.0,
++        "chi1": 0.3,
++        "chi2": -0.2,
++        "distance": 500.0,
++    }
++
++    # Normal execution
++    hp_norm, hc_norm = model(**args)
++
++    # torch.no_grad()
++    with torch.no_grad():
++        hp_nograd, hc_nograd = model(**args)
++
++    # torch.inference_mode()
++    with torch.inference_mode():
++        hp_inf, hc_inf = model(**args)
++
++    assert torch.equal(hp_norm, hp_nograd), "no_grad differs from normal evaluation"
++    assert torch.equal(hp_norm, hp_inf), "inference_mode differs from normal evaluation"
++    assert torch.equal(hc_norm, hc_nograd), "no_grad cross differs from normal evaluation"
++    assert torch.equal(hc_norm, hc_inf), "inference_mode cross differs from normal evaluation"
++    assert torch.all(torch.isfinite(hp_norm))
++    assert torch.all(torch.isfinite(hc_norm))
++
++
++def test_xas_batched_vs_scalar_scale_aware():
++    """Verify batched evaluation matches scalar evaluation with scale-aware tolerances."""
++    model = IMRPhenomXAS()
++    f = torch.linspace(20.0, 300.0, 150, dtype=torch.float64)
++
++    m1_b = torch.tensor([30.0, 45.0, 55.0], dtype=torch.float64)
++    m2_b = torch.tensor([25.0, 15.0, 10.0], dtype=torch.float64)
++    chi1_b = torch.tensor([0.2, -0.4, 0.6], dtype=torch.float64)
++    chi2_b = torch.tensor([-0.1, 0.3, -0.5], dtype=torch.float64)
++
++    hp_b, hc_b = model(
++        sample_frequencies=f,
++        mass1=m1_b,
++        mass2=m2_b,
++        chi1=chi1_b,
++        chi2=chi2_b,
++    )
++
++    assert hp_b.shape == (3, 150)
++    assert hc_b.shape == (3, 150)
++
++    for i in range(3):
++        hp_s, hc_s = model(
++            sample_frequencies=f,
++            mass1=float(m1_b[i]),
++            mass2=float(m2_b[i]),
++            chi1=float(chi1_b[i]),
++            chi2=float(chi2_b[i]),
++        )
++        scale = torch.max(torch.abs(hp_s)).item()
++        assert scale > 0.0, "Physical strain scale must be positive"
++        assert torch.allclose(hp_b[i], hp_s, rtol=1e-12, atol=1e-12 * scale), (
++            f"Batched row {i} does not match scalar evaluation"
++        )
++        assert torch.allclose(hc_b[i], hc_s, rtol=1e-12, atol=1e-12 * scale)
++
++
++def test_xas_autograd_parameter_gradients():
++    """Verify autograd parameter gradients are finite, non-zero, and agree with finite differences."""
++    model = IMRPhenomXAS()
++    f = torch.linspace(30.0, 250.0, 40, dtype=torch.float64)
++
++    m1 = torch.tensor(35.0, dtype=torch.float64, requires_grad=True)
++    m2 = torch.tensor(25.0, dtype=torch.float64, requires_grad=True)
++    chi1 = torch.tensor(0.2, dtype=torch.float64, requires_grad=True)
++    chi2 = torch.tensor(-0.1, dtype=torch.float64, requires_grad=True)
++
++    hp, _ = model(sample_frequencies=f, mass1=m1, mass2=m2, chi1=chi1, chi2=chi2)
++    loss = torch.sum(hp.real)
++    loss.backward()
++
++    base_args = {"sample_frequencies": f, "mass1": 35.0, "mass2": 25.0, "chi1": 0.2, "chi2": -0.1}
++    param_checks = {
++        "m1": (m1, "mass1", 35.0, 1e-4),
++        "m2": (m2, "mass2", 25.0, 1e-4),
++        "chi1": (chi1, "chi1", 0.2, 1e-4),
++        "chi2": (chi2, "chi2", -0.1, 1e-4),
++    }
++
++    for name, (param, kw_key, val, eps) in param_checks.items():
++        assert param.grad is not None, f"Gradient for {name} is None"
++        assert torch.isfinite(param.grad), f"Gradient for {name} is non-finite"
++        auto_val = param.grad.item()
++        assert abs(auto_val) > 0.0, f"Gradient for {name} is zero"
++
++        # Central difference at eps
++        kw_p = dict(base_args)
++        kw_m = dict(base_args)
++        kw_p[kw_key] = val + eps
++        kw_m[kw_key] = val - eps
++        hp_p, _ = model(**kw_p)
++        hp_m, _ = model(**kw_m)
++        num_grad = ((torch.sum(hp_p.real) - torch.sum(hp_m.real)) / (2.0 * eps)).item()
++
++        rel_diff = abs(auto_val - num_grad) / abs(num_grad)
++        assert rel_diff < 0.02, f"Gradient mismatch for {name}: auto={auto_val}, num={num_grad} (rel {rel_diff:.2e})"
+--- /dev/null
++++ current/tests/test_parity_harness_controls.py
+@@ -0,0 +1,225 @@
++"""Focused negative controls and robustness tests for parity harness validation."""
++
++import copy
++import pytest
++import torch
++
++from tests.parity_harness import (
++    get_canonical_analytic_cases,
++    get_canonical_catalog_cases,
++    run_full_parity_suite,
++    run_oracle_comparison,
++    validate_case_inventory,
++    MANIFEST_MODELS,
++)
++
++
++def test_inventory_tamper_rejected():
++    """Verify that duplicate, altered, or substituted cases fail inventory validation."""
++    analytic_cases = get_canonical_analytic_cases()
++
++    # 1. Duplicate case (replacement of cases with first case)
++    tampered_cases = [copy.deepcopy(analytic_cases[0]) for _ in range(6)]
++    for i, c in enumerate(tampered_cases):
++        c["id"] = f"replacement_{i}"
++    
++    is_valid, errors = validate_case_inventory(tampered_cases, scope="analytic")
++    assert not is_valid, "Inventory validation must reject substituted case parameters"
++    assert any("mismatch" in e for e in errors)
++
++    # 2. Run suite with tampered cases
++    suite_res = run_full_parity_suite(scope="analytic", cases=tampered_cases)
++    assert suite_res["inventory_valid"] is False
++    assert suite_res["suite_passed"] is False
++
++
++def test_inplace_parameter_corruption_rejected():
++    """Verify that in-place mutation of mutable case lists is rejected against frozen specs."""
++    corrupted_cases = get_canonical_analytic_cases()
++    corrupted_cases[0]["params"]["mass1"] = 999.0
++
++    is_valid, errors = validate_case_inventory(corrupted_cases, scope="analytic")
++    assert not is_valid, "In-place corruption must be caught against deserialized frozen canonical specs"
++    assert any("physical parameters do not match" in e for e in errors)
++
++
++def test_unphysical_overlap_rejected():
++    """Verify that unphysical overlap (> 1.0 + 1e-12 or non-finite) fails run_oracle_comparison."""
++    case = copy.deepcopy(get_canonical_analytic_cases()[0])
++    
++    import tests.parity_harness as ph
++    orig_eval = ph.evaluate_waveform_metrics
++
++    def mock_eval(*args, **kwargs):
++        res = orig_eval(*args, **kwargs)
++        res["optimized_match"] = 2.0
++        return res
++
++    try:
++        ph.evaluate_waveform_metrics = mock_eval
++        res = run_oracle_comparison(case, strict=True)
++        assert res["status"] == "FAILED", f"Unphysical overlap 2.0 must fail: {res}"
++        assert "unphysical" in res.get("reason", "").lower()
++    finally:
++        ph.evaluate_waveform_metrics = orig_eval
++
++
++def test_missing_and_unresolved_catalog_coverage():
++    """Verify that full catalog parity suite fails honestly when unresolved models or math gaps exist."""
++    suite_res = run_full_parity_suite(scope="catalog", strict=False)
++    assert suite_res["catalog_passed"] is False, "Catalog parity must not certify while gaps remain"
++    assert suite_res["suite_passed"] is False, "suite_passed must equal catalog_passed for catalog scope"
++    assert len(suite_res["catalog_coverage"]) >= 17
++    assert set(MANIFEST_MODELS).issubset(set(suite_res["catalog_coverage"].keys()))
++    assert suite_res["catalog_coverage"]["SEOBNR_ROM"]["status"] == "UNRESOLVED_ORACLE"
++    assert suite_res["catalog_coverage"]["KerrRingdown"]["status"] == "UNRESOLVED_ORACLE"
++
++
++def test_projection_named_psd_corruption_fails():
++    """Verify that corrupting exclusively a projection PSD mismatch triggers verification failure."""
++    case = copy.deepcopy(get_canonical_analytic_cases()[0])
++    import tests.parity_harness as ph
++    orig_psd_mismatch = ph.psd_mismatch
++
++    call_count = [0]
++    def corrupt_proj_psd(h1, h2, psd, df):
++        call_count[0] += 1
++        # Calls 1-6 are named polarization PSDs, 7-8 are polarization metric PSDs; projections follow.
++        val = orig_psd_mismatch(h1, h2, psd, df)
++        if call_count[0] > 8:
++            return 0.5
++        return val
++
++    try:
++        ph.psd_mismatch = corrupt_proj_psd
++        res = ph.run_oracle_comparison(case, strict=True)
++        assert res["status"] == "FAILED", "Projection PSD mismatch corruption must cause verification failure"
++        assert res["plus"]["psd_mismatch"] <= 1.0e-8
++        assert res["cross"]["psd_mismatch"] <= 1.0e-8
++    finally:
++        ph.psd_mismatch = orig_psd_mismatch
++
++
++def test_invalid_waveform_inputs_fail():
++    """Verify that invalid waveform tensors, bad shapes, invalid grids, or negative PSDs return FAILED with reason."""
++    case = copy.deepcopy(get_canonical_analytic_cases()[0])
++    import tests.parity_harness as ph
++
++    # 1. Non-finite (NaN) waveform tensor
++    orig_wf = ph.get_fd_waveform
++    def nan_wf(*args, **kwargs):
++        hp, hc = orig_wf(*args, **kwargs)
++        hp = hp.clone()
++        hp[len(hp) // 2] = float("nan")
++        return hp, hc
++
++    try:
++        ph.get_fd_waveform = nan_wf
++        res = ph.run_oracle_comparison(case, strict=True)
++        assert res["status"] == "FAILED", "NaN waveform must fail verification"
++        assert "non-finite" in res.get("reason", "").lower()
++    finally:
++        ph.get_fd_waveform = orig_wf
++
++    # 2. Shape mismatch between waveform and grid
++    def bad_shape_wf(*args, **kwargs):
++        hp, hc = orig_wf(*args, **kwargs)
++        return hp[:-5], hc[:-5]
++
++    try:
++        ph.get_fd_waveform = bad_shape_wf
++        res = ph.run_oracle_comparison(case, strict=True)
++        assert res["status"] == "FAILED", "Mismatched waveform shape must fail verification"
++        assert "shape" in res.get("reason", "").lower()
++    finally:
++        ph.get_fd_waveform = orig_wf
++
++    # 3. Invalid frequency grid (non-increasing frequencies / inverted bounds)
++    bad_grid_case = copy.deepcopy(case)
++    bad_grid_case["grid"]["flow"] = 1000.0
++    bad_grid_case["grid"]["fhigh"] = 50.0
++    res = ph.run_oracle_comparison(bad_grid_case, strict=True)
++    assert res["status"] == "FAILED", "Inverted frequency grid must fail verification"
++    assert "frequency bounds" in res.get("reason", "").lower() or "grid" in res.get("reason", "").lower()
++
++    # 4. Non-positive / negative PSD values
++    orig_psd = ph.aLIGOZeroDetHighPower
++    def negative_psd(f):
++        vals = orig_psd(f).clone()
++        vals[10] = -1.0e-45
++        return vals
++
++    try:
++        ph.aLIGOZeroDetHighPower = negative_psd
++        res = ph.run_oracle_comparison(case, strict=True)
++        assert res["status"] == "FAILED", "Negative PSD values must fail verification"
++        assert "psd" in res.get("reason", "").lower()
++    finally:
++        ph.aLIGOZeroDetHighPower = orig_psd
++
++
++def test_manifest_consistency_and_drift_detection():
++    """Verify that docs/model_manifest.json matches harness models, and simulated drift causes catalog failure."""
++    import tests.parity_harness as ph
++    actual_manifest_models = ph.get_manifest_models()
++    assert len(actual_manifest_models) == 17, f"Expected 17 models in docs/model_manifest.json, found {len(actual_manifest_models)}"
++    assert set(actual_manifest_models) == set(ph.MANIFEST_MODELS), "Manifest models must match harness MANIFEST_MODELS"
++
++    # Injected manifest drift: add a fake model to manifest output
++    orig_get = ph.get_manifest_models
++    try:
++        ph.get_manifest_models = lambda: sorted(actual_manifest_models + ["DriftedModel_v1"])
++        suite_res = ph.run_full_parity_suite(scope="catalog", strict=False)
++        assert suite_res["catalog_passed"] is False, "Catalog drift must fail catalog acceptance"
++        assert len(suite_res.get("manifest_drift_errors", [])) > 0, "Drift error must be recorded"
++        assert any("DriftedModel_v1" in err for err in suite_res["manifest_drift_errors"])
++    finally:
++        ph.get_manifest_models = orig_get
++
++
++def test_frozen_inventory_immutability():
++    """Verify that mutating convenience globals does not alter execution or canonical specifications."""
++    import tests.parity_harness as ph
++    orig_val = ph.DETERMINISTIC_HELD_OUT_CASES[0]["params"]["mass1"]
++    try:
++        ph.DETERMINISTIC_HELD_OUT_CASES[0]["params"]["mass1"] = 9999.0
++        # Freshly deserialized specs must remain unchanged
++        canonical = ph.get_canonical_analytic_cases()
++        assert canonical[0]["params"]["mass1"] == orig_val, "Frozen deserialized specs must not be affected by global mutation"
++
++        # Default run must use clean canonical specs
++        suite_res = ph.run_full_parity_suite(scope="analytic", strict=False)
++        assert suite_res["inventory_valid"] is True
++        assert suite_res["metadata"]["executed_inventory"][0]["params"]["mass1"] == orig_val
++    finally:
++        ph.DETERMINISTIC_HELD_OUT_CASES[0]["params"]["mass1"] = orig_val
++
++
++@pytest.mark.parametrize("corruption", ["nan", "shape"])
++def test_invalid_projection_returns_failure(monkeypatch, corruption):
++    import tests.parity_harness as ph
++    original = ph.project_strain
++    def corrupt(*args, **kwargs):
++        strain = original(*args, **kwargs)
++        if corruption == "shape":
++            return strain[:-1]
++        strain = strain.clone()
++        strain[len(strain) // 2] = complex(float("nan"), 0)
++        return strain
++    monkeypatch.setattr(ph, "project_strain", corrupt)
++    result = ph.run_oracle_comparison(ph.get_canonical_analytic_cases()[0], strict=True)
++    assert result["status"] == "FAILED"
++    assert "Projection validation failed" in result["reason"]
++
++@pytest.mark.parametrize("df", [0, -1, float("nan"), float("inf")])
++def test_invalid_grid_rejected_before_oracle(monkeypatch, df):
++    import tests.parity_harness as ph
++    import lalsimulation
++    def unexpected_oracle(*args, **kwargs):
++        pytest.fail("Invalid frequency grid reached oracle")
++    monkeypatch.setattr(lalsimulation, "SimInspiralChooseFDWaveform", unexpected_oracle)
++    case = ph.get_canonical_analytic_cases()[0]
++    case["grid"]["df"] = df
++    result = ph.run_oracle_comparison(case, strict=True)
++    assert result["status"] == "FAILED"
++    assert "grid" in result["reason"]

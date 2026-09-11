@@ -46,7 +46,7 @@ class IMRPhenomP:
     ) -> Tuple[torch.Tensor, ...]:
         """Compute NNLO Euler angle polynomial coefficients.
 
-        Equations 2103-2131 of Pratten et al. (2021, arXiv:2004.06503).
+        Equations (B1)–(B2) in Appendix B of Pratten et al. (2021), Phys. Rev. D 103, 104056 [arXiv:2004.06503].
         """
         eta2 = eta * eta
         eta3 = eta2 * eta

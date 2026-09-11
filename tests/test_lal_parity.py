@@ -251,7 +251,7 @@ def test_precessing_phenomp_xp_lal_parity(name, tw_app, lal_model_str, m1, m2, s
     """Verify IMRPhenomP/Pv2 and IMRPhenomXP achieve match >= 0.995 against LAL precessing models."""
     import lal
     import lalsimulation as lalsim
-    from pycbc.filter.matchedfilter import match
+    from pycbc.filter.matchedfilter import optimized_match
     from pycbc.types import FrequencySeries
 
     df = 0.25
@@ -282,7 +282,158 @@ def test_precessing_phenomp_xp_lal_parity(name, tw_app, lal_model_str, m1, m2, s
         f_ref=f_ref,
     )
     s_tw = FrequencySeries(hp_tw.detach().cpu().numpy(), delta_f=df)
-    overlap, _ = match(s_lal, s_tw, low_frequency_cutoff=f_min, high_frequency_cutoff=f_max)
+    overlap, _ = optimized_match(s_lal, s_tw, low_frequency_cutoff=f_min, high_frequency_cutoff=f_max)
     assert overlap >= min_match, f"{name}: overlap = {overlap:.8f} below expected {min_match}"
+
+
+@pytest.mark.skipif(not _has_lal(), reason="LALSimulation or PyCBC not installed in environment")
+@pytest.mark.parametrize(
+    "label,tw_name,lal_name,kwargs",
+    [
+        ("TF2 point particle", "TaylorF2", "TaylorF2", dict(mass1=1.4, mass2=1.4, chi1=0.0, chi2=0.0, f_ref=30.0, flow=30.0, fhigh=500.0, spin_order=7, tidal_order=0)),
+        ("TF2 6PN tides", "TaylorF2", "TaylorF2", dict(mass1=1.4, mass2=1.4, chi1=0.0, chi2=0.0, lambda1=400.0, lambda2=400.0, f_ref=30.0, flow=30.0, fhigh=1000.0, spin_order=7, tidal_order=12)),
+        ("TF2 6.5PN tides", "TaylorF2", "TaylorF2", dict(mass1=1.4, mass2=1.4, chi1=0.0, chi2=0.0, lambda1=400.0, lambda2=400.0, f_ref=30.0, flow=30.0, fhigh=1000.0, spin_order=7, tidal_order=13)),
+        ("TF2 unequal spinning", "TaylorF2", "TaylorF2", dict(mass1=1.7, mass2=1.2, chi1=0.15, chi2=-0.08, f_ref=50.0, flow=30.0, fhigh=600.0, spin_order=7, tidal_order=0)),
+        ("Ecc explicit references", "TaylorF2_Eccentric", "TaylorF2Ecc", dict(mass1=1.4, mass2=1.4, chi1=0.0, chi2=0.0, e0=0.05, f0_ecc=30.0, f_ref=50.0, flow=30.0, fhigh=500.0, spin_order=7, ecc_order=6)),
+        ("Ecc unequal spinning", "TaylorF2_Eccentric", "TaylorF2Ecc", dict(mass1=1.7, mass2=1.2, chi1=0.15, chi2=-0.08, e0=0.03, f0_ecc=30.0, f_ref=50.0, flow=30.0, fhigh=500.0, spin_order=7, ecc_order=6)),
+    ],
+)
+def test_explicit_option_oracle_cases(label, tw_name, lal_name, kwargs):
+    """Verify complex relative L2 <= 1e-11 against LALSimulation for matched physical options."""
+    import lal
+    import lalsimulation as lalsim
+
+    p = dict(kwargs)
+    flow = float(p.pop("flow"))
+    fhigh = float(p.pop("fhigh"))
+    df = 0.25
+    fref = float(p.get("f_ref", flow))
+    m1 = float(p["mass1"])
+    m2 = float(p["mass2"])
+    s1 = float(p.get("chi1", 0.0))
+    s2 = float(p.get("chi2", 0.0))
+    e0 = float(p.get("e0", 0.0))
+
+    extra = lal.CreateDict()
+    spin_order = p.get("spin_order", 7)
+    lalsim.SimInspiralWaveformParamsInsertPNSpinOrder(extra, spin_order)
+    if "lambda1" in p:
+        tidal_order = p.get("tidal_order", 12)
+        lalsim.SimInspiralWaveformParamsInsertPNTidalOrder(extra, tidal_order)
+        lalsim.SimInspiralWaveformParamsInsertTidalLambda1(extra, float(p["lambda1"]))
+        lalsim.SimInspiralWaveformParamsInsertTidalLambda2(extra, float(p["lambda2"]))
+    if e0 > 0.0:
+        lalsim.SimInspiralWaveformParamsInsertEccentricityFreq(extra, float(p.get("f0_ecc", flow)))
+        lalsim.SimInspiralWaveformParamsInsertPNEccentricityOrder(extra, p.get("ecc_order", 6))
+
+    lal_approx = lalsim.GetApproximantFromString(lal_name)
+    hp_lal, hc_lal = lalsim.SimInspiralChooseFDWaveform(
+        m1 * lal.MSUN_SI, m2 * lal.MSUN_SI,
+        0.0, 0.0, s1, 0.0, 0.0, s2,
+        100.0 * 1e6 * lal.PC_SI, 0.0, 0.0, 0.0, e0, 0.0,
+        df, flow, fhigh, fref, extra, lal_approx,
+    )
+
+    n_pts = len(hp_lal.data.data)
+    freqs = torch.arange(n_pts, dtype=torch.float64) * df
+
+    hp_tw, hc_tw = get_fd_waveform(
+        tw_name,
+        sample_frequencies=freqs,
+        distance=100.0,
+        dtype=torch.float64,
+        **p,
+    )
+
+    sel = (freqs >= flow) & (freqs < fhigh)
+    h_ref_p = torch.tensor(hp_lal.data.data, dtype=torch.complex128)[sel]
+    h_ref_c = torch.tensor(hc_lal.data.data, dtype=torch.complex128)[sel]
+
+    rel_l2_p = float(torch.linalg.norm(hp_tw[sel] - h_ref_p) / torch.linalg.norm(h_ref_p))
+    rel_l2_c = float(torch.linalg.norm(hc_tw[sel] - h_ref_c) / torch.linalg.norm(h_ref_c))
+
+    assert rel_l2_p <= 1e-11, f"{label} plus relative L2 {rel_l2_p:.3e} exceeds 1e-11"
+    assert rel_l2_c <= 1e-11, f"{label} cross relative L2 {rel_l2_c:.3e} exceeds 1e-11"
+    assert hp_tw[0] == 0.0 and hc_tw[0] == 0.0, f"{label} DC bin must be zero"
+
+
+def test_antenna_factors_geometry():
+    """Verify distinct detector antenna responses and rejection of invalid detectors."""
+    from tests.parity_harness import compute_antenna_factors
+    ra, dec, psi = 1.2, 0.4, 0.3
+    h1 = compute_antenna_factors(ra, dec, psi, detector="H1")
+    l1 = compute_antenna_factors(ra, dec, psi, detector="L1")
+    v1 = compute_antenna_factors(ra, dec, psi, detector="V1")
+
+    # Responses must be distinct
+    assert h1 != l1, "H1 and L1 responses must not be identical"
+    assert h1 != v1, "H1 and V1 responses must not be identical"
+    assert l1 != v1, "L1 and V1 responses must not be identical"
+
+    # Invalid detector must raise ValueError
+    with pytest.raises(ValueError, match="not recognized"):
+        compute_antenna_factors(ra, dec, psi, detector="not-a-detector")
+
+
+@pytest.mark.skipif(not _has_lal(), reason="LALSimulation / PyCBC required for negative control tests")
+def test_parity_harness_negative_controls():
+    """Verify strict verification harness rejects corruptions (DC, PSD, projection, missing oracle)."""
+    import copy
+    import builtins
+    from unittest.mock import patch
+    from tests import parity_harness
+
+    case = copy.deepcopy(parity_harness.DETERMINISTIC_HELD_OUT_CASES[0])
+
+    # 1. Baseline passes strict gates
+    baseline = parity_harness.run_oracle_comparison(case, strict=True)
+    assert baseline["status"] == "PASSED", f"Baseline failed: {baseline}"
+
+    # 2. Corrupt DC bin -> must fail
+    orig_wf = parity_harness.get_fd_waveform
+    def corrupt_dc(*args, **kwargs):
+        hp, hc = orig_wf(*args, **kwargs)
+        hp, hc = hp.clone(), hc.clone()
+        hp[0], hc[0] = 1.0 + 1.0j, 1.0 - 1.0j
+        return hp, hc
+
+    with patch.object(parity_harness, "get_fd_waveform", corrupt_dc):
+        res = parity_harness.run_oracle_comparison(case, strict=True)
+        assert res["status"] == "FAILED", "Non-zero DC failed to trigger verification failure"
+
+    # 3. Corrupt PSD mismatch -> must fail
+    orig_metrics = parity_harness.evaluate_waveform_metrics
+    def corrupt_psd(*args, **kwargs):
+        metrics = orig_metrics(*args, **kwargs)
+        metrics["psd_mismatch"] = 0.5
+        return metrics
+
+    with patch.object(parity_harness, "evaluate_waveform_metrics", corrupt_psd):
+        res = parity_harness.run_oracle_comparison(case, strict=True)
+        assert res["status"] == "FAILED", "Corrupted PSD mismatch failed to trigger verification failure"
+
+    # 4. Corrupt projection strain -> must fail
+    orig_proj = parity_harness.project_strain
+    proj_calls = [0]
+    def corrupt_proj(*args, **kwargs):
+        proj_calls[0] += 1
+        s = orig_proj(*args, **kwargs)
+        return s * 2.0 if proj_calls[0] == 1 else s
+
+    with patch.object(parity_harness, "project_strain", corrupt_proj):
+        res = parity_harness.run_oracle_comparison(case, strict=True)
+        assert res["status"] == "FAILED", "Corrupted detector projection failed to trigger verification failure"
+
+    # 5. Missing PyCBC in strict mode -> must fail
+    orig_import = builtins.__import__
+    def without_pycbc(name, *args, **kwargs):
+        if name == "pycbc" or name.startswith("pycbc."):
+            raise ImportError("simulated absent pycbc")
+        return orig_import(name, *args, **kwargs)
+
+    with patch("builtins.__import__", without_pycbc):
+        res = parity_harness.run_oracle_comparison(case, strict=True)
+        assert res["status"] == "FAILED", "Missing PyCBC in strict mode failed to trigger verification failure"
+
 
 
