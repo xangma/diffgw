@@ -32,6 +32,7 @@ from torchwave.approximants.imrphenom_hm import (
 from torchwave.approximants.imrphenom_xhm import (
     IMRPhenomXHM,
 )
+from torchwave.approximants.imrphenom_xp import IMRPhenomXP
 from torchwave.approximants.imrphenom_xphm import IMRPhenomXPHM
 from torchwave.approximants.imrphenom_nsbh import IMRPhenomNSBH
 from torchwave.approximants.taylorf2_eccentric import TaylorF2_Eccentric
@@ -50,7 +51,9 @@ _APPROXIMANTS = {
     "imrphenomd": IMRPhenomD,
     "imrphenomp": IMRPhenomP,
     "imrphenompv2": IMRPhenomP,
-    "imrphenomxp": IMRPhenomP,
+    "imrphenomxp": IMRPhenomXP,
+    "phenomxp": IMRPhenomXP,
+    "xp": IMRPhenomXP,
     "imrphenomdnrtidal": IMRPhenomD_NRTidal,
     "imrphenomdnrtidalv2": IMRPhenomD_NRTidalv2,
     "nrtidal": IMRPhenomD_NRTidal,
@@ -273,11 +276,27 @@ def _get_fd_waveform_raw(
             lambda2=lambda2,
             **model_kwargs,
         )
-    elif key in ("imrphenomp", "imrphenompv2", "imrphenomxp"):
+    elif key in ("imrphenomxp", "phenomxp", "xp"):
+        model = IMRPhenomXP()
+        return model(
+            f=f,
+            mass1=mass1,
+            mass2=mass2,
+            spin1x=spin1x,
+            spin1y=spin1y,
+            spin1z=s1z,
+            spin2x=spin2x,
+            spin2y=spin2y,
+            spin2z=s2z,
+            distance=distance,
+            inclination=inclination,
+            phic=phic,
+            tc=tc,
+            **model_kwargs,
+        )
+    elif key in ("imrphenomp", "imrphenompv2"):
         model = model_cls()
-        if key == "imrphenomxp" and "precession_version" not in model_kwargs:
-            model_kwargs["precession_version"] = "xp"
-        elif key in ("imrphenomp", "imrphenompv2") and "precession_version" not in model_kwargs:
+        if "precession_version" not in model_kwargs:
             model_kwargs["precession_version"] = "v2"
         return model(
             f=f,

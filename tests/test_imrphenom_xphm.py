@@ -157,6 +157,8 @@ def test_imrphenom_xphm_lal_parity():
 
     df, f_min, f_max, f_ref = 0.25, 20.0, 300.0, 20.0
     for m1, m2, s1x, s1y, s1z, s2x, s2y, s2z, inc, min_match in test_cases:
+        d_params = lal.CreateDict()
+        lalsim.SimInspiralWaveformParamsInsertPhenomXPrecVersion(d_params, 102)
         hp_lal, hc_lal = lalsim.SimInspiralChooseFDWaveform(
             m1 * lal.MSUN_SI,
             m2 * lal.MSUN_SI,
@@ -165,7 +167,7 @@ def test_imrphenom_xphm_lal_parity():
             100.0 * 1e6 * lal.PC_SI,
             inc, 0.0, 0.0, 0.0, 0.0,
             df, f_min, f_max, f_ref,
-            lal.CreateDict(),
+            d_params,
             lalsim.IMRPhenomXPHM,
         )
         s_hp_lal = FrequencySeries(hp_lal.data.data, delta_f=df)
@@ -185,6 +187,8 @@ def test_imrphenom_xphm_lal_parity():
             inclination=inc,
             f_ref=f_ref,
             sample_frequencies=freqs,
+            precession_method="nnlo",
+            prec_version=102,
         )
 
         s_hp_tw = FrequencySeries(hp_tw.detach().cpu().numpy(), delta_f=df)

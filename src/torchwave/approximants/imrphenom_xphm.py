@@ -2,8 +2,8 @@
 
 Strict Clean-Room Implementation based exclusively on published literature:
 - Pratten et al. (2021), Phys. Rev. D 103, 104056 (arXiv:2004.06503), Sec. IV & Appendix B
-- Khan et al. (2020), Phys. Rev. Lett. 124, 081101 (arXiv:1911.06050)
 - García-Quirós et al. (2020), Phys. Rev. D 102, 064002 (arXiv:2001.10914)
+- Chatziioannou et al. (2017), Phys. Rev. D 95, 104004 (arXiv:1703.03967)
 """
 
 from typing import Dict, List, Optional, Sequence, Tuple, Union
@@ -22,11 +22,8 @@ from torchwave.conversions import (
     component_masses_to_eta,
     component_masses_to_delta,
 )
-from torchwave.approximants.imrphenomp import IMRPhenomP
-from torchwave.approximants.imrphenom_hm import (
-    IMRPhenomXHM,
-    _swsh_projection_coefficients,
-)
+from torchwave.approximants.imrphenom_xhm import IMRPhenomXHM
+from torchwave.approximants.precession_msa import evaluate_msa_precession
 
 
 def wigner_small_d_matrix(l: int, beta: torch.Tensor) -> torch.Tensor:
@@ -64,8 +61,8 @@ class IMRPhenomXPHM(nn.Module):
     """IMRPhenomXPHM Precessing Multipolar Higher-Harmonic Waveform Approximant.
 
     Twists up underlying coprecessing multipolar modes from IMRPhenomXHM
-    using next-to-next-to-leading order (NNLO) precession angles and the
-    full Wigner D-matrix frame rotation.
+    using Multiple Scale Analysis (MSA variant 223 default) or NNLO precession
+    angles and the full Wigner D-matrix frame rotation.
     """
 
     SUPPORTED_MODES = ((2, 2), (2, 1), (3, 3), (3, 2), (4, 4))
@@ -80,9 +77,9 @@ class IMRPhenomXPHM(nn.Module):
 
     def forward(
         self,
-        f: torch.Tensor,
-        mass1: Union[float, torch.Tensor],
-        mass2: Union[float, torch.Tensor],
+        f: Optional[torch.Tensor] = None,
+        mass1: Union[float, torch.Tensor] = 30.0,
+        mass2: Union[float, torch.Tensor] = 30.0,
         spin1x: Union[float, torch.Tensor] = 0.0,
         spin1y: Union[float, torch.Tensor] = 0.0,
         spin1z: Optional[Union[float, torch.Tensor]] = None,
@@ -102,17 +99,14 @@ class IMRPhenomXPHM(nn.Module):
         phasing_convention: Optional[str] = None,
         reference_frame: Optional[str] = None,
         sample_frequencies: Optional[torch.Tensor] = None,
-        precession_method: str = "nnlo",
+        precession_method: str = "msa",
+        prec_version: int = 223,
+        convention: int = 1,
         **kwargs,
     ) -> Union[
         Tuple[torch.Tensor, torch.Tensor],
         Tuple[torch.Tensor, torch.Tensor, Dict[Tuple[int, int], Tuple[torch.Tensor, torch.Tensor]]],
     ]:
-        if f is None:
-            if sample_frequencies is not None:
-                f = sample_frequencies
-            else:
-                raise ValueError("Must provide frequency grid via 'f' or 'sample_frequencies'")
         """Generate frequency-domain precessing multipolar polarizations (h_plus, h_cross).
 
         Args:
@@ -128,9 +122,16 @@ class IMRPhenomXPHM(nn.Module):
             f_ref: Reference frequency in Hz
             phi0: Observer azimuth angle in radians
             modes: Optional sequence of harmonic modes (l, m) to evaluate
+            precession_method: 'msa' (default), 'nnlo', or 'ode'
+            prec_version: Precession prescription version (101, 102, 103, 104, 220, 223)
+            convention: Euler angle offset convention (0, 1, 5, 6, 7; default 1)
         """
-        device = f.device
-        dtype = f.dtype if f.is_floating_point() else torch.float64
+        freqs = f if f is not None else sample_frequencies
+        if freqs is None:
+            raise ValueError("Must provide frequency grid via 'f' or 'sample_frequencies'")
+
+        device = freqs.device if isinstance(freqs, torch.Tensor) else None
+        dtype = freqs.dtype if isinstance(freqs, torch.Tensor) and freqs.is_floating_point() else torch.float64
         complex_dtype = torch.complex128 if dtype == torch.float64 else torch.complex64
 
         m1 = as_tensor(mass1, device=device, dtype=dtype)
@@ -152,40 +153,63 @@ class IMRPhenomXPHM(nn.Module):
         fref = as_tensor(f_ref, device=device, dtype=dtype) if f_ref is not None else None
         phi_0 = as_tensor(phi0, device=device, dtype=dtype)
 
+        # Canonical body ordering: primary mass m1 >= m2
+        swap_mask = m1 < m2
+        if torch.any(swap_mask):
+            m1_eff = torch.where(swap_mask, m2, m1)
+            m2_eff = torch.where(swap_mask, m1, m2)
+            s1x_eff = torch.where(swap_mask, s2x, s1x)
+            s1y_eff = torch.where(swap_mask, s2y, s1y)
+            s1z_eff = torch.where(swap_mask, s2z, s1z)
+            s2x_eff = torch.where(swap_mask, s1x, s2x)
+            s2y_eff = torch.where(swap_mask, s1y, s2y)
+            s2z_eff = torch.where(swap_mask, s1z, s2z)
+            m1, m2 = m1_eff, m2_eff
+            s1x, s1y, s1z = s1x_eff, s1y_eff, s1z_eff
+            s2x, s2y, s2z = s2x_eff, s2y_eff, s2z_eff
+
         active_modes = tuple(modes) if modes is not None else self.modes
 
-        # Binary parameters
+        # In-plane spin check
+        in_plane_sq = s1x * s1x + s1y * s1y + s2x * s2x + s2y * s2y
+        is_aligned = in_plane_sq < 1e-12
+
+        # Fast path: if purely aligned scalar, directly return IMRPhenomXHM
+        if isinstance(is_aligned, torch.Tensor) and is_aligned.dim() == 0 and bool(is_aligned):
+            return self.xhm_model(
+                f=freqs,
+                mass1=m1,
+                mass2=m2,
+                chi1=s1z,
+                chi2=s2z,
+                distance=dist,
+                inclination=inc,
+                phic=phi_c,
+                tc=t_c,
+                f_ref=fref,
+                phi0=phi_0,
+                modes=active_modes,
+                return_modes=return_modes,
+                phasing_convention=phasing_convention,
+                reference_frame=reference_frame,
+            )
+
         total_mass = m1 + m2
         m_sec = total_mass * MSUN_SEC
-        eta = component_masses_to_eta(m1, m2)
-        delta = component_masses_to_delta(m1, m2)
+        is_batched = total_mass.dim() >= 1
 
-        m1_norm = 0.5 * (1.0 + delta)
-        m2_norm = 0.5 * (1.0 - delta)
+        f_eval = freqs if (not is_batched or freqs.dim() > 1) else freqs.unsqueeze(0)
 
-        q = m1 / m2
-        a1_coeff = 2.0 + 1.5 / q
-        a2_coeff = 2.0 + 1.5 * q
+        def unsqueeze_param(t: torch.Tensor) -> torch.Tensor:
+            if is_batched and f_eval.dim() > t.dim():
+                return t.unsqueeze(-1)
+            return t
 
-        # Effective precession parameter chi_p (Schmidt et al. 2015, Pratten et al. 2021)
-        s1_perp = (m1 * m1) * torch.sqrt(torch.clamp(s1x * s1x + s1y * s1y, min=1e-20))
-        s2_perp = (m2 * m2) * torch.sqrt(torch.clamp(s2x * s2x + s2y * s2y, min=1e-20))
-        s_p = torch.maximum(a1_coeff * s1_perp, a2_coeff * s2_perp)
-        chip = s_p / (a1_coeff * m1 * m1)
+        fref_eval = fref if fref is not None else torch.tensor(20.0, device=device, dtype=dtype)
 
-        # In-plane spin initial orientation angle at f_ref: alpha(f_ref) = phi_s1
-        s1_perp_sq = s1x * s1x + s1y * s1y
-        phi_s1 = torch.where(
-            s1_perp_sq > 1e-12,
-            torch.atan2(s1y, s1x),
-            torch.atan2(s2y, s2x),
-        )
-
-        # Aligned spin in coprecessing frame
-        chi_l = m1_norm * s1z + m2_norm * s2z
-
+        # Coprecessing modes from IMRPhenomXHM
         _, _, coprec_dict = self.xhm_model(
-            f=f,
+            f=freqs,
             mass1=m1,
             mass2=m2,
             chi1=s1z,
@@ -202,33 +226,7 @@ class IMRPhenomXPHM(nn.Module):
             reference_frame=reference_frame,
         )
 
-        is_batched = total_mass.dim() >= 1
-        if f.dim() == 1 and is_batched:
-            f_eval = f.unsqueeze(0)
-        else:
-            f_eval = f
-
-        def unsqueeze_param(t: torch.Tensor) -> torch.Tensor:
-            if is_batched and f_eval.dim() > t.dim():
-                return t.unsqueeze(-1)
-            return t
-
-        m_sec_u = unsqueeze_param(m_sec)
-        eta_u = unsqueeze_param(eta)
-        delta_u = unsqueeze_param(delta)
-        m1n_u = unsqueeze_param(m1_norm)
-        m2n_u = unsqueeze_param(m2_norm)
-        chip_u = unsqueeze_param(chip)
-        chil_u = unsqueeze_param(chi_l)
-        s1z_u = unsqueeze_param(s1z)
-        s2z_u = unsqueeze_param(s2z)
-        a1_u = unsqueeze_param(a1_coeff)
-        inc_u = unsqueeze_param(inc)
-        fref_eval = fref if fref is not None else torch.tensor(20.0, device=device, dtype=dtype)
-        fref_u = unsqueeze_param(fref_eval)
-        phi_s1_u = unsqueeze_param(phi_s1)
-        phi0_u = unsqueeze_param(phi_0)
-
+        # Precession angles evaluation
         if precession_method.lower() == "ode":
             from torchwave.approximants.precession_ode import SpinPrecessionODE
 
@@ -244,89 +242,68 @@ class IMRPhenomXPHM(nn.Module):
                 spin2z=s2z,
                 f_ref=fref_eval,
             )
+            gamma = -epsilon
+            theta_jn = inc
+            zeta = torch.zeros_like(theta_jn)
         else:
-            # NNLO precession angle polynomial coefficients
-            (
-                a_m3, a_m2, a_m1, a_1, a_log,
-                e_m3, e_m2, e_m1, e_1, e_log,
-            ) = IMRPhenomP.nnlo_angle_coefficients(
-                eta=eta_u,
-                delta=delta_u,
-                m1_norm=m1n_u,
-                chip=chip_u,
-                chi_l=chil_u,
-            )
+            p_ver = 102 if (precession_method.lower() == "nnlo" and prec_version in (220, 223)) else prec_version
+            v = (PI * unsqueeze_param(m_sec) * f_eval) ** (1.0 / 3.0)
+            v0 = (PI * unsqueeze_param(m_sec) * unsqueeze_param(fref_eval)) ** (1.0 / 3.0)
 
-            # Dimensionless velocity v = (pi * M * f)^(1/3)
-            v = (PI * m_sec_u * f_eval) ** (1.0 / 3.0)
-            v_ref = (PI * m_sec_u * fref_u) ** (1.0 / 3.0)
-
-            alpha_dyn, epsilon = IMRPhenomP.evaluate_nnlo_angles(
+            alpha, beta, gamma, theta_jn, zeta = evaluate_msa_precession(
                 v=v,
-                v_ref=v_ref,
-                a_minus3=a_m3, a_minus2=a_m2, a_minus1=a_m1, a_1=a_1, a_log=a_log,
-                e_minus3=e_m3, e_minus2=e_m2, e_minus1=e_m1, e_1=e_1, e_log=e_log,
+                v0=v0,
+                m1=unsqueeze_param(m1),
+                m2=unsqueeze_param(m2),
+                s1x=unsqueeze_param(s1x),
+                s1y=unsqueeze_param(s1y),
+                s1z=unsqueeze_param(s1z),
+                s2x=unsqueeze_param(s2x),
+                s2y=unsqueeze_param(s2y),
+                s2z=unsqueeze_param(s2z),
+                iota=unsqueeze_param(inc),
+                phi_ref=unsqueeze_param(phi_0),
+                prec_version=p_ver,
+                convention=convention,
             )
-            alpha = alpha_dyn + phi_s1_u
-
-            # Opening angle beta(f)
-            ang_l = IMRPhenomP.orbital_angular_momentum(v, eta_u)
-            sp_geom = chip_u * a1_u * (m1n_u * m1n_u)
-            sl_geom = (m1n_u * m1n_u) * s1z_u + (m2n_u * m2n_u) * s2z_u
-
-            l_plus_sl = ang_l + sl_geom
-            cos_beta = torch.clamp(
-                l_plus_sl / torch.sqrt(l_plus_sl * l_plus_sl + sp_geom * sp_geom + 1e-24),
-                -1.0 + 1e-12,
-                1.0 - 1e-12,
-            )
-            beta = torch.arccos(cos_beta)
-
-        # If in-plane spins are effectively zero (aligned spin limit), beta -> 0, alpha -> 0, epsilon -> 0
-        in_plane_sq = s1x * s1x + s1y * s1y + s2x * s2x + s2y * s2y
-        is_aligned = unsqueeze_param(in_plane_sq) < 1e-12
-        beta = torch.where(is_aligned, torch.zeros_like(beta), beta)
-        alpha = torch.where(is_aligned, torch.zeros_like(alpha), alpha)
-        epsilon = torch.where(is_aligned, torch.zeros_like(epsilon), epsilon)
 
         h_plus_total = torch.zeros(f_eval.shape, dtype=complex_dtype, device=device)
         h_cross_total = torch.zeros(f_eval.shape, dtype=complex_dtype, device=device)
         mode_dict = {}
 
-        # Evaluate Wigner small-d matrices for required multipoles
         unique_l = sorted(list(set(l for l, _ in active_modes)))
         d_mat_beta = {l: wigner_small_d_matrix(l, beta) for l in unique_l}
-        d_mat_inc = {l: wigner_small_d_matrix(l, inc_u) for l in unique_l}
+        d_mat_jn = {l: wigner_small_d_matrix(l, unsqueeze_param(theta_jn)) for l in unique_l}
 
         norm_mode = math.sqrt(16.0 * PI / 5.0)
+        phi0_u = unsqueeze_param(phi_0)
+        two_zeta = 2.0 * unsqueeze_param(zeta)
+        cos_2z = torch.cos(two_zeta)
+        sin_2z = torch.sin(two_zeta)
 
         for l, mp in active_modes:
             h_mode = coprec_dict[(l, mp)]
 
-            # Precession scale factor: converts Wigner small-d basis to physical strain normalization
             sign_l = -1.0 if l == 3 else 1.0
             scale_l = (sign_l * math.sqrt((2 * l + 1) / 5.0)) / norm_mode
 
             d_beta_l = d_mat_beta[l]
-            d_inc_l = d_mat_inc[l]
+            d_jn_l = d_mat_jn[l]
 
             term_plus = torch.zeros(f_eval.shape, dtype=complex_dtype, device=device)
             term_cross = torch.zeros(f_eval.shape, dtype=complex_dtype, device=device)
 
-            # Sum over m in [-l, ..., l]
             for m_val in range(-l, l + 1):
                 m_idx = m_val + l
                 dm_minus = d_beta_l[..., m_idx, -mp + l]
                 dm_plus = d_beta_l[..., m_idx, mp + l]
 
-                # y_{l, m}(iota) = d^l_{m, -2}(iota)
-                y_lm = d_inc_l[..., m_idx, -2 + l]
+                y_lm = d_jn_l[..., m_idx, -2 + l]
 
                 m_phase = float(m_val) * (phi0_u - alpha)
                 cos_m = torch.cos(m_phase)
                 sin_m = torch.sin(m_phase)
 
-                # a_{m, -m'} and a_{m, m'}^*
                 exp_minus_ima = torch.complex(cos_m, sin_m)
                 exp_plus_ima = torch.complex(cos_m, -sin_m)
 
@@ -336,19 +313,58 @@ class IMRPhenomXPHM(nn.Module):
                 term_plus = term_plus + (a_m_minus + ((-1) ** l) * a_m_plus_star)
                 term_cross = term_cross + (a_m_minus - ((-1) ** l) * a_m_plus_star)
 
-            # Phase shift exp(-i * mp * epsilon)
-            mp_eps = float(mp) * epsilon
-            exp_minus_ime = torch.complex(torch.cos(-mp_eps), torch.sin(-mp_eps))
+            # Phase factor exp(-i * mp' * gamma) for mp' = mp
+            mp_gamma = float(mp) * gamma
+            exp_neg_im_gamma = torch.complex(torch.cos(mp_gamma), torch.sin(mp_gamma))
 
-            # Multiply by scale and coprecessing mode
-            hp_lm = scale_l * exp_minus_ime * h_mode * term_plus
-            hc_lm = -1j * scale_l * exp_minus_ime * h_mode * term_cross
+            hp_raw = scale_l * exp_neg_im_gamma * h_mode * term_plus
+            hc_raw = -1j * scale_l * exp_neg_im_gamma * h_mode * term_cross
+
+            # Rotate polarizations by exp(2i * zeta)
+            hp_lm = cos_2z * hp_raw + sin_2z * hc_raw
+            hc_lm = -sin_2z * hp_raw + cos_2z * hc_raw
 
             h_plus_total = h_plus_total + hp_lm
             h_cross_total = h_cross_total + hc_lm
 
             if return_modes:
                 mode_dict[(l, mp)] = (hp_lm, hc_lm)
+
+        # If aligned-spin limit, blend with exact IMRPhenomXHM
+        if is_aligned.any():
+            out_al = self.xhm_model(
+                f=f_eval,
+                mass1=m1,
+                mass2=m2,
+                chi1=s1z,
+                chi2=s2z,
+                distance=dist,
+                inclination=inc,
+                phic=phi_c,
+                tc=t_c,
+                f_ref=fref,
+                phi0=phi_0,
+                modes=active_modes,
+                return_modes=return_modes,
+                phasing_convention=phasing_convention,
+                reference_frame=reference_frame,
+            )
+            is_al_u = unsqueeze_param(is_aligned)
+            if return_modes:
+                hp_al, hc_al, dict_al = out_al
+                h_plus_total = torch.where(is_al_u, hp_al, h_plus_total)
+                h_cross_total = torch.where(is_al_u, hc_al, h_cross_total)
+                for k in active_modes:
+                    hp_m, hc_m = mode_dict[k]
+                    hp_m_al, hc_m_al = dict_al[k]
+                    mode_dict[k] = (
+                        torch.where(is_al_u, hp_m_al, hp_m),
+                        torch.where(is_al_u, hc_m_al, hc_m),
+                    )
+            else:
+                hp_al, hc_al = out_al
+                h_plus_total = torch.where(is_al_u, hp_al, h_plus_total)
+                h_cross_total = torch.where(is_al_u, hc_al, h_cross_total)
 
         if return_modes:
             return h_plus_total, h_cross_total, mode_dict

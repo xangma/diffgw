@@ -258,10 +258,18 @@ def test_precessing_phenomp_xp_lal_parity(name, tw_app, lal_model_str, m1, m2, s
     f_min, f_max, f_ref = 20.0, 300.0, 20.0
     lal_approx = lalsim.GetApproximantFromString(lal_model_str)
 
+    d_lal = lal.CreateDict()
+    tw_kwargs = {}
+    if "xp" in tw_app.lower():
+        # Pin NNLO comparator explicitly for PhenomX precession parity check
+        lalsim.SimInspiralWaveformParamsInsertPhenomXPrecVersion(d_lal, 102)
+        tw_kwargs["precession_method"] = "nnlo"
+        tw_kwargs["prec_version"] = 102
+
     hp_lal, _ = lalsim.SimInspiralChooseFDWaveform(
         m1 * lal.MSUN_SI, m2 * lal.MSUN_SI, s1x, s1y, s1z, s2x, s2y, s2z,
         100.0 * 1e6 * lal.PC_SI, inc, 0.0, 0.0, 0.0, 0.0,
-        df, f_min, f_max, f_ref, lal.CreateDict(), lal_approx,
+        df, f_min, f_max, f_ref, d_lal, lal_approx,
     )
     s_lal = FrequencySeries(hp_lal.data.data, delta_f=df)
     freqs = torch.arange(len(s_lal), dtype=torch.float64) * df
@@ -280,6 +288,7 @@ def test_precessing_phenomp_xp_lal_parity(name, tw_app, lal_model_str, m1, m2, s
         inclination=inc,
         sample_frequencies=freqs,
         f_ref=f_ref,
+        **tw_kwargs,
     )
     s_tw = FrequencySeries(hp_tw.detach().cpu().numpy(), delta_f=df)
     overlap, _ = optimized_match(s_lal, s_tw, low_frequency_cutoff=f_min, high_frequency_cutoff=f_max)

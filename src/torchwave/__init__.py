@@ -19,6 +19,7 @@ from torchwave.detectors.network import (
     greenwich_mean_sidereal_time,
 )
 
+from torchwave.approximants.imrphenom_xp import IMRPhenomXP
 from torchwave.approximants.imrphenom_xphm import IMRPhenomXPHM
 from torchwave.approximants.imrphenom_nsbh import IMRPhenomNSBH
 from torchwave.approximants.taylorf2_eccentric import TaylorF2_Eccentric
@@ -91,6 +92,7 @@ __all__ = [
     "IMRPhenomXHM",
     "IMRPhenomXAS",
     "IMRPhenomP",
+    "IMRPhenomXP",
     "IMRPhenomXPHM",
     "IMRPhenomNSBH",
     "SpinPrecessionODE",
