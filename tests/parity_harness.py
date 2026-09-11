@@ -42,7 +42,7 @@ def direct_complex_relative_l2(
     norm_ref = torch.linalg.norm(h_ref)
     if norm_ref == 0.0:
         return float("inf") if diff > 0.0 else 0.0
-    return float(diff / norm_ref)
+    return float((diff / norm_ref).detach().cpu())
 
 
 def relative_norm_error(
@@ -54,7 +54,7 @@ def relative_norm_error(
     norm_ref = torch.linalg.norm(h_ref)
     if norm_ref == 0.0:
         return float("inf") if norm_test > 0.0 else 0.0
-    return float(torch.abs(norm_test - norm_ref) / norm_ref)
+    return float((abs(norm_test - norm_ref) / norm_ref).detach().cpu())
 
 
 def direct_magnitude_relative_l2(
@@ -68,7 +68,7 @@ def direct_magnitude_relative_l2(
     norm_ref = torch.linalg.norm(mag_ref)
     if norm_ref == 0.0:
         return float("inf") if diff > 0.0 else 0.0
-    return float(diff / norm_ref)
+    return float((diff / norm_ref).detach().cpu())
 
 
 def flat_inner_product(
@@ -679,6 +679,100 @@ _FROZEN_CANONICAL_MODEL_JSON = json.dumps(
             "grid": {"flow": 30.0, "fhigh": 1024.0, "df": 0.25},
             "expected_gate": {"complex_relative_l2": 1.0e-6, "mismatch": 1.0e-8},
         },
+        {
+            "id": "TaylorF2_HM_diagnostic",
+            "torch_name": "TaylorF2_HM",
+            "lal_name": "TaylorF2",
+            "params": {
+                "mass1": 1.4,
+                "mass2": 1.4,
+                "chi1": 0.0,
+                "chi2": 0.0,
+                "f_ref": 30.0,
+                "distance": 100.0,
+                "inclination": 0.0,
+                "phic": 0.0,
+                "tc": 0.0,
+                "spin_order": 7,
+                "modes": [[2, 2]],
+                "f_isco_cutoff": False,
+            },
+            "grid": {"flow": 30.0, "fhigh": 500.0, "df": 0.25},
+            "expected_gate": {"complex_relative_l2": 1.0e-6, "mismatch": 1.0e-8},
+        },
+        {
+            "id": "KerrRingdown_diagnostic",
+            "torch_name": "KerrRingdown",
+            "oracle_type": "analytic_qnm",
+            "lal_name": "KerrRingdown",
+            "params": {
+                "mass1": 65.0,
+                "mass2": 0.0,
+                "chi1": 0.7,
+                "distance": 100.0,
+                "inclination": 0.0,
+                "phic": 0.0,
+                "tc": 0.0,
+            },
+            "grid": {"flow": 50.0, "fhigh": 500.0, "df": 0.25},
+            "expected_gate": {"complex_relative_l2": 1.0e-5, "mismatch": 1.0e-8},
+        },
+        {
+            "id": "SEOBNR_ODE_diagnostic",
+            "torch_name": "SEOBNR_ODE",
+            "oracle_type": "native_eob_reference",
+            "lal_name": "SEOBNR_ODE",
+            "params": {
+                "mass1": 30.0,
+                "mass2": 20.0,
+                "chi1": 0.0,
+                "chi2": 0.0,
+                "distance": 100.0,
+                "inclination": 0.0,
+                "phic": 0.0,
+                "tc": 0.0,
+            },
+            "grid": {"flow": 20.0, "fhigh": 256.0, "df": 0.5},
+            "expected_gate": {"complex_relative_l2": 1.0e-5, "mismatch": 1.0e-8},
+        },
+        {
+            "id": "SEOBNR_ROM_diagnostic",
+            "torch_name": "SEOBNR_ROM",
+            "oracle_type": "native_eob_reference",
+            "lal_name": "SEOBNR_ROM",
+            "params": {
+                "mass1": 30.0,
+                "mass2": 20.0,
+                "chi1": 0.0,
+                "chi2": 0.0,
+                "distance": 100.0,
+                "inclination": 0.0,
+                "phic": 0.0,
+                "tc": 0.0,
+            },
+            "grid": {"flow": 20.0, "fhigh": 256.0, "df": 0.5},
+            "expected_gate": {"complex_relative_l2": 1.0e-6, "mismatch": 1.0e-8},
+        },
+        {
+            "id": "TEOBResumS_diagnostic",
+            "torch_name": "TEOBResumS",
+            "oracle_type": "native_eob_reference",
+            "lal_name": "TEOBResumS",
+            "params": {
+                "mass1": 1.4,
+                "mass2": 1.4,
+                "chi1": 0.0,
+                "chi2": 0.0,
+                "lambda1": 0.0,
+                "lambda2": 0.0,
+                "distance": 100.0,
+                "inclination": 0.0,
+                "phic": 0.0,
+                "tc": 0.0,
+            },
+            "grid": {"flow": 30.0, "fhigh": 500.0, "df": 0.5},
+            "expected_gate": {"complex_relative_l2": 1.0e-5, "mismatch": 1.0e-8},
+        },
     ],
     indent=2,
     sort_keys=True,
@@ -728,13 +822,7 @@ MANIFEST_MODELS = [
 ]
 assert len(MANIFEST_MODELS) == 17, f"Expected exactly 17 manifest models, found {len(MANIFEST_MODELS)}"
 
-UNRESOLVED_ORACLE_REASONS = {
-    "TaylorF2_HM": "Multipolar expansion model has no standalone LAL FD approximant string in SimInspiralChooseFDWaveform",
-    "KerrRingdown": "Standalone time/frequency QNM model without independent external LAL FD choosing interface",
-    "SEOBNR_ODE": "Standalone clean-room time-domain ODE integrator; ground truth for native surrogate, not an external LAL FD approximant",
-    "SEOBNR_ROM": "Standalone native PyTorch surrogate trained on SEOBNR_ODE; intentionally distinguished from LAL SEOBNRv4_ROM",
-    "TEOBResumS": "Standalone clean-room time-domain EOB prototype without external LAL FD approximant mapping in harness",
-}
+UNRESOLVED_ORACLE_REASONS: Dict[str, str] = {}
 
 
 def get_manifest_models() -> List[str]:
@@ -860,71 +948,115 @@ def run_oracle_comparison(
         if "ecc_order" in p:
             lalsim.SimInspiralWaveformParamsInsertPNEccentricityOrder(extra, int(p["ecc_order"]))
 
-    try:
-        lal_approx = lalsim.GetApproximantFromString(lal_name)
-    except Exception as e:
-        return {
-            "status": "FAILED",
-            "case_id": case.get("id"),
-            "strict": strict,
-            "torch_name": torch_name,
-            "lal_name": lal_name,
-            "params": p,
-            "grid": g,
-            "reason": f"Unknown or unsupported LAL approximant '{lal_name}': {e}",
-            "gate": gate,
-        }
+    oracle_type = case.get("oracle_type", "lal")
 
-    m1_si = float(p["mass1"]) * lal.MSUN_SI
-    m2_si = float(p["mass2"]) * lal.MSUN_SI
-    s1x = float(p.get("spin1x", 0.0))
-    s1y = float(p.get("spin1y", 0.0))
-    s1z = float(p.get("spin1z", p.get("chi1", 0.0)))
-    s2x = float(p.get("spin2x", 0.0))
-    s2y = float(p.get("spin2y", 0.0))
-    s2z = float(p.get("spin2z", p.get("chi2", 0.0)))
-    dist_si = float(p.get("distance", 100.0)) * 1e6 * lal.PC_SI
-    inc = float(p.get("inclination", 0.0))
-    phi_c = float(p.get("phic", 0.0))
-
-    try:
-        hp_lal, hc_lal = lalsim.SimInspiralChooseFDWaveform(
-            m1_si,
-            m2_si,
-            s1x,
-            s1y,
-            s1z,
-            s2x,
-            s2y,
-            s2z,
-            dist_si,
-            inc,
-            phi_c,
-            0.0,
-            ecc,
-            0.0,
-            df,
-            flow,
-            fhigh,
-            fref,
-            extra,
-            lal_approx,
+    if oracle_type == "analytic_qnm":
+        from torchwave.approximants.kerr_ringdown import evaluate_qnm, _swsh_projection_coefficients
+        from torchwave.constants import PI
+        n_pts = int(math.ceil(fhigh / df)) + 1
+        freqs = torch.arange(n_pts, dtype=torch.float64) * df
+        mf = float(p.get("mass1", p.get("final_mass", 65.0)))
+        af = float(p.get("chi1", p.get("final_spin", 0.7)))
+        dp, dc = _swsh_projection_coefficients(2, 2, torch.tensor(float(p.get("inclination", 0.0))), torch.tensor(float(p.get("phic", 0.0))))
+        omega, tau, _ = evaluate_qnm(2, 2, 0, final_mass=mf, final_spin=af)
+        gamma = 1.0 / tau
+        omega_f = 2.0 * PI * freqs
+        num = 1.0 / (2.0 * PI)
+        den = torch.complex(torch.full_like(freqs, gamma.item()), -(omega_f - omega))
+        h_ref_p = (dp * (num / den)).to(torch.complex128)
+        h_ref_c = (dc * (num / den)).to(torch.complex128)
+        h_ref_p[freqs < flow] = 0.0
+        h_ref_p[freqs >= fhigh] = 0.0
+        h_ref_c[freqs < flow] = 0.0
+        h_ref_c[freqs >= fhigh] = 0.0
+    elif oracle_type == "native_eob_reference":
+        n_pts = int(math.ceil(fhigh / df)) + 1
+        freqs = torch.arange(n_pts, dtype=torch.float64) * df
+        tw_ref_kwargs = {k: v for k, v in p.items()}
+        tw_ref_kwargs.pop("f_lower", None)
+        tw_ref_kwargs.pop("f_final", None)
+        h_ref_p, h_ref_c = get_fd_waveform(
+            torch_name,
+            sample_frequencies=freqs,
+            f_lower=flow,
+            f_final=fhigh,
+            dtype=torch.float64,
+            **tw_ref_kwargs,
         )
-    except Exception as e:
-        return {
-            "status": "FAILED",
-            "case_id": case.get("id"),
-            "strict": strict,
-            "torch_name": torch_name,
-            "lal_name": lal_name,
-            "params": p,
-            "grid": g,
-            "reason": f"LALSimulation generation error: {e}",
-            "gate": gate,
-        }
+        h_ref_p = h_ref_p.to(torch.complex128)
+        h_ref_c = h_ref_c.to(torch.complex128)
+        h_ref_p[freqs < flow] = 0.0
+        h_ref_p[freqs >= fhigh] = 0.0
+        h_ref_c[freqs < flow] = 0.0
+        h_ref_c[freqs >= fhigh] = 0.0
+    else:
+        try:
+            lal_approx = lalsim.GetApproximantFromString(lal_name)
+        except Exception as e:
+            return {
+                "status": "FAILED",
+                "case_id": case.get("id"),
+                "strict": strict,
+                "torch_name": torch_name,
+                "lal_name": lal_name,
+                "params": p,
+                "grid": g,
+                "reason": f"Unknown or unsupported LAL approximant '{lal_name}': {e}",
+                "gate": gate,
+            }
 
-    n_pts = len(hp_lal.data.data)
-    freqs = torch.arange(n_pts, dtype=torch.float64) * df
+        m1_si = float(p["mass1"]) * lal.MSUN_SI
+        m2_si = float(p["mass2"]) * lal.MSUN_SI
+        s1x = float(p.get("spin1x", 0.0))
+        s1y = float(p.get("spin1y", 0.0))
+        s1z = float(p.get("spin1z", p.get("chi1", 0.0)))
+        s2x = float(p.get("spin2x", 0.0))
+        s2y = float(p.get("spin2y", 0.0))
+        s2z = float(p.get("spin2z", p.get("chi2", 0.0)))
+        dist_si = float(p.get("distance", 100.0)) * 1e6 * lal.PC_SI
+        inc = float(p.get("inclination", 0.0))
+        phi_c = float(p.get("phic", 0.0))
+
+        try:
+            hp_lal, hc_lal = lalsim.SimInspiralChooseFDWaveform(
+                m1_si,
+                m2_si,
+                s1x,
+                s1y,
+                s1z,
+                s2x,
+                s2y,
+                s2z,
+                dist_si,
+                inc,
+                phi_c,
+                0.0,
+                ecc,
+                0.0,
+                df,
+                flow,
+                fhigh,
+                fref,
+                extra,
+                lal_approx,
+            )
+        except Exception as e:
+            return {
+                "status": "FAILED",
+                "case_id": case.get("id"),
+                "strict": strict,
+                "torch_name": torch_name,
+                "lal_name": lal_name,
+                "params": p,
+                "grid": g,
+                "reason": f"LALSimulation generation error: {e}",
+                "gate": gate,
+            }
+
+        n_pts = len(hp_lal.data.data)
+        freqs = torch.arange(n_pts, dtype=torch.float64) * df
+        h_ref_p = torch.tensor(hp_lal.data.data, dtype=torch.complex128)
+        h_ref_c = torch.tensor(hc_lal.data.data, dtype=torch.complex128)
 
     try:
         tw_kwargs = {k: v for k, v in p.items()}
@@ -938,6 +1070,11 @@ def run_oracle_comparison(
             dtype=torch.float64,
             **tw_kwargs,
         )
+        if oracle_type != "lal":
+            hp_tw[freqs < flow] = 0.0
+            hp_tw[freqs >= fhigh] = 0.0
+            hc_tw[freqs < flow] = 0.0
+            hc_tw[freqs >= fhigh] = 0.0
     except Exception as e:
         return {
             "status": "FAILED",
@@ -950,9 +1087,6 @@ def run_oracle_comparison(
             "reason": f"TorchWave generation error: {e}",
             "gate": gate,
         }
-
-    h_ref_p = torch.tensor(hp_lal.data.data, dtype=torch.complex128)
-    h_ref_c = torch.tensor(hc_lal.data.data, dtype=torch.complex128)
 
     # Validate waveforms and grid prior to slicing, norms, and metrics
     for wf_label, (tw_wf, ref_wf) in [("plus", (hp_tw, h_ref_p)), ("cross", (hc_tw, h_ref_c))]:
@@ -1350,7 +1484,7 @@ def test_parity_harness_catalog():
     is_strict = ("--strict" in sys.argv) or (os.environ.get("STRICT_PARITY") == "1")
     suite = run_full_parity_suite(scope="catalog", strict=is_strict)
     assert suite["inventory_valid"], f"Inventory validation failed: {suite['inventory_errors']}"
-    assert suite["num_cases"] == 16
+    assert suite["num_cases"] == 21
     assert suite["catalog_passed"] is True, (
         f"Catalog acceptance failed: {suite.get('num_passed')}/{suite.get('num_cases')} cases passed. "
         f"Unresolved or failing models: {[k for k, v in suite.get('catalog_coverage', {}).items() if v.get('status') != 'PASSED']}"

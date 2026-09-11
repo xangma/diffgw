@@ -653,35 +653,30 @@ class IMRPhenomNSBH(nn.Module):
         )
         sum_a_safe = torch.clamp(sum_a, min=1e-8)
 
-        prefac_pn = (
-            ((m_sec_u ** 2.0) / d_sec_u)
-            * PI
+        f_bar = m_sec_u * f_safe
+
+        a_pn_dimless = (
+            PI
             * torch.sqrt(2.0 * eta_u / 3.0)
-            * torch.pow(PI * m_sec_u * f_safe, -7.0 / 6.0)
-        )
-        a_pn = prefac_pn * (sum_cap_a / torch.sqrt(sum_a_safe))
-
-        a_pm = (
-            ((m_sec_u ** 2.0) / d_sec_u)
-            * gamma1_p_u
-            * torch.pow(PI * m_sec_u * f_safe, 5.0 / 6.0)
-            * torch.pow(PI * m_sec_u, -7.0 / 6.0)
+            * torch.pow(PI * f_bar, -7.0 / 6.0)
+            * (sum_cap_a / torch.sqrt(sum_a_safe))
         )
 
-        lorentz = (sigma_l_u ** 2.0) / ((f_safe - f_rd_u) ** 2.0 + (sigma_l_u ** 2.0) / 4.0)
-        a_rd = (
-            ((m_sec_u ** 2.0) / d_sec_u)
-            * eps_tide_u
-            * delta1_u
-            * lorentz
-            * torch.pow(PI * m_sec_u * f_safe, -7.0 / 6.0)
-        )
+        a_pm_dimless = gamma1_p_u * torch.pow(f_bar, 5.0 / 6.0)
+
+        f_rd_bar = m_sec_u * f_rd_u
+        sigma_bar = m_sec_u * sigma_l_u
+        lorentz_bar = (sigma_bar ** 2.0) / ((f_bar - f_rd_bar) ** 2.0 + (sigma_bar ** 2.0) / 4.0)
+        a_rd_dimless = eps_tide_u * delta1_u * lorentz_bar * torch.pow(f_bar, -7.0 / 6.0)
 
         w_ins = omega_minus(f_eval, f0_tilde_u, d_win_u)
         w_pm = omega_minus(f_eval, f1_tilde_u, d_win_u)
         w_rd = omega_plus(f_eval, f2_tilde_u, d_win_u)
 
-        full_amp = a_pn * w_ins + a_pm * w_pm + a_rd * w_rd
+        full_amp_dimless = a_pn_dimless * w_ins + a_pm_dimless * w_pm + a_rd_dimless * w_rd
+
+        norm = ((m_sec_u ** 2.0) / d_sec_u) * (0.5 * math.sqrt(5.0 / (4.0 * PI)))
+        full_amp = norm * full_amp_dimless
         full_amp = torch.where(f_eval > 0.0, full_amp, torch.zeros_like(full_amp))
 
         # -------------------------------------------------------------
