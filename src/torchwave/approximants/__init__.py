@@ -13,6 +13,8 @@ from torchwave.approximants.imrphenomd_nrtidal import (
 )
 from torchwave.approximants.imrphenom_hm import (
     IMRPhenomHM,
+)
+from torchwave.approximants.imrphenom_xhm import (
     IMRPhenomXHM,
 )
 from torchwave.approximants.imrphenom_xas import IMRPhenomXAS

@@ -2,6 +2,7 @@
 
 Strict Clean-Room Implementation based exclusively on published literature:
 - London et al. (2018), Phys. Rev. Lett. 120, 161102 (arXiv:1708.00404)
+- Mishra et al. (2016), Phys. Rev. D 94, 084053 (arXiv:1609.00727)
 - García-Quirós et al. (2020), Phys. Rev. D 102, 064002 (arXiv:2001.10914)
 - Berti, Cardoso, Will (2006), Phys. Rev. D 73, 064030 (arXiv:gr-qc/0512160)
 - Kidder (2008), Phys. Rev. D 77, 044016 (arXiv:0710.0614)
@@ -53,6 +54,10 @@ QNM_FITS: Dict[Tuple[int, int], Dict[str, Tuple[float, float, float]]] = {
         "f": (2.3000, -1.5056, 0.2244),
         "q": (1.1929, 3.1191, -0.4825),
     },
+    (4, 3): {
+        "f": (1.6869, -0.8862, 0.2822),
+        "q": (1.4812, 2.8096, -0.4271),
+    },
 }
 
 
@@ -100,7 +105,6 @@ def _swsh_projection_coefficients(
         yl_negm = c_norm * sin_i * (one_minus_cos * one_minus_cos) * exp_neg
         sign_l = -1.0
     elif l == 3 and m == 2:
-        # Wigner d-matrix formula for (3, 2)
         c_norm = math.sqrt(7.0 / (4.0 * math.pi)) * 0.25
         ylm = c_norm * (one_plus_cos * one_plus_cos) * (3.0 * cos_i - 2.0) * exp_pos
         yl_negm = c_norm * (one_minus_cos * one_minus_cos) * (3.0 * cos_i + 2.0) * exp_neg
@@ -109,6 +113,11 @@ def _swsh_projection_coefficients(
         c_norm = math.sqrt(63.0 / (256.0 * math.pi))
         ylm = c_norm * (sin_i * sin_i) * (one_plus_cos * one_plus_cos) * exp_pos
         yl_negm = c_norm * (sin_i * sin_i) * (one_minus_cos * one_minus_cos) * exp_neg
+        sign_l = 1.0
+    elif l == 4 and m == 3:
+        c_norm = 3.0 * math.sqrt(14.0) / (16.0 * math.sqrt(math.pi))
+        ylm = c_norm * sin_i * (one_plus_cos * one_plus_cos) * (1.0 - 2.0 * cos_i) * exp_pos
+        yl_negm = c_norm * sin_i * (one_minus_cos * one_minus_cos) * (1.0 + 2.0 * cos_i) * exp_neg
         sign_l = 1.0
     else:
         raise ValueError(f"Mode ({l}, {m}) not currently supported.")
@@ -121,17 +130,107 @@ def _swsh_projection_coefficients(
     return d_plus, d_cross
 
 
+def frequency_mapping_amplitude(
+    f: torch.Tensor,
+    f0_amp: Union[float, torch.Tensor],
+    f_rd_lm: Union[float, torch.Tensor],
+    f_rd_22: Union[float, torch.Tensor],
+    m: int,
+) -> torch.Tensor:
+    """London et al. (2018) piecewise amplitude frequency mapping f_22^A(f).
+
+    Args:
+        f: Frequency tensor
+        f0_amp: Transition frequency f_0^A
+        f_rd_lm: Ringdown frequency of (l, m) mode
+        f_rd_22: Ringdown frequency of (2, 2) mode
+        m: Azimuthal mode number
+    """
+    s2 = (f_rd_22 - (2.0 / float(m)) * f0_amp) / (f_rd_lm - f0_amp)
+    reg1 = (2.0 / float(m)) * f
+    reg2 = s2 * (f - f0_amp) + (2.0 / float(m)) * f0_amp
+    reg3 = f - (f_rd_lm - f_rd_22)
+    return torch.where(f <= f0_amp, reg1, torch.where(f <= f_rd_lm, reg2, reg3))
+
+
+def frequency_mapping_phase(
+    f: torch.Tensor,
+    f0_phi: Union[float, torch.Tensor],
+    f_rd_lm: Union[float, torch.Tensor],
+    f_rd_22: Union[float, torch.Tensor],
+    m: int,
+) -> torch.Tensor:
+    """London et al. (2018) piecewise phase frequency mapping f_22^phi(f).
+
+    Args:
+        f: Frequency tensor
+        f0_phi: Transition frequency f_0^phi
+        f_rd_lm: Ringdown frequency of (l, m) mode
+        f_rd_22: Ringdown frequency of (2, 2) mode
+        m: Azimuthal mode number
+    """
+    s2 = (f_rd_22 - (2.0 / float(m)) * f0_phi) / (f_rd_lm - f0_phi)
+    s3 = f_rd_22 / f_rd_lm
+    reg1 = (2.0 / float(m)) * f
+    reg2 = s2 * (f - f0_phi) + (2.0 / float(m)) * f0_phi
+    reg3 = s3 * f
+    return torch.where(f <= f0_phi, reg1, torch.where(f <= f_rd_lm, reg2, reg3))
+
+
+def h_hat_multipole(
+    l: int,
+    m: int,
+    v_m: torch.Tensor,
+    delta: torch.Tensor,
+    eta: torch.Tensor,
+    chi_s: torch.Tensor,
+    chi_a: torch.Tensor,
+) -> torch.Tensor:
+    """Evaluate leading PN multipole amplitude ratio H_hat_lm(f).
+
+    References:
+    - Mishra et al. (2016), Phys. Rev. D 94, 084053
+    - London et al. (2018), Phys. Rev. Lett. 120, 161102
+    """
+    if (l, m) == (2, 2):
+        return -torch.ones_like(v_m)
+    elif (l, m) == (3, 3):
+        c = -0.75 * math.sqrt(5.0 / 7.0)
+        return c * delta * v_m
+    elif (l, m) == (4, 4):
+        c = -(4.0 / 9.0) * math.sqrt(10.0 / 7.0)
+        return c * (1.0 - 3.0 * eta) * (v_m ** 2.0)
+    elif (l, m) == (2, 1):
+        c = -math.sqrt(2.0) / 3.0
+        return c * (delta * v_m - 1.5 * (chi_a + delta * chi_s) * (v_m ** 2.0))
+    elif (l, m) == (3, 2):
+        c = -(1.0 / 3.0) * math.sqrt(5.0 / 7.0)
+        return c * ((1.0 - 3.0 * eta) * (v_m ** 2.0) + 4.0 * eta * chi_s * (v_m ** 3.0))
+    elif (l, m) == (4, 3):
+        c = -0.75 * math.sqrt(3.0 / 35.0)
+        return c * (delta * (1.0 - 2.0 * eta) * (v_m ** 3.0) + 2.5 * eta * (chi_a - delta * chi_s) * (v_m ** 4.0))
+    else:
+        raise ValueError(f"Mode ({l}, {m}) not supported.")
+
+
 class IMRPhenomHM(nn.Module):
     """IMRPhenomHM Multipolar Higher-Harmonic IMR Gravitational Waveform Approximant.
 
-    Supports harmonics (l, m) in {(2, 2), (2, 1), (3, 3), (3, 2), (4, 4)}.
+    Supports harmonics (l, m) in {(2, 2), (2, 1), (3, 3), (3, 2), (4, 4), (4, 3)}.
     Literature:
     - London et al. (2018), Phys. Rev. Lett. 120, 161102 (arXiv:1708.00404)
-    - García-Quirós et al. (2020), Phys. Rev. D 102, 064002 (arXiv:2001.10914)
+    - Mishra et al. (2016), Phys. Rev. D 94, 084053 (arXiv:1609.00727)
     - Berti, Cardoso, Will (2006), Phys. Rev. D 73, 064030 (arXiv:gr-qc/0512160)
     """
 
-    SUPPORTED_MODES = ((2, 2), (2, 1), (3, 3), (3, 2), (4, 4))
+    SUPPORTED_MODES: Tuple[Tuple[int, int], ...] = (
+        (2, 2),
+        (2, 1),
+        (3, 3),
+        (3, 2),
+        (4, 4),
+        (4, 3),
+    )
 
     def __init__(
         self,
@@ -164,6 +263,8 @@ class IMRPhenomHM(nn.Module):
         """Compute fundamental QNM frequency f_RD and damping width f_damp for mode (l, m).
 
         Reference: Berti, Cardoso, Will (2006) Table VIII.
+        Returns:
+            f_rd, f_damp in dimensionless geometric units (M * f).
         """
         total_mass = mass1 + mass2
         m_final, a_final, _, _ = IMRPhenomD.remnant_properties(mass1, mass2, chi1, chi2)
@@ -218,6 +319,7 @@ class IMRPhenomHM(nn.Module):
             phi0: Observer azimuth angle in radians (default 0.0)
             modes: Optional tuple of modes to evaluate (defaults to all supported modes)
             return_modes: If True, also return dictionary of mode waveforms
+            return_unprojected_modes: If True, also return dictionary of unprojected h_mode waveforms
 
         Returns:
             (h_plus, h_cross) or (h_plus, h_cross, mode_dict)
@@ -245,24 +347,39 @@ class IMRPhenomHM(nn.Module):
         total_mass = m1 + m2
         eta = component_masses_to_eta(m1, m2)
         delta = component_masses_to_delta(m1, m2)
+        chi_s = 0.5 * (s1 + s2)
+        chi_a = 0.5 * (s1 - s2)
         m_sec = total_mass * MSUN_SEC
 
         is_batched = total_mass.dim() >= 1
-        if f.dim() == 1 and is_batched:
-            f_eval = f.unsqueeze(0)
-            m_sec_eval = m_sec.unsqueeze(-1)
-            eta_eval = eta.unsqueeze(-1)
-            delta_eval = delta.unsqueeze(-1)
-            inc_eval = inc.unsqueeze(-1)
-            phi0_eval = phi_0.unsqueeze(-1)
-            dist_eval = dist.unsqueeze(-1)
-            phic_eval = phi_c.unsqueeze(-1)
-            tc_eval = t_c.unsqueeze(-1)
+        if is_batched:
+            if f.dim() == 1:
+                f_eval = f.unsqueeze(0)
+            else:
+                f_eval = f
+
+            def _unsqueeze(t: torch.Tensor) -> torch.Tensor:
+                if t.dim() < f_eval.dim():
+                    return t.unsqueeze(-1)
+                return t
+
+            m_sec_eval = _unsqueeze(m_sec)
+            eta_eval = _unsqueeze(eta)
+            delta_eval = _unsqueeze(delta)
+            chi_s_eval = _unsqueeze(chi_s)
+            chi_a_eval = _unsqueeze(chi_a)
+            inc_eval = _unsqueeze(inc)
+            phi0_eval = _unsqueeze(phi_0)
+            dist_eval = _unsqueeze(dist)
+            phic_eval = _unsqueeze(phi_c)
+            tc_eval = _unsqueeze(t_c)
         else:
             f_eval = f
             m_sec_eval = m_sec
             eta_eval = eta
             delta_eval = delta
+            chi_s_eval = chi_s
+            chi_a_eval = chi_a
             inc_eval = inc
             phi0_eval = phi_0
             dist_eval = dist
@@ -271,7 +388,7 @@ class IMRPhenomHM(nn.Module):
 
         # Evaluate base (2, 2) mode at face-on (iota=0)
         try:
-            hp_22_raw, _, phi_22 = self.base_22(
+            hp_22_raw, _, phi_22_raw = self.base_22(
                 f=f,
                 mass1=m1,
                 mass2=m2,
@@ -279,8 +396,8 @@ class IMRPhenomHM(nn.Module):
                 chi2=s2,
                 distance=dist,
                 inclination=0.0,
-                phic=phic,
-                tc=tc,
+                phic=0.0,
+                tc=0.0,
                 f_ref=f_ref,
                 phasing_convention=phasing_convention,
                 reference_frame=reference_frame,
@@ -295,23 +412,16 @@ class IMRPhenomHM(nn.Module):
                 chi2=s2,
                 distance=dist,
                 inclination=0.0,
-                phic=phic,
-                tc=tc,
+                phic=0.0,
+                tc=0.0,
                 f_ref=f_ref,
                 phasing_convention=phasing_convention,
                 reference_frame=reference_frame,
             )
-            phi_22 = -torch.angle(hp_22_raw)  # h ~ exp(-i * phi)
+            phi_22_raw = -torch.angle(hp_22_raw)
 
         amp_22 = torch.abs(hp_22_raw)
-
-        # Baseline Newtonian quadrupole amplitude
-        dist_sec = (dist_eval * MPC_SI) / C_SI
-        prefactor = torch.sqrt(5.0 * eta_eval / 24.0) / (PI ** (2.0 / 3.0) * dist_sec)
-        a0_phys = prefactor * (m_sec_eval ** (5.0 / 6.0)) * (torch.clamp(f_eval, min=1e-8) ** (-7.0 / 6.0))
-
-        # Velocity v22 = (pi * M * f)^(1/3)
-        v22 = torch.pow(PI * m_sec_eval * torch.clamp(f_eval, min=1e-8), 1.0 / 3.0)
+        phi_22 = phi_22_raw + 2.0 * PI * f_eval * tc_eval - 2.0 * phic_eval
 
         h_plus_total = torch.zeros_like(
             amp_22, dtype=torch.complex128 if dtype == torch.float64 else torch.complex64
@@ -320,106 +430,164 @@ class IMRPhenomHM(nn.Module):
         mode_dict = {}
 
         # 22 QNM ringdown frequency
-        f_rd_22, f_damp_22 = self.mode_qnm_frequencies(2, 2, m1, m2, s1, s2)
-        if is_batched and f_eval.dim() > f_rd_22.dim():
-            f_rd_22_u = f_rd_22.unsqueeze(-1)
+        f_rd_22_geom, _ = self.mode_qnm_frequencies(2, 2, m1, m2, s1, s2)
+        if is_batched:
+            f_rd_22_u = _unsqueeze(f_rd_22_geom)
         else:
-            f_rd_22_u = f_rd_22
+            f_rd_22_u = f_rd_22_geom
+        f_rd_22_phys = f_rd_22_u / m_sec_eval
 
         norm_mode = math.sqrt(16.0 * PI / 5.0)
+
         for l, m in active_modes:
             if (l, m) == (2, 2):
                 exp_neg_i_phi22 = torch.complex(torch.cos(phi_22), -torch.sin(phi_22))
                 h_mode = (norm_mode * amp_22).to(exp_neg_i_phi22.dtype) * exp_neg_i_phi22
             else:
                 # 1. QNM ringdown for mode (l, m)
-                f_rd_lm, f_damp_lm = self.mode_qnm_frequencies(l, m, m1, m2, s1, s2)
-                if is_batched and f_eval.dim() > f_rd_lm.dim():
-                    f_rd_lm_u = f_rd_lm.unsqueeze(-1)
-                    f_damp_lm_u = f_damp_lm.unsqueeze(-1)
+                f_rd_lm_geom, _ = self.mode_qnm_frequencies(l, m, m1, m2, s1, s2)
+                if is_batched:
+                    f_rd_lm_u = _unsqueeze(f_rd_lm_geom)
                 else:
-                    f_rd_lm_u = f_rd_lm
-                    f_damp_lm_u = f_damp_lm
+                    f_rd_lm_u = f_rd_lm_geom
+                f_rd_lm_phys = f_rd_lm_u / m_sec_eval
 
-                # 2. Phase connection via Stationary Phase Approximation:
-                # Inspiral: Psi_lm(f) = (m / 2) * Psi_22(2f / m) + Delta_Psi_lm
-                # Delta_Psi_lm = (pi / 2) * (3l + mod(l + m, 2)) - pi (London et al. 2018 Eq. 10)
-                delta_psi_lm = (PI / 2.0) * float(3 * l + ((l + m) % 2)) - PI
-                f_scaled = (2.0 / float(m)) * f_eval
+                # Transition frequencies in physical Hz
+                f0_amp = (0.018 / m_sec_eval) * (f_rd_lm_phys / f_rd_22_phys)
+                f0_phi = (0.014 / m_sec_eval) * (f_rd_lm_phys / f_rd_22_phys)
 
-                # Re-evaluate base phase at scaled frequency f_scaled
+                # 2. London et al. (2018) Frequency Mappings
+                f_map_amp = frequency_mapping_amplitude(f_eval, f0_amp, f_rd_lm_phys, f_rd_22_phys, m)
+                f_map_phi = frequency_mapping_phase(f_eval, f0_phi, f_rd_lm_phys, f_rd_22_phys, m)
+
+                # 3. Base 22 amplitude at mapped frequency f_22^A
+                f_map_amp_safe = torch.clamp(f_map_amp, min=1e-8)
+                hp_amp_eval, _ = self.base_22(
+                    f=f_map_amp_safe,
+                    mass1=m1,
+                    mass2=m2,
+                    chi1=s1,
+                    chi2=s2,
+                    distance=dist,
+                    inclination=0.0,
+                    phic=0.0,
+                    tc=0.0,
+                    f_ref=f_ref,
+                    phasing_convention=phasing_convention,
+                    reference_frame=reference_frame,
+                )
+                amp_22_mapped = torch.abs(hp_amp_eval)
+
+                # 4. Base 22 phase at mapped frequency f_22^phi
+                f_map_phi_safe = torch.clamp(f_map_phi, min=1e-8)
                 try:
-                    hp_scaled, _, phi_22_scaled = self.base_22(
-                        f=f_scaled,
+                    _, _, phi_22_mapped = self.base_22(
+                        f=f_map_phi_safe,
                         mass1=m1,
                         mass2=m2,
                         chi1=s1,
                         chi2=s2,
                         distance=dist,
                         inclination=0.0,
-                        phic=phic,
-                        tc=tc,
+                        phic=0.0,
+                        tc=0.0,
                         f_ref=f_ref,
                         phasing_convention=phasing_convention,
                         reference_frame=reference_frame,
                         return_phase=True,
                     )
                 except (TypeError, ValueError):
-                    hp_scaled, _ = self.base_22(
-                        f=f_scaled,
+                    hp_phi_eval, _ = self.base_22(
+                        f=f_map_phi_safe,
                         mass1=m1,
                         mass2=m2,
                         chi1=s1,
                         chi2=s2,
                         distance=dist,
                         inclination=0.0,
-                        phic=phic,
-                        tc=tc,
+                        phic=0.0,
+                        tc=0.0,
                         f_ref=f_ref,
                         phasing_convention=phasing_convention,
                         reference_frame=reference_frame,
                     )
-                    phi_22_scaled = -torch.angle(hp_scaled)
-                psi_lm_ins = (float(m) / 2.0) * phi_22_scaled + delta_psi_lm
+                    phi_22_mapped = -torch.angle(hp_phi_eval)
 
-                # Intermediate and ringdown phase connection
-                psi_lm = psi_lm_ins
-
-                # 3. Leading-order amplitude ratio R_lm = A_lm / (sqrt(16pi/5) * A0)
-                # Kidder (2008), London et al. (2018), García-Quirós et al. (2020)
-                if (l, m) == (2, 1):
-                    # Proportional to delta * v22
-                    r_lm_ins = (delta_eval / (3.0 * (2.0 ** (1.0 / 3.0)))) * v22
-                elif (l, m) == (3, 3):
-                    # Proportional to delta * v22
-                    r_lm_ins = (3.0 / 4.0) * math.sqrt(15.0 / 14.0) * delta_eval * v22
-                elif (l, m) == (3, 2):
-                    # Proportional to (1 - 3*eta) * v22^2
-                    r_lm_ins = (1.0 / 3.0) * math.sqrt(5.0 / 7.0) * (1.0 - 3.0 * eta_eval) * (v22 * v22)
-                elif (l, m) == (4, 4):
-                    # Proportional to (1 - 3*eta) * v22^2
-                    r_lm_ins = (8.0 / 9.0) * math.sqrt(5.0 / 7.0) * (1.0 - 3.0 * eta_eval) * (v22 * v22)
+                # 5. Base 22 phase at boundaries f_b0 = 2*f0_phi/m and f_bRD = f_rd_22_phys
+                f_b0 = (2.0 / float(m)) * f0_phi
+                f_bRD = f_rd_22_phys
+                if is_batched:
+                    f_boundaries = torch.cat([f_b0, f_bRD], dim=-1)
                 else:
-                    r_lm_ins = torch.zeros_like(v22)
+                    f_boundaries = torch.stack([f_b0, f_bRD])
+                f_boundaries_safe = torch.clamp(f_boundaries, min=1e-8)
+                try:
+                    _, _, phi_bounds = self.base_22(
+                        f=f_boundaries_safe,
+                        mass1=m1,
+                        mass2=m2,
+                        chi1=s1,
+                        chi2=s2,
+                        distance=dist,
+                        inclination=0.0,
+                        phic=0.0,
+                        tc=0.0,
+                        f_ref=f_ref,
+                        phasing_convention=phasing_convention,
+                        reference_frame=reference_frame,
+                        return_phase=True,
+                    )
+                except (TypeError, ValueError):
+                    hp_bounds, _ = self.base_22(
+                        f=f_boundaries_safe,
+                        mass1=m1,
+                        mass2=m2,
+                        chi1=s1,
+                        chi2=s2,
+                        distance=dist,
+                        inclination=0.0,
+                        phic=0.0,
+                        tc=0.0,
+                        f_ref=f_ref,
+                        phasing_convention=phasing_convention,
+                        reference_frame=reference_frame,
+                    )
+                    phi_bounds = -torch.angle(hp_bounds)
 
-                # Convert to physical amplitude
-                mode_norm = math.sqrt(16.0 * PI / 5.0) * a0_phys
-                amp_lm_ins = mode_norm * r_lm_ins
+                if is_batched:
+                    phi_22_f0 = phi_bounds[..., 0:1]
+                    phi_22_frd = phi_bounds[..., 1:2]
+                else:
+                    phi_22_f0 = phi_bounds[0]
+                    phi_22_frd = phi_bounds[1]
 
-                # Ringdown Lorentzian fall-off matching Kerr QNM
-                f_rd_phys = f_rd_lm_u / m_sec_eval
-                f_damp_phys = f_damp_lm_u / m_sec_eval
-                lorentzian = (f_damp_phys ** 2.0) / ((f_eval - f_rd_phys) ** 2.0 + f_damp_phys ** 2.0)
-                amp_lm_rd = amp_lm_ins * lorentzian
+                # 6. Phase Connection
+                slope_2 = (f_rd_22_phys - (2.0 / float(m)) * f0_phi) / (f_rd_lm_phys - f0_phi)
+                slope_3 = f_rd_22_phys / f_rd_lm_phys
+                kappa_1 = float(m) / 2.0
+                kappa_2 = 1.0 / slope_2
+                kappa_3 = 1.0 / slope_3
 
-                amp_lm = torch.where(f_eval <= f_rd_phys, amp_lm_ins, amp_lm_rd)
+                delta_1 = (PI / 2.0) * float(3 * l + ((l + m) % 2)) - PI
+                delta_2 = (kappa_1 - kappa_2) * phi_22_f0 + delta_1
+                delta_3 = (kappa_2 - kappa_3) * phi_22_frd + delta_2
 
-                # Equal-mass symmetry: odd-m modes must vanish identically when m1 == m2
-                if m % 2 != 0:
-                    amp_lm = torch.where(delta_eval == 0.0, torch.zeros_like(amp_lm), amp_lm)
+                kappa_f = torch.where(f_eval <= f0_phi, kappa_1, torch.where(f_eval <= f_rd_lm_phys, kappa_2, kappa_3))
+                delta_f = torch.where(f_eval <= f0_phi, delta_1, torch.where(f_eval <= f_rd_lm_phys, delta_2, delta_3))
 
+                phi_lm_int = kappa_f * phi_22_mapped + delta_f
+                psi_lm = phi_lm_int + 2.0 * PI * f_eval * tc_eval - float(m) * phic_eval
+
+                # 7. Amplitude Rescaling: A_lm(f) = |beta_lm(f)| * A_22[f_22^A(f)]
+                v_m = torch.pow(PI * m_sec_eval * torch.clamp((2.0 / float(m)) * f_eval, min=1e-8), 1.0 / 3.0)
+                h_hat = h_hat_multipole(l, m, v_m, delta_eval, eta_eval, chi_s_eval, chi_a_eval)
+                beta_lm = -h_hat
+                amp_lm = torch.abs(beta_lm) * amp_22_mapped
+
+                # Complex mode strain
                 exp_neg_i_psi = torch.complex(torch.cos(psi_lm), -torch.sin(psi_lm))
-                h_mode = amp_lm.to(exp_neg_i_psi.dtype) * exp_neg_i_psi
+                h_mode = (norm_mode * torch.sign(beta_lm) * amp_lm).to(exp_neg_i_psi.dtype) * exp_neg_i_psi
+                h_mode = torch.where(f_eval > 0.0, h_mode, torch.zeros_like(h_mode))
 
             # Spin-weighted spherical harmonics projection
             d_plus, d_cross = _swsh_projection_coefficients(l, m, inc_eval, phi0_eval)
@@ -446,19 +614,16 @@ class IMRPhenomHM(nn.Module):
         return self.forward(*args, **kwargs)
 
 
-class IMRPhenomXHM(IMRPhenomHM):
-    """IMRPhenomXHM Multipolar Higher-Harmonic IMR Gravitational Waveform Approximant.
 
-    Literature citations:
-    - García-Quirós et al. (2020), Phys. Rev. D 102, 064002 (arXiv:2001.10914)
-    - Pratten et al. (2020), Phys. Rev. D 102, 064001 (arXiv:2001.11412)
-    """
+# Re-export clean-room calibrated IMRPhenomXHM
+from torchwave.approximants.imrphenom_xhm import IMRPhenomXHM
 
-    def __init__(
-        self,
-        modes: Optional[Sequence[Tuple[int, int]]] = None,
-        carrier: str = "XAS",
-        base_22: Optional[nn.Module] = None,
-    ):
-        super().__init__(modes=modes, carrier=carrier, base_22=base_22)
-
+__all__ = [
+    "IMRPhenomHM",
+    "IMRPhenomXHM",
+    "frequency_mapping_amplitude",
+    "frequency_mapping_phase",
+    "h_hat_multipole",
+    "_swsh_projection_coefficients",
+    "QNM_FITS",
+]

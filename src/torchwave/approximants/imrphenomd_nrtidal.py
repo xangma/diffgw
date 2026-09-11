@@ -178,7 +178,7 @@ def _quadrupole_monopole_constants(
     return c_q, c_oc
 
 
-def _nrtidal_self_spin_correction(
+def _nrtidal_self_spin_components(
     x: torch.Tensor,
     mass1: torch.Tensor,
     mass2: torch.Tensor,
@@ -186,19 +186,22 @@ def _nrtidal_self_spin_correction(
     chi2: torch.Tensor,
     lambda1: torch.Tensor,
     lambda2: torch.Tensor,
-) -> torch.Tensor:
-    """Compute 2PN, 3PN, and 3.5PN self-spin / quadrupole-monopole phase corrections.
+) -> Tuple[torch.Tensor, torch.Tensor]:
+    """Compute (S23, S35) self-spin phase corrections from Dietrich et al. (2019) Eqs. 26-27.
 
-    Reference: Dietrich et al. (2019) Eqs. 26-27 (arXiv:1905.06011).
+    Returns:
+        s23: Sum of 2PN and 3PN self-spin phase contributions
+        s35: 3.5PN self-spin phase contribution
     """
     total_mass = mass1 + mass2
     eta = component_masses_to_eta(mass1, mass2)
     xa = mass1 / total_mass
     xb = mass2 / total_mass
 
-    # If spins are effectively zero, return zero
+    # If spins are effectively zero, return zeros
     if torch.all(torch.abs(chi1) < 1e-12) and torch.all(torch.abs(chi2) < 1e-12):
-        return torch.zeros_like(x)
+        zero = torch.zeros_like(x)
+        return zero, zero
 
     cq1, coc1 = _quadrupole_monopole_constants(lambda1)
     cq2, coc2 = _quadrupole_monopole_constants(lambda2)
@@ -246,8 +249,34 @@ def _nrtidal_self_spin_correction(
         eta_u = eta
 
     prefactor = 3.0 / (128.0 * eta_u * (x ** 2.5))
-    psi_ss = prefactor * (p2 * (x ** 2.0) + p3 * (x ** 3.0) + p35 * (x ** 3.5))
-    return psi_ss
+    s23 = prefactor * (p2 * (x ** 2.0) + p3 * (x ** 3.0))
+    s35 = prefactor * (p35 * (x ** 3.5))
+    return s23, s35
+
+
+def _nrtidal_self_spin_correction(
+    x: torch.Tensor,
+    mass1: torch.Tensor,
+    mass2: torch.Tensor,
+    chi1: torch.Tensor,
+    chi2: torch.Tensor,
+    lambda1: torch.Tensor,
+    lambda2: torch.Tensor,
+) -> torch.Tensor:
+    """Compute 2PN, 3PN, and 3.5PN self-spin / quadrupole-monopole phase corrections.
+
+    Reference: Dietrich et al. (2019) Eqs. 26-27 (arXiv:1905.06011).
+    """
+    s23, s35 = _nrtidal_self_spin_components(
+        x=x,
+        mass1=mass1,
+        mass2=mass2,
+        chi1=chi1,
+        chi2=chi2,
+        lambda1=lambda1,
+        lambda2=lambda2,
+    )
+    return s23 + s35
 
 
 class IMRPhenomD_NRTidal(nn.Module):
@@ -356,7 +385,7 @@ class IMRPhenomD_NRTidal(nn.Module):
         # Leading factor: -kappa_eff * c_Newt = - (3/16 * 39/16) * Lambda_tilde / eta = -(117 / 256) * Lambda_tilde / eta
         leading_factor = -(117.0 / 256.0) * (lam_tilde_eval / eta_eval)
 
-        # 2. Padé tidal phase correction
+        # 2. Tidal and self-spin phase corrections
         if self.version == "v1":
             # Dietrich et al. (2017)
             c = NRTIDAL_V1_COEFFS
@@ -370,7 +399,7 @@ class IMRPhenomD_NRTidal(nn.Module):
             den = 1.0 + c["d1"] * x + c["d32"] * (x ** 1.5)
             pade_ratio = num / den
             psi_tidal = leading_factor * (x ** 2.5) * pade_ratio
-            psi_ss = torch.zeros_like(psi_tidal)
+            total_delta_psi = psi_tidal
         else:
             # NRTidalv2: Dietrich et al. (2019)
             num = (
@@ -385,8 +414,8 @@ class IMRPhenomD_NRTidal(nn.Module):
             pade_ratio = num / den
             psi_tidal = leading_factor * (x ** 2.5) * pade_ratio
 
-            # Spin-induced quadrupole-monopole terms up to 3.5PN
-            psi_ss = _nrtidal_self_spin_correction(
+            # Spin-induced quadrupole-monopole terms up to 3.5PN (Dietrich et al. 2019 Eqs. 26-27)
+            s23, s35 = _nrtidal_self_spin_components(
                 x=x,
                 mass1=m1,
                 mass2=m2,
@@ -396,7 +425,34 @@ class IMRPhenomD_NRTidal(nn.Module):
                 lambda2=lam2,
             )
 
-        total_delta_psi = psi_tidal + psi_ss
+            # Determine phasing convention matching base IMRPhenomD priority
+            conv = reference_frame if reference_frame is not None else (
+                phasing_convention if phasing_convention is not None else ("reference_frequency" if f_ref is not None else "coalescence")
+            )
+            conv = conv.lower()
+
+            if conv in ("reference_frequency", "reffreq", "ref"):
+                ref_f = f_ref if f_ref is not None else (f_eval.reshape(-1)[0] if f_eval.numel() > 0 else 20.0)
+                fref_t = as_tensor(ref_f, device=device, dtype=dtype)
+                if is_batched and f_eval.dim() > fref_t.dim():
+                    fref_u = fref_t.unsqueeze(-1)
+                else:
+                    fref_u = fref_t
+
+                safe_fref = torch.clamp(fref_u, min=1e-8)
+                x_ref = torch.pow(PI * m_sec_eval * safe_fref, 2.0 / 3.0)
+                s23_ref, _ = _nrtidal_self_spin_components(
+                    x=x_ref,
+                    mass1=m1,
+                    mass2=m2,
+                    chi1=s1,
+                    chi2=s2,
+                    lambda1=lam1,
+                    lambda2=lam2,
+                )
+                total_delta_psi = psi_tidal + (s23 - s23_ref) + s35
+            else:
+                total_delta_psi = psi_tidal + s23 + s35
 
         # 3. High-frequency BNS merger cutoff & Planck taper
         if apply_merger_taper:
