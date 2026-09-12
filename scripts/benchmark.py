@@ -1,0 +1,684 @@
+#!/usr/bin/env python3
+"""Comprehensive Performance Benchmarking Suite for TorchWave.
+
+Measures latency and throughput across models, devices (CPU, MPS, CUDA),
+batch sizes, precisions (FP32, FP64), autograd backward passes, and
+optionally compares against LALSimulation.
+
+Usage examples:
+    # Quick benchmark of common models
+    python scripts/benchmark.py --models TaylorF2,IMRPhenomD,IMRPhenomXAS
+
+    # Full catalog across single and batched inputs
+    python scripts/benchmark.py --models all --batch-sizes 1,10,100
+
+    # Benchmark with LALSimulation comparison and export to JSON
+    python scripts/benchmark.py --models TaylorF2,IMRPhenomD --compare-lal --json-out benchmark_results.json
+
+    # Benchmark forward + backward autograd pass on Apple Silicon MPS
+    python scripts/benchmark.py --models IMRPhenomD --device mps --backward
+"""
+
+import argparse
+import copy
+import json
+import os
+import platform
+import sys
+import time
+from pathlib import Path
+from typing import Any, Dict, List, Optional, Tuple
+
+_REPO_ROOT = Path(__file__).resolve().parent.parent
+_SRC_DIR = _REPO_ROOT / "src"
+for _p in (str(_REPO_ROOT), str(_SRC_DIR)):
+    if _p not in sys.path:
+        sys.path.insert(0, _p)
+
+import numpy as np
+import torch
+
+from torchwave import get_fd_waveform
+
+# Canonical parameters for all 17 catalog models
+DEFAULT_MODEL_SPECS: Dict[str, Dict[str, Any]] = {
+    "TaylorF2": {
+        "params": {"mass1": 1.4, "mass2": 1.4, "chi1": 0.0, "chi2": 0.0, "f_ref": 30.0},
+        "grid": {"flow": 30.0, "fhigh": 500.0, "df": 0.25},
+        "lal_name": "TaylorF2",
+    },
+    "TaylorF2_HM": {
+        "params": {"mass1": 1.4, "mass2": 1.4, "chi1": 0.0, "chi2": 0.0, "f_ref": 30.0},
+        "grid": {"flow": 30.0, "fhigh": 500.0, "df": 0.25},
+        "lal_name": None,
+    },
+    "TaylorF2_Eccentric": {
+        "params": {"mass1": 1.4, "mass2": 1.4, "chi1": 0.0, "chi2": 0.0, "e0": 0.05, "f0_ecc": 30.0, "f_ref": 30.0},
+        "grid": {"flow": 30.0, "fhigh": 500.0, "df": 0.25},
+        "lal_name": "TaylorF2Ecc",
+    },
+    "IMRPhenomD": {
+        "params": {"mass1": 30.0, "mass2": 20.0, "chi1": 0.3, "chi2": -0.2, "f_ref": 20.0},
+        "grid": {"flow": 20.0, "fhigh": 512.0, "df": 0.25},
+        "lal_name": "IMRPhenomD",
+    },
+    "IMRPhenomXAS": {
+        "params": {"mass1": 35.0, "mass2": 30.0, "chi1": 0.2, "chi2": -0.3, "f_ref": 20.0},
+        "grid": {"flow": 20.0, "fhigh": 512.0, "df": 0.25},
+        "lal_name": "IMRPhenomXAS",
+    },
+    "IMRPhenomHM": {
+        "params": {"mass1": 40.0, "mass2": 15.0, "chi1": 0.3, "chi2": -0.2, "f_ref": 20.0, "inclination": 0.8},
+        "grid": {"flow": 20.0, "fhigh": 512.0, "df": 0.25},
+        "lal_name": "IMRPhenomHM",
+    },
+    "IMRPhenomXHM": {
+        "params": {"mass1": 40.0, "mass2": 20.0, "chi1": 0.3, "chi2": -0.1, "f_ref": 20.0, "inclination": 1.0},
+        "grid": {"flow": 20.0, "fhigh": 512.0, "df": 0.25},
+        "lal_name": "IMRPhenomXHM",
+    },
+    "IMRPhenomPv2": {
+        "params": {
+            "mass1": 35.0, "mass2": 25.0, "chi1": 0.2, "chi2": -0.1,
+            "spin1x": 0.2, "spin1y": 0.1, "spin1z": 0.2,
+            "spin2x": -0.1, "spin2y": 0.15, "spin2z": -0.1,
+            "f_ref": 20.0, "inclination": 0.7,
+        },
+        "grid": {"flow": 20.0, "fhigh": 512.0, "df": 0.25},
+        "lal_name": "IMRPhenomPv2",
+    },
+    "IMRPhenomXP": {
+        "params": {
+            "mass1": 35.0, "mass2": 25.0, "chi1": 0.2, "chi2": -0.1,
+            "spin1x": 0.2, "spin1y": 0.1, "spin1z": 0.2,
+            "spin2x": -0.1, "spin2y": 0.15, "spin2z": -0.1,
+            "f_ref": 20.0, "inclination": 0.7,
+        },
+        "grid": {"flow": 20.0, "fhigh": 512.0, "df": 0.25},
+        "lal_name": "IMRPhenomXP",
+    },
+    "IMRPhenomXPHM": {
+        "params": {
+            "mass1": 35.0, "mass2": 25.0, "chi1": 0.2, "chi2": -0.1,
+            "spin1x": 0.2, "spin1y": 0.1, "spin1z": 0.2,
+            "spin2x": -0.1, "spin2y": 0.15, "spin2z": -0.1,
+            "f_ref": 20.0, "inclination": 0.7,
+        },
+        "grid": {"flow": 20.0, "fhigh": 512.0, "df": 0.25},
+        "lal_name": "IMRPhenomXPHM",
+    },
+    "IMRPhenomD_NRTidal": {
+        "params": {"mass1": 1.4, "mass2": 1.3, "chi1": 0.05, "chi2": -0.02, "lambda1": 350.0, "lambda2": 420.0, "f_ref": 30.0},
+        "grid": {"flow": 30.0, "fhigh": 1024.0, "df": 0.25},
+        "lal_name": "IMRPhenomD_NRTidal",
+    },
+    "IMRPhenomD_NRTidalv2": {
+        "params": {"mass1": 1.4, "mass2": 1.3, "chi1": 0.05, "chi2": -0.02, "lambda1": 350.0, "lambda2": 420.0, "f_ref": 30.0},
+        "grid": {"flow": 30.0, "fhigh": 1024.0, "df": 0.25},
+        "lal_name": "IMRPhenomD_NRTidalv2",
+    },
+    "IMRPhenomNSBH": {
+        "params": {"mass1": 5.0, "mass2": 1.4, "chi1": 0.2, "chi2": 0.0, "lambda2": 400.0, "f_ref": 30.0},
+        "grid": {"flow": 30.0, "fhigh": 1024.0, "df": 0.25},
+        "lal_name": "IMRPhenomNSBH",
+    },
+    "KerrRingdown": {
+        "params": {"mass1": 65.0, "mass2": 0.0, "chi1": 0.7},
+        "grid": {"flow": 50.0, "fhigh": 500.0, "df": 0.25},
+        "lal_name": None,
+    },
+    "SEOBNR_ODE": {
+        "params": {"mass1": 30.0, "mass2": 20.0, "chi1": 0.0, "chi2": 0.0},
+        "grid": {"flow": 20.0, "fhigh": 256.0, "df": 0.5},
+        "lal_name": None,
+    },
+    "SEOBNR_ROM": {
+        "params": {"mass1": 30.0, "mass2": 20.0, "chi1": 0.0, "chi2": 0.0},
+        "grid": {"flow": 20.0, "fhigh": 256.0, "df": 0.5},
+        "lal_name": None,
+    },
+    "TEOBResumS": {
+        "params": {"mass1": 1.4, "mass2": 1.4, "chi1": 0.0, "chi2": 0.0, "lambda1": 0.0, "lambda2": 0.0},
+        "grid": {"flow": 30.0, "fhigh": 500.0, "df": 0.5},
+        "lal_name": None,
+    },
+}
+
+ALL_MODELS = list(DEFAULT_MODEL_SPECS.keys())
+POPULAR_MODELS = ["TaylorF2", "IMRPhenomD", "IMRPhenomXAS", "IMRPhenomXP", "IMRPhenomD_NRTidalv2"]
+
+
+def _has_lal() -> bool:
+    try:
+        import lal
+        import lalsimulation
+        return True
+    except ImportError:
+        return False
+
+
+def sync_device(dev: torch.device) -> None:
+    """Ensure all pending operations on the target device have finished."""
+    if dev.type == "cuda":
+        torch.cuda.synchronize(dev)
+    elif dev.type == "mps":
+        torch.mps.synchronize()
+
+
+def resolve_device(requested: str) -> torch.device:
+    """Resolve device string to torch.device with fallback logic."""
+    req = requested.lower()
+    if req == "auto":
+        if torch.cuda.is_available():
+            return torch.device("cuda")
+        elif torch.backends.mps.is_available():
+            return torch.device("mps")
+        return torch.device("cpu")
+    if req == "mps":
+        if not torch.backends.mps.is_available():
+            raise RuntimeError("MPS requested but not available on this system.")
+        return torch.device("mps")
+    if req == "cuda":
+        if not torch.cuda.is_available():
+            raise RuntimeError("CUDA requested but not available on this system.")
+        return torch.device("cuda")
+    return torch.device("cpu")
+
+
+def resolve_dtype(requested: str, device: torch.device) -> torch.dtype:
+    """Resolve dtype string to torch.dtype, handling MPS float64 limitation."""
+    req = requested.lower()
+    if req in ("float32", "fp32", "32"):
+        dt = torch.float32
+    elif req in ("float64", "fp64", "double", "64"):
+        dt = torch.float64
+    else:
+        raise ValueError(f"Unsupported dtype: {requested}. Choose 'float32' or 'float64'.")
+
+    if device.type == "mps" and dt == torch.float64:
+        print("[Notice] Apple Silicon MPS does not support float64. Switching precision to float32.")
+        return torch.float32
+    return dt
+
+
+def benchmark_lal_model(
+    lal_name: str,
+    params: Dict[str, Any],
+    grid: Dict[str, float],
+    iterations: int = 20,
+    warmup: int = 5,
+) -> Optional[Dict[str, float]]:
+    """Benchmark LALSimulation single-waveform generation."""
+    if not _has_lal() or not lal_name:
+        return None
+
+    import lal
+    import lalsimulation as lalsim
+
+    try:
+        approx = lalsim.GetApproximantFromString(lal_name)
+    except Exception:
+        return None
+
+    m1_si = float(params["mass1"]) * lal.MSUN_SI
+    m2_si = float(params["mass2"]) * lal.MSUN_SI
+    s1x = float(params.get("spin1x", 0.0))
+    s1y = float(params.get("spin1y", 0.0))
+    s1z = float(params.get("spin1z", params.get("chi1", 0.0)))
+    s2x = float(params.get("spin2x", 0.0))
+    s2y = float(params.get("spin2y", 0.0))
+    s2z = float(params.get("spin2z", params.get("chi2", 0.0)))
+    dist_si = float(params.get("distance", 100.0)) * 1e6 * lal.PC_SI
+    inc = float(params.get("inclination", 0.0))
+    phic = float(params.get("phic", 0.0))
+    flow = float(grid["flow"])
+    fhigh = float(grid["fhigh"])
+    df = float(grid["df"])
+    fref = float(params.get("f_ref", flow))
+    e0 = float(params.get("e0", 0.0))
+
+    extra = lal.CreateDict()
+    if "lambda1" in params:
+        lalsim.SimInspiralWaveformParamsInsertTidalLambda1(extra, float(params["lambda1"]))
+    if "lambda2" in params:
+        lalsim.SimInspiralWaveformParamsInsertTidalLambda2(extra, float(params["lambda2"]))
+
+    # Warmup
+    for _ in range(warmup):
+        _ = lalsim.SimInspiralChooseFDWaveform(
+            m1_si, m2_si, s1x, s1y, s1z, s2x, s2y, s2z,
+            dist_si, inc, phic, 0.0, e0, 0.0,
+            df, flow, fhigh, fref, extra, approx
+        )
+
+    # Timing
+    timings = []
+    for _ in range(iterations):
+        t0 = time.perf_counter()
+        _ = lalsim.SimInspiralChooseFDWaveform(
+            m1_si, m2_si, s1x, s1y, s1z, s2x, s2y, s2z,
+            dist_si, inc, phic, 0.0, e0, 0.0,
+            df, flow, fhigh, fref, extra, approx
+        )
+        t1 = time.perf_counter()
+        timings.append((t1 - t0) * 1000.0)  # ms
+
+    timings = np.array(timings)
+    mean_ms = float(np.mean(timings))
+    return {
+        "mean_ms": mean_ms,
+        "std_ms": float(np.std(timings)),
+        "median_ms": float(np.median(timings)),
+        "min_ms": float(np.min(timings)),
+        "wf_per_sec": 1000.0 / mean_ms if mean_ms > 0 else 0.0,
+    }
+
+
+def benchmark_torchwave_model(
+    model_name: str,
+    batch_size: int,
+    device: torch.device,
+    dtype: torch.dtype,
+    grid: Dict[str, float],
+    params: Dict[str, Any],
+    iterations: int = 20,
+    warmup: int = 5,
+    measure_backward: bool = False,
+) -> Dict[str, Any]:
+    """Benchmark TorchWave waveform generation on a specific model."""
+    flow = float(grid["flow"])
+    fhigh = float(grid["fhigh"])
+    df = float(grid["df"])
+    n_freqs = int(round((fhigh - flow) / df)) + 1
+    freqs = torch.linspace(flow, fhigh, n_freqs, dtype=dtype, device=device)
+
+    # Build input parameters
+    def make_inputs(req_grad: bool = False):
+        kw = {}
+        for k, v in params.items():
+            if isinstance(v, (int, float)):
+                if batch_size > 1:
+                    t = torch.full((batch_size,), float(v), dtype=dtype, device=device)
+                else:
+                    t = torch.tensor(float(v), dtype=dtype, device=device)
+                if req_grad and k in ("mass1", "mass2", "chi1", "chi2", "spin1z", "spin2z"):
+                    t = t.clone().detach().requires_grad_(True)
+                kw[k] = t
+            else:
+                kw[k] = v
+        return kw
+
+    # Warmup
+    for _ in range(warmup):
+        inputs = make_inputs(req_grad=measure_backward)
+        hp, hc = get_fd_waveform(
+            model_name,
+            sample_frequencies=freqs,
+            device=device,
+            dtype=dtype,
+            **inputs,
+        )
+        if measure_backward:
+            loss = (hp.abs().sum() + hc.abs().sum())
+            loss.backward()
+        sync_device(device)
+
+    # Measurement
+    fwd_times: List[float] = []
+    bwd_times: List[float] = []
+    total_times: List[float] = []
+
+    for _ in range(iterations):
+        inputs = make_inputs(req_grad=measure_backward)
+
+        sync_device(device)
+        t_start = time.perf_counter()
+
+        hp, hc = get_fd_waveform(
+            model_name,
+            sample_frequencies=freqs,
+            device=device,
+            dtype=dtype,
+            **inputs,
+        )
+        sync_device(device)
+        t_fwd_end = time.perf_counter()
+
+        if measure_backward:
+            loss = (hp.abs().sum() + hc.abs().sum())
+            loss.backward()
+            sync_device(device)
+            t_bwd_end = time.perf_counter()
+            bwd_times.append((t_bwd_end - t_fwd_end) * 1000.0)
+            total_times.append((t_bwd_end - t_start) * 1000.0)
+        else:
+            total_times.append((t_fwd_end - t_start) * 1000.0)
+
+        fwd_times.append((t_fwd_end - t_start) * 1000.0)
+
+    fwd_arr = np.array(fwd_times)
+    total_arr = np.array(total_times)
+    mean_total_ms = float(np.mean(total_arr))
+
+    wf_per_sec = (batch_size * 1000.0) / mean_total_ms if mean_total_ms > 0 else 0.0
+
+    res: Dict[str, Any] = {
+        "model": model_name,
+        "batch_size": batch_size,
+        "device": str(device),
+        "dtype": str(dtype).replace("torch.", ""),
+        "n_freq_bins": n_freqs,
+        "iterations": iterations,
+        "mean_ms": mean_total_ms,
+        "std_ms": float(np.std(total_arr)),
+        "median_ms": float(np.median(total_arr)),
+        "min_ms": float(np.min(total_arr)),
+        "max_ms": float(np.max(total_arr)),
+        "p95_ms": float(np.percentile(total_arr, 95)),
+        "wf_per_sec": wf_per_sec,
+    }
+
+    if measure_backward:
+        res["forward_mean_ms"] = float(np.mean(fwd_arr))
+        res["backward_mean_ms"] = float(np.mean(bwd_times))
+
+    return res
+
+
+def run_benchmark_suite(
+    models: List[str],
+    batch_sizes: List[int],
+    device: torch.device,
+    dtype: torch.dtype,
+    iterations: int = 20,
+    warmup: int = 5,
+    measure_backward: bool = False,
+    compare_lal: bool = False,
+) -> Dict[str, Any]:
+    """Execute the full benchmark matrix across selected models and batch sizes."""
+    results = []
+    lal_cache: Dict[str, Optional[Dict[str, float]]] = {}
+
+    for model_name in models:
+        spec = DEFAULT_MODEL_SPECS.get(model_name)
+        if spec is None:
+            print(f"Warning: model '{model_name}' not in default specs; skipping.")
+            continue
+
+        params = spec["params"]
+        grid = spec["grid"]
+        lal_name = spec.get("lal_name")
+
+        # Run LAL baseline once per model if requested
+        if compare_lal and lal_name and lal_name not in lal_cache:
+            lal_res = benchmark_lal_model(
+                lal_name, params, grid, iterations=iterations, warmup=warmup
+            )
+            lal_cache[lal_name] = lal_res
+        elif compare_lal and not lal_name:
+            lal_cache[model_name] = None
+
+        for bsz in batch_sizes:
+            try:
+                bench = benchmark_torchwave_model(
+                    model_name=model_name,
+                    batch_size=bsz,
+                    device=device,
+                    dtype=dtype,
+                    grid=grid,
+                    params=params,
+                    iterations=iterations,
+                    warmup=warmup,
+                    measure_backward=measure_backward,
+                )
+
+                if compare_lal and lal_name:
+                    l_res = lal_cache.get(lal_name)
+                    if l_res:
+                        bench["lal_mean_ms"] = l_res["mean_ms"]
+                        bench["lal_wf_per_sec"] = l_res["wf_per_sec"]
+                        # Speedup ratio: TorchWave throughput vs LAL single-waveform throughput
+                        bench["speedup_vs_lal"] = bench["wf_per_sec"] / l_res["wf_per_sec"]
+
+                results.append(bench)
+            except Exception as e:
+                results.append({
+                    "model": model_name,
+                    "batch_size": bsz,
+                    "error": f"{type(e).__name__}: {str(e)}",
+                })
+
+    meta = {
+        "timestamp": time.strftime("%Y-%m-%d %H:%M:%S"),
+        "platform": platform.platform(),
+        "processor": platform.processor() or platform.machine(),
+        "python_version": platform.python_version(),
+        "torch_version": torch.__version__,
+        "device": str(device),
+        "dtype": str(dtype).replace("torch.", ""),
+        "iterations": iterations,
+        "warmup": warmup,
+        "measure_backward": measure_backward,
+        "compare_lal": compare_lal,
+    }
+
+    return {"metadata": meta, "benchmarks": results}
+
+
+def format_table(data: Dict[str, Any]) -> str:
+    """Format benchmark results into an ASCII summary table."""
+    benchmarks = data.get("benchmarks", [])
+    if not benchmarks:
+        return "No benchmark results to display."
+
+    compare_lal = data.get("metadata", {}).get("compare_lal", False)
+    measure_backward = data.get("metadata", {}).get("measure_backward", False)
+
+    headers = ["Model", "Batch", "Mean Latency", "Median", "P95", "Throughput (WF/s)"]
+    if measure_backward:
+        headers.extend(["Fwd (ms)", "Bwd (ms)"])
+    if compare_lal:
+        headers.extend(["LAL (ms)", "Speedup"])
+
+    rows = []
+    for b in benchmarks:
+        if "error" in b:
+            err_row = [b["model"], str(b["batch_size"]), f"ERROR: {b['error'][:25]}", "-", "-", "-"]
+            if measure_backward:
+                err_row.extend(["-", "-"])
+            if compare_lal:
+                err_row.extend(["-", "-"])
+            rows.append(err_row)
+            continue
+
+        mean_str = f"{b['mean_ms']:.3f} ms"
+        med_str = f"{b['median_ms']:.3f} ms"
+        p95_str = f"{b['p95_ms']:.3f} ms"
+        thr_str = f"{b['wf_per_sec']:,.1f}"
+
+        row = [b["model"], str(b["batch_size"]), mean_str, med_str, p95_str, thr_str]
+
+        if measure_backward:
+            fwd_str = f"{b.get('forward_mean_ms', 0.0):.3f}"
+            bwd_str = f"{b.get('backward_mean_ms', 0.0):.3f}"
+            row.extend([fwd_str, bwd_str])
+
+        if compare_lal:
+            lal_ms = b.get("lal_mean_ms")
+            speedup = b.get("speedup_vs_lal")
+            lal_str = f"{lal_ms:.3f}" if lal_ms is not None else "N/A"
+            sp_str = f"{speedup:.2f}x" if speedup is not None else "N/A"
+            row.extend([lal_str, sp_str])
+
+        rows.append(row)
+
+    col_widths = [len(h) for h in headers]
+    for row in rows:
+        for i, val in enumerate(row):
+            if i < len(col_widths):
+                col_widths[i] = max(col_widths[i], len(val))
+
+    def make_line(vals, fill=" "):
+        return " | ".join(val.ljust(col_widths[i], fill) for i, val in enumerate(vals))
+
+    sep = "-+-".join("-" * w for w in col_widths)
+    header_line = make_line(headers)
+    table_lines = [header_line, sep] + [make_line(r) for r in rows]
+    return "\n".join(table_lines)
+
+
+def format_markdown_table(data: Dict[str, Any]) -> str:
+    """Format benchmark results into GitHub-flavored Markdown."""
+    benchmarks = data.get("benchmarks", [])
+    if not benchmarks:
+        return "No benchmark results."
+
+    compare_lal = data.get("metadata", {}).get("compare_lal", False)
+    measure_backward = data.get("metadata", {}).get("measure_backward", False)
+
+    headers = ["Model", "Batch", "Latency (mean ± std)", "Throughput (WF/s)"]
+    if measure_backward:
+        headers.extend(["Forward", "Backward"])
+    if compare_lal:
+        headers.extend(["LAL (ms)", "Speedup vs LAL"])
+
+    lines = ["| " + " | ".join(headers) + " |"]
+    lines.append("| " + " | ".join(["---"] * len(headers)) + " |")
+
+    for b in benchmarks:
+        if "error" in b:
+            lines.append(f"| {b['model']} | {b['batch_size']} | ERROR: {b['error']} | - |")
+            continue
+        row = [
+            b["model"],
+            str(b["batch_size"]),
+            f"{b['mean_ms']:.3f} ± {b['std_ms']:.3f} ms",
+            f"{b['wf_per_sec']:,.1f}",
+        ]
+        if measure_backward:
+            row.extend([f"{b.get('forward_mean_ms', 0):.3f} ms", f"{b.get('backward_mean_ms', 0):.3f} ms"])
+        if compare_lal:
+            lal_ms = b.get("lal_mean_ms")
+            speedup = b.get("speedup_vs_lal")
+            row.append(f"{lal_ms:.3f} ms" if lal_ms is not None else "N/A")
+            row.append(f"**{speedup:.2f}x**" if speedup is not None else "N/A")
+
+        lines.append("| " + " | ".join(row) + " |")
+
+    return "\n".join(lines)
+
+
+def main():
+    parser = argparse.ArgumentParser(
+        description="TorchWave Gravitational Waveform Benchmarking Suite",
+        formatter_class=argparse.ArgumentDefaultsHelpFormatter,
+    )
+    parser.add_argument(
+        "--models",
+        type=str,
+        default="popular",
+        help="Comma-separated models to benchmark, or 'all', or 'popular'.",
+    )
+    parser.add_argument(
+        "--batch-sizes",
+        type=str,
+        default="1,10,100",
+        help="Comma-separated batch sizes.",
+    )
+    parser.add_argument(
+        "--device",
+        type=str,
+        default="auto",
+        help="Device to benchmark on ('cpu', 'mps', 'cuda', 'auto').",
+    )
+    parser.add_argument(
+        "--dtype",
+        type=str,
+        default="float64",
+        help="Floating point precision ('float32', 'float64').",
+    )
+    parser.add_argument(
+        "--iterations",
+        type=int,
+        default=20,
+        help="Number of timed benchmark iterations.",
+    )
+    parser.add_argument(
+        "--warmup",
+        type=int,
+        default=5,
+        help="Number of untimed warmup iterations.",
+    )
+    parser.add_argument(
+        "--backward",
+        action="store_true",
+        help="Measure forward + backward autograd gradient time.",
+    )
+    parser.add_argument(
+        "--compare-lal",
+        action="store_true",
+        help="Benchmark corresponding LALSimulation approximant as baseline.",
+    )
+    parser.add_argument(
+        "--json-out",
+        type=str,
+        default=None,
+        help="Output path for JSON results.",
+    )
+    parser.add_argument(
+        "--markdown-out",
+        type=str,
+        default=None,
+        help="Output path for Markdown summary table.",
+    )
+
+    args = parser.parse_args()
+
+    # Parse models
+    if args.models.lower() == "all":
+        selected_models = ALL_MODELS
+    elif args.models.lower() == "popular":
+        selected_models = POPULAR_MODELS
+    else:
+        selected_models = [m.strip() for m in args.models.split(",") if m.strip()]
+
+    # Parse batch sizes
+    batch_sizes = [int(b.strip()) for b in args.batch_sizes.split(",") if b.strip()]
+
+    device = resolve_device(args.device)
+    dtype = resolve_dtype(args.dtype, device)
+
+    print("=" * 80)
+    print("TORCHWAVE PERFORMANCE BENCHMARK")
+    print(f"Device: {device} | Precision: {dtype} | Models: {len(selected_models)} | Batches: {batch_sizes}")
+    print(f"Iterations: {args.iterations} (warmup: {args.warmup}) | Autograd Backward: {args.backward}")
+    print("=" * 80)
+
+    suite_results = run_benchmark_suite(
+        models=selected_models,
+        batch_sizes=batch_sizes,
+        device=device,
+        dtype=dtype,
+        iterations=args.iterations,
+        warmup=args.warmup,
+        measure_backward=args.backward,
+        compare_lal=args.compare_lal,
+    )
+
+    table_str = format_table(suite_results)
+    print("\n" + table_str + "\n")
+
+    if args.json_out:
+        with open(args.json_out, "w") as f:
+            json.dump(suite_results, f, indent=2)
+        print(f"Saved JSON benchmark results to {args.json_out}")
+
+    if args.markdown_out:
+        md_str = format_markdown_table(suite_results)
+        with open(args.markdown_out, "w") as f:
+            f.write(md_str + "\n")
+        print(f"Saved Markdown summary to {args.markdown_out}")
+
+
+if __name__ == "__main__":
+    main()
