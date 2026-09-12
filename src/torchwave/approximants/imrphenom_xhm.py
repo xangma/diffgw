@@ -51,8 +51,10 @@ _INSP_MAT = torch.tensor([
 _INSP_MAT_INV = torch.linalg.inv(_INSP_MAT)
 
 
-def _unsqueeze_to(tensor: torch.Tensor, target: torch.Tensor) -> torch.Tensor:
+def _unsqueeze_to(tensor: Union[float, torch.Tensor], target: torch.Tensor) -> torch.Tensor:
     """Unsqueeze tensor along trailing dimensions until it matches target's dimensionality."""
+    if not isinstance(tensor, torch.Tensor):
+        tensor = torch.as_tensor(tensor, dtype=target.dtype, device=target.device)
     res = tensor
     while res.dim() < target.dim():
         res = res.unsqueeze(-1)
@@ -940,17 +942,21 @@ class IMRPhenomXHM(nn.Module):
                             + shift_u
                         )
 
-                    # Inspiral phase connection at f_ins_p
-                    carrier_p_at_ins, carrier_dp_at_ins = eval_carrier_phi_and_deriv((2.0 / m_flt) * f_ins_p)
-                    dphi_int_at_ins = eval_dphi_int(f_ins_p)
-                    dt_ins = dphi_int_at_ins - carrier_dp_at_ins
+                    # Alignment frequency f_align and target phase per Section 3 of SPEC-TW-2026-09-11-PARITY
+                    f_align_geom = torch.where(eta > 0.05, 0.6 * (m_flt / 2.0) * f_meco_22, (m_flt / 2.0) * f_meco_22)
+                    f_align_hz = f_align_geom / m_sec
 
-                    lambda_insp = getattr(XHMParameterFits, f"phase_lambda_{lm_str}")(eta, s1, s2, S)
-                    phi_int_at_ins = eval_phi_int(f_ins_p)
-                    phi_ins_base = (m_flt / 2.0) * carrier_p_at_ins + lambda_insp + dt_ins * f_ins_p
-                    dphi_ins_shift = phi_int_at_ins - phi_ins_base
+                    delta_target = (l % 2) * PI - (3.0 * PI / 8.0) * (m_flt - 2.0)
+                    if l == 2 and m == 1:
+                        ff = 0.008
+                        a21_pn = (
+                            -16.0 * delta * eta * ff * (math.pi**1.5) / (3.0 * math.sqrt(5.0))
+                            + 4.0 * (2.0**(1.0/3.0)) * ((s1 - s2) + delta * (s1 + s2)) * eta * (ff**(4.0/3.0)) * (math.pi**(11.0/6.0)) / math.sqrt(5.0)
+                            + 2.0 * (2.0**(2.0/3.0)) * eta * (306.0 * delta - 360.0 * delta * eta) * (ff**(5.0/3.0)) * (math.pi**(13.0/6.0)) / (189.0 * math.sqrt(5.0))
+                        )
+                        delta_target = delta_target + torch.where(a21_pn >= 0, torch.tensor(PI, device=device, dtype=dtype), torch.tensor(0.0, device=device, dtype=dtype))
 
-                    # Evaluate carrier phase on scaled frequency grid for inspiral
+                    # Evaluate carrier phase on scaled frequency grid (2/m) * f
                     f_scaled_grid = (2.0 / m_flt) * f_eval
                     _, _, phi_22_scaled = self.base_22(
                         f=f_scaled_grid,
@@ -967,13 +973,17 @@ class IMRPhenomXHM(nn.Module):
                         reference_frame=reference_frame,
                         return_phase=True,
                     )
-                    lam_insp_u = _unsqueeze_to(lambda_insp, mf_grid)
-                    dt_ins_u = _unsqueeze_to(dt_ins, mf_grid)
-                    dphi_ins_shift_u = _unsqueeze_to(dphi_ins_shift, mf_grid)
+                    delta_target_u = _unsqueeze_to(delta_target, mf_grid)
+                    phi_ins_grid = (m_flt / 2.0) * phi_22_scaled + delta_target_u
 
-                    phi_ins_grid = (m_flt / 2.0) * phi_22_scaled + lam_insp_u + dt_ins_u * mf_grid + dphi_ins_shift_u
-                    phi_int_grid = eval_phi_int(mf_grid)
-                    phi_rd_grid = eval_phi_rd(mf_grid)
+                    # C0 continuity connection at f_ins_p
+                    carrier_p_at_ins, _ = eval_carrier_phi_and_deriv((2.0 / m_flt) * f_ins_p)
+                    phi_ins_at_ins = (m_flt / 2.0) * carrier_p_at_ins + delta_target
+                    dphi_int_shift = phi_ins_at_ins - eval_phi_int(f_ins_p)
+                    dphi_int_shift_u = _unsqueeze_to(dphi_int_shift, mf_grid)
+
+                    phi_int_grid = eval_phi_int(mf_grid) + dphi_int_shift_u
+                    phi_rd_grid = eval_phi_rd(mf_grid) + dphi_int_shift_u
 
                     f_ins_p_u = _unsqueeze_to(f_ins_p, mf_grid)
                     f_rd_p_u = _unsqueeze_to(f_rd_p, mf_grid)
@@ -1157,25 +1167,20 @@ class IMRPhenomXHM(nn.Module):
 
                     c_int_32 = eval_phi_32_s(f_rd_p) - eval_phi_int_32(f_rd_p)
 
-                    # Inspiral phase connection for (3,2) at f_ins_p
-                    carrier_p_at_ins, carrier_dp_at_ins = eval_carrier_phi_and_deriv(f_ins_p)
-                    dphi_int_at_ins = eval_dphi_int_32(f_ins_p)
-                    dt_ins_32 = dphi_int_at_ins - carrier_dp_at_ins
+                    # Alignment frequency f_align and target phase per Section 3 of SPEC-TW-2026-09-11-PARITY
+                    f_align_geom_32 = torch.where(eta > 0.05, 0.6 * f_meco_22, f_meco_22)
+                    f_align_hz_32 = f_align_geom_32 / m_sec
+                    delta_target_32 = PI
+                    phi_ins_32_grid = phi_22_carrier + delta_target_32
 
-                    lambda_insp_32 = XHMParameterFits.phase_lambda_32(eta, s1, s2, S)
-                    phi_int_at_ins = eval_phi_int_32(f_ins_p) + c_int_32
-                    phi_ins_base = carrier_p_at_ins + lambda_insp_32 + dt_ins_32 * f_ins_p
-                    dphi_ins_shift_32 = phi_int_at_ins - phi_ins_base
-
-                    # Assemble IMR phase for mode (3,2)
-                    lam_32_u = _unsqueeze_to(lambda_insp_32, mf_grid)
-                    dt_32_u = _unsqueeze_to(dt_ins_32, mf_grid)
-                    shift_32_u = _unsqueeze_to(dphi_ins_shift_32, mf_grid)
+                    carrier_p_at_ins, _ = eval_carrier_phi_and_deriv(f_ins_p)
+                    phi_ins_at_ins_32 = carrier_p_at_ins + delta_target_32
+                    dphi_int_shift_32 = phi_ins_at_ins_32 - (eval_phi_int_32(f_ins_p) + c_int_32)
+                    dphi_int_shift_32_u = _unsqueeze_to(dphi_int_shift_32, mf_grid)
                     c_int_32_u = _unsqueeze_to(c_int_32, mf_grid)
 
-                    phi_ins_32_grid = phi_22_carrier + lam_32_u + dt_32_u * mf_grid + shift_32_u
-                    phi_int_32_grid = eval_phi_int_32(mf_grid) + c_int_32_u
-                    phi_rd_32_s_grid = eval_phi_32_s(mf_grid)
+                    phi_int_32_grid = eval_phi_int_32(mf_grid) + c_int_32_u + dphi_int_shift_32_u
+                    phi_rd_32_s_grid = eval_phi_32_s(mf_grid) + dphi_int_shift_32_u
 
                     f_ins_p_u = _unsqueeze_to(f_ins_p, mf_grid)
                     f_rd_p_u = _unsqueeze_to(f_rd_p, mf_grid)

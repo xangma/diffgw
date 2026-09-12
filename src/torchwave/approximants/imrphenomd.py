@@ -235,6 +235,46 @@ class IMRPhenomD:
         return d0, d1_c, d2, d3_c, d4
 
     @staticmethod
+    def compute_slope_peak(
+        mass1: Union[float, torch.Tensor],
+        mass2: Union[float, torch.Tensor],
+        chi1: Union[float, torch.Tensor] = 0.0,
+        chi2: Union[float, torch.Tensor] = 0.0,
+    ) -> torch.Tensor:
+        """Paper merger-ringdown phase derivative dPsi/d(Mf) evaluated at f_peak."""
+        m1 = as_tensor(mass1)
+        m2 = as_tensor(mass2)
+        s1 = as_tensor(chi1)
+        s2 = as_tensor(chi2)
+        total_mass = m1 + m2
+        eta = component_masses_to_eta(m1, m2)
+        _, _, chi_pn, _ = spin_combinations(m1, m2, s1, s2)
+
+        gamma2 = IMRPhenomD.eval_table_v("gamma2", eta, chi_pn)
+        gamma3 = IMRPhenomD.eval_table_v("gamma3", eta, chi_pn)
+        alpha1_raw = IMRPhenomD.eval_table_v("alpha1", eta, chi_pn)
+        alpha2 = IMRPhenomD.eval_table_v("alpha2", eta, chi_pn)
+        alpha3 = IMRPhenomD.eval_table_v("alpha3", eta, chi_pn)
+        alpha4 = IMRPhenomD.eval_table_v("alpha4", eta, chi_pn)
+        alpha5 = IMRPhenomD.eval_table_v("alpha5", eta, chi_pn)
+
+        m_final, a_final, f_rd, f_damp = IMRPhenomD.remnant_properties(m1, m2, s1, s2)
+        diff_gamma = torch.clamp(1.0 - gamma2 * gamma2, min=0.0)
+        safe_sqrt = torch.sqrt(diff_gamma + 1e-12)
+        term_peak = torch.where(diff_gamma > 1e-10, safe_sqrt, torch.zeros_like(gamma2)) - 1.0
+        f_peak = torch.abs(f_rd + (f_damp * gamma3 * term_peak) / gamma2)
+
+        atan_lorentz_peak = (alpha4 * f_damp) / (f_damp * f_damp + (f_peak - alpha5 * f_rd) ** 2)
+        slope_peak = (
+            alpha1_raw
+            + alpha2 * (f_peak ** -2.0)
+            + alpha3 * (f_peak ** -0.25)
+            + atan_lorentz_peak
+        ) / eta
+        return slope_peak
+
+    @staticmethod
+
     def __call__(
         f: torch.Tensor,
         mass1: Union[float, torch.Tensor],
@@ -572,7 +612,6 @@ class IMRPhenomD:
         alpha5_u = unsqueeze_param(alpha5)
 
         # Paper merger-ringdown phase derivative dPsi/d(Mf) evaluated at f_peak using raw fitted alpha1
-        # slope = (alpha1_raw + alpha2 / f_peak**2 + alpha3 / f_peak**0.25 + alpha4 * f_damp / (f_damp**2 + (f_peak - alpha5 * f_rd)**2)) / eta
         atan_lorentz_peak = (alpha4 * f_damp) / (f_damp * f_damp + (f_peak - alpha5 * f_rd) ** 2)
         slope_peak = (
             alpha1_raw

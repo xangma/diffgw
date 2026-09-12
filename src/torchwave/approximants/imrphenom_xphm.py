@@ -100,7 +100,7 @@ class IMRPhenomXPHM(nn.Module):
         reference_frame: Optional[str] = None,
         sample_frequencies: Optional[torch.Tensor] = None,
         precession_method: str = "msa",
-        prec_version: int = 223,
+        prec_version: int = 102,
         convention: int = 1,
         **kwargs,
     ) -> Union[
@@ -216,7 +216,7 @@ class IMRPhenomXPHM(nn.Module):
             chi2=s2z,
             distance=dist,
             inclination=torch.zeros_like(inc),
-            phic=phi_c,
+            phic=torch.zeros_like(phi_c),
             tc=t_c,
             f_ref=fref,
             phi0=torch.zeros_like(phi_0),
@@ -246,7 +246,7 @@ class IMRPhenomXPHM(nn.Module):
             theta_jn = inc
             zeta = torch.zeros_like(theta_jn)
         else:
-            p_ver = 102 if (precession_method.lower() == "nnlo" and prec_version in (220, 223)) else prec_version
+            p_ver = 102 if (prec_version is None or (precession_method.lower() == "nnlo" and prec_version in (220, 223))) else prec_version
             v = (PI * unsqueeze_param(m_sec) * f_eval) ** (1.0 / 3.0)
             v0 = (PI * unsqueeze_param(m_sec) * unsqueeze_param(fref_eval)) ** (1.0 / 3.0)
 
@@ -262,7 +262,7 @@ class IMRPhenomXPHM(nn.Module):
                 s2y=unsqueeze_param(s2y),
                 s2z=unsqueeze_param(s2z),
                 iota=unsqueeze_param(inc),
-                phi_ref=unsqueeze_param(phi_0),
+                phi_ref=unsqueeze_param(phi_c),
                 prec_version=p_ver,
                 convention=convention,
             )
@@ -284,8 +284,7 @@ class IMRPhenomXPHM(nn.Module):
         for l, mp in active_modes:
             h_mode = coprec_dict[(l, mp)]
 
-            sign_l = -1.0 if l == 3 else 1.0
-            scale_l = (sign_l * math.sqrt((2 * l + 1) / 5.0)) / norm_mode
+            scale_l = math.sqrt((2 * l + 1) / 5.0) / norm_mode
 
             d_beta_l = d_mat_beta[l]
             d_jn_l = d_mat_jn[l]
@@ -300,7 +299,7 @@ class IMRPhenomXPHM(nn.Module):
 
                 y_lm = d_jn_l[..., m_idx, -2 + l]
 
-                m_phase = float(m_val) * (phi0_u - alpha)
+                m_phase = float(m_val) * (-alpha)
                 cos_m = torch.cos(m_phase)
                 sin_m = torch.sin(m_phase)
 
@@ -320,9 +319,9 @@ class IMRPhenomXPHM(nn.Module):
             hp_raw = scale_l * exp_neg_im_gamma * h_mode * term_plus
             hc_raw = -1j * scale_l * exp_neg_im_gamma * h_mode * term_cross
 
-            # Rotate polarizations by exp(2i * zeta)
-            hp_lm = cos_2z * hp_raw + sin_2z * hc_raw
-            hc_lm = -sin_2z * hp_raw + cos_2z * hc_raw
+            # Rotate polarizations by exp(2i * zeta) with negative reflection
+            hp_lm = -(cos_2z * hp_raw + sin_2z * hc_raw)
+            hc_lm = -(-sin_2z * hp_raw + cos_2z * hc_raw)
 
             h_plus_total = h_plus_total + hp_lm
             h_cross_total = h_cross_total + hc_lm

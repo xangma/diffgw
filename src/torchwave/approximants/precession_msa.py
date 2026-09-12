@@ -370,7 +370,7 @@ def evaluate_msa_precession(
 
     alpha_nnlo_dyn, epsilon_nnlo_dyn = IMRPhenomP.evaluate_nnlo_angles(
         v=v,
-        v_ref=v0,
+        v_ref=torch.as_tensor(v0, device=v.device, dtype=v.dtype),
         a_minus3=a_m3, a_minus2=a_m2, a_minus1=a_m1, a_1=a_1, a_log=a_log,
         e_minus3=e_m3, e_minus2=e_m2, e_minus1=e_m1, e_1=e_1, e_log=e_log,
     )
@@ -438,7 +438,7 @@ def evaluate_msa_precession(
         alpha_0 = alpha_0_xp
         epsilon_0 = torch.zeros_like(phi_jl0)
     else:  # convention == 1 (default)
-        alpha_0 = alpha_0_pv2
+        alpha_0 = alpha_0_xp
         epsilon_0 = epsilon_0_xp
 
     # Offsets for MSA

@@ -162,7 +162,7 @@ def test_phase_derivative_relation():
     f_rd_22 = f_rd_22_geom / m_sec
     f_rd_33_geom, _ = model.mode_qnm_frequencies(3, 3, m1, m2, s1, s2)
     f_rd_33 = f_rd_33_geom / m_sec
-    f0_phi = (0.014 / m_sec) * (f_rd_33 / f_rd_22)
+    f0_phi = (0.018 / m_sec) * (f_rd_33 / f_rd_22)
 
     # Test point inside Region 2 (intermediate regime)
     f_mid = 0.5 * (f0_phi + f_rd_33)

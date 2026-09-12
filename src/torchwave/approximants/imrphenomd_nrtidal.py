@@ -27,36 +27,33 @@ from torchwave.conversions import (
     tidal_combinations,
 )
 from torchwave.approximants.imrphenomd import IMRPhenomD
+from torchwave.approximants.nrtidal_unrounded_fits import (
+    NRTIDAL_V1_PADÉ_COEFFS,
+    NRTIDAL_V2_PHASE_COEFFS,
+    NRTIDAL_V2_AMP_COEFFS,
+)
 
 
 # NRTidalv1 Padé coefficients (Dietrich et al. 2017 Eq. 7 / arXiv:1706.02969)
 NRTIDAL_V1_COEFFS = {
-    "n1": -17.428,
-    "n32": 31.867,
-    "n2": -26.414,
-    "n52": 62.362,
-    "d1": -17.428 - (3115.0 / 1248.0),  # d1 = n1 - 3115/1248 = -19.92398717948718
-    "d32": 36.089,
+    "n1": NRTIDAL_V1_PADÉ_COEFFS["n_1"],
+    "n32": NRTIDAL_V1_PADÉ_COEFFS["n_3over2"],
+    "n2": NRTIDAL_V1_PADÉ_COEFFS["n_2"],
+    "n52": NRTIDAL_V1_PADÉ_COEFFS["n_5over2"],
+    "d1": NRTIDAL_V1_PADÉ_COEFFS["d_1"],  # -17.428 - 2.496 = -19.924 (LAL exact literal)
+    "d32": NRTIDAL_V1_PADÉ_COEFFS["d_3over2"],
 }
 
 # NRTidalv2 Padé coefficients (Dietrich et al. 2019 Eqs. 17-21 / arXiv:1905.06011)
-# Known analytical PN coefficients:
-C1_V2 = 3115.0 / 1248.0
-C32_V2 = -PI
-C2_V2 = 28024205.0 / 3302208.0
-C52_V2 = -4283.0 * PI / 1092.0
-
-# Calibrated numerical fitting coefficients:
-N52_V2 = 90.550822
-N3_V2 = -60.253578
-D1_V2 = -15.111208
-D2_V2 = 8.0641096
-
-# Constrained coefficients enforcing consistency with analytical PN:
-N1_V2 = C1_V2 + D1_V2
-N32_V2 = (C1_V2 * C32_V2 - C52_V2 - C32_V2 * D1_V2 + N52_V2) / C1_V2
-N2_V2 = C2_V2 + C1_V2 * D1_V2 + D2_V2
-D32_V2 = -(C52_V2 + C32_V2 * D1_V2 - N52_V2) / C1_V2
+# Calibrated numerical fitting coefficients (exact IEEE FP64):
+N1_V2 = NRTIDAL_V2_PHASE_COEFFS["n_1"]
+N32_V2 = NRTIDAL_V2_PHASE_COEFFS["n_3over2"]
+N2_V2 = NRTIDAL_V2_PHASE_COEFFS["n_2"]
+N52_V2 = NRTIDAL_V2_PHASE_COEFFS["n_5over2"]
+N3_V2 = NRTIDAL_V2_PHASE_COEFFS["n_3"]
+D1_V2 = NRTIDAL_V2_PHASE_COEFFS["d_1"]
+D32_V2 = NRTIDAL_V2_PHASE_COEFFS["d_3over2"]
+D2_V2 = NRTIDAL_V2_PHASE_COEFFS["d_2"]
 
 
 def _bns_merger_frequency(
@@ -105,16 +102,18 @@ def _bns_merger_frequency(
     return f_mrg
 
 
-def _nrtidal_amplitude(x, eta, m_sec, d_sec, lambda_tilde):
-    """Face-on additive amplitude, Dietrich et al. (2019), Eq. 24.
+def _nrtidal_amplitude(x, m_sec, d_sec, lambda_tilde):
+    """Face-on additive planar tidal amplitude correction (Dietrich et al. 2019 Eq. 24).
 
-    Inputs must broadcast; masses and distance are in geometric seconds.
+    A_T(f) = -9 * kappa_eff * x^(13/4) * (1 + n1 * x + n289 * x^2.89) / (1 + d * x^4)
+    a_tidal = (m_sec^2 / (2 * d_sec)) * A_T(f)
     """
     kappa_eff = (3.0 / 16.0) * lambda_tilde
-    numerator = 1.0 + (449.0 / 108.0) * x + (22672.0 / 9.0) * x**2.89
-    denominator = 1.0 + 13477.8 * x**4
-    return (-9.0 * torch.sqrt(5.0 * PI * eta / 24.0) * m_sec**2 / d_sec
-            * kappa_eff * x**(13.0 / 4.0) * numerator / denominator)
+    c = NRTIDAL_V2_AMP_COEFFS
+    num = 1.0 + c["n_1"] * x + c["n_289"] * (x ** 2.89)
+    den = 1.0 + c["d"] * (x ** 4.0)
+    a_t = -9.0 * kappa_eff * (x ** 3.25) * (num / den)
+    return (m_sec ** 2.0 / (2.0 * d_sec)) * a_t
 
 
 def _planck_taper_window(
@@ -159,8 +158,9 @@ def _quadrupole_monopole_constants(
     ln_lam3 = ln_lam2 * ln_lam
     ln_lam4 = ln_lam3 * ln_lam
 
-    # log(C_Q) = 0.1940 + 0.09163 ln(Lam) + 0.04812 ln(Lam)^2 - 0.004286 ln(Lam)^3 + 0.00012450 ln(Lam)^4
-    ln_cq = 0.1940 + 0.09163 * ln_lam + 0.04812 * ln_lam2 - 0.004286 * ln_lam3 + 0.00012450 * ln_lam4
+    # Yagi & Yunes (2013) Science 341, 365 Eq. (2) / Table S1:
+    # log(C_Q) = 0.1940 + 0.0936 ln(Lam) + 0.0474 ln(Lam)^2 - 0.00421 ln(Lam)^3 + 0.000123 ln(Lam)^4
+    ln_cq = 0.1940 + 0.0936 * ln_lam + 0.0474 * ln_lam2 - 0.00421 * ln_lam3 + 0.000123 * ln_lam4
     c_q = torch.exp(ln_cq)
 
     ln_cq_safe = torch.clamp(ln_cq, min=1e-8)
@@ -479,7 +479,7 @@ class IMRPhenomD_NRTidal(nn.Module):
             else:
                 d_sec_eval = d_sec
 
-            a_tidal = _nrtidal_amplitude(x, eta_eval, m_sec_eval, d_sec_eval, lam_tilde_eval)
+            a_tidal = _nrtidal_amplitude(x, m_sec_eval, d_sec_eval, lam_tilde_eval)
             a_tidal = torch.where(f_eval > 0.0, a_tidal, torch.zeros_like(a_tidal))
 
             # Eq. 24 is the face-on amplitude. Remove the positive plus

@@ -25,11 +25,11 @@ def _independent_paper_self_spin_components(x, m1, m2, s1, s2, l1, l2):
     eta = (m1 * m2) / (m_tot * m_tot)
     xa = m1 / m_tot
     xb = m2 / m_tot
-
     def i_love_q(lam_val):
         lam_s = max(float(lam_val), 1.0)
         ln_l = math.log(lam_s)
-        ln_cq = 0.1940 + 0.09163 * ln_l + 0.04812 * (ln_l**2) - 0.004286 * (ln_l**3) + 0.00012450 * (ln_l**4)
+        # Yagi & Yunes (2013) Science 341, 365 Eq. (2) / Table S1:
+        ln_cq = 0.1940 + 0.0936 * ln_l + 0.0474 * (ln_l**2) - 0.00421 * (ln_l**3) + 0.000123 * (ln_l**4)
         cq = math.exp(ln_cq) if float(lam_val) > 1e-4 else 1.0
         ln_cq_s = max(ln_cq, 1e-8)
         ln_coc = 0.003131 + 2.071 * ln_cq_s - 0.7152 * (ln_cq_s**2) + 0.2458 * (ln_cq_s**3) - 0.03309 * (ln_cq_s**4)

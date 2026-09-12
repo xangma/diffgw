@@ -61,7 +61,7 @@ class IMRPhenomXP(nn.Module):
         reference_frame: Optional[str] = None,
         sample_frequencies: Optional[torch.Tensor] = None,
         precession_method: str = "msa",
-        prec_version: int = 223,
+        prec_version: int = 102,
         convention: int = 1,
         **kwargs,
     ) -> Tuple[torch.Tensor, torch.Tensor]:
@@ -144,11 +144,11 @@ class IMRPhenomXP(nn.Module):
         v = (PI * unsqueeze_param(m_sec) * f_eval) ** (1.0 / 3.0)
         v0 = (PI * unsqueeze_param(m_sec) * unsqueeze_param(fref_eval)) ** (1.0 / 3.0)
 
-        # Precession method selection
-        if precession_method.lower() == "nnlo":
-            p_ver = 102 if prec_version in (220, 223) else prec_version
+        # Precession method selection (default 102 matching standard PhenomXP)
+        if prec_version is None:
+            p_ver = 102
         else:
-            p_ver = prec_version
+            p_ver = 102 if (precession_method.lower() == "nnlo" and prec_version in (220, 223)) else prec_version
 
         # Evaluate precession angles
         alpha, beta, gamma, theta_jn, zeta = evaluate_msa_precession(
@@ -163,12 +163,12 @@ class IMRPhenomXP(nn.Module):
             s2y=unsqueeze_param(s2y),
             s2z=unsqueeze_param(s2z),
             iota=unsqueeze_param(inc),
-            phi_ref=unsqueeze_param(phi_0),
+            phi_ref=unsqueeze_param(phi_c),
             prec_version=p_ver,
             convention=convention,
         )
 
-        # Evaluate carrier (2, 2) mode at face-on (iota=0)
+        # Evaluate carrier (2, 2) mode at face-on (iota=0) conditioned with phi_c=0
         hp_carrier, _ = self.xas_model(
             f=f_eval,
             mass1=m1,
@@ -177,7 +177,7 @@ class IMRPhenomXP(nn.Module):
             chi2=s2z,
             distance=dist,
             inclination=torch.zeros_like(inc),
-            phi_c=phi_c,
+            phi_c=torch.zeros_like(phi_c),
             t_c=t_c,
             f_ref=fref,
             phasing_convention=phasing_convention,
@@ -185,15 +185,12 @@ class IMRPhenomXP(nn.Module):
         )
 
         # Twist-up for (l=2, mp=2)
-        norm_mode = math.sqrt(16.0 * PI / 5.0)
-        scale_2 = 1.0 / norm_mode
+        scale_2 = 1.0
         d_beta = wigner_small_d_matrix(2, beta)
         d_jn = wigner_small_d_matrix(2, unsqueeze_param(theta_jn))
 
         term_plus = torch.zeros(f_eval.shape, dtype=complex_dtype, device=device)
         term_cross = torch.zeros(f_eval.shape, dtype=complex_dtype, device=device)
-
-        phi0_u = unsqueeze_param(phi_0)
 
         for m_val in range(-2, 3):
             m_idx = m_val + 2
@@ -201,7 +198,7 @@ class IMRPhenomXP(nn.Module):
             dm_plus = d_beta[..., m_idx, 2 + 2]
             y_lm = d_jn[..., m_idx, -2 + 2]
 
-            m_phase = float(m_val) * (phi0_u - alpha)
+            m_phase = float(m_val) * (-alpha)
             cos_m = torch.cos(m_phase)
             sin_m = torch.sin(m_phase)
 
@@ -221,13 +218,13 @@ class IMRPhenomXP(nn.Module):
         hp_raw = scale_2 * exp_two_gamma * hp_carrier * term_plus
         hc_raw = -1j * scale_2 * exp_two_gamma * hp_carrier * term_cross
 
-        # Polarization basis rotation by exp(2i * zeta)
+        # Polarization basis rotation by exp(2i * zeta) with negative reflection
         two_zeta = 2.0 * unsqueeze_param(zeta)
         cos_2z = torch.cos(two_zeta)
         sin_2z = torch.sin(two_zeta)
 
-        hp_precess = cos_2z * hp_raw + sin_2z * hc_raw
-        hc_precess = -sin_2z * hp_raw + cos_2z * hc_raw
+        hp_precess = -(cos_2z * hp_raw + sin_2z * hc_raw)
+        hc_precess = -(-sin_2z * hp_raw + cos_2z * hc_raw)
 
         # If aligned-spin limit, evaluate exact non-precessing waveform
         if is_aligned.any():

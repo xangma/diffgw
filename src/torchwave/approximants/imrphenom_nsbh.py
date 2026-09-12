@@ -28,9 +28,12 @@ from torchwave.conversions import (
     component_masses_to_delta,
     kerr_isco_radius,
     kerr_isco_frequency,
+    spin_combinations,
     tidal_combinations,
 )
-from torchwave.approximants.imrphenomd import IMRPhenomD
+from torchwave.approximants.imrphenomd import IMRPhenomD, TaylorF2
+from torchwave.approximants.kerr_qnm_interp import evaluate_kerr_qnm_220
+from torchwave.approximants.nrtidal_unrounded_fits import NRTIDAL_V2_PHASE_COEFFS
 from torchwave.approximants.imrphenomd_nrtidal import (
     N1_V2,
     N32_V2,
@@ -435,29 +438,53 @@ class IMRPhenomNSBH(nn.Module):
         # -------------------------------------------------------------
         # 2. Step 2: Relativistic Tidal Disruption Root xi_tide & f_tide
         # -------------------------------------------------------------
-        xi_tide, _ = solve_xi_tide(q, chi, c)
+        # -------------------------------------------------------------
+        # 2. Step 2: Relativistic Tidal Disruption Root xi_tide & f_tide
+        # -------------------------------------------------------------
+        xi_tide, _ = solve_xi_tide(q, s1, c)
         r_tide = xi_tide * m2_sec * torch.clamp(1.0 - 2.0 * c, min=0.0) / torch.clamp(c, min=1e-6)
-        denom_ftide = PI * (chi * m1_sec + torch.sqrt(torch.clamp((r_tide ** 3.0) / m1_sec, min=0.0) + 1e-30))
+        denom_ftide = PI * (s1 * m1_sec + torch.sqrt(torch.clamp((r_tide ** 3.0) / m1_sec, min=0.0) + 1e-30))
         f_tide = 1.0 / denom_ftide
 
         # -------------------------------------------------------------
         # 3. Step 3: Baryonic Torus Remnant Mass Ratio
         # -------------------------------------------------------------
-        r_isco = kerr_isco_radius(chi)
+        r_isco = kerr_isco_radius(s1)
         torus_ratio = torch.clamp(
             0.296 * xi_tide * (1.0 - 2.0 * c) - 0.171 * q * c * r_isco,
             min=0.0,
         )
+        has_torus = torus_ratio > 0.0
 
         # -------------------------------------------------------------
-        # 4. Step 4: Remnant Mass M_f and Remnant Spin chi_f (Zappa 2019)
+        # 4. Step 4: Remnant Mass M_f and Remnant Spin chi_f
         # -------------------------------------------------------------
-        mf, chif = zappa_remnant_properties(m1, m2, s1, s2, lam2)
+        mf_bbh_ratio, a_bbh = bbh_remnant_uib2016(m1, m2, s1, s2)
+        mf_zappa, a_zappa = zappa_remnant_properties(m1, m2, s1, s2, lam2)
+
+        m_ratio_bbh = 1.0 / mf_bbh_ratio
+        omega_r_bbh, omega_i_bbh = evaluate_kerr_qnm_220(a_bbh)
+        f_rd_bbh = m_ratio_bbh * omega_r_bbh / (2.0 * PI)
+        f_damp_bbh = m_ratio_bbh * torch.abs(omega_i_bbh) / (2.0 * PI)
+
+        m_ratio_zappa = total_mass / mf_zappa
+        omega_r_zappa, omega_i_zappa = evaluate_kerr_qnm_220(a_zappa)
+        f_rd_zappa = m_ratio_zappa * omega_r_zappa / (2.0 * PI)
+        f_damp_zappa = m_ratio_zappa * torch.abs(omega_i_zappa) / (2.0 * PI)
+
+        f_rd_tilde_bbh = f_rd_bbh / m_sec
+        is_ftide_ge_frd = f_tide >= f_rd_tilde_bbh
+
+        chi_f = torch.where(is_ftide_ge_frd & (~has_torus), a_bbh, a_zappa)
+        f_rd_ph = torch.where(is_ftide_ge_frd & (~has_torus), f_rd_bbh, f_rd_zappa)
+        f_damp_ph = torch.where(is_ftide_ge_frd & (~has_torus), f_damp_bbh, f_damp_zappa)
+
+        mf = torch.where(is_ftide_ge_frd & (~has_torus), total_mass * mf_bbh_ratio, mf_zappa)
 
         # -------------------------------------------------------------
         # 5. Step 5: Kerr Ringdown Frequency f_RD and Quality Factor Q (London 2018)
         # -------------------------------------------------------------
-        f_rd, q_factor = london_ringdown_properties(mf, chif)
+        f_rd, q_factor = london_ringdown_properties(mf, chi_f)
 
         # -------------------------------------------------------------
         # 6. Step 6: Merger Classification and Joining Parameters
@@ -483,16 +510,13 @@ class IMRPhenomNSBH(nn.Module):
             d_val = as_tensor(d, device=device, dtype=dtype)
             f0_val = as_tensor(f0, device=device, dtype=dtype)
             arg = torch.clamp(4.0 * (val - f0_val) / torch.clamp(d_val.abs(), min=1e-8), -50.0, 50.0)
-            return 0.5 * (1.0 + torch.tanh(arg))
+            return torch.sigmoid(2.0 * arg)
 
         def omega_minus(val: torch.Tensor, f0: Union[float, torch.Tensor], d: Union[float, torch.Tensor]) -> torch.Tensor:
             d_val = as_tensor(d, device=device, dtype=dtype)
             f0_val = as_tensor(f0, device=device, dtype=dtype)
             arg = torch.clamp(4.0 * (val - f0_val) / torch.clamp(d_val.abs(), min=1e-8), -50.0, 50.0)
-            return 0.5 * (1.0 - torch.tanh(arg))
-
-        is_ftide_ge_frd = f_tide >= f_rd
-        has_torus = torus_ratio > 0.0
+            return torch.sigmoid(-2.0 * arg)
 
         eps_tide_high = omega_plus(x_nd, -0.0796251, 0.0801192)
         eps_tide = torch.where(is_ftide_ge_frd, eps_tide_high, torch.zeros_like(eps_tide_high))
@@ -541,7 +565,7 @@ class IMRPhenomNSBH(nn.Module):
         gamma1_prime = torch.where(
             lam2 > 1.0,
             1.25 * gamma1,
-            (1.0 + 0.5 * lam_safe - 0.25 * (lam_safe ** 2.0)) * gamma1,
+            (1.0 - 0.5 * lam_safe - 0.25 * (lam_safe ** 2.0)) * gamma1,
         )
         delta2_prime_gt1 = 0.81248 * omega_minus((f_tide - f_rd_tilde) / f_rd_tilde, 0.0188092, 0.338737)
         delta2_prime_le1 = delta2 - 2.0 * (delta2 - 0.81248) * lam_safe + (delta2 - 0.81248) * (lam_safe ** 2.0)
@@ -553,8 +577,6 @@ class IMRPhenomNSBH(nn.Module):
         d_sec_u = unsqueeze_param(d_sec)
         eta_u = unsqueeze_param(eta)
         chi_u = unsqueeze_param(chi)
-        s1_u = unsqueeze_param(s1)
-        s2_u = unsqueeze_param(s2)
 
         gamma1_p_u = unsqueeze_param(gamma1_prime)
         delta1_u = unsqueeze_param(delta1)
@@ -567,101 +589,91 @@ class IMRPhenomNSBH(nn.Module):
         f2_tilde_u = unsqueeze_param(f2_tilde)
         d_win_u = unsqueeze_param(d_win)
 
+        # 3.5PN SPA Inspiral Amplitude (PhenomC)
         v = torch.pow(PI * m_sec_u * f_safe, 1.0 / 3.0)
-        x = v * v
+        v2 = v * v
+        v3 = v2 * v
+        v4 = v2 * v2
+        v5 = v3 * v2
+        v6 = v3 * v3
+        v7 = v4 * v3
+        v10 = v5 * v5
 
-        euler_gamma = 0.5772156649015329
-        a0 = torch.ones_like(eta_u)
-        a1 = torch.zeros_like(eta_u)
-        a2 = -743.0 / 336.0 - 11.0 * eta_u / 4.0
-        a3 = 4.0 * PI - 113.0 * chi_u / 12.0 + 19.0 * eta_u * (s1_u + s2_u) / 6.0
-        a4 = (
-            34103.0 / 18144.0
-            + 5.0 * (chi_u ** 2.0)
-            + eta_u * (13661.0 / 2016.0 - s1_u * s2_u / 8.0)
-            + 59.0 * (eta_u ** 2.0) / 18.0
+        chisum = 2.0 * chi_u
+        chiprod = chi_u * chi_u
+        chi2 = chi_u * chi_u
+        eta2 = eta_u * eta_u
+        gamma_e = 0.577215664901532860606512090082402431
+
+        xdota_n = 64.0 * eta_u / 5.0
+        xdota2 = -7.43 / 3.36 - 11.0 * eta_u / 4.0
+        xdota3 = 4.0 * PI - 11.3 * chi_u / 1.2 + 19.0 * eta_u * chisum / 6.0
+        xdota4 = 3.4103 / 1.8144 + 5.0 * chi2 + eta_u * (13.661 / 2.016 - chiprod / 8.0) + 5.9 * eta2 / 1.8
+        xdota5 = (
+            -PI * (41.59 / 6.72 + 189.0 * eta_u / 8.0)
+            - chi_u * (31.571 / 1.008 - 116.5 * eta_u / 2.4)
+            + chisum * (21.863 * eta_u / 1.008 - 79.0 * eta2 / 6.0)
+            - 3.0 * chi_u * chi2 / 4.0
+            + 9.0 * eta_u * chi_u * chiprod / 4.0
         )
-        a5 = (
-            -PI * (4159.0 / 672.0 + 189.0 * eta_u / 8.0)
-            - chi_u * (31571.0 / 1008.0 - 1165.0 * eta_u / 24.0)
-            + (s1_u + s2_u) * (21863.0 * eta_u / 1008.0 - 79.0 * (eta_u ** 2.0) / 6.0)
-            - 0.75 * (chi_u ** 3.0)
-            + 2.25 * eta_u * chi_u * s1_u * s2_u
-        )
-        a6 = (
-            16447322263.0 / 139708800.0
-            - 1712.0 * euler_gamma / 105.0
-            + 16.0 * (PI ** 2.0) / 3.0
-            - (856.0 / 105.0) * torch.log(16.0 * x)
-            + eta_u * (451.0 * (PI ** 2.0) / 48.0 - 56198689.0 / 217728.0)
-            + 541.0 * (eta_u ** 2.0) / 896.0
-            - 5605.0 * (eta_u ** 3.0) / 2592.0
+        xdota6 = (
+            164.47322263 / 1.39708800
+            - 17.12 * gamma_e / 1.05
+            + 16.0 * (PI ** 2) / 3.0
+            - 8.56 * math.log(16.0) / 1.05
+            + eta_u * (45.1 * (PI ** 2) / 4.8 - 561.98689 / 2.17728)
+            + 5.41 * eta2 / 8.96
+            - 5.605 * eta_u * eta2 / 2.592
             - 80.0 * PI * chi_u / 3.0
-            + (20.0 * PI / 3.0 - 1135.0 * chi_u / 36.0) * eta_u * (s1_u + s2_u)
-            + (64153.0 / 1008.0 - 457.0 * eta_u / 36.0) * (chi_u ** 2.0)
-            - (787.0 * eta_u / 144.0 - 3037.0 * (eta_u ** 2.0) / 144.0) * s1_u * s2_u
+            + eta_u * chisum * (20.0 * PI / 3.0 - 113.5 * chi_u / 3.6)
+            + chi2 * (64.153 / 1.008 - 45.7 * eta_u / 3.6)
+            - chiprod * (7.87 * eta_u / 1.44 - 30.37 * eta2 / 1.44)
         )
-        a7 = (
-            -PI * (4415.0 / 4032.0 - 358675.0 * eta_u / 6048.0 - 91495.0 * (eta_u ** 2.0) / 1512.0)
-            - chi_u * (2529407.0 / 27216.0 - 845827.0 * eta_u / 6048.0 + 41551.0 * (eta_u ** 2.0) / 864.0)
-            + (s1_u + s2_u) * (
-                1580239.0 * eta_u / 54432.0
-                - 451597.0 * (eta_u ** 2.0) / 6048.0
-                + 2045.0 * (eta_u ** 3.0) / 432.0
-                + 107.0 * eta_u * (chi_u ** 2.0) / 6.0
-                - 5.0 * (eta_u ** 2.0) * s1_u * s2_u / 24.0
+        xdota6log = -856.0 / 105.0
+        xdota7 = (
+            -PI * (4.415 / 4.032 - 358.675 * eta_u / 6.048 - 91.495 * eta2 / 1.512)
+            - chi_u * (252.9407 / 2.7216 - 845.827 * eta_u / 6.048 + 415.51 * eta2 / 8.64)
+            + chisum * (
+                158.0239 * eta_u / 5.4432
+                - 451.597 * eta2 / 6.048
+                + 20.45 * eta2 * eta_u / 4.32
+                + 107.0 * eta_u * chi2 / 6.0
+                - 5.0 * eta2 * chiprod / 24.0
             )
-            + 12.0 * PI * (chi_u ** 2.0)
-            - (chi_u ** 3.0) * (1505.0 / 24.0 + eta_u / 8.0)
-            + chi_u * s1_u * s2_u * (101.0 * eta_u / 24.0 + 3.0 * (eta_u ** 2.0) / 8.0)
+            + 12.0 * PI * chi2
+            - chi2 * chi_u * (150.5 / 2.4 + eta_u / 8.0)
+            + chi_u * chiprod * (10.1 * eta_u / 2.4 + 3.0 * eta2 / 8.0)
         )
 
-        cap_a0 = torch.ones_like(eta_u)
-        cap_a1 = torch.zeros_like(eta_u)
-        cap_a2 = -107.0 / 42.0 + 55.0 * eta_u / 42.0
-        cap_a3 = 2.0 * PI - 4.0 * chi_u / 3.0 + 2.0 * eta_u * (s1_u + s2_u) / 3.0
-        cap_a4 = -2173.0 / 1512.0 - eta_u * (1069.0 / 216.0 - 2.0 * s1_u * s2_u) + 2047.0 * (eta_u ** 2.0) / 1512.0
-        cap_a5 = -107.0 * PI / 21.0 + 34.0 * PI * eta_u / 21.0
-        cap_a6 = (
-            27027409.0 / 646800.0
-            - 856.0 * euler_gamma / 105.0
-            + 2.0 * (PI ** 2.0) / 3.0
-            + eta_u * (41.0 * (PI ** 2.0) / 96.0 - 278185.0 / 33264.0)
-            - 20261.0 * (eta_u ** 2.0) / 2772.0
-            + 114635.0 * (eta_u ** 3.0) / 99792.0
-            - (428.0 / 105.0) * torch.log(16.0 * x)
-        )
+        log_v2 = torch.log(torch.clamp(v2, min=1e-20))
+        xdot = 1.0 + xdota2 * v2 + xdota3 * v3 + xdota4 * v4 + xdota5 * v5 + (xdota6 + xdota6log * log_v2) * v6 + xdota7 * v7
+        xdot = xdot * (xdota_n * v10)
+        omgdot = 1.5 * v * xdot
+        ampfac = torch.sqrt(torch.abs(PI / torch.clamp(omgdot, min=1e-30)))
 
-        sum_cap_a = (
-            cap_a0
-            + cap_a1 * (x ** 0.5)
-            + cap_a2 * x
-            + cap_a3 * (x ** 1.5)
-            + cap_a4 * (x ** 2.0)
-            + cap_a5 * (x ** 2.5)
-            + cap_a6 * (x ** 3.0)
+        an = 8.0 * eta_u * math.sqrt(PI / 5.0)
+        a2_re = (-107.0 + 55.0 * eta_u) / 42.0
+        a3_re = 2.0 * PI - 4.0 * chi_u / 3.0 + 2.0 * eta_u * chisum / 3.0
+        a4_re = -2.173 / 1.512 - eta_u * (10.69 / 2.16 - 2.0 * chiprod) + 2.047 * eta2 / 1.512
+        a5_re = -10.7 * PI / 2.1 + eta_u * (3.4 * PI / 2.1)
+        a5imag = -24.0 * eta_u
+        a6_re = (
+            270.27409 / 6.46800
+            - 8.56 * gamma_e / 1.05
+            + 2.0 * (PI ** 2) / 3.0
+            + eta_u * (4.1 * (PI ** 2) / 9.6 - 27.8185 / 3.3264)
+            - 20.261 * eta2 / 2.772
+            + 11.4635 * eta_u * eta2 / 9.9792
+            - 4.28 * math.log(16.0) / 1.05
         )
-        sum_a = (
-            a0
-            + a1 * (x ** 0.5)
-            + a2 * x
-            + a3 * (x ** 1.5)
-            + a4 * (x ** 2.0)
-            + a5 * (x ** 2.5)
-            + a6 * (x ** 3.0)
-            + a7 * (x ** 3.5)
-        )
-        sum_a_safe = torch.clamp(sum_a, min=1e-8)
+        a6log = -428.0 / 105.0
+        a6imag = 4.28 * PI / 1.05
+
+        amp_pn_re = ampfac * an * v2 * (1.0 + a2_re * v2 + a3_re * v3 + a4_re * v4 + a5_re * v5 + (a6_re + a6log * log_v2) * v6)
+        amp_pn_im = ampfac * an * v2 * (a5imag * v5 + a6imag * v6)
+        a_pn_dimless = torch.sqrt(amp_pn_re * amp_pn_re + amp_pn_im * amp_pn_im)
 
         f_bar = m_sec_u * f_safe
-
-        a_pn_dimless = (
-            PI
-            * torch.sqrt(2.0 * eta_u / 3.0)
-            * torch.pow(PI * f_bar, -7.0 / 6.0)
-            * (sum_cap_a / torch.sqrt(sum_a_safe))
-        )
-
         a_pm_dimless = gamma1_p_u * torch.pow(f_bar, 5.0 / 6.0)
 
         f_rd_bar = m_sec_u * f_rd_u
@@ -682,78 +694,103 @@ class IMRPhenomNSBH(nn.Module):
         # -------------------------------------------------------------
         # 8. Step 8: Phase Model & Waveform Synthesis
         # -------------------------------------------------------------
-        # 8a. Base BBH phase from IMRPhenomD
-        _, _, phi_bbh = self.bbh_model(
-            f=f_eval,
-            mass1=m1,
-            mass2=m2,
-            chi1=s1,
-            chi2=s2,
-            distance=dist,
-            inclination=torch.zeros_like(inc),
-            phic=phi_c,
-            tc=t_c,
-            f_ref=f_ref,
-            phasing_convention=phasing_convention,
-            reference_frame=reference_frame,
-            return_phase=True,
+        chi_s, chi_a, chi_pn, chi_hat = spin_combinations(m1, m2, s1, s2)
+        alpha1_raw = IMRPhenomD.eval_table_v("alpha1", eta, chi_pn)
+        alpha2 = IMRPhenomD.eval_table_v("alpha2", eta, chi_pn)
+        alpha3 = IMRPhenomD.eval_table_v("alpha3", eta, chi_pn)
+        alpha4 = IMRPhenomD.eval_table_v("alpha4", eta, chi_pn)
+        alpha5 = IMRPhenomD.eval_table_v("alpha5", eta, chi_pn)
+        sigma1 = IMRPhenomD.eval_table_v("sigma1", eta, chi_pn)
+        sigma2 = IMRPhenomD.eval_table_v("sigma2", eta, chi_pn)
+        sigma3 = IMRPhenomD.eval_table_v("sigma3", eta, chi_pn)
+        sigma4 = IMRPhenomD.eval_table_v("sigma4", eta, chi_pn)
+        beta2 = IMRPhenomD.eval_table_v("beta2", eta, chi_pn)
+        beta3 = IMRPhenomD.eval_table_v("beta3", eta, chi_pn)
+
+        f1_ph = 0.018
+        f2_ph = 0.5 * f_rd_ph
+
+        (tf2_0, tf2_2, tf2_3, tf2_4, tf2_5, tf2_5_log, tf2_6, tf2_6_log, tf2_7, *_) = TaylorF2.phase_coefficients(
+            m1, m2, s1, s2, phenom_d_calibration=True
         )
 
-        # 8b. Tidal phasing from NRTidalv2 (Dietrich et al. 2019)
+        def eval_tf2(u):
+            v_u = (PI * u) ** (1.0 / 3.0)
+            v2_u = v_u * v_u; v3_u = v2_u * v_u; v4_u = v2_u * v2_u; v5_u = v4_u * v_u; v6_u = v3_u * v3_u; v7_u = v6_u * v_u
+            ln_v_u = torch.log(v_u); ln_4v_u = torch.log(4.0 * v_u)
+            pn_sum_u = tf2_0 + tf2_2*v2_u + tf2_3*v3_u + tf2_4*v4_u + (tf2_5 + tf2_5_log*ln_v_u)*v5_u + (tf2_6 + tf2_6_log*ln_4v_u)*v6_u + tf2_7*v7_u
+            phi_tf2_u = (3.0 / (128.0 * eta * v5_u)) * pn_sum_u
+            dv_du_u = (PI / 3.0) * (PI * u) ** (-2.0 / 3.0)
+            d_pn_sum_dv_u = -5.0*tf2_0*(v_u**-6) - 3.0*tf2_2*(v_u**-4) - 2.0*tf2_3*(v_u**-3) - tf2_4*(v_u**-2) + tf2_5_log*(v_u**-1) + (tf2_6 + tf2_6_log*ln_4v_u + tf2_6_log) + 2.0*tf2_7*v_u
+            dphi_tf2_u = (3.0 / (128.0 * eta)) * d_pn_sum_dv_u * dv_du_u
+            return phi_tf2_u, dphi_tf2_u
+
+        phi_tf2_f1, dphi_tf2_f1 = eval_tf2(as_tensor(f1_ph, device=device, dtype=dtype))
+        dphi_ins_f1 = dphi_tf2_f1 + (1.0 / eta) * (sigma1 + sigma2*(f1_ph**(1/3)) + sigma3*(f1_ph**(2/3)) + sigma4*f1_ph)
+        phi_ins_f1 = phi_tf2_f1 + (1.0 / eta) * (sigma1*f1_ph + (3/4)*sigma2*(f1_ph**(4/3)) + (3/5)*sigma3*(f1_ph**(5/3)) + 0.5*sigma4*(f1_ph**2))
+        beta1 = eta * dphi_ins_f1 - beta2*(f1_ph**-1.0) - beta3*(f1_ph**-4.0)
+        beta0 = eta * phi_ins_f1 - beta1*f1_ph - beta2*math.log(f1_ph) + (beta3/3.0)*(f1_ph**-3.0)
+
+        dphi_int_f2 = (1.0 / eta) * (beta1 + beta2*(f2_ph**-1.0) + beta3*(f2_ph**-4.0))
+        phi_int_f2 = (1.0 / eta) * (beta0 + beta1*f2_ph + beta2*torch.log(f2_ph) - (beta3/3.0)*(f2_ph**-3.0))
+        atan_arg_f2 = (f2_ph - alpha5 * f_rd_ph) / f_damp_ph
+        d_atan_f2 = (alpha4 / f_damp_ph) / (1.0 + atan_arg_f2 * atan_arg_f2)
+        alpha1 = eta * dphi_int_f2 - alpha2*(f2_ph**-2.0) - alpha3*(f2_ph**-0.25) - d_atan_f2
+        alpha0 = eta * phi_int_f2 - alpha1*f2_ph + alpha2*(f2_ph**-1.0) - (4/3)*alpha3*(f2_ph**0.75) - alpha4*torch.atan(atan_arg_f2)
+
+        # Grid evaluation
+        mf_grid = m_sec_u * f_safe
+        v_g = (PI * mf_grid) ** (1.0 / 3.0)
+        v2_g = v_g * v_g; v3_g = v2_g * v_g; v4_g = v2_g * v2_g; v5_g = v4_g * v_g; v6_g = v3_g * v3_g; v7_g = v6_g * v_g
+        ln_v_g = torch.log(v_g); ln_4v_g = torch.log(4.0 * v_g)
+        pn_sum_g = unsqueeze_param(tf2_0) + unsqueeze_param(tf2_2)*v2_g + unsqueeze_param(tf2_3)*v3_g + unsqueeze_param(tf2_4)*v4_g + (unsqueeze_param(tf2_5) + unsqueeze_param(tf2_5_log)*ln_v_g)*v5_g + (unsqueeze_param(tf2_6) + unsqueeze_param(tf2_6_log)*ln_4v_g)*v6_g + unsqueeze_param(tf2_7)*v7_g
+        phi_tf2_grid = (3.0 / (128.0 * eta_u * v5_g)) * pn_sum_g
+
+        s1_u = unsqueeze_param(sigma1); s2_u = unsqueeze_param(sigma2); s3_u = unsqueeze_param(sigma3); s4_u = unsqueeze_param(sigma4)
+        phi_ins_grid = phi_tf2_grid + (1.0 / eta_u) * (s1_u*mf_grid + (3/4)*s2_u*(mf_grid**(4/3)) + (3/5)*s3_u*(mf_grid**(5/3)) + 0.5*s4_u*(mf_grid**2))
+
+        b0_u = unsqueeze_param(beta0); b1_u = unsqueeze_param(beta1); b2_u = unsqueeze_param(beta2); b3_u = unsqueeze_param(beta3)
+        phi_int_grid = (1.0 / eta_u) * (b0_u + b1_u*mf_grid + b2_u*torch.log(mf_grid) - (b3_u/3.0)*(mf_grid**-3.0))
+
+        a0_u = unsqueeze_param(alpha0); a1_u = unsqueeze_param(alpha1); a2_u = unsqueeze_param(alpha2); a3_u = unsqueeze_param(alpha3); a4_u = unsqueeze_param(alpha4); a5_u = unsqueeze_param(alpha5)
+        frd_u = unsqueeze_param(f_rd_ph); fdamp_u = unsqueeze_param(f_damp_ph)
+        atan_arg_grid = (mf_grid - a5_u * frd_u) / fdamp_u
+        phi_mr_grid = (1.0 / eta_u) * (a0_u + a1_u*mf_grid - a2_u*(mf_grid**-1.0) + (4/3)*a3_u*(mf_grid**0.75) + a4_u*torch.atan(atan_arg_grid))
+
+        f1_u = unsqueeze_param(as_tensor(f1_ph, device=device, dtype=dtype))
+        f2_u = unsqueeze_param(f2_ph)
+        phi_phenomd = torch.where(mf_grid <= f1_u, phi_ins_grid, torch.where(mf_grid <= f2_u, phi_int_grid, phi_mr_grid))
+
+        # Tidal phasing from NRTidalv2
         lam1 = torch.zeros_like(lam2)
         lam_tilde, _ = tidal_combinations(m1, m2, lam1, lam2)
         lam_tilde_u = unsqueeze_param(lam_tilde)
+        m_omega = PI * m_sec_u * f_safe
+        x_pn = torch.pow(m_omega, 2.0 / 3.0)
+        c_fit = NRTIDAL_V2_PHASE_COEFFS
+        num_p = 1.0 + c_fit["n_1"]*x_pn + c_fit["n_3over2"]*(x_pn**1.5) + c_fit["n_2"]*(x_pn**2) + c_fit["n_5over2"]*(x_pn**2.5) + c_fit["n_3"]*(x_pn**3)
+        den_p = 1.0 + c_fit["d_1"]*x_pn + c_fit["d_3over2"]*(x_pn**1.5) + c_fit["d_2"]*(x_pn**2)
+        phi_tidal = -(117.0 / (256.0 * eta_u)) * (x_pn**2.5) * (num_p / den_p) * lam_tilde_u
 
-        leading_factor = -(117.0 / 256.0) * (lam_tilde_u / eta_u)
-        num_pade = (
-            1.0
-            + N1_V2 * x
-            + N32_V2 * (x ** 1.5)
-            + N2_V2 * (x ** 2.0)
-            + N52_V2 * (x ** 2.5)
-            + N3_V2 * (x ** 3.0)
-        )
-        den_pade = 1.0 + D1_V2 * x + D32_V2 * (x ** 1.5) + D2_V2 * (x ** 2.0)
-        psi_tidal = leading_factor * (x ** 2.5) * (num_pade / den_pade)
+        # Reference phase precalculation
+        ref_f = f_ref if f_ref is not None else 30.0
+        fref_t = as_tensor(ref_f, device=device, dtype=dtype)
+        mf_ref = m_sec * fref_t
+        phi_tf2_ref, _ = eval_tf2(mf_ref)
+        phi_0 = phi_tf2_ref + (1.0 / eta) * (sigma1*mf_ref + (3/4)*sigma2*(mf_ref**(4/3)) + (3/5)*sigma3*(mf_ref**(5/3)) + 0.5*sigma4*(mf_ref**2))
+        phi_precalc = unsqueeze_param(2.0 * phi_c + phi_0)
 
-        # Self-spin corrections
-        s23, s35 = _nrtidal_self_spin_components(
-            x=x,
-            mass1=m1,
-            mass2=m2,
-            chi1=s1,
-            chi2=s2,
-            lambda1=lam1,
-            lambda2=lam2,
-        )
+        # Time shift t0 evaluated at f_final * M_sec
+        fmax_eval = kwargs.get("f_final", kwargs.get("fhigh", torch.max(f_eval)))
+        fmax_t = as_tensor(fmax_eval, device=device, dtype=dtype)
+        f_eval_t0 = m_sec * fmax_t
+        atan_eval = (f_eval_t0 - alpha5 * f_rd_ph) / f_damp_ph
+        t0_phenom = (1.0 / eta) * (alpha1_raw + alpha2*(f_eval_t0**-2.0) + alpha3*(f_eval_t0**-0.25) + (alpha4 / f_damp_ph) / (1.0 + atan_eval**2))
+        t0_total = t0_phenom + (2.0 * PI * t_c) / m_sec
+        t0_u = unsqueeze_param(t0_total)
+        mf_ref_u = unsqueeze_param(mf_ref)
 
-        conv = reference_frame if reference_frame is not None else (
-            phasing_convention if phasing_convention is not None else (
-                "reference_frequency" if f_ref is not None else "coalescence"
-            )
-        )
-        conv = conv.lower()
-
-        if conv in ("reference_frequency", "reffreq", "ref"):
-            ref_f = f_ref if f_ref is not None else (f_eval.reshape(-1)[0] if f_eval.numel() > 0 else 20.0)
-            fref_t = as_tensor(ref_f, device=device, dtype=dtype)
-            fref_u = unsqueeze_param(fref_t)
-            safe_fref = torch.clamp(fref_u, min=1e-8)
-            x_ref = torch.pow(PI * m_sec_u * safe_fref, 2.0 / 3.0)
-            s23_ref, _ = _nrtidal_self_spin_components(
-                x=x_ref,
-                mass1=m1,
-                mass2=m2,
-                chi1=s1,
-                chi2=s2,
-                lambda1=lam1,
-                lambda2=lam2,
-            )
-            total_delta_psi = psi_tidal + (s23 - s23_ref) + s35
-        else:
-            total_delta_psi = psi_tidal + s23 + s35
-
-        total_phase = phi_bbh + total_delta_psi
+        total_phase = phi_phenomd + phi_tidal - t0_u * (mf_grid - mf_ref_u) - phi_precalc
 
         # -------------------------------------------------------------
         # 8c. Polarizations Projection onto -2Y_2,\pm 2
@@ -762,12 +799,10 @@ class IMRPhenomNSBH(nn.Module):
         plus_factor = 0.5 * (1.0 + cos_inc * cos_inc)
         cross_factor = cos_inc
 
-        exp_minus_i_phase = torch.complex(torch.cos(total_phase), -torch.sin(total_phase))
-
-        h_plus = (plus_factor * full_amp).to(exp_minus_i_phase.dtype) * exp_minus_i_phase
+        h_plus = - plus_factor * full_amp * torch.complex(torch.cos(total_phase), -torch.sin(total_phase))
         h_cross = torch.complex(
-            -cross_factor * full_amp * torch.sin(total_phase),
-            -cross_factor * full_amp * torch.cos(total_phase),
+            cross_factor * full_amp * torch.sin(total_phase),
+            cross_factor * full_amp * torch.cos(total_phase),
         )
 
         # Enforce exact finite zeros for DC and non-positive frequency bins

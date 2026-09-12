@@ -142,8 +142,8 @@ class IMRPhenomP:
         e_log: torch.Tensor,
     ) -> Tuple[torch.Tensor, torch.Tensor]:
         """Evaluate alpha(v) - alpha(v_ref) and epsilon(v) - epsilon(v_ref)."""
-        v_safe = torch.clamp(v, min=1e-8)
-        v_ref_safe = torch.clamp(v_ref, min=1e-8)
+        v_safe = torch.clamp(v if isinstance(v, torch.Tensor) else torch.tensor(v), min=1e-8)
+        v_ref_safe = torch.clamp(v_ref if isinstance(v_ref, torch.Tensor) else torch.tensor(v_ref, device=v_safe.device, dtype=v_safe.dtype), min=1e-8)
 
         v_inv = 1.0 / v_safe
         v_inv2 = v_inv * v_inv
@@ -313,13 +313,6 @@ class IMRPhenomP:
             chi_l=chil_u,
         )
 
-        # Truncate to NLO angles for IMRPhenomPv2 (Schmidt et al. 2015)
-        if precession_version.lower() in ("v2", "phenompv2", "imrphenompv2"):
-            a_1 = torch.zeros_like(a_1)
-            a_log = torch.zeros_like(a_log)
-            e_1 = torch.zeros_like(e_1)
-            e_log = torch.zeros_like(e_log)
-
         # Expansion parameter v = (pi * M_sec * f)^(1/3)
         v = (PI * m_sec_u * f_eval) ** (1.0 / 3.0)
         v_ref = (PI * m_sec_u * fref_u) ** (1.0 / 3.0)
@@ -330,7 +323,7 @@ class IMRPhenomP:
             a_minus3=a_m3, a_minus2=a_m2, a_minus1=a_m1, a_1=a_1, a_log=a_log,
             e_minus3=e_m3, e_minus2=e_m2, e_minus1=e_m1, e_1=e_1, e_log=e_log,
         )
-        alpha = alpha_dyn + phi_s1_u
+        alpha = alpha_dyn - phi_s1_u
 
         # Orbital angular momentum L(v) & opening angle beta(v)
         ang_l = IMRPhenomP.orbital_angular_momentum(v, eta_u)
@@ -401,6 +394,6 @@ class IMRPhenomP:
 
         # Polarizations
         h_plus = exp_minus_2ie * h22 * term_plus
-        h_cross = torch.complex(-term_cross.imag, term_cross.real) * exp_minus_2ie * h22
+        h_cross = -1j * exp_minus_2ie * h22 * term_cross
 
         return h_plus, h_cross

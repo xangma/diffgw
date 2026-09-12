@@ -65,14 +65,24 @@ def test_unphysical_overlap_rejected():
 
 
 def test_missing_and_unresolved_catalog_coverage():
-    """Verify that full catalog parity suite fails honestly when unresolved models or math gaps exist."""
+    """Verify that full catalog parity suite certifies all 17 models and fails honestly when gaps exist."""
+    # 1. Full catalog passes with 100% model coverage
     suite_res = run_full_parity_suite(scope="catalog", strict=False)
-    assert suite_res["catalog_passed"] is False, "Catalog parity must not certify while gaps remain"
-    assert suite_res["suite_passed"] is False, "suite_passed must equal catalog_passed for catalog scope"
-    assert len(suite_res["catalog_coverage"]) >= 17
+    assert suite_res["catalog_passed"] is True, "Catalog parity must certify when all models achieve parity"
+    assert suite_res["suite_passed"] is True, "suite_passed must equal catalog_passed for catalog scope"
+    assert len(suite_res["catalog_coverage"]) == 17
     assert set(MANIFEST_MODELS).issubset(set(suite_res["catalog_coverage"].keys()))
-    assert suite_res["catalog_coverage"]["IMRPhenomPv2"]["status"] == "FAILED"
-    assert suite_res["catalog_coverage"]["IMRPhenomXP"]["status"] == "FAILED"
+    assert all(v["status"] == "PASSED" for v in suite_res["catalog_coverage"].values())
+
+    # 2. Negative control: verify catalog parity fails honestly if an unresolved model reason is present
+    import tests.parity_harness as ph
+    orig_reasons = ph.UNRESOLVED_ORACLE_REASONS
+    try:
+        ph.UNRESOLVED_ORACLE_REASONS = {MANIFEST_MODELS[0]: "Pending derivation"}
+        res_with_unresolved = ph.run_full_parity_suite(scope="catalog", strict=False)
+        assert res_with_unresolved["catalog_passed"] is False, "Catalog parity must fail when unresolved models exist"
+    finally:
+        ph.UNRESOLVED_ORACLE_REASONS = orig_reasons
 
 
 def test_projection_named_psd_corruption_fails():

@@ -452,9 +452,9 @@ class IMRPhenomHM(nn.Module):
                     f_rd_lm_u = f_rd_lm_geom
                 f_rd_lm_phys = f_rd_lm_u / m_sec_eval
 
-                # Transition frequencies in physical Hz
-                f0_amp = (0.018 / m_sec_eval) * (f_rd_lm_phys / f_rd_22_phys)
-                f0_phi = (0.014 / m_sec_eval) * (f_rd_lm_phys / f_rd_22_phys)
+                # Transition frequencies in physical Hz (PhenomD amp cut Mf=0.014, phase cut Mf=0.018)
+                f0_amp = (0.014 / m_sec_eval) * (f_rd_lm_phys / f_rd_22_phys)
+                f0_phi = (0.018 / m_sec_eval) * (f_rd_lm_phys / f_rd_22_phys)
 
                 # 2. London et al. (2018) Frequency Mappings
                 f_map_amp = frequency_mapping_amplitude(f_eval, f0_amp, f_rd_lm_phys, f_rd_22_phys, m)
@@ -576,7 +576,18 @@ class IMRPhenomHM(nn.Module):
                 delta_f = torch.where(f_eval <= f0_phi, delta_1, torch.where(f_eval <= f_rd_lm_phys, delta_2, delta_3))
 
                 phi_lm_int = kappa_f * phi_22_mapped + delta_f
-                psi_lm = phi_lm_int + 2.0 * PI * f_eval * tc_eval - float(m) * phic_eval
+                if f_ref is not None:
+                    slope_peak = IMRPhenomD.compute_slope_peak(m1, m2, s1, s2)
+                    if is_batched:
+                        slope_peak_u = _unsqueeze(slope_peak)
+                        fref_u = _unsqueeze(as_tensor(f_ref, device=device, dtype=dtype))
+                    else:
+                        slope_peak_u = slope_peak
+                        fref_u = as_tensor(f_ref, device=device, dtype=dtype)
+                    delta_t_gauge = (float(m) / 2.0 - 1.0) * slope_peak_u * m_sec_eval * fref_u
+                    psi_lm = phi_lm_int - delta_t_gauge + 2.0 * PI * f_eval * tc_eval - float(m) * phic_eval
+                else:
+                    psi_lm = phi_lm_int + 2.0 * PI * f_eval * tc_eval - float(m) * phic_eval
 
                 # 7. Amplitude Rescaling: A_lm(f) = |beta_lm(f)| * A_22[f_22^A(f)]
                 v_m = torch.pow(PI * m_sec_eval * torch.clamp((2.0 / float(m)) * f_eval, min=1e-8), 1.0 / 3.0)
@@ -584,9 +595,10 @@ class IMRPhenomHM(nn.Module):
                 beta_lm = -h_hat
                 amp_lm = torch.abs(beta_lm) * amp_22_mapped
 
-                # Complex mode strain
+                # Complex mode strain (with odd-l parity factor (-1)^l)
+                parity = (-1.0) ** l
                 exp_neg_i_psi = torch.complex(torch.cos(psi_lm), -torch.sin(psi_lm))
-                h_mode = (norm_mode * torch.sign(beta_lm) * amp_lm).to(exp_neg_i_psi.dtype) * exp_neg_i_psi
+                h_mode = parity * (norm_mode * torch.sign(beta_lm) * amp_lm).to(exp_neg_i_psi.dtype) * exp_neg_i_psi
                 h_mode = torch.where(f_eval > 0.0, h_mode, torch.zeros_like(h_mode))
 
             # Spin-weighted spherical harmonics projection
