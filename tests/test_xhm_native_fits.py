@@ -10,14 +10,24 @@ from torchwave.approximants.xhm_native_fits import (
     eval_native_33_ringdown_params,
     eval_native_44_ringdown_params,
     eval_native_32_ringdown_params,
+    eval_native_21_phase_params,
     eval_native_33_phase_params,
+    eval_native_44_phase_params,
+    eval_native_32_phase_params,
     eval_native_phase_params,
     native_ringdown_amplitude,
     native_ringdown_amplitude_33,
     native_ringdown_phase,
+    native_ringdown_phase_21,
     native_ringdown_phase_33,
+    native_ringdown_phase_44,
+    native_ringdown_phase_32,
     SIGMA_DEFAULTS,
+    T0_OFFSET_21,
     T0_OFFSET_33,
+    T0_OFFSET_44,
+    T0_OFFSET_32,
+    T0_OFFSET_DEFAULTS,
 )
 
 
@@ -143,12 +153,14 @@ def test_imrphenom_xphm_native_waveform():
     assert torch.linalg.vector_norm(hp_nat).item() > 0.0
 
 
-def test_native_33_phase_params_physical():
-    """Verify (3,3) phase parameters are smooth, finite, and follow expected physical signs."""
+@pytest.mark.parametrize("lm", [(2, 1), (3, 3), (4, 4), (3, 2)])
+def test_native_phase_params_physical(lm):
+    """Verify phase parameters are smooth, finite, and follow expected physical signs across modes."""
+    l, m = lm
     q_vals = torch.linspace(1.0, 10.0, 50, dtype=torch.float64, requires_grad=True)
     eta = q_vals / ((1.0 + q_vals) ** 2)
 
-    alpha_2, alpha_lam = eval_native_33_phase_params(eta)
+    alpha_2, alpha_lam = eval_native_phase_params(l, m, eta)
 
     assert torch.all(torch.isfinite(alpha_2))
     assert torch.all(torch.isfinite(alpha_lam))
@@ -162,14 +174,16 @@ def test_native_33_phase_params_physical():
     assert torch.all(torch.isfinite(grad_alam))
 
 
-def test_native_33_ringdown_phase_profile():
-    """Verify native (3,3) ringdown phase profile is finite and differentiable."""
+@pytest.mark.parametrize("lm", [(2, 1), (3, 3), (4, 4), (3, 2)])
+def test_native_ringdown_phase_profile(lm):
+    """Verify native ringdown phase profile is finite and differentiable across modes."""
+    l, m = lm
     eta = torch.tensor(0.1875, dtype=torch.float64)  # q = 3
-    f_ring = 0.124
+    f_ring = 0.08 * (m / 2.0)
     f_damp = 0.014
     f = torch.linspace(0.8 * f_ring, 0.35, 100, dtype=torch.float64, requires_grad=True)
 
-    phi = native_ringdown_phase_33(f, eta, f_ring, f_damp)
+    phi = native_ringdown_phase(l, m, f, eta, f_ring, f_damp)
     assert phi.shape == f.shape
     assert torch.all(torch.isfinite(phi))
 
@@ -234,4 +248,82 @@ def test_native_33_phase_holdout_quality_gates():
             assert m["affine_mismatch"] < 2.5e-4
         # Universal arrival time residual within +-0.20 M
         assert abs(m["time_shift"]) < 0.20
+
+
+@pytest.mark.parametrize("lm", [(2, 1), (3, 3), (4, 4), (3, 2)])
+def test_native_phase_holdout_quality_gates_all_modes(lm):
+    """Verify sovereign phase calibration on holdouts SXS:BBH:0030 (q=3) and SXS:BBH:0166 (q=6)."""
+    import os
+    import json
+    import numpy as np
+    from pathlib import Path
+    try:
+        import sxs
+    except ImportError:
+        import sys
+        venv_sp = "/tmp/torchwave-nr33-pilot/venv/lib/python3.13/site-packages"
+        if os.path.exists(venv_sp):
+            sys.path.append(venv_sp)
+            try:
+                import sxs
+            except ImportError:
+                pytest.skip("sxs package not installed in environment")
+        else:
+            pytest.skip("sxs package not installed in environment")
+
+    raw_dir = Path("/tmp/torchwave-nr33-pilot/raw")
+    manifest_path = Path("docs/reviews/2026-09-15-independent-calibration/nr33-data-manifest.json")
+    if not manifest_path.exists():
+        pytest.skip("Data manifest not found")
+    manifest = json.loads(manifest_path.read_text())
+    cases = {c["sxs_id"]: c for c in manifest["cases"] if "/N2" not in c["id"]}
+
+    from scripts.kerr_leaver_solver import solve
+    from scripts.fit_nr33_amplitude_pilot import FFTControls
+    from scripts.nr33_phase_data import transform_complex
+    from scripts.nr33_phase_metrics import phase_metrics
+
+    l, m = lm
+    holdouts = [("SXS:BBH:0030", 3.0), ("SXS:BBH:0166", 6.0)]
+
+    for sid, q in holdouts:
+        h5_path = raw_dir / f"{sid.replace(':', '_')}.h5"
+        if not h5_path.exists():
+            pytest.skip(f"Holdout file {h5_path} not found")
+        c = cases[sid]
+        w = sxs.load(str(h5_path), download=False)
+        t = np.asarray(w.t)
+        h22 = np.asarray(w.data[:, w.index(2, 2)])
+        t_peak = float(t[int(np.argmax(np.abs(h22)))])
+        hlm = np.asarray(w.data[:, w.index(l, m)])
+
+        controls = FFTControls(fmax=0.45)
+        spec = transform_complex(t, hlm, controls=controls, relaxation_time=float(c["relaxation_time"]), h22_peak_time=t_peak)
+
+        eta = q / (1.0 + q)**2
+        spin = float(c["final_spin_magnitude"])
+        mf = float(c["final_mass_fraction"])
+        qnm = solve(spin, l, m, 0, strict=True)
+        f_ring = float(qnm.omega.real / (2 * np.pi * mf))
+        f_damp = float(-qnm.omega.imag / (2 * np.pi * mf))
+
+        f_rd = 0.90 * f_ring if m >= 3 else 0.80 * f_ring
+        f_max = 0.35 if lm == (4, 4) else (0.22 if lm == (2, 1) else 0.28)
+        band = (spec.frequency >= f_rd) & (spec.frequency <= f_max)
+        f_band = spec.frequency[band]
+        ref = -spec.spectrum[band]
+
+        f_t = torch.as_tensor(f_band, dtype=torch.float64)
+        eta_t = torch.tensor(eta, dtype=torch.float64)
+        phi_model = native_ringdown_phase(l, m, f_t, eta_t, f_ring, f_damp, include_arrival_time=True).numpy()
+        cand = np.abs(ref) * np.exp(1j * phi_model)
+
+        w_quad = np.ones_like(f_band) * (f_band[1] - f_band[0])
+        mask = np.abs(ref) >= 1e-3 * np.max(np.abs(ref))
+        met = phase_metrics(f_band, cand, ref, weights=w_quad, phase_mask=mask)
+
+        # Quality gates across all higher harmonics:
+        # Phase RMS < 0.15 rad, Mismatch < 0.010 (1%)
+        assert met["affine_phase_rms"] < 0.15
+        assert met["affine_mismatch"] < 0.010
 

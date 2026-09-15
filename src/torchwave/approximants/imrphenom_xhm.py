@@ -40,6 +40,7 @@ from torchwave.approximants.xhm_native_fits import (
     eval_native_ringdown_params,
     eval_native_33_ringdown_params,
     eval_native_33_phase_params,
+    eval_native_phase_params,
     native_ringdown_phase_33,
 )
 from torchwave.approximants.imrphenom_hm import _swsh_projection_coefficients
@@ -1285,8 +1286,8 @@ class IMRPhenomXHM(nn.Module):
                         )
 
                     # Ringdown phase connection at f_rd_p
-                    if self.calibration in ("torchwave_nr", "native", "torchwave") and (l, m) == (3, 3):
-                        alpha_2_lm, alpha_lambda_lm = eval_native_33_phase_params(eta)
+                    if self.calibration in ("torchwave_nr", "native", "torchwave") and (l, m) in ((2, 1), (3, 3), (4, 4)):
+                        alpha_2_lm, alpha_lambda_lm = eval_native_phase_params(l, m, eta)
                     else:
                         alpha_2_lm = (f_damp["22"] / f_damp_lm) * alpha2_22
                         alpha_lambda_lm = alpha_lambda_22

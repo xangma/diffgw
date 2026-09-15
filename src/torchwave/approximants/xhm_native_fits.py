@@ -62,6 +62,17 @@ LAMBDA_COEFFS_33 = (
     0.19316055184011058,
 )
 
+# (2, 1) Phase parameters: alpha_2 = sum(c_k * x^k), alpha_lambda = sum(c_k * x^k)
+ALPHA2_COEFFS_21 = (
+    10.00000000,
+    -30.00000000,
+)
+ALAMBDA_COEFFS_21 = (
+    -4.38174292,
+    -4.61940634,
+)
+T0_OFFSET_21: float = -4.5672
+
 # (3, 3) Phase parameters: alpha_2 = sum(c_k * x^k), alpha_lambda = sum(c_k * x^k)
 # Calibrated on 5 SXS training families: SXS:BBH:2331 (q=1.5), SXS:BBH:1166 (q=2),
 # SXS:BBH:2485 (q=4), SXS:BBH:3619 (q=5), SXS:BBH:2707 (q=8).
@@ -75,6 +86,35 @@ ALAMBDA_COEFFS_33 = (
     -0.07975304,
 )
 T0_OFFSET_33: float = -13.783
+
+# (4, 4) Phase parameters: alpha_2 = sum(c_k * x^k), alpha_lambda = sum(c_k * x^k)
+ALPHA2_COEFFS_44 = (
+    63.16622136,
+    3.62059925,
+)
+ALAMBDA_COEFFS_44 = (
+    -0.43596746,
+    5.89463054,
+)
+T0_OFFSET_44: float = -16.1609
+
+# (3, 2) Phase parameters: alpha_2 = sum(c_k * x^k), alpha_lambda = sum(c_k * x^k)
+ALPHA2_COEFFS_32 = (
+    39.08863265,
+    5.80140909,
+)
+ALAMBDA_COEFFS_32 = (
+    -1.84034153,
+    -1.40999930,
+)
+T0_OFFSET_32: float = -16.8168
+
+T0_OFFSET_DEFAULTS: Dict[Tuple[int, int], float] = {
+    (2, 1): T0_OFFSET_21,
+    (3, 3): T0_OFFSET_33,
+    (4, 4): T0_OFFSET_44,
+    (3, 2): T0_OFFSET_32,
+}
 
 # (4, 4) Even-m: log(a_lambda / sqrt(eta - 3*eta^2)) = sum(c_k * x^k)
 LOG_A_OVER_SQRT_COEFFS_44 = (
@@ -223,6 +263,16 @@ def native_ringdown_amplitude_33(
     return native_ringdown_amplitude(3, 3, f, eta, delta, f_ring_33, f_damp_33, sigma)
 
 
+def eval_native_21_phase_params(
+    eta: torch.Tensor,
+) -> Tuple[torch.Tensor, torch.Tensor]:
+    """Compute native SXS-calibrated (2, 1) ringdown phase parameters (alpha_2, alpha_lambda)."""
+    x = 4.0 * eta - 1.0
+    alpha_2 = _eval_poly_x(ALPHA2_COEFFS_21, x)
+    alpha_lambda = _eval_poly_x(ALAMBDA_COEFFS_21, x)
+    return alpha_2, alpha_lambda
+
+
 def eval_native_33_phase_params(
     eta: torch.Tensor,
 ) -> Tuple[torch.Tensor, torch.Tensor]:
@@ -230,6 +280,26 @@ def eval_native_33_phase_params(
     x = 4.0 * eta - 1.0
     alpha_2 = _eval_poly_x(ALPHA2_COEFFS_33, x)
     alpha_lambda = _eval_poly_x(ALAMBDA_COEFFS_33, x)
+    return alpha_2, alpha_lambda
+
+
+def eval_native_44_phase_params(
+    eta: torch.Tensor,
+) -> Tuple[torch.Tensor, torch.Tensor]:
+    """Compute native SXS-calibrated (4, 4) ringdown phase parameters (alpha_2, alpha_lambda)."""
+    x = 4.0 * eta - 1.0
+    alpha_2 = _eval_poly_x(ALPHA2_COEFFS_44, x)
+    alpha_lambda = _eval_poly_x(ALAMBDA_COEFFS_44, x)
+    return alpha_2, alpha_lambda
+
+
+def eval_native_32_phase_params(
+    eta: torch.Tensor,
+) -> Tuple[torch.Tensor, torch.Tensor]:
+    """Compute native SXS-calibrated (3, 2) ringdown phase parameters (alpha_2, alpha_lambda)."""
+    x = 4.0 * eta - 1.0
+    alpha_2 = _eval_poly_x(ALPHA2_COEFFS_32, x)
+    alpha_lambda = _eval_poly_x(ALAMBDA_COEFFS_32, x)
     return alpha_2, alpha_lambda
 
 
@@ -248,8 +318,14 @@ def eval_native_phase_params(
     Returns:
         Tuple of (alpha_2, alpha_lambda) tensors.
     """
-    if (l, m) == (3, 3):
+    if (l, m) == (2, 1):
+        return eval_native_21_phase_params(eta)
+    elif (l, m) == (3, 3):
         return eval_native_33_phase_params(eta)
+    elif (l, m) == (4, 4):
+        return eval_native_44_phase_params(eta)
+    elif (l, m) == (3, 2):
+        return eval_native_32_phase_params(eta)
     else:
         raise ValueError(f"Native NR phase calibration not supported for mode ({l}, {m})")
 
@@ -274,9 +350,21 @@ def native_ringdown_phase(
     inv_term = -(f_ring ** 2) / f_safe
     atan_term = torch.atan((f - f_ring) / f_damp)
     phi = alpha_2 * inv_term + alpha_lambda * atan_term
-    if include_arrival_time and (l, m) == (3, 3):
-        phi = phi + 2.0 * math.pi * f * T0_OFFSET_33
+    if include_arrival_time:
+        t0 = T0_OFFSET_DEFAULTS.get((l, m), 0.0)
+        phi = phi + 2.0 * math.pi * f * t0
     return phi
+
+
+def native_ringdown_phase_21(
+    f: torch.Tensor,
+    eta: torch.Tensor,
+    f_ring_21: Union[float, torch.Tensor],
+    f_damp_21: Union[float, torch.Tensor],
+    include_arrival_time: bool = True,
+) -> torch.Tensor:
+    """Backward-compatible wrapper for native_ringdown_phase on (2, 1)."""
+    return native_ringdown_phase(2, 1, f, eta, f_ring_21, f_damp_21, include_arrival_time)
 
 
 def native_ringdown_phase_33(
@@ -288,3 +376,25 @@ def native_ringdown_phase_33(
 ) -> torch.Tensor:
     """Backward-compatible wrapper for native_ringdown_phase on (3, 3)."""
     return native_ringdown_phase(3, 3, f, eta, f_ring_33, f_damp_33, include_arrival_time)
+
+
+def native_ringdown_phase_44(
+    f: torch.Tensor,
+    eta: torch.Tensor,
+    f_ring_44: Union[float, torch.Tensor],
+    f_damp_44: Union[float, torch.Tensor],
+    include_arrival_time: bool = True,
+) -> torch.Tensor:
+    """Backward-compatible wrapper for native_ringdown_phase on (4, 4)."""
+    return native_ringdown_phase(4, 4, f, eta, f_ring_44, f_damp_44, include_arrival_time)
+
+
+def native_ringdown_phase_32(
+    f: torch.Tensor,
+    eta: torch.Tensor,
+    f_ring_32: Union[float, torch.Tensor],
+    f_damp_32: Union[float, torch.Tensor],
+    include_arrival_time: bool = True,
+) -> torch.Tensor:
+    """Backward-compatible wrapper for native_ringdown_phase on (3, 2)."""
+    return native_ringdown_phase(3, 2, f, eta, f_ring_32, f_damp_32, include_arrival_time)
