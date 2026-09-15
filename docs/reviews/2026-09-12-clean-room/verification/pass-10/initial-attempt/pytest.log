@@ -1,0 +1,173 @@
+........................................................................ [  6%]
+........................................................................ [ 13%]
+..................................................ssss.................. [ 19%]
+........................................................................ [ 26%]
+........................................................................ [ 33%]
+.....................FF........FFFFF.................................... [ 39%]
+..................s..................................................... [ 46%]
+........................................................................ [ 53%]
+........................................................................ [ 59%]
+.............................................ss......................... [ 66%]
+..............................................................s......... [ 73%]
+........................................................................ [ 79%]
+........................................................................ [ 86%]
+........................................................................ [ 93%]
+........................................................................ [ 99%]
+...                                                                      [100%]
+=================================== FAILURES ===================================
+_ test_quadrupole_reference_closure_label_exchange_and_dc_gradients[IMRPhenomXP] _
+
+factory = <class 'torchwave.approximants.imrphenom_xp.IMRPhenomXP'>
+
+    @pytest.mark.parametrize('factory', [IMRPhenomP, IMRPhenomXP, lambda: IMRPhenomXPHM(modes=[(2,2)])])
+    def test_quadrupole_reference_closure_label_exchange_and_dc_gradients(factory):
+        model = factory()
+        f = torch.tensor([0., 25., 40., 80.], dtype=DTYPE)
+        sx = torch.tensor(.3, dtype=DTYPE, requires_grad=True)
+        params = dict(mass1=40., mass2=20., spin1x=sx, spin1y=.2,
+                      spin1z=.4, spin2z=-.2, inclination=.7, phic=.3, f_ref=40.)
+        hp, hc = model(f, **params)
+        assert torch.isfinite(hp).all() and torch.isfinite(hc).all()
+        assert hp[0] == 0 and hc[0] == 0
+        hp0, hc0 = model(f, **{**params, 'spin1x':0., 'spin1y':0.})
+        # Pv2 retains its inherited distinct frame mapping pending derivation.
+        if not isinstance(model, IMRPhenomP):
+            for h, h0 in ((hp,hp0),(hc,hc0)):
+>               torch.testing.assert_close(h[2], h0[2], rtol=3e-13, atol=1e-35)
+E               AssertionError: Scalars are not close!
+E               
+E               Expected (-1.919468674403257e-23-1.0234329077882412e-22j) but got (-1.919019546178165e-23-1.0231934391209396e-22j).
+E               Absolute difference: 2.4364401130534592e-26 (up to 1e-35 allowed)
+E               Relative difference: 0.00023398570192446978 (up to 3e-13 allowed)
+
+tests/test_clean_room_precession_equations.py:74: AssertionError
+_ test_quadrupole_reference_closure_label_exchange_and_dc_gradients[<lambda>] __
+
+factory = <function <lambda> at 0x124af6340>
+
+    @pytest.mark.parametrize('factory', [IMRPhenomP, IMRPhenomXP, lambda: IMRPhenomXPHM(modes=[(2,2)])])
+    def test_quadrupole_reference_closure_label_exchange_and_dc_gradients(factory):
+        model = factory()
+        f = torch.tensor([0., 25., 40., 80.], dtype=DTYPE)
+        sx = torch.tensor(.3, dtype=DTYPE, requires_grad=True)
+        params = dict(mass1=40., mass2=20., spin1x=sx, spin1y=.2,
+                      spin1z=.4, spin2z=-.2, inclination=.7, phic=.3, f_ref=40.)
+        hp, hc = model(f, **params)
+        assert torch.isfinite(hp).all() and torch.isfinite(hc).all()
+        assert hp[0] == 0 and hc[0] == 0
+        hp0, hc0 = model(f, **{**params, 'spin1x':0., 'spin1y':0.})
+        # Pv2 retains its inherited distinct frame mapping pending derivation.
+        if not isinstance(model, IMRPhenomP):
+            for h, h0 in ((hp,hp0),(hc,hc0)):
+>               torch.testing.assert_close(h[2], h0[2], rtol=3e-13, atol=1e-35)
+E               AssertionError: Scalars are not close!
+E               
+E               Expected (-1.9194686744032583e-23-1.0234329077882416e-22j) but got (-1.9190195461781645e-23-1.0231934391209397e-22j).
+E               Absolute difference: 2.4364401130560952e-26 (up to 1e-35 allowed)
+E               Relative difference: 0.00023398570192472286 (up to 3e-13 allowed)
+
+tests/test_clean_room_precession_equations.py:74: AssertionError
+____ test_each_mode_reference_rotation_uses_its_spa_orbital_frequency[lm0] _____
+
+lm = (2, 2)
+
+    @pytest.mark.parametrize('lm', IMRPhenomXPHM.SUPPORTED_MODES)
+    def test_each_mode_reference_rotation_uses_its_spa_orbital_frequency(lm):
+        # E18/E19 identify f_orb=f/mp, hence f=mp*f_ref/2 at the initial frame.
+        f = torch.tensor([lm[1]*40./2],dtype=DTYPE)
+        model = IMRPhenomXPHM(modes=[lm])
+        params = dict(mass1=40.,mass2=20.,spin1z=.4,spin2z=-.2,phic=.3,f_ref=40.,inclination=.7)
+        for h, h0 in zip(model(f, spin1x=.3, spin1y=.2, **params),model(f, **params)):
+>           torch.testing.assert_close(h,h0,atol=1e-34,rtol=5e-12)
+E           AssertionError: Tensor-likes are not close!
+E           
+E           Mismatched elements: 1 / 1 (100.0%)
+E           Greatest absolute difference: 2.4364401130560952e-26 at index (0,) (up to 1e-34 allowed)
+E           Greatest relative difference: 0.00023398570192472286 at index (0,) (up to 5e-12 allowed)
+
+tests/test_clean_room_precession_equations.py:136: AssertionError
+____ test_each_mode_reference_rotation_uses_its_spa_orbital_frequency[lm1] _____
+
+lm = (2, 1)
+
+    @pytest.mark.parametrize('lm', IMRPhenomXPHM.SUPPORTED_MODES)
+    def test_each_mode_reference_rotation_uses_its_spa_orbital_frequency(lm):
+        # E18/E19 identify f_orb=f/mp, hence f=mp*f_ref/2 at the initial frame.
+        f = torch.tensor([lm[1]*40./2],dtype=DTYPE)
+        model = IMRPhenomXPHM(modes=[lm])
+        params = dict(mass1=40.,mass2=20.,spin1z=.4,spin2z=-.2,phic=.3,f_ref=40.,inclination=.7)
+        for h, h0 in zip(model(f, spin1x=.3, spin1y=.2, **params),model(f, **params)):
+>           torch.testing.assert_close(h,h0,atol=1e-34,rtol=5e-12)
+E           AssertionError: Tensor-likes are not close!
+E           
+E           Mismatched elements: 1 / 1 (100.0%)
+E           Greatest absolute difference: 1.1525581785800035e-26 at index (0,) (up to 1e-34 allowed)
+E           Greatest relative difference: 0.003468400883247207 at index (0,) (up to 5e-12 allowed)
+
+tests/test_clean_room_precession_equations.py:136: AssertionError
+____ test_each_mode_reference_rotation_uses_its_spa_orbital_frequency[lm2] _____
+
+lm = (3, 3)
+
+    @pytest.mark.parametrize('lm', IMRPhenomXPHM.SUPPORTED_MODES)
+    def test_each_mode_reference_rotation_uses_its_spa_orbital_frequency(lm):
+        # E18/E19 identify f_orb=f/mp, hence f=mp*f_ref/2 at the initial frame.
+        f = torch.tensor([lm[1]*40./2],dtype=DTYPE)
+        model = IMRPhenomXPHM(modes=[lm])
+        params = dict(mass1=40.,mass2=20.,spin1z=.4,spin2z=-.2,phic=.3,f_ref=40.,inclination=.7)
+        for h, h0 in zip(model(f, spin1x=.3, spin1y=.2, **params),model(f, **params)):
+>           torch.testing.assert_close(h,h0,atol=1e-34,rtol=5e-12)
+E           AssertionError: Tensor-likes are not close!
+E           
+E           Mismatched elements: 1 / 1 (100.0%)
+E           Greatest absolute difference: 5.078881795755397e-26 at index (0,) (up to 1e-34 allowed)
+E           Greatest relative difference: 0.006113619219658947 at index (0,) (up to 5e-12 allowed)
+
+tests/test_clean_room_precession_equations.py:136: AssertionError
+____ test_each_mode_reference_rotation_uses_its_spa_orbital_frequency[lm3] _____
+
+lm = (3, 2)
+
+    @pytest.mark.parametrize('lm', IMRPhenomXPHM.SUPPORTED_MODES)
+    def test_each_mode_reference_rotation_uses_its_spa_orbital_frequency(lm):
+        # E18/E19 identify f_orb=f/mp, hence f=mp*f_ref/2 at the initial frame.
+        f = torch.tensor([lm[1]*40./2],dtype=DTYPE)
+        model = IMRPhenomXPHM(modes=[lm])
+        params = dict(mass1=40.,mass2=20.,spin1z=.4,spin2z=-.2,phic=.3,f_ref=40.,inclination=.7)
+        for h, h0 in zip(model(f, spin1x=.3, spin1y=.2, **params),model(f, **params)):
+>           torch.testing.assert_close(h,h0,atol=1e-34,rtol=5e-12)
+E           AssertionError: Tensor-likes are not close!
+E           
+E           Mismatched elements: 1 / 1 (100.0%)
+E           Greatest absolute difference: 8.066933668797706e-27 at index (0,) (up to 1e-34 allowed)
+E           Greatest relative difference: 0.01575493797566801 at index (0,) (up to 5e-12 allowed)
+
+tests/test_clean_room_precession_equations.py:136: AssertionError
+____ test_each_mode_reference_rotation_uses_its_spa_orbital_frequency[lm4] _____
+
+lm = (4, 4)
+
+    @pytest.mark.parametrize('lm', IMRPhenomXPHM.SUPPORTED_MODES)
+    def test_each_mode_reference_rotation_uses_its_spa_orbital_frequency(lm):
+        # E18/E19 identify f_orb=f/mp, hence f=mp*f_ref/2 at the initial frame.
+        f = torch.tensor([lm[1]*40./2],dtype=DTYPE)
+        model = IMRPhenomXPHM(modes=[lm])
+        params = dict(mass1=40.,mass2=20.,spin1z=.4,spin2z=-.2,phic=.3,f_ref=40.,inclination=.7)
+        for h, h0 in zip(model(f, spin1x=.3, spin1y=.2, **params),model(f, **params)):
+>           torch.testing.assert_close(h,h0,atol=1e-34,rtol=5e-12)
+E           AssertionError: Tensor-likes are not close!
+E           
+E           Mismatched elements: 1 / 1 (100.0%)
+E           Greatest absolute difference: 2.519509630886596e-27 at index (0,) (up to 1e-34 allowed)
+E           Greatest relative difference: 0.0010792866352520867 at index (0,) (up to 5e-12 allowed)
+
+tests/test_clean_room_precession_equations.py:136: AssertionError
+=========================== short test summary info ============================
+FAILED tests/test_clean_room_precession_equations.py::test_quadrupole_reference_closure_label_exchange_and_dc_gradients[IMRPhenomXP]
+FAILED tests/test_clean_room_precession_equations.py::test_quadrupole_reference_closure_label_exchange_and_dc_gradients[<lambda>]
+FAILED tests/test_clean_room_precession_equations.py::test_each_mode_reference_rotation_uses_its_spa_orbital_frequency[lm0]
+FAILED tests/test_clean_room_precession_equations.py::test_each_mode_reference_rotation_uses_its_spa_orbital_frequency[lm1]
+FAILED tests/test_clean_room_precession_equations.py::test_each_mode_reference_rotation_uses_its_spa_orbital_frequency[lm2]
+FAILED tests/test_clean_room_precession_equations.py::test_each_mode_reference_rotation_uses_its_spa_orbital_frequency[lm3]
+FAILED tests/test_clean_room_precession_equations.py::test_each_mode_reference_rotation_uses_its_spa_orbital_frequency[lm4]
+7 failed, 1068 passed, 8 skipped in 74.25s (0:01:14)

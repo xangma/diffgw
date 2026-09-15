@@ -1,0 +1,138 @@
+[
+    {
+        "Id": "sha256:506cbbdd23fe617f9dfbf0243cc99cdede63c277ceaa6be636928bd0ffc235cb",
+        "RepoTags": [
+            "torchwave-spectre:2026.09.05-len-id"
+        ],
+        "RepoDigests": [],
+        "Parent": "sha256:433062f6079d2d07f72df6dd25a878854cf224a098ea89e021989f77a3aed0be",
+        "Comment": "",
+        "Created": "2026-09-12T19:08:35.475263173Z",
+        "Container": "bf30b1b67261c48bfd51b32de275316fb7189919a6b7bc21feb9f37c89710c33",
+        "ContainerConfig": {
+            "Hostname": "bf30b1b67261",
+            "Domainname": "",
+            "User": "",
+            "AttachStdin": false,
+            "AttachStdout": true,
+            "AttachStderr": true,
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "PATH=/work/spectre/build/bin:/opt/venv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/work/texlive/bin/x86_64-linux",
+                "DEBIAN_FRONTEND=noninteractive",
+                "VIRTUAL_ENV=/opt/venv",
+                "CHARM_ARCH=x86_64",
+                "TEX_ARCH=x86_64",
+                "CHARM_ROOT=/work/charm_7_0_0/multicore-linux-x86_64-gcc",
+                "SPECTRE_CONTAINER=0",
+                "SPECTRE_HOME=/work/spectre",
+                "PYTHONPATH=/work/spectre/build/bin/python:"
+            ],
+            "Cmd": [
+                "-u",
+                "-c",
+                "\nimport subprocess,time,datetime,json,resource\nstart=time.monotonic()\nprint('build_started_utc='+datetime.datetime.now(datetime.timezone.utc).isoformat(),flush=True)\nhead=subprocess.check_output(['git','-C','/work/spectre','rev-parse','HEAD'],text=True).strip()\nassert head=='ce221e8b4bf8f4ca1d0acad98453aed5b454f469',head\nconfigure=['cmake','-S','/work/spectre','-B','/work/spectre/build','-DOVERRIDE_ARCH=znver2','-DUSE_GIT_HOOKS=OFF']\nprint('configure='+json.dumps(configure),flush=True)\nsubprocess.run(configure,check=True,timeout=600)\ncommand=['cmake','--build','/work/spectre/build','--clean-first','--target','SolveXcts','cli','EvolveGhBinaryBlackHole','EvolveGhSingleBlackHole','CharacteristicExtract','-j12']\nprint('compile='+json.dumps(command),flush=True)\np=subprocess.run(command,timeout=13700)\nprint(json.dumps({'exit_code':p.returncode,'wall_seconds':time.monotonic()-start,'child_max_rss_kib':resource.getrusage(resource.RUSAGE_CHILDREN).ru_maxrss}),flush=True)\nraise SystemExit(p.returncode)\n"
+            ],
+            "Image": "sxscollaboration/spectre@sha256:698ea4fe0d997d66113a3ee7e869a736003577753dc70a62372000bc7436e658",
+            "Volumes": null,
+            "WorkingDir": "/work/spectre/build",
+            "Entrypoint": [
+                "python"
+            ],
+            "OnBuild": null,
+            "Labels": {
+                "org.opencontainers.image.version": "22.04"
+            }
+        },
+        "DockerVersion": "25.0.2",
+        "Author": "",
+        "Config": {
+            "Hostname": "bf30b1b67261",
+            "Domainname": "",
+            "User": "",
+            "AttachStdin": false,
+            "AttachStdout": true,
+            "AttachStderr": true,
+            "Tty": false,
+            "OpenStdin": false,
+            "StdinOnce": false,
+            "Env": [
+                "PATH=/work/spectre/build/bin:/opt/venv/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/work/texlive/bin/x86_64-linux",
+                "DEBIAN_FRONTEND=noninteractive",
+                "VIRTUAL_ENV=/opt/venv",
+                "CHARM_ARCH=x86_64",
+                "TEX_ARCH=x86_64",
+                "CHARM_ROOT=/work/charm_7_0_0/multicore-linux-x86_64-gcc",
+                "SPECTRE_CONTAINER=0",
+                "SPECTRE_HOME=/work/spectre",
+                "PYTHONPATH=/work/spectre/build/bin/python:"
+            ],
+            "Cmd": [
+                "-u",
+                "-c",
+                "\nimport subprocess,time,datetime,json,resource\nstart=time.monotonic()\nprint('build_started_utc='+datetime.datetime.now(datetime.timezone.utc).isoformat(),flush=True)\nhead=subprocess.check_output(['git','-C','/work/spectre','rev-parse','HEAD'],text=True).strip()\nassert head=='ce221e8b4bf8f4ca1d0acad98453aed5b454f469',head\nconfigure=['cmake','-S','/work/spectre','-B','/work/spectre/build','-DOVERRIDE_ARCH=znver2','-DUSE_GIT_HOOKS=OFF']\nprint('configure='+json.dumps(configure),flush=True)\nsubprocess.run(configure,check=True,timeout=600)\ncommand=['cmake','--build','/work/spectre/build','--clean-first','--target','SolveXcts','cli','EvolveGhBinaryBlackHole','EvolveGhSingleBlackHole','CharacteristicExtract','-j12']\nprint('compile='+json.dumps(command),flush=True)\np=subprocess.run(command,timeout=13700)\nprint(json.dumps({'exit_code':p.returncode,'wall_seconds':time.monotonic()-start,'child_max_rss_kib':resource.getrusage(resource.RUSAGE_CHILDREN).ru_maxrss}),flush=True)\nraise SystemExit(p.returncode)\n"
+            ],
+            "Image": "sxscollaboration/spectre@sha256:698ea4fe0d997d66113a3ee7e869a736003577753dc70a62372000bc7436e658",
+            "Volumes": null,
+            "WorkingDir": "/work/spectre/build",
+            "Entrypoint": [
+                "python"
+            ],
+            "OnBuild": null,
+            "Labels": {
+                "org.opencontainers.image.version": "22.04"
+            }
+        },
+        "Architecture": "amd64",
+        "Os": "linux",
+        "Size": 16669682441,
+        "GraphDriver": {
+            "Data": {
+                "LowerDir": "/var/lib/docker/overlay2/c96248e14ab8297668f2c3a050f7a0cebb5a032ccf77920802dc67cf3e11e64f/diff:/var/lib/docker/overlay2/60798db8c3d7ae6b487ba9d9eb74633ec78c1d47f604c1db37f5f96152bd1cce/diff:/var/lib/docker/overlay2/4f31d60b15f176b0637264467ab736aa8fcf1312b209190f79c8339b9f2f1620/diff:/var/lib/docker/overlay2/8f23eccabeb48dd4ccefa631f069ac049a901f77b5c0afd29808e2ca0d5754f2/diff:/var/lib/docker/overlay2/6bdf3645f8637773b26d4fa4118b91849dc2362226a1be48fd0a94703a0a1486/diff:/var/lib/docker/overlay2/4f326dfdd1acf6291a72570d1a026ee236767af946aefe14be7a7230d65604db/diff:/var/lib/docker/overlay2/1bf0b40eb4382fe1d4ef224e79f43416f20bc245db11e4868d778234ccdd866d/diff:/var/lib/docker/overlay2/1970430a2a1f2698ade5744cf5024e03b9571176d8a4572a32e43a422bc2e089/diff:/var/lib/docker/overlay2/e282fc3bad0aea17bf8d0f50f4b3eb62348abce22ce90aabfa03c796e305fcd3/diff:/var/lib/docker/overlay2/922eb2ce51987d177edf507c6de23577b4c69f4f915cdbb65486ed26ea714a52/diff:/var/lib/docker/overlay2/207cd62f4c0ac5fc12fcc2dbd7d2fe09db061ec24cee76fceef0de92be2e344b/diff:/var/lib/docker/overlay2/688e2f7f77b6dc402b61f9ef61fbe221b9c3804f7af4c4c1c6e1a969fc287fcf/diff:/var/lib/docker/overlay2/ea77ab8d3ea0f625db5fb7064b94cd18330b8044ebda21e97d1cd66338e64a73/diff:/var/lib/docker/overlay2/54a1a37417ca0138ee3c7bc3aa04d4cce5d73518e4c345dcac5e08bf7f19eb81/diff:/var/lib/docker/overlay2/3f4958aa3401386c3a8ca0fee80bf62f2f057485409237d816567045813c9c12/diff:/var/lib/docker/overlay2/9262bf703f2e62c4511ccdba88746897cccc678d7badd1dba0a0f69e4e52d2c4/diff:/var/lib/docker/overlay2/a7d2b3c18e4b5650b558c4a1c64832a89f76f73c15aabb09ba2a422a3eb81a5a/diff:/var/lib/docker/overlay2/72e0b98cd01f3eafe8e9a12050d571f69f28abfb6a90b39a55a6322a2b9788bd/diff:/var/lib/docker/overlay2/837d90896f718dd17b028aba43afb89f283195d44ad9abf453e06b01de7ea119/diff:/var/lib/docker/overlay2/33fb7ab1c5fe8a4d7e31fef9f875f23f51586fb75261220307414d3daab79aa4/diff:/var/lib/docker/overlay2/f613029fe420917da097a6d4209f855b37a7cbbfdb6f3ede04a7141f71073c02/diff:/var/lib/docker/overlay2/422f02e72ec1750ccdde4d9313831132fcdadf6f1333b4daf0e3422826d1f117/diff:/var/lib/docker/overlay2/a89128b3a8e91572796f156f6e0be55d9436cf5e8415ab4985c597800b05a4de/diff:/var/lib/docker/overlay2/4999a288c5ac5abad0218f751b87fc57078314e7e619055e570a56e24445a248/diff:/var/lib/docker/overlay2/9528252c814ac607af721b27d7ad30cd101aed6eba9d9dec47ef6ac59e046512/diff:/var/lib/docker/overlay2/7525bc1b9da34c451868b7d73e1664707733bd43f8b8a0f5d695f6fe36e4a6f5/diff:/var/lib/docker/overlay2/4ce1c5c220a19e7b7710ea58964a429880adcfd4ca6fd54781661f152b881a12/diff:/var/lib/docker/overlay2/364f55468eb8b43687cbaaf313b65924810276971c6252e3baf00a114e690060/diff",
+                "MergedDir": "/var/lib/docker/overlay2/4d29024bd7210ae96e29e8e6023ae1b47630d108a199448912e15f7cba435fb9/merged",
+                "UpperDir": "/var/lib/docker/overlay2/4d29024bd7210ae96e29e8e6023ae1b47630d108a199448912e15f7cba435fb9/diff",
+                "WorkDir": "/var/lib/docker/overlay2/4d29024bd7210ae96e29e8e6023ae1b47630d108a199448912e15f7cba435fb9/work"
+            },
+            "Name": "overlay2"
+        },
+        "RootFS": {
+            "Type": "layers",
+            "Layers": [
+                "sha256:c0359c5b6ede84d4a083d06d35ee77f0b338dfb17423771854d007d89953fb3e",
+                "sha256:e5225c3cba4cdbaa76d0ae3ca1f219a122f2385e57fdaf0aca9f2db86e2df4f3",
+                "sha256:71b78308e9cc37874ab3d87630c529d5b596d1995fe41aa4a7799d67a2bbd070",
+                "sha256:e1776cd700e3bffd88b5619556b35a5740e8dc3827198ea203519519d5071c38",
+                "sha256:879619e0186055f291ff45c5a70ea293ad15125e57cbf2e8b140b6ea05006fbc",
+                "sha256:6e0e8e078865659bc561e4487e9dec38f3bb3f7b562976ecbffc71028831b663",
+                "sha256:b5edee06e1ec198707c1ae068f73c1143f61bd53ee34f8b686a4d9d044ca43d3",
+                "sha256:bf71e60403d9aa618b869b240f9531bbf8e37636cb39a27e9aff96a4fbe42111",
+                "sha256:581c885d5da34ac59bef044437b87da269214f521e518d737d65c3cb3c77bea7",
+                "sha256:e0d0ebd75d08199885dc6f1674b35cf893f614d4dab0b95fb60eb19f92862894",
+                "sha256:663d43d7249690607682f8318134bbab27145ab649134bdc6d08c85cdebeffe9",
+                "sha256:8582c5767b0ed91002eec52a9e36b65466e97dc8b032cb0836bd46111139b8a9",
+                "sha256:35018a5300ffd0123c7a9fd75bfebfd2351e2251ac2771558b8919337ee95c96",
+                "sha256:c5547b4f098669a6abe1c2e6639f5502e974c7f0cac6a14cf861cf8c9bcada5b",
+                "sha256:d26ebe82d0080bccb5861cb5df68f72c7bd7977f64043c8fbbab569975927745",
+                "sha256:7131135ddc9dff66449e12989d82371d98b5c5877d94c21c1c2faab47a1f5c4f",
+                "sha256:523cc7390b211bcdd8240f3385e80f50e87bfe63354a4d44f278a541fa1f10f3",
+                "sha256:847265c8ede9ed630c41148493d1931c107fdc880b686c97ff9d2b36f7a281c7",
+                "sha256:0bcc085ca526c6bfe4e36d9686aba828e321b32e01cbab9a179fe45af3a4b375",
+                "sha256:4381d02e43d6660c99bd46c5849f1fcb6816a867bf3c0c9e06be6387961c2219",
+                "sha256:76e44c50c28454fe399375218eee2fb65433df9fdc8d3221ed11ad6d8f2a89d6",
+                "sha256:b767117114821d50c44465ec03aac2f3d021c050fe08061bc043a546a1fff393",
+                "sha256:4150de13db03aaec892b65a194c0139b6e202040d653d41d5a68517142fddd42",
+                "sha256:5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef",
+                "sha256:5f70bf18a086007016e948b04aed3b82103a36bea41755b6cddfaf10ace3c6ef",
+                "sha256:18d4b3f7e897132774fcc949d26004d59082226e198a31773762079016cda71e",
+                "sha256:2b92635775c07fc3922df95ba4a7ee67d8aa4eb39527cc8dd59e2cd71af5f275",
+                "sha256:94b47a27bbab276c6fd06da685b2c21fac123396a28b4a48bbd8a27465abaa96",
+                "sha256:cc01199cb14cc4bc4b11f063b0595e7e6c558011ec3f6e1bf14d46f9b8fc8960"
+            ]
+        },
+        "Metadata": {
+            "LastTagTime": "2026-09-12T20:08:35.484449859+01:00"
+        }
+    }
+]

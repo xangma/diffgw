@@ -1,0 +1,2387 @@
+{
+  "label": "regression",
+  "manifest_sha256": "b16c5266a8219d2fa16a7fbfe634a121e1df223e774bf71b087fab8c88d750aa",
+  "model_sha256": "a380dfbd209b5898324e477fedbb1f70565b1bc62f6c69c0b92996ad0dc75bcf",
+  "results": [
+    {
+      "id": "SXS:BBH:2265/Lev3/N3",
+      "q": 3.000112224984311,
+      "input_sha256": "b34ee2d0a4c94dccd412023047429859c0d7c4716c3a36990d7080090853ee45",
+      "extrapolation": false,
+      "basis": {
+        "modes": {
+          "22": {
+            "complex_l2": 0.12371731863769786,
+            "amplitude_l2": 0.11008137354028644
+          },
+          "33": {
+            "complex_l2": 0.016464586649600328,
+            "amplitude_l2": 0.010922361010402497
+          }
+        },
+        "mean_mode_complex_l2": 0.07009095264364909,
+        "relative_mode_phase_rms_rad": 0.08540826407756809,
+        "coherent_equal_weight_sum_l2": 0.02047967897190452
+      },
+      "baseline": {
+        "modes": {
+          "22": {
+            "complex_l2": 0.10879616833130373,
+            "amplitude_l2": 0.10351673737813598
+          },
+          "33": {
+            "complex_l2": 0.009008556825233622,
+            "amplitude_l2": 0.006494542537925974
+          }
+        },
+        "mean_mode_complex_l2": 0.058902362578268676,
+        "relative_mode_phase_rms_rad": 0.049791493085035006,
+        "coherent_equal_weight_sum_l2": 0.008074922765500874
+      },
+      "quality": {
+        "id": "SXS:BBH:2265/Lev3/N3",
+        "comparisons": [
+          {
+            "modes": {
+              "22": {
+                "complex_l2": 0.15917974137034985,
+                "amplitude_l2": 0.059457084431722616
+              },
+              "33": {
+                "complex_l2": 0.026075488489833275,
+                "amplitude_l2": 0.004183898233206076
+              }
+            },
+            "mean_mode_complex_l2": 0.09262761493009156,
+            "relative_mode_phase_rms_rad": 0.13689300974169646,
+            "coherent_equal_weight_sum_l2": 0.033583922163012446,
+            "control": "SXS:BBH:2265/Lev2/N2",
+            "phase": {
+              "22": {
+                "bins": 512,
+                "constant_phase": 0.14905456383332755,
+                "affine_phase": -0.3937050074073079,
+                "time_shift": 0.7040081163905613,
+                "raw_relative_l2": 0.1591797413703499,
+                "constant_relative_l2": 0.06374309048724208,
+                "affine_relative_l2": 0.06023900115422598,
+                "raw_overlap": 0.9876187175126979,
+                "constant_overlap": 0.998692297377841,
+                "affine_overlap": 0.9989184246595887,
+                "raw_mismatch": 0.012381282487302081,
+                "constant_mismatch": 0.0013077026221589572,
+                "affine_mismatch": 0.0010815753404113115,
+                "raw_phase_rms": 0.15194044490051176,
+                "constant_phase_rms": 0.02413667860853906,
+                "affine_phase_rms": 0.010541013117941547,
+                "phase_mask_retained_reference_norm_fraction": 0.9999990352301328
+              },
+              "33": {
+                "bins": 512,
+                "constant_phase": 0.024732241345920496,
+                "affine_phase": -0.11478673518431501,
+                "time_shift": 0.17767343799488433,
+                "raw_relative_l2": 0.026075488489833275,
+                "constant_relative_l2": 0.008409624156931035,
+                "affine_relative_l2": 0.005143972490968943,
+                "raw_overlap": 0.9996665804371598,
+                "constant_overlap": 0.9999723982872684,
+                "affine_overlap": 0.9999946170927329,
+                "raw_mismatch": 0.00033341956284016483,
+                "constant_mismatch": 2.7601712731639694e-05,
+                "affine_mismatch": 5.382907267148518e-06,
+                "raw_phase_rms": 0.025796832760890134,
+                "constant_phase_rms": 0.0073287676760948085,
+                "affine_phase_rms": 0.0030259777813465257,
+                "phase_mask_retained_reference_norm_fraction": 0.9999994950866042
+              }
+            },
+            "phase_threshold_rad": 0.01,
+            "phase_diagnostic_pass": false
+          },
+          {
+            "modes": {
+              "22": {
+                "complex_l2": 0.15788541060237804,
+                "amplitude_l2": 0.05815441450899168
+              },
+              "33": {
+                "complex_l2": 0.02586469880736542,
+                "amplitude_l2": 0.004119166621051935
+              }
+            },
+            "mean_mode_complex_l2": 0.09187505470487173,
+            "relative_mode_phase_rms_rad": 0.13559331214537984,
+            "coherent_equal_weight_sum_l2": 0.03329420989113303,
+            "control": "SXS:BBH:2265/Lev2/N3",
+            "phase": {
+              "22": {
+                "bins": 512,
+                "constant_phase": 0.14819080794362957,
+                "affine_phase": -0.37170256625425235,
+                "time_shift": 0.6743158512697804,
+                "raw_relative_l2": 0.15788541060237807,
+                "constant_relative_l2": 0.06231677908232801,
+                "affine_relative_l2": 0.058992140910914585,
+                "raw_overlap": 0.9878152444389738,
+                "constant_overlap": 0.998761852258814,
+                "affine_overlap": 0.9989716400406062,
+                "raw_mismatch": 0.012184755561026162,
+                "constant_mismatch": 0.0012381477411860242,
+                "affine_mismatch": 0.0010283599593937653,
+                "raw_phase_rms": 0.15089934885948436,
+                "constant_phase_rms": 0.023349005545335495,
+                "affine_phase_rms": 0.010615367603854424,
+                "phase_mask_retained_reference_norm_fraction": 0.9999990352301328
+              },
+              "33": {
+                "bins": 512,
+                "constant_phase": 0.0245289379153392,
+                "affine_phase": -0.11446535887966264,
+                "time_shift": 0.17700517050028436,
+                "raw_relative_l2": 0.025864698807365413,
+                "constant_relative_l2": 0.008349206197793812,
+                "affine_relative_l2": 0.005076214216193583,
+                "raw_overlap": 0.9996718484581146,
+                "constant_overlap": 0.9999726595479526,
+                "affine_overlap": 0.9999947163059201,
+                "raw_mismatch": 0.00032815154188536866,
+                "constant_mismatch": 2.7340452047441843e-05,
+                "affine_mismatch": 5.283694079927237e-06,
+                "raw_phase_rms": 0.025592057935321006,
+                "constant_phase_rms": 0.007294353411249426,
+                "affine_phase_rms": 0.0029979699530711967,
+                "phase_mask_retained_reference_norm_fraction": 0.9999994950866042
+              }
+            },
+            "phase_threshold_rad": 0.01,
+            "phase_diagnostic_pass": false
+          },
+          {
+            "modes": {
+              "22": {
+                "complex_l2": 0.0019337020490506102,
+                "amplitude_l2": 0.0012972734269907956
+              },
+              "33": {
+                "complex_l2": 0.00018588034216773566,
+                "amplitude_l2": 5.835716607382391e-05
+              }
+            },
+            "mean_mode_complex_l2": 0.001059791195609173,
+            "relative_mode_phase_rms_rad": 0.002313629972676918,
+            "coherent_equal_weight_sum_l2": 0.00023847325552754455,
+            "control": "SXS:BBH:2265/Lev3/N2",
+            "phase": {
+              "22": {
+                "bins": 512,
+                "constant_phase": 0.0003775757568534666,
+                "affine_phase": -0.02762064889508006,
+                "time_shift": 0.036254230869988774,
+                "raw_relative_l2": 0.0019337020490506106,
+                "constant_relative_l2": 0.0018964863775173821,
+                "affine_relative_l2": 0.0015386742581376298,
+                "raw_overlap": 0.9999981401347855,
+                "constant_overlap": 0.9999982114163835,
+                "affine_overlap": 0.9999988260747193,
+                "raw_mismatch": 1.8598652145040973e-06,
+                "constant_mismatch": 1.7885836165465463e-06,
+                "affine_mismatch": 1.173925280650856e-06,
+                "raw_phase_rms": 0.0014352309478169922,
+                "constant_phase_rms": 0.0013842324940154126,
+                "affine_phase_rms": 0.0008174614176144624,
+                "phase_mask_retained_reference_norm_fraction": 0.9999990352301328
+              },
+              "33": {
+                "bins": 512,
+                "constant_phase": 0.00017081630974375214,
+                "affine_phase": -9.335311502089411e-05,
+                "time_shift": 0.00033639203597135315,
+                "raw_relative_l2": 0.00018588034216773564,
+                "constant_relative_l2": 7.331383573045228e-05,
+                "affine_relative_l2": 7.218790381395761e-05,
+                "raw_overlap": 0.9999999842808259,
+                "constant_overlap": 0.9999999988699317,
+                "affine_overlap": 0.9999999989518489,
+                "raw_mismatch": 1.5719174073502984e-08,
+                "constant_mismatch": 1.1300682611903312e-09,
+                "affine_mismatch": 1.0481511214521788e-09,
+                "raw_phase_rms": 0.00017552481385729417,
+                "constant_phase_rms": 4.043629281415129e-05,
+                "affine_phase_rms": 3.8410704321026706e-05,
+                "phase_mask_retained_reference_norm_fraction": 0.9999994950866042
+              }
+            },
+            "phase_threshold_rad": 0.01,
+            "phase_diagnostic_pass": true
+          },
+          {
+            "modes": {
+              "22": {
+                "complex_l2": 1.6898930310672791e-06,
+                "amplitude_l2": 1.1742277293429554e-06
+              },
+              "33": {
+                "complex_l2": 1.7027743063939092e-08,
+                "amplitude_l2": 1.2907564976203103e-08
+              }
+            },
+            "mean_mode_complex_l2": 8.534603870656091e-07,
+            "relative_mode_phase_rms_rad": 1.698791483842474e-06,
+            "coherent_equal_weight_sum_l2": 9.874170262594963e-08,
+            "control": "dt_0.05",
+            "phase": {
+              "22": {
+                "bins": 512,
+                "constant_phase": -5.669043270933433e-08,
+                "affine_phase": -1.3285495258572338e-06,
+                "time_shift": 1.6468259657522249e-06,
+                "raw_relative_l2": 1.6898930310672793e-06,
+                "constant_relative_l2": 1.6889418732572443e-06,
+                "affine_relative_l2": 1.6881886628829962e-06,
+                "raw_overlap": 0.9999999999985726,
+                "constant_overlap": 0.9999999999985741,
+                "affine_overlap": 0.9999999999985753,
+                "raw_mismatch": 1.4274137427605638e-12,
+                "constant_mismatch": 1.4258594305260885e-12,
+                "affine_mismatch": 1.4247492075014634e-12,
+                "raw_phase_rms": 1.0600663935879416e-06,
+                "constant_phase_rms": 1.0585503455037238e-06,
+                "affine_phase_rms": 1.057333459323561e-06,
+                "phase_mask_retained_reference_norm_fraction": 0.9999990352301328
+              },
+              "33": {
+                "bins": 512,
+                "constant_phase": 1.5919441040967593e-09,
+                "affine_phase": 2.0522993770195154e-09,
+                "time_shift": -5.86518200133751e-10,
+                "raw_relative_l2": 1.7027743063939092e-08,
+                "constant_relative_l2": 1.695316335406479e-08,
+                "affine_relative_l2": 1.6953152954700935e-08,
+                "raw_overlap": 1.0,
+                "constant_overlap": 1.0,
+                "affine_overlap": 1.0,
+                "raw_mismatch": 0.0,
+                "constant_mismatch": 0.0,
+                "affine_mismatch": 0.0,
+                "raw_phase_rms": 1.0485395647707914e-08,
+                "constant_phase_rms": 1.0363875988606032e-08,
+                "affine_phase_rms": 1.0363852565806779e-08,
+                "phase_mask_retained_reference_norm_fraction": 0.9999994950866042
+              }
+            },
+            "phase_threshold_rad": 0.002,
+            "phase_diagnostic_pass": true
+          },
+          {
+            "modes": {
+              "22": {
+                "complex_l2": 0.00010894871737831994,
+                "amplitude_l2": 7.728619146343787e-05
+              },
+              "33": {
+                "complex_l2": 1.5752120002257407e-06,
+                "amplitude_l2": 1.1773954809588517e-06
+              }
+            },
+            "mean_mode_complex_l2": 5.526196468927284e-05,
+            "relative_mode_phase_rms_rad": 0.00010606692907336223,
+            "coherent_equal_weight_sum_l2": 7.038731355480433e-06,
+            "control": "tail_40",
+            "phase": {
+              "22": {
+                "bins": 512,
+                "constant_phase": -1.0924532603535433e-05,
+                "affine_phase": -0.00026463847442478926,
+                "time_shift": 0.0003285120324782366,
+                "raw_relative_l2": 0.00010894871737831996,
+                "constant_relative_l2": 0.0001083996218333236,
+                "affine_relative_l2": 0.00010792861977667493,
+                "raw_overlap": 0.9999999940708868,
+                "constant_overlap": 0.9999999941305598,
+                "affine_overlap": 0.9999999941815055,
+                "raw_mismatch": 5.92911320040912e-09,
+                "constant_mismatch": 5.8694401561254494e-09,
+                "affine_mismatch": 5.818494464016055e-09,
+                "raw_phase_rms": 6.964211333930433e-05,
+                "constant_phase_rms": 6.878029060871968e-05,
+                "affine_phase_rms": 6.803138733692649e-05,
+                "phase_mask_retained_reference_norm_fraction": 0.9999990352301328
+              },
+              "33": {
+                "bins": 512,
+                "constant_phase": -1.7677185250818897e-07,
+                "affine_phase": -3.8029778162492706e-06,
+                "time_shift": 4.617818165891935e-06,
+                "raw_relative_l2": 1.5752120002257407e-06,
+                "constant_relative_l2": 1.5652618194832788e-06,
+                "affine_relative_l2": 1.5556222683681276e-06,
+                "raw_overlap": 0.9999999999987762,
+                "constant_overlap": 0.9999999999987916,
+                "affine_overlap": 0.9999999999988068,
+                "raw_mismatch": 1.22379884004431e-12,
+                "constant_mismatch": 1.2083667400020204e-12,
+                "affine_mismatch": 1.1931566845646557e-12,
+                "raw_phase_rms": 1.0447863319535817e-06,
+                "constant_phase_rms": 1.0297237795182394e-06,
+                "affine_phase_rms": 1.0150046355772292e-06,
+                "phase_mask_retained_reference_norm_fraction": 0.9999994950866042
+              }
+            },
+            "phase_threshold_rad": 0.002,
+            "phase_diagnostic_pass": true
+          }
+        ],
+        "phase_diagnostic_pass": false
+      },
+      "gauge": {
+        "peak_time": 30556.345367388192,
+        "orbital_rotation": 3.6056865542936833
+      },
+      "frequency_band": [
+        0.11804517039154139,
+        0.29964461947342097
+      ]
+    },
+    {
+      "id": "SXS:BBH:2489/Lev5/N3",
+      "q": 5.999531974378745,
+      "input_sha256": "95a7ac1b35d1a4a86c0205ac314e8235312abff8bcab9079fe7311044ee32e54",
+      "extrapolation": false,
+      "basis": {
+        "modes": {
+          "22": {
+            "complex_l2": 0.03965410911053737,
+            "amplitude_l2": 0.026949492655109288
+          },
+          "33": {
+            "complex_l2": 0.03867796558022504,
+            "amplitude_l2": 0.011446790817674357
+          }
+        },
+        "mean_mode_complex_l2": 0.03916603734538121,
+        "relative_mode_phase_rms_rad": 0.027004191624474844,
+        "coherent_equal_weight_sum_l2": 0.036586707035387835
+      },
+      "baseline": {
+        "modes": {
+          "22": {
+            "complex_l2": 0.055733163778939096,
+            "amplitude_l2": 0.02089466581511027
+          },
+          "33": {
+            "complex_l2": 0.02267707351383613,
+            "amplitude_l2": 0.007974503821694982
+          }
+        },
+        "mean_mode_complex_l2": 0.039205118646387614,
+        "relative_mode_phase_rms_rad": 0.04461592240904984,
+        "coherent_equal_weight_sum_l2": 0.02415908512916728
+      },
+      "quality": {
+        "id": "SXS:BBH:2489/Lev5/N3",
+        "comparisons": [
+          {
+            "modes": {
+              "22": {
+                "complex_l2": 0.11373785389847452,
+                "amplitude_l2": 0.022929164255722338
+              },
+              "33": {
+                "complex_l2": 0.035884395040127616,
+                "amplitude_l2": 0.0015886769109709413
+              }
+            },
+            "mean_mode_complex_l2": 0.07481112446930106,
+            "relative_mode_phase_rms_rad": 0.09045356663317003,
+            "coherent_equal_weight_sum_l2": 0.0405360337873166,
+            "control": "SXS:BBH:2489/Lev4/N2",
+            "phase": {
+              "22": {
+                "bins": 512,
+                "constant_phase": -0.10883105458653437,
+                "affine_phase": 0.4209644605639794,
+                "time_shift": -0.7589992633219471,
+                "raw_relative_l2": 0.11373785389847453,
+                "constant_relative_l2": 0.03162257048498612,
+                "affine_relative_l2": 0.023921657913742855,
+                "raw_overlap": 0.9936332094437291,
+                "constant_overlap": 0.9995467844227907,
+                "affine_overlap": 0.9997587088037511,
+                "raw_mismatch": 0.006366790556270874,
+                "constant_mismatch": 0.0004532155772093427,
+                "affine_mismatch": 0.00024129119624893836,
+                "raw_phase_rms": 0.11318800022310364,
+                "constant_phase_rms": 0.03200344712984843,
+                "affine_phase_rms": 0.023398209920370505,
+                "phase_mask_retained_reference_norm_fraction": 0.9999982547434972
+              },
+              "33": {
+                "bins": 512,
+                "constant_phase": -0.034970429353618944,
+                "affine_phase": 0.10835513041272739,
+                "time_shift": -0.20124647656104794,
+                "raw_relative_l2": 0.03588439504012761,
+                "constant_relative_l2": 0.00805416192854693,
+                "affine_relative_l2": 0.0028318126469945052,
+                "raw_overlap": 0.9993561842997006,
+                "constant_overlap": 0.9999675676225688,
+                "affine_overlap": 0.9999959915566191,
+                "raw_mismatch": 0.0006438157002993661,
+                "constant_mismatch": 3.243237743122407e-05,
+                "affine_mismatch": 4.00844338088735e-06,
+                "raw_phase_rms": 0.035862089652284254,
+                "constant_phase_rms": 0.007902727335249755,
+                "affine_phase_rms": 0.002326943598749145,
+                "phase_mask_retained_reference_norm_fraction": 0.9999995246900119
+              }
+            },
+            "phase_threshold_rad": 0.01,
+            "phase_diagnostic_pass": false
+          },
+          {
+            "modes": {
+              "22": {
+                "complex_l2": 0.08246608135978797,
+                "amplitude_l2": 0.021490123637990792
+              },
+              "33": {
+                "complex_l2": 0.01631964243934783,
+                "amplitude_l2": 0.0026649189495659203
+              }
+            },
+            "mean_mode_complex_l2": 0.0493928618995679,
+            "relative_mode_phase_rms_rad": 0.07914601984765185,
+            "coherent_equal_weight_sum_l2": 0.0201040349341204,
+            "control": "SXS:BBH:2489/Lev4/N3",
+            "phase": {
+              "22": {
+                "bins": 512,
+                "constant_phase": -0.07660911823768433,
+                "affine_phase": 0.42337974524551575,
+                "time_shift": -0.7163171691474252,
+                "raw_relative_l2": 0.08246608135978799,
+                "constant_relative_l2": 0.029940337170901877,
+                "affine_relative_l2": 0.02268606637841266,
+                "raw_overlap": 0.9966468874567401,
+                "constant_overlap": 0.9995786953371094,
+                "affine_overlap": 0.9997682731526353,
+                "raw_mismatch": 0.003353112543259873,
+                "constant_mismatch": 0.000421304662890587,
+                "affine_mismatch": 0.0002317268473647216,
+                "raw_phase_rms": 0.08210148493624066,
+                "constant_phase_rms": 0.03012285803853202,
+                "affine_phase_rms": 0.02197180697988224,
+                "phase_mask_retained_reference_norm_fraction": 0.9999982547434972
+              },
+              "33": {
+                "bins": 512,
+                "constant_phase": -0.015313504550252008,
+                "affine_phase": 0.06778455830217954,
+                "time_shift": -0.11668085093428611,
+                "raw_relative_l2": 0.016319642439347835,
+                "constant_relative_l2": 0.005598961972153702,
+                "affine_relative_l2": 0.0034961136795383617,
+                "raw_overlap": 0.9998692596806976,
+                "constant_overlap": 0.999986507518208,
+                "affine_overlap": 0.9999960504948392,
+                "raw_mismatch": 0.0001307403193023804,
+                "constant_mismatch": 1.3492481792054534e-05,
+                "affine_mismatch": 3.949505160805167e-06,
+                "raw_phase_rms": 0.01609075517014918,
+                "constant_phase_rms": 0.00491997425463548,
+                "affine_phase_rms": 0.0022432674571839805,
+                "phase_mask_retained_reference_norm_fraction": 0.9999995246900119
+              }
+            },
+            "phase_threshold_rad": 0.01,
+            "phase_diagnostic_pass": false
+          },
+          {
+            "modes": {
+              "22": {
+                "complex_l2": 0.010330300560295604,
+                "amplitude_l2": 0.001039195276426688
+              },
+              "33": {
+                "complex_l2": 0.006111205106398685,
+                "amplitude_l2": 0.0020466194709768586
+              }
+            },
+            "mean_mode_complex_l2": 0.008220752833347144,
+            "relative_mode_phase_rms_rad": 0.00609999061137336,
+            "coherent_equal_weight_sum_l2": 0.006248330074725931,
+            "control": "SXS:BBH:2489/Lev5/N2",
+            "phase": {
+              "22": {
+                "bins": 512,
+                "constant_phase": 0.010134529398879707,
+                "affine_phase": -0.029699306118940505,
+                "time_shift": 0.05709682204603628,
+                "raw_relative_l2": 0.010330300560295607,
+                "constant_relative_l2": 0.0020168009083037755,
+                "affine_relative_l2": 0.001175589398629791,
+                "raw_overlap": 0.9999467819484447,
+                "constant_overlap": 0.999998135756234,
+                "affine_overlap": 0.9999994792787618,
+                "raw_mismatch": 5.32180515553371e-05,
+                "constant_mismatch": 1.864243766025453e-06,
+                "affine_mismatch": 5.20721238239652e-07,
+                "raw_phase_rms": 0.010282845786116076,
+                "constant_phase_rms": 0.001733541981490103,
+                "affine_phase_rms": 0.0005546597817828548,
+                "phase_mask_retained_reference_norm_fraction": 0.9999982547434972
+              },
+              "33": {
+                "bins": 512,
+                "constant_phase": 0.00569107784727193,
+                "affine_phase": -0.011599720280591534,
+                "time_shift": 0.024276554920834706,
+                "raw_relative_l2": 0.006111205106398684,
+                "constant_relative_l2": 0.002241603713477577,
+                "affine_relative_l2": 0.0020484102275045105,
+                "raw_overlap": 0.9999833830724472,
+                "constant_overlap": 0.9999995772054238,
+                "affine_overlap": 0.9999999924558736,
+                "raw_mismatch": 1.661692755283717e-05,
+                "constant_mismatch": 4.227945762380614e-07,
+                "affine_mismatch": 7.54412643466651e-09,
+                "raw_phase_rms": 0.0057640725064545895,
+                "constant_phase_rms": 0.0009149310937798022,
+                "affine_phase_rms": 8.41839528388479e-05,
+                "phase_mask_retained_reference_norm_fraction": 0.9999995246900119
+              }
+            },
+            "phase_threshold_rad": 0.01,
+            "phase_diagnostic_pass": true
+          },
+          {
+            "modes": {
+              "22": {
+                "complex_l2": 2.8750901527524156e-06,
+                "amplitude_l2": 1.953548796612137e-06
+              },
+              "33": {
+                "complex_l2": 1.782065486896949e-07,
+                "amplitude_l2": 1.3095370206197536e-07
+              }
+            },
+            "mean_mode_complex_l2": 1.5266483507210552e-06,
+            "relative_mode_phase_rms_rad": 4.225260086188783e-06,
+            "coherent_equal_weight_sum_l2": 2.67843484026131e-07,
+            "control": "dt_0.05",
+            "phase": {
+              "22": {
+                "bins": 512,
+                "constant_phase": -4.3850622692089935e-07,
+                "affine_phase": -1.2874530340219649e-05,
+                "time_shift": 1.7824615528700056e-05,
+                "raw_relative_l2": 2.875090152752416e-06,
+                "constant_relative_l2": 2.841453110513698e-06,
+                "affine_relative_l2": 2.7939797769941077e-06,
+                "raw_overlap": 0.9999999999960133,
+                "constant_overlap": 0.9999999999961091,
+                "affine_overlap": 0.9999999999962428,
+                "raw_mismatch": 3.986699859126475e-12,
+                "constant_mismatch": 3.890887612101324e-12,
+                "affine_mismatch": 3.757216759936455e-12,
+                "raw_phase_rms": 1.97140849643375e-06,
+                "constant_phase_rms": 1.921963323211271e-06,
+                "affine_phase_rms": 1.8523090355912672e-06,
+                "phase_mask_retained_reference_norm_fraction": 0.9999982547434972
+              },
+              "33": {
+                "bins": 512,
+                "constant_phase": -1.099515794172673e-08,
+                "affine_phase": -1.0967633933686419e-07,
+                "time_shift": 1.3855575930923427e-07,
+                "raw_relative_l2": 1.782065486896949e-07,
+                "constant_relative_l2": 1.778670303705448e-07,
+                "affine_relative_l2": 1.7779227486715493e-07,
+                "raw_overlap": 0.9999999999999841,
+                "constant_overlap": 0.9999999999999841,
+                "affine_overlap": 0.9999999999999843,
+                "raw_mismatch": 1.587618925213974e-14,
+                "constant_mismatch": 1.587618925213974e-14,
+                "affine_mismatch": 1.5654144647214707e-14,
+                "raw_phase_rms": 1.1283713784737699e-07,
+                "constant_phase_rms": 1.1230052071995214e-07,
+                "affine_phase_rms": 1.1218007793272295e-07,
+                "phase_mask_retained_reference_norm_fraction": 0.9999995246900119
+              }
+            },
+            "phase_threshold_rad": 0.002,
+            "phase_diagnostic_pass": true
+          },
+          {
+            "modes": {
+              "22": {
+                "complex_l2": 0.00011527184865099383,
+                "amplitude_l2": 8.15747620617626e-05
+              },
+              "33": {
+                "complex_l2": 1.0397336154706905e-05,
+                "amplitude_l2": 7.386967919961067e-06
+              }
+            },
+            "mean_mode_complex_l2": 6.283459240285037e-05,
+            "relative_mode_phase_rms_rad": 0.0001808032153963578,
+            "coherent_equal_weight_sum_l2": 8.221526160933902e-06,
+            "control": "tail_40",
+            "phase": {
+              "22": {
+                "bins": 512,
+                "constant_phase": -1.4522057342829445e-06,
+                "affine_phase": -0.00012296268443860682,
+                "time_shift": 0.0001741682777173618,
+                "raw_relative_l2": 0.00011527184865099381,
+                "constant_relative_l2": 0.00011526270068315216,
+                "affine_relative_l2": 0.00011515553750533387,
+                "raw_overlap": 0.9999999934066185,
+                "constant_overlap": 0.999999993407673,
+                "affine_overlap": 0.9999999934200192,
+                "raw_mismatch": 6.593381507435936e-09,
+                "constant_mismatch": 6.592327017607147e-09,
+                "affine_mismatch": 6.579980782461803e-09,
+                "raw_phase_rms": 7.9255678255305e-05,
+                "constant_phase_rms": 7.924241333072799e-05,
+                "affine_phase_rms": 7.908387809412993e-05,
+                "phase_mask_retained_reference_norm_fraction": 0.9999982547434972
+              },
+              "33": {
+                "bins": 512,
+                "constant_phase": 8.719638304465169e-07,
+                "affine_phase": 1.9401772933783305e-05,
+                "time_shift": -2.6016227800372773e-05,
+                "raw_relative_l2": 1.0397336154706907e-05,
+                "constant_relative_l2": 1.0360708375578255e-05,
+                "affine_relative_l2": 1.0314571181328505e-05,
+                "raw_overlap": 0.9999999999459668,
+                "constant_overlap": 0.9999999999463469,
+                "affine_overlap": 0.999999999946824,
+                "raw_mismatch": 5.403322234087682e-11,
+                "constant_mismatch": 5.3653081977245165e-11,
+                "affine_mismatch": 5.3176019143563735e-11,
+                "raw_phase_rms": 7.308588822480895e-06,
+                "constant_phase_rms": 7.2563832516614175e-06,
+                "affine_phase_rms": 7.190400912433604e-06,
+                "phase_mask_retained_reference_norm_fraction": 0.9999995246900119
+              }
+            },
+            "phase_threshold_rad": 0.002,
+            "phase_diagnostic_pass": true
+          }
+        ],
+        "phase_diagnostic_pass": false
+      },
+      "gauge": {
+        "peak_time": 8958.171562378928,
+        "orbital_rotation": 3.4768882191730905
+      },
+      "frequency_band": [
+        0.10655023704022636,
+        0.2996221684317192
+      ]
+    },
+    {
+      "id": "SXS:BBH:2483/Lev5/N3",
+      "q": 3.499942504651751,
+      "input_sha256": "7b84fead528c9b8de1aa5261ed788d9f31a7443d971eb08f8b42b2679bfac6ad",
+      "extrapolation": false,
+      "basis": {
+        "modes": {
+          "22": {
+            "complex_l2": 0.021440383619431395,
+            "amplitude_l2": 0.019174739211008512
+          },
+          "33": {
+            "complex_l2": 0.019150046965557284,
+            "amplitude_l2": 0.0034581355683795337
+          }
+        },
+        "mean_mode_complex_l2": 0.02029521529249434,
+        "relative_mode_phase_rms_rad": 0.02615596892205341,
+        "coherent_equal_weight_sum_l2": 0.01874180581943921
+      },
+      "baseline": {
+        "modes": {
+          "22": {
+            "complex_l2": 0.021319082771208586,
+            "amplitude_l2": 0.012741776968097852
+          },
+          "33": {
+            "complex_l2": 0.010944016304330574,
+            "amplitude_l2": 0.00525302517950064
+          }
+        },
+        "mean_mode_complex_l2": 0.01613154953776958,
+        "relative_mode_phase_rms_rad": 0.017405583887647836,
+        "coherent_equal_weight_sum_l2": 0.0113374287524517
+      },
+      "quality": {
+        "id": "SXS:BBH:2483/Lev5/N3",
+        "comparisons": [
+          {
+            "modes": {
+              "22": {
+                "complex_l2": 0.019627717966643574,
+                "amplitude_l2": 0.009234699887579781
+              },
+              "33": {
+                "complex_l2": 0.006980353722880892,
+                "amplitude_l2": 0.0018063777492605168
+              }
+            },
+            "mean_mode_complex_l2": 0.013304035844762233,
+            "relative_mode_phase_rms_rad": 0.015062139219482254,
+            "coherent_equal_weight_sum_l2": 0.007123128840840441,
+            "control": "SXS:BBH:2483/Lev4/N2",
+            "phase": {
+              "22": {
+                "bins": 512,
+                "constant_phase": 0.015768645728408123,
+                "affine_phase": -0.15494439524736286,
+                "time_shift": 0.22672374255587416,
+                "raw_relative_l2": 0.019627717966643577,
+                "constant_relative_l2": 0.011591612355666168,
+                "affine_relative_l2": 0.009343444612716604,
+                "raw_overlap": 0.9998494369648787,
+                "constant_overlap": 0.99997375622014,
+                "affine_overlap": 0.9999970785564155,
+                "raw_mismatch": 0.00015056303512128721,
+                "constant_mismatch": 2.624377986004678e-05,
+                "affine_mismatch": 2.9214435844915343e-06,
+                "raw_phase_rms": 0.01723319817592853,
+                "constant_phase_rms": 0.006964536404599828,
+                "affine_phase_rms": 0.001375611871460265,
+                "phase_mask_retained_reference_norm_fraction": 0.9999960321188663
+              },
+              "33": {
+                "bins": 512,
+                "constant_phase": 0.0066884833677581974,
+                "affine_phase": -0.011354801202181849,
+                "time_shift": 0.023527760797161186,
+                "raw_relative_l2": 0.006980353722880891,
+                "constant_relative_l2": 0.002016589343668844,
+                "affine_relative_l2": 0.00181468677514534,
+                "raw_overlap": 0.9999770758619723,
+                "constant_overlap": 0.9999994436710216,
+                "affine_overlap": 0.9999998311093782,
+                "raw_mismatch": 2.292413802773563e-05,
+                "constant_mismatch": 5.563289784404901e-07,
+                "affine_mismatch": 1.6889062182112724e-07,
+                "raw_phase_rms": 0.006747638936160856,
+                "constant_phase_rms": 0.0008949259357800152,
+                "affine_phase_rms": 0.00016733439500894878,
+                "phase_mask_retained_reference_norm_fraction": 0.9999994931107753
+              }
+            },
+            "phase_threshold_rad": 0.01,
+            "phase_diagnostic_pass": true
+          },
+          {
+            "modes": {
+              "22": {
+                "complex_l2": 0.013207538273364785,
+                "amplitude_l2": 0.008736250758742282
+              },
+              "33": {
+                "complex_l2": 0.0019432987711452158,
+                "amplitude_l2": 0.0005329660638061955
+              }
+            },
+            "mean_mode_complex_l2": 0.007575418522255,
+            "relative_mode_phase_rms_rad": 0.011897494494630293,
+            "coherent_equal_weight_sum_l2": 0.002293039647242265,
+            "control": "SXS:BBH:2483/Lev4/N3",
+            "phase": {
+              "22": {
+                "bins": 512,
+                "constant_phase": 0.00786890586820471,
+                "affine_phase": -0.13744137080390814,
+                "time_shift": 0.19299455868856055,
+                "raw_relative_l2": 0.013207538273364787,
+                "constant_relative_l2": 0.010582897401649942,
+                "affine_relative_l2": 0.008834202314807584,
+                "raw_overlap": 0.9999489171771686,
+                "constant_overlap": 0.9999798762341732,
+                "affine_overlap": 0.9999967112652961,
+                "raw_mismatch": 5.1082822831394203e-05,
+                "constant_mismatch": 2.01237658268294e-05,
+                "affine_mismatch": 3.28873470389901e-06,
+                "raw_phase_rms": 0.009865898969804904,
+                "constant_phase_rms": 0.0059491359172082325,
+                "affine_phase_rms": 0.0012716213059337515,
+                "phase_mask_retained_reference_norm_fraction": 0.9999960321188663
+              },
+              "33": {
+                "bins": 512,
+                "constant_phase": 0.0018459663951610299,
+                "affine_phase": -0.003047362559763575,
+                "time_shift": 0.0063806865045630354,
+                "raw_relative_l2": 0.001943298771145216,
+                "constant_relative_l2": 0.0006068084314673286,
+                "affine_relative_l2": 0.0005577235600611791,
+                "raw_overlap": 0.9999981277964604,
+                "constant_overlap": 0.9999998315916555,
+                "affine_overlap": 0.9999998601670491,
+                "raw_mismatch": 1.8722035396434578e-06,
+                "constant_mismatch": 1.6840834449194375e-07,
+                "affine_mismatch": 1.3983295088504377e-07,
+                "raw_phase_rms": 0.0018679053147658516,
+                "constant_phase_rms": 0.00028638440684151034,
+                "affine_phase_rms": 0.00015865379961069732,
+                "phase_mask_retained_reference_norm_fraction": 0.9999994931107753
+              }
+            },
+            "phase_threshold_rad": 0.01,
+            "phase_diagnostic_pass": true
+          },
+          {
+            "modes": {
+              "22": {
+                "complex_l2": 0.008302526202623265,
+                "amplitude_l2": 0.001795687653071164
+              },
+              "33": {
+                "complex_l2": 0.00548746870764824,
+                "amplitude_l2": 0.0019439701572593084
+              }
+            },
+            "mean_mode_complex_l2": 0.006894997455135752,
+            "relative_mode_phase_rms_rad": 0.003582475793957356,
+            "coherent_equal_weight_sum_l2": 0.005477350793270723,
+            "control": "SXS:BBH:2483/Lev5/N2",
+            "phase": {
+              "22": {
+                "bins": 512,
+                "constant_phase": 0.008016770271600956,
+                "affine_phase": -0.020424455281909445,
+                "time_shift": 0.03777228444651316,
+                "raw_relative_l2": 0.008302526202623265,
+                "constant_relative_l2": 0.002143969162002808,
+                "affine_relative_l2": 0.0018178101734343227,
+                "raw_overlap": 0.9999661159283331,
+                "constant_overlap": 0.9999982500027905,
+                "affine_overlap": 0.9999988954130424,
+                "raw_mismatch": 3.388407166693419e-05,
+                "constant_mismatch": 1.7499972094769944e-06,
+                "affine_mismatch": 1.1045869575676548e-06,
+                "raw_phase_rms": 0.008098442842386073,
+                "constant_phase_rms": 0.0011560067194213062,
+                "affine_phase_rms": 0.0002063695750670252,
+                "phase_mask_retained_reference_norm_fraction": 0.9999960321188663
+              },
+              "33": {
+                "bins": 512,
+                "constant_phase": 0.00509498900005989,
+                "affine_phase": -0.008285292519039629,
+                "time_shift": 0.017447778512584056,
+                "raw_relative_l2": 0.00548746870764824,
+                "constant_relative_l2": 0.0020503362512976097,
+                "affine_relative_l2": 0.001944102060231542,
+                "raw_overlap": 0.9999868042693311,
+                "constant_overlap": 0.9999997836949012,
+                "affine_overlap": 0.999999996280745,
+                "raw_mismatch": 1.3195730668935646e-05,
+                "constant_mismatch": 2.1630509883241444e-07,
+                "affine_mismatch": 3.7192550150777492e-09,
+                "raw_phase_rms": 0.005136549016678682,
+                "constant_phase_rms": 0.000652339732143798,
+                "affine_phase_rms": 2.2349897121507455e-05,
+                "phase_mask_retained_reference_norm_fraction": 0.9999994931107753
+              }
+            },
+            "phase_threshold_rad": 0.01,
+            "phase_diagnostic_pass": true
+          },
+          {
+            "modes": {
+              "22": {
+                "complex_l2": 2.3578482358980373e-06,
+                "amplitude_l2": 1.6083750907808536e-06
+              },
+              "33": {
+                "complex_l2": 2.0921403992549966e-07,
+                "amplitude_l2": 1.4933244291543628e-07
+              }
+            },
+            "mean_mode_complex_l2": 1.2835311379117686e-06,
+            "relative_mode_phase_rms_rad": 2.5321869996293193e-06,
+            "coherent_equal_weight_sum_l2": 2.3908078630272676e-07,
+            "control": "dt_0.05",
+            "phase": {
+              "22": {
+                "bins": 512,
+                "constant_phase": 1.0185562755148661e-07,
+                "affine_phase": 1.0839347757879485e-06,
+                "time_shift": -1.3043166905470227e-06,
+                "raw_relative_l2": 2.3578482358980373e-06,
+                "constant_relative_l2": 2.3556472007416934e-06,
+                "affine_relative_l2": 2.3553163506753118e-06,
+                "raw_overlap": 0.9999999999972208,
+                "constant_overlap": 0.9999999999972257,
+                "affine_overlap": 0.9999999999972267,
+                "raw_mismatch": 2.7792212975441544e-12,
+                "constant_mismatch": 2.7743363162358037e-12,
+                "affine_mismatch": 2.773337115513641e-12,
+                "raw_phase_rms": 1.5432075834304988e-06,
+                "constant_phase_rms": 1.5398414120421125e-06,
+                "affine_phase_rms": 1.5393404110448146e-06,
+                "phase_mask_retained_reference_norm_fraction": 0.9999960321188663
+              },
+              "33": {
+                "bins": 512,
+                "constant_phase": 5.940702805478556e-08,
+                "affine_phase": -6.031742487926887e-07,
+                "time_shift": 8.640027219096652e-07,
+                "raw_relative_l2": 2.092140399254997e-07,
+                "constant_relative_l2": 2.006023910709222e-07,
+                "affine_relative_l2": 1.979877792644263e-07,
+                "raw_overlap": 0.99999999999998,
+                "constant_overlap": 0.9999999999999818,
+                "affine_overlap": 0.9999999999999822,
+                "raw_mismatch": 1.9984014443252818e-14,
+                "constant_mismatch": 1.8207657603852567e-14,
+                "affine_mismatch": 1.7763568394002505e-14,
+                "raw_phase_rms": 1.4647359680165817e-07,
+                "constant_phase_rms": 1.3388545164225482e-07,
+                "affine_phase_rms": 1.2993470162840411e-07,
+                "phase_mask_retained_reference_norm_fraction": 0.9999994931107753
+              }
+            },
+            "phase_threshold_rad": 0.002,
+            "phase_diagnostic_pass": true
+          },
+          {
+            "modes": {
+              "22": {
+                "complex_l2": 0.00015319222319558413,
+                "amplitude_l2": 0.00010882539449337986
+              },
+              "33": {
+                "complex_l2": 6.581408954667979e-06,
+                "amplitude_l2": 4.733650751945471e-06
+              }
+            },
+            "mean_mode_complex_l2": 7.988681607512606e-05,
+            "relative_mode_phase_rms_rad": 0.00015044450269293937,
+            "coherent_equal_weight_sum_l2": 6.89695521387306e-06,
+            "control": "tail_40",
+            "phase": {
+              "22": {
+                "bins": 512,
+                "constant_phase": -2.8074447780892714e-05,
+                "affine_phase": -0.0006529593537790345,
+                "time_shift": 0.0008299299122179067,
+                "raw_relative_l2": 0.00015319222319558413,
+                "constant_relative_l2": 0.00015059776905377545,
+                "affine_relative_l2": 0.00014850485229903496,
+                "raw_overlap": 0.9999999882895098,
+                "constant_overlap": 0.9999999886835971,
+                "affine_overlap": 0.9999999889965977,
+                "raw_mismatch": 1.1710490244176697e-08,
+                "constant_mismatch": 1.1316402925842795e-08,
+                "affine_mismatch": 1.1003402300424625e-08,
+                "raw_phase_rms": 0.00010187384878447376,
+                "constant_phase_rms": 9.792794143951268e-05,
+                "affine_phase_rms": 9.468525811836244e-05,
+                "phase_mask_retained_reference_norm_fraction": 0.9999960321188663
+              },
+              "33": {
+                "bins": 512,
+                "constant_phase": 4.980854795552173e-07,
+                "affine_phase": 1.0727096695699707e-05,
+                "time_shift": -1.3338608602508649e-05,
+                "raw_relative_l2": 6.58140895466798e-06,
+                "constant_relative_l2": 6.562534158439933e-06,
+                "affine_relative_l2": 6.5436021340649274e-06,
+                "raw_overlap": 0.9999999999784289,
+                "constant_overlap": 0.9999999999785528,
+                "affine_overlap": 0.9999999999786771,
+                "raw_mismatch": 2.157107825695448e-11,
+                "constant_mismatch": 2.144717736740631e-11,
+                "affine_mismatch": 2.1322943410950757e-11,
+                "raw_phase_rms": 4.570592392667689e-06,
+                "constant_phase_rms": 4.5433740805696275e-06,
+                "affine_phase_rms": 4.515953136090662e-06,
+                "phase_mask_retained_reference_norm_fraction": 0.9999994931107753
+              }
+            },
+            "phase_threshold_rad": 0.002,
+            "phase_diagnostic_pass": true
+          }
+        ],
+        "phase_diagnostic_pass": true
+      },
+      "gauge": {
+        "peak_time": 8045.0957617847525,
+        "orbital_rotation": 2.4912227744280244
+      },
+      "frequency_band": [
+        0.11517177112546069,
+        0.29963900736547944
+      ]
+    },
+    {
+      "id": "SXS:BBH:2484/Lev5/N3",
+      "q": 4.4995631767635835,
+      "input_sha256": "9572b837d88553e6c1726ab6fc4d070276e5402420f7a20f0643572f8cfa1116",
+      "extrapolation": false,
+      "basis": {
+        "modes": {
+          "22": {
+            "complex_l2": 0.10490291241646935,
+            "amplitude_l2": 0.03905698271818006
+          },
+          "33": {
+            "complex_l2": 0.03791058591323158,
+            "amplitude_l2": 0.010460506723584017
+          }
+        },
+        "mean_mode_complex_l2": 0.07140674916485046,
+        "relative_mode_phase_rms_rad": 0.07603594498043255,
+        "coherent_equal_weight_sum_l2": 0.041517488856926965
+      },
+      "baseline": {
+        "modes": {
+          "22": {
+            "complex_l2": 0.12273990365203608,
+            "amplitude_l2": 0.04466852380043736
+          },
+          "33": {
+            "complex_l2": 0.029116240562038917,
+            "amplitude_l2": 0.00604184826546527
+          }
+        },
+        "mean_mode_complex_l2": 0.0759280721070375,
+        "relative_mode_phase_rms_rad": 0.0990455331046198,
+        "coherent_equal_weight_sum_l2": 0.03431586463231907
+      },
+      "quality": {
+        "id": "SXS:BBH:2484/Lev5/N3",
+        "comparisons": [
+          {
+            "modes": {
+              "22": {
+                "complex_l2": 0.06132470977265192,
+                "amplitude_l2": 0.05429271887659242
+              },
+              "33": {
+                "complex_l2": 0.0029502036651723367,
+                "amplitude_l2": 0.001761127802017493
+              }
+            },
+            "mean_mode_complex_l2": 0.032137456718912126,
+            "relative_mode_phase_rms_rad": 0.035920648651121205,
+            "coherent_equal_weight_sum_l2": 0.004267802176859084,
+            "control": "SXS:BBH:2484/Lev4/N2",
+            "phase": {
+              "22": {
+                "bins": 512,
+                "constant_phase": -0.026504407354342854,
+                "affine_phase": -0.036067749763565075,
+                "time_shift": 0.01313485216546529,
+                "raw_relative_l2": 0.061324709772651934,
+                "constant_relative_l2": 0.05500663821412105,
+                "affine_relative_l2": 0.055001929820437986,
+                "raw_overlap": 0.9992477931954836,
+                "constant_overlap": 0.9995988735546378,
+                "affine_overlap": 0.999599122436065,
+                "raw_mismatch": 0.0007522068045163754,
+                "constant_mismatch": 0.00040112644536216546,
+                "affine_mismatch": 0.0004008775639350315,
+                "raw_phase_rms": 0.0282043276353634,
+                "constant_phase_rms": 0.009468875761410166,
+                "affine_phase_rms": 0.009461818747320517,
+                "phase_mask_retained_reference_norm_fraction": 0.9999981636908089
+              },
+              "33": {
+                "bins": 512,
+                "constant_phase": 0.001329859873106547,
+                "affine_phase": 0.028609321621686584,
+                "time_shift": -0.036885861829029365,
+                "raw_relative_l2": 0.002950203665172337,
+                "constant_relative_l2": 0.002633441033515068,
+                "affine_relative_l2": 0.002234682061616461,
+                "raw_overlap": 0.9999956531355744,
+                "constant_overlap": 0.9999965373960229,
+                "affine_overlap": 0.9999975079077853,
+                "raw_mismatch": 4.346864425630592e-06,
+                "constant_mismatch": 3.462603977100187e-06,
+                "affine_mismatch": 2.492092214700925e-06,
+                "raw_phase_rms": 0.002353089807353247,
+                "constant_phase_rms": 0.0019392268494643474,
+                "affine_phase_rms": 0.0013609777308618185,
+                "phase_mask_retained_reference_norm_fraction": 0.9999995301646432
+              }
+            },
+            "phase_threshold_rad": 0.01,
+            "phase_diagnostic_pass": true
+          },
+          {
+            "modes": {
+              "22": {
+                "complex_l2": 0.06478072982384928,
+                "amplitude_l2": 0.05354071653229327
+              },
+              "33": {
+                "complex_l2": 0.005157135889498937,
+                "amplitude_l2": 0.002607638668981726
+              }
+            },
+            "mean_mode_complex_l2": 0.03496893285667411,
+            "relative_mode_phase_rms_rad": 0.03825551895803967,
+            "coherent_equal_weight_sum_l2": 0.008429738505934498,
+            "control": "SXS:BBH:2484/Lev4/N3",
+            "phase": {
+              "22": {
+                "bins": 512,
+                "constant_phase": -0.03456700098795975,
+                "affine_phase": -0.019014842607864877,
+                "time_shift": -0.021557049473162358,
+                "raw_relative_l2": 0.06478072982384928,
+                "constant_relative_l2": 0.05429291446929946,
+                "affine_relative_l2": 0.05429495816570923,
+                "raw_overlap": 0.9989912020341712,
+                "constant_overlap": 0.999588335406439,
+                "affine_overlap": 0.9995882307777229,
+                "raw_mismatch": 0.001008797965828756,
+                "constant_mismatch": 0.0004116645935610119,
+                "affine_mismatch": 0.0004117692222771474,
+                "raw_phase_rms": 0.03584316636522652,
+                "constant_phase_rms": 0.009332714864031099,
+                "affine_phase_rms": 0.009313905312909095,
+                "phase_mask_retained_reference_norm_fraction": 0.9999981636908089
+              },
+              "33": {
+                "bins": 512,
+                "constant_phase": -0.0036883881351326194,
+                "affine_phase": 0.03686077697615538,
+                "time_shift": -0.054829597468752794,
+                "raw_relative_l2": 0.005157135889498938,
+                "constant_relative_l2": 0.0036006287782844332,
+                "affine_relative_l2": 0.0029476916345566196,
+                "raw_overlap": 0.9999887517054274,
+                "constant_overlap": 0.9999955537709899,
+                "affine_overlap": 0.99999768729655,
+                "raw_mismatch": 1.1248294572552275e-05,
+                "constant_mismatch": 4.446229010079961e-06,
+                "affine_mismatch": 2.3127034499692556e-06,
+                "raw_phase_rms": 0.004431776933975274,
+                "constant_phase_rms": 0.0024622801343241246,
+                "affine_phase_rms": 0.0013587473732300697,
+                "phase_mask_retained_reference_norm_fraction": 0.9999995301646432
+              }
+            },
+            "phase_threshold_rad": 0.01,
+            "phase_diagnostic_pass": true
+          },
+          {
+            "modes": {
+              "22": {
+                "complex_l2": 0.008580566714611158,
+                "amplitude_l2": 0.000872756800222881
+              },
+              "33": {
+                "complex_l2": 0.005301991374444431,
+                "amplitude_l2": 0.0017407393942828172
+              }
+            },
+            "mean_mode_complex_l2": 0.0069412790445277945,
+            "relative_mode_phase_rms_rad": 0.004899369083070265,
+            "coherent_equal_weight_sum_l2": 0.005403317180820294,
+            "control": "SXS:BBH:2484/Lev5/N2",
+            "phase": {
+              "22": {
+                "bins": 512,
+                "constant_phase": 0.008497553809793876,
+                "affine_phase": 0.004288901094445019,
+                "time_shift": 0.0058192153539729525,
+                "raw_relative_l2": 0.008580566714611158,
+                "constant_relative_l2": 0.0012025813074313747,
+                "affine_relative_l2": 0.00119221284746219,
+                "raw_overlap": 0.9999632479468417,
+                "constant_overlap": 0.9999993519165666,
+                "affine_overlap": 0.9999993643365935,
+                "raw_mismatch": 3.675205315833985e-05,
+                "constant_mismatch": 6.480834333633112e-07,
+                "affine_mismatch": 6.356634064674793e-07,
+                "raw_phase_rms": 0.008534105865939341,
+                "constant_phase_rms": 0.0007854288744531954,
+                "affine_phase_rms": 0.0007690618000647971,
+                "phase_mask_retained_reference_norm_fraction": 0.9999981636908089
+              },
+              "33": {
+                "bins": 512,
+                "constant_phase": 0.004955099969934129,
+                "affine_phase": -0.009948217365531989,
+                "time_shift": 0.02015366643369851,
+                "raw_relative_l2": 0.005301991374444432,
+                "constant_relative_l2": 0.0018975987707985276,
+                "affine_relative_l2": 0.001741343181280907,
+                "raw_overlap": 0.9999874367245546,
+                "constant_overlap": 0.9999997132037711,
+                "affine_overlap": 0.999999998001886,
+                "raw_mismatch": 1.2563275445409694e-05,
+                "constant_mismatch": 2.8679622887661793e-07,
+                "affine_mismatch": 1.9981140075842063e-09,
+                "raw_phase_rms": 0.0050124347778850815,
+                "constant_phase_rms": 0.0007560419839944,
+                "affine_phase_rms": 4.364506866909655e-05,
+                "phase_mask_retained_reference_norm_fraction": 0.9999995301646432
+              }
+            },
+            "phase_threshold_rad": 0.01,
+            "phase_diagnostic_pass": true
+          },
+          {
+            "modes": {
+              "22": {
+                "complex_l2": 5.637854836811871e-06,
+                "amplitude_l2": 4.002255139755946e-06
+              },
+              "33": {
+                "complex_l2": 1.8736997641333994e-08,
+                "amplitude_l2": 1.7429667560108104e-08
+              }
+            },
+            "mean_mode_complex_l2": 2.8282959172266025e-06,
+            "relative_mode_phase_rms_rad": 9.507533955495791e-06,
+            "coherent_equal_weight_sum_l2": 3.234235270007425e-07,
+            "control": "dt_0.05",
+            "phase": {
+              "22": {
+                "bins": 512,
+                "constant_phase": -9.621709959701395e-08,
+                "affine_phase": -6.482057711597875e-06,
+                "time_shift": 8.828658473253822e-06,
+                "raw_relative_l2": 5.637854836811872e-06,
+                "constant_relative_l2": 5.637033743500429e-06,
+                "affine_relative_l2": 5.6317773716778874e-06,
+                "raw_overlap": 0.9999999999842678,
+                "constant_overlap": 0.9999999999842722,
+                "affine_overlap": 0.999999999984302,
+                "raw_mismatch": 1.5732193325845856e-11,
+                "constant_mismatch": 1.5727752433747355e-11,
+                "affine_mismatch": 1.56979984566874e-11,
+                "raw_phase_rms": 3.7122623959037135e-06,
+                "constant_phase_rms": 3.7110112977445715e-06,
+                "affine_phase_rms": 3.7031125506773203e-06,
+                "phase_mask_retained_reference_norm_fraction": 0.9999981636908089
+              },
+              "33": {
+                "bins": 512,
+                "constant_phase": -2.1076184171528983e-09,
+                "affine_phase": -3.3015296573978916e-08,
+                "time_shift": 4.1796239551071475e-08,
+                "raw_relative_l2": 1.8736997641333997e-08,
+                "constant_relative_l2": 1.8618083284375488e-08,
+                "affine_relative_l2": 1.855212288606967e-08,
+                "raw_overlap": 1.0,
+                "constant_overlap": 1.0,
+                "affine_overlap": 0.9999999999999999,
+                "raw_mismatch": 0.0,
+                "constant_mismatch": 0.0,
+                "affine_mismatch": 1.1102230246251565e-16,
+                "raw_phase_rms": 6.771417896061725e-09,
+                "constant_phase_rms": 6.435049233517263e-09,
+                "affine_phase_rms": 6.241764179808592e-09,
+                "phase_mask_retained_reference_norm_fraction": 0.9999995301646432
+              }
+            },
+            "phase_threshold_rad": 0.002,
+            "phase_diagnostic_pass": true
+          },
+          {
+            "modes": {
+              "22": {
+                "complex_l2": 0.00020269401250140874,
+                "amplitude_l2": 0.00014810407505031373
+              },
+              "33": {
+                "complex_l2": 1.501831020376624e-05,
+                "amplitude_l2": 1.071036276285915e-05
+              }
+            },
+            "mean_mode_complex_l2": 0.00010885616135258749,
+            "relative_mode_phase_rms_rad": 0.000268122534412169,
+            "coherent_equal_weight_sum_l2": 2.2393440272114766e-05,
+            "control": "tail_40",
+            "phase": {
+              "22": {
+                "bins": 512,
+                "constant_phase": 3.955465741640796e-05,
+                "affine_phase": 0.0008162489803039395,
+                "time_shift": -0.0010738455593661657,
+                "raw_relative_l2": 0.00020269401250140874,
+                "constant_relative_l2": 0.0001987970040866176,
+                "affine_relative_l2": 0.00019661522173864695,
+                "raw_overlap": 0.9999999798353977,
+                "constant_overlap": 0.9999999806176831,
+                "affine_overlap": 0.9999999810490228,
+                "raw_mismatch": 2.0164602321237624e-08,
+                "constant_mismatch": 1.9382316862603943e-08,
+                "affine_mismatch": 1.895097723192407e-08,
+                "raw_phase_rms": 0.00013511147502640996,
+                "constant_phase_rms": 0.00012919440248333608,
+                "affine_phase_rms": 0.00012579668614889423,
+                "phase_mask_retained_reference_norm_fraction": 0.9999981636908089
+              },
+              "33": {
+                "bins": 512,
+                "constant_phase": 1.3528312209535719e-06,
+                "affine_phase": 3.081179844372575e-05,
+                "time_shift": -3.983731460681593e-05,
+                "raw_relative_l2": 1.5018310203766243e-05,
+                "constant_relative_l2": 1.4957255371123068e-05,
+                "affine_relative_l2": 1.488274637667912e-05,
+                "raw_overlap": 0.9999999998873275,
+                "constant_overlap": 0.9999999998882426,
+                "affine_overlap": 0.9999999998893541,
+                "raw_mismatch": 1.1267253796631849e-10,
+                "constant_mismatch": 1.1175738112711997e-10,
+                "affine_mismatch": 1.1064593685716773e-10,
+                "raw_phase_rms": 1.0522156366213479e-05,
+                "constant_phase_rms": 1.0434836951051316e-05,
+                "affine_phase_rms": 1.032762697888823e-05,
+                "phase_mask_retained_reference_norm_fraction": 0.9999995301646432
+              }
+            },
+            "phase_threshold_rad": 0.002,
+            "phase_diagnostic_pass": true
+          }
+        ],
+        "phase_diagnostic_pass": true
+      },
+      "gauge": {
+        "peak_time": 7441.971706123673,
+        "orbital_rotation": -1.226522651399216
+      },
+      "frequency_band": [
+        0.11084570414877952,
+        0.29963055801591554
+      ]
+    },
+    {
+      "id": "SXS:BBH:2486/Lev5/N3",
+      "q": 5.50003563689487,
+      "input_sha256": "cad725f7151f72f24f690c06e5bb600ab147787133d7b3345c4289262e9e2665",
+      "extrapolation": false,
+      "basis": {
+        "modes": {
+          "22": {
+            "complex_l2": 0.0763556541313806,
+            "amplitude_l2": 0.009716678282817698
+          },
+          "33": {
+            "complex_l2": 0.016333801577297878,
+            "amplitude_l2": 0.012650787247226743
+          }
+        },
+        "mean_mode_complex_l2": 0.04634472785433924,
+        "relative_mode_phase_rms_rad": 0.09178111139981979,
+        "coherent_equal_weight_sum_l2": 0.015581690227722857
+      },
+      "baseline": {
+        "modes": {
+          "22": {
+            "complex_l2": 0.05198269816744049,
+            "amplitude_l2": 0.017310079954234184
+          },
+          "33": {
+            "complex_l2": 0.009189067865466232,
+            "amplitude_l2": 0.0068357504844305346
+          }
+        },
+        "mean_mode_complex_l2": 0.03058588301645336,
+        "relative_mode_phase_rms_rad": 0.050422813758987,
+        "coherent_equal_weight_sum_l2": 0.00953882963220086
+      },
+      "quality": {
+        "id": "SXS:BBH:2486/Lev5/N3",
+        "comparisons": [
+          {
+            "modes": {
+              "22": {
+                "complex_l2": 0.029296083524922197,
+                "amplitude_l2": 0.015187053671238376
+              },
+              "33": {
+                "complex_l2": 0.0067194675624841875,
+                "amplitude_l2": 0.0028079148728963627
+              }
+            },
+            "mean_mode_complex_l2": 0.01800777554370319,
+            "relative_mode_phase_rms_rad": 0.03227084454221766,
+            "coherent_equal_weight_sum_l2": 0.006808685922672874,
+            "control": "SXS:BBH:2486/Lev4/N2",
+            "phase": {
+              "22": {
+                "bins": 512,
+                "constant_phase": 0.020937876733921452,
+                "affine_phase": -0.23566364962993624,
+                "time_shift": 0.36347004499565955,
+                "raw_relative_l2": 0.029296083524922193,
+                "constant_relative_l2": 0.02034775001357248,
+                "affine_relative_l2": 0.017278737526047975,
+                "raw_overlap": 0.9996659939982797,
+                "constant_overlap": 0.9998851581594407,
+                "affine_overlap": 0.9999421292444535,
+                "raw_mismatch": 0.0003340060017202884,
+                "constant_mismatch": 0.000114841840559321,
+                "affine_mismatch": 5.787075554652965e-05,
+                "raw_phase_rms": 0.025139742920141414,
+                "constant_phase_rms": 0.013991377419814313,
+                "affine_phase_rms": 0.008999770923473392,
+                "phase_mask_retained_reference_norm_fraction": 0.9999960528207893
+              },
+              "33": {
+                "bins": 512,
+                "constant_phase": 0.00597230854764353,
+                "affine_phase": -0.01676443027049145,
+                "time_shift": 0.03158732410868682,
+                "raw_relative_l2": 0.006719467562484188,
+                "constant_relative_l2": 0.0030926193694038734,
+                "affine_relative_l2": 0.0028581622615624067,
+                "raw_overlap": 0.9999799786836451,
+                "constant_overlap": 0.9999978128263229,
+                "affine_overlap": 0.999998512022349,
+                "raw_mismatch": 2.0021316354923435e-05,
+                "constant_mismatch": 2.1871736770595618e-06,
+                "affine_mismatch": 1.4879776509824083e-06,
+                "raw_phase_rms": 0.006104837809137137,
+                "constant_phase_rms": 0.0012749299626921226,
+                "affine_phase_rms": 0.0004924695432474182,
+                "phase_mask_retained_reference_norm_fraction": 0.9999994969500469
+              }
+            },
+            "phase_threshold_rad": 0.01,
+            "phase_diagnostic_pass": true
+          },
+          {
+            "modes": {
+              "22": {
+                "complex_l2": 0.022640655780363915,
+                "amplitude_l2": 0.013857311243018908
+              },
+              "33": {
+                "complex_l2": 0.0017419668720065576,
+                "amplitude_l2": 0.0015038732080317465
+              }
+            },
+            "mean_mode_complex_l2": 0.012191311326185237,
+            "relative_mode_phase_rms_rad": 0.03102073503108052,
+            "coherent_equal_weight_sum_l2": 0.002529261800507471,
+            "control": "SXS:BBH:2486/Lev4/N3",
+            "phase": {
+              "22": {
+                "bins": 512,
+                "constant_phase": 0.012007054873377125,
+                "affine_phase": -0.22629321762581717,
+                "time_shift": 0.33755325048251894,
+                "raw_relative_l2": 0.022640655780363915,
+                "constant_relative_l2": 0.019149576944176662,
+                "affine_relative_l2": 0.016362465652722886,
+                "raw_overlap": 0.9998188295709954,
+                "constant_overlap": 0.999890905524386,
+                "affine_overlap": 0.9999398029577066,
+                "raw_mismatch": 0.00018117042900456237,
+                "constant_mismatch": 0.00010909447561402441,
+                "affine_mismatch": 6.019704229343059e-05,
+                "raw_phase_rms": 0.018222063197861287,
+                "constant_phase_rms": 0.013744352498957155,
+                "affine_phase_rms": 0.009483007841384406,
+                "phase_mask_retained_reference_norm_fraction": 0.9999960528207893
+              },
+              "33": {
+                "bins": 512,
+                "constant_phase": 0.0005964095241967963,
+                "affine_phase": -0.007093380345862529,
+                "time_shift": 0.010682849707677097,
+                "raw_relative_l2": 0.0017419668720065572,
+                "constant_relative_l2": 0.0016367142637255436,
+                "affine_relative_l2": 0.0015864629964048608,
+                "raw_overlap": 0.9999985135958006,
+                "constant_overlap": 0.9999986914477227,
+                "affine_overlap": 0.9999987724524121,
+                "raw_mismatch": 1.486404199391167e-06,
+                "constant_mismatch": 1.3085522773126357e-06,
+                "affine_mismatch": 1.2275475879119924e-06,
+                "raw_phase_rms": 0.000850768673372072,
+                "constant_phase_rms": 0.0006076156805325273,
+                "affine_phase_rms": 0.0004593676296349122,
+                "phase_mask_retained_reference_norm_fraction": 0.9999994969500469
+              }
+            },
+            "phase_threshold_rad": 0.01,
+            "phase_diagnostic_pass": true
+          },
+          {
+            "modes": {
+              "22": {
+                "complex_l2": 0.006746143373315624,
+                "amplitude_l2": 0.002306670689971829
+              },
+              "33": {
+                "complex_l2": 0.005438409101929309,
+                "amplitude_l2": 0.0016805674971603136
+              }
+            },
+            "mean_mode_complex_l2": 0.006092276237622466,
+            "relative_mode_phase_rms_rad": 0.001976152518729289,
+            "coherent_equal_weight_sum_l2": 0.005314518943997981,
+            "control": "SXS:BBH:2486/Lev5/N2",
+            "phase": {
+              "22": {
+                "bins": 512,
+                "constant_phase": 0.006297408901721304,
+                "affine_phase": -0.0071131805952991236,
+                "time_shift": 0.018997642520054633,
+                "raw_relative_l2": 0.006746143373315624,
+                "constant_relative_l2": 0.002408934569268684,
+                "affine_relative_l2": 0.0023416517239842525,
+                "raw_overlap": 0.9999780782600529,
+                "constant_overlap": 0.9999979068324572,
+                "affine_overlap": 0.9999980664463887,
+                "raw_mismatch": 2.1921739947083907e-05,
+                "constant_mismatch": 2.0931675428492724e-06,
+                "affine_mismatch": 1.933553611332961e-06,
+                "raw_phase_rms": 0.006330736289575922,
+                "constant_phase_rms": 0.0006618893793262745,
+                "affine_phase_rms": 0.0003529650876949676,
+                "phase_mask_retained_reference_norm_fraction": 0.9999960528207893
+              },
+              "33": {
+                "bins": 512,
+                "constant_phase": 0.0051366840238485,
+                "affine_phase": -0.007126729660119455,
+                "time_shift": 0.01703864935655745,
+                "raw_relative_l2": 0.005438409101929306,
+                "constant_relative_l2": 0.001798645317351174,
+                "affine_relative_l2": 0.0016832772502674246,
+                "raw_overlap": 0.9999865982068445,
+                "constant_overlap": 0.9999997909364587,
+                "affine_overlap": 0.9999999921255128,
+                "raw_mismatch": 1.34017931554542e-05,
+                "constant_mismatch": 2.0906354125660442e-07,
+                "affine_mismatch": 7.874487173431532e-09,
+                "raw_phase_rms": 0.005176563965890019,
+                "constant_phase_rms": 0.0006414674615359105,
+                "affine_phase_rms": 9.537705021207706e-05,
+                "phase_mask_retained_reference_norm_fraction": 0.9999994969500469
+              }
+            },
+            "phase_threshold_rad": 0.01,
+            "phase_diagnostic_pass": true
+          },
+          {
+            "modes": {
+              "22": {
+                "complex_l2": 2.0292598790234357e-06,
+                "amplitude_l2": 1.4823386904396558e-06
+              },
+              "33": {
+                "complex_l2": 1.5615566947803003e-07,
+                "amplitude_l2": 1.138462074586306e-07
+              }
+            },
+            "mean_mode_complex_l2": 1.092707774250733e-06,
+            "relative_mode_phase_rms_rad": 2.2820220589267744e-06,
+            "coherent_equal_weight_sum_l2": 1.949965844300973e-07,
+            "control": "dt_0.05",
+            "phase": {
+              "22": {
+                "bins": 512,
+                "constant_phase": 8.8064004075337e-09,
+                "affine_phase": 1.8641717981119422e-06,
+                "time_shift": -2.6285048317781613e-06,
+                "raw_relative_l2": 2.0292598790234353e-06,
+                "constant_relative_l2": 2.0292407703192817e-06,
+                "affine_relative_l2": 2.0277283558053108e-06,
+                "raw_overlap": 0.999999999997941,
+                "constant_overlap": 0.9999999999979412,
+                "affine_overlap": 0.9999999999979443,
+                "raw_mismatch": 2.0590196214698153e-12,
+                "constant_mismatch": 2.0587975768648903e-12,
+                "affine_mismatch": 2.05568895239594e-12,
+                "raw_phase_rms": 1.2214040810290902e-06,
+                "constant_phase_rms": 1.2213718147989461e-06,
+                "affine_phase_rms": 1.2189124025437058e-06,
+                "phase_mask_retained_reference_norm_fraction": 0.9999960528207893
+              },
+              "33": {
+                "bins": 512,
+                "constant_phase": -8.55026470994814e-10,
+                "affine_phase": 1.3083281234865278e-08,
+                "time_shift": -1.9365574705011654e-08,
+                "raw_relative_l2": 1.5615566947802998e-07,
+                "constant_relative_l2": 1.5615332862270231e-07,
+                "affine_relative_l2": 1.561516567114376e-07,
+                "raw_overlap": 0.9999999999999878,
+                "constant_overlap": 0.9999999999999878,
+                "affine_overlap": 0.9999999999999878,
+                "raw_mismatch": 1.2212453270876722e-14,
+                "constant_mismatch": 1.2212453270876722e-14,
+                "affine_mismatch": 1.2212453270876722e-14,
+                "raw_phase_rms": 1.0676402757174198e-07,
+                "constant_phase_rms": 1.0676060479781418e-07,
+                "affine_phase_rms": 1.06758170391964e-07,
+                "phase_mask_retained_reference_norm_fraction": 0.9999994969500469
+              }
+            },
+            "phase_threshold_rad": 0.002,
+            "phase_diagnostic_pass": true
+          },
+          {
+            "modes": {
+              "22": {
+                "complex_l2": 0.0001320897676948193,
+                "amplitude_l2": 9.468802574408617e-05
+              },
+              "33": {
+                "complex_l2": 1.670580871787345e-05,
+                "amplitude_l2": 1.1860392326360935e-05
+              }
+            },
+            "mean_mode_complex_l2": 7.439778820634638e-05,
+            "relative_mode_phase_rms_rad": 0.00019096034242504372,
+            "coherent_equal_weight_sum_l2": 1.912482934987724e-05,
+            "control": "tail_40",
+            "phase": {
+              "22": {
+                "bins": 512,
+                "constant_phase": 1.2963908076186573e-05,
+                "affine_phase": 0.00022417812928351882,
+                "time_shift": -0.0002992427802938187,
+                "raw_relative_l2": 0.00013208976769481928,
+                "constant_relative_l2": 0.00013145205156284202,
+                "affine_relative_l2": 0.00013115836546561513,
+                "raw_overlap": 0.9999999913441429,
+                "constant_overlap": 0.9999999914281745,
+                "affine_overlap": 0.9999999914667363,
+                "raw_mismatch": 8.655857142159107e-09,
+                "constant_mismatch": 8.571825471648253e-09,
+                "affine_mismatch": 8.533263651244738e-09,
+                "raw_phase_rms": 8.548833095805525e-05,
+                "constant_phase_rms": 8.449998149669341e-05,
+                "affine_phase_rms": 8.403844903436072e-05,
+                "phase_mask_retained_reference_norm_fraction": 0.9999960528207893
+              },
+              "33": {
+                "bins": 512,
+                "constant_phase": 1.5372262006233727e-06,
+                "affine_phase": 3.540563431597077e-05,
+                "time_shift": -4.7056537336290654e-05,
+                "raw_relative_l2": 1.6705808717873447e-05,
+                "constant_relative_l2": 1.6634932519380423e-05,
+                "affine_relative_l2": 1.6542500453954917e-05,
+                "raw_overlap": 0.9999999998604905,
+                "constant_overlap": 0.9999999998616721,
+                "affine_overlap": 0.9999999998632052,
+                "raw_mismatch": 1.3950951505137255e-10,
+                "constant_mismatch": 1.38327904686264e-10,
+                "affine_mismatch": 1.3679479771155911e-10,
+                "raw_phase_rms": 1.1756872223877702e-05,
+                "constant_phase_rms": 1.1655949492327474e-05,
+                "affine_phase_rms": 1.1523543980500952e-05,
+                "phase_mask_retained_reference_norm_fraction": 0.9999994969500469
+              }
+            },
+            "phase_threshold_rad": 0.002,
+            "phase_diagnostic_pass": true
+          }
+        ],
+        "phase_diagnostic_pass": true
+      },
+      "gauge": {
+        "peak_time": 8430.451167824705,
+        "orbital_rotation": 2.266863486077538
+      },
+      "frequency_band": [
+        0.10776772713707179,
+        0.2996245463420646
+      ]
+    },
+    {
+      "id": "SXS:BBH:2491/Lev5/N3",
+      "q": 7.00017202109518,
+      "input_sha256": "1d045bfd6c1c248a9553d3762b51c5f5ceb1f8b31f2eead8cc9ffc5ea8985fa5",
+      "extrapolation": false,
+      "basis": {
+        "modes": {
+          "22": {
+            "complex_l2": 0.08902909702679408,
+            "amplitude_l2": 0.08574572878325538
+          },
+          "33": {
+            "complex_l2": 0.016011591675597084,
+            "amplitude_l2": 0.007933237847808451
+          }
+        },
+        "mean_mode_complex_l2": 0.05252034435119558,
+        "relative_mode_phase_rms_rad": 0.05116880358601664,
+        "coherent_equal_weight_sum_l2": 0.019938980234427726
+      },
+      "baseline": {
+        "modes": {
+          "22": {
+            "complex_l2": 0.09064782280981883,
+            "amplitude_l2": 0.08503840097092433
+          },
+          "33": {
+            "complex_l2": 0.009939101152770736,
+            "amplitude_l2": 0.007494975622430082
+          }
+        },
+        "mean_mode_complex_l2": 0.05029346198129478,
+        "relative_mode_phase_rms_rad": 0.04838776192678975,
+        "coherent_equal_weight_sum_l2": 0.012607895941797962
+      },
+      "quality": {
+        "id": "SXS:BBH:2491/Lev5/N3",
+        "comparisons": [
+          {
+            "modes": {
+              "22": {
+                "complex_l2": 0.045001580735038904,
+                "amplitude_l2": 0.0408038040611556
+              },
+              "33": {
+                "complex_l2": 0.007926458792853086,
+                "amplitude_l2": 0.0016044808015205582
+              }
+            },
+            "mean_mode_complex_l2": 0.026464019763945995,
+            "relative_mode_phase_rms_rad": 0.035260434007659,
+            "coherent_equal_weight_sum_l2": 0.0058414150795027715,
+            "control": "SXS:BBH:2491/Lev4/N2",
+            "phase": {
+              "22": {
+                "bins": 512,
+                "constant_phase": -0.014585698417422042,
+                "affine_phase": -0.21568692393160876,
+                "time_shift": 0.2941740022719848,
+                "raw_relative_l2": 0.0450015807350389,
+                "constant_relative_l2": 0.04248659898084294,
+                "affine_relative_l2": 0.04202371462242107,
+                "raw_overlap": 0.9995992781196232,
+                "constant_overlap": 0.9997056162195596,
+                "affine_overlap": 0.9997245399354904,
+                "raw_mismatch": 0.00040072188037676426,
+                "constant_mismatch": 0.00029438378044044367,
+                "affine_mismatch": 0.000275460064509625,
+                "raw_phase_rms": 0.03390025650062477,
+                "constant_phase_rms": 0.030613053276638887,
+                "affine_phase_rms": 0.029503408362421095,
+                "phase_mask_retained_reference_norm_fraction": 0.9999984792773785
+              },
+              "33": {
+                "bins": 512,
+                "constant_phase": 0.007588233924521213,
+                "affine_phase": 0.020056300525453652,
+                "time_shift": -0.01783141782447856,
+                "raw_relative_l2": 0.007926458792853086,
+                "constant_relative_l2": 0.0022964661164206904,
+                "affine_relative_l2": 0.002197689964656507,
+                "raw_overlap": 0.9999686725452371,
+                "constant_overlap": 0.9999974629810917,
+                "affine_overlap": 0.9999976850391128,
+                "raw_mismatch": 3.1327454762863916e-05,
+                "constant_mismatch": 2.537018908288502e-06,
+                "affine_mismatch": 2.3149608872063965e-06,
+                "raw_phase_rms": 0.0077620291472764134,
+                "constant_phase_rms": 0.0016259645848286952,
+                "affine_phase_rms": 0.0014866627677107649,
+                "phase_mask_retained_reference_norm_fraction": 0.9999995721377964
+              }
+            },
+            "phase_threshold_rad": 0.01,
+            "phase_diagnostic_pass": false
+          },
+          {
+            "modes": {
+              "22": {
+                "complex_l2": 0.04936696981769666,
+                "amplitude_l2": 0.04115188657054434
+              },
+              "33": {
+                "complex_l2": 0.0033445703480987875,
+                "amplitude_l2": 0.0020769978849345828
+              }
+            },
+            "mean_mode_complex_l2": 0.026355770082897724,
+            "relative_mode_phase_rms_rad": 0.038563086074787034,
+            "coherent_equal_weight_sum_l2": 0.004304817203912534,
+            "control": "SXS:BBH:2491/Lev4/N3",
+            "phase": {
+              "22": {
+                "bins": 512,
+                "constant_phase": -0.02427023765893296,
+                "affine_phase": -0.19732193826433728,
+                "time_shift": 0.2531698115233225,
+                "raw_relative_l2": 0.04936696981769665,
+                "constant_relative_l2": 0.04275318556215309,
+                "affine_relative_l2": 0.042450900270536954,
+                "raw_overlap": 0.9994037332239664,
+                "constant_overlap": 0.9996981520884853,
+                "affine_overlap": 0.9997106156226657,
+                "raw_mismatch": 0.0005962667760336382,
+                "constant_mismatch": 0.0003018479115146633,
+                "affine_mismatch": 0.0002893843773342786,
+                "raw_phase_rms": 0.0387028643053174,
+                "constant_phase_rms": 0.03017833255548183,
+                "affine_phase_rms": 0.029348308246704258,
+                "phase_mask_retained_reference_norm_fraction": 0.9999984792773785
+              },
+              "33": {
+                "bins": 512,
+                "constant_phase": 0.0014491957377771021,
+                "affine_phase": 0.031065488167548058,
+                "time_shift": -0.04235849173752886,
+                "raw_relative_l2": 0.0033445703480987888,
+                "constant_relative_l2": 0.003013783160060776,
+                "affine_relative_l2": 0.0025699944399527725,
+                "raw_overlap": 0.999995503807155,
+                "constant_overlap": 0.9999965538874954,
+                "affine_overlap": 0.99999779106984,
+                "raw_mismatch": 4.496192845038216e-06,
+                "constant_mismatch": 3.4461125045792684e-06,
+                "affine_mismatch": 2.2089301600081157e-06,
+                "raw_phase_rms": 0.0026066657867322403,
+                "constant_phase_rms": 0.002165221550734298,
+                "affine_phase_rms": 0.001497138535249599,
+                "phase_mask_retained_reference_norm_fraction": 0.9999995721377964
+              }
+            },
+            "phase_threshold_rad": 0.01,
+            "phase_diagnostic_pass": false
+          },
+          {
+            "modes": {
+              "22": {
+                "complex_l2": 0.01021949704950496,
+                "amplitude_l2": 0.002295950715133124
+              },
+              "33": {
+                "complex_l2": 0.006627084986443286,
+                "amplitude_l2": 0.0022600015649092203
+              }
+            },
+            "mean_mode_complex_l2": 0.008423291017974123,
+            "relative_mode_phase_rms_rad": 0.00429104657015513,
+            "coherent_equal_weight_sum_l2": 0.0067530189621910945,
+            "control": "SXS:BBH:2491/Lev5/N2",
+            "phase": {
+              "22": {
+                "bins": 512,
+                "constant_phase": 0.009930753392450887,
+                "affine_phase": -0.010088079955848699,
+                "time_shift": 0.02928074786615861,
+                "raw_relative_l2": 0.010219497049504957,
+                "constant_relative_l2": 0.0024577896484657374,
+                "affine_relative_l2": 0.002319253164606355,
+                "raw_overlap": 0.9999501938998745,
+                "constant_overlap": 0.9999995034016145,
+                "affine_overlap": 0.9999998350442317,
+                "raw_mismatch": 4.980610012550457e-05,
+                "constant_mismatch": 4.965983855242939e-07,
+                "affine_mismatch": 1.6495576826702774e-07,
+                "raw_phase_rms": 0.009969279309444473,
+                "constant_phase_rms": 0.0008736376054661842,
+                "affine_phase_rms": 0.00031992472261484656,
+                "phase_mask_retained_reference_norm_fraction": 0.9999984792773785
+              },
+              "33": {
+                "bins": 512,
+                "constant_phase": 0.006161721529717187,
+                "affine_phase": -0.012105010153764762,
+                "time_shift": 0.026127878175502925,
+                "raw_relative_l2": 0.0066270849864432865,
+                "constant_relative_l2": 0.0024570987164514225,
+                "affine_relative_l2": 0.002260204188260317,
+                "raw_overlap": 0.9999805476588149,
+                "constant_overlap": 0.999999530995955,
+                "affine_overlap": 0.9999999964528183,
+                "raw_mismatch": 1.9452341185055566e-05,
+                "constant_mismatch": 4.6900404504501836e-07,
+                "affine_mismatch": 3.5471816595133987e-09,
+                "raw_phase_rms": 0.0062369318706762735,
+                "constant_phase_rms": 0.0009653024221963565,
+                "affine_phase_rms": 2.9611254662836976e-05,
+                "phase_mask_retained_reference_norm_fraction": 0.9999995721377964
+              }
+            },
+            "phase_threshold_rad": 0.01,
+            "phase_diagnostic_pass": true
+          },
+          {
+            "modes": {
+              "22": {
+                "complex_l2": 2.241852648589782e-06,
+                "amplitude_l2": 1.5722918621805869e-06
+              },
+              "33": {
+                "complex_l2": 1.1161565234584809e-07,
+                "amplitude_l2": 8.319480504856018e-08
+              }
+            },
+            "mean_mode_complex_l2": 1.1767341504678151e-06,
+            "relative_mode_phase_rms_rad": 2.8556435640839917e-06,
+            "coherent_equal_weight_sum_l2": 1.751067330511484e-07,
+            "control": "dt_0.05",
+            "phase": {
+              "22": {
+                "bins": 512,
+                "constant_phase": -1.2070344512693967e-08,
+                "affine_phase": -4.5525671936780126e-07,
+                "time_shift": 6.482388019492635e-07,
+                "raw_relative_l2": 2.241852648589782e-06,
+                "constant_relative_l2": 2.241820154427322e-06,
+                "affine_relative_l2": 2.2417491562509056e-06,
+                "raw_overlap": 0.999999999997491,
+                "constant_overlap": 0.9999999999974911,
+                "affine_overlap": 0.999999999997491,
+                "raw_mismatch": 2.5089930133503913e-12,
+                "constant_mismatch": 2.5088819910479288e-12,
+                "affine_mismatch": 2.5089930133503913e-12,
+                "raw_phase_rms": 1.5070719875011797e-06,
+                "constant_phase_rms": 1.5070237234693055e-06,
+                "affine_phase_rms": 1.5069162500841504e-06,
+                "phase_mask_retained_reference_norm_fraction": 0.9999984792773785
+              },
+              "33": {
+                "bins": 512,
+                "constant_phase": -2.2749620771486717e-10,
+                "affine_phase": -8.079052994264614e-09,
+                "time_shift": 1.1230171461098508e-08,
+                "raw_relative_l2": 1.116156523458481e-07,
+                "constant_relative_l2": 1.1161542050004614e-07,
+                "affine_relative_l2": 1.1161464286247875e-07,
+                "raw_overlap": 0.9999999999999939,
+                "constant_overlap": 0.9999999999999939,
+                "affine_overlap": 0.9999999999999939,
+                "raw_mismatch": 6.106226635438361e-15,
+                "constant_mismatch": 6.106226635438361e-15,
+                "affine_mismatch": 6.106226635438361e-15,
+                "raw_phase_rms": 7.28665438548651e-08,
+                "constant_phase_rms": 7.286618808221042e-08,
+                "affine_phase_rms": 7.286500795713083e-08,
+                "phase_mask_retained_reference_norm_fraction": 0.9999995721377964
+              }
+            },
+            "phase_threshold_rad": 0.002,
+            "phase_diagnostic_pass": true
+          },
+          {
+            "modes": {
+              "22": {
+                "complex_l2": 0.00014359599721914284,
+                "amplitude_l2": 0.00010603572291442296
+              },
+              "33": {
+                "complex_l2": 1.1737459574458841e-05,
+                "amplitude_l2": 8.315426049812672e-06
+              }
+            },
+            "mean_mode_complex_l2": 7.766672839680084e-05,
+            "relative_mode_phase_rms_rad": 0.00018355361991942293,
+            "coherent_equal_weight_sum_l2": 1.7998703538076642e-05,
+            "control": "tail_40",
+            "phase": {
+              "22": {
+                "bins": 512,
+                "constant_phase": 1.764741553185781e-05,
+                "affine_phase": 0.0002573272370700072,
+                "time_shift": -0.00035056360655053666,
+                "raw_relative_l2": 0.00014359599721914282,
+                "constant_relative_l2": 0.0001425074427590188,
+                "affine_relative_l2": 0.0001421724322287579,
+                "raw_overlap": 0.9999999900123911,
+                "constant_overlap": 0.9999999901681065,
+                "affine_overlap": 0.9999999902157906,
+                "raw_mismatch": 9.987608851069751e-09,
+                "constant_mismatch": 9.831893521550228e-09,
+                "affine_mismatch": 9.784209442642577e-09,
+                "raw_phase_rms": 9.41680698807178e-05,
+                "constant_phase_rms": 9.249924463182776e-05,
+                "affine_phase_rms": 9.19857475004681e-05,
+                "phase_mask_retained_reference_norm_fraction": 0.9999984792773785
+              },
+              "33": {
+                "bins": 512,
+                "constant_phase": 1.0514636245898176e-06,
+                "affine_phase": 2.4015394227194037e-05,
+                "time_shift": -3.284655858028762e-05,
+                "raw_relative_l2": 1.1737459574458844e-05,
+                "constant_relative_l2": 1.1690268662336271e-05,
+                "affine_relative_l2": 1.1627281092819955e-05,
+                "raw_overlap": 0.999999999931121,
+                "constant_overlap": 0.9999999999316741,
+                "affine_overlap": 0.9999999999324084,
+                "raw_mismatch": 6.887901360386195e-11,
+                "constant_mismatch": 6.83259004929937e-11,
+                "affine_mismatch": 6.759159898450662e-11,
+                "raw_phase_rms": 8.270624957085364e-06,
+                "constant_phase_rms": 8.203526725205931e-06,
+                "affine_phase_rms": 8.113358789124431e-06,
+                "phase_mask_retained_reference_norm_fraction": 0.9999995721377964
+              }
+            },
+            "phase_threshold_rad": 0.002,
+            "phase_diagnostic_pass": true
+          }
+        ],
+        "phase_diagnostic_pass": false
+      },
+      "gauge": {
+        "peak_time": 9975.119800054661,
+        "orbital_rotation": 0.13019012103195055
+      },
+      "frequency_band": [
+        0.1045598667734451,
+        0.2996182809897919
+      ]
+    },
+    {
+      "id": "SXS:BBH:0185/Lev3/N3",
+      "q": 9.989508574369625,
+      "input_sha256": "4fa48aa8b0e455e194e10c01b3d0808aa435d89adc24393c3584b97d9a7c2113",
+      "extrapolation": true,
+      "basis": {
+        "modes": {
+          "22": {
+            "complex_l2": 0.06469012401474165,
+            "amplitude_l2": 0.03862526867518052
+          },
+          "33": {
+            "complex_l2": 0.1104216643424803,
+            "amplitude_l2": 0.048401839208332166
+          }
+        },
+        "mean_mode_complex_l2": 0.08755589417861098,
+        "relative_mode_phase_rms_rad": 0.058506224826260826,
+        "coherent_equal_weight_sum_l2": 0.10448112199696433
+      },
+      "baseline": {
+        "modes": {
+          "22": {
+            "complex_l2": 0.12215893845683244,
+            "amplitude_l2": 0.019228627733046573
+          },
+          "33": {
+            "complex_l2": 0.04000127412423639,
+            "amplitude_l2": 0.011001671827505674
+          }
+        },
+        "mean_mode_complex_l2": 0.08108010629053441,
+        "relative_mode_phase_rms_rad": 0.09893447938751601,
+        "coherent_equal_weight_sum_l2": 0.045718254729051826
+      },
+      "quality": {
+        "id": "SXS:BBH:0185/Lev3/N3",
+        "comparisons": [
+          {
+            "modes": {
+              "22": {
+                "complex_l2": 0.0022734484962614334,
+                "amplitude_l2": 0.001499584045977347
+              },
+              "33": {
+                "complex_l2": 0.0019418606227565123,
+                "amplitude_l2": 0.0017388533100452096
+              }
+            },
+            "mean_mode_complex_l2": 0.0021076545595089726,
+            "relative_mode_phase_rms_rad": 0.0022615929665016177,
+            "coherent_equal_weight_sum_l2": 0.001904512071821843,
+            "control": "SXS:BBH:0185/Lev2/N2",
+            "phase": {
+              "22": {
+                "bins": 512,
+                "constant_phase": -0.001452957433410939,
+                "affine_phase": 0.0024962937645605365,
+                "time_shift": -0.005964512608638785,
+                "raw_relative_l2": 0.0022734484962614334,
+                "constant_relative_l2": 0.0017479522420445269,
+                "affine_relative_l2": 0.0017388583040904764,
+                "raw_overlap": 0.9999979355642628,
+                "constant_overlap": 0.9999989911056638,
+                "affine_overlap": 0.9999990069439828,
+                "raw_mismatch": 2.064435737247905e-06,
+                "constant_mismatch": 1.0088943361852287e-06,
+                "affine_mismatch": 9.930560171955705e-07,
+                "raw_phase_rms": 0.0017040605325049916,
+                "constant_phase_rms": 0.0008907796665463788,
+                "affine_phase_rms": 0.0008730087310227196,
+                "phase_mask_retained_reference_norm_fraction": 0.9999986059224428
+              },
+              "33": {
+                "bins": 512,
+                "constant_phase": -0.0008363505973323252,
+                "affine_phase": -0.0020191630543464133,
+                "time_shift": 0.0017526941806527785,
+                "raw_relative_l2": 0.001941860622756513,
+                "constant_relative_l2": 0.0017528641894736438,
+                "affine_relative_l2": 0.001751697752236098,
+                "raw_overlap": 0.999999566860424,
+                "constant_overlap": 0.9999999166015352,
+                "affine_overlap": 0.9999999186489528,
+                "raw_mismatch": 4.331395759837875e-07,
+                "constant_mismatch": 8.339846480076574e-08,
+                "affine_mismatch": 8.135104723194786e-08,
+                "raw_phase_rms": 0.0008599820948738143,
+                "constant_phase_rms": 0.00020047280059461118,
+                "affine_phase_rms": 0.00018978189416680422,
+                "phase_mask_retained_reference_norm_fraction": 0.9999995931532334
+              }
+            },
+            "phase_threshold_rad": 0.01,
+            "phase_diagnostic_pass": true
+          },
+          {
+            "modes": {
+              "22": {
+                "complex_l2": 0.00951028303729793,
+                "amplitude_l2": 0.0014051482248382005
+              },
+              "33": {
+                "complex_l2": 0.006162988769701322,
+                "amplitude_l2": 0.001015782210527729
+              }
+            },
+            "mean_mode_complex_l2": 0.007836635903499626,
+            "relative_mode_phase_rms_rad": 0.003460548700381086,
+            "coherent_equal_weight_sum_l2": 0.00630223260676515,
+            "control": "SXS:BBH:0185/Lev2/N3",
+            "phase": {
+              "22": {
+                "bins": 512,
+                "constant_phase": -0.009392716644339973,
+                "affine_phase": -0.008593609728332232,
+                "time_shift": -0.0012066552577988515,
+                "raw_relative_l2": 0.009510283037297935,
+                "constant_relative_l2": 0.001491328959426476,
+                "affine_relative_l2": 0.0014907960658342573,
+                "raw_overlap": 0.9999547768262103,
+                "constant_overlap": 0.9999988880158357,
+                "affine_overlap": 0.9999988888104526,
+                "raw_mismatch": 4.52231737897435e-05,
+                "constant_mismatch": 1.111984164303692e-06,
+                "affine_mismatch": 1.1111895473758793e-06,
+                "raw_phase_rms": 0.009401687952174265,
+                "constant_phase_rms": 0.0004152386452010647,
+                "affine_phase_rms": 0.00041369100995423475,
+                "phase_mask_retained_reference_norm_fraction": 0.9999986059224428
+              },
+              "33": {
+                "bins": 512,
+                "constant_phase": -0.006046100378566095,
+                "affine_phase": -0.0029309736684746215,
+                "time_shift": -0.004615359006214738,
+                "raw_relative_l2": 0.006162988769701325,
+                "constant_relative_l2": 0.0011957536942555044,
+                "affine_relative_l2": 0.001183285042473153,
+                "raw_overlap": 0.9999810099473875,
+                "constant_overlap": 0.9999992875435807,
+                "affine_overlap": 0.9999993023763928,
+                "raw_mismatch": 1.8990052612521957e-05,
+                "constant_mismatch": 7.124564193050631e-07,
+                "affine_mismatch": 6.976236072153696e-07,
+                "raw_phase_rms": 0.006076140131652005,
+                "constant_phase_rms": 0.0006061718217118508,
+                "affine_phase_rms": 0.000581819017090419,
+                "phase_mask_retained_reference_norm_fraction": 0.9999995931532334
+              }
+            },
+            "phase_threshold_rad": 0.01,
+            "phase_diagnostic_pass": true
+          },
+          {
+            "modes": {
+              "22": {
+                "complex_l2": 0.02847765918270039,
+                "amplitude_l2": 0.001744458494855986
+              },
+              "33": {
+                "complex_l2": 0.01746996747485473,
+                "amplitude_l2": 0.001620377149372099
+              }
+            },
+            "mean_mode_complex_l2": 0.02297381332877756,
+            "relative_mode_phase_rms_rad": 0.012432351290297473,
+            "coherent_equal_weight_sum_l2": 0.018124220393620088,
+            "control": "SXS:BBH:0185/Lev3/N2",
+            "phase": {
+              "22": {
+                "bins": 512,
+                "constant_phase": -0.028270051183696073,
+                "affine_phase": 0.03280121005044454,
+                "time_shift": -0.09223643560344481,
+                "raw_relative_l2": 0.028477659182700392,
+                "constant_relative_l2": 0.003333552899324503,
+                "affine_relative_l2": 0.0018938949438685455,
+                "raw_overlap": 0.9995952918565214,
+                "constant_overlap": 0.9999948610877533,
+                "affine_overlap": 0.9999986205406476,
+                "raw_mismatch": 0.00040470814347859374,
+                "constant_mismatch": 5.1389122467382364e-06,
+                "affine_mismatch": 1.379459352413015e-06,
+                "raw_phase_rms": 0.028408252274254458,
+                "constant_phase_rms": 0.002831254079599102,
+                "affine_phase_rms": 0.0007213256853450271,
+                "phase_mask_retained_reference_norm_fraction": 0.9999986059224428
+              },
+              "33": {
+                "bins": 512,
+                "constant_phase": -0.017171020323568986,
+                "affine_phase": 0.035168186610570674,
+                "time_shift": -0.07755235728882101,
+                "raw_relative_l2": 0.01746996747485473,
+                "constant_relative_l2": 0.003292580120501834,
+                "affine_relative_l2": 0.0016382356820137758,
+                "raw_overlap": 0.9998484626819426,
+                "constant_overlap": 0.9999958804219468,
+                "affine_overlap": 0.9999999656623418,
+                "raw_mismatch": 0.00015153731805739312,
+                "constant_mismatch": 4.119578053241035e-06,
+                "affine_mismatch": 3.4337658161298634e-08,
+                "raw_phase_rms": 0.01740883229620391,
+                "constant_phase_rms": 0.002867592108110218,
+                "affine_phase_rms": 0.00023372671313333398,
+                "phase_mask_retained_reference_norm_fraction": 0.9999995931532334
+              }
+            },
+            "phase_threshold_rad": 0.01,
+            "phase_diagnostic_pass": true
+          },
+          {
+            "modes": {
+              "22": {
+                "complex_l2": 3.1737063788886403e-06,
+                "amplitude_l2": 2.20525341680508e-06
+              },
+              "33": {
+                "complex_l2": 2.6194900716995783e-07,
+                "amplitude_l2": 1.8446386195290058e-07
+              }
+            },
+            "mean_mode_complex_l2": 1.7178276930292992e-06,
+            "relative_mode_phase_rms_rad": 3.317709832510064e-06,
+            "coherent_equal_weight_sum_l2": 3.3778841402224544e-07,
+            "control": "dt_0.05",
+            "phase": {
+              "22": {
+                "bins": 512,
+                "constant_phase": -9.387890219778925e-08,
+                "affine_phase": -3.714884677712486e-07,
+                "time_shift": 4.192954153901691e-07,
+                "raw_relative_l2": 3.17370637888864e-06,
+                "constant_relative_l2": 3.1723175960990647e-06,
+                "affine_relative_l2": 3.1722931339148757e-06,
+                "raw_overlap": 0.9999999999949659,
+                "constant_overlap": 0.9999999999949707,
+                "affine_overlap": 0.9999999999949709,
+                "raw_mismatch": 5.034084260557847e-12,
+                "constant_mismatch": 5.029310301551959e-12,
+                "affine_mismatch": 5.029088256947034e-12,
+                "raw_phase_rms": 2.2459046045283886e-06,
+                "constant_phase_rms": 2.243941596847808e-06,
+                "affine_phase_rms": 2.2439070818427986e-06,
+                "phase_mask_retained_reference_norm_fraction": 0.9999986059224428
+              },
+              "33": {
+                "bins": 512,
+                "constant_phase": -1.243099394244191e-08,
+                "affine_phase": -3.326159308481566e-07,
+                "time_shift": 4.7442627530063506e-07,
+                "raw_relative_l2": 2.6194900716995783e-07,
+                "constant_relative_l2": 2.616538796771107e-07,
+                "affine_relative_l2": 2.610691622601552e-07,
+                "raw_overlap": 0.9999999999999659,
+                "constant_overlap": 0.999999999999966,
+                "affine_overlap": 0.9999999999999658,
+                "raw_mismatch": 3.4083846855992306e-14,
+                "constant_mismatch": 3.397282455352979e-14,
+                "affine_mismatch": 3.419486915845482e-14,
+                "raw_phase_rms": 1.8586551197526228e-07,
+                "constant_phase_rms": 1.8544934689726385e-07,
+                "affine_phase_rms": 1.8462330807668915e-07,
+                "phase_mask_retained_reference_norm_fraction": 0.9999995931532334
+              }
+            },
+            "phase_threshold_rad": 0.002,
+            "phase_diagnostic_pass": true
+          },
+          {
+            "modes": {
+              "22": {
+                "complex_l2": 0.00014520616955107746,
+                "amplitude_l2": 0.00010344273717928927
+              },
+              "33": {
+                "complex_l2": 3.3774086493337924e-07,
+                "amplitude_l2": 2.385029842102409e-07
+              }
+            },
+            "mean_mode_complex_l2": 7.277195520800542e-05,
+            "relative_mode_phase_rms_rad": 0.00015851250210981136,
+            "coherent_equal_weight_sum_l2": 1.0138928853288938e-05,
+            "control": "tail_40",
+            "phase": {
+              "22": {
+                "bins": 512,
+                "constant_phase": 3.763196983997681e-06,
+                "affine_phase": 7.818896525111479e-05,
+                "time_shift": -0.0001124118764057364,
+                "raw_relative_l2": 0.00014520616955107746,
+                "constant_relative_l2": 0.00014515739711455593,
+                "affine_relative_l2": 0.0001451191046748008,
+                "raw_overlap": 0.9999999894766207,
+                "constant_overlap": 0.9999999894837016,
+                "affine_overlap": 0.9999999894892593,
+                "raw_mismatch": 1.0523379279092637e-08,
+                "constant_mismatch": 1.051629838766388e-08,
+                "affine_mismatch": 1.051074072222491e-08,
+                "raw_phase_rms": 9.957448882985838e-05,
+                "constant_phase_rms": 9.950335407762574e-05,
+                "affine_phase_rms": 9.94473931707352e-05,
+                "phase_mask_retained_reference_norm_fraction": 0.9999986059224428
+              },
+              "33": {
+                "bins": 512,
+                "constant_phase": 5.624836210875079e-09,
+                "affine_phase": 1.278380305614458e-07,
+                "time_shift": -1.8108915365503918e-07,
+                "raw_relative_l2": 3.377408649333792e-07,
+                "constant_relative_l2": 3.376940228409547e-07,
+                "affine_relative_l2": 3.3762849963067166e-07,
+                "raw_overlap": 0.9999999999999426,
+                "constant_overlap": 0.9999999999999428,
+                "affine_overlap": 0.9999999999999428,
+                "raw_mismatch": 5.739853037312059e-14,
+                "constant_mismatch": 5.717648576819556e-14,
+                "affine_mismatch": 5.717648576819556e-14,
+                "raw_phase_rms": 2.2440962422051825e-07,
+                "constant_phase_rms": 2.2433916618896694e-07,
+                "affine_phase_rms": 2.242398783844268e-07,
+                "phase_mask_retained_reference_norm_fraction": 0.9999995931532334
+              }
+            },
+            "phase_threshold_rad": 0.002,
+            "phase_diagnostic_pass": true
+          }
+        ],
+        "phase_diagnostic_pass": true
+      },
+      "gauge": {
+        "peak_time": 5294.328262781139,
+        "orbital_rotation": 1.8390536513170956
+      },
+      "frequency_band": [
+        0.10076716625466389,
+        0.2996108733715911
+      ]
+    }
+  ]
+}

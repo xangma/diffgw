@@ -1,0 +1,816 @@
+{
+  "scope": "supplemental_explicit_nnlo",
+  "native_module": "/tmp/torchwave-pass10-before/src/torchwave/__init__.py",
+  "oracle_options": {
+    "PhenomXPrecVersion": 102,
+    "PhenomXPFinalSpinMod": 0
+  },
+  "oracle_default_final_spin_mod": 4,
+  "cases": [
+    {
+      "expected_gate": {
+        "complex_relative_l2": 1e-06,
+        "mismatch": 1e-08
+      },
+      "grid": {
+        "df": 0.25,
+        "fhigh": 512.0,
+        "flow": 20.0
+      },
+      "id": "IMRPhenomXP_diagnostic_NNLO102_FinalSpin0",
+      "lal_name": "IMRPhenomXP",
+      "params": {
+        "chi1": 0.2,
+        "chi2": -0.1,
+        "distance": 500.0,
+        "f_ref": 20.0,
+        "inclination": 0.7,
+        "mass1": 35.0,
+        "mass2": 25.0,
+        "phic": 0.3,
+        "spin1x": 0.2,
+        "spin1y": 0.1,
+        "spin1z": 0.2,
+        "spin2x": -0.1,
+        "spin2y": 0.15,
+        "spin2z": -0.1,
+        "tc": 0.0,
+        "prec_version": 102
+      },
+      "torch_name": "IMRPhenomXP"
+    },
+    {
+      "expected_gate": {
+        "complex_relative_l2": 1e-06,
+        "mismatch": 1e-08
+      },
+      "grid": {
+        "df": 0.25,
+        "fhigh": 512.0,
+        "flow": 20.0
+      },
+      "id": "IMRPhenomXPHM_diagnostic_NNLO102_FinalSpin0",
+      "lal_name": "IMRPhenomXPHM",
+      "params": {
+        "chi1": 0.2,
+        "chi2": -0.1,
+        "distance": 500.0,
+        "f_ref": 20.0,
+        "inclination": 0.7,
+        "mass1": 35.0,
+        "mass2": 25.0,
+        "phic": 0.3,
+        "spin1x": 0.2,
+        "spin1y": 0.1,
+        "spin1z": 0.2,
+        "spin2x": -0.1,
+        "spin2y": 0.15,
+        "spin2z": -0.1,
+        "tc": 0.0,
+        "prec_version": 102
+      },
+      "torch_name": "IMRPhenomXPHM"
+    },
+    {
+      "expected_gate": {
+        "complex_relative_l2": 1e-06,
+        "mismatch": 1e-08
+      },
+      "grid": {
+        "df": 0.25,
+        "fhigh": 512.0,
+        "flow": 20.0
+      },
+      "id": "IMRPhenomXP_holdout_NNLO102_FinalSpin0",
+      "lal_name": "IMRPhenomXP",
+      "params": {
+        "chi1": -0.3,
+        "chi2": 0.2,
+        "distance": 500.0,
+        "f_ref": 35.0,
+        "inclination": 1.1,
+        "mass1": 42.0,
+        "mass2": 17.0,
+        "phic": 0.71,
+        "spin1x": 0.3,
+        "spin1y": -0.15,
+        "spin1z": -0.3,
+        "spin2x": 0.12,
+        "spin2y": 0.08,
+        "spin2z": 0.2,
+        "tc": 0.0,
+        "prec_version": 102
+      },
+      "torch_name": "IMRPhenomXP"
+    },
+    {
+      "expected_gate": {
+        "complex_relative_l2": 1e-06,
+        "mismatch": 1e-08
+      },
+      "grid": {
+        "df": 0.25,
+        "fhigh": 512.0,
+        "flow": 20.0
+      },
+      "id": "IMRPhenomXPHM_holdout_NNLO102_FinalSpin0",
+      "lal_name": "IMRPhenomXPHM",
+      "params": {
+        "chi1": -0.3,
+        "chi2": 0.2,
+        "distance": 500.0,
+        "f_ref": 35.0,
+        "inclination": 1.1,
+        "mass1": 42.0,
+        "mass2": 17.0,
+        "phic": 0.71,
+        "spin1x": 0.3,
+        "spin1y": -0.15,
+        "spin1z": -0.3,
+        "spin2x": 0.12,
+        "spin2y": 0.08,
+        "spin2z": 0.2,
+        "tc": 0.0,
+        "prec_version": 102
+      },
+      "torch_name": "IMRPhenomXPHM"
+    }
+  ],
+  "results": [
+    {
+      "status": "FAILED",
+      "case_id": "IMRPhenomXP_diagnostic_NNLO102_FinalSpin0",
+      "strict": true,
+      "torch_name": "IMRPhenomXP",
+      "lal_name": "IMRPhenomXP",
+      "params": {
+        "chi1": 0.2,
+        "chi2": -0.1,
+        "distance": 500.0,
+        "f_ref": 20.0,
+        "inclination": 0.7,
+        "mass1": 35.0,
+        "mass2": 25.0,
+        "phic": 0.3,
+        "spin1x": 0.2,
+        "spin1y": 0.1,
+        "spin1z": 0.2,
+        "spin2x": -0.1,
+        "spin2y": 0.15,
+        "spin2z": -0.1,
+        "tc": 0.0,
+        "prec_version": 102
+      },
+      "grid": {
+        "df": 0.25,
+        "fhigh": 512.0,
+        "flow": 20.0
+      },
+      "reference_kind": "lal_binary",
+      "oracle_api": "SimInspiralChooseFDWaveform",
+      "oracle_fhigh": 512.0,
+      "verification_scope": "full_polarizations",
+      "plus": {
+        "complex_relative_l2": 0.05736805016589716,
+        "relative_norm_error": 0.005946688120153833,
+        "magnitude_relative_l2": 0.033660908941163324,
+        "flat_mismatch": 0.0016182418604721027,
+        "psd_mismatch": 0.005643799791595017,
+        "optimized_match": 0.9988879034707164,
+        "finite": true,
+        "dc_zero": true,
+        "out_of_band_zero": true
+      },
+      "cross": {
+        "complex_relative_l2": 0.0697472323187298,
+        "relative_norm_error": 0.00712151895188278,
+        "magnitude_relative_l2": 0.04207497467763879,
+        "flat_mismatch": 0.0023899600462072845,
+        "psd_mismatch": 0.007592223398952047,
+        "optimized_match": 0.9982893221170479,
+        "finite": true,
+        "dc_zero": true,
+        "out_of_band_zero": true
+      },
+      "psd_mismatches_plus": {
+        "aLIGOZeroDetHighPower": 0.005643799791595017,
+        "CosmicExplorer": 0.0019592989458742105,
+        "EinsteinTelescope": 0.0019447089143316276
+      },
+      "psd_mismatches_cross": {
+        "aLIGOZeroDetHighPower": 0.007592223398952047,
+        "CosmicExplorer": 0.00305750001811822,
+        "EinsteinTelescope": 0.003025150286156464
+      },
+      "projections": {
+        "H1_sky0": {
+          "complex_relative_l2": 0.06615207682962805,
+          "relative_norm_error": 0.007230765239936892,
+          "magnitude_relative_l2": 0.04028729643563585,
+          "flat_mismatch": 0.0021463866335974524,
+          "psd_mismatch": 0.006866966207018321,
+          "optimized_match": 0.9984380422647655,
+          "finite": true,
+          "dc_zero": true,
+          "out_of_band_zero": true,
+          "psd_mismatches": {
+            "aLIGOZeroDetHighPower": 0.006866966207018321,
+            "CosmicExplorer": 0.002734112122175225,
+            "EinsteinTelescope": 0.0027360277011754253
+          }
+        },
+        "H1_sky1": {
+          "complex_relative_l2": 0.06968283833698061,
+          "relative_norm_error": 0.007351131297928412,
+          "magnitude_relative_l2": 0.04232870163113694,
+          "flat_mismatch": 0.002383309393394706,
+          "psd_mismatch": 0.007518722000000699,
+          "optimized_match": 0.998274607823149,
+          "finite": true,
+          "dc_zero": true,
+          "out_of_band_zero": true,
+          "psd_mismatches": {
+            "aLIGOZeroDetHighPower": 0.007518722000000699,
+            "CosmicExplorer": 0.0030596941823277657,
+            "EinsteinTelescope": 0.003041628134700436
+          }
+        },
+        "L1_sky0": {
+          "complex_relative_l2": 0.06673136673738497,
+          "relative_norm_error": 0.00727842662815295,
+          "magnitude_relative_l2": 0.04066137170886931,
+          "flat_mismatch": 0.002184152710977494,
+          "psd_mismatch": 0.006963724934178628,
+          "optimized_match": 0.9984094968133516,
+          "finite": true,
+          "dc_zero": true,
+          "out_of_band_zero": true,
+          "psd_mismatches": {
+            "aLIGOZeroDetHighPower": 0.006963724934178628,
+            "CosmicExplorer": 0.002787412927779953,
+            "EinsteinTelescope": 0.002787891474740345
+          }
+        },
+        "L1_sky1": {
+          "complex_relative_l2": 0.06978151846433296,
+          "relative_norm_error": 0.007331892242108323,
+          "magnitude_relative_l2": 0.042356633647839356,
+          "flat_mismatch": 0.0023903262233759826,
+          "psd_mismatch": 0.007543577302041582,
+          "optimized_match": 0.9982716993141264,
+          "finite": true,
+          "dc_zero": true,
+          "out_of_band_zero": true,
+          "psd_mismatches": {
+            "aLIGOZeroDetHighPower": 0.007543577302041582,
+            "CosmicExplorer": 0.003068225114015277,
+            "EinsteinTelescope": 0.0030482017207699164
+          }
+        },
+        "V1_sky0": {
+          "complex_relative_l2": 0.06826351272444457,
+          "relative_norm_error": 0.0067281481185404975,
+          "magnitude_relative_l2": 0.04079302253933849,
+          "flat_mismatch": 0.0022918993578356917,
+          "psd_mismatch": 0.00739808423931676,
+          "optimized_match": 0.998384205528968,
+          "finite": true,
+          "dc_zero": true,
+          "out_of_band_zero": true,
+          "psd_mismatches": {
+            "aLIGOZeroDetHighPower": 0.00739808423931676,
+            "CosmicExplorer": 0.0029063151224894,
+            "EinsteinTelescope": 0.0028625660851763213
+          }
+        },
+        "V1_sky1": {
+          "complex_relative_l2": 0.05913861054011126,
+          "relative_norm_error": 0.006347186941506877,
+          "magnitude_relative_l2": 0.03522186744232921,
+          "flat_mismatch": 0.0017176420421320948,
+          "psd_mismatch": 0.005845134454152023,
+          "optimized_match": 0.9987913238390305,
+          "finite": true,
+          "dc_zero": true,
+          "out_of_band_zero": true,
+          "psd_mismatches": {
+            "aLIGOZeroDetHighPower": 0.005845134454152023,
+            "CosmicExplorer": 0.0021124417687995445,
+            "EinsteinTelescope": 0.0021098394978262824
+          }
+        }
+      },
+      "gate": {
+        "complex_relative_l2": 1e-06,
+        "mismatch": 1e-08
+      }
+    },
+    {
+      "status": "FAILED",
+      "case_id": "IMRPhenomXPHM_diagnostic_NNLO102_FinalSpin0",
+      "strict": true,
+      "torch_name": "IMRPhenomXPHM",
+      "lal_name": "IMRPhenomXPHM",
+      "params": {
+        "chi1": 0.2,
+        "chi2": -0.1,
+        "distance": 500.0,
+        "f_ref": 20.0,
+        "inclination": 0.7,
+        "mass1": 35.0,
+        "mass2": 25.0,
+        "phic": 0.3,
+        "spin1x": 0.2,
+        "spin1y": 0.1,
+        "spin1z": 0.2,
+        "spin2x": -0.1,
+        "spin2y": 0.15,
+        "spin2z": -0.1,
+        "tc": 0.0,
+        "prec_version": 102
+      },
+      "grid": {
+        "df": 0.25,
+        "fhigh": 512.0,
+        "flow": 20.0
+      },
+      "reference_kind": "lal_binary",
+      "oracle_api": "SimInspiralChooseFDWaveform",
+      "oracle_fhigh": 512.0,
+      "verification_scope": "full_polarizations",
+      "plus": {
+        "complex_relative_l2": 0.07168573099708575,
+        "relative_norm_error": 0.006259454983153043,
+        "magnitude_relative_l2": 0.04792113563810819,
+        "flat_mismatch": 0.0025339703525995017,
+        "psd_mismatch": 0.011264017218217015,
+        "optimized_match": 0.9978388322458036,
+        "finite": true,
+        "dc_zero": true,
+        "out_of_band_zero": true
+      },
+      "cross": {
+        "complex_relative_l2": 0.08191290727372659,
+        "relative_norm_error": 0.007726092055106329,
+        "magnitude_relative_l2": 0.05534775938282354,
+        "flat_mismatch": 0.0032995235173620685,
+        "psd_mismatch": 0.013542196167986353,
+        "optimized_match": 0.9971257771983281,
+        "finite": true,
+        "dc_zero": true,
+        "out_of_band_zero": true
+      },
+      "psd_mismatches_plus": {
+        "aLIGOZeroDetHighPower": 0.011264017218217015,
+        "CosmicExplorer": 0.002404190239664983,
+        "EinsteinTelescope": 0.0023047196043746165
+      },
+      "psd_mismatches_cross": {
+        "aLIGOZeroDetHighPower": 0.013542196167986353,
+        "CosmicExplorer": 0.0033815348390399125,
+        "EinsteinTelescope": 0.003238417290437723
+      },
+      "projections": {
+        "H1_sky0": {
+          "complex_relative_l2": 0.07831136795906914,
+          "relative_norm_error": 0.007377822747751028,
+          "magnitude_relative_l2": 0.052226683403794424,
+          "flat_mismatch": 0.003016861174561458,
+          "psd_mismatch": 0.01247415960245124,
+          "optimized_match": 0.997376601387692,
+          "finite": true,
+          "dc_zero": true,
+          "out_of_band_zero": true,
+          "psd_mismatches": {
+            "aLIGOZeroDetHighPower": 0.01247415960245124,
+            "CosmicExplorer": 0.0030878566911898275,
+            "EinsteinTelescope": 0.002989907201248254
+          }
+        },
+        "H1_sky1": {
+          "complex_relative_l2": 0.08158244571254265,
+          "relative_norm_error": 0.007770460199827934,
+          "magnitude_relative_l2": 0.054853489713110395,
+          "flat_mismatch": 0.0032722309579380493,
+          "psd_mismatch": 0.013345766037740181,
+          "optimized_match": 0.9971448833712537,
+          "finite": true,
+          "dc_zero": true,
+          "out_of_band_zero": true,
+          "psd_mismatches": {
+            "aLIGOZeroDetHighPower": 0.013345766037740181,
+            "CosmicExplorer": 0.003380198714298399,
+            "EinsteinTelescope": 0.0032529891546768663
+          }
+        },
+        "L1_sky0": {
+          "complex_relative_l2": 0.0788115924886854,
+          "relative_norm_error": 0.007447224147281033,
+          "magnitude_relative_l2": 0.05260066644837819,
+          "flat_mismatch": 0.003055150590301703,
+          "psd_mismatch": 0.01259248420425485,
+          "optimized_match": 0.9973411541286548,
+          "finite": true,
+          "dc_zero": true,
+          "out_of_band_zero": true,
+          "psd_mismatches": {
+            "aLIGOZeroDetHighPower": 0.01259248420425485,
+            "CosmicExplorer": 0.0031353569587070362,
+            "EinsteinTelescope": 0.003034640779701725
+          }
+        },
+        "L1_sky1": {
+          "complex_relative_l2": 0.08170082454013786,
+          "relative_norm_error": 0.0077766592619673116,
+          "magnitude_relative_l2": 0.05497085477496118,
+          "flat_mismatch": 0.0032817530751830803,
+          "psd_mismatch": 0.013388300575331469,
+          "optimized_match": 0.9971368014711123,
+          "finite": true,
+          "dc_zero": true,
+          "out_of_band_zero": true,
+          "psd_mismatches": {
+            "aLIGOZeroDetHighPower": 0.013388300575331469,
+            "CosmicExplorer": 0.003388173114192816,
+            "EinsteinTelescope": 0.003258603434076468
+          }
+        },
+        "V1_sky0": {
+          "complex_relative_l2": 0.08094260145099309,
+          "relative_norm_error": 0.007482101519437866,
+          "magnitude_relative_l2": 0.05491098553631208,
+          "flat_mismatch": 0.0032237410851819748,
+          "psd_mismatch": 0.013436605654425282,
+          "optimized_match": 0.9972026496506372,
+          "finite": true,
+          "dc_zero": true,
+          "out_of_band_zero": true,
+          "psd_mismatches": {
+            "aLIGOZeroDetHighPower": 0.013436605654425282,
+            "CosmicExplorer": 0.0032507847557794456,
+            "EinsteinTelescope": 0.003097952663783099
+          }
+        },
+        "V1_sky1": {
+          "complex_relative_l2": 0.07279038433979682,
+          "relative_norm_error": 0.006507649843236434,
+          "magnitude_relative_l2": 0.04845046342975123,
+          "flat_mismatch": 0.0026110534513431594,
+          "psd_mismatch": 0.011375300733483362,
+          "optimized_match": 0.9977608830295774,
+          "finite": true,
+          "dc_zero": true,
+          "out_of_band_zero": true,
+          "psd_mismatches": {
+            "aLIGOZeroDetHighPower": 0.011375300733483362,
+            "CosmicExplorer": 0.0025373955068992426,
+            "EinsteinTelescope": 0.0024481535950395816
+          }
+        }
+      },
+      "gate": {
+        "complex_relative_l2": 1e-06,
+        "mismatch": 1e-08
+      }
+    },
+    {
+      "status": "FAILED",
+      "case_id": "IMRPhenomXP_holdout_NNLO102_FinalSpin0",
+      "strict": true,
+      "torch_name": "IMRPhenomXP",
+      "lal_name": "IMRPhenomXP",
+      "params": {
+        "chi1": -0.3,
+        "chi2": 0.2,
+        "distance": 500.0,
+        "f_ref": 35.0,
+        "inclination": 1.1,
+        "mass1": 42.0,
+        "mass2": 17.0,
+        "phic": 0.71,
+        "spin1x": 0.3,
+        "spin1y": -0.15,
+        "spin1z": -0.3,
+        "spin2x": 0.12,
+        "spin2y": 0.08,
+        "spin2z": 0.2,
+        "tc": 0.0,
+        "prec_version": 102
+      },
+      "grid": {
+        "df": 0.25,
+        "fhigh": 512.0,
+        "flow": 20.0
+      },
+      "reference_kind": "lal_binary",
+      "oracle_api": "SimInspiralChooseFDWaveform",
+      "oracle_fhigh": 512.0,
+      "verification_scope": "full_polarizations",
+      "plus": {
+        "complex_relative_l2": 0.32629516202410314,
+        "relative_norm_error": 0.046872462679377315,
+        "magnitude_relative_l2": 0.22325001701035754,
+        "flat_mismatch": 0.05469966028671658,
+        "psd_mismatch": 0.09705504829305434,
+        "optimized_match": 0.9489691015273011,
+        "finite": true,
+        "dc_zero": true,
+        "out_of_band_zero": true
+      },
+      "cross": {
+        "complex_relative_l2": 0.3097432927773694,
+        "relative_norm_error": 0.03018256739927837,
+        "magnitude_relative_l2": 0.22845062150345835,
+        "flat_mismatch": 0.04899371616311188,
+        "psd_mismatch": 0.10769913912918772,
+        "optimized_match": 0.9669822717144767,
+        "finite": true,
+        "dc_zero": true,
+        "out_of_band_zero": true
+      },
+      "psd_mismatches_plus": {
+        "aLIGOZeroDetHighPower": 0.09705504829305434,
+        "CosmicExplorer": 0.0503810438768445,
+        "EinsteinTelescope": 0.0623012679605921
+      },
+      "psd_mismatches_cross": {
+        "aLIGOZeroDetHighPower": 0.10769913912918772,
+        "CosmicExplorer": 0.039058725662667326,
+        "EinsteinTelescope": 0.04566984096054405
+      },
+      "projections": {
+        "H1_sky0": {
+          "complex_relative_l2": 0.41047792842298075,
+          "relative_norm_error": 0.06026483689591289,
+          "magnitude_relative_l2": 0.30348287023624865,
+          "flat_mismatch": 0.08771635117482002,
+          "psd_mismatch": 0.1574565945223343,
+          "optimized_match": 0.9300563913774219,
+          "finite": true,
+          "dc_zero": true,
+          "out_of_band_zero": true,
+          "psd_mismatches": {
+            "aLIGOZeroDetHighPower": 0.1574565945223343,
+            "CosmicExplorer": 0.08056030076780685,
+            "EinsteinTelescope": 0.09641299789998814
+          }
+        },
+        "H1_sky1": {
+          "complex_relative_l2": 0.3594862199338045,
+          "relative_norm_error": 0.04182133728878541,
+          "magnitude_relative_l2": 0.26681586790477485,
+          "flat_mismatch": 0.06652272850084073,
+          "psd_mismatch": 0.1328400346005123,
+          "optimized_match": 0.9532650746776278,
+          "finite": true,
+          "dc_zero": true,
+          "out_of_band_zero": true,
+          "psd_mismatches": {
+            "aLIGOZeroDetHighPower": 0.1328400346005123,
+            "CosmicExplorer": 0.05656497705853358,
+            "EinsteinTelescope": 0.0663407855543261
+          }
+        },
+        "L1_sky0": {
+          "complex_relative_l2": 0.4080915533421422,
+          "relative_norm_error": 0.058828660012096474,
+          "magnitude_relative_l2": 0.3024243507492276,
+          "flat_mismatch": 0.08663560912961943,
+          "psd_mismatch": 0.15685276571994444,
+          "optimized_match": 0.931970373051861,
+          "finite": true,
+          "dc_zero": true,
+          "out_of_band_zero": true,
+          "psd_mismatches": {
+            "aLIGOZeroDetHighPower": 0.15685276571994444,
+            "CosmicExplorer": 0.07911867791528637,
+            "EinsteinTelescope": 0.09439745315765613
+          }
+        },
+        "L1_sky1": {
+          "complex_relative_l2": 0.35329365097205595,
+          "relative_norm_error": 0.04015490697759522,
+          "magnitude_relative_l2": 0.26201154317574,
+          "flat_mismatch": 0.06417909939760924,
+          "psd_mismatch": 0.12963363360584346,
+          "optimized_match": 0.9552542736292144,
+          "finite": true,
+          "dc_zero": true,
+          "out_of_band_zero": true,
+          "psd_mismatches": {
+            "aLIGOZeroDetHighPower": 0.12963363360584346,
+            "CosmicExplorer": 0.054129349928544235,
+            "EinsteinTelescope": 0.06343588137687206
+          }
+        },
+        "V1_sky0": {
+          "complex_relative_l2": 0.258371177851241,
+          "relative_norm_error": 0.021826630832505692,
+          "magnitude_relative_l2": 0.18942010650278276,
+          "flat_mismatch": 0.033879098439956734,
+          "psd_mismatch": 0.08348968703617798,
+          "optimized_match": 0.9769607993322096,
+          "finite": true,
+          "dc_zero": true,
+          "out_of_band_zero": true,
+          "psd_mismatches": {
+            "aLIGOZeroDetHighPower": 0.08348968703617798,
+            "CosmicExplorer": 0.025392090938061718,
+            "EinsteinTelescope": 0.029750375361391468
+          }
+        },
+        "V1_sky1": {
+          "complex_relative_l2": 0.3723753518477612,
+          "relative_norm_error": 0.05714986399501455,
+          "magnitude_relative_l2": 0.2613936508791252,
+          "flat_mismatch": 0.0718021298076047,
+          "psd_mismatch": 0.12363649517160114,
+          "optimized_match": 0.9346465872745823,
+          "finite": true,
+          "dc_zero": true,
+          "out_of_band_zero": true,
+          "psd_mismatches": {
+            "aLIGOZeroDetHighPower": 0.12363649517160114,
+            "CosmicExplorer": 0.06696457289746693,
+            "EinsteinTelescope": 0.08253127728146958
+          }
+        }
+      },
+      "gate": {
+        "complex_relative_l2": 1e-06,
+        "mismatch": 1e-08
+      }
+    },
+    {
+      "status": "FAILED",
+      "case_id": "IMRPhenomXPHM_holdout_NNLO102_FinalSpin0",
+      "strict": true,
+      "torch_name": "IMRPhenomXPHM",
+      "lal_name": "IMRPhenomXPHM",
+      "params": {
+        "chi1": -0.3,
+        "chi2": 0.2,
+        "distance": 500.0,
+        "f_ref": 35.0,
+        "inclination": 1.1,
+        "mass1": 42.0,
+        "mass2": 17.0,
+        "phic": 0.71,
+        "spin1x": 0.3,
+        "spin1y": -0.15,
+        "spin1z": -0.3,
+        "spin2x": 0.12,
+        "spin2y": 0.08,
+        "spin2z": 0.2,
+        "tc": 0.0,
+        "prec_version": 102
+      },
+      "grid": {
+        "df": 0.25,
+        "fhigh": 512.0,
+        "flow": 20.0
+      },
+      "reference_kind": "lal_binary",
+      "oracle_api": "SimInspiralChooseFDWaveform",
+      "oracle_fhigh": 512.0,
+      "verification_scope": "full_polarizations",
+      "plus": {
+        "complex_relative_l2": 0.34378713742692474,
+        "relative_norm_error": 0.044600857414818236,
+        "magnitude_relative_l2": 0.2354103958845712,
+        "flat_mismatch": 0.060812467898830214,
+        "psd_mismatch": 0.14509414650917318,
+        "optimized_match": 0.9431521320548141,
+        "finite": true,
+        "dc_zero": true,
+        "out_of_band_zero": true
+      },
+      "cross": {
+        "complex_relative_l2": 0.32248146536650824,
+        "relative_norm_error": 0.02825285272928584,
+        "magnitude_relative_l2": 0.24100166464493286,
+        "flat_mismatch": 0.053098211868914835,
+        "psd_mismatch": 0.12727411712877235,
+        "optimized_match": 0.9603663533644831,
+        "finite": true,
+        "dc_zero": true,
+        "out_of_band_zero": true
+      },
+      "psd_mismatches_plus": {
+        "aLIGOZeroDetHighPower": 0.14509414650917318,
+        "CosmicExplorer": 0.04971605969649939,
+        "EinsteinTelescope": 0.05979625374087938
+      },
+      "psd_mismatches_cross": {
+        "aLIGOZeroDetHighPower": 0.12727411712877235,
+        "CosmicExplorer": 0.038191284732811304,
+        "EinsteinTelescope": 0.043523190758756325
+      },
+      "projections": {
+        "H1_sky0": {
+          "complex_relative_l2": 0.4169609185361285,
+          "relative_norm_error": 0.05944874342259815,
+          "magnitude_relative_l2": 0.31136353921133153,
+          "flat_mismatch": 0.09054384505941582,
+          "psd_mismatch": 0.1807412062548528,
+          "optimized_match": 0.9253580058823488,
+          "finite": true,
+          "dc_zero": true,
+          "out_of_band_zero": true,
+          "psd_mismatches": {
+            "aLIGOZeroDetHighPower": 0.1807412062548528,
+            "CosmicExplorer": 0.07667513507893209,
+            "EinsteinTelescope": 0.0903395345372171
+          }
+        },
+        "H1_sky1": {
+          "complex_relative_l2": 0.36802908935217565,
+          "relative_norm_error": 0.04051326370055874,
+          "magnitude_relative_l2": 0.2768672310507196,
+          "flat_mismatch": 0.0697269076328132,
+          "psd_mismatch": 0.14981306746205691,
+          "optimized_match": 0.9471627615833778,
+          "finite": true,
+          "dc_zero": true,
+          "out_of_band_zero": true,
+          "psd_mismatches": {
+            "aLIGOZeroDetHighPower": 0.14981306746205691,
+            "CosmicExplorer": 0.05431037928112681,
+            "EinsteinTelescope": 0.06249663365947955
+          }
+        },
+        "L1_sky0": {
+          "complex_relative_l2": 0.4144611573496879,
+          "relative_norm_error": 0.05800919965071409,
+          "magnitude_relative_l2": 0.3104344840505721,
+          "flat_mismatch": 0.08939205332211297,
+          "psd_mismatch": 0.17868129699329094,
+          "optimized_match": 0.9271308229569574,
+          "finite": true,
+          "dc_zero": true,
+          "out_of_band_zero": true,
+          "psd_mismatches": {
+            "aLIGOZeroDetHighPower": 0.17868129699329094,
+            "CosmicExplorer": 0.07528939221111197,
+            "EinsteinTelescope": 0.08843650098466116
+          }
+        },
+        "L1_sky1": {
+          "complex_relative_l2": 0.3622792299160342,
+          "relative_norm_error": 0.038772060234052455,
+          "magnitude_relative_l2": 0.27234669188109345,
+          "flat_mismatch": 0.06748813804005371,
+          "psd_mismatch": 0.14672931571450798,
+          "optimized_match": 0.949062202191597,
+          "finite": true,
+          "dc_zero": true,
+          "out_of_band_zero": true,
+          "psd_mismatches": {
+            "aLIGOZeroDetHighPower": 0.14672931571450798,
+            "CosmicExplorer": 0.05206419274684437,
+            "EinsteinTelescope": 0.05982735405403694
+          }
+        },
+        "V1_sky0": {
+          "complex_relative_l2": 0.2772158683813421,
+          "relative_norm_error": 0.019233831939048457,
+          "magnitude_relative_l2": 0.2052110882705118,
+          "flat_mismatch": 0.038989261600737124,
+          "psd_mismatch": 0.10870813480881047,
+          "optimized_match": 0.970128232865084,
+          "finite": true,
+          "dc_zero": true,
+          "out_of_band_zero": true,
+          "psd_mismatches": {
+            "aLIGOZeroDetHighPower": 0.10870813480881047,
+            "CosmicExplorer": 0.025662603550241747,
+            "EinsteinTelescope": 0.02895402295253635
+          }
+        },
+        "V1_sky1": {
+          "complex_relative_l2": 0.3850783841552773,
+          "relative_norm_error": 0.05552814949464368,
+          "magnitude_relative_l2": 0.2711926324782859,
+          "flat_mismatch": 0.07686940933160036,
+          "psd_mismatch": 0.1669823371218251,
+          "optimized_match": 0.9297122795891329,
+          "finite": true,
+          "dc_zero": true,
+          "out_of_band_zero": true,
+          "psd_mismatches": {
+            "aLIGOZeroDetHighPower": 0.1669823371218251,
+            "CosmicExplorer": 0.06491980625954152,
+            "EinsteinTelescope": 0.07831362752352855
+          }
+        }
+      },
+      "gate": {
+        "complex_relative_l2": 1e-06,
+        "mismatch": 1e-08
+      }
+    }
+  ],
+  "num_cases": 4,
+  "num_passed": 0,
+  "note": "Separate diagnostic inventory; no frozen catalog/holdout acceptance claim."
+}

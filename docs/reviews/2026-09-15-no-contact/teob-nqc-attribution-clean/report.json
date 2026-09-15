@@ -1,0 +1,212 @@
+{
+  "classification": {
+    "limits": [
+      "The public binary route has no independent NQC-off full toggle in this experiment.",
+      "The 8-sample auxiliary window is a consequence of the fixed cached TD grid.",
+      "No fitted residual, copied coefficient, alignment, source, or runtime implementation was used."
+    ],
+    "remaining_residual": "No documentary fix is justified. The processed residual grows across ODE inspiral and is largest in the sampled auxiliary-to-attachment window. Targets, event timing, trajectory, interpolation and projection conventions remain unresolved; this comparison does not isolate them.",
+    "result": "Applying NQC improves agreement with the public full route: the uncorrected native PA prefix is ~1e-3 away, while the corrected prefix is ~4e-6 away. The reviewed separate PA-only comparison remains 3.43e-7. This establishes the importance of the correction, not the cause of its remaining error."
+  },
+  "controls": {
+    "full_route_arrays": [
+      "exact_start_raw_h_plus",
+      "exact_start_raw_h_cross"
+    ],
+    "public_pa_only_cache": "docs/reviews/2026-09-13-parity-review/verification/teob-pa-exact-start-clean/arrays.npz",
+    "public_pa_only_pre_nqc_vs_public_pa_only": {
+      "alignment": "none",
+      "amplitude_relative_l2": 1.0768019727675111e-08,
+      "first_sample_relative_envelope": 1.931632200688099e-09,
+      "phase_final_radians": 1.0038592962484407e-06,
+      "phase_initial_radians": -1.924910808008285e-09,
+      "phase_max_abs_radians": 1.0038592962484407e-06,
+      "phase_rms_radians": 3.1587914133734305e-07,
+      "raw_relative_l2": 3.425709157938578e-07,
+      "samples": 2637
+    }
+  },
+  "diagnostic": {
+    "script": "scripts/teob_no_contact_nqc_attribution.py",
+    "script_sha256": "789d7edea8b9bb4a913d71070f0ef705a2e0bf1e97b6da2a85caf785cc8df05d"
+  },
+  "experiment": "same-grid NQC-on versus NQC-off counterfactual",
+  "grid": {
+    "alignment": "none",
+    "attachment_time_M": 7948.213151938116,
+    "dt_M": 1.9826703782039414,
+    "no_regridding": true,
+    "ode_start_time_M": 7931.213151938116,
+    "pa_end_time_M": 5226.692548836558,
+    "samples_full": 4087,
+    "samples_through_attachment": 4009
+  },
+  "inputs": {
+    "docs/reviews/2026-09-13-parity-review/verification/teob-conditioner-public-clean/arrays.npz": "4712791026b99ad8fb4e713cb99270d2f444c274d320267ef25a10be7e21ab6e",
+    "docs/reviews/2026-09-13-parity-review/verification/teob-conditioner-public-clean/report.json": "b80a516eab445baa9e5f0be9e4a0d0fbd413ea7771f8293c5cebd4ae114589c9",
+    "docs/reviews/2026-09-13-parity-review/verification/teob-native-replay-public-clean/replay-native-output.npz": "bd7bc65a0da98334585069462b47b54dba0800bd6bbb092369a69267ecb9e611",
+    "docs/reviews/2026-09-13-parity-review/verification/teob-native-replay-public-clean/replay-report.json": "d21b5d41035d7753409ecdd5c4e39775c8fc714c3cdc46c8dbd6cb10e434efce",
+    "docs/reviews/2026-09-13-parity-review/verification/teob-pa-exact-start-clean/arrays.npz": "f54e86714b073e48e91314eabf00f93eaa55f64bd66d1f29917ef8a3ffb1e686"
+  },
+  "nqc_switch": {
+    "documentary_basis": "saved nqc_original amplitude/phase are the pre-correction mode; saved h_plus_td/h_cross_td are the processed native mode; public full and PA-only arrays are exact-start black-box outputs",
+    "first_effect_ratio_thresholds": {
+      "0.0001": {
+        "index": 0,
+        "ratio": 0.0007156616506031895,
+        "td_time_dimensionless": 0.0
+      },
+      "0.001": {
+        "index": 1472,
+        "ratio": 0.001000073217443573,
+        "td_time_dimensionless": 2918.4907967162017
+      },
+      "1e-05": {
+        "index": 0,
+        "ratio": 0.0007156616506031895,
+        "td_time_dimensionless": 0.0
+      },
+      "1e-06": {
+        "index": 0,
+        "ratio": 0.0007156616506031895,
+        "td_time_dimensionless": 0.0
+      }
+    },
+    "first_sample_original_vs_processed": 0.0007156616506031895,
+    "scale_documentary_mass_distance": {
+      "distance_mpc": 100.0,
+      "factor": 1.509279792662595e-20,
+      "total_mass_msun": 50.0
+    }
+  },
+  "run": {
+    "command": "scripts/teob_no_contact_nqc_attribution.py",
+    "cwd": "/Users/xangma/repos/torchwave",
+    "elapsed_seconds": 0.01826666697161272,
+    "host": "RONI2",
+    "platform": "macOS-26.6-arm64-arm-64bit-Mach-O"
+  },
+  "status": "complete",
+  "windows": {
+    "nqc_auxiliary_to_attachment": {
+      "original_vs_processed": {
+        "alignment": "none",
+        "amplitude_relative_l2": 0.14073365344044927,
+        "first_sample_relative_envelope": 0.16774659923652763,
+        "phase_final_radians": 0.36274339551010826,
+        "phase_initial_radians": 0.14411585240679864,
+        "phase_max_abs_radians": 0.36274339551010826,
+        "phase_rms_radians": 0.24149141279763187,
+        "raw_relative_l2": 0.3004861359889253,
+        "samples": 8
+      },
+      "original_vs_public_full": {
+        "alignment": "none",
+        "amplitude_relative_l2": 0.14069796472777388,
+        "first_sample_relative_envelope": 0.16706722716782296,
+        "phase_final_radians": 0.36097729226656844,
+        "phase_initial_radians": 0.14338782228338703,
+        "phase_max_abs_radians": 0.36097729226656844,
+        "phase_rms_radians": 0.24028485197929145,
+        "raw_relative_l2": 0.29930506214846214,
+        "samples": 8
+      },
+      "processed_vs_public_full": {
+        "alignment": "none",
+        "amplitude_relative_l2": 3.1597090663441695e-05,
+        "first_sample_relative_envelope": 0.0007281969455868012,
+        "phase_final_radians": -0.0017661032435398265,
+        "phase_initial_radians": -0.0007280301234116258,
+        "phase_max_abs_radians": 0.0017661032435398265,
+        "phase_rms_radians": 0.0012067392696474672,
+        "raw_relative_l2": 0.0012358557858241804,
+        "samples": 8
+      },
+      "samples": 8,
+      "time_M": [
+        7932.66418319397,
+        7946.542875841397
+      ]
+    },
+    "ode_inspiral": {
+      "original_vs_processed": {
+        "alignment": "none",
+        "amplitude_relative_l2": 0.010486465657371317,
+        "first_sample_relative_envelope": 0.0015793736937599545,
+        "phase_final_radians": 0.13111594476168878,
+        "phase_initial_radians": 0.0015777700400008102,
+        "phase_max_abs_radians": 0.13111594476168878,
+        "phase_rms_radians": 0.011749933471772334,
+        "raw_relative_l2": 0.026052971100537874,
+        "samples": 1364
+      },
+      "original_vs_public_full": {
+        "alignment": "none",
+        "amplitude_relative_l2": 0.010484249166531588,
+        "first_sample_relative_envelope": 0.0015738696585963182,
+        "phase_final_radians": 0.13045596229363837,
+        "phase_initial_radians": 0.001572302774519685,
+        "phase_max_abs_radians": 0.13045596229363837,
+        "phase_rms_radians": 0.01169532408528087,
+        "raw_relative_l2": 0.025947261584119863,
+        "samples": 1364
+      },
+      "processed_vs_public_full": {
+        "alignment": "none",
+        "amplitude_relative_l2": 2.2090806990693243e-06,
+        "first_sample_relative_envelope": 5.546488695602419e-06,
+        "phase_final_radians": -0.0006599824680503727,
+        "phase_initial_radians": -5.467265481128972e-06,
+        "phase_max_abs_radians": 0.0006599824680503727,
+        "phase_rms_radians": 5.4878081959768804e-05,
+        "raw_relative_l2": 0.00011269483598506687,
+        "samples": 1364
+      },
+      "samples": 1364,
+      "time_M": [
+        5228.301787323793,
+        7930.681512815766
+      ]
+    },
+    "pa": {
+      "original_vs_processed": {
+        "alignment": "none",
+        "amplitude_relative_l2": 3.8248328156593625e-05,
+        "first_sample_relative_envelope": 0.0007156616506031896,
+        "phase_final_radians": 0.0015769078519838268,
+        "phase_initial_radians": 0.0007154373590148006,
+        "phase_max_abs_radians": 0.0015769078519838268,
+        "phase_rms_radians": 0.0010407725039898825,
+        "raw_relative_l2": 0.00107526682863036,
+        "samples": 2637
+      },
+      "original_vs_public_full": {
+        "alignment": "none",
+        "amplitude_relative_l2": 3.7606273854761444e-05,
+        "first_sample_relative_envelope": 0.0007129160596341888,
+        "phase_final_radians": 0.001571442193324058,
+        "phase_initial_radians": 0.0007126968035577202,
+        "phase_max_abs_radians": 0.001571442193324058,
+        "phase_rms_radians": 0.0010369112605552154,
+        "raw_relative_l2": 0.0010712654757828184,
+        "samples": 2637
+      },
+      "processed_vs_public_full": {
+        "alignment": "none",
+        "amplitude_relative_l2": 6.90588760626939e-07,
+        "first_sample_relative_envelope": 2.75055120992294e-06,
+        "phase_final_radians": -5.4656586597418044e-06,
+        "phase_initial_radians": -2.7405554570811336e-06,
+        "phase_max_abs_radians": 5.529576071649767e-06,
+        "phase_rms_radians": 3.861702618503766e-06,
+        "raw_relative_l2": 4.040806393660417e-06,
+        "samples": 2637
+      },
+      "samples": 2637,
+      "time_M": [
+        0.0,
+        5226.3191169455895
+      ]
+    }
+  }
+}

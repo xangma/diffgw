@@ -1,0 +1,152 @@
+{
+  "api_parameters": {
+    "PN_tidal_order": 0,
+    "delta_f_hz": 0.5,
+    "delta_t_seconds": 0.0009765625,
+    "distance_mpc": 100.0,
+    "f_max_hz": 500.0,
+    "inclination_rad": 0.0,
+    "m1_msun": 1.4,
+    "m2_msun": 1.4,
+    "mode": [
+      2,
+      2
+    ],
+    "phi_ref_rad": 0.0,
+    "raw_generation_f_min_hz": 28.430883710960526,
+    "requested_f_low_hz": 30.0
+  },
+  "array_shapes": {
+    "exact_start_raw_h_cross": [
+      64291
+    ],
+    "exact_start_raw_h_plus": [
+      64291
+    ]
+  },
+  "capture_generator": {
+    "comparison": "generated raw plus/cross arrays are np.array_equal to public-td.npz",
+    "path": "docs/reviews/2026-09-15-teob-fd-attribution/catalog/generate_public_td.py",
+    "reproduces_raw_arrays_bitwise": true,
+    "sha256": "211e07b5b0ec184e05e24609aa4eb4c12583a16ee613119596cbaabd994551d4"
+  },
+  "clean_plan": {
+    "chirp_time": 56.08041676656506,
+    "eta": 0.25,
+    "f_low": 30.0,
+    "f_safe": 30.0,
+    "first_taper_duration": 5.708041676656512,
+    "mass1": 1.4,
+    "mass2": 1.4,
+    "plunge_ringdown_time": 0.00419123924006272,
+    "plunge_time": 0.0023396515898766444,
+    "qnm_damping_time": 0.00016832615001691596,
+    "qnm_dimensionless_frequency": 0.5290948351740714,
+    "qnm_quality": 3.228847697816648,
+    "ringdown_time": 0.0018515876501860756,
+    "spin_bound": 0.686,
+    "start_frequency": 28.430883710960526,
+    "support_time": 61.7926496824617,
+    "total_mass_seconds": 1.3791374653395548e-05,
+    "v_safe": 0.10913387133740819
+  },
+  "command": "PYTHONPATH=src /Users/xangma/miniconda3/envs/pycbcorig313/bin/python docs/reviews/2026-09-15-teob-fd-attribution/catalog/generate_public_td.py --output docs/reviews/2026-09-15-teob-fd-attribution/catalog/public-td.npz",
+  "options": {
+    "PN_tidal_order": 0,
+    "lambda1": 0.0,
+    "lambda2": 0.0,
+    "mode_array": [
+      [
+        2,
+        2
+      ]
+    ],
+    "sign_conversion": "saved arrays are -SimIMRTEOBResumS direct EOB polarizations for generic observer frame"
+  },
+  "outputs": {
+    "public_td_npz": "/Users/xangma/repos/torchwave/docs/reviews/2026-09-15-teob-fd-attribution/catalog/public-td.npz",
+    "public_td_sha256": "d276c9e7df94e48ca64487babd71d2ce5fd47d569fa5546aae30db171209cdef"
+  },
+  "public_support_bounds": {
+    "chirp_time_seconds": 56.080416766565115,
+    "merge_time_seconds": 0.0023396515898766444,
+    "plunge_ringdown_time_seconds": 0.00419123924006272,
+    "ringdown_time_seconds": 0.0018515876501860756,
+    "spin_bound": 0.686,
+    "start_frequency_hz": 28.430883710960526,
+    "start_frequency_hz_hex": "0x1.c6e4e6516f45fp+4",
+    "support_time_seconds": 61.7926496824617,
+    "textra_seconds": 5.708041676656512
+  },
+  "public_support_plan": {
+    "chirp_time": 56.08041676656506,
+    "eta": 0.25,
+    "f_low": 30.0,
+    "f_safe": 30.0,
+    "first_taper_duration": 5.708041676656512,
+    "mass1": 1.4,
+    "mass2": 1.4,
+    "plunge_ringdown_time": 0.00419123924006272,
+    "plunge_time": 0.0023396515898766444,
+    "qnm_damping_time": 0.00016832615001691596,
+    "qnm_dimensionless_frequency": 0.5290948351740714,
+    "qnm_quality": 3.228847697816648,
+    "ringdown_time": 0.0018515876501860756,
+    "spin_bound": 0.686,
+    "start_frequency": 28.430883710960526,
+    "support_time": 61.7926496824617,
+    "total_mass_seconds": 1.3791374653395548e-05,
+    "v_safe": 0.10913387133740819
+  },
+  "purpose": "fresh public SimIMRTEOBResumS exact-support-start TD fixture for cache-only paired conditioner control",
+  "request": {
+    "api": "SimIMRTEOBResumS",
+    "delta_f_hz": 0.5,
+    "delta_t_seconds": 0.0009765625,
+    "distance_mpc": 100.0,
+    "f_max_hz": 500.0,
+    "inclination_rad": 0.0,
+    "mass1_msun": 1.4,
+    "mass2_msun": 1.4,
+    "phi_ref_rad": 0.0,
+    "requested_f_low_hz": 30.0,
+    "spins": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "tc_seconds": 0.0
+  },
+  "sampling": {
+    "dt_seconds": 0.0009765625,
+    "epoch_seconds": -62.781416251,
+    "samples": 64291
+  },
+  "scope": {
+    "direct_to_generic_sign": "both saved direct-frame polarizations multiplied by -1 per reviewed observer-frame contract",
+    "no_alignment": true,
+    "no_native_ode_runs": true,
+    "no_oracle_fitting": true
+  },
+  "source_changes": [],
+  "source_hashes_after": {
+    "capture_generator": "211e07b5b0ec184e05e24609aa4eb4c12583a16ee613119596cbaabd994551d4",
+    "conditioner": "d8a9ad936a0e6fb8e0c59a35428a7e2c70e372dca0b8d87f6d890d38dcd30a8a",
+    "controls_script": "8ed217dadbc2d935479abdc529af273889f39adea4a8c797a9c0f029e58992b3"
+  },
+  "source_hashes_before": {
+    "capture_generator": "211e07b5b0ec184e05e24609aa4eb4c12583a16ee613119596cbaabd994551d4",
+    "conditioner": "d8a9ad936a0e6fb8e0c59a35428a7e2c70e372dca0b8d87f6d890d38dcd30a8a",
+    "controls_script": "8ed217dadbc2d935479abdc529af273889f39adea4a8c797a9c0f029e58992b3"
+  },
+  "status": "complete",
+  "versions": {
+    "lal": "7.7.0",
+    "lalsimulation": "6.2.0",
+    "platform": "macOS-26.6-arm64-arm-64bit-Mach-O",
+    "python": "3.13.9 | packaged by conda-forge | (main, Oct 22 2025, 23:38:18) [Clang 19.1.7 ]"
+  }
+}

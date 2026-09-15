@@ -1,0 +1,45 @@
+{
+  "status": "fit_complete",
+  "inputs_frozen_at_utc": "2026-09-15T11:46:15.554074+00:00",
+  "fit_completed_at_utc": "2026-09-15T11:46:16.303813+00:00",
+  "calibration_path": "/Users/xangma/repos/torchwave/docs/reviews/2026-09-15-independent-calibration-v3-search/nr33-calibration.json",
+  "calibration_sha256": "ade377c62a57a5d9cff513e34f22b0fe43677177a0c1577a9a4af5ad3b8aa561",
+  "calibration_sidecar": "/Users/xangma/repos/torchwave/docs/reviews/2026-09-15-independent-calibration-v3-search/nr33-calibration.json.sha256",
+  "split_path": "/Users/xangma/repos/torchwave/docs/reviews/2026-09-15-independent-calibration-v3-search/nr33-calibration-split.json",
+  "split_sha256": "83b858655d7c08bc8bb41bd6b624444ddc9342af740206ecb75997ad314f9529",
+  "manifest_path": "/Users/xangma/repos/torchwave/docs/reviews/2026-09-15-independent-calibration-v3-search/nr33-qualified-manifest.json",
+  "manifest_sha256": "990df8e246ba978fc47735407be05b49eb9a3f261565ccc4a946029704cc5160",
+  "fitter_script_sha256": "e307ef505094a5f3d568690d3a9f44cff58d9683d3c29f91e62cc7d2f17ed554",
+  "input_sha256": {
+    "docs/reviews/2026-09-15-independent-calibration-v2/quality-policy.json": "1a863811b90c410cd5a9b0b52a0bd53696b869a0d503cb8fa61d9c054842138d",
+    "docs/reviews/2026-09-15-independent-calibration-v3-search/quality-screen-round1.json": "99f814ccd6e8183459d90b0a724841f1e220c2b28fb5a9c4677ee511a8822746",
+    "docs/reviews/2026-09-15-independent-calibration-v3-search/nr33-qualified-manifest.json": "990df8e246ba978fc47735407be05b49eb9a3f261565ccc4a946029704cc5160",
+    "/Users/xangma/repos/torchwave/scripts/fit_nr33_amplitude_pilot.py": "e307ef505094a5f3d568690d3a9f44cff58d9683d3c29f91e62cc7d2f17ed554",
+    "/Users/xangma/repos/torchwave/scripts/kerr_leaver_solver.py": "a7b07b28962b676271645fd60cf6bd7c2684c8c92e801579897f2d8f84698fc9"
+  },
+  "controls": {
+    "pad_factor": 4,
+    "start_taper_duration": 500.0,
+    "end_taper_duration": 20.0,
+    "fmax": 0.3,
+    "sample_dt": 0.1
+  },
+  "host": "RONI2",
+  "cwd": "/Users/xangma/repos/torchwave",
+  "command": [
+    "/Users/xangma/repos/torchwave/scripts/calibrate_nr33_v2.py",
+    "--policy",
+    "docs/reviews/2026-09-15-independent-calibration-v2/quality-policy.json",
+    "--quality",
+    "docs/reviews/2026-09-15-independent-calibration-v3-search/quality-screen-round1.json",
+    "--manifest",
+    "docs/reviews/2026-09-15-independent-calibration-v3-search/nr33-qualified-manifest.json",
+    "--output",
+    "docs/reviews/2026-09-15-independent-calibration-v3-search/nr33-calibration.json"
+  ],
+  "python_executable": "/Users/xangma/miniconda3/envs/pycbcorig313/bin/python",
+  "python_version": "3.13.9",
+  "numpy_version": "2.3.5",
+  "scipy_version": "1.16.3",
+  "orchestrator_sha256": "c244b3b7abb3d74f33bfe1a009c377617866245aee7ff84318ef3a000a6741b1"
+}

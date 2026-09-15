@@ -1,0 +1,299 @@
+{
+  "case": "unequal_bns",
+  "inputs": {
+    "continuous_json": "/Users/xangma/repos/torchwave/docs/reviews/2026-09-15-teob-fd-attribution/unequal_bns/continuous.json",
+    "continuous_npz": "/Users/xangma/repos/torchwave/docs/reviews/2026-09-15-teob-fd-attribution/unequal_bns/continuous.npz",
+    "continuous_sha256": "0c9e1c3f3c68095a0f146d9f48cfc97f55f9c61b60dd85c3e99f95de0de1ed9d",
+    "public_fd_npz": "/Users/xangma/repos/torchwave/docs/reviews/2026-09-15-teob-fd-attribution/unequal_bns/public-fd.npz",
+    "public_fd_sha256": "5c6e17b6b7f12b31966d6977fd84b74b1f3405cf17bebb86a34038dd9904c67f",
+    "public_td_npz": null
+  },
+  "limitations": [
+    "The optional TD control is absent unless --public-td-npz is supplied.",
+    "The epoch factor is evaluated only as a counterfactual diagnostic and is never applied to the replay.",
+    "Unequal TD lengths use shared elapsed indices and report unmatched-tail energy; no shift is fitted."
+  ],
+  "method": {
+    "evolution": false,
+    "frequency_interpolation": false,
+    "oracle_fitting": false,
+    "shared_frequency_selection": "exact bins only; score is [flow,fhigh)",
+    "tc_runtime_value": 0.0,
+    "time_or_phase_alignment": false
+  },
+  "native_replay": {
+    "cross_exact": true,
+    "cross_max_abs": 0.0,
+    "frequency_exact": true,
+    "plus_exact": true,
+    "plus_max_abs": 0.0
+  },
+  "outputs": {
+    "controls_npz": "/Users/xangma/repos/torchwave/docs/reviews/2026-09-15-teob-fd-attribution/unequal_bns/controls.npz"
+  },
+  "provenance": {
+    "command": "/Users/xangma/miniconda3/envs/pycbcorig313/bin/python scripts/teob_fd_cache_controls.py --case unequal_bns",
+    "cwd": "/Users/xangma/repos/torchwave",
+    "host": "RONI2",
+    "pid": 62055,
+    "script_sha256": "86b60d310d11d1750f1e4791cb12dd4b7ffcdbce179168a65467934c2ddc3793"
+  },
+  "public_comparison": {
+    "epoch_factor_counterfactual": {
+      "cross": {
+        "applied": false,
+        "counterfactual_metrics": {
+          "complex_relative_l2": 1.3988492703804902,
+          "magnitude_relative_l2": 0.00032706726684568563,
+          "max_complex_abs_error": 7.36956329291232e-24,
+          "mean_magnitude": 1.2499695907451802e-24,
+          "norm": 4.6647050903470086e-23,
+          "norm_relative_error": 2.5174483570652152e-05,
+          "reference_mean_magnitude": 1.2501040131309609e-24,
+          "reference_norm": 4.6648225248450204e-23,
+          "samples": 940
+        },
+        "epoch_seconds": -64.06311266011916,
+        "factor_convention": "exp(-2 pi i f epoch_seconds)",
+        "status": "diagnostic_only"
+      },
+      "plus": {
+        "applied": false,
+        "counterfactual_metrics": {
+          "complex_relative_l2": 1.3982442465769167,
+          "magnitude_relative_l2": 0.00025208162973324377,
+          "max_complex_abs_error": 7.359079167376769e-24,
+          "mean_magnitude": 1.2963086593121755e-24,
+          "norm": 4.750220580643971e-23,
+          "norm_relative_error": 1.9711027545139944e-05,
+          "reference_mean_magnitude": 1.2963096099359559e-24,
+          "reference_norm": 4.7501269507608014e-23,
+          "samples": 940
+        },
+        "epoch_seconds": -64.06311266011916,
+        "factor_convention": "exp(-2 pi i f epoch_seconds)",
+        "status": "diagnostic_only"
+      }
+    },
+    "metrics": {
+      "cross": {
+        "frequency_bands": {
+          "100-200Hz": {
+            "bounds_hz": [
+              100.0,
+              200.0
+            ],
+            "metrics": {
+              "complex_relative_l2": 0.0003317871001286619,
+              "magnitude_relative_l2": 0.00022810904924236157,
+              "max_complex_abs_error": 9.227537327590253e-28,
+              "mean_magnitude": 2.537701721116541e-24,
+              "norm": 3.716605870060687e-23,
+              "norm_relative_error": 1.5346447915999655e-05,
+              "reference_mean_magnitude": 2.5376955905798444e-24,
+              "reference_norm": 3.716548834237575e-23,
+              "samples": 200
+            },
+            "valid_bins": 200
+          },
+          "200-500Hz": {
+            "bounds_hz": [
+              200.0,
+              500.0
+            ],
+            "metrics": {
+              "complex_relative_l2": 0.00045276608000904974,
+              "magnitude_relative_l2": 0.00032220203740594613,
+              "max_complex_abs_error": 7.732450679808666e-28,
+              "mean_magnitude": 1.05731286598105e-24,
+              "norm": 2.802535136291058e-23,
+              "norm_relative_error": 6.40844121596622e-05,
+              "reference_mean_magnitude": 1.0573505275098414e-24,
+              "reference_norm": 2.802714746618046e-23,
+              "samples": 600
+            },
+            "valid_bins": 600
+          },
+          "30-60Hz": {
+            "bounds_hz": [
+              30.0,
+              60.0
+            ],
+            "metrics": {
+              "complex_relative_l2": 0.004623636633396069,
+              "magnitude_relative_l2": 0.00438460692620168,
+              "max_complex_abs_error": 7.583148347013354e-28,
+              "mean_magnitude": 1.5158632910330072e-25,
+              "norm": 1.2051785485754617e-24,
+              "norm_relative_error": 0.004317662884887767,
+              "reference_mean_magnitude": 1.5227054815998286e-25,
+              "reference_norm": 1.2104046678856866e-24,
+              "samples": 60
+            },
+            "valid_bins": 60
+          },
+          "60-100Hz": {
+            "bounds_hz": [
+              60.0,
+              100.0
+            ],
+            "metrics": {
+              "complex_relative_l2": 0.002611073700625631,
+              "magnitude_relative_l2": 0.0025623024736218473,
+              "max_complex_abs_error": 8.660625571440155e-28,
+              "mean_magnitude": 2.9935214677916634e-25,
+              "norm": 2.785437901916598e-24,
+              "norm_relative_error": 0.0024818959356820254,
+              "reference_mean_magnitude": 3.0015131039538266e-25,
+              "reference_norm": 2.792368269375288e-24,
+              "samples": 80
+            },
+            "valid_bins": 80
+          }
+        },
+        "linear_phase_ratio": {
+          "applied": false,
+          "equivalent_time_shift_seconds": 2.2348176268799065e-07,
+          "intercept_rad": 0.0005118512390309989,
+          "phase_fit_max_abs_rad": 0.003920145423397976,
+          "phase_fit_rms_rad": 0.0005813348192031942,
+          "ratio_magnitude_mean": 0.9994575680476734,
+          "ratio_magnitude_median": 0.9998688130272446,
+          "slope_rad_per_hz": -1.404177327743778e-06,
+          "status": "diagnostic_only",
+          "valid_bins": 940
+        },
+        "raw": {
+          "complex_relative_l2": 0.00042743343459975333,
+          "magnitude_relative_l2": 0.00032706726684568786,
+          "max_complex_abs_error": 9.227537327590253e-28,
+          "mean_magnitude": 1.2499695907451802e-24,
+          "norm": 4.664705090347008e-23,
+          "norm_relative_error": 2.5174483570778147e-05,
+          "reference_mean_magnitude": 1.2501040131309609e-24,
+          "reference_norm": 4.6648225248450204e-23,
+          "samples": 940
+        }
+      },
+      "plus": {
+        "frequency_bands": {
+          "100-200Hz": {
+            "bounds_hz": [
+              100.0,
+              200.0
+            ],
+            "metrics": {
+              "complex_relative_l2": 0.0001090188633842051,
+              "magnitude_relative_l2": 7.48612270452338e-05,
+              "max_complex_abs_error": 3.2861374064414047e-28,
+              "mean_magnitude": 2.582323999724465e-24,
+              "norm": 3.784513789231427e-23,
+              "norm_relative_error": 3.3957039919921086e-06,
+              "reference_mean_magnitude": 2.582328691600651e-24,
+              "reference_norm": 3.7845266403636474e-23,
+              "samples": 200
+            },
+            "valid_bins": 200
+          },
+          "200-500Hz": {
+            "bounds_hz": [
+              200.0,
+              500.0
+            ],
+            "metrics": {
+              "complex_relative_l2": 0.0005703939616532194,
+              "magnitude_relative_l2": 0.0004038166891963362,
+              "max_complex_abs_error": 8.930950556969851e-28,
+              "mean_magnitude": 1.0847485837538037e-24,
+              "norm": 2.833875315677201e-23,
+              "norm_relative_error": 7.143810910224497e-05,
+              "reference_mean_magnitude": 1.0847083506467792e-24,
+              "reference_norm": 2.8336728834445933e-23,
+              "samples": 600
+            },
+            "valid_bins": 600
+          },
+          "30-60Hz": {
+            "bounds_hz": [
+              30.0,
+              60.0
+            ],
+            "metrics": {
+              "complex_relative_l2": 0.0008114539428960575,
+              "magnitude_relative_l2": 0.0007785491475737001,
+              "max_complex_abs_error": 2.487110438655615e-28,
+              "mean_magnitude": 2.6279223118510453e-25,
+              "norm": 2.0470320514537123e-24,
+              "norm_relative_error": 0.000771731518133797,
+              "reference_mean_magnitude": 2.629980645682029e-25,
+              "reference_norm": 2.0486130306979615e-24,
+              "samples": 60
+            },
+            "valid_bins": 60
+          },
+          "60-100Hz": {
+            "bounds_hz": [
+              60.0,
+              100.0
+            ],
+            "metrics": {
+              "complex_relative_l2": 0.00046366111658761183,
+              "magnitude_relative_l2": 0.00033244816713487755,
+              "max_complex_abs_error": 2.3847061605879503e-28,
+              "mean_magnitude": 4.431081960645432e-25,
+              "norm": 4.114586697219758e-24,
+              "norm_relative_error": 0.0002826827046739415,
+              "reference_mean_magnitude": 4.432550094688573e-25,
+              "reference_norm": 4.115750148603527e-24,
+              "samples": 80
+            },
+            "valid_bins": 80
+          }
+        },
+        "linear_phase_ratio": {
+          "applied": false,
+          "equivalent_time_shift_seconds": 3.229807882558418e-08,
+          "intercept_rad": 5.016641783410217e-05,
+          "phase_fit_max_abs_rad": 0.00434003565748687,
+          "phase_fit_rms_rad": 0.0005552387442045701,
+          "ratio_magnitude_mean": 0.9999004285026283,
+          "ratio_magnitude_median": 0.999960508785644,
+          "slope_rad_per_hz": -2.0293481432703862e-07,
+          "status": "diagnostic_only",
+          "valid_bins": 940
+        },
+        "raw": {
+          "complex_relative_l2": 0.0003551961788044758,
+          "magnitude_relative_l2": 0.0002520816297332399,
+          "max_complex_abs_error": 8.930950556969851e-28,
+          "mean_magnitude": 1.2963086593121755e-24,
+          "norm": 4.75022058064397e-23,
+          "norm_relative_error": 1.971102754501621e-05,
+          "reference_mean_magnitude": 1.2963096099359559e-24,
+          "reference_norm": 4.7501269507608014e-23,
+          "samples": 940
+        }
+      }
+    },
+    "shared_bins": 940
+  },
+  "request": {
+    "chi1z": 0.0,
+    "chi2z": 0.0,
+    "df": 0.5,
+    "distance": 100.0,
+    "dt": 0.0009765625,
+    "fhigh": 500.0,
+    "flow": 30.0,
+    "inclination": 0.0,
+    "mass1": 1.6,
+    "mass2": 1.2,
+    "phic": 0.0,
+    "tc": 0.0
+  },
+  "status": "complete",
+  "td_control": {
+    "reason": "no --public-td-npz supplied; no evolution was started",
+    "status": "not_run"
+  }
+}

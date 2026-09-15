@@ -1,0 +1,407 @@
+   438	void CkPupMainChareData(PUP::er &p, CkArgMsg *args)
+   439	{
+   440		int nMains=_mainTable.size();
+   441		DEBCHK("[%d] CkPupMainChareData %s: nMains = %d\n", CkMyPe(),p.typeString(),nMains);
+   442		for(int i=0;i<nMains;i++){  /* Create all mainchares */
+   443			ChareInfo *entry = _chareTable[_mainTable[i]->chareIdx];
+   444			int entryMigCtor = entry->getMigCtor();
+   445			if(entryMigCtor!=-1) {
+   446				Chare* obj;
+   447				if (p.isUnpacking()) {
+   448					int size = entry->size;
+   449					DEBCHK("MainChare PUP'ed: name = %s, idx = %d, size = %d\n", entry->name, i, size);
+   450					obj = (Chare*)malloc(size);
+   451					_MEMCHECK(obj);
+   452					_mainTable[i]->setObj(obj);
+   453					//void *m = CkAllocSysMsg();
+   454					_entryTable[entryMigCtor]->call(args, obj);
+   455				}
+   608	
+   609	
+   610	    // if using migration constructor, you'd better have a pup
+   611	    gobj->virtual_pup(p);
+   612	  }
+   613	}
+   614	
+   615	void CkPupGroupData(PUP::er &p
+   616	  )
+   617	{
+   618	        CkPupPerPlaceData(p, CkpvAccess(_groupIDTable), CkpvAccess(_groupTable),
+   619	                          CkpvAccess(_numGroups), BocInitMsg, &CkCreateLocalGroup
+   620	                         );
+   621	}
+   622	
+   623	void CkPupNodeGroupData(PUP::er &p
+   624	  )
+   625	{
+   626	          CkPupPerPlaceData(p, &CksvAccess(_nodeGroupIDTable),
+   627	                            CksvAccess(_nodeGroupTable), CksvAccess(_numNodeGroups),
+   628	                            NodeBocInitMsg, &CkCreateLocalNodeGroup
+   629	                           );
+   630	}
+   631	
+   632	// handle chare array elements for this processor
+   633	void CkPupArrayElementsData(PUP::er &p, int notifyListeners)
+   634	{
+   635	 	int i;
+   878		// content of the file: numGroups, GroupInfo[numGroups], _groupTable(PUP'ed), groups(PUP'ed)
+   879		// restore from PE0's copy if shrink/expand
+   880		FILE* fGroups = openCheckpointFile(dirname, "Groups", "rb",
+   881	                                     (CkNumPes() == _numPes) ? CkMyPe() : 0);
+   882		PUP::fromDisk pGroups(fGroups, PUP::er::IS_CHECKPOINT);
+   883	    CkPupGroupData(pGroups);
+   884		CmiFclose(fGroups);
+   885	
+   886		// restore nodegroups
+   887		// content of the file: numNodeGroups, GroupInfo[numNodeGroups], _nodeGroupTable(PUP'ed), nodegroups(PUP'ed)
+   888		if(CkMyRank()==0){
+   889	                FILE* fNodeGroups = openCheckpointFile(dirname, "NodeGroups", "rb",
+   890	                                                       (CkNumNodes() == _numNodes) ? CkMyNode() : 0);
+   891	                PUP::fromDisk pNodeGroups(fNodeGroups, PUP::er::IS_CHECKPOINT);
+   892	        CkPupNodeGroupData(pNodeGroups);
+   893			CmiFclose(fNodeGroups);
+   894		}
+   895	
+CK
+   659	void CkCreateLocalGroup(CkGroupID groupID, int epIdx, envelope *env)
+   660	{
+   661	  int gIdx = _entryTable[epIdx]->chareIdx;
+   662	  void *obj = malloc(_chareTable[gIdx]->size);
+   663	  _MEMCHECK(obj);
+   664	  setMemoryTypeChare(obj);
+   665	  CmiImmediateLock(CkpvAccess(_groupTableImmLock));
+   666	  CkpvAccess(_groupTable)->find(groupID).setObj(obj);
+   667	  CkpvAccess(_groupTable)->find(groupID).setcIdx(gIdx);
+   668	  CkpvAccess(_groupIDTable)->push_back(groupID);
+   669	  PtrQ *ptrq = CkpvAccess(_groupTable)->find(groupID).getPending();
+   670	  if(ptrq) {
+   671	    void *pending;
+   672	    while((pending=ptrq->deq())!=0) {
+   673	      CsdEnqueueGeneral(pending, CQS_QUEUEING_FIFO, 0, 0);
+   674	    }
+   675	    CkpvAccess(_groupTable)->find(groupID).clearPending();
+   676	  }
+   677	  CmiImmediateUnlock(CkpvAccess(_groupTableImmLock));
+   678	
+   679	  CkpvAccess(_currentGroup) = groupID;
+   680	  CkpvAccess(_currentGroupRednMgr) = env->getRednMgr();
+   681	
+   682	#ifndef CMK_CHARE_USE_PTR
+   683	  int callingChareIdx = CkpvAccess(currentChareIdx);
+   684	  CkpvAccess(currentChareIdx) = -1;
+   685	#endif
+   686	
+   687	  _invokeEntryNoTrace(epIdx,env,obj); /* can't trace groups: would cause nested begin's */
+   688	
+   689	#ifndef CMK_CHARE_USE_PTR
+   690	  CkpvAccess(currentChareIdx) = callingChareIdx;
+   691	#endif
+   692	
+   693	  _STATS_RECORD_PROCESS_GROUP_1();
+   694	}
+   695	
+   696	void CkCreateLocalNodeGroup(CkGroupID groupID, int epIdx, envelope *env)
+   697	{
+   698	  int gIdx = _entryTable[epIdx]->chareIdx;
+   699	  size_t objSize=_chareTable[gIdx]->size;
+   700	  void *obj = malloc(objSize);
+   701	  _MEMCHECK(obj);
+   702	  setMemoryTypeChare(obj);
+   703	  CkpvAccess(_currentGroup) = groupID;
+   704	
+   705	// Now that the NodeGroup is created, add it to the table.
+   706	//  NodeGroups can be accessed by multiple processors, so
+   707	//  this is in the opposite order from groups - invoking the constructor
+   708	//  before registering it.
+   709	// User may call CkLocalNodeBranch() inside the nodegroup constructor
+   710	//  store nodegroup into _currentNodeGroupObj
+   711	  CkpvAccess(_currentNodeGroupObj) = obj;
+   712	
+   713	#ifndef CMK_CHARE_USE_PTR
+   714	  int callingChareIdx = CkpvAccess(currentChareIdx);
+   715	  CkpvAccess(currentChareIdx) = -1;
+   716	#endif
+   717	
+   718	  _invokeEntryNoTrace(epIdx,env,obj);
+   719	
+   720	#ifndef CMK_CHARE_USE_PTR
+   721	  CkpvAccess(currentChareIdx) = callingChareIdx;
+   722	#endif
+   723	
+   724	  CkpvAccess(_currentNodeGroupObj) = NULL;
+   725	  _STATS_RECORD_PROCESS_NODE_GROUP_1();
+   726	
+   727	  CmiImmediateLock(CksvAccess(_nodeGroupTableImmLock));
+   728	  CksvAccess(_nodeGroupTable)->find(groupID).setObj(obj);
+   729	  CksvAccess(_nodeGroupTable)->find(groupID).setcIdx(gIdx);
+   730	  CksvAccess(_nodeGroupIDTable).push_back(groupID);
+   731	
+   732	  PtrQ *ptrq = CksvAccess(_nodeGroupTable)->find(groupID).getPending();
+   733	  if(ptrq) {
+   734	    void *pending;
+   735	    while((pending=ptrq->deq())!=0) {
+   736	      _CldNodeEnqueue(CkMyNode(), pending, _infoIdx);
+   737	    }
+   738	    CksvAccess(_nodeGroupTable)->find(groupID).clearPending();
+   739	  }
+   740	  CmiImmediateUnlock(CksvAccess(_nodeGroupTableImmLock));
+   741	}
+   742	
+   743	void _createGroup(CkGroupID groupID, envelope *env)
+   744	{
+   745	  _CHECK_USED(env);
+   746	  _SET_USED(env, 1);
+   747	  int epIdx = env->getEpIdx();
+   748	  int gIdx = _entryTable[epIdx]->chareIdx;
+  1010	  delete vptr;
+  1011	  CkpvAccess(vidblocks)[(CmiIntPtr)env->getVidPtr()] = NULL;
+  1012	#endif
+  1013	  CmiFree(env);
+  1014	}
+  1015	
+  1016	/************** Receive: Groups ****************/
+  1017	
+  1018	/**
+  1019	 Return a pointer to the local BOC of "groupID".
+  1020	 The message "env" passed in has some known dependency on this groupID
+  1021	 (either it is to be delivered to this BOC, or it depends on this BOC being there).
+  1022	 Therefore, if the return value is NULL, this function buffers the message so that
+  1023	 it will be re-sent (by CkCreateLocalBranch) when this groupID is eventually constructed.
+  1024	 The message passed in must have its handlers correctly set so that it can be
+  1025	 scheduled again.
+  1026	*/
+  1027	static inline IrrGroup *_lookupGroupAndBufferIfNotThere(const CkCoreState *ck, const envelope *env, const CkGroupID &groupID)
+  1028	{
+  1029	
+  1030		CmiImmediateLock(CkpvAccess(_groupTableImmLock));
+  1930	void CkSendMsgNodeBranchInline(int eIdx, void *msg, int node, CkGroupID gID, int opts)
+  1931	{
+  1932	  if (node==CkMyNode()) {
+  1933	    if (CMI_ZC_MSGTYPE(UsrToEnv(msg)) == CMK_REG_NO_ZC_MSG)
+  1934	    {
+  1935	      CmiImmediateLock(CksvAccess(_nodeGroupTableImmLock));
+  1936	      void *obj = CksvAccess(_nodeGroupTable)->find(gID).getObj();
+  1937	      CmiImmediateUnlock(CksvAccess(_nodeGroupTableImmLock));
+  1938	      if (obj!=NULL)
+  1939	      { //Just directly call the group:
+  1940	#if CMK_ERROR_CHECKING
+  1941	        envelope *env=_prepareMsgBranch(eIdx,msg,gID,ForNodeBocMsg);
+  1942	#else
+HDR
+   188	#include "ckrdma.h"
+   189	
+   190	#include "ckrdmadevice.h"
+   191	
+   192	/********************* Superclass of all Chares ******************/
+   193	#if CMK_MULTIPLE_DELETE
+   194	#define CHARM_INPLACE_NEW \
+   195	    void *operator new(size_t, void *ptr) { return ptr; }; \
+   196	    void operator delete(void*, void*) {}; \
+   197	    void *operator new(size_t s) { return malloc(s); } \
+   198	    void operator delete(void *ptr) { free(ptr); }
+   199	#else
+   200	#define CHARM_INPLACE_NEW \
+   201	    void *operator new(size_t, void *ptr) { return ptr; }; \
+   202	    void *operator new(size_t s) { return malloc(s); } \
+   203	    void operator delete(void *ptr) { free(ptr); }
+   204	#endif
+   205	
+   206	// for object message queue
+   207	#include "ckobjQ.h"
+  2055	void CkDeleteChares() {
+  2056	  int i;
+  2057	  int numGroups = CkpvAccess(_groupIDTable)->size();
+  2058	
+  2059	  // delete all plain chares
+  2060	#ifndef CMK_CHARE_USE_PTR
+  2061	  for (i=0; i<CkpvAccess(chare_objs).size(); i++) {
+  2062		Chare *obj = (Chare*)CkpvAccess(chare_objs)[i];
+  2063		delete obj;
+  2064		CkpvAccess(chare_objs)[i] = NULL;
+  2065	  }
+  2066	  for (i=0; i<CkpvAccess(vidblocks).size(); i++) {
+  2067		VidBlock *obj = CkpvAccess(vidblocks)[i];
+  2068		delete obj;
+  2069		CkpvAccess(vidblocks)[i] = NULL;
+  2070	  }
+  2071	#endif
+  2072	
+  2073	  // delete all array elements
+  2074	  for(i=0;i<numGroups;i++) {
+  2075	    IrrGroup *obj = CkpvAccess(_groupTable)->find((*CkpvAccess(_groupIDTable))[i]).getObj();
+  2076	    if(obj && obj->isLocMgr())  {
+  2077	      CkLocMgr *mgr = (CkLocMgr*)obj;
+  2078	      ElementDestroyer destroyer(mgr);
+  2079	      mgr->iterate(destroyer);
+  2080	    }
+  2081	  }
+  2082	
+  2083	  // delete all groups
+  2084	  CmiImmediateLock(CkpvAccess(_groupTableImmLock));
+  2085	  for(i=0;i<numGroups;i++) {
+  2086	    CkGroupID gID = (*CkpvAccess(_groupIDTable))[i];
+  2087	    IrrGroup *obj = CkpvAccess(_groupTable)->find(gID).getObj();
+  2088	    if (obj) delete obj;
+  2089	  }
+  2090	  CmiImmediateUnlock(CkpvAccess(_groupTableImmLock));
+  2091	
+  2092	  // delete all node groups
+  2093	  if (CkMyRank() == 0) {
+  2094	    int numNodeGroups = CksvAccess(_nodeGroupIDTable).size();
+  2095	    for(i=0;i<numNodeGroups;i++) {
+  2096	      CkGroupID gID = CksvAccess(_nodeGroupIDTable)[i];
+  2097	      IrrGroup *obj = CksvAccess(_nodeGroupTable)->find(gID).getObj();
+  2098	      if (obj) delete obj;
+  2099	    }
+  2100	  }
+  2101	}
+
+ARRAY
+  1018	  init.thisArrayID = thisgroup;
+  1019	  if (listenerData) /*Have to *copy* data because msg will be deleted*/
+  1020	    memcpy(init.listenerData, listenerData, sizeof(init.listenerData));
+  1021	  init.fromMigration = fromMigration;
+  1022	
+  1023	  // Build the element
+  1024	  size_t elSize = _chareTable[elChareType]->size;
+  1025	  ArrayElement* elem = (ArrayElement*)malloc(elSize);
+  1026	  if (elem != NULL)
+  1027	    setMemoryTypeChare(elem);
+  1028	  return elem;
+  1029	}
+  1030	
+  1031	void CkArray::insertElement(CkMarshalledMessage&& m, const CkArrayIndex& idx,
+  1032	                            int listenerData[CK_ARRAYLISTENER_MAXLEN])
+
+INIT
+  1688				}
+  1689			}
+  1690			if (count) {
+  1691				CmiPrintf("If any of the above arguments were intended for the RTS you may need to recompile Charm++ with different options.\n");
+  1692			}
+  1693	
+  1694			CmiCheckAffinity(); // check for thread oversubscription
+  1695	
+  1696			for(i=0;i<nMains;i++)  /* Create all mainchares */
+  1697			{
+  1698				size_t size = _chareTable[_mainTable[i]->chareIdx]->size;
+  1699				void *obj = malloc(size);
+  1700				_MEMCHECK(obj);
+  1701				_mainTable[i]->setObj(obj);
+  1702				CkpvAccess(_currentChare) = obj;
+  1703				CkpvAccess(_currentChareType) = _mainTable[i]->chareIdx;
+  1704				CkArgMsg *msg = (CkArgMsg *)CkAllocMsg(0, sizeof(CkArgMsg), 0, GroupDepNum{});
+  1705				msg->argc = CmiGetArgc(argv);
+  1706				msg->argv = argv;
+  1707	      quietMode = 0;  // allow printing any mainchare user messages
+  1708				_entryTable[_mainTable[i]->entryIdx]->call(msg, obj);
+
+CHARE
+   850	  CkAssert(cIdx == _entryTable[eIdx]->chareIdx);
+   851	  envelope *env = UsrToEnv(msg);
+   852	  env->setMsgtype(NodeBocInitMsg);
+   853	  env->setEpIdx(eIdx);
+   854	  env->setSrcPe(CkMyPe());
+   855	  _TRACE_CREATION_N(env, CkNumNodes());
+   856	  CkGroupID gid = _nodeGroupCreate(env);
+   857	  _TRACE_CREATION_DONE(1);
+   858	  return gid;
+   859	}
+   860	
+   861	static inline void *_allocNewChare(envelope *env, int &idx)
+   862	{
+   863	  int chareIdx = _entryTable[env->getEpIdx()]->chareIdx;
+   864	  void *tmp=malloc(_chareTable[chareIdx]->size);
+   865	  _MEMCHECK(tmp);
+   866	#ifndef CMK_CHARE_USE_PTR
+   867	  CkpvAccess(chare_objs).push_back(tmp);
+   868	  CkpvAccess(chare_types).push_back(chareIdx);
+   869	  idx = CkpvAccess(chare_objs).size()-1;
+   870	#endif
+   871	  setMemoryTypeChare(tmp);
+   872	  return tmp;
+
+CPUP
+   530			  v = new VidBlock();
+   531			  CkpvAccess(vidblocks).push_back(v);
+   532		  }
+   533		  else{
+   534			  v = CkpvAccess(vidblocks)[i];
+   535		  }
+   536		  v->pup(p);
+   537		}
+   538	  }
+   539	}
+   540	#else
+   541	void CkPupChareData(PUP::er &p)
+   542	{
+   543	   // not implemented
+   544	}
+   545	#endif
+   546	
+   547	typedef void GroupCreationFn(CkGroupID groupID, int constructorIdx, envelope *env);
+   548	
+   549	static void CkPupPerPlaceData(PUP::er &p, GroupIDTable *idTable, GroupTable *objectTable,
+   550	                              unsigned int &numObjects, int constructionMsgType,
+   551	                              GroupCreationFn creationFn
+   552	                             )
+   553	{
+   554	  int numGroups = 0, i;
+   555	
+   556	  if (!p.isUnpacking()) {
+   557	    numGroups = idTable->size();
+   558	  }
+   559	  p|numGroups;
+   560	  if (p.isUnpacking()) {
+   561	    if(CkMyPe()==0)  
+   562	      numObjects = numGroups+1; 
+   563	    else 
+   564	      numObjects = 1;
+   565	  }
+   566	  DEBCHK("[%d] CkPupPerPlaceData %s: numGroups = %d\n", CkMyPe(),p.typeString(),numGroups);
+   567	
+   568	  std::vector<GroupInfo> tmpInfo(numGroups);
+   569	  if (!p.isUnpacking()) {
+   570	    for (i = 0; i < numGroups; i++) {
+   571	      tmpInfo[i].gID = (*idTable)[i];
+   572	      TableEntry ent = objectTable->find(tmpInfo[i].gID);
+   573	      tmpInfo[i].present = ent.getObj() != NULL;
+   574	      tmpInfo[i].MigCtor = _chareTable[ent.getcIdx()]->migCtor;
+   575	      tmpInfo[i].name = _chareTable[ent.getcIdx()]->name;
+   576	      //CkPrintf("[%d] CkPupPerPlaceData: %s group %s \n", CkMyPe(), p.typeString(), tmpInfo[i].name);
+   577	
+   578	      if(tmpInfo[i].MigCtor==-1) {
+   579	        CkAbort("(Node)Group %s needs a migration constructor and PUP'er routine for restart.\n", tmpInfo[i].name.c_str());
+   580	      }
+   581	    }
+   582	  }
+   583	  p|tmpInfo;
+   584	
+   585	  for (i = 0; i < numGroups; i++) 
+   586	  {
+   587	    if (!tmpInfo[i].present)
+   588	      continue;
+   589	
+   590	    CkGroupID gID = tmpInfo[i].gID;
+   591	    if (p.isUnpacking()) {
+   592	      int eIdx = tmpInfo[i].MigCtor;
+   593	      if (eIdx == -1) {
+   594	        CkPrintf("[%d] ERROR> (Node)Group %s's migration constructor is not defined!\n", CkMyPe(), tmpInfo[i].name.c_str());
+   595	        CkAbort("Abort");
+   596	      }
+   597	      void *m = CkAllocSysMsg();
+   598	      envelope* env = UsrToEnv((CkMessage *)m);
+   599	      env->setMsgtype(constructionMsgType);
+   600	
+   601	      {
+   602	        creationFn(gID, eIdx, env);
+   603	      }
+   604	
+   605	      CkFreeSysMsg(m);
+   606	    }   // end of unPacking
+   607	    IrrGroup *gobj = objectTable->find(gID).getObj();
+   608	
+   609	
+   610	    // if using migration constructor, you'd better have a pup
+   611	    gobj->virtual_pup(p);
+   612	  }

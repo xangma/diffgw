@@ -8,14 +8,13 @@ Literature citations:
 - Berti, Cardoso, Will (2006), Phys. Rev. D 73, 064030 (arXiv:gr-qc/0512160)
   "Quasinormal modes of Kerr black holes: from astrophysics to string theory"
 
-Strict Clean-Room Barrier Compliance:
-- Mathematical equations from published literature (García-Quirós et al. 2020) and spec docs/reviews/2026-09-11-clean-room-spec/phenomxhm-spec.md.
-- Calibration parameter fits from author ancillary release in src/torchwave/approximants/xhm_fits.py.
-- Zero copying, inspecting, or porting of LAL/LALSimulation/PyCBC source code or internal constants.
-- Pure PyTorch native tensor implementation with autograd differentiability.
+The fresh published-equation checks and remaining calibration gaps are recorded
+in docs/reviews/2026-09-12-clean-room/pass-2-higher-modes.md. Inherited fit
+assembly and phase conventions are not certified by those checks.
 """
 
 from typing import Dict, List, Optional, Sequence, Tuple, Union
+from functools import wraps
 import math
 import torch
 import torch.nn as nn
@@ -36,8 +35,9 @@ from torchwave.approximants.imrphenom_xas import (
     XASParameterFits,
     safe_sqrt,
 )
-from torchwave.approximants.xhm_fits import XHMParameterFits
+from torchwave.approximants.xhm_fits import XHMParameterFits, _nonnegative_sqrt
 from torchwave.approximants.imrphenom_hm import _swsh_projection_coefficients
+from torchwave.approximants.polynomial_interval import polynomial_has_nonpositive
 
 
 # Pre-inverted 3x3 matrix for inspiral collocation points
@@ -51,6 +51,81 @@ _INSP_MAT = torch.tensor([
 _INSP_MAT_INV = torch.linalg.inv(_INSP_MAT)
 
 
+def _published_parameter_amplitude_veto(
+    mode: Tuple[int, int],
+    mass_ratio: torch.Tensor,
+    eta: torch.Tensor,
+    chi1: torch.Tensor,
+    chi2: torch.Tensor,
+) -> torch.Tensor:
+    """Remove both inner amplitude nodes in the unconditional paper regions.
+
+    García-Quirós et al., arXiv:2001.10914v2, Sec. V.A.3 and Table V.
+    Absolute-amplitude vetoes and the conditional q > 40 rows require the
+    separately specified, ordered checks and are not implemented here.
+    """
+    return (
+        ((mode == (2, 1)) & (eta < 0.23) & (chi1 > 0.7) & (chi2 < -0.5))
+        | ((mode == (3, 2)) & (mass_ratio > 2.5) & (chi1 < -0.6) & (chi2 > 0.0))
+        | ((mode == (3, 2)) & (chi1 < -0.9) & (chi2 < -0.9))
+        | ((mode in ((3, 3), (4, 4))) & (mass_ratio > 7.0) & (chi1 > 0.95))
+    )
+
+
+def _ordered_amplitude_vetoes(
+    mode: Tuple[int, int],
+    mass_ratio: torch.Tensor,
+    eta: torch.Tensor,
+    chi1: torch.Tensor,
+    chi2: torch.Tensor,
+    h_ins: torch.Tensor,
+    h_int1: torch.Tensor,
+    h_int2: torch.Tensor,
+    h_rd: torch.Tensor,
+) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
+    """Apply source-supported ordered intermediate-amplitude vetoes.
+
+    Table VI's numeric amplitude thresholds are deliberately not activated:
+    the paper does not resolve raw ``A`` versus ``A/A0`` threshold units.
+    The monotonicity check requires all values in a common convention with
+    frequency-independent normalization.  ``alive1`` and ``alive2`` identify
+    surviving inner values; the third result is reserved for a future,
+    explicitly normalized threshold implementation.
+    """
+    alive1 = torch.ones_like(h_ins, dtype=torch.bool)
+    alive2 = torch.ones_like(h_ins, dtype=torch.bool)
+    remove_derivatives = torch.zeros_like(h_ins, dtype=torch.bool)
+
+    # The paper does not explicitly identify the sequence used in its
+    # monotonicity check.  We use the full four-point
+    # sequence here as an explicit implementation choice; all four values
+    # are in the common A/A0 convention at the production call site.
+    both_alive = alive1 & alive2
+    monotonic = ((h_ins <= h_int1) & (h_int1 <= h_int2) & (h_int2 <= h_rd)) | (
+        (h_ins >= h_int1) & (h_int1 >= h_int2) & (h_int2 >= h_rd)
+    )
+    remove_middle = both_alive & ~monotonic & ((mode == (2, 1)) | (mode == (3, 2)))
+    alive2 = alive2 & ~remove_middle
+
+    # The bad-a_lambda and unconditional parameter rows are applied in the
+    # published order, before the conditional high-q rows.
+    if mode in ((3, 3), (4, 4)):
+        bad_lambda = (mass_ratio > 7.0) & (chi1 > 0.95)
+        alive1 = torch.where(bad_lambda, torch.zeros_like(alive1), alive1)
+        alive2 = torch.where(bad_lambda, torch.zeros_like(alive2), alive2)
+
+    unconditional = _published_parameter_amplitude_veto(mode, mass_ratio, eta, chi1, chi2)
+    alive1 = torch.where(unconditional, torch.zeros_like(alive1), alive1)
+    alive2 = torch.where(unconditional, torch.zeros_like(alive2), alive2)
+
+    conditional = (mass_ratio > 40.0) & (chi1 > 0.9)
+    if mode in ((2, 1), (3, 2), (3, 3), (4, 4)):
+        alive1 = torch.where(conditional, torch.zeros_like(alive1), alive1)
+        alive2 = torch.where(conditional, torch.zeros_like(alive2), alive2)
+
+    return alive1, alive2, remove_derivatives
+
+
 def _unsqueeze_to(tensor: Union[float, torch.Tensor], target: torch.Tensor) -> torch.Tensor:
     """Unsqueeze tensor along trailing dimensions until it matches target's dimensionality."""
     if not isinstance(tensor, torch.Tensor):
@@ -59,6 +134,77 @@ def _unsqueeze_to(tensor: Union[float, torch.Tensor], target: torch.Tensor) -> t
     while res.dim() < target.dim():
         res = res.unsqueeze(-1)
     return res
+
+
+def _value_and_derivative(function, frequency: torch.Tensor):
+    """Value and pointwise frequency derivative, retaining parameter gradients."""
+    outer_grad = torch.is_grad_enabled()
+    with torch.enable_grad():
+        probe = frequency.clone().requires_grad_(True)
+        value = function(probe)
+        derivative = torch.autograd.grad(value.sum(), probe, create_graph=True)[0]
+    if not outer_grad:
+        return value.detach(), derivative.detach()
+    return value, derivative
+
+
+def _allow_internal_frequency_derivatives(function):
+    """Keep local derivative probes usable for callers in inference mode."""
+    @wraps(function)
+    def evaluate(*args, **kwargs):
+        if not torch.is_inference_mode_enabled():
+            return function(*args, **kwargs)
+        # Inference tensors cannot be saved by autograd. Recreate input tensors
+        # outside that mode; no_grad preserves the caller's detached outputs.
+        with torch.inference_mode(False), torch.no_grad():
+            args = tuple(value.clone() if isinstance(value, torch.Tensor) else value for value in args)
+            kwargs = {key: value.clone() if isinstance(value, torch.Tensor) else value for key, value in kwargs.items()}
+            return function(*args, **kwargs)
+    return evaluate
+
+
+def _pn_phase_lambda(l, m, frequency, eta, delta):
+    """Frequency-dependent part of Eq. (4.9), expanded through linear f.
+
+    The constant PN argument is absorbed in the separate phase convention.
+    These coefficients follow by dividing the first imaginary coefficient in
+    Eqs. (E10), (E11), (E12), (E14) by the leading real coefficient, after
+    removing the constant complex prefactor. The odd-mode imaginary terms
+    vanish identically at equal mass at the PN order available here.
+    """
+    eta = _unsqueeze_to(eta, frequency)
+    delta = _unsqueeze_to(delta, frequency)
+    if (l, m) == (2, 1):
+        coefficient = torch.where(delta != 0, torch.full_like(delta, -0.5 * (1.0 + math.log(16.0))), torch.zeros_like(delta))
+    elif (l, m) == (3, 3):
+        coefficient = torch.where(delta != 0, torch.full_like(delta, -21.0 / 5.0 + 6.0 * math.log(1.5)), torch.zeros_like(delta))
+    elif (l, m) == (3, 2):
+        coefficient = (3.0 - 66.0 * eta / 5.0) / (1.0 - 3.0 * eta)
+    elif (l, m) == (4, 4):
+        coefficient = (eta * (3579.0 - 2880.0 * math.log(2.0)) - 1008.0 + 960.0 * math.log(2.0)) / (120.0 * (3.0 * eta - 1.0))
+    else:
+        raise ValueError(f"Unsupported PN phase mode {(l, m)}")
+    return coefficient * (2.0 * PI / float(m)) * frequency
+
+
+def _spherical_32_from_spheroidal(h22, h32_s, alpha222, alpha232, alpha322, alpha332):
+    """Eliminate h22,S from the two simultaneous equations in Eq. (A3).
+
+    Coefficients here are entries of the published matrix, in row order.
+    In particular, the available quadrupole input is spherical, not spheroidal.
+    """
+    ratio = alpha322 / alpha222
+    return ratio * h22 + (alpha332 - ratio * alpha232) * h32_s
+
+
+def _carrier_h22_ratio(strain, phase, phase_reference, a0):
+    """Put the physical carrier in the H_lm normalization of Eq. (4.6).
+
+    Here ``a0`` is the native physical leading quadrupole amplitude. The
+    paper's ``A^0_22`` and spherical mode amplitude both carry the common
+    ``sqrt(16*pi/5)`` factor, so it cancels in their ratio.
+    """
+    return torch.abs(strain / a0) * torch.exp(-1j * (phase - phase_reference))
 
 
 def _eval_f_isco(chi: torch.Tensor) -> torch.Tensor:
@@ -82,7 +228,7 @@ def _pn_amplitude_h21(
     chi_s: torch.Tensor,
     chi_a: torch.Tensor,
 ) -> torch.Tensor:
-    """3PN Fourier-domain amplitude H_21 (Eqs. 1864-1887 of García-Quirós et al. 2020)."""
+    """Magnitude of the expanded PN H_21 (arXiv:2001.10914v2, Eq. E10)."""
     c1 = (1.0 / 3.0) * math.sqrt(2.0)
     v2 = v * v
     v3 = v2 * v
@@ -153,7 +299,7 @@ def _pn_amplitude_h21(
 
     h_re = -c1 * t_im
     h_im = c1 * t_re
-    return safe_sqrt(h_re**2 + h_im**2)
+    return _nonnegative_sqrt(h_re**2 + h_im**2)
 
 
 def _pn_amplitude_h33(
@@ -163,7 +309,7 @@ def _pn_amplitude_h33(
     chi_s: torch.Tensor,
     chi_a: torch.Tensor,
 ) -> torch.Tensor:
-    """3PN Fourier-domain amplitude H_33 (Eqs. 1889-1910 of García-Quirós et al. 2020)."""
+    """Magnitude of the expanded PN H_33 (arXiv:2001.10914v2, Eq. E11)."""
     c1 = -(3.0 / 4.0) * math.sqrt(5.0 / 7.0)
     v2 = v * v
     v3 = v2 * v
@@ -221,7 +367,7 @@ def _pn_amplitude_h33(
 
     h_re = -c1 * t_im
     h_im = c1 * t_re
-    return safe_sqrt(h_re**2 + h_im**2)
+    return _nonnegative_sqrt(h_re**2 + h_im**2)
 
 
 def _pn_amplitude_h32(
@@ -231,7 +377,7 @@ def _pn_amplitude_h32(
     chi_s: torch.Tensor,
     chi_a: torch.Tensor,
 ) -> torch.Tensor:
-    """3PN Fourier-domain amplitude H_32 (Eqs. 1912-1923 of García-Quirós et al. 2020)."""
+    """Magnitude of the expanded PN H_32 (arXiv:2001.10914v2, Eq. E12)."""
     c1 = (1.0 / 3.0) * math.sqrt(5.0 / 7.0)
     v2 = v * v
     v3 = v2 * v
@@ -276,7 +422,7 @@ def _pn_amplitude_h32(
 
     h_re = c1 * t_re
     h_im = c1 * t_im
-    return safe_sqrt(h_re**2 + h_im**2)
+    return _nonnegative_sqrt(h_re**2 + h_im**2)
 
 
 def _pn_amplitude_h44(
@@ -286,7 +432,7 @@ def _pn_amplitude_h44(
     chi_s: torch.Tensor,
     chi_a: torch.Tensor,
 ) -> torch.Tensor:
-    """3PN Fourier-domain amplitude H_44 (Eqs. 1948-1960 of García-Quirós et al. 2020)."""
+    """Magnitude of the expanded PN H_44 (arXiv:2001.10914v2, Eq. E14)."""
     c1 = (4.0 / 9.0) * math.sqrt(10.0 / 7.0)
     v2 = v * v
     v4 = v2 * v2
@@ -331,7 +477,7 @@ def _pn_amplitude_h44(
 
     h_re = c1 * t_re
     h_im = c1 * t_im
-    return safe_sqrt(h_re**2 + h_im**2)
+    return _nonnegative_sqrt(h_re**2 + h_im**2)
 
 
 def _pn_amplitude_ratio(
@@ -343,10 +489,14 @@ def _pn_amplitude_ratio(
     chi_s: torch.Tensor,
     chi_a: torch.Tensor,
 ) -> torch.Tensor:
-    """Evaluate dimensionless amplitude ratio |A_lm^PN| / A_22^0 = (2/m)^(7/6) * |H_lm(v)|."""
+    """Return |A_lm^PN|/A_22^0 using arXiv:2001.10914v2 Eq. (E8).
+
+    The SPA envelope is v_m^(-7/2), with v_m=(2*pi*f/m)^(1/3).
+    Dividing by the quadrupole envelope at the same f gives (m/2)^(7/6).
+    """
     m_flt = float(m)
     v = torch.pow(torch.clamp((2.0 * PI * f) / m_flt, min=1e-12), 1.0 / 3.0)
-    factor = (2.0 / m_flt) ** (7.0 / 6.0)
+    factor = (m_flt / 2.0) ** (7.0 / 6.0)
     eta_u = _unsqueeze_to(eta, v)
     delta_u = _unsqueeze_to(delta, v)
     chi_s_u = _unsqueeze_to(chi_s, v)
@@ -371,6 +521,11 @@ class IMRPhenomXHM(nn.Module):
     Literature:
     - García-Quirós et al. (2020), Phys. Rev. D 102, 064002 (arXiv:2001.10914)
     - Pratten et al. (2020), Phys. Rev. D 101, 024029 (arXiv:2001.10911)
+
+    ``experimental_phase_connections=True`` assembles Eq. (4.11) with C1
+    inspiral joins. This imports the intermediate fits' unverified time gauge
+    into the inspiral and is not a certified calibration. The default retains
+    the existing carrier-based inspiral and value-only phase connection.
     """
 
     SUPPORTED_MODES = ((2, 2), (2, 1), (3, 3), (3, 2), (4, 4))
@@ -385,6 +540,8 @@ class IMRPhenomXHM(nn.Module):
         modes: Optional[Sequence[Tuple[int, int]]] = None,
         carrier: str = "XAS",
         base_22: Optional[nn.Module] = None,
+        *,
+        experimental_phase_connections: bool = False,
     ):
         self.carrier = carrier
         super().__init__()
@@ -393,7 +550,9 @@ class IMRPhenomXHM(nn.Module):
             if lm not in self.SUPPORTED_MODES:
                 raise ValueError(f"Mode {lm} not supported. Supported: {self.SUPPORTED_MODES}")
         self.base_22 = base_22 if base_22 is not None else IMRPhenomXAS()
+        self.experimental_phase_connections = experimental_phase_connections
 
+    @_allow_internal_frequency_derivatives
     def forward(
         self,
         f: Optional[torch.Tensor] = None,
@@ -451,12 +610,16 @@ class IMRPhenomXHM(nn.Module):
         phi_c = as_tensor(kwargs.pop("phic", phic), device=device, dtype=dtype)
         t_c = as_tensor(kwargs.pop("tc", tc), device=device, dtype=dtype)
         phi_0 = as_tensor(kwargs.pop("phi0", phi0), device=device, dtype=dtype)
+        final_spin_override = kwargs.pop("_final_spin_override", None)
+        if final_spin_override is not None:
+            final_spin_override = as_tensor(final_spin_override, device=device, dtype=dtype)
 
         active_modes = tuple(modes) if modes is not None else self.modes
 
-        # Body exchange canonical ordering (m1 >= m2)
+        # Body exchange canonical ordering (m1 >= m2), breaking equal-mass ties
+        # by spin so that Eq. (2.13) also holds for unequal-spin equal masses.
         # Binary relabeling 1 <-> 2: under 180-deg orbital rotation, odd-m modes pick up a factor (-1)^m = -1.
-        swap_mask = m1_in < m2_in
+        swap_mask = (m1_in < m2_in) | ((m1_in == m2_in) & (s1_in < s2_in))
         m1 = torch.where(swap_mask, m2_in, m1_in)
         m2 = torch.where(swap_mask, m1_in, m2_in)
         s1 = torch.where(swap_mask, s2_in, s1_in)
@@ -471,7 +634,10 @@ class IMRPhenomXHM(nn.Module):
         m_sec = total_mass * MSUN_SEC
 
         # Final remnant properties from XAS fits
-        chi_f = XASParameterFits.fit_final_spin(eta, s1, s2)
+        chi_f = (
+            XASParameterFits.fit_final_spin(eta, s1, s2)
+            if final_spin_override is None else final_spin_override
+        )
         erad = XASParameterFits.fit_erad(eta, s1, s2)
         m_f = 1.0 - erad
 
@@ -575,12 +741,13 @@ class IMRPhenomXHM(nn.Module):
             chi2=s2,
             distance=dist,
             inclination=0.0,
-            phic=phic,
-            tc=tc,
+            phic=0.0,
+            tc=0.0,
             f_ref=f_ref,
             phasing_convention=phasing_convention,
             reference_frame=reference_frame,
             return_phase=True,
+            _final_spin_override=final_spin_override,
         )
         amp_22_phys = torch.abs(hp_22_raw)
 
@@ -591,34 +758,23 @@ class IMRPhenomXHM(nn.Module):
         # Mode normalization factor relates mode amplitude to physical strain
         mode_norm = math.sqrt(16.0 * PI / 5.0)
 
-        # Evaluate carrier phase and derivative at specific geometric frequencies for boundary alignment
-        def eval_carrier_phi_and_deriv(mf_target: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:
-            eps_mf = 1e-5
-            f_hz_target = mf_target / m_sec
-            f_hz_minus = (mf_target - eps_mf) / m_sec
-            f_hz_plus = (mf_target + eps_mf) / m_sec
-            f_probe = torch.stack([f_hz_minus, f_hz_target, f_hz_plus], dim=-1)
-
-            _, _, phi_probe = self.base_22(
-                f=f_probe,
-                mass1=m1,
-                mass2=m2,
-                chi1=s1,
-                chi2=s2,
-                distance=dist,
-                inclination=0.0,
-                phic=phic,
-                tc=tc,
-                f_ref=f_ref,
-                phasing_convention=phasing_convention,
-                reference_frame=reference_frame,
-                return_phase=True,
+        def eval_carrier_at(mf_target: torch.Tensor):
+            # An explicit singleton frequency axis keeps batch axes distinct.
+            target_grid = mf_target.unsqueeze(-1) if mf_target.ndim == m_sec.ndim else mf_target
+            target_hz = target_grid / _unsqueeze_to(m_sec, target_grid)
+            hp, _, phase = self.base_22(
+                f=target_hz, mass1=m1, mass2=m2, chi1=s1, chi2=s2,
+                distance=m_sec * C_SI / MPC_SI, inclination=0.0, phic=0.0, tc=0.0,
+                f_ref=f_ref, phasing_convention=phasing_convention,
+                reference_frame=reference_frame, return_phase=True,
+                _final_spin_override=final_spin_override,
             )
-            p_minus = phi_probe[..., 0]
-            p_val = phi_probe[..., 1]
-            p_plus = phi_probe[..., 2]
-            dp_dmf = (p_plus - p_minus) / (2.0 * eps_mf)
-            return p_val, dp_dmf
+            if mf_target.ndim == m_sec.ndim:
+                return hp.squeeze(-1), phase.squeeze(-1)
+            return hp, phase
+
+        def eval_carrier_phi_and_deriv(mf_target: torch.Tensor):
+            return _value_and_derivative(lambda x: eval_carrier_at(x)[1], mf_target)
 
         h_plus_total = torch.zeros_like(
             amp_22_phys, dtype=torch.complex128 if dtype == torch.float64 else torch.complex64
@@ -658,6 +814,15 @@ class IMRPhenomXHM(nn.Module):
                 h1_fit = getattr(XHMParameterFits, f"amp_insp1_{lm_str}")(eta, s1, s2, S)
                 h2_fit = getattr(XHMParameterFits, f"amp_insp2_{lm_str}")(eta, s1, s2, S)
                 h3_fit = getattr(XHMParameterFits, f"amp_insp3_{lm_str}")(eta, s1, s2, S)
+                if m % 2 != 0:
+                    # The odd-m calibration surfaces are allowed to carry the
+                    # sign of the full strain.  Reconstructed amplitudes use
+                    # their non-negative magnitudes (arXiv:2001.10914v2,
+                    # Sec. V.A.2), so fold these collocation targets before
+                    # solving for the inspiral reconstruction coefficients.
+                    h1_fit = torch.abs(h1_fit)
+                    h2_fit = torch.abs(h2_fit)
+                    h3_fit = torch.abs(h3_fit)
 
                 rhs_insp = torch.stack([h1_fit - h1_pn, h2_fit - h2_pn, h3_fit - h3_pn], dim=-1)
                 inv_mat = _INSP_MAT_INV.to(device=device, dtype=dtype)
@@ -680,329 +845,10 @@ class IMRPhenomXHM(nn.Module):
                     f_pow = torch.pow(torch.clamp(f_in, min=1e-8), 1.0 / 12.0)
                     return (1.0 / f_pow) * (torch.abs(alam_u) * w / torch.clamp(den, min=1e-12)) * exp_term
 
-                def eval_dh_rd(f_in: torch.Tensor) -> torch.Tensor:
-                    eps_h = 1e-6
-                    return (eval_h_rd(f_in + eps_h) - eval_h_rd(f_in - eps_h)) / (2.0 * eps_h)
-
-                def eval_h_ins(f_in: torch.Tensor) -> torch.Tensor:
-                    pn_part = _pn_amplitude_ratio(l, m, f_in, eta, delta, chi_s, chi_a)
-                    f_ins_u = _unsqueeze_to(f_ins_a, f_in)
-                    a_u = _unsqueeze_to(alpha_insp, f_in)
-                    b_u = _unsqueeze_to(beta_insp, f_in)
-                    g_u = _unsqueeze_to(gamma_insp, f_in)
-                    f_ratio = f_in / f_ins_u
-                    pseudo = (
-                        a_u * torch.pow(f_ratio, 7.0 / 3.0)
-                        + b_u * torch.pow(f_ratio, 8.0 / 3.0)
-                        + g_u * torch.pow(f_ratio, 3.0)
-                    )
-                    return pn_part + pseudo
-
-                def eval_dh_ins(f_in: torch.Tensor) -> torch.Tensor:
-                    eps_h = 1e-6
-                    return (eval_h_ins(f_in + eps_h) - eval_h_ins(f_in - eps_h)) / (2.0 * eps_h)
-
-                # Intermediate amplitude collocation matching
-                f_int1 = f_ins_a + (1.0 / 3.0) * (f_rd_a - f_ins_a)
-                f_int2 = f_ins_a + (2.0 / 3.0) * (f_rd_a - f_ins_a)
-
-                h_int1_fit = getattr(XHMParameterFits, f"amp_int1_{lm_str}")(eta, s1, s2, S)
-                h_int2_fit = getattr(XHMParameterFits, f"amp_int2_{lm_str}")(eta, s1, s2, S)
-
-                h_ins_at_cut = eval_h_ins(f_ins_a)
-                dh_ins_at_cut = eval_dh_ins(f_ins_a)
-                p_ins = torch.pow(PI * f_ins_a, 7.0 / 6.0) / torch.clamp(h_ins_at_cut, min=1e-12)
-                dp_ins = torch.pow(PI * f_ins_a, 7.0 / 6.0) * (
-                    (7.0 / 6.0) / (f_ins_a * torch.clamp(h_ins_at_cut, min=1e-12))
-                    - dh_ins_at_cut / torch.clamp(h_ins_at_cut**2, min=1e-12)
-                )
-
-                p_int1 = torch.pow(PI * f_int1, 7.0 / 6.0) / torch.clamp(h_int1_fit, min=1e-12)
-                p_int2 = torch.pow(PI * f_int2, 7.0 / 6.0) / torch.clamp(h_int2_fit, min=1e-12)
-
-                h_rd_at_cut = eval_h_rd(f_rd_a)
-                dh_rd_at_cut = eval_dh_rd(f_rd_a)
-                p_rd = torch.pow(PI * f_rd_a, 7.0 / 6.0) / torch.clamp(h_rd_at_cut, min=1e-12)
-                dp_rd = torch.pow(PI * f_rd_a, 7.0 / 6.0) * (
-                    (7.0 / 6.0) / (f_rd_a * torch.clamp(h_rd_at_cut, min=1e-12))
-                    - dh_rd_at_cut / torch.clamp(h_rd_at_cut**2, min=1e-12)
-                )
-
-                def make_vandermonde_rows(f_node: torch.Tensor, is_deriv: bool = False) -> torch.Tensor:
-                    if not is_deriv:
-                        return torch.stack([
-                            torch.ones_like(f_node), f_node, f_node**2, f_node**3, f_node**4, f_node**5
-                        ], dim=-1)
-                    return torch.stack([
-                        torch.zeros_like(f_node), torch.ones_like(f_node), 2.0 * f_node, 3.0 * (f_node**2), 4.0 * (f_node**3), 5.0 * (f_node**4)
-                    ], dim=-1)
-
-                v_mat = torch.stack([
-                    make_vandermonde_rows(f_ins_a),
-                    make_vandermonde_rows(f_ins_a, is_deriv=True),
-                    make_vandermonde_rows(f_int1),
-                    make_vandermonde_rows(f_int2),
-                    make_vandermonde_rows(f_rd_a),
-                    make_vandermonde_rows(f_rd_a, is_deriv=True),
-                ], dim=-2)
-                rhs_amp = torch.stack([p_ins, dp_ins, p_int1, p_int2, p_rd, dp_rd], dim=-1)
-                delta_amp = torch.linalg.solve(v_mat, rhs_amp)
-
-                # 3rd-order Hermite polynomial (García-Quirós et al. 2020 Sec V.1.3 fallback for zero-crossings)
-                def make_hermite_rows(f_node: torch.Tensor, is_deriv: bool = False) -> torch.Tensor:
-                    if not is_deriv:
-                        return torch.stack([
-                            torch.ones_like(f_node), f_node, f_node**2, f_node**3
-                        ], dim=-1)
-                    return torch.stack([
-                        torch.zeros_like(f_node), torch.ones_like(f_node), 2.0 * f_node, 3.0 * (f_node**2)
-                    ], dim=-1)
-
-                v_mat3 = torch.stack([
-                    make_hermite_rows(f_ins_a),
-                    make_hermite_rows(f_ins_a, is_deriv=True),
-                    make_hermite_rows(f_rd_a),
-                    make_hermite_rows(f_rd_a, is_deriv=True),
-                ], dim=-2)
-                rhs_amp3 = torch.stack([p_ins, dp_ins, p_rd, dp_rd], dim=-1)
-                delta_amp3 = torch.linalg.solve(v_mat3, rhs_amp3)
-
-                p3_poly_grid = (
-                    _unsqueeze_to(delta_amp3[..., 0], mf_grid)
-                    + _unsqueeze_to(delta_amp3[..., 1], mf_grid) * mf_grid
-                    + _unsqueeze_to(delta_amp3[..., 2], mf_grid) * (mf_grid**2)
-                    + _unsqueeze_to(delta_amp3[..., 3], mf_grid) * (mf_grid**3)
-                )
-
-                # Interval-level check for 5th-order zero crossing or severe dip
-                s_nodes = torch.linspace(0.0, 1.0, 11, device=device, dtype=dtype)
-                f_ins_u1 = f_ins_a.unsqueeze(-1) if f_ins_a.dim() > 0 else f_ins_a
-                f_rd_u1 = f_rd_a.unsqueeze(-1) if f_rd_a.dim() > 0 else f_rd_a
-                nodes_check = f_ins_u1 + s_nodes * (f_rd_u1 - f_ins_u1)
-                
-                c0 = delta_amp[..., 0].unsqueeze(-1) if delta_amp.dim() > 1 else delta_amp[0]
-                c1 = delta_amp[..., 1].unsqueeze(-1) if delta_amp.dim() > 1 else delta_amp[1]
-                c2 = delta_amp[..., 2].unsqueeze(-1) if delta_amp.dim() > 1 else delta_amp[2]
-                c3_c = delta_amp[..., 3].unsqueeze(-1) if delta_amp.dim() > 1 else delta_amp[3]
-                c4 = delta_amp[..., 4].unsqueeze(-1) if delta_amp.dim() > 1 else delta_amp[4]
-                c5 = delta_amp[..., 5].unsqueeze(-1) if delta_amp.dim() > 1 else delta_amp[5]
-                
-                p5_check = c0 + c1*nodes_check + c2*(nodes_check**2) + c3_c*(nodes_check**3) + c4*(nodes_check**4) + c5*(nodes_check**5)
-                p_bound_min = torch.minimum(p_ins, p_rd)
-                p_bound_min_u = p_bound_min.unsqueeze(-1) if p_bound_min.dim() > 0 else p_bound_min
-                has_zero_crossing = torch.any(p5_check <= 0.05 * p_bound_min_u, dim=-1)
-                has_zero_crossing_u = _unsqueeze_to(has_zero_crossing, mf_grid)
-
-                # Evaluate amplitude ratio across frequency grid
-                h_ins_grid = eval_h_ins(mf_grid)
-                p_poly_grid = (
-                    _unsqueeze_to(delta_amp[..., 0], mf_grid)
-                    + _unsqueeze_to(delta_amp[..., 1], mf_grid) * mf_grid
-                    + _unsqueeze_to(delta_amp[..., 2], mf_grid) * (mf_grid**2)
-                    + _unsqueeze_to(delta_amp[..., 3], mf_grid) * (mf_grid**3)
-                    + _unsqueeze_to(delta_amp[..., 4], mf_grid) * (mf_grid**4)
-                    + _unsqueeze_to(delta_amp[..., 5], mf_grid) * (mf_grid**5)
-                )
-                f_ins_a_u = _unsqueeze_to(f_ins_a, mf_grid)
-                f_rd_a_u = _unsqueeze_to(f_rd_a, mf_grid)
-
-                # Order 1 (linear) polynomial (García-Quirós et al. 2020 Sec V.1.3 minimum order)
-                p_ins_u = _unsqueeze_to(p_ins, mf_grid)
-                p_rd_u = _unsqueeze_to(p_rd, mf_grid)
-                p1_poly_grid = p_ins_u + (mf_grid - f_ins_a_u) * (
-                    (p_rd_u - p_ins_u) / torch.clamp(f_rd_a_u - f_ins_a_u, min=1e-8)
-                )
-
-                p_bound_min = torch.minimum(p_ins, p_rd)
-                p_bound_min_u = _unsqueeze_to(p_bound_min, mf_grid)
-
-                p_poly_active = torch.where(has_zero_crossing_u, p3_poly_grid, p_poly_grid)
-                # If polynomial still dips or crosses zero, fallback to order 1 linear
-                p_poly_active = torch.where(p_poly_active <= 0.05 * p_bound_min_u, p1_poly_grid, p_poly_active)
-                p_poly_active = torch.clamp(p_poly_active, min=1e-12)
-                h_int_grid = torch.pow(PI * mf_grid, 7.0 / 6.0) / p_poly_active
-                h_rd_grid = eval_h_rd(mf_grid)
-                h_ratio_grid = torch.where(
-                    mf_grid <= f_ins_a_u,
-                    h_ins_grid,
-                    torch.where(
-                        mf_grid <= f_rd_a_u,
-                        h_int_grid,
-                        h_rd_grid,
-                    ),
-                )
-                if m % 2 != 0:
-                    zero_odd_mask = _unsqueeze_to((delta == 0.0) & (chi_a == 0.0), mf_grid)
-                    h_ratio_grid = torch.where(zero_odd_mask, torch.zeros_like(h_ratio_grid), h_ratio_grid)
-
-                amp_lm_phys = mode_norm * a0_phys * h_ratio_grid
-
-                # -------------------------------------------------------------
-                # 2. Phase Reconstruction
-                # -------------------------------------------------------------
-                beta_eta = 1.0 + 0.001 * (0.25 / torch.clamp(eta, min=1e-6) - 1.0)
-                f_start = beta_eta * f_ins_p
-                f_end = f_ring_lm if (l, m) != (3, 2) else (f_ring["22"] - 0.5 * f_damp["22"])
-
-                c_pts = [
-                    f_start,
-                    0.25 * ((math.sqrt(3.0) + 2.0) * f_start - (math.sqrt(3.0) - 2.0) * f_end),
-                    0.25 * (f_end + 3.0 * f_start),
-                    0.50 * (f_end + f_start),
-                    0.25 * (3.0 * f_end + f_start),
-                ]
-
-                if (l, m) != (3, 2):
-                    # Modes without mixing: (2,1), (3,3), (4,4)
-                    f_p1 = getattr(XHMParameterFits, f"phase_p1_{lm_str}")(eta, s1, s2, S)
-                    f_p2 = getattr(XHMParameterFits, f"phase_p2_{lm_str}")(eta, s1, s2, S)
-                    f_p3 = getattr(XHMParameterFits, f"phase_p3_{lm_str}")(eta, s1, s2, S)
-                    f_p4 = getattr(XHMParameterFits, f"phase_p4_{lm_str}")(eta, s1, s2, S)
-                    f_p5 = getattr(XHMParameterFits, f"phase_p5_{lm_str}")(eta, s1, s2, S)
-
-                    f_nodes = torch.stack(c_pts, dim=-1)
-                    f_damp_u_nodes = f_damp_lm.unsqueeze(-1) if f_damp_lm.dim() > 0 else f_damp_lm
-                    f_ring_u_nodes = f_ring_lm.unsqueeze(-1) if f_ring_lm.dim() > 0 else f_ring_lm
-                    lorentz_nodes = f_damp_u_nodes / ((f_damp_u_nodes**2) + (f_nodes - f_ring_u_nodes)**2)
-                    m_phase = torch.stack([
-                        lorentz_nodes,
-                        torch.ones_like(f_nodes),
-                        1.0 / f_nodes,
-                        1.0 / (f_nodes**2),
-                        1.0 / (f_nodes**4),
-                    ], dim=-1)
-                    rhs_phase = torch.stack([f_p1, f_p2, f_p3, f_p4, f_p5], dim=-1)
-                    a_int = torch.linalg.solve(m_phase, rhs_phase)
-
-                    a_lam = a_int[..., 0]
-                    a_0 = a_int[..., 1]
-                    a_1 = a_int[..., 2]
-                    a_2 = a_int[..., 3]
-                    a_4 = a_int[..., 4]
-
-                    def eval_dphi_int(f_in: torch.Tensor) -> torch.Tensor:
-                        damp_u = _unsqueeze_to(f_damp_lm, f_in)
-                        ring_u = _unsqueeze_to(f_ring_lm, f_in)
-                        a_lam_u = _unsqueeze_to(a_lam, f_in)
-                        a_0_u = _unsqueeze_to(a_0, f_in)
-                        a_1_u = _unsqueeze_to(a_1, f_in)
-                        a_2_u = _unsqueeze_to(a_2, f_in)
-                        a_4_u = _unsqueeze_to(a_4, f_in)
-                        lor = damp_u / ((damp_u**2) + (f_in - ring_u)**2)
-                        return (
-                            a_lam_u * lor
-                            + a_0_u
-                            + a_1_u / f_in
-                            + a_2_u / (f_in**2)
-                            + a_4_u / (f_in**4)
-                        )
-
-                    def eval_phi_int(f_in: torch.Tensor) -> torch.Tensor:
-                        damp_u = _unsqueeze_to(f_damp_lm, f_in)
-                        ring_u = _unsqueeze_to(f_ring_lm, f_in)
-                        a_lam_u = _unsqueeze_to(a_lam, f_in)
-                        a_0_u = _unsqueeze_to(a_0, f_in)
-                        a_1_u = _unsqueeze_to(a_1, f_in)
-                        a_2_u = _unsqueeze_to(a_2, f_in)
-                        a_4_u = _unsqueeze_to(a_4, f_in)
-                        return (
-                            a_lam_u * torch.atan((f_in - ring_u) / damp_u)
-                            + a_0_u * f_in
-                            + a_1_u * torch.log(torch.clamp(f_in, min=1e-12))
-                            - a_2_u / f_in
-                            - (1.0 / 3.0) * a_4_u / (f_in**3)
-                        )
-
-                    # Ringdown phase connection at f_rd_p
-                    alpha_2_lm = (f_damp["22"] / f_damp_lm) * alpha2_22
-                    dphi_rd_val = eval_dphi_int(f_rd_p)
-                    lor_rd_at_cut = f_damp_lm / ((f_damp_lm**2) + (f_rd_p - f_ring_lm)**2)
-                    dt_rd = dphi_rd_val - (
-                        alpha_2_lm * (f_ring_lm**2) / (f_rd_p**2) + alpha_lambda_22 * lor_rd_at_cut
-                    )
-                    phi_int_at_cut = eval_phi_int(f_rd_p)
-                    phi_rd_base = (
-                        -alpha_2_lm * (f_ring_lm**2) / f_rd_p
-                        + alpha_lambda_22 * torch.atan((f_rd_p - f_ring_lm) / f_damp_lm)
-                        + dt_rd * f_rd_p
-                    )
-                    dphi_rd_shift = phi_int_at_cut - phi_rd_base
-
-                    def eval_phi_rd(f_in: torch.Tensor) -> torch.Tensor:
-                        damp_u = _unsqueeze_to(f_damp_lm, f_in)
-                        ring_u = _unsqueeze_to(f_ring_lm, f_in)
-                        a2_u = _unsqueeze_to(alpha_2_lm, f_in)
-                        alam_u = _unsqueeze_to(alpha_lambda_22, f_in)
-                        dt_u = _unsqueeze_to(dt_rd, f_in)
-                        shift_u = _unsqueeze_to(dphi_rd_shift, f_in)
-                        return (
-                            -a2_u * (ring_u**2) / f_in
-                            + alam_u * torch.atan((f_in - ring_u) / damp_u)
-                            + dt_u * f_in
-                            + shift_u
-                        )
-
-                    # Alignment frequency f_align and target phase per Section 3 of SPEC-TW-2026-09-11-PARITY
-                    f_align_geom = torch.where(eta > 0.05, 0.6 * (m_flt / 2.0) * f_meco_22, (m_flt / 2.0) * f_meco_22)
-                    f_align_hz = f_align_geom / m_sec
-
-                    delta_target = (l % 2) * PI - (3.0 * PI / 8.0) * (m_flt - 2.0)
-                    if l == 2 and m == 1:
-                        ff = 0.008
-                        a21_pn = (
-                            -16.0 * delta * eta * ff * (math.pi**1.5) / (3.0 * math.sqrt(5.0))
-                            + 4.0 * (2.0**(1.0/3.0)) * ((s1 - s2) + delta * (s1 + s2)) * eta * (ff**(4.0/3.0)) * (math.pi**(11.0/6.0)) / math.sqrt(5.0)
-                            + 2.0 * (2.0**(2.0/3.0)) * eta * (306.0 * delta - 360.0 * delta * eta) * (ff**(5.0/3.0)) * (math.pi**(13.0/6.0)) / (189.0 * math.sqrt(5.0))
-                        )
-                        delta_target = delta_target + torch.where(a21_pn >= 0, torch.tensor(PI, device=device, dtype=dtype), torch.tensor(0.0, device=device, dtype=dtype))
-
-                    # Evaluate carrier phase on scaled frequency grid (2/m) * f
-                    f_scaled_grid = (2.0 / m_flt) * f_eval
-                    _, _, phi_22_scaled = self.base_22(
-                        f=f_scaled_grid,
-                        mass1=m1,
-                        mass2=m2,
-                        chi1=s1,
-                        chi2=s2,
-                        distance=dist,
-                        inclination=0.0,
-                        phic=phic,
-                        tc=tc,
-                        f_ref=f_ref,
-                        phasing_convention=phasing_convention,
-                        reference_frame=reference_frame,
-                        return_phase=True,
-                    )
-                    delta_target_u = _unsqueeze_to(delta_target, mf_grid)
-                    phi_ins_grid = (m_flt / 2.0) * phi_22_scaled + delta_target_u
-
-                    # C0 continuity connection at f_ins_p
-                    carrier_p_at_ins, _ = eval_carrier_phi_and_deriv((2.0 / m_flt) * f_ins_p)
-                    phi_ins_at_ins = (m_flt / 2.0) * carrier_p_at_ins + delta_target
-                    dphi_int_shift = phi_ins_at_ins - eval_phi_int(f_ins_p)
-                    dphi_int_shift_u = _unsqueeze_to(dphi_int_shift, mf_grid)
-
-                    phi_int_grid = eval_phi_int(mf_grid) + dphi_int_shift_u
-                    phi_rd_grid = eval_phi_rd(mf_grid) + dphi_int_shift_u
-
-                    f_ins_p_u = _unsqueeze_to(f_ins_p, mf_grid)
-                    f_rd_p_u = _unsqueeze_to(f_rd_p, mf_grid)
-                    psi_lm = torch.where(
-                        mf_grid <= f_ins_p_u,
-                        phi_ins_grid,
-                        torch.where(
-                            mf_grid <= f_rd_p_u,
-                            phi_int_grid,
-                            phi_rd_grid,
-                        ),
-                    )
-                    exp_neg_i_psi = torch.complex(torch.cos(psi_lm), -torch.sin(psi_lm))
-                    h_mode = amp_lm_phys.to(exp_neg_i_psi.dtype) * exp_neg_i_psi
-
-                else:
-                    # ---------------------------------------------------------
-                    # Mode (3, 2): Spherical-Spheroidal Mode Mixing
-                    # ---------------------------------------------------------
+                if (l, m) == (3, 2):
+                    # The three inherited calibration conditions below are not
+                    # the four data specified in Table IX. Preserve that gap;
+                    # do not fabricate a fourth fit (see the pass-2 audit).
                     alpha2_32 = alpha2_22
                     g1 = XHMParameterFits.phase_32_s_dphi_p1(eta, s1, s2, S)
                     g2 = XHMParameterFits.phase_32_s_dphi_fring32(eta, s1, s2, S)
@@ -1085,6 +931,446 @@ class IMRPhenomXHM(nn.Module):
                             + shift_u
                         )
 
+                    eval_h_rd_s = eval_h_rd
+                    alpha222 = torch.complex(*XHMParameterFits.mixing_alpha222(chi_f))
+                    alpha232 = torch.complex(*XHMParameterFits.mixing_alpha223(chi_f))
+                    alpha322 = torch.complex(*XHMParameterFits.mixing_alpha322(chi_f))
+                    alpha332 = torch.complex(*XHMParameterFits.mixing_alpha333(chi_f))
+
+                    def eval_mixed_rd_relative(f_in: torch.Tensor):
+                        strain22, phase22 = eval_carrier_at(f_in)
+                        # The carrier probe uses distance=M, so all amplitude
+                        # derivatives are evaluated before the tiny physical
+                        # distance normalization is applied.
+                        a0 = _unsqueeze_to(m_sec * torch.sqrt(5.0 * eta / 24.0) / PI ** (2.0 / 3.0), f_in) * f_in ** (-7.0 / 6.0)
+                        phase_s = eval_phi_32_s(f_in)
+                        # Eq. (4.6) defines H_lm against A^0_22. The common
+                        # sqrt(16*pi/5) factor in the paper's A^0_22 and mode
+                        # amplitude cancels, leaving the native carrier ratio.
+                        relative22 = _carrier_h22_ratio(strain22, phase22, phase_s, a0)
+                        return _spherical_32_from_spheroidal(
+                            relative22, eval_h_rd_s(f_in),
+                            _unsqueeze_to(alpha222, f_in), _unsqueeze_to(alpha232, f_in),
+                            _unsqueeze_to(alpha322, f_in), _unsqueeze_to(alpha332, f_in),
+                        )
+
+                    def eval_phi_32_rd(f_in: torch.Tensor):
+                        # Factoring out the smooth spheroidal phase avoids
+                        # wrapping its many orbital cycles into [-pi, pi].
+                        return eval_phi_32_s(f_in) - torch.angle(eval_mixed_rd_relative(f_in))
+
+                    def eval_h_rd(f_in: torch.Tensor) -> torch.Tensor:
+                        return torch.abs(eval_mixed_rd_relative(f_in))
+
+                def eval_dh_rd(f_in: torch.Tensor) -> torch.Tensor:
+                    return _value_and_derivative(eval_h_rd, f_in)[1]
+
+                def eval_h_ins(f_in: torch.Tensor) -> torch.Tensor:
+                    pn_part = _pn_amplitude_ratio(l, m, f_in, eta, delta, chi_s, chi_a)
+                    f_ins_u = _unsqueeze_to(f_ins_a, f_in)
+                    a_u = _unsqueeze_to(alpha_insp, f_in)
+                    b_u = _unsqueeze_to(beta_insp, f_in)
+                    g_u = _unsqueeze_to(gamma_insp, f_in)
+                    f_ratio = f_in / f_ins_u
+                    pseudo = (
+                        a_u * torch.pow(f_ratio, 7.0 / 3.0)
+                        + b_u * torch.pow(f_ratio, 8.0 / 3.0)
+                        + g_u * torch.pow(f_ratio, 3.0)
+                    )
+                    return pn_part + pseudo
+
+                def eval_dh_ins(f_in: torch.Tensor) -> torch.Tensor:
+                    return _value_and_derivative(eval_h_ins, f_in)[1]
+
+                # Intermediate amplitude collocation matching
+                f_int1 = f_ins_a + (1.0 / 3.0) * (f_rd_a - f_ins_a)
+                f_int2 = f_ins_a + (2.0 / 3.0) * (f_rd_a - f_ins_a)
+
+                v_int1_fit = getattr(XHMParameterFits, f"amp_int1_{lm_str}")(eta, s1, s2, S)
+                v_int2_fit = getattr(XHMParameterFits, f"amp_int2_{lm_str}")(eta, s1, s2, S)
+                if m % 2 != 0:
+                    # Eq. (5.3) fits the intermediate amplitude itself.  The
+                    # odd-m fit may be negative because its sign is folded
+                    # from the strain; the reconstructed amplitude is |fit|.
+                    v_int1_fit = torch.abs(v_int1_fit)
+                    v_int2_fit = torch.abs(v_int2_fit)
+
+                h_ins_at_cut = eval_h_ins(f_ins_a)
+                dh_ins_at_cut = eval_dh_ins(f_ins_a)
+                p_ins = torch.pow(PI * f_ins_a, 7.0 / 6.0) / torch.clamp(h_ins_at_cut, min=1e-12)
+                dp_ins = torch.pow(PI * f_ins_a, 7.0 / 6.0) * (
+                    (7.0 / 6.0) / (f_ins_a * torch.clamp(h_ins_at_cut, min=1e-12))
+                    - dh_ins_at_cut / torch.clamp(h_ins_at_cut**2, min=1e-12)
+                )
+
+                # Eq. (5.3) fits A^Inter_lm/A0, where A0 = pi*sqrt(2*eta/3)
+                # is frequency independent.  Converting that target to the
+                # Eq. (4.6) H_lm ratio supplies the common (pi*f)^(7/6)
+                # factor only when evaluating H_lm, hence p=1/(A^Inter/A0).
+                p_int1 = 1.0 / torch.clamp(v_int1_fit, min=1e-12)
+                p_int2 = 1.0 / torch.clamp(v_int2_fit, min=1e-12)
+
+                h_rd_at_cut = eval_h_rd(f_rd_a)
+                dh_rd_at_cut = eval_dh_rd(f_rd_a)
+                p_rd = torch.pow(PI * f_rd_a, 7.0 / 6.0) / torch.clamp(h_rd_at_cut, min=1e-12)
+                dp_rd = torch.pow(PI * f_rd_a, 7.0 / 6.0) * (
+                    (7.0 / 6.0) / (f_rd_a * torch.clamp(h_rd_at_cut, min=1e-12))
+                    - dh_rd_at_cut / torch.clamp(h_rd_at_cut**2, min=1e-12)
+                )
+
+                def make_vandermonde_rows(f_node: torch.Tensor, is_deriv: bool = False) -> torch.Tensor:
+                    if not is_deriv:
+                        return torch.stack([
+                            torch.ones_like(f_node), f_node, f_node**2, f_node**3, f_node**4, f_node**5
+                        ], dim=-1)
+                    return torch.stack([
+                        torch.zeros_like(f_node), torch.ones_like(f_node), 2.0 * f_node, 3.0 * (f_node**2), 4.0 * (f_node**3), 5.0 * (f_node**4)
+                    ], dim=-1)
+
+                v_mat = torch.stack([
+                    make_vandermonde_rows(f_ins_a),
+                    make_vandermonde_rows(f_ins_a, is_deriv=True),
+                    make_vandermonde_rows(f_int1),
+                    make_vandermonde_rows(f_int2),
+                    make_vandermonde_rows(f_rd_a),
+                    make_vandermonde_rows(f_rd_a, is_deriv=True),
+                ], dim=-2)
+                rhs_amp = torch.stack([p_ins, dp_ins, p_int1, p_int2, p_rd, dp_rd], dim=-1)
+                delta_amp = torch.linalg.solve(v_mat, rhs_amp)
+
+                # Parameter-space veto cubic: retain C1 matching at the
+                # endpoints after removing both intermediate values.
+                def make_hermite_rows(f_node: torch.Tensor, is_deriv: bool = False) -> torch.Tensor:
+                    if not is_deriv:
+                        return torch.stack([
+                            torch.ones_like(f_node), f_node, f_node**2, f_node**3
+                        ], dim=-1)
+                    return torch.stack([
+                        torch.zeros_like(f_node), torch.ones_like(f_node), 2.0 * f_node, 3.0 * (f_node**2)
+                    ], dim=-1)
+
+                v_mat3 = torch.stack([
+                    make_hermite_rows(f_ins_a),
+                    make_hermite_rows(f_ins_a, is_deriv=True),
+                    make_hermite_rows(f_rd_a),
+                    make_hermite_rows(f_rd_a, is_deriv=True),
+                ], dim=-2)
+                rhs_amp3 = torch.stack([p_ins, dp_ins, p_rd, dp_rd], dim=-1)
+                delta_amp3 = torch.linalg.solve(v_mat3, rhs_amp3)
+
+                # Published pole fallback: keep all four positive amplitude
+                # values and remove only the two boundary derivatives. This
+                # differs from the parameter-space veto above, which removes
+                # both inner values and retains C1 boundary matching.
+                v_mat4 = torch.stack([
+                    make_hermite_rows(f_ins_a),
+                    make_hermite_rows(f_int1),
+                    make_hermite_rows(f_int2),
+                    make_hermite_rows(f_rd_a),
+                ], dim=-2)
+                rhs_amp4 = torch.stack([p_ins, p_int1, p_int2, p_rd], dim=-1)
+                delta_amp4 = torch.linalg.solve(v_mat4, rhs_amp4)
+                # A single surviving inner value leaves five conditions and
+                # therefore a quartic inverse polynomial.  The two variants
+                # are kept separate so a veto of fInt1 still preserves fInt2
+                # (and conversely) in a later pole fallback.
+                def make_quartic_value_row(f_node: torch.Tensor) -> torch.Tensor:
+                    return torch.stack([
+                        torch.ones_like(f_node), f_node, f_node**2, f_node**3, f_node**4,
+                    ], dim=-1)
+
+                def make_quartic_deriv_row(f_node: torch.Tensor) -> torch.Tensor:
+                    return torch.stack([
+                        torch.zeros_like(f_node), torch.ones_like(f_node),
+                        2.0 * f_node, 3.0 * f_node**2, 4.0 * f_node**3,
+                    ], dim=-1)
+
+                v_mat5_1 = torch.stack([
+                    make_quartic_value_row(f_ins_a), make_quartic_deriv_row(f_ins_a),
+                    make_quartic_value_row(f_int1), make_quartic_value_row(f_rd_a),
+                    make_quartic_deriv_row(f_rd_a),
+                ], dim=-2)
+                v_mat5_2 = torch.stack([
+                    make_quartic_value_row(f_ins_a), make_quartic_deriv_row(f_ins_a),
+                    make_quartic_value_row(f_int2), make_quartic_value_row(f_rd_a),
+                    make_quartic_deriv_row(f_rd_a),
+                ], dim=-2)
+                delta_amp5_1 = torch.linalg.solve(
+                    v_mat5_1, torch.stack([p_ins, dp_ins, p_int1, p_rd, dp_rd], dim=-1),
+                )
+                delta_amp5_2 = torch.linalg.solve(
+                    v_mat5_2, torch.stack([p_ins, dp_ins, p_int2, p_rd, dp_rd], dim=-1),
+                )
+                # Lower-order value-only branches preserve every surviving
+                # amplitude value when a denominator pole is found.
+                def make_value_row(f_node: torch.Tensor) -> torch.Tensor:
+                    return torch.stack([
+                        torch.ones_like(f_node), f_node, f_node**2, f_node**3,
+                    ], dim=-1)
+
+                v_mat2_1 = torch.stack([
+                    make_value_row(f_ins_a), make_value_row(f_int1), make_value_row(f_rd_a),
+                ], dim=-2)[..., :3, :3]
+                v_mat2_2 = torch.stack([
+                    make_value_row(f_ins_a), make_value_row(f_int2), make_value_row(f_rd_a),
+                ], dim=-2)[..., :3, :3]
+                delta_amp2_1 = torch.linalg.solve(v_mat2_1, torch.stack([p_ins, p_int1, p_rd], dim=-1))
+                delta_amp2_2 = torch.linalg.solve(v_mat2_2, torch.stack([p_ins, p_int2, p_rd], dim=-1))
+                v_mat1 = torch.stack([
+                    torch.ones_like(f_ins_a), f_ins_a,
+                    torch.ones_like(f_rd_a), f_rd_a,
+                ], dim=-1).reshape(f_ins_a.shape + (2, 2))
+                delta_amp1 = torch.linalg.solve(v_mat1, torch.stack([p_ins, p_rd], dim=-1))
+                # The source's numeric Table VI thresholds are deferred: it
+                # does not resolve raw A versus A/A0 threshold units.
+                h_int1_at_cut = v_int1_fit
+                h_int2_at_cut = v_int2_fit
+                # Monotonicity compares the four collocation
+                # amplitudes in the common A/A0 convention.  The endpoint
+                # values are 1/p at the same cuts; using H there would mix in
+                # a frequency-dependent (pi*f)^(7/6) factor.
+                alive1, alive2, remove_derivatives = _ordered_amplitude_vetoes(
+                    (l, m), m1 / m2, eta, s1, s2,
+                    1.0 / torch.clamp(p_ins, min=1e-12),
+                    h_int1_at_cut, h_int2_at_cut,
+                    1.0 / torch.clamp(p_rd, min=1e-12),
+                )
+
+                # Select coefficients per intrinsic row before checking them.
+                # An unselected reconstruction must never trigger a fallback.
+                def pad_coefficients(coefficients: torch.Tensor, count: int) -> torch.Tensor:
+                    return torch.nn.functional.pad(coefficients, (0, count - coefficients.shape[-1]))
+
+                full = (alive1 & alive2).unsqueeze(-1)
+                one1 = (alive1 & ~alive2).unsqueeze(-1)
+                one2 = (~alive1 & alive2).unsqueeze(-1)
+                active_coefficients = torch.where(full, delta_amp, pad_coefficients(delta_amp3, 6))
+                active_coefficients = torch.where(one1, pad_coefficients(delta_amp5_1, 6), active_coefficients)
+                active_coefficients = torch.where(one2, pad_coefficients(delta_amp5_2, 6), active_coefficients)
+
+                # Dropping both boundary derivatives retains every surviving
+                # value. The paper does not specify a one-derivative-at-a-time
+                # order; removing both together is the retained interpretation.
+                value_coefficients = torch.where(full, delta_amp4, pad_coefficients(delta_amp1, 4))
+                value_coefficients = torch.where(one1, pad_coefficients(delta_amp2_1, 4), value_coefficients)
+                value_coefficients = torch.where(one2, pad_coefficients(delta_amp2_2, 4), value_coefficients)
+                active_coefficients = torch.where(
+                    remove_derivatives.unsqueeze(-1), pad_coefficients(value_coefficients, 6), active_coefficients,
+                )
+                use_pole_fallback = polynomial_has_nonpositive(active_coefficients, f_ins_a, f_rd_a)
+                fallback_bad = polynomial_has_nonpositive(value_coefficients, f_ins_a, f_rd_a)
+                selected_coefficients = torch.where(
+                    use_pole_fallback.unsqueeze(-1), pad_coefficients(value_coefficients, 6), active_coefficients,
+                )
+                selected_coefficients = torch.where(
+                    (use_pole_fallback & fallback_bad).unsqueeze(-1),
+                    pad_coefficients(delta_amp1, 6), selected_coefficients,
+                )
+                # Numerical stationary-point checks replace the old eleven
+                # samples and five-percent floor. Decisions are detached;
+                # the selected polynomial retains parameter gradients.
+                p_poly_active = torch.zeros_like(mf_grid)
+                for power in range(5, -1, -1):
+                    p_poly_active = p_poly_active * mf_grid + _unsqueeze_to(selected_coefficients[..., power], mf_grid)
+                p_poly_active = torch.clamp(p_poly_active, min=1e-12)
+                f_ins_a_u = _unsqueeze_to(f_ins_a, mf_grid)
+                f_rd_a_u = _unsqueeze_to(f_rd_a, mf_grid)
+                h_ins_grid = eval_h_ins(mf_grid)
+                h_int_grid = torch.pow(PI * mf_grid, 7.0 / 6.0) / p_poly_active
+                h_rd_grid = eval_h_rd(mf_grid)
+                h_ratio_grid = torch.where(
+                    mf_grid <= f_ins_a_u,
+                    h_ins_grid,
+                    torch.where(
+                        mf_grid <= f_rd_a_u,
+                        h_int_grid,
+                        h_rd_grid,
+                    ),
+                )
+                if m % 2 != 0:
+                    zero_odd_mask = _unsqueeze_to((delta == 0.0) & (chi_a == 0.0), mf_grid)
+                    h_ratio_grid = torch.where(zero_odd_mask, torch.zeros_like(h_ratio_grid), h_ratio_grid)
+
+                amp_lm_phys = mode_norm * a0_phys * h_ratio_grid
+
+                # -------------------------------------------------------------
+                # 2. Phase Reconstruction
+                # -------------------------------------------------------------
+                beta_eta = 1.0 + 0.001 * (0.25 / torch.clamp(eta, min=1e-6) - 1.0)
+                f_start = beta_eta * f_ins_p
+                f_end = f_ring_lm if (l, m) != (3, 2) else (f_ring["22"] - 0.5 * f_damp["22"])
+
+                c_pts = [
+                    f_start,
+                    0.25 * ((math.sqrt(3.0) + 2.0) * f_start - (math.sqrt(3.0) - 2.0) * f_end),
+                    0.25 * (f_end + 3.0 * f_start),
+                    0.50 * (f_end + f_start),
+                    0.25 * (3.0 * f_end + f_start),
+                    0.125 * (7.0 * f_end + f_start),
+                ]
+
+                if (l, m) != (3, 2):
+                    # Modes without mixing: (2,1), (3,3), (4,4)
+                    f_p1 = getattr(XHMParameterFits, f"phase_p1_{lm_str}")(eta, s1, s2, S)
+                    f_p2 = getattr(XHMParameterFits, f"phase_p2_{lm_str}")(eta, s1, s2, S)
+                    f_p3 = getattr(XHMParameterFits, f"phase_p3_{lm_str}")(eta, s1, s2, S)
+                    f_p4 = getattr(XHMParameterFits, f"phase_p4_{lm_str}")(eta, s1, s2, S)
+                    f_p6 = getattr(XHMParameterFits, f"phase_p6_{lm_str}")(eta, s1, s2, S)
+
+                    # Table VII / Fig. 8 default subset: [C1,C2,E2,E3,E5]
+                    # = [f1,f2,f3,f4,f6].  The fifth table point is reserved
+                    # for the paper's sparse-calibration subset.
+                    f_nodes = torch.stack([c_pts[0], c_pts[1], c_pts[2], c_pts[3], c_pts[5]], dim=-1)
+                    f_damp_u_nodes = f_damp_lm.unsqueeze(-1) if f_damp_lm.dim() > 0 else f_damp_lm
+                    f_ring_u_nodes = f_ring_lm.unsqueeze(-1) if f_ring_lm.dim() > 0 else f_ring_lm
+                    lorentz_nodes = f_damp_u_nodes / ((f_damp_u_nodes**2) + (f_nodes - f_ring_u_nodes)**2)
+                    m_phase = torch.stack([
+                        lorentz_nodes,
+                        torch.ones_like(f_nodes),
+                        1.0 / f_nodes,
+                        1.0 / (f_nodes**2),
+                        1.0 / (f_nodes**4),
+                    ], dim=-1)
+                    rhs_phase = torch.stack([f_p1, f_p2, f_p3, f_p4, f_p6], dim=-1)
+                    a_int = torch.linalg.solve(m_phase, rhs_phase)
+
+                    a_lam = a_int[..., 0]
+                    a_0 = a_int[..., 1]
+                    a_1 = a_int[..., 2]
+                    a_2 = a_int[..., 3]
+                    a_4 = a_int[..., 4]
+
+                    def eval_dphi_int(f_in: torch.Tensor) -> torch.Tensor:
+                        damp_u = _unsqueeze_to(f_damp_lm, f_in)
+                        ring_u = _unsqueeze_to(f_ring_lm, f_in)
+                        a_lam_u = _unsqueeze_to(a_lam, f_in)
+                        a_0_u = _unsqueeze_to(a_0, f_in)
+                        a_1_u = _unsqueeze_to(a_1, f_in)
+                        a_2_u = _unsqueeze_to(a_2, f_in)
+                        a_4_u = _unsqueeze_to(a_4, f_in)
+                        lor = damp_u / ((damp_u**2) + (f_in - ring_u)**2)
+                        return (
+                            a_lam_u * lor
+                            + a_0_u
+                            + a_1_u / f_in
+                            + a_2_u / (f_in**2)
+                            + a_4_u / (f_in**4)
+                        )
+
+                    def eval_phi_int(f_in: torch.Tensor) -> torch.Tensor:
+                        damp_u = _unsqueeze_to(f_damp_lm, f_in)
+                        ring_u = _unsqueeze_to(f_ring_lm, f_in)
+                        a_lam_u = _unsqueeze_to(a_lam, f_in)
+                        a_0_u = _unsqueeze_to(a_0, f_in)
+                        a_1_u = _unsqueeze_to(a_1, f_in)
+                        a_2_u = _unsqueeze_to(a_2, f_in)
+                        a_4_u = _unsqueeze_to(a_4, f_in)
+                        return (
+                            a_lam_u * torch.atan((f_in - ring_u) / damp_u)
+                            + a_0_u * f_in
+                            + a_1_u * torch.log(torch.clamp(f_in, min=1e-12))
+                            - a_2_u / f_in
+                            - (1.0 / 3.0) * a_4_u / (f_in**3)
+                        )
+
+                    # Ringdown phase connection at f_rd_p
+                    alpha_2_lm = (f_damp["22"] / f_damp_lm) * alpha2_22
+                    dphi_rd_val = eval_dphi_int(f_rd_p)
+                    lor_rd_at_cut = f_damp_lm / ((f_damp_lm**2) + (f_rd_p - f_ring_lm)**2)
+                    dt_rd = dphi_rd_val - (
+                        alpha_2_lm * (f_ring_lm**2) / (f_rd_p**2) + alpha_lambda_22 * lor_rd_at_cut
+                    )
+                    phi_int_at_cut = eval_phi_int(f_rd_p)
+                    phi_rd_base = (
+                        -alpha_2_lm * (f_ring_lm**2) / f_rd_p
+                        + alpha_lambda_22 * torch.atan((f_rd_p - f_ring_lm) / f_damp_lm)
+                        + dt_rd * f_rd_p
+                    )
+                    dphi_rd_shift = phi_int_at_cut - phi_rd_base
+
+                    def eval_phi_rd(f_in: torch.Tensor) -> torch.Tensor:
+                        damp_u = _unsqueeze_to(f_damp_lm, f_in)
+                        ring_u = _unsqueeze_to(f_ring_lm, f_in)
+                        a2_u = _unsqueeze_to(alpha_2_lm, f_in)
+                        alam_u = _unsqueeze_to(alpha_lambda_22, f_in)
+                        dt_u = _unsqueeze_to(dt_rd, f_in)
+                        shift_u = _unsqueeze_to(dphi_rd_shift, f_in)
+                        return (
+                            -a2_u * (ring_u**2) / f_in
+                            + alam_u * torch.atan((f_in - ring_u) / damp_u)
+                            + dt_u * f_in
+                            + shift_u
+                        )
+
+                    # Inherited phase convention; its calibrated alignment
+                    # remains outside the published-equation certification.
+                    delta_target = (l % 2) * PI - (3.0 * PI / 8.0) * (m_flt - 2.0)
+                    if l == 2 and m == 1:
+                        ff = 0.008
+                        a21_pn = (
+                            -16.0 * delta * eta * ff * (math.pi**1.5) / (3.0 * math.sqrt(5.0))
+                            + 4.0 * (2.0**(1.0/3.0)) * ((s1 - s2) + delta * (s1 + s2)) * eta * (ff**(4.0/3.0)) * (math.pi**(11.0/6.0)) / math.sqrt(5.0)
+                            + 2.0 * (2.0**(2.0/3.0)) * eta * (306.0 * delta - 360.0 * delta * eta) * (ff**(5.0/3.0)) * (math.pi**(13.0/6.0)) / (189.0 * math.sqrt(5.0))
+                        )
+                        delta_target = delta_target + torch.where(a21_pn >= 0, torch.tensor(PI, device=device, dtype=dtype), torch.tensor(0.0, device=device, dtype=dtype))
+
+                    # Evaluate carrier phase on scaled frequency grid (2/m) * f
+                    f_scaled_grid = (2.0 / m_flt) * f_eval
+                    _, _, phi_22_scaled = self.base_22(
+                        f=f_scaled_grid,
+                        mass1=m1,
+                        mass2=m2,
+                        chi1=s1,
+                        chi2=s2,
+                        distance=dist,
+                        inclination=0.0,
+                        phic=0.0,
+                        tc=0.0,
+                        f_ref=f_ref,
+                        phasing_convention=phasing_convention,
+                        reference_frame=reference_frame,
+                        return_phase=True,
+                        _final_spin_override=final_spin_override,
+                    )
+                    delta_target_u = _unsqueeze_to(delta_target, mf_grid)
+                    carrier_p_at_ins, carrier_dp_at_ins = eval_carrier_phi_and_deriv((2.0 / m_flt) * f_ins_p)
+                    phi_ins_grid = (m_flt / 2.0) * phi_22_scaled + delta_target_u
+                    phi_ins_at_ins = (m_flt / 2.0) * carrier_p_at_ins + delta_target
+                    if self.experimental_phase_connections:
+                        # Eq. (4.11) fixes the linear shift from the calibrated
+                        # intermediate derivative. Its fit-target/time-gauge
+                        # convention must be established before enabling this
+                        # reconstruction by default (see the pass-2 audit).
+                        lambda_at_ins, lambda_dp_at_ins = _value_and_derivative(
+                            lambda x: _pn_phase_lambda(l, m, x, eta, delta), f_ins_p,
+                        )
+                        dphi_ins = eval_dphi_int(f_ins_p) - carrier_dp_at_ins - lambda_dp_at_ins
+                        phi_ins_grid = phi_ins_grid + _pn_phase_lambda(l, m, mf_grid, eta, delta) + _unsqueeze_to(dphi_ins, mf_grid) * mf_grid
+                        phi_ins_at_ins = phi_ins_at_ins + lambda_at_ins + dphi_ins * f_ins_p
+                    dphi_int_shift = phi_ins_at_ins - eval_phi_int(f_ins_p)
+                    dphi_int_shift_u = _unsqueeze_to(dphi_int_shift, mf_grid)
+
+                    phi_int_grid = eval_phi_int(mf_grid) + dphi_int_shift_u
+                    phi_rd_grid = eval_phi_rd(mf_grid) + dphi_int_shift_u
+
+                    f_ins_p_u = _unsqueeze_to(f_ins_p, mf_grid)
+                    f_rd_p_u = _unsqueeze_to(f_rd_p, mf_grid)
+                    psi_lm = torch.where(
+                        mf_grid <= f_ins_p_u,
+                        phi_ins_grid,
+                        torch.where(
+                            mf_grid <= f_rd_p_u,
+                            phi_int_grid,
+                            phi_rd_grid,
+                        ),
+                    )
+                    exp_neg_i_psi = torch.complex(torch.cos(psi_lm), -torch.sin(psi_lm))
+                    h_mode = amp_lm_phys.to(exp_neg_i_psi.dtype) * exp_neg_i_psi
+
+                else:
+                    # ---------------------------------------------------------
+                    # Mode (3, 2): Spherical-Spheroidal Mode Mixing
+                    # ---------------------------------------------------------
                     # Intermediate phase for (3,2)
                     f_p1_32 = XHMParameterFits.phase_p1_32(eta, s1, s2, S)
                     f_p2_32 = XHMParameterFits.phase_p2_32(eta, s1, s2, S)
@@ -1103,9 +1389,9 @@ class IMRPhenomXHM(nn.Module):
                         ring_u = _unsqueeze_to(f_ring["32"], f_in)
                         return -2.0 * damp_u * (f_in - ring_u) / (((damp_u**2) + (f_in - ring_u)**2)**2)
 
-                    eps_diff = 1e-6
-                    dphi_rd_at_join = eval_dphi_32_s(f_rd_p)
-                    d2phi_rd_at_join = (eval_dphi_32_s(f_rd_p + eps_diff) - eval_dphi_32_s(f_rd_p - eps_diff)) / (2.0 * eps_diff)
+                    dphi_rd_at_join, d2phi_rd_at_join = _value_and_derivative(
+                        lambda x: _value_and_derivative(eval_phi_32_rd, x)[1], f_rd_p,
+                    )
 
                     rows_32 = []
                     for i_pt in range(4):
@@ -1165,22 +1451,27 @@ class IMRPhenomXHM(nn.Module):
                             - (1.0 / 3.0) * a_4_u / (f_in**3)
                         )
 
-                    c_int_32 = eval_phi_32_s(f_rd_p) - eval_phi_int_32(f_rd_p)
+                    c_int_32 = eval_phi_32_rd(f_rd_p) - eval_phi_int_32(f_rd_p)
 
-                    # Alignment frequency f_align and target phase per Section 3 of SPEC-TW-2026-09-11-PARITY
-                    f_align_geom_32 = torch.where(eta > 0.05, 0.6 * f_meco_22, f_meco_22)
-                    f_align_hz_32 = f_align_geom_32 / m_sec
+                    # Inherited phase convention; its calibrated alignment
+                    # remains outside the published-equation certification.
                     delta_target_32 = PI
+                    carrier_p_at_ins, carrier_dp_at_ins = eval_carrier_phi_and_deriv(f_ins_p)
                     phi_ins_32_grid = phi_22_carrier + delta_target_32
-
-                    carrier_p_at_ins, _ = eval_carrier_phi_and_deriv(f_ins_p)
                     phi_ins_at_ins_32 = carrier_p_at_ins + delta_target_32
+                    if self.experimental_phase_connections:
+                        lambda_at_ins, lambda_dp_at_ins = _value_and_derivative(
+                            lambda x: _pn_phase_lambda(l, m, x, eta, delta), f_ins_p,
+                        )
+                        dphi_ins_32 = eval_dphi_int_32(f_ins_p) - carrier_dp_at_ins - lambda_dp_at_ins
+                        phi_ins_32_grid = phi_ins_32_grid + _pn_phase_lambda(l, m, mf_grid, eta, delta) + _unsqueeze_to(dphi_ins_32, mf_grid) * mf_grid
+                        phi_ins_at_ins_32 = phi_ins_at_ins_32 + lambda_at_ins + dphi_ins_32 * f_ins_p
                     dphi_int_shift_32 = phi_ins_at_ins_32 - (eval_phi_int_32(f_ins_p) + c_int_32)
                     dphi_int_shift_32_u = _unsqueeze_to(dphi_int_shift_32, mf_grid)
                     c_int_32_u = _unsqueeze_to(c_int_32, mf_grid)
 
                     phi_int_32_grid = eval_phi_int_32(mf_grid) + c_int_32_u + dphi_int_shift_32_u
-                    phi_rd_32_s_grid = eval_phi_32_s(mf_grid) + dphi_int_shift_32_u
+                    phi_rd_32_grid = eval_phi_32_rd(mf_grid) + dphi_int_shift_32_u
 
                     f_ins_p_u = _unsqueeze_to(f_ins_p, mf_grid)
                     f_rd_p_u = _unsqueeze_to(f_rd_p, mf_grid)
@@ -1190,36 +1481,19 @@ class IMRPhenomXHM(nn.Module):
                         torch.where(
                             mf_grid <= f_rd_p_u,
                             phi_int_32_grid,
-                            phi_rd_32_s_grid,
+                            phi_rd_32_grid,
                         ),
                     )
 
-                    # Complex mixing coefficients from XHMParameterFits
-                    alpha322_re, alpha322_im = XHMParameterFits.mixing_alpha322(chi_f)
-                    alpha333_re, alpha333_im = XHMParameterFits.mixing_alpha333(chi_f)
-                    alpha322 = torch.complex(alpha322_re, alpha322_im)
-                    alpha332 = torch.complex(alpha333_re, alpha333_im)
+                    # Both amplitude and phase are already spherical here.
+                    # Each has its own published transition frequency (Table II).
+                    h_mode = amp_lm_phys * torch.exp(-1j * phi_32_imr)
 
-                    alpha322_u = _unsqueeze_to(alpha322, mf_grid)
-                    alpha332_u = _unsqueeze_to(alpha332, mf_grid)
-
-                    # Mode strain in spheroidal basis for ringdown:
-                    exp_neg_i_psi_32_s = torch.complex(torch.cos(phi_rd_32_s_grid), -torch.sin(phi_rd_32_s_grid))
-                    h32_s = amp_lm_phys.to(exp_neg_i_psi_32_s.dtype) * exp_neg_i_psi_32_s
-
-                    # Transformed strain for ringdown (f > f_rd_a = f_ring_22)
-                    h32_mixed = alpha322_u * h22_mode_strain + alpha332_u * h32_s
-
-                    # Unmixed strain for f <= f_rd_a
-                    exp_neg_i_psi_32 = torch.complex(torch.cos(phi_32_imr), -torch.sin(phi_32_imr))
-                    h32_unmixed = amp_lm_phys.to(exp_neg_i_psi_32.dtype) * exp_neg_i_psi_32
-
-                    f_rd_a_u = _unsqueeze_to(f_rd_a, mf_grid)
-                    h_mode = torch.where(
-                        mf_grid <= f_rd_a_u,
-                        h32_unmixed,
-                        h32_mixed,
-                    )
+            # Apply the Fourier time shift and orbital phase once, after the
+            # intrinsic joins and (3,2) mixing. Their factors must be common to
+            # every frequency region (García-Quirós et al., Sec. II B and Eq. (2.13)).
+            extrinsic_phase = 2.0 * PI * f_eval * tc_eval - float(m) * phic_eval
+            h_mode = h_mode * torch.complex(torch.cos(extrinsic_phase), -torch.sin(extrinsic_phase))
 
             # Apply body exchange swap phase (-1)^m for odd-m modes when swapped
             if m % 2 != 0:

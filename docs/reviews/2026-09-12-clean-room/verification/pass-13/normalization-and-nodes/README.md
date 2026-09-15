@@ -1,0 +1,1 @@
+Initial pass-13 normalization and phase-node verification, before the source-reviewed denominator fallback correction. Full suite: 1118 passed,8 skipped. Strict catalog11/21 and holdouts4/13; component3/34. This is historical intermediate evidence, not the final state. Parent retained all outputs before the further correction. No metrics were provided to implementers.

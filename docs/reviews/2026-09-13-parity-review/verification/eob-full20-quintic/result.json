@@ -1,0 +1,94 @@
+{
+  "timestamp_utc": "2026-09-13T22:41:47.770935+00:00",
+  "host": "RONI2",
+  "python": "3.13.9",
+  "torch": "2.9.1",
+  "lal_version": "7.7.0",
+  "lalsimulation_version": "6.2.0",
+  "verifier_sha256": "aa4f3b95d63a696f27d2efbfe9fd20d4365cf2e41285f29bf7d821056de3b092",
+  "input_sha256": "1d2df0d77bfbb80e531f9025168d1acc9b4145d2a305ea1d45bfee49732a7602",
+  "run_result_sha256": "f9c3d5485705c5a2f71dc231490eea2c1da665600c6be8de16707b0f6ee7a584",
+  "run_source_hashes": null,
+  "run_cli": [
+    "scripts/verify_eob_full20_saved.py",
+    "--input-dir",
+    "docs/reviews/2026-09-13-parity-review/verification/eob-full20",
+    "--output-dir",
+    "docs/reviews/2026-09-13-parity-review/verification/eob-full20-quintic",
+    "--interpolation",
+    "quintic",
+    "--time-origin",
+    "orbital_peak"
+  ],
+  "interpolation": "quintic",
+  "time_origin": "orbital_peak",
+  "time_origin_key": "peak_time",
+  "native_support_s": [
+    -1.2320381845222033,
+    0.03590632267434979
+  ],
+  "binary_support_s": [
+    -1.232042294,
+    0.09439241819979305
+  ],
+  "common_support_s": [
+    -1.2320381845222033,
+    0.03590632267434979
+  ],
+  "raw_common_relative_l2": 0.0008332416885412429,
+  "active_samples": 10179,
+  "active_threshold": "amplitude > 0.1% of each waveform maximum; phase/frequency only",
+  "native_frequency_hz": [
+    20.005462924562348,
+    350.0700114442785
+  ],
+  "binary_frequency_hz": [
+    20.00548200451087,
+    350.11271280249935
+  ],
+  "frequency_rms_hz": 0.005261152557306341,
+  "phase_rms_rad": 0.0008166916872174363,
+  "phase_max_abs_rad": 0.005964233498081851,
+  "phase_residual_at_common_start_rad": 0.00047070517896038083,
+  "native_phase_at_same_event_rad": -1.6908430029241601,
+  "binary_phase_at_same_event_rad": -1.691855941503627,
+  "native_amplitude_peak_time_s": -0.001034859432959713,
+  "binary_amplitude_peak_time_s": -0.0010389689107563882,
+  "dropped_tail_energy_fraction": 0.0,
+  "dropped_tail_definition": "sum |binary h22|^2 after native end / total binary sum",
+  "omitted_binary_energy": {
+    "leading_integral": 1.8701340370286557e-47,
+    "trailing_integral": 0.0,
+    "total_integral": 1.037415532499854e-41,
+    "leading_fraction": 1.8026855955416484e-06,
+    "trailing_fraction": 0.0,
+    "definition": "trapezoidal time integral outside common native/binary support"
+  },
+  "projection_roundtrip_relative_l2": {
+    "plus": 2.5576740632360614e-17,
+    "cross": 1.0382802876130778e-16
+  },
+  "all_input_arrays_finite": true,
+  "intervals": {
+    "early": {
+      "samples": 9194,
+      "relative_l2": 0.0006615623047130408,
+      "phase_frequency_active_samples": 9194
+    },
+    "inspiral": {
+      "samples": 10006,
+      "relative_l2": 0.0008265613852965922,
+      "phase_frequency_active_samples": 10006
+    },
+    "merger": {
+      "samples": 325,
+      "relative_l2": 0.0012649430222945182,
+      "phase_frequency_active_samples": 325
+    },
+    "ringdown": {
+      "samples": 130,
+      "relative_l2": 0.07010530638760627,
+      "phase_frequency_active_samples": 11
+    }
+  }
+}

@@ -1,0 +1,61 @@
+# Torch TD→FD conditioning verification
+
+Date: 2026-09-14  
+Environment: `/Users/xangma/miniconda3/envs/pycbcorig313/bin/python`,
+`PYTHONPATH=src:tests:scripts:.`, `PYTEST_DISABLE_PLUGIN_AUTOLOAD=1`
+
+The implementation is isolated in
+`src/torchwave/approximants/eob/td_fd_conditioning_clean.py`.  It has no LAL
+or SciPy import.  The filter is a Torch recurrence over four bilinear
+Butterworth sections, and the FFT path uses `dt * torch.fft.rfft`.  Support,
+tapers, filter coefficients, sample sizing, paired leading pad/crop, and the
+optional `tc` phase are separate APIs; tensor parameters remain on the
+caller's device and autograd graph.
+
+## Checks
+
+Commands:
+
+```text
+PYTHONPATH=src:tests:scripts:. PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 \
+  /Users/xangma/miniconda3/envs/pycbcorig313/bin/python -m pytest -q \
+  tests/test_td_fd_conditioning_clean.py
+PYTHONPATH=src:tests:scripts:. PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 \
+  /Users/xangma/miniconda3/envs/pycbcorig313/bin/python \
+  scripts/diagnose_td_fd_conditioning_clean.py
+```
+
+Results on this host:
+
+* Focused tests: **7 passed**.
+* The 30+20 and 1.4+1.4 zero-spin support fixtures agree with the contract
+  at about `7e-14` seconds or better.  The support calculation uses positive
+  TaylorT2 terms through 2PN, the independently derived `54πM` orbital period
+  at `r=9M`, and 11 fundamental 22-mode damping times.
+* The analytic half-cosine samples for `n=4` are
+  `[0, 0.1464466094, 0.5, 0.8535533906, 1, ...]`.  A synthetic 527-sample
+  paired fixture trims seven exact suffix zeros after filtering and reports
+  taper counts `(first, second-begin, second-end) = (503, 125, 64)`.
+* Against SciPy's independently constructed standard eighth-order SOS
+  Butterworth filter (same prewarped corner and section order), the Torch
+  recurrence has relative L2 error `1.214e-15` and maximum absolute error
+  `4.441e-15` for a deterministic length-4096 vector in float64.
+* The diagnostic run takes about `229 ms` for the four-section forward/reverse
+  recurrence at `N=4096` and `6.75 s` at `N=120000`; cost is linear in samples
+  and sections, with batch entries evaluated in parallel.  A float32 batched
+  TD→FD check produced finite outputs and a finite gradient through the
+  waveform and `tc` phase.
+* Fourier checks cover explicit `f_max/delta_f` sizing (`100/1 → N=256`,
+  Nyquist `128 Hz`) and automatic strict-power-of-two sizing (`n=8 → N=16`).
+
+## Provenance
+
+The timing expression was derived from the standard PN phasing equations in
+Blanchet, *Living Reviews in Relativity* (2014),
+<https://arxiv.org/abs/1310.1528>.  The fundamental Kerr 22 QNM fit is from
+Berti, Cardoso & Will, Appendix E/Table VIII,
+<https://arxiv.org/abs/gr-qc/0512160>.  The equal-mass aligned remnant-spin
+linear estimate is from Tichy & Marronetti,
+<https://arxiv.org/abs/0807.2985>.  No constants were fitted to LAL; public
+SciPy was used only as an independent numerical filter check, and no native
+EOB trajectory was started.

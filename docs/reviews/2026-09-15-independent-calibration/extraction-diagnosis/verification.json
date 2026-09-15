@@ -1,0 +1,75 @@
+{
+  "created_utc": "2026-09-15T10:16:01.125559+00:00",
+  "host": "RONI2",
+  "cwd": "/Users/xangma/repos/torchwave",
+  "python": "/Users/xangma/miniconda3/envs/pycbcorig313/bin/python",
+  "frozen_artifacts": {
+    "docs/reviews/2026-09-15-independent-calibration/nr33-calibration.json": {
+      "expected": "f447acda86f64f1d13745c8a5d725acdf295b050a2638d1731d4b6a139e1358d",
+      "actual": "f447acda86f64f1d13745c8a5d725acdf295b050a2638d1731d4b6a139e1358d",
+      "unchanged": true
+    },
+    "docs/reviews/2026-09-15-independent-calibration/nr33-data-manifest.json": {
+      "expected": "53504f1a5143afec714c23fae19c124932f55b8a35bde641e1b89ca363208aea",
+      "actual": "53504f1a5143afec714c23fae19c124932f55b8a35bde641e1b89ca363208aea",
+      "unchanged": true
+    },
+    "scripts/fit_nr33_amplitude_pilot.py": {
+      "expected": "e307ef505094a5f3d568690d3a9f44cff58d9683d3c29f91e62cc7d2f17ed554",
+      "actual": "e307ef505094a5f3d568690d3a9f44cff58d9683d3c29f91e62cc7d2f17ed554",
+      "unchanged": true
+    },
+    "scripts/kerr_leaver_solver.py": {
+      "expected": "a7b07b28962b676271645fd60cf6bd7c2684c8c92e801579897f2d8f84698fc9",
+      "actual": "a7b07b28962b676271645fd60cf6bd7c2684c8c92e801579897f2d8f84698fc9",
+      "unchanged": true
+    }
+  },
+  "runtime_baseline": {
+    "record": "docs/reviews/2026-09-15-no-contact/verification/baseline/source-record.json",
+    "sha256": "04b3d5e16885fab1c18250450243c3fa601452ceaec02d8e59d385e5ae7f5da7",
+    "files_checked": 139,
+    "changed": []
+  },
+  "checks": {
+    "pytest": {
+      "command": "PYTHONPATH=src /Users/xangma/miniconda3/envs/pycbcorig313/bin/python -m pytest -q tests/test_nr33_amplitude_pilot.py tests/test_nr33_amplitude_validation.py tests/test_nr33_calibration_provenance.py",
+      "exit_code": 0,
+      "passed": 15,
+      "elapsed_s": 0.86
+    },
+    "diagnostic_scripts_compiled": [
+      "scripts/diagnose_nr33_extraction.py",
+      "scripts/diagnose_nr33_resolution.py",
+      "scripts/compare_nr33_resolution_to_frozen.py",
+      "scripts/diagnose_nr33_metadata_effect.py"
+    ],
+    "comparison_input_hashes_current": true,
+    "exact_metadata_md5_files_checked": 18,
+    "metadata_prediction_baseline_relative_l2": 0,
+    "original_validation_metrics_reproduced_tolerance": 1e-12,
+    "full_parity_suite_rerun": false,
+    "readme_factual_review": "Luna review completed; causal, extraction-order, decoder-version and mass-scale wording clarified"
+  },
+  "artifact_sha256": {
+    "docs/reviews/2026-09-15-independent-calibration/README.md": "7f961155382f5e73d963ae07e6e2d434539f2892b138cf4f6bf45a025e4cb598",
+    "docs/reviews/2026-09-15-independent-calibration/extraction-diagnosis/README.md": "de99f9a12a6a56cfbf8fdd5e0375895ddd8dde6d6789742480555c2267cea4a8",
+    "docs/reviews/2026-09-15-independent-calibration/extraction-diagnosis/fft-amplitudes.png": "c4a958889a4ba7082c5dd6f699c3a96e6f5edb695c20f70e5b0f42c2002ae50d",
+    "docs/reviews/2026-09-15-independent-calibration/extraction-diagnosis/metadata-audit.json": "01b72549b024db49b3c53c1bc8695567e9b5e0a86574ad8128d40bc9d39d2b52",
+    "docs/reviews/2026-09-15-independent-calibration/extraction-diagnosis/metadata-consistency.json": "d70be44329d8dc418e0836bd3b39bc37dbfa83668ba6e13998fff0fee0bad29e",
+    "docs/reviews/2026-09-15-independent-calibration/extraction-diagnosis/metadata-prediction-effect.json": "7b3aa2c3e2f7dfdd4a38345b4934c7c8b0435cb5c1b56b7fc369b4235940e241",
+    "docs/reviews/2026-09-15-independent-calibration/extraction-diagnosis/numerical-diagnosis.json": "37f91e2213aeea9febd1419ddfc96581ffc781daa2a9ef4544bfa17215f33227",
+    "docs/reviews/2026-09-15-independent-calibration/extraction-diagnosis/radial-extrapolation-sensitivity.json": "d3bbcd040a01fcf9bc7d4ca846e135b467b8cdd01f3651a974fdc14fde17fef3",
+    "docs/reviews/2026-09-15-independent-calibration/extraction-diagnosis/resolution-diagnosis.json": "33ac551d7b74321d74b22c8c277d5784d156c9b0d2132caca0dedb2c3efcff32",
+    "docs/reviews/2026-09-15-independent-calibration/extraction-diagnosis/resolution-q3-amplitude-spectra.png": "c94155fc723cb5fb470cdc1d9d07e9d95278ba6bbc7ab90be16d862d84e63bbb",
+    "docs/reviews/2026-09-15-independent-calibration/extraction-diagnosis/resolution-q3-time-domain-differences.png": "0cb8ee05d005e8e51e72b168f8e7f0b7b1c598c3f9879f31e7efcaf9de6d8564",
+    "docs/reviews/2026-09-15-independent-calibration/extraction-diagnosis/resolution-versus-frozen.json": "6d17db1ec8532acb9896eeaf43e99508c176aaebabfde6bd23d71138598ed0db",
+    "docs/reviews/2026-09-15-independent-calibration/extraction-diagnosis/resolution-versus-frozen.png": "c0221d8242d294160be12d7fcb29d1d6288676500722af5ba4878be1f1537b3a",
+    "docs/reviews/2026-09-15-independent-calibration/extraction-diagnosis/time-domain-ratios.png": "36eb3634bfb2319c1ba1b3f8b098143e9b4b261e54744f8f1ebca2887c5ee8ed",
+    "scripts/compare_nr33_resolution_to_frozen.py": "644f81f3e902bd51c853357058a855ef14b9ea073242c19d313a896a56a25563",
+    "scripts/diagnose_nr33_extraction.py": "2ed42a11b621820faffe34f011828c9b4156e8e66ddd25e2d4d59936c99f7020",
+    "scripts/diagnose_nr33_metadata_effect.py": "ade96191e83632b4f12e3ade02002d93b02b2919c93d039c4f81c224644f9b1a",
+    "scripts/diagnose_nr33_resolution.py": "8ab06e4cfebc674caec6e79f4d3e76bc7b169c6bc51d5209b7e540c20776c8d7"
+  },
+  "scope": "post-hoc diagnosis only; no refit, runtime change or upstream contact"
+}

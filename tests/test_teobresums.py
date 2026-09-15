@@ -25,9 +25,6 @@ def test_point_mass_limit_potentials():
     chi1 = torch.tensor(0.1, dtype=torch.float64)
     chi2 = torch.tensor(-0.1, dtype=torch.float64)
 
-    # Point-mass EOB Hamiltonian
-    ham_pm = EOBHamiltonian(nu=nu, chi1=chi1, chi2=chi2)
-
     # TEOBResumS Hamiltonian with zero tidal deformabilities
     ham_tidal_zero = TEOBResumSHamiltonian(
         nu=nu,
@@ -38,8 +35,8 @@ def test_point_mass_limit_potentials():
     )
 
     r = torch.tensor([5.0, 8.0, 15.0, 30.0], dtype=torch.float64)
-    a_pm, b_pm, xi_pm = ham_pm.metric_potentials(r)
     a_teob, b_teob, xi_teob = ham_tidal_zero.metric_potentials(r)
+    a_pm, b_pm, xi_pm = ham_tidal_zero.point_mass_metric_potentials(r)
 
     assert torch.allclose(a_teob, a_pm, atol=1e-12, rtol=1e-12)
     assert torch.allclose(b_teob, b_pm, atol=1e-12, rtol=1e-12)

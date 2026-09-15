@@ -1,0 +1,92 @@
+{
+  "scope": "Operational watchdog behavior only; local process tests, not NR or container resource measurements",
+  "results": [
+    {
+      "case": "checkpoint",
+      "wrapper_exit": 0,
+      "metrics": {
+        "started_utc": "2026-09-12T18:52:45.558492+00:00",
+        "command": [
+          "/Users/xangma/miniconda3/bin/python",
+          "-c",
+          "raise SystemExit(2)"
+        ],
+        "cwd": "/Users/xangma/repos/torchwave",
+        "expected_exit_code": 2,
+        "timeout_seconds": 10.0,
+        "output_bytes_before": 0,
+        "cpu_stat_before": null,
+        "container_child_pid": 46392,
+        "ended_utc": "2026-09-12T18:52:45.579179+00:00",
+        "wall_seconds": 0.020785332992090844,
+        "exit_code": 2,
+        "watchdog_reason": null,
+        "accepted_exit": true,
+        "child_max_rss_kib": 11026432,
+        "cgroup_memory_peak_bytes": null,
+        "cgroup_memory_events": null,
+        "cpu_stat_after": null,
+        "output_bytes_after": 0,
+        "filesystem_free_bytes_after": 548589862912
+      }
+    },
+    {
+      "case": "wrong_exit",
+      "wrapper_exit": 1,
+      "metrics": {
+        "started_utc": "2026-09-12T18:52:45.603619+00:00",
+        "command": [
+          "/Users/xangma/miniconda3/bin/python",
+          "-c",
+          "raise SystemExit(0)"
+        ],
+        "cwd": "/Users/xangma/repos/torchwave",
+        "expected_exit_code": 2,
+        "timeout_seconds": 10.0,
+        "output_bytes_before": 0,
+        "cpu_stat_before": null,
+        "container_child_pid": 46394,
+        "ended_utc": "2026-09-12T18:52:45.623969+00:00",
+        "wall_seconds": 0.020426125003723428,
+        "exit_code": 0,
+        "watchdog_reason": null,
+        "accepted_exit": false,
+        "child_max_rss_kib": 11059200,
+        "cgroup_memory_peak_bytes": null,
+        "cgroup_memory_events": null,
+        "cpu_stat_after": null,
+        "output_bytes_after": 0,
+        "filesystem_free_bytes_after": 548589858816
+      }
+    },
+    {
+      "case": "timeout",
+      "wrapper_exit": 1,
+      "metrics": {
+        "started_utc": "2026-09-12T18:52:45.649454+00:00",
+        "command": [
+          "/Users/xangma/miniconda3/bin/python",
+          "-c",
+          "import time;time.sleep(10)"
+        ],
+        "cwd": "/Users/xangma/repos/torchwave",
+        "expected_exit_code": 0,
+        "timeout_seconds": 0.1,
+        "output_bytes_before": 0,
+        "cpu_stat_before": null,
+        "container_child_pid": 46396,
+        "ended_utc": "2026-09-12T18:52:45.759907+00:00",
+        "wall_seconds": 0.11055374999705236,
+        "exit_code": -15,
+        "watchdog_reason": "wall_time_limit",
+        "accepted_exit": false,
+        "child_max_rss_kib": 11091968,
+        "cgroup_memory_peak_bytes": null,
+        "cgroup_memory_events": null,
+        "cpu_stat_after": null,
+        "output_bytes_after": 0,
+        "filesystem_free_bytes_after": 548589846528
+      }
+    }
+  ]
+}

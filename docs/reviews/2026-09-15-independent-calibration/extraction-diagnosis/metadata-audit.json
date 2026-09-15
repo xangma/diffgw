@@ -1,0 +1,420 @@
+{
+  "created_utc": "2026-09-15T09:58:18.251494+00:00",
+  "host": "RONI2",
+  "cwd": "/Users/xangma/repos/torchwave",
+  "scope": "read-only metadata and runtime identity audit for extraction disagreement",
+  "frozen_artifact_sha256": {
+    "docs/reviews/2026-09-15-independent-calibration/nr33-calibration.json": "f447acda86f64f1d13745c8a5d725acdf295b050a2638d1731d4b6a139e1358d",
+    "docs/reviews/2026-09-15-independent-calibration/nr33-data-manifest.json": "53504f1a5143afec714c23fae19c124932f55b8a35bde641e1b89ca363208aea",
+    "scripts/fit_nr33_amplitude_pilot.py": "e307ef505094a5f3d568690d3a9f44cff58d9683d3c29f91e62cc7d2f17ed554",
+    "scripts/kerr_leaver_solver.py": "a7b07b28962b676271645fd60cf6bd7c2684c8c92e801579897f2d8f84698fc9"
+  },
+  "runtime_baseline_files_checked": 139,
+  "runtime_baseline_changed": [],
+  "cases": [
+    {
+      "id": "SXS:BBH:0030/Lev3/N3",
+      "q": 2.999993377707023,
+      "resolution": "Lev3",
+      "extrapolation_order": 3,
+      "time_start": -108.26701690218482,
+      "time_end": 4881.5968027154095,
+      "n_times": 17301,
+      "peak_time": 4461.814074081729,
+      "relaxation_time": 260.0,
+      "source_frame_type": "inertial",
+      "frame_transform": "none",
+      "npz_sha256": "3783c8db343b8019863ac7e9208a549f19e900e0daa4c58b0ed66e6498096b44",
+      "waveform_json": {
+        "data_info": {
+          "data_type": "h",
+          "ell_max": 8,
+          "ell_min": 2,
+          "m_is_scaled_out": true,
+          "r_is_scaled_out": true,
+          "spin_weight": -2
+        },
+        "modifications": {
+          "add_memory": {
+            "integration_start_time": 640.0
+          },
+          "extrapolate": {
+            "CoordRadii": [
+              "0100",
+              "0102",
+              "0105",
+              "0108",
+              "0111",
+              "0114",
+              "0117",
+              "0121",
+              "0125",
+              "0129",
+              "0133",
+              "0137",
+              "0142",
+              "0148",
+              "0153",
+              "0160",
+              "0166",
+              "0173",
+              "0181",
+              "0190",
+              "0200",
+              "0210",
+              "0222",
+              "0235",
+              "0250",
+              "0266",
+              "0285",
+              "0307",
+              "0333",
+              "0363"
+            ]
+          },
+          "transform": {
+            "boost_velocity": [
+              5.217414351859872e-07,
+              -1.8400516234491385e-06,
+              3.4256660212169032e-12
+            ],
+            "space_translation": [
+              -0.02062712667121443,
+              0.0034399103810792207,
+              -5.184941723592505e-10
+            ]
+          },
+          "truncate": {
+            "tol": 1e-10
+          }
+        },
+        "sxs_format": "rotating_paired_diff_multishuffle_bzip2",
+        "validation": {
+          "h5_file_size": 2639738,
+          "md5sum": "d6e1a33a3ce9e0143bc14da352898141",
+          "n_times": 17301
+        },
+        "version_info": {
+          "h5py": "3.7.0",
+          "numba": "0.56.4",
+          "numpy": "1.23.5",
+          "python": "3.10.9 (main, Jan 11 2023, 15:21:40) [GCC 11.2.0]",
+          "quaternion": "2022.4.1",
+          "quaternionic": "1.0.6",
+          "scipy": "1.10.0",
+          "scri": "2022.3.4",
+          "spec_version_hist": [
+            [
+              "ef51849550a1d8a5bbdd810c7debf0dd839e86dd",
+              "Overall sign change in complex strain h."
+            ]
+          ],
+          "spherical": "1.0.13",
+          "spherical_functions": "2022.4.1",
+          "spinsfast": "2022.4.1",
+          "sxs": "2022.4.3"
+        }
+      }
+    },
+    {
+      "id": "SXS:BBH:0166/Lev5/N3",
+      "q": 5.99997866468524,
+      "resolution": "Lev5",
+      "extrapolation_order": 3,
+      "time_start": -108.27901504749337,
+      "time_end": 5125.764134366375,
+      "n_times": 17680,
+      "peak_time": 4891.719755220822,
+      "relaxation_time": 200.0,
+      "source_frame_type": "inertial",
+      "frame_transform": "none",
+      "npz_sha256": "8e75c40d960320d5a8fea0f9907cbf4f1b29e435549d24874dd3e14ddad05596",
+      "waveform_json": {
+        "data_info": {
+          "data_type": "h",
+          "ell_max": 8,
+          "ell_min": 2,
+          "m_is_scaled_out": true,
+          "r_is_scaled_out": true,
+          "spin_weight": -2
+        },
+        "modifications": {
+          "add_memory": {
+            "integration_start_time": 200.0
+          },
+          "extrapolate": {
+            "CoordRadii": [
+              "0100",
+              "0103",
+              "0107",
+              "0111",
+              "0116",
+              "0121",
+              "0127",
+              "0133",
+              "0139",
+              "0147",
+              "0155",
+              "0164",
+              "0174",
+              "0186",
+              "0199",
+              "0214",
+              "0232",
+              "0253",
+              "0278",
+              "0308",
+              "0346",
+              "0395",
+              "0460",
+              "0550"
+            ]
+          },
+          "transform": {
+            "boost_velocity": [
+              2.4127946041800477e-09,
+              -4.6749387708897403e-07,
+              3.081701903656021e-12
+            ],
+            "space_translation": [
+              -0.019277876494612337,
+              0.0015781551314693876,
+              -1.5724468265000936e-09
+            ]
+          },
+          "truncate": {
+            "tol": 1e-10
+          }
+        },
+        "sxs_format": "rotating_paired_diff_multishuffle_bzip2",
+        "validation": {
+          "h5_file_size": 2693916,
+          "md5sum": "1efca43cdc182bd247b478d7ab891887",
+          "n_times": 17680
+        },
+        "version_info": {
+          "h5py": "3.7.0",
+          "numba": "0.56.4",
+          "numpy": "1.23.5",
+          "python": "3.10.9 (main, Jan 11 2023, 15:21:40) [GCC 11.2.0]",
+          "quaternion": "2022.4.1",
+          "quaternionic": "1.0.6",
+          "scipy": "1.10.0",
+          "scri": "2022.3.4",
+          "spec_version_hist": [
+            [
+              "ef51849550a1d8a5bbdd810c7debf0dd839e86dd",
+              "Overall sign change in complex strain h."
+            ]
+          ],
+          "spherical": "1.0.13",
+          "spherical_functions": "2022.4.1",
+          "spinsfast": "2022.4.1",
+          "sxs": "2022.4.3"
+        }
+      }
+    },
+    {
+      "id": "SXS:BBH:0030/Lev3/N2",
+      "q": 2.999993377707023,
+      "resolution": "Lev3",
+      "extrapolation_order": 2,
+      "time_start": -108.26701690218482,
+      "time_end": 4881.5968027154095,
+      "n_times": 17301,
+      "peak_time": 4462.0140870985115,
+      "relaxation_time": 260.0,
+      "source_frame_type": "inertial",
+      "frame_transform": "none",
+      "npz_sha256": "bec6cd42d7a7600b0569e27075fa04d12767039df5b37b364379bb7691dc9639",
+      "waveform_json": {
+        "data_info": {
+          "data_type": "h",
+          "ell_max": 8,
+          "ell_min": 2,
+          "m_is_scaled_out": true,
+          "r_is_scaled_out": true,
+          "spin_weight": -2
+        },
+        "modifications": {
+          "add_memory": {
+            "integration_start_time": 640.0
+          },
+          "extrapolate": {
+            "CoordRadii": [
+              "0100",
+              "0102",
+              "0105",
+              "0108",
+              "0111",
+              "0114",
+              "0117",
+              "0121",
+              "0125",
+              "0129",
+              "0133",
+              "0137",
+              "0142",
+              "0148",
+              "0153",
+              "0160",
+              "0166",
+              "0173",
+              "0181",
+              "0190",
+              "0200",
+              "0210",
+              "0222",
+              "0235",
+              "0250",
+              "0266",
+              "0285",
+              "0307",
+              "0333",
+              "0363"
+            ]
+          },
+          "transform": {
+            "boost_velocity": [
+              5.217414351859872e-07,
+              -1.8400516234491385e-06,
+              3.4256660212169032e-12
+            ],
+            "space_translation": [
+              -0.02062712667121443,
+              0.0034399103810792207,
+              -5.184941723592505e-10
+            ]
+          },
+          "truncate": {
+            "tol": 1e-10
+          }
+        },
+        "sxs_format": "rotating_paired_diff_multishuffle_bzip2",
+        "validation": {
+          "h5_file_size": 2295638,
+          "md5sum": "3b19ac53a4feacfb7f4ce8d8fb18e492",
+          "n_times": 17301
+        },
+        "version_info": {
+          "h5py": "3.7.0",
+          "numba": "0.56.4",
+          "numpy": "1.23.5",
+          "python": "3.10.9 (main, Jan 11 2023, 15:21:40) [GCC 11.2.0]",
+          "quaternion": "2022.4.1",
+          "quaternionic": "1.0.6",
+          "scipy": "1.10.0",
+          "scri": "2022.3.4",
+          "spec_version_hist": [
+            [
+              "ef51849550a1d8a5bbdd810c7debf0dd839e86dd",
+              "Overall sign change in complex strain h."
+            ]
+          ],
+          "spherical": "1.0.13",
+          "spherical_functions": "2022.4.1",
+          "spinsfast": "2022.4.1",
+          "sxs": "2022.4.3"
+        }
+      }
+    },
+    {
+      "id": "SXS:BBH:0166/Lev5/N2",
+      "q": 5.99997866468524,
+      "resolution": "Lev5",
+      "extrapolation_order": 2,
+      "time_start": -108.27901504749337,
+      "time_end": 5125.764134366375,
+      "n_times": 17680,
+      "peak_time": 4891.719755220822,
+      "relaxation_time": 200.0,
+      "source_frame_type": "inertial",
+      "frame_transform": "none",
+      "npz_sha256": "972d0eaec5c4daa207b4c6564242e2ee0bee0b5cac435cf903c54b5c7f57652f",
+      "waveform_json": {
+        "data_info": {
+          "data_type": "h",
+          "ell_max": 8,
+          "ell_min": 2,
+          "m_is_scaled_out": true,
+          "r_is_scaled_out": true,
+          "spin_weight": -2
+        },
+        "modifications": {
+          "add_memory": {
+            "integration_start_time": 200.0
+          },
+          "extrapolate": {
+            "CoordRadii": [
+              "0100",
+              "0103",
+              "0107",
+              "0111",
+              "0116",
+              "0121",
+              "0127",
+              "0133",
+              "0139",
+              "0147",
+              "0155",
+              "0164",
+              "0174",
+              "0186",
+              "0199",
+              "0214",
+              "0232",
+              "0253",
+              "0278",
+              "0308",
+              "0346",
+              "0395",
+              "0460",
+              "0550"
+            ]
+          },
+          "transform": {
+            "boost_velocity": [
+              2.4127946041800477e-09,
+              -4.6749387708897403e-07,
+              3.081701903656021e-12
+            ],
+            "space_translation": [
+              -0.019277876494612337,
+              0.0015781551314693876,
+              -1.5724468265000936e-09
+            ]
+          },
+          "truncate": {
+            "tol": 1e-10
+          }
+        },
+        "sxs_format": "rotating_paired_diff_multishuffle_bzip2",
+        "validation": {
+          "h5_file_size": 2420124,
+          "md5sum": "afa815578ebd015c937c17c39d77b747",
+          "n_times": 17680
+        },
+        "version_info": {
+          "h5py": "3.7.0",
+          "numba": "0.56.4",
+          "numpy": "1.23.5",
+          "python": "3.10.9 (main, Jan 11 2023, 15:21:40) [GCC 11.2.0]",
+          "quaternion": "2022.4.1",
+          "quaternionic": "1.0.6",
+          "scipy": "1.10.0",
+          "scri": "2022.3.4",
+          "spec_version_hist": [
+            [
+              "ef51849550a1d8a5bbdd810c7debf0dd839e86dd",
+              "Overall sign change in complex strain h."
+            ]
+          ],
+          "spherical": "1.0.13",
+          "spherical_functions": "2022.4.1",
+          "spinsfast": "2022.4.1",
+          "sxs": "2022.4.3"
+        }
+      }
+    }
+  ]
+}

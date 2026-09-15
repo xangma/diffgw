@@ -1,0 +1,134 @@
+{
+  "provenance": "Public SimIMRPhenomXPPNAngles alpha/gamma/beta with exact case inclination; native theta,zeta,carrier; XP102 convention1; both waveform controls phic=0. Public output[1] is gamma=-epsilon.",
+  "python": "3.13.9 | packaged by conda-forge | (main, Oct 22 2025, 23:38:18) [Clang 19.1.7 ]",
+  "versions": {
+    "lal": "7.7.0",
+    "lalsimulation": "6.2.0"
+  },
+  "cases": [
+    {
+      "id": "IMRPhenomXP_diagnostic",
+      "clean_coeff": {
+        "plus_raw_l2": 0.005460781895923706,
+        "cross_raw_l2": 0.005448634510571781,
+        "n": 1968
+      },
+      "clean_coeff_public_angles": {
+        "plus_raw_l2": 0.00546078189592454,
+        "cross_raw_l2": 0.005448634510572616,
+        "n": 1968
+      },
+      "pointwise_angle_control": {
+        "frequencies_hz": [
+          20.0,
+          50.0,
+          100.0,
+          200.0
+        ],
+        "native_minus_public_alpha_wrapped_rad": [
+          -2.6645352591003757e-15,
+          1.7763568394002505e-15,
+          1.7763568394002505e-15,
+          0.0
+        ],
+        "native_minus_public_gamma_wrapped_rad": [
+          1.7763568394002505e-15,
+          -1.7763568394002505e-15,
+          -2.6645352591003757e-15,
+          -2.6645352591003757e-15
+        ],
+        "native_minus_public_beta_rad": [
+          8.465450562766819e-16,
+          -3.3306690738754696e-16,
+          -2.7755575615628914e-17,
+          -6.938893903907228e-17
+        ],
+        "alpha_anchor_removed_rad": [
+          0.0,
+          4.440892098500626e-15,
+          4.440892098500626e-15,
+          2.6645352591003757e-15
+        ],
+        "gamma_anchor_removed_rad": [
+          0.0,
+          -3.552713678800501e-15,
+          -4.440892098500626e-15,
+          -4.440892098500626e-15
+        ],
+        "source_geometry_at_fref": {
+          "alpha0_rad": 2.3794079787079063,
+          "theta_jn_rad": 0.6456520257036361,
+          "zeta_rad": 3.0633508788654615,
+          "phi_j_rad": 0.869836411419806,
+          "native_theta_minus_clean_rad": 6.339297490542961e-05,
+          "native_zeta_wrapped_minus_clean_rad": 0.00010055964733668432
+        }
+      },
+      "adapter_calls": 2
+    },
+    {
+      "id": "IMRPhenomXP_holdout",
+      "clean_coeff": {
+        "plus_raw_l2": 0.01018444209202129,
+        "cross_raw_l2": 0.009656858971281108,
+        "n": 1968
+      },
+      "clean_coeff_public_angles": {
+        "plus_raw_l2": 0.01018444209202227,
+        "cross_raw_l2": 0.00965685897128424,
+        "n": 1968
+      },
+      "pointwise_angle_control": {
+        "frequencies_hz": [
+          35.0,
+          50.0,
+          100.0,
+          200.0
+        ],
+        "native_minus_public_alpha_wrapped_rad": [
+          6.661338147750939e-16,
+          -2.6645352591003757e-15,
+          -3.552713678800501e-15,
+          -2.6645352591003757e-15
+        ],
+        "native_minus_public_gamma_wrapped_rad": [
+          -1.3322676295501878e-15,
+          -1.3322676295501878e-15,
+          0.0,
+          -1.3322676295501878e-15
+        ],
+        "native_minus_public_beta_rad": [
+          -2.220446049250313e-16,
+          2.7755575615628914e-16,
+          1.1102230246251565e-16,
+          -5.551115123125783e-17
+        ],
+        "alpha_anchor_removed_rad": [
+          0.0,
+          -3.3306690738754696e-15,
+          -4.218847493575595e-15,
+          -3.3306690738754696e-15
+        ],
+        "gamma_anchor_removed_rad": [
+          0.0,
+          0.0,
+          1.3322676295501878e-15,
+          0.0
+        ],
+        "source_geometry_at_fref": {
+          "alpha0_rad": 1.0605603868369928,
+          "theta_jn_rad": 1.219198405978657,
+          "zeta_rad": 2.8790951153566793,
+          "phi_j_rad": -0.4046177902306334,
+          "native_theta_minus_clean_rad": -0.00044269915067651766,
+          "native_zeta_wrapped_minus_clean_rad": 0.0008429019888067657
+        }
+      },
+      "adapter_calls": 4
+    }
+  ],
+  "sha256": {
+    "scripts/diagnose_precession_public_angles.py": "49cf6d7f904c8949b45e79602260c29b11d0ccb7039a4fc61d2e1b8c9bb096c8",
+    "src/torchwave/approximants/precession_beta_clean.py": "bdadf4613e0c8cec0096789a97f88efb32178e0696180911b6d93e339b4f33f1"
+  }
+}

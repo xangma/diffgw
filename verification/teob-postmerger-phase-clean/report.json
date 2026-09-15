@@ -1,0 +1,70 @@
+{
+  "status": "frozen_component_fix",
+  "scope": "published TEOBResumS nonspinning postmerger 22 phase",
+  "implementation": "src/torchwave/approximants/eob/teob_postmerger.py",
+  "tests": [
+    "tests/test_clean_room_teob_postmerger.py",
+    "tests/test_clean_room_teob_uib2016_postmerger.py"
+  ],
+  "provenance": {
+    "primary_source": "https://arxiv.org/html/1806.01772v2",
+    "equations": "Appendix F.1, Eqs. 74-80",
+    "equation_change": {
+      "amplitude_rate": "c2A = alpha21/2",
+      "phase_rate": "c2phi = alpha21",
+      "phase_numerator": "1 + c3phi*exp(-c2phi*tau) + c4phi*exp(-2*c2phi*tau)"
+    },
+    "method": "Torch FP64 analytic/autodiff checks; no reference implementation or fitted residual was used"
+  },
+  "validation": {
+    "command": "PYTHONPATH=src:tests:scripts:. PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 /Users/xangma/miniconda3/envs/pycbcorig313/bin/python -m pytest -q tests/test_clean_room_teob_postmerger.py tests/test_clean_room_teob_uib2016_postmerger.py",
+    "tests_passed": 15,
+    "tests_failed": 0,
+    "result": "15 passed in 0.73s"
+  },
+  "source_hashes_sha256": {
+    "implementation_post_fix": "7324ff72dc1fd36149f137b9f8eafa68f354fd897ff5d56478ce5a6cf2f8c5f6",
+    "tests": "035552f77125a4477e39815af4f138116baeaa3aab268130a53c6fc8674b8ffe",
+    "pre_fix_source_reconstructed_for_comparison": "f88778c12e2aa2174212a580801cb3702c00713bf34ac1ba545987a0524cc565"
+  },
+  "merger_frequency_points": {
+    "inputs": {
+      "nu": 0.2,
+      "final_mass": 0.95,
+      "final_spin": 0.68,
+      "merger_time": 1.75,
+      "phase0": 0.31
+    },
+    "default_fit": {
+      "selected_frequency": 0.33788675999999995,
+      "pre_fix_frequency_reconstructed": 0.44470267771859723,
+      "pre_fix_error": 0.10681591771859728,
+      "post_fix_frequency": 0.3378867599999999,
+      "post_fix_error": 5.551115123125783e-17,
+      "post_minus_pre": -0.10681591771859733,
+      "merger_amplitude_derivative_post_fix": -2.1385715937761945e-18
+    },
+    "explicit_override": {
+      "selected_frequency": 0.42,
+      "pre_fix_frequency_reconstructed": 0.48575929771859727,
+      "pre_fix_error": 0.06575929771859729,
+      "post_fix_frequency": 0.4199999999999999,
+      "post_fix_error": 1.1102230246251565e-16,
+      "post_minus_pre": -0.0657592977185974,
+      "merger_amplitude_derivative_post_fix": -2.7203040307061076e-18
+    },
+    "pre_fix_formula": "(omega1/final_mass + selected_frequency)/2 at tau=0, because the old phase numerator used c2A"
+  },
+  "late_limits": {
+    "tau_in_final_mass_units": 300.0,
+    "max_frequency_absolute_error": 1.1102230246251565e-16,
+    "max_amplitude_log_rate_absolute_error": 2.7755575615628914e-17,
+    "targets": "omega1/final_mass and -alpha1/final_mass"
+  },
+  "scope_limits": [
+    "No full inspiral or postmerger trajectory was run.",
+    "No production driver/default routing was changed.",
+    "NQC amplitude-rate targets and their separate convention remain unchanged and were not resolved here.",
+    "The reconstructed pre-fix values are analytic component comparisons, not a binary residual or fitted parameter selection."
+  ]
+}

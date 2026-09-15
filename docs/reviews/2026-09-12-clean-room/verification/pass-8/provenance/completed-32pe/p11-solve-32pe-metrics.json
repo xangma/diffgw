@@ -1,0 +1,29 @@
+{
+  "started_utc": "2026-09-13T00:49:28.872122+00:00",
+  "command": [
+    "spectre",
+    "schedule",
+    "/campaign/independent-p11/InitialData.yaml",
+    "--no-schedule",
+    "--num-procs",
+    "32",
+    "--submit"
+  ],
+  "cwd": "/campaign/independent-p11",
+  "expected_exit_code": 0,
+  "timeout_seconds": 13800.0,
+  "output_bytes_before": 7341,
+  "cpu_stat_before": "usage_usec 83559\nuser_usec 44764\nsystem_usec 38795\ncore_sched.force_idle_usec 0\nnr_periods 2\nnr_throttled 0\nthrottled_usec 0\nnr_bursts 0\nburst_usec 0",
+  "container_child_pid": 7,
+  "ended_utc": "2026-09-13T02:57:21.723851+00:00",
+  "wall_seconds": 7672.851980903884,
+  "exit_code": 0,
+  "watchdog_reason": null,
+  "accepted_exit": true,
+  "child_max_rss_kib": 124552628,
+  "cgroup_memory_peak_bytes": "128265064448",
+  "cgroup_memory_events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0",
+  "cpu_stat_after": "usage_usec 240918150849\nuser_usec 240726132548\nsystem_usec 192018301\ncore_sched.force_idle_usec 0\nnr_periods 76730\nnr_throttled 50598\nthrottled_usec 96218441\nnr_bursts 0\nburst_usec 0",
+  "output_bytes_after": 438244407,
+  "filesystem_free_bytes_after": 320837267456
+}

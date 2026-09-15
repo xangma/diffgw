@@ -1,0 +1,30 @@
+{
+  "scope": "expanded candidate-inventory byte provenance",
+  "canonical_path": "/Users/xangma/repos/torchwave/docs/reviews/2026-09-15-independent-calibration-expanded/candidate-inventory.json",
+  "frozen_snapshot": {
+    "sha256": "dfe5c6b1752c3f8adf5bc2a6910d4266de63d8ce41f6a7cb0d73bb54c8710e37",
+    "size_bytes": 1597347,
+    "created_utc": "2026-09-15T12:01:13.477232+00:00",
+    "local_bytes_recovered": false
+  },
+  "retained_snapshots": [
+    {"path": "/tmp/inventory-current-0ff.json", "sha256": "0ff18f33eecfcc17e46311a49e7777bb376c21ef56c32f62baa5956639732a4a", "size_bytes": 2060762, "created_utc": "2026-09-15T12:03:33.419255+00:00"},
+    {"path": "/tmp/inventory-mutated-465-reconstructed.json", "sha256": "465c796883c0447e4484910d9c7e23ca106a6397e407f70c734aa5f6b7bfdf3b", "size_bytes": 1595345, "reconstruction": "0ff with only encoded_content_url and catalog_gate_scope recursively removed"},
+    {"path": "/Users/xangma/repos/torchwave/docs/reviews/2026-09-15-independent-calibration-expanded/candidate-inventory-during-prepare.json", "sha256": "76e7832aa740b11d569a12f57ac871dd504a87be4c7cef3e390ac6c1c840417a", "size_bytes": 1595345, "created_utc": "2026-09-15T12:05:19.949566+00:00"}
+  ],
+  "verified_0ff_to_465": {"removed_field_counts": {"encoded_content_url": 3612, "catalog_gate_scope": 181}},
+  "verified_465_to_76": {
+    "root_created_utc": ["2026-09-15T12:03:33.419255+00:00", "2026-09-15T12:05:19.949566+00:00"],
+    "fetch_scope_live_api_validation_utc": ["2026-09-15T12:03:33.432060+00:00", "2026-09-15T12:05:19.969118+00:00"],
+    "raw_record_sha256": {
+      "gx28k-wcg91": ["e48b288d25bf598183b4c84b9ea917c0aa17aa6d84ca8a57fe5a126388f30a21", "e171c8b86cc40e189efa7f74f8e5f4348f67caf9a0563b7ad5bb9b1f45b95083"],
+      "rx0d1-q7d95": ["a7b5f6d572f604d6c5a5556e9a09e70584dc2f6211a1a9a71f42f1e2964b98ea", "cbf7f1c5cd0cda71d83142205f537e3b115d71bfd82e6a34bd8fc2104ecfb897"],
+      "x0q4y-s3440": ["9b163a06d90111821999aba7f9f6418235e0200455d6b25172930e82c30a3522", "4ee1b7c20398ad23a34163ce154163551105732c9b63d3d51b6aea337049e109"],
+      "y7mbp-x8889": ["fbcd46e5174c835ea7a8bddf2b44c8a6886c8cb1acbabf4e0711cdf95912421d", "a5e3fafa59120ffd632492c3d6ca419d9962b2c7f5d6f0e0d9acdeaf6a7894cc"],
+      "z5qsd-ptm37": ["38178914f6033636b6e738796614b6560cae3431bb60823ef6c4aa44734d8660", "16bb93c42895b52d0407c653337b5cef5f4d1345ceb3d538cee0f07aa801951e"],
+      "1wj32-qdk56": ["ae16d67c58c6c350e0d01fe00c456f85f13462c4c1f5335362a9c25fd9f22f85", "ae16d67c58c6c350e0d01fe00c456f85f13462c4c1f5335362a9c25fd9f22f85"]
+    },
+    "parsed_record_payloads_field_differences": 0
+  },
+  "recovery_note": "Frozen bytes were not found under repository or /tmp; no canonical restoration performed."
+}

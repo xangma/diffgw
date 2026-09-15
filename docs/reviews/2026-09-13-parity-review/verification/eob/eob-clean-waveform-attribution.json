@@ -1,0 +1,468 @@
+{
+  "provenance": "Clean factorized 22 and NQC attachment evaluated independently on each trajectory state. Public binary mode is compared on its own time grid; no fitting or shifts. SI scale=(50 M_sun seconds)c/(100 Mpc). Public vector1/vector2 auxiliary rows are observed (t,r,phi,prstar,p_phi) schema. Tail phase is internal to the clean factorized helper and not separately exposed; orbital phi and total carrier phase are recorded.",
+  "saved_sha256": "56cf48952800928ec3b4037052a9d4010000d841fd90ef497da31e9632d5fd2f",
+  "python": "/Users/xangma/miniconda3/envs/pycbcorig313/bin/python",
+  "results": {
+    "dt_0p5M": {
+      "npz_sha256": "7bf76ba9b81515bdd22377a8569bc0ee8809717baeb43d7f887b71ecdeb9d88a",
+      "dt_M": 0.5,
+      "epoch_s": -1.232042294,
+      "mode_time_support_M": [
+        0.0,
+        5386.0
+      ],
+      "state_time_support_M": [
+        0.0,
+        5002.5
+      ],
+      "comparison_state_support_M": [
+        0.0,
+        5002.5
+      ],
+      "carrier_on_identical_binary_state": {
+        "raw_relative_l2": 0.2704703797254077,
+        "phase_rms_rad": 0.10367468744329107,
+        "checkpoints": {
+          "0": {
+            "sample_M": 0.0,
+            "raw_abs": 2.9263738163193e-23,
+            "phase_rad": 0.01371809646336245
+          },
+          "100": {
+            "sample_M": 100.0,
+            "raw_abs": 2.939606261810419e-23,
+            "phase_rad": 0.013717135309271225
+          },
+          "1000": {
+            "sample_M": 1000.0,
+            "raw_abs": 3.547574458300206e-23,
+            "phase_rad": 0.015804049573807804
+          },
+          "3000": {
+            "sample_M": 3000.0,
+            "raw_abs": 6.567700065405246e-23,
+            "phase_rad": 0.025013870975116658
+          },
+          "4500": {
+            "sample_M": 4500.0,
+            "raw_abs": 2.301344163379518e-22,
+            "phase_rad": 0.06429955993807758
+          },
+          "4900": {
+            "sample_M": 4900.0,
+            "raw_abs": 1.164070954617254e-21,
+            "phase_rad": 0.22328070450808635
+          }
+        }
+      },
+      "clean_attachment_on_identical_binary_state": {
+        "raw_relative_l2": 0.0065035395701789475,
+        "phase_rms_rad": 0.00651332586597056,
+        "checkpoints": {}
+      },
+      "orbital_phi_checkpoints": {
+        "0": 0.0,
+        "100": 1.5528491366406976,
+        "1000": 16.071442769270746,
+        "3000": 53.391522615582545,
+        "4500": 92.01941817056806,
+        "4900": 108.82131089015738
+      },
+      "nqc_attached_with_vector2_coefficients_on_vector1": {
+        "raw_relative_l2": 0.004733296079951001,
+        "phase_rms_rad": 0.0015117506546626107,
+        "checkpoints": {
+          "0": {
+            "sample_M": 0.0,
+            "raw_abs": 1.236174117772469e-25,
+            "phase_rad": -5.7946738607512375e-05
+          },
+          "100": {
+            "sample_M": 100.0,
+            "raw_abs": 1.2417644173934521e-25,
+            "phase_rad": -5.794270795237997e-05
+          },
+          "1000": {
+            "sample_M": 1000.0,
+            "raw_abs": 1.4985991112940305e-25,
+            "phase_rad": -6.675802213008945e-05
+          },
+          "3000": {
+            "sample_M": 3000.0,
+            "raw_abs": 2.7745289612481534e-25,
+            "phase_rad": -0.00010566100656192321
+          },
+          "4500": {
+            "sample_M": 4500.0,
+            "raw_abs": 9.7254045257027e-25,
+            "phase_rad": -0.0002715979561684129
+          },
+          "4900": {
+            "sample_M": 4900.0,
+            "raw_abs": 4.933357981144469e-24,
+            "phase_rad": -0.0009429891468137924
+          }
+        }
+      },
+      "nqc_analytic_coefficients": {
+        "amplitude": [
+          4.143849453189575,
+          -47.29772800195967,
+          57.11968420328811
+        ],
+        "phase": [
+          4.143668631721487,
+          -22.022946114625555
+        ],
+        "match_time_M": 4998.329341259881,
+        "prematch_lt_match_minus_1": {
+          "raw_relative_l2": 0.0007773853329211248,
+          "phase_rms_rad": 0.0003110891139919541,
+          "checkpoints": {
+            "0": {
+              "sample_M": 0.0,
+              "raw_abs": 1.0307572907887633e-25,
+              "phase_rad": -4.831781339427858e-05
+            },
+            "100": {
+              "sample_M": 100.0,
+              "raw_abs": 1.0354187717961907e-25,
+              "phase_rad": -4.831445750831237e-05
+            },
+            "1000": {
+              "sample_M": 1000.0,
+              "raw_abs": 1.2495739276614997e-25,
+              "phase_rad": -5.566495135979791e-05
+            },
+            "3000": {
+              "sample_M": 3000.0,
+              "raw_abs": 2.313472058894273e-25,
+              "phase_rad": -8.810359516756213e-05
+            },
+            "4500": {
+              "sample_M": 4500.0,
+              "raw_abs": 8.109188578504341e-25,
+              "phase_rad": -0.00022647045809442068
+            },
+            "4900": {
+              "sample_M": 4900.0,
+              "raw_abs": 4.114483816167999e-24,
+              "phase_rad": -0.0007865865511021746
+            }
+          }
+        },
+        "merger_ge_match": {
+          "raw_relative_l2": 0.04989140695638015,
+          "phase_rms_rad": 0.04894772104815748,
+          "checkpoints": {}
+        }
+      },
+      "nqc_sampled_coefficients": {
+        "amplitude": [
+          4.156503098839188,
+          -47.40869319536031,
+          57.246159535866575
+        ],
+        "phase": [
+          4.146566924790854,
+          -22.051975113452553
+        ],
+        "match_time_M": 4998.329341259881,
+        "prematch_lt_match_minus_1": {
+          "raw_relative_l2": 0.0009240168571482858,
+          "phase_rms_rad": 0.00037074871869625286,
+          "checkpoints": {
+            "0": {
+              "sample_M": 0.0,
+              "raw_abs": 1.2361735945364793e-25,
+              "phase_rad": -5.794671408016814e-05
+            },
+            "100": {
+              "sample_M": 100.0,
+              "raw_abs": 1.2417638917931602e-25,
+              "phase_rad": -5.7942683426805594e-05
+            },
+            "1000": {
+              "sample_M": 1000.0,
+              "raw_abs": 1.498598476982667e-25,
+              "phase_rad": -6.675799387312744e-05
+            },
+            "3000": {
+              "sample_M": 3000.0,
+              "raw_abs": 2.7745277868904766e-25,
+              "phase_rad": -0.00010566096183847526
+            },
+            "4500": {
+              "sample_M": 4500.0,
+              "raw_abs": 9.725400409565915e-25,
+              "phase_rad": -0.0002715978412081305
+            },
+            "4900": {
+              "sample_M": 4900.0,
+              "raw_abs": 4.933355894911619e-24,
+              "phase_rad": -0.00094298874786598
+            }
+          }
+        },
+        "merger_ge_match": {
+          "raw_relative_l2": 0.04977445957246052,
+          "phase_rms_rad": 0.04879657513822905,
+          "checkpoints": {}
+        }
+      },
+      "public_vector2_nqc_coefficients": {
+        "amplitude": [
+          4.156503112933471,
+          -47.40869330451998,
+          57.246159652171535
+        ],
+        "phase": [
+          4.1465669321735446,
+          -22.05197516405
+        ],
+        "time_support_M": [
+          4853.0,
+          5003.828125
+        ]
+      }
+    },
+    "dt_1_4096s": {
+      "npz_sha256": "eefe5b8f1380601f82232e78b0e3a8e1b8abf5a4f9cfb5208e28331b8f5685f9",
+      "dt_M": 0.9913351891019707,
+      "epoch_s": -1.23203809,
+      "mode_time_support_M": [
+        0.0,
+        5385.924082391007
+      ],
+      "state_time_support_M": [
+        0.0,
+        5002.277364208544
+      ],
+      "comparison_state_support_M": [
+        0.0,
+        5002.277364208544
+      ],
+      "carrier_on_identical_binary_state": {
+        "raw_relative_l2": 0.27151444686918913,
+        "phase_rms_rad": 0.10410193221827167,
+        "checkpoints": {
+          "0": {
+            "sample_M": 0.0,
+            "raw_abs": 2.936968856676098e-23,
+            "phase_rad": 0.01376776231846642
+          },
+          "100": {
+            "sample_M": 100.12485409929904,
+            "raw_abs": 2.9502943611128014e-23,
+            "phase_rad": 0.013766929415454106
+          },
+          "1000": {
+            "sample_M": 1000.2572058038885,
+            "raw_abs": 3.5604969695898693e-23,
+            "phase_rad": 0.015861384820667596
+          },
+          "3000": {
+            "sample_M": 3000.7716174116654,
+            "raw_abs": 6.593961290363122e-23,
+            "phase_rad": 0.025111697496460493
+          },
+          "4500": {
+            "sample_M": 4500.661758522947,
+            "raw_abs": 2.3125291906716564e-22,
+            "phase_rad": 0.06459284936489905
+          },
+          "4900": {
+            "sample_M": 4900.169839731041,
+            "raw_abs": 1.1704038416759733e-21,
+            "phase_rad": 0.22440109547156692
+          }
+        }
+      },
+      "clean_attachment_on_identical_binary_state": {
+        "raw_relative_l2": 0.00021622163547528543,
+        "phase_rms_rad": 0.00021556179102809146,
+        "checkpoints": {}
+      },
+      "orbital_phi_checkpoints": {
+        "0": 0.0,
+        "100": 1.5547947787712952,
+        "1000": 16.07574684421551,
+        "3000": 53.407937703266406,
+        "4500": 92.04189922785373,
+        "4900": 108.83129740215412
+      },
+      "nqc_attached_with_vector2_coefficients_on_vector1": {
+        "raw_relative_l2": 0.004544926663442911,
+        "phase_rms_rad": 0.0014424976209904826,
+        "checkpoints": {
+          "0": {
+            "sample_M": 0.0,
+            "raw_abs": 1.306932093906814e-28,
+            "phase_rad": -5.203786868450262e-08
+          },
+          "100": {
+            "sample_M": 100.12485409929904,
+            "raw_abs": 1.3180478748187423e-28,
+            "phase_rad": -5.206076260386628e-08
+          },
+          "1000": {
+            "sample_M": 1000.2572058038885,
+            "raw_abs": 1.6406802452814116e-28,
+            "phase_rad": -5.995818444263062e-08
+          },
+          "3000": {
+            "sample_M": 3000.7716174116654,
+            "raw_abs": 3.5522189585270006e-28,
+            "phase_rad": -9.49489343423299e-08
+          },
+          "4500": {
+            "sample_M": 4500.661758522947,
+            "raw_abs": 1.9778916397258454e-27,
+            "phase_rad": -2.4419343968286933e-07
+          },
+          "4900": {
+            "sample_M": 4900.169839731041,
+            "raw_abs": 2.037065663576366e-26,
+            "phase_rad": -1.1374113569352622e-06
+          }
+        }
+      },
+      "nqc_analytic_coefficients": {
+        "amplitude": [
+          4.14389330134529,
+          -47.29807151424762,
+          57.1200534588455
+        ],
+        "phase": [
+          4.143685787152114,
+          -22.023059827443554
+        ],
+        "match_time_M": 4998.329328492726,
+        "prematch_lt_match_minus_1": {
+          "raw_relative_l2": 1.910264166902048e-05,
+          "phase_rms_rad": 7.811342080788123e-06,
+          "checkpoints": {
+            "0": {
+              "sample_M": 0.0,
+              "raw_abs": 2.754348914467521e-27,
+              "phase_rad": 1.291046671718329e-06
+            },
+            "100": {
+              "sample_M": 100.12485409929904,
+              "raw_abs": 2.7668021772672958e-27,
+              "phase_rad": 1.2909424978944955e-06
+            },
+            "1000": {
+              "sample_M": 1000.2572058038885,
+              "raw_abs": 3.339169442543344e-27,
+              "phase_rad": 1.487362173491322e-06
+            },
+            "3000": {
+              "sample_M": 3000.7716174116654,
+              "raw_abs": 6.184829407297303e-27,
+              "phase_rad": 2.3547313107312363e-06
+            },
+            "4500": {
+              "sample_M": 4500.661758522947,
+              "raw_abs": 2.170662159874369e-26,
+              "phase_rad": 6.055903540095631e-06
+            },
+            "4900": {
+              "sample_M": 4900.169839731041,
+              "raw_abs": 1.086682663951738e-25,
+              "phase_rad": 2.068513095341843e-05
+            }
+          }
+        },
+        "merger_ge_match": {
+          "raw_relative_l2": 0.05203890614178757,
+          "phase_rms_rad": 0.05124169918884562,
+          "checkpoints": {}
+        }
+      },
+      "nqc_sampled_coefficients": {
+        "amplitude": [
+          4.146380989454032,
+          -47.32092305078457,
+          57.146681101014074
+        ],
+        "phase": [
+          4.1440900745297435,
+          -22.028097858379684
+        ],
+        "match_time_M": 4998.329328492726,
+        "prematch_lt_match_minus_1": {
+          "raw_relative_l2": 3.3671806206941394e-06,
+          "phase_rms_rad": 3.99870743513711e-07,
+          "checkpoints": {
+            "0": {
+              "sample_M": 0.0,
+              "raw_abs": 1.308080065717468e-28,
+              "phase_rad": -5.2101294579726196e-08
+            },
+            "100": {
+              "sample_M": 100.12485409929904,
+              "raw_abs": 1.3191970836780402e-28,
+              "phase_rad": -5.212418472274643e-08
+            },
+            "1000": {
+              "sample_M": 1000.2572058038885,
+              "raw_abs": 1.6420239542666075e-28,
+              "phase_rad": -6.003125546212805e-08
+            },
+            "3000": {
+              "sample_M": 3000.7716174116654,
+              "raw_abs": 3.554344583968919e-28,
+              "phase_rad": -9.506461882566998e-08
+            },
+            "4500": {
+              "sample_M": 4500.661758522947,
+              "raw_abs": 1.9783563451593762e-27,
+              "phase_rad": -2.444909705394092e-07
+            },
+            "4900": {
+              "sample_M": 4900.169839731041,
+              "raw_abs": 2.0372151378319056e-26,
+              "phase_rad": -1.1384427857254076e-06
+            }
+          }
+        },
+        "merger_ge_match": {
+          "raw_relative_l2": 0.052044639260163464,
+          "phase_rms_rad": 0.05123912837241469,
+          "checkpoints": {}
+        }
+      },
+      "public_vector2_nqc_coefficients": {
+        "amplitude": [
+          4.146381008407277,
+          -47.320923205234095,
+          57.1466812704447
+        ],
+        "phase": [
+          4.144090055438559,
+          -22.028097657555648
+        ],
+        "time_support_M": [
+          4852.585750654147,
+          5003.795346216857
+        ]
+      }
+    },
+    "saved_native_reference": {
+      "native_attached_vs_public_not_recomputed": "saved native mode retained for reference",
+      "nqc_coefficients": {
+        "amplitude": [
+          4.143151358227816,
+          -47.29250215010881,
+          57.11416235428837
+        ],
+        "phase": [
+          4.143480775400232,
+          -22.02187595461217
+        ]
+      }
+    }
+  },
+  "script_sha256": "0afb28a931f228a59d4eff6990150ec642b0ec45732752f37338268929fce30c"
+}

@@ -1,0 +1,180 @@
+{
+  "calls": {
+    "explicit_PA": {
+      "PNSpinOrder": 0,
+      "TEOB_use_postadiabatic": 2,
+      "array_hashes": {
+        "elapsed": "4d152024d7c733a9f7d3052aeae68a683cfc03abb68f859b3e7e9fe7e8a91c73",
+        "h_cross": "f90e9379dca9b3162a017910b0bed0e99c2054d1bc8068804deecf249e82c855",
+        "h_plus": "393109fc0f4526923f6213d4554a9b5503edf6b3930ade2b7971cc2a847908bf"
+      },
+      "delta_t_seconds": 0.00048828125,
+      "elapsed_end_seconds": 1.287109375,
+      "elapsed_seconds": 0.0011010830057784915,
+      "elapsed_start_seconds": 0.0,
+      "epoch_seconds": 0.0,
+      "label": "explicit_PNSpinOrder_0_PA_ONLY_2",
+      "pa_mode": 2,
+      "samples": 2637
+    },
+    "explicit_full_TD": {
+      "PNSpinOrder": 0,
+      "TEOB_use_postadiabatic": 1,
+      "array_hashes": {
+        "elapsed": "b37f127c45635e83b6d5e97b91b32a888eb635c899dd9e0771c454858f1076ac",
+        "h_cross": "81d933c67c2bf9924df86b43a2aac668c35d7d67280c1039d874b8b945cbe740",
+        "h_plus": "836660839ecc8daccb74e7e2d574eddfef2e8a6f528a6e82ffa4397225f82319"
+      },
+      "delta_t_seconds": 0.00048828125,
+      "elapsed_end_seconds": 1.99609375,
+      "elapsed_seconds": 0.007298375014215708,
+      "elapsed_start_seconds": 0.0,
+      "epoch_seconds": -1.959133171,
+      "label": "explicit_PNSpinOrder_0_full_TD_PA_1",
+      "pa_mode": 1,
+      "samples": 4089
+    }
+  },
+  "comparisons": {
+    "PA": {
+      "complex_summary": {
+        "fresh_explicit_vs_pre_NQC": {
+          "difference_sha256": "f03a339b7ef6b14844fd5ef9e6ffa51b3670082b72b560a92f3549a255370a26",
+          "max_abs": 2.9907753071020215e-24,
+          "relative_l2": 0.0006967645675583161,
+          "samples": 2637,
+          "status": "complete"
+        },
+        "fresh_explicit_vs_saved_default_PA": {
+          "difference_sha256": "78f15a80adf7a6e15fe434272fb71bb9c13d01fd4e792e850672e60242b0f773",
+          "max_abs": 2.9923249387130844e-24,
+          "relative_l2": 0.0006969921067336539,
+          "samples": 2637,
+          "status": "complete"
+        }
+      },
+      "fresh_explicit_vs_current_analytic_pre_NQC": {
+        "elapsed_grid_values_bitwise_equal": true,
+        "exact_elapsed_indices": true,
+        "h_cross": {
+          "difference_sha256": "92ae8b8af052b43dd53c5161efafae91127e2918962933cb35ac9be7d9436a7b",
+          "max_abs": 2.962825092541282e-24,
+          "relative_l2": 0.0007002990571360296,
+          "samples": 2637,
+          "status": "complete"
+        },
+        "h_plus": {
+          "difference_sha256": "ab881131d0990d7659b939e3140a0c1929647411db77a4c5ea2decc86896d972",
+          "max_abs": 2.8968867281477454e-24,
+          "relative_l2": 0.0006932128482258859,
+          "samples": 2637,
+          "status": "complete"
+        },
+        "max_elapsed_grid_value_difference": 0.0,
+        "sample_spacing": 1.9826703782039414,
+        "status": "complete"
+      },
+      "fresh_explicit_vs_saved_public_default_PA": {
+        "elapsed_grid_values_bitwise_equal": true,
+        "exact_elapsed_indices": true,
+        "h_cross": {
+          "difference_sha256": "2ded579981d3345eb92eff161d368a83dd75b4baaa505b457a7bffa651bfe64d",
+          "max_abs": 2.9643465509427287e-24,
+          "relative_l2": 0.0007005288064633854,
+          "samples": 2637,
+          "status": "complete"
+        },
+        "h_plus": {
+          "difference_sha256": "f96a19adafe1fb8125f68cb24dee4fccff424e705268ba66a5ad6fff547918c0",
+          "max_abs": 2.898407136728682e-24,
+          "relative_l2": 0.0006934381610193551,
+          "samples": 2637,
+          "status": "complete"
+        },
+        "max_elapsed_grid_value_difference": 0.0,
+        "sample_spacing": 1.9826703782039414,
+        "status": "complete"
+      }
+    },
+    "full_TD": {
+      "fresh_explicit_PNSpinOrder_0_full_TD_vs_current_analytic_native": {
+        "actual_samples": 4089,
+        "reference_samples": 4087,
+        "status": "refused_elapsed_grid_mismatch"
+      },
+      "fresh_explicit_PNSpinOrder_0_full_TD_vs_saved_public_default_exact_start_TD": {
+        "actual_samples": 4089,
+        "reference_samples": 4087,
+        "status": "refused_elapsed_grid_mismatch"
+      }
+    }
+  },
+  "conclusion": "With zero-valued spins, the omitted public default and explicit PNSpinOrder=0 are separate attribution controls: the explicit PA-only output is compared on exact elapsed indices to the current analytic pre-NQC cache and saved default PA, while the explicit full-TD control is compared to omitted/default native and saved public TD. That control returned 4089 samples versus the cached 4087, so its TD comparisons are refused without truncation or alignment. This alternative public policy is not frozen parity; any difference can include branch, target, trajectory, timing, or reconstruction effects.",
+  "diagnostic": "zero-spin public PNSpinOrder policy attribution control",
+  "environment": {
+    "platform": "macOS-26.6-arm64-arm-64bit-Mach-O",
+    "python": "3.13.9"
+  },
+  "request": {
+    "PNTidalOrder": 0,
+    "api": "SimIMRTEOBResumS",
+    "distance_mpc": 100.0,
+    "dt_seconds_requested": 0.00048828125,
+    "f_ref_hz": 20.0,
+    "f_start_hz": 16.900094009839023,
+    "inclination_rad": 0.0,
+    "masses_msun": [
+      30.0,
+      20.0
+    ],
+    "mode": [
+      [
+        2,
+        2
+      ]
+    ],
+    "observer_sign": -1,
+    "phi_ref_rad": 0.0,
+    "spins": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "saved_caches": {
+    "native_arrays": "/Users/xangma/repos/torchwave/docs/reviews/2026-09-13-parity-review/verification/teob-native-replay-public-clean/replay-native-output.npz",
+    "native_report": "/Users/xangma/repos/torchwave/docs/reviews/2026-09-13-parity-review/verification/teob-native-replay-public-clean/replay-report.json",
+    "pa_arrays": "/Users/xangma/repos/torchwave/docs/reviews/2026-09-13-parity-review/verification/teob-pa-exact-start-clean/arrays.npz",
+    "pa_report": "/Users/xangma/repos/torchwave/docs/reviews/2026-09-13-parity-review/verification/teob-pa-exact-start-clean/report.json",
+    "public_arrays": "/Users/xangma/repos/torchwave/docs/reviews/2026-09-13-parity-review/verification/teob-conditioner-public-clean/arrays.npz",
+    "public_report": "/Users/xangma/repos/torchwave/docs/reviews/2026-09-13-parity-review/verification/teob-conditioner-public-clean/report.json"
+  },
+  "scope": "Two fresh public calls; no LAL implementation inspection, runtime edit, fitting, interpolation, alignment, or full native ODE.",
+  "source_hashes_stable": true,
+  "source_sha256_after": {
+    "/Users/xangma/repos/torchwave/docs/reviews/2026-09-13-parity-review/verification/teob-conditioner-public-clean/arrays.npz": "4712791026b99ad8fb4e713cb99270d2f444c274d320267ef25a10be7e21ab6e",
+    "/Users/xangma/repos/torchwave/docs/reviews/2026-09-13-parity-review/verification/teob-conditioner-public-clean/report.json": "b80a516eab445baa9e5f0be9e4a0d0fbd413ea7771f8293c5cebd4ae114589c9",
+    "/Users/xangma/repos/torchwave/docs/reviews/2026-09-13-parity-review/verification/teob-native-replay-public-clean/replay-native-output.npz": "bd7bc65a0da98334585069462b47b54dba0800bd6bbb092369a69267ecb9e611",
+    "/Users/xangma/repos/torchwave/docs/reviews/2026-09-13-parity-review/verification/teob-native-replay-public-clean/replay-report.json": "d21b5d41035d7753409ecdd5c4e39775c8fc714c3cdc46c8dbd6cb10e434efce",
+    "/Users/xangma/repos/torchwave/docs/reviews/2026-09-13-parity-review/verification/teob-pa-exact-start-clean/arrays.npz": "f54e86714b073e48e91314eabf00f93eaa55f64bd66d1f29917ef8a3ffb1e686",
+    "/Users/xangma/repos/torchwave/docs/reviews/2026-09-13-parity-review/verification/teob-pa-exact-start-clean/report.json": "7714853f4a288657d2676dd3bb0737ecb7b31c7dd11c3cbdd355ee653b1c1b4a",
+    "/Users/xangma/repos/torchwave/scripts/diagnose_teob_conditioner_public_clean.py": "6f39766f337db1a4d47f421b71edfd4e721975212d9531dda232353f7b79bc25",
+    "/Users/xangma/repos/torchwave/scripts/diagnose_teob_pa_exact_start_clean.py": "98881924a3f43c731b226ff86ccda0521c40cb229ad0dced7690e255a42c3ba6",
+    "/Users/xangma/repos/torchwave/scripts/diagnose_teob_zero_spin_policy_clean.py": "2ee70a80ab4a9aacf0ef104169c9cb4525bd3913982b4e9ac8129ebf7666d5a5"
+  },
+  "source_sha256_before": {
+    "/Users/xangma/repos/torchwave/docs/reviews/2026-09-13-parity-review/verification/teob-conditioner-public-clean/arrays.npz": "4712791026b99ad8fb4e713cb99270d2f444c274d320267ef25a10be7e21ab6e",
+    "/Users/xangma/repos/torchwave/docs/reviews/2026-09-13-parity-review/verification/teob-conditioner-public-clean/report.json": "b80a516eab445baa9e5f0be9e4a0d0fbd413ea7771f8293c5cebd4ae114589c9",
+    "/Users/xangma/repos/torchwave/docs/reviews/2026-09-13-parity-review/verification/teob-native-replay-public-clean/replay-native-output.npz": "bd7bc65a0da98334585069462b47b54dba0800bd6bbb092369a69267ecb9e611",
+    "/Users/xangma/repos/torchwave/docs/reviews/2026-09-13-parity-review/verification/teob-native-replay-public-clean/replay-report.json": "d21b5d41035d7753409ecdd5c4e39775c8fc714c3cdc46c8dbd6cb10e434efce",
+    "/Users/xangma/repos/torchwave/docs/reviews/2026-09-13-parity-review/verification/teob-pa-exact-start-clean/arrays.npz": "f54e86714b073e48e91314eabf00f93eaa55f64bd66d1f29917ef8a3ffb1e686",
+    "/Users/xangma/repos/torchwave/docs/reviews/2026-09-13-parity-review/verification/teob-pa-exact-start-clean/report.json": "7714853f4a288657d2676dd3bb0737ecb7b31c7dd11c3cbdd355ee653b1c1b4a",
+    "/Users/xangma/repos/torchwave/scripts/diagnose_teob_conditioner_public_clean.py": "6f39766f337db1a4d47f421b71edfd4e721975212d9531dda232353f7b79bc25",
+    "/Users/xangma/repos/torchwave/scripts/diagnose_teob_pa_exact_start_clean.py": "98881924a3f43c731b226ff86ccda0521c40cb229ad0dced7690e255a42c3ba6",
+    "/Users/xangma/repos/torchwave/scripts/diagnose_teob_zero_spin_policy_clean.py": "2ee70a80ab4a9aacf0ef104169c9cb4525bd3913982b4e9ac8129ebf7666d5a5"
+  },
+  "status": "complete"
+}

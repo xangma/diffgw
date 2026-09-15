@@ -1,0 +1,33 @@
+{
+  "boundary": "Luna implementation/review used primary papers and native code, no LAL/PyCBC implementation or binary residuals. Parent separately used public binary APIs. Instruction boundary, not OS-enforced isolation. Inherited provenance is not certified.",
+  "sources": [
+    {
+      "title": "Garcia-Quiros XHM",
+      "url": "https://arxiv.org/pdf/2001.10914v2",
+      "local": "/tmp/torchwave-paper-assets/garcia-quiros-2020-imrphenomxhm-v2.pdf",
+      "sha256": "00f3bdbe28a6ccde5cde3af82ac8fc95153ec6f03a4b071ce0ed57326e4e09ee",
+      "scope": "Sec V.A.3 and Tables V-VI; unconditional parameter vetoes only. Absolute amplitude conversion and ordered conditional checks deferred."
+    },
+    {
+      "title": "Pratten precession",
+      "url": "https://arxiv.org/abs/2004.06503v2",
+      "local": "/tmp/torchwave-clean-room-precession/2004.06503v2-phenomx.tex",
+      "sha256": "d1e611c582b2861bc34d975e99b6c2d6ef3d4447442aab249541616a331443f5",
+      "scope": "Sec IV.D, Table III, Table V and Appendix F; independent remnant selector and documented defaults."
+    },
+    {
+      "title": "Pratten PDF equation-number check",
+      "url": "https://arxiv.org/pdf/2004.06503v2",
+      "local": "/tmp/torchwave-clean-room-precession/2004.06503v2.pdf",
+      "sha256": "fd21fcd7c111d780eddb109e51c5813d7645a52022b84a24d923056b639bd935",
+      "scope": "Eq4.17 vector identity; Eq4.18 Lfin definition; Eq4.20 averaged Sfin\u00b2; Eq4.29 conflicting M\u00b2 divisor."
+    },
+    {
+      "title": "Colleoni et al., Fast frequency-domain gravitational waveforms for precessing binaries with a new twist",
+      "url": "https://arxiv.org/html/2412.16721v1",
+      "scope": "Sec II.1 updated XHM amplitude requires separate fit data; Sec II.2 SpinTaylor320/FinalSpin2 is a separate prescription. Read primary HTML; no implementation derived."
+    }
+  ],
+  "review": "../../pass-12-summary.md",
+  "integration": "Retain unconditional XHM parameter vetoes and explicit NNLO remnant selector. Reject unestablished amplitude-unit conversion, conditional-veto union and MSA Kerr normalization. No coefficient chosen from binary residuals."
+}

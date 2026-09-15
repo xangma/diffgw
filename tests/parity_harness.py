@@ -1,6 +1,6 @@
 """Reusable Parity Verification Harness for TorchWave against LALSimulation Oracles.
 
-Strict Clean-Room Literature Implementation:
+External binary verification (separate from waveform implementation):
 Computes direct unnormalized complex relative L2 error, relative norm error,
 magnitude relative L2 error, flat-noise mismatch, and named detector PSD mismatches
 (e.g., Advanced LIGO Zero Detuning High Power, Cosmic Explorer, Einstein Telescope)
@@ -23,6 +23,10 @@ from typing import Any, Dict, List, Optional, Sequence, Tuple, Union
 
 import numpy as np
 import torch
+
+# Every external comparison uses the same acceptance ceiling. Per-case settings
+# may tighten these values but may never relax the published parity contract.
+PARITY_GATE = {"complex_relative_l2": 1.0e-6, "mismatch": 1.0e-8}
 
 from torchwave.constants import C_SI, MPC_SI, MSUN_SEC, PI
 from torchwave.waveforms import get_fd_waveform
@@ -151,6 +155,8 @@ def validate_waveform_and_grid(
     flow: float,
     fhigh: float,
     label: str = "waveform",
+    require_reference_zero_dc: bool = True,
+    support_fhigh: Optional[float] = None,
 ) -> Tuple[bool, Optional[str]]:
     """Strictly validate waveform arrays and frequency grid prior to metric computations.
 
@@ -159,8 +165,14 @@ def validate_waveform_and_grid(
     - Finite CPU float64 1D tensor for freqs, strictly increasing and uniform with step df
     - Identical shapes between waveforms and grid
     - Nonempty in-band support with positive finite energy
-    - Zero DC component when freqs[0] == 0.0
+    - Zero native DC component; reference DC is also checked for analytic FD
+      generators. Fourier transforms of finite TD signals may have nonzero DC.
+    - Zero native samples outside the requested support edge.  The support
+      edge defaults to the comparison upper frequency and can be higher when
+      an oracle supplies a padded conditioning grid.
     """
+    if support_fhigh is None:
+        support_fhigh = fhigh
     if not isinstance(freqs, torch.Tensor):
         return False, f"[{label}] freqs must be a torch.Tensor, got {type(freqs).__name__}"
     if freqs.ndim != 1:
@@ -180,8 +192,8 @@ def validate_waveform_and_grid(
     if not bool(torch.allclose(diffs, torch.tensor(df, dtype=torch.float64), atol=1e-12, rtol=1e-7)):
         return False, f"[{label}] freqs step size is not uniformly equal to df={df}"
 
-    if not (0.0 <= flow < fhigh <= float(freqs[-1].item()) + df * 0.5):
-        return False, f"[{label}] frequency bounds invalid: flow={flow}, fhigh={fhigh}, f_max={float(freqs[-1].item())}"
+    if not (0.0 <= flow < fhigh <= support_fhigh <= float(freqs[-1].item()) + df * 0.5):
+        return False, f"[{label}] frequency bounds invalid: flow={flow}, fhigh={fhigh}, support_fhigh={support_fhigh}, f_max={float(freqs[-1].item())}"
 
     for name, wf in [(f"{label}_tw", h_tw), (f"{label}_ref", h_ref)]:
         if not isinstance(wf, torch.Tensor):
@@ -211,7 +223,7 @@ def validate_waveform_and_grid(
     if freqs[0] == 0.0:
         if h_tw[0] != 0.0:
             return False, f"[{label}_tw] DC bin at f=0 must be zero, got {h_tw[0]}"
-        if h_ref[0] != 0.0:
+        if require_reference_zero_dc and h_ref[0] != 0.0:
             return False, f"[{label}_ref] DC bin at f=0 must be zero, got {h_ref[0]}"
 
     return True, None
@@ -285,8 +297,11 @@ def evaluate_waveform_metrics(
     flow: float,
     fhigh: float,
     compute_opt_match: bool = True,
+    support_fhigh: Optional[float] = None,
 ) -> Dict[str, Any]:
     """Evaluate full suite of parity metrics between test and reference waveforms."""
+    if support_fhigh is None:
+        support_fhigh = fhigh
     sel = (freqs >= flow) & (freqs < fhigh)
     f_in = freqs[sel]
     t_in = h_test[sel]
@@ -296,9 +311,9 @@ def evaluate_waveform_metrics(
     dc_zero = bool((h_test[0] == 0.0).item()) if freqs[0] == 0.0 else True
 
     below_flow = freqs < flow
-    above_fhigh = freqs >= fhigh
+    above_support = freqs >= support_fhigh
     oob_below = bool((torch.abs(h_test[below_flow]) == 0.0).all().item()) if below_flow.any() else True
-    oob_above = bool((torch.abs(h_test[above_fhigh]) == 0.0).all().item()) if above_fhigh.any() else True
+    oob_above = bool((torch.abs(h_test[above_support]) == 0.0).all().item()) if above_support.any() else True
     oob_zero = oob_below and oob_above
 
     comp_l2 = direct_complex_relative_l2(t_in, r_in)
@@ -528,7 +543,7 @@ _FROZEN_CANONICAL_MODEL_JSON = json.dumps(
                 "tc": 0.0,
             },
             "grid": {"flow": 20.0, "fhigh": 512.0, "df": 0.25},
-            "expected_gate": {"complex_relative_l2": 0.02, "mismatch": 2.0e-4},
+            "expected_gate": {"complex_relative_l2": 1.0e-6, "mismatch": 1.0e-8},
         },
         {
             "id": "IMRPhenomXHM_diagnostic",
@@ -546,7 +561,7 @@ _FROZEN_CANONICAL_MODEL_JSON = json.dumps(
                 "tc": 0.0,
             },
             "grid": {"flow": 20.0, "fhigh": 512.0, "df": 0.25},
-            "expected_gate": {"complex_relative_l2": 0.15, "mismatch": 0.02},
+            "expected_gate": {"complex_relative_l2": 1.0e-6, "mismatch": 1.0e-8},
         },
         {
             "id": "IMRPhenomPv2_diagnostic",
@@ -570,7 +585,7 @@ _FROZEN_CANONICAL_MODEL_JSON = json.dumps(
                 "tc": 0.0,
             },
             "grid": {"flow": 20.0, "fhigh": 512.0, "df": 0.25},
-            "expected_gate": {"complex_relative_l2": 0.35, "mismatch": 0.10},
+            "expected_gate": {"complex_relative_l2": 1.0e-6, "mismatch": 1.0e-8},
         },
         {
             "id": "IMRPhenomXP_diagnostic",
@@ -594,7 +609,7 @@ _FROZEN_CANONICAL_MODEL_JSON = json.dumps(
                 "tc": 0.0,
             },
             "grid": {"flow": 20.0, "fhigh": 512.0, "df": 0.25},
-            "expected_gate": {"complex_relative_l2": 0.20, "mismatch": 0.025},
+            "expected_gate": {"complex_relative_l2": 1.0e-6, "mismatch": 1.0e-8},
         },
         {
             "id": "IMRPhenomXPHM_diagnostic",
@@ -618,7 +633,7 @@ _FROZEN_CANONICAL_MODEL_JSON = json.dumps(
                 "tc": 0.0,
             },
             "grid": {"flow": 20.0, "fhigh": 512.0, "df": 0.25},
-            "expected_gate": {"complex_relative_l2": 0.25, "mismatch": 0.03},
+            "expected_gate": {"complex_relative_l2": 1.0e-6, "mismatch": 1.0e-8},
         },
         {
             "id": "IMRPhenomD_NRTidal_diagnostic",
@@ -677,12 +692,13 @@ _FROZEN_CANONICAL_MODEL_JSON = json.dumps(
                 "tc": 0.0,
             },
             "grid": {"flow": 30.0, "fhigh": 1024.0, "df": 0.25},
-            "expected_gate": {"complex_relative_l2": 1.0e-5, "mismatch": 1.0e-8},
+            "expected_gate": {"complex_relative_l2": 1.0e-6, "mismatch": 1.0e-8},
         },
         {
             "id": "TaylorF2_HM_diagnostic",
             "torch_name": "TaylorF2_HM",
             "lal_name": "TaylorF2",
+            "verification_scope": "dominant_mode_only",
             "params": {
                 "mass1": 1.4,
                 "mass2": 1.4,
@@ -703,8 +719,9 @@ _FROZEN_CANONICAL_MODEL_JSON = json.dumps(
         {
             "id": "KerrRingdown_diagnostic",
             "torch_name": "KerrRingdown",
-            "oracle_type": "analytic_qnm",
+            "oracle_type": "lal_ringdown_td",
             "lal_name": "KerrRingdown",
+            "oracle_api": "SimBlackHoleRingdown",
             "params": {
                 "mass1": 65.0,
                 "mass2": 0.0,
@@ -715,13 +732,14 @@ _FROZEN_CANONICAL_MODEL_JSON = json.dumps(
                 "tc": 0.0,
             },
             "grid": {"flow": 50.0, "fhigh": 500.0, "df": 0.25},
-            "expected_gate": {"complex_relative_l2": 1.0e-5, "mismatch": 1.0e-8},
+            "expected_gate": {"complex_relative_l2": 1.0e-6, "mismatch": 1.0e-8},
         },
         {
             "id": "SEOBNR_ODE_diagnostic",
             "torch_name": "SEOBNR_ODE",
-            "oracle_type": "native_eob_reference",
-            "lal_name": "SEOBNR_ODE",
+            "lal_name": "SEOBNRv4",
+            "oracle_api": "SimInspiralFD",
+            "oracle_fhigh": 1024.0,
             "params": {
                 "mass1": 30.0,
                 "mass2": 20.0,
@@ -733,13 +751,12 @@ _FROZEN_CANONICAL_MODEL_JSON = json.dumps(
                 "tc": 0.0,
             },
             "grid": {"flow": 20.0, "fhigh": 256.0, "df": 0.5},
-            "expected_gate": {"complex_relative_l2": 1.0e-5, "mismatch": 1.0e-8},
+            "expected_gate": {"complex_relative_l2": 1.0e-6, "mismatch": 1.0e-8},
         },
         {
             "id": "SEOBNR_ROM_diagnostic",
             "torch_name": "SEOBNR_ROM",
-            "oracle_type": "native_eob_reference",
-            "lal_name": "SEOBNR_ROM",
+            "lal_name": "SEOBNRv4_ROM",
             "params": {
                 "mass1": 30.0,
                 "mass2": 20.0,
@@ -756,8 +773,8 @@ _FROZEN_CANONICAL_MODEL_JSON = json.dumps(
         {
             "id": "TEOBResumS_diagnostic",
             "torch_name": "TEOBResumS",
-            "oracle_type": "native_eob_reference",
             "lal_name": "TEOBResumS",
+            "oracle_api": "SimInspiralFD",
             "params": {
                 "mass1": 1.4,
                 "mass2": 1.4,
@@ -771,7 +788,7 @@ _FROZEN_CANONICAL_MODEL_JSON = json.dumps(
                 "tc": 0.0,
             },
             "grid": {"flow": 30.0, "fhigh": 500.0, "df": 0.5},
-            "expected_gate": {"complex_relative_l2": 1.0e-5, "mismatch": 1.0e-8},
+            "expected_gate": {"complex_relative_l2": 1.0e-6, "mismatch": 1.0e-8},
         },
     ],
     indent=2,
@@ -794,11 +811,61 @@ def get_canonical_catalog_cases() -> List[Dict[str, Any]]:
     return get_canonical_analytic_cases() + get_canonical_model_cases()
 
 
+def _build_holdout_cases() -> List[Dict[str, Any]]:
+    """Fixed, off-canonical regression probes; never used to fit coefficients.
+
+    These deliberately vary mass ratio, spin sign, inclination, and reference
+    frequency. They are a small coverage extension, not a domain certificate.
+    """
+    base = {c["torch_name"]: c for c in get_canonical_model_cases()}
+    cases = []
+    aligned = [
+        ("IMRPhenomD", 57., 13., .83, -.41, 27., .9),
+        ("IMRPhenomD", 23., 21., -.6, .2, 35., 1.2),
+        ("IMRPhenomD", 80., 8., -.7, .1, 20., .4),
+        ("IMRPhenomXAS", 45., 20., .35, .6, 35., .9),
+        ("IMRPhenomXAS", 90., 30., -.4, -.6, 27., 1.2),
+        ("IMRPhenomHM", 55., 11., -.4, .2, 27., 1.1),
+        ("IMRPhenomXHM", 55., 11., -.4, .2, 27., 1.1),
+    ]
+    for index, (name, m1, m2, c1, c2, ref, inc) in enumerate(aligned):
+        case = copy.deepcopy(base[name])
+        case["id"] = f"{name}_holdout_{index}"
+        case["params"].update(mass1=m1, mass2=m2, chi1=c1, chi2=c2,
+                              f_ref=ref, inclination=inc, phic=.71, distance=680.)
+        cases.append(case)
+    for name in ("IMRPhenomD_NRTidal", "IMRPhenomD_NRTidalv2", "IMRPhenomNSBH"):
+        case = copy.deepcopy(base[name])
+        case["id"] = f"{name}_holdout"
+        case["params"].update(mass1=1.5, mass2=1.3, chi1=.02, chi2=-.03,
+                              lambda1=400., lambda2=800., f_ref=40., inclination=.9)
+        if name == "IMRPhenomNSBH":
+            case["params"].update(mass1=7., mass2=1.4, chi1=.4, chi2=0.,
+                                  lambda1=0., lambda2=2600.)
+        cases.append(case)
+    for name in ("IMRPhenomPv2", "IMRPhenomXP", "IMRPhenomXPHM"):
+        case = copy.deepcopy(base[name])
+        case["id"] = f"{name}_holdout"
+        case["params"].update(mass1=42., mass2=17., chi1=-.3, chi2=.2,
+                              spin1x=.3, spin1y=-.15, spin1z=-.3,
+                              spin2x=.12, spin2y=.08, spin2z=.2,
+                              f_ref=35., inclination=1.1, phic=.71)
+        cases.append(case)
+    return cases
+
+
+_FROZEN_HOLDOUT_JSON = json.dumps(_build_holdout_cases(), sort_keys=True)
+
+
+def get_canonical_holdout_cases() -> List[Dict[str, Any]]:
+    return json.loads(_FROZEN_HOLDOUT_JSON)
+
+
 # Module-level convenience exposures (fresh copies)
 CANONICAL_ANALYTIC_CASES = get_canonical_analytic_cases()
 CANONICAL_MODEL_CASES = get_canonical_model_cases()
 CANONICAL_FULL_CATALOG_CASES = get_canonical_catalog_cases()
-DETERMINISTIC_HELD_OUT_CASES = get_canonical_catalog_cases()
+DETERMINISTIC_HELD_OUT_CASES = get_canonical_holdout_cases()
 
 # Exact seventeen (17) manifest models from docs/model_manifest.json
 MANIFEST_MODELS = [
@@ -822,7 +889,9 @@ MANIFEST_MODELS = [
 ]
 assert len(MANIFEST_MODELS) == 17, f"Expected exactly 17 manifest models, found {len(MANIFEST_MODELS)}"
 
-UNRESOLVED_ORACLE_REASONS: Dict[str, str] = {}
+UNRESOLVED_ORACLE_REASONS: Dict[str, str] = {
+    "TaylorF2_HM": "The public TaylorF2 API returns one carrier series; its mode-array metadata does not change that output, and SimInspiralChooseFDModes has no TaylorF2 mode generator. Higher-mode full-waveform parity therefore has no stable external reference.",
+}
 
 
 def get_manifest_models() -> List[str]:
@@ -846,6 +915,8 @@ def validate_case_inventory(
         expected_inventory = get_canonical_analytic_cases()
     elif scope == "catalog":
         expected_inventory = get_canonical_catalog_cases()
+    elif scope == "holdout":
+        expected_inventory = get_canonical_holdout_cases()
     else:
         return False, [f"Unknown scope: {scope}"]
 
@@ -873,6 +944,10 @@ def validate_case_inventory(
             errors.append(f"Case '{exp['id']}' grid parameters do not match required inventory")
         if act.get("expected_gate") != exp["expected_gate"]:
             errors.append(f"Case '{exp['id']}' gate parameters do not match required inventory")
+        # Include oracle selection, options, scope, and future fields: swapping
+        # an external reference for a native self-comparison must fail closed.
+        if act != exp:
+            errors.append(f"Case '{exp['id']}' complete specification does not match required inventory")
 
     return len(errors) == 0, errors
 
@@ -882,11 +957,32 @@ def run_oracle_comparison(
     strict: bool = False,
 ) -> Dict[str, Any]:
     """Execute parity comparison for a specific configuration against LALSimulation."""
-    gate = case.get("expected_gate", {"complex_relative_l2": 1.0e-6, "mismatch": 1.0e-8})
+    gate = copy.deepcopy(case.get("expected_gate", PARITY_GATE))
     p = copy.deepcopy(case.get("params", {}))
     g = copy.deepcopy(case.get("grid", {}))
     torch_name = case.get("torch_name", "")
     lal_name = case.get("lal_name", "")
+
+    def invalid_case(reason):
+        return {"status": "FAILED", "case_id": case.get("id"), "strict": strict,
+                "torch_name": torch_name, "lal_name": lal_name, "params": p,
+                "grid": g, "reason": reason, "gate": gate}
+
+    if not isinstance(gate, dict) or set(gate) != set(PARITY_GATE):
+        return invalid_case("Invalid parity gate: expected complex_relative_l2 and mismatch")
+    for metric, ceiling in PARITY_GATE.items():
+        value = gate[metric]
+        if (isinstance(value, bool) or not isinstance(value, (int, float))
+                or not math.isfinite(value) or not 0 < value <= ceiling):
+            return invalid_case(f"Invalid parity gate for {metric}: require 0 < value <= {ceiling}")
+
+    oracle_type = case.get("oracle_type", "lal")
+    if oracle_type not in {"lal", "lal_ringdown_td"}:
+        result = invalid_case(UNRESOLVED_ORACLE_REASONS.get(
+            torch_name, f"No independent external oracle configured for {oracle_type!r}"))
+        result.update(status="UNRESOLVED_ORACLE", reference_kind=oracle_type,
+                      verification_scope="unverified")
+        return result
 
     try:
         import lal
@@ -916,11 +1012,6 @@ def run_oracle_comparison(
             "gate": gate,
         }
 
-    def invalid_case(reason):
-        return {"status": "FAILED", "case_id": case.get("id"), "strict": strict,
-                "torch_name": torch_name, "lal_name": lal_name, "params": p,
-                "grid": g, "reason": reason, "gate": gate}
-
     try:
         flow, fhigh, df = (float(g[key]) for key in ("flow", "fhigh", "df"))
         fref = float(p.get("f_ref", flow))
@@ -930,8 +1021,49 @@ def run_oracle_comparison(
             and df > 0 and 0 <= flow < fhigh and fref >= 0):
         return invalid_case("Invalid frequency bounds/grid: require finite df > 0, 0 <= flow < fhigh, f_ref >= 0")
 
+    oracle_api = case.get("oracle_api", "SimInspiralChooseFDWaveform")
+    if oracle_type == "lal_ringdown_td":
+        if oracle_api != "SimBlackHoleRingdown":
+            return invalid_case("lal_ringdown_td requires oracle_api=SimBlackHoleRingdown")
+    elif oracle_api not in {"SimInspiralChooseFDWaveform", "SimInspiralFD"}:
+        return invalid_case("Unsupported external oracle API")
+    try:
+        oracle_fhigh = float(case.get("oracle_fhigh", fhigh))
+    except (TypeError, ValueError):
+        return invalid_case("Invalid external oracle upper frequency")
+    if not math.isfinite(oracle_fhigh) or oracle_fhigh < fhigh:
+        return invalid_case("External oracle upper frequency must cover the comparison band")
+
+    prec_version = p.get("prec_version")
+    if prec_version is not None and (
+        isinstance(prec_version, bool) or not isinstance(prec_version, int)
+        or prec_version not in (101, 102, 103, 104, 220, 221, 222, 223, 224)
+        or torch_name not in ("IMRPhenomXP", "IMRPhenomXPHM")
+    ):
+        return invalid_case("Invalid explicit precession version for this model")
+    final_spin_mod = p.get("final_spin_mod")
+    if final_spin_mod is not None and (
+        isinstance(final_spin_mod, bool) or not isinstance(final_spin_mod, int)
+        or final_spin_mod not in (0, 3)
+        or torch_name not in ("IMRPhenomXP", "IMRPhenomXPHM")
+    ):
+        return invalid_case("Invalid explicit final-spin mode for this model")
+    convention = p.get("convention")
+    if convention is not None and (
+        isinstance(convention, bool) or not isinstance(convention, int)
+        or convention not in (0, 1, 5, 6, 7)
+        or torch_name not in ("IMRPhenomXP", "IMRPhenomXPHM")
+    ):
+        return invalid_case("Invalid explicit precession convention for this model")
+
     # Configure LAL parameters safely
     extra = lal.CreateDict()
+    if prec_version is not None:
+        lalsim.SimInspiralWaveformParamsInsertPhenomXPrecVersion(extra, prec_version)
+    if final_spin_mod is not None:
+        lalsim.SimInspiralWaveformParamsInsertPhenomXPFinalSpinMod(extra, final_spin_mod)
+    if convention is not None:
+        lalsim.SimInspiralWaveformParamsInsertPhenomXPConvention(extra, convention)
     if "spin_order" in p:
         lalsim.SimInspiralWaveformParamsInsertPNSpinOrder(extra, int(p["spin_order"]))
     if "tidal_order" in p:
@@ -948,62 +1080,40 @@ def run_oracle_comparison(
         if "ecc_order" in p:
             lalsim.SimInspiralWaveformParamsInsertPNEccentricityOrder(extra, int(p["ecc_order"]))
 
-    oracle_type = case.get("oracle_type", "lal")
-
-    if oracle_type == "analytic_qnm":
-        from torchwave.approximants.kerr_ringdown import evaluate_qnm, _swsh_projection_coefficients
-        from torchwave.constants import PI
-        n_pts = int(math.ceil(fhigh / df)) + 1
-        freqs = torch.arange(n_pts, dtype=torch.float64) * df
-        mf = float(p.get("mass1", p.get("final_mass", 65.0)))
-        af = float(p.get("chi1", p.get("final_spin", 0.7)))
-        dp, dc = _swsh_projection_coefficients(2, 2, torch.tensor(float(p.get("inclination", 0.0))), torch.tensor(float(p.get("phic", 0.0))))
-        omega, tau, _ = evaluate_qnm(2, 2, 0, final_mass=mf, final_spin=af)
-        gamma = 1.0 / tau
-        omega_f = 2.0 * PI * freqs
-        num = 1.0 / (2.0 * PI)
-        den = torch.complex(torch.full_like(freqs, gamma.item()), -(omega_f - omega))
-        h_ref_p = (dp * (num / den)).to(torch.complex128)
-        h_ref_c = (dc * (num / den)).to(torch.complex128)
-        h_ref_p[freqs < flow] = 0.0
-        h_ref_p[freqs >= fhigh] = 0.0
-        h_ref_c[freqs < flow] = 0.0
-        h_ref_c[freqs >= fhigh] = 0.0
-    elif oracle_type == "native_eob_reference":
-        n_pts = int(math.ceil(fhigh / df)) + 1
-        freqs = torch.arange(n_pts, dtype=torch.float64) * df
-        tw_ref_kwargs = {k: v for k, v in p.items()}
-        tw_ref_kwargs.pop("f_lower", None)
-        tw_ref_kwargs.pop("f_final", None)
-        h_ref_p, h_ref_c = get_fd_waveform(
-            torch_name,
-            sample_frequencies=freqs,
-            f_lower=flow,
-            f_final=fhigh,
-            dtype=torch.float64,
-            **tw_ref_kwargs,
-        )
-        h_ref_p = h_ref_p.to(torch.complex128)
-        h_ref_c = h_ref_c.to(torch.complex128)
-        h_ref_p[freqs < flow] = 0.0
-        h_ref_p[freqs >= fhigh] = 0.0
-        h_ref_c[freqs < flow] = 0.0
-        h_ref_c[freqs >= fhigh] = 0.0
+    oracle_meta = None
+    if oracle_type == "lal_ringdown_td":
+        try:
+            from kerr_public_oracle import public_ringdown_fd_converged
+            f_np, hp_np, hc_np, oracle_meta = public_ringdown_fd_converged(
+                p["mass1"], p.get("spin1z", p.get("chi1", 0.0)), p.get("distance", 100.0),
+                inclination=p.get("inclination", 0.0), phase=p.get("phic", 0.0),
+                sample_rate=65536, max_sample_rate=131072, delta_f=df,
+                f_max=oracle_fhigh, comparison_band=(flow, fhigh),
+                fractional_mass_loss=p.get("energy_fraction", 0.01),
+            )
+            if p.get("tc", 0.0):
+                tc_shift = np.exp(-2j * np.pi * f_np * float(p["tc"]))
+                hp_np, hc_np = hp_np * tc_shift, hc_np * tc_shift
+            freqs = torch.tensor(f_np, dtype=torch.float64)
+            h_ref_p = torch.tensor(hp_np, dtype=torch.complex128)
+            h_ref_c = torch.tensor(hc_np, dtype=torch.complex128)
+        except Exception as e:
+            return invalid_case(f"Public Kerr TD oracle generation error: {e}")
     else:
         try:
             lal_approx = lalsim.GetApproximantFromString(lal_name)
         except Exception as e:
             return {
-                "status": "FAILED",
-                "case_id": case.get("id"),
-                "strict": strict,
-                "torch_name": torch_name,
-                "lal_name": lal_name,
-                "params": p,
-                "grid": g,
-                "reason": f"Unknown or unsupported LAL approximant '{lal_name}': {e}",
-                "gate": gate,
-            }
+            "status": "FAILED",
+            "case_id": case.get("id"),
+            "strict": strict,
+            "torch_name": torch_name,
+            "lal_name": lal_name,
+            "params": p,
+            "grid": g,
+            "reason": f"Unknown or unsupported LAL approximant '{lal_name}': {e}",
+            "gate": gate,
+        }
 
         m1_si = float(p["mass1"]) * lal.MSUN_SI
         m2_si = float(p["mass2"]) * lal.MSUN_SI
@@ -1018,63 +1128,45 @@ def run_oracle_comparison(
         phi_c = float(p.get("phic", 0.0))
 
         try:
-            hp_lal, hc_lal = lalsim.SimInspiralChooseFDWaveform(
-                m1_si,
-                m2_si,
-                s1x,
-                s1y,
-                s1z,
-                s2x,
-                s2y,
-                s2z,
-                dist_si,
-                inc,
-                phi_c,
-                0.0,
-                ecc,
-                0.0,
-                df,
-                flow,
-                fhigh,
-                fref,
-                extra,
-                lal_approx,
-            )
+            # SimInspiralFD provides the public conditioning/FFT adapter for TD
+            # approximants. Extra high-frequency samples satisfy its Nyquist limit;
+            # the declared comparison band below remains unchanged.
+            hp_lal, hc_lal = getattr(lalsim, oracle_api)(
+                m1_si, m2_si, s1x, s1y, s1z, s2x, s2y, s2z, dist_si, inc,
+                phi_c, 0.0, ecc, 0.0, df, flow, oracle_fhigh, fref, extra, lal_approx)
         except Exception as e:
-            return {
-                "status": "FAILED",
-                "case_id": case.get("id"),
-                "strict": strict,
-                "torch_name": torch_name,
-                "lal_name": lal_name,
-                "params": p,
-                "grid": g,
-                "reason": f"LALSimulation generation error: {e}",
-                "gate": gate,
-            }
+            return invalid_case(f"LALSimulation generation error: {e}")
 
         n_pts = len(hp_lal.data.data)
         freqs = torch.arange(n_pts, dtype=torch.float64) * df
         h_ref_p = torch.tensor(hp_lal.data.data, dtype=torch.complex128)
         h_ref_c = torch.tensor(hc_lal.data.data, dtype=torch.complex128)
-
     try:
         tw_kwargs = {k: v for k, v in p.items()}
         tw_kwargs.pop("f_lower", None)
         tw_kwargs.pop("f_final", None)
+        # LAL ChooseFD supplies a uniform, conditioned grid whose comparison
+        # upper edge is exclusive.  Tell the clean Pv2 adapter that this
+        # particular sequence is such a request; direct frequency sequences
+        # retain every requested endpoint by default.
+        support_kwargs = {}
+        torch_key = torch_name.lower().replace("_", "").replace("-", "")
+        torch_f_final = fhigh
+        if torch_key == "imrphenompv2":
+            support_kwargs["frequency_support"] = "uniform"
+            # SimInspiralFD may return a power-of-two padded grid.  Condition
+            # Torch at the oracle support edge, while comparison metrics keep
+            # using the requested physical band fhigh below.
+            torch_f_final = oracle_fhigh
         hp_tw, hc_tw = get_fd_waveform(
             torch_name,
             sample_frequencies=freqs,
             f_lower=flow,
-            f_final=fhigh,
+            f_final=torch_f_final,
             dtype=torch.float64,
+            **support_kwargs,
             **tw_kwargs,
         )
-        if oracle_type != "lal":
-            hp_tw[freqs < flow] = 0.0
-            hp_tw[freqs >= fhigh] = 0.0
-            hc_tw[freqs < flow] = 0.0
-            hc_tw[freqs >= fhigh] = 0.0
     except Exception as e:
         return {
             "status": "FAILED",
@@ -1088,9 +1180,15 @@ def run_oracle_comparison(
             "gate": gate,
         }
 
+    support_fhigh = oracle_fhigh if torch_key == "imrphenompv2" else fhigh
+
     # Validate waveforms and grid prior to slicing, norms, and metrics
     for wf_label, (tw_wf, ref_wf) in [("plus", (hp_tw, h_ref_p)), ("cross", (hc_tw, h_ref_c))]:
-        ok, err_msg = validate_waveform_and_grid(tw_wf, ref_wf, freqs, df, flow, fhigh, label=wf_label)
+        ok, err_msg = validate_waveform_and_grid(
+            tw_wf, ref_wf, freqs, df, flow, fhigh, label=wf_label,
+            require_reference_zero_dc=oracle_api not in {"SimInspiralFD", "SimBlackHoleRingdown"},
+            support_fhigh=support_fhigh,
+        )
         if not ok:
             return {
                 "status": "FAILED",
@@ -1136,8 +1234,14 @@ def run_oracle_comparison(
         psd_results_p[psd_name] = psd_mismatch(t_in_p, r_in_p, psd_t, df)
         psd_results_c[psd_name] = psd_mismatch(t_in_c, r_in_c, psd_t, df)
 
-    metrics_p = evaluate_waveform_metrics(hp_tw, h_ref_p, freqs, df, flow, fhigh, compute_opt_match=True)
-    metrics_c = evaluate_waveform_metrics(hc_tw, h_ref_c, freqs, df, flow, fhigh, compute_opt_match=True)
+    metrics_p = evaluate_waveform_metrics(
+        hp_tw, h_ref_p, freqs, df, flow, fhigh,
+        compute_opt_match=True, support_fhigh=support_fhigh,
+    )
+    metrics_c = evaluate_waveform_metrics(
+        hc_tw, h_ref_c, freqs, df, flow, fhigh,
+        compute_opt_match=True, support_fhigh=support_fhigh,
+    )
 
     # Multi-detector projection evaluation using public LAL binary APIs
     t_shared_gps = 1126259462.0
@@ -1180,12 +1284,17 @@ def run_oracle_comparison(
 
             key = f"{det_key}_sky{idx_sky}"
             ok_proj, err_proj = validate_waveform_and_grid(
-                h_proj_tw, h_proj_lal, freqs, df, flow, fhigh, label=f"projection_{key}"
+                h_proj_tw, h_proj_lal, freqs, df, flow, fhigh, label=f"projection_{key}",
+                require_reference_zero_dc=oracle_api not in {"SimInspiralFD", "SimBlackHoleRingdown"},
+                support_fhigh=support_fhigh,
             )
             if not ok_proj:
                 return invalid_case(f"Projection validation failed: {err_proj}")
 
-            m_proj = evaluate_waveform_metrics(h_proj_tw, h_proj_lal, freqs, df, flow, fhigh, compute_opt_match=True)
+            m_proj = evaluate_waveform_metrics(
+                h_proj_tw, h_proj_lal, freqs, df, flow, fhigh,
+                compute_opt_match=True, support_fhigh=support_fhigh,
+            )
 
             # Compute and gate all THREE named PSDs for each projection
             proj_named_psds = {}
@@ -1273,6 +1382,11 @@ def run_oracle_comparison(
         "lal_name": lal_name,
         "params": p,
         "grid": g,
+        "reference_kind": "lal_binary",
+        "oracle_api": oracle_api,
+        "oracle_fhigh": oracle_fhigh,
+        "oracle_convergence": oracle_meta,
+        "verification_scope": case.get("verification_scope", "full_polarizations"),
         "plus": metrics_p,
         "cross": metrics_c,
         "psd_mismatches_plus": psd_results_p,
@@ -1287,13 +1401,15 @@ def run_full_parity_suite(
     strict: bool = False,
     cases: Optional[Sequence[Dict[str, Any]]] = None,
 ) -> Dict[str, Any]:
-    """Execute parity suite under explicit required scope ('analytic' or 'catalog')."""
+    """Execute a frozen analytic, full catalog, or off-canonical holdout suite."""
     if scope == "analytic":
         expected_inventory = get_canonical_analytic_cases()
     elif scope == "catalog":
         expected_inventory = get_canonical_catalog_cases()
+    elif scope == "holdout":
+        expected_inventory = get_canonical_holdout_cases()
     else:
-        raise ValueError(f"Unknown parity suite scope: '{scope}'. Supported: ['analytic', 'catalog']")
+        raise ValueError(f"Unknown parity suite scope: '{scope}'. Supported: ['analytic', 'catalog', 'holdout']")
 
     cases_to_run = copy.deepcopy(cases) if cases is not None else copy.deepcopy(expected_inventory)
 
@@ -1446,7 +1562,7 @@ def run_full_parity_suite(
             "physical_parameters": "tc, phic, and f_ref forwarded directly as declared without internal shifts",
             "amplitude_scaling": "no amplitude rescaling or normalization factor applied",
             "optimized_match_role": "diagnostic metric independently optimized over time and phase per component; never a convention correction or amplitude certification",
-            "model_conventions_status": "unresolved for non-TaylorF2 models; only TaylorF2/TaylorF2Ecc conventions are verified against LAL",
+            "model_conventions_status": "Only reported configurations are tested; passing a case does not certify a model parameter domain.",
         },
         "manifest_drift_errors": manifest_drift_errors,
         "required_inventory": copy.deepcopy(expected_inventory),
@@ -1496,6 +1612,8 @@ if __name__ == "__main__":
     scope = "catalog"
     if "--analytic-only" in sys.argv or "--scope=analytic" in sys.argv:
         scope = "analytic"
+    elif "--scope=holdout" in sys.argv:
+        scope = "holdout"
 
     output_file = None
     if "--json-out" in sys.argv:
@@ -1523,8 +1641,8 @@ if __name__ == "__main__":
             sys.exit(0)
     else:
         if not suite_res["suite_passed"]:
-            print("\nANALYTIC PARITY SUITE FAILED!")
+            print(f"\n{scope.upper()} PARITY SUITE FAILED!")
             sys.exit(1)
         else:
-            print(f"\nANALYTIC PARITY SUITE PASSED: {suite_res['num_passed']}/{suite_res['num_cases']} cases verified.")
+            print(f"\n{scope.upper()} PARITY SUITE PASSED: {suite_res['num_passed']}/{suite_res['num_cases']} cases verified.")
             sys.exit(0)

@@ -1,0 +1,23 @@
+{"status": "running", "host": "RONI2", "cwd": "/Users/xangma/repos/torchwave", "pid": 56699, "command": "/Users/xangma/miniconda3/envs/pycbcorig313/bin/python scripts/teob_continuous_fd_attribution.py --case unequal_bbh"}
+Traceback (most recent call last):
+  File "/Users/xangma/repos/torchwave/scripts/teob_continuous_fd_attribution.py", line 163, in <module>
+    if __name__=='__main__': raise SystemExit(main())
+                                              ~~~~^^
+  File "/Users/xangma/repos/torchwave/scripts/teob_continuous_fd_attribution.py", line 132, in main
+    result = conditioned_teob_fd(p['mass1'],p['mass2'],f_low=g['flow'],f_max=g['fhigh'],delta_f=g['df'],distance=p['distance'],inclination=p['inclination'],phic=p['phic'],tc=p['tc'],matching_method=args.matching_method,**report['policies'],pa_kwargs={'r_min':14.,'dr':.1,'pa_order':8},dtype=torch.float64)
+  File "/Users/xangma/repos/torchwave/src/torchwave/approximants/eob/teob_conditioned_waveform_clean.py", line 657, in conditioned_teob_fd
+    targets, target_provenance = _resolve_targets(
+                                 ~~~~~~~~~~~~~~~~^
+        hamiltonian,
+        ^^^^^^^^^^^^
+    ...<2 lines>...
+        provenance=nqc_target_provenance,
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "/Users/xangma/repos/torchwave/src/torchwave/approximants/eob/teob_conditioned_waveform_clean.py", line 473, in _resolve_targets
+    published_2017_nqc_targets(hamiltonian.nu, hamiltonian.nu.new_zeros(())),
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/xangma/repos/torchwave/src/torchwave/approximants/eob/teob_merger_nqc_clean.py", line 362, in published_2017_nqc_targets
+    raise ValueError("published 2017 NQC targets require 0.16 < nu <= 0.25")
+ValueError: published 2017 NQC targets require 0.16 < nu <= 0.25

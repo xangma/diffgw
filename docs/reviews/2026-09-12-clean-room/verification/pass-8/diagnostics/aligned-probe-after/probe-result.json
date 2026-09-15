@@ -1,0 +1,48 @@
+{
+  "commands": [
+    [
+      "/work/charm_7_0_0/multicore-linux-x86_64-gcc/bin/charmc",
+      "aligned-nodegroup.ci"
+    ],
+    [
+      "/work/charm_7_0_0/multicore-linux-x86_64-gcc/bin/charmc",
+      "-O2",
+      "-language",
+      "charm++",
+      "-o",
+      "aligned-nodegroup",
+      "aligned-nodegroup.cpp"
+    ],
+    [
+      "./aligned-nodegroup",
+      "+p8"
+    ]
+  ],
+  "expected_misalignment": false,
+  "exit_code": 0,
+  "allocation_rows": [
+    "AlignedNodeGroup this=0x57d333f3da00 mod64=0 alignof=64",
+    "AlignedNodeGroup this=0x57d333f3dc40 mod64=0 alignof=64",
+    "AlignedNodeGroup this=0x57d333f3df00 mod64=0 alignof=64",
+    "AlignedNodeGroup this=0x57d333f3e180 mod64=0 alignof=64",
+    "AlignedNodeGroup this=0x57d333f3e480 mod64=0 alignof=64",
+    "AlignedNodeGroup this=0x57d333f3e6c0 mod64=0 alignof=64",
+    "AlignedNodeGroup this=0x57d333f3e980 mod64=0 alignof=64",
+    "AlignedNodeGroup this=0x57d333f3ec00 mod64=0 alignof=64",
+    "AlignedNodeGroup this=0x57d333f3ef80 mod64=0 alignof=64",
+    "AlignedNodeGroup this=0x57d333f3f1c0 mod64=0 alignof=64",
+    "AlignedNodeGroup this=0x57d333f3f440 mod64=0 alignof=64",
+    "AlignedNodeGroup this=0x57d333f3f700 mod64=0 alignof=64",
+    "AlignedNodeGroup this=0x57d333f3f980 mod64=0 alignof=64",
+    "AlignedNodeGroup this=0x57d333f3fc40 mod64=0 alignof=64",
+    "AlignedNodeGroup this=0x57d333f3fec0 mod64=0 alignof=64",
+    "AlignedNodeGroup this=0x57d333f40180 mod64=0 alignof=64"
+  ],
+  "accepted": true,
+  "hashes": {
+    "aligned-nodegroup.ci": "c58ecf1feacc97bc4f726bb9017d2603838962c0530e90cbe9510c09e7d3bf79",
+    "aligned-nodegroup.cpp": "d03eb20855146501959a18c01a14c58d88ab670ec0bdebfc89117661a50997c7",
+    "aligned-nodegroup": "fa1d93165e5c7c291a1f8350ee640d5de6607b71ab82c7767b6ae8da997e8b11",
+    "/work/charm_7_0_0/multicore-linux-x86_64-gcc/lib/libck.a": "2907aa11e3865f9f441c98b21b5dffb8068aca663c4dea9841655def6e3c82dd"
+  }
+}

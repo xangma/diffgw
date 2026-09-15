@@ -1,0 +1,40 @@
+{
+  "requested_utc": "2026-09-13T00:47:44.001671+00:00",
+  "reason": "User requested more cores if faster; replace fixed 16-PE run with 32-PE run",
+  "host": "len",
+  "cwd": "/home/xangma/simulations/torchwave-nr/2026-09-12-pilot",
+  "stopped_solver_pid": 1830864,
+  "solver_cmdline": "/work/spectre/build/bin/SolveXcts --input-file /campaign/independent-p11/InitialData.yaml +p 16 ",
+  "process_snapshot": "PID                 ELAPSED             %CPU                COMMAND\n1830478             791                 0.1                 python\n1830565             791                 0.0                 spectre\n1830566             791                 0.0                 python3.10\n1830864             790                 1598                SolveXcts\n",
+  "driver_state_before": {
+    "host": "len",
+    "pid": 1829427,
+    "cwd": "/home/xangma/simulations/torchwave-nr/2026-09-12-pilot",
+    "started_utc": "2026-09-13T00:34:30.717072+00:00",
+    "status": "running",
+    "completed": [
+      {
+        "stage": "p11-preparation-v2",
+        "reused": true,
+        "wall_seconds": 1.5174819889944047,
+        "metrics_sha256": "539d449604b9615e59d0e7db359cf51fa86f5bb64da24a2dc9a85bca0d600588"
+      }
+    ],
+    "plan_sha256": "7d6b9d829da56b538784497341191f9f6c8a137a535eaa87db3a00d264a21192",
+    "current_owned_service": "torchwave-nr-p11-solve.service",
+    "stage": "p11-solve",
+    "updated_utc": "2026-09-13T00:34:31.110781+00:00",
+    "command": [
+      "spectre",
+      "schedule",
+      "/campaign/independent-p11/InitialData.yaml",
+      "--no-schedule",
+      "--num-procs",
+      "16",
+      "--submit"
+    ]
+  },
+  "signal": "SIGTERM to actual SolveXcts child; retain measured rejected exit",
+  "checkpoint_available": false,
+  "restart_from": "identical original initial-data YAML; no partial solution reused"
+}

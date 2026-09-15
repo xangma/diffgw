@@ -1,0 +1,61 @@
+{
+  "date": "2026-09-15",
+  "current_release": "122022",
+  "current_release_route": "not_found_in_bounded_checked_records",
+  "checked_primary_records": [
+    {
+      "url": "https://arxiv.org/abs/2001.10914v2",
+      "revision": "v2 (revised 2020-11-03)",
+      "role": "paper equations and ancillary identity; paper-era only"
+    },
+    {
+      "url": "https://arxiv.org/src/2001.10914v2",
+      "revision": "v2 source archive",
+      "role": "metadata member inventory; no 122022 marker"
+    },
+    {
+      "url": "https://arxiv.org/licenses/nonexclusive-distrib/1.0/",
+      "revision": "license record 1.0",
+      "role": "distribution terms; no MIT ancillary-data grant"
+    },
+    {
+      "url": "https://lscsoft.docs.ligo.org/lalsuite/lalsimulation/_l_a_l_sim_inspiral_waveform_params_8c_source.html",
+      "revision": "public documentation record checked 2026-09-15",
+      "role": "referenced API/setter/version documentation candidate from prior audit metadata; not fetched or inspected in this pass",
+      "inspection_status": "not_inspected_this_pass"
+    },
+    {
+      "record": "docs/reviews/2026-09-13-parity-review/verification/xhm-inspiral/xhm-inspiral-public.json",
+      "sha256": "2ea0c7d296dc9b3138cccbdce0433770bf940f71e197a1d031ce0928449329e1",
+      "revision": "local audit record",
+      "role": "observed default 122022, amplitude-fit 122018, variant 3"
+    }
+  ],
+  "older_target": {
+    "identity": "arxiv-2001.10914v2-paper-era-ancillary",
+    "url": "https://arxiv.org/src/2001.10914v2",
+    "sha256": "cc05e7dbff7bf0c42a10b7da1f4840eefc55b252168d6bfb085155a7bdc5318e",
+    "regular_file_count": 218,
+    "prefix_file_counts": {
+      "anc/MixingCoefficients/": 8,
+      "anc/QNMs/": 10,
+      "anc/ParspaceFits/AmpFits/": 37,
+      "anc/ParspaceFits/PhaseFits/": 33
+    },
+    "metadata_members": [
+      "anc/ParspaceFits/README",
+      "anc/ParspaceFits/IMRPhenomXHM_AmplitudeFits.nb",
+      "anc/ParspaceFits/IMRPhenomXHM_PhaseFits.nb"
+    ],
+    "status": "metadata_verified_candidate_not_approved_source",
+    "public_location_clears_use_or_distribution": false,
+    "redistribution": "not_cleared_for_mit_bundle",
+    "mit_bundle_clearance": false
+  },
+  "policy": {
+    "contact_authors": false,
+    "derive_values_from_outputs": false,
+    "relabel_older_target_as_current": false,
+    "scientific_fidelity": "independently calibrated model may be scientifically useful but cannot claim exact LAL 122022 parity"
+  }
+}

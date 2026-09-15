@@ -1,0 +1,435 @@
+{
+  "schema_version": 1,
+  "created_utc": "2026-09-15T10:48:54.650610+00:00",
+  "policy_sha256": "1a863811b90c410cd5a9b0b52a0bd53696b869a0d503cb8fa61d9c054842138d",
+  "inventory_sha256": "6605db8f60ccb2277c9a21e1219c03fe48b0529d4050eed953ca655357873ff9",
+  "candidate_order": [
+    {
+      "target_q": 1.5,
+      "sxs_id": "SXS:BBH:2331",
+      "rank": 1,
+      "split": "training",
+      "metadata_pass": true
+    },
+    {
+      "target_q": 2.0,
+      "sxs_id": "SXS:BBH:2425",
+      "rank": 1,
+      "split": "training",
+      "metadata_pass": false
+    },
+    {
+      "target_q": 2.0,
+      "sxs_id": "SXS:BBH:1166",
+      "rank": 2,
+      "split": "training",
+      "metadata_pass": true
+    },
+    {
+      "target_q": 2.0,
+      "sxs_id": "SXS:BBH:1167",
+      "rank": 3,
+      "split": "training",
+      "metadata_pass": true
+    },
+    {
+      "target_q": 3.0,
+      "sxs_id": "SXS:BBH:1221",
+      "rank": 1,
+      "split": "holdout",
+      "metadata_pass": false
+    },
+    {
+      "target_q": 3.0,
+      "sxs_id": "SXS:BBH:2265",
+      "rank": 2,
+      "split": "holdout",
+      "metadata_pass": true
+    },
+    {
+      "target_q": 3.0,
+      "sxs_id": "SXS:BBH:2498",
+      "rank": 3,
+      "split": "holdout",
+      "metadata_pass": true
+    },
+    {
+      "target_q": 4.0,
+      "sxs_id": "SXS:BBH:2485",
+      "rank": 1,
+      "split": "training",
+      "metadata_pass": true
+    },
+    {
+      "target_q": 4.0,
+      "sxs_id": "SXS:BBH:1220",
+      "rank": 2,
+      "split": "training",
+      "metadata_pass": true
+    },
+    {
+      "target_q": 4.0,
+      "sxs_id": "SXS:BBH:1906",
+      "rank": 3,
+      "split": "training",
+      "metadata_pass": false
+    },
+    {
+      "target_q": 5.0,
+      "sxs_id": "SXS:BBH:3619",
+      "rank": 1,
+      "split": "training",
+      "metadata_pass": true
+    },
+    {
+      "target_q": 6.0,
+      "sxs_id": "SXS:BBH:3630",
+      "rank": 1,
+      "split": "holdout",
+      "metadata_pass": true
+    },
+    {
+      "target_q": 8.0,
+      "sxs_id": "SXS:BBH:3622",
+      "rank": 1,
+      "split": "training",
+      "metadata_pass": true
+    }
+  ],
+  "selection_rule": "first highest-resolution metadata-qualified candidate by frozen rank for each target; no waveform inspected",
+  "source_layout": "N2 standalone; N3 in same-record same-Lev ExtraWaveforms /Strain_N3.dir",
+  "selected_simulations": [
+    "SXS:BBH:2331",
+    "SXS:BBH:1166",
+    "SXS:BBH:2265",
+    "SXS:BBH:2485",
+    "SXS:BBH:3619",
+    "SXS:BBH:3630",
+    "SXS:BBH:3622"
+  ],
+  "download_bytes": 519575120,
+  "cases": [
+    {
+      "sxs_id": "SXS:BBH:2331",
+      "record_id": "aq9e2-0ye86",
+      "resolution": "Lev2",
+      "extrapolation_order": 2,
+      "split": "validation_only",
+      "source_split": "training",
+      "target_q": 1.5,
+      "candidate_rank": 1
+    },
+    {
+      "sxs_id": "SXS:BBH:2331",
+      "record_id": "aq9e2-0ye86",
+      "resolution": "Lev2",
+      "extrapolation_order": 3,
+      "split": "validation_only",
+      "source_split": "training",
+      "target_q": 1.5,
+      "candidate_rank": 1,
+      "h5_key": "Lev2:ExtraWaveforms.h5",
+      "sidecar_key": "Lev2:ExtraWaveforms.json",
+      "h5_group": "/Strain_N3.dir"
+    },
+    {
+      "sxs_id": "SXS:BBH:2331",
+      "record_id": "aq9e2-0ye86",
+      "resolution": "Lev3",
+      "extrapolation_order": 2,
+      "split": "validation_only",
+      "source_split": "training",
+      "target_q": 1.5,
+      "candidate_rank": 1
+    },
+    {
+      "sxs_id": "SXS:BBH:2331",
+      "record_id": "aq9e2-0ye86",
+      "resolution": "Lev3",
+      "extrapolation_order": 3,
+      "split": "training",
+      "source_split": "training",
+      "target_q": 1.5,
+      "candidate_rank": 1,
+      "h5_key": "Lev3:ExtraWaveforms.h5",
+      "sidecar_key": "Lev3:ExtraWaveforms.json",
+      "h5_group": "/Strain_N3.dir"
+    },
+    {
+      "sxs_id": "SXS:BBH:1166",
+      "record_id": "27s13-fe162",
+      "resolution": "Lev2",
+      "extrapolation_order": 2,
+      "split": "validation_only",
+      "source_split": "training",
+      "target_q": 2,
+      "candidate_rank": 2
+    },
+    {
+      "sxs_id": "SXS:BBH:1166",
+      "record_id": "27s13-fe162",
+      "resolution": "Lev2",
+      "extrapolation_order": 3,
+      "split": "validation_only",
+      "source_split": "training",
+      "target_q": 2,
+      "candidate_rank": 2,
+      "h5_key": "Lev2:ExtraWaveforms.h5",
+      "sidecar_key": "Lev2:ExtraWaveforms.json",
+      "h5_group": "/Strain_N3.dir"
+    },
+    {
+      "sxs_id": "SXS:BBH:1166",
+      "record_id": "27s13-fe162",
+      "resolution": "Lev3",
+      "extrapolation_order": 2,
+      "split": "validation_only",
+      "source_split": "training",
+      "target_q": 2,
+      "candidate_rank": 2
+    },
+    {
+      "sxs_id": "SXS:BBH:1166",
+      "record_id": "27s13-fe162",
+      "resolution": "Lev3",
+      "extrapolation_order": 3,
+      "split": "training",
+      "source_split": "training",
+      "target_q": 2,
+      "candidate_rank": 2,
+      "h5_key": "Lev3:ExtraWaveforms.h5",
+      "sidecar_key": "Lev3:ExtraWaveforms.json",
+      "h5_group": "/Strain_N3.dir"
+    },
+    {
+      "sxs_id": "SXS:BBH:2265",
+      "record_id": "258wv-a5t45",
+      "resolution": "Lev2",
+      "extrapolation_order": 2,
+      "split": "validation_only",
+      "source_split": "holdout",
+      "target_q": 3,
+      "candidate_rank": 2
+    },
+    {
+      "sxs_id": "SXS:BBH:2265",
+      "record_id": "258wv-a5t45",
+      "resolution": "Lev2",
+      "extrapolation_order": 3,
+      "split": "validation_only",
+      "source_split": "holdout",
+      "target_q": 3,
+      "candidate_rank": 2,
+      "h5_key": "Lev2:ExtraWaveforms.h5",
+      "sidecar_key": "Lev2:ExtraWaveforms.json",
+      "h5_group": "/Strain_N3.dir"
+    },
+    {
+      "sxs_id": "SXS:BBH:2265",
+      "record_id": "258wv-a5t45",
+      "resolution": "Lev3",
+      "extrapolation_order": 2,
+      "split": "validation_only",
+      "source_split": "holdout",
+      "target_q": 3,
+      "candidate_rank": 2
+    },
+    {
+      "sxs_id": "SXS:BBH:2265",
+      "record_id": "258wv-a5t45",
+      "resolution": "Lev3",
+      "extrapolation_order": 3,
+      "split": "holdout",
+      "source_split": "holdout",
+      "target_q": 3,
+      "candidate_rank": 2,
+      "h5_key": "Lev3:ExtraWaveforms.h5",
+      "sidecar_key": "Lev3:ExtraWaveforms.json",
+      "h5_group": "/Strain_N3.dir"
+    },
+    {
+      "sxs_id": "SXS:BBH:2485",
+      "record_id": "5mjz7-2gs59",
+      "resolution": "Lev4",
+      "extrapolation_order": 2,
+      "split": "validation_only",
+      "source_split": "training",
+      "target_q": 4,
+      "candidate_rank": 1
+    },
+    {
+      "sxs_id": "SXS:BBH:2485",
+      "record_id": "5mjz7-2gs59",
+      "resolution": "Lev4",
+      "extrapolation_order": 3,
+      "split": "validation_only",
+      "source_split": "training",
+      "target_q": 4,
+      "candidate_rank": 1,
+      "h5_key": "Lev4:ExtraWaveforms.h5",
+      "sidecar_key": "Lev4:ExtraWaveforms.json",
+      "h5_group": "/Strain_N3.dir"
+    },
+    {
+      "sxs_id": "SXS:BBH:2485",
+      "record_id": "5mjz7-2gs59",
+      "resolution": "Lev5",
+      "extrapolation_order": 2,
+      "split": "validation_only",
+      "source_split": "training",
+      "target_q": 4,
+      "candidate_rank": 1
+    },
+    {
+      "sxs_id": "SXS:BBH:2485",
+      "record_id": "5mjz7-2gs59",
+      "resolution": "Lev5",
+      "extrapolation_order": 3,
+      "split": "training",
+      "source_split": "training",
+      "target_q": 4,
+      "candidate_rank": 1,
+      "h5_key": "Lev5:ExtraWaveforms.h5",
+      "sidecar_key": "Lev5:ExtraWaveforms.json",
+      "h5_group": "/Strain_N3.dir"
+    },
+    {
+      "sxs_id": "SXS:BBH:3619",
+      "record_id": "6fw56-9q785",
+      "resolution": "Lev2",
+      "extrapolation_order": 2,
+      "split": "validation_only",
+      "source_split": "training",
+      "target_q": 5,
+      "candidate_rank": 1
+    },
+    {
+      "sxs_id": "SXS:BBH:3619",
+      "record_id": "6fw56-9q785",
+      "resolution": "Lev2",
+      "extrapolation_order": 3,
+      "split": "validation_only",
+      "source_split": "training",
+      "target_q": 5,
+      "candidate_rank": 1,
+      "h5_key": "Lev2:ExtraWaveforms.h5",
+      "sidecar_key": "Lev2:ExtraWaveforms.json",
+      "h5_group": "/Strain_N3.dir"
+    },
+    {
+      "sxs_id": "SXS:BBH:3619",
+      "record_id": "6fw56-9q785",
+      "resolution": "Lev3",
+      "extrapolation_order": 2,
+      "split": "validation_only",
+      "source_split": "training",
+      "target_q": 5,
+      "candidate_rank": 1
+    },
+    {
+      "sxs_id": "SXS:BBH:3619",
+      "record_id": "6fw56-9q785",
+      "resolution": "Lev3",
+      "extrapolation_order": 3,
+      "split": "training",
+      "source_split": "training",
+      "target_q": 5,
+      "candidate_rank": 1,
+      "h5_key": "Lev3:ExtraWaveforms.h5",
+      "sidecar_key": "Lev3:ExtraWaveforms.json",
+      "h5_group": "/Strain_N3.dir"
+    },
+    {
+      "sxs_id": "SXS:BBH:3630",
+      "record_id": "28pv5-4wj69",
+      "resolution": "Lev2",
+      "extrapolation_order": 2,
+      "split": "validation_only",
+      "source_split": "holdout",
+      "target_q": 6,
+      "candidate_rank": 1
+    },
+    {
+      "sxs_id": "SXS:BBH:3630",
+      "record_id": "28pv5-4wj69",
+      "resolution": "Lev2",
+      "extrapolation_order": 3,
+      "split": "validation_only",
+      "source_split": "holdout",
+      "target_q": 6,
+      "candidate_rank": 1,
+      "h5_key": "Lev2:ExtraWaveforms.h5",
+      "sidecar_key": "Lev2:ExtraWaveforms.json",
+      "h5_group": "/Strain_N3.dir"
+    },
+    {
+      "sxs_id": "SXS:BBH:3630",
+      "record_id": "28pv5-4wj69",
+      "resolution": "Lev3",
+      "extrapolation_order": 2,
+      "split": "validation_only",
+      "source_split": "holdout",
+      "target_q": 6,
+      "candidate_rank": 1
+    },
+    {
+      "sxs_id": "SXS:BBH:3630",
+      "record_id": "28pv5-4wj69",
+      "resolution": "Lev3",
+      "extrapolation_order": 3,
+      "split": "holdout",
+      "source_split": "holdout",
+      "target_q": 6,
+      "candidate_rank": 1,
+      "h5_key": "Lev3:ExtraWaveforms.h5",
+      "sidecar_key": "Lev3:ExtraWaveforms.json",
+      "h5_group": "/Strain_N3.dir"
+    },
+    {
+      "sxs_id": "SXS:BBH:3622",
+      "record_id": "r1mdz-3sj90",
+      "resolution": "Lev2",
+      "extrapolation_order": 2,
+      "split": "validation_only",
+      "source_split": "training",
+      "target_q": 8,
+      "candidate_rank": 1
+    },
+    {
+      "sxs_id": "SXS:BBH:3622",
+      "record_id": "r1mdz-3sj90",
+      "resolution": "Lev2",
+      "extrapolation_order": 3,
+      "split": "validation_only",
+      "source_split": "training",
+      "target_q": 8,
+      "candidate_rank": 1,
+      "h5_key": "Lev2:ExtraWaveforms.h5",
+      "sidecar_key": "Lev2:ExtraWaveforms.json",
+      "h5_group": "/Strain_N3.dir"
+    },
+    {
+      "sxs_id": "SXS:BBH:3622",
+      "record_id": "r1mdz-3sj90",
+      "resolution": "Lev3",
+      "extrapolation_order": 2,
+      "split": "validation_only",
+      "source_split": "training",
+      "target_q": 8,
+      "candidate_rank": 1
+    },
+    {
+      "sxs_id": "SXS:BBH:3622",
+      "record_id": "r1mdz-3sj90",
+      "resolution": "Lev3",
+      "extrapolation_order": 3,
+      "split": "training",
+      "source_split": "training",
+      "target_q": 8,
+      "candidate_rank": 1,
+      "h5_key": "Lev3:ExtraWaveforms.h5",
+      "sidecar_key": "Lev3:ExtraWaveforms.json",
+      "h5_group": "/Strain_N3.dir"
+    }
+  ]
+}

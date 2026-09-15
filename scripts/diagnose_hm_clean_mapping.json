@@ -1,0 +1,529 @@
+{
+  "provenance": {
+    "paper": "London et al., arXiv:1708.00404, Eqs. (5)-(6), (13)-(14)",
+    "source_sha256": "cbf474aa50241a06608bbfc69a9682f05b00ab3044fb507eb17c2f96921f0887",
+    "script_sha256": "499682df0bc7fc7e42eee88c9b845aa392e3cf1a4f180e5b8104aa2e470b7cb1",
+    "paper_mishra": "Mishra et al., arXiv:1601.05588 / PRD 93 084054 (2016), Eq. (12)",
+    "native_source_sha256": {
+      "imrphenom_hm.py": "e48a2d42568a5d09a19b668b53a65a358696c245989e22fb5685fef921929ac7",
+      "imrphenomd.py": "56c5c5c5ba40b73cf6ac73e69b8d6913678c10e7ca6aa3c2f72dbf06cebf055c",
+      "constants.py": "1ae479e07b44a19d23b9a9eaed4b8b8b8bf38b4293717a91d321b59f2d1ac4e3",
+      "conversions.py": "2cb04a754b927839dd056eec2372e4fb840e8298fbc3da67f847e3db8f323302"
+    },
+    "case_sha256": "9058b4504f76f63cbd22ed007549c57a3b69ad88e67928804952c532670082e8",
+    "binary_case_sha256": "28a0b31bc58e1cecbc0b20ef8a3061be981423dba96e3a2e6c5fb953496d18f8",
+    "python": "3.13.9",
+    "torch": "2.9.1"
+  },
+  "grid": {
+    "start": 0.0,
+    "stop": 0.16,
+    "count": 1001
+  },
+  "rows": [
+    {
+      "m": 1,
+      "kind": "amplitude",
+      "max_abs_difference": 0.0,
+      "finite": true,
+      "join_residual_f0": 7.999999999999674e-05,
+      "join_residual_fr": 9.287598944598963e-06
+    },
+    {
+      "m": 1,
+      "kind": "phase",
+      "max_abs_difference": 0.0,
+      "finite": true,
+      "join_residual_f0": 7.999999999999674e-05,
+      "join_residual_fr": 9.287598944598963e-06
+    },
+    {
+      "m": 2,
+      "kind": "amplitude",
+      "max_abs_difference": 0.0,
+      "finite": true,
+      "join_residual_f0": 7.999999999999674e-05,
+      "join_residual_fr": 2.1498708010339596e-05
+    },
+    {
+      "m": 2,
+      "kind": "phase",
+      "max_abs_difference": 0.0,
+      "finite": true,
+      "join_residual_f0": 7.999999999999674e-05,
+      "join_residual_fr": 2.1498708010339596e-05
+    },
+    {
+      "m": 3,
+      "kind": "amplitude",
+      "max_abs_difference": 1.734723475976807e-18,
+      "finite": true,
+      "join_residual_f0": 1.7128953771291047e-05,
+      "join_residual_fr": 4.000000000001225e-05
+    },
+    {
+      "m": 3,
+      "kind": "phase",
+      "max_abs_difference": 1.734723475976807e-18,
+      "finite": true,
+      "join_residual_f0": 1.7128953771291047e-05,
+      "join_residual_fr": 1.853810264386413e-05
+    },
+    {
+      "m": 4,
+      "kind": "amplitude",
+      "max_abs_difference": 0.0,
+      "finite": true,
+      "join_residual_f0": 1.821818181818244e-05,
+      "join_residual_fr": 1.8218181818185908e-05
+    },
+    {
+      "m": 4,
+      "kind": "phase",
+      "max_abs_difference": 0.0,
+      "finite": true,
+      "join_residual_f0": 1.821818181818244e-05,
+      "join_residual_fr": 1.8218181818185908e-05
+    }
+  ],
+  "case": {
+    "mass1": 35.0,
+    "mass2": 25.0,
+    "chi1": 0.1,
+    "chi2": -0.05,
+    "distance_mpc": 400.0,
+    "inclination_rad": 0.7,
+    "phic_rad": 0.2,
+    "tc_sec": 0.0,
+    "f_ref_hz": 25.0,
+    "sample_frequencies_hz": [
+      25.0,
+      100.0,
+      300.0
+    ],
+    "api": "IMRPhenomHM.forward(sample_frequencies=..., return_unprojected_modes=True)"
+  },
+  "mode_outputs": {
+    "22": {
+      "real": [
+        1.802873249212804e-22,
+        2.6846143589320293e-23,
+        1.0690734013678906e-23
+      ],
+      "imag": [
+        7.622425840116096e-23,
+        1.885561234324038e-23,
+        -7.1980959102144895e-25
+      ]
+    },
+    "21": {
+      "real": [
+        1.395727407761366e-24,
+        2.8937174113223033e-25,
+        -4.666809633840351e-26
+      ],
+      "imag": [
+        -8.936184433780159e-25,
+        3.081587797810111e-25,
+        -5.193637497095108e-27
+      ]
+    },
+    "33": {
+      "real": [
+        -5.91739802923322e-24,
+        2.2531000322817342e-24,
+        -3.661626970336528e-25
+      ],
+      "imag": [
+        6.158674216370723e-24,
+        -3.4534612938523734e-26,
+        1.071507704177098e-24
+      ]
+    },
+    "32": {
+      "real": [
+        -1.1479430150898454e-24,
+        -4.154003716438355e-25,
+        3.9985548944641095e-25
+      ],
+      "imag": [
+        -4.85342522277827e-25,
+        -3.3288799278422787e-25,
+        1.7704396491070204e-25
+      ]
+    },
+    "44": {
+      "real": [
+        2.59291227903625e-24,
+        1.3493528619290115e-24,
+        6.4322849565294725e-25
+      ],
+      "imag": [
+        2.197232127859402e-24,
+        5.733571975102272e-25,
+        5.721859977344861e-25
+      ]
+    },
+    "43": {
+      "real": [
+        7.36032667162405e-26,
+        -7.525400327312224e-26,
+        7.447984230144777e-26
+      ],
+      "imag": [
+        -7.66043687996935e-26,
+        1.3010734216720682e-27,
+        1.5558476302081128e-26
+      ]
+    }
+  },
+  "binary_mode_comparison": {
+    "available": true,
+    "versions": {
+      "lal": "7.7.0",
+      "lalsimulation": "6.2.0"
+    },
+    "cases": [
+      {
+        "id": "IMRPhenomHM_diagnostic",
+        "mode_metrics": {
+          "22": {
+            "relative_mode_to_22_amplitude_l2": 5.4816081933833375e-17,
+            "relative_mode_to_22_complex_l2": 5.942455400747261e-17,
+            "phase_circular_rms_rad": 2.2945038252535033e-17,
+            "phase_median_rad": 1.8810508144747176e-19
+          },
+          "21": {
+            "relative_mode_to_22_amplitude_l2": 0.6398329172060325,
+            "relative_mode_to_22_complex_l2": 0.6398498831952749,
+            "phase_circular_rms_rad": 0.010699900531503768,
+            "phase_median_rad": -0.00531361144534489
+          },
+          "33": {
+            "relative_mode_to_22_amplitude_l2": 0.04157399538186806,
+            "relative_mode_to_22_complex_l2": 1.9590951922979325,
+            "phase_circular_rms_rad": 3.1401732131743514,
+            "phase_median_rad": -3.1403466025854203
+          },
+          "32": {
+            "relative_mode_to_22_amplitude_l2": 0.09749453023352056,
+            "relative_mode_to_22_complex_l2": 1.9025219001867435,
+            "phase_circular_rms_rad": 3.1275104026234612,
+            "phase_median_rad": 3.1132429680776252
+          },
+          "44": {
+            "relative_mode_to_22_amplitude_l2": 0.03363343099103885,
+            "relative_mode_to_22_complex_l2": 0.04946102446254288,
+            "phase_circular_rms_rad": 0.021677418357921467,
+            "phase_median_rad": 0.015073781846667359
+          },
+          "43": {
+            "relative_mode_to_22_amplitude_l2": 0.21487412934711786,
+            "relative_mode_to_22_complex_l2": 0.21794104882338142,
+            "phase_circular_rms_rad": 0.013834704280273979,
+            "phase_median_rad": -0.0036300129129847925
+          }
+        },
+        "mode_api": "SimIMRPhenomHMGethlmModes",
+        "mode_api_signature": "SimIMRPhenomHMGethlmModes(REAL8Vector[f=20..512Hz,df=.25], m1_SI,m2_SI, S1x=0,S1y=0,S1z=chi1, S2x=0,S2y=0,S2z=chi2, phiRef, deltaF, f_ref, lal.Dict)",
+        "polarization_api_signature": "SimInspiralChooseFDWaveform(same masses/spins, distance_Mpc*1e6*lal.PC_SI, inclination, phiRef, tc=0, deltaF=.25, f_min=20, f_max=512, f_ref, lal.Dict[ModeArray])",
+        "frequency_count": 1969,
+        "phase_convention": "raw complex ratio; no time/phase optimization or alignment",
+        "metric_scope": "Each reported mode is divided by the same model's (2,2) mode because the public mode API has no distance argument. These are relative-mode diagnostics, not raw individual-mode errors; (2,2) is identically zero by construction.",
+        "reconstruction_control": {
+          "summed_normalized_mode_hp_relative_l2": 2.915986517960891,
+          "summed_normalized_mode_hc_relative_l2": 2.86014896168193,
+          "22_only_scope": "public binary polarization waveform with ModeArray=(2,2); mode ratios are not individual-mode errors",
+          "22_only_hp_norm": 0.23424135317858266,
+          "22_only_hc_norm": 0.21973541958293497,
+          "22_only_hp_binary_relative_l2": 2.3688424583828278e-05,
+          "22_only_hc_binary_relative_l2": 2.3688424583828247e-05
+        },
+        "pn_amplitude_diagnostic": {
+          "provenance": "London arXiv:1708.00404 Eq. (4) and its text; Mishra et al. PRD 93 084054 (2016) Eq. (12)",
+          "bands_hz": [
+            [
+              20.0,
+              40.0
+            ],
+            [
+              40.0,
+              80.0
+            ],
+            [
+              80.0,
+              160.0
+            ],
+            [
+              160.0,
+              320.0
+            ]
+          ],
+          "values": {
+            "21": {
+              "absolute_beta_minus_native_ratio_median_by_band": {
+                "20-40Hz": 0.00994722008963678,
+                "40-80Hz": 0.02079039132202914,
+                "80-160Hz": 0.04627096139670436,
+                "160-320Hz": 0.07109682529279322
+              }
+            },
+            "33": {
+              "absolute_beta_minus_native_ratio_median_by_band": {
+                "20-40Hz": 0.0003847494006588015,
+                "40-80Hz": 9.418533432753451e-07,
+                "80-160Hz": 0.0005860488193992139,
+                "160-320Hz": 0.004928785323470089
+              }
+            },
+            "32": {
+              "absolute_beta_minus_native_ratio_median_by_band": {
+                "20-40Hz": 5.204170427930421e-18,
+                "40-80Hz": 6.938893903907228e-18,
+                "80-160Hz": 0.0009275223802370433,
+                "160-320Hz": 0.0045432522798398225
+              }
+            },
+            "44": {
+              "absolute_beta_minus_native_ratio_median_by_band": {
+                "20-40Hz": 0.005026298336638015,
+                "40-80Hz": 1.598518894942863e-07,
+                "80-160Hz": 1.9511505619372593e-05,
+                "160-320Hz": 0.0008579492750811005
+              }
+            },
+            "43": {
+              "absolute_beta_minus_native_ratio_median_by_band": {
+                "20-40Hz": 0.00015304923652480413,
+                "40-80Hz": 0.0002722492700596834,
+                "80-160Hz": 0.0007194902411457194,
+                "160-320Hz": 0.001227817635846785
+              }
+            }
+          }
+        },
+        "physical_mode_array_comparison": {
+          "scope": "absolute physical hp/hc outputs from documented ModeArray calls; no mode normalization, alignment, or fitted scale",
+          "modes": {
+            "22": {
+              "hp_amplitude_relative_l2": 2.3651848458889983e-05,
+              "hc_amplitude_relative_l2": 2.3651848458889976e-05,
+              "hp_raw_complex_relative_l2": 2.3688424583828278e-05,
+              "hc_raw_complex_relative_l2": 2.3688424583828247e-05
+            },
+            "21": {
+              "hp_amplitude_relative_l2": 0.16275848291523454,
+              "hc_amplitude_relative_l2": 0.16275848291523456,
+              "hp_raw_complex_relative_l2": 0.16276991704904825,
+              "hc_raw_complex_relative_l2": 0.1627699170490483
+            },
+            "33": {
+              "hp_amplitude_relative_l2": 0.016665789834414982,
+              "hc_amplitude_relative_l2": 0.016665789834414985,
+              "hp_raw_complex_relative_l2": 0.016687839753641888,
+              "hc_raw_complex_relative_l2": 0.016687839753641895
+            },
+            "32": {
+              "hp_amplitude_relative_l2": 0.0656269574221165,
+              "hc_amplitude_relative_l2": 0.06562695742211681,
+              "hp_raw_complex_relative_l2": 0.06677564077252662,
+              "hc_raw_complex_relative_l2": 0.06677564077252691
+            },
+            "44": {
+              "hp_amplitude_relative_l2": 0.02074158655476368,
+              "hc_amplitude_relative_l2": 0.02074158655476369,
+              "hp_raw_complex_relative_l2": 0.024776402604147024,
+              "hc_raw_complex_relative_l2": 0.024776402604147037
+            },
+            "43": {
+              "hp_amplitude_relative_l2": 0.17736815040732354,
+              "hc_amplitude_relative_l2": 0.17736815040732326,
+              "hp_raw_complex_relative_l2": 0.17803189367642,
+              "hc_raw_complex_relative_l2": 0.17803189367641972
+            },
+            "all": {
+              "hp_amplitude_relative_l2": 0.0033706936249229807,
+              "hc_amplitude_relative_l2": 0.002768611976203647,
+              "hp_raw_complex_relative_l2": 0.004677683355395428,
+              "hc_raw_complex_relative_l2": 0.003796719338351013,
+              "native_sum_single_vs_all_hp_relative_l2": 0.0,
+              "native_sum_single_vs_all_hc_relative_l2": 0.0,
+              "binary_sum_single_vs_all_hp_relative_l2": 1.6819920152915406e-16,
+              "binary_sum_single_vs_all_hc_relative_l2": 1.7035918967752413e-16
+            }
+          }
+        }
+      },
+      {
+        "id": "IMRPhenomHM_holdout_5",
+        "mode_metrics": {
+          "22": {
+            "relative_mode_to_22_amplitude_l2": 5.1153518666141027e-17,
+            "relative_mode_to_22_complex_l2": 5.611253444477454e-17,
+            "phase_circular_rms_rad": 2.3063695495058245e-17,
+            "phase_median_rad": 2.952123743424133e-20
+          },
+          "21": {
+            "relative_mode_to_22_amplitude_l2": 0.5149162440122582,
+            "relative_mode_to_22_complex_l2": 0.5159507561122443,
+            "phase_circular_rms_rad": 0.024904414229015806,
+            "phase_median_rad": 0.02936515305791367
+          },
+          "33": {
+            "relative_mode_to_22_amplitude_l2": 0.04818979451079123,
+            "relative_mode_to_22_complex_l2": 2.001962776464314,
+            "phase_circular_rms_rad": 3.1380884335366757,
+            "phase_median_rad": -3.1354206717364277
+          },
+          "32": {
+            "relative_mode_to_22_amplitude_l2": 0.22623748850563946,
+            "relative_mode_to_22_complex_l2": 1.7745500571081316,
+            "phase_circular_rms_rad": 3.1274924625451535,
+            "phase_median_rad": -3.1160008404908974
+          },
+          "44": {
+            "relative_mode_to_22_amplitude_l2": 0.04429645085047461,
+            "relative_mode_to_22_complex_l2": 0.0545026635334416,
+            "phase_circular_rms_rad": 0.01825736348936686,
+            "phase_median_rad": -0.012922869134214523
+          },
+          "43": {
+            "relative_mode_to_22_amplitude_l2": 0.15941176438044768,
+            "relative_mode_to_22_complex_l2": 0.16209806862171236,
+            "phase_circular_rms_rad": 0.017981881052767056,
+            "phase_median_rad": 0.0060617734755660626
+          }
+        },
+        "mode_api": "SimIMRPhenomHMGethlmModes",
+        "mode_api_signature": "SimIMRPhenomHMGethlmModes(REAL8Vector[f=20..512Hz,df=.25], m1_SI,m2_SI, S1x=0,S1y=0,S1z=chi1, S2x=0,S2y=0,S2z=chi2, phiRef, deltaF, f_ref, lal.Dict)",
+        "polarization_api_signature": "SimInspiralChooseFDWaveform(same masses/spins, distance_Mpc*1e6*lal.PC_SI, inclination, phiRef, tc=0, deltaF=.25, f_min=20, f_max=512, f_ref, lal.Dict[ModeArray])",
+        "frequency_count": 1969,
+        "phase_convention": "raw complex ratio; no time/phase optimization or alignment",
+        "metric_scope": "Each reported mode is divided by the same model's (2,2) mode because the public mode API has no distance argument. These are relative-mode diagnostics, not raw individual-mode errors; (2,2) is identically zero by construction.",
+        "reconstruction_control": {
+          "summed_normalized_mode_hp_relative_l2": 0.2793972155651841,
+          "summed_normalized_mode_hc_relative_l2": 0.28671214328790345,
+          "22_only_scope": "public binary polarization waveform with ModeArray=(2,2); mode ratios are not individual-mode errors",
+          "22_only_hp_norm": 0.19014160180838494,
+          "22_only_hc_norm": 0.14306039072888493,
+          "22_only_hp_binary_relative_l2": 1.6722200907211428e-06,
+          "22_only_hc_binary_relative_l2": 1.6722200907210422e-06
+        },
+        "pn_amplitude_diagnostic": {
+          "provenance": "London arXiv:1708.00404 Eq. (4) and its text; Mishra et al. PRD 93 084054 (2016) Eq. (12)",
+          "bands_hz": [
+            [
+              20.0,
+              40.0
+            ],
+            [
+              40.0,
+              80.0
+            ],
+            [
+              80.0,
+              160.0
+            ],
+            [
+              160.0,
+              320.0
+            ]
+          ],
+          "values": {
+            "21": {
+              "absolute_beta_minus_native_ratio_median_by_band": {
+                "20-40Hz": 0.015124823791316161,
+                "40-80Hz": 0.048562429904367516,
+                "80-160Hz": 0.10570764396240537,
+                "160-320Hz": 0.16446994120263653
+              }
+            },
+            "33": {
+              "absolute_beta_minus_native_ratio_median_by_band": {
+                "20-40Hz": 0.0006554460985130905,
+                "40-80Hz": 2.738672499572048e-06,
+                "80-160Hz": 0.0033344298796864347,
+                "160-320Hz": 0.010929729435688998
+              }
+            },
+            "32": {
+              "absolute_beta_minus_native_ratio_median_by_band": {
+                "20-40Hz": 6.938893903907228e-18,
+                "40-80Hz": 1.3877787807814457e-17,
+                "80-160Hz": 0.00336279978477751,
+                "160-320Hz": 0.00878071334192516
+              }
+            },
+            "44": {
+              "absolute_beta_minus_native_ratio_median_by_band": {
+                "20-40Hz": 0.008905490892532847,
+                "40-80Hz": 3.51940537303419e-07,
+                "80-160Hz": 0.00022083264080974274,
+                "160-320Hz": 0.002193069601875937
+              }
+            },
+            "43": {
+              "absolute_beta_minus_native_ratio_median_by_band": {
+                "20-40Hz": 0.00013438524879217815,
+                "40-80Hz": 0.000249629633435841,
+                "80-160Hz": 0.0005487814002144119,
+                "160-320Hz": 0.0019322885911964406
+              }
+            }
+          }
+        },
+        "physical_mode_array_comparison": {
+          "scope": "absolute physical hp/hc outputs from documented ModeArray calls; no mode normalization, alignment, or fitted scale",
+          "modes": {
+            "22": {
+              "hp_amplitude_relative_l2": 1.5925184535502776e-06,
+              "hc_amplitude_relative_l2": 1.592518453550266e-06,
+              "hp_raw_complex_relative_l2": 1.6722200907211428e-06,
+              "hc_raw_complex_relative_l2": 1.6722200907210422e-06
+            },
+            "21": {
+              "hp_amplitude_relative_l2": 0.2015117955791619,
+              "hc_amplitude_relative_l2": 0.20151179557916193,
+              "hp_raw_complex_relative_l2": 0.20155510226922177,
+              "hc_raw_complex_relative_l2": 0.2015551022692218
+            },
+            "33": {
+              "hp_amplitude_relative_l2": 0.016076314867503494,
+              "hc_amplitude_relative_l2": 0.01607631486750348,
+              "hp_raw_complex_relative_l2": 0.01608476454284142,
+              "hc_raw_complex_relative_l2": 0.0160847645428414
+            },
+            "32": {
+              "hp_amplitude_relative_l2": 0.14610131427349202,
+              "hc_amplitude_relative_l2": 0.14610131427349227,
+              "hp_raw_complex_relative_l2": 0.14622522489578105,
+              "hc_raw_complex_relative_l2": 0.14622522489578132
+            },
+            "44": {
+              "hp_amplitude_relative_l2": 0.017471522918703162,
+              "hc_amplitude_relative_l2": 0.01747152291870313,
+              "hp_raw_complex_relative_l2": 0.019768968509660673,
+              "hc_raw_complex_relative_l2": 0.019768968509660645
+            },
+            "43": {
+              "hp_amplitude_relative_l2": 0.11481298392192889,
+              "hc_amplitude_relative_l2": 0.11481298392192889,
+              "hp_raw_complex_relative_l2": 0.11528182021192755,
+              "hc_raw_complex_relative_l2": 0.11528182021192751
+            },
+            "all": {
+              "hp_amplitude_relative_l2": 0.010547871645296554,
+              "hc_amplitude_relative_l2": 0.007764328895033379,
+              "hp_raw_complex_relative_l2": 0.01946481102400903,
+              "hc_raw_complex_relative_l2": 0.011245156572947288,
+              "native_sum_single_vs_all_hp_relative_l2": 0.0,
+              "native_sum_single_vs_all_hc_relative_l2": 0.0,
+              "binary_sum_single_vs_all_hp_relative_l2": 1.5069240457695172e-16,
+              "binary_sum_single_vs_all_hc_relative_l2": 1.5732180332569901e-16
+            }
+          }
+        }
+      }
+    ]
+  }
+}

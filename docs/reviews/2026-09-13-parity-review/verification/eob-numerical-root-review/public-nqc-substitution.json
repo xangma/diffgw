@@ -1,0 +1,432 @@
+{
+  "purpose": "Diagnostic only: separately replace solved amplitude or phase NQC coefficients by public binary output at paired physical inputs; no targets are inferred or installed, and no runtime files changed. Public auxiliary trajectories are used throughout. This attributes residuals to NQC coefficient differences, not their underlying cause.",
+  "public_api": "SimIMRSpinAlignedEOBModes with nqcFlag=1; 30+20 Msun, zero spins, 20 Hz, version 4, default dictionaries, paired dt",
+  "vector_indices": {
+    "amplitude": [
+      0,
+      1,
+      2
+    ],
+    "phase": [
+      6,
+      7
+    ]
+  },
+  "host": "RONI2",
+  "pid": 34836,
+  "elapsed_seconds": 7.070872208016226,
+  "sources_before": {
+    "scripts/diagnose_eob_numerical_derivative_clean.py": "ff93ec23031a91dcda02638ae0ddf07de60f3251e940f5b7beabf20429141453",
+    "src/torchwave/approximants/eob/numerical_derivative_clean.py": "2400ef464b292a0887f1eed68ced5579ab55ae6afe1f0f859226f9aaba180152",
+    "src/torchwave/approximants/eob/numerical_attachment.py": "775aa6f40d4cfe2bffa836d7af0b58dc8521411571d5c124230890eb5de91cb1",
+    "src/torchwave/approximants/eob/published_waveform.py": "34a87406a13c44cccdbc2e57d2e797c858984f0e762c06abe28859cb7bbc449c",
+    "src/torchwave/approximants/eob/seobnrv4_flux.py": "9395f930449651c6607de4aa780cfd75545d95ba67fe4b4d653e2852fef407a8",
+    "src/torchwave/approximants/eob/seobnrv4_hamiltonian.py": "5b1a5b877129e5235b8f92974a01ab450176e8e924d374ca0fc413334fad177f",
+    "src/torchwave/approximants/eob/remnant.py": "e7690cd5df1bcde2f579954762116beb20db606dae809835b148dae73c4cb007",
+    "src/torchwave/approximants/eob/events.py": "c1ae1182e4c2f9cf5f8a2857ea5d73802dbbb68b59739709849f973503bdfd5d",
+    "src/torchwave/approximants/eob/nqc.py": "f023b84fc0a48e59feb6b543d234635df965e04ee9aff05672ea3ff984d0cf85",
+    "src/torchwave/approximants/kerr_qnm_table_convention.py": "c4c85d17b079306df73c74f4bb755b7f4256fbdf49fef6a85cd9810367d800f6"
+  },
+  "sources_after": {
+    "scripts/diagnose_eob_numerical_derivative_clean.py": "ff93ec23031a91dcda02638ae0ddf07de60f3251e940f5b7beabf20429141453",
+    "src/torchwave/approximants/eob/numerical_derivative_clean.py": "2400ef464b292a0887f1eed68ced5579ab55ae6afe1f0f859226f9aaba180152",
+    "src/torchwave/approximants/eob/numerical_attachment.py": "775aa6f40d4cfe2bffa836d7af0b58dc8521411571d5c124230890eb5de91cb1",
+    "src/torchwave/approximants/eob/published_waveform.py": "34a87406a13c44cccdbc2e57d2e797c858984f0e762c06abe28859cb7bbc449c",
+    "src/torchwave/approximants/eob/seobnrv4_flux.py": "9395f930449651c6607de4aa780cfd75545d95ba67fe4b4d653e2852fef407a8",
+    "src/torchwave/approximants/eob/seobnrv4_hamiltonian.py": "5b1a5b877129e5235b8f92974a01ab450176e8e924d374ca0fc413334fad177f",
+    "src/torchwave/approximants/eob/remnant.py": "e7690cd5df1bcde2f579954762116beb20db606dae809835b148dae73c4cb007",
+    "src/torchwave/approximants/eob/events.py": "c1ae1182e4c2f9cf5f8a2857ea5d73802dbbb68b59739709849f973503bdfd5d",
+    "src/torchwave/approximants/eob/nqc.py": "f023b84fc0a48e59feb6b543d234635df965e04ee9aff05672ea3ff984d0cf85",
+    "src/torchwave/approximants/kerr_qnm_table_convention.py": "c4c85d17b079306df73c74f4bb755b7f4256fbdf49fef6a85cd9810367d800f6"
+  },
+  "cases": [
+    {
+      "label": "dt_0p5M",
+      "fixture_sha256": "7bf76ba9b81515bdd22377a8569bc0ee8809717baeb43d7f887b71ecdeb9d88a",
+      "public_nqc_vector": [
+        4.110240890037285,
+        -47.03812474440112,
+        56.84354405587586,
+        0.0,
+        0.0,
+        0.0,
+        4.129125034115698,
+        -21.93221275349806,
+        0.0,
+        0.0
+      ],
+      "variants": {
+        "baseline": {
+          "peak": {
+            "time_M": 5002.7187423706055,
+            "frequency": 0.16441453242075965,
+            "curvature": -0.004106832630730281,
+            "sample_index": 9582
+          },
+          "match": {
+            "time_M": 4998.346362836525,
+            "phase_rad": 25.16358844822704
+          },
+          "boundary": {
+            "time_M": 4998.34375,
+            "sample_index": 9302,
+            "phase_rad": 25.162661389829903,
+            "frequency": 0.3547086050989492,
+            "amplitude_unscaled": 0.37616671900946985
+          },
+          "internal_step_M": 0.015625,
+          "coefficients": {
+            "amplitude": [
+              4.114751530047683,
+              -47.07717764720065,
+              56.88775014837794
+            ],
+            "phase": [
+              4.129267832669519,
+              -21.933411785746042
+            ]
+          },
+          "post_boundary_unshifted": {
+            "available": true,
+            "sample_count": 233,
+            "raw_relative_l2": 4.42294105776997e-05,
+            "amplitude_relative_l2": 2.7970093675265474e-07,
+            "time_shift_applied_M": 0.0,
+            "phase_shift_applied_rad": 0.0
+          },
+          "post_boundary_grid": {
+            "definition": "output_time_M >= boundary_time_M, same indices, no time or phase shift",
+            "first_sample_M": 4998.5,
+            "last_sample_M": 5114.5
+          }
+        },
+        "public_amplitude": {
+          "peak": {
+            "time_M": 5002.7187423706055,
+            "frequency": 0.16441453242075965,
+            "curvature": -0.004106832630730281,
+            "sample_index": 9582
+          },
+          "match": {
+            "time_M": 4998.346362836525,
+            "phase_rad": 25.16358844822704
+          },
+          "boundary": {
+            "time_M": 4998.34375,
+            "sample_index": 9302,
+            "phase_rad": 25.162661389829903,
+            "frequency": 0.3547086050989492,
+            "amplitude_unscaled": 0.3761671123716065
+          },
+          "internal_step_M": 0.015625,
+          "coefficients": {
+            "amplitude": [
+              4.110240890037285,
+              -47.03812474440112,
+              56.84354405587586
+            ],
+            "phase": [
+              4.129267832669519,
+              -21.933411785746042
+            ]
+          },
+          "post_boundary_unshifted": {
+            "available": true,
+            "sample_count": 233,
+            "raw_relative_l2": 4.424840442145381e-05,
+            "amplitude_relative_l2": 1.3254134540919648e-06,
+            "time_shift_applied_M": 0.0,
+            "phase_shift_applied_rad": 0.0
+          },
+          "post_boundary_grid": {
+            "definition": "output_time_M >= boundary_time_M, same indices, no time or phase shift",
+            "first_sample_M": 4998.5,
+            "last_sample_M": 5114.5
+          }
+        },
+        "public_phase": {
+          "peak": {
+            "time_M": 5002.7187423706055,
+            "frequency": 0.16441453242075965,
+            "curvature": -0.004106832630730281,
+            "sample_index": 9582
+          },
+          "match": {
+            "time_M": 4998.346362836525,
+            "phase_rad": 25.1635449009333
+          },
+          "boundary": {
+            "time_M": 4998.34375,
+            "sample_index": 9302,
+            "phase_rad": 25.16261784436568,
+            "frequency": 0.3547079008142191,
+            "amplitude_unscaled": 0.3761667190094699
+          },
+          "internal_step_M": 0.015625,
+          "coefficients": {
+            "amplitude": [
+              4.114751530047683,
+              -47.07717764720065,
+              56.88775014837794
+            ],
+            "phase": [
+              4.129125034115698,
+              -21.93221275349806
+            ]
+          },
+          "post_boundary_unshifted": {
+            "available": true,
+            "sample_count": 233,
+            "raw_relative_l2": 3.297968270513276e-06,
+            "amplitude_relative_l2": 2.79700936892086e-07,
+            "time_shift_applied_M": 0.0,
+            "phase_shift_applied_rad": 0.0
+          },
+          "post_boundary_grid": {
+            "definition": "output_time_M >= boundary_time_M, same indices, no time or phase shift",
+            "first_sample_M": 4998.5,
+            "last_sample_M": 5114.5
+          }
+        },
+        "public_both": {
+          "peak": {
+            "time_M": 5002.7187423706055,
+            "frequency": 0.16441453242075965,
+            "curvature": -0.004106832630730281,
+            "sample_index": 9582
+          },
+          "match": {
+            "time_M": 4998.346362836525,
+            "phase_rad": 25.1635449009333
+          },
+          "boundary": {
+            "time_M": 4998.34375,
+            "sample_index": 9302,
+            "phase_rad": 25.16261784436568,
+            "frequency": 0.3547079008142191,
+            "amplitude_unscaled": 0.3761671123716065
+          },
+          "internal_step_M": 0.015625,
+          "coefficients": {
+            "amplitude": [
+              4.110240890037285,
+              -47.03812474440112,
+              56.84354405587586
+            ],
+            "phase": [
+              4.129125034115698,
+              -21.93221275349806
+            ]
+          },
+          "post_boundary_unshifted": {
+            "available": true,
+            "sample_count": 233,
+            "raw_relative_l2": 3.543316838138076e-06,
+            "amplitude_relative_l2": 1.3254134540707632e-06,
+            "time_shift_applied_M": 0.0,
+            "phase_shift_applied_rad": 0.0
+          },
+          "post_boundary_grid": {
+            "definition": "output_time_M >= boundary_time_M, same indices, no time or phase shift",
+            "first_sample_M": 4998.5,
+            "last_sample_M": 5114.5
+          }
+        }
+      }
+    },
+    {
+      "label": "dt_1_4096s",
+      "fixture_sha256": "eefe5b8f1380601f82232e78b0e3a8e1b8abf5a4f9cfb5208e28331b8f5685f9",
+      "public_nqc_vector": [
+        4.141576800531685,
+        -47.279237518543205,
+        57.09944161869055,
+        0.0,
+        0.0,
+        0.0,
+        4.144074388143258,
+        -22.027973629587294,
+        0.0,
+        0.0
+      ],
+      "variants": {
+        "baseline": {
+          "peak": {
+            "time_M": 5002.701702440849,
+            "frequency": 0.16441512104816525,
+            "curvature": -0.004043794735074056,
+            "sample_index": 9692
+          },
+          "match": {
+            "time_M": 4998.3293229067685,
+            "phase_rad": 25.16254812404899
+          },
+          "boundary": {
+            "time_M": 4998.327513064466,
+            "sample_index": 9409,
+            "phase_rad": 25.161905967366607,
+            "frequency": 0.354718208143308,
+            "amplitude_unscaled": 0.3761667207299712
+          },
+          "internal_step_M": 0.015489612329718292,
+          "coefficients": {
+            "amplitude": [
+              4.146414437743756,
+              -47.32120340456461,
+              57.146993354954944
+            ],
+            "phase": [
+              4.144061532167092,
+              -22.027753653074576
+            ]
+          },
+          "post_boundary_unshifted": {
+            "available": true,
+            "sample_count": 117,
+            "raw_relative_l2": 3.2103532723930344e-06,
+            "amplitude_relative_l2": 2.7954724313664096e-07,
+            "time_shift_applied_M": 0.0,
+            "phase_shift_applied_rad": 0.0
+          },
+          "post_boundary_grid": {
+            "definition": "output_time_M >= boundary_time_M, same indices, no time or phase shift",
+            "first_sample_M": 4999.303358641238,
+            "last_sample_M": 5114.298240577067
+          }
+        },
+        "public_amplitude": {
+          "peak": {
+            "time_M": 5002.701702440849,
+            "frequency": 0.16441512104816525,
+            "curvature": -0.004043794735074056,
+            "sample_index": 9692
+          },
+          "match": {
+            "time_M": 4998.3293229067685,
+            "phase_rad": 25.16254812404899
+          },
+          "boundary": {
+            "time_M": 4998.327513064466,
+            "sample_index": 9409,
+            "phase_rad": 25.161905967366604,
+            "frequency": 0.354718208143308,
+            "amplitude_unscaled": 0.3761671118367311
+          },
+          "internal_step_M": 0.015489612329718292,
+          "coefficients": {
+            "amplitude": [
+              4.141576800531685,
+              -47.279237518543205,
+              57.09944161869055
+            ],
+            "phase": [
+              4.144061532167092,
+              -22.027753653074576
+            ]
+          },
+          "post_boundary_unshifted": {
+            "available": true,
+            "sample_count": 117,
+            "raw_relative_l2": 3.459579427575983e-06,
+            "amplitude_relative_l2": 1.3192640700295578e-06,
+            "time_shift_applied_M": 0.0,
+            "phase_shift_applied_rad": 0.0
+          },
+          "post_boundary_grid": {
+            "definition": "output_time_M >= boundary_time_M, same indices, no time or phase shift",
+            "first_sample_M": 4999.303358641238,
+            "last_sample_M": 5114.298240577067
+          }
+        },
+        "public_phase": {
+          "peak": {
+            "time_M": 5002.701702440849,
+            "frequency": 0.16441512104816525,
+            "curvature": -0.004043794735074056,
+            "sample_index": 9692
+          },
+          "match": {
+            "time_M": 4998.3293229067685,
+            "phase_rad": 25.16255018679909
+          },
+          "boundary": {
+            "time_M": 4998.327513064466,
+            "sample_index": 9409,
+            "phase_rad": 25.161908030775578,
+            "frequency": 0.3547178457308374,
+            "amplitude_unscaled": 0.37616672072997115
+          },
+          "internal_step_M": 0.015489612329718292,
+          "coefficients": {
+            "amplitude": [
+              4.146414437743756,
+              -47.32120340456461,
+              57.146993354954944
+            ],
+            "phase": [
+              4.144074388143258,
+              -22.027973629587294
+            ]
+          },
+          "post_boundary_unshifted": {
+            "available": true,
+            "sample_count": 117,
+            "raw_relative_l2": 3.322373789622722e-06,
+            "amplitude_relative_l2": 2.795472429558047e-07,
+            "time_shift_applied_M": 0.0,
+            "phase_shift_applied_rad": 0.0
+          },
+          "post_boundary_grid": {
+            "definition": "output_time_M >= boundary_time_M, same indices, no time or phase shift",
+            "first_sample_M": 4999.303358641238,
+            "last_sample_M": 5114.298240577067
+          }
+        },
+        "public_both": {
+          "peak": {
+            "time_M": 5002.701702440849,
+            "frequency": 0.16441512104816525,
+            "curvature": -0.004043794735074056,
+            "sample_index": 9692
+          },
+          "match": {
+            "time_M": 4998.3293229067685,
+            "phase_rad": 25.16255018679909
+          },
+          "boundary": {
+            "time_M": 4998.327513064466,
+            "sample_index": 9409,
+            "phase_rad": 25.161908030775578,
+            "frequency": 0.3547178457308374,
+            "amplitude_unscaled": 0.3761671118367311
+          },
+          "internal_step_M": 0.015489612329718292,
+          "coefficients": {
+            "amplitude": [
+              4.141576800531685,
+              -47.279237518543205,
+              57.09944161869055
+            ],
+            "phase": [
+              4.144074388143258,
+              -22.027973629587294
+            ]
+          },
+          "post_boundary_unshifted": {
+            "available": true,
+            "sample_count": 117,
+            "raw_relative_l2": 3.563774686860335e-06,
+            "amplitude_relative_l2": 1.3192640699994862e-06,
+            "time_shift_applied_M": 0.0,
+            "phase_shift_applied_rad": 0.0
+          },
+          "post_boundary_grid": {
+            "definition": "output_time_M >= boundary_time_M, same indices, no time or phase shift",
+            "first_sample_M": 4999.303358641238,
+            "last_sample_M": 5114.298240577067
+          }
+        }
+      }
+    }
+  ]
+}

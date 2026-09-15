@@ -1,0 +1,437 @@
+{
+  "case": "bbh_reference",
+  "fd": {
+    "reason": "FD attribution is covered independently; this report localizes TD residuals only.",
+    "status": "omitted"
+  },
+  "fixture_verification": {
+    "case": "bbh_reference",
+    "continuous": {
+      "declared_sha256": "136a66ba97499f2abc060b250cca9f2bc42e30c7d8791892217379d3877feb62",
+      "exists": true,
+      "hash_match": true,
+      "path": "/Users/xangma/repos/torchwave/docs/reviews/2026-09-15-teob-fd-attribution/bbh_reference/continuous.npz",
+      "sha256": "136a66ba97499f2abc060b250cca9f2bc42e30c7d8791892217379d3877feb62"
+    },
+    "public_fd": {
+      "declared_sha256": "401c9473906354dc3a8ae8d3c27be60bdf97395397f6315e522fe853f23f3949",
+      "exists": true,
+      "hash_match": true,
+      "path": "/Users/xangma/repos/torchwave/docs/reviews/2026-09-15-teob-fd-attribution/bbh_reference/public-fd.npz",
+      "sha256": "401c9473906354dc3a8ae8d3c27be60bdf97395397f6315e522fe853f23f3949"
+    },
+    "public_td": {
+      "declared_sha256": "4712791026b99ad8fb4e713cb99270d2f444c274d320267ef25a10be7e21ab6e",
+      "exists": true,
+      "hash_match": true,
+      "path": "/Users/xangma/repos/torchwave/docs/reviews/2026-09-13-parity-review/verification/teob-conditioner-public-clean/arrays.npz",
+      "sha256": "4712791026b99ad8fb4e713cb99270d2f444c274d320267ef25a10be7e21ab6e"
+    },
+    "public_td_sidecar": {
+      "declared_sha256": "aace0f25da76d002bd6489cb90faa535fc6c71d1297daba6c11b1e33bfc89be3",
+      "exists": true,
+      "fixture_hash_match": true,
+      "hash_match": true,
+      "path": "/Users/xangma/repos/torchwave/docs/reviews/2026-09-15-teob-fd-attribution/bbh_reference/public-td.json",
+      "request": {
+        "api": "SimIMRTEOBResumS",
+        "delta_f_hz": 0.5,
+        "delta_t_seconds": 0.00048828125,
+        "distance_mpc": 100.0,
+        "f_max_hz": 1024.0,
+        "inclination_rad": 0.0,
+        "mass1_msun": 30.0,
+        "mass2_msun": 20.0,
+        "phi_ref_rad": 0.0,
+        "requested_f_low_hz": 20.0,
+        "spins": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "tc_seconds": 0.0
+      },
+      "sampling": {
+        "dt_seconds": 0.00048828125,
+        "epoch_seconds": -1.95776505,
+        "samples": 4087
+      },
+      "sha256": "aace0f25da76d002bd6489cb90faa535fc6c71d1297daba6c11b1e33bfc89be3",
+      "validated_with": "scripts.teob_fd_cache_controls._validate_public_td_sidecar"
+    },
+    "status": "complete"
+  },
+  "global_td": {
+    "first_amplitude_relative_ge_1e-6": {
+      "error": 1.0062976889280824e-06,
+      "index": 2502,
+      "td_time_dimensionless": 4960.641286266262,
+      "threshold": 1e-06
+    },
+    "first_phase_abs_rad_ge_1e-6": {
+      "error": 2.7405554570977003e-06,
+      "index": 0,
+      "td_time_dimensionless": 0.0,
+      "threshold": 1e-06
+    },
+    "h_cross": {
+      "max_abs": 9.994651233918708e-24,
+      "reference_norm": 7.35800959789126e-20,
+      "relative_l2": 0.0002906230833526153,
+      "residual_norm": 2.138407436677295e-23,
+      "samples": 4087,
+      "value_norm": 7.35800723982604e-20
+    },
+    "h_plus": {
+      "max_abs": 9.651675222564995e-24,
+      "reference_norm": 7.355705076434548e-20,
+      "relative_l2": 0.00029086648823064724,
+      "residual_norm": 2.1395281040428615e-23,
+      "samples": 4087,
+      "value_norm": 7.355709022213417e-20
+    },
+    "hp_minus_i_hc": {
+      "max_abs": 1.0735629185074104e-23,
+      "reference_norm": 1.0404167550272573e-19,
+      "relative_l2": 0.00029074477314020025,
+      "residual_norm": 3.0249573341166325e-23,
+      "samples": 4087,
+      "value_norm": 1.0404168672258456e-19
+    },
+    "phase_ratio": {
+      "abs_residual_rad_quantiles": {
+        "q100": 0.015303794067165257,
+        "q50": 4.467452654791063e-06,
+        "q90": 1.611006217655793e-05,
+        "q99": 0.005796039100990902
+      },
+      "signed_residual_rad_first": -2.7405554570977003e-06,
+      "signed_residual_rad_last": 0.015303794067165257,
+      "status": "diagnostic_only_no_alignment",
+      "valid_samples": 4087
+    },
+    "samples": 4087,
+    "td_time_M": [
+      0.0,
+      8101.191165341304
+    ]
+  },
+  "grid_event_boundaries": {
+    "attachment_time_M": 7948.213151938116,
+    "match_M": 7948.213151938116,
+    "nqc_auxiliary_start_M": 7931.213151938116,
+    "pa_end_M": 5226.692548836558,
+    "rd_peak_M": 7949.358457063205,
+    "rule": "PA <= accepted pa_time[-1]; early ODE until accepted nqc_auxiliary_time[0]; late/pre-NQC until nominal grid matching_time_M; matching window until nominal attachment_time_M; post-attachment after nominal attachment_time_M"
+  },
+  "input_hashes": {
+    "continuous_npz": "136a66ba97499f2abc060b250cca9f2bc42e30c7d8791892217379d3877feb62",
+    "controls_json": "f5be4e2778b1482ed7db926bc5e93f34963c5bbe0bc8eaa9623d96b07106ea7d",
+    "derivative_controls_declared_input": "136a66ba97499f2abc060b250cca9f2bc42e30c7d8791892217379d3877feb62",
+    "derivative_controls_json": "51769087b03e05a4a403e106c979fbca0de12db6b4ee1141e0d96868e58d3994",
+    "nominal_declared_output": "0fca098008e13b178566f07c1bb45c5132ebb30054d4eedde99b4fce8c8fbe92",
+    "nominal_grid_npz": "0fca098008e13b178566f07c1bb45c5132ebb30054d4eedde99b4fce8c8fbe92",
+    "public_td_json": "aace0f25da76d002bd6489cb90faa535fc6c71d1297daba6c11b1e33bfc89be3",
+    "public_td_npz": "4712791026b99ad8fb4e713cb99270d2f444c274d320267ef25a10be7e21ab6e"
+  },
+  "matching_fixture": {
+    "grid": {
+      "df": 0.5,
+      "fhigh": 1024.0,
+      "flow": 20.0
+    },
+    "nominal_output_hash_match": true,
+    "parameters": {
+      "chi1": 0.0,
+      "chi2": 0.0,
+      "distance": 100.0,
+      "inclination": 0.0,
+      "lambda1": 0.0,
+      "lambda2": 0.0,
+      "mass1": 30.0,
+      "mass2": 20.0,
+      "phic": 0.0,
+      "tc": 0.0
+    },
+    "reference": "public TD exact-start fixture",
+    "td_dt_exact_within_1e-15": true,
+    "td_dt_seconds_from_cache": 0.00048828125,
+    "td_dt_seconds_requested": 0.00048828125
+  },
+  "method_limits": [
+    "TD comparisons use identical elapsed output indices against the validated public exact-start fixture, with no fitted shifts.",
+    "The matching window can be one or zero samples at the cached TD spacing; empty segments remain explicit.",
+    "TD localization does not assign the public residual to a unique FD band."
+  ],
+  "outputs": {
+    "arrays_npz": "/Users/xangma/repos/torchwave/docs/reviews/2026-09-15-teob-grid-nqc/localization-bbh_reference.npz"
+  },
+  "provenance": {
+    "command": "/Users/xangma/miniconda3/envs/pycbcorig313/bin/python scripts/teob_grid_residual_localization.py --case bbh_reference",
+    "cwd": "/Users/xangma/repos/torchwave",
+    "host": "RONI2",
+    "python": "/Users/xangma/miniconda3/envs/pycbcorig313/bin/python",
+    "script_sha256": "ba1c556e398d2e1e85a3188f4f5d19cbcdd1808b8d9834bfa772b1461a09806c"
+  },
+  "request": {
+    "chi1z": 0.0,
+    "chi2z": 0.0,
+    "df": 0.5,
+    "distance": 100.0,
+    "dt": 0.00048828125,
+    "fhigh": 1024.0,
+    "flow": 20.0,
+    "inclination": 0.0,
+    "lambda1": 0.0,
+    "lambda2": 0.0,
+    "mass1": 30.0,
+    "mass2": 20.0,
+    "phic": 0.0,
+    "tc": 0.0
+  },
+  "segments": [
+    {
+      "declared_time_bounds_M": [
+        0.0,
+        5226.692548836558
+      ],
+      "empty": false,
+      "h_cross": {
+        "max_abs": 9.623855082661032e-27,
+        "reference_norm": 4.884643050755059e-20,
+        "relative_l2": 4.0304905582390535e-06,
+        "residual_norm": 1.9687507696436272e-25,
+        "samples": 2637,
+        "value_norm": 4.884640448302876e-20
+      },
+      "h_plus": {
+        "max_abs": 9.242574553017413e-27,
+        "reference_norm": 4.8851250563143884e-20,
+        "relative_l2": 4.05109393278224e-06,
+        "residual_norm": 1.9790100476517714e-25,
+        "samples": 2637,
+        "value_norm": 4.885122126499497e-20
+      },
+      "hp_minus_i_hc": {
+        "max_abs": 9.96154927355566e-27,
+        "reference_norm": 6.908269287536518e-20,
+        "relative_l2": 4.040806393660417e-06,
+        "residual_norm": 2.7914978706205456e-25,
+        "samples": 2637,
+        "value_norm": 6.908265375621545e-20
+      },
+      "index_bounds": [
+        0,
+        2637
+      ],
+      "name": "PA_span",
+      "phase_ratio": {
+        "abs_residual_rad_quantiles": {
+          "q100": 5.529576071667573e-06,
+          "q50": 3.560684930824747e-06,
+          "q90": 5.117297894194285e-06,
+          "q99": 5.524179890495265e-06
+        },
+        "signed_residual_rad_first": -2.7405554570977003e-06,
+        "signed_residual_rad_last": -5.465658659753958e-06,
+        "status": "diagnostic_only_no_alignment",
+        "valid_samples": 2637
+      },
+      "samples": 2637,
+      "share_of_total_squared_residual": 8.5160086689855e-05,
+      "squared_residual_energy": 7.792460361679039e-50,
+      "time_range_M": [
+        0.0,
+        5226.3191169455895
+      ]
+    },
+    {
+      "declared_time_bounds_M": [
+        5226.692548836558,
+        7931.213151938116
+      ],
+      "empty": false,
+      "h_cross": {
+        "max_abs": 2.9085769585250962e-24,
+        "reference_norm": 5.287843496819238e-20,
+        "relative_l2": 0.0001224602898081449,
+        "residual_norm": 6.475508470805982e-24,
+        "samples": 1364,
+        "value_norm": 5.2878366145454416e-20
+      },
+      "h_plus": {
+        "max_abs": 2.035590726906096e-24,
+        "reference_norm": 5.308363118554321e-20,
+        "relative_l2": 0.00010208549744331941,
+        "residual_norm": 5.419068895673882e-24,
+        "samples": 1364,
+        "value_norm": 5.30836146971374e-20
+      },
+      "hp_minus_i_hc": {
+        "max_abs": 3.2209317592941884e-24,
+        "reference_norm": 7.492663601502556e-20,
+        "relative_l2": 0.00011269483598506687,
+        "residual_norm": 8.44384495662611e-24,
+        "samples": 1364,
+        "value_norm": 7.492657576272173e-20
+      },
+      "index_bounds": [
+        2637,
+        4001
+      ],
+      "name": "early_ODE",
+      "phase_ratio": {
+        "abs_residual_rad_quantiles": {
+          "q100": 0.0006599824680503604,
+          "q50": 8.711936658054898e-06,
+          "q90": 3.586721097111436e-05,
+          "q99": 0.0002675335025661412
+        },
+        "signed_residual_rad_first": -5.467265481132705e-06,
+        "signed_residual_rad_last": -0.0006599824680503604,
+        "status": "diagnostic_only_no_alignment",
+        "valid_samples": 1364
+      },
+      "samples": 1364,
+      "share_of_total_squared_residual": 0.07791875302853683,
+      "squared_residual_energy": 7.129851765154017e-47,
+      "time_range_M": [
+        5228.301787323793,
+        7930.681512815766
+      ]
+    },
+    {
+      "declared_time_bounds_M": [
+        7931.213151938116,
+        7948.213151938116
+      ],
+      "empty": false,
+      "h_cross": {
+        "max_abs": 6.527032332038966e-24,
+        "reference_norm": 1.1825524178839597e-20,
+        "relative_l2": 0.0009579568052929932,
+        "residual_norm": 1.1328341363276228e-23,
+        "samples": 8,
+        "value_norm": 1.182590212652852e-20
+      },
+      "h_plus": {
+        "max_abs": 9.651675222564995e-24,
+        "reference_norm": 9.579416479531027e-21,
+        "relative_l2": 0.0015672941934484872,
+        "residual_norm": 1.5013763824993727e-23,
+        "samples": 8,
+        "value_norm": 9.578235569226911e-21
+      },
+      "hp_minus_i_hc": {
+        "max_abs": 1.0031515611069952e-23,
+        "reference_norm": 1.521868069816272e-20,
+        "relative_l2": 0.0012358557858241804,
+        "residual_norm": 1.8808094593435175e-23,
+        "samples": 8,
+        "value_norm": 1.521823109713594e-20
+      },
+      "index_bounds": [
+        4001,
+        4009
+      ],
+      "name": "late_pre_NQC",
+      "phase_ratio": {
+        "abs_residual_rad_quantiles": {
+          "q100": 0.0017661032435398085,
+          "q50": 0.0010919425341738046,
+          "q90": 0.0016044647519776738,
+          "q99": 0.001749939394383595
+        },
+        "signed_residual_rad_first": -0.0007280301234115782,
+        "signed_residual_rad_last": -0.0017661032435398085,
+        "status": "diagnostic_only_no_alignment",
+        "valid_samples": 8
+      },
+      "samples": 8,
+      "share_of_total_squared_residual": 0.3865904254294574,
+      "squared_residual_energy": 3.537444222356054e-46,
+      "time_range_M": [
+        7932.66418319397,
+        7946.542875841397
+      ]
+    },
+    {
+      "declared_time_bounds_M": [
+        7948.213151938116,
+        7948.213151938116
+      ],
+      "empty": true,
+      "h_cross": null,
+      "h_plus": null,
+      "hp_minus_i_hc": null,
+      "index_bounds": [
+        4009,
+        4009
+      ],
+      "name": "matching_window",
+      "phase_ratio": null,
+      "samples": 0,
+      "share_of_total_squared_residual": null,
+      "squared_residual_energy": 0.0
+    },
+    {
+      "declared_time_bounds_M": [
+        7948.213151938116,
+        8101.191165341304
+      ],
+      "empty": false,
+      "h_cross": {
+        "max_abs": 9.994651233918708e-24,
+        "reference_norm": 9.59608483431396e-21,
+        "relative_l2": 0.0017653424890490491,
+        "residual_norm": 1.694037628653364e-23,
+        "samples": 78,
+        "value_norm": 9.595949973536619e-21
+      },
+      "h_plus": {
+        "max_abs": 7.836802303931892e-24,
+        "reference_norm": 1.0703173157262534e-20,
+        "relative_l2": 0.0013309774997106141,
+        "residual_norm": 1.4245682647823046e-23,
+        "samples": 78,
+        "value_norm": 1.0704716574106183e-20
+      },
+      "hp_minus_i_hc": {
+        "max_abs": 1.0735629185074104e-23,
+        "reference_norm": 1.4375074253084596e-20,
+        "relative_l2": 0.0015397515018989259,
+        "residual_norm": 2.2134042171095587e-23,
+        "samples": 78,
+        "value_norm": 1.4376133444934386e-20
+      },
+      "index_bounds": [
+        4009,
+        4087
+      ],
+      "name": "post_attachment",
+      "phase_ratio": {
+        "abs_residual_rad_quantiles": {
+          "q100": 0.015303794067165257,
+          "q50": 0.006345192435645753,
+          "q90": 0.01351207430853393,
+          "q99": 0.015124622091219788
+        },
+        "signed_residual_rad_first": -0.00190287853666851,
+        "signed_residual_rad_last": 0.015303794067165257,
+        "status": "diagnostic_only_no_alignment",
+        "valid_samples": 78
+      },
+      "samples": 78,
+      "share_of_total_squared_residual": 0.5354056614553159,
+      "squared_residual_energy": 4.8991582283183786e-46,
+      "time_range_M": [
+        7948.525546219601,
+        8101.191165341304
+      ]
+    }
+  ],
+  "status": "complete"
+}

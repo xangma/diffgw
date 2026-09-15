@@ -1,0 +1,89 @@
+{
+  "created_utc": "2026-09-13T00:47:42.707263+00:00",
+  "host": "len",
+  "cwd": "/home/xangma/simulations/torchwave-nr/2026-09-12-pilot",
+  "image_id": "sha256:0ba0f3bb70b90e83c9b50316ecd37f1b55af4537160eafbe3392a6f67c4e9d77",
+  "helper_sha256": {
+    "run-finite-followup-v3.py": "d34d213612f1a649c5a56c99ffb7c31ada8c4002b9b289f9f98afcb600e02378",
+    "launch-stage.py": "1e94fbbe6fdd834038807b8dc70f7e3fe0bacad172923d4e6d8fb83a6fd66532",
+    "measure-stage.py": "f96773dcb69d67f7bfaa696148193e882cb561b09fc163305c012e3361c24cef",
+    "id_quality.py": "14767719bf4acdce1cd3a28794c2228d082461b58349e2d0b72da896a18efb19",
+    "prepare-independent-p11.py": "538e016960b5b68de1992088548dd1c55d60d090db8a4d226a62b1e23fe1a092",
+    "compare-independent-p11.py": "dedb95ea59733593bf3ba0eb9c6dde1a986297fdc03954e24c50e43ce3d1eb41",
+    "prepare-controlled-p9-lev0-evolution.py": "0fc73fee9525284649ad19d6d23b348d96a3bf66c4f11763a7bca6e2c10a672c",
+    "prepare-smoke-restart.py": "5012968524b2ee99af5238c06a1da6eac7bb9a9146f0fa59b0061be2fee242ce",
+    "validate-controlled-bbh-smoke-32pe.py": "22961f0bb21a4ddfdd8e7cf3b701df7faf3cdd21e8b3fc088813acf9d806e7ba",
+    "launch-finite-followup-v3.py": "4a1b047dd69cd64c32156c2e7332683589b86a2c96b42cf3cc6c9022e489ef03"
+  },
+  "single_hole_validation_file": "single-kerrschild-validation-v2.json",
+  "single_hole_validation_sha256": "80e512593fb46421364fa5bf59b7d41d88689bb0dc39ba898c54bf8bb6201515",
+  "total_timeout_seconds": 48000,
+  "poll_seconds": 30,
+  "max_parallel_new_stages": 1,
+  "stages": [
+    "verify accepted controlled ID and hash-locked prepared inputs",
+    "P11 solve and horizon postprocess",
+    "compare P9/P11",
+    "checkpoint Lev0 evolution of controlled P9 initial data at >=0.5M",
+    "restart through 1M",
+    "validate closed binary output"
+  ],
+  "resource_limits": {
+    "p11": {
+      "cpus": 32,
+      "memory_gib": 160,
+      "timeout_seconds": 13800
+    },
+    "each_evolution_segment": {
+      "cpus": 32,
+      "memory_gib": 96,
+      "timeout_seconds": 6900
+    },
+    "disk_minimum_free_gib_before_launch": 80,
+    "memory_headroom_gib_before_launch": 16
+  },
+  "p11_memory_note": "160GiB is an unvalidated estimate from the measured P9 ~54GiB peak; resource cap and free-memory gate enforced",
+  "stops_on": "first nonaccepted exit, timeout, missing/invalid/stale metrics, resource guard, changed helper or invalid science prerequisite",
+  "automatic_retries": false,
+  "scope": "finite prerequisites only; 100M performance test and full multi-resolution campaign remain unlaunched",
+  "revision": 3,
+  "recovery_reason": "User requested more cores where faster. Stop and archive unfinished 16-PE P11 attempt; restart identical numerical input at 32 PEs and use 32 PEs for both binary checkpoint/restart segments. No live PE resizing or checkpoint recovery is claimed.",
+  "completed_preparations": {
+    "p11-preparation-v2": {
+      "command": [
+        "python",
+        "/campaign/scripts/prepare-independent-p11.py",
+        "--num-procs",
+        "16"
+      ],
+      "cwd": "/campaign/preparation/independent-p11-v2"
+    },
+    "controlled-p9-lev0-preparation-v2": {
+      "command": [
+        "python",
+        "/campaign/scripts/prepare-controlled-p9-lev0-evolution.py"
+      ],
+      "cwd": "/campaign/preparation/controlled-p9-lev0-v2"
+    }
+  },
+  "completed_input_sha256": {
+    "provenance/p11-preparation-v2-job.json": "505d6d0133eea2ef15fbcb267abb75531f11f3448d864ccb113fa97697e6297e",
+    "provenance/p11-preparation-v2-metrics.json": "539d449604b9615e59d0e7db359cf51fa86f5bb64da24a2dc9a85bca0d600588",
+    "provenance/controlled-p9-lev0-preparation-v2-job.json": "d200ed5487615c24bc811ac652bf584dc79452e77852430f87de1940ea6380a5",
+    "provenance/controlled-p9-lev0-preparation-v2-metrics.json": "c2aee7e39072a15c540d84758e0baf78c2cdf9cc363e7da5b8d4a07e1b3914c8",
+    "provenance/independent-p11-manifest.json": "147e1db0d12c52f5da9cfc5f1b3f0d600c743cd307e3e243f6056088ce18eabe",
+    "provenance/independent-p11-check-options.json": "60d8a19f7aa76312a0921d7978e636ac3e060ba577b91bb538512e7ea1c6a309",
+    "provenance/controlled-p9-lev0-evolution-manifest.json": "207ca514bfe60e3c75fc569bc6d8c80b2f7267044d696895d0c7de1ee06afc59",
+    "provenance/controlled-p9-lev0-evolution-check-options.json": "033f85e3aed08d5a189989fc37b19d87f174831e28a43c35853ddcc263ebedcd",
+    "independent-p11/InitialData.yaml": "bf9b2e9ca5dd8b147dd5969c24e518c33ed71d440d9def352693c0b2981c0d84",
+    "controlled-p9-lev0-evolution/Segment_0000/Inspiral.yaml": "df6f5eb4201f4814cb4b7ac88674bd7e052ca944ccb5e771c4f0da17bd946cc4",
+    "controlled-id/final-quality.json": "4561b06481f60ec8822dfc3b60fb52ed7a42f7e8370f9e62d2238f414f58eb33",
+    "controlled-id/ControlParams_002/InitialData.yaml": "037e53cb200407504ebcb42588805c3bd68df0e3464b2926d2f5db6f0aaac695",
+    "controlled-id/ControlParams_002/BbhReductions.h5": "7a27c7fb29b29c41e0011a5931b4bcb8a36343befb2c0e7df4183b9d7693d9bf",
+    "controlled-id/ControlParams_002/Horizons.h5": "be9ac511f32ec0c1633b288e0e7ec5f323e3c7aa7aeb11c06f9f277fa756ab67"
+  },
+  "evolution_resolution_note": "P9 refers to initial data; pinned evolution Lev0 uses base polynomial order 7.",
+  "execution_num_procs": 32,
+  "allocation_note": "Preparation records retain their historical 16-PE requested allocation; rendered scientific YAML is unchanged. Actual execution commands and jobs use 32 PEs. Checkpoint and restart must use the same 32-PE allocation.",
+  "performance_note": "Higher CPU allocation is an optimization trial, not a measured 2x speedup. 64 physical cores on len; 32 workers leave capacity for other services. Resource caps remain unchanged."
+}

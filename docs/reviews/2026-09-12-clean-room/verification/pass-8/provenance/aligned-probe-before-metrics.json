@@ -1,0 +1,26 @@
+{
+  "started_utc": "2026-09-12T19:32:53.257652+00:00",
+  "command": [
+    "python",
+    "-u",
+    "/campaign/diagnostics/aligned-nodegroup/run-probe.py",
+    "--expect-misalignment"
+  ],
+  "cwd": "/campaign/diagnostics/aligned-probe-before",
+  "expected_exit_code": 0,
+  "timeout_seconds": 300.0,
+  "output_bytes_before": 0,
+  "cpu_stat_before": "usage_usec 110460\nuser_usec 56253\nsystem_usec 54207\ncore_sched.force_idle_usec 0\nnr_periods 2\nnr_throttled 0\nthrottled_usec 0\nnr_bursts 0\nburst_usec 0",
+  "container_child_pid": 7,
+  "ended_utc": "2026-09-12T19:32:53.623767+00:00",
+  "wall_seconds": 0.36631942505482584,
+  "exit_code": 1,
+  "watchdog_reason": null,
+  "accepted_exit": false,
+  "child_max_rss_kib": 14336,
+  "cgroup_memory_peak_bytes": "21708800",
+  "cgroup_memory_events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0",
+  "cpu_stat_after": "usage_usec 418113\nuser_usec 147807\nsystem_usec 270305\ncore_sched.force_idle_usec 0\nnr_periods 6\nnr_throttled 0\nthrottled_usec 0\nnr_bursts 0\nburst_usec 0",
+  "output_bytes_after": 26026,
+  "filesystem_free_bytes_after": 327459160064
+}

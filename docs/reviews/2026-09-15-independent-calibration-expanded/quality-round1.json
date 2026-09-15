@@ -1,0 +1,1179 @@
+{
+  "schema_version": 1,
+  "purpose": "external holdouts; no training or refit",
+  "created_utc": "2026-09-15T12:06:59.879368+00:00",
+  "overall_pass": false,
+  "overall_pass_definition": "all requested targets have a qualified case",
+  "policy_sha256": "1a863811b90c410cd5a9b0b52a0bd53696b869a0d503cb8fa61d9c054842138d",
+  "protocol_sha256": "e337fac253a230da3250593d0edfad8bcd2a9cd7540d0e6f811010d9c8c1f67a",
+  "input_manifest_sha256": "6df46485d2d02534679b5207c252059d4c20a9cc71cb2c25654aba42717cc403",
+  "selected_primary_case_ids": [
+    "SXS:BBH:2483/Lev5/N3",
+    "SXS:BBH:2484/Lev5/N3",
+    "SXS:BBH:2486/Lev5/N3",
+    "SXS:BBH:2491/Lev5/N3",
+    "SXS:BBH:0185/Lev3/N3"
+  ],
+  "simulations": [
+    {
+      "sxs_id": "SXS:BBH:0198",
+      "available_resolutions": [
+        "Lev5",
+        "Lev4"
+      ],
+      "primary_case_id": "SXS:BBH:0198/Lev5/N3",
+      "source_split": "holdout",
+      "gates": [
+        {
+          "name": "exact_nondeprecated_level_metadata",
+          "pass": true,
+          "required": true,
+          "evidence": {
+            "SXS:BBH:0198/Lev5/N2": {
+              "pass": true,
+              "missing_fields": [],
+              "errors": [],
+              "deprecated": false,
+              "source_split": "validation_only"
+            },
+            "SXS:BBH:0198/Lev5/N3": {
+              "pass": true,
+              "missing_fields": [],
+              "errors": [],
+              "deprecated": false,
+              "source_split": "holdout"
+            },
+            "SXS:BBH:0198/Lev4/N3": {
+              "pass": true,
+              "missing_fields": [],
+              "errors": [],
+              "deprecated": false,
+              "source_split": "validation_only"
+            }
+          }
+        },
+        {
+          "name": "near_nonspin",
+          "pass": true,
+          "required": true,
+          "evidence": {
+            "magnitudes": [
+              5.056456016134826e-05,
+              8.534899192596271e-05
+            ],
+            "maximum": 8.534899192596271e-05
+          },
+          "limit": 0.0001
+        },
+        {
+          "name": "eccentricity",
+          "pass": true,
+          "required": true,
+          "evidence": {
+            "value": 0.0002023,
+            "kind": "value"
+          },
+          "limit": 0.001
+        },
+        {
+          "name": "post_peak_duration",
+          "pass": true,
+          "required": true,
+          "evidence": 297.6759823171442,
+          "limit": 150.0
+        },
+        {
+          "name": "high_resolution_extraction",
+          "pass": false,
+          "required": true,
+          "evidence": 0.02568424805709976,
+          "limit": 0.01
+        },
+        {
+          "name": "next_resolution",
+          "pass": false,
+          "required": true,
+          "evidence": 0.07491373054751531,
+          "limit": 0.01
+        },
+        {
+          "name": "preprocessing_variations",
+          "pass": true,
+          "required": true,
+          "evidence": {
+            "relative_l2": [
+              1.758196993054299e-07,
+              2.5568990366265935e-05
+            ],
+            "frequency_Mf_range": [
+              0.13211441195279344,
+              0.29998255915353755
+            ],
+            "bins": 3466,
+            "denominator": "highest-resolution N3 baseline",
+            "no_extrapolation": true
+          },
+          "limit": 0.002
+        },
+        {
+          "name": "external_holdout_split",
+          "pass": true,
+          "required": true
+        },
+        {
+          "name": "declared_target_q",
+          "pass": true,
+          "required": true,
+          "evidence": 1.2024615600710993,
+          "limit_relative": 0.005
+        }
+      ],
+      "passed": false,
+      "highest_resolution": "Lev5",
+      "next_resolution": "Lev4",
+      "metadata": {
+        "SXS:BBH:0198/Lev5/N2": {
+          "pass": true,
+          "missing_fields": [],
+          "errors": [],
+          "deprecated": false,
+          "source_split": "validation_only"
+        },
+        "SXS:BBH:0198/Lev5/N3": {
+          "pass": true,
+          "missing_fields": [],
+          "errors": [],
+          "deprecated": false,
+          "source_split": "holdout"
+        },
+        "SXS:BBH:0198/Lev4/N3": {
+          "pass": true,
+          "missing_fields": [],
+          "errors": [],
+          "deprecated": false,
+          "source_split": "validation_only"
+        }
+      },
+      "h22_peak": {
+        "metadata_time": 5908.214007512778,
+        "decoded_time": 5908.214007512778,
+        "metadata_decoded_difference_M": 0.0,
+        "duration_to_end_M": 297.6759823171442,
+        "duration_source": "decoded h22"
+      },
+      "qnm": {
+        "f_ring_33": 0.13903445578822948,
+        "f_damp_33": 0.013974931008299928,
+        "qnm_source": "independent scripts/kerr_leaver_solver.py",
+        "qnm_solver": {
+          "omega_remnant": [
+            0.8320018079242244,
+            -0.08362795969246488
+          ],
+          "radial_residual": [
+            1.7763568394002505e-15,
+            -7.771561172376096e-16
+          ],
+          "cf_depth": 1024,
+          "cf_error": 0.0,
+          "angular_error": 3.553689326789271e-14,
+          "helper_sha256": "a7b07b28962b676271645fd60cf6bd7c2684c8c92e801579897f2d8f84698fc9"
+        }
+      },
+      "frequency_band": {
+        "minimum": 0.132082732998818,
+        "maximum": 0.3
+      },
+      "metrics": {
+        "extraction_high_N2_vs_high_N3_relative_l2": 0.02568424805709976,
+        "resolution_next_N3_vs_high_N3_relative_l2": 0.07491373054751531,
+        "preprocessing_variant_relative_l2": {
+          "relative_l2": [
+            1.758196993054299e-07,
+            2.5568990366265935e-05
+          ],
+          "frequency_Mf_range": [
+            0.13211441195279344,
+            0.29998255915353755
+          ],
+          "bins": 3466,
+          "denominator": "highest-resolution N3 baseline",
+          "no_extrapolation": true
+        }
+      },
+      "evaluation_status": "failed_quality_gate",
+      "target_q": 1.2,
+      "candidate_rank": 1
+    },
+    {
+      "sxs_id": "SXS:BBH:2483",
+      "available_resolutions": [
+        "Lev5",
+        "Lev4"
+      ],
+      "primary_case_id": "SXS:BBH:2483/Lev5/N3",
+      "source_split": "holdout",
+      "gates": [
+        {
+          "name": "exact_nondeprecated_level_metadata",
+          "pass": true,
+          "required": true,
+          "evidence": {
+            "SXS:BBH:2483/Lev5/N2": {
+              "pass": true,
+              "missing_fields": [],
+              "errors": [],
+              "deprecated": false,
+              "source_split": "validation_only"
+            },
+            "SXS:BBH:2483/Lev5/N3": {
+              "pass": true,
+              "missing_fields": [],
+              "errors": [],
+              "deprecated": false,
+              "source_split": "holdout"
+            },
+            "SXS:BBH:2483/Lev4/N3": {
+              "pass": true,
+              "missing_fields": [],
+              "errors": [],
+              "deprecated": false,
+              "source_split": "validation_only"
+            }
+          }
+        },
+        {
+          "name": "near_nonspin",
+          "pass": true,
+          "required": true,
+          "evidence": {
+            "magnitudes": [
+              3.7443133704028264e-05,
+              8.936208050599518e-05
+            ],
+            "maximum": 8.936208050599518e-05
+          },
+          "limit": 0.0001
+        },
+        {
+          "name": "eccentricity",
+          "pass": true,
+          "required": true,
+          "evidence": {
+            "value": 0.0002336,
+            "kind": "value"
+          },
+          "limit": 0.001
+        },
+        {
+          "name": "post_peak_duration",
+          "pass": true,
+          "required": true,
+          "evidence": 161.28312660313895,
+          "limit": 150.0
+        },
+        {
+          "name": "high_resolution_extraction",
+          "pass": true,
+          "required": true,
+          "evidence": 0.0019440055557258438,
+          "limit": 0.01
+        },
+        {
+          "name": "next_resolution",
+          "pass": true,
+          "required": true,
+          "evidence": 0.0005381495450919086,
+          "limit": 0.01
+        },
+        {
+          "name": "preprocessing_variations",
+          "pass": true,
+          "required": true,
+          "evidence": {
+            "relative_l2": [
+              7.556443637193224e-08,
+              4.747995989667923e-06
+            ],
+            "frequency_Mf_range": [
+              0.11520334473584189,
+              0.2999619916381604
+            ],
+            "bins": 4862,
+            "denominator": "highest-resolution N3 baseline",
+            "no_extrapolation": true
+          },
+          "limit": 0.002
+        },
+        {
+          "name": "external_holdout_split",
+          "pass": true,
+          "required": true
+        },
+        {
+          "name": "declared_target_q",
+          "pass": true,
+          "required": true,
+          "evidence": 3.499942504651751,
+          "limit_relative": 0.005
+        }
+      ],
+      "passed": true,
+      "highest_resolution": "Lev5",
+      "next_resolution": "Lev4",
+      "metadata": {
+        "SXS:BBH:2483/Lev5/N2": {
+          "pass": true,
+          "missing_fields": [],
+          "errors": [],
+          "deprecated": false,
+          "source_split": "validation_only"
+        },
+        "SXS:BBH:2483/Lev5/N3": {
+          "pass": true,
+          "missing_fields": [],
+          "errors": [],
+          "deprecated": false,
+          "source_split": "holdout"
+        },
+        "SXS:BBH:2483/Lev4/N3": {
+          "pass": true,
+          "missing_fields": [],
+          "errors": [],
+          "deprecated": false,
+          "source_split": "validation_only"
+        }
+      },
+      "h22_peak": {
+        "metadata_time": 8045.0957617847525,
+        "decoded_time": 8045.0957617847525,
+        "metadata_decoded_difference_M": 0.0,
+        "duration_to_end_M": 161.28312660313895,
+        "duration_source": "decoded h22"
+      },
+      "qnm": {
+        "f_ring_33": 0.12123344328995862,
+        "f_damp_33": 0.014462975481206137,
+        "qnm_source": "independent scripts/kerr_leaver_solver.py",
+        "qnm_solver": {
+          "omega_remnant": [
+            0.7426499336135978,
+            -0.08859706933575537
+          ],
+          "radial_residual": [
+            -1.1102230246251565e-14,
+            4.440892098500626e-15
+          ],
+          "cf_depth": 1024,
+          "cf_error": 0.0,
+          "angular_error": 3.552783067061927e-14,
+          "helper_sha256": "a7b07b28962b676271645fd60cf6bd7c2684c8c92e801579897f2d8f84698fc9"
+        }
+      },
+      "frequency_band": {
+        "minimum": 0.11517177112546069,
+        "maximum": 0.3
+      },
+      "metrics": {
+        "extraction_high_N2_vs_high_N3_relative_l2": 0.0019440055557258438,
+        "resolution_next_N3_vs_high_N3_relative_l2": 0.0005381495450919086,
+        "preprocessing_variant_relative_l2": {
+          "relative_l2": [
+            7.556443637193224e-08,
+            4.747995989667923e-06
+          ],
+          "frequency_Mf_range": [
+            0.11520334473584189,
+            0.2999619916381604
+          ],
+          "bins": 4862,
+          "denominator": "highest-resolution N3 baseline",
+          "no_extrapolation": true
+        }
+      },
+      "evaluation_status": "passed",
+      "target_q": 3.5,
+      "candidate_rank": 9
+    },
+    {
+      "sxs_id": "SXS:BBH:2484",
+      "available_resolutions": [
+        "Lev5",
+        "Lev4"
+      ],
+      "primary_case_id": "SXS:BBH:2484/Lev5/N3",
+      "source_split": "holdout",
+      "gates": [
+        {
+          "name": "exact_nondeprecated_level_metadata",
+          "pass": true,
+          "required": true,
+          "evidence": {
+            "SXS:BBH:2484/Lev5/N2": {
+              "pass": true,
+              "missing_fields": [],
+              "errors": [],
+              "deprecated": false,
+              "source_split": "validation_only"
+            },
+            "SXS:BBH:2484/Lev5/N3": {
+              "pass": true,
+              "missing_fields": [],
+              "errors": [],
+              "deprecated": false,
+              "source_split": "holdout"
+            },
+            "SXS:BBH:2484/Lev4/N3": {
+              "pass": true,
+              "missing_fields": [],
+              "errors": [],
+              "deprecated": false,
+              "source_split": "validation_only"
+            }
+          }
+        },
+        {
+          "name": "near_nonspin",
+          "pass": true,
+          "required": true,
+          "evidence": {
+            "magnitudes": [
+              1.598107199225072e-05,
+              9.01195005397783e-05
+            ],
+            "maximum": 9.01195005397783e-05
+          },
+          "limit": 0.0001
+        },
+        {
+          "name": "eccentricity",
+          "pass": true,
+          "required": true,
+          "evidence": {
+            "value": 0.0008098,
+            "kind": "value"
+          },
+          "limit": 0.001
+        },
+        {
+          "name": "post_peak_duration",
+          "pass": true,
+          "required": true,
+          "evidence": 152.1952887702073,
+          "limit": 150.0
+        },
+        {
+          "name": "high_resolution_extraction",
+          "pass": true,
+          "required": true,
+          "evidence": 0.0017407134368334813,
+          "limit": 0.01
+        },
+        {
+          "name": "next_resolution",
+          "pass": true,
+          "required": true,
+          "evidence": 0.0026322751951138672,
+          "limit": 0.01
+        },
+        {
+          "name": "preprocessing_variations",
+          "pass": true,
+          "required": true,
+          "evidence": {
+            "relative_l2": [
+              1.760053313233456e-08,
+              1.0740128729185188e-05
+            ],
+            "frequency_Mf_range": [
+              0.11088205423595215,
+              0.29998029437176943
+            ],
+            "bins": 4991,
+            "denominator": "highest-resolution N3 baseline",
+            "no_extrapolation": true
+          },
+          "limit": 0.002
+        },
+        {
+          "name": "external_holdout_split",
+          "pass": true,
+          "required": true
+        },
+        {
+          "name": "declared_target_q",
+          "pass": true,
+          "required": true,
+          "evidence": 4.4995631767635835,
+          "limit_relative": 0.005
+        }
+      ],
+      "passed": true,
+      "highest_resolution": "Lev5",
+      "next_resolution": "Lev4",
+      "metadata": {
+        "SXS:BBH:2484/Lev5/N2": {
+          "pass": true,
+          "missing_fields": [],
+          "errors": [],
+          "deprecated": false,
+          "source_split": "validation_only"
+        },
+        "SXS:BBH:2484/Lev5/N3": {
+          "pass": true,
+          "missing_fields": [],
+          "errors": [],
+          "deprecated": false,
+          "source_split": "holdout"
+        },
+        "SXS:BBH:2484/Lev4/N3": {
+          "pass": true,
+          "missing_fields": [],
+          "errors": [],
+          "deprecated": false,
+          "source_split": "validation_only"
+        }
+      },
+      "h22_peak": {
+        "metadata_time": 7441.971706123673,
+        "decoded_time": 7441.971706123673,
+        "metadata_decoded_difference_M": 0.0,
+        "duration_to_end_M": 152.1952887702073,
+        "duration_source": "decoded h22"
+      },
+      "qnm": {
+        "f_ring_33": 0.11667968857766266,
+        "f_damp_33": 0.01455133879484376,
+        "qnm_source": "independent scripts/kerr_leaver_solver.py",
+        "qnm_solver": {
+          "omega_remnant": [
+            0.7187213368145337,
+            -0.08963306123421945
+          ],
+          "radial_residual": [
+            -6.661338147750939e-15,
+            2.220446049250313e-15
+          ],
+          "cf_depth": 1024,
+          "cf_error": 0.0,
+          "angular_error": 3.552783067061927e-14,
+          "helper_sha256": "a7b07b28962b676271645fd60cf6bd7c2684c8c92e801579897f2d8f84698fc9"
+        }
+      },
+      "frequency_band": {
+        "minimum": 0.11084570414877952,
+        "maximum": 0.3
+      },
+      "metrics": {
+        "extraction_high_N2_vs_high_N3_relative_l2": 0.0017407134368334813,
+        "resolution_next_N3_vs_high_N3_relative_l2": 0.0026322751951138672,
+        "preprocessing_variant_relative_l2": {
+          "relative_l2": [
+            1.760053313233456e-08,
+            1.0740128729185188e-05
+          ],
+          "frequency_Mf_range": [
+            0.11088205423595215,
+            0.29998029437176943
+          ],
+          "bins": 4991,
+          "denominator": "highest-resolution N3 baseline",
+          "no_extrapolation": true
+        }
+      },
+      "evaluation_status": "passed",
+      "target_q": 4.5,
+      "candidate_rank": 1
+    },
+    {
+      "sxs_id": "SXS:BBH:2486",
+      "available_resolutions": [
+        "Lev5",
+        "Lev4"
+      ],
+      "primary_case_id": "SXS:BBH:2486/Lev5/N3",
+      "source_split": "holdout",
+      "gates": [
+        {
+          "name": "exact_nondeprecated_level_metadata",
+          "pass": true,
+          "required": true,
+          "evidence": {
+            "SXS:BBH:2486/Lev5/N2": {
+              "pass": true,
+              "missing_fields": [],
+              "errors": [],
+              "deprecated": false,
+              "source_split": "validation_only"
+            },
+            "SXS:BBH:2486/Lev5/N3": {
+              "pass": true,
+              "missing_fields": [],
+              "errors": [],
+              "deprecated": false,
+              "source_split": "holdout"
+            },
+            "SXS:BBH:2486/Lev4/N3": {
+              "pass": true,
+              "missing_fields": [],
+              "errors": [],
+              "deprecated": false,
+              "source_split": "validation_only"
+            }
+          }
+        },
+        {
+          "name": "near_nonspin",
+          "pass": true,
+          "required": true,
+          "evidence": {
+            "magnitudes": [
+              1.8991685209918843e-05,
+              9.58877744080267e-06
+            ],
+            "maximum": 1.8991685209918843e-05
+          },
+          "limit": 0.0001
+        },
+        {
+          "name": "eccentricity",
+          "pass": true,
+          "required": true,
+          "evidence": {
+            "value": 0.0004536,
+            "kind": "value"
+          },
+          "limit": 0.001
+        },
+        {
+          "name": "post_peak_duration",
+          "pass": true,
+          "required": true,
+          "evidence": 150.08775845137097,
+          "limit": 150.0
+        },
+        {
+          "name": "high_resolution_extraction",
+          "pass": true,
+          "required": true,
+          "evidence": 0.0016801508989905671,
+          "limit": 0.01
+        },
+        {
+          "name": "next_resolution",
+          "pass": true,
+          "required": true,
+          "evidence": 0.0015105147026100313,
+          "limit": 0.01
+        },
+        {
+          "name": "preprocessing_variations",
+          "pass": true,
+          "required": true,
+          "evidence": {
+            "relative_l2": [
+              6.395401689095872e-08,
+              1.1896278949431275e-05
+            ],
+            "frequency_Mf_range": [
+              0.10778397530830022,
+              0.2999612462111251
+            ],
+            "bins": 5555,
+            "denominator": "highest-resolution N3 baseline",
+            "no_extrapolation": true
+          },
+          "limit": 0.002
+        },
+        {
+          "name": "external_holdout_split",
+          "pass": true,
+          "required": true
+        },
+        {
+          "name": "declared_target_q",
+          "pass": true,
+          "required": true,
+          "evidence": 5.50003563689487,
+          "limit_relative": 0.005
+        }
+      ],
+      "passed": true,
+      "highest_resolution": "Lev5",
+      "next_resolution": "Lev4",
+      "metadata": {
+        "SXS:BBH:2486/Lev5/N2": {
+          "pass": true,
+          "missing_fields": [],
+          "errors": [],
+          "deprecated": false,
+          "source_split": "validation_only"
+        },
+        "SXS:BBH:2486/Lev5/N3": {
+          "pass": true,
+          "missing_fields": [],
+          "errors": [],
+          "deprecated": false,
+          "source_split": "holdout"
+        },
+        "SXS:BBH:2486/Lev4/N3": {
+          "pass": true,
+          "missing_fields": [],
+          "errors": [],
+          "deprecated": false,
+          "source_split": "validation_only"
+        }
+      },
+      "h22_peak": {
+        "metadata_time": 8430.451167824705,
+        "decoded_time": 8430.451167824705,
+        "metadata_decoded_difference_M": 0.0,
+        "duration_to_end_M": 150.08775845137097,
+        "duration_source": "decoded h22"
+      },
+      "qnm": {
+        "f_ring_33": 0.11343971277586505,
+        "f_damp_33": 0.01460481535118586,
+        "qnm_source": "independent scripts/kerr_leaver_solver.py",
+        "qnm_solver": {
+          "omega_remnant": [
+            0.7013924353028381,
+            -0.09030088983525646
+          ],
+          "radial_residual": [
+            -3.552713678800501e-15,
+            -5.551115123125783e-16
+          ],
+          "cf_depth": 1024,
+          "cf_error": 0.0,
+          "angular_error": 3.552752709864308e-14,
+          "helper_sha256": "a7b07b28962b676271645fd60cf6bd7c2684c8c92e801579897f2d8f84698fc9"
+        }
+      },
+      "frequency_band": {
+        "minimum": 0.10776772713707179,
+        "maximum": 0.3
+      },
+      "metrics": {
+        "extraction_high_N2_vs_high_N3_relative_l2": 0.0016801508989905671,
+        "resolution_next_N3_vs_high_N3_relative_l2": 0.0015105147026100313,
+        "preprocessing_variant_relative_l2": {
+          "relative_l2": [
+            6.395401689095872e-08,
+            1.1896278949431275e-05
+          ],
+          "frequency_Mf_range": [
+            0.10778397530830022,
+            0.2999612462111251
+          ],
+          "bins": 5555,
+          "denominator": "highest-resolution N3 baseline",
+          "no_extrapolation": true
+        }
+      },
+      "evaluation_status": "passed",
+      "target_q": 5.5,
+      "candidate_rank": 1
+    },
+    {
+      "sxs_id": "SXS:BBH:2491",
+      "available_resolutions": [
+        "Lev5",
+        "Lev4"
+      ],
+      "primary_case_id": "SXS:BBH:2491/Lev5/N3",
+      "source_split": "holdout",
+      "gates": [
+        {
+          "name": "exact_nondeprecated_level_metadata",
+          "pass": true,
+          "required": true,
+          "evidence": {
+            "SXS:BBH:2491/Lev5/N2": {
+              "pass": true,
+              "missing_fields": [],
+              "errors": [],
+              "deprecated": false,
+              "source_split": "validation_only"
+            },
+            "SXS:BBH:2491/Lev5/N3": {
+              "pass": true,
+              "missing_fields": [],
+              "errors": [],
+              "deprecated": false,
+              "source_split": "holdout"
+            },
+            "SXS:BBH:2491/Lev4/N3": {
+              "pass": true,
+              "missing_fields": [],
+              "errors": [],
+              "deprecated": false,
+              "source_split": "validation_only"
+            }
+          }
+        },
+        {
+          "name": "near_nonspin",
+          "pass": true,
+          "required": true,
+          "evidence": {
+            "magnitudes": [
+              2.7439227852578147e-05,
+              4.1513234959774083e-05
+            ],
+            "maximum": 4.1513234959774083e-05
+          },
+          "limit": 0.0001
+        },
+        {
+          "name": "eccentricity",
+          "pass": true,
+          "required": true,
+          "evidence": {
+            "value": 0.0003607,
+            "kind": "value"
+          },
+          "limit": 0.001
+        },
+        {
+          "name": "post_peak_duration",
+          "pass": true,
+          "required": true,
+          "evidence": 152.48934129184272,
+          "limit": 150.0
+        },
+        {
+          "name": "high_resolution_extraction",
+          "pass": true,
+          "required": true,
+          "evidence": 0.00226100086976026,
+          "limit": 0.01
+        },
+        {
+          "name": "next_resolution",
+          "pass": true,
+          "required": true,
+          "evidence": 0.0020947761431168222,
+          "limit": 0.01
+        },
+        {
+          "name": "preprocessing_variations",
+          "pass": true,
+          "required": true,
+          "evidence": {
+            "relative_l2": [
+              5.8739333414768494e-08,
+              8.344295871306103e-06
+            ],
+            "frequency_Mf_range": [
+              0.10456350814622681,
+              0.2999687351636772
+            ],
+            "bins": 6751,
+            "denominator": "highest-resolution N3 baseline",
+            "no_extrapolation": true
+          },
+          "limit": 0.002
+        },
+        {
+          "name": "external_holdout_split",
+          "pass": true,
+          "required": true
+        },
+        {
+          "name": "declared_target_q",
+          "pass": true,
+          "required": true,
+          "evidence": 7.00017202109518,
+          "limit_relative": 0.005
+        }
+      ],
+      "passed": true,
+      "highest_resolution": "Lev5",
+      "next_resolution": "Lev4",
+      "metadata": {
+        "SXS:BBH:2491/Lev5/N2": {
+          "pass": true,
+          "missing_fields": [],
+          "errors": [],
+          "deprecated": false,
+          "source_split": "validation_only"
+        },
+        "SXS:BBH:2491/Lev5/N3": {
+          "pass": true,
+          "missing_fields": [],
+          "errors": [],
+          "deprecated": false,
+          "source_split": "holdout"
+        },
+        "SXS:BBH:2491/Lev4/N3": {
+          "pass": true,
+          "missing_fields": [],
+          "errors": [],
+          "deprecated": false,
+          "source_split": "validation_only"
+        }
+      },
+      "h22_peak": {
+        "metadata_time": 9975.119800054661,
+        "decoded_time": 9975.119800054661,
+        "metadata_decoded_difference_M": 0.0,
+        "duration_to_end_M": 152.48934129184272,
+        "duration_source": "decoded h22"
+      },
+      "qnm": {
+        "f_ring_33": 0.110063017656258,
+        "f_damp_33": 0.014651858091719068,
+        "qnm_source": "independent scripts/kerr_leaver_solver.py",
+        "qnm_solver": {
+          "omega_remnant": [
+            0.6830537163861081,
+            -0.09092978127100752
+          ],
+          "radial_residual": [
+            -4.440892098500626e-16,
+            -1.2212453270876722e-15
+          ],
+          "cf_depth": 1024,
+          "cf_error": 0.0,
+          "angular_error": 4.2633006859194455e-14,
+          "helper_sha256": "a7b07b28962b676271645fd60cf6bd7c2684c8c92e801579897f2d8f84698fc9"
+        }
+      },
+      "frequency_band": {
+        "minimum": 0.1045598667734451,
+        "maximum": 0.3
+      },
+      "metrics": {
+        "extraction_high_N2_vs_high_N3_relative_l2": 0.00226100086976026,
+        "resolution_next_N3_vs_high_N3_relative_l2": 0.0020947761431168222,
+        "preprocessing_variant_relative_l2": {
+          "relative_l2": [
+            5.8739333414768494e-08,
+            8.344295871306103e-06
+          ],
+          "frequency_Mf_range": [
+            0.10456350814622681,
+            0.2999687351636772
+          ],
+          "bins": 6751,
+          "denominator": "highest-resolution N3 baseline",
+          "no_extrapolation": true
+        }
+      },
+      "evaluation_status": "passed",
+      "target_q": 7.0,
+      "candidate_rank": 2
+    },
+    {
+      "sxs_id": "SXS:BBH:0185",
+      "available_resolutions": [
+        "Lev3",
+        "Lev2"
+      ],
+      "primary_case_id": "SXS:BBH:0185/Lev3/N3",
+      "source_split": "holdout",
+      "gates": [
+        {
+          "name": "exact_nondeprecated_level_metadata",
+          "pass": true,
+          "required": true,
+          "evidence": {
+            "SXS:BBH:0185/Lev3/N2": {
+              "pass": true,
+              "missing_fields": [],
+              "errors": [],
+              "deprecated": false,
+              "source_split": "validation_only"
+            },
+            "SXS:BBH:0185/Lev3/N3": {
+              "pass": true,
+              "missing_fields": [],
+              "errors": [],
+              "deprecated": false,
+              "source_split": "holdout"
+            },
+            "SXS:BBH:0185/Lev2/N3": {
+              "pass": true,
+              "missing_fields": [],
+              "errors": [],
+              "deprecated": false,
+              "source_split": "validation_only"
+            }
+          }
+        },
+        {
+          "name": "near_nonspin",
+          "pass": true,
+          "required": true,
+          "evidence": {
+            "magnitudes": [
+              1.2811410995434554e-05,
+              1.4339514338744353e-05
+            ],
+            "maximum": 1.4339514338744353e-05
+          },
+          "limit": 0.0001
+        },
+        {
+          "name": "eccentricity",
+          "pass": true,
+          "required": true,
+          "evidence": {
+            "value": 0.0002772,
+            "kind": "value"
+          },
+          "limit": 0.001
+        },
+        {
+          "name": "post_peak_duration",
+          "pass": true,
+          "required": true,
+          "evidence": 413.87143130809545,
+          "limit": 150.0
+        },
+        {
+          "name": "high_resolution_extraction",
+          "pass": true,
+          "required": true,
+          "evidence": 0.0016194329161173715,
+          "limit": 0.01
+        },
+        {
+          "name": "next_resolution",
+          "pass": true,
+          "required": true,
+          "evidence": 0.0010264318405896102,
+          "limit": 0.01
+        },
+        {
+          "name": "preprocessing_variations",
+          "pass": true,
+          "required": true,
+          "evidence": {
+            "relative_l2": [
+              1.116708583687732e-07,
+              2.409370967563017e-07
+            ],
+            "frequency_Mf_range": [
+              0.10078951789013942,
+              0.2999421393508408
+            ],
+            "bins": 4269,
+            "denominator": "highest-resolution N3 baseline",
+            "no_extrapolation": true
+          },
+          "limit": 0.002
+        },
+        {
+          "name": "external_holdout_split",
+          "pass": true,
+          "required": true
+        },
+        {
+          "name": "declared_target_q",
+          "pass": true,
+          "required": true,
+          "evidence": 9.989508574369625,
+          "limit_relative": 0.005
+        }
+      ],
+      "passed": true,
+      "highest_resolution": "Lev3",
+      "next_resolution": "Lev2",
+      "metadata": {
+        "SXS:BBH:0185/Lev3/N2": {
+          "pass": true,
+          "missing_fields": [],
+          "errors": [],
+          "deprecated": false,
+          "source_split": "validation_only"
+        },
+        "SXS:BBH:0185/Lev3/N3": {
+          "pass": true,
+          "missing_fields": [],
+          "errors": [],
+          "deprecated": false,
+          "source_split": "holdout"
+        },
+        "SXS:BBH:0185/Lev2/N3": {
+          "pass": true,
+          "missing_fields": [],
+          "errors": [],
+          "deprecated": false,
+          "source_split": "validation_only"
+        }
+      },
+      "h22_peak": {
+        "metadata_time": 5294.328262781139,
+        "decoded_time": 5294.328262781139,
+        "metadata_decoded_difference_M": 0.0,
+        "duration_to_end_M": 413.87143130809545,
+        "duration_source": "decoded h22"
+      },
+      "qnm": {
+        "f_ring_33": 0.10607070132069883,
+        "f_damp_33": 0.014696577227847538,
+        "qnm_source": "independent scripts/kerr_leaver_solver.py",
+        "qnm_solver": {
+          "omega_remnant": [
+            0.660950647866709,
+            -0.09157771297089935
+          ],
+          "radial_residual": [
+            1.1546319456101628e-14,
+            -5.551115123125783e-15
+          ],
+          "cf_depth": 1024,
+          "cf_error": 0.0,
+          "angular_error": 1.0658285595710818e-14,
+          "helper_sha256": "a7b07b28962b676271645fd60cf6bd7c2684c8c92e801579897f2d8f84698fc9"
+        }
+      },
+      "frequency_band": {
+        "minimum": 0.10076716625466389,
+        "maximum": 0.3
+      },
+      "metrics": {
+        "extraction_high_N2_vs_high_N3_relative_l2": 0.0016194329161173715,
+        "resolution_next_N3_vs_high_N3_relative_l2": 0.0010264318405896102,
+        "preprocessing_variant_relative_l2": {
+          "relative_l2": [
+            1.116708583687732e-07,
+            2.409370967563017e-07
+          ],
+          "frequency_Mf_range": [
+            0.10078951789013942,
+            0.2999421393508408
+          ],
+          "bins": 4269,
+          "denominator": "highest-resolution N3 baseline",
+          "no_extrapolation": true
+        }
+      },
+      "evaluation_status": "passed",
+      "target_q": 10.0,
+      "candidate_rank": 30
+    }
+  ],
+  "qualified_manifest": {
+    "path": "docs/reviews/2026-09-15-independent-calibration-expanded/qualified-round1.json",
+    "sha256": "eb5a8358ecbc47e32b72a78b61cfe133a846a77bda81c48dc86859b768407308",
+    "case_count": 5
+  },
+  "missing_or_failed_targets": [
+    1.2,
+    1.8,
+    2.5
+  ],
+  "counts": {
+    "selected": 5,
+    "training": 0,
+    "holdout": 5,
+    "required_targets": 8
+  },
+  "source_sha256": {
+    "screen_adapter": "8057a24c750dedcc43237c189832fcff40865344e25914b22d77e2376160f76b",
+    "original_screen": "2e8245eced92fd21ebc4e037d67095e26119ee6804428f8330650e449d78abfd"
+  }
+}

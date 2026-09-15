@@ -1,0 +1,79 @@
+{
+  "checked_at_utc": "2026-09-12T15:24:54.048299+00:00",
+  "host": "RONI2",
+  "scope": "Licence notices, package assembly, and selected QNM checks; no new full parity run.",
+  "build": {
+    "command": [
+      "/Users/xangma/miniconda3/bin/python",
+      "-m",
+      "build",
+      "--no-isolation",
+      "--wheel",
+      "--sdist",
+      "--outdir",
+      "/var/folders/l0/3dr1pyw15ln58b6xh74j_41w0000gn/T/torchwave-license-build-k8w5zlqn/dist",
+      "/var/folders/l0/3dr1pyw15ln58b6xh74j_41w0000gn/T/torchwave-license-build-k8w5zlqn/source"
+    ],
+    "exit_code": 0,
+    "duration_seconds": 1.5996331659989664,
+    "log": "package-build.log",
+    "artifacts": [
+      {
+        "name": "torchwave-0.1.0-py3-none-any.whl",
+        "sha256": "adbf0d9273b1dfc27d296227e392ca4705b4b4b143c26c1659e3fa084bf5a40b",
+        "license_paths": {
+          "LICENSE": "torchwave-0.1.0.dist-info/licenses/LICENSE",
+          "THIRD_PARTY_NOTICES.md": "torchwave-0.1.0.dist-info/licenses/THIRD_PARTY_NOTICES.md"
+        },
+        "contains_external_hdf5": false
+      },
+      {
+        "name": "torchwave-0.1.0.tar.gz",
+        "sha256": "ec3f5cc394f0e7356e744ddde5343764678d70bd996879ed9557248462f967b5",
+        "license_paths": {
+          "LICENSE": "torchwave-0.1.0/LICENSE",
+          "THIRD_PARTY_NOTICES.md": "torchwave-0.1.0/THIRD_PARTY_NOTICES.md"
+        },
+        "contains_external_hdf5": false
+      }
+    ]
+  },
+  "input_sha256": {
+    "LICENSE": "baab32a5637e27c180a1eb286fd8fcba440dd99e8cc472056c869c6171bad36f",
+    "THIRD_PARTY_NOTICES.md": "f182b61561bc013c684b3d8d1962ee969846952cdee0a74ef3262f7187ed9ee4",
+    "pyproject.toml": "099efdafed6f3c786c2c3de160589097e8e815768d523c8c1cc07430915cb515",
+    "README.md": "96de016509174a21235bf708e3a539dc6004f8f3eec66490734fa9aa9d67a172"
+  },
+  "qnm_tests": {
+    "command": [
+      "/Users/xangma/miniconda3/envs/pycbcorig313/bin/python",
+      "-m",
+      "pytest",
+      "-q",
+      "tests/test_kerr_qnm_author.py",
+      "tests/test_clean_room_kerr_angular.py"
+    ],
+    "cwd": "/Users/xangma/repos/torchwave",
+    "host": "RONI2",
+    "finished_at_utc": "2026-09-12T15:25:11.285558+00:00",
+    "exit_code": 0,
+    "duration_seconds": 1.302886541998305,
+    "log": "qnm-tests.log",
+    "passed": 55,
+    "pytest_duration_seconds": 1.05
+  },
+  "mit_license_unchanged_from_HEAD": true,
+  "notice_pass_sha256": {
+    "pyproject.toml": "099efdafed6f3c786c2c3de160589097e8e815768d523c8c1cc07430915cb515",
+    "README.md": "96de016509174a21235bf708e3a539dc6004f8f3eec66490734fa9aa9d67a172",
+    "THIRD_PARTY_NOTICES.md": "f182b61561bc013c684b3d8d1962ee969846952cdee0a74ef3262f7187ed9ee4",
+    "src/torchwave/approximants/kerr_qnm_author.py": "b816f0e2cf11b7c1c55e14e3dee71e9bef014a72b713fd542a3114d76d508d52",
+    "src/torchwave/approximants/phenomd_unrounded_fits.py": "2f6ce30ffccd8574372a4bc13970eef9516da87bec2bfabb164fddea668c51e7",
+    "scripts/generate_kerr_qnm_author.py": "a13a9ab44e3be4482d6b6a2504bbd1a5070f2409ccc7484c91df426380a62d39",
+    "tests/data/kerr_qnm_author_holdout.json": "19884b1b922349965a0a13cc0f3d1ce8a8ebef005d43916098823a25509697e1",
+    "docs/reviews/2026-09-12-clean-room/calibration-data-licensing.md": "47346e29b1d5251eaf5d7cd2c048cadae416fa26b84d07c046ba25d3326796df",
+    "docs/reviews/2026-09-12-clean-room/work-plan.md": "9df17a2bd266c635de2444e995a1c99503da633d0166f3f7410ab6b18b26dc08",
+    "docs/reviews/2026-09-12-clean-room/summary.md": "22c9990003bf9dd88f3a687fdf6fef9afd85f3d599b3747d602b5bad840a7886"
+  },
+  "relative_links_ok": true
+}

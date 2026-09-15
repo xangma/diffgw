@@ -1,0 +1,593 @@
+{
+  "validation_passed": true,
+  "image_id": "sha256:0ba0f3bb70b90e83c9b50316ecd37f1b55af4537160eafbe3392a6f67c4e9d77",
+  "num_procs": 32,
+  "initial_data": {
+    "run_dir": "/campaign/controlled-id/ControlParams_002",
+    "nonlinear_final": {
+      "Iteration": 5.0,
+      "Walltime": 3068.822314273,
+      "GlobalizationStep": 0.0,
+      "Residual": 7.277966467926099e-10,
+      "StepLength": 1.0
+    },
+    "nonlinear_history_rows": 6,
+    "nonlinear_iteration_zero_rows": 1,
+    "holes": {
+      "A": {
+        "mass": 0.5000256064491514,
+        "dimensionless_spin": [
+          1.4198785852857167e-13,
+          1.4015902164795815e-12,
+          -5.167135893068495e-07
+        ],
+        "spin_norm": 5.167135893087699e-07
+      },
+      "B": {
+        "mass": 0.5000256064646208,
+        "dimensionless_spin": [
+          2.987138705843459e-13,
+          1.7830864878889821e-12,
+          -5.133402952375399e-07
+        ],
+        "spin_norm": 5.133402952407236e-07
+      }
+    },
+    "mass_sum": 1.0000512129137722,
+    "mass_ratio_a_over_b": 0.9999999999690627,
+    "target_residuals": [
+      2.5606449151394095e-05,
+      1.4198785852857167e-13,
+      1.4015902164795815e-12,
+      -5.167135893068495e-07,
+      2.560646462079763e-05,
+      2.987138705843459e-13,
+      1.7830864878889821e-12,
+      -5.133402952375399e-07
+    ],
+    "max_abs_target_residual": 2.560646462079763e-05,
+    "target_tolerance": 5e-05,
+    "target_converged": true,
+    "sha256": {
+      "InitialData.yaml": "037e53cb200407504ebcb42588805c3bd68df0e3464b2926d2f5db6f0aaac695",
+      "BbhReductions.h5": "7a27c7fb29b29c41e0011a5931b4bcb8a36343befb2c0e7df4183b9d7693d9bf",
+      "Horizons.h5": "be9ac511f32ec0c1633b288e0e7ec5f323e3c7aa7aeb11c06f9f277fa756ab67"
+    }
+  },
+  "segments": [
+    {
+      "tables": {
+        "Norms.dat": {
+          "rows": 5,
+          "times": [
+            0.0,
+            0.1,
+            0.2,
+            0.30000000000000004,
+            0.4
+          ],
+          "last": {
+            "Time": 0.4,
+            "NumberOfPoints": 2637568.0,
+            "Volume": 972637629.9597924,
+            "L2Norm(Lapse)": 0.9397628831085731,
+            "L2Norm(PointwiseL2Norm(GaugeConstraint))": 9.707024364729373e-07,
+            "L2Norm(PointwiseL2Norm(ThreeIndexConstraint))": 1.6576592009473658e-05
+          }
+        },
+        "TimeSteps.dat": {
+          "rows": 5,
+          "times": [
+            0.0,
+            0.1,
+            0.2,
+            0.30000000000000004,
+            0.4
+          ],
+          "last": {
+            "Time": 0.4,
+            "Number of degrees of freedom": 131878400.0,
+            "Slab size": 0.09999999999999998,
+            "Minimum time step": 0.0007812499999999998,
+            "Maximum time step": 0.04999999999999999,
+            "Effective time step": 0.002701608660723328,
+            "Minimum Walltime": 601.911357136,
+            "Maximum Walltime": 608.850953457
+          }
+        },
+        "ObservationAhA.dat": {
+          "rows": 1,
+          "times": [
+            0.0
+          ],
+          "last": {
+            "Time": 0.0,
+            "Area": 12.567668475200902,
+            "IrreducibleMass": 0.5000258194544066,
+            "MaxRicciScalar": 2.0022267472100226,
+            "MinRicciScalar": 1.9983183686858335,
+            "ChristodoulouMass": 0.5000258194544234,
+            "DimensionlessSpinMagnitude": 5.1806476189354e-07,
+            "DimensionfulSpinVector_x": -8.536300906284102e-11,
+            "DimensionfulSpinVector_y": 1.8007400858076265e-12,
+            "DimensionfulSpinVector_z": -1.2952953882762974e-07
+          }
+        },
+        "ObservationAhB.dat": {
+          "rows": 1,
+          "times": [
+            0.0
+          ],
+          "last": {
+            "Time": 0.0,
+            "Area": 12.567668459995888,
+            "IrreducibleMass": 0.5000258191519281,
+            "MaxRicciScalar": 2.0022453923249874,
+            "MinRicciScalar": 1.9982750354443815,
+            "ChristodoulouMass": 0.5000258191519446,
+            "DimensionlessSpinMagnitude": 5.134850933546749e-07,
+            "DimensionfulSpinVector_x": -7.360969821126991e-11,
+            "DimensionfulSpinVector_y": 9.220574734641008e-12,
+            "DimensionfulSpinVector_z": -1.2838450999732392e-07
+          }
+        }
+      },
+      "files": {
+        "BbhReductions.h5": {
+          "bytes": 15873427,
+          "sha256": "546c538d1d5075caf778ab513d64faff31f3c816acead3afb28d5a5e1f2fd6b2"
+        },
+        "BbhSurfaces.h5": {
+          "bytes": 11277579,
+          "sha256": "60b12aba598bbaf66fa7ee14b1d56e2b518f6f989793983aa6c41457a3563db7"
+        },
+        "BbhVolume0.h5": {
+          "bytes": 1049111119,
+          "sha256": "08362a041d1dcb61a11848611d9b19aa1f87fac071c025cb6a8af32c0b9eb92e"
+        },
+        "BondiSachsCceR0100.h5": {
+          "bytes": 11570291,
+          "sha256": "ad6854fa8d186863a499b20e482100450227f33487d4ab4182f0bc14ca4b3c36"
+        },
+        "BondiSachsCceR0150.h5": {
+          "bytes": 11570291,
+          "sha256": "d25c411aac4a601febd3a078cd73ebefde7d5f47c6f7158a43d177bd4e4329d8"
+        },
+        "BondiSachsCceR0200.h5": {
+          "bytes": 11570291,
+          "sha256": "a8e90681d08ac7fed58d142210187d73510a4cfe557dcd66aeec9c6bb3edc2b0"
+        }
+      }
+    },
+    {
+      "tables": {
+        "Norms.dat": {
+          "rows": 7,
+          "times": [
+            0.5,
+            0.6,
+            0.7,
+            0.7999999999999999,
+            0.8999999999999999,
+            0.9999999999999999,
+            1.0999999999999999
+          ],
+          "last": {
+            "Time": 1.0999999999999999,
+            "NumberOfPoints": 2637568.0,
+            "Volume": 972637627.6191665,
+            "L2Norm(Lapse)": 0.9554338532617133,
+            "L2Norm(PointwiseL2Norm(GaugeConstraint))": 4.450091899235519e-07,
+            "L2Norm(PointwiseL2Norm(ThreeIndexConstraint))": 3.5029922252725636e-06
+          }
+        },
+        "TimeSteps.dat": {
+          "rows": 7,
+          "times": [
+            0.5,
+            0.6,
+            0.7,
+            0.7999999999999999,
+            0.8999999999999999,
+            0.9999999999999999,
+            1.0999999999999999
+          ],
+          "last": {
+            "Time": 1.0999999999999999,
+            "Number of degrees of freedom": 131878400.0,
+            "Slab size": 0.09999999999999987,
+            "Minimum time step": 0.000781249999999999,
+            "Maximum time step": 0.04999999999999993,
+            "Effective time step": 0.004955393403189643,
+            "Minimum Walltime": 588.259993152,
+            "Maximum Walltime": 588.849242543
+          }
+        },
+        "ObservationAhA.dat": {
+          "rows": 2,
+          "times": [
+            0.5,
+            0.9999999999999999
+          ],
+          "last": {
+            "Time": 0.9999999999999999,
+            "Area": 12.567660204549245,
+            "IrreducibleMass": 0.500025654923489,
+            "MaxRicciScalar": 2.0006438001916402,
+            "MinRicciScalar": 1.998533414181019,
+            "ChristodoulouMass": 0.5000256549235067,
+            "DimensionlessSpinMagnitude": 5.308678645271969e-07,
+            "DimensionfulSpinVector_x": -4.8084791759643064e-11,
+            "DimensionfulSpinVector_y": 1.214222236051456e-11,
+            "DimensionfulSpinVector_z": -1.3273057659034684e-07
+          }
+        },
+        "ObservationAhB.dat": {
+          "rows": 2,
+          "times": [
+            0.5,
+            0.9999999999999999
+          ],
+          "last": {
+            "Time": 0.9999999999999999,
+            "Area": 12.567660133580052,
+            "IrreducibleMass": 0.5000256535116742,
+            "MaxRicciScalar": 2.00059239392431,
+            "MinRicciScalar": 1.9985527814893365,
+            "ChristodoulouMass": 0.5000256535116916,
+            "DimensionlessSpinMagnitude": 5.270815899902576e-07,
+            "DimensionfulSpinVector_x": -4.531384865810555e-11,
+            "DimensionfulSpinVector_y": 6.41309955192071e-12,
+            "DimensionfulSpinVector_z": -1.31783911391552e-07
+          }
+        }
+      },
+      "files": {
+        "BbhReductions.h5": {
+          "bytes": 15942155,
+          "sha256": "7c9cd03cdabb27922d2549d25eced10cec55185f1e2ebb386a636a34197e14b5"
+        },
+        "BbhSurfaces.h5": {
+          "bytes": 11440603,
+          "sha256": "27659ef7c9ee569c35c3820a4a654b63a326a2bc0c8b435dd027d382d6bdd59c"
+        },
+        "BondiSachsCceR0100.h5": {
+          "bytes": 11570291,
+          "sha256": "571210f42a4acc176825e8904ef6cfc21bbd2d2ec9f69dec73f6e18423b6727d"
+        },
+        "BondiSachsCceR0150.h5": {
+          "bytes": 11570291,
+          "sha256": "96b4feae5bb3b609e78fd3f4534731b177799de9ccaab46c6e18f6d7a66326d2"
+        },
+        "BondiSachsCceR0200.h5": {
+          "bytes": 11570291,
+          "sha256": "f95244727c7edbf2aaef1cba26ce0aa23f3ececee992619016a47c919d866a86"
+        }
+      }
+    }
+  ],
+  "checkpoint_metrics": {
+    "started_utc": "2026-09-13T02:58:06.145497+00:00",
+    "command": [
+      "EvolveGhBinaryBlackHole",
+      "+p32",
+      "--input-file",
+      "/campaign/controlled-p9-lev0-evolution/Segment_0000/Inspiral.yaml"
+    ],
+    "cwd": "/campaign/controlled-p9-lev0-evolution/Segment_0000",
+    "expected_exit_code": 2,
+    "timeout_seconds": 6900.0,
+    "output_bytes_before": 39536,
+    "cpu_stat_before": "usage_usec 79111\nuser_usec 45489\nsystem_usec 33622\ncore_sched.force_idle_usec 0\nnr_periods 1\nnr_throttled 0\nthrottled_usec 0\nnr_bursts 0\nburst_usec 0",
+    "container_child_pid": 7,
+    "ended_utc": "2026-09-13T03:11:19.586920+00:00",
+    "wall_seconds": 793.4418030269444,
+    "exit_code": 2,
+    "watchdog_reason": null,
+    "accepted_exit": true,
+    "child_max_rss_kib": 53315500,
+    "cgroup_memory_peak_bytes": "66994507776",
+    "cgroup_memory_events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0",
+    "cpu_stat_after": "usage_usec 24793304670\nuser_usec 24618112134\nsystem_usec 175192535\ncore_sched.force_idle_usec 0\nnr_periods 7890\nnr_throttled 4232\nthrottled_usec 11754754\nnr_bursts 0\nburst_usec 0",
+    "output_bytes_after": 12331768704,
+    "filesystem_free_bytes_after": 308482473984
+  },
+  "restart_metrics": {
+    "started_utc": "2026-09-13T03:12:08.807072+00:00",
+    "command": [
+      "EvolveGhBinaryBlackHole",
+      "+p32",
+      "+restart",
+      "/campaign/controlled-p9-lev0-evolution/Segment_0000/Checkpoints/Checkpoint_0000"
+    ],
+    "cwd": "/campaign/controlled-p9-lev0-evolution/Segment_0001",
+    "expected_exit_code": 0,
+    "timeout_seconds": 6900.0,
+    "output_bytes_before": 12331769001,
+    "cpu_stat_before": "usage_usec 81242\nuser_usec 49920\nsystem_usec 31322\ncore_sched.force_idle_usec 0\nnr_periods 2\nnr_throttled 0\nthrottled_usec 0\nnr_bursts 0\nburst_usec 0",
+    "container_child_pid": 7,
+    "ended_utc": "2026-09-13T03:22:05.389143+00:00",
+    "wall_seconds": 596.5849499250762,
+    "exit_code": 0,
+    "watchdog_reason": null,
+    "accepted_exit": true,
+    "child_max_rss_kib": 48085660,
+    "cgroup_memory_peak_bytes": "49373884416",
+    "cgroup_memory_events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0",
+    "cpu_stat_after": "usage_usec 18724138582\nuser_usec 18580482784\nsystem_usec 143655798\ncore_sched.force_idle_usec 0\nnr_periods 5968\nnr_throttled 2991\nthrottled_usec 5375255\nnr_bursts 0\nburst_usec 0",
+    "output_bytes_after": 12393862632,
+    "filesystem_free_bytes_after": 308399628288
+  },
+  "checkpoint_files": {
+    "MainChares.dat": {
+      "bytes": 16256,
+      "sha256": "9d28b6dccc826c750412f4c8c1344ad1314c5c918bbd9abe87c5ba8e50dead38"
+    },
+    "RO.dat": {
+      "bytes": 118,
+      "sha256": "a8e1cfa1caddaaab3c394a41eca16d52743300761da762a658980a639c562026"
+    },
+    "sub0/Groups_0.dat": {
+      "bytes": 13087,
+      "sha256": "3b667364dddac6871661fa2158b314b3feb73a05445184bc9ecf2b0bc1ff0655"
+    },
+    "sub0/Groups_1.dat": {
+      "bytes": 13082,
+      "sha256": "a0d138b54a8b305cdf494dd517956d96cc8d176c3f5d642082ee0516716c9198"
+    },
+    "sub0/Groups_10.dat": {
+      "bytes": 13082,
+      "sha256": "dedfa2d0e16c7163ea79631d738cd4b4f1964f63d420474f5c3e04a731afe6b8"
+    },
+    "sub0/Groups_11.dat": {
+      "bytes": 13082,
+      "sha256": "6ea1b410119233051c398510bf90591cddec96e6bb331093f4b5d73af871224e"
+    },
+    "sub0/Groups_12.dat": {
+      "bytes": 13082,
+      "sha256": "23e5ca58a5e62ba3315da082597aae18b5fdee4ecd12a3b590034c23907a6a5c"
+    },
+    "sub0/Groups_13.dat": {
+      "bytes": 13082,
+      "sha256": "8c623021d0eb91144320a0a2863fd139975e2854a7b344ef679682e411b36db3"
+    },
+    "sub0/Groups_14.dat": {
+      "bytes": 13082,
+      "sha256": "0c085f22b02680876e924dcdf0cf18db6a0450cb0cbdb7ad8fa4166bed320235"
+    },
+    "sub0/Groups_15.dat": {
+      "bytes": 13082,
+      "sha256": "713d80303bca1fccc0aee7af189d8f7451c68fd60c65b900c1100259822db5f2"
+    },
+    "sub0/Groups_16.dat": {
+      "bytes": 13082,
+      "sha256": "4fb3f6e89c98cc1c0560e57f5ee2be5d48327c96468968bf26eac84a6434a86a"
+    },
+    "sub0/Groups_17.dat": {
+      "bytes": 13082,
+      "sha256": "9c6b6e2627b01a75ca4431a08f2d9e599038b0dfa5f5956bde9194944cca0b44"
+    },
+    "sub0/Groups_18.dat": {
+      "bytes": 13082,
+      "sha256": "f671efa89cc3b9e3cdc5e5d93cb6e79d60b224308476f6436d331fa0db0df632"
+    },
+    "sub0/Groups_19.dat": {
+      "bytes": 13082,
+      "sha256": "06800b0b202db8ce9ec51831ea4e601de444caf70eaab1ab70eb34568d130f40"
+    },
+    "sub0/Groups_2.dat": {
+      "bytes": 13082,
+      "sha256": "72b14be620e8e89b41647d5042b1834968df6cc6b92c4fc9b33b53b5b2030a59"
+    },
+    "sub0/Groups_20.dat": {
+      "bytes": 13082,
+      "sha256": "0157ef7df87df1ab6c264fe2438b45fcb1dc1d945446fbbb4436f971fc2b1eff"
+    },
+    "sub0/Groups_21.dat": {
+      "bytes": 13082,
+      "sha256": "601c0d18601c5fbbf5e089f918747b87d55192fb09cd06cbd416a6293605b4c3"
+    },
+    "sub0/Groups_22.dat": {
+      "bytes": 13082,
+      "sha256": "3167473e297d43a60e3e023f9e671f7c81d187c7efbbd9f7918c7fc9cb9e0a00"
+    },
+    "sub0/Groups_23.dat": {
+      "bytes": 13077,
+      "sha256": "17b43d6437a4ba8cd612dd6c179b581be62f936bacb9b7cd878f4b9a3ab80e99"
+    },
+    "sub0/Groups_24.dat": {
+      "bytes": 13077,
+      "sha256": "1ab41eabecd4ef5c81bbb7cdcccc39c7def66eb660e34655200f26dd55c250a9"
+    },
+    "sub0/Groups_25.dat": {
+      "bytes": 13077,
+      "sha256": "c594083a9719e2dbbabb217a0cfff6b73fcbbd5bc9747ea748b6d28438f17862"
+    },
+    "sub0/Groups_26.dat": {
+      "bytes": 13077,
+      "sha256": "646bd3958d3b8f97b4d93bae12fd02bdb3cc3ddd9b1a264e49ae15be64e961e3"
+    },
+    "sub0/Groups_27.dat": {
+      "bytes": 13077,
+      "sha256": "43a3c2faa72b70c933011a2dc9194841fe82202f5593bc1f9e50f9ef828679a8"
+    },
+    "sub0/Groups_28.dat": {
+      "bytes": 13077,
+      "sha256": "78e1c4c5a9ff12e3ce3cdbe9dd2422cd7a1e8b7fcc464c0d890108a0bbb6ac12"
+    },
+    "sub0/Groups_29.dat": {
+      "bytes": 13077,
+      "sha256": "85446bde6f6828e0ec06d3188deb926eb3d6cd3531fb904503d615b4ee8d6655"
+    },
+    "sub0/Groups_3.dat": {
+      "bytes": 13082,
+      "sha256": "e3dfcca9a220a718d5ab1db3f9e0a732293fed4cbc574172045d76eef1233937"
+    },
+    "sub0/Groups_30.dat": {
+      "bytes": 13077,
+      "sha256": "b6594fd334c25efe3cbd937a78c77dc7a0a09480b9d9dfad7974c45dfdbfb4d6"
+    },
+    "sub0/Groups_31.dat": {
+      "bytes": 13077,
+      "sha256": "f3fdb5098e6ece4f54aec76d7c82e86f920af3e7d6ee306b8800e09d3e97ae0f"
+    },
+    "sub0/Groups_4.dat": {
+      "bytes": 13082,
+      "sha256": "f97a265308dda38404c4b0d1c88fa6324dde7aa29d7161156222f0725623dd8d"
+    },
+    "sub0/Groups_5.dat": {
+      "bytes": 13082,
+      "sha256": "210da91dea1c690f1eed4110313fb4512c003f2f3a055182f399435e464b2740"
+    },
+    "sub0/Groups_6.dat": {
+      "bytes": 13082,
+      "sha256": "b7bc95c74c5a10d15ad2b95253dde867c16bec8ea5a367fbf6dffc4e74b91215"
+    },
+    "sub0/Groups_7.dat": {
+      "bytes": 13082,
+      "sha256": "8640574941d69fc75397716fa7aee27c2e3fc10959da833b81cae1783a485218"
+    },
+    "sub0/Groups_8.dat": {
+      "bytes": 13082,
+      "sha256": "a0d56bd7180b1fb256c0ac41f479bc82cb3cf26035c6eccdda65b1f5cde4f2da"
+    },
+    "sub0/Groups_9.dat": {
+      "bytes": 13082,
+      "sha256": "807caa4ff2a0d8afce44139a400d1a2a050d514864b0f521f518615027be4882"
+    },
+    "sub0/NodeGroups_0.dat": {
+      "bytes": 174575,
+      "sha256": "d335cb33786869a52033637eb8af4e2be1e2988c9a704b8c3918f87ed35285e1"
+    },
+    "sub0/arr_0.dat": {
+      "bytes": 136128699,
+      "sha256": "ff4c995d7a3b5724a3ba5fd8e4c4c3f99bbcaa47269d6781c81ba43c3703fbea"
+    },
+    "sub0/arr_1.dat": {
+      "bytes": 157352791,
+      "sha256": "6ce4915a1f165d42df0f3e4e5fd2f3f9802f9820f87151abd966cac80178e136"
+    },
+    "sub0/arr_10.dat": {
+      "bytes": 445759381,
+      "sha256": "da421fa9559b5921b1b37b77cfee105862e469663355f8a034716558b3d0e408"
+    },
+    "sub0/arr_11.dat": {
+      "bytes": 447043097,
+      "sha256": "53772827c6e94988bf73cba61e67f4878e6c069ae31f4a03db57d13ba2797d47"
+    },
+    "sub0/arr_12.dat": {
+      "bytes": 392538267,
+      "sha256": "92f5968452d73ce1b81d94a75daf3a3611632af552348a426ca5a0a795ee8393"
+    },
+    "sub0/arr_13.dat": {
+      "bytes": 140746859,
+      "sha256": "e153a2f866f0baf9dfeab5e097d85c55607a06e4f1d1ebe60ddb89e9ed3cb755"
+    },
+    "sub0/arr_14.dat": {
+      "bytes": 159808589,
+      "sha256": "b1f4152a5d59e04d60052cf6121fe967baeac0ccb92246c0ea6a43a124e5633e"
+    },
+    "sub0/arr_15.dat": {
+      "bytes": 174551675,
+      "sha256": "9a467f02964a23956ceb93dffbf26bf0390ea1f6578a275f45b9a3b5f37c9ed4"
+    },
+    "sub0/arr_16.dat": {
+      "bytes": 179416429,
+      "sha256": "d73c1c911d773b1d6677f50e56def2a2d946e7b557e4789f37d364e03406fb4e"
+    },
+    "sub0/arr_17.dat": {
+      "bytes": 136753341,
+      "sha256": "5663383508c5035a6421eff8cf82035a5c10e0f0a7a200afc2648b4b63f9665a"
+    },
+    "sub0/arr_18.dat": {
+      "bytes": 159482628,
+      "sha256": "677004260f5461105ceacbbdf5984eb2ab488ec788bae45c1f6dc6fcfadf45da"
+    },
+    "sub0/arr_19.dat": {
+      "bytes": 180651063,
+      "sha256": "569287efafff461ea0170996f70dac9c88babbbe9ef973da2a1144caea34e4e7"
+    },
+    "sub0/arr_2.dat": {
+      "bytes": 175354939,
+      "sha256": "d3bd9d76131b0208a97d3b5fef5568c38919b49d793654c2942e6ceba06380d0"
+    },
+    "sub0/arr_20.dat": {
+      "bytes": 192687805,
+      "sha256": "c9cfec65418c2b362db2a084a2d8106719a8dd43cf6711d21b4a7aefaef9b150"
+    },
+    "sub0/arr_21.dat": {
+      "bytes": 444783537,
+      "sha256": "b274bfc3acc26b7128e84f761ed8a0f8c7da4167b1257abe620100e59a090793"
+    },
+    "sub0/arr_22.dat": {
+      "bytes": 446128897,
+      "sha256": "b1f72ee9753d2327b60bb1881b359267b79a644fd74b01d928b42807a98c43eb"
+    },
+    "sub0/arr_23.dat": {
+      "bytes": 445022428,
+      "sha256": "443844557d84e3e377207ba9b10ed6fd10bf23dfd8cbd1af5a549e2eaa6d1bd7"
+    },
+    "sub0/arr_24.dat": {
+      "bytes": 399685596,
+      "sha256": "aa66be629b0c9996d6e783535ed2511f76286ff6daed77028d53f269a32d52b7"
+    },
+    "sub0/arr_25.dat": {
+      "bytes": 436429596,
+      "sha256": "6c24d5547b77dfc6c79961399b6f86abaf6bd99334139ef01f785d148d8b3d63"
+    },
+    "sub0/arr_26.dat": {
+      "bytes": 557244534,
+      "sha256": "5e7be2fed893f44c98d72d552a0617827b18453f2a1df1b2eace7ae4494c6e1d"
+    },
+    "sub0/arr_27.dat": {
+      "bytes": 564534154,
+      "sha256": "e91abe89c14e2043893e48c1872c4ed1b737585b752137d94a6f03118638e120"
+    },
+    "sub0/arr_28.dat": {
+      "bytes": 570492088,
+      "sha256": "5b535d0cf6d597a915a610e8109859e14e7a2aac3ca0ae30c09367194b2ac1f0"
+    },
+    "sub0/arr_29.dat": {
+      "bytes": 572076128,
+      "sha256": "4ed53a96e7cd15cd79fe59e2a2642a72c8d9efd56a88976826f9390d95161f7c"
+    },
+    "sub0/arr_3.dat": {
+      "bytes": 179598554,
+      "sha256": "d7282596ff98445714e1b9c25b6680c21ddcd242cf00f49653e715941406771f"
+    },
+    "sub0/arr_30.dat": {
+      "bytes": 555771150,
+      "sha256": "de1f1e4062f9f0d1206a54a080696ba7d0f44cc1691194b2f465d8f20df6d0f6"
+    },
+    "sub0/arr_31.dat": {
+      "bytes": 1404886370,
+      "sha256": "7fa751be8ea116782fb286427afe7296cb239ad72326fb5e80d136c33ad96c58"
+    },
+    "sub0/arr_4.dat": {
+      "bytes": 139711292,
+      "sha256": "0b66e0898116f92426f3853f29b4ef9c64d296430f283e5bf8c48e80fd378bc0"
+    },
+    "sub0/arr_5.dat": {
+      "bytes": 149275292,
+      "sha256": "eea220a8f10b0553fa4a5b5c315414d8a5c8db9cd645419002046f55001105c0"
+    },
+    "sub0/arr_6.dat": {
+      "bytes": 173690954,
+      "sha256": "b511a02bf3c0f1307bb8932c37422d6fae10f80873352dfc4f13f39ff209c79d"
+    },
+    "sub0/arr_7.dat": {
+      "bytes": 211150686,
+      "sha256": "270ae50b5bc0d6cc7e851098f83ab385b8cd3dfda84f61f2f18aeef2889c77db"
+    },
+    "sub0/arr_8.dat": {
+      "bytes": 445413563,
+      "sha256": "a0b90023f24d0a9eeb9d37e98f9326905f991b92b572dc46bc37d63eccbcacdb"
+    },
+    "sub0/arr_9.dat": {
+      "bytes": 445976255,
+      "sha256": "13f8533014be9f4ffea6190b632f84fd85c57c989cd84ff9f17dc89f70ed57b0"
+    }
+  },
+  "initial_transient_M_per_wall_hour": 2.5898782108722918,
+  "scope": "Finite 1M operational test; no steady-throughput, eccentricity, waveform convergence or calibration claim"
+}

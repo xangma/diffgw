@@ -1,0 +1,46 @@
+{
+  "status": "bounded_checks_passed",
+  "scope": "opt-in SEOBNRv4 numerical attachment contracts",
+  "provenance": {
+    "implementation": "MIT-licensed TorchWave equations and Torch-only numerical utilities",
+    "contract_document": "docs/reviews/2026-09-13-parity-review/reference-audit-contracts.md",
+    "inputs": "analytic and synthetic Torch tensors; no LAL/reference, decompiled, exposure, or fitted calibration data",
+    "runtime": "no SciPy runtime dependency"
+  },
+  "command": "PYTHONPATH=src:tests:scripts:. PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 /Users/xangma/miniconda3/envs/pycbcorig313/bin/python -m pytest -q tests/test_eob_numerical_contract_clean.py",
+  "result": {
+    "tests_passed": 10,
+    "tests_failed": 0,
+    "elapsed_seconds": 1.40
+  },
+  "checks": {
+    "natural_cubic_unequal_knots": "dense natural-endpoint Thomas solve agrees, including endpoint second derivatives",
+    "natural_cubic_gradients": "query derivative and finite-difference check pass",
+    "natural_cubic_extrapolation": "extrapolate=True continues the endpoint interval cubic; default raises outside domain",
+    "full_series_nqc": "A*q_j and p_j columns are independently splined over the complete series",
+    "nqc_gradient": "continuous match-time autograd agrees with finite difference inside one spline interval",
+    "orbital_peak": "first non-increasing sample and generic sign-product bisection contract",
+    "attachment_boundary": "greatest input sample <= match; exact knot uses that knot; corrected unwrapped phase and backward positive frequency",
+    "internal_step": "output step / 2^max(0, ceil(log2(50*dt_output/M)))",
+    "qnm_cache": "independent 107-knot angular table remains differentiable after inference-first cache initialization",
+    "spin_amplitude": "compatibility flag adds Pan Eq. (29a) a^3*v^7/3 beside Bohé Eq. (2.5); paper path remains separate"
+  },
+  "synthetic_attachment_fixture": {
+    "input_step_M": 0.02,
+    "output_step_M": 0.5,
+    "exact_match_M": 18.0,
+    "exact_match_boundary_index": 900,
+    "between_match_M": 18.003,
+    "between_match_boundary_index": 900,
+    "internal_step_M": 0.015625
+  },
+  "remaining_residuals": {
+    "public_oracle_waveform": null,
+    "post_attachment_100M": null,
+    "interpretation": "not measured; no acceptance or residual fitting was performed"
+  },
+  "limitations": [
+    "Numerical compatibility is opt-in and production EOB routing remains unchanged.",
+    "The helper exposes the internal geometric step while evaluating the analytic merger ansatz at requested output samples; no long trajectory or internal-grid integration was started."
+  ]
+}

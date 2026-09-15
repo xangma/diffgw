@@ -1,0 +1,34 @@
+{
+  "source_revision": "84ef9b3",
+  "source_directory": "/var/folders/l0/3dr1pyw15ln58b6xh74j_41w0000gn/T/torchwave-starting-code-4_i02nvw",
+  "harness": "/Users/xangma/repos/torchwave/tests/parity_harness.py",
+  "environment": {
+    "PYTHONPATH": "/var/folders/l0/3dr1pyw15ln58b6xh74j_41w0000gn/T/torchwave-starting-code-4_i02nvw/src:/Users/xangma/repos/torchwave/tests"
+  },
+  "runs": [
+    {
+      "scope": "catalog",
+      "exit_code": 1,
+      "command": [
+        "/Users/xangma/miniconda3/envs/pycbcorig313/bin/python",
+        "/Users/xangma/repos/torchwave/tests/parity_harness.py",
+        "--scope=catalog",
+        "--strict",
+        "--json-out",
+        "/Users/xangma/repos/torchwave/docs/reviews/2026-09-12-clean-room/verification/baseline-strict-catalog.json"
+      ]
+    },
+    {
+      "scope": "holdout",
+      "exit_code": 1,
+      "command": [
+        "/Users/xangma/miniconda3/envs/pycbcorig313/bin/python",
+        "/Users/xangma/repos/torchwave/tests/parity_harness.py",
+        "--scope=holdout",
+        "--strict",
+        "--json-out",
+        "/Users/xangma/repos/torchwave/docs/reviews/2026-09-12-clean-room/verification/baseline-strict-holdout.json"
+      ]
+    }
+  ]
+}

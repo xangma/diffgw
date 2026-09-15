@@ -1,0 +1,249 @@
+{
+  "image_id": "sha256:0ba0f3bb70b90e83c9b50316ecd37f1b55af4537160eafbe3392a6f67c4e9d77",
+  "num_procs": 4,
+  "checkpoint": {
+    "manifest": "docs/reviews/2026-09-12-clean-room/verification/pass-8/provenance/actual-single-kerrschild/checkpoint-files-sha256.txt",
+    "files": [
+      "22d2a584d050bf2424428743f6835a1e0ecea736e7d12ca299932277493945a2  MainChares.dat",
+      "2af49f775b78b241fb3e713c63d994978c0b938335bbc56214206fabbc1bf38a  RO.dat",
+      "4dc0a6435ef76814a2eee4426d0f6c8323f2307d1cebf9a66bd88beb4bb24bde  sub0/arr_0.dat",
+      "e9f6d46cba17bd2bec9a88effff8555beedba3b16a0c6425732800b00f03b421  sub0/arr_1.dat",
+      "8f2cc9ff1b3a1ef4c62acd2266a793c5480c789acfe805d832a2229d26200e6c  sub0/arr_2.dat",
+      "5e2280cbeccd2af1e65770697023b751654a8e11eb16d3110bdaf844a0a8c217  sub0/arr_3.dat",
+      "1bf04a735c3eba61c114cfbb38cfa35a327b69c208722a54754f0a9bac7a5701  sub0/Groups_0.dat",
+      "41d8f17ff9b292be8646bb5beda2e0ac19d188aa53ed2c7aaa9278bce772fbe2  sub0/Groups_1.dat",
+      "f8169429c5df7c0b0fb9b743be63f94453ac3b9b196f9f334cbfc8ebad81d3fb  sub0/Groups_2.dat",
+      "03f9c817e5e5dcddfcde9888ab6e46d539b1f0c0ba0606110a3188b1dd3211dc  sub0/Groups_3.dat",
+      "3f8eed6a8839a02f277dae7203ee97bf94ef027aacaa6c48aeb65eb27f2a8ca5  sub0/NodeGroups_0.dat"
+    ]
+  },
+  "segment_0000": {
+    "files": {
+      "GhKerrSchildReductions.h5": {
+        "bytes": 11163115,
+        "sha256": "6a17a64b43403448bc82ee8b4af900dae128ff6c70f11f95e730a90dadf2f250"
+      },
+      "GhKerrSchildSurfaces.h5": {
+        "bytes": 11161931,
+        "sha256": "683b561069e086b07fd268735eda936263590845c39369ac3ea473f20653d6cf"
+      }
+    },
+    "rows": {
+      "TimeSteps.dat": 1,
+      "Norms.dat": 1,
+      "Errors.dat": 1,
+      "ApparentHorizon.dat": 1
+    },
+    "final_times": {
+      "TimeSteps.dat": 0.0,
+      "Norms.dat": 0.0,
+      "Errors.dat": 0.0,
+      "ApparentHorizon.dat": 0.0
+    }
+  },
+  "segment_0001": {
+    "files": {
+      "GhKerrSchildReductions.h5": {
+        "bytes": 11163115,
+        "sha256": "6221da30d1ac4511bba0dcfb1a8f8de2609b2d30f321ad1dc760de8a6fc8eaeb"
+      },
+      "GhKerrSchildSurfaces.h5": {
+        "bytes": 11161931,
+        "sha256": "88a2698b1322de3e297d797df4729f3e532be5eaa1de0412b3d34fea7c0ea5b6"
+      }
+    },
+    "rows": {
+      "TimeSteps.dat": 1,
+      "Norms.dat": 1,
+      "Errors.dat": 1,
+      "ApparentHorizon.dat": 1
+    },
+    "final_times": {
+      "TimeSteps.dat": 0.002,
+      "Norms.dat": 0.002,
+      "Errors.dat": 0.002,
+      "ApparentHorizon.dat": 0.002
+    }
+  },
+  "checkpoint_metrics": {
+    "started_utc": "2026-09-12T20:18:59.662884+00:00",
+    "command": [
+      "EvolveGhSingleBlackHole",
+      "+p4",
+      "--input-file",
+      "/campaign/smoke/single-kerrschild/Segment_0000/KerrSchild.yaml"
+    ],
+    "cwd": "/campaign/smoke/single-kerrschild/Segment_0000",
+    "expected_exit_code": 2,
+    "timeout_seconds": 300.0,
+    "output_bytes_before": 6495,
+    "cpu_stat_before": "usage_usec 107160\nuser_usec 66098\nsystem_usec 41061\ncore_sched.force_idle_usec 0\nnr_periods 2\nnr_throttled 0\nthrottled_usec 0\nnr_bursts 0\nburst_usec 0",
+    "container_child_pid": 7,
+    "ended_utc": "2026-09-12T20:19:01.381376+00:00",
+    "wall_seconds": 1.7188273490173742,
+    "exit_code": 2,
+    "watchdog_reason": null,
+    "accepted_exit": true,
+    "child_max_rss_kib": 119452,
+    "cgroup_memory_peak_bytes": "99266560",
+    "cgroup_memory_events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0",
+    "cpu_stat_after": "usage_usec 5755491\nuser_usec 5423058\nsystem_usec 332432\ncore_sched.force_idle_usec 0\nnr_periods 19\nnr_throttled 4\nthrottled_usec 2272\nnr_bursts 0\nburst_usec 0",
+    "output_bytes_after": 38722832,
+    "filesystem_free_bytes_after": 317822951424
+  },
+  "restart_metrics": {
+    "started_utc": "2026-09-12T20:19:59.631880+00:00",
+    "command": [
+      "EvolveGhSingleBlackHole",
+      "+p4",
+      "+restart",
+      "/campaign/smoke/single-kerrschild/Segment_0000/Checkpoints/Checkpoint_0000"
+    ],
+    "cwd": "/campaign/smoke/single-kerrschild/Segment_0001",
+    "expected_exit_code": 0,
+    "timeout_seconds": 300.0,
+    "output_bytes_before": 38723027,
+    "cpu_stat_before": "usage_usec 92055\nuser_usec 50579\nsystem_usec 41475\ncore_sched.force_idle_usec 0\nnr_periods 2\nnr_throttled 0\nthrottled_usec 0\nnr_bursts 0\nburst_usec 0",
+    "container_child_pid": 7,
+    "ended_utc": "2026-09-12T20:20:00.799725+00:00",
+    "wall_seconds": 1.1688852339284495,
+    "exit_code": 0,
+    "watchdog_reason": null,
+    "accepted_exit": true,
+    "child_max_rss_kib": 108056,
+    "cgroup_memory_peak_bytes": "71053312",
+    "cgroup_memory_events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0",
+    "cpu_stat_after": "usage_usec 3768208\nuser_usec 3497258\nsystem_usec 270949\ncore_sched.force_idle_usec 0\nnr_periods 14\nnr_throttled 0\nthrottled_usec 0\nnr_bursts 0\nburst_usec 0",
+    "output_bytes_after": 61048073,
+    "filesystem_free_bytes_after": 317822709760
+  },
+  "scope": "read-only artifact validation; no launch performed",
+  "reference": {
+    "files": {
+      "GhKerrSchildReductions.h5": {
+        "bytes": 11163115,
+        "sha256": "19d0ef735c4854c84055fa8981c8db091614ffb3b44b40b4f9c35bb242d7c9b8"
+      },
+      "GhKerrSchildSurfaces.h5": {
+        "bytes": 11237211,
+        "sha256": "570eb41363327a0e8a5d3fd36893541cecdb09fa969f3843c584c9dd983d30bc"
+      }
+    },
+    "rows": {
+      "TimeSteps.dat": 2,
+      "Norms.dat": 2,
+      "Errors.dat": 2,
+      "ApparentHorizon.dat": 2
+    },
+    "final_times": {
+      "TimeSteps.dat": 0.002,
+      "Norms.dat": 0.002,
+      "Errors.dat": 0.002,
+      "ApparentHorizon.dat": 0.002
+    }
+  },
+  "reference_comparison": {
+    "Norms.dat": {
+      "resumed": [
+        0.002,
+        750.0,
+        22.23434235695942,
+        0.7158995088670403,
+        0.020235222447719827,
+        0.13193217029188,
+        0.39709562683588956
+      ],
+      "reference": [
+        0.002,
+        750.0,
+        22.23434235695942,
+        0.7158995088670403,
+        0.020235222447719827,
+        0.13193217029188,
+        0.39709562683588956
+      ],
+      "deltas": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "atol": 1e-12,
+      "rtol": 1e-10,
+      "within_tolerance": true
+    },
+    "Errors.dat": {
+      "resumed": [
+        0.002,
+        750.0,
+        22.23434235695942,
+        0.018987130760905475,
+        0.007927101227625317,
+        0.0828250690058535
+      ],
+      "reference": [
+        0.002,
+        750.0,
+        22.23434235695942,
+        0.018987130760905475,
+        0.007927101227625317,
+        0.0828250690058535
+      ],
+      "deltas": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "atol": 1e-12,
+      "rtol": 1e-10,
+      "within_tolerance": true
+    },
+    "ApparentHorizon.dat": {
+      "resumed": [
+        0.002,
+        50.649279971147266,
+        1.0038104447213514,
+        0.5135587761640222,
+        0.4862243178795678,
+        1.0038104447213514,
+        8.49531843962402e-16,
+        1.4939214502915015e-17,
+        -5.415588732513289e-18,
+        -8.558708640300671e-16
+      ],
+      "reference": [
+        0.002,
+        50.649279971147266,
+        1.0038104447213514,
+        0.5135587761640222,
+        0.4862243178795678,
+        1.0038104447213514,
+        8.49531843962402e-16,
+        1.4939214502915015e-17,
+        -5.415588732513289e-18,
+        -8.558708640300671e-16
+      ],
+      "deltas": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "atol": 1e-12,
+      "rtol": 1e-10,
+      "within_tolerance": true
+    }
+  }
+}

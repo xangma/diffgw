@@ -1,0 +1,29 @@
+{
+  "started_utc": "2026-09-12T19:08:55.840740+00:00",
+  "command": [
+    "spectre",
+    "schedule",
+    "/campaign/smoke/id/InitialData.yaml",
+    "--no-schedule",
+    "--num-procs",
+    "8",
+    "--submit"
+  ],
+  "cwd": "/campaign/smoke/id",
+  "expected_exit_code": 0,
+  "timeout_seconds": 6900.0,
+  "output_bytes_before": 7175,
+  "cpu_stat_before": "usage_usec 83223\nuser_usec 52775\nsystem_usec 30447\ncore_sched.force_idle_usec 0\nnr_periods 1\nnr_throttled 0\nthrottled_usec 0\nnr_bursts 0\nburst_usec 0",
+  "container_child_pid": 7,
+  "ended_utc": "2026-09-12T19:14:52.732154+00:00",
+  "wall_seconds": 356.89166377997026,
+  "exit_code": 0,
+  "watchdog_reason": null,
+  "accepted_exit": true,
+  "child_max_rss_kib": 8797812,
+  "cgroup_memory_peak_bytes": "9085911040",
+  "cgroup_memory_events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0",
+  "cpu_stat_after": "usage_usec 2683423204\nuser_usec 2670578175\nsystem_usec 12845029\ncore_sched.force_idle_usec 0\nnr_periods 3570\nnr_throttled 2178\nthrottled_usec 805825\nnr_bursts 0\nburst_usec 0",
+  "output_bytes_after": 75878883,
+  "filesystem_free_bytes_after": 333902753792
+}

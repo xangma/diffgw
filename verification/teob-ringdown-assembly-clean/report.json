@@ -1,0 +1,118 @@
+{
+  "status": "frozen_component",
+  "scope": "clean-room TEOB (2,2) ringdown and sampling assembly",
+  "implementation": "src/torchwave/approximants/eob/teob_ringdown_assembly_clean.py",
+  "tests": [
+    "tests/test_teob_ringdown_assembly_clean.py"
+  ],
+  "provenance": {
+    "contract": "docs/reviews/2026-09-13-parity-review/teob-merger-assembly-contract.md",
+    "primary_source": "https://arxiv.org/html/1806.01772v2",
+    "source_scope": "Appendix F.1 postmerger ansatz, with the contract's independently specified sampling/index rules",
+    "method": "Torch FP64 synthetic checks and an independently derived natural-cubic tridiagonal solve; no external waveform implementation, oracle fit, or residual-selected parameter was used"
+  },
+  "api": {
+    "entry_point": "assemble_teob_ringdown_22",
+    "aliases": [
+      "assemble_ringdown_22",
+      "teob_ringdown_assembly"
+    ],
+    "input_arrays": [
+      "full_time",
+      "full_amplitude",
+      "full_phase",
+      "auxiliary_time",
+      "auxiliary_amplitude",
+      "auxiliary_phase",
+      "auxiliary_orbital_frequency"
+    ],
+    "parameters": [
+      "nu",
+      "final_mass",
+      "final_spin"
+    ],
+    "metadata": [
+      "matching_time",
+      "matching_state"
+    ],
+    "result_records": [
+      "CorrectedWaveformSeries",
+      "RingdownAssemblyEvents",
+      "RingdownAssemblyResult"
+    ]
+  },
+  "conventions": {
+    "mode": "h=A*exp(-i*phase)",
+    "join": "full_time < auxiliary_time[0], followed by auxiliary samples from index 1",
+    "peak": "degree-six polynomial through seven knots and one Newton step; three left neighbors required; last-two-knot linear continuation supplies missing right neighbors",
+    "merger_and_match": "t_merger=t_peak-3 and t_match=t_merger+2 in initial-total-mass units",
+    "attachment_threshold": "t_peak/final_mass - 3/final_mass + 2/final_mass, evaluated left to right",
+    "attachment_index": "last strictly earlier joined knot, then one preceding knot",
+    "extension": "1500 samples at the auxiliary spacing",
+    "interpolation": "natural cubic amplitude and phase separately, with exact natural endpoint second derivatives",
+    "epoch": "coordinate start of returned support; no observer or peak-time shift"
+  },
+  "validation": {
+    "command": "PYTHONPATH=src:tests:scripts:. PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 /Users/xangma/miniconda3/envs/pycbcorig313/bin/python -m pytest -q tests/test_teob_ringdown_assembly_clean.py",
+    "tests_passed": 8,
+    "tests_failed": 0,
+    "result": "8 passed in 1.04s",
+    "checks": [
+      "independent seven-knot peak polynomial and right-support continuation",
+      "independent phase-anchor calculation against postmerger_22",
+      "exact/off-knot and floating-point boundary attachment arithmetic",
+      "join support, fixed extension, signed amplitude preservation, and no amplitude renormalization",
+      "time translation, optional output grid, asymptotic QNM frequency, batches, finite gradients, and domain errors",
+      "natural cubic comparison with scipy.interpolate.CubicSpline(..., bc_type='natural') on a nonuniform knot grid"
+    ],
+    "combined_clean_postmerger_checks": {
+      "command": "PYTHONPATH=src:tests:scripts:. PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 /Users/xangma/miniconda3/envs/pycbcorig313/bin/python -m pytest -q tests/test_teob_ringdown_assembly_clean.py tests/test_clean_room_teob_postmerger.py tests/test_clean_room_teob_uib2016_postmerger.py",
+      "tests_passed": 23,
+      "tests_failed": 0,
+      "result": "23 passed in 1.09s"
+    }
+  },
+  "support_counts_from_public_fixture_state_times": {
+    "torchwave-public-eob-dt_0p5M.npz": {
+      "full_samples": 10006,
+      "auxiliary_samples": 9654,
+      "strict_full_prefix_samples": 9706,
+      "joined_samples": 19359,
+      "extended_samples": 20859,
+      "auxiliary_spacing": 0.015625,
+      "output_grid_samples_at_auxiliary_spacing": 320246,
+      "natural_cubic_seconds": 0.246949
+    },
+    "torchwave-public-eob-dt_1_4096s.npz": {
+      "full_samples": 5047,
+      "auxiliary_samples": 9763,
+      "strict_full_prefix_samples": 4895,
+      "joined_samples": 14657,
+      "extended_samples": 16157,
+      "auxiliary_spacing": 0.015489612329474767,
+      "output_grid_samples_at_auxiliary_spacing": 323043,
+      "natural_cubic_seconds": 0.189668
+    },
+    "benchmark_method": "One warmed CPU FP64 natural_cubic_interpolate call on fixture time arrays reconstructed from state[0], with y=sin(0.01*t); output query uses the auxiliary spacing. Timings are indicative single-process measurements, not a parity claim.",
+    "solver_storage": "O(joined_samples) tridiagonal workspace; no dense joined-by-joined matrix"
+  },
+  "source_hashes_sha256": {
+    "implementation": "df3d21ce4fad55a84d0e1550ac376b8931eecbc0b4076dc9f6235b076ed0befa",
+    "tests": "2946090c29bdeae0850b33319e414c966e97604d24ae3153ae3b29d8b323ffa9",
+    "verification_readme": "a1dc3eb58bcf0d5b5ad3fa46b87f5d3c73f6a3575e36c9a347e9a9372d8d3745",
+    "contract": "f84736109b0ecd8cd43b7dea52698a2bb8f6f9b74906c558e1ff428ab32c4331",
+    "clean_postmerger_dependency": "7324ff72dc1fd36149f137b9f8eafa68f354fd897ff5d56478ce5a6cf2f8c5f6",
+    "clean_uib_remnant_dependency": "9ea727ec726f82c62c2ad6e399ee084e02daf275c145a3503e0666271010e755",
+    "clean_nqc_interface_dependency": "f705514ef981b3f0a557efeebe508b52fdb70c634a8ac8f2c357f30761871068"
+  },
+  "data_hashes_sha256": {
+    "/tmp/torchwave-public-eob-dt_0p5M.npz": "7bf76ba9b81515bdd22377a8569bc0ee8809717baeb43d7f887b71ecdeb9d88a",
+    "/tmp/torchwave-public-eob-dt_1_4096s.npz": "eefe5b8f1380601f82232e78b0e3a8e1b8abf5a4f9cfb5208e28331b8f5685f9"
+  },
+  "scope_limits": [
+    "No physical corrected-NQC array assembly was run; the two public fixtures were inspected read-only for support counts and timing only while awaiting the NQC worker cache.",
+    "No full inspiral or postmerger trajectory validation was performed.",
+    "No production driver, default, fit, NQC target, or dispatch path was changed.",
+    "No amplitude rescaling, time optimization, phase optimization, or binary residual ranking is part of this component."
+  ]
+}

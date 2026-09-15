@@ -1,0 +1,1332 @@
+{
+  "provenance": "Public lalsimulation SimIMRSpinAlignedEOBModes output was consumed as black-box state/postpeak/mode/epoch data for 30+20 Msun, nonspinning, fstart=20 Hz, distance=100 Mpc. For each spacing, the clean SEOBNRv4 Hamiltonian/flux/waveform/event/NQC/remnant/QNM helpers were evaluated afresh. Attachment receives the initial-time relative grid; public epoch coordinates remain separate. The postmatch residual is same-index complex subtraction with zero time and phase shifts, and all quadratic/degree4/degree6 alternatives are numerical convergence diagnostics only.",
+  "primary_reference": "Boh\u00e9 et al., Improved effective-one-body model for coalescing nonprecessing binary black holes, arXiv:1611.03703 (equation context).",
+  "public_parameters": {
+    "approximant_api": "lalsimulation.SimIMRSpinAlignedEOBModes",
+    "m1_msun": 30.0,
+    "m2_msun": 20.0,
+    "chi1": 0.0,
+    "chi2": 0.0,
+    "fstart_hz": 20.0,
+    "distance_mpc": 100.0,
+    "mode": [
+      2,
+      2
+    ],
+    "approximant_version": 4,
+    "inclination_rad": 0.0,
+    "phase_rad": 0.0,
+    "eccentricity": 0.0,
+    "tidal_lambda1": 0.0,
+    "tidal_lambda2": 0.0,
+    "spacings": {
+      "dt_0p25M": 0.25,
+      "dt_0p5M": 0.5,
+      "dt_1M": 1.0,
+      "dt_1_4096s": 0.9913351891019707
+    }
+  },
+  "clean_parameters": {
+    "nu": 0.24,
+    "delta": 0.2,
+    "chi": 0.0,
+    "spin_truncation": "generic-leading-ell8",
+    "spin_v6": "none",
+    "include_pan_v8": true,
+    "include_positive_chi_540": true,
+    "final_spin_fit_order": [
+      3,
+      4
+    ],
+    "mode_scale_100Mpc": 2.392707920793921e-20,
+    "qnm_mode": [
+      2,
+      2,
+      0
+    ]
+  },
+  "mass_assumption": {
+    "total_mass_msun": 50.0,
+    "Msec": 0.00024627454738206334,
+    "MTSUN_s": 4.925490947641267e-06
+  },
+  "coordinate_contract": {
+    "input_time": "postpeak_state[0], initial total-mass coordinates starting near t/M=0",
+    "attachment_output_time": "arange(len(mode22)) * dt_s / Msec",
+    "public_epoch_time": "epoch_s + arange(len(mode22)) * dt_s",
+    "residual_alignment": "same output index after removing only the public epoch from attachment coordinates"
+  },
+  "libraries": {
+    "python": "3.13.9",
+    "numpy": "2.3.5",
+    "torch": "2.9.1",
+    "lal": "7.7.0",
+    "lalsimulation": "6.2.0"
+  },
+  "python_executable": "/Users/xangma/miniconda3/envs/pycbcorig313/bin/python",
+  "host": "RONI2",
+  "dependency_sha256": {
+    "scripts/diagnose_eob_epoch_contract_clean.py": "1e332ec3ffdef71e61c6c006bcc812224ca08654d1e4279e18b4199eb3c6bdc8",
+    "scripts/diagnose_eob_clean_hamiltonian_public.py": "c4fce3c08ed71718d34f92bc743a398e3f447c0830c1ae1a3a4899d6e7396088",
+    "src/torchwave/constants.py": "1ae479e07b44a19d23b9a9eaed4b8b8b8bf38b4293717a91d321b59f2d1ac4e3",
+    "src/torchwave/approximants/eob/attachment.py": "097165aa7a6dcf87c5458fb26eade17a9c6bdf43c8e001c0929c1eb6ea2975e7",
+    "src/torchwave/approximants/eob/events.py": "c1ae1182e4c2f9cf5f8a2857ea5d73802dbbb68b59739709849f973503bdfd5d",
+    "src/torchwave/approximants/eob/nqc.py": "f023b84fc0a48e59feb6b543d234635df965e04ee9aff05672ea3ff984d0cf85",
+    "src/torchwave/approximants/eob/published_waveform.py": "8eedc2a0fa0a2eb96dbd7c6e5b541081df2466888aa9fb8dd45234b70b21eb60",
+    "src/torchwave/approximants/eob/seobnrv4_hamiltonian.py": "5b1a5b877129e5235b8f92974a01ab450176e8e924d374ca0fc413334fad177f",
+    "src/torchwave/approximants/eob/seobnrv4_flux.py": "50af1727e28828969d84cac5e984189c529e205ad9fb96d22c11037103aca3ec",
+    "src/torchwave/approximants/eob/seobnrv4_mode22.py": "d1fa659a2604732ae74e8c7e9736b89371655f3b06a0d04bed6a1162500203f9",
+    "src/torchwave/approximants/eob/factorized_modes.py": "d4b10cbcbbecc4de84329a13cdca43d90d4fa5aa168248fc2e874211d29f8315",
+    "src/torchwave/approximants/eob/merger_ringdown.py": "0db678173690ce0f7918c6fef2d9cb4864bf55a8dae3a6f80a47d0563ac7237d",
+    "src/torchwave/approximants/eob/remnant.py": "e7690cd5df1bcde2f579954762116beb20db606dae809835b148dae73c4cb007",
+    "src/torchwave/approximants/kerr_qnm_generated.py": "3361bbf72224e93ce445169d5bb66e95ca27b5bdf6475d6de6ff7514bdf0283f"
+  },
+  "results": {
+    "dt_0p25M": {
+      "npz_path": "/tmp/torchwave-public-eob-dt_0p25M.npz",
+      "npz_sha256": "29bba9d38ccea96619677313233f51e5335a3dca330f27e0c34057ddea7006fc",
+      "npz_size_bytes": 1532566,
+      "raw_arrays": {
+        "keys": [
+          "state",
+          "postpeak_state",
+          "mode22",
+          "epoch_s",
+          "dt_s"
+        ],
+        "state_shape": [
+          5,
+          20012
+        ],
+        "postpeak_state_shape": [
+          5,
+          9652
+        ],
+        "mode22_shape": [
+          21546
+        ],
+        "loaded_arrays_copied": true
+      },
+      "dt_s": 6.156863684551583e-05,
+      "dt_M": 0.25,
+      "epoch_s": -1.232042294,
+      "epoch_M": -5002.718742544858,
+      "relative_output_grid": {
+        "passed_to_attachment": true,
+        "definition": "arange(output_length) * dt_s / Msec",
+        "first_last_M": [
+          0.0,
+          5386.25
+        ],
+        "first_last_s": [
+          0.0,
+          1.3264962808366387
+        ]
+      },
+      "public_epoch_output_grid": {
+        "definition": "epoch_s + arange(output_length) * dt_s",
+        "first_last_s": [
+          -1.232042294,
+          0.09445398683663875
+        ],
+        "first_last_M": [
+          -5002.718742544858,
+          383.5312574551417
+        ]
+      },
+      "trajectory_support_M_initial_origin": [
+        0.0,
+        5002.75
+      ],
+      "postpeak_support_M_initial_origin": [
+        4853.0,
+        5003.796875
+      ],
+      "degree6_event_and_peak_diagnostics": {
+        "degree6_attachment_event": {
+          "time_M_initial_origin": 5002.70169827389,
+          "frequency": 0.1644151207804603,
+          "curvature": -0.004043791155842065,
+          "sample_index": 9581,
+          "sample_time_M_initial_origin": 5002.703125,
+          "fractional_bin_offset_not_available_from_attachment_api": null,
+          "time_M_public_epoch_coordinate": -0.01704427096865402,
+          "sample_time_M_public_epoch_coordinate": -0.015617544858287147
+        },
+        "quadratic_peak_diagnostic": {
+          "time_M_initial_origin": 5002.701662169285,
+          "fractional_bin_offset": -0.09362116579016107,
+          "sample_index": 9581,
+          "frequency_at_sample": 0.1644151166630129,
+          "time_M_public_epoch_coordinate": -0.017080375573641504
+        },
+        "stencil_diagnostics": {
+          "degree4": {
+            "resolved": true,
+            "degree": 4,
+            "sample_index": 9581,
+            "time": 5002.701698275033,
+            "fractional_bin_offset": -0.09131039789645001,
+            "frequency_or_amplitude": 0.1644151207804535,
+            "curvature_in_local_coordinate": -1.5796058400601777e-05,
+            "candidate_count": 1,
+            "stencil_start_index": 9579,
+            "stencil_end_index": 9583,
+            "time_M_public_epoch_coordinate": -0.017044269825419178
+          },
+          "degree6": {
+            "resolved": true,
+            "degree": 6,
+            "sample_index": 9581,
+            "time": 5002.70169827389,
+            "fractional_bin_offset": -0.09131047106347978,
+            "frequency_or_amplitude": 0.16441512078046028,
+            "curvature_in_local_coordinate": -3.554113320461299e-05,
+            "candidate_count": 1,
+            "stencil_start_index": 9578,
+            "stencil_end_index": 9584,
+            "time_M_public_epoch_coordinate": -0.01704427096865402
+          }
+        }
+      },
+      "nqc_match": {
+        "time_M_initial_origin": 4998.329318739809,
+        "time_M_public_epoch_coordinate": -4.389423805048864,
+        "minus_degree6_event_M": -4.37237953408021,
+        "minus_quadratic_peak_M": -4.372343429475222
+      },
+      "public_mode_amplitude_peak": {
+        "relative_output_coordinate": {
+          "sample_index": 19993,
+          "sample_time": 4998.25,
+          "sample_value": 9.000461112244974e-21,
+          "quadratic": {
+            "degree": 2,
+            "time": 4998.364488592765,
+            "fractional_bin_offset": 0.45795437106024406,
+            "value_at_sample": 9.000461112244974e-21
+          },
+          "stencil_diagnostics": {
+            "degree4": {
+              "resolved": true,
+              "degree": 4,
+              "sample_index": 19993,
+              "time": 4998.360378257735,
+              "fractional_bin_offset": 0.44151303093894967,
+              "frequency_or_amplitude": 9.000584695023532e-21,
+              "curvature_in_local_coordinate": -1.9544062238348837e-23,
+              "candidate_count": 1,
+              "stencil_start_index": 19991,
+              "stencil_end_index": 19995
+            },
+            "degree6": {
+              "resolved": true,
+              "degree": 6,
+              "sample_index": 19993,
+              "time": 4998.359181557874,
+              "fractional_bin_offset": 0.43672623149541323,
+              "frequency_or_amplitude": 9.000580598458402e-21,
+              "curvature_in_local_coordinate": -4.291632888546703e-23,
+              "candidate_count": 1,
+              "stencil_start_index": 19990,
+              "stencil_end_index": 19996
+            }
+          },
+          "coordinate_label": "relative output time from public mode sample zero"
+        },
+        "public_epoch_coordinate": {
+          "sample_index": 19993,
+          "sample_time": -4.468742544858287,
+          "sample_value": 9.000461112244974e-21,
+          "quadratic": {
+            "degree": 2,
+            "time": -4.354253952093131,
+            "fractional_bin_offset": 0.45795437106024406,
+            "value_at_sample": 9.000461112244974e-21
+          },
+          "stencil_diagnostics": {
+            "degree4": {
+              "resolved": true,
+              "degree": 4,
+              "sample_index": 19993,
+              "time": -4.35836428712355,
+              "fractional_bin_offset": 0.44151303093894967,
+              "frequency_or_amplitude": 9.000584695023532e-21,
+              "curvature_in_local_coordinate": -1.9544062238348837e-23,
+              "candidate_count": 1,
+              "stencil_start_index": 19991,
+              "stencil_end_index": 19995
+            },
+            "degree6": {
+              "resolved": true,
+              "degree": 6,
+              "sample_index": 19993,
+              "time": -4.359560986984434,
+              "fractional_bin_offset": 0.43672623149541323,
+              "frequency_or_amplitude": 9.000580598458402e-21,
+              "curvature_in_local_coordinate": -4.291632888546703e-23,
+              "candidate_count": 1,
+              "stencil_start_index": 19990,
+              "stencil_end_index": 19996
+            }
+          },
+          "coordinate_label": "public mode epoch coordinate: epoch_s + relative output time"
+        }
+      },
+      "nqc_coefficients": {
+        "amplitude": [
+          4.144071073667841,
+          -47.300860079602835,
+          57.123922800732075
+        ],
+        "phase": [
+          4.143531901497326,
+          -22.022686108452426
+        ],
+        "vector_order": [
+          "a1",
+          "a2",
+          "a3",
+          "b1",
+          "b2"
+        ],
+        "vector": [
+          4.144071073667841,
+          -47.300860079602835,
+          57.123922800732075,
+          4.143531901497326,
+          -22.022686108452426
+        ],
+        "sampling_condition": 5599.946007431745,
+        "amplitude_condition": 744.6779369122818,
+        "phase_condition": 8.799143925637042,
+        "amplitude_residual_l2": 6.839803500189228e-17,
+        "phase_residual_l2": 1.3877787807814457e-17
+      },
+      "postmatch_unshifted_complex_residual": {
+        "available": true,
+        "comparison": "same output indices after the relative-grid epoch mapping",
+        "time_shift_applied_M": 0.0,
+        "phase_shift_applied_rad": 0.0,
+        "first_sample_index": 19994,
+        "sample_count": 1552,
+        "support_M_initial_origin": [
+          4998.5,
+          5386.25
+        ],
+        "public_support_M_epoch_coordinate": [
+          -4.218742544858287,
+          383.5312574551417
+        ],
+        "raw_complex_l2": 5.221399540423187e-22,
+        "raw_relative_l2": 0.007770131400633401,
+        "max_abs": 6.259483051045988e-23,
+        "max_abs_over_public_peak": 0.00695466771125949,
+        "phase_rms_rad": 0.009392493480932157,
+        "phase_max_abs_rad": 0.009746353111453785,
+        "amplitude_ratio_mean": 0.9988838625423062
+      },
+      "clean_attachment": {
+        "mode_scale_100Mpc": 2.392707920793921e-20,
+        "mode_length": 21546,
+        "match_phase_rad": 0.02965637451068015
+      }
+    },
+    "dt_0p5M": {
+      "npz_path": "/tmp/torchwave-public-eob-dt_0p5M.npz",
+      "npz_sha256": "7bf76ba9b81515bdd22377a8569bc0ee8809717baeb43d7f887b71ecdeb9d88a",
+      "npz_size_bytes": 960038,
+      "raw_arrays": {
+        "keys": [
+          "state",
+          "postpeak_state",
+          "mode22",
+          "epoch_s",
+          "dt_s"
+        ],
+        "state_shape": [
+          5,
+          10006
+        ],
+        "postpeak_state_shape": [
+          5,
+          9654
+        ],
+        "mode22_shape": [
+          10773
+        ],
+        "loaded_arrays_copied": true
+      },
+      "dt_s": 0.00012313727369103167,
+      "dt_M": 0.5,
+      "epoch_s": -1.232042294,
+      "epoch_M": -5002.718742544858,
+      "relative_output_grid": {
+        "passed_to_attachment": true,
+        "definition": "arange(output_length) * dt_s / Msec",
+        "first_last_M": [
+          0.0,
+          5386.0
+        ],
+        "first_last_s": [
+          0.0,
+          1.326434712199793
+        ]
+      },
+      "public_epoch_output_grid": {
+        "definition": "epoch_s + arange(output_length) * dt_s",
+        "first_last_s": [
+          -1.232042294,
+          0.09439241819979305
+        ],
+        "first_last_M": [
+          -5002.718742544858,
+          383.2812574551417
+        ]
+      },
+      "trajectory_support_M_initial_origin": [
+        0.0,
+        5002.5
+      ],
+      "postpeak_support_M_initial_origin": [
+        4853.0,
+        5003.828125
+      ],
+      "degree6_event_and_peak_diagnostics": {
+        "degree6_attachment_event": {
+          "time_M_initial_origin": 5002.7017207866975,
+          "frequency": 0.1644151212452234,
+          "curvature": -0.004043531685545578,
+          "sample_index": 9581,
+          "sample_time_M_initial_origin": 5002.703125,
+          "fractional_bin_offset_not_available_from_attachment_api": null,
+          "time_M_public_epoch_coordinate": -0.01702175816080853,
+          "sample_time_M_public_epoch_coordinate": -0.015617544858287147
+        },
+        "quadratic_peak_diagnostic": {
+          "time_M_initial_origin": 5002.701684503957,
+          "fractional_bin_offset": -0.09219174673299066,
+          "sample_index": 9581,
+          "frequency_at_sample": 0.16441511725696825,
+          "time_M_public_epoch_coordinate": -0.017058040901247296
+        },
+        "stencil_diagnostics": {
+          "degree4": {
+            "resolved": true,
+            "degree": 4,
+            "sample_index": 9581,
+            "time": 5002.70172078784,
+            "fractional_bin_offset": -0.08986957825254649,
+            "frequency_or_amplitude": 0.16441512124521676,
+            "curvature_in_local_coordinate": -1.579504485905691e-05,
+            "candidate_count": 1,
+            "stencil_start_index": 9579,
+            "stencil_end_index": 9583,
+            "time_M_public_epoch_coordinate": -0.017021757018483186
+          },
+          "degree6": {
+            "resolved": true,
+            "degree": 6,
+            "sample_index": 9581,
+            "time": 5002.7017207866975,
+            "fractional_bin_offset": -0.0898696513613686,
+            "frequency_or_amplitude": 0.16441512124522326,
+            "curvature_in_local_coordinate": -3.553885270417699e-05,
+            "candidate_count": 1,
+            "stencil_start_index": 9578,
+            "stencil_end_index": 9584,
+            "time_M_public_epoch_coordinate": -0.01702175816080853
+          }
+        }
+      },
+      "nqc_match": {
+        "time_M_initial_origin": 4998.329341252617,
+        "time_M_public_epoch_coordinate": -4.389401292241018,
+        "minus_degree6_event_M": -4.37237953408021,
+        "minus_quadratic_peak_M": -4.372343251339771
+      },
+      "public_mode_amplitude_peak": {
+        "relative_output_coordinate": {
+          "sample_index": 9997,
+          "sample_time": 4998.5,
+          "sample_value": 9.000405642553502e-21,
+          "quadratic": {
+            "degree": 2,
+            "time": 4998.391196891783,
+            "fractional_bin_offset": -0.21760621643526493,
+            "value_at_sample": 9.000405642553502e-21
+          },
+          "stencil_diagnostics": {
+            "degree4": {
+              "resolved": true,
+              "degree": 4,
+              "sample_index": 9997,
+              "time": 4998.3832875067155,
+              "fractional_bin_offset": -0.2334249865689344,
+              "frequency_or_amplitude": 9.000520068116147e-21,
+              "curvature_in_local_coordinate": -6.79083662325663e-23,
+              "candidate_count": 1,
+              "stencil_start_index": 9995,
+              "stencil_end_index": 9999
+            },
+            "degree6": {
+              "resolved": true,
+              "degree": 6,
+              "sample_index": 9997,
+              "time": 4998.378930915803,
+              "fractional_bin_offset": -0.2421381683943764,
+              "frequency_or_amplitude": 9.00052901994303e-21,
+              "curvature_in_local_coordinate": -1.5425093400645037e-22,
+              "candidate_count": 1,
+              "stencil_start_index": 9994,
+              "stencil_end_index": 10000
+            }
+          },
+          "coordinate_label": "relative output time from public mode sample zero"
+        },
+        "public_epoch_coordinate": {
+          "sample_index": 9997,
+          "sample_time": -4.218742544858287,
+          "sample_value": 9.000405642553502e-21,
+          "quadratic": {
+            "degree": 2,
+            "time": -4.327545653075504,
+            "fractional_bin_offset": -0.21760621643526493,
+            "value_at_sample": 9.000405642553502e-21
+          },
+          "stencil_diagnostics": {
+            "degree4": {
+              "resolved": true,
+              "degree": 4,
+              "sample_index": 9997,
+              "time": -4.335455038142754,
+              "fractional_bin_offset": -0.2334249865689344,
+              "frequency_or_amplitude": 9.000520068116147e-21,
+              "curvature_in_local_coordinate": -6.79083662325663e-23,
+              "candidate_count": 1,
+              "stencil_start_index": 9995,
+              "stencil_end_index": 9999
+            },
+            "degree6": {
+              "resolved": true,
+              "degree": 6,
+              "sample_index": 9997,
+              "time": -4.339811629055475,
+              "fractional_bin_offset": -0.2421381683943764,
+              "frequency_or_amplitude": 9.00052901994303e-21,
+              "curvature_in_local_coordinate": -1.5425093400645037e-22,
+              "candidate_count": 1,
+              "stencil_start_index": 9994,
+              "stencil_end_index": 10000
+            }
+          },
+          "coordinate_label": "public mode epoch coordinate: epoch_s + relative output time"
+        }
+      },
+      "nqc_coefficients": {
+        "amplitude": [
+          4.156503112933471,
+          -47.40869330451998,
+          57.246159652171535
+        ],
+        "phase": [
+          4.1465669321735446,
+          -22.05197516405
+        ],
+        "vector_order": [
+          "a1",
+          "a2",
+          "a3",
+          "b1",
+          "b2"
+        ],
+        "vector": [
+          4.156503112933471,
+          -47.40869330451998,
+          57.246159652171535,
+          4.1465669321735446,
+          -22.05197516405
+        ],
+        "sampling_condition": 5600.390557154526,
+        "amplitude_condition": 744.6900364314741,
+        "phase_condition": 8.805388550429084,
+        "amplitude_residual_l2": 6.249369913176822e-17,
+        "phase_residual_l2": 1.3877787807814457e-17
+      },
+      "postmatch_unshifted_complex_residual": {
+        "available": true,
+        "comparison": "same output indices after the relative-grid epoch mapping",
+        "time_shift_applied_M": 0.0,
+        "phase_shift_applied_rad": 0.0,
+        "first_sample_index": 9997,
+        "sample_count": 776,
+        "support_M_initial_origin": [
+          4998.5,
+          5386.0
+        ],
+        "public_support_M_epoch_coordinate": [
+          -4.218742544858287,
+          383.2812574551417
+        ],
+        "raw_complex_l2": 3.697623771420145e-22,
+        "raw_relative_l2": 0.007747114686634396,
+        "max_abs": 6.253472567184647e-23,
+        "max_abs_over_public_peak": 0.00694798969684046,
+        "phase_rms_rad": 0.009380420349308841,
+        "phase_max_abs_rad": 0.009736710113991921,
+        "amplitude_ratio_mean": 0.9988867062470662
+      },
+      "clean_attachment": {
+        "mode_scale_100Mpc": 2.392707920793921e-20,
+        "mode_length": 10773,
+        "match_phase_rad": 0.030525543359152474
+      }
+    },
+    "dt_1M": {
+      "npz_path": "/tmp/torchwave-public-eob-dt_1M.npz",
+      "npz_sha256": "e24786f7ed083151fdc8e879a4d4dc192499e4c5dedf7f79dafe321d6f0686d7",
+      "npz_size_bytes": 671086,
+      "raw_arrays": {
+        "keys": [
+          "state",
+          "postpeak_state",
+          "mode22",
+          "epoch_s",
+          "dt_s"
+        ],
+        "state_shape": [
+          5,
+          5004
+        ],
+        "postpeak_state_shape": [
+          5,
+          9587
+        ],
+        "mode22_shape": [
+          5386
+        ],
+        "loaded_arrays_copied": true
+      },
+      "dt_s": 0.00024627454738206334,
+      "dt_M": 1.0,
+      "epoch_s": -1.232042294,
+      "epoch_M": -5002.718742544858,
+      "relative_output_grid": {
+        "passed_to_attachment": true,
+        "definition": "arange(output_length) * dt_s / Msec",
+        "first_last_M": [
+          0.0,
+          5385.0
+        ],
+        "first_last_s": [
+          0.0,
+          1.3261884376524111
+        ]
+      },
+      "public_epoch_output_grid": {
+        "definition": "epoch_s + arange(output_length) * dt_s",
+        "first_last_s": [
+          -1.232042294,
+          0.09414614365241114
+        ],
+        "first_last_M": [
+          -5002.718742544858,
+          382.2812574551417
+        ]
+      },
+      "trajectory_support_M_initial_origin": [
+        0.0,
+        5003.0
+      ],
+      "postpeak_support_M_initial_origin": [
+        4854.0,
+        5003.78125
+      ],
+      "degree6_event_and_peak_diagnostics": {
+        "degree6_attachment_event": {
+          "time_M_initial_origin": 5002.701697645643,
+          "frequency": 0.16441512045558015,
+          "curvature": -0.004043779005412181,
+          "sample_index": 9517,
+          "sample_time_M_initial_origin": 5002.703125,
+          "fractional_bin_offset_not_available_from_attachment_api": null,
+          "time_M_public_epoch_coordinate": -0.017044899214852194,
+          "sample_time_M_public_epoch_coordinate": -0.015617544858287147
+        },
+        "quadratic_peak_diagnostic": {
+          "time_M_initial_origin": 5002.701661563957,
+          "fractional_bin_offset": -0.09365990676862225,
+          "sample_index": 9517,
+          "frequency_at_sample": 0.16441511633451847,
+          "time_M_public_epoch_coordinate": -0.01708098090148269
+        },
+        "stencil_diagnostics": {
+          "degree4": {
+            "resolved": true,
+            "degree": 4,
+            "sample_index": 9517,
+            "time": 5002.701697646787,
+            "fractional_bin_offset": -0.09135060565313324,
+            "frequency_or_amplitude": 0.1644151204555734,
+            "curvature_in_local_coordinate": -1.5796010937577222e-05,
+            "candidate_count": 1,
+            "stencil_start_index": 9515,
+            "stencil_end_index": 9519,
+            "time_M_public_epoch_coordinate": -0.017044898071617354
+          },
+          "degree6": {
+            "resolved": true,
+            "degree": 6,
+            "sample_index": 9517,
+            "time": 5002.701697645643,
+            "fractional_bin_offset": -0.09135067882016301,
+            "frequency_or_amplitude": 0.1644151204555801,
+            "curvature_in_local_coordinate": -3.554102641382378e-05,
+            "candidate_count": 1,
+            "stencil_start_index": 9514,
+            "stencil_end_index": 9520,
+            "time_M_public_epoch_coordinate": -0.017044899214852194
+          }
+        }
+      },
+      "nqc_match": {
+        "time_M_initial_origin": 4998.329318111563,
+        "time_M_public_epoch_coordinate": -4.389424433295062,
+        "minus_degree6_event_M": -4.37237953408021,
+        "minus_quadratic_peak_M": -4.372343452393579
+      },
+      "public_mode_amplitude_peak": {
+        "relative_output_coordinate": {
+          "sample_index": 4998,
+          "sample_time": 4998.0,
+          "sample_value": 8.999196662611735e-21,
+          "quadratic": {
+            "degree": 2,
+            "time": 4998.407373021938,
+            "fractional_bin_offset": 0.4073730219377077,
+            "value_at_sample": 8.999196662611735e-21
+          },
+          "stencil_diagnostics": {
+            "degree4": {
+              "resolved": true,
+              "degree": 4,
+              "sample_index": 4998,
+              "time": 4998.408807281361,
+              "fractional_bin_offset": 0.4088072813610779,
+              "frequency_or_amplitude": 9.00090083180621e-21,
+              "curvature_in_local_coordinate": -3.2689253783946296e-22,
+              "candidate_count": 1,
+              "stencil_start_index": 4996,
+              "stencil_end_index": 5000
+            },
+            "degree6": {
+              "resolved": true,
+              "degree": 6,
+              "sample_index": 4998,
+              "time": 4998.403826889862,
+              "fractional_bin_offset": 0.4038268898621027,
+              "frequency_or_amplitude": 9.000837843455086e-21,
+              "curvature_in_local_coordinate": -7.185825188407469e-22,
+              "candidate_count": 1,
+              "stencil_start_index": 4995,
+              "stencil_end_index": 5001
+            }
+          },
+          "coordinate_label": "relative output time from public mode sample zero"
+        },
+        "public_epoch_coordinate": {
+          "sample_index": 4998,
+          "sample_time": -4.718742544858287,
+          "sample_value": 8.999196662611735e-21,
+          "quadratic": {
+            "degree": 2,
+            "time": -4.311369522920359,
+            "fractional_bin_offset": 0.4073730219377077,
+            "value_at_sample": 8.999196662611735e-21
+          },
+          "stencil_diagnostics": {
+            "degree4": {
+              "resolved": true,
+              "degree": 4,
+              "sample_index": 4998,
+              "time": -4.309935263497209,
+              "fractional_bin_offset": 0.4088072813610779,
+              "frequency_or_amplitude": 9.00090083180621e-21,
+              "curvature_in_local_coordinate": -3.2689253783946296e-22,
+              "candidate_count": 1,
+              "stencil_start_index": 4996,
+              "stencil_end_index": 5000
+            },
+            "degree6": {
+              "resolved": true,
+              "degree": 6,
+              "sample_index": 4998,
+              "time": -4.3149156549961845,
+              "fractional_bin_offset": 0.4038268898621027,
+              "frequency_or_amplitude": 9.000837843455086e-21,
+              "curvature_in_local_coordinate": -7.185825188407469e-22,
+              "candidate_count": 1,
+              "stencil_start_index": 4995,
+              "stencil_end_index": 5001
+            }
+          },
+          "coordinate_label": "public mode epoch coordinate: epoch_s + relative output time"
+        }
+      },
+      "nqc_coefficients": {
+        "amplitude": [
+          4.141321769640525,
+          -47.27697162504852,
+          57.096819876221936
+        ],
+        "phase": [
+          4.142869409639464,
+          -22.016254459947454
+        ],
+        "vector_order": [
+          "a1",
+          "a2",
+          "a3",
+          "b1",
+          "b2"
+        ],
+        "vector": [
+          4.141321769640525,
+          -47.27697162504852,
+          57.096819876221936,
+          4.142869409639464,
+          -22.016254459947454
+        ],
+        "sampling_condition": 5599.933720957384,
+        "amplitude_condition": 744.6727780129543,
+        "phase_condition": 8.79776661784104,
+        "amplitude_residual_l2": 2.238684264091961e-16,
+        "phase_residual_l2": 2.7755575615628914e-17
+      },
+      "postmatch_unshifted_complex_residual": {
+        "available": true,
+        "comparison": "same output indices after the relative-grid epoch mapping",
+        "time_shift_applied_M": 0.0,
+        "phase_shift_applied_rad": 0.0,
+        "first_sample_index": 4999,
+        "sample_count": 387,
+        "support_M_initial_origin": [
+          4999.0,
+          5385.0
+        ],
+        "public_support_M_epoch_coordinate": [
+          -3.718742544858287,
+          382.2812574551417
+        ],
+        "raw_complex_l2": 2.617643554271693e-22,
+        "raw_relative_l2": 0.007825980748111642,
+        "max_abs": 6.289547647161558e-23,
+        "max_abs_over_public_peak": 0.006990451680528052,
+        "phase_rms_rad": 0.009435396182954947,
+        "phase_max_abs_rad": 0.009785850547033789,
+        "amplitude_ratio_mean": 0.9988827136570345
+      },
+      "clean_attachment": {
+        "mode_scale_100Mpc": 2.392707920793921e-20,
+        "mode_length": 5386,
+        "match_phase_rad": 0.029467792437846363
+      }
+    },
+    "dt_1_4096s": {
+      "npz_path": "/tmp/torchwave-public-eob-dt_1_4096s.npz",
+      "npz_sha256": "eefe5b8f1380601f82232e78b0e3a8e1b8abf5a4f9cfb5208e28331b8f5685f9",
+      "npz_size_bytes": 680614,
+      "raw_arrays": {
+        "keys": [
+          "state",
+          "postpeak_state",
+          "mode22",
+          "epoch_s",
+          "dt_s"
+        ],
+        "state_shape": [
+          5,
+          5047
+        ],
+        "postpeak_state_shape": [
+          5,
+          9763
+        ],
+        "mode22_shape": [
+          5434
+        ],
+        "loaded_arrays_copied": true
+      },
+      "dt_s": 0.000244140625,
+      "dt_M": 0.9913351891019707,
+      "epoch_s": -1.23203809,
+      "epoch_M": -5002.701672165298,
+      "relative_output_grid": {
+        "passed_to_attachment": true,
+        "definition": "arange(output_length) * dt_s / Msec",
+        "first_last_M": [
+          0.0,
+          5385.924082391007
+        ],
+        "first_last_s": [
+          0.0,
+          1.326416015625
+        ]
+      },
+      "public_epoch_output_grid": {
+        "definition": "epoch_s + arange(output_length) * dt_s",
+        "first_last_s": [
+          -1.23203809,
+          0.09437792562499991
+        ],
+        "first_last_M": [
+          -5002.701672165298,
+          383.2224102257087
+        ]
+      },
+      "trajectory_support_M_initial_origin": [
+        0.0,
+        5002.277364208544
+      ],
+      "postpeak_support_M_initial_origin": [
+        4852.585750654147,
+        5003.795346216857
+      ],
+      "degree6_event_and_peak_diagnostics": {
+        "degree6_attachment_event": {
+          "time_M_initial_origin": 5002.701708021243,
+          "frequency": 0.164415121047836,
+          "curvature": -0.0040437904546552035,
+          "sample_index": 9691,
+          "sample_time_M_initial_origin": 5002.695583741447,
+          "fractional_bin_offset_not_available_from_attachment_api": null,
+          "time_M_public_epoch_coordinate": 3.585594458854757e-05,
+          "sample_time_M_public_epoch_coordinate": -0.00608842385099706
+        },
+        "quadratic_peak_diagnostic": {
+          "time_M_initial_origin": 5002.701688594776,
+          "fractional_bin_offset": 0.3941256372012146,
+          "sample_index": 9691,
+          "frequency_at_sample": 0.16441504535392004,
+          "time_M_public_epoch_coordinate": 1.642947790969629e-05
+        },
+        "stencil_diagnostics": {
+          "degree4": {
+            "resolved": true,
+            "degree": 4,
+            "sample_index": 9691,
+            "time": 5002.701708021747,
+            "fractional_bin_offset": 0.39537983069475785,
+            "frequency_or_amplitude": 0.16441512104785871,
+            "curvature_in_local_coordinate": -1.5523505750588795e-05,
+            "candidate_count": 1,
+            "stencil_start_index": 9689,
+            "stencil_end_index": 9693,
+            "time_M_public_epoch_coordinate": 3.5856449358107056e-05
+          },
+          "degree6": {
+            "resolved": true,
+            "degree": 6,
+            "sample_index": 9691,
+            "time": 5002.701708021243,
+            "fractional_bin_offset": 0.3953797981071405,
+            "frequency_or_amplitude": 0.16441512104783593,
+            "curvature_in_local_coordinate": -3.492788114361722e-05,
+            "candidate_count": 1,
+            "stencil_start_index": 9688,
+            "stencil_end_index": 9694,
+            "time_M_public_epoch_coordinate": 3.585594458854757e-05
+          }
+        }
+      },
+      "nqc_match": {
+        "time_M_initial_origin": 4998.3293284871625,
+        "time_M_public_epoch_coordinate": -4.372343678135621,
+        "minus_degree6_event_M": -4.37237953408021,
+        "minus_quadratic_peak_M": -4.372360107613531
+      },
+      "public_mode_amplitude_peak": {
+        "relative_output_coordinate": {
+          "sample_index": 5042,
+          "sample_time": 4998.312023452137,
+          "sample_value": 9.000564983368151e-21,
+          "quadratic": {
+            "degree": 2,
+            "time": 4998.405745758086,
+            "fractional_bin_offset": 0.09454149008261375,
+            "value_at_sample": 9.000564983368151e-21
+          },
+          "stencil_diagnostics": {
+            "degree4": {
+              "resolved": true,
+              "degree": 4,
+              "sample_index": 5042,
+              "time": 4998.4191410944395,
+              "fractional_bin_offset": 0.10805390899112448,
+              "frequency_or_amplitude": 9.000673962873287e-21,
+              "curvature_in_local_coordinate": -2.9964346785819588e-22,
+              "candidate_count": 1,
+              "stencil_start_index": 5040,
+              "stencil_end_index": 5044
+            },
+            "degree6": {
+              "resolved": true,
+              "degree": 6,
+              "sample_index": 5042,
+              "time": 4998.411563311153,
+              "fractional_bin_offset": 0.10040989174089768,
+              "frequency_or_amplitude": 9.000658389132118e-21,
+              "curvature_in_local_coordinate": -6.677209058911027e-22,
+              "candidate_count": 1,
+              "stencil_start_index": 5039,
+              "stencil_end_index": 5045
+            }
+          },
+          "coordinate_label": "relative output time from public mode sample zero"
+        },
+        "public_epoch_coordinate": {
+          "sample_index": 5042,
+          "sample_time": -4.389648713161478,
+          "sample_value": 9.000564983368151e-21,
+          "quadratic": {
+            "degree": 2,
+            "time": -4.2959264072123915,
+            "fractional_bin_offset": 0.09454149008261375,
+            "value_at_sample": 9.000564983368151e-21
+          },
+          "stencil_diagnostics": {
+            "degree4": {
+              "resolved": true,
+              "degree": 4,
+              "sample_index": 5042,
+              "time": -4.2825310708585675,
+              "fractional_bin_offset": 0.10805390899112448,
+              "frequency_or_amplitude": 9.000673962873287e-21,
+              "curvature_in_local_coordinate": -2.9964346785819588e-22,
+              "candidate_count": 1,
+              "stencil_start_index": 5040,
+              "stencil_end_index": 5044
+            },
+            "degree6": {
+              "resolved": true,
+              "degree": 6,
+              "sample_index": 5042,
+              "time": -4.290108854144819,
+              "fractional_bin_offset": 0.10040989174089768,
+              "frequency_or_amplitude": 9.000658389132118e-21,
+              "curvature_in_local_coordinate": -6.677209058911027e-22,
+              "candidate_count": 1,
+              "stencil_start_index": 5039,
+              "stencil_end_index": 5045
+            }
+          },
+          "coordinate_label": "public mode epoch coordinate: epoch_s + relative output time"
+        }
+      },
+      "nqc_coefficients": {
+        "amplitude": [
+          4.146381008407277,
+          -47.320923205234095,
+          57.1466812704447
+        ],
+        "phase": [
+          4.144090055438559,
+          -22.028097657555648
+        ],
+        "vector_order": [
+          "a1",
+          "a2",
+          "a3",
+          "b1",
+          "b2"
+        ],
+        "vector": [
+          4.146381008407277,
+          -47.320923205234095,
+          57.1466812704447,
+          4.144090055438559,
+          -22.028097657555648
+        ],
+        "sampling_condition": 5615.751912919961,
+        "amplitude_condition": 744.6817979977164,
+        "phase_condition": 8.800301751004868,
+        "amplitude_residual_l2": 5.701800567474885e-17,
+        "phase_residual_l2": 1.734723475976807e-18
+      },
+      "postmatch_unshifted_complex_residual": {
+        "available": true,
+        "comparison": "same output indices after the relative-grid epoch mapping",
+        "time_shift_applied_M": 0.0,
+        "phase_shift_applied_rad": 0.0,
+        "first_sample_index": 5043,
+        "sample_count": 391,
+        "support_M_initial_origin": [
+          4999.303358641238,
+          5385.924082391007
+        ],
+        "public_support_M_epoch_coordinate": [
+          -3.398313524059631,
+          383.2224102257087
+        ],
+        "raw_complex_l2": 1.6157247723458315e-23,
+        "raw_relative_l2": 0.00048669821484279994,
+        "max_abs": 3.98124226927876e-24,
+        "max_abs_over_public_peak": 0.00044270772971780607,
+        "phase_rms_rad": 0.0007403650991902361,
+        "phase_max_abs_rad": 0.0008499778172900466,
+        "amplitude_ratio_mean": 1.0001529001523821
+      },
+      "clean_attachment": {
+        "mode_scale_100Mpc": 2.392707920793921e-20,
+        "mode_length": 5434,
+        "match_phase_rad": 0.02981584822531813
+      }
+    }
+  },
+  "sampling_dependence": {
+    "pairwise": {
+      "dt_0p25M_minus_dt_0p5M": {
+        "public_epoch_M": 0.0,
+        "degree6_event_time_M_initial_origin": -2.251280784548726e-05,
+        "degree6_event_time_M_public_epoch_coordinate": -2.251280784548726e-05,
+        "quadratic_event_time_M_initial_origin": -2.233467239420861e-05,
+        "public_amplitude_quadratic_time_M_epoch_coordinate": -0.026708299017627724,
+        "nqc_match_time_M_initial_origin": -2.251280784548726e-05,
+        "postmatch_residual_raw_relative_l2": 2.301671399900472e-05,
+        "nqc_amplitude": {
+          "component_delta": [
+            -0.012432039265630301,
+            0.10783322491714387,
+            -0.12223685143946028
+          ],
+          "max_abs": 0.12223685143946028,
+          "l2": 0.1634760161190815
+        },
+        "nqc_phase": {
+          "component_delta": [
+            -0.0030350306762185753,
+            0.02928905559757311
+          ],
+          "max_abs": 0.02928905559757311,
+          "l2": 0.029445885773793874
+        }
+      },
+      "dt_0p25M_minus_dt_1M": {
+        "public_epoch_M": 0.0,
+        "degree6_event_time_M_initial_origin": 6.28246198175475e-07,
+        "degree6_event_time_M_public_epoch_coordinate": 6.28246198175475e-07,
+        "quadratic_event_time_M_initial_origin": 6.05327841185499e-07,
+        "public_amplitude_quadratic_time_M_epoch_coordinate": -0.0428844291727728,
+        "nqc_match_time_M_initial_origin": 6.28246198175475e-07,
+        "postmatch_residual_raw_relative_l2": -5.58493474782408e-05,
+        "nqc_amplitude": {
+          "component_delta": [
+            0.0027493040273158798,
+            -0.023888454554317207,
+            0.02710292451013885
+          ],
+          "max_abs": 0.02710292451013885,
+          "l2": 0.03623238124427622
+        },
+        "nqc_phase": {
+          "component_delta": [
+            0.0006624918578621575,
+            -0.006431648504971577
+          ],
+          "max_abs": 0.006431648504971577,
+          "l2": 0.0064656784603966165
+        }
+      },
+      "dt_0p25M_minus_dt_1_4096s": {
+        "public_epoch_M": -0.017070379560209403,
+        "degree6_event_time_M_initial_origin": -9.747353033162653e-06,
+        "degree6_event_time_M_public_epoch_coordinate": -0.017080126913242566,
+        "quadratic_event_time_M_initial_origin": -2.642549134179717e-05,
+        "public_amplitude_quadratic_time_M_epoch_coordinate": -0.05832754488073988,
+        "nqc_match_time_M_initial_origin": -9.747353033162653e-06,
+        "postmatch_residual_raw_relative_l2": 0.007283433185790601,
+        "nqc_amplitude": {
+          "component_delta": [
+            -0.0023099347394364145,
+            0.020063125631260448,
+            -0.022758469712627516
+          ],
+          "max_abs": 0.022758469712627516,
+          "l2": 0.030427171282535928
+        },
+        "nqc_phase": {
+          "component_delta": [
+            -0.0005581539412329306,
+            0.0054115491032220575
+          ],
+          "max_abs": 0.0054115491032220575,
+          "l2": 0.0054402573026188115
+        }
+      },
+      "dt_0p5M_minus_dt_1M": {
+        "public_epoch_M": 0.0,
+        "degree6_event_time_M_initial_origin": 2.3141054043662734e-05,
+        "degree6_event_time_M_public_epoch_coordinate": 2.3141054043662734e-05,
+        "quadratic_event_time_M_initial_origin": 2.294000023539411e-05,
+        "public_amplitude_quadratic_time_M_epoch_coordinate": -0.016176130155145074,
+        "nqc_match_time_M_initial_origin": 2.3141054043662734e-05,
+        "postmatch_residual_raw_relative_l2": -7.886606147724552e-05,
+        "nqc_amplitude": {
+          "component_delta": [
+            0.015181343292946181,
+            -0.13172167947146107,
+            0.14933977594959913
+          ],
+          "max_abs": 0.14933977594959913,
+          "l2": 0.19970839418421318
+        },
+        "nqc_phase": {
+          "component_delta": [
+            0.0036975225340807327,
+            -0.03572070410254469
+          ],
+          "max_abs": 0.03572070410254469,
+          "l2": 0.03591156324182487
+        }
+      },
+      "dt_0p5M_minus_dt_1_4096s": {
+        "public_epoch_M": -0.017070379560209403,
+        "degree6_event_time_M_initial_origin": 1.2765454812324606e-05,
+        "degree6_event_time_M_public_epoch_coordinate": -0.01705761410539708,
+        "quadratic_event_time_M_initial_origin": -4.090818947588559e-06,
+        "public_amplitude_quadratic_time_M_epoch_coordinate": -0.031619245863112155,
+        "nqc_match_time_M_initial_origin": 1.2765454812324606e-05,
+        "postmatch_residual_raw_relative_l2": 0.007260416471791597,
+        "nqc_amplitude": {
+          "component_delta": [
+            0.010122104526193887,
+            -0.08777009928588342,
+            0.09947838172683277
+          ],
+          "max_abs": 0.09947838172683277,
+          "l2": 0.13304884726927355
+        },
+        "nqc_phase": {
+          "component_delta": [
+            0.0024768767349856446,
+            -0.023877506494351053
+          ],
+          "max_abs": 0.023877506494351053,
+          "l2": 0.02400562923041364
+        }
+      },
+      "dt_1M_minus_dt_1_4096s": {
+        "public_epoch_M": -0.017070379560209403,
+        "degree6_event_time_M_initial_origin": -1.0375599231338128e-05,
+        "degree6_event_time_M_public_epoch_coordinate": -0.01708075515944074,
+        "quadratic_event_time_M_initial_origin": -2.7030819182982668e-05,
+        "public_amplitude_quadratic_time_M_epoch_coordinate": -0.015443115707967081,
+        "nqc_match_time_M_initial_origin": -1.0375599231338128e-05,
+        "postmatch_residual_raw_relative_l2": 0.007339282533268842,
+        "nqc_amplitude": {
+          "component_delta": [
+            -0.005059238766752294,
+            0.043951580185577654,
+            -0.049861394222766364
+          ],
+          "max_abs": 0.049861394222766364,
+          "l2": 0.06665955244033964
+        },
+        "nqc_phase": {
+          "component_delta": [
+            -0.001220645799095088,
+            0.011843197608193634
+          ],
+          "max_abs": 0.011843197608193634,
+          "l2": 0.011905935736160007
+        }
+      }
+    },
+    "ranges": {
+      "public_epoch_M": {
+        "minimum": -5002.718742544858,
+        "maximum": -5002.701672165298,
+        "max_minus_min": 0.017070379560209403
+      },
+      "degree6_event_time_M_initial_origin": {
+        "minimum": 5002.701697645643,
+        "maximum": 5002.7017207866975,
+        "max_minus_min": 2.3141054043662734e-05
+      },
+      "degree6_event_time_M_public_epoch_coordinate": {
+        "minimum": -0.017044899214852194,
+        "maximum": 3.585594458854757e-05,
+        "max_minus_min": 0.01708075515944074
+      },
+      "quadratic_event_time_M_initial_origin": {
+        "minimum": 5002.701661563957,
+        "maximum": 5002.701688594776,
+        "max_minus_min": 2.7030819182982668e-05
+      },
+      "public_amplitude_quadratic_time_M_epoch_coordinate": {
+        "minimum": -4.354253952093131,
+        "maximum": -4.2959264072123915,
+        "max_minus_min": 0.05832754488073988
+      },
+      "nqc_match_time_M_initial_origin": {
+        "minimum": 4998.329318111563,
+        "maximum": 4998.329341252617,
+        "max_minus_min": 2.3141054043662734e-05
+      },
+      "postmatch_residual_raw_relative_l2": {
+        "minimum": 0.00048669821484279994,
+        "maximum": 0.007825980748111642,
+        "max_minus_min": 0.007339282533268842
+      },
+      "nqc_amplitude": {
+        "component_max": [
+          4.156503112933471,
+          -47.27697162504852,
+          57.246159652171535
+        ],
+        "component_min": [
+          4.141321769640525,
+          -47.40869330451998,
+          57.096819876221936
+        ],
+        "component_max_minus_min": [
+          0.015181343292946181,
+          0.13172167947146107,
+          0.14933977594959913
+        ],
+        "component_max_abs": [
+          4.156503112933471,
+          47.40869330451998,
+          57.246159652171535
+        ],
+        "vector_max_abs": 57.246159652171535,
+        "vector_range_l2": 0.19970839418421318
+      },
+      "nqc_phase": {
+        "component_max": [
+          4.1465669321735446,
+          -22.016254459947454
+        ],
+        "component_min": [
+          4.142869409639464,
+          -22.05197516405
+        ],
+        "component_max_minus_min": [
+          0.0036975225340807327,
+          0.03572070410254469
+        ],
+        "component_max_abs": [
+          4.1465669321735446,
+          22.05197516405
+        ],
+        "vector_max_abs": 22.05197516405,
+        "vector_range_l2": 0.03591156324182487
+      }
+    }
+  },
+  "limitations": [
+    "The public epoch is reported as returned by LALSimulation; its physical interpretation is not inferred beyond the explicit grid mapping.",
+    "The four black-box arrays are compared at identical output indices. No interpolation, fitted offset, or parity-based stencil selection is used.",
+    "The diagnostic event is the clean degree-six event from events.py; quadratic and degree-4/6 polynomial peaks are reported only to show numerical stencil sensitivity."
+  ]
+}

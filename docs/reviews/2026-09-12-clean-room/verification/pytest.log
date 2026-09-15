@@ -1,0 +1,17 @@
+........................................................................ [ 18%]
+........................................................................ [ 37%]
+........................................................................ [ 56%]
+........................................................................ [ 75%]
+........................................................................ [ 93%]
+.......................                                                  [100%]
+=============================== warnings summary ===============================
+tests/test_phenomxp_msa_reconstruction.py::test_msa_versions_and_conventions
+  /Users/xangma/repos/torchwave/src/torchwave/approximants/imrphenom_xphm.py:260: RuntimeWarning: The MSA 220/223 path is experimental: nutation and oscillatory MSA corrections are not implemented.
+    alpha, beta, gamma, theta_jn, zeta = evaluate_msa_precession(
+
+tests/test_phenomxp_msa_reconstruction.py::test_msa_versions_and_conventions
+  /Users/xangma/repos/torchwave/src/torchwave/approximants/imrphenom_xphm.py:287: RuntimeWarning: The MSA 220/223 path is experimental: nutation and oscillatory MSA corrections are not implemented.
+    a_mp, b_mp, g_mp, _, _ = evaluate_msa_precession(
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+383 passed, 2 warnings in 28.18s

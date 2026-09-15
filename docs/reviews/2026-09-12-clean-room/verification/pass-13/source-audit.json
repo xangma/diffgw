@@ -1,0 +1,15 @@
+{
+  "boundary": "GPT-5.6 Luna implementation/review used primary papers, author mathematical assets and inherited native code; no LAL/PyCBC implementation or binary residuals. Parent separately used public binary APIs. Instruction boundary, not OS-enforced isolation. Inherited fit provenance is not certified.",
+  "sources": [
+    {
+      "title": "Garcia-Quiros et al. XHM",
+      "url": "https://arxiv.org/pdf/2001.10914v2",
+      "local": "/tmp/torchwave-clean-higher-modes/2001.10914v2.pdf",
+      "sha256": "00f3bdbe28a6ccde5cde3af82ac8fc95153ec6f03a4b071ce0ed57326e4e09ee",
+      "scope": "Eqs4.5/4.6/5.3 and TableIV define intermediate amplitude normalization; SecV.B Eq5.5/TableVII/Fig8 define phase derivative ansatz and default node subset. Eq6.2 confirms ringdown H normalization. TableVI final row distinguishes removal of derivative constraints for denominator poles from removal of inner values for parameter vetoes."
+    }
+  ],
+  "review": "../../pass-13-summary.md",
+  "integration": "A022=A0*(pi*f)^(-7/6), hence H=(A/A0)*(pi*f)^(7/6) and inverse-polynomial inner targets are 1/(A/A0). Default nonmixing phase nodes are [1,2,3,4,6], using inherited p6 fits. No new coefficient or fit preprocessing is inferred from residuals. TableVI pole fallback retains all four values and removes endpoint derivatives; parameter veto removes inner values. Cubic/linear selection is global per intrinsic row. Independent Luna review is recorded in fallback-independent-review.md.",
+  "limits": "Sparse phase-node switching and independent p6 ancillary provenance remain unresolved. Eq5.5 defines physical absolute F_i but does not independently establish preprocessing of author p_i assets. No relative-target conversion or experimental phase-default change is introduced. Ordered/absolute-amplitude vetoes and the inherited sampled pole detector remain incomplete."
+}

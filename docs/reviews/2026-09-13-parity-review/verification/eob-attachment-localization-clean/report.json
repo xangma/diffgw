@@ -1,0 +1,824 @@
+{
+  "status": "bounded_same_trajectory_attachment_localization",
+  "host": "RONI2",
+  "cwd": "/Users/xangma/repos/torchwave",
+  "command": "scripts/diagnose_eob_attachment_localization_clean.py",
+  "pid": 72210,
+  "elapsed_seconds": 3.3775272089987993,
+  "source_hashes_before": {
+    "scripts/diagnose_eob_attachment_localization_clean.py": "5dbe96725950e4749c0da36ae4aef8c34cfe531d19952b8c018c3a10f034f5df",
+    "src/torchwave/approximants/eob/numerical_attachment.py": "775aa6f40d4cfe2bffa836d7af0b58dc8521411571d5c124230890eb5de91cb1",
+    "src/torchwave/approximants/eob/published_waveform.py": "34a87406a13c44cccdbc2e57d2e797c858984f0e762c06abe28859cb7bbc449c",
+    "src/torchwave/approximants/eob/nqc.py": "f023b84fc0a48e59feb6b543d234635df965e04ee9aff05672ea3ff984d0cf85",
+    "src/torchwave/approximants/eob/seobnrv4_hamiltonian.py": "5b1a5b877129e5235b8f92974a01ab450176e8e924d374ca0fc413334fad177f",
+    "src/torchwave/approximants/eob/seobnrv4_flux.py": "9395f930449651c6607de4aa780cfd75545d95ba67fe4b4d653e2852fef407a8",
+    "src/torchwave/approximants/eob/remnant.py": "e7690cd5df1bcde2f579954762116beb20db606dae809835b148dae73c4cb007",
+    "src/torchwave/approximants/kerr_qnm_table_convention.py": "c4c85d17b079306df73c74f4bb755b7f4256fbdf49fef6a85cd9810367d800f6",
+    "docs/reviews/2026-09-13-parity-review/verification/eob-numerical-root-review/public-nqc-substitution.json": "6ee128e5e2d0ff64d0fd691a9e808d7a8eb02004f73cedf4fe11707f23c29415",
+    "docs/reviews/2026-09-13-parity-review/verification/eob-numerical-root-review/public-derivative-attachment-local.json": "8b533db6fa8a06f7ff6d43b6bd50ec186968ba75bbf453553c21c51366bc9a77"
+  },
+  "source_hashes_after": {
+    "scripts/diagnose_eob_attachment_localization_clean.py": "5dbe96725950e4749c0da36ae4aef8c34cfe531d19952b8c018c3a10f034f5df",
+    "src/torchwave/approximants/eob/numerical_attachment.py": "775aa6f40d4cfe2bffa836d7af0b58dc8521411571d5c124230890eb5de91cb1",
+    "src/torchwave/approximants/eob/published_waveform.py": "34a87406a13c44cccdbc2e57d2e797c858984f0e762c06abe28859cb7bbc449c",
+    "src/torchwave/approximants/eob/nqc.py": "f023b84fc0a48e59feb6b543d234635df965e04ee9aff05672ea3ff984d0cf85",
+    "src/torchwave/approximants/eob/seobnrv4_hamiltonian.py": "5b1a5b877129e5235b8f92974a01ab450176e8e924d374ca0fc413334fad177f",
+    "src/torchwave/approximants/eob/seobnrv4_flux.py": "9395f930449651c6607de4aa780cfd75545d95ba67fe4b4d653e2852fef407a8",
+    "src/torchwave/approximants/eob/remnant.py": "e7690cd5df1bcde2f579954762116beb20db606dae809835b148dae73c4cb007",
+    "src/torchwave/approximants/kerr_qnm_table_convention.py": "c4c85d17b079306df73c74f4bb755b7f4256fbdf49fef6a85cd9810367d800f6",
+    "docs/reviews/2026-09-13-parity-review/verification/eob-numerical-root-review/public-nqc-substitution.json": "6ee128e5e2d0ff64d0fd691a9e808d7a8eb02004f73cedf4fe11707f23c29415",
+    "docs/reviews/2026-09-13-parity-review/verification/eob-numerical-root-review/public-derivative-attachment-local.json": "8b533db6fa8a06f7ff6d43b6bd50ec186968ba75bbf453553c21c51366bc9a77"
+  },
+  "source_hashes_stable": true,
+  "provenance": {
+    "implementation": "MIT-only clean TorchWave Hamiltonian, flux, published mode, NQC, QNM and numerical attachment helpers",
+    "trajectory": "identical public postpeak state arrays are used for all stages; no trajectory evolution",
+    "public_comparison": "public mode samples are compared directly on their output grid; source-knot values use independently interpolated public amplitude and lifted positive phase, while the added preboundary output-grid check splines only the clean source amplitude and lifted positive phase",
+    "reference_implementation_imported": false,
+    "fitted_coefficients": false,
+    "forbidden_source_or_cache_access": false
+  },
+  "parameters": {
+    "total_mass_msun": 50.0,
+    "distance_mpc": 100.0,
+    "m1_fraction": 0.6,
+    "m2_fraction": 0.4,
+    "nu": 0.24,
+    "chi": 0.0,
+    "spin_v6": "none",
+    "include_pan_v8": true,
+    "include_positive_chi_540": true,
+    "spin_truncation": "generic-leading-ell8"
+  },
+  "prior_evidence": {
+    "public_nqc_substitution_report": "docs/reviews/2026-09-13-parity-review/verification/eob-numerical-root-review/public-nqc-substitution.json",
+    "public_derivative_attachment_report": "docs/reviews/2026-09-13-parity-review/verification/eob-numerical-root-review/public-derivative-attachment-local.json",
+    "known_public_phase_only_dt_0p5M_raw_relative_l2": 3.297968270513276e-06,
+    "known_public_phase_only_dt_1_4096s_raw_relative_l2": 3.322373789622722e-06,
+    "interpretation": "public coefficient substitution is retained as attribution evidence only; no public coefficient enters this clean rerun"
+  },
+  "results": {
+    "dt_0p5M": {
+      "fixture_sha256": "7bf76ba9b81515bdd22377a8569bc0ee8809717baeb43d7f887b71ecdeb9d88a",
+      "source_state_shape": [
+        5,
+        9654
+      ],
+      "public_mode_length": 10773,
+      "epoch_s": -1.232042294,
+      "output_dt_M": 0.5,
+      "source_time_M": [
+        4853.0,
+        5003.828125
+      ],
+      "output_time_M": [
+        0.0,
+        5386.0
+      ],
+      "peak": {
+        "time_M": 5002.7187423706055,
+        "frequency": 0.16441453242075965,
+        "curvature": -0.004106832630730281,
+        "sample_index": 9582
+      },
+      "match": {
+        "time_M": 4998.346362836525,
+        "phase_lifted_rad": 25.16358844822704,
+        "clean_match_mode_vs_public_amp_phase": {
+          "available": true,
+          "sample_count": 1,
+          "complex_relative_l2": 0.0002499696278919828,
+          "amplitude_relative_l2": 5.9545304074350456e-05,
+          "phase_rms_rad": 0.0002427666834198435,
+          "phase_max_abs_rad": 0.0002427666834198435,
+          "phase_mean_rad": 0.0002427666834198435
+        }
+      },
+      "boundary": {
+        "time_M": 4998.34375,
+        "input_sample_index": 9302,
+        "input_step_M": 0.015625,
+        "phase_lifted_rad": 25.162661389829903,
+        "frequency_clean_backward": 0.3547086050989492,
+        "amplitude_clean_scaled": 9.000570881130197e-21,
+        "clean_vs_public_interpolated": {
+          "clean_amplitude": 9.000570881130197e-21,
+          "clean_phase_lifted_rad": 25.162661389829903,
+          "public_interpolated_amplitude": 9.000028747955099e-21,
+          "public_interpolated_phase_lifted_rad": 0.030165763309353544,
+          "wrapped_phase_error_rad": 0.0002456021977960382,
+          "complex_relative_error": 0.0002528884103778634,
+          "relative_amplitude_error": 6.0236827045923036e-05
+        },
+        "public_next_output_observable": {
+          "index": 9997,
+          "time_M": 4998.5,
+          "amplitude": 9.000405642553502e-21,
+          "backward_frequency": 0.353723960089924,
+          "boundary_to_next_output_M": 0.15625,
+          "clean_boundary_to_public_next_output": {
+            "available": true,
+            "sample_count": 1,
+            "complex_relative_l2": 0.0555083549611183,
+            "amplitude_relative_l2": 1.8359014388559658e-05,
+            "phase_rms_rad": 0.055514970962100556,
+            "phase_max_abs_rad": 0.055514970962100556,
+            "phase_mean_rad": 0.055514970962100556
+          }
+        }
+      },
+      "ringdown": {
+        "damping": 0.08590518084900033,
+        "internal_step_M": 0.015625,
+        "support_count_high_samples": 7450,
+        "windows": {
+          "first_1M": {
+            "available": true,
+            "sample_count": 2,
+            "complex_relative_l2": 4.2583033903570234e-05,
+            "amplitude_relative_l2": 2.7970093652126837e-07,
+            "phase_rms_rad": 4.258213666811032e-05,
+            "phase_max_abs_rad": 4.266226491013375e-05,
+            "phase_mean_rad": -4.258206113583764e-05
+          },
+          "first_5M": {
+            "available": true,
+            "sample_count": 10,
+            "complex_relative_l2": 4.315766437447336e-05,
+            "amplitude_relative_l2": 2.797009366967565e-07,
+            "phase_rms_rad": 4.316462611248556e-05,
+            "phase_max_abs_rad": 4.376164333658303e-05,
+            "phase_mean_rad": -4.316274855290191e-05
+          },
+          "first_10M": {
+            "available": true,
+            "sample_count": 20,
+            "complex_relative_l2": 4.367252387883083e-05,
+            "amplitude_relative_l2": 2.7970093676434173e-07,
+            "phase_rms_rad": 4.3739437549935116e-05,
+            "phase_max_abs_rad": 4.467961643332237e-05,
+            "phase_mean_rad": -4.37343981715687e-05
+          },
+          "first_50M": {
+            "available": true,
+            "sample_count": 100,
+            "complex_relative_l2": 4.422871184647616e-05,
+            "amplitude_relative_l2": 2.7970093676003054e-07,
+            "phase_rms_rad": 4.515559624047211e-05,
+            "phase_max_abs_rad": 4.56551432961267e-05,
+            "phase_mean_rad": -4.514863238075067e-05
+          },
+          "first_100M": {
+            "available": true,
+            "sample_count": 200,
+            "complex_relative_l2": 4.422941045495252e-05,
+            "amplitude_relative_l2": 2.797009367597232e-07,
+            "phase_rms_rad": 4.5406771956010086e-05,
+            "phase_max_abs_rad": 4.5656753641758176e-05,
+            "phase_mean_rad": -4.5402599125079826e-05
+          },
+          "late_50_to_100M": {
+            "available": true,
+            "sample_count": 100,
+            "complex_relative_l2": 4.565682726284829e-05,
+            "amplitude_relative_l2": 2.797009361216405e-07,
+            "phase_rms_rad": 4.565656587061349e-05,
+            "phase_max_abs_rad": 4.5656753641758176e-05,
+            "phase_mean_rad": -4.565656586940898e-05
+          },
+          "late_100M_to_end": {
+            "available": true,
+            "sample_count": 33,
+            "complex_relative_l2": 4.5657616964822086e-05,
+            "amplitude_relative_l2": 2.797009354325642e-07,
+            "phase_rms_rad": 4.5656753928572694e-05,
+            "phase_max_abs_rad": 4.565675403975496e-05,
+            "phase_mean_rad": -4.565675392857269e-05
+          }
+        }
+      },
+      "source_same_trajectory": {
+        "comparison": "two checks are reported: public amplitude/phase interpolation at clean state knots, and clean amplitude/phase spline interpolation at public output times",
+        "sample_count": 9302,
+        "base_mode_before_nqc": {
+          "available": true,
+          "sample_count": 9302,
+          "complex_relative_l2": 0.6124098642889553,
+          "amplitude_relative_l2": 0.032395259090197366,
+          "phase_rms_rad": 0.49256990954556956,
+          "phase_max_abs_rad": 1.4701977917871363,
+          "phase_mean_rad": 0.4015799368442749
+        },
+        "corrected_mode_after_nqc": {
+          "available": true,
+          "sample_count": 9302,
+          "complex_relative_l2": 7.449440283166362e-05,
+          "amplitude_relative_l2": 1.3050003662230675e-05,
+          "phase_rms_rad": 5.2991550663003383e-05,
+          "phase_max_abs_rad": 0.0003084371668696262,
+          "phase_mean_rad": 2.243044144861679e-05
+        },
+        "direct_public_grid": {
+          "comparison": "clean corrected and base source amplitudes and lifted positive phases are independently natural-cubic-splined to public output times; public complex samples are compared directly",
+          "output_time_M": [
+            4853.0,
+            4998.0
+          ],
+          "output_dt_M": 0.5,
+          "sample_count_all_preboundary": 291,
+          "sample_count_preboundary_excluding_immediate": 290,
+          "sample_count_immediate_boundary_interval": 1,
+          "immediate_boundary_interval_M": [
+            4997.84375,
+            4998.34375
+          ],
+          "base_mode_before_nqc": {
+            "available": true,
+            "sample_count": 291,
+            "complex_relative_l2": 0.6102994720490754,
+            "amplitude_relative_l2": 0.032033308267297965,
+            "phase_rms_rad": 0.49098520448301053,
+            "phase_max_abs_rad": 1.4474538549238354,
+            "phase_mean_rad": 0.40051262661603315
+          },
+          "corrected_mode_after_nqc": {
+            "all_preboundary": {
+              "available": true,
+              "sample_count": 291,
+              "complex_relative_l2": 2.18544424435724e-05,
+              "amplitude_relative_l2": 8.201865393783946e-06,
+              "phase_rms_rad": 1.6206981695934518e-05,
+              "phase_max_abs_rad": 4.2303592039828354e-05,
+              "phase_mean_rad": -1.3494384262526993e-05
+            },
+            "preboundary_excluding_immediate": {
+              "available": true,
+              "sample_count": 290,
+              "complex_relative_l2": 2.1630446784566488e-05,
+              "amplitude_relative_l2": 8.232181933513682e-06,
+              "phase_rms_rad": 1.6043721138039778e-05,
+              "phase_max_abs_rad": 4.199281030462265e-05,
+              "phase_mean_rad": -1.3395042166743196e-05
+            },
+            "immediate_boundary_interval": {
+              "available": true,
+              "sample_count": 1,
+              "complex_relative_l2": 4.230543130261632e-05,
+              "amplitude_relative_l2": 3.935913195753737e-07,
+              "phase_rms_rad": 4.2303592039828354e-05,
+              "phase_max_abs_rad": 4.2303592039828354e-05,
+              "phase_mean_rad": -4.2303592039828354e-05
+            }
+          }
+        }
+      },
+      "nqc_matching_system": {
+        "target_vector": [
+          0.37616672231693943,
+          0.0,
+          -0.0009690387643043249,
+          0.35482358618455545,
+          0.011022771043981791
+        ],
+        "target_names": [
+          "amplitude",
+          "amplitude_derivative",
+          "amplitude_second_derivative",
+          "frequency",
+          "frequency_derivative"
+        ],
+        "base_value_at_match": [
+          0.42653978475427873,
+          0.08433798168161474,
+          0.02914539213382929,
+          0.017133388100891527,
+          -0.4446638552943615,
+          -0.01663846970703513
+        ],
+        "base_first_derivative_at_match": [
+          0.005819667977771021,
+          0.015247577837731863,
+          0.00633454661147965,
+          0.004036948434926797,
+          -0.03716221458067482,
+          -0.0038423461578717846
+        ],
+        "base_second_derivative_at_match": [
+          -0.0008453298439961355,
+          0.004499731276579246,
+          0.002069375007252482,
+          0.0013848561343031511,
+          -0.008182968209775767,
+          -0.0013500493757146613
+        ],
+        "waveform_phase_first_derivative_at_match": 0.2856466094297938,
+        "waveform_phase_second_derivative_at_match": 0.006844292528236481,
+        "amplitude_matrix": [
+          [
+            0.08433798168161474,
+            0.02914539213382929,
+            0.017133388100891527
+          ],
+          [
+            0.015247577837731863,
+            0.00633454661147965,
+            0.004036948434926797
+          ],
+          [
+            0.004499731276579246,
+            0.002069375007252482,
+            0.0013848561343031511
+          ]
+        ],
+        "amplitude_rhs": [
+          -0.0503730624373393,
+          -0.005819667977771021,
+          -0.0001237089203081894
+        ],
+        "phase_matrix": [
+          [
+            -0.03716221458067482,
+            -0.0038423461578717846
+          ],
+          [
+            -0.008182968209775767,
+            -0.0013500493757146613
+          ]
+        ],
+        "phase_rhs": [
+          -0.06917697675476164,
+          -0.00417847851574531
+        ],
+        "clean_coefficients": {
+          "amplitude": [
+            4.114751530047683,
+            -47.07717764720065,
+            56.88775014837794
+          ],
+          "phase": [
+            4.129267832669519,
+            -21.933411785746042
+          ]
+        },
+        "clean_sampling_condition": 1.0,
+        "clean_amplitude_condition": 745.2730381932159,
+        "clean_phase_condition": 8.812632126771769,
+        "clean_amplitude_solve_residual": [
+          -1.1102230246251565e-16,
+          -1.0408340855860843e-17,
+          1.235990476633475e-17
+        ],
+        "clean_phase_solve_residual": [
+          -2.7755575615628914e-17,
+          -6.938893903907228e-18
+        ],
+        "public_coefficients": {
+          "amplitude": [
+            4.110240890037285,
+            -47.03812474440112,
+            56.84354405587586
+          ],
+          "phase": [
+            4.129125034115698,
+            -21.93221275349806
+          ],
+          "source": "docs/reviews/2026-09-13-parity-review/verification/eob-numerical-root-review/public-nqc-substitution.json",
+          "use": "observable diagnostic only; not substituted into clean attachment"
+        },
+        "clean_minus_public_coefficient_delta": {
+          "amplitude_clean_minus_public": [
+            0.004510640010398248,
+            -0.039052902799532774,
+            0.04420609250207974
+          ],
+          "phase_clean_minus_public": [
+            0.00014279855382071105,
+            -0.0011990322479817905
+          ]
+        }
+      },
+      "interpretation": {
+        "first_material_residual_stage": "unresolved corrected source / boundary discrepancy; public-grid interpolation remains confounded",
+        "evidence": "NQC removes the order-unity uncorrected carrier mismatch. The direct public-grid check resamples only the clean corrected source, but its remaining preboundary discrepancy and the one-spacing boundary interval do not by themselves distinguish a source/NQC convention from a floor-boundary convention. The amplitude/phase-interpolated boundary value is therefore diagnostic evidence rather than a first-stage attribution.",
+        "public_binary_coefficients_are_diagnostic": true,
+        "required_next_observable": [
+          "Reference corrected h22 amplitude and phase at the clean floor boundary knot and its preceding knot, or the corresponding continuous attachment values; the public output grid alone cannot resolve this.",
+          "Reference NQC matching-system target and sampled basis derivative rows at the same clean match time if the source coefficient residual is to be separated from the boundary convention."
+        ]
+      }
+    },
+    "dt_1_4096s": {
+      "fixture_sha256": "eefe5b8f1380601f82232e78b0e3a8e1b8abf5a4f9cfb5208e28331b8f5685f9",
+      "source_state_shape": [
+        5,
+        9763
+      ],
+      "public_mode_length": 5434,
+      "epoch_s": -1.23203809,
+      "output_dt_M": 0.9913351891019707,
+      "source_time_M": [
+        4852.585750654147,
+        5003.795346216857
+      ],
+      "output_time_M": [
+        0.0,
+        5385.924082391007
+      ],
+      "peak": {
+        "time_M": 5002.701702440849,
+        "frequency": 0.16441512104816525,
+        "curvature": -0.004043794735074056,
+        "sample_index": 9692
+      },
+      "match": {
+        "time_M": 4998.3293229067685,
+        "phase_lifted_rad": 25.16254812404899,
+        "clean_match_mode_vs_public_amp_phase": {
+          "available": true,
+          "sample_count": 1,
+          "complex_relative_l2": 9.66962451917192e-05,
+          "amplitude_relative_l2": 1.5455717259582447e-05,
+          "phase_rms_rad": 9.545231178878235e-05,
+          "phase_max_abs_rad": 9.545231178878235e-05,
+          "phase_mean_rad": 9.545231178878235e-05
+        }
+      },
+      "boundary": {
+        "time_M": 4998.327513064466,
+        "input_sample_index": 9409,
+        "input_step_M": 0.015489612329474767,
+        "phase_lifted_rad": 25.161905967366607,
+        "frequency_clean_backward": 0.354718208143308,
+        "amplitude_clean_scaled": 9.000570922296769e-21,
+        "clean_vs_public_interpolated": {
+          "clean_amplitude": 9.000570922296769e-21,
+          "clean_phase_lifted_rad": 25.161905967366607,
+          "public_interpolated_amplitude": 9.000445780122598e-21,
+          "public_interpolated_phase_lifted_rad": 0.02925068951230773,
+          "wrapped_phase_error_rad": 8.595086404640925e-05,
+          "complex_relative_error": 8.706879397493818e-05,
+          "relative_amplitude_error": 1.3903997338360341e-05
+        },
+        "public_next_output_observable": {
+          "index": 5043,
+          "time_M": 4999.303358641238,
+          "amplitude": 8.992935975652633e-21,
+          "backward_frequency": 0.36006348687941836,
+          "boundary_to_next_output_M": 0.9758455767723717,
+          "clean_boundary_to_public_next_output": {
+            "available": true,
+            "sample_count": 1,
+            "complex_relative_l2": 0.3497957359025692,
+            "amplitude_relative_l2": 0.0008489937729799273,
+            "phase_rms_rad": 0.3514523118924444,
+            "phase_max_abs_rad": 0.3514523118924444,
+            "phase_mean_rad": 0.3514523118924444
+          }
+        }
+      },
+      "ringdown": {
+        "damping": 0.08590518084900033,
+        "internal_step_M": 0.015489612329718292,
+        "support_count_high_samples": 7515,
+        "windows": {
+          "first_1M": {
+            "available": true,
+            "sample_count": 1,
+            "complex_relative_l2": 3.174363401667402e-06,
+            "amplitude_relative_l2": 2.795472417105545e-07,
+            "phase_rms_rad": 3.1620299730428334e-06,
+            "phase_max_abs_rad": 3.1620299730428334e-06,
+            "phase_mean_rad": 3.1620299730428334e-06
+          },
+          "first_5M": {
+            "available": true,
+            "sample_count": 5,
+            "complex_relative_l2": 3.1871373637015487e-06,
+            "amplitude_relative_l2": 2.795472440851312e-07,
+            "phase_rms_rad": 3.1750760733120412e-06,
+            "phase_max_abs_rad": 3.187132108497981e-06,
+            "phase_mean_rad": 3.175063642453994e-06
+          },
+          "first_10M": {
+            "available": true,
+            "sample_count": 10,
+            "complex_relative_l2": 3.1983731552966156e-06,
+            "amplitude_relative_l2": 2.795472411686162e-07,
+            "phase_rms_rad": 3.1878292721779964e-06,
+            "phase_max_abs_rad": 3.207995440774601e-06,
+            "phase_mean_rad": 3.187795205443978e-06
+          },
+          "first_50M": {
+            "available": true,
+            "sample_count": 50,
+            "complex_relative_l2": 3.2103375428808008e-06,
+            "amplitude_relative_l2": 2.79547243140798e-07,
+            "phase_rms_rad": 3.2190821393929927e-06,
+            "phase_max_abs_rad": 3.230214183250983e-06,
+            "phase_mean_rad": 3.2190344519143417e-06
+          },
+          "first_100M": {
+            "available": true,
+            "sample_count": 100,
+            "complex_relative_l2": 3.210353269737146e-06,
+            "amplitude_relative_l2": 2.795472431376929e-07,
+            "phase_rms_rad": 3.2246702363490774e-06,
+            "phase_max_abs_rad": 3.2302532275449713e-06,
+            "phase_mean_rad": 3.224641559110308e-06
+          },
+          "late_50_to_100M": {
+            "available": true,
+            "sample_count": 50,
+            "complex_relative_l2": 3.242308863505113e-06,
+            "amplitude_relative_l2": 2.79547236797023e-07,
+            "phase_rms_rad": 3.230248666315375e-06,
+            "phase_max_abs_rad": 3.2302532275449713e-06,
+            "phase_mean_rad": 3.230248666306275e-06
+          },
+          "late_100M_to_end": {
+            "available": true,
+            "sample_count": 17,
+            "complex_relative_l2": 3.242326927294257e-06,
+            "amplitude_relative_l2": 2.7954723264789127e-07,
+            "phase_rms_rad": 3.2302530252490162e-06,
+            "phase_max_abs_rad": 3.2302532843680423e-06,
+            "phase_mean_rad": 3.2302530252490124e-06
+          }
+        }
+      },
+      "source_same_trajectory": {
+        "comparison": "two checks are reported: public amplitude/phase interpolation at clean state knots, and clean amplitude/phase spline interpolation at public output times",
+        "sample_count": 9409,
+        "base_mode_before_nqc": {
+          "available": true,
+          "sample_count": 9409,
+          "complex_relative_l2": 0.6137600170025175,
+          "amplitude_relative_l2": 0.03227882291057435,
+          "phase_rms_rad": 0.49364899858053923,
+          "phase_max_abs_rad": 1.473829778453869,
+          "phase_mean_rad": 0.4023269619245498
+        },
+        "corrected_mode_after_nqc": {
+          "available": true,
+          "sample_count": 9409,
+          "complex_relative_l2": 0.0003574898520051836,
+          "amplitude_relative_l2": 4.269232138330541e-05,
+          "phase_rms_rad": 0.0002598200684490028,
+          "phase_max_abs_rad": 0.0013787781911128011,
+          "phase_mean_rad": 0.00014204317102909362
+        },
+        "direct_public_grid": {
+          "comparison": "clean corrected and base source amplitudes and lifted positive phases are independently natural-cubic-splined to public output times; public complex samples are compared directly",
+          "output_time_M": [
+            4852.585750654147,
+            4998.312023452137
+          ],
+          "output_dt_M": 0.9913351891019707,
+          "sample_count_all_preboundary": 148,
+          "sample_count_preboundary_excluding_immediate": 147,
+          "sample_count_immediate_boundary_interval": 1,
+          "immediate_boundary_interval_M": [
+            4997.336177875364,
+            4998.327513064466
+          ],
+          "base_mode_before_nqc": {
+            "available": true,
+            "sample_count": 148,
+            "complex_relative_l2": 0.6228351405239121,
+            "amplitude_relative_l2": 0.03408633471311063,
+            "phase_rms_rad": 0.4992755525426804,
+            "phase_max_abs_rad": 1.4738297784537564,
+            "phase_mean_rad": 0.4049940145647346
+          },
+          "corrected_mode_after_nqc": {
+            "all_preboundary": {
+              "available": true,
+              "sample_count": 148,
+              "complex_relative_l2": 8.835833746345881e-06,
+              "amplitude_relative_l2": 8.674379705800809e-06,
+              "phase_rms_rad": 1.3650429279110657e-06,
+              "phase_max_abs_rad": 3.154568405231553e-06,
+              "phase_mean_rad": 1.1660315411098467e-06
+            },
+            "preboundary_excluding_immediate": {
+              "available": true,
+              "sample_count": 147,
+              "complex_relative_l2": 8.892124039629754e-06,
+              "amplitude_relative_l2": 8.737691817784952e-06,
+              "phase_rms_rad": 1.3447386591879248e-06,
+              "phase_max_abs_rad": 3.1361143892186835e-06,
+              "phase_mean_rad": 1.1525040794491547e-06
+            },
+            "immediate_boundary_interval": {
+              "available": true,
+              "sample_count": 1,
+              "complex_relative_l2": 3.16686513087622e-06,
+              "amplitude_relative_l2": 2.788012904331318e-07,
+              "phase_rms_rad": 3.154568405231553e-06,
+              "phase_max_abs_rad": 3.154568405231553e-06,
+              "phase_mean_rad": 3.154568405231553e-06
+            }
+          }
+        }
+      },
+      "nqc_matching_system": {
+        "target_vector": [
+          0.37616672231693943,
+          0.0,
+          -0.0009690387643043249,
+          0.35482358618455545,
+          0.011022771043981791
+        ],
+        "target_names": [
+          "amplitude",
+          "amplitude_derivative",
+          "amplitude_second_derivative",
+          "frequency",
+          "frequency_derivative"
+        ],
+        "base_value_at_match": [
+          0.42644047160977017,
+          0.08407877704662098,
+          0.029037734267588468,
+          0.017064787980712138,
+          -0.44403170971239997,
+          -0.016573182872752838
+        ],
+        "base_first_derivative_at_match": [
+          0.005833970650689686,
+          0.015171321066572657,
+          0.006299466915976777,
+          0.004013470988506578,
+          -0.037023612964884656,
+          -0.0038194781520286135
+        ],
+        "base_second_derivative_at_match": [
+          -0.0008345699147084975,
+          0.00446388752935176,
+          0.002052451496081292,
+          0.0013733159623435692,
+          -0.008121652992129797,
+          -0.0013378760039986504
+        ],
+        "waveform_phase_first_derivative_at_match": 0.28552997973112093,
+        "waveform_phase_second_derivative_at_match": 0.006836544336129018,
+        "amplitude_matrix": [
+          [
+            0.08407877704662098,
+            0.029037734267588468,
+            0.017064787980712138
+          ],
+          [
+            0.015171321066572657,
+            0.006299466915976777,
+            0.004013470988506578
+          ],
+          [
+            0.00446388752935176,
+            0.002052451496081292,
+            0.0013733159623435692
+          ]
+        ],
+        "amplitude_rhs": [
+          -0.05027374929283074,
+          -0.005833970650689686,
+          -0.0001344688495958274
+        ],
+        "phase_matrix": [
+          [
+            -0.037023612964884656,
+            -0.0038194781520286135
+          ],
+          [
+            -0.008121652992129797,
+            -0.0013378760039986504
+          ]
+        ],
+        "phase_rhs": [
+          -0.06929360645343452,
+          -0.004186226707852773
+        ],
+        "clean_coefficients": {
+          "amplitude": [
+            4.146414437743756,
+            -47.32120340456461,
+            57.146993354954944
+          ],
+          "phase": [
+            4.144061532167092,
+            -22.027753653074576
+          ]
+        },
+        "clean_sampling_condition": 1.0000000000587164,
+        "clean_amplitude_condition": 744.6836744692224,
+        "clean_phase_condition": 8.800320715652814,
+        "clean_amplitude_solve_residual": [
+          -5.551115123125783e-17,
+          -3.209238430557093e-17,
+          -2.3310346708438345e-17
+        ],
+        "clean_phase_solve_residual": [
+          2.7755575615628914e-17,
+          2.6020852139652106e-18
+        ],
+        "public_coefficients": {
+          "amplitude": [
+            4.141576800531685,
+            -47.279237518543205,
+            57.09944161869055
+          ],
+          "phase": [
+            4.144074388143258,
+            -22.027973629587294
+          ],
+          "source": "docs/reviews/2026-09-13-parity-review/verification/eob-numerical-root-review/public-nqc-substitution.json",
+          "use": "observable diagnostic only; not substituted into clean attachment"
+        },
+        "clean_minus_public_coefficient_delta": {
+          "amplitude_clean_minus_public": [
+            0.004837637212070867,
+            -0.041965886021408494,
+            0.04755173626439557
+          ],
+          "phase_clean_minus_public": [
+            -1.285597616540457e-05,
+            0.00021997651271732366
+          ]
+        }
+      },
+      "interpretation": {
+        "first_material_residual_stage": "unresolved corrected source / boundary discrepancy; public-grid interpolation remains confounded",
+        "evidence": "NQC removes the order-unity uncorrected carrier mismatch. The direct public-grid check resamples only the clean corrected source, but its remaining preboundary discrepancy and the one-spacing boundary interval do not by themselves distinguish a source/NQC convention from a floor-boundary convention. The amplitude/phase-interpolated boundary value is therefore diagnostic evidence rather than a first-stage attribution.",
+        "public_binary_coefficients_are_diagnostic": true,
+        "required_next_observable": [
+          "Reference corrected h22 amplitude and phase at the clean floor boundary knot and its preceding knot, or the corresponding continuous attachment values; the public output grid alone cannot resolve this.",
+          "Reference NQC matching-system target and sampled basis derivative rows at the same clean match time if the source coefficient residual is to be separated from the boundary convention."
+        ]
+      }
+    }
+  },
+  "limitations": [
+    "The 1/4096 s output spacing is 0.991335M for this 50 Msun fixture and is coarser than the 0.5M output spacing; neither public grid contains the clean continuous floor boundary time in general.",
+    "The direct preboundary output-grid check removes public resampling but still uses a clean amplitude/phase spline, so it cannot by itself identify a unique source or boundary convention.",
+    "A smaller post-boundary residual does not identify a unique production convention; direct boundary phase/frequency observables are required for further attribution.",
+    "This is not a complete waveform, calibration, or acceptance gate."
+  ],
+  "cached_phase_coefficient_attribution": {
+    "status": "diagnostic_only_no_runtime_substitution",
+    "definition": "R = phase_matrix @ b_public - phase_rhs_clean; implied_target_minus_clean_target = -R",
+    "meaning": "The implied target is the frequency and frequency derivative that would make the clean sampled phase system hold with the diagnostic public coefficient vector.",
+    "rounding_uncertainty": {
+      "documented_in_inputs": false,
+      "conclusion": "published coefficient rounding uncertainty is unknown; no uncertainty band is assumed"
+    },
+    "cases": {
+      "dt_0p5M": {
+        "public_phase_coefficients": [
+          4.129125034115698,
+          -21.93221275349806
+        ],
+        "clean_phase_target_frequency_and_derivative": [
+          0.35482358618455545,
+          0.011022771043981791
+        ],
+        "implied_target_frequency_and_derivative": [
+          0.3548228865710078,
+          0.011023221280693326
+        ],
+        "implied_target_minus_clean_target": [
+          -6.996135476500243e-07,
+          4.5023671153485156e-07
+        ],
+        "phase_system_residual_R": [
+          6.99613547663902e-07,
+          -4.5023671153485156e-07
+        ],
+        "phase_system_residual_l2": 8.31968877115357e-07
+      },
+      "dt_1_4096s": {
+        "public_phase_coefficients": [
+          4.144074388143258,
+          -22.027973629587294
+        ],
+        "clean_phase_target_frequency_and_derivative": [
+          0.35482358618455545,
+          0.011022771043981791
+        ],
+        "implied_target_frequency_and_derivative": [
+          0.354823221963757,
+          0.011022581154461267
+        ],
+        "implied_target_minus_clean_target": [
+          -3.642207984655421e-07,
+          -1.898895205243445e-07
+        ],
+        "phase_system_residual_R": [
+          3.642207984794199e-07,
+          1.8988952052347713e-07
+        ],
+        "phase_system_residual_l2": 4.1074909622496094e-07
+      }
+    },
+    "interpretation": "The public coefficient vector misses the clean phase equations by sub-micro-unit frequency and frequency-derivative target shifts. This is evidence about target/coefficient sampling conventions only and does not identify the boundary convention or authorize coefficient replacement."
+  }
+}

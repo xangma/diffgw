@@ -1,0 +1,35 @@
+--- a/src/ck-core/ck.C
++++ b/src/ck-core/ck.C
+@@ -656,10 +656,22 @@
+   _TRACE_CREATION_DONE(1);
+ }
+ 
++/* Local pilot fix: honor the 64-byte alignment required by SpECTRE's
++ * MultiReaderSpinlock. Group registration records size, but not alignment.
++ * posix_memalign storage is compatible with Chare::operator delete/free.
++ */
++static inline void *CkAllocGroupObject(size_t size)
++{
++  void *obj = NULL;
++  if (posix_memalign(&obj, 64, size) != 0)
++    CmiAbort("Unable to allocate aligned group object");
++  return obj;
++}
++
+ void CkCreateLocalGroup(CkGroupID groupID, int epIdx, envelope *env)
+ {
+   int gIdx = _entryTable[epIdx]->chareIdx;
+-  void *obj = malloc(_chareTable[gIdx]->size);
++  void *obj = CkAllocGroupObject(_chareTable[gIdx]->size);
+   _MEMCHECK(obj);
+   setMemoryTypeChare(obj);
+   CmiImmediateLock(CkpvAccess(_groupTableImmLock));
+@@ -697,7 +709,7 @@
+ {
+   int gIdx = _entryTable[epIdx]->chareIdx;
+   size_t objSize=_chareTable[gIdx]->size;
+-  void *obj = malloc(objSize);
++  void *obj = CkAllocGroupObject(objSize);
+   _MEMCHECK(obj);
+   setMemoryTypeChare(obj);
+   CkpvAccess(_currentGroup) = groupID;

@@ -1,0 +1,284 @@
+--- pass11/src/torchwave/approximants/imrphenom_xhm.py
++++ pass12/src/torchwave/approximants/imrphenom_xhm.py
+@@ -48,6 +48,27 @@
+     [1.0, 1.0, 1.0],
+ ], dtype=torch.float64)
+ _INSP_MAT_INV = torch.linalg.inv(_INSP_MAT)
++
++
++def _published_parameter_amplitude_veto(
++    mode: Tuple[int, int],
++    mass_ratio: torch.Tensor,
++    eta: torch.Tensor,
++    chi1: torch.Tensor,
++    chi2: torch.Tensor,
++) -> torch.Tensor:
++    """Remove both inner amplitude nodes in the unconditional paper regions.
++
++    García-Quirós et al., arXiv:2001.10914v2, Sec. V.A.3 and Table V.
++    Absolute-amplitude vetoes and the conditional q > 40 rows require the
++    separately specified, ordered checks and are not implemented here.
++    """
++    return (
++        ((mode == (2, 1)) & (eta < 0.23) & (chi1 > 0.7) & (chi2 < -0.5))
++        | ((mode == (3, 2)) & (mass_ratio > 2.5) & (chi1 < -0.6) & (chi2 > 0.0))
++        | ((mode == (3, 2)) & (chi1 < -0.9) & (chi2 < -0.9))
++        | ((mode in ((3, 3), (4, 4))) & (mass_ratio > 7.0) & (chi1 > 0.95))
++    )
+ 
+ 
+ def _unsqueeze_to(tensor: Union[float, torch.Tensor], target: torch.Tensor) -> torch.Tensor:
+@@ -1011,7 +1032,13 @@
+                 p_bound_min = torch.minimum(p_ins, p_rd)
+                 p_bound_min_u = _unsqueeze_to(p_bound_min, mf_grid)
+ 
+-                p_poly_active = torch.where(has_zero_crossing_u, p3_poly_grid, p_poly_grid)
++                # Remove both inner nodes in the unconditional published
++                # parameter regions, retaining the two C1 boundary matches.
++                parameter_veto = _published_parameter_amplitude_veto(
++                    (l, m), m1 / m2, eta, s1, s2,
++                )
++                use_cubic = has_zero_crossing_u | _unsqueeze_to(parameter_veto, mf_grid)
++                p_poly_active = torch.where(use_cubic, p3_poly_grid, p_poly_grid)
+                 # If polynomial still dips or crosses zero, fallback to order 1 linear
+                 p_poly_active = torch.where(p_poly_active <= 0.05 * p_bound_min_u, p1_poly_grid, p_poly_active)
+                 p_poly_active = torch.clamp(p_poly_active, min=1e-12)
+--- pass11/src/torchwave/approximants/imrphenom_xp.py
++++ pass12/src/torchwave/approximants/imrphenom_xp.py
+@@ -67,6 +67,7 @@
+         precession_method: str = "nnlo",
+         prec_version: Optional[int] = None,
+         convention: int = 1,
++        final_spin_mod: Optional[int] = None,
+         **kwargs,
+     ) -> Tuple[torch.Tensor, torch.Tensor]:
+         """Generate precessing dominant-mode polarizations.
+@@ -78,8 +79,15 @@
+         phi0 is an additional source-frame observer azimuth. NNLO rotations
+         with L+S_parallel<=0 are unsupported; exactly aligned convention-1
+         inputs use the nonprecessing carrier directly.
++
++        ``final_spin_mod=0`` explicitly selects the NNLO remnant estimate
++        independently of the Euler-angle prescription. ``None`` retains the
++        existing behavior: NNLO remnant for versions 101--104 and the aligned
++        carrier remnant otherwise. MSA FinalSpinMod3 is not implemented.
+         """
+         p_ver = resolve_precession_version(precession_method, prec_version)
++        if final_spin_mod not in (None, 0):
++            raise ValueError("final_spin_mod must be None or 0 (NNLO).")
+         if convention not in (0, 1, 5, 6, 7):
+             raise ValueError(f"Unsupported precession convention: {convention}.")
+         freqs = f if f is not None else sample_frequencies
+@@ -159,8 +167,8 @@
+         m_sec = total_mass * MSUN_SEC
+         final_spin_override = None
+         # Table V FinalSpinMod=0 is the NNLO (versions 101--104) remnant model.
+-        # An explicit MSA version takes precedence over the method label.
+-        if p_ver in (101, 102, 103, 104):
++        # An explicit remnant prescription is independent of the angle version.
++        if final_spin_mod == 0 or p_ver in (101, 102, 103, 104):
+             chip = compute_effective_chip(m1, m2, s1x, s1y, s2x, s2y)
+             final_spin_override = XASParameterFits.fit_final_spin_nnlo(eta, s1z, s2z, chip)
+         is_batched = total_mass.dim() >= 1
+--- pass11/src/torchwave/approximants/imrphenom_xphm.py
++++ pass12/src/torchwave/approximants/imrphenom_xphm.py
+@@ -107,6 +107,7 @@
+         precession_method: str = "nnlo",
+         prec_version: Optional[int] = None,
+         convention: int = 1,
++        final_spin_mod: Optional[int] = None,
+         **kwargs,
+     ) -> Union[
+         Tuple[torch.Tensor, torch.Tensor],
+@@ -136,8 +137,15 @@
+ 
+         NNLO rotations with L+S_parallel<=0 are unsupported; exactly aligned
+         convention-1 inputs use the nonprecessing carrier directly.
++
++        ``final_spin_mod=0`` explicitly selects the NNLO remnant estimate
++        independently of the Euler-angle prescription. ``None`` retains the
++        existing behavior: NNLO remnant for versions 101--104 and the aligned
++        carrier remnant otherwise. MSA FinalSpinMod3 is not implemented.
+         """
+         p_ver = None if precession_method.lower() == "ode" else resolve_precession_version(precession_method, prec_version)
++        if final_spin_mod not in (None, 0):
++            raise ValueError("final_spin_mod must be None or 0 (NNLO).")
+         if precession_method.lower() == "ode" and prec_version is not None:
+             raise ValueError("prec_version does not apply to precession_method='ode'.")
+         if convention not in (0, 1, 5, 6, 7):
+@@ -227,8 +235,8 @@
+         m_sec = total_mass * MSUN_SEC
+         final_spin_override = None
+         # Table V FinalSpinMod=0 is the NNLO (versions 101--104) remnant model.
+-        # An explicit MSA version takes precedence over the method label.
+-        if p_ver in (101, 102, 103, 104):
++        # An explicit remnant prescription is independent of the angle version.
++        if final_spin_mod == 0 or p_ver in (101, 102, 103, 104):
+             eta = component_masses_to_eta(m1, m2)
+             chip = compute_effective_chip(m1, m2, s1x, s1y, s2x, s2y)
+             final_spin_override = XASParameterFits.fit_final_spin_nnlo(eta, s1z, s2z, chip)
+--- pass11/tests/test_pass12_higher_modes.py
++++ pass12/tests/test_pass12_higher_modes.py
+@@ -0,0 +1,64 @@
++"""Source-defined parameter vetoes exercised through the XHM waveform."""
++
++import pytest
++import torch
++
++from torchwave.approximants import imrphenom_xhm as xhm
++from torchwave.approximants.xhm_fits import XHMParameterFits
++
++DTYPE = torch.float64
++
++
++@pytest.mark.parametrize("mode,q,eta,c1,c2,expected", [
++    ((2, 1), 3., .20, .8, -.6, True),
++    ((2, 1), 3., .23, .8, -.6, False),
++    ((2, 1), 3., .20, .7, -.6, False),
++    ((2, 1), 3., .20, .8, -.5, False),
++    ((3, 2), 3., .20, -.7, .1, True),
++    ((3, 2), 2.5, .20, -.7, .1, False),
++    ((3, 2), 3., .20, -.6, .1, False),
++    ((3, 2), 3., .20, -.7, 0., False),
++    ((3, 2), 2., .22, -.95, -.95, True),
++    ((3, 2), 2., .22, -.9, -.95, False),
++    ((3, 2), 2., .22, -.95, -.9, False),
++    ((3, 3), 8., .10, .96, 0., True),
++    ((4, 4), 8., .10, .96, 0., True),
++    ((3, 3), 7., .10, .96, 0., False),
++    ((4, 4), 8., .10, .95, 0., False),
++    ((2, 2), 8., .10, .96, 0., False),
++    # The conditional q > 40 veto is deliberately outside this subset.
++    ((2, 1), 41., .02, .91, 0., False),
++])
++def test_published_regions_and_strict_boundaries(mode, q, eta, c1, c2, expected):
++    args = [torch.tensor(x, dtype=DTYPE) for x in (q, eta, c1, c2)]
++    assert bool(xhm._published_parameter_amplitude_veto(mode, *args)) == expected
++
++
++def test_vetoed_waveform_ignores_inner_fit_nodes_in_mixed_batch(monkeypatch):
++    """Changing an inner node affects only the non-vetoed production row."""
++    f = torch.linspace(20., 500., 151, dtype=DTYPE)
++    spin = torch.tensor([-.95, -.8], dtype=DTYPE, requires_grad=True)
++    options = dict(mass1=torch.tensor([40., 40.], dtype=DTYPE), mass2=20.,
++                   chi1=spin, chi2=-.95, return_unprojected_modes=True)
++    model = xhm.IMRPhenomXHM(modes=((3, 2),))
++    before = model(f, **options)[2][(3, 2)]
++    gradient = torch.autograd.grad((before.abs() * 1e22).square().sum(), spin)[0]
++    assert torch.isfinite(before).all()
++    assert torch.isfinite(gradient).all()
++    assert (gradient != 0).all()
++
++    original = XHMParameterFits.amp_int1_32
++    monkeypatch.setattr(XHMParameterFits, "amp_int1_32",
++                        staticmethod(lambda *args: 1.01 * original(*args)))
++    after = model(f, **options)[2][(3, 2)]
++    torch.testing.assert_close(after[0], before[0], rtol=0., atol=0.)
++    relative_change = torch.linalg.vector_norm(after[1] - before[1]) / torch.linalg.vector_norm(before[1])
++    assert relative_change > 1e-4
++
++    # Disable just the new selection: the same vetoed physical system now
++    # depends on the inner nodes, so the check cannot pass via an old fallback.
++    monkeypatch.setattr(xhm, "_published_parameter_amplitude_veto",
++                        lambda mode, q, eta, c1, c2: torch.zeros_like(eta, dtype=torch.bool))
++    without_veto = model(f, **options)[2][(3, 2)]
++    relative_change = torch.linalg.vector_norm(without_veto[0] - after[0]) / torch.linalg.vector_norm(after[0])
++    assert relative_change > 1e-4
+--- pass11/tests/test_pass12_precession.py
++++ pass12/tests/test_pass12_precession.py
+@@ -0,0 +1,95 @@
++"""Pass 12 checks for the versioned precession prescription boundary."""
++
++import pytest
++import torch
++
++from torchwave.approximants.imrphenom_xp import IMRPhenomXP
++from torchwave.approximants.imrphenom_xphm import IMRPhenomXPHM
++from torchwave.approximants.precession_msa import (
++    evaluate_msa_precession,
++    resolve_precession_version,
++)
++
++
++DTYPE = torch.float64
++
++
++@pytest.mark.parametrize(
++    ("method", "expected"),
++    (("nnlo", 102), ("msa", 223)),
++)
++def test_wrapper_method_defaults_are_versioned(method, expected):
++    assert resolve_precession_version(method, None) == expected
++
++
++def test_low_level_msa_default_is_explicitly_223():
++    common = dict(
++        v=torch.tensor([0.16, 0.22], dtype=DTYPE),
++        v0=torch.tensor(0.14, dtype=DTYPE),
++        m1=torch.tensor(35.0, dtype=DTYPE),
++        m2=torch.tensor(25.0, dtype=DTYPE),
++        s1x=torch.tensor(0.2, dtype=DTYPE),
++        s1y=torch.tensor(0.1, dtype=DTYPE),
++        s1z=torch.tensor(0.3, dtype=DTYPE),
++        s2x=torch.tensor(-0.1, dtype=DTYPE),
++        s2y=torch.tensor(0.05, dtype=DTYPE),
++        s2z=torch.tensor(-0.2, dtype=DTYPE),
++        iota=torch.tensor(0.7, dtype=DTYPE),
++        phi_ref=torch.tensor(0.3, dtype=DTYPE),
++    )
++    implicit = evaluate_msa_precession(**common)
++    explicit = evaluate_msa_precession(**common, prec_version=223)
++    for got, want in zip(implicit, explicit):
++        torch.testing.assert_close(got, want, rtol=0.0, atol=0.0)
++
++
++@pytest.mark.parametrize("model", [IMRPhenomXP(), IMRPhenomXPHM(modes=[(2, 2)])])
++def test_experimental_msa_remnant_mode_is_not_silently_supported(model):
++    with pytest.raises(ValueError, match="final_spin_mod"):
++        model(torch.tensor([40.0], dtype=DTYPE), final_spin_mod=3)
++
++
++@pytest.mark.parametrize("model_class,carrier_name", [
++    (IMRPhenomXP, "xas_model"), (IMRPhenomXPHM, "xhm_model"),
++])
++def test_explicit_nnlo_remnant_reaches_carrier_with_msa_angles(monkeypatch, model_class, carrier_name):
++    """Remnant choice is independent of angle version; old defaults remain."""
++    from torchwave.approximants.imrphenom_xas import XASParameterFits
++    from torchwave.approximants.precession_msa import compute_effective_chip
++
++    model = model_class()
++    carrier = getattr(model, carrier_name)
++    original = carrier.forward
++    received = []
++
++    def capture(*args, **kwargs):
++        received.append(kwargs.get("_final_spin_override"))
++        return original(*args, **kwargs)
++
++    monkeypatch.setattr(carrier, "forward", capture)
++    f = torch.tensor([25., 80., 180.], dtype=DTYPE)
++    options = dict(mass1=40., mass2=20., spin1x=.3, spin1y=.2, spin1z=.1,
++                   spin2x=-.2, spin2y=.3, spin2z=-.1, inclination=.7, f_ref=40.)
++    values = [torch.tensor(x, dtype=DTYPE) for x in (40., 20., .3, .2, -.2, .3)]
++    chip = compute_effective_chip(*values)
++    expected = XASParameterFits.fit_final_spin_nnlo(
++        torch.tensor(2./9., dtype=DTYPE), torch.tensor(.1, dtype=DTYPE),
++        torch.tensor(-.1, dtype=DTYPE), chip,
++    )
++    for version in (102, 223):
++        received.clear()
++        default = model(f, **options, prec_version=version)
++        assert received
++        if version == 223:
++            assert all(value is None for value in received)
++        received.clear()
++        explicit = model(f, **options, prec_version=version, final_spin_mod=0)
++        assert received
++        for value in received:
++            torch.testing.assert_close(value, expected, rtol=1e-14, atol=0.)
++        if version == 102:
++            for actual, prior in zip(explicit, default):
++                torch.testing.assert_close(actual, prior, rtol=0., atol=0.)
++        else:
++            relative_change = torch.linalg.vector_norm(explicit[0] - default[0]) / torch.linalg.vector_norm(default[0])
++            assert relative_change > 1e-6

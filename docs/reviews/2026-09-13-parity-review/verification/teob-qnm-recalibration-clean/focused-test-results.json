@@ -1,0 +1,42 @@
+{
+  "python": "/Users/xangma/miniconda3/envs/pycbcorig313/bin/python",
+  "environment": {
+    "PYTHONPATH": "src:tests:scripts:.",
+    "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1"
+  },
+  "invocations": [
+    {
+      "args": [
+        "-m",
+        "pytest",
+        "-q",
+        "tests/test_teob_qnm_refit_clean.py",
+        "tests/test_teob_ringdown_assembly_clean.py",
+        "tests/test_teob_waveform_construction.py",
+        "tests/test_teob_conditioned_waveform_clean.py",
+        "tests/test_mit_packaging.py"
+      ],
+      "passed": 42,
+      "seconds": 9.57
+    },
+    {
+      "args": [
+        "-m",
+        "pytest",
+        "-q",
+        "tests/test_teob_qnm_refit_replay_clean.py"
+      ],
+      "passed": 18,
+      "seconds": 0.95
+    }
+  ],
+  "total_disjoint_passed": 60,
+  "test_file_sha256": {
+    "tests/test_teob_qnm_refit_clean.py": "1a92b965b44474218df549e6c27ed07e59adc7aa67a142d92a74163580067653",
+    "tests/test_teob_ringdown_assembly_clean.py": "2946090c29bdeae0850b33319e414c966e97604d24ae3153ae3b29d8b323ffa9",
+    "tests/test_teob_waveform_construction.py": "19e7466e25956ccb56faad83dd9590ded7084cb93668c7bebabe43067deb9b93",
+    "tests/test_teob_conditioned_waveform_clean.py": "59db6a3e129c262daa8c26130d41664ba2eeccbe76ece9ee7ca309f68f77f753",
+    "tests/test_mit_packaging.py": "139e829e062b222d02135e9d13308531c9139fc1859940624120bbda5acb9f2a",
+    "tests/test_teob_qnm_refit_replay_clean.py": "993539553b92dfde9755e6e31c6eed2028ed022041bc2a7bf4ee538291831a95"
+  }
+}

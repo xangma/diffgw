@@ -1,0 +1,921 @@
+{
+  "acceleration": {
+    "cache_radial_acceleration": {
+      "max": 0.006980203359432006,
+      "max_abs": 0.006980203359432006,
+      "mean": -0.0005501579962415799,
+      "min": -0.006975809887698292,
+      "rms": 0.0018328150705555176
+    },
+    "fresh_exact_chain_rule": {
+      "max": 0.006980203359432006,
+      "max_abs": 0.006980203359432006,
+      "mean": -0.0005501579962415799,
+      "min": -0.006975809887698292,
+      "rms": 0.0018328150705555176
+    },
+    "fresh_exact_difference_vs_cache": {
+      "max": 0.0,
+      "max_abs": 0.0,
+      "max_relative": 0.0,
+      "mean": 0.0,
+      "min": 0.0,
+      "rms": 0.0
+    },
+    "frozen_difference_vs_exact": {
+      "max": -7.934828275673532e-10,
+      "max_abs": 0.022010848230420425,
+      "max_relative": 112.4154767931781,
+      "mean": -0.0010661501957832241,
+      "min": -0.022010848230420425,
+      "rms": 0.0038369307618501664
+    },
+    "frozen_mobility": {
+      "max": -2.3967460901754545e-08,
+      "max_abs": 0.016814005172990962,
+      "mean": -0.001616308192024804,
+      "min": -0.016814005172990962,
+      "rms": 0.004447444946147805
+    },
+    "mixed_current_p0_force": {
+      "max": -2.3967463627011286e-08,
+      "max_abs": 0.020024145797494012,
+      "mean": -0.0017985192322925423,
+      "min": -0.020024145797494012,
+      "rms": 0.0050892788204437815
+    },
+    "mixed_p0_current_force": {
+      "max": -2.396746359360327e-08,
+      "max_abs": 0.019397244081182787,
+      "mean": -0.001764936913920446,
+      "min": -0.019397244081182787,
+      "rms": 0.0049699249762737855
+    },
+    "strict_difference_vs_exact": {
+      "max": -7.934882446731291e-10,
+      "max_abs": 0.030931579884579372,
+      "max_relative": 155.21690239055854,
+      "mean": -0.0014238827066378815,
+      "min": -0.030931579884579372,
+      "rms": 0.0052712685465232745
+    },
+    "strict_p0": {
+      "max": -2.396746631886032e-08,
+      "max_abs": 0.02398046095310743,
+      "mean": -0.001974040702879461,
+      "min": -0.02398046095310743,
+      "rms": 0.005734230386179475
+    }
+  },
+  "command": "/Users/xangma/miniconda3/envs/pycbcorig313/bin/python scripts/diagnose_teob_radial_acceleration_clean.py",
+  "cwd": "/Users/xangma/repos/torchwave",
+  "derivation": {
+    "exact_conservative_chain_rule": "a=(partial_r rdot)*rdot+(partial_prstar rdot)*prstar_dot; all derivatives and flow factors use the supplied current (r,prstar,pphi), with dp_phi/dt=0",
+    "frozen_mobility": "a=C_current*prstar_dot_current with C held fixed in the time derivative; C_current=xi*(1+2*z3*A*prstar^2/r^2)/(H*Heff), and both C and prstar_dot use the supplied current prstar; the prstar=0 limit is C0=xi0/(H0*Heff0)",
+    "mixed_diagnostics": {
+      "mixed_current_p0_force": "C_current*prstar_dot0",
+      "mixed_p0_current_force": "C0*prstar_dot_current",
+      "selection": "diagnostic only; no runtime branch is selected"
+    },
+    "primary_sources": [
+      {
+        "citation": "Damour & Nagar, arXiv:1406.6913v1, Eqs. (96)--(97)",
+        "role": "NQC radial basis and conservative ddot-r quantity",
+        "url": "https://arxiv.org/pdf/1406.6913v1"
+      },
+      {
+        "citation": "Damour, Nagar & Bernuzzi, arXiv:1212.4357v2, Appendix A",
+        "role": "Hamilton-equation chain rule and conservative branch",
+        "url": "https://arxiv.org/pdf/1212.4357v2"
+      },
+      {
+        "citation": "Nagar et al., arXiv:1806.01772v2, Sec. II, Eqs. (4)--(11)",
+        "role": "zero-spin TEOB effective Hamiltonian and radial flow",
+        "url": "https://arxiv.org/html/1806.01772v2"
+      }
+    ],
+    "strict_leading_p": "rdot=prstar*C; a=C0*prstar_dot0, where C0=xi0/(H0*Heff0) and prstar_dot0=-xi0*(partial_r Heff)_0/H0; A, xi, Heff, H, and partial_r Heff are all evaluated at prstar=0 at the same (r,pphi)"
+  },
+  "device": "cpu",
+  "elapsed_seconds": 0.22247658402193338,
+  "host": "RONI2",
+  "input_cache": {
+    "arrays": {
+      "amplitude": {
+        "dtype": "float64",
+        "shape": [
+          661
+        ]
+      },
+      "amplitude_coefficients": {
+        "dtype": "float64",
+        "shape": [
+          2
+        ]
+      },
+      "amplitude_matrix": {
+        "dtype": "float64",
+        "shape": [
+          2,
+          2
+        ]
+      },
+      "amplitude_rw": {
+        "dtype": "float64",
+        "shape": [
+          661
+        ]
+      },
+      "aux_amplitude": {
+        "dtype": "float64",
+        "shape": [
+          202
+        ]
+      },
+      "aux_basis_amplitude": {
+        "dtype": "float64",
+        "shape": [
+          202,
+          2
+        ]
+      },
+      "aux_basis_phase": {
+        "dtype": "float64",
+        "shape": [
+          202,
+          2
+        ]
+      },
+      "aux_corrected_amplitude": {
+        "dtype": "float64",
+        "shape": [
+          202
+        ]
+      },
+      "aux_corrected_phase": {
+        "dtype": "float64",
+        "shape": [
+          202
+        ]
+      },
+      "aux_orbital_frequency": {
+        "dtype": "float64",
+        "shape": [
+          202
+        ]
+      },
+      "aux_phase": {
+        "dtype": "float64",
+        "shape": [
+          202
+        ]
+      },
+      "aux_radial_acceleration": {
+        "dtype": "float64",
+        "shape": [
+          202
+        ]
+      },
+      "aux_state": {
+        "dtype": "float64",
+        "shape": [
+          202,
+          4
+        ]
+      },
+      "aux_time": {
+        "dtype": "float64",
+        "shape": [
+          202
+        ]
+      },
+      "auxiliary_amplitude_rw": {
+        "dtype": "float64",
+        "shape": [
+          202
+        ]
+      },
+      "auxiliary_negative_amplitude": {
+        "dtype": "bool",
+        "shape": [
+          202
+        ]
+      },
+      "corrected_amplitude": {
+        "dtype": "float64",
+        "shape": [
+          661
+        ]
+      },
+      "corrected_phase": {
+        "dtype": "float64",
+        "shape": [
+          661
+        ]
+      },
+      "mode": {
+        "dtype": "complex128",
+        "shape": [
+          661
+        ]
+      },
+      "orbital_frequency": {
+        "dtype": "float64",
+        "shape": [
+          661
+        ]
+      },
+      "phase": {
+        "dtype": "float64",
+        "shape": [
+          661
+        ]
+      },
+      "phase_coefficients": {
+        "dtype": "float64",
+        "shape": [
+          2
+        ]
+      },
+      "phase_matrix": {
+        "dtype": "float64",
+        "shape": [
+          2,
+          2
+        ]
+      },
+      "radial_acceleration": {
+        "dtype": "float64",
+        "shape": [
+          661
+        ]
+      },
+      "state": {
+        "dtype": "float64",
+        "shape": [
+          661,
+          4
+        ]
+      },
+      "targets": {
+        "dtype": "float64",
+        "shape": [
+          4
+        ]
+      },
+      "time": {
+        "dtype": "float64",
+        "shape": [
+          661
+        ]
+      }
+    },
+    "cached_mode_provider": "teob_published_driver.teob22_mode -> generic FactorizedModes.mode",
+    "cached_mode_used_for_nqc": false,
+    "generic_carrier_reproduction": {
+      "amplitude_difference_vs_cache": {
+        "max": 0.0,
+        "max_abs": 0.0,
+        "mean": 0.0,
+        "min": 0.0,
+        "rms": 0.0
+      },
+      "mode_difference_vs_cache": {
+        "max": 0.0,
+        "max_abs": 0.0,
+        "mean": 0.0,
+        "min": 0.0,
+        "rms": 0.0
+      },
+      "phase_difference_vs_cache": {
+        "max": 0.0,
+        "max_abs": 0.0,
+        "mean": 0.0,
+        "min": 0.0,
+        "rms": 0.0
+      }
+    },
+    "path": "/Users/xangma/repos/torchwave/docs/reviews/2026-09-13-parity-review/verification/teob-merger-nqc-clean/physical-input-output.npz",
+    "read_only": true,
+    "samples": 661,
+    "sha256_after": "06bb6d88d9b148cc481c8b45a694ea0d132ec195f0c109fc83ba0e024421d334",
+    "sha256_before": "06bb6d88d9b148cc481c8b45a694ea0d132ec195f0c109fc83ba0e024421d334",
+    "time_end": 12318.826873406742,
+    "time_start": 0.0,
+    "unchanged": true
+  },
+  "nqc": {
+    "branches": {
+      "exact_conservative_chain_rule": {
+        "acceleration": {
+          "max": 0.006980203359432006,
+          "max_abs": 0.006980203359432006,
+          "mean": -0.0005501579962415799,
+          "min": -0.006975809887698292,
+          "rms": 0.0018328150705555176
+        },
+        "acceleration_difference_vs_exact_chain_rule": {
+          "max": 0.0,
+          "max_abs": 0.0,
+          "max_relative": 0.0,
+          "mean": 0.0,
+          "min": 0.0,
+          "rms": 0.0
+        },
+        "amplitude_branches": {
+          "auxiliary_corrected": {
+            "max": 0.3753401195690672,
+            "max_abs": 0.3753401195690672,
+            "mean": 0.3561807087017356,
+            "min": 0.3238732475752241,
+            "rms": 0.3565486084255572
+          },
+          "auxiliary_difference_vs_exact_branch": {
+            "max": 0.0,
+            "max_abs": 0.0,
+            "max_relative": 0.0,
+            "mean": 0.0,
+            "min": 0.0,
+            "rms": 0.0
+          },
+          "auxiliary_negative_samples": 0,
+          "original_corrected": {
+            "max": 0.3753340513499833,
+            "max_abs": 0.3753340513499833,
+            "mean": 0.17626705433902337,
+            "min": 0.07239664410765226,
+            "rms": 0.197515334120308
+          },
+          "original_difference_vs_exact_branch": {
+            "max": 0.0,
+            "max_abs": 0.0,
+            "max_relative": 0.0,
+            "mean": 0.0,
+            "min": 0.0,
+            "rms": 0.0
+          }
+        },
+        "branch_name": "exact_conservative_chain_rule",
+        "coefficients": {
+          "amplitude": [
+            -0.06665689174701846,
+            1.2859694155452546
+          ],
+          "phase": [
+            0.18545551628736504,
+            1.7988546881041059
+          ]
+        },
+        "external_tail_factor": false,
+        "matching": {
+          "amplitude_condition": 1.0783172195525959,
+          "amplitude_residual": [
+            -1.3877787807814457e-17,
+            0.0
+          ],
+          "auxiliary_samples": 202,
+          "auxiliary_spacing": 0.1,
+          "cut_last_index": 659,
+          "cut_start_index": 574,
+          "matching_index": 168,
+          "phase_condition": 1.2636734408062182,
+          "phase_residual": [
+            0.0,
+            0.0
+          ],
+          "t_nqc": 12315.452448035621,
+          "t_peak_grid": 12316.452448035621
+        },
+        "mode_provider": "TEOBRadiationClean.mode",
+        "phase_branches": {
+          "auxiliary_corrected": {
+            "max": 423.51006421745325,
+            "max_abs": 423.51006421745325,
+            "mean": 420.0370076165157,
+            "min": 417.1972463485509,
+            "rms": 420.0409538719144
+          },
+          "original_corrected": {
+            "max": 423.5831255899754,
+            "max_abs": 423.5831255899754,
+            "mean": 339.0053719717755,
+            "min": -2.994192693576011,
+            "rms": 348.80492352787513
+          }
+        },
+        "tail_application_count": 1,
+        "target_provenance": "Nagar, Riemenschneider & Pratten (2017), arXiv:1703.06814v1, Appendix A Table II (q=1) and Table IV + Eq. (A3) (q>1); A_RW=A/(nu*sqrt(24))=|Psi_22|/nu; acceleration branch=exact_conservative_chain_rule"
+      },
+      "frozen_mobility": {
+        "acceleration": {
+          "max": -2.3967460901754545e-08,
+          "max_abs": 0.016814005172990962,
+          "mean": -0.001616308192024804,
+          "min": -0.016814005172990962,
+          "rms": 0.004447444946147805
+        },
+        "acceleration_difference_vs_exact_chain_rule": {
+          "max": -7.934828275673532e-10,
+          "max_abs": 0.022010848230420425,
+          "max_relative": 112.4154767931781,
+          "mean": -0.0010661501957832241,
+          "min": -0.022010848230420425,
+          "rms": 0.0038369307618501664
+        },
+        "amplitude_branches": {
+          "auxiliary_corrected": {
+            "max": 0.38719775573780607,
+            "max_abs": 0.38719775573780607,
+            "mean": 0.35939538038665786,
+            "min": 0.32592642877878436,
+            "rms": 0.3597810018667555
+          },
+          "auxiliary_difference_vs_exact_branch": {
+            "max": 0.035424320539029164,
+            "max_abs": 0.035424320539029164,
+            "max_relative": 0.10070209115993058,
+            "mean": 0.0032146716849222926,
+            "min": 0.0,
+            "rms": 0.005808688991382053
+          },
+          "auxiliary_negative_samples": 0,
+          "original_corrected": {
+            "max": 0.3913710936622726,
+            "max_abs": 0.3913710936622726,
+            "mean": 0.17711494059950686,
+            "min": 0.07239678471970021,
+            "rms": 0.1990220271558794
+          },
+          "original_difference_vs_exact_branch": {
+            "max": 0.042579307296935265,
+            "max_abs": 0.042579307296935265,
+            "max_relative": 0.12207657680429475,
+            "mean": 0.000847886260483489,
+            "min": 1.4061204794968418e-07,
+            "rms": 0.003745986422078761
+          }
+        },
+        "branch_name": "frozen_mobility",
+        "coefficients": {
+          "amplitude": [
+            0.11334193524201375,
+            1.1047430560099525
+          ],
+          "phase": [
+            0.18545551628736504,
+            1.7988546881041059
+          ]
+        },
+        "external_tail_factor": false,
+        "matching": {
+          "amplitude_condition": 3.906410058003553,
+          "amplitude_residual": [
+            0.0,
+            0.0
+          ],
+          "auxiliary_samples": 202,
+          "auxiliary_spacing": 0.1,
+          "cut_last_index": 659,
+          "cut_start_index": 574,
+          "matching_index": 168,
+          "phase_condition": 1.2636734408062182,
+          "phase_residual": [
+            0.0,
+            0.0
+          ],
+          "t_nqc": 12315.452448035621,
+          "t_peak_grid": 12316.452448035621
+        },
+        "mode_provider": "TEOBRadiationClean.mode",
+        "phase_branches": {
+          "auxiliary_corrected": {
+            "max": 423.51006421745325,
+            "max_abs": 423.51006421745325,
+            "mean": 420.0370076165157,
+            "min": 417.1972463485509,
+            "rms": 420.0409538719144
+          },
+          "original_corrected": {
+            "max": 423.5831255899754,
+            "max_abs": 423.5831255899754,
+            "mean": 339.0053719717755,
+            "min": -2.994192693576011,
+            "rms": 348.80492352787513
+          }
+        },
+        "tail_application_count": 1,
+        "target_provenance": "Nagar, Riemenschneider & Pratten (2017), arXiv:1703.06814v1, Appendix A Table II (q=1) and Table IV + Eq. (A3) (q>1); A_RW=A/(nu*sqrt(24))=|Psi_22|/nu; acceleration branch=frozen_mobility"
+      },
+      "mixed_current_mobility_p0_force": {
+        "acceleration": {
+          "max": -2.3967463627011286e-08,
+          "max_abs": 0.020024145797494012,
+          "mean": -0.0017985192322925423,
+          "min": -0.020024145797494012,
+          "rms": 0.0050892788204437815
+        },
+        "acceleration_difference_vs_exact_chain_rule": {
+          "max": -7.934855528240949e-10,
+          "max_abs": 0.026291573457356537,
+          "max_relative": 134.1028990915676,
+          "mean": -0.0012483612360509628,
+          "min": -0.026291573457356537,
+          "rms": 0.004556485284102299
+        },
+        "amplitude_branches": {
+          "auxiliary_corrected": {
+            "max": 0.3976500455928547,
+            "max_abs": 0.3976500455928547,
+            "mean": 0.3602585496700128,
+            "min": 0.3262615228366977,
+            "rms": 0.3606677940686853
+          },
+          "auxiliary_difference_vs_exact_branch": {
+            "max": 0.04587661039407781,
+            "max_abs": 0.04587661039407781,
+            "max_relative": 0.1304152212862642,
+            "mean": 0.004077840968277153,
+            "min": 0.0,
+            "rms": 0.007512122759886774
+          },
+          "auxiliary_negative_samples": 0,
+          "original_corrected": {
+            "max": 0.4038012679185474,
+            "max_abs": 0.4038012679185474,
+            "mean": 0.17733600519334797,
+            "min": 0.07239678752455214,
+            "rms": 0.19943788381487837
+          },
+          "original_difference_vs_exact_branch": {
+            "max": 0.055009481553210116,
+            "max_abs": 0.055009481553210116,
+            "max_relative": 0.15771438349064554,
+            "mean": 0.0010689508543245822,
+            "min": 1.434168998837304e-07,
+            "rms": 0.004850948844511556
+          }
+        },
+        "branch_name": "mixed_current_mobility_p0_force",
+        "coefficients": {
+          "amplitude": [
+            0.15074271284469407,
+            1.1143163990901281
+          ],
+          "phase": [
+            0.18545551628736504,
+            1.7988546881041059
+          ]
+        },
+        "external_tail_factor": false,
+        "matching": {
+          "amplitude_condition": 4.597890524767105,
+          "amplitude_residual": [
+            0.0,
+            -1.734723475976807e-18
+          ],
+          "auxiliary_samples": 202,
+          "auxiliary_spacing": 0.1,
+          "cut_last_index": 659,
+          "cut_start_index": 574,
+          "matching_index": 168,
+          "phase_condition": 1.2636734408062182,
+          "phase_residual": [
+            0.0,
+            0.0
+          ],
+          "t_nqc": 12315.452448035621,
+          "t_peak_grid": 12316.452448035621
+        },
+        "mode_provider": "TEOBRadiationClean.mode",
+        "phase_branches": {
+          "auxiliary_corrected": {
+            "max": 423.51006421745325,
+            "max_abs": 423.51006421745325,
+            "mean": 420.0370076165157,
+            "min": 417.1972463485509,
+            "rms": 420.0409538719144
+          },
+          "original_corrected": {
+            "max": 423.5831255899754,
+            "max_abs": 423.5831255899754,
+            "mean": 339.0053719717755,
+            "min": -2.994192693576011,
+            "rms": 348.80492352787513
+          }
+        },
+        "tail_application_count": 1,
+        "target_provenance": "Nagar, Riemenschneider & Pratten (2017), arXiv:1703.06814v1, Appendix A Table II (q=1) and Table IV + Eq. (A3) (q>1); A_RW=A/(nu*sqrt(24))=|Psi_22|/nu; acceleration branch=mixed_current_mobility_p0_force"
+      },
+      "mixed_p0_mobility_current_force": {
+        "acceleration": {
+          "max": -2.396746359360327e-08,
+          "max_abs": 0.019397244081182787,
+          "mean": -0.001764936913920446,
+          "min": -0.019397244081182787,
+          "rms": 0.0049699249762737855
+        },
+        "acceleration_difference_vs_exact_chain_rule": {
+          "max": -7.934855194160798e-10,
+          "max_abs": 0.025622310723917234,
+          "max_relative": 130.08922214827717,
+          "mean": -0.0012147789176788657,
+          "min": -0.025622310723917234,
+          "rms": 0.004427335568742295
+        },
+        "amplitude_branches": {
+          "auxiliary_corrected": {
+            "max": 0.39445878307621296,
+            "max_abs": 0.39445878307621296,
+            "mean": 0.3599588466870224,
+            "min": 0.3261274517812676,
+            "rms": 0.36036043556919445
+          },
+          "auxiliary_difference_vs_exact_branch": {
+            "max": 0.04268534787743605,
+            "max_abs": 0.04268534787743605,
+            "max_relative": 0.12134329544616071,
+            "mean": 0.003778137985286788,
+            "min": 0.0,
+            "rms": 0.006969911486125322
+          },
+          "auxiliary_negative_samples": 0,
+          "original_corrected": {
+            "max": 0.4000470582300671,
+            "max_abs": 0.4000470582300671,
+            "mean": 0.17726215179508042,
+            "min": 0.07239678500780802,
+            "rms": 0.19929956447849434
+          },
+          "original_difference_vs_exact_branch": {
+            "max": 0.05125527186472978,
+            "max_abs": 0.05125527186472978,
+            "max_relative": 0.14695091417962214,
+            "mean": 0.0009950974560570508,
+            "min": 1.4090015576506687e-07,
+            "rms": 0.004507436254085277
+          }
+        },
+        "branch_name": "mixed_p0_mobility_current_force",
+        "coefficients": {
+          "amplitude": [
+            0.14395617206105343,
+            1.1154970622707203
+          ],
+          "phase": [
+            0.18545551628736504,
+            1.7988546881041059
+          ]
+        },
+        "external_tail_factor": false,
+        "matching": {
+          "amplitude_condition": 4.471806065475399,
+          "amplitude_residual": [
+            0.0,
+            0.0
+          ],
+          "auxiliary_samples": 202,
+          "auxiliary_spacing": 0.1,
+          "cut_last_index": 659,
+          "cut_start_index": 574,
+          "matching_index": 168,
+          "phase_condition": 1.2636734408062182,
+          "phase_residual": [
+            0.0,
+            0.0
+          ],
+          "t_nqc": 12315.452448035621,
+          "t_peak_grid": 12316.452448035621
+        },
+        "mode_provider": "TEOBRadiationClean.mode",
+        "phase_branches": {
+          "auxiliary_corrected": {
+            "max": 423.51006421745325,
+            "max_abs": 423.51006421745325,
+            "mean": 420.0370076165157,
+            "min": 417.1972463485509,
+            "rms": 420.0409538719144
+          },
+          "original_corrected": {
+            "max": 423.5831255899754,
+            "max_abs": 423.5831255899754,
+            "mean": 339.0053719717755,
+            "min": -2.994192693576011,
+            "rms": 348.80492352787513
+          }
+        },
+        "tail_application_count": 1,
+        "target_provenance": "Nagar, Riemenschneider & Pratten (2017), arXiv:1703.06814v1, Appendix A Table II (q=1) and Table IV + Eq. (A3) (q>1); A_RW=A/(nu*sqrt(24))=|Psi_22|/nu; acceleration branch=mixed_p0_mobility_current_force"
+      },
+      "strict_leading_p": {
+        "acceleration": {
+          "max": -2.396746631886032e-08,
+          "max_abs": 0.02398046095310743,
+          "mean": -0.001974040702879461,
+          "min": -0.02398046095310743,
+          "rms": 0.005734230386179475
+        },
+        "acceleration_difference_vs_exact_chain_rule": {
+          "max": -7.934882446731291e-10,
+          "max_abs": 0.030931579884579372,
+          "max_relative": 155.21690239055854,
+          "mean": -0.0014238827066378815,
+          "min": -0.030931579884579372,
+          "rms": 0.0052712685465232745
+        },
+        "amplitude_branches": {
+          "auxiliary_corrected": {
+            "max": 0.4040929463024351,
+            "max_abs": 0.4040929463024351,
+            "mean": 0.36062144199593754,
+            "min": 0.3262770359145887,
+            "rms": 0.3610505295956508
+          },
+          "auxiliary_difference_vs_exact_branch": {
+            "max": 0.05231951110365818,
+            "max_abs": 0.05231951110365818,
+            "max_relative": 0.14873070524524953,
+            "mean": 0.00444073329420191,
+            "min": 0.0,
+            "rms": 0.008477456022528805
+          },
+          "auxiliary_negative_samples": 0,
+          "original_corrected": {
+            "max": 0.41158103757492887,
+            "max_abs": 0.41158103757492887,
+            "mean": 0.17744131762876839,
+            "min": 0.07239677923992052,
+            "rms": 0.1996457961611117
+          },
+          "original_difference_vs_exact_branch": {
+            "max": 0.06278925120959156,
+            "max_abs": 0.06278925120959156,
+            "max_relative": 0.1800192942153282,
+            "mean": 0.001174263289745004,
+            "min": 1.351322682641154e-07,
+            "rms": 0.005510305829263603
+          }
+        },
+        "branch_name": "strict_leading_p",
+        "coefficients": {
+          "amplitude": [
+            0.19033733621853832,
+            1.1408061242068777
+          ],
+          "phase": [
+            0.18545551628736504,
+            1.7988546881041059
+          ]
+        },
+        "external_tail_factor": false,
+        "matching": {
+          "amplitude_condition": 5.343368209939973,
+          "amplitude_residual": [
+            1.3877787807814457e-17,
+            0.0
+          ],
+          "auxiliary_samples": 202,
+          "auxiliary_spacing": 0.1,
+          "cut_last_index": 659,
+          "cut_start_index": 574,
+          "matching_index": 168,
+          "phase_condition": 1.2636734408062182,
+          "phase_residual": [
+            0.0,
+            0.0
+          ],
+          "t_nqc": 12315.452448035621,
+          "t_peak_grid": 12316.452448035621
+        },
+        "mode_provider": "TEOBRadiationClean.mode",
+        "phase_branches": {
+          "auxiliary_corrected": {
+            "max": 423.51006421745325,
+            "max_abs": 423.51006421745325,
+            "mean": 420.0370076165157,
+            "min": 417.1972463485509,
+            "rms": 420.0409538719144
+          },
+          "original_corrected": {
+            "max": 423.5831255899754,
+            "max_abs": 423.5831255899754,
+            "mean": 339.0053719717755,
+            "min": -2.994192693576011,
+            "rms": 348.80492352787513
+          }
+        },
+        "tail_application_count": 1,
+        "target_provenance": "Nagar, Riemenschneider & Pratten (2017), arXiv:1703.06814v1, Appendix A Table II (q=1) and Table IV + Eq. (A3) (q>1); A_RW=A/(nu*sqrt(24))=|Psi_22|/nu; acceleration branch=strict_leading_p"
+      }
+    },
+    "fixed_step": 0.1,
+    "input_mode_provider": "TEOBRadiationClean.mode",
+    "target_provider": "published_2017_nqc_targets",
+    "targets": [
+      0.317783696,
+      -0.0019246396,
+      0.38280077079999997,
+      0.0114928308
+    ]
+  },
+  "physical_carrier": {
+    "amplitude": {
+      "max": 0.4541236856865785,
+      "max_abs": 0.4541236856865785,
+      "mean": 0.18444133183349365,
+      "min": 0.0723975164467559,
+      "rms": 0.21254301800029277
+    },
+    "external_tail_factor": false,
+    "mode": "(2,2)",
+    "mode_samples": 661,
+    "parity_claim": false,
+    "parity_note": "The historical cache carrier and the freshly evaluated clean TEOB carrier are reported separately; these differences are diagnostic evidence, not a public waveform parity result.",
+    "phase": {
+      "max": 422.9853283412126,
+      "max_abs": 422.9853283412126,
+      "mean": 338.950361381502,
+      "min": -2.994707064210263,
+      "rms": 348.7392316472931
+    },
+    "phase_extraction": "2*orbital_phase - unwrap(angle(mode*exp(2j*orbital_phase)))",
+    "physical_vs_generic_carrier": {
+      "amplitude": {
+        "max": -4.6201191790384843e-07,
+        "max_abs": 0.10049391122222717,
+        "max_relative": 0.21404954561337558,
+        "mean": -0.0055416040942525046,
+        "min": -0.10049391122222717,
+        "rms": 0.016983762619804395
+      },
+      "complex_mode": {
+        "max": 0.15524448438655802,
+        "max_abs": 0.2197324670421138,
+        "mean": -0.005394699606371753,
+        "min": -0.2197324670421138,
+        "rms": 0.053047592863719656
+      },
+      "phase": {
+        "max": 0.4651504022784252,
+        "max_abs": 0.4651504022784252,
+        "mean": 0.11716756970816601,
+        "min": 0.02246165799539801,
+        "rms": 0.16812980372859748
+      }
+    },
+    "physical_vs_historical_cache": {
+      "amplitude": {
+        "max": -4.6201191790384843e-07,
+        "max_abs": 0.10049391122222717,
+        "max_relative": 0.21404954561337558,
+        "mean": -0.0055416040942525046,
+        "min": -0.10049391122222717,
+        "rms": 0.016983762619804395
+      },
+      "complex_mode": {
+        "max": 0.15524448438655802,
+        "max_abs": 0.2197324670421138,
+        "mean": -0.005394699606371753,
+        "min": -0.2197324670421138,
+        "rms": 0.053047592863719656
+      },
+      "phase": {
+        "max": 0.4651504022784252,
+        "max_abs": 0.4651504022784252,
+        "mean": 0.11716756970816601,
+        "min": 0.02246165799539801,
+        "rms": 0.16812980372859748
+      }
+    },
+    "provider": "TEOBRadiationClean.mode",
+    "residual_phase_policy": "zero-unpublished",
+    "tail_application_count": 1,
+    "tail_application_location": "inside TEOBRadiationClean.mode"
+  },
+  "pid": 63549,
+  "python": "/Users/xangma/miniconda3/envs/pycbcorig313/bin/python",
+  "source_hashes_unchanged": true,
+  "source_sha256_after": {
+    "generic_carrier": "58376bbd318f5b5f33922759416fc3b1d2531cb7edafb0e9d8d5c1edadfa8845",
+    "hamiltonian": "05e15d8fd9888ee8d454d61fbc8454fe5c652747780f77c771718557ce0294f3",
+    "module": "6e16681eae0daade84bc540f12ee6fe40b3ad08929444273faf03123b7bbc3f9",
+    "nqc": "f705514ef981b3f0a557efeebe508b52fdb70c634a8ac8f2c357f30761871068",
+    "nqc_basis": "8ec2d77a57b96e8246bdae3ca8c62c4e2a17cabf1c5554aa1e47fe25b1ea8f46",
+    "radiation": "dca2c9791403467d85572f25a062cbc995d8228743d33b6b2e5dc28c13336bd6",
+    "script": "57b8e0de7eec8ef1066cdc7798c2122aaee2c8280e04305bc90a837e1349d304",
+    "test": "164f13d4e9dfbac6d3be00855e977d79d5d53c31b56f805fbb2c0cee76006d63",
+    "trajectory": "6728419dd6b7c6f2a7a340f017f52b5dd54bc399d212884f9975643cd58db785"
+  },
+  "source_sha256_before": {
+    "generic_carrier": "58376bbd318f5b5f33922759416fc3b1d2531cb7edafb0e9d8d5c1edadfa8845",
+    "hamiltonian": "05e15d8fd9888ee8d454d61fbc8454fe5c652747780f77c771718557ce0294f3",
+    "module": "6e16681eae0daade84bc540f12ee6fe40b3ad08929444273faf03123b7bbc3f9",
+    "nqc": "f705514ef981b3f0a557efeebe508b52fdb70c634a8ac8f2c357f30761871068",
+    "nqc_basis": "8ec2d77a57b96e8246bdae3ca8c62c4e2a17cabf1c5554aa1e47fe25b1ea8f46",
+    "radiation": "dca2c9791403467d85572f25a062cbc995d8228743d33b6b2e5dc28c13336bd6",
+    "script": "57b8e0de7eec8ef1066cdc7798c2122aaee2c8280e04305bc90a837e1349d304",
+    "test": "164f13d4e9dfbac6d3be00855e977d79d5d53c31b56f805fbb2c0cee76006d63",
+    "trajectory": "6728419dd6b7c6f2a7a340f017f52b5dd54bc399d212884f9975643cd58db785"
+  },
+  "started_unix": 1789397011.4923038,
+  "status": "complete"
+}

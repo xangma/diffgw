@@ -162,7 +162,7 @@ def test_detector_network_projections():
 
 
 def test_detector_autograd_gradients():
-    """Verify end-to-end autograd differentiability w.r.t. sky coordinates and time."""
+    """Sky/time gradients exist; face-on circular power is independent of psi."""
     ra = torch.tensor(1.5, dtype=torch.float64, requires_grad=True)
     dec = torch.tensor(-0.5, dtype=torch.float64, requires_grad=True)
     psi = torch.tensor(0.3, dtype=torch.float64, requires_grad=True)
@@ -182,7 +182,12 @@ def test_detector_autograd_gradients():
     loss = (strain.abs() ** 2.0).sum()
     loss.backward()
 
-    for p, name in [(ra, "ra"), (dec, "dec"), (psi, "psi"), (t_gps, "t_gps")]:
+    for p, name in [(ra, "ra"), (dec, "dec"), (t_gps, "t_gps")]:
         assert p.grad is not None, f"Gradient for {name} is None"
         assert torch.isfinite(p.grad), f"Gradient for {name} is not finite: {p.grad}"
         assert p.grad.item() != 0.0, f"Gradient for {name} is zero"
+
+    # At the default face-on inclination hc = +/- i hp, so power is
+    # |hp|^2 (F+^2 + Fx^2), exactly invariant under polarization rotation.
+    assert psi.grad is not None and torch.isfinite(psi.grad)
+    assert abs(psi.grad.item()) <= 64 * torch.finfo(loss.dtype).eps * loss.detach().item()

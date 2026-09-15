@@ -1,0 +1,84 @@
+{
+  "purpose": "Coordinator public-binary validation of independently implemented full conditioning; no fitting",
+  "rows": [
+    {
+      "masses": [
+        30.0,
+        20.0
+      ],
+      "spins": [
+        0.0,
+        0.0
+      ],
+      "flow": 20.0,
+      "dt": 0.00048828125,
+      "n_input": 4096,
+      "paired_trailing_zeros": 37,
+      "n_native": 4059,
+      "n_public": 4059,
+      "seconds": 0.5196025829936843,
+      "hp": {
+        "raw_rel_l2": 1.8802274059527993e-14,
+        "max_abs": 5.0182080713057076e-14
+      },
+      "hc": {
+        "raw_rel_l2": 1.9717742493382107e-14,
+        "max_abs": 3.697042672001771e-14
+      }
+    },
+    {
+      "masses": [
+        90.0,
+        40.0
+      ],
+      "spins": [
+        0.5,
+        -0.2
+      ],
+      "flow": 40.0,
+      "dt": 0.00048828125,
+      "n_input": 4096,
+      "paired_trailing_zeros": 0,
+      "n_native": 4096,
+      "n_public": 4096,
+      "seconds": 0.5178695420036092,
+      "hp": {
+        "raw_rel_l2": 1.117067126263427e-14,
+        "max_abs": 3.774758283725532e-14
+      },
+      "hc": {
+        "raw_rel_l2": 1.1074601097057213e-14,
+        "max_abs": 2.0095036745715333e-14
+      }
+    },
+    {
+      "masses": [
+        1.4,
+        1.4
+      ],
+      "spins": [
+        0.02,
+        -0.01
+      ],
+      "flow": 30.0,
+      "dt": 0.00048828125,
+      "n_input": 16384,
+      "paired_trailing_zeros": 11,
+      "n_native": 16373,
+      "n_public": 16373,
+      "seconds": 2.021688750013709,
+      "hp": {
+        "raw_rel_l2": 1.6973109246055297e-14,
+        "max_abs": 3.530509218307998e-14
+      },
+      "hc": {
+        "raw_rel_l2": 1.7272285837684577e-14,
+        "max_abs": 2.375877272697835e-14
+      }
+    }
+  ],
+  "sha256": {
+    "src/torchwave/approximants/eob/td_fd_conditioning_clean.py": "9e6f87ae24879188d7d6e63a020ff3bb2034d3d38426de59d07c6ae22b0167a6",
+    "docs/reviews/2026-09-13-parity-review/td-fd-conditioning-contract.md": "5e19a94fe2712bbefcdc78d4ac8f595a837790268530f03207316f0d7a5863ce"
+  }
+}

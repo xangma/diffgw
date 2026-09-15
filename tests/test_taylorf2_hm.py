@@ -7,6 +7,8 @@ Formulas derived strictly from clean-room literature:
 - García-Quirós et al. (2020), Phys. Rev. D 102, 064002 (arXiv:2001.10914)
 """
 
+import math
+
 import pytest
 import torch
 
@@ -39,7 +41,7 @@ def test_taylorf2_hm_22_matches_taylorf2():
 
 
 def test_taylorf2_hm_odd_m_vanish_equal_mass():
-    """For equal masses (m1 == m2 -> delta = 0), modes with odd m ((2, 1) and (3, 3)) must vanish identically."""
+    """For equal masses, the leading odd-m modes vanish identically."""
     f = torch.linspace(30.0, 300.0, 100, dtype=torch.float64)
     m1, m2 = 10.0, 10.0
     iota = 0.8
@@ -49,16 +51,67 @@ def test_taylorf2_hm_odd_m_vanish_equal_mass():
     )
 
     hp_21, hc_21 = modes[(2, 1)]
+    hp_31, hc_31 = modes[(3, 1)]
     hp_33, hc_33 = modes[(3, 3)]
+    hp_43, hc_43 = modes[(4, 3)]
 
     assert torch.all(hp_21 == 0.0)
     assert torch.all(hc_21 == 0.0)
+    assert torch.all(hp_31 == 0.0)
+    assert torch.all(hc_31 == 0.0)
     assert torch.all(hp_33 == 0.0)
     assert torch.all(hc_33 == 0.0)
+    assert torch.all(hp_43 == 0.0)
+    assert torch.all(hc_43 == 0.0)
 
     # Even mode (4, 4) should NOT vanish
     hp_44, _ = modes[(4, 4)]
     assert torch.max(torch.abs(hp_44)).item() > 0.0
+
+    # The even-m (3, 2) mode remains nonzero for equal, nonspinning masses.
+    hp_32, _ = modes[(3, 2)]
+    assert torch.max(torch.abs(hp_32)).item() > 0.0
+
+
+def test_taylorf2_hm_32_leading_pn_ratio():
+    """The added (3,2) mode follows the published leading PN amplitude."""
+    f = torch.tensor([40.0, 80.0, 160.0], dtype=torch.float64)
+    m1, m2 = 30.0, 10.0
+    eta = m1 * m2 / (m1 + m2) ** 2
+    v22 = (math.pi * (m1 + m2) * 4.925490947641267e-6 * f).pow(1.0 / 3.0)
+
+    _, _, modes = TaylorF2_HM(modes=((2, 2), (3, 2)))(
+        f,
+        m1,
+        m2,
+        inclination=0.7,
+        f_isco_cutoff=False,
+        return_modes=True,
+    )
+    hp22, _ = modes[(2, 2)]
+    hp32, _ = modes[(3, 2)]
+
+    # Both modes have m=2 and therefore the same SPA phase here. Remove the
+    # angular projection to compare the mode-amplitude ratio directly.
+    from torchwave.approximants.taylorf2_hm import _swsh_projection_coefficients
+
+    d22, _ = _swsh_projection_coefficients(2, 2, torch.tensor(0.7, dtype=torch.float64), torch.tensor(0.0, dtype=torch.float64))
+    d32, _ = _swsh_projection_coefficients(3, 2, torch.tensor(0.7, dtype=torch.float64), torch.tensor(0.0, dtype=torch.float64))
+    ratio = (hp32 / d32) / (hp22 / d22)
+    # García-Quirós et al. (2020), Appendix E, Eq. (75), after matching the
+    # common SPA normalization in Eq. (71): (1/3) sqrt(5/7)(1-3 eta) v^2.
+    expected = (1.0 / 3.0) * math.sqrt(5.0 / 7.0) * (1.0 - 3.0 * eta) * v22.square()
+    assert torch.allclose(ratio.real, expected, rtol=1e-13, atol=1e-15)
+    assert torch.max(torch.abs(ratio.imag)).item() < 1e-13
+
+
+def test_taylorf2_hm_forward_accepts_42_mode():
+    """The per-call mode override accepts the published leading (4,2) term."""
+    _, _, modes = TaylorF2_HM()(torch.tensor([40.0], dtype=torch.float64), 30.0, 10.0,
+                                modes=((4, 2),), f_isco_cutoff=False,
+                                return_modes=True)
+    assert torch.isfinite(modes[(4, 2)][0]).all()
+    assert torch.isfinite(modes[(4, 2)][1]).all()
 
 
 def test_taylorf2_hm_unequal_mass_presence():

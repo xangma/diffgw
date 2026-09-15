@@ -1,0 +1,279 @@
+{
+  "lal_version": "7.7.0",
+  "lalsimulation_version": "6.2.0",
+  "api": "SimInspiralChooseTDWaveform",
+  "approximant": "SEOBNRv4",
+  "choices": {
+    "spin_truncation": "tabulated",
+    "spin_v6": "bohe_total_energy",
+    "include_pan_v8": false,
+    "include_positive_chi_540": false,
+    "final_spin_fit_order": [
+      1,
+      2
+    ]
+  },
+  "native_artifact": "/tmp/torchwave-eob-degree6-fine/dt-0.0625.pt",
+  "native_artifact_sha256": "ea324da3318e85b55d92058f0a83437c4800183403ccfa508fc7d8449a204dac",
+  "native_source_sha256": null,
+  "input_sha256": "ed1ee8bcca5419f54fb22e01b43b5fae3d05cf8307b2adf0d611485031eea02b",
+  "verifier_script_sha256": "f879086b1bb23b11e84a757f2b40ba8c8ac40b4f7984744e9b707fa1f2868c14",
+  "provenance": "recovered artifacts; startup source hash unavailable",
+  "startup_source_sha256": null,
+  "convention": "Native NQC amplitude peak is t=0; reference retains its returned epoch. Same numerical input phase zero, without establishing identical phase semantics. No optimization or fitted alignment.",
+  "scope": "Separate TD diagnostic on reference time support; not a catalog pass or canonical FD acceptance test. Raw epoch residuals include linear native interpolation and finite start/end support. Peak-time and orbital-phase coordinates are diagnostics only.",
+  "results": [
+    {
+      "parameters": {
+        "omega_start": 0.04,
+        "mass1": 30.0,
+        "mass2": 20.0,
+        "chi1": 0.0,
+        "chi2": 0.0
+      },
+      "distance_Mpc": 100.0,
+      "inclination": 0.8,
+      "phi_ref": 0.0,
+      "f_ref": 0.0,
+      "f_lower": 51.70000547234364,
+      "delta_t": 1.539215921137896e-05,
+      "reference_time_interval": [
+        -0.077411014,
+        0.09453479655031435
+      ],
+      "native_time_interval": [
+        -0.07645021966557543,
+        0.041761563077814964
+      ],
+      "reference_samples": 11172,
+      "metrics": {
+        "plus": {
+          "relative_l2": 1.8701766309250845,
+          "relative_norm_error": 0.001111090349745547,
+          "finite": true
+        },
+        "cross": {
+          "relative_l2": 1.8771764798013197,
+          "relative_norm_error": 0.0020310545491490917,
+          "finite": true
+        },
+        "mode": {
+          "amplitude_relative_l2": 0.06921979880881311,
+          "amplitude_norm_ratio": 1.003726112723341,
+          "phase_rms_rad": 2.4973790175249406,
+          "phase_max_abs_rad": 3.0166094141709996,
+          "phase_at_common_start_rad": [
+            2.7260823989115375,
+            -0.5404934940970495
+          ],
+          "phase_at_reference_peak_rad": [
+            -33.279540356374035,
+            -37.64364415206993
+          ],
+          "finite": true
+        },
+        "instantaneous_frequency": {
+          "native_mean": 925.8216772341253,
+          "reference_mean": 945.2800307296184,
+          "relative_l2": 0.03790823123484443,
+          "units": "rad/s; finite differences of unwrapped (2,2) phase"
+        },
+        "fixed_peak_time": {
+          "native_peak_s": 2.6351373438529774e-06,
+          "reference_peak_s": -0.0010812964707717504,
+          "native_support_s": [
+            -0.07645285480291929,
+            0.04175892794047111
+          ],
+          "reference_support_s": [
+            -0.07632971752922825,
+            0.0956160930210861
+          ]
+        },
+        "trajectory_peak_origin": {
+          "native_trajectory_peak_s": 0.0010768057907381446,
+          "native_mode_peak_in_trajectory_chart_s": -0.0010741706533942915,
+          "reference_amplitude_peak_s": -0.0010812964707717504,
+          "peak_epoch_difference_s": -7.125817377458873e-06,
+          "note": "Equation-defined trajectory peak origin; raw NQC-match origin retained above; no fitted shift."
+        },
+        "trajectory_peak_chart_residuals": {
+          "common_support_s": [
+            -0.077411014,
+            0.027578903980815875
+          ],
+          "amplitude_relative_l2": 0.0016977666613852728,
+          "frequency_relative_l2": 0.0004678582974004949,
+          "phase_at_common_start_rad": [
+            2.691232011705741,
+            -0.22479921389285015
+          ],
+          "phase_at_reference_peak_rad": [
+            -34.727622733893526,
+            -37.64364415206993
+          ],
+          "windows": [
+            {
+              "window": "early",
+              "time_s": [
+                -0.077411014,
+                -0.04242463611253563
+              ],
+              "amplitude_relative_l2": 0.0026380554059975223,
+              "frequency_relative_l2": 0.00175841400337011
+            },
+            {
+              "window": "mid",
+              "time_s": [
+                -0.04240924395332425,
+                -0.007422866065859873
+              ],
+              "amplitude_relative_l2": 0.001526947372603108,
+              "frequency_relative_l2": 0.0012953143019611179
+            },
+            {
+              "window": "late",
+              "time_s": [
+                -0.007407473906648504,
+                0.027578903980815875
+              ],
+              "amplitude_relative_l2": 0.00018807698117300433,
+              "frequency_relative_l2": 0.00014815939926445885
+            }
+          ]
+        },
+        "orbital_phase": {
+          "native_at_peak_rad": 2.96122910217629,
+          "reference_at_peak_rad": 0.05546769100758841,
+          "note": "reported separately; no phase shift or fit applied"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "omega_start": 0.04,
+        "mass1": 30.0,
+        "mass2": 20.0,
+        "chi1": 0.2,
+        "chi2": -0.1
+      },
+      "distance_Mpc": 100.0,
+      "inclination": 0.8,
+      "phi_ref": 0.0,
+      "f_ref": 0.0,
+      "f_lower": 51.70000547234364,
+      "delta_t": 1.539215921137896e-05,
+      "reference_time_interval": [
+        -0.082551996,
+        0.09530440368748387
+      ],
+      "native_time_interval": [
+        -0.08126624511181098,
+        0.03694553763157943
+      ],
+      "reference_samples": 11556,
+      "metrics": {
+        "plus": {
+          "relative_l2": 1.3999657250443813,
+          "relative_norm_error": 0.00027175568208559486,
+          "finite": true
+        },
+        "cross": {
+          "relative_l2": 1.4127326095184196,
+          "relative_norm_error": 8.945270363791558e-05,
+          "finite": true
+        },
+        "mode": {
+          "amplitude_relative_l2": 0.0740708019164758,
+          "amplitude_norm_ratio": 1.0039958154352329,
+          "phase_rms_rad": 1.5756750575113503,
+          "phase_max_abs_rad": 2.005642421106106,
+          "phase_at_common_start_rad": [
+            2.699986944347832,
+            -1.5775559417256486
+          ],
+          "phase_at_reference_peak_rad": [
+            -35.726378259327106,
+            -41.24224699999403
+          ],
+          "finite": true
+        },
+        "instantaneous_frequency": {
+          "native_mean": 930.0079666060875,
+          "reference_mean": 951.464040672267,
+          "relative_l2": 0.04177912280832648,
+          "units": "rad/s; finite differences of unwrapped (2,2) phase"
+        },
+        "fixed_peak_time": {
+          "native_peak_s": 4.355524269926497e-06,
+          "reference_peak_s": -0.0011890424086508228,
+          "native_support_s": [
+            -0.08127060063608091,
+            0.036941182107309505
+          ],
+          "reference_support_s": [
+            -0.08136295359134918,
+            0.0964934460961347
+          ]
+        },
+        "trajectory_peak_origin": {
+          "native_trajectory_peak_s": 0.0011966900457360448,
+          "native_mode_peak_in_trajectory_chart_s": -0.0011923345214661183,
+          "reference_amplitude_peak_s": -0.0011890424086508228,
+          "peak_epoch_difference_s": 3.2921128152955254e-06,
+          "note": "Equation-defined trajectory peak origin; raw NQC-match origin retained above; no fitted shift."
+        },
+        "trajectory_peak_chart_residuals": {
+          "common_support_s": [
+            -0.08245964304473173,
+            0.02785596202322127
+          ],
+          "amplitude_relative_l2": 0.0015752048425793255,
+          "frequency_relative_l2": 0.00040559111607093006,
+          "phase_at_common_start_rad": [
+            2.7012548422212284,
+            -1.1863913632356076
+          ],
+          "phase_at_reference_peak_rad": [
+            -37.36257982958761,
+            -41.24224699999403
+          ],
+          "windows": [
+            {
+              "window": "early",
+              "time_s": [
+                -0.08245964304473173,
+                -0.045703166847958776
+              ],
+              "amplitude_relative_l2": 0.0025278603937810944,
+              "frequency_relative_l2": 0.0009832273408468047
+            },
+            {
+              "window": "mid",
+              "time_s": [
+                -0.0456877746887474,
+                -0.008931298491974438
+              ],
+              "amplitude_relative_l2": 0.00137311114745376,
+              "frequency_relative_l2": 0.0010616052779085043
+            },
+            {
+              "window": "late",
+              "time_s": [
+                -0.008915906332763068,
+                0.02785596202322127
+              ],
+              "amplitude_relative_l2": 0.00011313298338134281,
+              "frequency_relative_l2": 0.00027395458377561116
+            }
+          ]
+        },
+        "orbital_phase": {
+          "native_at_peak_rad": 0.3413884166504494,
+          "reference_at_peak_rad": 2.7400501502630705,
+          "note": "reported separately; no phase shift or fit applied"
+        }
+      }
+    }
+  ]
+}

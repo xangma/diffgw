@@ -1,0 +1,64 @@
+{
+  "host": "RONI2",
+  "python": "/Users/xangma/miniconda3/envs/pycbcorig313/bin/python",
+  "lal_version": "7.7.0",
+  "lalsimulation_version": "6.2.0",
+  "invocation": {
+    "callable": "lalsimulation.SimIMRSpinAlignedEOBModes",
+    "deltaT": 0.000244140625,
+    "m1_SI": 5.965229612094152e+31,
+    "m2_SI": 3.9768197413961014e+31,
+    "fMin_Hz": 20.0,
+    "distance_m": 3.085677581491367e+24,
+    "spin1z": 0.0,
+    "spin2z": 0.0,
+    "version": 4,
+    "tidals": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "quadrupole_params": [
+      1.0,
+      1.0
+    ],
+    "nqc_length": 0,
+    "nqcFlag": 0,
+    "PAPa_dict": "empty",
+    "TGRParams_dict": "empty"
+  },
+  "returned_type": "list",
+  "returned_length": 3,
+  "mode_nodes": [
+    {
+      "l": 2,
+      "m": 2,
+      "name": "(2, 2) mode",
+      "length": 5434,
+      "deltaT": 0.000244140625,
+      "epoch": -1.23203809,
+      "f0": 0.0,
+      "sample_units": "strain"
+    }
+  ],
+  "auxiliary_vectors": [
+    {
+      "length": 25235,
+      "finite": true
+    },
+    {
+      "length": 48815,
+      "finite": true
+    }
+  ],
+  "reference_npz": "/tmp/torchwave-lal-eob-modes-reference.npz",
+  "reference_sha256": "ff7cbea0197075db997551cf3bc86c162723746ec32bb627b1a09ccf340954b7",
+  "schema_note": "The public return is [SphHarmTimeSeries, REAL8Vector, REAL8Vector]. The two auxiliary vector semantics are not assigned here because the public callable contract does not name their columns; no trajectory comparison is inferred.",
+  "saved_full20_comparison": "Not performed: saved payload columns and auxiliary vector semantics are not identified by this public API contract.",
+  "script_sha256": "02fb5c2835e7681a5698a054193a96603eabb01e319fe7fce2bac0151f4c59d1"
+}

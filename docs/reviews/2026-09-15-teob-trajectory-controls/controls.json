@@ -1,0 +1,1203 @@
+{
+  "status": "finished",
+  "experiment": "historical TD trajectory and final interpolation grid controls",
+  "run": {
+    "host": "RONI2",
+    "cwd": "/Users/xangma/repos/torchwave",
+    "pid": 78396,
+    "command": "/Users/xangma/miniconda3/envs/pycbcorig313/bin/python scripts/teob_trajectory_grid_controls.py",
+    "elapsed_seconds": 1.6397639579954557
+  },
+  "source_and_input_hashes_before": {
+    "docs/reviews/2026-09-15-no-contact/teob-ode-convergence-clean/convergence-arrays.npz": "fddc9fd5e16e1cb6933a8b405cbc8a529247841f71c29cfce9fe456199c3f1bc",
+    "docs/reviews/2026-09-15-no-contact/teob-ode-convergence-clean/report.json": "c01f7292d7154dc4ebaf7e7b74ce721f4b799d527bd976514b2a89ddf83d0735",
+    "docs/reviews/2026-09-15-parity-strategy-experiment/eob/native-fixed-event-reassembly.json": "bfeff7b8cfcaefbc67a995d6d85cc9fbd6a961b978883588cd17fb114d52762a",
+    "docs/reviews/2026-09-15-teob-target-audit/README.md": "af604450d080dab0cca56e2679707f274fd12a5b5bf9ee60b34af9793abb83d1",
+    "docs/reviews/2026-09-15-teob-target-audit/artifact-manifest.json": "6c86fdc7db1215378ab087a462d82021f7e392cfda2abc8c79609ba51ddb09dd",
+    "docs/reviews/2026-09-15-teob-target-audit/artifact-validation.json": "eb574d0c5d7cfa4f76ced7f3cde93ac6f91397734802b4773534292460b4b16e",
+    "docs/reviews/2026-09-15-teob-target-audit/bbh_reference/amplitude_derivative_minus.npz": "67309454ca7357ba6f36b9ab2036289001291153add70a3faeb48aed87754f37",
+    "docs/reviews/2026-09-15-teob-target-audit/bbh_reference/amplitude_derivative_plus.npz": "e4fd519798e6ad84b0d1caeb6bc5d332bffca4c3918ab72ef7b16a6f05cf4ffb",
+    "docs/reviews/2026-09-15-teob-target-audit/bbh_reference/amplitude_minus.npz": "389ada8c3eb61ed123014c31e22f4dde05aa723a561057fc3c98aba9c18b8d4f",
+    "docs/reviews/2026-09-15-teob-target-audit/bbh_reference/amplitude_plus.npz": "bf40e4e9a245536e7ce186597470d8f6b45bc1795ec3f1e58c72042909f3b748",
+    "docs/reviews/2026-09-15-teob-target-audit/bbh_reference/controls.json": "e2746c231ed464228cea7f66cd32f0934099c57cc23e9ca1c70a12386077b968",
+    "docs/reviews/2026-09-15-teob-target-audit/bbh_reference/frequency_derivative_minus.npz": "697c754dda3379a1ece6d43239227f1d4bae2bae9eb6440b2ef84ff6e9826b15",
+    "docs/reviews/2026-09-15-teob-target-audit/bbh_reference/frequency_derivative_plus.npz": "6b2058302b35ebd5dca19389977ef06f2351e46e786e7b00ec962d1ea754f2bd",
+    "docs/reviews/2026-09-15-teob-target-audit/bbh_reference/frequency_minus.npz": "fdae96d2214720daf1af94d9bc8839d58a81ce81f13fb84293c69860264ac9f3",
+    "docs/reviews/2026-09-15-teob-target-audit/bbh_reference/frequency_plus.npz": "077a0c51400d2da9f816dd500978e4c98a61ce143ce3c001cdfc8ee3e97318fb",
+    "docs/reviews/2026-09-15-teob-target-audit/bbh_reference/knot_next.npz": "46b065d85358d2afe0122eccfe71c18f01cd9598794a80d38c14814a10761142",
+    "docs/reviews/2026-09-15-teob-target-audit/bbh_reference/knot_previous.npz": "9b294456fc62c6c6d5acc6e4b08b93207c21c20507ccf6ed8d40b63dbd64199f",
+    "docs/reviews/2026-09-15-teob-target-audit/bbh_reference/nominal.npz": "0fca098008e13b178566f07c1bb45c5132ebb30054d4eedde99b4fce8c8fbe92",
+    "docs/reviews/2026-09-15-teob-target-audit/bbh_reference.log": "23a2859e650ac9561b71c3f5933383567940c90c8d655aff64c8858bb74df4fb",
+    "docs/reviews/2026-09-15-teob-target-audit/catalog/amplitude_derivative_minus.npz": "80eacb6f7331471e9ca1c8d64ce9fe2686d27b3b6f5cc2d6d821dee6c76a3d74",
+    "docs/reviews/2026-09-15-teob-target-audit/catalog/amplitude_derivative_plus.npz": "ae6d4203238b6063952cdf0c8e66dfe05a87ee2a1561bbff9b63403b02525186",
+    "docs/reviews/2026-09-15-teob-target-audit/catalog/amplitude_minus.npz": "1efbf144d933549cccddc16614366633316a8211c093c4541b940e7a9f40aa2e",
+    "docs/reviews/2026-09-15-teob-target-audit/catalog/amplitude_plus.npz": "568a1417f7419e4478fbe3a5757b5346cdeab3d140a1307061a2c2cb9a4fbac8",
+    "docs/reviews/2026-09-15-teob-target-audit/catalog/controls.json": "a9949e46dbfedb54a60c453b302155548f91951deb54ae6eff6ad9f5f24b000d",
+    "docs/reviews/2026-09-15-teob-target-audit/catalog/frequency_derivative_minus.npz": "f661e623614161ab73f2d9590bf6ef2a7c2f21412c1da624029cbad4c8acf5c6",
+    "docs/reviews/2026-09-15-teob-target-audit/catalog/frequency_derivative_plus.npz": "701c6914b8ea5116d67242bacf8301fab659fed7ffe780f054eca39a70ba838a",
+    "docs/reviews/2026-09-15-teob-target-audit/catalog/frequency_minus.npz": "ab0ed7e38b7bf37fe5f473172b5eb10f676a7cca704d07d4741de75af3102859",
+    "docs/reviews/2026-09-15-teob-target-audit/catalog/frequency_plus.npz": "17eedc961acb6d18da644d174a0db791a3732fe1e1de8db592d0a039f66b8c94",
+    "docs/reviews/2026-09-15-teob-target-audit/catalog/knot_next.npz": "a87f0b89409a4c89bd653f2d4611d5ed949bd660a0b138a542d9b679a08c9e02",
+    "docs/reviews/2026-09-15-teob-target-audit/catalog/knot_previous.npz": "132609550b6bbb7c11e7e4056c5972a1530d5dc2a212681e413b6ad4341ac917",
+    "docs/reviews/2026-09-15-teob-target-audit/catalog/nominal.npz": "864e26191732bfd2d28842d80603dec4e8b6f1973539f0412ba3cfc02e8dacfa",
+    "docs/reviews/2026-09-15-teob-target-audit/catalog.log": "be5bad84140b8f5d94754292db12118dac6e390a25268f62585bd6dec8c8123a",
+    "docs/reviews/2026-09-15-teob-target-audit/convention-audit.md": "b23d8982b7250da1edf149ba6615a2f83c6ba4e798dbce43e70172fa664b41ea",
+    "docs/reviews/2026-09-15-teob-target-audit/equal_bbh/amplitude_derivative_minus.npz": "8db69b26d9d1b4d3a32ad73c765b6303a6d17e197d9d6ef06c6df8788b69cfab",
+    "docs/reviews/2026-09-15-teob-target-audit/equal_bbh/amplitude_derivative_plus.npz": "cef9fe82d8bc55e359ca6bb61fcb4bdf3c56b7cbbfcca7fbce78051a30b059c1",
+    "docs/reviews/2026-09-15-teob-target-audit/equal_bbh/amplitude_minus.npz": "3f3251f19b7b36d66edcb6a3d87629677768a65a82b104f7eb2d28ce26eb195f",
+    "docs/reviews/2026-09-15-teob-target-audit/equal_bbh/amplitude_plus.npz": "b11140aa4f3289d5355700cd5bc9b9b8022945e66748442aed84520e925f3f18",
+    "docs/reviews/2026-09-15-teob-target-audit/equal_bbh/controls.json": "0d4fce2a7cdd75ba8667c8143b25da609d71ada30486b89b3351d5435a5d21de",
+    "docs/reviews/2026-09-15-teob-target-audit/equal_bbh/frequency_derivative_minus.npz": "6f95f38d467eb15e827d05dd75cb97d458cf1d51cd039b9578945ada84f85b01",
+    "docs/reviews/2026-09-15-teob-target-audit/equal_bbh/frequency_derivative_plus.npz": "a3123d099fb9a21b705ee200032fc1030966f659a0e7636708251117996ab00e",
+    "docs/reviews/2026-09-15-teob-target-audit/equal_bbh/frequency_minus.npz": "a94cf4de984ddd03c2e773455f24c86ce54ee6c27de78429ce272f29a5c13d66",
+    "docs/reviews/2026-09-15-teob-target-audit/equal_bbh/frequency_plus.npz": "e4e63ba46f5b11cf83f05c79ee9a2716c5a64f9d3e5751f0a0619667d9b74bcc",
+    "docs/reviews/2026-09-15-teob-target-audit/equal_bbh/knot_next.npz": "bb26cc15f5bc19220db0fb6abacd407b5147939d7bbf4d2e7853e47012fdc18b",
+    "docs/reviews/2026-09-15-teob-target-audit/equal_bbh/knot_previous.npz": "27f85c37a4496870ee42a541b972d05936a8888dc2b04c3cc4109de33f621c45",
+    "docs/reviews/2026-09-15-teob-target-audit/equal_bbh/nominal.npz": "657bb798aaa1b3b0cdb37ee10aa529c1b9da5737c4fa7ea29b7f852f5bda8527",
+    "docs/reviews/2026-09-15-teob-target-audit/equal_bbh.log": "094c0aec39362191f18579f443436eeaa97cce0d6cddfd0b3c8f33abaf032984",
+    "docs/reviews/2026-09-15-teob-target-audit/protocol.md": "c3749f96f837a2decbf33e8f3bc8451d8a8876ca42b5052f484af8f37f0165e8",
+    "docs/reviews/2026-09-15-teob-target-audit/source-audit.md": "1210af9636c9285ae476dd8d92dfcf155e8d5b5f74c55cbabf6b4f121201ca71",
+    "docs/reviews/2026-09-15-teob-target-audit/unequal_bns/amplitude_derivative_minus.npz": "dcf6f3273ff82bced4beda0ccf8e9519e2fccb5b5fb8afdcb42bfc5e856e5a71",
+    "docs/reviews/2026-09-15-teob-target-audit/unequal_bns/amplitude_derivative_plus.npz": "257312a3a4bafaee23ab58a18ba043b811dddf776449c3fe17bf7b47e9c7a923",
+    "docs/reviews/2026-09-15-teob-target-audit/unequal_bns/amplitude_minus.npz": "e174b42054980bf4ab47114714d14fdd95a44a29a599746478f48dcc0fffd1ff",
+    "docs/reviews/2026-09-15-teob-target-audit/unequal_bns/amplitude_plus.npz": "11b1c2996dc7c732ed5d482cf9f06505c2c4e5a3a3240d8fcb82e4ae64cba8f8",
+    "docs/reviews/2026-09-15-teob-target-audit/unequal_bns/controls.json": "0d2e838e4df0d09308c941cf18edce0d4462f53365e1e3f3ee491cb3cd808250",
+    "docs/reviews/2026-09-15-teob-target-audit/unequal_bns/frequency_derivative_minus.npz": "d553b17c9a86626bfbe70af9ce0c2f3c0f855f64944a711bfaad9962101dfae7",
+    "docs/reviews/2026-09-15-teob-target-audit/unequal_bns/frequency_derivative_plus.npz": "f995162cbf2530a873681db6a2ccae0851751b27288343f438aa98d1854614c5",
+    "docs/reviews/2026-09-15-teob-target-audit/unequal_bns/frequency_minus.npz": "e882d3da74192ece57c5679388214f3cad0cbdc9d3a7730bdbad5c2df2549fc0",
+    "docs/reviews/2026-09-15-teob-target-audit/unequal_bns/frequency_plus.npz": "4e01bf17edab1c47d762e48d2bd824b80c218d3c6f9f48353f4efa597495dfbf",
+    "docs/reviews/2026-09-15-teob-target-audit/unequal_bns/knot_next.npz": "920a188e2a8fcc43110b06e4fdb7e7753f59a32449bd844c868afe60c55add87",
+    "docs/reviews/2026-09-15-teob-target-audit/unequal_bns/knot_previous.npz": "5cb36430d6db465ea9000f053c9ffa35651635fb5d7a22b9399e3cfbbd2e2d61",
+    "docs/reviews/2026-09-15-teob-target-audit/unequal_bns/nominal.npz": "7f97e9fa1a08cd290f7730933f6b8fa3cc24da95f3d081b52feab15d38ea3d03",
+    "docs/reviews/2026-09-15-teob-target-audit/unequal_bns.log": "3653e94eb94660c7b8e8ae13d23944f008c874601088c873514443d2ae018442",
+    "docs/reviews/2026-09-15-teob-target-audit/validation.json": "affbf6dc17cfb0a11900b654f508b1915728867c3ea5473c13a7446dfff6d0e5",
+    "docs/reviews/2026-09-15-teob-trajectory-controls/protocol.md": "e4db748ce859d860a15183cf585225f37575d33ae40a15fcc7d6344a89f94956",
+    "scripts/diagnose_teob_paired_driver_clean.py": "52c5267c4bbb389e0801f27d99e2c95ea96d3ca6c67d48d16e3e8586f9fdef22",
+    "scripts/teob_fixed_event_replay.py": "361ceca8afe34fbb2183e19c2717b76238255235144ba4709bf62c5ec8936343",
+    "scripts/teob_target_event_controls.py": "f7359a9fc70684ed47c892cadb13c6f7bc62486830a23ce19b45af4cb0a072b1",
+    "scripts/teob_trajectory_grid_controls.py": "fdda141de99586a84fa244ff77b751765cdce8b9eb88191b0d3b9506d9a62a5a",
+    "scripts/validate_teob_target_controls.py": "d818fb23a22af4dac5a91696ea58015d399c5cab8a6267b7737db0dab0d4c866",
+    "src/torchwave/__init__.py": "db42aeba20b5f4a4b57d4edabcf1fe860a2be94db0d9d252d281c2079d3d9176",
+    "src/torchwave/approximants/__init__.py": "50cdc46775f1fd8c960bd9eecb3df0c9a0880062284227c70e012f1af3a7bba5",
+    "src/torchwave/approximants/continuous_wave.py": "3d38063738e437742fbe76144900fe367647feba32327b174039a535e3edd00f",
+    "src/torchwave/approximants/emri_kludge.py": "0bbfd934d35d2dc561eefad8b605289a173ba6f347336d013e5c3d28c76526e1",
+    "src/torchwave/approximants/eob/__init__.py": "cba1fb28097542ef6b4b80eb6f7ddc4105418b4c225052d94f3dac7b85636356",
+    "src/torchwave/approximants/eob/adaptive_driver_clean.py": "27db5a25123f4d054a9919a11752b207cfc6accc377a8eeaf21f4b49087867e0",
+    "src/torchwave/approximants/eob/attachment.py": "097165aa7a6dcf87c5458fb26eade17a9c6bdf43c8e001c0929c1eb6ea2975e7",
+    "src/torchwave/approximants/eob/conditioned_waveform_clean.py": "c8ca45a490842f291e30616a52850f148397a8aad3e49c764c9a45c1bff99ec6",
+    "src/torchwave/approximants/eob/continuous_matching.py": "5db6aefa91cfdade8bb709381efe31144efc34054672263eec1c707a70cd1a06",
+    "src/torchwave/approximants/eob/events.py": "c1ae1182e4c2f9cf5f8a2857ea5d73802dbbb68b59739709849f973503bdfd5d",
+    "src/torchwave/approximants/eob/factorized_modes.py": "d4b10cbcbbecc4de84329a13cdca43d90d4fa5aa168248fc2e874211d29f8315",
+    "src/torchwave/approximants/eob/hamiltonian.py": "d26a87ded2a197a000704b77b075cdc72ee2315741bdacc29fb25f912158a441",
+    "src/torchwave/approximants/eob/initial_conditions.py": "68363208874bfaf39dad5d5668e5f128553144b4db31f64f0283278ed710458f",
+    "src/torchwave/approximants/eob/integrator.py": "a036f6b7580450a847bc1d56ebf745de6cdb5c2ee397d31cf1014d483eebe26b",
+    "src/torchwave/approximants/eob/merger_ringdown.py": "0db678173690ce0f7918c6fef2d9cb4864bf55a8dae3a6f80a47d0563ac7237d",
+    "src/torchwave/approximants/eob/nqc.py": "c8683181f7cf911df1e1b85cd6999cdb03e7c594e867315359040e9eb03ca552",
+    "src/torchwave/approximants/eob/nqc_analytic_clean.py": "28161546b97d0e182a7d7557b7d132f92a1d705a5f3120b1b0c51c06d31b8b99",
+    "src/torchwave/approximants/eob/numerical_attachment.py": "b042ed739c89ac53ec1829d005b404d86f16d18dc4f4dd710bd58000de5c4a93",
+    "src/torchwave/approximants/eob/numerical_derivative_clean.py": "2400ef464b292a0887f1eed68ced5579ab55ae6afe1f0f859226f9aaba180152",
+    "src/torchwave/approximants/eob/published_waveform.py": "7a4ceb62563f066ac8cd4d68ab5cc32e61143bc3a429a4420ff17b12ee021595",
+    "src/torchwave/approximants/eob/radiation_reaction.py": "dfb8853fc929145c3d61b7af49c16426560a12dc14ba9e664659af4a4449834d",
+    "src/torchwave/approximants/eob/remnant.py": "e7690cd5df1bcde2f579954762116beb20db606dae809835b148dae73c4cb007",
+    "src/torchwave/approximants/eob/seobnrv4_amplitude22.py": "941a7e6c4a3e92dc7860b91076958b09aa9a934e6799c33936409a5d09178eca",
+    "src/torchwave/approximants/eob/seobnrv4_flux.py": "9395f930449651c6607de4aa780cfd75545d95ba67fe4b4d653e2852fef407a8",
+    "src/torchwave/approximants/eob/seobnrv4_hamiltonian.py": "5b1a5b877129e5235b8f92974a01ab450176e8e924d374ca0fc413334fad177f",
+    "src/torchwave/approximants/eob/seobnrv4_mode22.py": "4bb182b480b741877429f7a85c08d175fcf20ea9517540aaadaaef0ead199190",
+    "src/torchwave/approximants/eob/td_fd_conditioning_clean.py": "d8a9ad936a0e6fb8e0c59a35428a7e2c70e372dca0b8d87f6d890d38dcd30a8a",
+    "src/torchwave/approximants/eob/teob_adaptive_continuation_clean.py": "7b8722ecc28af74eeb2fe29d2e7c1782123106d63fbeba60c82ca81f6b70b869",
+    "src/torchwave/approximants/eob/teob_conditioned_waveform_clean.py": "6f671bec34b0b9e8f6aa4dd9b7198e1da2a7b95aa7aaaadb78013f1c02b39dbb",
+    "src/torchwave/approximants/eob/teob_healy2014_remnant_clean.py": "ff65443236f379b3d1f4aebec5482833c43edd36b90418955ee3bfcea67f3dd2",
+    "src/torchwave/approximants/eob/teob_merger_nqc_clean.py": "a3902d99a6578714cd11c36ea4da0c2a83cfe7993aaa66c5ec95b48f2d1e3788",
+    "src/torchwave/approximants/eob/teob_nqc_clean.py": "8ec2d77a57b96e8246bdae3ca8c62c4e2a17cabf1c5554aa1e47fe25b1ea8f46",
+    "src/torchwave/approximants/eob/teob_orbital_potential_closed_clean.py": "b6c8b2ba574234145c2dd254553ae0cc5abe20616ea2571d17732e27cdbf19b3",
+    "src/torchwave/approximants/eob/teob_postadiabatic_clean.py": "06d0620283798a28c477e6e70b3a3720e337c53a8d8af8a78be17646a7be7550",
+    "src/torchwave/approximants/eob/teob_postmerger.py": "7324ff72dc1fd36149f137b9f8eafa68f354fd897ff5d56478ce5a6cf2f8c5f6",
+    "src/torchwave/approximants/eob/teob_published_driver.py": "58376bbd318f5b5f33922759416fc3b1d2531cb7edafb0e9d8d5c1edadfa8845",
+    "src/torchwave/approximants/eob/teob_radial_acceleration_clean.py": "6e16681eae0daade84bc540f12ee6fe40b3ad08929444273faf03123b7bbc3f9",
+    "src/torchwave/approximants/eob/teob_radiation_clean.py": "dca2c9791403467d85572f25a062cbc995d8228743d33b6b2e5dc28c13336bd6",
+    "src/torchwave/approximants/eob/teob_ringdown_assembly_clean.py": "bb6bc86986cbcd52c360c98ae3358baa7e6e03223b19485eaf24617cddbee7ff",
+    "src/torchwave/approximants/eob/teob_trajectory.py": "6728419dd6b7c6f2a7a340f017f52b5dd54bc399d212884f9975643cd58db785",
+    "src/torchwave/approximants/eob/teob_uib2016_postmerger.py": "2a560838c801820540a9ec585a8291b7ad316ab6765a928bf06de882681db3a5",
+    "src/torchwave/approximants/eob/teob_uib2016_remnant.py": "9ea727ec726f82c62c2ad6e399ee084e02daf275c145a3503e0666271010e755",
+    "src/torchwave/approximants/eob/teob_vacuum_driver_clean.py": "5188f9161c793cf79b1992abe562fd9ae58925319a44c730d6eb079050e43e41",
+    "src/torchwave/approximants/eob/teob_waveform_state_clean.py": "b247c91659b18341301356eca2def7cde270b0aaa7a9e16c85f8ba40f1861552",
+    "src/torchwave/approximants/eob/waveform.py": "1e9d61e31284c667ca0b27877646ba5553d9dbd3ebbe72d1090d9917acc4bc79",
+    "src/torchwave/approximants/hm_21_pn_clean.py": "8a69dd0d6435674b9c3f78dddf7356dbaea85ef105a820c81d7a8a6a155b5c95",
+    "src/torchwave/approximants/hm_assembly_clean.py": "8b985c5fcbf778fb8d43e626beaf89d5d3080fd3210342e1e56eea858a715d6c",
+    "src/torchwave/approximants/imrphenom_hm.py": "9f4054232e2fea72f5b0e5f3cfd68aef119f30edb48a0f7c4724a56133b46c8b",
+    "src/torchwave/approximants/imrphenom_hm_clean.py": "cbf474aa50241a06608bbfc69a9682f05b00ab3044fb507eb17c2f96921f0887",
+    "src/torchwave/approximants/imrphenom_hm_phase_clean.py": "59b67127968bb76a327e0bfac58f6e4d7f7c53e73387045f7b17f5777e30cc38",
+    "src/torchwave/approximants/imrphenom_hm_qnm_n61.py": "350c958aef4e1554d5c2d6a6bc22f8b9bf3513c2a000f08dc3cb3de1cde05b06",
+    "src/torchwave/approximants/imrphenom_nsbh.py": "a2b38665db46a38a15882490f1329420284458eaa57a80d971bba0aa987b22ab",
+    "src/torchwave/approximants/imrphenom_xas.py": "d82413363ee09b332337344b54c51cab785ec338b43adda551d5f88b76b58a44",
+    "src/torchwave/approximants/imrphenom_xhm.py": "c54a2f8f3eb74f5b49836feca3a524d939f02991c71f8c089da58d362021aa31",
+    "src/torchwave/approximants/imrphenom_xp.py": "be61b7aec433b8ff6a8606deb5add16472ba460e9882bdded3ef6905105e2631",
+    "src/torchwave/approximants/imrphenom_xphm.py": "4ab171aa839835c6064b391df4506e1e3f6308815dc098df4b573a24b0af837c",
+    "src/torchwave/approximants/imrphenomd.py": "77779b5733cdeb3289adb621f10a0a447ddd27014e46581f04e74b276583833e",
+    "src/torchwave/approximants/imrphenomd_nrtidal.py": "1349d1addada8d8858d0f3b099f4992ccecdc6ad490ec0379bcb6b6cf6897792",
+    "src/torchwave/approximants/imrphenomp.py": "df155863ce8ef3886386dfb46de4cf73e212f33f4640aafa44220149a4a9812f",
+    "src/torchwave/approximants/kerr_angular.py": "ad2b0bb82de180254cedd0c3fc31058a980f03e187b20219d4829053668172aa",
+    "src/torchwave/approximants/kerr_angular_table_convention.py": "d8256c9504ad470b9e075a630cca3c963c7f87aacf02c29c1722910788ac6a93",
+    "src/torchwave/approximants/kerr_qnm_author.py": "292f0a74f055800d0af12b95f839fac16f84ded3d91fc99e086206fa3ded7911",
+    "src/torchwave/approximants/kerr_qnm_d_sampling_clean.py": "5b342ea33a081ff41bfde00369a01fe9a8495216664ccb941fdc33aa6cfd8009",
+    "src/torchwave/approximants/kerr_qnm_generated.py": "3361bbf72224e93ce445169d5bb66e95ca27b5bdf6475d6de6ff7514bdf0283f",
+    "src/torchwave/approximants/kerr_qnm_interp.py": "a75c959cacf6c0f1413f9e8eeb427e1fb6f214e2d77c44941b28868b0d2d0679",
+    "src/torchwave/approximants/kerr_qnm_london_published.py": "74dc85b21585392bfe0bf2339064eefd2dc026e8b85eb8163ea7548fc653177e",
+    "src/torchwave/approximants/kerr_qnm_table_convention.py": "c4c85d17b079306df73c74f4bb755b7f4256fbdf49fef6a85cd9810367d800f6",
+    "src/torchwave/approximants/kerr_ringdown.py": "952fd6c40a263e4d3727f683a354e746908142b473a71c92c30171802db8f4ac",
+    "src/torchwave/approximants/kerr_ringdown_energy.py": "0c283b5145e929d6e465db37b1bead329073af90ab89c887826c2e2be303ba37",
+    "src/torchwave/approximants/kerr_ringdown_public_clean.py": "e585144576334e1836defaf3c3f809708e1600ef8e03a2e816e3813af6e64616",
+    "src/torchwave/approximants/memory.py": "33374f62c2f4e134ea1a338782173d864539379c1eedd8078ddca5fc52045470",
+    "src/torchwave/approximants/nrtidal_published_fits.py": "8c1d9a0fa2db4575d1e74184a45feec4004a8c063d838cbd4ec5dbe91da9954a",
+    "src/torchwave/approximants/nsbh_clean_amplitude.py": "dbd8d551ccbefdbbdf5a216b3793803ba1818feb53c57a84e92d6f7329cb5774",
+    "src/torchwave/approximants/nsbh_clean_phase.py": "a887f592b32a40a1d4903ce32bb97859bd06f5fa54e72396cb75c4d5f1fd90ec",
+    "src/torchwave/approximants/nsbh_phase_baseline.py": "74e13c9abe4172dc38e2ddf3f96593e57d7922dfbdbf153b2f096d5a3e84e156",
+    "src/torchwave/approximants/phenom_meco.py": "fb33a9ebfdc530111e56a0e560c53163bfa788706838e158d6d13a98fb103e49",
+    "src/torchwave/approximants/phenomd_unrounded_fits.py": "2f6ce30ffccd8574372a4bc13970eef9516da87bec2bfabb164fddea668c51e7",
+    "src/torchwave/approximants/phenompv2_waveform_clean.py": "716d3e38037c4352e57bf70850cb0bb11217dabd0d0e6d7f4a2481cfb69f8544",
+    "src/torchwave/approximants/polynomial_interval.py": "ceefc9c1526b9d22bb7fbaa4565a16d9976eb90709a501fc18aa46d155cb19e0",
+    "src/torchwave/approximants/ppe.py": "04bade0e334f9f9bf8d55792efab1fa0b8ff17edc6106c9c19d8fd1aa4a5e6ad",
+    "src/torchwave/approximants/precession_beta_clean.py": "13eb469547bd648f3b6effbe4cef66d81ba0740240c5ba1fd86bb2c3d913f2d2",
+    "src/torchwave/approximants/precession_msa.py": "851baecd58a4b934c11ceec539d3218faebf04196c28bc868499c453123d01d6",
+    "src/torchwave/approximants/precession_msa_angles_clean.py": "259705bd0fe0ead9aef45922a8d61cee598b0cd6ba0d1ec655ca6d4a14bdf4e2",
+    "src/torchwave/approximants/precession_msa_initial_clean.py": "25f4920b9c852d82e22299c57a49252ae8e7fc88fd613eb26b347a91f26a0aab",
+    "src/torchwave/approximants/precession_msa_oscillatory_clean.py": "a0e3e5e56cbbc295036c0fce42436ae30e4d9704e40ad1e2d59d327d5e49649a",
+    "src/torchwave/approximants/precession_msa_pn_clean.py": "12e9fabcb181828283829aab20beb73ec52fc0ad0b9a5b6c47cc808fdf23f8eb",
+    "src/torchwave/approximants/precession_msa_reference_l_clean.py": "2ee1059e626c0d7076c7e205100803b05c01a3ee40f87b2b3fb392cf7fd124c0",
+    "src/torchwave/approximants/precession_msa_secular_clean.py": "d40d1b2253305ba563bac248480e28b51daa9af94b9f1b6b92716e98f6afbddb",
+    "src/torchwave/approximants/precession_msa_waveform_clean.py": "002af508a4a8501f02c0e59a1416e30d917ce187c8dc79814aac80b0ae1b1ab7",
+    "src/torchwave/approximants/precession_nnlo_clean.py": "6d1b5a713fd19e96ee0f2214936f2ffa731eea2a9e28a254f32d6e22f77f3ea9",
+    "src/torchwave/approximants/precession_nnlo_waveform_clean.py": "838742009880e5d9affb77b01ecda775ea3b7a33a1c0a754668551cb8bb7b774",
+    "src/torchwave/approximants/precession_ode.py": "e816267a6710a659e2852c20497379e29f48ff2ac9d66a53b1743db9a77bef9b",
+    "src/torchwave/approximants/precession_source_frame_clean.py": "1f7273265036504d3083e0bd6b4d1677d6ddfc0f257e3e8979fe5a2b14467eda",
+    "src/torchwave/approximants/precession_twisting_clean.py": "32485331071e15ad683bcb0b903ce94dc75eddf47298e63620cafcc1c9717b62",
+    "src/torchwave/approximants/rom/__init__.py": "bea88a61fec8fde49c94e93fa42b78fc9f94d1f5d1fabf4763659c49e9a0f9ea",
+    "src/torchwave/approximants/rom/bspline.py": "45184b2cc3d857fdba8844d1c86245d7a696cb1c302bf4179420cd87a6f712a9",
+    "src/torchwave/approximants/rom/generator.py": "a06c1040801507f457d836f16b120b374dc38d0220712722f7447c8ecc381f01",
+    "src/torchwave/approximants/rom/glue.py": "011fefed60c32f8d06ae026302320f4bdd694eb2e1bc54c5752e0ba2a56ee8ac",
+    "src/torchwave/approximants/rom/official.py": "b0af35a773c5cea5573b04746bcf84b5a789e1727ee927546902a5c1ee7ff76b",
+    "src/torchwave/approximants/rom/official_wrapper.py": "a5e45364dc24355e153e12bc3e30c4e8798c66c8f71e66c1cd6427070803fe3f",
+    "src/torchwave/approximants/rom/surrogate.py": "c57567c4b13dba3d75020aaa11119c97999fd5472cfe812429661dbbbb3fdcd0",
+    "src/torchwave/approximants/taylorf2.py": "4f6d2536bd8a3fab691da6c724f09148b00b0521f4b005fdf8fc91a72c9db97d",
+    "src/torchwave/approximants/taylorf2_eccentric.py": "f6debf294f561ec18e4982c36eb554cdfe1fd5192d85e794c8966c188deac5bd",
+    "src/torchwave/approximants/taylorf2_hm.py": "fd30750e0fa8795120cba61ef98fc3df68d1644e2b7f442578079758f9a1a711",
+    "src/torchwave/approximants/teobresums.py": "05e15d8fd9888ee8d454d61fbc8454fe5c652747780f77c771718557ce0294f3",
+    "src/torchwave/approximants/xhm_amplitude_clean.py": "d10bf39f21d58a31b5bdfd56242d9c73ba82e0db61e662ed73e4290cef0db5e4",
+    "src/torchwave/approximants/xhm_fits.py": "6704f0c59a1e1527f5c31063d1bac8ab84f7349207acc3f1c24532c370167548",
+    "src/torchwave/approximants/xhm_inspiral_assembly_clean.py": "c68dda9efd5abdad9938ed33d35bc1d534221af7e80afa37b3d6ec6506cc5e45",
+    "src/torchwave/approximants/xhm_inspiral_assembly_release122022_clean.py": "3a8ec52088ab24d0f618b5e2a6a6f4e5d04b10717c2f01706fad597234ff4bd1",
+    "src/torchwave/approximants/xhm_intermediate_amplitude_clean.py": "613d4d5ebf131db3d72160b81e41edbc23c66a33c7588954a985f74e1d6b8338",
+    "src/torchwave/approximants/xhm_phase_clean.py": "7b1c201f4c8744fdd60a684cea46ff366dc7c000991d6b0aa8d48b63c322483f",
+    "src/torchwave/approximants/xhm_spa_clean.py": "00b0f2775d605a33b6e74c0a673138b900b1f015420f9ffbf42476bdf4f0d9ed",
+    "src/torchwave/constants.py": "1ae479e07b44a19d23b9a9eaed4b8b8b8bf38b4293717a91d321b59f2d1ac4e3",
+    "src/torchwave/conversions.py": "2cb04a754b927839dd056eec2372e4fb840e8298fbc3da67f847e3db8f323302",
+    "src/torchwave/detectors/__init__.py": "4e445658bcb157530ffafcf588f349473c1f28dea6478b484c08200023ea3764",
+    "src/torchwave/detectors/lisa.py": "d1351340229c67db751bccde5cae51be9b6bb9a95bcd03895c07261bcea55ea6",
+    "src/torchwave/detectors/network.py": "634b179fcd05834e27f80981141d56db8ca56d05d17acd30853944eef05d5777",
+    "src/torchwave/detectors/psd.py": "7b88a6eedd9ea25ff34f83e66f00ae1c68ea405c99f24b88ff738250eb4a8449",
+    "src/torchwave/detectors/pta.py": "891d613c25fef397674f3fcb5d1834c21aa3eb17044e389a0af6ee1240a4a2d2",
+    "src/torchwave/external_data.py": "2e77a3ec77f59f91c7ae765d763b4b444e77add0e59c4f02f097303bd42e89d8",
+    "src/torchwave/inference/__init__.py": "ddb9cea34efe3ffa995806bd8c529419a03ac03ec5d6aa08f31901332f0ba006",
+    "src/torchwave/inference/f_statistic.py": "3806ee5770180fab38235d6072b051291b470c08fbba9022a7df2c9943175b38",
+    "src/torchwave/inference/fisher.py": "fad61ccf45f66acd13e3afa1d6330589449a2f2094490c25f928a7439a05c470",
+    "src/torchwave/inference/likelihood.py": "dfe1a38096306065eeba60c535685378c34e8d9ae41f246aa8c1fc478d316853",
+    "src/torchwave/inference/mcmc.py": "f2c6a50daafa701364fc54fd9c499161a10e1bd082b059e8ae78be61a51c8f3c",
+    "src/torchwave/inference/relative_binning.py": "fa57a8d2b3c8c3beca432b0fdd4317799d92db8f503961c0f13f60a8441da9af",
+    "src/torchwave/inference/wavelet_glitch.py": "ca823a53a896de3b8067dcc031cac87dab2d1f291b50f6adcee5bf458eff29c4",
+    "src/torchwave/phenomd_published_fits.py": "55992c5c6d46e1430d2c86915dcedf44741beaddf039ff95faea944531bde2dd",
+    "src/torchwave/provenance.py": "ab4397670b6e3075904f12c3d37cd68fad0f923b2538eed88742be6135e48320",
+    "src/torchwave/waveforms.py": "9885b94bd4b18b48ae5bbdea614e4c0225f0ef6fb9e147f1044e3f204cd0809e"
+  },
+  "source_and_input_hashes_after": {
+    "docs/reviews/2026-09-15-no-contact/teob-ode-convergence-clean/convergence-arrays.npz": "fddc9fd5e16e1cb6933a8b405cbc8a529247841f71c29cfce9fe456199c3f1bc",
+    "docs/reviews/2026-09-15-no-contact/teob-ode-convergence-clean/report.json": "c01f7292d7154dc4ebaf7e7b74ce721f4b799d527bd976514b2a89ddf83d0735",
+    "docs/reviews/2026-09-15-parity-strategy-experiment/eob/native-fixed-event-reassembly.json": "bfeff7b8cfcaefbc67a995d6d85cc9fbd6a961b978883588cd17fb114d52762a",
+    "docs/reviews/2026-09-15-teob-target-audit/README.md": "af604450d080dab0cca56e2679707f274fd12a5b5bf9ee60b34af9793abb83d1",
+    "docs/reviews/2026-09-15-teob-target-audit/artifact-manifest.json": "6c86fdc7db1215378ab087a462d82021f7e392cfda2abc8c79609ba51ddb09dd",
+    "docs/reviews/2026-09-15-teob-target-audit/artifact-validation.json": "eb574d0c5d7cfa4f76ced7f3cde93ac6f91397734802b4773534292460b4b16e",
+    "docs/reviews/2026-09-15-teob-target-audit/bbh_reference/amplitude_derivative_minus.npz": "67309454ca7357ba6f36b9ab2036289001291153add70a3faeb48aed87754f37",
+    "docs/reviews/2026-09-15-teob-target-audit/bbh_reference/amplitude_derivative_plus.npz": "e4fd519798e6ad84b0d1caeb6bc5d332bffca4c3918ab72ef7b16a6f05cf4ffb",
+    "docs/reviews/2026-09-15-teob-target-audit/bbh_reference/amplitude_minus.npz": "389ada8c3eb61ed123014c31e22f4dde05aa723a561057fc3c98aba9c18b8d4f",
+    "docs/reviews/2026-09-15-teob-target-audit/bbh_reference/amplitude_plus.npz": "bf40e4e9a245536e7ce186597470d8f6b45bc1795ec3f1e58c72042909f3b748",
+    "docs/reviews/2026-09-15-teob-target-audit/bbh_reference/controls.json": "e2746c231ed464228cea7f66cd32f0934099c57cc23e9ca1c70a12386077b968",
+    "docs/reviews/2026-09-15-teob-target-audit/bbh_reference/frequency_derivative_minus.npz": "697c754dda3379a1ece6d43239227f1d4bae2bae9eb6440b2ef84ff6e9826b15",
+    "docs/reviews/2026-09-15-teob-target-audit/bbh_reference/frequency_derivative_plus.npz": "6b2058302b35ebd5dca19389977ef06f2351e46e786e7b00ec962d1ea754f2bd",
+    "docs/reviews/2026-09-15-teob-target-audit/bbh_reference/frequency_minus.npz": "fdae96d2214720daf1af94d9bc8839d58a81ce81f13fb84293c69860264ac9f3",
+    "docs/reviews/2026-09-15-teob-target-audit/bbh_reference/frequency_plus.npz": "077a0c51400d2da9f816dd500978e4c98a61ce143ce3c001cdfc8ee3e97318fb",
+    "docs/reviews/2026-09-15-teob-target-audit/bbh_reference/knot_next.npz": "46b065d85358d2afe0122eccfe71c18f01cd9598794a80d38c14814a10761142",
+    "docs/reviews/2026-09-15-teob-target-audit/bbh_reference/knot_previous.npz": "9b294456fc62c6c6d5acc6e4b08b93207c21c20507ccf6ed8d40b63dbd64199f",
+    "docs/reviews/2026-09-15-teob-target-audit/bbh_reference/nominal.npz": "0fca098008e13b178566f07c1bb45c5132ebb30054d4eedde99b4fce8c8fbe92",
+    "docs/reviews/2026-09-15-teob-target-audit/bbh_reference.log": "23a2859e650ac9561b71c3f5933383567940c90c8d655aff64c8858bb74df4fb",
+    "docs/reviews/2026-09-15-teob-target-audit/catalog/amplitude_derivative_minus.npz": "80eacb6f7331471e9ca1c8d64ce9fe2686d27b3b6f5cc2d6d821dee6c76a3d74",
+    "docs/reviews/2026-09-15-teob-target-audit/catalog/amplitude_derivative_plus.npz": "ae6d4203238b6063952cdf0c8e66dfe05a87ee2a1561bbff9b63403b02525186",
+    "docs/reviews/2026-09-15-teob-target-audit/catalog/amplitude_minus.npz": "1efbf144d933549cccddc16614366633316a8211c093c4541b940e7a9f40aa2e",
+    "docs/reviews/2026-09-15-teob-target-audit/catalog/amplitude_plus.npz": "568a1417f7419e4478fbe3a5757b5346cdeab3d140a1307061a2c2cb9a4fbac8",
+    "docs/reviews/2026-09-15-teob-target-audit/catalog/controls.json": "a9949e46dbfedb54a60c453b302155548f91951deb54ae6eff6ad9f5f24b000d",
+    "docs/reviews/2026-09-15-teob-target-audit/catalog/frequency_derivative_minus.npz": "f661e623614161ab73f2d9590bf6ef2a7c2f21412c1da624029cbad4c8acf5c6",
+    "docs/reviews/2026-09-15-teob-target-audit/catalog/frequency_derivative_plus.npz": "701c6914b8ea5116d67242bacf8301fab659fed7ffe780f054eca39a70ba838a",
+    "docs/reviews/2026-09-15-teob-target-audit/catalog/frequency_minus.npz": "ab0ed7e38b7bf37fe5f473172b5eb10f676a7cca704d07d4741de75af3102859",
+    "docs/reviews/2026-09-15-teob-target-audit/catalog/frequency_plus.npz": "17eedc961acb6d18da644d174a0db791a3732fe1e1de8db592d0a039f66b8c94",
+    "docs/reviews/2026-09-15-teob-target-audit/catalog/knot_next.npz": "a87f0b89409a4c89bd653f2d4611d5ed949bd660a0b138a542d9b679a08c9e02",
+    "docs/reviews/2026-09-15-teob-target-audit/catalog/knot_previous.npz": "132609550b6bbb7c11e7e4056c5972a1530d5dc2a212681e413b6ad4341ac917",
+    "docs/reviews/2026-09-15-teob-target-audit/catalog/nominal.npz": "864e26191732bfd2d28842d80603dec4e8b6f1973539f0412ba3cfc02e8dacfa",
+    "docs/reviews/2026-09-15-teob-target-audit/catalog.log": "be5bad84140b8f5d94754292db12118dac6e390a25268f62585bd6dec8c8123a",
+    "docs/reviews/2026-09-15-teob-target-audit/convention-audit.md": "b23d8982b7250da1edf149ba6615a2f83c6ba4e798dbce43e70172fa664b41ea",
+    "docs/reviews/2026-09-15-teob-target-audit/equal_bbh/amplitude_derivative_minus.npz": "8db69b26d9d1b4d3a32ad73c765b6303a6d17e197d9d6ef06c6df8788b69cfab",
+    "docs/reviews/2026-09-15-teob-target-audit/equal_bbh/amplitude_derivative_plus.npz": "cef9fe82d8bc55e359ca6bb61fcb4bdf3c56b7cbbfcca7fbce78051a30b059c1",
+    "docs/reviews/2026-09-15-teob-target-audit/equal_bbh/amplitude_minus.npz": "3f3251f19b7b36d66edcb6a3d87629677768a65a82b104f7eb2d28ce26eb195f",
+    "docs/reviews/2026-09-15-teob-target-audit/equal_bbh/amplitude_plus.npz": "b11140aa4f3289d5355700cd5bc9b9b8022945e66748442aed84520e925f3f18",
+    "docs/reviews/2026-09-15-teob-target-audit/equal_bbh/controls.json": "0d4fce2a7cdd75ba8667c8143b25da609d71ada30486b89b3351d5435a5d21de",
+    "docs/reviews/2026-09-15-teob-target-audit/equal_bbh/frequency_derivative_minus.npz": "6f95f38d467eb15e827d05dd75cb97d458cf1d51cd039b9578945ada84f85b01",
+    "docs/reviews/2026-09-15-teob-target-audit/equal_bbh/frequency_derivative_plus.npz": "a3123d099fb9a21b705ee200032fc1030966f659a0e7636708251117996ab00e",
+    "docs/reviews/2026-09-15-teob-target-audit/equal_bbh/frequency_minus.npz": "a94cf4de984ddd03c2e773455f24c86ce54ee6c27de78429ce272f29a5c13d66",
+    "docs/reviews/2026-09-15-teob-target-audit/equal_bbh/frequency_plus.npz": "e4e63ba46f5b11cf83f05c79ee9a2716c5a64f9d3e5751f0a0619667d9b74bcc",
+    "docs/reviews/2026-09-15-teob-target-audit/equal_bbh/knot_next.npz": "bb26cc15f5bc19220db0fb6abacd407b5147939d7bbf4d2e7853e47012fdc18b",
+    "docs/reviews/2026-09-15-teob-target-audit/equal_bbh/knot_previous.npz": "27f85c37a4496870ee42a541b972d05936a8888dc2b04c3cc4109de33f621c45",
+    "docs/reviews/2026-09-15-teob-target-audit/equal_bbh/nominal.npz": "657bb798aaa1b3b0cdb37ee10aa529c1b9da5737c4fa7ea29b7f852f5bda8527",
+    "docs/reviews/2026-09-15-teob-target-audit/equal_bbh.log": "094c0aec39362191f18579f443436eeaa97cce0d6cddfd0b3c8f33abaf032984",
+    "docs/reviews/2026-09-15-teob-target-audit/protocol.md": "c3749f96f837a2decbf33e8f3bc8451d8a8876ca42b5052f484af8f37f0165e8",
+    "docs/reviews/2026-09-15-teob-target-audit/source-audit.md": "1210af9636c9285ae476dd8d92dfcf155e8d5b5f74c55cbabf6b4f121201ca71",
+    "docs/reviews/2026-09-15-teob-target-audit/unequal_bns/amplitude_derivative_minus.npz": "dcf6f3273ff82bced4beda0ccf8e9519e2fccb5b5fb8afdcb42bfc5e856e5a71",
+    "docs/reviews/2026-09-15-teob-target-audit/unequal_bns/amplitude_derivative_plus.npz": "257312a3a4bafaee23ab58a18ba043b811dddf776449c3fe17bf7b47e9c7a923",
+    "docs/reviews/2026-09-15-teob-target-audit/unequal_bns/amplitude_minus.npz": "e174b42054980bf4ab47114714d14fdd95a44a29a599746478f48dcc0fffd1ff",
+    "docs/reviews/2026-09-15-teob-target-audit/unequal_bns/amplitude_plus.npz": "11b1c2996dc7c732ed5d482cf9f06505c2c4e5a3a3240d8fcb82e4ae64cba8f8",
+    "docs/reviews/2026-09-15-teob-target-audit/unequal_bns/controls.json": "0d2e838e4df0d09308c941cf18edce0d4462f53365e1e3f3ee491cb3cd808250",
+    "docs/reviews/2026-09-15-teob-target-audit/unequal_bns/frequency_derivative_minus.npz": "d553b17c9a86626bfbe70af9ce0c2f3c0f855f64944a711bfaad9962101dfae7",
+    "docs/reviews/2026-09-15-teob-target-audit/unequal_bns/frequency_derivative_plus.npz": "f995162cbf2530a873681db6a2ccae0851751b27288343f438aa98d1854614c5",
+    "docs/reviews/2026-09-15-teob-target-audit/unequal_bns/frequency_minus.npz": "e882d3da74192ece57c5679388214f3cad0cbdc9d3a7730bdbad5c2df2549fc0",
+    "docs/reviews/2026-09-15-teob-target-audit/unequal_bns/frequency_plus.npz": "4e01bf17edab1c47d762e48d2bd824b80c218d3c6f9f48353f4efa597495dfbf",
+    "docs/reviews/2026-09-15-teob-target-audit/unequal_bns/knot_next.npz": "920a188e2a8fcc43110b06e4fdb7e7753f59a32449bd844c868afe60c55add87",
+    "docs/reviews/2026-09-15-teob-target-audit/unequal_bns/knot_previous.npz": "5cb36430d6db465ea9000f053c9ffa35651635fb5d7a22b9399e3cfbbd2e2d61",
+    "docs/reviews/2026-09-15-teob-target-audit/unequal_bns/nominal.npz": "7f97e9fa1a08cd290f7730933f6b8fa3cc24da95f3d081b52feab15d38ea3d03",
+    "docs/reviews/2026-09-15-teob-target-audit/unequal_bns.log": "3653e94eb94660c7b8e8ae13d23944f008c874601088c873514443d2ae018442",
+    "docs/reviews/2026-09-15-teob-target-audit/validation.json": "affbf6dc17cfb0a11900b654f508b1915728867c3ea5473c13a7446dfff6d0e5",
+    "docs/reviews/2026-09-15-teob-trajectory-controls/protocol.md": "e4db748ce859d860a15183cf585225f37575d33ae40a15fcc7d6344a89f94956",
+    "scripts/diagnose_teob_paired_driver_clean.py": "52c5267c4bbb389e0801f27d99e2c95ea96d3ca6c67d48d16e3e8586f9fdef22",
+    "scripts/teob_fixed_event_replay.py": "361ceca8afe34fbb2183e19c2717b76238255235144ba4709bf62c5ec8936343",
+    "scripts/teob_target_event_controls.py": "f7359a9fc70684ed47c892cadb13c6f7bc62486830a23ce19b45af4cb0a072b1",
+    "scripts/teob_trajectory_grid_controls.py": "fdda141de99586a84fa244ff77b751765cdce8b9eb88191b0d3b9506d9a62a5a",
+    "scripts/validate_teob_target_controls.py": "d818fb23a22af4dac5a91696ea58015d399c5cab8a6267b7737db0dab0d4c866",
+    "src/torchwave/__init__.py": "db42aeba20b5f4a4b57d4edabcf1fe860a2be94db0d9d252d281c2079d3d9176",
+    "src/torchwave/approximants/__init__.py": "50cdc46775f1fd8c960bd9eecb3df0c9a0880062284227c70e012f1af3a7bba5",
+    "src/torchwave/approximants/continuous_wave.py": "3d38063738e437742fbe76144900fe367647feba32327b174039a535e3edd00f",
+    "src/torchwave/approximants/emri_kludge.py": "0bbfd934d35d2dc561eefad8b605289a173ba6f347336d013e5c3d28c76526e1",
+    "src/torchwave/approximants/eob/__init__.py": "cba1fb28097542ef6b4b80eb6f7ddc4105418b4c225052d94f3dac7b85636356",
+    "src/torchwave/approximants/eob/adaptive_driver_clean.py": "27db5a25123f4d054a9919a11752b207cfc6accc377a8eeaf21f4b49087867e0",
+    "src/torchwave/approximants/eob/attachment.py": "097165aa7a6dcf87c5458fb26eade17a9c6bdf43c8e001c0929c1eb6ea2975e7",
+    "src/torchwave/approximants/eob/conditioned_waveform_clean.py": "c8ca45a490842f291e30616a52850f148397a8aad3e49c764c9a45c1bff99ec6",
+    "src/torchwave/approximants/eob/continuous_matching.py": "5db6aefa91cfdade8bb709381efe31144efc34054672263eec1c707a70cd1a06",
+    "src/torchwave/approximants/eob/events.py": "c1ae1182e4c2f9cf5f8a2857ea5d73802dbbb68b59739709849f973503bdfd5d",
+    "src/torchwave/approximants/eob/factorized_modes.py": "d4b10cbcbbecc4de84329a13cdca43d90d4fa5aa168248fc2e874211d29f8315",
+    "src/torchwave/approximants/eob/hamiltonian.py": "d26a87ded2a197a000704b77b075cdc72ee2315741bdacc29fb25f912158a441",
+    "src/torchwave/approximants/eob/initial_conditions.py": "68363208874bfaf39dad5d5668e5f128553144b4db31f64f0283278ed710458f",
+    "src/torchwave/approximants/eob/integrator.py": "a036f6b7580450a847bc1d56ebf745de6cdb5c2ee397d31cf1014d483eebe26b",
+    "src/torchwave/approximants/eob/merger_ringdown.py": "0db678173690ce0f7918c6fef2d9cb4864bf55a8dae3a6f80a47d0563ac7237d",
+    "src/torchwave/approximants/eob/nqc.py": "c8683181f7cf911df1e1b85cd6999cdb03e7c594e867315359040e9eb03ca552",
+    "src/torchwave/approximants/eob/nqc_analytic_clean.py": "28161546b97d0e182a7d7557b7d132f92a1d705a5f3120b1b0c51c06d31b8b99",
+    "src/torchwave/approximants/eob/numerical_attachment.py": "b042ed739c89ac53ec1829d005b404d86f16d18dc4f4dd710bd58000de5c4a93",
+    "src/torchwave/approximants/eob/numerical_derivative_clean.py": "2400ef464b292a0887f1eed68ced5579ab55ae6afe1f0f859226f9aaba180152",
+    "src/torchwave/approximants/eob/published_waveform.py": "7a4ceb62563f066ac8cd4d68ab5cc32e61143bc3a429a4420ff17b12ee021595",
+    "src/torchwave/approximants/eob/radiation_reaction.py": "dfb8853fc929145c3d61b7af49c16426560a12dc14ba9e664659af4a4449834d",
+    "src/torchwave/approximants/eob/remnant.py": "e7690cd5df1bcde2f579954762116beb20db606dae809835b148dae73c4cb007",
+    "src/torchwave/approximants/eob/seobnrv4_amplitude22.py": "941a7e6c4a3e92dc7860b91076958b09aa9a934e6799c33936409a5d09178eca",
+    "src/torchwave/approximants/eob/seobnrv4_flux.py": "9395f930449651c6607de4aa780cfd75545d95ba67fe4b4d653e2852fef407a8",
+    "src/torchwave/approximants/eob/seobnrv4_hamiltonian.py": "5b1a5b877129e5235b8f92974a01ab450176e8e924d374ca0fc413334fad177f",
+    "src/torchwave/approximants/eob/seobnrv4_mode22.py": "4bb182b480b741877429f7a85c08d175fcf20ea9517540aaadaaef0ead199190",
+    "src/torchwave/approximants/eob/td_fd_conditioning_clean.py": "d8a9ad936a0e6fb8e0c59a35428a7e2c70e372dca0b8d87f6d890d38dcd30a8a",
+    "src/torchwave/approximants/eob/teob_adaptive_continuation_clean.py": "7b8722ecc28af74eeb2fe29d2e7c1782123106d63fbeba60c82ca81f6b70b869",
+    "src/torchwave/approximants/eob/teob_conditioned_waveform_clean.py": "6f671bec34b0b9e8f6aa4dd9b7198e1da2a7b95aa7aaaadb78013f1c02b39dbb",
+    "src/torchwave/approximants/eob/teob_healy2014_remnant_clean.py": "ff65443236f379b3d1f4aebec5482833c43edd36b90418955ee3bfcea67f3dd2",
+    "src/torchwave/approximants/eob/teob_merger_nqc_clean.py": "a3902d99a6578714cd11c36ea4da0c2a83cfe7993aaa66c5ec95b48f2d1e3788",
+    "src/torchwave/approximants/eob/teob_nqc_clean.py": "8ec2d77a57b96e8246bdae3ca8c62c4e2a17cabf1c5554aa1e47fe25b1ea8f46",
+    "src/torchwave/approximants/eob/teob_orbital_potential_closed_clean.py": "b6c8b2ba574234145c2dd254553ae0cc5abe20616ea2571d17732e27cdbf19b3",
+    "src/torchwave/approximants/eob/teob_postadiabatic_clean.py": "06d0620283798a28c477e6e70b3a3720e337c53a8d8af8a78be17646a7be7550",
+    "src/torchwave/approximants/eob/teob_postmerger.py": "7324ff72dc1fd36149f137b9f8eafa68f354fd897ff5d56478ce5a6cf2f8c5f6",
+    "src/torchwave/approximants/eob/teob_published_driver.py": "58376bbd318f5b5f33922759416fc3b1d2531cb7edafb0e9d8d5c1edadfa8845",
+    "src/torchwave/approximants/eob/teob_radial_acceleration_clean.py": "6e16681eae0daade84bc540f12ee6fe40b3ad08929444273faf03123b7bbc3f9",
+    "src/torchwave/approximants/eob/teob_radiation_clean.py": "dca2c9791403467d85572f25a062cbc995d8228743d33b6b2e5dc28c13336bd6",
+    "src/torchwave/approximants/eob/teob_ringdown_assembly_clean.py": "bb6bc86986cbcd52c360c98ae3358baa7e6e03223b19485eaf24617cddbee7ff",
+    "src/torchwave/approximants/eob/teob_trajectory.py": "6728419dd6b7c6f2a7a340f017f52b5dd54bc399d212884f9975643cd58db785",
+    "src/torchwave/approximants/eob/teob_uib2016_postmerger.py": "2a560838c801820540a9ec585a8291b7ad316ab6765a928bf06de882681db3a5",
+    "src/torchwave/approximants/eob/teob_uib2016_remnant.py": "9ea727ec726f82c62c2ad6e399ee084e02daf275c145a3503e0666271010e755",
+    "src/torchwave/approximants/eob/teob_vacuum_driver_clean.py": "5188f9161c793cf79b1992abe562fd9ae58925319a44c730d6eb079050e43e41",
+    "src/torchwave/approximants/eob/teob_waveform_state_clean.py": "b247c91659b18341301356eca2def7cde270b0aaa7a9e16c85f8ba40f1861552",
+    "src/torchwave/approximants/eob/waveform.py": "1e9d61e31284c667ca0b27877646ba5553d9dbd3ebbe72d1090d9917acc4bc79",
+    "src/torchwave/approximants/hm_21_pn_clean.py": "8a69dd0d6435674b9c3f78dddf7356dbaea85ef105a820c81d7a8a6a155b5c95",
+    "src/torchwave/approximants/hm_assembly_clean.py": "8b985c5fcbf778fb8d43e626beaf89d5d3080fd3210342e1e56eea858a715d6c",
+    "src/torchwave/approximants/imrphenom_hm.py": "9f4054232e2fea72f5b0e5f3cfd68aef119f30edb48a0f7c4724a56133b46c8b",
+    "src/torchwave/approximants/imrphenom_hm_clean.py": "cbf474aa50241a06608bbfc69a9682f05b00ab3044fb507eb17c2f96921f0887",
+    "src/torchwave/approximants/imrphenom_hm_phase_clean.py": "59b67127968bb76a327e0bfac58f6e4d7f7c53e73387045f7b17f5777e30cc38",
+    "src/torchwave/approximants/imrphenom_hm_qnm_n61.py": "350c958aef4e1554d5c2d6a6bc22f8b9bf3513c2a000f08dc3cb3de1cde05b06",
+    "src/torchwave/approximants/imrphenom_nsbh.py": "a2b38665db46a38a15882490f1329420284458eaa57a80d971bba0aa987b22ab",
+    "src/torchwave/approximants/imrphenom_xas.py": "d82413363ee09b332337344b54c51cab785ec338b43adda551d5f88b76b58a44",
+    "src/torchwave/approximants/imrphenom_xhm.py": "c54a2f8f3eb74f5b49836feca3a524d939f02991c71f8c089da58d362021aa31",
+    "src/torchwave/approximants/imrphenom_xp.py": "be61b7aec433b8ff6a8606deb5add16472ba460e9882bdded3ef6905105e2631",
+    "src/torchwave/approximants/imrphenom_xphm.py": "4ab171aa839835c6064b391df4506e1e3f6308815dc098df4b573a24b0af837c",
+    "src/torchwave/approximants/imrphenomd.py": "77779b5733cdeb3289adb621f10a0a447ddd27014e46581f04e74b276583833e",
+    "src/torchwave/approximants/imrphenomd_nrtidal.py": "1349d1addada8d8858d0f3b099f4992ccecdc6ad490ec0379bcb6b6cf6897792",
+    "src/torchwave/approximants/imrphenomp.py": "df155863ce8ef3886386dfb46de4cf73e212f33f4640aafa44220149a4a9812f",
+    "src/torchwave/approximants/kerr_angular.py": "ad2b0bb82de180254cedd0c3fc31058a980f03e187b20219d4829053668172aa",
+    "src/torchwave/approximants/kerr_angular_table_convention.py": "d8256c9504ad470b9e075a630cca3c963c7f87aacf02c29c1722910788ac6a93",
+    "src/torchwave/approximants/kerr_qnm_author.py": "292f0a74f055800d0af12b95f839fac16f84ded3d91fc99e086206fa3ded7911",
+    "src/torchwave/approximants/kerr_qnm_d_sampling_clean.py": "5b342ea33a081ff41bfde00369a01fe9a8495216664ccb941fdc33aa6cfd8009",
+    "src/torchwave/approximants/kerr_qnm_generated.py": "3361bbf72224e93ce445169d5bb66e95ca27b5bdf6475d6de6ff7514bdf0283f",
+    "src/torchwave/approximants/kerr_qnm_interp.py": "a75c959cacf6c0f1413f9e8eeb427e1fb6f214e2d77c44941b28868b0d2d0679",
+    "src/torchwave/approximants/kerr_qnm_london_published.py": "74dc85b21585392bfe0bf2339064eefd2dc026e8b85eb8163ea7548fc653177e",
+    "src/torchwave/approximants/kerr_qnm_table_convention.py": "c4c85d17b079306df73c74f4bb755b7f4256fbdf49fef6a85cd9810367d800f6",
+    "src/torchwave/approximants/kerr_ringdown.py": "952fd6c40a263e4d3727f683a354e746908142b473a71c92c30171802db8f4ac",
+    "src/torchwave/approximants/kerr_ringdown_energy.py": "0c283b5145e929d6e465db37b1bead329073af90ab89c887826c2e2be303ba37",
+    "src/torchwave/approximants/kerr_ringdown_public_clean.py": "e585144576334e1836defaf3c3f809708e1600ef8e03a2e816e3813af6e64616",
+    "src/torchwave/approximants/memory.py": "33374f62c2f4e134ea1a338782173d864539379c1eedd8078ddca5fc52045470",
+    "src/torchwave/approximants/nrtidal_published_fits.py": "8c1d9a0fa2db4575d1e74184a45feec4004a8c063d838cbd4ec5dbe91da9954a",
+    "src/torchwave/approximants/nsbh_clean_amplitude.py": "dbd8d551ccbefdbbdf5a216b3793803ba1818feb53c57a84e92d6f7329cb5774",
+    "src/torchwave/approximants/nsbh_clean_phase.py": "a887f592b32a40a1d4903ce32bb97859bd06f5fa54e72396cb75c4d5f1fd90ec",
+    "src/torchwave/approximants/nsbh_phase_baseline.py": "74e13c9abe4172dc38e2ddf3f96593e57d7922dfbdbf153b2f096d5a3e84e156",
+    "src/torchwave/approximants/phenom_meco.py": "fb33a9ebfdc530111e56a0e560c53163bfa788706838e158d6d13a98fb103e49",
+    "src/torchwave/approximants/phenomd_unrounded_fits.py": "2f6ce30ffccd8574372a4bc13970eef9516da87bec2bfabb164fddea668c51e7",
+    "src/torchwave/approximants/phenompv2_waveform_clean.py": "716d3e38037c4352e57bf70850cb0bb11217dabd0d0e6d7f4a2481cfb69f8544",
+    "src/torchwave/approximants/polynomial_interval.py": "ceefc9c1526b9d22bb7fbaa4565a16d9976eb90709a501fc18aa46d155cb19e0",
+    "src/torchwave/approximants/ppe.py": "04bade0e334f9f9bf8d55792efab1fa0b8ff17edc6106c9c19d8fd1aa4a5e6ad",
+    "src/torchwave/approximants/precession_beta_clean.py": "13eb469547bd648f3b6effbe4cef66d81ba0740240c5ba1fd86bb2c3d913f2d2",
+    "src/torchwave/approximants/precession_msa.py": "851baecd58a4b934c11ceec539d3218faebf04196c28bc868499c453123d01d6",
+    "src/torchwave/approximants/precession_msa_angles_clean.py": "259705bd0fe0ead9aef45922a8d61cee598b0cd6ba0d1ec655ca6d4a14bdf4e2",
+    "src/torchwave/approximants/precession_msa_initial_clean.py": "25f4920b9c852d82e22299c57a49252ae8e7fc88fd613eb26b347a91f26a0aab",
+    "src/torchwave/approximants/precession_msa_oscillatory_clean.py": "a0e3e5e56cbbc295036c0fce42436ae30e4d9704e40ad1e2d59d327d5e49649a",
+    "src/torchwave/approximants/precession_msa_pn_clean.py": "12e9fabcb181828283829aab20beb73ec52fc0ad0b9a5b6c47cc808fdf23f8eb",
+    "src/torchwave/approximants/precession_msa_reference_l_clean.py": "2ee1059e626c0d7076c7e205100803b05c01a3ee40f87b2b3fb392cf7fd124c0",
+    "src/torchwave/approximants/precession_msa_secular_clean.py": "d40d1b2253305ba563bac248480e28b51daa9af94b9f1b6b92716e98f6afbddb",
+    "src/torchwave/approximants/precession_msa_waveform_clean.py": "002af508a4a8501f02c0e59a1416e30d917ce187c8dc79814aac80b0ae1b1ab7",
+    "src/torchwave/approximants/precession_nnlo_clean.py": "6d1b5a713fd19e96ee0f2214936f2ffa731eea2a9e28a254f32d6e22f77f3ea9",
+    "src/torchwave/approximants/precession_nnlo_waveform_clean.py": "838742009880e5d9affb77b01ecda775ea3b7a33a1c0a754668551cb8bb7b774",
+    "src/torchwave/approximants/precession_ode.py": "e816267a6710a659e2852c20497379e29f48ff2ac9d66a53b1743db9a77bef9b",
+    "src/torchwave/approximants/precession_source_frame_clean.py": "1f7273265036504d3083e0bd6b4d1677d6ddfc0f257e3e8979fe5a2b14467eda",
+    "src/torchwave/approximants/precession_twisting_clean.py": "32485331071e15ad683bcb0b903ce94dc75eddf47298e63620cafcc1c9717b62",
+    "src/torchwave/approximants/rom/__init__.py": "bea88a61fec8fde49c94e93fa42b78fc9f94d1f5d1fabf4763659c49e9a0f9ea",
+    "src/torchwave/approximants/rom/bspline.py": "45184b2cc3d857fdba8844d1c86245d7a696cb1c302bf4179420cd87a6f712a9",
+    "src/torchwave/approximants/rom/generator.py": "a06c1040801507f457d836f16b120b374dc38d0220712722f7447c8ecc381f01",
+    "src/torchwave/approximants/rom/glue.py": "011fefed60c32f8d06ae026302320f4bdd694eb2e1bc54c5752e0ba2a56ee8ac",
+    "src/torchwave/approximants/rom/official.py": "b0af35a773c5cea5573b04746bcf84b5a789e1727ee927546902a5c1ee7ff76b",
+    "src/torchwave/approximants/rom/official_wrapper.py": "a5e45364dc24355e153e12bc3e30c4e8798c66c8f71e66c1cd6427070803fe3f",
+    "src/torchwave/approximants/rom/surrogate.py": "c57567c4b13dba3d75020aaa11119c97999fd5472cfe812429661dbbbb3fdcd0",
+    "src/torchwave/approximants/taylorf2.py": "4f6d2536bd8a3fab691da6c724f09148b00b0521f4b005fdf8fc91a72c9db97d",
+    "src/torchwave/approximants/taylorf2_eccentric.py": "f6debf294f561ec18e4982c36eb554cdfe1fd5192d85e794c8966c188deac5bd",
+    "src/torchwave/approximants/taylorf2_hm.py": "fd30750e0fa8795120cba61ef98fc3df68d1644e2b7f442578079758f9a1a711",
+    "src/torchwave/approximants/teobresums.py": "05e15d8fd9888ee8d454d61fbc8454fe5c652747780f77c771718557ce0294f3",
+    "src/torchwave/approximants/xhm_amplitude_clean.py": "d10bf39f21d58a31b5bdfd56242d9c73ba82e0db61e662ed73e4290cef0db5e4",
+    "src/torchwave/approximants/xhm_fits.py": "6704f0c59a1e1527f5c31063d1bac8ab84f7349207acc3f1c24532c370167548",
+    "src/torchwave/approximants/xhm_inspiral_assembly_clean.py": "c68dda9efd5abdad9938ed33d35bc1d534221af7e80afa37b3d6ec6506cc5e45",
+    "src/torchwave/approximants/xhm_inspiral_assembly_release122022_clean.py": "3a8ec52088ab24d0f618b5e2a6a6f4e5d04b10717c2f01706fad597234ff4bd1",
+    "src/torchwave/approximants/xhm_intermediate_amplitude_clean.py": "613d4d5ebf131db3d72160b81e41edbc23c66a33c7588954a985f74e1d6b8338",
+    "src/torchwave/approximants/xhm_phase_clean.py": "7b1c201f4c8744fdd60a684cea46ff366dc7c000991d6b0aa8d48b63c322483f",
+    "src/torchwave/approximants/xhm_spa_clean.py": "00b0f2775d605a33b6e74c0a673138b900b1f015420f9ffbf42476bdf4f0d9ed",
+    "src/torchwave/constants.py": "1ae479e07b44a19d23b9a9eaed4b8b8b8bf38b4293717a91d321b59f2d1ac4e3",
+    "src/torchwave/conversions.py": "2cb04a754b927839dd056eec2372e4fb840e8298fbc3da67f847e3db8f323302",
+    "src/torchwave/detectors/__init__.py": "4e445658bcb157530ffafcf588f349473c1f28dea6478b484c08200023ea3764",
+    "src/torchwave/detectors/lisa.py": "d1351340229c67db751bccde5cae51be9b6bb9a95bcd03895c07261bcea55ea6",
+    "src/torchwave/detectors/network.py": "634b179fcd05834e27f80981141d56db8ca56d05d17acd30853944eef05d5777",
+    "src/torchwave/detectors/psd.py": "7b88a6eedd9ea25ff34f83e66f00ae1c68ea405c99f24b88ff738250eb4a8449",
+    "src/torchwave/detectors/pta.py": "891d613c25fef397674f3fcb5d1834c21aa3eb17044e389a0af6ee1240a4a2d2",
+    "src/torchwave/external_data.py": "2e77a3ec77f59f91c7ae765d763b4b444e77add0e59c4f02f097303bd42e89d8",
+    "src/torchwave/inference/__init__.py": "ddb9cea34efe3ffa995806bd8c529419a03ac03ec5d6aa08f31901332f0ba006",
+    "src/torchwave/inference/f_statistic.py": "3806ee5770180fab38235d6072b051291b470c08fbba9022a7df2c9943175b38",
+    "src/torchwave/inference/fisher.py": "fad61ccf45f66acd13e3afa1d6330589449a2f2094490c25f928a7439a05c470",
+    "src/torchwave/inference/likelihood.py": "dfe1a38096306065eeba60c535685378c34e8d9ae41f246aa8c1fc478d316853",
+    "src/torchwave/inference/mcmc.py": "f2c6a50daafa701364fc54fd9c499161a10e1bd082b059e8ae78be61a51c8f3c",
+    "src/torchwave/inference/relative_binning.py": "fa57a8d2b3c8c3beca432b0fdd4317799d92db8f503961c0f13f60a8441da9af",
+    "src/torchwave/inference/wavelet_glitch.py": "ca823a53a896de3b8067dcc031cac87dab2d1f291b50f6adcee5bf458eff29c4",
+    "src/torchwave/phenomd_published_fits.py": "55992c5c6d46e1430d2c86915dcedf44741beaddf039ff95faea944531bde2dd",
+    "src/torchwave/provenance.py": "ab4397670b6e3075904f12c3d37cd68fad0f923b2538eed88742be6135e48320",
+    "src/torchwave/waveforms.py": "9885b94bd4b18b48ae5bbdea614e4c0225f0ef6fb9e147f1044e3f204cd0809e"
+  },
+  "previous_manifest_entries_unchanged": 60,
+  "native_nqc_clone_bitwise": {
+    "tight_0p1": true,
+    "tight_0p01": true
+  },
+  "historical_source_compatibility": {
+    "clean_driver": {
+      "historical": "52c5267c4bbb389e0801f27d99e2c95ea96d3ca6c67d48d16e3e8586f9fdef22",
+      "current": "52c5267c4bbb389e0801f27d99e2c95ea96d3ca6c67d48d16e3e8586f9fdef22",
+      "historical_hash_equal": true
+    },
+    "native_nqc_module": {
+      "historical": "f705514ef981b3f0a557efeebe508b52fdb70c634a8ac8f2c357f30761871068",
+      "current": "a3902d99a6578714cd11c36ea4da0c2a83cfe7993aaa66c5ec95b48f2d1e3788",
+      "historical_hash_equal": false
+    },
+    "native_ringdown_module": {
+      "historical": "df3d21ce4fad55a84d0e1550ac376b8931eecbc0b4076dc9f6235b076ed0befa",
+      "current": "bb6bc86986cbcd52c360c98ae3358baa7e6e03223b19485eaf24617cddbee7ff",
+      "historical_hash_equal": false
+    },
+    "replay_script": {
+      "historical": "361ceca8afe34fbb2183e19c2717b76238255235144ba4709bf62c5ec8936343",
+      "current": "361ceca8afe34fbb2183e19c2717b76238255235144ba4709bf62c5ec8936343",
+      "historical_hash_equal": true
+    }
+  },
+  "common_grid_source": "previous experiment common support intersection, no oracle selection",
+  "rows": {
+    "native": {
+      "tight_0p1": {
+        "output_sha256": "e83518de38e0b7deeef427bb7de3921fb0276910a590b0796ea90e01932c47ab",
+        "events": {
+          "peak_knot_index_auxiliary": 179,
+          "peak_time_initial_mass": 12316.531451506382,
+          "peak_time_final_mass": 12893.776420270277,
+          "merger_time_initial_mass": 12313.531451506382,
+          "merger_time_final_mass": 12890.635817787093,
+          "t_match_initial_mass": 12315.531451506382,
+          "t_match_final_mass": 12892.729552775883,
+          "strictly_earlier_index_joined": 1057,
+          "attachment_sampled_index_joined": 1056,
+          "attachment_time_initial_mass": 12315.387269626202,
+          "attachment_time_final_mass": 12892.57861345224,
+          "output_boundary_index_public_grid": 24631,
+          "output_boundary_time_initial_mass": 12315.5,
+          "attachment_threshold_arithmetic": "t_peak/final_mass - 3/final_mass + 2/final_mass",
+          "epoch_coordinate_start_initial_mass": 0.0,
+          "joined_support_initial_mass": [
+            0.0,
+            12318.687269626203
+          ],
+          "extended_support_initial_mass": [
+            0.0,
+            12468.68726962675
+          ],
+          "output_support_initial_mass": [
+            0.0,
+            12468.5
+          ],
+          "joined_samples": 1090,
+          "extended_samples": 2590,
+          "output_samples": 24938,
+          "extension_samples": 1500,
+          "auxiliary_spacing_initial_mass": 0.1000000000003638,
+          "ringdown_phase0": 0.5324176932988867,
+          "auxiliary_amplitude_negative": false,
+          "metrics_vs_public": {
+            "samples": 24938,
+            "relative_l2": 0.004039641935319653,
+            "max_abs": 1.3088284817867288e-22,
+            "rms_abs": 5.966495468014484e-24
+          },
+          "scored_public_samples": 24938,
+          "full_public_support": true,
+          "signed_extended_negative_samples": 0
+        },
+        "nqc_derivative_spacing_M": 0.1,
+        "nqc_peak_time_M": 12316.487269626203,
+        "nqc_requested_time_M": 12315.487269626203,
+        "nqc_selected_index": 168,
+        "nqc_selected_time_M": 12315.387269626202,
+        "amplitude_coefficients": [
+          -0.06698995280765058,
+          1.284311587348846
+        ],
+        "phase_coefficients": [
+          0.18699214304645037,
+          1.8486200382476372
+        ],
+        "cache_reproduction": {
+          "samples": 24938,
+          "relative_l2": 2.636720152124043e-16,
+          "max_abs": 3.323469920718476e-36,
+          "rms_abs": 3.893261265324881e-37
+        }
+      },
+      "tight_0p01": {
+        "output_sha256": "4b2dfbdc13596d709b9fe8ead2551fc5ad9c50b27458e6f0c870ee241e48869f",
+        "events": {
+          "peak_knot_index_auxiliary": 179,
+          "peak_time_initial_mass": 12316.53126289578,
+          "peak_time_final_mass": 12893.776222819968,
+          "merger_time_initial_mass": 12313.53126289578,
+          "merger_time_final_mass": 12890.635620336785,
+          "t_match_initial_mass": 12315.53126289578,
+          "t_match_final_mass": 12892.729355325575,
+          "strictly_earlier_index_joined": 1541,
+          "attachment_sampled_index_joined": 1540,
+          "attachment_time_initial_mass": 12315.35990319574,
+          "attachment_time_final_mass": 12892.549964425752,
+          "output_boundary_index_public_grid": 24631,
+          "output_boundary_time_initial_mass": 12315.5,
+          "attachment_threshold_arithmetic": "t_peak/final_mass - 3/final_mass + 2/final_mass",
+          "epoch_coordinate_start_initial_mass": 0.0,
+          "joined_support_initial_mass": [
+            0.0,
+            12318.559903195739
+          ],
+          "extended_support_initial_mass": [
+            0.0,
+            12468.559903196285
+          ],
+          "output_support_initial_mass": [
+            0.0,
+            12468.5
+          ],
+          "joined_samples": 1573,
+          "extended_samples": 3073,
+          "output_samples": 24938,
+          "extension_samples": 1500,
+          "auxiliary_spacing_initial_mass": 0.1000000000003638,
+          "ringdown_phase0": 0.5180712430039499,
+          "auxiliary_amplitude_negative": false,
+          "metrics_vs_public": {
+            "samples": 24938,
+            "relative_l2": 0.0020543174136323254,
+            "max_abs": 5.814238965291758e-23,
+            "rms_abs": 3.034198509311844e-24
+          },
+          "scored_public_samples": 24938,
+          "full_public_support": true,
+          "signed_extended_negative_samples": 0
+        },
+        "nqc_derivative_spacing_M": 0.1,
+        "nqc_peak_time_M": 12316.559903195739,
+        "nqc_requested_time_M": 12315.559903195739,
+        "nqc_selected_index": 168,
+        "nqc_selected_time_M": 12315.459903195739,
+        "amplitude_coefficients": [
+          -0.06637791316204633,
+          1.2871383184168061
+        ],
+        "phase_coefficients": [
+          0.1842325176086618,
+          1.7595311180248916
+        ],
+        "cache_reproduction": {
+          "samples": 24938,
+          "relative_l2": 3.0714629767229846e-16,
+          "max_abs": 5.099857551130771e-36,
+          "rms_abs": 4.535161951672788e-37
+        }
+      }
+    },
+    "legacy_common_fixed": {
+      "tight_0p1": {
+        "output_sha256": "53b89fb36aa220bbc8f26734582e064f1c98f941ff1d5192d240d0dbf9eb4ab5",
+        "events": {
+          "peak_knot_index_auxiliary": 179,
+          "peak_time_initial_mass": 12316.531451506382,
+          "peak_time_final_mass": 12893.776420270277,
+          "merger_time_initial_mass": 12313.531451506382,
+          "merger_time_final_mass": 12890.635817787093,
+          "t_match_initial_mass": 12315.531451506382,
+          "t_match_final_mass": 12892.729552775883,
+          "strictly_earlier_index_joined": 1057,
+          "attachment_sampled_index_joined": 1056,
+          "attachment_time_initial_mass": 12315.35990319574,
+          "attachment_time_final_mass": 12892.549964425752,
+          "output_boundary_index_public_grid": 24631,
+          "output_boundary_time_initial_mass": 12315.5,
+          "attachment_threshold_arithmetic": "t_peak/final_mass - 3/final_mass + 2/final_mass",
+          "epoch_coordinate_start_initial_mass": 0.0,
+          "joined_support_initial_mass": [
+            0.0,
+            12318.559903195739
+          ],
+          "extended_support_initial_mass": [
+            0.0,
+            12468.559903196285
+          ],
+          "output_support_initial_mass": [
+            0.0,
+            12468.5
+          ],
+          "joined_samples": 1089,
+          "extended_samples": 2589,
+          "output_samples": 24938,
+          "extension_samples": 1500,
+          "auxiliary_spacing_initial_mass": 0.1000000000003638,
+          "ringdown_phase0": 0.5375995896217112,
+          "auxiliary_amplitude_negative": false,
+          "metrics_vs_public": {
+            "samples": 24938,
+            "relative_l2": 0.004811916866244494,
+            "max_abs": 1.587748835842197e-22,
+            "rms_abs": 7.107134898241521e-24
+          },
+          "scored_public_samples": 24938,
+          "full_public_support": true,
+          "signed_extended_negative_samples": 0
+        },
+        "nqc_derivative_spacing_M": 0.1000000000003638,
+        "nqc_peak_time_M": 12316.487269626203,
+        "nqc_requested_time_M": 12315.487269626203,
+        "nqc_selected_index": 167,
+        "nqc_selected_time_M": 12315.35990319574,
+        "amplitude_coefficients": [
+          -0.0672300109203848,
+          1.2831939543739728
+        ],
+        "phase_coefficients": [
+          0.1880191249124725,
+          1.88244757014353
+        ]
+      },
+      "tight_0p01": {
+        "output_sha256": "ee3ab10fa7d8aa7df35c91a771170522aa5888314b562c40d9912821615bf082",
+        "events": {
+          "peak_knot_index_auxiliary": 179,
+          "peak_time_initial_mass": 12316.531451506382,
+          "peak_time_final_mass": 12893.776420270277,
+          "merger_time_initial_mass": 12313.531451506382,
+          "merger_time_final_mass": 12890.635817787093,
+          "t_match_initial_mass": 12315.531451506382,
+          "t_match_final_mass": 12892.729552775883,
+          "strictly_earlier_index_joined": 1541,
+          "attachment_sampled_index_joined": 1540,
+          "attachment_time_initial_mass": 12315.35990319574,
+          "attachment_time_final_mass": 12892.549964425752,
+          "output_boundary_index_public_grid": 24631,
+          "output_boundary_time_initial_mass": 12315.5,
+          "attachment_threshold_arithmetic": "t_peak/final_mass - 3/final_mass + 2/final_mass",
+          "epoch_coordinate_start_initial_mass": 0.0,
+          "joined_support_initial_mass": [
+            0.0,
+            12318.559903195739
+          ],
+          "extended_support_initial_mass": [
+            0.0,
+            12468.559903196285
+          ],
+          "output_support_initial_mass": [
+            0.0,
+            12468.5
+          ],
+          "joined_samples": 1573,
+          "extended_samples": 3073,
+          "output_samples": 24938,
+          "extension_samples": 1500,
+          "auxiliary_spacing_initial_mass": 0.1000000000003638,
+          "ringdown_phase0": 0.5376051205768042,
+          "auxiliary_amplitude_negative": false,
+          "metrics_vs_public": {
+            "samples": 24938,
+            "relative_l2": 0.0048127848395085535,
+            "max_abs": 1.5880497415847447e-22,
+            "rms_abs": 7.108416882790967e-24
+          },
+          "scored_public_samples": 24938,
+          "full_public_support": true,
+          "signed_extended_negative_samples": 0
+        },
+        "nqc_derivative_spacing_M": 0.1000000000003638,
+        "nqc_peak_time_M": 12316.487269626203,
+        "nqc_requested_time_M": 12315.487269626203,
+        "nqc_selected_index": 167,
+        "nqc_selected_time_M": 12315.35990319574,
+        "amplitude_coefficients": [
+          -0.06722999697425122,
+          1.2831940931535553
+        ],
+        "phase_coefficients": [
+          0.18801764959620534,
+          1.8825020295680557
+        ]
+      }
+    },
+    "explicit_common_fixed": {
+      "tight_0p1": {
+        "output_sha256": "c9be0b26fee9b95fea70c5818336f1f95ba62e34ab291a942d95f038884421e1",
+        "events": {
+          "peak_knot_index_auxiliary": 179,
+          "peak_time_initial_mass": 12316.531451506382,
+          "peak_time_final_mass": 12893.776420270277,
+          "merger_time_initial_mass": 12313.531451506382,
+          "merger_time_final_mass": 12890.635817787093,
+          "t_match_initial_mass": 12315.531451506382,
+          "t_match_final_mass": 12892.729552775883,
+          "strictly_earlier_index_joined": 1057,
+          "attachment_sampled_index_joined": 1056,
+          "attachment_time_initial_mass": 12315.35990319574,
+          "attachment_time_final_mass": 12892.549964425752,
+          "output_boundary_index_public_grid": 24631,
+          "output_boundary_time_initial_mass": 12315.5,
+          "attachment_threshold_arithmetic": "t_peak/final_mass - 3/final_mass + 2/final_mass",
+          "epoch_coordinate_start_initial_mass": 0.0,
+          "joined_support_initial_mass": [
+            0.0,
+            12318.559903195739
+          ],
+          "extended_support_initial_mass": [
+            0.0,
+            12468.559903196285
+          ],
+          "output_support_initial_mass": [
+            0.0,
+            12468.5
+          ],
+          "joined_samples": 1089,
+          "extended_samples": 2589,
+          "output_samples": 24938,
+          "extension_samples": 1500,
+          "auxiliary_spacing_initial_mass": 0.1000000000003638,
+          "ringdown_phase0": 0.5375995896033507,
+          "auxiliary_amplitude_negative": false,
+          "metrics_vs_public": {
+            "samples": 24938,
+            "relative_l2": 0.004811916863550853,
+            "max_abs": 1.5877488348433152e-22,
+            "rms_abs": 7.10713489426305e-24
+          },
+          "scored_public_samples": 24938,
+          "full_public_support": true,
+          "signed_extended_negative_samples": 0
+        },
+        "nqc_derivative_spacing_M": 0.1,
+        "nqc_peak_time_M": 12316.487269626203,
+        "nqc_requested_time_M": 12315.487269626203,
+        "nqc_selected_index": 167,
+        "nqc_selected_time_M": 12315.35990319574,
+        "amplitude_coefficients": [
+          -0.06723001092035132,
+          1.2831939543743525
+        ],
+        "phase_coefficients": [
+          0.18801912490648648,
+          1.882447570045667
+        ]
+      },
+      "tight_0p01": {
+        "output_sha256": "f0ddb60a99270b80083da7b0f29bcb3d5b5b1565f9b9cbcd96fc26491dcb62c0",
+        "events": {
+          "peak_knot_index_auxiliary": 179,
+          "peak_time_initial_mass": 12316.531451506382,
+          "peak_time_final_mass": 12893.776420270277,
+          "merger_time_initial_mass": 12313.531451506382,
+          "merger_time_final_mass": 12890.635817787093,
+          "t_match_initial_mass": 12315.531451506382,
+          "t_match_final_mass": 12892.729552775883,
+          "strictly_earlier_index_joined": 1541,
+          "attachment_sampled_index_joined": 1540,
+          "attachment_time_initial_mass": 12315.35990319574,
+          "attachment_time_final_mass": 12892.549964425752,
+          "output_boundary_index_public_grid": 24631,
+          "output_boundary_time_initial_mass": 12315.5,
+          "attachment_threshold_arithmetic": "t_peak/final_mass - 3/final_mass + 2/final_mass",
+          "epoch_coordinate_start_initial_mass": 0.0,
+          "joined_support_initial_mass": [
+            0.0,
+            12318.559903195739
+          ],
+          "extended_support_initial_mass": [
+            0.0,
+            12468.559903196285
+          ],
+          "output_support_initial_mass": [
+            0.0,
+            12468.5
+          ],
+          "joined_samples": 1573,
+          "extended_samples": 3073,
+          "output_samples": 24938,
+          "extension_samples": 1500,
+          "auxiliary_spacing_initial_mass": 0.1000000000003638,
+          "ringdown_phase0": 0.5376051205584438,
+          "auxiliary_amplitude_negative": false,
+          "metrics_vs_public": {
+            "samples": 24938,
+            "relative_l2": 0.004812784836814967,
+            "max_abs": 1.5880497405858575e-22,
+            "rms_abs": 7.108416878812577e-24
+          },
+          "scored_public_samples": 24938,
+          "full_public_support": true,
+          "signed_extended_negative_samples": 0
+        },
+        "nqc_derivative_spacing_M": 0.1,
+        "nqc_peak_time_M": 12316.487269626203,
+        "nqc_requested_time_M": 12315.487269626203,
+        "nqc_selected_index": 167,
+        "nqc_selected_time_M": 12315.35990319574,
+        "amplitude_coefficients": [
+          -0.06722999697421773,
+          1.2831940931539352
+        ],
+        "phase_coefficients": [
+          0.188017649590217,
+          1.8825020294702772
+        ]
+      }
+    },
+    "prefix_tight_0p1": {
+      "tight_0p1": {
+        "output_sha256": "c9be0b26fee9b95fea70c5818336f1f95ba62e34ab291a942d95f038884421e1",
+        "events": {
+          "peak_knot_index_auxiliary": 179,
+          "peak_time_initial_mass": 12316.531451506382,
+          "peak_time_final_mass": 12893.776420270277,
+          "merger_time_initial_mass": 12313.531451506382,
+          "merger_time_final_mass": 12890.635817787093,
+          "t_match_initial_mass": 12315.531451506382,
+          "t_match_final_mass": 12892.729552775883,
+          "strictly_earlier_index_joined": 1057,
+          "attachment_sampled_index_joined": 1056,
+          "attachment_time_initial_mass": 12315.35990319574,
+          "attachment_time_final_mass": 12892.549964425752,
+          "output_boundary_index_public_grid": 24631,
+          "output_boundary_time_initial_mass": 12315.5,
+          "attachment_threshold_arithmetic": "t_peak/final_mass - 3/final_mass + 2/final_mass",
+          "epoch_coordinate_start_initial_mass": 0.0,
+          "joined_support_initial_mass": [
+            0.0,
+            12318.559903195739
+          ],
+          "extended_support_initial_mass": [
+            0.0,
+            12468.559903196285
+          ],
+          "output_support_initial_mass": [
+            0.0,
+            12468.5
+          ],
+          "joined_samples": 1089,
+          "extended_samples": 2589,
+          "output_samples": 24938,
+          "extension_samples": 1500,
+          "auxiliary_spacing_initial_mass": 0.1000000000003638,
+          "ringdown_phase0": 0.5375995896033507,
+          "auxiliary_amplitude_negative": false,
+          "metrics_vs_public": {
+            "samples": 24938,
+            "relative_l2": 0.004811916863550853,
+            "max_abs": 1.5877488348433152e-22,
+            "rms_abs": 7.10713489426305e-24
+          },
+          "scored_public_samples": 24938,
+          "full_public_support": true,
+          "signed_extended_negative_samples": 0
+        },
+        "nqc_derivative_spacing_M": 0.1,
+        "nqc_peak_time_M": 12316.487269626203,
+        "nqc_requested_time_M": 12315.487269626203,
+        "nqc_selected_index": 167,
+        "nqc_selected_time_M": 12315.35990319574,
+        "amplitude_coefficients": [
+          -0.06723001092035132,
+          1.2831939543743525
+        ],
+        "phase_coefficients": [
+          0.18801912490648648,
+          1.882447570045667
+        ]
+      },
+      "tight_0p01": {
+        "output_sha256": "b9fc1b48976588192c9a77c53ccbd91635a1dcaae65cf877d736664f082fd56d",
+        "events": {
+          "peak_knot_index_auxiliary": 179,
+          "peak_time_initial_mass": 12316.531451506382,
+          "peak_time_final_mass": 12893.776420270277,
+          "merger_time_initial_mass": 12313.531451506382,
+          "merger_time_final_mass": 12890.635817787093,
+          "t_match_initial_mass": 12315.531451506382,
+          "t_match_final_mass": 12892.729552775883,
+          "strictly_earlier_index_joined": 1057,
+          "attachment_sampled_index_joined": 1056,
+          "attachment_time_initial_mass": 12315.35990319574,
+          "attachment_time_final_mass": 12892.549964425752,
+          "output_boundary_index_public_grid": 24631,
+          "output_boundary_time_initial_mass": 12315.5,
+          "attachment_threshold_arithmetic": "t_peak/final_mass - 3/final_mass + 2/final_mass",
+          "epoch_coordinate_start_initial_mass": 0.0,
+          "joined_support_initial_mass": [
+            0.0,
+            12318.559903195739
+          ],
+          "extended_support_initial_mass": [
+            0.0,
+            12468.559903196285
+          ],
+          "output_support_initial_mass": [
+            0.0,
+            12468.5
+          ],
+          "joined_samples": 1089,
+          "extended_samples": 2589,
+          "output_samples": 24938,
+          "extension_samples": 1500,
+          "auxiliary_spacing_initial_mass": 0.1000000000003638,
+          "ringdown_phase0": 0.5376051205584438,
+          "auxiliary_amplitude_negative": false,
+          "metrics_vs_public": {
+            "samples": 24938,
+            "relative_l2": 0.004812783023913281,
+            "max_abs": 1.5880497405858575e-22,
+            "rms_abs": 7.108414201181771e-24
+          },
+          "scored_public_samples": 24938,
+          "full_public_support": true,
+          "signed_extended_negative_samples": 0
+        },
+        "nqc_derivative_spacing_M": 0.1,
+        "nqc_peak_time_M": 12316.487269626203,
+        "nqc_requested_time_M": 12315.487269626203,
+        "nqc_selected_index": 167,
+        "nqc_selected_time_M": 12315.35990319574,
+        "amplitude_coefficients": [
+          -0.06722999697421773,
+          1.2831940931539352
+        ],
+        "phase_coefficients": [
+          0.188017649590217,
+          1.8825020294702772
+        ]
+      }
+    },
+    "prefix_tight_0p01": {
+      "tight_0p1": {
+        "output_sha256": "b5ea50529d78a5f1ff495c4e17d946011d4f25d195dd0ff8245d590339f0ecc6",
+        "events": {
+          "peak_knot_index_auxiliary": 179,
+          "peak_time_initial_mass": 12316.531451506382,
+          "peak_time_final_mass": 12893.776420270277,
+          "merger_time_initial_mass": 12313.531451506382,
+          "merger_time_final_mass": 12890.635817787093,
+          "t_match_initial_mass": 12315.531451506382,
+          "t_match_final_mass": 12892.729552775883,
+          "strictly_earlier_index_joined": 1541,
+          "attachment_sampled_index_joined": 1540,
+          "attachment_time_initial_mass": 12315.35990319574,
+          "attachment_time_final_mass": 12892.549964425752,
+          "output_boundary_index_public_grid": 24631,
+          "output_boundary_time_initial_mass": 12315.5,
+          "attachment_threshold_arithmetic": "t_peak/final_mass - 3/final_mass + 2/final_mass",
+          "epoch_coordinate_start_initial_mass": 0.0,
+          "joined_support_initial_mass": [
+            0.0,
+            12318.559903195739
+          ],
+          "extended_support_initial_mass": [
+            0.0,
+            12468.559903196285
+          ],
+          "output_support_initial_mass": [
+            0.0,
+            12468.5
+          ],
+          "joined_samples": 1573,
+          "extended_samples": 3073,
+          "output_samples": 24938,
+          "extension_samples": 1500,
+          "auxiliary_spacing_initial_mass": 0.1000000000003638,
+          "ringdown_phase0": 0.5375995896033507,
+          "auxiliary_amplitude_negative": false,
+          "metrics_vs_public": {
+            "samples": 24938,
+            "relative_l2": 0.0048119213927294985,
+            "max_abs": 1.5877488348433152e-22,
+            "rms_abs": 7.107141583797495e-24
+          },
+          "scored_public_samples": 24938,
+          "full_public_support": true,
+          "signed_extended_negative_samples": 0
+        },
+        "nqc_derivative_spacing_M": 0.1,
+        "nqc_peak_time_M": 12316.487269626203,
+        "nqc_requested_time_M": 12315.487269626203,
+        "nqc_selected_index": 167,
+        "nqc_selected_time_M": 12315.35990319574,
+        "amplitude_coefficients": [
+          -0.06723001092035132,
+          1.2831939543743525
+        ],
+        "phase_coefficients": [
+          0.18801912490648648,
+          1.882447570045667
+        ]
+      },
+      "tight_0p01": {
+        "output_sha256": "f0ddb60a99270b80083da7b0f29bcb3d5b5b1565f9b9cbcd96fc26491dcb62c0",
+        "events": {
+          "peak_knot_index_auxiliary": 179,
+          "peak_time_initial_mass": 12316.531451506382,
+          "peak_time_final_mass": 12893.776420270277,
+          "merger_time_initial_mass": 12313.531451506382,
+          "merger_time_final_mass": 12890.635817787093,
+          "t_match_initial_mass": 12315.531451506382,
+          "t_match_final_mass": 12892.729552775883,
+          "strictly_earlier_index_joined": 1541,
+          "attachment_sampled_index_joined": 1540,
+          "attachment_time_initial_mass": 12315.35990319574,
+          "attachment_time_final_mass": 12892.549964425752,
+          "output_boundary_index_public_grid": 24631,
+          "output_boundary_time_initial_mass": 12315.5,
+          "attachment_threshold_arithmetic": "t_peak/final_mass - 3/final_mass + 2/final_mass",
+          "epoch_coordinate_start_initial_mass": 0.0,
+          "joined_support_initial_mass": [
+            0.0,
+            12318.559903195739
+          ],
+          "extended_support_initial_mass": [
+            0.0,
+            12468.559903196285
+          ],
+          "output_support_initial_mass": [
+            0.0,
+            12468.5
+          ],
+          "joined_samples": 1573,
+          "extended_samples": 3073,
+          "output_samples": 24938,
+          "extension_samples": 1500,
+          "auxiliary_spacing_initial_mass": 0.1000000000003638,
+          "ringdown_phase0": 0.5376051205584438,
+          "auxiliary_amplitude_negative": false,
+          "metrics_vs_public": {
+            "samples": 24938,
+            "relative_l2": 0.004812784836814967,
+            "max_abs": 1.5880497405858575e-22,
+            "rms_abs": 7.108416878812577e-24
+          },
+          "scored_public_samples": 24938,
+          "full_public_support": true,
+          "signed_extended_negative_samples": 0
+        },
+        "nqc_derivative_spacing_M": 0.1,
+        "nqc_peak_time_M": 12316.487269626203,
+        "nqc_requested_time_M": 12315.487269626203,
+        "nqc_selected_index": 167,
+        "nqc_selected_time_M": 12315.35990319574,
+        "amplitude_coefficients": [
+          -0.06722999697421773,
+          1.2831940931539352
+        ],
+        "phase_coefficients": [
+          0.188017649590217,
+          1.8825020294702772
+        ]
+      }
+    }
+  },
+  "fixed_control_checks": {
+    "native": {
+      "aux_time": false,
+      "joined_time": false,
+      "extended_time": false,
+      "time": true,
+      "public_time": true,
+      "nqc_selected_time_equal": false,
+      "rd_peak_equal": false,
+      "attachment_time_equal": false
+    },
+    "legacy_common_fixed": {
+      "aux_time": true,
+      "joined_time": false,
+      "extended_time": false,
+      "time": true,
+      "public_time": true,
+      "nqc_selected_time_equal": true,
+      "rd_peak_equal": true,
+      "attachment_time_equal": true
+    },
+    "explicit_common_fixed": {
+      "aux_time": true,
+      "joined_time": false,
+      "extended_time": false,
+      "time": true,
+      "public_time": true,
+      "nqc_selected_time_equal": true,
+      "rd_peak_equal": true,
+      "attachment_time_equal": true
+    },
+    "prefix_tight_0p1": {
+      "aux_time": true,
+      "joined_time": true,
+      "extended_time": true,
+      "time": true,
+      "public_time": true,
+      "nqc_selected_time_equal": true,
+      "rd_peak_equal": true,
+      "attachment_time_equal": true,
+      "reference_output_bitwise": true
+    },
+    "prefix_tight_0p01": {
+      "aux_time": true,
+      "joined_time": true,
+      "extended_time": true,
+      "time": true,
+      "public_time": true,
+      "nqc_selected_time_equal": true,
+      "rd_peak_equal": true,
+      "attachment_time_equal": true,
+      "reference_output_bitwise": true
+    }
+  },
+  "pairwise_mode_metrics": {
+    "native": {
+      "samples": 24938,
+      "relative_l2": 0.002164702270751462,
+      "max_abs": 8.065297220782506e-23,
+      "rms_abs": 3.1963010920549913e-24
+    },
+    "legacy_common_fixed": {
+      "samples": 24938,
+      "relative_l2": 9.039793489666779e-07,
+      "max_abs": 3.531765220926026e-26,
+      "rms_abs": 1.3347772049473804e-27
+    },
+    "explicit_common_fixed": {
+      "samples": 24938,
+      "relative_l2": 9.039793491323395e-07,
+      "max_abs": 3.531765220904591e-26,
+      "rms_abs": 1.3347772051919877e-27
+    },
+    "prefix_tight_0p1": {
+      "samples": 24938,
+      "relative_l2": 8.989262685456819e-07,
+      "max_abs": 3.538318972480033e-26,
+      "rms_abs": 1.3273160427334173e-27
+    },
+    "prefix_tight_0p01": {
+      "samples": 24938,
+      "relative_l2": 8.940911991748028e-07,
+      "max_abs": 3.5475499143555443e-26,
+      "rms_abs": 1.3201767865165739e-27
+    }
+  },
+  "changes_against_previous_control": {
+    "explicit_common_fixed": {
+      "tight_0p1": {
+        "samples": 24938,
+        "relative_l2": 2.7652541043548536e-12,
+        "max_abs": 1.0370839696843842e-31,
+        "rms_abs": 4.083055822679085e-33
+      },
+      "tight_0p01": {
+        "samples": 24938,
+        "relative_l2": 2.7652077912035336e-12,
+        "max_abs": 1.0370803886918764e-31,
+        "rms_abs": 4.082987438825927e-33
+      }
+    },
+    "prefix_tight_0p1": {
+      "tight_0p1": {
+        "samples": 24938,
+        "relative_l2": 0.0,
+        "max_abs": 0.0,
+        "rms_abs": 0.0
+      },
+      "tight_0p01": {
+        "samples": 24938,
+        "relative_l2": 3.6660754615956636e-08,
+        "max_abs": 8.542830461167308e-27,
+        "rms_abs": 5.413170072462482e-29
+      }
+    },
+    "prefix_tight_0p01": {
+      "tight_0p1": {
+        "samples": 24938,
+        "relative_l2": 9.336874557187397e-08,
+        "max_abs": 2.1759270289912057e-26,
+        "rms_abs": 1.3786429234951786e-28
+      },
+      "tight_0p01": {
+        "samples": 24938,
+        "relative_l2": 0.0,
+        "max_abs": 0.0,
+        "rms_abs": 0.0
+      }
+    }
+  }
+}

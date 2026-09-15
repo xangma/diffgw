@@ -1,0 +1,222 @@
+{
+  "provenance": "MIT clean helper vs public LAL black-box; Pv2 source-frame API",
+  "python": "3.13.9 | packaged by conda-forge | (main, Oct 22 2025, 23:38:18) [Clang 19.1.7 ]",
+  "platform": "macOS-26.6-arm64-arm-64bit-Mach-O",
+  "torch": "2.9.1",
+  "lal": "7.7.0",
+  "lalsimulation": "6.2.0",
+  "cases": [
+    {
+      "id": "IMRPhenomPv2_diagnostic",
+      "inputs": {
+        "chi1": 0.2,
+        "chi2": -0.1,
+        "distance": 500.0,
+        "f_ref": 20.0,
+        "inclination": 0.7,
+        "mass1": 35.0,
+        "mass2": 25.0,
+        "phic": 0.3,
+        "spin1x": 0.2,
+        "spin1y": 0.1,
+        "spin1z": 0.2,
+        "spin2x": -0.1,
+        "spin2y": 0.15,
+        "spin2z": -0.1,
+        "tc": 0.0
+      },
+      "public_callable": "SimIMRPhenomPCalculateModelParametersFromSourceFrame",
+      "public_enum": "IMRPhenomPv2_V",
+      "clean": [
+        2.703007374599255,
+        0.6336593668118059,
+        4.664536377826453,
+        -0.869836411419806
+      ],
+      "public": [
+        0.2,
+        -0.1,
+        0.22360679774997902,
+        0.6336593668118047,
+        2.7030073745992547,
+        -0.869836411419806,
+        -1.6186489293531345
+      ],
+      "errors": {
+        "chi_p": 0.0,
+        "theta_JN": 1.2212453270876722e-15,
+        "alpha0_periodic": 4.440892098500626e-16,
+        "phi_aligned_periodic": 0.0,
+        "zeta_periodic": 0.0
+      }
+    },
+    {
+      "id": "IMRPhenomPv2_holdout",
+      "inputs": {
+        "chi1": -0.3,
+        "chi2": 0.2,
+        "distance": 500.0,
+        "f_ref": 35.0,
+        "inclination": 1.1,
+        "mass1": 42.0,
+        "mass2": 17.0,
+        "phic": 0.71,
+        "spin1x": 0.3,
+        "spin1y": -0.15,
+        "spin1z": -0.3,
+        "spin2x": 0.12,
+        "spin2y": 0.08,
+        "spin2z": 0.2,
+        "tc": 0.0
+      },
+      "public_callable": "SimIMRPhenomPCalculateModelParametersFromSourceFrame",
+      "public_enum": "IMRPhenomPv2_V",
+      "clean": [
+        1.7292299211258764,
+        1.0367480552842065,
+        4.409178495683276,
+        0.4046177902306334
+      ],
+      "public": [
+        -0.3,
+        0.2,
+        0.33541019662496846,
+        1.0367480552842065,
+        1.7292299211258768,
+        0.4046177902306335,
+        -1.8740068114963104
+      ],
+      "errors": {
+        "chi_p": 0.0,
+        "theta_JN": 0.0,
+        "alpha0_periodic": 4.440892098500626e-16,
+        "phi_aligned_periodic": 0.0,
+        "zeta_periodic": 0.0
+      }
+    },
+    {
+      "id": "independent_generic",
+      "inputs": {
+        "mass1": 40.0,
+        "mass2": 20.0,
+        "spin1x": 0.3,
+        "spin1y": 0.2,
+        "spin1z": 0.4,
+        "spin2x": -0.2,
+        "spin2y": 0.1,
+        "spin2z": -0.2,
+        "inclination": 0.7,
+        "phic": 0.0,
+        "f_ref": 20.0
+      },
+      "public_callable": "SimIMRPhenomPCalculateModelParametersFromSourceFrame",
+      "public_enum": "IMRPhenomPv2_V",
+      "clean": [
+        2.1652897145043255,
+        0.6162894968681418,
+        4.537866320476163,
+        -0.7328151017865067
+      ],
+      "public": [
+        0.4,
+        -0.2,
+        0.3605551275463989,
+        0.6162894968681418,
+        2.165289714504326,
+        -0.7328151017865066,
+        -1.7453189867034231
+      ],
+      "errors": {
+        "chi_p": 0.0,
+        "theta_JN": 0.0,
+        "alpha0_periodic": 4.440892098500626e-16,
+        "phi_aligned_periodic": 0.0,
+        "zeta_periodic": 0.0
+      }
+    },
+    {
+      "id": "large_q",
+      "inputs": {
+        "mass1": 60.0,
+        "mass2": 5.0,
+        "spin1x": 0.6,
+        "spin1y": -0.2,
+        "spin1z": 0.3,
+        "spin2x": -0.2,
+        "spin2y": 0.1,
+        "spin2z": -0.1,
+        "inclination": 1.0,
+        "phic": 0.4,
+        "f_ref": 30.0
+      },
+      "public_callable": "SimIMRPhenomPCalculateModelParametersFromSourceFrame",
+      "public_enum": "IMRPhenomPv2_V",
+      "clean": [
+        1.184662874136732,
+        1.1326664604835919,
+        3.803547781706092,
+        0.3214024861893271
+      ],
+      "public": [
+        0.3,
+        -0.1,
+        0.6324555320336758,
+        1.1326664604835919,
+        1.1846628741367322,
+        0.32140248618932715,
+        -2.4796375254734944
+      ],
+      "errors": {
+        "chi_p": 0.0,
+        "theta_JN": 0.0,
+        "alpha0_periodic": 0.0,
+        "phi_aligned_periodic": 0.0,
+        "zeta_periodic": 0.0
+      }
+    },
+    {
+      "id": "aligned",
+      "inputs": {
+        "mass1": 35.0,
+        "mass2": 25.0,
+        "spin1x": 0.0,
+        "spin1y": 0.0,
+        "spin1z": 0.2,
+        "spin2x": 0.0,
+        "spin2y": 0.0,
+        "spin2z": -0.1,
+        "inclination": 0.7,
+        "phic": 0.3,
+        "f_ref": 20.0
+      },
+      "public_callable": "SimIMRPhenomPCalculateModelParametersFromSourceFrame",
+      "public_enum": "IMRPhenomPv2_V",
+      "clean": [
+        3.141592653589793,
+        0.7,
+        4.71238898038469,
+        1.2707963267948965
+      ],
+      "public": [
+        0.2,
+        -0.1,
+        0.0,
+        0.7,
+        3.141592653589793,
+        -1.2707963267948965,
+        -1.5707963267948966
+      ],
+      "errors": {
+        "chi_p": 0.0,
+        "theta_JN": 0.0,
+        "alpha0_periodic": 0.0,
+        "phi_aligned_periodic": 2.5415926535897935,
+        "zeta_periodic": 0.0
+      }
+    }
+  ],
+  "source_sha256": {
+    "src/torchwave/approximants/phenompv2_waveform_clean.py": "209b2e833dd87d680a35e6de1b52f2b82a84273c126d6288b05c987f802f230f",
+    "/Users/xangma/repos/torchwave/scripts/verify_pv2_sourceframe_clean.py": "974e7c4b50ff81e6c59db6da40d8d7fe73bf76fff1fada57792933697d0c1756"
+  }
+}

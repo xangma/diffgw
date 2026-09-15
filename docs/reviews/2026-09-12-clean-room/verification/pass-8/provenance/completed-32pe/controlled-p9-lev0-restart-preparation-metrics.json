@@ -1,0 +1,32 @@
+{
+  "started_utc": "2026-09-13T03:11:37.676295+00:00",
+  "command": [
+    "python",
+    "/campaign/scripts/prepare-smoke-restart.py",
+    "--evolution-dir",
+    "/campaign/controlled-p9-lev0-evolution",
+    "--metrics",
+    "/campaign/provenance/controlled-p9-lev0-checkpoint-metrics.json",
+    "--record",
+    "/campaign/provenance/controlled-p9-lev0-restart-preparation.json",
+    "--num-procs",
+    "32"
+  ],
+  "cwd": "/campaign/preparation/controlled-p9-lev0-restart",
+  "expected_exit_code": 0,
+  "timeout_seconds": 180.0,
+  "output_bytes_before": 0,
+  "cpu_stat_before": "usage_usec 82921\nuser_usec 51186\nsystem_usec 31735\ncore_sched.force_idle_usec 0\nnr_periods 1\nnr_throttled 0\nthrottled_usec 0\nnr_bursts 0\nburst_usec 0",
+  "container_child_pid": 7,
+  "ended_utc": "2026-09-13T03:11:47.841560+00:00",
+  "wall_seconds": 10.165467528859153,
+  "exit_code": 0,
+  "watchdog_reason": null,
+  "accepted_exit": true,
+  "child_max_rss_kib": 17408,
+  "cgroup_memory_peak_bytes": "17125376",
+  "cgroup_memory_events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0",
+  "cpu_stat_after": "usage_usec 10234535\nuser_usec 8623293\nsystem_usec 1611241\ncore_sched.force_idle_usec 0\nnr_periods 103\nnr_throttled 60\nthrottled_usec 11189\nnr_bursts 0\nburst_usec 0",
+  "output_bytes_after": 0,
+  "filesystem_free_bytes_after": 308482183168
+}

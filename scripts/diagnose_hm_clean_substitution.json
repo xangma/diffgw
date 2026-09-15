@@ -1,0 +1,1851 @@
+{
+  "signature": "(l: int, m: int, v_m: torch.Tensor, delta: torch.Tensor, eta: torch.Tensor, chi_s: torch.Tensor, chi_a: torch.Tensor) -> torch.Tensor",
+  "beta_convention": "London Eq. (4): [Hhat_lm(fA)/Hhat_22(fA)] [Hhat_lm(f)/Hhat_lm(2f/m)], with each Hhat_lm(x)=Eq.(12) factor times Mishra Eq.(11) V_m(x)^(-7/2), V_m(x)=(2*pi*M*x/m)^(1/3); Hhat_22 uses m=2.",
+  "native_source_sha256_before": "e48a2d42568a5d09a19b668b53a65a358696c245989e22fb5685fef921929ac7",
+  "equation_provenance": {
+    "mishra_eq11": "arXiv:1601.05588, Sec. III, Eq. (11), common SPA factor V_m^(-7/2)",
+    "mishra_eq12": "arXiv:1601.05588, Sec. III, Eqs. (12b),(12d)",
+    "london_eq4": "arXiv:1708.00404, Eq. (4)",
+    "london_alternative": "arXiv:1708.00404, paragraph immediately after Eq. (4)",
+    "truncation_note": "London 1.5PN-in-f wording is recorded alongside explicit Mishra through-V3 alternatives; no truncation is selected by residual."
+  },
+  "cases": [
+    {
+      "id": "IMRPhenomHM_diagnostic",
+      "modes": {
+        "22": {
+          "native_to_binary_by_band": {
+            "20-40Hz": {
+              "amplitude_ratio_median": 0.9999999999999992,
+              "phase_residual_circular_rms_rad": 2.863170956505984e-07
+            },
+            "40-80Hz": {
+              "amplitude_ratio_median": 1.0000000114647687,
+              "phase_residual_circular_rms_rad": 1.039098633391461e-06
+            }
+          },
+          "low_frequency_samples": {
+            "frequency_hz": [
+              20.0,
+              30.0,
+              39.75
+            ],
+            "native_over_binary_amplitude": [
+              0.9999999999999997,
+              0.9999999999999991,
+              0.9999999999999994
+            ],
+            "clean_pn_truncations": {}
+          },
+          "geometric_break_frequencies_hz": {
+            "f0_amplitude": 66.44469165646372,
+            "f_lm_rd": 319.70408582793146,
+            "f_22_rd": 319.70408582793146
+          }
+        },
+        "21": {
+          "native_to_binary_by_band": {
+            "20-40Hz": {
+              "amplitude_ratio_median": 0.9794214454653438,
+              "phase_residual_circular_rms_rad": 2.863171038074201e-07
+            },
+            "40-80Hz": {
+              "amplitude_ratio_median": 0.8938201635671356,
+              "phase_residual_circular_rms_rad": 0.0019780673204204294
+            }
+          },
+          "low_frequency_samples": {
+            "frequency_hz": [
+              20.0,
+              30.0,
+              39.75
+            ],
+            "native_over_binary_amplitude": [
+              0.9729780630000435,
+              0.9795252984353865,
+              0.9886049097301609
+            ],
+            "clean_pn_truncations": {
+              "21_leading": [
+                -0.06944565661188212,
+                -0.07949543220708943,
+                -0.08731338008159549
+              ],
+              "21_leading_plus_V2_spin": [
+                -0.04918928646922342,
+                -0.05295207834244802,
+                -0.055292515855704466
+              ],
+              "21_full_through_V3": [
+                -0.05584851330747401,
+                -0.0629409185998239,
+                -0.0685277291967275
+              ]
+            }
+          },
+          "geometric_break_frequencies_hz": {
+            "f0_amplitude": 57.48537032661168,
+            "f_lm_rd": 276.5955761187079,
+            "f_22_rd": 319.70408582793146
+          }
+        },
+        "33": {
+          "native_to_binary_by_band": {
+            "20-40Hz": {
+              "amplitude_ratio_median": 0.9999999999999991,
+              "phase_residual_circular_rms_rad": 2.863170647404404e-07
+            },
+            "40-80Hz": {
+              "amplitude_ratio_median": 0.9999999999999988,
+              "phase_residual_circular_rms_rad": 1.0390986459712255e-06
+            }
+          },
+          "low_frequency_samples": {
+            "frequency_hz": [
+              20.0,
+              30.0,
+              39.75
+            ],
+            "native_over_binary_amplitude": [
+              0.9999999999999984,
+              0.999999999999999,
+              0.9999999999999987
+            ],
+            "clean_pn_truncations": {}
+          },
+          "geometric_break_frequencies_hz": {
+            "f0_amplitude": 105.4181415598701,
+            "f_lm_rd": 507.2280378894521,
+            "f_22_rd": 319.70408582793146
+          }
+        },
+        "32": {
+          "native_to_binary_by_band": {
+            "20-40Hz": {
+              "amplitude_ratio_median": 1.0288049845319058,
+              "phase_residual_circular_rms_rad": 2.863170953219543e-07
+            },
+            "40-80Hz": {
+              "amplitude_ratio_median": 1.0354885069499955,
+              "phase_residual_circular_rms_rad": 1.039098634910809e-06
+            }
+          },
+          "low_frequency_samples": {
+            "frequency_hz": [
+              20.0,
+              30.0,
+              39.75
+            ],
+            "native_over_binary_amplitude": [
+              1.0251985674537456,
+              1.0288451590562426,
+              1.0316819251907559
+            ],
+            "clean_pn_truncations": {
+              "32_leading": [
+                -0.00754895481518016,
+                -0.009891929183577607,
+                -0.0119332365809812
+              ],
+              "32_V3_spin": [
+                -0.0001902228471155925,
+                -0.0002853342706733888,
+                -0.0003780679086422401
+              ],
+              "32_full_through_V3": [
+                -0.007739177662295752,
+                -0.010177263454250995,
+                -0.012311304489623441
+              ]
+            }
+          },
+          "geometric_break_frequencies_hz": {
+            "f0_amplitude": 95.25861496460126,
+            "f_lm_rd": 458.3446420663786,
+            "f_22_rd": 319.70408582793146
+          }
+        },
+        "44": {
+          "native_to_binary_by_band": {
+            "20-40Hz": {
+              "amplitude_ratio_median": 0.999999999999999,
+              "phase_residual_circular_rms_rad": 2.8631702427609027e-07
+            },
+            "40-80Hz": {
+              "amplitude_ratio_median": 0.9999999999999987,
+              "phase_residual_circular_rms_rad": 1.0390986197738778e-06
+            }
+          },
+          "low_frequency_samples": {
+            "frequency_hz": [
+              20.0,
+              30.0,
+              39.75
+            ],
+            "native_over_binary_amplitude": [
+              0.9999999999999993,
+              0.9999999999999991,
+              0.999999999999999
+            ],
+            "clean_pn_truncations": {}
+          },
+          "geometric_break_frequencies_hz": {
+            "f0_amplitude": 143.12012518914452,
+            "f_lm_rd": 688.6342256465784,
+            "f_22_rd": 319.70408582793146
+          }
+        },
+        "43": {
+          "native_to_binary_by_band": {
+            "20-40Hz": {
+              "amplitude_ratio_median": 1.1055659346687587,
+              "phase_residual_circular_rms_rad": 2.863170668867722e-07
+            },
+            "40-80Hz": {
+              "amplitude_ratio_median": 1.1330976239498265,
+              "phase_residual_circular_rms_rad": 1.0390986394365807e-06
+            }
+          },
+          "low_frequency_samples": {
+            "frequency_hz": [
+              20.0,
+              30.0,
+              39.75
+            ],
+            "native_over_binary_amplitude": [
+              1.0923489586540789,
+              1.105713168256293,
+              1.1161094893546377
+            ],
+            "clean_pn_truncations": {}
+          },
+          "geometric_break_frequencies_hz": {
+            "f0_amplitude": 131.9477114095212,
+            "f_lm_rd": 634.8772400265179,
+            "f_22_rd": 319.70408582793146
+          }
+        }
+      },
+      "ratios": {
+        "22": {
+          "v": [
+            0.02,
+            0.05,
+            0.1
+          ],
+          "native_over_clean": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "eq4_beta": [
+            1.0000000000000007,
+            1.0000000000000007,
+            1.0000000000000004
+          ],
+          "alternative_beta": [
+            1.0000000000000007,
+            1.0000000000000007,
+            1.0000000000000004
+          ],
+          "alternative_over_eq4": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "21": {
+          "v": [
+            0.02,
+            0.05,
+            0.1
+          ],
+          "native_over_clean": [
+            0.9996282784796756,
+            0.9976158660483568,
+            0.990067601750851
+          ],
+          "eq4_beta": [
+            0.004209921640443481,
+            0.010256072700122056,
+            0.019694619987253557
+          ],
+          "alternative_beta": [
+            0.004209921640443481,
+            0.010256072700122056,
+            0.01969461998725356
+          ],
+          "alternative_over_eq4": [
+            1.0,
+            1.0,
+            1.0000000000000002
+          ],
+          "clean_pn_truncations": {
+            "21_leading": [
+              -0.004285495643554834,
+              -0.010713739108887085,
+              -0.02142747821777417
+            ],
+            "21_leading_plus_V2_spin": [
+              -0.004208356721970847,
+              -0.010231620848987166,
+              -0.019499005178174496
+            ],
+            "21_full_through_V3": [
+              -0.004209921640443479,
+              -0.010256072700122047,
+              -0.01969461998725355
+            ]
+          }
+        },
+        "33": {
+          "v": [
+            0.02,
+            0.05,
+            0.1
+          ],
+          "native_over_clean": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "eq4_beta": [
+            0.005762415373148981,
+            0.014406038432872454,
+            0.0288120768657449
+          ],
+          "alternative_beta": [
+            0.005762415373148981,
+            0.014406038432872453,
+            0.0288120768657449
+          ],
+          "alternative_over_eq4": [
+            1.0,
+            0.9999999999999999,
+            1.0
+          ]
+        },
+        "32": {
+          "v": [
+            0.02,
+            0.05,
+            0.1
+          ],
+          "native_over_clean": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "eq4_beta": [
+            4.572307800567634e-05,
+            0.00028660740704429874,
+            0.0011520174249026727
+          ],
+          "alternative_beta": [
+            4.5723078005676336e-05,
+            0.0002866074070442988,
+            0.0011520174249026727
+          ],
+          "alternative_over_eq4": [
+            0.9999999999999999,
+            1.0000000000000002,
+            1.0
+          ],
+          "clean_pn_truncations": {
+            "32_leading": [
+              -4.563367325806866e-05,
+              -0.00028521045786292915,
+              -0.0011408418314517166
+            ],
+            "32_V3_spin": [
+              -8.940474760764473e-08,
+              -1.396949181369449e-06,
+              -1.1175593450955592e-05
+            ],
+            "32_full_through_V3": [
+              -4.572307800567631e-05,
+              -0.0002866074070442986,
+              -0.0011520174249026723
+            ]
+          }
+        },
+        "44": {
+          "v": [
+            0.02,
+            0.05,
+            0.1
+          ],
+          "native_over_clean": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "eq4_beta": [
+            8.604767949661755e-05,
+            0.0005377979968538599,
+            0.0021511919874154387
+          ],
+          "alternative_beta": [
+            8.604767949661755e-05,
+            0.0005377979968538598,
+            0.0021511919874154387
+          ],
+          "alternative_over_eq4": [
+            1.0,
+            0.9999999999999998,
+            1.0
+          ]
+        },
+        "43": {
+          "v": [
+            0.02,
+            0.05,
+            0.1
+          ],
+          "native_over_clean": [
+            1.0082191780821919,
+            1.0205479452054793,
+            1.0410958904109588
+          ],
+          "eq4_beta": [
+            4.817177670377061e-07,
+            7.526840109964158e-06,
+            6.021472087971327e-05
+          ],
+          "alternative_beta": [
+            4.817177670377061e-07,
+            7.526840109964158e-06,
+            6.021472087971326e-05
+          ],
+          "alternative_over_eq4": [
+            1.0,
+            1.0,
+            0.9999999999999999
+          ]
+        }
+      },
+      "inputs": {
+        "id": "IMRPhenomHM_diagnostic",
+        "mass1": 40.0,
+        "mass2": 15.0,
+        "chi1": 0.3,
+        "chi2": -0.2,
+        "f_ref": 20.0,
+        "distance": 500.0,
+        "inclination": 0.8,
+        "phic": 0.2,
+        "flow": 20.0,
+        "fhigh": 512.0,
+        "df": 0.25
+      },
+      "alternative_reassembly": {
+        "scope": "legacy native-phase amplitude reassembly diagnostic; not an equation-level Eq.4 baseline",
+        "native_all_control": {
+          "hp": {
+            "raw_l2": 0.004540949061216073,
+            "magnitude_l2": 0.0031782184185974605
+          },
+          "hc": {
+            "raw_l2": 0.0036380322927874555,
+            "magnitude_l2": 0.0025466475028817904
+          }
+        },
+        "alternative_all": {
+          "hp": {
+            "raw_l2": 0.006985811794844635,
+            "magnitude_l2": 0.005185437872134913
+          },
+          "hc": {
+            "raw_l2": 0.00568050732886373,
+            "magnitude_l2": 0.004209035809964213
+          }
+        },
+        "modes": {
+          "22": {
+            "hp": {
+              "raw_l2": 1.3332063467525328e-06,
+              "magnitude_l2": 2.1427884076154388e-07
+            },
+            "hc": {
+              "raw_l2": 1.3332063467520119e-06,
+              "magnitude_l2": 2.142788407613238e-07
+            },
+            "ratio_alt_over_eq4_by_band": {
+              "20-40Hz": 1.0,
+              "40-80Hz": 1.0,
+              "80-160Hz": 1.0
+            }
+          },
+          "21": {
+            "hp": {
+              "raw_l2": 0.22600840863338392,
+              "magnitude_l2": 0.2260017263392882
+            },
+            "hc": {
+              "raw_l2": 0.226008408633384,
+              "magnitude_l2": 0.22600172633928814
+            },
+            "ratio_alt_over_eq4_by_band": {
+              "20-40Hz": 1.0,
+              "40-80Hz": 0.9831461429705177,
+              "80-160Hz": 0.7906327065564398
+            }
+          },
+          "33": {
+            "hp": {
+              "raw_l2": 0.029241653830540025,
+              "magnitude_l2": 0.02922961064486907
+            },
+            "hc": {
+              "raw_l2": 0.029241653830540032,
+              "magnitude_l2": 0.029229610644869074
+            },
+            "ratio_alt_over_eq4_by_band": {
+              "20-40Hz": 1.0,
+              "40-80Hz": 1.0,
+              "80-160Hz": 0.9930740331242642
+            }
+          },
+          "32": {
+            "hp": {
+              "raw_l2": 0.1461130427515192,
+              "magnitude_l2": 0.14567030481337942
+            },
+            "hc": {
+              "raw_l2": 0.14611304275151957,
+              "magnitude_l2": 0.14567030481337975
+            },
+            "ratio_alt_over_eq4_by_band": {
+              "20-40Hz": 1.0,
+              "40-80Hz": 1.0,
+              "80-160Hz": 0.9611240613458449
+            }
+          },
+          "44": {
+            "hp": {
+              "raw_l2": 0.0316330165276307,
+              "magnitude_l2": 0.028676851161444805
+            },
+            "hc": {
+              "raw_l2": 0.031633016527630724,
+              "magnitude_l2": 0.028676851161444823
+            },
+            "ratio_alt_over_eq4_by_band": {
+              "20-40Hz": 1.0,
+              "40-80Hz": 1.0,
+              "80-160Hz": 1.0
+            }
+          },
+          "43": {
+            "hp": {
+              "raw_l2": 0.14873714263764948,
+              "magnitude_l2": 0.14797403583935295
+            },
+            "hc": {
+              "raw_l2": 0.14873714263764923,
+              "magnitude_l2": 0.14797403583935267
+            },
+            "ratio_alt_over_eq4_by_band": {
+              "20-40Hz": 1.0,
+              "40-80Hz": 1.0,
+              "80-160Hz": 1.0
+            }
+          },
+          "all": {
+            "hp": {
+              "raw_l2": 0.006985811794844635,
+              "magnitude_l2": 0.005185437872134913
+            },
+            "hc": {
+              "raw_l2": 0.00568050732886373,
+              "magnitude_l2": 0.004209035809964213
+            }
+          },
+          "native_sum_single_vs_all": {
+            "hp": {
+              "raw_l2": 0.0,
+              "magnitude_l2": 0.0
+            },
+            "hc": {
+              "raw_l2": 0.0,
+              "magnitude_l2": 0.0
+            }
+          }
+        }
+      },
+      "direct_equation_reconstruction": {
+        "scope": "London Eq. (3)-(4) with black-box 22 carrier amplitude; no fitted normalization",
+        "modes": {
+          "22": {
+            "native_unprojected_amplitude_l2": 4.467484195802259e-17,
+            "eq4_magnitude_low_frequency_relative_l2": 3.5923546591514873e-17,
+            "eq4_vs_binary_low_frequency": {
+              "hp": {
+                "raw_l2": 2.2230239972467866e-07,
+                "magnitude_l2": 6.964863617099075e-16
+              },
+              "hc": {
+                "raw_l2": 2.2230239972249887e-07,
+                "magnitude_l2": 6.873197923301073e-16
+              }
+            },
+            "eq4_physical_hp": {
+              "raw_l2": 1.3332063467533324e-06,
+              "magnitude_l2": 2.14278840767115e-07
+            },
+            "eq4_physical_hc": {
+              "raw_l2": 1.3332063467527164e-06,
+              "magnitude_l2": 2.142788407668017e-07
+            },
+            "alternative_physical_hp": {
+              "raw_l2": 1.333206346752895e-06,
+              "magnitude_l2": 2.1427884076405774e-07
+            },
+            "alternative_physical_hc": {
+              "raw_l2": 1.333206346752293e-06,
+              "magnitude_l2": 2.1427884076405218e-07
+            },
+            "eq4_reference_A22_identity_max_abs": 0.0
+          },
+          "21": {
+            "native_unprojected_amplitude_l2": 0.6570664225037066,
+            "eq4_magnitude_low_frequency_relative_l2": 0.1761611624032831,
+            "eq4_vs_binary_low_frequency": {
+              "hp": {
+                "raw_l2": 0.15124544836353973,
+                "magnitude_l2": 0.15124544836333964
+              },
+              "hc": {
+                "raw_l2": 0.1512454483635397,
+                "magnitude_l2": 0.1512454483633396
+              }
+            },
+            "eq4_physical_hp": {
+              "raw_l2": 0.48890530326084286,
+              "magnitude_l2": 0.48889659166924754
+            },
+            "eq4_physical_hc": {
+              "raw_l2": 0.48890530326084325,
+              "magnitude_l2": 0.48889659166924754
+            },
+            "alternative_physical_hp": {
+              "raw_l2": 0.2916767261063302,
+              "magnitude_l2": 0.2916651277823132
+            },
+            "alternative_physical_hc": {
+              "raw_l2": 0.2916767261063302,
+              "magnitude_l2": 0.2916651277823132
+            }
+          },
+          "33": {
+            "native_unprojected_amplitude_l2": 0.01452594641889572,
+            "eq4_magnitude_low_frequency_relative_l2": 3.6236435451228205e-16,
+            "eq4_vs_binary_low_frequency": {
+              "hp": {
+                "raw_l2": 2.4123898944532783e-07,
+                "magnitude_l2": 9.778711955715868e-16
+              },
+              "hc": {
+                "raw_l2": 2.412389894290433e-07,
+                "magnitude_l2": 1.0020605947199714e-15
+              }
+            },
+            "eq4_physical_hp": {
+              "raw_l2": 0.0038846346492546102,
+              "magnitude_l2": 0.0037844590765186976
+            },
+            "eq4_physical_hc": {
+              "raw_l2": 0.003884634649254613,
+              "magnitude_l2": 0.0037844590765187007
+            },
+            "alternative_physical_hp": {
+              "raw_l2": 0.01564131978796134,
+              "magnitude_l2": 0.015617787887670298
+            },
+            "alternative_physical_hc": {
+              "raw_l2": 0.015641319787961346,
+              "magnitude_l2": 0.015617787887670301
+            }
+          },
+          "32": {
+            "native_unprojected_amplitude_l2": 0.10169968676836642,
+            "eq4_magnitude_low_frequency_relative_l2": 1.8908694549731987e-16,
+            "eq4_vs_binary_low_frequency": {
+              "hp": {
+                "raw_l2": 0.02829061306787755,
+                "magnitude_l2": 0.028290613066682
+              },
+              "hc": {
+                "raw_l2": 0.02829061306787677,
+                "magnitude_l2": 0.02829061306668123
+              }
+            },
+            "eq4_physical_hp": {
+              "raw_l2": 0.04337590140576814,
+              "magnitude_l2": 0.041259825034560334
+            },
+            "eq4_physical_hc": {
+              "raw_l2": 0.043375901405767435,
+              "magnitude_l2": 0.041259825034559626
+            },
+            "alternative_physical_hp": {
+              "raw_l2": 0.06347895101757665,
+              "magnitude_l2": 0.062269284369635365
+            },
+            "alternative_physical_hc": {
+              "raw_l2": 0.06347895101757695,
+              "magnitude_l2": 0.062269284369635684
+            }
+          },
+          "44": {
+            "native_unprojected_amplitude_l2": 0.014538278653817802,
+            "eq4_magnitude_low_frequency_relative_l2": 2.012679923713031e-16,
+            "eq4_vs_binary_low_frequency": {
+              "hp": {
+                "raw_l2": 2.591303379786293e-07,
+                "magnitude_l2": 1.0388352741115206e-15
+              },
+              "hc": {
+                "raw_l2": 2.591303379784392e-07,
+                "magnitude_l2": 1.0558907835810977e-15
+              }
+            },
+            "eq4_physical_hp": {
+              "raw_l2": 0.014229356810294693,
+              "magnitude_l2": 0.003601993039299753
+            },
+            "eq4_physical_hc": {
+              "raw_l2": 0.014229356810294698,
+              "magnitude_l2": 0.00360199303929977
+            },
+            "alternative_physical_hp": {
+              "raw_l2": 0.020220206740331217,
+              "magnitude_l2": 0.014996685465264994
+            },
+            "alternative_physical_hc": {
+              "raw_l2": 0.020220206740331228,
+              "magnitude_l2": 0.014996685465265015
+            }
+          },
+          "43": {
+            "native_unprojected_amplitude_l2": 0.14892423845389252,
+            "eq4_magnitude_low_frequency_relative_l2": 0.09480409375684563,
+            "eq4_vs_binary_low_frequency": {
+              "hp": {
+                "raw_l2": 2.749650406266597e-07,
+                "magnitude_l2": 9.491560874222967e-16
+              },
+              "hc": {
+                "raw_l2": 2.7496504062703497e-07,
+                "magnitude_l2": 1.169662414186761e-15
+              }
+            },
+            "eq4_physical_hp": {
+              "raw_l2": 0.015378841963748825,
+              "magnitude_l2": 0.006388302093484493
+            },
+            "eq4_physical_hc": {
+              "raw_l2": 0.015378841963748816,
+              "magnitude_l2": 0.006388302093484485
+            },
+            "alternative_physical_hp": {
+              "raw_l2": 0.028545509757088777,
+              "magnitude_l2": 0.025040009829994162
+            },
+            "alternative_physical_hc": {
+              "raw_l2": 0.028545509757088923,
+              "magnitude_l2": 0.025040009829994336
+            }
+          },
+          "all": {
+            "eq4_hp": {
+              "raw_l2": 0.011247146067411954,
+              "magnitude_l2": 0.00868554059781504
+            },
+            "eq4_hc": {
+              "raw_l2": 0.00834566182088485,
+              "magnitude_l2": 0.006422785012058002
+            },
+            "alternative_hp": {
+              "raw_l2": 0.007099435258924936,
+              "magnitude_l2": 0.005342724259223588
+            },
+            "alternative_hc": {
+              "raw_l2": 0.005418561221365103,
+              "magnitude_l2": 0.004077346291502064
+            }
+          }
+        }
+      },
+      "before": {
+        "22": {
+          "hp": {
+            "raw_l2": 1.3332063467530493e-06,
+            "magnitude_l2": 2.1427884076485406e-07
+          },
+          "hc": {
+            "raw_l2": 1.3332063467525737e-06,
+            "magnitude_l2": 2.1427884076432673e-07
+          }
+        },
+        "21": {
+          "hp": {
+            "raw_l2": 0.16276991697248008,
+            "magnitude_l2": 0.162758482838661
+          },
+          "hc": {
+            "raw_l2": 0.16276991697248014,
+            "magnitude_l2": 0.16275848283866098
+          }
+        },
+        "33": {
+          "hp": {
+            "raw_l2": 0.01573385124852512,
+            "magnitude_l2": 0.015710462446165443
+          },
+          "hc": {
+            "raw_l2": 0.015733851248525128,
+            "magnitude_l2": 0.01571046244616545
+          }
+        },
+        "32": {
+          "hp": {
+            "raw_l2": 0.06668493874800299,
+            "magnitude_l2": 0.06553466560323387
+          },
+          "hc": {
+            "raw_l2": 0.06668493874800328,
+            "magnitude_l2": 0.06553466560323418
+          }
+        },
+        "44": {
+          "hp": {
+            "raw_l2": 0.02053332526728952,
+            "magnitude_l2": 0.01542597592822833
+          },
+          "hc": {
+            "raw_l2": 0.020533325267289536,
+            "magnitude_l2": 0.01542597592822835
+          }
+        },
+        "43": {
+          "hp": {
+            "raw_l2": 0.175698912004573,
+            "magnitude_l2": 0.17502632171331692
+          },
+          "hc": {
+            "raw_l2": 0.17569891200457272,
+            "magnitude_l2": 0.17502632171331664
+          }
+        },
+        "all": {
+          "hp": {
+            "raw_l2": 0.004540949061216073,
+            "magnitude_l2": 0.0031782184185974605
+          },
+          "hc": {
+            "raw_l2": 0.0036380322927874555,
+            "magnitude_l2": 0.0025466475028817904
+          }
+        }
+      },
+      "after": {
+        "22": {
+          "hp": {
+            "raw_l2": 1.3332063467530493e-06,
+            "magnitude_l2": 2.1427884076485406e-07
+          },
+          "hc": {
+            "raw_l2": 1.3332063467525737e-06,
+            "magnitude_l2": 2.1427884076432673e-07
+          }
+        },
+        "21": {
+          "hp": {
+            "raw_l2": 0.2824396363716604,
+            "magnitude_l2": 0.28242782937814925
+          },
+          "hc": {
+            "raw_l2": 0.28243963637166053,
+            "magnitude_l2": 0.2824278293781492
+          }
+        },
+        "33": {
+          "hp": {
+            "raw_l2": 0.01573385124852512,
+            "magnitude_l2": 0.015710462446165443
+          },
+          "hc": {
+            "raw_l2": 0.015733851248525128,
+            "magnitude_l2": 0.01571046244616545
+          }
+        },
+        "32": {
+          "hp": {
+            "raw_l2": 0.06668493874800299,
+            "magnitude_l2": 0.06553466560323387
+          },
+          "hc": {
+            "raw_l2": 0.06668493874800328,
+            "magnitude_l2": 0.06553466560323418
+          }
+        },
+        "44": {
+          "hp": {
+            "raw_l2": 0.02053332526728952,
+            "magnitude_l2": 0.01542597592822833
+          },
+          "hc": {
+            "raw_l2": 0.020533325267289536,
+            "magnitude_l2": 0.01542597592822835
+          }
+        },
+        "43": {
+          "hp": {
+            "raw_l2": 0.03201780155931651,
+            "magnitude_l2": 0.028949984615461288
+          },
+          "hc": {
+            "raw_l2": 0.03201780155931667,
+            "magnitude_l2": 0.028949984615461454
+          }
+        },
+        "all": {
+          "hp": {
+            "raw_l2": 0.0069041378736237405,
+            "magnitude_l2": 0.005238706413627987
+          },
+          "hc": {
+            "raw_l2": 0.005275166418522048,
+            "magnitude_l2": 0.004002910632709668
+          }
+        }
+      },
+      "patch_count": {
+        "calls": 10
+      }
+    },
+    {
+      "id": "IMRPhenomHM_holdout_5",
+      "modes": {
+        "22": {
+          "native_to_binary_by_band": {
+            "20-40Hz": {
+              "amplitude_ratio_median": 0.9999999999999982,
+              "phase_residual_circular_rms_rad": 9.55195204076089e-08
+            },
+            "40-80Hz": {
+              "amplitude_ratio_median": 1.0000000230467583,
+              "phase_residual_circular_rms_rad": 5.160647268764227e-07
+            }
+          },
+          "low_frequency_samples": {
+            "frequency_hz": [
+              20.0,
+              30.0,
+              39.75
+            ],
+            "native_over_binary_amplitude": [
+              0.9999999999999989,
+              0.9999999999999983,
+              0.9999999999999962
+            ],
+            "clean_pn_truncations": {}
+          },
+          "geometric_break_frequencies_hz": {
+            "f0_amplitude": 55.37057638038643,
+            "f_lm_rd": 197.33938917715707,
+            "f_22_rd": 197.33938917715707
+          }
+        },
+        "21": {
+          "native_to_binary_by_band": {
+            "20-40Hz": {
+              "amplitude_ratio_median": 1.1025575023274348,
+              "phase_residual_circular_rms_rad": 9.551957548430164e-08
+            },
+            "40-80Hz": {
+              "amplitude_ratio_median": 0.9853631427543106,
+              "phase_residual_circular_rms_rad": 0.0012019029167919827
+            }
+          },
+          "low_frequency_samples": {
+            "frequency_hz": [
+              20.0,
+              30.0,
+              39.75
+            ],
+            "native_over_binary_amplitude": [
+              1.0594270286458207,
+              1.1031262015440861,
+              1.1491063437185447
+            ],
+            "clean_pn_truncations": {
+              "21_leading": [
+                -0.10823563240032341,
+                -0.12389886996041709,
+                -0.1360836569370751
+              ],
+              "21_leading_plus_V2_spin": [
+                -0.13898895064498482,
+                -0.164197117026949,
+                -0.18469788648919513
+              ],
+              "21_full_through_V3": [
+                -0.14911435569356477,
+                -0.17938522459981893,
+                -0.20482212902324778
+              ]
+            }
+          },
+          "geometric_break_frequencies_hz": {
+            "f0_amplitude": 53.59360782729045,
+            "f_lm_rd": 191.0063164194172,
+            "f_22_rd": 197.33938917715707
+          }
+        },
+        "33": {
+          "native_to_binary_by_band": {
+            "20-40Hz": {
+              "amplitude_ratio_median": 0.9999999999999991,
+              "phase_residual_circular_rms_rad": 9.551948333590362e-08
+            },
+            "40-80Hz": {
+              "amplitude_ratio_median": 0.9999999999999971,
+              "phase_residual_circular_rms_rad": 5.160646212404037e-07
+            }
+          },
+          "low_frequency_samples": {
+            "frequency_hz": [
+              20.0,
+              30.0,
+              39.75
+            ],
+            "native_over_binary_amplitude": [
+              0.9999999999999998,
+              0.9999999999999991,
+              0.9999999999999984
+            ],
+            "clean_pn_truncations": {}
+          },
+          "geometric_break_frequencies_hz": {
+            "f0_amplitude": 88.78749625721466,
+            "f_lm_rd": 316.43647986612444,
+            "f_22_rd": 197.33938917715707
+          }
+        },
+        "32": {
+          "native_to_binary_by_band": {
+            "20-40Hz": {
+              "amplitude_ratio_median": 0.9702404103422182,
+              "phase_residual_circular_rms_rad": 9.55195206672348e-08
+            },
+            "40-80Hz": {
+              "amplitude_ratio_median": 0.9624791051778608,
+              "phase_residual_circular_rms_rad": 5.160647267496091e-07
+            }
+          },
+          "low_frequency_samples": {
+            "frequency_hz": [
+              20.0,
+              30.0,
+              39.75
+            ],
+            "native_over_binary_amplitude": [
+              0.9739663450762572,
+              0.970198904423073,
+              0.9672681270770634
+            ],
+            "clean_pn_truncations": {
+              "32_leading": [
+                -0.0122794921977002,
+                -0.016090686751189045,
+                -0.019411175331822694
+              ],
+              "32_V3_spin": [
+                0.00031968006251370404,
+                0.00047952009377055614,
+                0.0006353641242459868
+              ],
+              "32_full_through_V3": [
+                -0.011959812135186496,
+                -0.015611166657418489,
+                -0.018775811207576706
+              ]
+            }
+          },
+          "geometric_break_frequencies_hz": {
+            "f0_amplitude": 87.068484877811,
+            "f_lm_rd": 310.3099650675489,
+            "f_22_rd": 197.33938917715707
+          }
+        },
+        "44": {
+          "native_to_binary_by_band": {
+            "20-40Hz": {
+              "amplitude_ratio_median": 0.9999999999999994,
+              "phase_residual_circular_rms_rad": 9.551943241560171e-08
+            },
+            "40-80Hz": {
+              "amplitude_ratio_median": 0.9999999999999982,
+              "phase_residual_circular_rms_rad": 5.160645220516448e-07
+            }
+          },
+          "low_frequency_samples": {
+            "frequency_hz": [
+              20.0,
+              30.0,
+              39.75
+            ],
+            "native_over_binary_amplitude": [
+              0.9999999999999996,
+              0.9999999999999992,
+              0.9999999999999987
+            ],
+            "clean_pn_truncations": {}
+          },
+          "geometric_break_frequencies_hz": {
+            "f0_amplitude": 119.76442716003794,
+            "f_lm_rd": 426.83750912309114,
+            "f_22_rd": 197.33938917715707
+          }
+        },
+        "43": {
+          "native_to_binary_by_band": {
+            "20-40Hz": {
+              "amplitude_ratio_median": 0.9540671005282446,
+              "phase_residual_circular_rms_rad": 9.551948442412355e-08
+            },
+            "40-80Hz": {
+              "amplitude_ratio_median": 0.9420877596546644,
+              "phase_residual_circular_rms_rad": 5.160646222428215e-07
+            }
+          },
+          "low_frequency_samples": {
+            "frequency_hz": [
+              20.0,
+              30.0,
+              39.75
+            ],
+            "native_over_binary_amplitude": [
+              0.9598179521879951,
+              0.9540030375746382,
+              0.949479483898116
+            ],
+            "clean_pn_truncations": {}
+          },
+          "geometric_break_frequencies_hz": {
+            "f0_amplitude": 118.25919334790807,
+            "f_lm_rd": 421.47289238126984,
+            "f_22_rd": 197.33938917715707
+          }
+        }
+      },
+      "ratios": {
+        "22": {
+          "v": [
+            0.02,
+            0.05,
+            0.1
+          ],
+          "native_over_clean": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "eq4_beta": [
+            1.0000000000000007,
+            1.0000000000000007,
+            1.0000000000000004
+          ],
+          "alternative_beta": [
+            1.0000000000000007,
+            1.0000000000000007,
+            1.0000000000000004
+          ],
+          "alternative_over_eq4": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        },
+        "21": {
+          "v": [
+            0.02,
+            0.05,
+            0.1
+          ],
+          "native_over_clean": [
+            0.9996897409629738,
+            0.9981099644102733,
+            0.9927668750170593
+          ],
+          "eq4_beta": [
+            0.00639108549715302,
+            0.01639264793045382,
+            0.03426755442107349
+          ],
+          "alternative_beta": [
+            0.00639108549715302,
+            0.01639264793045382,
+            0.03426755442107349
+          ],
+          "alternative_over_eq4": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "clean_pn_truncations": {
+            "21_leading": [
+              -0.00628539361054709,
+              -0.015713484026367724,
+              -0.03142696805273545
+            ],
+            "21_leading_plus_V2_spin": [
+              -0.006389102605121117,
+              -0.016361665242455393,
+              -0.03401969291708612
+            ],
+            "21_full_through_V3": [
+              -0.006391085497153016,
+              -0.01639264793045381,
+              -0.034267554421073466
+            ]
+          }
+        },
+        "33": {
+          "v": [
+            0.02,
+            0.05,
+            0.1
+          ],
+          "native_over_clean": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "eq4_beta": [
+            0.008451542547285171,
+            0.021128856368212934,
+            0.04225771273642585
+          ],
+          "alternative_beta": [
+            0.008451542547285171,
+            0.02112885636821293,
+            0.04225771273642585
+          ],
+          "alternative_over_eq4": [
+            1.0,
+            0.9999999999999999,
+            1.0
+          ]
+        },
+        "32": {
+          "v": [
+            0.02,
+            0.05,
+            0.1
+          ],
+          "native_over_clean": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "eq4_beta": [
+            6.560901177448043e-05,
+            0.0004088824982367131,
+            0.0016277044905882551
+          ],
+          "alternative_beta": [
+            6.560901177448043e-05,
+            0.0004088824982367132,
+            0.001627704490588255
+          ],
+          "alternative_over_eq4": [
+            1.0,
+            1.0000000000000002,
+            0.9999999999999999
+          ],
+          "clean_pn_truncations": {
+            "32_leading": [
+              -6.573421981221795e-05,
+              -0.0004108388738263622,
+              -0.0016433554953054488
+            ],
+            "32_V3_spin": [
+              1.2520803773755804e-07,
+              1.9563755896493442e-06,
+              1.5651004717194754e-05
+            ],
+            "32_full_through_V3": [
+              -6.56090117744804e-05,
+              -0.00040888249823671285,
+              -0.001627704490588254
+            ]
+          }
+        },
+        "44": {
+          "v": [
+            0.02,
+            0.05,
+            0.1
+          ],
+          "native_over_clean": [
+            1.0,
+            1.0,
+            1.0
+          ],
+          "eq4_beta": [
+            0.00012394963356060384,
+            0.000774685209753774,
+            0.0030987408390150957
+          ],
+          "alternative_beta": [
+            0.00012394963356060384,
+            0.000774685209753774,
+            0.0030987408390150952
+          ],
+          "alternative_over_eq4": [
+            1.0,
+            1.0,
+            0.9999999999999999
+          ]
+        },
+        "43": {
+          "v": [
+            0.02,
+            0.05,
+            0.1
+          ],
+          "native_over_clean": [
+            0.9966346153846153,
+            0.9915865384615384,
+            0.983173076923077
+          ],
+          "eq4_beta": [
+            8.457800632220629e-07,
+            1.3215313487844732e-05,
+            0.00010572250790275784
+          ],
+          "alternative_beta": [
+            8.457800632220629e-07,
+            1.3215313487844732e-05,
+            0.00010572250790275784
+          ],
+          "alternative_over_eq4": [
+            1.0,
+            1.0,
+            1.0
+          ]
+        }
+      },
+      "inputs": {
+        "id": "IMRPhenomHM_holdout_5",
+        "mass1": 55.0,
+        "mass2": 11.0,
+        "chi1": -0.4,
+        "chi2": 0.2,
+        "f_ref": 27.0,
+        "distance": 680.0,
+        "inclination": 1.1,
+        "phic": 0.71,
+        "flow": 20.0,
+        "fhigh": 512.0,
+        "df": 0.25
+      },
+      "alternative_reassembly": {
+        "scope": "legacy native-phase amplitude reassembly diagnostic; not an equation-level Eq.4 baseline",
+        "native_all_control": {
+          "hp": {
+            "raw_l2": 0.019464597334346818,
+            "magnitude_l2": 0.010547477301873128
+          },
+          "hc": {
+            "raw_l2": 0.01124470228203371,
+            "magnitude_l2": 0.007763670926290267
+          }
+        },
+        "alternative_all": {
+          "hp": {
+            "raw_l2": 0.01569999959084764,
+            "magnitude_l2": 0.012816962862211548
+          },
+          "hc": {
+            "raw_l2": 0.010914479447791704,
+            "magnitude_l2": 0.00960381598021969
+          }
+        },
+        "modes": {
+          "22": {
+            "hp": {
+              "raw_l2": 5.174920374497027e-07,
+              "magnitude_l2": 8.713783283167994e-08
+            },
+            "hc": {
+              "raw_l2": 5.174920374493104e-07,
+              "magnitude_l2": 8.713783283117948e-08
+            },
+            "ratio_alt_over_eq4_by_band": {
+              "20-40Hz": 1.0,
+              "40-80Hz": 1.0,
+              "80-160Hz": 1.0
+            }
+          },
+          "21": {
+            "hp": {
+              "raw_l2": 0.1499336973425594,
+              "magnitude_l2": 0.1498921554828901
+            },
+            "hc": {
+              "raw_l2": 0.14993369734255946,
+              "magnitude_l2": 0.1498921554828901
+            },
+            "ratio_alt_over_eq4_by_band": {
+              "20-40Hz": 1.0,
+              "40-80Hz": 0.9550842390408774,
+              "80-160Hz": 0.7583225941241336
+            }
+          },
+          "33": {
+            "hp": {
+              "raw_l2": 0.029409534439180974,
+              "magnitude_l2": 0.029405033061717902
+            },
+            "hc": {
+              "raw_l2": 0.029409534439180963,
+              "magnitude_l2": 0.029405033061717892
+            },
+            "ratio_alt_over_eq4_by_band": {
+              "20-40Hz": 1.0,
+              "40-80Hz": 1.0,
+              "80-160Hz": 0.980570076103624
+            }
+          },
+          "32": {
+            "hp": {
+              "raw_l2": 0.22739563022570183,
+              "magnitude_l2": 0.22733156216808856
+            },
+            "hc": {
+              "raw_l2": 0.22739563022570203,
+              "magnitude_l2": 0.22733156216808878
+            },
+            "ratio_alt_over_eq4_by_band": {
+              "20-40Hz": 1.0,
+              "40-80Hz": 1.0,
+              "80-160Hz": 0.9259472193493549
+            }
+          },
+          "44": {
+            "hp": {
+              "raw_l2": 0.0326212199098105,
+              "magnitude_l2": 0.03132654590082194
+            },
+            "hc": {
+              "raw_l2": 0.032621219909810456,
+              "magnitude_l2": 0.031326545900821914
+            },
+            "ratio_alt_over_eq4_by_band": {
+              "20-40Hz": 1.0,
+              "40-80Hz": 1.0,
+              "80-160Hz": 0.9999485991594648
+            }
+          },
+          "43": {
+            "hp": {
+              "raw_l2": 0.14269805080944747,
+              "magnitude_l2": 0.14233914051085333
+            },
+            "hc": {
+              "raw_l2": 0.14269805080944747,
+              "magnitude_l2": 0.14233914051085336
+            },
+            "ratio_alt_over_eq4_by_band": {
+              "20-40Hz": 1.0,
+              "40-80Hz": 1.0,
+              "80-160Hz": 0.9990683367408639
+            }
+          },
+          "all": {
+            "hp": {
+              "raw_l2": 0.01569999959084764,
+              "magnitude_l2": 0.012816962862211548
+            },
+            "hc": {
+              "raw_l2": 0.010914479447791704,
+              "magnitude_l2": 0.00960381598021969
+            }
+          },
+          "native_sum_single_vs_all": {
+            "hp": {
+              "raw_l2": 0.0,
+              "magnitude_l2": 0.0
+            },
+            "hc": {
+              "raw_l2": 0.0,
+              "magnitude_l2": 0.0
+            }
+          }
+        }
+      },
+      "direct_equation_reconstruction": {
+        "scope": "London Eq. (3)-(4) with black-box 22 carrier amplitude; no fitted normalization",
+        "modes": {
+          "22": {
+            "native_unprojected_amplitude_l2": 1.1119212785647591e-16,
+            "eq4_magnitude_low_frequency_relative_l2": 8.062367514764029e-17,
+            "eq4_vs_binary_low_frequency": {
+              "hp": {
+                "raw_l2": 7.859348632482234e-08,
+                "magnitude_l2": 1.7417556440744322e-15
+              },
+              "hc": {
+                "raw_l2": 7.859348632882009e-08,
+                "magnitude_l2": 1.740730734239815e-15
+              }
+            },
+            "eq4_physical_hp": {
+              "raw_l2": 5.174920374514269e-07,
+              "magnitude_l2": 8.713783284162488e-08
+            },
+            "eq4_physical_hc": {
+              "raw_l2": 5.174920374510976e-07,
+              "magnitude_l2": 8.713783284155294e-08
+            },
+            "alternative_physical_hp": {
+              "raw_l2": 5.174920374507796e-07,
+              "magnitude_l2": 8.713783283744588e-08
+            },
+            "alternative_physical_hc": {
+              "raw_l2": 5.17492037450588e-07,
+              "magnitude_l2": 8.71378328376081e-08
+            },
+            "eq4_reference_A22_identity_max_abs": 0.0
+          },
+          "21": {
+            "native_unprojected_amplitude_l2": 0.40120396186995,
+            "eq4_magnitude_low_frequency_relative_l2": 0.0875150863123825,
+            "eq4_vs_binary_low_frequency": {
+              "hp": {
+                "raw_l2": 0.18837826298898347,
+                "magnitude_l2": 0.18837826298896235
+              },
+              "hc": {
+                "raw_l2": 0.18837826298898347,
+                "magnitude_l2": 0.1883782629889623
+              }
+            },
+            "eq4_physical_hp": {
+              "raw_l2": 0.5996243160908883,
+              "magnitude_l2": 0.5995986389417749
+            },
+            "eq4_physical_hc": {
+              "raw_l2": 0.5996243160908886,
+              "magnitude_l2": 0.599598638941775
+            },
+            "alternative_physical_hp": {
+              "raw_l2": 0.3480778348622137,
+              "magnitude_l2": 0.34804639506696317
+            },
+            "alternative_physical_hc": {
+              "raw_l2": 0.3480778348622137,
+              "magnitude_l2": 0.3480463950669632
+            }
+          },
+          "33": {
+            "native_unprojected_amplitude_l2": 0.01455745533510664,
+            "eq4_magnitude_low_frequency_relative_l2": 3.509438858889917e-16,
+            "eq4_vs_binary_low_frequency": {
+              "hp": {
+                "raw_l2": 8.291329059245842e-08,
+                "magnitude_l2": 1.0021797636406e-15
+              },
+              "hc": {
+                "raw_l2": 8.291329059846185e-08,
+                "magnitude_l2": 9.514108753538444e-16
+              }
+            },
+            "eq4_physical_hp": {
+              "raw_l2": 0.005047355615496831,
+              "magnitude_l2": 0.005019620816362233
+            },
+            "eq4_physical_hc": {
+              "raw_l2": 0.005047355615496814,
+              "magnitude_l2": 0.005019620816362218
+            },
+            "alternative_physical_hp": {
+              "raw_l2": 0.016178691622609695,
+              "magnitude_l2": 0.016170289663817703
+            },
+            "alternative_physical_hc": {
+              "raw_l2": 0.016178691622609674,
+              "magnitude_l2": 0.016170289663817686
+            }
+          },
+          "32": {
+            "native_unprojected_amplitude_l2": 0.11953201203118256,
+            "eq4_magnitude_low_frequency_relative_l2": 1.9061103881079947e-16,
+            "eq4_vs_binary_low_frequency": {
+              "hp": {
+                "raw_l2": 0.029064141425072503,
+                "magnitude_l2": 0.029064141424952984
+              },
+              "hc": {
+                "raw_l2": 0.029064141425072913,
+                "magnitude_l2": 0.029064141424953404
+              }
+            },
+            "eq4_physical_hp": {
+              "raw_l2": 0.04926147347983963,
+              "magnitude_l2": 0.048802269422046025
+            },
+            "eq4_physical_hc": {
+              "raw_l2": 0.04926147347984003,
+              "magnitude_l2": 0.0488022694220464
+            },
+            "alternative_physical_hp": {
+              "raw_l2": 0.14072218174903534,
+              "magnitude_l2": 0.14059345996890263
+            },
+            "alternative_physical_hc": {
+              "raw_l2": 0.14072218174903564,
+              "magnitude_l2": 0.14059345996890293
+            }
+          },
+          "44": {
+            "native_unprojected_amplitude_l2": 0.01544992579347744,
+            "eq4_magnitude_low_frequency_relative_l2": 2.0178064898581626e-16,
+            "eq4_vs_binary_low_frequency": {
+              "hp": {
+                "raw_l2": 8.732817198204113e-08,
+                "magnitude_l2": 5.518022817993981e-16
+              },
+              "hc": {
+                "raw_l2": 8.732817198241877e-08,
+                "magnitude_l2": 5.035777281208562e-16
+              }
+            },
+            "eq4_physical_hp": {
+              "raw_l2": 0.011377576354555934,
+              "magnitude_l2": 0.006402622987563368
+            },
+            "eq4_physical_hc": {
+              "raw_l2": 0.011377576354555916,
+              "magnitude_l2": 0.006402622987563341
+            },
+            "alternative_physical_hp": {
+              "raw_l2": 0.019679635935225627,
+              "magnitude_l2": 0.017369486780391356
+            },
+            "alternative_physical_hc": {
+              "raw_l2": 0.0196796359352256,
+              "magnitude_l2": 0.017369486780391324
+            }
+          },
+          "43": {
+            "native_unprojected_amplitude_l2": 0.12965264128403375,
+            "eq4_magnitude_low_frequency_relative_l2": 0.04758685886182547,
+            "eq4_vs_binary_low_frequency": {
+              "hp": {
+                "raw_l2": 9.06178013904019e-08,
+                "magnitude_l2": 1.247617554683843e-15
+              },
+              "hc": {
+                "raw_l2": 9.061780138248745e-08,
+                "magnitude_l2": 1.2424663048639524e-15
+              }
+            },
+            "eq4_physical_hp": {
+              "raw_l2": 0.013682036205064203,
+              "magnitude_l2": 0.007726348238603542
+            },
+            "eq4_physical_hc": {
+              "raw_l2": 0.013682036205064202,
+              "magnitude_l2": 0.007726348238603539
+            },
+            "alternative_physical_hp": {
+              "raw_l2": 0.03486906028705855,
+              "magnitude_l2": 0.03308987632043368
+            },
+            "alternative_physical_hc": {
+              "raw_l2": 0.03486906028705855,
+              "magnitude_l2": 0.03308987632043368
+            }
+          },
+          "all": {
+            "eq4_hp": {
+              "raw_l2": 0.05534873393702074,
+              "magnitude_l2": 0.03186026410726431
+            },
+            "eq4_hc": {
+              "raw_l2": 0.03276275915068423,
+              "magnitude_l2": 0.01968849803376482
+            },
+            "alternative_hp": {
+              "raw_l2": 0.032580994713108186,
+              "magnitude_l2": 0.01901860246897374
+            },
+            "alternative_hc": {
+              "raw_l2": 0.018965886359118656,
+              "magnitude_l2": 0.012437520492728362
+            }
+          }
+        }
+      },
+      "before": {
+        "22": {
+          "hp": {
+            "raw_l2": 5.174920374503906e-07,
+            "magnitude_l2": 8.713783283568012e-08
+          },
+          "hc": {
+            "raw_l2": 5.174920374500667e-07,
+            "magnitude_l2": 8.713783283545874e-08
+          }
+        },
+        "21": {
+          "hp": {
+            "raw_l2": 0.20155510218516814,
+            "magnitude_l2": 0.20151179549509024
+          },
+          "hc": {
+            "raw_l2": 0.2015551021851682,
+            "magnitude_l2": 0.20151179549509024
+          }
+        },
+        "33": {
+          "hp": {
+            "raw_l2": 0.016084721723762404,
+            "magnitude_l2": 0.016076272025918808
+          },
+          "hc": {
+            "raw_l2": 0.016084721723762387,
+            "magnitude_l2": 0.016076272025918797
+          }
+        },
+        "32": {
+          "hp": {
+            "raw_l2": 0.14622521059391402,
+            "magnitude_l2": 0.14610129995949536
+          },
+          "hc": {
+            "raw_l2": 0.1462252105939143,
+            "magnitude_l2": 0.1461012999594956
+          }
+        },
+        "44": {
+          "hp": {
+            "raw_l2": 0.019736003280106554,
+            "magnitude_l2": 0.017434214138732817
+          },
+          "hc": {
+            "raw_l2": 0.019736003280106527,
+            "magnitude_l2": 0.017434214138732786
+          }
+        },
+        "43": {
+          "hp": {
+            "raw_l2": 0.11527153736632499,
+            "magnitude_l2": 0.11480265908278418
+          },
+          "hc": {
+            "raw_l2": 0.11527153736632495,
+            "magnitude_l2": 0.1148026590827842
+          }
+        },
+        "all": {
+          "hp": {
+            "raw_l2": 0.019464597334346818,
+            "magnitude_l2": 0.010547477301873128
+          },
+          "hc": {
+            "raw_l2": 0.01124470228203371,
+            "magnitude_l2": 0.007763670926290267
+          }
+        }
+      },
+      "after": {
+        "22": {
+          "hp": {
+            "raw_l2": 5.174920374503906e-07,
+            "magnitude_l2": 8.713783283568012e-08
+          },
+          "hc": {
+            "raw_l2": 5.174920374500667e-07,
+            "magnitude_l2": 8.713783283545874e-08
+          }
+        },
+        "21": {
+          "hp": {
+            "raw_l2": 0.3389737558948129,
+            "magnitude_l2": 0.33894160508372667
+          },
+          "hc": {
+            "raw_l2": 0.33897375589481277,
+            "magnitude_l2": 0.33894160508372667
+          }
+        },
+        "33": {
+          "hp": {
+            "raw_l2": 0.016084721723762404,
+            "magnitude_l2": 0.016076272025918808
+          },
+          "hc": {
+            "raw_l2": 0.016084721723762387,
+            "magnitude_l2": 0.016076272025918797
+          }
+        },
+        "32": {
+          "hp": {
+            "raw_l2": 0.14622521059391402,
+            "magnitude_l2": 0.14610129995949536
+          },
+          "hc": {
+            "raw_l2": 0.1462252105939143,
+            "magnitude_l2": 0.1461012999594956
+          }
+        },
+        "44": {
+          "hp": {
+            "raw_l2": 0.019736003280106554,
+            "magnitude_l2": 0.017434214138732817
+          },
+          "hc": {
+            "raw_l2": 0.019736003280106527,
+            "magnitude_l2": 0.017434214138732786
+          }
+        },
+        "43": {
+          "hp": {
+            "raw_l2": 0.03838035530091127,
+            "magnitude_l2": 0.03677169736689775
+          },
+          "hc": {
+            "raw_l2": 0.03838035530091126,
+            "magnitude_l2": 0.03677169736689775
+          }
+        },
+        "all": {
+          "hp": {
+            "raw_l2": 0.03179924792593125,
+            "magnitude_l2": 0.0180156520398031
+          },
+          "hc": {
+            "raw_l2": 0.018425828404883805,
+            "magnitude_l2": 0.01194615412918792
+          }
+        }
+      },
+      "patch_count": {
+        "calls": 10
+      }
+    }
+  ],
+  "versions": {
+    "lal": "7.7.0",
+    "lalsimulation": "6.2.0"
+  },
+  "script_sha256": "3908c5f9426df182bf27083386b2c01cbe4f64afaa8cd6f99c1a2cd991dc3e80",
+  "helper_sha256": "cbf474aa50241a06608bbfc69a9682f05b00ab3044fb507eb17c2f96921f0887",
+  "native_source_sha256_after": "e48a2d42568a5d09a19b668b53a65a358696c245989e22fb5685fef921929ac7"
+}

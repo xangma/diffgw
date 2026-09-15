@@ -10,6 +10,8 @@ on:
 jobs:
   oracle-parity:
     runs-on: ubuntu-latest
+    env:
+      LAL_DATA_PATH: ${{ github.workspace }}/.lal-oracle-data
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -34,6 +36,16 @@ jobs:
         run: |
           python -c "import lal, lalsimulation, pycbc, torch; print('LAL:', lal.__version__, 'LALSim:', lalsimulation.__version__, 'PyCBC:', pycbc.__version__, 'Torch:', torch.__version__)"
 
+      - name: Cache External Oracle Data
+        uses: actions/cache@v4
+        with:
+          path: .lal-oracle-data
+          key: lal-seobnrv4-rom-bb0eab9ae721af6abd06c4872b13e477
+
+      - name: Verify External Oracle Data
+        shell: bash -el {0}
+        run: python scripts/fetch_lal_oracle_data.py "$LAL_DATA_PATH"
+
       - name: Run Full Pytest Suite
         shell: bash -el {0}
         run: |
@@ -47,9 +59,17 @@ jobs:
         run: |
           PYTHONPATH=src python tests/parity_harness.py --strict --json-out parity_results.json
 
+      - name: Execute Strict Holdout Harness
+        if: always()
+        shell: bash -el {0}
+        run: |
+          PYTHONPATH=src python tests/parity_harness.py --scope=holdout --strict --json-out parity_holdout_results.json
+
       - name: Upload Parity Report Artifact
         if: always()
         uses: actions/upload-artifact@v4
         with:
           name: parity-oracle-report
-          path: parity_results.json
+          path: |
+            parity_results.json
+            parity_holdout_results.json

@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "created_utc": "2026-09-15T11:37:07.258237+00:00",
+  "authorization": "User Go for it: search longer eligible q6/q8, then fit/freeze and validate if both qualify",
+  "quality_policy_path": "docs/reviews/2026-09-15-independent-calibration-v2/quality-policy.json",
+  "quality_policy_sha256": "1a863811b90c410cd5a9b0b52a0bd53696b869a0d503cb8fa61d9c054842138d",
+  "new_targets": [
+    6,
+    8
+  ],
+  "max_relative_q_deviation": 0.005,
+  "holdout_target_q": [
+    3,
+    6
+  ],
+  "training_target_q": [
+    1.5,
+    2,
+    4,
+    5,
+    8
+  ],
+  "preserved_passing_sxs_ids": [
+    "SXS:BBH:2331",
+    "SXS:BBH:1166",
+    "SXS:BBH:2265",
+    "SXS:BBH:2485",
+    "SXS:BBH:3619"
+  ],
+  "excluded_sxs_ids": [
+    "SXS:BBH:0008",
+    "SXS:BBH:0169",
+    "SXS:BBH:0030",
+    "SXS:BBH:0182",
+    "SXS:BBH:0056",
+    "SXS:BBH:0166",
+    "SXS:BBH:0063",
+    "SXS:BBH:3630",
+    "SXS:BBH:3622"
+  ],
+  "metadata_filters": {
+    "nondeprecated": true,
+    "max_reference_spin_norm": 0.0001,
+    "max_eccentricity_upper_bound": 0.001,
+    "min_available_resolutions": 2
+  },
+  "ranking": "eligible candidates by descending highest two resolution labels, then numeric SXS ID; freeze full ranking before any new waveform H5 download; evaluate in order, next only after prior failure",
+  "primary": "highest available resolution N3; top two resolutions N2/N3; same exact metadata pairing",
+  "source_scope": "SXS cached catalog plus refresh/current public catalog discovery; record temporal limitations; no numerical waveform inspection during discovery",
+  "candidate_cap": null,
+  "quality_changes": "none; all numerical thresholds, controls and split retained",
+  "fit_admission": "five training and two holdout targets all pass; reuse unchanged fitter; freeze before LAL",
+  "contact_policy": "no external messages"
+}

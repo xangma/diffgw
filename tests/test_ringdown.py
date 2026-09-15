@@ -42,7 +42,7 @@ def test_berti_table_viii_coefficients():
 
     for (l, m, n), cases in benchmarks.items():
         for af, (exp_omega, exp_q) in cases.items():
-            omega, tau, Q = evaluate_qnm(l, m, n, final_mass=1.0, final_spin=af)
+            omega, tau, Q = evaluate_qnm(l, m, n, final_mass=1.0, final_spin=af, qnm_backend="berti")
             actual_omega = (omega * MSUN_SEC).item()
             actual_q = Q.item()
 
@@ -132,8 +132,11 @@ def test_kerr_ringdown_frequency_domain():
     spin = 0.68
     f_array = torch.linspace(50.0, 600.0, 500, dtype=torch.float64)
 
-    omega_220, _, _ = evaluate_qnm(2, 2, 0, final_mass=mass, final_spin=spin)
-    f_qnm = (omega_220 / (2.0 * PI)).item()
+    omega_220, tau_220, _ = evaluate_qnm(2, 2, 0, final_mass=mass, final_spin=spin)
+    # The transform of a real causal cosine has two poles. Their interference
+    # shifts the amplitude maximum slightly above the oscillation frequency.
+    w, g = omega_220.item(), 1.0 / tau_220.item()
+    f_peak_exact = math.sqrt(math.sqrt(w**4 + 4*g*g*w*w) - g*g) / (2.0 * PI)
 
     hp_fd, hc_fd = KerrRingdown.frequency_domain(
         frequencies=f_array,
@@ -148,9 +151,9 @@ def test_kerr_ringdown_frequency_domain():
     peak_idx = torch.argmax(amp)
     f_peak = f_array[peak_idx].item()
 
-    # Peak frequency should be within 1 grid bin of f_qnm
+    # Peak frequency should be within one grid bin of the exact cosine peak.
     df = (f_array[1] - f_array[0]).item()
-    assert abs(f_peak - f_qnm) <= 2 * df
+    assert abs(f_peak - f_peak_exact) <= df
 
 
 def test_kerr_ringdown_batching():

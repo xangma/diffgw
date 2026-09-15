@@ -1,0 +1,599 @@
+{
+  "contract": {
+    "angle_transition_grid_hz": [
+      185.0,
+      196.0
+    ],
+    "comparison": "direct native/public hp,hc; no phase/time/amplitude/residual optimization",
+    "expansion_order": 5,
+    "phase_limit": "P(v)=-(3/4) g0 delta (1+psi1 v+psi2 v^2)/v^3 with additive C=0",
+    "prec_version": 223,
+    "public_approximant": "IMRPhenomXP",
+    "raw_waveform_frequency_count": 181,
+    "raw_waveform_grid_hz": [
+      20.0,
+      200.0
+    ],
+    "root_gap_threshold": 1e-05
+  },
+  "rows": [
+    {
+      "angle_residual_summary": {
+        "alpha_gauge_offset": 2.730906413657782,
+        "alpha_max_abs": 1.4210854715202004e-14,
+        "cos_beta_max_abs": 4.79191575308846e-10,
+        "gamma_max_abs": 4.440892098500626e-15
+      },
+      "expected": "pass",
+      "initial_degenerate": true,
+      "name": "equalmass",
+      "native_angle_finite": true,
+      "native_waveform_finite": true,
+      "parameters": {
+        "distance": 500.0,
+        "f_ref": 20.0,
+        "inclination": 0.7,
+        "mass1": 30.0,
+        "mass2": 30.0,
+        "phic": 0.0,
+        "spin1": [
+          0.2,
+          0.1,
+          0.2
+        ],
+        "spin2": [
+          -0.1,
+          0.15,
+          -0.1
+        ],
+        "tc": 0.0
+      },
+      "raw_hp_hc_metrics": {
+        "hc": {
+          "difference_l2": 1.3488456637778546e-31,
+          "max_abs": 5.78367344515745e-32,
+          "relative_l2": 7.063528845139814e-10,
+          "target_l2": 1.9095917824501442e-22
+        },
+        "hp": {
+          "difference_l2": 1.068160155609824e-31,
+          "max_abs": 4.708922461341182e-32,
+          "relative_l2": 5.451210795228587e-10,
+          "target_l2": 1.9594915620301795e-22
+        }
+      }
+    },
+    {
+      "angle_residual_summary": {
+        "alpha_gauge_offset": 2.7309483054828827,
+        "alpha_max_abs": 1.9539925233402755e-14,
+        "cos_beta_max_abs": 1.607513011592232e-10,
+        "gamma_max_abs": 1.4210854715202004e-14
+      },
+      "expected": "pass",
+      "initial_degenerate": true,
+      "name": "near_equalmass",
+      "native_angle_finite": true,
+      "native_waveform_finite": true,
+      "parameters": {
+        "distance": 500.0,
+        "f_ref": 20.0,
+        "inclination": 0.7,
+        "mass1": 30.000001,
+        "mass2": 30.0,
+        "phic": 0.0,
+        "spin1": [
+          0.2,
+          0.1,
+          0.2
+        ],
+        "spin2": [
+          -0.1,
+          0.15,
+          -0.1
+        ],
+        "tc": 0.0
+      },
+      "raw_hp_hc_metrics": {
+        "hc": {
+          "difference_l2": 3.1080184324317675e-29,
+          "max_abs": 4.305181305382399e-30,
+          "relative_l2": 1.6267116141534736e-07,
+          "target_l2": 1.910614275689642e-22
+        },
+        "hp": {
+          "difference_l2": 3.2055508578524127e-29,
+          "max_abs": 4.478365407144672e-30,
+          "relative_l2": 1.6350326948037954e-07,
+          "target_l2": 1.960542359819343e-22
+        }
+      }
+    },
+    {
+      "angle_residual_summary": {
+        "alpha_gauge_offset": 3.141592653589793,
+        "alpha_max_abs": 1.3651452768215222e-07,
+        "cos_beta_max_abs": 3.3306690738754696e-16,
+        "gamma_max_abs": 1.3441947821490885e-07
+      },
+      "expected": "pass",
+      "initial_degenerate": true,
+      "name": "aligned",
+      "native_angle_finite": true,
+      "native_waveform_finite": true,
+      "parameters": {
+        "distance": 500.0,
+        "f_ref": 20.0,
+        "inclination": 0.7,
+        "mass1": 35.0,
+        "mass2": 25.0,
+        "phic": 0.0,
+        "spin1": [
+          0.0,
+          0.0,
+          0.2
+        ],
+        "spin2": [
+          0.0,
+          0.0,
+          -0.1
+        ],
+        "tc": 0.0
+      },
+      "raw_hp_hc_metrics": {
+        "hc": {
+          "difference_l2": 2.1996962876983804e-31,
+          "max_abs": 1.7590903716481715e-32,
+          "relative_l2": 1.2070028865102008e-09,
+          "target_l2": 1.822444927251456e-22
+        },
+        "hp": {
+          "difference_l2": 2.2786166153662713e-31,
+          "max_abs": 1.8225175644960718e-32,
+          "relative_l2": 1.206683711872629e-09,
+          "target_l2": 1.8883296367944924e-22
+        }
+      }
+    },
+    {
+      "angle_residual_summary": {
+        "alpha_gauge_offset": 3.141592653589793,
+        "alpha_max_abs": 4.0241587839773274e-11,
+        "cos_beta_max_abs": 4.440892098500626e-16,
+        "gamma_max_abs": 3.552713678800501e-15
+      },
+      "expected": "pass",
+      "initial_degenerate": true,
+      "name": "zero_spin",
+      "native_angle_finite": true,
+      "native_waveform_finite": true,
+      "parameters": {
+        "distance": 500.0,
+        "f_ref": 20.0,
+        "inclination": 0.7,
+        "mass1": 35.0,
+        "mass2": 25.0,
+        "phic": 0.0,
+        "spin1": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "spin2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "tc": 0.0
+      },
+      "raw_hp_hc_metrics": {
+        "hc": {
+          "difference_l2": 5.9900381597606455e-33,
+          "max_abs": 1.9650424684880922e-33,
+          "relative_l2": 3.3318860288223564e-11,
+          "target_l2": 1.7977920336842386e-22
+        },
+        "hp": {
+          "difference_l2": 6.205652049399891e-33,
+          "max_abs": 2.036043249920596e-33,
+          "relative_l2": 3.3313830129521104e-11,
+          "target_l2": 1.8627855233916025e-22
+        }
+      }
+    },
+    {
+      "angle_residual_summary": {
+        "alpha_gauge_offset": 2.0425700889801766,
+        "alpha_max_abs": 0.006050693576408861,
+        "cos_beta_max_abs": 9.131765676961834e-09,
+        "gamma_max_abs": 0.006073559181325017
+      },
+      "expected": "unresolved_current_root_onset",
+      "initial_degenerate": true,
+      "name": "small_inplane",
+      "native_angle_finite": true,
+      "native_waveform_finite": true,
+      "parameters": {
+        "distance": 500.0,
+        "f_ref": 20.0,
+        "inclination": 0.7,
+        "mass1": 35.0,
+        "mass2": 25.0,
+        "phic": 0.0,
+        "spin1": [
+          1e-05,
+          0.0,
+          0.2
+        ],
+        "spin2": [
+          0.0,
+          1e-05,
+          -0.1
+        ],
+        "tc": 0.0
+      },
+      "raw_hp_hc_metrics": {
+        "hc": {
+          "difference_l2": 2.2642935527558006e-25,
+          "max_abs": 1.1237917385651715e-25,
+          "relative_l2": 0.0012425177880792126,
+          "target_l2": 1.8223429672231364e-22
+        },
+        "hp": {
+          "difference_l2": 2.3535108709636154e-25,
+          "max_abs": 1.1685990496694748e-25,
+          "relative_l2": 0.0012463967018104323,
+          "target_l2": 1.8882518443325976e-22
+        }
+      },
+      "transition_185_196_hz": {
+        "angle_residuals": {
+          "alpha_gauge_offset": 2.042570318445806,
+          "alpha_max_abs": 0.0062654998289382036,
+          "alpha_residual": [
+            0.0,
+            -5.005773573429906e-11,
+            -9.880096740744193e-11,
+            -1.4626344579937722e-10,
+            -1.9245760540798074e-10,
+            0.0025377511682105336,
+            6.140888102201814e-05,
+            8.51213684427421e-07,
+            1.1513953058539528e-05,
+            -5.342840712074803e-07,
+            -7.307118124799672e-06,
+            -0.0062654998289382036
+          ],
+          "cos_beta_max_abs": 2.2214504680206915e-09,
+          "cos_beta_residual": [
+            7.340836827296471e-10,
+            2.2214504680206915e-09,
+            -7.66053886991358e-15,
+            6.664724327976046e-10,
+            8.984724075844497e-11,
+            3.0963265285066655e-10,
+            -1.3223466766021374e-10,
+            -1.7645107597275e-11,
+            -2.3924140446496267e-10,
+            2.1277313244638663e-11,
+            1.6277923453600351e-10,
+            -2.9738045359550824e-10
+          ],
+          "gamma_max_abs": 0.006288529720688274,
+          "gamma_residual": [
+            2.2736871496675803e-07,
+            2.274090054044109e-07,
+            2.274480044306415e-07,
+            2.2748572980901827e-07,
+            2.275222135139643e-07,
+            0.002578960175500633,
+            -6.109946784338405e-05,
+            -6.147951667756502e-07,
+            -1.117829610208787e-05,
+            7.528605987516812e-07,
+            7.4729950165774994e-06,
+            -0.006288529720688274
+          ]
+        },
+        "current_root_gap": [
+          0.0,
+          0.0,
+          0.0,
+          8.392286862408255e-09,
+          5.266622450149881e-06,
+          4.0621993086900274e-05,
+          7.561726393559131e-05,
+          0.00011024230931929368,
+          0.0001444996417994072,
+          0.0001783969135590864,
+          0.0002119378703545234,
+          0.0002451244606368778
+        ],
+        "frequencies_hz": [
+          185.0,
+          186.0,
+          187.0,
+          188.0,
+          189.0,
+          190.0,
+          191.0,
+          192.0,
+          193.0,
+          194.0,
+          195.0,
+          196.0
+        ],
+        "frequency_degenerate": [
+          true,
+          true,
+          true,
+          true,
+          true,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "initial_degenerate": true,
+        "interpretation": "Initial Eq. (51) additive constant is zero and current small-gap rows suppress only nutation. The first ordinary-root point remains an unresolved public-waveform mismatch. Signed pole continuation is finite away from n=0 but the reported correction is numerically sensitive as either factor approaches zero; no empirical correction is applied.",
+        "oscillatory_phi_all": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0012033782252774139,
+          -0.0017788078293523295,
+          -0.002125698580801141,
+          -0.002422959099572174,
+          -0.002690089304999686,
+          -0.0029353885038645076,
+          -0.0031460017634457175
+        ],
+        "oscillatory_phi_on_degenerate": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "oscillatory_zeta_all": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          -0.0013549944062163815,
+          0.001711025198035674,
+          0.0020872289064530346,
+          0.0023993530397190335,
+          0.002667041188036639,
+          0.0029025391886761923,
+          0.0031310742573194164
+        ],
+        "oscillatory_zeta_on_degenerate": [
+          0.0,
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ],
+        "pole_factor_a": [
+          0.012632165187979383,
+          0.012628890053480779,
+          0.012625623881509007,
+          0.012622372992672992,
+          0.012619132748851292,
+          -2.3717773787401697e-05,
+          1.7971047153952924e-05,
+          1.757350666309332e-05,
+          2.0211476707276965e-05,
+          1.1022956320050348e-05,
+          3.167858718011729e-06,
+          9.647378812149832e-06
+        ],
+        "pole_factor_b": [
+          1.000000001171755,
+          1.000000001175754,
+          1.0000000011797447,
+          1.0000000011837273,
+          1.0000000011877017,
+          1.000048410276961,
+          1.000090418176049,
+          1.0001322616117583,
+          1.000173938358599,
+          1.0002154524630233,
+          1.0002568033841186,
+          1.0002979884791559
+        ],
+        "rational_invalid_current": [
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false,
+          false
+        ],
+        "series_phase_max_abs_error": 4.440892098500626e-16,
+        "spin_squared_on_degenerate": [
+          0.0025699273845404724,
+          0.002569927623238883,
+          0.0025699281195563665,
+          0.0025699339753094373,
+          0.002575199727397055
+        ],
+        "upper_root_on_degenerate": [
+          0.0025699273845404724,
+          0.002569927623238883,
+          0.0025699281195563665,
+          0.0025699339753094373,
+          0.002575199727397055
+        ]
+      }
+    },
+    {
+      "angle_residual_summary": {
+        "alpha_gauge_offset": 2.3795684687114624,
+        "alpha_max_abs": 1.1457501614131615e-13,
+        "cos_beta_max_abs": 4.440892098500626e-16,
+        "gamma_max_abs": 1.1191048088221578e-13
+      },
+      "expected": "pass",
+      "initial_degenerate": false,
+      "name": "swapped",
+      "native_angle_finite": true,
+      "native_waveform_finite": true,
+      "parameters": {
+        "distance": 500.0,
+        "f_ref": 20.0,
+        "inclination": 0.7,
+        "mass1": 25.0,
+        "mass2": 35.0,
+        "phic": 0.0,
+        "spin1": [
+          -0.1,
+          0.15,
+          -0.1
+        ],
+        "spin2": [
+          0.2,
+          0.1,
+          0.2
+        ],
+        "tc": 0.0
+      },
+      "raw_hp_hc_metrics": {
+        "hc": {
+          "difference_l2": 1.2167061764358738e-35,
+          "max_abs": 2.3330509480780877e-36,
+          "relative_l2": 6.436689087516489e-14,
+          "target_l2": 1.8902671231947352e-22
+        },
+        "hp": {
+          "difference_l2": 1.2432742698118602e-35,
+          "max_abs": 2.3786959266322063e-36,
+          "relative_l2": 6.415233747431986e-14,
+          "target_l2": 1.9380030701290378e-22
+        }
+      }
+    },
+    {
+      "angle_residual_summary": {
+        "alpha_gauge_offset": 0.7009935031101359,
+        "alpha_max_abs": 2.349231920106831e-13,
+        "cos_beta_max_abs": 7.216449660063518e-14,
+        "gamma_max_abs": 2.2959412149248237e-13
+      },
+      "expected": "pass",
+      "initial_degenerate": false,
+      "name": "unequal_extreme",
+      "native_angle_finite": true,
+      "native_waveform_finite": true,
+      "parameters": {
+        "distance": 500.0,
+        "f_ref": 20.0,
+        "inclination": 0.7,
+        "mass1": 65.0,
+        "mass2": 9.0,
+        "phic": 0.0,
+        "spin1": [
+          0.45,
+          0.03,
+          -0.55
+        ],
+        "spin2": [
+          -0.21,
+          0.13,
+          0.06
+        ],
+        "tc": 0.0
+      },
+      "raw_hp_hc_metrics": {
+        "hc": {
+          "difference_l2": 1.7810697687545953e-35,
+          "max_abs": 8.272478334338393e-36,
+          "relative_l2": 1.9932916240241482e-13,
+          "target_l2": 8.935319585394586e-23
+        },
+        "hp": {
+          "difference_l2": 1.8662491705655627e-35,
+          "max_abs": 8.876059617088344e-36,
+          "relative_l2": 1.8567649682181974e-13,
+          "target_l2": 1.0051079175392169e-22
+        }
+      }
+    },
+    {
+      "angle_residual_summary": {
+        "alpha_gauge_offset": 0.940363478522444,
+        "alpha_max_abs": 1.1546319456101628e-14,
+        "cos_beta_max_abs": 8.881784197001252e-16,
+        "gamma_max_abs": 1.1546319456101628e-14
+      },
+      "expected": "pass",
+      "initial_degenerate": false,
+      "name": "generic_anchor_B",
+      "native_angle_finite": true,
+      "native_waveform_finite": true,
+      "parameters": {
+        "distance": 500.0,
+        "f_ref": 20.0,
+        "inclination": 0.7,
+        "mass1": 45.0,
+        "mass2": 15.0,
+        "phic": 0.0,
+        "spin1": [
+          0.45,
+          -0.2,
+          0.3
+        ],
+        "spin2": [
+          0.1,
+          0.2,
+          -0.25
+        ],
+        "tc": 0.0
+      },
+      "raw_hp_hc_metrics": {
+        "hc": {
+          "difference_l2": 7.01398739084336e-36,
+          "max_abs": 1.7106674098815536e-36,
+          "relative_l2": 5.052233926751083e-14,
+          "target_l2": 1.3882942659691558e-22
+        },
+        "hp": {
+          "difference_l2": 8.195404740233057e-36,
+          "max_abs": 1.8249171211477784e-36,
+          "relative_l2": 5.763478364048905e-14,
+          "target_l2": 1.4219546292311745e-22
+        }
+      }
+    }
+  ],
+  "source_hashes_sha256": {
+    "docs/reviews/2026-09-13-parity-review/reference-audit-contracts.md": "9849d5bec1fdbf3672ea0427ab28081b4baff15203eb9893b33ad9c246720db7",
+    "scripts/diagnose_msa_v223_boundary_contract_clean.py": "eceefac69db18f860a4b09bba2053c2cc416f7aaa788bacd62834681d1174e58",
+    "scripts/diagnose_msa_v223_contract_clean.py": "40e60d36b995f482a1aa8e9db6bbfdde2154dee14871bb167c8d6a3ccd1f2a06",
+    "src/torchwave/approximants/precession_msa_angles_clean.py": "b0ef1f2db75544647453be6322d55299801e699a7f52c35c91b1a900dcd77062",
+    "src/torchwave/approximants/precession_msa_oscillatory_clean.py": "33764920f08b86dd71c4f3a97dc2c1f91aff3474fa27319053cbee32a4495a73",
+    "src/torchwave/approximants/precession_msa_pn_clean.py": "12e9fabcb181828283829aab20beb73ec52fc0ad0b9a5b6c47cc808fdf23f8eb",
+    "src/torchwave/approximants/precession_msa_secular_clean.py": "d40d1b2253305ba563bac248480e28b51daa9af94b9f1b6b92716e98f6afbddb",
+    "src/torchwave/approximants/precession_msa_waveform_clean.py": "539a44ae3fc7fdd354c95a581f0a89af689dccbc653706d5e14aa6de918cfd49",
+    "tests/test_precession_msa_v223_contract_clean.py": "f46a3abb4c1747622975be0460ce9f910622a9c40afedc76f98e8cfab5eea6aa"
+  },
+  "status": "complete_with_unresolved_small_inplane",
+  "validation": {
+    "diagnostic_command": "PYTHONPATH=src:tests:scripts:. PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 /Users/xangma/miniconda3/envs/pycbcorig313/bin/python scripts/diagnose_msa_v223_boundary_contract_clean.py",
+    "focused_test_command": "PYTHONPATH=src:tests:scripts:. PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 /Users/xangma/miniconda3/envs/pycbcorig313/bin/python -m pytest -q tests/test_precession_msa_angles_clean.py tests/test_precession_msa_initial_clean.py tests/test_precession_msa_initial_physical.py tests/test_precession_msa_oscillatory_clean.py tests/test_precession_msa_pn_clean.py tests/test_precession_msa_reference_l_clean.py tests/test_precession_msa_secular_clean.py tests/test_precession_msa_v223_contract_clean.py tests/test_precession_msa_waveform_clean.py",
+    "focused_test_result": "62 passed, 1 existing warning"
+  }
+}

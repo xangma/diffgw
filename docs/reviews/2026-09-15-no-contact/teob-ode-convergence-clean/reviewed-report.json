@@ -1,0 +1,190 @@
+{
+  "generating_report_source_sha256": {
+    "adaptive_continuation": "7b8722ecc28af74eeb2fe29d2e7c1782123106d63fbeba60c82ca81f6b70b869",
+    "adaptive_driver": "27db5a25123f4d054a9919a11752b207cfc6accc377a8eeaf21f4b49087867e0",
+    "contract": "7e74010b49e0e5a4b89128378c483016edbb5ce1283ad3009e090c2575d8f099",
+    "diagnostic": "50c0d5776e0fed879bf90361caf1fdbd170a7de008a8971ad5997601921b48e2",
+    "nqc": "f705514ef981b3f0a557efeebe508b52fdb70c634a8ac8f2c357f30761871068",
+    "paired_driver": "52c5267c4bbb389e0801f27d99e2c95ea96d3ca6c67d48d16e3e8586f9fdef22",
+    "postadiabatic": "06d0620283798a28c477e6e70b3a3720e337c53a8d8af8a78be17646a7be7550",
+    "ringdown": "df3d21ce4fad55a84d0e1550ac376b8931eecbc0b4076dc9f6235b076ed0befa",
+    "vacuum_driver": "5188f9161c793cf79b1992abe562fd9ae58925319a44c730d6eb079050e43e41",
+    "waveform_state": "b247c91659b18341301356eca2def7cde270b0aaa7a9e16c85f8ba40f1861552"
+  },
+  "input_sha256": {
+    "docs/reviews/2026-09-15-no-contact/teob-ode-convergence-clean/convergence-arrays.npz": "fddc9fd5e16e1cb6933a8b405cbc8a529247841f71c29cfce9fe456199c3f1bc",
+    "docs/reviews/2026-09-15-no-contact/teob-ode-convergence-clean/report.json": "c01f7292d7154dc4ebaf7e7b74ce721f4b799d527bd976514b2a89ddf83d0735"
+  },
+  "interpretation": "Native states and pre-NQC modes differ little at the sampled tolerances, whereas the processed mode changes substantially. This directs investigation to amplification during NQC and attachment processing. It does not establish asymptotic convergence or exclude derivative/interpolation amplification of integration errors. The specific cause remains unresolved.",
+  "limits": [
+    "Native trajectory grids are adaptive and were never compared by index.",
+    "Mode arrays use only their exact common public prefix; no alignment or fitting was applied.",
+    "This clean replay cannot identify which documented NQC or event convention causes the processed sensitivity.",
+    "No experiment holding event times or the auxiliary grid fixed was run.",
+    "The generating report's approach-to-baseline convergence criterion is superseded: convergence must be assessed across successively refined levels, not by proximity to the baseline."
+  ],
+  "method": "cache-only postprocessing; no ODE rerun",
+  "pairs_in_tolerance_order": {
+    "baseline_vs_tight_0p1": {
+      "event_delta_initial_mass": {
+        "attachment_time_initial_mass": 0.014856402480290853,
+        "peak_time_initial_mass": 4.785872806678526e-05,
+        "t_match_initial_mass": 4.785872806678526e-05
+      },
+      "event_index_delta": {
+        "attachment_sampled_index_joined": 307,
+        "output_boundary_index_public_grid": 0,
+        "peak_knot_index_auxiliary": -2
+      },
+      "native_trajectory_grid": {
+        "max_abs_difference": null,
+        "same": false,
+        "samples_a": 668,
+        "samples_b": 1012,
+        "support_a": [
+          0.0,
+          12318.833098423882
+        ],
+        "support_b": [
+          0.0,
+          12318.833625309915
+        ]
+      },
+      "pre_nqc_mode_on_common_public_subset": {
+        "metrics": {
+          "max_abs": 1.093528067538956e-28,
+          "relative_l2": 1.7044639088136623e-09,
+          "rms_abs": 2.5315396089866545e-30,
+          "samples": 24638
+        },
+        "public_prefix_samples": 24638,
+        "public_prefix_support": [
+          0.0,
+          12318.5
+        ],
+        "same_public_subset": true
+      },
+      "processed_mode_on_common_public_subset": {
+        "metrics": {
+          "max_abs": 9.39991823134772e-23,
+          "relative_l2": 0.002529172268500524,
+          "rms_abs": 3.73446094321189e-24,
+          "samples": 24938
+        },
+        "public_prefix_samples": 24938,
+        "public_prefix_support": [
+          0.0,
+          12468.5
+        ],
+        "same_public_subset": true
+      },
+      "trajectory_state_on_shared_public_grid": {
+        "available": true,
+        "endpoint_abs_by_component": [
+          1.844346897428295e-11,
+          7.73070496506989e-11,
+          4.083022808742953e-11,
+          9.487832741683633e-11
+        ],
+        "max_abs_by_component": [
+          1.7453550604784596e-08,
+          1.487956069468055e-08,
+          2.6382849238615336e-09,
+          2.3403807780653096e-09
+        ],
+        "query_support": [
+          0.0,
+          12318.5
+        ],
+        "rms_abs_by_component": [
+          3.386923171417257e-10,
+          4.935782144128943e-10,
+          3.9991132097595334e-11,
+          5.0945704465286824e-11
+        ],
+        "samples": 24638
+      }
+    },
+    "tight_0p1_vs_tight_0p01": {
+      "event_delta_initial_mass": {
+        "attachment_time_initial_mass": -0.027366430462279823,
+        "peak_time_initial_mass": -0.00018861060198105406,
+        "t_match_initial_mass": -0.00018861060198105406
+      },
+      "event_index_delta": {
+        "attachment_sampled_index_joined": 484,
+        "output_boundary_index_public_grid": 0,
+        "peak_knot_index_auxiliary": 0
+      },
+      "native_trajectory_grid": {
+        "max_abs_difference": null,
+        "same": false,
+        "samples_a": 1012,
+        "samples_b": 1559,
+        "support_a": [
+          0.0,
+          12318.833625309915
+        ],
+        "support_b": [
+          0.0,
+          12318.70004420347
+        ]
+      },
+      "pre_nqc_mode_on_common_public_subset": {
+        "metrics": {
+          "max_abs": 6.2369100366558285e-27,
+          "relative_l2": 2.675925450745815e-08,
+          "rms_abs": 3.9743940778235034e-29,
+          "samples": 24638
+        },
+        "public_prefix_samples": 24638,
+        "public_prefix_support": [
+          0.0,
+          12318.5
+        ],
+        "same_public_subset": true
+      },
+      "processed_mode_on_common_public_subset": {
+        "metrics": {
+          "max_abs": 8.065297220782506e-23,
+          "relative_l2": 0.0021647122134381648,
+          "rms_abs": 3.1963010920549913e-24,
+          "samples": 24938
+        },
+        "public_prefix_samples": 24938,
+        "public_prefix_support": [
+          0.0,
+          12468.5
+        ],
+        "same_public_subset": true
+      },
+      "trajectory_state_on_shared_public_grid": {
+        "available": true,
+        "endpoint_abs_by_component": [
+          1.8949868607620601e-07,
+          2.447049496367981e-07,
+          2.429148843186013e-08,
+          1.5033163291988672e-07
+        ],
+        "max_abs_by_component": [
+          1.8949868607620601e-07,
+          2.447049496367981e-07,
+          2.429148843186013e-08,
+          1.5033163291988672e-07
+        ],
+        "query_support": [
+          0.0,
+          12318.5
+        ],
+        "rms_abs_by_component": [
+          1.2095262184517788e-09,
+          1.5806740003084851e-09,
+          1.549272488169336e-10,
+          9.577965028031402e-10
+        ],
+        "samples": 24638
+      }
+    }
+  },
+  "review_script_sha256": "f4336ed61ccf347542ac0eb8dd6d51ce15f41e4628010a270f056eccf01eb22d"
+}

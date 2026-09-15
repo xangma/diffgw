@@ -1,0 +1,426 @@
+--- a/src/torchwave/approximants/imrphenom_nsbh.py
++++ b/src/torchwave/approximants/imrphenom_nsbh.py
+@@ -266,11 +266,19 @@
+     chi2: torch.Tensor,
+     lambda2: torch.Tensor,
+ ) -> Tuple[torch.Tensor, torch.Tensor]:
+-    """Compute NSBH remnant mass M_f and remnant spin chi_f (Zappa et al. 2019 Eq. 6 & Table IV)."""
++    """Compute the NSBH remnant mass and spin from the Zappa fit.
++
++    Zappa et al. (2019), Eqs. (1), (4)-(6), define the fit as
++    ``F(nu, a_BH, Lambda)``.  Their NS spin is neglected, so the tidal
++    correction polynomials use the black-hole spin ``chi1`` directly.  The
++    BBH baseline remains evaluated with both caller-supplied spins for API
++    compatibility; the published NSBH calibration itself assumes ``chi2=0``.
++    """
+     m = mass1 + mass2
+     eta = component_masses_to_eta(mass1, mass2)
+-    delta = component_masses_to_delta(mass1, mass2)
+-    chi = ((1.0 + delta) / 2.0) * chi1 + ((1.0 - delta) / 2.0) * chi2
++    # Zappa's a_BH is the initial black-hole spin, not a mass-weighted
++    # effective spin.  In the NSBH ordering used here, that is chi1.
++    chi = chi1
+ 
+     mf_bbh_ratio, chif_bbh = bbh_remnant_uib2016(mass1, mass2, chi1, chi2)
+ 
+--- a/src/torchwave/approximants/imrphenom_xhm.py
++++ b/src/torchwave/approximants/imrphenom_xhm.py
+@@ -119,6 +119,16 @@
+     """
+     ratio = alpha322 / alpha222
+     return ratio * h22 + (alpha332 - ratio * alpha232) * h32_s
++
++
++def _carrier_h22_ratio(strain, phase, phase_reference, a0):
++    """Put the physical carrier in the H_lm normalization of Eq. (4.6).
++
++    Here ``a0`` is the native physical leading quadrupole amplitude. The
++    paper's ``A^0_22`` and spherical mode amplitude both carry the common
++    ``sqrt(16*pi/5)`` factor, so it cancels in their ratio.
++    """
++    return torch.abs(strain / a0) * torch.exp(-1j * (phase - phase_reference))
+ 
+ 
+ def _eval_f_isco(chi: torch.Tensor) -> torch.Tensor:
+@@ -849,7 +859,10 @@
+                         # distance normalization is applied.
+                         a0 = _unsqueeze_to(m_sec * torch.sqrt(5.0 * eta / 24.0) / PI ** (2.0 / 3.0), f_in) * f_in ** (-7.0 / 6.0)
+                         phase_s = eval_phi_32_s(f_in)
+-                        relative22 = torch.abs(strain22 / a0) * torch.exp(-1j * (phase22 - phase_s))
++                        # Eq. (4.6) defines H_lm against A^0_22. The common
++                        # sqrt(16*pi/5) factor in the paper's A^0_22 and mode
++                        # amplitude cancels, leaving the native carrier ratio.
++                        relative22 = _carrier_h22_ratio(strain22, phase22, phase_s, a0)
+                         return _spherical_32_from_spheroidal(
+                             relative22, eval_h_rd_s(f_in),
+                             _unsqueeze_to(alpha222, f_in), _unsqueeze_to(alpha232, f_in),
+--- a/src/torchwave/approximants/precession_msa.py
++++ b/src/torchwave/approximants/precession_msa.py
+@@ -333,7 +333,8 @@
+ 
+ 
+ 
+-def evaluate_msa_dynamics(v, v0, eta, delta, q_c, s1, s2, l_pn, anchor_reference=True):
++def evaluate_msa_dynamics(v, v0, eta, delta, q_c, s1, s2, l_pn,
++                          anchor_reference=True, return_averages=False):
+     """Published two-spin MSA solution and initialization validity.
+ 
+     Conservative evolution uses L_N=eta/v. The opening angle uses the
+@@ -490,7 +491,67 @@
+         alpha_osc0, eps_osc0 = msa_oscillatory_angles(v0,torch.sqrt(j0_sq),l0,xi,eta,s1_sq,s2_sq,delta,s3_sq,sm_sq,sp_sq,psi_ref)
+         alpha = alpha-alpha_osc0
+         epsilon = epsilon-eps_osc0
++    if return_averages:
++        # These are the precession-averaged quantities entering Eq. (4.20)
++        # of Pratten et al. (arXiv:2004.06503v2). Keep this opt-in so the
++        # historical four-value low-level API remains unchanged.
++        return alpha, beta, -epsilon, valid, sav_sq, s1_ell_avg, s2_ell_avg
+     return alpha,beta,-epsilon,valid
++
++
++def compute_msa_averaged_couplings(v0, m1, m2, s1x, s1y, s1z,
++                                   s2x, s2y, s2z):
++    """Return the MSA couplings needed by the precession-averaged remnant.
++
++    The returned values are ``(<S^2>_pr, <S1.Lhat>_pr,
++    <S2.Lhat>_pr, valid)`` in total-mass-normalized units.  With
++    ``s_i = S_i/M^2`` and ``M=m1+m2``, ``<S^2>_pr`` is numerically
++    ``<S^2>_pr/M^4`` while each projection is numerically
++    ``<S_i.Lhat>_pr/M^2``.  The construction is the same 3PN MSA
++    initialization used for the angles, evaluated at the reference
++    frequency, and follows Eqs. (A9)--(A11) of Chatziioannou et al.
++    (arXiv:1703.03967) as summarized by Pratten et al.
++    (arXiv:2004.06503v2), Eq. (4.20).
++    The returned couplings are physically usable only where ``valid`` is true;
++    callers must choose their own documented behavior for invalid rows.
++    """
++    (v0, m1, m2, s1x, s1y, s1z, s2x, s2y, s2z) = torch.broadcast_tensors(
++        v0, m1, m2, s1x, s1y, s1z, s2x, s2y, s2z
++    )
++    total_mass = m1 + m2
++    m1_norm, m2_norm = m1 / total_mass, m2 / total_mass
++    eta = m1_norm * m2_norm
++    delta = m1_norm - m2_norm
++    q_c = m2_norm / m1_norm
++    s1_sq_norm = m1_norm * m1_norm
++    s2_sq_norm = m2_norm * m2_norm
++    s1 = s1_sq_norm.unsqueeze(-1) * torch.stack((s1x, s1y, s1z), dim=-1)
++    s2 = s2_sq_norm.unsqueeze(-1) * torch.stack((s2x, s2y, s2z), dim=-1)
++    s_ell = s1[..., 2] + s2[..., 2]
++    sigma_ell = m2_norm * s2z - m1_norm * s1z
++    l0 = compute_l_3pn(v0, eta, delta, s_ell, sigma_ell)
++    result = evaluate_msa_dynamics(
++        v0, v0, eta, delta, q_c, s1, s2, l0,
++        anchor_reference=True, return_averages=True,
++    )
++    _, _, _, valid, sav_sq, s1_ell_avg, s2_ell_avg = result
++    return sav_sq, s1_ell_avg, s2_ell_avg, valid
++
++
++def compute_msa_final_spin_squared(
++    s_av_sq, s1_l_avg, s2_l_avg, l_fin
++):
++    """Evaluate the published MSA ``<S_fin^2>`` identity.
++
++    All arguments use total-mass-normalized units: ``s_av_sq`` is
++    ``<S_av^2>/M^4``, ``s1_l_avg`` and ``s2_l_avg`` are projections divided
++    by ``M^2``, and ``l_fin`` is ``L_fin/M^2``.  The return value is
++    ``<S_fin^2>/M^4``.  ``l_fin`` is explicit because the source defines it
++    using ``M_fin`` in Eq. (4.18) but prints ``M`` in the FinalSpinMod3
++    normalization of Eq. (4.29); this helper intentionally performs no normalization,
++    clamping, or signed-Kerr conversion.
++    """
++    return s_av_sq + l_fin.square() + 2.0 * l_fin * (s1_l_avg + s2_l_avg)
+ 
+ def evaluate_msa_precession(
+     v: torch.Tensor,
+--- /dev/null
++++ b/tests/test_pass11_baseline.py
+@@ -0,0 +1,59 @@
++"""Equation checks for the bounded pass-11 NSBH remnant correction."""
++
++import pytest
++import torch
++
++from torchwave.approximants.imrphenom_nsbh import (
++    bbh_remnant_uib2016,
++    zappa_remnant_properties,
++)
++
++
++@pytest.mark.parametrize("ns_spin", [0.0, -0.8])
++def test_zappa_tidal_polynomials_use_the_black_hole_spin(ns_spin):
++    """Zappa Eqs. (4)-(6) use a_BH, not a mass-weighted two-spin variable."""
++    mass1 = torch.tensor(7.0, dtype=torch.float64)
++    mass2 = torch.tensor(1.4, dtype=torch.float64)
++    chi_bh = torch.tensor(0.35, dtype=torch.float64)
++    chi_ns = torch.tensor(ns_spin, dtype=torch.float64)
++    lambda2 = torch.tensor(1200.0, dtype=torch.float64)
++
++    mf, chif = zappa_remnant_properties(mass1, mass2, chi_bh, chi_ns, lambda2)
++    eta = mass1 * mass2 / (mass1 + mass2).square()
++    mf_bbh_ratio, chif_bbh = bbh_remnant_uib2016(mass1, mass2, chi_bh, chi_ns)
++
++    # Zappa et al. (2019), Eqs. (4)-(6) and Table I: p_kj is linear in
++    # a_BH and quadratic in nu.  These coefficients are the X_bullet and
++    # a_bullet rows, respectively.
++    p1_m = (-1.83e-3 * chi_bh + 2.39e-3) * eta + (4.29e-3 * chi_bh + 9.80e-3) * eta.square()
++    p2_m = (2.34e-7 * chi_bh - 8.28e-7) * eta + (-1.64e-6 * chi_bh + 8.08e-6) * eta.square()
++    p3_m = (-2.01e-2 * chi_bh + 1.32e-1) * eta + (6.51e-2 * chi_bh - 1.43e-1) * eta.square()
++    expected_mf = (mass1 + mass2) * mf_bbh_ratio * (
++        1.0 + p1_m * lambda2 + p2_m * lambda2.square()
++    ) / (1.0 + p3_m.square() * lambda2).square()
++
++    p1_s = (-5.44e-3 * chi_bh + 7.91e-3) * eta + (2.33e-2 * chi_bh + 2.48e-2) * eta.square()
++    p2_s = (-8.57e-7 * chi_bh - 2.82e-6) * eta + (6.61e-6 * chi_bh + 4.29e-5) * eta.square()
++    p3_s = (-3.04e-2 * chi_bh + 2.55e-1) * eta + (1.48e-1 * chi_bh - 4.28e-1) * eta.square()
++    expected_chif = chif_bbh * (
++        1.0 + p1_s * lambda2 + p2_s * lambda2.square()
++    ) / (1.0 + p3_s.square() * lambda2).square()
++    expected_chif = torch.clamp(expected_chif, -0.999, 0.999)
++
++    torch.testing.assert_close(mf, expected_mf, rtol=3e-14, atol=0.0)
++    torch.testing.assert_close(chif, expected_chif, rtol=3e-14, atol=0.0)
++
++
++def test_zappa_lambda_zero_is_the_supplied_bbh_baseline():
++    """The fit's Lambda -> 0 construction preserves both supplied BBH spins."""
++    mass1 = torch.tensor(6.0, dtype=torch.float64)
++    mass2 = torch.tensor(1.4, dtype=torch.float64)
++    chi1 = torch.tensor(-0.25, dtype=torch.float64)
++    chi2 = torch.tensor(0.6, dtype=torch.float64)
++    zero = torch.tensor(0.0, dtype=torch.float64)
++
++    mf, chif = zappa_remnant_properties(mass1, mass2, chi1, chi2, zero)
++    mf_bbh_ratio, chif_bbh = bbh_remnant_uib2016(mass1, mass2, chi1, chi2)
++
++    torch.testing.assert_close(mf, (mass1 + mass2) * mf_bbh_ratio, rtol=2e-14, atol=0.0)
++    torch.testing.assert_close(chif, chif_bbh, rtol=2e-14, atol=0.0)
+--- /dev/null
++++ b/tests/test_pass11_higher_modes.py
+@@ -0,0 +1,126 @@
++"""Independent source-audited checks for the pass-11 XHM normalization."""
++
++import math
++
++import torch
++
++from torchwave.constants import C_SI, MPC_SI, MSUN_SEC, PI
++from torchwave.approximants.imrphenom_xas import IMRPhenomXAS
++from torchwave.approximants import imrphenom_xhm as xhm_module
++from torchwave.approximants.imrphenom_xhm import (
++    _carrier_h22_ratio,
++    _spherical_32_from_spheroidal,
++)
++from torchwave.approximants.xhm_fits import XHMParameterFits
++
++
++def test_xas_carrier_matches_paper_ratio_after_a0_cancellation():
++    """The paper's N factors cancel between physical h22 and A^0_22."""
++    f = torch.tensor([100.0], dtype=torch.float64)
++    mass1 = torch.tensor(35.0, dtype=torch.float64)
++    mass2 = torch.tensor(20.0, dtype=torch.float64)
++    eta = mass1 * mass2 / (mass1 + mass2) ** 2
++    m_sec = (mass1 + mass2) * MSUN_SEC
++    distance = m_sec * C_SI / MPC_SI
++
++    strain, _, phase = IMRPhenomXAS()( 
++        f=f,
++        mass1=mass1,
++        mass2=mass2,
++        chi1=torch.tensor(0.2, dtype=torch.float64),
++        chi2=torch.tensor(-0.1, dtype=torch.float64),
++        distance=distance,
++        inclination=0.0,
++        phic=0.0,
++        tc=0.0,
++        return_phase=True,
++    )
++    native_a0 = (
++        torch.sqrt(5.0 * eta / 24.0)
++        / PI ** (2.0 / 3.0)
++        / m_sec ** (1.0 / 6.0)
++        * f ** (-7.0 / 6.0)
++    )
++    paper_n = math.sqrt(16.0 * math.pi / 5.0)
++    # Eq. (4.5), evaluated at the same D=M convention as the carrier probe.
++    paper_a0 = (
++        torch.sqrt(2.0 * eta / 3.0)
++        * PI ** (-1.0 / 6.0)
++        * m_sec ** (-1.0 / 6.0)
++        * f ** (-7.0 / 6.0)
++    )
++
++    result = _carrier_h22_ratio(strain, phase, phase, native_a0)
++    expected = (paper_n * torch.abs(strain) / paper_a0).to(result.dtype)
++    torch.testing.assert_close(result, expected, rtol=1e-14, atol=1e-14)
++
++
++def test_xhm_32_mixing_receives_normalized_carrier(monkeypatch):
++    """The production (3,2) probe passes the cancelled carrier ratio to mixing."""
++    helper_values = []
++    mixing_values = []
++    original_helper = xhm_module._carrier_h22_ratio
++    original_mixing = xhm_module._spherical_32_from_spheroidal
++
++    def capture_helper(*args, **kwargs):
++        result = original_helper(*args, **kwargs)
++        helper_values.append(result.detach().clone())
++        return result
++
++    def capture_mixing(h22, *args, **kwargs):
++        mixing_values.append(h22.detach().clone())
++        return original_mixing(h22, *args, **kwargs)
++
++    monkeypatch.setattr(xhm_module, "_carrier_h22_ratio", capture_helper)
++    monkeypatch.setattr(xhm_module, "_spherical_32_from_spheroidal", capture_mixing)
++
++    from torchwave.approximants.imrphenom_xhm import IMRPhenomXHM
++
++    IMRPhenomXHM(modes=((3, 2),))(
++        torch.tensor([30.0, 300.0], dtype=torch.float64),
++        mass1=35.0,
++        mass2=20.0,
++        chi1=0.5,
++        chi2=-0.3,
++        return_unprojected_modes=True,
++    )
++
++    assert helper_values
++    assert len(helper_values) == len(mixing_values)
++    for helper_value, mixing_value in zip(helper_values, mixing_values):
++        torch.testing.assert_close(mixing_value, helper_value, rtol=0.0, atol=0.0)
++
++
++def test_spherical_32_reconstructs_appendix_a_matrix():
++    """The eliminated 22 spheroidal entry exactly satisfies Appendix A Eq. (A3)."""
++    alpha222 = torch.tensor(0.93 + 0.04j, dtype=torch.complex128)
++    alpha232 = torch.tensor(-0.08 + 0.02j, dtype=torch.complex128)
++    alpha322 = torch.tensor(0.11 - 0.03j, dtype=torch.complex128)
++    alpha332 = torch.tensor(0.97 + 0.01j, dtype=torch.complex128)
++    h22_s = torch.tensor(1.2 - 0.4j, dtype=torch.complex128)
++    h32_s = torch.tensor(-0.3 + 0.6j, dtype=torch.complex128)
++    h22 = alpha222 * h22_s + alpha232 * h32_s
++    expected_h32 = alpha322 * h22_s + alpha332 * h32_s
++
++    result = _spherical_32_from_spheroidal(
++        h22, h32_s, alpha222, alpha232, alpha322, alpha332
++    )
++    torch.testing.assert_close(result, expected_h32, rtol=1e-14, atol=1e-14)
++
++
++def test_published_mixing_fits_have_no_spin_zero_coupling():
++    """The author fits reduce to the identity matrix at the Kerr spin-zero limit."""
++    chi = torch.tensor(0.0, dtype=torch.float64)
++    alpha222 = torch.complex(*XHMParameterFits.mixing_alpha222(chi))
++    alpha232 = torch.complex(*XHMParameterFits.mixing_alpha223(chi))
++    alpha322 = torch.complex(*XHMParameterFits.mixing_alpha322(chi))
++    alpha332 = torch.complex(*XHMParameterFits.mixing_alpha333(chi))
++    torch.testing.assert_close(alpha222, torch.tensor(1.0 + 0.0j, dtype=torch.complex128), rtol=0.0, atol=0.0)
++    torch.testing.assert_close(alpha232, torch.tensor(0.0 + 0.0j, dtype=torch.complex128), rtol=0.0, atol=0.0)
++    torch.testing.assert_close(alpha322, torch.tensor(0.0 + 0.0j, dtype=torch.complex128), rtol=0.0, atol=0.0)
++    torch.testing.assert_close(alpha332, torch.tensor(1.0 + 0.0j, dtype=torch.complex128), rtol=0.0, atol=0.0)
++
++    h22 = torch.tensor(0.6 - 0.2j, dtype=torch.complex128)
++    h32_s = torch.tensor(-0.1 + 0.4j, dtype=torch.complex128)
++    result = _spherical_32_from_spheroidal(h22, h32_s, alpha222, alpha232, alpha322, alpha332)
++    torch.testing.assert_close(result, h32_s, rtol=0.0, atol=0.0)
+--- /dev/null
++++ b/tests/test_pass11_precession.py
+@@ -0,0 +1,96 @@
++import torch
++
++from torchwave.approximants.precession_msa import (
++    compute_msa_averaged_couplings,
++    compute_msa_final_spin_squared,
++)
++
++
++def _sample(dtype=torch.float64):
++    return dict(
++        v0=torch.tensor(0.2, dtype=dtype),
++        m1=torch.tensor(35.0, dtype=dtype),
++        m2=torch.tensor(25.0, dtype=dtype),
++        s1x=torch.tensor(0.2, dtype=dtype),
++        s1y=torch.tensor(0.1, dtype=dtype),
++        s1z=torch.tensor(0.3, dtype=dtype),
++        s2x=torch.tensor(-0.1, dtype=dtype),
++        s2y=torch.tensor(0.05, dtype=dtype),
++        s2z=torch.tensor(-0.2, dtype=dtype),
++    )
++
++
++def test_msa_averages_match_single_rows_of_batched_evaluation():
++    first = _sample()
++    second = _sample()
++    second.update(
++        v0=torch.tensor(0.17, dtype=torch.float64),
++        m1=torch.tensor(30.0, dtype=torch.float64),
++        m2=torch.tensor(20.0, dtype=torch.float64),
++        s1x=torch.tensor(0.15, dtype=torch.float64),
++        s1z=torch.tensor(-0.25, dtype=torch.float64),
++        s2y=torch.tensor(-0.08, dtype=torch.float64),
++        s2z=torch.tensor(0.18, dtype=torch.float64),
++    )
++    batched = {name: torch.stack((first[name], second[name])) for name in first}
++    batch_result = compute_msa_averaged_couplings(**batched)
++    assert bool(batch_result[-1].all())
++    for row in range(2):
++        scalar_result = compute_msa_averaged_couplings(
++            **{name: values[row] for name, values in batched.items()}
++        )
++        for batch_value, scalar_value in zip(batch_result[:3], scalar_result[:3]):
++            torch.testing.assert_close(batch_value[row], scalar_value, rtol=0.0, atol=0.0)
++
++
++def test_msa_averages_mark_degenerate_rows_without_poisoning_batch():
++    valid_row = _sample()
++    degenerate_row = _sample()
++    degenerate_row.update(
++        m1=torch.tensor(30.0, dtype=torch.float64),
++        m2=torch.tensor(30.0, dtype=torch.float64),
++    )
++    batched = {
++        name: torch.stack((valid_row[name], degenerate_row[name]))
++        for name in valid_row
++    }
++    s_av_sq, s1_l_avg, s2_l_avg, valid = compute_msa_averaged_couplings(**batched)
++    assert bool(valid[0])
++    assert not bool(valid[1])
++    assert torch.isfinite(torch.stack((s_av_sq, s1_l_avg, s2_l_avg))).all()
++
++
++def test_msa_squared_helper_is_the_orthogonal_vector_norm():
++    s_perp = torch.tensor([0.25, -0.125], dtype=torch.float64)
++    s_parallel = torch.tensor(-0.25, dtype=torch.float64)
++    l_fin = torch.tensor(0.5, dtype=torch.float64)
++    s_av_sq = s_perp.square().sum() + s_parallel.square()
++    result = compute_msa_final_spin_squared(
++        s_av_sq, s_parallel, torch.tensor(0.0), l_fin
++    )
++    final_vector = torch.cat((s_perp, (s_parallel + l_fin).reshape(1)))
++    expected = torch.dot(final_vector, final_vector)
++    torch.testing.assert_close(result, expected, rtol=0.0, atol=0.0)
++
++
++def test_msa_squared_helper_preserves_aligned_vector_identity():
++    s_parallel = torch.tensor(0.5, dtype=torch.float64)
++    l_fin = torch.tensor(-0.25, dtype=torch.float64)
++    result = compute_msa_final_spin_squared(
++        s_parallel.square(), s_parallel, torch.tensor(0.0), l_fin
++    )
++    torch.testing.assert_close(result, (s_parallel + l_fin).square(), rtol=0.0, atol=0.0)
++
++
++def test_msa_averages_and_squared_helper_have_finite_gradients():
++    p = _sample()
++    for name in ("v0", "s1x", "s1y", "s2x"):
++        p[name].requires_grad_()
++    l_fin = torch.tensor(0.37, dtype=torch.float64, requires_grad=True)
++    s_av_sq, s1_l_avg, s2_l_avg, valid = compute_msa_averaged_couplings(**p)
++    assert bool(valid)
++    s_fin_sq = compute_msa_final_spin_squared(s_av_sq, s1_l_avg, s2_l_avg, l_fin)
++    (s_fin_sq + s_av_sq + s1_l_avg.square() + s2_l_avg.square()).backward()
++    for name in ("v0", "s1x", "s1y", "s2x"):
++        assert torch.isfinite(p[name].grad)
++    assert torch.isfinite(l_fin.grad)

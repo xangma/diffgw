@@ -1,0 +1,31 @@
+{
+  "commands": [
+    [
+      "/work/charm_7_0_0/multicore-linux-x86_64-gcc/bin/charmc",
+      "aligned-nodegroup.ci"
+    ],
+    [
+      "/work/charm_7_0_0/multicore-linux-x86_64-gcc/bin/charmc",
+      "-O2",
+      "-language",
+      "charm++",
+      "-o",
+      "aligned-nodegroup",
+      "aligned-nodegroup.cpp"
+    ],
+    [
+      "./aligned-nodegroup",
+      "+p8"
+    ]
+  ],
+  "expected_misalignment": true,
+  "exit_code": -6,
+  "allocation_rows": [],
+  "accepted": true,
+  "hashes": {
+    "aligned-nodegroup.ci": "c58ecf1feacc97bc4f726bb9017d2603838962c0530e90cbe9510c09e7d3bf79",
+    "aligned-nodegroup.cpp": "d03eb20855146501959a18c01a14c58d88ab670ec0bdebfc89117661a50997c7",
+    "aligned-nodegroup": "4bde8cca5312bf4eb54c258a5e324bd4a50213c49e4e81c89b6c769a9e87c279",
+    "/work/charm_7_0_0/multicore-linux-x86_64-gcc/lib/libck.a": "354ca1a9ac841a8dff6c4fd2d9a786bed1a9e1d5ee95945d9e12b42448518a14"
+  }
+}

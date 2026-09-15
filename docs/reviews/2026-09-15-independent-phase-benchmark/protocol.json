@@ -1,0 +1,91 @@
+{
+  "schema": "nr33-phase-benchmark-protocol-v1",
+  "created_utc": "2026-09-15T13:06:47.383188+00:00",
+  "scope": "Diagnostic phase and complex NR/LAL comparison on existing amplitude-qualified nonspinning33 holdouts; no phase fitting, no runtime promotion",
+  "input_manifest_sha256": "b16c5266a8219d2fa16a7fbfe634a121e1df223e774bf71b087fab8c88d750aa",
+  "calibration_sha256": "ade377c62a57a5d9cff513e34f22b0fe43677177a0c1577a9a4af5ad3b8aa561",
+  "primary_ids": [
+    "SXS:BBH:2265/Lev3/N3",
+    "SXS:BBH:2483/Lev5/N3",
+    "SXS:BBH:2484/Lev5/N3",
+    "SXS:BBH:2486/Lev5/N3",
+    "SXS:BBH:2489/Lev5/N3",
+    "SXS:BBH:2491/Lev5/N3",
+    "SXS:BBH:0185/Lev3/N3"
+  ],
+  "fft_controls": {
+    "pad_factor": 4,
+    "start_taper_duration": 500.0,
+    "end_taper_duration": 20.0,
+    "fmax": 0.3,
+    "sample_dt": 0.1
+  },
+  "preprocessing_variants": [
+    {
+      "sample_dt": 0.05
+    },
+    {
+      "end_taper_duration": 40.0
+    }
+  ],
+  "band": {
+    "lower_f_ring33_factor": 0.95,
+    "upper_Mf": 0.3,
+    "grid": "highest resolution N3 native frequency grid, common domain of all variants; no extrapolation"
+  },
+  "fourier_convention": {
+    "transform": "dt*FFT(conj(h33))*exp(-2pi*i*f*(uniform_start-h22_peak))",
+    "lal_mode_mapping": "multiply by (-1)^3 for equatorial symmetry h3,-3=(-1)^3 conj(h33)",
+    "time_reference": "own h22 peak at t=0 for each waveform",
+    "phase_reference": "native SXS inertial phase retained; constant and linear-in-frequency residual removed only in explicitly aligned metrics"
+  },
+  "phase_alignment": {
+    "reference": "highest resolution N3",
+    "mask_min_relative_reference_amplitude": 0.001,
+    "mask_contiguous_from_band_start": true,
+    "weights": "abs(NR)^2 times trapezoid integration widths",
+    "fit": "unwrap candidate/reference phase; weighted least-squares constant + 2pi*f*time; report raw, constant-only, affine residual",
+    "min_bins": 8,
+    "tail_mismatch": "full common band including weak tail, phase mask applies only to phase alignment"
+  },
+  "phase_quality_diagnostic_limits": {
+    "extraction_resolution_phase_rms_rad": 0.01,
+    "extraction_resolution_aligned_complex_l2": 0.01,
+    "preprocessing_phase_rms_rad": 0.002,
+    "preprocessing_aligned_complex_l2": 0.002,
+    "interpretation": "preregistered sensitivity thresholds, not rigorous error bounds; every case reported whether passing or failing"
+  },
+  "overlap": {
+    "definition": "absolute integral conj(candidate)*reference*exp(-2pi*i*f*time)/PSD divided by norms, maximum over time and constant phase",
+    "time_bounds_M": [
+      -200.0,
+      200.0
+    ],
+    "coarse_step_max_M": "1/(8*bandwidth)",
+    "require_interior_maximum": true,
+    "psd": "public LALSimulation SimNoisePSDaLIGOZeroDetHighPower",
+    "total_masses_msun": [
+      20.0,
+      60.0,
+      120.0
+    ],
+    "minimum_frequency_hz": 20.0,
+    "interpretation": "single-mode ringdown-band-only mismatch, not full detector waveform mismatch"
+  },
+  "lal": {
+    "api": "SimIMRPhenomXHMFrequencySequenceOneMode",
+    "mode": [
+      3,
+      -3
+    ],
+    "release": 122022,
+    "chi1": 0.0,
+    "chi2": 0.0,
+    "distance_mpc": 100.0,
+    "phi_ref": 0.0,
+    "f_ref_hz": 20.0,
+    "role": "post-freeze validation only; no LAL outputs or coefficients used to fit"
+  },
+  "calibration_policy": "existing amplitude calibration remains frozen; all primary cases remain holdouts; no future fit of these data without explicit new split",
+  "failure_policy": "record failures and preserve selection; no case replacement or threshold changes from residuals; preserve original freeze if amendment needed"
+}

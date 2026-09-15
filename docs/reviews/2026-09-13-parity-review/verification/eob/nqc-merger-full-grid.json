@@ -1,0 +1,321 @@
+{
+  "provenance": "Published attach_seobnrv4_22 called directly with paired public postpeak state/time/base mode/base frequency and full binary output grid. No manual phase/amplitude assembly, fitting, or shifts.",
+  "script_sha256": "09aac327a954935529abb1cf4a080a31e7b6514a5d049eaa6422b6d1d26f050b",
+  "coefficient_report_sha256": "e1006284ec953a8abe9202ab7c64e0985b3a2426c9adbe2100b5cece82cdaad5",
+  "dependency_sha256": {
+    "src/torchwave/approximants/eob/merger_ringdown.py": "0db678173690ce0f7918c6fef2d9cb4864bf55a8dae3a6f80a47d0563ac7237d",
+    "src/torchwave/approximants/eob/attachment.py": "097165aa7a6dcf87c5458fb26eade17a9c6bdf43c8e001c0929c1eb6ea2975e7"
+  },
+  "results": {
+    "dt_0p5M": {
+      "npz_sha256": "7bf76ba9b81515bdd22377a8569bc0ee8809717baeb43d7f887b71ecdeb9d88a",
+      "input_support_M": [
+        4853.0,
+        5003.828125
+      ],
+      "output_support_M": [
+        0.0,
+        5386.0
+      ],
+      "match_time_M": 4998.329341252617,
+      "coefficient_match_time_M": 4998.329341259881,
+      "match_consistency_delta_M": -7.264134183060378e-09,
+      "peak_time_M": 5002.7017207866975,
+      "orbital_peak_frequency": 0.1644151212452234,
+      "c0_relative_nearest_output_sample": 0.05989840633794,
+      "frequency_rms_postmatch": {
+        "count": 232,
+        "rms": 7.880723512559226e-05
+      },
+      "baseline_frequency_rms_postmatch": {
+        "count": 232,
+        "rms": 7.880723512558452e-05
+      },
+      "postmatch_count": 776,
+      "bands": {
+        "4998.329341:5003.828125": {
+          "count": 11,
+          "raw_l2": 0.005677948265493284,
+          "phase_rms": 0.005687004849718081,
+          "amplitude_ratio_mean": 0.9998787036306989
+        },
+        "4998.329341:5018.329341": {
+          "count": 40,
+          "raw_l2": 0.006781057985464825,
+          "phase_rms": 0.007191042004067265,
+          "amplitude_ratio_mean": 0.9993907586234648
+        },
+        "5018.329341:5048.329341": {
+          "count": 60,
+          "raw_l2": 0.008696380283819445,
+          "phase_rms": 0.008740167180976734,
+          "amplitude_ratio_mean": 0.998790894176966
+        },
+        "5048.329341:5098.329341": {
+          "count": 100,
+          "raw_l2": 0.008919041199004694,
+          "phase_rms": 0.008869266157199724,
+          "amplitude_ratio_mean": 0.9987767215959329
+        },
+        "4998.329341:5387.000000": {
+          "count": 776,
+          "raw_l2": 0.006953722570574086,
+          "phase_rms": 0.008577682844292023,
+          "amplitude_ratio_mean": 0.9988867062470662
+        }
+      },
+      "baseline_controls": {
+        "0.001": {
+          "c0_relative": 3.469446951953614e-18,
+          "amplitude_derivative": 1.0841946784800882e-07,
+          "target_amplitude_derivative": 0.0,
+          "frequency_from_phasor": 0.35482357172338724,
+          "target_frequency": 0.35482358618455545,
+          "frequency_error": -1.44611682073581e-08
+        },
+        "0.0001": {
+          "c0_relative": 3.469446951953614e-18,
+          "amplitude_derivative": 1.0845491171806998e-08,
+          "target_amplitude_derivative": 0.0,
+          "frequency_from_phasor": 0.35482358545243303,
+          "target_frequency": 0.35482358618455545,
+          "frequency_error": -7.321224182454955e-10
+        },
+        "1e-05": {
+          "c0_relative": 3.469446951953614e-18,
+          "amplitude_derivative": 1.0630385460785874e-09,
+          "target_amplitude_derivative": 0.0,
+          "frequency_from_phasor": 0.3548235770712446,
+          "target_frequency": 0.35482358618455545,
+          "frequency_error": -9.113310828201548e-09
+        }
+      },
+      "analytic_controls": {
+        "0.001": {
+          "c0_relative": 1.1102230246251565e-16,
+          "amplitude_derivative": -1.690169115775575e-07,
+          "target_amplitude_derivative": 0.0,
+          "frequency_from_phasor": 0.3548253531432872,
+          "target_frequency": 0.35482358618455545,
+          "frequency_error": 1.7669587317747926e-06
+        },
+        "0.0001": {
+          "c0_relative": 1.1102230246251565e-16,
+          "amplitude_derivative": -2.6715712975189376e-07,
+          "target_amplitude_derivative": 0.0,
+          "frequency_from_phasor": 0.35482537031472233,
+          "target_frequency": 0.35482358618455545,
+          "frequency_error": 1.7841301668819476e-06
+        },
+        "1e-05": {
+          "c0_relative": 1.1102230246251565e-16,
+          "amplitude_derivative": -2.7719493367328596e-07,
+          "target_amplitude_derivative": 0.0,
+          "frequency_from_phasor": 0.35482536228752876,
+          "target_frequency": 0.35482358618455545,
+          "frequency_error": 1.7761029733054379e-06
+        }
+      },
+      "baseline_bands": {
+        "full_postmatch": {
+          "count": 776,
+          "raw_l2": 0.007747114686634396,
+          "phase_rms": 0.009380420349308841,
+          "amplitude_ratio_mean": 0.9988867062470662
+        }
+      },
+      "baseline_coefficients": {
+        "amplitude": [
+          4.156503112933471,
+          -47.40869330451998,
+          57.246159652171535
+        ],
+        "phase": [
+          4.1465669321735446,
+          -22.05197516405
+        ]
+      },
+      "analytic_coefficients": {
+        "amplitude": [
+          4.143849453189575,
+          -47.29772800195967,
+          57.11968420328811
+        ],
+        "phase": [
+          4.143668631721487,
+          -22.022946114625555
+        ]
+      },
+      "remnant_mass_fraction": 0.9550166356939277,
+      "remnant_spin": 0.6638743502317225,
+      "sigma_real_imag": [
+        0.5417620995997733,
+        -0.08590498344727082
+      ],
+      "attachment_fields": [
+        "mode",
+        "corrected_inspiral",
+        "peak",
+        "match_time",
+        "match_phase",
+        "calibration"
+      ],
+      "excess_attached_energy_fraction": 9.003210800842871e-10
+    },
+    "dt_1_4096s": {
+      "npz_sha256": "eefe5b8f1380601f82232e78b0e3a8e1b8abf5a4f9cfb5208e28331b8f5685f9",
+      "input_support_M": [
+        4852.585750654147,
+        5003.795346216857
+      ],
+      "output_support_M": [
+        0.0,
+        5385.924082391007
+      ],
+      "match_time_M": 4998.3293284871625,
+      "coefficient_match_time_M": 4998.329328492726,
+      "match_consistency_delta_M": -5.563379090745002e-09,
+      "peak_time_M": 5002.701708021243,
+      "orbital_peak_frequency": 0.164415121047836,
+      "c0_relative_nearest_output_sample": 0.3488468729785202,
+      "frequency_rms_postmatch": {
+        "count": 116,
+        "rms": 1.541010208999284e-05
+      },
+      "baseline_frequency_rms_postmatch": {
+        "count": 116,
+        "rms": 1.5410102089998446e-05
+      },
+      "postmatch_count": 391,
+      "bands": {
+        "4998.329328:5003.795346": {
+          "count": 5,
+          "raw_l2": 0.00015272475744085998,
+          "phase_rms": 0.00015329261197395805,
+          "amplitude_ratio_mean": 1.000017472464826
+        },
+        "4998.329328:5018.329328": {
+          "count": 20,
+          "raw_l2": 0.0003708035266036472,
+          "phase_rms": 0.00042692037205235394,
+          "amplitude_ratio_mean": 1.000081759021346
+        },
+        "5018.329328:5048.329328": {
+          "count": 30,
+          "raw_l2": 0.0006248633891763898,
+          "phase_rms": 0.0006282106170264177,
+          "amplitude_ratio_mean": 1.0001592116355467
+        },
+        "5048.329328:5098.329328": {
+          "count": 50,
+          "raw_l2": 0.0006850112889725586,
+          "phase_rms": 0.0006931065514531802,
+          "amplitude_ratio_mean": 1.0001696449499553
+        },
+        "4998.329328:5386.924082": {
+          "count": 391,
+          "raw_l2": 0.00040328093035857274,
+          "phase_rms": 0.000646286996550611,
+          "amplitude_ratio_mean": 1.0001529001523881
+        }
+      },
+      "baseline_controls": {
+        "0.001": {
+          "c0_relative": 1.1107649934270853e-16,
+          "amplitude_derivative": 1.0842132747157507e-07,
+          "target_amplitude_derivative": 0.0,
+          "frequency_from_phasor": 0.3548235717139509,
+          "target_frequency": 0.35482358618455545,
+          "frequency_error": -1.4470604547955901e-08
+        },
+        "0.0001": {
+          "c0_relative": 1.1107649934270853e-16,
+          "amplitude_derivative": 1.0848266729368561e-08,
+          "target_amplitude_derivative": 0.0,
+          "frequency_from_phasor": 0.35482358545243337,
+          "target_frequency": 0.35482358618455545,
+          "frequency_error": -7.321220851785881e-10
+        },
+        "1e-05": {
+          "c0_relative": 1.1107649934270853e-16,
+          "amplitude_derivative": 1.1268763699945339e-09,
+          "target_amplitude_derivative": 0.0,
+          "frequency_from_phasor": 0.35482357708238454,
+          "target_frequency": 0.35482358618455545,
+          "frequency_error": -9.102170905883611e-09
+        }
+      },
+      "analytic_controls": {
+        "0.001": {
+          "c0_relative": 0.0,
+          "amplitude_derivative": -2.2053034398616944e-07,
+          "target_amplitude_derivative": 0.0,
+          "frequency_from_phasor": 0.35482570806438274,
+          "target_frequency": 0.35482358618455545,
+          "frequency_error": 2.1218798272881756e-06
+        },
+        "0.0001": {
+          "c0_relative": 0.0,
+          "amplitude_derivative": -3.1829427982188463e-07,
+          "target_amplitude_derivative": 0.0,
+          "frequency_from_phasor": 0.35482572258181305,
+          "target_frequency": 0.35482358618455545,
+          "frequency_error": 2.136397257601619e-06
+        },
+        "1e-05": {
+          "c0_relative": 0.0,
+          "amplitude_derivative": -3.2821800832749654e-07,
+          "target_amplitude_derivative": 0.0,
+          "frequency_from_phasor": 0.3548257142949295,
+          "target_frequency": 0.35482358618455545,
+          "frequency_error": 2.1281103740333762e-06
+        }
+      },
+      "baseline_bands": {
+        "full_postmatch": {
+          "count": 391,
+          "raw_l2": 0.00048669821481921963,
+          "phase_rms": 0.000740365099148681,
+          "amplitude_ratio_mean": 1.0001529001523883
+        }
+      },
+      "baseline_coefficients": {
+        "amplitude": [
+          4.146381008407277,
+          -47.320923205234095,
+          57.1466812704447
+        ],
+        "phase": [
+          4.144090055438559,
+          -22.028097657555648
+        ]
+      },
+      "analytic_coefficients": {
+        "amplitude": [
+          4.14389330134529,
+          -47.29807151424762,
+          57.1200534588455
+        ],
+        "phase": [
+          4.143685787152114,
+          -22.023059827443554
+        ]
+      },
+      "remnant_mass_fraction": 0.9550166356939277,
+      "remnant_spin": 0.6638743502317225,
+      "sigma_real_imag": [
+        0.5417620995997733,
+        -0.08590498344727082
+      ],
+      "attachment_fields": [
+        "mode",
+        "corrected_inspiral",
+        "peak",
+        "match_time",
+        "match_phase",
+        "calibration"
+      ],
+      "excess_attached_energy_fraction": 8.907496043157345e-10
+    }
+  }
+}

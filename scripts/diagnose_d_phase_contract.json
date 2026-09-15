@@ -1,0 +1,117 @@
+{
+  "api_signature": "(f: torch.Tensor, mass1: Union[float, torch.Tensor], mass2: Union[float, torch.Tensor], chi1: Union[float, torch.Tensor] = 0.0, chi2: Union[float, torch.Tensor] = 0.0, distance: Union[float, torch.Tensor] = 100.0, inclination: Union[float, torch.Tensor] = 0.0, phic: Union[float, torch.Tensor] = 0.0, tc: Union[float, torch.Tensor] = 0.0, f_ref: Union[float, torch.Tensor, NoneType] = None, window_type: Optional[str] = None, phasing_convention: Optional[str] = None, reference_frame: Optional[str] = None, return_phase: bool = False, *, remnant_provider=None) -> Union[Tuple[torch.Tensor, torch.Tensor], Tuple[torch.Tensor, torch.Tensor, torch.Tensor]]",
+  "slope_signature": "(mass1: Union[float, torch.Tensor], mass2: Union[float, torch.Tensor], chi1: Union[float, torch.Tensor] = 0.0, chi2: Union[float, torch.Tensor] = 0.0, *, remnant_provider=None) -> torch.Tensor",
+  "torch_version": "2.9.1",
+  "python": "3.13.9 | packaged by conda-forge | (main, Oct 22 2025, 23:38:18) [Clang 19.1.7 ]",
+  "native_module_path": "/Users/xangma/repos/torchwave/src/torchwave/approximants/imrphenomd.py",
+  "native_module_sha256": "d33cdf095aa5d7803e9c1d201e8c3599991227f9a904116860a36b469ac424f0",
+  "git_head": "890541e23db9431065e070c2b2f7fb4936e07898",
+  "published_reference": "https://arxiv.org/html/1508.07253",
+  "MTSUN_SI_used": 4.925490947641267e-06,
+  "cases": [
+    {
+      "case": {
+        "m1": 40.0,
+        "m2": 15.0,
+        "chi1": 0.3,
+        "chi2": -0.2,
+        "f_ref": 20.0
+      },
+      "n_frequency": 4095,
+      "f_max_hz": 738.2743510002115,
+      "total_mass_time_s": 0.0002709020021202697,
+      "slope_peak": 329.31013253798295,
+      "equation": "q=phi(f)-phi(f_ref)-slope_peak*(M f-M f_ref); p=q-2*phic+2*pi*f*tc; hp,hc carrier=exp(-i*p), including the tc rotation exp(-2*pi*i*f*tc)",
+      "max_abs_wrapped_rad": {
+        "phase_phic": 3.9968028886505635e-15,
+        "phase_tc": 2.2737367544323206e-13,
+        "polarization_phic": 4.084189805226793e-15,
+        "polarization_tc": 1.1379629946255355e-13,
+        "direct_carrier": 1.2309981644283944e-16,
+        "direct_nonzero_phic_tc": 1.1938939529009407e-16,
+        "inclination_0p8": 1.295839513554363e-16,
+        "wrong_exp_plus_i_q": 3.1412133104741566,
+        "wrong_no_tc_rotation": 3.1410308543381062
+      },
+      "exact_below_1e-10": true
+    },
+    {
+      "case": {
+        "m1": 55.0,
+        "m2": 11.0,
+        "chi1": -0.4,
+        "chi2": 0.2,
+        "f_ref": 27.0
+      },
+      "n_frequency": 4096,
+      "f_max_hz": 615.2286258335097,
+      "total_mass_time_s": 0.0003250824025443236,
+      "slope_peak": 425.2927810216258,
+      "equation": "q=phi(f)-phi(f_ref)-slope_peak*(M f-M f_ref); p=q-2*phic+2*pi*f*tc; hp,hc carrier=exp(-i*p), including the tc rotation exp(-2*pi*i*f*tc)",
+      "max_abs_wrapped_rad": {
+        "phase_phic": 1.3322676295501878e-15,
+        "phase_tc": 2.2737367544323206e-13,
+        "polarization_phic": 1.4731504922900884e-15,
+        "polarization_tc": 1.1375267930848654e-13,
+        "direct_carrier": 1.6893477553867633e-16,
+        "direct_nonzero_phic_tc": 1.7952355675235146e-16,
+        "inclination_0p8": 1.3506166300457554e-16,
+        "wrong_exp_plus_i_q": 3.141184901120057,
+        "wrong_no_tc_rotation": 3.1401914354124343
+      },
+      "exact_below_1e-10": true
+    },
+    {
+      "case": {
+        "m1": 32.0,
+        "m2": 18.0,
+        "chi1": -0.6,
+        "chi2": 0.45,
+        "f_ref": 25.0
+      },
+      "n_frequency": 4096,
+      "f_max_hz": 812.1017861002326,
+      "total_mass_time_s": 0.00024627454738206334,
+      "slope_peak": 263.0772715513437,
+      "equation": "q=phi(f)-phi(f_ref)-slope_peak*(M f-M f_ref); p=q-2*phic+2*pi*f*tc; hp,hc carrier=exp(-i*p), including the tc rotation exp(-2*pi*i*f*tc)",
+      "max_abs_wrapped_rad": {
+        "phase_phic": 3.1086244689504383e-15,
+        "phase_tc": 2.2737367544323206e-13,
+        "polarization_phic": 3.261298043111776e-15,
+        "polarization_tc": 1.1385641654920985e-13,
+        "direct_carrier": 1.3855519939229995e-16,
+        "direct_nonzero_phic_tc": 1.3536106458797383e-16,
+        "inclination_0p8": 1.4561269059073412e-16,
+        "wrong_exp_plus_i_q": 3.138881038407537,
+        "wrong_no_tc_rotation": 3.1413981083810913
+      },
+      "exact_below_1e-10": true
+    },
+    {
+      "case": {
+        "m1": 70.0,
+        "m2": 8.0,
+        "chi1": 0.1,
+        "chi2": -0.5,
+        "f_ref": 30.0
+      },
+      "n_frequency": 4096,
+      "f_max_hz": 520.5780680129697,
+      "total_mass_time_s": 0.0003841882939160188,
+      "slope_peak": 670.2458469576919,
+      "equation": "q=phi(f)-phi(f_ref)-slope_peak*(M f-M f_ref); p=q-2*phic+2*pi*f*tc; hp,hc carrier=exp(-i*p), including the tc rotation exp(-2*pi*i*f*tc)",
+      "max_abs_wrapped_rad": {
+        "phase_phic": 3.1086244689504383e-15,
+        "phase_tc": 2.2737367544323206e-13,
+        "polarization_phic": 3.289517413479932e-15,
+        "polarization_tc": 1.1382652629671418e-13,
+        "direct_carrier": 1.3655669253571447e-16,
+        "direct_nonzero_phic_tc": 1.7909242039742043e-16,
+        "inclination_0p8": 1.6469736695265229e-16,
+        "wrong_exp_plus_i_q": 3.141198258382519,
+        "wrong_no_tc_rotation": 3.1414150353085377
+      },
+      "exact_below_1e-10": true
+    }
+  ]
+}

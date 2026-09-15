@@ -1,0 +1,21 @@
+{
+  "passed": true,
+  "checks": [
+    "accept unchanged hash-locked prepared input",
+    "reject changed prepared input",
+    "reject symlink outside campaign",
+    "reject completed-input traversal",
+    "reject plan changed after launch",
+    "reject plan changed while running",
+    "accept valid completion",
+    "reject exit_code",
+    "reject accepted_exit",
+    "reject watchdog_reason",
+    "reject oom",
+    "reject oom_kill",
+    "reject oom_group_kill",
+    "all helper syntax checks"
+  ],
+  "scope": "isolated v2 recovery validation; actual prepared option checks archived separately",
+  "driver_sha256": "d486ee5345ce7620cd282a2492757a224a64537181a89807ce82106f9e63f30c"
+}

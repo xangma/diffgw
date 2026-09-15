@@ -1,0 +1,60 @@
+{
+  "host": "len",
+  "pid": 2211621,
+  "cwd": "/home/xangma/simulations/torchwave-nr/2026-09-12-pilot",
+  "started_utc": "2026-09-13T00:49:26.995284+00:00",
+  "status": "complete",
+  "completed": [
+    {
+      "stage": "p11-preparation-v2",
+      "reused": true,
+      "wall_seconds": 1.5174819889944047,
+      "metrics_sha256": "539d449604b9615e59d0e7db359cf51fa86f5bb64da24a2dc9a85bca0d600588"
+    },
+    {
+      "stage": "p11-solve-32pe",
+      "wall_seconds": 7672.851980903884,
+      "metrics_sha256": "eca123f105251103c5b88ec84a32c602ebac6aa8a8f4730885e2c2dc4ae6333d"
+    },
+    {
+      "stage": "p11-comparison",
+      "wall_seconds": 0.3663841600064188,
+      "metrics_sha256": "38c58c0c4ce06661d04cfcb65380a06f01cb37c7d1bcfaead07c99d02ac83fe2"
+    },
+    {
+      "stage": "controlled-p9-lev0-preparation-v2",
+      "reused": true,
+      "wall_seconds": 1.3167074259836227,
+      "metrics_sha256": "c2aee7e39072a15c540d84758e0baf78c2cdf9cc363e7da5b8d4a07e1b3914c8"
+    },
+    {
+      "stage": "controlled-p9-lev0-checkpoint",
+      "wall_seconds": 793.4418030269444,
+      "metrics_sha256": "91697519814e2031003f487a204be6900711278b92344220595481e9033761dc"
+    },
+    {
+      "stage": "controlled-p9-lev0-restart-preparation",
+      "wall_seconds": 10.165467528859153,
+      "metrics_sha256": "f4c331fb5f95f327063c1c0d997e8e070c64aaf81e5ec6c1828a8dcf6fc374f5"
+    },
+    {
+      "stage": "controlled-p9-lev0-restart",
+      "wall_seconds": 596.5849499250762,
+      "metrics_sha256": "2526830c2eaecd0121a29140df66a8c8f8c217c0b70067754143486a764332aa"
+    },
+    {
+      "stage": "controlled-p9-lev0-validation",
+      "wall_seconds": 11.369888611137867,
+      "metrics_sha256": "a89b746565858733269e4487c3c7f7ba5c506bd61f13199f618e0eb3ffa2993c"
+    }
+  ],
+  "plan_sha256": "7c0e2279009b420602485768e5d46d4802dd7c252b98aca6dcefcc2c76827b6e",
+  "current_owned_service": null,
+  "stage": "finite_checks_complete",
+  "updated_utc": "2026-09-13T03:22:39.914509+00:00",
+  "command": [
+    "python",
+    "/campaign/scripts/validate-controlled-bbh-smoke-32pe.py"
+  ],
+  "scope": "P9/P11 initial-data check and 1M binary restart only; longer evolution remains unlaunched"
+}

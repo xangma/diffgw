@@ -1,0 +1,23 @@
+{
+  "capture_sha256": "ca496cb98538db54533e12e747bba839c9e3d05c9188b9c962b8a043750753cd",
+  "indexing": {
+    "fine_indices": "arange(0,len(attached),refinement_factor)",
+    "native_indices": "restart_index+fine_indices//refinement_factor",
+    "refinement_factor": 32,
+    "restart_index": 9706,
+    "samples_compared": 591
+  },
+  "inputs": {
+    "/Users/xangma/repos/torchwave/docs/reviews/2026-09-13-parity-review/verification/eob-adaptive-full20-clean/native-full20-controller-clean.npz": "c868f8136d21d5cbfc90850ea20f98c172a27c46dd227fac5ad2b09f1d2d84fa",
+    "/Users/xangma/repos/torchwave/docs/reviews/2026-09-13-parity-review/verification/eob-fine-stage-replay-clean/fine-attachment-intermediates.npz": "65dcf7c08d94ab24cc2b0bae9823313181d85a0c961c2dd0f9d9cae12941296b",
+    "/tmp/torchwave-public-eob-dt_0p5M.npz": "7bf76ba9b81515bdd22377a8569bc0ee8809717baeb43d7f887b71ecdeb9d88a"
+  },
+  "metrics": {
+    "attached_vs_cached_native_relative_l2": 0.0,
+    "attached_vs_public_relative_l2": 6.932790459280097e-05,
+    "cached_native_vs_public_relative_l2": 6.932790459280097e-05
+  },
+  "provenance": "Direct returned attachment.fine; exact native-grid indexing, no interpolation/alignment/fitting.",
+  "scale_geometric_to_100mpc": 2.392707920793921e-20,
+  "script_sha256": "0547f689ab95aa21d0d51be35858f88615c42810fd35923a47aa9c1512b41489"
+}

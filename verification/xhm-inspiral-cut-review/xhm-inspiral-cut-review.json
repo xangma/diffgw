@@ -1,0 +1,3251 @@
+{
+  "paper": "arXiv:2001.10914v2",
+  "purpose": "bounded clean-room inspiral assembly with explicit XHM collocations",
+  "math_fixes": {
+    "provider_spin_input": "chiPNHat = (chi_eff - 38*eta*(chi1+chi2)/113)/(1 - 76*eta/113)",
+    "provider_collocation_order": "abs(reverse(amp_insp1, amp_insp2, amp_insp3)) -> [.5,.75,1.0]*f_ins",
+    "cut_33": "final -5/6 chi_eff term is linear",
+    "cut_21": "final -5/6 chi_eff term is squared",
+    "cut_32_printed": "abs(chi_eff), with epsilon=f_rd_32/f_rd_22 on the MECO term only",
+    "cut_32_compatibility": "abs(chi_eff), with epsilon=f_rd_32/f_rd_22 multiplying the complete MECO-to-ISCO parenthesis",
+    "pn_44": "compatibility signs reverse printed v2 and v4 only",
+    "pn_32": "compatibility signs reverse printed v2, v3, and v4 only",
+    "spa_21": "full 3PN TaylorT4 v6 recovered by reciprocal-series inversion of uncalibrated TaylorF2 phase coefficients"
+  },
+  "release_controls": {
+    "installed_default_release_expected": 122022,
+    "installed_default_release_observed": 122022,
+    "installed_default_inspiral_amp_fits_version_observed": 122018,
+    "installed_default_inspiral_amp_variant_observed": 3,
+    "author_release": 122019,
+    "author_inspiral_amp_fits_version": 122018,
+    "release_public_setter": "SimInspiralWaveformParamsInsertPhenomXHMReleaseVersion",
+    "inspiral_amp_fits_public_setter": "SimInspiralWaveformParamsInsertPhenomXHMInspiralAmpFitsVersion",
+    "author_control_usage": "only explicit public setter control; clean math and collocations are not routed into production"
+  },
+  "current_default_residuals": {
+    "meaning": "row fields clean_vs_public_physical_scale_acceptance_like_relative_l2 and default_vs_author_release_physical_scale_relative_l2",
+    "default_release": 122022,
+    "calibration_interpretation": "descriptive current-default comparisons; no fit constants or residuals are used to alter math",
+    "strict_parity_claim": false,
+    "author_release_rows_are": "explicit old-release diagnostic controls, never current-default parity"
+  },
+  "calibration_blockers": [
+    "Current default release 122022 uses changed fit data, cuts, intermediate behavior, and collocation normalization; old-provider values are not interchangeable.",
+    "The 33 provider calibration differs across the old-release control and remains an explicit blocker.",
+    "The current-default all-new amplitude calibration is unresolved.",
+    "Mode 32 dynamic ringdown-amplitude veto requires a ringdown value outside this inspiral-only helper and is unsupported here."
+  ],
+  "scope": {
+    "modes": [
+      [
+        2,
+        1
+      ],
+      [
+        3,
+        2
+      ],
+      [
+        3,
+        3
+      ],
+      [
+        4,
+        4
+      ]
+    ],
+    "mass_ratio_domain": "q < 20",
+    "mode_21_pn_branch": "non-reexpanded SPA expression, published for q < 40",
+    "mode_32_and_44_pn_branch": "re-expanded Appendix E expressions with named compatibility sign variants",
+    "mode_33_pn_branch": "re-expanded Appendix E printed expression",
+    "production_routing": "none; diagnostic and helper only"
+  },
+  "equations": [
+    "Sec. II.3 Eq. (18): chiPN = chi_eff - (38*eta/113)*(chi1+chi2) for inspiral amplitude fits",
+    "Sec. II.3 Eq. (19): Shat = (m1^2 chi1 + m2^2 chi2)/(m1^2+m2^2) for merger/ringdown fits",
+    "Sec. IV.A.1 Eq. (fcutIns) and Table deltaInsp",
+    "Sec. IV.A.1 Eq. (AlmScaling): A22^0 = pi*sqrt(2*eta/3)*(pi*f*M)^(-7/6) in geometric units",
+    "Sec. IV.A.1 Eq. (insp_amp): H_lm = |A_lm^PN|/A22^0 + alpha*u^(7/3) + beta*u^(8/3) + gamma*u^(9/3)",
+    "Sec. IV.A.1 collocations [.5 fIns, .75 fIns, fIns] and highest-order zero padding after vetoes",
+    "Appendix E E10 (21), E11 (33), E12 (32), E14 (44), E15 (43); this diagnostic evaluates 21, 32, 33, 44",
+    "Appendix E E3 non-reexpanded (2,1) SPA branch for q < 40"
+  ],
+  "primary_source_scope": {
+    "tex": "/tmp/gq2001/hmc2.tex lines 572-673 and Appendix E",
+    "rendered_paper": "/tmp/torchwave-paper-assets/garcia-quiros-2020-imrphenomxhm-v2.pdf",
+    "table_note": "The printed 33 deltaIns term is linear -5/6 chi_eff; it is transcribed literally."
+  },
+  "normalization": {
+    "provider_and_clean_collocations": "dimensionless H_lm values at [.5,.75,1]*f_ins",
+    "provider_common_h_to_geometric": "A_lm^geo = H_lm * pi*sqrt(2*eta/3)*(pi*f_hz*M_seconds)^(-7/6)",
+    "clean_normalized_return": "dimensionless H_lm amplitude",
+    "clean_physical_return": "(M^2/D)*pi*sqrt(2*eta/3)*(pi*f*M)^(-7/6)*H_lm, Fourier-domain strain/Hz",
+    "distance_mpc": 500.0,
+    "distance_m": 1.5428387907456836e+25,
+    "distance_seconds": 5.14635625271695e+16,
+    "physical_scale_metrics": "physical-scale acceptance-like; M^2/D is retained",
+    "norm_normalized_metrics": "shape-only; L2 normalization intentionally removes scale"
+  },
+  "collocation_solver": {
+    "fractions": [
+      0.5,
+      0.75,
+      1.0
+    ],
+    "powers": [
+      2.3333333333333335,
+      2.6666666666666665,
+      3.0
+    ],
+    "removed_node_rule": "each removed node zero-pads one highest pseudo-PN coefficient",
+    "21_geometric_threshold": "|h21| < 0.2 in geometric units; clean assembly uses provider H_lm converted with A22^0",
+    "public_oracle_role": "public geometric amplitudes are computed separately and used only for a component-only veto comparison"
+  },
+  "vetoes": {
+    "21": "q < 8: remove geometric |h21| values below 0.2; at every q remove middle node for a nonmonotonic geometric-amplitude sequence",
+    "33": "1 < q < 1.2, chi1 < -0.1, chi2 > 0: remove final node",
+    "44": "no veto printed in cited section",
+    "32": "clean cut and compatibility polynomial are implemented; q<20 parameter-region and nonmonotonic-node checks are recorded; dynamic ringdown-amplitude veto is out of this inspiral-only diagnostic scope"
+  },
+  "opaque_provider": {
+    "output_interpretation": "amp_insp1/2/3 are the three fitted hybrid H_lm collocation values described in Sec. IV.A.1",
+    "formal_spin_argument_name": "S",
+    "diagnostic_spin_argument_choice": "normalized chiPNHat from the sanitized earlier-release contract, passed through the provider's formal S argument",
+    "formal_spin_contract_status": "the provider's formal S name remains opaque; the sanitized earlier-release contract fixes the normalized input",
+    "node_order_used": "abs([amp_insp3,amp_insp2,amp_insp1]) assigned to [0.5,0.75,1.0]*f_ins",
+    "order_status": "sanitized contract choice; provider implementation and fit bodies were not inspected",
+    "no_coefficient_inference": true,
+    "no_source_body_inspection": true,
+    "signatures": {
+      "compute_spin_variables": "(eta: torch.Tensor, chi1: torch.Tensor, chi2: torch.Tensor)",
+      "amp_insp1_21": "(eta: torch.Tensor, chi1: torch.Tensor, chi2: torch.Tensor, S: torch.Tensor) -> torch.Tensor",
+      "amp_insp2_21": "(eta: torch.Tensor, chi1: torch.Tensor, chi2: torch.Tensor, S: torch.Tensor) -> torch.Tensor",
+      "amp_insp3_21": "(eta: torch.Tensor, chi1: torch.Tensor, chi2: torch.Tensor, S: torch.Tensor) -> torch.Tensor",
+      "amp_insp1_32": "(eta: torch.Tensor, chi1: torch.Tensor, chi2: torch.Tensor, S: torch.Tensor) -> torch.Tensor",
+      "amp_insp2_32": "(eta: torch.Tensor, chi1: torch.Tensor, chi2: torch.Tensor, S: torch.Tensor) -> torch.Tensor",
+      "amp_insp3_32": "(eta: torch.Tensor, chi1: torch.Tensor, chi2: torch.Tensor, S: torch.Tensor) -> torch.Tensor",
+      "amp_insp1_33": "(eta: torch.Tensor, chi1: torch.Tensor, chi2: torch.Tensor, S: torch.Tensor) -> torch.Tensor",
+      "amp_insp2_33": "(eta: torch.Tensor, chi1: torch.Tensor, chi2: torch.Tensor, S: torch.Tensor) -> torch.Tensor",
+      "amp_insp3_33": "(eta: torch.Tensor, chi1: torch.Tensor, chi2: torch.Tensor, S: torch.Tensor) -> torch.Tensor",
+      "amp_insp1_44": "(eta: torch.Tensor, chi1: torch.Tensor, chi2: torch.Tensor, S: torch.Tensor) -> torch.Tensor",
+      "amp_insp2_44": "(eta: torch.Tensor, chi1: torch.Tensor, chi2: torch.Tensor, S: torch.Tensor) -> torch.Tensor",
+      "amp_insp3_44": "(eta: torch.Tensor, chi1: torch.Tensor, chi2: torch.Tensor, S: torch.Tensor) -> torch.Tensor",
+      "fit_f_meco": "(eta: torch.Tensor, chi1: torch.Tensor, chi2: torch.Tensor) -> torch.Tensor",
+      "fit_final_spin": "(eta: torch.Tensor, chi1: torch.Tensor, chi2: torch.Tensor) -> torch.Tensor"
+    }
+  },
+  "input_contract_investigation": {
+    "published_inspiral_spin_rule": "XHM Eq. (18) numerator with the sanitized earlier-provider normalization",
+    "selected_inspiral_spin_input": "chiPNHat = (chi_eff - 38*eta*(chi1+chi2)/113)/(1 - 76*eta/113)",
+    "selected_collocation_mapping": "amp_insp1/2/3 magnitudes -> [1.0,0.75,0.5]*f_ins, then reverse to solver nodes [0.5,0.75,1.0]*f_ins",
+    "black_box_observation": "provider raw values are retained signed; clean solver values use their absolute reversed order",
+    "provider_formal_argument_note": "the callable's formal S name remains opaque; this diagnostic passes the contractually specified normalized chiPNHat",
+    "calibration_precision_interpretation": "corrected final-spin, chiPNHat, ordering, and normalization inputs are prerequisites; current-release calibration differences remain blocked",
+    "clean_room_basis": "public equations, public API signatures, and black-box numerical behavior only; no provider fit bodies or external implementation were inspected"
+  },
+  "cut_frequency_inputs": {
+    "f_meco": "opaque XASParameterFits.fit_f_meco(eta,chi1,chi2), recorded as dimensionless M*f22",
+    "final_spin": "opaque XASParameterFits.fit_final_spin(eta,chi1,chi2), recorded as chi_f",
+    "f_isco": "clean equatorial Kerr ISCO formula evaluated at the XAS final-spin chi_f, as specified by XAS Fig. 1",
+    "f_rd_32_and_f_rd_22": "opaque XHMParameterFits.qnm_fring_32/22(final_spin), used only for the explicit mode-32 epsilon ratio",
+    "mode_32_cut_selection": "release-compatibility for clean reconstruction; printed-paper retained in each row as a control",
+    "frequency_grid": "max(20 Hz, [0.50,0.75,0.90,0.95]*f_ins), unique values strictly below each mode f_ins"
+  },
+  "baseline_contracts": {
+    "public": "lalsimulation.SimIMRPhenomXHMFrequencySequenceOneMode(..., distance_m, ...)->COMPLEX16FrequencySeries",
+    "public_units": "distance-corrected physical Fourier-domain strain/Hz",
+    "native": "TorchWave IMRPhenomXHM(..., return_unprojected_modes=True), current production baseline only"
+  },
+  "cases": [
+    {
+      "label": "A40_15",
+      "m1": 40.0,
+      "m2": 15.0,
+      "chi1": 0.3,
+      "chi2": -0.2
+    },
+    {
+      "label": "B55_11",
+      "m1": 55.0,
+      "m2": 11.0,
+      "chi1": -0.4,
+      "chi2": 0.2
+    },
+    {
+      "label": "C27_16",
+      "m1": 27.0,
+      "m2": 16.0,
+      "chi1": -0.25,
+      "chi2": 0.15
+    },
+    {
+      "label": "D35_20",
+      "m1": 35.0,
+      "m2": 20.0,
+      "chi1": 0.2,
+      "chi2": 0.1
+    },
+    {
+      "label": "fresh32_18",
+      "m1": 32.0,
+      "m2": 18.0,
+      "chi1": -0.6,
+      "chi2": 0.45
+    }
+  ],
+  "rows": [
+    {
+      "case": "A40_15",
+      "mode": [
+        2,
+        1
+      ],
+      "m1_msun": 40.0,
+      "m2_msun": 15.0,
+      "q": 2.6666666666666665,
+      "eta": 0.19834710743801653,
+      "chi1_aligned": 0.3,
+      "chi2_aligned": -0.2,
+      "chi_eff_mass_weighted": 0.16363636363636364,
+      "chi_pn_raw_inspiral_fit_numerator": 0.1569662839172091,
+      "chi_pn_inspiral_fit_input_normalized": 0.1811292092159676,
+      "chi_pn_normalization_denominator": 0.8665984056169093,
+      "spin_variables_delta_x1_x2_S": [
+        0.45454545454545453,
+        0.7272727272727273,
+        0.2727272727272727,
+        0.23835616438356166
+      ],
+      "S_hat_available_but_not_passed_to_inspiral_fit": 0.23835616438356166,
+      "final_spin_chi_f_from_xas_fit": 0.6792822582610815,
+      "public_default_release_observed": 122022,
+      "public_author_release_control": 122019,
+      "public_default_row_role": "current-installed-default descriptive observation",
+      "author_release_row_role": "explicit old-release diagnostic control",
+      "strict_current_release_parity_claim": false,
+      "clean_collocation_provenance": "earlier-release compatibility provider; not current-default calibration",
+      "f_meco_22_dimensionless_Mf": 0.023226189055280816,
+      "f_isco_22_dimensionless_Mf": 0.044270666671678637,
+      "f_isco_22_dimensionless_Mf_final_spin": 0.044270666671678637,
+      "f_rd_32_dimensionless_Mf": null,
+      "f_rd_22_dimensionless_Mf": null,
+      "f_rd_32_over_f_rd_22": null,
+      "cut_frequency_variant": "printed-paper",
+      "f_ins_dimensionless_Mf_printed_control": 0.018865351964726065,
+      "f_ins_dimensionless_Mf": 0.018865351964726065,
+      "f_ins_hz": 69.63902746038252,
+      "frequency_hz": [
+        34.81951373019126,
+        52.22927059528689,
+        62.67512471434427,
+        66.1570760873634
+      ],
+      "frequency_as_fraction_of_f_ins": [
+        0.5,
+        0.75,
+        0.9,
+        0.95
+      ],
+      "collocation_frequency_hz": [
+        34.81951373019126,
+        52.22927059528689,
+        69.63902746038252
+      ],
+      "frequency_support_strictly_below_cut": true,
+      "collocation_endpoint_allowed_by_support_check": true,
+      "provider_amp_insp1_2_3_raw": [
+        0.029438649154944034,
+        0.02610275825212732,
+        0.02407462212704724
+      ],
+      "provider_collocation_values_H_lm": [
+        0.02407462212704724,
+        0.02610275825212732,
+        0.029438649154944034
+      ],
+      "provider_collocation_order_for_nodes": "[amp_insp3, amp_insp2, amp_insp1] -> [0.5, 0.75, 1.0]*f_ins",
+      "geometric_veto_amplitudes_from_provider_common_H": [
+        1.6683778066756954,
+        1.1271495029800465,
+        0.908764055558416
+      ],
+      "geometric_veto_amplitudes_from_public_output": [
+        1.672178259547004,
+        1.1482676868482213,
+        0.9194568708948202
+      ],
+      "geometric_veto_amplitudes_from_author_release_output": [
+        1.6683778066756958,
+        1.1271495029800502,
+        0.9087640555707183
+      ],
+      "retained_collocation_nodes": [
+        0,
+        1,
+        2
+      ],
+      "oracle_retained_collocation_nodes_component_only": [
+        0,
+        1,
+        2
+      ],
+      "veto_support_nonempty": true,
+      "provider_oracle_veto_node_sets_match": true,
+      "pseudo_pn_coefficients_alpha_beta_gamma_zero_padded": [
+        -0.11017456552144779,
+        0.19280193631319298,
+        -0.08049795715059777
+      ],
+      "clean_physical_amplitude_units": "Fourier-domain strain/Hz (SI)",
+      "public_physical_amplitude_units": "Fourier-domain strain/Hz (SI)",
+      "author_release_physical_amplitude_units": "Fourier-domain strain/Hz (SI)",
+      "native_physical_amplitude_units": "Fourier-domain strain/Hz (SI)",
+      "clean_physical_l2": 3.459077943118136e-24,
+      "public_physical_l2": 3.496710276606607e-24,
+      "author_release_physical_l2": 3.459077943200123e-24,
+      "native_physical_l2": 3.6109833953476045e-24,
+      "clean_vs_public_physical_scale_acceptance_like_relative_l2": 0.01343326784373871,
+      "clean_vs_native_physical_scale_acceptance_like_relative_l2": 0.1555043339994289,
+      "clean_vs_author_release_physical_scale_relative_l2": 4.287115939673432e-11,
+      "default_vs_author_release_physical_scale_relative_l2": 0.0135794123105946,
+      "native_vs_public_physical_scale_acceptance_like_relative_l2": 0.16628590102620558,
+      "clean_vs_public_shape_only_normalized_relative_l2": 0.00808273487230493,
+      "clean_vs_native_shape_only_normalized_relative_l2": 0.15295794620521005,
+      "native_vs_public_shape_only_normalized_relative_l2": 0.16044239273018224,
+      "release_views": {
+        "current_default": {
+          "release": 122022,
+          "role": "current-installed-default descriptive observation",
+          "strict_parity_claim": false,
+          "clean_vs_public_physical_relative_l2": 0.01343326784373871,
+          "public_physical_l2": 3.496710276606607e-24
+        },
+        "author_release_control": {
+          "release": 122019,
+          "inspiral_amp_fits_version": 122018,
+          "role": "explicit old-release diagnostic control",
+          "strict_current_release_parity_claim": false,
+          "clean_vs_author_release_physical_relative_l2": 4.287115939673432e-11,
+          "author_release_physical_l2": 3.459077943200123e-24
+        }
+      },
+      "array_sha256": {
+        "frequency_hz": "0bc89da3b752a0a00141fad1391a152f943908b8e6318c09a184f44b9b8c9f65",
+        "collocation_frequency_hz": "2df7167f9943df5ebcf86867bcb29a7d228a9ef77422d1e7d830dcda1d38fcf4",
+        "provider_H_lm": "1cf8bc561dafdea0d4ab2a94df25e16828c21faebe4a262fab61fc2648ed0c4e",
+        "provider_amp_insp1_2_3_raw": "982b2a66c1e2ec277ad9832eb9d51ed3a6a7b34e695df174376c31bb8f990035",
+        "geometric_veto_amplitudes": "e56ccbdcca3e359d5a94996059eb1a11eda40d24f651909bbd65a85d19a5e8c8",
+        "oracle_geometric_veto_amplitudes": "9f5049eeac8c856c89a42e312c0e7b630427471f3dc4f901519ed7f6c0aee410",
+        "author_release_geometric_veto_amplitudes": "3466ece33fc3fb10e90e9d416dc6fb2b69de5638d041c8e18b335a7985f96408",
+        "clean_physical_amplitude": "e0d7002bfdfd5b2455ab28d39f250172d6f381ce87ca00c64f76a2916ade7bf0",
+        "public_complex_physical": "3564f3ec2923bf0906f425078b7616cdb78902518a2d11530f7cb6bb44bc7e98",
+        "public_physical_amplitude": "fb22db5673971d06282d814958655256cbf3a44dd4e8fa18f6040b7968da1e15",
+        "author_release_complex_physical": "c5b731ec819a693e778cccdbdaf45f8034504809a7bd157cf9b725f25b2cf97b",
+        "author_release_physical_amplitude": "de73ab7bd10ce2c9b0e3ff3209e481680c2ee58751893312cda084d3085de1eb",
+        "native_complex_physical": "49ebf984bafd36145a79ecc250734bbab46c734ab5a95753cd85e7a97e315b2b",
+        "native_physical_amplitude": "609e7044cd32808133c6bb22b54397dda54f026ce19410210bb0e3f76ea24285"
+      }
+    },
+    {
+      "case": "A40_15",
+      "mode": [
+        3,
+        2
+      ],
+      "m1_msun": 40.0,
+      "m2_msun": 15.0,
+      "q": 2.6666666666666665,
+      "eta": 0.19834710743801653,
+      "chi1_aligned": 0.3,
+      "chi2_aligned": -0.2,
+      "chi_eff_mass_weighted": 0.16363636363636364,
+      "chi_pn_raw_inspiral_fit_numerator": 0.1569662839172091,
+      "chi_pn_inspiral_fit_input_normalized": 0.1811292092159676,
+      "chi_pn_normalization_denominator": 0.8665984056169093,
+      "spin_variables_delta_x1_x2_S": [
+        0.45454545454545453,
+        0.7272727272727273,
+        0.2727272727272727,
+        0.23835616438356166
+      ],
+      "S_hat_available_but_not_passed_to_inspiral_fit": 0.23835616438356166,
+      "final_spin_chi_f_from_xas_fit": 0.6792822582610815,
+      "public_default_release_observed": 122022,
+      "public_author_release_control": 122019,
+      "public_default_row_role": "current-installed-default descriptive observation",
+      "author_release_row_role": "explicit old-release diagnostic control",
+      "strict_current_release_parity_claim": false,
+      "clean_collocation_provenance": "earlier-release compatibility provider; not current-default calibration",
+      "f_meco_22_dimensionless_Mf": 0.023226189055280816,
+      "f_isco_22_dimensionless_Mf": 0.044270666671678637,
+      "f_isco_22_dimensionless_Mf_final_spin": 0.044270666671678637,
+      "f_rd_32_dimensionless_Mf": 0.11950964606548495,
+      "f_rd_22_dimensionless_Mf": 0.08334844075032792,
+      "f_rd_32_over_f_rd_22": 1.4338558104941483,
+      "cut_frequency_variant": "release-compatibility",
+      "f_ins_dimensionless_Mf_printed_control": 0.04827710852378143,
+      "f_ins_dimensionless_Mf": 0.054773709853151505,
+      "f_ins_hz": 202.1901256707367,
+      "frequency_hz": [
+        101.09506283536835,
+        151.64259425305252,
+        181.97111310366304,
+        192.08061938719987
+      ],
+      "frequency_as_fraction_of_f_ins": [
+        0.5,
+        0.75,
+        0.9,
+        0.9500000000000001
+      ],
+      "collocation_frequency_hz": [
+        101.09506283536835,
+        151.64259425305252,
+        202.1901256707367
+      ],
+      "frequency_support_strictly_below_cut": true,
+      "collocation_endpoint_allowed_by_support_check": true,
+      "provider_amp_insp1_2_3_raw": [
+        0.0302357157502175,
+        0.0302357157502175,
+        0.02104130280936719
+      ],
+      "provider_collocation_values_H_lm": [
+        0.02104130280936719,
+        0.0302357157502175,
+        0.0302357157502175
+      ],
+      "provider_collocation_order_for_nodes": "[amp_insp3, amp_insp2, amp_insp1] -> [0.5, 0.75, 1.0]*f_ins",
+      "geometric_veto_amplitudes_from_provider_common_H": [
+        0.4204836360186631,
+        0.3764930158223641,
+        0.2691504218286934
+      ],
+      "geometric_veto_amplitudes_from_public_output": [
+        0.4107680788319573,
+        0.37397843787445234,
+        0.3704294982220778
+      ],
+      "geometric_veto_amplitudes_from_author_release_output": [
+        0.42048366020497424,
+        0.37649304466262107,
+        0.3743336431384002
+      ],
+      "retained_collocation_nodes": [
+        0,
+        1,
+        2
+      ],
+      "oracle_retained_collocation_nodes_component_only": [
+        0,
+        1,
+        2
+      ],
+      "veto_support_nonempty": true,
+      "provider_oracle_veto_node_sets_match": true,
+      "pseudo_pn_coefficients_alpha_beta_gamma_zero_padded": [
+        -0.588066625639132,
+        1.3243856148790227,
+        -0.7366406355294369
+      ],
+      "clean_physical_amplitude_units": "Fourier-domain strain/Hz (SI)",
+      "public_physical_amplitude_units": "Fourier-domain strain/Hz (SI)",
+      "author_release_physical_amplitude_units": "Fourier-domain strain/Hz (SI)",
+      "native_physical_amplitude_units": "Fourier-domain strain/Hz (SI)",
+      "clean_physical_l2": 1.02128978129366e-24,
+      "public_physical_l2": 1.0875968602308708e-24,
+      "author_release_physical_l2": 1.1011469562230161e-24,
+      "native_physical_l2": 1.2095815668139686e-24,
+      "clean_vs_public_physical_scale_acceptance_like_relative_l2": 0.11093150752442334,
+      "clean_vs_native_physical_scale_acceptance_like_relative_l2": 0.2891407547679868,
+      "clean_vs_author_release_physical_scale_relative_l2": 0.11446496254690385,
+      "default_vs_author_release_physical_scale_relative_l2": 0.014199818232008214,
+      "native_vs_public_physical_scale_acceptance_like_relative_l2": 0.38270384603245045,
+      "clean_vs_public_shape_only_normalized_relative_l2": 0.09563736056566824,
+      "clean_vs_native_shape_only_normalized_relative_l2": 0.26517180217557534,
+      "native_vs_public_shape_only_normalized_relative_l2": 0.3469589845815815,
+      "release_views": {
+        "current_default": {
+          "release": 122022,
+          "role": "current-installed-default descriptive observation",
+          "strict_parity_claim": false,
+          "clean_vs_public_physical_relative_l2": 0.11093150752442334,
+          "public_physical_l2": 1.0875968602308708e-24
+        },
+        "author_release_control": {
+          "release": 122019,
+          "inspiral_amp_fits_version": 122018,
+          "role": "explicit old-release diagnostic control",
+          "strict_current_release_parity_claim": false,
+          "clean_vs_author_release_physical_relative_l2": 0.11446496254690385,
+          "author_release_physical_l2": 1.1011469562230161e-24
+        }
+      },
+      "array_sha256": {
+        "frequency_hz": "265b23b7afaecd30398a9d7cb7fd3c9c865782e516a750d1a3c4eadd304bb381",
+        "collocation_frequency_hz": "54c6f4ba779f4503634f02b649daf7392906e2bd6fa77ff476db11f1bf27f906",
+        "provider_H_lm": "aa647e24ec8c5e3d4504a4b2c4c002b02aa60185ba6e1ae1bb6f10f2355efaa4",
+        "provider_amp_insp1_2_3_raw": "b4a7761792cb8b744346283a2086c285a177c8037a7835f74da4594d3f32f4ae",
+        "geometric_veto_amplitudes": "67bdcd506228d0ad51ef58fd5fe00318f1d576f66f60cb2efb7c024525d952ea",
+        "oracle_geometric_veto_amplitudes": "f6399547d4ea28e3fc5fd959051f6aaf5ea7f553e8b990cd27852b631c71207e",
+        "author_release_geometric_veto_amplitudes": "68a2c2a39389207033e3d592be4185cee853311f36e4ff05b5eba05a4bc5c656",
+        "clean_physical_amplitude": "e6a1e262d843643b3a0623537525f556a756c1ecc2acb282713bafe836b0b4bd",
+        "public_complex_physical": "77c0adf3e8c6ec7e37609d1e72ae0f42e563df5ae52bf8f0362a936f7fdbfd5d",
+        "public_physical_amplitude": "1d8980f6d6fe74d4f8f85ba26d735662f2cf14ec1ba1f679fd662b3e52e76105",
+        "author_release_complex_physical": "dbc63ab929eb6af6a429ef5a3fc0d9ca4a8092eed456eb5ee7dd47e02226ad9d",
+        "author_release_physical_amplitude": "d0c94abfde1c75ef1f9826da0c89edbf6245fb074d36662a329f12f47297216e",
+        "native_complex_physical": "9095fcd74521abc2f5de916f2d6329721f49122a3cb17a2bbe1a7e1eeb20b28f",
+        "native_physical_amplitude": "8e67c6555020c511614446ea9347210c2cea62af9dbfbde67783d6a249425657"
+      }
+    },
+    {
+      "case": "A40_15",
+      "mode": [
+        3,
+        3
+      ],
+      "m1_msun": 40.0,
+      "m2_msun": 15.0,
+      "q": 2.6666666666666665,
+      "eta": 0.19834710743801653,
+      "chi1_aligned": 0.3,
+      "chi2_aligned": -0.2,
+      "chi_eff_mass_weighted": 0.16363636363636364,
+      "chi_pn_raw_inspiral_fit_numerator": 0.1569662839172091,
+      "chi_pn_inspiral_fit_input_normalized": 0.1811292092159676,
+      "chi_pn_normalization_denominator": 0.8665984056169093,
+      "spin_variables_delta_x1_x2_S": [
+        0.45454545454545453,
+        0.7272727272727273,
+        0.2727272727272727,
+        0.23835616438356166
+      ],
+      "S_hat_available_but_not_passed_to_inspiral_fit": 0.23835616438356166,
+      "final_spin_chi_f_from_xas_fit": 0.6792822582610815,
+      "public_default_release_observed": 122022,
+      "public_author_release_control": 122019,
+      "public_default_row_role": "current-installed-default descriptive observation",
+      "author_release_row_role": "explicit old-release diagnostic control",
+      "strict_current_release_parity_claim": false,
+      "clean_collocation_provenance": "earlier-release compatibility provider; not current-default calibration",
+      "f_meco_22_dimensionless_Mf": 0.023226189055280816,
+      "f_isco_22_dimensionless_Mf": 0.044270666671678637,
+      "f_isco_22_dimensionless_Mf_final_spin": 0.044270666671678637,
+      "f_rd_32_dimensionless_Mf": null,
+      "f_rd_22_dimensionless_Mf": null,
+      "f_rd_32_over_f_rd_22": null,
+      "cut_frequency_variant": "printed-paper",
+      "f_ins_dimensionless_Mf_printed_control": 0.052995884930050634,
+      "f_ins_dimensionless_Mf": 0.052995884930050634,
+      "f_ins_hz": 195.6275129577026,
+      "frequency_hz": [
+        97.8137564788513,
+        146.72063471827695,
+        176.06476166193235,
+        185.84613730981746
+      ],
+      "frequency_as_fraction_of_f_ins": [
+        0.5,
+        0.75,
+        0.9,
+        0.95
+      ],
+      "collocation_frequency_hz": [
+        97.8137564788513,
+        146.72063471827695,
+        195.6275129577026
+      ],
+      "frequency_support_strictly_below_cut": true,
+      "collocation_endpoint_allowed_by_support_check": true,
+      "provider_amp_insp1_2_3_raw": [
+        0.15785138068436563,
+        0.1432422519750986,
+        0.1322037145521201
+      ],
+      "provider_collocation_values_H_lm": [
+        0.1322037145521201,
+        0.1432422519750986,
+        0.15785138068436563
+      ],
+      "provider_collocation_order_for_nodes": "[amp_insp3, amp_insp2, amp_insp1] -> [0.5, 0.75, 1.0]*f_ins",
+      "geometric_veto_amplitudes_from_provider_common_H": [
+        2.745607633296558,
+        1.8536432485878012,
+        1.4602981637679457
+      ],
+      "geometric_veto_amplitudes_from_public_output": [
+        2.7687586903867296,
+        1.8240157765016634,
+        1.4789331280078237
+      ],
+      "geometric_veto_amplitudes_from_author_release_output": [
+        2.7533687352452665,
+        1.8444239061843501,
+        1.467090461337737
+      ],
+      "retained_collocation_nodes": [
+        0,
+        1,
+        2
+      ],
+      "oracle_retained_collocation_nodes_component_only": [
+        0,
+        1,
+        2
+      ],
+      "veto_support_nonempty": true,
+      "provider_oracle_veto_node_sets_match": true,
+      "pseudo_pn_coefficients_alpha_beta_gamma_zero_padded": [
+        -0.38970174781231554,
+        0.7954607002923125,
+        -0.36904373357999537
+      ],
+      "clean_physical_amplitude_units": "Fourier-domain strain/Hz (SI)",
+      "public_physical_amplitude_units": "Fourier-domain strain/Hz (SI)",
+      "author_release_physical_amplitude_units": "Fourier-domain strain/Hz (SI)",
+      "native_physical_amplitude_units": "Fourier-domain strain/Hz (SI)",
+      "clean_physical_l2": 5.6649332887365894e-24,
+      "public_physical_l2": 5.676766970379025e-24,
+      "author_release_physical_l2": 5.663970305287475e-24,
+      "native_physical_l2": 6.132471697073492e-24,
+      "clean_vs_public_physical_scale_acceptance_like_relative_l2": 0.009962656978146243,
+      "clean_vs_native_physical_scale_acceptance_like_relative_l2": 0.15363180897403697,
+      "clean_vs_author_release_physical_scale_relative_l2": 0.003248111944174198,
+      "default_vs_author_release_physical_scale_relative_l2": 0.0073760095746751835,
+      "native_vs_public_physical_scale_acceptance_like_relative_l2": 0.16251813217874259,
+      "clean_vs_public_shape_only_normalized_relative_l2": 0.009752297895763274,
+      "clean_vs_native_shape_only_normalized_relative_l2": 0.1387749586383173,
+      "native_vs_public_shape_only_normalized_relative_l2": 0.1359565334096842,
+      "release_views": {
+        "current_default": {
+          "release": 122022,
+          "role": "current-installed-default descriptive observation",
+          "strict_parity_claim": false,
+          "clean_vs_public_physical_relative_l2": 0.009962656978146243,
+          "public_physical_l2": 5.676766970379025e-24
+        },
+        "author_release_control": {
+          "release": 122019,
+          "inspiral_amp_fits_version": 122018,
+          "role": "explicit old-release diagnostic control",
+          "strict_current_release_parity_claim": false,
+          "clean_vs_author_release_physical_relative_l2": 0.003248111944174198,
+          "author_release_physical_l2": 5.663970305287475e-24
+        }
+      },
+      "array_sha256": {
+        "frequency_hz": "c386a47e810d4a34afd21613255d359dc0e02e10d6b67cff0b5ef725be260b7c",
+        "collocation_frequency_hz": "188da610793b18f1171a942f48e13ef6b63c69bfeec15824452975c973755562",
+        "provider_H_lm": "7a24b9d2d6b195660b7dc15c8ad8b654efe51930177fe294bc91b9aecf8fe1b0",
+        "provider_amp_insp1_2_3_raw": "062441269f0c428cdf8602d3e172928b86d7506824f4a4c1c2e52310a73c5f79",
+        "geometric_veto_amplitudes": "aa714581b6a498d19ca4ce580b5f13ba327ffec96015aacf55b536cd022d2f0c",
+        "oracle_geometric_veto_amplitudes": "63e186fa285731cdf717e3837f78a9cdbfcf37876bbcb903c4c0e5cb6f409359",
+        "author_release_geometric_veto_amplitudes": "fe00afc3a7a0e7baa7bc05a0f8942249eabcdd593820b315b7bc457e50c5970f",
+        "clean_physical_amplitude": "6240872e37fe3316f787d6985dfb310b16ed8ee12f7932f76c62f58ecf9bd1dd",
+        "public_complex_physical": "d45b3f59180e066e3a6d44814a0e95675063afc3507f04efc360a41bee9cb8fc",
+        "public_physical_amplitude": "4d1f94f51dc09458a7abb83b388a1c7164d782677031a4be136299ab3dfab4d7",
+        "author_release_complex_physical": "34d50e882c338fa01a723bfae898daae3b8d3e4e2a71f5b7b61c4d8a452eea67",
+        "author_release_physical_amplitude": "3d3a149e8fbccae6479e27725875f336fee784ff702467ea9b480613c1b9f826",
+        "native_complex_physical": "7d8c5f3664eb23d93d72a4e59353aa20c2f3cf95ec2c313490421a973ab3b4bc",
+        "native_physical_amplitude": "12bb4aa868ad4f80d228754a762e2e90a722bba2bf45ae7d358e8378ec97daef"
+      }
+    },
+    {
+      "case": "A40_15",
+      "mode": [
+        4,
+        4
+      ],
+      "m1_msun": 40.0,
+      "m2_msun": 15.0,
+      "q": 2.6666666666666665,
+      "eta": 0.19834710743801653,
+      "chi1_aligned": 0.3,
+      "chi2_aligned": -0.2,
+      "chi_eff_mass_weighted": 0.16363636363636364,
+      "chi_pn_raw_inspiral_fit_numerator": 0.1569662839172091,
+      "chi_pn_inspiral_fit_input_normalized": 0.1811292092159676,
+      "chi_pn_normalization_denominator": 0.8665984056169093,
+      "spin_variables_delta_x1_x2_S": [
+        0.45454545454545453,
+        0.7272727272727273,
+        0.2727272727272727,
+        0.23835616438356166
+      ],
+      "S_hat_available_but_not_passed_to_inspiral_fit": 0.23835616438356166,
+      "final_spin_chi_f_from_xas_fit": 0.6792822582610815,
+      "public_default_release_observed": 122022,
+      "public_author_release_control": 122019,
+      "public_default_row_role": "current-installed-default descriptive observation",
+      "author_release_row_role": "explicit old-release diagnostic control",
+      "strict_current_release_parity_claim": false,
+      "clean_collocation_provenance": "earlier-release compatibility provider; not current-default calibration",
+      "f_meco_22_dimensionless_Mf": 0.023226189055280816,
+      "f_isco_22_dimensionless_Mf": 0.044270666671678637,
+      "f_isco_22_dimensionless_Mf_final_spin": 0.044270666671678637,
+      "f_rd_32_dimensionless_Mf": null,
+      "f_rd_22_dimensionless_Mf": null,
+      "f_rd_32_over_f_rd_22": null,
+      "cut_frequency_variant": "printed-paper",
+      "f_ins_dimensionless_Mf_printed_control": 0.0764005828930245,
+      "f_ins_dimensionless_Mf": 0.0764005828930245,
+      "f_ins_hz": 282.02295403895056,
+      "frequency_hz": [
+        141.01147701947528,
+        211.51721552921293,
+        253.8206586350555,
+        267.92180633700303
+      ],
+      "frequency_as_fraction_of_f_ins": [
+        0.5,
+        0.75,
+        0.9,
+        0.95
+      ],
+      "collocation_frequency_hz": [
+        141.01147701947528,
+        211.51721552921293,
+        282.02295403895056
+      ],
+      "frequency_support_strictly_below_cut": true,
+      "collocation_endpoint_allowed_by_support_check": true,
+      "provider_amp_insp1_2_3_raw": [
+        0.07820192346807439,
+        0.06551724802166455,
+        0.05235175319180365
+      ],
+      "provider_collocation_values_H_lm": [
+        0.05235175319180365,
+        0.06551724802166455,
+        0.07820192346807439
+      ],
+      "provider_collocation_order_for_nodes": "[amp_insp3, amp_insp2, amp_insp1] -> [0.5, 0.75, 1.0]*f_ins",
+      "geometric_veto_amplitudes_from_provider_common_H": [
+        0.7095708543572329,
+        0.553325115278274,
+        0.47215034556914764
+      ],
+      "geometric_veto_amplitudes_from_public_output": [
+        0.7111091341512172,
+        0.5409578800709014,
+        0.47205024295426173
+      ],
+      "geometric_veto_amplitudes_from_author_release_output": [
+        0.709570854357221,
+        0.5533251152782609,
+        0.4721503457086475
+      ],
+      "retained_collocation_nodes": [
+        0,
+        1,
+        2
+      ],
+      "oracle_retained_collocation_nodes_component_only": [
+        0,
+        1,
+        2
+      ],
+      "veto_support_nonempty": true,
+      "provider_oracle_veto_node_sets_match": true,
+      "pseudo_pn_coefficients_alpha_beta_gamma_zero_padded": [
+        -0.34882413614769336,
+        0.6040656661485292,
+        -0.26669696669477555
+      ],
+      "clean_physical_amplitude_units": "Fourier-domain strain/Hz (SI)",
+      "public_physical_amplitude_units": "Fourier-domain strain/Hz (SI)",
+      "author_release_physical_amplitude_units": "Fourier-domain strain/Hz (SI)",
+      "native_physical_amplitude_units": "Fourier-domain strain/Hz (SI)",
+      "clean_physical_l2": 1.6228678992814106e-24,
+      "public_physical_l2": 1.6115527008273289e-24,
+      "author_release_physical_l2": 1.6228678992813746e-24,
+      "native_physical_l2": 1.936198703810665e-24,
+      "clean_vs_public_physical_scale_acceptance_like_relative_l2": 0.01189613936669433,
+      "clean_vs_native_physical_scale_acceptance_like_relative_l2": 0.3061132147303742,
+      "clean_vs_author_release_physical_scale_relative_l2": 2.2667592025610017e-14,
+      "default_vs_author_release_physical_scale_relative_l2": 0.011813195352671063,
+      "native_vs_public_physical_scale_acceptance_like_relative_l2": 0.36583053813211236,
+      "clean_vs_public_shape_only_normalized_relative_l2": 0.009569559124952389,
+      "clean_vs_native_shape_only_normalized_relative_l2": 0.28381813038805526,
+      "native_vs_public_shape_only_normalized_relative_l2": 0.2785942732930581,
+      "release_views": {
+        "current_default": {
+          "release": 122022,
+          "role": "current-installed-default descriptive observation",
+          "strict_parity_claim": false,
+          "clean_vs_public_physical_relative_l2": 0.01189613936669433,
+          "public_physical_l2": 1.6115527008273289e-24
+        },
+        "author_release_control": {
+          "release": 122019,
+          "inspiral_amp_fits_version": 122018,
+          "role": "explicit old-release diagnostic control",
+          "strict_current_release_parity_claim": false,
+          "clean_vs_author_release_physical_relative_l2": 2.2667592025610017e-14,
+          "author_release_physical_l2": 1.6228678992813746e-24
+        }
+      },
+      "array_sha256": {
+        "frequency_hz": "c71dc44a190116b05ff87bfde8f7ede7d8dc09a319625ae85670051002c77dc0",
+        "collocation_frequency_hz": "a0f1afbb83172e78f9b4577ac8639d4d5ee7edb9689234ff2ddbb19c08172c04",
+        "provider_H_lm": "e4bd25af0ca63103fa40e5b43a6a227c3fb74afb028caed0e71d438ee6c759a9",
+        "provider_amp_insp1_2_3_raw": "bc1f1355d7687e0ce4ca8098a6604bcf008e926ec0007c333adb7bbf62be55e1",
+        "geometric_veto_amplitudes": "952d3236bafba15c481d1c6f7a007c46cf164d782653858579397447ef33e68b",
+        "oracle_geometric_veto_amplitudes": "ef671cc0d6826f8e77010a0e264df81ecf6ec03f6d6b08f7ea37d51a935b88ba",
+        "author_release_geometric_veto_amplitudes": "744e00584882cfe37bb58ce1c9576ad84e35eaf3866d2625b99d9d6756fceb62",
+        "clean_physical_amplitude": "fccaa05f3c89f8ad86ec279daa73bb1b102306c8a535f232e17247f4d02f5a48",
+        "public_complex_physical": "c1690e39eb61196e4a60c6286ded5fab711d2617f075ad609541077bcadf115b",
+        "public_physical_amplitude": "75e3fc155a627ae2c2b8976cf0b7ba5a72d578758615ea84db412e9e0c680f9a",
+        "author_release_complex_physical": "44416516277255bcb0102914cf6714c98ecbdb6ef21f468caee596b0b6269bdf",
+        "author_release_physical_amplitude": "9efa2614ed684b83c5305927b20453b7c553c4242bacd240f7ce162916b6604d",
+        "native_complex_physical": "a13f0a48e06b5352bae8516212cb3cd0fe728301f393ad91c2bd9dc3c8275498",
+        "native_physical_amplitude": "83bc2239eff0c87ece4f0dd27f274a393a72c817dd2e5d4055acbe0a19f79e04"
+      }
+    },
+    {
+      "case": "B55_11",
+      "mode": [
+        2,
+        1
+      ],
+      "m1_msun": 55.0,
+      "m2_msun": 11.0,
+      "q": 5.0,
+      "eta": 0.1388888888888889,
+      "chi1_aligned": -0.4,
+      "chi2_aligned": 0.2,
+      "chi_eff_mass_weighted": -0.3,
+      "chi_pn_raw_inspiral_fit_numerator": -0.29065880039331365,
+      "chi_pn_inspiral_fit_input_normalized": -0.3206073752711497,
+      "chi_pn_normalization_denominator": 0.9065880039331367,
+      "spin_variables_delta_x1_x2_S": [
+        0.6666666666666666,
+        0.8333333333333333,
+        0.16666666666666669,
+        -0.3769230769230769
+      ],
+      "S_hat_available_but_not_passed_to_inspiral_fit": -0.3769230769230769,
+      "final_spin_chi_f_from_xas_fit": 0.18013649479770436,
+      "public_default_release_observed": 122022,
+      "public_author_release_control": 122019,
+      "public_default_row_role": "current-installed-default descriptive observation",
+      "author_release_row_role": "explicit old-release diagnostic control",
+      "strict_current_release_parity_claim": false,
+      "clean_collocation_provenance": "earlier-release compatibility provider; not current-default calibration",
+      "f_meco_22_dimensionless_Mf": 0.01708194301951061,
+      "f_isco_22_dimensionless_Mf": 0.025022805446997837,
+      "f_isco_22_dimensionless_Mf_final_spin": 0.025022805446997837,
+      "f_rd_32_dimensionless_Mf": null,
+      "f_rd_22_dimensionless_Mf": null,
+      "f_rd_32_over_f_rd_22": null,
+      "cut_frequency_variant": "printed-paper",
+      "f_ins_dimensionless_Mf_printed_control": 0.011500927979601169,
+      "f_ins_dimensionless_Mf": 0.011500927979601169,
+      "f_ins_hz": 35.37850061887944,
+      "frequency_hz": [
+        20.0,
+        26.533875464159582,
+        31.8406505569915,
+        33.60957558793547
+      ],
+      "frequency_as_fraction_of_f_ins": [
+        0.5653150826105718,
+        0.75,
+        0.9,
+        0.9499999999999998
+      ],
+      "collocation_frequency_hz": [
+        17.68925030943972,
+        26.533875464159582,
+        35.37850061887944
+      ],
+      "frequency_support_strictly_below_cut": true,
+      "collocation_endpoint_allowed_by_support_check": true,
+      "provider_amp_insp1_2_3_raw": [
+        0.04623976783518953,
+        0.045768053430810904,
+        0.046321542531988044
+      ],
+      "provider_collocation_values_H_lm": [
+        0.046321542531988044,
+        0.045768053430810904,
+        0.04623976783518953
+      ],
+      "provider_collocation_order_for_nodes": "[amp_insp3, amp_insp2, amp_insp1] -> [0.5, 0.75, 1.0]*f_ins",
+      "geometric_veto_amplitudes_from_provider_common_H": [
+        4.785119490432777,
+        2.9459977679516522,
+        2.127765472155674
+      ],
+      "geometric_veto_amplitudes_from_public_output": [
+        4.931656279572202,
+        2.92914929329661,
+        2.2062035778162237
+      ],
+      "geometric_veto_amplitudes_from_author_release_output": [
+        4.785119490432765,
+        2.9459977679516305,
+        2.127765472155651
+      ],
+      "retained_collocation_nodes": [
+        0,
+        1,
+        2
+      ],
+      "oracle_retained_collocation_nodes_component_only": [
+        0,
+        1,
+        2
+      ],
+      "veto_support_nonempty": true,
+      "provider_oracle_veto_node_sets_match": true,
+      "pseudo_pn_coefficients_alpha_beta_gamma_zero_padded": [
+        0.0763445503467065,
+        -0.2421944522758886,
+        0.16062108939015765
+      ],
+      "clean_physical_amplitude_units": "Fourier-domain strain/Hz (SI)",
+      "public_physical_amplitude_units": "Fourier-domain strain/Hz (SI)",
+      "author_release_physical_amplitude_units": "Fourier-domain strain/Hz (SI)",
+      "native_physical_amplitude_units": "Fourier-domain strain/Hz (SI)",
+      "clean_physical_l2": 1.241685371304196e-23,
+      "public_physical_l2": 1.2660115801340296e-23,
+      "author_release_physical_l2": 1.2416853713037028e-23,
+      "native_physical_l2": 1.2341510154438967e-23,
+      "clean_vs_public_physical_scale_acceptance_like_relative_l2": 0.02371410327608937,
+      "clean_vs_native_physical_scale_acceptance_like_relative_l2": 0.008745297077454776,
+      "clean_vs_author_release_physical_scale_relative_l2": 2.5891577874754677e-11,
+      "default_vs_author_release_physical_scale_relative_l2": 0.024178692970228045,
+      "native_vs_public_physical_scale_acceptance_like_relative_l2": 0.02952476465301431,
+      "clean_vs_public_shape_only_normalized_relative_l2": 0.01403327053026485,
+      "clean_vs_native_shape_only_normalized_relative_l2": 0.006242805363677205,
+      "native_vs_public_shape_only_normalized_relative_l2": 0.015637565716653992,
+      "release_views": {
+        "current_default": {
+          "release": 122022,
+          "role": "current-installed-default descriptive observation",
+          "strict_parity_claim": false,
+          "clean_vs_public_physical_relative_l2": 0.02371410327608937,
+          "public_physical_l2": 1.2660115801340296e-23
+        },
+        "author_release_control": {
+          "release": 122019,
+          "inspiral_amp_fits_version": 122018,
+          "role": "explicit old-release diagnostic control",
+          "strict_current_release_parity_claim": false,
+          "clean_vs_author_release_physical_relative_l2": 2.5891577874754677e-11,
+          "author_release_physical_l2": 1.2416853713037028e-23
+        }
+      },
+      "array_sha256": {
+        "frequency_hz": "248a9400bd1f01c66ec849c27f9c78db6107303d668d1b9d749826ebf7fe1523",
+        "collocation_frequency_hz": "9c87792f653af00aae0428f88cf269378a36f257b1890635c48ef7cf5969c04c",
+        "provider_H_lm": "ddbeaa85db90b59b18a31de962ebb77beeb5173c75b84470fcb2794ff88c884f",
+        "provider_amp_insp1_2_3_raw": "330707958a70b042f3c0b5e7773c805f7c22193023fc82856345f3b6d758f1a3",
+        "geometric_veto_amplitudes": "1a75fe876c920dc7a15ea1c77489aacf53a1d5dd4365c2b144c8827d54d9d3b1",
+        "oracle_geometric_veto_amplitudes": "16a565ee0c336b137e0d693eda6a34fb2d8fe6c4af39a530bb7bc7373d513e10",
+        "author_release_geometric_veto_amplitudes": "a106c2fbfb9207eb669c60c287e3570b4198b91ebfa875996a7278b8dc50c072",
+        "clean_physical_amplitude": "ff960467fbdd7ea9cc8e055bbf946cee2f58f578a985facf90bef4a156c2af7c",
+        "public_complex_physical": "2f2b73e787225174588f6251b734a2600fc34c7d6aed1e3edf345d595003cedc",
+        "public_physical_amplitude": "c8f692da96d09c89e81bcc482ca30572593dadc9d1fb5fd5c2ad80bf907c59e7",
+        "author_release_complex_physical": "8821f65e6e107c5ccd46145988962a580faf0b2e5c8091fcb17931d860595cbc",
+        "author_release_physical_amplitude": "cba1da9b8156e519aaf6bf78fe5bd3bcced8d60a2e996c501bc59bc5052641f3",
+        "native_complex_physical": "913ba6c06085d7d4a2165fa1dba2aed9fecc1ddd3878cd824297cc0235dba1ee",
+        "native_physical_amplitude": "f7b4a6a47b670613675c502bcab43b7b978632f713310e355e06885e062a5a12"
+      }
+    },
+    {
+      "case": "B55_11",
+      "mode": [
+        3,
+        2
+      ],
+      "m1_msun": 55.0,
+      "m2_msun": 11.0,
+      "q": 5.0,
+      "eta": 0.1388888888888889,
+      "chi1_aligned": -0.4,
+      "chi2_aligned": 0.2,
+      "chi_eff_mass_weighted": -0.3,
+      "chi_pn_raw_inspiral_fit_numerator": -0.29065880039331365,
+      "chi_pn_inspiral_fit_input_normalized": -0.3206073752711497,
+      "chi_pn_normalization_denominator": 0.9065880039331367,
+      "spin_variables_delta_x1_x2_S": [
+        0.6666666666666666,
+        0.8333333333333333,
+        0.16666666666666669,
+        -0.3769230769230769
+      ],
+      "S_hat_available_but_not_passed_to_inspiral_fit": -0.3769230769230769,
+      "final_spin_chi_f_from_xas_fit": 0.18013649479770436,
+      "public_default_release_observed": 122022,
+      "public_author_release_control": 122019,
+      "public_default_row_role": "current-installed-default descriptive observation",
+      "author_release_row_role": "explicit old-release diagnostic control",
+      "strict_current_release_parity_claim": false,
+      "clean_collocation_provenance": "earlier-release compatibility provider; not current-default calibration",
+      "f_meco_22_dimensionless_Mf": 0.01708194301951061,
+      "f_isco_22_dimensionless_Mf": 0.025022805446997837,
+      "f_isco_22_dimensionless_Mf_final_spin": 0.025022805446997837,
+      "f_rd_32_dimensionless_Mf": 0.09969339480756625,
+      "f_rd_22_dimensionless_Mf": 0.06349814527901844,
+      "f_rd_32_over_f_rd_22": 1.570020578861029,
+      "cut_frequency_variant": "release-compatibility",
+      "f_ins_dimensionless_Mf_printed_control": 0.032214818087040735,
+      "f_ins_dimensionless_Mf": 0.03529054425789095,
+      "f_ins_hz": 108.55876535205327,
+      "frequency_hz": [
+        54.279382676026636,
+        81.41907401403995,
+        97.70288881684795,
+        103.1308270844506
+      ],
+      "frequency_as_fraction_of_f_ins": [
+        0.5,
+        0.75,
+        0.9,
+        0.95
+      ],
+      "collocation_frequency_hz": [
+        54.279382676026636,
+        81.41907401403995,
+        108.55876535205327
+      ],
+      "frequency_support_strictly_below_cut": true,
+      "collocation_endpoint_allowed_by_support_check": true,
+      "provider_amp_insp1_2_3_raw": [
+        0.018008578732296474,
+        0.018008578732296474,
+        0.015224781020820219
+      ],
+      "provider_collocation_values_H_lm": [
+        0.015224781020820219,
+        0.018008578732296474,
+        0.018008578732296474
+      ],
+      "provider_collocation_order_for_nodes": "[amp_insp3, amp_insp2, amp_insp1] -> [0.5, 0.75, 1.0]*f_ins",
+      "geometric_veto_amplitudes_from_provider_common_H": [
+        0.42518810969167165,
+        0.3133788574854107,
+        0.2240308535343142
+      ],
+      "geometric_veto_amplitudes_from_public_output": [
+        0.413462063056195,
+        0.30855191919049685,
+        0.28310283995293045
+      ],
+      "geometric_veto_amplitudes_from_author_release_output": [
+        0.42518811316928196,
+        0.31337886148243127,
+        0.2770831585372141
+      ],
+      "retained_collocation_nodes": [
+        0,
+        1,
+        2
+      ],
+      "oracle_retained_collocation_nodes_component_only": [
+        0,
+        1,
+        2
+      ],
+      "veto_support_nonempty": true,
+      "provider_oracle_veto_node_sets_match": true,
+      "pseudo_pn_coefficients_alpha_beta_gamma_zero_padded": [
+        -0.2981987764498211,
+        0.5978114496321866,
+        -0.3044173392474303
+      ],
+      "clean_physical_amplitude_units": "Fourier-domain strain/Hz (SI)",
+      "public_physical_amplitude_units": "Fourier-domain strain/Hz (SI)",
+      "author_release_physical_amplitude_units": "Fourier-domain strain/Hz (SI)",
+      "native_physical_amplitude_units": "Fourier-domain strain/Hz (SI)",
+      "clean_physical_l2": 1.3089078688372343e-24,
+      "public_physical_l2": 1.3466371199900652e-24,
+      "author_release_physical_l2": 1.3608037405140427e-24,
+      "native_physical_l2": 1.2997731908897233e-24,
+      "clean_vs_public_physical_scale_acceptance_like_relative_l2": 0.07791488999670428,
+      "clean_vs_native_physical_scale_acceptance_like_relative_l2": 0.1239973604175761,
+      "clean_vs_author_release_physical_scale_relative_l2": 0.06727333137318514,
+      "default_vs_author_release_physical_scale_relative_l2": 0.020548174875135498,
+      "native_vs_public_physical_scale_acceptance_like_relative_l2": 0.18959647085140935,
+      "clean_vs_public_shape_only_normalized_relative_l2": 0.07374359666420444,
+      "clean_vs_native_shape_only_normalized_relative_l2": 0.12336529651305102,
+      "native_vs_public_shape_only_normalized_relative_l2": 0.18970541721655987,
+      "release_views": {
+        "current_default": {
+          "release": 122022,
+          "role": "current-installed-default descriptive observation",
+          "strict_parity_claim": false,
+          "clean_vs_public_physical_relative_l2": 0.07791488999670428,
+          "public_physical_l2": 1.3466371199900652e-24
+        },
+        "author_release_control": {
+          "release": 122019,
+          "inspiral_amp_fits_version": 122018,
+          "role": "explicit old-release diagnostic control",
+          "strict_current_release_parity_claim": false,
+          "clean_vs_author_release_physical_relative_l2": 0.06727333137318514,
+          "author_release_physical_l2": 1.3608037405140427e-24
+        }
+      },
+      "array_sha256": {
+        "frequency_hz": "e3367a72be07ca636aa4b4eb557b3c36d3f75dfc4e2d2aae9530707e9a7ca026",
+        "collocation_frequency_hz": "369c4858e47a29b51c0bb1fb1ac0f238dc48bb0a2062f6146e20c3970d245452",
+        "provider_H_lm": "ff4e9d9b2bed490846d000afe821335b4f8424a1c1ab94d1a14ebe74b2d7870c",
+        "provider_amp_insp1_2_3_raw": "027d4f0caf441b4e0b67d6f1c078b1792829270b4112a73390a1fc62bb99e2ef",
+        "geometric_veto_amplitudes": "95a1746eb10f56b3c15ae3d7916c4d35a53550a4eabc7d67079a976f94d1c719",
+        "oracle_geometric_veto_amplitudes": "7996a419e2a8566e1c5f23f017a1f1bc2bd32ddaa952dfd8f0bcf077fab7077f",
+        "author_release_geometric_veto_amplitudes": "3e7dfda06a0d594c2809ec7f6eabc4fa8504f2a0efc77bd891613ff5f1395a8a",
+        "clean_physical_amplitude": "5f5470cdaeeb7ed6e3ad425e18e60420df566486f17ea35d6fa62acd274a36fe",
+        "public_complex_physical": "7bc7385b436a52a8178c33efce22b5d0cc824190e649676242c936ecd2da2663",
+        "public_physical_amplitude": "9800de9cf7973436d1259b3f07c6a77cfa5017648cdf2be60c86af8089ea85d0",
+        "author_release_complex_physical": "da049f2697ae0f08a947751d4991fdd8a31701eb14ba21b0a71ea2176cb187da",
+        "author_release_physical_amplitude": "32d790bf01526c866763dcbc26dfda57db105872bc54eee541ade4af81aaf20e",
+        "native_complex_physical": "aca7a247dbeea4946acd55e16fd1517cb4a9813288ecc63c13c992e003ca57c6",
+        "native_physical_amplitude": "a2e9f49f11d227b482708eb116ccf5be77ed1cd81812a7749c4ccc6fa2bf42a1"
+      }
+    },
+    {
+      "case": "B55_11",
+      "mode": [
+        3,
+        3
+      ],
+      "m1_msun": 55.0,
+      "m2_msun": 11.0,
+      "q": 5.0,
+      "eta": 0.1388888888888889,
+      "chi1_aligned": -0.4,
+      "chi2_aligned": 0.2,
+      "chi_eff_mass_weighted": -0.3,
+      "chi_pn_raw_inspiral_fit_numerator": -0.29065880039331365,
+      "chi_pn_inspiral_fit_input_normalized": -0.3206073752711497,
+      "chi_pn_normalization_denominator": 0.9065880039331367,
+      "spin_variables_delta_x1_x2_S": [
+        0.6666666666666666,
+        0.8333333333333333,
+        0.16666666666666669,
+        -0.3769230769230769
+      ],
+      "S_hat_available_but_not_passed_to_inspiral_fit": -0.3769230769230769,
+      "final_spin_chi_f_from_xas_fit": 0.18013649479770436,
+      "public_default_release_observed": 122022,
+      "public_author_release_control": 122019,
+      "public_default_row_role": "current-installed-default descriptive observation",
+      "author_release_row_role": "explicit old-release diagnostic control",
+      "strict_current_release_parity_claim": false,
+      "clean_collocation_provenance": "earlier-release compatibility provider; not current-default calibration",
+      "f_meco_22_dimensionless_Mf": 0.01708194301951061,
+      "f_isco_22_dimensionless_Mf": 0.025022805446997837,
+      "f_isco_22_dimensionless_Mf_final_spin": 0.025022805446997837,
+      "f_rd_32_dimensionless_Mf": null,
+      "f_rd_22_dimensionless_Mf": null,
+      "f_rd_32_over_f_rd_22": null,
+      "cut_frequency_variant": "printed-paper",
+      "f_ins_dimensionless_Mf_printed_control": 0.03837395437220353,
+      "f_ins_dimensionless_Mf": 0.03837395437220353,
+      "f_ins_hz": 118.04377619908664,
+      "frequency_hz": [
+        59.02188809954332,
+        88.53283214931497,
+        106.23939857917797,
+        112.1415873891323
+      ],
+      "frequency_as_fraction_of_f_ins": [
+        0.5,
+        0.7499999999999999,
+        0.9,
+        0.95
+      ],
+      "collocation_frequency_hz": [
+        59.02188809954332,
+        88.53283214931497,
+        118.04377619908664
+      ],
+      "frequency_support_strictly_below_cut": true,
+      "collocation_endpoint_allowed_by_support_check": true,
+      "provider_amp_insp1_2_3_raw": [
+        0.13765266047215166,
+        0.1385333672180692,
+        0.1532155738867005
+      ],
+      "provider_collocation_values_H_lm": [
+        0.1532155738867005,
+        0.1385333672180692,
+        0.13765266047215166
+      ],
+      "provider_collocation_order_for_nodes": "[amp_insp3, amp_insp2, amp_insp1] -> [0.5, 0.75, 1.0]*f_ins",
+      "geometric_veto_amplitudes_from_provider_common_H": [
+        3.8805361778292236,
+        2.186268072847324,
+        1.553001132559595
+      ],
+      "geometric_veto_amplitudes_from_public_output": [
+        3.8703371108013407,
+        2.1649646624223453,
+        1.6265157493767022
+      ],
+      "geometric_veto_amplitudes_from_author_release_output": [
+        3.880659966802162,
+        2.197097249879412,
+        1.5450725269825496
+      ],
+      "retained_collocation_nodes": [
+        0,
+        1,
+        2
+      ],
+      "oracle_retained_collocation_nodes_component_only": [
+        0,
+        1,
+        2
+      ],
+      "veto_support_nonempty": true,
+      "provider_oracle_veto_node_sets_match": true,
+      "pseudo_pn_coefficients_alpha_beta_gamma_zero_padded": [
+        0.5263270227142006,
+        -1.4677891752045567,
+        0.9579432938273301
+      ],
+      "clean_physical_amplitude_units": "Fourier-domain strain/Hz (SI)",
+      "public_physical_amplitude_units": "Fourier-domain strain/Hz (SI)",
+      "author_release_physical_amplitude_units": "Fourier-domain strain/Hz (SI)",
+      "native_physical_amplitude_units": "Fourier-domain strain/Hz (SI)",
+      "clean_physical_l2": 1.034775864519406e-23,
+      "public_physical_l2": 1.0419027471313219e-23,
+      "author_release_physical_l2": 1.0359533631613163e-23,
+      "native_physical_l2": 9.728677598863442e-24,
+      "clean_vs_public_physical_scale_acceptance_like_relative_l2": 0.021944849237155294,
+      "clean_vs_native_physical_scale_acceptance_like_relative_l2": 0.1104368807021081,
+      "clean_vs_author_release_physical_scale_relative_l2": 0.002295202578196353,
+      "default_vs_author_release_physical_scale_relative_l2": 0.022279748679158502,
+      "native_vs_public_physical_scale_acceptance_like_relative_l2": 0.09561603370331014,
+      "clean_vs_public_shape_only_normalized_relative_l2": 0.0209232366470175,
+      "clean_vs_native_shape_only_normalized_relative_l2": 0.08751870701994763,
+      "native_vs_public_shape_only_normalized_relative_l2": 0.07134036132270154,
+      "release_views": {
+        "current_default": {
+          "release": 122022,
+          "role": "current-installed-default descriptive observation",
+          "strict_parity_claim": false,
+          "clean_vs_public_physical_relative_l2": 0.021944849237155294,
+          "public_physical_l2": 1.0419027471313219e-23
+        },
+        "author_release_control": {
+          "release": 122019,
+          "inspiral_amp_fits_version": 122018,
+          "role": "explicit old-release diagnostic control",
+          "strict_current_release_parity_claim": false,
+          "clean_vs_author_release_physical_relative_l2": 0.002295202578196353,
+          "author_release_physical_l2": 1.0359533631613163e-23
+        }
+      },
+      "array_sha256": {
+        "frequency_hz": "2331cc891122d7e839f673bf603115c18b3fa6c38aaaa37f3bf9313edf07760a",
+        "collocation_frequency_hz": "81d83a64d48fa5fff4e2988f5cc6942e596da2db3588be391f516e441097d628",
+        "provider_H_lm": "2da4497bb730b68ec3fceecf9899922d3cf2d39e02ce2c04a3aec14effa2f4cb",
+        "provider_amp_insp1_2_3_raw": "e60844357f42fb99d5c35522aa8fb2bb261af8bb3736c06351b0fedfaf1ac25f",
+        "geometric_veto_amplitudes": "6e30e23002626f454724b93c02b1864116eaac109d68f5dae6dcaa5ef479934d",
+        "oracle_geometric_veto_amplitudes": "75df08b0a449e366b0f7eacaf723f8c1e8d0bdfcaed1666e8233b1a55bc8a37d",
+        "author_release_geometric_veto_amplitudes": "b0f5eafda67d140318964ba86dd23890d93ccd865cbed179f7e1417d58165a2a",
+        "clean_physical_amplitude": "324fc6281dae82014c7d4f6bac6ddc8ef3f46892acf7d4cd56181f862e326867",
+        "public_complex_physical": "c76e2f9898868395bd4d6f6280883f05821c3beb346dc88a3da51b80480fb14d",
+        "public_physical_amplitude": "5793407b155557ba8ae8529ed631b75dddce4be816e5923ab15d6cd665381bda",
+        "author_release_complex_physical": "f0ab858918450cd8ef9fefb68255ae60eba867ee8ed425c3a8771b34564ab9e5",
+        "author_release_physical_amplitude": "9303be29496ef89ac38f1c7a1aa262fc505a73ef1684eea9e370f26f07efa006",
+        "native_complex_physical": "121f6c1a7af87271aaf9b188130a9e753c24c3fb94bf9a85e057e199170d9797",
+        "native_physical_amplitude": "6287753b1de4ce965e9d25577ef1d2a5d2cd1f3a67cb44cfb06a7973993ac54e"
+      }
+    },
+    {
+      "case": "B55_11",
+      "mode": [
+        4,
+        4
+      ],
+      "m1_msun": 55.0,
+      "m2_msun": 11.0,
+      "q": 5.0,
+      "eta": 0.1388888888888889,
+      "chi1_aligned": -0.4,
+      "chi2_aligned": 0.2,
+      "chi_eff_mass_weighted": -0.3,
+      "chi_pn_raw_inspiral_fit_numerator": -0.29065880039331365,
+      "chi_pn_inspiral_fit_input_normalized": -0.3206073752711497,
+      "chi_pn_normalization_denominator": 0.9065880039331367,
+      "spin_variables_delta_x1_x2_S": [
+        0.6666666666666666,
+        0.8333333333333333,
+        0.16666666666666669,
+        -0.3769230769230769
+      ],
+      "S_hat_available_but_not_passed_to_inspiral_fit": -0.3769230769230769,
+      "final_spin_chi_f_from_xas_fit": 0.18013649479770436,
+      "public_default_release_observed": 122022,
+      "public_author_release_control": 122019,
+      "public_default_row_role": "current-installed-default descriptive observation",
+      "author_release_row_role": "explicit old-release diagnostic control",
+      "strict_current_release_parity_claim": false,
+      "clean_collocation_provenance": "earlier-release compatibility provider; not current-default calibration",
+      "f_meco_22_dimensionless_Mf": 0.01708194301951061,
+      "f_isco_22_dimensionless_Mf": 0.025022805446997837,
+      "f_isco_22_dimensionless_Mf_final_spin": 0.025022805446997837,
+      "f_rd_32_dimensionless_Mf": null,
+      "f_rd_22_dimensionless_Mf": null,
+      "f_rd_32_over_f_rd_22": null,
+      "cut_frequency_variant": "printed-paper",
+      "f_ins_dimensionless_Mf_printed_control": 0.04719484128252776,
+      "f_ins_dimensionless_Mf": 0.04719484128252776,
+      "f_ins_hz": 145.1780868885788,
+      "frequency_hz": [
+        72.5890434442894,
+        108.8835651664341,
+        130.66027819972092,
+        137.91918254414986
+      ],
+      "frequency_as_fraction_of_f_ins": [
+        0.5,
+        0.75,
+        0.9,
+        0.95
+      ],
+      "collocation_frequency_hz": [
+        72.5890434442894,
+        108.8835651664341,
+        145.1780868885788
+      ],
+      "frequency_support_strictly_below_cut": true,
+      "collocation_endpoint_allowed_by_support_check": true,
+      "provider_amp_insp1_2_3_raw": [
+        0.05788175989053723,
+        0.05440560238391805,
+        0.05158830574119224
+      ],
+      "provider_collocation_values_H_lm": [
+        0.05158830574119224,
+        0.05440560238391805,
+        0.05788175989053723
+      ],
+      "provider_collocation_order_for_nodes": "[amp_insp3, amp_insp2, amp_insp1] -> [0.5, 0.75, 1.0]*f_ins",
+      "geometric_veto_amplitudes_from_provider_common_H": [
+        1.026374338563568,
+        0.6744633280902651,
+        0.5129730933608994
+      ],
+      "geometric_veto_amplitudes_from_public_output": [
+        1.0191655695734134,
+        0.6490267255303896,
+        0.5161236373866576
+      ],
+      "geometric_veto_amplitudes_from_author_release_output": [
+        1.0263743385635786,
+        0.6744633280902816,
+        0.5129730933609195
+      ],
+      "retained_collocation_nodes": [
+        0,
+        1,
+        2
+      ],
+      "oracle_retained_collocation_nodes_component_only": [
+        0,
+        1,
+        2
+      ],
+      "veto_support_nonempty": true,
+      "provider_oracle_veto_node_sets_match": true,
+      "pseudo_pn_coefficients_alpha_beta_gamma_zero_padded": [
+        0.2983882085027785,
+        -0.773568338834418,
+        0.4552883484032238
+      ],
+      "clean_physical_amplitude_units": "Fourier-domain strain/Hz (SI)",
+      "public_physical_amplitude_units": "Fourier-domain strain/Hz (SI)",
+      "author_release_physical_amplitude_units": "Fourier-domain strain/Hz (SI)",
+      "native_physical_amplitude_units": "Fourier-domain strain/Hz (SI)",
+      "clean_physical_l2": 2.978413414075039e-24,
+      "public_physical_l2": 2.937093881917287e-24,
+      "author_release_physical_l2": 2.9784134140751e-24,
+      "native_physical_l2": 3.0090586759224683e-24,
+      "clean_vs_public_physical_scale_acceptance_like_relative_l2": 0.019279311889686353,
+      "clean_vs_native_physical_scale_acceptance_like_relative_l2": 0.0882634347790228,
+      "clean_vs_author_release_physical_scale_relative_l2": 2.334996588511883e-14,
+      "default_vs_author_release_physical_scale_relative_l2": 0.019011849977315916,
+      "native_vs_public_physical_scale_acceptance_like_relative_l2": 0.09073743955843472,
+      "clean_vs_public_shape_only_normalized_relative_l2": 0.013090747407816355,
+      "clean_vs_native_shape_only_normalized_relative_l2": 0.08812379233516557,
+      "native_vs_public_shape_only_normalized_relative_l2": 0.08631560310885988,
+      "release_views": {
+        "current_default": {
+          "release": 122022,
+          "role": "current-installed-default descriptive observation",
+          "strict_parity_claim": false,
+          "clean_vs_public_physical_relative_l2": 0.019279311889686353,
+          "public_physical_l2": 2.937093881917287e-24
+        },
+        "author_release_control": {
+          "release": 122019,
+          "inspiral_amp_fits_version": 122018,
+          "role": "explicit old-release diagnostic control",
+          "strict_current_release_parity_claim": false,
+          "clean_vs_author_release_physical_relative_l2": 2.334996588511883e-14,
+          "author_release_physical_l2": 2.9784134140751e-24
+        }
+      },
+      "array_sha256": {
+        "frequency_hz": "333ea9cc36e79feada008aa26377e2d9a69c8bb1a408306922a895f0295afc76",
+        "collocation_frequency_hz": "9f43b1724d884ac0370d3d2cad9db0552907b8a38217bdfb8dcd1b79027b3164",
+        "provider_H_lm": "94426f7c912482547ad4937d69aadbf0a30cc85ce856612decb1576e38db036b",
+        "provider_amp_insp1_2_3_raw": "8363f87dcf03174333caeed3406f9270b65d105b452ff9ebaa904b95aed13620",
+        "geometric_veto_amplitudes": "2e0ace043a47bf2ad3ad0b3477a9c2e89eb2cc0f57255887991c420d854f7b55",
+        "oracle_geometric_veto_amplitudes": "e1a179ca17a8b04256b3d50ed358213b108f2b682dc42b4c3798ba0cc3279170",
+        "author_release_geometric_veto_amplitudes": "a00b023869f0fddb394419e16da11df74f648c73667de33e805b3ddb33db42e7",
+        "clean_physical_amplitude": "6900e59f85feb374c1b78d2c7514649775e93bfc56954e372c36bc5281c8a992",
+        "public_complex_physical": "cd9a3b103caaedf35990a5357ae5407f205738cc4533c9313308eff79c78a5cd",
+        "public_physical_amplitude": "cacb2feeeaa86b55121a24732e7228f780b3a3a1ef8715a20a048683aee439ad",
+        "author_release_complex_physical": "080fb8093a7c6f55d6060ec6c7a191627427d96e11e5cdc5be77dc732053b640",
+        "author_release_physical_amplitude": "11b3f1f217261987e14ae5467677ff1844e61b42c82ea5c4c2da7afadd9021c1",
+        "native_complex_physical": "416b7cbb71856bc5f71ee3e910ad2d066cc5a2437e80665d39ed46585c5f8962",
+        "native_physical_amplitude": "788c2381ac02e0ccc1c59d0ac165b809320d28e1863330bace1695524ea73f66"
+      }
+    },
+    {
+      "case": "C27_16",
+      "mode": [
+        2,
+        1
+      ],
+      "m1_msun": 27.0,
+      "m2_msun": 16.0,
+      "q": 1.6875,
+      "eta": 0.23363980530016226,
+      "chi1_aligned": -0.25,
+      "chi2_aligned": 0.15,
+      "chi_eff_mass_weighted": -0.1011627906976744,
+      "chi_pn_raw_inspiral_fit_numerator": -0.09330587689112027,
+      "chi_pn_inspiral_fit_input_normalized": -0.1107012861645041,
+      "chi_pn_normalization_denominator": 0.8428617238689174,
+      "spin_variables_delta_x1_x2_S": [
+        0.255813953488372,
+        0.627906976744186,
+        0.372093023255814,
+        -0.14604060913705583
+      ],
+      "S_hat_available_but_not_passed_to_inspiral_fit": -0.14604060913705583,
+      "final_spin_chi_f_from_xas_fit": 0.5924309094209793,
+      "public_default_release_observed": 122022,
+      "public_author_release_control": 122019,
+      "public_default_row_role": "current-installed-default descriptive observation",
+      "author_release_row_role": "explicit old-release diagnostic control",
+      "strict_current_release_parity_claim": false,
+      "clean_collocation_provenance": "earlier-release compatibility provider; not current-default calibration",
+      "f_meco_22_dimensionless_Mf": 0.020017286741157665,
+      "f_isco_22_dimensionless_Mf": 0.03892305405670921,
+      "f_isco_22_dimensionless_Mf_final_spin": 0.03892305405670921,
+      "f_rd_32_dimensionless_Mf": null,
+      "f_rd_22_dimensionless_Mf": null,
+      "f_rd_32_over_f_rd_22": null,
+      "cut_frequency_variant": "printed-paper",
+      "f_ins_dimensionless_Mf_printed_control": 0.0172424152997113,
+      "f_ins_dimensionless_Mf": 0.0172424152997113,
+      "f_ins_hz": 81.41044346267512,
+      "frequency_hz": [
+        40.70522173133756,
+        61.05783259700634,
+        73.26939911640761,
+        77.33992128954137
+      ],
+      "frequency_as_fraction_of_f_ins": [
+        0.5,
+        0.75,
+        0.9,
+        0.9500000000000001
+      ],
+      "collocation_frequency_hz": [
+        40.70522173133756,
+        61.05783259700634,
+        81.41044346267512
+      ],
+      "frequency_support_strictly_below_cut": true,
+      "collocation_endpoint_allowed_by_support_check": true,
+      "provider_amp_insp1_2_3_raw": [
+        0.03251130350813136,
+        0.027651233757738803,
+        0.024015122629405444
+      ],
+      "provider_collocation_values_H_lm": [
+        0.024015122629405444,
+        0.027651233757738803,
+        0.03251130350813136
+      ],
+      "provider_collocation_order_for_nodes": "[amp_insp3, amp_insp2, amp_insp1] -> [0.5, 0.75, 1.0]*f_ins",
+      "geometric_veto_amplitudes_from_provider_common_H": [
+        2.0061257924436435,
+        1.4392891927594786,
+        1.2097790899658398
+      ],
+      "geometric_veto_amplitudes_from_public_output": [
+        1.9760690846774251,
+        1.432411126069282,
+        1.2084455267301921
+      ],
+      "geometric_veto_amplitudes_from_author_release_output": [
+        2.006125792443649,
+        1.43928919275949,
+        1.2097790899795968
+      ],
+      "retained_collocation_nodes": [
+        0,
+        1,
+        2
+      ],
+      "oracle_retained_collocation_nodes_component_only": [
+        0,
+        1,
+        2
+      ],
+      "veto_support_nonempty": true,
+      "provider_oracle_veto_node_sets_match": true,
+      "pseudo_pn_coefficients_alpha_beta_gamma_zero_padded": [
+        -0.0845655979200996,
+        0.18013721246663006,
+        -0.08561769147388902
+      ],
+      "clean_physical_amplitude_units": "Fourier-domain strain/Hz (SI)",
+      "public_physical_amplitude_units": "Fourier-domain strain/Hz (SI)",
+      "author_release_physical_amplitude_units": "Fourier-domain strain/Hz (SI)",
+      "native_physical_amplitude_units": "Fourier-domain strain/Hz (SI)",
+      "clean_physical_l2": 2.6544630866004785e-24,
+      "public_physical_l2": 2.6350275718871578e-24,
+      "author_release_physical_l2": 2.6544630866343438e-24,
+      "native_physical_l2": 2.9198010212906024e-24,
+      "clean_vs_public_physical_scale_acceptance_like_relative_l2": 0.010207997647082844,
+      "clean_vs_native_physical_scale_acceptance_like_relative_l2": 0.2397803200295646,
+      "clean_vs_author_release_physical_scale_relative_l2": 2.1989450299841177e-11,
+      "default_vs_author_release_physical_scale_relative_l2": 0.010133256471701083,
+      "native_vs_public_physical_scale_acceptance_like_relative_l2": 0.27447170515222885,
+      "clean_vs_public_shape_only_normalized_relative_l2": 0.007031054134003766,
+      "clean_vs_native_shape_only_normalized_relative_l2": 0.23271847814925062,
+      "native_vs_public_shape_only_normalized_relative_l2": 0.239680416258485,
+      "release_views": {
+        "current_default": {
+          "release": 122022,
+          "role": "current-installed-default descriptive observation",
+          "strict_parity_claim": false,
+          "clean_vs_public_physical_relative_l2": 0.010207997647082844,
+          "public_physical_l2": 2.6350275718871578e-24
+        },
+        "author_release_control": {
+          "release": 122019,
+          "inspiral_amp_fits_version": 122018,
+          "role": "explicit old-release diagnostic control",
+          "strict_current_release_parity_claim": false,
+          "clean_vs_author_release_physical_relative_l2": 2.1989450299841177e-11,
+          "author_release_physical_l2": 2.6544630866343438e-24
+        }
+      },
+      "array_sha256": {
+        "frequency_hz": "9f18230854862e4669d6cd758050c66412ab65ad63ace9b8df66c06274922759",
+        "collocation_frequency_hz": "93694b7486398c64ae41e747867a2e7d22b21f273d0ccb325f9a399462a06bff",
+        "provider_H_lm": "7d65e8f8d1e1fa83f369e3cd578f9b5540690fcffd9ce11de018244f0fd7b959",
+        "provider_amp_insp1_2_3_raw": "e1e0ac3f08eded322bb58a6f937a6a17f3a9f8ec6ead8442c815e9f85d00ce07",
+        "geometric_veto_amplitudes": "23f19552f02198761e21e5b0afe0a329f79b3589069ee87ebb452ed89c8054c7",
+        "oracle_geometric_veto_amplitudes": "fe71089aa040e95f5f6bc5318a8d3af16af1c821829b1d8272ed3c99277c11b7",
+        "author_release_geometric_veto_amplitudes": "fb1cdb4994c89323195c851eae78031986211cfea46c9f41130ca31ae6ab6a31",
+        "clean_physical_amplitude": "c8f0fbb607cb37ec9ed615939b78802de121ade3a388a52162e9e6a7173be108",
+        "public_complex_physical": "bbd96bc58d7c154d1f871af9c6ef6cadca854c3c0de59cf863ab2029865c8a25",
+        "public_physical_amplitude": "8ec9c01276b708fe9905fd61daf7af41a47ce5d6849736f6f2f1afd430d4ed88",
+        "author_release_complex_physical": "8a4bc1610e2e298680449e6a843448e7de8020a7d1cbe8a756456fedf628bf31",
+        "author_release_physical_amplitude": "ea94a03acf8570c7c81d3a1a216b66d323038de2376627e6ef7ba682ff917a0b",
+        "native_complex_physical": "eec0c1d79765b27e6a4435cd24e3e06fdc8f685eabac3b030f9dcbe5af7f2be3",
+        "native_physical_amplitude": "fc2b71e95a9521ebfa15d51dc6008ced6d1d57a18abb7b201d4ae8f35d519878"
+      }
+    },
+    {
+      "case": "C27_16",
+      "mode": [
+        3,
+        2
+      ],
+      "m1_msun": 27.0,
+      "m2_msun": 16.0,
+      "q": 1.6875,
+      "eta": 0.23363980530016226,
+      "chi1_aligned": -0.25,
+      "chi2_aligned": 0.15,
+      "chi_eff_mass_weighted": -0.1011627906976744,
+      "chi_pn_raw_inspiral_fit_numerator": -0.09330587689112027,
+      "chi_pn_inspiral_fit_input_normalized": -0.1107012861645041,
+      "chi_pn_normalization_denominator": 0.8428617238689174,
+      "spin_variables_delta_x1_x2_S": [
+        0.255813953488372,
+        0.627906976744186,
+        0.372093023255814,
+        -0.14604060913705583
+      ],
+      "S_hat_available_but_not_passed_to_inspiral_fit": -0.14604060913705583,
+      "final_spin_chi_f_from_xas_fit": 0.5924309094209793,
+      "public_default_release_observed": 122022,
+      "public_author_release_control": 122019,
+      "public_default_row_role": "current-installed-default descriptive observation",
+      "author_release_row_role": "explicit old-release diagnostic control",
+      "strict_current_release_parity_claim": false,
+      "clean_collocation_provenance": "earlier-release compatibility provider; not current-default calibration",
+      "f_meco_22_dimensionless_Mf": 0.020017286741157665,
+      "f_isco_22_dimensionless_Mf": 0.03892305405670921,
+      "f_isco_22_dimensionless_Mf_final_spin": 0.03892305405670921,
+      "f_rd_32_dimensionless_Mf": 0.11465060278859057,
+      "f_rd_22_dimensionless_Mf": 0.07823065120276268,
+      "f_rd_32_over_f_rd_22": 1.4655458062266742,
+      "cut_frequency_variant": "release-compatibility",
+      "f_ins_dimensionless_Mf_printed_control": 0.0430661244794524,
+      "f_ins_dimensionless_Mf": 0.04945800966750692,
+      "f_ins_hz": 233.5170815587784,
+      "frequency_hz": [
+        116.7585407793892,
+        175.1378111690838,
+        210.16537340290054,
+        221.84122748083945
+      ],
+      "frequency_as_fraction_of_f_ins": [
+        0.5,
+        0.75,
+        0.9,
+        0.95
+      ],
+      "collocation_frequency_hz": [
+        116.7585407793892,
+        175.1378111690838,
+        233.5170815587784
+      ],
+      "frequency_support_strictly_below_cut": true,
+      "collocation_endpoint_allowed_by_support_check": true,
+      "provider_amp_insp1_2_3_raw": [
+        0.019345561772606695,
+        0.019345561772606695,
+        0.013173863544044798
+      ],
+      "provider_collocation_values_H_lm": [
+        0.013173863544044798,
+        0.019345561772606695,
+        0.019345561772606695
+      ],
+      "provider_collocation_order_for_nodes": "[amp_insp3, amp_insp2, amp_insp1] -> [0.5, 0.75, 1.0]*f_ins",
+      "geometric_veto_amplitudes_from_provider_common_H": [
+        0.32186584287390535,
+        0.294512188927513,
+        0.21054329443638875
+      ],
+      "geometric_veto_amplitudes_from_public_output": [
+        0.316809764008595,
+        0.28268408594506556,
+        0.3033053794445165
+      ],
+      "geometric_veto_amplitudes_from_author_release_output": [
+        0.3218658437749585,
+        0.2888165002578867,
+        0.3027324701159592
+      ],
+      "retained_collocation_nodes": [
+        0,
+        1,
+        2
+      ],
+      "oracle_retained_collocation_nodes_component_only": [
+        0,
+        1,
+        2
+      ],
+      "veto_support_nonempty": true,
+      "provider_oracle_veto_node_sets_match": true,
+      "pseudo_pn_coefficients_alpha_beta_gamma_zero_padded": [
+        -0.4095538067640665,
+        0.9296985065748521,
+        -0.5187439615325325
+      ],
+      "clean_physical_amplitude_units": "Fourier-domain strain/Hz (SI)",
+      "public_physical_amplitude_units": "Fourier-domain strain/Hz (SI)",
+      "author_release_physical_amplitude_units": "Fourier-domain strain/Hz (SI)",
+      "native_physical_amplitude_units": "Fourier-domain strain/Hz (SI)",
+      "clean_physical_l2": 4.854838345033553e-25,
+      "public_physical_l2": 5.20444830632426e-25,
+      "author_release_physical_l2": 5.238378004016136e-25,
+      "native_physical_l2": 5.061861684101342e-25,
+      "clean_vs_public_physical_scale_acceptance_like_relative_l2": 0.12898634794187339,
+      "clean_vs_native_physical_scale_acceptance_like_relative_l2": 0.27432267654998155,
+      "clean_vs_author_release_physical_scale_relative_l2": 0.12251137418732372,
+      "default_vs_author_release_physical_scale_relative_l2": 0.013878112505527321,
+      "native_vs_public_physical_scale_acceptance_like_relative_l2": 0.362759497282256,
+      "clean_vs_public_shape_only_normalized_relative_l2": 0.11400929463561454,
+      "clean_vs_native_shape_only_normalized_relative_l2": 0.27697994399265075,
+      "native_vs_public_shape_only_normalized_relative_l2": 0.36678272759359254,
+      "release_views": {
+        "current_default": {
+          "release": 122022,
+          "role": "current-installed-default descriptive observation",
+          "strict_parity_claim": false,
+          "clean_vs_public_physical_relative_l2": 0.12898634794187339,
+          "public_physical_l2": 5.20444830632426e-25
+        },
+        "author_release_control": {
+          "release": 122019,
+          "inspiral_amp_fits_version": 122018,
+          "role": "explicit old-release diagnostic control",
+          "strict_current_release_parity_claim": false,
+          "clean_vs_author_release_physical_relative_l2": 0.12251137418732372,
+          "author_release_physical_l2": 5.238378004016136e-25
+        }
+      },
+      "array_sha256": {
+        "frequency_hz": "4294cbf21b9b89b2b736ebba32865e42f5b9fbeb3d1c645292083586ccd6b4be",
+        "collocation_frequency_hz": "6d26b3228d03504488996bdadbdae9dea6744f19a13327d202204054e75ce830",
+        "provider_H_lm": "23d710bba6045a213706f299a476a8e57180255763f0e04c6eb09e8ee0636a32",
+        "provider_amp_insp1_2_3_raw": "5eb2001c9d4e894c963356c7c2be024d6961ff8e1b4cce90eb33548934ae0fab",
+        "geometric_veto_amplitudes": "f798c3650e0adfbf48a31d3f9ff287a160f1a07ea0ba3386419f87df7e69fe4f",
+        "oracle_geometric_veto_amplitudes": "24febdae4d5cb1bff4a997e3afed714fe3ddb3ac028399f1b72a2b6d2065e0e5",
+        "author_release_geometric_veto_amplitudes": "e4a860072941d9f0925e28431fa87d66f0974f88be193a733ff9dce2d2323eed",
+        "clean_physical_amplitude": "652a4b77efbed029f97bfb61f06946c7ccd0768cceece05541218dd61fc339d5",
+        "public_complex_physical": "bb8cfe0b4b3278c0a2faa8c7cfba6f5798c60892057cb602d4184cdac5116bc7",
+        "public_physical_amplitude": "0e7a7492465fb90fb841e34a70ed6409f80ea8c9706050a7caee3e7f04efed55",
+        "author_release_complex_physical": "221dc1a94e947c19ce3cf2125f93b642c0fd71db30dd37de0b1cfc0839e3bddc",
+        "author_release_physical_amplitude": "eac90b7a52aee4f2772b623913dba48eebc0f5ee1c526cfc3d0d76880bdcfae6",
+        "native_complex_physical": "99f0fa2b1faabe71aa1f4243f734a7a85dba15141a66a7430daf9ba28fc08adb",
+        "native_physical_amplitude": "29fc02bc7fac790ba34d710816baf4c112935a29c0b623b797268e7c8f727514"
+      }
+    },
+    {
+      "case": "C27_16",
+      "mode": [
+        3,
+        3
+      ],
+      "m1_msun": 27.0,
+      "m2_msun": 16.0,
+      "q": 1.6875,
+      "eta": 0.23363980530016226,
+      "chi1_aligned": -0.25,
+      "chi2_aligned": 0.15,
+      "chi_eff_mass_weighted": -0.1011627906976744,
+      "chi_pn_raw_inspiral_fit_numerator": -0.09330587689112027,
+      "chi_pn_inspiral_fit_input_normalized": -0.1107012861645041,
+      "chi_pn_normalization_denominator": 0.8428617238689174,
+      "spin_variables_delta_x1_x2_S": [
+        0.255813953488372,
+        0.627906976744186,
+        0.372093023255814,
+        -0.14604060913705583
+      ],
+      "S_hat_available_but_not_passed_to_inspiral_fit": -0.14604060913705583,
+      "final_spin_chi_f_from_xas_fit": 0.5924309094209793,
+      "public_default_release_observed": 122022,
+      "public_author_release_control": 122019,
+      "public_default_row_role": "current-installed-default descriptive observation",
+      "author_release_row_role": "explicit old-release diagnostic control",
+      "strict_current_release_parity_claim": false,
+      "clean_collocation_provenance": "earlier-release compatibility provider; not current-default calibration",
+      "f_meco_22_dimensionless_Mf": 0.020017286741157665,
+      "f_isco_22_dimensionless_Mf": 0.03892305405670921,
+      "f_isco_22_dimensionless_Mf_final_spin": 0.03892305405670921,
+      "f_rd_32_dimensionless_Mf": null,
+      "f_rd_22_dimensionless_Mf": null,
+      "f_rd_32_over_f_rd_22": null,
+      "cut_frequency_variant": "printed-paper",
+      "f_ins_dimensionless_Mf_printed_control": 0.05435979603326212,
+      "f_ins_dimensionless_Mf": 0.05435979603326212,
+      "f_ins_hz": 256.6609738069895,
+      "frequency_hz": [
+        128.33048690349474,
+        192.49573035524213,
+        230.99487642629055,
+        243.82792511664
+      ],
+      "frequency_as_fraction_of_f_ins": [
+        0.5,
+        0.75,
+        0.9,
+        0.95
+      ],
+      "collocation_frequency_hz": [
+        128.33048690349474,
+        192.49573035524213,
+        256.6609738069895
+      ],
+      "frequency_support_strictly_below_cut": true,
+      "collocation_endpoint_allowed_by_support_check": true,
+      "provider_amp_insp1_2_3_raw": [
+        0.08527541528242635,
+        0.0762081470697752,
+        0.06908418209535647
+      ],
+      "provider_collocation_values_H_lm": [
+        0.06908418209535647,
+        0.0762081470697752,
+        0.08527541528242635
+      ],
+      "provider_collocation_order_for_nodes": "[amp_insp3, amp_insp2, amp_insp1] -> [0.5, 0.75, 1.0]*f_ins",
+      "geometric_veto_amplitudes_from_provider_common_H": [
+        1.5116768759941321,
+        1.039063165736468,
+        0.8311942514323745
+      ],
+      "geometric_veto_amplitudes_from_public_output": [
+        1.511092230742597,
+        1.0185801901180924,
+        0.8399941000902683
+      ],
+      "geometric_veto_amplitudes_from_author_release_output": [
+        1.514118815308339,
+        1.038476438227087,
+        0.8310489807071103
+      ],
+      "retained_collocation_nodes": [
+        0,
+        1,
+        2
+      ],
+      "oracle_retained_collocation_nodes_component_only": [
+        0,
+        1,
+        2
+      ],
+      "veto_support_nonempty": true,
+      "provider_oracle_veto_node_sets_match": true,
+      "pseudo_pn_coefficients_alpha_beta_gamma_zero_padded": [
+        -0.6588129988270282,
+        1.4417695252654574,
+        -0.7505468184234693
+      ],
+      "clean_physical_amplitude_units": "Fourier-domain strain/Hz (SI)",
+      "public_physical_amplitude_units": "Fourier-domain strain/Hz (SI)",
+      "author_release_physical_amplitude_units": "Fourier-domain strain/Hz (SI)",
+      "native_physical_amplitude_units": "Fourier-domain strain/Hz (SI)",
+      "clean_physical_l2": 1.932536510529552e-24,
+      "public_physical_l2": 1.923907373578227e-24,
+      "author_release_physical_l2": 1.9332311597263673e-24,
+      "native_physical_l2": 2.059993245952217e-24,
+      "clean_vs_public_physical_scale_acceptance_like_relative_l2": 0.009478622782009331,
+      "clean_vs_native_physical_scale_acceptance_like_relative_l2": 0.16984374326532423,
+      "clean_vs_author_release_physical_scale_relative_l2": 0.0012310766317955805,
+      "default_vs_author_release_physical_scale_relative_l2": 0.009269398041497378,
+      "native_vs_public_physical_scale_acceptance_like_relative_l2": 0.1822902974955404,
+      "clean_vs_public_shape_only_normalized_relative_l2": 0.008331614332683836,
+      "clean_vs_native_shape_only_normalized_relative_l2": 0.16330573532292364,
+      "native_vs_public_shape_only_normalized_relative_l2": 0.16236305835334447,
+      "release_views": {
+        "current_default": {
+          "release": 122022,
+          "role": "current-installed-default descriptive observation",
+          "strict_parity_claim": false,
+          "clean_vs_public_physical_relative_l2": 0.009478622782009331,
+          "public_physical_l2": 1.923907373578227e-24
+        },
+        "author_release_control": {
+          "release": 122019,
+          "inspiral_amp_fits_version": 122018,
+          "role": "explicit old-release diagnostic control",
+          "strict_current_release_parity_claim": false,
+          "clean_vs_author_release_physical_relative_l2": 0.0012310766317955805,
+          "author_release_physical_l2": 1.9332311597263673e-24
+        }
+      },
+      "array_sha256": {
+        "frequency_hz": "19ad254b70ffcbc73e996abf3224b05001562f4884485512662cb70ab2ccac84",
+        "collocation_frequency_hz": "2cc61406c4ec1726e909d199cd40cfe8fc2cdb039a8b27fe0ab3dccf9091a4e7",
+        "provider_H_lm": "1f2a4dfa11079915c570e7b6e51d2540ffb31fbe7efc5c1fd2d5800fdbfefc84",
+        "provider_amp_insp1_2_3_raw": "a19341a5023d0373fa5a993f62c595167482855658456c671e28f0c786cdfe23",
+        "geometric_veto_amplitudes": "722295c7daca2a9146d29745b4b025f3580be82cfcebb6fbc8462ce86452d451",
+        "oracle_geometric_veto_amplitudes": "8eb5725e4959a23dad8d28c2bf4e84defa9a70be1675a431b71c6fe5e8a96c4e",
+        "author_release_geometric_veto_amplitudes": "d5f09c080c48342d79ab3e99834e103872bee8ae70f1a2ff5c0d8f9218d09b6d",
+        "clean_physical_amplitude": "59bbc727df7d9c47ec7036e938c27fca81ea401b0f6d12d2a87f250db52e2724",
+        "public_complex_physical": "3f9591949c64f8596071eb7531eda3338ba8e86573c4be957ab3d1561e82f6eb",
+        "public_physical_amplitude": "28cb17fbd47606e002b22c5469d1a88a433f717530f06cc1693dab44bd51d71c",
+        "author_release_complex_physical": "05ab5b83f6b50b94dff96e3f5da5747c045865566fdc35adb116e03df7995df4",
+        "author_release_physical_amplitude": "cf8986f0b6ec2c1e282b52e8f5815577994648295ea33bb37d8cf72f43da8689",
+        "native_complex_physical": "84a517489e196d9e7320d1253a95fe6c8ea8cddc8faf4f31b4814e04ff798a1c",
+        "native_physical_amplitude": "dfecbb3c6938b8e2a8dcf60262fc1f8b3dcfd498731e658a144b25f74dee8e29"
+      }
+    },
+    {
+      "case": "C27_16",
+      "mode": [
+        4,
+        4
+      ],
+      "m1_msun": 27.0,
+      "m2_msun": 16.0,
+      "q": 1.6875,
+      "eta": 0.23363980530016226,
+      "chi1_aligned": -0.25,
+      "chi2_aligned": 0.15,
+      "chi_eff_mass_weighted": -0.1011627906976744,
+      "chi_pn_raw_inspiral_fit_numerator": -0.09330587689112027,
+      "chi_pn_inspiral_fit_input_normalized": -0.1107012861645041,
+      "chi_pn_normalization_denominator": 0.8428617238689174,
+      "spin_variables_delta_x1_x2_S": [
+        0.255813953488372,
+        0.627906976744186,
+        0.372093023255814,
+        -0.14604060913705583
+      ],
+      "S_hat_available_but_not_passed_to_inspiral_fit": -0.14604060913705583,
+      "final_spin_chi_f_from_xas_fit": 0.5924309094209793,
+      "public_default_release_observed": 122022,
+      "public_author_release_control": 122019,
+      "public_default_row_role": "current-installed-default descriptive observation",
+      "author_release_row_role": "explicit old-release diagnostic control",
+      "strict_current_release_parity_claim": false,
+      "clean_collocation_provenance": "earlier-release compatibility provider; not current-default calibration",
+      "f_meco_22_dimensionless_Mf": 0.020017286741157665,
+      "f_isco_22_dimensionless_Mf": 0.03892305405670921,
+      "f_isco_22_dimensionless_Mf_final_spin": 0.03892305405670921,
+      "f_rd_32_dimensionless_Mf": null,
+      "f_rd_22_dimensionless_Mf": null,
+      "f_rd_32_over_f_rd_22": null,
+      "cut_frequency_variant": "printed-paper",
+      "f_ins_dimensionless_Mf_printed_control": 0.06929212774114603,
+      "f_ins_dimensionless_Mf": 0.06929212774114603,
+      "f_ins_hz": 327.1643067298978,
+      "frequency_hz": [
+        163.5821533649489,
+        245.37323004742336,
+        294.44787605690806,
+        310.80609139340294
+      ],
+      "frequency_as_fraction_of_f_ins": [
+        0.5,
+        0.75,
+        0.9,
+        0.9500000000000001
+      ],
+      "collocation_frequency_hz": [
+        163.5821533649489,
+        245.37323004742336,
+        327.1643067298978
+      ],
+      "frequency_support_strictly_below_cut": true,
+      "collocation_endpoint_allowed_by_support_check": true,
+      "provider_amp_insp1_2_3_raw": [
+        0.057340827630892224,
+        0.04597135199591619,
+        0.0361613962348934
+      ],
+      "provider_collocation_values_H_lm": [
+        0.0361613962348934,
+        0.04597135199591619,
+        0.057340827630892224
+      ],
+      "provider_collocation_order_for_nodes": "[amp_insp3, amp_insp2, amp_insp1] -> [0.5, 0.75, 1.0]*f_ins",
+      "geometric_veto_amplitudes_from_provider_common_H": [
+        0.5961448296088034,
+        0.47223053427945433,
+        0.42108414211443784
+      ],
+      "geometric_veto_amplitudes_from_public_output": [
+        0.5999139001904725,
+        0.4600152602731972,
+        0.41285210514526705
+      ],
+      "geometric_veto_amplitudes_from_author_release_output": [
+        0.5961448296088002,
+        0.4722305342794515,
+        0.42108414215597684
+      ],
+      "retained_collocation_nodes": [
+        0,
+        1,
+        2
+      ],
+      "oracle_retained_collocation_nodes_component_only": [
+        0,
+        1,
+        2
+      ],
+      "veto_support_nonempty": true,
+      "provider_oracle_veto_node_sets_match": true,
+      "pseudo_pn_coefficients_alpha_beta_gamma_zero_padded": [
+        -0.22144060700398552,
+        0.3877490375396624,
+        -0.16152097119574665
+      ],
+      "clean_physical_amplitude_units": "Fourier-domain strain/Hz (SI)",
+      "public_physical_amplitude_units": "Fourier-domain strain/Hz (SI)",
+      "author_release_physical_amplitude_units": "Fourier-domain strain/Hz (SI)",
+      "native_physical_amplitude_units": "Fourier-domain strain/Hz (SI)",
+      "clean_physical_l2": 8.504978459823529e-25,
+      "public_physical_l2": 8.410864404167946e-25,
+      "author_release_physical_l2": 8.504978459823487e-25,
+      "native_physical_l2": 9.731033887868389e-25,
+      "clean_vs_public_physical_scale_acceptance_like_relative_l2": 0.01790571867342825,
+      "clean_vs_native_physical_scale_acceptance_like_relative_l2": 0.3568032343481945,
+      "clean_vs_author_release_physical_scale_relative_l2": 5.01925915139569e-15,
+      "default_vs_author_release_physical_scale_relative_l2": 0.017707578276980482,
+      "native_vs_public_physical_scale_acceptance_like_relative_l2": 0.4031545989097729,
+      "clean_vs_public_shape_only_normalized_relative_l2": 0.013901283427612769,
+      "clean_vs_native_shape_only_normalized_relative_l2": 0.35706861712884824,
+      "native_vs_public_shape_only_normalized_relative_l2": 0.34523794099784394,
+      "release_views": {
+        "current_default": {
+          "release": 122022,
+          "role": "current-installed-default descriptive observation",
+          "strict_parity_claim": false,
+          "clean_vs_public_physical_relative_l2": 0.01790571867342825,
+          "public_physical_l2": 8.410864404167946e-25
+        },
+        "author_release_control": {
+          "release": 122019,
+          "inspiral_amp_fits_version": 122018,
+          "role": "explicit old-release diagnostic control",
+          "strict_current_release_parity_claim": false,
+          "clean_vs_author_release_physical_relative_l2": 5.01925915139569e-15,
+          "author_release_physical_l2": 8.504978459823487e-25
+        }
+      },
+      "array_sha256": {
+        "frequency_hz": "ef0f9ba33ca4586364e9d2712c57b82963d36449a8aa41b88447eaf34d500121",
+        "collocation_frequency_hz": "e267009ec84685f2393a438d7c94cda55b5d8163a4a847e6e6db58867fd4cddc",
+        "provider_H_lm": "9e2e89272cca682fd428be1a8aa83bb8dc9488fe234249733b4fb817d03a6feb",
+        "provider_amp_insp1_2_3_raw": "acedf39404f4910332067f6298c7b255f79bbc4ca4092b8219a0644fdd8171aa",
+        "geometric_veto_amplitudes": "a616faf10c991368f5d6a650c107db5ad5c534dcf9df05901f79f8acdde8983d",
+        "oracle_geometric_veto_amplitudes": "b510314310824904713d01340c15452aeccf730b0302d1f2e026009f632826e4",
+        "author_release_geometric_veto_amplitudes": "22319e40fbd2b80a05d464be04103b1120b49dbacac8242c0ca3765663a7a83a",
+        "clean_physical_amplitude": "308c25c388a6cdc5277053d6c9da6f41d7dd83151a86b3f4f418f90e97256d13",
+        "public_complex_physical": "0d8aba881ad9f6ad391c1bb6741b786491497a0c1f3af7ed7c4ecc9d2f67ddef",
+        "public_physical_amplitude": "54792e8d1a092f4218e65987bf1e4a43cae761dd1557043595ec6f64aa94ba7c",
+        "author_release_complex_physical": "e0f9742d0ccfdcc1dfedf3a3635cccd8895c33dd99486e6374256644034a1ee9",
+        "author_release_physical_amplitude": "f36585eb6b761f644145cf7cbdd189d175005eb2f3b8f65c4405453be9da8162",
+        "native_complex_physical": "316ab3e1fadc05f91e0ff25c6d94a4e699801653cfc8d92cd78e6428af0e655a",
+        "native_physical_amplitude": "0174964e7ec85027716e8cdeb430c21b77eea9c2037d54b086a98ff672da081a"
+      }
+    },
+    {
+      "case": "D35_20",
+      "mode": [
+        2,
+        1
+      ],
+      "m1_msun": 35.0,
+      "m2_msun": 20.0,
+      "q": 1.75,
+      "eta": 0.23140495867768596,
+      "chi1_aligned": 0.2,
+      "chi2_aligned": 0.1,
+      "chi_eff_mass_weighted": 0.16363636363636364,
+      "chi_pn_raw_inspiral_fit_numerator": 0.14029108461932274,
+      "chi_pn_inspiral_fit_input_normalized": 0.16614984841922908,
+      "chi_pn_normalization_denominator": 0.8443648065530608,
+      "spin_variables_delta_x1_x2_S": [
+        0.2727272727272727,
+        0.6363636363636364,
+        0.36363636363636365,
+        0.1753846153846154
+      ],
+      "S_hat_available_but_not_passed_to_inspiral_fit": 0.1753846153846154,
+      "final_spin_chi_f_from_xas_fit": 0.7073333174012266,
+      "public_default_release_observed": 122022,
+      "public_author_release_control": 122019,
+      "public_default_row_role": "current-installed-default descriptive observation",
+      "author_release_row_role": "explicit old-release diagnostic control",
+      "strict_current_release_parity_claim": false,
+      "clean_collocation_provenance": "earlier-release compatibility provider; not current-default calibration",
+      "f_meco_22_dimensionless_Mf": 0.023579518633275492,
+      "f_isco_22_dimensionless_Mf": 0.04636758312030512,
+      "f_isco_22_dimensionless_Mf_final_spin": 0.04636758312030512,
+      "f_rd_32_dimensionless_Mf": null,
+      "f_rd_22_dimensionless_Mf": null,
+      "f_rd_32_over_f_rd_22": null,
+      "cut_frequency_variant": "printed-paper",
+      "f_ins_dimensionless_Mf_printed_control": 0.019642884167979935,
+      "f_ins_dimensionless_Mf": 0.019642884167979935,
+      "f_ins_hz": 72.50918787694776,
+      "frequency_hz": [
+        36.25459393847388,
+        54.381890907710826,
+        65.25826908925299,
+        68.88372848310037
+      ],
+      "frequency_as_fraction_of_f_ins": [
+        0.5,
+        0.75,
+        0.9,
+        0.95
+      ],
+      "collocation_frequency_hz": [
+        36.25459393847388,
+        54.381890907710826,
+        72.50918787694776
+      ],
+      "frequency_support_strictly_below_cut": true,
+      "collocation_endpoint_allowed_by_support_check": true,
+      "provider_amp_insp1_2_3_raw": [
+        0.023128146846964875,
+        0.020019701861786695,
+        0.01747339037892252
+      ],
+      "provider_collocation_values_H_lm": [
+        0.01747339037892252,
+        0.020019701861786695,
+        0.023128146846964875
+      ],
+      "provider_collocation_order_for_nodes": "[amp_insp3, amp_insp2, amp_insp1] -> [0.5, 0.75, 1.0]*f_ins",
+      "geometric_veto_amplitudes_from_provider_common_H": [
+        1.24773329831292,
+        0.8907634504421238,
+        0.7356712091570747
+      ],
+      "geometric_veto_amplitudes_from_public_output": [
+        1.2371395983660038,
+        0.888002471021961,
+        0.7339179826147819
+      ],
+      "geometric_veto_amplitudes_from_author_release_output": [
+        1.247733298312914,
+        0.8907634504421215,
+        0.7356712091684394
+      ],
+      "retained_collocation_nodes": [
+        0,
+        1,
+        2
+      ],
+      "oracle_retained_collocation_nodes_component_only": [
+        0,
+        1,
+        2
+      ],
+      "veto_support_nonempty": true,
+      "provider_oracle_veto_node_sets_match": true,
+      "pseudo_pn_coefficients_alpha_beta_gamma_zero_padded": [
+        -0.10476636722292239,
+        0.2142034532179576,
+        -0.1044573311564232
+      ],
+      "clean_physical_amplitude_units": "Fourier-domain strain/Hz (SI)",
+      "public_physical_amplitude_units": "Fourier-domain strain/Hz (SI)",
+      "author_release_physical_amplitude_units": "Fourier-domain strain/Hz (SI)",
+      "native_physical_amplitude_units": "Fourier-domain strain/Hz (SI)",
+      "clean_physical_l2": 2.684841364119596e-24,
+      "public_physical_l2": 2.6713050094176096e-24,
+      "author_release_physical_l2": 2.6848413641760497e-24,
+      "native_physical_l2": 2.938946332621374e-24,
+      "clean_vs_public_physical_scale_acceptance_like_relative_l2": 0.005944888643854589,
+      "clean_vs_native_physical_scale_acceptance_like_relative_l2": 0.2233132778284794,
+      "clean_vs_author_release_physical_scale_relative_l2": 3.6550499647711574e-11,
+      "default_vs_author_release_physical_scale_relative_l2": 0.005914915884415941,
+      "native_vs_public_physical_scale_acceptance_like_relative_l2": 0.25006949709740556,
+      "clean_vs_public_shape_only_normalized_relative_l2": 0.0031008475127151246,
+      "clean_vs_native_shape_only_normalized_relative_l2": 0.2154194856487525,
+      "native_vs_public_shape_only_normalized_relative_l2": 0.21843939700691037,
+      "release_views": {
+        "current_default": {
+          "release": 122022,
+          "role": "current-installed-default descriptive observation",
+          "strict_parity_claim": false,
+          "clean_vs_public_physical_relative_l2": 0.005944888643854589,
+          "public_physical_l2": 2.6713050094176096e-24
+        },
+        "author_release_control": {
+          "release": 122019,
+          "inspiral_amp_fits_version": 122018,
+          "role": "explicit old-release diagnostic control",
+          "strict_current_release_parity_claim": false,
+          "clean_vs_author_release_physical_relative_l2": 3.6550499647711574e-11,
+          "author_release_physical_l2": 2.6848413641760497e-24
+        }
+      },
+      "array_sha256": {
+        "frequency_hz": "e07d3c595c060b2f367edd6d2ae17650e3f2d8a76d33f502511d160ce3f6247d",
+        "collocation_frequency_hz": "e04ee1149f615002bec4fc1688449cc3008a47841d9cb2d677d4166c7d87ca42",
+        "provider_H_lm": "b88b2f95dc7a85175010f42c65ff5fb582a01c7b47e40410ffef90109454adf1",
+        "provider_amp_insp1_2_3_raw": "4d151af2ba3912fb42c5113f5089a3dad4c2409c1bde11ae6edc5000809491fc",
+        "geometric_veto_amplitudes": "8ae13395db49c2f6263cda34732287abd32023e515da8b32bf2589139ba18bb2",
+        "oracle_geometric_veto_amplitudes": "48663af372d8af50a657e45b7863cf2cd2f5ff7080bd5f26d2e5fc2ad6aab42c",
+        "author_release_geometric_veto_amplitudes": "30b30722bd766a0fb0b5df791a68bea7439b04a0f6d2050f29a3a8314c1cb813",
+        "clean_physical_amplitude": "74b54f377f51f7569a66bf34357711aaf9f35d6986e191f2c5c395e0bc5cd621",
+        "public_complex_physical": "9eb610638c2e77c677590b535f5311a14bd7e4710a25c13e4e11c6fc9019ca21",
+        "public_physical_amplitude": "f1b70ede300e66829d78ab1dd41f6d74d663e2bc44c2b76ad3e45ee0744ed1fa",
+        "author_release_complex_physical": "8df1da9dc81f01d900541067bcfbe62b44edb1fc0abaef68c35b64f92ec86157",
+        "author_release_physical_amplitude": "d8b30c8b727f2583a1bd9df3192e0e2cf2d673641dec3e9e8a3008c1d6db558f",
+        "native_complex_physical": "3afbae042a6c9e5e40e3f3b0401cddb3a12ed03def056748525c6a031d52ff66",
+        "native_physical_amplitude": "d54e69d05277c8432385903166221f9878ecb818b173b29dd210d852cfe6d69b"
+      }
+    },
+    {
+      "case": "D35_20",
+      "mode": [
+        3,
+        2
+      ],
+      "m1_msun": 35.0,
+      "m2_msun": 20.0,
+      "q": 1.75,
+      "eta": 0.23140495867768596,
+      "chi1_aligned": 0.2,
+      "chi2_aligned": 0.1,
+      "chi_eff_mass_weighted": 0.16363636363636364,
+      "chi_pn_raw_inspiral_fit_numerator": 0.14029108461932274,
+      "chi_pn_inspiral_fit_input_normalized": 0.16614984841922908,
+      "chi_pn_normalization_denominator": 0.8443648065530608,
+      "spin_variables_delta_x1_x2_S": [
+        0.2727272727272727,
+        0.6363636363636364,
+        0.36363636363636365,
+        0.1753846153846154
+      ],
+      "S_hat_available_but_not_passed_to_inspiral_fit": 0.1753846153846154,
+      "final_spin_chi_f_from_xas_fit": 0.7073333174012266,
+      "public_default_release_observed": 122022,
+      "public_author_release_control": 122019,
+      "public_default_row_role": "current-installed-default descriptive observation",
+      "author_release_row_role": "explicit old-release diagnostic control",
+      "strict_current_release_parity_claim": false,
+      "clean_collocation_provenance": "earlier-release compatibility provider; not current-default calibration",
+      "f_meco_22_dimensionless_Mf": 0.023579518633275492,
+      "f_isco_22_dimensionless_Mf": 0.04636758312030512,
+      "f_isco_22_dimensionless_Mf_final_spin": 0.04636758312030512,
+      "f_rd_32_dimensionless_Mf": 0.1213090740762876,
+      "f_rd_22_dimensionless_Mf": 0.08529403557683155,
+      "f_rd_32_over_f_rd_22": 1.4222456852450636,
+      "cut_frequency_variant": "release-compatibility",
+      "f_ins_dimensionless_Mf_printed_control": 0.04975061233996627,
+      "f_ins_dimensionless_Mf": 0.05659721790618056,
+      "f_ins_hz": 208.92137179943637,
+      "frequency_hz": [
+        104.46068589971819,
+        156.69102884957726,
+        188.02923461949274,
+        198.47530320946456
+      ],
+      "frequency_as_fraction_of_f_ins": [
+        0.5,
+        0.7499999999999999,
+        0.9,
+        0.9500000000000001
+      ],
+      "collocation_frequency_hz": [
+        104.46068589971819,
+        156.69102884957726,
+        208.92137179943637
+      ],
+      "frequency_support_strictly_below_cut": true,
+      "collocation_endpoint_allowed_by_support_check": true,
+      "provider_amp_insp1_2_3_raw": [
+        0.02952128475775819,
+        0.02952128475775819,
+        0.01919075501489538
+      ],
+      "provider_collocation_values_H_lm": [
+        0.01919075501489538,
+        0.02952128475775819,
+        0.02952128475775819
+      ],
+      "provider_collocation_order_for_nodes": "[amp_insp3, amp_insp2, amp_insp1] -> [0.5, 0.75, 1.0]*f_ins",
+      "geometric_veto_amplitudes_from_provider_common_H": [
+        0.3987020919718566,
+        0.38216587503196375,
+        0.2732058820499234
+      ],
+      "geometric_veto_amplitudes_from_public_output": [
+        0.4085673455078131,
+        0.37519020500458333,
+        0.4043085434278622
+      ],
+      "geometric_veto_amplitudes_from_author_release_output": [
+        0.39870211997270844,
+        0.3724596642631615,
+        0.4042887827304406
+      ],
+      "retained_collocation_nodes": [
+        0,
+        1,
+        2
+      ],
+      "oracle_retained_collocation_nodes_component_only": [
+        0,
+        1,
+        2
+      ],
+      "veto_support_nonempty": true,
+      "provider_oracle_veto_node_sets_match": true,
+      "pseudo_pn_coefficients_alpha_beta_gamma_zero_padded": [
+        -0.7138693415910387,
+        1.605958199130571,
+        -0.8905458450888449
+      ],
+      "clean_physical_amplitude_units": "Fourier-domain strain/Hz (SI)",
+      "public_physical_amplitude_units": "Fourier-domain strain/Hz (SI)",
+      "author_release_physical_amplitude_units": "Fourier-domain strain/Hz (SI)",
+      "native_physical_amplitude_units": "Fourier-domain strain/Hz (SI)",
+      "clean_physical_l2": 1.0177454610866571e-24,
+      "public_physical_l2": 1.1253475577117168e-24,
+      "author_release_physical_l2": 1.1066870814540386e-24,
+      "native_physical_l2": 1.1484363499620541e-24,
+      "clean_vs_public_physical_scale_acceptance_like_relative_l2": 0.14288061547786246,
+      "clean_vs_native_physical_scale_acceptance_like_relative_l2": 0.3122035198218675,
+      "clean_vs_author_release_physical_scale_relative_l2": 0.13361594682833863,
+      "default_vs_author_release_physical_scale_relative_l2": 0.018022758337321733,
+      "native_vs_public_physical_scale_acceptance_like_relative_l2": 0.39594593491253033,
+      "clean_vs_public_shape_only_normalized_relative_l2": 0.11164263902110033,
+      "clean_vs_native_shape_only_normalized_relative_l2": 0.30882734839848563,
+      "native_vs_public_shape_only_normalized_relative_l2": 0.3914190132697272,
+      "release_views": {
+        "current_default": {
+          "release": 122022,
+          "role": "current-installed-default descriptive observation",
+          "strict_parity_claim": false,
+          "clean_vs_public_physical_relative_l2": 0.14288061547786246,
+          "public_physical_l2": 1.1253475577117168e-24
+        },
+        "author_release_control": {
+          "release": 122019,
+          "inspiral_amp_fits_version": 122018,
+          "role": "explicit old-release diagnostic control",
+          "strict_current_release_parity_claim": false,
+          "clean_vs_author_release_physical_relative_l2": 0.13361594682833863,
+          "author_release_physical_l2": 1.1066870814540386e-24
+        }
+      },
+      "array_sha256": {
+        "frequency_hz": "8f5fba397fffb299ff954a3e6f8d664c52183575b95aa1e3cec4b266ee11794a",
+        "collocation_frequency_hz": "9d7795b967758ec55fdefa25df5f296d43cf6b6745094995c5ee5b6c5b5df4a6",
+        "provider_H_lm": "778f6f22a9bd8bfc6d8c0e4012a60a71353f63b49d46f61fe9cf9d736cfb63a6",
+        "provider_amp_insp1_2_3_raw": "41f7bb31413b1d91ad4288836cac886696193e9106bb82db4f8f6cf81844009d",
+        "geometric_veto_amplitudes": "cc76f4b0a00c30b2455c788d2f0868188e5db82982d4a59f7185b8c8e6bced23",
+        "oracle_geometric_veto_amplitudes": "85214897f269c1f53177dbdf99bb0a37f2106f114eeee3626fdce2a951a4af7c",
+        "author_release_geometric_veto_amplitudes": "dec0d8e69065969cd78063ecb8888ba9ae7779b478adea2e45aec6023645fb84",
+        "clean_physical_amplitude": "5fa8415e79d3e9d597595b0b1299cd232357b3b5f6775542aa8a15b75dcb892b",
+        "public_complex_physical": "99ecc39d548ba4381a81b48df004d0547f844eba30a4e192e736784fe2b79618",
+        "public_physical_amplitude": "16d471e7ccfc0be2041b2d6742e06a671d9aa52840d219a11366f58bba0c3e66",
+        "author_release_complex_physical": "60c539479e6a64393148feb419830070cbe66a87a1902902b2d5e150561d44a3",
+        "author_release_physical_amplitude": "4c2d2aad8c469a3a8df5b0b8ceaf6c888fef02c70df4d1059b5cd8e5f517a447",
+        "native_complex_physical": "06cd9be4b442443c5b68e00732d4bc3159c31218cc4bbcc1d0f8b865cbd2c912",
+        "native_physical_amplitude": "e9aefc79677eb5c5340d7cfcab467d4348617722663706c90f9c45c8f6da9d2d"
+      }
+    },
+    {
+      "case": "D35_20",
+      "mode": [
+        3,
+        3
+      ],
+      "m1_msun": 35.0,
+      "m2_msun": 20.0,
+      "q": 1.75,
+      "eta": 0.23140495867768596,
+      "chi1_aligned": 0.2,
+      "chi2_aligned": 0.1,
+      "chi_eff_mass_weighted": 0.16363636363636364,
+      "chi_pn_raw_inspiral_fit_numerator": 0.14029108461932274,
+      "chi_pn_inspiral_fit_input_normalized": 0.16614984841922908,
+      "chi_pn_normalization_denominator": 0.8443648065530608,
+      "spin_variables_delta_x1_x2_S": [
+        0.2727272727272727,
+        0.6363636363636364,
+        0.36363636363636365,
+        0.1753846153846154
+      ],
+      "S_hat_available_but_not_passed_to_inspiral_fit": 0.1753846153846154,
+      "final_spin_chi_f_from_xas_fit": 0.7073333174012266,
+      "public_default_release_observed": 122022,
+      "public_author_release_control": 122019,
+      "public_default_row_role": "current-installed-default descriptive observation",
+      "author_release_row_role": "explicit old-release diagnostic control",
+      "strict_current_release_parity_claim": false,
+      "clean_collocation_provenance": "earlier-release compatibility provider; not current-default calibration",
+      "f_meco_22_dimensionless_Mf": 0.023579518633275492,
+      "f_isco_22_dimensionless_Mf": 0.04636758312030512,
+      "f_isco_22_dimensionless_Mf_final_spin": 0.04636758312030512,
+      "f_rd_32_dimensionless_Mf": null,
+      "f_rd_22_dimensionless_Mf": null,
+      "f_rd_32_over_f_rd_22": null,
+      "cut_frequency_variant": "printed-paper",
+      "f_ins_dimensionless_Mf_printed_control": 0.05503019849665457,
+      "f_ins_dimensionless_Mf": 0.05503019849665457,
+      "f_ins_hz": 203.13692060578924,
+      "frequency_hz": [
+        101.56846030289462,
+        152.35269045434194,
+        182.82322854521033,
+        192.98007457549977
+      ],
+      "frequency_as_fraction_of_f_ins": [
+        0.5,
+        0.75,
+        0.9,
+        0.95
+      ],
+      "collocation_frequency_hz": [
+        101.56846030289462,
+        152.35269045434194,
+        203.13692060578924
+      ],
+      "frequency_support_strictly_below_cut": true,
+      "collocation_endpoint_allowed_by_support_check": true,
+      "provider_amp_insp1_2_3_raw": [
+        0.10158856996927591,
+        0.08971676803954957,
+        0.0819810336443628
+      ],
+      "provider_collocation_values_H_lm": [
+        0.0819810336443628,
+        0.08971676803954957,
+        0.10158856996927591
+      ],
+      "provider_collocation_order_for_nodes": "[amp_insp3, amp_insp2, amp_insp1] -> [0.5, 0.75, 1.0]*f_ins",
+      "geometric_veto_amplitudes_from_provider_common_H": [
+        1.759933187624475,
+        1.2000977159007953,
+        0.9714623563538797
+      ],
+      "geometric_veto_amplitudes_from_public_output": [
+        1.761510720304949,
+        1.2014969126419908,
+        0.9871477121063608
+      ],
+      "geometric_veto_amplitudes_from_author_release_output": [
+        1.76482280868782,
+        1.1900091794177121,
+        0.9785028232088372
+      ],
+      "retained_collocation_nodes": [
+        0,
+        1,
+        2
+      ],
+      "oracle_retained_collocation_nodes_component_only": [
+        0,
+        1,
+        2
+      ],
+      "veto_support_nonempty": true,
+      "provider_oracle_veto_node_sets_match": true,
+      "pseudo_pn_coefficients_alpha_beta_gamma_zero_padded": [
+        -0.12549338234870683,
+        0.2688623192918629,
+        -0.11640491535099123
+      ],
+      "clean_physical_amplitude_units": "Fourier-domain strain/Hz (SI)",
+      "public_physical_amplitude_units": "Fourier-domain strain/Hz (SI)",
+      "author_release_physical_amplitude_units": "Fourier-domain strain/Hz (SI)",
+      "native_physical_amplitude_units": "Fourier-domain strain/Hz (SI)",
+      "clean_physical_l2": 3.668617596109653e-24,
+      "public_physical_l2": 3.6887245807631504e-24,
+      "author_release_physical_l2": 3.664246303290804e-24,
+      "native_physical_l2": 3.9532024414511354e-24,
+      "clean_vs_public_physical_scale_acceptance_like_relative_l2": 0.008548029441645082,
+      "clean_vs_native_physical_scale_acceptance_like_relative_l2": 0.17525270653726482,
+      "clean_vs_author_release_physical_scale_relative_l2": 0.004721075458514524,
+      "default_vs_author_release_physical_scale_relative_l2": 0.010826167344503479,
+      "native_vs_public_physical_scale_acceptance_like_relative_l2": 0.19154420298354702,
+      "clean_vs_public_shape_only_normalized_relative_l2": 0.006602558662109179,
+      "clean_vs_native_shape_only_normalized_relative_l2": 0.16586651566498067,
+      "native_vs_public_shape_only_normalized_relative_l2": 0.17157440405538327,
+      "release_views": {
+        "current_default": {
+          "release": 122022,
+          "role": "current-installed-default descriptive observation",
+          "strict_parity_claim": false,
+          "clean_vs_public_physical_relative_l2": 0.008548029441645082,
+          "public_physical_l2": 3.6887245807631504e-24
+        },
+        "author_release_control": {
+          "release": 122019,
+          "inspiral_amp_fits_version": 122018,
+          "role": "explicit old-release diagnostic control",
+          "strict_current_release_parity_claim": false,
+          "clean_vs_author_release_physical_relative_l2": 0.004721075458514524,
+          "author_release_physical_l2": 3.664246303290804e-24
+        }
+      },
+      "array_sha256": {
+        "frequency_hz": "5c4988a5458b93d707f3926a8a1ea58f57629c1eb3ad38b3e0bf6f8e4699cf51",
+        "collocation_frequency_hz": "af7384c32b875b3b15c6b7cc3be90ebc0941afc4f5f1b6dda957a2095c8c0788",
+        "provider_H_lm": "654711d5953d812e895259d3286f637ec25b46c67a54beb427c1a289c9b060b1",
+        "provider_amp_insp1_2_3_raw": "ea9e33574e50354ceb56db4349a5328a2d217167e9704d0cdbd49a13bea5d738",
+        "geometric_veto_amplitudes": "2e3d79410963ca1105a571078ad095fc93e0ffde146381ebf96d60930df6bd18",
+        "oracle_geometric_veto_amplitudes": "3466df36beca25770b0c1ddd8f72663c1cd19d3de5762854994e0c166f385dbf",
+        "author_release_geometric_veto_amplitudes": "0dd74ef5240daa99383a927a6aa6e12fb810284f31ddcba32f68e9910e79be05",
+        "clean_physical_amplitude": "11143938dda893ec0485211e1420b0399167893538a0a25013b0ca8537611e5a",
+        "public_complex_physical": "ae7e97e69dfe72fa087ba0478725e5f6f100a66f8e017093fa523a56a7b772ef",
+        "public_physical_amplitude": "79a4aa9ba085142ad85ce66399798725f12bbd58112cb49048c0687dd5c1564d",
+        "author_release_complex_physical": "4a0678d70fd3e8287830d30fa366bf8880b5cae4a9a337df12e66adaa5e2f377",
+        "author_release_physical_amplitude": "fbef491e7ec7f628d2d57dec5a861f4b583fbd8d61aa77a91ff40cf6d97f15b9",
+        "native_complex_physical": "900575ea3047e210a5fc7e6286977e209f074ab02fd043a133f712454e7dbadb",
+        "native_physical_amplitude": "f7b6e3325af6a466b5d3cbc2b89484eac574f7eba29abf36752f2bf3a0034fe9"
+      }
+    },
+    {
+      "case": "D35_20",
+      "mode": [
+        4,
+        4
+      ],
+      "m1_msun": 35.0,
+      "m2_msun": 20.0,
+      "q": 1.75,
+      "eta": 0.23140495867768596,
+      "chi1_aligned": 0.2,
+      "chi2_aligned": 0.1,
+      "chi_eff_mass_weighted": 0.16363636363636364,
+      "chi_pn_raw_inspiral_fit_numerator": 0.14029108461932274,
+      "chi_pn_inspiral_fit_input_normalized": 0.16614984841922908,
+      "chi_pn_normalization_denominator": 0.8443648065530608,
+      "spin_variables_delta_x1_x2_S": [
+        0.2727272727272727,
+        0.6363636363636364,
+        0.36363636363636365,
+        0.1753846153846154
+      ],
+      "S_hat_available_but_not_passed_to_inspiral_fit": 0.1753846153846154,
+      "final_spin_chi_f_from_xas_fit": 0.7073333174012266,
+      "public_default_release_observed": 122022,
+      "public_author_release_control": 122019,
+      "public_default_row_role": "current-installed-default descriptive observation",
+      "author_release_row_role": "explicit old-release diagnostic control",
+      "strict_current_release_parity_claim": false,
+      "clean_collocation_provenance": "earlier-release compatibility provider; not current-default calibration",
+      "f_meco_22_dimensionless_Mf": 0.023579518633275492,
+      "f_isco_22_dimensionless_Mf": 0.04636758312030512,
+      "f_isco_22_dimensionless_Mf_final_spin": 0.04636758312030512,
+      "f_rd_32_dimensionless_Mf": null,
+      "f_rd_22_dimensionless_Mf": null,
+      "f_rd_32_over_f_rd_22": null,
+      "cut_frequency_variant": "printed-paper",
+      "f_ins_dimensionless_Mf_printed_control": 0.07958852467382024,
+      "f_ins_dimensionless_Mf": 0.07958852467382024,
+      "f_ins_hz": 293.7908322969356,
+      "frequency_hz": [
+        146.8954161484678,
+        220.3431242227017,
+        264.41174906724206,
+        279.1012906820888
+      ],
+      "frequency_as_fraction_of_f_ins": [
+        0.5,
+        0.75,
+        0.9,
+        0.95
+      ],
+      "collocation_frequency_hz": [
+        146.8954161484678,
+        220.3431242227017,
+        293.7908322969356
+      ],
+      "frequency_support_strictly_below_cut": true,
+      "collocation_endpoint_allowed_by_support_check": true,
+      "provider_amp_insp1_2_3_raw": [
+        0.06697023837345478,
+        0.05468625085516655,
+        0.0422322084685481
+      ],
+      "provider_collocation_values_H_lm": [
+        0.0422322084685481,
+        0.05468625085516655,
+        0.06697023837345478
+      ],
+      "provider_collocation_order_for_nodes": "[amp_insp3, amp_insp2, amp_insp1] -> [0.5, 0.75, 1.0]*f_ins",
+      "geometric_veto_amplitudes_from_provider_common_H": [
+        0.5894798711473811,
+        0.475623752717134,
+        0.41639486994496033
+      ],
+      "geometric_veto_amplitudes_from_public_output": [
+        0.5932957419917105,
+        0.4664286754436521,
+        0.41453968930351753
+      ],
+      "geometric_veto_amplitudes_from_author_release_output": [
+        0.5894798711473896,
+        0.4756237527171401,
+        0.4163948697682574
+      ],
+      "retained_collocation_nodes": [
+        0,
+        1,
+        2
+      ],
+      "oracle_retained_collocation_nodes_component_only": [
+        0,
+        1,
+        2
+      ],
+      "veto_support_nonempty": true,
+      "provider_oracle_veto_node_sets_match": true,
+      "pseudo_pn_coefficients_alpha_beta_gamma_zero_padded": [
+        -0.3339820255402991,
+        0.6215727071344584,
+        -0.28859733469996585
+      ],
+      "clean_physical_amplitude_units": "Fourier-domain strain/Hz (SI)",
+      "public_physical_amplitude_units": "Fourier-domain strain/Hz (SI)",
+      "author_release_physical_amplitude_units": "Fourier-domain strain/Hz (SI)",
+      "native_physical_amplitude_units": "Fourier-domain strain/Hz (SI)",
+      "clean_physical_l2": 1.3874830826752326e-24,
+      "public_physical_l2": 1.3787801729186732e-24,
+      "author_release_physical_l2": 1.3874830826752484e-24,
+      "native_physical_l2": 1.6357547482328697e-24,
+      "clean_vs_public_physical_scale_acceptance_like_relative_l2": 0.012253239440480497,
+      "clean_vs_native_physical_scale_acceptance_like_relative_l2": 0.3353360577014888,
+      "clean_vs_author_release_physical_scale_relative_l2": 1.1917799732305137e-14,
+      "default_vs_author_release_physical_scale_relative_l2": 0.012176381683869765,
+      "native_vs_public_physical_scale_acceptance_like_relative_l2": 0.39181556203666335,
+      "clean_vs_public_shape_only_normalized_relative_l2": 0.010469394933894672,
+      "clean_vs_native_shape_only_normalized_relative_l2": 0.3246738180782802,
+      "native_vs_public_shape_only_normalized_relative_l2": 0.31642065965509036,
+      "release_views": {
+        "current_default": {
+          "release": 122022,
+          "role": "current-installed-default descriptive observation",
+          "strict_parity_claim": false,
+          "clean_vs_public_physical_relative_l2": 0.012253239440480497,
+          "public_physical_l2": 1.3787801729186732e-24
+        },
+        "author_release_control": {
+          "release": 122019,
+          "inspiral_amp_fits_version": 122018,
+          "role": "explicit old-release diagnostic control",
+          "strict_current_release_parity_claim": false,
+          "clean_vs_author_release_physical_relative_l2": 1.1917799732305137e-14,
+          "author_release_physical_l2": 1.3874830826752484e-24
+        }
+      },
+      "array_sha256": {
+        "frequency_hz": "2af0df7e01e11b1e6b0f378040eae6686cf1a1a8132c40da04d76c81c7c6a2a7",
+        "collocation_frequency_hz": "f992c071c1a7d0f02cbf23f764ec6a726d85cf0d247bcc31e9d7dcc2d1cd7c50",
+        "provider_H_lm": "449dcb613adf9e7969a8b17838c562fa7c3e1fe49daf9436c57f3383be1b89ac",
+        "provider_amp_insp1_2_3_raw": "36f8203c128e10199f97c1b93d5422ebe456054d7cd6b05c13d67b0adae7d65d",
+        "geometric_veto_amplitudes": "7e926d52490abb1b600c16199aeeead0249857bb63060f163850137373e3e0c4",
+        "oracle_geometric_veto_amplitudes": "3955c23ca9176d62b5fe2407508622b0d2e582393d67aa07184d833b822cc37e",
+        "author_release_geometric_veto_amplitudes": "b3a4a7cd4795cb640ae8a4401164061fa85a9c609d25dc5aa760f6650b50ea66",
+        "clean_physical_amplitude": "cbb520e74e7e3ceaac2b676e0898f08d350fb293c303bd9d3db5bd14958f2afc",
+        "public_complex_physical": "dc1f67e7a1a4f299bfdb4b23dbeb42a4889df89861220b5cedec8305f004905f",
+        "public_physical_amplitude": "1eedefc3281904d855758fd9b4fb0da114f1e24d0b37315c0f92ddeebcc48157",
+        "author_release_complex_physical": "bc92f795eacb8d4ffc404c765003bea9baad35aa71b262a8f4470d9211039862",
+        "author_release_physical_amplitude": "52d5c7cde78833c24d86c6ac922938f4fe3b3ab293e4f148674bc49e506927c0",
+        "native_complex_physical": "24d16a722bde1923eb6d6f8835d143f2028c2ac5d1fa1bdc402fc2d8487334b9",
+        "native_physical_amplitude": "e83c3f511984a73879b9ee41bdf89987b8f1b1377c898b4f3a6ac681537ccb70"
+      }
+    },
+    {
+      "case": "fresh32_18",
+      "mode": [
+        2,
+        1
+      ],
+      "m1_msun": 32.0,
+      "m2_msun": 18.0,
+      "q": 1.7777777777777777,
+      "eta": 0.2304,
+      "chi1_aligned": -0.6,
+      "chi2_aligned": 0.45,
+      "chi_eff_mass_weighted": -0.222,
+      "chi_pn_raw_inspiral_fit_numerator": -0.21037805309734514,
+      "chi_pn_inspiral_fit_input_normalized": -0.24895611668705286,
+      "chi_pn_normalization_denominator": 0.8450407079646017,
+      "spin_variables_delta_x1_x2_S": [
+        0.28,
+        0.64,
+        0.36,
+        -0.3476261127596439
+      ],
+      "S_hat_available_but_not_passed_to_inspiral_fit": -0.3476261127596439,
+      "final_spin_chi_f_from_xas_fit": 0.49919507936402746,
+      "public_default_release_observed": 122022,
+      "public_author_release_control": 122019,
+      "public_default_row_role": "current-installed-default descriptive observation",
+      "author_release_row_role": "explicit old-release diagnostic control",
+      "strict_current_release_parity_claim": false,
+      "clean_collocation_provenance": "earlier-release compatibility provider; not current-default calibration",
+      "f_meco_22_dimensionless_Mf": 0.01860504666067119,
+      "f_isco_22_dimensionless_Mf": 0.03453130322674564,
+      "f_isco_22_dimensionless_Mf_final_spin": 0.03453130322674564,
+      "f_rd_32_dimensionless_Mf": null,
+      "f_rd_22_dimensionless_Mf": null,
+      "f_rd_32_over_f_rd_22": null,
+      "cut_frequency_variant": "printed-paper",
+      "f_ins_dimensionless_Mf_printed_control": 0.015363260266555228,
+      "f_ins_dimensionless_Mf": 0.015363260266555228,
+      "f_ins_hz": 62.382655576343836,
+      "frequency_hz": [
+        31.191327788171918,
+        46.78699168225788,
+        56.14439001870945,
+        59.26352279752664
+      ],
+      "frequency_as_fraction_of_f_ins": [
+        0.5,
+        0.75,
+        0.9,
+        0.95
+      ],
+      "collocation_frequency_hz": [
+        31.191327788171918,
+        46.78699168225788,
+        62.382655576343836
+      ],
+      "frequency_support_strictly_below_cut": true,
+      "collocation_endpoint_allowed_by_support_check": true,
+      "provider_amp_insp1_2_3_raw": [
+        0.0440529958794683,
+        0.0375077639848974,
+        0.033206135827277335
+      ],
+      "provider_collocation_values_H_lm": [
+        0.033206135827277335,
+        0.0375077639848974,
+        0.0440529958794683
+      ],
+      "provider_collocation_order_for_nodes": "[amp_insp3, amp_insp2, amp_insp1] -> [0.5, 0.75, 1.0]*f_ins",
+      "geometric_veto_amplitudes_from_provider_common_H": [
+        3.1515679707160373,
+        2.218143865568773,
+        1.8624392901599898
+      ],
+      "geometric_veto_amplitudes_from_public_output": [
+        3.103389698118311,
+        2.1989097209810984,
+        1.8492232772368467
+      ],
+      "geometric_veto_amplitudes_from_author_release_output": [
+        3.1515679707160307,
+        2.218143865568765,
+        1.8624392901599773
+      ],
+      "retained_collocation_nodes": [
+        0,
+        1,
+        2
+      ],
+      "oracle_retained_collocation_nodes_component_only": [
+        0,
+        1,
+        2
+      ],
+      "veto_support_nonempty": true,
+      "provider_oracle_veto_node_sets_match": true,
+      "pseudo_pn_coefficients_alpha_beta_gamma_zero_padded": [
+        -0.024314450133145562,
+        0.046255819304339696,
+        -0.008797263497403094
+      ],
+      "clean_physical_amplitude_units": "Fourier-domain strain/Hz (SI)",
+      "public_physical_amplitude_units": "Fourier-domain strain/Hz (SI)",
+      "author_release_physical_amplitude_units": "Fourier-domain strain/Hz (SI)",
+      "native_physical_amplitude_units": "Fourier-domain strain/Hz (SI)",
+      "clean_physical_l2": 5.5688559371413846e-24,
+      "public_physical_l2": 5.518237627976203e-24,
+      "author_release_physical_l2": 5.568855937189736e-24,
+      "native_physical_l2": 5.89464305849196e-24,
+      "clean_vs_public_physical_scale_acceptance_like_relative_l2": 0.011118695007105344,
+      "clean_vs_native_physical_scale_acceptance_like_relative_l2": 0.21466192561064995,
+      "clean_vs_author_release_physical_scale_relative_l2": 1.5148318457745006e-11,
+      "default_vs_author_release_physical_scale_relative_l2": 0.011017631243971296,
+      "native_vs_public_physical_scale_acceptance_like_relative_l2": 0.23690358361420555,
+      "clean_vs_public_shape_only_normalized_relative_l2": 0.006254932301630218,
+      "clean_vs_native_shape_only_normalized_relative_l2": 0.21340617274024457,
+      "native_vs_public_shape_only_normalized_relative_l2": 0.21950823850484186,
+      "release_views": {
+        "current_default": {
+          "release": 122022,
+          "role": "current-installed-default descriptive observation",
+          "strict_parity_claim": false,
+          "clean_vs_public_physical_relative_l2": 0.011118695007105344,
+          "public_physical_l2": 5.518237627976203e-24
+        },
+        "author_release_control": {
+          "release": 122019,
+          "inspiral_amp_fits_version": 122018,
+          "role": "explicit old-release diagnostic control",
+          "strict_current_release_parity_claim": false,
+          "clean_vs_author_release_physical_relative_l2": 1.5148318457745006e-11,
+          "author_release_physical_l2": 5.568855937189736e-24
+        }
+      },
+      "array_sha256": {
+        "frequency_hz": "0f6c9bf9c52717f207631b6df32746d11a4fe50c4aede837c70a519c489dd2d4",
+        "collocation_frequency_hz": "35fd48568468138855d6b524950987a275cd4059a0b231f63625ba43d8caa76b",
+        "provider_H_lm": "30688fd16232d44d7b287cc61a15a805a663ba4e3b354a1eab6fa8ee89c29e1c",
+        "provider_amp_insp1_2_3_raw": "9dbd4e989d0e931061e7a4b15249cf65b62ad2a1f5fe024210eb4d709051e0ed",
+        "geometric_veto_amplitudes": "5b123e1b6b8c57da8393eae529330dcb0730a27aea5a3079810bf86f2373f518",
+        "oracle_geometric_veto_amplitudes": "77bc83c262ca3f7c050e5a970f4c4ed6631a31afc22238f347e8278891891ba8",
+        "author_release_geometric_veto_amplitudes": "a93efbbb4dc095ab563ce5a65f2e3b0d72dfa0738f2847e858b8644428f0f4df",
+        "clean_physical_amplitude": "c848c99924daa04179fc5b4a7db7e427439a74fd885d2c5981d2f86b2cc0b370",
+        "public_complex_physical": "25972ec7da1304bd7111b9b4f6690ca42c251c1873c3811160014d2b1a739409",
+        "public_physical_amplitude": "d24a193d4cea710f546adc2e5a1c67df4db9334a58f89f89718a9ccddfdcead8",
+        "author_release_complex_physical": "5f33596e32e4e2f312168687e7f1a795d906fedaef8d65c0064f9a326c74c56b",
+        "author_release_physical_amplitude": "8df6594d8d82b42ca9837b6ab1969458fbc1eaa5367f2d32e31348817c25d91b",
+        "native_complex_physical": "4df3ceff832f3bc45936f049dd1ad06fbca84da7fd39d91b3e18635d2d62893b",
+        "native_physical_amplitude": "f9cdd997aa4bc5eae6272b4c51ef309062a9ccd2ef8462b637c4fb3388e5c8f6"
+      }
+    },
+    {
+      "case": "fresh32_18",
+      "mode": [
+        3,
+        2
+      ],
+      "m1_msun": 32.0,
+      "m2_msun": 18.0,
+      "q": 1.7777777777777777,
+      "eta": 0.2304,
+      "chi1_aligned": -0.6,
+      "chi2_aligned": 0.45,
+      "chi_eff_mass_weighted": -0.222,
+      "chi_pn_raw_inspiral_fit_numerator": -0.21037805309734514,
+      "chi_pn_inspiral_fit_input_normalized": -0.24895611668705286,
+      "chi_pn_normalization_denominator": 0.8450407079646017,
+      "spin_variables_delta_x1_x2_S": [
+        0.28,
+        0.64,
+        0.36,
+        -0.3476261127596439
+      ],
+      "S_hat_available_but_not_passed_to_inspiral_fit": -0.3476261127596439,
+      "final_spin_chi_f_from_xas_fit": 0.49919507936402746,
+      "public_default_release_observed": 122022,
+      "public_author_release_control": 122019,
+      "public_default_row_role": "current-installed-default descriptive observation",
+      "author_release_row_role": "explicit old-release diagnostic control",
+      "strict_current_release_parity_claim": false,
+      "clean_collocation_provenance": "earlier-release compatibility provider; not current-default calibration",
+      "f_meco_22_dimensionless_Mf": 0.01860504666067119,
+      "f_isco_22_dimensionless_Mf": 0.03453130322674564,
+      "f_isco_22_dimensionless_Mf_final_spin": 0.03453130322674564,
+      "f_rd_32_dimensionless_Mf": 0.11033071129520419,
+      "f_rd_22_dimensionless_Mf": 0.07383251197152005,
+      "f_rd_32_over_f_rd_22": 1.4943377700295888,
+      "cut_frequency_variant": "release-compatibility",
+      "f_ins_dimensionless_Mf_printed_control": 0.03891604355770757,
+      "f_ins_dimensionless_Mf": 0.04441002436492414,
+      "f_ins_hz": 180.327300717876,
+      "frequency_hz": [
+        90.163650358938,
+        135.245475538407,
+        162.2945706460884,
+        171.3109356819822
+      ],
+      "frequency_as_fraction_of_f_ins": [
+        0.5,
+        0.75,
+        0.9,
+        0.95
+      ],
+      "collocation_frequency_hz": [
+        90.163650358938,
+        135.245475538407,
+        180.327300717876
+      ],
+      "frequency_support_strictly_below_cut": true,
+      "collocation_endpoint_allowed_by_support_check": true,
+      "provider_amp_insp1_2_3_raw": [
+        0.015004332839476272,
+        0.015004332839476272,
+        0.011263514752696333
+      ],
+      "provider_collocation_values_H_lm": [
+        0.011263514752696333,
+        0.015004332839476272,
+        0.015004332839476272
+      ],
+      "provider_collocation_order_for_nodes": "[amp_insp3, amp_insp2, amp_insp1] -> [0.5, 0.75, 1.0]*f_ins",
+      "geometric_veto_amplitudes_from_provider_common_H": [
+        0.3098501491482173,
+        0.2571903471119776,
+        0.18386234938317525
+      ],
+      "geometric_veto_amplitudes_from_public_output": [
+        0.29364399974171046,
+        0.2546702582125827,
+        0.2521396815213678
+      ],
+      "geometric_veto_amplitudes_from_author_release_output": [
+        0.3098501399297786,
+        0.25719033720472223,
+        0.23744079642889337
+      ],
+      "retained_collocation_nodes": [
+        0,
+        1,
+        2
+      ],
+      "oracle_retained_collocation_nodes_component_only": [
+        0,
+        1,
+        2
+      ],
+      "veto_support_nonempty": true,
+      "provider_oracle_veto_node_sets_match": true,
+      "pseudo_pn_coefficients_alpha_beta_gamma_zero_padded": [
+        -0.2401991263061497,
+        0.5346179213597777,
+        -0.29472460688623264
+      ],
+      "clean_physical_amplitude_units": "Fourier-domain strain/Hz (SI)",
+      "public_physical_amplitude_units": "Fourier-domain strain/Hz (SI)",
+      "author_release_physical_amplitude_units": "Fourier-domain strain/Hz (SI)",
+      "native_physical_amplitude_units": "Fourier-domain strain/Hz (SI)",
+      "clean_physical_l2": 5.903344354832908e-25,
+      "public_physical_l2": 6.199246829178434e-25,
+      "author_release_physical_l2": 6.224460777696218e-25,
+      "native_physical_l2": 5.321773253000537e-25,
+      "clean_vs_public_physical_scale_acceptance_like_relative_l2": 0.11452302047796704,
+      "clean_vs_native_physical_scale_acceptance_like_relative_l2": 0.2416139541282405,
+      "clean_vs_author_release_physical_scale_relative_l2": 0.08524612221303561,
+      "default_vs_author_release_physical_scale_relative_l2": 0.03955713112105369,
+      "native_vs_public_physical_scale_acceptance_like_relative_l2": 0.3129415809210688,
+      "clean_vs_public_shape_only_normalized_relative_l2": 0.10667889518234308,
+      "clean_vs_native_shape_only_normalized_relative_l2": 0.204597927032743,
+      "native_vs_public_shape_only_normalized_relative_l2": 0.30123313381312306,
+      "release_views": {
+        "current_default": {
+          "release": 122022,
+          "role": "current-installed-default descriptive observation",
+          "strict_parity_claim": false,
+          "clean_vs_public_physical_relative_l2": 0.11452302047796704,
+          "public_physical_l2": 6.199246829178434e-25
+        },
+        "author_release_control": {
+          "release": 122019,
+          "inspiral_amp_fits_version": 122018,
+          "role": "explicit old-release diagnostic control",
+          "strict_current_release_parity_claim": false,
+          "clean_vs_author_release_physical_relative_l2": 0.08524612221303561,
+          "author_release_physical_l2": 6.224460777696218e-25
+        }
+      },
+      "array_sha256": {
+        "frequency_hz": "9e51fbcbb14ae3b19d7c7b46678c4379deb07b80fdad4d40ed4d14f93ab50696",
+        "collocation_frequency_hz": "6ba8e3b7a76087b7a59a280223a000e329e01870aec8ff0fd6800d9cbaa77562",
+        "provider_H_lm": "3043c49cc96f1dad1f2f59ffcf7b16107bf21785823a31c4eab0bd448095582f",
+        "provider_amp_insp1_2_3_raw": "ff479ce0ea0088c43daaf20badfbb620ccc9890e660a038c6ebace9736a6f91b",
+        "geometric_veto_amplitudes": "072ff353e105cf707f52af4aca8144f5258a453fd774896e5fe1e1d2616081dc",
+        "oracle_geometric_veto_amplitudes": "1ad984d2896cd1f15884c9c17de9ac467c3f757a67a49dc1c9a1a8b59a529319",
+        "author_release_geometric_veto_amplitudes": "4b93164979c302a49ad3c21ace4044b9bd7312f99d6f6df05ea854e7865d3f4f",
+        "clean_physical_amplitude": "fba85315fe53b97682b4c350515f899c66b34d0c4dc4aa3469662af173976f3b",
+        "public_complex_physical": "c931b74a9417514f0d7d2b06e4b47ca91b55b9ca2f7cada0f2e4b55e377ddf01",
+        "public_physical_amplitude": "94441b69db031988a503f0312a1b5e5ff2403b8e460ff629bba4c07038f6672b",
+        "author_release_complex_physical": "828102ea6f310c8dfe366b95e77982005e06a3f796fc9cc3368cdebd81baf6e4",
+        "author_release_physical_amplitude": "327bd2c74e27d29df6a8aced8240b64382fe2a944157fa0df1556a5a0a4b7cf4",
+        "native_complex_physical": "d2277bdb129881e1971ebb653ea8e9339270fc54828cb7ad2ed861b6d9fb8d04",
+        "native_physical_amplitude": "3109a3cf17b4d2efa8eb5513914d969fc3f3a4e1379153024f57c1211d63aa53"
+      }
+    },
+    {
+      "case": "fresh32_18",
+      "mode": [
+        3,
+        3
+      ],
+      "m1_msun": 32.0,
+      "m2_msun": 18.0,
+      "q": 1.7777777777777777,
+      "eta": 0.2304,
+      "chi1_aligned": -0.6,
+      "chi2_aligned": 0.45,
+      "chi_eff_mass_weighted": -0.222,
+      "chi_pn_raw_inspiral_fit_numerator": -0.21037805309734514,
+      "chi_pn_inspiral_fit_input_normalized": -0.24895611668705286,
+      "chi_pn_normalization_denominator": 0.8450407079646017,
+      "spin_variables_delta_x1_x2_S": [
+        0.28,
+        0.64,
+        0.36,
+        -0.3476261127596439
+      ],
+      "S_hat_available_but_not_passed_to_inspiral_fit": -0.3476261127596439,
+      "final_spin_chi_f_from_xas_fit": 0.49919507936402746,
+      "public_default_release_observed": 122022,
+      "public_author_release_control": 122019,
+      "public_default_row_role": "current-installed-default descriptive observation",
+      "author_release_row_role": "explicit old-release diagnostic control",
+      "strict_current_release_parity_claim": false,
+      "clean_collocation_provenance": "earlier-release compatibility provider; not current-default calibration",
+      "f_meco_22_dimensionless_Mf": 0.01860504666067119,
+      "f_isco_22_dimensionless_Mf": 0.03453130322674564,
+      "f_isco_22_dimensionless_Mf_final_spin": 0.03453130322674564,
+      "f_rd_32_dimensionless_Mf": null,
+      "f_rd_22_dimensionless_Mf": null,
+      "f_rd_32_over_f_rd_22": null,
+      "cut_frequency_variant": "printed-paper",
+      "f_ins_dimensionless_Mf_printed_control": 0.051490454032504365,
+      "f_ins_dimensionless_Mf": 0.051490454032504365,
+      "f_ins_hz": 209.07744864362104,
+      "frequency_hz": [
+        104.53872432181052,
+        156.8080864827158,
+        188.16970377925895,
+        198.62357621143997
+      ],
+      "frequency_as_fraction_of_f_ins": [
+        0.5,
+        0.7500000000000001,
+        0.9000000000000001,
+        0.95
+      ],
+      "collocation_frequency_hz": [
+        104.53872432181052,
+        156.8080864827158,
+        209.07744864362104
+      ],
+      "frequency_support_strictly_below_cut": true,
+      "collocation_endpoint_allowed_by_support_check": true,
+      "provider_amp_insp1_2_3_raw": [
+        0.08252636470697826,
+        0.07508965744021968,
+        0.06929258458696719
+      ],
+      "provider_collocation_values_H_lm": [
+        0.06929258458696719,
+        0.07508965744021968,
+        0.08252636470697826
+      ],
+      "provider_collocation_order_for_nodes": "[amp_insp3, amp_insp2, amp_insp1] -> [0.5, 0.75, 1.0]*f_ins",
+      "geometric_veto_amplitudes_from_provider_common_H": [
+        1.6040252840580937,
+        1.083090558248463,
+        0.8509724542096286
+      ],
+      "geometric_veto_amplitudes_from_public_output": [
+        1.6210092846891617,
+        1.0618376312443527,
+        0.8631604211253602
+      ],
+      "geometric_veto_amplitudes_from_author_release_output": [
+        1.6059524358015962,
+        1.0877571634508245,
+        0.8475499237879398
+      ],
+      "retained_collocation_nodes": [
+        0,
+        1,
+        2
+      ],
+      "oracle_retained_collocation_nodes_component_only": [
+        0,
+        1,
+        2
+      ],
+      "veto_support_nonempty": true,
+      "provider_oracle_veto_node_sets_match": true,
+      "pseudo_pn_coefficients_alpha_beta_gamma_zero_padded": [
+        -0.9489872199251019,
+        2.0656082863367757,
+        -1.0812936217885858
+      ],
+      "clean_physical_amplitude_units": "Fourier-domain strain/Hz (SI)",
+      "public_physical_amplitude_units": "Fourier-domain strain/Hz (SI)",
+      "author_release_physical_amplitude_units": "Fourier-domain strain/Hz (SI)",
+      "native_physical_amplitude_units": "Fourier-domain strain/Hz (SI)",
+      "clean_physical_l2": 2.7358706267382902e-24,
+      "public_physical_l2": 2.7396595484569832e-24,
+      "author_release_physical_l2": 2.7403179021982676e-24,
+      "native_physical_l2": 2.8453539195802395e-24,
+      "clean_vs_public_physical_scale_acceptance_like_relative_l2": 0.011948768205633772,
+      "clean_vs_native_physical_scale_acceptance_like_relative_l2": 0.14150334432442738,
+      "clean_vs_author_release_physical_scale_relative_l2": 0.0022730269893569445,
+      "default_vs_author_release_physical_scale_relative_l2": 0.01322469698573022,
+      "native_vs_public_physical_scale_acceptance_like_relative_l2": 0.1415763077703488,
+      "clean_vs_public_shape_only_normalized_relative_l2": 0.011876677929742055,
+      "clean_vs_native_shape_only_normalized_relative_l2": 0.1388692935209878,
+      "native_vs_public_shape_only_normalized_relative_l2": 0.13366456046178835,
+      "release_views": {
+        "current_default": {
+          "release": 122022,
+          "role": "current-installed-default descriptive observation",
+          "strict_parity_claim": false,
+          "clean_vs_public_physical_relative_l2": 0.011948768205633772,
+          "public_physical_l2": 2.7396595484569832e-24
+        },
+        "author_release_control": {
+          "release": 122019,
+          "inspiral_amp_fits_version": 122018,
+          "role": "explicit old-release diagnostic control",
+          "strict_current_release_parity_claim": false,
+          "clean_vs_author_release_physical_relative_l2": 0.0022730269893569445,
+          "author_release_physical_l2": 2.7403179021982676e-24
+        }
+      },
+      "array_sha256": {
+        "frequency_hz": "47521d91935f0c12adad482e52516534e78b4dc8f6aacc2c18fada091ff54c68",
+        "collocation_frequency_hz": "8a0ba382807dc3afe30ce60709da0d250d914326b6caba8c58b106b93973b74d",
+        "provider_H_lm": "f912c7cce1541520f6b1f47453f97fff6b0a75b693aa8a30cd39169f3e9220bc",
+        "provider_amp_insp1_2_3_raw": "38459b456325e7301e99291b4fb8f7e870b61aab2784d58732dbb3cb72e1901f",
+        "geometric_veto_amplitudes": "18f694c0df1087caf2aa38633d3dbf4b6b89f0522bb6629c474f21609550fa8d",
+        "oracle_geometric_veto_amplitudes": "85328e2c7e4ccda53529ca55033ba58bb15288018b0d7cce882a56f7e0ccb8f4",
+        "author_release_geometric_veto_amplitudes": "c76cc13756b086490100a06d6df64dab21a2fcc705a021840c6ac2dea15257b4",
+        "clean_physical_amplitude": "c3a7cfed48a1545384fc6a5d855cd252635b036e0f82c3131a2ec6a04958c2a8",
+        "public_complex_physical": "217af74415a66a7cc59c859e29c0b7e0b84fb496b28e2b892700646cba81205d",
+        "public_physical_amplitude": "f1d3a84c1b6364eb17d603c716195d0d70c41a9a99b328f81fcc126260cb5c1b",
+        "author_release_complex_physical": "c3f34ff8e656d8ab0edfb59ebc1eb7eac970be2cf4b4693fa094a5655a68c44f",
+        "author_release_physical_amplitude": "126e18681a21885dcba7a19e9f08c490400f1039912326a3ce5b5df1a6c03b77",
+        "native_complex_physical": "f36a1934936fa2f9bb4dc2ca2b58a48911bfdaf25b2e33e2f28dbc42311a44f5",
+        "native_physical_amplitude": "0e8e71cebc0274d367155c65b71daeadbb2fced943d2346a0eac33c92e3e9d3b"
+      }
+    },
+    {
+      "case": "fresh32_18",
+      "mode": [
+        4,
+        4
+      ],
+      "m1_msun": 32.0,
+      "m2_msun": 18.0,
+      "q": 1.7777777777777777,
+      "eta": 0.2304,
+      "chi1_aligned": -0.6,
+      "chi2_aligned": 0.45,
+      "chi_eff_mass_weighted": -0.222,
+      "chi_pn_raw_inspiral_fit_numerator": -0.21037805309734514,
+      "chi_pn_inspiral_fit_input_normalized": -0.24895611668705286,
+      "chi_pn_normalization_denominator": 0.8450407079646017,
+      "spin_variables_delta_x1_x2_S": [
+        0.28,
+        0.64,
+        0.36,
+        -0.3476261127596439
+      ],
+      "S_hat_available_but_not_passed_to_inspiral_fit": -0.3476261127596439,
+      "final_spin_chi_f_from_xas_fit": 0.49919507936402746,
+      "public_default_release_observed": 122022,
+      "public_author_release_control": 122019,
+      "public_default_row_role": "current-installed-default descriptive observation",
+      "author_release_row_role": "explicit old-release diagnostic control",
+      "strict_current_release_parity_claim": false,
+      "clean_collocation_provenance": "earlier-release compatibility provider; not current-default calibration",
+      "f_meco_22_dimensionless_Mf": 0.01860504666067119,
+      "f_isco_22_dimensionless_Mf": 0.03453130322674564,
+      "f_isco_22_dimensionless_Mf_final_spin": 0.03453130322674564,
+      "f_rd_32_dimensionless_Mf": null,
+      "f_rd_22_dimensionless_Mf": null,
+      "f_rd_32_over_f_rd_22": null,
+      "cut_frequency_variant": "printed-paper",
+      "f_ins_dimensionless_Mf_printed_control": 0.06276122378055826,
+      "f_ins_dimensionless_Mf": 0.06276122378055826,
+      "f_ins_hz": 254.8425099049813,
+      "frequency_hz": [
+        127.42125495249066,
+        191.131882428736,
+        229.35825891448317,
+        242.10038440973224
+      ],
+      "frequency_as_fraction_of_f_ins": [
+        0.5,
+        0.75,
+        0.8999999999999999,
+        0.95
+      ],
+      "collocation_frequency_hz": [
+        127.42125495249066,
+        191.131882428736,
+        254.8425099049813
+      ],
+      "frequency_support_strictly_below_cut": true,
+      "collocation_endpoint_allowed_by_support_check": true,
+      "provider_amp_insp1_2_3_raw": [
+        0.05320283002833415,
+        0.042123400944530424,
+        0.033234762033940476
+      ],
+      "provider_collocation_values_H_lm": [
+        0.033234762033940476,
+        0.042123400944530424,
+        0.05320283002833415
+      ],
+      "provider_collocation_order_for_nodes": "[amp_insp3, amp_insp2, amp_insp1] -> [0.5, 0.75, 1.0]*f_ins",
+      "geometric_veto_amplitudes_from_provider_common_H": [
+        0.6106957444153883,
+        0.4822985383662262,
+        0.43547717102532096
+      ],
+      "geometric_veto_amplitudes_from_public_output": [
+        0.6305111928824615,
+        0.46885331391623636,
+        0.41805785970494985
+      ],
+      "geometric_veto_amplitudes_from_author_release_output": [
+        0.6106957444153841,
+        0.48229853836622727,
+        0.43547717102532757
+      ],
+      "retained_collocation_nodes": [
+        0,
+        1,
+        2
+      ],
+      "oracle_retained_collocation_nodes_component_only": [
+        0,
+        1,
+        2
+      ],
+      "veto_support_nonempty": true,
+      "provider_oracle_veto_node_sets_match": true,
+      "pseudo_pn_coefficients_alpha_beta_gamma_zero_padded": [
+        -0.27308505761202234,
+        0.48002173028352746,
+        -0.20141023752836018
+      ],
+      "clean_physical_amplitude_units": "Fourier-domain strain/Hz (SI)",
+      "public_physical_amplitude_units": "Fourier-domain strain/Hz (SI)",
+      "author_release_physical_amplitude_units": "Fourier-domain strain/Hz (SI)",
+      "native_physical_amplitude_units": "Fourier-domain strain/Hz (SI)",
+      "clean_physical_l2": 1.1793965720321864e-24,
+      "public_physical_l2": 1.170670506596639e-24,
+      "author_release_physical_l2": 1.1793965720321885e-24,
+      "native_physical_l2": 1.3284054695832626e-24,
+      "clean_vs_public_physical_scale_acceptance_like_relative_l2": 0.032399729938797237,
+      "clean_vs_native_physical_scale_acceptance_like_relative_l2": 0.35648494208611325,
+      "clean_vs_author_release_physical_scale_relative_l2": 7.898750628415881e-15,
+      "default_vs_author_release_physical_scale_relative_l2": 0.03216001229823779,
+      "native_vs_public_physical_scale_acceptance_like_relative_l2": 0.375546662696143,
+      "clean_vs_public_shape_only_normalized_relative_l2": 0.03141378853349167,
+      "clean_vs_native_shape_only_normalized_relative_l2": 0.35911742765897436,
+      "native_vs_public_shape_only_normalized_relative_l2": 0.3290742116603598,
+      "release_views": {
+        "current_default": {
+          "release": 122022,
+          "role": "current-installed-default descriptive observation",
+          "strict_parity_claim": false,
+          "clean_vs_public_physical_relative_l2": 0.032399729938797237,
+          "public_physical_l2": 1.170670506596639e-24
+        },
+        "author_release_control": {
+          "release": 122019,
+          "inspiral_amp_fits_version": 122018,
+          "role": "explicit old-release diagnostic control",
+          "strict_current_release_parity_claim": false,
+          "clean_vs_author_release_physical_relative_l2": 7.898750628415881e-15,
+          "author_release_physical_l2": 1.1793965720321885e-24
+        }
+      },
+      "array_sha256": {
+        "frequency_hz": "0e55020943dec7b2c9edcb323c1910d9b69fd282e9cbba284393858c87654644",
+        "collocation_frequency_hz": "dbfaeb6e5d7d123a30ebddaa41bf917c42b127aacb24712a42911fb77511ee56",
+        "provider_H_lm": "9b3971e70efd9897b80e55060bc34f34dfcf486a2b449aaa7bcc65877d09df86",
+        "provider_amp_insp1_2_3_raw": "0ea77b5d25c88cfc73e6aed3477e6b9d94823304295d9d41f173b1c8b31a0ff3",
+        "geometric_veto_amplitudes": "761b0fe47336775c620a51864b7336c7e149eaa9099204a76d4e328052041ddd",
+        "oracle_geometric_veto_amplitudes": "ddc66c7d8051900bb635d87fe44dd48fc01132558d87fdfcb7c0ec92bc123b68",
+        "author_release_geometric_veto_amplitudes": "01f448db6659dd44f300eb09ea3ea3d7c21f053d3b87374ad82be207c0ccbc2f",
+        "clean_physical_amplitude": "6a99310d0995d7d13af8d54c41bce76176a8df5ec863e8dfd06b23d2bcdbd8a9",
+        "public_complex_physical": "25cb35ff1bb4c8bf564179fb4cba0b73f895f8f5d5a85523391b01dae6ec1d74",
+        "public_physical_amplitude": "eabdd67882093219a22deab9b0ea1f88dab03bba6c4a170bd61fca8096a2de7c",
+        "author_release_complex_physical": "c1a170fac184f5e09f1d8a458478c38a00e4cd2a518d2b70b62c0aad658d7717",
+        "author_release_physical_amplitude": "4bac203102afbb6651a1334a6594c162c254c4b9d79be350f2868fde5488630b",
+        "native_complex_physical": "b495cacf5a72bc27ce7e4a929a6d5b8fb9169d21b9a498f6708da820ec11b3d1",
+        "native_physical_amplitude": "42e2f75555b984979d3dce55df1457c526821056fa6f7cc189a0348c19dc8322"
+      }
+    }
+  ],
+  "npz": "/tmp/torchwave-xhm-inspiral-assembly-raw.npz",
+  "source_hashes": {
+    "paper_tex": "5c7132720db24d9caaa804f53d6961b075996cacee00b3ce0a51865a6dbf107e",
+    "clean_amplitude_helper": "d10bf39f21d58a31b5bdfd56242d9c73ba82e0db61e662ed73e4290cef0db5e4",
+    "clean_spa_helper": "00b0f2775d605a33b6e74c0a673138b900b1f015420f9ffbf42476bdf4f0d9ed",
+    "clean_assembly_helper": "c68dda9efd5abdad9938ed33d35bc1d534221af7e80afa37b3d6ec6506cc5e45",
+    "script": "6a4f83b87e139bbc68ce739f6769e18cab07e67283812584a97bcd7653276645"
+  },
+  "raw_npz_sha256": "855036b69fdc006106d56a4cdcbac67609bdd703ff1faeddabc1375af95d25a8",
+  "python": "3.13.9",
+  "numpy": "2.3.5",
+  "torch": "2.9.1"
+}

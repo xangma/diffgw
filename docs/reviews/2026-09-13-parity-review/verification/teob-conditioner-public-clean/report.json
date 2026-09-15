@@ -1,0 +1,460 @@
+{
+  "api_parameters": {
+    "PN_tidal_order": 0,
+    "SimInspiralTDConditionStage1": {
+      "f_min_hz": 20.0,
+      "textra_seconds": 0.32156926398807184
+    },
+    "SimInspiralTDConditionStage2": {
+      "f_max_hz": 87.94349521273605,
+      "f_min_hz": 20.0
+    },
+    "delta_f_hz": 0.5,
+    "delta_t_seconds": 0.00048828125,
+    "distance_mpc": 100.0,
+    "f_max_hz": 1024.0,
+    "fd_fixture": "/Users/xangma/repos/torchwave/docs/reviews/2026-09-13-parity-review/verification/teob-conditioned-waveform-clean/public-fd-sim-inspiral-output.npz",
+    "inclination_rad": 0.0,
+    "m1_msun": 30.0,
+    "m2_msun": 20.0,
+    "mode": [
+      2,
+      2
+    ],
+    "phi_ref_rad": 0.0,
+    "raw_generation_f_min_hz": 16.90009400983902,
+    "raw_generation_f_min_hz_hex": "0x1.0e66c8f9f9587p+4",
+    "requested_f_low_hz": 20.0,
+    "spins": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "td_fixture": "/Users/xangma/repos/torchwave/docs/reviews/2026-09-13-parity-review/verification/teob-first-difference-clean/public-td-output.npz"
+  },
+  "arrays": {
+    "keys": [
+      "clean_conditioned_h_cross",
+      "clean_conditioned_h_plus",
+      "clean_frequencies",
+      "clean_h_cross_fd",
+      "clean_h_plus_fd",
+      "exact_start_clean_frequencies",
+      "exact_start_clean_h_cross",
+      "exact_start_clean_h_cross_fd",
+      "exact_start_clean_h_plus",
+      "exact_start_clean_h_plus_fd",
+      "exact_start_raw_h_cross",
+      "exact_start_raw_h_plus",
+      "exact_start_stage2_h_cross",
+      "exact_start_stage2_h_plus",
+      "public_stage1_h_cross",
+      "public_stage1_h_plus",
+      "public_stage2_frequencies",
+      "public_stage2_h_cross",
+      "public_stage2_h_cross_fd",
+      "public_stage2_h_plus",
+      "public_stage2_h_plus_fd",
+      "raw_h_cross_generic",
+      "raw_h_plus_generic",
+      "reference_frequencies",
+      "reference_h_cross_fd",
+      "reference_h_plus_fd"
+    ],
+    "path": "/Users/xangma/repos/torchwave/docs/reviews/2026-09-13-parity-review/verification/teob-conditioner-public-clean/arrays.npz",
+    "sha256": "4712791026b99ad8fb4e713cb99270d2f444c274d320267ef25a10be7e21ab6e"
+  },
+  "clean_plan": {
+    "chirp_time": 1.7156926398807184,
+    "eta": 0.24000000000000005,
+    "f_low": 20.0,
+    "f_safe": 20.0,
+    "first_taper_duration": 0.32156926398807184,
+    "mass1": 30.0,
+    "mass2": 20.0,
+    "plunge_ringdown_time": 0.07484355785826285,
+    "plunge_time": 0.04177949267636864,
+    "qnm_damping_time": 0.0030058241074449278,
+    "qnm_dimensionless_frequency": 0.5290948351740714,
+    "qnm_quality": 3.228847697816648,
+    "ringdown_time": 0.033064065181894205,
+    "spin_bound": 0.686,
+    "start_frequency": 16.90009400983902,
+    "support_time": 2.112105461727053,
+    "total_mass_seconds": 0.00024627454738206334,
+    "v_safe": 0.24919144739758323
+  },
+  "clean_plan_float_hex": {
+    "f_isco": "0x1.5fc6239bea892p+6",
+    "f_safe": "0x1.4000000000000p+4",
+    "first_taper_duration": "0x1.49497400e9054p-2",
+    "start_frequency": "0x1.0e66c8f9f9587p+4",
+    "support_time": "0x1.0e5978c5e90bdp+1"
+  },
+  "conclusion": "The saved public TD passes through clean and public conditioning with equal lengths and the reported separated errors. FD attribution is reported on exact shared frequency axes; no cause beyond this bounded conditioner comparison is inferred.",
+  "conditioning_td": {
+    "clean": {
+      "first_taper_samples": 659,
+      "hc": {
+        "abs_max": 5.509030183283314e-21,
+        "dtype": "float64",
+        "finite": true,
+        "l2": 7.117072072115225e-20,
+        "sha256": "ab1490d0490fd23c132ad3923b5f4bfad5ec091443867c5b25b5de14f7ef1289",
+        "shape": [
+          4087
+        ]
+      },
+      "hp": {
+        "abs_max": 5.415871918290809e-21,
+        "dtype": "float64",
+        "finite": true,
+        "l2": 7.117398265866579e-20,
+        "sha256": "c89d60bb4cd451b754660c202f5921adf56629f64f755907d89a420f487b7584",
+        "shape": [
+          4087
+        ]
+      },
+      "length": 4087,
+      "n_trailing_zeros": 0,
+      "second_begin_samples": 102,
+      "second_end_samples": 23,
+      "second_stage_applied": true
+    },
+    "clean_vs_stage2": {
+      "cross": {
+        "difference_sha256": "d6a38b8eae51ff6f057cd30b67013c3885ef5717fbbe2de2879b2e5c3cc8583f",
+        "max_abs": 1.5349135035297101e-33,
+        "relative_l2_public_norm": 2.459275243104154e-13
+      },
+      "exact_equal_lengths": true,
+      "plus": {
+        "difference_sha256": "c0d033db5dfaade665a59f8a57859c96f1dc847906fb7719267e32ac883a77a7",
+        "max_abs": 1.615599435770152e-33,
+        "relative_l2_public_norm": 2.461287820570904e-13
+      }
+    },
+    "public_stage1": {
+      "hc": {
+        "abs_max": 5.5090301832832905e-21,
+        "dtype": "float64",
+        "finite": true,
+        "l2": 7.117132330933178e-20,
+        "sha256": "aeb0bee8463491629cbc47b02e805be8c10c7609bbb34639edfe8f059314c41f",
+        "shape": [
+          4087
+        ]
+      },
+      "hp": {
+        "abs_max": 5.415871918290837e-21,
+        "dtype": "float64",
+        "finite": true,
+        "l2": 7.11747779614374e-20,
+        "sha256": "c542c8e3e34c22916eb2ba1881ed8c1a42bad56e98f6101de8024ad4a7615140",
+        "shape": [
+          4087
+        ]
+      },
+      "lengths": [
+        4087,
+        4087
+      ]
+    },
+    "public_stage2": {
+      "hc": {
+        "abs_max": 5.5090301832832905e-21,
+        "dtype": "float64",
+        "finite": true,
+        "l2": 7.117072072114525e-20,
+        "sha256": "627c0b305c2a5bcb26e002ffc031c74af06fefc6cf7a2d954de172c8cc84d56d",
+        "shape": [
+          4087
+        ]
+      },
+      "hp": {
+        "abs_max": 5.415871918290837e-21,
+        "dtype": "float64",
+        "finite": true,
+        "l2": 7.117398265865886e-20,
+        "sha256": "13929030ba8dfa58ad165bef60727082fdbc33a0d6cbe0e6016bc23604858d27",
+        "shape": [
+          4087
+        ]
+      },
+      "lengths": [
+        4087,
+        4087
+      ],
+      "status": [
+        0,
+        0
+      ]
+    }
+  },
+  "exact_start_control": {
+    "api_start_frequency_hz": 16.900094009839023,
+    "clean_vs_stage2_exact_start": {
+      "cross": {
+        "difference_sha256": "2e72aa7fc87727cd704919f438e89f1ef110e685b9d3e5323390f08e6753c8f6",
+        "max_abs": 1.9833881082554293e-33,
+        "relative_l2_public_norm": 2.483957307188785e-13
+      },
+      "plus": {
+        "difference_sha256": "4d34ab6c83a015a33f34b83c027cef13fd2ef5b77a3354f8b72363f4759909a3",
+        "max_abs": 1.3805005656056944e-33,
+        "relative_l2_public_norm": 2.4687846994534397e-13
+      }
+    },
+    "exact_start_vs_public_fd": {
+      "concat_plus_then_cross": {
+        "difference_sha256": "022e66a34d0291eb43dc0bfbfc551cff8afc328c049900af9b65b3dc41e3b0b6",
+        "max_abs": 4.293439007895708e-35,
+        "relative_l2_public_norm": 2.6041247309980736e-13
+      },
+      "cross": {
+        "difference_sha256": "e8427b3681e0590baccb756c9ffaff44c8b888d917656278fc785a0162b74030",
+        "max_abs": 4.1394796144711e-35,
+        "relative_l2_public_norm": 2.5503575949041787e-13
+      },
+      "exact_axes": true,
+      "plus": {
+        "difference_sha256": "57692d5b5a8fed0c7be9b19ea4ef2ddaac136a39f0cf45a23e56191b4eb4fd3b",
+        "max_abs": 4.293439007895708e-35,
+        "relative_l2_public_norm": 2.6567983895000833e-13
+      }
+    },
+    "fixture_vs_exact_start_td": {
+      "cross": {
+        "difference_sha256": "aef0d44dca0f565253766b0e26140474dcf961f2f0800b11d2869203d3f0316f",
+        "max_abs": 3.697964401872539e-24,
+        "relative_l2_public_norm": 0.00011890880350554185
+      },
+      "exact_lengths": true,
+      "plus": {
+        "difference_sha256": "75dfcb410d200d0c2d7f1a28ca9882c91bcffcca3553fcb889223a250b67bd47",
+        "max_abs": 3.4557195983052936e-24,
+        "relative_l2_public_norm": 0.00011914248286777672
+      }
+    },
+    "stage2_lengths": [
+      4087,
+      4087
+    ],
+    "status": "complete",
+    "td": {
+      "dt": 0.00048828125,
+      "epoch": -1.957764651,
+      "start_frequency_hz": 16.900094009839023
+    },
+    "trigger_public_fd_rel_l2": 0.00013391300327924533,
+    "trigger_stage2_rel_l2": 2.461287820570904e-13
+  },
+  "fd_comparison": {
+    "clean": {
+      "concat_plus_then_cross": {
+        "difference_sha256": "93f4584a0dd0c2345bae159918e5a631baf25f986541eeef242fe286c6ce2eea",
+        "max_abs": 9.92842645653194e-27,
+        "relative_l2_public_norm": 0.0001339130032794602
+      },
+      "cross": {
+        "difference_sha256": "5de246ca6dcc10cbf4a8169c854ea5025dc9e30a8e9184a0c659b80b715d20e4",
+        "max_abs": 9.92842645653194e-27,
+        "relative_l2_public_norm": 0.0001338091101200707
+      },
+      "plus": {
+        "difference_sha256": "c71b35f3a6e1789f20ca453d42fb70e10d1f684aac7101253035835471372ec6",
+        "max_abs": 9.9183231993691e-27,
+        "relative_l2_public_norm": 0.0001340168047831807
+      }
+    },
+    "exact_axes": true,
+    "frequency_bins_compared": 2009,
+    "frequency_bins_total": 2049,
+    "frequency_range_hz": [
+      20.0,
+      1024.0
+    ],
+    "no_polarization_sum_used": true,
+    "public_stage2": {
+      "concat_plus_then_cross": {
+        "difference_sha256": "8b99702ea4434bde7a4b4cd689ea58ae043b9060fa81e77a7bbcd04528854af1",
+        "max_abs": 9.928426458020023e-27,
+        "relative_l2_public_norm": 0.00013391300327924533
+      },
+      "cross": {
+        "difference_sha256": "00ce39c907709873617d33316deed3ce2901e4c69cc25a8a4efe6a1e51d2c358",
+        "max_abs": 9.928426458020023e-27,
+        "relative_l2_public_norm": 0.00013380911011990541
+      },
+      "plus": {
+        "difference_sha256": "d93155127a288ed9146ec09d5941f8993b81d71ea0cce0a2e01399ab23ae5009",
+        "max_abs": 9.918323198353854e-27,
+        "relative_l2_public_norm": 0.00013401680478291654
+      }
+    }
+  },
+  "inputs": {
+    "fd_fixture_sha256": "084e58b5332549b73fdaeb3ffb63df04d573a8082b83db7230d25642d0780fb8",
+    "raw_direct_hc": {
+      "abs_max": 5.506775311121725e-21,
+      "dtype": "float64",
+      "finite": true,
+      "l2": 7.35801270492107e-20,
+      "sha256": "3198490b7c6d6a373e6aa541c1de6f2ea8036b6ee48b97bfd953474cac9f6639",
+      "shape": [
+        4087
+      ]
+    },
+    "raw_direct_hp": {
+      "abs_max": 5.416730720452422e-21,
+      "dtype": "float64",
+      "finite": true,
+      "l2": 7.355706254973032e-20,
+      "sha256": "ac3968a51b5932a72f244792aba732202102119bb4085ec3f1116a2417a146bc",
+      "shape": [
+        4087
+      ]
+    },
+    "raw_generic_hc": {
+      "abs_max": 5.506775311121725e-21,
+      "dtype": "float64",
+      "finite": true,
+      "l2": 7.35801270492107e-20,
+      "sha256": "dfa03ea5af86a9b9402a2dad199e3fca75bd42042e5d569f0a6fef82e12ce16b",
+      "shape": [
+        4087
+      ]
+    },
+    "raw_generic_hp": {
+      "abs_max": 5.416730720452422e-21,
+      "dtype": "float64",
+      "finite": true,
+      "l2": 7.355706254973032e-20,
+      "sha256": "773043449c5c26f161dc763b3b89d19e3e71b455dd02416932f753589417e5f2",
+      "shape": [
+        4087
+      ]
+    },
+    "td_fixture_sha256": "a661d22dfee9c808a0c3c226e84f2b299584566447ae0734e7c1ab2cbe531771"
+  },
+  "modules": {
+    "clean_conditioner": {
+      "path": "/Users/xangma/repos/torchwave/src/torchwave/approximants/eob/td_fd_conditioning_clean.py",
+      "sha256": "9e6f87ae24879188d7d6e63a020ff3bb2034d3d38426de59d07c6ae22b0167a6"
+    },
+    "conditioning_contract": {
+      "path": "/Users/xangma/repos/torchwave/docs/reviews/2026-09-13-parity-review/td-fd-conditioning-contract.md",
+      "sha256": "19d2d50330036ab570db965b0ba5139973551735e61beb6a5ce24ad07e0fdf53"
+    },
+    "diagnostic_script": {
+      "path": "/Users/xangma/repos/torchwave/scripts/diagnose_teob_conditioner_public_clean.py",
+      "sha256": "6f39766f337db1a4d47f421b71edfd4e721975212d9531dda232353f7b79bc25"
+    }
+  },
+  "public_time_bounds": {
+    "calls": {
+      "SimInspiralChirpStartFrequencyBound": [
+        2.1121054617270536,
+        5.965229612094152e+31,
+        3.9768197413961014e+31
+      ],
+      "SimInspiralChirpTimeBound": [
+        20.0,
+        5.965229612094152e+31,
+        3.9768197413961014e+31,
+        0.0,
+        0.0
+      ],
+      "SimInspiralMergeTimeBound": [
+        5.965229612094152e+31,
+        3.9768197413961014e+31
+      ],
+      "SimInspiralRingdownTimeBound": [
+        9.942049353490254e+31,
+        0.686
+      ]
+    },
+    "chirp_time_seconds": 1.7156926398807189,
+    "mass_arguments_are_SI_kg": 1.0,
+    "merge_time_seconds": 0.04177949267636865,
+    "plunge_ringdown_time_seconds": 0.07484355785826285,
+    "ringdown_time_seconds": 0.033064065181894205,
+    "spin_bound": 0.686,
+    "start_frequency_hz": 16.900094009839023,
+    "start_frequency_hz_hex": "0x1.0e66c8f9f9588p+4",
+    "support_time_seconds": 2.1121054617270536,
+    "support_time_seconds_hex": "0x1.0e5978c5e90bep+1"
+  },
+  "sampling": {
+    "delta_f_hz": 0.5,
+    "dt_seconds": 0.00048828125,
+    "f_nyquist_hz": 1024.0,
+    "n_frequency": 2049,
+    "n_time": 4096,
+    "operation": "pair_leading_pad_final_crop then dt*rfft per real polarization"
+  },
+  "scope": {
+    "direct_to_generic_sign": "both saved direct-frame polarizations multiplied by -1 per reviewed observer-frame contract",
+    "no_alignment": true,
+    "no_native_ode_runs": true,
+    "no_oracle_fitting": true,
+    "no_threshold_changes": true,
+    "purpose": "localize TD conditioner versus public stage APIs using identical saved public TD",
+    "source_isolation": "MIT clean conditioner plus public LALSimulation black-box APIs"
+  },
+  "status": "complete",
+  "time_bound_comparison": {
+    "chirp_time": {
+      "clean": 1.7156926398807184,
+      "clean_hex": "0x1.b737a202468d2p+0",
+      "clean_minus_public": -4.440892098500626e-16,
+      "public": 1.7156926398807189,
+      "public_hex": "0x1.b737a202468d4p+0"
+    },
+    "plunge_ringdown_time": {
+      "clean": 0.07484355785826285,
+      "clean_hex": "0x1.328f28951492cp-4",
+      "clean_minus_public": 0.0,
+      "public": 0.07484355785826285,
+      "public_hex": "0x1.328f28951492cp-4"
+    },
+    "plunge_time": {
+      "clean": 0.04177949267636864,
+      "clean_hex": "0x1.5641f25607fc6p-5",
+      "clean_minus_public": -6.938893903907228e-18,
+      "public": 0.04177949267636865,
+      "public_hex": "0x1.5641f25607fc7p-5"
+    },
+    "ringdown_time": {
+      "clean": 0.033064065181894205,
+      "clean_hex": "0x1.0edc5ed421291p-5",
+      "clean_minus_public": 0.0,
+      "public": 0.033064065181894205,
+      "public_hex": "0x1.0edc5ed421291p-5"
+    },
+    "start_frequency": {
+      "clean": 16.90009400983902,
+      "clean_hex": "0x1.0e66c8f9f9587p+4",
+      "clean_minus_public": -3.552713678800501e-15,
+      "public": 16.900094009839023,
+      "public_hex": "0x1.0e66c8f9f9588p+4"
+    },
+    "support_time": {
+      "clean": 2.112105461727053,
+      "clean_hex": "0x1.0e5978c5e90bdp+1",
+      "clean_minus_public": -4.440892098500626e-16,
+      "public": 2.1121054617270536,
+      "public_hex": "0x1.0e5978c5e90bep+1"
+    }
+  },
+  "versions": {
+    "lal": "7.7.0",
+    "lalsimulation": "6.2.0",
+    "platform": "macOS-26.6-arm64-arm-64bit-Mach-O",
+    "python": "3.13.9 | packaged by conda-forge | (main, Oct 22 2025, 23:38:18) [Clang 19.1.7 ]",
+    "torch": "2.9.1"
+  }
+}

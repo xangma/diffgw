@@ -1,0 +1,444 @@
+{
+  "host": "RONI2",
+  "reference_npz": "/tmp/torchwave-lal-eob-modes-reference.npz",
+  "reference_sha256": "ff7cbea0197075db997551cf3bc86c162723746ec32bb627b1a09ccf340954b7",
+  "saved_input_sha256": {
+    "coarse": "1d2df0d77bfbb80e531f9025168d1acc9b4145d2a305ea1d45bfee49732a7602",
+    "fine": "56cf48952800928ec3b4037052a9d4010000d841fd90ef497da31e9632d5fd2f"
+  },
+  "vectors": {
+    "vector1": {
+      "length": 25235,
+      "reshape_candidates": [
+        {
+          "reshape": [
+            5,
+            5047
+          ],
+          "columns": [
+            {
+              "first": 0.0,
+              "last": 5002.277364208544,
+              "min": 0.0,
+              "max": 5002.277364208544,
+              "strict_increasing": true,
+              "nondecreasing": true
+            },
+            {
+              "first": 16.154003242274587,
+              "last": 2.4285157528062586,
+              "min": 2.4285157528062586,
+              "max": 16.154003242274587,
+              "strict_increasing": false,
+              "nondecreasing": false
+            },
+            {
+              "first": 0.0,
+              "last": 117.57209252349534,
+              "min": 0.0,
+              "max": 117.57209252349534,
+              "strict_increasing": true,
+              "nondecreasing": true
+            },
+            {
+              "first": -0.000830456284933745,
+              "last": -0.2878458873342516,
+              "min": -0.2878458873342516,
+              "max": -0.0008300727851119354,
+              "strict_increasing": false,
+              "nondecreasing": false
+            },
+            {
+              "first": 4.4421205915661925,
+              "last": 2.7677142436518793,
+              "min": 2.7677142436518793,
+              "max": 4.4421205915661925,
+              "strict_increasing": false,
+              "nondecreasing": false
+            }
+          ]
+        },
+        {
+          "reshape": [
+            5047,
+            5
+          ],
+          "columns": [
+            {
+              "first": 0.0,
+              "last": 2.849068215562813,
+              "min": -0.22776940249789632,
+              "max": 5001.286029019442,
+              "strict_increasing": false,
+              "nondecreasing": false
+            },
+            {
+              "first": 0.9913351891019707,
+              "last": 2.829852592818885,
+              "min": -0.2530293673845409,
+              "max": 5002.277364208544,
+              "strict_increasing": false,
+              "nondecreasing": false
+            },
+            {
+              "first": 1.9826703782039414,
+              "last": 2.809675079626262,
+              "min": -0.2878458873342516,
+              "max": 4998.312023452137,
+              "strict_increasing": false,
+              "nondecreasing": false
+            },
+            {
+              "first": 2.974005567305912,
+              "last": 2.788772019948923,
+              "min": -0.19294973695256964,
+              "max": 4999.303358641238,
+              "strict_increasing": false,
+              "nondecreasing": false
+            },
+            {
+              "first": 3.965340756407883,
+              "last": 2.7677142436518793,
+              "min": -0.20844289008822073,
+              "max": 5000.29469383034,
+              "strict_increasing": false,
+              "nondecreasing": false
+            }
+          ]
+        }
+      ],
+      "observed_physical_schema_rows": [
+        "time",
+        "r",
+        "phi",
+        "prstar",
+        "p_phi"
+      ],
+      "physical_identity_checks": {
+        "time_increasing": true,
+        "radius_positive": true,
+        "phi_increasing": true,
+        "prstar_nonpositive": true,
+        "p_phi_positive": true
+      },
+      "saved_trajectory_comparison_initial": {
+        "coarse": {
+          "common_support_M": [
+            0.0,
+            5002.277364208544
+          ],
+          "common_support_s": [
+            0.0,
+            1.23193359375
+          ],
+          "samples": 5047,
+          "columns": [
+            "r",
+            "phi",
+            "prstar",
+            "pphi"
+          ],
+          "relative_l2": [
+            1.1464185066545805e-07,
+            1.7219444637505818e-08,
+            3.0656345595034706e-05,
+            3.642393509282488e-08
+          ],
+          "max_abs": [
+            4.134086949214577e-05,
+            1.9201809465130282e-05,
+            1.7569189347699243e-05,
+            3.382254504025184e-06
+          ],
+          "absolute_residual_at_M": {
+            "0.0": [
+              4.419664634269793e-09,
+              2.0816681711721685e-17,
+              7.009034261838687e-09,
+              2.804981136250717e-09
+            ],
+            "1000.0": [
+              1.085781704546207e-07,
+              6.673240093846289e-08,
+              5.695671695784069e-09,
+              3.571005713354225e-09
+            ],
+            "3000.0": [
+              5.601069297256345e-08,
+              2.801099086013892e-07,
+              3.3085450694241014e-09,
+              6.949465003458499e-09
+            ],
+            "4500.0": [
+              7.620961106624691e-08,
+              2.8048813760506164e-07,
+              1.9772179293137127e-09,
+              7.28977678221554e-09
+            ],
+            "4900.0": [
+              1.1471411154317934e-06,
+              8.388104646428474e-07,
+              1.621425466460935e-08,
+              4.55658737408271e-08
+            ]
+          }
+        },
+        "fine": {
+          "common_support_M": [
+            0.0,
+            5002.277364208544
+          ],
+          "common_support_s": [
+            0.0,
+            1.23193359375
+          ],
+          "samples": 5047,
+          "columns": [
+            "r",
+            "phi",
+            "prstar",
+            "pphi"
+          ],
+          "relative_l2": [
+            1.1412884235023142e-07,
+            1.7203436872615657e-08,
+            3.09843626468322e-05,
+            3.639140768153776e-08
+          ],
+          "max_abs": [
+            4.06061983202477e-05,
+            1.9046143080458933e-05,
+            1.7775268569497626e-05,
+            3.371860760381651e-06
+          ],
+          "absolute_residual_at_M": {
+            "0.0": [
+              4.419678845124508e-09,
+              6.938893903907228e-18,
+              7.009034261947107e-09,
+              2.8049802480722974e-09
+            ],
+            "1000.0": [
+              1.0857800880614832e-07,
+              6.673237251675346e-08,
+              5.695669280181628e-09,
+              3.5710128187815826e-09
+            ],
+            "3000.0": [
+              5.600993979726354e-08,
+              2.8011120178916826e-07,
+              3.3085426705183746e-09,
+              6.9495058596658055e-09
+            ],
+            "4500.0": [
+              7.620866782076519e-08,
+              2.804929408739554e-07,
+              1.977212294064501e-09,
+              7.289908232621656e-09
+            ],
+            "4900.0": [
+              1.1471405549912106e-06,
+              8.388070540377157e-07,
+              1.6213718392193988e-08,
+              4.55662254594813e-08
+            ]
+          }
+        }
+      }
+    },
+    "vector2": {
+      "length": 48815,
+      "reshape_candidates": [
+        {
+          "reshape": [
+            5,
+            9763
+          ],
+          "columns": [
+            {
+              "first": 4852.585750654147,
+              "last": 5003.795346216857,
+              "min": 4852.585750654147,
+              "max": 5003.795346216857,
+              "strict_increasing": true,
+              "nondecreasing": true
+            },
+            {
+              "first": 7.205188568433229,
+              "last": 2.211764392860413,
+              "min": 2.211764392860413,
+              "max": 7.205188568433229,
+              "strict_increasing": false,
+              "nondecreasing": false
+            },
+            {
+              "first": 106.22702176260906,
+              "last": 117.8204711967891,
+              "min": 106.22702176260906,
+              "max": 117.8204711967891,
+              "strict_increasing": true,
+              "nondecreasing": true
+            },
+            {
+              "first": -0.014598851912701515,
+              "last": -0.3749782325747841,
+              "min": -0.3749782325747841,
+              "max": -0.014598851912701515,
+              "strict_increasing": false,
+              "nondecreasing": false
+            },
+            {
+              "first": 3.4144929934564323,
+              "last": 2.738308283390098,
+              "min": 2.738308283390098,
+              "max": 3.4144929934564323,
+              "strict_increasing": false,
+              "nondecreasing": false
+            }
+          ]
+        },
+        {
+          "reshape": [
+            9763,
+            5
+          ],
+          "columns": [
+            {
+              "first": 4852.585750654147,
+              "last": 2.7393598572814777,
+              "min": -0.37380394088328134,
+              "max": 5003.764366992197,
+              "strict_increasing": false,
+              "nondecreasing": false
+            },
+            {
+              "first": 4852.601240266476,
+              "last": 2.7390964620611955,
+              "min": -0.3749782325747841,
+              "max": 5003.779856604528,
+              "strict_increasing": false,
+              "nondecreasing": false
+            },
+            {
+              "first": 4852.616729878807,
+              "last": 2.7388334793542772,
+              "min": -0.3702912214461207,
+              "max": 5003.795346216857,
+              "strict_increasing": false,
+              "nondecreasing": false
+            },
+            {
+              "first": 4852.632219491136,
+              "last": 2.7385707921381144,
+              "min": -0.3714596630532402,
+              "max": 5003.733387767538,
+              "strict_increasing": false,
+              "nondecreasing": false
+            },
+            {
+              "first": 4852.647709103466,
+              "last": 2.738308283390098,
+              "min": -0.37263082695419797,
+              "max": 5003.748877379868,
+              "strict_increasing": false,
+              "nondecreasing": false
+            }
+          ]
+        }
+      ],
+      "observed_physical_schema_rows": [
+        "time",
+        "r",
+        "phi",
+        "prstar",
+        "p_phi"
+      ],
+      "physical_identity_checks": {
+        "time_increasing": true,
+        "radius_positive": true,
+        "phi_increasing": true,
+        "prstar_nonpositive": true,
+        "p_phi_positive": true
+      },
+      "saved_trajectory_comparison_initial": {
+        "coarse": {
+          "common_support_M": [
+            4852.585750654147,
+            5003.795346216857
+          ],
+          "common_support_s": [
+            1.195068359375,
+            1.2323074340820312
+          ],
+          "samples": 9763,
+          "columns": [
+            "r",
+            "phi",
+            "prstar",
+            "pphi"
+          ],
+          "relative_l2": [
+            1.6148958322514084e-06,
+            4.866646068876036e-08,
+            4.818179877448571e-05,
+            2.7109613562973056e-07
+          ],
+          "max_abs": [
+            6.755532340374515e-05,
+            2.1492950892820772e-05,
+            8.691654073011978e-05,
+            8.322200718335893e-06
+          ],
+          "absolute_residual_at_M": {
+            "4900.0": [
+              1.001667660815997e-06,
+              6.999279946739989e-07,
+              1.213179013151433e-08,
+              3.113877067306703e-08
+            ]
+          }
+        },
+        "fine": {
+          "common_support_M": [
+            4852.585750654147,
+            5003.5
+          ],
+          "common_support_s": [
+            1.195068359375,
+            1.2322346978261538
+          ],
+          "samples": 9743,
+          "columns": [
+            "r",
+            "phi",
+            "prstar",
+            "pphi"
+          ],
+          "relative_l2": [
+            1.5496158121183505e-06,
+            4.8292255925447014e-08,
+            3.724643330507605e-05,
+            2.618512057895713e-07
+          ],
+          "max_abs": [
+            4.641617294609546e-05,
+            2.0307680927089677e-05,
+            3.005142965328833e-05,
+            3.6228964064299873e-06
+          ],
+          "absolute_residual_at_M": {
+            "4900.0": [
+              1.0016670914936299e-06,
+              6.999245698580125e-07,
+              1.2131254781971856e-08,
+              3.113911839491834e-08
+            ]
+          }
+        }
+      }
+    }
+  },
+  "interpretation_note": "Rows=(time,r,phi,prstar,p_phi) are an observed physically consistent hypothesis, not a documented LAL guarantee. Auxiliary vector semantics remain absent from the callable docstring.",
+  "comparison_note": "Times remain in dimensionless total-M coordinates with initial origin; no event shift or optimization. Saved trajectories are interpolated locally with quintic polynomials only within overlap. The public mode grid has dt=1/4096 s (physical), corresponding to approximately 0.99M here.",
+  "script_sha256": "34cc1c08e66e71dbb88a4d15f8a2c2264ee32929c49b0d87db08882f0b7b58d4"
+}

@@ -1,0 +1,35 @@
+{
+  "template": "docs/reviews/2026-09-12-clean-room/verification/pass-8/inputs/single-kerrschild/KerrSchild.yaml",
+  "template_sha256": "e3ee592bee1b5925f7f53ebd20b77502c756977dfa9d63dc47272c1bf55a8ec3",
+  "input": "docs/reviews/2026-09-12-clean-room/verification/pass-8/inputs/single-kerrschild/checkpoint-smoke-v2/Segment_0000/KerrSchild.yaml",
+  "input_sha256": "c8d48f30a036eb517d5846a7b4c723b3b55da484eb37348908c9556163fbe32f",
+  "num_procs": 1,
+  "checkpoint_trigger": {
+    "wallclock_hours": 0.0,
+    "slab_interval": 1
+  },
+  "completion_time": 0.002,
+  "validation_command": [
+    "EvolveGhSingleBlackHole",
+    "+p1",
+    "--input-file",
+    "docs/reviews/2026-09-12-clean-room/verification/pass-8/inputs/single-kerrschild/checkpoint-smoke-v2/Segment_0000/KerrSchild.yaml",
+    "--check-options"
+  ],
+  "first_segment_command": [
+    "EvolveGhSingleBlackHole",
+    "+p1",
+    "--input-file",
+    "docs/reviews/2026-09-12-clean-room/verification/pass-8/inputs/single-kerrschild/checkpoint-smoke-v2/Segment_0000/KerrSchild.yaml"
+  ],
+  "restart_command_template": [
+    "EvolveGhSingleBlackHole",
+    "+p1",
+    "+restart",
+    "../Segment_0000/Checkpoints/Checkpoint_0000",
+    "--input-file",
+    "docs/reviews/2026-09-12-clean-room/verification/pass-8/inputs/single-kerrschild/checkpoint-smoke-v2/Segment_0000/KerrSchild.yaml"
+  ],
+  "launched": false,
+  "scope": "local render only; checkpoint and restart remain unexecuted"
+}

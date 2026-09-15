@@ -1,0 +1,160 @@
+{
+  "coefficients": {
+    "cached_current": {
+      "amplitude": [
+        0.11361403761995545,
+        1.1082603067205608
+      ],
+      "phase": [
+        0.18687890455638467,
+        1.845386495114594
+      ]
+    },
+    "high_precision_binary64_inputs": {
+      "amplitude": [
+        0.11361403761995999,
+        1.1082603067205776
+      ],
+      "phase": [
+        0.18687890456810413,
+        1.8453864946619583
+      ]
+    },
+    "max_abs_current_vs_high_precision": 4.5263570669362707e-10,
+    "max_abs_current_vs_rational": 4.525488872531014e-10,
+    "rational_float64": {
+      "amplitude": [
+        0.11361403761996072,
+        1.108260306720581
+      ],
+      "phase": [
+        0.18687890456810205,
+        1.845386494662045
+      ]
+    },
+    "reconstructed_current": {
+      "amplitude": [
+        0.11361403761995545,
+        1.1082603067205608
+      ],
+      "phase": [
+        0.18687890455638467,
+        1.845386495114594
+      ]
+    }
+  },
+  "corrected_original_max_abs": {
+    "current_reconstruction_vs_cached_amplitude": 0.0,
+    "current_reconstruction_vs_cached_phase": 0.0,
+    "current_vs_high_precision_amplitude": 4.274358644806853e-15,
+    "current_vs_high_precision_phase": 4.6497916628140956e-11,
+    "current_vs_rational_amplitude": 4.884981308350689e-15,
+    "current_vs_rational_phase": 4.6497916628140956e-11
+  },
+  "cwd": "/Users/xangma/repos/torchwave",
+  "derivative_max_abs_current_vs_high_precision": {
+    "d2_p": 1.1851630787873546e-13,
+    "d2_phase": 1.3878429270100577e-10,
+    "d_arw": 9.315465065995454e-16,
+    "d_p": 1.3100631690576847e-14,
+    "d_phase": 4.689582056016661e-12,
+    "d_product": 1.071365218763276e-14
+  },
+  "derivative_max_abs_current_vs_rational": {
+    "d2_p": 3.31568106304303e-13,
+    "d2_phase": 1.3566583042209956e-10,
+    "d_arw": 7.355227538141662e-16,
+    "d_p": 2.3592239273284576e-14,
+    "d_phase": 4.357958438561127e-12,
+    "d_product": 5.828670879282072e-15
+  },
+  "derived_weights": {
+    "0": {
+      "denominator": 12,
+      "numerators": [
+        -25,
+        48,
+        -36,
+        16,
+        -3
+      ]
+    },
+    "1": {
+      "denominator": 12,
+      "numerators": [
+        -3,
+        -10,
+        18,
+        -6,
+        1
+      ]
+    },
+    "2": {
+      "denominator": 12,
+      "numerators": [
+        1,
+        -8,
+        0,
+        8,
+        -1
+      ]
+    },
+    "3": {
+      "denominator": 12,
+      "numerators": [
+        -1,
+        6,
+        -18,
+        10,
+        3
+      ]
+    },
+    "4": {
+      "denominator": 12,
+      "numerators": [
+        3,
+        -16,
+        36,
+        -48,
+        25
+      ]
+    }
+  },
+  "elapsed_seconds": 0.029466666019288823,
+  "host": "RONI2",
+  "input": {
+    "auxiliary_samples": 204,
+    "matching_index": 170,
+    "nu": 0.24,
+    "original_samples": 642,
+    "path": "/Users/xangma/repos/torchwave/docs/reviews/2026-09-13-parity-review/verification/teob-native-replay-public-clean/replay-native-output.npz",
+    "sha256": "bd7bc65a0da98334585069462b47b54dba0800bd6bbb092369a69267ecb9e611",
+    "spacing": 0.1,
+    "targets": [
+      0.317783696,
+      -0.0019246396,
+      0.38280077079999997,
+      0.0114928308
+    ]
+  },
+  "interpretation": "The high-precision comparison changes only arithmetic on the same sampled trajectory. Its coefficient and corrected-waveform deltas are the roundoff scale; they cannot account for a 2.9e-4 full-TD residual unless they are comparable, which this diagnostic tests directly.",
+  "pid": 63272,
+  "python": "/Users/xangma/miniconda3/envs/pycbcorig313/bin/python",
+  "scope": "saved binary64 NQC arrays only; no ODE, LAL, or fitted/oracle constants",
+  "source_hashes_unchanged": true,
+  "source_sha256_after": {
+    "cache": "bd7bc65a0da98334585069462b47b54dba0800bd6bbb092369a69267ecb9e611",
+    "contract": "7e74010b49e0e5a4b89128378c483016edbb5ce1283ad3009e090c2575d8f099",
+    "module": "f705514ef981b3f0a557efeebe508b52fdb70c634a8ac8f2c357f30761871068",
+    "replay_report": "d21b5d41035d7753409ecdd5c4e39775c8fc714c3cdc46c8dbd6cb10e434efce",
+    "script": "92a4b866627d36a152cdc8489967df9b68e4cf67d493a7a31249a06cf7755f89"
+  },
+  "source_sha256_before": {
+    "cache": "bd7bc65a0da98334585069462b47b54dba0800bd6bbb092369a69267ecb9e611",
+    "contract": "7e74010b49e0e5a4b89128378c483016edbb5ce1283ad3009e090c2575d8f099",
+    "module": "f705514ef981b3f0a557efeebe508b52fdb70c634a8ac8f2c357f30761871068",
+    "replay_report": "d21b5d41035d7753409ecdd5c4e39775c8fc714c3cdc46c8dbd6cb10e434efce",
+    "script": "92a4b866627d36a152cdc8489967df9b68e4cf67d493a7a31249a06cf7755f89"
+  },
+  "status": "complete"
+}

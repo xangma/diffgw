@@ -1,0 +1,3406 @@
+{
+  "environment": {
+    "diagnostic_script_sha256": "4acdc2f2cb73a0eba3eb6228c74f82b00107e3ecfc52b734d4105326cee76401",
+    "helper_hashes_after": {
+      "precession_msa_angles_clean.py": "259705bd0fe0ead9aef45922a8d61cee598b0cd6ba0d1ec655ca6d4a14bdf4e2",
+      "precession_msa_waveform_clean.py": "002af508a4a8501f02c0e59a1416e30d917ce187c8dc79814aac80b0ae1b1ab7",
+      "precession_source_frame_clean.py": "1f7273265036504d3083e0bd6b4d1677d6ddfc0f257e3e8979fe5a2b14467eda"
+    },
+    "helper_hashes_before": {
+      "precession_msa_angles_clean.py": "259705bd0fe0ead9aef45922a8d61cee598b0cd6ba0d1ec655ca6d4a14bdf4e2",
+      "precession_msa_waveform_clean.py": "002af508a4a8501f02c0e59a1416e30d917ce187c8dc79814aac80b0ae1b1ab7",
+      "precession_source_frame_clean.py": "1f7273265036504d3083e0bd6b4d1677d6ddfc0f257e3e8979fe5a2b14467eda"
+    },
+    "helper_hashes_stable_during_run": true,
+    "lal": "7.7.0",
+    "lalsimulation": "6.2.0",
+    "platform": "macOS-26.6-arm64-arm-64bit-Mach-O",
+    "python": "3.13.9 | packaged by conda-forge | (main, Oct 22 2025, 23:38:18) [Clang 19.1.7 ]",
+    "torch": "2.9.1"
+  },
+  "equations": {
+    "aligned_chart_relation": "For convention 1 at exact alignment, delta_alpha=phiRef-pi/2=-phiJ and delta_gamma=+phiJ, so delta_alpha+delta_gamma=0",
+    "cause": "Before the endpoint mapping, the clean endpoint retains the helper's finite root-regularized beta (about 3e-5--4e-5 rad).  Therefore the m'!=2 O(beta) terms expose the convention-1 chart offsets even though the leading m'=2 sum is unchanged.  The native v223 wrapper now applies the same public alpha/gamma chart relation; its direct waveform remains within the unchanged gate.",
+    "endpoint_correction": "For exact transverse-zero v223 convention 1 only, subtract the current clean phi_J from relative alpha and add it to relative gamma before projection.  This preserves alpha+gamma and cos(beta), leaves tiny nonzero transverse rows on the legacy/generic behavior, and does not alter the carrier or remnant.",
+    "eq45_endpoint": "The m'=2 term depends on alpha+gamma at beta=0; m'!=2 terms are proportional to finite-beta Wigner factors",
+    "reusable_contract": "At exact aligned v223 convention 1, apply the paired endpoint chart mapping before Eq. (45) projection: delta_alpha=-phi_J and delta_gamma=+phi_J.  Retain the current finite cos(beta) and root behavior, keep exact-zero selection separate from tiny nonzero transverse spins, and retain the Table-IV carrier phases.",
+    "scope": "This report diagnoses XP v223 convention 0/1 exact-aligned and zero-spin boundaries plus a tiny-spin neighbor; it does not broaden to XPHM or a tiny-spin physics correction.",
+    "source_frame_j_azimuth": "phiJ=atan2(J_y,J_x), with public phiJL0=-phiJ",
+    "source_frame_observer": "N=(sin(iota) sin(phiRef), sin(iota) cos(phiRef), cos(iota))",
+    "table_iv_convention_0": "phi_c=phiJL0=-phiJ; clean projector basis is related to public metadata by zeta_clean=zeta_public+pi/2",
+    "table_iv_convention_1": "phi_c=0; public convention-1 zeta metadata is consumed as reported and the clean projector applies its -pi/2 Table-IV shift once"
+  },
+  "fixtures": "The audited and fresh fixture labels are immutable report metadata; no frozen catalog/holdout case is mutated or rerouted.",
+  "grid": {
+    "count": 1968,
+    "delta_f_hz": 0.25,
+    "fhigh_exclusive_hz": 512.0,
+    "flow_hz": 20.0,
+    "sample_frequencies_hz": [
+      20.0,
+      190.0,
+      511.75
+    ]
+  },
+  "minimal_failing_regression": {
+    "convention": 1,
+    "direct_native_relative_complex_l2": 0.007354070457629662,
+    "expected": "tiny nonzero transverse route remains visibly above 1e-6; exact endpoint rows pass after chart correction",
+    "fixture": "audited_tiny_neighbor_35_25",
+    "public_chart_injected_relative_complex_l2": 0.003921729338918756,
+    "reason": "the tiny-spin discrepancy is a separate MSA internal boundary failure and is not corrected here"
+  },
+  "provenance": "Clean-room equation-level diagnosis. Public LALSimulation angle, source-frame, remnant, XAS, and XP waveform functions are black-box interfaces. Local clean MSA/source-frame helpers are treated as opaque where their physics is outside this boundary diagnosis.",
+  "public_contract": {
+    "angle_api": "SimIMRPhenomXPMSAAngles",
+    "carrier_api": "SimInspiralChooseFDWaveform(..., IMRPhenomXAS)",
+    "conventions": [
+      0,
+      1
+    ],
+    "expansion_order": 5,
+    "final_spin_mod": 3,
+    "mprime": 2,
+    "prec_version": 223,
+    "remnant_api": "SimIMRPhenomXFinalSpin2017",
+    "source_frame_api": "SimIMRPhenomXPCalculateModelParametersFromSourceFrame",
+    "waveform_api": "SimInspiralChooseFDWaveform(..., IMRPhenomXP)"
+  },
+  "rows": [
+    {
+      "angles": {
+        "angle_api": "SimIMRPhenomXPMSAAngles",
+        "beta_max_rad": {
+          "clean": 4.0661856069529476e-05,
+          "public": 4.0661847878389835e-05
+        },
+        "chart_deltas_before_endpoint_correction": {
+          "alpha_max_abs_wrapped": 1.3651465913255834e-07,
+          "alpha_plus_gamma_max_abs_wrapped": 5.04953767688221e-09,
+          "cos_beta_max_abs": 4.440892098500626e-16,
+          "gamma_max_abs_wrapped": 1.344200120101391e-07,
+          "samples": {
+            "alpha": {
+              "190Hz": 1.36468495171016e-07,
+              "20Hz": 0.0,
+              "511.75Hz": 1.2807265470371476e-07
+            },
+            "alpha_plus_gamma": {
+              "190Hz": 2.290727607601184e-09,
+              "20Hz": 0.0,
+              "511.75Hz": 5.04953767688221e-09
+            },
+            "cos_beta": {
+              "190Hz": 0.0,
+              "20Hz": 0.0,
+              "511.75Hz": 0.0
+            },
+            "gamma": {
+              "190Hz": -1.3417776756341482e-07,
+              "20Hz": 0.0,
+              "511.75Hz": -1.2302311702683255e-07
+            }
+          }
+        },
+        "chart_deltas_public_minus_clean": {
+          "alpha_max_abs_wrapped": 1.3651465913255834e-07,
+          "alpha_plus_gamma_max_abs_wrapped": 5.04953767688221e-09,
+          "cos_beta_max_abs": 4.440892098500626e-16,
+          "gamma_max_abs_wrapped": 1.344200120101391e-07,
+          "samples": {
+            "alpha": {
+              "190Hz": 1.36468495171016e-07,
+              "20Hz": 0.0,
+              "511.75Hz": 1.2807265470371476e-07
+            },
+            "alpha_plus_gamma": {
+              "190Hz": 2.290727607601184e-09,
+              "20Hz": 0.0,
+              "511.75Hz": 5.04953767688221e-09
+            },
+            "cos_beta": {
+              "190Hz": 0.0,
+              "20Hz": 0.0,
+              "511.75Hz": 0.0
+            },
+            "gamma": {
+              "190Hz": -1.3417776756341482e-07,
+              "20Hz": 0.0,
+              "511.75Hz": -1.2302311702683255e-07
+            }
+          }
+        },
+        "clean_native_absolute": {
+          "alpha": {
+            "190Hz": 10.601265730086403,
+            "20Hz": 3.141592653589793,
+            "511.75Hz": 10.461040402233014
+          },
+          "cos_beta": {
+            "190Hz": 0.9999999991858275,
+            "20Hz": 0.9999999995469072,
+            "511.75Hz": 0.9999999994651118
+          },
+          "gamma": {
+            "190Hz": -7.384616899156305,
+            "20Hz": 0.0,
+            "511.75Hz": -7.1539990529472055
+          }
+        },
+        "clean_native_absolute_before_endpoint_chart": {
+          "alpha": {
+            "190Hz": 10.601265730086403,
+            "20Hz": 3.141592653589793,
+            "511.75Hz": 10.461040402233014
+          },
+          "cos_beta": {
+            "190Hz": 0.9999999991858275,
+            "20Hz": 0.9999999995469072,
+            "511.75Hz": 0.9999999994651118
+          },
+          "gamma": {
+            "190Hz": -7.384616899156305,
+            "20Hz": 0.0,
+            "511.75Hz": -7.1539990529472055
+          }
+        },
+        "clean_native_relative": {
+          "alpha": {
+            "190Hz": 7.459673076496611,
+            "20Hz": 0.0,
+            "511.75Hz": 7.319447748643221
+          },
+          "cos_beta": {
+            "190Hz": 0.9999999991858275,
+            "20Hz": 0.9999999995469072,
+            "511.75Hz": 0.9999999994651118
+          },
+          "gamma": {
+            "190Hz": -7.384616899156305,
+            "20Hz": -0.0,
+            "511.75Hz": -7.1539990529472055
+          }
+        },
+        "mprime": 2,
+        "public_raw": {
+          "alpha": {
+            "190Hz": 10.601265866554899,
+            "20Hz": 3.141592653589793,
+            "511.75Hz": 10.461040530305668
+          },
+          "cos_beta": {
+            "190Hz": 0.9999999991858275,
+            "20Hz": 0.9999999995469072,
+            "511.75Hz": 0.9999999994651118
+          },
+          "gamma": {
+            "190Hz": -7.384617033334073,
+            "20Hz": -0.0,
+            "511.75Hz": -7.1539991759703225
+          }
+        },
+        "public_transported_absolute": {
+          "alpha": {
+            "190Hz": 10.601265866554899,
+            "20Hz": 3.141592653589793,
+            "511.75Hz": 10.461040530305668
+          },
+          "cos_beta": {
+            "190Hz": 0.9999999991858275,
+            "20Hz": 0.9999999995469072,
+            "511.75Hz": 0.9999999994651118
+          },
+          "gamma": {
+            "190Hz": -7.384617033334073,
+            "20Hz": 0.0,
+            "511.75Hz": -7.1539991759703225
+          }
+        }
+      },
+      "carrier": {
+        "clean_carrier_phase": -1.2707963267948965,
+        "clean_minus_public_table_phase": 0.0,
+        "local_xas_with_clean_remnant_vs_public_xas": {
+          "h_cross": {
+            "max_abs": 9.249945251437416e-33,
+            "nonfinite": 0,
+            "relative_l2": 5.200750978049916e-10,
+            "support": 1968
+          },
+          "h_plus": {
+            "max_abs": 9.249945251437416e-33,
+            "nonfinite": 0,
+            "relative_l2": 5.200750978049916e-10,
+            "support": 1968
+          }
+        },
+        "local_xas_with_public_fit_vs_public_xas": {
+          "h_cross": {
+            "max_abs": 3.406754202730265e-36,
+            "nonfinite": 0,
+            "relative_l2": 4.497925883051834e-14,
+            "support": 1968
+          },
+          "h_plus": {
+            "max_abs": 3.406754202730265e-36,
+            "nonfinite": 0,
+            "relative_l2": 4.497925883051834e-14,
+            "support": 1968
+          }
+        },
+        "opaque_carrier_scope": "XAS is called at inclination zero; the clean projector receives only its positive-frequency h22.",
+        "public_table_carrier_phase": -1.2707963267948965,
+        "public_table_phase_placeholder": null,
+        "public_xas_carrier_phase_input": -1.2707963267948965
+      },
+      "convention": 0,
+      "fixture": {
+        "distance_mpc": 500.0,
+        "exact_transverse_zero": true,
+        "f_ref_hz": 20.0,
+        "full_three_component_spins": true,
+        "id": "audited_aligned_35_25",
+        "inclination_rad": 0.7,
+        "label": "audited prior exact-aligned probe",
+        "mass1_msun": 35.0,
+        "mass2_msun": 25.0,
+        "phic_rad": 0.3,
+        "spin1": [
+          0.0,
+          0.0,
+          0.2
+        ],
+        "spin2": [
+          0.0,
+          0.0,
+          -0.1
+        ]
+      },
+      "options": {
+        "looked_up": {
+          "convention": 0,
+          "expansion_order": 5,
+          "final_spin_mod": 3,
+          "prec_version": 223
+        },
+        "requested": {
+          "convention": 0,
+          "expansion_order": 5,
+          "final_spin_mod": 3,
+          "prec_version": 223
+        }
+      },
+      "remnant": {
+        "clean_detail": {
+          "aligned_kerr_parameter": 0.7056427779389591,
+          "initial_s1_l": 0.06805555555555558,
+          "initial_s2_l": -0.017361111111111115,
+          "l_fin": 0.6549483334945146,
+          "mean_s1_l": 0.06805555460225576,
+          "mean_s2_l": -0.017361110430182684,
+          "remnant_mass_fraction": 0.951466602997229,
+          "s_av_squared": 0.0025699271975308654
+        },
+        "clean_minus_public": 1.0148304419033138e-10,
+        "clean_native_msa_v223": 0.7056427780404422,
+        "eta": 0.24305555555555555,
+        "interpretation": "The remnant scalar is recorded separately.  It is passed to the opaque carrier and is not fitted or phase-adjusted by this diagnostic.",
+        "public_aligned_fit": 0.7056427779389591
+      },
+      "source_frame": {
+        "clean_current_chart": {
+          "alpha0": 3.141592653589793,
+          "phi_j": 1.2707963267948965,
+          "theta_jn": 0.7,
+          "zeta": 3.141592653589793
+        },
+        "clean_zero": {
+          "alpha0": 3.141592653589793,
+          "phi_j": 1.5707963267948966,
+          "theta_jn": 0.7,
+          "zeta": 3.141592653589793
+        },
+        "phi_j_mapping": "phi_j=-phiJL0",
+        "public_current": {
+          "alpha0": 3.141592653589793,
+          "chi1": 0.2,
+          "chi2": -0.1,
+          "chip": 0.0,
+          "phiJL0": -1.2707963267948965,
+          "thetaJN": 0.7,
+          "zeta": -1.5707963267948966
+        },
+        "public_current_mapped_for_clean_projector": {
+          "alpha0": 3.141592653589793,
+          "phi_j": 1.2707963267948965,
+          "theta_jn": 0.7,
+          "zeta": 0.0
+        },
+        "public_transport": {
+          "aligned_gamma_transport_omitted": false,
+          "delta_alpha": 0.0,
+          "delta_gamma": 0.0,
+          "delta_phi_j": -0.2999999999999998,
+          "source": "Appendix C/Table IV source-frame coordinate transport"
+        },
+        "public_tuple_contract": "(chi1, chi2, chip, thetaJN, alpha0, phiJL0, zeta)",
+        "public_zero": {
+          "alpha0": 3.141592653589793,
+          "chi1": 0.2,
+          "chi2": -0.1,
+          "chip": 0.0,
+          "phiJL0": -1.5707963267948966,
+          "thetaJN": 0.7,
+          "zeta": -1.5707963267948966
+        },
+        "zeta_mapping": "public convention 0 receives +pi/2 clean-basis shift; convention 1 receives no metadata shift before the composer's -pi/2 Table-IV shift"
+      },
+      "status": "ordinary_aligned_control",
+      "strict_gate": {
+        "chart_injected_pass": true,
+        "direct_native_pass": true,
+        "relative_complex_l2": 1e-06,
+        "threshold_changed": false
+      },
+      "waveform": {
+        "direct_clean_native_vs_public_xp": {
+          "h_cross": {
+            "max_abs": 1.855965642736421e-32,
+            "nonfinite": 0,
+            "relative_l2": 1.5985713043204706e-09,
+            "support": 1968
+          },
+          "h_plus": {
+            "max_abs": 1.922541973830806e-32,
+            "nonfinite": 0,
+            "relative_l2": 1.5982991315239057e-09,
+            "support": 1968
+          }
+        },
+        "grid_hz": {
+          "count": 1968,
+          "delta_f": 0.25,
+          "fhigh_exclusive": 512.0,
+          "flow": 20.0
+        },
+        "public_chart_injected_clean_vs_public_xp": {
+          "h_cross": {
+            "max_abs": 1.1034498903332337e-34,
+            "nonfinite": 0,
+            "relative_l2": 8.238918824163778e-13,
+            "support": 1968
+          },
+          "h_plus": {
+            "max_abs": 8.413075562825749e-35,
+            "nonfinite": 0,
+            "relative_l2": 6.11167011791967e-13,
+            "support": 1968
+          }
+        },
+        "public_target": "SimInspiralChooseFDWaveform(..., IMRPhenomXP)"
+      }
+    },
+    {
+      "angles": {
+        "angle_api": "SimIMRPhenomXPMSAAngles",
+        "beta_max_rad": {
+          "clean": 4.0661856069529476e-05,
+          "public": 4.0661847878389835e-05
+        },
+        "chart_deltas_before_endpoint_correction": {
+          "alpha_max_abs_wrapped": 1.2707963267948967,
+          "alpha_plus_gamma_max_abs_wrapped": 5.0495385650606295e-09,
+          "cos_beta_max_abs": 4.440892098500626e-16,
+          "gamma_max_abs_wrapped": 1.2707963267948965,
+          "samples": {
+            "alpha": {
+              "190Hz": -1.2707961903264007,
+              "20Hz": -1.2707963267948967,
+              "511.75Hz": -1.2707961987222411
+            },
+            "alpha_plus_gamma": {
+              "190Hz": 2.2907284957796037e-09,
+              "20Hz": -2.220446049250313e-16,
+              "511.75Hz": 5.0495385650606295e-09
+            },
+            "cos_beta": {
+              "190Hz": 0.0,
+              "20Hz": 0.0,
+              "511.75Hz": 0.0
+            },
+            "gamma": {
+              "190Hz": 1.2707961926171292,
+              "20Hz": 1.2707963267948965,
+              "511.75Hz": 1.2707962037717797
+            }
+          }
+        },
+        "chart_deltas_public_minus_clean": {
+          "alpha_max_abs_wrapped": 1.3651465913255834e-07,
+          "alpha_plus_gamma_max_abs_wrapped": 5.04953767688221e-09,
+          "cos_beta_max_abs": 4.440892098500626e-16,
+          "gamma_max_abs_wrapped": 1.344200120101391e-07,
+          "samples": {
+            "alpha": {
+              "190Hz": 1.36468495171016e-07,
+              "20Hz": -2.220446049250313e-16,
+              "511.75Hz": 1.2807265470371476e-07
+            },
+            "alpha_plus_gamma": {
+              "190Hz": 2.290727607601184e-09,
+              "20Hz": -2.220446049250313e-16,
+              "511.75Hz": 5.04953767688221e-09
+            },
+            "cos_beta": {
+              "190Hz": 0.0,
+              "20Hz": 0.0,
+              "511.75Hz": 0.0
+            },
+            "gamma": {
+              "190Hz": -1.3417776756341482e-07,
+              "20Hz": 0.0,
+              "511.75Hz": -1.2302311702683255e-07
+            }
+          }
+        },
+        "clean_native_absolute": {
+          "alpha": {
+            "190Hz": 9.330469403291508,
+            "20Hz": 1.8707963267948966,
+            "511.75Hz": 9.190244075438118
+          },
+          "cos_beta": {
+            "190Hz": 0.9999999991858275,
+            "20Hz": 0.9999999995469072,
+            "511.75Hz": 0.9999999994651118
+          },
+          "gamma": {
+            "190Hz": -4.243024245566512,
+            "20Hz": 3.141592653589793,
+            "511.75Hz": -4.012406399357412
+          }
+        },
+        "clean_native_absolute_before_endpoint_chart": {
+          "alpha": {
+            "190Hz": 10.601265730086403,
+            "20Hz": 3.141592653589793,
+            "511.75Hz": 10.461040402233014
+          },
+          "cos_beta": {
+            "190Hz": 0.9999999991858275,
+            "20Hz": 0.9999999995469072,
+            "511.75Hz": 0.9999999994651118
+          },
+          "gamma": {
+            "190Hz": -5.513820572361409,
+            "20Hz": 1.8707963267948966,
+            "511.75Hz": -5.283202726152309
+          }
+        },
+        "clean_native_relative": {
+          "alpha": {
+            "190Hz": 7.459673076496611,
+            "20Hz": 0.0,
+            "511.75Hz": 7.319447748643221
+          },
+          "cos_beta": {
+            "190Hz": 0.9999999991858275,
+            "20Hz": 0.9999999995469072,
+            "511.75Hz": 0.9999999994651118
+          },
+          "gamma": {
+            "190Hz": -7.384616899156305,
+            "20Hz": -0.0,
+            "511.75Hz": -7.1539990529472055
+          }
+        },
+        "mprime": 2,
+        "public_raw": {
+          "alpha": {
+            "190Hz": 9.030469539760002,
+            "20Hz": 1.5707963267948966,
+            "511.75Hz": 8.890244203510772
+          },
+          "cos_beta": {
+            "190Hz": 0.9999999991858275,
+            "20Hz": 0.9999999995469072,
+            "511.75Hz": 0.9999999994651118
+          },
+          "gamma": {
+            "190Hz": -4.24302437974428,
+            "20Hz": 3.141592653589793,
+            "511.75Hz": -4.012406522380529
+          }
+        },
+        "public_transported_absolute": {
+          "alpha": {
+            "190Hz": 9.330469539760003,
+            "20Hz": 1.8707963267948964,
+            "511.75Hz": 9.190244203510773
+          },
+          "cos_beta": {
+            "190Hz": 0.9999999991858275,
+            "20Hz": 0.9999999995469072,
+            "511.75Hz": 0.9999999994651118
+          },
+          "gamma": {
+            "190Hz": -4.24302437974428,
+            "20Hz": 3.141592653589793,
+            "511.75Hz": -4.012406522380529
+          }
+        }
+      },
+      "carrier": {
+        "clean_carrier_phase": 0.0,
+        "clean_minus_public_table_phase": 0.0,
+        "local_xas_with_clean_remnant_vs_public_xas": {
+          "h_cross": {
+            "max_abs": 9.249972172803171e-33,
+            "nonfinite": 0,
+            "relative_l2": 5.200767511900022e-10,
+            "support": 1968
+          },
+          "h_plus": {
+            "max_abs": 9.249972172803171e-33,
+            "nonfinite": 0,
+            "relative_l2": 5.200767511900022e-10,
+            "support": 1968
+          }
+        },
+        "local_xas_with_public_fit_vs_public_xas": {
+          "h_cross": {
+            "max_abs": 3.495055964968378e-36,
+            "nonfinite": 0,
+            "relative_l2": 4.713390003770111e-14,
+            "support": 1968
+          },
+          "h_plus": {
+            "max_abs": 3.495055964968378e-36,
+            "nonfinite": 0,
+            "relative_l2": 4.713390003770111e-14,
+            "support": 1968
+          }
+        },
+        "opaque_carrier_scope": "XAS is called at inclination zero; the clean projector receives only its positive-frequency h22.",
+        "public_table_carrier_phase": 0.0,
+        "public_table_phase_placeholder": null,
+        "public_xas_carrier_phase_input": 0.0
+      },
+      "convention": 1,
+      "fixture": {
+        "distance_mpc": 500.0,
+        "exact_transverse_zero": true,
+        "f_ref_hz": 20.0,
+        "full_three_component_spins": true,
+        "id": "audited_aligned_35_25",
+        "inclination_rad": 0.7,
+        "label": "audited prior exact-aligned probe",
+        "mass1_msun": 35.0,
+        "mass2_msun": 25.0,
+        "phic_rad": 0.3,
+        "spin1": [
+          0.0,
+          0.0,
+          0.2
+        ],
+        "spin2": [
+          0.0,
+          0.0,
+          -0.1
+        ]
+      },
+      "options": {
+        "looked_up": {
+          "convention": 1,
+          "expansion_order": 5,
+          "final_spin_mod": 3,
+          "prec_version": 223
+        },
+        "requested": {
+          "convention": 1,
+          "expansion_order": 5,
+          "final_spin_mod": 3,
+          "prec_version": 223
+        }
+      },
+      "remnant": {
+        "clean_detail": {
+          "aligned_kerr_parameter": 0.7056427779389591,
+          "initial_s1_l": 0.06805555555555558,
+          "initial_s2_l": -0.017361111111111115,
+          "l_fin": 0.6549483334945146,
+          "mean_s1_l": 0.06805555460225576,
+          "mean_s2_l": -0.017361110430182684,
+          "remnant_mass_fraction": 0.951466602997229,
+          "s_av_squared": 0.0025699271975308654
+        },
+        "clean_minus_public": 1.0148304419033138e-10,
+        "clean_native_msa_v223": 0.7056427780404422,
+        "eta": 0.24305555555555555,
+        "interpretation": "The remnant scalar is recorded separately.  It is passed to the opaque carrier and is not fitted or phase-adjusted by this diagnostic.",
+        "public_aligned_fit": 0.7056427779389591
+      },
+      "source_frame": {
+        "clean_current_chart": {
+          "alpha0": 3.141592653589793,
+          "phi_j": 1.2707963267948965,
+          "theta_jn": 0.7,
+          "zeta": 3.141592653589793
+        },
+        "clean_zero": {
+          "alpha0": 3.141592653589793,
+          "phi_j": 1.5707963267948966,
+          "theta_jn": 0.7,
+          "zeta": 3.141592653589793
+        },
+        "phi_j_mapping": "phi_j=-phiJL0",
+        "public_current": {
+          "alpha0": 1.8707963267948966,
+          "chi1": 0.2,
+          "chi2": -0.1,
+          "chip": 0.0,
+          "phiJL0": -0.0,
+          "thetaJN": 0.7,
+          "zeta": -3.141592653589793
+        },
+        "public_current_mapped_for_clean_projector": {
+          "alpha0": 1.8707963267948966,
+          "phi_j": 0.0,
+          "theta_jn": 0.7,
+          "zeta": -3.141592653589793
+        },
+        "public_transport": {
+          "aligned_gamma_transport_omitted": true,
+          "delta_alpha": 0.2999999999999998,
+          "delta_gamma": 0.0,
+          "delta_phi_j": 0.0,
+          "source": "Appendix C/Table IV source-frame coordinate transport"
+        },
+        "public_tuple_contract": "(chi1, chi2, chip, thetaJN, alpha0, phiJL0, zeta)",
+        "public_zero": {
+          "alpha0": 1.5707963267948966,
+          "chi1": 0.2,
+          "chi2": -0.1,
+          "chip": 0.0,
+          "phiJL0": -0.0,
+          "thetaJN": 0.7,
+          "zeta": -3.141592653589793
+        },
+        "zeta_mapping": "public convention 0 receives +pi/2 clean-basis shift; convention 1 receives no metadata shift before the composer's -pi/2 Table-IV shift"
+      },
+      "status": "endpoint_chart_corrected",
+      "strict_gate": {
+        "chart_injected_pass": true,
+        "direct_native_pass": true,
+        "relative_complex_l2": 1e-06,
+        "threshold_changed": false
+      },
+      "waveform": {
+        "direct_clean_native_vs_public_xp": {
+          "h_cross": {
+            "max_abs": 1.855468328338429e-32,
+            "nonfinite": 0,
+            "relative_l2": 1.5987089516017457e-09,
+            "support": 1968
+          },
+          "h_plus": {
+            "max_abs": 1.9221600679435553e-32,
+            "nonfinite": 0,
+            "relative_l2": 1.5984003761005393e-09,
+            "support": 1968
+          }
+        },
+        "grid_hz": {
+          "count": 1968,
+          "delta_f": 0.25,
+          "fhigh_exclusive": 512.0,
+          "flow": 20.0
+        },
+        "public_chart_injected_clean_vs_public_xp": {
+          "h_cross": {
+            "max_abs": 1.1071924940036626e-34,
+            "nonfinite": 0,
+            "relative_l2": 8.268032231268704e-13,
+            "support": 1968
+          },
+          "h_plus": {
+            "max_abs": 8.451614836600513e-35,
+            "nonfinite": 0,
+            "relative_l2": 6.14123217826993e-13,
+            "support": 1968
+          }
+        },
+        "public_target": "SimInspiralChooseFDWaveform(..., IMRPhenomXP)"
+      }
+    },
+    {
+      "angles": {
+        "angle_api": "SimIMRPhenomXPMSAAngles",
+        "beta_max_rad": {
+          "clean": 4.1290332542893686e-05,
+          "public": 4.1290332542893686e-05
+        },
+        "chart_deltas_before_endpoint_correction": {
+          "alpha_max_abs_wrapped": 6.104983185650781e-11,
+          "alpha_plus_gamma_max_abs_wrapped": 6.104805549966841e-11,
+          "cos_beta_max_abs": 4.440892098500626e-16,
+          "gamma_max_abs_wrapped": 7.549516567451064e-15,
+          "samples": {
+            "alpha": {
+              "190Hz": 8.926193117986259e-12,
+              "20Hz": 0.0,
+              "511.75Hz": 2.7553070935937285e-11
+            },
+            "alpha_plus_gamma": {
+              "190Hz": 8.926193117986259e-12,
+              "20Hz": 0.0,
+              "511.75Hz": 2.7552182757517585e-11
+            },
+            "cos_beta": {
+              "190Hz": 0.0,
+              "20Hz": 0.0,
+              "511.75Hz": 0.0
+            },
+            "gamma": {
+              "190Hz": 0.0,
+              "20Hz": 0.0,
+              "511.75Hz": -8.881784197001252e-16
+            }
+          }
+        },
+        "chart_deltas_public_minus_clean": {
+          "alpha_max_abs_wrapped": 6.104983185650781e-11,
+          "alpha_plus_gamma_max_abs_wrapped": 6.104805549966841e-11,
+          "cos_beta_max_abs": 4.440892098500626e-16,
+          "gamma_max_abs_wrapped": 7.549516567451064e-15,
+          "samples": {
+            "alpha": {
+              "190Hz": 8.926193117986259e-12,
+              "20Hz": 0.0,
+              "511.75Hz": 2.7553070935937285e-11
+            },
+            "alpha_plus_gamma": {
+              "190Hz": 8.926193117986259e-12,
+              "20Hz": 0.0,
+              "511.75Hz": 2.7552182757517585e-11
+            },
+            "cos_beta": {
+              "190Hz": 0.0,
+              "20Hz": 0.0,
+              "511.75Hz": 0.0
+            },
+            "gamma": {
+              "190Hz": 0.0,
+              "20Hz": 0.0,
+              "511.75Hz": -8.881784197001252e-16
+            }
+          }
+        },
+        "clean_native_absolute": {
+          "alpha": {
+            "190Hz": 10.831584785973812,
+            "20Hz": 3.141592653589793,
+            "511.75Hz": 10.543392177124899
+          },
+          "cos_beta": {
+            "190Hz": 0.9999999991711879,
+            "20Hz": 0.9999999995286698,
+            "511.75Hz": 0.9999999994962058
+          },
+          "gamma": {
+            "190Hz": -7.68999212907428,
+            "20Hz": 0.0,
+            "511.75Hz": -7.401799521254604
+          }
+        },
+        "clean_native_absolute_before_endpoint_chart": {
+          "alpha": {
+            "190Hz": 10.831584785973812,
+            "20Hz": 3.141592653589793,
+            "511.75Hz": 10.543392177124899
+          },
+          "cos_beta": {
+            "190Hz": 0.9999999991711879,
+            "20Hz": 0.9999999995286698,
+            "511.75Hz": 0.9999999994962058
+          },
+          "gamma": {
+            "190Hz": -7.68999212907428,
+            "20Hz": 0.0,
+            "511.75Hz": -7.401799521254604
+          }
+        },
+        "clean_native_relative": {
+          "alpha": {
+            "190Hz": 7.689992132384019,
+            "20Hz": 0.0,
+            "511.75Hz": 7.4017995235351055
+          },
+          "cos_beta": {
+            "190Hz": 0.9999999991711879,
+            "20Hz": 0.9999999995286698,
+            "511.75Hz": 0.9999999994962058
+          },
+          "gamma": {
+            "190Hz": -7.68999212907428,
+            "20Hz": -0.0,
+            "511.75Hz": -7.401799521254604
+          }
+        },
+        "mprime": 2,
+        "public_raw": {
+          "alpha": {
+            "190Hz": 10.831584785982738,
+            "20Hz": 3.141592653589793,
+            "511.75Hz": 10.543392177152452
+          },
+          "cos_beta": {
+            "190Hz": 0.9999999991711879,
+            "20Hz": 0.9999999995286698,
+            "511.75Hz": 0.9999999994962058
+          },
+          "gamma": {
+            "190Hz": -7.68999212907428,
+            "20Hz": -0.0,
+            "511.75Hz": -7.401799521254605
+          }
+        },
+        "public_transported_absolute": {
+          "alpha": {
+            "190Hz": 10.831584785982738,
+            "20Hz": 3.141592653589793,
+            "511.75Hz": 10.543392177152452
+          },
+          "cos_beta": {
+            "190Hz": 0.9999999991711879,
+            "20Hz": 0.9999999995286698,
+            "511.75Hz": 0.9999999994962058
+          },
+          "gamma": {
+            "190Hz": -7.68999212907428,
+            "20Hz": 0.0,
+            "511.75Hz": -7.401799521254605
+          }
+        }
+      },
+      "carrier": {
+        "clean_carrier_phase": -1.2707963267948965,
+        "clean_minus_public_table_phase": 0.0,
+        "local_xas_with_clean_remnant_vs_public_xas": {
+          "h_cross": {
+            "max_abs": 8.171067877549817e-33,
+            "nonfinite": 0,
+            "relative_l2": 4.596262920372146e-10,
+            "support": 1968
+          },
+          "h_plus": {
+            "max_abs": 8.171067877549817e-33,
+            "nonfinite": 0,
+            "relative_l2": 4.596262920372146e-10,
+            "support": 1968
+          }
+        },
+        "local_xas_with_public_fit_vs_public_xas": {
+          "h_cross": {
+            "max_abs": 2.232908007534578e-36,
+            "nonfinite": 0,
+            "relative_l2": 5.249560651793085e-14,
+            "support": 1968
+          },
+          "h_plus": {
+            "max_abs": 2.232908007534578e-36,
+            "nonfinite": 0,
+            "relative_l2": 5.249560651793085e-14,
+            "support": 1968
+          }
+        },
+        "opaque_carrier_scope": "XAS is called at inclination zero; the clean projector receives only its positive-frequency h22.",
+        "public_table_carrier_phase": -1.2707963267948965,
+        "public_table_phase_placeholder": null,
+        "public_xas_carrier_phase_input": -1.2707963267948965
+      },
+      "convention": 0,
+      "fixture": {
+        "distance_mpc": 500.0,
+        "exact_transverse_zero": true,
+        "f_ref_hz": 20.0,
+        "full_three_component_spins": true,
+        "id": "audited_zero_35_25",
+        "inclination_rad": 0.7,
+        "label": "audited prior zero-spin probe",
+        "mass1_msun": 35.0,
+        "mass2_msun": 25.0,
+        "phic_rad": 0.3,
+        "spin1": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "spin2": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "options": {
+        "looked_up": {
+          "convention": 0,
+          "expansion_order": 5,
+          "final_spin_mod": 3,
+          "prec_version": 223
+        },
+        "requested": {
+          "convention": 0,
+          "expansion_order": 5,
+          "final_spin_mod": 3,
+          "prec_version": 223
+        }
+      },
+      "remnant": {
+        "clean_detail": {
+          "aligned_kerr_parameter": 0.6708959565937861,
+          "initial_s1_l": 0.0,
+          "initial_s2_l": 0.0,
+          "l_fin": 0.6708959565937861,
+          "mean_s1_l": -9.532995369986147e-10,
+          "mean_s2_l": 6.809282407132962e-10,
+          "remnant_mass_fraction": 0.9541390773735456,
+          "s_av_squared": 5e-10
+        },
+        "clean_minus_public": 1.0026468544310774e-10,
+        "clean_native_msa_v223": 0.6708959566940508,
+        "eta": 0.24305555555555555,
+        "interpretation": "The remnant scalar is recorded separately.  It is passed to the opaque carrier and is not fitted or phase-adjusted by this diagnostic.",
+        "public_aligned_fit": 0.6708959565937861
+      },
+      "source_frame": {
+        "clean_current_chart": {
+          "alpha0": 3.141592653589793,
+          "phi_j": 1.2707963267948965,
+          "theta_jn": 0.7,
+          "zeta": 3.141592653589793
+        },
+        "clean_zero": {
+          "alpha0": 3.141592653589793,
+          "phi_j": 1.5707963267948966,
+          "theta_jn": 0.7,
+          "zeta": 3.141592653589793
+        },
+        "phi_j_mapping": "phi_j=-phiJL0",
+        "public_current": {
+          "alpha0": 3.141592653589793,
+          "chi1": 0.0,
+          "chi2": 0.0,
+          "chip": 0.0,
+          "phiJL0": -1.2707963267948965,
+          "thetaJN": 0.7,
+          "zeta": -1.5707963267948966
+        },
+        "public_current_mapped_for_clean_projector": {
+          "alpha0": 3.141592653589793,
+          "phi_j": 1.2707963267948965,
+          "theta_jn": 0.7,
+          "zeta": 0.0
+        },
+        "public_transport": {
+          "aligned_gamma_transport_omitted": false,
+          "delta_alpha": 0.0,
+          "delta_gamma": 0.0,
+          "delta_phi_j": -0.2999999999999998,
+          "source": "Appendix C/Table IV source-frame coordinate transport"
+        },
+        "public_tuple_contract": "(chi1, chi2, chip, thetaJN, alpha0, phiJL0, zeta)",
+        "public_zero": {
+          "alpha0": 3.141592653589793,
+          "chi1": 0.0,
+          "chi2": 0.0,
+          "chip": 0.0,
+          "phiJL0": -1.5707963267948966,
+          "thetaJN": 0.7,
+          "zeta": -1.5707963267948966
+        },
+        "zeta_mapping": "public convention 0 receives +pi/2 clean-basis shift; convention 1 receives no metadata shift before the composer's -pi/2 Table-IV shift"
+      },
+      "status": "ordinary_aligned_control",
+      "strict_gate": {
+        "chart_injected_pass": true,
+        "direct_native_pass": true,
+        "relative_complex_l2": 1e-06,
+        "threshold_changed": false
+      },
+      "waveform": {
+        "direct_clean_native_vs_public_xp": {
+          "h_cross": {
+            "max_abs": 3.7241954748875255e-33,
+            "nonfinite": 0,
+            "relative_l2": 3.721643716972086e-11,
+            "support": 1968
+          },
+          "h_plus": {
+            "max_abs": 3.858864158148497e-33,
+            "nonfinite": 0,
+            "relative_l2": 3.7209866548021205e-11,
+            "support": 1968
+          }
+        },
+        "grid_hz": {
+          "count": 1968,
+          "delta_f": 0.25,
+          "fhigh_exclusive": 512.0,
+          "flow": 20.0
+        },
+        "public_chart_injected_clean_vs_public_xp": {
+          "h_cross": {
+            "max_abs": 7.59101824778931e-34,
+            "nonfinite": 0,
+            "relative_l2": 4.161659953686384e-12,
+            "support": 1968
+          },
+          "h_plus": {
+            "max_abs": 7.865349588489464e-34,
+            "nonfinite": 0,
+            "relative_l2": 4.126057857856638e-12,
+            "support": 1968
+          }
+        },
+        "public_target": "SimInspiralChooseFDWaveform(..., IMRPhenomXP)"
+      }
+    },
+    {
+      "angles": {
+        "angle_api": "SimIMRPhenomXPMSAAngles",
+        "beta_max_rad": {
+          "clean": 4.1290332542893686e-05,
+          "public": 4.1290332542893686e-05
+        },
+        "chart_deltas_before_endpoint_correction": {
+          "alpha_max_abs_wrapped": 1.2707963268388163,
+          "alpha_plus_gamma_max_abs_wrapped": 6.104716732124871e-11,
+          "cos_beta_max_abs": 4.440892098500626e-16,
+          "gamma_max_abs_wrapped": 1.270796326794904,
+          "samples": {
+            "alpha": {
+              "190Hz": -1.2707963267859714,
+              "20Hz": -1.2707963267948967,
+              "511.75Hz": -1.2707963267673446
+            },
+            "alpha_plus_gamma": {
+              "190Hz": 8.925304939566558e-12,
+              "20Hz": -2.220446049250313e-16,
+              "511.75Hz": 2.7551294579097885e-11
+            },
+            "cos_beta": {
+              "190Hz": 0.0,
+              "20Hz": 0.0,
+              "511.75Hz": 0.0
+            },
+            "gamma": {
+              "190Hz": 1.2707963267948967,
+              "20Hz": 1.2707963267948965,
+              "511.75Hz": 1.2707963267948958
+            }
+          }
+        },
+        "chart_deltas_public_minus_clean": {
+          "alpha_max_abs_wrapped": 6.104805549966841e-11,
+          "alpha_plus_gamma_max_abs_wrapped": 6.104627914282901e-11,
+          "cos_beta_max_abs": 4.440892098500626e-16,
+          "gamma_max_abs_wrapped": 7.549516567451064e-15,
+          "samples": {
+            "alpha": {
+              "190Hz": 8.924416761146858e-12,
+              "20Hz": -2.220446049250313e-16,
+              "511.75Hz": 2.7551294579097885e-11
+            },
+            "alpha_plus_gamma": {
+              "190Hz": 8.924416761146858e-12,
+              "20Hz": -2.220446049250313e-16,
+              "511.75Hz": 2.7550406400678185e-11
+            },
+            "cos_beta": {
+              "190Hz": 0.0,
+              "20Hz": 0.0,
+              "511.75Hz": 0.0
+            },
+            "gamma": {
+              "190Hz": 0.0,
+              "20Hz": 0.0,
+              "511.75Hz": -8.881784197001252e-16
+            }
+          }
+        },
+        "clean_native_absolute": {
+          "alpha": {
+            "190Hz": 9.560788459178916,
+            "20Hz": 1.8707963267948966,
+            "511.75Hz": 9.272595850330003
+          },
+          "cos_beta": {
+            "190Hz": 0.9999999991711879,
+            "20Hz": 0.9999999995286698,
+            "511.75Hz": 0.9999999994962058
+          },
+          "gamma": {
+            "190Hz": -4.548399475484487,
+            "20Hz": 3.141592653589793,
+            "511.75Hz": -4.260206867664811
+          }
+        },
+        "clean_native_absolute_before_endpoint_chart": {
+          "alpha": {
+            "190Hz": 10.831584785973812,
+            "20Hz": 3.141592653589793,
+            "511.75Hz": 10.543392177124899
+          },
+          "cos_beta": {
+            "190Hz": 0.9999999991711879,
+            "20Hz": 0.9999999995286698,
+            "511.75Hz": 0.9999999994962058
+          },
+          "gamma": {
+            "190Hz": -5.819195802279384,
+            "20Hz": 1.8707963267948966,
+            "511.75Hz": -5.531003194459708
+          }
+        },
+        "clean_native_relative": {
+          "alpha": {
+            "190Hz": 7.689992132384019,
+            "20Hz": 0.0,
+            "511.75Hz": 7.4017995235351055
+          },
+          "cos_beta": {
+            "190Hz": 0.9999999991711879,
+            "20Hz": 0.9999999995286698,
+            "511.75Hz": 0.9999999994962058
+          },
+          "gamma": {
+            "190Hz": -7.68999212907428,
+            "20Hz": -0.0,
+            "511.75Hz": -7.401799521254604
+          }
+        },
+        "mprime": 2,
+        "public_raw": {
+          "alpha": {
+            "190Hz": 9.260788459187841,
+            "20Hz": 1.5707963267948966,
+            "511.75Hz": 8.972595850357555
+          },
+          "cos_beta": {
+            "190Hz": 0.9999999991711879,
+            "20Hz": 0.9999999995286698,
+            "511.75Hz": 0.9999999994962058
+          },
+          "gamma": {
+            "190Hz": -4.548399475484487,
+            "20Hz": 3.141592653589793,
+            "511.75Hz": -4.260206867664812
+          }
+        },
+        "public_transported_absolute": {
+          "alpha": {
+            "190Hz": 9.56078845918784,
+            "20Hz": 1.8707963267948964,
+            "511.75Hz": 9.272595850357554
+          },
+          "cos_beta": {
+            "190Hz": 0.9999999991711879,
+            "20Hz": 0.9999999995286698,
+            "511.75Hz": 0.9999999994962058
+          },
+          "gamma": {
+            "190Hz": -4.548399475484487,
+            "20Hz": 3.141592653589793,
+            "511.75Hz": -4.260206867664812
+          }
+        }
+      },
+      "carrier": {
+        "clean_carrier_phase": 0.0,
+        "clean_minus_public_table_phase": 0.0,
+        "local_xas_with_clean_remnant_vs_public_xas": {
+          "h_cross": {
+            "max_abs": 8.171068295746608e-33,
+            "nonfinite": 0,
+            "relative_l2": 4.596261878880415e-10,
+            "support": 1968
+          },
+          "h_plus": {
+            "max_abs": 8.171068295746608e-33,
+            "nonfinite": 0,
+            "relative_l2": 4.596261878880415e-10,
+            "support": 1968
+          }
+        },
+        "local_xas_with_public_fit_vs_public_xas": {
+          "h_cross": {
+            "max_abs": 2.2334779338049554e-36,
+            "nonfinite": 0,
+            "relative_l2": 5.2323027040970244e-14,
+            "support": 1968
+          },
+          "h_plus": {
+            "max_abs": 2.2334779338049554e-36,
+            "nonfinite": 0,
+            "relative_l2": 5.2323027040970244e-14,
+            "support": 1968
+          }
+        },
+        "opaque_carrier_scope": "XAS is called at inclination zero; the clean projector receives only its positive-frequency h22.",
+        "public_table_carrier_phase": 0.0,
+        "public_table_phase_placeholder": null,
+        "public_xas_carrier_phase_input": 0.0
+      },
+      "convention": 1,
+      "fixture": {
+        "distance_mpc": 500.0,
+        "exact_transverse_zero": true,
+        "f_ref_hz": 20.0,
+        "full_three_component_spins": true,
+        "id": "audited_zero_35_25",
+        "inclination_rad": 0.7,
+        "label": "audited prior zero-spin probe",
+        "mass1_msun": 35.0,
+        "mass2_msun": 25.0,
+        "phic_rad": 0.3,
+        "spin1": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "spin2": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "options": {
+        "looked_up": {
+          "convention": 1,
+          "expansion_order": 5,
+          "final_spin_mod": 3,
+          "prec_version": 223
+        },
+        "requested": {
+          "convention": 1,
+          "expansion_order": 5,
+          "final_spin_mod": 3,
+          "prec_version": 223
+        }
+      },
+      "remnant": {
+        "clean_detail": {
+          "aligned_kerr_parameter": 0.6708959565937861,
+          "initial_s1_l": 0.0,
+          "initial_s2_l": 0.0,
+          "l_fin": 0.6708959565937861,
+          "mean_s1_l": -9.532995369986147e-10,
+          "mean_s2_l": 6.809282407132962e-10,
+          "remnant_mass_fraction": 0.9541390773735456,
+          "s_av_squared": 5e-10
+        },
+        "clean_minus_public": 1.0026468544310774e-10,
+        "clean_native_msa_v223": 0.6708959566940508,
+        "eta": 0.24305555555555555,
+        "interpretation": "The remnant scalar is recorded separately.  It is passed to the opaque carrier and is not fitted or phase-adjusted by this diagnostic.",
+        "public_aligned_fit": 0.6708959565937861
+      },
+      "source_frame": {
+        "clean_current_chart": {
+          "alpha0": 3.141592653589793,
+          "phi_j": 1.2707963267948965,
+          "theta_jn": 0.7,
+          "zeta": 3.141592653589793
+        },
+        "clean_zero": {
+          "alpha0": 3.141592653589793,
+          "phi_j": 1.5707963267948966,
+          "theta_jn": 0.7,
+          "zeta": 3.141592653589793
+        },
+        "phi_j_mapping": "phi_j=-phiJL0",
+        "public_current": {
+          "alpha0": 1.8707963267948966,
+          "chi1": 0.0,
+          "chi2": 0.0,
+          "chip": 0.0,
+          "phiJL0": -0.0,
+          "thetaJN": 0.7,
+          "zeta": -3.141592653589793
+        },
+        "public_current_mapped_for_clean_projector": {
+          "alpha0": 1.8707963267948966,
+          "phi_j": 0.0,
+          "theta_jn": 0.7,
+          "zeta": -3.141592653589793
+        },
+        "public_transport": {
+          "aligned_gamma_transport_omitted": true,
+          "delta_alpha": 0.2999999999999998,
+          "delta_gamma": 0.0,
+          "delta_phi_j": 0.0,
+          "source": "Appendix C/Table IV source-frame coordinate transport"
+        },
+        "public_tuple_contract": "(chi1, chi2, chip, thetaJN, alpha0, phiJL0, zeta)",
+        "public_zero": {
+          "alpha0": 1.5707963267948966,
+          "chi1": 0.0,
+          "chi2": 0.0,
+          "chip": 0.0,
+          "phiJL0": -0.0,
+          "thetaJN": 0.7,
+          "zeta": -3.141592653589793
+        },
+        "zeta_mapping": "public convention 0 receives +pi/2 clean-basis shift; convention 1 receives no metadata shift before the composer's -pi/2 Table-IV shift"
+      },
+      "status": "endpoint_chart_corrected",
+      "strict_gate": {
+        "chart_injected_pass": true,
+        "direct_native_pass": true,
+        "relative_complex_l2": 1e-06,
+        "threshold_changed": false
+      },
+      "waveform": {
+        "direct_clean_native_vs_public_xp": {
+          "h_cross": {
+            "max_abs": 3.724435521411922e-33,
+            "nonfinite": 0,
+            "relative_l2": 3.722891548705403e-11,
+            "support": 1968
+          },
+          "h_plus": {
+            "max_abs": 3.859063284002503e-33,
+            "nonfinite": 0,
+            "relative_l2": 3.721921168336054e-11,
+            "support": 1968
+          }
+        },
+        "grid_hz": {
+          "count": 1968,
+          "delta_f": 0.25,
+          "fhigh_exclusive": 512.0,
+          "flow": 20.0
+        },
+        "public_chart_injected_clean_vs_public_xp": {
+          "h_cross": {
+            "max_abs": 7.590656660852402e-34,
+            "nonfinite": 0,
+            "relative_l2": 4.154475740298915e-12,
+            "support": 1968
+          },
+          "h_plus": {
+            "max_abs": 7.865139200172576e-34,
+            "nonfinite": 0,
+            "relative_l2": 4.1207349640242305e-12,
+            "support": 1968
+          }
+        },
+        "public_target": "SimInspiralChooseFDWaveform(..., IMRPhenomXP)"
+      }
+    },
+    {
+      "angles": {
+        "angle_api": "SimIMRPhenomXPMSAAngles",
+        "beta_max_rad": {
+          "clean": 0.06343175907936849,
+          "public": 0.06343175907459582
+        },
+        "chart_deltas_before_endpoint_correction": {
+          "alpha_max_abs_wrapped": 0.024354479369611326,
+          "alpha_plus_gamma_max_abs_wrapped": 0.048715865674592074,
+          "cos_beta_max_abs": 9.131765676961834e-09,
+          "gamma_max_abs_wrapped": 0.024361386304980748,
+          "samples": {
+            "alpha": {
+              "190Hz": -0.0025375217108116743,
+              "20Hz": -8.23163759378076e-12,
+              "511.75Hz": 2.007301578288434e-07
+            },
+            "alpha_plus_gamma": {
+              "190Hz": -0.005116481886312307,
+              "20Hz": -8.23163759378076e-12,
+              "511.75Hz": 4.594919111866629e-09
+            },
+            "cos_beta": {
+              "190Hz": -3.0963265285066655e-10,
+              "20Hz": 0.0,
+              "511.75Hz": 5.622169396701793e-13
+            },
+            "gamma": {
+              "190Hz": -0.0025789601755006335,
+              "20Hz": 0.0,
+              "511.75Hz": -1.9613523871697677e-07
+            }
+          }
+        },
+        "chart_deltas_public_minus_clean": {
+          "alpha_max_abs_wrapped": 0.024354479369611326,
+          "alpha_plus_gamma_max_abs_wrapped": 0.048715865674592074,
+          "cos_beta_max_abs": 9.131765676961834e-09,
+          "gamma_max_abs_wrapped": 0.024361386304980748,
+          "samples": {
+            "alpha": {
+              "190Hz": -0.0025375217108116743,
+              "20Hz": -8.23163759378076e-12,
+              "511.75Hz": 2.007301578288434e-07
+            },
+            "alpha_plus_gamma": {
+              "190Hz": -0.005116481886312307,
+              "20Hz": -8.23163759378076e-12,
+              "511.75Hz": 4.594919111866629e-09
+            },
+            "cos_beta": {
+              "190Hz": -3.0963265285066655e-10,
+              "20Hz": 0.0,
+              "511.75Hz": 5.622169396701793e-13
+            },
+            "gamma": {
+              "190Hz": -0.0025789601755006335,
+              "20Hz": 0.0,
+              "511.75Hz": -1.9613523871697677e-07
+            }
+          }
+        },
+        "clean_native_absolute": {
+          "alpha": {
+            "190Hz": 10.109940537069813,
+            "20Hz": 2.34257082168463,
+            "511.75Hz": 9.942292476326452
+          },
+          "cos_beta": {
+            "190Hz": 0.9999718319077903,
+            "20Hz": 0.9999999999913523,
+            "511.75Hz": 0.9980191306549325
+          },
+          "gamma": {
+            "190Hz": -7.694297269505725,
+            "20Hz": 0.0,
+            "511.75Hz": -7.468645654201001
+          }
+        },
+        "clean_native_absolute_before_endpoint_chart": {
+          "alpha": {
+            "190Hz": 10.109940537069813,
+            "20Hz": 2.34257082168463,
+            "511.75Hz": 9.942292476326452
+          },
+          "cos_beta": {
+            "190Hz": 0.9999718319077903,
+            "20Hz": 0.9999999999913523,
+            "511.75Hz": 0.9980191306549325
+          },
+          "gamma": {
+            "190Hz": -7.694297269505725,
+            "20Hz": 0.0,
+            "511.75Hz": -7.468645654201001
+          }
+        },
+        "clean_native_relative": {
+          "alpha": {
+            "190Hz": 7.767369715385183,
+            "20Hz": 0.0,
+            "511.75Hz": 7.599721654641823
+          },
+          "cos_beta": {
+            "190Hz": 0.9999718319077903,
+            "20Hz": 0.9999999999913523,
+            "511.75Hz": 0.9980191306549325
+          },
+          "gamma": {
+            "190Hz": -7.694297269505725,
+            "20Hz": -0.0,
+            "511.75Hz": -7.468645654201001
+          }
+        },
+        "mprime": 2,
+        "public_raw": {
+          "alpha": {
+            "190Hz": 9.807402282662778,
+            "20Hz": 2.0425700889801766,
+            "511.75Hz": 9.642291944360387
+          },
+          "cos_beta": {
+            "190Hz": 0.9999718315981576,
+            "20Hz": 0.9999999999913523,
+            "511.75Hz": 0.9980191306554947
+          },
+          "gamma": {
+            "190Hz": -7.696876229681226,
+            "20Hz": -0.0,
+            "511.75Hz": -7.46864585033624
+          }
+        },
+        "public_transported_absolute": {
+          "alpha": {
+            "190Hz": 10.107403015359,
+            "20Hz": 2.3425708216763983,
+            "511.75Hz": 9.94229267705661
+          },
+          "cos_beta": {
+            "190Hz": 0.9999718315981576,
+            "20Hz": 0.9999999999913523,
+            "511.75Hz": 0.9980191306554947
+          },
+          "gamma": {
+            "190Hz": -7.696876229681226,
+            "20Hz": 0.0,
+            "511.75Hz": -7.46864585033624
+          }
+        }
+      },
+      "carrier": {
+        "clean_carrier_phase": -0.47177751118075,
+        "clean_minus_public_table_phase": 0.0,
+        "local_xas_with_clean_remnant_vs_public_xas": {
+          "h_cross": {
+            "max_abs": 1.0384315873982702e-33,
+            "nonfinite": 0,
+            "relative_l2": 5.839202291997781e-11,
+            "support": 1968
+          },
+          "h_plus": {
+            "max_abs": 1.0384315873982702e-33,
+            "nonfinite": 0,
+            "relative_l2": 5.839202291997781e-11,
+            "support": 1968
+          }
+        },
+        "local_xas_with_public_fit_vs_public_xas": {
+          "h_cross": {
+            "max_abs": 3.549107315885676e-36,
+            "nonfinite": 0,
+            "relative_l2": 4.698309978538438e-14,
+            "support": 1968
+          },
+          "h_plus": {
+            "max_abs": 3.549107315885676e-36,
+            "nonfinite": 0,
+            "relative_l2": 4.698309978538438e-14,
+            "support": 1968
+          }
+        },
+        "opaque_carrier_scope": "XAS is called at inclination zero; the clean projector receives only its positive-frequency h22.",
+        "public_table_carrier_phase": -0.47177751118075,
+        "public_table_phase_placeholder": null,
+        "public_xas_carrier_phase_input": -0.47177751118075
+      },
+      "convention": 0,
+      "fixture": {
+        "distance_mpc": 500.0,
+        "exact_transverse_zero": false,
+        "f_ref_hz": 20.0,
+        "full_three_component_spins": true,
+        "id": "audited_tiny_neighbor_35_25",
+        "inclination_rad": 0.7,
+        "label": "audited tiny nonzero transverse neighbor",
+        "mass1_msun": 35.0,
+        "mass2_msun": 25.0,
+        "phic_rad": 0.3,
+        "spin1": [
+          1e-05,
+          0.0,
+          0.2
+        ],
+        "spin2": [
+          0.0,
+          1e-05,
+          -0.1
+        ]
+      },
+      "options": {
+        "looked_up": {
+          "convention": 0,
+          "expansion_order": 5,
+          "final_spin_mod": 3,
+          "prec_version": 223
+        },
+        "requested": {
+          "convention": 0,
+          "expansion_order": 5,
+          "final_spin_mod": 3,
+          "prec_version": 223
+        }
+      },
+      "remnant": {
+        "clean_detail": {
+          "aligned_kerr_parameter": 0.7056427779389591,
+          "initial_s1_l": 0.06805555555555558,
+          "initial_s2_l": -0.017361111111111115,
+          "l_fin": 0.6549483334945146,
+          "mean_s1_l": 0.06805555554563425,
+          "mean_s2_l": -0.017361111104024458,
+          "remnant_mass_fraction": 0.951466602997229,
+          "s_av_squared": 0.0025699267173274996
+        },
+        "clean_minus_public": 1.139632832547477e-11,
+        "clean_native_msa_v223": 0.7056427779503555,
+        "eta": 0.24305555555555555,
+        "interpretation": "The remnant scalar is recorded separately.  It is passed to the opaque carrier and is not fitted or phase-adjusted by this diagnostic.",
+        "public_aligned_fit": 0.7056427779389591
+      },
+      "source_frame": {
+        "clean_current_chart": {
+          "alpha0": 2.34257082168463,
+          "phi_j": 0.47177751118075,
+          "theta_jn": 0.6999975277098504,
+          "zeta": 3.14158870991628
+        },
+        "clean_zero": {
+          "alpha0": 2.042570088990408,
+          "phi_j": 0.47177751118075,
+          "theta_jn": 0.6999983889250401,
+          "zeta": 3.141587751947654
+        },
+        "phi_j_mapping": "phi_j=-phiJL0",
+        "public_current": {
+          "alpha0": 2.3425708216763983,
+          "chi1": 0.2,
+          "chi2": -0.1,
+          "chip": 1e-05,
+          "phiJL0": -0.47177751118075,
+          "thetaJN": 0.6999975277031032,
+          "zeta": -1.5708002704791728
+        },
+        "public_current_mapped_for_clean_projector": {
+          "alpha0": 2.3425708216763983,
+          "phi_j": 0.47177751118075,
+          "theta_jn": 0.6999975277031032,
+          "zeta": -3.943684276253023e-06
+        },
+        "public_transport": {
+          "aligned_gamma_transport_omitted": false,
+          "delta_alpha": 0.30000073269622174,
+          "delta_gamma": 0.0,
+          "delta_phi_j": 0.0,
+          "source": "Appendix C/Table IV source-frame coordinate transport"
+        },
+        "public_tuple_contract": "(chi1, chi2, chip, thetaJN, alpha0, phiJL0, zeta)",
+        "public_zero": {
+          "alpha0": 2.0425700889801766,
+          "chi1": 0.2,
+          "chi2": -0.1,
+          "chip": 1e-05,
+          "phiJL0": -0.47177751118075,
+          "thetaJN": 0.6999983889206431,
+          "zeta": -1.5708012284504131
+        },
+        "zeta_mapping": "public convention 0 receives +pi/2 clean-basis shift; convention 1 receives no metadata shift before the composer's -pi/2 Table-IV shift"
+      },
+      "status": "known_tiny_spin_internal_failure",
+      "strict_gate": {
+        "chart_injected_pass": false,
+        "direct_native_pass": false,
+        "relative_complex_l2": 1e-06,
+        "threshold_changed": false
+      },
+      "waveform": {
+        "direct_clean_native_vs_public_xp": {
+          "h_cross": {
+            "max_abs": 2.054884587156756e-25,
+            "nonfinite": 0,
+            "relative_l2": 0.007311213109414074,
+            "support": 1968
+          },
+          "h_plus": {
+            "max_abs": 2.142946695780591e-25,
+            "nonfinite": 0,
+            "relative_l2": 0.007354070457605203,
+            "support": 1968
+          }
+        },
+        "grid_hz": {
+          "count": 1968,
+          "delta_f": 0.25,
+          "fhigh_exclusive": 512.0,
+          "flow": 20.0
+        },
+        "public_chart_injected_clean_vs_public_xp": {
+          "h_cross": {
+            "max_abs": 2.0545353473003345e-25,
+            "nonfinite": 0,
+            "relative_l2": 0.0038986654053757594,
+            "support": 1968
+          },
+          "h_plus": {
+            "max_abs": 2.142657165574011e-25,
+            "nonfinite": 0,
+            "relative_l2": 0.003921729338919167,
+            "support": 1968
+          }
+        },
+        "public_target": "SimInspiralChooseFDWaveform(..., IMRPhenomXP)"
+      }
+    },
+    {
+      "angles": {
+        "angle_api": "SimIMRPhenomXPMSAAngles",
+        "beta_max_rad": {
+          "clean": 0.06343175907936849,
+          "public": 0.06343175907459582
+        },
+        "chart_deltas_before_endpoint_correction": {
+          "alpha_max_abs_wrapped": 0.024354479369611326,
+          "alpha_plus_gamma_max_abs_wrapped": 0.04871586567459118,
+          "cos_beta_max_abs": 9.131765676961834e-09,
+          "gamma_max_abs_wrapped": 0.024361386304979856,
+          "samples": {
+            "alpha": {
+              "190Hz": -0.0025375217108116743,
+              "20Hz": -8.23163759378076e-12,
+              "511.75Hz": 2.007301578288434e-07
+            },
+            "alpha_plus_gamma": {
+              "190Hz": -0.005116481886311419,
+              "20Hz": -8.23163759378076e-12,
+              "511.75Hz": 4.594920000045048e-09
+            },
+            "cos_beta": {
+              "190Hz": -3.0963265285066655e-10,
+              "20Hz": 0.0,
+              "511.75Hz": 5.622169396701793e-13
+            },
+            "gamma": {
+              "190Hz": -0.0025789601754997453,
+              "20Hz": 0.0,
+              "511.75Hz": -1.9613523782879835e-07
+            }
+          }
+        },
+        "chart_deltas_public_minus_clean": {
+          "alpha_max_abs_wrapped": 0.024354479369611326,
+          "alpha_plus_gamma_max_abs_wrapped": 0.04871586567459118,
+          "cos_beta_max_abs": 9.131765676961834e-09,
+          "gamma_max_abs_wrapped": 0.024361386304979856,
+          "samples": {
+            "alpha": {
+              "190Hz": -0.0025375217108116743,
+              "20Hz": -8.23163759378076e-12,
+              "511.75Hz": 2.007301578288434e-07
+            },
+            "alpha_plus_gamma": {
+              "190Hz": -0.005116481886311419,
+              "20Hz": -8.23163759378076e-12,
+              "511.75Hz": 4.594920000045048e-09
+            },
+            "cos_beta": {
+              "190Hz": -3.0963265285066655e-10,
+              "20Hz": 0.0,
+              "511.75Hz": 5.622169396701793e-13
+            },
+            "gamma": {
+              "190Hz": -0.0025789601754997453,
+              "20Hz": 0.0,
+              "511.75Hz": -1.9613523782879835e-07
+            }
+          }
+        },
+        "clean_native_absolute": {
+          "alpha": {
+            "190Hz": 10.109940537069813,
+            "20Hz": 2.34257082168463,
+            "511.75Hz": 9.942292476326452
+          },
+          "cos_beta": {
+            "190Hz": 0.9999718319077903,
+            "20Hz": 0.9999999999913523,
+            "511.75Hz": 0.9980191306549325
+          },
+          "gamma": {
+            "190Hz": -5.024482127096682,
+            "20Hz": 2.669815142409043,
+            "511.75Hz": -4.798830511791959
+          }
+        },
+        "clean_native_absolute_before_endpoint_chart": {
+          "alpha": {
+            "190Hz": 10.109940537069813,
+            "20Hz": 2.34257082168463,
+            "511.75Hz": 9.942292476326452
+          },
+          "cos_beta": {
+            "190Hz": 0.9999718319077903,
+            "20Hz": 0.9999999999913523,
+            "511.75Hz": 0.9980191306549325
+          },
+          "gamma": {
+            "190Hz": -5.024482127096682,
+            "20Hz": 2.669815142409043,
+            "511.75Hz": -4.798830511791959
+          }
+        },
+        "clean_native_relative": {
+          "alpha": {
+            "190Hz": 7.767369715385183,
+            "20Hz": 0.0,
+            "511.75Hz": 7.599721654641823
+          },
+          "cos_beta": {
+            "190Hz": 0.9999718319077903,
+            "20Hz": 0.9999999999913523,
+            "511.75Hz": 0.9980191306549325
+          },
+          "gamma": {
+            "190Hz": -7.694297269505725,
+            "20Hz": -0.0,
+            "511.75Hz": -7.468645654201001
+          }
+        },
+        "mprime": 2,
+        "public_raw": {
+          "alpha": {
+            "190Hz": 9.807402282662778,
+            "20Hz": 2.0425700889801766,
+            "511.75Hz": 9.642291944360387
+          },
+          "cos_beta": {
+            "190Hz": 0.9999718315981576,
+            "20Hz": 0.9999999999913523,
+            "511.75Hz": 0.9980191306554947
+          },
+          "gamma": {
+            "190Hz": -5.027061087272182,
+            "20Hz": 2.669815142409043,
+            "511.75Hz": -4.798830707927197
+          }
+        },
+        "public_transported_absolute": {
+          "alpha": {
+            "190Hz": 10.107403015359,
+            "20Hz": 2.3425708216763983,
+            "511.75Hz": 9.94229267705661
+          },
+          "cos_beta": {
+            "190Hz": 0.9999718315981576,
+            "20Hz": 0.9999999999913523,
+            "511.75Hz": 0.9980191306554947
+          },
+          "gamma": {
+            "190Hz": -5.027061087272182,
+            "20Hz": 2.669815142409043,
+            "511.75Hz": -4.798830707927197
+          }
+        }
+      },
+      "carrier": {
+        "clean_carrier_phase": 0.0,
+        "clean_minus_public_table_phase": 0.0,
+        "local_xas_with_clean_remnant_vs_public_xas": {
+          "h_cross": {
+            "max_abs": 1.0384583635694517e-33,
+            "nonfinite": 0,
+            "relative_l2": 5.839208716540834e-11,
+            "support": 1968
+          },
+          "h_plus": {
+            "max_abs": 1.0384583635694517e-33,
+            "nonfinite": 0,
+            "relative_l2": 5.839208716540834e-11,
+            "support": 1968
+          }
+        },
+        "local_xas_with_public_fit_vs_public_xas": {
+          "h_cross": {
+            "max_abs": 3.495055964968378e-36,
+            "nonfinite": 0,
+            "relative_l2": 4.713390003770111e-14,
+            "support": 1968
+          },
+          "h_plus": {
+            "max_abs": 3.495055964968378e-36,
+            "nonfinite": 0,
+            "relative_l2": 4.713390003770111e-14,
+            "support": 1968
+          }
+        },
+        "opaque_carrier_scope": "XAS is called at inclination zero; the clean projector receives only its positive-frequency h22.",
+        "public_table_carrier_phase": 0.0,
+        "public_table_phase_placeholder": null,
+        "public_xas_carrier_phase_input": 0.0
+      },
+      "convention": 1,
+      "fixture": {
+        "distance_mpc": 500.0,
+        "exact_transverse_zero": false,
+        "f_ref_hz": 20.0,
+        "full_three_component_spins": true,
+        "id": "audited_tiny_neighbor_35_25",
+        "inclination_rad": 0.7,
+        "label": "audited tiny nonzero transverse neighbor",
+        "mass1_msun": 35.0,
+        "mass2_msun": 25.0,
+        "phic_rad": 0.3,
+        "spin1": [
+          1e-05,
+          0.0,
+          0.2
+        ],
+        "spin2": [
+          0.0,
+          1e-05,
+          -0.1
+        ]
+      },
+      "options": {
+        "looked_up": {
+          "convention": 1,
+          "expansion_order": 5,
+          "final_spin_mod": 3,
+          "prec_version": 223
+        },
+        "requested": {
+          "convention": 1,
+          "expansion_order": 5,
+          "final_spin_mod": 3,
+          "prec_version": 223
+        }
+      },
+      "remnant": {
+        "clean_detail": {
+          "aligned_kerr_parameter": 0.7056427779389591,
+          "initial_s1_l": 0.06805555555555558,
+          "initial_s2_l": -0.017361111111111115,
+          "l_fin": 0.6549483334945146,
+          "mean_s1_l": 0.06805555554563425,
+          "mean_s2_l": -0.017361111104024458,
+          "remnant_mass_fraction": 0.951466602997229,
+          "s_av_squared": 0.0025699267173274996
+        },
+        "clean_minus_public": 1.139632832547477e-11,
+        "clean_native_msa_v223": 0.7056427779503555,
+        "eta": 0.24305555555555555,
+        "interpretation": "The remnant scalar is recorded separately.  It is passed to the opaque carrier and is not fitted or phase-adjusted by this diagnostic.",
+        "public_aligned_fit": 0.7056427779389591
+      },
+      "source_frame": {
+        "clean_current_chart": {
+          "alpha0": 2.34257082168463,
+          "phi_j": 0.47177751118075,
+          "theta_jn": 0.6999975277098504,
+          "zeta": 3.14158870991628
+        },
+        "clean_zero": {
+          "alpha0": 2.042570088990408,
+          "phi_j": 0.47177751118075,
+          "theta_jn": 0.6999983889250401,
+          "zeta": 3.141587751947654
+        },
+        "phi_j_mapping": "phi_j=-phiJL0",
+        "public_current": {
+          "alpha0": 2.3425708216763983,
+          "chi1": 0.2,
+          "chi2": -0.1,
+          "chip": 1e-05,
+          "phiJL0": -0.47177751118075,
+          "thetaJN": 0.6999975277098504,
+          "zeta": 3.141588709905517
+        },
+        "public_current_mapped_for_clean_projector": {
+          "alpha0": 2.3425708216763983,
+          "phi_j": 0.47177751118075,
+          "theta_jn": 0.6999975277098504,
+          "zeta": 3.141588709905517
+        },
+        "public_transport": {
+          "aligned_gamma_transport_omitted": false,
+          "delta_alpha": 0.30000073269622174,
+          "delta_gamma": -0.0,
+          "delta_phi_j": 0.0,
+          "source": "Appendix C/Table IV source-frame coordinate transport"
+        },
+        "public_tuple_contract": "(chi1, chi2, chip, thetaJN, alpha0, phiJL0, zeta)",
+        "public_zero": {
+          "alpha0": 2.0425700889801766,
+          "chi1": 0.2,
+          "chi2": -0.1,
+          "chip": 1e-05,
+          "phiJL0": -0.47177751118075,
+          "thetaJN": 0.6999983889250401,
+          "zeta": 3.1415877519342765
+        },
+        "zeta_mapping": "public convention 0 receives +pi/2 clean-basis shift; convention 1 receives no metadata shift before the composer's -pi/2 Table-IV shift"
+      },
+      "status": "known_tiny_spin_internal_failure",
+      "strict_gate": {
+        "chart_injected_pass": false,
+        "direct_native_pass": false,
+        "relative_complex_l2": 1e-06,
+        "threshold_changed": false
+      },
+      "waveform": {
+        "direct_clean_native_vs_public_xp": {
+          "h_cross": {
+            "max_abs": 2.0548845871612707e-25,
+            "nonfinite": 0,
+            "relative_l2": 0.007311213109467375,
+            "support": 1968
+          },
+          "h_plus": {
+            "max_abs": 2.1429466957789756e-25,
+            "nonfinite": 0,
+            "relative_l2": 0.007354070457629662,
+            "support": 1968
+          }
+        },
+        "grid_hz": {
+          "count": 1968,
+          "delta_f": 0.25,
+          "fhigh_exclusive": 512.0,
+          "flow": 20.0
+        },
+        "public_chart_injected_clean_vs_public_xp": {
+          "h_cross": {
+            "max_abs": 2.054535347287952e-25,
+            "nonfinite": 0,
+            "relative_l2": 0.0038986654053745685,
+            "support": 1968
+          },
+          "h_plus": {
+            "max_abs": 2.1426571655647594e-25,
+            "nonfinite": 0,
+            "relative_l2": 0.003921729338918756,
+            "support": 1968
+          }
+        },
+        "public_target": "SimInspiralChooseFDWaveform(..., IMRPhenomXP)"
+      }
+    },
+    {
+      "angles": {
+        "angle_api": "SimIMRPhenomXPMSAAngles",
+        "beta_max_rad": {
+          "clean": 4.780190784850905e-05,
+          "public": 4.780190784850905e-05
+        },
+        "chart_deltas_before_endpoint_correction": {
+          "alpha_max_abs_wrapped": 7.061531128726983e-07,
+          "alpha_plus_gamma_max_abs_wrapped": 6.307044486675295e-08,
+          "cos_beta_max_abs": 4.440892098500626e-16,
+          "gamma_max_abs_wrapped": 6.800999461376023e-07,
+          "samples": {
+            "alpha": {
+              "190Hz": -7.061009164033294e-07,
+              "20Hz": 0.0,
+              "511.75Hz": -6.538648698040106e-07
+            },
+            "alpha_plus_gamma": {
+              "190Hz": -2.8612047842102584e-08,
+              "20Hz": 0.0,
+              "511.75Hz": -6.307044486675295e-08
+            },
+            "cos_beta": {
+              "190Hz": -1.1102230246251565e-16,
+              "20Hz": 1.1102230246251565e-16,
+              "511.75Hz": 1.1102230246251565e-16
+            },
+            "gamma": {
+              "190Hz": 6.774888685612268e-07,
+              "20Hz": 0.0,
+              "511.75Hz": 5.907944249372576e-07
+            }
+          }
+        },
+        "chart_deltas_public_minus_clean": {
+          "alpha_max_abs_wrapped": 7.061531128726983e-07,
+          "alpha_plus_gamma_max_abs_wrapped": 6.307044486675295e-08,
+          "cos_beta_max_abs": 4.440892098500626e-16,
+          "gamma_max_abs_wrapped": 6.800999461376023e-07,
+          "samples": {
+            "alpha": {
+              "190Hz": -7.061009164033294e-07,
+              "20Hz": 0.0,
+              "511.75Hz": -6.538648698040106e-07
+            },
+            "alpha_plus_gamma": {
+              "190Hz": -2.8612047842102584e-08,
+              "20Hz": 0.0,
+              "511.75Hz": -6.307044486675295e-08
+            },
+            "cos_beta": {
+              "190Hz": -1.1102230246251565e-16,
+              "20Hz": 1.1102230246251565e-16,
+              "511.75Hz": 1.1102230246251565e-16
+            },
+            "gamma": {
+              "190Hz": 6.774888685612268e-07,
+              "20Hz": 0.0,
+              "511.75Hz": 5.907944249372576e-07
+            }
+          }
+        },
+        "clean_native_absolute": {
+          "alpha": {
+            "190Hz": 12.206663142880053,
+            "20Hz": 3.141592653589793,
+            "511.75Hz": 12.233344861801337
+          },
+          "cos_beta": {
+            "190Hz": 0.9999999988734792,
+            "20Hz": 0.9999999993401383,
+            "511.75Hz": 0.9999999992709613
+          },
+          "gamma": {
+            "190Hz": -8.56814854666238,
+            "20Hz": 0.0,
+            "511.75Hz": -7.996371497261501
+          }
+        },
+        "clean_native_absolute_before_endpoint_chart": {
+          "alpha": {
+            "190Hz": 12.206663142880053,
+            "20Hz": 3.141592653589793,
+            "511.75Hz": 12.233344861801337
+          },
+          "cos_beta": {
+            "190Hz": 0.9999999988734792,
+            "20Hz": 0.9999999993401383,
+            "511.75Hz": 0.9999999992709613
+          },
+          "gamma": {
+            "190Hz": -8.56814854666238,
+            "20Hz": 0.0,
+            "511.75Hz": -7.996371497261501
+          }
+        },
+        "clean_native_relative": {
+          "alpha": {
+            "190Hz": 9.06507048929026,
+            "20Hz": 0.0,
+            "511.75Hz": 9.091752208211544
+          },
+          "cos_beta": {
+            "190Hz": 0.9999999988734792,
+            "20Hz": 0.9999999993401383,
+            "511.75Hz": 0.9999999992709613
+          },
+          "gamma": {
+            "190Hz": -8.56814854666238,
+            "20Hz": -0.0,
+            "511.75Hz": -7.996371497261501
+          }
+        },
+        "mprime": 2,
+        "public_raw": {
+          "alpha": {
+            "190Hz": 12.206662436779137,
+            "20Hz": 3.141592653589793,
+            "511.75Hz": 12.233344207936467
+          },
+          "cos_beta": {
+            "190Hz": 0.9999999988734791,
+            "20Hz": 0.9999999993401384,
+            "511.75Hz": 0.9999999992709614
+          },
+          "gamma": {
+            "190Hz": -8.568147869173512,
+            "20Hz": -0.0,
+            "511.75Hz": -7.996370906467076
+          }
+        },
+        "public_transported_absolute": {
+          "alpha": {
+            "190Hz": 12.206662436779137,
+            "20Hz": 3.141592653589793,
+            "511.75Hz": 12.233344207936467
+          },
+          "cos_beta": {
+            "190Hz": 0.9999999988734791,
+            "20Hz": 0.9999999993401384,
+            "511.75Hz": 0.9999999992709614
+          },
+          "gamma": {
+            "190Hz": -8.568147869173512,
+            "20Hz": 0.0,
+            "511.75Hz": -7.996370906467076
+          }
+        }
+      },
+      "carrier": {
+        "clean_carrier_phase": -1.2707963267948965,
+        "clean_minus_public_table_phase": 0.0,
+        "local_xas_with_clean_remnant_vs_public_xas": {
+          "h_cross": {
+            "max_abs": 7.531108998419005e-33,
+            "nonfinite": 0,
+            "relative_l2": 4.89259105678824e-10,
+            "support": 1968
+          },
+          "h_plus": {
+            "max_abs": 7.531108998419005e-33,
+            "nonfinite": 0,
+            "relative_l2": 4.89259105678824e-10,
+            "support": 1968
+          }
+        },
+        "local_xas_with_public_fit_vs_public_xas": {
+          "h_cross": {
+            "max_abs": 3.836742534223552e-36,
+            "nonfinite": 0,
+            "relative_l2": 4.526197124188018e-14,
+            "support": 1968
+          },
+          "h_plus": {
+            "max_abs": 3.836742534223552e-36,
+            "nonfinite": 0,
+            "relative_l2": 4.526197124188018e-14,
+            "support": 1968
+          }
+        },
+        "opaque_carrier_scope": "XAS is called at inclination zero; the clean projector receives only its positive-frequency h22.",
+        "public_table_carrier_phase": -1.2707963267948965,
+        "public_table_phase_placeholder": null,
+        "public_xas_carrier_phase_input": -1.2707963267948965
+      },
+      "convention": 0,
+      "fixture": {
+        "distance_mpc": 500.0,
+        "exact_transverse_zero": true,
+        "f_ref_hz": 20.0,
+        "full_three_component_spins": true,
+        "id": "fresh_aligned_45_15",
+        "inclination_rad": 0.7,
+        "label": "fresh exact-aligned mass-ratio fixture",
+        "mass1_msun": 45.0,
+        "mass2_msun": 15.0,
+        "phic_rad": 0.3,
+        "spin1": [
+          0.0,
+          0.0,
+          0.35
+        ],
+        "spin2": [
+          0.0,
+          0.0,
+          -0.2
+        ]
+      },
+      "options": {
+        "looked_up": {
+          "convention": 0,
+          "expansion_order": 5,
+          "final_spin_mod": 3,
+          "prec_version": 223
+        },
+        "requested": {
+          "convention": 0,
+          "expansion_order": 5,
+          "final_spin_mod": 3,
+          "prec_version": 223
+        }
+      },
+      "remnant": {
+        "clean_detail": {
+          "aligned_kerr_parameter": 0.6862621688517878,
+          "initial_s1_l": 0.196875,
+          "initial_s2_l": -0.0125,
+          "l_fin": 0.5018871688517879,
+          "mean_s1_l": 0.19687499947038925,
+          "mean_s2_l": -0.012499999823463085,
+          "remnant_mass_fraction": 0.9651774931138247,
+          "s_av_squared": 0.033994141124999995
+        },
+        "clean_minus_public": 1.0607736911083521e-10,
+        "clean_native_msa_v223": 0.6862621689578651,
+        "eta": 0.1875,
+        "interpretation": "The remnant scalar is recorded separately.  It is passed to the opaque carrier and is not fitted or phase-adjusted by this diagnostic.",
+        "public_aligned_fit": 0.6862621688517877
+      },
+      "source_frame": {
+        "clean_current_chart": {
+          "alpha0": 3.141592653589793,
+          "phi_j": 1.2707963267948965,
+          "theta_jn": 0.7,
+          "zeta": 3.141592653589793
+        },
+        "clean_zero": {
+          "alpha0": 3.141592653589793,
+          "phi_j": 1.5707963267948966,
+          "theta_jn": 0.7,
+          "zeta": 3.141592653589793
+        },
+        "phi_j_mapping": "phi_j=-phiJL0",
+        "public_current": {
+          "alpha0": 3.141592653589793,
+          "chi1": 0.35,
+          "chi2": -0.2,
+          "chip": 0.0,
+          "phiJL0": -1.2707963267948965,
+          "thetaJN": 0.7,
+          "zeta": -1.5707963267948966
+        },
+        "public_current_mapped_for_clean_projector": {
+          "alpha0": 3.141592653589793,
+          "phi_j": 1.2707963267948965,
+          "theta_jn": 0.7,
+          "zeta": 0.0
+        },
+        "public_transport": {
+          "aligned_gamma_transport_omitted": false,
+          "delta_alpha": 0.0,
+          "delta_gamma": 0.0,
+          "delta_phi_j": -0.2999999999999998,
+          "source": "Appendix C/Table IV source-frame coordinate transport"
+        },
+        "public_tuple_contract": "(chi1, chi2, chip, thetaJN, alpha0, phiJL0, zeta)",
+        "public_zero": {
+          "alpha0": 3.141592653589793,
+          "chi1": 0.35,
+          "chi2": -0.2,
+          "chip": 0.0,
+          "phiJL0": -1.5707963267948966,
+          "thetaJN": 0.7,
+          "zeta": -1.5707963267948966
+        },
+        "zeta_mapping": "public convention 0 receives +pi/2 clean-basis shift; convention 1 receives no metadata shift before the composer's -pi/2 Table-IV shift"
+      },
+      "status": "ordinary_aligned_control",
+      "strict_gate": {
+        "chart_injected_pass": true,
+        "direct_native_pass": true,
+        "relative_complex_l2": 1e-06,
+        "threshold_changed": false
+      },
+      "waveform": {
+        "direct_clean_native_vs_public_xp": {
+          "h_cross": {
+            "max_abs": 1.8873531901418173e-31,
+            "nonfinite": 0,
+            "relative_l2": 1.8347467603018308e-08,
+            "support": 1968
+          },
+          "h_plus": {
+            "max_abs": 1.9550431636218512e-31,
+            "nonfinite": 0,
+            "relative_l2": 1.8348477167314123e-08,
+            "support": 1968
+          }
+        },
+        "grid_hz": {
+          "count": 1968,
+          "delta_f": 0.25,
+          "fhigh_exclusive": 512.0,
+          "flow": 20.0
+        },
+        "public_chart_injected_clean_vs_public_xp": {
+          "h_cross": {
+            "max_abs": 1.6223040687211574e-34,
+            "nonfinite": 0,
+            "relative_l2": 9.37162261714293e-13,
+            "support": 1968
+          },
+          "h_plus": {
+            "max_abs": 1.2392519085678563e-34,
+            "nonfinite": 0,
+            "relative_l2": 6.92177100347828e-13,
+            "support": 1968
+          }
+        },
+        "public_target": "SimInspiralChooseFDWaveform(..., IMRPhenomXP)"
+      }
+    },
+    {
+      "angles": {
+        "angle_api": "SimIMRPhenomXPMSAAngles",
+        "beta_max_rad": {
+          "clean": 4.780190784850905e-05,
+          "public": 4.780190784850905e-05
+        },
+        "chart_deltas_before_endpoint_correction": {
+          "alpha_max_abs_wrapped": 1.2707970329480087,
+          "alpha_plus_gamma_max_abs_wrapped": 6.307044397857453e-08,
+          "cos_beta_max_abs": 4.440892098500626e-16,
+          "gamma_max_abs_wrapped": 1.2707970068948429,
+          "samples": {
+            "alpha": {
+              "190Hz": -1.270797032895814,
+              "20Hz": -1.2707963267948967,
+              "511.75Hz": -1.2707969806597657
+            },
+            "alpha_plus_gamma": {
+              "190Hz": -2.8612048730281003e-08,
+              "20Hz": -2.220446049250313e-16,
+              "511.75Hz": -6.307044397857453e-08
+            },
+            "cos_beta": {
+              "190Hz": -1.1102230246251565e-16,
+              "20Hz": 1.1102230246251565e-16,
+              "511.75Hz": 1.1102230246251565e-16
+            },
+            "gamma": {
+              "190Hz": 1.2707970042837653,
+              "20Hz": 1.2707963267948965,
+              "511.75Hz": 1.2707969175893217
+            }
+          }
+        },
+        "chart_deltas_public_minus_clean": {
+          "alpha_max_abs_wrapped": 7.061531128726983e-07,
+          "alpha_plus_gamma_max_abs_wrapped": 6.307044486675295e-08,
+          "cos_beta_max_abs": 4.440892098500626e-16,
+          "gamma_max_abs_wrapped": 6.800999461376023e-07,
+          "samples": {
+            "alpha": {
+              "190Hz": -7.061009181796862e-07,
+              "20Hz": -2.220446049250313e-16,
+              "511.75Hz": -6.538648698040106e-07
+            },
+            "alpha_plus_gamma": {
+              "190Hz": -2.8612049618459423e-08,
+              "20Hz": -2.220446049250313e-16,
+              "511.75Hz": -6.307044486675295e-08
+            },
+            "cos_beta": {
+              "190Hz": -1.1102230246251565e-16,
+              "20Hz": 1.1102230246251565e-16,
+              "511.75Hz": 1.1102230246251565e-16
+            },
+            "gamma": {
+              "190Hz": 6.774888685612268e-07,
+              "20Hz": 0.0,
+              "511.75Hz": 5.907944249372576e-07
+            }
+          }
+        },
+        "clean_native_absolute": {
+          "alpha": {
+            "190Hz": 10.935866816085158,
+            "20Hz": 1.8707963267948966,
+            "511.75Hz": 10.96254853500644
+          },
+          "cos_beta": {
+            "190Hz": 0.9999999988734792,
+            "20Hz": 0.9999999993401383,
+            "511.75Hz": 0.9999999992709613
+          },
+          "gamma": {
+            "190Hz": -5.426555893072587,
+            "20Hz": 3.141592653589793,
+            "511.75Hz": -4.854778843671708
+          }
+        },
+        "clean_native_absolute_before_endpoint_chart": {
+          "alpha": {
+            "190Hz": 12.206663142880053,
+            "20Hz": 3.141592653589793,
+            "511.75Hz": 12.233344861801337
+          },
+          "cos_beta": {
+            "190Hz": 0.9999999988734792,
+            "20Hz": 0.9999999993401383,
+            "511.75Hz": 0.9999999992709613
+          },
+          "gamma": {
+            "190Hz": -6.697352219867484,
+            "20Hz": 1.8707963267948966,
+            "511.75Hz": -6.125575170466605
+          }
+        },
+        "clean_native_relative": {
+          "alpha": {
+            "190Hz": 9.06507048929026,
+            "20Hz": 0.0,
+            "511.75Hz": 9.091752208211544
+          },
+          "cos_beta": {
+            "190Hz": 0.9999999988734792,
+            "20Hz": 0.9999999993401383,
+            "511.75Hz": 0.9999999992709613
+          },
+          "gamma": {
+            "190Hz": -8.56814854666238,
+            "20Hz": -0.0,
+            "511.75Hz": -7.996371497261501
+          }
+        },
+        "mprime": 2,
+        "public_raw": {
+          "alpha": {
+            "190Hz": 10.63586610998424,
+            "20Hz": 1.5707963267948966,
+            "511.75Hz": 10.66254788114157
+          },
+          "cos_beta": {
+            "190Hz": 0.9999999988734791,
+            "20Hz": 0.9999999993401384,
+            "511.75Hz": 0.9999999992709614
+          },
+          "gamma": {
+            "190Hz": -5.4265552155837185,
+            "20Hz": 3.141592653589793,
+            "511.75Hz": -4.854778252877283
+          }
+        },
+        "public_transported_absolute": {
+          "alpha": {
+            "190Hz": 10.93586610998424,
+            "20Hz": 1.8707963267948964,
+            "511.75Hz": 10.962547881141571
+          },
+          "cos_beta": {
+            "190Hz": 0.9999999988734791,
+            "20Hz": 0.9999999993401384,
+            "511.75Hz": 0.9999999992709614
+          },
+          "gamma": {
+            "190Hz": -5.4265552155837185,
+            "20Hz": 3.141592653589793,
+            "511.75Hz": -4.854778252877283
+          }
+        }
+      },
+      "carrier": {
+        "clean_carrier_phase": 0.0,
+        "clean_minus_public_table_phase": 0.0,
+        "local_xas_with_clean_remnant_vs_public_xas": {
+          "h_cross": {
+            "max_abs": 7.531108916690682e-33,
+            "nonfinite": 0,
+            "relative_l2": 4.892580164988647e-10,
+            "support": 1968
+          },
+          "h_plus": {
+            "max_abs": 7.531108916690682e-33,
+            "nonfinite": 0,
+            "relative_l2": 4.892580164988647e-10,
+            "support": 1968
+          }
+        },
+        "local_xas_with_public_fit_vs_public_xas": {
+          "h_cross": {
+            "max_abs": 3.6689514255430345e-36,
+            "nonfinite": 0,
+            "relative_l2": 4.563290963227402e-14,
+            "support": 1968
+          },
+          "h_plus": {
+            "max_abs": 3.6689514255430345e-36,
+            "nonfinite": 0,
+            "relative_l2": 4.563290963227402e-14,
+            "support": 1968
+          }
+        },
+        "opaque_carrier_scope": "XAS is called at inclination zero; the clean projector receives only its positive-frequency h22.",
+        "public_table_carrier_phase": 0.0,
+        "public_table_phase_placeholder": null,
+        "public_xas_carrier_phase_input": 0.0
+      },
+      "convention": 1,
+      "fixture": {
+        "distance_mpc": 500.0,
+        "exact_transverse_zero": true,
+        "f_ref_hz": 20.0,
+        "full_three_component_spins": true,
+        "id": "fresh_aligned_45_15",
+        "inclination_rad": 0.7,
+        "label": "fresh exact-aligned mass-ratio fixture",
+        "mass1_msun": 45.0,
+        "mass2_msun": 15.0,
+        "phic_rad": 0.3,
+        "spin1": [
+          0.0,
+          0.0,
+          0.35
+        ],
+        "spin2": [
+          0.0,
+          0.0,
+          -0.2
+        ]
+      },
+      "options": {
+        "looked_up": {
+          "convention": 1,
+          "expansion_order": 5,
+          "final_spin_mod": 3,
+          "prec_version": 223
+        },
+        "requested": {
+          "convention": 1,
+          "expansion_order": 5,
+          "final_spin_mod": 3,
+          "prec_version": 223
+        }
+      },
+      "remnant": {
+        "clean_detail": {
+          "aligned_kerr_parameter": 0.6862621688517878,
+          "initial_s1_l": 0.196875,
+          "initial_s2_l": -0.0125,
+          "l_fin": 0.5018871688517879,
+          "mean_s1_l": 0.19687499947038925,
+          "mean_s2_l": -0.012499999823463085,
+          "remnant_mass_fraction": 0.9651774931138247,
+          "s_av_squared": 0.033994141124999995
+        },
+        "clean_minus_public": 1.0607736911083521e-10,
+        "clean_native_msa_v223": 0.6862621689578651,
+        "eta": 0.1875,
+        "interpretation": "The remnant scalar is recorded separately.  It is passed to the opaque carrier and is not fitted or phase-adjusted by this diagnostic.",
+        "public_aligned_fit": 0.6862621688517877
+      },
+      "source_frame": {
+        "clean_current_chart": {
+          "alpha0": 3.141592653589793,
+          "phi_j": 1.2707963267948965,
+          "theta_jn": 0.7,
+          "zeta": 3.141592653589793
+        },
+        "clean_zero": {
+          "alpha0": 3.141592653589793,
+          "phi_j": 1.5707963267948966,
+          "theta_jn": 0.7,
+          "zeta": 3.141592653589793
+        },
+        "phi_j_mapping": "phi_j=-phiJL0",
+        "public_current": {
+          "alpha0": 1.8707963267948966,
+          "chi1": 0.35,
+          "chi2": -0.2,
+          "chip": 0.0,
+          "phiJL0": -0.0,
+          "thetaJN": 0.7,
+          "zeta": -3.141592653589793
+        },
+        "public_current_mapped_for_clean_projector": {
+          "alpha0": 1.8707963267948966,
+          "phi_j": 0.0,
+          "theta_jn": 0.7,
+          "zeta": -3.141592653589793
+        },
+        "public_transport": {
+          "aligned_gamma_transport_omitted": true,
+          "delta_alpha": 0.2999999999999998,
+          "delta_gamma": 0.0,
+          "delta_phi_j": 0.0,
+          "source": "Appendix C/Table IV source-frame coordinate transport"
+        },
+        "public_tuple_contract": "(chi1, chi2, chip, thetaJN, alpha0, phiJL0, zeta)",
+        "public_zero": {
+          "alpha0": 1.5707963267948966,
+          "chi1": 0.35,
+          "chi2": -0.2,
+          "chip": 0.0,
+          "phiJL0": -0.0,
+          "thetaJN": 0.7,
+          "zeta": -3.141592653589793
+        },
+        "zeta_mapping": "public convention 0 receives +pi/2 clean-basis shift; convention 1 receives no metadata shift before the composer's -pi/2 Table-IV shift"
+      },
+      "status": "endpoint_chart_corrected",
+      "strict_gate": {
+        "chart_injected_pass": true,
+        "direct_native_pass": true,
+        "relative_complex_l2": 1e-06,
+        "threshold_changed": false
+      },
+      "waveform": {
+        "direct_clean_native_vs_public_xp": {
+          "h_cross": {
+            "max_abs": 1.8876163404540234e-31,
+            "nonfinite": 0,
+            "relative_l2": 1.8354775511656594e-08,
+            "support": 1968
+          },
+          "h_plus": {
+            "max_abs": 1.9552560373655522e-31,
+            "nonfinite": 0,
+            "relative_l2": 1.835387134952343e-08,
+            "support": 1968
+          }
+        },
+        "grid_hz": {
+          "count": 1968,
+          "delta_f": 0.25,
+          "fhigh_exclusive": 512.0,
+          "flow": 20.0
+        },
+        "public_chart_injected_clean_vs_public_xp": {
+          "h_cross": {
+            "max_abs": 1.6221607717178887e-34,
+            "nonfinite": 0,
+            "relative_l2": 9.394622898881335e-13,
+            "support": 1968
+          },
+          "h_plus": {
+            "max_abs": 1.2390706855388298e-34,
+            "nonfinite": 0,
+            "relative_l2": 6.944359811495237e-13,
+            "support": 1968
+          }
+        },
+        "public_target": "SimInspiralChooseFDWaveform(..., IMRPhenomXP)"
+      }
+    },
+    {
+      "angles": {
+        "angle_api": "SimIMRPhenomXPMSAAngles",
+        "beta_max_rad": {
+          "clean": 4.0249608674597e-05,
+          "public": 4.0249608674597e-05
+        },
+        "chart_deltas_before_endpoint_correction": {
+          "alpha_max_abs_wrapped": 7.709388682997087e-11,
+          "alpha_plus_gamma_max_abs_wrapped": 7.709211047313147e-11,
+          "cos_beta_max_abs": 4.440892098500626e-16,
+          "gamma_max_abs_wrapped": 5.773159728050814e-15,
+          "samples": {
+            "alpha": {
+              "190Hz": 1.0105694059348025e-11,
+              "20Hz": 0.0,
+              "511.75Hz": 2.3245405600391678e-11
+            },
+            "alpha_plus_gamma": {
+              "190Hz": 1.0104805880928325e-11,
+              "20Hz": 0.0,
+              "511.75Hz": 2.3243629243552277e-11
+            },
+            "cos_beta": {
+              "190Hz": 0.0,
+              "20Hz": 0.0,
+              "511.75Hz": 0.0
+            },
+            "gamma": {
+              "190Hz": -8.881784197001252e-16,
+              "20Hz": 0.0,
+              "511.75Hz": -1.7763568394002505e-15
+            }
+          }
+        },
+        "chart_deltas_public_minus_clean": {
+          "alpha_max_abs_wrapped": 7.709388682997087e-11,
+          "alpha_plus_gamma_max_abs_wrapped": 7.709211047313147e-11,
+          "cos_beta_max_abs": 4.440892098500626e-16,
+          "gamma_max_abs_wrapped": 5.773159728050814e-15,
+          "samples": {
+            "alpha": {
+              "190Hz": 1.0105694059348025e-11,
+              "20Hz": 0.0,
+              "511.75Hz": 2.3245405600391678e-11
+            },
+            "alpha_plus_gamma": {
+              "190Hz": 1.0104805880928325e-11,
+              "20Hz": 0.0,
+              "511.75Hz": 2.3243629243552277e-11
+            },
+            "cos_beta": {
+              "190Hz": 0.0,
+              "20Hz": 0.0,
+              "511.75Hz": 0.0
+            },
+            "gamma": {
+              "190Hz": -8.881784197001252e-16,
+              "20Hz": 0.0,
+              "511.75Hz": -1.7763568394002505e-15
+            }
+          }
+        },
+        "clean_native_absolute": {
+          "alpha": {
+            "190Hz": 10.67700405144799,
+            "20Hz": 3.141592653589793,
+            "511.75Hz": 10.407187750603114
+          },
+          "cos_beta": {
+            "190Hz": 0.9999999992097205,
+            "20Hz": 0.9999999995544342,
+            "511.75Hz": 0.9999999995076461
+          },
+          "gamma": {
+            "190Hz": -7.535411394781162,
+            "20Hz": 0.0,
+            "511.75Hz": -7.265595094825144
+          }
+        },
+        "clean_native_absolute_before_endpoint_chart": {
+          "alpha": {
+            "190Hz": 10.67700405144799,
+            "20Hz": 3.141592653589793,
+            "511.75Hz": 10.407187750603114
+          },
+          "cos_beta": {
+            "190Hz": 0.9999999992097205,
+            "20Hz": 0.9999999995544342,
+            "511.75Hz": 0.9999999995076461
+          },
+          "gamma": {
+            "190Hz": -7.535411394781162,
+            "20Hz": 0.0,
+            "511.75Hz": -7.265595094825144
+          }
+        },
+        "clean_native_relative": {
+          "alpha": {
+            "190Hz": 7.535411397858196,
+            "20Hz": 0.0,
+            "511.75Hz": 7.26559509701332
+          },
+          "cos_beta": {
+            "190Hz": 0.9999999992097205,
+            "20Hz": 0.9999999995544342,
+            "511.75Hz": 0.9999999995076461
+          },
+          "gamma": {
+            "190Hz": -7.535411394781162,
+            "20Hz": -0.0,
+            "511.75Hz": -7.265595094825144
+          }
+        },
+        "mprime": 2,
+        "public_raw": {
+          "alpha": {
+            "190Hz": 10.677004051458095,
+            "20Hz": 3.141592653589793,
+            "511.75Hz": 10.40718775062636
+          },
+          "cos_beta": {
+            "190Hz": 0.9999999992097205,
+            "20Hz": 0.9999999995544342,
+            "511.75Hz": 0.9999999995076461
+          },
+          "gamma": {
+            "190Hz": -7.535411394781163,
+            "20Hz": -0.0,
+            "511.75Hz": -7.265595094825146
+          }
+        },
+        "public_transported_absolute": {
+          "alpha": {
+            "190Hz": 10.677004051458095,
+            "20Hz": 3.141592653589793,
+            "511.75Hz": 10.40718775062636
+          },
+          "cos_beta": {
+            "190Hz": 0.9999999992097205,
+            "20Hz": 0.9999999995544342,
+            "511.75Hz": 0.9999999995076461
+          },
+          "gamma": {
+            "190Hz": -7.535411394781163,
+            "20Hz": 0.0,
+            "511.75Hz": -7.265595094825146
+          }
+        }
+      },
+      "carrier": {
+        "clean_carrier_phase": -1.2707963267948965,
+        "clean_minus_public_table_phase": 0.0,
+        "local_xas_with_clean_remnant_vs_public_xas": {
+          "h_cross": {
+            "max_abs": 3.1778156238293475e-32,
+            "nonfinite": 0,
+            "relative_l2": 1.7626203965928739e-09,
+            "support": 1968
+          },
+          "h_plus": {
+            "max_abs": 3.1778156238293475e-32,
+            "nonfinite": 0,
+            "relative_l2": 1.7626203965928739e-09,
+            "support": 1968
+          }
+        },
+        "local_xas_with_public_fit_vs_public_xas": {
+          "h_cross": {
+            "max_abs": 3.3264945438832885e-36,
+            "nonfinite": 0,
+            "relative_l2": 3.692997793428222e-14,
+            "support": 1968
+          },
+          "h_plus": {
+            "max_abs": 3.3264945438832885e-36,
+            "nonfinite": 0,
+            "relative_l2": 3.692997793428222e-14,
+            "support": 1968
+          }
+        },
+        "opaque_carrier_scope": "XAS is called at inclination zero; the clean projector receives only its positive-frequency h22.",
+        "public_table_carrier_phase": -1.2707963267948965,
+        "public_table_phase_placeholder": null,
+        "public_xas_carrier_phase_input": -1.2707963267948965
+      },
+      "convention": 0,
+      "fixture": {
+        "distance_mpc": 500.0,
+        "exact_transverse_zero": true,
+        "f_ref_hz": 20.0,
+        "full_three_component_spins": true,
+        "id": "fresh_zero_equal_30_30",
+        "inclination_rad": 0.7,
+        "label": "fresh equal-mass zero-spin fixture",
+        "mass1_msun": 30.0,
+        "mass2_msun": 30.0,
+        "phic_rad": 0.3,
+        "spin1": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "spin2": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "options": {
+        "looked_up": {
+          "convention": 0,
+          "expansion_order": 5,
+          "final_spin_mod": 3,
+          "prec_version": 223
+        },
+        "requested": {
+          "convention": 0,
+          "expansion_order": 5,
+          "final_spin_mod": 3,
+          "prec_version": 223
+        }
+      },
+      "remnant": {
+        "clean_detail": {
+          "aligned_kerr_parameter": 0.6863698793893069,
+          "initial_s1_l": 0.0,
+          "initial_s2_l": 0.0,
+          "l_fin": 0.6863698793893069,
+          "mean_s1_l": -5296108.538881194,
+          "mean_s2_l": 5296108.538881194,
+          "remnant_mass_fraction": 0.9515839428556587,
+          "s_av_squared": 5e-10
+        },
+        "clean_minus_public": 3.642350865362687e-10,
+        "clean_native_msa_v223": 0.686369879753542,
+        "eta": 0.25,
+        "interpretation": "The remnant scalar is recorded separately.  It is passed to the opaque carrier and is not fitted or phase-adjusted by this diagnostic.",
+        "public_aligned_fit": 0.6863698793893069
+      },
+      "source_frame": {
+        "clean_current_chart": {
+          "alpha0": 3.141592653589793,
+          "phi_j": 1.2707963267948965,
+          "theta_jn": 0.7,
+          "zeta": 3.141592653589793
+        },
+        "clean_zero": {
+          "alpha0": 3.141592653589793,
+          "phi_j": 1.5707963267948966,
+          "theta_jn": 0.7,
+          "zeta": 3.141592653589793
+        },
+        "phi_j_mapping": "phi_j=-phiJL0",
+        "public_current": {
+          "alpha0": 3.141592653589793,
+          "chi1": 0.0,
+          "chi2": 0.0,
+          "chip": 0.0,
+          "phiJL0": -1.2707963267948965,
+          "thetaJN": 0.7,
+          "zeta": -1.5707963267948966
+        },
+        "public_current_mapped_for_clean_projector": {
+          "alpha0": 3.141592653589793,
+          "phi_j": 1.2707963267948965,
+          "theta_jn": 0.7,
+          "zeta": 0.0
+        },
+        "public_transport": {
+          "aligned_gamma_transport_omitted": false,
+          "delta_alpha": 0.0,
+          "delta_gamma": 0.0,
+          "delta_phi_j": -0.2999999999999998,
+          "source": "Appendix C/Table IV source-frame coordinate transport"
+        },
+        "public_tuple_contract": "(chi1, chi2, chip, thetaJN, alpha0, phiJL0, zeta)",
+        "public_zero": {
+          "alpha0": 3.141592653589793,
+          "chi1": 0.0,
+          "chi2": 0.0,
+          "chip": 0.0,
+          "phiJL0": -1.5707963267948966,
+          "thetaJN": 0.7,
+          "zeta": -1.5707963267948966
+        },
+        "zeta_mapping": "public convention 0 receives +pi/2 clean-basis shift; convention 1 receives no metadata shift before the composer's -pi/2 Table-IV shift"
+      },
+      "status": "ordinary_aligned_control",
+      "strict_gate": {
+        "chart_injected_pass": true,
+        "direct_native_pass": true,
+        "relative_complex_l2": 1e-06,
+        "threshold_changed": false
+      },
+      "waveform": {
+        "direct_clean_native_vs_public_xp": {
+          "h_cross": {
+            "max_abs": 3.1066771912380865e-33,
+            "nonfinite": 0,
+            "relative_l2": 4.904062400134214e-11,
+            "support": 1968
+          },
+          "h_plus": {
+            "max_abs": 3.219022996559688e-33,
+            "nonfinite": 0,
+            "relative_l2": 4.9040796015329e-11,
+            "support": 1968
+          }
+        },
+        "grid_hz": {
+          "count": 1968,
+          "delta_f": 0.25,
+          "fhigh_exclusive": 512.0,
+          "flow": 20.0
+        },
+        "public_chart_injected_clean_vs_public_xp": {
+          "h_cross": {
+            "max_abs": 2.2188134185263134e-33,
+            "nonfinite": 0,
+            "relative_l2": 8.368649017228761e-12,
+            "support": 1968
+          },
+          "h_plus": {
+            "max_abs": 2.2990543922920503e-33,
+            "nonfinite": 0,
+            "relative_l2": 8.352169675847443e-12,
+            "support": 1968
+          }
+        },
+        "public_target": "SimInspiralChooseFDWaveform(..., IMRPhenomXP)"
+      }
+    },
+    {
+      "angles": {
+        "angle_api": "SimIMRPhenomXPMSAAngles",
+        "beta_max_rad": {
+          "clean": 4.0249608674597e-05,
+          "public": 4.0249608674597e-05
+        },
+        "chart_deltas_before_endpoint_correction": {
+          "alpha_max_abs_wrapped": 1.2707963268318032,
+          "alpha_plus_gamma_max_abs_wrapped": 7.709122229471177e-11,
+          "cos_beta_max_abs": 4.440892098500626e-16,
+          "gamma_max_abs_wrapped": 1.2707963267949023,
+          "samples": {
+            "alpha": {
+              "190Hz": -1.270796326784792,
+              "20Hz": -1.2707963267948967,
+              "511.75Hz": -1.2707963267716522
+            },
+            "alpha_plus_gamma": {
+              "190Hz": 1.0103917702508625e-11,
+              "20Hz": -2.220446049250313e-16,
+              "511.75Hz": 2.3242741065132577e-11
+            },
+            "cos_beta": {
+              "190Hz": 0.0,
+              "20Hz": 0.0,
+              "511.75Hz": 0.0
+            },
+            "gamma": {
+              "190Hz": 1.2707963267948958,
+              "20Hz": 1.2707963267948965,
+              "511.75Hz": 1.270796326794895
+            }
+          }
+        },
+        "chart_deltas_public_minus_clean": {
+          "alpha_max_abs_wrapped": 7.709211047313147e-11,
+          "alpha_plus_gamma_max_abs_wrapped": 7.709033411629207e-11,
+          "cos_beta_max_abs": 4.440892098500626e-16,
+          "gamma_max_abs_wrapped": 5.773159728050814e-15,
+          "samples": {
+            "alpha": {
+              "190Hz": 1.0103917702508625e-11,
+              "20Hz": -2.220446049250313e-16,
+              "511.75Hz": 2.3243629243552277e-11
+            },
+            "alpha_plus_gamma": {
+              "190Hz": 1.0103029524088925e-11,
+              "20Hz": -2.220446049250313e-16,
+              "511.75Hz": 2.3241852886712877e-11
+            },
+            "cos_beta": {
+              "190Hz": 0.0,
+              "20Hz": 0.0,
+              "511.75Hz": 0.0
+            },
+            "gamma": {
+              "190Hz": -8.881784197001252e-16,
+              "20Hz": 0.0,
+              "511.75Hz": -1.7763568394002505e-15
+            }
+          }
+        },
+        "clean_native_absolute": {
+          "alpha": {
+            "190Hz": 9.406207724653093,
+            "20Hz": 1.8707963267948966,
+            "511.75Hz": 9.136391423808218
+          },
+          "cos_beta": {
+            "190Hz": 0.9999999992097205,
+            "20Hz": 0.9999999995544342,
+            "511.75Hz": 0.9999999995076461
+          },
+          "gamma": {
+            "190Hz": -4.393818741191369,
+            "20Hz": 3.141592653589793,
+            "511.75Hz": -4.124002441235351
+          }
+        },
+        "clean_native_absolute_before_endpoint_chart": {
+          "alpha": {
+            "190Hz": 10.67700405144799,
+            "20Hz": 3.141592653589793,
+            "511.75Hz": 10.407187750603114
+          },
+          "cos_beta": {
+            "190Hz": 0.9999999992097205,
+            "20Hz": 0.9999999995544342,
+            "511.75Hz": 0.9999999995076461
+          },
+          "gamma": {
+            "190Hz": -5.664615067986266,
+            "20Hz": 1.8707963267948966,
+            "511.75Hz": -5.394798768030248
+          }
+        },
+        "clean_native_relative": {
+          "alpha": {
+            "190Hz": 7.535411397858196,
+            "20Hz": 0.0,
+            "511.75Hz": 7.26559509701332
+          },
+          "cos_beta": {
+            "190Hz": 0.9999999992097205,
+            "20Hz": 0.9999999995544342,
+            "511.75Hz": 0.9999999995076461
+          },
+          "gamma": {
+            "190Hz": -7.535411394781162,
+            "20Hz": -0.0,
+            "511.75Hz": -7.265595094825144
+          }
+        },
+        "mprime": 2,
+        "public_raw": {
+          "alpha": {
+            "190Hz": 9.106207724663198,
+            "20Hz": 1.5707963267948966,
+            "511.75Hz": 8.836391423831463
+          },
+          "cos_beta": {
+            "190Hz": 0.9999999992097205,
+            "20Hz": 0.9999999995544342,
+            "511.75Hz": 0.9999999995076461
+          },
+          "gamma": {
+            "190Hz": -4.39381874119137,
+            "20Hz": 3.141592653589793,
+            "511.75Hz": -4.124002441235353
+          }
+        },
+        "public_transported_absolute": {
+          "alpha": {
+            "190Hz": 9.406207724663197,
+            "20Hz": 1.8707963267948964,
+            "511.75Hz": 9.136391423831462
+          },
+          "cos_beta": {
+            "190Hz": 0.9999999992097205,
+            "20Hz": 0.9999999995544342,
+            "511.75Hz": 0.9999999995076461
+          },
+          "gamma": {
+            "190Hz": -4.39381874119137,
+            "20Hz": 3.141592653589793,
+            "511.75Hz": -4.124002441235353
+          }
+        }
+      },
+      "carrier": {
+        "clean_carrier_phase": 0.0,
+        "clean_minus_public_table_phase": 0.0,
+        "local_xas_with_clean_remnant_vs_public_xas": {
+          "h_cross": {
+            "max_abs": 3.177818465275264e-32,
+            "nonfinite": 0,
+            "relative_l2": 1.7626202579485596e-09,
+            "support": 1968
+          },
+          "h_plus": {
+            "max_abs": 3.177818465275264e-32,
+            "nonfinite": 0,
+            "relative_l2": 1.7626202579485596e-09,
+            "support": 1968
+          }
+        },
+        "local_xas_with_public_fit_vs_public_xas": {
+          "h_cross": {
+            "max_abs": 3.195875266298094e-36,
+            "nonfinite": 0,
+            "relative_l2": 3.5806587046129635e-14,
+            "support": 1968
+          },
+          "h_plus": {
+            "max_abs": 3.195875266298094e-36,
+            "nonfinite": 0,
+            "relative_l2": 3.5806587046129635e-14,
+            "support": 1968
+          }
+        },
+        "opaque_carrier_scope": "XAS is called at inclination zero; the clean projector receives only its positive-frequency h22.",
+        "public_table_carrier_phase": 0.0,
+        "public_table_phase_placeholder": null,
+        "public_xas_carrier_phase_input": 0.0
+      },
+      "convention": 1,
+      "fixture": {
+        "distance_mpc": 500.0,
+        "exact_transverse_zero": true,
+        "f_ref_hz": 20.0,
+        "full_three_component_spins": true,
+        "id": "fresh_zero_equal_30_30",
+        "inclination_rad": 0.7,
+        "label": "fresh equal-mass zero-spin fixture",
+        "mass1_msun": 30.0,
+        "mass2_msun": 30.0,
+        "phic_rad": 0.3,
+        "spin1": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "spin2": [
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "options": {
+        "looked_up": {
+          "convention": 1,
+          "expansion_order": 5,
+          "final_spin_mod": 3,
+          "prec_version": 223
+        },
+        "requested": {
+          "convention": 1,
+          "expansion_order": 5,
+          "final_spin_mod": 3,
+          "prec_version": 223
+        }
+      },
+      "remnant": {
+        "clean_detail": {
+          "aligned_kerr_parameter": 0.6863698793893069,
+          "initial_s1_l": 0.0,
+          "initial_s2_l": 0.0,
+          "l_fin": 0.6863698793893069,
+          "mean_s1_l": -5296108.538881194,
+          "mean_s2_l": 5296108.538881194,
+          "remnant_mass_fraction": 0.9515839428556587,
+          "s_av_squared": 5e-10
+        },
+        "clean_minus_public": 3.642350865362687e-10,
+        "clean_native_msa_v223": 0.686369879753542,
+        "eta": 0.25,
+        "interpretation": "The remnant scalar is recorded separately.  It is passed to the opaque carrier and is not fitted or phase-adjusted by this diagnostic.",
+        "public_aligned_fit": 0.6863698793893069
+      },
+      "source_frame": {
+        "clean_current_chart": {
+          "alpha0": 3.141592653589793,
+          "phi_j": 1.2707963267948965,
+          "theta_jn": 0.7,
+          "zeta": 3.141592653589793
+        },
+        "clean_zero": {
+          "alpha0": 3.141592653589793,
+          "phi_j": 1.5707963267948966,
+          "theta_jn": 0.7,
+          "zeta": 3.141592653589793
+        },
+        "phi_j_mapping": "phi_j=-phiJL0",
+        "public_current": {
+          "alpha0": 1.8707963267948966,
+          "chi1": 0.0,
+          "chi2": 0.0,
+          "chip": 0.0,
+          "phiJL0": -0.0,
+          "thetaJN": 0.7,
+          "zeta": -3.141592653589793
+        },
+        "public_current_mapped_for_clean_projector": {
+          "alpha0": 1.8707963267948966,
+          "phi_j": 0.0,
+          "theta_jn": 0.7,
+          "zeta": -3.141592653589793
+        },
+        "public_transport": {
+          "aligned_gamma_transport_omitted": true,
+          "delta_alpha": 0.2999999999999998,
+          "delta_gamma": 0.0,
+          "delta_phi_j": 0.0,
+          "source": "Appendix C/Table IV source-frame coordinate transport"
+        },
+        "public_tuple_contract": "(chi1, chi2, chip, thetaJN, alpha0, phiJL0, zeta)",
+        "public_zero": {
+          "alpha0": 1.5707963267948966,
+          "chi1": 0.0,
+          "chi2": 0.0,
+          "chip": 0.0,
+          "phiJL0": -0.0,
+          "thetaJN": 0.7,
+          "zeta": -3.141592653589793
+        },
+        "zeta_mapping": "public convention 0 receives +pi/2 clean-basis shift; convention 1 receives no metadata shift before the composer's -pi/2 Table-IV shift"
+      },
+      "status": "endpoint_chart_corrected",
+      "strict_gate": {
+        "chart_injected_pass": true,
+        "direct_native_pass": true,
+        "relative_complex_l2": 1e-06,
+        "threshold_changed": false
+      },
+      "waveform": {
+        "direct_clean_native_vs_public_xp": {
+          "h_cross": {
+            "max_abs": 3.107036898896638e-33,
+            "nonfinite": 0,
+            "relative_l2": 4.90569883227632e-11,
+            "support": 1968
+          },
+          "h_plus": {
+            "max_abs": 3.219350116841778e-33,
+            "nonfinite": 0,
+            "relative_l2": 4.9053289901051454e-11,
+            "support": 1968
+          }
+        },
+        "grid_hz": {
+          "count": 1968,
+          "delta_f": 0.25,
+          "fhigh_exclusive": 512.0,
+          "flow": 20.0
+        },
+        "public_chart_injected_clean_vs_public_xp": {
+          "h_cross": {
+            "max_abs": 2.2191048720313125e-33,
+            "nonfinite": 0,
+            "relative_l2": 8.430402746390945e-12,
+            "support": 1968
+          },
+          "h_plus": {
+            "max_abs": 2.2993532007609758e-33,
+            "nonfinite": 0,
+            "relative_l2": 8.398006883644794e-12,
+            "support": 1968
+          }
+        },
+        "public_target": "SimInspiralChooseFDWaveform(..., IMRPhenomXP)"
+      }
+    }
+  ],
+  "strict_gate": {
+    "known_boundary_failures_are_visible": true,
+    "relative_complex_l2": 1e-06,
+    "threshold_changed": false
+  }
+}

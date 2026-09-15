@@ -1,0 +1,3229 @@
+{
+  "metadata": {
+    "python": "/Users/xangma/miniconda3/envs/pycbcorig313/bin/python",
+    "platform": "macOS-26.6-arm64-arm-64bit-Mach-O",
+    "grid": {
+      "flow": 30.0,
+      "f_final": 1024.0,
+      "df": 0.25
+    },
+    "fixed_reference_shift_note": "same public f_ref/phic; no shift applied",
+    "source_sha256": {
+      "scripts/nsbh_baseline_decomposition_diagnostic.py": "5cdc94220b50c2644c6d9320449759f4e4399356b764e0b707ec356148b4414a",
+      "src/torchwave/approximants/imrphenom_nsbh.py": "cece61e5024af35197891e8c30dec8c8fe1772e3b04778c7fa57d0a9c3bf236a",
+      "src/torchwave/approximants/imrphenomd.py": "56c5c5c5ba40b73cf6ac73e69b8d6913678c10e7ca6aa3c2f72dbf06cebf055c"
+    },
+    "module_phase_callable_inventory": {
+      "torchwave.approximants.imrphenom_nsbh._legacy_phase_offsets": {
+        "signature": "(m1, m2, s1, s2, mf_ref, mf_anchor, remnant_mass, remnant_spin)",
+        "doc": "Retain the inherited NSBH affine gauge, not a published prescription.\n\nIts constant uses the inspiral phase at the reference frequency; its time\norigin uses the raw MR slope at the requested upper frequency, evaluated\nwith the amplitude remnant. These offsets do not alter intrinsic curvature."
+      },
+      "torchwave.approximants.imrphenom_nsbh.nrtidalv2_frequency_phase": {
+        "signature": "(frequency_hz: torch.Tensor, total_mass_sec: torch.Tensor, eta: torch.Tensor, lambda_tilde: torch.Tensor) -> torch.Tensor",
+        "doc": "Return the additive NRTidalv2 phase correction in radians.\n\n``frequency_hz`` is the positive GW (2,2) frequency.  The tidal\ndeformability is the usual mass-weighted ``Lambda_tilde``.  No reference\nphase or time shift is applied here: those affine choices belong to the\nPhenomD baseline in the NSBH assembly (Thompson et al. Sec. II.B)."
+      }
+    }
+  },
+  "records": [
+    {
+      "case": "catalog",
+      "lambda2": 0.0,
+      "pair": "native_D_vs_binary_D",
+      "polarization": "hp",
+      "band_hz": [
+        30.0,
+        60.0
+      ],
+      "metric": {
+        "support_bins": 120,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 3.368172788034973e-08,
+        "magnitude_relative_l2": 8.620778770106329e-16,
+        "unit_phase_l2": 4.254578898504384e-08,
+        "phase_slope_rad_per_hz": 2.4719086813732657e-09,
+        "phase_nonaffine_rms_rad": 5.673902819665238e-13,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 0.0,
+      "pair": "native_D_vs_binary_D",
+      "polarization": "hp",
+      "band_hz": [
+        60.0,
+        100.0
+      ],
+      "metric": {
+        "support_bins": 160,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.1666216061893208e-07,
+        "magnitude_relative_l2": 9.394092236994214e-16,
+        "unit_phase_l2": 1.265462988166218e-07,
+        "phase_slope_rad_per_hz": 2.4719184372944986e-09,
+        "phase_nonaffine_rms_rad": 2.4698823215737415e-13,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 0.0,
+      "pair": "native_D_vs_binary_D",
+      "polarization": "hp",
+      "band_hz": [
+        100.0,
+        200.0
+      ],
+      "metric": {
+        "support_bins": 400,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 2.7074316664233695e-07,
+        "magnitude_relative_l2": 1.015345180348956e-15,
+        "unit_phase_l2": 3.047906991725433e-07,
+        "phase_slope_rad_per_hz": 2.4719213045164585e-09,
+        "phase_nonaffine_rms_rad": 2.104063285862184e-13,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 0.0,
+      "pair": "native_D_vs_binary_D",
+      "polarization": "hp",
+      "band_hz": [
+        200.0,
+        500.0
+      ],
+      "metric": {
+        "support_bins": 1200,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 6.762524144922324e-07,
+        "magnitude_relative_l2": 8.555900220791537e-10,
+        "unit_phase_l2": 8.191707751237935e-07,
+        "phase_slope_rad_per_hz": 2.4719212368830867e-09,
+        "phase_nonaffine_rms_rad": 2.1065283489467227e-13,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 0.0,
+      "pair": "native_D_vs_binary_D",
+      "polarization": "hp",
+      "band_hz": [
+        500.0,
+        1024.0
+      ],
+      "metric": {
+        "support_bins": 2096,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.6513896787373126e-06,
+        "magnitude_relative_l2": 1.437020104566995e-07,
+        "unit_phase_l2": 1.8473725689255719e-06,
+        "phase_slope_rad_per_hz": 2.4719212395615426e-09,
+        "phase_nonaffine_rms_rad": 2.0566714750834476e-13,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 0.0,
+      "pair": "native_D_vs_binary_D",
+      "polarization": "hc",
+      "band_hz": [
+        30.0,
+        60.0
+      ],
+      "metric": {
+        "support_bins": 120,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 3.368172788414342e-08,
+        "magnitude_relative_l2": 8.706845290550097e-16,
+        "unit_phase_l2": 4.254578899017399e-08,
+        "phase_slope_rad_per_hz": 2.471908682202029e-09,
+        "phase_nonaffine_rms_rad": 5.673943982303494e-13,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 0.0,
+      "pair": "native_D_vs_binary_D",
+      "polarization": "hc",
+      "band_hz": [
+        60.0,
+        100.0
+      ],
+      "metric": {
+        "support_bins": 160,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.1666216061799156e-07,
+        "magnitude_relative_l2": 9.544661425765623e-16,
+        "unit_phase_l2": 1.2654629881611402e-07,
+        "phase_slope_rad_per_hz": 2.471918437364828e-09,
+        "phase_nonaffine_rms_rad": 2.469838337056904e-13,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 0.0,
+      "pair": "native_D_vs_binary_D",
+      "polarization": "hc",
+      "band_hz": [
+        100.0,
+        200.0
+      ],
+      "metric": {
+        "support_bins": 400,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 2.707431666456058e-07,
+        "magnitude_relative_l2": 1.013426503581994e-15,
+        "unit_phase_l2": 3.0479069917532265e-07,
+        "phase_slope_rad_per_hz": 2.471921304557763e-09,
+        "phase_nonaffine_rms_rad": 2.10403540153534e-13,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 0.0,
+      "pair": "native_D_vs_binary_D",
+      "polarization": "hc",
+      "band_hz": [
+        200.0,
+        500.0
+      ],
+      "metric": {
+        "support_bins": 1200,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 6.762524144921383e-07,
+        "magnitude_relative_l2": 8.555900212925572e-10,
+        "unit_phase_l2": 8.191707751209397e-07,
+        "phase_slope_rad_per_hz": 2.471921236850557e-09,
+        "phase_nonaffine_rms_rad": 2.106510317017499e-13,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 0.0,
+      "pair": "native_D_vs_binary_D",
+      "polarization": "hc",
+      "band_hz": [
+        500.0,
+        1024.0
+      ],
+      "metric": {
+        "support_bins": 2096,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.6513896787363823e-06,
+        "magnitude_relative_l2": 1.437020104546086e-07,
+        "unit_phase_l2": 1.8473725689230098e-06,
+        "phase_slope_rad_per_hz": 2.471921239574148e-09,
+        "phase_nonaffine_rms_rad": 2.0566649162437818e-13,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 0.0,
+      "pair": "native_NSBH_vs_binary_NSBH",
+      "polarization": "hp",
+      "band_hz": [
+        30.0,
+        60.0
+      ],
+      "metric": {
+        "support_bins": 120,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 2.9356078288135724e-10,
+        "magnitude_relative_l2": 5.241940859882522e-16,
+        "unit_phase_l2": 3.706221225261134e-10,
+        "phase_slope_rad_per_hz": -2.145380857675052e-11,
+        "phase_nonaffine_rms_rad": 5.542809422026109e-13,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 0.0,
+      "pair": "native_NSBH_vs_binary_NSBH",
+      "polarization": "hp",
+      "band_hz": [
+        60.0,
+        100.0
+      ],
+      "metric": {
+        "support_bins": 160,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.0139690008612185e-09,
+        "magnitude_relative_l2": 4.548269791089699e-16,
+        "unit_phase_l2": 1.0997439941198518e-09,
+        "phase_slope_rad_per_hz": -2.1454527435472158e-11,
+        "phase_nonaffine_rms_rad": 2.513751227791015e-13,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 0.0,
+      "pair": "native_NSBH_vs_binary_NSBH",
+      "polarization": "hp",
+      "band_hz": [
+        100.0,
+        200.0
+      ],
+      "metric": {
+        "support_bins": 400,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 2.3522662814813706e-09,
+        "magnitude_relative_l2": 5.00565107408783e-16,
+        "unit_phase_l2": 2.646526473884801e-09,
+        "phase_slope_rad_per_hz": -2.1450777447994584e-11,
+        "phase_nonaffine_rms_rad": 2.6160652062796186e-13,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 0.0,
+      "pair": "native_NSBH_vs_binary_NSBH",
+      "polarization": "hp",
+      "band_hz": [
+        200.0,
+        500.0
+      ],
+      "metric": {
+        "support_bins": 1200,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 5.9108055503438375e-09,
+        "magnitude_relative_l2": 5.419280205427711e-16,
+        "unit_phase_l2": 7.110116844478369e-09,
+        "phase_slope_rad_per_hz": -2.1450370126722814e-11,
+        "phase_nonaffine_rms_rad": 2.6577197046976e-13,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 0.0,
+      "pair": "native_NSBH_vs_binary_NSBH",
+      "polarization": "hp",
+      "band_hz": [
+        500.0,
+        1024.0
+      ],
+      "metric": {
+        "support_bins": 2096,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.4317987577170616e-08,
+        "magnitude_relative_l2": 4.587168227924825e-16,
+        "unit_phase_l2": 1.6032470756356467e-08,
+        "phase_slope_rad_per_hz": -2.1450406088572767e-11,
+        "phase_nonaffine_rms_rad": 2.701568188069018e-13,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 0.0,
+      "pair": "native_NSBH_vs_binary_NSBH",
+      "polarization": "hc",
+      "band_hz": [
+        30.0,
+        60.0
+      ],
+      "metric": {
+        "support_bins": 120,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 2.935607873754353e-10,
+        "magnitude_relative_l2": 5.197670824295258e-16,
+        "unit_phase_l2": 3.7062213300703953e-10,
+        "phase_slope_rad_per_hz": -2.1453807930307967e-11,
+        "phase_nonaffine_rms_rad": 5.542803976615652e-13,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 0.0,
+      "pair": "native_NSBH_vs_binary_NSBH",
+      "polarization": "hc",
+      "band_hz": [
+        60.0,
+        100.0
+      ],
+      "metric": {
+        "support_bins": 160,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.013969000751066e-09,
+        "magnitude_relative_l2": 4.587674105555118e-16,
+        "unit_phase_l2": 1.0997439931399449e-09,
+        "phase_slope_rad_per_hz": -2.145452703758924e-11,
+        "phase_nonaffine_rms_rad": 2.5137720234399674e-13,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 0.0,
+      "pair": "native_NSBH_vs_binary_NSBH",
+      "polarization": "hc",
+      "band_hz": [
+        100.0,
+        200.0
+      ],
+      "metric": {
+        "support_bins": 400,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 2.352266282405453e-09,
+        "magnitude_relative_l2": 5.0223461256353e-16,
+        "unit_phase_l2": 2.646526476853742e-09,
+        "phase_slope_rad_per_hz": -2.1450777389750716e-11,
+        "phase_nonaffine_rms_rad": 2.6160511365725116e-13,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 0.0,
+      "pair": "native_NSBH_vs_binary_NSBH",
+      "polarization": "hc",
+      "band_hz": [
+        200.0,
+        500.0
+      ],
+      "metric": {
+        "support_bins": 1200,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 5.910805551551146e-09,
+        "magnitude_relative_l2": 5.400117005427261e-16,
+        "unit_phase_l2": 7.110116846507993e-09,
+        "phase_slope_rad_per_hz": -2.1450370136183114e-11,
+        "phase_nonaffine_rms_rad": 2.6577454299509014e-13,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 0.0,
+      "pair": "native_NSBH_vs_binary_NSBH",
+      "polarization": "hc",
+      "band_hz": [
+        500.0,
+        1024.0
+      ],
+      "metric": {
+        "support_bins": 2096,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.4317987579516327e-08,
+        "magnitude_relative_l2": 4.570368807472812e-16,
+        "unit_phase_l2": 1.603247075995532e-08,
+        "phase_slope_rad_per_hz": -2.1450406084094935e-11,
+        "phase_nonaffine_rms_rad": 2.701564644048057e-13,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 0.0,
+      "pair": "native_NSBH_vs_native_D",
+      "polarization": "hp",
+      "band_hz": [
+        30.0,
+        60.0
+      ],
+      "metric": {
+        "support_bins": 120,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.9969378180119457,
+        "magnitude_relative_l2": 0.00021741603629096858,
+        "unit_phase_l2": 1.9954520895522658,
+        "phase_slope_rad_per_hz": -0.007842383975108376,
+        "phase_nonaffine_rms_rad": 1.2160950766420873e-13,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 0.0,
+      "pair": "native_NSBH_vs_native_D",
+      "polarization": "hp",
+      "band_hz": [
+        60.0,
+        100.0
+      ],
+      "metric": {
+        "support_bins": 160,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.9656556243035401,
+        "magnitude_relative_l2": 0.000294385475022463,
+        "unit_phase_l2": 1.959943742603786,
+        "phase_slope_rad_per_hz": -0.007842383975119282,
+        "phase_nonaffine_rms_rad": 1.4594672391407975e-13,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 0.0,
+      "pair": "native_NSBH_vs_native_D",
+      "polarization": "hp",
+      "band_hz": [
+        100.0,
+        200.0
+      ],
+      "metric": {
+        "support_bins": 400,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.8221344054263442,
+        "magnitude_relative_l2": 0.0012548874086442177,
+        "unit_phase_l2": 1.7746586048396191,
+        "phase_slope_rad_per_hz": -0.007842383975117865,
+        "phase_nonaffine_rms_rad": 2.392764479883205e-13,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 0.0,
+      "pair": "native_NSBH_vs_native_D",
+      "polarization": "hp",
+      "band_hz": [
+        200.0,
+        500.0
+      ],
+      "metric": {
+        "support_bins": 1200,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.1333331403883165,
+        "magnitude_relative_l2": 0.018670145285952205,
+        "unit_phase_l2": 0.8570294679417336,
+        "phase_slope_rad_per_hz": -0.007842383975117544,
+        "phase_nonaffine_rms_rad": 2.5325476015887644e-13,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 0.0,
+      "pair": "native_NSBH_vs_native_D",
+      "polarization": "hp",
+      "band_hz": [
+        500.0,
+        1024.0
+      ],
+      "metric": {
+        "support_bins": 2096,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.528602388946986,
+        "magnitude_relative_l2": 0.06753361746478126,
+        "unit_phase_l2": 1.654521917778966,
+        "phase_slope_rad_per_hz": -0.007842383975117571,
+        "phase_nonaffine_rms_rad": 2.5935886099990454e-13,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 0.0,
+      "pair": "native_NSBH_vs_native_D",
+      "polarization": "hc",
+      "band_hz": [
+        30.0,
+        60.0
+      ],
+      "metric": {
+        "support_bins": 120,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.996937818011946,
+        "magnitude_relative_l2": 0.0002174160362909617,
+        "unit_phase_l2": 1.9954520895522656,
+        "phase_slope_rad_per_hz": -0.007842383975108376,
+        "phase_nonaffine_rms_rad": 1.2162681141899857e-13,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 0.0,
+      "pair": "native_NSBH_vs_native_D",
+      "polarization": "hc",
+      "band_hz": [
+        60.0,
+        100.0
+      ],
+      "metric": {
+        "support_bins": 160,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.9656556243035403,
+        "magnitude_relative_l2": 0.0002943854750224562,
+        "unit_phase_l2": 1.959943742603786,
+        "phase_slope_rad_per_hz": -0.007842383975119282,
+        "phase_nonaffine_rms_rad": 1.459301106416213e-13,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 0.0,
+      "pair": "native_NSBH_vs_native_D",
+      "polarization": "hc",
+      "band_hz": [
+        100.0,
+        200.0
+      ],
+      "metric": {
+        "support_bins": 400,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.8221344054263442,
+        "magnitude_relative_l2": 0.0012548874086442154,
+        "unit_phase_l2": 1.7746586048396191,
+        "phase_slope_rad_per_hz": -0.007842383975117861,
+        "phase_nonaffine_rms_rad": 2.39280835089756e-13,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 0.0,
+      "pair": "native_NSBH_vs_native_D",
+      "polarization": "hc",
+      "band_hz": [
+        200.0,
+        500.0
+      ],
+      "metric": {
+        "support_bins": 1200,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.1333331403883162,
+        "magnitude_relative_l2": 0.018670145285952212,
+        "unit_phase_l2": 0.8570294679417336,
+        "phase_slope_rad_per_hz": -0.007842383975117544,
+        "phase_nonaffine_rms_rad": 2.532560556835664e-13,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 0.0,
+      "pair": "native_NSBH_vs_native_D",
+      "polarization": "hc",
+      "band_hz": [
+        500.0,
+        1024.0
+      ],
+      "metric": {
+        "support_bins": 2096,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.5286023889469857,
+        "magnitude_relative_l2": 0.06753361746478126,
+        "unit_phase_l2": 1.654521917778966,
+        "phase_slope_rad_per_hz": -0.007842383975117571,
+        "phase_nonaffine_rms_rad": 2.5935752487448564e-13,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 0.0,
+      "pair": "binary_NSBH_vs_binary_D",
+      "polarization": "hp",
+      "band_hz": [
+        30.0,
+        60.0
+      ],
+      "metric": {
+        "support_bins": 120,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.9969378198209422,
+        "magnitude_relative_l2": 0.00021741603629142793,
+        "unit_phase_l2": 1.9954520924394945,
+        "phase_slope_rad_per_hz": -0.007842381481745899,
+        "phase_nonaffine_rms_rad": 1.8450468622801324e-13,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 0.0,
+      "pair": "binary_NSBH_vs_binary_D",
+      "polarization": "hp",
+      "band_hz": [
+        60.0,
+        100.0
+      ],
+      "metric": {
+        "support_bins": 160,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.9656556458346477,
+        "magnitude_relative_l2": 0.00029438547502304963,
+        "unit_phase_l2": 1.9599437679208982,
+        "phase_slope_rad_per_hz": -0.007842381481746305,
+        "phase_nonaffine_rms_rad": 1.9461190254448267e-13,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 0.0,
+      "pair": "binary_NSBH_vs_binary_D",
+      "polarization": "hp",
+      "band_hz": [
+        100.0,
+        200.0
+      ],
+      "metric": {
+        "support_bins": 400,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.8221345152176183,
+        "magnitude_relative_l2": 0.001254887408643818,
+        "unit_phase_l2": 1.77465874273408,
+        "phase_slope_rad_per_hz": -0.007842381481745778,
+        "phase_nonaffine_rms_rad": 1.8691386540506163e-13,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 0.0,
+      "pair": "binary_NSBH_vs_binary_D",
+      "polarization": "hp",
+      "band_hz": [
+        200.0,
+        500.0
+      ],
+      "metric": {
+        "support_bins": 1200,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.1333335145761478,
+        "magnitude_relative_l2": 0.018670144901611656,
+        "unit_phase_l2": 0.8570297802077658,
+        "phase_slope_rad_per_hz": -0.007842381481745937,
+        "phase_nonaffine_rms_rad": 1.8501945268109822e-13,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 0.0,
+      "pair": "binary_NSBH_vs_binary_D",
+      "polarization": "hp",
+      "band_hz": [
+        500.0,
+        1024.0
+      ],
+      "metric": {
+        "support_bins": 2096,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.5286018646275348,
+        "magnitude_relative_l2": 0.06753348808853495,
+        "unit_phase_l2": 1.654521819414146,
+        "phase_slope_rad_per_hz": -0.007842381481745925,
+        "phase_nonaffine_rms_rad": 1.8899761667110094e-13,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 0.0,
+      "pair": "binary_NSBH_vs_binary_D",
+      "polarization": "hc",
+      "band_hz": [
+        30.0,
+        60.0
+      ],
+      "metric": {
+        "support_bins": 120,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.996937819820942,
+        "magnitude_relative_l2": 0.00021741603629142143,
+        "unit_phase_l2": 1.9954520924394945,
+        "phase_slope_rad_per_hz": -0.007842381481745899,
+        "phase_nonaffine_rms_rad": 1.845087123366693e-13,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 0.0,
+      "pair": "binary_NSBH_vs_binary_D",
+      "polarization": "hc",
+      "band_hz": [
+        60.0,
+        100.0
+      ],
+      "metric": {
+        "support_bins": 160,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.9656556458346477,
+        "magnitude_relative_l2": 0.000294385475023054,
+        "unit_phase_l2": 1.9599437679208982,
+        "phase_slope_rad_per_hz": -0.007842381481746308,
+        "phase_nonaffine_rms_rad": 1.9461739370364175e-13,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 0.0,
+      "pair": "binary_NSBH_vs_binary_D",
+      "polarization": "hc",
+      "band_hz": [
+        100.0,
+        200.0
+      ],
+      "metric": {
+        "support_bins": 400,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.8221345152176178,
+        "magnitude_relative_l2": 0.0012548874086438227,
+        "unit_phase_l2": 1.7746587427340799,
+        "phase_slope_rad_per_hz": -0.007842381481745778,
+        "phase_nonaffine_rms_rad": 1.869124093436198e-13,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 0.0,
+      "pair": "binary_NSBH_vs_binary_D",
+      "polarization": "hc",
+      "band_hz": [
+        200.0,
+        500.0
+      ],
+      "metric": {
+        "support_bins": 1200,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.133333514576148,
+        "magnitude_relative_l2": 0.01867014490161165,
+        "unit_phase_l2": 0.8570297802077658,
+        "phase_slope_rad_per_hz": -0.007842381481745937,
+        "phase_nonaffine_rms_rad": 1.8501778009856144e-13,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 0.0,
+      "pair": "binary_NSBH_vs_binary_D",
+      "polarization": "hc",
+      "band_hz": [
+        500.0,
+        1024.0
+      ],
+      "metric": {
+        "support_bins": 2096,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.5286018646275348,
+        "magnitude_relative_l2": 0.06753348808853496,
+        "unit_phase_l2": 1.654521819414146,
+        "phase_slope_rad_per_hz": -0.007842381481745925,
+        "phase_nonaffine_rms_rad": 1.889967130985562e-13,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 400.0,
+      "pair": "native_D_vs_binary_D",
+      "polarization": "hp",
+      "band_hz": [
+        30.0,
+        60.0
+      ],
+      "metric": {
+        "support_bins": 120,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 3.368172788034973e-08,
+        "magnitude_relative_l2": 8.620778770106329e-16,
+        "unit_phase_l2": 4.254578898504384e-08,
+        "phase_slope_rad_per_hz": 2.4719086813732657e-09,
+        "phase_nonaffine_rms_rad": 5.673902819665238e-13,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 400.0,
+      "pair": "native_D_vs_binary_D",
+      "polarization": "hp",
+      "band_hz": [
+        60.0,
+        100.0
+      ],
+      "metric": {
+        "support_bins": 160,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.1666216061893208e-07,
+        "magnitude_relative_l2": 9.394092236994214e-16,
+        "unit_phase_l2": 1.265462988166218e-07,
+        "phase_slope_rad_per_hz": 2.4719184372944986e-09,
+        "phase_nonaffine_rms_rad": 2.4698823215737415e-13,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 400.0,
+      "pair": "native_D_vs_binary_D",
+      "polarization": "hp",
+      "band_hz": [
+        100.0,
+        200.0
+      ],
+      "metric": {
+        "support_bins": 400,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 2.7074316664233695e-07,
+        "magnitude_relative_l2": 1.015345180348956e-15,
+        "unit_phase_l2": 3.047906991725433e-07,
+        "phase_slope_rad_per_hz": 2.4719213045164585e-09,
+        "phase_nonaffine_rms_rad": 2.104063285862184e-13,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 400.0,
+      "pair": "native_D_vs_binary_D",
+      "polarization": "hp",
+      "band_hz": [
+        200.0,
+        500.0
+      ],
+      "metric": {
+        "support_bins": 1200,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 6.762524144922324e-07,
+        "magnitude_relative_l2": 8.555900220791537e-10,
+        "unit_phase_l2": 8.191707751237935e-07,
+        "phase_slope_rad_per_hz": 2.4719212368830867e-09,
+        "phase_nonaffine_rms_rad": 2.1065283489467227e-13,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 400.0,
+      "pair": "native_D_vs_binary_D",
+      "polarization": "hp",
+      "band_hz": [
+        500.0,
+        1024.0
+      ],
+      "metric": {
+        "support_bins": 2096,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.6513896787373126e-06,
+        "magnitude_relative_l2": 1.437020104566995e-07,
+        "unit_phase_l2": 1.8473725689255719e-06,
+        "phase_slope_rad_per_hz": 2.4719212395615426e-09,
+        "phase_nonaffine_rms_rad": 2.0566714750834476e-13,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 400.0,
+      "pair": "native_D_vs_binary_D",
+      "polarization": "hc",
+      "band_hz": [
+        30.0,
+        60.0
+      ],
+      "metric": {
+        "support_bins": 120,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 3.368172788414342e-08,
+        "magnitude_relative_l2": 8.706845290550097e-16,
+        "unit_phase_l2": 4.254578899017399e-08,
+        "phase_slope_rad_per_hz": 2.471908682202029e-09,
+        "phase_nonaffine_rms_rad": 5.673943982303494e-13,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 400.0,
+      "pair": "native_D_vs_binary_D",
+      "polarization": "hc",
+      "band_hz": [
+        60.0,
+        100.0
+      ],
+      "metric": {
+        "support_bins": 160,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.1666216061799156e-07,
+        "magnitude_relative_l2": 9.544661425765623e-16,
+        "unit_phase_l2": 1.2654629881611402e-07,
+        "phase_slope_rad_per_hz": 2.471918437364828e-09,
+        "phase_nonaffine_rms_rad": 2.469838337056904e-13,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 400.0,
+      "pair": "native_D_vs_binary_D",
+      "polarization": "hc",
+      "band_hz": [
+        100.0,
+        200.0
+      ],
+      "metric": {
+        "support_bins": 400,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 2.707431666456058e-07,
+        "magnitude_relative_l2": 1.013426503581994e-15,
+        "unit_phase_l2": 3.0479069917532265e-07,
+        "phase_slope_rad_per_hz": 2.471921304557763e-09,
+        "phase_nonaffine_rms_rad": 2.10403540153534e-13,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 400.0,
+      "pair": "native_D_vs_binary_D",
+      "polarization": "hc",
+      "band_hz": [
+        200.0,
+        500.0
+      ],
+      "metric": {
+        "support_bins": 1200,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 6.762524144921383e-07,
+        "magnitude_relative_l2": 8.555900212925572e-10,
+        "unit_phase_l2": 8.191707751209397e-07,
+        "phase_slope_rad_per_hz": 2.471921236850557e-09,
+        "phase_nonaffine_rms_rad": 2.106510317017499e-13,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 400.0,
+      "pair": "native_D_vs_binary_D",
+      "polarization": "hc",
+      "band_hz": [
+        500.0,
+        1024.0
+      ],
+      "metric": {
+        "support_bins": 2096,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.6513896787363823e-06,
+        "magnitude_relative_l2": 1.437020104546086e-07,
+        "unit_phase_l2": 1.8473725689230098e-06,
+        "phase_slope_rad_per_hz": 2.471921239574148e-09,
+        "phase_nonaffine_rms_rad": 2.0566649162437818e-13,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 400.0,
+      "pair": "native_NSBH_vs_binary_NSBH",
+      "polarization": "hp",
+      "band_hz": [
+        30.0,
+        60.0
+      ],
+      "metric": {
+        "support_bins": 120,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 3.889291920555509e-09,
+        "magnitude_relative_l2": 3.8782110221559735e-09,
+        "unit_phase_l2": 3.703817170322614e-10,
+        "phase_slope_rad_per_hz": -2.1440544971933672e-11,
+        "phase_nonaffine_rms_rad": 5.566084758617297e-13,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 400.0,
+      "pair": "native_NSBH_vs_binary_NSBH",
+      "polarization": "hp",
+      "band_hz": [
+        60.0,
+        100.0
+      ],
+      "metric": {
+        "support_bins": 160,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 5.0269415610050264e-09,
+        "magnitude_relative_l2": 4.9239806579036524e-09,
+        "unit_phase_l2": 1.0976006754404547e-09,
+        "phase_slope_rad_per_hz": -2.135968525603331e-11,
+        "phase_nonaffine_rms_rad": 3.7181451132171276e-13,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 400.0,
+      "pair": "native_NSBH_vs_binary_NSBH",
+      "polarization": "hp",
+      "band_hz": [
+        100.0,
+        200.0
+      ],
+      "metric": {
+        "support_bins": 400,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 7.956122261396796e-09,
+        "magnitude_relative_l2": 7.609231758066845e-09,
+        "unit_phase_l2": 2.605866151152722e-09,
+        "phase_slope_rad_per_hz": -2.0534864373291184e-11,
+        "phase_nonaffine_rms_rad": 8.013856478485203e-12,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 400.0,
+      "pair": "native_NSBH_vs_binary_NSBH",
+      "polarization": "hp",
+      "band_hz": [
+        200.0,
+        500.0
+      ],
+      "metric": {
+        "support_bins": 1200,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 2.998075176036051e-08,
+        "magnitude_relative_l2": 2.963991870533361e-08,
+        "unit_phase_l2": 4.555553039603901e-09,
+        "phase_slope_rad_per_hz": 2.6861125269356907e-12,
+        "phase_nonaffine_rms_rad": 7.278836000227178e-10,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 400.0,
+      "pair": "native_NSBH_vs_binary_NSBH",
+      "polarization": "hp",
+      "band_hz": [
+        500.0,
+        1024.0
+      ],
+      "metric": {
+        "support_bins": 2096,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 7.738052587888582e-07,
+        "magnitude_relative_l2": 7.737730529752228e-07,
+        "unit_phase_l2": 8.704768262653498e-09,
+        "phase_slope_rad_per_hz": 2.560239273663179e-11,
+        "phase_nonaffine_rms_rad": 1.9076065268760166e-09,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 400.0,
+      "pair": "native_NSBH_vs_binary_NSBH",
+      "polarization": "hc",
+      "band_hz": [
+        30.0,
+        60.0
+      ],
+      "metric": {
+        "support_bins": 120,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 3.889291915556754e-09,
+        "magnitude_relative_l2": 3.878211029776536e-09,
+        "unit_phase_l2": 3.703817187432562e-10,
+        "phase_slope_rad_per_hz": -2.144054549982528e-11,
+        "phase_nonaffine_rms_rad": 5.566069503989477e-13,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 400.0,
+      "pair": "native_NSBH_vs_binary_NSBH",
+      "polarization": "hc",
+      "band_hz": [
+        60.0,
+        100.0
+      ],
+      "metric": {
+        "support_bins": 160,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 5.026941573158324e-09,
+        "magnitude_relative_l2": 4.9239806584251145e-09,
+        "unit_phase_l2": 1.0976006749299858e-09,
+        "phase_slope_rad_per_hz": -2.1359685372455096e-11,
+        "phase_nonaffine_rms_rad": 3.718102784665796e-13,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 400.0,
+      "pair": "native_NSBH_vs_binary_NSBH",
+      "polarization": "hc",
+      "band_hz": [
+        100.0,
+        200.0
+      ],
+      "metric": {
+        "support_bins": 400,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 7.956122263863468e-09,
+        "magnitude_relative_l2": 7.6092317615167e-09,
+        "unit_phase_l2": 2.6058661561246188e-09,
+        "phase_slope_rad_per_hz": -2.053486451677454e-11,
+        "phase_nonaffine_rms_rad": 8.013857097026769e-12,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 400.0,
+      "pair": "native_NSBH_vs_binary_NSBH",
+      "polarization": "hc",
+      "band_hz": [
+        200.0,
+        500.0
+      ],
+      "metric": {
+        "support_bins": 1200,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 2.998075175646259e-08,
+        "magnitude_relative_l2": 2.9639918697948673e-08,
+        "unit_phase_l2": 4.555553039902668e-09,
+        "phase_slope_rad_per_hz": 2.6861125345386114e-12,
+        "phase_nonaffine_rms_rad": 7.278836006467707e-10,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 400.0,
+      "pair": "native_NSBH_vs_binary_NSBH",
+      "polarization": "hc",
+      "band_hz": [
+        500.0,
+        1024.0
+      ],
+      "metric": {
+        "support_bins": 2096,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 7.738052587904878e-07,
+        "magnitude_relative_l2": 7.737730529777458e-07,
+        "unit_phase_l2": 8.704768262777016e-09,
+        "phase_slope_rad_per_hz": 2.5602392723659995e-11,
+        "phase_nonaffine_rms_rad": 1.9076065262102504e-09,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 400.0,
+      "pair": "native_NSBH_vs_native_D",
+      "polarization": "hp",
+      "band_hz": [
+        30.0,
+        60.0
+      ],
+      "metric": {
+        "support_bins": 120,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.9971208495824757,
+        "magnitude_relative_l2": 0.00020302764530513167,
+        "unit_phase_l2": 1.9957082762867797,
+        "phase_slope_rad_per_hz": -0.007702703024269509,
+        "phase_nonaffine_rms_rad": 7.563579062004575e-05,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 400.0,
+      "pair": "native_NSBH_vs_native_D",
+      "polarization": "hp",
+      "band_hz": [
+        60.0,
+        100.0
+      ],
+      "metric": {
+        "support_bins": 160,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.9674160945213057,
+        "magnitude_relative_l2": 0.00024820486116303083,
+        "unit_phase_l2": 1.9619667544633703,
+        "phase_slope_rad_per_hz": -0.00762859136940246,
+        "phase_nonaffine_rms_rad": 0.0001208166751925289,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 400.0,
+      "pair": "native_NSBH_vs_native_D",
+      "polarization": "hp",
+      "band_hz": [
+        100.0,
+        200.0
+      ],
+      "metric": {
+        "support_bins": 400,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.8330347577817072,
+        "magnitude_relative_l2": 0.0014191308149750304,
+        "unit_phase_l2": 1.7887603005412247,
+        "phase_slope_rad_per_hz": -0.0074899631670259864,
+        "phase_nonaffine_rms_rad": 0.0007397658531405322,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 400.0,
+      "pair": "native_NSBH_vs_native_D",
+      "polarization": "hp",
+      "band_hz": [
+        200.0,
+        500.0
+      ],
+      "metric": {
+        "support_bins": 1200,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.1903425979467743,
+        "magnitude_relative_l2": 0.019694663519296923,
+        "unit_phase_l2": 0.9124181246385051,
+        "phase_slope_rad_per_hz": -0.007037292944747277,
+        "phase_nonaffine_rms_rad": 0.008283538573672755,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 400.0,
+      "pair": "native_NSBH_vs_native_D",
+      "polarization": "hp",
+      "band_hz": [
+        500.0,
+        1024.0
+      ],
+      "metric": {
+        "support_bins": 2096,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.3470055811632076,
+        "magnitude_relative_l2": 0.07316612128595998,
+        "unit_phase_l2": 1.5615911972348182,
+        "phase_slope_rad_per_hz": -0.00639963079202367,
+        "phase_nonaffine_rms_rad": 0.006068690360323294,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 400.0,
+      "pair": "native_NSBH_vs_native_D",
+      "polarization": "hc",
+      "band_hz": [
+        30.0,
+        60.0
+      ],
+      "metric": {
+        "support_bins": 120,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.9971208495824757,
+        "magnitude_relative_l2": 0.00020302764530513696,
+        "unit_phase_l2": 1.9957082762867797,
+        "phase_slope_rad_per_hz": -0.007702703024269509,
+        "phase_nonaffine_rms_rad": 7.563579062004977e-05,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 400.0,
+      "pair": "native_NSBH_vs_native_D",
+      "polarization": "hc",
+      "band_hz": [
+        60.0,
+        100.0
+      ],
+      "metric": {
+        "support_bins": 160,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.9674160945213057,
+        "magnitude_relative_l2": 0.0002482048611630197,
+        "unit_phase_l2": 1.9619667544633703,
+        "phase_slope_rad_per_hz": -0.00762859136940246,
+        "phase_nonaffine_rms_rad": 0.00012081667519253405,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 400.0,
+      "pair": "native_NSBH_vs_native_D",
+      "polarization": "hc",
+      "band_hz": [
+        100.0,
+        200.0
+      ],
+      "metric": {
+        "support_bins": 400,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.8330347577817077,
+        "magnitude_relative_l2": 0.001419130814975028,
+        "unit_phase_l2": 1.7887603005412247,
+        "phase_slope_rad_per_hz": -0.007489963167025994,
+        "phase_nonaffine_rms_rad": 0.0007397658531405426,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 400.0,
+      "pair": "native_NSBH_vs_native_D",
+      "polarization": "hc",
+      "band_hz": [
+        200.0,
+        500.0
+      ],
+      "metric": {
+        "support_bins": 1200,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.1903425979467743,
+        "magnitude_relative_l2": 0.019694663519296923,
+        "unit_phase_l2": 0.9124181246385052,
+        "phase_slope_rad_per_hz": -0.007037292944747277,
+        "phase_nonaffine_rms_rad": 0.008283538573672753,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 400.0,
+      "pair": "native_NSBH_vs_native_D",
+      "polarization": "hc",
+      "band_hz": [
+        500.0,
+        1024.0
+      ],
+      "metric": {
+        "support_bins": 2096,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.3470055811632073,
+        "magnitude_relative_l2": 0.07316612128595998,
+        "unit_phase_l2": 1.5615911972348182,
+        "phase_slope_rad_per_hz": -0.00639963079202367,
+        "phase_nonaffine_rms_rad": 0.006068690360323294,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 400.0,
+      "pair": "binary_NSBH_vs_binary_D",
+      "polarization": "hp",
+      "band_hz": [
+        30.0,
+        60.0
+      ],
+      "metric": {
+        "support_bins": 120,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.997120855202278,
+        "magnitude_relative_l2": 0.00020302380697419513,
+        "unit_phase_l2": 1.9957082790917688,
+        "phase_slope_rad_per_hz": -0.0077027005309202815,
+        "phase_nonaffine_rms_rad": 7.563579057263502e-05,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 400.0,
+      "pair": "binary_NSBH_vs_binary_D",
+      "polarization": "hp",
+      "band_hz": [
+        60.0,
+        100.0
+      ],
+      "metric": {
+        "support_bins": 160,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.9674161203366556,
+        "magnitude_relative_l2": 0.0002482001329232441,
+        "unit_phase_l2": 1.9619667791441426,
+        "phase_slope_rad_per_hz": -0.007628588876124312,
+        "phase_nonaffine_rms_rad": 0.0001208166749487663,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 400.0,
+      "pair": "binary_NSBH_vs_binary_D",
+      "polarization": "hp",
+      "band_hz": [
+        100.0,
+        200.0
+      ],
+      "metric": {
+        "support_bins": 400,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.8330348713464086,
+        "magnitude_relative_l2": 0.0014191368970226368,
+        "unit_phase_l2": 1.7887604346135577,
+        "phase_slope_rad_per_hz": -0.007489960674569813,
+        "phase_nonaffine_rms_rad": 0.0007397658452368465,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 400.0,
+      "pair": "binary_NSBH_vs_binary_D",
+      "polarization": "hp",
+      "band_hz": [
+        200.0,
+        500.0
+      ],
+      "metric": {
+        "support_bins": 1200,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.190343010372663,
+        "magnitude_relative_l2": 0.019694693048425454,
+        "unit_phase_l2": 0.9124185424422452,
+        "phase_slope_rad_per_hz": -0.0070372904755121495,
+        "phase_nonaffine_rms_rad": 0.008283537850880025,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 400.0,
+      "pair": "binary_NSBH_vs_binary_D",
+      "polarization": "hp",
+      "band_hz": [
+        500.0,
+        1024.0
+      ],
+      "metric": {
+        "support_bins": 2096,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.3470053977294718,
+        "magnitude_relative_l2": 0.07316656829728975,
+        "unit_phase_l2": 1.5615906236959483,
+        "phase_slope_rad_per_hz": -0.0063996283457048225,
+        "phase_nonaffine_rms_rad": 0.0060686921591660975,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 400.0,
+      "pair": "binary_NSBH_vs_binary_D",
+      "polarization": "hc",
+      "band_hz": [
+        30.0,
+        60.0
+      ],
+      "metric": {
+        "support_bins": 120,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.997120855202278,
+        "magnitude_relative_l2": 0.00020302380697420283,
+        "unit_phase_l2": 1.9957082790917688,
+        "phase_slope_rad_per_hz": -0.0077027005309202815,
+        "phase_nonaffine_rms_rad": 7.563579057263367e-05,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 400.0,
+      "pair": "binary_NSBH_vs_binary_D",
+      "polarization": "hc",
+      "band_hz": [
+        60.0,
+        100.0
+      ],
+      "metric": {
+        "support_bins": 160,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.9674161203366556,
+        "magnitude_relative_l2": 0.00024820013292324214,
+        "unit_phase_l2": 1.9619667791441422,
+        "phase_slope_rad_per_hz": -0.007628588876124312,
+        "phase_nonaffine_rms_rad": 0.00012081667494877366,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 400.0,
+      "pair": "binary_NSBH_vs_binary_D",
+      "polarization": "hc",
+      "band_hz": [
+        100.0,
+        200.0
+      ],
+      "metric": {
+        "support_bins": 400,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.8330348713464084,
+        "magnitude_relative_l2": 0.0014191368970226377,
+        "unit_phase_l2": 1.7887604346135577,
+        "phase_slope_rad_per_hz": -0.007489960674569813,
+        "phase_nonaffine_rms_rad": 0.0007397658452368514,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 400.0,
+      "pair": "binary_NSBH_vs_binary_D",
+      "polarization": "hc",
+      "band_hz": [
+        200.0,
+        500.0
+      ],
+      "metric": {
+        "support_bins": 1200,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.190343010372663,
+        "magnitude_relative_l2": 0.019694693048425447,
+        "unit_phase_l2": 0.9124185424422452,
+        "phase_slope_rad_per_hz": -0.0070372904755121495,
+        "phase_nonaffine_rms_rad": 0.008283537850880021,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 400.0,
+      "pair": "binary_NSBH_vs_binary_D",
+      "polarization": "hc",
+      "band_hz": [
+        500.0,
+        1024.0
+      ],
+      "metric": {
+        "support_bins": 2096,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.3470053977294718,
+        "magnitude_relative_l2": 0.07316656829728976,
+        "unit_phase_l2": 1.5615906236959483,
+        "phase_slope_rad_per_hz": -0.0063996283457048225,
+        "phase_nonaffine_rms_rad": 0.006068692159166098,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 0.0,
+      "pair": "native_D_vs_binary_D",
+      "polarization": "hp",
+      "band_hz": [
+        30.0,
+        60.0
+      ],
+      "metric": {
+        "support_bins": 120,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.32363213069293e-07,
+        "magnitude_relative_l2": 5.607828232130852e-16,
+        "unit_phase_l2": 1.2406656908914063e-07,
+        "phase_slope_rad_per_hz": -1.4324978524943038e-08,
+        "phase_nonaffine_rms_rad": 3.2708658728342547e-13,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 0.0,
+      "pair": "native_D_vs_binary_D",
+      "polarization": "hp",
+      "band_hz": [
+        60.0,
+        100.0
+      ],
+      "metric": {
+        "support_bins": 160,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 4.6938818175997423e-07,
+        "magnitude_relative_l2": 6.212819458835178e-16,
+        "unit_phase_l2": 5.262536567439377e-07,
+        "phase_slope_rad_per_hz": -1.4324966269503303e-08,
+        "phase_nonaffine_rms_rad": 1.0896105932153964e-13,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 0.0,
+      "pair": "native_D_vs_binary_D",
+      "polarization": "hp",
+      "band_hz": [
+        100.0,
+        200.0
+      ],
+      "metric": {
+        "support_bins": 400,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.3563123724570363e-06,
+        "magnitude_relative_l2": 6.496673927230435e-16,
+        "unit_phase_l2": 1.5582041941436504e-06,
+        "phase_slope_rad_per_hz": -1.4324963731220985e-08,
+        "phase_nonaffine_rms_rad": 7.535241274017138e-14,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 0.0,
+      "pair": "native_D_vs_binary_D",
+      "polarization": "hp",
+      "band_hz": [
+        200.0,
+        500.0
+      ],
+      "metric": {
+        "support_bins": 1200,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 3.66227814142566e-06,
+        "magnitude_relative_l2": 6.182572711585979e-08,
+        "unit_phase_l2": 4.540104267674653e-06,
+        "phase_slope_rad_per_hz": -1.4324963227481409e-08,
+        "phase_nonaffine_rms_rad": 6.34286284823054e-14,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 0.0,
+      "pair": "native_D_vs_binary_D",
+      "polarization": "hp",
+      "band_hz": [
+        500.0,
+        1024.0
+      ],
+      "metric": {
+        "support_bins": 2096,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 9.467961804164467e-06,
+        "magnitude_relative_l2": 4.070605214179714e-07,
+        "unit_phase_l2": 1.0501241114893618e-05,
+        "phase_slope_rad_per_hz": -1.4372164821558359e-08,
+        "phase_nonaffine_rms_rad": 1.0052616311511349e-08,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 0.0,
+      "pair": "native_D_vs_binary_D",
+      "polarization": "hc",
+      "band_hz": [
+        30.0,
+        60.0
+      ],
+      "metric": {
+        "support_bins": 120,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.32363213070588e-07,
+        "magnitude_relative_l2": 5.389416677396105e-16,
+        "unit_phase_l2": 1.2406656908894174e-07,
+        "phase_slope_rad_per_hz": -1.432497852500082e-08,
+        "phase_nonaffine_rms_rad": 3.2708961922582934e-13,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 0.0,
+      "pair": "native_D_vs_binary_D",
+      "polarization": "hc",
+      "band_hz": [
+        60.0,
+        100.0
+      ],
+      "metric": {
+        "support_bins": 160,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 4.693881817603755e-07,
+        "magnitude_relative_l2": 6.056182941727871e-16,
+        "unit_phase_l2": 5.262536567427832e-07,
+        "phase_slope_rad_per_hz": -1.432496626945326e-08,
+        "phase_nonaffine_rms_rad": 1.0895814336450201e-13,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 0.0,
+      "pair": "native_D_vs_binary_D",
+      "polarization": "hc",
+      "band_hz": [
+        100.0,
+        200.0
+      ],
+      "metric": {
+        "support_bins": 400,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.3563123724576799e-06,
+        "magnitude_relative_l2": 6.468646075261531e-16,
+        "unit_phase_l2": 1.5582041941463935e-06,
+        "phase_slope_rad_per_hz": -1.4324963731363479e-08,
+        "phase_nonaffine_rms_rad": 7.535340699168105e-14,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 0.0,
+      "pair": "native_D_vs_binary_D",
+      "polarization": "hc",
+      "band_hz": [
+        200.0,
+        500.0
+      ],
+      "metric": {
+        "support_bins": 1200,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 3.6622781414271624e-06,
+        "magnitude_relative_l2": 6.182572711330078e-08,
+        "unit_phase_l2": 4.540104267677379e-06,
+        "phase_slope_rad_per_hz": -1.4324963227481773e-08,
+        "phase_nonaffine_rms_rad": 6.342963130467774e-14,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 0.0,
+      "pair": "native_D_vs_binary_D",
+      "polarization": "hc",
+      "band_hz": [
+        500.0,
+        1024.0
+      ],
+      "metric": {
+        "support_bins": 2096,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 9.467961804165323e-06,
+        "magnitude_relative_l2": 4.0706052141991757e-07,
+        "unit_phase_l2": 1.0501241114893755e-05,
+        "phase_slope_rad_per_hz": -1.4372164821559898e-08,
+        "phase_nonaffine_rms_rad": 1.0052616313001594e-08,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 0.0,
+      "pair": "native_NSBH_vs_binary_NSBH",
+      "polarization": "hp",
+      "band_hz": [
+        30.0,
+        60.0
+      ],
+      "metric": {
+        "support_bins": 120,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.7435502892165468e-08,
+        "magnitude_relative_l2": 5.943789126933047e-16,
+        "unit_phase_l2": 1.6342450316532086e-08,
+        "phase_slope_rad_per_hz": 1.8869324920016943e-09,
+        "phase_nonaffine_rms_rad": 3.217500645552816e-13,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 0.0,
+      "pair": "native_NSBH_vs_binary_NSBH",
+      "polarization": "hp",
+      "band_hz": [
+        60.0,
+        100.0
+      ],
+      "metric": {
+        "support_bins": 160,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 6.184242887704925e-08,
+        "magnitude_relative_l2": 5.298388486764505e-16,
+        "unit_phase_l2": 6.932013137359612e-08,
+        "phase_slope_rad_per_hz": 1.886943660457226e-09,
+        "phase_nonaffine_rms_rad": 1.0626091919521408e-13,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 0.0,
+      "pair": "native_NSBH_vs_binary_NSBH",
+      "polarization": "hp",
+      "band_hz": [
+        100.0,
+        200.0
+      ],
+      "metric": {
+        "support_bins": 400,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.7897535399259615e-07,
+        "magnitude_relative_l2": 5.583061533194437e-16,
+        "unit_phase_l2": 2.0525297236040346e-07,
+        "phase_slope_rad_per_hz": 1.8869449155295786e-09,
+        "phase_nonaffine_rms_rad": 7.252165313432532e-14,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 0.0,
+      "pair": "native_NSBH_vs_binary_NSBH",
+      "polarization": "hp",
+      "band_hz": [
+        200.0,
+        500.0
+      ],
+      "metric": {
+        "support_bins": 1200,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 4.895348802784518e-07,
+        "magnitude_relative_l2": 5.320057161001137e-16,
+        "unit_phase_l2": 5.980415784859347e-07,
+        "phase_slope_rad_per_hz": 1.8869454025232683e-09,
+        "phase_nonaffine_rms_rad": 6.994392737417601e-14,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 0.0,
+      "pair": "native_NSBH_vs_binary_NSBH",
+      "polarization": "hp",
+      "band_hz": [
+        500.0,
+        1024.0
+      ],
+      "metric": {
+        "support_bins": 2096,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 2.056384262062645e-05,
+        "magnitude_relative_l2": 4.0204570122841453e-16,
+        "unit_phase_l2": 3.1327899185706586e-05,
+        "phase_slope_rad_per_hz": 8.246037562771905e-08,
+        "phase_nonaffine_rms_rad": 2.774752303944326e-05,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 0.0,
+      "pair": "native_NSBH_vs_binary_NSBH",
+      "polarization": "hc",
+      "band_hz": [
+        30.0,
+        60.0
+      ],
+      "metric": {
+        "support_bins": 120,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.743550289402588e-08,
+        "magnitude_relative_l2": 5.881960439545642e-16,
+        "unit_phase_l2": 1.634245031712637e-08,
+        "phase_slope_rad_per_hz": 1.886932492138571e-09,
+        "phase_nonaffine_rms_rad": 3.2175195491581713e-13,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 0.0,
+      "pair": "native_NSBH_vs_binary_NSBH",
+      "polarization": "hc",
+      "band_hz": [
+        60.0,
+        100.0
+      ],
+      "metric": {
+        "support_bins": 160,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 6.184242887621482e-08,
+        "magnitude_relative_l2": 5.174903538398791e-16,
+        "unit_phase_l2": 6.932013137574587e-08,
+        "phase_slope_rad_per_hz": 1.886943660297623e-09,
+        "phase_nonaffine_rms_rad": 1.0625840392039929e-13,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 0.0,
+      "pair": "native_NSBH_vs_binary_NSBH",
+      "polarization": "hc",
+      "band_hz": [
+        100.0,
+        200.0
+      ],
+      "metric": {
+        "support_bins": 400,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.7897535399290958e-07,
+        "magnitude_relative_l2": 5.478894869869192e-16,
+        "unit_phase_l2": 2.0525297236164243e-07,
+        "phase_slope_rad_per_hz": 1.8869449156602644e-09,
+        "phase_nonaffine_rms_rad": 7.252495802384745e-14,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 0.0,
+      "pair": "native_NSBH_vs_binary_NSBH",
+      "polarization": "hc",
+      "band_hz": [
+        200.0,
+        500.0
+      ],
+      "metric": {
+        "support_bins": 1200,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 4.895348802777179e-07,
+        "magnitude_relative_l2": 5.312184951984292e-16,
+        "unit_phase_l2": 5.980415784852775e-07,
+        "phase_slope_rad_per_hz": 1.8869454025196668e-09,
+        "phase_nonaffine_rms_rad": 6.994136268399365e-14,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 0.0,
+      "pair": "native_NSBH_vs_binary_NSBH",
+      "polarization": "hc",
+      "band_hz": [
+        500.0,
+        1024.0
+      ],
+      "metric": {
+        "support_bins": 2096,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 2.0563842620627186e-05,
+        "magnitude_relative_l2": 4.0393970149810954e-16,
+        "unit_phase_l2": 3.1327899185707406e-05,
+        "phase_slope_rad_per_hz": 8.246037562771895e-08,
+        "phase_nonaffine_rms_rad": 2.7747523039444493e-05,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 0.0,
+      "pair": "native_NSBH_vs_native_D",
+      "polarization": "hp",
+      "band_hz": [
+        30.0,
+        60.0
+      ],
+      "metric": {
+        "support_bins": 120,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.9993626536860953,
+        "magnitude_relative_l2": 0.0001938514582753816,
+        "unit_phase_l2": 1.9996097100268373,
+        "phase_slope_rad_per_hz": -0.004562391841954029,
+        "phase_nonaffine_rms_rad": 5.6388911241667804e-14,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 0.0,
+      "pair": "native_NSBH_vs_native_D",
+      "polarization": "hp",
+      "band_hz": [
+        60.0,
+        100.0
+      ],
+      "metric": {
+        "support_bins": 160,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.9946107332121292,
+        "magnitude_relative_l2": 0.00035263909406328344,
+        "unit_phase_l2": 1.992987005827329,
+        "phase_slope_rad_per_hz": -0.004562391841955125,
+        "phase_nonaffine_rms_rad": 4.4440259849925797e-14,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 0.0,
+      "pair": "native_NSBH_vs_native_D",
+      "polarization": "hp",
+      "band_hz": [
+        100.0,
+        200.0
+      ],
+      "metric": {
+        "support_bins": 400,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.9576175976774037,
+        "magnitude_relative_l2": 0.004949105930674494,
+        "unit_phase_l2": 1.9390804033169466,
+        "phase_slope_rad_per_hz": -0.004562391841956366,
+        "phase_nonaffine_rms_rad": 6.61200851301679e-14,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 0.0,
+      "pair": "native_NSBH_vs_native_D",
+      "polarization": "hp",
+      "band_hz": [
+        200.0,
+        500.0
+      ],
+      "metric": {
+        "support_bins": 1200,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.7135655117617679,
+        "magnitude_relative_l2": 0.04432091402322654,
+        "unit_phase_l2": 1.5265847571878919,
+        "phase_slope_rad_per_hz": -0.004562391841956404,
+        "phase_nonaffine_rms_rad": 6.793588648554772e-14,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 0.0,
+      "pair": "native_NSBH_vs_native_D",
+      "polarization": "hp",
+      "band_hz": [
+        500.0,
+        1024.0
+      ],
+      "metric": {
+        "support_bins": 2096,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 0.7112147531207265,
+        "magnitude_relative_l2": 0.10355380794005697,
+        "unit_phase_l2": 0.6755298484636174,
+        "phase_slope_rad_per_hz": -0.004562391841956377,
+        "phase_nonaffine_rms_rad": 6.868679076838408e-14,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 0.0,
+      "pair": "native_NSBH_vs_native_D",
+      "polarization": "hc",
+      "band_hz": [
+        30.0,
+        60.0
+      ],
+      "metric": {
+        "support_bins": 120,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.9993626536860951,
+        "magnitude_relative_l2": 0.00019385145827539456,
+        "unit_phase_l2": 1.9996097100268373,
+        "phase_slope_rad_per_hz": -0.004562391841954029,
+        "phase_nonaffine_rms_rad": 5.6378651234544136e-14,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 0.0,
+      "pair": "native_NSBH_vs_native_D",
+      "polarization": "hc",
+      "band_hz": [
+        60.0,
+        100.0
+      ],
+      "metric": {
+        "support_bins": 160,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.9946107332121297,
+        "magnitude_relative_l2": 0.00035263909406327737,
+        "unit_phase_l2": 1.9929870058273291,
+        "phase_slope_rad_per_hz": -0.004562391841955125,
+        "phase_nonaffine_rms_rad": 4.4448718525725975e-14,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 0.0,
+      "pair": "native_NSBH_vs_native_D",
+      "polarization": "hc",
+      "band_hz": [
+        100.0,
+        200.0
+      ],
+      "metric": {
+        "support_bins": 400,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.957617597677403,
+        "magnitude_relative_l2": 0.004949105930674499,
+        "unit_phase_l2": 1.9390804033169466,
+        "phase_slope_rad_per_hz": -0.004562391841956366,
+        "phase_nonaffine_rms_rad": 6.612061828253011e-14,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 0.0,
+      "pair": "native_NSBH_vs_native_D",
+      "polarization": "hc",
+      "band_hz": [
+        200.0,
+        500.0
+      ],
+      "metric": {
+        "support_bins": 1200,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.7135655117617676,
+        "magnitude_relative_l2": 0.044320914023226535,
+        "unit_phase_l2": 1.5265847571878919,
+        "phase_slope_rad_per_hz": -0.004562391841956404,
+        "phase_nonaffine_rms_rad": 6.793928437685597e-14,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 0.0,
+      "pair": "native_NSBH_vs_native_D",
+      "polarization": "hc",
+      "band_hz": [
+        500.0,
+        1024.0
+      ],
+      "metric": {
+        "support_bins": 2096,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 0.7112147531207264,
+        "magnitude_relative_l2": 0.10355380794005697,
+        "unit_phase_l2": 0.6755298484636175,
+        "phase_slope_rad_per_hz": -0.004562391841956377,
+        "phase_nonaffine_rms_rad": 6.868688366067174e-14,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 0.0,
+      "pair": "binary_NSBH_vs_binary_D",
+      "polarization": "hp",
+      "band_hz": [
+        30.0,
+        60.0
+      ],
+      "metric": {
+        "support_bins": 120,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.9993626505297315,
+        "magnitude_relative_l2": 0.00019385145827545758,
+        "unit_phase_l2": 1.9996097072535144,
+        "phase_slope_rad_per_hz": -0.004562408053865029,
+        "phase_nonaffine_rms_rad": 4.6427273823981835e-14,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 0.0,
+      "pair": "binary_NSBH_vs_binary_D",
+      "polarization": "hp",
+      "band_hz": [
+        60.0,
+        100.0
+      ],
+      "metric": {
+        "support_bins": 160,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.994610693602513,
+        "magnitude_relative_l2": 0.0003526390940632445,
+        "unit_phase_l2": 1.9929869560593587,
+        "phase_slope_rad_per_hz": -0.004562408053865078,
+        "phase_nonaffine_rms_rad": 5.3372960112550415e-14,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 0.0,
+      "pair": "binary_NSBH_vs_binary_D",
+      "polarization": "hp",
+      "band_hz": [
+        100.0,
+        200.0
+      ],
+      "metric": {
+        "support_bins": 400,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.9576172713104347,
+        "magnitude_relative_l2": 0.004949105930674304,
+        "unit_phase_l2": 1.9390799750230292,
+        "phase_slope_rad_per_hz": -0.004562408053865007,
+        "phase_nonaffine_rms_rad": 5.1245071078091594e-14,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 0.0,
+      "pair": "binary_NSBH_vs_binary_D",
+      "polarization": "hp",
+      "band_hz": [
+        200.0,
+        500.0
+      ],
+      "metric": {
+        "support_bins": 1200,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.713563433746566,
+        "magnitude_relative_l2": 0.04432096208641469,
+        "unit_phase_l2": 1.5265817525997043,
+        "phase_slope_rad_per_hz": -0.0045624080538650335,
+        "phase_nonaffine_rms_rad": 4.7325318051958976e-14,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 0.0,
+      "pair": "binary_NSBH_vs_binary_D",
+      "polarization": "hp",
+      "band_hz": [
+        500.0,
+        1024.0
+      ],
+      "metric": {
+        "support_bins": 2096,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 0.7112182095304866,
+        "magnitude_relative_l2": 0.10355421771043674,
+        "unit_phase_l2": 0.6755436839346912,
+        "phase_slope_rad_per_hz": -0.004562488674496824,
+        "phase_nonaffine_rms_rad": 2.7757384022708712e-05,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 0.0,
+      "pair": "binary_NSBH_vs_binary_D",
+      "polarization": "hc",
+      "band_hz": [
+        30.0,
+        60.0
+      ],
+      "metric": {
+        "support_bins": 120,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.9993626505297317,
+        "magnitude_relative_l2": 0.00019385145827544855,
+        "unit_phase_l2": 1.9996097072535146,
+        "phase_slope_rad_per_hz": -0.004562408053865029,
+        "phase_nonaffine_rms_rad": 4.642541536059717e-14,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 0.0,
+      "pair": "binary_NSBH_vs_binary_D",
+      "polarization": "hc",
+      "band_hz": [
+        60.0,
+        100.0
+      ],
+      "metric": {
+        "support_bins": 160,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.9946106936025128,
+        "magnitude_relative_l2": 0.0003526390940632309,
+        "unit_phase_l2": 1.9929869560593585,
+        "phase_slope_rad_per_hz": -0.004562408053865078,
+        "phase_nonaffine_rms_rad": 5.3376978317371165e-14,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 0.0,
+      "pair": "binary_NSBH_vs_binary_D",
+      "polarization": "hc",
+      "band_hz": [
+        100.0,
+        200.0
+      ],
+      "metric": {
+        "support_bins": 400,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.9576172713104347,
+        "magnitude_relative_l2": 0.004949105930674296,
+        "unit_phase_l2": 1.9390799750230292,
+        "phase_slope_rad_per_hz": -0.004562408053865008,
+        "phase_nonaffine_rms_rad": 5.124248291524601e-14,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 0.0,
+      "pair": "binary_NSBH_vs_binary_D",
+      "polarization": "hc",
+      "band_hz": [
+        200.0,
+        500.0
+      ],
+      "metric": {
+        "support_bins": 1200,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.713563433746566,
+        "magnitude_relative_l2": 0.04432096208641468,
+        "unit_phase_l2": 1.5265817525997043,
+        "phase_slope_rad_per_hz": -0.004562408053865033,
+        "phase_nonaffine_rms_rad": 4.733254329411529e-14,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 0.0,
+      "pair": "binary_NSBH_vs_binary_D",
+      "polarization": "hc",
+      "band_hz": [
+        500.0,
+        1024.0
+      ],
+      "metric": {
+        "support_bins": 2096,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 0.7112182095304866,
+        "magnitude_relative_l2": 0.10355421771043676,
+        "unit_phase_l2": 0.6755436839346912,
+        "phase_slope_rad_per_hz": -0.004562488674496825,
+        "phase_nonaffine_rms_rad": 2.7757384022705483e-05,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 1200.0,
+      "pair": "native_D_vs_binary_D",
+      "polarization": "hp",
+      "band_hz": [
+        30.0,
+        60.0
+      ],
+      "metric": {
+        "support_bins": 120,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.32363213069293e-07,
+        "magnitude_relative_l2": 5.607828232130852e-16,
+        "unit_phase_l2": 1.2406656908914063e-07,
+        "phase_slope_rad_per_hz": -1.4324978524943038e-08,
+        "phase_nonaffine_rms_rad": 3.2708658728342547e-13,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 1200.0,
+      "pair": "native_D_vs_binary_D",
+      "polarization": "hp",
+      "band_hz": [
+        60.0,
+        100.0
+      ],
+      "metric": {
+        "support_bins": 160,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 4.6938818175997423e-07,
+        "magnitude_relative_l2": 6.212819458835178e-16,
+        "unit_phase_l2": 5.262536567439377e-07,
+        "phase_slope_rad_per_hz": -1.4324966269503303e-08,
+        "phase_nonaffine_rms_rad": 1.0896105932153964e-13,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 1200.0,
+      "pair": "native_D_vs_binary_D",
+      "polarization": "hp",
+      "band_hz": [
+        100.0,
+        200.0
+      ],
+      "metric": {
+        "support_bins": 400,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.3563123724570363e-06,
+        "magnitude_relative_l2": 6.496673927230435e-16,
+        "unit_phase_l2": 1.5582041941436504e-06,
+        "phase_slope_rad_per_hz": -1.4324963731220985e-08,
+        "phase_nonaffine_rms_rad": 7.535241274017138e-14,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 1200.0,
+      "pair": "native_D_vs_binary_D",
+      "polarization": "hp",
+      "band_hz": [
+        200.0,
+        500.0
+      ],
+      "metric": {
+        "support_bins": 1200,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 3.66227814142566e-06,
+        "magnitude_relative_l2": 6.182572711585979e-08,
+        "unit_phase_l2": 4.540104267674653e-06,
+        "phase_slope_rad_per_hz": -1.4324963227481409e-08,
+        "phase_nonaffine_rms_rad": 6.34286284823054e-14,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 1200.0,
+      "pair": "native_D_vs_binary_D",
+      "polarization": "hp",
+      "band_hz": [
+        500.0,
+        1024.0
+      ],
+      "metric": {
+        "support_bins": 2096,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 9.467961804164467e-06,
+        "magnitude_relative_l2": 4.070605214179714e-07,
+        "unit_phase_l2": 1.0501241114893618e-05,
+        "phase_slope_rad_per_hz": -1.4372164821558359e-08,
+        "phase_nonaffine_rms_rad": 1.0052616311511349e-08,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 1200.0,
+      "pair": "native_D_vs_binary_D",
+      "polarization": "hc",
+      "band_hz": [
+        30.0,
+        60.0
+      ],
+      "metric": {
+        "support_bins": 120,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.32363213070588e-07,
+        "magnitude_relative_l2": 5.389416677396105e-16,
+        "unit_phase_l2": 1.2406656908894174e-07,
+        "phase_slope_rad_per_hz": -1.432497852500082e-08,
+        "phase_nonaffine_rms_rad": 3.2708961922582934e-13,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 1200.0,
+      "pair": "native_D_vs_binary_D",
+      "polarization": "hc",
+      "band_hz": [
+        60.0,
+        100.0
+      ],
+      "metric": {
+        "support_bins": 160,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 4.693881817603755e-07,
+        "magnitude_relative_l2": 6.056182941727871e-16,
+        "unit_phase_l2": 5.262536567427832e-07,
+        "phase_slope_rad_per_hz": -1.432496626945326e-08,
+        "phase_nonaffine_rms_rad": 1.0895814336450201e-13,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 1200.0,
+      "pair": "native_D_vs_binary_D",
+      "polarization": "hc",
+      "band_hz": [
+        100.0,
+        200.0
+      ],
+      "metric": {
+        "support_bins": 400,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.3563123724576799e-06,
+        "magnitude_relative_l2": 6.468646075261531e-16,
+        "unit_phase_l2": 1.5582041941463935e-06,
+        "phase_slope_rad_per_hz": -1.4324963731363479e-08,
+        "phase_nonaffine_rms_rad": 7.535340699168105e-14,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 1200.0,
+      "pair": "native_D_vs_binary_D",
+      "polarization": "hc",
+      "band_hz": [
+        200.0,
+        500.0
+      ],
+      "metric": {
+        "support_bins": 1200,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 3.6622781414271624e-06,
+        "magnitude_relative_l2": 6.182572711330078e-08,
+        "unit_phase_l2": 4.540104267677379e-06,
+        "phase_slope_rad_per_hz": -1.4324963227481773e-08,
+        "phase_nonaffine_rms_rad": 6.342963130467774e-14,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 1200.0,
+      "pair": "native_D_vs_binary_D",
+      "polarization": "hc",
+      "band_hz": [
+        500.0,
+        1024.0
+      ],
+      "metric": {
+        "support_bins": 2096,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 9.467961804165323e-06,
+        "magnitude_relative_l2": 4.0706052141991757e-07,
+        "unit_phase_l2": 1.0501241114893755e-05,
+        "phase_slope_rad_per_hz": -1.4372164821559898e-08,
+        "phase_nonaffine_rms_rad": 1.0052616313001594e-08,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 1200.0,
+      "pair": "native_NSBH_vs_binary_NSBH",
+      "polarization": "hp",
+      "band_hz": [
+        30.0,
+        60.0
+      ],
+      "metric": {
+        "support_bins": 120,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 2.6945830968032676e-08,
+        "magnitude_relative_l2": 1.3926729039802447e-10,
+        "unit_phase_l2": 2.5255765192880998e-08,
+        "phase_slope_rad_per_hz": -2.9160802867492972e-09,
+        "phase_nonaffine_rms_rad": 3.9273398183301265e-13,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 1200.0,
+      "pair": "native_NSBH_vs_binary_NSBH",
+      "polarization": "hp",
+      "band_hz": [
+        60.0,
+        100.0
+      ],
+      "metric": {
+        "support_bins": 160,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 9.556398211367743e-08,
+        "magnitude_relative_l2": 2.1173055011252254e-10,
+        "unit_phase_l2": 1.0711669018100503e-07,
+        "phase_slope_rad_per_hz": -2.915541516809456e-09,
+        "phase_nonaffine_rms_rad": 1.57890720437128e-12,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 1200.0,
+      "pair": "native_NSBH_vs_binary_NSBH",
+      "polarization": "hp",
+      "band_hz": [
+        100.0,
+        200.0
+      ],
+      "metric": {
+        "support_bins": 400,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 2.763962218881976e-07,
+        "magnitude_relative_l2": 4.708410093775117e-10,
+        "unit_phase_l2": 3.1690184462100115e-07,
+        "phase_slope_rad_per_hz": -2.909203727184577e-09,
+        "phase_nonaffine_rms_rad": 6.346556807423873e-11,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 1200.0,
+      "pair": "native_NSBH_vs_binary_NSBH",
+      "polarization": "hp",
+      "band_hz": [
+        200.0,
+        500.0
+      ],
+      "metric": {
+        "support_bins": 1200,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 7.486256884083311e-07,
+        "magnitude_relative_l2": 7.1421458163739274e-09,
+        "unit_phase_l2": 9.107243610057353e-07,
+        "phase_slope_rad_per_hz": -2.819264341582701e-09,
+        "phase_nonaffine_rms_rad": 1.3378286865513954e-09,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 1200.0,
+      "pair": "native_NSBH_vs_binary_NSBH",
+      "polarization": "hp",
+      "band_hz": [
+        500.0,
+        1024.0
+      ],
+      "metric": {
+        "support_bins": 2096,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 4.070293148942006e-05,
+        "magnitude_relative_l2": 3.4211120719077673e-06,
+        "unit_phase_l2": 6.140163454263387e-05,
+        "phase_slope_rad_per_hz": 1.6013014250827284e-07,
+        "phase_nonaffine_rms_rad": 5.5455854614481054e-05,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 1200.0,
+      "pair": "native_NSBH_vs_binary_NSBH",
+      "polarization": "hc",
+      "band_hz": [
+        30.0,
+        60.0
+      ],
+      "metric": {
+        "support_bins": 120,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 2.6945830966083333e-08,
+        "magnitude_relative_l2": 1.3926730502413254e-10,
+        "unit_phase_l2": 2.5255765188812894e-08,
+        "phase_slope_rad_per_hz": -2.916080286568336e-09,
+        "phase_nonaffine_rms_rad": 3.9273410794624096e-13,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 1200.0,
+      "pair": "native_NSBH_vs_binary_NSBH",
+      "polarization": "hc",
+      "band_hz": [
+        60.0,
+        100.0
+      ],
+      "metric": {
+        "support_bins": 160,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 9.556398211973185e-08,
+        "magnitude_relative_l2": 2.1173051531428386e-10,
+        "unit_phase_l2": 1.0711669018717781e-07,
+        "phase_slope_rad_per_hz": -2.9155415166400356e-09,
+        "phase_nonaffine_rms_rad": 1.578912126675799e-12,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 1200.0,
+      "pair": "native_NSBH_vs_binary_NSBH",
+      "polarization": "hc",
+      "band_hz": [
+        100.0,
+        200.0
+      ],
+      "metric": {
+        "support_bins": 400,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 2.7639622188567275e-07,
+        "magnitude_relative_l2": 4.708410006178967e-10,
+        "unit_phase_l2": 3.1690184461772424e-07,
+        "phase_slope_rad_per_hz": -2.9092037271709564e-09,
+        "phase_nonaffine_rms_rad": 6.346556829036e-11,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 1200.0,
+      "pair": "native_NSBH_vs_binary_NSBH",
+      "polarization": "hc",
+      "band_hz": [
+        200.0,
+        500.0
+      ],
+      "metric": {
+        "support_bins": 1200,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 7.486256884069831e-07,
+        "magnitude_relative_l2": 7.142145810633448e-09,
+        "unit_phase_l2": 9.107243610032244e-07,
+        "phase_slope_rad_per_hz": -2.819264341588859e-09,
+        "phase_nonaffine_rms_rad": 1.337828687460712e-09,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 1200.0,
+      "pair": "native_NSBH_vs_binary_NSBH",
+      "polarization": "hc",
+      "band_hz": [
+        500.0,
+        1024.0
+      ],
+      "metric": {
+        "support_bins": 2096,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 4.070293148941998e-05,
+        "magnitude_relative_l2": 3.421112071905721e-06,
+        "unit_phase_l2": 6.140163454263381e-05,
+        "phase_slope_rad_per_hz": 1.6013014250827184e-07,
+        "phase_nonaffine_rms_rad": 5.545585461448117e-05,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 1200.0,
+      "pair": "native_NSBH_vs_native_D",
+      "polarization": "hp",
+      "band_hz": [
+        30.0,
+        60.0
+      ],
+      "metric": {
+        "support_bins": 120,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.9993433586178635,
+        "magnitude_relative_l2": 0.00018026148888030964,
+        "unit_phase_l2": 1.9996425636313209,
+        "phase_slope_rad_per_hz": -0.004244770089447251,
+        "phase_nonaffine_rms_rad": 0.00017258883366603244,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 1200.0,
+      "pair": "native_NSBH_vs_native_D",
+      "polarization": "hp",
+      "band_hz": [
+        60.0,
+        100.0
+      ],
+      "metric": {
+        "support_bins": 160,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.996129688937478,
+        "magnitude_relative_l2": 0.00039290528954471197,
+        "unit_phase_l2": 1.9947948167465372,
+        "phase_slope_rad_per_hz": -0.004071780567011299,
+        "phase_nonaffine_rms_rad": 0.0002888389216006239,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 1200.0,
+      "pair": "native_NSBH_vs_native_D",
+      "polarization": "hp",
+      "band_hz": [
+        100.0,
+        200.0
+      ],
+      "metric": {
+        "support_bins": 400,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.9702312752916582,
+        "magnitude_relative_l2": 0.005125478431156557,
+        "unit_phase_l2": 1.9559117686129566,
+        "phase_slope_rad_per_hz": -0.003718786380141428,
+        "phase_nonaffine_rms_rad": 0.001985590964197004,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 1200.0,
+      "pair": "native_NSBH_vs_native_D",
+      "polarization": "hp",
+      "band_hz": [
+        200.0,
+        500.0
+      ],
+      "metric": {
+        "support_bins": 1200,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.845389750708035,
+        "magnitude_relative_l2": 0.045370463206939,
+        "unit_phase_l2": 1.7383154312563613,
+        "phase_slope_rad_per_hz": -0.0026062797815866834,
+        "phase_nonaffine_rms_rad": 0.015475224971675684,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 1200.0,
+      "pair": "native_NSBH_vs_native_D",
+      "polarization": "hp",
+      "band_hz": [
+        500.0,
+        1024.0
+      ],
+      "metric": {
+        "support_bins": 2096,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.3591882835268363,
+        "magnitude_relative_l2": 0.10863462173637084,
+        "unit_phase_l2": 1.1808375115223084,
+        "phase_slope_rad_per_hz": -0.001828087386910429,
+        "phase_nonaffine_rms_rad": 0.015150694667417891,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 1200.0,
+      "pair": "native_NSBH_vs_native_D",
+      "polarization": "hc",
+      "band_hz": [
+        30.0,
+        60.0
+      ],
+      "metric": {
+        "support_bins": 120,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.9993433586178633,
+        "magnitude_relative_l2": 0.00018026148888032582,
+        "unit_phase_l2": 1.9996425636313209,
+        "phase_slope_rad_per_hz": -0.0042447700894472406,
+        "phase_nonaffine_rms_rad": 0.0001725888336660548,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 1200.0,
+      "pair": "native_NSBH_vs_native_D",
+      "polarization": "hc",
+      "band_hz": [
+        60.0,
+        100.0
+      ],
+      "metric": {
+        "support_bins": 160,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.9961296889374787,
+        "magnitude_relative_l2": 0.00039290528954472634,
+        "unit_phase_l2": 1.9947948167465372,
+        "phase_slope_rad_per_hz": -0.004071780567011299,
+        "phase_nonaffine_rms_rad": 0.00028883892160061725,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 1200.0,
+      "pair": "native_NSBH_vs_native_D",
+      "polarization": "hc",
+      "band_hz": [
+        100.0,
+        200.0
+      ],
+      "metric": {
+        "support_bins": 400,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.970231275291658,
+        "magnitude_relative_l2": 0.005125478431156563,
+        "unit_phase_l2": 1.9559117686129566,
+        "phase_slope_rad_per_hz": -0.003718786380141428,
+        "phase_nonaffine_rms_rad": 0.0019855909641969855,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 1200.0,
+      "pair": "native_NSBH_vs_native_D",
+      "polarization": "hc",
+      "band_hz": [
+        200.0,
+        500.0
+      ],
+      "metric": {
+        "support_bins": 1200,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.8453897507080348,
+        "magnitude_relative_l2": 0.04537046320693901,
+        "unit_phase_l2": 1.7383154312563613,
+        "phase_slope_rad_per_hz": -0.0026062797815866834,
+        "phase_nonaffine_rms_rad": 0.01547522497167568,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 1200.0,
+      "pair": "native_NSBH_vs_native_D",
+      "polarization": "hc",
+      "band_hz": [
+        500.0,
+        1024.0
+      ],
+      "metric": {
+        "support_bins": 2096,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.3591882835268363,
+        "magnitude_relative_l2": 0.10863462173637084,
+        "unit_phase_l2": 1.1808375115223084,
+        "phase_slope_rad_per_hz": -0.001828087386910429,
+        "phase_nonaffine_rms_rad": 0.015150694667417893,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 1200.0,
+      "pair": "binary_NSBH_vs_binary_D",
+      "polarization": "hp",
+      "band_hz": [
+        30.0,
+        60.0
+      ],
+      "metric": {
+        "support_bins": 120,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.9993433564871614,
+        "magnitude_relative_l2": 0.00018026135191034594,
+        "unit_phase_l2": 1.9996425618095581,
+        "phase_slope_rad_per_hz": -0.00424478149834549,
+        "phase_nonaffine_rms_rad": 0.00017258883351357996,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 1200.0,
+      "pair": "binary_NSBH_vs_binary_D",
+      "polarization": "hp",
+      "band_hz": [
+        60.0,
+        100.0
+      ],
+      "metric": {
+        "support_bins": 160,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.9961296652141873,
+        "magnitude_relative_l2": 0.0003929054403569708,
+        "unit_phase_l2": 1.9947947865588267,
+        "phase_slope_rad_per_hz": -0.004071791976436034,
+        "phase_nonaffine_rms_rad": 0.0002888389200313657,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 1200.0,
+      "pair": "binary_NSBH_vs_binary_D",
+      "polarization": "hp",
+      "band_hz": [
+        100.0,
+        200.0
+      ],
+      "metric": {
+        "support_bins": 400,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.97023107838469,
+        "magnitude_relative_l2": 0.005125478884930374,
+        "unit_phase_l2": 1.955911510903583,
+        "phase_slope_rad_per_hz": -0.0037187977959014344,
+        "phase_nonaffine_rms_rad": 0.00198559090138439,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 1200.0,
+      "pair": "binary_NSBH_vs_binary_D",
+      "polarization": "hp",
+      "band_hz": [
+        200.0,
+        500.0
+      ],
+      "metric": {
+        "support_bins": 1200,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.8453885501935372,
+        "magnitude_relative_l2": 0.04537051795532508,
+        "unit_phase_l2": 1.7383136966573431,
+        "phase_slope_rad_per_hz": -0.002606291287285571,
+        "phase_nonaffine_rms_rad": 0.015475223675789794,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 1200.0,
+      "pair": "binary_NSBH_vs_binary_D",
+      "polarization": "hp",
+      "band_hz": [
+        500.0,
+        1024.0
+      ],
+      "metric": {
+        "support_bins": 2096,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.3591809288963959,
+        "magnitude_relative_l2": 0.10863608905037324,
+        "unit_phase_l2": 1.1808240021495446,
+        "phase_slope_rad_per_hz": -0.0018282618892177574,
+        "phase_nonaffine_rms_rad": 0.015114234636637094,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 1200.0,
+      "pair": "binary_NSBH_vs_binary_D",
+      "polarization": "hc",
+      "band_hz": [
+        30.0,
+        60.0
+      ],
+      "metric": {
+        "support_bins": 120,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.9993433564871612,
+        "magnitude_relative_l2": 0.000180261351910328,
+        "unit_phase_l2": 1.999642561809558,
+        "phase_slope_rad_per_hz": -0.00424478149834549,
+        "phase_nonaffine_rms_rad": 0.00017258883351356795,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 1200.0,
+      "pair": "binary_NSBH_vs_binary_D",
+      "polarization": "hc",
+      "band_hz": [
+        60.0,
+        100.0
+      ],
+      "metric": {
+        "support_bins": 160,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.9961296652141876,
+        "magnitude_relative_l2": 0.0003929054403569548,
+        "unit_phase_l2": 1.9947947865588267,
+        "phase_slope_rad_per_hz": -0.004071791976436034,
+        "phase_nonaffine_rms_rad": 0.0002888389200313624,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 1200.0,
+      "pair": "binary_NSBH_vs_binary_D",
+      "polarization": "hc",
+      "band_hz": [
+        100.0,
+        200.0
+      ],
+      "metric": {
+        "support_bins": 400,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.9702310783846901,
+        "magnitude_relative_l2": 0.005125478884930368,
+        "unit_phase_l2": 1.9559115109035832,
+        "phase_slope_rad_per_hz": -0.0037187977959014344,
+        "phase_nonaffine_rms_rad": 0.0019855909013843857,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 1200.0,
+      "pair": "binary_NSBH_vs_binary_D",
+      "polarization": "hc",
+      "band_hz": [
+        200.0,
+        500.0
+      ],
+      "metric": {
+        "support_bins": 1200,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.845388550193537,
+        "magnitude_relative_l2": 0.045370517955325075,
+        "unit_phase_l2": 1.7383136966573431,
+        "phase_slope_rad_per_hz": -0.002606291287285571,
+        "phase_nonaffine_rms_rad": 0.015475223675789797,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 1200.0,
+      "pair": "binary_NSBH_vs_binary_D",
+      "polarization": "hc",
+      "band_hz": [
+        500.0,
+        1024.0
+      ],
+      "metric": {
+        "support_bins": 2096,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.3591809288963959,
+        "magnitude_relative_l2": 0.10863608905037325,
+        "unit_phase_l2": 1.1808240021495446,
+        "phase_slope_rad_per_hz": -0.0018282618892177574,
+        "phase_nonaffine_rms_rad": 0.015114234636637096,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    }
+  ]
+}

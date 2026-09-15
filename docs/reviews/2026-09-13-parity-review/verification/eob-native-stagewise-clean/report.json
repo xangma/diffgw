@@ -1,0 +1,67 @@
+{
+  "timestamp_grid": {
+    "n": 10008,
+    "dt_M": 0.5,
+    "comparison": "cached assembled mode and public mode share the 0.5M grid"
+  },
+  "stages": {
+    "cached_native_assembled_full_padded": {
+      "n": 10230,
+      "complex_rel_l2": 2.766799454794218e-05,
+      "amp_rel_l2": 8.587714186520147e-07,
+      "phase_rms": 1.9096889833165646e-05
+    },
+    "cached_native_truncated_valid_window": {
+      "n": 10008,
+      "complex_rel_l2": 2.3356326061026267e-05,
+      "amp_rel_l2": 8.652799804432309e-07,
+      "phase_rms": 8.529342943842768e-06
+    },
+    "cached_native_pre_boundary_valid_window": {
+      "n": 9997,
+      "complex_rel_l2": 2.0057652183744233e-05,
+      "amp_rel_l2": 8.693729598588864e-07,
+      "phase_rms": 7.573087438475541e-06
+    },
+    "cached_native_post_boundary_valid_window": {
+      "n": 11,
+      "complex_rel_l2": 0.00011861440025887886,
+      "amp_rel_l2": 2.7970088604645333e-07,
+      "phase_rms": 0.00011860339927572434
+    },
+    "coarse_grid_reattachment_control_full_overlap": {
+      "n": 10008,
+      "complex_rel_l2": 0.0009188281038703883,
+      "amp_rel_l2": 0.0003981794932110446,
+      "phase_rms": 0.00027952623243070933
+    },
+    "coarse_grid_reattachment_pre_boundary": {
+      "n": 9996,
+      "complex_rel_l2": 0.00030337021574862086,
+      "amp_rel_l2": 1.0396065207998283e-05,
+      "phase_rms": 0.0001214602350658649
+    },
+    "coarse_grid_reattachment_post_boundary": {
+      "n": 12,
+      "complex_rel_l2": 0.008108830049744359,
+      "amp_rel_l2": 0.0037189175252210424,
+      "phase_rms": 0.007271561895577157
+    }
+  },
+  "events": {
+    "recorded_actual_fine_boundary_time_M": 4998.34375,
+    "coarse_control_boundary_time_M": 4998.0,
+    "coarse_control_boundary_index": 9996
+  },
+  "inputs_sha256": {
+    "cache": "c868f8136d21d5cbfc90850ea20f98c172a27c46dd227fac5ad2b09f1d2d84fa",
+    "public_fixture": "7bf76ba9b81515bdd22377a8569bc0ee8809717baeb43d7f887b71ecdeb9d88a",
+    "adaptive_diagnostic": "122aeec1fc86393978aa7430d3e0c6a5b75d0ace469ae4dd41271a3ac1eba146",
+    "script": "7b2c196b33745ba86bdc039014dc0b146209bb3097643f397a357b4ef4747594"
+  },
+  "limitations": [
+    "The cached native mode is the actual fine-grid pipeline output; full padded comparison includes its ringdown and zero tail.",
+    "The reattachment control intentionally attaches on the downsampled 0.5M trajectory and is not a production-stage estimate.",
+    "The cache does not contain fine-grid base and NQC-corrected complex mode arrays, so source versus boundary attribution cannot be isolated without a new fine-grid replay."
+  ]
+}

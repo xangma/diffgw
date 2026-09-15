@@ -1,0 +1,339 @@
+--- a/src/torchwave/approximants/imrphenom_xhm.py
++++ b/src/torchwave/approximants/imrphenom_xhm.py
+@@ -922,8 +922,8 @@
+                 f_int1 = f_ins_a + (1.0 / 3.0) * (f_rd_a - f_ins_a)
+                 f_int2 = f_ins_a + (2.0 / 3.0) * (f_rd_a - f_ins_a)
+ 
+-                h_int1_fit = getattr(XHMParameterFits, f"amp_int1_{lm_str}")(eta, s1, s2, S)
+-                h_int2_fit = getattr(XHMParameterFits, f"amp_int2_{lm_str}")(eta, s1, s2, S)
++                v_int1_fit = getattr(XHMParameterFits, f"amp_int1_{lm_str}")(eta, s1, s2, S)
++                v_int2_fit = getattr(XHMParameterFits, f"amp_int2_{lm_str}")(eta, s1, s2, S)
+ 
+                 h_ins_at_cut = eval_h_ins(f_ins_a)
+                 dh_ins_at_cut = eval_dh_ins(f_ins_a)
+@@ -933,8 +933,12 @@
+                     - dh_ins_at_cut / torch.clamp(h_ins_at_cut**2, min=1e-12)
+                 )
+ 
+-                p_int1 = torch.pow(PI * f_int1, 7.0 / 6.0) / torch.clamp(h_int1_fit, min=1e-12)
+-                p_int2 = torch.pow(PI * f_int2, 7.0 / 6.0) / torch.clamp(h_int2_fit, min=1e-12)
++                # Eq. (5.3) fits A^Inter_lm/A0, where A0 = pi*sqrt(2*eta/3)
++                # is frequency independent.  Converting that target to the
++                # Eq. (4.6) H_lm ratio supplies the common (pi*f)^(7/6)
++                # factor only when evaluating H_lm, hence p=1/(A^Inter/A0).
++                p_int1 = 1.0 / torch.clamp(v_int1_fit, min=1e-12)
++                p_int2 = 1.0 / torch.clamp(v_int2_fit, min=1e-12)
+ 
+                 h_rd_at_cut = eval_h_rd(f_rd_a)
+                 dh_rd_at_cut = eval_dh_rd(f_rd_a)
+@@ -1072,6 +1076,7 @@
+                     0.25 * (f_end + 3.0 * f_start),
+                     0.50 * (f_end + f_start),
+                     0.25 * (3.0 * f_end + f_start),
++                    0.125 * (7.0 * f_end + f_start),
+                 ]
+ 
+                 if (l, m) != (3, 2):
+@@ -1080,9 +1085,12 @@
+                     f_p2 = getattr(XHMParameterFits, f"phase_p2_{lm_str}")(eta, s1, s2, S)
+                     f_p3 = getattr(XHMParameterFits, f"phase_p3_{lm_str}")(eta, s1, s2, S)
+                     f_p4 = getattr(XHMParameterFits, f"phase_p4_{lm_str}")(eta, s1, s2, S)
+-                    f_p5 = getattr(XHMParameterFits, f"phase_p5_{lm_str}")(eta, s1, s2, S)
+-
+-                    f_nodes = torch.stack(c_pts, dim=-1)
++                    f_p6 = getattr(XHMParameterFits, f"phase_p6_{lm_str}")(eta, s1, s2, S)
++
++                    # Table VII / Fig. 8 default subset: [C1,C2,E2,E3,E5]
++                    # = [f1,f2,f3,f4,f6].  The fifth table point is reserved
++                    # for the paper's sparse-calibration subset.
++                    f_nodes = torch.stack([c_pts[0], c_pts[1], c_pts[2], c_pts[3], c_pts[5]], dim=-1)
+                     f_damp_u_nodes = f_damp_lm.unsqueeze(-1) if f_damp_lm.dim() > 0 else f_damp_lm
+                     f_ring_u_nodes = f_ring_lm.unsqueeze(-1) if f_ring_lm.dim() > 0 else f_ring_lm
+                     lorentz_nodes = f_damp_u_nodes / ((f_damp_u_nodes**2) + (f_nodes - f_ring_u_nodes)**2)
+@@ -1093,7 +1101,7 @@
+                         1.0 / (f_nodes**2),
+                         1.0 / (f_nodes**4),
+                     ], dim=-1)
+-                    rhs_phase = torch.stack([f_p1, f_p2, f_p3, f_p4, f_p5], dim=-1)
++                    rhs_phase = torch.stack([f_p1, f_p2, f_p3, f_p4, f_p6], dim=-1)
+                     a_int = torch.linalg.solve(m_phase, rhs_phase)
+ 
+                     a_lam = a_int[..., 0]
+--- a/tests/test_pass12_higher_modes.py
++++ b/tests/test_pass12_higher_modes.py
+@@ -35,30 +35,32 @@
+ 
+ 
+ def test_vetoed_waveform_ignores_inner_fit_nodes_in_mixed_batch(monkeypatch):
+-    """Changing an inner node affects only the non-vetoed production row."""
++    """Changing an inner node affects only the non-vetoed native-input row."""
+     f = torch.linspace(20., 500., 151, dtype=DTYPE)
+-    spin = torch.tensor([-.95, -.8], dtype=DTYPE, requires_grad=True)
+-    options = dict(mass1=torch.tensor([40., 40.], dtype=DTYPE), mass2=20.,
+-                   chi1=spin, chi2=-.95, return_unprojected_modes=True)
+-    model = xhm.IMRPhenomXHM(modes=((3, 2),))
+-    before = model(f, **options)[2][(3, 2)]
++    # The first physical system is in the published (2,1) veto region:
++    # eta < .23, chi1 > .7, chi2 < -.5. The control differs only in chi1.
++    spin = torch.tensor([.8, .6], dtype=DTYPE, requires_grad=True)
++    options = dict(mass1=torch.tensor([50., 50.], dtype=DTYPE), mass2=20.,
++                   chi1=spin, chi2=-.8, return_unprojected_modes=True)
++    model = xhm.IMRPhenomXHM(modes=((2, 1),))
++    before = model(f, **options)[2][(2, 1)]
+     gradient = torch.autograd.grad((before.abs() * 1e22).square().sum(), spin)[0]
+     assert torch.isfinite(before).all()
+     assert torch.isfinite(gradient).all()
+     assert (gradient != 0).all()
+ 
+-    original = XHMParameterFits.amp_int1_32
+-    monkeypatch.setattr(XHMParameterFits, "amp_int1_32",
++    original = XHMParameterFits.amp_int1_21
++    monkeypatch.setattr(XHMParameterFits, "amp_int1_21",
+                         staticmethod(lambda *args: 1.01 * original(*args)))
+-    after = model(f, **options)[2][(3, 2)]
++    after = model(f, **options)[2][(2, 1)]
+     torch.testing.assert_close(after[0], before[0], rtol=0., atol=0.)
+     relative_change = torch.linalg.vector_norm(after[1] - before[1]) / torch.linalg.vector_norm(before[1])
+     assert relative_change > 1e-4
+ 
+-    # Disable just the new selection: the same vetoed physical system now
+-    # depends on the inner nodes, so the check cannot pass via an old fallback.
++    # Disable just the published selection: the vetoed physical system now
++    # depends on the inner nodes, so the check cannot pass via a fallback.
+     monkeypatch.setattr(xhm, "_published_parameter_amplitude_veto",
+                         lambda mode, q, eta, c1, c2: torch.zeros_like(eta, dtype=torch.bool))
+-    without_veto = model(f, **options)[2][(3, 2)]
++    without_veto = model(f, **options)[2][(2, 1)]
+     relative_change = torch.linalg.vector_norm(without_veto[0] - after[0]) / torch.linalg.vector_norm(after[0])
+     assert relative_change > 1e-4
+--- a/tests/test_pass13_xhm_amplitude.py
++++ b/tests/test_pass13_xhm_amplitude.py
+@@ -0,0 +1,76 @@
++"""Pass 13 checks for the published XHM intermediate-amplitude normalization."""
++
++import pytest
++import torch
++
++from torchwave.approximants.imrphenom_xas import XASParameterFits
++from torchwave.approximants.imrphenom_xhm import IMRPhenomXHM, _eval_f_isco
++from torchwave.approximants.xhm_fits import XHMParameterFits
++from torchwave.constants import C_SI, MPC_SI, MSUN_SEC, PI
++
++
++DTYPE = torch.float64
++
++
++def _intermediate_21_node(index):
++    """Return an Eq. (5.1) node and its Eq. (5.3) target q=A^Inter/A0."""
++    m1, m2 = torch.tensor(35.0, dtype=DTYPE), torch.tensor(20.0, dtype=DTYPE)
++    chi1, chi2 = torch.tensor(0.4, dtype=DTYPE), torch.tensor(-0.2, dtype=DTYPE)
++    total_mass = m1 + m2
++    eta = m1 * m2 / total_mass.square()
++    _, _, _, spin_combination = XHMParameterFits.compute_spin_variables(eta, chi1, chi2)
++    chi_eff = (m1 * chi1 + m2 * chi2) / total_mass
++    chi_f = XASParameterFits.fit_final_spin(eta, chi1, chi2)
++    m_f = 1.0 - XASParameterFits.fit_erad(eta, chi1, chi2)
++    f_meco = XASParameterFits.fit_f_meco(eta, chi1, chi2)
++    f_isco = _eval_f_isco(chi_f)
++    f_ins = 0.5 * (f_meco + torch.abs(f_isco - f_meco) *
++                   (0.75 - 0.235 * chi_eff - (5.0 / 6.0) * chi_eff.square()))
++    f_ring = XHMParameterFits.qnm_fring_21(chi_f) / m_f
++    f_rd = 0.75 * f_ring
++    f_int = f_ins + index * (f_rd - f_ins) / 3.0
++    q = getattr(XHMParameterFits, f"amp_int{index}_21")(eta, chi1, chi2, spin_combination)
++    return total_mass * MSUN_SEC, eta, f_int, q
++
++
++@pytest.mark.parametrize("index", (1, 2))
++def test_intermediate_node_matches_eq53_a0_normalized_strain(index):
++    """Eq. (5.3) target gets exactly one (pi*f)^(7/6) conversion to H_lm."""
++    mass_seconds, eta, f_int, q = _intermediate_21_node(index)
++    frequency = f_int / mass_seconds
++    distance_seconds = 100.0 * MPC_SI / C_SI
++    # This is the model's native physical leading amplitude A0^22(f).
++    a0_phys = (torch.sqrt(5.0 * eta / 24.0) /
++               (PI ** (2.0 / 3.0) * distance_seconds) *
++               mass_seconds ** (5.0 / 6.0) * frequency ** (-7.0 / 6.0))
++    expected = (16.0 * PI / 5.0) ** 0.5 * a0_phys * (PI * f_int) ** (7.0 / 6.0) * q
++
++    model = IMRPhenomXHM(modes=((2, 1),))
++    _, _, mode_strains = model(
++        f=frequency.reshape(1), mass1=35.0, mass2=20.0,
++        chi1=0.4, chi2=-0.2, distance=100.0,
++        return_unprojected_modes=True,
++    )
++    normalized_strain = mode_strains[(2, 1)].abs().squeeze() / expected
++    torch.testing.assert_close(normalized_strain, torch.ones_like(normalized_strain),
++                               rtol=5e-12, atol=0.0)
++
++
++def test_intermediate_amplitude_has_finite_strain_gradients():
++    """The corrected node conversion remains differentiable in production."""
++    _, _, f_int, _ = _intermediate_21_node(1)
++    mass_seconds = (35.0 + 20.0) * MSUN_SEC
++    frequency = torch.tensor([f_int.item(), f_int.item() + 0.001], dtype=DTYPE) / mass_seconds
++    frequency.requires_grad_()
++    mass1 = torch.tensor(35.0, dtype=DTYPE, requires_grad=True)
++    mass2 = torch.tensor(20.0, dtype=DTYPE, requires_grad=True)
++    chi1 = torch.tensor(0.4, dtype=DTYPE, requires_grad=True)
++    chi2 = torch.tensor(-0.2, dtype=DTYPE, requires_grad=True)
++    model = IMRPhenomXHM(modes=((2, 1),))
++    _, _, mode_strains = model(
++        f=frequency, mass1=mass1, mass2=mass2, chi1=chi1, chi2=chi2,
++        distance=100.0, return_unprojected_modes=True,
++    )
++    loss = (mode_strains[(2, 1)].abs() * 1e22).sum()
++    gradients = torch.autograd.grad(loss, (frequency, mass1, mass2, chi1, chi2))
++    assert all(torch.isfinite(gradient).all() and (gradient != 0).any() for gradient in gradients)
+--- a/tests/test_pass13_xhm_phase.py
++++ b/tests/test_pass13_xhm_phase.py
+@@ -0,0 +1,149 @@
++"""Focused checks for the Section V.B nonmixing phase-node correction."""
++
++import math
++
++import torch
++
++import torchwave.approximants.imrphenom_xhm as xhm
++from torchwave.approximants.imrphenom_xhm import IMRPhenomXHM
++
++
++NONMIXING = ((2, 1), (3, 3), (4, 4))
++
++
++def _phase_node_values(b, e):
++    """Reconstruct Table VII's six points from its two endpoints."""
++    return torch.stack((
++        b,
++        0.25 * ((math.sqrt(3.0) + 2.0) * b - (math.sqrt(3.0) - 2.0) * e),
++        0.25 * (e + 3.0 * b),
++        0.50 * (e + b),
++        0.25 * (3.0 * e + b),
++        0.125 * (7.0 * e + b),
++    ))
++
++
++def test_nonmixing_phase_solve_captures_default_table_vii_subset(monkeypatch):
++    """The production 5x5 solve uses f1,f2,f3,f4,f6 for every nonmixing mode."""
++    original_solve = torch.linalg.solve
++
++    for lm in NONMIXING:
++        captured = []
++        captured_rhs = []
++        captured_p6 = []
++        p6_name = f"phase_p6_{lm[0]}{lm[1]}"
++        original_p6 = getattr(xhm.XHMParameterFits, p6_name)
++
++        def capture_solve(a, b, *args, **kwargs):
++            if a.shape[-2:] == (5, 5) and torch.allclose(
++                a[..., 1], torch.ones_like(a[..., 1])
++            ):
++                captured.append(a.detach().clone())
++                captured_rhs.append(b.detach().clone())
++            return original_solve(a, b, *args, **kwargs)
++
++        def capture_p6(*args, _original=original_p6, **kwargs):
++            value = _original(*args, **kwargs)
++            captured_p6.append(value.detach().clone())
++            return value
++
++        monkeypatch.setattr(torch.linalg, "solve", capture_solve)
++        monkeypatch.setattr(xhm.XHMParameterFits, p6_name, staticmethod(capture_p6))
++        model = IMRPhenomXHM(modes=(lm,))
++        model(
++            torch.linspace(20.0, 500.0, 48, dtype=torch.float64),
++            mass1=torch.tensor(35.0, dtype=torch.float64),
++            mass2=torch.tensor(20.0, dtype=torch.float64),
++            chi1=torch.tensor(0.4, dtype=torch.float64),
++            chi2=torch.tensor(-0.2, dtype=torch.float64),
++            return_unprojected_modes=True,
++        )
++
++        assert len(captured) == 1, f"expected one nonmixing phase solve for {lm}"
++        assert len(captured_rhs) == 1 and len(captured_p6) == 1
++        matrix = captured[0]
++        nodes = 1.0 / matrix[..., 2]
++        b = nodes[0]
++        e = 4.0 * nodes[2] - 3.0 * b
++        expected = _phase_node_values(b, e)
++        torch.testing.assert_close(nodes, expected[[0, 1, 2, 3, 5]], atol=0.0, rtol=2e-12)
++        assert not torch.isclose(nodes[-1], expected[4], atol=0.0, rtol=1e-12)
++        torch.testing.assert_close(captured_rhs[0][-1], captured_p6[0], atol=0.0, rtol=0.0)
++
++
++def test_nonmixing_phase_p6_changes_normalized_strain_and_p5_is_unused(monkeypatch):
++    """Changing only p6 changes each mode while a p5 call would fail the test."""
++    frequency = torch.linspace(20.0, 600.0, 96, dtype=torch.float64)
++    baseline = {}
++    calls = {lm: 0 for lm in NONMIXING}
++
++    for lm in NONMIXING:
++        suffix = f"{lm[0]}{lm[1]}"
++        p5_name = f"phase_p5_{suffix}"
++        p6_name = f"phase_p6_{suffix}"
++        original_p6 = getattr(xhm.XHMParameterFits, p6_name)
++
++        def forbidden(*args, _name=p5_name, **kwargs):
++            raise AssertionError(f"excluded {_name} was evaluated")
++
++        def tracked_p6(*args, _original=original_p6, _lm=lm, **kwargs):
++            calls[_lm] += 1
++            return _original(*args, **kwargs)
++
++        monkeypatch.setattr(xhm.XHMParameterFits, p5_name, staticmethod(forbidden))
++        monkeypatch.setattr(xhm.XHMParameterFits, p6_name, staticmethod(tracked_p6))
++        out = IMRPhenomXHM(modes=(lm,))(
++            frequency,
++            mass1=35.0,
++            mass2=20.0,
++            chi1=0.4,
++            chi2=-0.2,
++            return_unprojected_modes=True,
++        )[2][lm]
++        baseline[lm] = out / out.abs().max()
++
++        def shifted_p6(*args, _original=original_p6, **kwargs):
++            value = _original(*args, **kwargs)
++            return value + torch.ones_like(value)
++
++        monkeypatch.setattr(xhm.XHMParameterFits, p6_name, staticmethod(shifted_p6))
++        changed = IMRPhenomXHM(modes=(lm,))(
++            frequency,
++            mass1=35.0,
++            mass2=20.0,
++            chi1=0.4,
++            chi2=-0.2,
++            return_unprojected_modes=True,
++        )[2][lm]
++        changed = changed / changed.abs().max()
++        assert torch.max(torch.abs(changed - baseline[lm])).item() > 1e-8
++        assert calls[lm] == 1
++
++
++def test_nonmixing_phase_gradients_are_finite(monkeypatch):
++    """The corrected solve remains differentiable for all three nonmixing modes."""
++    for lm in NONMIXING:
++        suffix = f"{lm[0]}{lm[1]}"
++        p5_name = f"phase_p5_{suffix}"
++
++        def forbidden(*args, _name=p5_name, **kwargs):
++            raise AssertionError(f"excluded {_name} was evaluated")
++
++        monkeypatch.setattr(xhm.XHMParameterFits, p5_name, staticmethod(forbidden))
++        m1 = torch.tensor(35.0, dtype=torch.float64, requires_grad=True)
++        m2 = torch.tensor(20.0, dtype=torch.float64, requires_grad=True)
++        chi1 = torch.tensor(0.4, dtype=torch.float64, requires_grad=True)
++        chi2 = torch.tensor(-0.2, dtype=torch.float64, requires_grad=True)
++        h = IMRPhenomXHM(modes=(lm,))(
++            torch.linspace(20.0, 500.0, 64, dtype=torch.float64),
++            mass1=m1,
++            mass2=m2,
++            chi1=chi1,
++            chi2=chi2,
++            return_unprojected_modes=True,
++        )[2][lm]
++        (1e22 * (h.real + 0.37 * h.imag).sum()).backward()
++        for parameter in (m1, m2, chi1, chi2):
++            assert parameter.grad is not None
++            assert torch.isfinite(parameter.grad).all()
++            assert parameter.grad.abs() > 0.0

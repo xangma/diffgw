@@ -1,0 +1,51 @@
+{
+  "status": "passed",
+  "runtime_files_unchanged": 130,
+  "historical_artifacts_unchanged": 75,
+  "historical_tool_updated_with_original_saved": [
+    "/Users/xangma/repos/torchwave/scripts/teob_fd_matching_controls.py"
+  ],
+  "cases": {
+    "catalog": {
+      "derivative_outputs_verified": 9,
+      "output_resampling_outputs_verified": 4,
+      "corrected_tool_replay_bitwise": true
+    },
+    "bbh_reference": {
+      "derivative_outputs_verified": 9,
+      "output_resampling_outputs_verified": 4,
+      "corrected_tool_replay_bitwise": true
+    },
+    "equal_bbh": {
+      "derivative_outputs_verified": 9,
+      "output_resampling_outputs_verified": 4,
+      "corrected_tool_replay_bitwise": true
+    },
+    "unequal_bns": {
+      "derivative_outputs_verified": 9,
+      "output_resampling_outputs_verified": 4,
+      "corrected_tool_replay_bitwise": true
+    }
+  },
+  "localizations": {
+    "catalog": {
+      "independent_complex_l2_verified": true,
+      "cumulative_residual_energy_indices": {
+        "0.1": 64288,
+        "0.5": 64288,
+        "0.9": 64288,
+        "0.99": 64288
+      }
+    },
+    "bbh_reference": {
+      "independent_complex_l2_verified": true,
+      "cumulative_residual_energy_indices": {
+        "0.1": 4002,
+        "0.5": 4009,
+        "0.9": 4013,
+        "0.99": 4021
+      }
+    }
+  },
+  "validation_script_sha256": "8013fc956800a51a0a46b8fedd45d5b62e3dcd2cb6efacd3a0e36f211f5e51d7"
+}

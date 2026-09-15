@@ -1,0 +1,89 @@
+{
+  "status": "complete",
+  "model_identity": {
+    "native": "clean TEOB conditioned waveform cache",
+    "public": "lalsimulation.SimIMRTEOBResumS",
+    "conditioner": "torchwave.approximants.eob.teob_conditioned_waveform_clean.condition_td_to_fd",
+    "lalsimulation": "6.2.0",
+    "lal": "7.7.0",
+    "producer_module_sha256": "31c0f491b71bfca2c24fb2ab17b94dfffc2119bbfa3e537851d7209ebc32ecb3",
+    "diagnostic_script_sha256": "ddcec87c820e07457ea3a34e239cdc8683a2889831d4201d5106c587cdb6a496",
+    "conditioning_module_sha256": "9e6f87ae24879188d7d6e63a020ff3bb2034d3d38426de59d07c6ae22b0167a6"
+  },
+  "inputs": {
+    "native_file": "/Users/xangma/repos/torchwave/docs/reviews/2026-09-13-parity-review/verification/teob-conditioned-waveform-clean/native-output.npz",
+    "native_sha256": "a7cc79b050778a1869fa2861719e8e80bda44c38f66e4a83206b9d28a7169ead",
+    "public_file": "/Users/xangma/repos/torchwave/docs/reviews/2026-09-13-parity-review/verification/teob-first-difference-clean/public-td-output.npz",
+    "public_sha256": "a661d22dfee9c808a0c3c226e84f2b299584566447ae0734e7c1ab2cbe531771",
+    "public_fd_cache": "/Users/xangma/repos/torchwave/docs/reviews/2026-09-13-parity-review/verification/teob-conditioned-waveform-clean/public-fd-sim-inspiral-output.npz",
+    "public_fd_cache_sha256": "084e58b5332549b73fdaeb3ffb63df04d573a8082b83db7230d25642d0780fb8"
+  },
+  "public_call": {
+    "m1_msun": 30.0,
+    "m2_msun": 20.0,
+    "distance_mpc": 100.0,
+    "inclination": 0.0,
+    "phi_ref": 0.0,
+    "delta_t_seconds": 0.00048828125,
+    "f_min_hz": 16.90009400983902,
+    "mode_array": [
+      [
+        2,
+        2
+      ]
+    ],
+    "PN_tidal_order": 0,
+    "f_ref_hz": 0.0,
+    "spin1x": 0.0,
+    "spin1y": 0.0,
+    "spin1z": 0.0,
+    "spin2x": 0.0,
+    "spin2y": 0.0,
+    "spin2z": 0.0,
+    "lambda1": 0.0,
+    "lambda2": 0.0,
+    "eccentricity": 0.0,
+    "mean_periastron_anomaly": 0.0,
+    "long_asc_node": 0.0
+  },
+  "grid": {
+    "native_samples": 4087,
+    "public_samples": 4087,
+    "native_dt_seconds": 0.00048828125,
+    "public_dt_seconds": 0.00048828125,
+    "native_epoch_seconds": -1.9577635419555968,
+    "public_epoch_seconds": -1.957765049,
+    "epoch_difference_seconds": -1.507044403270541e-06,
+    "comparison": "equal elapsed-from-generation-start indices; epochs differ; no physical-time alignment"
+  },
+  "raw_td_comparison": {
+    "sign_contract": "-1 is project_teob22_direct versus generic/audited observer-frame convention in teob_conditioned_waveform_clean.py",
+    "shared_samples": 4087,
+    "relative_l2_public_norm": 0.00040827316890069374,
+    "max_abs": 1.4700973787098582e-23,
+    "first_difference_index": 0
+  },
+  "conditioned_public_td": {
+    "status": "complete",
+    "fd_samples": 2049,
+    "delta_f_hz": 0.5,
+    "f_max_hz": 1024.0,
+    "fd_output_path": "/Users/xangma/repos/torchwave/docs/reviews/2026-09-13-parity-review/verification/teob-first-difference-clean/conditioned-public-td-fd.npz",
+    "fd_output_sha256": "73d719b4956914c784745459185e3c43f7d7274c1c59e416e243bc20ad02d2af"
+  },
+  "cached_public_fd_comparison": {
+    "status": "complete",
+    "public_frequency_bins": 2049,
+    "frequency_range_hz": [
+      20.0,
+      1024.0
+    ],
+    "requested_f_low_hz": 20.0,
+    "exact_bins": 2009,
+    "relative_l2_public_norm": 0.0001339130032794602,
+    "plus_relative_l2_public_norm": 0.0001340168047831807,
+    "cross_relative_l2_public_norm": 0.0001338091101200707,
+    "max_abs": 9.92842645653194e-27
+  },
+  "conclusion": "Raw TD polarizations differ at equal elapsed indices. Conditioning the sign-converted public TD also leaves a measured residual against the cached public SimInspiralFD output. These measurements alone do not separate generation inputs, waveform generation, and conditioner behavior; the independent public-stage replay is needed for attribution."
+}

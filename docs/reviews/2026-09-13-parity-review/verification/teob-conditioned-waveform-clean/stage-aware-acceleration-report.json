@@ -1,0 +1,98 @@
+{
+  "policy": "frozen-mobility-stage-aware",
+  "convention": "H_real(r,p_r*,p_phi)^2 applies only to continuation PA prefix; ODE suffix is unchanged",
+  "cases": [
+    {
+      "cache": "docs/reviews/2026-09-13-parity-review/verification/teob-conditioned-waveform-clean/native-output.npz",
+      "pa_knots": 41,
+      "total_knots": 642,
+      "max_pa_energy_factor_minus_one": 0.015902467448722923,
+      "max_ode_acceleration_difference": 0.0,
+      "nqc_coefficients": "cached canonical solve held fixed for both variants",
+      "max_original_corrected_amplitude_difference": 1.1827966445165927e-07,
+      "max_original_corrected_phase_difference": 0.0,
+      "max_aux_corrected_amplitude_difference": 0.0,
+      "max_aux_corrected_phase_difference": 0.0,
+      "baseline_native_plus_raw_l2": 0.0,
+      "baseline_native_cross_raw_l2": 0.0,
+      "catalog_frequency_band_hz": [
+        20.0,
+        256.0
+      ],
+      "stage_vs_baseline_plus_raw_l2_full": 4.486909548072306e-07,
+      "stage_vs_baseline_cross_raw_l2_full": 4.336338833896485e-07,
+      "stage_vs_public_plus_raw_l2_full": 0.0003040362428068511,
+      "stage_vs_public_cross_raw_l2_full": 0.0003038873172754587,
+      "stage_vs_public_combined_raw_l2_full": 0.000303961792595108,
+      "stage_vs_public_plus_raw_l2_catalog": 0.0002662597034643952,
+      "stage_vs_public_cross_raw_l2_catalog": 0.0002664677513985611,
+      "stage_vs_public_combined_raw_l2_catalog": 0.0002663637438966757
+    },
+    {
+      "cache": "docs/reviews/2026-09-13-parity-review/verification/teob-conditioned-waveform-clean/catalog-output.npz",
+      "pa_knots": 731,
+      "total_knots": 1322,
+      "max_pa_energy_factor_minus_one": 0.016562160651955704,
+      "max_ode_acceleration_difference": 0.0,
+      "nqc_coefficients": "cached canonical solve held fixed for both variants",
+      "max_original_corrected_amplitude_difference": 1.3729601350265241e-07,
+      "max_original_corrected_phase_difference": 0.0,
+      "max_aux_corrected_amplitude_difference": 0.0,
+      "max_aux_corrected_phase_difference": 0.0,
+      "baseline_native_plus_raw_l2": 0.0,
+      "baseline_native_cross_raw_l2": 0.0,
+      "catalog_frequency_band_hz": [
+        30.0,
+        500.0
+      ],
+      "stage_vs_baseline_plus_raw_l2_full": 2.3697301326007234e-07,
+      "stage_vs_baseline_cross_raw_l2_full": 2.2757096325467252e-07,
+      "stage_vs_public_plus_raw_l2_full": 3.098716320154235e-05,
+      "stage_vs_public_cross_raw_l2_full": 0.00011288421074842717,
+      "stage_vs_public_combined_raw_l2_full": 8.287929712031192e-05,
+      "stage_vs_public_plus_raw_l2_catalog": 2.4327811304673595e-05,
+      "stage_vs_public_cross_raw_l2_catalog": 8.335253571003163e-05,
+      "stage_vs_public_combined_raw_l2_catalog": 6.124369827440565e-05
+    }
+  ],
+  "source_sha256_before": {
+    "src/torchwave/approximants/eob/teob_conditioned_waveform_clean.py": "31c0f491b71bfca2c24fb2ab17b94dfffc2119bbfa3e537851d7209ebc32ecb3",
+    "src/torchwave/approximants/eob/teob_merger_nqc_clean.py": "f705514ef981b3f0a557efeebe508b52fdb70c634a8ac8f2c357f30761871068",
+    "src/torchwave/approximants/eob/teob_ringdown_assembly_clean.py": "df3d21ce4fad55a84d0e1550ac376b8931eecbc0b4076dc9f6235b076ed0befa",
+    "src/torchwave/approximants/eob/td_fd_conditioning_clean.py": "9e6f87ae24879188d7d6e63a020ff3bb2034d3d38426de59d07c6ae22b0167a6",
+    "/Users/xangma/repos/torchwave/scripts/diagnose_teob_stage_aware_acceleration_clean.py": "e1a2cd74702f31d5d15ca55970f6fbe6c91e40112cd7b3bdbb118736066d72df"
+  },
+  "source_sha256_after": {
+    "src/torchwave/approximants/eob/teob_conditioned_waveform_clean.py": "31c0f491b71bfca2c24fb2ab17b94dfffc2119bbfa3e537851d7209ebc32ecb3",
+    "src/torchwave/approximants/eob/teob_merger_nqc_clean.py": "f705514ef981b3f0a557efeebe508b52fdb70c634a8ac8f2c357f30761871068",
+    "src/torchwave/approximants/eob/teob_ringdown_assembly_clean.py": "df3d21ce4fad55a84d0e1550ac376b8931eecbc0b4076dc9f6235b076ed0befa",
+    "src/torchwave/approximants/eob/td_fd_conditioning_clean.py": "9e6f87ae24879188d7d6e63a020ff3bb2034d3d38426de59d07c6ae22b0167a6",
+    "/Users/xangma/repos/torchwave/scripts/diagnose_teob_stage_aware_acceleration_clean.py": "e1a2cd74702f31d5d15ca55970f6fbe6c91e40112cd7b3bdbb118736066d72df"
+  },
+  "input_npz_sha256_before": {
+    "docs/reviews/2026-09-13-parity-review/verification/teob-conditioned-waveform-clean/native-output.npz": "a7cc79b050778a1869fa2861719e8e80bda44c38f66e4a83206b9d28a7169ead",
+    "docs/reviews/2026-09-13-parity-review/verification/teob-conditioned-waveform-clean/catalog-output.npz": "70af9febc682f55dc285933eb63086d576ef25959e30aa78dafb44553393e07d",
+    "docs/reviews/2026-09-13-parity-review/verification/teob-conditioned-waveform-clean/public-fd-sim-inspiral-output.npz": "084e58b5332549b73fdaeb3ffb63df04d573a8082b83db7230d25642d0780fb8"
+  },
+  "input_npz_sha256_after": {
+    "docs/reviews/2026-09-13-parity-review/verification/teob-conditioned-waveform-clean/native-output.npz": "a7cc79b050778a1869fa2861719e8e80bda44c38f66e4a83206b9d28a7169ead",
+    "docs/reviews/2026-09-13-parity-review/verification/teob-conditioned-waveform-clean/catalog-output.npz": "70af9febc682f55dc285933eb63086d576ef25959e30aa78dafb44553393e07d",
+    "docs/reviews/2026-09-13-parity-review/verification/teob-conditioned-waveform-clean/public-fd-sim-inspiral-output.npz": "084e58b5332549b73fdaeb3ffb63df04d573a8082b83db7230d25642d0780fb8"
+  },
+  "runtime_sha256_before": {
+    "python_executable": "/Users/xangma/miniconda3/envs/pycbcorig313/bin/python",
+    "python_sha256": "357ea389f9f92c2628db935346ac44bf289fd52405e2a592dafb7593a7a3ca6c",
+    "python_version": "3.13.9 | packaged by conda-forge | (main, Oct 22 2025, 23:38:18) [Clang 19.1.7 ]",
+    "torch_version": "2.9.1",
+    "platform": "macOS-26.6-arm64-arm-64bit-Mach-O"
+  },
+  "runtime_sha256_after": {
+    "python_executable": "/Users/xangma/miniconda3/envs/pycbcorig313/bin/python",
+    "python_sha256": "357ea389f9f92c2628db935346ac44bf289fd52405e2a592dafb7593a7a3ca6c",
+    "python_version": "3.13.9 | packaged by conda-forge | (main, Oct 22 2025, 23:38:18) [Clang 19.1.7 ]",
+    "torch_version": "2.9.1",
+    "platform": "macOS-26.6-arm64-arm-64bit-Mach-O"
+  },
+  "hashes_unchanged": true,
+  "elapsed_seconds": 51.523202750016935
+}

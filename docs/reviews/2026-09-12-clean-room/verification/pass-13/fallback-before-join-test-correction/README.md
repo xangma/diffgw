@@ -1,0 +1,1 @@
+Historical pass-13 fallback candidate: runtime source stayed stable; ordinary suite found two obsolete unconditional C1 amplitude assertions at a published derivative-removal fallback. Full binary results are preserved. See the final pass-13 report for the subsequent test-contract review and final verification.

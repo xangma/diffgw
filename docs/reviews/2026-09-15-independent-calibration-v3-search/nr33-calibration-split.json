@@ -1,0 +1,30 @@
+{
+  "rule": "predeclared target q=3,6 holdout; q=1.5,2,4,5,8 training; NR-only quality selection",
+  "train_case_ids": [
+    "SXS:BBH:2331/Lev3/N3",
+    "SXS:BBH:1166/Lev3/N3",
+    "SXS:BBH:2485/Lev5/N3",
+    "SXS:BBH:3619/Lev3/N3",
+    "SXS:BBH:2707/Lev4/N3"
+  ],
+  "holdout_case_ids": [
+    "SXS:BBH:2265/Lev3/N3",
+    "SXS:BBH:2489/Lev5/N3"
+  ],
+  "excluded_case_ids": [],
+  "frozen_at_utc": "2026-09-15T11:46:15.554074+00:00",
+  "input_sha256": {
+    "docs/reviews/2026-09-15-independent-calibration-v2/quality-policy.json": "1a863811b90c410cd5a9b0b52a0bd53696b869a0d503cb8fa61d9c054842138d",
+    "docs/reviews/2026-09-15-independent-calibration-v3-search/quality-screen-round1.json": "99f814ccd6e8183459d90b0a724841f1e220c2b28fb5a9c4677ee511a8822746",
+    "docs/reviews/2026-09-15-independent-calibration-v3-search/nr33-qualified-manifest.json": "990df8e246ba978fc47735407be05b49eb9a3f261565ccc4a946029704cc5160",
+    "/Users/xangma/repos/torchwave/scripts/fit_nr33_amplitude_pilot.py": "e307ef505094a5f3d568690d3a9f44cff58d9683d3c29f91e62cc7d2f17ed554",
+    "/Users/xangma/repos/torchwave/scripts/kerr_leaver_solver.py": "a7b07b28962b676271645fd60cf6bd7c2684c8c92e801579897f2d8f84698fc9"
+  },
+  "controls": {
+    "pad_factor": 4,
+    "start_taper_duration": 500.0,
+    "end_taper_duration": 20.0,
+    "fmax": 0.3,
+    "sample_dt": 0.1
+  }
+}

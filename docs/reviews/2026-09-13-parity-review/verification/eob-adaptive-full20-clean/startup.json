@@ -1,0 +1,54 @@
+{
+  "command": "/Users/xangma/miniconda3/envs/pycbcorig313/bin/python scripts/diagnose_eob_full20_controller_clean.py --output-dir docs/reviews/2026-09-13-parity-review/verification/eob-adaptive-full20-clean",
+  "cwd": "/Users/xangma/repos/torchwave",
+  "executable": "/Users/xangma/miniconda3/envs/pycbcorig313/bin/python",
+  "host": "RONI2",
+  "input_sha256_before": {
+    "/Users/xangma/repos/torchwave/docs/reviews/2026-09-13-parity-review/verification/eob-adaptive-root-review/full20-controller.json": "abda35187a70506bd832042b682506ba5a1931fcd0bd9a97c278175b7852b2ea",
+    "/tmp/torchwave-native-eob-full20-controller.npz": "90c90754d36ee798fa572bd9374a04b233856265d9956e916bf9efba1b65125f",
+    "/tmp/torchwave-public-eob-dt_0p5M.npz": "7bf76ba9b81515bdd22377a8569bc0ee8809717baeb43d7f887b71ecdeb9d88a"
+  },
+  "parameters": {
+    "atol": 1e-10,
+    "chi1": 0.0,
+    "chi2": 0.0,
+    "controller": "gsl_state_scaled",
+    "dt_geom": 0.5,
+    "f_lower_Hz": 20.0,
+    "final_spin_fit_order": [
+      3,
+      4
+    ],
+    "include_pan_v8": false,
+    "include_positive_chi_540": false,
+    "mass1": 30.0,
+    "mass2": 20.0,
+    "max_accepted_steps": 5000,
+    "max_duration_M": 10000.0,
+    "max_evaluations": 100000,
+    "omega_start": 0.015473886176432833,
+    "ringdown_duration_M": 150.0,
+    "rtol": 1e-09,
+    "spin_truncation": "generic-leading-ell8",
+    "spin_v6": "bohe_total_energy"
+  },
+  "pid": 25324,
+  "report_directory": "/Users/xangma/repos/torchwave/docs/reviews/2026-09-13-parity-review/verification/eob-adaptive-full20-clean",
+  "runtime_source_sha256_before": {
+    "/Users/xangma/repos/torchwave/src/torchwave/approximants/eob/adaptive_driver_clean.py": "27db5a25123f4d054a9919a11752b207cfc6accc377a8eeaf21f4b49087867e0",
+    "/Users/xangma/repos/torchwave/src/torchwave/approximants/eob/events.py": "c1ae1182e4c2f9cf5f8a2857ea5d73802dbbb68b59739709849f973503bdfd5d",
+    "/Users/xangma/repos/torchwave/src/torchwave/approximants/eob/initial_conditions.py": "68363208874bfaf39dad5d5668e5f128553144b4db31f64f0283278ed710458f",
+    "/Users/xangma/repos/torchwave/src/torchwave/approximants/eob/integrator.py": "a036f6b7580450a847bc1d56ebf745de6cdb5c2ee397d31cf1014d483eebe26b",
+    "/Users/xangma/repos/torchwave/src/torchwave/approximants/eob/nqc.py": "f023b84fc0a48e59feb6b543d234635df965e04ee9aff05672ea3ff984d0cf85",
+    "/Users/xangma/repos/torchwave/src/torchwave/approximants/eob/numerical_attachment.py": "775aa6f40d4cfe2bffa836d7af0b58dc8521411571d5c124230890eb5de91cb1",
+    "/Users/xangma/repos/torchwave/src/torchwave/approximants/eob/published_waveform.py": "34a87406a13c44cccdbc2e57d2e797c858984f0e762c06abe28859cb7bbc449c",
+    "/Users/xangma/repos/torchwave/src/torchwave/approximants/eob/remnant.py": "e7690cd5df1bcde2f579954762116beb20db606dae809835b148dae73c4cb007",
+    "/Users/xangma/repos/torchwave/src/torchwave/approximants/eob/seobnrv4_amplitude22.py": "941a7e6c4a3e92dc7860b91076958b09aa9a934e6799c33936409a5d09178eca",
+    "/Users/xangma/repos/torchwave/src/torchwave/approximants/eob/seobnrv4_flux.py": "9395f930449651c6607de4aa780cfd75545d95ba67fe4b4d653e2852fef407a8",
+    "/Users/xangma/repos/torchwave/src/torchwave/approximants/eob/seobnrv4_hamiltonian.py": "5b1a5b877129e5235b8f92974a01ab450176e8e924d374ca0fc413334fad177f",
+    "/Users/xangma/repos/torchwave/src/torchwave/approximants/eob/seobnrv4_mode22.py": "4bb182b480b741877429f7a85c08d175fcf20ea9517540aaadaaef0ead199190",
+    "/Users/xangma/repos/torchwave/src/torchwave/approximants/kerr_qnm_table_convention.py": "c4c85d17b079306df73c74f4bb755b7f4256fbdf49fef6a85cd9810367d800f6",
+    "/Users/xangma/repos/torchwave/src/torchwave/constants.py": "1ae479e07b44a19d23b9a9eaed4b8b8b8bf38b4293717a91d321b59f2d1ac4e3"
+  },
+  "timestamp_utc": "2026-09-14T15:38:23.476718+00:00"
+}

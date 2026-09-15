@@ -1,0 +1,177 @@
+{
+  "diagnostic": "direct-quadratic replay cache-only PA pre-NQC comparison",
+  "grid_contract": {
+    "direct_pa_knots": 41,
+    "dt_M": 1.9826703782039414,
+    "end_M": 5226.3191169455895,
+    "exact_public_grid_reused": true,
+    "grid": "existing public PA-only uniform elapsed grid",
+    "grid_hash": "d055c405f29d06f6bdcc814438be12664c7134974bffe9e5ab0c34c71ba5fac3",
+    "no_extrapolation": true,
+    "samples": 2637,
+    "start_M": 0.0
+  },
+  "inputs": {
+    "direct_cache": {
+      "path": "/Users/xangma/repos/torchwave/docs/reviews/2026-09-13-parity-review/verification/teob-direct-quadratic-replay-clean/replay-native-output.npz",
+      "sha256": "fa5cca54adee93ae72b664d411c581cc1ea4246b97661323bf1553e3028268a4"
+    },
+    "direct_report": {
+      "path": "/Users/xangma/repos/torchwave/docs/reviews/2026-09-13-parity-review/verification/teob-direct-quadratic-replay-clean/replay-report.json",
+      "sha256": "96d5ed9db3c139e1ac52225cc1e4e77bf088caf52ee1640cfce24b41d96ddbe4"
+    },
+    "old_cache": {
+      "path": "/Users/xangma/repos/torchwave/docs/reviews/2026-09-13-parity-review/verification/teob-native-replay-public-clean/replay-native-output.npz",
+      "sha256": "bd7bc65a0da98334585069462b47b54dba0800bd6bbb092369a69267ecb9e611"
+    },
+    "old_report": {
+      "path": "/Users/xangma/repos/torchwave/docs/reviews/2026-09-13-parity-review/verification/teob-native-replay-public-clean/replay-report.json",
+      "sha256": "d21b5d41035d7753409ecdd5c4e39775c8fc714c3cdc46c8dbd6cb10e434efce"
+    },
+    "public_pa_arrays": {
+      "path": "/Users/xangma/repos/torchwave/docs/reviews/2026-09-13-parity-review/verification/teob-pa-exact-start-clean/arrays.npz",
+      "sha256": "f54e86714b073e48e91314eabf00f93eaa55f64bd66d1f29917ef8a3ffb1e686"
+    },
+    "public_pa_report": {
+      "path": "/Users/xangma/repos/torchwave/docs/reviews/2026-09-13-parity-review/verification/teob-pa-exact-start-clean/report.json",
+      "sha256": "7714853f4a288657d2676dd3bb0737ecb7b31c7dd11c3cbdd355ee653b1c1b4a"
+    }
+  },
+  "methods": {
+    "alignment": false,
+    "fits_or_tuning": false,
+    "full_native_ode": false,
+    "interpolation": "natural cubic amplitude and saved lifted phase separately",
+    "positive_projection_scale": 1.509279792662595e-20,
+    "public_call": false,
+    "runtime_edit": false
+  },
+  "metrics_on_public_pa_grid": {
+    "direct_pre_nqc_over_old_analytic_pre_nqc": {
+      "alignment": "none",
+      "amplitude_fractional": {
+        "count": 2637,
+        "max_abs": 3.881726118315498e-08,
+        "mean": -2.1367366903349824e-10,
+        "rms": 7.700221897446474e-09
+      },
+      "amplitude_relative_l2": 8.650336152500031e-09,
+      "phase_difference_radians": {
+        "count": 2637,
+        "max_abs": 4.508668496422336e-07,
+        "mean": 1.470572191549508e-07,
+        "rms": 1.9152297875409846e-07
+      },
+      "phase_final_radians": 2.5893797326608375e-08,
+      "phase_initial_radians": -1.9405382391458673e-11,
+      "raw_relative_l2": 2.0520488721492172e-07,
+      "samples": 2637
+    },
+    "direct_pre_nqc_over_public_pa_only": {
+      "alignment": "none",
+      "amplitude_fractional": {
+        "count": 2637,
+        "max_abs": 2.4168058776474766e-08,
+        "mean": -4.170561539862945e-09,
+        "rms": 6.241776887521213e-09
+      },
+      "amplitude_relative_l2": 6.767320052436922e-09,
+      "phase_difference_radians": {
+        "count": 2637,
+        "max_abs": 1.0297530935846883e-06,
+        "mean": 3.972375465812558e-07,
+        "rms": 4.94083363898903e-07
+      },
+      "phase_final_radians": 1.0297530935846883e-06,
+      "phase_initial_radians": -1.944316172522807e-09,
+      "raw_relative_l2": 5.316008635473778e-07,
+      "samples": 2637
+    },
+    "old_analytic_pre_nqc_over_public_pa_only": {
+      "alignment": "none",
+      "amplitude_fractional": {
+        "count": 2637,
+        "max_abs": 5.187808105322489e-08,
+        "mean": -3.95688781517094e-09,
+        "rms": 9.539175227540217e-09
+      },
+      "amplitude_relative_l2": 1.0768019727675111e-08,
+      "phase_difference_radians": {
+        "count": 2637,
+        "max_abs": 1.0038592962484407e-06,
+        "mean": 2.501803274264865e-07,
+        "rms": 3.1587914133734305e-07
+      },
+      "phase_final_radians": 1.0038592962484407e-06,
+      "phase_initial_radians": -1.924910808008285e-09,
+      "raw_relative_l2": 3.425709157938578e-07,
+      "samples": 2637
+    }
+  },
+  "nqc_isolation": {
+    "contract_basis": "coordinator supplied sanitized public binary behavior contract; no source inspected",
+    "direct_pa_prefix": "saved nqc_original amplitude/phase first 41 knots",
+    "limitation": "comparison uses cached public PA output and replay arrays only",
+    "public_pa_contract": "PA-only route stops at PA endpoint and skips BBH NQC/ringdown"
+  },
+  "pa_endpoint_and_phase_changes": {
+    "pa_phase_grid": {
+      "max_abs_delta": 7.5085409179109774e-06,
+      "rms_delta": 1.8009423267234974e-06
+    },
+    "pa_phase_radians": {
+      "delta": -1.2647077340943724e-06,
+      "max_abs_delta": 7.5085409179109774e-06,
+      "new": 80.70878106135851,
+      "old": 80.70878232606624
+    },
+    "pa_radius_M": {
+      "delta": 0.0,
+      "max_abs_delta": 0.0,
+      "new": 14.017491181997485,
+      "old": 14.017491181997485
+    },
+    "pa_time_M": {
+      "delta": -6.557601500389865e-05,
+      "max_abs_delta": 0.0003942420007660985,
+      "new": 5226.692483260543,
+      "old": 5226.692548836558
+    },
+    "pa_time_grid": {
+      "max_abs_delta": 0.0003942420007660985,
+      "rms_delta": 9.847802703262482e-05
+    }
+  },
+  "prefix_knot_changes": {
+    "nqc_original_amplitude": {
+      "delta": -3.287670968799006e-10,
+      "max_abs_delta": 8.0675641167538e-10,
+      "new": 0.10240699480866021,
+      "old": 0.1024069951374273
+    },
+    "nqc_original_phase_radians": {
+      "delta": -2.529651538907274e-06,
+      "max_abs_delta": 1.5016500327647009e-05,
+      "new": 158.48609932289784,
+      "old": 158.48610185254938
+    },
+    "nqc_original_time_M": {
+      "delta": -6.557601500389865e-05,
+      "max_abs_delta": 0.0003942420007660985,
+      "new": 5226.692483260543,
+      "old": 5226.692548836558
+    }
+  },
+  "run": {
+    "command": "scripts/diagnose_teob_direct_quadratic_pa_clean.py",
+    "cwd": "/Users/xangma/repos/torchwave",
+    "elapsed_seconds": 0.1603415830177255,
+    "host": "RONI2",
+    "platform": "macOS-26.6-arm64-arm-64bit-Mach-O"
+  },
+  "source_hashes": {
+    "numerical_attachment": "b042ed739c89ac53ec1829d005b404d86f16d18dc4f4dd710bd58000de5c4a93",
+    "script": "bcb67c23bca00d731cdf5ed91d5f59aada8ce0a4c619936e7d6c257826fccc6a"
+  },
+  "status": "complete"
+}

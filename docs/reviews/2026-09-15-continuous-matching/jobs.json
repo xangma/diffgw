@@ -1,0 +1,34 @@
+[
+  {
+    "name": "adapter-smoke",
+    "pid": 34968,
+    "process_group": 34968,
+    "host": "RONI2",
+    "cwd": "/Users/xangma/repos/torchwave",
+    "command": "/Users/xangma/miniconda3/envs/pycbcorig313/bin/python scripts/teob_continuous_adapter_smoke.py --output /Users/xangma/repos/torchwave/docs/reviews/2026-09-15-continuous-matching/adapter-smoke.json",
+    "log": "/Users/xangma/repos/torchwave/docs/reviews/2026-09-15-continuous-matching/adapter-smoke.log",
+    "started_unix": 1789486003.1827772,
+    "next_check_seconds": null,
+    "stop": "kill -TERM -- -34968",
+    "status": "passed",
+    "elapsed_seconds": 29.55217218399048
+  },
+  {
+    "name": "parity",
+    "pid": 34969,
+    "process_group": 34969,
+    "host": "RONI2",
+    "cwd": "/Users/xangma/repos/torchwave",
+    "command": "/Users/xangma/miniconda3/envs/pycbcorig313/bin/python scripts/run_snapshot_parity_gates.py --output-dir /Users/xangma/repos/torchwave/docs/reviews/2026-09-15-continuous-matching/parity",
+    "log": "/Users/xangma/repos/torchwave/docs/reviews/2026-09-15-continuous-matching/parity.log",
+    "started_unix": 1789486003.183779,
+    "next_check_seconds": null,
+    "stop": "kill -TERM -- -34969",
+    "status": "finished",
+    "returncodes": {
+      "catalog": 1,
+      "holdout": 1
+    },
+    "elapsed_seconds": 75.87699818611145
+  }
+]

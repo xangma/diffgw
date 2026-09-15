@@ -43,6 +43,37 @@ def test_qnm_fits_and_supported_modes():
     assert math.isclose(q43[2], -0.4271, rel_tol=1e-5)
 
 
+def test_restricted_pn_m_minus_one_modes_follow_published_spin_terms():
+    """Check the restricted 1.5PN H21/H32/H43 equations independently.
+
+    London et al. prescribe the 1.5PN spin-dependent truncation for the
+    |m|=l-1 modes; the coefficients below are the corresponding restricted
+    expressions in Mishra et al., Eqs. (12b), (12d), and (12g).
+    """
+    eta = torch.tensor(0.21, dtype=torch.float64)
+    delta = torch.tensor(0.37, dtype=torch.float64)
+    chi_s = torch.tensor(-0.18, dtype=torch.float64)
+    chi_a = torch.tensor(0.43, dtype=torch.float64)
+    v = torch.tensor(0.17, dtype=torch.float64)
+
+    h21 = h_hat_multipole(2, 1, v, delta, eta, chi_s, chi_a)
+    h32 = h_hat_multipole(3, 2, v, delta, eta, chi_s, chi_a)
+    h43 = h_hat_multipole(4, 3, v, delta, eta, chi_s, chi_a)
+    expected21 = -math.sqrt(2.0) / 3.0 * (
+        delta * v - 1.5 * (chi_a + delta * chi_s) * v**2
+    )
+    expected32 = -math.sqrt(5.0 / 7.0) / 3.0 * (
+        (1.0 - 3.0 * eta) * v**2 + 4.0 * eta * chi_s * v**3
+    )
+    expected43 = -0.75 * math.sqrt(3.0 / 35.0) * (
+        delta * (1.0 - 2.0 * eta) * v**3
+        + 2.5 * eta * (chi_a - delta * chi_s) * v**4
+    )
+    torch.testing.assert_close(h21, expected21, rtol=0.0, atol=0.0)
+    torch.testing.assert_close(h32, expected32, rtol=0.0, atol=0.0)
+    torch.testing.assert_close(h43, expected43, rtol=0.0, atol=0.0)
+
+
 def test_frequency_mappings_continuity():
     """Verify continuity of piecewise frequency mappings f_22^A and f_22^phi across f0 and f_RD."""
     model = IMRPhenomHM()
@@ -64,6 +95,8 @@ def test_frequency_mappings_continuity():
         f_rd_lm = f_rd_lm_geom / m_sec
 
         f0_amp = (0.018 / m_sec) * (f_rd_lm / f_rd_22)
+        # Exercise London's published higher-mode mapping constants directly;
+        # the runtime carrier convention is audited separately.
         f0_phi = (0.014 / m_sec) * (f_rd_lm / f_rd_22)
 
         # 1. Check f_22^A continuity across f0_amp
@@ -98,7 +131,7 @@ def test_frequency_mappings_continuity():
 
 
 def test_phase_continuity_across_boundaries():
-    """Verify continuity of phi_lm(f) across transition f0_phi and ringdown f_rd_lm."""
+    """Verify continuity of phi_lm(f) at the runtime transition and ringdown joins."""
     model = IMRPhenomHM()
     m1 = torch.tensor(35.0, dtype=torch.float64)
     m2 = torch.tensor(20.0, dtype=torch.float64)
@@ -115,7 +148,9 @@ def test_phase_continuity_across_boundaries():
             continue
         f_rd_lm_geom, _ = model.mode_qnm_frequencies(l, m, m1, m2, s1, s2)
         f_rd_lm = f_rd_lm_geom / m_sec
-        f0_phi = (0.014 / m_sec) * (f_rd_lm / f_rd_22)
+        # Match IMRPhenomHM's PhenomD carrier phase join, Mf=0.018.  This is
+        # distinct from London's separately stated higher-mode f_0^phi value.
+        f0_phi = (0.018 / m_sec) * (f_rd_lm / f_rd_22)
 
         # Sample tight window around f0_phi
         f_grid_f0 = torch.tensor([f0_phi - eps, f0_phi, f0_phi + eps], dtype=torch.float64)
@@ -150,7 +185,7 @@ def test_phase_continuity_across_boundaries():
 
 
 def test_phase_derivative_relation():
-    """Verify London et al. phase derivative relation d phi_lm / df ≈ phi_22'(f_22^phi)."""
+    """Verify the mapped phase derivative, including London's Eq. (9)."""
     model = IMRPhenomHM()
     m1 = torch.tensor(35.0, dtype=torch.float64)
     m2 = torch.tensor(20.0, dtype=torch.float64)
@@ -158,10 +193,13 @@ def test_phase_derivative_relation():
     s2 = torch.tensor(-0.1, dtype=torch.float64)
     m_sec = (m1 + m2) * MSUN_SEC
 
-    f_rd_22_geom, _ = model.mode_qnm_frequencies(2, 2, m1, m2, s1, s2)
+    f_rd_22_geom, f_damp_22 = model.mode_qnm_frequencies(2, 2, m1, m2, s1, s2)
     f_rd_22 = f_rd_22_geom / m_sec
-    f_rd_33_geom, _ = model.mode_qnm_frequencies(3, 3, m1, m2, s1, s2)
+    f_rd_33_geom, f_damp_33 = model.mode_qnm_frequencies(3, 3, m1, m2, s1, s2)
     f_rd_33 = f_rd_33_geom / m_sec
+    # Match the PhenomD carrier phase join used by this runtime (Mf=0.018).
+    # London et al.'s HM mapping paper separately states f_0^phi=0.014;
+    # see docs/reviews/2026-09-12-clean-room/pass-30-phenomhm-transition-audit.md.
     f0_phi = (0.018 / m_sec) * (f_rd_33 / f_rd_22)
 
     # Test point inside Region 2 (intermediate regime)
@@ -184,6 +222,26 @@ def test_phase_derivative_relation():
     f22_pts = torch.tensor([f22_mid - df, f22_mid + df], dtype=torch.float64)
     _, _, phi22_pts = model.base_22(f=f22_pts, mass1=m1, mass2=m2, chi1=s1, chi2=s2, phic=0.0, tc=0.0, return_phase=True)
     dphi22_df22 = (phi22_pts[1] - phi22_pts[0]) / (2.0 * df)
+
+    # Eq. (9) changes the arctangent derivative, and C1 matching subtracts
+    # that derivative change at D's merger-ringdown join.
+    eta = m1 * m2 / (m1 + m2).square()
+    chi_pn = 0.5 * (s1 + s2) * (1.0 - 76.0 * eta / 113.0) + (m1 - m2) / (m1 + m2) * 0.5 * (s1 - s2)
+    a4 = model.base_22.eval_table_v("alpha4", eta, chi_pn)
+    a5 = model.base_22.eval_table_v("alpha5", eta, chi_pn)
+    ratio = f_rd_22_geom / f_rd_33_geom
+    width = ratio * f_damp_33
+
+    def lorentzian_change(mf):
+        shift = mf - a5 * f_rd_22_geom
+        return a4 / eta * (
+            ratio * width / (width.square() + shift.square())
+            - f_damp_22 / (f_damp_22.square() + shift.square())
+        )
+
+    dphi22_df22 += m_sec * (
+        lorentzian_change(f22_mid * m_sec) - lorentzian_change(0.5 * f_rd_22_geom)
+    )
 
     rel_err = torch.abs(dphi33_df - dphi22_df22) / torch.abs(dphi22_df22)
     assert rel_err.item() < 1e-4, f"Phase derivative relation error {rel_err.item():.4e} exceeds 1e-4"
@@ -266,8 +324,8 @@ def test_body_exchange_parity():
     assert torch.allclose(hc_a, hc_b, rtol=1e-10, atol=1e-28)
 
 
-def test_equal_mass_unequal_spin_produces_nonzero_21_and_43():
-    """Equal-mass binaries with unequal spins must produce non-zero (2, 1) and (4, 3) modes."""
+def test_equal_mass_unequal_spin_odd_mode_contracts():
+    """Check the production London odd-mode contract and the public PN helper."""
     model = IMRPhenomHM()
     f = torch.linspace(25.0, 300.0, 80, dtype=torch.float64)
 
@@ -285,7 +343,10 @@ def test_equal_mass_unequal_spin_produces_nonzero_21_and_43():
             f"Mode {lm} should vanish for equal-mass equal-spin"
         )
 
-    # 2. Equal-mass, unequal-spin: (2, 1) and (4, 3) must be non-zero due to spin difference chi_a
+    # 2. Equal-mass, unequal-spin: the production London (2, 1) mode retains
+    # its displayed spin term.  The published production truncation keeps the
+    # (4, 3) leading antisymmetric-mass term, so it vanishes at equal masses;
+    # the public full PN helper still exposes its higher-order spin term.
     _, _, modes_spin = model(
         f=f,
         mass1=30.0,
@@ -297,7 +358,21 @@ def test_equal_mass_unequal_spin_produces_nonzero_21_and_43():
     h21 = modes_spin[(2, 1)]
     h43 = modes_spin[(4, 3)]
     assert torch.any(h21.abs() > 0.0), "Mode (2, 1) should not vanish when chi1 != chi2"
-    assert torch.any(h43.abs() > 0.0), "Mode (4, 3) should not vanish when chi1 != chi2"
+    assert torch.allclose(h43, torch.zeros_like(h43), atol=1e-28)
+
+    from torchwave.approximants.imrphenom_hm import h_hat_multipole
+
+    v = torch.full_like(f, 0.2)
+    h43_full_pn = h_hat_multipole(
+        4,
+        3,
+        v,
+        torch.zeros_like(v),
+        torch.full_like(v, 0.25),
+        torch.zeros_like(v),
+        torch.full_like(v, 0.5),
+    )
+    assert torch.any(h43_full_pn.abs() > 0.0)
     assert torch.max(h21.abs()).item() > 1e-26, "Mode (2, 1) amplitude unexpectedly small"
 
 
@@ -377,3 +452,66 @@ def test_batched_evaluation():
         )
         assert torch.allclose(hp_b[i], hp_s, rtol=1e-8, atol=1e-28)
         assert torch.allclose(hc_b[i], hc_s, rtol=1e-8, atol=1e-28)
+
+
+def test_scalar_masses_broadcast_over_batched_nonmass_parameters():
+    """Broadcast a shared mass pair across every batched physical parameter."""
+    model = IMRPhenomHM()
+    f = torch.linspace(30.0, 260.0, 36, dtype=torch.float64)
+    chi1 = torch.tensor([0.22, -0.31], dtype=torch.float64, requires_grad=True)
+    chi2 = torch.tensor([-0.11, 0.17], dtype=torch.float64, requires_grad=True)
+    distance = torch.tensor([120.0, 190.0], dtype=torch.float64, requires_grad=True)
+    inclination = torch.tensor([0.4, 1.1], dtype=torch.float64, requires_grad=True)
+    phic = torch.tensor([0.15, -0.35], dtype=torch.float64, requires_grad=True)
+    f_ref = torch.tensor([35.0, 55.0], dtype=torch.float64, requires_grad=True)
+
+    hp_batch, hc_batch = model(
+        f=f,
+        mass1=35.0,
+        mass2=21.0,
+        chi1=chi1,
+        chi2=chi2,
+        distance=distance,
+        inclination=inclination,
+        phic=phic,
+        f_ref=f_ref,
+    )
+    assert hp_batch.shape == (2, f.numel())
+    assert hc_batch.shape == hp_batch.shape
+    assert torch.isfinite(hp_batch.real).all() and torch.isfinite(hp_batch.imag).all()
+    assert torch.isfinite(hc_batch.real).all() and torch.isfinite(hc_batch.imag).all()
+
+    for i in range(2):
+        hp_row, hc_row = model(
+            f=f,
+            mass1=35.0,
+            mass2=21.0,
+            chi1=chi1[i],
+            chi2=chi2[i],
+            distance=distance[i],
+            inclination=inclination[i],
+            phic=phic[i],
+            f_ref=f_ref[i],
+        )
+        assert torch.allclose(hp_batch[i], hp_row, rtol=1e-9, atol=1e-28)
+        assert torch.allclose(hc_batch[i], hc_row, rtol=1e-9, atol=1e-28)
+
+    # A phase-sensitive loss exercises the broadcasted graph for all inputs.
+    loss = (
+        0.37 * hp_batch.real
+        + 0.19 * hp_batch.imag
+        - 0.23 * hc_batch.real
+        + 0.11 * hc_batch.imag
+    ).sum()
+    loss.backward()
+    for value, name in (
+        (chi1, "chi1"),
+        (chi2, "chi2"),
+        (distance, "distance"),
+        (inclination, "inclination"),
+        (phic, "phic"),
+        (f_ref, "f_ref"),
+    ):
+        assert value.grad is not None, f"Gradient for {name} is None"
+        assert torch.isfinite(value.grad).all(), f"Gradient for {name} is non-finite"
+        assert torch.any(value.grad != 0.0), f"Gradient for {name} is zero"

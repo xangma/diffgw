@@ -392,7 +392,9 @@ def test_parity_harness_negative_controls():
     from unittest.mock import patch
     from tests import parity_harness
 
-    case = copy.deepcopy(parity_harness.DETERMINISTIC_HELD_OUT_CASES[0])
+    # Corruption controls need a passing analytic fixture. Off-canonical model
+    # holdouts intentionally expose unresolved physical discrepancies.
+    case = parity_harness.get_canonical_analytic_cases()[0]
 
     # 1. Baseline passes strict gates
     baseline = parity_harness.run_oracle_comparison(case, strict=True)
@@ -443,6 +445,5 @@ def test_parity_harness_negative_controls():
     with patch("builtins.__import__", without_pycbc):
         res = parity_harness.run_oracle_comparison(case, strict=True)
         assert res["status"] == "FAILED", "Missing PyCBC in strict mode failed to trigger verification failure"
-
 
 

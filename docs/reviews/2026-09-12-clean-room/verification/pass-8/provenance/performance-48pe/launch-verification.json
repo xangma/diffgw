@@ -1,0 +1,16 @@
+{
+  "checked_utc": "2026-09-13T06:48:59.550627+00:00",
+  "host": "len",
+  "read_only_command": "systemctl --user show torchwave-nr-performance-48pe.service torchwave-nr-performance-48pe-segment-0000.service -p Id -p MainPID -p ActiveState -p SubState; docker inspect torchwave-nr-performance-48pe-segment-0000 --format '{{json .State}} {{json .HostConfig.NanoCpus}} {{json .HostConfig.CpusetCpus}}'; docker stats --no-stream --format '{{.Name}} {{.CPUPerc}} {{.MemUsage}}' torchwave-nr-performance-48pe-segment-0000",
+  "output": "MainPID=2599638\nId=torchwave-nr-performance-48pe.service\nActiveState=active\nSubState=running\n\nMainPID=2600014\nId=torchwave-nr-performance-48pe-segment-0000.service\nActiveState=active\nSubState=running\n{\"Dead\":false,\"Error\":\"\",\"ExitCode\":0,\"FinishedAt\":\"0001-01-01T00:00:00Z\",\"OOMKilled\":false,\"Paused\":false,\"Pid\":2600143,\"Restarting\":false,\"Running\":true,\"StartedAt\":\"2026-09-13T06:46:48.323369529Z\",\"Status\":\"running\"} 48000000000 \"0-47\"\ntorchwave-nr-performance-48pe-segment-0000 4596.96% 27.63GiB / 160GiB\n",
+  "helper_checks_passed": [
+    "Python compilation",
+    "accepted exit 0",
+    "accepted checkpoint exit 2",
+    "rejected exit 1",
+    "wall-clock watchdog termination",
+    "100 M finite HDF5 with embedded source archive",
+    "nonfinite Bondi output rejected",
+    "five local helper hashes match locked remote launch plan"
+  ]
+}

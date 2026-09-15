@@ -1,0 +1,396 @@
+{
+  "api_doc": "SimIMRPhenomXPCalculateModelParametersFromSourceFrame(REAL8 const m1_SI, REAL8 const m2_SI, REAL8 const f_ref, REAL8 const phiRef, REAL8 const incl, REAL8 const s1x, REAL8 const s1y, REAL8 const s1z, REAL8 const s2x, REAL8 const s2y, REAL8 const s2z, Dict lalParams) -> int",
+  "cases": [
+    {
+      "id": "IMRPhenomXP_diagnostic",
+      "options": {
+        "prec_version": 102,
+        "convention": 0,
+        "final_spin_mod": 0
+      },
+      "looked_up_options": {
+        "prec_version": 102,
+        "convention": 0,
+        "final_spin_mod": 0
+      },
+      "public_tuple_semantics": [
+        "chi1",
+        "chi2",
+        "chip",
+        "thetaJN",
+        "alpha0",
+        "phiJL0",
+        "zeta"
+      ],
+      "public": [
+        0.2,
+        -0.1,
+        0.22360679774997896,
+        0.6334148062350996,
+        2.7028511757432487,
+        -0.869836411419806,
+        -1.6188427392218585
+      ],
+      "clean_geometry": [
+        2.7028511757432483,
+        0.6334148062350995,
+        3.093546241162831,
+        0.869836411419806
+      ],
+      "differences": {
+        "alpha0_wrapped": -4.440892098500626e-16,
+        "thetaJN": -1.1102230246251565e-16,
+        "zeta_wrapped": -1.5707963267948966,
+        "phiJL0_vs_neg_phiJ_wrapped": 0.0
+      }
+    },
+    {
+      "id": "IMRPhenomXP_holdout",
+      "options": {
+        "prec_version": 102,
+        "convention": 0,
+        "final_spin_mod": 0
+      },
+      "looked_up_options": {
+        "prec_version": 102,
+        "convention": 0,
+        "final_spin_mod": 0
+      },
+      "public_tuple_semantics": [
+        "chi1",
+        "chi2",
+        "chip",
+        "thetaJN",
+        "alpha0",
+        "phiJL0",
+        "zeta"
+      ],
+      "public": [
+        -0.3,
+        0.2,
+        0.33541019662496846,
+        1.0376299806868576,
+        1.7324574719892707,
+        0.4046177902306334,
+        -1.8676614062347643
+      ],
+      "clean_geometry": [
+        1.7324574719892705,
+        1.0376299806868579,
+        2.844727574149925,
+        -0.4046177902306334
+      ],
+      "differences": {
+        "alpha0_wrapped": 0.0,
+        "thetaJN": 2.220446049250313e-16,
+        "zeta_wrapped": -1.5707963267948966,
+        "phiJL0_vs_neg_phiJ_wrapped": 0.0
+      }
+    },
+    {
+      "id": "IMRPhenomXP_independent_0",
+      "options": {
+        "prec_version": 102,
+        "convention": 0,
+        "final_spin_mod": 0
+      },
+      "looked_up_options": {
+        "prec_version": 102,
+        "convention": 0,
+        "final_spin_mod": 0
+      },
+      "public_tuple_semantics": [
+        "chi1",
+        "chi2",
+        "chip",
+        "thetaJN",
+        "alpha0",
+        "phiJL0",
+        "zeta"
+      ],
+      "public": [
+        0.4,
+        -0.2,
+        0.36055512754639896,
+        0.6042459282103786,
+        2.139084270120416,
+        -0.7328151017865067,
+        -1.777295079311536
+      ],
+      "clean_geometry": [
+        2.1390842701204154,
+        0.6042459282103784,
+        2.935093901073153,
+        0.7328151017865067
+      ],
+      "differences": {
+        "alpha0_wrapped": -4.440892098500626e-16,
+        "thetaJN": -2.220446049250313e-16,
+        "zeta_wrapped": -1.5707963267948966,
+        "phiJL0_vs_neg_phiJ_wrapped": 0.0
+      }
+    },
+    {
+      "id": "IMRPhenomXP_independent_1",
+      "options": {
+        "prec_version": 102,
+        "convention": 0,
+        "final_spin_mod": 0
+      },
+      "looked_up_options": {
+        "prec_version": 102,
+        "convention": 0,
+        "final_spin_mod": 0
+      },
+      "public_tuple_semantics": [
+        "chi1",
+        "chi2",
+        "chip",
+        "thetaJN",
+        "alpha0",
+        "phiJL0",
+        "zeta"
+      ],
+      "public": [
+        -0.4,
+        0.2,
+        0.26925824035672524,
+        0.7548946688044783,
+        0.30612979796727097,
+        1.1254952829072107,
+        -1.7411807465838736
+      ],
+      "clean_geometry": [
+        0.30612979796727086,
+        0.7548946688044786,
+        2.9712082338008163,
+        -1.1254952829072107
+      ],
+      "differences": {
+        "alpha0_wrapped": 0.0,
+        "thetaJN": 3.3306690738754696e-16,
+        "zeta_wrapped": -1.5707963267948966,
+        "phiJL0_vs_neg_phiJ_wrapped": 0.0
+      }
+    },
+    {
+      "id": "IMRPhenomXP_independent_2",
+      "options": {
+        "prec_version": 102,
+        "convention": 0,
+        "final_spin_mod": 0
+      },
+      "looked_up_options": {
+        "prec_version": 102,
+        "convention": 0,
+        "final_spin_mod": 0
+      },
+      "public_tuple_semantics": [
+        "chi1",
+        "chi2",
+        "chip",
+        "thetaJN",
+        "alpha0",
+        "phiJL0",
+        "zeta"
+      ],
+      "public": [
+        0.1,
+        0.25,
+        0.360555127546399,
+        0.7883975864671283,
+        -2.413629561866423,
+        -2.16612778935134,
+        -1.3606255458355727
+      ],
+      "clean_geometry": [
+        -2.4136295618664225,
+        0.7883975864671284,
+        -2.9314218726304695,
+        2.16612778935134
+      ],
+      "differences": {
+        "alpha0_wrapped": 4.440892098500626e-16,
+        "thetaJN": 1.1102230246251565e-16,
+        "zeta_wrapped": -1.5707963267948968,
+        "phiJL0_vs_neg_phiJ_wrapped": 0.0
+      }
+    },
+    {
+      "id": "IMRPhenomXP_independent_3",
+      "options": {
+        "prec_version": 102,
+        "convention": 0,
+        "final_spin_mod": 0
+      },
+      "looked_up_options": {
+        "prec_version": 102,
+        "convention": 0,
+        "final_spin_mod": 0
+      },
+      "public_tuple_semantics": [
+        "chi1",
+        "chi2",
+        "chip",
+        "thetaJN",
+        "alpha0",
+        "phiJL0",
+        "zeta"
+      ],
+      "public": [
+        0.6,
+        -0.4,
+        0.13781836921657725,
+        0.4263409688449585,
+        -0.07576749625167889,
+        1.6512673380603575,
+        -1.565661104943781
+      ],
+      "clean_geometry": [
+        -0.07576749625167939,
+        0.42634096884495715,
+        -3.1364574317386777,
+        -1.6512673380603575
+      ],
+      "differences": {
+        "alpha0_wrapped": -4.440892098500626e-16,
+        "thetaJN": -1.3322676295501878e-15,
+        "zeta_wrapped": -1.5707963267948968,
+        "phiJL0_vs_neg_phiJ_wrapped": 0.0
+      }
+    },
+    {
+      "id": "IMRPhenomXP_aligned_0",
+      "options": {
+        "prec_version": 102,
+        "convention": 0,
+        "final_spin_mod": 0
+      },
+      "looked_up_options": {
+        "prec_version": 102,
+        "convention": 0,
+        "final_spin_mod": 0
+      },
+      "public_tuple_semantics": [
+        "chi1",
+        "chi2",
+        "chip",
+        "thetaJN",
+        "alpha0",
+        "phiJL0",
+        "zeta"
+      ],
+      "public": [
+        0.2,
+        -0.1,
+        0.0,
+        0.0,
+        3.141592653589793,
+        -1.2707963267948965,
+        -1.5707963267948966
+      ],
+      "clean_geometry": [
+        0.0,
+        0.0,
+        0.0,
+        1.2707963267948965
+      ],
+      "differences": {
+        "alpha0_wrapped": -3.141592653589793,
+        "thetaJN": 0.0,
+        "zeta_wrapped": 1.5707963267948966,
+        "phiJL0_vs_neg_phiJ_wrapped": 0.0
+      }
+    },
+    {
+      "id": "IMRPhenomXP_aligned_1",
+      "options": {
+        "prec_version": 102,
+        "convention": 0,
+        "final_spin_mod": 0
+      },
+      "looked_up_options": {
+        "prec_version": 102,
+        "convention": 0,
+        "final_spin_mod": 0
+      },
+      "public_tuple_semantics": [
+        "chi1",
+        "chi2",
+        "chip",
+        "thetaJN",
+        "alpha0",
+        "phiJL0",
+        "zeta"
+      ],
+      "public": [
+        0.2,
+        -0.1,
+        0.0,
+        0.7,
+        3.141592653589793,
+        -1.2707963267948965,
+        -1.5707963267948966
+      ],
+      "clean_geometry": [
+        3.141592653589793,
+        0.7,
+        3.141592653589793,
+        1.2707963267948965
+      ],
+      "differences": {
+        "alpha0_wrapped": 0.0,
+        "thetaJN": 0.0,
+        "zeta_wrapped": -1.5707963267948966,
+        "phiJL0_vs_neg_phiJ_wrapped": 0.0
+      }
+    },
+    {
+      "id": "IMRPhenomXP_aligned_2",
+      "options": {
+        "prec_version": 102,
+        "convention": 0,
+        "final_spin_mod": 0
+      },
+      "looked_up_options": {
+        "prec_version": 102,
+        "convention": 0,
+        "final_spin_mod": 0
+      },
+      "public_tuple_semantics": [
+        "chi1",
+        "chi2",
+        "chip",
+        "thetaJN",
+        "alpha0",
+        "phiJL0",
+        "zeta"
+      ],
+      "public": [
+        0.2,
+        -0.1,
+        0.0,
+        1.1,
+        3.141592653589793,
+        -1.2707963267948965,
+        -1.5707963267948966
+      ],
+      "clean_geometry": [
+        3.141592653589793,
+        1.1,
+        3.141592653589793,
+        1.2707963267948965
+      ],
+      "differences": {
+        "alpha0_wrapped": 0.0,
+        "thetaJN": 0.0,
+        "zeta_wrapped": -1.5707963267948966,
+        "phiJL0_vs_neg_phiJ_wrapped": 0.0
+      }
+    }
+  ],
+  "sha256": {
+    "src/torchwave/approximants/precession_source_frame_clean.py": "6ff95ee5d9ff9af8d67feba09c0d7fac23badf1f38391689f0b16c1354b6bf64",
+    "/Users/xangma/repos/torchwave/scripts/compare_precession_source_frame_public.py": "d722cbee0ad2568411d5804d5e9674a88b107e774ceb2b9fdb340ed9cadafd0b"
+  }
+}

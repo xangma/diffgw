@@ -27,7 +27,7 @@ from torchwave.conversions import (
     tidal_combinations,
 )
 from torchwave.approximants.imrphenomd import IMRPhenomD
-from torchwave.approximants.nrtidal_unrounded_fits import (
+from torchwave.approximants.nrtidal_published_fits import (
     NRTIDAL_V1_PADÉ_COEFFS,
     NRTIDAL_V2_PHASE_COEFFS,
     NRTIDAL_V2_AMP_COEFFS,
@@ -40,7 +40,7 @@ NRTIDAL_V1_COEFFS = {
     "n32": NRTIDAL_V1_PADÉ_COEFFS["n_3over2"],
     "n2": NRTIDAL_V1_PADÉ_COEFFS["n_2"],
     "n52": NRTIDAL_V1_PADÉ_COEFFS["n_5over2"],
-    "d1": NRTIDAL_V1_PADÉ_COEFFS["d_1"],  # -17.428 - 2.496 = -19.924 (LAL exact literal)
+    "d1": NRTIDAL_V1_PADÉ_COEFFS["d_1"],
     "d32": NRTIDAL_V1_PADÉ_COEFFS["d_3over2"],
 }
 

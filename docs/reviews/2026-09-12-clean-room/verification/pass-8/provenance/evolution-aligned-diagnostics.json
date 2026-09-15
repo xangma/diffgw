@@ -1,0 +1,36 @@
+{
+  "run": "evolution-aligned",
+  "source_host": "len",
+  "source_archive": "/home/xangma/simulations/torchwave-nr/2026-09-12-pilot/archives/evolution-aligned-20260912T200815Z",
+  "observed_facts": {
+    "service": {"active_state": "failed", "exit_status": 1, "expected_exit": 2},
+    "metrics": {"wall_seconds": 1428.6392470370047, "ended_utc": "2026-09-12T20:08:15.531940+00:00", "final_logged_time": 0.149386, "oom": false},
+    "closed_h5": {
+      "norms_times": [0.0, 0.1],
+      "norms_at_0_1": {"number_of_points": 1196030.0, "volume": 972638000.0, "lapse_l2": 0.931183, "gauge_constraint_l2": 0.000132936, "three_index_constraint_l2": 0.0012559},
+      "timesteps_times": [0.0, 0.1],
+      "timesteps_at_0_1": {"minimum": 9.76563e-05, "maximum": 0.025, "minimum_walltime": 0.000765957, "maximum_walltime": 798.519},
+      "horizon_center_last_time": 0.147612,
+      "expansion_last_time": 0.147612,
+      "size_a_time_range": [0.001, 0.149033],
+      "size_b_time_range": [0.001, 0.149386]
+    },
+    "size_b_near_failure": {
+      "time": 0.149386,
+      "target_char_speed": 0.0229192,
+      "min_char_speed": -0.00114947,
+      "min_comoving_char_speed": -0.0161213,
+      "char_speed_crossing_time": 1.74709e-06,
+      "comoving_char_speed_crossing_time": 2.8995e-06,
+      "delta_r_crossing_time": 1.85804,
+      "suggested_timescale": 1.74709e-06,
+      "damping_time": 0.0001
+    },
+    "error": {"component": "DgElementArray", "element": "B14,(L2I3,L2I3,L2I0)", "direction": "-2", "condition": "DemandOutgoingCharSpeeds", "speed_index": 3, "incoming_speed": -0.000358827}
+  },
+  "inference": {
+    "failure_location": "Object B excision boundary; the input assigns DemandOutgoingCharSpeeds to ObjectB Interior.ExciseWithBoundaryCondition.",
+    "interpretation": "The immediate failure is a SizeB/control characteristic-speed crossing. Lev -2 and ObjectBCube initial grid points 5,5,4 may reduce margin, but no norm, NaN, OOM, or outer-boundary failure was observed.",
+    "next_smoke_bound": "After controlled-ID P9, use a finite Lev0 run with at least 16 PEs, preserving boundary conditions and tolerances; do not auto-continue or loosen them."
+  }
+}

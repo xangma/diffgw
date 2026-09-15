@@ -1,0 +1,73 @@
+{
+  "recovery": "artifacts loaded after verifier report crash; no integration rerun",
+  "host": "RONI2",
+  "cwd": "/Users/xangma/repos/torchwave",
+  "artifacts": [
+    "dt-0.125.pt",
+    "dt-0.0625.pt"
+  ],
+  "source_hash_record": "unavailable for crashed startup report; current hashes recorded below",
+  "comparison": {
+    "relative_complex_l2": [
+      6.907160815931303e-08,
+      1.956908811720649e-08
+    ],
+    "peak_time_difference": [
+      3.1882905204838607e-09,
+      7.132825885491911e-09
+    ]
+  },
+  "tolerances": {
+    "strict": 1e-07,
+    "loose": 1e-06,
+    "strict_pass": true,
+    "loose_pass": true
+  },
+  "rows": {
+    "dt-0.125": {
+      "match_time": [
+        310.4268000044598,
+        329.98231434765444
+      ],
+      "peak_time": [
+        314.79917953853976,
+        334.84148497026666
+      ]
+    },
+    "dt-0.0625": {
+      "match_time": [
+        310.4268000012715,
+        329.98231435478726
+      ],
+      "peak_time": [
+        314.79917953535147,
+        334.8414849773995
+      ]
+    }
+  },
+  "current_source_sha256": {
+    "src/torchwave/approximants/eob/__init__.py": "2a2c62a4ae15232f2590f676d7d2a8d4b35a9d35b7bd8876ea9b22f6d5578748",
+    "src/torchwave/approximants/eob/attachment.py": "097165aa7a6dcf87c5458fb26eade17a9c6bdf43c8e001c0929c1eb6ea2975e7",
+    "src/torchwave/approximants/eob/events.py": "c1ae1182e4c2f9cf5f8a2857ea5d73802dbbb68b59739709849f973503bdfd5d",
+    "src/torchwave/approximants/eob/factorized_modes.py": "d4b10cbcbbecc4de84329a13cdca43d90d4fa5aa168248fc2e874211d29f8315",
+    "src/torchwave/approximants/eob/hamiltonian.py": "d26a87ded2a197a000704b77b075cdc72ee2315741bdacc29fb25f912158a441",
+    "src/torchwave/approximants/eob/initial_conditions.py": "68363208874bfaf39dad5d5668e5f128553144b4db31f64f0283278ed710458f",
+    "src/torchwave/approximants/eob/integrator.py": "a036f6b7580450a847bc1d56ebf745de6cdb5c2ee397d31cf1014d483eebe26b",
+    "src/torchwave/approximants/eob/merger_ringdown.py": "0db678173690ce0f7918c6fef2d9cb4864bf55a8dae3a6f80a47d0563ac7237d",
+    "src/torchwave/approximants/eob/nqc.py": "f023b84fc0a48e59feb6b543d234635df965e04ee9aff05672ea3ff984d0cf85",
+    "src/torchwave/approximants/eob/published_waveform.py": "81e36db4bb930be0f32772314f7e6242d828ca540579160b745cdf0c49e39ddf",
+    "src/torchwave/approximants/eob/radiation_reaction.py": "dfb8853fc929145c3d61b7af49c16426560a12dc14ba9e664659af4a4449834d",
+    "src/torchwave/approximants/eob/remnant.py": "e7690cd5df1bcde2f579954762116beb20db606dae809835b148dae73c4cb007",
+    "src/torchwave/approximants/eob/seobnrv4_amplitude22.py": "f51cf2a03f1a3567293fbac75a341701448275bc45da1fa97af80d017890d2a5",
+    "src/torchwave/approximants/eob/seobnrv4_flux.py": "50af1727e28828969d84cac5e984189c529e205ad9fb96d22c11037103aca3ec",
+    "src/torchwave/approximants/eob/seobnrv4_hamiltonian.py": "5b1a5b877129e5235b8f92974a01ab450176e8e924d374ca0fc413334fad177f",
+    "src/torchwave/approximants/eob/seobnrv4_mode22.py": "d1fa659a2604732ae74e8c7e9736b89371655f3b06a0d04bed6a1162500203f9",
+    "src/torchwave/approximants/eob/teob_postmerger.py": "f88778c12e2aa2174212a580801cb3702c00713bf34ac1ba545987a0524cc565",
+    "src/torchwave/approximants/eob/teob_trajectory.py": "6728419dd6b7c6f2a7a340f017f52b5dd54bc399d212884f9975643cd58db785",
+    "src/torchwave/approximants/eob/teob_uib2016_postmerger.py": "2a560838c801820540a9ec585a8291b7ad316ab6765a928bf06de882681db3a5",
+    "src/torchwave/approximants/eob/teob_uib2016_remnant.py": "9ea727ec726f82c62c2ad6e399ee084e02daf275c145a3503e0666271010e755",
+    "src/torchwave/approximants/eob/waveform.py": "1e9d61e31284c667ca0b27877646ba5553d9dbd3ebbe72d1090d9917acc4bc79",
+    "src/torchwave/approximants/kerr_qnm_generated.py": "3361bbf72224e93ce445169d5bb66e95ca27b5bdf6475d6de6ff7514bdf0283f",
+    "scripts/verify_eob_published_convergence.py": "9ff70d061e0cf802bce8fa73e696c4d8eec50ef14544edb95fa8fc65532f5b6d"
+  }
+}

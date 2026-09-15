@@ -1,0 +1,26 @@
+{
+  "started_utc": "2026-09-13T06:35:14.208279+00:00",
+  "command": [
+    "python",
+    "/campaign/scripts/prepare-performance-evolution.py",
+    "--num-procs",
+    "48"
+  ],
+  "cwd": "/campaign/preparation/performance-48pe",
+  "expected_exit_code": 0,
+  "timeout_seconds": 180.0,
+  "output_bytes_before": 0,
+  "cpu_stat_before": "usage_usec 83714\nuser_usec 52321\nsystem_usec 31392\ncore_sched.force_idle_usec 0\nnr_periods 1\nnr_throttled 0\nthrottled_usec 0\nnr_bursts 0\nburst_usec 0",
+  "container_child_pid": 7,
+  "ended_utc": "2026-09-13T06:35:15.474788+00:00",
+  "wall_seconds": 1.2667052980978042,
+  "exit_code": 0,
+  "watchdog_reason": null,
+  "accepted_exit": true,
+  "child_max_rss_kib": 96392,
+  "cgroup_memory_peak_bytes": "57978880",
+  "cgroup_memory_events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0",
+  "cpu_stat_after": "usage_usec 1173268\nuser_usec 781504\nsystem_usec 391764\ncore_sched.force_idle_usec 0\nnr_periods 14\nnr_throttled 4\nthrottled_usec 58538\nnr_bursts 0\nburst_usec 0",
+  "output_bytes_after": 0,
+  "filesystem_free_bytes_after": 308179013632
+}

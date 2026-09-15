@@ -330,6 +330,46 @@ class XASParameterFits:
         return (m1**2 * chi1 + m2**2 * chi2) + (2.0 * math.sqrt(3.0) * eta + 20.0830030082033 * eta**2 - 12.333573402277912 * eta**3)/(1.0 + 7.2388440419467335 * eta) + 0.3223660562764661 * s_delta * eta**2 * (1.0 + 9.332575956437443 * eta) * (chi1 - chi2) - 0.059808322561702126 * eta**3 * (chi1 - chi2)**2 + (2.3170397514509933 * s_delta * (1.0 - 3.2624649875884852 * eta) * eta**3 * (chi1 - chi2) * ratio_s) + (((-0.8561951310209386 * eta - 0.09939065676370885 * eta**2 + 1.668810429851045 * eta**3) * ratio_s + (0.5881660363307388 * eta - 2.149269067519131 * eta**2 + 3.4768263932898678 * eta**3) * ratio_s**2 + (0.142443244743048 * eta - 0.9598353840147513 * eta**2 + 1.9595643107593743 * eta**3) * ratio_s**3)/(1.0 + (-0.9142232693081653 + 2.3191363426522633 * eta - 9.710576749140989 * eta**3) * ratio_s))
 
     @staticmethod
+    def fit_final_spin_nnlo(
+        eta: torch.Tensor,
+        chi1: torch.Tensor,
+        chi2: torch.Tensor,
+        chi_p: torch.Tensor,
+    ) -> torch.Tensor:
+        """NNLO remnant from the orthogonal-spin prescription.
+
+        Pratten et al. Eq. (4.17), with the Pv2 mass scaling described in
+        arXiv:1809.10113. Printed Eq. (4.25) has an apparent extra square;
+        see the source audit in pass-10-nnlo-remnant.md.
+        """
+        a_parallel = XASParameterFits.fit_final_spin(eta, chi1, chi2)
+        mass_discriminant = torch.clamp(1.0 - 4.0 * eta, min=0.0)
+        safe_discriminant = torch.where(
+            mass_discriminant > 0.0, mass_discriminant, torch.ones_like(mass_discriminant)
+        )
+        sqrt_discriminant = torch.where(
+            mass_discriminant > 0.0,
+            torch.sqrt(safe_discriminant),
+            torch.zeros_like(mass_discriminant),
+        )
+        m1_norm = 0.5 * (1.0 + sqrt_discriminant)
+        s_perp = chi_p * m1_norm.square()
+        zero_parallel = (a_parallel == 0.0) & (chi_p != 0.0)
+        if bool(torch.any(zero_parallel)):
+            raise ValueError(
+                "NNLO precessing final-spin sign is undefined when "
+                "a_parallel_fin is zero and chi_p is nonzero."
+            )
+        # Use a vector norm instead of safe_sqrt: the inherited helper has a
+        # 1e-12 dead zone that would erase physically small NNLO remnants.
+        magnitude = torch.linalg.vector_norm(
+            torch.stack((a_parallel, s_perp), dim=-1), dim=-1
+        )
+        signed = torch.where(a_parallel < 0.0, -magnitude, magnitude)
+        # Eq. (4.25) reduces exactly to the aligned fit at chi_p == 0.
+        return torch.where(chi_p == 0.0, a_parallel, signed)
+
+    @staticmethod
     def fit_erad(eta: torch.Tensor, chi1: torch.Tensor, chi2: torch.Tensor) -> torch.Tensor:
         delta, m1, m2, s_tot_r, chi_pn_hat = compute_spin_variables(eta, chi1, chi2)
         S = s_tot_r
@@ -739,6 +779,9 @@ class IMRPhenomXAS(nn.Module):
         f_eval = as_tensor(freqs, device=device, dtype=dtype)
         m1 = as_tensor(mass1, device=device, dtype=dtype)
         m2 = as_tensor(mass2, device=device, dtype=dtype)
+        final_spin_override = kwargs.pop("_final_spin_override", None)
+        if final_spin_override is not None:
+            final_spin_override = as_tensor(final_spin_override, device=device, dtype=dtype)
 
         s1z_arg = kwargs.pop("spin1z", None) if spin1z is None else spin1z
         s2z_arg = kwargs.pop("spin2z", None) if spin2z is None else spin2z
@@ -785,11 +828,15 @@ class IMRPhenomXAS(nn.Module):
         # Batching alignment
         is_batched = any(
             t.dim() > 0 for t in (m1, m2, s1z, s2z, dist, inc, phi0, t0)
-        )
+        ) or (final_spin_override is not None and final_spin_override.dim() > 0)
         if is_batched:
-            m1, m2, s1z, s2z, dist, inc, phi0, t0 = torch.broadcast_tensors(
-                m1, m2, s1z, s2z, dist, inc, phi0, t0
-            )
+            broadcast_args = (m1, m2, s1z, s2z, dist, inc, phi0, t0)
+            if final_spin_override is not None:
+                broadcast_args += (final_spin_override,)
+            broadcasted = torch.broadcast_tensors(*broadcast_args)
+            m1, m2, s1z, s2z, dist, inc, phi0, t0 = broadcasted[:8]
+            if final_spin_override is not None:
+                final_spin_override = broadcasted[8]
 
         # Canonical ordering: m1 >= m2, swap spins if needed
         swap_mask = m1 < m2
@@ -808,7 +855,12 @@ class IMRPhenomXAS(nn.Module):
 
         # 1. Evaluate XAS Parameter Fits
         f_meco = XASParameterFits.fit_f_meco(eta, s1_eff, s2_eff)
-        final_spin = XASParameterFits.fit_final_spin(eta, s1_eff, s2_eff)
+        # The aligned-spin remnant controls the ISCO and transition fits.  A
+        # precessing caller may provide an explicit remnant only for the Kerr
+        # ringdown frequencies; retain the aligned fit for the carrier's
+        # inspiral/ISCO quantities.
+        aligned_final_spin = XASParameterFits.fit_final_spin(eta, s1_eff, s2_eff)
+        final_spin = aligned_final_spin if final_spin_override is None else final_spin_override
         erad = XASParameterFits.fit_erad(eta, s1_eff, s2_eff)
         m_final = torch.clamp(1.0 - erad, min=0.1)
 
@@ -816,7 +868,7 @@ class IMRPhenomXAS(nn.Module):
         f_damp = XASParameterFits.fit_im_omega(final_spin) / m_final
 
         # Kerr ISCO frequency
-        chi_fit = torch.clamp(final_spin, -0.999, 0.999)
+        chi_fit = torch.clamp(aligned_final_spin, -0.999, 0.999)
         z1 = 1.0 + (1.0 - chi_fit**2) ** (1.0 / 3.0) * (
             torch.sign(1.0 + chi_fit) * torch.abs(1.0 + chi_fit) ** (1.0 / 3.0)
             + torch.sign(1.0 - chi_fit) * torch.abs(1.0 - chi_fit) ** (1.0 / 3.0)
@@ -1373,5 +1425,3 @@ class IMRPhenomXAS(nn.Module):
 
     def __call__(self, *args, **kwargs):
         return self.forward(*args, **kwargs)
-
-

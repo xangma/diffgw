@@ -1,8 +1,8 @@
-"""Authoritative unrounded IEEE FP64 fitting coefficients for IMRPhenomD.
+"""Inherited unrounded IEEE FP64 fitting coefficients for IMRPhenomD.
 
-Strict Clean-Room Reference Data Extraction for TorchWave.
-Maintains pure MIT license integrity.
-Contains purely mathematical constants and polynomial fits from the literature:
+The independent source and licensing of these extra digits remain under review.
+The literature references below identify the model, but do not establish the
+provenance of this unrounded representation:
 - Khan, Husa, Hannam, Ohme, Pürrer, Forteza, Bohé (2016), Phys. Rev. D 93, 044007
   [arXiv:1508.07253], Table V and Equations (20, 21, 31).
 - Husa, Khan, Hannam, Pürrer, Ohme, Forteza, Bohé (2016), Phys. Rev. D 93, 044006

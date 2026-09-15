@@ -1,0 +1,28 @@
+{
+  "primary_source": "https://arxiv.org/pdf/1212.4357v2 Eq(23)",
+  "math": "2*khat*log(r0_new/r0_old)=-khat; khat=m*Hreal*Omega",
+  "probe": "30+20Msun PA-only r0=19.999999999999996 default spin route, dt=.5M, initial-time samples; no optimization",
+  "rows": [
+    {
+      "candidate": "baseline_r0_2M",
+      "raw_relative_l2": 0.028613933872492284,
+      "amplitude_relative_l2": 9.793415094141303e-07,
+      "phase_rms": 0.027809404043806604,
+      "max_abs_phase": 0.03737554742895114,
+      "initial_phase_error": 0.022328357755165947,
+      "final_phase_error": 0.03737554742895114
+    },
+    {
+      "candidate": "published_r0_2M_over_sqrt_e",
+      "raw_relative_l2": 9.961661384781222e-05,
+      "amplitude_relative_l2": 9.79341509407e-07,
+      "phase_rms": 8.644619346053509e-05,
+      "max_abs_phase": 0.0002689172040957596,
+      "initial_phase_error": -1.2548841006458564e-09,
+      "final_phase_error": -0.0002689172040957596
+    }
+  ],
+  "runtime_edited": false,
+  "cache": "/tmp/torchwave-teob-pa-public-gauge.npz",
+  "cache_sha256": "c81bcb89086833fa6c44fc44a26eb54ee93adc2ff14fca5976944aaae54c8fb0"
+}

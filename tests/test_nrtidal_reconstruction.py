@@ -50,7 +50,8 @@ def test_additive_amplitude_polarization_projection(inclination):
     xa, xb = 1.4 / 2.7, 1.3 / 2.7
     kappa = 3 / 13 * ((xa + 12 * xb) * xa**4 * 350 + (xb + 12 * xa) * xb**4 * 420)
     x = (PI * 2.7 * MSUN_SEC * f) ** (2 / 3)
-    c_amp = 13477.8073677
+    # Dietrich et al. (2019), arXiv:1905.06011 Eq. 24 prints d=13477.8.
+    c_amp = 13477.8
     at = (2.7 * MSUN_SEC)**2 / (2.0 * 80 * MPC_SI / C_SI) * (-9 * kappa * x**(13/4) * (1 + 449/108 * x + 22672/9 * x**2.89) / (1 + c_amp * x**4))
     plus = .5 * (1 + math.cos(inclination)**2)
     torch.testing.assert_close((hp.abs() - hp0.abs()) / 1e-23, plus * at / 1e-23, rtol=1e-10, atol=1e-13)

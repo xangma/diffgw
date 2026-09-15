@@ -5,6 +5,7 @@ Strict Clean-Room Implementation based exclusively on published literature:
 - Arun, Buonanno, Faye, Ochsner (2009), Phys. Rev. D 79, 104023 (arXiv:0810.5336)
 - Blanchet (2014), Living Rev. Relativity 17, 2 (arXiv:1310.1528)
 - García-Quirós et al. (2020), Phys. Rev. D 102, 064002 (arXiv:2001.10914)
+- Mezzasoma & Yunes (2022), Phys. Rev. D 106, 024026 (arXiv:2203.08939)
 - Bardeen, Press, Teukolsky (1972), Astrophys. J. 178, 347
 """
 
@@ -71,10 +72,47 @@ def _swsh_projection_coefficients(
         ylm = -c_norm * sin_i * (one_plus_cos * one_plus_cos) * exp_pos
         yl_negm = c_norm * sin_i * (one_minus_cos * one_minus_cos) * exp_neg
         sign_l = -1.0
+    elif l == 3 and m == 2:
+        # {}_{-2}Y_{3,2} = sqrt(7/(64*pi)) (1+cos(iota))^2
+        #                         * (3*cos(iota)-2) exp(2 i phi0).
+        c_norm = math.sqrt(7.0 / (64.0 * math.pi))
+        ylm = c_norm * (one_plus_cos * one_plus_cos) * (3.0 * cos_i - 2.0) * exp_pos
+        yl_negm = c_norm * (one_minus_cos * one_minus_cos) * (3.0 * cos_i + 2.0) * exp_neg
+        sign_l = -1.0
+    elif l == 3 and m == 1:
+        # {}_{-2}Y_{3,1} = sqrt(70/(256*pi)) sin(iota) (1+cos(iota))
+        #                         * (3*cos(iota)-1) exp(i phi0).
+        # The negative-m partner follows from the same standard Wigner-d
+        # convention used by the lower multipoles above.
+        c_norm = math.sqrt(70.0 / (256.0 * math.pi))
+        ylm = c_norm * sin_i * one_plus_cos * (3.0 * cos_i - 1.0) * exp_pos
+        yl_negm = c_norm * sin_i * one_minus_cos * (1.0 + 3.0 * cos_i) * exp_neg
+        sign_l = -1.0
     elif l == 4 and m == 4:
         c_norm = math.sqrt(63.0 / (256.0 * math.pi))
         ylm = c_norm * (sin_i * sin_i) * (one_plus_cos * one_plus_cos) * exp_pos
         yl_negm = c_norm * (sin_i * sin_i) * (one_minus_cos * one_minus_cos) * exp_neg
+        sign_l = 1.0
+    elif l == 4 and m == 2:
+        # {}_{-2}Y_{4,2} = 3/(8*sqrt(pi)) (1+cos(iota))^2
+        #                         * (7*cos(iota)^2 - 7*cos(iota) + 1) exp(2 i phi0)
+        # and its negative-m partner.  These are the standard s=-2
+        # spin-weighted spherical harmonics in the same convention as the
+        # lower multipoles above.
+        c_norm = 3.0 / (8.0 * math.sqrt(math.pi))
+        ylm = c_norm * (one_plus_cos * one_plus_cos) * (
+            7.0 * cos_i * cos_i - 7.0 * cos_i + 1.0
+        ) * exp_pos
+        yl_negm = c_norm * (one_minus_cos * one_minus_cos) * (
+            7.0 * cos_i * cos_i + 7.0 * cos_i + 1.0
+        ) * exp_neg
+        sign_l = 1.0
+    elif l == 4 and m == 3:
+        # {}_{-2}Y_{4,3} = 3*sqrt(14/(256*pi)) sin(iota) (1+cos(iota))^2
+        #                         * (1-2*cos(iota)) exp(3 i phi0).
+        c_norm = 3.0 * math.sqrt(14.0 / (256.0 * math.pi))
+        ylm = c_norm * sin_i * (one_plus_cos * one_plus_cos) * (1.0 - 2.0 * cos_i) * exp_pos
+        yl_negm = c_norm * sin_i * (one_minus_cos * one_minus_cos) * (1.0 + 2.0 * cos_i) * exp_neg
         sign_l = 1.0
     else:
         raise ValueError(f"Mode ({l}, {m}) not currently supported in TaylorF2_HM")
@@ -91,19 +129,21 @@ def _swsh_projection_coefficients(
 class TaylorF2_HM(nn.Module):
     """Multipolar Post-Newtonian Stationary Phase Approximation (SPA) frequency-domain model.
 
-    Supports harmonics (l, m) in {(2, 2), (2, 1), (3, 3), (4, 4)}.
+    Supports harmonics (l, m) in {(2, 2), (2, 1), (3, 1), (3, 2), (3, 3),
+    (4, 2), (4, 3), (4, 4)}.
     """
 
-    DEFAULT_MODES = ((2, 2), (2, 1), (3, 3), (4, 4))
+    DEFAULT_MODES = ((2, 2), (2, 1), (3, 1), (3, 2), (3, 3), (4, 2), (4, 3), (4, 4))
 
     def __init__(self, modes: Sequence[Tuple[int, int]] = DEFAULT_MODES):
         super().__init__()
-        for l, m in modes:
+        normalized_modes = tuple((l, m) for l, m in modes)
+        for l, m in normalized_modes:
             if (l, m) not in self.DEFAULT_MODES:
                 raise ValueError(
                     f"Mode ({l}, {m}) is not supported. Supported modes: {self.DEFAULT_MODES}"
                 )
-        self.modes = tuple(modes)
+        self.modes = normalized_modes
 
     def forward(
         self,
@@ -171,7 +211,14 @@ class TaylorF2_HM(nn.Module):
         l1 = as_tensor(lambda1, device=device, dtype=dtype) if lambda1 is not None else None
         l2 = as_tensor(lambda2, device=device, dtype=dtype) if lambda2 is not None else None
 
-        active_modes = tuple(modes) if modes is not None else self.modes
+        active_modes = (
+            tuple((l, m) for l, m in modes) if modes is not None else self.modes
+        )
+        for mode in active_modes:
+            if mode not in self.DEFAULT_MODES:
+                raise ValueError(
+                    f"Mode {mode} is not supported. Supported modes: {self.DEFAULT_MODES}"
+                )
 
         # Dimensions & broadcasting
         is_batched = m1.dim() >= 1
@@ -263,14 +310,57 @@ class TaylorF2_HM(nn.Module):
                 # (delta / (3 * 2^(1/3))) * v22
                 factor_21 = delta_b / (3.0 * (2.0 ** (1.0 / 3.0)))
                 r_lm = factor_21 * v22
+            elif (l, m) == (3, 1):
+                # García-Quirós et al. (2020), Appendix FPN, Eq. (31amp):
+                # H_31 = i*delta*v_1/(12*sqrt(7)).  Converting from the
+                # m=1 SPA velocity v_1 to v22 and mode_norm gives
+                # delta*v22 / (12*sqrt(7)*2^(5/6)).
+                factor_31 = delta_b / (12.0 * math.sqrt(7.0) * (2.0 ** (5.0 / 6.0)))
+                r_lm = factor_31 * v22
             elif (l, m) == (3, 3):
-                # (3 / 4) * sqrt(15 / 14) * delta * v22
-                factor_33 = (3.0 / 4.0) * math.sqrt(15.0 / 14.0) * delta_b
+                # García-Quirós et al. (2020), Appendix E, Eq. (74), after
+                # converting v_3=(2/3)^(1/3)*v22 and the common v^(-7/2)
+                # SPA factor to the 22-mode normalization:
+                # (3/4) * sqrt(5/7) * (3/2)^(5/6) * delta * v22.
+                factor_33 = (
+                    (3.0 / 4.0)
+                    * math.sqrt(5.0 / 7.0)
+                    * (3.0 / 2.0) ** (5.0 / 6.0)
+                    * delta_b
+                )
                 r_lm = factor_33 * v22
+            elif (l, m) == (3, 2):
+                # Leading nonspinning term from García-Quirós et al. (2020),
+                # Appendix E, Eq. (75): (1/3) sqrt(5/7) * (1 - 3*eta) * x,
+                # with x=v22^2.  The paper's Eq. (71) normalization is the
+                # same common SPA normalization used by mode_norm above.
+                factor_32 = (1.0 / 3.0) * math.sqrt(5.0 / 7.0) * (1.0 - 3.0 * eta_b)
+                r_lm = factor_32 * (v22 * v22)
             elif (l, m) == (4, 4):
                 # (8 / 9) * sqrt(5 / 7) * (1 - 3*eta) * v22^2
                 factor_44 = (8.0 / 9.0) * math.sqrt(5.0 / 7.0) * (1.0 - 3.0 * eta_b)
                 r_lm = factor_44 * (v22 * v22)
+            elif (l, m) == (4, 2):
+                # Mezzasoma & Yunes (2022), Phys. Rev. D 106, 024026,
+                # Eq. (2.21g): H_42 = sqrt(5)/63 * (1 - 3*eta) * x.
+                # Here m=2, so x = v22^2, and the mode is in phase with
+                # the quadrupole at this leading PN order.
+                factor_42 = (math.sqrt(5.0) / 63.0) * (1.0 - 3.0 * eta_b)
+                r_lm = factor_42 * (v22 * v22)
+            elif (l, m) == (4, 3):
+                # García-Quirós et al. (2020), Appendix FPN, Eq. (43amp):
+                # H_43 = (3/4)i*sqrt(3/35)*delta*(2*eta-1)*v_3^3.
+                # The existing real-amplitude phase convention factors out
+                # the common -i phase, leaving the equivalent positive
+                # delta*(1-2*eta) coefficient below.
+                factor_43 = (
+                    (3.0 / 4.0)
+                    * math.sqrt(3.0 / 35.0)
+                    * (3.0 / 2.0) ** (1.0 / 6.0)
+                    * delta_b
+                    * (1.0 - 2.0 * eta_b)
+                )
+                r_lm = factor_43 * (v22 * v22 * v22)
 
             amp_lm = mode_norm * r_lm
 

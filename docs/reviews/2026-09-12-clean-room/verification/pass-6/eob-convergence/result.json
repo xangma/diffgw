@@ -1,0 +1,227 @@
+{
+  "host": "RONI2",
+  "cwd": "/Users/xangma/repos/torchwave",
+  "pid": 8622,
+  "inputs": {
+    "omega_start": [
+      0.04,
+      0.04
+    ],
+    "mass1": [
+      30.0,
+      30.0
+    ],
+    "mass2": [
+      20.0,
+      20.0
+    ],
+    "chi1": [
+      0.0,
+      0.2
+    ],
+    "chi2": [
+      0.0,
+      -0.1
+    ]
+  },
+  "choices": {
+    "spin_truncation": "tabulated",
+    "spin_v6": "bohe_total_energy",
+    "include_pan_v8": false,
+    "include_positive_chi_540": false,
+    "final_spin_fit_order": [
+      1,
+      2
+    ]
+  },
+  "source_sha256_before": {
+    "src/torchwave/approximants/eob/__init__.py": "f8a26118875687ba8643d262a585a00ac4e76803d887c4933fcdcca42569ed15",
+    "src/torchwave/approximants/eob/attachment.py": "09941c1cc1aa371898205a38719f13d359655f0b9cad76828ea86cfb09df0521",
+    "src/torchwave/approximants/eob/events.py": "2fcb3dc9e7362fd8c15d8f78d3ddcb7b603d5d03dbdebb188eca460e09dd4f75",
+    "src/torchwave/approximants/eob/factorized_modes.py": "d4b10cbcbbecc4de84329a13cdca43d90d4fa5aa168248fc2e874211d29f8315",
+    "src/torchwave/approximants/eob/hamiltonian.py": "d26a87ded2a197a000704b77b075cdc72ee2315741bdacc29fb25f912158a441",
+    "src/torchwave/approximants/eob/initial_conditions.py": "68363208874bfaf39dad5d5668e5f128553144b4db31f64f0283278ed710458f",
+    "src/torchwave/approximants/eob/integrator.py": "60657589b70a3dc6ae75abbb26093e65cae63f2de9fb2a5b0110c07c15d88879",
+    "src/torchwave/approximants/eob/merger_ringdown.py": "0db678173690ce0f7918c6fef2d9cb4864bf55a8dae3a6f80a47d0563ac7237d",
+    "src/torchwave/approximants/eob/nqc.py": "f023b84fc0a48e59feb6b543d234635df965e04ee9aff05672ea3ff984d0cf85",
+    "src/torchwave/approximants/eob/published_waveform.py": "306bcedb98abee3241b4c4b386cd8e17c104834fbf28eb8bd11386fc3d868ffd",
+    "src/torchwave/approximants/eob/radiation_reaction.py": "dfb8853fc929145c3d61b7af49c16426560a12dc14ba9e664659af4a4449834d",
+    "src/torchwave/approximants/eob/remnant.py": "e7690cd5df1bcde2f579954762116beb20db606dae809835b148dae73c4cb007",
+    "src/torchwave/approximants/eob/seobnrv4_amplitude22.py": "f51cf2a03f1a3567293fbac75a341701448275bc45da1fa97af80d017890d2a5",
+    "src/torchwave/approximants/eob/seobnrv4_flux.py": "f0b4d00664f3d3ea51db6bf73d506f7f2facab130776879a64eb30b8003d379e",
+    "src/torchwave/approximants/eob/seobnrv4_hamiltonian.py": "5b1a5b877129e5235b8f92974a01ab450176e8e924d374ca0fc413334fad177f",
+    "src/torchwave/approximants/eob/seobnrv4_mode22.py": "b0d5587f50b369181eaaecf7ea63c87e14b8e1c774ad20add1fd2af49ef7c55b",
+    "src/torchwave/approximants/eob/waveform.py": "03a559c59f1aef83037ba0fdea61cc070c1afa4478f082d4068b67fe1fc27ced",
+    "src/torchwave/approximants/kerr_qnm_author.py": "ea90c5dcce7403995e91ee088551d61f941a645b331fa33a5fe5c1950f78990c",
+    "scripts/verify_eob_published_convergence.py": "704bf49072ae4a68fcde00a26dadab4892f277ecbca5c807cf59451a9597627c"
+  },
+  "runs": [
+    {
+      "dt": 0.5,
+      "seconds": 25.68335391599976,
+      "artifact": "dt-0.5.pt",
+      "peak_time": [
+        314.7997725007316,
+        334.84258622584537
+      ],
+      "peak_frequency": [
+        0.16441020836352116,
+        0.1629689025659733
+      ],
+      "match_time": [
+        310.4273929666516,
+        329.98341560323314
+      ],
+      "final_mass_fraction": [
+        0.9550166356939277,
+        0.9521433597755232
+      ],
+      "final_spin": [
+        0.6637124603053226,
+        0.7026040650687663
+      ],
+      "amplitude_condition": [
+        746.8028173785486,
+        832.5339855170599
+      ],
+      "phase_condition": [
+        8.798879745037949,
+        8.512624776163873
+      ],
+      "samples": [
+        634,
+        674
+      ],
+      "finite": true
+    },
+    {
+      "dt": 0.25,
+      "seconds": 51.585081917000934,
+      "artifact": "dt-0.25.pt",
+      "peak_time": [
+        314.7992508179954,
+        334.8415336931262
+      ],
+      "peak_frequency": [
+        0.16441121827041177,
+        0.1629698935684163
+      ],
+      "match_time": [
+        310.42687128391543,
+        329.982363070514
+      ],
+      "final_mass_fraction": [
+        0.9550166356939277,
+        0.9521433597755232
+      ],
+      "final_spin": [
+        0.6637124603053226,
+        0.7026040650687663
+      ],
+      "amplitude_condition": [
+        746.0042636923306,
+        832.4596189852313
+      ],
+      "phase_condition": [
+        8.791193162899587,
+        8.511412064774916
+      ],
+      "samples": [
+        1263,
+        1343
+      ],
+      "finite": true
+    },
+    {
+      "dt": 0.125,
+      "seconds": 104.75907583300432,
+      "artifact": "dt-0.125.pt",
+      "peak_time": [
+        314.79918186706254,
+        334.8414895818337
+      ],
+      "peak_frequency": [
+        0.16441120702228795,
+        0.1629698696455728
+      ],
+      "match_time": [
+        310.42680233298256,
+        329.98231895922146
+      ],
+      "final_mass_fraction": [
+        0.9550166356939277,
+        0.9521433597755232
+      ],
+      "final_spin": [
+        0.6637124603053226,
+        0.7026040650687663
+      ],
+      "amplitude_condition": [
+        745.6744425473985,
+        832.4183399172722
+      ],
+      "phase_condition": [
+        8.788373468278829,
+        8.511085353668529
+      ],
+      "samples": [
+        2522,
+        2683
+      ],
+      "finite": true
+    }
+  ],
+  "comparisons": [
+    {
+      "relative_complex_l2": [
+        0.00022970071249160383,
+        0.0001535947222782275
+      ],
+      "peak_time_difference": [
+        0.0005216827361778087,
+        0.0010525327191430733
+      ],
+      "peak_frequency_difference": [
+        1.0099068906144204e-06,
+        9.910024429959918e-07
+      ]
+    },
+    {
+      "relative_complex_l2": [
+        0.0001030464259113899,
+        8.104943650056674e-06
+      ],
+      "peak_time_difference": [
+        6.895093287084819e-05,
+        4.41112925386733e-05
+      ],
+      "peak_frequency_difference": [
+        1.1248123821250289e-08,
+        2.39228434839589e-08
+      ]
+    }
+  ],
+  "source_sha256_after": {
+    "src/torchwave/approximants/eob/__init__.py": "f8a26118875687ba8643d262a585a00ac4e76803d887c4933fcdcca42569ed15",
+    "src/torchwave/approximants/eob/attachment.py": "09941c1cc1aa371898205a38719f13d359655f0b9cad76828ea86cfb09df0521",
+    "src/torchwave/approximants/eob/events.py": "2fcb3dc9e7362fd8c15d8f78d3ddcb7b603d5d03dbdebb188eca460e09dd4f75",
+    "src/torchwave/approximants/eob/factorized_modes.py": "d4b10cbcbbecc4de84329a13cdca43d90d4fa5aa168248fc2e874211d29f8315",
+    "src/torchwave/approximants/eob/hamiltonian.py": "d26a87ded2a197a000704b77b075cdc72ee2315741bdacc29fb25f912158a441",
+    "src/torchwave/approximants/eob/initial_conditions.py": "68363208874bfaf39dad5d5668e5f128553144b4db31f64f0283278ed710458f",
+    "src/torchwave/approximants/eob/integrator.py": "60657589b70a3dc6ae75abbb26093e65cae63f2de9fb2a5b0110c07c15d88879",
+    "src/torchwave/approximants/eob/merger_ringdown.py": "0db678173690ce0f7918c6fef2d9cb4864bf55a8dae3a6f80a47d0563ac7237d",
+    "src/torchwave/approximants/eob/nqc.py": "f023b84fc0a48e59feb6b543d234635df965e04ee9aff05672ea3ff984d0cf85",
+    "src/torchwave/approximants/eob/published_waveform.py": "306bcedb98abee3241b4c4b386cd8e17c104834fbf28eb8bd11386fc3d868ffd",
+    "src/torchwave/approximants/eob/radiation_reaction.py": "dfb8853fc929145c3d61b7af49c16426560a12dc14ba9e664659af4a4449834d",
+    "src/torchwave/approximants/eob/remnant.py": "e7690cd5df1bcde2f579954762116beb20db606dae809835b148dae73c4cb007",
+    "src/torchwave/approximants/eob/seobnrv4_amplitude22.py": "f51cf2a03f1a3567293fbac75a341701448275bc45da1fa97af80d017890d2a5",
+    "src/torchwave/approximants/eob/seobnrv4_flux.py": "f0b4d00664f3d3ea51db6bf73d506f7f2facab130776879a64eb30b8003d379e",
+    "src/torchwave/approximants/eob/seobnrv4_hamiltonian.py": "5b1a5b877129e5235b8f92974a01ab450176e8e924d374ca0fc413334fad177f",
+    "src/torchwave/approximants/eob/seobnrv4_mode22.py": "b0d5587f50b369181eaaecf7ea63c87e14b8e1c774ad20add1fd2af49ef7c55b",
+    "src/torchwave/approximants/eob/waveform.py": "03a559c59f1aef83037ba0fdea61cc070c1afa4478f082d4068b67fe1fc27ced",
+    "src/torchwave/approximants/kerr_qnm_author.py": "ea90c5dcce7403995e91ee088551d61f941a645b331fa33a5fe5c1950f78990c",
+    "scripts/verify_eob_published_convergence.py": "704bf49072ae4a68fcde00a26dadab4892f277ecbca5c807cf59451a9597627c"
+  },
+  "changed_inputs": [],
+  "pass": true
+}

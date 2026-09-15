@@ -1,9 +1,12 @@
 """IMRPhenomD Frequency-Domain Aligned-Spin Gravitational Waveform Approximant.
 
-Strict Clean-Room Implementation based exclusively on published literature:
+Waveform equations based on published literature:
 - Husa, Khan, Hannam, Pürrer, Ohme, Forteza, Bohé (2016), Phys. Rev. D 93, 044006 (arXiv:1508.07250) [Paper I]
 - Khan, Husa, Hannam, Ohme, Pürrer, Forteza, Bohé (2016), Phys. Rev. D 93, 044007 (arXiv:1508.07253) [Paper II]
 - Stein (2019), JOSS 4(42), 1683 [independent Kerr eigenproblem solves]
+
+Inherited unrounded calibration constants require separate provenance review;
+the paper citations alone do not establish the origin of every stored digit.
 """
 
 from typing import Dict, Optional, Tuple, Union
@@ -25,7 +28,12 @@ from torchwave.conversions import (
     total_spin_for_remnant,
 )
 from torchwave.approximants.taylorf2 import TaylorF2
-from torchwave.approximants.kerr_qnm_interp import evaluate_kerr_qnm_220
+# Compatibility re-export for existing diagnostics and non-D callers.  The D
+# remnant path below uses the independent cyclic sampler directly.
+import torchwave.approximants.kerr_qnm_interp as _kerr_qnm_interp
+
+evaluate_kerr_qnm_220 = _kerr_qnm_interp.evaluate_kerr_qnm_220
+from torchwave.approximants.kerr_qnm_d_sampling_clean import evaluate_d_qnm_220
 
 
 from torchwave.approximants.phenomd_unrounded_fits import (
@@ -39,13 +47,30 @@ from torchwave.approximants.phenomd_unrounded_fits import (
 
 
 # Table V of Khan et al. (2016), arXiv:1508.07253
-# Authoritative unrounded IEEE FP64 fitting coefficients
+# Inherited unrounded fitting coefficients; see module provenance caveat.
 TABLE_V_COEFFS: Dict[str, Tuple[float, ...]] = TABLE_V_UNROUNDED_COEFFS
 
 
 
 class IMRPhenomD:
     """IMRPhenomD Frequency-Domain Aligned-Spin Phenomenological Waveform Model."""
+
+    @staticmethod
+    def amplitude_peak_frequency(f_rd, f_damp, gamma2, gamma3):
+        """Evaluate Khan et al. Eq. (20), retaining the inherited no-root continuation.
+
+        Rationalizing sqrt(1-gamma2**2)-1 avoids cancellation at gamma2=0.
+        For gamma2 >= 1 the existing continuation replaces the square root
+        with zero; this join frequency need not be an amplitude extremum.
+        The branch point has no finite mathematical derivative. At equality
+        autograd follows the continuation branch, without an epsilon shift.
+        """
+        discriminant = 1.0 - gamma2.square()
+        has_root = discriminant > 0.0
+        root = torch.sqrt(torch.where(has_root, discriminant, torch.ones_like(discriminant)))
+        safe_gamma2 = torch.where(has_root, torch.ones_like(gamma2), gamma2)
+        offset = torch.where(has_root, -gamma2 / (1.0 + root), -1.0 / safe_gamma2)
+        return torch.abs(f_rd + f_damp * gamma3 * offset)
 
     @staticmethod
     def eval_table_v(name: str, eta: torch.Tensor, chi_pn: torch.Tensor) -> torch.Tensor:
@@ -120,15 +145,15 @@ class IMRPhenomD:
 
         m_final = total_mass * (1.0 - erad_over_m)
 
-        # Primary numerical Kerr QNM evaluation (l=2, m=2, n=0).
-        # f_RD = (M / M_f) * Re(omega) / (2 * pi)
-        # f_damp = (M / M_f) * (-Im(omega)) / (2 * pi)
-        omega_r, omega_i_abs = evaluate_kerr_qnm_220(a_final)
+        # Independent rounded-cubic Kerr QNM evaluation (l=2, m=2, n=0).
+        # The sampler returns cyclic final-mass units (M_f f); only the
+        # total-to-final mass ratio belongs in this D call site.
+        f_rd_final, f_damp_final = evaluate_d_qnm_220(a_final)
 
         # Dimensionless QNM frequencies scaled to total binary mass M:
         m_ratio = total_mass / m_final
-        f_rd = m_ratio * (omega_r / (2.0 * PI))
-        f_damp = m_ratio * (omega_i_abs / (2.0 * PI))
+        f_rd = m_ratio * f_rd_final
+        f_damp = m_ratio * f_damp_final
 
         return m_final, a_final, f_rd, f_damp
 
@@ -240,12 +265,34 @@ class IMRPhenomD:
         mass2: Union[float, torch.Tensor],
         chi1: Union[float, torch.Tensor] = 0.0,
         chi2: Union[float, torch.Tensor] = 0.0,
+        *,
+        remnant_provider=None,
     ) -> torch.Tensor:
         """Paper merger-ringdown phase derivative dPsi/d(Mf) evaluated at f_peak."""
-        m1 = as_tensor(mass1)
-        m2 = as_tensor(mass2)
-        s1 = as_tensor(chi1)
-        s2 = as_tensor(chi2)
+        # Preserve the waveform parameter precision.  Coercing batched
+        # float32 inputs to as_tensor's float64 default promotes the batched
+        # gauge term, while PyTorch keeps a 0-D scalar operand weak, so
+        # scalar and one-row calls otherwise take different precision paths.
+        values = (mass1, mass2, chi1, chi2)
+        input_dtype = None
+        input_device = None
+        for value in values:
+            if isinstance(value, torch.Tensor):
+                if input_device is None:
+                    input_device = value.device
+                if value.is_floating_point():
+                    input_dtype = (value.dtype if input_dtype is None
+                                   else torch.promote_types(input_dtype, value.dtype))
+        if input_dtype is None:
+            input_dtype = torch.float64
+
+        def coerce(value: Union[float, torch.Tensor]) -> torch.Tensor:
+            return torch.as_tensor(value, device=input_device, dtype=input_dtype)
+
+        m1 = coerce(mass1)
+        m2 = coerce(mass2)
+        s1 = coerce(chi1)
+        s2 = coerce(chi2)
         total_mass = m1 + m2
         eta = component_masses_to_eta(m1, m2)
         _, _, chi_pn, _ = spin_combinations(m1, m2, s1, s2)
@@ -258,11 +305,8 @@ class IMRPhenomD:
         alpha4 = IMRPhenomD.eval_table_v("alpha4", eta, chi_pn)
         alpha5 = IMRPhenomD.eval_table_v("alpha5", eta, chi_pn)
 
-        m_final, a_final, f_rd, f_damp = IMRPhenomD.remnant_properties(m1, m2, s1, s2)
-        diff_gamma = torch.clamp(1.0 - gamma2 * gamma2, min=0.0)
-        safe_sqrt = torch.sqrt(diff_gamma + 1e-12)
-        term_peak = torch.where(diff_gamma > 1e-10, safe_sqrt, torch.zeros_like(gamma2)) - 1.0
-        f_peak = torch.abs(f_rd + (f_damp * gamma3 * term_peak) / gamma2)
+        m_final, a_final, f_rd, f_damp = (IMRPhenomD.remnant_properties if remnant_provider is None else remnant_provider)(m1, m2, s1, s2)
+        f_peak = IMRPhenomD.amplitude_peak_frequency(f_rd, f_damp, gamma2, gamma3)
 
         atan_lorentz_peak = (alpha4 * f_damp) / (f_damp * f_damp + (f_peak - alpha5 * f_rd) ** 2)
         slope_peak = (
@@ -286,10 +330,12 @@ class IMRPhenomD:
         phic: Union[float, torch.Tensor] = 0.0,
         tc: Union[float, torch.Tensor] = 0.0,
         f_ref: Optional[Union[float, torch.Tensor]] = None,
-        window_type: Optional[str] = "planck",
+        window_type: Optional[str] = None,
         phasing_convention: Optional[str] = None,
         reference_frame: Optional[str] = None,
         return_phase: bool = False,
+        *,
+        remnant_provider=None,
     ) -> Union[Tuple[torch.Tensor, torch.Tensor], Tuple[torch.Tensor, torch.Tensor, torch.Tensor]]:
         """Generate frequency-domain polarizations (h_plus, h_cross) using IMRPhenomD.
 
@@ -304,7 +350,8 @@ class IMRPhenomD:
             phic: Coalescence phase in radians
             tc: Coalescence time in seconds
             f_ref: Reference frequency in Hz for physical reference phasing
-            window_type: High-frequency roll-off window ('cosine' or 'planck')
+            window_type: Optional high-frequency taper ('cosine' or 'planck');
+                None retains the analytic amplitude up to the existing Mf=0.2 cutoff
             phasing_convention: Phasing convention ('coalescence' or 'reference_frequency')
             reference_frame: Alias for phasing_convention
 
@@ -350,14 +397,10 @@ class IMRPhenomD:
         alpha5 = IMRPhenomD.eval_table_v("alpha5", eta, chi_pn)
 
         # Remnant black hole properties & QNM frequencies
-        m_final, a_final, f_rd, f_damp = IMRPhenomD.remnant_properties(m1, m2, s1, s2)
+        m_final, a_final, f_rd, f_damp = (IMRPhenomD.remnant_properties if remnant_provider is None else remnant_provider)(m1, m2, s1, s2)
 
         # Amplitude peak frequency (Khan et al. 2016, arXiv:1508.07253)
-        # Differentiable root formulation avoiding NaN gradients when gamma2 >= 1.0
-        diff_gamma = torch.clamp(1.0 - gamma2 * gamma2, min=0.0)
-        safe_sqrt = torch.sqrt(diff_gamma + 1e-12)
-        term_peak = torch.where(diff_gamma > 1e-10, safe_sqrt, torch.zeros_like(gamma2)) - 1.0
-        f_peak = torch.abs(f_rd + (f_damp * gamma3 * term_peak) / gamma2)
+        f_peak = IMRPhenomD.amplitude_peak_frequency(f_rd, f_damp, gamma2, gamma3)
 
         # Transition boundaries
         f1_amp = 0.014
@@ -418,7 +461,11 @@ class IMRPhenomD:
         v1_col = eval_scaled_amp_ins(f1_amp)
         d1_col = eval_scaled_amp_ins_deriv(f1_amp)
         v3_col = eval_scaled_amp_mr(f3_amp)
-        d3_col = torch.zeros_like(v3_col)  # by definition of f_peak (zero derivative)
+        # Differentiate Eq. (19): the no-real-root continuation of Eq. (20)
+        # is not stationary, so imposing zero here would break C1 continuity.
+        width = gamma3 * f_damp
+        offset = f3_amp - f_rd
+        d3_col = v3_col * (-2.0 * offset / (offset.square() + width.square()) - gamma2 / width)
 
         # Solve intermediate amplitude collocation system
         d0, d1_c, d2, d3_c, d4 = IMRPhenomD.intermediate_amplitude_coeffs(
@@ -677,8 +724,9 @@ class IMRPhenomD:
         a0_phys = prefactor * (m_sec_eval ** (5.0 / 6.0)) * (f_eval_safe ** (-7.0 / 6.0))
         full_amp = a0_phys * scaled_amp
 
-        # High-frequency physical windowing and cutoff:
-        # Canonical PhenomD (Khan et al. 2016) is calibrated up to Mf = 0.2
+        # Khan Eqs. (19), (36) give an untapered merger-ringdown amplitude.
+        # Extra high-frequency tapers are opt-in. The Mf=0.2 default cutoff
+        # below is an inherited implementation boundary, not a fit in Eq. (19).
         if window_type is not None and window_type.lower() in ("planck", "cosine"):
             mf_cut = f_rd_u + 5.0 * f_damp_u
             mf_start = mf_cut - 2.0 * f_damp_u

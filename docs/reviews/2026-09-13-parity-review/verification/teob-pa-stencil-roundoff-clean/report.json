@@ -1,0 +1,543 @@
+{
+  "conclusion": {
+    "criterion": "compare fixed-spacing minus native with the supplied order-8 native/reference drift",
+    "interpretation": "fixed-spacing versus actual-node differences quantify stencil arithmetic sensitivity; they do not replace the published/native endpoint or tune it",
+    "order8_fixed_native_abs": {
+      "p_phi": 5.329070518200751e-15,
+      "phase": 1.1937117960769683e-12,
+      "pr_star": 1.3320507891156907e-15,
+      "radius": 0.0,
+      "time_M": 3.092281986027956e-11
+    },
+    "order8_native_reference_abs": {
+      "p_phi": 1.5564683764068832e-08,
+      "phase": 9.390364226646852e-06,
+      "pr_star": 2.374353459720993e-09,
+      "time_M": 0.00049837002188724
+    }
+  },
+  "independent_polynomial_validation": {
+    "cubic_degree": 3,
+    "fraction_moment_residuals": {
+      "cubic_integral_max_abs_fraction": 0.0,
+      "quartic_derivative_max_abs_fraction": 0.0
+    },
+    "grid_points": 13,
+    "max_abs_derivative_error": 1.7053025658242404e-13,
+    "max_abs_integral_error": 5.551115123125783e-17,
+    "quartic_degree": 4,
+    "spacing": -0.1
+  },
+  "inputs": {
+    "dr": 0.1,
+    "horizon_branch": "diagnostic leading-order zero-spin horizon reaction",
+    "nu": 0.24,
+    "pa_orders": [
+      2,
+      4,
+      6,
+      8
+    ],
+    "r0": 19.999999999999996,
+    "r_min": 14.0,
+    "radius_spacing_statistics": {
+      "count": 59,
+      "max": -0.09999999999999787,
+      "max_abs_deviation_from_nominal": 2.1371793224034263e-15,
+      "mean": -0.1,
+      "min": -0.10000000000000142
+    },
+    "spin": [
+      0.0,
+      0.0
+    ],
+    "tides": [
+      0.0,
+      0.0
+    ]
+  },
+  "method": {
+    "cubic_moments": "sum(w_j q_j^p)=1/(p+1), p=0..3, then multiply by descending spacing",
+    "cubic_stencils": "four consecutive nodes; first and last four at boundaries, i-1..i+2 in the interior",
+    "fixed_spacing": "independent exact Fraction moment solves, converted to float64 and applied at nominal spacing -dr",
+    "fixed_spacing_value": -0.1,
+    "native": "teob_postadiabatic_clean actual-node Vandermonde solves",
+    "quartic_moments": "sum(w_j q_j^p)=delta[p,1], p=0..4",
+    "quartic_stencils": "five consecutive nodes; first and last five at boundaries, centered elsewhere"
+  },
+  "orders": [
+    {
+      "fixed_minus_native": {
+        "p_phi": {
+          "abs": 3.552713678800501e-15,
+          "signed": -3.552713678800501e-15
+        },
+        "phase": {
+          "abs": 2.5579538487363607e-13,
+          "signed": 2.5579538487363607e-13
+        },
+        "pr_star": {
+          "abs": 3.2938062000109625e-16,
+          "signed": -3.2938062000109625e-16
+        },
+        "radius": {
+          "abs": 0.0,
+          "signed": 0.0
+        },
+        "time_M": {
+          "abs": 2.3646862246096134e-11,
+          "signed": 2.3646862246096134e-11
+        }
+      },
+      "fixed_minus_reference": {
+        "p_phi": {
+          "abs": 4.830238244935003e-07,
+          "signed": -4.830238244935003e-07
+        },
+        "phase": {
+          "abs": 0.03527097149066094,
+          "signed": -0.03527097149066094
+        },
+        "pr_star": {
+          "abs": 9.888344984906525e-07,
+          "signed": -9.888344984906525e-07
+        },
+        "time_M": {
+          "abs": 2.3225115167824697,
+          "signed": -2.3225115167824697
+        }
+      },
+      "fixed_spacing": {
+        "p_phi": 4.215698082088747,
+        "phase": 132.1350436394743,
+        "pr_star": -0.0012988349524478365,
+        "radius": 14.099999999999996,
+        "time_M": 9521.620151085699
+      },
+      "native_actual_node": {
+        "p_phi": 4.215698082088751,
+        "phase": 132.13504363947405,
+        "pr_star": -0.0012988349524475072,
+        "radius": 14.099999999999996,
+        "time_M": 9521.620151085675
+      },
+      "native_minus_reference": {
+        "p_phi": {
+          "abs": 4.830238209407867e-07,
+          "signed": -4.830238209407867e-07
+        },
+        "phase": {
+          "abs": 0.035270971490916736,
+          "signed": -0.035270971490916736
+        },
+        "pr_star": {
+          "abs": 9.888344981612718e-07,
+          "signed": -9.888344981612718e-07
+        },
+        "time_M": {
+          "abs": 2.3225115168061166,
+          "signed": -2.3225115168061166
+        }
+      },
+      "pa_order": 2,
+      "points": 60,
+      "profile_fixed_minus_native": {
+        "omega": {
+          "endpoint_abs": 1.734723475976807e-17,
+          "max_abs": 1.734723475976807e-17,
+          "rms": 2.7336805628360377e-18
+        },
+        "p_phi": {
+          "endpoint_abs": 3.552713678800501e-15,
+          "max_abs": 3.552713678800501e-15,
+          "rms": 5.958081967793455e-16
+        },
+        "phase": {
+          "endpoint_abs": 2.5579538487363607e-13,
+          "max_abs": 6.292744103575387e-13,
+          "rms": 3.5582708559786596e-13
+        },
+        "pr_star": {
+          "endpoint_abs": 3.2938062000109625e-16,
+          "max_abs": 3.2938062000109625e-16,
+          "rms": 5.653692102066602e-17
+        },
+        "radial_velocity": {
+          "endpoint_abs": 2.964208739575369e-16,
+          "max_abs": 2.964208739575369e-16,
+          "rms": 5.150178724349452e-17
+        },
+        "time": {
+          "endpoint_abs": 2.3646862246096134e-11,
+          "max_abs": 5.5990767577895895e-11,
+          "rms": 3.1961510729954745e-11
+        }
+      }
+    },
+    {
+      "fixed_minus_native": {
+        "p_phi": {
+          "abs": 5.329070518200751e-15,
+          "signed": -5.329070518200751e-15
+        },
+        "phase": {
+          "abs": 3.126388037344441e-13,
+          "signed": -3.126388037344441e-13
+        },
+        "pr_star": {
+          "abs": 5.421010862427522e-18,
+          "signed": 5.421010862427522e-18
+        },
+        "radius": {
+          "abs": 0.0,
+          "signed": 0.0
+        },
+        "time_M": {
+          "abs": 4.729372449219227e-11,
+          "signed": -4.729372449219227e-11
+        }
+      },
+      "fixed_minus_reference": {
+        "p_phi": {
+          "abs": 1.9406046547487676e-08,
+          "signed": 1.9406046547487676e-08
+        },
+        "phase": {
+          "abs": 8.679927944399424e-05,
+          "signed": 8.679927944399424e-05
+        },
+        "pr_star": {
+          "abs": 3.1183135021633362e-09,
+          "signed": 3.1183135021633362e-09
+        },
+        "time_M": {
+          "abs": 0.005355392628189293,
+          "signed": 0.005355392628189293
+        }
+      },
+      "fixed_spacing": {
+        "p_phi": 4.215698584518618,
+        "phase": 132.1704014102444,
+        "pr_star": -0.0012978429996358437,
+        "radius": 14.099999999999996,
+        "time_M": 9523.94801799511
+      },
+      "native_actual_node": {
+        "p_phi": 4.2156985845186234,
+        "phase": 132.17040141024472,
+        "pr_star": -0.0012978429996358491,
+        "radius": 14.099999999999996,
+        "time_M": 9523.948017995157
+      },
+      "native_minus_reference": {
+        "p_phi": {
+          "abs": 1.9406051876558195e-08,
+          "signed": 1.9406051876558195e-08
+        },
+        "phase": {
+          "abs": 8.679927975663304e-05,
+          "signed": 8.679927975663304e-05
+        },
+        "pr_star": {
+          "abs": 3.1183134967423254e-09,
+          "signed": 3.1183134967423254e-09
+        },
+        "time_M": {
+          "abs": 0.005355392675483017,
+          "signed": 0.005355392675483017
+        }
+      },
+      "pa_order": 4,
+      "points": 60,
+      "profile_fixed_minus_native": {
+        "omega": {
+          "endpoint_abs": 2.0816681711721685e-17,
+          "max_abs": 2.0816681711721685e-17,
+          "rms": 3.1273172206927508e-18
+        },
+        "p_phi": {
+          "endpoint_abs": 5.329070518200751e-15,
+          "max_abs": 5.329070518200751e-15,
+          "rms": 8.580618731806452e-16
+        },
+        "phase": {
+          "endpoint_abs": 3.126388037344441e-13,
+          "max_abs": 8.313350008393172e-13,
+          "rms": 6.403778930039434e-13
+        },
+        "pr_star": {
+          "endpoint_abs": 5.421010862427522e-18,
+          "max_abs": 2.413434035952733e-16,
+          "rms": 5.896646474160703e-17
+        },
+        "radial_velocity": {
+          "endpoint_abs": 4.7704895589362195e-18,
+          "max_abs": 2.1890041862482335e-16,
+          "rms": 5.3816326421730977e-17
+        },
+        "time": {
+          "endpoint_abs": 4.729372449219227e-11,
+          "max_abs": 7.185008144006133e-11,
+          "rms": 5.975802808486941e-11
+        }
+      }
+    },
+    {
+      "fixed_minus_native": {
+        "p_phi": {
+          "abs": 1.3322676295501878e-14,
+          "signed": 1.3322676295501878e-14
+        },
+        "phase": {
+          "abs": 1.9895196601282805e-12,
+          "signed": 1.9895196601282805e-12
+        },
+        "pr_star": {
+          "abs": 1.6518904299989146e-15,
+          "signed": 1.6518904299989146e-15
+        },
+        "radius": {
+          "abs": 0.0,
+          "signed": 0.0
+        },
+        "time_M": {
+          "abs": 1.6552803572267294e-10,
+          "signed": 1.6552803572267294e-10
+        }
+      },
+      "fixed_minus_reference": {
+        "p_phi": {
+          "abs": 1.5495952965238757e-08,
+          "signed": 1.5495952965238757e-08
+        },
+        "phase": {
+          "abs": 1.0092679559647877e-05,
+          "signed": -1.0092679559647877e-05
+        },
+        "pr_star": {
+          "abs": 2.428408905821161e-09,
+          "signed": -2.428408905821161e-09
+        },
+        "time_M": {
+          "abs": 0.0005393178998929216,
+          "signed": -0.0005393178998929216
+        }
+      },
+      "fixed_spacing": {
+        "p_phi": 4.2156985806085245,
+        "phase": 132.1703045182854,
+        "pr_star": -0.0012978485463582517,
+        "radius": 14.099999999999996,
+        "time_M": 9523.942123284582
+      },
+      "native_actual_node": {
+        "p_phi": 4.215698580608511,
+        "phase": 132.17030451828342,
+        "pr_star": -0.0012978485463599036,
+        "radius": 14.099999999999996,
+        "time_M": 9523.942123284416
+      },
+      "native_minus_reference": {
+        "p_phi": {
+          "abs": 1.5495939642562462e-08,
+          "signed": 1.5495939642562462e-08
+        },
+        "phase": {
+          "abs": 1.0092681549167537e-05,
+          "signed": -1.0092681549167537e-05
+        },
+        "pr_star": {
+          "abs": 2.428410557711591e-09,
+          "signed": -2.428410557711591e-09
+        },
+        "time_M": {
+          "abs": 0.0005393180654209573,
+          "signed": -0.0005393180654209573
+        }
+      },
+      "pa_order": 6,
+      "points": 60,
+      "profile_fixed_minus_native": {
+        "omega": {
+          "endpoint_abs": 5.204170427930421e-17,
+          "max_abs": 5.204170427930421e-17,
+          "rms": 6.964146005730098e-18
+        },
+        "p_phi": {
+          "endpoint_abs": 1.3322676295501878e-14,
+          "max_abs": 1.3322676295501878e-14,
+          "rms": 1.8274329441693934e-15
+        },
+        "phase": {
+          "endpoint_abs": 1.9895196601282805e-12,
+          "max_abs": 1.9895196601282805e-12,
+          "rms": 1.430691484797154e-12
+        },
+        "pr_star": {
+          "endpoint_abs": 1.6518904299989146e-15,
+          "max_abs": 1.6518904299989146e-15,
+          "rms": 2.2075271696237815e-16
+        },
+        "radial_velocity": {
+          "endpoint_abs": 1.4870916997811179e-15,
+          "max_abs": 1.4870916997811179e-15,
+          "rms": 1.9894860341947543e-16
+        },
+        "time": {
+          "endpoint_abs": 1.6552803572267294e-10,
+          "max_abs": 1.6552803572267294e-10,
+          "rms": 1.294679580994695e-10
+        }
+      }
+    },
+    {
+      "fixed_minus_native": {
+        "p_phi": {
+          "abs": 5.329070518200751e-15,
+          "signed": -5.329070518200751e-15
+        },
+        "phase": {
+          "abs": 1.1937117960769683e-12,
+          "signed": -1.1937117960769683e-12
+        },
+        "pr_star": {
+          "abs": 1.3320507891156907e-15,
+          "signed": -1.3320507891156907e-15
+        },
+        "radius": {
+          "abs": 0.0,
+          "signed": 0.0
+        },
+        "time_M": {
+          "abs": 3.092281986027956e-11,
+          "signed": -3.092281986027956e-11
+        }
+      },
+      "fixed_minus_reference": {
+        "p_phi": {
+          "abs": 1.5564678434998314e-08,
+          "signed": 1.5564678434998314e-08
+        },
+        "phase": {
+          "abs": 9.390365420358648e-06,
+          "signed": -9.390365420358648e-06
+        },
+        "pr_star": {
+          "abs": 2.3743547917717822e-09,
+          "signed": -2.3743547917717822e-09
+        },
+        "time_M": {
+          "abs": 0.0004983700528100599,
+          "signed": -0.0004983700528100599
+        }
+      },
+      "fixed_spacing": {
+        "p_phi": 4.21569858067725,
+        "phase": 132.17030522059954,
+        "pr_star": -0.0012978484923041377,
+        "radius": 14.099999999999996,
+        "time_M": 9523.942164232429
+      },
+      "native_actual_node": {
+        "p_phi": 4.215698580677255,
+        "phase": 132.17030522060074,
+        "pr_star": -0.0012978484923028056,
+        "radius": 14.099999999999996,
+        "time_M": 9523.94216423246
+      },
+      "native_minus_reference": {
+        "p_phi": {
+          "abs": 1.5564683764068832e-08,
+          "signed": 1.5564683764068832e-08
+        },
+        "phase": {
+          "abs": 9.390364226646852e-06,
+          "signed": -9.390364226646852e-06
+        },
+        "pr_star": {
+          "abs": 2.374353459720993e-09,
+          "signed": -2.374353459720993e-09
+        },
+        "time_M": {
+          "abs": 0.00049837002188724,
+          "signed": -0.00049837002188724
+        }
+      },
+      "pa_order": 8,
+      "points": 60,
+      "profile_fixed_minus_native": {
+        "omega": {
+          "endpoint_abs": 2.42861286636753e-17,
+          "max_abs": 2.42861286636753e-17,
+          "rms": 4.26685557589375e-18
+        },
+        "p_phi": {
+          "endpoint_abs": 5.329070518200751e-15,
+          "max_abs": 6.217248937900877e-15,
+          "rms": 1.2455627029317538e-15
+        },
+        "phase": {
+          "endpoint_abs": 1.1937117960769683e-12,
+          "max_abs": 1.568078999980571e-12,
+          "rms": 6.646574299651156e-13
+        },
+        "pr_star": {
+          "endpoint_abs": 1.3320507891156907e-15,
+          "max_abs": 1.3320507891156907e-15,
+          "rms": 2.172742728251235e-16
+        },
+        "radial_velocity": {
+          "endpoint_abs": 1.1989107623344708e-15,
+          "max_abs": 1.1989107623344708e-15,
+          "rms": 1.9682520756318513e-16
+        },
+        "time": {
+          "endpoint_abs": 3.092281986027956e-11,
+          "max_abs": 1.3992007552587893e-10,
+          "rms": 6.022131372493341e-11
+        }
+      }
+    }
+  ],
+  "reference_endpoint": {
+    "provenance": "parent-provided black-box endpoint for the contracted grid and leading-order horizon branch",
+    "used_for_runtime": false,
+    "values": {
+      "p_phi": 4.215698565112572,
+      "phase": 132.17031461096497,
+      "pr_star": -0.0012978461179493459,
+      "time_M": 9523.942662602482
+    }
+  },
+  "run": {
+    "command": "/Users/xangma/miniconda3/envs/pycbcorig313/bin/python scripts/diagnose_teob_pa_stencil_roundoff_clean.py",
+    "cwd": "/Users/xangma/repos/torchwave",
+    "elapsed_seconds": 0.6936771250038873,
+    "host": "RONI2",
+    "log_path": "/Users/xangma/repos/torchwave/docs/reviews/2026-09-13-parity-review/verification/teob-pa-stencil-roundoff-clean/diagnostic.log",
+    "pid": 24146,
+    "platform": "macOS-26.6-arm64-arm-64bit-Mach-O",
+    "python": "/Users/xangma/miniconda3/envs/pycbcorig313/bin/python",
+    "python_version": "3.13.9",
+    "started_unix": 1789400232.341533,
+    "stop_command": "terminate the diagnostic process by PID if required",
+    "torch_version": "2.9.1"
+  },
+  "scope": "PA stencil roundoff diagnostic only; no runtime edits",
+  "source_hashes_after": {
+    "contract": "d02a2319c587fbd514493ef81fa245330970443de8cc41371d3e9c0350edb800",
+    "hamiltonian": "05e15d8fd9888ee8d454d61fbc8454fe5c652747780f77c771718557ce0294f3",
+    "paired_clean_helpers": "52c5267c4bbb389e0801f27d99e2c95ea96d3ca6c67d48d16e3e8586f9fdef22",
+    "postadiabatic": "97de447367d6e5bb61e596c579bb698fdf36e61756394a800166767de4025807",
+    "script": "7a7e4a3350af946ae0330c369655edadd83dac733647e272153901351b928b67"
+  },
+  "source_hashes_before": {
+    "contract": "d02a2319c587fbd514493ef81fa245330970443de8cc41371d3e9c0350edb800",
+    "hamiltonian": "05e15d8fd9888ee8d454d61fbc8454fe5c652747780f77c771718557ce0294f3",
+    "paired_clean_helpers": "52c5267c4bbb389e0801f27d99e2c95ea96d3ca6c67d48d16e3e8586f9fdef22",
+    "postadiabatic": "97de447367d6e5bb61e596c579bb698fdf36e61756394a800166767de4025807",
+    "script": "7a7e4a3350af946ae0330c369655edadd83dac733647e272153901351b928b67"
+  },
+  "source_hashes_unchanged": true,
+  "status": "complete"
+}

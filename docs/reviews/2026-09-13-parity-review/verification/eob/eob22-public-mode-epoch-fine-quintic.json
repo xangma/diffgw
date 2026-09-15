@@ -1,0 +1,75 @@
+{
+  "provenance": "Public lalsimulation SimIMRSpinAlignedEOBModes, SEOBNRv4 version 4, nonspinning 30+20 Msun, fMin=20Hz. Fine saved mode is compared at dt=0.5M in initial coordinates and orbital-peak-centered coordinates against the public binary epoch; quintic interpolation is used only within common support, with no optimized shift. The saved unprojected 22 mode is converted to SI strain by mode * (50 M_sun seconds) * c / (100 Mpc), with positive real scale and an exact conversion assertion. The two time-coordinate comparisons are distinct; no causal interpretation of the epoch is assumed.",
+  "saved_sha256": "56cf48952800928ec3b4037052a9d4010000d841fd90ef497da31e9632d5fd2f",
+  "saved_sha256_expected": "56cf48952800928ec3b4037052a9d4010000d841fd90ef497da31e9632d5fd2f",
+  "interpolation": "quintic (reviewed local helper)",
+  "deltaT_M": 0.5,
+  "deltaT_s": 0.00012313727369103167,
+  "binary_epoch_s": -1.232042294,
+  "mode_scale": "MSEC*c/(100 Mpc)",
+  "mode_scale_value": 2.392707920793921e-20,
+  "results": {
+    "initial": {
+      "native_support_M": [
+        0.0,
+        5148.5
+      ],
+      "binary_support_M": [
+        0.0,
+        5386.0
+      ],
+      "common_support_M": [
+        0.0,
+        5148.5
+      ],
+      "samples": 10298,
+      "phase_rms_rad": 0.0008526041776869118,
+      "phase_max_abs_rad": 0.00754541365514358,
+      "active_samples": 10179,
+      "raw_relative_l2": 0.0013268754366919694,
+      "residual_checkpoints_initial_M": {
+        "0.0": {
+          "raw_abs": 1.0199213566643551e-25,
+          "phase_rad": -4.780987906527923e-05
+        },
+        "100.0": {
+          "raw_abs": 1.0252987216471526e-25,
+          "phase_rad": -4.784204319728644e-05
+        },
+        "1000.0": {
+          "raw_abs": 1.2383230420599889e-25,
+          "phase_rad": -5.5163737690651105e-05
+        },
+        "4000.0": {
+          "raw_abs": 4.240904210587244e-25,
+          "phase_rad": -0.00013829506132085302
+        },
+        "4900.0": {
+          "raw_abs": 4.049695612196365e-24,
+          "phase_rad": -0.0007742166141491215
+        }
+      }
+    },
+    "orbital_peak_centered": {
+      "native_support_M": [
+        -5002.702052426393,
+        145.79794757360742
+      ],
+      "binary_support_M": [
+        -5002.718742544858,
+        383.28125745514143
+      ],
+      "common_support_M": [
+        -5002.702052426393,
+        145.79794757360742
+      ],
+      "samples": 10297,
+      "phase_rms_rad": 0.0007996995258726775,
+      "phase_max_abs_rad": 0.005797925875485546,
+      "active_samples": 10178,
+      "raw_relative_l2": 0.0008092817255266186,
+      "residual_checkpoints_initial_M": {}
+    }
+  },
+  "script_sha256": "da08c74f9bf550b1893a1e25683aaae9e1e1d0a0c906449fce00ba1453af4d5d"
+}

@@ -1,0 +1,42 @@
+{
+  "template": "docs/reviews/2026-09-12-clean-room/verification/pass-8/inputs/single-kerrschild/KerrSchild.yaml",
+  "template_sha256": "e3ee592bee1b5925f7f53ebd20b77502c756977dfa9d63dc47272c1bf55a8ec3",
+  "input": "docs/reviews/2026-09-12-clean-room/verification/pass-8/inputs/single-kerrschild/checkpoint-smoke-corrected/Segment_0000/KerrSchild.yaml",
+  "input_sha256": "772da31782d4b8e9cb561f8e27866552e0640038d1abacb5b7af272a1948b561",
+  "num_procs": 4,
+  "first_segment_command": [
+    "EvolveGhSingleBlackHole",
+    "+p4",
+    "--input-file",
+    "docs/reviews/2026-09-12-clean-room/verification/pass-8/inputs/single-kerrschild/checkpoint-smoke-corrected/Segment_0000/KerrSchild.yaml"
+  ],
+  "validation_command": [
+    "EvolveGhSingleBlackHole",
+    "+p4",
+    "--input-file",
+    "docs/reviews/2026-09-12-clean-room/verification/pass-8/inputs/single-kerrschild/checkpoint-smoke-corrected/Segment_0000/KerrSchild.yaml",
+    "--check-options"
+  ],
+  "restart_command": [
+    "EvolveGhSingleBlackHole",
+    "+p4",
+    "+restart",
+    "../Segment_0000/Checkpoints/Checkpoint_0000"
+  ],
+  "restart_overlay": {
+    "phase_type": "CheckpointAndExitAfterWallclock",
+    "WallclockHours": "None",
+    "input_file_argument": false
+  },
+  "checkpoint_trigger": {
+    "comparison": "GreaterThanOrEqualTo",
+    "time": 0.001,
+    "WallclockHours": 0.0
+  },
+  "completion_trigger": {
+    "comparison": "GreaterThanOrEqualTo",
+    "time": 0.002
+  },
+  "launched": false,
+  "scope": "local render only; parent must validate and launch"
+}

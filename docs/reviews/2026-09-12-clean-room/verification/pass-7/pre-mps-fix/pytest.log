@@ -1,0 +1,100 @@
+........................................................................ [  6%]
+........................................................................ [ 13%]
+.................................................ssss................... [ 20%]
+........................................................................ [ 27%]
+........................................................................ [ 34%]
+........................................................................ [ 41%]
+..............s......................................................... [ 48%]
+.............................................................F.......... [ 55%]
+........................................................................ [ 62%]
+.........................................ss............................. [ 69%]
+..........................................................s............. [ 76%]
+........................................................................ [ 83%]
+........................................................................ [ 90%]
+........................................................................ [ 96%]
+................................                                         [100%]
+=================================== FAILURES ===================================
+____________________________ test_mps_device_parity ____________________________
+
+    def test_mps_device_parity():
+        if not torch.backends.mps.is_available():
+            pytest.skip("Apple Silicon MPS is not available on this machine")
+    
+        f_cpu = torch.linspace(20.0, 500.0, 128, dtype=torch.float32, device="cpu")
+        f_mps = torch.linspace(20.0, 500.0, 128, dtype=torch.float32, device="mps")
+    
+        # TaylorF2
+        hp_cpu_tf2, _ = get_fd_waveform(
+            "TaylorF2",
+            mass1=1.4,
+            mass2=1.4,
+            sample_frequencies=f_cpu,
+            device="cpu",
+            dtype=torch.float32,
+        )
+        hp_mps_tf2, _ = get_fd_waveform(
+            "TaylorF2",
+            mass1=1.4,
+            mass2=1.4,
+            sample_frequencies=f_mps,
+            device="mps",
+            dtype=torch.float32,
+        )
+        # Compare real and imaginary parts to avoid float32 squared underflow (10^-23)^2 = 10^-46
+        assert torch.allclose(hp_cpu_tf2.real, hp_mps_tf2.cpu().real, rtol=1e-4, atol=2e-25)
+        assert torch.allclose(hp_cpu_tf2.imag, hp_mps_tf2.cpu().imag, rtol=1e-4, atol=2e-25)
+    
+        # IMRPhenomD
+        hp_cpu_phd, _ = get_fd_waveform(
+            "IMRPhenomD",
+            mass1=30.0,
+            mass2=30.0,
+            chi1=0.2,
+            chi2=-0.1,
+            sample_frequencies=f_cpu,
+            device="cpu",
+            dtype=torch.float32,
+        )
+>       hp_mps_phd, _ = get_fd_waveform(
+            "IMRPhenomD",
+            mass1=30.0,
+            mass2=30.0,
+            chi1=0.2,
+            chi2=-0.1,
+            sample_frequencies=f_mps,
+            device="mps",
+            dtype=torch.float32,
+        )
+
+tests/test_device_parity.py:48: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+src/torchwave/waveforms.py:465: in get_fd_waveform
+    out = _get_fd_waveform_raw(
+src/torchwave/waveforms.py:321: in _get_fd_waveform_raw
+    return model(
+src/torchwave/approximants/imrphenomd.py:371: in __call__
+    m_final, a_final, f_rd, f_damp = IMRPhenomD.remnant_properties(m1, m2, s1, s2)
+                                     ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+src/torchwave/approximants/imrphenomd.py:146: in remnant_properties
+    omega_r, omega_i_abs = evaluate_kerr_qnm_220(a_final)
+                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+a_final = tensor(0.7017, device='mps:0')
+
+    def evaluate_kerr_qnm_220(a_final: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:
+        """Return Re(M_f*omega) and -Im(M_f*omega), preserving shape/device/dtype.
+    
+        Negative spin uses the positive-spin m=-2 branch by Kerr symmetry. Inputs
+        outside [-0.9999, 0.9999] retain the historical endpoint-clamping behavior.
+        """
+        if not a_final.is_floating_point():
+            raise TypeError("Kerr spin must be a floating-point tensor")
+>       spin = a_final.to(torch.float64).clamp(min=-0.9999, max=0.9999)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^
+E       TypeError: Cannot convert a MPS Tensor to float64 dtype as the MPS framework doesn't support float64. Please use float32 instead.
+
+src/torchwave/approximants/kerr_qnm_interp.py:23: TypeError
+=========================== short test summary info ============================
+FAILED tests/test_device_parity.py::test_mps_device_parity - TypeError: Canno...
+1 failed, 1031 passed, 8 skipped in 65.59s (0:01:05)

@@ -1,0 +1,483 @@
+{
+  "array_contract": {
+    "dtype_native_cross": "float64",
+    "dtype_native_plus": "float64",
+    "dtype_public_cross": "float64",
+    "dtype_public_plus": "float64",
+    "exact_lengths": true,
+    "exact_sampling_dt": true,
+    "finite": true,
+    "native_td_time_start_end": [
+      0.0,
+      8101.191165341304
+    ],
+    "public_sampling_dt_seconds": 0.00048828125,
+    "public_sign_contract": "both saved direct-frame polarizations multiplied by -1 per reviewed observer-frame contract",
+    "samples": 4087,
+    "sampling_dt_seconds": 0.00048828125
+  },
+  "earliest_deviation": {
+    "fixed_relative_envelope_markers": {
+      "first_finite": {
+        "elapsed_time_seconds": 0.0,
+        "index": 0,
+        "ratio": 2.75055120992294e-06,
+        "td_time_dimensionless": 0.0
+      },
+      "maximum": {
+        "elapsed_time_seconds": 1.9951171875,
+        "index": 4086,
+        "ratio": 0.015408795474211801,
+        "td_time_dimensionless": 8101.191165341304
+      },
+      "relative_envelope_ge_0.0001": {
+        "elapsed_time_seconds": 1.9306640625,
+        "index": 3954,
+        "ratio": 0.00010112535644228086,
+        "td_time_dimensionless": 7839.478675418384
+      },
+      "relative_envelope_ge_0.001": {
+        "elapsed_time_seconds": 1.955078125,
+        "index": 4004,
+        "ratio": 0.001021813387546079,
+        "td_time_dimensionless": 7938.612194328582
+      },
+      "relative_envelope_ge_1e-05": {
+        "elapsed_time_seconds": 1.6796875,
+        "index": 3440,
+        "ratio": 1.0007000952374113e-05,
+        "td_time_dimensionless": 6820.386101021559
+      },
+      "relative_envelope_ge_1e-06": {
+        "elapsed_time_seconds": 0.0,
+        "index": 0,
+        "ratio": 2.75055120992294e-06,
+        "td_time_dimensionless": 0.0
+      }
+    },
+    "interpretation": "A discrepancy is already present within PA and grows during ODE inspiral, with larger aggregate residuals in the NQC auxiliary-to-attachment and tail windows. Cached TD outputs alone cannot distinguish PA state error, NQC correction, projection, or sampling effects; the next contract should pin those trajectory, support, sampling, and event-handoff quantities before assigning causality.",
+    "raw_nonzero": {
+      "h_cross_index": 0,
+      "h_plus_index": 0,
+      "interpretation": "Both polarizations differ at the first stored sample; this is a small deterministic raw difference, not an identified conditioner boundary."
+    }
+  },
+  "epoch_comparison": {
+    "absolute_mismatch_seconds": 1.0971197776932229e-06,
+    "comparison_correction_applied": false,
+    "native_epoch_seconds": -1.9577635538802223,
+    "public_exact_start_epoch_seconds": -1.957764651,
+    "public_minus_native_seconds": -1.0971197776932229e-06
+  },
+  "inputs": {
+    "files": [
+      {
+        "path": "/Users/xangma/repos/torchwave/docs/reviews/2026-09-13-parity-review/verification/teob-native-replay-public-clean/replay-native-output.npz",
+        "sha256": "bd7bc65a0da98334585069462b47b54dba0800bd6bbb092369a69267ecb9e611"
+      },
+      {
+        "path": "/Users/xangma/repos/torchwave/docs/reviews/2026-09-13-parity-review/verification/teob-native-replay-public-clean/replay-report.json",
+        "sha256": "d21b5d41035d7753409ecdd5c4e39775c8fc714c3cdc46c8dbd6cb10e434efce"
+      },
+      {
+        "path": "/Users/xangma/repos/torchwave/docs/reviews/2026-09-13-parity-review/verification/teob-conditioner-public-clean/arrays.npz",
+        "sha256": "4712791026b99ad8fb4e713cb99270d2f444c274d320267ef25a10be7e21ab6e"
+      },
+      {
+        "path": "/Users/xangma/repos/torchwave/docs/reviews/2026-09-13-parity-review/verification/teob-conditioner-public-clean/report.json",
+        "sha256": "b80a516eab445baa9e5f0be9e4a0d0fbd413ea7771f8293c5cebd4ae114589c9"
+      }
+    ],
+    "native_arrays": [
+      "h_plus_td",
+      "h_cross_td",
+      "td_time"
+    ],
+    "public_arrays": [
+      "exact_start_raw_h_plus",
+      "exact_start_raw_h_cross"
+    ]
+  },
+  "overall": {
+    "concat_plus_then_cross": {
+      "first_nonzero_index": 0,
+      "first_sample_difference": 8.221052336132272e-28,
+      "max_abs": 9.994651233918708e-24,
+      "max_abs_index": 8097,
+      "native_norm": 1.0404168672258455e-19,
+      "public_norm": 1.0404167550272577e-19,
+      "relative_l2_public_norm": 0.0002907447731402002,
+      "residual_norm": 3.0249573341166325e-23,
+      "samples": 8174
+    },
+    "h_cross": {
+      "first_nonzero_index": 0,
+      "first_sample_difference": -3.2239466980987886e-27,
+      "max_abs": 9.994651233918708e-24,
+      "max_abs_index": 4010,
+      "native_norm": 7.35800723982604e-20,
+      "public_norm": 7.35800959789126e-20,
+      "relative_l2_public_norm": 0.0002906230833526153,
+      "residual_norm": 2.138407436677295e-23,
+      "samples": 4087
+    },
+    "h_plus": {
+      "first_nonzero_index": 0,
+      "first_sample_difference": 8.221052336132272e-28,
+      "max_abs": 9.651675222564995e-24,
+      "max_abs_index": 4008,
+      "native_norm": 7.355709022213417e-20,
+      "public_norm": 7.355705076434548e-20,
+      "relative_l2_public_norm": 0.00029086648823064724,
+      "residual_norm": 2.1395281040428615e-23,
+      "samples": 4087
+    }
+  },
+  "reproducibility": {
+    "diagnostic_script": "/Users/xangma/repos/torchwave/scripts/diagnose_teob_native_residual_localization_clean.py",
+    "diagnostic_script_sha256": "8cb5d60372628386cd59f04aca1c1b7a1b061c5bfb496da0544f451a9a2fdb2d",
+    "native_replay_report_status": "complete",
+    "numpy": "2.3.5",
+    "platform": "macOS-26.6-arm64-arm-64bit-Mach-O",
+    "public_conditioner_report_status": "complete",
+    "python": "3.13.9 | packaged by conda-forge | (main, Oct 22 2025, 23:38:18) [Clang 19.1.7 ]",
+    "replay_source_hashes_unchanged": true,
+    "replay_source_sha256_after": {
+      "adapter": "31c0f491b71bfca2c24fb2ab17b94dfffc2119bbfa3e537851d7209ebc32ecb3",
+      "adaptive_continuation": "7b8722ecc28af74eeb2fe29d2e7c1782123106d63fbeba60c82ca81f6b70b869",
+      "adaptive_driver": "27db5a25123f4d054a9919a11752b207cfc6accc377a8eeaf21f4b49087867e0",
+      "conditioning": "d8a9ad936a0e6fb8e0c59a35428a7e2c70e372dca0b8d87f6d890d38dcd30a8a",
+      "conditioning_contract": "2fcdbd7a825e7f539e80a769a63a66f37b5b477b697878056ccb8e1bb98141b8",
+      "existing_diagnostic": "3eb4cfbd08a77ce07b8d65d59d3aa7468650b56adf64e668739888693c33d432",
+      "hamiltonian": "05e15d8fd9888ee8d454d61fbc8454fe5c652747780f77c771718557ce0294f3",
+      "nqc": "f705514ef981b3f0a557efeebe508b52fdb70c634a8ac8f2c357f30761871068",
+      "nqc_basis": "8ec2d77a57b96e8246bdae3ca8c62c4e2a17cabf1c5554aa1e47fe25b1ea8f46",
+      "postadiabatic": "5146cc82b844641968ab17042da898140b9ad58dcf86c8ef872134711e31fa3d",
+      "postmerger": "7324ff72dc1fd36149f137b9f8eafa68f354fd897ff5d56478ce5a6cf2f8c5f6",
+      "producer_diagnostic": "3c28c431f4dffc7aced34691c42aa4e8f9d4f2552c0f56ecf157459904dcc7ff",
+      "projection": "c8ca45a490842f291e30616a52850f148397a8aad3e49c764c9a45c1bff99ec6",
+      "radial_acceleration": "6e16681eae0daade84bc540f12ee6fe40b3ad08929444273faf03123b7bbc3f9",
+      "radiation": "dca2c9791403467d85572f25a062cbc995d8228743d33b6b2e5dc28c13336bd6",
+      "replay_script": "1627be3e4929f626d5467c1493a2ff25aa78fea7613368ef3dbedebba3d292f5",
+      "ringdown": "df3d21ce4fad55a84d0e1550ac376b8931eecbc0b4076dc9f6235b076ed0befa",
+      "state_mode": "b247c91659b18341301356eca2def7cde270b0aaa7a9e16c85f8ba40f1861552",
+      "trajectory": "6728419dd6b7c6f2a7a340f017f52b5dd54bc399d212884f9975643cd58db785",
+      "uib_remnant": "9ea727ec726f82c62c2ad6e399ee084e02daf275c145a3503e0666271010e755",
+      "vacuum_driver": "3b6e1d0f0cd69352e82a203eb8d9592db87cef662988cf3f4859906ae0977fd6"
+    },
+    "replay_source_sha256_before": {
+      "adapter": "31c0f491b71bfca2c24fb2ab17b94dfffc2119bbfa3e537851d7209ebc32ecb3",
+      "adaptive_continuation": "7b8722ecc28af74eeb2fe29d2e7c1782123106d63fbeba60c82ca81f6b70b869",
+      "adaptive_driver": "27db5a25123f4d054a9919a11752b207cfc6accc377a8eeaf21f4b49087867e0",
+      "conditioning": "d8a9ad936a0e6fb8e0c59a35428a7e2c70e372dca0b8d87f6d890d38dcd30a8a",
+      "conditioning_contract": "2fcdbd7a825e7f539e80a769a63a66f37b5b477b697878056ccb8e1bb98141b8",
+      "existing_diagnostic": "3eb4cfbd08a77ce07b8d65d59d3aa7468650b56adf64e668739888693c33d432",
+      "hamiltonian": "05e15d8fd9888ee8d454d61fbc8454fe5c652747780f77c771718557ce0294f3",
+      "nqc": "f705514ef981b3f0a557efeebe508b52fdb70c634a8ac8f2c357f30761871068",
+      "nqc_basis": "8ec2d77a57b96e8246bdae3ca8c62c4e2a17cabf1c5554aa1e47fe25b1ea8f46",
+      "postadiabatic": "5146cc82b844641968ab17042da898140b9ad58dcf86c8ef872134711e31fa3d",
+      "postmerger": "7324ff72dc1fd36149f137b9f8eafa68f354fd897ff5d56478ce5a6cf2f8c5f6",
+      "producer_diagnostic": "3c28c431f4dffc7aced34691c42aa4e8f9d4f2552c0f56ecf157459904dcc7ff",
+      "projection": "c8ca45a490842f291e30616a52850f148397a8aad3e49c764c9a45c1bff99ec6",
+      "radial_acceleration": "6e16681eae0daade84bc540f12ee6fe40b3ad08929444273faf03123b7bbc3f9",
+      "radiation": "dca2c9791403467d85572f25a062cbc995d8228743d33b6b2e5dc28c13336bd6",
+      "replay_script": "1627be3e4929f626d5467c1493a2ff25aa78fea7613368ef3dbedebba3d292f5",
+      "ringdown": "df3d21ce4fad55a84d0e1550ac376b8931eecbc0b4076dc9f6235b076ed0befa",
+      "state_mode": "b247c91659b18341301356eca2def7cde270b0aaa7a9e16c85f8ba40f1861552",
+      "trajectory": "6728419dd6b7c6f2a7a340f017f52b5dd54bc399d212884f9975643cd58db785",
+      "uib_remnant": "9ea727ec726f82c62c2ad6e399ee084e02daf275c145a3503e0666271010e755",
+      "vacuum_driver": "3b6e1d0f0cd69352e82a203eb8d9592db87cef662988cf3f4859906ae0977fd6"
+    }
+  },
+  "scope": {
+    "comparison": "same elapsed array indices; no time or phase alignment",
+    "fd_parity_warning": "raw TD index comparison is diagnostic and is not strict FD parity",
+    "no_alignment": true,
+    "no_oracle_fitting": true,
+    "no_parameter_search": true,
+    "no_runtime_edits": true,
+    "purpose": "bounded raw TD localization of native replay versus exact-start public TD",
+    "source_isolation": "cached native output versus cached public black-box TD output"
+  },
+  "segments": [
+    {
+      "concat_plus_then_cross": {
+        "first_nonzero_index": 0,
+        "first_sample_difference": 8.221052336132272e-28,
+        "max_abs": 9.623855082661032e-27,
+        "max_abs_index": 5249,
+        "native_norm": 6.908265375621546e-20,
+        "public_norm": 6.90826928753652e-20,
+        "relative_l2_public_norm": 4.040806393660416e-06,
+        "residual_norm": 2.7914978706205456e-25,
+        "samples": 5274
+      },
+      "elapsed_time_seconds": [
+        0.0,
+        1.287109375
+      ],
+      "global_first_nonzero_indices": {
+        "h_cross": 0,
+        "h_plus": 0
+      },
+      "global_max_abs_indices": {
+        "concat_plus_then_cross": 2612,
+        "h_cross": 2612,
+        "h_plus": 2629
+      },
+      "h_cross": {
+        "first_nonzero_index": 0,
+        "first_sample_difference": -3.2239466980987886e-27,
+        "max_abs": 9.623855082661032e-27,
+        "max_abs_index": 2612,
+        "native_norm": 4.884640448302876e-20,
+        "public_norm": 4.884643050755059e-20,
+        "relative_l2_public_norm": 4.0304905582390535e-06,
+        "residual_norm": 1.9687507696436272e-25,
+        "samples": 2637
+      },
+      "h_plus": {
+        "first_nonzero_index": 0,
+        "first_sample_difference": 8.221052336132272e-28,
+        "max_abs": 9.242574553017413e-27,
+        "max_abs_index": 2629,
+        "native_norm": 4.885122126499497e-20,
+        "public_norm": 4.8851250563143884e-20,
+        "relative_l2_public_norm": 4.05109393278224e-06,
+        "residual_norm": 1.9790100476517714e-25,
+        "samples": 2637
+      },
+      "indices": [
+        0,
+        2636
+      ],
+      "name": "pa",
+      "samples": 2637,
+      "td_time_dimensionless": [
+        0.0,
+        5226.3191169455895
+      ]
+    },
+    {
+      "concat_plus_then_cross": {
+        "first_nonzero_index": 0,
+        "first_sample_difference": -8.553375186685013e-27,
+        "max_abs": 2.9085769585250962e-24,
+        "max_abs_index": 2727,
+        "native_norm": 7.492657576272175e-20,
+        "public_norm": 7.492663601502556e-20,
+        "relative_l2_public_norm": 0.00011269483598506687,
+        "residual_norm": 8.44384495662611e-24,
+        "samples": 2728
+      },
+      "elapsed_time_seconds": [
+        1.28759765625,
+        1.953125
+      ],
+      "global_first_nonzero_indices": {
+        "h_cross": 2637,
+        "h_plus": 2637
+      },
+      "global_max_abs_indices": {
+        "concat_plus_then_cross": 4000,
+        "h_cross": 4000,
+        "h_plus": 3996
+      },
+      "h_cross": {
+        "first_nonzero_index": 0,
+        "first_sample_difference": -5.834763956668097e-28,
+        "max_abs": 2.9085769585250962e-24,
+        "max_abs_index": 1363,
+        "native_norm": 5.287836614545442e-20,
+        "public_norm": 5.287843496819238e-20,
+        "relative_l2_public_norm": 0.0001224602898081449,
+        "residual_norm": 6.475508470805982e-24,
+        "samples": 1364
+      },
+      "h_plus": {
+        "first_nonzero_index": 0,
+        "first_sample_difference": -8.553375186685013e-27,
+        "max_abs": 2.035590726906096e-24,
+        "max_abs_index": 1359,
+        "native_norm": 5.30836146971374e-20,
+        "public_norm": 5.308363118554321e-20,
+        "relative_l2_public_norm": 0.00010208549744331941,
+        "residual_norm": 5.419068895673882e-24,
+        "samples": 1364
+      },
+      "indices": [
+        2637,
+        4000
+      ],
+      "name": "ode_inspiral",
+      "samples": 1364,
+      "td_time_dimensionless": [
+        5228.301787323793,
+        7930.681512815766
+      ]
+    },
+    {
+      "concat_plus_then_cross": {
+        "first_nonzero_index": 0,
+        "first_sample_difference": 2.8711277379509346e-24,
+        "max_abs": 9.651675222564995e-24,
+        "max_abs_index": 7,
+        "native_norm": 1.521823109713594e-20,
+        "public_norm": 1.521868069816272e-20,
+        "relative_l2_public_norm": 0.0012358557858241804,
+        "residual_norm": 1.8808094593435175e-23,
+        "samples": 16
+      },
+      "elapsed_time_seconds": [
+        1.95361328125,
+        1.95703125
+      ],
+      "global_first_nonzero_indices": {
+        "h_cross": 4001,
+        "h_plus": 4001
+      },
+      "global_max_abs_indices": {
+        "concat_plus_then_cross": 4008,
+        "h_cross": 4006,
+        "h_plus": 4008
+      },
+      "h_cross": {
+        "first_nonzero_index": 0,
+        "first_sample_difference": -2.220574135898361e-24,
+        "max_abs": 6.527032332038966e-24,
+        "max_abs_index": 5,
+        "native_norm": 1.182590212652852e-20,
+        "public_norm": 1.1825524178839597e-20,
+        "relative_l2_public_norm": 0.0009579568052929932,
+        "residual_norm": 1.1328341363276228e-23,
+        "samples": 8
+      },
+      "h_plus": {
+        "first_nonzero_index": 0,
+        "first_sample_difference": 2.8711277379509346e-24,
+        "max_abs": 9.651675222564995e-24,
+        "max_abs_index": 7,
+        "native_norm": 9.578235569226911e-21,
+        "public_norm": 9.579416479531027e-21,
+        "relative_l2_public_norm": 0.0015672941934484872,
+        "residual_norm": 1.5013763824993727e-23,
+        "samples": 8
+      },
+      "indices": [
+        4001,
+        4008
+      ],
+      "name": "nqc_auxiliary_to_attachment",
+      "samples": 8,
+      "td_time_dimensionless": [
+        7932.66418319397,
+        7946.542875841397
+      ]
+    },
+    {
+      "concat_plus_then_cross": {
+        "first_nonzero_index": 0,
+        "first_sample_difference": -5.8958322479096355e-24,
+        "max_abs": 9.994651233918708e-24,
+        "max_abs_index": 79,
+        "native_norm": 1.4376133444934386e-20,
+        "public_norm": 1.4375074253084593e-20,
+        "relative_l2_public_norm": 0.0015397515018989263,
+        "residual_norm": 2.2134042171095587e-23,
+        "samples": 156
+      },
+      "elapsed_time_seconds": [
+        1.95751953125,
+        1.9951171875
+      ],
+      "global_first_nonzero_indices": {
+        "h_cross": 4009,
+        "h_plus": 4009
+      },
+      "global_max_abs_indices": {
+        "concat_plus_then_cross": 4010,
+        "h_cross": 4010,
+        "h_plus": 4011
+      },
+      "h_cross": {
+        "first_nonzero_index": 0,
+        "first_sample_difference": -8.971783329078098e-24,
+        "max_abs": 9.994651233918708e-24,
+        "max_abs_index": 1,
+        "native_norm": 9.595949973536619e-21,
+        "public_norm": 9.59608483431396e-21,
+        "relative_l2_public_norm": 0.0017653424890490491,
+        "residual_norm": 1.694037628653364e-23,
+        "samples": 78
+      },
+      "h_plus": {
+        "first_nonzero_index": 0,
+        "first_sample_difference": -5.8958322479096355e-24,
+        "max_abs": 7.836802303931892e-24,
+        "max_abs_index": 2,
+        "native_norm": 1.0704716574106181e-20,
+        "public_norm": 1.0703173157262534e-20,
+        "relative_l2_public_norm": 0.0013309774997106141,
+        "residual_norm": 1.4245682647823046e-23,
+        "samples": 78
+      },
+      "indices": [
+        4009,
+        4086
+      ],
+      "name": "tail",
+      "samples": 78,
+      "td_time_dimensionless": [
+        7948.525546219601,
+        8101.191165341304
+      ]
+    }
+  ],
+  "status": "complete",
+  "support_and_events": {
+    "event_attachment_index_recorded": 724,
+    "event_attachment_td_time": 7948.213151938116,
+    "native_support_start_frequency_hz": 16.900094009839023,
+    "native_support_start_frequency_hz_hex": "0x1.0e66c8f9f9588p+4",
+    "native_support_time_seconds": 2.1121054617270536,
+    "nqc_matching_index_recorded": 170,
+    "ode_inspiral_end_td_time": 7931.213151938116,
+    "pa_end_td_time": 5226.692548836558,
+    "public_exact_start_frequency_hz": 16.900094009839023,
+    "replay_native_start": {
+      "continuation_peak_event_time": 7949.516402289853,
+      "coordinate_epoch": 0.0,
+      "formula": "max(r_min, omega_start**(-2/3))",
+      "initial_radius": 18.017491181997485,
+      "initial_radius_hex": "0x1.2047a4d56a5c8p+4",
+      "omega_start": 0.013075506553963168,
+      "omega_start_hex": "0x1.ac754c8392680p-7",
+      "physical_epoch_seconds": -1.9577635538802223
+    },
+    "replay_support_start_arithmetic": {
+      "adapter_omega_start_hex": "0x1.ac754c8392680p-7",
+      "adapter_start_frequency_hz": 16.900094009839023,
+      "adapter_start_frequency_hz_hex": "0x1.0e66c8f9f9588p+4",
+      "direct_fractional_power_hz": 16.90009400983902,
+      "direct_fractional_power_hz_hex": "0x1.0e66c8f9f9587p+4",
+      "eta": 0.24,
+      "eta_alternative_python_msun_ratio": 0.24,
+      "eta_alternative_python_msun_ratio_hex": "0x1.eb851eb851eb8p-3",
+      "eta_hex": "0x1.eb851eb851eb8p-3",
+      "eta_independent_plan": 0.24,
+      "eta_independent_plan_hex": "0x1.eb851eb851eb8p-3",
+      "formula": "f_start=(5*M/(eta*t_support))**(3/8)/(8*pi*M)",
+      "nested_eighth_root_then_cube_hz": 16.90009400983902,
+      "nested_eighth_root_then_cube_hz_hex": "0x1.0e66c8f9f9587p+4",
+      "power_base": 0.0024291967565535136,
+      "power_base_hex": "0x1.3e66513ff900bp-9",
+      "t_support": 2.1121054617270536,
+      "t_support_hex": "0x1.0e5978c5e90bep+1",
+      "total_mass_seconds": 0.00024627454738206334,
+      "total_mass_seconds_hex": "0x1.023cd2078cb2bp-12"
+    },
+    "segment_caveat": "All stored native TD samples already include the replay's NQC/ringdown processing; the auxiliary-to-attachment interval is a recorded diagnostic window, not a claim that NQC starts at its first sample.",
+    "segment_rule": "PA <= pa_time[-1]; ODE > PA and < nqc_auxiliary_time[0]; NQC auxiliary-to-attachment >= auxiliary start and <= event_attachment_time; tail > event_attachment_time",
+    "total_mass_seconds": 0.00024627454738206334
+  }
+}

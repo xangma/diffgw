@@ -1,0 +1,260 @@
+--- before/src/torchwave/approximants/eob/teob_ringdown_assembly_clean.py
++++ after/src/torchwave/approximants/eob/teob_ringdown_assembly_clean.py
+@@ -89,7 +89,7 @@
+     The ``mode``, ``amplitude``, ``phase`` and ``time`` fields are the final
+     output (possibly on the optional uniform output grid).  ``joined_*`` are
+     the pre-extension joined arrays, and ``extended_*`` retain the complete
+-    1500-sample support before optional output interpolation.  The latter
++    extension support before optional output interpolation.  The latter
+     fields make the support and the replacement boundary directly auditable.
+ 
+     ``epoch`` is the coordinate start of the returned support (the first
+@@ -466,6 +466,7 @@
+     output_step: Optional[Tensor],
+     matching_method: str,
+     explicit_peak_time: Optional[Tensor],
++    support_end: Optional[Tensor],
+ ):
+     spacing = _uniform_spacing(auxiliary_time)
+     joined_time, joined_amplitude, joined_phase, cut = _join_row(
+@@ -530,13 +531,35 @@
+         )
+         attachment_time = match_time
+ 
+-    extension_offsets = torch.arange(
+-        1, _EXTENSION_SAMPLES + 1, dtype=joined_time.dtype, device=joined_time.device
+-    )
++    if support_end is None:
++        # Keep the legacy 1500-knot path byte-for-byte equivalent when no
++        # explicit support is requested.
++        extension_samples = _EXTENSION_SAMPLES
++        extension_offsets = torch.arange(
++            1, _EXTENSION_SAMPLES + 1, dtype=joined_time.dtype, device=joined_time.device
++        )
++    else:
++        if not bool(torch.isfinite(support_end)) or not bool(support_end > 0):
++            raise ValueError("support_end must be a positive finite scalar")
++        if not bool(support_end > joined_time[-1]):
++            raise ValueError("support_end must be later than the joined endpoint")
++        span = support_end - joined_time[-1]
++        extension_samples = int(torch.ceil(span / spacing).item())
++        if extension_samples < 1:
++            raise ValueError("support_end must leave at least one extension knot")
++        extension_offsets = torch.arange(
++            1, extension_samples + 1, dtype=joined_time.dtype, device=joined_time.device
++        )
+     extended_time = torch.cat((
+         joined_time,
+         joined_time[-1] + spacing * extension_offsets,
+     ))
++    if support_end is not None:
++        # The last interval may be shorter than the auxiliary spacing.  The
++        # ceil above ensures this clamp remains strictly after its predecessor.
++        extended_time = torch.cat((extended_time[:-1], support_end.reshape(1)))
++        if bool((extended_time[1:] <= extended_time[:-1]).any()):
++            raise ValueError("support_end must produce strictly increasing extension knots")
+     evaluate_time = torch.maximum(extended_time, merger_time)
+     postmerger_kwargs = dict(
+         nu=nu,
+@@ -593,7 +616,7 @@
+     )
+     base_extended_mode = torch.cat((
+         replacement_base_mode,
+-        torch.zeros(_EXTENSION_SAMPLES, dtype=ringdown_mode.dtype, device=ringdown_mode.device),
++        torch.zeros(extension_samples, dtype=ringdown_mode.dtype, device=ringdown_mode.device),
+     ))
+     replacement = torch.arange(
+         extended_time.shape[-1], device=extended_time.device
+@@ -601,7 +624,7 @@
+     extended_mode = torch.where(replacement, ringdown_mode, base_extended_mode)
+     base_extended_amplitude = torch.cat((
+         joined_for_replacement_amplitude,
+-        torch.zeros(_EXTENSION_SAMPLES, dtype=joined_amplitude.dtype, device=joined_amplitude.device),
++        torch.zeros(extension_samples, dtype=joined_amplitude.dtype, device=joined_amplitude.device),
+     ))
+     # The ansatz carries its own physical amplitude.  No anchor rescaling is
+     # applied, and the signed pre-attachment input amplitude stays signed.
+@@ -726,6 +749,9 @@
+         "events": events,
+         "cut_count": cut,
+         "spacing": spacing,
++        "extension_samples": torch.as_tensor(
++            extension_samples, dtype=torch.long, device=joined_time.device
++        ),
+         "ringdown_phase0": ringdown_phase0,
+         "auxiliary_amplitude_negative": (auxiliary_amplitude < 0).any(),
+     }
+@@ -756,6 +782,7 @@
+     merger_frequency_value=None,
+     matching_method: str = "grid",
+     peak_time: Optional[Tensor] = None,
++    support_end: Optional[Tensor] = None,
+ ) -> RingdownAssemblyResult:
+     """Join corrected samples and append the published TEOB postmerger.
+ 
+@@ -784,6 +811,13 @@
+     anchor the analytic ansatz.  Its attachment index identifies the first
+     joined knot at or after the physical boundary, while attachment_time is
+     the continuous boundary itself.
++
++    ``support_end`` optionally sets the absolute end of the extended support
++    in initial-total-mass time units.  It must be a positive finite scalar (or
++    one scalar per batch row), later than the joined endpoint.  The final
++    extension knot is clamped exactly to this value; this is an end coordinate,
++    rather than a duration.  With ``support_end=None`` the legacy 1500
++    auxiliary-spacing knots are retained exactly.
+     """
+ 
+     series = (
+@@ -830,6 +864,11 @@
+         parameter_batch = torch.broadcast_shapes(parameter_batch, peak_tensor.shape)
+     else:
+         peak_tensor = None
++    if support_end is not None:
++        support_end_tensor = _parameter("support_end", support_end, full_time)
++        parameter_batch = torch.broadcast_shapes(parameter_batch, support_end_tensor.shape)
++    else:
++        support_end_tensor = None
+     batch_shape = torch.broadcast_shapes(
+         *(value.shape[:-1] for _, value in series),
+         parameter_batch,
+@@ -861,6 +900,8 @@
+     spin_tensor = spin_tensor.expand(batch_shape)
+     if peak_tensor is not None:
+         peak_tensor = peak_tensor.expand(batch_shape)
++    if support_end_tensor is not None:
++        support_end_tensor = support_end_tensor.expand(batch_shape)
+     if merger_frequency_tensor is not None:
+         merger_frequency_tensor = merger_frequency_tensor.expand(batch_shape)
+     row_count = 1
+@@ -870,6 +911,9 @@
+     flat_nu = nu_tensor.reshape(row_count)
+     flat_mass = mass_tensor.reshape(row_count)
+     flat_spin = spin_tensor.reshape(row_count)
++    flat_support_end = (
++        None if support_end_tensor is None else support_end_tensor.reshape(row_count)
++    )
+     flat_merger_frequency = (
+         None if merger_frequency_tensor is None else merger_frequency_tensor.reshape(row_count)
+     )
+@@ -885,10 +929,18 @@
+             output_step_tensor,
+             matching_method,
+             None if peak_tensor is None else peak_tensor.reshape(row_count)[row],
++            None if flat_support_end is None else flat_support_end[row],
+         ))
+     joined_lengths = {item["joined_time"].shape[-1] for item in rows}
+     if len(joined_lengths) != 1:
+         raise ValueError("batch rows must use the same strict waveform join length")
++    extended_lengths = {item["extended_time"].shape[-1] for item in rows}
++    output_lengths = {item["time"].shape[-1] for item in rows}
++    if len(extended_lengths) != 1 or len(output_lengths) != 1:
++        raise ValueError(
++            "batch rows must use the same extended/output support length; "
++            "use a common support_end and output_step"
++        )
+ 
+     events = RingdownAssemblyEvents(*(
+         _reshape_rows([item["events"][field] for item in rows], batch_shape)
+@@ -920,7 +972,11 @@
+         _reshape_rows([item["time"][0] for item in rows], batch_shape),
+         _reshape_rows([item["extended_time"][-1] for item in rows], batch_shape),
+         _reshape_rows([item["time"][-1] for item in rows], batch_shape),
+-        torch.as_tensor(_EXTENSION_SAMPLES, dtype=torch.long, device=device),
++        (
++            torch.as_tensor(_EXTENSION_SAMPLES, dtype=torch.long, device=device)
++            if support_end_tensor is None else
++            _reshape_rows([item["extension_samples"] for item in rows], batch_shape)
++        ),
+         _reshape_rows([item["spacing"] for item in rows], batch_shape),
+         _reshape_rows([item["ringdown_phase0"] for item in rows], batch_shape),
+         _reshape_rows([item["auxiliary_amplitude_negative"] for item in rows], batch_shape),
+--- before/tests/test_teob_ringdown_continuous.py
++++ after/tests/test_teob_ringdown_continuous.py
+@@ -230,6 +230,8 @@
+         matching_method="continuous", peak_time=peaks,
+     )
+     assert result.mode.shape[0] == 2
++    assert result.extension_samples.ndim == 0
++    assert int(result.extension_samples) == 1500
+     torch.testing.assert_close(result.events.peak_time, peaks, rtol=0.0, atol=0.0)
+     torch.testing.assert_close(result.events.match_time, peaks - 1.0, rtol=0.0, atol=0.0)
+ 
+@@ -242,3 +244,77 @@
+                   peak_time=torch.tensor(20.0, dtype=DTYPE))
+     with pytest.raises(ValueError, match="matching_method"):
+         _assemble(_series(), matching_method="nearest")
++
++
++def test_support_end_none_keeps_legacy_auxiliary_knot_count():
++    result = _assemble(_series(aux_step=0.5), matching_method="continuous",
++                       peak_time=torch.tensor(5.2, dtype=DTYPE))
++    assert int(result.extension_samples) == 1500
++    torch.testing.assert_close(
++        result.extended_time[-1] - result.joined_time[-1],
++        torch.tensor(1500.0 * 0.5, dtype=DTYPE), rtol=0.0, atol=0.0,
++    )
++
++
++def test_support_end_clamps_nondivisible_final_knot():
++    base = _assemble(_series(aux_step=0.5), matching_method="continuous",
++                     peak_time=torch.tensor(5.2, dtype=DTYPE))
++    requested = base.joined_time[-1] + torch.tensor(1.1, dtype=DTYPE)
++    result = _assemble(_series(aux_step=0.5), matching_method="continuous",
++                       peak_time=torch.tensor(5.2, dtype=DTYPE),
++                       support_end=requested)
++    assert int(result.extension_samples) == 3
++    torch.testing.assert_close(result.extended_time[-1], requested,
++                               rtol=0.0, atol=0.0)
++    assert bool(torch.all(result.extended_time[1:] > result.extended_time[:-1]))
++
++
++def test_support_end_makes_continuous_uniform_output_and_fd_spacing_independent():
++    results = [
++        _assemble(_series(aux_step=step), matching_method="continuous",
++                  peak_time=torch.tensor(5.2, dtype=DTYPE),
++                  output_step=torch.tensor(0.25, dtype=DTYPE),
++                  support_end=torch.tensor(11.0, dtype=DTYPE))
++        for step in (0.05, 0.1, 0.2, 0.5)
++    ]
++    reference = results[0]
++    for result in results[1:]:
++        torch.testing.assert_close(result.time, reference.time, rtol=0.0, atol=0.0)
++        torch.testing.assert_close(result.mode, reference.mode, rtol=0.0, atol=0.0)
++        torch.testing.assert_close(torch.fft.fft(result.mode), torch.fft.fft(reference.mode),
++                                   rtol=0.0, atol=0.0)
++        torch.testing.assert_close(result.extended_time[-1], reference.extended_time[-1],
++                                   rtol=0.0, atol=0.0)
++
++
++@pytest.mark.parametrize("bad_support", [0.0, -1.0, float("nan"), float("inf")])
++def test_support_end_rejects_invalid_values(bad_support):
++    with pytest.raises(ValueError, match="support_end"):
++        _assemble(_series(), matching_method="continuous",
++                  peak_time=torch.tensor(5.2, dtype=DTYPE),
++                  support_end=torch.tensor(bad_support, dtype=DTYPE))
++
++
++def test_support_end_must_follow_each_joined_endpoint():
++    series = _series()
++    joined_end = _assemble(series, matching_method="continuous",
++                           peak_time=torch.tensor(5.2, dtype=DTYPE)).joined_time[-1]
++    with pytest.raises(ValueError, match="later than the joined endpoint"):
++        _assemble(series, matching_method="continuous",
++                  peak_time=torch.tensor(5.2, dtype=DTYPE), support_end=joined_end)
++
++
++def test_support_end_rejects_incompatible_batched_output_lengths():
++    series = _series()
++    batched = tuple(torch.stack((value, value)) for value in series)
++    with pytest.raises(ValueError, match="same extended/output support length"):
++        assemble_teob_ringdown_22(
++            *batched,
++            nu=torch.tensor([0.24, 0.24], dtype=DTYPE),
++            final_mass=torch.tensor([0.95, 0.95], dtype=DTYPE),
++            final_spin=torch.tensor([0.0, 0.0], dtype=DTYPE),
++            matching_method="continuous",
++            peak_time=torch.tensor([5.2, 5.2], dtype=DTYPE),
++            output_step=torch.tensor(0.25, dtype=DTYPE),
++            support_end=torch.tensor([11.0, 11.25], dtype=DTYPE),
++        )

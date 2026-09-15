@@ -1,0 +1,32 @@
+{
+  "host": "len",
+  "cwd": "/home/xangma/simulations/torchwave-nr/2026-09-12-pilot",
+  "command": [
+    "/usr/bin/python3",
+    "-u",
+    "/home/xangma/simulations/torchwave-nr/2026-09-12-pilot/scripts/run-performance-48pe.py"
+  ],
+  "systemd_command": [
+    "systemd-run",
+    "--user",
+    "--unit=torchwave-nr-performance-48pe",
+    "--property=RuntimeMaxSec=374400",
+    "--property=TimeoutStopSec=90",
+    "--property=MemoryMax=256M",
+    "--property=CPUQuota=20%",
+    "--property=StandardOutput=append:/home/xangma/simulations/torchwave-nr/2026-09-12-pilot/logs/performance-48pe.log",
+    "--property=StandardError=inherit",
+    "--working-directory=/home/xangma/simulations/torchwave-nr/2026-09-12-pilot",
+    "/usr/bin/python3",
+    "-u",
+    "/home/xangma/simulations/torchwave-nr/2026-09-12-pilot/scripts/run-performance-48pe.py"
+  ],
+  "unit": "torchwave-nr-performance-48pe.service",
+  "requested_utc": "2026-09-13T06:46:47.221767+00:00",
+  "log_path": "/home/xangma/simulations/torchwave-nr/2026-09-12-pilot/logs/performance-48pe.log",
+  "state_path": "/home/xangma/simulations/torchwave-nr/2026-09-12-pilot/provenance/performance-48pe-state.json",
+  "stop_command": "systemctl --user stop torchwave-nr-performance-48pe.service",
+  "expected_next_check": "within one minute; driver polls every 10 seconds",
+  "plan_sha256": "9434584824184d4d0169cb43b8602909cc70580447ffe8a3f498751f0f0ee01b",
+  "initial_systemd_state": "MainPID=2599638\nActiveState=active\nSubState=running\n"
+}

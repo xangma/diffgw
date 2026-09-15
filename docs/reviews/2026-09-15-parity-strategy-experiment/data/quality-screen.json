@@ -1,0 +1,358 @@
+{
+  "all_pass": false,
+  "policy_sha256": "1a863811b90c410cd5a9b0b52a0bd53696b869a0d503cb8fa61d9c054842138d",
+  "simulations": [
+    {
+      "available_resolutions": [
+        "Lev3",
+        "Lev2"
+      ],
+      "evaluation_status": "failed_quality_gate",
+      "frequency_band": {
+        "maximum": 0.3,
+        "minimum": 0.12292090062019145
+      },
+      "gates": [
+        {
+          "evidence": {
+            "SXS:BBH:0201/Lev2/N3": {
+              "deprecated": false,
+              "errors": [],
+              "missing_fields": [],
+              "pass": true,
+              "source_split": "validation_only"
+            },
+            "SXS:BBH:0201/Lev3/N2": {
+              "deprecated": false,
+              "errors": [],
+              "missing_fields": [],
+              "pass": true,
+              "source_split": "validation_only"
+            },
+            "SXS:BBH:0201/Lev3/N3": {
+              "deprecated": false,
+              "errors": [],
+              "missing_fields": [],
+              "pass": true,
+              "source_split": "holdout"
+            }
+          },
+          "name": "exact_nondeprecated_level_metadata",
+          "pass": true,
+          "required": true
+        },
+        {
+          "evidence": {
+            "magnitudes": [
+              6.506503445032356e-05,
+              3.846986521211109e-05
+            ],
+            "maximum": 6.506503445032356e-05
+          },
+          "limit": 0.0001,
+          "name": "near_nonspin",
+          "pass": true,
+          "required": true
+        },
+        {
+          "evidence": {
+            "kind": "value",
+            "value": 0.0001938
+          },
+          "limit": 0.001,
+          "name": "eccentricity",
+          "pass": true,
+          "required": true
+        },
+        {
+          "evidence": 328.2792640689904,
+          "limit": 150.0,
+          "name": "post_peak_duration",
+          "pass": true,
+          "required": true
+        },
+        {
+          "evidence": 0.02718261670246047,
+          "limit": 0.01,
+          "name": "high_resolution_extraction",
+          "pass": false,
+          "required": true
+        },
+        {
+          "evidence": 0.07933444385152806,
+          "limit": 0.01,
+          "name": "next_resolution",
+          "pass": false,
+          "required": true
+        },
+        {
+          "evidence": {
+            "bins": 2534,
+            "denominator": "highest-resolution N3 baseline",
+            "frequency_Mf_range": [
+              0.12292447028568235,
+              0.2999385028232795
+            ],
+            "no_extrapolation": true,
+            "relative_l2": [
+              2.771004674130568e-07,
+              8.284019010128325e-06
+            ]
+          },
+          "limit": 0.002,
+          "name": "preprocessing_variations",
+          "pass": true,
+          "required": true
+        }
+      ],
+      "h22_peak": {
+        "decoded_time": 5281.68248766156,
+        "duration_source": "decoded h22",
+        "duration_to_end_M": 328.2792640689904,
+        "metadata_decoded_difference_M": 0.0,
+        "metadata_time": 5281.68248766156
+      },
+      "highest_resolution": "Lev3",
+      "metadata": {
+        "SXS:BBH:0201/Lev2/N3": {
+          "deprecated": false,
+          "errors": [],
+          "missing_fields": [],
+          "pass": true,
+          "source_split": "validation_only"
+        },
+        "SXS:BBH:0201/Lev3/N2": {
+          "deprecated": false,
+          "errors": [],
+          "missing_fields": [],
+          "pass": true,
+          "source_split": "validation_only"
+        },
+        "SXS:BBH:0201/Lev3/N3": {
+          "deprecated": false,
+          "errors": [],
+          "missing_fields": [],
+          "pass": true,
+          "source_split": "holdout"
+        }
+      },
+      "metrics": {
+        "extraction_high_N2_vs_high_N3_relative_l2": 0.02718261670246047,
+        "preprocessing_variant_relative_l2": {
+          "bins": 2534,
+          "denominator": "highest-resolution N3 baseline",
+          "frequency_Mf_range": [
+            0.12292447028568235,
+            0.2999385028232795
+          ],
+          "no_extrapolation": true,
+          "relative_l2": [
+            2.771004674130568e-07,
+            8.284019010128325e-06
+          ]
+        },
+        "resolution_next_N3_vs_high_N3_relative_l2": 0.07933444385152806
+      },
+      "next_resolution": "Lev2",
+      "passed": false,
+      "primary_case_id": "SXS:BBH:0201/Lev3/N3",
+      "qnm": {
+        "f_damp_33": 0.014267394156967629,
+        "f_ring_33": 0.1293904217054647,
+        "qnm_solver": {
+          "angular_error": 2.131808899983951e-14,
+          "cf_depth": 1024,
+          "cf_error": 0.0,
+          "helper_sha256": "a7b07b28962b676271645fd60cf6bd7c2684c8c92e801579897f2d8f84698fc9",
+          "omega_remnant": [
+            0.7843561662672499,
+            -0.08648799838566615
+          ],
+          "radial_residual": [
+            2.220446049250313e-15,
+            -1.887379141862766e-15
+          ]
+        },
+        "qnm_source": "independent scripts/kerr_leaver_solver.py"
+      },
+      "source_split": "holdout",
+      "sxs_id": "SXS:BBH:0201"
+    },
+    {
+      "available_resolutions": [
+        "Lev5",
+        "Lev4"
+      ],
+      "evaluation_status": "passed",
+      "frequency_band": {
+        "maximum": 0.3,
+        "minimum": 0.10549140908151815
+      },
+      "gates": [
+        {
+          "evidence": {
+            "SXS:BBH:2488/Lev4/N3": {
+              "deprecated": false,
+              "errors": [],
+              "missing_fields": [],
+              "pass": true,
+              "source_split": "validation_only"
+            },
+            "SXS:BBH:2488/Lev5/N2": {
+              "deprecated": false,
+              "errors": [],
+              "missing_fields": [],
+              "pass": true,
+              "source_split": "validation_only"
+            },
+            "SXS:BBH:2488/Lev5/N3": {
+              "deprecated": false,
+              "errors": [],
+              "missing_fields": [],
+              "pass": true,
+              "source_split": "holdout"
+            }
+          },
+          "name": "exact_nondeprecated_level_metadata",
+          "pass": true,
+          "required": true
+        },
+        {
+          "evidence": {
+            "magnitudes": [
+              4.8100463563669246e-05,
+              2.3316290641978947e-05
+            ],
+            "maximum": 4.8100463563669246e-05
+          },
+          "limit": 0.0001,
+          "name": "near_nonspin",
+          "pass": true,
+          "required": true
+        },
+        {
+          "evidence": {
+            "kind": "value",
+            "value": 0.0007904
+          },
+          "limit": 0.001,
+          "name": "eccentricity",
+          "pass": true,
+          "required": true
+        },
+        {
+          "evidence": 153.90323147572053,
+          "limit": 150.0,
+          "name": "post_peak_duration",
+          "pass": true,
+          "required": true
+        },
+        {
+          "evidence": 0.0021485565175851985,
+          "limit": 0.01,
+          "name": "high_resolution_extraction",
+          "pass": true,
+          "required": true
+        },
+        {
+          "evidence": 0.00325952535532042,
+          "limit": 0.01,
+          "name": "next_resolution",
+          "pass": true,
+          "required": true
+        },
+        {
+          "evidence": {
+            "bins": 6365,
+            "denominator": "highest-resolution N3 baseline",
+            "frequency_Mf_range": [
+              0.10551114696391904,
+              0.2999718881392393
+            ],
+            "no_extrapolation": true,
+            "relative_l2": [
+              6.757578137872705e-08,
+              6.977414040687538e-06
+            ]
+          },
+          "limit": 0.002,
+          "name": "preprocessing_variations",
+          "pass": true,
+          "required": true
+        }
+      ],
+      "h22_peak": {
+        "decoded_time": 9486.490168037535,
+        "duration_source": "decoded h22",
+        "duration_to_end_M": 153.90323147572053,
+        "metadata_decoded_difference_M": 0.0,
+        "metadata_time": 9486.490168037535
+      },
+      "highest_resolution": "Lev5",
+      "metadata": {
+        "SXS:BBH:2488/Lev4/N3": {
+          "deprecated": false,
+          "errors": [],
+          "missing_fields": [],
+          "pass": true,
+          "source_split": "validation_only"
+        },
+        "SXS:BBH:2488/Lev5/N2": {
+          "deprecated": false,
+          "errors": [],
+          "missing_fields": [],
+          "pass": true,
+          "source_split": "validation_only"
+        },
+        "SXS:BBH:2488/Lev5/N3": {
+          "deprecated": false,
+          "errors": [],
+          "missing_fields": [],
+          "pass": true,
+          "source_split": "holdout"
+        }
+      },
+      "metrics": {
+        "extraction_high_N2_vs_high_N3_relative_l2": 0.0021485565175851985,
+        "preprocessing_variant_relative_l2": {
+          "bins": 6365,
+          "denominator": "highest-resolution N3 baseline",
+          "frequency_Mf_range": [
+            0.10551114696391904,
+            0.2999718881392393
+          ],
+          "no_extrapolation": true,
+          "relative_l2": [
+            6.757578137872705e-08,
+            6.977414040687538e-06
+          ]
+        },
+        "resolution_next_N3_vs_high_N3_relative_l2": 0.00325952535532042
+      },
+      "next_resolution": "Lev4",
+      "passed": true,
+      "primary_case_id": "SXS:BBH:2488/Lev5/N3",
+      "qnm": {
+        "f_damp_33": 0.014639043699740038,
+        "f_ring_33": 0.11104358850686122,
+        "qnm_solver": {
+          "angular_error": 1.066251308843905e-14,
+          "cf_depth": 1024,
+          "cf_error": 0.0,
+          "helper_sha256": "a7b07b28962b676271645fd60cf6bd7c2684c8c92e801579897f2d8f84698fc9",
+          "omega_remnant": [
+            0.6884123560815356,
+            -0.09075443886159995
+          ],
+          "radial_residual": [
+            8.881784197001252e-16,
+            -2.3314683517128287e-15
+          ]
+        },
+        "qnm_source": "independent scripts/kerr_leaver_solver.py"
+      },
+      "source_split": "holdout",
+      "sxs_id": "SXS:BBH:2488"
+    }
+  ]
+}

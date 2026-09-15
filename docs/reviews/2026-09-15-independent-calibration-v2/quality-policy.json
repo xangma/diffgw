@@ -1,0 +1,88 @@
+{
+  "schema_version": 1,
+  "created_utc": "2026-09-15T10:33:55.896752+00:00",
+  "purpose": "predeclared NR-only quality screening before replacement-waveform inspection and fitting",
+  "target_mass_ratios": [
+    1.5,
+    2,
+    3,
+    4,
+    5,
+    6,
+    8
+  ],
+  "training_target_q": [
+    1.5,
+    2,
+    4,
+    5,
+    8
+  ],
+  "holdout_target_q": [
+    3,
+    6
+  ],
+  "excluded_sxs_ids": [
+    "SXS:BBH:0008",
+    "SXS:BBH:0169",
+    "SXS:BBH:0030",
+    "SXS:BBH:0182",
+    "SXS:BBH:0056",
+    "SXS:BBH:0166",
+    "SXS:BBH:0063"
+  ],
+  "candidate_order": "nondeprecated replacements ranked using metadata alone; freeze candidate IDs/order before waveform H5 download; next prespecified candidate only after earlier candidate fails fixed gates",
+  "primary": "highest available numerical resolution, N3; never choose extraction order based on agreement with LAL",
+  "required_data": "highest two available resolutions, N2 and N3 each; exact same-record same-resolution metadata and sidecars verified by inventory MD5 and size",
+  "gates": {
+    "max_reference_spin_magnitude": 0.0001,
+    "max_eccentricity_upper_bound": 0.001,
+    "min_post_peak_duration_M": 150.0,
+    "max_extraction_relative_l2": 0.01,
+    "max_resolution_relative_l2": 0.01,
+    "max_preprocessing_relative_l2": 0.002,
+    "min_training_simulations": 5,
+    "min_holdout_simulations": 2
+  },
+  "controls": {
+    "sample_dt": 0.1,
+    "start_taper_duration": 500.0,
+    "end_taper_duration": 20.0,
+    "pad_factor": 4,
+    "fmax": 0.3
+  },
+  "preprocessing_variants": [
+    {
+      "sample_dt": 0.05
+    },
+    {
+      "end_taper_duration": 40.0
+    }
+  ],
+  "frequency_band": {
+    "minimum": "0.95 * independent f_ring_33 from highest N3 matching remnant metadata",
+    "maximum": 0.3
+  },
+  "metric": "geometric Fourier amplitude relative L2; denominator is highest-resolution N3; native highest-N3 frequency bins over overlap of all compared spectra; linear amplitude interpolation, no extrapolation",
+  "definitions": {
+    "extraction": "highest-resolution N2 versus highest-resolution N3",
+    "resolution": "next-highest-resolution N3 versus highest-resolution N3",
+    "preprocessing": "each fixed preprocessing variant versus highest-resolution N3 baseline",
+    "eccentricity": "finite scalar or numeric upper bound; absent/unparseable does not pass",
+    "metadata_units": "waveform reference-mass normalization; matching resolution metadata code-unit masses/times converted by total reference mass; dimensionless spins unchanged"
+  },
+  "fit_policy": {
+    "reuse_fitter": "scripts/fit_nr33_amplitude_pilot.py",
+    "sigma_33": 1.3,
+    "parameter_degree": 2,
+    "no_hyperparameter_tuning": true,
+    "holdout_policy": "q3/q6 replacements and their alternate resolutions/orders never enter training; inspected historical pilot cases excluded",
+    "if_insufficient_quality": "do not fit; report failed gates and remaining dataset gaps",
+    "LAL_policy": "no LAL calls before new calibration and split are frozen; any subsequent call is validation only"
+  },
+  "limits": [
+    "NR-only quality screening inspects holdout NR for numerical quality but never uses holdout fit residuals to select data or coefficients",
+    "replacement simulations can share a physical family with old runs; they are new to this fit, not necessarily independent of earlier NR generation",
+    "amplitude-only selected-band gates do not prove complete complex-waveform accuracy"
+  ]
+}

@@ -1,0 +1,49 @@
+{
+  "artifact": "/tmp/torchwave-eob-degree6-fine/dt-0.0625.pt",
+  "artifact_sha256": "ea324da3318e85b55d92058f0a83437c4800183403ccfa508fc7d8449a204dac",
+  "sweeps": [
+    [
+      {
+        "phiRef": 0.0,
+        "phase_start": 2.7289816094703454,
+        "phase_peak": 2.9612291021762895,
+        "unwrapped_peak": -34.73788274090123
+      },
+      {
+        "phiRef": 0.2,
+        "phase_start": 2.3289816094703455,
+        "phase_peak": 2.5612291021762896,
+        "unwrapped_peak": -35.137882740901226
+      },
+      {
+        "phiRef": 0.7,
+        "phase_start": 1.3289816094703457,
+        "phase_peak": 1.5612291021762899,
+        "unwrapped_peak": -36.137882740901226
+      }
+    ],
+    [
+      {
+        "phiRef": 0.0,
+        "phase_start": 2.7023255804783166,
+        "phase_peak": 0.34138841665044933,
+        "unwrapped_peak": -37.35772342642707
+      },
+      {
+        "phiRef": 0.2,
+        "phase_start": 2.3023255804783163,
+        "phase_peak": -0.058611583349550696,
+        "unwrapped_peak": -37.75772342642707
+      },
+      {
+        "phiRef": 0.7,
+        "phase_start": 1.3023255804783165,
+        "phase_peak": -1.0586115833495506,
+        "unwrapped_peak": -38.75772342642707
+      }
+    ]
+  ],
+  "public_api": "SimInspiralChooseTDWaveform(phiRef, fRef, ...); installed docstring exposes parameter names but no anchoring semantics. fRef=0 and fRef=f_lower controls were identical for SEOBNRv4 TD.",
+  "conclusion": "The documented public contract inspected here does not establish whether phiRef anchors initial orbital phase, reference-frequency phase, or coalescence phase for this TD approximant. Native assembly uses exp(-2 i phiRef), which is an equation-defined m=2 rotation; a self-contained absolute anchor requires an explicit project convention or additional public specification, not residual fitting.",
+  "paper": "Ossokine et al., SEOBNRv4PHM, arXiv:2004.09442 (multipolar EOB paper; does not specify this TD wrapper anchoring rule)."
+}

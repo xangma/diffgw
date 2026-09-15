@@ -1,0 +1,513 @@
+{
+  "case_id": "SXS:BBH:2484/Lev5/N3",
+  "sxs_id": "SXS:BBH:2484",
+  "q": 4.4995631767635835,
+  "target_q": 4.5,
+  "split": "holdout",
+  "qnm": {
+    "f_ring_33": 0.11667968857766266,
+    "f_damp_33": 0.01455133879484376,
+    "qnm_source": "independent scripts/kerr_leaver_solver.py",
+    "qnm_solver": {
+      "omega_remnant": [
+        0.7187213368145337,
+        -0.08963306123421945
+      ],
+      "radial_residual": [
+        -6.661338147750939e-15,
+        2.220446049250313e-15
+      ],
+      "cf_depth": 1024,
+      "cf_error": 0.0,
+      "angular_error": 3.552783067061927e-14,
+      "helper_sha256": "a7b07b28962b676271645fd60cf6bd7c2684c8c92e801579897f2d8f84698fc9"
+    }
+  },
+  "frequency_Mf_range": [
+    0.11088205423595215,
+    0.29998029437176943
+  ],
+  "bins": 4991,
+  "phase_bins": 1978,
+  "phase_band_Mf": [
+    0.11088205423595215,
+    0.18580133695108456
+  ],
+  "phase_quality_pass": true,
+  "numerical_controls": [
+    {
+      "key": "control_Lev4_N2",
+      "case_id": "SXS:BBH:2484/Lev4/N2",
+      "required": false,
+      "passed": true,
+      "phase_limit_rad": 0.01,
+      "complex_l2_limit": 0.01,
+      "metrics": {
+        "bins": 4991,
+        "constant_phase": -1.5743689069503968,
+        "affine_phase": -1.5464186098977324,
+        "time_shift": -0.03774075996635165,
+        "raw_relative_l2": 1.4168232758660617,
+        "constant_relative_l2": 0.00265866984822107,
+        "affine_relative_l2": 0.0022481216113571733,
+        "raw_overlap": -0.003572559957146774,
+        "constant_overlap": 0.9999964734966849,
+        "affine_overlap": 0.99999748061271,
+        "raw_mismatch": 1.0035725599571468,
+        "constant_mismatch": 3.526503315143259e-06,
+        "affine_mismatch": 2.5193872900119985e-06,
+        "raw_phase_rms": 1.574367099271447,
+        "constant_phase_rms": 0.001960779528213614,
+        "affine_phase_rms": 0.0013653782391142989,
+        "phase_mask_retained_reference_norm_fraction": 0.9999995365180835
+      }
+    },
+    {
+      "key": "control_Lev4_N3",
+      "case_id": "SXS:BBH:2484/Lev4/N3",
+      "required": true,
+      "passed": true,
+      "phase_limit_rad": 0.01,
+      "complex_l2_limit": 0.01,
+      "metrics": {
+        "bins": 4991,
+        "constant_phase": -1.5881585957345843,
+        "affine_phase": -1.546934482761638,
+        "time_shift": -0.055665277402446124,
+        "raw_relative_l2": 1.4278911283442866,
+        "constant_relative_l2": 0.0036340997329180886,
+        "affine_relative_l2": 0.002972841733246214,
+        "raw_overlap": -0.0173613182112712,
+        "constant_overlap": 0.999995482107986,
+        "affine_overlap": 0.9999976621127077,
+        "raw_mismatch": 1.0173613182112713,
+        "constant_mismatch": 4.517892014055391e-06,
+        "affine_mismatch": 2.3378872923141003e-06,
+        "raw_phase_rms": 1.5881569099549693,
+        "constant_phase_rms": 0.0024834844695547508,
+        "affine_phase_rms": 0.0013636201532951215,
+        "phase_mask_retained_reference_norm_fraction": 0.9999995365180835
+      }
+    },
+    {
+      "key": "control_Lev5_N2",
+      "case_id": "SXS:BBH:2484/Lev5/N2",
+      "required": true,
+      "passed": true,
+      "phase_limit_rad": 0.01,
+      "complex_l2_limit": 0.01,
+      "metrics": {
+        "bins": 4991,
+        "constant_phase": 0.01358227332000271,
+        "affine_phase": -0.0013570573239734774,
+        "time_shift": 0.02017446731601923,
+        "raw_relative_l2": 0.013702235711434162,
+        "constant_relative_l2": 0.001896580986111428,
+        "affine_relative_l2": 0.0017413246095855854,
+        "raw_overlap": 0.9999074774377366,
+        "constant_overlap": 0.9999997150677254,
+        "affine_overlap": 0.9999999979640299,
+        "raw_mismatch": 9.25225622634418e-05,
+        "constant_mismatch": 2.8493227455239634e-07,
+        "affine_mismatch": 2.0359700592109675e-09,
+        "raw_phase_rms": 0.01360314878445294,
+        "constant_phase_rms": 0.0007535415480674928,
+        "affine_phase_rms": 4.396553572171873e-05,
+        "phase_mask_retained_reference_norm_fraction": 0.9999995365180835
+      }
+    },
+    {
+      "key": "preprocessing_0",
+      "case_id": "SXS:BBH:2484/Lev5/N3",
+      "required": true,
+      "passed": true,
+      "phase_limit_rad": 0.002,
+      "complex_l2_limit": 0.002,
+      "metrics": {
+        "bins": 4991,
+        "constant_phase": -2.0488744428850907e-09,
+        "affine_phase": -3.261531179384072e-08,
+        "time_shift": 4.127766683213787e-08,
+        "raw_relative_l2": 1.8927543009540197e-08,
+        "constant_relative_l2": 1.8816322645861806e-08,
+        "affine_relative_l2": 1.8753205120068007e-08,
+        "raw_overlap": 1.0000000000000002,
+        "constant_overlap": 1.0000000000000002,
+        "affine_overlap": 1.0000000000000002,
+        "raw_mismatch": -2.220446049250313e-16,
+        "constant_mismatch": -2.220446049250313e-16,
+        "affine_mismatch": -2.220446049250313e-16,
+        "raw_phase_rms": 6.8170998845073765e-09,
+        "constant_phase_rms": 6.5018988194332495e-09,
+        "affine_phase_rms": 6.317097274249144e-09,
+        "phase_mask_retained_reference_norm_fraction": 0.9999995365180835
+      }
+    },
+    {
+      "key": "preprocessing_1",
+      "case_id": "SXS:BBH:2484/Lev5/N3",
+      "required": true,
+      "passed": true,
+      "phase_limit_rad": 0.002,
+      "complex_l2_limit": 0.002,
+      "metrics": {
+        "bins": 4991,
+        "constant_phase": 1.4328554337748002e-06,
+        "affine_phase": 3.378267077328546e-05,
+        "time_shift": -4.368617988429561e-05,
+        "raw_relative_l2": 1.51254911099672e-05,
+        "constant_relative_l2": 1.505747011032353e-05,
+        "affine_relative_l2": 1.4969192538272874e-05,
+        "raw_overlap": 0.9999999998856396,
+        "constant_overlap": 0.9999999998866661,
+        "affine_overlap": 0.9999999998879914,
+        "raw_mismatch": 1.1436041003065611e-10,
+        "constant_mismatch": 1.1333389782208769e-10,
+        "affine_mismatch": 1.1200862459759264e-10,
+        "raw_phase_rms": 1.0641954669753883e-05,
+        "constant_phase_rms": 1.0545062132207113e-05,
+        "affine_phase_rms": 1.0418485750381242e-05,
+        "phase_mask_retained_reference_norm_fraction": 0.9999995365180835
+      }
+    }
+  ],
+  "fft_metadata": {
+    "primary": {
+      "relaxation_time": 997.0025398574278,
+      "retained_time": [
+        997.1025064980173,
+        7594.102506498018
+      ],
+      "taper_flat_window": [
+        1497.0025398574278,
+        7574.166994893881
+      ],
+      "native_dt": 0.14575605990239637,
+      "sample_dt": 0.1,
+      "n_samples": 65971,
+      "nfft": 263884,
+      "fft_epoch": 997.1025064980173,
+      "h22_peak_time": 7441.971706123673,
+      "phase_reference": "h22_peak",
+      "epoch_correction": "exp(-2*pi*i*f*(fft_epoch-h22_peak_time))",
+      "frequency_convention": "conjugate h33; numpy FFT f>0",
+      "positive_mode_mapping": "h_(3,-3) = -conj(h33)",
+      "spectrum_units": "time-domain amplitude multiplied by sample_dt"
+    },
+    "control_Lev4_N2": {
+      "relaxation_time": 979.7261551237378,
+      "retained_time": [
+        980.2872914444728,
+        7627.687291444473
+      ],
+      "taper_flat_window": [
+        1479.726155123738,
+        7607.776314648852
+      ],
+      "native_dt": 0.16456221772386925,
+      "sample_dt": 0.1,
+      "n_samples": 66475,
+      "nfft": 265900,
+      "fft_epoch": 980.2872914444728,
+      "h22_peak_time": 7475.34601252112,
+      "phase_reference": "h22_peak",
+      "epoch_correction": "exp(-2*pi*i*f*(fft_epoch-h22_peak_time))",
+      "frequency_convention": "conjugate h33; numpy FFT f>0",
+      "positive_mode_mapping": "h_(3,-3) = -conj(h33)",
+      "spectrum_units": "time-domain amplitude multiplied by sample_dt"
+    },
+    "control_Lev4_N3": {
+      "relaxation_time": 979.7261551237378,
+      "retained_time": [
+        980.2872914444728,
+        7627.687291444473
+      ],
+      "taper_flat_window": [
+        1479.726155123738,
+        7607.776314648852
+      ],
+      "native_dt": 0.16456221772386925,
+      "sample_dt": 0.1,
+      "n_samples": 66475,
+      "nfft": 265900,
+      "fft_epoch": 980.2872914444728,
+      "h22_peak_time": 7475.34601252112,
+      "phase_reference": "h22_peak",
+      "epoch_correction": "exp(-2*pi*i*f*(fft_epoch-h22_peak_time))",
+      "frequency_convention": "conjugate h33; numpy FFT f>0",
+      "positive_mode_mapping": "h_(3,-3) = -conj(h33)",
+      "spectrum_units": "time-domain amplitude multiplied by sample_dt"
+    },
+    "control_Lev5_N2": {
+      "relaxation_time": 997.0025398574278,
+      "retained_time": [
+        997.1025064980173,
+        7594.102506498018
+      ],
+      "taper_flat_window": [
+        1497.0025398574278,
+        7574.166994893881
+      ],
+      "native_dt": 0.14575605990239637,
+      "sample_dt": 0.1,
+      "n_samples": 65971,
+      "nfft": 263884,
+      "fft_epoch": 997.1025064980173,
+      "h22_peak_time": 7441.971706123673,
+      "phase_reference": "h22_peak",
+      "epoch_correction": "exp(-2*pi*i*f*(fft_epoch-h22_peak_time))",
+      "frequency_convention": "conjugate h33; numpy FFT f>0",
+      "positive_mode_mapping": "h_(3,-3) = -conj(h33)",
+      "spectrum_units": "time-domain amplitude multiplied by sample_dt"
+    },
+    "preprocessing_0": {
+      "relaxation_time": 997.0025398574278,
+      "retained_time": [
+        997.1025064980173,
+        7594.152506498018
+      ],
+      "taper_flat_window": [
+        1497.0025398574278,
+        7574.166994893881
+      ],
+      "native_dt": 0.14575605990239637,
+      "sample_dt": 0.05,
+      "n_samples": 131942,
+      "nfft": 527768,
+      "fft_epoch": 997.1025064980173,
+      "h22_peak_time": 7441.971706123673,
+      "phase_reference": "h22_peak",
+      "epoch_correction": "exp(-2*pi*i*f*(fft_epoch-h22_peak_time))",
+      "frequency_convention": "conjugate h33; numpy FFT f>0",
+      "positive_mode_mapping": "h_(3,-3) = -conj(h33)",
+      "spectrum_units": "time-domain amplitude multiplied by sample_dt"
+    },
+    "preprocessing_1": {
+      "relaxation_time": 997.0025398574278,
+      "retained_time": [
+        997.1025064980173,
+        7594.102506498018
+      ],
+      "taper_flat_window": [
+        1497.0025398574278,
+        7554.166994893881
+      ],
+      "native_dt": 0.14575605990239637,
+      "sample_dt": 0.1,
+      "n_samples": 65971,
+      "nfft": 263884,
+      "fft_epoch": 997.1025064980173,
+      "h22_peak_time": 7441.971706123673,
+      "phase_reference": "h22_peak",
+      "epoch_correction": "exp(-2*pi*i*f*(fft_epoch-h22_peak_time))",
+      "frequency_convention": "conjugate h33; numpy FFT f>0",
+      "positive_mode_mapping": "h_(3,-3) = -conj(h33)",
+      "spectrum_units": "time-domain amplitude multiplied by sample_dt"
+    }
+  },
+  "lal_comparisons": [
+    {
+      "total_mass_msun": 20.0,
+      "metadata": {
+        "api": "SimIMRPhenomXHMFrequencySequenceOneMode",
+        "mode": [
+          3,
+          -3
+        ],
+        "release": 122022,
+        "total_mass_msun": 20.0,
+        "q": 4.4995631767635835,
+        "chi1": 0.0,
+        "chi2": 0.0,
+        "distance_mpc": 100.0,
+        "phi_ref": 0.0,
+        "f_ref_hz": 20.0,
+        "Mf_to_Hz_mass_seconds": 9.850981895282533e-05,
+        "physical_to_geometric_divisor": 9.428208963376012e-25,
+        "lal_version": "7.7.0",
+        "lalsimulation_version": "6.2.0",
+        "series_epoch_seconds": 0.0,
+        "no_interpolation": true
+      },
+      "metrics": {
+        "bins": 4991,
+        "constant_phase": -0.1972683322650732,
+        "affine_phase": 0.4313338251442426,
+        "time_shift": -0.8489337954721438,
+        "raw_relative_l2": 0.19950817418432187,
+        "constant_relative_l2": 0.032157337206095274,
+        "affine_relative_l2": 0.006343716851234955,
+        "raw_overlap": 0.980098609238251,
+        "constant_overlap": 0.9994829624788368,
+        "affine_overlap": 0.9999798792148189,
+        "raw_mismatch": 0.019901390761749016,
+        "constant_mismatch": 0.0005170375211631661,
+        "affine_mismatch": 2.0120785181099166e-05,
+        "raw_phase_rms": 0.1998866101530056,
+        "constant_phase_rms": 0.03200977775364205,
+        "affine_phase_rms": 0.00475426630019527,
+        "phase_mask_retained_reference_norm_fraction": 0.9999995365180835
+      },
+      "unweighted_optimized": {
+        "time_shift": -0.8478021841868744,
+        "constant_phase": 0.43050584573340994,
+        "overlap": 0.9999798801004681,
+        "mismatch": 2.0119899531878538e-05,
+        "boundary": false,
+        "grid_step": 0.6600660066006583,
+        "bins": 4991
+      },
+      "detector_optimized": {
+        "time_shift": -0.833392691116052,
+        "constant_phase": 0.4198483470737307,
+        "overlap": 0.9999832220397624,
+        "mismatch": 1.6777960237579492e-05,
+        "boundary": false,
+        "grid_step": 0.6600660066006583,
+        "bins": 4991
+      },
+      "detector_band_Hz": [
+        1125.593929769089,
+        3045.1816637225256
+      ],
+      "amplitude_relative_l2": 0.004224256641561292
+    },
+    {
+      "total_mass_msun": 60.0,
+      "metadata": {
+        "api": "SimIMRPhenomXHMFrequencySequenceOneMode",
+        "mode": [
+          3,
+          -3
+        ],
+        "release": 122022,
+        "total_mass_msun": 60.0,
+        "q": 4.4995631767635835,
+        "chi1": 0.0,
+        "chi2": 0.0,
+        "distance_mpc": 100.0,
+        "phi_ref": 0.0,
+        "f_ref_hz": 20.0,
+        "Mf_to_Hz_mass_seconds": 0.000295529456858476,
+        "physical_to_geometric_divisor": 8.485388067038411e-24,
+        "lal_version": "7.7.0",
+        "lalsimulation_version": "6.2.0",
+        "series_epoch_seconds": 0.0,
+        "no_interpolation": true
+      },
+      "metrics": {
+        "bins": 4991,
+        "constant_phase": 1.4366067754143883,
+        "affine_phase": 2.0652089328232366,
+        "time_shift": -0.8489337954715084,
+        "raw_relative_l2": 1.316281020517546,
+        "constant_relative_l2": 0.03215733720609529,
+        "affine_relative_l2": 0.006343716851234692,
+        "raw_overlap": 0.1337180192798054,
+        "constant_overlap": 0.9994829624788368,
+        "affine_overlap": 0.9999798792148189,
+        "raw_mismatch": 0.8662819807201946,
+        "constant_mismatch": 0.0005170375211631661,
+        "affine_mismatch": 2.0120785181099166e-05,
+        "raw_phase_rms": 1.4369247356406587,
+        "constant_phase_rms": 0.03200977775364201,
+        "affine_phase_rms": 0.004754266300195085,
+        "phase_mask_retained_reference_norm_fraction": 0.9999995365180835
+      },
+      "unweighted_optimized": {
+        "time_shift": -0.8478025194259659,
+        "constant_phase": 2.0643812016529566,
+        "overlap": 0.9999798801004681,
+        "mismatch": 2.0119899531878538e-05,
+        "boundary": false,
+        "grid_step": 0.6600660066006583,
+        "bins": 4991
+      },
+      "detector_optimized": {
+        "time_shift": -0.844091791625944,
+        "constant_phase": 2.0616390847026618,
+        "overlap": 0.9999808009313397,
+        "mismatch": 1.9199068660324947e-05,
+        "boundary": false,
+        "grid_step": 0.6600660066006583,
+        "bins": 4991
+      },
+      "detector_band_Hz": [
+        375.19797658969634,
+        1015.0605545741752
+      ],
+      "amplitude_relative_l2": 0.004224256641561344
+    },
+    {
+      "total_mass_msun": 120.0,
+      "metadata": {
+        "api": "SimIMRPhenomXHMFrequencySequenceOneMode",
+        "mode": [
+          3,
+          -3
+        ],
+        "release": 122022,
+        "total_mass_msun": 120.0,
+        "q": 4.4995631767635835,
+        "chi1": 0.0,
+        "chi2": 0.0,
+        "distance_mpc": 100.0,
+        "phi_ref": 0.0,
+        "f_ref_hz": 20.0,
+        "Mf_to_Hz_mass_seconds": 0.000591058913716952,
+        "physical_to_geometric_divisor": 3.3941552268153646e-23,
+        "lal_version": "7.7.0",
+        "lalsimulation_version": "6.2.0",
+        "series_epoch_seconds": 0.0,
+        "no_interpolation": true
+      },
+      "metrics": {
+        "bins": 4991,
+        "constant_phase": -0.24459131769148149,
+        "affine_phase": 0.38401083971797745,
+        "time_shift": -0.8489337954723359,
+        "raw_relative_l2": 0.24603183208776572,
+        "constant_relative_l2": 0.03215733720609529,
+        "affine_relative_l2": 0.0063437168512349,
+        "raw_overlap": 0.9697347238229288,
+        "constant_overlap": 0.9994829624788368,
+        "affine_overlap": 0.9999798792148188,
+        "raw_mismatch": 0.0302652761770712,
+        "constant_mismatch": 0.0005170375211631661,
+        "affine_mismatch": 2.0120785181210188e-05,
+        "raw_phase_rms": 0.24671528066092585,
+        "constant_phase_rms": 0.03200977775364201,
+        "affine_phase_rms": 0.004754266300195087,
+        "phase_mask_retained_reference_norm_fraction": 0.9999995365180835
+      },
+      "unweighted_optimized": {
+        "time_shift": -0.8478026186442097,
+        "constant_phase": 0.3831831820168755,
+        "overlap": 0.9999798801004681,
+        "mismatch": 2.0119899531878538e-05,
+        "boundary": false,
+        "grid_step": 0.6600660066006583,
+        "bins": 4991
+      },
+      "detector_optimized": {
+        "time_shift": -0.84842088628169,
+        "constant_phase": 0.38364534046698806,
+        "overlap": 0.9999797356246816,
+        "mismatch": 2.0264375318435057e-05,
+        "boundary": false,
+        "grid_step": 0.6600660066006583,
+        "bins": 4991
+      },
+      "detector_band_Hz": [
+        187.59898829484817,
+        507.5302772870876
+      ],
+      "amplitude_relative_l2": 0.0042242566415613345
+    }
+  ],
+  "arrays": {
+    "path": "/Users/xangma/repos/torchwave/docs/reviews/2026-09-15-independent-phase-benchmark/results/SXS_BBH_2484.npz",
+    "sha256": "83e548a54b1c8af4907378a6acdabf0de7f06b43f5ba0a23f96175b26c73d443"
+  },
+  "frozen_amplitude_transform_reproduced": true
+}

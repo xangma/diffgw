@@ -1,14 +1,14 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "manifest_version": "1.0.0",
+  "manifest_version": "1.3.0",
   "project": "torchwave",
-  "description": "Clean-room PyTorch gravitational waveform modeling library with literature provenance and complete 100% catalog parity verification across all 17 models.",
+  "description": "Batched differentiable PyTorch gravitational waveform models. Full LAL parity is not achieved; independent coverage and inherited calibration provenance remain incomplete.",
   "acceptance_gates": {
     "direct_cpu_fp64": {
-      "complex_relative_l2": 1.0e-6,
-      "relative_norm_error": 1.0e-6,
-      "flat_mismatch": 1.0e-8,
-      "psd_mismatch": 1.0e-8
+      "complex_relative_l2": 1e-06,
+      "relative_norm_error": 1e-06,
+      "flat_mismatch": 1e-08,
+      "psd_mismatch": 1e-08
     },
     "precessing_and_hm_tolerance": {
       "optimized_match": 0.995,
@@ -26,275 +26,910 @@
       "eccentricity": "Dimensionless e0 in [0, 0.4)"
     },
     "polarizations": "Complex Fourier strain h_plus(f) and h_cross(f) in physical geometric units (G/c^2 / distance)",
-    "time_translation": "Strictly linear Fourier time shift: h(f; tc) = h(f; 0) * exp(-2*pi*i*f*tc)",
-    "reference_phasing": "Aligned such that at reference frequency f_ref, SPA phase convention satisfies Psi(f_ref) = 3*pi/4 (LAL convention) or 0 (pure reference convention)"
+    "time_translation": "Model-specific. Explicit Fourier time shifts generally use exp(-2*pi*i*f*tc); the default legacy NSBH gauge retains a positive time slope anchored at f_ref. See each model and the independent audit.",
+    "reference_phasing": "Model-specific reference phases are tested only for the declared configurations; unresolved frame and phase conventions are documented in the independent audit."
   },
   "models": {
     "TaylorF2": {
       "name": "TaylorF2",
-      "aliases": ["taylorf2"],
+      "aliases": [
+        "taylorf2"
+      ],
       "lal_approximant": "TaylorF2",
       "domain": "frequency_domain",
       "spins": "aligned",
-      "modes": ["(2,2)"],
+      "modes": [
+        "(2,2)"
+      ],
       "pn_orders": {
         "spin_order": "Up to 7 (3.5PN spin-orbit, spin-spin, and self-spin)",
         "tidal_order": "Up to 13 (6.5PN electric quadrupole and octupole tides)"
       },
       "parameters": {
-        "required": ["mass1", "mass2"],
-        "optional": ["chi1", "chi2", "spin1z", "spin2z", "distance", "inclination", "phic", "tc", "f_ref", "lambda1", "lambda2", "spin_order", "tidal_order"]
-      },
-      "status": "verified_parity",
-      "notes": "Strict CPU FP64 parity passed only on the 4 declared TaylorF2 cases. Both polarizations have complex relative L2 < 1.64e-12; the six detector/sky projections per case have complex relative L2 < 3.08e-7. These measurements do not certify the full parameter domain. Evidence: docs/reviews/2026-09-11-agy/verification/strict-catalog.json.",
-      "direct_fp64_parity": {
-        "complex_relative_l2": 1.6394511672528196e-12,
-        "relative_norm_error": 8.557465858376769e-16,
-        "mismatch": 2.220446049250313e-16,
-        "scope": "maximum over both polarizations of declared cases; detector projections recorded separately",
-        "case_ids": [
-          "TF2_point_particle_bns",
-          "TF2_unequal_spinning",
-          "TF2_tidal_6PN",
-          "TF2_tidal_6.5PN"
+        "required": [
+          "mass1",
+          "mass2"
+        ],
+        "optional": [
+          "chi1",
+          "chi2",
+          "spin1z",
+          "spin2z",
+          "distance",
+          "inclination",
+          "phic",
+          "tc",
+          "f_ref",
+          "lambda1",
+          "lambda2",
+          "spin_order",
+          "tidal_order"
         ]
       },
+      "status": "verified_declared_cases",
+      "notes": "Uniform strict CPU FP64 gates apply to both polarizations and detector projections. Only the listed cases have been checked. See docs/reviews/2026-09-12-clean-room/summary.md for remaining numerical, model-definition and provenance gaps.",
       "primary_references": [
-        {"citation": "Buonanno, Iyer, Ochsner, Pan, Sathyaprakash (2009), Phys. Rev. D 80, 084043", "doi": "10.1103/PhysRevD.80.084043"},
-        {"citation": "Mishra, Kaviraj, Arun (2016), Phys. Rev. D 93, 084039", "doi": "10.1103/PhysRevD.93.084039"},
-        {"citation": "Vines, Flanagan, Hinderer (2011), Phys. Rev. D 83, 084051", "doi": "10.1103/PhysRevD.83.084051"}
-      ]
+        {
+          "citation": "Buonanno, Iyer, Ochsner, Pan, Sathyaprakash (2009), Phys. Rev. D 80, 084043",
+          "doi": "10.1103/PhysRevD.80.084043"
+        },
+        {
+          "citation": "Mishra, Kaviraj, Arun (2016), Phys. Rev. D 93, 084039",
+          "doi": "10.1103/PhysRevD.93.084039"
+        },
+        {
+          "citation": "Vines, Flanagan, Hinderer (2011), Phys. Rev. D 83, 084051",
+          "doi": "10.1103/PhysRevD.83.084051"
+        }
+      ],
+      "validation": {
+        "catalog": {
+          "case_ids": [
+            "TF2_point_particle_bns",
+            "TF2_unequal_spinning",
+            "TF2_tidal_6PN",
+            "TF2_tidal_6.5PN"
+          ],
+          "cases_passed": 4,
+          "cases_total": 4,
+          "max_polarization_complex_relative_l2": 1.6394511672528196e-12,
+          "max_projection_complex_relative_l2": 2.962178587343778e-07,
+          "verification_scopes": [
+            "full_polarizations"
+          ]
+        },
+        "holdout": {
+          "case_ids": [],
+          "cases_passed": 0,
+          "cases_total": 0,
+          "max_polarization_complex_relative_l2": null,
+          "max_projection_complex_relative_l2": null,
+          "verification_scopes": []
+        }
+      }
     },
     "TaylorF2_HM": {
       "name": "TaylorF2_HM",
-      "aliases": ["taylorf2hm", "taylorf2_hm"],
+      "aliases": [
+        "taylorf2hm",
+        "taylorf2_hm"
+      ],
       "lal_approximant": "TaylorF2 (higher mode expansion)",
       "domain": "frequency_domain",
       "spins": "aligned",
-      "modes": ["(2,2)", "(2,1)", "(3,3)", "(4,4)"],
-      "status": "verified_parity",
-      "notes": "Dominant (2,2) carrier mode strictly verified against LALSimulation TaylorF2 with complex relative L2 < 1.64e-12. Multipolar higher harmonics verified via literature symmetry fixtures.",
+      "modes": [
+        "(2,2)",
+        "(2,1)",
+        "(3,1)",
+        "(3,2)",
+        "(3,3)",
+        "(4,2)",
+        "(4,3)",
+        "(4,4)"
+      ],
+      "status": "unresolved_independent_reference",
+      "notes": "The external TaylorF2 case checks only (2,2); higher modes have no independent full-waveform reference in this suite. The native leading-order inventory now contains eight source-backed modes through l=4: (2,2), (2,1), (3,1), (3,2), (3,3), (4,2), (4,3), and (4,4). The available (4,1) and (5,5) time-domain expressions do not independently fix the native negative-m storage and SPA phase conventions, so those modes remain excluded. Higher-PN and spin-amplitude completeness remains unresolved.",
       "primary_references": [
-        {"citation": "García-Quirós et al. (2020), Phys. Rev. D 102, 064002", "doi": "10.1103/PhysRevD.102.064002", "equations": "Eq. (3)"}
-      ]
+        {
+          "citation": "Kidder (2008), Phys. Rev. D 77, 044016",
+          "arxiv": "0710.0614"
+        },
+        {
+          "citation": "Arun, Buonanno, Faye and Ochsner (2009), Phys. Rev. D 79, 104023",
+          "arxiv": "0810.5336"
+        },
+        {
+          "citation": "Henry (2023), Class. Quantum Grav. 40, 145007",
+          "arxiv": "2210.15602v2"
+        },
+        {
+          "citation": "Garc\u00eda-Quir\u00f3s et al. (2020), Phys. Rev. D 102, 064002",
+          "doi": "10.1103/PhysRevD.102.064002",
+          "equations": "Eq. (3)"
+        },
+        {
+          "citation": "Mezzasoma and Yunes (2022), Phys. Rev. D 106, 024026",
+          "arxiv": "2203.08939",
+          "equations": "Eqs. (2.20), (2.21g), and (2.26)"
+        }
+      ],
+      "validation": {
+        "catalog": {
+          "case_ids": [
+            "TaylorF2_HM_diagnostic"
+          ],
+          "cases_passed": 1,
+          "cases_total": 1,
+          "max_polarization_complex_relative_l2": 1.6385724532630683e-12,
+          "max_projection_complex_relative_l2": 2.962178587379361e-07,
+          "verification_scopes": [
+            "dominant_mode_only"
+          ]
+        },
+        "holdout": {
+          "case_ids": [],
+          "cases_passed": 0,
+          "cases_total": 0,
+          "max_polarization_complex_relative_l2": null,
+          "max_projection_complex_relative_l2": null,
+          "verification_scopes": []
+        }
+      }
     },
     "TaylorF2_Eccentric": {
       "name": "TaylorF2_Eccentric",
-      "aliases": ["taylorf2eccentric", "taylorf2_eccentric", "eccentrictaylorf2"],
+      "aliases": [
+        "taylorf2eccentric",
+        "taylorf2_eccentric",
+        "eccentrictaylorf2"
+      ],
       "lal_approximant": "TaylorF2Ecc",
       "domain": "frequency_domain",
       "spins": "aligned",
-      "modes": ["(2,2)"],
+      "modes": [
+        "(2,2)"
+      ],
       "eccentricity_range": "[0, 0.4)",
       "pn_orders": {
         "ecc_order": "Up to 6 (3PN eccentric phase expansion)"
       },
-      "status": "verified_parity",
-      "notes": "Strict CPU FP64 parity passed only on the 2 declared TaylorF2_Eccentric cases. Both polarizations have complex relative L2 < 1.64e-12; the six detector/sky projections per case have complex relative L2 < 3.08e-7. These measurements do not certify the full parameter domain. Evidence: docs/reviews/2026-09-11-agy/verification/strict-catalog.json.",
-      "direct_fp64_parity": {
-        "complex_relative_l2": 1.6385727303663531e-12,
-        "relative_norm_error": 7.182497756436873e-16,
-        "mismatch": 2.220446049250313e-16,
-        "scope": "maximum over both polarizations of declared cases; detector projections recorded separately",
-        "case_ids": [
-          "TF2Ecc_circular_limit",
-          "TF2Ecc_eccentric_spinning"
-        ]
-      },
+      "status": "verified_declared_cases",
+      "notes": "Uniform strict CPU FP64 gates apply to both polarizations and detector projections. Only the listed cases have been checked. See docs/reviews/2026-09-12-clean-room/summary.md for remaining numerical, model-definition and provenance gaps.",
       "primary_references": [
-        {"citation": "Moore, Favata, Arun, Mishra (2016), Phys. Rev. D 93, 124061", "doi": "10.1103/PhysRevD.93.124061", "equations": "Eqs. (4.17)-(4.18)"}
-      ]
+        {
+          "citation": "Moore, Favata, Arun, Mishra (2016), Phys. Rev. D 93, 124061",
+          "doi": "10.1103/PhysRevD.93.124061",
+          "equations": "Eqs. (4.17)-(4.18)"
+        }
+      ],
+      "validation": {
+        "catalog": {
+          "case_ids": [
+            "TF2Ecc_circular_limit",
+            "TF2Ecc_eccentric_spinning"
+          ],
+          "cases_passed": 2,
+          "cases_total": 2,
+          "max_polarization_complex_relative_l2": 1.6385727303663531e-12,
+          "max_projection_complex_relative_l2": 2.9626893965504786e-07,
+          "verification_scopes": [
+            "full_polarizations"
+          ]
+        },
+        "holdout": {
+          "case_ids": [],
+          "cases_passed": 0,
+          "cases_total": 0,
+          "max_polarization_complex_relative_l2": null,
+          "max_projection_complex_relative_l2": null,
+          "verification_scopes": []
+        }
+      }
     },
     "IMRPhenomD": {
       "name": "IMRPhenomD",
-      "aliases": ["imrphenomd"],
+      "aliases": [
+        "imrphenomd"
+      ],
       "lal_approximant": "IMRPhenomD",
       "domain": "frequency_domain",
       "spins": "aligned",
-      "modes": ["(2,2)"],
-      "status": "verified_parity",
-      "notes": "Strict CPU FP64 parity passed on the declared IMRPhenomD diagnostic case. Both polarizations achieve complex relative L2 < 4.95e-7 and flat mismatch < 1.23e-13 using the unrounded author calibration fits from Khan et al. (2016) Table V and Husa et al. (2016).",
-      "direct_fp64_parity": {
-        "complex_relative_l2": 4.947669228452238e-07,
-        "relative_norm_error": 9.570533847203193e-10,
-        "mismatch": 1.2223555501122974e-13,
-        "scope": "maximum over both polarizations of declared diagnostic case",
-        "case_ids": ["IMRPhenomD_diagnostic"]
-      },
+      "modes": [
+        "(2,2)"
+      ],
+      "status": "verified_declared_cases",
+      "notes": "Uniform strict CPU FP64 gates apply to both polarizations and detector projections. Only the listed cases have been checked. See docs/reviews/2026-09-12-clean-room/summary.md for remaining numerical, model-definition and provenance gaps.",
       "primary_references": [
-        {"citation": "Husa et al. (2016), Phys. Rev. D 93, 044006", "doi": "10.1103/PhysRevD.93.044006"},
-        {"citation": "Khan et al. (2016), Phys. Rev. D 93, 044007", "doi": "10.1103/PhysRevD.93.044007", "tables": "Table V", "equations": "Eqs. (24), (28)-(32)"},
-        {"citation": "Berti, Cardoso, Will (2006), Phys. Rev. D 73, 064030", "doi": "10.1103/PhysRevD.73.064030", "tables": "Table VIII"}
-      ]
+        {
+          "citation": "Husa et al. (2016), Phys. Rev. D 93, 044006",
+          "doi": "10.1103/PhysRevD.93.044006"
+        },
+        {
+          "citation": "Khan et al. (2016), Phys. Rev. D 93, 044007",
+          "doi": "10.1103/PhysRevD.93.044007",
+          "tables": "Table V",
+          "equations": "Eqs. (24), (28)-(32)"
+        },
+        {
+          "citation": "Berti, Cardoso, Will (2006), Phys. Rev. D 73, 064030",
+          "doi": "10.1103/PhysRevD.73.064030",
+          "tables": "Table VIII"
+        }
+      ],
+      "validation": {
+        "catalog": {
+          "case_ids": [
+            "IMRPhenomD_diagnostic"
+          ],
+          "cases_passed": 1,
+          "cases_total": 1,
+          "max_polarization_complex_relative_l2": 6.257283038536445e-14,
+          "max_projection_complex_relative_l2": 2.987382611498888e-07,
+          "verification_scopes": [
+            "full_polarizations"
+          ]
+        },
+        "holdout": {
+          "case_ids": [
+            "IMRPhenomD_holdout_0",
+            "IMRPhenomD_holdout_1",
+            "IMRPhenomD_holdout_2"
+          ],
+          "cases_passed": 3,
+          "cases_total": 3,
+          "max_polarization_complex_relative_l2": 2.2224059659344118e-07,
+          "max_projection_complex_relative_l2": 4.125275274345382e-07,
+          "verification_scopes": [
+            "full_polarizations"
+          ]
+        }
+      }
     },
     "IMRPhenomPv2": {
       "name": "IMRPhenomPv2",
-      "aliases": ["imrphenomp", "imrphenompv2"],
+      "aliases": [
+        "imrphenomp",
+        "imrphenompv2"
+      ],
       "lal_approximant": "IMRPhenomPv2",
       "domain": "frequency_domain",
       "spins": "precessing",
-      "modes": ["(2,2) coprecessing"],
+      "modes": [
+        "(2,2) coprecessing"
+      ],
       "frame_convention": "P-frame precession angle twisting via single effective precession parameter chi_p",
-      "status": "verified_parity",
-      "notes": "Verified against LALSimulation IMRPhenomPv2 with calibrated precessing gate (complex relative L2 <= 0.35, mismatch <= 0.10). Diagnostic case achieves plus complex relative L2 = 0.278, mismatch = 0.0395; cross complex relative L2 = 0.305, mismatch = 0.0475; multi-detector sky projections <= 0.0475.",
+      "status": "verified_declared_cases",
+      "notes": "Uniform strict CPU FP64 gates apply to both polarizations and detector projections. Only the listed cases have been checked. See docs/reviews/2026-09-12-clean-room/summary.md for remaining numerical, model-definition and provenance gaps.",
       "primary_references": [
-        {"citation": "Hannam et al. (2014), Phys. Rev. Lett. 113, 151101", "doi": "10.1103/PhysRevLett.113.151101"},
-        {"citation": "Schmidt et al. (2015), Phys. Rev. D 91, 024043", "doi": "10.1103/PhysRevD.91.024043"}
-      ]
+        {
+          "citation": "Hannam et al. (2014), Phys. Rev. Lett. 113, 151101",
+          "doi": "10.1103/PhysRevLett.113.151101"
+        },
+        {
+          "citation": "Schmidt et al. (2015), Phys. Rev. D 91, 024043",
+          "doi": "10.1103/PhysRevD.91.024043"
+        }
+      ],
+      "validation": {
+        "catalog": {
+          "case_ids": [
+            "IMRPhenomPv2_diagnostic"
+          ],
+          "cases_passed": 1,
+          "cases_total": 1,
+          "max_polarization_complex_relative_l2": 4.504968769541274e-14,
+          "max_projection_complex_relative_l2": 3.0151009670979543e-07,
+          "verification_scopes": [
+            "full_polarizations"
+          ]
+        },
+        "holdout": {
+          "case_ids": [
+            "IMRPhenomPv2_holdout"
+          ],
+          "cases_passed": 1,
+          "cases_total": 1,
+          "max_polarization_complex_relative_l2": 6.304078185056227e-14,
+          "max_projection_complex_relative_l2": 3.3393657251624037e-07,
+          "verification_scopes": [
+            "full_polarizations"
+          ]
+        }
+      }
     },
     "IMRPhenomXP": {
       "name": "IMRPhenomXP",
-      "aliases": ["imrphenomxp"],
+      "aliases": [
+        "imrphenomxp"
+      ],
       "lal_approximant": "IMRPhenomXP",
       "domain": "frequency_domain",
       "spins": "precessing",
-      "modes": ["(2,2) coprecessing"],
-      "frame_convention": "Multispin P-frame twisting angles with NNLO spin-orbit angles (Chatziioannou et al. 2017, Pratten et al. 2021)",
-      "status": "verified_parity",
-      "notes": "Verified against LALSimulation IMRPhenomXP with calibrated precessing gate (complex relative L2 <= 0.20, mismatch <= 0.025). Diagnostic case achieves plus complex relative L2 = 0.147, mismatch = 0.0109; cross complex relative L2 = 0.180, mismatch = 0.0163; multi-detector sky projections <= 0.0163.",
+      "modes": [
+        "(2,2) coprecessing"
+      ],
+      "frame_convention": "Default MSA version 223, convention 1, final_spin_mod=3; supported phi0=0 requests use the clean MSA helper. Legacy geometry remains for nonzero phi0; unsupported guard rows use explicit fallback.",
+      "status": "verified_declared_cases",
+      "notes": "Frozen checkpoint-3 public catalog and holdout rows pass for the clean supported path (maximum polarization complex relative L2 7.36e-14 catalog and 3.52e-14 holdout; detector projection errors are 3.02e-7 and 3.40e-7). The production default is MSA version 223 with convention=1 and final_spin_mod=3; supported phi0=0 requests use the clean helper. This is frozen-case evidence, not a parameter-domain certificate: convention-1 exact-aligned and zero-spin probes remain ~3e-5, tiny in-plane probes ~0.0073, unsupported guard rows use explicit fallback, and nonzero phi0 retains legacy geometry. XPHM remains unresolved/failing.",
       "primary_references": [
-        {"citation": "Pratten et al. (2021), Phys. Rev. D 103, 104056", "doi": "10.1103/PhysRevD.103.104056", "equations": "Appendix B, Eqs. (B1)-(B2)"}
-      ]
+        {
+          "citation": "Pratten et al. (2021), Phys. Rev. D 103, 104056",
+          "doi": "10.1103/PhysRevD.103.104056",
+          "equations": "Appendix B, Eqs. (B1)-(B2)"
+        }
+      ],
+      "validation": {
+        "catalog": {
+          "case_ids": [
+            "IMRPhenomXP_diagnostic"
+          ],
+          "cases_passed": 1,
+          "cases_total": 1,
+          "max_polarization_complex_relative_l2": 7.356762654765714e-14,
+          "max_projection_complex_relative_l2": 3.012702316959011e-07,
+          "verification_scopes": [
+            "full_polarizations"
+          ]
+        },
+        "holdout": {
+          "case_ids": [
+            "IMRPhenomXP_holdout"
+          ],
+          "cases_passed": 1,
+          "cases_total": 1,
+          "max_polarization_complex_relative_l2": 3.5157188941902363e-14,
+          "max_projection_complex_relative_l2": 3.40055256066621e-07,
+          "verification_scopes": [
+            "full_polarizations"
+          ]
+        }
+      },
+      "precession_domain": "The clean MSA v223 helper supports declared phi0=0 requests with convention=1 and final_spin_mod=3. Unsupported guard rows use explicit fallback; nonzero phi0 retains legacy geometry. Passing frozen rows do not certify the full precession parameter domain.",
+      "convention_evidence": "docs/reviews/2026-09-12-clean-room/pass-4-precession-conventions.md"
     },
     "IMRPhenomHM": {
       "name": "IMRPhenomHM",
-      "aliases": ["imrphenomhm"],
+      "aliases": [
+        "imrphenomhm"
+      ],
       "lal_approximant": "IMRPhenomHM",
       "domain": "frequency_domain",
       "spins": "aligned",
-      "modes": ["(2,2)", "(2,1)", "(3,3)", "(3,2)", "(4,4)"],
-      "frame_convention": "Co-orbital to radiation frame SWSH projection with London et al. (2018) mode mixing",
-      "status": "verified_parity",
-      "notes": "Verified against LALSimulation IMRPhenomHM with calibrated higher-order multipole gate (complex relative L2 <= 0.02, mismatch <= 2.0e-4). Diagnostic case achieves plus complex relative L2 = 0.0098, flat mismatch = 4.82e-5.",
+      "modes": [
+        "(2,2)",
+        "(2,1)",
+        "(3,3)",
+        "(3,2)",
+        "(4,4)",
+        "(4,3)"
+      ],
+      "frame_convention": "London frequency mapping and spin-weighted spherical-harmonic projection; target phase compatibility remains unresolved.",
+      "status": "verified_declared_cases",
+      "notes": "Uniform strict CPU FP64 gates apply to both polarizations and detector projections. Only the listed cases have been checked. See docs/reviews/2026-09-12-clean-room/summary.md for remaining numerical, model-definition and provenance gaps.",
       "primary_references": [
-        {"citation": "London et al. (2018), Phys. Rev. Lett. 120, 161102", "doi": "10.1103/PhysRevLett.120.161102"}
-      ]
+        {
+          "citation": "London et al. (2018), Phys. Rev. Lett. 120, 161102",
+          "doi": "10.1103/PhysRevLett.120.161102"
+        }
+      ],
+      "validation": {
+        "catalog": {
+          "case_ids": [
+            "IMRPhenomHM_diagnostic"
+          ],
+          "cases_passed": 1,
+          "cases_total": 1,
+          "max_polarization_complex_relative_l2": 1.0669255243492147e-07,
+          "max_projection_complex_relative_l2": 3.2428376703675953e-07,
+          "verification_scopes": [
+            "full_polarizations"
+          ]
+        },
+        "holdout": {
+          "case_ids": [
+            "IMRPhenomHM_holdout_5"
+          ],
+          "cases_passed": 1,
+          "cases_total": 1,
+          "max_polarization_complex_relative_l2": 5.574546976198813e-07,
+          "max_projection_complex_relative_l2": 6.517566040480203e-07,
+          "verification_scopes": [
+            "full_polarizations"
+          ]
+        }
+      }
     },
     "IMRPhenomXHM": {
       "name": "IMRPhenomXHM",
-      "aliases": ["imrphenomxhm"],
+      "aliases": [
+        "imrphenomxhm"
+      ],
       "lal_approximant": "IMRPhenomXHM",
       "domain": "frequency_domain",
       "spins": "aligned",
-      "modes": ["(2,2)", "(2,1)", "(3,3)", "(3,2)", "(4,4)"],
-      "frame_convention": "García-Quirós et al. (2020) spherical harmonic decomposition and collocation reconstruction",
-      "status": "verified_parity",
-      "notes": "Verified against LALSimulation IMRPhenomXHM with calibrated higher-order multipole gate (complex relative L2 <= 0.15, mismatch <= 0.02). Diagnostic case achieves plus complex relative L2 = 0.098, flat mismatch = 0.0048.",
+      "modes": [
+        "(2,2)",
+        "(2,1)",
+        "(3,3)",
+        "(3,2)",
+        "(4,4)"
+      ],
+      "frame_convention": "Garc\u00eda-Quir\u00f3s et al. (2020) spherical harmonic decomposition and collocation reconstruction",
+      "status": "parity_gap",
+      "notes": "Uniform strict CPU FP64 gates apply to both polarizations and detector projections. Only the listed cases have been checked. See docs/reviews/2026-09-12-clean-room/summary.md for remaining numerical, model-definition and provenance gaps. Pass 11 independently verifies cancellation of the mode normalization in the 32 carrier mixing ratio; production regression added, waveform normalization unchanged. Pass 12 selects cubic intermediate amplitude in unconditional published parameter-veto regions. Absolute-amplitude thresholds and ordered conditional vetoes remain unresolved; no frozen parity metric changed. Pass 13 corrects the intermediate amplitude fit normalization to constant A0 and separates derivative-removal pole fallback from inner-value parameter vetoes with interval-wide selection. It uses published default phase nodes [1,2,3,4,6] with inherited p6 tables. Sparse-node switching and table phase-target preprocessing remain unresolved. Full waveform parity remains unachieved. Pass 14 applies the published absolute-value convention to odd-m inspiral and intermediate amplitude collocation targets; raw fit coefficients are unchanged. Independently evaluated author expressions check eight intermediate amplitude fits and the nonmixing p6 phase fits. Expression matches do not establish production fit selection or full calibration preprocessing. Ordered amplitude vetoes, complete root detection and sparse-node selection remain unresolved. Full waveform parity remains unachieved. Pass 15 adds partial-node quartics, conditional high-q node removal, and numerical stationary-point denominator checks with selected value-only fallback. Four-point A/A0 monotonicity is an explicit interpretation of an underspecified rule; numeric amplitude threshold units remain unresolved and inactive. Raw fits and acceptance gates are unchanged. Strict passing counts did not increase and several independent XHM/XPHM waveform errors worsened. Sparse-node selection and calibration metadata remain unresolved; full parity remains unachieved. Pass 17 archives and verifies the complete official intermediate phase-fit set. No runtime change was retained because the numeric amplitude-veto normalization, sparse phase dispatch, canonical high-q Lambda record, and printed 32 amplitude-cut denominator remain unresolved.",
       "primary_references": [
-        {"citation": "García-Quirós et al. (2020), Phys. Rev. D 102, 064002", "doi": "10.1103/PhysRevD.102.064002", "equations": "Eq. (3)"},
-        {"citation": "Pratten et al. (2020), Phys. Rev. D 102, 064001", "doi": "10.1103/PhysRevD.102.064001"}
-      ]
+        {
+          "citation": "Garc\u00eda-Quir\u00f3s et al. (2020), Phys. Rev. D 102, 064002",
+          "doi": "10.1103/PhysRevD.102.064002",
+          "equations": "Eq. (3)"
+        },
+        {
+          "citation": "Pratten et al. (2020), Phys. Rev. D 102, 064001",
+          "doi": "10.1103/PhysRevD.102.064001"
+        }
+      ],
+      "validation": {
+        "catalog": {
+          "case_ids": [
+            "IMRPhenomXHM_diagnostic"
+          ],
+          "cases_passed": 0,
+          "cases_total": 1,
+          "max_polarization_complex_relative_l2": 0.462925096634756,
+          "max_projection_complex_relative_l2": 0.4611447604291805,
+          "verification_scopes": [
+            "full_polarizations"
+          ]
+        },
+        "holdout": {
+          "case_ids": [
+            "IMRPhenomXHM_holdout_6"
+          ],
+          "cases_passed": 0,
+          "cases_total": 1,
+          "max_polarization_complex_relative_l2": 0.8104661208152623,
+          "max_projection_complex_relative_l2": 0.8068059685183065,
+          "verification_scopes": [
+            "full_polarizations"
+          ]
+        }
+      }
     },
     "IMRPhenomXPHM": {
       "name": "IMRPhenomXPHM",
-      "aliases": ["imrphenomxphm", "xphm"],
+      "aliases": [
+        "imrphenomxphm",
+        "xphm"
+      ],
       "lal_approximant": "IMRPhenomXPHM",
       "domain": "frequency_domain",
       "spins": "precessing",
-      "modes": ["(2,2)", "(2,1)", "(3,3)", "(3,2)", "(4,4) coprecessing"],
-      "frame_convention": "Time-dependent Wigner-D rotation from coprecessing frame to inertial detector frame (Pratten et al. 2021)",
-      "status": "verified_parity",
-      "notes": "Verified against LALSimulation IMRPhenomXPHM with calibrated precessing multimode gate (complex relative L2 <= 0.25, mismatch <= 0.03). Diagnostic case achieves plus complex relative L2 = 0.164, mismatch = 0.0136; cross complex relative L2 = 0.195, mismatch = 0.0192; multi-detector sky projections <= 0.0192.",
+      "modes": [
+        "(2,2)",
+        "(2,1)",
+        "(3,3)",
+        "(3,2)",
+        "(4,4) coprecessing"
+      ],
+      "frame_convention": "XPHM remains on its existing precession and higher-mode frame path; the clean XP MSA v223/convention-1/final_spin_mod=3 helper result does not transfer to XPHM.",
+      "status": "parity_gap",
+      "notes": "Frozen checkpoint-3 public catalog and holdout rows remain failed (maximum polarization complex relative L2 0.162 catalog and 1.187 holdout; detector projection errors are 0.162 and 1.278). The clean XP MSA v223/convention-1/final_spin_mod=3 helper is supported only for XP\u2019s declared phi0=0 path and does not establish XPHM parity. Convention-1 exact-aligned and zero-spin probes remain ~3e-5, tiny in-plane probes ~0.0073, unsupported guard rows use explicit fallback, and nonzero phi0 retains legacy geometry. XPHM remains unresolved/failing.",
       "primary_references": [
-        {"citation": "Pratten et al. (2021), Phys. Rev. D 103, 104056", "doi": "10.1103/PhysRevD.103.104056"},
-        {"citation": "García-Quirós et al. (2020), Phys. Rev. D 102, 064002", "doi": "10.1103/PhysRevD.102.064002"}
-      ]
+        {
+          "citation": "Pratten et al. (2021), Phys. Rev. D 103, 104056",
+          "doi": "10.1103/PhysRevD.103.104056"
+        },
+        {
+          "citation": "Garc\u00eda-Quir\u00f3s et al. (2020), Phys. Rev. D 102, 064002",
+          "doi": "10.1103/PhysRevD.102.064002"
+        }
+      ],
+      "validation": {
+        "catalog": {
+          "case_ids": [
+            "IMRPhenomXPHM_diagnostic"
+          ],
+          "cases_passed": 0,
+          "cases_total": 1,
+          "max_polarization_complex_relative_l2": 0.16191598466557902,
+          "max_projection_complex_relative_l2": 0.16212324149908955,
+          "verification_scopes": [
+            "full_polarizations"
+          ]
+        },
+        "holdout": {
+          "case_ids": [
+            "IMRPhenomXPHM_holdout"
+          ],
+          "cases_passed": 0,
+          "cases_total": 1,
+          "max_polarization_complex_relative_l2": 1.1872610419452823,
+          "max_projection_complex_relative_l2": 1.278031386341689,
+          "verification_scopes": [
+            "full_polarizations"
+          ]
+        }
+      },
+      "precession_domain": "XPHM does not inherit the clean XP MSA v223 helper contract; its declared frozen catalog and holdout rows remain unresolved/failing. XP-only guard and phi0 limitations do not certify XPHM\u2019s full precession and higher-mode domain.",
+      "convention_evidence": "docs/reviews/2026-09-12-clean-room/pass-4-precession-conventions.md"
     },
     "IMRPhenomXAS": {
       "name": "IMRPhenomXAS",
-      "aliases": ["imrphenomxas", "phenomxas", "xas"],
+      "aliases": [
+        "imrphenomxas",
+        "phenomxas",
+        "xas"
+      ],
       "lal_approximant": "IMRPhenomXAS",
       "domain": "frequency_domain",
       "spins": "aligned",
-      "modes": ["(2,2)"],
-      "status": "verified_parity",
-      "notes": "Strict CPU FP64 parity passed on the declared IMRPhenomXAS diagnostic case. Both polarizations achieve machine-precision complex relative L2 < 4.22e-14 and flat mismatch = 0.0 with SPA +3pi/4 reference alignment and analytical time shift.",
-      "direct_fp64_parity": {
-        "complex_relative_l2": 4.2127909339648705e-14,
-        "relative_norm_error": 8.639936205273384e-15,
-        "mismatch": 0.0,
-        "scope": "maximum over both polarizations of declared diagnostic case",
-        "case_ids": ["IMRPhenomXAS_diagnostic"]
-      },
+      "modes": [
+        "(2,2)"
+      ],
+      "status": "verified_declared_cases",
+      "notes": "Uniform strict CPU FP64 gates apply to both polarizations and detector projections. Only the listed cases have been checked. See docs/reviews/2026-09-12-clean-room/summary.md for remaining numerical, model-definition and provenance gaps.",
       "primary_references": [
-        {"citation": "Pratten et al. (2020), Phys. Rev. D 102, 064001", "doi": "10.1103/PhysRevD.102.064001"},
-        {"citation": "Mathematica public release candidate: IMRPhenomXAS_Parameter_Space_Fits_Public_Release_Candidate.m", "url": "https://journals.aps.org/prd/supplemental/10.1103/PhysRevD.102.064001/IMRPhenomXAS_Parameter_Space_Fits_Public_Release_Candidate.m"}
-      ]
+        {
+          "citation": "Pratten et al. (2020), Phys. Rev. D 102, 064001",
+          "doi": "10.1103/PhysRevD.102.064001"
+        },
+        {
+          "citation": "Mathematica public release candidate: IMRPhenomXAS_Parameter_Space_Fits_Public_Release_Candidate.m",
+          "url": "https://journals.aps.org/prd/supplemental/10.1103/PhysRevD.102.064001/IMRPhenomXAS_Parameter_Space_Fits_Public_Release_Candidate.m"
+        }
+      ],
+      "validation": {
+        "catalog": {
+          "case_ids": [
+            "IMRPhenomXAS_diagnostic"
+          ],
+          "cases_passed": 1,
+          "cases_total": 1,
+          "max_polarization_complex_relative_l2": 4.2127909339648705e-14,
+          "max_projection_complex_relative_l2": 2.9931889837287913e-07,
+          "verification_scopes": [
+            "full_polarizations"
+          ]
+        },
+        "holdout": {
+          "case_ids": [
+            "IMRPhenomXAS_holdout_3",
+            "IMRPhenomXAS_holdout_4"
+          ],
+          "cases_passed": 2,
+          "cases_total": 2,
+          "max_polarization_complex_relative_l2": 9.49094186919911e-09,
+          "max_projection_complex_relative_l2": 4.128527303991575e-07,
+          "verification_scopes": [
+            "full_polarizations"
+          ]
+        }
+      }
     },
     "IMRPhenomD_NRTidal": {
       "name": "IMRPhenomD_NRTidal",
-      "aliases": ["imrphenomdnrtidal", "nrtidal"],
+      "aliases": [
+        "imrphenomdnrtidal",
+        "nrtidal"
+      ],
       "lal_approximant": "IMRPhenomD_NRTidal",
       "domain": "frequency_domain",
       "spins": "aligned",
-      "modes": ["(2,2)"],
-      "status": "verified_parity",
-      "notes": "Verified against LALSimulation IMRPhenomD_NRTidal with strict FP64 parity gate (complex relative L2 <= 1.0e-6, mismatch <= 1.0e-8). Diagnostic case achieves complex relative L2 = 2.73e-7, mismatch = 0.0.",
+      "modes": [
+        "(2,2)"
+      ],
+      "status": "verified_declared_cases",
+      "notes": "Uniform strict CPU FP64 gates apply to both polarizations and detector projections. Only the listed cases have been checked. See docs/reviews/2026-09-12-clean-room/summary.md for remaining numerical, model-definition and provenance gaps.",
       "primary_references": [
-        {"citation": "Dietrich et al. (2017), Phys. Rev. D 96, 121501", "doi": "10.1103/PhysRevD.96.121501"}
-      ]
+        {
+          "citation": "Dietrich et al. (2017), Phys. Rev. D 96, 121501",
+          "doi": "10.1103/PhysRevD.96.121501"
+        }
+      ],
+      "validation": {
+        "catalog": {
+          "case_ids": [
+            "IMRPhenomD_NRTidal_diagnostic"
+          ],
+          "cases_passed": 1,
+          "cases_total": 1,
+          "max_polarization_complex_relative_l2": 4.5988144588132875e-12,
+          "max_projection_complex_relative_l2": 2.95936507305982e-07,
+          "verification_scopes": [
+            "full_polarizations"
+          ]
+        },
+        "holdout": {
+          "case_ids": [
+            "IMRPhenomD_NRTidal_holdout"
+          ],
+          "cases_passed": 1,
+          "cases_total": 1,
+          "max_polarization_complex_relative_l2": 2.442766585457142e-12,
+          "max_projection_complex_relative_l2": 3.0949543089970273e-07,
+          "verification_scopes": [
+            "full_polarizations"
+          ]
+        }
+      }
     },
     "IMRPhenomD_NRTidalv2": {
       "name": "IMRPhenomD_NRTidalv2",
-      "aliases": ["imrphenomdnrtidalv2", "nrtidalv2"],
+      "aliases": [
+        "imrphenomdnrtidalv2",
+        "nrtidalv2"
+      ],
       "lal_approximant": "IMRPhenomD_NRTidalv2",
       "domain": "frequency_domain",
       "spins": "aligned",
-      "modes": ["(2,2)"],
-      "status": "verified_parity",
-      "notes": "Verified against LALSimulation IMRPhenomD_NRTidalv2 with strict FP64 parity gate (complex relative L2 <= 1.0e-6, mismatch <= 1.0e-8). Diagnostic case achieves complex relative L2 = 2.70e-7, mismatch = 0.0.",
+      "modes": [
+        "(2,2)"
+      ],
+      "status": "verified_declared_cases",
+      "notes": "Uniform strict CPU FP64 gates apply to both polarizations and detector projections. Only the listed cases have been checked. See docs/reviews/2026-09-12-clean-room/summary.md for remaining numerical, model-definition and provenance gaps.",
       "primary_references": [
-        {"citation": "Dietrich et al. (2019), Phys. Rev. D 100, 044003", "doi": "10.1103/PhysRevD.100.044003", "equations": "Eqs. (15)-(21)"}
-      ]
+        {
+          "citation": "Dietrich et al. (2019), Phys. Rev. D 100, 044003",
+          "doi": "10.1103/PhysRevD.100.044003",
+          "equations": "Eqs. (15)-(21)"
+        }
+      ],
+      "validation": {
+        "catalog": {
+          "case_ids": [
+            "IMRPhenomD_NRTidalv2_diagnostic"
+          ],
+          "cases_passed": 1,
+          "cases_total": 1,
+          "max_polarization_complex_relative_l2": 3.3468488598450916e-09,
+          "max_projection_complex_relative_l2": 2.9618706997352865e-07,
+          "verification_scopes": [
+            "full_polarizations"
+          ]
+        },
+        "holdout": {
+          "case_ids": [
+            "IMRPhenomD_NRTidalv2_holdout"
+          ],
+          "cases_passed": 1,
+          "cases_total": 1,
+          "max_polarization_complex_relative_l2": 5.672618836592692e-09,
+          "max_projection_complex_relative_l2": 3.0914191781563814e-07,
+          "verification_scopes": [
+            "full_polarizations"
+          ]
+        }
+      }
     },
     "IMRPhenomNSBH": {
       "name": "IMRPhenomNSBH",
-      "aliases": ["imrphenomnsbh", "nsbh"],
+      "aliases": [
+        "imrphenomnsbh",
+        "nsbh"
+      ],
       "lal_approximant": "IMRPhenomNSBH",
       "domain": "frequency_domain",
       "spins": "aligned",
-      "modes": ["(2,2)"],
-      "status": "verified_parity",
-      "notes": "Verified against LALSimulation IMRPhenomNSBH with strict FP64 parity gate (complex relative L2 <= 1.0e-5, mismatch <= 1.0e-8). Diagnostic case achieves complex relative L2 = 9.77e-6, mismatch = 4.49e-11.",
+      "modes": [
+        "(2,2)"
+      ],
+      "status": "verified_declared_cases",
+      "notes": "The frozen catalog, holdout, and 22 expanded strict waveform regressions pass after clean phase-mass, remnant-spin and amplitude-branch corrections. The public-compatible tidal-frequency sign, small-tide boundary polynomial, ringdown window sign and mildly disruptive PN-window composition are documented in implementation-status.md. The underlying inherited PhenomD and remnant calibration provenance remains under review; these tests do not certify the full parameter domain.",
       "primary_references": [
-        {"citation": "Pannarale et al. (2015), Phys. Rev. D 92, 084041", "doi": "10.1103/PhysRevD.92.084041"},
-        {"citation": "Thompson et al. (2020), Phys. Rev. D 101, 124059", "doi": "10.1103/PhysRevD.101.124059"}
-      ]
+        {
+          "citation": "Pannarale et al. (2015), Phys. Rev. D 92, 084041",
+          "doi": "10.1103/PhysRevD.92.084041"
+        },
+        {
+          "citation": "Thompson et al. (2020), Phys. Rev. D 101, 124059",
+          "doi": "10.1103/PhysRevD.101.124059"
+        }
+      ],
+      "validation": {
+        "catalog": {
+          "case_ids": [
+            "IMRPhenomNSBH_diagnostic"
+          ],
+          "cases_passed": 1,
+          "cases_total": 1,
+          "max_polarization_complex_relative_l2": 1.535346357935249e-09,
+          "max_projection_complex_relative_l2": 2.9566883494199773e-07,
+          "verification_scopes": [
+            "full_polarizations"
+          ]
+        },
+        "holdout": {
+          "case_ids": [
+            "IMRPhenomNSBH_holdout"
+          ],
+          "cases_passed": 1,
+          "cases_total": 1,
+          "max_polarization_complex_relative_l2": 8.828745918348348e-08,
+          "max_projection_complex_relative_l2": 3.4314378684535435e-07,
+          "verification_scopes": [
+            "full_polarizations"
+          ]
+        }
+      },
+      "phase_conventions": "Default legacy affine gauge and positive reference-anchored time slope are preserved for compatibility. Explicit coalescence/reference-frequency conventions use the shared intrinsic PhenomD phase and negative Fourier time shift."
     },
     "KerrRingdown": {
       "name": "KerrRingdown",
-      "aliases": ["kerrringdown", "ringdown"],
+      "aliases": [
+        "kerrringdown",
+        "ringdown"
+      ],
       "lal_approximant": "Kerr ringdown QNM",
       "domain": "time_domain and frequency_domain",
       "spins": "aligned Kerr remnant",
-      "modes": ["(2,2)", "(3,3)", "(4,4)"],
-      "status": "verified_parity",
-      "notes": "Verified against exact analytical Leaver and Berti et al. (2006) QNM frequency and damping solutions with complex relative L2 < 1.61e-8.",
+      "modes": [
+        "(2,2)",
+        "(2,1)",
+        "(3,3)",
+        "(3,2)",
+        "(4,4)"
+      ],
+      "status": "verified_declared_cases",
+      "notes": "The canonical (2,2), n=0 physical-energy waveform passes the frozen catalog and four expanded public TD-to-FD comparisons at the original 1e-6 tolerance. Its independent public reference uses SimBlackHoleRingdown and composite-Simpson Fourier integration. The angular series stopping rule and adaptive integration tolerance are inferred numerical compatibility conventions, not fitted calibration. Other listed modes and overtones do not inherit this full-waveform result.",
       "primary_references": [
-        {"citation": "Berti, Cardoso, Will (2006), Phys. Rev. D 73, 064030", "doi": "10.1103/PhysRevD.73.064030", "tables": "Table VIII"}
-      ]
+        {
+          "citation": "Cook and Zalutskiy (2014), Phys. Rev. D 90, 124021",
+          "arxiv": "1410.7698v2"
+        },
+        {
+          "citation": "Gregory Cook, High Accuracy Data for the Gravitational Quasinormal Modes of Kerr Black Holes, v4",
+          "doi": "10.5281/zenodo.16801267",
+          "license": "ODC-By-1.0"
+        },
+        {
+          "citation": "Berti, Cardoso, Will (2006), Phys. Rev. D 73, 064030",
+          "doi": "10.1103/PhysRevD.73.064030",
+          "tables": "VIII-X; optional legacy fit backend"
+        }
+      ],
+      "validation": {
+        "catalog": {
+          "case_ids": [
+            "KerrRingdown_diagnostic"
+          ],
+          "cases_passed": 1,
+          "cases_total": 1,
+          "max_polarization_complex_relative_l2": 9.783568314832475e-08,
+          "max_projection_complex_relative_l2": 3.488785485315891e-07,
+          "verification_scopes": [
+            "full_polarizations"
+          ]
+        },
+        "holdout": {
+          "case_ids": [],
+          "cases_passed": 0,
+          "cases_total": 0,
+          "max_polarization_complex_relative_l2": null,
+          "max_projection_complex_relative_l2": null,
+          "verification_scopes": []
+        }
+      },
+      "overtones": [
+        0,
+        1,
+        2
+      ],
+      "qnm_backends": {
+        "default": "independent",
+        "optional": "berti",
+        "legacy_alias": "author (uses independent data)",
+        "independent_evidence": "docs/reviews/2026-09-12-clean-room/pass-7-independent-qnm.md",
+        "independent_spin_domain": [
+          0.0,
+          0.99999
+        ],
+        "working_dtype": {
+          "cpu": "float64",
+          "cuda": "float64",
+          "mps": "float32"
+        },
+        "strict_accuracy_dtype": "float64"
+      },
+      "angular_bases": {
+        "default": "spherical",
+        "optional": "spheroidal"
+      },
+      "component_evidence": "docs/reviews/2026-09-12-clean-room/verification/pass-7/kerr-components.json",
+      "energy_amplitude_api": {
+        "function": "torchwave.approximants.kerr_ringdown_energy.ringdown_amplitude_from_energy_fraction",
+        "conventions": [
+          "native_pair (default)",
+          "single_mode",
+          "pair_member"
+        ],
+        "units": "Final mass in solar masses, distance in Mpc, omega in rad/s and tau in seconds; energy fraction of remnant rest energy.",
+        "evidence": "docs/reviews/2026-09-12-clean-room/pass-3-ringdown-energy.md",
+        "complete_lal_waveform_conventions_resolved": false,
+        "waveform_diagnostic": "docs/reviews/2026-09-12-clean-room/verification/pass-7/kerr-waveforms.json"
+      }
     },
     "SEOBNR_ODE": {
       "name": "SEOBNR_ODE",
-      "aliases": ["seobnr", "seobnrode", "seobnrv5"],
-      "lal_approximant": "SEOBNR time-domain integrator",
-      "domain": "time_domain",
+      "aliases": [
+        "seobnr",
+        "seobnrode",
+        "seobnrv5"
+      ],
+      "lal_approximant": "SEOBNRv4",
+      "domain": "frequency_domain (internal time-domain dynamics)",
       "spins": "aligned",
-      "modes": ["(2,2)"],
-      "status": "standalone_differentiable",
-      "notes": "Pure PyTorch time-domain ODE integrator with autograd support; serves as ground truth for torchwave's native ROM surrogate.",
+      "modes": [
+        "(2,2)"
+      ],
+      "status": "parity_gap",
+      "notes": "Uniform strict CPU FP64 gates apply to both polarizations and detector projections. Only the listed cases have been checked. See docs/reviews/2026-09-12-clean-room/summary.md for remaining numerical, model-definition and provenance gaps. Legacy v4/v5 aliases do not certify a calibrated model version. Pass 20 verifies the pre-NQC phase, remnant fits, NQC equations and C1 attachment as bounded components under explicit choices. Pass 21 wires the prototype default to refined peak plus NQC/C1 attachment when the peak resolves, retaining the legacy final-sample PhenomD fallback for under-resolved runs. assembly_model='seobnrv4_published' exposes the end-to-end published path and requires all five choices explicitly. The rerun strict diagnostic remains failed (polarization L2 1.0206987416256423; projection L2 1.0205836988469421); no LAL parity is claimed.",
       "primary_references": [
-        {"citation": "Buonanno & Damour (1999), Phys. Rev. D 59, 084006", "doi": "10.1103/PhysRevD.59.084006"},
-        {"citation": "Bohé et al. (2017), Phys. Rev. D 95, 044028", "doi": "10.1103/PhysRevD.95.044028"}
-      ]
+        {
+          "citation": "Buonanno & Damour (1999), Phys. Rev. D 59, 084006",
+          "doi": "10.1103/PhysRevD.59.084006"
+        },
+        {
+          "citation": "Boh\u00e9 et al. (2017), Phys. Rev. D 95, 044028",
+          "doi": "10.1103/PhysRevD.95.044028"
+        }
+      ],
+      "validation": {
+        "catalog": {
+          "case_ids": [
+            "SEOBNR_ODE_diagnostic"
+          ],
+          "cases_passed": 0,
+          "cases_total": 1,
+          "max_polarization_complex_relative_l2": 1.0206987417441302,
+          "max_projection_complex_relative_l2": 1.020583698890503,
+          "verification_scopes": [
+            "full_polarizations"
+          ]
+        },
+        "holdout": {
+          "case_ids": [],
+          "cases_passed": 0,
+          "cases_total": 0,
+          "max_polarization_complex_relative_l2": null,
+          "max_projection_complex_relative_l2": null,
+          "verification_scopes": []
+        }
+      },
+      "experimental_components": {
+        "conservative_model": [
+          "prototype (default)",
+          "seobnrv4_published"
+        ],
+        "radiation_model": [
+          "prototype (default)",
+          "din2009_nonspinning",
+          "pan2011_leading_spin"
+        ],
+        "standalone": [
+          "seobnrv4_published_amplitude22",
+          "published complex 22 mode and phase components",
+          "35-mode spinning flux",
+          "NQC calibration",
+          "merger-ringdown C1 matching",
+          "published final mass and signed final-spin fits"
+        ],
+        "remaining": "The prototype default now uses refined peak plus NQC/C1 attachment when the peak resolves, with a legacy final-sample PhenomD fallback for under-resolved runs. assembly_model='seobnrv4_published' exposes the existing end-to-end path and requires all five choices explicitly. Pass 20/21 confirm that the primary sources do not uniquely select the residual spin-phase inheritance or Hofmann block. The rerun strict diagnostic remains failed (polarization L2 1.0206987416256423; projection L2 1.0205836988469421); no LAL parity is claimed. Target choices, phase/time semantics and numerical parity remain unresolved.",
+        "integration_assessment": "docs/reviews/2026-09-12-clean-room/pass-4-eob-integration-assessment.md"
+      }
     },
     "SEOBNR_ROM": {
       "name": "SEOBNR_ROM",
-      "aliases": ["seobnrrom", "seobnrv4rom", "seobnrv5rom"],
-      "lal_approximant": "SEOBNR Reduced-Order Model",
+      "aliases": [
+        "seobnrrom",
+        "seobnrv4rom",
+        "seobnrv5rom"
+      ],
+      "lal_approximant": "SEOBNRv4_ROM",
       "domain": "frequency_domain",
       "spins": "aligned",
-      "modes": ["(2,2)"],
+      "modes": [
+        "(2,2)"
+      ],
       "asset": {
         "file": "src/torchwave/data/seobnr_surrogate.pt",
         "sha256": "8316be966b297f474be810024a6add2d5e64559ee3c506302e8ea83372085414",
@@ -302,24 +937,366 @@
         "generator": "torchwave.approximants.eob.SEOBNR_ODE",
         "license": "MIT"
       },
-      "status": "standalone_surrogate",
-      "notes": "Evaluates native clean-room PyTorch surrogate model trained on SEOBNR_ODE; generator fidelity is strictly distinguished from LAL SEOBNRv4_ROM parity.",
+      "status": "verified_declared_cases_external_data",
+      "notes": "The fresh official-ROM wrapper passes the frozen catalog and five additional parameter probes below 3e-11 polarization relative L2. Tensor B-splines, basis reconstruction, published 31-knot phase stitching and waveform gauge are independently implemented. Official SEOBNRv4ROM HDF5 calibration data remain external and are never bundled; redistribution terms are unresolved.",
       "primary_references": [
-        {"citation": "Pürrer (2014), Class. Quantum Grav. 31, 195010", "doi": "10.1088/0264-9381/31/19/195010"},
-        {"citation": "Pürrer (2016), Phys. Rev. D 93, 064041", "doi": "10.1103/PhysRevD.93.064041"}
-      ]
+        {
+          "citation": "P\u00fcrrer (2014), Class. Quantum Grav. 31, 195010",
+          "doi": "10.1088/0264-9381/31/19/195010"
+        },
+        {
+          "citation": "P\u00fcrrer (2016), Phys. Rev. D 93, 064041",
+          "doi": "10.1103/PhysRevD.93.064041"
+        }
+      ],
+      "validation": {
+        "catalog": {
+          "case_ids": [
+            "SEOBNR_ROM_diagnostic"
+          ],
+          "cases_passed": 1,
+          "cases_total": 1,
+          "max_polarization_complex_relative_l2": 1.203823245233543e-11,
+          "max_projection_complex_relative_l2": 2.988495218951695e-07,
+          "verification_scopes": [
+            "full_polarizations"
+          ]
+        },
+        "holdout": {
+          "case_ids": [],
+          "cases_passed": 0,
+          "cases_total": 0,
+          "max_polarization_complex_relative_l2": null,
+          "max_projection_complex_relative_l2": null,
+          "verification_scopes": []
+        }
+      }
     },
     "TEOBResumS": {
       "name": "TEOBResumS",
-      "aliases": ["teobresums"],
+      "aliases": [
+        "teobresums"
+      ],
       "lal_approximant": "TEOBResumS",
-      "domain": "time_domain",
+      "domain": "frequency_domain (internal time-domain dynamics)",
       "spins": "aligned",
-      "status": "standalone_prototype",
-      "notes": "Differentiable EOB prototype; uses leading quadrupole strain.",
+      "status": "parity_gap",
+      "notes": "Uniform strict CPU FP64 gates apply to both polarizations and detector projections. Only the listed cases have been checked. See docs/reviews/2026-09-12-clean-room/summary.md for remaining numerical, model-definition and provenance gaps. Repaired uncalibrated 3PN metric and radial dynamics; inherited tidal resummation, spin terms and merger prescription remain incomplete.",
       "primary_references": [
-        {"citation": "Nagar et al. (2018), Phys. Rev. D 98, 104052", "doi": "10.1103/PhysRevD.98.104052"}
-      ]
+        {
+          "citation": "Nagar et al. (2018), Phys. Rev. D 98, 104052",
+          "doi": "10.1103/PhysRevD.98.104052"
+        }
+      ],
+      "validation": {
+        "catalog": {
+          "case_ids": [
+            "TEOBResumS_diagnostic"
+          ],
+          "cases_passed": 0,
+          "cases_total": 1,
+          "max_polarization_complex_relative_l2": 1.0008418600455444,
+          "max_projection_complex_relative_l2": 1.0009047518112315,
+          "verification_scopes": [
+            "full_polarizations"
+          ]
+        },
+        "holdout": {
+          "case_ids": [],
+          "cases_passed": 0,
+          "cases_total": 0,
+          "max_polarization_complex_relative_l2": null,
+          "max_projection_complex_relative_l2": null,
+          "verification_scopes": []
+        }
+      }
     }
+  },
+  "verification": {
+    "date": "2026-09-14",
+    "catalog_passed": false,
+    "catalog_cases_passed": 17,
+    "catalog_cases_total": 21,
+    "holdout_cases_passed": 11,
+    "holdout_cases_total": 13,
+    "scope": "Frozen cases only, not a parameter-domain certificate. Dominant-mode-only checks and native self-comparisons do not certify complete models.",
+    "evidence": "docs/reviews/2026-09-13-parity-review/implementation-status.md",
+    "unit_tests_passed": 1248,
+    "unit_tests_skipped": 9,
+    "unit_test_skip_reason": "Seven CUDA unavailable; two generation-only gmpy2 unavailable in the Torch test environment. MPS passed.",
+    "source_and_test_inputs_changed_during_runs": false,
+    "provenance": "Independent Kerr equation solves supply QNM runtime data; external numerical data and binaries are verification-only. Other inherited waveform/remnant/matter calibration provenance remains incomplete.",
+    "unit_tests_seconds": 71.42,
+    "unit_test_execution": "Historical whole-suite execution from Pass 33, before current changes: eight parallel shards; seconds records the slowest shard. Evidence: docs/reviews/2026-09-12-clean-room/verification/pass-33/full-suite-run3/. Current focused checks are documented in implementation-status.md.",
+    "supplemental_explicit_components": {
+      "cases_passed": 3,
+      "cases_total": 34,
+      "mode_sum_controls_passed": 4,
+      "evidence": "docs/reviews/2026-09-12-clean-room/verification/pass-15/comparison.json",
+      "scope": "Separate NNLO102/FinalSpin0 and MSA223/FinalSpin3 plus HM/XHM selected-mode diagnostics. XHM selects both signed modes and disables multibanding. Overlapping controls do not add frozen passing cases."
+    }
+  },
+  "verification/pass-3": {
+    "date": "2026-09-12",
+    "catalog_passed": false,
+    "catalog_cases_passed": 11,
+    "catalog_cases_total": 21,
+    "holdout_cases_passed": 4,
+    "holdout_cases_total": 13,
+    "scope": "Frozen cases only, not a parameter-domain certificate. Dominant-mode-only checks and native self-comparisons do not certify complete models.",
+    "evidence": "docs/reviews/2026-09-12-clean-room/verification/pass-3/",
+    "provenance": "Fresh-context implementers used papers and author mathematical data; inherited coefficient provenance is not certified."
+  },
+  "verification/pass-5": {
+    "date": "2026-09-12",
+    "catalog_passed": false,
+    "catalog_cases_passed": 11,
+    "catalog_cases_total": 21,
+    "holdout_cases_passed": 4,
+    "holdout_cases_total": 13,
+    "scope": "Frozen cases only, not a parameter-domain certificate. Dominant-mode-only checks and native self-comparisons do not certify complete models.",
+    "evidence": "docs/reviews/2026-09-12-clean-room/verification/pass-5/",
+    "unit_tests_passed": 745,
+    "unit_tests_skipped": 1,
+    "unit_test_skip_reason": "CUDA unavailable on verification host",
+    "source_and_test_inputs_changed_during_runs": false,
+    "provenance": "Fresh-context implementers used papers and author mathematical data; inherited coefficient provenance is not certified."
+  },
+  "verification/pass-6": {
+    "date": "2026-09-12",
+    "catalog_passed": false,
+    "catalog_cases_passed": 11,
+    "catalog_cases_total": 21,
+    "holdout_cases_passed": 4,
+    "holdout_cases_total": 13,
+    "scope": "Frozen cases only, not a parameter-domain certificate. Dominant-mode-only checks and native self-comparisons do not certify complete models.",
+    "evidence": "docs/reviews/2026-09-12-clean-room/verification/pass-6/",
+    "unit_tests_passed": 884,
+    "unit_tests_skipped": 5,
+    "unit_test_skip_reason": "CUDA unavailable on verification host",
+    "source_and_test_inputs_changed_during_runs": false,
+    "provenance": "Fresh-context implementers used papers and author mathematical data; inherited coefficient provenance is not certified."
+  },
+  "experimental_implementations": {
+    "SEOBNRv4Published": {
+      "status": "experimental_published_reconstruction_parity_not_achieved",
+      "api": "torchwave.get_fd_waveform(approximant=\"SEOBNRv4Published\", ...)",
+      "modes": [
+        "(2,2)",
+        "(2,-2)"
+      ],
+      "flux_modes": "35 positive-m modes through ell=8, with symmetry-paired flux",
+      "required_choices": {
+        "spin_truncation": [
+          "tabulated",
+          "generic-leading-ell8"
+        ],
+        "spin_v6": [
+          "bohe_total_energy",
+          "pan_test_particle",
+          "bohe_plus_pan",
+          "none"
+        ],
+        "include_pan_v8": [
+          false,
+          true
+        ],
+        "include_positive_chi_540": [
+          false,
+          true
+        ],
+        "final_spin_fit_order": [
+          [
+            1,
+            2
+          ],
+          [
+            3,
+            3
+          ],
+          [
+            3,
+            4
+          ]
+        ]
+      },
+      "final_spin_domain": [
+        0.0,
+        0.99999
+      ],
+      "conventions": "Initial orbital phase zero; phic rotates h22 by exp(-2i*phic); tc sets NQC amplitude peak; finite Fourier sum uses exp(-2*pi*i*f*t). No taper. Target phase/time compatibility unresolved.",
+      "numerical_limits": "Discrete peak/stencil/sample-count selection; local quartic matching and linear earlier interpolation. Float64 preferred; finer step checks required. Two-input convergence is not a 1e-6 accuracy certificate.",
+      "report": "docs/reviews/2026-09-12-clean-room/pass-6-eob-driver.md",
+      "source_audit": "docs/reviews/2026-09-12-clean-room/pass-20-summary.md",
+      "convergence_evidence": "docs/reviews/2026-09-12-clean-room/verification/pass-6/eob-convergence/result.json",
+      "lal_td_diagnostic": "docs/reviews/2026-09-12-clean-room/verification/pass-6/eob-waveforms.json",
+      "frozen_catalog_member": false,
+      "scope": "Explicit experimental assembly; does not replace SEOBNR_ODE or certify SEOBNRv4/ROM. Required choices were frozen before binary probing."
+    }
+  },
+  "verification/pass-7": {
+    "date": "2026-09-12",
+    "catalog_passed": false,
+    "catalog_cases_passed": 11,
+    "catalog_cases_total": 21,
+    "holdout_cases_passed": 4,
+    "holdout_cases_total": 13,
+    "scope": "Frozen cases only, not a parameter-domain certificate. Dominant-mode-only checks and native self-comparisons do not certify complete models.",
+    "evidence": "docs/reviews/2026-09-12-clean-room/verification/pass-7/",
+    "unit_tests_passed": 1050,
+    "unit_tests_skipped": 8,
+    "unit_test_skip_reason": "Six CUDA unavailable; two generation-only gmpy2 unavailable in the Torch test environment. MPS passed.",
+    "source_and_test_inputs_changed_during_runs": false,
+    "provenance": "Independent Kerr equation solves supply QNM runtime data; external numerical data and binaries are verification-only. Other inherited waveform/remnant/matter calibration provenance remains incomplete."
+  },
+  "verification/pass-9": {
+    "date": "2026-09-13",
+    "catalog_passed": false,
+    "catalog_cases_passed": 11,
+    "catalog_cases_total": 21,
+    "holdout_cases_passed": 4,
+    "holdout_cases_total": 13,
+    "scope": "Frozen cases only, not a parameter-domain certificate. Dominant-mode-only checks and native self-comparisons do not certify complete models.",
+    "evidence": "docs/reviews/2026-09-12-clean-room/verification/pass-9/",
+    "unit_tests_passed": 1063,
+    "unit_tests_skipped": 8,
+    "unit_test_skip_reason": "Six CUDA unavailable; two generation-only gmpy2 unavailable in the Torch test environment. MPS passed.",
+    "source_and_test_inputs_changed_during_runs": false,
+    "provenance": "Independent Kerr equation solves supply QNM runtime data; external numerical data and binaries are verification-only. Other inherited waveform/remnant/matter calibration provenance remains incomplete."
+  },
+  "verification/pass-10": {
+    "date": "2026-09-13",
+    "catalog_passed": false,
+    "catalog_cases_passed": 11,
+    "catalog_cases_total": 21,
+    "holdout_cases_passed": 4,
+    "holdout_cases_total": 13,
+    "scope": "Frozen cases only, not a parameter-domain certificate. Dominant-mode-only checks and native self-comparisons do not certify complete models.",
+    "evidence": "docs/reviews/2026-09-12-clean-room/verification/pass-10/",
+    "unit_tests_passed": 1075,
+    "unit_tests_skipped": 8,
+    "unit_test_skip_reason": "Six CUDA unavailable; two generation-only gmpy2 unavailable in the Torch test environment. MPS passed.",
+    "source_and_test_inputs_changed_during_runs": false,
+    "provenance": "Independent Kerr equation solves supply QNM runtime data; external numerical data and binaries are verification-only. Other inherited waveform/remnant/matter calibration provenance remains incomplete."
+  },
+  "verification/pass-11": {
+    "date": "2026-09-13",
+    "catalog_passed": false,
+    "catalog_cases_passed": 11,
+    "catalog_cases_total": 21,
+    "holdout_cases_passed": 4,
+    "holdout_cases_total": 13,
+    "scope": "Frozen cases only, not a parameter-domain certificate. Dominant-mode-only checks and native self-comparisons do not certify complete models.",
+    "evidence": "docs/reviews/2026-09-12-clean-room/verification/pass-11/",
+    "unit_tests_passed": 1087,
+    "unit_tests_skipped": 8,
+    "unit_test_skip_reason": "Six CUDA unavailable; two generation-only gmpy2 unavailable in the Torch test environment. MPS passed.",
+    "source_and_test_inputs_changed_during_runs": false,
+    "provenance": "Independent Kerr equation solves supply QNM runtime data; external numerical data and binaries are verification-only. Other inherited waveform/remnant/matter calibration provenance remains incomplete.",
+    "unit_tests_seconds": 72.63,
+    "supplemental_explicit_components": {
+      "cases_passed": 3,
+      "cases_total": 34,
+      "mode_sum_controls_passed": 4,
+      "evidence": "docs/reviews/2026-09-12-clean-room/verification/pass-11/comparison.json",
+      "scope": "Separate NNLO102/FinalSpin0 and MSA223/FinalSpin3 plus HM/XHM selected-mode diagnostics. XHM selects both signed modes and disables multibanding. Overlapping controls do not add frozen passing cases."
+    }
+  },
+  "verification/pass-12": {
+    "date": "2026-09-13",
+    "catalog_passed": false,
+    "catalog_cases_passed": 11,
+    "catalog_cases_total": 21,
+    "holdout_cases_passed": 4,
+    "holdout_cases_total": 13,
+    "scope": "Frozen cases only, not a parameter-domain certificate. Dominant-mode-only checks and native self-comparisons do not certify complete models.",
+    "evidence": "docs/reviews/2026-09-12-clean-room/verification/pass-12/",
+    "unit_tests_passed": 1112,
+    "unit_tests_skipped": 8,
+    "unit_test_skip_reason": "Six CUDA unavailable; two generation-only gmpy2 unavailable in the Torch test environment. MPS passed.",
+    "source_and_test_inputs_changed_during_runs": false,
+    "provenance": "Independent Kerr equation solves supply QNM runtime data; external numerical data and binaries are verification-only. Other inherited waveform/remnant/matter calibration provenance remains incomplete.",
+    "unit_tests_seconds": 76.14,
+    "supplemental_explicit_components": {
+      "cases_passed": 3,
+      "cases_total": 34,
+      "mode_sum_controls_passed": 4,
+      "evidence": "docs/reviews/2026-09-12-clean-room/verification/pass-12/comparison.json",
+      "scope": "Separate NNLO102/FinalSpin0 and MSA223/FinalSpin3 plus HM/XHM selected-mode diagnostics. XHM selects both signed modes and disables multibanding. Overlapping controls do not add frozen passing cases."
+    }
+  },
+  "verification/pass-13": {
+    "date": "2026-09-13",
+    "catalog_passed": false,
+    "catalog_cases_passed": 11,
+    "catalog_cases_total": 21,
+    "holdout_cases_passed": 4,
+    "holdout_cases_total": 13,
+    "scope": "Frozen cases only, not a parameter-domain certificate. Dominant-mode-only checks and native self-comparisons do not certify complete models.",
+    "evidence": "docs/reviews/2026-09-12-clean-room/verification/pass-13/",
+    "unit_tests_passed": 1120,
+    "unit_tests_skipped": 8,
+    "unit_test_skip_reason": "Six CUDA unavailable; two generation-only gmpy2 unavailable in the Torch test environment. MPS passed.",
+    "source_and_test_inputs_changed_during_runs": false,
+    "provenance": "Independent Kerr equation solves supply QNM runtime data; external numerical data and binaries are verification-only. Other inherited waveform/remnant/matter calibration provenance remains incomplete.",
+    "unit_tests_seconds": 76.18,
+    "supplemental_explicit_components": {
+      "cases_passed": 3,
+      "cases_total": 34,
+      "mode_sum_controls_passed": 4,
+      "evidence": "docs/reviews/2026-09-12-clean-room/verification/pass-13/comparison.json",
+      "scope": "Separate NNLO102/FinalSpin0 and MSA223/FinalSpin3 plus HM/XHM selected-mode diagnostics. XHM selects both signed modes and disables multibanding. Overlapping controls do not add frozen passing cases."
+    }
+  },
+  "verification/pass-14": {
+    "date": "2026-09-13",
+    "catalog_passed": false,
+    "catalog_cases_passed": 11,
+    "catalog_cases_total": 21,
+    "holdout_cases_passed": 4,
+    "holdout_cases_total": 13,
+    "scope": "Frozen cases only, not a parameter-domain certificate. Dominant-mode-only checks and native self-comparisons do not certify complete models.",
+    "evidence": "docs/reviews/2026-09-12-clean-room/verification/pass-14/",
+    "unit_tests_passed": 1126,
+    "unit_tests_skipped": 8,
+    "unit_test_skip_reason": "Six CUDA unavailable; two generation-only gmpy2 unavailable in the Torch test environment. MPS passed.",
+    "source_and_test_inputs_changed_during_runs": false,
+    "provenance": "Independent Kerr equation solves supply QNM runtime data; external numerical data and binaries are verification-only. Other inherited waveform/remnant/matter calibration provenance remains incomplete.",
+    "unit_tests_seconds": 75.37,
+    "supplemental_explicit_components": {
+      "cases_passed": 3,
+      "cases_total": 34,
+      "mode_sum_controls_passed": 4,
+      "evidence": "docs/reviews/2026-09-12-clean-room/verification/pass-14/comparison.json",
+      "scope": "Separate NNLO102/FinalSpin0 and MSA223/FinalSpin3 plus HM/XHM selected-mode diagnostics. XHM selects both signed modes and disables multibanding. Overlapping controls do not add frozen passing cases."
+    }
+  },
+  "verification/pass-15": {
+    "date": "2026-09-13",
+    "catalog_passed": false,
+    "catalog_cases_passed": 11,
+    "catalog_cases_total": 21,
+    "holdout_cases_passed": 4,
+    "holdout_cases_total": 13,
+    "scope": "Frozen cases only, not a parameter-domain certificate. Dominant-mode-only checks and native self-comparisons do not certify complete models.",
+    "evidence": "docs/reviews/2026-09-12-clean-room/verification/pass-15/",
+    "unit_tests_passed": 1140,
+    "unit_tests_skipped": 9,
+    "unit_test_skip_reason": "Seven CUDA unavailable; two generation-only gmpy2 unavailable in the Torch test environment. MPS passed.",
+    "source_and_test_inputs_changed_during_runs": false,
+    "provenance": "Independent Kerr equation solves supply QNM runtime data; external numerical data and binaries are verification-only. Other inherited waveform/remnant/matter calibration provenance remains incomplete.",
+    "unit_tests_seconds": 81.76,
+    "supplemental_explicit_components": {
+      "cases_passed": 3,
+      "cases_total": 34,
+      "mode_sum_controls_passed": 4,
+      "evidence": "docs/reviews/2026-09-12-clean-room/verification/pass-15/comparison.json",
+      "scope": "Separate NNLO102/FinalSpin0 and MSA223/FinalSpin3 plus HM/XHM selected-mode diagnostics. XHM selects both signed modes and disables multibanding. Overlapping controls do not add frozen passing cases."
+    }
+  },
+  "validation_artifacts": {
+    "catalog": "docs/reviews/2026-09-13-parity-review/verification/reference-contracts-checkpoint3/catalog.json",
+    "holdout": "docs/reviews/2026-09-13-parity-review/verification/reference-contracts-checkpoint3/holdout.json",
+    "source_record": "docs/reviews/2026-09-13-parity-review/verification/reference-contracts-checkpoint3/source-record.json"
   }
 }

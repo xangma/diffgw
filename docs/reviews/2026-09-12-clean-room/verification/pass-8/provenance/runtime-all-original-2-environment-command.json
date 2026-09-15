@@ -1,0 +1,29 @@
+{
+  "command": [
+    "docker",
+    "run",
+    "--rm",
+    "--network",
+    "none",
+    "--cpus",
+    "2",
+    "--memory",
+    "4g",
+    "--read-only",
+    "--tmpfs",
+    "/tmp:rw,nosuid,nodev,size=1g",
+    "--mount",
+    "type=bind,src=/home/xangma/simulations/torchwave-nr/2026-09-12-pilot,dst=/campaign,readonly",
+    "--env",
+    "HOME=/tmp",
+    "--env",
+    "PYTHONDONTWRITEBYTECODE=1",
+    "--entrypoint",
+    "python",
+    "sha256:4d03ce10bf6deb922444b293b39e0c3753d92ac69c70f99ecb9cef49ba64b42f",
+    "/campaign/scripts/capture-environment.py"
+  ],
+  "exit_code": 0,
+  "stderr": "",
+  "utc": "2026-09-12T19:43:48.401332+00:00"
+}

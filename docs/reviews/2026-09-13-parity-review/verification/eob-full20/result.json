@@ -1,0 +1,62 @@
+{
+  "input": "full20.pt",
+  "parameters": {
+    "mass1": 30,
+    "mass2": 20,
+    "f_start_hz": 20,
+    "delta_t_s": 0.00012313727369103167,
+    "inclination": 0.8,
+    "distance_mpc": 100
+  },
+  "native_support_s": [
+    -1.230961378731465,
+    0.036983128465087986
+  ],
+  "binary_support_s": [
+    -1.232042294,
+    0.09439241819979305
+  ],
+  "common_support_s": [
+    -1.230961378731465,
+    0.036983128465087986
+  ],
+  "raw_common_relative_l2": 0.4471191678074733,
+  "roundtrip_projection_inversion_max": 1.550939958642289e-36,
+  "phase_frequency_threshold": "amplitude > 0.1% of each mode maximum",
+  "active_samples": 10170,
+  "native_frequency_hz": [
+    20.005462924562348,
+    350.06987976751753
+  ],
+  "binary_frequency_hz": [
+    20.01163800852935,
+    350.11271008109236
+  ],
+  "frequency_rms_hz": 2.109517142473728,
+  "phase_rms_rad": 0.38079768423840876,
+  "phase_max_abs_rad": 2.372734513994885,
+  "phase_residual_at_common_start_rad": 0.135841888419026,
+  "native_peak_origin_s": 0.0010768057907382007,
+  "binary_phase_at_native_peak_rad": 2.748779583538132,
+  "native_phase_at_native_peak_rad": -0.09014522118897286,
+  "binary_amplitude_peak_time_s": -0.0010389689107563882,
+  "native_amplitude_peak_time_s": 4.194635777848765e-05,
+  "intervals": {
+    "early": {
+      "samples": 9194,
+      "relative_l2": 0.2016302487728982
+    },
+    "inspiral": {
+      "samples": 10006,
+      "relative_l2": 0.3964610464503834
+    },
+    "merger": {
+      "samples": 325,
+      "relative_l2": 1.134455037583533
+    },
+    "ringdown": {
+      "samples": 2,
+      "relative_l2": 2.2915857760715377
+    }
+  }
+}

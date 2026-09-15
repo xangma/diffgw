@@ -1,0 +1,1019 @@
+{
+  "source": "TorchWave's independent Kerr eigenproblem solves",
+  "license": "MIT",
+  "external_numerical_inputs": [],
+  "source_sha256": {
+    "scripts/generate_kerr_qnm_independent.py": "ff394aff3075570f61ffcc09dfb3b67f22883f5cb12a7d10499598d4baead9d9",
+    "scripts/kerr_leaver_solver.py": "2439ed8b2a2331656fff758cefaf578acc3eed5b0a3d443e9e98a66a252d95b0",
+    "src/torchwave/approximants/kerr_qnm_generated.py": "677e9500637baba37b58b33fcd5bddf1ef58ffd9cf8e1ae8f38b0f88f01f696b"
+  },
+  "source_unchanged": true,
+  "versions": {
+    "numpy": "2.5.2",
+    "scipy": "1.16.3",
+    "gmpy2": "2.3.1"
+  },
+  "spin_domain": [
+    0.0,
+    0.99999
+  ],
+  "coordinate": "-log(1-a)",
+  "spline_degree": 5,
+  "absolute_tolerance": 1e-12,
+  "relative_tolerance": 1e-10,
+  "holdout_seed": 20260912,
+  "modes": {
+    "2,2,0": {
+      "training_count": 401,
+      "development": {
+        "count": 400,
+        "max_abs": [
+          4.4875214655348827e-13,
+          2.6394164631682315e-13
+        ],
+        "max_relative": [
+          1.1951316872898318e-12,
+          2.967880044725684e-12
+        ],
+        "worst_spin": [
+          0.014288099099389428,
+          0.014288099099389428
+        ]
+      },
+      "holdout": {
+        "count": 106,
+        "max_abs": [
+          1.8318679906315083e-14,
+          1.0297318553398327e-14
+        ],
+        "max_relative": [
+          4.9021317728248473e-14,
+          1.2709421258985383e-13
+        ],
+        "worst_spin": [
+          0.00013,
+          0.00013
+        ]
+      },
+      "endpoint_resolution": {
+        "count": 2,
+        "max_abs": [
+          0.0,
+          1.0842021724855044e-18
+        ],
+        "max_relative": [
+          0.0,
+          9.756193000299876e-16
+        ],
+        "worst_spin": [
+          0.0,
+          0.99999
+        ]
+      },
+      "reverse_continuation": {
+        "count": 401,
+        "max_complex_abs": 3.3422138886441676e-16,
+        "worst_spin": 0.48417783492782934,
+        "schwarzschild_closure": 6.206335383118183e-17,
+        "max_coordinate_step": 0.028782313667742088
+      },
+      "max_estimated_frequency_error": 1.0117567601274477e-15,
+      "max_radial_residual": 8.587186007360501e-14,
+      "max_cf_depth": 4096
+    },
+    "2,1,0": {
+      "training_count": 801,
+      "development": {
+        "count": 800,
+        "max_abs": [
+          2.429723089392155e-13,
+          2.2255808307392044e-13
+        ],
+        "max_relative": [
+          6.494417721555231e-13,
+          2.5019219482870065e-12
+        ],
+        "worst_spin": [
+          0.007169752223165507,
+          0.007169752223165507
+        ]
+      },
+      "holdout": {
+        "count": 106,
+        "max_abs": [
+          1.837419105754634e-14,
+          1.7236212457305555e-14
+        ],
+        "max_relative": [
+          4.917094289933273e-14,
+          2.35766871063742e-13
+        ],
+        "worst_spin": [
+          0.00013,
+          0.00013
+        ]
+      },
+      "endpoint_resolution": {
+        "count": 2,
+        "max_abs": [
+          0.0,
+          0.0
+        ],
+        "max_relative": [
+          0.0,
+          0.0
+        ],
+        "worst_spin": [
+          0.0,
+          0.0
+        ]
+      },
+      "reverse_continuation": {
+        "count": 801,
+        "max_complex_abs": 1.9550332035018557e-14,
+        "worst_spin": 0.9999170626795524,
+        "schwarzschild_closure": 0.0,
+        "max_coordinate_step": 0.014391156836527585
+      },
+      "max_estimated_frequency_error": 1.3915486216108364e-14,
+      "max_radial_residual": 8.312842623359686e-13,
+      "max_cf_depth": 16384
+    },
+    "3,3,0": {
+      "training_count": 401,
+      "development": {
+        "count": 400,
+        "max_abs": [
+          1.6575629757653587e-13,
+          4.246603069191224e-15
+        ],
+        "max_relative": [
+          2.751815629622835e-13,
+          3.244375062640176e-13
+        ],
+        "worst_spin": [
+          0.014288099099389428,
+          0.014288099099389428
+        ]
+      },
+      "holdout": {
+        "count": 106,
+        "max_abs": [
+          7.771561172376096e-15,
+          3.668940151690947e-16
+        ],
+        "max_relative": [
+          1.296406308054179e-14,
+          2.784286644647244e-13
+        ],
+        "worst_spin": [
+          0.00013,
+          0.9999516643884606
+        ]
+      },
+      "endpoint_resolution": {
+        "count": 2,
+        "max_abs": [
+          6.661338147750939e-16,
+          4.844215306665234e-16
+        ],
+        "max_relative": [
+          4.459395171427368e-16,
+          4.359158572647093e-13
+        ],
+        "worst_spin": [
+          0.99999,
+          0.99999
+        ]
+      },
+      "reverse_continuation": {
+        "count": 401,
+        "max_complex_abs": 6.674335893081556e-16,
+        "worst_spin": 0.9082724064611086,
+        "schwarzschild_closure": 1.3877787807814457e-16,
+        "max_coordinate_step": 0.028782313667742088
+      },
+      "max_estimated_frequency_error": 1.3314346425937527e-15,
+      "max_radial_residual": 3.6016976470382164e-13,
+      "max_cf_depth": 4096
+    },
+    "3,2,0": {
+      "training_count": 801,
+      "development": {
+        "count": 800,
+        "max_abs": [
+          6.794564910705958e-14,
+          7.456535389138708e-14
+        ],
+        "max_relative": [
+          1.131648639432981e-13,
+          1.4716915914063078e-12
+        ],
+        "worst_spin": [
+          0.007169752223165507,
+          0.007169752223165507
+        ]
+      },
+      "holdout": {
+        "count": 106,
+        "max_abs": [
+          1.1324274851176597e-14,
+          8.309325449928906e-15
+        ],
+        "max_relative": [
+          1.1010585627813893e-14,
+          4.4253436040032276e-13
+        ],
+        "worst_spin": [
+          0.9999761321017951,
+          0.9999408765358719
+        ]
+      },
+      "endpoint_resolution": {
+        "count": 2,
+        "max_abs": [
+          2.220446049250313e-16,
+          1.1102230246251565e-16
+        ],
+        "max_relative": [
+          2.1588607737074643e-16,
+          5.9668991720919165e-15
+        ],
+        "worst_spin": [
+          0.99999,
+          0.99999
+        ]
+      },
+      "reverse_continuation": {
+        "count": 801,
+        "max_complex_abs": 3.891456978004981e-14,
+        "worst_spin": 0.9999776127886144,
+        "schwarzschild_closure": 1.3877787807814457e-16,
+        "max_coordinate_step": 0.014391156836527585
+      },
+      "max_estimated_frequency_error": 2.50785836862294e-14,
+      "max_radial_residual": 1.3409552944811334e-12,
+      "max_cf_depth": 8192
+    },
+    "4,4,0": {
+      "training_count": 401,
+      "development": {
+        "count": 400,
+        "max_abs": [
+          1.3633538742396922e-13,
+          1.5751289161869408e-14
+        ],
+        "max_relative": [
+          1.6765328213595082e-13,
+          2.1500320112803552e-13
+        ],
+        "worst_spin": [
+          0.014288099099389428,
+          0.014288099099389428
+        ]
+      },
+      "holdout": {
+        "count": 106,
+        "max_abs": [
+          6.217248937900877e-15,
+          6.800116025829084e-16
+        ],
+        "max_relative": [
+          7.683064909413735e-15,
+          2.1684919876853865e-13
+        ],
+        "worst_spin": [
+          0.00013,
+          0.00013
+        ]
+      },
+      "endpoint_resolution": {
+        "count": 2,
+        "max_abs": [
+          0.0,
+          1.734723475976807e-18
+        ],
+        "max_relative": [
+          0.0,
+          1.5609373696085897e-15
+        ],
+        "worst_spin": [
+          0.0,
+          0.99999
+        ]
+      },
+      "reverse_continuation": {
+        "count": 401,
+        "max_complex_abs": 1.3325567187647329e-15,
+        "worst_spin": 0.7014617381083467,
+        "schwarzschild_closure": 1.3877787807814457e-16,
+        "max_coordinate_step": 0.028782313667742088
+      },
+      "max_estimated_frequency_error": 1.9745660178771496e-15,
+      "max_radial_residual": 9.936607355674874e-13,
+      "max_cf_depth": 2048
+    },
+    "2,2,1": {
+      "training_count": 801,
+      "development": {
+        "count": 800,
+        "max_abs": [
+          1.759703494030873e-14,
+          3.902433931557425e-14
+        ],
+        "max_relative": [
+          5.060305461278567e-14,
+          1.425169511329306e-13
+        ],
+        "worst_spin": [
+          0.007169752223165507,
+          0.007169752223165507
+        ]
+      },
+      "holdout": {
+        "count": 106,
+        "max_abs": [
+          4.6074255521944e-15,
+          1.071365218763276e-14
+        ],
+        "max_relative": [
+          1.317471210656751e-14,
+          3.915185311748166e-14
+        ],
+        "worst_spin": [
+          0.020666832552069952,
+          0.020666832552069952
+        ]
+      },
+      "endpoint_resolution": {
+        "count": 2,
+        "max_abs": [
+          1.1102230246251565e-16,
+          5.551115123125783e-17
+        ],
+        "max_relative": [
+          3.2021569394064943e-16,
+          6.8943160279942015e-15
+        ],
+        "worst_spin": [
+          0.0,
+          0.0
+        ]
+      },
+      "reverse_continuation": {
+        "count": 801,
+        "max_complex_abs": 5.117875266520903e-16,
+        "worst_spin": 0.4212380116510045,
+        "schwarzschild_closure": 1.7554167342883506e-16,
+        "max_coordinate_step": 0.014391156836527585
+      },
+      "max_estimated_frequency_error": 4.999290336157015e-16,
+      "max_radial_residual": 4.514063603885583e-14,
+      "max_cf_depth": 8192
+    },
+    "2,1,1": {
+      "training_count": 1601,
+      "development": {
+        "count": 1600,
+        "max_abs": [
+          3.5338398873818733e-13,
+          2.546574062733953e-13
+        ],
+        "max_relative": [
+          6.553244999760449e-13,
+          2.1374848025160635e-12
+        ],
+        "worst_spin": [
+          0.9995452083315897,
+          0.9994860303199243
+        ]
+      },
+      "holdout": {
+        "count": 106,
+        "max_abs": [
+          6.938893903907228e-14,
+          1.0132172878485335e-13
+        ],
+        "max_relative": [
+          1.285910220555634e-13,
+          8.479025987972004e-13
+        ],
+        "worst_spin": [
+          0.999133723137773,
+          0.999133723137773
+        ]
+      },
+      "endpoint_resolution": {
+        "count": 2,
+        "max_abs": [
+          1.1102230246251565e-16,
+          5.551115123125783e-17
+        ],
+        "max_relative": [
+          3.2021569394064943e-16,
+          2.0265840317082687e-16
+        ],
+        "worst_spin": [
+          0.0,
+          0.0
+        ]
+      },
+      "reverse_continuation": {
+        "count": 1601,
+        "max_complex_abs": 3.559106498030673e-13,
+        "worst_spin": 0.9995268487410399,
+        "schwarzschild_closure": 1.7554167342883506e-16,
+        "max_coordinate_step": 0.007195578424660454
+      },
+      "max_estimated_frequency_error": 2.096920819130317e-13,
+      "max_radial_residual": 1.7538319308410853e-13,
+      "max_cf_depth": 16384
+    },
+    "3,3,1": {
+      "training_count": 801,
+      "development": {
+        "count": 800,
+        "max_abs": [
+          1.1546319456101628e-14,
+          3.4416913763379853e-15
+        ],
+        "max_relative": [
+          1.976481387350003e-14,
+          1.0630991383441871e-13
+        ],
+        "worst_spin": [
+          0.007169752223165507,
+          0.007169752223165507
+        ]
+      },
+      "holdout": {
+        "count": 106,
+        "max_abs": [
+          1.5543122344752192e-15,
+          3.191891195797325e-16
+        ],
+        "max_relative": [
+          2.6675610819800067e-15,
+          3.8038275227920725e-14
+        ],
+        "worst_spin": [
+          0.00013,
+          0.9999354554930832
+        ]
+      },
+      "endpoint_resolution": {
+        "count": 2,
+        "max_abs": [
+          0.0,
+          1.3010426069826053e-18
+        ],
+        "max_relative": [
+          0.0,
+          3.9025593378097965e-16
+        ],
+        "worst_spin": [
+          0.0,
+          0.99999
+        ]
+      },
+      "reverse_continuation": {
+        "count": 801,
+        "max_complex_abs": 5.978733960281817e-16,
+        "worst_spin": 0.014288099099389428,
+        "schwarzschild_closure": 2.0014830212433605e-16,
+        "max_coordinate_step": 0.014391156836527585
+      },
+      "max_estimated_frequency_error": 8.695045760948744e-16,
+      "max_radial_residual": 2.7762680133724567e-13,
+      "max_cf_depth": 4096
+    },
+    "3,2,1": {
+      "training_count": 801,
+      "development": {
+        "count": 800,
+        "max_abs": [
+          5.81756864903582e-14,
+          2.6029178812336795e-13
+        ],
+        "max_relative": [
+          9.96718926894873e-14,
+          9.25464027472878e-13
+        ],
+        "worst_spin": [
+          0.007169752223165507,
+          0.007169752223165507
+        ]
+      },
+      "holdout": {
+        "count": 106,
+        "max_abs": [
+          4.6629367034256575e-15,
+          1.9984014443252818e-14
+        ],
+        "max_relative": [
+          8.002810764252496e-15,
+          6.194913084324558e-13
+        ],
+        "worst_spin": [
+          0.00013,
+          0.00013
+        ]
+      },
+      "endpoint_resolution": {
+        "count": 2,
+        "max_abs": [
+          3.552713678800501e-15,
+          4.0314973581701e-15
+        ],
+        "max_relative": [
+          3.5524569175369462e-15,
+          7.601183740402693e-13
+        ],
+        "worst_spin": [
+          0.99999,
+          0.99999
+        ]
+      },
+      "reverse_continuation": {
+        "count": 801,
+        "max_complex_abs": 2.288152213865306e-15,
+        "worst_spin": 0.9991087490618688,
+        "schwarzschild_closure": 5.551115123125783e-17,
+        "max_coordinate_step": 0.014391156836527585
+      },
+      "max_estimated_frequency_error": 5.341524629478299e-15,
+      "max_radial_residual": 5.004828258095394e-14,
+      "max_cf_depth": 2048
+    },
+    "4,4,1": {
+      "training_count": 401,
+      "development": {
+        "count": 400,
+        "max_abs": [
+          2.744471316873387e-13,
+          1.0691447727140257e-13
+        ],
+        "max_relative": [
+          3.4272356837354656e-13,
+          3.761308459439014e-13
+        ],
+        "worst_spin": [
+          0.014288099099389428,
+          0.014288099099389428
+        ]
+      },
+      "holdout": {
+        "count": 106,
+        "max_abs": [
+          2.9753977059954195e-14,
+          1.1879386363489175e-14
+        ],
+        "max_relative": [
+          3.647520358240248e-14,
+          4.1847728383952176e-14
+        ],
+        "worst_spin": [
+          0.06403005576078873,
+          0.06403005576078873
+        ]
+      },
+      "endpoint_resolution": {
+        "count": 2,
+        "max_abs": [
+          0.0,
+          8.673617379884035e-19
+        ],
+        "max_relative": [
+          0.0,
+          2.6015622827683443e-16
+        ],
+        "worst_spin": [
+          0.0,
+          0.99999
+        ]
+      },
+      "reverse_continuation": {
+        "count": 401,
+        "max_complex_abs": 1.1157603309187458e-15,
+        "worst_spin": 0.8741074588206864,
+        "schwarzschild_closure": 0.0,
+        "max_coordinate_step": 0.028782313667742088
+      },
+      "max_estimated_frequency_error": 1.0748728583898437e-15,
+      "max_radial_residual": 5.094498818551624e-13,
+      "max_cf_depth": 2048
+    },
+    "2,2,2": {
+      "training_count": 801,
+      "development": {
+        "count": 800,
+        "max_abs": [
+          3.3306690738754696e-15,
+          1.478261957288396e-13
+        ],
+        "max_relative": [
+          1.1018070689017619e-14,
+          3.092897594792602e-13
+        ],
+        "worst_spin": [
+          0.007169752223165507,
+          0.007169752223165507
+        ]
+      },
+      "holdout": {
+        "count": 106,
+        "max_abs": [
+          8.326672684688674e-16,
+          1.1324274851176597e-14
+        ],
+        "max_relative": [
+          2.2125117962765594e-15,
+          3.725649888523073e-14
+        ],
+        "worst_spin": [
+          0.6038412906950816,
+          0.00013
+        ]
+      },
+      "endpoint_resolution": {
+        "count": 2,
+        "max_abs": [
+          1.1102230246251565e-16,
+          1.214306433183765e-17
+        ],
+        "max_relative": [
+          3.6877936712424367e-16,
+          2.1853951064191577e-15
+        ],
+        "worst_spin": [
+          0.0,
+          0.99999
+        ]
+      },
+      "reverse_continuation": {
+        "count": 801,
+        "max_complex_abs": 5.79553433516819e-16,
+        "worst_spin": 0.7524003650751593,
+        "schwarzschild_closure": 0.0,
+        "max_coordinate_step": 0.014391156836527585
+      },
+      "max_estimated_frequency_error": 8.432244991326322e-16,
+      "max_radial_residual": 2.5453905834259155e-14,
+      "max_cf_depth": 8192
+    },
+    "2,1,2": {
+      "training_count": 1601,
+      "development": {
+        "count": 1600,
+        "max_abs": [
+          2.4313884239290928e-14,
+          3.469446951953614e-14
+        ],
+        "max_relative": [
+          4.7111879337199373e-14,
+          1.7526222332903536e-13
+        ],
+        "worst_spin": [
+          0.9950061269257494,
+          0.0035913249189193793
+        ]
+      },
+      "holdout": {
+        "count": 106,
+        "max_abs": [
+          1.0880185641326534e-14,
+          1.7180701306074297e-14
+        ],
+        "max_relative": [
+          2.107214187357591e-14,
+          1.3218915391251452e-13
+        ],
+        "worst_spin": [
+          0.9948251744937094,
+          0.9948251744937094
+        ]
+      },
+      "endpoint_resolution": {
+        "count": 2,
+        "max_abs": [
+          1.1102230246251565e-16,
+          2.6020852139652106e-18
+        ],
+        "max_relative": [
+          3.6877936712424367e-16,
+          4.810137702736265e-16
+        ],
+        "worst_spin": [
+          0.0,
+          0.99999
+        ]
+      },
+      "reverse_continuation": {
+        "count": 1601,
+        "max_complex_abs": 5.474044100912243e-15,
+        "worst_spin": 0.9940860860645001,
+        "schwarzschild_closure": 0.0,
+        "max_coordinate_step": 0.007195578424660454
+      },
+      "max_estimated_frequency_error": 7.672730645337997e-15,
+      "max_radial_residual": 2.0253584144909416e-14,
+      "max_cf_depth": 1024
+    },
+    "3,3,2": {
+      "training_count": 801,
+      "development": {
+        "count": 800,
+        "max_abs": [
+          2.808864252301646e-14,
+          2.0095036745715333e-14
+        ],
+        "max_relative": [
+          5.075781822191875e-14,
+          4.1959286361743074e-14
+        ],
+        "worst_spin": [
+          0.007169752223165507,
+          0.007169752223165507
+        ]
+      },
+      "holdout": {
+        "count": 106,
+        "max_abs": [
+          5.440092820663267e-15,
+          5.329070518200751e-15
+        ],
+        "max_relative": [
+          9.781544596229993e-15,
+          1.113410003248683e-14
+        ],
+        "worst_spin": [
+          0.018753046758047603,
+          0.018753046758047603
+        ]
+      },
+      "endpoint_resolution": {
+        "count": 2,
+        "max_abs": [
+          0.0,
+          1.734723475976807e-18
+        ],
+        "max_relative": [
+          0.0,
+          3.122048191750763e-16
+        ],
+        "worst_spin": [
+          0.0,
+          0.99999
+        ]
+      },
+      "reverse_continuation": {
+        "count": 801,
+        "max_complex_abs": 7.850462293418876e-16,
+        "worst_spin": 0.7761278861432985,
+        "schwarzschild_closure": 3.1401849173675503e-16,
+        "max_coordinate_step": 0.014391156836527585
+      },
+      "max_estimated_frequency_error": 8.107503000603708e-16,
+      "max_radial_residual": 1.5120063745753226e-13,
+      "max_cf_depth": 4096
+    },
+    "3,2,2": {
+      "training_count": 1601,
+      "development": {
+        "count": 1600,
+        "max_abs": [
+          1.354472090042691e-14,
+          1.1664280652468051e-14
+        ],
+        "max_relative": [
+          1.3489729270574478e-14,
+          2.8738954593563235e-13
+        ],
+        "worst_spin": [
+          0.9994672021054151,
+          0.9997025338860084
+        ]
+      },
+      "holdout": {
+        "count": 106,
+        "max_abs": [
+          7.771561172376096e-15,
+          7.605027718682322e-15
+        ],
+        "max_relative": [
+          7.7395163280892e-15,
+          2.0602077013024072e-13
+        ],
+        "worst_spin": [
+          0.9993625891757715,
+          0.999739235082562
+        ]
+      },
+      "endpoint_resolution": {
+        "count": 2,
+        "max_abs": [
+          4.440892098500626e-16,
+          3.9898639947466563e-17
+        ],
+        "max_relative": [
+          4.440419015060086e-16,
+          5.289961349009443e-15
+        ],
+        "worst_spin": [
+          0.99999,
+          0.99999
+        ]
+      },
+      "reverse_continuation": {
+        "count": 1601,
+        "max_complex_abs": 1.2282022541427831e-14,
+        "worst_spin": 0.9995752582031303,
+        "schwarzschild_closure": 2.220446049250313e-16,
+        "max_coordinate_step": 0.007195578424660454
+      },
+      "max_estimated_frequency_error": 1.6829214391325798e-14,
+      "max_radial_residual": 6.637611133276302e-14,
+      "max_cf_depth": 2048
+    },
+    "4,4,2": {
+      "training_count": 801,
+      "development": {
+        "count": 800,
+        "max_abs": [
+          9.658940314238862e-15,
+          6.8833827526759706e-15
+        ],
+        "max_relative": [
+          1.2464603850222874e-14,
+          1.434641237572183e-14
+        ],
+        "worst_spin": [
+          0.007169752223165507,
+          0.007169752223165507
+        ]
+      },
+      "holdout": {
+        "count": 106,
+        "max_abs": [
+          2.220446049250313e-15,
+          2.7842311789427754e-16
+        ],
+        "max_relative": [
+          2.519026856221123e-15,
+          4.783172252176194e-14
+        ],
+        "worst_spin": [
+          0.3,
+          0.9999890200997834
+        ]
+      },
+      "endpoint_resolution": {
+        "count": 2,
+        "max_abs": [
+          2.220446049250313e-16,
+          4.414871246360974e-16
+        ],
+        "max_relative": [
+          1.1146499754953482e-16,
+          7.945171209131177e-14
+        ],
+        "worst_spin": [
+          0.99999,
+          0.99999
+        ]
+      },
+      "reverse_continuation": {
+        "count": 801,
+        "max_complex_abs": 1.0370338861126152e-15,
+        "worst_spin": 0.4915479531400421,
+        "schwarzschild_closure": 1.2412670766236366e-16,
+        "max_coordinate_step": 0.014391156836527585
+      },
+      "max_estimated_frequency_error": 9.63050765103781e-16,
+      "max_radial_residual": 3.5840613047570586e-13,
+      "max_cf_depth": 4096
+    },
+    "2,-2,0": {
+      "training_count": 1601,
+      "development": {
+        "count": 1600,
+        "max_abs": [
+          2.1782575743145571e-13,
+          4.3895442836117127e-14
+        ],
+        "max_relative": [
+          5.836375559064696e-13,
+          4.986580928331337e-13
+        ],
+        "worst_spin": [
+          0.0035913249189193793,
+          0.9995112773128709
+        ]
+      },
+      "holdout": {
+        "count": 106,
+        "max_abs": [
+          3.247402347028583e-14,
+          1.2129186544029835e-14
+        ],
+        "max_relative": [
+          8.690903177067637e-14,
+          1.3778897108429248e-13
+        ],
+        "worst_spin": [
+          0.00013,
+          0.9994612129952929
+        ]
+      },
+      "endpoint_resolution": {
+        "count": 2,
+        "max_abs": [
+          0.0,
+          0.0
+        ],
+        "max_relative": [
+          0.0,
+          0.0
+        ],
+        "worst_spin": [
+          0.0,
+          0.0
+        ]
+      },
+      "reverse_continuation": {
+        "count": 1601,
+        "max_complex_abs": 8.479255213636073e-14,
+        "worst_spin": 0.9993170718728287,
+        "schwarzschild_closure": 6.938893903907228e-17,
+        "max_coordinate_step": 0.007195578424660454
+      },
+      "max_estimated_frequency_error": 7.268084386860948e-14,
+      "max_radial_residual": 1.0125194094384351e-11,
+      "max_cf_depth": 32768
+    }
+  },
+  "overtone_separations": {
+    "2,2,0;2,2,1": {
+      "minimum_complex_separation": 0.00222262189912005,
+      "separation_to_error_ratio": 2196794710657.6025
+    },
+    "2,2,0;2,2,2": {
+      "minimum_complex_separation": 0.004445165404186705,
+      "separation_to_error_ratio": 4393511938212.068
+    },
+    "2,1,0;2,1,1": {
+      "minimum_complex_separation": 0.08707022756113435,
+      "separation_to_error_ratio": 415228971770.3604
+    },
+    "2,1,0;2,1,2": {
+      "minimum_complex_separation": 0.07881439135919036,
+      "separation_to_error_ratio": 5663789977238.163
+    },
+    "3,3,0;3,3,1": {
+      "minimum_complex_separation": 0.0022225458788719733,
+      "separation_to_error_ratio": 1669286503273.0835
+    },
+    "3,3,0;3,3,2": {
+      "minimum_complex_separation": 0.0044450905266386126,
+      "separation_to_error_ratio": 3338572081900.4546
+    },
+    "3,2,0;3,2,1": {
+      "minimum_complex_separation": 0.027027183818026913,
+      "separation_to_error_ratio": 1077699767904.6559
+    },
+    "3,2,0;3,2,2": {
+      "minimum_complex_separation": 0.02764502854254811,
+      "separation_to_error_ratio": 1102336116282.6726
+    },
+    "4,4,0;4,4,1": {
+      "minimum_complex_separation": 0.00222266890352879,
+      "separation_to_error_ratio": 1125649324158.0117
+    },
+    "4,4,0;4,4,2": {
+      "minimum_complex_separation": 0.004445337808813139,
+      "separation_to_error_ratio": 2251298649205.1094
+    },
+    "2,2,1;2,2,2": {
+      "minimum_complex_separation": 0.00222254350599703,
+      "separation_to_error_ratio": 2635767234328.7104
+    },
+    "2,1,1;2,1,2": {
+      "minimum_complex_separation": 0.026655443426336387,
+      "separation_to_error_ratio": 127117071770.9386
+    },
+    "3,3,1;3,3,2": {
+      "minimum_complex_separation": 0.0022225446477706153,
+      "separation_to_error_ratio": 2556104601257.563
+    },
+    "3,2,1;3,2,2": {
+      "minimum_complex_separation": 0.002238817593741425,
+      "separation_to_error_ratio": 133031616430.97067
+    },
+    "4,4,1;4,4,2": {
+      "minimum_complex_separation": 0.002222668905286315,
+      "separation_to_error_ratio": 2067843548134.4893
+    }
+  },
+  "output_sha256": "7f224df7237798b18bb3ad00263a9189ac31abca57cea6e1a1dac78a058835fd",
+  "elapsed_seconds": 2925.6088832499954
+}

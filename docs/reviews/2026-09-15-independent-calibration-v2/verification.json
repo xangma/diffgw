@@ -1,0 +1,279 @@
+{
+  "completed_utc": "2026-09-15T11:01:11.575159+00:00",
+  "host": "RONI2",
+  "cwd": "/Users/xangma/repos/torchwave",
+  "command": [
+    "/Users/xangma/miniconda3/envs/pycbcorig313/bin/python",
+    "docs/reviews/2026-09-15-independent-calibration-v2/verify-run.py"
+  ],
+  "audit_script_sha256": "c1643fb36fa42d3054a2df380fdf45515352fbebc75493d4226550cfc10af759",
+  "numpy_version": "2.3.5",
+  "python_version": "3.13.9",
+  "status": "insufficient_quality_do_not_fit",
+  "integrity": {
+    "old_artifact_sha256": {
+      "checked": 37,
+      "changed": []
+    },
+    "runtime_sha256": {
+      "checked": 139,
+      "changed": []
+    }
+  },
+  "input_sha256": {
+    "integrity-start.json": "9d4de46c15c563b16cb4839d73cdd7a21317dfe2783d4173f2e4cb5c38b9c117",
+    "quality-policy.json": "1a863811b90c410cd5a9b0b52a0bd53696b869a0d503cb8fa61d9c054842138d",
+    "candidate-inventory.json": "6605db8f60ccb2277c9a21e1219c03fe48b0529d4050eed953ca655357873ff9",
+    "selection-round1.json": "8578a4e8521d4ee1e137506cebb9e0bfa9a7b0d081c701175776f239793052e7",
+    "nr33-manifest-round1.json": "3ee69110faf64800e253e9124e736e9c5a16aad53e40bbd4ccd57fe5e214ccaa",
+    "quality-screen-round1.json": "b398e6a38222bd5264fd4cfaad11ebef4983e52c359e6f36c8553a42d061ce03"
+  },
+  "source_sha256": {
+    "scripts/prepare_nr33_calibration_v2.py": "777b4492fbd6d73d2ed6202b128be0873b00bf7d0c59d14f011a873e53869c7c",
+    "scripts/screen_nr33_calibration_v2.py": "2e8245eced92fd21ebc4e037d67095e26119ee6804428f8330650e449d78abfd",
+    "scripts/calibrate_nr33_v2.py": "c244b3b7abb3d74f33bfe1a009c377617866245aee7ff84318ef3a000a6741b1",
+    "scripts/prepare_nr33_calibration_data.py": "721e9395aab7f5d15dc82cba2670b70e538825d81a7e681cec386c23a0796496",
+    "scripts/fit_nr33_amplitude_pilot.py": "e307ef505094a5f3d568690d3a9f44cff58d9683d3c29f91e62cc7d2f17ed554",
+    "scripts/kerr_leaver_solver.py": "a7b07b28962b676271645fd60cf6bd7c2684c8c92e801579897f2d8f84698fc9"
+  },
+  "waveform_checks": [
+    {
+      "id": "SXS:BBH:2331/Lev2/N2",
+      "samples": 22284,
+      "npz_sha256": "e9528afa6bd3461e786d0baeed8df829f1b04296adef4e7f13c59da7142bcc1e",
+      "peak_h22_M": 9774.981775496435,
+      "end_M": 9945.075573281558,
+      "post_peak_M": 170.09379778512266
+    },
+    {
+      "id": "SXS:BBH:2331/Lev2/N3",
+      "samples": 22284,
+      "npz_sha256": "806d0c8d37027ea8165f0cdb5d1ed537cdc27ee3ad10afe534dce1eef9d10d8d",
+      "peak_h22_M": 9774.981775496435,
+      "end_M": 9945.075573281558,
+      "post_peak_M": 170.09379778512266
+    },
+    {
+      "id": "SXS:BBH:2331/Lev3/N2",
+      "samples": 22323,
+      "npz_sha256": "76a8af98d9a576d115d2faf4585a27738333697a3037994d983973224a0f0db3",
+      "peak_h22_M": 9776.454361838942,
+      "end_M": 9946.844105043987,
+      "post_peak_M": 170.3897432050453
+    },
+    {
+      "id": "SXS:BBH:2331/Lev3/N3",
+      "samples": 22323,
+      "npz_sha256": "54abd57e0ef61fecffb0940bd206f66cded52695b2a04e7d288cfce10e6f3532",
+      "peak_h22_M": 9776.454361838942,
+      "end_M": 9946.844105043987,
+      "post_peak_M": 170.3897432050453
+    },
+    {
+      "id": "SXS:BBH:1166/Lev2/N2",
+      "samples": 28490,
+      "npz_sha256": "cd8efc0b375b7c49cf192847f1fd4604c9c5257d2be89b9b454e8bd07732ee1c",
+      "peak_h22_M": 15785.176510617679,
+      "end_M": 15966.656950393184,
+      "post_peak_M": 181.48043977550515
+    },
+    {
+      "id": "SXS:BBH:1166/Lev2/N3",
+      "samples": 28490,
+      "npz_sha256": "a9c1cb45176938b81374630274e20761309fc7bf964da32df517f8499eb669ad",
+      "peak_h22_M": 15785.176510617679,
+      "end_M": 15966.656950393184,
+      "post_peak_M": 181.48043977550515
+    },
+    {
+      "id": "SXS:BBH:1166/Lev3/N2",
+      "samples": 28520,
+      "npz_sha256": "c2304e5f6e7ee75ee1b4675c3c53860a40c4c72e800976964f531d2cee606005",
+      "peak_h22_M": 15754.949940624358,
+      "end_M": 15936.730197338124,
+      "post_peak_M": 181.780256713766
+    },
+    {
+      "id": "SXS:BBH:1166/Lev3/N3",
+      "samples": 28520,
+      "npz_sha256": "e2eeaaa12b643ab44befa4a564622b12e90863b54f0c2738bd350ff3b75143ce",
+      "peak_h22_M": 15754.949940624358,
+      "end_M": 15936.730197338124,
+      "post_peak_M": 181.780256713766
+    },
+    {
+      "id": "SXS:BBH:2265/Lev2/N2",
+      "samples": 41017,
+      "npz_sha256": "e34f67bc5217d06b81a47caaf9fc27fcb5564c9de193fb6fd17790b6ef8756e5",
+      "peak_h22_M": 30511.705206178893,
+      "end_M": 30694.3023388588,
+      "post_peak_M": 182.5971326799081
+    },
+    {
+      "id": "SXS:BBH:2265/Lev2/N3",
+      "samples": 41017,
+      "npz_sha256": "7e6d99a42e0372b2f34f781cef48efd5912102f0644cd139ee69de09431c8db7",
+      "peak_h22_M": 30511.705206178893,
+      "end_M": 30694.3023388588,
+      "post_peak_M": 182.5971326799081
+    },
+    {
+      "id": "SXS:BBH:2265/Lev3/N2",
+      "samples": 41113,
+      "npz_sha256": "e71ffcc06737ebc6b969b57a8cb4b0106075aed35b81bfdfc50cf47e91daca9c",
+      "peak_h22_M": 30556.345367388192,
+      "end_M": 30739.839673885424,
+      "post_peak_M": 183.49430649723217
+    },
+    {
+      "id": "SXS:BBH:2265/Lev3/N3",
+      "samples": 41113,
+      "npz_sha256": "b34ee2d0a4c94dccd412023047429859c0d7c4716c3a36990d7080090853ee45",
+      "peak_h22_M": 30556.345367388192,
+      "end_M": 30739.839673885424,
+      "post_peak_M": 183.49430649723217
+    },
+    {
+      "id": "SXS:BBH:2485/Lev4/N2",
+      "samples": 18511,
+      "npz_sha256": "44c9e6b773a40c54af5a4b2e5626694bfdba3cf44b5b0e3fd07d97d5d2eabe20",
+      "peak_h22_M": 6967.062953442249,
+      "end_M": 7119.992272473341,
+      "post_peak_M": 152.92931903109184
+    },
+    {
+      "id": "SXS:BBH:2485/Lev4/N3",
+      "samples": 18511,
+      "npz_sha256": "67a3ed0abadefeafdaed6e17a2ec5565b18697852540ebf32b5f77d0804de8c2",
+      "peak_h22_M": 6966.962932679182,
+      "end_M": 7119.992272473341,
+      "post_peak_M": 153.02933979415866
+    },
+    {
+      "id": "SXS:BBH:2485/Lev5/N2",
+      "samples": 18528,
+      "npz_sha256": "576e0d81fa157a655d137971911b77054b80e7341b3863f00e6a0c44c0000154",
+      "peak_h22_M": 6956.901697048977,
+      "end_M": 7110.420954570029,
+      "post_peak_M": 153.51925752105126
+    },
+    {
+      "id": "SXS:BBH:2485/Lev5/N3",
+      "samples": 18528,
+      "npz_sha256": "5e47a5334555f5b19db2fa398ddc412aba214b953d3c1ac91b1594c579309146",
+      "peak_h22_M": 6956.901697048977,
+      "end_M": 7110.420954570029,
+      "post_peak_M": 153.51925752105126
+    },
+    {
+      "id": "SXS:BBH:3619/Lev2/N2",
+      "samples": 19842,
+      "npz_sha256": "c4b01b6bfbf8dd27d8a31e664e3fd1dff506d767ff0b51eaeda63ec5086c89a3",
+      "peak_h22_M": 7844.221888249004,
+      "end_M": 7998.810364993623,
+      "post_peak_M": 154.58847674461867
+    },
+    {
+      "id": "SXS:BBH:3619/Lev2/N3",
+      "samples": 19842,
+      "npz_sha256": "9df4bf369398654e866d1842e678dcb604b46dfcf7767f618f6ad3eb67f2a719",
+      "peak_h22_M": 7844.221888249004,
+      "end_M": 7998.810364993623,
+      "post_peak_M": 154.58847674461867
+    },
+    {
+      "id": "SXS:BBH:3619/Lev3/N2",
+      "samples": 19817,
+      "npz_sha256": "4367aa357e4fe2854cf8877b4248c246284c4ed08e7c141bc3af8adfa29f87c3",
+      "peak_h22_M": 7822.31110321981,
+      "end_M": 7976.900293931303,
+      "post_peak_M": 154.58919071149285
+    },
+    {
+      "id": "SXS:BBH:3619/Lev3/N3",
+      "samples": 19817,
+      "npz_sha256": "753e1627c915ab9a7f3b052da344d4a4e570f2defb0c9ef15f8a360398f94632",
+      "peak_h22_M": 7822.31110321981,
+      "end_M": 7976.900293931303,
+      "post_peak_M": 154.58919071149285
+    },
+    {
+      "id": "SXS:BBH:3630/Lev2/N2",
+      "samples": 15379,
+      "npz_sha256": "38a8e83eb9f68f469f72fee28ee49fae5334d891d3d1df666f1f5e3602465dc6",
+      "peak_h22_M": 4815.362013303364,
+      "end_M": 4954.457188016479,
+      "post_peak_M": 139.09517471311574
+    },
+    {
+      "id": "SXS:BBH:3630/Lev2/N3",
+      "samples": 15379,
+      "npz_sha256": "e8d56c167f738e247b1e8fdc92ef46701ef4567c6e48cfaa50a425907f6e411a",
+      "peak_h22_M": 4815.362013303364,
+      "end_M": 4954.457188016479,
+      "post_peak_M": 139.09517471311574
+    },
+    {
+      "id": "SXS:BBH:3630/Lev3/N2",
+      "samples": 15376,
+      "npz_sha256": "e36655a40e1249ca47031a149ed50a1b3d44f105a1df3c9928255ca523c3898e",
+      "peak_h22_M": 4802.187134614337,
+      "end_M": 4942.073638641294,
+      "post_peak_M": 139.88650402695657
+    },
+    {
+      "id": "SXS:BBH:3630/Lev3/N3",
+      "samples": 15376,
+      "npz_sha256": "40babf47a9d2b9f7d4e90ff2a969bb91e273ee96cfa6db870076734a84d5188a",
+      "peak_h22_M": 4802.187134614337,
+      "end_M": 4942.073638641294,
+      "post_peak_M": 139.88650402695657
+    },
+    {
+      "id": "SXS:BBH:3622/Lev2/N2",
+      "samples": 17145,
+      "npz_sha256": "ca578563609844595fb2801f35385540a324485d8faa0a7ac1c5f831ff811b9e",
+      "peak_h22_M": 5915.549631449372,
+      "end_M": 6054.624115137743,
+      "post_peak_M": 139.0744836883705
+    },
+    {
+      "id": "SXS:BBH:3622/Lev2/N3",
+      "samples": 17145,
+      "npz_sha256": "f24577cf21ecbb89afea8d15fa4f119ba83102d2ae409bee3b715abe09b3339d",
+      "peak_h22_M": 5915.549631449372,
+      "end_M": 6054.624115137743,
+      "post_peak_M": 139.0744836883705
+    },
+    {
+      "id": "SXS:BBH:3622/Lev3/N2",
+      "samples": 17130,
+      "npz_sha256": "59c11cf772c21aebd33b10a89d45843b72186559478398f5f1503911a120b41d",
+      "peak_h22_M": 5897.9005376932955,
+      "end_M": 6036.674848784364,
+      "post_peak_M": 138.77431109106874
+    },
+    {
+      "id": "SXS:BBH:3622/Lev3/N3",
+      "samples": 17130,
+      "npz_sha256": "2337df9c395ddc0549180008d92eabbd1a9e0c814cc5f7eeffbfc2f9475ac0dd",
+      "peak_h22_M": 5897.800555548332,
+      "end_M": 6036.674848784364,
+      "post_peak_M": 138.87429323603192
+    }
+  ],
+  "counts": {
+    "holdout": 1,
+    "required_targets": 7,
+    "selected": 5,
+    "training": 4
+  },
+  "failed_target_q": [
+    6.0,
+    8.0
+  ],
+  "fit_admission_rejection": "NR quality screen did not pass; no fit allowed",
+  "calibration_created": false,
+  "LAL_called": false,
+  "data_location": "raw H5 and decoded NPZ remain outside repository under /tmp/torchwave-nr33-v2"
+}

@@ -1,0 +1,9 @@
+mainmodule aligned_nodegroup {
+  mainchare Main {
+    entry Main(CkArgMsg* msg);
+    entry void nodegroupReady();
+  };
+  nodegroup AlignedNodeGroup {
+    entry AlignedNodeGroup(CProxy_Main main);
+  };
+};

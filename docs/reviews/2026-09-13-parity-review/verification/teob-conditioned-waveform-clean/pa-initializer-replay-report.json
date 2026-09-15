@@ -1,0 +1,162 @@
+{
+  "command": "/Users/xangma/miniconda3/envs/pycbcorig313/bin/python scripts/diagnose_teob_pa_initializer_replay_clean.py --native docs/reviews/2026-09-13-parity-review/verification/teob-conditioned-waveform-clean/native-output.npz --catalog docs/reviews/2026-09-13-parity-review/verification/teob-conditioned-waveform-clean/catalog-output.npz --output docs/reviews/2026-09-13-parity-review/verification/teob-conditioned-waveform-clean/pa-initializer-replay-report.json",
+  "metric_definition_note": "Stage-aware FD report uses concatenated plus/cross polarization norms; complex-combined band diagnostics are not numerically interchangeable.",
+  "dependency_sha256": {
+    "/Users/xangma/repos/torchwave/scripts/diagnose_teob_pa_initializer_replay_clean.py": "f855ff2d25f5e704d23f9e88604397cb0ac52c5277ab376ca4f4f7edcda2cbc6",
+    "src/torchwave/approximants/eob/teob_postadiabatic_clean.py": "5146cc82b844641968ab17042da898140b9ad58dcf86c8ef872134711e31fa3d",
+    "src/torchwave/approximants/eob/teob_conditioned_waveform_clean.py": "31c0f491b71bfca2c24fb2ab17b94dfffc2119bbfa3e537851d7209ebc32ecb3",
+    "src/torchwave/approximants/eob/hamiltonian.py": "d26a87ded2a197a000704b77b075cdc72ee2315741bdacc29fb25f912158a441",
+    "src/torchwave/approximants/eob/radiation_reaction.py": "dfb8853fc929145c3d61b7af49c16426560a12dc14ba9e664659af4a4449834d",
+    "src/torchwave/approximants/eob/teob_radiation_clean.py": "dca2c9791403467d85572f25a062cbc995d8228743d33b6b2e5dc28c13336bd6",
+    "src/torchwave/approximants/eob/teob_vacuum_driver_clean.py": "3b6e1d0f0cd69352e82a203eb8d9592db87cef662988cf3f4859906ae0977fd6"
+  },
+  "cases": [
+    {
+      "cache": "docs/reviews/2026-09-13-parity-review/verification/teob-conditioned-waveform-clean/native-output.npz",
+      "sha256": "a7cc79b050778a1869fa2861719e8e80bda44c38f66e4a83206b9d28a7169ead",
+      "physical_masses_msun": [
+        30.0,
+        20.0
+      ],
+      "pa_knots": 41,
+      "pa_kwargs": {
+        "omega_start": 0.013075506553963164,
+        "r_min": 14.0,
+        "dr": 0.1,
+        "pa_order": 8
+      },
+      "reaction": "_make_reaction('leading-order', hamiltonian), include_horizon_absorption=True",
+      "initializer_policies": [
+        "analytic",
+        "quadratic-value"
+      ],
+      "analytic": {
+        "status": "complete",
+        "initial_state": [
+          18.01749118199749,
+          0.0,
+          -0.0005833651093658831,
+          4.6398326996992125
+        ],
+        "max_state_abs_from_cached": 0.0,
+        "state_relative_l2_from_cached": 0.0,
+        "max_time_abs_from_cached": 0.0,
+        "time_relative_l2_from_cached": 0.0,
+        "replayed_knots": 41,
+        "cached_knots": 41,
+        "max_state_abs_by_component": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "quadratic-value": {
+        "status": "complete",
+        "initial_state": [
+          18.01749118199749,
+          0.0,
+          -0.0005833651093655678,
+          4.639832699699212
+        ],
+        "max_state_abs_from_cached": 1.0667022820598504e-12,
+        "state_relative_l2_from_cached": 1.7257027867447313e-14,
+        "max_time_abs_from_cached": 8.094502845779061e-11,
+        "time_relative_l2_from_cached": 2.0422105530534643e-14,
+        "replayed_knots": 41,
+        "cached_knots": 41,
+        "max_state_abs_by_component": [
+          0.0,
+          1.0667022820598504e-12,
+          6.696032617270475e-16,
+          1.0658141036401503e-14
+        ]
+      },
+      "quadratic_vs_analytic": {
+        "max_state_abs": 1.0667022820598504e-12,
+        "state_relative_l2": 1.7257027867447313e-14,
+        "max_time_abs": 8.094502845779061e-11,
+        "time_relative_l2": 2.0422105530534643e-14
+      },
+      "quadratic_minus_analytic": 8.881784197001252e-16
+    },
+    {
+      "cache": "docs/reviews/2026-09-13-parity-review/verification/teob-conditioned-waveform-clean/catalog-output.npz",
+      "sha256": "70af9febc682f55dc285933eb63086d576ef25959e30aa78dafb44553393e07d",
+      "physical_masses_msun": [
+        1.4,
+        1.4
+      ],
+      "pa_knots": 731,
+      "pa_kwargs": {
+        "omega_start": 0.0012318215236286447,
+        "r_min": 14.0,
+        "dr": 0.1,
+        "pa_order": 8
+      },
+      "reaction": "_make_reaction('leading-order', hamiltonian), include_horizon_absorption=True",
+      "initializer_policies": [
+        "analytic",
+        "quadratic-value"
+      ],
+      "analytic": {
+        "status": "complete",
+        "initial_state": [
+          87.02315166684038,
+          0.0,
+          -4.860326696321626e-06,
+          9.493149862767288
+        ],
+        "max_state_abs_from_cached": 0.0,
+        "state_relative_l2_from_cached": 0.0,
+        "max_time_abs_from_cached": 0.0,
+        "time_relative_l2_from_cached": 0.0,
+        "replayed_knots": 731,
+        "cached_knots": 731,
+        "max_state_abs_by_component": [
+          0.0,
+          0.0,
+          0.0,
+          0.0
+        ]
+      },
+      "quadratic-value": {
+        "status": "complete",
+        "initial_state": [
+          87.02315166684038,
+          0.0,
+          -4.860326696321626e-06,
+          9.493149862767288
+        ],
+        "max_state_abs_from_cached": 8.881784197001252e-16,
+        "state_relative_l2_from_cached": 8.804572888731544e-21,
+        "max_time_abs_from_cached": 0.0,
+        "time_relative_l2_from_cached": 0.0,
+        "replayed_knots": 731,
+        "cached_knots": 731,
+        "max_state_abs_by_component": [
+          0.0,
+          0.0,
+          5.117434254131581e-17,
+          8.881784197001252e-16
+        ]
+      },
+      "quadratic_vs_analytic": {
+        "max_state_abs": 8.881784197001252e-16,
+        "state_relative_l2": 8.804572888731544e-21,
+        "max_time_abs": 0.0,
+        "time_relative_l2": 0.0
+      },
+      "quadratic_minus_analytic": 0.0
+    }
+  ],
+  "input_sha256_before": {
+    "docs/reviews/2026-09-13-parity-review/verification/teob-conditioned-waveform-clean/native-output.npz": "a7cc79b050778a1869fa2861719e8e80bda44c38f66e4a83206b9d28a7169ead",
+    "docs/reviews/2026-09-13-parity-review/verification/teob-conditioned-waveform-clean/catalog-output.npz": "70af9febc682f55dc285933eb63086d576ef25959e30aa78dafb44553393e07d"
+  },
+  "input_sha256_after": {
+    "docs/reviews/2026-09-13-parity-review/verification/teob-conditioned-waveform-clean/native-output.npz": "a7cc79b050778a1869fa2861719e8e80bda44c38f66e4a83206b9d28a7169ead",
+    "docs/reviews/2026-09-13-parity-review/verification/teob-conditioned-waveform-clean/catalog-output.npz": "70af9febc682f55dc285933eb63086d576ef25959e30aa78dafb44553393e07d"
+  },
+  "inputs_unchanged": true
+}

@@ -1,0 +1,59 @@
+{
+  "provenance": "Public generic ChooseTD polarizations versus direct EOB API: polarization rotation -pi/2 flips both signs. Native independent conditioning of generic TD compared with public SimInspiralFD. No fitted phase/time. Finite residual includes separately generated adaptive trajectories.",
+  "rows": [
+    {
+      "masses": [
+        80.0,
+        60.0
+      ],
+      "flow": 80.0,
+      "fmax": 512.0,
+      "df": 8.0,
+      "inclination": 0.7,
+      "phic": 0.31,
+      "f_start": 11.680528619390788,
+      "dt": 0.0009765625,
+      "td_samples": 1111,
+      "fd_samples": 65,
+      "metrics": [
+        {
+          "generic_vs_rotated_direct_TD_L2": 1.2298890878979167e-16,
+          "raw_conditioned_L2_band": 0.002177562260216111,
+          "raw_conditioned_L2_full": 0.0020627793743129624
+        },
+        {
+          "generic_vs_rotated_direct_TD_L2": 1.2985325212954869e-16,
+          "raw_conditioned_L2_band": 0.0021817142982817886,
+          "raw_conditioned_L2_full": 0.0020670725904053874
+        }
+      ]
+    },
+    {
+      "masses": [
+        30.0,
+        20.0
+      ],
+      "flow": 20.0,
+      "fmax": 1024.0,
+      "df": 0.5,
+      "inclination": 0.0,
+      "phic": 0.0,
+      "f_start": 16.90009400983902,
+      "dt": 0.00048828125,
+      "td_samples": 4252,
+      "fd_samples": 2049,
+      "metrics": [
+        {
+          "generic_vs_rotated_direct_TD_L2": 1.316630026431483e-16,
+          "raw_conditioned_L2_band": 0.00014421995577488592,
+          "raw_conditioned_L2_full": 0.0001320634410594061
+        },
+        {
+          "generic_vs_rotated_direct_TD_L2": 1.3128098033940075e-16,
+          "raw_conditioned_L2_band": 0.00014419488463937726,
+          "raw_conditioned_L2_full": 0.0001320404952821245
+        }
+      ]
+    }
+  ]
+}

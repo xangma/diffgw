@@ -1,0 +1,854 @@
+--- before/src/torchwave/approximants/imrphenom_xhm.py
++++ after/src/torchwave/approximants/imrphenom_xhm.py
+@@ -37,6 +37,7 @@
+ )
+ from torchwave.approximants.xhm_fits import XHMParameterFits, _nonnegative_sqrt
+ from torchwave.approximants.imrphenom_hm import _swsh_projection_coefficients
++from torchwave.approximants.polynomial_interval import polynomial_has_nonpositive
+ 
+ 
+ # Pre-inverted 3x3 matrix for inspiral collocation points
+@@ -69,6 +70,60 @@
+         | ((mode == (3, 2)) & (chi1 < -0.9) & (chi2 < -0.9))
+         | ((mode in ((3, 3), (4, 4))) & (mass_ratio > 7.0) & (chi1 > 0.95))
+     )
++
++
++def _ordered_amplitude_vetoes(
++    mode: Tuple[int, int],
++    mass_ratio: torch.Tensor,
++    eta: torch.Tensor,
++    chi1: torch.Tensor,
++    chi2: torch.Tensor,
++    h_ins: torch.Tensor,
++    h_int1: torch.Tensor,
++    h_int2: torch.Tensor,
++    h_rd: torch.Tensor,
++) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
++    """Apply source-supported ordered intermediate-amplitude vetoes.
++
++    Table VI's numeric amplitude thresholds are deliberately not activated:
++    the paper does not resolve raw ``A`` versus ``A/A0`` threshold units.
++    The monotonicity check requires all values in a common convention with
++    frequency-independent normalization.  ``alive1`` and ``alive2`` identify
++    surviving inner values; the third result is reserved for a future,
++    explicitly normalized threshold implementation.
++    """
++    alive1 = torch.ones_like(h_ins, dtype=torch.bool)
++    alive2 = torch.ones_like(h_ins, dtype=torch.bool)
++    remove_derivatives = torch.zeros_like(h_ins, dtype=torch.bool)
++
++    # The paper does not explicitly identify the sequence used in its
++    # monotonicity check.  We use the full four-point
++    # sequence here as an explicit implementation choice; all four values
++    # are in the common A/A0 convention at the production call site.
++    both_alive = alive1 & alive2
++    monotonic = ((h_ins <= h_int1) & (h_int1 <= h_int2) & (h_int2 <= h_rd)) | (
++        (h_ins >= h_int1) & (h_int1 >= h_int2) & (h_int2 >= h_rd)
++    )
++    remove_middle = both_alive & ~monotonic & ((mode == (2, 1)) | (mode == (3, 2)))
++    alive2 = alive2 & ~remove_middle
++
++    # The bad-a_lambda and unconditional parameter rows are applied in the
++    # published order, before the conditional high-q rows.
++    if mode in ((3, 3), (4, 4)):
++        bad_lambda = (mass_ratio > 7.0) & (chi1 > 0.95)
++        alive1 = torch.where(bad_lambda, torch.zeros_like(alive1), alive1)
++        alive2 = torch.where(bad_lambda, torch.zeros_like(alive2), alive2)
++
++    unconditional = _published_parameter_amplitude_veto(mode, mass_ratio, eta, chi1, chi2)
++    alive1 = torch.where(unconditional, torch.zeros_like(alive1), alive1)
++    alive2 = torch.where(unconditional, torch.zeros_like(alive2), alive2)
++
++    conditional = (mass_ratio > 40.0) & (chi1 > 0.9)
++    if mode in ((2, 1), (3, 2), (3, 3), (4, 4)):
++        alive1 = torch.where(conditional, torch.zeros_like(alive1), alive1)
++        alive2 = torch.where(conditional, torch.zeros_like(alive2), alive2)
++
++    return alive1, alive2, remove_derivatives
+ 
+ 
+ def _unsqueeze_to(tensor: Union[float, torch.Tensor], target: torch.Tensor) -> torch.Tensor:
+@@ -1003,13 +1058,6 @@
+                 rhs_amp3 = torch.stack([p_ins, dp_ins, p_rd, dp_rd], dim=-1)
+                 delta_amp3 = torch.linalg.solve(v_mat3, rhs_amp3)
+ 
+-                hermite_cubic_grid = (
+-                    _unsqueeze_to(delta_amp3[..., 0], mf_grid)
+-                    + _unsqueeze_to(delta_amp3[..., 1], mf_grid) * mf_grid
+-                    + _unsqueeze_to(delta_amp3[..., 2], mf_grid) * (mf_grid**2)
+-                    + _unsqueeze_to(delta_amp3[..., 3], mf_grid) * (mf_grid**3)
+-                )
+-
+                 # Published pole fallback: keep all four positive amplitude
+                 # values and remove only the two boundary derivatives. This
+                 # differs from the parameter-space veto above, which removes
+@@ -1022,86 +1070,112 @@
+                 ], dim=-2)
+                 rhs_amp4 = torch.stack([p_ins, p_int1, p_int2, p_rd], dim=-1)
+                 delta_amp4 = torch.linalg.solve(v_mat4, rhs_amp4)
+-                value_cubic_grid = (
+-                    _unsqueeze_to(delta_amp4[..., 0], mf_grid)
+-                    + _unsqueeze_to(delta_amp4[..., 1], mf_grid) * mf_grid
+-                    + _unsqueeze_to(delta_amp4[..., 2], mf_grid) * (mf_grid**2)
+-                    + _unsqueeze_to(delta_amp4[..., 3], mf_grid) * (mf_grid**3)
++                # A single surviving inner value leaves five conditions and
++                # therefore a quartic inverse polynomial.  The two variants
++                # are kept separate so a veto of fInt1 still preserves fInt2
++                # (and conversely) in a later pole fallback.
++                def make_quartic_value_row(f_node: torch.Tensor) -> torch.Tensor:
++                    return torch.stack([
++                        torch.ones_like(f_node), f_node, f_node**2, f_node**3, f_node**4,
++                    ], dim=-1)
++
++                def make_quartic_deriv_row(f_node: torch.Tensor) -> torch.Tensor:
++                    return torch.stack([
++                        torch.zeros_like(f_node), torch.ones_like(f_node),
++                        2.0 * f_node, 3.0 * f_node**2, 4.0 * f_node**3,
++                    ], dim=-1)
++
++                v_mat5_1 = torch.stack([
++                    make_quartic_value_row(f_ins_a), make_quartic_deriv_row(f_ins_a),
++                    make_quartic_value_row(f_int1), make_quartic_value_row(f_rd_a),
++                    make_quartic_deriv_row(f_rd_a),
++                ], dim=-2)
++                v_mat5_2 = torch.stack([
++                    make_quartic_value_row(f_ins_a), make_quartic_deriv_row(f_ins_a),
++                    make_quartic_value_row(f_int2), make_quartic_value_row(f_rd_a),
++                    make_quartic_deriv_row(f_rd_a),
++                ], dim=-2)
++                delta_amp5_1 = torch.linalg.solve(
++                    v_mat5_1, torch.stack([p_ins, dp_ins, p_int1, p_rd, dp_rd], dim=-1),
+                 )
+-
+-                # Interval-level check for 5th-order zero crossing or severe dip
+-                s_nodes = torch.linspace(0.0, 1.0, 11, device=device, dtype=dtype)
+-                f_ins_u1 = f_ins_a.unsqueeze(-1) if f_ins_a.dim() > 0 else f_ins_a
+-                f_rd_u1 = f_rd_a.unsqueeze(-1) if f_rd_a.dim() > 0 else f_rd_a
+-                nodes_check = f_ins_u1 + s_nodes * (f_rd_u1 - f_ins_u1)
+-                
+-                c0 = delta_amp[..., 0].unsqueeze(-1) if delta_amp.dim() > 1 else delta_amp[0]
+-                c1 = delta_amp[..., 1].unsqueeze(-1) if delta_amp.dim() > 1 else delta_amp[1]
+-                c2 = delta_amp[..., 2].unsqueeze(-1) if delta_amp.dim() > 1 else delta_amp[2]
+-                c3_c = delta_amp[..., 3].unsqueeze(-1) if delta_amp.dim() > 1 else delta_amp[3]
+-                c4 = delta_amp[..., 4].unsqueeze(-1) if delta_amp.dim() > 1 else delta_amp[4]
+-                c5 = delta_amp[..., 5].unsqueeze(-1) if delta_amp.dim() > 1 else delta_amp[5]
+-                
+-                p5_check = c0 + c1*nodes_check + c2*(nodes_check**2) + c3_c*(nodes_check**3) + c4*(nodes_check**4) + c5*(nodes_check**5)
+-                p_bound_min = torch.minimum(p_ins, p_rd)
+-                p_bound_min_u = p_bound_min.unsqueeze(-1) if p_bound_min.dim() > 0 else p_bound_min
+-                has_zero_crossing = torch.any(p5_check <= 0.05 * p_bound_min_u, dim=-1)
+-
+-                # Evaluate amplitude ratio across frequency grid
+-                h_ins_grid = eval_h_ins(mf_grid)
+-                p_poly_grid = (
+-                    _unsqueeze_to(delta_amp[..., 0], mf_grid)
+-                    + _unsqueeze_to(delta_amp[..., 1], mf_grid) * mf_grid
+-                    + _unsqueeze_to(delta_amp[..., 2], mf_grid) * (mf_grid**2)
+-                    + _unsqueeze_to(delta_amp[..., 3], mf_grid) * (mf_grid**3)
+-                    + _unsqueeze_to(delta_amp[..., 4], mf_grid) * (mf_grid**4)
+-                    + _unsqueeze_to(delta_amp[..., 5], mf_grid) * (mf_grid**5)
++                delta_amp5_2 = torch.linalg.solve(
++                    v_mat5_2, torch.stack([p_ins, dp_ins, p_int2, p_rd, dp_rd], dim=-1),
+                 )
++                # Lower-order value-only branches preserve every surviving
++                # amplitude value when a denominator pole is found.
++                def make_value_row(f_node: torch.Tensor) -> torch.Tensor:
++                    return torch.stack([
++                        torch.ones_like(f_node), f_node, f_node**2, f_node**3,
++                    ], dim=-1)
++
++                v_mat2_1 = torch.stack([
++                    make_value_row(f_ins_a), make_value_row(f_int1), make_value_row(f_rd_a),
++                ], dim=-2)[..., :3, :3]
++                v_mat2_2 = torch.stack([
++                    make_value_row(f_ins_a), make_value_row(f_int2), make_value_row(f_rd_a),
++                ], dim=-2)[..., :3, :3]
++                delta_amp2_1 = torch.linalg.solve(v_mat2_1, torch.stack([p_ins, p_int1, p_rd], dim=-1))
++                delta_amp2_2 = torch.linalg.solve(v_mat2_2, torch.stack([p_ins, p_int2, p_rd], dim=-1))
++                v_mat1 = torch.stack([
++                    torch.ones_like(f_ins_a), f_ins_a,
++                    torch.ones_like(f_rd_a), f_rd_a,
++                ], dim=-1).reshape(f_ins_a.shape + (2, 2))
++                delta_amp1 = torch.linalg.solve(v_mat1, torch.stack([p_ins, p_rd], dim=-1))
++                # The source's numeric Table VI thresholds are deferred: it
++                # does not resolve raw A versus A/A0 threshold units.
++                h_int1_at_cut = v_int1_fit
++                h_int2_at_cut = v_int2_fit
++                # Monotonicity compares the four collocation
++                # amplitudes in the common A/A0 convention.  The endpoint
++                # values are 1/p at the same cuts; using H there would mix in
++                # a frequency-dependent (pi*f)^(7/6) factor.
++                alive1, alive2, remove_derivatives = _ordered_amplitude_vetoes(
++                    (l, m), m1 / m2, eta, s1, s2,
++                    1.0 / torch.clamp(p_ins, min=1e-12),
++                    h_int1_at_cut, h_int2_at_cut,
++                    1.0 / torch.clamp(p_rd, min=1e-12),
++                )
++
++                # Select coefficients per intrinsic row before checking them.
++                # An unselected reconstruction must never trigger a fallback.
++                def pad_coefficients(coefficients: torch.Tensor, count: int) -> torch.Tensor:
++                    return torch.nn.functional.pad(coefficients, (0, count - coefficients.shape[-1]))
++
++                full = (alive1 & alive2).unsqueeze(-1)
++                one1 = (alive1 & ~alive2).unsqueeze(-1)
++                one2 = (~alive1 & alive2).unsqueeze(-1)
++                active_coefficients = torch.where(full, delta_amp, pad_coefficients(delta_amp3, 6))
++                active_coefficients = torch.where(one1, pad_coefficients(delta_amp5_1, 6), active_coefficients)
++                active_coefficients = torch.where(one2, pad_coefficients(delta_amp5_2, 6), active_coefficients)
++
++                # Dropping both boundary derivatives retains every surviving
++                # value. The paper does not specify a one-derivative-at-a-time
++                # order; removing both together is the retained interpretation.
++                value_coefficients = torch.where(full, delta_amp4, pad_coefficients(delta_amp1, 4))
++                value_coefficients = torch.where(one1, pad_coefficients(delta_amp2_1, 4), value_coefficients)
++                value_coefficients = torch.where(one2, pad_coefficients(delta_amp2_2, 4), value_coefficients)
++                active_coefficients = torch.where(
++                    remove_derivatives.unsqueeze(-1), pad_coefficients(value_coefficients, 6), active_coefficients,
++                )
++                use_pole_fallback = polynomial_has_nonpositive(active_coefficients, f_ins_a, f_rd_a)
++                fallback_bad = polynomial_has_nonpositive(value_coefficients, f_ins_a, f_rd_a)
++                selected_coefficients = torch.where(
++                    use_pole_fallback.unsqueeze(-1), pad_coefficients(value_coefficients, 6), active_coefficients,
++                )
++                selected_coefficients = torch.where(
++                    (use_pole_fallback & fallback_bad).unsqueeze(-1),
++                    pad_coefficients(delta_amp1, 6), selected_coefficients,
++                )
++                # Numerical stationary-point checks replace the old eleven
++                # samples and five-percent floor. Decisions are detached;
++                # the selected polynomial retains parameter gradients.
++                p_poly_active = torch.zeros_like(mf_grid)
++                for power in range(5, -1, -1):
++                    p_poly_active = p_poly_active * mf_grid + _unsqueeze_to(selected_coefficients[..., power], mf_grid)
++                p_poly_active = torch.clamp(p_poly_active, min=1e-12)
+                 f_ins_a_u = _unsqueeze_to(f_ins_a, mf_grid)
+                 f_rd_a_u = _unsqueeze_to(f_rd_a, mf_grid)
+-
+-                # Order 1 (linear) polynomial (García-Quirós et al. 2020 Sec V.1.3 minimum order)
+-                p_ins_u = _unsqueeze_to(p_ins, mf_grid)
+-                p_rd_u = _unsqueeze_to(p_rd, mf_grid)
+-                p1_poly_grid = p_ins_u + (mf_grid - f_ins_a_u) * (
+-                    (p_rd_u - p_ins_u) / torch.clamp(f_rd_a_u - f_ins_a_u, min=1e-8)
+-                )
+-
+-                p_bound_min = torch.minimum(p_ins, p_rd)
+-                p_bound_min_u = _unsqueeze_to(p_bound_min, mf_grid)
+-
+-                # Remove both inner nodes in the unconditional published
+-                # parameter regions, retaining the two C1 boundary matches.
+-                parameter_veto = _published_parameter_amplitude_veto(
+-                    (l, m), m1 / m2, eta, s1, s2,
+-                )
+-                parameter_veto_u = _unsqueeze_to(parameter_veto, mf_grid)
+-                # Choose one reconstruction for the whole intrinsic row so
+-                # fallback transitions cannot occur at individual frequencies.
+-                use_pole_fallback = has_zero_crossing & ~parameter_veto
+-                use_pole_fallback_u = _unsqueeze_to(use_pole_fallback, mf_grid)
+-                p_poly_active = torch.where(parameter_veto_u, hermite_cubic_grid, p_poly_grid)
+-                p_poly_active = torch.where(use_pole_fallback_u, value_cubic_grid, p_poly_active)
+-
+-                # Keep the order-one fallback row-global as well. The paper
+-                # specifies interval-level denominator checks; this code uses
+-                # the existing 11-point, 5%-of-bound heuristic rather than an
+-                # exact root search.
+-                value_cubic_check = sum(
+-                    delta_amp4[..., i].unsqueeze(-1) * nodes_check**i for i in range(4)
+-                )
+-                hermite_cubic_check = sum(
+-                    delta_amp3[..., i].unsqueeze(-1) * nodes_check**i for i in range(4)
+-                )
+-                active_cubic_check = torch.where(
+-                    _unsqueeze_to(parameter_veto, nodes_check), hermite_cubic_check, value_cubic_check,
+-                )
+-                needs_linear_fallback = torch.any(
+-                    active_cubic_check <= 0.05 * p_bound_min_u, dim=-1,
+-                ) & (parameter_veto | has_zero_crossing)
+-                needs_linear_fallback_u = _unsqueeze_to(needs_linear_fallback, mf_grid)
+-                p_poly_active = torch.where(needs_linear_fallback_u, p1_poly_grid, p_poly_active)
+-                p_poly_active = torch.clamp(p_poly_active, min=1e-12)
++                h_ins_grid = eval_h_ins(mf_grid)
+                 h_int_grid = torch.pow(PI * mf_grid, 7.0 / 6.0) / p_poly_active
+                 h_rd_grid = eval_h_rd(mf_grid)
+                 h_ratio_grid = torch.where(
+--- before/src/torchwave/approximants/polynomial_interval.py
++++ after/src/torchwave/approximants/polynomial_interval.py
+@@ -0,0 +1,232 @@
++"""Small, device-native interval checks for low-order polynomials.
++
++The XHM reconstruction uses a degree-five polynomial as a denominator.  A
++fixed grid is not sufficient for that check: a polynomial can have a narrow
++negative interval between two grid points.  This module isolates the real
++roots of the derivative (recursively, using the derivative's extrema) and
++checks the polynomial at every resulting candidate extremum and endpoint.
++
++The answer is a discrete, detached decision.  The root locations are found
++to floating-point accuracy; this is a numerical guard, rather than an exact
++algebraic certificate.
++"""
++
++from __future__ import annotations
++
++import torch
++
++
++_MAX_DEGREE = 5
++_BISECTION_STEPS = 48
++
++
++def _evaluate(coefficients: torch.Tensor, x: torch.Tensor) -> torch.Tensor:
++    """Evaluate ascending-power coefficients with Horner's rule."""
++
++    value = torch.zeros_like(x)
++    for power in range(_MAX_DEGREE, -1, -1):
++        term = coefficients[..., power]
++        while term.ndim < x.ndim:
++            term = term.unsqueeze(-1)
++        value = value * x + term
++    return value
++
++
++def _absolute_scale(coefficients: torch.Tensor, x: torch.Tensor) -> torch.Tensor:
++    """A Horner evaluation of ``sum(abs(c_k) abs(x)**k)``."""
++
++    value = torch.zeros_like(x)
++    absolute_x = x.abs()
++    for power in range(_MAX_DEGREE, -1, -1):
++        term = coefficients[..., power].abs()
++        while term.ndim < x.ndim:
++            term = term.unsqueeze(-1)
++        value = value * absolute_x + term
++    return value
++
++
++def _derivative(coefficients: torch.Tensor) -> torch.Tensor:
++    """Return derivative coefficients, padded to six ascending powers."""
++
++    terms = torch.stack(
++        [coefficients[..., power] * float(power) for power in range(1, _MAX_DEGREE + 1)],
++        dim=-1,
++    )
++    return torch.cat((terms, torch.zeros_like(coefficients[..., :1])), dim=-1)
++
++
++def _affine_transform(coefficients: torch.Tensor, center: torch.Tensor, half_width: torch.Tensor) -> torch.Tensor:
++    """Express ``P(center + half_width*t)`` in ascending powers of ``t``."""
++
++    transformed = torch.zeros_like(coefficients)
++    for power in range(_MAX_DEGREE, -1, -1):
++        next_coefficients = torch.zeros_like(transformed)
++        next_coefficients[..., 0] = transformed[..., 0] * center + coefficients[..., power]
++        for output_power in range(1, _MAX_DEGREE + 1):
++            next_coefficients[..., output_power] = (
++                transformed[..., output_power] * center
++                + transformed[..., output_power - 1] * half_width
++            )
++        transformed = next_coefficients
++    return transformed
++
++
++def _roots_in_interval(
++    coefficients: torch.Tensor,
++    degree: int,
++    lower: torch.Tensor,
++    upper: torch.Tensor,
++) -> tuple[torch.Tensor, torch.Tensor]:
++    """Find all real roots in an interval, with a small padded root list.
++
++    The derivative roots partition the interval into monotone pieces.  Each
++    piece has at most one root, which is refined by bisection.  Roots at a
++    derivative extremum are retained as well, covering repeated/tangent
++    roots.  The returned list deliberately permits duplicate roots at segment
++    boundaries; callers only evaluate them, so deduplication would add
++    numerical complexity without changing the decision.
++    """
++
++    if degree <= 0:
++        shape = coefficients.shape[:-1] + (0,)
++        return coefficients.new_empty(shape), torch.zeros(shape, dtype=torch.bool, device=coefficients.device)
++
++    derivative = _derivative(coefficients)
++    if degree == 1:
++        denominator = coefficients[..., 1]
++        safe_denominator = torch.where(denominator == 0, torch.ones_like(denominator), denominator)
++        root = -coefficients[..., 0] / safe_denominator
++        finite = torch.isfinite(root) & torch.isfinite(denominator)
++        mask = finite & (denominator != 0) & (root >= lower) & (root <= upper)
++        return root.unsqueeze(-1), mask.unsqueeze(-1)
++
++    critical, critical_mask = _roots_in_interval(derivative, degree - 1, lower, upper)
++    # Invalid roots are placed at the upper endpoint.  Their mask controls
++    # whether the corresponding segment is active, and sorting keeps valid
++    # roots at the front of the list without any host-side indexing.
++    critical_safe = torch.where(critical_mask, critical, upper.unsqueeze(-1))
++    critical_safe, order = torch.sort(critical_safe, dim=-1)
++    critical_mask = torch.gather(critical_mask, -1, order)
++
++    boundaries = torch.cat((lower.unsqueeze(-1), critical_safe, upper.unsqueeze(-1)), dim=-1)
++    eps = torch.finfo(coefficients.dtype).eps
++    left = boundaries[..., :-1]
++    right = boundaries[..., 1:]
++    active = torch.cat((torch.ones_like(left[..., :1], dtype=torch.bool), critical_mask), dim=-1)
++    f_left = _evaluate(coefficients, left)
++    f_right = _evaluate(coefficients, right)
++    scale = torch.maximum(_absolute_scale(coefficients, left), _absolute_scale(coefficients, right))
++    tolerance = (128.0 * eps) * torch.clamp(scale, min=torch.finfo(coefficients.dtype).tiny)
++    left_zero = f_left.abs() <= tolerance
++    right_zero = f_right.abs() <= tolerance
++    sign_change = (f_left < 0) != (f_right < 0)
++    segment_masks = active & (left_zero | right_zero | sign_change)
++
++    # Bisection is batched over all monotone segments.  Inactive segments
++    # still follow the same fixed loop, which keeps the operation entirely
++    # device-native and bounds work independently of input data.
++    bisect_left = left
++    bisect_right = right
++    bisect_f_left = f_left
++    for _ in range(_BISECTION_STEPS):
++        midpoint = bisect_left + (bisect_right - bisect_left) * 0.5
++        f_midpoint = _evaluate(coefficients, midpoint)
++        same_side = (bisect_f_left < 0) == (f_midpoint < 0)
++        bisect_left = torch.where(same_side, midpoint, bisect_left)
++        bisect_f_left = torch.where(same_side, f_midpoint, bisect_f_left)
++        bisect_right = torch.where(same_side, bisect_right, midpoint)
++    segment_roots = torch.where(
++        left_zero, left, torch.where(right_zero, right, (bisect_left + bisect_right) * 0.5)
++    )
++
++    # A root which merely touches zero has no sign change.  Such a root is a
++    # stationary point of this polynomial, so test the residual at the
++    # recursively isolated critical points and carry qualifying points up.
++    critical_residual = _evaluate(coefficients, critical_safe)
++    critical_scale = _absolute_scale(coefficients, critical_safe)
++    critical_tolerance = (256.0 * eps) * torch.clamp(
++        critical_scale, min=torch.finfo(coefficients.dtype).tiny
++    )
++    repeated_mask = critical_mask & (critical_residual.abs() <= critical_tolerance)
++
++    roots = torch.cat((segment_roots, critical_safe), dim=-1)
++    masks = torch.cat((segment_masks, repeated_mask), dim=-1)
++    roots = torch.where(masks, roots, upper.unsqueeze(-1))
++    roots, order = torch.sort(roots, dim=-1)
++    masks = torch.gather(masks, -1, order)
++    return roots, masks
++
++
++def polynomial_has_nonpositive(
++    coefficients: torch.Tensor,
++    lower: torch.Tensor | float,
++    upper: torch.Tensor | float,
++) -> torch.Tensor:
++    """Return whether a polynomial is nonpositive anywhere on a closed interval.
++
++    ``coefficients[..., k]`` is the coefficient of ``x**k`` and at most six
++    coefficients (degree five) are accepted.  ``lower`` and ``upper`` and
++    all leading batch dimensions broadcast.  The returned boolean tensor has
++    the broadcast batch shape and is detached from coefficient gradients.
++
++    Nonfinite inputs conservatively return ``True``.  Finite decisions use a
++    machine-precision-scaled residual tolerance when evaluating numerically
++    isolated stationary points; this handles repeated roots while avoiding a
++    fixed relative floor such as the old five-percent heuristic.
++    """
++
++    coefficients = torch.as_tensor(coefficients)
++    if coefficients.ndim == 0 or coefficients.shape[-1] == 0 or coefficients.shape[-1] > _MAX_DEGREE + 1:
++        raise ValueError("coefficients must have a final dimension containing 1 through 6 powers")
++    if coefficients.is_complex():
++        raise TypeError("polynomial coefficients must be real")
++    if not coefficients.is_floating_point():
++        coefficients = coefficients.to(torch.get_default_dtype())
++    if coefficients.dtype in (torch.float16, torch.bfloat16):
++        coefficients = coefficients.float()
++    degree = coefficients.shape[-1] - 1
++
++    lower = torch.as_tensor(lower, device=coefficients.device, dtype=coefficients.dtype)
++    upper = torch.as_tensor(upper, device=coefficients.device, dtype=coefficients.dtype)
++    batch_shape = torch.broadcast_shapes(coefficients.shape[:-1], lower.shape, upper.shape)
++    coefficients = coefficients.expand(batch_shape + (coefficients.shape[-1],))
++    if coefficients.shape[-1] < _MAX_DEGREE + 1:
++        coefficients = torch.nn.functional.pad(coefficients, (0, _MAX_DEGREE + 1 - coefficients.shape[-1]))
++    lower = lower.expand(batch_shape)
++    upper = upper.expand(batch_shape)
++
++    with torch.no_grad():
++        nonfinite = (~torch.isfinite(coefficients).all(dim=-1)) | ~torch.isfinite(lower) | ~torch.isfinite(upper)
++        left = torch.minimum(lower, upper)
++        right = torch.maximum(lower, upper)
++        center = left * 0.5 + right * 0.5
++        half_width = right * 0.5 - left * 0.5
++        coefficients = _affine_transform(coefficients, center, half_width)
++        nonfinite = nonfinite | ~torch.isfinite(coefficients).all(dim=-1)
++        left = -torch.ones_like(center)
++        right = torch.ones_like(center)
++
++        values_left = _evaluate(coefficients, left)
++        values_right = _evaluate(coefficients, right)
++        result = (values_left <= 0) | (values_right <= 0)
++        nonfinite = nonfinite | ~torch.isfinite(values_left) | ~torch.isfinite(values_right)
++
++        derivative = _derivative(coefficients)
++        stationary, stationary_mask = _roots_in_interval(derivative, degree - 1, left, right)
++        stationary_values = _evaluate(coefficients, stationary)
++        nonfinite = nonfinite | ~torch.isfinite(stationary_values).all(dim=-1)
++        # Root bisection can leave a tangent extremum a few ulps from its
++        # exact location (for x**2 this produces a tiny positive value).  The
++        # interval was normalized to [-1, 1], so this scale tracks polynomial
++        # amplitude without introducing a unit-sized absolute floor.
++        coefficient_scale = coefficients.abs().amax(dim=-1, keepdim=True)
++        value_scale = torch.maximum(
++            coefficient_scale.expand_as(stationary_values),
++            torch.full_like(stationary_values, torch.finfo(coefficients.dtype).tiny),
++        )
++        tolerance = (512.0 * torch.finfo(coefficients.dtype).eps) * value_scale
++        result = result | torch.any(stationary_mask & (stationary_values <= tolerance), dim=-1)
++        return (result | nonfinite).detach()
++
++
++__all__ = ["polynomial_has_nonpositive"]
+--- before/tests/test_pass13_xhm_amplitude.py
++++ after/tests/test_pass13_xhm_amplitude.py
+@@ -11,6 +11,12 @@
+ 
+ 
+ DTYPE = torch.float64
++
++
++def _retain_inner_nodes_unless_parameter_veto(mode, q, eta, chi1, chi2, *amplitudes):
++    """Isolate collocation normalization/fallback from the ordered node vetoes."""
++    alive = ~xhm._published_parameter_amplitude_veto(mode, q, eta, chi1, chi2)
++    return alive, alive, torch.zeros_like(alive)
+ 
+ 
+ def _intermediate_21_node(index, m1_value=35.0, m2_value=20.0,
+@@ -38,8 +44,9 @@
+ 
+ 
+ @pytest.mark.parametrize("index", (1, 2))
+-def test_intermediate_node_matches_eq53_a0_normalized_strain(index):
++def test_intermediate_node_matches_eq53_a0_normalized_strain(index, monkeypatch):
+     """Eq. (5.3) target gets exactly one (pi*f)^(7/6) conversion to H_lm."""
++    monkeypatch.setattr(xhm, "_ordered_amplitude_vetoes", _retain_inner_nodes_unless_parameter_veto)
+     mass_seconds, eta, f_int, q = _intermediate_21_node(index)
+     frequency = f_int / mass_seconds
+     distance_seconds = 100.0 * MPC_SI / C_SI
+@@ -82,6 +89,7 @@
+ 
+ def test_pole_fallback_keeps_inner_values_and_differs_from_veto(monkeypatch):
+     """A derivative-induced pole uses the four-value cubic, not endpoint Hermite."""
++    monkeypatch.setattr(xhm, "_ordered_amplitude_vetoes", _retain_inner_nodes_unless_parameter_veto)
+     mass_seconds, eta, f_int1, q1 = _intermediate_21_node(
+         1, m1_value=50.0, m2_value=20.0, chi1_value=0.6, chi2_value=-0.8,
+     )
+@@ -120,15 +128,15 @@
+     assert len(amplitude_solves) == 1
+ 
+     # Independently inspect the production six-condition solve. The perturbed
+-    # endpoint derivative makes the quintic denominator cross the existing
+-    # 5%-of-bound detector, while the four positive node values remain intact.
++    # endpoint derivative makes the quintic denominator genuinely negative,
++    # while the four positive node values remain intact.
+     matrix, rhs = amplitude_solves[0]
+     coefficients = original_solve(matrix, rhs)
+     p5_nodes = torch.linspace(matrix[0, 1], matrix[4, 1], 11,
+                               dtype=matrix.dtype, device=matrix.device)
+     p5_check = sum(coefficients[i] * p5_nodes**i for i in range(6))
+     threshold = 0.05 * torch.minimum(rhs[0], rhs[4])
+-    assert (p5_check <= threshold).any()
++    assert (p5_check <= 0).any()
+     value_nodes = torch.stack((matrix[0, 1], matrix[2, 1], matrix[3, 1], matrix[4, 1]))
+     value_targets = torch.stack((rhs[0], rhs[2], rhs[3], rhs[4]))
+     value_matrix = torch.stack(
+--- before/tests/test_pass15_polynomial_interval.py
++++ after/tests/test_pass15_polynomial_interval.py
+@@ -0,0 +1,82 @@
++"""Clean-room checks for the XHM polynomial interval guard."""
++
++import pytest
++import torch
++
++from torchwave.approximants.polynomial_interval import polynomial_has_nonpositive
++
++
++def test_finds_narrow_negative_dip_between_the_old_eleven_nodes():
++    # The negative interval is approximately [0.52684, 0.53316], so the
++    # 0.0, 0.1, ..., 1.0 sampling grid does not evaluate it.
++    coefficients = torch.tensor([0.28089, -1.06, 1.0], dtype=torch.float64)
++    assert polynomial_has_nonpositive(coefficients, 0.0, 1.0).item()
++    nodes = torch.linspace(0.0, 1.0, 11, dtype=torch.float64)
++    sampled = sum(coefficients[k] * nodes**k for k in range(coefficients.numel()))
++    assert torch.all(sampled > 0)
++
++
++def test_includes_tangent_root_and_rejects_positive_near_zero_minimum():
++    tangent = torch.tensor([0.0, 0.0, 1.0], dtype=torch.float64)
++    positive = torch.tensor([1.0e-12, 0.0, 1.0], dtype=torch.float64)
++    assert polynomial_has_nonpositive(tangent, -1.0, 1.0).item()
++    assert not polynomial_has_nonpositive(positive, -1.0, 1.0).item()
++
++
++def test_mixed_batch_broadcasts_bounds_and_handles_degree_degeneracy():
++    coefficients = torch.tensor(
++        [
++            [2.0, 0.0, 0.0],             # positive constant
++            [-3.0, 0.0, 0.0],            # negative constant
++            [1.0, -2.0, 0.0],            # linear root at the right endpoint
++            [1.0, 0.0, 1.0],             # positive quadratic
++            [0.28089, -1.06, 1.0],       # narrow dip
++        ],
++        dtype=torch.float64,
++    )
++    result = polynomial_has_nonpositive(coefficients, 0.0, 1.0)
++    expected = torch.tensor([False, True, True, False, True])
++    torch.testing.assert_close(result, expected)
++
++    # A batch-shaped lower bound broadcasts against a single polynomial.
++    broadcast = polynomial_has_nonpositive(
++        torch.tensor([1.0, -2.0], dtype=torch.float64),
++        torch.tensor([0.0, 0.6]),
++        torch.tensor([0.4, 1.0]),
++    )
++    torch.testing.assert_close(broadcast, torch.tensor([False, True]))
++
++
++def test_scaled_interval_and_coefficients_remain_device_native():
++    # The stationary point is at x=1e6; the positive offset is deliberately
++    # much smaller than the polynomial's coefficient scale.
++    center = 1.0e6
++    coefficients = torch.tensor([center * center + 1.0e-3, -2.0 * center, 1.0], dtype=torch.float64)
++    assert not polynomial_has_nonpositive(coefficients, center - 1.0, center + 1.0).item()
++
++    # Rescaling the whole polynomial must not turn a positive or negative
++    # decision into a unit-sized absolute-threshold decision.
++    narrow_dip = torch.tensor([0.28089, -1.06, 1.0], dtype=torch.float64)
++    assert polynomial_has_nonpositive(narrow_dip * 1.0e-20, 0.0, 1.0).item()
++    assert polynomial_has_nonpositive(narrow_dip * 1.0e20, 0.0, 1.0).item()
++    tiny_positive = torch.tensor([1.0, 0.0, 1.0], dtype=torch.float64) * 1.0e-20
++    assert not polynomial_has_nonpositive(tiny_positive, -1.0, 1.0).item()
++
++
++def test_decision_is_detached_and_nonfinite_inputs_are_conservative():
++    coefficients = torch.tensor([1.0, -2.0, 1.0], dtype=torch.float64, requires_grad=True)
++    decision = polynomial_has_nonpositive(coefficients, 0.0, 1.0)
++    assert decision.dtype is torch.bool
++    assert not decision.requires_grad
++    assert polynomial_has_nonpositive(torch.tensor([float("nan")]), 0.0, 1.0).item()
++    assert polynomial_has_nonpositive(torch.tensor([1.0]), float("-inf"), 1.0).item()
++
++
++@pytest.mark.parametrize("device", ["cuda", "mps"])
++def test_available_accelerator_matches_cpu(device):
++    if not getattr(torch, f"{device}").is_available():
++        pytest.skip(f"{device} unavailable")
++    coefficients = torch.tensor([0.28089, -1.06, 1.0], dtype=torch.float32, device=device)
++    result = polynomial_has_nonpositive(coefficients, 0.0, 1.0)
++    assert result.device.type == device
++    assert result.item()
+--- before/tests/test_pass15_xhm_pole_selection.py
++++ after/tests/test_pass15_xhm_pole_selection.py
+@@ -0,0 +1,24 @@
++"""Parent integration regression: an inactive fallback cannot change the strain."""
++import torch
++from torchwave.approximants import imrphenom_xhm as xhm
++
++
++def test_bad_unused_value_polynomial_does_not_override_valid_selected_polynomial(monkeypatch):
++    model = xhm.IMRPhenomXHM(modes=((2, 1),))
++    frequency = torch.tensor([100.0, 120.0], dtype=torch.float64)
++    options = dict(mass1=50.0, mass2=20.0, chi1=0.6, chi2=-0.8,
++                   return_unprojected_modes=True)
++    decisions = []
++
++    def detector(coefficients, lower, upper):
++        decision = decisions.pop(0)
++        return torch.full_like(lower, decision, dtype=torch.bool)
++
++    monkeypatch.setattr(xhm, "polynomial_has_nonpositive", detector)
++    decisions[:] = [False, False]
++    reference = model(frequency, **options)[2][(2, 1)]
++    assert not decisions
++    decisions[:] = [False, True]
++    actual = model(frequency, **options)[2][(2, 1)]
++    assert not decisions
++    torch.testing.assert_close(actual, reference, rtol=0.0, atol=0.0)
+--- before/tests/test_pass15_xhm_vetoes.py
++++ after/tests/test_pass15_xhm_vetoes.py
+@@ -0,0 +1,177 @@
++"""Pass 15 source checks for ordered XHM intermediate amplitude vetoes."""
++
++import torch
++
++from torchwave.approximants import imrphenom_xhm as xhm
++from torchwave.approximants.imrphenom_xhm import IMRPhenomXHM
++from torchwave.approximants.xhm_fits import XHMParameterFits
++
++
++DTYPE = torch.float64
++
++
++def _veto(mode, q, eta=0.2, chi1=0.0, chi2=0.0, h_ins=None, h_int1=None,
++          h_int2=None, h_rd=None):
++    q = torch.as_tensor(q, dtype=DTYPE)
++    eta = torch.as_tensor(eta, dtype=DTYPE)
++    chi1 = torch.as_tensor(chi1, dtype=DTYPE)
++    chi2 = torch.as_tensor(chi2, dtype=DTYPE)
++    h_ins = torch.as_tensor(1.0 if h_ins is None else h_ins, dtype=DTYPE)
++    h_int1 = torch.as_tensor(1.0 if h_int1 is None else h_int1, dtype=DTYPE)
++    h_int2 = torch.as_tensor(1.0 if h_int2 is None else h_int2, dtype=DTYPE)
++    h_rd = torch.as_tensor(1.0 if h_rd is None else h_rd, dtype=DTYPE)
++    return xhm._ordered_amplitude_vetoes(
++        mode, q, eta, chi1, chi2, h_ins, h_int1, h_int2, h_rd,
++    )
++
++
++def test_monotonic_order_removes_only_middle_node_and_supports_batches():
++    alive1, alive2, derivatives = _veto(
++        (2, 1), [2.0, 2.0, 2.0], h_ins=[1.0, 3.0, 3.0],
++        h_int1=[2.0, 2.0, 1.0], h_int2=[3.0, 1.0, 2.0], h_rd=[4.0, 0.0, 3.0],
++    )
++    torch.testing.assert_close(alive1, torch.tensor([True, True, True]))
++    torch.testing.assert_close(alive2, torch.tensor([True, True, False]))
++    assert not derivatives.any()
++
++
++def test_high_q_veto_applies_to_each_node_still_alive():
++    # The first row has a nonmonotonic sequence and loses fInt2 first; the
++    # later q>40 row then removes the remaining live fInt1 as well.
++    alive1, alive2, _ = _veto(
++        (2, 1), [41.0, 41.0], chi1=[0.91, 0.91],
++        h_ins=[1.0, 1.0], h_int1=[3.0, 2.0], h_int2=[2.0, 3.0], h_rd=[4.0, 4.0],
++    )
++    torch.testing.assert_close(alive1, torch.tensor([False, False]))
++    torch.testing.assert_close(alive2, torch.tensor([False, False]))
++
++
++def test_numeric_thresholds_are_deferred_without_normalization_claim():
++    # The primary paper does not say whether 0.2/0.01 are A/A0 or H_lm.
++    # Consequently values on either side of those constants do not silently
++    # activate a guessed unit convention in this pass.
++    alive1, alive2, derivatives = _veto(
++        (2, 1), 2.0, h_ins=0.1, h_int1=0.199, h_int2=0.201, h_rd=0.3,
++    )
++    assert bool(alive1) and bool(alive2) and not bool(derivatives)
++
++
++def test_production_branch_retains_only_selected_inner_node(monkeypatch):
++    model = IMRPhenomXHM(modes=((2, 1),))
++    frequency = torch.tensor([100.0, 120.0], dtype=DTYPE)
++    options = dict(
++        mass1=torch.tensor([60.0, 60.0], dtype=DTYPE),
++        mass2=torch.tensor([20.0, 10.0], dtype=DTYPE),
++        chi1=torch.tensor([0.2, 0.2], dtype=DTYPE),
++        chi2=torch.tensor([-0.1, -0.1], dtype=DTYPE),
++        return_unprojected_modes=True,
++    )
++
++    def forced_selection(mode, q, eta, chi1, chi2, h_ins, h_int1, h_int2, h_rd):
++        # q=3 retains fInt1 only (quartic branch); q=6 removes both.
++        alive1 = q < 4.0
++        alive2 = torch.zeros_like(alive1)
++        return alive1, alive2, torch.zeros_like(alive1)
++
++    monkeypatch.setattr(xhm, "_ordered_amplitude_vetoes", forced_selection)
++    before = model(frequency, **options)[2][(2, 1)]
++    original = XHMParameterFits.amp_int1_21
++    monkeypatch.setattr(
++        XHMParameterFits, "amp_int1_21",
++        staticmethod(lambda *args: 1.2 * original(*args)),
++    )
++    after = model(frequency, **options)[2][(2, 1)]
++    assert torch.isfinite(after).all()
++    assert torch.abs(after[0] - before[0]).max() > 0.0
++    torch.testing.assert_close(after[1], before[1], rtol=0.0, atol=0.0)
++
++
++def test_production_branch_retains_either_single_inner_node(monkeypatch):
++    """Both one-node quartics preserve the corresponding fit value."""
++    model = IMRPhenomXHM(modes=((2, 1),))
++    frequency = torch.tensor([100.0, 120.0], dtype=DTYPE)
++    options = dict(
++        mass1=torch.tensor([60.0, 60.0], dtype=DTYPE),
++        mass2=torch.tensor([20.0, 10.0], dtype=DTYPE),
++        chi1=torch.tensor([0.2, 0.2], dtype=DTYPE),
++        chi2=torch.tensor([-0.1, -0.1], dtype=DTYPE),
++        return_unprojected_modes=True,
++    )
++    original1 = XHMParameterFits.amp_int1_21
++    original2 = XHMParameterFits.amp_int2_21
++    for retain_first in (True, False):
++        def forced_selection(mode, q, eta, chi1, chi2, h_ins, h_int1, h_int2, h_rd,
++                             retain_first=retain_first):
++            live = q < 4.0
++            zeros = torch.zeros_like(live)
++            return (live, zeros, zeros) if retain_first else (zeros, live, zeros)
++
++        monkeypatch.setattr(xhm, "_ordered_amplitude_vetoes", forced_selection)
++        monkeypatch.setattr(
++            XHMParameterFits, "amp_int1_21", staticmethod(original1),
++        )
++        monkeypatch.setattr(
++            XHMParameterFits, "amp_int2_21", staticmethod(original2),
++        )
++        before = model(frequency, **options)[2][(2, 1)]
++        monkeypatch.setattr(
++            XHMParameterFits, "amp_int1_21", staticmethod(
++                (lambda *args: 1.2 * original1(*args)) if retain_first else original1,
++            ),
++        )
++        monkeypatch.setattr(
++            XHMParameterFits, "amp_int2_21", staticmethod(
++                (lambda *args: 1.2 * original2(*args)) if not retain_first else original2,
++            ),
++        )
++        after = model(frequency, **options)[2][(2, 1)]
++        assert torch.isfinite(after).all()
++        assert torch.abs(after[0] - before[0]).max() > 0.0
++        torch.testing.assert_close(after[1], before[1], rtol=0.0, atol=0.0)
++
++
++def test_production_veto_receives_common_a_over_a0_values(monkeypatch):
++    captured = []
++    solves = []
++    original_veto = xhm._ordered_amplitude_vetoes
++    original_solve = torch.linalg.solve
++
++    def capture_veto(mode, q, eta, chi1, chi2, h_ins, h_int1, h_int2, h_rd):
++        captured.append((h_ins.detach(), h_int1.detach(), h_int2.detach(), h_rd.detach()))
++        return original_veto(mode, q, eta, chi1, chi2, h_ins, h_int1, h_int2, h_rd)
++
++    def capture_solve(matrix, rhs, *args, **kwargs):
++        if tuple(matrix.shape[-2:]) == (6, 6) and not solves:
++            solves.append(rhs.detach().clone())
++        return original_solve(matrix, rhs, *args, **kwargs)
++
++    monkeypatch.setattr(xhm, "_ordered_amplitude_vetoes", capture_veto)
++    monkeypatch.setattr(torch.linalg, "solve", capture_solve)
++    IMRPhenomXHM(modes=((2, 1),))(
++        torch.tensor([100.0], dtype=DTYPE), mass1=torch.tensor(60.0, dtype=DTYPE),
++        mass2=torch.tensor(20.0, dtype=DTYPE), chi1=torch.tensor(0.2, dtype=DTYPE),
++        chi2=torch.tensor(-0.1, dtype=DTYPE), return_unprojected_modes=True,
++    )
++    assert len(captured) == len(solves) == 1
++    endpoint1, inner1, inner2, endpoint2 = captured[0]
++    rhs = solves[0]
++    torch.testing.assert_close(endpoint1, 1.0 / rhs[..., 0])
++    torch.testing.assert_close(inner1, 1.0 / rhs[..., 2])
++    torch.testing.assert_close(inner2, 1.0 / rhs[..., 3])
++    torch.testing.assert_close(endpoint2, 1.0 / rhs[..., 4])
++
++
++def test_production_heterogeneous_batch_has_finite_parameter_gradients():
++    model = IMRPhenomXHM(modes=((3, 2),))
++    frequency = torch.tensor([100.0, 120.0], dtype=DTYPE, requires_grad=True)
++    mass1 = torch.tensor([60.0, 60.0], dtype=DTYPE, requires_grad=True)
++    chi1 = torch.tensor([0.2, 0.91], dtype=DTYPE, requires_grad=True)
++    output = model(
++        frequency, mass1=mass1, mass2=torch.tensor([20.0, 1.0], dtype=DTYPE),
++        chi1=chi1, chi2=torch.tensor([-0.1, 0.0], dtype=DTYPE),
++        return_unprojected_modes=True,
++    )[2][(3, 2)]
++    gradients = torch.autograd.grad((output.abs() * 1.0e22).sum(), (frequency, mass1, chi1))
++    assert torch.isfinite(output).all()
++    for gradient in gradients:
++        assert torch.isfinite(gradient).all()

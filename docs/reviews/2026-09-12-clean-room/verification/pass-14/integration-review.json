@@ -1,0 +1,19 @@
+{
+  "changed_files": [
+    "src/torchwave/approximants/imrphenom_xhm.py",
+    "tests/data/generate_xhm_amplitude_author_samples.py",
+    "tests/data/generate_xhm_phase_author_samples.py",
+    "tests/data/xhm_amplitude_author_samples.json",
+    "tests/data/xhm_phase_author_samples.json",
+    "tests/test_pass14_xhm_amplitude.py",
+    "tests/test_pass14_xhm_odd_amplitude.py",
+    "tests/test_pass14_xhm_phase.py"
+  ],
+  "runtime_review": "Parent directly checked author Sec. V.A.2 sign-folding prescription and reviewed the two consumer-only odd-m abs blocks. Raw fit expressions and frozen verifier unchanged. Earlier dirty work preserved.",
+  "test_review": "Production inspiral matmul and intermediate 6x6 solve targets captured for genuinely negative raw 21 fits. Assertions use zero absolute tolerance; waveform gradients finite and nonzero away from zero; even-m sign handling control retained. Parent replaced source-cache-only amplitude checks with native-vs-independent-fixture checks. Three phase and eight amplitude expressions match normalized author arithmetic ASTs. Independent fixtures regenerate byte-identically; all asset hashes checked. One amplitude hash transcription corrected against a fresh exact primary-source download.",
+  "focused_tests_passed": 6,
+  "ordinary_tests_passed": 1126,
+  "ordinary_tests_skipped": 8,
+  "input_hashes_stable": 185,
+  "source_boundary": "Fresh-context GPT-5.6 Luna implementers excluded LAL/PyCBC sources, translated ports, generation notebooks, verification artifacts and binary residuals. Parent-only public-binary checks do not tune coefficients. Instruction boundary, not OS isolation; inherited provenance uncertified."
+}

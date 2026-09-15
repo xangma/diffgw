@@ -1,0 +1,182 @@
+{
+  "diagnostic": "current exact-start PA-only pre-NQC isolation",
+  "grid_contract": {
+    "comparison_grid": "full public PA-only uniform elapsed grid",
+    "dt_M": 1.9826703782039414,
+    "end_M": 5226.3191169455895,
+    "no_extrapolation": true,
+    "pa_grid_hash": "3d6bc0a8059d8a7c162639462bbe62ad8524a7848fe771d2eb9407d04aa943c8",
+    "pa_radius_end": 14.017491181997485,
+    "pa_radius_start": 18.017491181997485,
+    "radius_grid_hash": "32a2491126c9508b20c9e48b490584000949b5224dc0fbab3a8a932b3da4e578",
+    "requested_dr": 0.1,
+    "requested_pa_order": 8,
+    "requested_r0": 18.017491181997485,
+    "requested_r_min": 14.0,
+    "samples": 2637,
+    "start_M": 0.0
+  },
+  "methods": {
+    "fitted_alignment": false,
+    "full_native_ode": false,
+    "interpolation": "natural cubic amplitude and saved lifted phase separately",
+    "runtime_edit": false,
+    "thresholds_or_fits": false
+  },
+  "metrics_on_public_pa_grid": {
+    "native_processed_over_public_pa_only": {
+      "alignment": "none",
+      "amplitude_fractional": {
+        "count": 2637,
+        "max_abs": 8.199375086048732e-05,
+        "mean": -3.3653763151843285e-05,
+        "rms": 3.6467344956507744e-05
+      },
+      "amplitude_relative_l2": 3.852362835679224e-05,
+      "phase_difference_radians": {
+        "count": 2637,
+        "max_abs": 0.00200800861853154,
+        "mean": -0.0010003404593785336,
+        "rms": 0.0010322673005565765
+      },
+      "phase_final_radians": -0.0015314799861981627,
+      "phase_initial_radians": -0.0007154392839255933,
+      "raw_relative_l2": 0.0010643864713260325,
+      "samples": 2637
+    },
+    "pre_nqc_over_native_processed": {
+      "alignment": "none",
+      "amplitude_fractional": {
+        "count": 2637,
+        "max_abs": 8.196541180360839e-05,
+        "mean": 3.365113599630723e-05,
+        "rms": 3.6463644633086866e-05
+      },
+      "amplitude_relative_l2": 3.851886950659794e-05,
+      "phase_difference_radians": {
+        "count": 2637,
+        "max_abs": 0.002008807180544648,
+        "mean": 0.0010005906397059603,
+        "rms": 0.0010325418415155585
+      },
+      "phase_final_radians": 0.001532483845494429,
+      "phase_initial_radians": 0.0007154373590148006,
+      "raw_relative_l2": 0.0010647230064893477,
+      "samples": 2637
+    },
+    "pre_nqc_over_public_pa_only": {
+      "alignment": "none",
+      "amplitude_fractional": {
+        "count": 2637,
+        "max_abs": 5.187808105322489e-08,
+        "mean": -3.95688781517094e-09,
+        "rms": 9.539175227540217e-09
+      },
+      "amplitude_relative_l2": 1.0768019727675111e-08,
+      "phase_difference_radians": {
+        "count": 2637,
+        "max_abs": 1.0038592962484407e-06,
+        "mean": 2.501803274264865e-07,
+        "rms": 3.1587914133734305e-07
+      },
+      "phase_final_radians": 1.0038592962484407e-06,
+      "phase_initial_radians": -1.924910808008285e-09,
+      "raw_relative_l2": 3.425709157938578e-07,
+      "samples": 2637
+    }
+  },
+  "native_cache_contract": {
+    "maximum_elapsed_grid_difference_M": 0.0,
+    "native_initial_radius": 18.017491181997485,
+    "native_pa_end_time_M": 5226.692548836558,
+    "native_pa_knots": 41,
+    "native_processed_includes_nqc": true,
+    "native_processed_prefix_samples": 2637,
+    "native_samples": 4087,
+    "native_support_start_frequency_hz": 16.900094009839023,
+    "requested_start_frequency_matches_native": true,
+    "requested_start_radius_matches_native": true,
+    "same_elapsed_grid": true
+  },
+  "nqc_isolation": {
+    "contract_basis": "coordinator supplied sanitized public binary behavior contract; no source inspected",
+    "limitation": "binary API exposes the PA route through its documented option; no separate NQC toggle used",
+    "native_processed": "current cached polarizations include NQC across all 4087 TD samples",
+    "pre_nqc_reference": "native nqc_original_amplitude/phase PA prefix; nqc22=1 before correction",
+    "public": "PA_ONLY contract: TEOB_use_postadiabatic=2 stops at PA endpoint and skips BBH NQC/ringdown",
+    "public_epoch": "zero; no peak located"
+  },
+  "output_hashes": {
+    "arrays.npz": "f54e86714b073e48e91314eabf00f93eaa55f64bd66d1f29917ef8a3ffb1e686"
+  },
+  "phase_convention": "complex h = h_plus - i*h_cross; pre-NQC h = positive scale*A*exp(-i*saved lifted phase); fixed pi/2-phiRef reference, no frequency-phase adjustment",
+  "public_pa_output": {
+    "array_hashes": {
+      "h_cross": "6a1a8b41ed935263191cd707bbae1c34910e34074639bdbed2fca5fe403c2977",
+      "h_plus": "7ae7f18ec093b1bdad466899689b9ebc7ceda4fd53506cfb5570ada2e3cc5c7a",
+      "time": "d055c405f29d06f6bdcc814438be12664c7134974bffe9e5ab0c34c71ba5fac3"
+    },
+    "delta_t_seconds": 0.00048828125,
+    "dt_M": 1.9826703782039414,
+    "dt_M_difference": 0.0,
+    "dt_M_expected": 1.9826703782039414,
+    "dt_seconds_requested": 0.00048828125,
+    "elapsed_seconds": 0.0011485409922897816,
+    "epoch_seconds": 0.0,
+    "samples": 2637,
+    "time_end_M": 5226.3191169455895,
+    "time_start_M": 0.0
+  },
+  "request": {
+    "ModeArray": [
+      [
+        2,
+        2
+      ]
+    ],
+    "PNSpinOrder": "omitted; caller/default preserved",
+    "PNTidalOrder": 0,
+    "TEOB_use_postadiabatic": 2,
+    "api": "SimIMRTEOBResumS",
+    "distance_mpc": 100.0,
+    "dt_seconds": 0.00048828125,
+    "f_ref_hz": 20.0,
+    "f_start_hz": 16.900094009839023,
+    "inclination": 0.0,
+    "masses_msun": [
+      30.0,
+      20.0
+    ],
+    "phi_ref": 0.0,
+    "spins": [
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ],
+    "tidal_parameters": [
+      0.0,
+      0.0,
+      0.0,
+      0.0
+    ]
+  },
+  "run": {
+    "command": "scripts/diagnose_teob_pa_exact_start_clean.py",
+    "cwd": "/Users/xangma/repos/torchwave",
+    "elapsed_seconds": 0.16669716700562276,
+    "host": "RONI2",
+    "platform": "macOS-26.6-arm64-arm-64bit-Mach-O"
+  },
+  "source_hashes": {
+    "docs/reviews/2026-09-13-parity-review/verification/teob-conditioner-public-clean/arrays.npz": "4712791026b99ad8fb4e713cb99270d2f444c274d320267ef25a10be7e21ab6e",
+    "docs/reviews/2026-09-13-parity-review/verification/teob-conditioner-public-clean/report.json": "b80a516eab445baa9e5f0be9e4a0d0fbd413ea7771f8293c5cebd4ae114589c9",
+    "docs/reviews/2026-09-13-parity-review/verification/teob-native-replay-public-clean/replay-native-output.npz": "bd7bc65a0da98334585069462b47b54dba0800bd6bbb092369a69267ecb9e611",
+    "docs/reviews/2026-09-13-parity-review/verification/teob-native-replay-public-clean/replay-report.json": "d21b5d41035d7753409ecdd5c4e39775c8fc714c3cdc46c8dbd6cb10e434efce",
+    "scripts/diagnose_teob_pa_exact_start_clean.py": "98881924a3f43c731b226ff86ccda0521c40cb229ad0dced7690e255a42c3ba6",
+    "src/torchwave/approximants/eob/numerical_attachment.py": "b042ed739c89ac53ec1829d005b404d86f16d18dc4f4dd710bd58000de5c4a93"
+  },
+  "status": "complete"
+}

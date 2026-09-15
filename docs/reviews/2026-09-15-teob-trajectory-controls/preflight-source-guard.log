@@ -1,0 +1,8 @@
+Traceback (most recent call last):
+  File "/Users/xangma/repos/torchwave/scripts/teob_trajectory_grid_controls.py", line 250, in <module>
+    run(parser.parse_args().output_root.resolve())
+    ~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/Users/xangma/repos/torchwave/scripts/teob_trajectory_grid_controls.py", line 157, in run
+    assert old.sha256(Path(entry['path'])) == entry['sha256'], entry['path']
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+AssertionError: /Users/xangma/repos/torchwave/src/torchwave/approximants/eob/teob_merger_nqc_clean.py

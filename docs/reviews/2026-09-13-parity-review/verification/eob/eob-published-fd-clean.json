@@ -1,0 +1,1381 @@
+{
+  "provenance": "Bounded clean-room FD diagnostic using serialized clean published 20 Hz trajectories at dt=0.25M and 0.5M. Each is transformed over the complete requested 20--512 Hz band and compared in absolute SI plus/cross scale to a fresh public SEOBNRv4 TD call with identical 30+20 Msun, nonspinning, 100 Mpc, inclination=0.8 parameters.",
+  "primary_reference": "Boh\u00e9 et al., Improved effective-one-body model for coalescing nonprecessing binary black holes, arXiv:1611.03703 (equation context).",
+  "public_parameters": {
+    "api": "lalsimulation.SimInspiralChooseTDWaveform",
+    "approximant": "SEOBNRv4",
+    "m1_msun": 30.0,
+    "m2_msun": 20.0,
+    "chi1": 0.0,
+    "chi2": 0.0,
+    "f_lower_hz": 20.0,
+    "distance_mpc": 100.0,
+    "inclination_rad": 0.8,
+    "phic_rad": 0.0,
+    "tc_s": 0.0
+  },
+  "clean_transform_parameters": {
+    "stage": "published_eob22_to_fd",
+    "mass_scale_seconds": 0.00024627454738206334,
+    "mode_scale": 2.392707920793921e-20,
+    "time_origins": [
+      "orbital_frequency_peak",
+      "nqc_match"
+    ],
+    "frequency_grid_hz": [
+      20.0,
+      512.0
+    ],
+    "frequency_spacing_hz": 0.25,
+    "quadrature": "rectangular rule at the recorded uniformly spaced samples",
+    "frequency_chunk": 32,
+    "legacy_fft_stage_is_diagnostic_only": true,
+    "no_fitted_time_or_phase_shift": true
+  },
+  "coordinate_contract": {
+    "clean_time": "result.time in initial-origin M coordinates",
+    "orbital_frequency_peak_origin": "result.trajectory.peak.time",
+    "legacy_nqc_match_origin": "result.attachment.match_time",
+    "absolute_physical_time": "tc + (result.time - origin) * total_mass_seconds",
+    "public_time": "public epoch + arange(N) * public deltaT",
+    "fourier_kernel": "exp(-2*pi*i*f*t)"
+  },
+  "libraries": {
+    "python": "3.13.9",
+    "numpy": "2.3.5",
+    "torch": "2.9.1",
+    "lal": "7.7.0",
+    "lalsimulation": "6.2.0"
+  },
+  "python_executable": "/Users/xangma/miniconda3/envs/pycbcorig313/bin/python",
+  "host": "RONI2",
+  "dependency_sha256": {
+    "scripts/diagnose_eob_published_fd_clean.py": "29847edf3354ea94eb163ae66da5007e1c3ee482b2df4c53b10aee64cc10a0cb",
+    "scripts/diagnose_eob_clean_hamiltonian_public.py": "c4fce3c08ed71718d34f92bc743a398e3f447c0830c1ae1a3a4899d6e7396088",
+    "scripts/run_eob_full20_serialized.py": "181bc223aed36680aa478997325ea55613f82b15c7ef27da35920e01d4e86526",
+    "scripts/verify_eob_full20_saved.py": "aa4f3b95d63a696f27d2efbfe9fd20d4365cf2e41285f29bf7d821056de3b092",
+    "src/torchwave/constants.py": "1ae479e07b44a19d23b9a9eaed4b8b8b8bf38b4293717a91d321b59f2d1ac4e3",
+    "src/torchwave/approximants/eob/published_waveform.py": "aae1848ed42ff6eb874fb588d17ba7563f7bc3f3dd7837ce29f26628ccc28939",
+    "src/torchwave/approximants/eob/waveform.py": "1e9d61e31284c667ca0b27877646ba5553d9dbd3ebbe72d1090d9917acc4bc79",
+    "src/torchwave/approximants/eob/attachment.py": "097165aa7a6dcf87c5458fb26eade17a9c6bdf43c8e001c0929c1eb6ea2975e7",
+    "src/torchwave/approximants/eob/integrator.py": "a036f6b7580450a847bc1d56ebf745de6cdb5c2ee397d31cf1014d483eebe26b",
+    "src/torchwave/approximants/eob/seobnrv4_hamiltonian.py": "5b1a5b877129e5235b8f92974a01ab450176e8e924d374ca0fc413334fad177f",
+    "src/torchwave/approximants/eob/seobnrv4_flux.py": "50af1727e28828969d84cac5e984189c529e205ad9fb96d22c11037103aca3ec",
+    "src/torchwave/approximants/eob/seobnrv4_mode22.py": "d1fa659a2604732ae74e8c7e9736b89371655f3b06a0d04bed6a1162500203f9",
+    "src/torchwave/approximants/eob/seobnrv4_amplitude22.py": "f51cf2a03f1a3567293fbac75a341701448275bc45da1fa97af80d017890d2a5",
+    "src/torchwave/approximants/eob/nqc.py": "f023b84fc0a48e59feb6b543d234635df965e04ee9aff05672ea3ff984d0cf85",
+    "src/torchwave/approximants/eob/events.py": "c1ae1182e4c2f9cf5f8a2857ea5d73802dbbb68b59739709849f973503bdfd5d"
+  },
+  "phase_peak_diagnostic": {
+    "available": true,
+    "report": "/Users/xangma/repos/torchwave/docs/reviews/2026-09-13-parity-review/verification/eob/eob-public-phase-peak-clean.json",
+    "sha256": "5cc1f8cc8db862e2ee826e4c19f6c698e4259456401820497087baef80bda8c0",
+    "summary": {
+      "dt_0p25M": {
+        "epoch_M": -5002.718742544858,
+        "minus_epoch_M": 5002.718742544858,
+        "clean_event_time_M": 5002.70169827389,
+        "phase_degree6_refined_time_M": 5002.699283433313,
+        "phase_degree6_minus_minus_epoch_M": -0.019459111545074848
+      },
+      "dt_0p5M": {
+        "epoch_M": -5002.718742544858,
+        "minus_epoch_M": 5002.718742544858,
+        "clean_event_time_M": 5002.7017207866975,
+        "phase_degree6_refined_time_M": 5002.6990340336415,
+        "phase_degree6_minus_minus_epoch_M": -0.01970851121677697
+      }
+    },
+    "interpretation": "The returned phase-derivative peak follows the clean initial-origin omega event within a few 1e-3 M on every grid. It therefore does not reproduce the 0.01707037956 M common-epoch displacement: the epoch discrepancy is not encoded as a different returned phase peak."
+  },
+  "results": {
+    "dt_0p25M": {
+      "artifact": {
+        "path": "/Users/xangma/repos/torchwave/docs/reviews/2026-09-13-parity-review/verification/eob-full20-dt025/full20.pt",
+        "sha256": "56cf48952800928ec3b4037052a9d4010000d841fd90ef497da31e9632d5fd2f",
+        "size_bytes": 1478185,
+        "result_json": "/Users/xangma/repos/torchwave/docs/reviews/2026-09-13-parity-review/verification/eob-full20-dt025/result.json",
+        "result_json_sha256": "d81aaa9912445ce77cc0300c82c1936be5f5e12d1c6b55c7952613bfdf15a10d",
+        "dt_M": 0.25,
+        "time_support_M_initial_origin": [
+          0.0,
+          5148.5
+        ],
+        "mode_samples": 20595,
+        "peak_time_M_initial_origin": 5002.702052426393,
+        "match_time_M_initial_origin": 4998.329672892312,
+        "loaded_keys": [
+          "match_time",
+          "mode",
+          "omega",
+          "peak_time",
+          "state",
+          "time",
+          "trajectory_time",
+          "valid"
+        ],
+        "loaded_tensors_copied": true,
+        "serialized_run": {
+          "timestamp_utc": "2026-09-13T22:18:06.113205+00:00",
+          "seconds": 1039.156812333007,
+          "omega_start": 0.015473886176432831,
+          "peak_time": 5002.702052426393,
+          "match_time": 4998.329672892312,
+          "samples": 20015,
+          "mode_samples": 20595,
+          "finite": true,
+          "choices": {
+            "spin_truncation": "tabulated",
+            "spin_v6": "bohe_total_energy",
+            "include_pan_v8": false,
+            "include_positive_chi_540": false,
+            "final_spin_fit_order": [
+              1,
+              2
+            ],
+            "dt_geom": 0.25,
+            "num_steps": 24000,
+            "ringdown_duration": 150.0,
+            "richardson_extrapolation": false
+          },
+          "source_sha256": {
+            "src/torchwave/approximants/eob/published_waveform.py": "8eedc2a0fa0a2eb96dbd7c6e5b541081df2466888aa9fb8dd45234b70b21eb60",
+            "src/torchwave/approximants/eob/integrator.py": "a036f6b7580450a847bc1d56ebf745de6cdb5c2ee397d31cf1014d483eebe26b",
+            "src/torchwave/approximants/eob/seobnrv4_hamiltonian.py": "5b1a5b877129e5235b8f92974a01ab450176e8e924d374ca0fc413334fad177f",
+            "src/torchwave/approximants/eob/seobnrv4_flux.py": "50af1727e28828969d84cac5e984189c529e205ad9fb96d22c11037103aca3ec",
+            "src/torchwave/approximants/eob/seobnrv4_mode22.py": "d1fa659a2604732ae74e8c7e9736b89371655f3b06a0d04bed6a1162500203f9",
+            "src/torchwave/approximants/eob/seobnrv4_amplitude22.py": "f51cf2a03f1a3567293fbac75a341701448275bc45da1fa97af80d017890d2a5",
+            "scripts/run_eob_full20_serialized.py": "181bc223aed36680aa478997325ea55613f82b15c7ef27da35920e01d4e86526"
+          },
+          "dependency_sha256_after": {
+            "src/torchwave/approximants/eob/published_waveform.py": "8eedc2a0fa0a2eb96dbd7c6e5b541081df2466888aa9fb8dd45234b70b21eb60",
+            "src/torchwave/approximants/eob/integrator.py": "a036f6b7580450a847bc1d56ebf745de6cdb5c2ee397d31cf1014d483eebe26b",
+            "src/torchwave/approximants/eob/seobnrv4_hamiltonian.py": "5b1a5b877129e5235b8f92974a01ab450176e8e924d374ca0fc413334fad177f",
+            "src/torchwave/approximants/eob/seobnrv4_flux.py": "50af1727e28828969d84cac5e984189c529e205ad9fb96d22c11037103aca3ec",
+            "src/torchwave/approximants/eob/seobnrv4_mode22.py": "d1fa659a2604732ae74e8c7e9736b89371655f3b06a0d04bed6a1162500203f9",
+            "src/torchwave/approximants/eob/seobnrv4_amplitude22.py": "f51cf2a03f1a3567293fbac75a341701448275bc45da1fa97af80d017890d2a5"
+          },
+          "executable": "/Users/xangma/miniconda3/envs/pycbcorig313/bin/python"
+        }
+      },
+      "public_td": {
+        "dt_s": 6.156863684551583e-05,
+        "dt_M": 0.25,
+        "epoch_s": -1.232042294,
+        "support_s": [
+          -1.232042294,
+          0.09445398683663875
+        ],
+        "sample_count": 21546
+      },
+      "clean_transform": {
+        "time_origin": "orbital_frequency_peak",
+        "sample_time_zero_M_initial_origin": 0.0,
+        "origin_time_M_initial_origin": 5002.702052426393,
+        "origin_time_s_absolute_when_tc_zero": 1.2320381836486292,
+        "mode_scale": 2.392707920793921e-20,
+        "support_s_absolute_when_tc_zero": [
+          -1.2320381836486292,
+          0.03590632354792397
+        ],
+        "polarization_projection": "sqrt(5/(16*pi))*(1+cos(i)^2)*Re(h22), -sqrt(5/(4*pi))*cos(i)*Im(h22)",
+        "fourier_stage": "chunked direct finite-support rectangular sum at recorded samples with exp(-2*pi*i*f*t)",
+        "frequency_chunk": 32
+      },
+      "clean_direct_transform": {
+        "role": "independent diagnostic reference for the new runtime",
+        "time_origin": "orbital_frequency_peak",
+        "sample_time_zero_M_initial_origin": 0.0,
+        "origin_time_M_initial_origin": 5002.702052426393,
+        "origin_time_s_absolute_when_tc_zero": 1.2320381836486292,
+        "mode_scale": 2.392707920793921e-20,
+        "support_s_absolute_when_tc_zero": [
+          -1.2320381836486292,
+          0.03590632354792397
+        ],
+        "polarization_projection": "sqrt(5/(16*pi))*(1+cos(i)^2)*Re(h22), -sqrt(5/(4*pi))*cos(i)*Im(h22)",
+        "fourier_stage": "independent direct finite-support sum with exp(-2*pi*i*f*t) and dt_seconds"
+      },
+      "legacy_interpolation_transform": {
+        "role": "historical diagnostic only; not used by published_eob22_to_fd",
+        "time_origin": "orbital_frequency_peak",
+        "sample_time_zero_M_initial_origin": 0.0,
+        "origin_time_M_initial_origin": 5002.702052426393,
+        "mode_scale": 2.392707920793921e-20,
+        "support_s_absolute_when_tc_zero": [
+          -1.2320381836486292,
+          0.035906323547924
+        ],
+        "fourier_stage": "shared _quadrupole_fd rFFT with four-times zero padding, linear frequency interpolation and absolute chart shift"
+      },
+      "legacy_transform": {
+        "time_origin": "nqc_match",
+        "origin_time_M_initial_origin": 4998.329672892312,
+        "origin_difference_peak_minus_match_M": 4.37237953408021,
+        "fourier_stage": "new chunked direct finite-support runtime"
+      },
+      "spectrum": {
+        "frequency_support_hz": [
+          20.0,
+          512.0
+        ],
+        "frequency_spacing_hz": 0.25,
+        "sample_count": 1969,
+        "requested_complete_band": "20--512 Hz inclusive at 0.25 Hz spacing"
+      },
+      "public_black_box_comparison": {
+        "reference": "finite-support integral of public SimInspiralChooseTDWaveform plus/cross samples",
+        "kernel": "exp(-2*pi*i*f*t) with public epoch retained in t",
+        "time_shift_applied_s": 0.0,
+        "phase_shift_applied_rad": 0.0,
+        "clean_support_s_absolute_when_tc_zero": [
+          -1.2320381836486292,
+          0.03590632354792397
+        ],
+        "clean_direct_support_s_absolute_when_tc_zero": [
+          -1.2320381836486292,
+          0.03590632354792397
+        ],
+        "legacy_fft_support_s_absolute_when_tc_zero": [
+          -1.2320381836486292,
+          0.035906323547924
+        ],
+        "public_support_s_absolute": [
+          -1.232042294,
+          0.09445398683663875
+        ],
+        "common_support_s": [
+          -1.2320381836486292,
+          0.03590632354792397
+        ],
+        "clean_runtime_vs_public_direct": {
+          "plus": {
+            "actual_complex_l2": 1.4964156574512818e-21,
+            "reference_complex_l2": 1.496415693380872e-21,
+            "raw_complex_l2": 1.0821653646745782e-24,
+            "raw_relative_l2_over_reference": 0.0007231716223381937,
+            "magnitude_relative_l2": 8.905251200557157e-05,
+            "max_abs_residual": 1.111475223819195e-25,
+            "max_abs_residual_over_reference_peak": 0.0005081013937921745,
+            "phase_rms_rad": 0.004772569219093151,
+            "phase_max_abs_rad": 0.052900107490317774,
+            "nonzero_reference_samples": 1969
+          },
+          "cross": {
+            "actual_complex_l2": 1.401448725226886e-21,
+            "reference_complex_l2": 1.4014483080835637e-21,
+            "raw_complex_l2": 1.0009408636572985e-24,
+            "raw_relative_l2_over_reference": 0.0007142188961832302,
+            "magnitude_relative_l2": 4.9516973161371025e-05,
+            "max_abs_residual": 1.0158868239894441e-25,
+            "max_abs_residual_over_reference_peak": 0.0005017159829777376,
+            "phase_rms_rad": 0.0014620249404428485,
+            "phase_max_abs_rad": 0.01627706604527545,
+            "nonzero_reference_samples": 1969
+          }
+        },
+        "clean_direct_vs_public_direct": {
+          "plus": {
+            "actual_complex_l2": 1.4964156574503404e-21,
+            "reference_complex_l2": 1.496415693380872e-21,
+            "raw_complex_l2": 1.082165364674263e-24,
+            "raw_relative_l2_over_reference": 0.000723171622337983,
+            "magnitude_relative_l2": 8.905251200571646e-05,
+            "max_abs_residual": 1.1114752238176148e-25,
+            "max_abs_residual_over_reference_peak": 0.0005081013937914521,
+            "phase_rms_rad": 0.004772569219093174,
+            "phase_max_abs_rad": 0.052900107490338834,
+            "nonzero_reference_samples": 1969
+          },
+          "cross": {
+            "actual_complex_l2": 1.4014487252260038e-21,
+            "reference_complex_l2": 1.4014483080835637e-21,
+            "raw_complex_l2": 1.0009408636566237e-24,
+            "raw_relative_l2_over_reference": 0.0007142188961827487,
+            "magnitude_relative_l2": 4.95169731575735e-05,
+            "max_abs_residual": 1.0158868239843373e-25,
+            "max_abs_residual_over_reference_peak": 0.0005017159829752156,
+            "phase_rms_rad": 0.0014620249404428203,
+            "phase_max_abs_rad": 0.01627706604526932,
+            "nonzero_reference_samples": 1969
+          }
+        },
+        "legacy_fft_vs_public_direct": {
+          "plus": {
+            "actual_complex_l2": 1.439783399471121e-21,
+            "reference_complex_l2": 1.496415693380872e-21,
+            "raw_complex_l2": 7.689018818271358e-23,
+            "raw_relative_l2_over_reference": 0.051382906850565395,
+            "magnitude_relative_l2": 0.050984293352696324,
+            "max_abs_residual": 7.553598506821187e-24,
+            "max_abs_residual_over_reference_peak": 0.0345306296282018,
+            "phase_rms_rad": 0.030906334172732555,
+            "phase_max_abs_rad": 0.47358837402730997,
+            "nonzero_reference_samples": 1969
+          },
+          "cross": {
+            "actual_complex_l2": 1.3482268671409995e-21,
+            "reference_complex_l2": 1.4014483080835637e-21,
+            "raw_complex_l2": 7.213335961211956e-23,
+            "raw_relative_l2_over_reference": 0.0514705816804329,
+            "magnitude_relative_l2": 0.0511136350492509,
+            "max_abs_residual": 7.090049907228245e-24,
+            "max_abs_residual_over_reference_peak": 0.035015626490724115,
+            "phase_rms_rad": 0.013304388077668731,
+            "phase_max_abs_rad": 0.09140006638202071,
+            "nonzero_reference_samples": 1969
+          }
+        },
+        "clean_fft_vs_public_direct": {
+          "plus": {
+            "actual_complex_l2": 1.439783399471121e-21,
+            "reference_complex_l2": 1.496415693380872e-21,
+            "raw_complex_l2": 7.689018818271358e-23,
+            "raw_relative_l2_over_reference": 0.051382906850565395,
+            "magnitude_relative_l2": 0.050984293352696324,
+            "max_abs_residual": 7.553598506821187e-24,
+            "max_abs_residual_over_reference_peak": 0.0345306296282018,
+            "phase_rms_rad": 0.030906334172732555,
+            "phase_max_abs_rad": 0.47358837402730997,
+            "nonzero_reference_samples": 1969
+          },
+          "cross": {
+            "actual_complex_l2": 1.3482268671409995e-21,
+            "reference_complex_l2": 1.4014483080835637e-21,
+            "raw_complex_l2": 7.213335961211956e-23,
+            "raw_relative_l2_over_reference": 0.0514705816804329,
+            "magnitude_relative_l2": 0.0511136350492509,
+            "max_abs_residual": 7.090049907228245e-24,
+            "max_abs_residual_over_reference_peak": 0.035015626490724115,
+            "phase_rms_rad": 0.013304388077668731,
+            "phase_max_abs_rad": 0.09140006638202071,
+            "nonzero_reference_samples": 1969
+          }
+        },
+        "plus": {
+          "actual_complex_l2": 1.4964156574512818e-21,
+          "reference_complex_l2": 1.496415693380872e-21,
+          "raw_complex_l2": 1.0821653646745782e-24,
+          "raw_relative_l2_over_reference": 0.0007231716223381937,
+          "magnitude_relative_l2": 8.905251200557157e-05,
+          "max_abs_residual": 1.111475223819195e-25,
+          "max_abs_residual_over_reference_peak": 0.0005081013937921745,
+          "phase_rms_rad": 0.004772569219093151,
+          "phase_max_abs_rad": 0.052900107490317774,
+          "nonzero_reference_samples": 1969
+        },
+        "cross": {
+          "actual_complex_l2": 1.401448725226886e-21,
+          "reference_complex_l2": 1.4014483080835637e-21,
+          "raw_complex_l2": 1.0009408636572985e-24,
+          "raw_relative_l2_over_reference": 0.0007142188961832302,
+          "magnitude_relative_l2": 4.9516973161371025e-05,
+          "max_abs_residual": 1.0158868239894441e-25,
+          "max_abs_residual_over_reference_peak": 0.0005017159829777376,
+          "phase_rms_rad": 0.0014620249404428485,
+          "phase_max_abs_rad": 0.01627706604527545,
+          "nonzero_reference_samples": 1969
+        }
+      },
+      "clean_runtime_vs_direct": {
+        "comparison": "new published_eob22_to_fd direct runtime versus independent direct finite clean sum, same mode, projection, scale, support and absolute chart",
+        "plus": {
+          "actual_complex_l2": 1.4964156574512818e-21,
+          "reference_complex_l2": 1.4964156574503404e-21,
+          "raw_complex_l2": 9.417445349485607e-34,
+          "raw_relative_l2_over_reference": 6.293335212444563e-13,
+          "magnitude_relative_l2": 6.293301658019651e-13,
+          "max_abs_residual": 1.3758051014139746e-34,
+          "max_abs_residual_over_reference_peak": 6.289370659049676e-13,
+          "phase_rms_rad": 1.242591445886972e-15,
+          "phase_max_abs_rad": 2.099361800857664e-14,
+          "nonzero_reference_samples": 1969
+        },
+        "cross": {
+          "actual_complex_l2": 1.401448725226886e-21,
+          "reference_complex_l2": 1.4014487252260038e-21,
+          "raw_complex_l2": 8.819763206246703e-34,
+          "raw_relative_l2_over_reference": 6.293318512116374e-13,
+          "magnitude_relative_l2": 6.293374472227428e-13,
+          "max_abs_residual": 1.2740635744737383e-34,
+          "max_abs_residual_over_reference_peak": 6.292220159804243e-13,
+          "phase_rms_rad": 1.228347355946045e-15,
+          "phase_max_abs_rad": 1.6418787214212363e-14,
+          "nonzero_reference_samples": 1969
+        }
+      },
+      "legacy_fft_vs_direct": {
+        "comparison": "historical _quadrupole_fd rFFT/interpolation versus independent direct finite clean sum, same mode, projection, scale, support and absolute chart",
+        "plus": {
+          "actual_complex_l2": 1.439783399471121e-21,
+          "reference_complex_l2": 1.4964156574503404e-21,
+          "raw_complex_l2": 7.688509512585458e-23,
+          "raw_relative_l2_over_reference": 0.05137950458020121,
+          "magnitude_relative_l2": 0.05098469982268114,
+          "max_abs_residual": 7.559275679267119e-24,
+          "max_abs_residual_over_reference_peak": 0.03455655645700712,
+          "phase_rms_rad": 0.031072421325632794,
+          "phase_max_abs_rad": 0.5151722328456948,
+          "nonzero_reference_samples": 1969
+        },
+        "cross": {
+          "actual_complex_l2": 1.3482268671409995e-21,
+          "reference_complex_l2": 1.4014487252260038e-21,
+          "raw_complex_l2": 7.212933236515093e-23,
+          "raw_relative_l2_over_reference": 0.05146769272883604,
+          "magnitude_relative_l2": 0.051114613487963145,
+          "max_abs_residual": 7.09277631651535e-24,
+          "max_abs_residual_over_reference_peak": 0.03502910766928914,
+          "phase_rms_rad": 0.013121683080776212,
+          "phase_max_abs_rad": 0.0943926242121151,
+          "nonzero_reference_samples": 1969
+        }
+      },
+      "clean_fft_vs_direct": {
+        "comparison": "alias of legacy_fft_vs_direct; historical rFFT/interpolation versus direct finite clean sum",
+        "plus": {
+          "actual_complex_l2": 1.439783399471121e-21,
+          "reference_complex_l2": 1.4964156574503404e-21,
+          "raw_complex_l2": 7.688509512585458e-23,
+          "raw_relative_l2_over_reference": 0.05137950458020121,
+          "magnitude_relative_l2": 0.05098469982268114,
+          "max_abs_residual": 7.559275679267119e-24,
+          "max_abs_residual_over_reference_peak": 0.03455655645700712,
+          "phase_rms_rad": 0.031072421325632794,
+          "phase_max_abs_rad": 0.5151722328456948,
+          "nonzero_reference_samples": 1969
+        },
+        "cross": {
+          "actual_complex_l2": 1.3482268671409995e-21,
+          "reference_complex_l2": 1.4014487252260038e-21,
+          "raw_complex_l2": 7.212933236515093e-23,
+          "raw_relative_l2_over_reference": 0.05146769272883604,
+          "magnitude_relative_l2": 0.051114613487963145,
+          "max_abs_residual": 7.09277631651535e-24,
+          "max_abs_residual_over_reference_peak": 0.03502910766928914,
+          "phase_rms_rad": 0.013121683080776212,
+          "phase_max_abs_rad": 0.0943926242121151,
+          "nonzero_reference_samples": 1969
+        }
+      },
+      "legacy_origin_change": {
+        "comparison": "NQC-match-origin direct spectrum versus orbital-frequency-peak direct spectrum",
+        "time_shift_applied_s": 0.0,
+        "phase_shift_applied_rad": 0.0,
+        "plus": {
+          "actual_complex_l2": 1.4964156574512822e-21,
+          "reference_complex_l2": 1.4964156574512818e-21,
+          "raw_complex_l2": 6.748720240500203e-22,
+          "raw_relative_l2_over_reference": 0.4509923567623402,
+          "magnitude_relative_l2": 1.0701562760816257e-14,
+          "max_abs_residual": 3.282933533814456e-23,
+          "max_abs_residual_over_reference_peak": 0.15007638670586046,
+          "phase_rms_rad": 1.9914822599935935,
+          "phase_max_abs_rad": 3.1410088724786522,
+          "nonzero_reference_samples": 1969
+        },
+        "cross": {
+          "actual_complex_l2": 1.401448725226886e-21,
+          "reference_complex_l2": 1.401448725226886e-21,
+          "raw_complex_l2": 6.320301707494151e-22,
+          "raw_relative_l2_over_reference": 0.4509834426137091,
+          "magnitude_relative_l2": 1.0024365354624924e-14,
+          "max_abs_residual": 3.0288823355810173e-23,
+          "max_abs_residual_over_reference_peak": 0.1495874685961261,
+          "phase_rms_rad": 1.9914822599935496,
+          "phase_max_abs_rad": 3.1410088724773586,
+          "nonzero_reference_samples": 1969
+        }
+      },
+      "arrays": {
+        "clean_runtime_plus_finite": true,
+        "clean_runtime_cross_finite": true,
+        "legacy_fft_plus_finite": true,
+        "legacy_fft_cross_finite": true,
+        "public_integral_plus_finite": true,
+        "public_integral_cross_finite": true
+      }
+    },
+    "dt_0p5M": {
+      "artifact": {
+        "path": "/Users/xangma/repos/torchwave/docs/reviews/2026-09-13-parity-review/verification/eob-full20/full20.pt",
+        "sha256": "1d2df0d77bfbb80e531f9025168d1acc9b4145d2a305ea1d45bfee49732a7602",
+        "size_bytes": 740863,
+        "result_json": "/Users/xangma/repos/torchwave/docs/reviews/2026-09-13-parity-review/verification/eob-full20/result.json",
+        "result_json_sha256": "f9c3d5485705c5a2f71dc231490eea2c1da665600c6be8de16707b0f6ee7a584",
+        "dt_M": 0.5,
+        "time_support_M_initial_origin": [
+          0.0,
+          5148.5
+        ],
+        "mode_samples": 10298,
+        "peak_time_M_initial_origin": 5002.702055973548,
+        "match_time_M_initial_origin": 4998.329676439468,
+        "loaded_keys": [
+          "match_time",
+          "mode",
+          "omega",
+          "peak_time",
+          "state",
+          "time",
+          "trajectory_time",
+          "valid"
+        ],
+        "loaded_tensors_copied": true,
+        "serialized_run": {
+          "input": "full20.pt",
+          "parameters": {
+            "mass1": 30,
+            "mass2": 20,
+            "f_start_hz": 20,
+            "delta_t_s": 0.00012313727369103167,
+            "inclination": 0.8,
+            "distance_mpc": 100
+          },
+          "native_support_s": [
+            -1.230961378731465,
+            0.036983128465087986
+          ],
+          "binary_support_s": [
+            -1.232042294,
+            0.09439241819979305
+          ],
+          "common_support_s": [
+            -1.230961378731465,
+            0.036983128465087986
+          ],
+          "raw_common_relative_l2": 0.4471191678074733,
+          "roundtrip_projection_inversion_max": 1.550939958642289e-36,
+          "phase_frequency_threshold": "amplitude > 0.1% of each mode maximum",
+          "active_samples": 10170,
+          "native_frequency_hz": [
+            20.005462924562348,
+            350.06987976751753
+          ],
+          "binary_frequency_hz": [
+            20.01163800852935,
+            350.11271008109236
+          ],
+          "frequency_rms_hz": 2.109517142473728,
+          "phase_rms_rad": 0.38079768423840876,
+          "phase_max_abs_rad": 2.372734513994885,
+          "phase_residual_at_common_start_rad": 0.135841888419026,
+          "native_peak_origin_s": 0.0010768057907382007,
+          "binary_phase_at_native_peak_rad": 2.748779583538132,
+          "native_phase_at_native_peak_rad": -0.09014522118897286,
+          "binary_amplitude_peak_time_s": -0.0010389689107563882,
+          "native_amplitude_peak_time_s": 4.194635777848765e-05,
+          "intervals": {
+            "early": {
+              "samples": 9194,
+              "relative_l2": 0.2016302487728982
+            },
+            "inspiral": {
+              "samples": 10006,
+              "relative_l2": 0.3964610464503834
+            },
+            "merger": {
+              "samples": 325,
+              "relative_l2": 1.134455037583533
+            },
+            "ringdown": {
+              "samples": 2,
+              "relative_l2": 2.2915857760715377
+            }
+          }
+        }
+      },
+      "public_td": {
+        "dt_s": 0.00012313727369103167,
+        "dt_M": 0.5,
+        "epoch_s": -1.232042294,
+        "support_s": [
+          -1.232042294,
+          0.09439241819979305
+        ],
+        "sample_count": 10773
+      },
+      "clean_transform": {
+        "time_origin": "orbital_frequency_peak",
+        "sample_time_zero_M_initial_origin": 0.0,
+        "origin_time_M_initial_origin": 5002.702055973548,
+        "origin_time_s_absolute_when_tc_zero": 1.2320381845222033,
+        "mode_scale": 2.392707920793921e-20,
+        "support_s_absolute_when_tc_zero": [
+          -1.2320381845222033,
+          0.03590632267434979
+        ],
+        "polarization_projection": "sqrt(5/(16*pi))*(1+cos(i)^2)*Re(h22), -sqrt(5/(4*pi))*cos(i)*Im(h22)",
+        "fourier_stage": "chunked direct finite-support rectangular sum at recorded samples with exp(-2*pi*i*f*t)",
+        "frequency_chunk": 32
+      },
+      "clean_direct_transform": {
+        "role": "independent diagnostic reference for the new runtime",
+        "time_origin": "orbital_frequency_peak",
+        "sample_time_zero_M_initial_origin": 0.0,
+        "origin_time_M_initial_origin": 5002.702055973548,
+        "origin_time_s_absolute_when_tc_zero": 1.2320381845222033,
+        "mode_scale": 2.392707920793921e-20,
+        "support_s_absolute_when_tc_zero": [
+          -1.2320381845222033,
+          0.03590632267434979
+        ],
+        "polarization_projection": "sqrt(5/(16*pi))*(1+cos(i)^2)*Re(h22), -sqrt(5/(4*pi))*cos(i)*Im(h22)",
+        "fourier_stage": "independent direct finite-support sum with exp(-2*pi*i*f*t) and dt_seconds"
+      },
+      "legacy_interpolation_transform": {
+        "role": "historical diagnostic only; not used by published_eob22_to_fd",
+        "time_origin": "orbital_frequency_peak",
+        "sample_time_zero_M_initial_origin": 0.0,
+        "origin_time_M_initial_origin": 5002.702055973548,
+        "mode_scale": 2.392707920793921e-20,
+        "support_s_absolute_when_tc_zero": [
+          -1.2320381845222033,
+          0.0359063226743499
+        ],
+        "fourier_stage": "shared _quadrupole_fd rFFT with four-times zero padding, linear frequency interpolation and absolute chart shift"
+      },
+      "legacy_transform": {
+        "time_origin": "nqc_match",
+        "origin_time_M_initial_origin": 4998.329676439468,
+        "origin_difference_peak_minus_match_M": 4.37237953408021,
+        "fourier_stage": "new chunked direct finite-support runtime"
+      },
+      "spectrum": {
+        "frequency_support_hz": [
+          20.0,
+          512.0
+        ],
+        "frequency_spacing_hz": 0.25,
+        "sample_count": 1969,
+        "requested_complete_band": "20--512 Hz inclusive at 0.25 Hz spacing"
+      },
+      "public_black_box_comparison": {
+        "reference": "finite-support integral of public SimInspiralChooseTDWaveform plus/cross samples",
+        "kernel": "exp(-2*pi*i*f*t) with public epoch retained in t",
+        "time_shift_applied_s": 0.0,
+        "phase_shift_applied_rad": 0.0,
+        "clean_support_s_absolute_when_tc_zero": [
+          -1.2320381845222033,
+          0.03590632267434979
+        ],
+        "clean_direct_support_s_absolute_when_tc_zero": [
+          -1.2320381845222033,
+          0.03590632267434979
+        ],
+        "legacy_fft_support_s_absolute_when_tc_zero": [
+          -1.2320381845222033,
+          0.0359063226743499
+        ],
+        "public_support_s_absolute": [
+          -1.232042294,
+          0.09439241819979305
+        ],
+        "common_support_s": [
+          -1.2320381845222033,
+          0.03590632267434979
+        ],
+        "clean_runtime_vs_public_direct": {
+          "plus": {
+            "actual_complex_l2": 1.496436206851739e-21,
+            "reference_complex_l2": 1.4964409982475023e-21,
+            "raw_complex_l2": 1.2670176389874563e-24,
+            "raw_relative_l2_over_reference": 0.0008466873337948332,
+            "magnitude_relative_l2": 7.635014390005164e-05,
+            "max_abs_residual": 1.1427991033352922e-25,
+            "max_abs_residual_over_reference_peak": 0.0005223861921488471,
+            "phase_rms_rad": 0.004931304247316569,
+            "phase_max_abs_rad": 0.07062244496726484,
+            "nonzero_reference_samples": 1969
+          },
+          "cross": {
+            "actual_complex_l2": 1.4014438085290795e-21,
+            "reference_complex_l2": 1.4014477889899593e-21,
+            "raw_complex_l2": 1.1776414559387934e-24,
+            "raw_relative_l2_over_reference": 0.0008403034812931091,
+            "magnitude_relative_l2": 4.1322102509615585e-05,
+            "max_abs_residual": 1.0441921743664417e-25,
+            "max_abs_residual_over_reference_peak": 0.0005157072242215588,
+            "phase_rms_rad": 0.0015660808997400898,
+            "phase_max_abs_rad": 0.01573643845675008,
+            "nonzero_reference_samples": 1969
+          }
+        },
+        "clean_direct_vs_public_direct": {
+          "plus": {
+            "actual_complex_l2": 1.4964362068507969e-21,
+            "reference_complex_l2": 1.4964409982475023e-21,
+            "raw_complex_l2": 1.2670176389906134e-24,
+            "raw_relative_l2_over_reference": 0.0008466873337969429,
+            "magnitude_relative_l2": 7.635014392642423e-05,
+            "max_abs_residual": 1.1427991033326131e-25,
+            "max_abs_residual_over_reference_peak": 0.0005223861921476224,
+            "phase_rms_rad": 0.004931304247318799,
+            "phase_max_abs_rad": 0.07062244496736923,
+            "nonzero_reference_samples": 1969
+          },
+          "cross": {
+            "actual_complex_l2": 1.4014438085281976e-21,
+            "reference_complex_l2": 1.4014477889899593e-21,
+            "raw_complex_l2": 1.1776414559414004e-24,
+            "raw_relative_l2_over_reference": 0.0008403034812949694,
+            "magnitude_relative_l2": 4.1322102552860926e-05,
+            "max_abs_residual": 1.044192174359255e-25,
+            "max_abs_residual_over_reference_peak": 0.0005157072242180095,
+            "phase_rms_rad": 0.0015660808997417573,
+            "phase_max_abs_rad": 0.015736438456772948,
+            "nonzero_reference_samples": 1969
+          }
+        },
+        "legacy_fft_vs_public_direct": {
+          "plus": {
+            "actual_complex_l2": 1.4398048568932135e-21,
+            "reference_complex_l2": 1.4964409982475023e-21,
+            "raw_complex_l2": 7.689926859314757e-23,
+            "raw_relative_l2_over_reference": 0.05138810596823069,
+            "magnitude_relative_l2": 0.050988012384931225,
+            "max_abs_residual": 7.553704789516813e-24,
+            "max_abs_residual_over_reference_peak": 0.03452882549606334,
+            "phase_rms_rad": 0.030044407934818333,
+            "phase_max_abs_rad": 0.41922350594308805,
+            "nonzero_reference_samples": 1969
+          },
+          "cross": {
+            "actual_complex_l2": 1.3482218469258297e-21,
+            "reference_complex_l2": 1.4014477889899593e-21,
+            "raw_complex_l2": 7.214159966870531e-23,
+            "raw_relative_l2_over_reference": 0.05147648041936592,
+            "magnitude_relative_l2": 0.0511181851379599,
+            "max_abs_residual": 7.090028238543351e-24,
+            "max_abs_residual_over_reference_peak": 0.03501633963853587,
+            "phase_rms_rad": 0.013230343765156914,
+            "phase_max_abs_rad": 0.08926080895726936,
+            "nonzero_reference_samples": 1969
+          }
+        },
+        "clean_fft_vs_public_direct": {
+          "plus": {
+            "actual_complex_l2": 1.4398048568932135e-21,
+            "reference_complex_l2": 1.4964409982475023e-21,
+            "raw_complex_l2": 7.689926859314757e-23,
+            "raw_relative_l2_over_reference": 0.05138810596823069,
+            "magnitude_relative_l2": 0.050988012384931225,
+            "max_abs_residual": 7.553704789516813e-24,
+            "max_abs_residual_over_reference_peak": 0.03452882549606334,
+            "phase_rms_rad": 0.030044407934818333,
+            "phase_max_abs_rad": 0.41922350594308805,
+            "nonzero_reference_samples": 1969
+          },
+          "cross": {
+            "actual_complex_l2": 1.3482218469258297e-21,
+            "reference_complex_l2": 1.4014477889899593e-21,
+            "raw_complex_l2": 7.214159966870531e-23,
+            "raw_relative_l2_over_reference": 0.05147648041936592,
+            "magnitude_relative_l2": 0.0511181851379599,
+            "max_abs_residual": 7.090028238543351e-24,
+            "max_abs_residual_over_reference_peak": 0.03501633963853587,
+            "phase_rms_rad": 0.013230343765156914,
+            "phase_max_abs_rad": 0.08926080895726936,
+            "nonzero_reference_samples": 1969
+          }
+        },
+        "plus": {
+          "actual_complex_l2": 1.496436206851739e-21,
+          "reference_complex_l2": 1.4964409982475023e-21,
+          "raw_complex_l2": 1.2670176389874563e-24,
+          "raw_relative_l2_over_reference": 0.0008466873337948332,
+          "magnitude_relative_l2": 7.635014390005164e-05,
+          "max_abs_residual": 1.1427991033352922e-25,
+          "max_abs_residual_over_reference_peak": 0.0005223861921488471,
+          "phase_rms_rad": 0.004931304247316569,
+          "phase_max_abs_rad": 0.07062244496726484,
+          "nonzero_reference_samples": 1969
+        },
+        "cross": {
+          "actual_complex_l2": 1.4014438085290795e-21,
+          "reference_complex_l2": 1.4014477889899593e-21,
+          "raw_complex_l2": 1.1776414559387934e-24,
+          "raw_relative_l2_over_reference": 0.0008403034812931091,
+          "magnitude_relative_l2": 4.1322102509615585e-05,
+          "max_abs_residual": 1.0441921743664417e-25,
+          "max_abs_residual_over_reference_peak": 0.0005157072242215588,
+          "phase_rms_rad": 0.0015660808997400898,
+          "phase_max_abs_rad": 0.01573643845675008,
+          "nonzero_reference_samples": 1969
+        }
+      },
+      "clean_runtime_vs_direct": {
+        "comparison": "new published_eob22_to_fd direct runtime versus independent direct finite clean sum, same mode, projection, scale, support and absolute chart",
+        "plus": {
+          "actual_complex_l2": 1.496436206851739e-21,
+          "reference_complex_l2": 1.4964362068507969e-21,
+          "raw_complex_l2": 9.41763495456685e-34,
+          "raw_relative_l2_over_reference": 6.293375495361722e-13,
+          "magnitude_relative_l2": 6.293360206260963e-13,
+          "max_abs_residual": 1.3762974049366583e-34,
+          "max_abs_residual_over_reference_peak": 6.291199604728038e-13,
+          "phase_rms_rad": 1.9660179855489625e-14,
+          "phase_max_abs_rad": 4.872976983874884e-13,
+          "nonzero_reference_samples": 1969
+        },
+        "cross": {
+          "actual_complex_l2": 1.4014438085290795e-21,
+          "reference_complex_l2": 1.4014438085281976e-21,
+          "raw_complex_l2": 8.819347551127295e-34,
+          "raw_relative_l2_over_reference": 6.293044000379446e-13,
+          "magnitude_relative_l2": 6.293042521389772e-13,
+          "max_abs_residual": 1.2738396221157617e-34,
+          "max_abs_residual_over_reference_peak": 6.29126341181836e-13,
+          "phase_rms_rad": 1.6232194924049308e-14,
+          "phase_max_abs_rad": 2.911278016096941e-13,
+          "nonzero_reference_samples": 1969
+        }
+      },
+      "legacy_fft_vs_direct": {
+        "comparison": "historical _quadrupole_fd rFFT/interpolation versus independent direct finite clean sum, same mode, projection, scale, support and absolute chart",
+        "plus": {
+          "actual_complex_l2": 1.4398048568932135e-21,
+          "reference_complex_l2": 1.4964362068507969e-21,
+          "raw_complex_l2": 7.68850044283e-23,
+          "raw_relative_l2_over_reference": 0.05137873841618821,
+          "magnitude_relative_l2": 0.050983850544715034,
+          "max_abs_residual": 7.55927351777203e-24,
+          "max_abs_residual_over_reference_peak": 0.03455423108149161,
+          "phase_rms_rad": 0.029923681192054522,
+          "phase_max_abs_rad": 0.43919818168449365,
+          "nonzero_reference_samples": 1969
+        },
+        "cross": {
+          "actual_complex_l2": 1.3482218469258297e-21,
+          "reference_complex_l2": 1.4014438085281976e-21,
+          "raw_complex_l2": 7.21292542999512e-23,
+          "raw_relative_l2_over_reference": 0.05146781758999075,
+          "magnitude_relative_l2": 0.05111480306465413,
+          "max_abs_residual": 7.092776305065528e-24,
+          "max_abs_residual_over_reference_peak": 0.03502993884124594,
+          "phase_rms_rad": 0.013037969295101199,
+          "phase_max_abs_rad": 0.08952662896010188,
+          "nonzero_reference_samples": 1969
+        }
+      },
+      "clean_fft_vs_direct": {
+        "comparison": "alias of legacy_fft_vs_direct; historical rFFT/interpolation versus direct finite clean sum",
+        "plus": {
+          "actual_complex_l2": 1.4398048568932135e-21,
+          "reference_complex_l2": 1.4964362068507969e-21,
+          "raw_complex_l2": 7.68850044283e-23,
+          "raw_relative_l2_over_reference": 0.05137873841618821,
+          "magnitude_relative_l2": 0.050983850544715034,
+          "max_abs_residual": 7.55927351777203e-24,
+          "max_abs_residual_over_reference_peak": 0.03455423108149161,
+          "phase_rms_rad": 0.029923681192054522,
+          "phase_max_abs_rad": 0.43919818168449365,
+          "nonzero_reference_samples": 1969
+        },
+        "cross": {
+          "actual_complex_l2": 1.3482218469258297e-21,
+          "reference_complex_l2": 1.4014438085281976e-21,
+          "raw_complex_l2": 7.21292542999512e-23,
+          "raw_relative_l2_over_reference": 0.05146781758999075,
+          "magnitude_relative_l2": 0.05111480306465413,
+          "max_abs_residual": 7.092776305065528e-24,
+          "max_abs_residual_over_reference_peak": 0.03502993884124594,
+          "phase_rms_rad": 0.013037969295101199,
+          "phase_max_abs_rad": 0.08952662896010188,
+          "nonzero_reference_samples": 1969
+        }
+      },
+      "legacy_origin_change": {
+        "comparison": "NQC-match-origin direct spectrum versus orbital-frequency-peak direct spectrum",
+        "time_shift_applied_s": 0.0,
+        "phase_shift_applied_rad": 0.0,
+        "plus": {
+          "actual_complex_l2": 1.4964362068517388e-21,
+          "reference_complex_l2": 1.496436206851739e-21,
+          "raw_complex_l2": 6.748743166726309e-22,
+          "raw_relative_l2_over_reference": 0.4509876956883166,
+          "magnitude_relative_l2": 1.9122508394165182e-14,
+          "max_abs_residual": 3.282982851551023e-23,
+          "max_abs_residual_over_reference_peak": 0.15006858505952272,
+          "phase_rms_rad": 1.9914822599936086,
+          "phase_max_abs_rad": 3.1410088724784155,
+          "nonzero_reference_samples": 1969
+        },
+        "cross": {
+          "actual_complex_l2": 1.4014438085290797e-21,
+          "reference_complex_l2": 1.4014438085290795e-21,
+          "raw_complex_l2": 6.320253856340741e-22,
+          "raw_relative_l2_over_reference": 0.4509816103846733,
+          "magnitude_relative_l2": 1.835098802152898e-14,
+          "max_abs_residual": 3.0288002378787144e-23,
+          "max_abs_residual_over_reference_peak": 0.14958696359760013,
+          "phase_rms_rad": 1.991482259993531,
+          "phase_max_abs_rad": 3.1410088724735346,
+          "nonzero_reference_samples": 1969
+        }
+      },
+      "arrays": {
+        "clean_runtime_plus_finite": true,
+        "clean_runtime_cross_finite": true,
+        "legacy_fft_plus_finite": true,
+        "legacy_fft_cross_finite": true,
+        "public_integral_plus_finite": true,
+        "public_integral_cross_finite": true
+      }
+    }
+  },
+  "clean_saved_grid_convergence": {
+    "plus": {
+      "actual_complex_l2": 1.4964156574512818e-21,
+      "reference_complex_l2": 1.496436206851739e-21,
+      "raw_complex_l2": 1.343690005033914e-24,
+      "raw_relative_l2_over_reference": 0.0008979266866716769,
+      "magnitude_relative_l2": 0.0006217694462052778,
+      "max_abs_residual": 3.219666662183101e-26,
+      "max_abs_residual_over_reference_peak": 0.00014717433571998816,
+      "phase_rms_rad": 0.03476380372859082,
+      "phase_max_abs_rad": 0.4291789966884178,
+      "nonzero_reference_samples": 1969
+    },
+    "cross": {
+      "actual_complex_l2": 1.401448725226886e-21,
+      "reference_complex_l2": 1.4014438085290795e-21,
+      "raw_complex_l2": 2.5182928008285307e-25,
+      "raw_relative_l2_over_reference": 0.0001796927415499925,
+      "magnitude_relative_l2": 0.00012400123570286794,
+      "max_abs_residual": 7.36349202394412e-27,
+      "max_abs_residual_over_reference_peak": 3.636695479489247e-05,
+      "phase_rms_rad": 0.007904070684519928,
+      "phase_max_abs_rad": 0.09334741139168028,
+      "nonzero_reference_samples": 1969
+    }
+  },
+  "legacy_fft_saved_grid_convergence": {
+    "plus": {
+      "actual_complex_l2": 1.439783399471121e-21,
+      "reference_complex_l2": 1.4398048568932135e-21,
+      "raw_complex_l2": 1.3434930639491298e-24,
+      "raw_relative_l2_over_reference": 0.0009331077454816317,
+      "magnitude_relative_l2": 0.0006444180387300281,
+      "max_abs_residual": 3.218316957323118e-26,
+      "max_abs_residual_over_reference_peak": 0.0001478908390799299,
+      "phase_rms_rad": 0.034664582293274064,
+      "phase_max_abs_rad": 0.37606450286499676,
+      "nonzero_reference_samples": 1969
+    },
+    "cross": {
+      "actual_complex_l2": 1.3482268671409995e-21,
+      "reference_complex_l2": 1.3482218469258297e-21,
+      "raw_complex_l2": 2.5090027831884138e-25,
+      "raw_relative_l2_over_reference": 0.000186097175988459,
+      "magnitude_relative_l2": 0.00012889142278917705,
+      "max_abs_residual": 7.330587216844874e-27,
+      "max_abs_residual_over_reference_peak": 3.63989285173431e-05,
+      "phase_rms_rad": 0.008785553881875909,
+      "phase_max_abs_rad": 0.11070103385210962,
+      "nonzero_reference_samples": 1969
+    }
+  },
+  "legacy_interpolation_diagnostic": {
+    "status": "historical only; shared _quadrupole_fd is no longer used by published_eob22_to_fd",
+    "stage": "four-times-padded rFFT followed by linear frequency interpolation",
+    "results": {
+      "dt_0p25M": {
+        "legacy_fft_vs_direct": {
+          "comparison": "historical _quadrupole_fd rFFT/interpolation versus independent direct finite clean sum, same mode, projection, scale, support and absolute chart",
+          "plus": {
+            "actual_complex_l2": 1.439783399471121e-21,
+            "reference_complex_l2": 1.4964156574503404e-21,
+            "raw_complex_l2": 7.688509512585458e-23,
+            "raw_relative_l2_over_reference": 0.05137950458020121,
+            "magnitude_relative_l2": 0.05098469982268114,
+            "max_abs_residual": 7.559275679267119e-24,
+            "max_abs_residual_over_reference_peak": 0.03455655645700712,
+            "phase_rms_rad": 0.031072421325632794,
+            "phase_max_abs_rad": 0.5151722328456948,
+            "nonzero_reference_samples": 1969
+          },
+          "cross": {
+            "actual_complex_l2": 1.3482268671409995e-21,
+            "reference_complex_l2": 1.4014487252260038e-21,
+            "raw_complex_l2": 7.212933236515093e-23,
+            "raw_relative_l2_over_reference": 0.05146769272883604,
+            "magnitude_relative_l2": 0.051114613487963145,
+            "max_abs_residual": 7.09277631651535e-24,
+            "max_abs_residual_over_reference_peak": 0.03502910766928914,
+            "phase_rms_rad": 0.013121683080776212,
+            "phase_max_abs_rad": 0.0943926242121151,
+            "nonzero_reference_samples": 1969
+          }
+        },
+        "legacy_fft_vs_public_direct": {
+          "plus": {
+            "actual_complex_l2": 1.439783399471121e-21,
+            "reference_complex_l2": 1.496415693380872e-21,
+            "raw_complex_l2": 7.689018818271358e-23,
+            "raw_relative_l2_over_reference": 0.051382906850565395,
+            "magnitude_relative_l2": 0.050984293352696324,
+            "max_abs_residual": 7.553598506821187e-24,
+            "max_abs_residual_over_reference_peak": 0.0345306296282018,
+            "phase_rms_rad": 0.030906334172732555,
+            "phase_max_abs_rad": 0.47358837402730997,
+            "nonzero_reference_samples": 1969
+          },
+          "cross": {
+            "actual_complex_l2": 1.3482268671409995e-21,
+            "reference_complex_l2": 1.4014483080835637e-21,
+            "raw_complex_l2": 7.213335961211956e-23,
+            "raw_relative_l2_over_reference": 0.0514705816804329,
+            "magnitude_relative_l2": 0.0511136350492509,
+            "max_abs_residual": 7.090049907228245e-24,
+            "max_abs_residual_over_reference_peak": 0.035015626490724115,
+            "phase_rms_rad": 0.013304388077668731,
+            "phase_max_abs_rad": 0.09140006638202071,
+            "nonzero_reference_samples": 1969
+          }
+        }
+      },
+      "dt_0p5M": {
+        "legacy_fft_vs_direct": {
+          "comparison": "historical _quadrupole_fd rFFT/interpolation versus independent direct finite clean sum, same mode, projection, scale, support and absolute chart",
+          "plus": {
+            "actual_complex_l2": 1.4398048568932135e-21,
+            "reference_complex_l2": 1.4964362068507969e-21,
+            "raw_complex_l2": 7.68850044283e-23,
+            "raw_relative_l2_over_reference": 0.05137873841618821,
+            "magnitude_relative_l2": 0.050983850544715034,
+            "max_abs_residual": 7.55927351777203e-24,
+            "max_abs_residual_over_reference_peak": 0.03455423108149161,
+            "phase_rms_rad": 0.029923681192054522,
+            "phase_max_abs_rad": 0.43919818168449365,
+            "nonzero_reference_samples": 1969
+          },
+          "cross": {
+            "actual_complex_l2": 1.3482218469258297e-21,
+            "reference_complex_l2": 1.4014438085281976e-21,
+            "raw_complex_l2": 7.21292542999512e-23,
+            "raw_relative_l2_over_reference": 0.05146781758999075,
+            "magnitude_relative_l2": 0.05111480306465413,
+            "max_abs_residual": 7.092776305065528e-24,
+            "max_abs_residual_over_reference_peak": 0.03502993884124594,
+            "phase_rms_rad": 0.013037969295101199,
+            "phase_max_abs_rad": 0.08952662896010188,
+            "nonzero_reference_samples": 1969
+          }
+        },
+        "legacy_fft_vs_public_direct": {
+          "plus": {
+            "actual_complex_l2": 1.4398048568932135e-21,
+            "reference_complex_l2": 1.4964409982475023e-21,
+            "raw_complex_l2": 7.689926859314757e-23,
+            "raw_relative_l2_over_reference": 0.05138810596823069,
+            "magnitude_relative_l2": 0.050988012384931225,
+            "max_abs_residual": 7.553704789516813e-24,
+            "max_abs_residual_over_reference_peak": 0.03452882549606334,
+            "phase_rms_rad": 0.030044407934818333,
+            "phase_max_abs_rad": 0.41922350594308805,
+            "nonzero_reference_samples": 1969
+          },
+          "cross": {
+            "actual_complex_l2": 1.3482218469258297e-21,
+            "reference_complex_l2": 1.4014477889899593e-21,
+            "raw_complex_l2": 7.214159966870531e-23,
+            "raw_relative_l2_over_reference": 0.05147648041936592,
+            "magnitude_relative_l2": 0.0511181851379599,
+            "max_abs_residual": 7.090028238543351e-24,
+            "max_abs_residual_over_reference_peak": 0.03501633963853587,
+            "phase_rms_rad": 0.013230343765156914,
+            "phase_max_abs_rad": 0.08926080895726936,
+            "nonzero_reference_samples": 1969
+          }
+        }
+      }
+    }
+  },
+  "transform_isolation": {
+    "comparison": "For each saved grid, compare the new published_eob22_to_fd chunked direct rectangular sum with an independent direct finite sum using the same copied clean mode, projection, scale, support and absolute time chart. Separately compare the historical four-times-padded FFT/interpolation stage with that same direct reference, and compare both clean references with the direct public TD sum.",
+    "results": {
+      "dt_0p25M": {
+        "runtime_direct_vs_independent_direct": {
+          "comparison": "new published_eob22_to_fd direct runtime versus independent direct finite clean sum, same mode, projection, scale, support and absolute chart",
+          "plus": {
+            "actual_complex_l2": 1.4964156574512818e-21,
+            "reference_complex_l2": 1.4964156574503404e-21,
+            "raw_complex_l2": 9.417445349485607e-34,
+            "raw_relative_l2_over_reference": 6.293335212444563e-13,
+            "magnitude_relative_l2": 6.293301658019651e-13,
+            "max_abs_residual": 1.3758051014139746e-34,
+            "max_abs_residual_over_reference_peak": 6.289370659049676e-13,
+            "phase_rms_rad": 1.242591445886972e-15,
+            "phase_max_abs_rad": 2.099361800857664e-14,
+            "nonzero_reference_samples": 1969
+          },
+          "cross": {
+            "actual_complex_l2": 1.401448725226886e-21,
+            "reference_complex_l2": 1.4014487252260038e-21,
+            "raw_complex_l2": 8.819763206246703e-34,
+            "raw_relative_l2_over_reference": 6.293318512116374e-13,
+            "magnitude_relative_l2": 6.293374472227428e-13,
+            "max_abs_residual": 1.2740635744737383e-34,
+            "max_abs_residual_over_reference_peak": 6.292220159804243e-13,
+            "phase_rms_rad": 1.228347355946045e-15,
+            "phase_max_abs_rad": 1.6418787214212363e-14,
+            "nonzero_reference_samples": 1969
+          }
+        },
+        "runtime_direct_vs_public_direct": {
+          "plus": {
+            "actual_complex_l2": 1.4964156574512818e-21,
+            "reference_complex_l2": 1.496415693380872e-21,
+            "raw_complex_l2": 1.0821653646745782e-24,
+            "raw_relative_l2_over_reference": 0.0007231716223381937,
+            "magnitude_relative_l2": 8.905251200557157e-05,
+            "max_abs_residual": 1.111475223819195e-25,
+            "max_abs_residual_over_reference_peak": 0.0005081013937921745,
+            "phase_rms_rad": 0.004772569219093151,
+            "phase_max_abs_rad": 0.052900107490317774,
+            "nonzero_reference_samples": 1969
+          },
+          "cross": {
+            "actual_complex_l2": 1.401448725226886e-21,
+            "reference_complex_l2": 1.4014483080835637e-21,
+            "raw_complex_l2": 1.0009408636572985e-24,
+            "raw_relative_l2_over_reference": 0.0007142188961832302,
+            "magnitude_relative_l2": 4.9516973161371025e-05,
+            "max_abs_residual": 1.0158868239894441e-25,
+            "max_abs_residual_over_reference_peak": 0.0005017159829777376,
+            "phase_rms_rad": 0.0014620249404428485,
+            "phase_max_abs_rad": 0.01627706604527545,
+            "nonzero_reference_samples": 1969
+          }
+        },
+        "legacy_fft_vs_independent_direct": {
+          "comparison": "historical _quadrupole_fd rFFT/interpolation versus independent direct finite clean sum, same mode, projection, scale, support and absolute chart",
+          "plus": {
+            "actual_complex_l2": 1.439783399471121e-21,
+            "reference_complex_l2": 1.4964156574503404e-21,
+            "raw_complex_l2": 7.688509512585458e-23,
+            "raw_relative_l2_over_reference": 0.05137950458020121,
+            "magnitude_relative_l2": 0.05098469982268114,
+            "max_abs_residual": 7.559275679267119e-24,
+            "max_abs_residual_over_reference_peak": 0.03455655645700712,
+            "phase_rms_rad": 0.031072421325632794,
+            "phase_max_abs_rad": 0.5151722328456948,
+            "nonzero_reference_samples": 1969
+          },
+          "cross": {
+            "actual_complex_l2": 1.3482268671409995e-21,
+            "reference_complex_l2": 1.4014487252260038e-21,
+            "raw_complex_l2": 7.212933236515093e-23,
+            "raw_relative_l2_over_reference": 0.05146769272883604,
+            "magnitude_relative_l2": 0.051114613487963145,
+            "max_abs_residual": 7.09277631651535e-24,
+            "max_abs_residual_over_reference_peak": 0.03502910766928914,
+            "phase_rms_rad": 0.013121683080776212,
+            "phase_max_abs_rad": 0.0943926242121151,
+            "nonzero_reference_samples": 1969
+          }
+        },
+        "legacy_fft_vs_public_direct": {
+          "plus": {
+            "actual_complex_l2": 1.439783399471121e-21,
+            "reference_complex_l2": 1.496415693380872e-21,
+            "raw_complex_l2": 7.689018818271358e-23,
+            "raw_relative_l2_over_reference": 0.051382906850565395,
+            "magnitude_relative_l2": 0.050984293352696324,
+            "max_abs_residual": 7.553598506821187e-24,
+            "max_abs_residual_over_reference_peak": 0.0345306296282018,
+            "phase_rms_rad": 0.030906334172732555,
+            "phase_max_abs_rad": 0.47358837402730997,
+            "nonzero_reference_samples": 1969
+          },
+          "cross": {
+            "actual_complex_l2": 1.3482268671409995e-21,
+            "reference_complex_l2": 1.4014483080835637e-21,
+            "raw_complex_l2": 7.213335961211956e-23,
+            "raw_relative_l2_over_reference": 0.0514705816804329,
+            "magnitude_relative_l2": 0.0511136350492509,
+            "max_abs_residual": 7.090049907228245e-24,
+            "max_abs_residual_over_reference_peak": 0.035015626490724115,
+            "phase_rms_rad": 0.013304388077668731,
+            "phase_max_abs_rad": 0.09140006638202071,
+            "nonzero_reference_samples": 1969
+          }
+        },
+        "independent_direct_vs_public_direct": {
+          "plus": {
+            "actual_complex_l2": 1.4964156574503404e-21,
+            "reference_complex_l2": 1.496415693380872e-21,
+            "raw_complex_l2": 1.082165364674263e-24,
+            "raw_relative_l2_over_reference": 0.000723171622337983,
+            "magnitude_relative_l2": 8.905251200571646e-05,
+            "max_abs_residual": 1.1114752238176148e-25,
+            "max_abs_residual_over_reference_peak": 0.0005081013937914521,
+            "phase_rms_rad": 0.004772569219093174,
+            "phase_max_abs_rad": 0.052900107490338834,
+            "nonzero_reference_samples": 1969
+          },
+          "cross": {
+            "actual_complex_l2": 1.4014487252260038e-21,
+            "reference_complex_l2": 1.4014483080835637e-21,
+            "raw_complex_l2": 1.0009408636566237e-24,
+            "raw_relative_l2_over_reference": 0.0007142188961827487,
+            "magnitude_relative_l2": 4.95169731575735e-05,
+            "max_abs_residual": 1.0158868239843373e-25,
+            "max_abs_residual_over_reference_peak": 0.0005017159829752156,
+            "phase_rms_rad": 0.0014620249404428203,
+            "phase_max_abs_rad": 0.01627706604526932,
+            "nonzero_reference_samples": 1969
+          }
+        }
+      },
+      "dt_0p5M": {
+        "runtime_direct_vs_independent_direct": {
+          "comparison": "new published_eob22_to_fd direct runtime versus independent direct finite clean sum, same mode, projection, scale, support and absolute chart",
+          "plus": {
+            "actual_complex_l2": 1.496436206851739e-21,
+            "reference_complex_l2": 1.4964362068507969e-21,
+            "raw_complex_l2": 9.41763495456685e-34,
+            "raw_relative_l2_over_reference": 6.293375495361722e-13,
+            "magnitude_relative_l2": 6.293360206260963e-13,
+            "max_abs_residual": 1.3762974049366583e-34,
+            "max_abs_residual_over_reference_peak": 6.291199604728038e-13,
+            "phase_rms_rad": 1.9660179855489625e-14,
+            "phase_max_abs_rad": 4.872976983874884e-13,
+            "nonzero_reference_samples": 1969
+          },
+          "cross": {
+            "actual_complex_l2": 1.4014438085290795e-21,
+            "reference_complex_l2": 1.4014438085281976e-21,
+            "raw_complex_l2": 8.819347551127295e-34,
+            "raw_relative_l2_over_reference": 6.293044000379446e-13,
+            "magnitude_relative_l2": 6.293042521389772e-13,
+            "max_abs_residual": 1.2738396221157617e-34,
+            "max_abs_residual_over_reference_peak": 6.29126341181836e-13,
+            "phase_rms_rad": 1.6232194924049308e-14,
+            "phase_max_abs_rad": 2.911278016096941e-13,
+            "nonzero_reference_samples": 1969
+          }
+        },
+        "runtime_direct_vs_public_direct": {
+          "plus": {
+            "actual_complex_l2": 1.496436206851739e-21,
+            "reference_complex_l2": 1.4964409982475023e-21,
+            "raw_complex_l2": 1.2670176389874563e-24,
+            "raw_relative_l2_over_reference": 0.0008466873337948332,
+            "magnitude_relative_l2": 7.635014390005164e-05,
+            "max_abs_residual": 1.1427991033352922e-25,
+            "max_abs_residual_over_reference_peak": 0.0005223861921488471,
+            "phase_rms_rad": 0.004931304247316569,
+            "phase_max_abs_rad": 0.07062244496726484,
+            "nonzero_reference_samples": 1969
+          },
+          "cross": {
+            "actual_complex_l2": 1.4014438085290795e-21,
+            "reference_complex_l2": 1.4014477889899593e-21,
+            "raw_complex_l2": 1.1776414559387934e-24,
+            "raw_relative_l2_over_reference": 0.0008403034812931091,
+            "magnitude_relative_l2": 4.1322102509615585e-05,
+            "max_abs_residual": 1.0441921743664417e-25,
+            "max_abs_residual_over_reference_peak": 0.0005157072242215588,
+            "phase_rms_rad": 0.0015660808997400898,
+            "phase_max_abs_rad": 0.01573643845675008,
+            "nonzero_reference_samples": 1969
+          }
+        },
+        "legacy_fft_vs_independent_direct": {
+          "comparison": "historical _quadrupole_fd rFFT/interpolation versus independent direct finite clean sum, same mode, projection, scale, support and absolute chart",
+          "plus": {
+            "actual_complex_l2": 1.4398048568932135e-21,
+            "reference_complex_l2": 1.4964362068507969e-21,
+            "raw_complex_l2": 7.68850044283e-23,
+            "raw_relative_l2_over_reference": 0.05137873841618821,
+            "magnitude_relative_l2": 0.050983850544715034,
+            "max_abs_residual": 7.55927351777203e-24,
+            "max_abs_residual_over_reference_peak": 0.03455423108149161,
+            "phase_rms_rad": 0.029923681192054522,
+            "phase_max_abs_rad": 0.43919818168449365,
+            "nonzero_reference_samples": 1969
+          },
+          "cross": {
+            "actual_complex_l2": 1.3482218469258297e-21,
+            "reference_complex_l2": 1.4014438085281976e-21,
+            "raw_complex_l2": 7.21292542999512e-23,
+            "raw_relative_l2_over_reference": 0.05146781758999075,
+            "magnitude_relative_l2": 0.05111480306465413,
+            "max_abs_residual": 7.092776305065528e-24,
+            "max_abs_residual_over_reference_peak": 0.03502993884124594,
+            "phase_rms_rad": 0.013037969295101199,
+            "phase_max_abs_rad": 0.08952662896010188,
+            "nonzero_reference_samples": 1969
+          }
+        },
+        "legacy_fft_vs_public_direct": {
+          "plus": {
+            "actual_complex_l2": 1.4398048568932135e-21,
+            "reference_complex_l2": 1.4964409982475023e-21,
+            "raw_complex_l2": 7.689926859314757e-23,
+            "raw_relative_l2_over_reference": 0.05138810596823069,
+            "magnitude_relative_l2": 0.050988012384931225,
+            "max_abs_residual": 7.553704789516813e-24,
+            "max_abs_residual_over_reference_peak": 0.03452882549606334,
+            "phase_rms_rad": 0.030044407934818333,
+            "phase_max_abs_rad": 0.41922350594308805,
+            "nonzero_reference_samples": 1969
+          },
+          "cross": {
+            "actual_complex_l2": 1.3482218469258297e-21,
+            "reference_complex_l2": 1.4014477889899593e-21,
+            "raw_complex_l2": 7.214159966870531e-23,
+            "raw_relative_l2_over_reference": 0.05147648041936592,
+            "magnitude_relative_l2": 0.0511181851379599,
+            "max_abs_residual": 7.090028238543351e-24,
+            "max_abs_residual_over_reference_peak": 0.03501633963853587,
+            "phase_rms_rad": 0.013230343765156914,
+            "phase_max_abs_rad": 0.08926080895726936,
+            "nonzero_reference_samples": 1969
+          }
+        },
+        "independent_direct_vs_public_direct": {
+          "plus": {
+            "actual_complex_l2": 1.4964362068507969e-21,
+            "reference_complex_l2": 1.4964409982475023e-21,
+            "raw_complex_l2": 1.2670176389906134e-24,
+            "raw_relative_l2_over_reference": 0.0008466873337969429,
+            "magnitude_relative_l2": 7.635014392642423e-05,
+            "max_abs_residual": 1.1427991033326131e-25,
+            "max_abs_residual_over_reference_peak": 0.0005223861921476224,
+            "phase_rms_rad": 0.004931304247318799,
+            "phase_max_abs_rad": 0.07062244496736923,
+            "nonzero_reference_samples": 1969
+          },
+          "cross": {
+            "actual_complex_l2": 1.4014438085281976e-21,
+            "reference_complex_l2": 1.4014477889899593e-21,
+            "raw_complex_l2": 1.1776414559414004e-24,
+            "raw_relative_l2_over_reference": 0.0008403034812949694,
+            "magnitude_relative_l2": 4.1322102552860926e-05,
+            "max_abs_residual": 1.044192174359255e-25,
+            "max_abs_residual_over_reference_peak": 0.0005157072242180095,
+            "phase_rms_rad": 0.0015660808997417573,
+            "phase_max_abs_rad": 0.015736438456772948,
+            "nonzero_reference_samples": 1969
+          }
+        }
+      }
+    },
+    "assessment": "The new runtime and independent direct clean sum agree to numerical precision on both saved grids. The historical FFT/interpolation stage differs from that same reference by about 5.14% raw L2, while the independent direct clean and direct public sums differ by below 0.09% raw L2. The earlier 5.1% discrepancy is therefore a transform interpolation artifact on this frequency grid, not an isolated trajectory or carrier discrepancy.",
+    "runtime_implication": "Use the chunked direct finite sum for arbitrary requested frequencies. Preserve the orbital-frequency-peak time origin and do not fit a shift or choose a sampling grid by residual."
+  },
+  "limitations": [
+    "The public FD generator is not used; the SEOBNRv4 public TD samples are integrated directly over their finite returned support.",
+    "The clean and public supports differ, especially after the clean 150M ringdown cutoff; the report records that omitted tail and does not extend either waveform by a fitted continuation.",
+    "The previous shared rFFT/interpolation path is retained only as a historical diagnostic; the published runtime now uses the chunked direct rectangular sum, and the report separately evaluates an independent direct sum with the same absolute chart.",
+    "Legacy-origin differences are a controlled chart comparison and are not selected by the public residual."
+  ],
+  "interpretation": {
+    "epoch_and_origin": "The clean transform now uses the continuous orbital-frequency peak as its default origin; the NQC-match chart remains explicit for diagnostic comparison. This changes the absolute Fourier phase only.",
+    "public_comparison": "Absolute hp/hc discrepancies below include trajectory, mode, NQC, finite-support, and transform differences; they are not a fitted parity score or evidence for changing the canonical SEOB route.",
+    "transform_isolation": "The new runtime agrees with the independent direct clean sum to numerical precision. The historical FFT/interpolation path differs by about 5.14% raw L2, whereas the direct clean and direct public sums differ by less than 0.09%. The earlier large error was therefore a frequency interpolation artifact on this grid; the direct path is the appropriate runtime check before changing trajectory or mode physics."
+  }
+}

@@ -1,0 +1,50 @@
+{
+  "created_utc": "2026-09-12T20:33:32.617027+00:00",
+  "host": "len",
+  "cwd": "/home/xangma/simulations/torchwave-nr/2026-09-12-pilot",
+  "image_id": "sha256:0ba0f3bb70b90e83c9b50316ecd37f1b55af4537160eafbe3392a6f67c4e9d77",
+  "helper_sha256": {
+    "run-finite-followup.py": "2081791c07d76d1338cfee5ac61df5c4a0f94e026fb85285c543ff22951db93e",
+    "launch-stage.py": "1e94fbbe6fdd834038807b8dc70f7e3fe0bacad172923d4e6d8fb83a6fd66532",
+    "measure-stage.py": "f96773dcb69d67f7bfaa696148193e882cb561b09fc163305c012e3361c24cef",
+    "id_quality.py": "14767719bf4acdce1cd3a28794c2228d082461b58349e2d0b72da896a18efb19",
+    "prepare-independent-p11.py": "88f68d02bf40174200fd4d6845b673400edacf794755b9bfa641a6e553342a6a",
+    "compare-independent-p11.py": "dedb95ea59733593bf3ba0eb9c6dde1a986297fdc03954e24c50e43ce3d1eb41",
+    "prepare-controlled-p9-lev0-evolution.py": "42d5a29bc6aa79c6d3e4006a7c7977a250b8aa6e7e2a4e731e391e0d950ca6f6",
+    "prepare-smoke-restart.py": "5012968524b2ee99af5238c06a1da6eac7bb9a9146f0fa59b0061be2fee242ce",
+    "validate-controlled-bbh-smoke.py": "cd7bc0f09665a76b1355cce6b2b662afefd254a70290e30a9ae4df653093b312"
+  },
+  "single_hole_validation_file": "single-kerrschild-validation-v2.json",
+  "single_hole_validation_sha256": "80e512593fb46421364fa5bf59b7d41d88689bb0dc39ba898c54bf8bb6201515",
+  "total_timeout_seconds": 48000,
+  "poll_seconds": 30,
+  "max_parallel_new_stages": 1,
+  "stages": [
+    "wait controlled-id and mass/spin tolerance 5e-5",
+    "prepare independent P11",
+    "P11 solve and horizon postprocess",
+    "compare P9/P11",
+    "prepare controlled P9 Lev0 evolution",
+    "checkpoint at >=0.5M",
+    "restart through 1M",
+    "validate closed binary output"
+  ],
+  "resource_limits": {
+    "p11": {
+      "cpus": 16,
+      "memory_gib": 160,
+      "timeout_seconds": 13800
+    },
+    "each_evolution_segment": {
+      "cpus": 16,
+      "memory_gib": 96,
+      "timeout_seconds": 6900
+    },
+    "disk_minimum_free_gib_before_launch": 80,
+    "memory_headroom_gib_before_launch": 16
+  },
+  "p11_memory_note": "160GiB is an unvalidated estimate from the measured P9 ~54GiB peak; resource cap and free-memory gate enforced",
+  "stops_on": "first nonaccepted exit, timeout, missing/invalid/stale metrics, resource guard, changed helper or invalid science prerequisite",
+  "automatic_retries": false,
+  "scope": "finite prerequisites only; 100M performance test and full multi-resolution campaign remain unlaunched"
+}

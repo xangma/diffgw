@@ -1,0 +1,836 @@
+{
+  "provenance": "Bounded clean-room public epoch sampling sweep. Each row calls the public lalsimulation SimIMRSpinAlignedEOBModes API for a predeclared dt_geom near 1M, copies state/postpeak/mode/epoch outputs, and then evaluates only the clean SEOBNRv4 Hamiltonian/flux orbital-frequency event on the returned postpeak state. No source waveform or private LAL implementation is inspected.",
+  "primary_reference": "Boh\u00e9 et al., Improved effective-one-body model for coalescing nonprecessing binary black holes, arXiv:1611.03703 (equation context).",
+  "public_parameters": {
+    "api": "lalsimulation.SimIMRSpinAlignedEOBModes",
+    "approximant": "SEOBNRv4 version 4",
+    "m1_msun": 30.0,
+    "m2_msun": 20.0,
+    "chi1": 0.0,
+    "chi2": 0.0,
+    "fstart_hz": 20.0,
+    "distance_mpc": 100.0,
+    "mode": [
+      2,
+      2
+    ]
+  },
+  "sweep_design": {
+    "requested_dt_geom_M": [
+      0.9,
+      0.95,
+      0.99,
+      1.0,
+      1.01,
+      1.05,
+      1.1,
+      0.9913351891019707
+    ],
+    "labels": [
+      "dt_0p90M",
+      "dt_0p95M",
+      "dt_0p99M",
+      "dt_1p00M",
+      "dt_1p01M",
+      "dt_1p05M",
+      "dt_1p10M",
+      "dt_1_4096s_exact"
+    ],
+    "exact_4096Hz_anchor_dt_geom_M": 0.9913351891019707,
+    "selection": "all predeclared rows are evaluated; no row is selected by residual",
+    "event_grid": "returned postpeak_state[0] high-resolution grid"
+  },
+  "clean_parameters": {
+    "nu": 0.24,
+    "delta": 0.2,
+    "chi1": 0.0,
+    "chi2": 0.0,
+    "hamiltonian": "SEOBNRv4Hamiltonian",
+    "flux": "SEOBNRv4PublishedFlux(spin_truncation='generic-leading-ell8')",
+    "event": "orbital_frequency_peak degree-six local event detector",
+    "coordinate": "initial-origin total-mass M"
+  },
+  "coordinate_contract": {
+    "postpeak_state_time": "returned postpeak_state[0]",
+    "public_epoch": "metadata epoch_s / Msec, compared as -epoch_M",
+    "sampled_maximum": "argmax clean Hamiltonian omega on returned postpeak state",
+    "continuous_event": "clean orbital_frequency_peak(time, omega)",
+    "no_fitted_offsets": true
+  },
+  "mass_scale": {
+    "total_mass_msun": 50.0,
+    "Msec": 0.00024627454738206334,
+    "MTSUN_s": 4.925490947641267e-06
+  },
+  "libraries": {
+    "python": "3.13.9",
+    "numpy": "2.3.5",
+    "lal": "7.7.0",
+    "lalsimulation": "6.2.0"
+  },
+  "python_executable": "/Users/xangma/miniconda3/envs/pycbcorig313/bin/python",
+  "host": "RONI2",
+  "dependency_sha256": {
+    "scripts/diagnose_eob_public_epoch_sampling_clean.py": "c438b27f0d6e824ad71ff73ddc5e82b562b06c9c24b3f43d51c614d1271f2e50",
+    "scripts/diagnose_eob_clean_hamiltonian_public.py": "c4fce3c08ed71718d34f92bc743a398e3f447c0830c1ae1a3a4899d6e7396088",
+    "scripts/diagnose_eob_public_phase_peak_clean.py": "f33f9a3b8bdd04a143b475bb68d081f275b7efd05d52700b36bd68b83ca79916",
+    "src/torchwave/constants.py": "1ae479e07b44a19d23b9a9eaed4b8b8b8bf38b4293717a91d321b59f2d1ac4e3",
+    "src/torchwave/approximants/eob/events.py": "c1ae1182e4c2f9cf5f8a2857ea5d73802dbbb68b59739709849f973503bdfd5d",
+    "src/torchwave/approximants/eob/hamiltonian.py": "d26a87ded2a197a000704b77b075cdc72ee2315741bdacc29fb25f912158a441",
+    "src/torchwave/approximants/eob/attachment.py": "097165aa7a6dcf87c5458fb26eade17a9c6bdf43c8e001c0929c1eb6ea2975e7",
+    "src/torchwave/approximants/eob/factorized_modes.py": "d4b10cbcbbecc4de84329a13cdca43d90d4fa5aa168248fc2e874211d29f8315",
+    "src/torchwave/approximants/eob/integrator.py": "a036f6b7580450a847bc1d56ebf745de6cdb5c2ee397d31cf1014d483eebe26b",
+    "src/torchwave/approximants/kerr_qnm_generated.py": "3361bbf72224e93ce445169d5bb66e95ca27b5bdf6475d6de6ff7514bdf0283f",
+    "src/torchwave/approximants/eob/nqc.py": "f023b84fc0a48e59feb6b543d234635df965e04ee9aff05672ea3ff984d0cf85",
+    "src/torchwave/approximants/eob/radiation_reaction.py": "dfb8853fc929145c3d61b7af49c16426560a12dc14ba9e664659af4a4449834d",
+    "src/torchwave/approximants/eob/remnant.py": "e7690cd5df1bcde2f579954762116beb20db606dae809835b148dae73c4cb007",
+    "src/torchwave/approximants/eob/seobnrv4_amplitude22.py": "f51cf2a03f1a3567293fbac75a341701448275bc45da1fa97af80d017890d2a5",
+    "src/torchwave/approximants/eob/seobnrv4_hamiltonian.py": "5b1a5b877129e5235b8f92974a01ab450176e8e924d374ca0fc413334fad177f",
+    "src/torchwave/approximants/eob/seobnrv4_flux.py": "50af1727e28828969d84cac5e984189c529e205ad9fb96d22c11037103aca3ec",
+    "src/torchwave/approximants/eob/seobnrv4_mode22.py": "d1fa659a2604732ae74e8c7e9736b89371655f3b06a0d04bed6a1162500203f9",
+    "src/torchwave/approximants/eob/published_waveform.py": "117b952ca8bf2b899dc09154e70c314916603354a07a16fbd7bf10603b355478"
+  },
+  "results": {
+    "dt_0p90M": {
+      "status": "ok",
+      "requested_dt_M": 0.9,
+      "returned_dt_s": 0.000221647092643857,
+      "returned_dt_M": 0.9,
+      "epoch_s": -1.232042679,
+      "epoch_M": -5002.720305840799,
+      "minus_epoch_M": 5002.720305840799,
+      "raw_output": {
+        "path": "/tmp/torchwave-public-eob-epoch-sweep-dt_0p90M.npz",
+        "sha256": "512415c2706d6ea2a43e0cf627e023f384dc70f7522c3e921122fd6cb083c37c",
+        "size_bytes": 748818,
+        "keys": [
+          "state",
+          "postpeak_state",
+          "mode22",
+          "epoch_s",
+          "dt_s",
+          "requested_dt_M"
+        ],
+        "state_shape": [
+          5,
+          5559
+        ],
+        "postpeak_state_shape": [
+          5,
+          10729
+        ],
+        "mode_shape": [
+          5985
+        ],
+        "arrays_copied_before_save": true
+      },
+      "state_grid": {
+        "sample_count": 5559,
+        "support_M_initial_origin": [
+          0.0,
+          5002.2
+        ],
+        "spacing_min_M": 0.8999999999996362,
+        "spacing_median_M": 0.900000000000091,
+        "spacing_max_M": 0.9000000000005457
+      },
+      "postpeak_grid": {
+        "sample_count": 10729,
+        "support_M_initial_origin": [
+          4852.8,
+          5003.6625
+        ],
+        "spacing_min_M": 0.014062499999454303,
+        "spacing_median_M": 0.014062500000363798,
+        "spacing_max_M": 0.014062500000363798,
+        "coordinate": "postpeak_state[0] in initial-origin M coordinates"
+      },
+      "clean_hamiltonian_omega_event": {
+        "time_M_initial_origin": 5002.701674913569,
+        "frequency": 0.16441509595703474,
+        "curvature": -0.004039458502436689,
+        "sample_index": 10660,
+        "sample_time_M_initial_origin": 5002.70625,
+        "sample_omega": 0.16441505362342218
+      },
+      "clean_hamiltonian_sampled_maximum": {
+        "sample_index": 10660,
+        "time_M_initial_origin": 5002.70625,
+        "omega": 0.16441505362342218,
+        "left_time_M_initial_origin": 5002.6921875,
+        "right_time_M_initial_origin": 5002.720312500001,
+        "left_omega": 0.16441491467337987,
+        "right_omega": 0.164414390465273
+      },
+      "peak_epoch_geometry": {
+        "continuous_event_minus_sample_max_M": -0.004575086431032105,
+        "minus_epoch_minus_continuous_event_M": 0.018630927229423833,
+        "minus_epoch_minus_sample_max_M": 0.014055840798391728,
+        "minus_epoch_minus_sample_max_in_highres_samples": 0.999526456748665,
+        "minus_epoch_minus_continuous_event_in_highres_samples": 1.3248659362803092,
+        "continuous_event_side_of_sample_max": "before"
+      },
+      "public_mode_amplitude_maximum": {
+        "sample_index": 5554,
+        "relative_output_time_M": 4998.6,
+        "public_epoch_coordinate_M": -4.12030584079821,
+        "amplitude": 9.000131011000123e-21
+      },
+      "no_time_or_phase_shift": true,
+      "no_residual_based_selection": true
+    },
+    "dt_0p95M": {
+      "status": "ok",
+      "requested_dt_M": 0.95,
+      "returned_dt_s": 0.00023396082001296017,
+      "returned_dt_M": 0.95,
+      "epoch_s": -1.232038083,
+      "epoch_M": -5002.701643741734,
+      "minus_epoch_M": 5002.701643741734,
+      "raw_output": {
+        "path": "/tmp/torchwave-public-eob-epoch-sweep-dt_0p95M.npz",
+        "sha256": "bd216b908256e4d094bf1416b28a2dd9fe4b6c9bede596e0f35d8d1419f009dd",
+        "size_bytes": 707738,
+        "keys": [
+          "state",
+          "postpeak_state",
+          "mode22",
+          "epoch_s",
+          "dt_s",
+          "requested_dt_M"
+        ],
+        "state_shape": [
+          5,
+          5267
+        ],
+        "postpeak_state_shape": [
+          5,
+          10120
+        ],
+        "mode_shape": [
+          5670
+        ],
+        "arrays_copied_before_save": true
+      },
+      "state_grid": {
+        "sample_count": 5267,
+        "support_M_initial_origin": [
+          0.0,
+          5002.7
+        ],
+        "spacing_min_M": 0.9499999999998181,
+        "spacing_median_M": 0.9499999999999886,
+        "spacing_max_M": 0.9500000000007276
+      },
+      "postpeak_grid": {
+        "sample_count": 10120,
+        "support_M_initial_origin": [
+          4853.55,
+          5003.75390625
+        ],
+        "spacing_min_M": 0.014843749999272404,
+        "spacing_median_M": 0.014843750000181899,
+        "spacing_max_M": 0.014843750000181899,
+        "coordinate": "postpeak_state[0] in initial-origin M coordinates"
+      },
+      "clean_hamiltonian_omega_event": {
+        "time_M_initial_origin": 5002.701694818233,
+        "frequency": 0.16441511734639078,
+        "curvature": -0.004043469504670286,
+        "sample_index": 10048,
+        "sample_time_M_initial_origin": 5002.7,
+        "sample_omega": 0.16441511154211702
+      },
+      "clean_hamiltonian_sampled_maximum": {
+        "sample_index": 10048,
+        "time_M_initial_origin": 5002.7,
+        "omega": 0.16441511154211702,
+        "left_time_M_initial_origin": 5002.685156250001,
+        "right_time_M_initial_origin": 5002.71484375,
+        "left_omega": 0.16441456710950667,
+        "right_omega": 0.16441476640645486
+      },
+      "peak_epoch_geometry": {
+        "continuous_event_minus_sample_max_M": 0.0016948182328633266,
+        "minus_epoch_minus_continuous_event_M": -5.107649849378504e-05,
+        "minus_epoch_minus_sample_max_M": 0.0016437417343695415,
+        "minus_epoch_minus_sample_max_in_highres_samples": 0.11073628526143317,
+        "minus_epoch_minus_continuous_event_in_highres_samples": -0.003440943056381247,
+        "continuous_event_side_of_sample_max": "after"
+      },
+      "public_mode_amplitude_maximum": {
+        "sample_index": 5261,
+        "relative_output_time_M": 4997.95,
+        "public_epoch_coordinate_M": -4.7516437417343695,
+        "amplitude": 8.998925425134344e-21
+      },
+      "no_time_or_phase_shift": true,
+      "no_residual_based_selection": true
+    },
+    "dt_0p99M": {
+      "status": "ok",
+      "requested_dt_M": 0.99,
+      "returned_dt_s": 0.0002438118019082427,
+      "returned_dt_M": 0.99,
+      "epoch_s": -1.232041986,
+      "epoch_M": -5002.717491908106,
+      "minus_epoch_M": 5002.717491908106,
+      "raw_output": {
+        "path": "/tmp/torchwave-public-eob-epoch-sweep-dt_0p99M.npz",
+        "sha256": "78d40e5f395a8b7da672a835ef54862938e3112b875146016912443deec9b0d9",
+        "size_bytes": 680554,
+        "keys": [
+          "state",
+          "postpeak_state",
+          "mode22",
+          "epoch_s",
+          "dt_s",
+          "requested_dt_M"
+        ],
+        "state_shape": [
+          5,
+          5054
+        ],
+        "postpeak_state_shape": [
+          5,
+          9745
+        ],
+        "mode_shape": [
+          5441
+        ],
+        "arrays_copied_before_save": true
+      },
+      "state_grid": {
+        "sample_count": 5054,
+        "support_M_initial_origin": [
+          0.0,
+          5002.47
+        ],
+        "spacing_min_M": 0.9899999999997817,
+        "spacing_median_M": 0.9900000000000091,
+        "spacing_max_M": 0.9900000000006912
+      },
+      "postpeak_grid": {
+        "sample_count": 9745,
+        "support_M_initial_origin": [
+          4852.98,
+          5003.7074999999995
+        ],
+        "spacing_min_M": 0.01546874999985448,
+        "spacing_median_M": 0.01546874999985448,
+        "spacing_max_M": 0.015468750000763976,
+        "coordinate": "postpeak_state[0] in initial-origin M coordinates"
+      },
+      "clean_hamiltonian_omega_event": {
+        "time_M_initial_origin": 5002.70167557818,
+        "frequency": 0.16441510899004594,
+        "curvature": -0.004042516656995276,
+        "sample_index": 9679,
+        "sample_time_M_initial_origin": 5002.70203125,
+        "sample_omega": 0.16441510873432447
+      },
+      "clean_hamiltonian_sampled_maximum": {
+        "sample_index": 9679,
+        "time_M_initial_origin": 5002.70203125,
+        "omega": 0.16441510873432447,
+        "left_time_M_initial_origin": 5002.686562499999,
+        "right_time_M_initial_origin": 5002.7175,
+        "left_omega": 0.1644146494160627,
+        "right_omega": 0.16441460042655198
+      },
+      "peak_epoch_geometry": {
+        "continuous_event_minus_sample_max_M": -0.0003556718202162301,
+        "minus_epoch_minus_continuous_event_M": 0.01581632992656523,
+        "minus_epoch_minus_sample_max_M": 0.015460658106349001,
+        "minus_epoch_minus_sample_max_in_highres_samples": 0.9994768876925701,
+        "minus_epoch_minus_continuous_event_in_highres_samples": 1.0224698134441388,
+        "continuous_event_side_of_sample_max": "before"
+      },
+      "public_mode_amplitude_maximum": {
+        "sample_index": 5049,
+        "relative_output_time_M": 4998.51,
+        "public_epoch_coordinate_M": -4.207491908106022,
+        "amplitude": 9.000374472280617e-21
+      },
+      "no_time_or_phase_shift": true,
+      "no_residual_based_selection": true
+    },
+    "dt_1p00M": {
+      "status": "ok",
+      "requested_dt_M": 1.0,
+      "returned_dt_s": 0.00024627454738206334,
+      "returned_dt_M": 1.0,
+      "epoch_s": -1.232042294,
+      "epoch_M": -5002.718742544858,
+      "minus_epoch_M": 5002.718742544858,
+      "raw_output": {
+        "path": "/tmp/torchwave-public-eob-epoch-sweep-dt_1p00M.npz",
+        "sha256": "f7a673de19e233c6dbce1d521067cb1d53226bde933002475e8f9faaae2d53d7",
+        "size_bytes": 671354,
+        "keys": [
+          "state",
+          "postpeak_state",
+          "mode22",
+          "epoch_s",
+          "dt_s",
+          "requested_dt_M"
+        ],
+        "state_shape": [
+          5,
+          5004
+        ],
+        "postpeak_state_shape": [
+          5,
+          9587
+        ],
+        "mode_shape": [
+          5386
+        ],
+        "arrays_copied_before_save": true
+      },
+      "state_grid": {
+        "sample_count": 5004,
+        "support_M_initial_origin": [
+          0.0,
+          5003.0
+        ],
+        "spacing_min_M": 1.0,
+        "spacing_median_M": 1.0,
+        "spacing_max_M": 1.0
+      },
+      "postpeak_grid": {
+        "sample_count": 9587,
+        "support_M_initial_origin": [
+          4854.0,
+          5003.78125
+        ],
+        "spacing_min_M": 0.015625,
+        "spacing_median_M": 0.015625,
+        "spacing_max_M": 0.015625,
+        "coordinate": "postpeak_state[0] in initial-origin M coordinates"
+      },
+      "clean_hamiltonian_omega_event": {
+        "time_M_initial_origin": 5002.701697645643,
+        "frequency": 0.16441512045558015,
+        "curvature": -0.004043779005412181,
+        "sample_index": 9517,
+        "sample_time_M_initial_origin": 5002.703125,
+        "sample_omega": 0.16441511633451847
+      },
+      "clean_hamiltonian_sampled_maximum": {
+        "sample_index": 9517,
+        "time_M_initial_origin": 5002.703125,
+        "omega": 0.16441511633451847,
+        "left_time_M_initial_origin": 5002.6875,
+        "right_time_M_initial_origin": 5002.71875,
+        "left_omega": 0.16441471464772942,
+        "right_omega": 0.1644145294730551
+      },
+      "peak_epoch_geometry": {
+        "continuous_event_minus_sample_max_M": -0.001427354356565047,
+        "minus_epoch_minus_continuous_event_M": 0.017044899214852194,
+        "minus_epoch_minus_sample_max_M": 0.015617544858287147,
+        "minus_epoch_minus_sample_max_in_highres_samples": 0.9995228709303774,
+        "minus_epoch_minus_continuous_event_in_highres_samples": 1.0908735497505404,
+        "continuous_event_side_of_sample_max": "before"
+      },
+      "public_mode_amplitude_maximum": {
+        "sample_index": 4998,
+        "relative_output_time_M": 4998.0,
+        "public_epoch_coordinate_M": -4.718742544858287,
+        "amplitude": 8.999196662611736e-21
+      },
+      "no_time_or_phase_shift": true,
+      "no_residual_based_selection": true
+    },
+    "dt_1p01M": {
+      "status": "ok",
+      "requested_dt_M": 1.01,
+      "returned_dt_s": 0.000248737292855884,
+      "returned_dt_M": 1.01,
+      "epoch_s": -1.232042448,
+      "epoch_M": -5002.719367863235,
+      "minus_epoch_M": 5002.719367863235,
+      "raw_output": {
+        "path": "/tmp/torchwave-public-eob-epoch-sweep-dt_1p01M.npz",
+        "sha256": "3854b3be5e6dbf2437ad4ebcc8fdea44149cd1b17bfc479f97556e94595caba4",
+        "size_bytes": 666826,
+        "keys": [
+          "state",
+          "postpeak_state",
+          "mode22",
+          "epoch_s",
+          "dt_s",
+          "requested_dt_M"
+        ],
+        "state_shape": [
+          5,
+          4954
+        ],
+        "postpeak_state_shape": [
+          5,
+          9545
+        ],
+        "mode_shape": [
+          5333
+        ],
+        "arrays_copied_before_save": true
+      },
+      "state_grid": {
+        "sample_count": 4954,
+        "support_M_initial_origin": [
+          0.0,
+          5002.53
+        ],
+        "spacing_min_M": 1.0099999999993088,
+        "spacing_median_M": 1.009999999999991,
+        "spacing_max_M": 1.0100000000002183
+      },
+      "postpeak_grid": {
+        "sample_count": 9545,
+        "support_M_initial_origin": [
+          4853.05,
+          5003.66625
+        ],
+        "spacing_min_M": 0.015781249999236024,
+        "spacing_median_M": 0.01578125000014552,
+        "spacing_max_M": 0.01578125000014552,
+        "coordinate": "postpeak_state[0] in initial-origin M coordinates"
+      },
+      "clean_hamiltonian_omega_event": {
+        "time_M_initial_origin": 5002.701667223439,
+        "frequency": 0.16441509804876323,
+        "curvature": -0.004040130411709363,
+        "sample_index": 9483,
+        "sample_time_M_initial_origin": 5002.70359375,
+        "sample_omega": 0.16441509054696093
+      },
+      "clean_hamiltonian_sampled_maximum": {
+        "sample_index": 9483,
+        "time_M_initial_origin": 5002.70359375,
+        "omega": 0.16441509054696093,
+        "left_time_M_initial_origin": 5002.6878125,
+        "right_time_M_initial_origin": 5002.719375000001,
+        "left_omega": 0.16441471189276224,
+        "right_omega": 0.1644144612607218
+      },
+      "peak_epoch_geometry": {
+        "continuous_event_minus_sample_max_M": -0.0019265265618741978,
+        "minus_epoch_minus_continuous_event_M": 0.017700639796203177,
+        "minus_epoch_minus_sample_max_M": 0.01577411323432898,
+        "minus_epoch_minus_sample_max_in_highres_samples": 0.9995477692947977,
+        "minus_epoch_minus_continuous_event_in_highres_samples": 1.1216246999470865,
+        "continuous_event_side_of_sample_max": "before"
+      },
+      "public_mode_amplitude_maximum": {
+        "sample_index": 4949,
+        "relative_output_time_M": 4998.49,
+        "public_epoch_coordinate_M": -4.229367863234984,
+        "amplitude": 9.000399844513095e-21
+      },
+      "no_time_or_phase_shift": true,
+      "no_residual_based_selection": true
+    },
+    "dt_1p05M": {
+      "status": "ok",
+      "requested_dt_M": 1.05,
+      "returned_dt_s": 0.0002585882747511665,
+      "returned_dt_M": 1.05,
+      "epoch_s": -1.232043833,
+      "epoch_M": -5002.7249916681085,
+      "minus_epoch_M": 5002.7249916681085,
+      "raw_output": {
+        "path": "/tmp/torchwave-public-eob-epoch-sweep-dt_1p05M.npz",
+        "sha256": "ab6fffb73ea8835e40b5c83e359c51f06aaa1431542e53f8158dc7d4d49dec12",
+        "size_bytes": 641618,
+        "keys": [
+          "state",
+          "postpeak_state",
+          "mode22",
+          "epoch_s",
+          "dt_s",
+          "requested_dt_M"
+        ],
+        "state_shape": [
+          5,
+          4765
+        ],
+        "postpeak_state_shape": [
+          5,
+          9185
+        ],
+        "mode_shape": [
+          5130
+        ],
+        "arrays_copied_before_save": true
+      },
+      "state_grid": {
+        "sample_count": 4765,
+        "support_M_initial_origin": [
+          0.0,
+          5002.2
+        ],
+        "spacing_min_M": 1.0499999999992724,
+        "spacing_median_M": 1.0500000000000114,
+        "spacing_max_M": 1.050000000000182
+      },
+      "postpeak_grid": {
+        "sample_count": 9185,
+        "support_M_initial_origin": [
+          4853.1,
+          5003.775000000001
+        ],
+        "spacing_min_M": 0.0164062499998181,
+        "spacing_median_M": 0.0164062499998181,
+        "spacing_max_M": 0.016406250000727596,
+        "coordinate": "postpeak_state[0] in initial-origin M coordinates"
+      },
+      "clean_hamiltonian_omega_event": {
+        "time_M_initial_origin": 5002.701695982562,
+        "frequency": 0.16441511893528224,
+        "curvature": -0.004043650740035558,
+        "sample_index": 9119,
+        "sample_time_M_initial_origin": 5002.708593750001,
+        "sample_omega": 0.16441502253726256
+      },
+      "clean_hamiltonian_sampled_maximum": {
+        "sample_index": 9119,
+        "time_M_initial_origin": 5002.708593750001,
+        "omega": 0.16441502253726256,
+        "left_time_M_initial_origin": 5002.692187500001,
+        "right_time_M_initial_origin": 5002.725,
+        "left_omega": 0.1644149366648893,
+        "right_omega": 0.1644140131446054
+      },
+      "peak_epoch_geometry": {
+        "continuous_event_minus_sample_max_M": -0.006897767438204028,
+        "minus_epoch_minus_continuous_event_M": 0.02329568554614525,
+        "minus_epoch_minus_sample_max_M": 0.016397918107941223,
+        "minus_epoch_minus_sample_max_in_highres_samples": 0.9994921513522609,
+        "minus_epoch_minus_continuous_event_in_highres_samples": 1.419927499971263,
+        "continuous_event_side_of_sample_max": "before"
+      },
+      "public_mode_amplitude_maximum": {
+        "sample_index": 4760,
+        "relative_output_time_M": 4998.0,
+        "public_epoch_coordinate_M": -4.724991668108487,
+        "amplitude": 8.999145979090797e-21
+      },
+      "no_time_or_phase_shift": true,
+      "no_residual_based_selection": true
+    },
+    "dt_1p10M": {
+      "status": "ok",
+      "requested_dt_M": 1.1,
+      "returned_dt_s": 0.0002709020021202697,
+      "returned_dt_M": 1.1,
+      "epoch_s": -1.232038076,
+      "epoch_M": -5002.701615318172,
+      "minus_epoch_M": 5002.701615318172,
+      "raw_output": {
+        "path": "/tmp/torchwave-public-eob-epoch-sweep-dt_1p10M.npz",
+        "sha256": "22813694010e98bc8035ab297344b28e61624de2c2f1aa8caf29985188f93f13",
+        "size_bytes": 612130,
+        "keys": [
+          "state",
+          "postpeak_state",
+          "mode22",
+          "epoch_s",
+          "dt_s",
+          "requested_dt_M"
+        ],
+        "state_shape": [
+          5,
+          4549
+        ],
+        "postpeak_state_shape": [
+          5,
+          8757
+        ],
+        "mode_shape": [
+          4897
+        ],
+        "arrays_copied_before_save": true
+      },
+      "state_grid": {
+        "sample_count": 4549,
+        "support_M_initial_origin": [
+          0.0,
+          5002.8
+        ],
+        "spacing_min_M": 1.0999999999994543,
+        "spacing_median_M": 1.099999999999909,
+        "spacing_max_M": 1.1000000000003638
+      },
+      "postpeak_grid": {
+        "sample_count": 8757,
+        "support_M_initial_origin": [
+          4853.200000000001,
+          5003.69375
+        ],
+        "spacing_min_M": 0.017187499999636202,
+        "spacing_median_M": 0.017187499999636202,
+        "spacing_max_M": 0.017187500000545697,
+        "coordinate": "postpeak_state[0] in initial-origin M coordinates"
+      },
+      "clean_hamiltonian_omega_event": {
+        "time_M_initial_origin": 5002.701658109978,
+        "frequency": 0.1644151042367272,
+        "curvature": -0.004041622665631784,
+        "sample_index": 8698,
+        "sample_time_M_initial_origin": 5002.696875000001,
+        "sample_omega": 0.1644150580705961
+      },
+      "clean_hamiltonian_sampled_maximum": {
+        "sample_index": 8698,
+        "time_M_initial_origin": 5002.696875000001,
+        "omega": 0.1644150580705961,
+        "left_time_M_initial_origin": 5002.679687500001,
+        "right_time_M_initial_origin": 5002.714062500001,
+        "left_omega": 0.16441413517772555,
+        "right_omega": 0.16441479213695326
+      },
+      "peak_epoch_geometry": {
+        "continuous_event_minus_sample_max_M": 0.004783109977324784,
+        "minus_epoch_minus_continuous_event_M": -4.279180575395003e-05,
+        "minus_epoch_minus_sample_max_M": 0.004740318171570834,
+        "minus_epoch_minus_sample_max_in_highres_samples": 0.2758003299881408,
+        "minus_epoch_minus_continuous_event_in_highres_samples": -0.0024897050621007,
+        "continuous_event_side_of_sample_max": "after"
+      },
+      "public_mode_amplitude_maximum": {
+        "sample_index": 4544,
+        "relative_output_time_M": 4998.400000000001,
+        "public_epoch_coordinate_M": -4.301615318171571,
+        "amplitude": 9.000517419061934e-21
+      },
+      "no_time_or_phase_shift": true,
+      "no_residual_based_selection": true
+    },
+    "dt_1_4096s_exact": {
+      "status": "ok",
+      "requested_dt_M": 0.9913351891019707,
+      "returned_dt_s": 0.000244140625,
+      "returned_dt_M": 0.9913351891019707,
+      "epoch_s": -1.23203809,
+      "epoch_M": -5002.701672165298,
+      "minus_epoch_M": 5002.701672165298,
+      "raw_output": {
+        "path": "/tmp/torchwave-public-eob-epoch-sweep-dt_1_4096s_exact.npz",
+        "sha256": "0ed159ba1b88854350fa264b1e37e8d4f8d2ba5fb01cade93f2ae78a3a077ab1",
+        "size_bytes": 680882,
+        "keys": [
+          "state",
+          "postpeak_state",
+          "mode22",
+          "epoch_s",
+          "dt_s",
+          "requested_dt_M"
+        ],
+        "state_shape": [
+          5,
+          5047
+        ],
+        "postpeak_state_shape": [
+          5,
+          9763
+        ],
+        "mode_shape": [
+          5434
+        ],
+        "arrays_copied_before_save": true
+      },
+      "state_grid": {
+        "sample_count": 5047,
+        "support_M_initial_origin": [
+          0.0,
+          5002.277364208544
+        ],
+        "spacing_min_M": 0.9913351891013917,
+        "spacing_median_M": 0.9913351891018465,
+        "spacing_max_M": 0.991335189102756
+      },
+      "postpeak_grid": {
+        "sample_count": 9763,
+        "support_M_initial_origin": [
+          4852.585750654147,
+          5003.795346216857
+        ],
+        "spacing_min_M": 0.015489612329474767,
+        "spacing_median_M": 0.015489612329474767,
+        "spacing_max_M": 0.015489612330384261,
+        "coordinate": "postpeak_state[0] in initial-origin M coordinates"
+      },
+      "clean_hamiltonian_omega_event": {
+        "time_M_initial_origin": 5002.701708021243,
+        "frequency": 0.164415121047836,
+        "curvature": -0.0040437904546552035,
+        "sample_index": 9691,
+        "sample_time_M_initial_origin": 5002.695583741447,
+        "sample_omega": 0.16441504535392004
+      },
+      "clean_hamiltonian_sampled_maximum": {
+        "sample_index": 9691,
+        "time_M_initial_origin": 5002.695583741447,
+        "omega": 0.16441504535392004,
+        "left_time_M_initial_origin": 5002.680094129118,
+        "right_time_M_initial_origin": 5002.711073353777,
+        "left_omega": 0.164414182674133,
+        "right_omega": 0.16441494320309363
+      },
+      "peak_epoch_geometry": {
+        "continuous_event_minus_sample_max_M": 0.006124279795585608,
+        "minus_epoch_minus_continuous_event_M": -3.585594458854757e-05,
+        "minus_epoch_minus_sample_max_M": 0.00608842385099706,
+        "minus_epoch_minus_sample_max_in_highres_samples": 0.39306496001914537,
+        "minus_epoch_minus_continuous_event_in_highres_samples": -0.002314838087995157,
+        "continuous_event_side_of_sample_max": "after"
+      },
+      "public_mode_amplitude_maximum": {
+        "sample_index": 5042,
+        "relative_output_time_M": 4998.312023452137,
+        "public_epoch_coordinate_M": -4.389648713161478,
+        "amplitude": 9.000564983368151e-21
+      },
+      "no_time_or_phase_shift": true,
+      "no_residual_based_selection": true
+    }
+  },
+  "interpretation": {
+    "successful_event_time_range_M_initial_origin": [
+      5002.701658109978,
+      5002.701708021243
+    ],
+    "event_before_sample_rows": [
+      "dt_0p90M",
+      "dt_0p99M",
+      "dt_1p00M",
+      "dt_1p01M",
+      "dt_1p05M"
+    ],
+    "event_after_sample_rows": [
+      "dt_0p95M",
+      "dt_1p10M",
+      "dt_1_4096s_exact"
+    ],
+    "before_sample_minus_epoch_minus_event_range_M": [
+      0.01581632992656523,
+      0.02329568554614525
+    ],
+    "after_sample_minus_epoch_minus_event_range_M": [
+      -5.107649849378504e-05,
+      -3.585594458854757e-05
+    ],
+    "runtime_recommendation": "No epoch correction or fitted offset is justified by this sweep. The continuous clean orbital-frequency event is stable while the public epoch follows a discrete one-high-resolution-sample branch when that event lies before the sampled maximum and is nearly equal to it when the event lies after the sampled maximum. Keep the continuous event as the runtime origin and treat public epoch as metadata; if native epoch code changes, add a deterministic bracket-side regression test."
+  },
+  "summary": {
+    "successful_rows": 8,
+    "failed_rows": 0,
+    "failed_labels": []
+  },
+  "limitations": [
+    "The event is evaluated from the public returned postpeak state through the clean Hamiltonian/flux adapter; this does not claim the clean event is the public implementation's internal event.",
+    "The exact 4096-Hz spacing is included as a fixed anchor row; all other rows use the fixed dt_geom values listed above.",
+    "Epoch comparisons are reported as signed coordinate differences. No correction or fitted shift is installed from them."
+  ]
+}

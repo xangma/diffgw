@@ -1,0 +1,776 @@
+{
+  "binary_endpoint_validation_only": {
+    "j": 4.215698565112572,
+    "omega": 0.018973840039422412,
+    "phase": 132.17031461096497,
+    "pr_star": -0.0012978461179493459,
+    "time_M": 9523.942662602482
+  },
+  "command": "scripts/diagnose_teob_pa_circular_initialization_clean.py --output docs/reviews/2026-09-13-parity-review/verification/teob-pa-circular-initialization-clean/report.json",
+  "cwd": "/Users/xangma/repos/torchwave",
+  "equation": {
+    "a": "Uprime**2 - 4*U*Gprime**2",
+    "b": "2*Aprime*Uprime - 4*A*Gprime**2",
+    "branch": "lower quadratic root at exact Gprime == 0",
+    "c": "Aprime**2",
+    "discriminant": "clamp only if raw discriminant < 0",
+    "uprime": "rc**-2*(Aprime - 2*A*rcprime/rc)"
+  },
+  "finished_unix": 1789401995.2572422,
+  "host": "RONI2",
+  "initializer_diagnostics": {
+    "float32": {
+      "coefficients": {
+        "a": {
+          "count": 60,
+          "finite": 60,
+          "max": 3.1607285677637265e-07,
+          "max_abs": 3.1607285677637265e-07,
+          "min": 4.51807764534351e-08,
+          "rms": 1.535254341433756e-07
+        },
+        "b": {
+          "count": 60,
+          "finite": 60,
+          "max": -2.1194596229179297e-06,
+          "max_abs": 1.123546371673001e-05,
+          "min": -1.123546371673001e-05,
+          "rms": 5.852083177160239e-06
+        },
+        "c": {
+          "count": 60,
+          "finite": 60,
+          "max": 9.984694770537317e-05,
+          "max_abs": 9.984694770537317e-05,
+          "min": 2.485630648152437e-05,
+          "rms": 5.6251730711665004e-05
+        },
+        "uprime_equation_minus_clean_max_abs": 5.820766091346741e-11
+      },
+      "discriminant": {
+        "clamped": {
+          "count": 60,
+          "finite": 60,
+          "max": 6.938893903907228e-18,
+          "max_abs": 6.938893903907228e-18,
+          "min": 0.0,
+          "rms": 1.7766805581873343e-18
+        },
+        "exact_zero_count": 25,
+        "negative_count": 21,
+        "positive_count": 14,
+        "raw": {
+          "count": 60,
+          "finite": 60,
+          "max": 6.938893903907228e-18,
+          "max_abs": 1.3877787807814457e-17,
+          "min": -1.3877787807814457e-17,
+          "rms": 3.6769216339650834e-18
+        },
+        "relative_to_coefficient_scale": {
+          "count": 60,
+          "finite": 60,
+          "max": 6.649656114632307e-08,
+          "max_abs": 8.586176392100242e-08,
+          "min": -8.586176392100242e-08,
+          "rms": 3.665947190256702e-08
+        }
+      },
+      "dtype": "torch.float32",
+      "first_node": {
+        "A": 0.9000869393348694,
+        "Aprime": 0.004985610023140907,
+        "U": 0.002250217366963625,
+        "Uprime_clean": -0.0002125577157130465,
+        "Uprime_eq": -0.00021255770116113126,
+        "analytic_clean": 23.455324172973633,
+        "analytic_equation": 23.455326080322266,
+        "discriminant_raw": 0.0,
+        "lower_root": 23.455326080322266,
+        "root_minus": 23.455326080322266,
+        "root_plus": 23.455326080322266
+      },
+      "grid": {
+        "count": 60,
+        "end_radius": 14.100000381469727,
+        "spacing": 0.1,
+        "start_radius": 20.0
+      },
+      "roots": {
+        "helper_minus_direct_root_max_abs": 0.0,
+        "j2_lower_minus_analytic_clean": {
+          "count": 60,
+          "finite": 60,
+          "max": 3.814697265625e-06,
+          "max_abs": 0.0078125,
+          "min": -0.0078125,
+          "rms": 0.0028781190048903227
+        },
+        "j2_lower_minus_analytic_equation": {
+          "count": 60,
+          "finite": 60,
+          "max": 1.9073486328125e-06,
+          "max_abs": 0.007808685302734375,
+          "min": -0.007808685302734375,
+          "rms": 0.0028780424036085606
+        },
+        "j_lower_minus_analytic_clean_max_abs": 0.0008440017700195312,
+        "lower_finite": true,
+        "lower_positive": true,
+        "minus_is_lower_count": 60,
+        "plus_is_lower_count": 0
+      },
+      "stationarity": {
+        "quadratic_residual": {
+          "count": 60,
+          "finite": 60,
+          "max": 7.275957614183426e-12,
+          "max_abs": 1.4551915228366852e-11,
+          "min": -1.4551915228366852e-11,
+          "rms": 4.291684195523171e-12
+        },
+        "unsquared_residual": {
+          "count": 60,
+          "finite": 60,
+          "max": 1.4846058320472366e-06,
+          "max_abs": 1.4846058320472366e-06,
+          "min": -4.815289833537406e-10,
+          "rms": 5.178616220291588e-07
+        },
+        "unsquared_sign_negative_count": 1,
+        "unsquared_sign_positive_count": 31
+      }
+    },
+    "float64": {
+      "coefficients": {
+        "a": {
+          "count": 60,
+          "finite": 60,
+          "max": 3.160729463732353e-07,
+          "max_abs": 3.160729463732353e-07,
+          "min": 4.518078226222991e-08,
+          "rms": 1.5352541706836268e-07
+        },
+        "b": {
+          "count": 60,
+          "finite": 60,
+          "max": -2.119459508298828e-06,
+          "max_abs": 1.1235462892687038e-05,
+          "min": -1.1235462892687038e-05,
+          "rms": 5.852083128400637e-06
+        },
+        "c": {
+          "count": 60,
+          "finite": 60,
+          "max": 9.984690864991163e-05,
+          "max_abs": 9.984690864991163e-05,
+          "min": 2.4856301630890574e-05,
+          "rms": 5.625173204565299e-05
+        },
+        "uprime_equation_minus_clean_max_abs": 5.421010862427522e-20
+      },
+      "discriminant": {
+        "clamped": {
+          "count": 60,
+          "finite": 60,
+          "max": 2.5849394142282115e-26,
+          "max_abs": 2.5849394142282115e-26,
+          "min": 0.0,
+          "rms": 5.457839764633372e-27
+        },
+        "exact_zero_count": 30,
+        "negative_count": 12,
+        "positive_count": 18,
+        "raw": {
+          "count": 60,
+          "finite": 60,
+          "max": 2.5849394142282115e-26,
+          "max_abs": 2.5849394142282115e-26,
+          "min": -2.5849394142282115e-26,
+          "rms": 7.154789553260698e-27
+        },
+        "relative_to_coefficient_scale": {
+          "count": 60,
+          "finite": 60,
+          "max": 1.8840424346519066e-16,
+          "max_abs": 1.8840424346519066e-16,
+          "min": -1.213925990348689e-16,
+          "rms": 6.557257243837006e-17
+        }
+      },
+      "dtype": "torch.float64",
+      "first_node": {
+        "A": 0.900086955071964,
+        "Aprime": 0.004985609454308528,
+        "U": 0.002250217387679911,
+        "Uprime_clean": -0.0002125577151322198,
+        "Uprime_eq": -0.00021255771513221982,
+        "analytic_clean": 23.455321069890452,
+        "analytic_equation": 23.45532106989045,
+        "discriminant_raw": 8.077935669463161e-28,
+        "lower_root": 23.45532075535728,
+        "root_minus": 23.45532075535728,
+        "root_plus": 23.455321384423623
+      },
+      "grid": {
+        "count": 60,
+        "end_radius": 14.099999999999996,
+        "spacing": 0.1,
+        "start_radius": 19.999999999999996
+      },
+      "roots": {
+        "helper_minus_direct_root_max_abs": 0.0,
+        "j2_lower_minus_analytic_clean": {
+          "count": 60,
+          "finite": 60,
+          "max": 3.552713678800501e-15,
+          "max_abs": 4.3074917144281244e-07,
+          "min": -4.3074917144281244e-07,
+          "rms": 1.473252578808925e-07
+        },
+        "j2_lower_minus_analytic_equation": {
+          "count": 60,
+          "finite": 60,
+          "max": 3.552713678800501e-15,
+          "max_abs": 4.3074917144281244e-07,
+          "min": -4.3074917144281244e-07,
+          "rms": 1.47325257635405e-07
+        },
+        "j_lower_minus_analytic_clean_max_abs": 4.5720650376779304e-08,
+        "lower_finite": true,
+        "lower_positive": true,
+        "minus_is_lower_count": 60,
+        "plus_is_lower_count": 0
+      },
+      "stationarity": {
+        "quadratic_residual": {
+          "count": 60,
+          "finite": 60,
+          "max": 2.710505431213761e-20,
+          "max_abs": 2.710505431213761e-20,
+          "min": -2.710505431213761e-20,
+          "rms": 8.660195640343591e-21
+        },
+        "unsquared_residual": {
+          "count": 60,
+          "finite": 60,
+          "max": 8.430785289129531e-11,
+          "max_abs": 8.430785289129531e-11,
+          "min": -8.95077753342505e-19,
+          "rms": 2.909119271304383e-11
+        },
+        "unsquared_sign_negative_count": 3,
+        "unsquared_sign_positive_count": 32
+      }
+    }
+  },
+  "orders": [
+    {
+      "general_quadratic_shadow": {
+        "endpoint": {
+          "clean_j": 4.215698082088751,
+          "clean_omega": 0.01897383805371615,
+          "clean_phase": 132.13504363947405,
+          "clean_pr_star": -0.0012988349524475072,
+          "clean_time_M": 9521.620151085675,
+          "general_j": 4.215698243384827,
+          "general_omega": 0.018973838706312713,
+          "general_phase": 132.13503871051023,
+          "general_pr_star": -0.0012988269883473156,
+          "general_time_M": 9521.619752567642
+        },
+        "omega_difference": {
+          "count": 60,
+          "finite": 60,
+          "max": 6.525965635939546e-10,
+          "max_abs": 6.525965635939546e-10,
+          "min": -9.999127220661208e-11,
+          "rms": 8.94571127398936e-11
+        },
+        "p_phi_difference": {
+          "count": 60,
+          "finite": 60,
+          "max": 1.612960760510873e-07,
+          "max_abs": 1.612960760510873e-07,
+          "min": -2.533991683151271e-08,
+          "rms": 2.3786118524683766e-08
+        },
+        "phase_difference": {
+          "count": 60,
+          "finite": 60,
+          "max": 1.7841294450704481e-06,
+          "max_abs": 9.012850776812797e-06,
+          "min": -9.012850776812797e-06,
+          "rms": 4.307846916038073e-06
+        },
+        "pr_star_difference": {
+          "count": 60,
+          "finite": 60,
+          "max": 7.96410019160941e-09,
+          "max_abs": 7.96410019160941e-09,
+          "min": -6.6395449868335635e-09,
+          "rms": 1.7055198261293864e-09
+        },
+        "time_difference": {
+          "count": 60,
+          "finite": 60,
+          "max": 0.0001016441710817162,
+          "max_abs": 0.0008093254261609673,
+          "min": -0.0008093254261609673,
+          "rms": 0.00038532407270207286
+        }
+      },
+      "initializer": {
+        "clean_first_j": 4.8430693852029885,
+        "first_j_difference": -3.24725029088313e-08,
+        "general_first_j": 4.8430693527304856,
+        "max_j_difference": 4.5720650376779304e-08
+      },
+      "order": 2,
+      "production_control_reproduction": {
+        "endpoint": {
+          "clean_j": 4.215698082088751,
+          "clean_omega": 0.01897383805371615,
+          "clean_phase": 132.13504363947405,
+          "clean_pr_star": -0.0012988349524475072,
+          "clean_time_M": 9521.620151085675,
+          "general_j": 4.215698082088751,
+          "general_omega": 0.01897383805371615,
+          "general_phase": 132.13504363947405,
+          "general_pr_star": -0.0012988349524475072,
+          "general_time_M": 9521.620151085675
+        },
+        "omega_difference": {
+          "count": 60,
+          "finite": 60,
+          "max": 0.0,
+          "max_abs": 0.0,
+          "min": 0.0,
+          "rms": 0.0
+        },
+        "p_phi_difference": {
+          "count": 60,
+          "finite": 60,
+          "max": 0.0,
+          "max_abs": 0.0,
+          "min": 0.0,
+          "rms": 0.0
+        },
+        "phase_difference": {
+          "count": 60,
+          "finite": 60,
+          "max": 0.0,
+          "max_abs": 0.0,
+          "min": 0.0,
+          "rms": 0.0
+        },
+        "pr_star_difference": {
+          "count": 60,
+          "finite": 60,
+          "max": 0.0,
+          "max_abs": 0.0,
+          "min": 0.0,
+          "rms": 0.0
+        },
+        "time_difference": {
+          "count": 60,
+          "finite": 60,
+          "max": 0.0,
+          "max_abs": 0.0,
+          "min": 0.0,
+          "rms": 0.0
+        }
+      }
+    },
+    {
+      "general_quadratic_shadow": {
+        "endpoint": {
+          "clean_j": 4.2156985845186234,
+          "clean_omega": 0.018973840118008685,
+          "clean_phase": 132.17040141024472,
+          "clean_pr_star": -0.0012978429996358491,
+          "clean_time_M": 9523.948017995157,
+          "general_j": 4.215698463086684,
+          "general_omega": 0.01897383962592966,
+          "general_phase": 132.1703989987386,
+          "general_pr_star": -0.0012978726908392346,
+          "general_time_M": 9523.948663295403
+        },
+        "omega_difference": {
+          "count": 60,
+          "finite": 60,
+          "max": 7.028190876501306e-11,
+          "max_abs": 4.920790233620131e-10,
+          "min": -4.920790233620131e-10,
+          "rms": 8.301008185817254e-11
+        },
+        "p_phi_difference": {
+          "count": 60,
+          "finite": 60,
+          "max": 1.8012693558944193e-08,
+          "max_abs": 1.2143193917069084e-07,
+          "min": -1.2143193917069084e-07,
+          "rms": 2.077933318582818e-08
+        },
+        "phase_difference": {
+          "count": 60,
+          "finite": 60,
+          "max": 2.494823067422658e-05,
+          "max_abs": 2.494823067422658e-05,
+          "min": -2.4115061307838914e-06,
+          "rms": 2.110746870364173e-05
+        },
+        "pr_star_difference": {
+          "count": 60,
+          "finite": 60,
+          "max": 4.759012580389001e-09,
+          "max_abs": 2.9691203385457873e-08,
+          "min": -2.9691203385457873e-08,
+          "rms": 4.117309846775355e-09
+        },
+        "time_difference": {
+          "count": 60,
+          "finite": 60,
+          "max": 0.0021332760222776415,
+          "max_abs": 0.0021332760222776415,
+          "min": 0.0,
+          "rms": 0.0018750864924093856
+        }
+      },
+      "initializer": {
+        "clean_first_j": 4.8430693852029885,
+        "first_j_difference": -3.24725029088313e-08,
+        "general_first_j": 4.8430693527304856,
+        "max_j_difference": 4.5720650376779304e-08
+      },
+      "order": 4,
+      "production_control_reproduction": {
+        "endpoint": {
+          "clean_j": 4.2156985845186234,
+          "clean_omega": 0.018973840118008685,
+          "clean_phase": 132.17040141024472,
+          "clean_pr_star": -0.0012978429996358491,
+          "clean_time_M": 9523.948017995157,
+          "general_j": 4.2156985845186234,
+          "general_omega": 0.018973840118008685,
+          "general_phase": 132.17040141024472,
+          "general_pr_star": -0.0012978429996358491,
+          "general_time_M": 9523.948017995157
+        },
+        "omega_difference": {
+          "count": 60,
+          "finite": 60,
+          "max": 0.0,
+          "max_abs": 0.0,
+          "min": 0.0,
+          "rms": 0.0
+        },
+        "p_phi_difference": {
+          "count": 60,
+          "finite": 60,
+          "max": 0.0,
+          "max_abs": 0.0,
+          "min": 0.0,
+          "rms": 0.0
+        },
+        "phase_difference": {
+          "count": 60,
+          "finite": 60,
+          "max": 0.0,
+          "max_abs": 0.0,
+          "min": 0.0,
+          "rms": 0.0
+        },
+        "pr_star_difference": {
+          "count": 60,
+          "finite": 60,
+          "max": 0.0,
+          "max_abs": 0.0,
+          "min": 0.0,
+          "rms": 0.0
+        },
+        "time_difference": {
+          "count": 60,
+          "finite": 60,
+          "max": 0.0,
+          "max_abs": 0.0,
+          "min": 0.0,
+          "rms": 0.0
+        }
+      }
+    },
+    {
+      "general_quadratic_shadow": {
+        "endpoint": {
+          "clean_j": 4.215698580608511,
+          "clean_omega": 0.01897384010201434,
+          "clean_phase": 132.17030451828342,
+          "clean_pr_star": -0.0012978485463599036,
+          "clean_time_M": 9523.942123284416,
+          "general_j": 4.215698510995106,
+          "general_omega": 0.018973839820401073,
+          "general_phase": 132.17031824548837,
+          "general_pr_star": -0.001297850775697797,
+          "general_time_M": 9523.942697157368
+        },
+        "omega_difference": {
+          "count": 60,
+          "finite": 60,
+          "max": 1.1922157358568164e-10,
+          "max_abs": 2.81613267427705e-10,
+          "min": -2.81613267427705e-10,
+          "rms": 4.3712186171082366e-11
+        },
+        "p_phi_difference": {
+          "count": 60,
+          "finite": 60,
+          "max": 3.0572276266127574e-08,
+          "max_abs": 6.961340481836942e-08,
+          "min": -6.961340481836942e-08,
+          "rms": 1.0942919282210414e-08
+        },
+        "phase_difference": {
+          "count": 60,
+          "finite": 60,
+          "max": 1.372720495851354e-05,
+          "max_abs": 1.372720495851354e-05,
+          "min": -6.507345560180511e-06,
+          "rms": 4.977284155186715e-06
+        },
+        "pr_star_difference": {
+          "count": 60,
+          "finite": 60,
+          "max": 7.238944213375578e-09,
+          "max_abs": 7.238944213375578e-09,
+          "min": -2.229337893325592e-09,
+          "rms": 1.3956855497289554e-09
+        },
+        "time_difference": {
+          "count": 60,
+          "finite": 60,
+          "max": 0.000573872952372767,
+          "max_abs": 0.000573872952372767,
+          "min": -0.0005111541267979192,
+          "rms": 0.00040294037195380615
+        }
+      },
+      "initializer": {
+        "clean_first_j": 4.8430693852029885,
+        "first_j_difference": -3.24725029088313e-08,
+        "general_first_j": 4.8430693527304856,
+        "max_j_difference": 4.5720650376779304e-08
+      },
+      "order": 6,
+      "production_control_reproduction": {
+        "endpoint": {
+          "clean_j": 4.215698580608511,
+          "clean_omega": 0.01897384010201434,
+          "clean_phase": 132.17030451828342,
+          "clean_pr_star": -0.0012978485463599036,
+          "clean_time_M": 9523.942123284416,
+          "general_j": 4.215698580608511,
+          "general_omega": 0.01897384010201434,
+          "general_phase": 132.17030451828342,
+          "general_pr_star": -0.0012978485463599036,
+          "general_time_M": 9523.942123284416
+        },
+        "omega_difference": {
+          "count": 60,
+          "finite": 60,
+          "max": 0.0,
+          "max_abs": 0.0,
+          "min": 0.0,
+          "rms": 0.0
+        },
+        "p_phi_difference": {
+          "count": 60,
+          "finite": 60,
+          "max": 0.0,
+          "max_abs": 0.0,
+          "min": 0.0,
+          "rms": 0.0
+        },
+        "phase_difference": {
+          "count": 60,
+          "finite": 60,
+          "max": 0.0,
+          "max_abs": 0.0,
+          "min": 0.0,
+          "rms": 0.0
+        },
+        "pr_star_difference": {
+          "count": 60,
+          "finite": 60,
+          "max": 0.0,
+          "max_abs": 0.0,
+          "min": 0.0,
+          "rms": 0.0
+        },
+        "time_difference": {
+          "count": 60,
+          "finite": 60,
+          "max": 0.0,
+          "max_abs": 0.0,
+          "min": 0.0,
+          "rms": 0.0
+        }
+      }
+    },
+    {
+      "general_quadratic_shadow": {
+        "endpoint": {
+          "clean_j": 4.215698580677255,
+          "clean_omega": 0.01897384010229412,
+          "clean_phase": 132.17030522060074,
+          "clean_pr_star": -0.0012978484923028056,
+          "clean_time_M": 9523.94216423246,
+          "general_j": 4.2156985470576425,
+          "general_omega": 0.018973839966420724,
+          "general_phase": 132.17031550446313,
+          "general_pr_star": -0.0012978455435559183,
+          "general_time_M": 9523.942705311169
+        },
+        "omega_difference": {
+          "count": 60,
+          "finite": 60,
+          "max": 1.0049859555660845e-10,
+          "max_abs": 1.3587339586784708e-10,
+          "min": -1.3587339586784708e-10,
+          "rms": 2.591368438590066e-11
+        },
+        "p_phi_difference": {
+          "count": 60,
+          "finite": 60,
+          "max": 2.5441636353207286e-08,
+          "max_abs": 3.3619612871405025e-08,
+          "min": -3.3619612871405025e-08,
+          "rms": 6.567779940334248e-09
+        },
+        "phase_difference": {
+          "count": 60,
+          "finite": 60,
+          "max": 1.0283862394544485e-05,
+          "max_abs": 1.0283862394544485e-05,
+          "min": -4.104196179355313e-06,
+          "rms": 1.583101087851738e-06
+        },
+        "pr_star_difference": {
+          "count": 60,
+          "finite": 60,
+          "max": 6.046733260585066e-09,
+          "max_abs": 6.046733260585066e-09,
+          "min": -2.6944522721946557e-09,
+          "rms": 1.0932952216228745e-09
+        },
+        "time_difference": {
+          "count": 60,
+          "finite": 60,
+          "max": 0.000541078708920395,
+          "max_abs": 0.000541078708920395,
+          "min": -0.00022537455151905306,
+          "rms": 8.431024843608683e-05
+        }
+      },
+      "initializer": {
+        "clean_first_j": 4.8430693852029885,
+        "first_j_difference": -3.24725029088313e-08,
+        "general_first_j": 4.8430693527304856,
+        "max_j_difference": 4.5720650376779304e-08
+      },
+      "order": 8,
+      "production_control_reproduction": {
+        "endpoint": {
+          "clean_j": 4.215698580677255,
+          "clean_omega": 0.01897384010229412,
+          "clean_phase": 132.17030522060074,
+          "clean_pr_star": -0.0012978484923028056,
+          "clean_time_M": 9523.94216423246,
+          "general_j": 4.215698580677255,
+          "general_omega": 0.01897384010229412,
+          "general_phase": 132.17030522060074,
+          "general_pr_star": -0.0012978484923028056,
+          "general_time_M": 9523.94216423246
+        },
+        "omega_difference": {
+          "count": 60,
+          "finite": 60,
+          "max": 0.0,
+          "max_abs": 0.0,
+          "min": 0.0,
+          "rms": 0.0
+        },
+        "p_phi_difference": {
+          "count": 60,
+          "finite": 60,
+          "max": 0.0,
+          "max_abs": 0.0,
+          "min": 0.0,
+          "rms": 0.0
+        },
+        "phase_difference": {
+          "count": 60,
+          "finite": 60,
+          "max": 0.0,
+          "max_abs": 0.0,
+          "min": 0.0,
+          "rms": 0.0
+        },
+        "pr_star_difference": {
+          "count": 60,
+          "finite": 60,
+          "max": 0.0,
+          "max_abs": 0.0,
+          "min": 0.0,
+          "rms": 0.0
+        },
+        "time_difference": {
+          "count": 60,
+          "finite": 60,
+          "max": 0.0,
+          "max_abs": 0.0,
+          "min": 0.0,
+          "rms": 0.0
+        }
+      }
+    }
+  ],
+  "parameters": {
+    "delta": 0.2,
+    "dr": 0.1,
+    "horizon": "diagnostic-only leading-order zero-spin horizon",
+    "n_intervals": 59,
+    "nu": 0.24,
+    "orders": [
+      2,
+      4,
+      6,
+      8
+    ],
+    "r0": 19.999999999999996,
+    "r_min": 14.0,
+    "spins": [
+      0.0,
+      0.0
+    ],
+    "tides": [
+      0.0,
+      0.0
+    ]
+  },
+  "pid": 50924,
+  "python": "/Users/xangma/miniconda3/envs/pycbcorig313/bin/python",
+  "runtime_source_hashes_after": {
+    "/Users/xangma/repos/torchwave/src/torchwave/approximants/eob/teob_postadiabatic_clean.py": "a923457f98f3b6c1b3232d096f26d74d70290ca221c4d004b0c6db9128a363ad",
+    "/Users/xangma/repos/torchwave/src/torchwave/approximants/eob/teob_radiation_clean.py": "dca2c9791403467d85572f25a062cbc995d8228743d33b6b2e5dc28c13336bd6",
+    "/Users/xangma/repos/torchwave/src/torchwave/approximants/teobresums.py": "05e15d8fd9888ee8d454d61fbc8454fe5c652747780f77c771718557ce0294f3"
+  },
+  "runtime_source_hashes_before": {
+    "/Users/xangma/repos/torchwave/src/torchwave/approximants/eob/teob_postadiabatic_clean.py": "a923457f98f3b6c1b3232d096f26d74d70290ca221c4d004b0c6db9128a363ad",
+    "/Users/xangma/repos/torchwave/src/torchwave/approximants/eob/teob_radiation_clean.py": "dca2c9791403467d85572f25a062cbc995d8228743d33b6b2e5dc28c13336bd6",
+    "/Users/xangma/repos/torchwave/src/torchwave/approximants/teobresums.py": "05e15d8fd9888ee8d454d61fbc8454fe5c652747780f77c771718557ce0294f3"
+  },
+  "runtime_sources_unchanged": true,
+  "started_unix": 1789401994.737087,
+  "status": "complete",
+  "torch": "2.9.1"
+}

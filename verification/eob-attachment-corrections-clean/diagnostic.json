@@ -1,0 +1,101 @@
+{
+  "status": "bounded_public_fixture_diagnostic",
+  "provenance": {
+    "inputs": "permitted public state/postpeak/mode/epoch fixtures",
+    "implementation": "MIT-only clean TorchWave Hamiltonian, flux, waveform, remnant, QNM, and numerical attachment helpers",
+    "primary_reference": "Boh\u00e9 et al., arXiv:1611.03703v3",
+    "trajectory_evolution": false,
+    "reference_implementation_imported": false
+  },
+  "public_parameters": {
+    "m1_msun": 30.0,
+    "m2_msun": 20.0,
+    "chi1": 0.0,
+    "chi2": 0.0,
+    "mode": [
+      2,
+      2
+    ],
+    "distance_mpc": 100.0,
+    "nu": 0.24,
+    "chi": 0.0,
+    "output_coordinate": "arange(mode22_length) * dt_s / (50 M_sun in seconds)"
+  },
+  "contract_effects": {
+    "phase_rhs": "full unwrapped waveform-phase spline first/second derivatives",
+    "shared_scalar_spline": "explicit scalar_output=True for (..., n) ordinates; channel callers retain (..., n, C)",
+    "orbital_peak": "strictly negative derivative product moves right; equality moves left",
+    "attachment_floor": "greatest input knot <= match; floor zero rejected for backward phase difference",
+    "tail_window": "floor(10/(damping*dt_high)) high-grid samples from elapsed zero before output selection"
+  },
+  "results": {
+    "dt_0p5M": {
+      "fixture_sha256": "7bf76ba9b81515bdd22377a8569bc0ee8809717baeb43d7f887b71ecdeb9d88a",
+      "state_shape": [
+        5,
+        10006
+      ],
+      "postpeak_state_shape": [
+        5,
+        9654
+      ],
+      "output_length": 10773,
+      "input_time_M": [
+        4853.0,
+        5003.828125
+      ],
+      "output_time_M": [
+        0.0,
+        5386.0
+      ],
+      "match_time_M": 4998.346362836525,
+      "boundary_time_M": 4998.34375,
+      "boundary_index": 9302,
+      "internal_step_M": 0.015625,
+      "damping": 0.08590518084900033,
+      "ringdown_support_count_high_samples": 7450,
+      "clean_last_nonzero_output_index": 10229,
+      "public_last_nonzero_output_index": 10229,
+      "postmatch_nonzero_count": 233,
+      "postmatch_complex_relative_l2": 4.422941057722376e-05,
+      "postmatch_amplitude_relative_l2": 2.7970093675972307e-07,
+      "postmatch_frequency_rms": 7.185850040401131e-08
+    },
+    "dt_1_4096s": {
+      "fixture_sha256": "eefe5b8f1380601f82232e78b0e3a8e1b8abf5a4f9cfb5208e28331b8f5685f9",
+      "state_shape": [
+        5,
+        5047
+      ],
+      "postpeak_state_shape": [
+        5,
+        9763
+      ],
+      "output_length": 5434,
+      "input_time_M": [
+        4852.585750654147,
+        5003.795346216857
+      ],
+      "output_time_M": [
+        0.0,
+        5385.924082391007
+      ],
+      "match_time_M": 4998.3293229067685,
+      "boundary_time_M": 4998.327513064466,
+      "boundary_index": 9409,
+      "internal_step_M": 0.015489612329718292,
+      "damping": 0.08590518084900033,
+      "ringdown_support_count_high_samples": 7515,
+      "clean_last_nonzero_output_index": 5159,
+      "public_last_nonzero_output_index": 5159,
+      "postmatch_nonzero_count": 117,
+      "postmatch_complex_relative_l2": 3.2103532727132976e-06,
+      "postmatch_amplitude_relative_l2": 2.7954724313769197e-07,
+      "postmatch_frequency_rms": 1.57880907352294e-09
+    }
+  },
+  "limitations": [
+    "The public fixture comparison is a short component diagnostic and not a native trajectory gate.",
+    "The optional amplitude curvature compatibility clamp was not implemented; its paper-derived condition is reported separately to the coordinator."
+  ]
+}

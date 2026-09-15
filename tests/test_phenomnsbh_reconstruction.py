@@ -134,6 +134,34 @@ def test_remnant_limits():
                     assert torch.isclose(af, a_bbh, atol=1e-12)
 
 
+def test_zappa_author_fit_uses_bbh_baseline_and_published_fallback():
+    """Check the author-published Zappa rational fit and its BBH fallback."""
+    m1 = torch.tensor(5.0, dtype=torch.float64)
+    m2 = torch.tensor(1.4, dtype=torch.float64)
+    chi = torch.tensor(0.2, dtype=torch.float64)
+    zero = torch.zeros_like(chi)
+    mf, af = zappa_remnant_properties(m1, m2, chi, zero, torch.tensor(400.0, dtype=torch.float64))
+    torch.testing.assert_close(mf / (m1 + m2), torch.tensor(0.9716178569291998, dtype=torch.float64), rtol=2e-14, atol=2e-14)
+    torch.testing.assert_close(af, torch.tensor(0.5971822966772592, dtype=torch.float64), rtol=2e-14, atol=2e-14)
+
+    # A disruptive case retains the tidal remnant correction and agrees with
+    # the public NSBH properties (mass ratio 5, chi_BH=.4, Lambda=2600).
+    m1 = torch.tensor(7.0, dtype=torch.float64)
+    chi = torch.tensor(0.4, dtype=torch.float64)
+    mf, af = zappa_remnant_properties(m1, m2, chi, torch.zeros_like(chi), torch.tensor(2600.0, dtype=torch.float64))
+    torch.testing.assert_close(mf / (m1 + m2), torch.tensor(0.9577366463051751, dtype=torch.float64), rtol=2e-14, atol=2e-14)
+    torch.testing.assert_close(af, torch.tensor(0.625206641047778, dtype=torch.float64), rtol=2e-14, atol=2e-14)
+
+    # Zappa's published extrapolation guard restores the BBH remnant for
+    # chi_BH < 0, eta < 0.188 (and also for chi_BH < -0.5).
+    m1 = torch.tensor(10.0, dtype=torch.float64)
+    chi = torch.tensor(-0.6, dtype=torch.float64)
+    mf, af = zappa_remnant_properties(m1, m2, chi, torch.zeros_like(chi), torch.tensor(800.0, dtype=torch.float64))
+    mf_bbh, af_bbh = bbh_remnant_uib2016(m1, m2, chi, torch.zeros_like(chi))
+    torch.testing.assert_close(mf / (m1 + m2), mf_bbh, rtol=2e-14, atol=2e-14)
+    torch.testing.assert_close(af, af_bbh, rtol=2e-14, atol=2e-14)
+
+
 def test_amplitude_positivity_and_cutoff():
     """Verify amplitude positivity A(f) > 0 and exponential cutoff for disrupting systems."""
     f = torch.linspace(30.0, 3000.0, 300, dtype=torch.float64)

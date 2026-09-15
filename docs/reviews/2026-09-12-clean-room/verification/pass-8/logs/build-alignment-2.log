@@ -1,0 +1,374 @@
+{"started_utc": "2026-09-12T19:41:25.034924+00:00", "command": ["python", "-u", "/campaign/scripts/fix-charm-alignment.py"], "cwd": "/work/spectre/build", "expected_exit_code": 0, "timeout_seconds": 3300.0, "output_bytes_before": 0, "cpu_stat_before": "usage_usec 79816\nuser_usec 45894\nsystem_usec 33922\ncore_sched.force_idle_usec 0\nnr_periods 1\nnr_throttled 0\nthrottled_usec 0\nnr_bursts 0\nburst_usec 0"}
+{"command": ["patch", "--dry-run", "-p1", "-d", "/work/charm_7_0_0", "-i", "/campaign/diagnostics/charm7-alignment/group-allocation.patch"]}
+checking file src/ck-core/ck.C
+{"command": ["patch", "-p1", "-d", "/work/charm_7_0_0", "-i", "/campaign/diagnostics/charm7-alignment/group-allocation.patch"]}
+patching file src/ck-core/ck.C
+{"command": ["cmake", "--build", "/work/charm_7_0_0/multicore-linux-x86_64-gcc", "--target", "ck", "-j4"]}
+[  0%] Built target create_symlinks
+[ 21%] Built target charmxi
+[ 21%] Generating ../../include/pgm.decl.h, ../../include/pgm.def.h
+[ 21%] Generating ../../include/cksparsereducer.decl.h, ../../include/cksparsereducer.def.h
+[ 21%] Generating ../../include/cksparsecontiguousreducer.decl.h, ../../include/cksparsecontiguousreducer.def.h
+Consolidate compiler generated dependencies of target ck
+[ 21%] Building CXX object src/ck-core/CMakeFiles/ck.dir/ck.C.o
+[ 24%] Linking CXX static library ../../lib/libck.a
+ar: creating ../../lib/libck.a
+[100%] Built target ck
+{"command": ["cmake", "--build", "/work/spectre/build", "--target", "SolveXcts", "EvolveGhBinaryBlackHole", "EvolveGhSingleBlackHole", "CharacteristicExtract", "-j4"]}
+[  5%] Built target slatec
+[  5%] Built target CharmModuleInit
+[  5%] Built target SPHEREPACK
+[  5%] Built target module_Printf
+[  5%] Built target module_GlobalCache
+[  5%] Built target module_Main
+[  5%] Built target SpectrePch
+[  5%] Built target module_AlgorithmArray
+[  5%] Built target module_AlgorithmGroup
+[  5%] Built target module_AlgorithmNodegroup
+[  5%] Built target module_AlgorithmSingleton
+[  5%] Built target InfoAtLink
+[  5%] Built target SystemUtilities
+[  5%] Built target ErrorHandling
+[  5%] Built target Printf
+[  5%] Built target Utilities
+[  5%] Built target Informer
+Consolidate compiler generated dependencies of target ParallelNonlinearSolver
+[ 10%] Built target ParallelNonlinearSolver
+[ 10%] Built target Options
+[ 10%] Built target Logging
+Consolidate compiler generated dependencies of target Elliptic
+[ 10%] Built target Parallel
+[ 10%] Built target Elliptic
+[ 10%] Built target EventsAndTriggers
+[ 15%] Built target DataStructures
+[ 15%] Built target RootFinding
+[ 20%] Built target MathFunctions
+[ 20%] Built target SphericalHarmonics
+[ 25%] Built target FunctionsOfTime
+[ 25%] Built target LinearAlgebra
+[ 25%] Built target IO
+[ 25%] Built target Convergence
+[ 25%] Built target Poisson
+[ 25%] Built target SpecialRelativity
+[ 25%] Built target PhaseControl
+Consolidate compiler generated dependencies of target ConstitutiveRelations
+[ 25%] Built target ConstitutiveRelations
+[ 25%] Built target TensorYlm
+[ 25%] Built target LinearSolver
+[ 30%] Built target Spectral
+[ 35%] Built target DomainBoundaryConditions
+[ 35%] Built target Interpolation
+[ 35%] Built target DomainStructure
+[ 35%] Built target LinearOperators
+[ 35%] Built target AmrPolicies
+[ 35%] Built target FiniteDifference
+Consolidate compiler generated dependencies of target ParallelMultigrid
+Consolidate compiler generated dependencies of target ParallelSchwarz
+[ 35%] Built target ParallelSchwarz
+[ 35%] Built target ParallelMultigrid
+[ 35%] Built target Strahlkorper
+[ 45%] Built target CoordinateMaps
+[ 45%] Built target Domain
+[ 45%] Built target Amr
+[ 45%] Built target DiscontinuousGalerkin
+[ 45%] Built target H5
+[ 45%] Built target ParallelAmr
+[ 45%] Built target AmrProjectors
+Consolidate compiler generated dependencies of target Elasticity
+[ 45%] Built target StrahlkorperIO
+[ 45%] Built target Elasticity
+[ 50%] Built target GeneralRelativity
+[ 55%] Built target Time
+[ 60%] Built target DomainTimeDependence
+Consolidate compiler generated dependencies of target ElasticityPointwiseFunctions
+[ 60%] Built target ElasticityPointwiseFunctions
+[ 65%] Built target Hydro
+[ 70%] Built target GeneralRelativitySolutions
+[ 70%] Built target EventsAndDenseTriggers
+[ 70%] Built target HydroSolutions
+[ 75%] Built target DomainCreators
+[ 80%] Built target RelativisticEulerSolutions
+Consolidate compiler generated dependencies of target XctsPointwiseFunctions
+[ 80%] Built target Exporter
+[ 85%] Built target Observer
+[ 85%] Built target XctsPointwiseFunctions
+[ 85%] Built target InitialDataUtilities
+[ 90%] Built target GrMhdAnalyticData
+[ 95%] Built target Events
+Consolidate compiler generated dependencies of target ParallelLinearSolver
+Consolidate compiler generated dependencies of target Xcts
+[ 95%] Built target ParallelLinearSolver
+Consolidate compiler generated dependencies of target XctsAnalyticData
+[100%] Built target Xcts
+[100%] Built target AmrCriteria
+[100%] Built target XctsAnalyticData
+Consolidate compiler generated dependencies of target EllipticSubdomainPreconditioners
+Consolidate compiler generated dependencies of target EllipticDgSubdomainOperator
+Consolidate compiler generated dependencies of target PoissonBoundaryConditions
+Consolidate compiler generated dependencies of target EllipticDg
+[100%] Built target EllipticSubdomainPreconditioners
+[100%] Built target EllipticDgSubdomainOperator
+[100%] Built target PoissonBoundaryConditions
+[100%] Built target EllipticDg
+Consolidate compiler generated dependencies of target XctsEvents
+[100%] Built target XctsEvents
+Consolidate compiler generated dependencies of target XctsSolutions
+[100%] Built target XctsSolutions
+Consolidate compiler generated dependencies of target XctsBoundaryConditions
+[100%] Built target XctsBoundaryConditions
+Consolidate compiler generated dependencies of target SolveXcts
+[100%] Linking CXX executable ../../../../bin/SolveXcts
+[100%] Built target SolveXcts
+[  0%] Built target CharmModuleInit
+[  0%] Built target Libsharp-external
+[  0%] Built target SPHEREPACK
+[  4%] Built target slatec
+[  4%] Built target module_Printf
+[  4%] Built target SpectrePch
+[  4%] Built target module_GlobalCache
+[  4%] Built target module_Main
+[  4%] Built target module_AlgorithmArray
+[  4%] Built target module_AlgorithmNodegroup
+[  4%] Built target module_AlgorithmGroup
+[  4%] Built target module_BoundaryMessage
+[  4%] Built target module_AlgorithmSingleton
+[  4%] Built target InfoAtLink
+[  4%] Built target SystemUtilities
+[  4%] Built target ErrorHandling
+[  4%] Built target Printf
+[  4%] Built target Utilities
+[  4%] Built target Informer
+[  4%] Built target Options
+[  4%] Built target Logging
+[  4%] Built target EventsAndTriggers
+[  4%] Built target Parallel
+[  8%] Built target DataStructures
+[  8%] Built target RootFinding
+[ 12%] Built target MathFunctions
+[ 12%] Built target SphericalHarmonics
+[ 16%] Built target FunctionsOfTime
+[ 16%] Built target IO
+[ 16%] Built target SpecialRelativity
+[ 16%] Built target LinearAlgebra
+[ 16%] Built target Convergence
+[ 16%] Built target PhaseControl
+[ 16%] Built target TensorYlm
+[ 16%] Built target LinearSolver
+[ 20%] Built target Spectral
+[ 25%] Built target DomainBoundaryConditions
+[ 25%] Built target SpinWeightedSphericalHarmonics
+[ 25%] Built target Interpolation
+[ 25%] Built target DomainStructure
+[ 25%] Built target LinearOperators
+[ 25%] Built target ParallelArrayCollection
+[ 25%] Built target FiniteDifference
+[ 25%] Built target AmrPolicies
+[ 25%] Built target Strahlkorper
+[ 33%] Built target CoordinateMaps
+[ 33%] Built target ApparentHorizonFinderCriteria
+[ 33%] Built target Domain
+[ 33%] Built target Amr
+[ 33%] Built target H5
+[ 33%] Built target DiscontinuousGalerkin
+[ 33%] Built target ConstraintDamping
+[ 33%] Built target ParallelAmr
+[ 37%] Built target Time
+[ 37%] Built target AmrProjectors
+[ 41%] Built target GeneralRelativity
+[ 41%] Built target StrahlkorperIO
+[ 41%] Built target EventsAndDenseTriggers
+[ 45%] Built target DomainTimeDependence
+[ 50%] Built target GrSurfaces
+[ 54%] Built target GeneralRelativitySolutions
+[ 54%] Built target GeneralRelativityAnalyticData
+[ 58%] Built target Hydro
+[ 62%] Built target ApparentHorizonFinder
+[ 62%] Built target HydroSolutions
+[ 66%] Built target DomainCreators
+[ 70%] Built target RelativisticEulerSolutions
+Consolidate compiler generated dependencies of target EvolutionTriggers
+[ 70%] Built target Exporter
+[ 75%] Built target Observer
+[ 75%] Built target EvolutionTriggers
+[ 75%] Built target GhRelativisticEulerSolutions
+[ 75%] Built target GrMhdSolutions
+[ 79%] Built target GrMhdAnalyticData
+[ 79%] Built target ParallelInterpolation
+[ 79%] Built target InitialDataUtilities
+[ 79%] Built target Importers
+[ 83%] Built target GhGrMhdAnalyticData
+[ 87%] Built target Events
+[ 91%] Built target ControlSystem
+[ 91%] Built target GhGrMhdSolutions
+[ 91%] Built target AmrEvents
+[ 91%] Built target AmrCriteria
+[ 95%] Built target Evolution
+[ 95%] Built target GeneralizedHarmonic
+[100%] Built target Cce
+Consolidate compiler generated dependencies of target EvolveGhBinaryBlackHole
+[100%] Linking CXX executable ../../../../bin/EvolveGhBinaryBlackHole
+[100%] Built target EvolveGhBinaryBlackHole
+[  0%] Built target CharmModuleInit
+[  0%] Built target Libsharp-external
+[  0%] Built target SPHEREPACK
+[  0%] Built target SpectrePch
+[  4%] Built target slatec
+[  4%] Built target module_Printf
+[  4%] Built target module_GlobalCache
+[  4%] Built target module_Main
+[  4%] Built target module_AlgorithmArray
+[  4%] Built target module_AlgorithmGroup
+[  4%] Built target module_AlgorithmNodegroup
+[  4%] Built target module_AlgorithmSingleton
+[  4%] Built target InfoAtLink
+[  4%] Built target module_BoundaryMessage
+[  4%] Built target SystemUtilities
+[  4%] Built target ErrorHandling
+[  4%] Built target Printf
+[  4%] Built target Utilities
+[  4%] Built target Informer
+[  4%] Built target Options
+[  4%] Built target Logging
+[  4%] Built target EventsAndTriggers
+[  4%] Built target Parallel
+[  8%] Built target DataStructures
+[  8%] Built target RootFinding
+[ 12%] Built target MathFunctions
+[ 12%] Built target SphericalHarmonics
+[ 16%] Built target FunctionsOfTime
+[ 16%] Built target LinearAlgebra
+[ 16%] Built target SpecialRelativity
+[ 16%] Built target IO
+[ 16%] Built target Convergence
+[ 16%] Built target PhaseControl
+[ 16%] Built target TensorYlm
+[ 16%] Built target LinearSolver
+[ 20%] Built target Spectral
+[ 25%] Built target DomainBoundaryConditions
+[ 25%] Built target SpinWeightedSphericalHarmonics
+[ 25%] Built target Interpolation
+[ 25%] Built target DomainStructure
+[ 25%] Built target LinearOperators
+[ 25%] Built target ParallelArrayCollection
+[ 25%] Built target AmrPolicies
+[ 25%] Built target FiniteDifference
+[ 25%] Built target Strahlkorper
+[ 25%] Built target ApparentHorizonFinderCriteria
+[ 33%] Built target CoordinateMaps
+[ 33%] Built target Domain
+[ 33%] Built target Amr
+[ 33%] Built target H5
+[ 33%] Built target DiscontinuousGalerkin
+[ 33%] Built target ConstraintDamping
+[ 37%] Built target GeneralRelativity
+[ 37%] Built target ParallelAmr
+[ 37%] Built target AmrProjectors
+[ 41%] Built target Time
+[ 41%] Built target StrahlkorperIO
+[ 45%] Built target DomainTimeDependence
+[ 50%] Built target GrSurfaces
+[ 54%] Built target GeneralRelativitySolutions
+[ 54%] Built target GeneralRelativityAnalyticData
+[ 58%] Built target ApparentHorizonFinder
+[ 58%] Built target EventsAndDenseTriggers
+[ 62%] Built target Hydro
+[ 62%] Built target HydroSolutions
+[ 66%] Built target DomainCreators
+[ 70%] Built target Observer
+[ 70%] Built target Exporter
+[ 75%] Built target RelativisticEulerSolutions
+[ 75%] Built target Importers
+[ 75%] Built target ParallelInterpolation
+[ 79%] Built target Events
+[ 79%] Built target InitialDataUtilities
+[ 83%] Built target ControlSystem
+[ 83%] Built target GrMhdSolutions
+[ 83%] Built target GhRelativisticEulerSolutions
+[ 87%] Built target GrMhdAnalyticData
+[ 87%] Built target AmrEvents
+[ 87%] Built target AmrCriteria
+[ 91%] Built target GhGrMhdAnalyticData
+[ 91%] Built target GhGrMhdSolutions
+[ 95%] Built target Evolution
+[ 95%] Built target GeneralizedHarmonic
+[100%] Built target Cce
+Consolidate compiler generated dependencies of target EvolveGhSingleBlackHole
+[100%] Linking CXX executable ../../../../bin/EvolveGhSingleBlackHole
+[100%] Built target EvolveGhSingleBlackHole
+[  0%] Built target Libsharp-external
+[  0%] Built target CharmModuleInit
+[  0%] Built target SPHEREPACK
+[  0%] Built target SpectrePch
+[  4%] Built target slatec
+[  4%] Built target module_Printf
+[  4%] Built target module_BoundaryMessage
+[  4%] Built target module_GlobalCache
+[  4%] Built target module_Main
+[  4%] Built target module_AlgorithmArray
+[  4%] Built target module_AlgorithmGroup
+[  4%] Built target module_AlgorithmNodegroup
+[  4%] Built target InfoAtLink
+[  4%] Built target module_AlgorithmSingleton
+[  4%] Built target SystemUtilities
+[  4%] Built target ErrorHandling
+[  4%] Built target Printf
+[  4%] Built target Utilities
+[  4%] Built target Informer
+[  4%] Built target Options
+[  4%] Built target Logging
+[  4%] Built target EventsAndTriggers
+[  4%] Built target Parallel
+[  9%] Built target DataStructures
+[  9%] Built target RootFinding
+[ 14%] Built target MathFunctions
+[ 14%] Built target SphericalHarmonics
+[ 19%] Built target FunctionsOfTime
+[ 19%] Built target LinearAlgebra
+[ 19%] Built target IO
+[ 19%] Built target SpecialRelativity
+[ 19%] Built target Convergence
+[ 19%] Built target TensorYlm
+[ 19%] Built target LinearSolver
+[ 23%] Built target Spectral
+[ 28%] Built target DomainBoundaryConditions
+[ 28%] Built target SpinWeightedSphericalHarmonics
+[ 28%] Built target Interpolation
+[ 28%] Built target DomainStructure
+[ 28%] Built target LinearOperators
+[ 28%] Built target ParallelArrayCollection
+[ 28%] Built target FiniteDifference
+[ 28%] Built target Strahlkorper
+[ 38%] Built target CoordinateMaps
+[ 38%] Built target Domain
+[ 38%] Built target DiscontinuousGalerkin
+[ 38%] Built target H5
+[ 38%] Built target ConstraintDamping
+[ 38%] Built target StrahlkorperIO
+[ 42%] Built target Time
+[ 47%] Built target GeneralRelativity
+[ 47%] Built target EventsAndDenseTriggers
+[ 52%] Built target DomainTimeDependence
+[ 57%] Built target GeneralRelativitySolutions
+[ 61%] Built target Hydro
+[ 61%] Built target HydroSolutions
+[ 66%] Built target DomainCreators
+[ 71%] Built target RelativisticEulerSolutions
+[ 71%] Built target Exporter
+[ 76%] Built target Observer
+[ 76%] Built target GrMhdSolutions
+[ 76%] Built target GhRelativisticEulerSolutions
+[ 76%] Built target InitialDataUtilities
+[ 80%] Built target GrMhdAnalyticData
+[ 80%] Built target Importers
+[ 80%] Built target GhGrMhdSolutions
+[ 80%] Built target ParallelInterpolation
+[ 85%] Built target Events
+[ 90%] Built target GhGrMhdAnalyticData
+[ 95%] Built target Evolution
+[ 95%] Built target GeneralizedHarmonic
+[100%] Built target Cce
+Consolidate compiler generated dependencies of target CharacteristicExtract
+[100%] Linking CXX executable ../../../../bin/CharacteristicExtract
+[100%] Built target CharacteristicExtract
+{"started_utc": "2026-09-12T19:41:25.074266+00:00", "patch_provenance": {"source_path": "/work/charm_7_0_0/src/ck-core/ck.C", "original_sha256": "c8774371a9c3c768d2d9a9908f1a9b276fdc7c963875b9716f6ed74ce19177c1", "patched_sha256": "a7c14ff611f576ee68020c60225b68b9b212edd02197eeefa27cc2bcfd56e93b", "patch_sha256": "dd96461cf701fad97f66f2b91f4b42ab91059007c0ab3c9e25ecc15223ceb232", "scope": "Linux pilot group/nodegroup allocation aligned to 64 bytes; not general support for arbitrary over-aligned chares"}, "source_before": "c8774371a9c3c768d2d9a9908f1a9b276fdc7c963875b9716f6ed74ce19177c1", "patch_sha256": "dd96461cf701fad97f66f2b91f4b42ab91059007c0ab3c9e25ecc15223ceb232", "libck_before": "354ca1a9ac841a8dff6c4fd2d9a786bed1a9e1d5ee95945d9e12b42448518a14", "binaries_before": {"SolveXcts": "8c138db11ff60ea92041f02618e743d28b68ceb8bfff65f66823f9d51c25a2ef", "EvolveGhBinaryBlackHole": "634680696cbb783c7d1ac6a6e6724d21c302a6b28ad7f3117b869f26fb2119c4", "EvolveGhSingleBlackHole": "9ebfb44f93bd3ccf596f6be30e979a8fc17bc73c1d54e0b9cbe4c37f268564f5", "CharacteristicExtract": "6f6b6e2e7df34ba4c8b62a262e4fa98ecadee784f2f78c325279643da15f558b"}, "source_after": "a7c14ff611f576ee68020c60225b68b9b212edd02197eeefa27cc2bcfd56e93b", "libck_after": "2907aa11e3865f9f441c98b21b5dffb8068aca663c4dea9841655def6e3c82dd", "binaries_after": {"SolveXcts": "7c9c9e9959fe5616c507c52dbb94510de563ed98dc9d1b03c8f92cedac57cf97", "EvolveGhBinaryBlackHole": "503de622ce6321c77b786e83c27679f7d3fc8b80e2a6e5d8af1bde502b9125cd", "EvolveGhSingleBlackHole": "88166b84a7680d0bac28f27074c57bfc5e000da451894ee62601bc0737593bc2", "CharacteristicExtract": "7cce35918d76227956efd2abf5f622a0dcf3aceb699079a880e482bc49f13f08"}, "spectre_commit": "ce221e8b4bf8f4ca1d0acad98453aed5b454f469", "charm_commit": "c5f1dcda82440082bf7d507a63e63270acc390df", "charm_diff": "diff --git a/src/ck-core/ck.C b/src/ck-core/ck.C\nindex dcc947c..d4f60f4 100644\n--- a/src/ck-core/ck.C\n+++ b/src/ck-core/ck.C\n@@ -656,10 +656,22 @@ void CkCreateChare(int cIdx, int eIdx, void *msg, CkChareID *pCid, int destPE)\n   _TRACE_CREATION_DONE(1);\n }\n \n+/* Local pilot fix: honor the 64-byte alignment required by SpECTRE's\n+ * MultiReaderSpinlock. Group registration records size, but not alignment.\n+ * posix_memalign storage is compatible with Chare::operator delete/free.\n+ */\n+static inline void *CkAllocGroupObject(size_t size)\n+{\n+  void *obj = NULL;\n+  if (posix_memalign(&obj, 64, size) != 0)\n+    CmiAbort(\"Unable to allocate aligned group object\");\n+  return obj;\n+}\n+\n void CkCreateLocalGroup(CkGroupID groupID, int epIdx, envelope *env)\n {\n   int gIdx = _entryTable[epIdx]->chareIdx;\n-  void *obj = malloc(_chareTable[gIdx]->size);\n+  void *obj = CkAllocGroupObject(_chareTable[gIdx]->size);\n   _MEMCHECK(obj);\n   setMemoryTypeChare(obj);\n   CmiImmediateLock(CkpvAccess(_groupTableImmLock));\n@@ -697,7 +709,7 @@ void CkCreateLocalNodeGroup(CkGroupID groupID, int epIdx, envelope *env)\n {\n   int gIdx = _entryTable[epIdx]->chareIdx;\n   size_t objSize=_chareTable[gIdx]->size;\n-  void *obj = malloc(objSize);\n+  void *obj = CkAllocGroupObject(objSize);\n   _MEMCHECK(obj);\n   setMemoryTypeChare(obj);\n   CkpvAccess(_currentGroup) = groupID;\n", "wall_seconds": 50.00292116194032}
+{"started_utc": "2026-09-12T19:41:25.034924+00:00", "command": ["python", "-u", "/campaign/scripts/fix-charm-alignment.py"], "cwd": "/work/spectre/build", "expected_exit_code": 0, "timeout_seconds": 3300.0, "output_bytes_before": 0, "cpu_stat_before": "usage_usec 79816\nuser_usec 45894\nsystem_usec 33922\ncore_sched.force_idle_usec 0\nnr_periods 1\nnr_throttled 0\nthrottled_usec 0\nnr_bursts 0\nburst_usec 0", "container_child_pid": 7, "ended_utc": "2026-09-12T19:42:16.799315+00:00", "wall_seconds": 51.76460724696517, "exit_code": 0, "watchdog_reason": null, "accepted_exit": true, "child_max_rss_kib": 1714236, "cgroup_memory_peak_bytes": "1959219200", "cgroup_memory_events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0", "cpu_stat_after": "usage_usec 113226607\nuser_usec 42046694\nsystem_usec 71179912\ncore_sched.force_idle_usec 0\nnr_periods 519\nnr_throttled 50\nthrottled_usec 223930456\nnr_bursts 0\nburst_usec 0", "output_bytes_after": 3362, "filesystem_free_bytes_after": 321741783040}

@@ -1,0 +1,38 @@
+{
+  "timestamp_utc": "2026-09-13T22:18:06.113205+00:00",
+  "host": "RONI2",
+  "pid": 80403,
+  "cwd": "/Users/xangma/repos/torchwave",
+  "command": "scripts/run_eob_full20_serialized.py --dt .25 --num-steps 24000 --output-dir /tmp/eob-full20-dt025-20260913",
+  "executable": "/Users/xangma/miniconda3/envs/pycbcorig313/bin/python",
+  "parameters": {
+    "mass1": 30.0,
+    "mass2": 20.0,
+    "chi1": 0.0,
+    "chi2": 0.0,
+    "f_lower": 20.0,
+    "omega_start": 0.015473886176432831
+  },
+  "choices": {
+    "spin_truncation": "tabulated",
+    "spin_v6": "bohe_total_energy",
+    "include_pan_v8": false,
+    "include_positive_chi_540": false,
+    "final_spin_fit_order": [
+      1,
+      2
+    ],
+    "dt_geom": 0.25,
+    "num_steps": 24000,
+    "ringdown_duration": 150.0,
+    "richardson_extrapolation": false
+  },
+  "dependency_sha256_before": {
+    "src/torchwave/approximants/eob/published_waveform.py": "8eedc2a0fa0a2eb96dbd7c6e5b541081df2466888aa9fb8dd45234b70b21eb60",
+    "src/torchwave/approximants/eob/integrator.py": "a036f6b7580450a847bc1d56ebf745de6cdb5c2ee397d31cf1014d483eebe26b",
+    "src/torchwave/approximants/eob/seobnrv4_hamiltonian.py": "5b1a5b877129e5235b8f92974a01ab450176e8e924d374ca0fc413334fad177f",
+    "src/torchwave/approximants/eob/seobnrv4_flux.py": "50af1727e28828969d84cac5e984189c529e205ad9fb96d22c11037103aca3ec",
+    "src/torchwave/approximants/eob/seobnrv4_mode22.py": "d1fa659a2604732ae74e8c7e9736b89371655f3b06a0d04bed6a1162500203f9",
+    "src/torchwave/approximants/eob/seobnrv4_amplitude22.py": "f51cf2a03f1a3567293fbac75a341701448275bc45da1fa97af80d017890d2a5"
+  }
+}

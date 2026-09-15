@@ -1,0 +1,115 @@
+{
+  "lal_version": "7.7.0",
+  "lalsimulation_version": "6.2.0",
+  "api": "SimInspiralChooseTDWaveform",
+  "approximant": "SEOBNRv4",
+  "choices": {
+    "spin_truncation": "tabulated",
+    "spin_v6": "bohe_total_energy",
+    "include_pan_v8": false,
+    "include_positive_chi_540": false,
+    "final_spin_fit_order": [
+      1,
+      2
+    ]
+  },
+  "native_artifact": "docs/reviews/2026-09-12-clean-room/verification/pass-6/eob-convergence/dt-0.125.pt",
+  "native_artifact_sha256": "99e035b5785e0f51f0d719daaef4df3cec8659871a774839ec2cce32590a2447",
+  "native_source_sha256": {
+    "src/torchwave/approximants/eob/__init__.py": "f8a26118875687ba8643d262a585a00ac4e76803d887c4933fcdcca42569ed15",
+    "src/torchwave/approximants/eob/attachment.py": "09941c1cc1aa371898205a38719f13d359655f0b9cad76828ea86cfb09df0521",
+    "src/torchwave/approximants/eob/events.py": "2fcb3dc9e7362fd8c15d8f78d3ddcb7b603d5d03dbdebb188eca460e09dd4f75",
+    "src/torchwave/approximants/eob/factorized_modes.py": "d4b10cbcbbecc4de84329a13cdca43d90d4fa5aa168248fc2e874211d29f8315",
+    "src/torchwave/approximants/eob/hamiltonian.py": "d26a87ded2a197a000704b77b075cdc72ee2315741bdacc29fb25f912158a441",
+    "src/torchwave/approximants/eob/initial_conditions.py": "68363208874bfaf39dad5d5668e5f128553144b4db31f64f0283278ed710458f",
+    "src/torchwave/approximants/eob/integrator.py": "60657589b70a3dc6ae75abbb26093e65cae63f2de9fb2a5b0110c07c15d88879",
+    "src/torchwave/approximants/eob/merger_ringdown.py": "0db678173690ce0f7918c6fef2d9cb4864bf55a8dae3a6f80a47d0563ac7237d",
+    "src/torchwave/approximants/eob/nqc.py": "f023b84fc0a48e59feb6b543d234635df965e04ee9aff05672ea3ff984d0cf85",
+    "src/torchwave/approximants/eob/published_waveform.py": "306bcedb98abee3241b4c4b386cd8e17c104834fbf28eb8bd11386fc3d868ffd",
+    "src/torchwave/approximants/eob/radiation_reaction.py": "dfb8853fc929145c3d61b7af49c16426560a12dc14ba9e664659af4a4449834d",
+    "src/torchwave/approximants/eob/remnant.py": "e7690cd5df1bcde2f579954762116beb20db606dae809835b148dae73c4cb007",
+    "src/torchwave/approximants/eob/seobnrv4_amplitude22.py": "f51cf2a03f1a3567293fbac75a341701448275bc45da1fa97af80d017890d2a5",
+    "src/torchwave/approximants/eob/seobnrv4_flux.py": "f0b4d00664f3d3ea51db6bf73d506f7f2facab130776879a64eb30b8003d379e",
+    "src/torchwave/approximants/eob/seobnrv4_hamiltonian.py": "5b1a5b877129e5235b8f92974a01ab450176e8e924d374ca0fc413334fad177f",
+    "src/torchwave/approximants/eob/seobnrv4_mode22.py": "b0d5587f50b369181eaaecf7ea63c87e14b8e1c774ad20add1fd2af49ef7c55b",
+    "src/torchwave/approximants/eob/waveform.py": "03a559c59f1aef83037ba0fdea61cc070c1afa4478f082d4068b67fe1fc27ced",
+    "src/torchwave/approximants/kerr_qnm_author.py": "ea90c5dcce7403995e91ee088551d61f941a645b331fa33a5fe5c1950f78990c",
+    "scripts/verify_eob_published_convergence.py": "704bf49072ae4a68fcde00a26dadab4892f277ecbca5c807cf59451a9597627c"
+  },
+  "convention": "Native NQC amplitude peak is t=0; reference retains its returned epoch. Same numerical input phase zero, without establishing identical phase semantics. No optimization or fitted alignment.",
+  "scope": "Separate TD diagnostic on reference time support; not the canonical FD acceptance test. Linear native interpolation and finite start/end support are included in residuals.",
+  "results": [
+    {
+      "parameters": {
+        "omega_start": 0.04,
+        "mass1": 30.0,
+        "mass2": 20.0,
+        "chi1": 0.0,
+        "chi2": 0.0
+      },
+      "distance_Mpc": 100.0,
+      "inclination": 0.8,
+      "phi_ref": 0.0,
+      "f_ref": 0.0,
+      "f_lower": 51.70000547234364,
+      "delta_t": 3.078431842275792e-05,
+      "reference_time_interval": [
+        -0.077411014,
+        0.09445783575425745
+      ],
+      "native_time_interval": [
+        -0.07645022023981653,
+        0.04176156250357388
+      ],
+      "reference_samples": 5584,
+      "metrics": {
+        "plus": {
+          "relative_l2": 1.8698695547590765,
+          "relative_norm_error": 0.0012506227553543692,
+          "finite": true
+        },
+        "cross": {
+          "relative_l2": 1.8769836969087188,
+          "relative_norm_error": 0.0019728274292560855,
+          "finite": true
+        }
+      }
+    },
+    {
+      "parameters": {
+        "omega_start": 0.04,
+        "mass1": 30.0,
+        "mass2": 20.0,
+        "chi1": 0.2,
+        "chi2": -0.1
+      },
+      "distance_Mpc": 100.0,
+      "inclination": 0.8,
+      "phi_ref": 0.0,
+      "f_ref": 0.0,
+      "f_lower": 51.70000547234364,
+      "delta_t": 3.078431842275792e-05,
+      "reference_time_interval": [
+        -0.082536604,
+        0.09530440352827248
+      ],
+      "native_time_interval": [
+        -0.08126624624576592,
+        0.03694553649762448
+      ],
+      "reference_samples": 5778,
+      "metrics": {
+        "plus": {
+          "relative_l2": 1.400108408222288,
+          "relative_norm_error": 0.0003473154883476548,
+          "finite": true
+        },
+        "cross": {
+          "relative_l2": 1.412887251552406,
+          "relative_norm_error": 7.675046377819683e-05,
+          "finite": true
+        }
+      }
+    }
+  ]
+}

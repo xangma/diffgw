@@ -1,0 +1,119 @@
+{
+  "provenance": "PROCESS-LOCAL ANGLE/SOURCE-FRAME SUBSTITUTION (not a full Eq.45 mode-sum): clean coefficients + full-J source frame alpha0/thetaJN/zeta + compat102 beta; conv0 alpha=alpha_NNLO-alpha_NNLO(fref)+alpha0, gamma=gamma_NNLO-gamma_NNLO(fref), carrier=phi_J; paired XP102 convention0; public comparison uses same phic and final_spin_mod",
+  "python": "3.13.9 | packaged by conda-forge | (main, Oct 22 2025, 23:38:18) [Clang 19.1.7 ]",
+  "versions": {
+    "lal": "7.7.0",
+    "lalsimulation": "6.2.0"
+  },
+  "cases": [
+    {
+      "id": "IMRPhenomXP_diagnostic",
+      "final_spin_mod": 0,
+      "phic": 0.0,
+      "metrics": {
+        "native_plus": 0.33232551114157083,
+        "native_cross": 0.33233038631046086,
+        "clean_frame_plus": 0.3327068775896741,
+        "clean_frame_cross": 0.3328112480736906,
+        "n": 1968
+      },
+      "adapter_calls": 1
+    },
+    {
+      "id": "IMRPhenomXP_diagnostic",
+      "final_spin_mod": 0,
+      "phic": 0.3,
+      "metrics": {
+        "native_plus": 0.3323161991102319,
+        "native_cross": 0.33231879294215333,
+        "clean_frame_plus": 0.33270704107828486,
+        "clean_frame_cross": 0.33278555495768725,
+        "n": 1968
+      },
+      "adapter_calls": 2
+    },
+    {
+      "id": "IMRPhenomXP_diagnostic",
+      "final_spin_mod": 3,
+      "phic": 0.0,
+      "metrics": {
+        "native_plus": 0.33721724845336076,
+        "native_cross": 0.3372852021670714,
+        "clean_frame_plus": 0.33764671132941637,
+        "clean_frame_cross": 0.33782654609105445,
+        "n": 1968
+      },
+      "adapter_calls": 3
+    },
+    {
+      "id": "IMRPhenomXP_diagnostic",
+      "final_spin_mod": 3,
+      "phic": 0.3,
+      "metrics": {
+        "native_plus": 0.33731839724527185,
+        "native_cross": 0.3373882693566373,
+        "clean_frame_plus": 0.3377596767319246,
+        "clean_frame_cross": 0.33791460898221665,
+        "n": 1968
+      },
+      "adapter_calls": 4
+    },
+    {
+      "id": "IMRPhenomXP_holdout",
+      "final_spin_mod": 0,
+      "phic": 0.0,
+      "metrics": {
+        "native_plus": 1.3811861083368735,
+        "native_cross": 1.3838794628980393,
+        "clean_frame_plus": 1.3805965582681423,
+        "clean_frame_cross": 1.3863494353710335,
+        "n": 1968
+      },
+      "adapter_calls": 5
+    },
+    {
+      "id": "IMRPhenomXP_holdout",
+      "final_spin_mod": 0,
+      "phic": 0.71,
+      "metrics": {
+        "native_plus": 1.382865925207231,
+        "native_cross": 1.383094385450674,
+        "clean_frame_plus": 1.3843161280231364,
+        "clean_frame_cross": 1.3853340381631192,
+        "n": 1968
+      },
+      "adapter_calls": 6
+    },
+    {
+      "id": "IMRPhenomXP_holdout",
+      "final_spin_mod": 3,
+      "phic": 0.0,
+      "metrics": {
+        "native_plus": 1.382034914510127,
+        "native_cross": 1.3856832389347897,
+        "clean_frame_plus": 1.3814153875331074,
+        "clean_frame_cross": 1.388173210072184,
+        "n": 1968
+      },
+      "adapter_calls": 7
+    },
+    {
+      "id": "IMRPhenomXP_holdout",
+      "final_spin_mod": 3,
+      "phic": 0.71,
+      "metrics": {
+        "native_plus": 1.3844433742197602,
+        "native_cross": 1.3853420909168577,
+        "clean_frame_plus": 1.3858991593733472,
+        "clean_frame_cross": 1.3875995025528032,
+        "n": 1968
+      },
+      "adapter_calls": 8
+    }
+  ],
+  "sha256": {
+    "scripts/diagnose_precession_clean_frame_assembly.py": "cc0643f24d08c94560621e2e8163abf4e936e4b3c0de4322ce195d2d3097e5af",
+    "src/torchwave/approximants/precession_source_frame_clean.py": "0886aefe5e93a8bba8e8399e91914df8d79e544496728e501eee76ac764c419c",
+    "src/torchwave/approximants/precession_beta_clean.py": "bdadf4613e0c8cec0096789a97f88efb32178e0696180911b6d93e339b4f33f1"
+  }
+}

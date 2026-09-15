@@ -1,0 +1,442 @@
+{
+  "scope": "Unaligned public-binary TD diagnostics, not strict waveform certification",
+  "host": "RONI2",
+  "lal_version": "7.7.0",
+  "lalsimulation_version": "6.2.0",
+  "oracle_api": "SimBlackHoleRingdown",
+  "oracle_inputs": "mass kg; distance m; deltaT seconds; final spin; fractional mass loss",
+  "native_energy_convention": "Equal +m,-m pair; remnant rest-energy fraction; exact finite Q",
+  "native_qnm_backend": "independent",
+  "native_angular_basis": "spheroidal",
+  "phase_probes": {
+    "raw": "Both APIs supplied phase zero",
+    "fixed_pi": "Native phase pi, reference phase zero; a fixed convention diagnostic, no optimized alignment"
+  },
+  "unresolved": [
+    "The meaning of the reference phase zero and angular eigenfunction gauge is not established as equivalent to the native API.",
+    "The scalar native energy conversion treats fractional mass loss as a fraction of the remnant rest energy; reference implementation semantics require independent documentation.",
+    "No waveform coefficient or native default is selected from these diagnostics."
+  ],
+  "cases": [
+    {
+      "final_mass_solar": 65.0,
+      "final_spin": 0.0,
+      "distance_mpc": 100.0,
+      "energy_fraction": 0.01,
+      "inclination": 0.0,
+      "mode": [
+        2,
+        2,
+        0
+      ],
+      "delta_t": 0.0001220703125,
+      "num_samples": 1063,
+      "native_pair_amplitude": 3.424829983832205e-20,
+      "raw": {
+        "plus": {
+          "relative_l2": 1.9999999926434666,
+          "relative_norm_error": 7.356532383262504e-09
+        },
+        "cross": {
+          "relative_l2": 1.999999976502233,
+          "relative_norm_error": 2.349776628829403e-08
+        }
+      },
+      "fixed_pi": {
+        "plus": {
+          "relative_l2": 7.351501660771447e-08,
+          "relative_norm_error": 7.356532161217899e-09
+        },
+        "cross": {
+          "relative_l2": 7.51886222265867e-08,
+          "relative_norm_error": 2.349776628829403e-08
+        }
+      }
+    },
+    {
+      "final_mass_solar": 65.0,
+      "final_spin": 0.0,
+      "distance_mpc": 100.0,
+      "energy_fraction": 0.01,
+      "inclination": 0.8,
+      "mode": [
+        2,
+        2,
+        0
+      ],
+      "delta_t": 0.0001220703125,
+      "num_samples": 1063,
+      "native_pair_amplitude": 3.424829983832205e-20,
+      "raw": {
+        "plus": {
+          "relative_l2": 1.9999999926434668,
+          "relative_norm_error": 7.356531939173294e-09
+        },
+        "cross": {
+          "relative_l2": 1.9999999765022325,
+          "relative_norm_error": 2.3497766066249426e-08
+        }
+      },
+      "fixed_pi": {
+        "plus": {
+          "relative_l2": 7.35150165989869e-08,
+          "relative_norm_error": 7.356531939173294e-09
+        },
+        "cross": {
+          "relative_l2": 7.518862211479857e-08,
+          "relative_norm_error": 2.3497766066249426e-08
+        }
+      }
+    },
+    {
+      "final_mass_solar": 65.0,
+      "final_spin": 0.0,
+      "distance_mpc": 100.0,
+      "energy_fraction": 0.01,
+      "inclination": 1.3,
+      "mode": [
+        2,
+        2,
+        0
+      ],
+      "delta_t": 0.0001220703125,
+      "num_samples": 1063,
+      "native_pair_amplitude": 3.424829983832205e-20,
+      "raw": {
+        "plus": {
+          "relative_l2": 1.9999999926434666,
+          "relative_norm_error": 7.356531939173294e-09
+        },
+        "cross": {
+          "relative_l2": 1.9999999765022325,
+          "relative_norm_error": 2.349776628829403e-08
+        }
+      },
+      "fixed_pi": {
+        "plus": {
+          "relative_l2": 7.351501658424645e-08,
+          "relative_norm_error": 7.356531939173294e-09
+        },
+        "cross": {
+          "relative_l2": 7.518862218832129e-08,
+          "relative_norm_error": 2.349776628829403e-08
+        }
+      }
+    },
+    {
+      "final_mass_solar": 65.0,
+      "final_spin": 0.3,
+      "distance_mpc": 100.0,
+      "energy_fraction": 0.01,
+      "inclination": 0.0,
+      "mode": [
+        2,
+        2,
+        0
+      ],
+      "delta_t": 0.0001220703125,
+      "num_samples": 1078,
+      "native_pair_amplitude": 3.048012587589346e-20,
+      "raw": {
+        "plus": {
+          "relative_l2": 2.0020935974028577,
+          "relative_norm_error": 0.0021258867693789707
+        },
+        "cross": {
+          "relative_l2": 1.99725531836896,
+          "relative_norm_error": 0.0027022901468782834
+        }
+      },
+      "fixed_pi": {
+        "plus": {
+          "relative_l2": 0.011567761456430677,
+          "relative_norm_error": 0.0021258867693789707
+        },
+        "cross": {
+          "relative_l2": 0.013290500497234027,
+          "relative_norm_error": 0.0027022901468782834
+        }
+      }
+    },
+    {
+      "final_mass_solar": 65.0,
+      "final_spin": 0.3,
+      "distance_mpc": 100.0,
+      "energy_fraction": 0.01,
+      "inclination": 0.8,
+      "mode": [
+        2,
+        2,
+        0
+      ],
+      "delta_t": 0.0001220703125,
+      "num_samples": 1078,
+      "native_pair_amplitude": 3.048012587589346e-20,
+      "raw": {
+        "plus": {
+          "relative_l2": 2.0022014439578864,
+          "relative_norm_error": 0.0022330607543339376
+        },
+        "cross": {
+          "relative_l2": 1.9974072853938234,
+          "relative_norm_error": 0.0025507900682074647
+        }
+      },
+      "fixed_pi": {
+        "plus": {
+          "relative_l2": 0.011471440666069303,
+          "relative_norm_error": 0.0022330607543339376
+        },
+        "cross": {
+          "relative_l2": 0.013190490619799409,
+          "relative_norm_error": 0.0025507900682074647
+        }
+      }
+    },
+    {
+      "final_mass_solar": 65.0,
+      "final_spin": 0.3,
+      "distance_mpc": 100.0,
+      "energy_fraction": 0.01,
+      "inclination": 1.3,
+      "mode": [
+        2,
+        2,
+        0
+      ],
+      "delta_t": 0.0001220703125,
+      "num_samples": 1078,
+      "native_pair_amplitude": 3.048012587589346e-20,
+      "raw": {
+        "plus": {
+          "relative_l2": 2.0022955737254713,
+          "relative_norm_error": 0.0023264836788712273
+        },
+        "cross": {
+          "relative_l2": 1.9975207236163837,
+          "relative_norm_error": 0.002437684782976457
+        }
+      },
+      "fixed_pi": {
+        "plus": {
+          "relative_l2": 0.011366406973460537,
+          "relative_norm_error": 0.0023264836788714494
+        },
+        "cross": {
+          "relative_l2": 0.013118849239805889,
+          "relative_norm_error": 0.002437684782976457
+        }
+      }
+    },
+    {
+      "final_mass_solar": 65.0,
+      "final_spin": 0.7,
+      "distance_mpc": 100.0,
+      "energy_fraction": 0.01,
+      "inclination": 0.0,
+      "mode": [
+        2,
+        2,
+        0
+      ],
+      "delta_t": 0.0001220703125,
+      "num_samples": 1171,
+      "native_pair_amplitude": 2.3272491914778668e-20,
+      "raw": {
+        "plus": {
+          "relative_l2": 2.002844500741529,
+          "relative_norm_error": 0.0030264097669356893
+        },
+        "cross": {
+          "relative_l2": 1.9945810095747116,
+          "relative_norm_error": 0.0052028082581847546
+        }
+      },
+      "fixed_pi": {
+        "plus": {
+          "relative_l2": 0.027163637998484307,
+          "relative_norm_error": 0.0030264097669356893
+        },
+        "cross": {
+          "relative_l2": 0.029824514056862077,
+          "relative_norm_error": 0.0052028082581847546
+        }
+      }
+    },
+    {
+      "final_mass_solar": 65.0,
+      "final_spin": 0.7,
+      "distance_mpc": 100.0,
+      "energy_fraction": 0.01,
+      "inclination": 0.8,
+      "mode": [
+        2,
+        2,
+        0
+      ],
+      "delta_t": 0.0001220703125,
+      "num_samples": 1171,
+      "native_pair_amplitude": 2.3272491914778668e-20,
+      "raw": {
+        "plus": {
+          "relative_l2": 2.0037398491414686,
+          "relative_norm_error": 0.0039102351190167806
+        },
+        "cross": {
+          "relative_l2": 1.9958139903581085,
+          "relative_norm_error": 0.00398077713374001
+        }
+      },
+      "fixed_pi": {
+        "plus": {
+          "relative_l2": 0.026422288242370986,
+          "relative_norm_error": 0.0039102351190167806
+        },
+        "cross": {
+          "relative_l2": 0.028898105977044654,
+          "relative_norm_error": 0.00398077713374001
+        }
+      }
+    },
+    {
+      "final_mass_solar": 65.0,
+      "final_spin": 0.7,
+      "distance_mpc": 100.0,
+      "energy_fraction": 0.01,
+      "inclination": 1.3,
+      "mode": [
+        2,
+        2,
+        0
+      ],
+      "delta_t": 0.0001220703125,
+      "num_samples": 1171,
+      "native_pair_amplitude": 2.3272491914778668e-20,
+      "raw": {
+        "plus": {
+          "relative_l2": 2.002987714123256,
+          "relative_norm_error": 0.0031622941808102656
+        },
+        "cross": {
+          "relative_l2": 1.9954955158854952,
+          "relative_norm_error": 0.004294037324291788
+        }
+      },
+      "fixed_pi": {
+        "plus": {
+          "relative_l2": 0.026634451439907992,
+          "relative_norm_error": 0.0031622941808102656
+        },
+        "cross": {
+          "relative_l2": 0.029298025476120683,
+          "relative_norm_error": 0.004294037324291788
+        }
+      }
+    },
+    {
+      "final_mass_solar": 65.0,
+      "final_spin": 0.95,
+      "distance_mpc": 100.0,
+      "energy_fraction": 0.01,
+      "inclination": 0.0,
+      "mode": [
+        2,
+        2,
+        0
+      ],
+      "delta_t": 0.0001220703125,
+      "num_samples": 1779,
+      "native_pair_amplitude": 1.359007885745314e-20,
+      "raw": {
+        "plus": {
+          "relative_l2": 2.002998130418481,
+          "relative_norm_error": 0.0031716929931213667
+        },
+        "cross": {
+          "relative_l2": 1.9992707340913474,
+          "relative_norm_error": 0.0005404790141301241
+        }
+      },
+      "fixed_pi": {
+        "plus": {
+          "relative_l2": 0.02655900573139542,
+          "relative_norm_error": 0.0031716929931213667
+        },
+        "cross": {
+          "relative_l2": 0.027480902176834226,
+          "relative_norm_error": 0.0005404790141301241
+        }
+      }
+    },
+    {
+      "final_mass_solar": 65.0,
+      "final_spin": 0.95,
+      "distance_mpc": 100.0,
+      "energy_fraction": 0.01,
+      "inclination": 0.8,
+      "mode": [
+        2,
+        2,
+        0
+      ],
+      "delta_t": 0.0001220703125,
+      "num_samples": 1779,
+      "native_pair_amplitude": 1.359007885745314e-20,
+      "raw": {
+        "plus": {
+          "relative_l2": 2.0016723945820236,
+          "relative_norm_error": 0.0018536269261111293
+        },
+        "cross": {
+          "relative_l2": 1.9979231088508616,
+          "relative_norm_error": 0.001878638564667856
+        }
+      },
+      "fixed_pi": {
+        "plus": {
+          "relative_l2": 0.027000080338300807,
+          "relative_norm_error": 0.0018536269261111293
+        },
+        "cross": {
+          "relative_l2": 0.02820913729185417,
+          "relative_norm_error": 0.001878638564667856
+        }
+      }
+    },
+    {
+      "final_mass_solar": 65.0,
+      "final_spin": 0.95,
+      "distance_mpc": 100.0,
+      "energy_fraction": 0.01,
+      "inclination": 1.3,
+      "mode": [
+        2,
+        2,
+        0
+      ],
+      "delta_t": 0.0001220703125,
+      "num_samples": 1779,
+      "native_pair_amplitude": 1.359007885745314e-20,
+      "raw": {
+        "plus": {
+          "relative_l2": 2.0004094652738194,
+          "relative_norm_error": 0.0005972064315775683
+        },
+        "cross": {
+          "relative_l2": 1.9958993789899542,
+          "relative_norm_error": 0.0038901309344484547
+        }
+      },
+      "fixed_pi": {
+        "plus": {
+          "relative_l2": 0.027413687826814626,
+          "relative_norm_error": 0.0005972064315775683
+        },
+        "cross": {
+          "relative_l2": 0.029247417785073646,
+          "relative_norm_error": 0.0038901309344484547
+        }
+      }
+    }
+  ]
+}

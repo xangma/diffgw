@@ -1,0 +1,483 @@
+{
+  "array_contract": {
+    "dtype_native_cross": "float64",
+    "dtype_native_plus": "float64",
+    "dtype_public_cross": "float64",
+    "dtype_public_plus": "float64",
+    "exact_lengths": true,
+    "exact_sampling_dt": true,
+    "finite": true,
+    "native_td_time_start_end": [
+      0.0,
+      8101.191165341304
+    ],
+    "public_sampling_dt_seconds": 0.00048828125,
+    "public_sign_contract": "both saved direct-frame polarizations multiplied by -1 per reviewed observer-frame contract",
+    "samples": 4087,
+    "sampling_dt_seconds": 0.00048828125
+  },
+  "earliest_deviation": {
+    "fixed_relative_envelope_markers": {
+      "first_finite": {
+        "elapsed_time_seconds": 0.0,
+        "index": 0,
+        "ratio": 3.3373079261709926e-06,
+        "td_time_dimensionless": 0.0
+      },
+      "maximum": {
+        "elapsed_time_seconds": 1.9951171875,
+        "index": 4086,
+        "ratio": 0.014932324969190744,
+        "td_time_dimensionless": 8101.191165341304
+      },
+      "relative_envelope_ge_0.0001": {
+        "elapsed_time_seconds": 1.921875,
+        "index": 3936,
+        "ratio": 0.000100824994084709,
+        "td_time_dimensionless": 7803.790608610713
+      },
+      "relative_envelope_ge_0.001": {
+        "elapsed_time_seconds": 1.9541015625,
+        "index": 4002,
+        "ratio": 0.0010170600502614512,
+        "td_time_dimensionless": 7934.646853572173
+      },
+      "relative_envelope_ge_1e-05": {
+        "elapsed_time_seconds": 1.52978515625,
+        "index": 3133,
+        "ratio": 1.0010046700042022e-05,
+        "td_time_dimensionless": 6211.706294912949
+      },
+      "relative_envelope_ge_1e-06": {
+        "elapsed_time_seconds": 0.0,
+        "index": 0,
+        "ratio": 3.3373079261709926e-06,
+        "td_time_dimensionless": 0.0
+      }
+    },
+    "interpretation": "A discrepancy is already present within PA and grows during ODE inspiral, with larger aggregate residuals in the NQC auxiliary-to-attachment and tail windows. Cached TD outputs alone cannot distinguish PA state error, NQC correction, projection, or sampling effects; the next contract should pin those trajectory, support, sampling, and event-handoff quantities before assigning causality.",
+    "raw_nonzero": {
+      "h_cross_index": 0,
+      "h_plus_index": 0,
+      "interpretation": "Both polarizations differ at the first stored sample; this is a small deterministic raw difference, not an identified conditioner boundary."
+    }
+  },
+  "epoch_comparison": {
+    "absolute_mismatch_seconds": 1.3718346412172622e-06,
+    "comparison_correction_applied": false,
+    "native_epoch_seconds": -1.9577632791653587,
+    "public_exact_start_epoch_seconds": -1.957764651,
+    "public_minus_native_seconds": -1.3718346412172622e-06
+  },
+  "inputs": {
+    "files": [
+      {
+        "path": "docs/reviews/2026-09-13-parity-review/verification/teob-direct-quadratic-replay-clean/replay-native-output.npz",
+        "sha256": "fa5cca54adee93ae72b664d411c581cc1ea4246b97661323bf1553e3028268a4"
+      },
+      {
+        "path": "docs/reviews/2026-09-13-parity-review/verification/teob-direct-quadratic-replay-clean/replay-report.json",
+        "sha256": "96d5ed9db3c139e1ac52225cc1e4e77bf088caf52ee1640cfce24b41d96ddbe4"
+      },
+      {
+        "path": "/Users/xangma/repos/torchwave/docs/reviews/2026-09-13-parity-review/verification/teob-conditioner-public-clean/arrays.npz",
+        "sha256": "4712791026b99ad8fb4e713cb99270d2f444c274d320267ef25a10be7e21ab6e"
+      },
+      {
+        "path": "/Users/xangma/repos/torchwave/docs/reviews/2026-09-13-parity-review/verification/teob-conditioner-public-clean/report.json",
+        "sha256": "b80a516eab445baa9e5f0be9e4a0d0fbd413ea7771f8293c5cebd4ae114589c9"
+      }
+    ],
+    "native_arrays": [
+      "h_plus_td",
+      "h_cross_td",
+      "td_time"
+    ],
+    "public_arrays": [
+      "exact_start_raw_h_plus",
+      "exact_start_raw_h_cross"
+    ]
+  },
+  "overall": {
+    "concat_plus_then_cross": {
+      "first_nonzero_index": 0,
+      "first_sample_difference": 9.38551427750599e-28,
+      "max_abs": 1.251859118780011e-23,
+      "max_abs_index": 8097,
+      "native_norm": 1.040416682499771e-19,
+      "public_norm": 1.0404167550272577e-19,
+      "relative_l2_public_norm": 0.0003691673851626414,
+      "residual_norm": 3.840879329328132e-23,
+      "samples": 8174
+    },
+    "h_cross": {
+      "first_nonzero_index": 0,
+      "first_sample_difference": -3.926245391417578e-27,
+      "max_abs": 1.251859118780011e-23,
+      "max_abs_index": 4010,
+      "native_norm": 7.358005320949409e-20,
+      "public_norm": 7.35800959789126e-20,
+      "relative_l2_public_norm": 0.00036895418484393205,
+      "residual_norm": 2.714768433263798e-23,
+      "samples": 4087
+    },
+    "h_plus": {
+      "first_nonzero_index": 0,
+      "first_sample_difference": 9.38551427750599e-28,
+      "max_abs": 1.2010650374924506e-23,
+      "max_abs_index": 4008,
+      "native_norm": 7.355708328860189e-20,
+      "public_norm": 7.355705076434548e-20,
+      "relative_l2_public_norm": 0.0003693805959210346,
+      "residual_norm": 2.717054724552773e-23,
+      "samples": 4087
+    }
+  },
+  "reproducibility": {
+    "diagnostic_script": "/Users/xangma/repos/torchwave/scripts/diagnose_teob_native_residual_localization_clean.py",
+    "diagnostic_script_sha256": "244e400c12d17c4a1c0670859bf6eac82246179ab5cd04214ba5038d69b624a3",
+    "native_replay_report_status": "complete",
+    "numpy": "2.3.5",
+    "platform": "macOS-26.6-arm64-arm-64bit-Mach-O",
+    "public_conditioner_report_status": "complete",
+    "python": "3.13.9 | packaged by conda-forge | (main, Oct 22 2025, 23:38:18) [Clang 19.1.7 ]",
+    "replay_source_hashes_unchanged": true,
+    "replay_source_sha256_after": {
+      "adapter": "1c78bf3dd6b88390d277bd2896ac4981c226a17b152c03515c330b0271f71f29",
+      "adaptive_continuation": "7b8722ecc28af74eeb2fe29d2e7c1782123106d63fbeba60c82ca81f6b70b869",
+      "adaptive_driver": "27db5a25123f4d054a9919a11752b207cfc6accc377a8eeaf21f4b49087867e0",
+      "conditioning": "d8a9ad936a0e6fb8e0c59a35428a7e2c70e372dca0b8d87f6d890d38dcd30a8a",
+      "conditioning_contract": "2fcdbd7a825e7f539e80a769a63a66f37b5b477b697878056ccb8e1bb98141b8",
+      "existing_diagnostic": "3eb4cfbd08a77ce07b8d65d59d3aa7468650b56adf64e668739888693c33d432",
+      "hamiltonian": "05e15d8fd9888ee8d454d61fbc8454fe5c652747780f77c771718557ce0294f3",
+      "nqc": "f705514ef981b3f0a557efeebe508b52fdb70c634a8ac8f2c357f30761871068",
+      "nqc_basis": "8ec2d77a57b96e8246bdae3ca8c62c4e2a17cabf1c5554aa1e47fe25b1ea8f46",
+      "postadiabatic": "06d0620283798a28c477e6e70b3a3720e337c53a8d8af8a78be17646a7be7550",
+      "postmerger": "7324ff72dc1fd36149f137b9f8eafa68f354fd897ff5d56478ce5a6cf2f8c5f6",
+      "producer_diagnostic": "3c28c431f4dffc7aced34691c42aa4e8f9d4f2552c0f56ecf157459904dcc7ff",
+      "projection": "c8ca45a490842f291e30616a52850f148397a8aad3e49c764c9a45c1bff99ec6",
+      "radial_acceleration": "6e16681eae0daade84bc540f12ee6fe40b3ad08929444273faf03123b7bbc3f9",
+      "radiation": "dca2c9791403467d85572f25a062cbc995d8228743d33b6b2e5dc28c13336bd6",
+      "replay_script": "1627be3e4929f626d5467c1493a2ff25aa78fea7613368ef3dbedebba3d292f5",
+      "ringdown": "df3d21ce4fad55a84d0e1550ac376b8931eecbc0b4076dc9f6235b076ed0befa",
+      "state_mode": "b247c91659b18341301356eca2def7cde270b0aaa7a9e16c85f8ba40f1861552",
+      "trajectory": "6728419dd6b7c6f2a7a340f017f52b5dd54bc399d212884f9975643cd58db785",
+      "uib_remnant": "9ea727ec726f82c62c2ad6e399ee084e02daf275c145a3503e0666271010e755",
+      "vacuum_driver": "3b6e1d0f0cd69352e82a203eb8d9592db87cef662988cf3f4859906ae0977fd6"
+    },
+    "replay_source_sha256_before": {
+      "adapter": "1c78bf3dd6b88390d277bd2896ac4981c226a17b152c03515c330b0271f71f29",
+      "adaptive_continuation": "7b8722ecc28af74eeb2fe29d2e7c1782123106d63fbeba60c82ca81f6b70b869",
+      "adaptive_driver": "27db5a25123f4d054a9919a11752b207cfc6accc377a8eeaf21f4b49087867e0",
+      "conditioning": "d8a9ad936a0e6fb8e0c59a35428a7e2c70e372dca0b8d87f6d890d38dcd30a8a",
+      "conditioning_contract": "2fcdbd7a825e7f539e80a769a63a66f37b5b477b697878056ccb8e1bb98141b8",
+      "existing_diagnostic": "3eb4cfbd08a77ce07b8d65d59d3aa7468650b56adf64e668739888693c33d432",
+      "hamiltonian": "05e15d8fd9888ee8d454d61fbc8454fe5c652747780f77c771718557ce0294f3",
+      "nqc": "f705514ef981b3f0a557efeebe508b52fdb70c634a8ac8f2c357f30761871068",
+      "nqc_basis": "8ec2d77a57b96e8246bdae3ca8c62c4e2a17cabf1c5554aa1e47fe25b1ea8f46",
+      "postadiabatic": "06d0620283798a28c477e6e70b3a3720e337c53a8d8af8a78be17646a7be7550",
+      "postmerger": "7324ff72dc1fd36149f137b9f8eafa68f354fd897ff5d56478ce5a6cf2f8c5f6",
+      "producer_diagnostic": "3c28c431f4dffc7aced34691c42aa4e8f9d4f2552c0f56ecf157459904dcc7ff",
+      "projection": "c8ca45a490842f291e30616a52850f148397a8aad3e49c764c9a45c1bff99ec6",
+      "radial_acceleration": "6e16681eae0daade84bc540f12ee6fe40b3ad08929444273faf03123b7bbc3f9",
+      "radiation": "dca2c9791403467d85572f25a062cbc995d8228743d33b6b2e5dc28c13336bd6",
+      "replay_script": "1627be3e4929f626d5467c1493a2ff25aa78fea7613368ef3dbedebba3d292f5",
+      "ringdown": "df3d21ce4fad55a84d0e1550ac376b8931eecbc0b4076dc9f6235b076ed0befa",
+      "state_mode": "b247c91659b18341301356eca2def7cde270b0aaa7a9e16c85f8ba40f1861552",
+      "trajectory": "6728419dd6b7c6f2a7a340f017f52b5dd54bc399d212884f9975643cd58db785",
+      "uib_remnant": "9ea727ec726f82c62c2ad6e399ee084e02daf275c145a3503e0666271010e755",
+      "vacuum_driver": "3b6e1d0f0cd69352e82a203eb8d9592db87cef662988cf3f4859906ae0977fd6"
+    }
+  },
+  "scope": {
+    "comparison": "same elapsed array indices; no time or phase alignment",
+    "fd_parity_warning": "raw TD index comparison is diagnostic and is not strict FD parity",
+    "no_alignment": true,
+    "no_oracle_fitting": true,
+    "no_parameter_search": true,
+    "no_runtime_edits": true,
+    "purpose": "bounded raw TD localization of native replay versus exact-start public TD",
+    "source_isolation": "cached native output versus cached public black-box TD output"
+  },
+  "segments": [
+    {
+      "concat_plus_then_cross": {
+        "first_nonzero_index": 0,
+        "first_sample_difference": 9.38551427750599e-28,
+        "max_abs": 1.1486319424726836e-26,
+        "max_abs_index": 5250,
+        "native_norm": 6.908265369113344e-20,
+        "public_norm": 6.90826928753652e-20,
+        "relative_l2_public_norm": 4.772885455514879e-06,
+        "residual_norm": 3.2972378005263195e-25,
+        "samples": 5274
+      },
+      "elapsed_time_seconds": [
+        0.0,
+        1.287109375
+      ],
+      "global_first_nonzero_indices": {
+        "h_cross": 0,
+        "h_plus": 0
+      },
+      "global_max_abs_indices": {
+        "concat_plus_then_cross": 2613,
+        "h_cross": 2613,
+        "h_plus": 2632
+      },
+      "h_cross": {
+        "first_nonzero_index": 0,
+        "first_sample_difference": -3.926245391417578e-27,
+        "max_abs": 1.1486319424726836e-26,
+        "max_abs_index": 2613,
+        "native_norm": 4.8846404730883004e-20,
+        "public_norm": 4.884643050755059e-20,
+        "relative_l2_public_norm": 4.763922266547468e-06,
+        "residual_norm": 2.327005979362838e-25,
+        "samples": 2637
+      },
+      "h_plus": {
+        "first_nonzero_index": 0,
+        "first_sample_difference": 9.38551427750599e-28,
+        "max_abs": 1.0983856631949432e-26,
+        "max_abs_index": 2632,
+        "native_norm": 4.885122092512983e-20,
+        "public_norm": 4.8851250563143884e-20,
+        "relative_l2_public_norm": 4.78183007997276e-06,
+        "residual_norm": 2.3359837938712764e-25,
+        "samples": 2637
+      },
+      "indices": [
+        0,
+        2636
+      ],
+      "name": "pa",
+      "samples": 2637,
+      "td_time_dimensionless": [
+        0.0,
+        5226.3191169455895
+      ]
+    },
+    {
+      "concat_plus_then_cross": {
+        "first_nonzero_index": 0,
+        "first_sample_difference": -1.066686789880987e-26,
+        "max_abs": 3.6746011166547446e-24,
+        "max_abs_index": 2727,
+        "native_norm": 7.49265747682025e-20,
+        "public_norm": 7.492663601502556e-20,
+        "relative_l2_public_norm": 0.00014446463613165857,
+        "residual_norm": 1.0824249208479891e-23,
+        "samples": 2728
+      },
+      "elapsed_time_seconds": [
+        1.28759765625,
+        1.953125
+      ],
+      "global_first_nonzero_indices": {
+        "h_cross": 2637,
+        "h_plus": 2637
+      },
+      "global_max_abs_indices": {
+        "concat_plus_then_cross": 4000,
+        "h_cross": 4000,
+        "h_plus": 3996
+      },
+      "h_cross": {
+        "first_nonzero_index": 0,
+        "first_sample_difference": -3.7564050567950444e-28,
+        "max_abs": 3.6746011166547446e-24,
+        "max_abs_index": 1363,
+        "native_norm": 5.2878357690954514e-20,
+        "public_norm": 5.287843496819238e-20,
+        "relative_l2_public_norm": 0.00015659698865754678,
+        "residual_norm": 8.280603680942847e-24,
+        "samples": 1364
+      },
+      "h_plus": {
+        "first_nonzero_index": 0,
+        "first_sample_difference": -1.066686789880987e-26,
+        "max_abs": 2.5882624896603473e-24,
+        "max_abs_index": 1359,
+        "native_norm": 5.308362171520056e-20,
+        "public_norm": 5.308363118554321e-20,
+        "relative_l2_public_norm": 0.00013132261453956487,
+        "residual_norm": 6.971081236539516e-24,
+        "samples": 1364
+      },
+      "indices": [
+        2637,
+        4000
+      ],
+      "name": "ode_inspiral",
+      "samples": 1364,
+      "td_time_dimensionless": [
+        5228.301787323793,
+        7930.681512815766
+      ]
+    },
+    {
+      "concat_plus_then_cross": {
+        "first_nonzero_index": 0,
+        "first_sample_difference": 3.608770763521211e-24,
+        "max_abs": 1.2010650374924506e-23,
+        "max_abs_index": 7,
+        "native_norm": 1.521815608581763e-20,
+        "public_norm": 1.521868069816272e-20,
+        "relative_l2_public_norm": 0.0015431350057309706,
+        "residual_norm": 2.348447892637714e-23,
+        "samples": 16
+      },
+      "elapsed_time_seconds": [
+        1.95361328125,
+        1.95703125
+      ],
+      "global_first_nonzero_indices": {
+        "h_cross": 4001,
+        "h_plus": 4001
+      },
+      "global_max_abs_indices": {
+        "concat_plus_then_cross": 4008,
+        "h_cross": 4006,
+        "h_plus": 4008
+      },
+      "h_cross": {
+        "first_nonzero_index": 0,
+        "first_sample_difference": -2.8063938982756806e-24,
+        "max_abs": 8.15430513138798e-24,
+        "max_abs_index": 5,
+        "native_norm": 1.1826023723256595e-20,
+        "public_norm": 1.1825524178839597e-20,
+        "relative_l2_public_norm": 0.0011974282458516068,
+        "residual_norm": 1.416021667374366e-23,
+        "samples": 8
+      },
+      "h_plus": {
+        "first_nonzero_index": 0,
+        "first_sample_difference": 3.608770763521211e-24,
+        "max_abs": 1.2010650374924506e-23,
+        "max_abs_index": 7,
+        "native_norm": 9.577966253296176e-21,
+        "public_norm": 9.579416479531027e-21,
+        "relative_l2_public_norm": 0.001955780355179216,
+        "residual_norm": 1.8735234564746828e-23,
+        "samples": 8
+      },
+      "indices": [
+        4001,
+        4008
+      ],
+      "name": "nqc_auxiliary_to_attachment",
+      "samples": 8,
+      "td_time_dimensionless": [
+        7932.66418319397,
+        7946.542875841397
+      ]
+    },
+    {
+      "concat_plus_then_cross": {
+        "first_nonzero_index": 0,
+        "first_sample_difference": -7.328724460264296e-24,
+        "max_abs": 1.251859118780011e-23,
+        "max_abs_index": 79,
+        "native_norm": 1.4376084657578867e-20,
+        "public_norm": 1.4375074253084593e-20,
+        "relative_l2_public_norm": 0.001975496909919373,
+        "residual_norm": 2.8397914766830157e-23,
+        "samples": 156
+      },
+      "elapsed_time_seconds": [
+        1.95751953125,
+        1.9951171875
+      ],
+      "global_first_nonzero_indices": {
+        "h_cross": 4009,
+        "h_plus": 4009
+      },
+      "global_max_abs_indices": {
+        "concat_plus_then_cross": 4010,
+        "h_cross": 4010,
+        "h_plus": 4012
+      },
+      "h_cross": {
+        "first_nonzero_index": 0,
+        "first_sample_difference": -1.1165442264696334e-23,
+        "max_abs": 1.251859118780011e-23,
+        "max_abs_index": 1,
+        "native_norm": 9.595698306178407e-21,
+        "public_norm": 9.59608483431396e-21,
+        "relative_l2_public_norm": 0.002254057711555975,
+        "residual_norm": 2.1630129021530723e-23,
+        "samples": 78
+      },
+      "h_plus": {
+        "first_nonzero_index": 0,
+        "first_sample_difference": -7.328724460264296e-24,
+        "max_abs": 1.0017263049298808e-23,
+        "max_abs_index": 3,
+        "native_norm": 1.0704876650325279e-20,
+        "public_norm": 1.0703173157262534e-20,
+        "relative_l2_public_norm": 0.0017191647976268429,
+        "residual_norm": 1.84005185148703e-23,
+        "samples": 78
+      },
+      "indices": [
+        4009,
+        4086
+      ],
+      "name": "tail",
+      "samples": 78,
+      "td_time_dimensionless": [
+        7948.525546219601,
+        8101.191165341304
+      ]
+    }
+  ],
+  "status": "complete",
+  "support_and_events": {
+    "event_attachment_index_recorded": 724,
+    "event_attachment_td_time": 7948.2107974937535,
+    "native_support_start_frequency_hz": 16.900094009839023,
+    "native_support_start_frequency_hz_hex": "0x1.0e66c8f9f9588p+4",
+    "native_support_time_seconds": 2.1121054617270536,
+    "nqc_matching_index_recorded": 170,
+    "ode_inspiral_end_td_time": 7931.2107974937535,
+    "pa_end_td_time": 5226.692483260543,
+    "public_exact_start_frequency_hz": 16.900094009839023,
+    "replay_native_start": {
+      "continuation_peak_event_time": 7949.515286807696,
+      "coordinate_epoch": 0.0,
+      "formula": "max(r_min, omega_start**(-2/3))",
+      "initial_radius": 18.017491181997485,
+      "initial_radius_hex": "0x1.2047a4d56a5c8p+4",
+      "omega_start": 0.013075506553963168,
+      "omega_start_hex": "0x1.ac754c8392680p-7",
+      "physical_epoch_seconds": -1.9577632791653587
+    },
+    "replay_support_start_arithmetic": {
+      "adapter_omega_start_hex": "0x1.ac754c8392680p-7",
+      "adapter_start_frequency_hz": 16.900094009839023,
+      "adapter_start_frequency_hz_hex": "0x1.0e66c8f9f9588p+4",
+      "direct_fractional_power_hz": 16.90009400983902,
+      "direct_fractional_power_hz_hex": "0x1.0e66c8f9f9587p+4",
+      "eta": 0.24,
+      "eta_alternative_python_msun_ratio": 0.24,
+      "eta_alternative_python_msun_ratio_hex": "0x1.eb851eb851eb8p-3",
+      "eta_hex": "0x1.eb851eb851eb8p-3",
+      "eta_independent_plan": 0.24,
+      "eta_independent_plan_hex": "0x1.eb851eb851eb8p-3",
+      "formula": "f_start=(5*M/(eta*t_support))**(3/8)/(8*pi*M)",
+      "nested_eighth_root_then_cube_hz": 16.90009400983902,
+      "nested_eighth_root_then_cube_hz_hex": "0x1.0e66c8f9f9587p+4",
+      "power_base": 0.0024291967565535136,
+      "power_base_hex": "0x1.3e66513ff900bp-9",
+      "t_support": 2.1121054617270536,
+      "t_support_hex": "0x1.0e5978c5e90bep+1",
+      "total_mass_seconds": 0.00024627454738206334,
+      "total_mass_seconds_hex": "0x1.023cd2078cb2bp-12"
+    },
+    "segment_caveat": "All stored native TD samples already include the replay's NQC/ringdown processing; the auxiliary-to-attachment interval is a recorded diagnostic window, not a claim that NQC starts at its first sample.",
+    "segment_rule": "PA <= pa_time[-1]; ODE > PA and < nqc_auxiliary_time[0]; NQC auxiliary-to-attachment >= auxiliary start and <= event_attachment_time; tail > event_attachment_time",
+    "total_mass_seconds": 0.00024627454738206334
+  }
+}

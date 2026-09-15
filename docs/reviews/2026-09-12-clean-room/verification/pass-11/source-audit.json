@@ -1,0 +1,49 @@
+{
+  "boundary": "Luna implementation/review used primary papers and native code, no LAL/PyCBC implementation or binary residuals. Parent separately used public binary APIs. Instruction boundary, not OS-enforced isolation. Inherited provenance is not certified.",
+  "sources": [
+    {
+      "title": "Zappa NSBH remnant",
+      "url": "https://arxiv.org/pdf/1903.11622v2",
+      "local": "/tmp/zappa_1903_11622.pdf",
+      "sha256": "2dd12d6c75fd9a5551f1e6eab014af6355fceea6e5676aea8709f6530a3aefdb",
+      "scope": "Eq1, Eqs4\u20136, TableI"
+    },
+    {
+      "title": "Garcia-Quiros XHM",
+      "url": "https://arxiv.org/pdf/2001.10914v2",
+      "local": "/tmp/torchwave-paper-assets/garcia-quiros-2020-imrphenomxhm-v2.pdf",
+      "sha256": "00f3bdbe28a6ccde5cde3af82ac8fc95153ec6f03a4b071ce0ed57326e4e09ee",
+      "scope": "Eqs4.5\u20134.6, AppendixA, AppendixE"
+    },
+    {
+      "title": "London HM",
+      "url": "https://arxiv.org/pdf/1708.00404v4",
+      "local": "/tmp/torchwave-paper-assets/london-2018-phenomhm-v4.pdf",
+      "sha256": "079521aebaccec86c4079901c7f5e56b2ed4712cf79320327d903f46d565a8d7",
+      "scope": "Eqs3\u20135; unchanged"
+    },
+    {
+      "title": "Pratten precession",
+      "url": "https://arxiv.org/abs/2004.06503v2",
+      "local": "/tmp/torchwave-clean-room-precession/2004.06503v2-phenomx.tex",
+      "sha256": "d1e611c582b2861bc34d975e99b6c2d6ef3d4447442aab249541616a331443f5",
+      "scope": "SecIVD vector identity and MSA average; explicit denominator conflict"
+    },
+    {
+      "title": "Khan Pv3",
+      "url": "https://arxiv.org/abs/1809.10113",
+      "local": "/tmp/torchwave-clean-room-precession/1809.10113-phenompv3.tex",
+      "sha256": "542ba40840e79e65df8ea65b590b9f557925d9ac861f08d1e4e3657d49377c16",
+      "scope": "Earlier NNLO context; unchanged"
+    },
+    {
+      "title": "Pratten PDF equation-number check",
+      "url": "https://arxiv.org/pdf/2004.06503v2",
+      "local": "/tmp/torchwave-clean-room-precession/2004.06503v2.pdf",
+      "sha256": "fd21fcd7c111d780eddb109e51c5813d7645a52022b84a24d923056b639bd935",
+      "scope": "Eq4.17 vector identity; Eq4.18 Lfin definition; Eq4.20 averaged Sfin\u00b2; Eq4.29 conflicting M\u00b2 divisor."
+    }
+  ],
+  "review": "../../pass-11-independent-review.md",
+  "integration": "Retain NSBH spin-input fix, well-defined MSA angular momentum components, and XHM normalization regression. Reject doubled XHM factor; defer ambiguous MSA Kerr normalization/automatic dispatch."
+}

@@ -23,7 +23,11 @@ from torchwave.approximants.imrphenom_xp import IMRPhenomXP
 from torchwave.approximants.imrphenom_xphm import IMRPhenomXPHM
 from torchwave.approximants.imrphenom_nsbh import IMRPhenomNSBH
 from torchwave.approximants.taylorf2_eccentric import TaylorF2_Eccentric
-from torchwave.approximants.kerr_ringdown import KerrRingdown, evaluate_qnm, get_ringdown_waveform
+from torchwave.approximants.kerr_ringdown import (
+    KerrRingdown, evaluate_qnm, get_ringdown_waveform,
+    sampled_kerr_single_mode_reference, kerr_single_mode_reference,
+    kerr_single_mode_fourier_reference,
+)
 
 from torchwave.approximants.precession_ode import SpinPrecessionODE
 
@@ -75,6 +79,9 @@ __all__ = [
     "KerrRingdown",
     "evaluate_qnm",
     "get_ringdown_waveform",
+    "sampled_kerr_single_mode_reference",
+    "kerr_single_mode_reference",
+    "kerr_single_mode_fourier_reference",
     "SEOBNR_ODE",
     "SEOBNR_ROM",
     "EMRIKludge",
@@ -97,5 +104,4 @@ __all__ = [
     "add_memory_to_waveform",
     "MemoryWaveform",
 ]
-
 

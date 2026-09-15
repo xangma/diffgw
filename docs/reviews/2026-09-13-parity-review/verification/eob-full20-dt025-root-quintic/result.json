@@ -1,0 +1,100 @@
+{
+  "timestamp_utc": "2026-09-13T22:50:27.773742+00:00",
+  "host": "RONI2",
+  "python": "3.13.9",
+  "torch": "2.9.1",
+  "lal_version": "7.7.0",
+  "lalsimulation_version": "6.2.0",
+  "verifier_sha256": "aa4f3b95d63a696f27d2efbfe9fd20d4365cf2e41285f29bf7d821056de3b092",
+  "input_sha256": "56cf48952800928ec3b4037052a9d4010000d841fd90ef497da31e9632d5fd2f",
+  "run_result_sha256": "d81aaa9912445ce77cc0300c82c1936be5f5e12d1c6b55c7952613bfdf15a10d",
+  "run_source_hashes": {
+    "src/torchwave/approximants/eob/published_waveform.py": "8eedc2a0fa0a2eb96dbd7c6e5b541081df2466888aa9fb8dd45234b70b21eb60",
+    "src/torchwave/approximants/eob/integrator.py": "a036f6b7580450a847bc1d56ebf745de6cdb5c2ee397d31cf1014d483eebe26b",
+    "src/torchwave/approximants/eob/seobnrv4_hamiltonian.py": "5b1a5b877129e5235b8f92974a01ab450176e8e924d374ca0fc413334fad177f",
+    "src/torchwave/approximants/eob/seobnrv4_flux.py": "50af1727e28828969d84cac5e984189c529e205ad9fb96d22c11037103aca3ec",
+    "src/torchwave/approximants/eob/seobnrv4_mode22.py": "d1fa659a2604732ae74e8c7e9736b89371655f3b06a0d04bed6a1162500203f9",
+    "src/torchwave/approximants/eob/seobnrv4_amplitude22.py": "f51cf2a03f1a3567293fbac75a341701448275bc45da1fa97af80d017890d2a5",
+    "scripts/run_eob_full20_serialized.py": "181bc223aed36680aa478997325ea55613f82b15c7ef27da35920e01d4e86526"
+  },
+  "run_cli": [
+    "scripts/verify_eob_full20_saved.py",
+    "--input-dir",
+    "docs/reviews/2026-09-13-parity-review/verification/eob-full20-dt025",
+    "--output-dir",
+    "docs/reviews/2026-09-13-parity-review/verification/eob-full20-dt025-root-quintic",
+    "--interpolation",
+    "quintic"
+  ],
+  "interpolation": "quintic",
+  "time_origin": "orbital_peak",
+  "time_origin_key": "peak_time",
+  "native_support_s": [
+    -1.2320381836486292,
+    0.03590632354792397
+  ],
+  "binary_support_s": [
+    -1.232042294,
+    0.09439241819979305
+  ],
+  "common_support_s": [
+    -1.2320381836486292,
+    0.03590632354792397
+  ],
+  "raw_common_relative_l2": 0.0008092673070412204,
+  "active_samples": 10179,
+  "active_threshold": "amplitude > 0.1% of each waveform maximum; phase/frequency only",
+  "native_frequency_hz": [
+    20.00546287121041,
+    350.07001144435196
+  ],
+  "binary_frequency_hz": [
+    20.005482008364034,
+    350.11271280249935
+  ],
+  "frequency_rms_hz": 0.005267103119618674,
+  "phase_rms_rad": 0.0007997303147688373,
+  "phase_max_abs_rad": 0.005798826130126341,
+  "phase_residual_at_common_start_rad": 0.0004688473403905631,
+  "native_phase_at_same_event_rad": -1.6911140981207033,
+  "binary_phase_at_same_event_rad": -1.691855941503627,
+  "native_amplitude_peak_time_s": -0.0010964271962310504,
+  "binary_amplitude_peak_time_s": -0.0010389689107563882,
+  "dropped_tail_energy_fraction": 0.0,
+  "dropped_tail_definition": "sum |binary h22|^2 after native end / total binary sum",
+  "omitted_binary_energy": {
+    "leading_integral": 1.870531580438145e-47,
+    "trailing_integral": 0.0,
+    "total_integral": 1.037415532499854e-41,
+    "leading_fraction": 1.8030688011107141e-06,
+    "trailing_fraction": 0.0,
+    "definition": "trapezoidal time integral outside common native/binary support"
+  },
+  "projection_roundtrip_relative_l2": {
+    "plus": 2.5576740632360614e-17,
+    "cross": 1.0382802876130778e-16
+  },
+  "all_input_arrays_finite": true,
+  "intervals": {
+    "early": {
+      "samples": 9194,
+      "relative_l2": 0.0006571803360947876,
+      "phase_frequency_active_samples": 9194
+    },
+    "inspiral": {
+      "samples": 10006,
+      "relative_l2": 0.0008058308139941492,
+      "phase_frequency_active_samples": 10006
+    },
+    "merger": {
+      "samples": 325,
+      "relative_l2": 0.0011628149221982003,
+      "phase_frequency_active_samples": 325
+    },
+    "ringdown": {
+      "samples": 130,
+      "relative_l2": 0.07009138177540429,
+      "phase_frequency_active_samples": 11
+    }
+  }
+}

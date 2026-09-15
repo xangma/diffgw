@@ -1,0 +1,162 @@
+--- a/scripts/teob_fd_matching_controls.py
++++ b/scripts/teob_fd_matching_controls.py
+@@ -9,6 +9,7 @@
+ import numpy as np
+ import torch
+ from teob_continuous_fd_attribution import OUT, case_for, evaluate_cached, json_value, source_hashes
++from teob_cache_metadata import cache_fixed_step
+ from torchwave.approximants.eob.teob_merger_nqc_clean import assemble_teob_merger_nqc, published_2017_nqc_targets, PUBLISHED_2017_NQC_PROVENANCE
+ from torchwave.approximants.eob.teob_ringdown_assembly_clean import assemble_teob_ringdown_22
+ from torchwave.approximants.eob.teob_uib2016_remnant import uib2016_nonspinning_remnant
+@@ -23,18 +24,29 @@
+     ap.add_argument('--case',default='catalog')
+     ap.add_argument('--variants',nargs='+',choices=VARIANTS,default=list(VARIANTS))
+     ap.add_argument('--input-root',type=Path,default=OUT)
++    ap.add_argument('--output-dir',type=Path,required=True,
++                    help='Separate output root; existing frozen input reports are preserved.')
++    ap.add_argument('--fixed-step',type=float,
++                    help='Independently known integration step for legacy caches without scalar metadata.')
+     args=ap.parse_args()
+     path=args.input_root/args.case/'continuous.npz'
++    out=args.output_dir/args.case
++    if out.resolve()==path.parent.resolve():
++        ap.error('--output-dir must differ from the frozen input root')
++    out.mkdir(parents=True,exist_ok=True)
+     data=np.load(path); case=case_for(args.case); p,g=case['params'],case['grid']
+     tensor=lambda name:torch.as_tensor(data[name],dtype=torch.float64)
+     m1,m2=p['mass1'],p['mass2']; nu=torch.tensor(m1*m2/(m1+m2)**2,dtype=torch.float64)
+     final_mass,final_spin=uib2016_nonspinning_remnant(m1,m2)
+     final_mass,final_spin=final_mass.double(),final_spin.double()
+     support=plan_td_support(m1,m2,g['flow'],dtype=torch.float64)
+-    spacing=tensor('nqc_auxiliary_time')[1]-tensor('nqc_auxiliary_time')[0]
++    spacing,spacing_source=cache_fixed_step(data,args.fixed_step)
+     before=source_hashes()
+     report={'input_sha256':hashlib.sha256(path.read_bytes()).hexdigest(),'case':case,
+-            'source_hashes_before':before,'variants':{},'notes':'Frozen accepted trajectory and original mode; no fitted alignment or coefficients. Mixed variants are attribution only.'}
++            'source_hashes_before':before,'fixed_step_M':spacing,'fixed_step_source':spacing_source,
++            'replay_script_sha256':hashlib.sha256(Path(__file__).read_bytes()).hexdigest(),
++            'metadata_helper_sha256':hashlib.sha256(Path(__file__).with_name('teob_cache_metadata.py').read_bytes()).hexdigest(),
++            'variants':{},'notes':'Frozen accepted trajectory and original mode; no fitted alignment or coefficients. Mixed variants are attribution only.'}
+     for variant in args.variants:
+         start=time.time(); nmethod,rmethod=VARIANTS[variant]
+         with torch.no_grad():
+@@ -51,7 +63,7 @@
+                 nu,final_mass,final_spin,output_step=tensor('sampling_dt_seconds')/tensor('total_mass_seconds'),matching_method=rmethod,peak_time=peak)
+             hp,hc=project_teob22_generic(rd.mode,torch.conj(rd.mode),mass1=m1,mass2=m2,distance=p['distance'],inclination=p['inclination'],phic=p['phic'])
+             fd=condition_td_to_fd(hp,hc,dt=tensor('sampling_dt_seconds'),delta_f=g['df'],f_max=g['fhigh'],support=support,tc=0.,return_metadata=True)
+-        output=path.parent/f'matching-{variant}.npz'
++        output=out/f'matching-{variant}.npz'
+         np.savez_compressed(output,frequencies=fd.frequencies.numpy(),h_plus_fd=fd.h_plus.numpy(),h_cross_fd=fd.h_cross.numpy(),td_time=rd.time.numpy(),h_plus_td=hp.numpy(),h_cross_td=hc.numpy())
+         item={'nqc_method':nmethod,'ringdown_method':rmethod,'nqc_coefficients':json_value(nqc.coefficients),
+               'peak_M':float(nqc.t_peak),'rd_peak_M':float(rd.t_peak),'match_M':float(rd.t_match),
+@@ -62,9 +74,9 @@
+             item['replay_vs_adapter']={pol:float(torch.linalg.vector_norm(getattr(fd,pol)-torch.as_tensor(data[pol+'_fd']))/torch.linalg.vector_norm(torch.as_tensor(data[pol+'_fd']))) for pol in ('h_plus','h_cross')}
+         report['variants'][variant]=item
+         print(json.dumps({'variant':variant,'plus':item['acceptance'].get('plus',{}).get('complex_relative_l2'),'cross':item['acceptance'].get('cross',{}).get('complex_relative_l2'),'seconds':item['seconds']}),flush=True)
+-        (path.parent/'matching-controls.json').write_text(json.dumps(json_value(report),indent=2)+'\n')
++        (out/'matching-controls.json').write_text(json.dumps(json_value(report),indent=2)+'\n')
+     after=source_hashes();report['source_hashes_after']=after
+     report['source_changes']=[p for p in before.keys()|after.keys() if before.get(p)!=after.get(p)]
+-    (path.parent/'matching-controls.json').write_text(json.dumps(json_value(report),indent=2)+'\n')
++    (out/'matching-controls.json').write_text(json.dumps(json_value(report),indent=2)+'\n')
+ 
+ if __name__=='__main__':main()
+--- a/scripts/diagnose_teob_conditioned_waveform_clean.py
++++ b/scripts/diagnose_teob_conditioned_waveform_clean.py
+@@ -670,6 +670,7 @@
+         "continuation_state": continuation.state,
+         "continuation_frequency": continuation.frequency,
+         "continuation_valid": continuation.valid,
++        "continuation_fixed_step": continuation.fixed_step,
+         "adaptive_time": continuation.adaptive_time,
+         "adaptive_state": continuation.adaptive_state,
+         "adaptive_frequency": continuation.adaptive_frequency,
+@@ -687,6 +688,7 @@
+         "nqc_original_corrected_amplitude": nqc.original.corrected_amplitude,
+         "nqc_original_corrected_phase": nqc.original.corrected_phase,
+         "nqc_auxiliary_time": nqc.auxiliary.time,
++        "nqc_auxiliary_spacing": nqc.auxiliary_spacing,
+         "nqc_auxiliary_state": nqc.auxiliary.state,
+         "nqc_auxiliary_amplitude": nqc.auxiliary.amplitude,
+         "nqc_auxiliary_phase": nqc.auxiliary.phase,
+--- /dev/null
++++ b/scripts/teob_cache_metadata.py
+@@ -0,0 +1,40 @@
++"""Authoritative scalar policies for frozen TEOB trajectory replay."""
++from __future__ import annotations
++
++import math
++from typing import Mapping
++
++import numpy as np
++
++
++def cache_fixed_step(data: Mapping, explicit: float | None = None) -> tuple[float, str]:
++    """Read the saved integration step, never infer it from rounded timestamps.
++
++    Older caches omit this field and require an explicit, independently known
++    value. An explicit value cannot silently override authoritative metadata.
++    """
++    def scalar(value, name):
++        array = np.asarray(value)
++        if array.shape != () or array.dtype.kind not in 'fiu':
++            raise ValueError(f'{name} must be a positive finite scalar')
++        result = float(array)
++        if not math.isfinite(result) or result <= 0:
++            raise ValueError(f'{name} must be a positive finite scalar')
++        return result
++
++    if explicit is not None:
++        explicit = scalar(explicit, 'explicit fixed step')
++    if 'continuation_fixed_step' in data:
++        step = scalar(data['continuation_fixed_step'], 'cached fixed step')
++        if explicit is not None and explicit != step:
++            raise ValueError('explicit fixed step conflicts with cached continuation_fixed_step')
++        provenance = 'cache.continuation_fixed_step'
++    elif explicit is not None:
++        step, provenance = explicit, 'explicit --fixed-step for legacy cache'
++    else:
++        raise ValueError('cache lacks continuation_fixed_step; provide independently known --fixed-step (do not infer it from timestamps)')
++    if 'nqc_auxiliary_spacing' in data:
++        auxiliary = scalar(data['nqc_auxiliary_spacing'], 'cached auxiliary spacing')
++        if auxiliary != min(.5, step):
++            raise ValueError('cached auxiliary spacing conflicts with the fixed-step policy')
++    return step, provenance
+--- /dev/null
++++ b/tests/test_teob_cache_metadata.py
+@@ -0,0 +1,35 @@
++from __future__ import annotations
++
++import numpy as np
++import pytest
++
++from scripts.teob_cache_metadata import cache_fixed_step
++
++
++def test_large_timestamp_roundoff_cannot_replace_saved_step():
++    times = 4_552_206.307415748 + np.arange(200)*.1
++    assert times[1]-times[0] != .1
++    cache = {'continuation_fixed_step': np.array(.1),
++             'nqc_auxiliary_spacing': np.array(.1), 'nqc_auxiliary_time': times}
++    assert cache_fixed_step(cache) == (.1, 'cache.continuation_fixed_step')
++    with pytest.raises(ValueError, match='conflicts'):
++        cache_fixed_step(cache, times[1]-times[0])
++
++
++def test_legacy_cache_requires_explicit_independent_step():
++    cache = {'nqc_auxiliary_time': np.arange(200)*.1}
++    with pytest.raises(ValueError, match='independently known'):
++        cache_fixed_step(cache)
++    assert cache_fixed_step(cache, .1)[0] == .1
++
++
++@pytest.mark.parametrize('value', [0., -1., float('nan'), float('inf'), [.1], True])
++def test_invalid_policy_is_rejected(value):
++    with pytest.raises(ValueError, match='positive finite scalar'):
++        cache_fixed_step({'continuation_fixed_step': value})
++
++
++def test_auxiliary_cap_is_checked_without_changing_integration_step():
++    assert cache_fixed_step({'continuation_fixed_step': 1., 'nqc_auxiliary_spacing': .5})[0] == 1.
++    with pytest.raises(ValueError, match='auxiliary spacing conflicts'):
++        cache_fixed_step({'continuation_fixed_step': .1, 'nqc_auxiliary_spacing': .2})

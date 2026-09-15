@@ -1,0 +1,23 @@
+{
+  "host": "RONI2",
+  "cwd": "/Users/xangma/repos/torchwave",
+  "command": [
+    "/Users/xangma/miniconda3/envs/pycbcorig313/bin/python",
+    "tests/parity_harness.py",
+    "--scope=holdout",
+    "--strict",
+    "--json-out",
+    "/Users/xangma/repos/torchwave/docs/reviews/2026-09-12-clean-room/verification/pass-3/holdouts.json"
+  ],
+  "environment": {
+    "PYTHONPATH": "src:tests",
+    "PYTEST_DISABLE_PLUGIN_AUTOLOAD": "1",
+    "LAL_DATA_PATH": "/tmp/torchwave-oracle-data"
+  },
+  "pid": 35904,
+  "log": "/Users/xangma/repos/torchwave/docs/reviews/2026-09-12-clean-room/verification/pass-3/holdouts.log",
+  "started_unix": 1789220311.9137762,
+  "stop_command": "kill 35904",
+  "exit_code": 1,
+  "duration_seconds": 2.720392942428589
+}

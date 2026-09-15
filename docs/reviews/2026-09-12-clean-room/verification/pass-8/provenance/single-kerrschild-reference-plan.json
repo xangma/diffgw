@@ -1,0 +1,13 @@
+{
+  "status": "planned_or_running_remotely; no local render or launch",
+  "source_input": "inputs/single-kerrschild/checkpoint-smoke-corrected/Segment_0000/KerrSchild.yaml",
+  "source_input_sha256": "772da31782d4b8e9cb561f8e27866552e0640038d1abacb5b7af272a1948b561",
+  "reference_change": "CheckpointAndExitAfterWallclock.WallclockHours 0.0 -> string None only",
+  "reference_input_sha256": "574d2b26d0deac425719a5ccb947856b7c094cf087a42b324de66cb042689f64",
+  "command_shape": ["EvolveGhSingleBlackHole", "+p4", "--input-file", "KerrSchild.yaml"],
+  "comparison_datasets": ["Norms.dat", "Errors.dat", "ApparentHorizon.dat"],
+  "comparison": {"absolute_tolerance": 1e-12, "relative_tolerance": 1e-10},
+  "ignored": ["TimeSteps.dat wallclock diagnostics"],
+  "launch_authority": "parent",
+  "local_launch": false
+}

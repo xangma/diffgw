@@ -8,6 +8,17 @@ Clean-room literature benchmarks:
 
 import pytest
 import torch
+from pathlib import Path
+
+ROM_DATA = Path("/private/tmp/torchwave-oracle-data/SEOBNRv4ROM_v3.0.hdf5")
+
+
+@pytest.fixture(autouse=True)
+def official_rom_data(monkeypatch):
+    """The canonical dispatcher requires the external official release."""
+    if not ROM_DATA.is_file():
+        pytest.skip("official SEOBNRv4 ROM HDF5 is unavailable")
+    monkeypatch.setenv("LAL_DATA_PATH", str(ROM_DATA.parent))
 
 from torchwave.waveforms import get_fd_waveform
 

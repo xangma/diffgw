@@ -1,0 +1,456 @@
+{
+  "purpose": "post-freeze NR sensitivity; no fitting or LAL output",
+  "baseline_controls": {
+    "pad_factor": 4,
+    "start_taper_duration": 500.0,
+    "end_taper_duration": 20.0,
+    "fmax": 0.3,
+    "sample_dt": 0.1
+  },
+  "calibration_before_sha256": "f447acda86f64f1d13745c8a5d725acdf295b050a2638d1731d4b6a139e1358d",
+  "calibration_after_sha256": "f447acda86f64f1d13745c8a5d725acdf295b050a2638d1731d4b6a139e1358d",
+  "manifest_sha256": "53504f1a5143afec714c23fae19c124932f55b8a35bde641e1b89ca363208aea",
+  "cases": [
+    {
+      "case_id": "SXS:BBH:0008",
+      "q": 1.4999989750008755,
+      "split": "training",
+      "input_sha256": "21ff68f36af6098824db9527552941929d0c9bde947b1f071c8dad1e8ad805de",
+      "comparisons": {
+        "start_taper_250M": {
+          "frequency_Mf_range": [
+            0.13001824817518248,
+            0.2999743885260597
+          ],
+          "bins": 4248,
+          "relative_amplitude_l2": 1.0567790164042692e-06,
+          "norm_ratio_variant_over_baseline": 1.000000001405381,
+          "max_absolute_amplitude_difference": 8.053272423924618e-07
+        },
+        "start_taper_1000M": {
+          "frequency_Mf_range": [
+            0.13001824817518248,
+            0.2999743885260597
+          ],
+          "bins": 4248,
+          "relative_amplitude_l2": 2.737279356951595e-07,
+          "norm_ratio_variant_over_baseline": 1.0000000002218312,
+          "max_absolute_amplitude_difference": 2.2878044680929577e-07
+        },
+        "end_taper_10M": {
+          "frequency_Mf_range": [
+            0.13001824817518248,
+            0.2999743885260597
+          ],
+          "bins": 4248,
+          "relative_amplitude_l2": 0.00042240065291201663,
+          "norm_ratio_variant_over_baseline": 1.0000132995578677,
+          "max_absolute_amplitude_difference": 0.0003657161986860835
+        },
+        "end_taper_40M": {
+          "frequency_Mf_range": [
+            0.13001824817518248,
+            0.2999743885260597
+          ],
+          "bins": 4248,
+          "relative_amplitude_l2": 7.707023048825139e-05,
+          "norm_ratio_variant_over_baseline": 0.9999997319747366,
+          "max_absolute_amplitude_difference": 4.020414564775976e-05
+        },
+        "resample_dt_0p05M": {
+          "frequency_Mf_range": [
+            0.13001824817518248,
+            0.2999743885260597
+          ],
+          "bins": 4248,
+          "relative_amplitude_l2": 4.4607478695441766e-06,
+          "norm_ratio_variant_over_baseline": 0.9999998403881784,
+          "max_absolute_amplitude_difference": 2.205344875494397e-06
+        }
+      }
+    },
+    {
+      "case_id": "SXS:BBH:0169",
+      "q": 1.9999969252812553,
+      "split": "training",
+      "input_sha256": "1513f153c2c0f97f1f0c76a4a67212d20fb1e7fddaea65cf4b4f5dac70792dd0",
+      "comparisons": {
+        "start_taper_250M": {
+          "frequency_Mf_range": [
+            0.12559669720036123,
+            0.2999612953167333
+          ],
+          "bins": 2704,
+          "relative_amplitude_l2": 1.9063088294501968e-06,
+          "norm_ratio_variant_over_baseline": 1.000000007807653,
+          "max_absolute_amplitude_difference": 1.7402428067470055e-06
+        },
+        "start_taper_1000M": {
+          "frequency_Mf_range": [
+            0.12559669720036123,
+            0.2999612953167333
+          ],
+          "bins": 2704,
+          "relative_amplitude_l2": 4.882240327259786e-07,
+          "norm_ratio_variant_over_baseline": 0.9999999983253067,
+          "max_absolute_amplitude_difference": 5.324324854338869e-07
+        },
+        "end_taper_10M": {
+          "frequency_Mf_range": [
+            0.12559669720036123,
+            0.2999612953167333
+          ],
+          "bins": 2704,
+          "relative_amplitude_l2": 1.9552907547733706e-05,
+          "norm_ratio_variant_over_baseline": 0.9999993739447128,
+          "max_absolute_amplitude_difference": 2.0483906011725672e-05
+        },
+        "end_taper_40M": {
+          "frequency_Mf_range": [
+            0.12559669720036123,
+            0.2999612953167333
+          ],
+          "bins": 2704,
+          "relative_amplitude_l2": 5.910542498556623e-06,
+          "norm_ratio_variant_over_baseline": 0.9999999512440051,
+          "max_absolute_amplitude_difference": 4.270048425569772e-06
+        },
+        "resample_dt_0p05M": {
+          "frequency_Mf_range": [
+            0.12559669720036123,
+            0.2999612953167333
+          ],
+          "bins": 2704,
+          "relative_amplitude_l2": 5.46731869822988e-07,
+          "norm_ratio_variant_over_baseline": 0.999999914946371,
+          "max_absolute_amplitude_difference": 9.185154264409556e-07
+        }
+      }
+    },
+    {
+      "case_id": "SXS:BBH:0030",
+      "q": 2.999993377707023,
+      "split": "holdout",
+      "input_sha256": "3783c8db343b8019863ac7e9208a549f19e900e0daa4c58b0ed66e6498096b44",
+      "comparisons": {
+        "start_taper_250M": {
+          "frequency_Mf_range": [
+            0.11803782403600639,
+            0.29996321461029124
+          ],
+          "bins": 3364,
+          "relative_amplitude_l2": 1.7934004821529086e-06,
+          "norm_ratio_variant_over_baseline": 0.9999999966741923,
+          "max_absolute_amplitude_difference": 2.6816348319691485e-06
+        },
+        "start_taper_1000M": {
+          "frequency_Mf_range": [
+            0.11803782403600639,
+            0.29996321461029124
+          ],
+          "bins": 3364,
+          "relative_amplitude_l2": 4.666695823578319e-07,
+          "norm_ratio_variant_over_baseline": 0.9999999994265236,
+          "max_absolute_amplitude_difference": 8.031842944067336e-07
+        },
+        "end_taper_10M": {
+          "frequency_Mf_range": [
+            0.11803782403600639,
+            0.29996321461029124
+          ],
+          "bins": 3364,
+          "relative_amplitude_l2": 0.0008459019611273459,
+          "norm_ratio_variant_over_baseline": 1.000001173316921,
+          "max_absolute_amplitude_difference": 0.0013784586513880814
+        },
+        "end_taper_40M": {
+          "frequency_Mf_range": [
+            0.11803782403600639,
+            0.29996321461029124
+          ],
+          "bins": 3364,
+          "relative_amplitude_l2": 0.0004607098091850264,
+          "norm_ratio_variant_over_baseline": 0.9999978288607445,
+          "max_absolute_amplitude_difference": 0.0003267578999706089
+        },
+        "resample_dt_0p05M": {
+          "frequency_Mf_range": [
+            0.11803782403600639,
+            0.29996321461029124
+          ],
+          "bins": 3364,
+          "relative_amplitude_l2": 6.774096646662193e-06,
+          "norm_ratio_variant_over_baseline": 1.000000156479911,
+          "max_absolute_amplitude_difference": 7.570638363985083e-06
+        },
+        "NR_extraction_N2": {
+          "frequency_Mf_range": [
+            0.11803782403600639,
+            0.29996321461029124
+          ],
+          "bins": 3364,
+          "relative_amplitude_l2": 0.30140548581308335,
+          "norm_ratio_variant_over_baseline": 0.7973288828827173,
+          "max_absolute_amplitude_difference": 0.2682319046081831,
+          "input_sha256": "bec6cd42d7a7600b0569e27075fa04d12767039df5b37b364379bb7691dc9639"
+        }
+      }
+    },
+    {
+      "case_id": "SXS:BBH:0182",
+      "q": 3.9999765924197983,
+      "split": "training",
+      "input_sha256": "19c5984895812243205670d43386e2f22fdf2b39305b746277992f9e59cd4339",
+      "comparisons": {
+        "start_taper_250M": {
+          "frequency_Mf_range": [
+            0.112819838766211,
+            0.2999766327842037
+          ],
+          "bins": 2564,
+          "relative_amplitude_l2": 3.2367299376326306e-06,
+          "norm_ratio_variant_over_baseline": 0.9999999931175696,
+          "max_absolute_amplitude_difference": 3.814106287247654e-06
+        },
+        "start_taper_1000M": {
+          "frequency_Mf_range": [
+            0.112819838766211,
+            0.2999766327842037
+          ],
+          "bins": 2564,
+          "relative_amplitude_l2": 8.338303016807094e-07,
+          "norm_ratio_variant_over_baseline": 0.9999999984516564,
+          "max_absolute_amplitude_difference": 1.3084757033432481e-06
+        },
+        "end_taper_10M": {
+          "frequency_Mf_range": [
+            0.112819838766211,
+            0.2999766327842037
+          ],
+          "bins": 2564,
+          "relative_amplitude_l2": 1.9085556534632814e-07,
+          "norm_ratio_variant_over_baseline": 1.000000008780917,
+          "max_absolute_amplitude_difference": 2.1139293604477416e-07
+        },
+        "end_taper_40M": {
+          "frequency_Mf_range": [
+            0.112819838766211,
+            0.2999766327842037
+          ],
+          "bins": 2564,
+          "relative_amplitude_l2": 6.044104901398908e-08,
+          "norm_ratio_variant_over_baseline": 1.0000000002854914,
+          "max_absolute_amplitude_difference": 4.3192775467382205e-08
+        },
+        "resample_dt_0p05M": {
+          "frequency_Mf_range": [
+            0.112819838766211,
+            0.2999766327842037
+          ],
+          "bins": 2564,
+          "relative_amplitude_l2": 1.2443782334435786e-08,
+          "norm_ratio_variant_over_baseline": 1.0000000118078707,
+          "max_absolute_amplitude_difference": 1.1279725375956673e-08
+        }
+      }
+    },
+    {
+      "case_id": "SXS:BBH:0056",
+      "q": 4.9999883276805726,
+      "split": "training",
+      "input_sha256": "f9fa8deef813b6f760e2a73f10aa2a7c54c48187010745d0a43110a530c3efbe",
+      "comparisons": {
+        "start_taper_250M": {
+          "frequency_Mf_range": [
+            0.10920266113098066,
+            0.29997123777605483
+          ],
+          "bins": 6103,
+          "relative_amplitude_l2": 2.1703907199595104e-06,
+          "norm_ratio_variant_over_baseline": 1.0000000006709253,
+          "max_absolute_amplitude_difference": 2.845829099706876e-06
+        },
+        "start_taper_1000M": {
+          "frequency_Mf_range": [
+            0.10920266113098066,
+            0.29997123777605483
+          ],
+          "bins": 6103,
+          "relative_amplitude_l2": 5.520472526902165e-07,
+          "norm_ratio_variant_over_baseline": 0.9999999993318309,
+          "max_absolute_amplitude_difference": 7.892718665303278e-07
+        },
+        "end_taper_10M": {
+          "frequency_Mf_range": [
+            0.10920266113098066,
+            0.29997123777605483
+          ],
+          "bins": 6103,
+          "relative_amplitude_l2": 0.00031234486205034993,
+          "norm_ratio_variant_over_baseline": 1.0000131947739221,
+          "max_absolute_amplitude_difference": 0.0004266318976813288
+        },
+        "end_taper_40M": {
+          "frequency_Mf_range": [
+            0.10920266113098066,
+            0.29997123777605483
+          ],
+          "bins": 6103,
+          "relative_amplitude_l2": 6.310067287369917e-05,
+          "norm_ratio_variant_over_baseline": 0.9999971637705187,
+          "max_absolute_amplitude_difference": 9.128649241207931e-05
+        },
+        "resample_dt_0p05M": {
+          "frequency_Mf_range": [
+            0.10920266113098066,
+            0.29997123777605483
+          ],
+          "bins": 6103,
+          "relative_amplitude_l2": 2.155126228340462e-06,
+          "norm_ratio_variant_over_baseline": 0.9999999324647344,
+          "max_absolute_amplitude_difference": 2.1767666402716657e-06
+        }
+      }
+    },
+    {
+      "case_id": "SXS:BBH:0166",
+      "q": 5.99997866468524,
+      "split": "holdout",
+      "input_sha256": "8e75c40d960320d5a8fea0f9907cbf4f1b29e435549d24874dd3e14ddad05596",
+      "comparisons": {
+        "start_taper_250M": {
+          "frequency_Mf_range": [
+            0.10658599967516647,
+            0.29996345622868276
+          ],
+          "bins": 3811,
+          "relative_amplitude_l2": 5.4300787162164705e-06,
+          "norm_ratio_variant_over_baseline": 0.9999999808776812,
+          "max_absolute_amplitude_difference": 7.688051454846079e-06
+        },
+        "start_taper_1000M": {
+          "frequency_Mf_range": [
+            0.10658599967516647,
+            0.29996345622868276
+          ],
+          "bins": 3811,
+          "relative_amplitude_l2": 4.664358378799034e-06,
+          "norm_ratio_variant_over_baseline": 0.999999994269317,
+          "max_absolute_amplitude_difference": 8.319234886644544e-06
+        },
+        "end_taper_10M": {
+          "frequency_Mf_range": [
+            0.10658599967516647,
+            0.29996345622868276
+          ],
+          "bins": 3811,
+          "relative_amplitude_l2": 4.0617515799389656e-07,
+          "norm_ratio_variant_over_baseline": 0.9999999790268169,
+          "max_absolute_amplitude_difference": 4.562428214116565e-07
+        },
+        "end_taper_40M": {
+          "frequency_Mf_range": [
+            0.10658599967516647,
+            0.29996345622868276
+          ],
+          "bins": 3811,
+          "relative_amplitude_l2": 1.2167239912630248e-07,
+          "norm_ratio_variant_over_baseline": 1.0000000106774305,
+          "max_absolute_amplitude_difference": 1.106957407959186e-07
+        },
+        "resample_dt_0p05M": {
+          "frequency_Mf_range": [
+            0.10658599967516647,
+            0.29996345622868276
+          ],
+          "bins": 3811,
+          "relative_amplitude_l2": 2.1915415702624205e-07,
+          "norm_ratio_variant_over_baseline": 0.9999999513856579,
+          "max_absolute_amplitude_difference": 3.9249485417336416e-07
+        },
+        "NR_extraction_N2": {
+          "frequency_Mf_range": [
+            0.10658599967516647,
+            0.29996345622868276
+          ],
+          "bins": 3811,
+          "relative_amplitude_l2": 0.000590553423784212,
+          "norm_ratio_variant_over_baseline": 0.9996890947713712,
+          "max_absolute_amplitude_difference": 0.0003647592868120664,
+          "input_sha256": "972d0eaec5c4daa207b4c6564242e2ee0bee0b5cac435cf903c54b5c7f57652f"
+        }
+      }
+    },
+    {
+      "case_id": "SXS:BBH:0063",
+      "q": 7.9999692834078795,
+      "split": "training",
+      "input_sha256": "687a8da8558e42b631ab9a6aeb44877dd929eae4c0a265a10c0d5ec2a336f335",
+      "comparisons": {
+        "start_taper_250M": {
+          "frequency_Mf_range": [
+            0.10302466718872356,
+            0.2999787914382668
+          ],
+          "bins": 4830,
+          "relative_amplitude_l2": 3.956667920488762e-06,
+          "norm_ratio_variant_over_baseline": 1.0000000022302573,
+          "max_absolute_amplitude_difference": 3.7001879107378954e-06
+        },
+        "start_taper_1000M": {
+          "frequency_Mf_range": [
+            0.10302466718872356,
+            0.2999787914382668
+          ],
+          "bins": 4830,
+          "relative_amplitude_l2": 1.0198216855450699e-06,
+          "norm_ratio_variant_over_baseline": 0.9999999984098847,
+          "max_absolute_amplitude_difference": 1.1098655277042013e-06
+        },
+        "end_taper_10M": {
+          "frequency_Mf_range": [
+            0.10302466718872356,
+            0.2999787914382668
+          ],
+          "bins": 4830,
+          "relative_amplitude_l2": 4.681065943684252e-05,
+          "norm_ratio_variant_over_baseline": 1.0000010284453078,
+          "max_absolute_amplitude_difference": 4.276384059365146e-05
+        },
+        "end_taper_40M": {
+          "frequency_Mf_range": [
+            0.10302466718872356,
+            0.2999787914382668
+          ],
+          "bins": 4830,
+          "relative_amplitude_l2": 8.74614286525356e-06,
+          "norm_ratio_variant_over_baseline": 0.9999997995199441,
+          "max_absolute_amplitude_difference": 8.22341824624484e-06
+        },
+        "resample_dt_0p05M": {
+          "frequency_Mf_range": [
+            0.10302466718872356,
+            0.2999787914382668
+          ],
+          "bins": 4830,
+          "relative_amplitude_l2": 2.865305272050913e-07,
+          "norm_ratio_variant_over_baseline": 0.9999999682101898,
+          "max_absolute_amplitude_difference": 2.0636380737570903e-07
+        }
+      }
+    }
+  ],
+  "plot": {
+    "path": "docs/reviews/2026-09-15-independent-calibration/nr33-extraction-comparison.png",
+    "sha256": "9ab37c1cd1ea478b05303d62c54b647608107e303ee3be55ecd3c33de585cc1f"
+  },
+  "source_sha256": {
+    "audit_nr33_preprocessing.py": "8104ab56c22dcb217a6a4902f49ed079411565aac01893e449649f7f9abe869f",
+    "fit_nr33_amplitude_pilot.py": "e307ef505094a5f3d568690d3a9f44cff58d9683d3c29f91e62cc7d2f17ed554"
+  },
+  "limitations": [
+    "N2 versus N3 does not bound all NR errors",
+    "no numerical-resolution convergence campaign",
+    "linear spectral interpolation onto common baseline bins"
+  ]
+}

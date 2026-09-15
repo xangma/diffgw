@@ -1,0 +1,176 @@
+{
+  "catalog": {
+    "passed": 11,
+    "total": 21,
+    "changed_case_metrics_from_pass14": {
+      "IMRPhenomXHM_diagnostic": {
+        "before": {
+          "status": "FAILED",
+          "max_polarization_complex_relative_l2": 0.32766556832141835,
+          "max_polarization_magnitude_relative_l2": 0.25884170865773226,
+          "max_projection_complex_relative_l2": 0.3266883540272164
+        },
+        "after": {
+          "status": "FAILED",
+          "max_polarization_complex_relative_l2": 0.3820011689068622,
+          "max_polarization_magnitude_relative_l2": 0.2866908270338491,
+          "max_projection_complex_relative_l2": 0.3794817271438915
+        }
+      },
+      "IMRPhenomXPHM_diagnostic": {
+        "before": {
+          "status": "FAILED",
+          "max_polarization_complex_relative_l2": 0.10160197321235806,
+          "max_polarization_magnitude_relative_l2": 0.06555427312594689,
+          "max_projection_complex_relative_l2": 0.10162411482442711
+        },
+        "after": {
+          "status": "FAILED",
+          "max_polarization_complex_relative_l2": 0.16092641634947522,
+          "max_polarization_magnitude_relative_l2": 0.10998195882904642,
+          "max_projection_complex_relative_l2": 0.16112353880056732
+        }
+      }
+    }
+  },
+  "holdout": {
+    "passed": 4,
+    "total": 13,
+    "changed_case_metrics_from_pass14": {
+      "IMRPhenomXHM_holdout_6": {
+        "before": {
+          "status": "FAILED",
+          "max_polarization_complex_relative_l2": 0.6596762069012339,
+          "max_polarization_magnitude_relative_l2": 0.4446314082639624,
+          "max_projection_complex_relative_l2": 0.6543418870327334
+        },
+        "after": {
+          "status": "FAILED",
+          "max_polarization_complex_relative_l2": 0.6586575063318627,
+          "max_polarization_magnitude_relative_l2": 0.44363111373689856,
+          "max_projection_complex_relative_l2": 0.6533452980229569
+        }
+      },
+      "IMRPhenomXPHM_holdout": {
+        "before": {
+          "status": "FAILED",
+          "max_polarization_complex_relative_l2": 0.5600687460269859,
+          "max_polarization_magnitude_relative_l2": 0.44846581361925375,
+          "max_projection_complex_relative_l2": 0.6387130319223391
+        },
+        "after": {
+          "status": "FAILED",
+          "max_polarization_complex_relative_l2": 1.1851135268837554,
+          "max_polarization_magnitude_relative_l2": 1.1401226656497372,
+          "max_projection_complex_relative_l2": 1.2770461197043386
+        }
+      }
+    }
+  },
+  "supplemental_explicit_components": {
+    "before_passed": 3,
+    "after_passed": 3,
+    "changed_case_metrics": [
+      "IMRPhenomXHM_diagnostic_Mode21",
+      "IMRPhenomXHM_diagnostic_Mode33",
+      "IMRPhenomXHM_diagnostic_Mode32",
+      "IMRPhenomXHM_diagnostic_Mode44",
+      "IMRPhenomXHM_diagnostic_AllExplicitModes",
+      "IMRPhenomXPHM_diagnostic_Prec102_FinalSpin0",
+      "IMRPhenomXPHM_diagnostic_Prec223_FinalSpin3",
+      "IMRPhenomXHM_holdout_6_Mode21",
+      "IMRPhenomXHM_holdout_6_Mode33",
+      "IMRPhenomXHM_holdout_6_Mode32",
+      "IMRPhenomXHM_holdout_6_Mode44",
+      "IMRPhenomXHM_holdout_6_AllExplicitModes",
+      "IMRPhenomXPHM_holdout_Prec102_FinalSpin0",
+      "IMRPhenomXPHM_holdout_Prec223_FinalSpin3"
+    ],
+    "total": 34,
+    "mode_sum_controls_before": [
+      {
+        "base_id": "IMRPhenomHM_diagnostic",
+        "errors": {
+          "lal_plus": 1.6819920152915406e-16,
+          "lal_cross": 1.7035918967752413e-16,
+          "native_plus": 0.0,
+          "native_cross": 0.0
+        },
+        "passed": true
+      },
+      {
+        "base_id": "IMRPhenomXHM_diagnostic",
+        "errors": {
+          "lal_plus": 5.186981406780453e-17,
+          "lal_cross": 4.876333911875461e-17,
+          "native_plus": 0.0,
+          "native_cross": 0.0
+        },
+        "passed": true
+      },
+      {
+        "base_id": "IMRPhenomHM_holdout_5",
+        "errors": {
+          "lal_plus": 1.5069240457695172e-16,
+          "lal_cross": 1.5732180332569901e-16,
+          "native_plus": 0.0,
+          "native_cross": 0.0
+        },
+        "passed": true
+      },
+      {
+        "base_id": "IMRPhenomXHM_holdout_6",
+        "errors": {
+          "lal_plus": 1.2116846950578703e-16,
+          "lal_cross": 6.928418648082688e-17,
+          "native_plus": 0.0,
+          "native_cross": 0.0
+        },
+        "passed": true
+      }
+    ],
+    "mode_sum_controls_after": [
+      {
+        "base_id": "IMRPhenomHM_diagnostic",
+        "errors": {
+          "lal_plus": 1.6819920152915406e-16,
+          "lal_cross": 1.7035918967752413e-16,
+          "native_plus": 0.0,
+          "native_cross": 0.0
+        },
+        "passed": true
+      },
+      {
+        "base_id": "IMRPhenomXHM_diagnostic",
+        "errors": {
+          "lal_plus": 5.186981406780453e-17,
+          "lal_cross": 4.876333911875461e-17,
+          "native_plus": 0.0,
+          "native_cross": 0.0
+        },
+        "passed": true
+      },
+      {
+        "base_id": "IMRPhenomHM_holdout_5",
+        "errors": {
+          "lal_plus": 1.5069240457695172e-16,
+          "lal_cross": 1.5732180332569901e-16,
+          "native_plus": 0.0,
+          "native_cross": 0.0
+        },
+        "passed": true
+      },
+      {
+        "base_id": "IMRPhenomXHM_holdout_6",
+        "errors": {
+          "lal_plus": 1.2116846950578703e-16,
+          "lal_cross": 6.928418648082688e-17,
+          "native_plus": 0.0,
+          "native_cross": 0.0
+        },
+        "passed": true
+      }
+    ]
+  },
+  "source_stable_during_verification": true
+}

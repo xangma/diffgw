@@ -1,13 +1,12 @@
 """Clean-room Differentiable Gravitational-Wave Detector Network Module.
 
 Strict Clean-Room Literature Implementation:
-- Anderson et al. (2001), Phys. Rev. D 63, 042003 (arXiv:gr-qc/0001044) [Detector geometry and tensors]
+- Anderson et al. (2001), Phys. Rev. D 63, 042003 (arXiv:gr-qc/0008066), Appendix B [Detector geometry and tensors]
 - Schutz (2011), Class. Quantum Grav. 28, 125023 (arXiv:1102.5421) [Detector response and network geometry]
 - Aoki et al. (1982), Astron. Astrophys. 105, 359 [IAU GMST definition]
 """
 
-from typing import Dict, List, Optional, Sequence, Tuple, Union
-import math
+from typing import Dict, Optional, Sequence, Tuple, Union
 import torch
 import torch.nn as nn
 
@@ -15,7 +14,6 @@ from torchwave.constants import (
     C_SI,
     PI,
 )
-from torchwave.conversions import as_tensor
 
 
 # Earth rotation rate in rad/s (7.292115146706979e-5 rad/s = 2*pi / 86164.09053083288 s)
@@ -25,39 +23,48 @@ OMEGA_EARTH: float = 7.292115146706979e-5
 GPS_REF_TIME: float = 1126259462.0
 GMST_REF_RAD: float = 2.4565038851564722
 
-# Standard GPS leap-seconds table: (GPS timestamp boundary, cumulative leap seconds)
+# IERS Bulletin C 72: (GPS time of the first UTC midnight after the insertion,
+# GPS - UTC).  GPS = TAI - 19 s.  The inserted 23:59:60 uses the old offset.
 GPS_LEAP_SECONDS: Sequence[Tuple[float, int]] = (
-    (46828800.0, 1),
-    (78364801.0, 2),
-    (109900802.0, 3),
-    (173059203.0, 4),
-    (252028804.0, 5),
-    (315187205.0, 6),
-    (346723206.0, 7),
-    (393984007.0, 8),
-    (425520008.0, 9),
-    (457056009.0, 10),
-    (504489610.0, 11),
-    (551750411.0, 12),
-    (599184012.0, 13),
-    (820108813.0, 14),
-    (914803214.0, 15),
-    (1024012815.0, 16),
-    (1119744016.0, 17),
-    (1167264017.0, 18),
+    (46828801.0, 1),
+    (78364802.0, 2),
+    (109900803.0, 3),
+    (173059204.0, 4),
+    (252028805.0, 5),
+    (315187206.0, 6),
+    (346723207.0, 7),
+    (393984008.0, 8),
+    (425520009.0, 9),
+    (457056010.0, 10),
+    (504489611.0, 11),
+    (551750412.0, 12),
+    (599184013.0, 13),
+    (820108814.0, 14),
+    (914803215.0, 15),
+    (1025136016.0, 16),
+    (1119744017.0, 17),
+    (1167264018.0, 18),
 )
 
 
 def gps_to_utc_seconds(t_gps: torch.Tensor) -> torch.Tensor:
-    """Convert continuous GPS seconds to UTC seconds since 1980-01-06 00:00:00 UTC."""
-    leap = torch.zeros_like(t_gps)
+    """Return float64 UTC calendar seconds since 1980-01-06.
+
+    Calendar days have 86400 nominal seconds: 23:59:60 and the following
+    00:00:00 share a coordinate.  This is not a continuous elapsed-time scale.
+    """
+    tg = torch.as_tensor(t_gps, dtype=torch.float64)
+    leap = torch.zeros_like(tg)
     for gps_boundary, cum_leap in GPS_LEAP_SECONDS:
-        leap = torch.where(t_gps >= gps_boundary, float(cum_leap), leap)
-    return t_gps - leap
+        leap = torch.where(tg >= gps_boundary, float(cum_leap), leap)
+    return tg - leap
 
 
-# Exact Earth-Centered Earth-Fixed (ECEF) coordinates in meters and unit arm vectors
-# Sources: Anderson et al. (2001), Phys. Rev. D 63, 042003 Table I; LAL / ECEF Geodesy standards.
+# Earth-Centered Earth-Fixed (ECEF) coordinates in meters and rounded arm
+# directions.  Survey checks: LIGO T980044-08 Tables 4/18; Anderson et al.
+# Appendix B Table I (H1/L1/V1); KAGRA JGW-T1605295-v1 Tables 1/4/5.
+# Those publications support only their printed precision, not all digits
+# of the inherited site data below.  Directions are normalized on ingestion.
 DETECTOR_SITE_DATA = {
     "H1": {
         "name": "LIGO Hanford",
@@ -94,20 +101,25 @@ def greenwich_mean_sidereal_time(
     Literature:
     - Aoki et al. (1982), Astron. Astrophys. 105, 359 [IAU 1982 GMST definition]
     - Explanatory Supplement to the Astronomical Almanac.
-    Fully differentiable with respect to GPS time.
+    Returns float64, including for integer inputs.  Supply Python floats or
+    float64 GPS tensors: precision already lost in a float32 epoch cannot be
+    recovered.  The IAU 1982 formula uses UT1; this function approximates it
+    by UTC because no Earth-orientation data are supplied.  Derivatives are
+    defined away from leap transitions and the angle wrap.
     """
-    is_tensor = isinstance(t_gps, torch.Tensor)
-    tg = t_gps if is_tensor else torch.tensor(t_gps, dtype=torch.float64)
+    tg = torch.as_tensor(t_gps, dtype=torch.float64)
     t_utc = gps_to_utc_seconds(tg)
-    jd = 2444244.5 + t_utc / 86400.0
-    jd_0h = torch.floor(jd - 0.5) + 0.5
-    T_0 = (jd_0h - 2451545.0) / 36525.0
-    ut_seconds = (jd - jd_0h) * 86400.0
+    # Split the day before forming Julian centuries.  Adding a fractional
+    # day to JD ~ 2.4 million otherwise discards tens of microseconds.
+    days = torch.floor(t_utc / 86400.0)
+    ut_seconds = t_utc - days * 86400.0
+    T_0 = (days - 7300.5) / 36525.0
+    # Aoki et al. (1982), Eqs. (13) and (19).
     theta0 = 24110.54841 + 8640184.812866 * T_0 + 0.093104 * (T_0**2) - 6.2e-6 * (T_0**3)
     ratio = 1.002737909350795 + 5.9006e-11 * T_0 - 5.9e-15 * (T_0**2)
-    theta_sec = theta0 + ut_seconds * ratio
+    theta_sec = (theta0 % 86400.0 + ut_seconds * ratio) % 86400.0
     theta_rad = theta_sec * (2.0 * PI / 86400.0)
-    return theta_rad % (2.0 * PI)
+    return theta_rad
 
 
 class Detector(nn.Module):
@@ -132,18 +144,16 @@ class Detector(nn.Module):
         )
         self.register_buffer(
             "x_arm",
-            torch.tensor(data["x_arm"], dtype=torch.float64),
+            torch.nn.functional.normalize(torch.tensor(data["x_arm"], dtype=torch.float64), dim=0),
             persistent=True,
         )
         self.register_buffer(
             "y_arm",
-            torch.tensor(data["y_arm"], dtype=torch.float64),
+            torch.nn.functional.normalize(torch.tensor(data["y_arm"], dtype=torch.float64), dim=0),
             persistent=True,
         )
 
         # Detector response tensor D^ij = 0.5 * (u^i u^j - v^i v^j)
-        u = self.x_arm
-        # Register response tensor
         response = 0.5 * (torch.outer(self.x_arm, self.x_arm) - torch.outer(self.y_arm, self.y_arm))
         self.register_buffer("response", response.to(dtype=self.x_arm.dtype))
 
@@ -174,11 +184,11 @@ class Detector(nn.Module):
         device = self.vertex.device
         dtype = self.vertex.dtype
 
-        ra_t = as_tensor(ra, device=device, dtype=dtype)
-        dec_t = as_tensor(dec, device=device, dtype=dtype)
-        tg_t = as_tensor(t_gps, device=device, dtype=dtype)
+        ra_t = torch.as_tensor(ra, device=device, dtype=dtype)
+        dec_t = torch.as_tensor(dec, device=device, dtype=dtype)
+        tg_t = torch.as_tensor(t_gps, device=device, dtype=torch.float64)
 
-        gmst = greenwich_mean_sidereal_time(tg_t)
+        gmst = greenwich_mean_sidereal_time(tg_t).to(dtype=dtype)
         gha = gmst - ra_t
 
         cos_gha = torch.cos(gha)
@@ -209,7 +219,7 @@ class Detector(nn.Module):
     ) -> Tuple[torch.Tensor, torch.Tensor]:
         """Compute antenna response factors F+ and Fx for given sky position and polarization angle.
 
-        Literature: Anderson et al. (2001) Eqs. 20-25; Schutz (2011).
+        Literature: Anderson et al. (2001), Eqs. (B1)-(B8); Schutz (2011).
 
         Args:
             ra: Right ascension in radians
@@ -223,12 +233,12 @@ class Detector(nn.Module):
         device = self.vertex.device
         dtype = self.vertex.dtype
 
-        ra_t = as_tensor(ra, device=device, dtype=dtype)
-        dec_t = as_tensor(dec, device=device, dtype=dtype)
-        psi_t = as_tensor(psi, device=device, dtype=dtype)
-        tg_t = as_tensor(t_gps, device=device, dtype=dtype)
+        ra_t = torch.as_tensor(ra, device=device, dtype=dtype)
+        dec_t = torch.as_tensor(dec, device=device, dtype=dtype)
+        psi_t = torch.as_tensor(psi, device=device, dtype=dtype)
+        tg_t = torch.as_tensor(t_gps, device=device, dtype=torch.float64)
 
-        gmst = greenwich_mean_sidereal_time(tg_t)
+        gmst = greenwich_mean_sidereal_time(tg_t).to(dtype=dtype)
         gha = gmst - ra_t
 
         cos_gha = torch.cos(gha)
@@ -298,8 +308,9 @@ class Detector(nn.Module):
         f_plus, f_cross = self.antenna_patterns(ra, dec, psi, t_gps)
         delta_t = self.time_delay_from_earth_center(ra, dec, t_gps)
 
-        # Broadcast parameters across frequency dimension
-        if f_actual.dim() >= 1 and f_plus.dim() < f_actual.dim():
+        # The final waveform axis is frequency.  Sky parameters describe the
+        # leading batch axes even when all waveforms share a one-dimensional f.
+        if max(f_actual.ndim, hp_actual.ndim, hc_actual.ndim) > 0:
             f_plus = f_plus.unsqueeze(-1)
             f_cross = f_cross.unsqueeze(-1)
             delta_t = delta_t.unsqueeze(-1)
@@ -328,10 +339,22 @@ class Detector(nn.Module):
             project_td_strain(hp, hc, delta_t, ra, dec, psi, t_gps)
             project_td_strain(times, hp, hc, ra, dec, psi, t_gps)
 
+        Uses a circular shift rounded to the nearest sample and requires a
+        scalar geometric delay.  Fractional-delay derivatives and batched sky
+        positions are supported by the frequency-domain projection only.
+
         Returns:
             h_det(t): Real strain tensor at detector.
         """
-        if isinstance(arg3, (float, int)) or (isinstance(arg3, torch.Tensor) and arg3.numel() == 1):
+        # A one-sample waveform is still a length-one tensor.  A Python scalar
+        # or zero-dimensional tensor is unambiguously the legacy ``delta_t``
+        # argument.  Keep accepting a one-element tensor in that legacy form
+        # when no explicit ``delta_t=`` keyword disambiguates the times form.
+        scalar_dt = isinstance(arg3, (float, int)) or (
+            isinstance(arg3, torch.Tensor)
+            and (arg3.ndim == 0 or (arg3.ndim == 1 and arg3.numel() == 1 and delta_t is None))
+        )
+        if scalar_dt:
             h_plus = arg1
             h_cross = arg2
             dt_val = float(arg3)

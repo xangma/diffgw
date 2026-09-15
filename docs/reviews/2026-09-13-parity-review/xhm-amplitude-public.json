@@ -1,0 +1,693 @@
+{
+  "paper": "arXiv:2001.10914v2",
+  "equations": [
+    "Eq. (spaamp_2)",
+    "Eq. (insp_amp)",
+    "Appendix E Eqs. (21),(33),(32),(44),(43)"
+  ],
+  "cases": [
+    [
+      40.0,
+      15.0,
+      0.3,
+      -0.2
+    ],
+    [
+      55.0,
+      11.0,
+      -0.4,
+      0.2
+    ],
+    [
+      27.0,
+      16.0,
+      -0.25,
+      0.15
+    ]
+  ],
+  "frequency_hz": [
+    20.0,
+    512.0,
+    1.0
+  ],
+  "distance_mpc": 500.0,
+  "public_distance_argument_m": 1.5428387907456836e+25,
+  "f_ref_hz": 20.0,
+  "modes": [
+    [
+      2,
+      2
+    ],
+    [
+      2,
+      1
+    ],
+    [
+      3,
+      3
+    ],
+    [
+      3,
+      2
+    ],
+    [
+      4,
+      4
+    ]
+  ],
+  "public_api": "SimIMRPhenomXHMFrequencySequenceOneMode(freqs,m1_SI,m2_SI,chi1L,chi2L,ell,emm,distance,phiRef,fRef_In,lalParams)->COMPLEX16FrequencySeries",
+  "public_mode_convention": "emm=-m; returned COMPLEX16FrequencySeries copied from data.data. Values are dimensionless mode amplitudes; TorchWave values are physical strain, so metrics normalize each series by its L2 norm. This removes only the documented M^2/D scale, while preserving phase.",
+  "public_spheroidal_controls": {
+    "SimIMRPhenomXHM_SpheroidalAmplitude": "REAL8Vector,ell,emm,m1_SI,m2_SI,chi1L,chi2L,distance,phiRef,fRef,Dict",
+    "SimIMRPhenomXHM_SpheroidalPhase": "same; black-box arrays recorded below"
+  },
+  "native_api": "(modes: Optional[Sequence[Tuple[int, int]]] = None, carrier: str = 'XAS', base_22: Optional[torch.nn.modules.module.Module] = None, *, experimental_phase_connections: bool = False)",
+  "python": "3.13.9",
+  "numpy": "2.3.5",
+  "torch": "2.9.1",
+  "source_hashes": {
+    "paper_tex": "5c7132720db24d9caaa804f53d6961b075996cacee00b3ce0a51865a6dbf107e",
+    "clean_helper": "b051313f993bb871afb56237ab3f6fd8c33de50d61423fd0c65c900e423f4a8e",
+    "script": "9564018aabcc45ed37a83f28ccbf69bede4cbd2327d40229aae85ec47d5c7a1e"
+  },
+  "npz": "/tmp/torchwave-xhm-amplitude-public.npz",
+  "phase_gauge_delta_phi": [
+    {
+      "mode": [
+        2,
+        2
+      ],
+      "delta_phi": 0.2,
+      "median_phase_change": 0.4000000000000057,
+      "expected_m_delta": 0.4
+    },
+    {
+      "mode": [
+        2,
+        1
+      ],
+      "delta_phi": 0.2,
+      "median_phase_change": 0.20000000000000284,
+      "expected_m_delta": 0.2
+    },
+    {
+      "mode": [
+        3,
+        3
+      ],
+      "delta_phi": 0.2,
+      "median_phase_change": 0.599999999999966,
+      "expected_m_delta": 0.6000000000000001
+    },
+    {
+      "mode": [
+        3,
+        2
+      ],
+      "delta_phi": 0.2,
+      "median_phase_change": 0.40000118785270894,
+      "expected_m_delta": 0.4
+    },
+    {
+      "mode": [
+        4,
+        4
+      ],
+      "delta_phi": 0.2,
+      "median_phase_change": 0.8000000000000114,
+      "expected_m_delta": 0.8
+    }
+  ],
+  "rows": [
+    {
+      "case": 0,
+      "experimental_phase_connections": false,
+      "mode": [
+        2,
+        2
+      ],
+      "native_norm": 6.4280369479900995e-22,
+      "public_norm": 6.428036947990091e-22,
+      "native_to_public_norm_ratio": 1.0000000000000013,
+      "raw_relative_l2": 2.0000000000000004,
+      "amplitude_relative_l2": 6.546392890280166e-15,
+      "physical_scale_aware_raw_relative_l2": 2.0000000000000013,
+      "physical_scale_aware_amplitude_relative_l2": 6.701253199083939e-15,
+      "ratio_amp_20": 0.999999999999998,
+      "ratio_amp_100": 1.0000000000000129,
+      "ratio_phase_20": 3.1415926535897927,
+      "ratio_phase_100": -3.1415926535896546
+    },
+    {
+      "case": 0,
+      "experimental_phase_connections": false,
+      "mode": [
+        2,
+        1
+      ],
+      "native_norm": 9.804301608488692e-23,
+      "public_norm": 2.0822155838548313e-23,
+      "native_to_public_norm_ratio": 4.7085910241522,
+      "raw_relative_l2": 1.3889278175574107,
+      "amplitude_relative_l2": 1.0225779003498354,
+      "physical_scale_aware_raw_relative_l2": 4.778816461456484,
+      "physical_scale_aware_amplitude_relative_l2": 4.321719433889387,
+      "ratio_amp_20": 0.2497455034999216,
+      "ratio_amp_100": 0.3352887470801666,
+      "ratio_phase_20": -1.5199651178306997,
+      "ratio_phase_100": 1.8454551952285694
+    },
+    {
+      "case": 0,
+      "experimental_phase_connections": false,
+      "mode": [
+        3,
+        3
+      ],
+      "native_norm": 1.9100600422269033e-22,
+      "public_norm": 8.626715985645388e-23,
+      "native_to_public_norm_ratio": 2.2141218575008024,
+      "raw_relative_l2": 1.425064612647832,
+      "amplitude_relative_l2": 0.8337710979474415,
+      "physical_scale_aware_raw_relative_l2": 2.4434710583058683,
+      "physical_scale_aware_amplitude_relative_l2": 1.7358837440247668,
+      "ratio_amp_20": 0.47705941157305803,
+      "ratio_amp_100": 0.5444368363026156,
+      "ratio_phase_20": 1.693980638923808,
+      "ratio_phase_100": 1.521582915091617
+    },
+    {
+      "case": 0,
+      "experimental_phase_connections": false,
+      "mode": [
+        3,
+        2
+      ],
+      "native_norm": 1.3163163879473916e-23,
+      "public_norm": 1.1172143224848203e-23,
+      "native_to_public_norm_ratio": 1.178212954717358,
+      "raw_relative_l2": 1.7320094802093688,
+      "amplitude_relative_l2": 0.45688965493804395,
+      "physical_scale_aware_raw_relative_l2": 1.8884464641251681,
+      "physical_scale_aware_amplitude_relative_l2": 0.5269816313987977,
+      "ratio_amp_20": 1.0176249691445152,
+      "ratio_amp_100": 1.3502737477413147,
+      "ratio_phase_20": -3.115475507148214,
+      "ratio_phase_100": -0.18459388113136102
+    },
+    {
+      "case": 0,
+      "experimental_phase_connections": false,
+      "mode": [
+        4,
+        4
+      ],
+      "native_norm": 4.6275894262474985e-23,
+      "public_norm": 2.3726100013872467e-23,
+      "native_to_public_norm_ratio": 1.9504214445449453,
+      "raw_relative_l2": 0.8991683328902546,
+      "amplitude_relative_l2": 0.5987188032506418,
+      "physical_scale_aware_raw_relative_l2": 1.5748726484775315,
+      "physical_scale_aware_amplitude_relative_l2": 1.2658819832426236,
+      "ratio_amp_20": 0.5644307745224296,
+      "ratio_amp_100": 0.8325854180337191,
+      "ratio_phase_20": 0.02353141705021974,
+      "ratio_phase_100": 0.0008187348466439763
+    },
+    {
+      "case": 0,
+      "experimental_phase_connections": true,
+      "mode": [
+        2,
+        2
+      ],
+      "native_norm": 6.4280369479900995e-22,
+      "public_norm": 6.428036947990091e-22,
+      "native_to_public_norm_ratio": 1.0000000000000013,
+      "raw_relative_l2": 2.0000000000000004,
+      "amplitude_relative_l2": 6.546392890280166e-15,
+      "physical_scale_aware_raw_relative_l2": 2.0000000000000013,
+      "physical_scale_aware_amplitude_relative_l2": 6.701253199083939e-15,
+      "ratio_amp_20": 0.999999999999998,
+      "ratio_amp_100": 1.0000000000000129,
+      "ratio_phase_20": 3.1415926535897927,
+      "ratio_phase_100": -3.1415926535896546
+    },
+    {
+      "case": 0,
+      "experimental_phase_connections": true,
+      "mode": [
+        2,
+        1
+      ],
+      "native_norm": 9.804301608488694e-23,
+      "public_norm": 2.0822155838548313e-23,
+      "native_to_public_norm_ratio": 4.708591024152201,
+      "raw_relative_l2": 1.3639266784101183,
+      "amplitude_relative_l2": 1.0225779003498352,
+      "physical_scale_aware_raw_relative_l2": 4.7447887579240415,
+      "physical_scale_aware_amplitude_relative_l2": 4.321719433889387,
+      "ratio_amp_20": 0.2497455034999216,
+      "ratio_amp_100": 0.3352887470801664,
+      "ratio_phase_20": 1.991848001315455,
+      "ratio_phase_100": 2.188446827388101
+    },
+    {
+      "case": 0,
+      "experimental_phase_connections": true,
+      "mode": [
+        3,
+        3
+      ],
+      "native_norm": 1.9100600422269035e-22,
+      "public_norm": 8.626715985645388e-23,
+      "native_to_public_norm_ratio": 2.214121857500803,
+      "raw_relative_l2": 1.4362665038467208,
+      "amplitude_relative_l2": 0.8337710979474414,
+      "physical_scale_aware_raw_relative_l2": 2.457950071654027,
+      "physical_scale_aware_amplitude_relative_l2": 1.7358837440247668,
+      "ratio_amp_20": 0.477059411573058,
+      "ratio_amp_100": 0.5444368363026156,
+      "ratio_phase_20": -0.9721907684367004,
+      "ratio_phase_100": 0.7570964926482344
+    },
+    {
+      "case": 0,
+      "experimental_phase_connections": true,
+      "mode": [
+        3,
+        2
+      ],
+      "native_norm": 1.3163163879473915e-23,
+      "public_norm": 1.1172143224848203e-23,
+      "native_to_public_norm_ratio": 1.178212954717358,
+      "raw_relative_l2": 1.3535980788993327,
+      "amplitude_relative_l2": 0.45688965493804395,
+      "physical_scale_aware_raw_relative_l2": 1.4800386275740391,
+      "physical_scale_aware_amplitude_relative_l2": 0.5269816313987976,
+      "ratio_amp_20": 1.0176249691445152,
+      "ratio_amp_100": 1.3502737477413145,
+      "ratio_phase_20": 0.5888925449898058,
+      "ratio_phase_100": 1.3268386678339137
+    },
+    {
+      "case": 0,
+      "experimental_phase_connections": true,
+      "mode": [
+        4,
+        4
+      ],
+      "native_norm": 4.6275894262474985e-23,
+      "public_norm": 2.3726100013872467e-23,
+      "native_to_public_norm_ratio": 1.9504214445449453,
+      "raw_relative_l2": 1.4990402418842008,
+      "amplitude_relative_l2": 0.5987188032506418,
+      "physical_scale_aware_raw_relative_l2": 2.299159666192812,
+      "physical_scale_aware_amplitude_relative_l2": 1.2658819832426236,
+      "ratio_amp_20": 0.5644307745224296,
+      "ratio_amp_100": 0.8325854180337191,
+      "ratio_phase_20": -2.6441198517988362,
+      "ratio_phase_100": -0.7710669950394922
+    },
+    {
+      "case": 1,
+      "experimental_phase_connections": false,
+      "mode": [
+        2,
+        2
+      ],
+      "native_norm": 5.189404891620976e-22,
+      "public_norm": 5.189404891620961e-22,
+      "native_to_public_norm_ratio": 1.0000000000000029,
+      "raw_relative_l2": 1.9999999999999996,
+      "amplitude_relative_l2": 4.0262533444390786e-15,
+      "physical_scale_aware_raw_relative_l2": 2.000000000000003,
+      "physical_scale_aware_amplitude_relative_l2": 4.901120411183523e-15,
+      "ratio_amp_20": 0.9999999999999973,
+      "ratio_amp_100": 1.0000000000000064,
+      "ratio_phase_20": -3.1415926535897905,
+      "ratio_phase_100": -3.1415926535896475
+    },
+    {
+      "case": 1,
+      "experimental_phase_connections": false,
+      "mode": [
+        2,
+        1
+      ],
+      "native_norm": 1.6573313327844885e-22,
+      "public_norm": 4.656873918733244e-23,
+      "native_to_public_norm_ratio": 3.5588924280675247,
+      "raw_relative_l2": 1.4565492627457497,
+      "amplitude_relative_l2": 0.8533956171755328,
+      "physical_scale_aware_raw_relative_l2": 3.754763373645803,
+      "physical_scale_aware_amplitude_relative_l2": 3.023212720622116,
+      "ratio_amp_20": 0.2706090379103184,
+      "ratio_amp_100": 2.0232461028702504,
+      "ratio_phase_20": -1.6426201109841416,
+      "ratio_phase_100": 2.4285291757857483
+    },
+    {
+      "case": 1,
+      "experimental_phase_connections": false,
+      "mode": [
+        3,
+        3
+      ],
+      "native_norm": 1.7630650793734995e-22,
+      "public_norm": 1.0834334109576225e-22,
+      "native_to_public_norm_ratio": 1.6272943602645278,
+      "raw_relative_l2": 1.4271376118859087,
+      "amplitude_relative_l2": 0.7565699714048328,
+      "physical_scale_aware_raw_relative_l2": 1.9255762911917447,
+      "physical_scale_aware_amplitude_relative_l2": 1.1510683948300588,
+      "ratio_amp_20": 0.5817346179336055,
+      "ratio_amp_100": 0.6201946864606906,
+      "ratio_phase_20": 1.5687632735553254,
+      "ratio_phase_100": 0.14336168308795175
+    },
+    {
+      "case": 1,
+      "experimental_phase_connections": false,
+      "mode": [
+        3,
+        2
+      ],
+      "native_norm": 1.1046339137066064e-23,
+      "public_norm": 1.2001088673333654e-23,
+      "native_to_public_norm_ratio": 0.9204447561170814,
+      "raw_relative_l2": 1.6591647787999537,
+      "amplitude_relative_l2": 0.3750639231857671,
+      "physical_scale_aware_raw_relative_l2": 1.5937863457721377,
+      "physical_scale_aware_amplitude_relative_l2": 0.3685250503563938,
+      "ratio_amp_20": 1.1262152582737484,
+      "ratio_amp_100": 0.8042990307622907,
+      "ratio_phase_20": -3.0863516851799706,
+      "ratio_phase_100": 1.431156940632474
+    },
+    {
+      "case": 1,
+      "experimental_phase_connections": false,
+      "mode": [
+        4,
+        4
+      ],
+      "native_norm": 9.169459505048349e-23,
+      "public_norm": 3.0720119135551217e-23,
+      "native_to_public_norm_ratio": 2.9848385237662978,
+      "raw_relative_l2": 1.1583134878768016,
+      "amplitude_relative_l2": 0.9388635592898077,
+      "physical_scale_aware_raw_relative_l2": 2.8185656584344088,
+      "physical_scale_aware_amplitude_relative_l2": 2.563320894261198,
+      "ratio_amp_20": 0.3505195398175362,
+      "ratio_amp_100": 0.3466659328365308,
+      "ratio_phase_20": -0.04206726726881148,
+      "ratio_phase_100": 0.036095981855113576
+    },
+    {
+      "case": 1,
+      "experimental_phase_connections": true,
+      "mode": [
+        2,
+        2
+      ],
+      "native_norm": 5.189404891620976e-22,
+      "public_norm": 5.189404891620961e-22,
+      "native_to_public_norm_ratio": 1.0000000000000029,
+      "raw_relative_l2": 1.9999999999999996,
+      "amplitude_relative_l2": 4.0262533444390786e-15,
+      "physical_scale_aware_raw_relative_l2": 2.000000000000003,
+      "physical_scale_aware_amplitude_relative_l2": 4.901120411183523e-15,
+      "ratio_amp_20": 0.9999999999999973,
+      "ratio_amp_100": 1.0000000000000064,
+      "ratio_phase_20": -3.1415926535897905,
+      "ratio_phase_100": -3.1415926535896475
+    },
+    {
+      "case": 1,
+      "experimental_phase_connections": true,
+      "mode": [
+        2,
+        1
+      ],
+      "native_norm": 1.6573313327844887e-22,
+      "public_norm": 4.656873918733244e-23,
+      "native_to_public_norm_ratio": 3.558892428067525,
+      "raw_relative_l2": 1.4330994721982395,
+      "amplitude_relative_l2": 0.8533956171755327,
+      "physical_scale_aware_raw_relative_l2": 3.722511456256454,
+      "physical_scale_aware_amplitude_relative_l2": 3.023212720622116,
+      "ratio_amp_20": 0.2706090379103182,
+      "ratio_amp_100": 2.0232461028702504,
+      "ratio_phase_20": -0.2889184613362387,
+      "ratio_phase_100": 2.236036447602573
+    },
+    {
+      "case": 1,
+      "experimental_phase_connections": true,
+      "mode": [
+        3,
+        3
+      ],
+      "native_norm": 1.7630650793734997e-22,
+      "public_norm": 1.0834334109576225e-22,
+      "native_to_public_norm_ratio": 1.627294360264528,
+      "raw_relative_l2": 1.4928073874977306,
+      "amplitude_relative_l2": 0.7565699714048328,
+      "physical_scale_aware_raw_relative_l2": 2.0049641437318177,
+      "physical_scale_aware_amplitude_relative_l2": 1.1510683948300588,
+      "ratio_amp_20": 0.5817346179336055,
+      "ratio_amp_100": 0.6201946864606906,
+      "ratio_phase_20": -3.086003718584544,
+      "ratio_phase_100": 0.6485384780158365
+    },
+    {
+      "case": 1,
+      "experimental_phase_connections": true,
+      "mode": [
+        3,
+        2
+      ],
+      "native_norm": 1.1046339137066064e-23,
+      "public_norm": 1.2001088673333654e-23,
+      "native_to_public_norm_ratio": 0.9204447561170814,
+      "raw_relative_l2": 1.401039812563344,
+      "amplitude_relative_l2": 0.3750639231857671,
+      "physical_scale_aware_raw_relative_l2": 1.3465071875309642,
+      "physical_scale_aware_amplitude_relative_l2": 0.3685250503563938,
+      "ratio_amp_20": 1.1262152582737484,
+      "ratio_amp_100": 0.8042990307622908,
+      "ratio_phase_20": -1.138872812311905,
+      "ratio_phase_100": 2.606217277878619
+    },
+    {
+      "case": 1,
+      "experimental_phase_connections": true,
+      "mode": [
+        4,
+        4
+      ],
+      "native_norm": 9.169459505048349e-23,
+      "public_norm": 3.0720119135551217e-23,
+      "native_to_public_norm_ratio": 2.9848385237662978,
+      "raw_relative_l2": 1.3211924555054013,
+      "amplitude_relative_l2": 0.9388635592898077,
+      "physical_scale_aware_raw_relative_l2": 3.024858239910254,
+      "physical_scale_aware_amplitude_relative_l2": 2.5633208942611985,
+      "ratio_amp_20": 0.3505195398175362,
+      "ratio_amp_100": 0.34666593283653085,
+      "ratio_phase_20": 1.584049792043645,
+      "ratio_phase_100": 1.8834959712376382
+    },
+    {
+      "case": 2,
+      "experimental_phase_connections": false,
+      "mode": [
+        2,
+        2
+      ],
+      "native_norm": 5.682868788643573e-22,
+      "public_norm": 5.682868788643564e-22,
+      "native_to_public_norm_ratio": 1.0000000000000016,
+      "raw_relative_l2": 2.0,
+      "amplitude_relative_l2": 6.018573292839804e-15,
+      "physical_scale_aware_raw_relative_l2": 2.0000000000000018,
+      "physical_scale_aware_amplitude_relative_l2": 6.137132078286669e-15,
+      "ratio_amp_20": 0.9999999999999983,
+      "ratio_amp_100": 1.0000000000000102,
+      "ratio_phase_20": 3.1415926535897927,
+      "ratio_phase_100": 3.1415926535897616
+    },
+    {
+      "case": 2,
+      "experimental_phase_connections": false,
+      "mode": [
+        2,
+        1
+      ],
+      "native_norm": 4.716633091382423e-23,
+      "public_norm": 1.9691173825511636e-23,
+      "native_to_public_norm_ratio": 2.3953031612933167,
+      "raw_relative_l2": 1.3614003880148793,
+      "amplitude_relative_l2": 0.6700574126389656,
+      "physical_scale_aware_raw_relative_l2": 2.527123301084149,
+      "physical_scale_aware_amplitude_relative_l2": 1.7384782962753482,
+      "ratio_amp_20": 0.5380368316305433,
+      "ratio_amp_100": 0.5036190954184199,
+      "ratio_phase_20": -1.4894794861040976,
+      "ratio_phase_100": -2.775803613423934
+    },
+    {
+      "case": 2,
+      "experimental_phase_connections": false,
+      "mode": [
+        3,
+        3
+      ],
+      "native_norm": 8.553041633380945e-23,
+      "public_norm": 3.8791932386789145e-23,
+      "native_to_public_norm_ratio": 2.2048506241193957,
+      "raw_relative_l2": 1.4307601457462022,
+      "amplitude_relative_l2": 0.8676758656921257,
+      "physical_scale_aware_raw_relative_l2": 2.442367442480034,
+      "physical_scale_aware_amplitude_relative_l2": 1.763976182247005,
+      "ratio_amp_20": 0.4685133845953064,
+      "ratio_amp_100": 0.5573089444886721,
+      "ratio_phase_20": 1.6695924465933873,
+      "ratio_phase_100": 1.548110955180927
+    },
+    {
+      "case": 2,
+      "experimental_phase_connections": false,
+      "mode": [
+        3,
+        2
+      ],
+      "native_norm": 6.4930403495982154e-24,
+      "public_norm": 6.5886255207555674e-24,
+      "native_to_public_norm_ratio": 0.9854923958181812,
+      "raw_relative_l2": 1.6405695950169923,
+      "amplitude_relative_l2": 0.5370781179136893,
+      "physical_scale_aware_raw_relative_l2": 1.6286903651748499,
+      "physical_scale_aware_amplitude_relative_l2": 0.5333653670362545,
+      "ratio_amp_20": 1.145119831964787,
+      "ratio_amp_100": 1.525882442694053,
+      "ratio_phase_20": 3.1075927088899555,
+      "ratio_phase_100": 1.9217575857576816
+    },
+    {
+      "case": 2,
+      "experimental_phase_connections": false,
+      "mode": [
+        4,
+        4
+      ],
+      "native_norm": 2.2529174233329128e-23,
+      "public_norm": 1.354608700155468e-23,
+      "native_to_public_norm_ratio": 1.6631499731799642,
+      "raw_relative_l2": 0.8573088068589761,
+      "amplitude_relative_l2": 0.5111647733952551,
+      "physical_scale_aware_raw_relative_l2": 1.2892428697005691,
+      "physical_scale_aware_amplitude_relative_l2": 0.935056890269934,
+      "ratio_amp_20": 0.660250841624327,
+      "ratio_amp_100": 0.9580494505258792,
+      "ratio_phase_20": 0.03967575115405979,
+      "ratio_phase_100": 0.005697503227319865
+    },
+    {
+      "case": 2,
+      "experimental_phase_connections": true,
+      "mode": [
+        2,
+        2
+      ],
+      "native_norm": 5.682868788643573e-22,
+      "public_norm": 5.682868788643564e-22,
+      "native_to_public_norm_ratio": 1.0000000000000016,
+      "raw_relative_l2": 2.0,
+      "amplitude_relative_l2": 6.018573292839804e-15,
+      "physical_scale_aware_raw_relative_l2": 2.0000000000000018,
+      "physical_scale_aware_amplitude_relative_l2": 6.137132078286669e-15,
+      "ratio_amp_20": 0.9999999999999983,
+      "ratio_amp_100": 1.0000000000000102,
+      "ratio_phase_20": 3.1415926535897927,
+      "ratio_phase_100": 3.1415926535897616
+    },
+    {
+      "case": 2,
+      "experimental_phase_connections": true,
+      "mode": [
+        2,
+        1
+      ],
+      "native_norm": 4.716633091382423e-23,
+      "public_norm": 1.9691173825511636e-23,
+      "native_to_public_norm_ratio": 2.3953031612933167,
+      "raw_relative_l2": 1.368167119559112,
+      "amplitude_relative_l2": 0.6700574126389656,
+      "physical_scale_aware_raw_relative_l2": 2.535861594888055,
+      "physical_scale_aware_amplitude_relative_l2": 1.7384782962753482,
+      "ratio_amp_20": 0.5380368316305432,
+      "ratio_amp_100": 0.5036190954184198,
+      "ratio_phase_20": 2.35486776778284,
+      "ratio_phase_100": -2.2551085209442854
+    },
+    {
+      "case": 2,
+      "experimental_phase_connections": true,
+      "mode": [
+        3,
+        3
+      ],
+      "native_norm": 8.553041633380945e-23,
+      "public_norm": 3.8791932386789145e-23,
+      "native_to_public_norm_ratio": 2.2048506241193957,
+      "raw_relative_l2": 1.439875419728626,
+      "amplitude_relative_l2": 0.8676758656921257,
+      "physical_scale_aware_raw_relative_l2": 2.4541500023173217,
+      "physical_scale_aware_amplitude_relative_l2": 1.763976182247005,
+      "ratio_amp_20": 0.4685133845953065,
+      "ratio_amp_100": 0.5573089444886722,
+      "ratio_phase_20": -0.6620854664858739,
+      "ratio_phase_100": 2.4560920041437946
+    },
+    {
+      "case": 2,
+      "experimental_phase_connections": true,
+      "mode": [
+        3,
+        2
+      ],
+      "native_norm": 6.4930403495982154e-24,
+      "public_norm": 6.5886255207555674e-24,
+      "native_to_public_norm_ratio": 0.9854923958181812,
+      "raw_relative_l2": 1.3152480860083666,
+      "amplitude_relative_l2": 0.5370781179136893,
+      "physical_scale_aware_raw_relative_l2": 1.305753276799322,
+      "physical_scale_aware_amplitude_relative_l2": 0.5333653670362545,
+      "ratio_amp_20": 1.1451198319647873,
+      "ratio_amp_100": 1.5258824426940527,
+      "ratio_phase_20": 0.8242735823901108,
+      "ratio_phase_100": -2.585116828927724
+    },
+    {
+      "case": 2,
+      "experimental_phase_connections": true,
+      "mode": [
+        4,
+        4
+      ],
+      "native_norm": 2.252917423332913e-23,
+      "public_norm": 1.354608700155468e-23,
+      "native_to_public_norm_ratio": 1.6631499731799644,
+      "raw_relative_l2": 1.4826059591088459,
+      "amplitude_relative_l2": 0.5111647733952551,
+      "physical_scale_aware_raw_relative_l2": 2.023751916887189,
+      "physical_scale_aware_amplitude_relative_l2": 0.935056890269934,
+      "ratio_amp_20": 0.6602508416243271,
+      "ratio_amp_100": 0.9580494505258792,
+      "ratio_phase_20": -2.297026077651471,
+      "ratio_phase_100": 0.8885589735588967
+    }
+  ]
+}

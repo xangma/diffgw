@@ -1,0 +1,77 @@
+{
+  "timestamp_utc": "2026-09-13T22:14:02.061051+00:00",
+  "host": "RONI2",
+  "python": "3.13.9",
+  "torch": "2.9.1",
+  "lal_version": "7.7.0",
+  "lalsimulation_version": "6.2.0",
+  "verifier_sha256": "7457dbfb548068d9e385770c586c813a0905e7417e9c61d4b2378be26091d1b6",
+  "input_sha256": "1d2df0d77bfbb80e531f9025168d1acc9b4145d2a305ea1d45bfee49732a7602",
+  "run_result_sha256": "03e63701e34aa1f97175c0c06d996fb439b7f95814d1f75e3258701a1c1870aa",
+  "run_source_hashes": {
+    "src/torchwave/approximants/eob/published_waveform.py": "8eedc2a0fa0a2eb96dbd7c6e5b541081df2466888aa9fb8dd45234b70b21eb60",
+    "src/torchwave/approximants/eob/integrator.py": "a036f6b7580450a847bc1d56ebf745de6cdb5c2ee397d31cf1014d483eebe26b"
+  },
+  "time_origin": "orbital_peak",
+  "time_origin_key": "peak_time",
+  "native_support_s": [
+    -1.2320381845222033,
+    0.03590632267434979
+  ],
+  "binary_support_s": [
+    -1.232042294,
+    0.09439241819979305
+  ],
+  "common_support_s": [
+    -1.2320381845222033,
+    0.03590632267434979
+  ],
+  "raw_common_relative_l2": 0.0008459982161992723,
+  "active_samples": 10179,
+  "active_threshold": "amplitude > 0.1% of each waveform maximum; phase/frequency only",
+  "native_frequency_hz": [
+    20.005462924562348,
+    350.0700114442785
+  ],
+  "binary_frequency_hz": [
+    20.005486341626366,
+    350.112712757756
+  ],
+  "frequency_rms_hz": 0.005232686446433164,
+  "phase_rms_rad": 0.0007889793666485729,
+  "phase_max_abs_rad": 0.005500657976369894,
+  "phase_residual_at_common_start_rad": 0.0004707038900244598,
+  "native_phase_at_same_event_rad": -1.6908430029241601,
+  "binary_phase_at_same_event_rad": -1.691855941503627,
+  "native_amplitude_peak_time_s": -0.001034859432959713,
+  "binary_amplitude_peak_time_s": -0.0010389689107563882,
+  "dropped_tail_energy_fraction": 0.0,
+  "dropped_tail_definition": "sum |binary h22|^2 after native end / total binary sum",
+  "projection_roundtrip_relative_l2": {
+    "plus": 2.5576740632360614e-17,
+    "cross": 1.0382802876130778e-16
+  },
+  "all_input_arrays_finite": true,
+  "intervals": {
+    "early": {
+      "samples": 9194,
+      "relative_l2": 0.0006616688229145604,
+      "phase_frequency_active_samples": 9194
+    },
+    "inspiral": {
+      "samples": 10006,
+      "relative_l2": 0.0008341034903424404,
+      "phase_frequency_active_samples": 10006
+    },
+    "merger": {
+      "samples": 325,
+      "relative_l2": 0.001334393643293218,
+      "phase_frequency_active_samples": 325
+    },
+    "ringdown": {
+      "samples": 130,
+      "relative_l2": 0.07007455990281904,
+      "phase_frequency_active_samples": 11
+    }
+  }
+}

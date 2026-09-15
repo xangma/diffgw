@@ -5,7 +5,7 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "torchwave"
 version = "0.1.0"
-description = "Clean-room, permissively licensed gravitational-wave waveform generator in PyTorch"
+description = "Batched, differentiable gravitational-wave waveform generator in PyTorch"
 readme = "README.md"
 authors = [
     { name = "Xan Morice-Atkinson" }
@@ -22,6 +22,18 @@ dev = [
     "pytest>=7.0.0",
     "scipy>=1.8.0",
 ]
+
+qnm-generation = [
+    "scipy>=1.8.0",
+    "gmpy2>=2.2.0",
+]
+
+rom-official = [
+    "h5py>=3.0",
+]
+
+[tool.setuptools]
+license-files = ["LICENSE", "THIRD_PARTY_NOTICES.md"]
 
 [tool.setuptools.packages.find]
 where = ["src"]

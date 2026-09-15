@@ -1,0 +1,55 @@
+{
+  "scope": "30+20 solar masses, nonspinning, 20..1024 Hz, df=0.5, both polarizations; exact bins, no fitted alignment",
+  "calibration_sha256": "db18c0fdde1bdfe17e115d1ea9a54915a89b3023404571d8bec7ea30fe3a6283",
+  "frozen_reference_sha256": "084e58b5332549b73fdaeb3ffb63df04d573a8082b83db7230d25642d0780fb8",
+  "results": {
+    "baseline": {
+      "relative_l2": 0.00032708438016984477,
+      "frequency_bins": 2009,
+      "native_public_axes_exact": true,
+      "public_arrays_bitwise_equal_frozen": true,
+      "source_hashes_stable": true,
+      "replacement_restored": null,
+      "elapsed_seconds": 29.682067208050285,
+      "artifacts_sha256": {
+        "replay-report.json": "c71f62355c73d147ba73db53609f024f7458c7215d3d123837480a6cfe6d80b3",
+        "replay-native-output.npz": "bd7bc65a0da98334585069462b47b54dba0800bd6bbb092369a69267ecb9e611",
+        "replay-public-fd-output.npz": "d3c008d033a8844b3e107bcaf448963d7beacdbc27d5cba574f4ebb22eff677a"
+      }
+    },
+    "refit": {
+      "relative_l2": 0.0003298344651847134,
+      "frequency_bins": 2009,
+      "native_public_axes_exact": true,
+      "public_arrays_bitwise_equal_frozen": true,
+      "source_hashes_stable": true,
+      "replacement_restored": true,
+      "elapsed_seconds": 31.412754916003905,
+      "artifacts_sha256": {
+        "replay-report.json": "4d2762779452001884c88aac001180aa0258b17825c790afd23e27911870f5c7",
+        "replay-native-output.npz": "965b61d3cd2b338cb7d3568c3f8d946ed59e06ab3e1ddd3646da19c91d8d2279",
+        "replay-public-fd-output.npz": "1145e3c41e4db95a1961f7771163a12f0ee07187ac64abb1d5a527c8f2190778"
+      },
+      "percent_change_in_error_vs_baseline": 0.8407876320601471
+    },
+    "direct": {
+      "relative_l2": 0.00033039250070446134,
+      "frequency_bins": 2009,
+      "native_public_axes_exact": true,
+      "public_arrays_bitwise_equal_frozen": true,
+      "source_hashes_stable": true,
+      "replacement_restored": true,
+      "elapsed_seconds": 31.69776524999179,
+      "artifacts_sha256": {
+        "replay-report.json": "249270cfe9ce6e424e25a6c7d819eee312a5cd3f71e148ae60dae5ba744125b5",
+        "replay-native-output.npz": "ea3b82013982560bb5ad3842ed0056c359637b998b8ec1dc8a3ba9534ffe9780",
+        "replay-public-fd-output.npz": "a93ecf1383c1322210ffe0290b43ba3c23d1c56a2844fd544f8f0b5381fa8cbb"
+      },
+      "percent_change_in_error_vs_baseline": 1.0113966716780443
+    },
+    "refit_vs_direct_relative_l2_public_norm": 3.4656130901691793e-06
+  },
+  "decision": "No canonical promotion: independent QNM substitutions slightly worsen this case. These measurements do not identify the remaining error source.",
+  "strict_suite": "Not rerun; latest frozen result remains 17/21 catalog and 11/13 holdout.",
+  "diagnostic_baseline_note": "Fresh baseline native-history comparison points to older replay cache; substitution runs use delegated default comparison cache. These paths are only used after waveform generation for historical diagnostics, not as waveform inputs. Root compares all generated arrays here."
+}

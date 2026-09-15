@@ -1,0 +1,315 @@
+{
+  "status": "complete",
+  "nominal_policy": {
+    "fixed_step_M": 0.1,
+    "source_records": [
+      "docs/reviews/2026-09-13-parity-review/teob-merger-assembly-contract.md:28",
+      "docs/reviews/2026-09-13-parity-review/verification/teob-merger-nqc-clean/diagnostic.json:nqc.auxiliary_spacing",
+      "scripts/teob_fd_matching_controls.py:34"
+    ],
+    "runtime_rule": "assemble_teob_merger_nqc uses min(0.5M, fixed_step); these cases use fixed_step=0.1M."
+  },
+  "scope": "Cached native NQC arrays only; no waveform, FFT, oracle, or source/reference evaluation.",
+  "cases": {
+    "catalog": {
+      "cache": "docs/reviews/2026-09-15-teob-fd-attribution/catalog/continuous.npz",
+      "cache_sha256": "2332696fcf372a101762e5f022e33f6ee5548c7d229c9ccf8527ab7265049745",
+      "frozen_grid_reference": {
+        "path": "docs/reviews/2026-09-15-teob-fd-attribution/catalog/matching-controls.json",
+        "nqc_coefficients": [
+          0.11424545662630528,
+          1.1050182182359547,
+          0.17728546624829153,
+          1.6902631314653591
+        ],
+        "t_peak_grid_M": 4552222.907415686,
+        "nqc_t_nqc_M": 4552221.907415686
+      },
+      "nominal_fixed_step_M": 0.1,
+      "recovered_fixed_step_M": 0.09999999962747097,
+      "cached_auxiliary_spacing": {
+        "first": 0.09999999962747097,
+        "min": 0.09999999962747097,
+        "max": 0.10000000055879354,
+        "max_abs_from_0.1": 5.58793539218172e-10
+      },
+      "continuous_cache_bracketing_index": 167,
+      "cached_continuous_event_match_time_M": 4552221.950122422,
+      "nominal": {
+        "auxiliary_grid": {
+          "shape": [
+            201
+          ],
+          "exact_equal": true,
+          "allclose_1e-12": true,
+          "max_abs_delta": 0.0,
+          "nonzero_delta_count": 0
+        },
+        "matching_index": 166,
+        "t_peak_grid_M": 4552222.907415752,
+        "t_nqc_M": 4552221.907415752,
+        "selected_knot_time_M": 4552221.807415752,
+        "coefficients": [
+          0.11437685627045013,
+          1.1035618397442695,
+          0.17323068776626038,
+          1.5670742773791488
+        ],
+        "max_abs_coeff_delta_vs_frozen_grid_reference": 0.12318885408621028
+      },
+      "recovered": {
+        "auxiliary_grid": {
+          "shape": [
+            201
+          ],
+          "exact_equal": false,
+          "allclose_1e-12": false,
+          "max_abs_delta": 7.450580596923828e-08,
+          "nonzero_delta_count": 199
+        },
+        "matching_index": 165,
+        "t_peak_grid_M": 4552222.907415686,
+        "t_nqc_M": 4552221.907415686,
+        "selected_knot_time_M": 4552221.707415691,
+        "coefficients": [
+          0.11424545662630528,
+          1.1050182182359547,
+          0.17728546624829153,
+          1.6902631314653591
+        ],
+        "max_abs_coeff_delta_vs_frozen_grid_reference": 0.0
+      },
+      "nominal_vs_recovered": {
+        "max_abs_auxiliary_time_delta": 7.450580596923828e-08,
+        "max_abs_coefficient_delta": 0.12318885408621028,
+        "t_nqc_delta_M": 6.612390279769897e-08,
+        "matching_index_equal": false
+      }
+    },
+    "bbh_reference": {
+      "cache": "docs/reviews/2026-09-15-teob-fd-attribution/bbh_reference/continuous.npz",
+      "cache_sha256": "136a66ba97499f2abc060b250cca9f2bc42e30c7d8791892217379d3877feb62",
+      "frozen_grid_reference": {
+        "path": "docs/reviews/2026-09-15-teob-fd-attribution/bbh_reference/matching-controls.json",
+        "nqc_coefficients": [
+          0.11361403761988663,
+          1.1082603067190857,
+          0.18687890456292414,
+          1.8453864951589845
+        ],
+        "t_peak_grid_M": 7949.313151938182,
+        "nqc_t_nqc_M": 7948.313151938182
+      },
+      "nominal_fixed_step_M": 0.1,
+      "recovered_fixed_step_M": 0.1000000000003638,
+      "cached_auxiliary_spacing": {
+        "first": 0.1000000000003638,
+        "min": 0.0999999999994543,
+        "max": 0.1000000000003638,
+        "max_abs_from_0.1": 5.457023721788801e-13
+      },
+      "continuous_cache_bracketing_index": 171,
+      "cached_continuous_event_match_time_M": 7948.358115866288,
+      "nominal": {
+        "auxiliary_grid": {
+          "shape": [
+            204
+          ],
+          "exact_equal": true,
+          "allclose_1e-12": true,
+          "max_abs_delta": 0.0,
+          "nonzero_delta_count": 0
+        },
+        "matching_index": 170,
+        "t_peak_grid_M": 7949.313151938117,
+        "t_nqc_M": 7948.313151938117,
+        "selected_knot_time_M": 7948.213151938116,
+        "coefficients": [
+          0.11361403761995545,
+          1.1082603067205608,
+          0.18687890455638467,
+          1.845386495114594
+        ],
+        "max_abs_coeff_delta_vs_frozen_grid_reference": 4.4390491282797484e-11
+      },
+      "recovered": {
+        "auxiliary_grid": {
+          "shape": [
+            204
+          ],
+          "exact_equal": false,
+          "allclose_1e-12": false,
+          "max_abs_delta": 7.366907084360719e-11,
+          "nonzero_delta_count": 202
+        },
+        "matching_index": 170,
+        "t_peak_grid_M": 7949.313151938182,
+        "t_nqc_M": 7948.313151938182,
+        "selected_knot_time_M": 7948.213151938178,
+        "coefficients": [
+          0.11361403761988663,
+          1.1082603067190857,
+          0.18687890456292414,
+          1.8453864951589845
+        ],
+        "max_abs_coeff_delta_vs_frozen_grid_reference": 0.0
+      },
+      "nominal_vs_recovered": {
+        "max_abs_auxiliary_time_delta": 7.366907084360719e-11,
+        "max_abs_coefficient_delta": 4.4390491282797484e-11,
+        "t_nqc_delta_M": -6.548361852765083e-11,
+        "matching_index_equal": true
+      }
+    },
+    "equal_bbh": {
+      "cache": "docs/reviews/2026-09-15-teob-fd-attribution/equal_bbh/continuous.npz",
+      "cache_sha256": "3a82dc09763a07adc3beee0f7ff61dd54552f16be714a8f73402f8412dd42572",
+      "frozen_grid_reference": {
+        "path": "docs/reviews/2026-09-15-teob-fd-attribution/equal_bbh/matching-controls.json",
+        "nqc_coefficients": [
+          0.11437817420597035,
+          1.1027870320090194,
+          0.17156870618279302,
+          1.5178738756502856
+        ],
+        "t_peak_grid_M": 7709.976857822472,
+        "nqc_t_nqc_M": 7708.976857822472
+      },
+      "nominal_fixed_step_M": 0.1,
+      "recovered_fixed_step_M": 0.1000000000003638,
+      "cached_auxiliary_spacing": {
+        "first": 0.1000000000003638,
+        "min": 0.0999999999994543,
+        "max": 0.1000000000003638,
+        "max_abs_from_0.1": 5.457023721788801e-13
+      },
+      "continuous_cache_bracketing_index": 167,
+      "cached_continuous_event_match_time_M": 7708.979171185217,
+      "nominal": {
+        "auxiliary_grid": {
+          "shape": [
+            201
+          ],
+          "exact_equal": true,
+          "allclose_1e-12": true,
+          "max_abs_delta": 0.0,
+          "nonzero_delta_count": 0
+        },
+        "matching_index": 166,
+        "t_peak_grid_M": 7709.9768578224075,
+        "t_nqc_M": 7708.9768578224075,
+        "selected_knot_time_M": 7708.876857822408,
+        "coefficients": [
+          0.11437817420595625,
+          1.1027870320101218,
+          0.17156870633981297,
+          1.5178738696190233
+        ],
+        "max_abs_coeff_delta_vs_frozen_grid_reference": 6.031262378414226e-09
+      },
+      "recovered": {
+        "auxiliary_grid": {
+          "shape": [
+            201
+          ],
+          "exact_equal": false,
+          "allclose_1e-12": false,
+          "max_abs_delta": 7.275957614183426e-11,
+          "nonzero_delta_count": 199
+        },
+        "matching_index": 166,
+        "t_peak_grid_M": 7709.976857822472,
+        "t_nqc_M": 7708.976857822472,
+        "selected_knot_time_M": 7708.876857822468,
+        "coefficients": [
+          0.11437817420597035,
+          1.1027870320090194,
+          0.17156870618279302,
+          1.5178738756502856
+        ],
+        "max_abs_coeff_delta_vs_frozen_grid_reference": 0.0
+      },
+      "nominal_vs_recovered": {
+        "max_abs_auxiliary_time_delta": 7.275957614183426e-11,
+        "max_abs_coefficient_delta": 6.031262378414226e-09,
+        "t_nqc_delta_M": -6.45741238258779e-11,
+        "matching_index_equal": true
+      }
+    },
+    "unequal_bns": {
+      "cache": "docs/reviews/2026-09-15-teob-fd-attribution/unequal_bns/continuous.npz",
+      "cache_sha256": "0c9e1c3f3c68095a0f146d9f48cfc97f55f9c61b60dd85c3e99f95de0de1ed9d",
+      "frozen_grid_reference": {
+        "path": "docs/reviews/2026-09-15-teob-fd-attribution/unequal_bns/matching-controls.json",
+        "nqc_coefficients": [
+          0.11386077297696445,
+          1.1094843715570273,
+          0.1887385058665523,
+          1.9576527179487047
+        ],
+        "t_peak_grid_M": 4645157.608132557,
+        "nqc_t_nqc_M": 4645156.608132557
+      },
+      "nominal_fixed_step_M": 0.1,
+      "recovered_fixed_step_M": 0.09999999962747097,
+      "cached_auxiliary_spacing": {
+        "first": 0.09999999962747097,
+        "min": 0.09999999962747097,
+        "max": 0.10000000055879354,
+        "max_abs_from_0.1": 5.58793539218172e-10
+      },
+      "continuous_cache_bracketing_index": 167,
+      "cached_continuous_event_match_time_M": 4645156.588052251,
+      "nominal": {
+        "auxiliary_grid": {
+          "shape": [
+            201
+          ],
+          "exact_equal": true,
+          "allclose_1e-12": true,
+          "max_abs_delta": 0.0,
+          "nonzero_delta_count": 0
+        },
+        "matching_index": 167,
+        "t_peak_grid_M": 4645157.608132623,
+        "t_nqc_M": 4645156.608132623,
+        "selected_knot_time_M": 4645156.5081326235,
+        "coefficients": [
+          0.1138859600705464,
+          1.1076269279231907,
+          0.1848894331810635,
+          1.833172430542796
+        ],
+        "max_abs_coeff_delta_vs_frozen_grid_reference": 0.12448028740590855
+      },
+      "recovered": {
+        "auxiliary_grid": {
+          "shape": [
+            201
+          ],
+          "exact_equal": false,
+          "allclose_1e-12": false,
+          "max_abs_delta": 7.450580596923828e-08,
+          "nonzero_delta_count": 199
+        },
+        "matching_index": 166,
+        "t_peak_grid_M": 4645157.608132557,
+        "t_nqc_M": 4645156.608132557,
+        "selected_knot_time_M": 4645156.4081325615,
+        "coefficients": [
+          0.11386077297696445,
+          1.1094843715570273,
+          0.1887385058665523,
+          1.9576527179487047
+        ],
+        "max_abs_coeff_delta_vs_frozen_grid_reference": 0.0
+      },
+      "nominal_vs_recovered": {
+        "max_abs_auxiliary_time_delta": 7.450580596923828e-08,
+        "max_abs_coefficient_delta": 0.12448028740590855,
+        "t_nqc_delta_M": 6.612390279769897e-08,
+        "matching_index_equal": false
+      }
+    }
+  }
+}

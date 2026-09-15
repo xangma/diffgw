@@ -1,0 +1,77 @@
+{
+  "pinned_api": "spectre.Pipelines.Bbh.Inspiral.start_inspiral",
+  "source": {
+    "final_quality": "/campaign/controlled-id/final-quality.json",
+    "final_quality_sha256": "4561b06481f60ec8822dfc3b60fb52ed7a42f7e8370f9e62d2238f414f58eb33",
+    "initial_data": "/campaign/controlled-id/ControlParams_002/InitialData.yaml",
+    "initial_data_sha256": "037e53cb200407504ebcb42588805c3bd68df0e3464b2926d2f5db6f0aaac695",
+    "reinspection": {
+      "run_dir": "/campaign/controlled-id/ControlParams_002",
+      "nonlinear_final": {
+        "Iteration": 5.0,
+        "Walltime": 3068.822314273,
+        "GlobalizationStep": 0.0,
+        "Residual": 7.277966467926099e-10,
+        "StepLength": 1.0
+      },
+      "nonlinear_history_rows": 6,
+      "nonlinear_iteration_zero_rows": 1,
+      "holes": {
+        "A": {
+          "mass": 0.5000256064491514,
+          "dimensionless_spin": [
+            1.4198785852857167e-13,
+            1.4015902164795815e-12,
+            -5.167135893068495e-07
+          ],
+          "spin_norm": 5.167135893087699e-07
+        },
+        "B": {
+          "mass": 0.5000256064646208,
+          "dimensionless_spin": [
+            2.987138705843459e-13,
+            1.7830864878889821e-12,
+            -5.133402952375399e-07
+          ],
+          "spin_norm": 5.133402952407236e-07
+        }
+      },
+      "mass_sum": 1.0000512129137722,
+      "mass_ratio_a_over_b": 0.9999999999690627,
+      "target_residuals": [
+        2.5606449151394095e-05,
+        1.4198785852857167e-13,
+        1.4015902164795815e-12,
+        -5.167135893068495e-07,
+        2.560646462079763e-05,
+        2.987138705843459e-13,
+        1.7830864878889821e-12,
+        -5.133402952375399e-07
+      ],
+      "max_abs_target_residual": 2.560646462079763e-05,
+      "target_tolerance": 5e-05,
+      "target_converged": true,
+      "sha256": {
+        "InitialData.yaml": "037e53cb200407504ebcb42588805c3bd68df0e3464b2926d2f5db6f0aaac695",
+        "BbhReductions.h5": "7a27c7fb29b29c41e0011a5931b4bcb8a36343befb2c0e7df4183b9d7693d9bf",
+        "Horizons.h5": "be9ac511f32ec0c1633b288e0e7ec5f323e3c7aa7aeb11c06f9f277fa756ab67"
+      }
+    }
+  },
+  "rendered_input": "/campaign/controlled-p9-lev0-evolution/Segment_0000/Inspiral.yaml",
+  "rendered_input_sha256": "df6f5eb4201f4814cb4b7ac88674bd7e052ca944ccb5e771c4f0da17bd946cc4",
+  "check_options_record": "/campaign/provenance/controlled-p9-lev0-evolution-check-options.json",
+  "configuration": {
+    "lev": 0,
+    "initial_data_polynomial_order": 9,
+    "evolution_polynomial_order": 7,
+    "num_procs": 16,
+    "final_time": 1.0,
+    "checkpoint_time": 0.5,
+    "continue_with_ringdown": false,
+    "eccentricity_control": false,
+    "no_schedule": true,
+    "submit": false
+  },
+  "evolution_launched": false
+}

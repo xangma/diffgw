@@ -1,0 +1,21 @@
+{
+  "status": "passed",
+  "host": "RONI2",
+  "cwd": "/Users/xangma/repos/torchwave",
+  "tests": {
+    "command": "PYTHONPATH=src OMP_NUM_THREADS=1 PYTEST_DISABLE_PLUGIN_AUTOLOAD=1 /Users/xangma/miniconda3/envs/pycbcorig313/bin/python -m pytest -q tests/test_teob_cache_metadata.py tests/test_teob_merger_nqc_clean.py tests/test_teob_conditioned_waveform_clean.py",
+    "exit_code": 0,
+    "result": "35 passed in 0.96s"
+  },
+  "artifact_validation": {
+    "command": "OMP_NUM_THREADS=1 /Users/xangma/miniconda3/envs/pycbcorig313/bin/python scripts/validate_teob_target_controls.py",
+    "exit_code": 0,
+    "result": "44 outputs independently verified"
+  },
+  "control_process_exit_codes": {
+    "catalog": 0,
+    "bbh_reference": 0,
+    "equal_bbh": 0,
+    "unequal_bns": 0
+  }
+}

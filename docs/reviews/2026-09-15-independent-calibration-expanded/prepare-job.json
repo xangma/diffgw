@@ -1,0 +1,32 @@
+{
+  "host": "RONI2",
+  "cwd": "/Users/xangma/repos/torchwave",
+  "command": [
+    "/tmp/torchwave-nr33-pilot/venv/bin/python",
+    "-u",
+    "-m",
+    "scripts.prepare_nr33_calibration_v2",
+    "--selection",
+    "docs/reviews/2026-09-15-independent-calibration-expanded/selection-round1.json",
+    "--inventory",
+    "docs/reviews/2026-09-15-independent-calibration-expanded/candidate-inventory.json",
+    "--output",
+    "docs/reviews/2026-09-15-independent-calibration-expanded/nr33-manifest-round1.json",
+    "--raw-dir",
+    "/tmp/torchwave-nr33-expanded/raw",
+    "--npz-dir",
+    "/tmp/torchwave-nr33-expanded/npz",
+    "--expected-policy-sha256",
+    "1a863811b90c410cd5a9b0b52a0bd53696b869a0d503cb8fa61d9c054842138d"
+  ],
+  "environment": {
+    "PYTHONPATH": "src"
+  },
+  "pid": 45160,
+  "log": "/tmp/torchwave-nr33-expanded/logs/prepare-round1.log",
+  "started_utc": "2026-09-15T12:03:26.820539+00:00",
+  "status": "completed",
+  "next_check": null,
+  "stop_command": null,
+  "finished_utc": "2026-09-15T12:05:25.877924+00:00"
+}

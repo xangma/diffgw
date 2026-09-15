@@ -1,0 +1,364 @@
+{
+  "case": "catalog",
+  "inputs": {
+    "continuous_json": "/Users/xangma/repos/torchwave/docs/reviews/2026-09-15-teob-fd-attribution/catalog/continuous.json",
+    "continuous_npz": "/Users/xangma/repos/torchwave/docs/reviews/2026-09-15-teob-fd-attribution/catalog/continuous.npz",
+    "continuous_sha256": "2332696fcf372a101762e5f022e33f6ee5548c7d229c9ccf8527ab7265049745",
+    "public_fd_npz": "/Users/xangma/repos/torchwave/docs/reviews/2026-09-15-teob-fd-attribution/catalog/public-fd.npz",
+    "public_fd_sha256": "2b306a442864f41c878a57b0fc4751e47879b179296f58bd5a05338e113dccb1",
+    "public_td_json": "docs/reviews/2026-09-15-teob-fd-attribution/catalog/public-td.json",
+    "public_td_json_sha256": "c0231f14485b840e451e5d05833f631d5ae73187a31fcc2de50c15d17956972e",
+    "public_td_npz": "docs/reviews/2026-09-15-teob-fd-attribution/catalog/public-td.npz",
+    "public_td_sha256": "d276c9e7df94e48ca64487babd71d2ce5fd47d569fa5546aae30db171209cdef"
+  },
+  "limitations": [
+    "The optional public TD control is absent unless --public-td-npz and its matching --public-td-json sidecar are supplied.",
+    "The epoch factor is evaluated only as a counterfactual diagnostic at tc=0 and is never applied to the replay.",
+    "Unequal TD lengths use shared elapsed indices and report unmatched-tail energy; no shift is fitted."
+  ],
+  "method": {
+    "evolution": false,
+    "frequency_interpolation": false,
+    "oracle_fitting": false,
+    "shared_frequency_selection": "exact bins only; score is [flow,fhigh)",
+    "tc_runtime_value": 0.0,
+    "time_or_phase_alignment": false
+  },
+  "native_replay": {
+    "cross_exact": true,
+    "cross_max_abs": 0.0,
+    "frequency_exact": true,
+    "plus_exact": true,
+    "plus_max_abs": 0.0
+  },
+  "outputs": {
+    "controls_npz": "/Users/xangma/repos/torchwave/docs/reviews/2026-09-15-teob-fd-attribution/catalog/controls.npz"
+  },
+  "provenance": {
+    "command": "/Users/xangma/miniconda3/envs/pycbcorig313/bin/python scripts/teob_fd_cache_controls.py --case catalog --public-td-npz docs/reviews/2026-09-15-teob-fd-attribution/catalog/public-td.npz --public-td-json docs/reviews/2026-09-15-teob-fd-attribution/catalog/public-td.json",
+    "cwd": "/Users/xangma/repos/torchwave",
+    "host": "RONI2",
+    "native_conditioner_sha256": "d8a9ad936a0e6fb8e0c59a35428a7e2c70e372dca0b8d87f6d890d38dcd30a8a",
+    "pid": 75307,
+    "script_sha256": "8ed217dadbc2d935479abdc529af273889f39adea4a8c797a9c0f029e58992b3"
+  },
+  "public_comparison": {
+    "epoch_factor_counterfactual": {
+      "cross": {
+        "applied": false,
+        "counterfactual_metrics": {
+          "complex_relative_l2": 1.41859044930861,
+          "magnitude_relative_l2": 0.0012824843454503465,
+          "max_complex_abs_error": 7.657893014104696e-24,
+          "mean_magnitude": 1.3159551013772181e-24,
+          "norm": 4.8081819598672677e-23,
+          "norm_relative_error": 1.6956236478000876e-05,
+          "reference_mean_magnitude": 1.315919907921885e-24,
+          "reference_norm": 4.8082634899200513e-23,
+          "samples": 940
+        },
+        "epoch_seconds": -62.781416197542,
+        "factor_convention": "exp(-2 pi i f epoch_seconds)",
+        "status": "diagnostic_only"
+      },
+      "plus": {
+        "applied": false,
+        "counterfactual_metrics": {
+          "complex_relative_l2": 1.4152898262384046,
+          "magnitude_relative_l2": 0.0002581601846706447,
+          "max_complex_abs_error": 8.192769651594185e-24,
+          "mean_magnitude": 1.2752456596954896e-24,
+          "norm": 4.7768410988638427e-23,
+          "norm_relative_error": 2.2317400492855188e-05,
+          "reference_mean_magnitude": 1.2753287110276425e-24,
+          "reference_norm": 4.776947707918974e-23,
+          "samples": 940
+        },
+        "epoch_seconds": -62.781416197542,
+        "factor_convention": "exp(-2 pi i f epoch_seconds)",
+        "status": "diagnostic_only"
+      }
+    },
+    "metrics": {
+      "cross": {
+        "frequency_bands": {
+          "100-200Hz": {
+            "bounds_hz": [
+              100.0,
+              200.0
+            ],
+            "metrics": {
+              "complex_relative_l2": 0.0011038885545403907,
+              "magnitude_relative_l2": 0.0007645259121390202,
+              "max_complex_abs_error": 3.237569570003486e-27,
+              "mean_magnitude": 2.622564221835732e-24,
+              "norm": 3.826248288266936e-23,
+              "norm_relative_error": 0.00011574515643876164,
+              "reference_mean_magnitude": 2.6227545740331746e-24,
+              "reference_norm": 3.826691209239592e-23,
+              "samples": 200
+            },
+            "valid_bins": 200
+          },
+          "200-500Hz": {
+            "bounds_hz": [
+              200.0,
+              500.0
+            ],
+            "metrics": {
+              "complex_relative_l2": 0.0026183879068611784,
+              "magnitude_relative_l2": 0.0018634326971111183,
+              "max_complex_abs_error": 3.252535163509468e-27,
+              "mean_magnitude": 1.0951058453033556e-24,
+              "norm": 2.8655960003075235e-23,
+              "norm_relative_error": 0.00020166644222898903,
+              "reference_mean_magnitude": 1.0949129157971149e-24,
+              "reference_norm": 2.865018222275716e-23,
+              "samples": 600
+            },
+            "valid_bins": 600
+          },
+          "30-60Hz": {
+            "bounds_hz": [
+              30.0,
+              60.0
+            ],
+            "metrics": {
+              "complex_relative_l2": 0.009229214818311977,
+              "magnitude_relative_l2": 0.00227323418980383,
+              "max_complex_abs_error": 2.497122155982275e-27,
+              "mean_magnitude": 2.4704679804033416e-25,
+              "norm": 1.9431414854726637e-24,
+              "norm_relative_error": 0.0015257997746069107,
+              "reference_mean_magnitude": 2.4659684363774653e-25,
+              "reference_norm": 1.940181157499854e-24,
+              "samples": 60
+            },
+            "valid_bins": 60
+          },
+          "60-100Hz": {
+            "bounds_hz": [
+              60.0,
+              100.0
+            ],
+            "metrics": {
+              "complex_relative_l2": 0.00488646465339633,
+              "magnitude_relative_l2": 0.0018301043439375411,
+              "max_complex_abs_error": 2.717941189022192e-27,
+              "mean_magnitude": 5.074829482875657e-25,
+              "norm": 4.7858057881955294e-24,
+              "norm_relative_error": 0.0017860833007144093,
+              "reference_mean_magnitude": 5.083779817925427e-25,
+              "reference_norm": 4.794368930479723e-24,
+              "samples": 80
+            },
+            "valid_bins": 80
+          }
+        },
+        "linear_phase_ratio": {
+          "applied": false,
+          "equivalent_time_shift_seconds": -1.8555665648624412e-06,
+          "intercept_rad": -0.004154700277127018,
+          "phase_fit_max_abs_rad": 0.01418462728122193,
+          "phase_fit_rms_rad": 0.003180367130039647,
+          "ratio_magnitude_mean": 1.0000223871453409,
+          "ratio_magnitude_median": 1.0000005939757983,
+          "slope_rad_per_hz": 1.1658868576837388e-05,
+          "status": "diagnostic_only",
+          "valid_bins": 940
+        },
+        "raw": {
+          "complex_relative_l2": 0.001892632347412851,
+          "magnitude_relative_l2": 0.0012824843454503456,
+          "max_complex_abs_error": 3.252535163509468e-27,
+          "mean_magnitude": 1.3159551013772181e-24,
+          "norm": 4.808181959867267e-23,
+          "norm_relative_error": 1.6956236478123113e-05,
+          "reference_mean_magnitude": 1.315919907921885e-24,
+          "reference_norm": 4.8082634899200513e-23,
+          "samples": 940
+        }
+      },
+      "plus": {
+        "frequency_bands": {
+          "100-200Hz": {
+            "bounds_hz": [
+              100.0,
+              200.0
+            ],
+            "metrics": {
+              "complex_relative_l2": 8.764016315113698e-05,
+              "magnitude_relative_l2": 6.350805321381514e-05,
+              "max_complex_abs_error": 3.99649987907683e-28,
+              "mean_magnitude": 2.6088343495636594e-24,
+              "norm": 3.8123930424691887e-23,
+              "norm_relative_error": 4.944356014880911e-06,
+              "reference_mean_magnitude": 2.6088509322804556e-24,
+              "reference_norm": 3.81241189239086e-23,
+              "samples": 200
+            },
+            "valid_bins": 200
+          },
+          "200-500Hz": {
+            "bounds_hz": [
+              200.0,
+              500.0
+            ],
+            "metrics": {
+              "complex_relative_l2": 0.0005483230091368522,
+              "magnitude_relative_l2": 0.0003922349074953403,
+              "max_complex_abs_error": 9.050576455625375e-28,
+              "mean_magnitude": 1.0573700408124565e-24,
+              "norm": 2.8530228678127126e-23,
+              "norm_relative_error": 3.3867357512333356e-05,
+              "reference_mean_magnitude": 1.0574044483780108e-24,
+              "reference_norm": 2.85311949543069e-23,
+              "samples": 600
+            },
+            "valid_bins": 600
+          },
+          "30-60Hz": {
+            "bounds_hz": [
+              30.0,
+              60.0
+            ],
+            "metrics": {
+              "complex_relative_l2": 0.0017347484573270752,
+              "magnitude_relative_l2": 0.0016420654086849703,
+              "max_complex_abs_error": 4.3580493288935e-28,
+              "mean_magnitude": 2.4514080529270427e-25,
+              "norm": 1.9022120881219348e-24,
+              "norm_relative_error": 0.0016403051047076233,
+              "reference_mean_magnitude": 2.45544656618428e-25,
+              "reference_norm": 1.9053374228227815e-24,
+              "samples": 60
+            },
+            "valid_bins": 60
+          },
+          "60-100Hz": {
+            "bounds_hz": [
+              60.0,
+              100.0
+            ],
+            "metrics": {
+              "complex_relative_l2": 0.0010578793759062476,
+              "magnitude_relative_l2": 0.001017403402605257,
+              "max_complex_abs_error": 4.305689073728075e-28,
+              "mean_magnitude": 3.479197174499029e-25,
+              "norm": 3.285522500044819e-24,
+              "norm_relative_error": 0.0009455321383837556,
+              "reference_mean_magnitude": 3.482931685747562e-25,
+              "reference_norm": 3.2886320072990376e-24,
+              "samples": 80
+            },
+            "valid_bins": 80
+          }
+        },
+        "linear_phase_ratio": {
+          "applied": false,
+          "equivalent_time_shift_seconds": 3.2706925223162043e-07,
+          "intercept_rad": 0.0004814811024029759,
+          "phase_fit_max_abs_rad": 0.013434354890439273,
+          "phase_fit_rms_rad": 0.0013035857799244272,
+          "ratio_magnitude_mean": 0.999802337691018,
+          "ratio_magnitude_median": 0.9999337476286937,
+          "slope_rad_per_hz": -2.0550367200519316e-06,
+          "status": "diagnostic_only",
+          "valid_bins": 940
+        },
+        "raw": {
+          "complex_relative_l2": 0.0003496246124438579,
+          "magnitude_relative_l2": 0.00025816018467064646,
+          "max_complex_abs_error": 9.050576455625375e-28,
+          "mean_magnitude": 1.2752456596954896e-24,
+          "norm": 4.776841098863844e-23,
+          "norm_relative_error": 2.231740049260911e-05,
+          "reference_mean_magnitude": 1.2753287110276425e-24,
+          "reference_norm": 4.776947707918974e-23,
+          "samples": 940
+        }
+      }
+    },
+    "shared_bins": 940
+  },
+  "request": {
+    "chi1z": 0.0,
+    "chi2z": 0.0,
+    "df": 0.5,
+    "distance": 100.0,
+    "dt": 0.0009765625,
+    "fhigh": 500.0,
+    "flow": 30.0,
+    "inclination": 0.0,
+    "lambda1": 0.0,
+    "lambda2": 0.0,
+    "mass1": 1.4,
+    "mass2": 1.4,
+    "phic": 0.0,
+    "tc": 0.0
+  },
+  "status": "complete",
+  "td_control": {
+    "attachment_split": {
+      "cached_joined_attachment_index": 1402,
+      "event_attachment_time": 4552221.950122422,
+      "post_definition": "shared elapsed indices [split, shared_samples)",
+      "pre_definition": "shared elapsed indices [0, split)",
+      "shared_split_index": 64289,
+      "split_rule": "searchsorted(native td_time, event_attachment_time, side='left')",
+      "uniform_td_attachment_index": 64289
+    },
+    "comparison": "same elapsed array indices; no epoch alignment or fitted shift",
+    "native_samples": 64291,
+    "native_unmatched_tail_samples": 0,
+    "polarizations": {
+      "cross": {
+        "native_unmatched_tail_energy_fraction": 0.0,
+        "post_attachment_relative_l2": 0.06780693105040805,
+        "pre_attachment_relative_l2": 0.0010350752746481628,
+        "public_unmatched_tail_energy_fraction": 0.0,
+        "shared_elapsed_index_relative_l2": 0.0010355437691420316
+      },
+      "plus": {
+        "native_unmatched_tail_energy_fraction": 0.0,
+        "post_attachment_relative_l2": 0.01433242617918288,
+        "pre_attachment_relative_l2": 0.00019251978986511116,
+        "public_unmatched_tail_energy_fraction": 0.0,
+        "shared_elapsed_index_relative_l2": 0.0001930457161971677
+      }
+    },
+    "public_conditioner_fd": {
+      "cross": {
+        "complex_relative_l2": 2.00060617773076e-15,
+        "magnitude_relative_l2": 1.5178333177194042e-15,
+        "max_complex_abs_error": 1.437682052557044e-38,
+        "mean_magnitude": 1.3159199079218854e-24,
+        "norm": 4.8082634899200513e-23,
+        "norm_relative_error": 0.0,
+        "reference_mean_magnitude": 1.315919907921885e-24,
+        "reference_norm": 4.8082634899200513e-23,
+        "samples": 940
+      },
+      "dt_seconds": 0.0009765625,
+      "frequency_exact": true,
+      "input_sha256": "d276c9e7df94e48ca64487babd71d2ce5fd47d569fa5546aae30db171209cdef",
+      "plus": {
+        "complex_relative_l2": 2.7519599918584437e-15,
+        "magnitude_relative_l2": 1.947344942290185e-15,
+        "max_complex_abs_error": 1.7570079950914185e-38,
+        "mean_magnitude": 1.2753287110276429e-24,
+        "norm": 4.776947707918975e-23,
+        "norm_relative_error": 2.460764535633527e-16,
+        "reference_mean_magnitude": 1.2753287110276425e-24,
+        "reference_norm": 4.776947707918974e-23,
+        "samples": 940
+      },
+      "sidecar_sha256": "c0231f14485b840e451e5d05833f631d5ae73187a31fcc2de50c15d17956972e",
+      "status": "complete"
+    },
+    "public_samples": 64291,
+    "public_unmatched_tail_samples": 0,
+    "shared_samples": 64291,
+    "status": "complete"
+  }
+}

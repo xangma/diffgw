@@ -1,0 +1,215 @@
+{
+  "metadata": {
+    "python": "/Users/xangma/miniconda3/envs/pycbcorig313/bin/python",
+    "platform": "macOS-26.6-arm64-arm-64bit-Mach-O",
+    "source_sha256": {
+      "scripts/nsbh_phase_residual_diagnostic.py": "3fa5100ce6f4f62f8cc503c9b832be1729048f4fa2d46da3f3f64ed0d142c22d",
+      "src/torchwave/approximants/imrphenom_nsbh.py": "82ed5e2d4ed7af6161e3898b2eeab793172ce245f9449acbaaf8c4215c98b179",
+      "src/torchwave/approximants/imrphenomd.py": "d33cdf095aa5d7803e9c1d201e8c3599991227f9a904116860a36b469ac424f0"
+    },
+    "public_phenoD_inventory": {
+      "IMRPhenomD.remnant_properties": "(mass1: torch.Tensor, mass2: torch.Tensor, chi1: torch.Tensor, chi2: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]",
+      "doc": "Compute final mass M_f, final spin a_f, QNM frequency f_RD, and damping width f_damp.\n\nReferences:\n- Husa et al. (2016) PRD 93, 044006 (arXiv:1508.07250, Eqs. 16, 17)\n- Stein (2019), JOSS 4(42), 1683, independent Kerr eigenproblem solves\n\nReturns:\n    m_final: Remnant mass in solar masses\n    a_final: Dimensionless remnant Kerr spin parameter\n    f_rd: Dimensionless ringdown frequency (M * f_RD)\n    f_damp: Dimensionless ringdown damping frequency (M * f_damp)\n"
+    }
+  },
+  "records": [
+    {
+      "case": "catalog",
+      "lambda2": 0.0,
+      "f_ref": 30.0,
+      "grid": {
+        "flow": 30.0,
+        "f_final": 1024.0,
+        "df": 0.25
+      },
+      "fixed_reference_shift_note": "same f_ref/phic; no shift applied",
+      "hp": {
+        "support_bins": 3977,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 2.1450137619732836e-09,
+        "magnitude_relative_l2": 5.087651680177651e-16,
+        "unit_phase_l2": 1.2309230439044561e-08,
+        "phase_intercept_rad": 6.418249285613073e-10,
+        "phase_slope_rad_per_hz": -2.145040617263698e-11,
+        "phase_nonaffine_rms_rad": 2.809536708324366e-13,
+        "fixed_reference_shift_removed_rad": 0.0
+      },
+      "hc": {
+        "support_bins": 3977,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 2.145013762816016e-09,
+        "magnitude_relative_l2": 5.067056249917244e-16,
+        "unit_phase_l2": 1.2309230441988307e-08,
+        "phase_intercept_rad": 6.418249274527326e-10,
+        "phase_slope_rad_per_hz": -2.1450406173095398e-11,
+        "phase_nonaffine_rms_rad": 2.809539720764589e-13,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 400.0,
+      "f_ref": 30.0,
+      "grid": {
+        "flow": 30.0,
+        "f_final": 1024.0,
+        "df": 0.25
+      },
+      "fixed_reference_shift_note": "same f_ref/phic; no shift applied",
+      "hp": {
+        "support_bins": 3977,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 7.77015629012667e-08,
+        "magnitude_relative_l2": 7.768639256231491e-08,
+        "unit_phase_l2": 6.8515686801011676e-09,
+        "phase_intercept_rad": -7.977878207351766e-09,
+        "phase_slope_rad_per_hz": 1.9547664169065182e-11,
+        "phase_nonaffine_rms_rad": 3.177096308538143e-09,
+        "fixed_reference_shift_removed_rad": 0.0
+      },
+      "hc": {
+        "support_bins": 3977,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 7.770156290137475e-08,
+        "magnitude_relative_l2": 7.768639256272381e-08,
+        "unit_phase_l2": 6.851568680498955e-09,
+        "phase_intercept_rad": -7.977878205423322e-09,
+        "phase_slope_rad_per_hz": 1.9547664165734068e-11,
+        "phase_nonaffine_rms_rad": 3.177096307841935e-09,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "holdout",
+      "lambda2": 0.0,
+      "f_ref": 40.0,
+      "grid": {
+        "flow": 30.0,
+        "f_final": 1024.0,
+        "df": 0.25
+      },
+      "fixed_reference_shift_note": "same f_ref/phic; no shift applied",
+      "hp": {
+        "support_bins": 3977,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 4.2335708684266595e-08,
+        "magnitude_relative_l2": 6.268194471681977e-16,
+        "unit_phase_l2": 2.5219538598766597e-07,
+        "phase_intercept_rad": 1.7880253687897483e-08,
+        "phase_slope_rad_per_hz": -4.462959347120902e-10,
+        "phase_nonaffine_rms_rad": 1.3147870568847614e-10,
+        "fixed_reference_shift_removed_rad": 0.0
+      },
+      "hc": {
+        "support_bins": 3977,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 4.2335708683683314e-08,
+        "magnitude_relative_l2": 6.210314447551006e-16,
+        "unit_phase_l2": 2.5219538598827276e-07,
+        "phase_intercept_rad": 1.788025368828108e-08,
+        "phase_slope_rad_per_hz": -4.462959347105553e-10,
+        "phase_nonaffine_rms_rad": 1.314787074080174e-10,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "holdout",
+      "lambda2": 2600.0,
+      "f_ref": 40.0,
+      "grid": {
+        "flow": 30.0,
+        "f_final": 1024.0,
+        "df": 0.25
+      },
+      "fixed_reference_shift_note": "same f_ref/phic; no shift applied",
+      "hp": {
+        "support_bins": 3977,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 8.82874591834834e-08,
+        "magnitude_relative_l2": 4.604056306645334e-09,
+        "unit_phase_l2": 5.743662031798649e-07,
+        "phase_intercept_rad": -5.110373437359729e-08,
+        "phase_slope_rad_per_hz": 1.031094785080847e-09,
+        "phase_nonaffine_rms_rad": 1.20104752361479e-08,
+        "fixed_reference_shift_removed_rad": 0.0
+      },
+      "hc": {
+        "support_bins": 3977,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 8.82874591825969e-08,
+        "magnitude_relative_l2": 4.604056307241276e-09,
+        "unit_phase_l2": 5.743662031800033e-07,
+        "phase_intercept_rad": -5.110373437578984e-08,
+        "phase_slope_rad_per_hz": 1.031094785083808e-09,
+        "phase_nonaffine_rms_rad": 1.2010475237222804e-08,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 0.0,
+      "f_ref": 45.0,
+      "grid": {
+        "flow": 30.0,
+        "f_final": 1024.0,
+        "df": 0.25
+      },
+      "fixed_reference_shift_note": "same f_ref/phic; no shift applied",
+      "hp": {
+        "support_bins": 3977,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.6938801937577134e-07,
+        "magnitude_relative_l2": 5.740667803688746e-16,
+        "unit_phase_l2": 1.0544201523557196e-06,
+        "phase_intercept_rad": -8.047450632277054e-08,
+        "phase_slope_rad_per_hz": 1.874126412376477e-09,
+        "phase_nonaffine_rms_rad": 6.241996283591392e-09,
+        "fixed_reference_shift_removed_rad": 0.0
+      },
+      "hc": {
+        "support_bins": 3977,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.693880193758864e-07,
+        "magnitude_relative_l2": 5.665246460835983e-16,
+        "unit_phase_l2": 1.0544201523569283e-06,
+        "phase_intercept_rad": -8.047450632260419e-08,
+        "phase_slope_rad_per_hz": 1.8741264123787232e-09,
+        "phase_nonaffine_rms_rad": 6.241996283148484e-09,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 1200.0,
+      "f_ref": 45.0,
+      "grid": {
+        "flow": 30.0,
+        "f_final": 1024.0,
+        "df": 0.25
+      },
+      "fixed_reference_shift_note": "same f_ref/phic; no shift applied",
+      "hp": {
+        "support_bins": 3977,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 4.143820655966373e-07,
+        "magnitude_relative_l2": 3.230552512520959e-07,
+        "unit_phase_l2": 1.6067622497782536e-06,
+        "phase_intercept_rad": 1.236593829907776e-07,
+        "phase_slope_rad_per_hz": -2.857352184913963e-09,
+        "phase_nonaffine_rms_rad": 7.723994324233631e-09,
+        "fixed_reference_shift_removed_rad": 0.0
+      },
+      "hc": {
+        "support_bins": 3977,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 4.1438206559646213e-07,
+        "magnitude_relative_l2": 3.230552512519961e-07,
+        "unit_phase_l2": 1.6067622497774297e-06,
+        "phase_intercept_rad": 1.2365938299156543e-07,
+        "phase_slope_rad_per_hz": -2.857352184914956e-09,
+        "phase_nonaffine_rms_rad": 7.723994323356902e-09,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    }
+  ]
+}

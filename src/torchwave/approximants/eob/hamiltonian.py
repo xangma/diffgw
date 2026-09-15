@@ -1,18 +1,30 @@
-"""Effective-One-Body (EOB) Conservative Hamiltonian.
+"""Prototype Effective-One-Body conservative Hamiltonian.
 
-Strict Clean-Room Implementation based on published peer-reviewed literature:
-- Buonanno & Damour (1999), Phys. Rev. D 59, 084006 (arXiv:gr-qc/9811091)
-- Buonanno & Damour (2000), Phys. Rev. D 62, 064015 (arXiv:gr-qc/0001013)
-- Barausse & Buonanno (2010), Phys. Rev. D 81, 084024 (arXiv:0912.3517)
-- Bohé et al. (2017), Phys. Rev. D 95, 044028 (arXiv:1611.03703) [SEOBNRv4]
-- Pompili et al. (2023), Phys. Rev. D 108, 124035 (arXiv:2303.18039) [SEOBNRv5]
+The nonspinning sector implements the uncalibrated 3PN model of Damour and
+Nagar, PRD 76, 044003 (2007), arXiv:0704.3550v2, Eqs. (2)-(11). The inherited
+spin terms have not been established as the calibrated SEOBNRv4 Hamiltonian.
+This module does not implement the full SEOBNRv4 or SEOBNRv5 conservative model.
 """
 
-from typing import Optional, Tuple, Union
+from typing import Optional, Tuple
+import copy
 import torch
-import math
 
 from torchwave.constants import PI
+
+
+def _ordinary_tensor_attributes(model):
+    """Make a local copy when inference tensors would enter an autograd graph."""
+    inference_names = [
+        name for name, value in vars(model).items()
+        if isinstance(value, torch.Tensor) and value.is_inference()
+    ]
+    if not inference_names:
+        return model
+    local_model = copy.copy(model)
+    for name in inference_names:
+        setattr(local_model, name, getattr(model, name).clone())
+    return local_model
 
 
 class EOBHamiltonian:
@@ -57,46 +69,37 @@ class EOBHamiltonian:
         self.a_minus = self.a1 - self.a2
 
     def metric_potentials(self, r: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
-        """Compute the radial metric potentials A(r), B(r), and tortoise factor xi(r).
+        """Compute the 3PN Padé potentials and xi = dr/dr_* = sqrt(A/B).
 
-        References:
-        - Bohé et al. (2017) arXiv:1611.03703 Eq. (A1)-(A6)
-        - Pompili et al. (2023) arXiv:2303.18039 Sec. II A
+        Damour--Nagar arXiv:0704.3550v2 Eqs. (2)-(3), (6) and the following
+        Padé prescription: A=P^1_3[A_3PN], D=P^0_3[D_3PN], B=D/A.
+        The model is defined outside its effective horizon, where A > 0.
         """
         u = 1.0 / r
         u2 = u * u
         u3 = u2 * u
-        u4 = u3 * u
 
         nu = self.nu
         if r.dim() > nu.dim():
             nu = nu.unsqueeze(-1)
 
-        # 4PN/5PN calibrated radial potential A(u)
-        # 1 - 2*u + 2*nu*u^3 + a4*nu*u^4 + a5*nu*u^5
+        # Solve the Padé coefficient equations for the published 3PN series
+        # 1 - 2u + 2 nu u^3 + a4 nu u^4. No calibration constants enter.
         a4 = (94.0 / 3.0) - (41.0 / 32.0) * (PI * PI)
-        a_potential = 1.0 - 2.0 * u + 2.0 * nu * u3 + a4 * nu * u4
-
-        # Regularization near horizon to prevent non-positive roots
-        a_potential = torch.clamp(a_potential, min=1e-4)
-
-        # B(u) potential: B(u) * A(u) = 1 + 2*nu*u^2 + ... (DJS / PS gauge)
-        d_potential = 1.0 - 6.0 * nu * u2
-        d_potential = torch.clamp(d_potential, min=1e-4)
-        b_potential = 1.0 / (a_potential * d_potential)
-
-        # Tortoise coordinate scale factor: xi(r) = sqrt(A(r) / B(r)) = A(r) * sqrt(D(r))
-        xi = a_potential * torch.sqrt(d_potential)
+        d1 = nu * (a4 + 4.0) / (8.0 - 2.0 * nu)
+        a_potential = (1.0 + (d1 - 2.0) * u) / (
+            1.0 + d1 * u + 2.0 * d1 * u2 + (4.0 * d1 - 2.0 * nu) * u3
+        )
+        d_potential = 1.0 / (
+            1.0 + 6.0 * nu * u2 + 2.0 * nu * (26.0 - 3.0 * nu) * u3
+        )
+        b_potential = d_potential / a_potential
+        xi = a_potential / torch.sqrt(d_potential)
 
         return a_potential, b_potential, xi
 
     def gyro_factors(self, r: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:
-        """Compute gyro-gravitomagnetic factors g_{a_+} and g_{a_-}.
-
-        References:
-        - Barausse & Buonanno (2011) PRD 84, 104027
-        - Pompili et al. (2023) arXiv:2303.18039 Eq. (11)
-        """
+        """Return inherited prototype spin couplings, not calibrated v4 factors."""
         u = 1.0 / r
         nu = self.nu
         if r.dim() > nu.dim():
@@ -127,11 +130,14 @@ class EOBHamiltonian:
         a_plus = self.a_plus
         a_minus = self.a_minus
         delta = self.delta
+        nu = self.nu
 
         if r.dim() > a_plus.dim():
             a_plus = a_plus.unsqueeze(-1)
             a_minus = a_minus.unsqueeze(-1)
             delta = delta.unsqueeze(-1)
+        if r.dim() > nu.dim():
+            nu = nu.unsqueeze(-1)
 
         r2 = r * r
         r3 = r2 * r
@@ -146,11 +152,15 @@ class EOBHamiltonian:
         so_den = r3 + a_plus2 * (r + 2.0)
         h_odd = so_num / so_den
 
-        # 2. Even-in-spin contribution (centrifugal, kinetic, and spin-spin)
-        # H_even = sqrt(A(r) * [1 + pr_*^2 + pphi^2 / r^2 + (a+^2 / r^2) * (1 + 2/r) * pphi^2])
+        # Damour--Nagar Eq. (7): the quadratic tortoise momentum is OUTSIDE
+        # A. The quartic term is 3PN accurate after their stated truncation of
+        # the tortoise transformation. The spin-spin term remains a prototype.
         spin_spin_term = (a_plus2 / r2) * (1.0 + 2.0 / r) * (pphi * pphi)
-        kinetic_term = 1.0 + pr_star * pr_star + (pphi * pphi) / r2 + spin_spin_term
-        h_even = torch.sqrt(torch.clamp(a_pot * kinetic_term, min=1e-6))
+        z3 = 2.0 * nu * (4.0 - 3.0 * nu)
+        angular_term = 1.0 + (pphi * pphi) / r2 + spin_spin_term
+        h_even = torch.sqrt(
+            pr_star.square() + a_pot * (angular_term + z3 * pr_star.pow(4) / r2)
+        )
 
         h_eff = h_odd + h_even
         return h_eff
@@ -184,6 +194,28 @@ class EOBHamiltonian:
         pr_star: torch.Tensor,
         pphi: torch.Tensor,
     ) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
+        """Return (dr/dt, Omega, dp_r*/dt), preserving requested derivatives.
+
+        Local Hamiltonian partials require autograd even during inference;
+        retain their graph only when an input needs an outer derivative.
+        """
+        track_grad = torch.is_grad_enabled() and any(
+            value.requires_grad
+            for value in (r, pr_star, pphi, self.nu, self.chi1, self.chi2, self.delta)
+        )
+        result = self._conservative_partials(r, pr_star, pphi)
+        if track_grad:
+            return result
+        return tuple(value.detach() for value in result)
+
+    @torch.inference_mode(False)
+    @torch.enable_grad()
+    def _conservative_partials(
+        self,
+        r: torch.Tensor,
+        pr_star: torch.Tensor,
+        pphi: torch.Tensor,
+    ) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
         """Compute conservative time derivatives (dr/dt, dphi/dt = Omega, dpr_star/dt).
 
         Evaluated via automatic differentiation:
@@ -191,10 +223,17 @@ class EOBHamiltonian:
             dphi/dt = (1 / H_real) * dH_eff / dpphi = Omega
             (dpr_star/dt)_cons = -(xi(r) / H_real) * dH_eff / dr
         """
-        # Enable autograd for coordinates
-        r_var = r.detach().clone().requires_grad_(True)
-        pr_var = pr_star.detach().clone().requires_grad_(True)
-        pphi_var = pphi.detach().clone().requires_grad_(True)
+        self = _ordinary_tensor_attributes(self)
+        r, pr_star, pphi = torch.broadcast_tensors(r, pr_star, pphi)
+        with torch.no_grad():
+            batch_shape = self.effective_hamiltonian(r, pr_star, pphi).shape
+        # Separate coordinate nodes give partial derivatives even when the
+        # inputs share a graph. Expand before cloning so each binary has its
+        # own coordinates: differentiating a shared scalar would sum forces
+        # across parameter batches. Incoming dependencies remain differentiable.
+        r_var = r.expand(batch_shape).clone().requires_grad_(True)
+        pr_var = pr_star.expand(batch_shape).clone().requires_grad_(True)
+        pphi_var = pphi.expand(batch_shape).clone().requires_grad_(True)
 
         h_eff = self.effective_hamiltonian(r_var, pr_var, pphi_var)
         h_real = self.real_hamiltonian_from_eff(h_eff)
@@ -211,7 +250,7 @@ class EOBHamiltonian:
         dh_dpr = grads[1]
         dh_dpphi = grads[2]
 
-        _, _, xi = self.metric_potentials(r)
+        _, _, xi = self.metric_potentials(r_var)
 
         # Coordinate velocities in tortoise coordinate system:
         # dr/dt = (xi(r) / H_real) * dH_eff / dpr_*

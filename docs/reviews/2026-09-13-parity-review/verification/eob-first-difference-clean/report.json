@@ -1,0 +1,158 @@
+{
+  "auxiliary_vectors": {
+    "vector1": {
+      "returned": null
+    },
+    "vector2": {
+      "returned": null
+    }
+  },
+  "clean_fine_full_series_coefficients": {
+    "a1": 4.111899524448969,
+    "a2": -47.05195460452208,
+    "a3": 56.85881141304583,
+    "a3S": 0.0,
+    "a4": 0.0,
+    "a5": 0.0,
+    "b1": 4.128852395373507,
+    "b2": -21.92860137952701,
+    "b3": 0.0,
+    "b4": 0.0
+  },
+  "coefficient_delta_public_minus_clean": {
+    "a1": -0.0016586344116928942,
+    "a2": 0.013829860121035153,
+    "a3": -0.015267357170046125,
+    "a3S": 0.0,
+    "a4": 0.0,
+    "a5": 0.0,
+    "b1": 0.00027263874219141115,
+    "b2": -0.003611373971050824,
+    "b3": 0.0,
+    "b4": 0.0
+  },
+  "coefficient_names": [
+    "a1",
+    "a2",
+    "a3",
+    "a3S",
+    "a4",
+    "a5",
+    "b1",
+    "b2",
+    "b3",
+    "b4"
+  ],
+  "coefficients": {
+    "a1": 4.110240890037276,
+    "a2": -47.038124744401046,
+    "a3": 56.84354405587578,
+    "a3S": 0.0,
+    "a4": 0.0,
+    "a5": 0.0,
+    "b1": 4.129125034115698,
+    "b2": -21.93221275349806,
+    "b3": 0.0,
+    "b4": 0.0
+  },
+  "input_hashes": {
+    "fine_capture_npz": "65dcf7c08d94ab24cc2b0bae9823313181d85a0c961c2dd0f9d9cae12941296b"
+  },
+  "interpretation": "First observed mismatch: the public NQC coefficients differ slightly from the clean captured full-series solve, while the public peak-frequency target is compared separately. These measurements do not by themselves distinguish source trajectory, sampled products, target, match time, or derivative-stencil semantics; no correction is justified yet.",
+  "invocation": {
+    "dt_M": 0.5,
+    "f_min_hz": 20.0,
+    "m1_msun": 30.0,
+    "m2_msun": 20.0,
+    "nqcFlag": 1,
+    "nqc_vector_length": 10,
+    "spin1z": 0.0,
+    "spin2z": 0.0,
+    "version": 4
+  },
+  "mode_nodes": [],
+  "module_sha256": {
+    "src/torchwave/approximants/eob/nqc.py": "c8683181f7cf911df1e1b85cd6999cdb03e7c594e867315359040e9eb03ca552",
+    "src/torchwave/approximants/eob/numerical_attachment.py": "b042ed739c89ac53ec1829d005b404d86f16d18dc4f4dd710bd58000de5c4a93",
+    "src/torchwave/approximants/eob/seobnrv4_flux.py": "9395f930449651c6607de4aa780cfd75545d95ba67fe4b4d653e2852fef407a8",
+    "src/torchwave/approximants/eob/seobnrv4_hamiltonian.py": "5b1a5b877129e5235b8f92974a01ab450176e8e924d374ca0fc413334fad177f"
+  },
+  "peak_frequency_comparison": {
+    "clean_target_dimensionless_2piMf": 0.35482358618455545,
+    "public_dimensionless_2piMf": 0.3548233340585996,
+    "public_minus_clean": -2.521259558352362e-07,
+    "public_peak_frequency_hz": 229.3046039068102
+  },
+  "provenance": "Public lalsimulation SimIMRSpinAlignedEOBModes black-box call; coefficients returned through caller-owned REAL8Vector with nqcFlag=1. Values are validation observables only and are not installed or fitted.",
+  "public_inspiral_comparison": {
+    "boundary_index_fine": 9302,
+    "fine_index_range": [
+      0,
+      9280
+    ],
+    "mask": "fine indices strictly before saved boundary_index, plus public support; exact native mapping restart + fine_index//refinement_factor",
+    "native_indices": [
+      9706,
+      9996
+    ],
+    "paper_corrected_vs_public_relative_l2": 5.4175044867978746e-05,
+    "public_fixture": "/tmp/torchwave-public-eob-dt_0p5M.npz",
+    "public_fixture_sha256": "7bf76ba9b81515bdd22377a8569bc0ee8809717baeb43d7f887b71ecdeb9d88a",
+    "rounded_timing_vs_public_relative_l2": 5.517737680319309e-05,
+    "samples": 291
+  },
+  "raw_waveform_precision_effect": {
+    "paper_recomputed_vs_saved_corrected_inspiral_relative_l2": 7.529571847929282e-13,
+    "rounded_vs_paper_corrected_inspiral_relative_l2": 1.1338197207974356e-06,
+    "scale_to_public_100mpc": 2.392707920793921e-20,
+    "scope": "same captured fine state/time, same clean targets, fixed peak, no ODE or alignment"
+  },
+  "runtime": {
+    "host": "RONI2",
+    "lal_version": "7.7.0",
+    "lalsimulation_version": "6.2.0",
+    "python": "/Users/xangma/miniconda3/envs/pycbcorig313/bin/python"
+  },
+  "script_sha256": "047c894bcff077a7ffe73b66931d18750b4bf934b1fa69417e06a2994f3b76a0",
+  "time_offset_precision_diagnostic": {
+    "match_time_shift_M": 6.750079998951719e-06,
+    "nonspinning_offset_coefficients_original": [
+      716.044155,
+      -13.087878,
+      -45.883834,
+      -2.504992
+    ],
+    "nonspinning_offset_coefficients_rounded_each": [
+      716.044,
+      -13.0879,
+      -45.8838,
+      -2.50499
+    ],
+    "original_paper_precision_offset_M": -4.37237953408,
+    "per_coefficient_six_significant_digit_offset_M": -4.372372784000001,
+    "rounded_match_coefficients": {
+      "a1": 4.11188252703583,
+      "a2": -47.05181932844342,
+      "a3": 56.858664965353036,
+      "a3S": 0.0,
+      "a4": 0.0,
+      "a5": 0.0,
+      "b1": 4.12884552805445,
+      "b2": -21.92855432402363,
+      "b3": 0.0,
+      "b4": 0.0
+    },
+    "rounded_minus_original_coefficients": {
+      "a1": -1.6997413139208106e-05,
+      "a2": 0.0001352760786588192,
+      "a3": -0.00014644769279215097,
+      "a3S": 0.0,
+      "a4": 0.0,
+      "a5": 0.0,
+      "b1": -6.867319056524934e-06,
+      "b2": 4.70555033800224e-05,
+      "b3": 0.0,
+      "b4": 0.0
+    }
+  }
+}

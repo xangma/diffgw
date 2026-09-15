@@ -1,0 +1,122 @@
+{
+  "catalog": {
+    "passed": 11,
+    "total": 21,
+    "changed_case_metrics_from_pass9": {
+      "IMRPhenomXP_diagnostic": {
+        "before": {
+          "status": "FAILED",
+          "max_polarization_complex_relative_l2": 0.07544486450333306,
+          "max_projection_complex_relative_l2": 0.07507045845109524
+        },
+        "after": {
+          "status": "FAILED",
+          "max_polarization_complex_relative_l2": 0.072548555371545,
+          "max_projection_complex_relative_l2": 0.07242449232148719
+        }
+      },
+      "IMRPhenomXPHM_diagnostic": {
+        "before": {
+          "status": "FAILED",
+          "max_polarization_complex_relative_l2": 0.08842192834050606,
+          "max_projection_complex_relative_l2": 0.08789514432588941
+        },
+        "after": {
+          "status": "FAILED",
+          "max_polarization_complex_relative_l2": 0.0884288220559525,
+          "max_projection_complex_relative_l2": 0.08802054949975976
+        }
+      }
+    }
+  },
+  "holdout": {
+    "passed": 4,
+    "total": 13,
+    "changed_case_metrics_from_pass9": {
+      "IMRPhenomXP_holdout": {
+        "before": {
+          "status": "FAILED",
+          "max_polarization_complex_relative_l2": 0.38457135929935105,
+          "max_projection_complex_relative_l2": 0.5105450415787924
+        },
+        "after": {
+          "status": "FAILED",
+          "max_polarization_complex_relative_l2": 0.40327127787938527,
+          "max_projection_complex_relative_l2": 0.5109112921701383
+        }
+      },
+      "IMRPhenomXPHM_holdout": {
+        "before": {
+          "status": "FAILED",
+          "max_polarization_complex_relative_l2": 0.40563131656593626,
+          "max_projection_complex_relative_l2": 0.5130735605315976
+        },
+        "after": {
+          "status": "FAILED",
+          "max_polarization_complex_relative_l2": 0.4224362756905931,
+          "max_projection_complex_relative_l2": 0.5150898309619378
+        }
+      }
+    }
+  },
+  "supplemental_explicit_nnlo": {
+    "before_passed": 0,
+    "after_passed": 0,
+    "total": 4,
+    "oracle_options": {
+      "PhenomXPrecVersion": 102,
+      "PhenomXPFinalSpinMod": 0
+    },
+    "cases": {
+      "IMRPhenomXP_diagnostic_NNLO102_FinalSpin0": {
+        "before": {
+          "status": "FAILED",
+          "max_polarization_complex_relative_l2": 0.0697472323187298,
+          "max_projection_complex_relative_l2": 0.06978151846433296
+        },
+        "after": {
+          "status": "FAILED",
+          "max_polarization_complex_relative_l2": 0.06116875307371707,
+          "max_projection_complex_relative_l2": 0.06130332590999946
+        }
+      },
+      "IMRPhenomXPHM_diagnostic_NNLO102_FinalSpin0": {
+        "before": {
+          "status": "FAILED",
+          "max_polarization_complex_relative_l2": 0.08191290727372659,
+          "max_projection_complex_relative_l2": 0.08170082454013786
+        },
+        "after": {
+          "status": "FAILED",
+          "max_polarization_complex_relative_l2": 0.07714567391444607,
+          "max_projection_complex_relative_l2": 0.0769418080259988
+        }
+      },
+      "IMRPhenomXP_holdout_NNLO102_FinalSpin0": {
+        "before": {
+          "status": "FAILED",
+          "max_polarization_complex_relative_l2": 0.32629516202410314,
+          "max_projection_complex_relative_l2": 0.41047792842298075
+        },
+        "after": {
+          "status": "FAILED",
+          "max_polarization_complex_relative_l2": 0.30958742244554305,
+          "max_projection_complex_relative_l2": 0.383928344083756
+        }
+      },
+      "IMRPhenomXPHM_holdout_NNLO102_FinalSpin0": {
+        "before": {
+          "status": "FAILED",
+          "max_polarization_complex_relative_l2": 0.34378713742692474,
+          "max_projection_complex_relative_l2": 0.4169609185361285
+        },
+        "after": {
+          "status": "FAILED",
+          "max_polarization_complex_relative_l2": 0.3276919458942695,
+          "max_projection_complex_relative_l2": 0.3935334202450526
+        }
+      }
+    }
+  },
+  "source_stable_during_verification": true
+}

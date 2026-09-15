@@ -1,17 +1,40 @@
 # TorchWave Literature Provenance and Coefficient Ledger
 
-This document establishes the mathematical and literature provenance for all waveform approximants, calibration datasets, and surrogate models in TorchWave.
+This document records mathematical sources, asset provenance, and unresolved
+provenance questions in TorchWave. It does not certify the origin of every
+inherited implementation or calibration dataset. Current verified results
+and their limits are maintained in the [implementation status](reviews/2026-09-13-parity-review/implementation-status.md).
 
 ## 1. Clean-Room Architecture Principles
 
-1. **Strict Literature Derivation**: All waveform formulas, Post-Newtonian coefficients, phenomenological ansatzes, and calibration parameters are derived exclusively from published peer-reviewed journals, public preprint archives (arXiv), and public journal supplemental material deposits.
-2. **Zero Code Inspection or Translation**: No C, Python, or CUDA source code from LAL, LALSimulation, PyCBC, or LVK internal repositories was inspected, copied, translated, or adapted.
-3. **Black-Box Binary Oracle Testing**: LALSimulation Python bindings are used solely as an external, black-box oracle to execute acceptance test gates against pre-computed physical parameter combinations.
+1. **Literature Derivation**: New physical formulas and calibration parameters must be independently derived from primary papers or admissible public data. Separately named numerical compatibility conventions may use the functional reference-audit contracts below. Inherited calibration assets with unresolved provenance remain explicitly unresolved; numerical parity does not clear them.
+2. **Separated Reference Audit and Implementation**: On 2026-09-14 the user authorized the coordinator to inspect public LAL implementation source and give functional findings to source-isolated Luna implementers. The prior blanket claim of zero source inspection no longer applies. Reference source stays outside the repository and implementer context; handoffs contain functional contracts and primary-paper references, without code excerpts or source-table ordinates. The exposure and boundaries are recorded in the [review](reviews/2026-09-13-parity-review/review.md) and [audit contracts](reviews/2026-09-13-parity-review/reference-audit-contracts.md).
+3. **Black-Box Binary Oracle Testing**: Implementers use LALSimulation Python bindings as an external binary oracle for the unchanged acceptance gates and additional validation cases. They must not fit calibration coefficients or residual corrections to its outputs. Numerical agreement does not establish the provenance of inherited calibration data.
 4. **Transparent Residual Accounting**: Where clean-room implementations have unresolved physical discrepancies or missing table integrations, these are recorded openly as unmet gates rather than masked or artificially tuned.
 
 ---
 
 ## 2. Approximants and Primary Literature Provenance
+
+### Independent NR amplitude pilot (2026-09-15)
+
+The [bounded `(3,3)` ringdown amplitude experiment](reviews/2026-09-15-independent-calibration/README.md)
+generated new coefficients from five raw SXS NR simulations using the XHM
+paper's Eq. (42), with two simulations reserved for validation. Independent
+Kerr eigenproblem solutions used NR remnant metadata. Input identities,
+numerical controls, and the actual coefficient artifact were frozen before
+LAL validation; no LAL output entered fitting.
+
+The original pilot software is MIT. The exact SXS records state CC-BY-4.0;
+their [data attribution](reviews/2026-09-15-independent-calibration/DATA_ATTRIBUTION.md)
+accompanies the separately identified processed data and calibration artifact.
+This is not an origin certification for inherited coefficients elsewhere.
+
+Held-out amplitude L2 errors were 27.70% and 3.18% against NR, and 8.60% and
+3.41% against LAL release 122022. The q≈3 NR extraction orders disagreed by
+30.14%. The pilot is not promoted to the runtime and does not establish full
+waveform parity. Calibration SHA256:
+`f447acda86f64f1d13745c8a5d725acdf295b050a2638d1731d4b6a139e1358d`.
 
 ### 2.1 TaylorF2 (Inspiral Aligned-Spin with Tides)
 - **Primary References**:
@@ -78,7 +101,7 @@ This document establishes the mathematical and literature provenance for all wav
 - **Public Data Asset**:
   - The complete 26-fit parameter space Mathematica file was deposited with APS PRD:
     - **URL**: `https://journals.aps.org/prd/supplemental/10.1103/PhysRevD.102.064001/IMRPhenomXAS_Parameter_Space_Fits_Public_Release_Candidate.m`
-    - **Path**: `src/torchwave/data/IMRPhenomXAS_Parameter_Space_Fits_Public_Release_Candidate.m`
+    - **Path**: `~/.cache/torchwave/external-validation/xas/IMRPhenomXAS_Parameter_Space_Fits_Public_Release_Candidate.m`
     - **SHA256**: `94b9334c19f3a7909864891ea278ab9a411e4f33b7b7e17cc01d927056d9ac52`
     - **Size**: 61,053 bytes
     - **Access Status**: Freely downloadable public supplemental deposit.
@@ -123,4 +146,4 @@ This document establishes the mathematical and literature provenance for all wav
 | Asset | Path | SHA256 Checksum | Provenance / Origin |
 |---|---|---|---|
 | Native SEOBNR ROM Surrogate | `src/torchwave/data/seobnr_surrogate.pt` | `8316be966b297f474be810024a6add2d5e64559ee3c506302e8ea83372085414` | Trained via `torchwave.approximants.eob.SEOBNR_ODE` on CPU |
-| APS IMRPhenomXAS Parameter Space Fits | `src/torchwave/data/IMRPhenomXAS_Parameter_Space_Fits_Public_Release_Candidate.m` | `94b9334c19f3a7909864891ea278ab9a411e4f33b7b7e17cc01d927056d9ac52` | APS PRD Supplemental Material (Pratten et al. 2020) |
+| APS IMRPhenomXAS Parameter Space Fits | `~/.cache/torchwave/external-validation/xas/IMRPhenomXAS_Parameter_Space_Fits_Public_Release_Candidate.m` | `94b9334c19f3a7909864891ea278ab9a411e4f33b7b7e17cc01d927056d9ac52` | APS PRD Supplemental Material (Pratten et al. 2020) |

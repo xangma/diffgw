@@ -1,6 +1,6 @@
 """IMRPhenomNSBH Frequency-Domain Gravitational Waveform Approximant.
 
-Strict Clean-Room Implementation based exclusively on published literature:
+Literature-based reconstruction of the following models:
 - Thompson et al. (2020), Phys. Rev. D 101, 124059 (arXiv:2002.08383)
 - Pannarale et al. (2015), Phys. Rev. D 92, 084050 (arXiv:1509.00512)
 - Pannarale et al. (2015), Phys. Rev. D 92, 081504 (arXiv:1509.06209)
@@ -9,6 +9,9 @@ Strict Clean-Room Implementation based exclusively on published literature:
 - London et al. (2018), Phys. Rev. Lett. 120, 161102 (arXiv:1708.00404)
 - Santamaria et al. (2010), Phys. Rev. D 82, 064016 (arXiv:1005.3306)
 - Dietrich et al. (2019), Phys. Rev. D 100, 044003 (arXiv:1905.06011)
+
+The bounded equation review in docs/reviews/2026-09-12-clean-room/nsbh.md
+does not certify the origin of every inherited coefficient or phase convention.
 """
 
 from typing import Optional, Tuple, Union
@@ -31,9 +34,12 @@ from torchwave.conversions import (
     spin_combinations,
     tidal_combinations,
 )
-from torchwave.approximants.imrphenomd import IMRPhenomD, TaylorF2
+from torchwave.approximants.imrphenomd import IMRPhenomD
+from torchwave.approximants.nsbh_phase_baseline import NSBHPhaseBaseline
+from torchwave.approximants.taylorf2 import TaylorF2
 from torchwave.approximants.kerr_qnm_interp import evaluate_kerr_qnm_220
-from torchwave.approximants.nrtidal_unrounded_fits import NRTIDAL_V2_PHASE_COEFFS
+from torchwave.approximants.nsbh_clean_phase import nrtidalv2_frequency_phase
+from torchwave.approximants.nsbh_clean_amplitude import positive_tidal_frequency, delta2_prime_plus, gamma1_prime_small_lambda, outer_pn_center
 from torchwave.approximants.imrphenomd_nrtidal import (
     N1_V2,
     N32_V2,
@@ -47,10 +53,27 @@ from torchwave.approximants.imrphenomd_nrtidal import (
 )
 
 
+# Coefficients transcribed from the author-released ``BHNSremnant.py``
+# accompanying Zappa et al. (2019), arXiv:1903.11622:
+# https://arxiv.org/pdf/1903.11622.pdf
+# SHA-256 of the released file used for this transcription:
+# f0043e0f2fc4b3babe664c527c5a20e8242b81c09bc023bfc3b016f1ff1bbcad
+ZAPPA_MASS_COEFFS = (
+    -1.83417425e-3, 2.39226041e-3, 4.29407902e-3, 9.79775571e-3,
+    2.33868869e-7, -8.28090025e-7, -1.64315549e-6, 8.08340931e-6,
+    -2.00726981e-2, 1.31986011e-1, 6.50754064e-2, -1.42749961e-1,
+)
+ZAPPA_SPIN_COEFFS = (
+    -5.44187381e-3, 7.91165608e-3, 2.33362046e-2, 2.47764497e-2,
+    -8.56844797e-7, -2.81727682e-6, 6.61290966e-6, 4.28979016e-5,
+    -3.04174272e-2, 2.54889050e-1, 1.47549350e-1, -4.27905832e-1,
+)
+
+
 def ns_compactness_from_lambda(lambda_ns: torch.Tensor) -> torch.Tensor:
     """Compute neutron star compactness C = M_NS / R_NS from tidal deformability Lambda.
 
-    Thompson et al. (2020) Eq. 20 (Appendix B, Eq. 791):
+    Thompson et al. (2020), Appendix B, Eq. (32):
         C(Lambda) = a0 + a1 * ln(Lambda) + a2 * ln(Lambda)^2, Lambda > 1
         C(Lambda) = 0.5 + (3a0 - a1 - 1.5)*Lambda^2 + (a1 - 2a0 + 1)*Lambda^3, Lambda <= 1
     with a0 = 0.360, a1 = -0.0355, a2 = 0.000705.
@@ -80,12 +103,13 @@ def solve_xi_tide(
 ) -> Tuple[torch.Tensor, torch.Tensor]:
     """Solve for relativistic disruption root xi_tide via Newton-Raphson.
 
-    Polynomial from Thompson et al. (2020) Eqs. 7-9:
+    Polynomial from Thompson et al. (2020), Appendix A, Eq. (10):
         P(xi) = xi^5 - 3*mu*xi^4 + 2*chi*sqrt(mu^3 * xi^7) - 3*q*xi^2 + 6*q*mu*xi - 3*q*mu^2 * chi^2 = 0
         P'(xi) = 5*xi^4 - 12*mu*xi^3 + 7*chi*sqrt(mu^3 * xi^5) - 6*q*xi + 6*q*mu
     with mu = q * C.
 
-    Initial guess: xi_0 = (3q)^(1/3) + 3*mu, ensuring convergence to the largest positive root.
+    Initial guess: xi_0 = (3q)^(1/3) + 3*mu. A fixed iteration count
+    does not guarantee convergence; the returned residual permits checking it.
 
     Returns:
         xi_tide: Root tensor
@@ -261,29 +285,47 @@ def zappa_remnant_properties(
     chi2: torch.Tensor,
     lambda2: torch.Tensor,
 ) -> Tuple[torch.Tensor, torch.Tensor]:
-    """Compute NSBH remnant mass M_f and remnant spin chi_f (Zappa et al. 2019 Eq. 6 & Table IV)."""
+    """Compute the NSBH remnant mass and spin from the Zappa fit.
+
+    Zappa et al. (2019), Eqs. (1), (4)-(6), define the fit as
+    ``F(nu, a_BH, Lambda)``.  Their NS spin is neglected, so the tidal
+    correction polynomials use the black-hole spin ``chi1`` directly.  The
+    BBH baseline remains evaluated with both caller-supplied spins for API
+    compatibility; the published NSBH calibration itself assumes ``chi2=0``.
+    """
     m = mass1 + mass2
     eta = component_masses_to_eta(mass1, mass2)
-    delta = component_masses_to_delta(mass1, mass2)
-    chi = ((1.0 + delta) / 2.0) * chi1 + ((1.0 - delta) / 2.0) * chi2
+    # Zappa's a_BH is the initial black-hole spin, not a mass-weighted
+    # effective spin.  In the NSBH ordering used here, that is chi1.
+    chi = chi1
 
     mf_bbh_ratio, chif_bbh = bbh_remnant_uib2016(mass1, mass2, chi1, chi2)
 
-    # Zappa Table IV fits for Mf/M (X_bullet)
-    p1_m = (-1.83e-3 * chi + 2.39e-3) * eta + (4.29e-3 * chi + 9.80e-3) * (eta ** 2.0)
-    p2_m = (2.34e-7 * chi - 8.28e-7) * eta + (-1.64e-6 * chi + 8.08e-6) * (eta ** 2.0)
-    p3_m = (-2.01e-2 * chi + 1.32e-1) * eta + (6.51e-2 * chi - 1.43e-1) * (eta ** 2.0)
+    def _zappa_factor(coeff):
+        p1 = ((coeff[0] * chi + coeff[1]) + (coeff[2] * chi + coeff[3]) * eta) * eta
+        p2 = ((coeff[4] * chi + coeff[5]) + (coeff[6] * chi + coeff[7]) * eta) * eta
+        p3 = ((coeff[8] * chi + coeff[9]) + (coeff[10] * chi + coeff[11]) * eta) * eta
+        return (1.0 + p1 * lambda2 + p2 * (lambda2 ** 2.0)) / ((1.0 + (p3 ** 2.0) * lambda2) ** 2.0)
 
-    mf_ratio = mf_bbh_ratio * (1.0 + p1_m * lambda2 + p2_m * (lambda2 ** 2.0)) / ((1.0 + (p3_m ** 2.0) * lambda2) ** 2.0)
-    mf = torch.clamp(m * mf_ratio, max=m)
+    mass_factor = _zappa_factor(ZAPPA_MASS_COEFFS)
+    spin_factor = _zappa_factor(ZAPPA_SPIN_COEFFS)
 
-    # Zappa Table IV fits for chif (a_bullet)
-    p1_s = (-5.44e-3 * chi + 7.91e-3) * eta + (2.33e-2 * chi + 2.48e-2) * (eta ** 2.0)
-    p2_s = (-8.57e-7 * chi - 2.82e-6) * eta + (6.61e-6 * chi + 4.29e-5) * (eta ** 2.0)
-    p3_s = (-3.04e-2 * chi + 2.55e-1) * eta + (1.48e-1 * chi - 4.28e-1) * (eta ** 2.0)
+    # Zappa et al. enforce the BBH result in the extrapolating regions where
+    # the fit is known to become unphysical.  This is a correction factor of
+    # one, so the BBH remnant (rather than the total mass) remains the base.
+    bbh_fallback = torch.logical_or(
+        torch.logical_and(chi < 0.0, eta < 0.188), chi < -0.5
+    )
+    mass_factor = torch.where(mass_factor > 1.0, torch.ones_like(mass_factor), mass_factor)
+    mass_factor = torch.where(bbh_fallback, torch.ones_like(mass_factor), mass_factor)
+    # The same physical guard keeps the spin correction from increasing the
+    # BBH value in the extrapolating small-tide region; public properties
+    # reduce to the BBH spin there.
+    spin_factor = torch.where(spin_factor > 1.0, torch.ones_like(spin_factor), spin_factor)
+    spin_factor = torch.where(bbh_fallback, torch.ones_like(spin_factor), spin_factor)
 
-    chif = chif_bbh * (1.0 + p1_s * lambda2 + p2_s * (lambda2 ** 2.0)) / ((1.0 + (p3_s ** 2.0) * lambda2) ** 2.0)
-    chif = torch.clamp(chif, -0.999, 0.999)
+    mf = m * mf_bbh_ratio * mass_factor
+    chif = chif_bbh * spin_factor
 
     return mf, chif
 
@@ -339,7 +381,7 @@ def nsbh_frequencies(
     xi, _ = solve_xi_tide(q, chi1, c)
     r_tide = xi * m2_sec * torch.clamp(1.0 - 2.0 * c, min=0.0) / torch.clamp(c, min=1e-6)
     denom = PI * (chi1 * m1_sec + torch.sqrt(torch.clamp((r_tide ** 3.0) / m1_sec, min=0.0) + 1e-30))
-    f_tide = 1.0 / denom
+    f_tide = positive_tidal_frequency(denom)
 
     # 3. Kerr ISCO frequency
     f_isco = kerr_isco_frequency(mass1, chi1)
@@ -351,10 +393,71 @@ def nsbh_frequencies(
     return f_tide, f_isco, f_rd, c
 
 
+def _amplitude_window(
+    frequency_hz: torch.Tensor,
+    center_hz: torch.Tensor,
+    width_mf: torch.Tensor,
+    total_mass_sec: torch.Tensor,
+    *,
+    rising: bool,
+) -> torch.Tensor:
+    """Thompson Eq. (30), with the width expressed in total-mass units.
+
+    Pannarale (2015), Sec. III and Eq. (13), defines d + sigma_tide
+    in M*f, so the frequency difference must be multiplied by M.
+    """
+    offset_mf = total_mass_sec * (frequency_hz - center_hz)
+    arg = 8.0 * offset_mf / torch.clamp(width_mf.abs(), min=1e-8)
+    return torch.sigmoid(arg if rising else -arg)
+
+
+def _legacy_phase_offsets(m1, m2, s1, s2, mf_ref, mf_anchor, remnant_mass, remnant_spin):
+    """Retain the inherited NSBH affine gauge, not a published prescription.
+
+    Its constant uses the inspiral phase at the reference frequency; its time
+    origin uses the raw MR slope at the requested upper frequency, evaluated
+    with the amplitude remnant. These offsets do not alter intrinsic curvature.
+    """
+    eta = component_masses_to_eta(m1, m2)
+    _, _, chi_pn, _ = spin_combinations(m1, m2, s1, s2)
+    sigma1, sigma2, sigma3, sigma4 = (
+        IMRPhenomD.eval_table_v(name, eta, chi_pn)
+        for name in ("sigma1", "sigma2", "sigma3", "sigma4")
+    )
+    alpha1, alpha2, alpha3, alpha4, alpha5 = (
+        IMRPhenomD.eval_table_v(name, eta, chi_pn)
+        for name in ("alpha1", "alpha2", "alpha3", "alpha4", "alpha5")
+    )
+    p0, p2, p3, p4, p5, p5log, p6, p6log, p7, *_ = TaylorF2.phase_coefficients(
+        m1, m2, s1, s2, phenom_d_calibration=True,
+    )
+    v_ref = (PI * mf_ref).pow(1.0 / 3.0)
+    pn_sum = (
+        p0 + p2 * v_ref.square() + p3 * v_ref.pow(3) + p4 * v_ref.pow(4)
+        + (p5 + p5log * torch.log(v_ref)) * v_ref.pow(5)
+        + (p6 + p6log * torch.log(4.0 * v_ref)) * v_ref.pow(6)
+        + p7 * v_ref.pow(7)
+    )
+    reference_phase = 3.0 * pn_sum / (128.0 * eta * v_ref.pow(5)) + (
+        sigma1 * mf_ref + 0.75 * sigma2 * mf_ref.pow(4.0 / 3.0)
+        + 0.6 * sigma3 * mf_ref.pow(5.0 / 3.0) + 0.5 * sigma4 * mf_ref.square()
+    ) / eta
+    omega_r, omega_i = evaluate_kerr_qnm_220(remnant_spin)
+    mass_ratio = (m1 + m2) / remnant_mass
+    f_rd = mass_ratio * omega_r / (2.0 * PI)
+    f_damp = mass_ratio * omega_i.abs() / (2.0 * PI)
+    atan_arg = (mf_anchor - alpha5 * f_rd) / f_damp
+    time_slope = (
+        alpha1 + alpha2 * mf_anchor.pow(-2.0) + alpha3 * mf_anchor.pow(-0.25)
+        + (alpha4 / f_damp) / (1.0 + atan_arg.square())
+    ) / eta
+    return reference_phase, time_slope
+
+
 class IMRPhenomNSBH(nn.Module):
     """IMRPhenomNSBH Aligned-Spin Frequency-Domain Waveform Approximant for NS-BH Mergers.
 
-    Clean-room implementation reconstructing Thompson et al. (2020), Phys. Rev. D 101, 124059.
+    Reconstruction of Thompson et al. (2020), Phys. Rev. D 101, 124059.
     """
 
     def __init__(self):
@@ -392,6 +495,10 @@ class IMRPhenomNSBH(nn.Module):
             phic: Coalescence phase in radians
             tc: Coalescence time in seconds
             f_ref: Reference frequency in Hz
+            phasing_convention: None or 'legacy' retains the inherited affine
+                offsets, including its upper-frequency time anchor. Explicit
+                'reference_frequency' or 'coalescence' uses the PhenomD gauge.
+            reference_frame: Alias for phasing_convention
         """
         device = f.device
         dtype = f.dtype if f.is_floating_point() else torch.float64
@@ -444,7 +551,7 @@ class IMRPhenomNSBH(nn.Module):
         xi_tide, _ = solve_xi_tide(q, s1, c)
         r_tide = xi_tide * m2_sec * torch.clamp(1.0 - 2.0 * c, min=0.0) / torch.clamp(c, min=1e-6)
         denom_ftide = PI * (s1 * m1_sec + torch.sqrt(torch.clamp((r_tide ** 3.0) / m1_sec, min=0.0) + 1e-30))
-        f_tide = 1.0 / denom_ftide
+        f_tide = positive_tidal_frequency(denom_ftide)
 
         # -------------------------------------------------------------
         # 3. Step 3: Baryonic Torus Remnant Mass Ratio
@@ -459,32 +566,20 @@ class IMRPhenomNSBH(nn.Module):
         # -------------------------------------------------------------
         # 4. Step 4: Remnant Mass M_f and Remnant Spin chi_f
         # -------------------------------------------------------------
-        mf_bbh_ratio, a_bbh = bbh_remnant_uib2016(m1, m2, s1, s2)
-        mf_zappa, a_zappa = zappa_remnant_properties(m1, m2, s1, s2, lam2)
-
-        m_ratio_bbh = 1.0 / mf_bbh_ratio
-        omega_r_bbh, omega_i_bbh = evaluate_kerr_qnm_220(a_bbh)
-        f_rd_bbh = m_ratio_bbh * omega_r_bbh / (2.0 * PI)
-        f_damp_bbh = m_ratio_bbh * torch.abs(omega_i_bbh) / (2.0 * PI)
-
-        m_ratio_zappa = total_mass / mf_zappa
-        omega_r_zappa, omega_i_zappa = evaluate_kerr_qnm_220(a_zappa)
-        f_rd_zappa = m_ratio_zappa * omega_r_zappa / (2.0 * PI)
-        f_damp_zappa = m_ratio_zappa * torch.abs(omega_i_zappa) / (2.0 * PI)
-
-        f_rd_tilde_bbh = f_rd_bbh / m_sec
-        is_ftide_ge_frd = f_tide >= f_rd_tilde_bbh
-
-        chi_f = torch.where(is_ftide_ge_frd & (~has_torus), a_bbh, a_zappa)
-        f_rd_ph = torch.where(is_ftide_ge_frd & (~has_torus), f_rd_bbh, f_rd_zappa)
-        f_damp_ph = torch.where(is_ftide_ge_frd & (~has_torus), f_damp_bbh, f_damp_zappa)
-
-        mf = torch.where(is_ftide_ge_frd & (~has_torus), total_mass * mf_bbh_ratio, mf_zappa)
+        # Thompson et al. (2020), Appendix A, steps 4--6: use the
+        # NSBH-specific remnant fit for every merger classification.  The
+        # BBH limit is already recovered by Zappa et al.'s fit at Lambda=0;
+        # selecting the BBH remnant conditionally for a non-disruptive system
+        # would therefore change the source-defined f_tide/f_RD boundary at
+        # finite Lambda.
+        mf, chi_f = zappa_remnant_properties(m1, m2, s1, s2, lam2)
 
         # -------------------------------------------------------------
         # 5. Step 5: Kerr Ringdown Frequency f_RD and Quality Factor Q (London 2018)
         # -------------------------------------------------------------
         f_rd, q_factor = london_ringdown_properties(mf, chi_f)
+        # Step 6 applies the table's f_tide >= f_RD (closed) boundary.
+        is_ftide_ge_frd = f_tide >= f_rd
 
         # -------------------------------------------------------------
         # 6. Step 6: Merger Classification and Joining Parameters
@@ -494,16 +589,18 @@ class IMRPhenomNSBH(nn.Module):
         frd_le1 = (1.0 - 0.02 * lam_safe + 0.01 * (lam_safe ** 2.0)) * 0.98 * f_rd
         f_rd_tilde = torch.where(lam2 > 1.0, frd_gt1, frd_le1)
 
-        x_nd = ((f_tide - f_rd_tilde) / f_rd_tilde) ** 2.0 - 0.571505 * c - 0.00508451 * chi
-        x_prime_nd = ((f_tide - f_rd_tilde) / f_rd_tilde) ** 2.0 - 0.657424 * c - 0.0259977 * chi
-        x_d = torus_ratio + 0.424912 * c + 0.363604 * torch.sqrt(eta) - 0.060559 * chi
+        # Thompson Sec. II defines chi in Eqs. (21)-(24) as the BH spin,
+        # unlike the effective spin used by the PhenomC BBH amplitude below.
+        x_nd = ((f_tide - f_rd_tilde) / f_rd_tilde) ** 2.0 - 0.571505 * c - 0.00508451 * s1
+        x_prime_nd = ((f_tide - f_rd_tilde) / f_rd_tilde) ** 2.0 - 0.657424 * c - 0.0259977 * s1
+        x_d = torus_ratio + 0.424912 * c + 0.363604 * torch.sqrt(eta) - 0.060559 * s1
         x_prime_d = (
             torus_ratio
             - 0.132754 * c
             + 0.576669 * torch.sqrt(eta)
-            - 0.0603749 * chi
-            - 0.0601185 * (chi ** 2.0)
-            - 0.0729134 * (chi ** 3.0)
+            - 0.0603749 * s1
+            - 0.0601185 * (s1 ** 2.0)
+            - 0.0729134 * (s1 ** 3.0)
         )
 
         def omega_plus(val: torch.Tensor, f0: Union[float, torch.Tensor], d: Union[float, torch.Tensor]) -> torch.Tensor:
@@ -536,7 +633,7 @@ class IMRPhenomNSBH(nn.Module):
         f0_tilde = torch.where(
             is_ftide_ge_frd,
             torch.where(has_torus, eps_ins * f_rd_tilde, f_rd_tilde),
-            torch.where(has_torus, eps_ins * f_tide, ((q - 1.0) * f_rd_tilde + eps_ins * f_tide) / q),
+            torch.where(has_torus, eps_ins * f_tide, outer_pn_center(((q - 1.0) * f_rd_tilde + eps_ins * f_tide) / q, eps_ins)),
         )
         f1_tilde = torch.where(
             is_ftide_ge_frd,
@@ -544,7 +641,7 @@ class IMRPhenomNSBH(nn.Module):
             torch.where(has_torus, f_tide, ((q - 1.0) * f_rd_tilde + f_tide) / q),
         )
         f2_tilde = f_rd_tilde
-        d_win = (0.015 + sigma_tide) * f_rd
+        d_win_mf = 0.015 + sigma_tide
 
         # -------------------------------------------------------------
         # 7. Step 7: Phenomenological Amplitude Assembly (Santamaria Table II)
@@ -565,9 +662,9 @@ class IMRPhenomNSBH(nn.Module):
         gamma1_prime = torch.where(
             lam2 > 1.0,
             1.25 * gamma1,
-            (1.0 - 0.5 * lam_safe - 0.25 * (lam_safe ** 2.0)) * gamma1,
+            gamma1_prime_small_lambda(lam_safe) * gamma1,
         )
-        delta2_prime_gt1 = 0.81248 * omega_minus((f_tide - f_rd_tilde) / f_rd_tilde, 0.0188092, 0.338737)
+        delta2_prime_gt1 = delta2_prime_plus(f_tide, f_rd_tilde)
         delta2_prime_le1 = delta2 - 2.0 * (delta2 - 0.81248) * lam_safe + (delta2 - 0.81248) * (lam_safe ** 2.0)
         delta2_prime = torch.where(lam2 > 1.0, delta2_prime_gt1, delta2_prime_le1)
         sigma_lorentz = delta2_prime * f_rd / q_factor
@@ -587,7 +684,7 @@ class IMRPhenomNSBH(nn.Module):
         f0_tilde_u = unsqueeze_param(f0_tilde)
         f1_tilde_u = unsqueeze_param(f1_tilde)
         f2_tilde_u = unsqueeze_param(f2_tilde)
-        d_win_u = unsqueeze_param(d_win)
+        d_win_mf_u = unsqueeze_param(d_win_mf)
 
         # 3.5PN SPA Inspiral Amplitude (PhenomC)
         v = torch.pow(PI * m_sec_u * f_safe, 1.0 / 3.0)
@@ -681,9 +778,9 @@ class IMRPhenomNSBH(nn.Module):
         lorentz_bar = (sigma_bar ** 2.0) / ((f_bar - f_rd_bar) ** 2.0 + (sigma_bar ** 2.0) / 4.0)
         a_rd_dimless = eps_tide_u * delta1_u * lorentz_bar * torch.pow(f_bar, -7.0 / 6.0)
 
-        w_ins = omega_minus(f_eval, f0_tilde_u, d_win_u)
-        w_pm = omega_minus(f_eval, f1_tilde_u, d_win_u)
-        w_rd = omega_plus(f_eval, f2_tilde_u, d_win_u)
+        w_ins = _amplitude_window(f_eval, f0_tilde_u, d_win_mf_u, m_sec_u, rising=False)
+        w_pm = _amplitude_window(f_eval, f1_tilde_u, d_win_mf_u, m_sec_u, rising=False)
+        w_rd = _amplitude_window(f_eval, f2_tilde_u, d_win_mf_u, m_sec_u, rising=True)
 
         full_amp_dimless = a_pn_dimless * w_ins + a_pm_dimless * w_pm + a_rd_dimless * w_rd
 
@@ -694,103 +791,76 @@ class IMRPhenomNSBH(nn.Module):
         # -------------------------------------------------------------
         # 8. Step 8: Phase Model & Waveform Synthesis
         # -------------------------------------------------------------
-        chi_s, chi_a, chi_pn, chi_hat = spin_combinations(m1, m2, s1, s2)
-        alpha1_raw = IMRPhenomD.eval_table_v("alpha1", eta, chi_pn)
-        alpha2 = IMRPhenomD.eval_table_v("alpha2", eta, chi_pn)
-        alpha3 = IMRPhenomD.eval_table_v("alpha3", eta, chi_pn)
-        alpha4 = IMRPhenomD.eval_table_v("alpha4", eta, chi_pn)
-        alpha5 = IMRPhenomD.eval_table_v("alpha5", eta, chi_pn)
-        sigma1 = IMRPhenomD.eval_table_v("sigma1", eta, chi_pn)
-        sigma2 = IMRPhenomD.eval_table_v("sigma2", eta, chi_pn)
-        sigma3 = IMRPhenomD.eval_table_v("sigma3", eta, chi_pn)
-        sigma4 = IMRPhenomD.eval_table_v("sigma4", eta, chi_pn)
-        beta2 = IMRPhenomD.eval_table_v("beta2", eta, chi_pn)
-        beta3 = IMRPhenomD.eval_table_v("beta3", eta, chi_pn)
-
-        f1_ph = 0.018
-        f2_ph = 0.5 * f_rd_ph
-
-        (tf2_0, tf2_2, tf2_3, tf2_4, tf2_5, tf2_5_log, tf2_6, tf2_6_log, tf2_7, *_) = TaylorF2.phase_coefficients(
-            m1, m2, s1, s2, phenom_d_calibration=True
+        # Thompson et al. (2020), Sec. II.B: the phase baseline is PhenomD.
+        # Its remnant and C1 joins therefore belong to the BBH phase model,
+        # independently of the disruption-dependent amplitude remnant above.
+        # The papers leave affine offsets free. Preserve the inherited default
+        # gauge; explicit conventions opt into the grid-independent BBH gauge.
+        # The public NSBH API uses zero as the sentinel for a reference at the
+        # lower edge of the generated positive-frequency grid.  Keep the
+        # inherited 30 Hz default for an omitted reference, but resolve an
+        # explicit zero before evaluating the logarithmic phase expressions.
+        ref_f = f_ref if f_ref is not None else 30.0
+        ref_f = as_tensor(ref_f, device=device, dtype=dtype)
+        if torch.any(~torch.isfinite(ref_f)):
+            raise ValueError("f_ref must contain only finite, non-negative values")
+        if torch.any(ref_f < 0.0):
+            raise ValueError("f_ref must be non-negative; zero selects the lowest positive frequency")
+        first_positive = torch.amin(
+            torch.where(
+                f_eval > 0.0,
+                f_eval,
+                torch.full_like(f_eval, float("inf")),
+            )
         )
-
-        def eval_tf2(u):
-            v_u = (PI * u) ** (1.0 / 3.0)
-            v2_u = v_u * v_u; v3_u = v2_u * v_u; v4_u = v2_u * v2_u; v5_u = v4_u * v_u; v6_u = v3_u * v3_u; v7_u = v6_u * v_u
-            ln_v_u = torch.log(v_u); ln_4v_u = torch.log(4.0 * v_u)
-            pn_sum_u = tf2_0 + tf2_2*v2_u + tf2_3*v3_u + tf2_4*v4_u + (tf2_5 + tf2_5_log*ln_v_u)*v5_u + (tf2_6 + tf2_6_log*ln_4v_u)*v6_u + tf2_7*v7_u
-            phi_tf2_u = (3.0 / (128.0 * eta * v5_u)) * pn_sum_u
-            dv_du_u = (PI / 3.0) * (PI * u) ** (-2.0 / 3.0)
-            d_pn_sum_dv_u = -5.0*tf2_0*(v_u**-6) - 3.0*tf2_2*(v_u**-4) - 2.0*tf2_3*(v_u**-3) - tf2_4*(v_u**-2) + tf2_5_log*(v_u**-1) + (tf2_6 + tf2_6_log*ln_4v_u + tf2_6_log) + 2.0*tf2_7*v_u
-            dphi_tf2_u = (3.0 / (128.0 * eta)) * d_pn_sum_dv_u * dv_du_u
-            return phi_tf2_u, dphi_tf2_u
-
-        phi_tf2_f1, dphi_tf2_f1 = eval_tf2(as_tensor(f1_ph, device=device, dtype=dtype))
-        dphi_ins_f1 = dphi_tf2_f1 + (1.0 / eta) * (sigma1 + sigma2*(f1_ph**(1/3)) + sigma3*(f1_ph**(2/3)) + sigma4*f1_ph)
-        phi_ins_f1 = phi_tf2_f1 + (1.0 / eta) * (sigma1*f1_ph + (3/4)*sigma2*(f1_ph**(4/3)) + (3/5)*sigma3*(f1_ph**(5/3)) + 0.5*sigma4*(f1_ph**2))
-        beta1 = eta * dphi_ins_f1 - beta2*(f1_ph**-1.0) - beta3*(f1_ph**-4.0)
-        beta0 = eta * phi_ins_f1 - beta1*f1_ph - beta2*math.log(f1_ph) + (beta3/3.0)*(f1_ph**-3.0)
-
-        dphi_int_f2 = (1.0 / eta) * (beta1 + beta2*(f2_ph**-1.0) + beta3*(f2_ph**-4.0))
-        phi_int_f2 = (1.0 / eta) * (beta0 + beta1*f2_ph + beta2*torch.log(f2_ph) - (beta3/3.0)*(f2_ph**-3.0))
-        atan_arg_f2 = (f2_ph - alpha5 * f_rd_ph) / f_damp_ph
-        d_atan_f2 = (alpha4 / f_damp_ph) / (1.0 + atan_arg_f2 * atan_arg_f2)
-        alpha1 = eta * dphi_int_f2 - alpha2*(f2_ph**-2.0) - alpha3*(f2_ph**-0.25) - d_atan_f2
-        alpha0 = eta * phi_int_f2 - alpha1*f2_ph + alpha2*(f2_ph**-1.0) - (4/3)*alpha3*(f2_ph**0.75) - alpha4*torch.atan(atan_arg_f2)
-
-        # Grid evaluation
-        mf_grid = m_sec_u * f_safe
-        v_g = (PI * mf_grid) ** (1.0 / 3.0)
-        v2_g = v_g * v_g; v3_g = v2_g * v_g; v4_g = v2_g * v2_g; v5_g = v4_g * v_g; v6_g = v3_g * v3_g; v7_g = v6_g * v_g
-        ln_v_g = torch.log(v_g); ln_4v_g = torch.log(4.0 * v_g)
-        pn_sum_g = unsqueeze_param(tf2_0) + unsqueeze_param(tf2_2)*v2_g + unsqueeze_param(tf2_3)*v3_g + unsqueeze_param(tf2_4)*v4_g + (unsqueeze_param(tf2_5) + unsqueeze_param(tf2_5_log)*ln_v_g)*v5_g + (unsqueeze_param(tf2_6) + unsqueeze_param(tf2_6_log)*ln_4v_g)*v6_g + unsqueeze_param(tf2_7)*v7_g
-        phi_tf2_grid = (3.0 / (128.0 * eta_u * v5_g)) * pn_sum_g
-
-        s1_u = unsqueeze_param(sigma1); s2_u = unsqueeze_param(sigma2); s3_u = unsqueeze_param(sigma3); s4_u = unsqueeze_param(sigma4)
-        phi_ins_grid = phi_tf2_grid + (1.0 / eta_u) * (s1_u*mf_grid + (3/4)*s2_u*(mf_grid**(4/3)) + (3/5)*s3_u*(mf_grid**(5/3)) + 0.5*s4_u*(mf_grid**2))
-
-        b0_u = unsqueeze_param(beta0); b1_u = unsqueeze_param(beta1); b2_u = unsqueeze_param(beta2); b3_u = unsqueeze_param(beta3)
-        phi_int_grid = (1.0 / eta_u) * (b0_u + b1_u*mf_grid + b2_u*torch.log(mf_grid) - (b3_u/3.0)*(mf_grid**-3.0))
-
-        a0_u = unsqueeze_param(alpha0); a1_u = unsqueeze_param(alpha1); a2_u = unsqueeze_param(alpha2); a3_u = unsqueeze_param(alpha3); a4_u = unsqueeze_param(alpha4); a5_u = unsqueeze_param(alpha5)
-        frd_u = unsqueeze_param(f_rd_ph); fdamp_u = unsqueeze_param(f_damp_ph)
-        atan_arg_grid = (mf_grid - a5_u * frd_u) / fdamp_u
-        phi_mr_grid = (1.0 / eta_u) * (a0_u + a1_u*mf_grid - a2_u*(mf_grid**-1.0) + (4/3)*a3_u*(mf_grid**0.75) + a4_u*torch.atan(atan_arg_grid))
-
-        f1_u = unsqueeze_param(as_tensor(f1_ph, device=device, dtype=dtype))
-        f2_u = unsqueeze_param(f2_ph)
-        phi_phenomd = torch.where(mf_grid <= f1_u, phi_ins_grid, torch.where(mf_grid <= f2_u, phi_int_grid, phi_mr_grid))
+        first_positive = torch.where(
+            torch.isfinite(first_positive),
+            first_positive,
+            torch.full_like(first_positive, 30.0),
+        )
+        ref_f = torch.where(ref_f > 0.0, ref_f, first_positive)
+        requested_frame = reference_frame if reference_frame is not None else phasing_convention
+        use_legacy_gauge = requested_frame is None or requested_frame.lower() == "legacy"
+        _, _, phi_phenomd = NSBHPhaseBaseline(chi_f)(
+            f, m1, m2, s1, s2,
+            distance=dist, inclination=inc,
+            phic=0.0 if use_legacy_gauge else phi_c,
+            tc=0.0 if use_legacy_gauge else t_c,
+            f_ref=ref_f, window_type=None,
+            phasing_convention="coalescence" if use_legacy_gauge else phasing_convention,
+            reference_frame=None if use_legacy_gauge else reference_frame,
+            return_phase=True,
+        )
+        if use_legacy_gauge:
+            mf_ref = m_sec * as_tensor(ref_f, device=device, dtype=dtype)
+            anchor_hz = kwargs.get("f_final", kwargs.get("fhigh", torch.max(f_eval)))
+            mf_anchor = m_sec * as_tensor(anchor_hz, device=device, dtype=dtype)
+            reference_phase, time_slope = _legacy_phase_offsets(
+                m1, m2, s1, s2, mf_ref, mf_anchor,
+                IMRPhenomD().remnant_properties(m1, m2, s1, s2)[0], chi_f,
+            )
+            # Remove PhenomD's affine offsets, retaining its intrinsic IMR
+            # phase, then restore the pre-existing default NSBH offsets.
+            slope_peak = NSBHPhaseBaseline(chi_f).compute_slope_peak(m1, m2, s1, s2)
+            phi_phenomd = (
+                phi_phenomd + PI / 4.0 + unsqueeze_param(slope_peak) * f_bar
+                - unsqueeze_param(reference_phase + 2.0 * phi_c)
+                - unsqueeze_param(time_slope + 2.0 * PI * t_c / m_sec)
+                * (f_bar - unsqueeze_param(mf_ref))
+            )
 
         # Tidal phasing from NRTidalv2
         lam1 = torch.zeros_like(lam2)
         lam_tilde, _ = tidal_combinations(m1, m2, lam1, lam2)
         lam_tilde_u = unsqueeze_param(lam_tilde)
-        m_omega = PI * m_sec_u * f_safe
-        x_pn = torch.pow(m_omega, 2.0 / 3.0)
-        c_fit = NRTIDAL_V2_PHASE_COEFFS
-        num_p = 1.0 + c_fit["n_1"]*x_pn + c_fit["n_3over2"]*(x_pn**1.5) + c_fit["n_2"]*(x_pn**2) + c_fit["n_5over2"]*(x_pn**2.5) + c_fit["n_3"]*(x_pn**3)
-        den_p = 1.0 + c_fit["d_1"]*x_pn + c_fit["d_3over2"]*(x_pn**1.5) + c_fit["d_2"]*(x_pn**2)
-        phi_tidal = -(117.0 / (256.0 * eta_u)) * (x_pn**2.5) * (num_p / den_p) * lam_tilde_u
+        phi_tidal = nrtidalv2_frequency_phase(
+            f_safe, m_sec_u, eta_u, lam_tilde_u,
+        )
 
-        # Reference phase precalculation
-        ref_f = f_ref if f_ref is not None else 30.0
-        fref_t = as_tensor(ref_f, device=device, dtype=dtype)
-        mf_ref = m_sec * fref_t
-        phi_tf2_ref, _ = eval_tf2(mf_ref)
-        phi_0 = phi_tf2_ref + (1.0 / eta) * (sigma1*mf_ref + (3/4)*sigma2*(mf_ref**(4/3)) + (3/5)*sigma3*(mf_ref**(5/3)) + 0.5*sigma4*(mf_ref**2))
-        phi_precalc = unsqueeze_param(2.0 * phi_c + phi_0)
-
-        # Time shift t0 evaluated at f_final * M_sec
-        fmax_eval = kwargs.get("f_final", kwargs.get("fhigh", torch.max(f_eval)))
-        fmax_t = as_tensor(fmax_eval, device=device, dtype=dtype)
-        f_eval_t0 = m_sec * fmax_t
-        atan_eval = (f_eval_t0 - alpha5 * f_rd_ph) / f_damp_ph
-        t0_phenom = (1.0 / eta) * (alpha1_raw + alpha2*(f_eval_t0**-2.0) + alpha3*(f_eval_t0**-0.25) + (alpha4 / f_damp_ph) / (1.0 + atan_eval**2))
-        t0_total = t0_phenom + (2.0 * PI * t_c) / m_sec
-        t0_u = unsqueeze_param(t0_total)
-        mf_ref_u = unsqueeze_param(mf_ref)
-
-        total_phase = phi_phenomd + phi_tidal - t0_u * (mf_grid - mf_ref_u) - phi_precalc
+        # Dietrich et al. (2019), Eqs. (4), (17)-(18): add the tidal
+        # phase to the BBH phase. The supplied reference phase belongs to the
+        # baseline; the tidal contribution is not independently re-anchored.
+        total_phase = phi_phenomd + phi_tidal
 
         # -------------------------------------------------------------
         # 8c. Polarizations Projection onto -2Y_2,\pm 2

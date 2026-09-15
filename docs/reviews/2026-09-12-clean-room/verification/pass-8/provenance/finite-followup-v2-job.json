@@ -1,0 +1,34 @@
+{
+  "host": "len",
+  "cwd": "/home/xangma/simulations/torchwave-nr/2026-09-12-pilot",
+  "command": [
+    "/usr/bin/python3",
+    "-u",
+    "/home/xangma/simulations/torchwave-nr/2026-09-12-pilot/scripts/run-finite-followup-v2.py"
+  ],
+  "systemd_command": [
+    "systemd-run",
+    "--user",
+    "--unit=torchwave-nr-finite-followup-v2",
+    "--property=RuntimeMaxSec=48120",
+    "--property=TimeoutStopSec=90",
+    "--property=MemoryMax=256M",
+    "--property=CPUQuota=10%",
+    "--property=StandardOutput=append:/home/xangma/simulations/torchwave-nr/2026-09-12-pilot/logs/finite-followup-v2.log",
+    "--property=StandardError=inherit",
+    "--working-directory=/home/xangma/simulations/torchwave-nr/2026-09-12-pilot",
+    "/usr/bin/python3",
+    "-u",
+    "/home/xangma/simulations/torchwave-nr/2026-09-12-pilot/scripts/run-finite-followup-v2.py"
+  ],
+  "unit": "torchwave-nr-finite-followup-v2.service",
+  "requested_utc": "2026-09-13T00:34:30.298896+00:00",
+  "log_path": "/home/xangma/simulations/torchwave-nr/2026-09-12-pilot/logs/finite-followup-v2.log",
+  "state_path": "/home/xangma/simulations/torchwave-nr/2026-09-12-pilot/provenance/finite-followup-v2-state.json",
+  "expected_next_check": "within one minute; driver polls every 30 seconds",
+  "stop_command": "systemctl --user stop torchwave-nr-finite-followup-v2.service",
+  "plan_sha256": "7d6b9d829da56b538784497341191f9f6c8a137a535eaa87db3a00d264a21192",
+  "launcher_sha256": "52794a9b00c6d20b824ff30a43000954d5ae95aa7feffc49917459d0d12b0c61",
+  "scope": "Accepted controlled ID and prepared inputs, independent P11 comparison, and 1M binary checkpoint/restart; no longer evolution",
+  "initial_systemd_state": "MainPID=1829427\nActiveState=active\nSubState=running\n"
+}

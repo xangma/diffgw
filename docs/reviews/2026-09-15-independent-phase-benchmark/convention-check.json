@@ -1,0 +1,142 @@
+{
+  "schema": "nr33-convention-check-v1",
+  "purpose": "Single frozen near-nonspinning SXS convention check; no physical residual sign selection or LAL comparison.",
+  "protocol_sha256": "39b9fb1222aad2b54b0abac6f2d6caf089428111cdeea73b276eb2e9b8bd0774",
+  "input_manifest": {
+    "path": "/Users/xangma/repos/torchwave/docs/reviews/2026-09-15-independent-phase-benchmark/input-manifest.json",
+    "sha256": "b16c5266a8219d2fa16a7fbfe634a121e1df223e774bf71b087fab8c88d750aa",
+    "case_id": "SXS:BBH:2483/Lev5/N3"
+  },
+  "source": {
+    "sxs_id": "SXS:BBH:2483",
+    "case_id": "SXS:BBH:2483/Lev5/N3",
+    "resolution": "Lev5",
+    "extrapolation_order": 3,
+    "split": "holdout",
+    "raw_h5_path": "/tmp/torchwave-nr33-expanded/raw/SXS_BBH_2483_z5qsd-ptm37_Lev5_N3.h5",
+    "h5_group": "/Strain_N3.dir",
+    "raw_h5_sha256_expected": "2b6307a8cabe719a0d7bd549e216c1b34514d480d364c25b79b55d4df35a512a",
+    "raw_h5_sha256_actual": "2b6307a8cabe719a0d7bd549e216c1b34514d480d364c25b79b55d4df35a512a",
+    "raw_sha256_verified_before_decode": true,
+    "sidecar_path": "/tmp/torchwave-nr33-expanded/raw/SXS_BBH_2483_z5qsd-ptm37_Lev5_N3.json",
+    "sidecar_sha256_expected": "34c4b93f539ede5705f5e970d3ca246afae9496456008480c1ed86ff340f8813",
+    "sidecar_sha256_actual": "34c4b93f539ede5705f5e970d3ca246afae9496456008480c1ed86ff340f8813",
+    "metadata_path": "/tmp/torchwave-nr33-expanded/raw/SXS_BBH_2483_z5qsd-ptm37_Lev5_N3_metadata.json",
+    "metadata_sha256_expected": "9828f284ece04e4a1f8821513e9af8ef073abc35e172a63424efca8ef5489e9d",
+    "metadata_sha256_actual": "9828f284ece04e4a1f8821513e9af8ef073abc35e172a63424efca8ef5489e9d",
+    "record_id": "z5qsd-ptm37",
+    "doi": "10.26138/SXS:BBH:2483v3.0"
+  },
+  "command": {
+    "decode": "PYTHONPATH=src /tmp/torchwave-nr33-pilot/venv/bin/python <inline convention-check decode>",
+    "cwd": "/Users/xangma/repos/torchwave",
+    "decoder_python": "/tmp/torchwave-nr33-pilot/venv/bin/python",
+    "decoder_package": "sxs",
+    "decoder_version": "2026.0.3",
+    "transform_python": "/tmp/torchwave-nr33-pilot/venv/bin/python (scipy 1.18.1)",
+    "source_hashes": {
+      "scripts/prepare_nr33_calibration_v2.py": "777b4492fbd6d73d2ed6202b128be0873b00bf7d0c59d14f011a873e53869c7c",
+      "scripts/nr33_phase_data.py": "7ca26d87485ada312fee0ed9f04baa20b799b9b9652996b2ef8584ca9dc8a239"
+    }
+  },
+  "decoded": {
+    "n_samples": 20039,
+    "time_range": [
+      -107.73405437866647,
+      8206.378888387891
+    ],
+    "mode_columns": {
+      "h33": 11,
+      "h3_minus3": 5,
+      "h22": 4
+    },
+    "arrays_finite": true,
+    "h22_peak_time_decoded": 8045.0957617847525,
+    "h22_peak_time_manifest": 8045.0957617847525,
+    "h22_peak_time_abs_difference": 0.0,
+    "h22_peak_index": 18425,
+    "initial_spin_norms": [
+      4.360305912104408e-08,
+      7.526021909863503e-09
+    ],
+    "max_initial_spin_norm": 4.360305912104408e-08,
+    "mode_amplitudes": {
+      "max_abs_h33": 0.06113653333533946,
+      "max_abs_h3_minus3": 0.06113654418284581
+    },
+    "sign_identity": {
+      "formula": "h_(3,-3) = -conj(h_(3,3))",
+      "residual_formula": "h_(3,-3) + conj(h_(3,3))",
+      "high_amplitude_threshold_relative_to_max": 0.001,
+      "high_amplitude_sample_count": 19319,
+      "all_max_abs_residual": 0.0003352850522949908,
+      "all_relative_l2": 0.000483342855536345,
+      "high_max_abs_residual": 0.0003352850522949908,
+      "high_relative_l2": 0.0004833428655226792,
+      "high_max_component_relative": 0.1086350920352862,
+      "residual_finite": true,
+      "max_residual_relative_to_max_mode_amplitude": 0.0054842012460196545,
+      "high_amplitude_component_ratio_is_tail_sensitive": true,
+      "threshold_sweep_relative_to_max_amplitude": {
+        "0.001": {
+          "samples": 19319,
+          "relative_l2": 0.0004833428655226792,
+          "max_component_relative": 0.1086350920352862
+        },
+        "0.01": {
+          "samples": 19048,
+          "relative_l2": 0.00048302664701598995,
+          "max_component_relative": 0.1086350920352862
+        },
+        "0.1": {
+          "samples": 18670,
+          "relative_l2": 0.000395782567664677,
+          "max_component_relative": 0.03489989326030723
+        },
+        "0.2": {
+          "samples": 9286,
+          "relative_l2": 0.0002695609482684632,
+          "max_component_relative": 0.01637618156019448
+        }
+      }
+    }
+  },
+  "transform_check": {
+    "input_npz_path": "/tmp/torchwave-nr33-expanded/npz-replay/SXS_BBH_2483_z5qsd-ptm37_Lev5_N3.npz",
+    "input_npz_sha256_expected": "7b84fead528c9b8de1aa5261ed788d9f31a7443d971eb08f8b42b2679bfac6ad",
+    "input_npz_sha256_actual": "7b84fead528c9b8de1aa5261ed788d9f31a7443d971eb08f8b42b2679bfac6ad",
+    "npz_sha256_verified": true,
+    "fft_controls": {
+      "sample_dt": 0.1,
+      "start_taper_duration": 500.0,
+      "end_taper_duration": 20.0,
+      "pad_factor": 4,
+      "fmax": 0.3
+    },
+    "frequency_bins": 7893,
+    "frequency_range_Mf": [
+      3.800836183960471e-05,
+      0.3
+    ],
+    "frequency_finite": true,
+    "spectrum_finite": true,
+    "spectrum_raw_finite": true,
+    "fft_epoch": 1628.9704350951051,
+    "h22_peak_time": 8045.0957617847525,
+    "phase_reference": "h22_peak",
+    "epoch_correction": "exp(-2*pi*i*f*(fft_epoch-h22_peak_time))",
+    "frequency_convention": "conjugate h33; numpy FFT f>0",
+    "positive_mode_mapping": "h_(3,-3) = -conj(h33)",
+    "retained_time": [
+      1628.9704350951051,
+      8206.370435095105
+    ],
+    "source_end_minus_retained_end": 0.008453292786725797,
+    "cubic_spline_no_extrapolation_endpoint": true
+  },
+  "limitations": [
+    "One SXS case only (SXS:BBH:2483 Lev5 N3).",
+    "The measured ~4.8e-4 relative L2 sign-identity residual is recorded as a finite near-nonspinning deviation; this check does not establish catalog-wide behavior.",
+    "This is a convention and preprocessing check only; no LAL call, fit, physical residual sign choice, or benchmark admission was performed."
+  ]
+}

@@ -1,0 +1,20 @@
+{
+  "passed": true,
+  "driver_sha256": "d34d213612f1a649c5a56c99ffb7c31ada8c4002b9b289f9f98afcb600e02378",
+  "checks": [
+    "all versioned helper hashes match plan",
+    "all three simulation stages allocate 32 CPUs",
+    "binary validator requires matching 32-PE checkpoint and restart",
+    "accept unchanged prepared inputs",
+    "reject changed prepared input",
+    "reject changed launcher plan",
+    "reject plan mutation during run",
+    "accept successful completed metrics",
+    "reject interrupted 16-PE solve",
+    "reject oom",
+    "reject oom_kill",
+    "reject oom_group_kill",
+    "versioned helper syntax"
+  ],
+  "scope": "32-PE allocation contracts and inherited provenance gates; no solver executed by tests"
+}

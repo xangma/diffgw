@@ -1,0 +1,72 @@
+{
+  "startup": {
+    "pid": 68446,
+    "host": "RONI2",
+    "cwd": "/Users/xangma/repos/torchwave",
+    "hashes": {
+      "src/torchwave/approximants/eob/adaptive_driver_clean.py": "f7b8b62c36b31c35a315029ef727068a88cb4ac578a039decafce7824d7da8ef",
+      "src/torchwave/approximants/eob/numerical_attachment.py": "775aa6f40d4cfe2bffa836d7af0b58dc8521411571d5c124230890eb5de91cb1",
+      "src/torchwave/approximants/eob/published_waveform.py": "34a87406a13c44cccdbc2e57d2e797c858984f0e762c06abe28859cb7bbc449c",
+      "src/torchwave/approximants/eob/seobnrv4_hamiltonian.py": "5b1a5b877129e5235b8f92974a01ab450176e8e924d374ca0fc413334fad177f",
+      "src/torchwave/approximants/eob/seobnrv4_flux.py": "9395f930449651c6607de4aa780cfd75545d95ba67fe4b4d653e2852fef407a8",
+      "src/torchwave/approximants/eob/initial_conditions.py": "68363208874bfaf39dad5d5668e5f128553144b4db31f64f0283278ed710458f",
+      "src/torchwave/approximants/eob/nqc.py": "f023b84fc0a48e59feb6b543d234635df965e04ee9aff05672ea3ff984d0cf85",
+      "src/torchwave/approximants/eob/remnant.py": "e7690cd5df1bcde2f579954762116beb20db606dae809835b148dae73c4cb007"
+    },
+    "parameters": {
+      "mass1": 30.0,
+      "mass2": 20.0,
+      "chi1": 0.0,
+      "chi2": 0.0,
+      "f_low": 20.0,
+      "dt_geom": 0.5,
+      "atol": 1e-10,
+      "rtol": 1e-09,
+      "max_accepted_steps": 5000,
+      "max_evaluations": 100000,
+      "max_duration": 10000.0,
+      "ringdown_duration": 150.0
+    }
+  },
+  "elapsed_seconds": 24.51429962500697,
+  "native_file": "/tmp/torchwave-native-eob-adaptive-full20-dt05.npz",
+  "native_sha256": "6a757b8b3e7c704d65a2571871935e31de6c0963b3f124a6db6eb67bb9abe19d",
+  "reference_file": "/tmp/torchwave-public-eob-dt_0p5M.npz",
+  "reference_sha256": "7bf76ba9b81515bdd22377a8569bc0ee8809717baeb43d7f887b71ecdeb9d88a",
+  "hashes_after": {
+    "src/torchwave/approximants/eob/adaptive_driver_clean.py": "f7b8b62c36b31c35a315029ef727068a88cb4ac578a039decafce7824d7da8ef",
+    "src/torchwave/approximants/eob/numerical_attachment.py": "775aa6f40d4cfe2bffa836d7af0b58dc8521411571d5c124230890eb5de91cb1",
+    "src/torchwave/approximants/eob/published_waveform.py": "34a87406a13c44cccdbc2e57d2e797c858984f0e762c06abe28859cb7bbc449c",
+    "src/torchwave/approximants/eob/seobnrv4_hamiltonian.py": "5b1a5b877129e5235b8f92974a01ab450176e8e924d374ca0fc413334fad177f",
+    "src/torchwave/approximants/eob/seobnrv4_flux.py": "9395f930449651c6607de4aa780cfd75545d95ba67fe4b4d653e2852fef407a8",
+    "src/torchwave/approximants/eob/initial_conditions.py": "68363208874bfaf39dad5d5668e5f128553144b4db31f64f0283278ed710458f",
+    "src/torchwave/approximants/eob/nqc.py": "f023b84fc0a48e59feb6b543d234635df965e04ee9aff05672ea3ff984d0cf85",
+    "src/torchwave/approximants/eob/remnant.py": "e7690cd5df1bcde2f579954762116beb20db606dae809835b148dae73c4cb007"
+  },
+  "input_files_changed": false,
+  "coarse_accepted": 286,
+  "fine_accepted": 73,
+  "native_samples": 10297,
+  "reference_samples": 10773,
+  "native_peak_M": 5002.7187423706055,
+  "native_match_M": 4998.346362836525,
+  "native_last_nonzero_M": 5114.5,
+  "reference_last_nonzero_M": 5114.5,
+  "raw_full_padded_relative_l2": 0.00012295977372486192,
+  "amplitude_full_padded_relative_l2": 3.2625258011765975e-06,
+  "coarse_common_samples": 10006,
+  "coarse_state_max_abs": [
+    3.893885301842204e-05,
+    1.9746828968436603e-05,
+    1.5117114270157828e-05,
+    3.975613599216388e-06
+  ],
+  "coarse_state_relative_l2": [
+    1.1462932003307691e-07,
+    1.767149077220528e-08,
+    2.7303238792379468e-05,
+    3.782604466517471e-08
+  ],
+  "native_uniform_grid_max_abs_M": 0.0,
+  "no_fitted_shift_or_constants": true
+}

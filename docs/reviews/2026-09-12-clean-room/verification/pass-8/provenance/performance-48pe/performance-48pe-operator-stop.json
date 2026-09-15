@@ -1,0 +1,55 @@
+{
+  "recorded_utc": "2026-09-13T07:43:31.521759+00:00",
+  "reason": "User requested deferring the run and using existing tables for now",
+  "stop_command": "systemctl --user stop torchwave-nr-performance-48pe.service",
+  "host": "len",
+  "cwd": "/home/xangma/simulations/torchwave-nr/2026-09-12-pilot",
+  "container_state": {
+    "Status": "exited",
+    "Running": false,
+    "Paused": false,
+    "Restarting": false,
+    "OOMKilled": false,
+    "Dead": false,
+    "Pid": 0,
+    "ExitCode": 137,
+    "Error": "",
+    "StartedAt": "2026-09-13T06:46:48.323369529Z",
+    "FinishedAt": "2026-09-13T07:42:59.883041543Z"
+  },
+  "systemd_state": "MainPID=0\nResult=exit-code\nId=torchwave-nr-performance-48pe.service\nActiveState=failed\nSubState=failed\n\nMainPID=0\nResult=exit-code\nId=torchwave-nr-performance-48pe-segment-0000.service\nActiveState=failed\nSubState=failed\n",
+  "driver_state": {
+    "status": "stopped",
+    "completed_segments": [],
+    "started_utc": "2026-09-13T06:46:47.404775+00:00",
+    "plan_sha256": "9434584824184d4d0169cb43b8602909cc70580447ffe8a3f498751f0f0ee01b",
+    "updated_utc": "2026-09-13T07:43:01.879025+00:00",
+    "active_stage": "performance-48pe-segment-0000",
+    "active_unit": "torchwave-nr-performance-48pe-segment-0000.service",
+    "active_command": [
+      "EvolveGhBinaryBlackHole",
+      "+p48",
+      "--input-file",
+      "/campaign/performance/Lev1/Segment_0000/Inspiral.48pe.yaml"
+    ],
+    "active_cwd": "/campaign/performance/Lev1/Segment_0000",
+    "error": "Stop requested",
+    "ended_utc": "2026-09-13T07:43:01.879004+00:00"
+  },
+  "checkpoint_paths": [],
+  "latest_logged_control_system_time": 2.87836,
+  "partial_output_bytes": 257553942,
+  "retained_files": {
+    "Inspiral.yaml": 19703,
+    "Inspiral.48pe.yaml": 15426,
+    "BbhSurfaces.h5": 12093515,
+    "BbhReductions.h5": 19422419,
+    "BbhVolume0.h5": 188956326,
+    "BondiSachsCceR0200.h5": 12348851,
+    "BondiSachsCceR0300.h5": 12348851,
+    "BondiSachsCceR0400.h5": 12348851
+  },
+  "restart_requirement": "New run from saved controlled initial data; no evolution restart checkpoint exists",
+  "automatic_restart_scheduled": false,
+  "scope": "Defer 100 M evolution and own NR calibration; continue existing calibration table path"
+}

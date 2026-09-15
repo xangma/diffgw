@@ -1,0 +1,44 @@
+{
+  "inputs_sha256": {
+    "/Users/xangma/repos/torchwave/docs/reviews/2026-09-13-parity-review/verification/eob-fine-stage-replay-clean/fine-attachment-intermediates.npz": "65dcf7c08d94ab24cc2b0bae9823313181d85a0c961c2dd0f9d9cae12941296b",
+    "/tmp/torchwave-public-eob-dt_0p5M.npz": "7bf76ba9b81515bdd22377a8569bc0ee8809717baeb43d7f887b71ecdeb9d88a"
+  },
+  "metrics": {
+    "new_boundary_time": 145.34375,
+    "new_minus_old_relative_l2": 1.4393588374386468e-06,
+    "new_vs_public_relative_l2": 7.075447524951461e-05,
+    "old_boundary_time": 145.34375,
+    "old_vs_cached_attached_max_abs": 2.5276354858873154e-12,
+    "old_vs_cached_attached_relative_l2": 4.229738989722456e-12,
+    "old_vs_public_relative_l2": 6.932790580851948e-05
+  },
+  "module_sha256": {
+    "/Users/xangma/repos/torchwave/src/torchwave/approximants/eob/nqc.py": "c8683181f7cf911df1e1b85cd6999cdb03e7c594e867315359040e9eb03ca552",
+    "/Users/xangma/repos/torchwave/src/torchwave/approximants/eob/numerical_attachment.py": "b042ed739c89ac53ec1829d005b404d86f16d18dc4f4dd710bd58000de5c4a93",
+    "/Users/xangma/repos/torchwave/src/torchwave/approximants/eob/remnant.py": "e7690cd5df1bcde2f579954762116beb20db606dae809835b148dae73c4cb007",
+    "/Users/xangma/repos/torchwave/src/torchwave/approximants/kerr_qnm_table_convention.py": "c4c85d17b079306df73c74f4bb755b7f4256fbdf49fef6a85cd9810367d800f6"
+  },
+  "parameters": {
+    "cached_match_time": 145.3463628365255,
+    "chi": 0.0,
+    "geometric_to_100mpc_scale": 2.392707920793921e-20,
+    "new_match_time": 145.34636958660548,
+    "new_offset": -4.372372784000001,
+    "nu": 0.24,
+    "old_match_time": 145.3463628365255,
+    "old_offset": -4.37237953408,
+    "samples_compared": 591,
+    "sigma_imag": -0.08590518084900033,
+    "sigma_real": 0.5417606130687541
+  },
+  "provenance": "Cached clean fine trajectory replay; same state, base mode, frequency, remnant/QNM sigma, and exact mapped dt=0.5M public samples; no ODE rerun, alignment, fitting, or LAL source.",
+  "reconstruction": {
+    "cached_attached_length": 18904,
+    "old_mode_length": 18904
+  },
+  "scope": "The old reconstruction is first checked against the saved attached output over its complete array; public comparison then uses exact refinement-grid samples only.",
+  "script_sha256": {
+    "/Users/xangma/repos/torchwave/scripts/capture_eob_fine_attachment_clean.py": "ca496cb98538db54533e12e747bba839c9e3d05c9188b9c962b8a043750753cd",
+    "/Users/xangma/repos/torchwave/scripts/replay_eob_nqc_offset_precision_clean.py": "d5f76afe57aaed128d5c0c47c0ce2cb8d0c006044782e8ebec1d2545d9468633"
+  }
+}

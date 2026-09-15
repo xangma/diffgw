@@ -1,6 +1,6 @@
 """IMRPhenomP Frequency-Domain Gravitational Waveform Approximant.
 
-Strict Clean-Room Implementation based exclusively on published literature:
+Mathematical references for the inherited model and audited corrections:
 - Hannam et al. (2014), Phys. Rev. Lett. 113, 151101 (arXiv:1308.3271)
 - Schmidt et al. (2015), Phys. Rev. D 91, 024043 (arXiv:1408.1810)
 - Pratten et al. (2021), Phys. Rev. D 103, 104056 (arXiv:2004.06503), Appendix B & D
@@ -46,7 +46,7 @@ class IMRPhenomP:
     ) -> Tuple[torch.Tensor, ...]:
         """Compute NNLO Euler angle polynomial coefficients.
 
-        Equations (B1)–(B2) in Appendix B of Pratten et al. (2021), Phys. Rev. D 103, 104056 [arXiv:2004.06503].
+        Equations (G7)–(G9) in Appendix G of Pratten et al. (2021), Phys. Rev. D 103, 104056 [arXiv:2004.06503].
         """
         eta2 = eta * eta
         eta3 = eta2 * eta
@@ -140,8 +140,9 @@ class IMRPhenomP:
         e_minus1: torch.Tensor,
         e_1: torch.Tensor,
         e_log: torch.Tensor,
+        anchor_reference: bool = True,
     ) -> Tuple[torch.Tensor, torch.Tensor]:
-        """Evaluate alpha(v) - alpha(v_ref) and epsilon(v) - epsilon(v_ref)."""
+        """Evaluate NNLO primitives, optionally subtracting their reference values."""
         v_safe = torch.clamp(v if isinstance(v, torch.Tensor) else torch.tensor(v), min=1e-8)
         v_ref_safe = torch.clamp(v_ref if isinstance(v_ref, torch.Tensor) else torch.tensor(v_ref, device=v_safe.device, dtype=v_safe.dtype), min=1e-8)
 
@@ -161,7 +162,9 @@ class IMRPhenomP:
         eps = e_minus3 * v_inv3 + e_minus2 * v_inv2 + e_minus1 * v_inv + e_1 * v_safe + e_log * log_v3
         eps_ref = e_minus3 * v_ref_inv3 + e_minus2 * v_ref_inv2 + e_minus1 * v_ref_inv + e_1 * v_ref_safe + e_log * log_vref3
 
-        return alpha - alpha_ref, eps - eps_ref
+        if anchor_reference:
+            return alpha - alpha_ref, eps - eps_ref
+        return alpha, eps
 
     @staticmethod
     def orbital_angular_momentum(v: torch.Tensor, eta: torch.Tensor) -> torch.Tensor:
@@ -171,6 +174,36 @@ class IMRPhenomP:
         l1 = 1.5 + eta / 6.0
         l2 = (27.0 / 8.0) - (19.0 * eta / 8.0) + (eta * eta / 24.0)
         return (eta / v_safe) * (1.0 + l1 * x + l2 * (x * x))
+
+    @staticmethod
+    def pv2_opening_angle(
+        orbital_angular_momentum: torch.Tensor,
+        chip: torch.Tensor,
+        m1_norm: torch.Tensor,
+        spin_parallel: torch.Tensor,
+    ) -> torch.Tensor:
+        """Compute the Pv2 cone angle from the published physical spins.
+
+        Pratten et al. (2021), Eqs. (4.3)--(4.4), use
+        ``S_perp = m1**2 * chi_p`` and ``beta = atan2(S_perp, L+S_parallel)``.
+        ``A1`` belongs only to the definition of ``chi_p``.
+        """
+        s_perp = chip * m1_norm.square()
+        return torch.atan2(s_perp, orbital_angular_momentum + spin_parallel)
+
+    @staticmethod
+    def _safe_in_plane_norm(x: torch.Tensor, y: torch.Tensor) -> torch.Tensor:
+        """Return the exact Euclidean norm with a finite derivative at zero.
+
+        The direction of a zero in-plane spin is undefined, but its magnitude
+        is exactly zero.  Selecting a nonzero square-root branch at the origin
+        avoids the ``0/0`` derivative of ``sqrt(x*x + y*y)`` without adding a
+        physical floor to the cone angle.
+        """
+        r2 = x * x + y * y
+        nonzero = r2 > 0
+        r2_safe = torch.where(nonzero, r2, torch.ones_like(r2))
+        return torch.where(nonzero, torch.sqrt(r2_safe), torch.zeros_like(r2))
 
     def __call__(
         self,
@@ -205,7 +238,7 @@ class IMRPhenomP:
             phic: Coalescence phase in radians (default 0.0)
             tc: Coalescence time in seconds (default 0.0)
             f_ref: Reference frequency in Hz (default 20.0)
-            precession_version: Precession model ('v2' for NLO angles or 'xp' for NNLO angles)
+            precession_version: Legacy label; this implementation uses NNLO angles and 2PN L
             phasing_convention: Phasing convention ('coalescence' or 'reference_frequency')
             reference_frame: Alias for phasing_convention
 
@@ -230,6 +263,19 @@ class IMRPhenomP:
         t_c = as_tensor(tc, device=device, dtype=dtype)
         fref = as_tensor(f_ref, device=device, dtype=dtype)
 
+        # NNLO coefficients and chi_p identify body 1 as the heavier body.
+        # Broadcast scalar masses with vector spin/extrinsic inputs first.
+        (m1, m2, s1x, s1y, s1z, s2x, s2y, s2z,
+         dist, inc, phi_c, t_c, fref) = torch.broadcast_tensors(
+            m1, m2, s1x, s1y, s1z, s2x, s2y, s2z,
+            dist, inc, phi_c, t_c, fref,
+        )
+        swap = m1 < m2
+        m1, m2 = torch.where(swap, m2, m1), torch.where(swap, m1, m2)
+        s1x, s2x = torch.where(swap, s2x, s1x), torch.where(swap, s1x, s2x)
+        s1y, s2y = torch.where(swap, s2y, s1y), torch.where(swap, s1y, s2y)
+        s1z, s2z = torch.where(swap, s2z, s1z), torch.where(swap, s1z, s2z)
+
         total_mass = m1 + m2
         m_sec = total_mass * MSUN_SEC
         eta = component_masses_to_eta(m1, m2)
@@ -243,18 +289,26 @@ class IMRPhenomP:
         a2_coeff = 2.0 + 1.5 * q
 
         # Effective precession parameter chi_p (Schmidt et al. 2015, Pratten et al. 2021)
-        s1_perp = (m1 * m1) * torch.sqrt(torch.clamp(s1x * s1x + s1y * s1y, min=1e-20))
-        s2_perp = (m2 * m2) * torch.sqrt(torch.clamp(s2x * s2x + s2y * s2y, min=1e-20))
+        # The published definition uses the Euclidean in-plane norms.  Keep
+        # the exact zero so the aligned-spin limit is an exact zero-cone case.
+        s1_perp = (m1 * m1) * self._safe_in_plane_norm(s1x, s1y)
+        s2_perp = (m2 * m2) * self._safe_in_plane_norm(s2x, s2y)
         s_p = torch.maximum(a1_coeff * s1_perp, a2_coeff * s2_perp)
         chip = s_p / (a1_coeff * m1 * m1)
 
         # In-plane spin initial orientation angle at f_ref: alpha(f_ref) = phi_s1
         s1_perp_sq = s1x * s1x + s1y * s1y
-        phi_s1 = torch.where(
-            s1_perp_sq > 1e-12,
-            torch.atan2(s1y, s1x),
-            torch.atan2(s2y, s2x),
+        s1_has_direction = s1_perp_sq > 1e-12
+        s2_has_direction = s2x * s2x + s2y * s2y > 1e-12
+        phi_s1_primary = torch.atan2(
+            torch.where(s1_has_direction, s1y, torch.zeros_like(s1y)),
+            torch.where(s1_has_direction, s1x, torch.ones_like(s1x)),
         )
+        phi_s1_secondary = torch.atan2(
+            torch.where(s2_has_direction, s2y, torch.zeros_like(s2y)),
+            torch.where(s2_has_direction, s2x, torch.ones_like(s2x)),
+        )
+        phi_s1 = torch.where(s1_has_direction, phi_s1_primary, phi_s1_secondary)
 
         # Aligned spin components in coprecessing frame
         chi_l = m1_norm * s1z + m2_norm * s2z
@@ -296,7 +350,6 @@ class IMRPhenomP:
         chil_u = unsqueeze_param(chi_l)
         s1z_u = unsqueeze_param(s1z)
         s2z_u = unsqueeze_param(s2z)
-        a1_u = unsqueeze_param(a1_coeff)
         inc_u = unsqueeze_param(inc)
         fref_u = unsqueeze_param(fref)
         phi_s1_u = unsqueeze_param(phi_s1)
@@ -327,16 +380,17 @@ class IMRPhenomP:
 
         # Orbital angular momentum L(v) & opening angle beta(v)
         ang_l = IMRPhenomP.orbital_angular_momentum(v, eta_u)
-        sp_geom = chip_u * a1_u * (m1n_u * m1n_u)
+        # Pratten et al. (2021), Eqs. (4.3)--(4.4), define the physical
+        # in-plane spin entering beta as S_perp = m1^2 * chi_p.  A1 is
+        # already present in the definition of chi_p above and must not be
+        # multiplied into this physical spin a second time.
+        sp_geom = chip_u * (m1n_u * m1n_u)
         sl_geom = (m1n_u * m1n_u) * s1z_u + (m2n_u * m2n_u) * s2z_u
 
         l_plus_sl = ang_l + sl_geom
-        cos_beta = torch.clamp(
-            l_plus_sl / torch.sqrt(l_plus_sl * l_plus_sl + sp_geom * sp_geom + 1e-24),
-            -1.0 + 1e-12,
-            1.0 - 1e-12,
-        )
-        beta = torch.arccos(cos_beta)
+        # This is the same signed angle as Eq. (4.4), while preserving the
+        # exact zero-cone limit and the anti-aligned geometric branch.
+        beta = IMRPhenomP.pv2_opening_angle(ang_l, chip_u, m1n_u, sl_geom)
 
         # Wigner d^2 matrix elements d^2_{m, m'}(beta)
         cb = torch.cos(0.5 * beta)

@@ -1,0 +1,99 @@
+{
+  "analytic_caches": {
+    "1.4+1.4": {
+      "path": "/Users/xangma/repos/torchwave/docs/reviews/2026-09-13-parity-review/verification/teob-conditioned-waveform-clean/catalog-output.npz",
+      "read_only": true,
+      "sha256": "70af9febc682f55dc285933eb63086d576ef25959e30aa78dafb44553393e07d"
+    },
+    "30+20": {
+      "path": "/Users/xangma/repos/torchwave/docs/reviews/2026-09-13-parity-review/verification/teob-conditioned-waveform-clean/native-output.npz",
+      "read_only": true,
+      "sha256": "a7cc79b050778a1869fa2861719e8e80bda44c38f66e4a83206b9d28a7169ead"
+    }
+  },
+  "cases": {},
+  "elapsed_seconds": 29.931369416997768,
+  "error": {
+    "message": "'numpy.ndarray' object has no attribute 'square'",
+    "type": "AttributeError"
+  },
+  "method": "clean conditioned_teob_fd with exact policies and frozen public SimInspiralFD cache",
+  "policies": {
+    "analytic_baseline": "frozen native cache generated with canonical analytic initializer",
+    "continuation": {
+      "atol": 1e-13,
+      "continuation_duration": 2.0,
+      "fixed_step_cap": 0.1,
+      "max_accepted_steps": 2000,
+      "max_duration": 6000.0,
+      "max_evaluations": 30000,
+      "max_rejected_steps": 10000,
+      "rtol": 1e-11
+    },
+    "horizon": "leading-order",
+    "nqc_targets": "published-2017",
+    "pa": {
+      "dr": 0.1,
+      "pa_order": 8,
+      "r_min": 14.0
+    },
+    "pa_initializer": "quadratic-value",
+    "radial_acceleration": "frozen-mobility",
+    "remnant": "uib2016"
+  },
+  "public_cache": {
+    "method": "SimInspiralFD",
+    "path": "/Users/xangma/repos/torchwave/docs/reviews/2026-09-13-parity-review/verification/teob-conditioned-waveform-clean/public-fd-sim-inspiral-output.npz",
+    "read_only": true,
+    "report_path": "/Users/xangma/repos/torchwave/docs/reviews/2026-09-13-parity-review/verification/teob-conditioned-waveform-clean/public-fd-sim-inspiral-report.json",
+    "report_sha256": "658674e0df561ee20d3e94a2adaa1ce0f40df66cefbcf7470b31e650866df03b",
+    "sha256": "084e58b5332549b73fdaeb3ffb63df04d573a8082b83db7230d25642d0780fb8"
+  },
+  "run_control": {
+    "command": "/Users/xangma/miniconda3/envs/pycbcorig313/bin/python scripts/diagnose_teob_pa_initializer_fd_clean.py --help",
+    "cwd": "/Users/xangma/repos/torchwave",
+    "expected_next_check": "inspect diagnostic.json and quadratic-*output.npz after process exit",
+    "host": "RONI2",
+    "log_path": "/Users/xangma/repos/torchwave/docs/reviews/2026-09-13-parity-review/verification/teob-pa-initializer-fd-clean/diagnostic.log",
+    "pid": 76861,
+    "platform": "macOS-26.6-arm64-arm-64bit-Mach-O",
+    "python": "/Users/xangma/miniconda3/envs/pycbcorig313/bin/python",
+    "started_unix": 1789403517.401494,
+    "stop_command": "kill 76861"
+  },
+  "scope": "value-only PA initializer attribution; no full trajectory validation",
+  "source_hashes_unchanged": true,
+  "source_sha256_after": {
+    "adapter": "cd8541196e8de643524a9d94d535ef600c47e406ae4eed838cb919bec336808a",
+    "adaptive_continuation": "7b8722ecc28af74eeb2fe29d2e7c1782123106d63fbeba60c82ca81f6b70b869",
+    "adaptive_driver": "27db5a25123f4d054a9919a11752b207cfc6accc377a8eeaf21f4b49087867e0",
+    "conditioning": "9e6f87ae24879188d7d6e63a020ff3bb2034d3d38426de59d07c6ae22b0167a6",
+    "nqc": "f705514ef981b3f0a557efeebe508b52fdb70c634a8ac8f2c357f30761871068",
+    "postadiabatic": "9e77d2cbc9be415378010c737960dcb23f67222ad54880ca355ff50d43dafc7e",
+    "postmerger": "7324ff72dc1fd36149f137b9f8eafa68f354fd897ff5d56478ce5a6cf2f8c5f6",
+    "projection": "c8ca45a490842f291e30616a52850f148397a8aad3e49c764c9a45c1bff99ec6",
+    "radiation": "dca2c9791403467d85572f25a062cbc995d8228743d33b6b2e5dc28c13336bd6",
+    "remnant_hybrid": "ff65443236f379b3d1f4aebec5482833c43edd36b90418955ee3bfcea67f3dd2",
+    "remnant_uib": "9ea727ec726f82c62c2ad6e399ee084e02daf275c145a3503e0666271010e755",
+    "ringdown": "df3d21ce4fad55a84d0e1550ac376b8931eecbc0b4076dc9f6235b076ed0befa",
+    "script": "8c402658e0e66171fd5bd0d9dfbbdcc2b7ad46da40c088ac5fe80f34b96eea0f",
+    "state_mode": "b247c91659b18341301356eca2def7cde270b0aaa7a9e16c85f8ba40f1861552"
+  },
+  "source_sha256_before": {
+    "adapter": "cd8541196e8de643524a9d94d535ef600c47e406ae4eed838cb919bec336808a",
+    "adaptive_continuation": "7b8722ecc28af74eeb2fe29d2e7c1782123106d63fbeba60c82ca81f6b70b869",
+    "adaptive_driver": "27db5a25123f4d054a9919a11752b207cfc6accc377a8eeaf21f4b49087867e0",
+    "conditioning": "9e6f87ae24879188d7d6e63a020ff3bb2034d3d38426de59d07c6ae22b0167a6",
+    "nqc": "f705514ef981b3f0a557efeebe508b52fdb70c634a8ac8f2c357f30761871068",
+    "postadiabatic": "9e77d2cbc9be415378010c737960dcb23f67222ad54880ca355ff50d43dafc7e",
+    "postmerger": "7324ff72dc1fd36149f137b9f8eafa68f354fd897ff5d56478ce5a6cf2f8c5f6",
+    "projection": "c8ca45a490842f291e30616a52850f148397a8aad3e49c764c9a45c1bff99ec6",
+    "radiation": "dca2c9791403467d85572f25a062cbc995d8228743d33b6b2e5dc28c13336bd6",
+    "remnant_hybrid": "ff65443236f379b3d1f4aebec5482833c43edd36b90418955ee3bfcea67f3dd2",
+    "remnant_uib": "9ea727ec726f82c62c2ad6e399ee084e02daf275c145a3503e0666271010e755",
+    "ringdown": "df3d21ce4fad55a84d0e1550ac376b8931eecbc0b4076dc9f6235b076ed0befa",
+    "script": "8c402658e0e66171fd5bd0d9dfbbdcc2b7ad46da40c088ac5fe80f34b96eea0f",
+    "state_mode": "b247c91659b18341301356eca2def7cde270b0aaa7a9e16c85f8ba40f1861552"
+  },
+  "status": "failed"
+}

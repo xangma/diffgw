@@ -1,0 +1,26 @@
+{
+  "scope": "Six public scalar support controls; not whole-waveform parity",
+  "command": "PYTHONPATH=src:tests:scripts:. /Users/xangma/miniconda3/envs/pycbcorig313/bin/python scripts/diagnose_td_fd_support_precision_clean.py",
+  "platform": "macOS-26.6-arm64-arm-64bit-Mach-O",
+  "python": "3.13.9",
+  "torch": "2.9.1",
+  "lal": "7.7.0",
+  "lalsimulation": "6.2.0",
+  "source_sha256": {
+    "scripts/diagnose_td_fd_support_precision_clean.py": "5f5a6ad69a716162a7feafa701cd7eda0618f8d7c3f145dc9ede9d76a7f3f33b",
+    "src/torchwave/approximants/eob/td_fd_conditioning_clean.py": "d8a9ad936a0e6fb8e0c59a35428a7e2c70e372dca0b8d87f6d890d38dcd30a8a",
+    "src/torchwave/constants.py": "1ae479e07b44a19d23b9a9eaed4b8b8b8bf38b4293717a91d321b59f2d1ac4e3",
+    "tests/test_td_fd_support_precision_contract.py": "1ddbaab31a933ba31b115017800e1b2307b65c57365ad92426e0bdca0c372ae7",
+    "docs/reviews/2026-09-13-parity-review/td-fd-conditioning-contract.md": "2fcdbd7a825e7f539e80a769a63a66f37b5b477b697878056ccb8e1bb98141b8"
+  },
+  "report_sha256": "d7109947a5b0757af41a0b812665db02c3fa78c8f221e5bd389f3d3d9f53aacd",
+  "root_reproduced": true,
+  "start_frequency_clean_minus_public_ulp": [
+    0,
+    3,
+    2,
+    0,
+    0,
+    -1
+  ]
+}

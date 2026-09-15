@@ -1,0 +1,25 @@
+PID 29349
+XLAL Error - XLALSimIMRSpinAlignedEOBModes: Ringdown frequency > Nyquist frequency!
+At present this situation is not supported.
+XLAL Error - XLALSimIMRSpinAlignedEOBModes (LALSimIMRSpinAlignedEOB.c:1285): Input domain error
+XLAL Error - XLALSimIMRSpinAlignedEOBWaveformAll (LALSimIMRSpinAlignedEOB.c:3912): Internal function call failed: Input domain error
+XLAL Error - XLALSimIMRSpinAlignedEOBWaveform (LALSimIMRSpinAlignedEOB.c:783): Internal function call failed: Input domain error
+XLAL Error - XLALSimInspiralChooseTDWaveform_legacy (LALSimInspiralGeneratorLegacy.c:1281): Internal function call failed: Input domain error
+XLAL Error - generate_conditioned_td_waveform_from_td (LALSimInspiralGeneratorConditioning.c:136): Internal function call failed: Input domain error
+XLAL Error - generate_conditioned_fd_waveform_from_td (LALSimInspiralGeneratorConditioning.c:554): Internal function call failed: Input domain error
+{"model": "SEOBNRv4", "status": "failed", "error": "Internal function call failed: Input domain error", "seconds": 0.0018429999981890433}
+XLAL Error - SEOBNRv4ROM_Init_LALDATA (LALSimIMRSEOBNRv4ROM.c:1667): Unable to resolve data file 'SEOBNRv4ROM_v3.0.hdf5' in $LAL_DATA_PATH.
+Note: LALSuite versions >= 7.25 require data files that are publicly available at:
+https://git.ligo.org/waveforms/software/lalsuite-waveform-data
+and on Zenodo at: https://zenodo.org/records/14999310.
+For earlier LALSuite versions, use the files in lalsuite-extra, available at:
+https://git.ligo.org/lscsoft/lalsuite-extra
+
+XLAL Error - SEOBNRv4ROM_Init_LALDATA (LALSimIMRSEOBNRv4ROM.c:1667): I/O error
+XLAL Error - SEOBNRv4ROMCore (LALSimIMRSEOBNRv4ROM.c:769): Error setting up SEOBNRv4ROM data - check your $LAL_DATA_PATH
+
+XLAL Error - SEOBNRv4ROMCore (LALSimIMRSEOBNRv4ROM.c:769): Generic failure
+XLAL Error - XLALSimInspiralChooseFDWaveform_legacy (LALSimInspiralGeneratorLegacy.c:2786): Internal function call failed: Generic failure
+XLAL Error - generate_conditioned_fd_waveform_from_fd (LALSimInspiralGeneratorConditioning.c:446): Internal function call failed: Generic failure
+{"model": "SEOBNRv4_ROM", "status": "failed", "error": "Internal function call failed: Generic failure", "seconds": 0.001549250002426561}
+{"model": "TEOBResumS", "status": "generated", "n": 1025, "deltaF": 0.5, "f0": 0.0, "epoch": "-1.997236563", "seconds": 0.03376145900256233}

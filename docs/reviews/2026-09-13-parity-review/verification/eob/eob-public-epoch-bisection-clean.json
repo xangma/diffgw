@@ -1,0 +1,3073 @@
+{
+  "provenance": "Bounded clean-room comparison of endpoint-product bisection hypotheses against eight previously saved public SEOBNRv4 output rows. The public API output is consumed only as copied arrays and epoch metadata; clean SEOBNRv4 Hamiltonian/flux code evaluates omega. No LAL source or private waveform implementation is inspected.",
+  "primary_reference": "Boh\u00e9 et al., Improved effective-one-body model for coalescing nonprecessing binary black holes, arXiv:1611.03703 (equation context).",
+  "public_output_inputs": {
+    "labels": [
+      "dt_0p90M",
+      "dt_0p95M",
+      "dt_0p99M",
+      "dt_1p00M",
+      "dt_1p01M",
+      "dt_1p05M",
+      "dt_1p10M",
+      "dt_1_4096s_exact"
+    ],
+    "source_report": "docs/reviews/2026-09-13-parity-review/verification/eob/eob-public-epoch-sampling-clean.json",
+    "source_report_sha256": "42389c8f83f9aaf9523b14c6fedece474c0c0c28150d52c3d8fd70f7b55673fb",
+    "all_inputs_external_to_repository": true
+  },
+  "public_parameters": {
+    "api": "lalsimulation.SimIMRSpinAlignedEOBModes (source rows already saved)",
+    "approximant": "SEOBNRv4 version 4",
+    "m1_msun": 30.0,
+    "m2_msun": 20.0,
+    "chi1": 0.0,
+    "chi2": 0.0,
+    "fstart_hz": 20.0,
+    "distance_mpc": 100.0,
+    "mode": [
+      2,
+      2
+    ]
+  },
+  "clean_parameters": {
+    "hamiltonian": "SEOBNRv4Hamiltonian",
+    "flux": "SEOBNRv4PublishedFlux.from_hamiltonian",
+    "event": "orbital_frequency_peak degree-six local event detector",
+    "derivative_cross_checks": [
+      3,
+      6
+    ],
+    "coordinate": "initial-origin total-mass M"
+  },
+  "endpoint_semantics": {
+    "left": "clean omega argmax sample on returned postpeak_state[0]",
+    "right": "immediately following returned postpeak_state[0] sample",
+    "source": "observable returned samples only; no public implementation source inspection",
+    "derivative": "clean local polynomial derivative on fixed contiguous stencil"
+  },
+  "bisection_algorithm": {
+    "interval": "[left_sample, right_next_sample]",
+    "update_rule": "At each midpoint, if f(left)*f(mid)>0 move left=mid; if f(left)*f(mid)<0 move right=mid; return the interval midpoint. A zero midpoint collapses the interval.",
+    "fixed_iterations": [
+      8,
+      10,
+      12,
+      14
+    ],
+    "tolerance_M": 1e-05,
+    "tolerance_max_iterations": 64,
+    "candidate_status": "A sign-changing endpoint pair is a valid derivative bracket. Same-sign endpoint candidates are retained as nonbracketing algorithm outputs and are not labeled roots.",
+    "no_residual_or_offset_selection": true
+  },
+  "gps_quantization": {
+    "assumed_quantum_s": 1e-09,
+    "assumed_quantum_M": 4.0605089345616726e-06,
+    "interval_definition": "observed epoch +/- 0.5 ns, converted to -epoch initial-origin M coordinate",
+    "not_exact_claim": true
+  },
+  "libraries": {
+    "python": "3.13.9",
+    "numpy": "2.3.5",
+    "torch": "2.9.1",
+    "lal": "7.7.0",
+    "lalsimulation": "6.2.0"
+  },
+  "python_executable": "/Users/xangma/miniconda3/envs/pycbcorig313/bin/python",
+  "host": "RONI2",
+  "dependency_sha256": {
+    "scripts/diagnose_eob_public_epoch_bisection_clean.py": "cd317f2b630a95f9d38c380fa1fe1171890993ac204935104d9bc6dce7e1ccaa",
+    "scripts/diagnose_eob_public_epoch_sampling_clean.py": "c438b27f0d6e824ad71ff73ddc5e82b562b06c9c24b3f43d51c614d1271f2e50",
+    "scripts/diagnose_eob_public_phase_peak_clean.py": "f33f9a3b8bdd04a143b475bb68d081f275b7efd05d52700b36bd68b83ca79916",
+    "src/torchwave/constants.py": "1ae479e07b44a19d23b9a9eaed4b8b8b8bf38b4293717a91d321b59f2d1ac4e3",
+    "src/torchwave/approximants/eob/events.py": "c1ae1182e4c2f9cf5f8a2857ea5d73802dbbb68b59739709849f973503bdfd5d",
+    "src/torchwave/approximants/eob/hamiltonian.py": "d26a87ded2a197a000704b77b075cdc72ee2315741bdacc29fb25f912158a441",
+    "src/torchwave/approximants/eob/integrator.py": "a036f6b7580450a847bc1d56ebf745de6cdb5c2ee397d31cf1014d483eebe26b",
+    "src/torchwave/approximants/eob/radiation_reaction.py": "dfb8853fc929145c3d61b7af49c16426560a12dc14ba9e664659af4a4449834d",
+    "src/torchwave/approximants/eob/seobnrv4_flux.py": "50af1727e28828969d84cac5e984189c529e205ad9fb96d22c11037103aca3ec",
+    "src/torchwave/approximants/eob/seobnrv4_hamiltonian.py": "5b1a5b877129e5235b8f92974a01ab450176e8e924d374ca0fc413334fad177f"
+  },
+  "results": {
+    "dt_0p90M": {
+      "status": "ok",
+      "input_path": "/tmp/torchwave-public-eob-epoch-sweep-dt_0p90M.npz",
+      "input_sha256": "512415c2706d6ea2a43e0cf627e023f384dc70f7522c3e921122fd6cb083c37c",
+      "requested_dt_M": 0.9,
+      "returned_dt_s": 0.000221647092643857,
+      "returned_dt_M": 0.9,
+      "postpeak_sample_count": 10729,
+      "postpeak_spacing_M": 0.014062500000363798,
+      "sample_maximum": {
+        "index": 10660,
+        "time_M_initial_origin": 5002.70625,
+        "omega": 0.16441505362342218,
+        "next_time_M_initial_origin": 5002.720312500001,
+        "next_minus_sample_M": 0.014062500000363798,
+        "next_minus_dt_over_2048_prediction_M": 5002.720305633546,
+        "prediction_minus_minus_epoch_M": -2.0725292415590957e-07,
+        "prediction_minus_minus_epoch_ns": -0.051041120090105724
+      },
+      "clean_event": {
+        "time_M_initial_origin": 5002.701674913569,
+        "frequency": 0.16441509595703474,
+        "curvature": -0.004039458502436689,
+        "sample_index": 10660,
+        "sample_time_M_initial_origin": 5002.70625,
+        "sample_omega": 0.16441505362342218
+      },
+      "clean_event_side_of_sample_max": "before",
+      "public_epoch": {
+        "epoch_s": -1.232042679,
+        "epoch_M": -5002.720305840799,
+        "minus_epoch_M": 5002.720305840799,
+        "minus_epoch_minus_sample_M": 0.014055840798391728,
+        "minus_epoch_minus_clean_event_M": 0.018630927229423833,
+        "gps_quantization": {
+          "quantum_s": 1e-09,
+          "quantum_M": 4.0605089345616726e-06,
+          "half_width_s": 5e-10,
+          "half_width_M": 2.0302544672808363e-06,
+          "observed_epoch_s": -1.232042679,
+          "nearest_integer_epoch_ns": -1232042679,
+          "observed_minus_nearest_epoch_ns": 0.0,
+          "nearest_ns_interval_epoch_s": [
+            -1.2320426795000001,
+            -1.2320426785
+          ],
+          "nearest_ns_interval_minus_epoch_coordinate_M": [
+            5002.7203038105445,
+            5002.720307871053
+          ],
+          "interpretation": "The interval is the nearest-GPS-nanosecond quantization interval used for a numerical comparison; it does not establish the producer's internal timestamp representation."
+        }
+      },
+      "bisection_hypotheses": {
+        "3": {
+          "fixed_iterations": {
+            "8": {
+              "degree": 3,
+              "derivative_method": "fixed_local_degree_3_polynomial",
+              "requested_iterations": 8,
+              "requested_tolerance_M": null,
+              "updates_performed": 8,
+              "stopped_by_tolerance": false,
+              "exact_zero_encountered": false,
+              "candidate_time_M_initial_origin": 5002.72028503418,
+              "final_interval_M_initial_origin": [
+                5002.7202575683605,
+                5002.720312500001
+              ],
+              "final_interval_width_M": 5.493164007930318e-05,
+              "final_left_derivative_domega_dt_M2": -7.569241202133305e-05,
+              "final_right_derivative_domega_dt_M2": -7.59180352789352e-05,
+              "initial_endpoint": {
+                "left_time_M_initial_origin": 5002.70625,
+                "right_time_M_initial_origin": 5002.720312500001,
+                "interval_width_M": 0.014062500000363798,
+                "left_derivative_domega_dt_M2": -1.851815041917332e-05,
+                "right_derivative_domega_dt_M2": -7.59180352789352e-05,
+                "derivative_product": 1.4058615968234288e-09,
+                "bracket_status": "nonbracketing_same_sign_negative",
+                "valid_sign_bracket": false
+              },
+              "candidate_minus_minus_epoch_M": -2.080661852232879e-05,
+              "candidate_minus_minus_epoch_ns": -5.124140559137778,
+              "candidate_within_gps_half_interval": false
+            },
+            "10": {
+              "degree": 3,
+              "derivative_method": "fixed_local_degree_3_polynomial",
+              "requested_iterations": 10,
+              "requested_tolerance_M": null,
+              "updates_performed": 10,
+              "stopped_by_tolerance": false,
+              "exact_zero_encountered": false,
+              "candidate_time_M_initial_origin": 5002.720305633546,
+              "final_interval_M_initial_origin": [
+                5002.72029876709,
+                5002.720312500001
+              ],
+              "final_interval_width_M": 1.3732910701946821e-05,
+              "final_left_derivative_domega_dt_M2": -7.58616284286744e-05,
+              "final_right_derivative_domega_dt_M2": -7.59180352789352e-05,
+              "initial_endpoint": {
+                "left_time_M_initial_origin": 5002.70625,
+                "right_time_M_initial_origin": 5002.720312500001,
+                "interval_width_M": 0.014062500000363798,
+                "left_derivative_domega_dt_M2": -1.851815041917332e-05,
+                "right_derivative_domega_dt_M2": -7.59180352789352e-05,
+                "derivative_product": 1.4058615968234288e-09,
+                "bracket_status": "nonbracketing_same_sign_negative",
+                "valid_sign_bracket": false
+              },
+              "candidate_minus_minus_epoch_M": -2.0725292415590957e-07,
+              "candidate_minus_minus_epoch_ns": -0.051041120090105724,
+              "candidate_within_gps_half_interval": true
+            },
+            "12": {
+              "degree": 3,
+              "derivative_method": "fixed_local_degree_3_polynomial",
+              "requested_iterations": 12,
+              "requested_tolerance_M": null,
+              "updates_performed": 12,
+              "stopped_by_tolerance": false,
+              "exact_zero_encountered": false,
+              "candidate_time_M_initial_origin": 5002.720310783387,
+              "final_interval_M_initial_origin": [
+                5002.720309066774,
+                5002.720312500001
+              ],
+              "final_interval_width_M": 3.433226993365679e-06,
+              "final_left_derivative_domega_dt_M2": -7.59039335046056e-05,
+              "final_right_derivative_domega_dt_M2": -7.59180352789352e-05,
+              "initial_endpoint": {
+                "left_time_M_initial_origin": 5002.70625,
+                "right_time_M_initial_origin": 5002.720312500001,
+                "interval_width_M": 0.014062500000363798,
+                "left_derivative_domega_dt_M2": -1.851815041917332e-05,
+                "right_derivative_domega_dt_M2": -7.59180352789352e-05,
+                "derivative_product": 1.4058615968234288e-09,
+                "bracket_status": "nonbracketing_same_sign_negative",
+                "valid_sign_bracket": false
+              },
+              "candidate_minus_minus_epoch_M": 4.94258802063996e-06,
+              "candidate_minus_minus_epoch_ns": 1.2172336276791142,
+              "candidate_within_gps_half_interval": false
+            },
+            "14": {
+              "degree": 3,
+              "derivative_method": "fixed_local_degree_3_polynomial",
+              "requested_iterations": 14,
+              "requested_tolerance_M": null,
+              "updates_performed": 14,
+              "stopped_by_tolerance": false,
+              "exact_zero_encountered": false,
+              "candidate_time_M_initial_origin": 5002.720312070847,
+              "final_interval_M_initial_origin": [
+                5002.720311641693,
+                5002.720312500001
+              ],
+              "final_interval_width_M": 8.583074304624461e-07,
+              "final_left_derivative_domega_dt_M2": -7.591450982851565e-05,
+              "final_right_derivative_domega_dt_M2": -7.59180352789352e-05,
+              "initial_endpoint": {
+                "left_time_M_initial_origin": 5002.70625,
+                "right_time_M_initial_origin": 5002.720312500001,
+                "interval_width_M": 0.014062500000363798,
+                "left_derivative_domega_dt_M2": -1.851815041917332e-05,
+                "right_derivative_domega_dt_M2": -7.59180352789352e-05,
+                "derivative_product": 1.4058615968234288e-09,
+                "bracket_status": "nonbracketing_same_sign_negative",
+                "valid_sign_bracket": false
+              },
+              "candidate_minus_minus_epoch_M": 6.230048711586278e-06,
+              "candidate_minus_minus_epoch_ns": 1.5343024266141172,
+              "candidate_within_gps_half_interval": false
+            }
+          },
+          "tolerance": {
+            "1e-5M": {
+              "degree": 3,
+              "derivative_method": "fixed_local_degree_3_polynomial",
+              "requested_iterations": null,
+              "requested_tolerance_M": 1e-05,
+              "updates_performed": 11,
+              "stopped_by_tolerance": true,
+              "exact_zero_encountered": false,
+              "candidate_time_M_initial_origin": 5002.720309066774,
+              "final_interval_M_initial_origin": [
+                5002.720305633546,
+                5002.720312500001
+              ],
+              "final_interval_width_M": 6.86645489622606e-06,
+              "final_left_derivative_domega_dt_M2": -7.588983176958442e-05,
+              "final_right_derivative_domega_dt_M2": -7.59180352789352e-05,
+              "initial_endpoint": {
+                "left_time_M_initial_origin": 5002.70625,
+                "right_time_M_initial_origin": 5002.720312500001,
+                "interval_width_M": 0.014062500000363798,
+                "left_derivative_domega_dt_M2": -1.851815041917332e-05,
+                "right_derivative_domega_dt_M2": -7.59180352789352e-05,
+                "derivative_product": 1.4058615968234288e-09,
+                "bracket_status": "nonbracketing_same_sign_negative",
+                "valid_sign_bracket": false
+              },
+              "candidate_minus_minus_epoch_M": 3.225974978704471e-06,
+              "candidate_minus_minus_epoch_ns": 0.794475527746305,
+              "candidate_within_gps_half_interval": false
+            }
+          }
+        },
+        "6": {
+          "fixed_iterations": {
+            "8": {
+              "degree": 6,
+              "derivative_method": "fixed_local_degree_6_polynomial",
+              "requested_iterations": 8,
+              "requested_tolerance_M": null,
+              "updates_performed": 8,
+              "stopped_by_tolerance": false,
+              "exact_zero_encountered": false,
+              "candidate_time_M_initial_origin": 5002.72028503418,
+              "final_interval_M_initial_origin": [
+                5002.7202575683605,
+                5002.720312500001
+              ],
+              "final_interval_width_M": 5.493164007930318e-05,
+              "final_left_derivative_domega_dt_M2": -7.569176683921191e-05,
+              "final_right_derivative_domega_dt_M2": -7.591738752517087e-05,
+              "initial_endpoint": {
+                "left_time_M_initial_origin": 5002.70625,
+                "right_time_M_initial_origin": 5002.720312500001,
+                "interval_width_M": 0.014062500000363798,
+                "left_derivative_domega_dt_M2": -1.8518796669157874e-05,
+                "right_derivative_domega_dt_M2": -7.591738752517087e-05,
+                "derivative_product": 1.4058986632323018e-09,
+                "bracket_status": "nonbracketing_same_sign_negative",
+                "valid_sign_bracket": false
+              },
+              "candidate_minus_minus_epoch_M": -2.080661852232879e-05,
+              "candidate_minus_minus_epoch_ns": -5.124140559137778,
+              "candidate_within_gps_half_interval": false
+            },
+            "10": {
+              "degree": 6,
+              "derivative_method": "fixed_local_degree_6_polynomial",
+              "requested_iterations": 10,
+              "requested_tolerance_M": null,
+              "updates_performed": 10,
+              "stopped_by_tolerance": false,
+              "exact_zero_encountered": false,
+              "candidate_time_M_initial_origin": 5002.720305633546,
+              "final_interval_M_initial_origin": [
+                5002.72029876709,
+                5002.720312500001
+              ],
+              "final_interval_width_M": 1.3732910701946821e-05,
+              "final_left_derivative_domega_dt_M2": -7.586098131228586e-05,
+              "final_right_derivative_domega_dt_M2": -7.591738752517087e-05,
+              "initial_endpoint": {
+                "left_time_M_initial_origin": 5002.70625,
+                "right_time_M_initial_origin": 5002.720312500001,
+                "interval_width_M": 0.014062500000363798,
+                "left_derivative_domega_dt_M2": -1.8518796669157874e-05,
+                "right_derivative_domega_dt_M2": -7.591738752517087e-05,
+                "derivative_product": 1.4058986632323018e-09,
+                "bracket_status": "nonbracketing_same_sign_negative",
+                "valid_sign_bracket": false
+              },
+              "candidate_minus_minus_epoch_M": -2.0725292415590957e-07,
+              "candidate_minus_minus_epoch_ns": -0.051041120090105724,
+              "candidate_within_gps_half_interval": true
+            },
+            "12": {
+              "degree": 6,
+              "derivative_method": "fixed_local_degree_6_polynomial",
+              "requested_iterations": 12,
+              "requested_tolerance_M": null,
+              "updates_performed": 12,
+              "stopped_by_tolerance": false,
+              "exact_zero_encountered": false,
+              "candidate_time_M_initial_origin": 5002.720310783387,
+              "final_interval_M_initial_origin": [
+                5002.720309066774,
+                5002.720312500001
+              ],
+              "final_interval_width_M": 3.433226993365679e-06,
+              "final_left_derivative_domega_dt_M2": -7.59032859098384e-05,
+              "final_right_derivative_domega_dt_M2": -7.591738752517087e-05,
+              "initial_endpoint": {
+                "left_time_M_initial_origin": 5002.70625,
+                "right_time_M_initial_origin": 5002.720312500001,
+                "interval_width_M": 0.014062500000363798,
+                "left_derivative_domega_dt_M2": -1.8518796669157874e-05,
+                "right_derivative_domega_dt_M2": -7.591738752517087e-05,
+                "derivative_product": 1.4058986632323018e-09,
+                "bracket_status": "nonbracketing_same_sign_negative",
+                "valid_sign_bracket": false
+              },
+              "candidate_minus_minus_epoch_M": 4.94258802063996e-06,
+              "candidate_minus_minus_epoch_ns": 1.2172336276791142,
+              "candidate_within_gps_half_interval": false
+            },
+            "14": {
+              "degree": 6,
+              "derivative_method": "fixed_local_degree_6_polynomial",
+              "requested_iterations": 14,
+              "requested_tolerance_M": null,
+              "updates_performed": 14,
+              "stopped_by_tolerance": false,
+              "exact_zero_encountered": false,
+              "candidate_time_M_initial_origin": 5002.720312070847,
+              "final_interval_M_initial_origin": [
+                5002.720311641693,
+                5002.720312500001
+              ],
+              "final_interval_width_M": 8.583074304624461e-07,
+              "final_left_derivative_domega_dt_M2": -7.591386211447894e-05,
+              "final_right_derivative_domega_dt_M2": -7.591738752517087e-05,
+              "initial_endpoint": {
+                "left_time_M_initial_origin": 5002.70625,
+                "right_time_M_initial_origin": 5002.720312500001,
+                "interval_width_M": 0.014062500000363798,
+                "left_derivative_domega_dt_M2": -1.8518796669157874e-05,
+                "right_derivative_domega_dt_M2": -7.591738752517087e-05,
+                "derivative_product": 1.4058986632323018e-09,
+                "bracket_status": "nonbracketing_same_sign_negative",
+                "valid_sign_bracket": false
+              },
+              "candidate_minus_minus_epoch_M": 6.230048711586278e-06,
+              "candidate_minus_minus_epoch_ns": 1.5343024266141172,
+              "candidate_within_gps_half_interval": false
+            }
+          },
+          "tolerance": {
+            "1e-5M": {
+              "degree": 6,
+              "derivative_method": "fixed_local_degree_6_polynomial",
+              "requested_iterations": null,
+              "requested_tolerance_M": 1e-05,
+              "updates_performed": 11,
+              "stopped_by_tolerance": true,
+              "exact_zero_encountered": false,
+              "candidate_time_M_initial_origin": 5002.720309066774,
+              "final_interval_M_initial_origin": [
+                5002.720305633546,
+                5002.720312500001
+              ],
+              "final_interval_width_M": 6.86645489622606e-06,
+              "final_left_derivative_domega_dt_M2": -7.588918433404565e-05,
+              "final_right_derivative_domega_dt_M2": -7.591738752517087e-05,
+              "initial_endpoint": {
+                "left_time_M_initial_origin": 5002.70625,
+                "right_time_M_initial_origin": 5002.720312500001,
+                "interval_width_M": 0.014062500000363798,
+                "left_derivative_domega_dt_M2": -1.8518796669157874e-05,
+                "right_derivative_domega_dt_M2": -7.591738752517087e-05,
+                "derivative_product": 1.4058986632323018e-09,
+                "bracket_status": "nonbracketing_same_sign_negative",
+                "valid_sign_bracket": false
+              },
+              "candidate_minus_minus_epoch_M": 3.225974978704471e-06,
+              "candidate_minus_minus_epoch_ns": 0.794475527746305,
+              "candidate_within_gps_half_interval": false
+            }
+          }
+        }
+      },
+      "no_fitted_shift": true,
+      "same_sign_candidates_are_not_roots": true
+    },
+    "dt_0p95M": {
+      "status": "ok",
+      "input_path": "/tmp/torchwave-public-eob-epoch-sweep-dt_0p95M.npz",
+      "input_sha256": "bd216b908256e4d094bf1416b28a2dd9fe4b6c9bede596e0f35d8d1419f009dd",
+      "requested_dt_M": 0.95,
+      "returned_dt_s": 0.00023396082001296017,
+      "returned_dt_M": 0.95,
+      "postpeak_sample_count": 10120,
+      "postpeak_spacing_M": 0.014843750000181899,
+      "sample_maximum": {
+        "index": 10048,
+        "time_M_initial_origin": 5002.7,
+        "omega": 0.16441511154211702,
+        "next_time_M_initial_origin": 5002.71484375,
+        "next_minus_sample_M": 0.014843750000181899,
+        "next_minus_dt_over_2048_prediction_M": 5002.714836502075,
+        "prediction_minus_minus_epoch_M": 0.013192760340643872,
+        "prediction_minus_minus_epoch_ns": 3249.0410816121052
+      },
+      "clean_event": {
+        "time_M_initial_origin": 5002.701694818233,
+        "frequency": 0.16441511734639078,
+        "curvature": -0.004043469504670286,
+        "sample_index": 10048,
+        "sample_time_M_initial_origin": 5002.7,
+        "sample_omega": 0.16441511154211702
+      },
+      "clean_event_side_of_sample_max": "after",
+      "public_epoch": {
+        "epoch_s": -1.232038083,
+        "epoch_M": -5002.701643741734,
+        "minus_epoch_M": 5002.701643741734,
+        "minus_epoch_minus_sample_M": 0.0016437417343695415,
+        "minus_epoch_minus_clean_event_M": -5.107649849378504e-05,
+        "gps_quantization": {
+          "quantum_s": 1e-09,
+          "quantum_M": 4.0605089345616726e-06,
+          "half_width_s": 5e-10,
+          "half_width_M": 2.0302544672808363e-06,
+          "observed_epoch_s": -1.232038083,
+          "nearest_integer_epoch_ns": -1232038083,
+          "observed_minus_nearest_epoch_ns": 2.384185791015625e-07,
+          "nearest_ns_interval_epoch_s": [
+            -1.2320380835,
+            -1.2320380825000001
+          ],
+          "nearest_ns_interval_minus_epoch_coordinate_M": [
+            5002.70164171148,
+            5002.701645771988
+          ],
+          "interpretation": "The interval is the nearest-GPS-nanosecond quantization interval used for a numerical comparison; it does not establish the producer's internal timestamp representation."
+        }
+      },
+      "bisection_hypotheses": {
+        "3": {
+          "fixed_iterations": {
+            "8": {
+              "degree": 3,
+              "derivative_method": "fixed_local_degree_3_polynomial",
+              "requested_iterations": 8,
+              "requested_tolerance_M": null,
+              "updates_performed": 8,
+              "stopped_by_tolerance": false,
+              "exact_zero_encountered": false,
+              "candidate_time_M_initial_origin": 5002.701710510253,
+              "final_interval_M_initial_origin": [
+                5002.701681518554,
+                5002.701739501952
+              ],
+              "final_interval_width_M": 5.798339770990424e-05,
+              "final_left_derivative_domega_dt_M2": 5.4443135588658795e-08,
+              "final_right_derivative_domega_dt_M2": -1.8001920003088272e-07,
+              "initial_endpoint": {
+                "left_time_M_initial_origin": 5002.7,
+                "right_time_M_initial_origin": 5002.71484375,
+                "interval_width_M": 0.014843750000181899,
+                "left_derivative_domega_dt_M2": 6.848462486529788e-06,
+                "right_derivative_domega_dt_M2": -5.348625382776937e-05,
+                "derivative_product": -3.6629860288448885e-10,
+                "bracket_status": "valid_sign_bracket",
+                "valid_sign_bracket": true
+              },
+              "candidate_minus_minus_epoch_M": 6.676851899101166e-05,
+              "candidate_minus_minus_epoch_ns": 16.443386793882095,
+              "candidate_within_gps_half_interval": false
+            },
+            "10": {
+              "degree": 3,
+              "derivative_method": "fixed_local_degree_3_polynomial",
+              "requested_iterations": 10,
+              "requested_tolerance_M": null,
+              "updates_performed": 10,
+              "stopped_by_tolerance": false,
+              "exact_zero_encountered": false,
+              "candidate_time_M_initial_origin": 5002.7016887664795,
+              "final_interval_M_initial_origin": [
+                5002.701681518554,
+                5002.701696014404
+              ],
+              "final_interval_width_M": 1.449584942747606e-05,
+              "final_left_derivative_domega_dt_M2": 5.4443135588658795e-08,
+              "final_right_derivative_domega_dt_M2": -4.17128700879588e-09,
+              "initial_endpoint": {
+                "left_time_M_initial_origin": 5002.7,
+                "right_time_M_initial_origin": 5002.71484375,
+                "interval_width_M": 0.014843750000181899,
+                "left_derivative_domega_dt_M2": 6.848462486529788e-06,
+                "right_derivative_domega_dt_M2": -5.348625382776937e-05,
+                "derivative_product": -3.6629860288448885e-10,
+                "bracket_status": "valid_sign_bracket",
+                "valid_sign_bracket": true
+              },
+              "candidate_minus_minus_epoch_M": 4.502474530454492e-05,
+              "candidate_minus_minus_epoch_ns": 11.088448770869482,
+              "candidate_within_gps_half_interval": false
+            },
+            "12": {
+              "degree": 3,
+              "derivative_method": "fixed_local_degree_3_polynomial",
+              "requested_iterations": 12,
+              "requested_tolerance_M": null,
+              "updates_performed": 12,
+              "stopped_by_tolerance": false,
+              "exact_zero_encountered": false,
+              "candidate_time_M_initial_origin": 5002.701694202422,
+              "final_interval_M_initial_origin": [
+                5002.701692390441,
+                5002.701696014404
+              ],
+              "final_interval_width_M": 3.6239625842426904e-06,
+              "final_left_derivative_domega_dt_M2": 1.048239214167733e-08,
+              "final_right_derivative_domega_dt_M2": -4.17128700879588e-09,
+              "initial_endpoint": {
+                "left_time_M_initial_origin": 5002.7,
+                "right_time_M_initial_origin": 5002.71484375,
+                "interval_width_M": 0.014843750000181899,
+                "left_derivative_domega_dt_M2": 6.848462486529788e-06,
+                "right_derivative_domega_dt_M2": -5.348625382776937e-05,
+                "derivative_product": -3.6629860288448885e-10,
+                "bracket_status": "valid_sign_bracket",
+                "valid_sign_bracket": true
+              },
+              "candidate_minus_minus_epoch_M": 5.0460687816666905e-05,
+              "candidate_minus_minus_epoch_ns": 12.427183052637238,
+              "candidate_within_gps_half_interval": false
+            },
+            "14": {
+              "degree": 3,
+              "derivative_method": "fixed_local_degree_3_polynomial",
+              "requested_iterations": 14,
+              "requested_tolerance_M": null,
+              "updates_performed": 14,
+              "stopped_by_tolerance": false,
+              "exact_zero_encountered": false,
+              "candidate_time_M_initial_origin": 5002.701694655418,
+              "final_interval_M_initial_origin": [
+                5002.701694202422,
+                5002.701695108413
+              ],
+              "final_interval_width_M": 9.059913281816989e-07,
+              "final_left_derivative_domega_dt_M2": 3.1555604537119473e-09,
+              "final_right_derivative_domega_dt_M2": -5.078636042185004e-10,
+              "initial_endpoint": {
+                "left_time_M_initial_origin": 5002.7,
+                "right_time_M_initial_origin": 5002.71484375,
+                "interval_width_M": 0.014843750000181899,
+                "left_derivative_domega_dt_M2": 6.848462486529788e-06,
+                "right_derivative_domega_dt_M2": -5.348625382776937e-05,
+                "derivative_product": -3.6629860288448885e-10,
+                "bracket_status": "valid_sign_bracket",
+                "valid_sign_bracket": true
+              },
+              "candidate_minus_minus_epoch_M": 5.0913683480757754e-05,
+              "candidate_minus_minus_epoch_ns": 12.538744354777249,
+              "candidate_within_gps_half_interval": false
+            }
+          },
+          "tolerance": {
+            "1e-5M": {
+              "degree": 3,
+              "derivative_method": "fixed_local_degree_3_polynomial",
+              "requested_iterations": null,
+              "requested_tolerance_M": 1e-05,
+              "updates_performed": 11,
+              "stopped_by_tolerance": true,
+              "exact_zero_encountered": false,
+              "candidate_time_M_initial_origin": 5002.701692390441,
+              "final_interval_M_initial_origin": [
+                5002.7016887664795,
+                5002.701696014404
+              ],
+              "final_interval_width_M": 7.247924258990679e-06,
+              "final_left_derivative_domega_dt_M2": 2.5136019226765e-08,
+              "final_right_derivative_domega_dt_M2": -4.17128700879588e-09,
+              "initial_endpoint": {
+                "left_time_M_initial_origin": 5002.7,
+                "right_time_M_initial_origin": 5002.71484375,
+                "interval_width_M": 0.014843750000181899,
+                "left_derivative_domega_dt_M2": 6.848462486529788e-06,
+                "right_derivative_domega_dt_M2": -5.348625382776937e-05,
+                "derivative_product": -3.6629860288448885e-10,
+                "bracket_status": "valid_sign_bracket",
+                "valid_sign_bracket": true
+              },
+              "candidate_minus_minus_epoch_M": 4.864870697929291e-05,
+              "candidate_minus_minus_epoch_ns": 11.980938292047986,
+              "candidate_within_gps_half_interval": false
+            }
+          }
+        },
+        "6": {
+          "fixed_iterations": {
+            "8": {
+              "degree": 6,
+              "derivative_method": "fixed_local_degree_6_polynomial",
+              "requested_iterations": 8,
+              "requested_tolerance_M": null,
+              "updates_performed": 8,
+              "stopped_by_tolerance": false,
+              "exact_zero_encountered": false,
+              "candidate_time_M_initial_origin": 5002.701710510253,
+              "final_interval_M_initial_origin": [
+                5002.701681518554,
+                5002.701739501952
+              ],
+              "final_interval_width_M": 5.798339770990424e-05,
+              "final_left_derivative_domega_dt_M2": 5.377651827626505e-08,
+              "final_right_derivative_domega_dt_M2": -1.8068091950341595e-07,
+              "initial_endpoint": {
+                "left_time_M_initial_origin": 5002.7,
+                "right_time_M_initial_origin": 5002.71484375,
+                "interval_width_M": 0.014843750000181899,
+                "left_derivative_domega_dt_M2": 6.8476803142494555e-06,
+                "right_derivative_domega_dt_M2": -5.348546686039311e-05,
+                "derivative_product": -3.6625137851835553e-10,
+                "bracket_status": "valid_sign_bracket",
+                "valid_sign_bracket": true
+              },
+              "candidate_minus_minus_epoch_M": 6.676851899101166e-05,
+              "candidate_minus_minus_epoch_ns": 16.443386793882095,
+              "candidate_within_gps_half_interval": false
+            },
+            "10": {
+              "degree": 6,
+              "derivative_method": "fixed_local_degree_6_polynomial",
+              "requested_iterations": 10,
+              "requested_tolerance_M": null,
+              "updates_performed": 10,
+              "stopped_by_tolerance": false,
+              "exact_zero_encountered": false,
+              "candidate_time_M_initial_origin": 5002.7016887664795,
+              "final_interval_M_initial_origin": [
+                5002.701681518554,
+                5002.701696014404
+              ],
+              "final_interval_width_M": 1.449584942747606e-05,
+              "final_left_derivative_domega_dt_M2": 5.377651827626505e-08,
+              "final_right_derivative_domega_dt_M2": -4.8366850622320825e-09,
+              "initial_endpoint": {
+                "left_time_M_initial_origin": 5002.7,
+                "right_time_M_initial_origin": 5002.71484375,
+                "interval_width_M": 0.014843750000181899,
+                "left_derivative_domega_dt_M2": 6.8476803142494555e-06,
+                "right_derivative_domega_dt_M2": -5.348546686039311e-05,
+                "derivative_product": -3.6625137851835553e-10,
+                "bracket_status": "valid_sign_bracket",
+                "valid_sign_bracket": true
+              },
+              "candidate_minus_minus_epoch_M": 4.502474530454492e-05,
+              "candidate_minus_minus_epoch_ns": 11.088448770869482,
+              "candidate_within_gps_half_interval": false
+            },
+            "12": {
+              "degree": 6,
+              "derivative_method": "fixed_local_degree_6_polynomial",
+              "requested_iterations": 12,
+              "requested_tolerance_M": null,
+              "updates_performed": 12,
+              "stopped_by_tolerance": false,
+              "exact_zero_encountered": false,
+              "candidate_time_M_initial_origin": 5002.701694202422,
+              "final_interval_M_initial_origin": [
+                5002.701692390441,
+                5002.701696014404
+              ],
+              "final_interval_width_M": 3.6239625842426904e-06,
+              "final_left_derivative_domega_dt_M2": 9.816688947540577e-09,
+              "final_right_derivative_domega_dt_M2": -4.8366850622320825e-09,
+              "initial_endpoint": {
+                "left_time_M_initial_origin": 5002.7,
+                "right_time_M_initial_origin": 5002.71484375,
+                "interval_width_M": 0.014843750000181899,
+                "left_derivative_domega_dt_M2": 6.8476803142494555e-06,
+                "right_derivative_domega_dt_M2": -5.348546686039311e-05,
+                "derivative_product": -3.6625137851835553e-10,
+                "bracket_status": "valid_sign_bracket",
+                "valid_sign_bracket": true
+              },
+              "candidate_minus_minus_epoch_M": 5.0460687816666905e-05,
+              "candidate_minus_minus_epoch_ns": 12.427183052637238,
+              "candidate_within_gps_half_interval": false
+            },
+            "14": {
+              "degree": 6,
+              "derivative_method": "fixed_local_degree_6_polynomial",
+              "requested_iterations": 14,
+              "requested_tolerance_M": null,
+              "updates_performed": 14,
+              "stopped_by_tolerance": false,
+              "exact_zero_encountered": false,
+              "candidate_time_M_initial_origin": 5002.701694655418,
+              "final_interval_M_initial_origin": [
+                5002.701694202422,
+                5002.701695108413
+              ],
+              "final_interval_width_M": 9.059913281816989e-07,
+              "final_left_derivative_domega_dt_M2": 2.490009802744331e-09,
+              "final_right_derivative_domega_dt_M2": -1.1733379631657641e-09,
+              "initial_endpoint": {
+                "left_time_M_initial_origin": 5002.7,
+                "right_time_M_initial_origin": 5002.71484375,
+                "interval_width_M": 0.014843750000181899,
+                "left_derivative_domega_dt_M2": 6.8476803142494555e-06,
+                "right_derivative_domega_dt_M2": -5.348546686039311e-05,
+                "derivative_product": -3.6625137851835553e-10,
+                "bracket_status": "valid_sign_bracket",
+                "valid_sign_bracket": true
+              },
+              "candidate_minus_minus_epoch_M": 5.0913683480757754e-05,
+              "candidate_minus_minus_epoch_ns": 12.538744354777249,
+              "candidate_within_gps_half_interval": false
+            }
+          },
+          "tolerance": {
+            "1e-5M": {
+              "degree": 6,
+              "derivative_method": "fixed_local_degree_6_polynomial",
+              "requested_iterations": null,
+              "requested_tolerance_M": 1e-05,
+              "updates_performed": 11,
+              "stopped_by_tolerance": true,
+              "exact_zero_encountered": false,
+              "candidate_time_M_initial_origin": 5002.701692390441,
+              "final_interval_M_initial_origin": [
+                5002.7016887664795,
+                5002.701696014404
+              ],
+              "final_interval_width_M": 7.247924258990679e-06,
+              "final_left_derivative_domega_dt_M2": 2.4470011109207995e-08,
+              "final_right_derivative_domega_dt_M2": -4.8366850622320825e-09,
+              "initial_endpoint": {
+                "left_time_M_initial_origin": 5002.7,
+                "right_time_M_initial_origin": 5002.71484375,
+                "interval_width_M": 0.014843750000181899,
+                "left_derivative_domega_dt_M2": 6.8476803142494555e-06,
+                "right_derivative_domega_dt_M2": -5.348546686039311e-05,
+                "derivative_product": -3.6625137851835553e-10,
+                "bracket_status": "valid_sign_bracket",
+                "valid_sign_bracket": true
+              },
+              "candidate_minus_minus_epoch_M": 4.864870697929291e-05,
+              "candidate_minus_minus_epoch_ns": 11.980938292047986,
+              "candidate_within_gps_half_interval": false
+            }
+          }
+        }
+      },
+      "no_fitted_shift": true,
+      "same_sign_candidates_are_not_roots": true
+    },
+    "dt_0p99M": {
+      "status": "ok",
+      "input_path": "/tmp/torchwave-public-eob-epoch-sweep-dt_0p99M.npz",
+      "input_sha256": "78d40e5f395a8b7da672a835ef54862938e3112b875146016912443deec9b0d9",
+      "requested_dt_M": 0.99,
+      "returned_dt_s": 0.0002438118019082427,
+      "returned_dt_M": 0.99,
+      "postpeak_sample_count": 9745,
+      "postpeak_spacing_M": 0.01546874999985448,
+      "sample_maximum": {
+        "index": 9679,
+        "time_M_initial_origin": 5002.70203125,
+        "omega": 0.16441510873432447,
+        "next_time_M_initial_origin": 5002.7175,
+        "next_minus_sample_M": 0.01546874999985448,
+        "next_minus_dt_over_2048_prediction_M": 5002.717492446899,
+        "prediction_minus_minus_epoch_M": 5.387928467825986e-07,
+        "prediction_minus_minus_epoch_ns": 0.13269096447407788
+      },
+      "clean_event": {
+        "time_M_initial_origin": 5002.70167557818,
+        "frequency": 0.16441510899004594,
+        "curvature": -0.004042516656995276,
+        "sample_index": 9679,
+        "sample_time_M_initial_origin": 5002.70203125,
+        "sample_omega": 0.16441510873432447
+      },
+      "clean_event_side_of_sample_max": "before",
+      "public_epoch": {
+        "epoch_s": -1.232041986,
+        "epoch_M": -5002.717491908106,
+        "minus_epoch_M": 5002.717491908106,
+        "minus_epoch_minus_sample_M": 0.015460658106349001,
+        "minus_epoch_minus_clean_event_M": 0.01581632992656523,
+        "gps_quantization": {
+          "quantum_s": 1e-09,
+          "quantum_M": 4.0605089345616726e-06,
+          "half_width_s": 5e-10,
+          "half_width_M": 2.0302544672808363e-06,
+          "observed_epoch_s": -1.232041986,
+          "nearest_integer_epoch_ns": -1232041986,
+          "observed_minus_nearest_epoch_ns": 0.0,
+          "nearest_ns_interval_epoch_s": [
+            -1.2320419865,
+            -1.2320419855
+          ],
+          "nearest_ns_interval_minus_epoch_coordinate_M": [
+            5002.717489877852,
+            5002.71749393836
+          ],
+          "interpretation": "The interval is the nearest-GPS-nanosecond quantization interval used for a numerical comparison; it does not establish the producer's internal timestamp representation."
+        }
+      },
+      "bisection_hypotheses": {
+        "3": {
+          "fixed_iterations": {
+            "8": {
+              "degree": 3,
+              "derivative_method": "fixed_local_degree_3_polynomial",
+              "requested_iterations": 8,
+              "requested_tolerance_M": null,
+              "updates_performed": 8,
+              "stopped_by_tolerance": false,
+              "exact_zero_encountered": false,
+              "candidate_time_M_initial_origin": 5002.717469787598,
+              "final_interval_M_initial_origin": [
+                5002.717439575195,
+                5002.7175
+              ],
+              "final_interval_width_M": 6.042480436008191e-05,
+              "final_left_derivative_domega_dt_M2": -6.41819811757631e-05,
+              "final_right_derivative_domega_dt_M2": -6.44297540057575e-05,
+              "initial_endpoint": {
+                "left_time_M_initial_origin": 5002.70203125,
+                "right_time_M_initial_origin": 5002.7175,
+                "interval_width_M": 0.01546874999985448,
+                "left_derivative_domega_dt_M2": -1.437173108629468e-06,
+                "right_derivative_domega_dt_M2": -6.44297540057575e-05,
+                "derivative_product": 9.259670985268643e-11,
+                "bracket_status": "nonbracketing_same_sign_negative",
+                "valid_sign_bracket": false
+              },
+              "candidate_minus_minus_epoch_M": -2.2120508219813928e-05,
+              "candidate_minus_minus_epoch_ns": -5.447718149695886,
+              "candidate_within_gps_half_interval": false
+            },
+            "10": {
+              "degree": 3,
+              "derivative_method": "fixed_local_degree_3_polynomial",
+              "requested_iterations": 10,
+              "requested_tolerance_M": null,
+              "updates_performed": 10,
+              "stopped_by_tolerance": false,
+              "exact_zero_encountered": false,
+              "candidate_time_M_initial_origin": 5002.7174924469,
+              "final_interval_M_initial_origin": [
+                5002.717484893799,
+                5002.7175
+              ],
+              "final_interval_width_M": 1.510620040789945e-05,
+              "final_left_derivative_domega_dt_M2": -6.43678095451279e-05,
+              "final_right_derivative_domega_dt_M2": -6.44297540057575e-05,
+              "initial_endpoint": {
+                "left_time_M_initial_origin": 5002.70203125,
+                "right_time_M_initial_origin": 5002.7175,
+                "interval_width_M": 0.01546874999985448,
+                "left_derivative_domega_dt_M2": -1.437173108629468e-06,
+                "right_derivative_domega_dt_M2": -6.44297540057575e-05,
+                "derivative_product": 9.259670985268643e-11,
+                "bracket_status": "nonbracketing_same_sign_negative",
+                "valid_sign_bracket": false
+              },
+              "candidate_minus_minus_epoch_M": 5.387937562773004e-07,
+              "candidate_minus_minus_epoch_ns": 0.1326911884594739,
+              "candidate_within_gps_half_interval": true
+            },
+            "12": {
+              "degree": 3,
+              "derivative_method": "fixed_local_degree_3_polynomial",
+              "requested_iterations": 12,
+              "requested_tolerance_M": null,
+              "updates_performed": 12,
+              "stopped_by_tolerance": false,
+              "exact_zero_encountered": false,
+              "candidate_time_M_initial_origin": 5002.717498111724,
+              "final_interval_M_initial_origin": [
+                5002.717496223449,
+                5002.7175
+              ],
+              "final_interval_width_M": 3.776550329348538e-06,
+              "final_left_derivative_domega_dt_M2": -6.441426781117223e-05,
+              "final_right_derivative_domega_dt_M2": -6.44297540057575e-05,
+              "initial_endpoint": {
+                "left_time_M_initial_origin": 5002.70203125,
+                "right_time_M_initial_origin": 5002.7175,
+                "interval_width_M": 0.01546874999985448,
+                "left_derivative_domega_dt_M2": -1.437173108629468e-06,
+                "right_derivative_domega_dt_M2": -6.44297540057575e-05,
+                "derivative_product": 9.259670985268643e-11,
+                "bracket_status": "nonbracketing_same_sign_negative",
+                "valid_sign_bracket": false
+              },
+              "candidate_minus_minus_epoch_M": 6.203617886058055e-06,
+              "candidate_minus_minus_epoch_ns": 1.52779318702022,
+              "candidate_within_gps_half_interval": false
+            },
+            "14": {
+              "degree": 3,
+              "derivative_method": "fixed_local_degree_3_polynomial",
+              "requested_iterations": 14,
+              "requested_tolerance_M": null,
+              "updates_performed": 14,
+              "stopped_by_tolerance": false,
+              "exact_zero_encountered": false,
+              "candidate_time_M_initial_origin": 5002.717499527931,
+              "final_interval_M_initial_origin": [
+                5002.7174990558615,
+                5002.7175
+              ],
+              "final_interval_width_M": 9.441382644581608e-07,
+              "final_left_derivative_domega_dt_M2": -6.44258824494081e-05,
+              "final_right_derivative_domega_dt_M2": -6.44297540057575e-05,
+              "initial_endpoint": {
+                "left_time_M_initial_origin": 5002.70203125,
+                "right_time_M_initial_origin": 5002.7175,
+                "interval_width_M": 0.01546874999985448,
+                "left_derivative_domega_dt_M2": -1.437173108629468e-06,
+                "right_derivative_domega_dt_M2": -6.44297540057575e-05,
+                "derivative_product": 9.259670985268643e-11,
+                "bracket_status": "nonbracketing_same_sign_negative",
+                "valid_sign_bracket": false
+              },
+              "candidate_minus_minus_epoch_M": 7.619824827997945e-06,
+              "candidate_minus_minus_epoch_ns": 1.8765689106458023,
+              "candidate_within_gps_half_interval": false
+            }
+          },
+          "tolerance": {
+            "1e-5M": {
+              "degree": 3,
+              "derivative_method": "fixed_local_degree_3_polynomial",
+              "requested_iterations": null,
+              "requested_tolerance_M": 1e-05,
+              "updates_performed": 11,
+              "stopped_by_tolerance": true,
+              "exact_zero_encountered": false,
+              "candidate_time_M_initial_origin": 5002.717496223449,
+              "final_interval_M_initial_origin": [
+                5002.7174924469,
+                5002.7175
+              ],
+              "final_interval_width_M": 7.553099749202374e-06,
+              "final_left_derivative_domega_dt_M2": -6.439878167264678e-05,
+              "final_right_derivative_domega_dt_M2": -6.44297540057575e-05,
+              "initial_endpoint": {
+                "left_time_M_initial_origin": 5002.70203125,
+                "right_time_M_initial_origin": 5002.7175,
+                "interval_width_M": 0.01546874999985448,
+                "left_derivative_domega_dt_M2": -1.437173108629468e-06,
+                "right_derivative_domega_dt_M2": -6.44297540057575e-05,
+                "derivative_product": 9.259670985268643e-11,
+                "bracket_status": "nonbracketing_same_sign_negative",
+                "valid_sign_bracket": false
+              },
+              "candidate_minus_minus_epoch_M": 4.315343176131137e-06,
+              "candidate_minus_minus_epoch_ns": 1.0627591874999713,
+              "candidate_within_gps_half_interval": false
+            }
+          }
+        },
+        "6": {
+          "fixed_iterations": {
+            "8": {
+              "degree": 6,
+              "derivative_method": "fixed_local_degree_6_polynomial",
+              "requested_iterations": 8,
+              "requested_tolerance_M": null,
+              "updates_performed": 8,
+              "stopped_by_tolerance": false,
+              "exact_zero_encountered": false,
+              "candidate_time_M_initial_origin": 5002.717469787598,
+              "final_interval_M_initial_origin": [
+                5002.717439575195,
+                5002.7175
+              ],
+              "final_interval_width_M": 6.042480436008191e-05,
+              "final_left_derivative_domega_dt_M2": -6.418111505313579e-05,
+              "final_right_derivative_domega_dt_M2": -6.442888443529995e-05,
+              "initial_endpoint": {
+                "left_time_M_initial_origin": 5002.70203125,
+                "right_time_M_initial_origin": 5002.7175,
+                "interval_width_M": 0.01546874999985448,
+                "left_derivative_domega_dt_M2": -1.438039912754193e-06,
+                "right_derivative_domega_dt_M2": -6.442888443529995e-05,
+                "derivative_product": 9.265130735218874e-11,
+                "bracket_status": "nonbracketing_same_sign_negative",
+                "valid_sign_bracket": false
+              },
+              "candidate_minus_minus_epoch_M": -2.2120508219813928e-05,
+              "candidate_minus_minus_epoch_ns": -5.447718149695886,
+              "candidate_within_gps_half_interval": false
+            },
+            "10": {
+              "degree": 6,
+              "derivative_method": "fixed_local_degree_6_polynomial",
+              "requested_iterations": 10,
+              "requested_tolerance_M": null,
+              "updates_performed": 10,
+              "stopped_by_tolerance": false,
+              "exact_zero_encountered": false,
+              "candidate_time_M_initial_origin": 5002.7174924469,
+              "final_interval_M_initial_origin": [
+                5002.717484893799,
+                5002.7175
+              ],
+              "final_interval_width_M": 1.510620040789945e-05,
+              "final_left_derivative_domega_dt_M2": -6.436694082918364e-05,
+              "final_right_derivative_domega_dt_M2": -6.442888443529995e-05,
+              "initial_endpoint": {
+                "left_time_M_initial_origin": 5002.70203125,
+                "right_time_M_initial_origin": 5002.7175,
+                "interval_width_M": 0.01546874999985448,
+                "left_derivative_domega_dt_M2": -1.438039912754193e-06,
+                "right_derivative_domega_dt_M2": -6.442888443529995e-05,
+                "derivative_product": 9.265130735218874e-11,
+                "bracket_status": "nonbracketing_same_sign_negative",
+                "valid_sign_bracket": false
+              },
+              "candidate_minus_minus_epoch_M": 5.387937562773004e-07,
+              "candidate_minus_minus_epoch_ns": 0.1326911884594739,
+              "candidate_within_gps_half_interval": true
+            },
+            "12": {
+              "degree": 6,
+              "derivative_method": "fixed_local_degree_6_polynomial",
+              "requested_iterations": 12,
+              "requested_tolerance_M": null,
+              "updates_performed": 12,
+              "stopped_by_tolerance": false,
+              "exact_zero_encountered": false,
+              "candidate_time_M_initial_origin": 5002.717498111724,
+              "final_interval_M_initial_origin": [
+                5002.717496223449,
+                5002.7175
+              ],
+              "final_interval_width_M": 3.776550329348538e-06,
+              "final_left_derivative_domega_dt_M2": -6.44133984538766e-05,
+              "final_right_derivative_domega_dt_M2": -6.442888443529995e-05,
+              "initial_endpoint": {
+                "left_time_M_initial_origin": 5002.70203125,
+                "right_time_M_initial_origin": 5002.7175,
+                "interval_width_M": 0.01546874999985448,
+                "left_derivative_domega_dt_M2": -1.438039912754193e-06,
+                "right_derivative_domega_dt_M2": -6.442888443529995e-05,
+                "derivative_product": 9.265130735218874e-11,
+                "bracket_status": "nonbracketing_same_sign_negative",
+                "valid_sign_bracket": false
+              },
+              "candidate_minus_minus_epoch_M": 6.203617886058055e-06,
+              "candidate_minus_minus_epoch_ns": 1.52779318702022,
+              "candidate_within_gps_half_interval": false
+            },
+            "14": {
+              "degree": 6,
+              "derivative_method": "fixed_local_degree_6_polynomial",
+              "requested_iterations": 14,
+              "requested_tolerance_M": null,
+              "updates_performed": 14,
+              "stopped_by_tolerance": false,
+              "exact_zero_encountered": false,
+              "candidate_time_M_initial_origin": 5002.717499527931,
+              "final_interval_M_initial_origin": [
+                5002.7174990558615,
+                5002.7175
+              ],
+              "final_interval_width_M": 9.441382644581608e-07,
+              "final_left_derivative_domega_dt_M2": -6.44250129322119e-05,
+              "final_right_derivative_domega_dt_M2": -6.442888443529995e-05,
+              "initial_endpoint": {
+                "left_time_M_initial_origin": 5002.70203125,
+                "right_time_M_initial_origin": 5002.7175,
+                "interval_width_M": 0.01546874999985448,
+                "left_derivative_domega_dt_M2": -1.438039912754193e-06,
+                "right_derivative_domega_dt_M2": -6.442888443529995e-05,
+                "derivative_product": 9.265130735218874e-11,
+                "bracket_status": "nonbracketing_same_sign_negative",
+                "valid_sign_bracket": false
+              },
+              "candidate_minus_minus_epoch_M": 7.619824827997945e-06,
+              "candidate_minus_minus_epoch_ns": 1.8765689106458023,
+              "candidate_within_gps_half_interval": false
+            }
+          },
+          "tolerance": {
+            "1e-5M": {
+              "degree": 6,
+              "derivative_method": "fixed_local_degree_6_polynomial",
+              "requested_iterations": null,
+              "requested_tolerance_M": 1e-05,
+              "updates_performed": 11,
+              "stopped_by_tolerance": true,
+              "exact_zero_encountered": false,
+              "candidate_time_M_initial_origin": 5002.717496223449,
+              "final_interval_M_initial_origin": [
+                5002.7174924469,
+                5002.7175
+              ],
+              "final_interval_width_M": 7.553099749202374e-06,
+              "final_left_derivative_domega_dt_M2": -6.439791252882407e-05,
+              "final_right_derivative_domega_dt_M2": -6.442888443529995e-05,
+              "initial_endpoint": {
+                "left_time_M_initial_origin": 5002.70203125,
+                "right_time_M_initial_origin": 5002.7175,
+                "interval_width_M": 0.01546874999985448,
+                "left_derivative_domega_dt_M2": -1.438039912754193e-06,
+                "right_derivative_domega_dt_M2": -6.442888443529995e-05,
+                "derivative_product": 9.265130735218874e-11,
+                "bracket_status": "nonbracketing_same_sign_negative",
+                "valid_sign_bracket": false
+              },
+              "candidate_minus_minus_epoch_M": 4.315343176131137e-06,
+              "candidate_minus_minus_epoch_ns": 1.0627591874999713,
+              "candidate_within_gps_half_interval": false
+            }
+          }
+        }
+      },
+      "no_fitted_shift": true,
+      "same_sign_candidates_are_not_roots": true
+    },
+    "dt_1p00M": {
+      "status": "ok",
+      "input_path": "/tmp/torchwave-public-eob-epoch-sweep-dt_1p00M.npz",
+      "input_sha256": "f7a673de19e233c6dbce1d521067cb1d53226bde933002475e8f9faaae2d53d7",
+      "requested_dt_M": 1.0,
+      "returned_dt_s": 0.00024627454738206334,
+      "returned_dt_M": 1.0,
+      "postpeak_sample_count": 9587,
+      "postpeak_spacing_M": 0.015625,
+      "sample_maximum": {
+        "index": 9517,
+        "time_M_initial_origin": 5002.703125,
+        "omega": 0.16441511633451847,
+        "next_time_M_initial_origin": 5002.71875,
+        "next_minus_sample_M": 0.015625,
+        "next_minus_dt_over_2048_prediction_M": 5002.7187423706055,
+        "prediction_minus_minus_epoch_M": -1.7425281839678064e-07,
+        "prediction_minus_minus_epoch_ns": -0.042914033980716026
+      },
+      "clean_event": {
+        "time_M_initial_origin": 5002.701697645643,
+        "frequency": 0.16441512045558015,
+        "curvature": -0.004043779005412181,
+        "sample_index": 9517,
+        "sample_time_M_initial_origin": 5002.703125,
+        "sample_omega": 0.16441511633451847
+      },
+      "clean_event_side_of_sample_max": "before",
+      "public_epoch": {
+        "epoch_s": -1.232042294,
+        "epoch_M": -5002.718742544858,
+        "minus_epoch_M": 5002.718742544858,
+        "minus_epoch_minus_sample_M": 0.015617544858287147,
+        "minus_epoch_minus_clean_event_M": 0.017044899214852194,
+        "gps_quantization": {
+          "quantum_s": 1e-09,
+          "quantum_M": 4.0605089345616726e-06,
+          "half_width_s": 5e-10,
+          "half_width_M": 2.0302544672808363e-06,
+          "observed_epoch_s": -1.232042294,
+          "nearest_integer_epoch_ns": -1232042294,
+          "observed_minus_nearest_epoch_ns": 0.0,
+          "nearest_ns_interval_epoch_s": [
+            -1.2320422945,
+            -1.2320422935000002
+          ],
+          "nearest_ns_interval_minus_epoch_coordinate_M": [
+            5002.718740514604,
+            5002.718744575112
+          ],
+          "interpretation": "The interval is the nearest-GPS-nanosecond quantization interval used for a numerical comparison; it does not establish the producer's internal timestamp representation."
+        }
+      },
+      "bisection_hypotheses": {
+        "3": {
+          "fixed_iterations": {
+            "8": {
+              "degree": 3,
+              "derivative_method": "fixed_local_degree_3_polynomial",
+              "requested_iterations": 8,
+              "requested_tolerance_M": null,
+              "updates_performed": 8,
+              "stopped_by_tolerance": false,
+              "exact_zero_encountered": false,
+              "candidate_time_M_initial_origin": 5002.718719482422,
+              "final_interval_M_initial_origin": [
+                5002.718688964844,
+                5002.71875
+              ],
+              "final_interval_width_M": 6.103515625e-05,
+              "final_left_derivative_domega_dt_M2": -6.924370476667667e-05,
+              "final_right_derivative_domega_dt_M2": -6.94943703853738e-05,
+              "initial_endpoint": {
+                "left_time_M_initial_origin": 5002.703125,
+                "right_time_M_initial_origin": 5002.71875,
+                "interval_width_M": 0.015625,
+                "left_derivative_domega_dt_M2": -5.774743248748844e-06,
+                "right_derivative_domega_dt_M2": -6.94943703853738e-05,
+                "derivative_product": 4.0131214620898896e-10,
+                "bracket_status": "nonbracketing_same_sign_negative",
+                "valid_sign_bracket": false
+              },
+              "candidate_minus_minus_epoch_M": -2.306243641214678e-05,
+              "candidate_minus_minus_epoch_ns": -5.679691088929065,
+              "candidate_within_gps_half_interval": false
+            },
+            "10": {
+              "degree": 3,
+              "derivative_method": "fixed_local_degree_3_polynomial",
+              "requested_iterations": 10,
+              "requested_tolerance_M": null,
+              "updates_performed": 10,
+              "stopped_by_tolerance": false,
+              "exact_zero_encountered": false,
+              "candidate_time_M_initial_origin": 5002.7187423706055,
+              "final_interval_M_initial_origin": [
+                5002.718734741211,
+                5002.71875
+              ],
+              "final_interval_width_M": 1.52587890625e-05,
+              "final_left_derivative_domega_dt_M2": -6.943170268597511e-05,
+              "final_right_derivative_domega_dt_M2": -6.94943703853738e-05,
+              "initial_endpoint": {
+                "left_time_M_initial_origin": 5002.703125,
+                "right_time_M_initial_origin": 5002.71875,
+                "interval_width_M": 0.015625,
+                "left_derivative_domega_dt_M2": -5.774743248748844e-06,
+                "right_derivative_domega_dt_M2": -6.94943703853738e-05,
+                "derivative_product": 4.0131214620898896e-10,
+                "bracket_status": "nonbracketing_same_sign_negative",
+                "valid_sign_bracket": false
+              },
+              "candidate_minus_minus_epoch_M": -1.7425281839678064e-07,
+              "candidate_minus_minus_epoch_ns": -0.042914033980716026,
+              "candidate_within_gps_half_interval": true
+            },
+            "12": {
+              "degree": 3,
+              "derivative_method": "fixed_local_degree_3_polynomial",
+              "requested_iterations": 12,
+              "requested_tolerance_M": null,
+              "updates_performed": 12,
+              "stopped_by_tolerance": false,
+              "exact_zero_encountered": false,
+              "candidate_time_M_initial_origin": 5002.718748092651,
+              "final_interval_M_initial_origin": [
+                5002.718746185303,
+                5002.71875
+              ],
+              "final_interval_width_M": 3.814697265625e-06,
+              "final_left_derivative_domega_dt_M2": -6.947870337960386e-05,
+              "final_right_derivative_domega_dt_M2": -6.94943703853738e-05,
+              "initial_endpoint": {
+                "left_time_M_initial_origin": 5002.703125,
+                "right_time_M_initial_origin": 5002.71875,
+                "interval_width_M": 0.015625,
+                "left_derivative_domega_dt_M2": -5.774743248748844e-06,
+                "right_derivative_domega_dt_M2": -6.94943703853738e-05,
+                "derivative_product": 4.0131214620898896e-10,
+                "bracket_status": "nonbracketing_same_sign_negative",
+                "valid_sign_bracket": false
+              },
+              "candidate_minus_minus_epoch_M": 5.547793080040719e-06,
+              "candidate_minus_minus_epoch_ns": 1.3662802297563712,
+              "candidate_within_gps_half_interval": false
+            },
+            "14": {
+              "degree": 3,
+              "derivative_method": "fixed_local_degree_3_polynomial",
+              "requested_iterations": 14,
+              "requested_tolerance_M": null,
+              "updates_performed": 14,
+              "stopped_by_tolerance": false,
+              "exact_zero_encountered": false,
+              "candidate_time_M_initial_origin": 5002.718749523163,
+              "final_interval_M_initial_origin": [
+                5002.718749046326,
+                5002.71875
+              ],
+              "final_interval_width_M": 9.5367431640625e-07,
+              "final_left_derivative_domega_dt_M2": -6.94904536288738e-05,
+              "final_right_derivative_domega_dt_M2": -6.94943703853738e-05,
+              "initial_endpoint": {
+                "left_time_M_initial_origin": 5002.703125,
+                "right_time_M_initial_origin": 5002.71875,
+                "interval_width_M": 0.015625,
+                "left_derivative_domega_dt_M2": -5.774743248748844e-06,
+                "right_derivative_domega_dt_M2": -6.94943703853738e-05,
+                "derivative_product": 4.0131214620898896e-10,
+                "bracket_status": "nonbracketing_same_sign_negative",
+                "valid_sign_bracket": false
+              },
+              "candidate_minus_minus_epoch_M": 6.978304554650094e-06,
+              "candidate_minus_minus_epoch_ns": 1.7185787956906429,
+              "candidate_within_gps_half_interval": false
+            }
+          },
+          "tolerance": {
+            "1e-5M": {
+              "degree": 3,
+              "derivative_method": "fixed_local_degree_3_polynomial",
+              "requested_iterations": null,
+              "requested_tolerance_M": 1e-05,
+              "updates_performed": 11,
+              "stopped_by_tolerance": true,
+              "exact_zero_encountered": false,
+              "candidate_time_M_initial_origin": 5002.718746185303,
+              "final_interval_M_initial_origin": [
+                5002.7187423706055,
+                5002.71875
+              ],
+              "final_interval_width_M": 7.62939453125e-06,
+              "final_left_derivative_domega_dt_M2": -6.946303642778076e-05,
+              "final_right_derivative_domega_dt_M2": -6.94943703853738e-05,
+              "initial_endpoint": {
+                "left_time_M_initial_origin": 5002.703125,
+                "right_time_M_initial_origin": 5002.71875,
+                "interval_width_M": 0.015625,
+                "left_derivative_domega_dt_M2": -5.774743248748844e-06,
+                "right_derivative_domega_dt_M2": -6.94943703853738e-05,
+                "derivative_product": 4.0131214620898896e-10,
+                "bracket_status": "nonbracketing_same_sign_negative",
+                "valid_sign_bracket": false
+              },
+              "candidate_minus_minus_epoch_M": 3.6404444472282194e-06,
+              "candidate_minus_minus_epoch_ns": 0.8965488085106754,
+              "candidate_within_gps_half_interval": false
+            }
+          }
+        },
+        "6": {
+          "fixed_iterations": {
+            "8": {
+              "degree": 6,
+              "derivative_method": "fixed_local_degree_6_polynomial",
+              "requested_iterations": 8,
+              "requested_tolerance_M": null,
+              "updates_performed": 8,
+              "stopped_by_tolerance": false,
+              "exact_zero_encountered": false,
+              "candidate_time_M_initial_origin": 5002.718719482422,
+              "final_interval_M_initial_origin": [
+                5002.718688964844,
+                5002.71875
+              ],
+              "final_interval_width_M": 6.103515625e-05,
+              "final_left_derivative_domega_dt_M2": -6.924279291372768e-05,
+              "final_right_derivative_domega_dt_M2": -6.94934548957122e-05,
+              "initial_endpoint": {
+                "left_time_M_initial_origin": 5002.703125,
+                "right_time_M_initial_origin": 5002.71875,
+                "interval_width_M": 0.015625,
+                "left_derivative_domega_dt_M2": -5.775656336256898e-06,
+                "right_derivative_domega_dt_M2": -6.94934548957122e-05,
+                "derivative_product": 4.013703130968031e-10,
+                "bracket_status": "nonbracketing_same_sign_negative",
+                "valid_sign_bracket": false
+              },
+              "candidate_minus_minus_epoch_M": -2.306243641214678e-05,
+              "candidate_minus_minus_epoch_ns": -5.679691088929065,
+              "candidate_within_gps_half_interval": false
+            },
+            "10": {
+              "degree": 6,
+              "derivative_method": "fixed_local_degree_6_polynomial",
+              "requested_iterations": 10,
+              "requested_tolerance_M": null,
+              "updates_performed": 10,
+              "stopped_by_tolerance": false,
+              "exact_zero_encountered": false,
+              "candidate_time_M_initial_origin": 5002.7187423706055,
+              "final_interval_M_initial_origin": [
+                5002.718734741211,
+                5002.71875
+              ],
+              "final_interval_width_M": 1.52587890625e-05,
+              "final_left_derivative_domega_dt_M2": -6.943078809767007e-05,
+              "final_right_derivative_domega_dt_M2": -6.94934548957122e-05,
+              "initial_endpoint": {
+                "left_time_M_initial_origin": 5002.703125,
+                "right_time_M_initial_origin": 5002.71875,
+                "interval_width_M": 0.015625,
+                "left_derivative_domega_dt_M2": -5.775656336256898e-06,
+                "right_derivative_domega_dt_M2": -6.94934548957122e-05,
+                "derivative_product": 4.013703130968031e-10,
+                "bracket_status": "nonbracketing_same_sign_negative",
+                "valid_sign_bracket": false
+              },
+              "candidate_minus_minus_epoch_M": -1.7425281839678064e-07,
+              "candidate_minus_minus_epoch_ns": -0.042914033980716026,
+              "candidate_within_gps_half_interval": true
+            },
+            "12": {
+              "degree": 6,
+              "derivative_method": "fixed_local_degree_6_polynomial",
+              "requested_iterations": 12,
+              "requested_tolerance_M": null,
+              "updates_performed": 12,
+              "stopped_by_tolerance": false,
+              "exact_zero_encountered": false,
+              "candidate_time_M_initial_origin": 5002.718748092651,
+              "final_interval_M_initial_origin": [
+                5002.718746185303,
+                5002.71875
+              ],
+              "final_interval_width_M": 3.814697265625e-06,
+              "final_left_derivative_domega_dt_M2": -6.947778811479134e-05,
+              "final_right_derivative_domega_dt_M2": -6.94934548957122e-05,
+              "initial_endpoint": {
+                "left_time_M_initial_origin": 5002.703125,
+                "right_time_M_initial_origin": 5002.71875,
+                "interval_width_M": 0.015625,
+                "left_derivative_domega_dt_M2": -5.775656336256898e-06,
+                "right_derivative_domega_dt_M2": -6.94934548957122e-05,
+                "derivative_product": 4.013703130968031e-10,
+                "bracket_status": "nonbracketing_same_sign_negative",
+                "valid_sign_bracket": false
+              },
+              "candidate_minus_minus_epoch_M": 5.547793080040719e-06,
+              "candidate_minus_minus_epoch_ns": 1.3662802297563712,
+              "candidate_within_gps_half_interval": false
+            },
+            "14": {
+              "degree": 6,
+              "derivative_method": "fixed_local_degree_6_polynomial",
+              "requested_iterations": 14,
+              "requested_tolerance_M": null,
+              "updates_performed": 14,
+              "stopped_by_tolerance": false,
+              "exact_zero_encountered": false,
+              "candidate_time_M_initial_origin": 5002.718749523163,
+              "final_interval_M_initial_origin": [
+                5002.718749046326,
+                5002.71875
+              ],
+              "final_interval_width_M": 9.5367431640625e-07,
+              "final_left_derivative_domega_dt_M2": -6.948953819539382e-05,
+              "final_right_derivative_domega_dt_M2": -6.94934548957122e-05,
+              "initial_endpoint": {
+                "left_time_M_initial_origin": 5002.703125,
+                "right_time_M_initial_origin": 5002.71875,
+                "interval_width_M": 0.015625,
+                "left_derivative_domega_dt_M2": -5.775656336256898e-06,
+                "right_derivative_domega_dt_M2": -6.94934548957122e-05,
+                "derivative_product": 4.013703130968031e-10,
+                "bracket_status": "nonbracketing_same_sign_negative",
+                "valid_sign_bracket": false
+              },
+              "candidate_minus_minus_epoch_M": 6.978304554650094e-06,
+              "candidate_minus_minus_epoch_ns": 1.7185787956906429,
+              "candidate_within_gps_half_interval": false
+            }
+          },
+          "tolerance": {
+            "1e-5M": {
+              "degree": 6,
+              "derivative_method": "fixed_local_degree_6_polynomial",
+              "requested_iterations": null,
+              "requested_tolerance_M": 1e-05,
+              "updates_performed": 11,
+              "stopped_by_tolerance": true,
+              "exact_zero_encountered": false,
+              "candidate_time_M_initial_origin": 5002.718746185303,
+              "final_interval_M_initial_origin": [
+                5002.7187423706055,
+                5002.71875
+              ],
+              "final_interval_width_M": 7.62939453125e-06,
+              "final_left_derivative_domega_dt_M2": -6.946212138814413e-05,
+              "final_right_derivative_domega_dt_M2": -6.94934548957122e-05,
+              "initial_endpoint": {
+                "left_time_M_initial_origin": 5002.703125,
+                "right_time_M_initial_origin": 5002.71875,
+                "interval_width_M": 0.015625,
+                "left_derivative_domega_dt_M2": -5.775656336256898e-06,
+                "right_derivative_domega_dt_M2": -6.94934548957122e-05,
+                "derivative_product": 4.013703130968031e-10,
+                "bracket_status": "nonbracketing_same_sign_negative",
+                "valid_sign_bracket": false
+              },
+              "candidate_minus_minus_epoch_M": 3.6404444472282194e-06,
+              "candidate_minus_minus_epoch_ns": 0.8965488085106754,
+              "candidate_within_gps_half_interval": false
+            }
+          }
+        }
+      },
+      "no_fitted_shift": true,
+      "same_sign_candidates_are_not_roots": true
+    },
+    "dt_1p01M": {
+      "status": "ok",
+      "input_path": "/tmp/torchwave-public-eob-epoch-sweep-dt_1p01M.npz",
+      "input_sha256": "3854b3be5e6dbf2437ad4ebcc8fdea44149cd1b17bfc479f97556e94595caba4",
+      "requested_dt_M": 1.01,
+      "returned_dt_s": 0.000248737292855884,
+      "returned_dt_M": 1.01,
+      "postpeak_sample_count": 9545,
+      "postpeak_spacing_M": 0.01578125000014552,
+      "sample_maximum": {
+        "index": 9483,
+        "time_M_initial_origin": 5002.70359375,
+        "omega": 0.16441509054696093,
+        "next_time_M_initial_origin": 5002.719375000001,
+        "next_minus_sample_M": 0.01578125000014552,
+        "next_minus_dt_over_2048_prediction_M": 5002.719367294312,
+        "prediction_minus_minus_epoch_M": -5.689225872629322e-07,
+        "prediction_minus_minus_epoch_ns": -0.14011115267361104
+      },
+      "clean_event": {
+        "time_M_initial_origin": 5002.701667223439,
+        "frequency": 0.16441509804876323,
+        "curvature": -0.004040130411709363,
+        "sample_index": 9483,
+        "sample_time_M_initial_origin": 5002.70359375,
+        "sample_omega": 0.16441509054696093
+      },
+      "clean_event_side_of_sample_max": "before",
+      "public_epoch": {
+        "epoch_s": -1.232042448,
+        "epoch_M": -5002.719367863235,
+        "minus_epoch_M": 5002.719367863235,
+        "minus_epoch_minus_sample_M": 0.01577411323432898,
+        "minus_epoch_minus_clean_event_M": 0.017700639796203177,
+        "gps_quantization": {
+          "quantum_s": 1e-09,
+          "quantum_M": 4.0605089345616726e-06,
+          "half_width_s": 5e-10,
+          "half_width_M": 2.0302544672808363e-06,
+          "observed_epoch_s": -1.232042448,
+          "nearest_integer_epoch_ns": -1232042448,
+          "observed_minus_nearest_epoch_ns": 0.0,
+          "nearest_ns_interval_epoch_s": [
+            -1.2320424485,
+            -1.2320424475
+          ],
+          "nearest_ns_interval_minus_epoch_coordinate_M": [
+            5002.719365832981,
+            5002.719369893489
+          ],
+          "interpretation": "The interval is the nearest-GPS-nanosecond quantization interval used for a numerical comparison; it does not establish the producer's internal timestamp representation."
+        }
+      },
+      "bisection_hypotheses": {
+        "3": {
+          "fixed_iterations": {
+            "8": {
+              "degree": 3,
+              "derivative_method": "fixed_local_degree_3_polynomial",
+              "requested_iterations": 8,
+              "requested_tolerance_M": null,
+              "updates_performed": 8,
+              "stopped_by_tolerance": false,
+              "exact_zero_encountered": false,
+              "candidate_time_M_initial_origin": 5002.719344177247,
+              "final_interval_M_initial_origin": [
+                5002.719313354493,
+                5002.719375000001
+              ],
+              "final_interval_width_M": 6.164550723042339e-05,
+              "final_left_derivative_domega_dt_M2": -7.186043734691718e-05,
+              "final_right_derivative_domega_dt_M2": -7.211347330558634e-05,
+              "initial_endpoint": {
+                "left_time_M_initial_origin": 5002.70359375,
+                "right_time_M_initial_origin": 5002.719375000001,
+                "interval_width_M": 0.01578125000014552,
+                "left_derivative_domega_dt_M2": -7.789235571137905e-06,
+                "right_derivative_domega_dt_M2": -7.211347330558634e-05,
+                "derivative_product": 5.617088314301768e-10,
+                "bracket_status": "nonbracketing_same_sign_negative",
+                "valid_sign_bracket": false
+              },
+              "candidate_minus_minus_epoch_M": -2.3685987798671704e-05,
+              "candidate_minus_minus_epoch_ns": -5.8332559244149484,
+              "candidate_within_gps_half_interval": false
+            },
+            "10": {
+              "degree": 3,
+              "derivative_method": "fixed_local_degree_3_polynomial",
+              "requested_iterations": 10,
+              "requested_tolerance_M": null,
+              "updates_performed": 10,
+              "stopped_by_tolerance": false,
+              "exact_zero_encountered": false,
+              "candidate_time_M_initial_origin": 5002.719367294312,
+              "final_interval_M_initial_origin": [
+                5002.719359588624,
+                5002.719375000001
+              ],
+              "final_interval_width_M": 1.5411376807605848e-05,
+              "final_left_derivative_domega_dt_M2": -7.205021301488423e-05,
+              "final_right_derivative_domega_dt_M2": -7.211347330558634e-05,
+              "initial_endpoint": {
+                "left_time_M_initial_origin": 5002.70359375,
+                "right_time_M_initial_origin": 5002.719375000001,
+                "interval_width_M": 0.01578125000014552,
+                "left_derivative_domega_dt_M2": -7.789235571137905e-06,
+                "right_derivative_domega_dt_M2": -7.211347330558634e-05,
+                "derivative_product": 5.617088314301768e-10,
+                "bracket_status": "nonbracketing_same_sign_negative",
+                "valid_sign_bracket": false
+              },
+              "candidate_minus_minus_epoch_M": -5.689225872629322e-07,
+              "candidate_minus_minus_epoch_ns": -0.14011115267361104,
+              "candidate_within_gps_half_interval": true
+            },
+            "12": {
+              "degree": 3,
+              "derivative_method": "fixed_local_degree_3_polynomial",
+              "requested_iterations": 12,
+              "requested_tolerance_M": null,
+              "updates_performed": 12,
+              "stopped_by_tolerance": false,
+              "exact_zero_encountered": false,
+              "candidate_time_M_initial_origin": 5002.719373073578,
+              "final_interval_M_initial_origin": [
+                5002.719371147156,
+                5002.719375000001
+              ],
+              "final_interval_width_M": 3.852844201901462e-06,
+              "final_left_derivative_domega_dt_M2": -7.209765815159614e-05,
+              "final_right_derivative_domega_dt_M2": -7.211347330558634e-05,
+              "initial_endpoint": {
+                "left_time_M_initial_origin": 5002.70359375,
+                "right_time_M_initial_origin": 5002.719375000001,
+                "interval_width_M": 0.01578125000014552,
+                "left_derivative_domega_dt_M2": -7.789235571137905e-06,
+                "right_derivative_domega_dt_M2": -7.211347330558634e-05,
+                "derivative_product": 5.617088314301768e-10,
+                "bracket_status": "nonbracketing_same_sign_negative",
+                "valid_sign_bracket": false
+              },
+              "candidate_minus_minus_epoch_M": 5.21034326084191e-06,
+              "candidate_minus_minus_epoch_ns": 1.2831749282690252,
+              "candidate_within_gps_half_interval": false
+            },
+            "14": {
+              "degree": 3,
+              "derivative_method": "fixed_local_degree_3_polynomial",
+              "requested_iterations": 14,
+              "requested_tolerance_M": null,
+              "updates_performed": 14,
+              "stopped_by_tolerance": false,
+              "exact_zero_encountered": false,
+              "candidate_time_M_initial_origin": 5002.719374518395,
+              "final_interval_M_initial_origin": [
+                5002.719374036789,
+                5002.719375000001
+              ],
+              "final_interval_width_M": 9.63211277849041e-07,
+              "final_left_derivative_domega_dt_M2": -7.21095195110733e-05,
+              "final_right_derivative_domega_dt_M2": -7.211347330558634e-05,
+              "initial_endpoint": {
+                "left_time_M_initial_origin": 5002.70359375,
+                "right_time_M_initial_origin": 5002.719375000001,
+                "interval_width_M": 0.01578125000014552,
+                "left_derivative_domega_dt_M2": -7.789235571137905e-06,
+                "right_derivative_domega_dt_M2": -7.211347330558634e-05,
+                "derivative_product": 5.617088314301768e-10,
+                "bracket_status": "nonbracketing_same_sign_negative",
+                "valid_sign_bracket": false
+              },
+              "candidate_minus_minus_epoch_M": 6.655160177615471e-06,
+              "candidate_minus_minus_epoch_ns": 1.6389965604973824,
+              "candidate_within_gps_half_interval": false
+            }
+          },
+          "tolerance": {
+            "1e-5M": {
+              "degree": 3,
+              "derivative_method": "fixed_local_degree_3_polynomial",
+              "requested_iterations": null,
+              "requested_tolerance_M": 1e-05,
+              "updates_performed": 11,
+              "stopped_by_tolerance": true,
+              "exact_zero_encountered": false,
+              "candidate_time_M_initial_origin": 5002.719371147156,
+              "final_interval_M_initial_origin": [
+                5002.719367294312,
+                5002.719375000001
+              ],
+              "final_interval_width_M": 7.705688403802924e-06,
+              "final_left_derivative_domega_dt_M2": -7.208184305181571e-05,
+              "final_right_derivative_domega_dt_M2": -7.211347330558634e-05,
+              "initial_endpoint": {
+                "left_time_M_initial_origin": 5002.70359375,
+                "right_time_M_initial_origin": 5002.719375000001,
+                "interval_width_M": 0.01578125000014552,
+                "left_derivative_domega_dt_M2": -7.789235571137905e-06,
+                "right_derivative_domega_dt_M2": -7.211347330558634e-05,
+                "derivative_product": 5.617088314301768e-10,
+                "bracket_status": "nonbracketing_same_sign_negative",
+                "valid_sign_bracket": false
+              },
+              "candidate_minus_minus_epoch_M": 3.2839216146385297e-06,
+              "candidate_minus_minus_epoch_ns": 0.8087463092832785,
+              "candidate_within_gps_half_interval": false
+            }
+          }
+        },
+        "6": {
+          "fixed_iterations": {
+            "8": {
+              "degree": 6,
+              "derivative_method": "fixed_local_degree_6_polynomial",
+              "requested_iterations": 8,
+              "requested_tolerance_M": null,
+              "updates_performed": 8,
+              "stopped_by_tolerance": false,
+              "exact_zero_encountered": false,
+              "candidate_time_M_initial_origin": 5002.719344177247,
+              "final_interval_M_initial_origin": [
+                5002.719313354493,
+                5002.719375000001
+              ],
+              "final_interval_width_M": 6.164550723042339e-05,
+              "final_left_derivative_domega_dt_M2": -7.185952611430828e-05,
+              "final_right_derivative_domega_dt_M2": -7.211255843886074e-05,
+              "initial_endpoint": {
+                "left_time_M_initial_origin": 5002.70359375,
+                "right_time_M_initial_origin": 5002.719375000001,
+                "interval_width_M": 0.01578125000014552,
+                "left_derivative_domega_dt_M2": -7.790148057902716e-06,
+                "right_derivative_domega_dt_M2": -7.211255843886074e-05,
+                "derivative_product": 5.617675070728871e-10,
+                "bracket_status": "nonbracketing_same_sign_negative",
+                "valid_sign_bracket": false
+              },
+              "candidate_minus_minus_epoch_M": -2.3685987798671704e-05,
+              "candidate_minus_minus_epoch_ns": -5.8332559244149484,
+              "candidate_within_gps_half_interval": false
+            },
+            "10": {
+              "degree": 6,
+              "derivative_method": "fixed_local_degree_6_polynomial",
+              "requested_iterations": 10,
+              "requested_tolerance_M": null,
+              "updates_performed": 10,
+              "stopped_by_tolerance": false,
+              "exact_zero_encountered": false,
+              "candidate_time_M_initial_origin": 5002.719367294312,
+              "final_interval_M_initial_origin": [
+                5002.719359588624,
+                5002.719375000001
+              ],
+              "final_interval_width_M": 1.5411376807605848e-05,
+              "final_left_derivative_domega_dt_M2": -7.204929904887139e-05,
+              "final_right_derivative_domega_dt_M2": -7.211255843886074e-05,
+              "initial_endpoint": {
+                "left_time_M_initial_origin": 5002.70359375,
+                "right_time_M_initial_origin": 5002.719375000001,
+                "interval_width_M": 0.01578125000014552,
+                "left_derivative_domega_dt_M2": -7.790148057902716e-06,
+                "right_derivative_domega_dt_M2": -7.211255843886074e-05,
+                "derivative_product": 5.617675070728871e-10,
+                "bracket_status": "nonbracketing_same_sign_negative",
+                "valid_sign_bracket": false
+              },
+              "candidate_minus_minus_epoch_M": -5.689225872629322e-07,
+              "candidate_minus_minus_epoch_ns": -0.14011115267361104,
+              "candidate_within_gps_half_interval": true
+            },
+            "12": {
+              "degree": 6,
+              "derivative_method": "fixed_local_degree_6_polynomial",
+              "requested_iterations": 12,
+              "requested_tolerance_M": null,
+              "updates_performed": 12,
+              "stopped_by_tolerance": false,
+              "exact_zero_encountered": false,
+              "candidate_time_M_initial_origin": 5002.719373073578,
+              "final_interval_M_initial_origin": [
+                5002.719371147156,
+                5002.719375000001
+              ],
+              "final_interval_width_M": 3.852844201901462e-06,
+              "final_left_derivative_domega_dt_M2": -7.209674350955898e-05,
+              "final_right_derivative_domega_dt_M2": -7.211255843886074e-05,
+              "initial_endpoint": {
+                "left_time_M_initial_origin": 5002.70359375,
+                "right_time_M_initial_origin": 5002.719375000001,
+                "interval_width_M": 0.01578125000014552,
+                "left_derivative_domega_dt_M2": -7.790148057902716e-06,
+                "right_derivative_domega_dt_M2": -7.211255843886074e-05,
+                "derivative_product": 5.617675070728871e-10,
+                "bracket_status": "nonbracketing_same_sign_negative",
+                "valid_sign_bracket": false
+              },
+              "candidate_minus_minus_epoch_M": 5.21034326084191e-06,
+              "candidate_minus_minus_epoch_ns": 1.2831749282690252,
+              "candidate_within_gps_half_interval": false
+            },
+            "14": {
+              "degree": 6,
+              "derivative_method": "fixed_local_degree_6_polynomial",
+              "requested_iterations": 14,
+              "requested_tolerance_M": null,
+              "updates_performed": 14,
+              "stopped_by_tolerance": false,
+              "exact_zero_encountered": false,
+              "candidate_time_M_initial_origin": 5002.719374518395,
+              "final_interval_M_initial_origin": [
+                5002.719374036789,
+                5002.719375000001
+              ],
+              "final_interval_width_M": 9.63211277849041e-07,
+              "final_left_derivative_domega_dt_M2": -7.21086047004892e-05,
+              "final_right_derivative_domega_dt_M2": -7.211255843886074e-05,
+              "initial_endpoint": {
+                "left_time_M_initial_origin": 5002.70359375,
+                "right_time_M_initial_origin": 5002.719375000001,
+                "interval_width_M": 0.01578125000014552,
+                "left_derivative_domega_dt_M2": -7.790148057902716e-06,
+                "right_derivative_domega_dt_M2": -7.211255843886074e-05,
+                "derivative_product": 5.617675070728871e-10,
+                "bracket_status": "nonbracketing_same_sign_negative",
+                "valid_sign_bracket": false
+              },
+              "candidate_minus_minus_epoch_M": 6.655160177615471e-06,
+              "candidate_minus_minus_epoch_ns": 1.6389965604973824,
+              "candidate_within_gps_half_interval": false
+            }
+          },
+          "tolerance": {
+            "1e-5M": {
+              "degree": 6,
+              "derivative_method": "fixed_local_degree_6_polynomial",
+              "requested_iterations": null,
+              "requested_tolerance_M": 1e-05,
+              "updates_performed": 11,
+              "stopped_by_tolerance": true,
+              "exact_zero_encountered": false,
+              "candidate_time_M_initial_origin": 5002.719371147156,
+              "final_interval_M_initial_origin": [
+                5002.719367294312,
+                5002.719375000001
+              ],
+              "final_interval_width_M": 7.705688403802924e-06,
+              "final_left_derivative_domega_dt_M2": -7.208092863479362e-05,
+              "final_right_derivative_domega_dt_M2": -7.211255843886074e-05,
+              "initial_endpoint": {
+                "left_time_M_initial_origin": 5002.70359375,
+                "right_time_M_initial_origin": 5002.719375000001,
+                "interval_width_M": 0.01578125000014552,
+                "left_derivative_domega_dt_M2": -7.790148057902716e-06,
+                "right_derivative_domega_dt_M2": -7.211255843886074e-05,
+                "derivative_product": 5.617675070728871e-10,
+                "bracket_status": "nonbracketing_same_sign_negative",
+                "valid_sign_bracket": false
+              },
+              "candidate_minus_minus_epoch_M": 3.2839216146385297e-06,
+              "candidate_minus_minus_epoch_ns": 0.8087463092832785,
+              "candidate_within_gps_half_interval": false
+            }
+          }
+        }
+      },
+      "no_fitted_shift": true,
+      "same_sign_candidates_are_not_roots": true
+    },
+    "dt_1p05M": {
+      "status": "ok",
+      "input_path": "/tmp/torchwave-public-eob-epoch-sweep-dt_1p05M.npz",
+      "input_sha256": "ab6fffb73ea8835e40b5c83e359c51f06aaa1431542e53f8158dc7d4d49dec12",
+      "requested_dt_M": 1.05,
+      "returned_dt_s": 0.0002585882747511665,
+      "returned_dt_M": 1.05,
+      "postpeak_sample_count": 9185,
+      "postpeak_spacing_M": 0.0164062499998181,
+      "sample_maximum": {
+        "index": 9119,
+        "time_M_initial_origin": 5002.708593750001,
+        "omega": 0.16441502253726256,
+        "next_time_M_initial_origin": 5002.725,
+        "next_minus_sample_M": 0.0164062499998181,
+        "next_minus_dt_over_2048_prediction_M": 5002.7249919891365,
+        "prediction_minus_minus_epoch_M": 3.2102798286359757e-07,
+        "prediction_minus_minus_epoch_ns": 0.07906102117670927
+      },
+      "clean_event": {
+        "time_M_initial_origin": 5002.701695982562,
+        "frequency": 0.16441511893528224,
+        "curvature": -0.004043650740035558,
+        "sample_index": 9119,
+        "sample_time_M_initial_origin": 5002.708593750001,
+        "sample_omega": 0.16441502253726256
+      },
+      "clean_event_side_of_sample_max": "before",
+      "public_epoch": {
+        "epoch_s": -1.232043833,
+        "epoch_M": -5002.7249916681085,
+        "minus_epoch_M": 5002.7249916681085,
+        "minus_epoch_minus_sample_M": 0.016397918107941223,
+        "minus_epoch_minus_clean_event_M": 0.02329568554614525,
+        "gps_quantization": {
+          "quantum_s": 1e-09,
+          "quantum_M": 4.0605089345616726e-06,
+          "half_width_s": 5e-10,
+          "half_width_M": 2.0302544672808363e-06,
+          "observed_epoch_s": -1.232043833,
+          "nearest_integer_epoch_ns": -1232043833,
+          "observed_minus_nearest_epoch_ns": 0.0,
+          "nearest_ns_interval_epoch_s": [
+            -1.2320438335000001,
+            -1.2320438325
+          ],
+          "nearest_ns_interval_minus_epoch_coordinate_M": [
+            5002.724989637854,
+            5002.724993698363
+          ],
+          "interpretation": "The interval is the nearest-GPS-nanosecond quantization interval used for a numerical comparison; it does not establish the producer's internal timestamp representation."
+        }
+      },
+      "bisection_hypotheses": {
+        "3": {
+          "fixed_iterations": {
+            "8": {
+              "degree": 3,
+              "derivative_method": "fixed_local_degree_3_polynomial",
+              "requested_iterations": 8,
+              "requested_tolerance_M": null,
+              "updates_performed": 8,
+              "stopped_by_tolerance": false,
+              "exact_zero_encountered": false,
+              "candidate_time_M_initial_origin": 5002.724967956543,
+              "final_interval_M_initial_origin": [
+                5002.7249359130865,
+                5002.725
+              ],
+              "final_interval_width_M": 6.408691388060106e-05,
+              "final_left_derivative_domega_dt_M2": -9.49731889559541e-05,
+              "final_right_derivative_domega_dt_M2": -9.523786662288074e-05,
+              "initial_endpoint": {
+                "left_time_M_initial_origin": 5002.708593750001,
+                "right_time_M_initial_origin": 5002.725,
+                "interval_width_M": 0.0164062499998181,
+                "left_derivative_domega_dt_M2": -2.7978642492643115e-05,
+                "right_derivative_domega_dt_M2": -9.523786662288074e-05,
+                "derivative_product": 2.6646262220036087e-09,
+                "bracket_status": "nonbracketing_same_sign_negative",
+                "valid_sign_bracket": false
+              },
+              "candidate_minus_minus_epoch_M": -2.3711565518169664e-05,
+              "candidate_minus_minus_epoch_ns": -5.839555065707374,
+              "candidate_within_gps_half_interval": false
+            },
+            "10": {
+              "degree": 3,
+              "derivative_method": "fixed_local_degree_3_polynomial",
+              "requested_iterations": 10,
+              "requested_tolerance_M": null,
+              "updates_performed": 10,
+              "stopped_by_tolerance": false,
+              "exact_zero_encountered": false,
+              "candidate_time_M_initial_origin": 5002.7249919891365,
+              "final_interval_M_initial_origin": [
+                5002.724983978272,
+                5002.725
+              ],
+              "final_interval_width_M": 1.602172869752394e-05,
+              "final_left_derivative_domega_dt_M2": -9.517169577408986e-05,
+              "final_right_derivative_domega_dt_M2": -9.523786662288074e-05,
+              "initial_endpoint": {
+                "left_time_M_initial_origin": 5002.708593750001,
+                "right_time_M_initial_origin": 5002.725,
+                "interval_width_M": 0.0164062499998181,
+                "left_derivative_domega_dt_M2": -2.7978642492643115e-05,
+                "right_derivative_domega_dt_M2": -9.523786662288074e-05,
+                "derivative_product": 2.6646262220036087e-09,
+                "bracket_status": "nonbracketing_same_sign_negative",
+                "valid_sign_bracket": false
+              },
+              "candidate_minus_minus_epoch_M": 3.2102798286359757e-07,
+              "candidate_minus_minus_epoch_ns": 0.07906102117670927,
+              "candidate_within_gps_half_interval": true
+            },
+            "12": {
+              "degree": 3,
+              "derivative_method": "fixed_local_degree_3_polynomial",
+              "requested_iterations": 12,
+              "requested_tolerance_M": null,
+              "updates_performed": 12,
+              "stopped_by_tolerance": false,
+              "exact_zero_encountered": false,
+              "candidate_time_M_initial_origin": 5002.724997997284,
+              "final_interval_M_initial_origin": [
+                5002.724995994568,
+                5002.725
+              ],
+              "final_interval_width_M": 4.00543194700731e-06,
+              "final_left_derivative_domega_dt_M2": -9.522132382217708e-05,
+              "final_right_derivative_domega_dt_M2": -9.523786662288074e-05,
+              "initial_endpoint": {
+                "left_time_M_initial_origin": 5002.708593750001,
+                "right_time_M_initial_origin": 5002.725,
+                "interval_width_M": 0.0164062499998181,
+                "left_derivative_domega_dt_M2": -2.7978642492643115e-05,
+                "right_derivative_domega_dt_M2": -9.523786662288074e-05,
+                "derivative_product": 2.6646262220036087e-09,
+                "bracket_status": "nonbracketing_same_sign_negative",
+                "valid_sign_bracket": false
+              },
+              "candidate_minus_minus_epoch_M": 6.329175448627211e-06,
+              "candidate_minus_minus_epoch_ns": 1.5587148189123339,
+              "candidate_within_gps_half_interval": false
+            },
+            "14": {
+              "degree": 3,
+              "derivative_method": "fixed_local_degree_3_polynomial",
+              "requested_iterations": 14,
+              "requested_tolerance_M": null,
+              "updates_performed": 14,
+              "stopped_by_tolerance": false,
+              "exact_zero_encountered": false,
+              "candidate_time_M_initial_origin": 5002.724999499322,
+              "final_interval_M_initial_origin": [
+                5002.724998998642,
+                5002.725
+              ],
+              "final_interval_width_M": 1.0013582141255029e-06,
+              "final_left_derivative_domega_dt_M2": -9.523373091617545e-05,
+              "final_right_derivative_domega_dt_M2": -9.523786662288074e-05,
+              "initial_endpoint": {
+                "left_time_M_initial_origin": 5002.708593750001,
+                "right_time_M_initial_origin": 5002.725,
+                "interval_width_M": 0.0164062499998181,
+                "left_derivative_domega_dt_M2": -2.7978642492643115e-05,
+                "right_derivative_domega_dt_M2": -9.523786662288074e-05,
+                "derivative_product": 2.6646262220036087e-09,
+                "bracket_status": "nonbracketing_same_sign_negative",
+                "valid_sign_bracket": false
+              },
+              "candidate_minus_minus_epoch_M": 7.831213224562816e-06,
+              "candidate_minus_minus_epoch_ns": 1.9286284923316361,
+              "candidate_within_gps_half_interval": false
+            }
+          },
+          "tolerance": {
+            "1e-5M": {
+              "degree": 3,
+              "derivative_method": "fixed_local_degree_3_polynomial",
+              "requested_iterations": null,
+              "requested_tolerance_M": 1e-05,
+              "updates_performed": 11,
+              "stopped_by_tolerance": true,
+              "exact_zero_encountered": false,
+              "candidate_time_M_initial_origin": 5002.724995994568,
+              "final_interval_M_initial_origin": [
+                5002.7249919891365,
+                5002.725
+              ],
+              "final_interval_width_M": 8.01086389401462e-06,
+              "final_left_derivative_domega_dt_M2": -9.520478108110342e-05,
+              "final_right_derivative_domega_dt_M2": -9.523786662288074e-05,
+              "initial_endpoint": {
+                "left_time_M_initial_origin": 5002.708593750001,
+                "right_time_M_initial_origin": 5002.725,
+                "interval_width_M": 0.0164062499998181,
+                "left_derivative_domega_dt_M2": -2.7978642492643115e-05,
+                "right_derivative_domega_dt_M2": -9.523786662288074e-05,
+                "derivative_product": 2.6646262220036087e-09,
+                "bracket_status": "nonbracketing_same_sign_negative",
+                "valid_sign_bracket": false
+              },
+              "candidate_minus_minus_epoch_M": 4.326459929870907e-06,
+              "candidate_minus_minus_epoch_ns": 1.065496960995591,
+              "candidate_within_gps_half_interval": false
+            }
+          }
+        },
+        "6": {
+          "fixed_iterations": {
+            "8": {
+              "degree": 6,
+              "derivative_method": "fixed_local_degree_6_polynomial",
+              "requested_iterations": 8,
+              "requested_tolerance_M": null,
+              "updates_performed": 8,
+              "stopped_by_tolerance": false,
+              "exact_zero_encountered": false,
+              "candidate_time_M_initial_origin": 5002.724967956543,
+              "final_interval_M_initial_origin": [
+                5002.7249359130865,
+                5002.725
+              ],
+              "final_interval_width_M": 6.408691388060106e-05,
+              "final_left_derivative_domega_dt_M2": -9.497212502592937e-05,
+              "final_right_derivative_domega_dt_M2": -9.523679843007536e-05,
+              "initial_endpoint": {
+                "left_time_M_initial_origin": 5002.708593750001,
+                "right_time_M_initial_origin": 5002.725,
+                "interval_width_M": 0.0164062499998181,
+                "left_derivative_domega_dt_M2": -2.7979705727868787e-05,
+                "right_derivative_domega_dt_M2": -9.523679843007536e-05,
+                "derivative_product": 2.6646975945378648e-09,
+                "bracket_status": "nonbracketing_same_sign_negative",
+                "valid_sign_bracket": false
+              },
+              "candidate_minus_minus_epoch_M": -2.3711565518169664e-05,
+              "candidate_minus_minus_epoch_ns": -5.839555065707374,
+              "candidate_within_gps_half_interval": false
+            },
+            "10": {
+              "degree": 6,
+              "derivative_method": "fixed_local_degree_6_polynomial",
+              "requested_iterations": 10,
+              "requested_tolerance_M": null,
+              "updates_performed": 10,
+              "stopped_by_tolerance": false,
+              "exact_zero_encountered": false,
+              "candidate_time_M_initial_origin": 5002.7249919891365,
+              "final_interval_M_initial_origin": [
+                5002.724983978272,
+                5002.725
+              ],
+              "final_interval_width_M": 1.602172869752394e-05,
+              "final_left_derivative_domega_dt_M2": -9.517062863786713e-05,
+              "final_right_derivative_domega_dt_M2": -9.523679843007536e-05,
+              "initial_endpoint": {
+                "left_time_M_initial_origin": 5002.708593750001,
+                "right_time_M_initial_origin": 5002.725,
+                "interval_width_M": 0.0164062499998181,
+                "left_derivative_domega_dt_M2": -2.7979705727868787e-05,
+                "right_derivative_domega_dt_M2": -9.523679843007536e-05,
+                "derivative_product": 2.6646975945378648e-09,
+                "bracket_status": "nonbracketing_same_sign_negative",
+                "valid_sign_bracket": false
+              },
+              "candidate_minus_minus_epoch_M": 3.2102798286359757e-07,
+              "candidate_minus_minus_epoch_ns": 0.07906102117670927,
+              "candidate_within_gps_half_interval": true
+            },
+            "12": {
+              "degree": 6,
+              "derivative_method": "fixed_local_degree_6_polynomial",
+              "requested_iterations": 12,
+              "requested_tolerance_M": null,
+              "updates_performed": 12,
+              "stopped_by_tolerance": false,
+              "exact_zero_encountered": false,
+              "candidate_time_M_initial_origin": 5002.724997997284,
+              "final_interval_M_initial_origin": [
+                5002.724995994568,
+                5002.725
+              ],
+              "final_interval_width_M": 4.00543194700731e-06,
+              "final_left_derivative_domega_dt_M2": -9.522025589294641e-05,
+              "final_right_derivative_domega_dt_M2": -9.523679843007536e-05,
+              "initial_endpoint": {
+                "left_time_M_initial_origin": 5002.708593750001,
+                "right_time_M_initial_origin": 5002.725,
+                "interval_width_M": 0.0164062499998181,
+                "left_derivative_domega_dt_M2": -2.7979705727868787e-05,
+                "right_derivative_domega_dt_M2": -9.523679843007536e-05,
+                "derivative_product": 2.6646975945378648e-09,
+                "bracket_status": "nonbracketing_same_sign_negative",
+                "valid_sign_bracket": false
+              },
+              "candidate_minus_minus_epoch_M": 6.329175448627211e-06,
+              "candidate_minus_minus_epoch_ns": 1.5587148189123339,
+              "candidate_within_gps_half_interval": false
+            },
+            "14": {
+              "degree": 6,
+              "derivative_method": "fixed_local_degree_6_polynomial",
+              "requested_iterations": 14,
+              "requested_tolerance_M": null,
+              "updates_performed": 14,
+              "stopped_by_tolerance": false,
+              "exact_zero_encountered": false,
+              "candidate_time_M_initial_origin": 5002.724999499322,
+              "final_interval_M_initial_origin": [
+                5002.724998998642,
+                5002.725
+              ],
+              "final_interval_width_M": 1.0013582141255029e-06,
+              "final_left_derivative_domega_dt_M2": -9.523266278922804e-05,
+              "final_right_derivative_domega_dt_M2": -9.523679843007536e-05,
+              "initial_endpoint": {
+                "left_time_M_initial_origin": 5002.708593750001,
+                "right_time_M_initial_origin": 5002.725,
+                "interval_width_M": 0.0164062499998181,
+                "left_derivative_domega_dt_M2": -2.7979705727868787e-05,
+                "right_derivative_domega_dt_M2": -9.523679843007536e-05,
+                "derivative_product": 2.6646975945378648e-09,
+                "bracket_status": "nonbracketing_same_sign_negative",
+                "valid_sign_bracket": false
+              },
+              "candidate_minus_minus_epoch_M": 7.831213224562816e-06,
+              "candidate_minus_minus_epoch_ns": 1.9286284923316361,
+              "candidate_within_gps_half_interval": false
+            }
+          },
+          "tolerance": {
+            "1e-5M": {
+              "degree": 6,
+              "derivative_method": "fixed_local_degree_6_polynomial",
+              "requested_iterations": null,
+              "requested_tolerance_M": 1e-05,
+              "updates_performed": 11,
+              "stopped_by_tolerance": true,
+              "exact_zero_encountered": false,
+              "candidate_time_M_initial_origin": 5002.724995994568,
+              "final_interval_M_initial_origin": [
+                5002.7249919891365,
+                5002.725
+              ],
+              "final_interval_width_M": 8.01086389401462e-06,
+              "final_left_derivative_domega_dt_M2": -9.52037134158282e-05,
+              "final_right_derivative_domega_dt_M2": -9.523679843007536e-05,
+              "initial_endpoint": {
+                "left_time_M_initial_origin": 5002.708593750001,
+                "right_time_M_initial_origin": 5002.725,
+                "interval_width_M": 0.0164062499998181,
+                "left_derivative_domega_dt_M2": -2.7979705727868787e-05,
+                "right_derivative_domega_dt_M2": -9.523679843007536e-05,
+                "derivative_product": 2.6646975945378648e-09,
+                "bracket_status": "nonbracketing_same_sign_negative",
+                "valid_sign_bracket": false
+              },
+              "candidate_minus_minus_epoch_M": 4.326459929870907e-06,
+              "candidate_minus_minus_epoch_ns": 1.065496960995591,
+              "candidate_within_gps_half_interval": false
+            }
+          }
+        }
+      },
+      "no_fitted_shift": true,
+      "same_sign_candidates_are_not_roots": true
+    },
+    "dt_1p10M": {
+      "status": "ok",
+      "input_path": "/tmp/torchwave-public-eob-epoch-sweep-dt_1p10M.npz",
+      "input_sha256": "22813694010e98bc8035ab297344b28e61624de2c2f1aa8caf29985188f93f13",
+      "requested_dt_M": 1.1,
+      "returned_dt_s": 0.0002709020021202697,
+      "returned_dt_M": 1.1,
+      "postpeak_sample_count": 8757,
+      "postpeak_spacing_M": 0.017187499999636202,
+      "sample_maximum": {
+        "index": 8698,
+        "time_M_initial_origin": 5002.696875000001,
+        "omega": 0.1644150580705961,
+        "next_time_M_initial_origin": 5002.714062500001,
+        "next_minus_sample_M": 0.017187500000545697,
+        "next_minus_dt_over_2048_prediction_M": 5002.714054107667,
+        "prediction_minus_minus_epoch_M": 0.012438789494808589,
+        "prediction_minus_minus_epoch_ns": 3063.3572528147492
+      },
+      "clean_event": {
+        "time_M_initial_origin": 5002.701658109978,
+        "frequency": 0.1644151042367272,
+        "curvature": -0.004041622665631784,
+        "sample_index": 8698,
+        "sample_time_M_initial_origin": 5002.696875000001,
+        "sample_omega": 0.1644150580705961
+      },
+      "clean_event_side_of_sample_max": "after",
+      "public_epoch": {
+        "epoch_s": -1.232038076,
+        "epoch_M": -5002.701615318172,
+        "minus_epoch_M": 5002.701615318172,
+        "minus_epoch_minus_sample_M": 0.004740318171570834,
+        "minus_epoch_minus_clean_event_M": -4.279180575395003e-05,
+        "gps_quantization": {
+          "quantum_s": 1e-09,
+          "quantum_M": 4.0605089345616726e-06,
+          "half_width_s": 5e-10,
+          "half_width_M": 2.0302544672808363e-06,
+          "observed_epoch_s": -1.232038076,
+          "nearest_integer_epoch_ns": -1232038076,
+          "observed_minus_nearest_epoch_ns": 0.0,
+          "nearest_ns_interval_epoch_s": [
+            -1.2320380765,
+            -1.2320380755
+          ],
+          "nearest_ns_interval_minus_epoch_coordinate_M": [
+            5002.701613287918,
+            5002.701617348426
+          ],
+          "interpretation": "The interval is the nearest-GPS-nanosecond quantization interval used for a numerical comparison; it does not establish the producer's internal timestamp representation."
+        }
+      },
+      "bisection_hypotheses": {
+        "3": {
+          "fixed_iterations": {
+            "8": {
+              "degree": 3,
+              "derivative_method": "fixed_local_degree_3_polynomial",
+              "requested_iterations": 8,
+              "requested_tolerance_M": null,
+              "updates_performed": 8,
+              "stopped_by_tolerance": false,
+              "exact_zero_encountered": false,
+              "candidate_time_M_initial_origin": 5002.701675415039,
+              "final_interval_M_initial_origin": [
+                5002.701641845702,
+                5002.701708984375
+              ],
+              "final_interval_width_M": 6.713867242069682e-05,
+              "final_left_derivative_domega_dt_M2": 6.636333667584129e-08,
+              "final_right_derivative_domega_dt_M2": -2.050002031540907e-07,
+              "initial_endpoint": {
+                "left_time_M_initial_origin": 5002.696875000001,
+                "right_time_M_initial_origin": 5002.714062500001,
+                "interval_width_M": 0.017187500000545697,
+                "left_derivative_domega_dt_M2": 1.9291145509098252e-05,
+                "right_derivative_domega_dt_M2": -5.041575555771131e-05,
+                "derivative_product": -9.725776764149378e-10,
+                "bracket_status": "valid_sign_bracket",
+                "valid_sign_bracket": true
+              },
+              "candidate_minus_minus_epoch_M": 6.009686694596894e-05,
+              "candidate_minus_minus_epoch_ns": 14.800328706198584,
+              "candidate_within_gps_half_interval": false
+            },
+            "10": {
+              "degree": 3,
+              "derivative_method": "fixed_local_degree_3_polynomial",
+              "requested_iterations": 10,
+              "requested_tolerance_M": null,
+              "updates_performed": 10,
+              "stopped_by_tolerance": false,
+              "exact_zero_encountered": false,
+              "candidate_time_M_initial_origin": 5002.701650238037,
+              "final_interval_M_initial_origin": [
+                5002.701641845702,
+                5002.701658630371
+              ],
+              "final_interval_width_M": 1.678466833254788e-05,
+              "final_left_derivative_domega_dt_M2": 6.636333667584129e-08,
+              "final_right_derivative_domega_dt_M2": -1.4760076442100046e-09,
+              "initial_endpoint": {
+                "left_time_M_initial_origin": 5002.696875000001,
+                "right_time_M_initial_origin": 5002.714062500001,
+                "interval_width_M": 0.017187500000545697,
+                "left_derivative_domega_dt_M2": 1.9291145509098252e-05,
+                "right_derivative_domega_dt_M2": -5.041575555771131e-05,
+                "derivative_product": -9.725776764149378e-10,
+                "bracket_status": "valid_sign_bracket",
+                "valid_sign_bracket": true
+              },
+              "candidate_minus_minus_epoch_M": 3.491986444714712e-05,
+              "candidate_minus_minus_epoch_ns": 8.59987381136416,
+              "candidate_within_gps_half_interval": false
+            },
+            "12": {
+              "degree": 3,
+              "derivative_method": "fixed_local_degree_3_polynomial",
+              "requested_iterations": 12,
+              "requested_tolerance_M": null,
+              "updates_performed": 12,
+              "stopped_by_tolerance": false,
+              "exact_zero_encountered": false,
+              "candidate_time_M_initial_origin": 5002.701656532287,
+              "final_interval_M_initial_origin": [
+                5002.701654434204,
+                5002.701658630371
+              ],
+              "final_interval_width_M": 4.196166628389619e-06,
+              "final_left_derivative_domega_dt_M2": 1.5483922945101466e-08,
+              "final_right_derivative_domega_dt_M2": -1.4760076442100046e-09,
+              "initial_endpoint": {
+                "left_time_M_initial_origin": 5002.696875000001,
+                "right_time_M_initial_origin": 5002.714062500001,
+                "interval_width_M": 0.017187500000545697,
+                "left_derivative_domega_dt_M2": 1.9291145509098252e-05,
+                "right_derivative_domega_dt_M2": -5.041575555771131e-05,
+                "derivative_product": -9.725776764149378e-10,
+                "bracket_status": "valid_sign_bracket",
+                "valid_sign_bracket": true
+              },
+              "candidate_minus_minus_epoch_M": 4.121411529922625e-05,
+              "candidate_minus_minus_epoch_ns": 10.149987591069117,
+              "candidate_within_gps_half_interval": false
+            },
+            "14": {
+              "degree": 3,
+              "derivative_method": "fixed_local_degree_3_polynomial",
+              "requested_iterations": 14,
+              "requested_tolerance_M": null,
+              "updates_performed": 14,
+              "stopped_by_tolerance": false,
+              "exact_zero_encountered": false,
+              "candidate_time_M_initial_origin": 5002.70165810585,
+              "final_interval_M_initial_origin": [
+                5002.701657581329,
+                5002.701658630371
+              ],
+              "final_interval_width_M": 1.0490421118447557e-06,
+              "final_left_derivative_domega_dt_M2": 2.76398286280845e-09,
+              "final_right_derivative_domega_dt_M2": -1.4760076442100046e-09,
+              "initial_endpoint": {
+                "left_time_M_initial_origin": 5002.696875000001,
+                "right_time_M_initial_origin": 5002.714062500001,
+                "interval_width_M": 0.017187500000545697,
+                "left_derivative_domega_dt_M2": 1.9291145509098252e-05,
+                "right_derivative_domega_dt_M2": -5.041575555771131e-05,
+                "derivative_product": -9.725776764149378e-10,
+                "bracket_status": "valid_sign_bracket",
+                "valid_sign_bracket": true
+              },
+              "candidate_minus_minus_epoch_M": 4.278767755749868e-05,
+              "candidate_minus_minus_epoch_ns": 10.537515924002657,
+              "candidate_within_gps_half_interval": false
+            }
+          },
+          "tolerance": {
+            "1e-5M": {
+              "degree": 3,
+              "derivative_method": "fixed_local_degree_3_polynomial",
+              "requested_iterations": null,
+              "requested_tolerance_M": 1e-05,
+              "updates_performed": 11,
+              "stopped_by_tolerance": true,
+              "exact_zero_encountered": false,
+              "candidate_time_M_initial_origin": 5002.701654434204,
+              "final_interval_M_initial_origin": [
+                5002.701650238037,
+                5002.701658630371
+              ],
+              "final_interval_width_M": 8.39233416627394e-06,
+              "final_left_derivative_domega_dt_M2": 3.244379297885504e-08,
+              "final_right_derivative_domega_dt_M2": -1.4760076442100046e-09,
+              "initial_endpoint": {
+                "left_time_M_initial_origin": 5002.696875000001,
+                "right_time_M_initial_origin": 5002.714062500001,
+                "interval_width_M": 0.017187500000545697,
+                "left_derivative_domega_dt_M2": 1.9291145509098252e-05,
+                "right_derivative_domega_dt_M2": -5.041575555771131e-05,
+                "derivative_product": -9.725776764149378e-10,
+                "bracket_status": "valid_sign_bracket",
+                "valid_sign_bracket": true
+              },
+              "candidate_minus_minus_epoch_M": 3.911603198503144e-05,
+              "candidate_minus_minus_epoch_ns": 9.63328307249593,
+              "candidate_within_gps_half_interval": false
+            }
+          }
+        },
+        "6": {
+          "fixed_iterations": {
+            "8": {
+              "degree": 6,
+              "derivative_method": "fixed_local_degree_6_polynomial",
+              "requested_iterations": 8,
+              "requested_tolerance_M": null,
+              "updates_performed": 8,
+              "stopped_by_tolerance": false,
+              "exact_zero_encountered": false,
+              "candidate_time_M_initial_origin": 5002.701675415039,
+              "final_interval_M_initial_origin": [
+                5002.701641845702,
+                5002.701708984375
+              ],
+              "final_interval_width_M": 6.713867242069682e-05,
+              "final_left_derivative_domega_dt_M2": 6.5733584071103e-08,
+              "final_right_derivative_domega_dt_M2": -2.056198220548106e-07,
+              "initial_endpoint": {
+                "left_time_M_initial_origin": 5002.696875000001,
+                "right_time_M_initial_origin": 5002.714062500001,
+                "interval_width_M": 0.017187500000545697,
+                "left_derivative_domega_dt_M2": 1.9289969801121646e-05,
+                "right_derivative_domega_dt_M2": -5.0414576509261407e-05,
+                "derivative_product": -9.724956583999893e-10,
+                "bracket_status": "valid_sign_bracket",
+                "valid_sign_bracket": true
+              },
+              "candidate_minus_minus_epoch_M": 6.009686694596894e-05,
+              "candidate_minus_minus_epoch_ns": 14.800328706198584,
+              "candidate_within_gps_half_interval": false
+            },
+            "10": {
+              "degree": 6,
+              "derivative_method": "fixed_local_degree_6_polynomial",
+              "requested_iterations": 10,
+              "requested_tolerance_M": null,
+              "updates_performed": 10,
+              "stopped_by_tolerance": false,
+              "exact_zero_encountered": false,
+              "candidate_time_M_initial_origin": 5002.701650238037,
+              "final_interval_M_initial_origin": [
+                5002.701641845702,
+                5002.701658630371
+              ],
+              "final_interval_width_M": 1.678466833254788e-05,
+              "final_left_derivative_domega_dt_M2": 6.5733584071103e-08,
+              "final_right_derivative_domega_dt_M2": -2.103231320341616e-09,
+              "initial_endpoint": {
+                "left_time_M_initial_origin": 5002.696875000001,
+                "right_time_M_initial_origin": 5002.714062500001,
+                "interval_width_M": 0.017187500000545697,
+                "left_derivative_domega_dt_M2": 1.9289969801121646e-05,
+                "right_derivative_domega_dt_M2": -5.0414576509261407e-05,
+                "derivative_product": -9.724956583999893e-10,
+                "bracket_status": "valid_sign_bracket",
+                "valid_sign_bracket": true
+              },
+              "candidate_minus_minus_epoch_M": 3.491986444714712e-05,
+              "candidate_minus_minus_epoch_ns": 8.59987381136416,
+              "candidate_within_gps_half_interval": false
+            },
+            "12": {
+              "degree": 6,
+              "derivative_method": "fixed_local_degree_6_polynomial",
+              "requested_iterations": 12,
+              "requested_tolerance_M": null,
+              "updates_performed": 12,
+              "stopped_by_tolerance": false,
+              "exact_zero_encountered": false,
+              "candidate_time_M_initial_origin": 5002.701656532287,
+              "final_interval_M_initial_origin": [
+                5002.701654434204,
+                5002.701658630371
+              ],
+              "final_interval_width_M": 4.196166628389619e-06,
+              "final_left_derivative_domega_dt_M2": 1.4856066754469763e-08,
+              "final_right_derivative_domega_dt_M2": -2.103231320341616e-09,
+              "initial_endpoint": {
+                "left_time_M_initial_origin": 5002.696875000001,
+                "right_time_M_initial_origin": 5002.714062500001,
+                "interval_width_M": 0.017187500000545697,
+                "left_derivative_domega_dt_M2": 1.9289969801121646e-05,
+                "right_derivative_domega_dt_M2": -5.0414576509261407e-05,
+                "derivative_product": -9.724956583999893e-10,
+                "bracket_status": "valid_sign_bracket",
+                "valid_sign_bracket": true
+              },
+              "candidate_minus_minus_epoch_M": 4.121411529922625e-05,
+              "candidate_minus_minus_epoch_ns": 10.149987591069117,
+              "candidate_within_gps_half_interval": false
+            },
+            "14": {
+              "degree": 6,
+              "derivative_method": "fixed_local_degree_6_polynomial",
+              "requested_iterations": 14,
+              "requested_tolerance_M": null,
+              "updates_performed": 14,
+              "stopped_by_tolerance": false,
+              "exact_zero_encountered": false,
+              "candidate_time_M_initial_origin": 5002.70165810585,
+              "final_interval_M_initial_origin": [
+                5002.701657581329,
+                5002.701658630371
+              ],
+              "final_interval_width_M": 1.0490421118447557e-06,
+              "final_left_derivative_domega_dt_M2": 2.136601040356527e-09,
+              "final_right_derivative_domega_dt_M2": -2.103231320341616e-09,
+              "initial_endpoint": {
+                "left_time_M_initial_origin": 5002.696875000001,
+                "right_time_M_initial_origin": 5002.714062500001,
+                "interval_width_M": 0.017187500000545697,
+                "left_derivative_domega_dt_M2": 1.9289969801121646e-05,
+                "right_derivative_domega_dt_M2": -5.0414576509261407e-05,
+                "derivative_product": -9.724956583999893e-10,
+                "bracket_status": "valid_sign_bracket",
+                "valid_sign_bracket": true
+              },
+              "candidate_minus_minus_epoch_M": 4.278767755749868e-05,
+              "candidate_minus_minus_epoch_ns": 10.537515924002657,
+              "candidate_within_gps_half_interval": false
+            }
+          },
+          "tolerance": {
+            "1e-5M": {
+              "degree": 6,
+              "derivative_method": "fixed_local_degree_6_polynomial",
+              "requested_iterations": null,
+              "requested_tolerance_M": 1e-05,
+              "updates_performed": 11,
+              "stopped_by_tolerance": true,
+              "exact_zero_encountered": false,
+              "candidate_time_M_initial_origin": 5002.701654434204,
+              "final_interval_M_initial_origin": [
+                5002.701650238037,
+                5002.701658630371
+              ],
+              "final_interval_width_M": 8.39233416627394e-06,
+              "final_left_derivative_domega_dt_M2": 3.181530446172143e-08,
+              "final_right_derivative_domega_dt_M2": -2.103231320341616e-09,
+              "initial_endpoint": {
+                "left_time_M_initial_origin": 5002.696875000001,
+                "right_time_M_initial_origin": 5002.714062500001,
+                "interval_width_M": 0.017187500000545697,
+                "left_derivative_domega_dt_M2": 1.9289969801121646e-05,
+                "right_derivative_domega_dt_M2": -5.0414576509261407e-05,
+                "derivative_product": -9.724956583999893e-10,
+                "bracket_status": "valid_sign_bracket",
+                "valid_sign_bracket": true
+              },
+              "candidate_minus_minus_epoch_M": 3.911603198503144e-05,
+              "candidate_minus_minus_epoch_ns": 9.63328307249593,
+              "candidate_within_gps_half_interval": false
+            }
+          }
+        }
+      },
+      "no_fitted_shift": true,
+      "same_sign_candidates_are_not_roots": true
+    },
+    "dt_1_4096s_exact": {
+      "status": "ok",
+      "input_path": "/tmp/torchwave-public-eob-epoch-sweep-dt_1_4096s_exact.npz",
+      "input_sha256": "0ed159ba1b88854350fa264b1e37e8d4f8d2ba5fb01cade93f2ae78a3a077ab1",
+      "requested_dt_M": 0.9913351891019707,
+      "returned_dt_s": 0.000244140625,
+      "returned_dt_M": 0.9913351891019707,
+      "postpeak_sample_count": 9763,
+      "postpeak_spacing_M": 0.015489612329474767,
+      "sample_maximum": {
+        "index": 9691,
+        "time_M_initial_origin": 5002.695583741447,
+        "omega": 0.16441504535392004,
+        "next_time_M_initial_origin": 5002.711073353777,
+        "next_minus_sample_M": 0.015489612329474767,
+        "next_minus_dt_over_2048_prediction_M": 5002.71106579049,
+        "prediction_minus_minus_epoch_M": 0.00939362519147835,
+        "prediction_minus_minus_epoch_ns": 2313.4107923080783
+      },
+      "clean_event": {
+        "time_M_initial_origin": 5002.701708021243,
+        "frequency": 0.164415121047836,
+        "curvature": -0.0040437904546552035,
+        "sample_index": 9691,
+        "sample_time_M_initial_origin": 5002.695583741447,
+        "sample_omega": 0.16441504535392004
+      },
+      "clean_event_side_of_sample_max": "after",
+      "public_epoch": {
+        "epoch_s": -1.23203809,
+        "epoch_M": -5002.701672165298,
+        "minus_epoch_M": 5002.701672165298,
+        "minus_epoch_minus_sample_M": 0.00608842385099706,
+        "minus_epoch_minus_clean_event_M": -3.585594458854757e-05,
+        "gps_quantization": {
+          "quantum_s": 1e-09,
+          "quantum_M": 4.0605089345616726e-06,
+          "half_width_s": 5e-10,
+          "half_width_M": 2.0302544672808363e-06,
+          "observed_epoch_s": -1.23203809,
+          "nearest_integer_epoch_ns": -1232038090,
+          "observed_minus_nearest_epoch_ns": 0.0,
+          "nearest_ns_interval_epoch_s": [
+            -1.2320380905000001,
+            -1.2320380895
+          ],
+          "nearest_ns_interval_minus_epoch_coordinate_M": [
+            5002.701670135044,
+            5002.701674195552
+          ],
+          "interpretation": "The interval is the nearest-GPS-nanosecond quantization interval used for a numerical comparison; it does not establish the producer's internal timestamp representation."
+        }
+      },
+      "bisection_hypotheses": {
+        "3": {
+          "fixed_iterations": {
+            "8": {
+              "degree": 3,
+              "derivative_method": "fixed_local_degree_3_polynomial",
+              "requested_iterations": 8,
+              "requested_tolerance_M": null,
+              "updates_performed": 8,
+              "stopped_by_tolerance": false,
+              "exact_zero_encountered": false,
+              "candidate_time_M_initial_origin": 5002.701725130711,
+              "final_interval_M_initial_origin": [
+                5002.701694877562,
+                5002.70175538386
+              ],
+              "final_interval_width_M": 6.050629781384487e-05,
+              "final_left_derivative_domega_dt_M2": 5.338193499327346e-08,
+              "final_right_derivative_domega_dt_M2": -1.913050877702847e-07,
+              "initial_endpoint": {
+                "left_time_M_initial_origin": 5002.695583741447,
+                "right_time_M_initial_origin": 5002.711073353777,
+                "interval_width_M": 0.015489612329474767,
+                "left_derivative_domega_dt_M2": 2.4697190543006098e-05,
+                "right_derivative_domega_dt_M2": -3.803432740058902e-05,
+                "derivative_product": -9.39341030987425e-10,
+                "bracket_status": "valid_sign_bracket",
+                "valid_sign_bracket": true
+              },
+              "candidate_minus_minus_epoch_M": 5.29654125784873e-05,
+              "candidate_minus_minus_epoch_ns": 13.044033009671205,
+              "candidate_within_gps_half_interval": false
+            },
+            "10": {
+              "degree": 3,
+              "derivative_method": "fixed_local_degree_3_polynomial",
+              "requested_iterations": 10,
+              "requested_tolerance_M": null,
+              "updates_performed": 10,
+              "stopped_by_tolerance": false,
+              "exact_zero_encountered": false,
+              "candidate_time_M_initial_origin": 5002.701702440849,
+              "final_interval_M_initial_origin": [
+                5002.701694877562,
+                5002.701710004136
+              ],
+              "final_interval_width_M": 1.5126573998713866e-05,
+              "final_left_derivative_domega_dt_M2": 5.338193499327346e-08,
+              "final_right_derivative_domega_dt_M2": -7.788552463152675e-09,
+              "initial_endpoint": {
+                "left_time_M_initial_origin": 5002.695583741447,
+                "right_time_M_initial_origin": 5002.711073353777,
+                "interval_width_M": 0.015489612329474767,
+                "left_derivative_domega_dt_M2": 2.4697190543006098e-05,
+                "right_derivative_domega_dt_M2": -3.803432740058902e-05,
+                "derivative_product": -9.39341030987425e-10,
+                "bracket_status": "valid_sign_bracket",
+                "valid_sign_bracket": true
+              },
+              "candidate_minus_minus_epoch_M": 3.0275550670921803e-05,
+              "candidate_minus_minus_epoch_ns": 7.456097538223991,
+              "candidate_within_gps_half_interval": false
+            },
+            "12": {
+              "degree": 3,
+              "derivative_method": "fixed_local_degree_3_polynomial",
+              "requested_iterations": 12,
+              "requested_tolerance_M": null,
+              "updates_performed": 12,
+              "stopped_by_tolerance": false,
+              "exact_zero_encountered": false,
+              "candidate_time_M_initial_origin": 5002.701708113314,
+              "final_interval_M_initial_origin": [
+                5002.701706222492,
+                5002.701710004136
+              ],
+              "final_interval_width_M": 3.7816434996784665e-06,
+              "final_left_derivative_domega_dt_M2": 7.504148550668742e-09,
+              "final_right_derivative_domega_dt_M2": -7.788552463152675e-09,
+              "initial_endpoint": {
+                "left_time_M_initial_origin": 5002.695583741447,
+                "right_time_M_initial_origin": 5002.711073353777,
+                "interval_width_M": 0.015489612329474767,
+                "left_derivative_domega_dt_M2": 2.4697190543006098e-05,
+                "right_derivative_domega_dt_M2": -3.803432740058902e-05,
+                "derivative_product": -9.39341030987425e-10,
+                "bracket_status": "valid_sign_bracket",
+                "valid_sign_bracket": true
+              },
+              "candidate_minus_minus_epoch_M": 3.594801637518685e-05,
+              "candidate_minus_minus_epoch_ns": 8.853081462082143,
+              "candidate_within_gps_half_interval": false
+            },
+            "14": {
+              "degree": 3,
+              "derivative_method": "fixed_local_degree_3_polynomial",
+              "requested_iterations": 14,
+              "requested_tolerance_M": null,
+              "updates_performed": 14,
+              "stopped_by_tolerance": false,
+              "exact_zero_encountered": false,
+              "candidate_time_M_initial_origin": 5002.701707640609,
+              "final_interval_M_initial_origin": [
+                5002.701707167904,
+                5002.701708113314
+              ],
+              "final_interval_width_M": 9.454106475459412e-07,
+              "final_left_derivative_domega_dt_M2": 3.6809754856154607e-09,
+              "final_right_derivative_domega_dt_M2": -1.4219719940270164e-10,
+              "initial_endpoint": {
+                "left_time_M_initial_origin": 5002.695583741447,
+                "right_time_M_initial_origin": 5002.711073353777,
+                "interval_width_M": 0.015489612329474767,
+                "left_derivative_domega_dt_M2": 2.4697190543006098e-05,
+                "right_derivative_domega_dt_M2": -3.803432740058902e-05,
+                "derivative_product": -9.39341030987425e-10,
+                "bracket_status": "valid_sign_bracket",
+                "valid_sign_bracket": true
+              },
+              "candidate_minus_minus_epoch_M": 3.547531105141388e-05,
+              "candidate_minus_minus_epoch_ns": 8.736666172424862,
+              "candidate_within_gps_half_interval": false
+            }
+          },
+          "tolerance": {
+            "1e-5M": {
+              "degree": 3,
+              "derivative_method": "fixed_local_degree_3_polynomial",
+              "requested_iterations": null,
+              "requested_tolerance_M": 1e-05,
+              "updates_performed": 11,
+              "stopped_by_tolerance": true,
+              "exact_zero_encountered": false,
+              "candidate_time_M_initial_origin": 5002.701706222492,
+              "final_interval_M_initial_origin": [
+                5002.701702440849,
+                5002.701710004136
+              ],
+              "final_interval_width_M": 7.563286999356933e-06,
+              "final_left_derivative_domega_dt_M2": 2.279679679801129e-08,
+              "final_right_derivative_domega_dt_M2": -7.788552463152675e-09,
+              "initial_endpoint": {
+                "left_time_M_initial_origin": 5002.695583741447,
+                "right_time_M_initial_origin": 5002.711073353777,
+                "interval_width_M": 0.015489612329474767,
+                "left_derivative_domega_dt_M2": 2.4697190543006098e-05,
+                "right_derivative_domega_dt_M2": -3.803432740058902e-05,
+                "derivative_product": -9.39341030987425e-10,
+                "bracket_status": "valid_sign_bracket",
+                "valid_sign_bracket": true
+              },
+              "candidate_minus_minus_epoch_M": 3.405719417060027e-05,
+              "candidate_minus_minus_epoch_ns": 8.387420079467628,
+              "candidate_within_gps_half_interval": false
+            }
+          }
+        },
+        "6": {
+          "fixed_iterations": {
+            "8": {
+              "degree": 6,
+              "derivative_method": "fixed_local_degree_6_polynomial",
+              "requested_iterations": 8,
+              "requested_tolerance_M": null,
+              "updates_performed": 8,
+              "stopped_by_tolerance": false,
+              "exact_zero_encountered": false,
+              "candidate_time_M_initial_origin": 5002.701725130711,
+              "final_interval_M_initial_origin": [
+                5002.701694877562,
+                5002.70175538386
+              ],
+              "final_interval_width_M": 6.050629781384487e-05,
+              "final_left_derivative_domega_dt_M2": 5.3149972390269643e-08,
+              "final_right_derivative_domega_dt_M2": -1.9152863208071386e-07,
+              "initial_endpoint": {
+                "left_time_M_initial_origin": 5002.695583741447,
+                "right_time_M_initial_origin": 5002.711073353777,
+                "interval_width_M": 0.015489612329474767,
+                "left_derivative_domega_dt_M2": 2.4696306176290652e-05,
+                "right_derivative_domega_dt_M2": -3.803344073441722e-05,
+                "derivative_product": -9.392854973149723e-10,
+                "bracket_status": "valid_sign_bracket",
+                "valid_sign_bracket": true
+              },
+              "candidate_minus_minus_epoch_M": 5.29654125784873e-05,
+              "candidate_minus_minus_epoch_ns": 13.044033009671205,
+              "candidate_within_gps_half_interval": false
+            },
+            "10": {
+              "degree": 6,
+              "derivative_method": "fixed_local_degree_6_polynomial",
+              "requested_iterations": 10,
+              "requested_tolerance_M": null,
+              "updates_performed": 10,
+              "stopped_by_tolerance": false,
+              "exact_zero_encountered": false,
+              "candidate_time_M_initial_origin": 5002.701702440849,
+              "final_interval_M_initial_origin": [
+                5002.701694877562,
+                5002.701710004136
+              ],
+              "final_interval_width_M": 1.5126573998713866e-05,
+              "final_left_derivative_domega_dt_M2": 5.3149972390269643e-08,
+              "final_right_derivative_domega_dt_M2": -8.018412095190615e-09,
+              "initial_endpoint": {
+                "left_time_M_initial_origin": 5002.695583741447,
+                "right_time_M_initial_origin": 5002.711073353777,
+                "interval_width_M": 0.015489612329474767,
+                "left_derivative_domega_dt_M2": 2.4696306176290652e-05,
+                "right_derivative_domega_dt_M2": -3.803344073441722e-05,
+                "derivative_product": -9.392854973149723e-10,
+                "bracket_status": "valid_sign_bracket",
+                "valid_sign_bracket": true
+              },
+              "candidate_minus_minus_epoch_M": 3.0275550670921803e-05,
+              "candidate_minus_minus_epoch_ns": 7.456097538223991,
+              "candidate_within_gps_half_interval": false
+            },
+            "12": {
+              "degree": 6,
+              "derivative_method": "fixed_local_degree_6_polynomial",
+              "requested_iterations": 12,
+              "requested_tolerance_M": null,
+              "updates_performed": 12,
+              "stopped_by_tolerance": false,
+              "exact_zero_encountered": false,
+              "candidate_time_M_initial_origin": 5002.701708113314,
+              "final_interval_M_initial_origin": [
+                5002.701706222492,
+                5002.701710004136
+              ],
+              "final_interval_width_M": 3.7816434996784665e-06,
+              "final_left_derivative_domega_dt_M2": 7.273763074750255e-09,
+              "final_right_derivative_domega_dt_M2": -8.018412095190615e-09,
+              "initial_endpoint": {
+                "left_time_M_initial_origin": 5002.695583741447,
+                "right_time_M_initial_origin": 5002.711073353777,
+                "interval_width_M": 0.015489612329474767,
+                "left_derivative_domega_dt_M2": 2.4696306176290652e-05,
+                "right_derivative_domega_dt_M2": -3.803344073441722e-05,
+                "derivative_product": -9.392854973149723e-10,
+                "bracket_status": "valid_sign_bracket",
+                "valid_sign_bracket": true
+              },
+              "candidate_minus_minus_epoch_M": 3.594801637518685e-05,
+              "candidate_minus_minus_epoch_ns": 8.853081462082143,
+              "candidate_within_gps_half_interval": false
+            },
+            "14": {
+              "degree": 6,
+              "derivative_method": "fixed_local_degree_6_polynomial",
+              "requested_iterations": 14,
+              "requested_tolerance_M": null,
+              "updates_performed": 14,
+              "stopped_by_tolerance": false,
+              "exact_zero_encountered": false,
+              "candidate_time_M_initial_origin": 5002.701707640609,
+              "final_interval_M_initial_origin": [
+                5002.701707167904,
+                5002.701708113314
+              ],
+              "final_interval_width_M": 9.454106475459412e-07,
+              "final_left_derivative_domega_dt_M2": 3.450721464468459e-09,
+              "final_right_derivative_domega_dt_M2": -3.723197617224933e-10,
+              "initial_endpoint": {
+                "left_time_M_initial_origin": 5002.695583741447,
+                "right_time_M_initial_origin": 5002.711073353777,
+                "interval_width_M": 0.015489612329474767,
+                "left_derivative_domega_dt_M2": 2.4696306176290652e-05,
+                "right_derivative_domega_dt_M2": -3.803344073441722e-05,
+                "derivative_product": -9.392854973149723e-10,
+                "bracket_status": "valid_sign_bracket",
+                "valid_sign_bracket": true
+              },
+              "candidate_minus_minus_epoch_M": 3.547531105141388e-05,
+              "candidate_minus_minus_epoch_ns": 8.736666172424862,
+              "candidate_within_gps_half_interval": false
+            }
+          },
+          "tolerance": {
+            "1e-5M": {
+              "degree": 6,
+              "derivative_method": "fixed_local_degree_6_polynomial",
+              "requested_iterations": null,
+              "requested_tolerance_M": 1e-05,
+              "updates_performed": 11,
+              "stopped_by_tolerance": true,
+              "exact_zero_encountered": false,
+              "candidate_time_M_initial_origin": 5002.701706222492,
+              "final_interval_M_initial_origin": [
+                5002.701702440849,
+                5002.701710004136
+              ],
+              "final_interval_width_M": 7.563286999356933e-06,
+              "final_left_derivative_domega_dt_M2": 2.2565885545537295e-08,
+              "final_right_derivative_domega_dt_M2": -8.018412095190615e-09,
+              "initial_endpoint": {
+                "left_time_M_initial_origin": 5002.695583741447,
+                "right_time_M_initial_origin": 5002.711073353777,
+                "interval_width_M": 0.015489612329474767,
+                "left_derivative_domega_dt_M2": 2.4696306176290652e-05,
+                "right_derivative_domega_dt_M2": -3.803344073441722e-05,
+                "derivative_product": -9.392854973149723e-10,
+                "bracket_status": "valid_sign_bracket",
+                "valid_sign_bracket": true
+              },
+              "candidate_minus_minus_epoch_M": 3.405719417060027e-05,
+              "candidate_minus_minus_epoch_ns": 8.387420079467628,
+              "candidate_within_gps_half_interval": false
+            }
+          }
+        }
+      },
+      "no_fitted_shift": true,
+      "same_sign_candidates_are_not_roots": true
+    }
+  },
+  "summary": {
+    "successful_rows": 8,
+    "failed_rows": 0,
+    "failed_labels": [],
+    "event_before_sample_rows": [
+      "dt_0p90M",
+      "dt_0p99M",
+      "dt_1p00M",
+      "dt_1p01M",
+      "dt_1p05M"
+    ],
+    "event_after_sample_rows": [
+      "dt_0p95M",
+      "dt_1p10M",
+      "dt_1_4096s_exact"
+    ],
+    "degree6_fixed10_candidates_within_gps_half_interval": 5,
+    "degree6_fixed10_candidate_count": 8
+  },
+  "interpretation": "The next-sample-minus-dt/2048 value is the exact midpoint returned by ten generic updates when both endpoint derivatives have the same sign and the update keeps moving the left endpoint rightward. This is an implementation-convention hypothesis, not an inferred physical time shift. Sign-changing rows are evaluated as ordinary bisection brackets; same-sign rows retain their nonbracketing status.",
+  "runtime_recommendation": "Do not install an epoch correction from these candidate comparisons. If compatibility with a public epoch becomes a product requirement, supporting an explicit, separately named discrete epoch convention could be considered only after an independent black-box validation; the continuous orbital-frequency event remains the clean runtime origin."
+}

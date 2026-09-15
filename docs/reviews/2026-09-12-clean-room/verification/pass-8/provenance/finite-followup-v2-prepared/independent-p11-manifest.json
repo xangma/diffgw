@@ -1,0 +1,93 @@
+{
+  "source": {
+    "final_quality": "/campaign/controlled-id/final-quality.json",
+    "final_quality_sha256": "4561b06481f60ec8822dfc3b60fb52ed7a42f7e8370f9e62d2238f414f58eb33",
+    "controlled_run_dir": "/campaign/controlled-id/ControlParams_002",
+    "controlled_initial_data": "/campaign/controlled-id/ControlParams_002/InitialData.yaml",
+    "controlled_initial_data_sha256": "037e53cb200407504ebcb42588805c3bd68df0e3464b2926d2f5db6f0aaac695",
+    "p9_reinspection": {
+      "run_dir": "/campaign/controlled-id/ControlParams_002",
+      "nonlinear_final": {
+        "Iteration": 5.0,
+        "Walltime": 3068.822314273,
+        "GlobalizationStep": 0.0,
+        "Residual": 7.277966467926099e-10,
+        "StepLength": 1.0
+      },
+      "nonlinear_history_rows": 6,
+      "nonlinear_iteration_zero_rows": 1,
+      "holes": {
+        "A": {
+          "mass": 0.5000256064491514,
+          "dimensionless_spin": [
+            1.4198785852857167e-13,
+            1.4015902164795815e-12,
+            -5.167135893068495e-07
+          ],
+          "spin_norm": 5.167135893087699e-07
+        },
+        "B": {
+          "mass": 0.5000256064646208,
+          "dimensionless_spin": [
+            2.987138705843459e-13,
+            1.7830864878889821e-12,
+            -5.133402952375399e-07
+          ],
+          "spin_norm": 5.133402952407236e-07
+        }
+      },
+      "mass_sum": 1.0000512129137722,
+      "mass_ratio_a_over_b": 0.9999999999690627,
+      "target_residuals": [
+        2.5606449151394095e-05,
+        1.4198785852857167e-13,
+        1.4015902164795815e-12,
+        -5.167135893068495e-07,
+        2.560646462079763e-05,
+        2.987138705843459e-13,
+        1.7830864878889821e-12,
+        -5.133402952375399e-07
+      ],
+      "max_abs_target_residual": 2.560646462079763e-05,
+      "target_tolerance": 5e-05,
+      "target_converged": true,
+      "sha256": {
+        "InitialData.yaml": "037e53cb200407504ebcb42588805c3bd68df0e3464b2926d2f5db6f0aaac695",
+        "BbhReductions.h5": "7a27c7fb29b29c41e0011a5931b4bcb8a36343befb2c0e7df4183b9d7693d9bf",
+        "Horizons.h5": "be9ac511f32ec0c1633b288e0e7ec5f323e3c7aa7aeb11c06f9f277fa756ab67"
+      }
+    }
+  },
+  "pinned_api": "spectre.Pipelines.Bbh.InitialData.generate_id",
+  "api_signature": "(target_params: Dict[Literal['MassRatio', 'MassA', 'MassB', 'DimensionlessSpinA', 'DimensionlessSpinB', 'CenterOfMass', 'AdmLinearMomentum', 'AdmMass', 'AdmAngularMomentumZ', 'Eccentricity', 'EccentricityAbsoluteTolerance', 'MeanAnomalyFraction', 'NumOrbits', 'TimeToMerger', 'EvolutionLev'], Union[float, Sequence[float]]], separation: Optional[float] = None, orbital_angular_velocity: Optional[float] = None, radial_expansion_velocity: Optional[float] = None, conformal_mass_a: Optional[float] = None, conformal_mass_b: Optional[float] = None, horizon_rotation_a: Optional[Sequence[float]] = None, horizon_rotation_b: Optional[Sequence[float]] = None, center_of_mass_offset: Sequence[float] = [0.0, 0.0, 0.0], linear_velocity: Sequence[float] = [0.0, 0.0, 0.0], refinement_level: int = 1, polynomial_order: int = 9, id_input_file_template: Union[str, pathlib.Path] = PosixPath('/work/spectre/build/bin/python/spectre/Pipelines/Bbh/InitialData.yaml'), control: bool = False, evolve: bool = False, eccentricity_control: bool = False, negative_expansion_bc: bool = True, pipeline_dir: Union[str, pathlib.Path, NoneType] = None, run_dir: Union[str, pathlib.Path, NoneType] = None, segments_dir: Union[str, pathlib.Path, NoneType] = None, out_file_name: str = 'spectre.out', **scheduler_kwargs)",
+  "template": "/work/spectre/build/bin/python/spectre/Pipelines/Bbh/InitialData.yaml",
+  "template_sha256": "fdca7dab88c076383983a06c24d8ad1f0756f58a4d86813298d0fc9a4cebe543",
+  "rendered_initial_data": "/campaign/independent-p11/InitialData.yaml",
+  "rendered_initial_data_sha256": "bf9b2e9ca5dd8b147dd5969c24e518c33ed71d440d9def352693c0b2981c0d84",
+  "check_options_record": "/campaign/provenance/independent-p11-check-options.json",
+  "configuration": {
+    "refinement_level": 1,
+    "polynomial_order": 11,
+    "num_procs": 16,
+    "control": false,
+    "evolve": false,
+    "eccentricity_control": false,
+    "negative_expansion_bc": true,
+    "separation": 15.366,
+    "orbital_angular_velocity": 0.01533628349983242,
+    "radial_expansion_velocity": -4.827331550791904e-05,
+    "conformal_mass_a": 0.40994463953681326,
+    "conformal_mass_b": 0.4099446395497856,
+    "horizon_rotation_a": [
+      4.0450810204504374e-10,
+      -2.5970594097919055e-11,
+      -0.0008368094294588044
+    ],
+    "horizon_rotation_b": [
+      3.784602889305878e-10,
+      -4.153577909346244e-12,
+      -0.0008368117433225838
+    ]
+  },
+  "solve_launched": false
+}

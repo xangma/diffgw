@@ -1,0 +1,167 @@
+{
+  "provenance": "Read-only diagnostic substitutions and tolerance convergence on frozen clean code. Public initial states are validation inputs only; no oracle data enters runtime. No fitted shifts, constants or threshold changes.",
+  "startup": {
+    "pid": 30916,
+    "host": "RONI2",
+    "cwd": "/Users/xangma/repos/torchwave",
+    "source_module": "/tmp/torchwave-parity-snapshot-97lcmhca/src/torchwave/approximants/eob/adaptive_driver_clean.py",
+    "source_sha256": "032dd202f72a4d94cb3e1786a1482f23858392d9023ae9466d9c1eed01a52130",
+    "reference_sha256": "7bf76ba9b81515bdd22377a8569bc0ee8809717baeb43d7f887b71ecdeb9d88a"
+  },
+  "baseline": {
+    "raw_full_padded_relative_l2": 2.7689646633438295e-05,
+    "amplitude_full_padded_relative_l2": 8.580842891266667e-07
+  },
+  "baseline_segments": [
+    {
+      "interval_M": [
+        0,
+        1000
+      ],
+      "raw_full_padded_relative_l2": 7.779603971788887e-07,
+      "amplitude_full_padded_relative_l2": 2.9889094735738576e-08,
+      "phase_range_rad": [
+        6.251689138442457e-07,
+        8.644581588024732e-07
+      ]
+    },
+    {
+      "interval_M": [
+        1000,
+        3000
+      ],
+      "raw_full_padded_relative_l2": 9.62475098720052e-07,
+      "amplitude_full_padded_relative_l2": 3.489934648673458e-08,
+      "phase_range_rad": [
+        7.775696351166947e-07,
+        1.166389826564458e-06
+      ]
+    },
+    {
+      "interval_M": [
+        3000,
+        4500
+      ],
+      "raw_full_padded_relative_l2": 2.1550164723520385e-06,
+      "amplitude_full_padded_relative_l2": 8.44814355133236e-08,
+      "phase_range_rad": [
+        1.1670152296134487e-06,
+        3.8056937747675117e-06
+      ]
+    },
+    {
+      "interval_M": [
+        4500,
+        4950
+      ],
+      "raw_full_padded_relative_l2": 1.3239631185505886e-05,
+      "amplitude_full_padded_relative_l2": 8.429124943674645e-07,
+      "phase_range_rad": [
+        3.8124758308524507e-06,
+        3.290780765342095e-05
+      ]
+    },
+    {
+      "interval_M": [
+        4950,
+        5000
+      ],
+      "raw_full_padded_relative_l2": 7.644210818106854e-05,
+      "amplitude_full_padded_relative_l2": 2.947217628301733e-06,
+      "phase_range_rad": [
+        3.3208564960847776e-05,
+        0.0001194115764349132
+      ]
+    },
+    {
+      "interval_M": [
+        5000,
+        5050
+      ],
+      "raw_full_padded_relative_l2": 0.0001175265383310901,
+      "amplitude_full_padded_relative_l2": 2.797008867432058e-07,
+      "phase_range_rad": [
+        0.00011628213814412835,
+        0.00011894888981345526
+      ]
+    },
+    {
+      "interval_M": [
+        5050,
+        5115
+      ],
+      "raw_full_padded_relative_l2": 0.00011628185387966132,
+      "amplitude_full_padded_relative_l2": 2.7970088669700153e-07,
+      "phase_range_rad": [
+        0.00011628088864777186,
+        0.00011628203965596061
+      ]
+    }
+  ],
+  "cases": [
+    {
+      "name": "public_initial_state",
+      "atol": 1e-10,
+      "rtol": 1e-09,
+      "elapsed_seconds": 29.18300633400213,
+      "coarse_accepted": 284,
+      "fine_accepted": 74,
+      "peak_M": 5002.7187423706055,
+      "match_M": 4998.346362836525,
+      "coarse_state_max_abs": [
+        4.483648603015311e-05,
+        2.6514337378102937e-05,
+        1.673567385818142e-05,
+        4.862047954468096e-06
+      ],
+      "coarse_initial_difference": [
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "coarse_final_difference": [
+        4.243327665509611e-05,
+        -2.6514337378102937e-05,
+        1.0633284278305233e-05,
+        4.862047954468096e-06
+      ],
+      "artifact": "/tmp/torchwave-native-eob-public_initial_state.npz",
+      "artifact_sha256": "3a008fc4352039649de315d6bab34582f61d23636daab8cf6d9a26b1695e1487",
+      "raw_full_padded_relative_l2": 2.794628937452661e-05,
+      "amplitude_full_padded_relative_l2": 8.601470196535029e-07
+    },
+    {
+      "name": "tighter_native_initial_state",
+      "atol": 1e-12,
+      "rtol": 1e-11,
+      "elapsed_seconds": 63.438526417012326,
+      "coarse_accepted": 699,
+      "fine_accepted": 169,
+      "peak_M": 5002.7187423706055,
+      "match_M": 4998.346362836525,
+      "coarse_state_max_abs": [
+        3.907291779770006e-05,
+        1.9539277957392187e-05,
+        1.532262850040267e-05,
+        3.546007682153629e-06
+      ],
+      "coarse_initial_difference": [
+        -4.4196930559792236e-09,
+        0.0,
+        -7.009034239287282e-09,
+        -2.8049855771428156e-09
+      ],
+      "coarse_final_difference": [
+        3.80370149382081e-05,
+        -1.9539277957392187e-05,
+        1.2028928797258587e-05,
+        3.546007682153629e-06
+      ],
+      "artifact": "/tmp/torchwave-native-eob-tighter_native_initial_state.npz",
+      "artifact_sha256": "aaf1b6a7483b81b2a2acb334b5c87b4f45bea090d4011fec6ea45e75f33fb93c",
+      "raw_full_padded_relative_l2": 0.0001523895716027588,
+      "amplitude_full_padded_relative_l2": 4.584758155146213e-06
+    }
+  ]
+}

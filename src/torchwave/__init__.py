@@ -23,7 +23,11 @@ from torchwave.approximants.imrphenom_xp import IMRPhenomXP
 from torchwave.approximants.imrphenom_xphm import IMRPhenomXPHM
 from torchwave.approximants.imrphenom_nsbh import IMRPhenomNSBH
 from torchwave.approximants.taylorf2_eccentric import TaylorF2_Eccentric
-from torchwave.approximants.kerr_ringdown import KerrRingdown, get_ringdown_waveform
+from torchwave.approximants.kerr_ringdown import (
+    KerrRingdown, get_ringdown_waveform,
+    sampled_kerr_single_mode_reference, kerr_single_mode_reference,
+    kerr_single_mode_fourier_reference,
+)
 from torchwave.detectors.psd import (
     aLIGOZeroDetHighPower,
     aLIGOEarlyHighPower,
@@ -97,6 +101,9 @@ __all__ = [
     "IMRPhenomNSBH",
     "SpinPrecessionODE",
     "KerrRingdown",
+    "sampled_kerr_single_mode_reference",
+    "kerr_single_mode_reference",
+    "kerr_single_mode_fourier_reference",
     "Detector",
     "DetectorNetwork",
     "LISANetwork",

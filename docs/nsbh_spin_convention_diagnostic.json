@@ -1,0 +1,519 @@
+{
+  "metadata": {
+    "python": "/Users/xangma/miniconda3/envs/pycbcorig313/bin/python",
+    "qnm_unit_conversion": "evaluate_kerr_qnm_220 gives M_final*omega; remnant_properties wants M_total*f, so factor=(m1+m2)/(M_final*2*pi)",
+    "unit_assertion": true,
+    "source_sha256": {
+      "scripts/nsbh_spin_convention_diagnostic.py": "4944b83d5d2b172204de672ac05bc2321f5315369d4eded3deee6a0f3fc7bb66",
+      "src/torchwave/approximants/imrphenom_nsbh.py": "82ed5e2d4ed7af6161e3898b2eeab793172ce245f9449acbaaf8c4215c98b179",
+      "src/torchwave/approximants/imrphenomd.py": "d33cdf095aa5d7803e9c1d201e8c3599991227f9a904116860a36b469ac424f0"
+    },
+    "hook_restored": true,
+    "public_callable_inventory": {
+      "torchwave.approximants.imrphenomd.evaluate_kerr_qnm_220": {
+        "signature": "(a_final: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]",
+        "doc": "Return Re(M_f*omega) and -Im(M_f*omega), preserving shape/device/dtype.\n\nNegative spin uses the positive-spin m=-2 branch by Kerr symmetry. Inputs\noutside [-0.9999, 0.9999] retain the historical endpoint-clamping behavior."
+      },
+      "torchwave.approximants.imrphenom_nsbh.NSBHPhaseBaseline": {
+        "signature": "(final_spin: torch.Tensor)",
+        "doc": "PhenomD phase baseline using the NSBH supplied final spin.\n\nThe mass remains the documented Husa PhenomD remnant mass.  Kerr QNM\noutputs are converted from ``M_f omega`` to the PhenomD convention\n``M_total f`` using the public component contracts."
+      },
+      "torchwave.approximants.imrphenom_nsbh._legacy_phase_offsets": {
+        "signature": "(m1, m2, s1, s2, mf_ref, mf_anchor, remnant_mass, remnant_spin)",
+        "doc": "Retain the inherited NSBH affine gauge, not a published prescription.\n\nIts constant uses the inspiral phase at the reference frequency; its time\norigin uses the raw MR slope at the requested upper frequency, evaluated\nwith the amplitude remnant. These offsets do not alter intrinsic curvature."
+      },
+      "torchwave.approximants.imrphenom_nsbh.evaluate_kerr_qnm_220": {
+        "signature": "(a_final: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]",
+        "doc": "Return Re(M_f*omega) and -Im(M_f*omega), preserving shape/device/dtype.\n\nNegative spin uses the positive-spin m=-2 branch by Kerr symmetry. Inputs\noutside [-0.9999, 0.9999] retain the historical endpoint-clamping behavior."
+      },
+      "torchwave.approximants.imrphenom_nsbh.nrtidalv2_frequency_phase": {
+        "signature": "(frequency_hz: torch.Tensor, total_mass_sec: torch.Tensor, eta: torch.Tensor, lambda_tilde: torch.Tensor) -> torch.Tensor",
+        "doc": "Return the additive NRTidalv2 phase correction in radians.\n\n``frequency_hz`` is the positive GW (2,2) frequency.  The tidal\ndeformability is the usual mass-weighted ``Lambda_tilde``.  No reference\nphase or time shift is applied here: those affine choices belong to the\nPhenomD baseline in the NSBH assembly (Thompson et al. Sec. II.B)."
+      },
+      "lalsimulation.SimIMRPhenomNSBHProperties": {
+        "signature": "builtin (inspect.signature unavailable)",
+        "doc": "SimIMRPhenomNSBHProperties(REAL8 mBH_SI, REAL8 mNS_SI, REAL8 chi_BH, REAL8 lambda_NS) -> int"
+      },
+      "lalsimulation.SimIMRPhenomDFinalSpin": {
+        "signature": "builtin (inspect.signature unavailable)",
+        "doc": "SimIMRPhenomDFinalSpin(REAL8 const m1_in, REAL8 const m2_in, REAL8 const chi1_in, REAL8 const chi2_in) -> double"
+      },
+      "lalsimulation.SimPhenomUtilsIMRPhenomDFinalMass": {
+        "signature": "builtin (inspect.signature unavailable)",
+        "doc": "SimPhenomUtilsIMRPhenomDFinalMass(REAL8 m1, REAL8 m2, REAL8 chi1z, REAL8 chi2z) -> double"
+      }
+    }
+  },
+  "property_comparisons": [
+    {
+      "case": "catalog",
+      "lambda2": 0.0,
+      "properties": {
+        "native_mass_msun": 6.2223152725154405,
+        "native_spin": 0.5971822966772592,
+        "lal_mass_msun": 6.2223152725154405,
+        "lal_spin": 0.5971822966772592,
+        "mass_abs_diff_msun": 0.0,
+        "spin_abs_diff": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 400.0,
+      "properties": {
+        "native_mass_msun": 6.218354284346879,
+        "native_spin": 0.5971822966772592,
+        "lal_mass_msun": 6.218354284346879,
+        "lal_spin": 0.5971822966772592,
+        "mass_abs_diff_msun": 0.0,
+        "spin_abs_diff": 0.0
+      }
+    },
+    {
+      "case": "holdout",
+      "lambda2": 0.0,
+      "properties": {
+        "native_mass_msun": 8.203278558714556,
+        "native_spin": 0.6499147482854839,
+        "lal_mass_msun": 8.203278558714556,
+        "lal_spin": 0.6499147482854841,
+        "mass_abs_diff_msun": 0.0,
+        "spin_abs_diff": 2.220446049250313e-16
+      }
+    },
+    {
+      "case": "holdout",
+      "lambda2": 2600.0,
+      "properties": {
+        "native_mass_msun": 8.044987828963471,
+        "native_spin": 0.6252066410477775,
+        "lal_mass_msun": 8.044987828963468,
+        "lal_spin": 0.625206641047778,
+        "mass_abs_diff_msun": 3.552713678800501e-15,
+        "spin_abs_diff": 5.551115123125783e-16
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 0.0,
+      "properties": {
+        "native_mass_msun": 9.314382423594997,
+        "native_spin": 0.5520720482225641,
+        "lal_mass_msun": 9.314382423594997,
+        "lal_spin": 0.5520720482225641,
+        "mass_abs_diff_msun": 0.0,
+        "spin_abs_diff": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 1200.0,
+      "properties": {
+        "native_mass_msun": 9.314382423594997,
+        "native_spin": 0.5479349620541683,
+        "lal_mass_msun": 9.314382423594997,
+        "lal_spin": 0.5479349620541683,
+        "mass_abs_diff_msun": 0.0,
+        "spin_abs_diff": 0.0
+      }
+    }
+  ],
+  "zappa_spin_qnm_hook": [
+    {
+      "case": "catalog",
+      "lambda2": 0.0,
+      "mode": "zappa_spin",
+      "finite": true,
+      "support_length": [
+        4097,
+        4097
+      ],
+      "restoration_max_abs": 0.0,
+      "hp": {
+        "support_bins": 3977,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 2.1450137619732836e-09,
+        "magnitude_relative_l2": 5.087651680177651e-16,
+        "unit_phase_l2": 1.2309230439044561e-08,
+        "phase_intercept_rad": 6.418249285613073e-10,
+        "phase_slope_rad_per_hz": -2.145040617263698e-11,
+        "phase_nonaffine_rms_rad": 2.809536708324366e-13,
+        "fixed_reference_shift_removed_rad": 0.0
+      },
+      "hc": {
+        "support_bins": 3977,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 2.145013762816016e-09,
+        "magnitude_relative_l2": 5.067056249917244e-16,
+        "unit_phase_l2": 1.2309230441988307e-08,
+        "phase_intercept_rad": 6.418249274527326e-10,
+        "phase_slope_rad_per_hz": -2.1450406173095398e-11,
+        "phase_nonaffine_rms_rad": 2.809539720764589e-13,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 0.0,
+      "mode": "zappa_mass",
+      "finite": true,
+      "support_length": [
+        4097,
+        4097
+      ],
+      "restoration_max_abs": 0.0,
+      "hp": {
+        "support_bins": 3977,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 2.942778069276666e-06,
+        "magnitude_relative_l2": 5.048356682177341e-16,
+        "unit_phase_l2": 1.6891458837063282e-05,
+        "phase_intercept_rad": 8.831688025338727e-07,
+        "phase_slope_rad_per_hz": -2.9439016359733247e-08,
+        "phase_nonaffine_rms_rad": 2.7936181760274227e-13,
+        "fixed_reference_shift_removed_rad": 0.0
+      },
+      "hc": {
+        "support_bins": 3977,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 2.9427780692774088e-06,
+        "magnitude_relative_l2": 5.119209058174103e-16,
+        "unit_phase_l2": 1.6891458837064258e-05,
+        "phase_intercept_rad": 8.831688025314087e-07,
+        "phase_slope_rad_per_hz": -2.9439016359728502e-08,
+        "phase_nonaffine_rms_rad": 2.793622304620114e-13,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 400.0,
+      "mode": "zappa_spin",
+      "finite": true,
+      "support_length": [
+        4097,
+        4097
+      ],
+      "restoration_max_abs": 0.0,
+      "hp": {
+        "support_bins": 3977,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 7.77015629012667e-08,
+        "magnitude_relative_l2": 7.768639256231491e-08,
+        "unit_phase_l2": 6.8515686801011676e-09,
+        "phase_intercept_rad": -7.977878207351766e-09,
+        "phase_slope_rad_per_hz": 1.9547664169065182e-11,
+        "phase_nonaffine_rms_rad": 3.177096308538143e-09,
+        "fixed_reference_shift_removed_rad": 0.0
+      },
+      "hc": {
+        "support_bins": 3977,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 7.770156290137475e-08,
+        "magnitude_relative_l2": 7.768639256272381e-08,
+        "unit_phase_l2": 6.851568680498955e-09,
+        "phase_intercept_rad": -7.977878205423322e-09,
+        "phase_slope_rad_per_hz": 1.9547664165734068e-11,
+        "phase_nonaffine_rms_rad": 3.177096307841935e-09,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "catalog",
+      "lambda2": 400.0,
+      "mode": "zappa_mass",
+      "finite": true,
+      "support_length": [
+        4097,
+        4097
+      ],
+      "restoration_max_abs": 0.0,
+      "hp": {
+        "support_bins": 3977,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 2.951541228537551e-05,
+        "magnitude_relative_l2": 7.768639256301224e-08,
+        "unit_phase_l2": 0.00016889671736168113,
+        "phase_intercept_rad": 8.823045186822091e-06,
+        "phase_slope_rad_per_hz": -2.9434788786435837e-07,
+        "phase_nonaffine_rms_rad": 3.1770965393919594e-09,
+        "fixed_reference_shift_removed_rad": 0.0
+      },
+      "hc": {
+        "support_bins": 3977,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 2.9515412285376304e-05,
+        "magnitude_relative_l2": 7.768639256301494e-08,
+        "unit_phase_l2": 0.00016889671736167985,
+        "phase_intercept_rad": 8.823045186820386e-06,
+        "phase_slope_rad_per_hz": -2.9434788786435546e-07,
+        "phase_nonaffine_rms_rad": 3.177096538855958e-09,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "holdout",
+      "lambda2": 0.0,
+      "mode": "zappa_spin",
+      "finite": true,
+      "support_length": [
+        4097,
+        4097
+      ],
+      "restoration_max_abs": 0.0,
+      "hp": {
+        "support_bins": 3977,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 4.2335708684266595e-08,
+        "magnitude_relative_l2": 6.268194471681977e-16,
+        "unit_phase_l2": 2.5219538598766597e-07,
+        "phase_intercept_rad": 1.7880253687897483e-08,
+        "phase_slope_rad_per_hz": -4.462959347120902e-10,
+        "phase_nonaffine_rms_rad": 1.3147870568847614e-10,
+        "fixed_reference_shift_removed_rad": 0.0
+      },
+      "hc": {
+        "support_bins": 3977,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 4.2335708683683314e-08,
+        "magnitude_relative_l2": 6.210314447551006e-16,
+        "unit_phase_l2": 2.5219538598827276e-07,
+        "phase_intercept_rad": 1.788025368828108e-08,
+        "phase_slope_rad_per_hz": -4.462959347105553e-10,
+        "phase_nonaffine_rms_rad": 1.314787074080174e-10,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "holdout",
+      "lambda2": 0.0,
+      "mode": "zappa_mass",
+      "finite": true,
+      "support_length": [
+        4097,
+        4097
+      ],
+      "restoration_max_abs": 0.0,
+      "hp": {
+        "support_bins": 3977,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 5.663157070408479e-06,
+        "magnitude_relative_l2": 6.212114065339779e-16,
+        "unit_phase_l2": 3.3735696625340713e-05,
+        "phase_intercept_rad": 2.391947363073594e-06,
+        "phase_slope_rad_per_hz": -5.970035772476646e-08,
+        "phase_nonaffine_rms_rad": 1.8393664678954315e-08,
+        "fixed_reference_shift_removed_rad": 0.0
+      },
+      "hc": {
+        "support_bins": 3977,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 5.663157070408802e-06,
+        "magnitude_relative_l2": 6.098186197737895e-16,
+        "unit_phase_l2": 3.373569662534072e-05,
+        "phase_intercept_rad": 2.3919473630729714e-06,
+        "phase_slope_rad_per_hz": -5.970035772476294e-08,
+        "phase_nonaffine_rms_rad": 1.8393664680735327e-08,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "holdout",
+      "lambda2": 2600.0,
+      "mode": "zappa_spin",
+      "finite": true,
+      "support_length": [
+        4097,
+        4097
+      ],
+      "restoration_max_abs": 0.0,
+      "hp": {
+        "support_bins": 3977,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 8.82874591834834e-08,
+        "magnitude_relative_l2": 4.604056306645334e-09,
+        "unit_phase_l2": 5.743662031798649e-07,
+        "phase_intercept_rad": -5.110373437359729e-08,
+        "phase_slope_rad_per_hz": 1.031094785080847e-09,
+        "phase_nonaffine_rms_rad": 1.20104752361479e-08,
+        "fixed_reference_shift_removed_rad": 0.0
+      },
+      "hc": {
+        "support_bins": 3977,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 8.82874591825969e-08,
+        "magnitude_relative_l2": 4.604056307241276e-09,
+        "unit_phase_l2": 5.743662031800033e-07,
+        "phase_intercept_rad": -5.110373437578984e-08,
+        "phase_slope_rad_per_hz": 1.031094785083808e-09,
+        "phase_nonaffine_rms_rad": 1.2010475237222804e-08,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "holdout",
+      "lambda2": 2600.0,
+      "mode": "zappa_mass",
+      "finite": true,
+      "support_length": [
+        4097,
+        4097
+      ],
+      "restoration_max_abs": 0.0,
+      "hp": {
+        "support_bins": 3977,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 0.0017579642282856732,
+        "magnitude_relative_l2": 4.604056306276976e-09,
+        "unit_phase_l2": 0.011066517036876396,
+        "phase_intercept_rad": 0.0007861510695420202,
+        "phase_slope_rad_per_hz": -1.9586187729503345e-05,
+        "phase_nonaffine_rms_rad": 9.685163527804965e-06,
+        "fixed_reference_shift_removed_rad": 0.0
+      },
+      "hc": {
+        "support_bins": 3977,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 0.0017579642282856739,
+        "magnitude_relative_l2": 4.604056307080555e-09,
+        "unit_phase_l2": 0.011066517036876396,
+        "phase_intercept_rad": 0.0007861510695420183,
+        "phase_slope_rad_per_hz": -1.9586187729503348e-05,
+        "phase_nonaffine_rms_rad": 9.685163527804546e-06,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 0.0,
+      "mode": "zappa_spin",
+      "finite": true,
+      "support_length": [
+        4097,
+        4097
+      ],
+      "restoration_max_abs": 0.0,
+      "hp": {
+        "support_bins": 3977,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.6938801937577134e-07,
+        "magnitude_relative_l2": 5.740667803688746e-16,
+        "unit_phase_l2": 1.0544201523557196e-06,
+        "phase_intercept_rad": -8.047450632277054e-08,
+        "phase_slope_rad_per_hz": 1.874126412376477e-09,
+        "phase_nonaffine_rms_rad": 6.241996283591392e-09,
+        "fixed_reference_shift_removed_rad": 0.0
+      },
+      "hc": {
+        "support_bins": 3977,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 1.693880193758864e-07,
+        "magnitude_relative_l2": 5.665246460835983e-16,
+        "unit_phase_l2": 1.0544201523569283e-06,
+        "phase_intercept_rad": -8.047450632260419e-08,
+        "phase_slope_rad_per_hz": 1.8741264123787232e-09,
+        "phase_nonaffine_rms_rad": 6.241996283148484e-09,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 0.0,
+      "mode": "zappa_mass",
+      "finite": true,
+      "support_length": [
+        4097,
+        4097
+      ],
+      "restoration_max_abs": 0.0,
+      "hp": {
+        "support_bins": 3977,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 2.2138704775584478e-05,
+        "magnitude_relative_l2": 5.763864135520285e-16,
+        "unit_phase_l2": 0.00013809377403543597,
+        "phase_intercept_rad": 1.0939411055706852e-05,
+        "phase_slope_rad_per_hz": -2.460228441622309e-07,
+        "phase_nonaffine_rms_rad": 6.615328931094748e-07,
+        "fixed_reference_shift_removed_rad": 0.0
+      },
+      "hc": {
+        "support_bins": 3977,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 2.213870477558439e-05,
+        "magnitude_relative_l2": 5.643309012248937e-16,
+        "unit_phase_l2": 0.00013809377403543465,
+        "phase_intercept_rad": 1.0939411055706012e-05,
+        "phase_slope_rad_per_hz": -2.460228441622272e-07,
+        "phase_nonaffine_rms_rad": 6.615328931104166e-07,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 1200.0,
+      "mode": "zappa_spin",
+      "finite": true,
+      "support_length": [
+        4097,
+        4097
+      ],
+      "restoration_max_abs": 0.0,
+      "hp": {
+        "support_bins": 3977,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 4.143820655966373e-07,
+        "magnitude_relative_l2": 3.230552512520959e-07,
+        "unit_phase_l2": 1.6067622497782536e-06,
+        "phase_intercept_rad": 1.236593829907776e-07,
+        "phase_slope_rad_per_hz": -2.857352184913963e-09,
+        "phase_nonaffine_rms_rad": 7.723994324233631e-09,
+        "fixed_reference_shift_removed_rad": 0.0
+      },
+      "hc": {
+        "support_bins": 3977,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 4.1438206559646213e-07,
+        "magnitude_relative_l2": 3.230552512519961e-07,
+        "unit_phase_l2": 1.6067622497774297e-06,
+        "phase_intercept_rad": 1.2365938299156543e-07,
+        "phase_slope_rad_per_hz": -2.857352184914956e-09,
+        "phase_nonaffine_rms_rad": 7.723994323356902e-09,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    },
+    {
+      "case": "independent_b",
+      "lambda2": 1200.0,
+      "mode": "zappa_mass",
+      "finite": true,
+      "support_length": [
+        4097,
+        4097
+      ],
+      "restoration_max_abs": 0.0,
+      "hp": {
+        "support_bins": 3977,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 2.296795285539629e-05,
+        "magnitude_relative_l2": 3.2305525125201487e-07,
+        "unit_phase_l2": 0.00014279692744958644,
+        "phase_intercept_rad": 1.1292661300501328e-05,
+        "phase_slope_rad_per_hz": -2.543739451965499e-07,
+        "phase_nonaffine_rms_rad": 7.047319715877293e-07,
+        "fixed_reference_shift_removed_rad": 0.0
+      },
+      "hc": {
+        "support_bins": 3977,
+        "support_mismatch_bins": 0,
+        "raw_relative_l2": 2.2967952855396164e-05,
+        "magnitude_relative_l2": 3.2305525125204234e-07,
+        "unit_phase_l2": 0.0001427969274495867,
+        "phase_intercept_rad": 1.1292661300502485e-05,
+        "phase_slope_rad_per_hz": -2.5437394519655197e-07,
+        "phase_nonaffine_rms_rad": 7.047319715880134e-07,
+        "fixed_reference_shift_removed_rad": 0.0
+      }
+    }
+  ]
+}

@@ -1,0 +1,2887 @@
+{
+  "provenance": "Bounded clean-room isolation using the four existing public lalsimulation SimIMRSpinAlignedEOBModes datasets for 30+20 Msun, nonspinning, fstart=20 Hz, distance=100 Mpc. Public postpeak row 2 is treated as orbital phase and differentiated independently with fixed local polynomial orders 4/6/8. Clean Hamiltonian/flux/event, published base mode, and known-target NQC attachment are evaluated afresh in float64. No source waveform, public coefficient, time offset, phase offset, or residual-selected stencil is used.",
+  "primary_reference": "Boh\u00e9 et al., Improved effective-one-body model for coalescing nonprecessing binary black holes, arXiv:1611.03703 (equation context).",
+  "public_parameters": {
+    "approximant_api": "lalsimulation.SimIMRSpinAlignedEOBModes",
+    "approximant_version": 4,
+    "m1_msun": 30.0,
+    "m2_msun": 20.0,
+    "chi1": 0.0,
+    "chi2": 0.0,
+    "fstart_hz": 20.0,
+    "distance_mpc": 100.0,
+    "mode": [
+      2,
+      2
+    ],
+    "spacings_M": {
+      "dt_0p25M": 0.25,
+      "dt_0p5M": 0.5,
+      "dt_1M": 1.0,
+      "dt_1_4096s": 0.9913351891019707
+    }
+  },
+  "clean_parameters": {
+    "nu": 0.24,
+    "delta": 0.2,
+    "chi": 0.0,
+    "spin_truncation": "generic-leading-ell8",
+    "spin_v6": "none",
+    "include_pan_v8": true,
+    "include_positive_chi_540": true,
+    "final_spin_fit_order": [
+      3,
+      4
+    ],
+    "mode_scale_100Mpc": 2.392707920793921e-20,
+    "phase_derivative_orders": [
+      4,
+      6,
+      8
+    ]
+  },
+  "coordinate_contract": {
+    "returned_state_phase": "postpeak_state[2], differentiated against postpeak_state[0] in initial-origin M coordinates",
+    "public_epoch_comparison": "compare phase peak and clean event in initial-origin M coordinates with -epoch_M",
+    "attachment_output_time": "arange(mode22_length) * dt_s / Msec",
+    "public_mode_time": "epoch_s + arange(mode22_length) * dt_s",
+    "base_mode_comparison": "same-index output grid, absolute complex scale, zero time/phase shifts"
+  },
+  "mass_assumption": {
+    "total_mass_msun": 50.0,
+    "Msec": 0.00024627454738206334,
+    "MTSUN_s": 4.925490947641267e-06
+  },
+  "libraries": {
+    "python": "3.13.9",
+    "numpy": "2.3.5",
+    "torch": "2.9.1",
+    "lal": "7.7.0",
+    "lalsimulation": "6.2.0"
+  },
+  "python_executable": "/Users/xangma/miniconda3/envs/pycbcorig313/bin/python",
+  "host": "RONI2",
+  "dependency_sha256": {
+    "scripts/diagnose_eob_public_phase_peak_clean.py": "f33f9a3b8bdd04a143b475bb68d081f275b7efd05d52700b36bd68b83ca79916",
+    "scripts/diagnose_eob_clean_hamiltonian_public.py": "c4fce3c08ed71718d34f92bc743a398e3f447c0830c1ae1a3a4899d6e7396088",
+    "src/torchwave/constants.py": "1ae479e07b44a19d23b9a9eaed4b8b8b8bf38b4293717a91d321b59f2d1ac4e3",
+    "src/torchwave/approximants/eob/attachment.py": "097165aa7a6dcf87c5458fb26eade17a9c6bdf43c8e001c0929c1eb6ea2975e7",
+    "src/torchwave/approximants/eob/events.py": "c1ae1182e4c2f9cf5f8a2857ea5d73802dbbb68b59739709849f973503bdfd5d",
+    "src/torchwave/approximants/eob/hamiltonian.py": "d26a87ded2a197a000704b77b075cdc72ee2315741bdacc29fb25f912158a441",
+    "src/torchwave/approximants/eob/integrator.py": "a036f6b7580450a847bc1d56ebf745de6cdb5c2ee397d31cf1014d483eebe26b",
+    "src/torchwave/approximants/eob/nqc.py": "f023b84fc0a48e59feb6b543d234635df965e04ee9aff05672ea3ff984d0cf85",
+    "src/torchwave/approximants/eob/published_waveform.py": "b2d4c70a43e55db02a7dcc249fd405780e81febdf14e3b9e6c181e1eaeaa5b0a",
+    "src/torchwave/approximants/eob/radiation_reaction.py": "dfb8853fc929145c3d61b7af49c16426560a12dc14ba9e664659af4a4449834d",
+    "src/torchwave/approximants/eob/remnant.py": "e7690cd5df1bcde2f579954762116beb20db606dae809835b148dae73c4cb007",
+    "src/torchwave/approximants/eob/seobnrv4_amplitude22.py": "f51cf2a03f1a3567293fbac75a341701448275bc45da1fa97af80d017890d2a5",
+    "src/torchwave/approximants/eob/seobnrv4_flux.py": "50af1727e28828969d84cac5e984189c529e205ad9fb96d22c11037103aca3ec",
+    "src/torchwave/approximants/eob/seobnrv4_hamiltonian.py": "5b1a5b877129e5235b8f92974a01ab450176e8e924d374ca0fc413334fad177f",
+    "src/torchwave/approximants/eob/seobnrv4_mode22.py": "d1fa659a2604732ae74e8c7e9736b89371655f3b06a0d04bed6a1162500203f9",
+    "src/torchwave/approximants/eob/factorized_modes.py": "d4b10cbcbbecc4de84329a13cdca43d90d4fa5aa168248fc2e874211d29f8315",
+    "src/torchwave/approximants/eob/merger_ringdown.py": "0db678173690ce0f7918c6fef2d9cb4864bf55a8dae3a6f80a47d0563ac7237d",
+    "src/torchwave/approximants/eob/waveform.py": "1e9d61e31284c667ca0b27877646ba5553d9dbd3ebbe72d1090d9917acc4bc79",
+    "src/torchwave/approximants/kerr_qnm_generated.py": "3361bbf72224e93ce445169d5bb66e95ca27b5bdf6475d6de6ff7514bdf0283f"
+  },
+  "results": {
+    "dt_0p25M": {
+      "npz_path": "/tmp/torchwave-public-eob-dt_0p25M.npz",
+      "npz_sha256": "29bba9d38ccea96619677313233f51e5335a3dca330f27e0c34057ddea7006fc",
+      "npz_size_bytes": 1532566,
+      "raw_arrays": {
+        "keys": [
+          "state",
+          "postpeak_state",
+          "mode22",
+          "epoch_s",
+          "dt_s"
+        ],
+        "state_shape": [
+          5,
+          20012
+        ],
+        "postpeak_state_shape": [
+          5,
+          9652
+        ],
+        "mode22_shape": [
+          21546
+        ],
+        "loaded_arrays_copied": true
+      },
+      "dt_s": 6.156863684551583e-05,
+      "dt_M": 0.25,
+      "state_grid_error_M": 0.0,
+      "epoch_s": -1.232042294,
+      "epoch_M": -5002.718742544858,
+      "minus_epoch_M": 5002.718742544858,
+      "postpeak_time_support_M_initial_origin": [
+        4853.0,
+        5003.796875
+      ],
+      "postpeak_spacing_M": {
+        "minimum": 0.015625,
+        "median": 0.015625,
+        "maximum": 0.015625
+      },
+      "clean_hamiltonian_omega_peak": {
+        "time_M_initial_origin": 5002.70169827389,
+        "frequency": 0.1644151207804603,
+        "curvature": -0.004043791155842065,
+        "sample_index": 9581,
+        "sample_time_M_initial_origin": 5002.703125,
+        "sample_omega": 0.1644151166630129
+      },
+      "returned_phase_omega_peak": {
+        "phase_row": 2,
+        "phase_time_coordinate": "postpeak_state[0] in initial-origin M coordinates",
+        "phase_offset_ignored_by_derivative": true,
+        "phase_increasing": true,
+        "phase_increment_range": [
+          0.0008027247541946281,
+          0.0025689741565173563
+        ],
+        "derivative_orders": [
+          4,
+          6,
+          8
+        ],
+        "records": {
+          "4": {
+            "resolved": true,
+            "degree": 4,
+            "sample_index": 9581,
+            "sample_time_M_initial_origin": 5002.703125,
+            "sample_omega": 0.1644143881419056,
+            "refined_time_M_initial_origin": 5002.699283428468,
+            "refined_omega": 0.16441441725213277,
+            "fractional_bin_offset": -0.24586057802662253,
+            "candidate_count": 1,
+            "curvature_domega_dt_M2": -0.003945097202757167,
+            "stencil_start_index": 9579,
+            "stencil_end_index": 9583,
+            "stencil_span_M": 0.0625,
+            "phase_fit_residual_l2": 6.194367960490402e-14,
+            "phase_fit_residual_max_abs": 5.684341886080802e-14,
+            "condition_number": 208.78367077659482,
+            "minus_epoch_M": 5002.718742544858,
+            "difference_refined_to_clean_event_M": -0.0024148454212991055,
+            "difference_refined_to_minus_epoch_M": -0.019459116389953124,
+            "difference_sample_to_clean_event_M": 0.0014267261103668716,
+            "difference_sample_to_minus_epoch_M": -0.015617544858287147
+          },
+          "6": {
+            "resolved": true,
+            "degree": 6,
+            "sample_index": 9581,
+            "sample_time_M_initial_origin": 5002.703125,
+            "sample_omega": 0.16441438814171416,
+            "refined_time_M_initial_origin": 5002.699283433313,
+            "refined_omega": 0.16441441725182845,
+            "fractional_bin_offset": -0.24586026795441285,
+            "candidate_count": 1,
+            "curvature_domega_dt_M2": -0.003945090350704851,
+            "stencil_start_index": 9578,
+            "stencil_end_index": 9584,
+            "stencil_span_M": 0.09375,
+            "phase_fit_residual_l2": 2.2958338407482174e-13,
+            "phase_fit_residual_max_abs": 1.8474111129762605e-13,
+            "condition_number": 5588.272112447291,
+            "minus_epoch_M": 5002.718742544858,
+            "difference_refined_to_clean_event_M": -0.002414840576420829,
+            "difference_refined_to_minus_epoch_M": -0.019459111545074848,
+            "difference_sample_to_clean_event_M": 0.0014267261103668716,
+            "difference_sample_to_minus_epoch_M": -0.015617544858287147
+          },
+          "8": {
+            "resolved": true,
+            "degree": 8,
+            "sample_index": 9581,
+            "sample_time_M_initial_origin": 5002.703125,
+            "sample_omega": 0.1644143881417084,
+            "refined_time_M_initial_origin": 5002.69928341802,
+            "refined_omega": 0.16441441725202288,
+            "fractional_bin_offset": -0.2458612467162311,
+            "candidate_count": 1,
+            "curvature_domega_dt_M2": -0.003945084710228985,
+            "stencil_start_index": 9577,
+            "stencil_end_index": 9585,
+            "stencil_span_M": 0.125,
+            "phase_fit_residual_l2": 2.36515759540527e-13,
+            "phase_fit_residual_max_abs": 9.947598300641403e-14,
+            "condition_number": 156530.3142688122,
+            "minus_epoch_M": 5002.718742544858,
+            "difference_refined_to_clean_event_M": -0.0024148558695742395,
+            "difference_refined_to_minus_epoch_M": -0.019459126838228258,
+            "difference_sample_to_clean_event_M": 0.0014267261103668716,
+            "difference_sample_to_minus_epoch_M": -0.015617544858287147
+          }
+        },
+        "all_sample_peak_indices_equal": true,
+        "common_sample_peak_index": 9581,
+        "refined_time_range_M": [
+          5002.69928341802,
+          5002.699283433313
+        ],
+        "refined_time_range_span_M": 1.5293153410311788e-08
+      },
+      "public_amplitude_maximum_sample": {
+        "sample_index": 19993,
+        "relative_output_time_M": 4998.25,
+        "public_epoch_coordinate_M": -4.468742544858287,
+        "amplitude": 9.000461112244974e-21,
+        "coordinate_definition": "epoch_M + arange(mode_length) * dt_M"
+      },
+      "clean_nqc_match": {
+        "time_M_initial_origin": 4998.329318739809,
+        "time_M_public_epoch_coordinate": -4.389423805048864,
+        "minus_clean_hamiltonian_event_M": -4.37237953408021
+      },
+      "known_clean_nqc_correction_before_match": {
+        "coefficient_source": "clean published NQC targets; no public-waveform fit",
+        "amplitude_coefficients_a1_a2_a3": [
+          4.144071073667841,
+          -47.300860079602835,
+          57.123922800732075
+        ],
+        "phase_coefficients_b1_b2": [
+          4.143531901497326,
+          -22.022686108452426
+        ],
+        "pre_match_sample_count": 9302,
+        "pre_match_factor_amplitude_range": [
+          0.8821227747375441,
+          1.000973408410533
+        ],
+        "pre_match_factor_phase_range_rad": [
+          -1.474791039611609,
+          -0.16376465975102794
+        ]
+      },
+      "base_inspiral_mode_vs_public_unshifted": {
+        "comparison": "fresh clean published base mode (NQC excluded) versus public mode at identical initial-origin output indices; public epoch omitted from this shared-grid comparison",
+        "mode_scale_100Mpc": 2.392707920793921e-20,
+        "shared_sample_count": 20012,
+        "state_mode_grid_max_error_M": 0.0,
+        "clean_mode_variant": "base mode (NQC excluded)",
+        "clean_base_excludes_nqc": true,
+        "clean_nqc_coefficients_fitted_to_public": false,
+        "public_mode_nqc_status": "public API output may include its own attachment/NQC",
+        "bands": {
+          "0_to_1000M": {
+            "available": true,
+            "label": "0_to_1000M",
+            "requested_support_M": [
+              0.0,
+              1000.0
+            ],
+            "actual_support_M": [
+              0.0,
+              999.75
+            ],
+            "sample_count": 4000,
+            "time_shift_applied_M": 0.0,
+            "phase_shift_applied_rad": 0.0,
+            "clean_complex_l2": 1.3828972558217967e-19,
+            "public_complex_l2": 1.3829329422044205e-19,
+            "raw_complex_l2": 2.037273067623302e-21,
+            "raw_relative_l2_over_public": 0.014731539075031731,
+            "raw_relative_l2_over_clean": 0.01473191923005616,
+            "max_abs": 3.544882484051487e-23,
+            "max_abs_over_public_peak": 0.015791915122885188,
+            "phase_rms_rad": 0.014712432906713258,
+            "phase_max_abs_rad": 0.015792281892910615,
+            "amplitude_ratio_mean_clean_over_public": 0.9999742539781494,
+            "amplitude_ratio_min_clean_over_public": 0.9999709443860474,
+            "amplitude_ratio_max_clean_over_public": 0.999977304016398
+          },
+          "1000_to_3000M": {
+            "available": true,
+            "label": "1000_to_3000M",
+            "requested_support_M": [
+              1000.0,
+              3000.0
+            ],
+            "actual_support_M": [
+              1000.0,
+              2999.75
+            ],
+            "sample_count": 8000,
+            "time_shift_applied_M": 0.0,
+            "phase_shift_applied_rad": 0.0,
+            "clean_complex_l2": 2.156638767488554e-19,
+            "public_complex_l2": 2.1567307284342692e-19,
+            "raw_complex_l2": 4.2894694102965905e-21,
+            "raw_relative_l2_over_public": 0.01988875733880156,
+            "raw_relative_l2_over_clean": 0.01988960541264756,
+            "max_abs": 6.562045013988987e-23,
+            "max_abs_over_public_peak": 0.02499168536714613,
+            "phase_rms_rad": 0.01965592667916074,
+            "phase_max_abs_rad": 0.024993040396908,
+            "amplitude_ratio_mean_clean_over_public": 0.999958194468536,
+            "amplitude_ratio_min_clean_over_public": 0.9999373335269568,
+            "amplitude_ratio_max_clean_over_public": 0.9999709494587108
+          },
+          "3000_to_4500M": {
+            "available": true,
+            "label": "3000_to_4500M",
+            "requested_support_M": [
+              3000.0,
+              4500.0
+            ],
+            "actual_support_M": [
+              3000.0,
+              4499.75
+            ],
+            "sample_count": 6000,
+            "time_shift_applied_M": 0.0,
+            "phase_shift_applied_rad": 0.0,
+            "clean_complex_l2": 2.310978929828965e-19,
+            "public_complex_l2": 2.3112782766404247e-19,
+            "raw_complex_l2": 9.316503758984156e-21,
+            "raw_relative_l2_over_public": 0.040308879519805066,
+            "raw_relative_l2_over_clean": 0.040314100828576865,
+            "max_abs": 2.298573069804722e-22,
+            "max_abs_over_public_peak": 0.06421026409207341,
+            "phase_rms_rad": 0.03842109076073937,
+            "phase_max_abs_rad": 0.0642293515907894,
+            "amplitude_ratio_mean_clean_over_public": 0.9998797448416611,
+            "amplitude_ratio_min_clean_over_public": 0.99973196379264,
+            "amplitude_ratio_max_clean_over_public": 0.9999373234317136
+          },
+          "4500_to_match_minus_100M": {
+            "available": true,
+            "label": "4500_to_match_minus_100M",
+            "requested_support_M": [
+              4500.0,
+              4898.329318739809
+            ],
+            "actual_support_M": [
+              4500.0,
+              4898.25
+            ],
+            "sample_count": 1594,
+            "time_shift_applied_M": 0.0,
+            "phase_shift_applied_rad": 0.0,
+            "clean_complex_l2": 1.6542322888600098e-19,
+            "public_complex_l2": 1.6551323996097992e-19,
+            "raw_complex_l2": 2.0153859101123533e-20,
+            "raw_relative_l2_over_public": 0.12176584245390185,
+            "raw_relative_l2_over_clean": 0.12183209841111416,
+            "max_abs": 1.1418922276694858e-21,
+            "max_abs_over_public_peak": 0.21942452381809052,
+            "phase_rms_rad": 0.11308036472429453,
+            "phase_max_abs_rad": 0.21996816266131952,
+            "amplitude_ratio_mean_clean_over_public": 0.9994977664054177,
+            "amplitude_ratio_min_clean_over_public": 0.9990671496468235,
+            "amplitude_ratio_max_clean_over_public": 0.9997318299532078
+          },
+          "match_minus_100_to_matchM": {
+            "available": true,
+            "label": "match_minus_100_to_matchM",
+            "requested_support_M": [
+              4898.329318739809,
+              4998.329318739809
+            ],
+            "actual_support_M": [
+              4898.5,
+              4998.25
+            ],
+            "sample_count": 400,
+            "time_shift_applied_M": 0.0,
+            "phase_shift_applied_rad": 0.0,
+            "clean_complex_l2": 1.3493221387302568e-19,
+            "public_complex_l2": 1.323954850808458e-19,
+            "raw_complex_l2": 8.999530395962586e-20,
+            "raw_relative_l2_over_public": 0.6797460193198527,
+            "raw_relative_l2_over_clean": 0.6669667781802907,
+            "max_abs": 1.2855731756331428e-20,
+            "max_abs_over_public_peak": 1.4283414589549666,
+            "phase_rms_rad": 0.5802446815142366,
+            "phase_max_abs_rad": 1.4636413400163861,
+            "amplitude_ratio_mean_clean_over_public": 1.0111484302482463,
+            "amplitude_ratio_min_clean_over_public": 0.9990666679701113,
+            "amplitude_ratio_max_clean_over_public": 1.1324243884154543
+          },
+          "all_pre_match": {
+            "available": true,
+            "label": "all_pre_match",
+            "requested_support_M": [
+              0.0,
+              4998.329318739809
+            ],
+            "actual_support_M": [
+              0.0,
+              4998.25
+            ],
+            "sample_count": 19994,
+            "time_shift_applied_M": 0.0,
+            "phase_shift_applied_rad": 0.0,
+            "clean_complex_l2": 4.057249549544871e-19,
+            "public_complex_l2": 4.049483662998786e-19,
+            "raw_complex_l2": 9.2815300695082e-20,
+            "raw_relative_l2_over_public": 0.2292028031700935,
+            "raw_relative_l2_over_clean": 0.22876409144094606,
+            "max_abs": 1.2855731756331428e-20,
+            "max_abs_over_public_peak": 1.4283414589549666,
+            "phase_rms_rad": 0.09162980605443814,
+            "phase_max_abs_rad": 1.4636413400163861,
+            "amplitude_ratio_mean_clean_over_public": 1.000125030132059,
+            "amplitude_ratio_min_clean_over_public": 0.9990666679701113,
+            "amplitude_ratio_max_clean_over_public": 1.1324243884154543
+          }
+        },
+        "checkpoints": {
+          "0.0": {
+            "requested_time_M": 0.0,
+            "sample_index": 0,
+            "sample_time_M": 0.0,
+            "abs_residual": 2.924211403930552e-23,
+            "abs_residual_over_public": 0.013707715283832751,
+            "phase_error_rad": 0.013707960028532765,
+            "amplitude_ratio_clean_over_public": 0.9999771788881854
+          },
+          "1000.0": {
+            "requested_time_M": 1000.0,
+            "sample_index": 4000,
+            "sample_time_M": 1000.0,
+            "abs_residual": 3.544955597843771e-23,
+            "abs_residual_over_public": 0.0157920166359652,
+            "phase_error_rad": 0.015792383413316263,
+            "amplitude_ratio_clean_over_public": 0.9999709492177931
+          },
+          "3000.0": {
+            "requested_time_M": 3000.0,
+            "sample_index": 12000,
+            "sample_time_M": 3000.0,
+            "abs_residual": 6.562846864784671e-23,
+            "abs_residual_over_public": 0.024994033665561508,
+            "phase_error_rad": 0.02499538906054832,
+            "amplitude_ratio_clean_over_public": 0.9999373234317138
+          },
+          "4500.0": {
+            "requested_time_M": 4500.0,
+            "sample_index": 18000,
+            "sample_time_M": 4500.0,
+            "abs_residual": 2.2996434820802785e-22,
+            "abs_residual_over_public": 0.06423295780812634,
+            "phase_error_rad": 0.06425206400331704,
+            "amplitude_ratio_clean_over_public": 0.999731829953208
+          },
+          "4900.0": {
+            "requested_time_M": 4900.0,
+            "sample_index": 19600,
+            "sample_time_M": 4900.0,
+            "abs_residual": 1.1632122791867316e-21,
+            "abs_residual_over_public": 0.2225517567679653,
+            "phase_error_rad": 0.2231162283759598,
+            "amplitude_ratio_clean_over_public": 0.9990666749086308
+          },
+          "4898.329318739809": {
+            "requested_time_M": 4898.329318739809,
+            "sample_index": 19593,
+            "sample_time_M": 4898.25,
+            "abs_residual": 1.141892227669486e-21,
+            "abs_residual_over_public": 0.21942452381809055,
+            "phase_error_rad": 0.21996816266131952,
+            "amplitude_ratio_clean_over_public": 0.9990671496468236
+          }
+        }
+      },
+      "nqc_corrected_inspiral_mode_vs_public_unshifted": {
+        "comparison": "fresh clean published base mode with fixed clean attachment-derived NQC versus public mode at identical initial-origin output indices; public epoch omitted from this shared-grid comparison",
+        "mode_scale_100Mpc": 2.392707920793921e-20,
+        "shared_sample_count": 20012,
+        "state_mode_grid_max_error_M": 0.0,
+        "clean_mode_variant": "base mode with fixed clean attachment-derived NQC",
+        "clean_base_excludes_nqc": false,
+        "clean_nqc_coefficients_fitted_to_public": false,
+        "public_mode_nqc_status": "public API output may include its own attachment/NQC",
+        "bands": {
+          "0_to_1000M": {
+            "available": true,
+            "label": "0_to_1000M",
+            "requested_support_M": [
+              0.0,
+              1000.0
+            ],
+            "actual_support_M": [
+              0.0,
+              999.75
+            ],
+            "sample_count": 4000,
+            "time_shift_applied_M": 0.0,
+            "phase_shift_applied_rad": 0.0,
+            "clean_complex_l2": 1.382933432711267e-19,
+            "public_complex_l2": 1.3829329422044205e-19,
+            "raw_complex_l2": 8.620261602837759e-24,
+            "raw_relative_l2_over_public": 6.233318579494464e-05,
+            "raw_relative_l2_over_clean": 6.233316368624898e-05,
+            "max_abs": 1.4999438149550046e-25,
+            "max_abs_over_public_peak": 6.682022752921815e-05,
+            "phase_rms_rad": 6.225003608380505e-05,
+            "phase_max_abs_rad": 6.681899978846814e-05,
+            "amplitude_ratio_mean_clean_over_public": 1.00000035382605,
+            "amplitude_ratio_min_clean_over_public": 1.0000003089949063,
+            "amplitude_ratio_max_clean_over_public": 1.0000004031076541
+          },
+          "1000_to_3000M": {
+            "available": true,
+            "label": "1000_to_3000M",
+            "requested_support_M": [
+              1000.0,
+              3000.0
+            ],
+            "actual_support_M": [
+              1000.0,
+              2999.75
+            ],
+            "sample_count": 8000,
+            "time_shift_applied_M": 0.0,
+            "phase_shift_applied_rad": 0.0,
+            "clean_complex_l2": 2.1567320452135337e-19,
+            "public_complex_l2": 2.1567307284342692e-19,
+            "raw_complex_l2": 1.8150418904294192e-23,
+            "raw_relative_l2_over_public": 8.415709325693583e-05,
+            "raw_relative_l2_over_clean": 8.415704187534876e-05,
+            "max_abs": 2.776728119297807e-25,
+            "max_abs_over_public_peak": 0.00010575226984828888,
+            "phase_rms_rad": 8.316641948913356e-05,
+            "phase_max_abs_rad": 0.00010574816940058871,
+            "amplitude_ratio_mean_clean_over_public": 1.0000005976181763,
+            "amplitude_ratio_min_clean_over_public": 1.0000004024351263,
+            "amplitude_ratio_max_clean_over_public": 1.0000009256917404
+          },
+          "3000_to_4500M": {
+            "available": true,
+            "label": "3000_to_4500M",
+            "requested_support_M": [
+              3000.0,
+              4500.0
+            ],
+            "actual_support_M": [
+              3000.0,
+              4499.75
+            ],
+            "sample_count": 6000,
+            "time_shift_applied_M": 0.0,
+            "phase_shift_applied_rad": 0.0,
+            "clean_complex_l2": 2.311283195201099e-19,
+            "public_complex_l2": 2.3112782766404247e-19,
+            "raw_complex_l2": 3.942885871888175e-23,
+            "raw_relative_l2_over_public": 0.00017059329946281438,
+            "raw_relative_l2_over_clean": 0.00017059293642919922,
+            "max_abs": 9.729647739565288e-25,
+            "max_abs_over_public_peak": 0.0002717961239028212,
+            "phase_rms_rad": 0.0001625615639002872,
+            "phase_max_abs_rad": 0.0002717515216926134,
+            "amplitude_ratio_mean_clean_over_public": 1.0000019548569907,
+            "amplitude_ratio_min_clean_over_public": 1.0000009256444542,
+            "amplitude_ratio_max_clean_over_public": 1.0000048870215579
+          },
+          "4500_to_match_minus_100M": {
+            "available": true,
+            "label": "4500_to_match_minus_100M",
+            "requested_support_M": [
+              4500.0,
+              4898.329318739809
+            ],
+            "actual_support_M": [
+              4500.0,
+              4898.25
+            ],
+            "sample_count": 1594,
+            "time_shift_applied_M": 0.0,
+            "phase_shift_applied_rad": 0.0,
+            "clean_complex_l2": 1.65515541085055e-19,
+            "public_complex_l2": 1.6551323996097992e-19,
+            "raw_complex_l2": 8.540347742958764e-23,
+            "raw_relative_l2_over_public": 0.0005159918170275784,
+            "raw_relative_l2_over_clean": 0.0005159846433133464,
+            "max_abs": 4.845082332411798e-24,
+            "max_abs_over_public_peak": 0.0009310247130928182,
+            "phase_rms_rad": 0.00047833530038183614,
+            "phase_max_abs_rad": 0.0009302423741332169,
+            "amplitude_ratio_mean_clean_over_public": 1.0000122648662062,
+            "amplitude_ratio_min_clean_over_public": 1.0000048903051866,
+            "amplitude_ratio_max_clean_over_public": 1.0000377300206105
+          },
+          "match_minus_100_to_matchM": {
+            "available": true,
+            "label": "match_minus_100_to_matchM",
+            "requested_support_M": [
+              4898.329318739809,
+              4998.329318739809
+            ],
+            "actual_support_M": [
+              4898.5,
+              4998.25
+            ],
+            "sample_count": 400,
+            "time_shift_applied_M": 0.0,
+            "phase_shift_applied_rad": 0.0,
+            "clean_complex_l2": 1.3241002575136606e-19,
+            "public_complex_l2": 1.323954850808458e-19,
+            "raw_complex_l2": 3.7730111006000027e-22,
+            "raw_relative_l2_over_public": 0.0028498034493367025,
+            "raw_relative_l2_over_clean": 0.0028494904968033186,
+            "max_abs": 5.174986822276778e-23,
+            "max_abs_over_public_peak": 0.005749690774438541,
+            "phase_rms_rad": 0.002399382336802948,
+            "phase_max_abs_rad": 0.005749685589468101,
+            "amplitude_ratio_mean_clean_over_public": 1.0000962014879706,
+            "amplitude_ratio_min_clean_over_public": 1.0000040598950521,
+            "amplitude_ratio_max_clean_over_public": 1.0001910387331614
+          },
+          "all_pre_match": {
+            "available": true,
+            "label": "all_pre_match",
+            "requested_support_M": [
+              0.0,
+              4998.329318739809
+            ],
+            "actual_support_M": [
+              0.0,
+              4998.25
+            ],
+            "sample_count": 19994,
+            "time_shift_applied_M": 0.0,
+            "phase_shift_applied_rad": 0.0,
+            "clean_complex_l2": 4.0495442865335e-19,
+            "public_complex_l2": 4.049483662998786e-19,
+            "raw_complex_l2": 3.893690577407901e-22,
+            "raw_relative_l2_over_public": 0.0009615276665974954,
+            "raw_relative_l2_over_clean": 0.0009615132720874592,
+            "max_abs": 5.174986822276778e-23,
+            "max_abs_over_public_peak": 0.005749690774438541,
+            "phase_rms_rad": 0.0003806434861123788,
+            "phase_max_abs_rad": 0.005749685589468101,
+            "amplitude_ratio_mean_clean_over_public": 1.0000037989488586,
+            "amplitude_ratio_min_clean_over_public": 1.0000003089949063,
+            "amplitude_ratio_max_clean_over_public": 1.0001910387331614
+          }
+        },
+        "checkpoints": {
+          "0.0": {
+            "requested_time_M": 0.0,
+            "sample_index": 0,
+            "sample_time_M": 0.0,
+            "abs_residual": 1.237308285933285e-25,
+            "abs_residual_over_public": 5.800083290525119e-05,
+            "phase_error_rad": -5.799999149923008e-05,
+            "amplitude_ratio_clean_over_public": 1.0000003107400943
+          },
+          "1000.0": {
+            "requested_time_M": 1000.0,
+            "sample_index": 4000,
+            "sample_time_M": 1000.0,
+            "abs_residual": 1.4999741978990554e-25,
+            "abs_residual_over_public": 6.682063239705597e-05,
+            "phase_error_rad": -6.681940702464302e-05,
+            "amplitude_ratio_clean_over_public": 1.0000004024470437
+          },
+          "3000.0": {
+            "requested_time_M": 3000.0,
+            "sample_index": 12000,
+            "sample_time_M": 3000.0,
+            "abs_residual": 2.777067259246598e-25,
+            "abs_residual_over_public": 0.00010576220045843698,
+            "phase_error_rad": -0.00010575810080299437,
+            "amplitude_ratio_clean_over_public": 1.0000009256444544
+          },
+          "4500.0": {
+            "requested_time_M": 4500.0,
+            "sample_index": 18000,
+            "sample_time_M": 4500.0,
+            "abs_residual": 9.73418165517048e-25,
+            "abs_residual_over_public": 0.0002718922669646128,
+            "phase_error_rad": -0.0002718476205640997,
+            "amplitude_ratio_clean_over_public": 1.0000048903051866
+          },
+          "4900.0": {
+            "requested_time_M": 4900.0,
+            "sample_index": 19600,
+            "sample_time_M": 4900.0,
+            "abs_residual": 4.936325576677108e-24,
+            "abs_residual_over_public": 0.0009444432015764273,
+            "phase_error_rad": -0.0009436366825635873,
+            "amplitude_ratio_clean_over_public": 1.0000385808767782
+          },
+          "4898.329318739809": {
+            "requested_time_M": 4898.329318739809,
+            "sample_index": 19593,
+            "sample_time_M": 4898.25,
+            "abs_residual": 4.8450823324117986e-24,
+            "abs_residual_over_public": 0.0009310247130928184,
+            "phase_error_rad": -0.0009302423741332169,
+            "amplitude_ratio_clean_over_public": 1.0000377300206105
+          }
+        },
+        "nqc_factor_amplitude_range": [
+          0.8561234767895333,
+          1.0009734069999958
+        ],
+        "nqc_factor_phase_range_rad": [
+          -1.6862010952016047,
+          -0.013744117767324553
+        ]
+      },
+      "postmatch_unshifted_complex_residual": {
+        "available": true,
+        "comparison": "same relative output indices after keeping public epoch separate",
+        "time_shift_applied_M": 0.0,
+        "phase_shift_applied_rad": 0.0,
+        "sample_count": 1552,
+        "support_M_initial_origin": [
+          4998.5,
+          5386.25
+        ],
+        "support_M_public_epoch_coordinate": [
+          -4.218742544858287,
+          383.5312574551417
+        ],
+        "raw_complex_l2": 5.221399540423187e-22,
+        "raw_relative_l2_over_public": 0.007770131400633401,
+        "max_abs": 6.259483051045988e-23,
+        "max_abs_over_public_peak": 0.00695466771125949,
+        "phase_rms_rad": 0.009392493480932157,
+        "phase_max_abs_rad": 0.009746353111453785,
+        "amplitude_ratio_mean_clean_over_public": 0.9988838625423062
+      }
+    },
+    "dt_0p5M": {
+      "npz_path": "/tmp/torchwave-public-eob-dt_0p5M.npz",
+      "npz_sha256": "7bf76ba9b81515bdd22377a8569bc0ee8809717baeb43d7f887b71ecdeb9d88a",
+      "npz_size_bytes": 960038,
+      "raw_arrays": {
+        "keys": [
+          "state",
+          "postpeak_state",
+          "mode22",
+          "epoch_s",
+          "dt_s"
+        ],
+        "state_shape": [
+          5,
+          10006
+        ],
+        "postpeak_state_shape": [
+          5,
+          9654
+        ],
+        "mode22_shape": [
+          10773
+        ],
+        "loaded_arrays_copied": true
+      },
+      "dt_s": 0.00012313727369103167,
+      "dt_M": 0.5,
+      "state_grid_error_M": 0.0,
+      "epoch_s": -1.232042294,
+      "epoch_M": -5002.718742544858,
+      "minus_epoch_M": 5002.718742544858,
+      "postpeak_time_support_M_initial_origin": [
+        4853.0,
+        5003.828125
+      ],
+      "postpeak_spacing_M": {
+        "minimum": 0.015625,
+        "median": 0.015625,
+        "maximum": 0.015625
+      },
+      "clean_hamiltonian_omega_peak": {
+        "time_M_initial_origin": 5002.7017207866975,
+        "frequency": 0.1644151212452234,
+        "curvature": -0.004043531685545578,
+        "sample_index": 9581,
+        "sample_time_M_initial_origin": 5002.703125,
+        "sample_omega": 0.16441511725696825
+      },
+      "returned_phase_omega_peak": {
+        "phase_row": 2,
+        "phase_time_coordinate": "postpeak_state[0] in initial-origin M coordinates",
+        "phase_offset_ignored_by_derivative": true,
+        "phase_increasing": true,
+        "phase_increment_range": [
+          0.0008027247467055076,
+          0.002568980464658921
+        ],
+        "derivative_orders": [
+          4,
+          6,
+          8
+        ],
+        "records": {
+          "4": {
+            "resolved": true,
+            "degree": 4,
+            "sample_index": 9581,
+            "sample_time_M_initial_origin": 5002.703125,
+            "sample_omega": 0.16441478540632035,
+            "refined_time_M_initial_origin": 5002.6990340416805,
+            "refined_omega": 0.16441481959779508,
+            "fractional_bin_offset": -0.26182133244583383,
+            "candidate_count": 1,
+            "curvature_domega_dt_M2": -0.004085996515921985,
+            "stencil_start_index": 9579,
+            "stencil_end_index": 9583,
+            "stencil_span_M": 0.0625,
+            "phase_fit_residual_l2": 1.18896540830928e-13,
+            "phase_fit_residual_max_abs": 8.526512829121202e-14,
+            "condition_number": 208.78367077659482,
+            "minus_epoch_M": 5002.718742544858,
+            "difference_refined_to_clean_event_M": -0.0026867450169447693,
+            "difference_refined_to_minus_epoch_M": -0.0197085031777533,
+            "difference_sample_to_clean_event_M": 0.0014042133025213843,
+            "difference_sample_to_minus_epoch_M": -0.015617544858287147
+          },
+          "6": {
+            "resolved": true,
+            "degree": 6,
+            "sample_index": 9581,
+            "sample_time_M_initial_origin": 5002.703125,
+            "sample_omega": 0.16441478540592944,
+            "refined_time_M_initial_origin": 5002.6990340336415,
+            "refined_omega": 0.16441481959743062,
+            "fractional_bin_offset": -0.26182184694334865,
+            "candidate_count": 1,
+            "curvature_domega_dt_M2": -0.004085981498018172,
+            "stencil_start_index": 9578,
+            "stencil_end_index": 9584,
+            "stencil_span_M": 0.09375,
+            "phase_fit_residual_l2": 2.92619408270042e-13,
+            "phase_fit_residual_max_abs": 2.4158453015843406e-13,
+            "condition_number": 5588.272112447291,
+            "minus_epoch_M": 5002.718742544858,
+            "difference_refined_to_clean_event_M": -0.0026867530559684383,
+            "difference_refined_to_minus_epoch_M": -0.01970851121677697,
+            "difference_sample_to_clean_event_M": 0.0014042133025213843,
+            "difference_sample_to_minus_epoch_M": -0.015617544858287147
+          },
+          "8": {
+            "resolved": true,
+            "degree": 8,
+            "sample_index": 9581,
+            "sample_time_M_initial_origin": 5002.703125,
+            "sample_omega": 0.16441478540580598,
+            "refined_time_M_initial_origin": 5002.699034011963,
+            "refined_omega": 0.16441481959761958,
+            "fractional_bin_offset": -0.2618232343811542,
+            "candidate_count": 1,
+            "curvature_domega_dt_M2": -0.00408597470867159,
+            "stencil_start_index": 9577,
+            "stencil_end_index": 9585,
+            "stencil_span_M": 0.125,
+            "phase_fit_residual_l2": 1.530555893832145e-13,
+            "phase_fit_residual_max_abs": 5.684341886080802e-14,
+            "condition_number": 156530.3142688122,
+            "minus_epoch_M": 5002.718742544858,
+            "difference_refined_to_clean_event_M": -0.0026867747346841497,
+            "difference_refined_to_minus_epoch_M": -0.01970853289549268,
+            "difference_sample_to_clean_event_M": 0.0014042133025213843,
+            "difference_sample_to_minus_epoch_M": -0.015617544858287147
+          }
+        },
+        "all_sample_peak_indices_equal": true,
+        "common_sample_peak_index": 9581,
+        "refined_time_range_M": [
+          5002.699034011963,
+          5002.6990340416805
+        ],
+        "refined_time_range_span_M": 2.971773938043043e-08
+      },
+      "public_amplitude_maximum_sample": {
+        "sample_index": 9997,
+        "relative_output_time_M": 4998.5,
+        "public_epoch_coordinate_M": -4.218742544858287,
+        "amplitude": 9.000405642553502e-21,
+        "coordinate_definition": "epoch_M + arange(mode_length) * dt_M"
+      },
+      "clean_nqc_match": {
+        "time_M_initial_origin": 4998.329341252617,
+        "time_M_public_epoch_coordinate": -4.389401292241018,
+        "minus_clean_hamiltonian_event_M": -4.37237953408021
+      },
+      "known_clean_nqc_correction_before_match": {
+        "coefficient_source": "clean published NQC targets; no public-waveform fit",
+        "amplitude_coefficients_a1_a2_a3": [
+          4.156503112933471,
+          -47.40869330451998,
+          57.246159652171535
+        ],
+        "phase_coefficients_b1_b2": [
+          4.1465669321735446,
+          -22.05197516405
+        ],
+        "pre_match_sample_count": 9302,
+        "pre_match_factor_amplitude_range": [
+          0.8821228063529394,
+          1.000983273609358
+        ],
+        "pre_match_factor_phase_range_rad": [
+          -1.4756529564048984,
+          -0.16388449994404655
+        ]
+      },
+      "base_inspiral_mode_vs_public_unshifted": {
+        "comparison": "fresh clean published base mode (NQC excluded) versus public mode at identical initial-origin output indices; public epoch omitted from this shared-grid comparison",
+        "mode_scale_100Mpc": 2.392707920793921e-20,
+        "shared_sample_count": 10006,
+        "state_mode_grid_max_error_M": 0.0,
+        "clean_mode_variant": "base mode (NQC excluded)",
+        "clean_base_excludes_nqc": true,
+        "clean_nqc_coefficients_fitted_to_public": false,
+        "public_mode_nqc_status": "public API output may include its own attachment/NQC",
+        "bands": {
+          "0_to_1000M": {
+            "available": true,
+            "label": "0_to_1000M",
+            "requested_support_M": [
+              0.0,
+              1000.0
+            ],
+            "actual_support_M": [
+              0.0,
+              999.5
+            ],
+            "sample_count": 2000,
+            "time_shift_applied_M": 0.0,
+            "phase_shift_applied_rad": 0.0,
+            "clean_complex_l2": 9.778497871986867e-20,
+            "public_complex_l2": 9.778750977091391e-20,
+            "raw_complex_l2": 1.441600007576247e-21,
+            "raw_relative_l2_over_public": 0.014742169127258408,
+            "raw_relative_l2_over_clean": 0.014742550711250827,
+            "max_abs": 3.5474282561383615e-23,
+            "max_abs_over_public_peak": 0.015803479092634035,
+            "phase_rms_rad": 0.014723050605594907,
+            "phase_max_abs_rad": 0.01580384695643972,
+            "amplitude_ratio_mean_clean_over_public": 0.9999741758453214,
+            "amplitude_ratio_min_clean_over_public": 0.9999708549043365,
+            "amplitude_ratio_max_clean_over_public": 0.9999772347544401
+          },
+          "1000_to_3000M": {
+            "available": true,
+            "label": "1000_to_3000M",
+            "requested_support_M": [
+              1000.0,
+              3000.0
+            ],
+            "actual_support_M": [
+              1000.0,
+              2999.5
+            ],
+            "sample_count": 4000,
+            "time_shift_applied_M": 0.0,
+            "phase_shift_applied_rad": 0.0,
+            "clean_complex_l2": 1.5249586921813764e-19,
+            "public_complex_l2": 1.5250239208445936e-19,
+            "raw_complex_l2": 3.0352302206722885e-21,
+            "raw_relative_l2_over_public": 0.019902836796102896,
+            "raw_relative_l2_over_clean": 0.01990368812108966,
+            "max_abs": 6.566094977123614e-23,
+            "max_abs_over_public_peak": 0.02500781036233656,
+            "phase_rms_rad": 0.019669864635339648,
+            "phase_max_abs_rad": 0.025009169150910695,
+            "amplitude_ratio_mean_clean_over_public": 0.9999580640121102,
+            "amplitude_ratio_min_clean_over_public": 0.9999371391611431,
+            "amplitude_ratio_max_clean_over_public": 0.9999708602351772
+          },
+          "3000_to_4500M": {
+            "available": true,
+            "label": "3000_to_4500M",
+            "requested_support_M": [
+              3000.0,
+              4500.0
+            ],
+            "actual_support_M": [
+              3000.0,
+              4499.5
+            ],
+            "sample_count": 3000,
+            "time_shift_applied_M": 0.0,
+            "phase_shift_applied_rad": 0.0,
+            "clean_complex_l2": 1.6340636199809122e-19,
+            "public_complex_l2": 1.6342760084421129e-19,
+            "raw_complex_l2": 6.591713354262192e-21,
+            "raw_relative_l2_over_public": 0.04033414992456383,
+            "raw_relative_l2_over_clean": 0.040339392381425095,
+            "max_abs": 2.29920285579245e-22,
+            "max_abs_over_public_peak": 0.06423499328217941,
+            "phase_rms_rad": 0.03844569881997491,
+            "phase_max_abs_rad": 0.06425412278496648,
+            "amplitude_ratio_mean_clean_over_public": 0.9998793352222947,
+            "amplitude_ratio_min_clean_over_public": 0.9997310444218787,
+            "amplitude_ratio_max_clean_over_public": 0.9999371194358603
+          },
+          "4500_to_match_minus_100M": {
+            "available": true,
+            "label": "4500_to_match_minus_100M",
+            "requested_support_M": [
+              4500.0,
+              4898.329341252617
+            ],
+            "actual_support_M": [
+              4500.0,
+              4898.0
+            ],
+            "sample_count": 797,
+            "time_shift_applied_M": 0.0,
+            "phase_shift_applied_rad": 0.0,
+            "clean_complex_l2": 1.1695666960048593e-19,
+            "public_complex_l2": 1.1702061976462874e-19,
+            "raw_complex_l2": 1.42504540173067e-20,
+            "raw_relative_l2_over_public": 0.12177729058322861,
+            "raw_relative_l2_over_clean": 0.12184387659109175,
+            "max_abs": 1.1397526756069776e-21,
+            "max_abs_over_public_peak": 0.21914630554455386,
+            "phase_rms_rad": 0.11310233177229413,
+            "phase_max_abs_rad": 0.21968892712444338,
+            "amplitude_ratio_mean_clean_over_public": 0.9994953965331951,
+            "amplitude_ratio_min_clean_over_public": 0.9990595616104545,
+            "amplitude_ratio_max_clean_over_public": 0.9997307749357767
+          },
+          "match_minus_100_to_matchM": {
+            "available": true,
+            "label": "match_minus_100_to_matchM",
+            "requested_support_M": [
+              4898.329341252617,
+              4998.329341252617
+            ],
+            "actual_support_M": [
+              4898.5,
+              4998.0
+            ],
+            "sample_count": 200,
+            "time_shift_applied_M": 0.0,
+            "phase_shift_applied_rad": 0.0,
+            "clean_complex_l2": 9.531029371495118e-20,
+            "public_complex_l2": 9.354748371629274e-20,
+            "raw_complex_l2": 6.334975650153224e-20,
+            "raw_relative_l2_over_public": 0.6771935917983318,
+            "raw_relative_l2_over_clean": 0.6646685686542445,
+            "max_abs": 1.2714170237329347e-20,
+            "max_abs_over_public_peak": 1.412811231102551,
+            "phase_rms_rad": 0.5783582845794412,
+            "phase_max_abs_rad": 1.4474532728395215,
+            "amplitude_ratio_mean_clean_over_public": 1.0109619804409717,
+            "amplitude_ratio_min_clean_over_public": 0.9990587673468534,
+            "amplitude_ratio_max_clean_over_public": 1.1286010744579447
+          },
+          "all_pre_match": {
+            "available": true,
+            "label": "all_pre_match",
+            "requested_support_M": [
+              0.0,
+              4998.329341252617
+            ],
+            "actual_support_M": [
+              0.0,
+              4998.0
+            ],
+            "sample_count": 9997,
+            "time_shift_applied_M": 0.0,
+            "phase_shift_applied_rad": 0.0,
+            "clean_complex_l2": 2.8684742631817226e-19,
+            "public_complex_l2": 2.863091240881462e-19,
+            "raw_complex_l2": 6.535295407647525e-20,
+            "raw_relative_l2_over_public": 0.2282601166994419,
+            "raw_relative_l2_over_clean": 0.22783176030307314,
+            "max_abs": 1.2714170237329347e-20,
+            "max_abs_over_public_peak": 1.412811231102551,
+            "phase_rms_rad": 0.0913977140057929,
+            "phase_max_abs_rad": 1.4474532728395215,
+            "amplitude_ratio_mean_clean_over_public": 1.0001209203292107,
+            "amplitude_ratio_min_clean_over_public": 0.9990587673468534,
+            "amplitude_ratio_max_clean_over_public": 1.1286010744579447
+          }
+        },
+        "checkpoints": {
+          "0.0": {
+            "requested_time_M": 0.0,
+            "sample_index": 0,
+            "sample_time_M": 0.0,
+            "abs_residual": 2.926373816319261e-23,
+            "abs_residual_over_public": 0.013717850990121508,
+            "phase_error_rad": 0.01371809646336229,
+            "amplitude_ratio_clean_over_public": 0.9999771094516388
+          },
+          "1000.0": {
+            "requested_time_M": 1000.0,
+            "sample_index": 2000,
+            "sample_time_M": 1000.0,
+            "abs_residual": 3.5475744583002136e-23,
+            "abs_residual_over_public": 0.015803681701335125,
+            "phase_error_rad": 0.01580404957380783,
+            "amplitude_ratio_clean_over_public": 0.9999708597954563
+          },
+          "3000.0": {
+            "requested_time_M": 3000.0,
+            "sample_index": 6000,
+            "sample_time_M": 3000.0,
+            "abs_residual": 6.567700065405262e-23,
+            "abs_residual_over_public": 0.025012511459135505,
+            "phase_error_rad": 0.025013870975116714,
+            "amplitude_ratio_clean_over_public": 0.9999371194358602
+          },
+          "4500.0": {
+            "requested_time_M": 4500.0,
+            "sample_index": 9000,
+            "sample_time_M": 4500.0,
+            "abs_residual": 2.3013441633795147e-22,
+            "abs_residual_over_public": 0.06428039293110041,
+            "phase_error_rad": 0.06429955993807748,
+            "amplitude_ratio_clean_over_public": 0.9997307749357764
+          },
+          "4900.0": {
+            "requested_time_M": 4900.0,
+            "sample_index": 9800,
+            "sample_time_M": 4900.0,
+            "abs_residual": 1.1640709546172545e-21,
+            "abs_residual_over_public": 0.22271428787852024,
+            "phase_error_rad": 0.22328070450808643,
+            "amplitude_ratio_clean_over_public": 0.9990588043578903
+          },
+          "4898.329341252617": {
+            "requested_time_M": 4898.329341252617,
+            "sample_index": 9797,
+            "sample_time_M": 4898.5,
+            "abs_residual": 1.1457383363817197e-21,
+            "abs_residual_over_public": 0.2200262891665534,
+            "phase_error_rad": 0.22057472271080875,
+            "amplitude_ratio_clean_over_public": 0.9990592808255676
+          }
+        }
+      },
+      "nqc_corrected_inspiral_mode_vs_public_unshifted": {
+        "comparison": "fresh clean published base mode with fixed clean attachment-derived NQC versus public mode at identical initial-origin output indices; public epoch omitted from this shared-grid comparison",
+        "mode_scale_100Mpc": 2.392707920793921e-20,
+        "shared_sample_count": 10006,
+        "state_mode_grid_max_error_M": 0.0,
+        "clean_mode_variant": "base mode with fixed clean attachment-derived NQC",
+        "clean_base_excludes_nqc": false,
+        "clean_nqc_coefficients_fitted_to_public": false,
+        "public_mode_nqc_status": "public API output may include its own attachment/NQC",
+        "bands": {
+          "0_to_1000M": {
+            "available": true,
+            "label": "0_to_1000M",
+            "requested_support_M": [
+              0.0,
+              1000.0
+            ],
+            "actual_support_M": [
+              0.0,
+              999.5
+            ],
+            "sample_count": 2000,
+            "time_shift_applied_M": 0.0,
+            "phase_shift_applied_rad": 0.0,
+            "clean_complex_l2": 9.778754611049977e-20,
+            "public_complex_l2": 9.778750977091391e-20,
+            "raw_complex_l2": 6.08971194617302e-24,
+            "raw_relative_l2_over_public": 6.22749465697546e-05,
+            "raw_relative_l2_over_clean": 6.227492342728035e-05,
+            "max_abs": 1.4985370346914202e-25,
+            "max_abs_over_public_peak": 6.675849936162876e-05,
+            "phase_rms_rad": 6.219177604827774e-05,
+            "phase_max_abs_rad": 6.67571534535908e-05,
+            "amplitude_ratio_mean_clean_over_public": 1.000000370717444,
+            "amplitude_ratio_min_clean_over_public": 1.0000003240377497,
+            "amplitude_ratio_max_clean_over_public": 1.0000004222472205
+          },
+          "1000_to_3000M": {
+            "available": true,
+            "label": "1000_to_3000M",
+            "requested_support_M": [
+              1000.0,
+              3000.0
+            ],
+            "actual_support_M": [
+              1000.0,
+              2999.5
+            ],
+            "sample_count": 4000,
+            "time_shift_applied_M": 0.0,
+            "phase_shift_applied_rad": 0.0,
+            "clean_complex_l2": 1.5250248961242406e-19,
+            "public_complex_l2": 1.5250239208445936e-19,
+            "raw_complex_l2": 1.2822006788048932e-23,
+            "raw_relative_l2_over_public": 8.407741421490496e-05,
+            "raw_relative_l2_over_clean": 8.407736044595268e-05,
+            "max_abs": 2.773850826565095e-25,
+            "max_abs_over_public_peak": 0.00010564564735330431,
+            "phase_rms_rad": 8.308753944033566e-05,
+            "phase_max_abs_rad": 0.00010564114772497346,
+            "amplitude_ratio_mean_clean_over_public": 1.000000625985996,
+            "amplitude_ratio_min_clean_over_public": 1.0000004214904694,
+            "amplitude_ratio_max_clean_over_public": 1.0000009694859022
+          },
+          "3000_to_4500M": {
+            "available": true,
+            "label": "3000_to_4500M",
+            "requested_support_M": [
+              3000.0,
+              4500.0
+            ],
+            "actual_support_M": [
+              3000.0,
+              4499.5
+            ],
+            "sample_count": 3000,
+            "time_shift_applied_M": 0.0,
+            "phase_shift_applied_rad": 0.0,
+            "clean_complex_l2": 1.6342796479978701e-19,
+            "public_complex_l2": 1.6342760084421129e-19,
+            "raw_complex_l2": 2.785119819223532e-23,
+            "raw_relative_l2_over_public": 0.00017041918285751932,
+            "raw_relative_l2_over_clean": 0.0001704188033324369,
+            "max_abs": 9.716350894731023e-25,
+            "max_abs_over_public_peak": 0.0002714548361306862,
+            "phase_rms_rad": 0.00016239625071112431,
+            "phase_max_abs_rad": 0.0002714060551574988,
+            "amplitude_ratio_mean_clean_over_public": 1.0000020459115222,
+            "amplitude_ratio_min_clean_over_public": 1.0000009699458194,
+            "amplitude_ratio_max_clean_over_public": 1.0000051093418598
+          },
+          "4500_to_match_minus_100M": {
+            "available": true,
+            "label": "4500_to_match_minus_100M",
+            "requested_support_M": [
+              4500.0,
+              4898.329341252617
+            ],
+            "actual_support_M": [
+              4500.0,
+              4898.0
+            ],
+            "sample_count": 797,
+            "time_shift_applied_M": 0.0,
+            "phase_shift_applied_rad": 0.0,
+            "clean_complex_l2": 1.170223180520413e-19,
+            "public_complex_l2": 1.1702061976462874e-19,
+            "raw_complex_l2": 6.029159506690898e-23,
+            "raw_relative_l2_over_public": 0.0005152219770171908,
+            "raw_relative_l2_over_clean": 0.0005152144998537505,
+            "max_abs": 4.826439485843087e-24,
+            "max_abs_over_public_peak": 0.0009280051759418686,
+            "phase_rms_rad": 0.000477644590551105,
+            "phase_max_abs_rad": 0.0009271571829915668,
+            "amplitude_ratio_mean_clean_over_public": 1.0000128065141112,
+            "amplitude_ratio_min_clean_over_public": 1.0000051154935277,
+            "amplitude_ratio_max_clean_over_public": 1.000039236433869
+          },
+          "match_minus_100_to_matchM": {
+            "available": true,
+            "label": "match_minus_100_to_matchM",
+            "requested_support_M": [
+              4898.329341252617,
+              4998.329341252617
+            ],
+            "actual_support_M": [
+              4898.5,
+              4998.0
+            ],
+            "sample_count": 200,
+            "time_shift_applied_M": 0.0,
+            "phase_shift_applied_rad": 0.0,
+            "clean_complex_l2": 9.355814929535382e-20,
+            "public_complex_l2": 9.354748371629274e-20,
+            "raw_complex_l2": 2.6533420713324746e-22,
+            "raw_relative_l2_over_public": 0.00283635856992095,
+            "raw_relative_l2_over_clean": 0.0028360352265585503,
+            "max_abs": 5.1266053014580796e-23,
+            "max_abs_over_public_peak": 0.005696734755103652,
+            "phase_rms_rad": 0.002388894630298569,
+            "phase_max_abs_rad": 0.005696680202367575,
+            "amplitude_ratio_mean_clean_over_public": 1.000099897868321,
+            "amplitude_ratio_min_clean_over_public": 1.0000149603062802,
+            "amplitude_ratio_max_clean_over_public": 1.0001974070998632
+          },
+          "all_pre_match": {
+            "available": true,
+            "label": "all_pre_match",
+            "requested_support_M": [
+              0.0,
+              4998.329341252617
+            ],
+            "actual_support_M": [
+              0.0,
+              4998.0
+            ],
+            "sample_count": 9997,
+            "time_shift_applied_M": 0.0,
+            "phase_shift_applied_rad": 0.0,
+            "clean_complex_l2": 2.863135753203921e-19,
+            "public_complex_l2": 2.863091240881462e-19,
+            "raw_complex_l2": 2.7388774269971353e-22,
+            "raw_relative_l2_over_public": 0.0009566154888427219,
+            "raw_relative_l2_over_clean": 0.0009566006166254123,
+            "max_abs": 5.1266053014580796e-23,
+            "max_abs_over_public_peak": 0.005696734755103652,
+            "phase_rms_rad": 0.0003792220203772177,
+            "phase_max_abs_rad": 0.005696680202367575,
+            "amplitude_ratio_mean_clean_over_public": 1.0000039581353255,
+            "amplitude_ratio_min_clean_over_public": 1.0000003240377497,
+            "amplitude_ratio_max_clean_over_public": 1.0001974070998632
+          }
+        },
+        "checkpoints": {
+          "0.0": {
+            "requested_time_M": 0.0,
+            "sample_index": 0,
+            "sample_time_M": 0.0,
+            "abs_residual": 1.2361741177762937e-25,
+            "abs_residual_over_public": 5.7947662909413024e-05,
+            "phase_error_rad": -5.79467386076833e-05,
+            "amplitude_ratio_clean_over_public": 1.000000325620878
+          },
+          "1000.0": {
+            "requested_time_M": 1000.0,
+            "sample_index": 2000,
+            "sample_time_M": 1000.0,
+            "abs_residual": 1.4985991112932717e-25,
+            "abs_residual_over_public": 6.675936934141257e-05,
+            "phase_error_rad": -6.675802213006254e-05,
+            "amplitude_ratio_clean_over_public": 1.0000004218975718
+          },
+          "3000.0": {
+            "requested_time_M": 3000.0,
+            "sample_index": 6000,
+            "sample_time_M": 3000.0,
+            "abs_residual": 2.7745289612465963e-25,
+            "abs_residual_over_public": 0.00010566550960880642,
+            "phase_error_rad": -0.00010566100656187704,
+            "amplitude_ratio_clean_over_public": 1.000000969945819
+          },
+          "4500.0": {
+            "requested_time_M": 4500.0,
+            "sample_index": 9000,
+            "sample_time_M": 4500.0,
+            "abs_residual": 9.725404525705816e-25,
+            "abs_residual_over_public": 0.0002716468202688283,
+            "phase_error_rad": -0.0002715979561685123,
+            "amplitude_ratio_clean_over_public": 1.0000051154935274
+          },
+          "4900.0": {
+            "requested_time_M": 4900.0,
+            "sample_index": 9800,
+            "sample_time_M": 4900.0,
+            "abs_residual": 4.9333579811440035e-24,
+            "abs_residual_over_public": 0.0009438679878251599,
+            "phase_error_rad": -0.0009429891468136991,
+            "amplitude_ratio_clean_over_public": 1.0000402802063126
+          },
+          "4898.329341252617": {
+            "requested_time_M": 4898.329341252617,
+            "sample_index": 9797,
+            "sample_time_M": 4898.5,
+            "abs_residual": 4.85245245233556e-24,
+            "abs_residual_over_public": 0.0009318594591294412,
+            "phase_error_rad": -0.0009310039978805316,
+            "amplitude_ratio_clean_over_public": 1.000039489766094
+          }
+        },
+        "nqc_factor_amplitude_range": [
+          0.8561654569293777,
+          1.0009832734818784
+        ],
+        "nqc_factor_phase_range_rad": [
+          -1.686023217224618,
+          -0.013754180229423192
+        ]
+      },
+      "postmatch_unshifted_complex_residual": {
+        "available": true,
+        "comparison": "same relative output indices after keeping public epoch separate",
+        "time_shift_applied_M": 0.0,
+        "phase_shift_applied_rad": 0.0,
+        "sample_count": 776,
+        "support_M_initial_origin": [
+          4998.5,
+          5386.0
+        ],
+        "support_M_public_epoch_coordinate": [
+          -4.218742544858287,
+          383.2812574551417
+        ],
+        "raw_complex_l2": 3.697623771420145e-22,
+        "raw_relative_l2_over_public": 0.007747114686634396,
+        "max_abs": 6.253472567184647e-23,
+        "max_abs_over_public_peak": 0.00694798969684046,
+        "phase_rms_rad": 0.009380420349308841,
+        "phase_max_abs_rad": 0.009736710113991921,
+        "amplitude_ratio_mean_clean_over_public": 0.9988867062470662
+      }
+    },
+    "dt_1M": {
+      "npz_path": "/tmp/torchwave-public-eob-dt_1M.npz",
+      "npz_sha256": "e24786f7ed083151fdc8e879a4d4dc192499e4c5dedf7f79dafe321d6f0686d7",
+      "npz_size_bytes": 671086,
+      "raw_arrays": {
+        "keys": [
+          "state",
+          "postpeak_state",
+          "mode22",
+          "epoch_s",
+          "dt_s"
+        ],
+        "state_shape": [
+          5,
+          5004
+        ],
+        "postpeak_state_shape": [
+          5,
+          9587
+        ],
+        "mode22_shape": [
+          5386
+        ],
+        "loaded_arrays_copied": true
+      },
+      "dt_s": 0.00024627454738206334,
+      "dt_M": 1.0,
+      "state_grid_error_M": 0.0,
+      "epoch_s": -1.232042294,
+      "epoch_M": -5002.718742544858,
+      "minus_epoch_M": 5002.718742544858,
+      "postpeak_time_support_M_initial_origin": [
+        4854.0,
+        5003.78125
+      ],
+      "postpeak_spacing_M": {
+        "minimum": 0.015625,
+        "median": 0.015625,
+        "maximum": 0.015625
+      },
+      "clean_hamiltonian_omega_peak": {
+        "time_M_initial_origin": 5002.701697645643,
+        "frequency": 0.16441512045558015,
+        "curvature": -0.004043779005412181,
+        "sample_index": 9517,
+        "sample_time_M_initial_origin": 5002.703125,
+        "sample_omega": 0.16441511633451847
+      },
+      "returned_phase_omega_peak": {
+        "phase_row": 2,
+        "phase_time_coordinate": "postpeak_state[0] in initial-origin M coordinates",
+        "phase_offset_ignored_by_derivative": true,
+        "phase_increasing": true,
+        "phase_increment_range": [
+          0.0008046234266743113,
+          0.0025689733018907646
+        ],
+        "derivative_orders": [
+          4,
+          6,
+          8
+        ],
+        "records": {
+          "4": {
+            "resolved": true,
+            "degree": 4,
+            "sample_index": 9517,
+            "sample_time_M_initial_origin": 5002.703125,
+            "sample_omega": 0.16441433815510706,
+            "refined_time_M_initial_origin": 5002.699444351699,
+            "refined_omega": 0.16441436473542695,
+            "fractional_bin_offset": -0.2355614912812598,
+            "candidate_count": 1,
+            "curvature_domega_dt_M2": -0.003924116028169058,
+            "stencil_start_index": 9515,
+            "stencil_end_index": 9519,
+            "stencil_span_M": 0.0625,
+            "phase_fit_residual_l2": 1.2868476258827026e-13,
+            "phase_fit_residual_max_abs": 1.1368683772161603e-13,
+            "condition_number": 208.78367077659482,
+            "minus_epoch_M": 5002.718742544858,
+            "difference_refined_to_clean_event_M": -0.0022532939447046374,
+            "difference_refined_to_minus_epoch_M": -0.01929819315955683,
+            "difference_sample_to_clean_event_M": 0.001427354356565047,
+            "difference_sample_to_minus_epoch_M": -0.015617544858287147
+          },
+          "6": {
+            "resolved": true,
+            "degree": 6,
+            "sample_index": 9517,
+            "sample_time_M_initial_origin": 5002.703125,
+            "sample_omega": 0.1644143381548752,
+            "refined_time_M_initial_origin": 5002.699444349804,
+            "refined_omega": 0.16441436473517732,
+            "fractional_bin_offset": -0.2355616125278175,
+            "candidate_count": 1,
+            "curvature_domega_dt_M2": -0.003924107889634179,
+            "stencil_start_index": 9514,
+            "stencil_end_index": 9520,
+            "stencil_span_M": 0.09375,
+            "phase_fit_residual_l2": 1.9844378647020649e-13,
+            "phase_fit_residual_max_abs": 1.7053025658242404e-13,
+            "condition_number": 5588.272112447291,
+            "minus_epoch_M": 5002.718742544858,
+            "difference_refined_to_clean_event_M": -0.002253295839182101,
+            "difference_refined_to_minus_epoch_M": -0.019298195054034295,
+            "difference_sample_to_clean_event_M": 0.001427354356565047,
+            "difference_sample_to_minus_epoch_M": -0.015617544858287147
+          },
+          "8": {
+            "resolved": true,
+            "degree": 8,
+            "sample_index": 9517,
+            "sample_time_M_initial_origin": 5002.703125,
+            "sample_omega": 0.16441433815641612,
+            "refined_time_M_initial_origin": 5002.699444388247,
+            "refined_omega": 0.16441436473641502,
+            "fractional_bin_offset": -0.235559152206406,
+            "candidate_count": 1,
+            "curvature_domega_dt_M2": -0.003924136426405824,
+            "stencil_start_index": 9513,
+            "stencil_end_index": 9521,
+            "stencil_span_M": 0.125,
+            "phase_fit_residual_l2": 2.0885605716641563e-13,
+            "phase_fit_residual_max_abs": 7.105427357601002e-14,
+            "condition_number": 156530.3142688122,
+            "minus_epoch_M": 5002.718742544858,
+            "difference_refined_to_clean_event_M": -0.0022532573966600467,
+            "difference_refined_to_minus_epoch_M": -0.01929815661151224,
+            "difference_sample_to_clean_event_M": 0.001427354356565047,
+            "difference_sample_to_minus_epoch_M": -0.015617544858287147
+          }
+        },
+        "all_sample_peak_indices_equal": true,
+        "common_sample_peak_index": 9517,
+        "refined_time_range_M": [
+          5002.699444349804,
+          5002.699444388247
+        ],
+        "refined_time_range_span_M": 3.844252205453813e-08
+      },
+      "public_amplitude_maximum_sample": {
+        "sample_index": 4998,
+        "relative_output_time_M": 4998.0,
+        "public_epoch_coordinate_M": -4.718742544858287,
+        "amplitude": 8.999196662611736e-21,
+        "coordinate_definition": "epoch_M + arange(mode_length) * dt_M"
+      },
+      "clean_nqc_match": {
+        "time_M_initial_origin": 4998.329318111563,
+        "time_M_public_epoch_coordinate": -4.389424433295062,
+        "minus_clean_hamiltonian_event_M": -4.37237953408021
+      },
+      "known_clean_nqc_correction_before_match": {
+        "coefficient_source": "clean published NQC targets; no public-waveform fit",
+        "amplitude_coefficients_a1_a2_a3": [
+          4.141321769640525,
+          -47.27697162504852,
+          57.096819876221936
+        ],
+        "phase_coefficients_b1_b2": [
+          4.142869409639464,
+          -22.016254459947454
+        ],
+        "pre_match_sample_count": 9238,
+        "pre_match_factor_amplitude_range": [
+          0.882122805170244,
+          1.0009712403419317
+        ],
+        "pre_match_factor_phase_range_rad": [
+          -1.4746033146950008,
+          -0.16464129378727044
+        ]
+      },
+      "base_inspiral_mode_vs_public_unshifted": {
+        "comparison": "fresh clean published base mode (NQC excluded) versus public mode at identical initial-origin output indices; public epoch omitted from this shared-grid comparison",
+        "mode_scale_100Mpc": 2.392707920793921e-20,
+        "shared_sample_count": 5004,
+        "state_mode_grid_max_error_M": 0.0,
+        "clean_mode_variant": "base mode (NQC excluded)",
+        "clean_base_excludes_nqc": true,
+        "clean_nqc_coefficients_fitted_to_public": false,
+        "public_mode_nqc_status": "public API output may include its own attachment/NQC",
+        "bands": {
+          "0_to_1000M": {
+            "available": true,
+            "label": "0_to_1000M",
+            "requested_support_M": [
+              0.0,
+              1000.0
+            ],
+            "actual_support_M": [
+              0.0,
+              999.0
+            ],
+            "sample_count": 1000,
+            "time_shift_applied_M": 0.0,
+            "phase_shift_applied_rad": 0.0,
+            "clean_complex_l2": 6.914353913877288e-20,
+            "public_complex_l2": 6.914532125688237e-20,
+            "raw_complex_l2": 1.0183641161724098e-21,
+            "raw_relative_l2_over_public": 0.014727881766418824,
+            "raw_relative_l2_over_clean": 0.014728261365512786,
+            "max_abs": 3.5439737200722346e-23,
+            "max_abs_over_public_peak": 0.015788539660848738,
+            "phase_rms_rad": 0.014708782400309879,
+            "phase_max_abs_rad": 0.01578890607097358,
+            "amplitude_ratio_mean_clean_over_public": 0.9999742852334134,
+            "amplitude_ratio_min_clean_over_public": 0.9999709771576272,
+            "amplitude_ratio_max_clean_over_public": 0.9999773290510383
+          },
+          "1000_to_3000M": {
+            "available": true,
+            "label": "1000_to_3000M",
+            "requested_support_M": [
+              1000.0,
+              3000.0
+            ],
+            "actual_support_M": [
+              1000.0,
+              2999.0
+            ],
+            "sample_count": 2000,
+            "time_shift_applied_M": 0.0,
+            "phase_shift_applied_rad": 0.0,
+            "clean_complex_l2": 1.0782871308649772e-19,
+            "public_complex_l2": 1.0783330492875532e-19,
+            "raw_complex_l2": 2.1440501975607585e-21,
+            "raw_relative_l2_over_public": 0.01988300552391784,
+            "raw_relative_l2_over_clean": 0.019883852233688912,
+            "max_abs": 6.55835879164104e-23,
+            "max_abs_over_public_peak": 0.024979763074659305,
+            "phase_rms_rad": 0.01965030731489354,
+            "phase_max_abs_rad": 0.024981115716174382,
+            "amplitude_ratio_mean_clean_over_public": 0.9999582493361104,
+            "amplitude_ratio_min_clean_over_public": 0.9999374383435616,
+            "amplitude_ratio_max_clean_over_public": 0.9999709822957866
+          },
+          "3000_to_4500M": {
+            "available": true,
+            "label": "3000_to_4500M",
+            "requested_support_M": [
+              3000.0,
+              4500.0
+            ],
+            "actual_support_M": [
+              3000.0,
+              4499.0
+            ],
+            "sample_count": 1500,
+            "time_shift_applied_M": 0.0,
+            "phase_shift_applied_rad": 0.0,
+            "clean_complex_l2": 1.1553934808205324e-19,
+            "public_complex_l2": 1.1555428728895488e-19,
+            "raw_complex_l2": 4.655390297270767e-21,
+            "raw_relative_l2_over_public": 0.04028747358918414,
+            "raw_relative_l2_over_clean": 0.04029268274877769,
+            "max_abs": 2.2949209484864743e-22,
+            "max_abs_over_public_peak": 0.06412983031050469,
+            "phase_rms_rad": 0.03840221530974026,
+            "phase_max_abs_rad": 0.06414884290567707,
+            "amplitude_ratio_mean_clean_over_public": 0.9998799524404418,
+            "amplitude_ratio_min_clean_over_public": 0.9997327507624839,
+            "amplitude_ratio_max_clean_over_public": 0.9999373985787223
+          },
+          "4500_to_match_minus_100M": {
+            "available": true,
+            "label": "4500_to_match_minus_100M",
+            "requested_support_M": [
+              4500.0,
+              4898.329318111563
+            ],
+            "actual_support_M": [
+              4500.0,
+              4898.0
+            ],
+            "sample_count": 399,
+            "time_shift_applied_M": 0.0,
+            "phase_shift_applied_rad": 0.0,
+            "clean_complex_l2": 8.276104810989935e-20,
+            "public_complex_l2": 8.28059919593136e-20,
+            "raw_complex_l2": 1.0084005922411217e-20,
+            "raw_relative_l2_over_public": 0.12177869842276576,
+            "raw_relative_l2_over_clean": 0.12184483102510434,
+            "max_abs": 1.1386861131556464e-21,
+            "max_abs_over_public_peak": 0.21894353960853344,
+            "phase_rms_rad": 0.1130715218290268,
+            "phase_max_abs_rad": 0.2194837180052832,
+            "amplitude_ratio_mean_clean_over_public": 0.999498796253092,
+            "amplitude_ratio_min_clean_over_public": 0.999070100579719,
+            "amplitude_ratio_max_clean_over_public": 0.9997322158236873
+          },
+          "match_minus_100_to_matchM": {
+            "available": true,
+            "label": "match_minus_100_to_matchM",
+            "requested_support_M": [
+              4898.329318111563,
+              4998.329318111563
+            ],
+            "actual_support_M": [
+              4899.0,
+              4998.0
+            ],
+            "sample_count": 100,
+            "time_shift_applied_M": 0.0,
+            "phase_shift_applied_rad": 0.0,
+            "clean_complex_l2": 6.753696604474302e-20,
+            "public_complex_l2": 6.624822092030947e-20,
+            "raw_complex_l2": 4.521459675834674e-20,
+            "raw_relative_l2_over_public": 0.6825028073242261,
+            "raw_relative_l2_over_clean": 0.6694792408707287,
+            "max_abs": 1.2706361756564491e-20,
+            "max_abs_over_public_peak": 1.411944002663552,
+            "phase_rms_rad": 0.582361118811816,
+            "phase_max_abs_rad": 1.4463592882530933,
+            "amplitude_ratio_mean_clean_over_public": 1.0113189740800435,
+            "amplitude_ratio_min_clean_over_public": 0.9990695440520446,
+            "amplitude_ratio_max_clean_over_public": 1.1286014277360807
+          },
+          "all_pre_match": {
+            "available": true,
+            "label": "all_pre_match",
+            "requested_support_M": [
+              0.0,
+              4998.329318111563
+            ],
+            "actual_support_M": [
+              0.0,
+              4998.0
+            ],
+            "sample_count": 4999,
+            "time_shift_applied_M": 0.0,
+            "phase_shift_applied_rad": 0.0,
+            "clean_complex_l2": 2.028985810510487e-19,
+            "public_complex_l2": 2.025032086015077e-19,
+            "raw_complex_l2": 4.661924078109611e-20,
+            "raw_relative_l2_over_public": 0.23021482525165785,
+            "raw_relative_l2_over_clean": 0.22976622379319078,
+            "max_abs": 1.2706361756564491e-20,
+            "max_abs_over_public_peak": 1.411944002663552,
+            "phase_rms_rad": 0.0918965585255189,
+            "phase_max_abs_rad": 1.4463592882530933,
+            "amplitude_ratio_mean_clean_over_public": 1.0001285516461862,
+            "amplitude_ratio_min_clean_over_public": 0.9990695440520446,
+            "amplitude_ratio_max_clean_over_public": 1.1286014277360807
+          }
+        },
+        "checkpoints": {
+          "0.0": {
+            "requested_time_M": 0.0,
+            "sample_index": 0,
+            "sample_time_M": 0.0,
+            "abs_residual": 2.9236416298672626e-23,
+            "abs_residual_over_public": 0.013705044724250123,
+            "phase_error_rad": 0.013705289240023233,
+            "amplitude_ratio_clean_over_public": 0.9999772043352019
+          },
+          "1000.0": {
+            "requested_time_M": 1000.0,
+            "sample_index": 1000,
+            "sample_time_M": 1000.0,
+            "abs_residual": 3.5442654131152845e-23,
+            "abs_residual_over_public": 0.015788942578929203,
+            "phase_error_rad": 0.015789309010283588,
+            "amplitude_ratio_clean_over_public": 0.9999709822957862
+          },
+          "3000.0": {
+            "requested_time_M": 3000.0,
+            "sample_index": 3000,
+            "sample_time_M": 3000.0,
+            "abs_residual": 6.561566794953831e-23,
+            "abs_residual_over_public": 0.02498916062261362,
+            "phase_error_rad": 0.024990514718324697,
+            "amplitude_ratio_clean_over_public": 0.9999373985787221
+          },
+          "4500.0": {
+            "requested_time_M": 4500.0,
+            "sample_index": 4500,
+            "sample_time_M": 4500.0,
+            "abs_residual": 2.299195160185343e-22,
+            "abs_residual_over_public": 0.0642204602546111,
+            "phase_error_rad": 0.0642395474226336,
+            "amplitude_ratio_clean_over_public": 0.9997322158236871
+          },
+          "4900.0": {
+            "requested_time_M": 4900.0,
+            "sample_index": 4900,
+            "sample_time_M": 4900.0,
+            "abs_residual": 1.1629866190516916e-21,
+            "abs_residual_over_public": 0.22250922165553697,
+            "phase_error_rad": 0.2230730973409496,
+            "amplitude_ratio_clean_over_public": 0.9990695440520446
+          },
+          "4898.329318111563": {
+            "requested_time_M": 4898.329318111563,
+            "sample_index": 4898,
+            "sample_time_M": 4898.0,
+            "abs_residual": 1.1386861131556464e-21,
+            "abs_residual_over_public": 0.21894353960853344,
+            "phase_error_rad": 0.2194837180052832,
+            "amplitude_ratio_clean_over_public": 0.999070100579719
+          }
+        }
+      },
+      "nqc_corrected_inspiral_mode_vs_public_unshifted": {
+        "comparison": "fresh clean published base mode with fixed clean attachment-derived NQC versus public mode at identical initial-origin output indices; public epoch omitted from this shared-grid comparison",
+        "mode_scale_100Mpc": 2.392707920793921e-20,
+        "shared_sample_count": 5004,
+        "state_mode_grid_max_error_M": 0.0,
+        "clean_mode_variant": "base mode with fixed clean attachment-derived NQC",
+        "clean_base_excludes_nqc": false,
+        "clean_nqc_coefficients_fitted_to_public": false,
+        "public_mode_nqc_status": "public API output may include its own attachment/NQC",
+        "bands": {
+          "0_to_1000M": {
+            "available": true,
+            "label": "0_to_1000M",
+            "requested_support_M": [
+              0.0,
+              1000.0
+            ],
+            "actual_support_M": [
+              0.0,
+              999.0
+            ],
+            "sample_count": 1000,
+            "time_shift_applied_M": 0.0,
+            "phase_shift_applied_rad": 0.0,
+            "clean_complex_l2": 6.914534631649095e-20,
+            "public_complex_l2": 6.914532125688237e-20,
+            "raw_complex_l2": 4.3447302637796585e-24,
+            "raw_relative_l2_over_public": 6.283476864093977e-05,
+            "raw_relative_l2_over_clean": 6.283474586840639e-05,
+            "max_abs": 1.5120015801487085e-25,
+            "max_abs_over_public_peak": 6.736025377456036e-05,
+            "phase_rms_rad": 6.275093134854448e-05,
+            "phase_max_abs_rad": 6.735898155882535e-05,
+            "amplitude_ratio_mean_clean_over_public": 1.0000003615407866,
+            "amplitude_ratio_min_clean_over_public": 1.0000003158955701,
+            "amplitude_ratio_max_clean_over_public": 1.0000004118771069
+          },
+          "1000_to_3000M": {
+            "available": true,
+            "label": "1000_to_3000M",
+            "requested_support_M": [
+              1000.0,
+              3000.0
+            ],
+            "actual_support_M": [
+              1000.0,
+              2999.0
+            ],
+            "sample_count": 2000,
+            "time_shift_applied_M": 0.0,
+            "phase_shift_applied_rad": 0.0,
+            "clean_complex_l2": 1.0783337218749991e-19,
+            "public_complex_l2": 1.0783330492875532e-19,
+            "raw_complex_l2": 9.14758958492854e-24,
+            "raw_relative_l2_over_public": 8.483083766163233e-05,
+            "raw_relative_l2_over_clean": 8.483078475022348e-05,
+            "max_abs": 2.7981958091402013e-25,
+            "max_abs_over_public_peak": 0.00010657890269424678,
+            "phase_rms_rad": 8.383244986416157e-05,
+            "phase_max_abs_rad": 0.00010657465833338348,
+            "amplitude_ratio_mean_clean_over_public": 1.0000006105303454,
+            "amplitude_ratio_min_clean_over_public": 1.0000004110715457,
+            "amplitude_ratio_max_clean_over_public": 1.0000009455010492
+          },
+          "3000_to_4500M": {
+            "available": true,
+            "label": "3000_to_4500M",
+            "requested_support_M": [
+              3000.0,
+              4500.0
+            ],
+            "actual_support_M": [
+              3000.0,
+              4499.0
+            ],
+            "sample_count": 1500,
+            "time_shift_applied_M": 0.0,
+            "phase_shift_applied_rad": 0.0,
+            "clean_complex_l2": 1.155545383158508e-19,
+            "public_complex_l2": 1.1555428728895488e-19,
+            "raw_complex_l2": 1.986582283215807e-23,
+            "raw_relative_l2_over_public": 0.00017191766137141776,
+            "raw_relative_l2_over_clean": 0.00017191728790311858,
+            "max_abs": 9.794811380704865e-25,
+            "max_abs_over_public_peak": 0.000273708596447415,
+            "phase_rms_rad": 0.0001638297241781576,
+            "phase_max_abs_rad": 0.00027366257978465457,
+            "amplitude_ratio_mean_clean_over_public": 1.0000019957445472,
+            "amplitude_ratio_min_clean_over_public": 1.0000009459216623,
+            "amplitude_ratio_max_clean_over_public": 1.0000049815248468
+          },
+          "4500_to_match_minus_100M": {
+            "available": true,
+            "label": "4500_to_match_minus_100M",
+            "requested_support_M": [
+              4500.0,
+              4898.329318111563
+            ],
+            "actual_support_M": [
+              4500.0,
+              4898.0
+            ],
+            "sample_count": 399,
+            "time_shift_applied_M": 0.0,
+            "phase_shift_applied_rad": 0.0,
+            "clean_complex_l2": 8.280716739022471e-20,
+            "public_complex_l2": 8.28059919593136e-20,
+            "raw_complex_l2": 4.3087095055988376e-23,
+            "raw_relative_l2_over_public": 0.0005203378890401923,
+            "raw_relative_l2_over_clean": 0.0005203305029496126,
+            "max_abs": 4.872378727902603e-24,
+            "max_abs_over_public_peak": 0.0009368480327242758,
+            "phase_rms_rad": 0.0004822683179380882,
+            "phase_max_abs_rad": 0.00093604373160328,
+            "amplitude_ratio_mean_clean_over_public": 1.0000125194431384,
+            "amplitude_ratio_min_clean_over_public": 1.0000049935624906,
+            "amplitude_ratio_max_clean_over_public": 1.0000383771766705
+          },
+          "match_minus_100_to_matchM": {
+            "available": true,
+            "label": "match_minus_100_to_matchM",
+            "requested_support_M": [
+              4898.329318111563,
+              4998.329318111563
+            ],
+            "actual_support_M": [
+              4899.0,
+              4998.0
+            ],
+            "sample_count": 100,
+            "time_shift_applied_M": 0.0,
+            "phase_shift_applied_rad": 0.0,
+            "clean_complex_l2": 6.625560682914163e-20,
+            "public_complex_l2": 6.624822092030947e-20,
+            "raw_complex_l2": 1.9098826057492038e-22,
+            "raw_relative_l2_over_public": 0.0028829190870598882,
+            "raw_relative_l2_over_clean": 0.0028825977108237243,
+            "max_abs": 5.1673924603992184e-23,
+            "max_abs_over_public_peak": 0.0057420597128050145,
+            "phase_rms_rad": 0.002426487108149679,
+            "phase_max_abs_rad": 0.005742005570415941,
+            "amplitude_ratio_mean_clean_over_public": 1.0000978515064949,
+            "amplitude_ratio_min_clean_over_public": 1.0000148855336692,
+            "amplitude_ratio_max_clean_over_public": 1.0001938838191542
+          },
+          "all_pre_match": {
+            "available": true,
+            "label": "all_pre_match",
+            "requested_support_M": [
+              0.0,
+              4998.329318111563
+            ],
+            "actual_support_M": [
+              0.0,
+              4998.0
+            ],
+            "sample_count": 4999,
+            "time_shift_applied_M": 0.0,
+            "phase_shift_applied_rad": 0.0,
+            "clean_complex_l2": 2.025062932539018e-19,
+            "public_complex_l2": 2.025032086015077e-19,
+            "raw_complex_l2": 1.9705384906384208e-22,
+            "raw_relative_l2_over_public": 0.0009730900089173942,
+            "raw_relative_l2_over_clean": 0.0009730751864426086,
+            "max_abs": 5.1673924603992184e-23,
+            "max_abs_over_public_peak": 0.0057420597128050145,
+            "phase_rms_rad": 0.00038470408933991365,
+            "phase_max_abs_rad": 0.005742005570415941,
+            "amplitude_ratio_mean_clean_over_public": 1.0000038720997717,
+            "amplitude_ratio_min_clean_over_public": 1.0000003158955701,
+            "amplitude_ratio_max_clean_over_public": 1.0001938838191542
+          }
+        },
+        "checkpoints": {
+          "0.0": {
+            "requested_time_M": 0.0,
+            "sample_index": 0,
+            "sample_time_M": 0.0,
+            "abs_residual": 1.247331246892608e-25,
+            "abs_residual_over_public": 5.847067694611391e-05,
+            "phase_error_rad": -5.846980532980855e-05,
+            "amplitude_ratio_clean_over_public": 1.0000003175571883
+          },
+          "1000.0": {
+            "requested_time_M": 1000.0,
+            "sample_index": 1000,
+            "sample_time_M": 1000.0,
+            "abs_residual": 1.5121256808279604e-25,
+            "abs_residual_over_public": 6.73619573138337e-05,
+            "phase_error_rad": -6.736068675123724e-05,
+            "amplitude_ratio_clean_over_public": 1.000000411470819
+          },
+          "3000.0": {
+            "requested_time_M": 3000.0,
+            "sample_index": 3000,
+            "sample_time_M": 3000.0,
+            "abs_residual": 2.7995643761192214e-25,
+            "abs_residual_over_public": 0.00010661899216204286,
+            "phase_error_rad": -0.00010661474560593299,
+            "amplitude_ratio_clean_over_public": 1.000000945921662
+          },
+          "4500.0": {
+            "requested_time_M": 4500.0,
+            "sample_index": 4500,
+            "sample_time_M": 4500.0,
+            "abs_residual": 9.813063156610908e-25,
+            "abs_residual_over_public": 0.0002740956676223682,
+            "phase_error_rad": -0.0002740494933053229,
+            "amplitude_ratio_clean_over_public": 1.0000049935624906
+          },
+          "4900.0": {
+            "requested_time_M": 4900.0,
+            "sample_index": 4900,
+            "sample_time_M": 4900.0,
+            "abs_residual": 4.975067749929694e-24,
+            "abs_residual_over_public": 0.0009518582884668742,
+            "phase_error_rad": -0.000951026267908953,
+            "amplitude_ratio_clean_over_public": 1.0000393411376605
+          },
+          "4898.329318111563": {
+            "requested_time_M": 4898.329318111563,
+            "sample_index": 4898,
+            "sample_time_M": 4898.0,
+            "abs_residual": 4.872378727902603e-24,
+            "abs_residual_over_public": 0.0009368480327242758,
+            "phase_error_rad": -0.00093604373160328,
+            "amplitude_ratio_clean_over_public": 1.0000383771766705
+          }
+        },
+        "nqc_factor_amplitude_range": [
+          0.8561138989878678,
+          1.00097124043929
+        ],
+        "nqc_factor_phase_range_rad": [
+          -1.685363643094477,
+          -0.013741919847920366
+        ]
+      },
+      "postmatch_unshifted_complex_residual": {
+        "available": true,
+        "comparison": "same relative output indices after keeping public epoch separate",
+        "time_shift_applied_M": 0.0,
+        "phase_shift_applied_rad": 0.0,
+        "sample_count": 387,
+        "support_M_initial_origin": [
+          4999.0,
+          5385.0
+        ],
+        "support_M_public_epoch_coordinate": [
+          -3.718742544858287,
+          382.2812574551417
+        ],
+        "raw_complex_l2": 2.617643554271693e-22,
+        "raw_relative_l2_over_public": 0.007825980748111642,
+        "max_abs": 6.289547647161558e-23,
+        "max_abs_over_public_peak": 0.006990451680528052,
+        "phase_rms_rad": 0.009435396182954947,
+        "phase_max_abs_rad": 0.009785850547033789,
+        "amplitude_ratio_mean_clean_over_public": 0.9988827136570345
+      }
+    },
+    "dt_1_4096s": {
+      "npz_path": "/tmp/torchwave-public-eob-dt_1_4096s.npz",
+      "npz_sha256": "eefe5b8f1380601f82232e78b0e3a8e1b8abf5a4f9cfb5208e28331b8f5685f9",
+      "npz_size_bytes": 680614,
+      "raw_arrays": {
+        "keys": [
+          "state",
+          "postpeak_state",
+          "mode22",
+          "epoch_s",
+          "dt_s"
+        ],
+        "state_shape": [
+          5,
+          5047
+        ],
+        "postpeak_state_shape": [
+          5,
+          9763
+        ],
+        "mode22_shape": [
+          5434
+        ],
+        "loaded_arrays_copied": true
+      },
+      "dt_s": 0.000244140625,
+      "dt_M": 0.9913351891019707,
+      "state_grid_error_M": 0.0,
+      "epoch_s": -1.23203809,
+      "epoch_M": -5002.701672165298,
+      "minus_epoch_M": 5002.701672165298,
+      "postpeak_time_support_M_initial_origin": [
+        4852.585750654147,
+        5003.795346216857
+      ],
+      "postpeak_spacing_M": {
+        "minimum": 0.015489612329474767,
+        "median": 0.015489612329474767,
+        "maximum": 0.015489612330384261
+      },
+      "clean_hamiltonian_omega_peak": {
+        "time_M_initial_origin": 5002.701708021243,
+        "frequency": 0.164415121047836,
+        "curvature": -0.0040437904546552035,
+        "sample_index": 9691,
+        "sample_time_M_initial_origin": 5002.695583741447,
+        "sample_omega": 0.16441504535392004
+      },
+      "returned_phase_omega_peak": {
+        "phase_row": 2,
+        "phase_time_coordinate": "postpeak_state[0] in initial-origin M coordinates",
+        "phase_offset_ignored_by_derivative": true,
+        "phase_increasing": true,
+        "phase_increment_range": [
+          0.000794994693251283,
+          0.0025467152537004267
+        ],
+        "derivative_orders": [
+          4,
+          6,
+          8
+        ],
+        "records": {
+          "4": {
+            "resolved": true,
+            "degree": 4,
+            "sample_index": 9691,
+            "sample_time_M_initial_origin": 5002.695583741447,
+            "sample_omega": 0.16441444430130192,
+            "refined_time_M_initial_origin": 5002.699170383946,
+            "refined_omega": 0.16441446980336508,
+            "fractional_bin_offset": 0.23155146961803008,
+            "candidate_count": 1,
+            "curvature_domega_dt_M2": -0.003964867967363536,
+            "stencil_start_index": 9689,
+            "stencil_end_index": 9693,
+            "stencil_span_M": 0.06195844931880856,
+            "phase_fit_residual_l2": 1.2550687055079163e-13,
+            "phase_fit_residual_max_abs": 1.1368683772161603e-13,
+            "condition_number": 208.78367078152147,
+            "minus_epoch_M": 5002.701672165298,
+            "difference_refined_to_clean_event_M": -0.002537637296882167,
+            "difference_refined_to_minus_epoch_M": -0.0025017813522936194,
+            "difference_sample_to_clean_event_M": -0.006124279795585608,
+            "difference_sample_to_minus_epoch_M": -0.00608842385099706
+          },
+          "6": {
+            "resolved": true,
+            "degree": 6,
+            "sample_index": 9691,
+            "sample_time_M_initial_origin": 5002.695583741447,
+            "sample_omega": 0.16441444430058816,
+            "refined_time_M_initial_origin": 5002.6991703682115,
+            "refined_omega": 0.16441446980249394,
+            "fractional_bin_offset": 0.23155045382383163,
+            "candidate_count": 1,
+            "curvature_domega_dt_M2": -0.003964873462220071,
+            "stencil_start_index": 9688,
+            "stencil_end_index": 9694,
+            "stencil_span_M": 0.09293767397866759,
+            "phase_fit_residual_l2": 9.318680617272435e-14,
+            "phase_fit_residual_max_abs": 7.105427357601002e-14,
+            "condition_number": 5588.272112657874,
+            "minus_epoch_M": 5002.701672165298,
+            "difference_refined_to_clean_event_M": -0.0025376530311405077,
+            "difference_refined_to_minus_epoch_M": -0.00250179708655196,
+            "difference_sample_to_clean_event_M": -0.006124279795585608,
+            "difference_sample_to_minus_epoch_M": -0.00608842385099706
+          },
+          "8": {
+            "resolved": true,
+            "degree": 8,
+            "sample_index": 9691,
+            "sample_time_M_initial_origin": 5002.695583741447,
+            "sample_omega": 0.16441444430060587,
+            "refined_time_M_initial_origin": 5002.699170359819,
+            "refined_omega": 0.16441446980236998,
+            "fractional_bin_offset": 0.2315499119886372,
+            "candidate_count": 1,
+            "curvature_domega_dt_M2": -0.003964867786585359,
+            "stencil_start_index": 9687,
+            "stencil_end_index": 9695,
+            "stencil_span_M": 0.12391689863761712,
+            "phase_fit_residual_l2": 1.9691137908567693e-13,
+            "phase_fit_residual_max_abs": 1.2789769243681803e-13,
+            "condition_number": 156530.31426952977,
+            "minus_epoch_M": 5002.701672165298,
+            "difference_refined_to_clean_event_M": -0.0025376614239576156,
+            "difference_refined_to_minus_epoch_M": -0.002501805479369068,
+            "difference_sample_to_clean_event_M": -0.006124279795585608,
+            "difference_sample_to_minus_epoch_M": -0.00608842385099706
+          }
+        },
+        "all_sample_peak_indices_equal": true,
+        "common_sample_peak_index": 9691,
+        "refined_time_range_M": [
+          5002.699170359819,
+          5002.699170383946
+        ],
+        "refined_time_range_span_M": 2.412707544863224e-08
+      },
+      "public_amplitude_maximum_sample": {
+        "sample_index": 5042,
+        "relative_output_time_M": 4998.312023452137,
+        "public_epoch_coordinate_M": -4.389648713161478,
+        "amplitude": 9.000564983368151e-21,
+        "coordinate_definition": "epoch_M + arange(mode_length) * dt_M"
+      },
+      "clean_nqc_match": {
+        "time_M_initial_origin": 4998.3293284871625,
+        "time_M_public_epoch_coordinate": -4.372343678135621,
+        "minus_clean_hamiltonian_event_M": -4.37237953408021
+      },
+      "known_clean_nqc_correction_before_match": {
+        "coefficient_source": "clean published NQC targets; no public-waveform fit",
+        "amplitude_coefficients_a1_a2_a3": [
+          4.146381008407277,
+          -47.320923205234095,
+          57.1466812704447
+        ],
+        "phase_coefficients_b1_b2": [
+          4.144090055438559,
+          -22.028097657555648
+        ],
+        "pre_match_sample_count": 9410,
+        "pre_match_factor_amplitude_range": [
+          0.8821302409137508,
+          1.0009752331473671
+        ],
+        "pre_match_factor_phase_range_rad": [
+          -1.4749062985247772,
+          -0.16341595837534562
+        ]
+      },
+      "base_inspiral_mode_vs_public_unshifted": {
+        "comparison": "fresh clean published base mode (NQC excluded) versus public mode at identical initial-origin output indices; public epoch omitted from this shared-grid comparison",
+        "mode_scale_100Mpc": 2.392707920793921e-20,
+        "shared_sample_count": 5047,
+        "state_mode_grid_max_error_M": 0.0,
+        "clean_mode_variant": "base mode (NQC excluded)",
+        "clean_base_excludes_nqc": true,
+        "clean_nqc_coefficients_fitted_to_public": false,
+        "public_mode_nqc_status": "public API output may include its own attachment/NQC",
+        "bands": {
+          "0_to_1000M": {
+            "available": true,
+            "label": "0_to_1000M",
+            "requested_support_M": [
+              0.0,
+              1000.0
+            ],
+            "actual_support_M": [
+              0.0,
+              999.2658706147865
+            ],
+            "sample_count": 1009,
+            "time_shift_applied_M": 0.0,
+            "phase_shift_applied_rad": 0.0,
+            "clean_complex_l2": 6.94544847747907e-20,
+            "public_complex_l2": 6.945630027827971e-20,
+            "raw_complex_l2": 1.0276282806810609e-21,
+            "raw_relative_l2_over_public": 0.014795321325262404,
+            "raw_relative_l2_over_clean": 0.014795708067134785,
+            "max_abs": 3.560206045294634e-23,
+            "max_abs_over_public_peak": 0.01586060928627839,
+            "phase_rms_rad": 0.014776128407810996,
+            "phase_max_abs_rad": 0.015860981637587725,
+            "amplitude_ratio_mean_clean_over_public": 0.9999739208764973,
+            "amplitude_ratio_min_clean_over_public": 0.9999705638508933,
+            "amplitude_ratio_max_clean_over_public": 0.9999770111914535
+          },
+          "1000_to_3000M": {
+            "available": true,
+            "label": "1000_to_3000M",
+            "requested_support_M": [
+              1000.0,
+              3000.0
+            ],
+            "actual_support_M": [
+              1000.2572058038885,
+              2999.7802822225635
+            ],
+            "sample_count": 2018,
+            "time_shift_applied_M": 0.0,
+            "phase_shift_applied_rad": 0.0,
+            "clean_complex_l2": 1.0831770183596527e-19,
+            "public_complex_l2": 1.083223836079023e-19,
+            "raw_complex_l2": 2.1639247727900108e-21,
+            "raw_relative_l2_over_public": 0.019976709344052403,
+            "raw_relative_l2_over_clean": 0.0199775727892291,
+            "max_abs": 6.59076944780875e-23,
+            "max_abs_over_public_peak": 0.0251009752649057,
+            "phase_rms_rad": 0.01974269942084459,
+            "phase_max_abs_rad": 0.025102351440807833,
+            "amplitude_ratio_mean_clean_over_public": 0.9999576256699424,
+            "amplitude_ratio_min_clean_over_public": 0.9999364561136976,
+            "amplitude_ratio_max_clean_over_public": 0.9999705683247873
+          },
+          "3000_to_4500M": {
+            "available": true,
+            "label": "3000_to_4500M",
+            "requested_support_M": [
+              3000.0,
+              4500.0
+            ],
+            "actual_support_M": [
+              3000.7716174116654,
+              4499.670423333845
+            ],
+            "sample_count": 1513,
+            "time_shift_applied_M": 0.0,
+            "phase_shift_applied_rad": 0.0,
+            "clean_complex_l2": 1.1605702049646113e-19,
+            "public_complex_l2": 1.1607229373997157e-19,
+            "raw_complex_l2": 4.700457648665257e-21,
+            "raw_relative_l2_over_public": 0.0404959486645052,
+            "raw_relative_l2_over_clean": 0.04050127798006486,
+            "max_abs": 2.3082610050335885e-22,
+            "max_abs_over_public_peak": 0.06448289911226435,
+            "phase_rms_rad": 0.038598401561001014,
+            "phase_max_abs_rad": 0.0645022955290502,
+            "amplitude_ratio_mean_clean_over_public": 0.9998778494168084,
+            "amplitude_ratio_min_clean_over_public": 0.9997273785033072,
+            "amplitude_ratio_max_clean_over_public": 0.9999364171401541
+          },
+          "4500_to_match_minus_100M": {
+            "available": true,
+            "label": "4500_to_match_minus_100M",
+            "requested_support_M": [
+              4500.0,
+              4898.3293284871625
+            ],
+            "actual_support_M": [
+              4500.661758522947,
+              4898.187169352837
+            ],
+            "sample_count": 402,
+            "time_shift_applied_M": 0.0,
+            "phase_shift_applied_rad": 0.0,
+            "clean_complex_l2": 8.310021736071619e-20,
+            "public_complex_l2": 8.314658564726373e-20,
+            "raw_complex_l2": 1.018439342773897e-20,
+            "raw_relative_l2_over_public": 0.12248721157287988,
+            "raw_relative_l2_over_clean": 0.12255555702738052,
+            "max_abs": 1.1461150207002044e-21,
+            "max_abs_over_public_peak": 0.22026213039908396,
+            "phase_rms_rad": 0.1137240533041924,
+            "phase_max_abs_rad": 0.2208150895813858,
+            "amplitude_ratio_mean_clean_over_public": 0.9994856116819373,
+            "amplitude_ratio_min_clean_over_public": 0.9990314328633692,
+            "amplitude_ratio_max_clean_over_public": 0.9997268345959778
+          },
+          "match_minus_100_to_matchM": {
+            "available": true,
+            "label": "match_minus_100_to_matchM",
+            "requested_support_M": [
+              4898.3293284871625,
+              4998.3293284871625
+            ],
+            "actual_support_M": [
+              4899.178504541939,
+              4998.312023452137
+            ],
+            "sample_count": 101,
+            "time_shift_applied_M": 0.0,
+            "phase_shift_applied_rad": 0.0,
+            "clean_complex_l2": 6.803467610517271e-20,
+            "public_complex_l2": 6.669570010471484e-20,
+            "raw_complex_l2": 4.6177628102603986e-20,
+            "raw_relative_l2_over_public": 0.6923628964101631,
+            "raw_relative_l2_over_clean": 0.678736649399483,
+            "max_abs": 1.2934196762836547e-20,
+            "max_abs_over_public_peak": 1.437042761952969,
+            "phase_rms_rad": 0.5903706417951136,
+            "phase_max_abs_rad": 1.473828846097855,
+            "amplitude_ratio_mean_clean_over_public": 1.0116333781618432,
+            "amplitude_ratio_min_clean_over_public": 0.9990295135495273,
+            "amplitude_ratio_max_clean_over_public": 1.133379705095009
+          },
+          "all_pre_match": {
+            "available": true,
+            "label": "all_pre_match",
+            "requested_support_M": [
+              0.0,
+              4998.3293284871625
+            ],
+            "actual_support_M": [
+              0.0,
+              4998.312023452137
+            ],
+            "sample_count": 5043,
+            "time_shift_applied_M": 0.0,
+            "phase_shift_applied_rad": 0.0,
+            "clean_complex_l2": 2.0386330045156916e-19,
+            "public_complex_l2": 2.0345113646809196e-19,
+            "raw_complex_l2": 4.7580753452271224e-20,
+            "raw_relative_l2_over_public": 0.23386821169088678,
+            "raw_relative_l2_over_clean": 0.2333953847842013,
+            "max_abs": 1.2934196762836547e-20,
+            "max_abs_over_public_peak": 1.437042761952969,
+            "phase_rms_rad": 0.09304849114768483,
+            "phase_max_abs_rad": 1.473828846097855,
+            "amplitude_ratio_mean_clean_over_public": 1.0001331643911255,
+            "amplitude_ratio_min_clean_over_public": 0.9990295135495273,
+            "amplitude_ratio_max_clean_over_public": 1.133379705095009
+          }
+        },
+        "checkpoints": {
+          "0.0": {
+            "requested_time_M": 0.0,
+            "sample_index": 0,
+            "sample_time_M": 0.0,
+            "abs_residual": 2.936968856676102e-23,
+            "abs_residual_over_public": 0.013767513864403282,
+            "phase_error_rad": 0.013767762318466428,
+            "amplitude_ratio_clean_over_public": 0.9999768848314403
+          },
+          "1000.0": {
+            "requested_time_M": 1000.0,
+            "sample_index": 1009,
+            "sample_time_M": 1000.2572058038885,
+            "abs_residual": 3.560496969589877e-23,
+            "abs_residual_over_public": 0.015861012445772035,
+            "phase_error_rad": 0.01586138482066763,
+            "amplitude_ratio_clean_over_public": 0.9999705683247874
+          },
+          "3000.0": {
+            "requested_time_M": 3000.0,
+            "sample_index": 3026,
+            "sample_time_M": 2999.7802822225635,
+            "abs_residual": 6.59076944780875e-23,
+            "abs_residual_over_public": 0.025100975264905703,
+            "phase_error_rad": 0.025102351440807833,
+            "amplitude_ratio_clean_over_public": 0.9999364561136976
+          },
+          "4500.0": {
+            "requested_time_M": 4500.0,
+            "sample_index": 4539,
+            "sample_time_M": 4499.670423333845,
+            "abs_residual": 2.3082610050335885e-22,
+            "abs_residual_over_public": 0.06448289911226435,
+            "phase_error_rad": 0.0645022955290502,
+            "amplitude_ratio_clean_over_public": 0.9997273785033074
+          },
+          "4900.0": {
+            "requested_time_M": 4900.0,
+            "sample_index": 4943,
+            "sample_time_M": 4900.169839731041,
+            "abs_residual": 1.1704038416759731e-21,
+            "abs_residual_over_public": 0.2238240299983555,
+            "phase_error_rad": 0.22440109547156695,
+            "amplitude_ratio_clean_over_public": 0.9990299865577089
+          },
+          "4898.3293284871625": {
+            "requested_time_M": 4898.3293284871625,
+            "sample_index": 4941,
+            "sample_time_M": 4898.187169352837,
+            "abs_residual": 1.1461150207002045e-21,
+            "abs_residual_over_public": 0.220262130399084,
+            "phase_error_rad": 0.2208150895813858,
+            "amplitude_ratio_clean_over_public": 0.999031432863369
+          }
+        }
+      },
+      "nqc_corrected_inspiral_mode_vs_public_unshifted": {
+        "comparison": "fresh clean published base mode with fixed clean attachment-derived NQC versus public mode at identical initial-origin output indices; public epoch omitted from this shared-grid comparison",
+        "mode_scale_100Mpc": 2.392707920793921e-20,
+        "shared_sample_count": 5047,
+        "state_mode_grid_max_error_M": 0.0,
+        "clean_mode_variant": "base mode with fixed clean attachment-derived NQC",
+        "clean_base_excludes_nqc": false,
+        "clean_nqc_coefficients_fitted_to_public": false,
+        "public_mode_nqc_status": "public API output may include its own attachment/NQC",
+        "bands": {
+          "0_to_1000M": {
+            "available": true,
+            "label": "0_to_1000M",
+            "requested_support_M": [
+              0.0,
+              1000.0
+            ],
+            "actual_support_M": [
+              0.0,
+              999.2658706147865
+            ],
+            "sample_count": 1009,
+            "time_shift_applied_M": 0.0,
+            "phase_shift_applied_rad": 0.0,
+            "clean_complex_l2": 6.945630285608628e-20,
+            "public_complex_l2": 6.945630027827971e-20,
+            "raw_complex_l2": 4.667566339294269e-27,
+            "raw_relative_l2_over_public": 6.7201482379474e-08,
+            "raw_relative_l2_over_clean": 6.720147988535301e-08,
+            "max_abs": 1.649641437792202e-28,
+            "max_abs_over_public_peak": 7.349102263858253e-08,
+            "phase_rms_rad": 5.586355365326814e-08,
+            "phase_max_abs_rad": 5.99786774429334e-08,
+            "amplitude_ratio_mean_clean_over_public": 1.0000000370248217,
+            "amplitude_ratio_min_clean_over_public": 1.0000000318555256,
+            "amplitude_ratio_max_clean_over_public": 1.0000000425088558
+          },
+          "1000_to_3000M": {
+            "available": true,
+            "label": "1000_to_3000M",
+            "requested_support_M": [
+              1000.0,
+              3000.0
+            ],
+            "actual_support_M": [
+              1000.2572058038885,
+              2999.7802822225635
+            ],
+            "sample_count": 2018,
+            "time_shift_applied_M": 0.0,
+            "phase_shift_applied_rad": 0.0,
+            "clean_complex_l2": 1.0832239048938997e-19,
+            "public_complex_l2": 1.083223836079023e-19,
+            "raw_complex_l2": 1.081377114672311e-26,
+            "raw_relative_l2_over_public": 9.982951617706303e-08,
+            "raw_relative_l2_over_clean": 9.982950983510934e-08,
+            "max_abs": 3.542558999334839e-28,
+            "max_abs_over_public_peak": 1.3491851978881904e-07,
+            "phase_rms_rad": 7.464093646874118e-08,
+            "phase_max_abs_rad": 9.488513016850987e-08,
+            "amplitude_ratio_mean_clean_over_public": 1.0000000621955112,
+            "amplitude_ratio_min_clean_over_public": 1.0000000416963257,
+            "amplitude_ratio_max_clean_over_public": 1.000000096052029
+          },
+          "3000_to_4500M": {
+            "available": true,
+            "label": "3000_to_4500M",
+            "requested_support_M": [
+              3000.0,
+              4500.0
+            ],
+            "actual_support_M": [
+              3000.7716174116654,
+              4499.670423333845
+            ],
+            "sample_count": 1513,
+            "time_shift_applied_M": 0.0,
+            "phase_shift_applied_rad": 0.0,
+            "clean_complex_l2": 1.1607231902231765e-19,
+            "public_complex_l2": 1.1607229373997157e-19,
+            "raw_complex_l2": 3.328432781900467e-26,
+            "raw_relative_l2_over_public": 2.867551484212861e-07,
+            "raw_relative_l2_over_clean": 2.867550859615803e-07,
+            "max_abs": 1.973156874113042e-27,
+            "max_abs_over_public_peak": 5.512152887764558e-07,
+            "phase_rms_rad": 1.4592902959262153e-07,
+            "phase_max_abs_rad": 2.438612267328063e-07,
+            "amplitude_ratio_mean_clean_over_public": 1.0000002003231532,
+            "amplitude_ratio_min_clean_over_public": 1.0000000958909316,
+            "amplitude_ratio_max_clean_over_public": 1.0000004943379082
+          },
+          "4500_to_match_minus_100M": {
+            "available": true,
+            "label": "4500_to_match_minus_100M",
+            "requested_support_M": [
+              4500.0,
+              4898.3293284871625
+            ],
+            "actual_support_M": [
+              4500.661758522947,
+              4898.187169352837
+            ],
+            "sample_count": 402,
+            "time_shift_applied_M": 0.0,
+            "phase_shift_applied_rad": 0.0,
+            "clean_complex_l2": 8.314669977790758e-20,
+            "public_complex_l2": 8.314658564726373e-20,
+            "raw_complex_l2": 1.3961452888385522e-25,
+            "raw_relative_l2_over_public": 1.6791372465509028e-06,
+            "raw_relative_l2_over_clean": 1.6791349416967644e-06,
+            "max_abs": 2.0421576145451998e-26,
+            "max_abs_over_public_peak": 3.92464960903864e-06,
+            "phase_rms_rad": 4.593667903146244e-07,
+            "phase_max_abs_rad": 1.4286491635197842e-06,
+            "amplitude_ratio_mean_clean_over_public": 1.0000012140218404,
+            "amplitude_ratio_min_clean_over_public": 1.0000004953746229,
+            "amplitude_ratio_max_clean_over_public": 1.0000036553835174
+          },
+          "match_minus_100_to_matchM": {
+            "available": true,
+            "label": "match_minus_100_to_matchM",
+            "requested_support_M": [
+              4898.3293284871625,
+              4998.3293284871625
+            ],
+            "actual_support_M": [
+              4899.178504541939,
+              4998.312023452137
+            ],
+            "sample_count": 101,
+            "time_shift_applied_M": 0.0,
+            "phase_shift_applied_rad": 0.0,
+            "clean_complex_l2": 6.669628158338527e-20,
+            "public_complex_l2": 6.669570010471484e-20,
+            "raw_complex_l2": 6.706323781240491e-25,
+            "raw_relative_l2_over_public": 1.0055106657117779e-05,
+            "raw_relative_l2_over_clean": 1.0055018993609241e-05,
+            "max_abs": 1.218524472843511e-25,
+            "max_abs_over_public_peak": 1.353831092931591e-05,
+            "phase_rms_rad": 2.6327024110569403e-06,
+            "phase_max_abs_rad": 5.257322021029401e-06,
+            "amplitude_ratio_mean_clean_over_public": 1.0000080133942915,
+            "amplitude_ratio_min_clean_over_public": 1.0000002296408617,
+            "amplitude_ratio_max_clean_over_public": 1.0000145411114523
+          },
+          "all_pre_match": {
+            "available": true,
+            "label": "all_pre_match",
+            "requested_support_M": [
+              0.0,
+              4998.3293284871625
+            ],
+            "actual_support_M": [
+              0.0,
+              4998.312023452137
+            ],
+            "sample_count": 5043,
+            "time_shift_applied_M": 0.0,
+            "phase_shift_applied_rad": 0.0,
+            "clean_complex_l2": 2.0345139270105446e-19,
+            "public_complex_l2": 2.0345113646809196e-19,
+            "raw_complex_l2": 6.859202384855595e-25,
+            "raw_relative_l2_over_public": 3.371424954380312e-06,
+            "raw_relative_l2_over_clean": 3.371420708303682e-06,
+            "max_abs": 1.218524472843511e-25,
+            "max_abs_over_public_peak": 1.353831092931591e-05,
+            "phase_rms_rad": 4.060527335534215e-07,
+            "phase_max_abs_rad": 5.257322021029401e-06,
+            "amplitude_ratio_mean_clean_over_public": 1.0000003496623282,
+            "amplitude_ratio_min_clean_over_public": 1.0000000318555256,
+            "amplitude_ratio_max_clean_over_public": 1.0000145411114523
+          }
+        },
+        "checkpoints": {
+          "0.0": {
+            "requested_time_M": 0.0,
+            "sample_index": 0,
+            "sample_time_M": 0.0,
+            "abs_residual": 1.3069321075778488e-28,
+            "abs_residual_over_public": 6.126454446396665e-08,
+            "phase_error_rad": -5.203786865563925e-08,
+            "amplitude_ratio_clean_over_public": 1.0000000323327165
+          },
+          "1000.0": {
+            "requested_time_M": 1000.0,
+            "sample_index": 1009,
+            "sample_time_M": 1000.2572058038885,
+            "abs_residual": 1.6406802423464317e-28,
+            "abs_residual_over_public": 7.308768962773904e-08,
+            "phase_error_rad": -5.995818440750018e-08,
+            "amplitude_ratio_clean_over_public": 1.0000000417950519
+          },
+          "3000.0": {
+            "requested_time_M": 3000.0,
+            "sample_index": 3026,
+            "sample_time_M": 2999.7802822225635,
+            "abs_residual": 3.5345479618609455e-28,
+            "abs_residual_over_public": 1.3461341906413008e-07,
+            "phase_error_rad": -9.488513016850987e-08,
+            "amplitude_ratio_clean_over_public": 1.0000000954860397
+          },
+          "4500.0": {
+            "requested_time_M": 4500.0,
+            "sample_index": 4539,
+            "sample_time_M": 4499.670423333845,
+            "abs_residual": 1.973156874113042e-27,
+            "abs_residual_over_public": 5.512152887764558e-07,
+            "phase_error_rad": -2.438612267328063e-07,
+            "amplitude_ratio_clean_over_public": 1.000000494337908
+          },
+          "4900.0": {
+            "requested_time_M": 4900.0,
+            "sample_index": 4943,
+            "sample_time_M": 4900.169839731041,
+            "abs_residual": 2.0370656636458428e-26,
+            "abs_residual_over_public": 3.895614744015129e-06,
+            "phase_error_rad": -1.1374113569002925e-06,
+            "amplitude_ratio_clean_over_public": 1.0000037258696728
+          },
+          "4898.3293284871625": {
+            "requested_time_M": 4898.3293284871625,
+            "sample_index": 4941,
+            "sample_time_M": 4898.187169352837,
+            "abs_residual": 2.0421576145451998e-26,
+            "abs_residual_over_public": 3.92464960903864e-06,
+            "phase_error_rad": -1.4286491635197842e-06,
+            "amplitude_ratio_clean_over_public": 1.0000036553835174
+          }
+        },
+        "nqc_factor_amplitude_range": [
+          0.8562810774109185,
+          1.00097523268364
+        ],
+        "nqc_factor_phase_range_rad": [
+          -1.6750090649212197,
+          -0.013745962966103503
+        ]
+      },
+      "postmatch_unshifted_complex_residual": {
+        "available": true,
+        "comparison": "same relative output indices after keeping public epoch separate",
+        "time_shift_applied_M": 0.0,
+        "phase_shift_applied_rad": 0.0,
+        "sample_count": 391,
+        "support_M_initial_origin": [
+          4999.303358641238,
+          5385.924082391007
+        ],
+        "support_M_public_epoch_coordinate": [
+          -3.398313524059631,
+          383.2224102257087
+        ],
+        "raw_complex_l2": 1.6157247723458315e-23,
+        "raw_relative_l2_over_public": 0.00048669821484279994,
+        "max_abs": 3.98124226927876e-24,
+        "max_abs_over_public_peak": 0.00044270772971780607,
+        "phase_rms_rad": 0.0007403650991902361,
+        "phase_max_abs_rad": 0.0008499778172900466,
+        "amplitude_ratio_mean_clean_over_public": 1.0001529001523821
+      }
+    }
+  },
+  "sampling_dependence": {
+    "scalar_ranges": {
+      "epoch_M": {
+        "minimum": -5002.718742544858,
+        "maximum": -5002.701672165298,
+        "max_minus_min": 0.017070379560209403
+      },
+      "minus_epoch_M": {
+        "minimum": 5002.701672165298,
+        "maximum": 5002.718742544858,
+        "max_minus_min": 0.017070379560209403
+      },
+      "clean_event_time_M": {
+        "minimum": 5002.701697645643,
+        "maximum": 5002.7017207866975,
+        "max_minus_min": 2.3141054043662734e-05
+      },
+      "clean_match_time_M": {
+        "minimum": 4998.329318111563,
+        "maximum": 4998.329341252617,
+        "max_minus_min": 2.3141054043662734e-05
+      },
+      "postmatch_raw_relative_l2": {
+        "minimum": 0.00048669821484279994,
+        "maximum": 0.007825980748111642,
+        "max_minus_min": 0.007339282533268842
+      },
+      "base_mode_raw_relative_l2_0_to_1000": {
+        "minimum": 0.014727881766418824,
+        "maximum": 0.014795321325262404,
+        "max_minus_min": 6.743955884357979e-05
+      },
+      "base_mode_raw_relative_l2_all_pre_match": {
+        "minimum": 0.2282601166994419,
+        "maximum": 0.23386821169088678,
+        "max_minus_min": 0.0056080949914448786
+      },
+      "base_mode_raw_relative_l2_match_minus_100_to_match": {
+        "minimum": 0.6771935917983318,
+        "maximum": 0.6923628964101631,
+        "max_minus_min": 0.015169304611831302
+      },
+      "nqc_corrected_mode_raw_relative_l2_0_to_1000": {
+        "minimum": 6.7201482379474e-08,
+        "maximum": 6.283476864093977e-05,
+        "max_minus_min": 6.27675671585603e-05
+      },
+      "nqc_corrected_mode_raw_relative_l2_all_pre_match": {
+        "minimum": 3.371424954380312e-06,
+        "maximum": 0.0009730900089173942,
+        "max_minus_min": 0.0009697185839630139
+      },
+      "nqc_corrected_mode_raw_relative_l2_match_minus_100_to_match": {
+        "minimum": 1.0055106657117779e-05,
+        "maximum": 0.0028829190870598882,
+        "max_minus_min": 0.0028728639804027705
+      }
+    },
+    "phase_ranges_by_degree": {
+      "4": {
+        "refined_time_M_initial_origin": {
+          "minimum": 5002.6990340416805,
+          "maximum": 5002.699444351699,
+          "max_minus_min": 0.00041031001819646917
+        },
+        "refined_minus_minus_epoch_M": {
+          "minimum": -0.0197085031777533,
+          "maximum": -0.0025017813522936194,
+          "max_minus_min": 0.01720672182545968
+        }
+      },
+      "6": {
+        "refined_time_M_initial_origin": {
+          "minimum": 5002.6990340336415,
+          "maximum": 5002.699444349804,
+          "max_minus_min": 0.00041031616274267435
+        },
+        "refined_minus_minus_epoch_M": {
+          "minimum": -0.01970851121677697,
+          "maximum": -0.00250179708655196,
+          "max_minus_min": 0.01720671413022501
+        }
+      },
+      "8": {
+        "refined_time_M_initial_origin": {
+          "minimum": 5002.699034011963,
+          "maximum": 5002.699444388247,
+          "max_minus_min": 0.00041037628398044035
+        },
+        "refined_minus_minus_epoch_M": {
+          "minimum": -0.01970853289549268,
+          "maximum": -0.002501805479369068,
+          "max_minus_min": 0.017206727416123613
+        }
+      }
+    },
+    "pairwise": {
+      "dt_0p25M_minus_dt_0p5M": {
+        "epoch_M": 0.0,
+        "clean_event_time_M": -2.251280784548726e-05,
+        "phase_degree6_refined_time_M": 0.00024939967170212185
+      },
+      "dt_0p25M_minus_dt_1M": {
+        "epoch_M": 0.0,
+        "clean_event_time_M": 6.28246198175475e-07,
+        "phase_degree6_refined_time_M": -0.0001609164910405525
+      },
+      "dt_0p25M_minus_dt_1_4096s": {
+        "epoch_M": -0.017070379560209403,
+        "clean_event_time_M": -9.747353033162653e-06,
+        "phase_degree6_refined_time_M": 0.00011306510168651585
+      },
+      "dt_0p5M_minus_dt_1M": {
+        "epoch_M": 0.0,
+        "clean_event_time_M": 2.3141054043662734e-05,
+        "phase_degree6_refined_time_M": -0.00041031616274267435
+      },
+      "dt_0p5M_minus_dt_1_4096s": {
+        "epoch_M": -0.017070379560209403,
+        "clean_event_time_M": 1.2765454812324606e-05,
+        "phase_degree6_refined_time_M": -0.000136334570015606
+      },
+      "dt_1M_minus_dt_1_4096s": {
+        "epoch_M": -0.017070379560209403,
+        "clean_event_time_M": -1.0375599231338128e-05,
+        "phase_degree6_refined_time_M": 0.00027398159272706835
+      }
+    }
+  },
+  "interpretation": {
+    "phase_peak_vs_epoch": "The returned phase-derivative peak follows the clean initial-origin omega event within a few 1e-3 M on every grid. It therefore does not reproduce the 0.01707037956 M common-epoch displacement: the epoch discrepancy is not encoded as a different returned phase peak.",
+    "base_inspiral_mode_residual": "The public complex mode contains its own NQC/attachment behavior over the returned support, so base-v-public residuals are NQC-confounded and do not by themselves identify a carrier discrepancy. The report also evaluates a fixed clean attachment-derived NQC factor before the match; this combined comparison is informative about the requested clean model contract but is not a public-NQC coefficient fit.",
+    "runtime_recommendation": "No additional runtime change is justified by this isolation. Keep the relative attachment grid arange(n)*dt/Msec and retain the public epoch as separate metadata; do not substitute -epoch for the clean event or fit a time/phase shift. A future change should target the clean carrier/factorized-mode contract and be validated independently."
+  },
+  "limitations": [
+    "The public phase row schema is used as the documented black-box observation from the paired wrapper; no LAL or PyCBC source is inspected.",
+    "The public mode includes its own NQC/attachment behavior. The base-mode comparison therefore cannot isolate the carrier; the separate NQC-corrected comparison applies only clean attachment-derived coefficients and never infers coefficients from public data.",
+    "The postmatch residual is available only where the clean attached output and public mode have the same relative output indices; it is raw complex subtraction with zero shifts.",
+    "Degree 4/6/8 phase stencils are predetermined numerical refinement diagnostics and are not selected by parity, residual, or agreement with the epoch."
+  ]
+}

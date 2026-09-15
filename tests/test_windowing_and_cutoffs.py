@@ -10,8 +10,8 @@ from torchwave.waveforms import get_fd_waveform
 from torchwave.constants import MSUN_SEC, PI
 
 
-def test_imrphenomd_physical_cutoff_zero_amplitude():
-    """Verify that IMRPhenomD amplitude is identically zero above f_cut = (f_RD + 5*f_damp)/M_sec."""
+def test_imrphenomd_opt_in_planck_cutoff_zero_amplitude():
+    """The optional Planck taper vanishes above (f_RD + 5*f_damp)/M_sec."""
     m1, m2 = 30.0, 20.0
     chi1, chi2 = 0.5, -0.3
     total_mass = m1 + m2
@@ -35,6 +35,7 @@ def test_imrphenomd_physical_cutoff_zero_amplitude():
         chi1=chi1,
         chi2=chi2,
         sample_frequencies=f_above,
+        window_type='planck',
     )
 
     # Strictly zero amplitude
@@ -42,8 +43,8 @@ def test_imrphenomd_physical_cutoff_zero_amplitude():
     assert torch.all(hc == 0.0), 'IMRPhenomD hc is non-zero above f_cut'
 
 
-def test_imrphenomd_smooth_rolloff_continuity():
-    """Verify smooth roll-off without step discontinuities in [f_cut - 2*f_damp, f_cut]."""
+def test_imrphenomd_opt_in_planck_rolloff_continuity():
+    """The optional Planck taper rolls off smoothly in its chosen window."""
     m1, m2 = 40.0, 30.0
     chi1, chi2 = 0.2, 0.1
     total_mass = m1 + m2
@@ -67,6 +68,7 @@ def test_imrphenomd_smooth_rolloff_continuity():
         chi1=chi1,
         chi2=chi2,
         sample_frequencies=f,
+        window_type='planck',
     )
     amp = hp.abs()
 
@@ -122,7 +124,7 @@ def test_windowing_autograd_differentiability():
     c1 = torch.tensor(0.3, dtype=torch.float64, requires_grad=True)
 
     f = torch.linspace(30.0, 500.0, 100, dtype=torch.float64)
-    hp, hc = get_fd_waveform('IMRPhenomD', mass1=m1, mass2=m2, chi1=c1, sample_frequencies=f)
+    hp, hc = get_fd_waveform('IMRPhenomD', mass1=m1, mass2=m2, chi1=c1, sample_frequencies=f, window_type='planck')
 
     loss = hp.abs().sum() + hc.abs().sum()
     loss.backward()

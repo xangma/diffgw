@@ -1,0 +1,116 @@
+{
+  "host": "RONI2",
+  "lal_version": "7.7.0",
+  "lalsimulation_version": "6.2.0",
+  "binary_defaults": {
+    "PhenomXPrecVersion": 300,
+    "PhenomXPFinalSpinMod": 4,
+    "PhenomXPConvention": 1,
+    "PhenomXPHMPrecModes": 0,
+    "PhenomXPHMThresholdMband": 0.001
+  },
+  "precession": {
+    "IMRPhenomXP": {
+      "lal_vs_lal_default_plus_cross_l2": {
+        "102": [
+          0.04230915253764218,
+          0.053764771010339066
+        ],
+        "223": [
+          0.0,
+          0.0
+        ],
+        "300": [
+          0.0,
+          0.0
+        ],
+        "final_spin_0": [
+          0.003548568869732027,
+          0.0035234959425866916
+        ],
+        "final_spin_3": [
+          0.0,
+          0.0
+        ],
+        "final_spin_4": [
+          0.0,
+          0.0
+        ]
+      },
+      "paired_harness": {
+        "None": {
+          "status": "FAILED",
+          "plus_l2": 0.05855372499951521,
+          "cross_l2": 0.07254855537154377,
+          "reason": null
+        },
+        "102": {
+          "status": "FAILED",
+          "plus_l2": 0.04864819743106271,
+          "cross_l2": 0.06116875307371707,
+          "reason": null
+        },
+        "223": {
+          "status": "FAILED",
+          "plus_l2": 0.03311443229410767,
+          "cross_l2": 0.03291061267135477,
+          "reason": null
+        }
+      }
+    },
+    "IMRPhenomXPHM": {
+      "lal_vs_lal_default_plus_cross_l2": {
+        "102": [
+          0.04460547843465854,
+          0.05477882957468985
+        ],
+        "223": [
+          0.0,
+          0.0
+        ],
+        "300": [
+          0.0,
+          0.0
+        ],
+        "final_spin_0": [
+          0.0035649013144829064,
+          0.0035525623558344994
+        ],
+        "final_spin_3": [
+          0.0,
+          0.0
+        ],
+        "final_spin_4": [
+          0.0,
+          0.0
+        ]
+      },
+      "paired_harness": {
+        "None": {
+          "status": "FAILED",
+          "plus_l2": 0.15540251035711572,
+          "cross_l2": 0.1609263788946501,
+          "reason": null
+        },
+        "102": {
+          "status": "FAILED",
+          "plus_l2": 0.15252757371625075,
+          "cross_l2": 0.1572055780547883,
+          "reason": null
+        },
+        "223": {
+          "status": "FAILED",
+          "plus_l2": 0.15796007397104042,
+          "cross_l2": 0.15631924757772597,
+          "reason": null
+        }
+      }
+    }
+  },
+  "teob": {
+    "face_on_max_abs_hp_minus_hc": 0.0,
+    "face_on_hp_norm": 2.1225063301848278e-25,
+    "catalog_default_duration_seconds": 0.01034353099004666,
+    "note": "Short probe tests polarization construction, not convergence."
+  }
+}

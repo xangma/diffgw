@@ -1,0 +1,358 @@
+{
+  "provenance": "Fresh double-spin Newtonian geometry, clean cubic roots and Eq.17/26 L variants compared against public SimIMRPhenomXPMSAAngles expansionorder=5 at prec_version 220/223; mprime=2; no fitting.",
+  "public_callable": "SimIMRPhenomXPMSAAngles",
+  "public_mprime": 2,
+  "public_expansion_order": 5,
+  "python": "3.13.9 | packaged by conda-forge | (main, Oct 22 2025, 23:38:18) [Clang 19.1.7 ]",
+  "frequencies_hz": [
+    20.0,
+    30.0,
+    50.0,
+    100.0,
+    200.0
+  ],
+  "cases": [
+    {
+      "parameters": {
+        "name": "35_25",
+        "m1": 35.0,
+        "m2": 25.0,
+        "chi1": [
+          0.2,
+          0.1,
+          0.3
+        ],
+        "chi2": [
+          0.05,
+          -0.1,
+          -0.2
+        ]
+      },
+      "public_cos_beta": {
+        "220": [
+          0.9974049193976461,
+          0.9941062113974757,
+          0.9890348754471384,
+          0.9824245741248044,
+          0.9782783140989257
+        ],
+        "223": [
+          0.997418321527197,
+          0.994161297533995,
+          0.9892547085723389,
+          0.9834430709296859,
+          0.9818087146369627
+        ]
+      },
+      "reference_geometry": {
+        "q": 0.7142857142857143,
+        "eta": 0.24305555555555558,
+        "delta": 0.16666666666666669,
+        "v_ref": 0.2648054269440597,
+        "L_N": 0.9178647067792203,
+        "J_N": 0.9883502014791654,
+        "xi": 0.09166666666666669,
+        "c1": 0.015867723023760254,
+        "roots_s3_sm_sp": [
+          -0.020870733808237393,
+          0.008102060588889357,
+          0.020930152074157264
+        ],
+        "Sav": 0.01451610633152331
+      },
+      "variants": [
+        {
+          "formula": "2PN_nonspin",
+          "spin_projection": "initial",
+          "L_reference": 1.0296535566373874,
+          "cosbeta_vectorJ": 0.9974478963035877,
+          "cosbeta_c1SavJ": 0.9974343428121686,
+          "PNroots": [
+            -0.03460531718049529,
+            0.008042085611330008,
+            0.01946973515279504
+          ],
+          "savpn": 0.013755910382062524,
+          "c1pn": 0.016012249790549722,
+          "Jrec": 1.099821526331242,
+          "beta_rec": 0.9974478963035877,
+          "absolute_error_vectorJ_public_220": 4.2976905941571886e-05,
+          "absolute_error_vectorJ_public_223": 2.9574776390650648e-05,
+          "absolute_error_c1SavJ_public_220": 2.9423414522500302e-05,
+          "absolute_error_c1SavJ_public_223": 1.6021284971579064e-05
+        },
+        {
+          "formula": "2PN_nonspin",
+          "spin_projection": "average",
+          "L_reference": 1.0296535566373874,
+          "cosbeta_vectorJ": 0.9974478963035877,
+          "cosbeta_c1SavJ": 0.9974343428121686,
+          "PNroots": [
+            -0.03460531718049529,
+            0.008042085611330008,
+            0.01946973515279504
+          ],
+          "savpn": 0.013755910382062524,
+          "c1pn": 0.016012249790549722,
+          "Jrec": 1.099821526331242,
+          "beta_rec": 0.9974478963035877,
+          "absolute_error_vectorJ_public_220": 4.2976905941571886e-05,
+          "absolute_error_vectorJ_public_223": 2.9574776390650648e-05,
+          "absolute_error_c1SavJ_public_220": 2.9423414522500302e-05,
+          "absolute_error_c1SavJ_public_223": 1.6021284971579064e-05
+        },
+        {
+          "formula": "3PN_spin",
+          "spin_projection": "initial",
+          "L_reference": 1.024542246349973,
+          "cosbeta_vectorJ": 0.9974240395272671,
+          "cosbeta_c1SavJ": 0.9974109147958908,
+          "PNroots": [
+            -0.03390500719290227,
+            0.008044418898888519,
+            0.019526909228436726
+          ],
+          "savpn": 0.013785664063662623,
+          "c1pn": 0.016006923304514087,
+          "Jrec": 1.0947233214657583,
+          "beta_rec": 0.9974240395272671,
+          "absolute_error_vectorJ_public_220": 1.912012962101972e-05,
+          "absolute_error_vectorJ_public_223": 5.7180000700984834e-06,
+          "absolute_error_c1SavJ_public_220": 5.995398244751371e-06,
+          "absolute_error_c1SavJ_public_223": 7.406731306169867e-06
+        },
+        {
+          "formula": "3PN_spin",
+          "spin_projection": "average",
+          "L_reference": 1.0245825425712778,
+          "cosbeta_vectorJ": 0.9974242289122343,
+          "cosbeta_c1SavJ": 0.99741110074369,
+          "PNroots": [
+            -0.03391050144444874,
+            0.008044400371735028,
+            0.019526455161130288
+          ],
+          "savpn": 0.013785427766432658,
+          "c1pn": 0.01600696570980989,
+          "Jrec": 1.0947635138894058,
+          "beta_rec": 0.9974242289122343,
+          "absolute_error_vectorJ_public_220": 1.930951458817276e-05,
+          "absolute_error_vectorJ_public_223": 5.907385037251522e-06,
+          "absolute_error_c1SavJ_public_220": 6.181346043909741e-06,
+          "absolute_error_c1SavJ_public_223": 7.220783507011497e-06
+        },
+        {
+          "formula": "full4PN",
+          "spin_projection": "initial",
+          "L_reference": 1.0248150875637718,
+          "cosbeta_vectorJ": 0.9974253214243247,
+          "cosbeta_c1SavJ": 0.9974121734381173,
+          "PNroots": [
+            -0.033942216484764164,
+            0.008044293494886582,
+            0.019523835825236424
+          ],
+          "savpn": 0.013784064660061504,
+          "c1pn": 0.016007210297019476,
+          "Jrec": 1.0949954600262741,
+          "beta_rec": 0.9974253214243247,
+          "absolute_error_vectorJ_public_220": 2.0402026678634222e-05,
+          "absolute_error_vectorJ_public_223": 6.999897127712984e-06,
+          "absolute_error_c1SavJ_public_220": 7.254040471194045e-06,
+          "absolute_error_c1SavJ_public_223": 6.1480890797271925e-06
+        },
+        {
+          "formula": "full4PN",
+          "spin_projection": "average",
+          "L_reference": 1.0248546532083047,
+          "cosbeta_vectorJ": 0.9974255072372922,
+          "cosbeta_c1SavJ": 0.9974123558822969,
+          "PNroots": [
+            -0.03394761395481127,
+            0.00804427531766026,
+            0.01952339034219343
+          ],
+          "savpn": 0.013783832829926845,
+          "c1pn": 0.016007251889666944,
+          "Jrec": 1.0950349238056656,
+          "beta_rec": 0.9974255072372922,
+          "absolute_error_vectorJ_public_220": 2.0587839646091233e-05,
+          "absolute_error_vectorJ_public_223": 7.185710095169995e-06,
+          "absolute_error_c1SavJ_public_220": 7.436484650846786e-06,
+          "absolute_error_c1SavJ_public_223": 5.965644900074452e-06
+        }
+      ]
+    },
+    {
+      "parameters": {
+        "name": "45_15",
+        "m1": 45.0,
+        "m2": 15.0,
+        "chi1": [
+          0.4,
+          -0.2,
+          0.5
+        ],
+        "chi2": [
+          -0.1,
+          0.2,
+          -0.3
+        ]
+      },
+      "public_cos_beta": {
+        "220": [
+          0.974213443005522,
+          0.9544926267247732,
+          0.9621969696697701,
+          0.9545190703263003,
+          0.9385219512756235
+        ],
+        "223": [
+          0.9744371980563438,
+          0.9551505419190901,
+          0.9630875988709494,
+          0.9569429352216083,
+          0.9466930328460271
+        ]
+      },
+      "reference_geometry": {
+        "q": 0.3333333333333333,
+        "eta": 0.1875,
+        "delta": 0.5,
+        "v_ref": 0.2648054269440597,
+        "L_N": 0.7080670595153985,
+        "J_N": 0.9999259870192229,
+        "xi": 0.3,
+        "c1": 0.04786429157507487,
+        "roots_s3_sm_sp": [
+          -0.2764799903214632,
+          0.1254051437089564,
+          0.14857015903339227
+        ],
+        "Sav": 0.13698765137117433
+      },
+      "variants": [
+        {
+          "formula": "2PN_nonspin",
+          "spin_projection": "initial",
+          "L_reference": 0.7943003516318344,
+          "cosbeta_vectorJ": 0.9750646923424876,
+          "cosbeta_c1SavJ": 0.9748582010176632,
+          "PNroots": [
+            -0.4091504225121831,
+            0.1253986893390538,
+            0.14731324327084747
+          ],
+          "savpn": 0.13635596630495062,
+          "c1pn": 0.04808589525888668,
+          "Jrec": 1.0838258834836751,
+          "beta_rec": 0.9750646923424876,
+          "absolute_error_vectorJ_public_220": 0.0008512493369655649,
+          "absolute_error_vectorJ_public_223": 0.0006274942861438371,
+          "absolute_error_c1SavJ_public_220": 0.0006447580121411445,
+          "absolute_error_c1SavJ_public_223": 0.0004210029613194166
+        },
+        {
+          "formula": "2PN_nonspin",
+          "spin_projection": "average",
+          "L_reference": 0.7943003516318344,
+          "cosbeta_vectorJ": 0.9750646923424876,
+          "cosbeta_c1SavJ": 0.9748582010176632,
+          "PNroots": [
+            -0.4091504225121831,
+            0.1253986893390538,
+            0.14731324327084747
+          ],
+          "savpn": 0.13635596630495062,
+          "c1pn": 0.04808589525888668,
+          "Jrec": 1.0838258834836751,
+          "beta_rec": 0.9750646923424876,
+          "absolute_error_vectorJ_public_220": 0.0008512493369655649,
+          "absolute_error_vectorJ_public_223": 0.0006274942861438371,
+          "absolute_error_c1SavJ_public_220": 0.0006447580121411445,
+          "absolute_error_c1SavJ_public_223": 0.0004210029613194166
+        },
+        {
+          "formula": "3PN_spin",
+          "spin_projection": "initial",
+          "L_reference": 0.7805870762985437,
+          "cosbeta_vectorJ": 0.9744298421345958,
+          "cosbeta_c1SavJ": 0.9742483986681068,
+          "PNroots": [
+            -0.38670474020717294,
+            0.1253996115624002,
+            0.14749148473337198
+          ],
+          "savpn": 0.1364455481478861,
+          "c1pn": 0.04805523443003174,
+          "Jrec": 1.0704588788183522,
+          "beta_rec": 0.9744298421345958,
+          "absolute_error_vectorJ_public_220": 0.00021639912907378545,
+          "absolute_error_vectorJ_public_223": 7.355921747942418e-06,
+          "absolute_error_c1SavJ_public_220": 3.49556625847125e-05,
+          "absolute_error_c1SavJ_public_223": 0.00018879938823701536
+        },
+        {
+          "formula": "3PN_spin",
+          "spin_projection": "average",
+          "L_reference": 0.7806952400049623,
+          "cosbeta_vectorJ": 0.9744349427496695,
+          "cosbeta_c1SavJ": 0.9742532919843291,
+          "PNroots": [
+            -0.38687978975707416,
+            0.1253996041496231,
+            0.14749004992114306
+          ],
+          "savpn": 0.13644482703538308,
+          "c1pn": 0.04805548222769183,
+          "Jrec": 1.0705642770375867,
+          "beta_rec": 0.9744349427496695,
+          "absolute_error_vectorJ_public_220": 0.00022149974414742424,
+          "absolute_error_vectorJ_public_223": 2.2553066743036254e-06,
+          "absolute_error_c1SavJ_public_220": 3.984897880704441e-05,
+          "absolute_error_c1SavJ_public_223": 0.00018390607201468345
+        },
+        {
+          "formula": "full4PN",
+          "spin_projection": "initial",
+          "L_reference": 0.7807453958294286,
+          "cosbeta_vectorJ": 0.9744373074084729,
+          "cosbeta_c1SavJ": 0.9742555605721485,
+          "PNroots": [
+            -0.3869609714884715,
+            0.12539960071305922,
+            0.14748938475351975
+          ],
+          "savpn": 0.13644449273328949,
+          "c1pn": 0.048055597099295196,
+          "Jrec": 1.070613150684831,
+          "beta_rec": 0.9744373074084729,
+          "absolute_error_vectorJ_public_220": 0.0002238644029508574,
+          "absolute_error_vectorJ_public_223": 1.0935212912954739e-07,
+          "absolute_error_c1SavJ_public_220": 4.211756662642063e-05,
+          "absolute_error_c1SavJ_public_223": 0.00018163748419530723
+        },
+        {
+          "formula": "full4PN",
+          "spin_projection": "average",
+          "L_reference": 0.7808518674196446,
+          "cosbeta_vectorJ": 0.9744423260709291,
+          "cosbeta_c1SavJ": 0.9742603754071164,
+          "PNroots": [
+            -0.38713332794302324,
+            0.1253995934194662,
+            0.14748797305873623
+          ],
+          "savpn": 0.13644378323910122,
+          "c1pn": 0.04805584088153758,
+          "Jrec": 1.0707169008417023,
+          "beta_rec": 0.9744423260709291,
+          "absolute_error_vectorJ_public_220": 0.0002288830654070262,
+          "absolute_error_vectorJ_public_223": 5.128014585298324e-06,
+          "absolute_error_c1SavJ_public_220": 4.69324015943684e-05,
+          "absolute_error_c1SavJ_public_223": 0.00017682264922735946
+        }
+      ]
+    }
+  ]
+}

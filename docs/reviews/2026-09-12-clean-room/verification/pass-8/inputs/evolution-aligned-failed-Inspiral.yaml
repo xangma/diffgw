@@ -1,0 +1,687 @@
+---
+Executable: EvolveGhBinaryBlackHole
+TargetParams:
+  AdmLinearMomentum:
+  - 0.0
+  - 0.0
+  - 0.0
+  CenterOfMass:
+  - 0.0
+  - 0.0
+  - 0.0
+  DimensionlessSpinA:
+  - 0.0
+  - 0.0
+  - 0.0
+  DimensionlessSpinB:
+  - 0.0
+  - 0.0
+  - 0.0
+  Eccentricity: 0.0
+  EccentricityAbsoluteTolerance: 0.001
+  EvolutionLev: 1
+  MassA: 0.5
+  MassB: 0.5
+  MassRatio: 1.0
+  MeanAnomalyFraction: null
+  NumOrbits: null
+  TimeToMerger: null
+Lev: -2
+---
+Parallelization:
+  ElementDistribution: NumGridPointsAndGridSpacing
+InitialData:
+  NumericInitialData:
+    VolumeData:
+      FileGlob: /campaign/smoke/id/BbhVolume*.h5
+      Subgroup: VolumeData.vol
+      ObservationValue: Last
+      ObservationValueEpsilon: Auto
+      ElementsAreIdentical: false
+      ExtrapolateIntoExcisions: false
+      NumThreads: 1
+    Variables:
+      Lapse: Lapse
+      Shift: ShiftExcess
+      SpatialMetric: SpatialMetric
+      ExtrinsicCurvature: ExtrinsicCurvature
+DomainCreator:
+  BinaryCompactObject:
+    ObjectA:
+      InnerRadius: 0.7919601
+      OuterRadius: 6.1464
+      XCoord: 7.683
+      Interior:
+        ExciseWithBoundaryCondition:
+          DemandOutgoingCharSpeeds: null
+      UseLogarithmicMap: true
+    ObjectB:
+      InnerRadius: 0.7919601
+      OuterRadius: 6.1464
+      XCoord: -7.683
+      Interior:
+        ExciseWithBoundaryCondition:
+          DemandOutgoingCharSpeeds: null
+      UseLogarithmicMap: true
+    CenterOfMassOffset:
+    - 0.0
+    - 0.0
+    Envelope:
+      Radius: 102.44
+      RadialDistribution: Logarithmic
+    OuterShell:
+      UseSphericalHarmonics: false
+      Radius: 614.64
+      RadialPartitioning: []
+      RadialDistribution: Linear
+      OpeningAngle: 120.0
+      BoundaryCondition:
+        ConstraintPreservingBjorhus:
+          Type: ConstraintPreservingPhysical
+          IncomingWaveProfile: None
+    UseEquiangularMap: true
+    CubeScale: 1.2
+    InitialRefinement:
+      ObjectAShell:
+      - 2
+      - 2
+      - 2
+      ObjectACube:
+      - 3
+      - 3
+      - 2
+      ObjectBShell:
+      - 2
+      - 2
+      - 2
+      ObjectBCube:
+      - 3
+      - 3
+      - 2
+      Envelope:
+      - 2
+      - 2
+      - 2
+      OuterShell0:
+      - 1
+      - 1
+      - 3
+    InitialGridPoints:
+      ObjectAShell:
+      - 8
+      - 8
+      - 6
+      ObjectACube:
+      - 5
+      - 5
+      - 4
+      ObjectBShell:
+      - 8
+      - 8
+      - 6
+      ObjectBCube:
+      - 5
+      - 5
+      - 4
+      Envelope:
+      - 8
+      - 8
+      - 10
+      OuterShell0:
+      - 8
+      - 8
+      - 9
+    UseWorldtube: false
+    TimeDependentMaps:
+      InitialTime: 0.0
+      ExpansionMap:
+        InitialValues:
+        - 1.0
+        - -4.827331550791904e-05
+        - 0.0
+        AsymptoticVelocityOuterBoundary: -1.0e-06
+        DecayTimescaleOuterBoundary: 50.0
+      RotationMap:
+        InitialAngularVelocity:
+        - 0.0
+        - 0.0
+        - 0.01533628349983242
+      TranslationMap:
+        InitialValues:
+        - - 0.0
+          - 0.0
+          - 0.0
+        - - 0.0
+          - 0.0
+          - 0.0
+        - - 0.0
+          - 0.0
+          - 0.0
+      SkewMap:
+        InitialValuesY:
+        - 0.0
+        - 0.0
+        - 0.0
+        InitialValuesZ:
+        - 0.0
+        - 0.0
+        - 0.0
+      ShapeMapA:
+        LMax: 10
+        CoefficientTruncationLimit: 1e-16
+        InitialValues:
+          Mass: 0.41
+          Spin:
+          - 0.0
+          - 0.0
+          - 0.0
+        SizeInitialValues:
+        - 0.0
+        - 0.0
+        - 0.0
+        TransitionEndsAtCube: true
+      ShapeMapB:
+        LMax: 10
+        CoefficientTruncationLimit: 1e-16
+        InitialValues:
+          Mass: 0.41
+          Spin:
+          - 0.0
+          - 0.0
+          - 0.0
+        SizeInitialValues:
+        - 0.0
+        - 0.0
+        - 0.0
+        TransitionEndsAtCube: true
+      GridCenters: None
+Evolution:
+  InitialTime: 0.0
+  InitialTimeStep: 0.0002
+  MinimumTimeStep: 1e-7
+  InitialSlabSize: 0.1
+  LocalTimeStepping: Conservative
+  VariableOrderAlgorithm:
+    GoalOrder: 4
+  LtsStepChoosers:
+  - LimitIncrease:
+      Factor: 2
+  - PreventRapidIncrease
+  - ErrorControl:
+      AbsoluteTolerance: 1e-10
+      RelativeTolerance: 1e-8
+      MaxFactor: 2
+      MinFactor: 0.25
+      SafetyFactor: 0.95
+  TimeStepper:
+    AdamsMoultonPcMonotonic:
+      Order: 4
+EvolutionSystem:
+  GeneralizedHarmonic:
+    GaugeCondition:
+      DampedHarmonic:
+        SpatialDecayWidth: 17.0152695482514
+        Amplitudes:
+        - 1.0
+        - 0.0
+        - 1.0
+        Exponents:
+        - 2
+        - 2
+        - 2
+    DampingFunctionGamma0: &id001
+      TimeDependentTripleGaussian:
+        Constant: 0.01
+        Gaussian1:
+          Amplitude: 8.0
+          Width: 3.5
+          Center:
+          - 7.683
+          - 0.0
+          - 0.0
+        Gaussian2:
+          Amplitude: 8.0
+          Width: 3.5
+          Center:
+          - -7.683
+          - 0.0
+          - 0.0
+        Gaussian3:
+          Amplitude: 0.75
+          Width: 38.415
+          Center:
+          - 0.0
+          - 0.0
+          - 0.0
+        MovementMethod: ExpansionFactor
+    DampingFunctionGamma1:
+      GaussianPlusConstant:
+        Constant: -0.999
+        Amplitude: 0.999
+        Width: 153.66
+        Center:
+        - 0.0
+        - 0.0
+        - 0.0
+    DampingFunctionGamma2: *id001
+SpatialDiscretization:
+  BoundaryCorrection:
+    AveragedUpwindPenalty: null
+  DiscontinuousGalerkin:
+    Formulation: StrongInertial
+    Quadrature: GaussLobatto
+    Filtering:
+    - Hypercube:
+        HalfPower: 420
+        Enable: true
+        BlocksToFilter: All
+        VolumeFilterOnSubstep: true
+        BoundaryCorrectionFilterOnSubstep: false
+        VolumeFilterEveryNSteps: None
+        BoundaryCorrectionFilterEveryNSteps: None
+Observers:
+  VolumeFileName: BbhVolume
+  ReductionFileName: BbhReductions
+  SurfaceFileName: BbhSurfaces
+Cce:
+  BondiSachsOutputFilePrefix: BondiSachs
+Amr:
+  Criteria: null
+  EnableInBlocks: All
+  Policies:
+    EnforceTwoToOneBalanceInNormalDirection: true
+    Isotropy: Anisotropic
+    Limits:
+      RefinementLevel: Auto
+      NumGridPoints: Auto
+      ErrorBeyondLimits: false
+    AllowCoarsening: true
+  Verbosity: Quiet
+PhaseChangeAndTriggers:
+- Trigger:
+    SeparationLessThan:
+      Value: 2.38
+  PhaseChanges:
+  - BbhCheckpointAndExitIfComplete
+- Trigger:
+    TimeCompares:
+      Comparison: GreaterThanOrEqualTo
+      Value: 0.5
+  PhaseChanges:
+  - CheckpointAndExitAfterWallclock:
+      WallclockHours: 0.0
+EventsAndTriggersAtCheckpoints:
+- Trigger: Always
+  Events:
+  - ObserveFields:
+      SubfileName: Checkpoints
+      VariablesToObserve:
+      - SpacetimeMetric
+      - Pi
+      - Phi
+      InterpolateToMesh: None
+      ProjectToMesh: None
+      CoordinatesFloatingPointType: Double
+      FloatingPointTypes:
+      - Double
+      BlocksToObserve: All
+EventsAndTriggersAtSlabs:
+- Trigger:
+    Slabs:
+      EvenlySpaced:
+        Interval: 1
+        Offset: 0
+  Events:
+  - ObserveTimeStep:
+      SubfileName: TimeSteps
+      PrintTimeToTerminal: true
+      ObservePerCore: false
+  - ObserveNorms:
+      SubfileName: Norms
+      TensorsToObserve:
+      - Name: Lapse
+        NormType: L2Norm
+        Components: Individual
+      - Name: PointwiseL2Norm(GaugeConstraint)
+        NormType: L2Norm
+        Components: Sum
+      - Name: PointwiseL2Norm(ThreeIndexConstraint)
+        NormType: L2Norm
+        Components: Sum
+- Trigger:
+    Slabs:
+      EvenlySpaced:
+        Interval: 100
+        Offset: 0
+  Events:
+  - ObserveNorms:
+      SubfileName: ConstraintEnergy
+      TensorsToObserve:
+      - Name: ConstraintEnergy
+        NormType: L2Norm
+        Components: Sum
+      - Name: NormalizedConstraintEnergy
+        NormType: L2Norm
+        Components: Sum
+  - ErrorIfDataTooBig:
+      Threshold: 10
+      VariablesToCheck:
+      - ConstraintEnergy
+  - ErrorIfDataTooBig:
+      Threshold: 100
+      VariablesToCheck:
+      - SpacetimeMetric
+- Trigger:
+    Slabs:
+      EvenlySpaced:
+        Interval: 5
+        Offset: 0
+  Events:
+  - ObservationAhA
+  - ObservationAhB
+  - ObservationExcisionBoundaryA
+  - ObservationExcisionBoundaryB
+- Trigger:
+    Slabs:
+      EvenlySpaced:
+        Interval: 2000
+        Offset: 0
+  Events:
+  - ObserveFields:
+      SubfileName: VolumeData
+      VariablesToObserve:
+      - SpacetimeMetric
+      - ConstraintEnergy
+      - NormalizedConstraintEnergy
+      - PointwiseL2Norm(GaugeConstraint)
+      - PointwiseL2Norm(ThreeIndexConstraint)
+      - Lapse
+      - SpatialRicciScalar
+      - Psi4Real
+      InterpolateToMesh: None
+      ProjectToMesh: None
+      CoordinatesFloatingPointType: Float
+      FloatingPointTypes:
+      - Float
+      BlocksToObserve: All
+- Trigger:
+    SeparationLessThan:
+      Value: 2.38
+  Events:
+  - ChangeSlabSize:
+      DelayChange: 0
+      StepChoosers:
+      - Constant: 0.01
+  - BbhCheckConstraintThresholds
+  - ObservationAhC:
+      SubfileName: ForContinuation
+      VariablesToObserve:
+      - SpacetimeMetric
+      - Pi
+      - Phi
+      InterpolateToMesh: None
+      ProjectToMesh: None
+      CoordinatesFloatingPointType: Double
+      FloatingPointTypes:
+      - Double
+      BlocksToObserve: All
+- Trigger:
+    TimeCompares:
+      Comparison: GreaterThanOrEqualTo
+      Value: 1.0
+  Events:
+  - Completion
+- Trigger: Always
+  Events:
+  - CleanFunctionsOfTime
+EventsAndTriggersAtSteps: null
+EventsAndDenseTriggers:
+- Trigger:
+    Times:
+      EvenlySpaced:
+        Interval: 0.1
+        Offset: 0.0
+  Events:
+  - BondiSachsInterpolation
+EventsRunAtCleanup:
+  ObservationValue: -1000.0
+  Events:
+  - ObserveTimeStepVolume:
+      SubfileName: FailureTimeStep
+      FloatingPointType: Double
+      CoordinatesFloatingPointType: Float
+Interpolator:
+  Verbosity: Silent
+BbhCompletionCriteria:
+  MinCommonHorizonSuccessesBeforeChecks: 8
+  MaxCommonHorizonSuccesses: 100
+  GaugeConstraintLinfThreshold: 1.0
+  ThreeIndexConstraintLinfThreshold: 1.0
+  CommonHorizonLMaxThreshold: 8
+  ConstraintCheckVerbose: false
+ApparentHorizons:
+  LMax: 33
+  ObservationAhA: &id003
+    Criteria:
+    - Residual:
+        MinResidual: 1.35335e-06
+        MaxResidual: 1.35335e-05
+        MinResolutionL: 6
+    - Shape:
+        MinTruncationError: 1.3533500000000001e-07
+        MaxTruncationError: 1.35335e-05
+        MaxPileUpModes: 4
+        MinResolutionL: 6
+    InitialGuess:
+      InitialL: 10
+      InitialShape:
+        Sphere:
+          Radius: 1.18794015
+          Center:
+          - 7.683
+          - 0.0
+          - 0.0
+    FastFlow: &id002
+      Flow: Fast
+      Alpha: 1.0
+      Beta: 0.5
+      AbsTol: 1e-12
+      TruncationTol: 1e-2
+      DivergenceTol: 1.2
+      DivergenceIter: 5
+      MaxIts: 100
+    Verbosity: Quiet
+    MaxComputeCoordsRetries: 3
+    BlocksForHorizonFind:
+    - ObjectAShell
+    - ObjectACube
+  ObservationAhB: &id004
+    Criteria:
+    - Residual:
+        MinResidual: 1.35335e-06
+        MaxResidual: 1.35335e-05
+        MinResolutionL: 6
+    - Shape:
+        MinTruncationError: 1.3533500000000001e-07
+        MaxTruncationError: 1.35335e-05
+        MaxPileUpModes: 4
+        MinResolutionL: 6
+    InitialGuess:
+      InitialL: 10
+      InitialShape:
+        Sphere:
+          Radius: 1.18794015
+          Center:
+          - -7.683
+          - 0.0
+          - 0.0
+    FastFlow: *id002
+    Verbosity: Quiet
+    MaxComputeCoordsRetries: 3
+    BlocksForHorizonFind:
+    - ObjectBShell
+    - ObjectBCube
+  ObservationAhC:
+    Criteria: null
+    InitialGuess:
+      InitialL: 33
+      InitialShape:
+        Sphere:
+          Radius: 10.0
+          Center:
+          - 0.0
+          - 0.0
+          - 0.0
+    FastFlow: *id002
+    Verbosity: Quiet
+    MaxComputeCoordsRetries: 3
+    BlocksForHorizonFind:
+    - ObjectAShell
+    - ObjectACube
+    - ObjectBShell
+    - ObjectBCube
+    - Envelope
+  ControlSystemAhA: *id003
+  ControlSystemAhB: *id004
+  ControlSystemCharSpeedAhA: *id003
+  ControlSystemCharSpeedAhB: *id004
+InterpolationTargets:
+  BondiSachsInterpolation:
+    LMax: 16
+    Radius:
+    - 100
+    - 150
+    - 200
+    Center:
+    - 0
+    - 0
+    - 0
+    AngularOrdering: Cce
+  ObservationExcisionBoundaryA: &id005
+    LMax: 10
+    Center:
+    - 7.683
+    - 0.0
+    - 0.0
+    Radius: 0.7919601
+    AngularOrdering: Strahlkorper
+  ObservationExcisionBoundaryB: &id006
+    LMax: 10
+    Center:
+    - -7.683
+    - 0.0
+    - 0.0
+    Radius: 0.7919601
+    AngularOrdering: Strahlkorper
+  ControlSystemCharSpeedExcisionA: *id005
+  ControlSystemCharSpeedExcisionB: *id006
+ControlSystems:
+  WriteDataToDisk: true
+  MeasurementsPerUpdate: 4
+  DelayUpdate: true
+  Verbosity: Silent
+  Expansion: &id007
+    Averager: &id008
+      AverageTimescaleFraction: 0.25
+      Average0thDeriv: false
+    Controller: &id009
+      UpdateFraction: 0.3
+    TimescaleTuner:
+      InitialTimescales: 0.2
+      MinTimescale: 0.01
+      MaxTimescale: 20.0
+      IncreaseThreshold: 2.5e-05
+      DecreaseThreshold: 0.0001
+      IncreaseFactor: 1.01
+      DecreaseFactor: 0.98
+    ControlError: null
+  Rotation: *id007
+  Translation: *id007
+  Skew:
+    Averager: *id008
+    Controller: *id009
+    TimescaleTuner:
+      InitialTimescales: 10.025
+      MinTimescale: 0.05
+      MaxTimescale: 20.0
+      IncreaseThreshold: 2.5e-05
+      DecreaseThreshold: 0.0001
+      IncreaseFactor: 1.01
+      DecreaseFactor: 0.98
+    ControlError: null
+  ShapeA:
+    Averager: &id010
+      AverageTimescaleFraction: 0.25
+      Average0thDeriv: true
+    Controller: *id009
+    TimescaleTuner:
+      InitialTimescales: 1.0
+      MinTimescale: 0.01
+      MaxTimescale: 20.0
+      IncreaseThreshold: 2.5e-05
+      DecreaseThreshold: 0.0001
+      IncreaseFactor: 1.01
+      DecreaseFactor: 0.98
+    ControlError: null
+  ShapeB:
+    Averager: *id010
+    Controller: *id009
+    TimescaleTuner:
+      InitialTimescales: 1.0
+      MinTimescale: 0.01
+      MaxTimescale: 20.0
+      IncreaseThreshold: 2.5e-05
+      DecreaseThreshold: 0.0001
+      IncreaseFactor: 1.01
+      DecreaseFactor: 0.98
+    ControlError: null
+  SizeA:
+    Averager: *id010
+    Controller: &id011
+      UpdateFraction: 0.2
+    TimescaleTuner:
+      InitialTimescales: 0.020000000000000004
+      MinTimescale: 0.0001
+      MaxTimescale: 20
+      IncreaseThreshold: 0.001
+      IncreaseFactor: 1.01
+    ControlError:
+      MaxNumTimesForZeroCrossingPredictor: 4
+      SmoothAvgTimescaleFraction: 0.25
+      DeltaRDriftOutwardOptions: None
+      DeltaRDriftInwardOptions: None
+      InitialState: Initial
+      SmootherTuner:
+        InitialTimescales: 0.020000000000000004
+        MinTimescale: 0.01
+        MaxTimescale: 20.0
+        IncreaseThreshold: 2.5e-05
+        DecreaseThreshold: 0.0001
+        IncreaseFactor: 1.01
+        DecreaseFactor: 0.98
+  SizeB:
+    Averager: *id010
+    Controller: *id011
+    TimescaleTuner:
+      InitialTimescales: 0.020000000000000004
+      MinTimescale: 0.0001
+      MaxTimescale: 20
+      IncreaseThreshold: 0.001
+      IncreaseFactor: 1.01
+    ControlError:
+      MaxNumTimesForZeroCrossingPredictor: 4
+      SmoothAvgTimescaleFraction: 0.25
+      DeltaRDriftOutwardOptions: None
+      DeltaRDriftInwardOptions: None
+      InitialState: Initial
+      SmootherTuner:
+        InitialTimescales: 0.020000000000000004
+        MinTimescale: 0.01
+        MaxTimescale: 20.0
+        IncreaseThreshold: 2.5e-05
+        DecreaseThreshold: 0.0001
+        IncreaseFactor: 1.01
+        DecreaseFactor: 0.98
+ResourceInfo:
+  AvoidGlobalProc0: false
+  Singletons: Auto

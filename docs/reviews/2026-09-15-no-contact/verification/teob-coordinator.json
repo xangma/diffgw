@@ -1,0 +1,49 @@
+{
+  "method": "Independent NumPy mode norms and SciPy natural-cubic state interpolation from saved arrays; no ODE rerun",
+  "source_and_input_hash_checks": {
+    "/Users/xangma/repos/torchwave/scripts/teob_no_contact_ode_convergence.py": true,
+    "/Users/xangma/repos/torchwave/scripts/diagnose_teob_paired_driver_clean.py": true,
+    "/Users/xangma/repos/torchwave/src/torchwave/approximants/eob/teob_adaptive_continuation_clean.py": true,
+    "/Users/xangma/repos/torchwave/src/torchwave/approximants/eob/adaptive_driver_clean.py": true,
+    "/Users/xangma/repos/torchwave/src/torchwave/approximants/eob/teob_vacuum_driver_clean.py": true,
+    "/Users/xangma/repos/torchwave/src/torchwave/approximants/eob/teob_postadiabatic_clean.py": true,
+    "/Users/xangma/repos/torchwave/src/torchwave/approximants/eob/teob_waveform_state_clean.py": true,
+    "/Users/xangma/repos/torchwave/src/torchwave/approximants/eob/teob_merger_nqc_clean.py": true,
+    "/Users/xangma/repos/torchwave/src/torchwave/approximants/eob/teob_ringdown_assembly_clean.py": true,
+    "/Users/xangma/repos/torchwave/docs/reviews/2026-09-13-parity-review/teob-merger-assembly-contract.md": true,
+    "docs/reviews/2026-09-15-no-contact/teob-ode-convergence-clean/convergence-arrays.npz": true,
+    "docs/reviews/2026-09-15-no-contact/teob-ode-convergence-clean/report.json": true,
+    "review_script": true,
+    "/tmp/torchwave-public-teob-q1p5-r20-dt0p5M.npz": true,
+    "/tmp/torchwave-public-teob-q1p5-r20-dt0p5M.json": true
+  },
+  "all_hashes_match": true,
+  "successive_level_metrics": {
+    "baseline_vs_tight_0p1": {
+      "pre_nqc_relative_l2": 1.7044639088136623e-09,
+      "processed_relative_l2": 0.002529172268500524,
+      "state_component_maxima_independent_scipy": [
+        1.7453550604784596e-08,
+        1.487956069468055e-08,
+        2.638284979372685e-09,
+        2.3403812221545195e-09
+      ]
+    },
+    "tight_0p1_vs_tight_0p01": {
+      "pre_nqc_relative_l2": 2.675925450745815e-08,
+      "processed_relative_l2": 0.0021647122134381648,
+      "state_component_maxima_independent_scipy": [
+        1.8949868607620601e-07,
+        2.447049496367981e-07,
+        2.429148837634898e-08,
+        1.5033163336397593e-07
+      ]
+    }
+  },
+  "processed_relative_l2_vs_public": {
+    "baseline": 0.0017625235032793713,
+    "tight_0p1": 0.004039641935319653,
+    "tight_0p01": 0.002054317413632325
+  },
+  "recorded_metrics_reproduced": true
+}

@@ -1,0 +1,68 @@
+{
+  "description": "FP64 samples evaluated independently from the author Mathematica p6 expressions",
+  "inputs": [
+    {
+      "eta": 0.12,
+      "S": 0.3846487849050518,
+      "chi1": 0.4,
+      "chi2": -0.2
+    },
+    {
+      "eta": 0.18,
+      "S": 0.6480391854123053,
+      "chi1": 0.7,
+      "chi2": 0.1
+    },
+    {
+      "eta": 0.24,
+      "S": -0.16923076923076924,
+      "chi1": -0.6,
+      "chi2": 0.8
+    },
+    {
+      "eta": 0.25,
+      "S": -0.1,
+      "chi1": 0.3,
+      "chi2": -0.5
+    }
+  ],
+  "expected_p6": {
+    "21": [
+      3093.756671414766,
+      3091.1998290884017,
+      3097.5749996730838,
+      3098.409823687984
+    ],
+    "33": [
+      39.91120226932898,
+      42.28584500255977,
+      38.45509532341934,
+      37.966092389781856
+    ],
+    "44": [
+      105.56824786704394,
+      86.59111580609708,
+      83.60012483346077,
+      93.23201490669729
+    ]
+  },
+  "source": {
+    "paper": "https://arxiv.org/abs/2001.10914",
+    "ancillary_base": "https://arxiv.org/src/2001.10914v2/anc/ParspaceFits/PhaseFits",
+    "files": {
+      "21": {
+        "url": "https://arxiv.org/src/2001.10914v2/anc/ParspaceFits/PhaseFits/21/3Dfit_p6_lm_21.m",
+        "sha256": "5b3ab0e7f04092f99f8983b02f7cb985cf4bfd13b3e4022b16cf020d57987716"
+      },
+      "33": {
+        "url": "https://arxiv.org/src/2001.10914v2/anc/ParspaceFits/PhaseFits/33/3Dfit_p6_lm_33.m",
+        "sha256": "7cb4273b6b46f4be4f82b5a48e03705fa0f1d832effd71c79ade845c2d91afe8"
+      },
+      "44": {
+        "url": "https://arxiv.org/src/2001.10914v2/anc/ParspaceFits/PhaseFits/44/3Dfit_p6_lm_44.m",
+        "sha256": "6dd15b7cf9fded8c3cdd329c7535d688f3d25633a9508c00ebf7fad2b29d5c8f"
+      }
+    },
+    "evaluation": "Decimal(80) arithmetic over the first expanded expression; no network or native imports."
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "started_utc": "2026-09-12T19:41:25.074266+00:00",
+  "patch_provenance": {
+    "source_path": "/work/charm_7_0_0/src/ck-core/ck.C",
+    "original_sha256": "c8774371a9c3c768d2d9a9908f1a9b276fdc7c963875b9716f6ed74ce19177c1",
+    "patched_sha256": "a7c14ff611f576ee68020c60225b68b9b212edd02197eeefa27cc2bcfd56e93b",
+    "patch_sha256": "dd96461cf701fad97f66f2b91f4b42ab91059007c0ab3c9e25ecc15223ceb232",
+    "scope": "Linux pilot group/nodegroup allocation aligned to 64 bytes; not general support for arbitrary over-aligned chares"
+  },
+  "source_before": "c8774371a9c3c768d2d9a9908f1a9b276fdc7c963875b9716f6ed74ce19177c1",
+  "patch_sha256": "dd96461cf701fad97f66f2b91f4b42ab91059007c0ab3c9e25ecc15223ceb232",
+  "libck_before": "354ca1a9ac841a8dff6c4fd2d9a786bed1a9e1d5ee95945d9e12b42448518a14",
+  "binaries_before": {
+    "SolveXcts": "8c138db11ff60ea92041f02618e743d28b68ceb8bfff65f66823f9d51c25a2ef",
+    "EvolveGhBinaryBlackHole": "634680696cbb783c7d1ac6a6e6724d21c302a6b28ad7f3117b869f26fb2119c4",
+    "EvolveGhSingleBlackHole": "9ebfb44f93bd3ccf596f6be30e979a8fc17bc73c1d54e0b9cbe4c37f268564f5",
+    "CharacteristicExtract": "6f6b6e2e7df34ba4c8b62a262e4fa98ecadee784f2f78c325279643da15f558b"
+  },
+  "source_after": "a7c14ff611f576ee68020c60225b68b9b212edd02197eeefa27cc2bcfd56e93b",
+  "libck_after": "2907aa11e3865f9f441c98b21b5dffb8068aca663c4dea9841655def6e3c82dd",
+  "binaries_after": {
+    "SolveXcts": "7c9c9e9959fe5616c507c52dbb94510de563ed98dc9d1b03c8f92cedac57cf97",
+    "EvolveGhBinaryBlackHole": "503de622ce6321c77b786e83c27679f7d3fc8b80e2a6e5d8af1bde502b9125cd",
+    "EvolveGhSingleBlackHole": "88166b84a7680d0bac28f27074c57bfc5e000da451894ee62601bc0737593bc2",
+    "CharacteristicExtract": "7cce35918d76227956efd2abf5f622a0dcf3aceb699079a880e482bc49f13f08"
+  },
+  "spectre_commit": "ce221e8b4bf8f4ca1d0acad98453aed5b454f469",
+  "charm_commit": "c5f1dcda82440082bf7d507a63e63270acc390df",
+  "charm_diff": "diff --git a/src/ck-core/ck.C b/src/ck-core/ck.C\nindex dcc947c..d4f60f4 100644\n--- a/src/ck-core/ck.C\n+++ b/src/ck-core/ck.C\n@@ -656,10 +656,22 @@ void CkCreateChare(int cIdx, int eIdx, void *msg, CkChareID *pCid, int destPE)\n   _TRACE_CREATION_DONE(1);\n }\n \n+/* Local pilot fix: honor the 64-byte alignment required by SpECTRE's\n+ * MultiReaderSpinlock. Group registration records size, but not alignment.\n+ * posix_memalign storage is compatible with Chare::operator delete/free.\n+ */\n+static inline void *CkAllocGroupObject(size_t size)\n+{\n+  void *obj = NULL;\n+  if (posix_memalign(&obj, 64, size) != 0)\n+    CmiAbort(\"Unable to allocate aligned group object\");\n+  return obj;\n+}\n+\n void CkCreateLocalGroup(CkGroupID groupID, int epIdx, envelope *env)\n {\n   int gIdx = _entryTable[epIdx]->chareIdx;\n-  void *obj = malloc(_chareTable[gIdx]->size);\n+  void *obj = CkAllocGroupObject(_chareTable[gIdx]->size);\n   _MEMCHECK(obj);\n   setMemoryTypeChare(obj);\n   CmiImmediateLock(CkpvAccess(_groupTableImmLock));\n@@ -697,7 +709,7 @@ void CkCreateLocalNodeGroup(CkGroupID groupID, int epIdx, envelope *env)\n {\n   int gIdx = _entryTable[epIdx]->chareIdx;\n   size_t objSize=_chareTable[gIdx]->size;\n-  void *obj = malloc(objSize);\n+  void *obj = CkAllocGroupObject(objSize);\n   _MEMCHECK(obj);\n   setMemoryTypeChare(obj);\n   CkpvAccess(_currentGroup) = groupID;\n",
+  "wall_seconds": 50.00292116194032
+}

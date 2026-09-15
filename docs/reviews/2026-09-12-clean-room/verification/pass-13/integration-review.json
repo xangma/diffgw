@@ -1,0 +1,19 @@
+{
+  "changed_files": [
+    "src/torchwave/approximants/imrphenom_xhm.py",
+    "tests/test_clean_higher_modes.py",
+    "tests/test_pass12_higher_modes.py",
+    "tests/test_pass13_xhm_amplitude.py",
+    "tests/test_pass13_xhm_phase.py"
+  ],
+  "runtime_review": "Parent checked Eqs4.5/4.6/5.3/6.2, TablesIV/VI/VII and Fig8 directly. Retained constant-A0 inner targets, separate derivative-removal value cubic for poles versus inner-value-removal Hermite cubic for parameter vetoes, row-global linear fallback, and default nonmixing phase nodes [1,2,3,4,6]. The second Luna independently reviewed TableVI. Earlier dirty work and acceptance harness remain unchanged.",
+  "test_review": "Both 21 nodes are checked against normalized physical strain with zero absolute tolerance. A captured production 6x6 solve proves the constructed quintic triggers the existing interval detector while its four-value cubic stays positive; both fallback inner values and finite/nonzero frequency gradients are checked before forcing the distinct parameter veto. Phase solve node/RHS capture, p6 strain sensitivity, p5 exclusion for all three nonmixing modes and phase-sensitive mass/spin gradients are checked. Parent made the independent detector grid explicitly FP64.",
+  "existing_test_change": "The mixed-batch parameter-veto test uses 21 native physical inputs because corrected normalization activates an unrelated pole fallback in its former 32 control. Zero-tolerance veto invariance, sensitive non-veto control, disabling-veto control and finite/nonzero gradients remain. The 32 join test independently proves parameter veto is inactive and pole fallback active, preserving C0 and phase checks. A separate complete-waveform control uses inner fit values derived from physical endpoint Hermite conditions, proves its production quintic clears the detector and verifies C0/C1 amplitude at both joins. Parent replaced the initial polynomial-only control; focused integration passed 57 tests.",
+  "verification": {
+    "passed": 1120,
+    "skipped": 8,
+    "seconds": 76.18,
+    "source_hashes_stable": 173
+  },
+  "earlier_candidate": "normalization-and-nodes/ preserves the initial verified candidate before the independent TableVI fallback correction. It is historical, not the final result."
+}

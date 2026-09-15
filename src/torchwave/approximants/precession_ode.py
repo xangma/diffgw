@@ -1,6 +1,6 @@
 """Differentiable Spin-Precession Dynamics and ODE Engine.
 
-Strict Clean-Room Implementation derived strictly from cited literature:
+Mathematical references for the inherited experimental integrator:
 - Chatziioannou et al. (2017), Phys. Rev. D 95, 104004 (arXiv:1703.03967)
   "Two-body problem in general relativity with spins: Precession on radiation-reaction timescales"
 - Kidder (1995), Phys. Rev. D 52, 821 (arXiv:gr-qc/9506014)
@@ -31,7 +31,8 @@ class SpinPrecessionODE(nn.Module):
     - 2PN Spin-Orbit (SO) couplings
     - 2PN Spin-Spin (SS) couplings
     - 2.5PN Radiation reaction orbital decay
-    - Conserves total angular momentum magnitude |J| = |L + S1 + S2| in conservative limit to < 10^(-6)
+    - Numerical accuracy depends on step size; this is not an MSA prescription
+    - Black-hole self-spin quadrupole couplings are not implemented
     - Extracts precessing Euler angles (alpha, cos_beta, epsilon)
     """
 
@@ -248,21 +249,22 @@ class SpinPrecessionODE(nn.Module):
         l_hat = l_traj / torch.clamp(l_mag, min=1e-24)
 
         # 1. Opening angle beta: cos(beta) = L_hat . J_hat_0
-        cos_beta = torch.clamp(torch.sum(l_hat * z_j_exp, dim=-1), -1.0 + 1e-12, 1.0 - 1e-12)
-        beta = torch.arccos(cos_beta)
+        cos_beta = torch.clamp(torch.sum(l_hat * z_j_exp, dim=-1), -1.0, 1.0)
+        perpendicular = torch.linalg.vector_norm(torch.linalg.cross(l_hat, z_j_exp.expand_as(l_hat)), dim=-1)
+        beta = torch.atan2(perpendicular, cos_beta)
 
         # 2. Azimuthal precession angle alpha: angle in x_j, y_j plane
         lx = torch.sum(l_hat * x_j_exp, dim=-1)
         ly = torch.sum(l_hat * y_j_exp, dim=-1)
         alpha = torch.atan2(ly, lx)
 
-        # 3. Minimal rotation angle epsilon: d_epsilon = -cos_beta * d_alpha
+        # 3. Pratten Eq. (3.1): epsilon = -gamma, so d_epsilon = cos_beta * d_alpha
         # Cumulative trapezoidal integration
         d_alpha = alpha[..., 1:] - alpha[..., :-1]
         # Unwrap 2pi jumps in d_alpha
         d_alpha = torch.remainder(d_alpha + PI, 2.0 * PI) - PI
         cos_b_mid = 0.5 * (cos_beta[..., 1:] + cos_beta[..., :-1])
-        d_eps = -cos_b_mid * d_alpha
+        d_eps = cos_b_mid * d_alpha
 
         zero_lead = torch.zeros(alpha.shape[:-1] + (1,), dtype=alpha.dtype, device=alpha.device)
         eps_cum = torch.cumsum(d_eps, dim=-1)
@@ -300,66 +302,80 @@ class SpinPrecessionODE(nn.Module):
         s2y = as_tensor(spin2y, device=device, dtype=dtype)
         s2z = as_tensor(spin2z, device=device, dtype=dtype)
 
-        total_m = m1 + m2
-        m_sec = total_m * MSUN_SEC
-        eta = (m1 * m2) / (total_m * total_m)
-        q = m1 / m2
-
-        m1_norm = m1 / total_m
-        m2_norm = m2 / total_m
-
-        s1_vec = (m1_norm ** 2) * torch.stack([s1x, s1y, s1z], dim=-1)
-        s2_vec = (m2_norm ** 2) * torch.stack([s2x, s2y, s2z], dim=-1)
-
         f_ref_val = as_tensor(f_ref if f_ref is not None else 20.0, device=device, dtype=dtype)
-        v_ref = (PI * m_sec * f_ref_val) ** (1.0 / 3.0)
+        m1, m2, s1x, s1y, s1z, s2x, s2y, s2z, f_ref_val = torch.broadcast_tensors(
+            m1, m2, s1x, s1y, s1z, s2x, s2y, s2z, f_ref_val,
+        )
+        if bool(torch.any(f <= 0)) or bool(torch.any(f_ref_val <= 0)):
+            raise ValueError("ODE precession requires positive frequencies and f_ref")
+        total_m = m1 + m2
+        eta = m1 * m2 / total_m.square()
+        s1_ref = (m1 / total_m).square().unsqueeze(-1) * torch.stack((s1x, s1y, s1z), dim=-1)
+        s2_ref = (m2 / total_m).square().unsqueeze(-1) * torch.stack((s2x, s2y, s2z), dim=-1)
+        v_ref = (PI * total_m * MSUN_SEC * f_ref_val).pow(1.0 / 3.0)
+        l_ref = torch.zeros_like(s1_ref)
+        l_ref[..., 2] = eta / v_ref
+        j_ref = l_ref + s1_ref + s2_ref
+        z_j = j_ref / torch.linalg.vector_norm(j_ref, dim=-1, keepdim=True)
+        z_axis = torch.zeros_like(z_j)
+        z_axis[..., 2] = 1.0
+        cross = torch.linalg.cross(z_axis, z_j)
+        cross_norm = torch.linalg.vector_norm(cross, dim=-1, keepdim=True)
+        y_axis = torch.zeros_like(z_j)
+        y_axis[..., 1] = 1.0
+        fallback = torch.linalg.cross(y_axis, z_j)
+        fallback = fallback / torch.linalg.vector_norm(fallback, dim=-1, keepdim=True)
+        x_j = torch.where(cross_norm > 1e-12, cross / cross_norm.clamp_min(1e-24), fallback)
+        y_j = torch.linalg.cross(z_j, x_j)
 
-        # Initial angular momentum at reference frequency
-        l0_dir = torch.zeros_like(s1_vec)
-        l0_dir[..., 2] = 1.0
-        l0_vec = (eta / torch.clamp(v_ref, min=1e-12)).unsqueeze(-1) * l0_dir
-        j0 = l0_vec + s1_vec + s2_vec
+        # Every frequency is an independent IVP starting at f_ref. Per-frequency
+        # fixed velocity steps make requested-grid order and spacing irrelevant.
+        v_target = (PI * total_m.unsqueeze(-1) * MSUN_SEC * f).pow(1.0 / 3.0)
+        v_start = v_ref.unsqueeze(-1).expand_as(v_target)
+        span = v_target - v_start
+        n_steps = torch.ceil(span.detach().abs() / 0.001).to(torch.int64).clamp_min(1)
+        step = span / n_steps
+        state_shape = v_target.shape + (3,)
+        s1 = s1_ref.unsqueeze(-2).expand(state_shape)
+        s2 = s2_ref.unsqueeze(-2).expand(state_shape)
+        l_vec = l_ref.unsqueeze(-2).expand(state_shape)
+        epsilon = torch.zeros_like(v_target)
+        x_j, y_j, z_j = x_j.unsqueeze(-2), y_j.unsqueeze(-2), z_j.unsqueeze(-2)
+        m1_f, m2_f, eta_f = m1.unsqueeze(-1), m2.unsqueeze(-1), eta.unsqueeze(-1)
 
-        # Velocity grid
-        v_grid = (PI * m_sec * f) ** (1.0 / 3.0)
-        n_pts = f.shape[-1]
+        def derivatives(velocity, state):
+            spin1, spin2, orbital, _ = state
+            l_hat = orbital / torch.linalg.vector_norm(orbital, dim=-1, keepdim=True).clamp_min(1e-24)
+            # Newtonian circular-orbit L, consistent with the leading flux used
+            # to change independent variable from time to v.
+            orbital_pn = (eta_f / velocity).unsqueeze(-1) * l_hat
+            omega1, omega2 = cls.precession_vectors(spin1, spin2, orbital_pn, m1_f, m2_f)
+            dt_dv = (5.0 / (32.0 * eta_f * velocity.pow(9))).unsqueeze(-1)
+            ds1 = torch.linalg.cross(omega1, spin1) * dt_dv
+            ds2 = torch.linalg.cross(omega2, spin2) * dt_dv
+            dl = -(ds1 + ds2) - (eta_f / velocity.square()).unsqueeze(-1) * l_hat
+            lx, ly = (orbital * x_j).sum(-1), (orbital * y_j).sum(-1)
+            dx, dy = (dl * x_j).sum(-1), (dl * y_j).sum(-1)
+            dalpha = (lx * dy - ly * dx) / (lx.square() + ly.square()).clamp_min(1e-24)
+            cos_beta = (l_hat * z_j).sum(-1)
+            return ds1, ds2, dl, cos_beta * dalpha
 
-        # Integrate along v_grid
-        l_traj = []
-        s1_curr = s1_vec
-        s2_curr = s2_vec
-
-        for i in range(n_pts):
-            v_i = v_grid[..., i]
-            l_mag_i = eta / torch.clamp(v_i, min=1e-12)
-
-            if i > 0:
-                dv = v_grid[..., i] - v_grid[..., i - 1]
-                v_mid = 0.5 * (v_grid[..., i] + v_grid[..., i - 1])
-                l_mag_mid = eta / torch.clamp(v_mid, min=1e-12)
-
-                l_prev = l_traj[-1]
-                l_hat_mid = l_prev / torch.clamp(torch.norm(l_prev, dim=-1, keepdim=True), min=1e-24)
-                l_vec_mid = l_mag_mid.unsqueeze(-1) * l_hat_mid
-
-                om1, om2 = cls.precession_vectors(s1_curr, s2_curr, l_vec_mid, m1, m2)
-                dv_dt = (32.0 / 5.0) * eta * (v_mid ** 9)
-                denom = torch.clamp(dv_dt.unsqueeze(-1), min=1e-36)
-
-                ds1_dv = torch.linalg.cross(om1, s1_curr) / denom
-                ds2_dv = torch.linalg.cross(om2, s2_curr) / denom
-
-                s1_curr = s1_curr + dv.unsqueeze(-1) * ds1_dv
-                s2_curr = s2_curr + dv.unsqueeze(-1) * ds2_dv
-
-            # Update L direction: in the precessing frame, L aligns with J - S1 - S2
-            l_dir = j0 - s1_curr - s2_curr
-            l_dir_mag = torch.norm(l_dir, dim=-1, keepdim=True)
-            l_hat_i = l_dir / torch.clamp(l_dir_mag, min=1e-24)
-            l_vec_i = l_mag_i.unsqueeze(-1) * l_hat_i
-            l_traj.append(l_vec_i)
-
-        l_traj_t = torch.stack(l_traj, dim=-2)
-        alpha, beta, epsilon = cls.extract_euler_angles(l_traj_t, j0)
-
+        state = (s1, s2, l_vec, epsilon)
+        for index in range(int(n_steps.max().item())):
+            h = torch.where(index < n_steps, step, torch.zeros_like(step))
+            velocity = v_start + torch.minimum(torch.full_like(n_steps, index), n_steps) * step
+            def advance(base, delta, factor):
+                return tuple(a + factor * (h.unsqueeze(-1) if a.dim() > h.dim() else h) * b
+                             for a, b in zip(base, delta))
+            k1 = derivatives(velocity, state)
+            k2 = derivatives(velocity + h / 2, advance(state, k1, 0.5))
+            k3 = derivatives(velocity + h / 2, advance(state, k2, 0.5))
+            k4 = derivatives(velocity + h, advance(state, k3, 1.0))
+            delta = tuple((a + 2*b + 2*c + d) / 6 for a, b, c, d in zip(k1, k2, k3, k4))
+            state = advance(state, delta, 1.0)
+        _, _, orbital, epsilon = state
+        lx, ly, lz = (orbital * x_j).sum(-1), (orbital * y_j).sum(-1), (orbital * z_j).sum(-1)
+        transverse = torch.linalg.vector_norm(torch.stack((lx, ly), dim=-1), dim=-1)
+        alpha = torch.atan2(ly, torch.where(transverse > 0, lx, torch.ones_like(lx)))
+        beta = torch.atan2(transverse, lz)
         return alpha, beta, epsilon

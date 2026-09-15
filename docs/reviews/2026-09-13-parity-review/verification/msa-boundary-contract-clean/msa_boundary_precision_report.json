@@ -1,0 +1,577 @@
+{
+  "angle_comparison": {
+    "alpha_offset_clean": 2.0425700844453747,
+    "alpha_offset_mp": 2.0425700844453747,
+    "clean_minus_mp_max_abs": {
+      "alpha": 0.6556414837532367,
+      "cos_beta": 1.1646866804326805e-09,
+      "gamma": 0.6390721350971855
+    },
+    "clean_vs_public_gauge_aligned_max_abs": {
+      "alpha": 0.024349600195549215,
+      "alpha_minus_gamma": 0.00012227888323668168,
+      "alpha_plus_gamma": 0.04870597728442938,
+      "cos_beta": 2.2214504680206915e-09,
+      "gamma": 0.024356377088880166
+    },
+    "count": 493,
+    "endpoint_initial_minus_exact_mp_max_abs": {
+      "alpha": 0.6391143258189613,
+      "cos_beta": 1.1102230246251565e-16,
+      "gamma": 0.6383597915308883
+    },
+    "grid_hz": [
+      20.0,
+      512.0
+    ],
+    "mp_vs_public_gauge_aligned_max_abs": {
+      "alpha": 0.6556693249234407,
+      "alpha_minus_gamma": 1.282631948240346,
+      "alpha_plus_gamma": 0.05012753452634566,
+      "cos_beta": 1.5816147280744985e-09,
+      "gamma": 0.6409930855999058
+    }
+  },
+  "case": {
+    "distance": 500.0,
+    "f_ref": 20.0,
+    "inclination": 0.7,
+    "mass1": 35.0,
+    "mass2": 25.0,
+    "phic": 0.0,
+    "spin1": [
+      1e-05,
+      0.0,
+      0.2
+    ],
+    "spin2": [
+      0.0,
+      1e-05,
+      -0.1
+    ],
+    "tc": 0.0
+  },
+  "contract": {
+    "comparison": "raw angles and hp/hc; no phase/time/amplitude/residual fitting",
+    "expansion_order": 5,
+    "finite_cubic_overshoot": "clamp finite acos argument to [-1,1]",
+    "frequency_count": 493,
+    "frequency_grid_hz": [
+      20.0,
+      512.0
+    ],
+    "phase_limit": "P(v) with additive integration constant C=0 for initial degenerate row",
+    "pole_continuation": "sqrt(abs(1-lambda)); algebraic labels; signed second pole denominator",
+    "prec_version": 223,
+    "root_gap_threshold": 1e-05,
+    "target_frequencies_hz": [
+      190.0,
+      196.0
+    ]
+  },
+  "independent_reference": {
+    "initial_degenerate": true,
+    "initial_raw_cubic_argument": -1.0,
+    "initial_raw_cubic_argument_decimal": "-0.9999999999999999983261078361667130434695",
+    "initial_raw_plus_one_decimal": "1.673892163833286956530533391678480114127e-18",
+    "initial_root_differences": {
+      "binary64_clean_minus_exact": [
+        7.632783294297951e-17,
+        1.7327124110511072e-11,
+        -1.732708551291373e-11
+      ],
+      "endpoint_clamped_minus_exact": [
+        -6.101306682877285e-21,
+        1.732710477756052e-11,
+        -1.7327104771459214e-11
+      ]
+    },
+    "initial_roots": [
+      -0.04663732928070397,
+      0.0025699267000003755,
+      0.002569926734654585
+    ],
+    "initial_roots_binary64_clean": [
+      -0.046637329280703896,
+      0.0025699267173274996,
+      0.0025699267173274996
+    ],
+    "initial_roots_endpoint_clamped": [
+      -0.04663732928070397,
+      0.00256992671732748,
+      0.00256992671732748
+    ],
+    "initial_roots_valid": true,
+    "mpmath_dps": 120,
+    "physical_q": 0.7142857142857143,
+    "secular_coefficients": "independent mpmath transcription of published Appendix coefficients"
+  },
+  "interpretation": {
+    "phase_convention": "The endpoint-clamped high-precision control isolates the secular initialization sensitivity from pole arithmetic. Its angle shifts are reported per target row; this control is diagnostic only and does not select a replacement phase convention.",
+    "physical_cancellation": "After aligning the alpha integration constant at the reference frequency, clean/public alpha-minus-gamma differs by about 1.2e-4 across 20--512 Hz while the individual alpha and gamma differences are about 2.4e-2. The cancellation reduces waveform sensitivity, but does not remove the raw 20--200 Hz residual.",
+    "pole_arithmetic": "With identical binary64-rounded roots and scalar inputs, the independent high-precision and float64 pole evaluations agree to approximately 1e-14 at 190 and 196 Hz. The clean lambda_a values differ from the same-root controls because the clean current roots/invariants differ; residue evaluation itself is not the 1e-3-scale source.",
+    "remaining_mismatch": "The residual combines amplified near-degenerate root/continuation sensitivity with a remaining angle or assembly convention difference. No empirical correction, threshold change, or production routing is selected by this diagnostic.",
+    "root_arithmetic": "The 50/80/120-digit runs are stable for fixed exact inputs, but the initial and current upper roots are nearly degenerate. Endpoint clamping versus the exact acos argument changes the root triple, and the resulting lambda_a shift crosses the n_a continuation boundary; a small absolute root difference therefore does not exclude amplified root arithmetic."
+  },
+  "precision_sensitivity": {
+    "190": {
+      "50_vs_80": {
+        "alpha": "-2.09236144424956671e-33",
+        "cos_beta": "1.18480350348239499e-44",
+        "gamma": "2.09498444892414343e-33",
+        "lambda_a": "2.60426565023065235e-39",
+        "lambda_b": "-1.26084424267544119e-43",
+        "residue_a": "-2.94182822704808026e-49",
+        "residue_b": "1.21779340453342531e-48"
+      },
+      "80_vs_120": {
+        "alpha": "7.82758996243509675e-63",
+        "cos_beta": "2.57402960966418004e-75",
+        "gamma": "-7.84375711569864996e-63",
+        "lambda_a": "5.66059132001570324e-70",
+        "lambda_b": "-2.74059883997430104e-74",
+        "residue_a": "-9.90698410344702235e-80",
+        "residue_b": "3.05000056505273664e-79"
+      }
+    },
+    "196": {
+      "50_vs_80": {
+        "alpha": "-1.40790779570448305e-33",
+        "cos_beta": "9.14462803675232634e-45",
+        "gamma": "1.41060150258730001e-33",
+        "lambda_a": "3.41760259867361796e-40",
+        "lambda_b": "-1.01841920704196045e-43",
+        "residue_a": "-1.73064138208372758e-50",
+        "residue_b": "2.90270035766693145e-50"
+      },
+      "80_vs_120": {
+        "alpha": "8.08397162610794915e-63",
+        "cos_beta": "-6.38163553010852723e-75",
+        "gamma": "-8.10057451165038914e-63",
+        "lambda_a": "-2.38608204145053082e-70",
+        "lambda_b": "7.11032973337678675e-74",
+        "residue_a": "-3.85051072208969365e-80",
+        "residue_b": "-1.06829921526688906e-80"
+      }
+    }
+  },
+  "raw_waveform_metrics": {
+    "hc": {
+      "difference_l2": 1.3167491026217334e-24,
+      "max_abs": 2.043667355786617e-25,
+      "relative_l2": 0.007117167252794415,
+      "target_l2": 1.8501027949072543e-22
+    },
+    "hp": {
+      "difference_l2": 1.3747254360326152e-24,
+      "max_abs": 2.13500246443105e-25,
+      "relative_l2": 0.0071690693801488535,
+      "target_l2": 1.917578646733743e-22
+    }
+  },
+  "raw_waveform_metrics_20_200_hz": {
+    "hc": {
+      "difference_l2": 2.26429355275538e-25,
+      "max_abs": 1.1237917385646623e-25,
+      "relative_l2": 0.001242517788078982,
+      "target_l2": 1.8223429672231364e-22
+    },
+    "hp": {
+      "difference_l2": 2.3535108709631783e-25,
+      "max_abs": 1.1685990496689449e-25,
+      "relative_l2": 0.0012463967018102008,
+      "target_l2": 1.8882518443325976e-22
+    }
+  },
+  "source_hashes": {
+    "docs/reviews/2026-09-13-parity-review/reference-audit-contracts.md": "c78d5929664d2fb4b552a4bd3e9ab4201069ddb7a82ded7515b43d6e5b981077",
+    "scripts/diagnose_msa_v223_boundary_precision_clean.py": "daad97ca83459935fb628cf0c7906a81150c67c39d3f9d379a7e5c3144a1640b",
+    "src/torchwave/approximants/precession_msa_angles_clean.py": "259705bd0fe0ead9aef45922a8d61cee598b0cd6ba0d1ec655ca6d4a14bdf4e2",
+    "src/torchwave/approximants/precession_msa_initial_clean.py": "25f4920b9c852d82e22299c57a49252ae8e7fc88fd613eb26b347a91f26a0aab",
+    "src/torchwave/approximants/precession_msa_oscillatory_clean.py": "a0e3e5e56cbbc295036c0fce42436ae30e4d9704e40ad1e2d59d327d5e49649a",
+    "src/torchwave/approximants/precession_msa_pn_clean.py": "12e9fabcb181828283829aab20beb73ec52fc0ad0b9a5b6c47cc808fdf23f8eb",
+    "src/torchwave/approximants/precession_msa_secular_clean.py": "d40d1b2253305ba563bac248480e28b51daa9af94b9f1b6b92716e98f6afbddb",
+    "src/torchwave/approximants/precession_msa_waveform_clean.py": "539a44ae3fc7fdd354c95a581f0a89af689dccbc653706d5e14aa6de918cfd49"
+  },
+  "status": "complete_read_only_precision_audit",
+  "target_rows": {
+    "190": {
+      "clean": {
+        "alpha": 7.767369715385183,
+        "cos_beta": 0.9999718319077903,
+        "frequency_degenerate": false,
+        "gamma": -7.694297269505725,
+        "lambda_a": 1.0000237177737874,
+        "lambda_b": -4.841027696087211e-05,
+        "roots": [
+          0.0025699230973498083,
+          0.002569925735906349,
+          0.0026105477289932494
+        ]
+      },
+      "differences": {
+        "clean_current_gap_minus_exact_mp": 9.63819877946063e-10,
+        "clean_current_roots_minus_exact_mp": [
+          9.636442004599954e-10,
+          -9.637320247390946e-10,
+          8.785333571736942e-14
+        ],
+        "clean_minus_float64_pole_same_mp_roots": {
+          "lambda_a": 2.372495308777811e-05,
+          "lambda_b": -1.148608917254533e-09
+        },
+        "clean_minus_mp": {
+          "alpha": 0.6441763843430222,
+          "cos_beta": 1.0794232174760054e-10,
+          "gamma": -0.6384141254244051
+        },
+        "endpoint_initial_minus_exact_mp": {
+          "alpha": 0.6373143695317438,
+          "cos_beta": 0.0,
+          "gamma": -0.6366687659133596,
+          "oscillatory_phi": 3.825420882841435e-13,
+          "oscillatory_zeta": 3.825425219650125e-13,
+          "psi": 0.0,
+          "secular_phi": 0.6373143695313619,
+          "secular_zeta": 0.6366687659129777
+        },
+        "mp_minus_float64_pole_same_mp_roots": {
+          "lambda_a": -1.0769163338864018e-14,
+          "lambda_b": 2.0355895788415346e-17,
+          "residue_0": 1.3877787807814457e-17,
+          "residue_a": 1.099544444742054e-14,
+          "residue_b": 0.0
+        },
+        "mp_pole_same_clean_roots_minus_float64": {
+          "lambda_a": -1.0635936575909e-13,
+          "lambda_b": 2.970713952610282e-17,
+          "residue_0": 0.0,
+          "residue_a": -1.6588850553620287e-14,
+          "residue_b": 1.3877787807814457e-17
+        },
+        "mp_pole_same_clean_roots_minus_mp_roots": {
+          "lambda_a": 2.3724953136072813e-05,
+          "lambda_b": -1.1486090142770748e-09,
+          "residue_0": 0.0,
+          "residue_a": 2.3802451788706747e-16,
+          "residue_b": 8.978928711655954e-15
+        }
+      },
+      "float64_pole_same_clean_roots": {
+        "lambda_a": 1.0000237177739313,
+        "lambda_b": -4.841027696097848e-05,
+        "residue_0": -0.09198168127567882,
+        "residue_a": -5.363136820384787e-10,
+        "residue_b": 0.08581695178285739
+      },
+      "float64_pole_same_mp_roots": {
+        "lambda_a": 0.9999999928206996,
+        "lambda_b": -4.8409128351954855e-05,
+        "residue_0": -0.09198168127567884,
+        "residue_a": -5.363415043579976e-10,
+        "residue_b": 0.08581695178284843
+      },
+      "mp": {
+        "alpha": 7.1231933310421605,
+        "cos_beta": 0.9999718317998479,
+        "current": {
+          "J": 0.4840763776434448,
+          "L": 0.4333819331810903,
+          "S2": 0.0026043331128603317,
+          "candidate_roots": [
+            0.002569922133705608,
+            0.002569926699638374,
+            0.002610547728905396
+          ],
+          "degenerate": false,
+          "gap": 4.062102926702233e-05,
+          "raw": 0.9999999573634424,
+          "roots": [
+            0.002569922133705608,
+            0.002569926699638374,
+            0.002610547728905396
+          ],
+          "spin_roots": [
+            0.002569922133705608,
+            0.002569926699638374,
+            0.002610547728905396
+          ],
+          "valid": true
+        },
+        "gamma": -7.05588314408132,
+        "lambda_a": 0.9999999928206889,
+        "lambda_b": -4.84091283519345e-05,
+        "oscillatory_phi": -0.005658521294988254,
+        "oscillatory_zeta": -0.003100239703136529,
+        "pole": {
+          "J": 0.4840763776434448,
+          "L": 0.4333819331810903,
+          "d0": 3.40858860040329e-05,
+          "d2": -3.4084235691289166e-05,
+          "d4": -1.6500680187122847e-09,
+          "psidot": -0.00028903736413441724
+        },
+        "pole_factor_a": 7.179311102872899e-09,
+        "pole_factor_b": 1.000048409128352,
+        "psi": -0.41314329555712576,
+        "residue_0": -0.09198168127567882,
+        "residue_a": -5.363305089135502e-10,
+        "residue_b": 0.08581695178284843,
+        "secular_phi": 7.1288518523371485,
+        "secular_zeta": 7.058983383784456
+      },
+      "mp_endpoint_clamped_initial": {
+        "alpha": 7.760507700573904,
+        "cos_beta": 0.9999718317998479,
+        "current": {
+          "J": 0.4840763776434448,
+          "L": 0.4333819331810903,
+          "S2": 0.002604333112860331,
+          "candidate_roots": [
+            0.0025699221337056087,
+            0.002569926699638374,
+            0.002610547728905395
+          ],
+          "degenerate": false,
+          "gap": 4.0621029267021535e-05,
+          "raw": 0.9999999573634424,
+          "roots": [
+            0.0025699221337056087,
+            0.002569926699638374,
+            0.002610547728905395
+          ],
+          "spin_roots": [
+            0.0025699221337056087,
+            0.002569926699638374,
+            0.002610547728905395
+          ],
+          "valid": true
+        },
+        "gamma": -7.6925519099946795,
+        "lambda_a": 0.9999999928206889,
+        "lambda_b": -4.840912835193355e-05,
+        "oscillatory_phi": -0.005658521294605712,
+        "oscillatory_zeta": -0.0031002397027539864,
+        "pole": {
+          "J": 0.4840763776434448,
+          "L": 0.4333819331810903,
+          "d0": 3.4085886004032236e-05,
+          "d2": -3.4084235691288495e-05,
+          "d4": -1.65006801871222e-09,
+          "psidot": -0.00028903736413441155
+        },
+        "pole_factor_a": 7.17931109826693e-09,
+        "pole_factor_b": 1.000048409128352,
+        "psi": -0.41314329555712576,
+        "residue_0": -0.09198168127567882,
+        "residue_a": -5.363305086946309e-10,
+        "residue_b": 0.08581695178284843,
+        "secular_phi": 7.76616622186851,
+        "secular_zeta": 7.695652149697434
+      },
+      "mp_pole_same_clean_roots": {
+        "lambda_a": 1.000023717773825,
+        "lambda_b": -4.8410276960948776e-05,
+        "residue_0": -0.09198168127567882,
+        "residue_a": -5.363302708890323e-10,
+        "residue_b": 0.0858169517828574
+      },
+      "mp_pole_same_mp_roots": {
+        "lambda_a": 0.999999992820688,
+        "lambda_b": -4.840912835193434e-05,
+        "residue_0": -0.09198168127567882,
+        "residue_a": -5.363302720489834e-10,
+        "residue_b": 0.08581695178284843
+      }
+    },
+    "196": {
+      "clean": {
+        "alpha": 7.7712275056715985,
+        "cos_beta": 0.9998299285536064,
+        "frequency_degenerate": false,
+        "gamma": -7.7050900147284525,
+        "lambda_a": 0.9999903526211879,
+        "lambda_b": -0.0002979884791559102,
+        "roots": [
+          0.002569923608885545,
+          0.0025699290641976774,
+          0.0028150535248345552
+        ]
+      },
+      "differences": {
+        "clean_current_gap_minus_exact_mp": -2.364590431661387e-09,
+        "clean_current_roots_minus_exact_mp": [
+          -2.3645319860085556e-09,
+          2.364561205690785e-09,
+          -2.922618744238825e-14
+        ],
+        "clean_minus_float64_pole_same_mp_roots": {
+          "lambda_a": -9.646276775687745e-06,
+          "lambda_b": 2.8745425996110074e-09
+        },
+        "clean_minus_mp": {
+          "alpha": 0.6385636036259159,
+          "cos_beta": -2.5778490453376435e-10,
+          "gamma": -0.6379005078002278
+        },
+        "endpoint_initial_minus_exact_mp": {
+          "alpha": 0.6378702870300916,
+          "cos_beta": 0.0,
+          "gamma": -0.6372072831178288,
+          "oscillatory_phi": 6.358715637366785e-14,
+          "oscillatory_zeta": 6.358715637366785e-14,
+          "psi": 0.0,
+          "secular_phi": 0.6378702870300286,
+          "secular_zeta": 0.6372072831177658
+        },
+        "mp_minus_float64_pole_same_mp_roots": {
+          "lambda_a": 1.8207657603852567e-14,
+          "lambda_b": 2.2985086056692694e-17,
+          "residue_0": 4.163336342344337e-17,
+          "residue_a": -6.42553344702528e-16,
+          "residue_b": -6.938893903907228e-17
+        },
+        "mp_pole_same_clean_roots_minus_float64": {
+          "lambda_a": 1.0103029524088925e-14,
+          "lambda_b": -2.4448758989548125e-17,
+          "residue_0": 1.3877787807814457e-17,
+          "residue_a": 4.678683316622895e-15,
+          "residue_b": -2.7755575615628914e-17
+        },
+        "mp_pole_same_clean_roots_minus_mp_roots": {
+          "lambda_a": -9.646276783792374e-06,
+          "lambda_b": 2.874542619343487e-09,
+          "residue_0": -2.7755575615628914e-17,
+          "residue_a": 4.1647569113090626e-17,
+          "residue_b": -3.2057689836051395e-15
+        }
+      },
+      "float64_pole_same_clean_roots": {
+        "lambda_a": 0.9999903526211879,
+        "lambda_b": -0.00029798847915584305,
+        "residue_0": -0.09783800357677878,
+        "residue_a": -8.99587753122101e-11,
+        "residue_b": 0.09124240838464902
+      },
+      "float64_pole_same_mp_roots": {
+        "lambda_a": 0.9999999988979635,
+        "lambda_b": -0.0002979913536985098,
+        "residue_0": -0.09783800357677878,
+        "residue_a": -8.995349572311788e-11,
+        "residue_b": 0.09124240838465227
+      },
+      "mp": {
+        "alpha": 7.132663902045683,
+        "cos_beta": 0.9998299288113913,
+        "current": {
+          "J": 0.4796082044134957,
+          "L": 0.428913759950948,
+          "S2": 0.002778523214357375,
+          "candidate_roots": [
+            0.002569925973417531,
+            0.0025699266996364717,
+            0.0028150535248637814
+          ],
+          "degenerate": false,
+          "gap": 0.00024512682522730947,
+          "raw": 0.9999999999703773,
+          "roots": [
+            0.002569925973417531,
+            0.0025699266996364717,
+            0.0028150535248637814
+          ],
+          "spin_roots": [
+            0.002569925973417531,
+            0.0025699266996364717,
+            0.0028150535248637814
+          ],
+          "valid": true
+        },
+        "gamma": -7.067189506928225,
+        "lambda_a": 0.9999999988979817,
+        "lambda_b": -0.00029799135369848684,
+        "oscillatory_phi": -0.0038392029449765127,
+        "oscillatory_zeta": 0.00243796388330005,
+        "pole": {
+          "J": 0.4796082044134957,
+          "L": 0.428913759950948,
+          "d0": 0.0002016406173080927,
+          "d2": -0.0002015805299253688,
+          "d4": -6.008716044601993e-08,
+          "psidot": -0.0007551903326903469
+        },
+        "pole_factor_a": 1.102018258935334e-09,
+        "pole_factor_b": 1.0002979913536985,
+        "psi": -0.4071370036128819,
+        "residue_0": -0.09783800357677874,
+        "residue_a": -8.995413827646259e-11,
+        "residue_b": 0.0912424083846522,
+        "secular_phi": 7.136503104990659,
+        "secular_zeta": 7.064751543044924
+      },
+      "mp_endpoint_clamped_initial": {
+        "alpha": 7.770534189075774,
+        "cos_beta": 0.9998299288113913,
+        "current": {
+          "J": 0.4796082044134957,
+          "L": 0.428913759950948,
+          "S2": 0.002778523214357375,
+          "candidate_roots": [
+            0.002569925973417531,
+            0.0025699266996364717,
+            0.002815053524863781
+          ],
+          "degenerate": false,
+          "gap": 0.00024512682522730936,
+          "raw": 0.9999999999703773,
+          "roots": [
+            0.002569925973417531,
+            0.0025699266996364717,
+            0.002815053524863781
+          ],
+          "spin_roots": [
+            0.002569925973417531,
+            0.0025699266996364717,
+            0.002815053524863781
+          ],
+          "valid": true
+        },
+        "gamma": -7.7043967900460535,
+        "lambda_a": 0.9999999988979817,
+        "lambda_b": -0.0002979913536984867,
+        "oscillatory_phi": -0.0038392029449129256,
+        "oscillatory_zeta": 0.002437963883363637,
+        "pole": {
+          "J": 0.4796082044134957,
+          "L": 0.428913759950948,
+          "d0": 0.00020164061730809258,
+          "d2": -0.0002015805299253687,
+          "d4": -6.008716044601986e-08,
+          "psidot": -0.0007551903326903465
+        },
+        "pole_factor_a": 1.1020182581733213e-09,
+        "pole_factor_b": 1.0002979913536985,
+        "psi": -0.4071370036128819,
+        "residue_0": -0.09783800357677874,
+        "residue_a": -8.995413823719705e-11,
+        "residue_b": 0.0912424083846522,
+        "secular_phi": 7.774373392020688,
+        "secular_zeta": 7.70195882616269
+      },
+      "mp_pole_same_clean_roots": {
+        "lambda_a": 0.999990352621198,
+        "lambda_b": -0.0002979884791558675,
+        "residue_0": -0.09783800357677877,
+        "residue_a": -8.995409662889347e-11,
+        "residue_b": 0.09124240838464899
+      },
+      "mp_pole_same_mp_roots": {
+        "lambda_a": 0.9999999988979822,
+        "lambda_b": -0.0002979913536984871,
+        "residue_0": -0.09783800357677877,
+        "residue_a": -8.995409661816835e-11,
+        "residue_b": 0.09124240838465222
+      }
+    }
+  }
+}

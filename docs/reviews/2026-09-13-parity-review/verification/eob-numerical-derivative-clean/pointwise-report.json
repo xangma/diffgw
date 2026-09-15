@@ -1,0 +1,628 @@
+{
+  "analytic_checks": {
+    "polynomial_degree": 4,
+    "polynomial_evaluations": [
+      8,
+      8,
+      8
+    ],
+    "polynomial_max_abs_error": 3.935252124165345e-11,
+    "polynomial_steps": [
+      1e-05,
+      1.1037882858468047e-05,
+      1e-05
+    ],
+    "sine_adaptive_evaluations": [
+      8,
+      8,
+      8
+    ],
+    "sine_adaptive_max_abs_error": 7.2103989445793104e-12,
+    "sine_adaptive_steps": [
+      1.2717987618715823e-05,
+      1e-05,
+      1.576782865343005e-05
+    ],
+    "sine_fixed_quartic_max_abs_error": 1.8851586958135158e-13
+  },
+  "eob_pointwise_checks": [
+    {
+      "analytic_path_max_abs_discrepancy": [
+        5.839592698286822e-12,
+        9.259190636434766e-12,
+        4.502975249620622e-12
+      ],
+      "field_components": [
+        "dr_dt",
+        "omega",
+        "dpr_star_dt"
+      ],
+      "finite_difference_evaluations_per_partial": {
+        "p_x": [
+          8,
+          8
+        ],
+        "p_y": [
+          8,
+          8
+        ],
+        "x": [
+          8,
+          8
+        ]
+      },
+      "max_abs_discrepancy": 9.259190636434766e-12,
+      "name": "EOBHamiltonian nonspinning",
+      "selected_steps": {
+        "p_x": [
+          2.356532039585248e-05,
+          2.7849559146630764e-05
+        ],
+        "p_y": [
+          2.128775087860767e-05,
+          2.089146215874872e-05
+        ],
+        "x": [
+          8.500291376546208e-05,
+          0.0002103668483866537
+        ]
+      },
+      "state": {
+        "pphi": [
+          3.0,
+          4.0
+        ],
+        "pr_star": [
+          -0.15,
+          0.1
+        ],
+        "r": [
+          6.0,
+          9.0
+        ]
+      },
+      "total_function_evaluations": 48
+    },
+    {
+      "analytic_path_max_abs_discrepancy": [
+        4.0352263197540594e-11,
+        3.3036628988014627e-12,
+        7.148727790284859e-12
+      ],
+      "field_components": [
+        "dr_dt",
+        "omega",
+        "dpr_star_dt"
+      ],
+      "finite_difference_evaluations_per_partial": {
+        "p_x": [
+          8,
+          8
+        ],
+        "p_y": [
+          8,
+          8
+        ],
+        "x": [
+          8,
+          8
+        ]
+      },
+      "max_abs_discrepancy": 4.0352263197540594e-11,
+      "name": "SEOBNRv4Hamiltonian aligned spin",
+      "selected_steps": {
+        "p_x": [
+          3.401537235063956e-05,
+          3.0702728912574944e-05
+        ],
+        "p_y": [
+          2.4546675665985887e-05,
+          2.4643373136614713e-05
+        ],
+        "x": [
+          0.0001668409577838487,
+          0.00016714177570774865
+        ]
+      },
+      "state": {
+        "pphi": [
+          3.2,
+          4.1
+        ],
+        "pr_star": [
+          -0.08,
+          0.12
+        ],
+        "r": [
+          7.0,
+          11.0
+        ]
+      },
+      "total_function_evaluations": 48
+    }
+  ],
+  "initial_step": 0.0001,
+  "max_iterations": 1,
+  "method": "clean Torch central quartic finite differences",
+  "normalization": "full real Hamiltonian divided by nu; effective-Hamiltonian limit at nu=0",
+  "optional_gsl_comparison": {
+    "reason": "The clean diagnostic has no GSL runtime dependency; public GSL comparison is optional.",
+    "status": "not run"
+  },
+  "public_postpeak_fixture_checks": [
+    {
+      "attachment_results": {
+        "analytic_frequency": {
+          "boundary": {
+            "amplitude_unscaled": 0.37616671900946985,
+            "frequency": 0.3547086050989492,
+            "phase_rad": 25.162661389829903,
+            "sample_index": 9302,
+            "time_M": 4998.34375
+          },
+          "coefficients": {
+            "amplitude": [
+              4.114751530047683,
+              -47.07717764720065,
+              56.88775014837794
+            ],
+            "phase": [
+              4.129267832669519,
+              -21.933411785746042
+            ]
+          },
+          "internal_step_M": 0.015625,
+          "match": {
+            "phase_rad": 25.16358844822704,
+            "time_M": 4998.346362836525
+          },
+          "peak": {
+            "curvature": -0.004106832630730281,
+            "frequency": 0.16441453242075965,
+            "sample_index": 9582,
+            "time_M": 5002.7187423706055
+          },
+          "post_boundary_grid": {
+            "definition": "output_time_M >= boundary_time_M, same indices, no time or phase shift",
+            "first_sample_M": 4998.5,
+            "last_sample_M": 5114.5
+          },
+          "post_boundary_unshifted": {
+            "amplitude_relative_l2": 2.7970093675265474e-07,
+            "available": true,
+            "phase_shift_applied_rad": 0.0,
+            "raw_relative_l2": 4.42294105776997e-05,
+            "sample_count": 233,
+            "time_shift_applied_M": 0.0
+          }
+        },
+        "numerical_frequency": {
+          "boundary": {
+            "amplitude_unscaled": 0.3761667190094481,
+            "frequency": 0.3547086046178265,
+            "phase_rad": 25.162698784032155,
+            "sample_index": 9302,
+            "time_M": 4998.34375
+          },
+          "coefficients": {
+            "amplitude": [
+              4.115011751830325,
+              -47.079437306503515,
+              56.890313101373
+            ],
+            "phase": [
+              4.129399699838494,
+              -21.934688480216945
+            ]
+          },
+          "internal_step_M": 0.015625,
+          "match": {
+            "phase_rad": 25.163625842428978,
+            "time_M": 4998.346362836525
+          },
+          "peak": {
+            "curvature": -0.004106718938585799,
+            "frequency": 0.16441453242746032,
+            "sample_index": 9582,
+            "time_M": 5002.7187423706055
+          },
+          "post_boundary_grid": {
+            "definition": "output_time_M >= boundary_time_M, same indices, no time or phase shift",
+            "first_sample_M": 4998.5,
+            "last_sample_M": 5114.5
+          },
+          "post_boundary_unshifted": {
+            "amplitude_relative_l2": 2.7970087886576074e-07,
+            "available": true,
+            "phase_shift_applied_rad": 0.0,
+            "raw_relative_l2": 8.161626184276709e-05,
+            "sample_count": 233,
+            "time_shift_applied_M": 0.0
+          }
+        },
+        "numerical_minus_analytic": {
+          "boundary_amplitude_unscaled": -2.1760371282653068e-14,
+          "boundary_frequency": -4.81122697237879e-10,
+          "boundary_phase_rad": 3.739420225201684e-05,
+          "boundary_sample_index": 0,
+          "boundary_time_M": 0.0,
+          "coefficients": {
+            "amplitude": [
+              0.00026022178264195617,
+              -0.0022596593028652023,
+              0.0025629529950634833
+            ],
+            "max_abs": 0.0025629529950634833,
+            "phase": [
+              0.00013186716897539696,
+              -0.0012766944709028394
+            ]
+          },
+          "match_phase_rad": 3.7394201939378036e-05,
+          "match_time_M": 0.0,
+          "peak_curvature": 1.136921444818556e-07,
+          "peak_frequency": 6.7006677983982854e-12,
+          "peak_sample_index": 0,
+          "peak_time_M": 0.0,
+          "post_boundary_unshifted": {
+            "amplitude_relative_l2": -5.788689399512364e-14,
+            "raw_relative_l2": 3.7386851265067386e-05
+          }
+        }
+      },
+      "attribution": "The analytic and numerical orbital-frequency series are fed separately to the same clean published base_mode/base_frequency, remnant sigma, target choices, and output grid. Residuals are reported unshifted and are not used to select a derivative policy.",
+      "dt_s": 0.00012313727369103167,
+      "epoch_s": -1.232042294,
+      "finite_difference": {
+        "evaluations_per_partial": {
+          "p_x": {
+            "maximum": 8,
+            "minimum": 8
+          },
+          "p_y": {
+            "maximum": 8,
+            "minimum": 8
+          },
+          "x": {
+            "maximum": 8,
+            "minimum": 8
+          }
+        },
+        "initial_step": 0.0001,
+        "max_iterations": 1,
+        "selected_step_range": {
+          "p_x": [
+            1.7500590235771068e-05,
+            0.0001
+          ],
+          "p_y": [
+            2.078831251877947e-05,
+            3.424365243496074e-05
+          ],
+          "x": [
+            1.2935937886295068e-05,
+            0.0002098762703499
+          ]
+        },
+        "total_function_evaluations": 231696
+      },
+      "input_time_support_M": [
+        4853.0,
+        5003.828125
+      ],
+      "npz_path": "/tmp/torchwave-public-eob-dt_0p5M.npz",
+      "npz_sha256": "7bf76ba9b81515bdd22377a8569bc0ee8809717baeb43d7f887b71ecdeb9d88a",
+      "npz_size_bytes": 960038,
+      "orbital_frequency_discrepancy": {
+        "analytic_boundary_sample_abs": 1.3299417123135981e-11,
+        "analytic_boundary_sample_signed": 1.3299417123135981e-11,
+        "global_max_abs": 2.187161562972051e-11,
+        "global_rms": 5.262536043297268e-12,
+        "max_abs_sample_index": 9593,
+        "max_abs_sample_time_M": 5002.890625,
+        "near_match_max_abs": 2.1736473732048012e-11,
+        "near_match_rms": 7.982703825640085e-12,
+        "near_match_window_M": 1.0
+      },
+      "output_grid": {
+        "absolute_public_seconds_definition": "epoch_s + relative_M * (50*MTSUN_SI)",
+        "absolute_public_seconds_support": [
+          -1.232042294,
+          0.09439241819979305
+        ],
+        "relative_M_definition": "arange(mode22.size) * dt_s / (50*MTSUN_SI)",
+        "relative_M_support": [
+          0.0,
+          5386.0
+        ],
+        "same_tensor_passed_to_both_attachments": true
+      },
+      "physics": {
+        "final_spin": 0.6638743502317225,
+        "final_spin_fit_order": [
+          3,
+          4
+        ],
+        "flux": "SEOBNRv4PublishedFlux(lmax=8, spin_truncation='generic-leading-ell8', retain_pan_cubic_spin=True)",
+        "hamiltonian": "SEOBNRv4Hamiltonian(nu=0.24, chiS=0, chiA=0, delta=0.2)",
+        "mass_distance_scale": 2.392707920793921e-20,
+        "mass_distance_scale_formula": "50*lal.MTSUN_SI*lal.C_SI/(100e6*lal.PC_SI)",
+        "mass_fraction": 0.9550166356939277,
+        "published_choices": {
+          "include_pan_v8": false,
+          "include_positive_chi_540": false,
+          "retain_pan_cubic_spin": true,
+          "spin_v6": "bohe_total_energy"
+        },
+        "sigma_real_imag": [
+          0.5417606130687541,
+          -0.08590518084900033
+        ]
+      },
+      "raw_arrays": {
+        "keys": [
+          "state",
+          "postpeak_state",
+          "mode22",
+          "epoch_s",
+          "dt_s"
+        ],
+        "loaded_arrays_copied": true,
+        "mode22_shape": [
+          10773
+        ],
+        "postpeak_state_shape": [
+          5,
+          9654
+        ]
+      },
+      "scope": "bounded postpeak pointwise batch only; no trajectory integration or full inspiral validation"
+    },
+    {
+      "attachment_results": {
+        "analytic_frequency": {
+          "boundary": {
+            "amplitude_unscaled": 0.3761667207299712,
+            "frequency": 0.354718208143308,
+            "phase_rad": 25.161905967366607,
+            "sample_index": 9409,
+            "time_M": 4998.327513064466
+          },
+          "coefficients": {
+            "amplitude": [
+              4.146414437743756,
+              -47.32120340456461,
+              57.146993354954944
+            ],
+            "phase": [
+              4.144061532167092,
+              -22.027753653074576
+            ]
+          },
+          "internal_step_M": 0.015489612329718292,
+          "match": {
+            "phase_rad": 25.16254812404899,
+            "time_M": 4998.3293229067685
+          },
+          "peak": {
+            "curvature": -0.004043794735074056,
+            "frequency": 0.16441512104816525,
+            "sample_index": 9692,
+            "time_M": 5002.701702440849
+          },
+          "post_boundary_grid": {
+            "definition": "output_time_M >= boundary_time_M, same indices, no time or phase shift",
+            "first_sample_M": 4999.303358641238,
+            "last_sample_M": 5114.298240577067
+          },
+          "post_boundary_unshifted": {
+            "amplitude_relative_l2": 2.7954724313664096e-07,
+            "available": true,
+            "phase_shift_applied_rad": 0.0,
+            "raw_relative_l2": 3.2103532723930344e-06,
+            "sample_count": 117,
+            "time_shift_applied_M": 0.0
+          }
+        },
+        "numerical_frequency": {
+          "boundary": {
+            "amplitude_unscaled": 0.3761667207299445,
+            "frequency": 0.35471822243433604,
+            "phase_rad": 25.162072401844764,
+            "sample_index": 9409,
+            "time_M": 4998.327513064466
+          },
+          "coefficients": {
+            "amplitude": [
+              4.147568463317838,
+              -47.331227941720236,
+              57.158365355624206
+            ],
+            "phase": [
+              4.144648858446631,
+              -22.033447002101404
+            ]
+          },
+          "internal_step_M": 0.015489612329718292,
+          "match": {
+            "phase_rad": 25.16271455852676,
+            "time_M": 4998.3293229067685
+          },
+          "peak": {
+            "curvature": -0.004043775556278088,
+            "frequency": 0.16441512104183106,
+            "sample_index": 9692,
+            "time_M": 5002.701702440849
+          },
+          "post_boundary_grid": {
+            "definition": "output_time_M >= boundary_time_M, same indices, no time or phase shift",
+            "first_sample_M": 4999.303358641238,
+            "last_sample_M": 5114.298240577067
+          },
+          "post_boundary_unshifted": {
+            "amplitude_relative_l2": 2.7954717206409434e-07,
+            "available": true,
+            "phase_shift_applied_rad": 0.0,
+            "raw_relative_l2": 0.0001633167074411591,
+            "sample_count": 117,
+            "time_shift_applied_M": 0.0
+          }
+        },
+        "numerical_minus_analytic": {
+          "boundary_amplitude_unscaled": -2.6700863742235015e-14,
+          "boundary_frequency": 1.4291028027635377e-08,
+          "boundary_phase_rad": 0.000166434478156674,
+          "boundary_sample_index": 0,
+          "boundary_time_M": 0.0,
+          "coefficients": {
+            "amplitude": [
+              0.0011540255740820626,
+              -0.010024537155622681,
+              0.011372000669261695
+            ],
+            "max_abs": 0.011372000669261695,
+            "phase": [
+              0.0005873262795388356,
+              -0.005693349026827832
+            ]
+          },
+          "match_phase_rad": 0.0001664344777694282,
+          "match_time_M": 0.0,
+          "peak_curvature": 1.91787959680223e-08,
+          "peak_frequency": -6.334183177969521e-12,
+          "peak_sample_index": 0,
+          "peak_time_M": 0.0,
+          "post_boundary_unshifted": {
+            "amplitude_relative_l2": -7.107254661778114e-14,
+            "raw_relative_l2": 0.00016010635416876607
+          }
+        }
+      },
+      "attribution": "The analytic and numerical orbital-frequency series are fed separately to the same clean published base_mode/base_frequency, remnant sigma, target choices, and output grid. Residuals are reported unshifted and are not used to select a derivative policy.",
+      "dt_s": 0.000244140625,
+      "epoch_s": -1.23203809,
+      "finite_difference": {
+        "evaluations_per_partial": {
+          "p_x": {
+            "maximum": 8,
+            "minimum": 8
+          },
+          "p_y": {
+            "maximum": 8,
+            "minimum": 8
+          },
+          "x": {
+            "maximum": 8,
+            "minimum": 8
+          }
+        },
+        "initial_step": 0.0001,
+        "max_iterations": 1,
+        "selected_step_range": {
+          "p_x": [
+            1.752842369373946e-05,
+            0.0001
+          ],
+          "p_y": [
+            2.07812990527222e-05,
+            3.399425489530077e-05
+          ],
+          "x": [
+            1.3031054820396741e-05,
+            0.00016657976067973795
+          ]
+        },
+        "total_function_evaluations": 234312
+      },
+      "input_time_support_M": [
+        4852.585750654147,
+        5003.795346216857
+      ],
+      "npz_path": "/tmp/torchwave-public-eob-dt_1_4096s.npz",
+      "npz_sha256": "eefe5b8f1380601f82232e78b0e3a8e1b8abf5a4f9cfb5208e28331b8f5685f9",
+      "npz_size_bytes": 680614,
+      "orbital_frequency_discrepancy": {
+        "analytic_boundary_sample_abs": 9.768019726408284e-12,
+        "analytic_boundary_sample_signed": 9.768019726408284e-12,
+        "global_max_abs": 2.3127638693054564e-11,
+        "global_rms": 5.258995848660527e-12,
+        "max_abs_sample_index": 9427,
+        "max_abs_sample_time_M": 4998.606326086401,
+        "near_match_max_abs": 2.3127638693054564e-11,
+        "near_match_rms": 7.322254947174837e-12,
+        "near_match_window_M": 1.0
+      },
+      "output_grid": {
+        "absolute_public_seconds_definition": "epoch_s + relative_M * (50*MTSUN_SI)",
+        "absolute_public_seconds_support": [
+          -1.23203809,
+          0.09437792562499991
+        ],
+        "relative_M_definition": "arange(mode22.size) * dt_s / (50*MTSUN_SI)",
+        "relative_M_support": [
+          0.0,
+          5385.924082391007
+        ],
+        "same_tensor_passed_to_both_attachments": true
+      },
+      "physics": {
+        "final_spin": 0.6638743502317225,
+        "final_spin_fit_order": [
+          3,
+          4
+        ],
+        "flux": "SEOBNRv4PublishedFlux(lmax=8, spin_truncation='generic-leading-ell8', retain_pan_cubic_spin=True)",
+        "hamiltonian": "SEOBNRv4Hamiltonian(nu=0.24, chiS=0, chiA=0, delta=0.2)",
+        "mass_distance_scale": 2.392707920793921e-20,
+        "mass_distance_scale_formula": "50*lal.MTSUN_SI*lal.C_SI/(100e6*lal.PC_SI)",
+        "mass_fraction": 0.9550166356939277,
+        "published_choices": {
+          "include_pan_v8": false,
+          "include_positive_chi_540": false,
+          "retain_pan_cubic_spin": true,
+          "spin_v6": "bohe_total_energy"
+        },
+        "sigma_real_imag": [
+          0.5417606130687541,
+          -0.08590518084900033
+        ]
+      },
+      "raw_arrays": {
+        "keys": [
+          "state",
+          "postpeak_state",
+          "mode22",
+          "epoch_s",
+          "dt_s"
+        ],
+        "loaded_arrays_copied": true,
+        "mode22_shape": [
+          5434
+        ],
+        "postpeak_state_shape": [
+          5,
+          9763
+        ]
+      },
+      "scope": "bounded postpeak pointwise batch only; no trajectory integration or full inspiral validation"
+    }
+  ],
+  "scope": "pointwise, bounded postpeak fixture, and short smooth-function checks only; no trajectory integration or full inspiral validation",
+  "source_sha256": {
+    "scripts/diagnose_eob_numerical_derivative_clean.py": "ff93ec23031a91dcda02638ae0ddf07de60f3251e940f5b7beabf20429141453",
+    "src/torchwave/approximants/eob/events.py": "c1ae1182e4c2f9cf5f8a2857ea5d73802dbbb68b59739709849f973503bdfd5d",
+    "src/torchwave/approximants/eob/nqc.py": "f023b84fc0a48e59feb6b543d234635df965e04ee9aff05672ea3ff984d0cf85",
+    "src/torchwave/approximants/eob/numerical_attachment.py": "775aa6f40d4cfe2bffa836d7af0b58dc8521411571d5c124230890eb5de91cb1",
+    "src/torchwave/approximants/eob/numerical_derivative_clean.py": "2400ef464b292a0887f1eed68ced5579ab55ae6afe1f0f859226f9aaba180152",
+    "src/torchwave/approximants/eob/published_waveform.py": "34a87406a13c44cccdbc2e57d2e797c858984f0e762c06abe28859cb7bbc449c",
+    "src/torchwave/approximants/eob/remnant.py": "e7690cd5df1bcde2f579954762116beb20db606dae809835b148dae73c4cb007",
+    "src/torchwave/approximants/eob/seobnrv4_flux.py": "9395f930449651c6607de4aa780cfd75545d95ba67fe4b4d653e2852fef407a8",
+    "src/torchwave/approximants/eob/seobnrv4_hamiltonian.py": "5b1a5b877129e5235b8f92974a01ab450176e8e924d374ca0fc413334fad177f",
+    "src/torchwave/approximants/kerr_qnm_table_convention.py": "c4c85d17b079306df73c74f4bb755b7f4256fbdf49fef6a85cd9810367d800f6"
+  },
+  "stencil": {
+    "adaptation": "one locally derived a/h+b*h^2 update, factor-of-ten cap",
+    "quadratic": "(f(x+h)-f(x-h))/(2h)",
+    "quartic": "(f(x-h)-8f(x-h/2)+8f(x+h/2)-f(x+h))/(6h)"
+  }
+}

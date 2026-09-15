@@ -1,0 +1,302 @@
+# Distributed under the MIT License.
+# See LICENSE.txt for details.
+
+Executable: SolveXcts
+TargetParams:
+  AdmLinearMomentum:
+  - 0.0
+  - 0.0
+  - 0.0
+  CenterOfMass:
+  - 0.0
+  - 0.0
+  - 0.0
+  DimensionlessSpinA:
+  - 0.0
+  - 0.0
+  - 0.0
+  DimensionlessSpinB:
+  - 0.0
+  - 0.0
+  - 0.0
+  Eccentricity: 0.0
+  EccentricityAbsoluteTolerance: 0.001
+  EvolutionLev: 1
+  MassA: 0.5
+  MassB: 0.5
+  MassRatio: 1.0
+  MeanAnomalyFraction: null
+  NumOrbits: null
+  TimeToMerger: null
+ExpectedOutput:
+  - BbhReductions.h5
+  - BbhVolume*.h5
+Next:
+  Run: spectre.Pipelines.Bbh.PostprocessId:postprocess_id
+  With:
+    id_input_file_path: __file__
+    id_run_dir: ./
+    pipeline_dir: None
+    horizon_l_max: 20
+    control: False
+    control_refinement_level: 1
+    control_polynomial_order: 9
+    control_params:
+      - MassA
+      - MassB
+      - DimensionlessSpinA
+      - DimensionlessSpinB
+      - CenterOfMass
+      - AdmLinearMomentum
+    evolve: False
+    eccentricity_control: False
+    negative_expansion_bc: True
+    scheduler: None
+    copy_executable: None
+    submit_script_template: None
+    submit: True
+
+---
+
+Parallelization:
+  ElementDistribution: NumGridPoints
+
+Background: &background
+  Binary:
+    XCoords: [&x_left -7.683, &x_right 7.683]
+    CenterOfMassOffset:
+      - &y_offset 0.0
+      - &z_offset 0.0
+    ObjectLeft: &kerr_left
+      KerrSchild:
+        Mass: &mass_left 0.4099446395497856
+        Spin: &spin_left
+          - 0.0
+          - 0.0
+          - 0.0
+        Center: [0., 0., 0.]
+        Velocity: [0., 0., 0.]
+    ObjectRight: &kerr_right
+      KerrSchild:
+        Mass: &mass_right 0.40994463953681326
+        Spin: &spin_right
+          - 0.0
+          - 0.0
+          - 0.0
+        Center: [0., 0., 0.]
+        Velocity: [0., 0., 0.]
+    AngularVelocity: 0.01533628349983242
+    Expansion: -4.827331550791904e-05
+    LinearVelocity:
+      - 0.0
+      - 0.0
+      - 0.0
+    FalloffWidths:
+      - 4.609800000028761
+      - 4.609799999971238
+
+InitialGuess: *background
+
+DomainCreator:
+  BinaryCompactObject:
+    ObjectA:
+      InnerRadius: 0.7624970295384728
+      OuterRadius: 4.0976
+      XCoord: *x_right
+      Interior:
+        ExciseWithBoundaryCondition:
+          ApparentHorizon:
+            Center: [*x_right, *y_offset, *z_offset]
+            Rotation:
+              - 4.0450810204504374e-10
+              - -2.5970594097919055e-11
+              - 0.014499474070373615
+            Lapse: *kerr_right
+            NegativeExpansion: *kerr_right
+      UseLogarithmicMap: True
+    ObjectB:
+      InnerRadius: 0.7624970295626012
+      OuterRadius: 4.0976
+      XCoord: *x_left
+      Interior:
+        ExciseWithBoundaryCondition:
+          ApparentHorizon:
+            Center: [*x_left, *y_offset, *z_offset]
+            Rotation:
+              - 3.784602889305878e-10
+              - -4.153577909346244e-12
+              - 0.014499471756509836
+            Lapse: *kerr_left
+            NegativeExpansion: *kerr_left
+      UseLogarithmicMap: True
+    CenterOfMassOffset: [*y_offset, *z_offset]
+    Envelope:
+      Radius: &outer_shell_inner_radius 61.464
+      RadialDistribution: Projective
+    OuterShell:
+      UseSphericalHarmonics: false
+      Radius: &outer_radius 1e5
+      RadialPartitioning: []
+      RadialDistribution: &outer_shell_distribution Inverse
+      OpeningAngle: 120.0
+      BoundaryCondition: Robin
+    UseEquiangularMap: True
+    CubeScale: 1.0
+    InitialRefinement:
+      ObjectAShell:     [1, 1, 1]
+      ObjectBShell:     [1, 1, 1]
+      ObjectACube:      [1, 1, 1]
+      ObjectBCube:      [1, 1, 1]
+      Envelope:         [1, 1, 2]
+      OuterShell0:       [2, 2, 1]
+    # This p-refinement represents a crude manual optimization of the domain. We
+    # will need AMR to optimize the domain further.
+    InitialGridPoints:
+      ObjectAShell:   [10, 10, 14]
+      ObjectBShell:   [10, 10, 14]
+      ObjectACube:    [10, 10, 11]
+      ObjectBCube:    [10, 10, 11]
+      Envelope:       [10, 10, 10]
+      OuterShell0:     [10, 10, 10]
+    UseWorldtube: false
+    TimeDependentMaps:
+      InitialTime: 0.
+      ExpansionMap: None
+      RotationMap: None
+      TranslationMap: None
+      SkewMap: None
+      ShapeMapA:
+        LMax: 20
+        CoefficientTruncationLimit: 0.
+        InitialValues:
+          Mass: *mass_right
+          Spin: *spin_right
+        SizeInitialValues: Auto
+        TransitionEndsAtCube: False
+      ShapeMapB:
+        CoefficientTruncationLimit: 0.
+        LMax: 20
+        InitialValues:
+          Mass: *mass_left
+          Spin: *spin_left
+        SizeInitialValues: Auto
+        TransitionEndsAtCube: False
+      GridCenters: None
+
+Amr:
+  Verbosity: Verbose
+  Criteria: []
+  EnableInBlocks: All
+  Policies:
+    EnforceTwoToOneBalanceInNormalDirection: true
+    Isotropy: Anisotropic
+    Limits:
+      NumGridPoints: Auto
+      RefinementLevel: Auto
+      ErrorBeyondLimits: False
+    AllowCoarsening: True
+  MaxCoarseLevels: Auto
+  Iterations: 1
+
+PhaseChangeAndTriggers: []
+
+Discretization:
+  DiscontinuousGalerkin:
+    PenaltyParameter: 1.5
+    Massive: True
+    Quadrature: GaussLobatto
+    Formulation: WeakInertial
+
+Observers:
+  VolumeFileName: "BbhVolume"
+  ReductionFileName: "BbhReductions"
+
+NonlinearSolver:
+  NewtonRaphson:
+    ConvergenceCriteria:
+      MaxIterations: 20
+      RelativeResidual: 0.
+      AbsoluteResidual: 1.e-8
+    SufficientDecrease: 1.e-4
+    MaxGlobalizationSteps: 10
+    DampingFactor: 1.
+    Verbosity: Verbose
+
+LinearSolver:
+  Gmres:
+    ConvergenceCriteria:
+      MaxIterations: 100
+      RelativeResidual: 1.e-3
+      AbsoluteResidual: 1.e-9
+    Verbosity: Quiet
+
+  Multigrid:
+    Iterations: 1
+    InitialCoarseLevels: Auto
+    PreSmoothing: True
+    UseBottomSolver: False
+    PostSmoothingAtBottom: True
+    Verbosity: Silent
+    OutputVolumeData: False
+
+  SchwarzSmoother:
+    MaxOverlap: 2
+    Iterations: 3
+    Verbosity: Silent
+    SubdomainSolver:
+      Gmres:
+        ConvergenceCriteria:
+          MaxIterations: 3
+          RelativeResidual: 1.e-4
+          AbsoluteResidual: 1.e-10
+        Verbosity: Silent
+        Restart: None
+        Preconditioner:
+          MinusLaplacian:
+            Solver:
+              ExplicitInverse:
+                WriteMatrixToFile: None
+            BoundaryConditions: Auto
+    SkipResets: True
+    ObservePerCoreReductions: False
+    OutputVolumeData: False
+
+RadiallyCompressedCoordinates:
+  InnerRadius: *outer_shell_inner_radius
+  OuterRadius: *outer_radius
+  Compression: *outer_shell_distribution
+
+EventsAndTriggersAtIterations:
+  - Trigger: HasConverged
+    Events:
+      - ObserveFields:
+          SubfileName: VolumeData
+          VariablesToObserve:
+            - ConformalFactor
+            - Lapse
+            - Shift
+            - ShiftExcess
+            - SpatialMetric
+            - InverseSpatialMetric
+            - SpatialChristoffelSecondKind
+            - ExtrinsicCurvature
+            - SpatialRicci
+            - RadiallyCompressedCoordinates
+          InterpolateToMesh: None
+          ProjectToMesh: None
+          CoordinatesFloatingPointType: Double
+          FloatingPointTypes: [Double]
+          BlocksToObserve: All
+      - ObserveAdmIntegrals
+
+RandomizeInitialGuess: None
+
+ResourceInfo:
+  AvoidGlobalProc0: false
+  Singletons: Auto
+
+BuildMatrix:
+  MatrixSubfileName: None
+  Verbosity: Verbose
+  EnableDirectSolve: True
+  SkipResets: True

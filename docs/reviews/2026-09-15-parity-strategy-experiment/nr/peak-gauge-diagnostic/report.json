@@ -1,0 +1,187 @@
+{
+  "purpose": "diagnose sampled h22 peak gauge; no model scoring, fitting, or refit",
+  "inputs": {
+    "manifest": "/Users/xangma/repos/torchwave/docs/reviews/2026-09-15-parity-strategy-experiment/data/manifest.json",
+    "manifest_sha256": "3a2d1c28b22cf387b6c6622a52329f053fbff4d72cacc71f4850ef42c5c6850e",
+    "fresh_holdout": "/Users/xangma/repos/torchwave/docs/reviews/2026-09-15-parity-strategy-experiment/nr/fresh-holdout.json",
+    "fresh_holdout_sha256": "ac077fc879e8b335aea2d709a7134f91313a616c08e44c471c4bfc9f3c481a52",
+    "npz": {
+      "Lev5/N3": {
+        "path": "/tmp/torchwave-parity-strategy/npz/SXS_BBH_2488_8tb5f-rnc06_Lev5_N3.npz",
+        "sha256": "ff65c1549aef7000ad6233df823882a3da207fcfcb43822e5a238554f5fd4e21"
+      },
+      "Lev4/N3": {
+        "path": "/tmp/torchwave-parity-strategy/npz/SXS_BBH_2488_8tb5f-rnc06_Lev4_N3.npz",
+        "sha256": "59e24a55077d4d0dde68198f3e8ceeef24939c2b329332e5873f24056ca39e8e"
+      }
+    }
+  },
+  "source": {
+    "path": "/Users/xangma/repos/torchwave/docs/reviews/2026-09-15-parity-strategy-experiment/nr/peak-gauge-diagnostic/diagnose_peak_gauge.py",
+    "sha256": "af31924ce98ce89694bc2d3ec6de6f8b7308ea433e2fb65d9090f8e0c4bdee34"
+  },
+  "method": {
+    "original": "frozen sampled argmax(|h22|); h22/h33 values at sample; shared exp(-i*m*phi) rotation with frozen h33 pi branch",
+    "continuous": "concave quadratic fit to three |h22| samples around argmax; linear complex interpolation of h22/h33 at vertex; same shared rotation and h33 pi branch",
+    "fft": "scripts.nr33_phase_data.transform_complex with default FFTControls; same fresh-holdout 512-bin band",
+    "frequency_band": [
+      0.10549140908151815,
+      0.2996201004083623
+    ],
+    "bins": 512
+  },
+  "cases": {
+    "Lev5/N3": {
+      "original": {
+        "sample_peak": 9486.490168037535,
+        "peak": 9486.490168037535,
+        "orbital": 4.637837551799394,
+        "branch": 1,
+        "neighbor_spacing": [
+          0.10000295905410894,
+          0.10000294603560178
+        ],
+        "n_samples": 21950,
+        "time": [
+          -107.8297277494213,
+          9640.393399513256
+        ]
+      },
+      "continuous": {
+        "sample_peak": 9486.490168037535,
+        "peak": 9486.451192089238,
+        "orbital": 4.6437971478564855,
+        "branch": 1,
+        "neighbor_spacing": [
+          0.10000295905410894,
+          0.10000294603560178
+        ],
+        "n_samples": 21950,
+        "time": [
+          -107.8297277494213,
+          9640.393399513256
+        ]
+      },
+      "peak_shift": -0.03897594829686568,
+      "orbital_shift": 0.00595959605709151
+    },
+    "Lev4/N3": {
+      "original": {
+        "sample_peak": 9435.323577567578,
+        "peak": 9435.323577567578,
+        "orbital": -0.8322987767266519,
+        "branch": 0,
+        "neighbor_spacing": [
+          0.09997869062135578,
+          0.09997867338643118
+        ],
+        "n_samples": 21886,
+        "time": [
+          -107.80486434241863,
+          9588.989657807446
+        ]
+      },
+      "continuous": {
+        "sample_peak": 9435.323577567578,
+        "peak": 9435.358024427387,
+        "orbital": -0.8375612677162831,
+        "branch": 0,
+        "neighbor_spacing": [
+          0.09997869062135578,
+          0.09997867338643118
+        ],
+        "n_samples": 21886,
+        "time": [
+          -107.80486434241863,
+          9588.989657807446
+        ]
+      },
+      "peak_shift": 0.034446859808667796,
+      "orbital_shift": -0.005262490989631274
+    }
+  },
+  "peak_spacing": {
+    "original_Lev5_minus_Lev4": 51.166590469956645,
+    "continuous_Lev5_minus_Lev4": 51.09316766185111,
+    "continuous_minus_original": -0.07342280810553348
+  },
+  "resolution_difference": {
+    "original_sampled_gauge": {
+      "modes": {
+        "22": {
+          "complex_l2": 0.09812334982153473,
+          "amplitude_l2": 0.039931825571398634,
+          "phase_fit": {
+            "constant_phase": 0.09063548590668165,
+            "affine_phase": -0.08313768111965618,
+            "time_shift": 0.25190565235556295,
+            "raw_phase_rms": 0.09135382865996351,
+            "constant_phase_rms": 0.010398466702638852,
+            "affine_phase_rms": 0.007590260011909396
+          }
+        },
+        "33": {
+          "complex_l2": 0.03584077262805086,
+          "amplitude_l2": 0.0032497575170730066,
+          "phase_fit": {
+            "constant_phase": 0.034919589971975404,
+            "affine_phase": -0.10511402790946398,
+            "time_shift": 0.19854308661059017,
+            "raw_phase_rms": 0.03575468403493409,
+            "constant_phase_rms": 0.007675125597909765,
+            "affine_phase_rms": 0.0020367377077701062
+          }
+        }
+      },
+      "mean_complex_l2": 0.06698206122479279
+    },
+    "continuous_quadratic_gauge": {
+      "modes": {
+        "22": {
+          "complex_l2": 0.07369869880721673,
+          "amplitude_l2": 0.039931821664513485,
+          "phase_fit": {
+            "constant_phase": 0.06244053533078045,
+            "affine_phase": -0.06069349822769387,
+            "time_shift": 0.17848284384076,
+            "raw_phase_rms": 0.06317847400773878,
+            "constant_phase_rms": 0.009108795592193119,
+            "affine_phase_rms": 0.007590259958284387
+          }
+        },
+        "33": {
+          "complex_l2": 0.01782249127301481,
+          "amplitude_l2": 0.0032497492251218596,
+          "phase_fit": {
+            "constant_phase": 0.016800148648362122,
+            "affine_phase": -0.0714477928668499,
+            "time_shift": 0.125120321294066,
+            "raw_phase_rms": 0.01755505662611196,
+            "constant_phase_rms": 0.005088763630492962,
+            "affine_phase_rms": 0.002036737244668553
+          }
+        }
+      },
+      "mean_complex_l2": 0.04576059504011577
+    },
+    "change_continuous_minus_original": {
+      "22": {
+        "complex_l2": -0.024424651014317997,
+        "amplitude_l2": -3.906885148730055e-09,
+        "affine_phase_rms": -5.362500894723343e-11,
+        "time_shift": -0.07342280851480296
+      },
+      "33": {
+        "complex_l2": -0.01801828135503605,
+        "amplitude_l2": -8.2919511469777e-09,
+        "affine_phase_rms": -4.631015531990357e-10,
+        "time_shift": -0.07342276531652417
+      }
+    }
+  },
+  "reproduction_check": {
+    "comparison": "original sampled gauge versus fresh-holdout.json Lev4/N3 quality record",
+    "max_absolute_difference": 6.8833827526759706e-15,
+    "pass_at_1e-12": true
+  }
+}

@@ -1,0 +1,162 @@
+{
+  "arrays": {
+    "path": "docs/reviews/2026-09-15-no-contact/seob-first-divergence-arrays.npz",
+    "sha256": "3024cb38d1d010fe48a8ee2b148283fa09e7a594be0553dc15604dba04906953"
+  },
+  "inputs_sha256": {
+    "clean_capture": "65dcf7c08d94ab24cc2b0bae9823313181d85a0c961c2dd0f9d9cae12941296b",
+    "public_fixture": "7bf76ba9b81515bdd22377a8569bc0ee8809717baeb43d7f887b71ecdeb9d88a"
+  },
+  "interpretation": "Recomputing the clean factorized mode and NQC solve on the clean state and on the public state with identical clean targets and the captured event time shows a 59.6 percent reduction in corrected pre-attachment L2 (5.42e-5 to 2.19e-5) under state substitution, while a 2.19e-5 residual remains. This makes trajectory evolution a contributor but does not identify a unique fix: event-time selection, target precision and factorized-mode convention remain unresolved. No runtime fix or default change is justified by this case.",
+  "parameters": {
+    "boundary_time_M": 4998.34375,
+    "chi": 0.0,
+    "clean_match_time_M": 4998.346362836525,
+    "common_fine_domain_M": [
+      4853.0,
+      5003.8125
+    ],
+    "common_fine_truncation": "min(clean_time, clean_state, public_state) samples; public mode compared only where restart_index + output index is available",
+    "dt_M": 0.5,
+    "fine_dt_M": 0.015625,
+    "fine_sample_count": 9653,
+    "fine_step": 32,
+    "input_lengths": {
+      "clean_saved_base_samples": 9653,
+      "clean_state_samples": 9653,
+      "clean_time_samples": 9653,
+      "public_mode_samples": 10773,
+      "public_mode_tail_samples": 1067,
+      "public_state_samples": 9654
+    },
+    "nu": 0.24,
+    "pre_attachment_samples": 291,
+    "public_clean_match_time_M": 4998.346362836525,
+    "restart_index": 9706,
+    "sample_count": 302
+  },
+  "pre_attachment": {
+    "clean_capture_saved_base_vs_recomputed": {
+      "amplitude_relative_l2": 4.3011869242238774e-16,
+      "complex_relative_l2": 4.463271219078332e-15,
+      "phase_max_abs_rad": 3.3207488730374306e-14,
+      "phase_rms_rad": 3.818366480140886e-15,
+      "samples": 291
+    },
+    "clean_factorized_on_clean_state_vs_public": {
+      "amplitude_relative_l2": 0.0320316957423613,
+      "complex_relative_l2": 0.6103091747134292,
+      "phase_max_abs_rad": 1.4474838177690796,
+      "phase_rms_rad": 0.4909942067605066,
+      "samples": 291
+    },
+    "clean_factorized_on_public_state_vs_public": {
+      "amplitude_relative_l2": 0.03203330826729798,
+      "complex_relative_l2": 0.6102994720490738,
+      "phase_max_abs_rad": 1.447453854923833,
+      "phase_rms_rad": 0.49098520448300903,
+      "samples": 291
+    },
+    "clean_nqc_on_clean_state_vs_public": {
+      "amplitude_relative_l2": 2.3384349099060383e-06,
+      "complex_relative_l2": 5.41750455009483e-05,
+      "phase_max_abs_rad": 0.00011924215450384595,
+      "phase_rms_rad": 4.246171019071429e-05,
+      "samples": 291
+    },
+    "clean_nqc_on_public_state_vs_public": {
+      "amplitude_relative_l2": 8.201865393787704e-06,
+      "complex_relative_l2": 2.1854442438891433e-05,
+      "phase_max_abs_rad": 4.230359199352558e-05,
+      "phase_rms_rad": 1.620698169233885e-05,
+      "samples": 291
+    },
+    "factorized_clean_state_vs_factorized_public_state": {
+      "amplitude_relative_l2": 1.7700019330192725e-06,
+      "complex_relative_l2": 1.2624690119983644e-05,
+      "phase_max_abs_rad": 2.996284524670087e-05,
+      "phase_rms_rad": 9.12969038063263e-06,
+      "samples": 291
+    },
+    "first_crossings_complex_relative_sample": {
+      "clean_factorized_on_clean_state": {
+        "index": 0,
+        "threshold": 0.0001,
+        "time_M": 4853.0,
+        "value": 0.1629512607811924
+      },
+      "clean_factorized_on_public_state": {
+        "index": 0,
+        "threshold": 0.0001,
+        "time_M": 4853.0,
+        "value": 0.16295010636274587
+      },
+      "clean_nqc_on_clean_state": {
+        "index": 279,
+        "threshold": 0.0001,
+        "time_M": 4992.5,
+        "value": 0.00010164914343850152
+      },
+      "clean_nqc_on_public_state": null
+    },
+    "first_crossings_phase_rad": {
+      "clean_factorized_on_clean_state": {
+        "index": 0,
+        "threshold": 0.001,
+        "time_M": 4853.0,
+        "value": 0.1631965415656591
+      },
+      "clean_factorized_on_public_state": {
+        "index": 0,
+        "threshold": 0.001,
+        "time_M": 4853.0,
+        "value": 0.16319537378523394
+      },
+      "clean_nqc_on_clean_state": null,
+      "clean_nqc_on_public_state": null
+    },
+    "nqc_corrected_clean_state_vs_public_state": {
+      "amplitude_relative_l2": 5.868702955316909e-06,
+      "complex_relative_l2": 7.45889096664031e-05,
+      "phase_max_abs_rad": 0.00016154574649737376,
+      "phase_rms_rad": 5.864131189746277e-05,
+      "samples": 291
+    },
+    "state_substitution_improvement": {
+      "complex_relative_l2_absolute_reduction": 3.2320603062056864e-05,
+      "complex_relative_l2_fraction_remaining": 0.403404228585445,
+      "complex_relative_l2_percent_reduction": 59.6595771414555
+    }
+  },
+  "provenance": "Public mode and postpeak state are copied black-box observables from the saved binary fixture. Clean factorized mode, orbital frequency and NQC equations are evaluated on both state paths; no public coefficients, implementation source, residual fit, alignment or trajectory correction is used.",
+  "runtime": {
+    "host": "RONI2",
+    "python": "/Users/xangma/miniconda3/envs/pycbcorig313/bin/python"
+  },
+  "source_sha256": {
+    "script": "947b4a8a3f93e2f5bff6f90260557ab39b589889434a1170bbf068ca86aee8e3",
+    "src/torchwave/approximants/eob/nqc.py": "c8683181f7cf911df1e1b85cd6999cdb03e7c594e867315359040e9eb03ca552",
+    "src/torchwave/approximants/eob/numerical_attachment.py": "b042ed739c89ac53ec1829d005b404d86f16d18dc4f4dd710bd58000de5c4a93",
+    "src/torchwave/approximants/eob/published_waveform.py": "7a4ceb62563f066ac8cd4d68ab5cc32e61143bc3a429a4420ff17b12ee021595",
+    "src/torchwave/approximants/eob/seobnrv4_flux.py": "9395f930449651c6607de4aa780cfd75545d95ba67fe4b4d653e2852fef407a8",
+    "src/torchwave/approximants/eob/seobnrv4_hamiltonian.py": "5b1a5b877129e5235b8f92974a01ab450176e8e924d374ca0fc413334fad177f"
+  },
+  "trajectory_state_difference": {
+    "p_phi": {
+      "max_abs": 3.485873913078308e-06,
+      "relative_l2": 2.8295862441263694e-07
+    },
+    "phi": {
+      "max_abs": 1.9796557424456296e-05,
+      "relative_l2": 5.349195069905968e-08
+    },
+    "prstar": {
+      "max_abs": 4.485177263130469e-05,
+      "relative_l2": 4.1631160146107186e-05
+    },
+    "r": {
+      "max_abs": 5.2579058031021475e-05,
+      "relative_l2": 1.6692950636632366e-06
+    }
+  }
+}

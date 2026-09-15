@@ -64,25 +64,31 @@ def test_unphysical_overlap_rejected():
         ph.evaluate_waveform_metrics = orig_eval
 
 
-def test_missing_and_unresolved_catalog_coverage():
-    """Verify that full catalog parity suite certifies all 17 models and fails honestly when gaps exist."""
-    # 1. Full catalog passes with 100% model coverage
-    suite_res = run_full_parity_suite(scope="catalog", strict=False)
-    assert suite_res["catalog_passed"] is True, "Catalog parity must certify when all models achieve parity"
-    assert suite_res["suite_passed"] is True, "suite_passed must equal catalog_passed for catalog scope"
-    assert len(suite_res["catalog_coverage"]) == 17
-    assert set(MANIFEST_MODELS).issubset(set(suite_res["catalog_coverage"].keys()))
-    assert all(v["status"] == "PASSED" for v in suite_res["catalog_coverage"].values())
-
-    # 2. Negative control: verify catalog parity fails honestly if an unresolved model reason is present
+def test_missing_and_unresolved_catalog_coverage(monkeypatch):
+    """Exercise aggregation with synthetic results; physics acceptance is separate."""
     import tests.parity_harness as ph
-    orig_reasons = ph.UNRESOLVED_ORACLE_REASONS
-    try:
-        ph.UNRESOLVED_ORACLE_REASONS = {MANIFEST_MODELS[0]: "Pending derivation"}
-        res_with_unresolved = ph.run_full_parity_suite(scope="catalog", strict=False)
-        assert res_with_unresolved["catalog_passed"] is False, "Catalog parity must fail when unresolved models exist"
-    finally:
-        ph.UNRESOLVED_ORACLE_REASONS = orig_reasons
+
+    def synthetic_pass(case, strict=False):
+        return {"status": "PASSED", "torch_name": case["torch_name"],
+                "case_id": case["id"], "reference_kind": "lal_binary",
+                "verification_scope": "full_polarizations"}
+
+    monkeypatch.setattr(ph, "run_oracle_comparison", synthetic_pass)
+    # Even apparently passing results cannot erase documented coverage gaps.
+    unresolved = ph.run_full_parity_suite(scope="catalog")
+    assert not unresolved["catalog_passed"]
+    for name in ph.UNRESOLVED_ORACLE_REASONS:
+        assert unresolved["catalog_coverage"][name]["status"] == "UNRESOLVED_ORACLE"
+
+    # Synthetic positive control for the aggregation logic, not a parity claim.
+    monkeypatch.setattr(ph, "UNRESOLVED_ORACLE_REASONS", {})
+    resolved = ph.run_full_parity_suite(scope="catalog")
+    assert resolved["catalog_passed"] and resolved["suite_passed"]
+    assert set(resolved["catalog_coverage"]) == set(MANIFEST_MODELS)
+
+    missing = ph.run_full_parity_suite(scope="analytic")
+    assert not missing["catalog_passed"]
+    assert missing["catalog_coverage"]["IMRPhenomD"]["status"] == "MISSING_COVERAGE"
 
 
 def test_projection_named_psd_corruption_fails():
@@ -187,6 +193,60 @@ def test_manifest_consistency_and_drift_detection():
         ph.get_manifest_models = orig_get
 
 
+def test_manifest_validation_matches_referenced_artifacts():
+    """Keep validation coverage and metrics tied to their declared strict artifacts."""
+    import json
+    from pathlib import Path
+
+    root = Path(__file__).parents[1]
+    manifest = json.loads((root / "docs/model_manifest.json").read_text())
+    references = manifest["validation_artifacts"]
+    source_record = json.loads((root / references["source_record"]).read_text())
+    assert source_record["changed_inputs"] == []
+    assert source_record["working_tree_changes"] == []
+
+    for scope in ("catalog", "holdout"):
+        artifact = json.loads((root / references[scope]).read_text())
+        results = artifact["results"]
+        assert artifact["num_cases"] == len(results)
+        assert artifact["num_passed"] == sum(
+            result["status"] == "PASSED" for result in results
+        )
+        assert {result["torch_name"] for result in results} <= manifest["models"].keys()
+        assert manifest["verification"][f"{scope}_cases_total"] == artifact["num_cases"]
+        assert manifest["verification"][f"{scope}_cases_passed"] == artifact["num_passed"]
+
+        for model_name, model in manifest["models"].items():
+            model_results = [result for result in results if result["torch_name"] == model_name]
+            validation = model["validation"][scope]
+            assert validation["case_ids"] == [result["case_id"] for result in model_results]
+            assert validation["cases_total"] == len(model_results)
+            assert validation["cases_passed"] == sum(
+                result["status"] == "PASSED" for result in model_results
+            )
+            assert validation["verification_scopes"] == sorted(
+                {result["verification_scope"] for result in model_results
+                 if result.get("verification_scope") is not None}
+            )
+            polarization_errors = [
+                result[polarization]["complex_relative_l2"]
+                for result in model_results
+                for polarization in ("plus", "cross")
+                if polarization in result
+            ]
+            projection_errors = [
+                projection["complex_relative_l2"]
+                for result in model_results
+                for projection in result.get("projections", {}).values()
+            ]
+            assert validation["max_polarization_complex_relative_l2"] == max(
+                polarization_errors, default=None
+            )
+            assert validation["max_projection_complex_relative_l2"] == max(
+                projection_errors, default=None
+            )
+
+
 def test_frozen_inventory_immutability():
     """Verify that mutating convenience globals does not alter execution or canonical specifications."""
     import tests.parity_harness as ph
@@ -194,11 +254,11 @@ def test_frozen_inventory_immutability():
     try:
         ph.DETERMINISTIC_HELD_OUT_CASES[0]["params"]["mass1"] = 9999.0
         # Freshly deserialized specs must remain unchanged
-        canonical = ph.get_canonical_analytic_cases()
+        canonical = ph.get_canonical_holdout_cases()
         assert canonical[0]["params"]["mass1"] == orig_val, "Frozen deserialized specs must not be affected by global mutation"
 
         # Default run must use clean canonical specs
-        suite_res = ph.run_full_parity_suite(scope="analytic", strict=False)
+        suite_res = ph.run_full_parity_suite(scope="holdout", strict=False)
         assert suite_res["inventory_valid"] is True
         assert suite_res["metadata"]["executed_inventory"][0]["params"]["mass1"] == orig_val
     finally:
@@ -233,3 +293,119 @@ def test_invalid_grid_rejected_before_oracle(monkeypatch, df):
     result = ph.run_oracle_comparison(case, strict=True)
     assert result["status"] == "FAILED"
     assert "grid" in result["reason"]
+
+
+@pytest.mark.parametrize("field,value", [
+    ("oracle_type", "native_eob_reference"),
+    ("verification_scope", "dominant_mode_only"),
+    ("oracle_options", {"mode": [2, 2]}),
+    ("oracle_api", "SimInspiralFD"),
+    ("oracle_fhigh", 2048.0),
+])
+def test_reference_specification_tampering_rejected(field, value):
+    cases = get_canonical_analytic_cases()
+    cases[0][field] = value
+    result = run_full_parity_suite(scope="analytic", cases=cases)
+    assert not result["inventory_valid"]
+    assert result["results"] == []
+
+
+@pytest.mark.parametrize("value", [1.e-5, .35, float("inf"), float("nan"), 0, -1, True])
+def test_weakened_or_invalid_gate_rejected_before_generation(monkeypatch, value):
+    import tests.parity_harness as ph
+    monkeypatch.setattr(ph, "get_fd_waveform", lambda *a, **k: pytest.fail("Reached generator"))
+    case = get_canonical_analytic_cases()[0]
+    case["expected_gate"]["complex_relative_l2"] = value
+    result = run_oracle_comparison(case, strict=True)
+    assert result["status"] == "FAILED"
+    assert "parity gate" in result["reason"]
+
+
+def test_native_references_never_count_as_external_parity(monkeypatch):
+    import tests.parity_harness as ph
+    monkeypatch.setattr(ph, "get_fd_waveform", lambda *a, **k: pytest.fail("Reached generator"))
+    native = [c for c in get_canonical_catalog_cases()
+              if c.get("oracle_type", "lal") not in {"lal", "lal_ringdown_td"}]
+    assert native == []
+    old_eob = get_canonical_analytic_cases()[0]
+    old_eob["oracle_type"] = "native_eob_reference"
+    native.append(old_eob)
+    for case in native:
+        result = run_oracle_comparison(case, strict=True)
+        assert result["status"] == "UNRESOLVED_ORACLE"
+        assert "plus" not in result
+
+
+def test_kerr_uses_independent_td_reference_contract():
+    case = next(c for c in get_canonical_catalog_cases()
+                if c["torch_name"] == "KerrRingdown")
+    assert case["oracle_type"] == "lal_ringdown_td"
+    assert case["oracle_api"] == "SimBlackHoleRingdown"
+
+
+def test_kerr_convergence_failure_is_not_accepted(monkeypatch):
+    import kerr_public_oracle
+    import tests.parity_harness as ph
+    monkeypatch.setattr(kerr_public_oracle, "public_ringdown_fd_converged",
+                        lambda *a, **k: (_ for _ in ()).throw(RuntimeError("forced convergence failure")))
+    case = next(c for c in ph.get_canonical_catalog_cases()
+                if c["torch_name"] == "KerrRingdown")
+    result = ph.run_oracle_comparison(case, strict=True)
+    assert result["status"] == "FAILED"
+    assert "convergence failure" in result["reason"]
+
+
+@pytest.mark.parametrize("field,value", [
+    ("oracle_api", "untrusted_callable"),
+    ("oracle_fhigh", 1.0),
+    ("oracle_fhigh", float("nan")),
+    ("oracle_fhigh", "bad"),
+])
+def test_invalid_external_adapter_rejected(monkeypatch, field, value):
+    import tests.parity_harness as ph
+    monkeypatch.setattr(ph, "get_fd_waveform", lambda *a, **k: pytest.fail("Reached generator"))
+    case = get_canonical_analytic_cases()[0]
+    case[field] = value
+    result = run_oracle_comparison(case, strict=True)
+    assert result["status"] == "FAILED"
+    assert "oracle" in result["reason"]
+
+
+def test_holdout_inventory_is_distinct_and_frozen():
+    import tests.parity_harness as ph
+    holdouts = ph.get_canonical_holdout_cases()
+    canonical = ph.get_canonical_catalog_cases()
+    assert len(holdouts) == 13
+    assert not {c["id"] for c in holdouts} & {c["id"] for c in canonical}
+    assert all(c["params"] != base["params"] for c in holdouts for base in canonical)
+    assert ph.validate_case_inventory(holdouts, scope="holdout")[0]
+    holdouts[0]["params"]["mass1"] += 1
+    assert not ph.validate_case_inventory(holdouts, scope="holdout")[0]
+    assert all(c["expected_gate"] == ph.PARITY_GATE
+               for c in canonical + ph.get_canonical_holdout_cases())
+
+
+def test_finite_time_reference_dc_does_not_bypass_native_or_inband_checks():
+    import tests.parity_harness as ph
+    f = torch.arange(8, dtype=torch.float64)
+    native = torch.ones(8, dtype=torch.complex128)
+    native[0] = 0
+    reference = torch.ones_like(native)
+    args = (native, reference, f, 1., 1., 7.)
+    assert not ph.validate_waveform_and_grid(*args)[0]
+    assert ph.validate_waveform_and_grid(*args, require_reference_zero_dc=False)[0]
+    native[0] = 1
+    assert not ph.validate_waveform_and_grid(*args, require_reference_zero_dc=False)[0]
+    native[0], native[3] = 0, complex(float('nan'), 0)
+    assert not ph.validate_waveform_and_grid(*args, require_reference_zero_dc=False)[0]
+
+
+@pytest.mark.parametrize('value', [True, 102.5, 999])
+def test_invalid_precession_version_rejected(monkeypatch, value):
+    import tests.parity_harness as ph
+    monkeypatch.setattr(ph, 'get_fd_waveform', lambda *a, **k: pytest.fail('Reached generator'))
+    case = next(c for c in ph.get_canonical_model_cases() if c['torch_name'] == 'IMRPhenomXP')
+    case['params']['prec_version'] = value
+    result = ph.run_oracle_comparison(case, strict=True)
+    assert result['status'] == 'FAILED'
+    assert 'precession version' in result['reason']

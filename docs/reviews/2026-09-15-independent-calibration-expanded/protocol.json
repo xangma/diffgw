@@ -1,0 +1,81 @@
+{
+  "schema_version": 1,
+  "created_utc": "2026-09-15T11:55:36.352394+00:00",
+  "purpose": "external validation of immutable NR-only nonspinning33 amplitude calibration; no fitting",
+  "calibration_path": "docs/reviews/2026-09-15-independent-calibration-v3-search/nr33-calibration.json",
+  "calibration_sha256": "ade377c62a57a5d9cff513e34f22b0fe43677177a0c1577a9a4af5ad3b8aa561",
+  "original_fit_manifest_path": "docs/reviews/2026-09-15-independent-calibration-v3-search/nr33-qualified-manifest.json",
+  "original_fit_manifest_sha256": "990df8e246ba978fc47735407be05b49eb9a3f261565ccc4a946029704cc5160",
+  "quality_policy_path": "docs/reviews/2026-09-15-independent-calibration-v2/quality-policy.json",
+  "quality_policy_sha256": "1a863811b90c410cd5a9b0b52a0bd53696b869a0d503cb8fa61d9c054842138d",
+  "target_mass_ratios": [
+    1.2,
+    1.8,
+    2.5,
+    3.5,
+    4.5,
+    5.5,
+    7,
+    10
+  ],
+  "max_relative_q_deviation": 0.005,
+  "nominal_training_q_range": [
+    1.5,
+    8
+  ],
+  "interpolation_targets": [
+    1.8,
+    2.5,
+    3.5,
+    4.5,
+    5.5,
+    7
+  ],
+  "extrapolation_targets": [
+    1.2,
+    10
+  ],
+  "excluded_sxs_ids": [
+    "SXS:BBH:0008",
+    "SXS:BBH:0030",
+    "SXS:BBH:0056",
+    "SXS:BBH:0063",
+    "SXS:BBH:0166",
+    "SXS:BBH:0169",
+    "SXS:BBH:0182",
+    "SXS:BBH:1166",
+    "SXS:BBH:2265",
+    "SXS:BBH:2331",
+    "SXS:BBH:2485",
+    "SXS:BBH:2489",
+    "SXS:BBH:2707",
+    "SXS:BBH:3619",
+    "SXS:BBH:3622",
+    "SXS:BBH:3630"
+  ],
+  "candidate_ranking": "descending highest two available resolution labels, then ascending numericSXSID; freeze all ranks before newH5 downloads; advance only after earlier candidate fails NR-only fixed gates",
+  "metadata_filters": {
+    "nondeprecated": true,
+    "highest_reference_spin_norm_max": 0.0001,
+    "highest_reference_eccentricity_upper_bound_max": 0.001,
+    "min_numerical_resolutions": 2
+  },
+  "primary": "highest available Lev N3; same-level exact metadata; top2Lev N2/N3 each",
+  "splits": "all external primaries holdout; supporting resolutions/orders validation_only; no training",
+  "quality_gate_reuse": "unchanged screen_nr33_calibration_v2.screen_simulation with original pinned quality policy; original training/holdout count and targetgrid requirements do not apply to external-only validation",
+  "coverage_policy": "report every requested target including absent/exhausted; validate all individually qualified targets even if coverage incomplete; never claim missing targets passed",
+  "agreement_reference": {
+    "metric": "relative amplitude L2 norm(A-B)/norm(B) using unchanged validator",
+    "reference_threshold": 0.01,
+    "purpose": "report whether prior subpercent observation extends; never a data-selection or refitting gate",
+    "comparisons": [
+      "fit_vs_NR",
+      "fit_vs_LAL",
+      "NR_vs_LAL"
+    ]
+  },
+  "numerical_controls": "unchanged from frozen calibration and original qualitypolicy; no tuning; evaluate fixed0.95fring33-to0.3band",
+  "LAL_policy": "validation only after quality screening; coefficient artifact already frozen; do not refit or select alternativeNR candidates based on fit or LAL residuals",
+  "runtime_policy": "no runtime promotion or edits; retain MIT LICENSE; rawH5/NPZ outside repository",
+  "contact_policy": "no external messages"
+}

@@ -1,0 +1,3609 @@
+{
+  "schema": "torchwave.nr33-calibration.v2",
+  "schema_version": 2,
+  "policy_sha256": "1a863811b90c410cd5a9b0b52a0bd53696b869a0d503cb8fa61d9c054842138d",
+  "created_utc": "2026-09-15T11:45:45.524769+00:00",
+  "source_manifests": [
+    {
+      "path": "docs/reviews/2026-09-15-independent-calibration-v2/nr33-manifest-round1.json",
+      "sha256": "3ee69110faf64800e253e9124e736e9c5a16aad53e40bbd4ccd57fe5e214ccaa",
+      "retained_case_ids": [
+        "SXS:BBH:2331/Lev2/N2",
+        "SXS:BBH:2331/Lev2/N3",
+        "SXS:BBH:2331/Lev3/N2",
+        "SXS:BBH:2331/Lev3/N3",
+        "SXS:BBH:1166/Lev2/N2",
+        "SXS:BBH:1166/Lev2/N3",
+        "SXS:BBH:1166/Lev3/N2",
+        "SXS:BBH:1166/Lev3/N3",
+        "SXS:BBH:2265/Lev2/N2",
+        "SXS:BBH:2265/Lev2/N3",
+        "SXS:BBH:2265/Lev3/N2",
+        "SXS:BBH:2265/Lev3/N3",
+        "SXS:BBH:2485/Lev4/N2",
+        "SXS:BBH:2485/Lev4/N3",
+        "SXS:BBH:2485/Lev5/N2",
+        "SXS:BBH:2485/Lev5/N3",
+        "SXS:BBH:3619/Lev2/N2",
+        "SXS:BBH:3619/Lev2/N3",
+        "SXS:BBH:3619/Lev3/N2",
+        "SXS:BBH:3619/Lev3/N3"
+      ]
+    },
+    {
+      "path": "docs/reviews/2026-09-15-independent-calibration-v3-search/nr33-new-manifest-round1.json",
+      "sha256": "ce4680f3860ba05e07b007d9a5b5750251fc830f36870b5459bd93917497a64c",
+      "retained_case_ids": [
+        "SXS:BBH:2489/Lev4/N2",
+        "SXS:BBH:2489/Lev4/N3",
+        "SXS:BBH:2489/Lev5/N2",
+        "SXS:BBH:2489/Lev5/N3",
+        "SXS:BBH:2707/Lev3/N2",
+        "SXS:BBH:2707/Lev3/N3",
+        "SXS:BBH:2707/Lev4/N2",
+        "SXS:BBH:2707/Lev4/N3"
+      ]
+    }
+  ],
+  "search_plan_sha256": "870395449f524525cdb1dea25174dc542a8f67c5a85c9011f571b04d6826fa4c",
+  "selection_manifest_sha256": "7847ffb6329ea8462437cac65146a7cf638e2de031833b56accae58d757b347c",
+  "inventory_sha256": "83b58618c2717a3aabb8fe7cac5cc54bd1ce73cc0433ffe811ad6538cdd92a9b",
+  "cases": [
+    {
+      "candidate_rank": 1,
+      "extrapolation_order": 2,
+      "id": "SXS:BBH:2331/Lev2/N2",
+      "metadata": {
+        "eccentricity": 0.0002795,
+        "extraction_frame_type": "inertial",
+        "extrapolation_order": 2,
+        "final_mass_fraction": 0.9553940732102264,
+        "final_spin": [
+          1.1933328064561985e-08,
+          1.4986828717551446e-08,
+          0.6640478236289699
+        ],
+        "final_spin_magnitude": 0.6640478236289702,
+        "frame_transform": "none",
+        "initial_spin1": [
+          -3.86e-14,
+          -6.5068e-12,
+          1.61116661e-07
+        ],
+        "initial_spin2": [
+          -1.82715e-11,
+          -7.04455e-11,
+          -1.58858763e-08
+        ],
+        "memory_integration_start_time_waveform_M": 814.0,
+        "memory_time_note": "selected sidecar group add_memory integration start retained separately; never used as relaxation_time",
+        "npz_sha256": "e9528afa6bd3461e786d0baeed8df829f1b04296adef4e7f13c59da7142bcc1e",
+        "peak_time": 9774.981775496435,
+        "peak_time_h22": 9774.981775496435,
+        "record_id": "aq9e2-0ye86",
+        "reference_mass1": 0.5999842498655331,
+        "reference_mass2": 0.3999725216215909,
+        "reference_spin1": [
+          5.774694479492613e-10,
+          1.2522380102592943e-08,
+          -2.3751205156367372e-05
+        ],
+        "reference_spin2": [
+          -2.1622954949856765e-08,
+          -6.004999917349762e-09,
+          1.7927689657822153e-05
+        ],
+        "reference_time": 814.0351895306721,
+        "reference_time_M": 814.0351895306721,
+        "reference_time_code": 814.0,
+        "relaxation_time": 814.0351895306721,
+        "relaxation_time_M": 814.0351895306721,
+        "relaxation_time_code": 814.0,
+        "remnant_mass": 0.955352772945231,
+        "remnant_mass_fraction": 0.9553940732102264,
+        "remnant_spin": [
+          1.1933328064561985e-08,
+          1.4986828717551446e-08,
+          0.6640478236289699
+        ],
+        "resolution": "Lev2",
+        "source_frame_type": "inertial",
+        "source_identity": {
+          "alternative_names": null,
+          "api_id": "aq9e2-0ye86",
+          "creators": [
+            {
+              "person_or_org": {
+                "name": "SXS Collaboration",
+                "type": "organizational"
+              }
+            }
+          ],
+          "doi": "10.26138/SXS:BBH:2331v3.0",
+          "h5_group": null,
+          "license": null,
+          "metadata_sha256": "3e3e5305582d9a3f22d32ebb73604fd2b61474d2c252c51af541426ca1752fcf",
+          "record_id": "aq9e2-0ye86",
+          "record_url": "https://data.caltech.edu/records/aq9e2-0ye86",
+          "selected_files": {
+            "h5": {
+              "checksum": "md5:a8a0a5cb80f3fb75d0a626385096f089",
+              "content": "https://data.caltech.edu/api/records/aq9e2-0ye86/files/Lev2:Strain_N2.h5/content",
+              "key": "Lev2:Strain_N2.h5",
+              "sha256": "84f2cf69aee52eabffcf8a0f90049691e7a8323e4987628674dc1501531dd19e",
+              "size": 3238629
+            },
+            "metadata": {
+              "checksum": "md5:2a3abf45669a6ef6a6e1f887203c03ef",
+              "content": "https://data.caltech.edu/api/records/aq9e2-0ye86/files/Lev2:metadata.json/content",
+              "key": "Lev2:metadata.json",
+              "sha256": "3e3e5305582d9a3f22d32ebb73604fd2b61474d2c252c51af541426ca1752fcf",
+              "size": 3334
+            },
+            "sidecar": {
+              "checksum": "md5:40375a2564a1a80c63fe56f6b94e3535",
+              "content": "https://data.caltech.edu/api/records/aq9e2-0ye86/files/Lev2:Strain_N2.json/content",
+              "key": "Lev2:Strain_N2.json",
+              "sha256": "cca6667e9b00d00d26d225efb628c73ec4b91ec22d61d0fc7abecb72a50c00e5",
+              "size": 2233
+            }
+          },
+          "simulation_name": null,
+          "source_format": "strain",
+          "title": "Binary black-hole simulation SXS:BBH:2331",
+          "waveform_sidecar_sha256": "cca6667e9b00d00d26d225efb628c73ec4b91ec22d61d0fc7abecb72a50c00e5"
+        },
+        "sxs_id": "SXS:BBH:2331",
+        "time_conversion": {
+          "Mref": 0.999956771487124,
+          "formula": "time_M=time_code/(reference_mass1+reference_mass2)",
+          "source_unit": "metadata code units",
+          "target_unit": "waveform M"
+        },
+        "time_end": 9945.075573281558
+      },
+      "npz_path": "/tmp/torchwave-nr33-v2/npz/SXS_BBH_2331_aq9e2-0ye86_Lev2_N2.npz",
+      "npz_sha256": "e9528afa6bd3461e786d0baeed8df829f1b04296adef4e7f13c59da7142bcc1e",
+      "path": "/tmp/torchwave-nr33-v2/npz/SXS_BBH_2331_aq9e2-0ye86_Lev2_N2.npz",
+      "q": 1.5000636729569408,
+      "resolution": "Lev2",
+      "selection": {
+        "candidate_rank": 1,
+        "target_q": 1.5
+      },
+      "source_split": "validation_only",
+      "split": "validation_only",
+      "sxs_id": "SXS:BBH:2331",
+      "target_q": 1.5
+    },
+    {
+      "candidate_rank": 1,
+      "extrapolation_order": 3,
+      "id": "SXS:BBH:2331/Lev2/N3",
+      "metadata": {
+        "eccentricity": 0.0002795,
+        "extraction_frame_type": "inertial",
+        "extrapolation_order": 3,
+        "final_mass_fraction": 0.9553940732102264,
+        "final_spin": [
+          1.1933328064561985e-08,
+          1.4986828717551446e-08,
+          0.6640478236289699
+        ],
+        "final_spin_magnitude": 0.6640478236289702,
+        "frame_transform": "none",
+        "initial_spin1": [
+          -3.86e-14,
+          -6.5068e-12,
+          1.61116661e-07
+        ],
+        "initial_spin2": [
+          -1.82715e-11,
+          -7.04455e-11,
+          -1.58858763e-08
+        ],
+        "memory_integration_start_time_waveform_M": 814.0,
+        "memory_time_note": "selected sidecar group add_memory integration start retained separately; never used as relaxation_time",
+        "npz_sha256": "806d0c8d37027ea8165f0cdb5d1ed537cdc27ee3ad10afe534dce1eef9d10d8d",
+        "peak_time": 9774.981775496435,
+        "peak_time_h22": 9774.981775496435,
+        "record_id": "aq9e2-0ye86",
+        "reference_mass1": 0.5999842498655331,
+        "reference_mass2": 0.3999725216215909,
+        "reference_spin1": [
+          5.774694479492613e-10,
+          1.2522380102592943e-08,
+          -2.3751205156367372e-05
+        ],
+        "reference_spin2": [
+          -2.1622954949856765e-08,
+          -6.004999917349762e-09,
+          1.7927689657822153e-05
+        ],
+        "reference_time": 814.0351895306721,
+        "reference_time_M": 814.0351895306721,
+        "reference_time_code": 814.0,
+        "relaxation_time": 814.0351895306721,
+        "relaxation_time_M": 814.0351895306721,
+        "relaxation_time_code": 814.0,
+        "remnant_mass": 0.955352772945231,
+        "remnant_mass_fraction": 0.9553940732102264,
+        "remnant_spin": [
+          1.1933328064561985e-08,
+          1.4986828717551446e-08,
+          0.6640478236289699
+        ],
+        "resolution": "Lev2",
+        "source_frame_type": "inertial",
+        "source_identity": {
+          "alternative_names": null,
+          "api_id": "aq9e2-0ye86",
+          "creators": [
+            {
+              "person_or_org": {
+                "name": "SXS Collaboration",
+                "type": "organizational"
+              }
+            }
+          ],
+          "doi": "10.26138/SXS:BBH:2331v3.0",
+          "h5_group": "/Strain_N3.dir",
+          "license": null,
+          "metadata_sha256": "3e3e5305582d9a3f22d32ebb73604fd2b61474d2c252c51af541426ca1752fcf",
+          "record_id": "aq9e2-0ye86",
+          "record_url": "https://data.caltech.edu/records/aq9e2-0ye86",
+          "selected_files": {
+            "h5": {
+              "checksum": "md5:f3a956ebc822acd029e078b8dfe73f0e",
+              "content": "https://data.caltech.edu/api/records/aq9e2-0ye86/files/Lev2:ExtraWaveforms.h5/content",
+              "key": "Lev2:ExtraWaveforms.h5",
+              "sha256": "6689b45ad43c028a0286b5df865060515527db3c90b74f5e9b3a67f209bf9975",
+              "size": 30447045
+            },
+            "metadata": {
+              "checksum": "md5:2a3abf45669a6ef6a6e1f887203c03ef",
+              "content": "https://data.caltech.edu/api/records/aq9e2-0ye86/files/Lev2:metadata.json/content",
+              "key": "Lev2:metadata.json",
+              "sha256": "3e3e5305582d9a3f22d32ebb73604fd2b61474d2c252c51af541426ca1752fcf",
+              "size": 3334
+            },
+            "sidecar": {
+              "checksum": "md5:fdfe33134c1bd43f831f5b7fa747b672",
+              "content": "https://data.caltech.edu/api/records/aq9e2-0ye86/files/Lev2:ExtraWaveforms.json/content",
+              "key": "Lev2:ExtraWaveforms.json",
+              "sha256": "bc3788080a3b8d2270432b71eb50f4705ed9fb7f0be66a488d4ef0a405fd1537",
+              "size": 17470
+            }
+          },
+          "simulation_name": null,
+          "source_format": "extra",
+          "title": "Binary black-hole simulation SXS:BBH:2331",
+          "waveform_sidecar_sha256": "bc3788080a3b8d2270432b71eb50f4705ed9fb7f0be66a488d4ef0a405fd1537"
+        },
+        "sxs_id": "SXS:BBH:2331",
+        "time_conversion": {
+          "Mref": 0.999956771487124,
+          "formula": "time_M=time_code/(reference_mass1+reference_mass2)",
+          "source_unit": "metadata code units",
+          "target_unit": "waveform M"
+        },
+        "time_end": 9945.075573281558
+      },
+      "npz_path": "/tmp/torchwave-nr33-v2/npz/SXS_BBH_2331_aq9e2-0ye86_Lev2_N3.npz",
+      "npz_sha256": "806d0c8d37027ea8165f0cdb5d1ed537cdc27ee3ad10afe534dce1eef9d10d8d",
+      "path": "/tmp/torchwave-nr33-v2/npz/SXS_BBH_2331_aq9e2-0ye86_Lev2_N3.npz",
+      "q": 1.5000636729569408,
+      "resolution": "Lev2",
+      "selection": {
+        "candidate_rank": 1,
+        "target_q": 1.5
+      },
+      "source_split": "validation_only",
+      "split": "validation_only",
+      "sxs_id": "SXS:BBH:2331",
+      "target_q": 1.5
+    },
+    {
+      "candidate_rank": 1,
+      "extrapolation_order": 2,
+      "id": "SXS:BBH:2331/Lev3/N2",
+      "metadata": {
+        "eccentricity": 5.41e-05,
+        "extraction_frame_type": "inertial",
+        "extrapolation_order": 2,
+        "final_mass_fraction": 0.9552560524044745,
+        "final_spin": [
+          2.9464084070797936e-09,
+          2.1610574935209485e-08,
+          0.6640589851663339
+        ],
+        "final_spin_magnitude": 0.6640589851663342,
+        "frame_transform": "none",
+        "initial_spin1": [
+          -3.86e-14,
+          -6.5068e-12,
+          1.61116661e-07
+        ],
+        "initial_spin2": [
+          -1.82715e-11,
+          -7.04455e-11,
+          -1.58858763e-08
+        ],
+        "memory_integration_start_time_waveform_M": 1422.0,
+        "memory_time_note": "selected sidecar group add_memory integration start retained separately; never used as relaxation_time",
+        "npz_sha256": "76a8af98d9a576d115d2faf4585a27738333697a3037994d983973224a0f0db3",
+        "peak_time": 9776.454361838942,
+        "peak_time_h22": 9776.454361838942,
+        "record_id": "aq9e2-0ye86",
+        "reference_mass1": 0.5999875051163962,
+        "reference_mass2": 0.39999438410606913,
+        "reference_spin1": [
+          -1.1698505070184841e-08,
+          2.3821081597944918e-09,
+          -7.573095671502318e-05
+        ],
+        "reference_spin2": [
+          -1.3880270803039511e-08,
+          -1.1547657291590066e-08,
+          -7.2536833715018395e-06
+        ],
+        "reference_time": 1422.0257539920792,
+        "reference_time_M": 1422.0257539920792,
+        "reference_time_code": 1422.0,
+        "relaxation_time": 1422.0257539920792,
+        "relaxation_time_M": 1422.0257539920792,
+        "relaxation_time_code": 1422.0,
+        "remnant_mass": 0.9552387519746208,
+        "remnant_mass_fraction": 0.9552560524044745,
+        "remnant_spin": [
+          2.9464084070797936e-09,
+          2.1610574935209485e-08,
+          0.6640589851663339
+        ],
+        "resolution": "Lev3",
+        "source_frame_type": "inertial",
+        "source_identity": {
+          "alternative_names": null,
+          "api_id": "aq9e2-0ye86",
+          "creators": [
+            {
+              "person_or_org": {
+                "name": "SXS Collaboration",
+                "type": "organizational"
+              }
+            }
+          ],
+          "doi": "10.26138/SXS:BBH:2331v3.0",
+          "h5_group": null,
+          "license": null,
+          "metadata_sha256": "97466382dee2abae41b207dade6cfbed07f3452e6d9f1914b7a2fcb7bb3dc70b",
+          "record_id": "aq9e2-0ye86",
+          "record_url": "https://data.caltech.edu/records/aq9e2-0ye86",
+          "selected_files": {
+            "h5": {
+              "checksum": "md5:2d5bc2ebf6ffe1cc3ed189c539683ba0",
+              "content": "https://data.caltech.edu/api/records/aq9e2-0ye86/files/Lev3:Strain_N2.h5/content",
+              "key": "Lev3:Strain_N2.h5",
+              "sha256": "6c08449724083fc93fdd6fe24e9fd9d10b63d51bf8ad22a89f637cd39e671b04",
+              "size": 3037765
+            },
+            "metadata": {
+              "checksum": "md5:260888d38b6e9b86c38bdcb13ee3062c",
+              "content": "https://data.caltech.edu/api/records/aq9e2-0ye86/files/Lev3:metadata.json/content",
+              "key": "Lev3:metadata.json",
+              "sha256": "97466382dee2abae41b207dade6cfbed07f3452e6d9f1914b7a2fcb7bb3dc70b",
+              "size": 3338
+            },
+            "sidecar": {
+              "checksum": "md5:ae118c0ffadb4726096f6e7862c3ee0c",
+              "content": "https://data.caltech.edu/api/records/aq9e2-0ye86/files/Lev3:Strain_N2.json/content",
+              "key": "Lev3:Strain_N2.json",
+              "sha256": "690c8ec45fa690a7a249629238cf90a6255e65d7d3ba2e90c584086c02ff198c",
+              "size": 2234
+            }
+          },
+          "simulation_name": null,
+          "source_format": "strain",
+          "title": "Binary black-hole simulation SXS:BBH:2331",
+          "waveform_sidecar_sha256": "690c8ec45fa690a7a249629238cf90a6255e65d7d3ba2e90c584086c02ff198c"
+        },
+        "sxs_id": "SXS:BBH:2331",
+        "time_conversion": {
+          "Mref": 0.9999818892224653,
+          "formula": "time_M=time_code/(reference_mass1+reference_mass2)",
+          "source_unit": "metadata code units",
+          "target_unit": "waveform M"
+        },
+        "time_end": 9946.844105043987
+      },
+      "npz_path": "/tmp/torchwave-nr33-v2/npz/SXS_BBH_2331_aq9e2-0ye86_Lev3_N2.npz",
+      "npz_sha256": "76a8af98d9a576d115d2faf4585a27738333697a3037994d983973224a0f0db3",
+      "path": "/tmp/torchwave-nr33-v2/npz/SXS_BBH_2331_aq9e2-0ye86_Lev3_N2.npz",
+      "q": 1.4999898222503383,
+      "resolution": "Lev3",
+      "selection": {
+        "candidate_rank": 1,
+        "target_q": 1.5
+      },
+      "source_split": "validation_only",
+      "split": "validation_only",
+      "sxs_id": "SXS:BBH:2331",
+      "target_q": 1.5
+    },
+    {
+      "candidate_rank": 1,
+      "extrapolation_order": 3,
+      "id": "SXS:BBH:2331/Lev3/N3",
+      "metadata": {
+        "eccentricity": 5.41e-05,
+        "extraction_frame_type": "inertial",
+        "extrapolation_order": 3,
+        "final_mass_fraction": 0.9552560524044745,
+        "final_spin": [
+          2.9464084070797936e-09,
+          2.1610574935209485e-08,
+          0.6640589851663339
+        ],
+        "final_spin_magnitude": 0.6640589851663342,
+        "frame_transform": "none",
+        "initial_spin1": [
+          -3.86e-14,
+          -6.5068e-12,
+          1.61116661e-07
+        ],
+        "initial_spin2": [
+          -1.82715e-11,
+          -7.04455e-11,
+          -1.58858763e-08
+        ],
+        "memory_integration_start_time_waveform_M": 1422.0,
+        "memory_time_note": "selected sidecar group add_memory integration start retained separately; never used as relaxation_time",
+        "npz_sha256": "54abd57e0ef61fecffb0940bd206f66cded52695b2a04e7d288cfce10e6f3532",
+        "peak_time": 9776.454361838942,
+        "peak_time_h22": 9776.454361838942,
+        "record_id": "aq9e2-0ye86",
+        "reference_mass1": 0.5999875051163962,
+        "reference_mass2": 0.39999438410606913,
+        "reference_spin1": [
+          -1.1698505070184841e-08,
+          2.3821081597944918e-09,
+          -7.573095671502318e-05
+        ],
+        "reference_spin2": [
+          -1.3880270803039511e-08,
+          -1.1547657291590066e-08,
+          -7.2536833715018395e-06
+        ],
+        "reference_time": 1422.0257539920792,
+        "reference_time_M": 1422.0257539920792,
+        "reference_time_code": 1422.0,
+        "relaxation_time": 1422.0257539920792,
+        "relaxation_time_M": 1422.0257539920792,
+        "relaxation_time_code": 1422.0,
+        "remnant_mass": 0.9552387519746208,
+        "remnant_mass_fraction": 0.9552560524044745,
+        "remnant_spin": [
+          2.9464084070797936e-09,
+          2.1610574935209485e-08,
+          0.6640589851663339
+        ],
+        "resolution": "Lev3",
+        "source_frame_type": "inertial",
+        "source_identity": {
+          "alternative_names": null,
+          "api_id": "aq9e2-0ye86",
+          "creators": [
+            {
+              "person_or_org": {
+                "name": "SXS Collaboration",
+                "type": "organizational"
+              }
+            }
+          ],
+          "doi": "10.26138/SXS:BBH:2331v3.0",
+          "h5_group": "/Strain_N3.dir",
+          "license": null,
+          "metadata_sha256": "97466382dee2abae41b207dade6cfbed07f3452e6d9f1914b7a2fcb7bb3dc70b",
+          "record_id": "aq9e2-0ye86",
+          "record_url": "https://data.caltech.edu/records/aq9e2-0ye86",
+          "selected_files": {
+            "h5": {
+              "checksum": "md5:e7e12c764a1d40ae952948fa47290242",
+              "content": "https://data.caltech.edu/api/records/aq9e2-0ye86/files/Lev3:ExtraWaveforms.h5/content",
+              "key": "Lev3:ExtraWaveforms.h5",
+              "sha256": "697e303814676cf9fbf282167f282af5daeba81281dab12313712f5fa9b5d010",
+              "size": 29061325
+            },
+            "metadata": {
+              "checksum": "md5:260888d38b6e9b86c38bdcb13ee3062c",
+              "content": "https://data.caltech.edu/api/records/aq9e2-0ye86/files/Lev3:metadata.json/content",
+              "key": "Lev3:metadata.json",
+              "sha256": "97466382dee2abae41b207dade6cfbed07f3452e6d9f1914b7a2fcb7bb3dc70b",
+              "size": 3338
+            },
+            "sidecar": {
+              "checksum": "md5:46354ddebf51521fbc1e00540205e54f",
+              "content": "https://data.caltech.edu/api/records/aq9e2-0ye86/files/Lev3:ExtraWaveforms.json/content",
+              "key": "Lev3:ExtraWaveforms.json",
+              "sha256": "6a1a7db502588f9deefd50b4618013853f3f22d76e18d21d8a5f8f1e03eae902",
+              "size": 17477
+            }
+          },
+          "simulation_name": null,
+          "source_format": "extra",
+          "title": "Binary black-hole simulation SXS:BBH:2331",
+          "waveform_sidecar_sha256": "6a1a7db502588f9deefd50b4618013853f3f22d76e18d21d8a5f8f1e03eae902"
+        },
+        "sxs_id": "SXS:BBH:2331",
+        "time_conversion": {
+          "Mref": 0.9999818892224653,
+          "formula": "time_M=time_code/(reference_mass1+reference_mass2)",
+          "source_unit": "metadata code units",
+          "target_unit": "waveform M"
+        },
+        "time_end": 9946.844105043987
+      },
+      "npz_path": "/tmp/torchwave-nr33-v2/npz/SXS_BBH_2331_aq9e2-0ye86_Lev3_N3.npz",
+      "npz_sha256": "54abd57e0ef61fecffb0940bd206f66cded52695b2a04e7d288cfce10e6f3532",
+      "path": "/tmp/torchwave-nr33-v2/npz/SXS_BBH_2331_aq9e2-0ye86_Lev3_N3.npz",
+      "q": 1.4999898222503383,
+      "resolution": "Lev3",
+      "selection": {
+        "candidate_rank": 1,
+        "target_q": 1.5
+      },
+      "source_split": "training",
+      "split": "training",
+      "sxs_id": "SXS:BBH:2331",
+      "target_q": 1.5
+    },
+    {
+      "candidate_rank": 2,
+      "extrapolation_order": 2,
+      "id": "SXS:BBH:1166/Lev2/N2",
+      "metadata": {
+        "eccentricity": 0.0002359,
+        "extraction_frame_type": "inertial",
+        "extrapolation_order": 2,
+        "final_mass_fraction": 0.9611597234015709,
+        "final_spin": [
+          -2.287232466530844e-07,
+          4.9743402899568247e-08,
+          0.623351008988008
+        ],
+        "final_spin_magnitude": 0.623351008988052,
+        "frame_transform": "none",
+        "initial_spin1": [
+          -1.896e-13,
+          -6.95e-13,
+          -3.5135972e-09
+        ],
+        "initial_spin2": [
+          1.03194e-11,
+          -6.02777e-11,
+          -5.65097329e-08
+        ],
+        "memory_integration_start_time_waveform_M": 1749.0,
+        "memory_time_note": "selected sidecar group add_memory integration start retained separately; never used as relaxation_time",
+        "npz_sha256": "cd8efc0b375b7c49cf192847f1fd4604c9c5257d2be89b9b454e8bd07732ee1c",
+        "peak_time": 15785.176510617679,
+        "peak_time_h22": 15785.176510617679,
+        "record_id": "27s13-fe162",
+        "reference_mass1": 0.6666900074015021,
+        "reference_mass2": 0.33333492491714667,
+        "reference_spin1": [
+          -1.5167108309520687e-07,
+          4.4523917187444976e-08,
+          4.883843917626486e-05
+        ],
+        "reference_spin2": [
+          -2.7121274308045455e-08,
+          -9.819468269843179e-08,
+          4.123360826241056e-05
+        ],
+        "reference_time": 1748.9563944618706,
+        "reference_time_M": 1748.9563944618706,
+        "reference_time_code": 1749.0,
+        "relaxation_time": 1748.9563944618706,
+        "relaxation_time_M": 1748.9563944618706,
+        "relaxation_time_code": 1749.0,
+        "remnant_mass": 0.961183687342067,
+        "remnant_mass_fraction": 0.9611597234015709,
+        "remnant_spin": [
+          -2.287232466530844e-07,
+          4.9743402899568247e-08,
+          0.623351008988008
+        ],
+        "resolution": "Lev2",
+        "source_frame_type": "inertial",
+        "source_identity": {
+          "alternative_names": null,
+          "api_id": "27s13-fe162",
+          "creators": [
+            {
+              "person_or_org": {
+                "name": "SXS Collaboration",
+                "type": "organizational"
+              }
+            }
+          ],
+          "doi": "10.26138/SXS:BBH:1166v3.0",
+          "h5_group": null,
+          "license": null,
+          "metadata_sha256": "7c5572967d88b7f7782bad99bf4610bfbf13cc0ab13d746a1f6ca5d863863a85",
+          "record_id": "27s13-fe162",
+          "record_url": "https://data.caltech.edu/records/27s13-fe162",
+          "selected_files": {
+            "h5": {
+              "checksum": "md5:950dbdb95d082d684dd995242f016379",
+              "content": "https://data.caltech.edu/api/records/27s13-fe162/files/Lev2:Strain_N2.h5/content",
+              "key": "Lev2:Strain_N2.h5",
+              "sha256": "19c409d96953bbf7ad174cecc841fbfd0f9e4007893b49390cb8bf530bd399e9",
+              "size": 3881951
+            },
+            "metadata": {
+              "checksum": "md5:9dcdabe5b9601936eccb9d7cb28b396b",
+              "content": "https://data.caltech.edu/api/records/27s13-fe162/files/Lev2:metadata.json/content",
+              "key": "Lev2:metadata.json",
+              "sha256": "7c5572967d88b7f7782bad99bf4610bfbf13cc0ab13d746a1f6ca5d863863a85",
+              "size": 3298
+            },
+            "sidecar": {
+              "checksum": "md5:a9354b3dc7eda80a3cb748ada47e6775",
+              "content": "https://data.caltech.edu/api/records/27s13-fe162/files/Lev2:Strain_N2.json/content",
+              "key": "Lev2:Strain_N2.json",
+              "sha256": "dccbb3a99d55cff82f4073df548ac5d7c4d99224ff38465ca60234257a27b22b",
+              "size": 2234
+            }
+          },
+          "simulation_name": null,
+          "source_format": "strain",
+          "title": "Binary black-hole simulation SXS:BBH:1166",
+          "waveform_sidecar_sha256": "dccbb3a99d55cff82f4073df548ac5d7c4d99224ff38465ca60234257a27b22b"
+        },
+        "sxs_id": "SXS:BBH:1166",
+        "time_conversion": {
+          "Mref": 1.0000249323186488,
+          "formula": "time_M=time_code/(reference_mass1+reference_mass2)",
+          "source_unit": "metadata code units",
+          "target_unit": "waveform M"
+        },
+        "time_end": 15966.656950393184
+      },
+      "npz_path": "/tmp/torchwave-nr33-v2/npz/SXS_BBH_1166_27s13-fe162_Lev2_N2.npz",
+      "npz_sha256": "cd8efc0b375b7c49cf192847f1fd4604c9c5257d2be89b9b454e8bd07732ee1c",
+      "path": "/tmp/torchwave-nr33-v2/npz/SXS_BBH_1166_27s13-fe162_Lev2_N2.npz",
+      "q": 2.0000604724128856,
+      "resolution": "Lev2",
+      "selection": {
+        "candidate_rank": 2,
+        "target_q": 2
+      },
+      "source_split": "validation_only",
+      "split": "validation_only",
+      "sxs_id": "SXS:BBH:1166",
+      "target_q": 2
+    },
+    {
+      "candidate_rank": 2,
+      "extrapolation_order": 3,
+      "id": "SXS:BBH:1166/Lev2/N3",
+      "metadata": {
+        "eccentricity": 0.0002359,
+        "extraction_frame_type": "inertial",
+        "extrapolation_order": 3,
+        "final_mass_fraction": 0.9611597234015709,
+        "final_spin": [
+          -2.287232466530844e-07,
+          4.9743402899568247e-08,
+          0.623351008988008
+        ],
+        "final_spin_magnitude": 0.623351008988052,
+        "frame_transform": "none",
+        "initial_spin1": [
+          -1.896e-13,
+          -6.95e-13,
+          -3.5135972e-09
+        ],
+        "initial_spin2": [
+          1.03194e-11,
+          -6.02777e-11,
+          -5.65097329e-08
+        ],
+        "memory_integration_start_time_waveform_M": 1749.0,
+        "memory_time_note": "selected sidecar group add_memory integration start retained separately; never used as relaxation_time",
+        "npz_sha256": "a9c1cb45176938b81374630274e20761309fc7bf964da32df517f8499eb669ad",
+        "peak_time": 15785.176510617679,
+        "peak_time_h22": 15785.176510617679,
+        "record_id": "27s13-fe162",
+        "reference_mass1": 0.6666900074015021,
+        "reference_mass2": 0.33333492491714667,
+        "reference_spin1": [
+          -1.5167108309520687e-07,
+          4.4523917187444976e-08,
+          4.883843917626486e-05
+        ],
+        "reference_spin2": [
+          -2.7121274308045455e-08,
+          -9.819468269843179e-08,
+          4.123360826241056e-05
+        ],
+        "reference_time": 1748.9563944618706,
+        "reference_time_M": 1748.9563944618706,
+        "reference_time_code": 1749.0,
+        "relaxation_time": 1748.9563944618706,
+        "relaxation_time_M": 1748.9563944618706,
+        "relaxation_time_code": 1749.0,
+        "remnant_mass": 0.961183687342067,
+        "remnant_mass_fraction": 0.9611597234015709,
+        "remnant_spin": [
+          -2.287232466530844e-07,
+          4.9743402899568247e-08,
+          0.623351008988008
+        ],
+        "resolution": "Lev2",
+        "source_frame_type": "inertial",
+        "source_identity": {
+          "alternative_names": null,
+          "api_id": "27s13-fe162",
+          "creators": [
+            {
+              "person_or_org": {
+                "name": "SXS Collaboration",
+                "type": "organizational"
+              }
+            }
+          ],
+          "doi": "10.26138/SXS:BBH:1166v3.0",
+          "h5_group": "/Strain_N3.dir",
+          "license": null,
+          "metadata_sha256": "7c5572967d88b7f7782bad99bf4610bfbf13cc0ab13d746a1f6ca5d863863a85",
+          "record_id": "27s13-fe162",
+          "record_url": "https://data.caltech.edu/records/27s13-fe162",
+          "selected_files": {
+            "h5": {
+              "checksum": "md5:5cd87080a3aa9d12589a33c048a12073",
+              "content": "https://data.caltech.edu/api/records/27s13-fe162/files/Lev2:ExtraWaveforms.h5/content",
+              "key": "Lev2:ExtraWaveforms.h5",
+              "sha256": "48ac2ce81f96362030332f057f094096de33c9fd368eef66a583058304a9fed6",
+              "size": 36240186
+            },
+            "metadata": {
+              "checksum": "md5:9dcdabe5b9601936eccb9d7cb28b396b",
+              "content": "https://data.caltech.edu/api/records/27s13-fe162/files/Lev2:metadata.json/content",
+              "key": "Lev2:metadata.json",
+              "sha256": "7c5572967d88b7f7782bad99bf4610bfbf13cc0ab13d746a1f6ca5d863863a85",
+              "size": 3298
+            },
+            "sidecar": {
+              "checksum": "md5:625b92e3e2068da27cae5c61a411ba15",
+              "content": "https://data.caltech.edu/api/records/27s13-fe162/files/Lev2:ExtraWaveforms.json/content",
+              "key": "Lev2:ExtraWaveforms.json",
+              "sha256": "b23f548db5e556a1a42b7d1346e2fe6190a58080a46bc1bb8f9160072a458bec",
+              "size": 17477
+            }
+          },
+          "simulation_name": null,
+          "source_format": "extra",
+          "title": "Binary black-hole simulation SXS:BBH:1166",
+          "waveform_sidecar_sha256": "b23f548db5e556a1a42b7d1346e2fe6190a58080a46bc1bb8f9160072a458bec"
+        },
+        "sxs_id": "SXS:BBH:1166",
+        "time_conversion": {
+          "Mref": 1.0000249323186488,
+          "formula": "time_M=time_code/(reference_mass1+reference_mass2)",
+          "source_unit": "metadata code units",
+          "target_unit": "waveform M"
+        },
+        "time_end": 15966.656950393184
+      },
+      "npz_path": "/tmp/torchwave-nr33-v2/npz/SXS_BBH_1166_27s13-fe162_Lev2_N3.npz",
+      "npz_sha256": "a9c1cb45176938b81374630274e20761309fc7bf964da32df517f8499eb669ad",
+      "path": "/tmp/torchwave-nr33-v2/npz/SXS_BBH_1166_27s13-fe162_Lev2_N3.npz",
+      "q": 2.0000604724128856,
+      "resolution": "Lev2",
+      "selection": {
+        "candidate_rank": 2,
+        "target_q": 2
+      },
+      "source_split": "validation_only",
+      "split": "validation_only",
+      "sxs_id": "SXS:BBH:1166",
+      "target_q": 2
+    },
+    {
+      "candidate_rank": 2,
+      "extrapolation_order": 2,
+      "id": "SXS:BBH:1166/Lev3/N2",
+      "metadata": {
+        "eccentricity": 0.0003799,
+        "extraction_frame_type": "inertial",
+        "extrapolation_order": 2,
+        "final_mass_fraction": 0.9612530316295399,
+        "final_spin": [
+          -1.3344629385269262e-09,
+          -1.4495238928849603e-08,
+          0.6234277777840841
+        ],
+        "final_spin_magnitude": 0.6234277777840843,
+        "frame_transform": "none",
+        "initial_spin1": [
+          -1.896e-13,
+          -6.95e-13,
+          -3.5135972e-09
+        ],
+        "initial_spin2": [
+          1.03194e-11,
+          -6.02777e-11,
+          -5.65097329e-08
+        ],
+        "memory_integration_start_time_waveform_M": 401.5,
+        "memory_time_note": "selected sidecar group add_memory integration start retained separately; never used as relaxation_time",
+        "npz_sha256": "c2304e5f6e7ee75ee1b4675c3c53860a40c4c72e800976964f531d2cee606005",
+        "peak_time": 15754.949940624358,
+        "peak_time_h22": 15754.949940624358,
+        "record_id": "27s13-fe162",
+        "reference_mass1": 0.6666863824830513,
+        "reference_mass2": 0.33333975313049696,
+        "reference_spin1": [
+          1.4371372650146008e-09,
+          -2.252687057620897e-09,
+          4.074477068817072e-05
+        ],
+        "reference_spin2": [
+          2.2903244143154236e-09,
+          -3.766330577928885e-08,
+          -3.9879274477520845e-06
+        ],
+        "reference_time": 401.48950682540595,
+        "reference_time_M": 401.48950682540595,
+        "reference_time_code": 401.5,
+        "relaxation_time": 401.48950682540595,
+        "relaxation_time_M": 401.48950682540595,
+        "relaxation_time_code": 401.5,
+        "remnant_mass": 0.9612781545672967,
+        "remnant_mass_fraction": 0.9612530316295399,
+        "remnant_spin": [
+          -1.3344629385269262e-09,
+          -1.4495238928849603e-08,
+          0.6234277777840841
+        ],
+        "resolution": "Lev3",
+        "source_frame_type": "inertial",
+        "source_identity": {
+          "alternative_names": null,
+          "api_id": "27s13-fe162",
+          "creators": [
+            {
+              "person_or_org": {
+                "name": "SXS Collaboration",
+                "type": "organizational"
+              }
+            }
+          ],
+          "doi": "10.26138/SXS:BBH:1166v3.0",
+          "h5_group": null,
+          "license": null,
+          "metadata_sha256": "ac0100e502e12fab8047cf6ddf970193defb6e6aca79659b3467e70377d2050d",
+          "record_id": "27s13-fe162",
+          "record_url": "https://data.caltech.edu/records/27s13-fe162",
+          "selected_files": {
+            "h5": {
+              "checksum": "md5:abb089eac91fc7dc92ca94e60b363d87",
+              "content": "https://data.caltech.edu/api/records/27s13-fe162/files/Lev3:Strain_N2.h5/content",
+              "key": "Lev3:Strain_N2.h5",
+              "sha256": "85a9ad5bc6b9be2bce2835d6f5ee6085124a5e6b31b7d02317c03447538b8400",
+              "size": 3438615
+            },
+            "metadata": {
+              "checksum": "md5:11ab346d17248d72f520aae6b68ecc7a",
+              "content": "https://data.caltech.edu/api/records/27s13-fe162/files/Lev3:metadata.json/content",
+              "key": "Lev3:metadata.json",
+              "sha256": "ac0100e502e12fab8047cf6ddf970193defb6e6aca79659b3467e70377d2050d",
+              "size": 3334
+            },
+            "sidecar": {
+              "checksum": "md5:78be4144d39598b4fc3635b10f8910f4",
+              "content": "https://data.caltech.edu/api/records/27s13-fe162/files/Lev3:Strain_N2.json/content",
+              "key": "Lev3:Strain_N2.json",
+              "sha256": "56e518b3e19a1a7547791548d3149d495987062dcdba521e914248596e53003c",
+              "size": 2232
+            }
+          },
+          "simulation_name": null,
+          "source_format": "strain",
+          "title": "Binary black-hole simulation SXS:BBH:1166",
+          "waveform_sidecar_sha256": "56e518b3e19a1a7547791548d3149d495987062dcdba521e914248596e53003c"
+        },
+        "sxs_id": "SXS:BBH:1166",
+        "time_conversion": {
+          "Mref": 1.0000261356135483,
+          "formula": "time_M=time_code/(reference_mass1+reference_mass2)",
+          "source_unit": "metadata code units",
+          "target_unit": "waveform M"
+        },
+        "time_end": 15936.730197338124
+      },
+      "npz_path": "/tmp/torchwave-nr33-v2/npz/SXS_BBH_1166_27s13-fe162_Lev3_N2.npz",
+      "npz_sha256": "c2304e5f6e7ee75ee1b4675c3c53860a40c4c72e800976964f531d2cee606005",
+      "path": "/tmp/torchwave-nr33-v2/npz/SXS_BBH_1166_27s13-fe162_Lev3_N2.npz",
+      "q": 2.000020628268884,
+      "resolution": "Lev3",
+      "selection": {
+        "candidate_rank": 2,
+        "target_q": 2
+      },
+      "source_split": "validation_only",
+      "split": "validation_only",
+      "sxs_id": "SXS:BBH:1166",
+      "target_q": 2
+    },
+    {
+      "candidate_rank": 2,
+      "extrapolation_order": 3,
+      "id": "SXS:BBH:1166/Lev3/N3",
+      "metadata": {
+        "eccentricity": 0.0003799,
+        "extraction_frame_type": "inertial",
+        "extrapolation_order": 3,
+        "final_mass_fraction": 0.9612530316295399,
+        "final_spin": [
+          -1.3344629385269262e-09,
+          -1.4495238928849603e-08,
+          0.6234277777840841
+        ],
+        "final_spin_magnitude": 0.6234277777840843,
+        "frame_transform": "none",
+        "initial_spin1": [
+          -1.896e-13,
+          -6.95e-13,
+          -3.5135972e-09
+        ],
+        "initial_spin2": [
+          1.03194e-11,
+          -6.02777e-11,
+          -5.65097329e-08
+        ],
+        "memory_integration_start_time_waveform_M": 401.5,
+        "memory_time_note": "selected sidecar group add_memory integration start retained separately; never used as relaxation_time",
+        "npz_sha256": "e2eeaaa12b643ab44befa4a564622b12e90863b54f0c2738bd350ff3b75143ce",
+        "peak_time": 15754.949940624358,
+        "peak_time_h22": 15754.949940624358,
+        "record_id": "27s13-fe162",
+        "reference_mass1": 0.6666863824830513,
+        "reference_mass2": 0.33333975313049696,
+        "reference_spin1": [
+          1.4371372650146008e-09,
+          -2.252687057620897e-09,
+          4.074477068817072e-05
+        ],
+        "reference_spin2": [
+          2.2903244143154236e-09,
+          -3.766330577928885e-08,
+          -3.9879274477520845e-06
+        ],
+        "reference_time": 401.48950682540595,
+        "reference_time_M": 401.48950682540595,
+        "reference_time_code": 401.5,
+        "relaxation_time": 401.48950682540595,
+        "relaxation_time_M": 401.48950682540595,
+        "relaxation_time_code": 401.5,
+        "remnant_mass": 0.9612781545672967,
+        "remnant_mass_fraction": 0.9612530316295399,
+        "remnant_spin": [
+          -1.3344629385269262e-09,
+          -1.4495238928849603e-08,
+          0.6234277777840841
+        ],
+        "resolution": "Lev3",
+        "source_frame_type": "inertial",
+        "source_identity": {
+          "alternative_names": null,
+          "api_id": "27s13-fe162",
+          "creators": [
+            {
+              "person_or_org": {
+                "name": "SXS Collaboration",
+                "type": "organizational"
+              }
+            }
+          ],
+          "doi": "10.26138/SXS:BBH:1166v3.0",
+          "h5_group": "/Strain_N3.dir",
+          "license": null,
+          "metadata_sha256": "ac0100e502e12fab8047cf6ddf970193defb6e6aca79659b3467e70377d2050d",
+          "record_id": "27s13-fe162",
+          "record_url": "https://data.caltech.edu/records/27s13-fe162",
+          "selected_files": {
+            "h5": {
+              "checksum": "md5:3e82655aa90e7913b67f333f265b045d",
+              "content": "https://data.caltech.edu/api/records/27s13-fe162/files/Lev3:ExtraWaveforms.h5/content",
+              "key": "Lev3:ExtraWaveforms.h5",
+              "sha256": "190165c139af625e616e2ebfb2b37f9b284bc6029981e53608094255ee3ba58a",
+              "size": 32894250
+            },
+            "metadata": {
+              "checksum": "md5:11ab346d17248d72f520aae6b68ecc7a",
+              "content": "https://data.caltech.edu/api/records/27s13-fe162/files/Lev3:metadata.json/content",
+              "key": "Lev3:metadata.json",
+              "sha256": "ac0100e502e12fab8047cf6ddf970193defb6e6aca79659b3467e70377d2050d",
+              "size": 3334
+            },
+            "sidecar": {
+              "checksum": "md5:e2f0f17acaa0bc2eae54037b38af0a91",
+              "content": "https://data.caltech.edu/api/records/27s13-fe162/files/Lev3:ExtraWaveforms.json/content",
+              "key": "Lev3:ExtraWaveforms.json",
+              "sha256": "6c5cc5e544b14fe6c2f42dbfdd91e3653166249099046fc6a68326e7a62cf9da",
+              "size": 17463
+            }
+          },
+          "simulation_name": null,
+          "source_format": "extra",
+          "title": "Binary black-hole simulation SXS:BBH:1166",
+          "waveform_sidecar_sha256": "6c5cc5e544b14fe6c2f42dbfdd91e3653166249099046fc6a68326e7a62cf9da"
+        },
+        "sxs_id": "SXS:BBH:1166",
+        "time_conversion": {
+          "Mref": 1.0000261356135483,
+          "formula": "time_M=time_code/(reference_mass1+reference_mass2)",
+          "source_unit": "metadata code units",
+          "target_unit": "waveform M"
+        },
+        "time_end": 15936.730197338124
+      },
+      "npz_path": "/tmp/torchwave-nr33-v2/npz/SXS_BBH_1166_27s13-fe162_Lev3_N3.npz",
+      "npz_sha256": "e2eeaaa12b643ab44befa4a564622b12e90863b54f0c2738bd350ff3b75143ce",
+      "path": "/tmp/torchwave-nr33-v2/npz/SXS_BBH_1166_27s13-fe162_Lev3_N3.npz",
+      "q": 2.000020628268884,
+      "resolution": "Lev3",
+      "selection": {
+        "candidate_rank": 2,
+        "target_q": 2
+      },
+      "source_split": "training",
+      "split": "training",
+      "sxs_id": "SXS:BBH:1166",
+      "target_q": 2
+    },
+    {
+      "candidate_rank": 2,
+      "extrapolation_order": 2,
+      "id": "SXS:BBH:2265/Lev2/N2",
+      "metadata": {
+        "eccentricity": 0.0002298,
+        "extraction_frame_type": "inertial",
+        "extrapolation_order": 2,
+        "final_mass_fraction": 0.9712593086260101,
+        "final_spin": [
+          -1.1900949594949083e-07,
+          -2.166967244897371e-07,
+          0.5406086009756078
+        ],
+        "final_spin_magnitude": 0.5406086009756643,
+        "frame_transform": "none",
+        "initial_spin1": [
+          1.54177e-11,
+          -4.74938e-11,
+          -7.0784767e-09
+        ],
+        "initial_spin2": [
+          1.64519e-11,
+          -1.62843e-11,
+          -6.90100228e-08
+        ],
+        "memory_integration_start_time_waveform_M": 602.0,
+        "memory_time_note": "selected sidecar group add_memory integration start retained separately; never used as relaxation_time",
+        "npz_sha256": "e34f67bc5217d06b81a47caaf9fc27fcb5564c9de193fb6fd17790b6ef8756e5",
+        "peak_time": 30511.705206178893,
+        "peak_time_h22": 30511.705206178893,
+        "record_id": "258wv-a5t45",
+        "reference_mass1": 0.7499867757987505,
+        "reference_mass2": 0.24999906211394038,
+        "reference_spin1": [
+          -2.0612350445136664e-08,
+          -3.4721532167834404e-07,
+          2.22690218660035e-06
+        ],
+        "reference_spin2": [
+          2.8642881865530604e-08,
+          -7.283532730570545e-08,
+          -1.3290708294605457e-05
+        ],
+        "reference_time": 602.0085256973017,
+        "reference_time_M": 602.0085256973017,
+        "reference_time_code": 602.0,
+        "relaxation_time": 602.0085256973017,
+        "relaxation_time_M": 602.0085256973017,
+        "relaxation_time_code": 602.0,
+        "remnant_mass": 0.9712455535668816,
+        "remnant_mass_fraction": 0.9712593086260101,
+        "remnant_spin": [
+          -1.1900949594949083e-07,
+          -2.166967244897371e-07,
+          0.5406086009756078
+        ],
+        "resolution": "Lev2",
+        "source_frame_type": "inertial",
+        "source_identity": {
+          "alternative_names": null,
+          "api_id": "258wv-a5t45",
+          "creators": [
+            {
+              "person_or_org": {
+                "name": "SXS Collaboration",
+                "type": "organizational"
+              }
+            }
+          ],
+          "doi": "10.26138/SXS:BBH:2265v3.0",
+          "h5_group": null,
+          "license": null,
+          "metadata_sha256": "050bf1ab76f2481247441272930cda6d1b9c96aeeec0a00b98a707254f9d8722",
+          "record_id": "258wv-a5t45",
+          "record_url": "https://data.caltech.edu/records/258wv-a5t45",
+          "selected_files": {
+            "h5": {
+              "checksum": "md5:6c98c77914cd7cd30f558b35f6fd7d7c",
+              "content": "https://data.caltech.edu/api/records/258wv-a5t45/files/Lev2:Strain_N2.h5/content",
+              "key": "Lev2:Strain_N2.h5",
+              "sha256": "0331c1cef89cbaf61717a7f0a61982a8ff052607c2b16ceaf40dd376522af022",
+              "size": 6246326
+            },
+            "metadata": {
+              "checksum": "md5:97a683f1e7f738d81895e09ee6d3236f",
+              "content": "https://data.caltech.edu/api/records/258wv-a5t45/files/Lev2:metadata.json/content",
+              "key": "Lev2:metadata.json",
+              "sha256": "050bf1ab76f2481247441272930cda6d1b9c96aeeec0a00b98a707254f9d8722",
+              "size": 3309
+            },
+            "sidecar": {
+              "checksum": "md5:268bf2bd33cb16c7b4b10134da0694ad",
+              "content": "https://data.caltech.edu/api/records/258wv-a5t45/files/Lev2:Strain_N2.json/content",
+              "key": "Lev2:Strain_N2.json",
+              "sha256": "bd78e384599e7f76cfb74c8a617a33d8b1961aff2378aad001fbc6868a94bc58",
+              "size": 2227
+            }
+          },
+          "simulation_name": null,
+          "source_format": "strain",
+          "title": "Binary black-hole simulation SXS:BBH:2265",
+          "waveform_sidecar_sha256": "bd78e384599e7f76cfb74c8a617a33d8b1961aff2378aad001fbc6868a94bc58"
+        },
+        "sxs_id": "SXS:BBH:2265",
+        "time_conversion": {
+          "Mref": 0.9999858379126909,
+          "formula": "time_M=time_code/(reference_mass1+reference_mass2)",
+          "source_unit": "metadata code units",
+          "target_unit": "waveform M"
+        },
+        "time_end": 30694.3023388588
+      },
+      "npz_path": "/tmp/torchwave-nr33-v2/npz/SXS_BBH_2265_258wv-a5t45_Lev2_N2.npz",
+      "npz_sha256": "e34f67bc5217d06b81a47caaf9fc27fcb5564c9de193fb6fd17790b6ef8756e5",
+      "path": "/tmp/torchwave-nr33-v2/npz/SXS_BBH_2265_258wv-a5t45_Lev2_N2.npz",
+      "q": 2.9999583576714945,
+      "resolution": "Lev2",
+      "selection": {
+        "candidate_rank": 2,
+        "target_q": 3
+      },
+      "source_split": "validation_only",
+      "split": "validation_only",
+      "sxs_id": "SXS:BBH:2265",
+      "target_q": 3
+    },
+    {
+      "candidate_rank": 2,
+      "extrapolation_order": 3,
+      "id": "SXS:BBH:2265/Lev2/N3",
+      "metadata": {
+        "eccentricity": 0.0002298,
+        "extraction_frame_type": "inertial",
+        "extrapolation_order": 3,
+        "final_mass_fraction": 0.9712593086260101,
+        "final_spin": [
+          -1.1900949594949083e-07,
+          -2.166967244897371e-07,
+          0.5406086009756078
+        ],
+        "final_spin_magnitude": 0.5406086009756643,
+        "frame_transform": "none",
+        "initial_spin1": [
+          1.54177e-11,
+          -4.74938e-11,
+          -7.0784767e-09
+        ],
+        "initial_spin2": [
+          1.64519e-11,
+          -1.62843e-11,
+          -6.90100228e-08
+        ],
+        "memory_integration_start_time_waveform_M": 602.0,
+        "memory_time_note": "selected sidecar group add_memory integration start retained separately; never used as relaxation_time",
+        "npz_sha256": "7e6d99a42e0372b2f34f781cef48efd5912102f0644cd139ee69de09431c8db7",
+        "peak_time": 30511.705206178893,
+        "peak_time_h22": 30511.705206178893,
+        "record_id": "258wv-a5t45",
+        "reference_mass1": 0.7499867757987505,
+        "reference_mass2": 0.24999906211394038,
+        "reference_spin1": [
+          -2.0612350445136664e-08,
+          -3.4721532167834404e-07,
+          2.22690218660035e-06
+        ],
+        "reference_spin2": [
+          2.8642881865530604e-08,
+          -7.283532730570545e-08,
+          -1.3290708294605457e-05
+        ],
+        "reference_time": 602.0085256973017,
+        "reference_time_M": 602.0085256973017,
+        "reference_time_code": 602.0,
+        "relaxation_time": 602.0085256973017,
+        "relaxation_time_M": 602.0085256973017,
+        "relaxation_time_code": 602.0,
+        "remnant_mass": 0.9712455535668816,
+        "remnant_mass_fraction": 0.9712593086260101,
+        "remnant_spin": [
+          -1.1900949594949083e-07,
+          -2.166967244897371e-07,
+          0.5406086009756078
+        ],
+        "resolution": "Lev2",
+        "source_frame_type": "inertial",
+        "source_identity": {
+          "alternative_names": null,
+          "api_id": "258wv-a5t45",
+          "creators": [
+            {
+              "person_or_org": {
+                "name": "SXS Collaboration",
+                "type": "organizational"
+              }
+            }
+          ],
+          "doi": "10.26138/SXS:BBH:2265v3.0",
+          "h5_group": "/Strain_N3.dir",
+          "license": null,
+          "metadata_sha256": "050bf1ab76f2481247441272930cda6d1b9c96aeeec0a00b98a707254f9d8722",
+          "record_id": "258wv-a5t45",
+          "record_url": "https://data.caltech.edu/records/258wv-a5t45",
+          "selected_files": {
+            "h5": {
+              "checksum": "md5:8d4135a51584abdb84776885ded7004e",
+              "content": "https://data.caltech.edu/api/records/258wv-a5t45/files/Lev2:ExtraWaveforms.h5/content",
+              "key": "Lev2:ExtraWaveforms.h5",
+              "sha256": "7b3037af4df5346e129e06404ba349b519338d820a437ec7415464d5915cb478",
+              "size": 55901013
+            },
+            "metadata": {
+              "checksum": "md5:97a683f1e7f738d81895e09ee6d3236f",
+              "content": "https://data.caltech.edu/api/records/258wv-a5t45/files/Lev2:metadata.json/content",
+              "key": "Lev2:metadata.json",
+              "sha256": "050bf1ab76f2481247441272930cda6d1b9c96aeeec0a00b98a707254f9d8722",
+              "size": 3309
+            },
+            "sidecar": {
+              "checksum": "md5:078b53821b0b6f3aa2882752b1e454e4",
+              "content": "https://data.caltech.edu/api/records/258wv-a5t45/files/Lev2:ExtraWaveforms.json/content",
+              "key": "Lev2:ExtraWaveforms.json",
+              "sha256": "0f4da87556aa45265f19f39efe1bb108e3a7c8f56963e90dae939f74a3b3b707",
+              "size": 17428
+            }
+          },
+          "simulation_name": null,
+          "source_format": "extra",
+          "title": "Binary black-hole simulation SXS:BBH:2265",
+          "waveform_sidecar_sha256": "0f4da87556aa45265f19f39efe1bb108e3a7c8f56963e90dae939f74a3b3b707"
+        },
+        "sxs_id": "SXS:BBH:2265",
+        "time_conversion": {
+          "Mref": 0.9999858379126909,
+          "formula": "time_M=time_code/(reference_mass1+reference_mass2)",
+          "source_unit": "metadata code units",
+          "target_unit": "waveform M"
+        },
+        "time_end": 30694.3023388588
+      },
+      "npz_path": "/tmp/torchwave-nr33-v2/npz/SXS_BBH_2265_258wv-a5t45_Lev2_N3.npz",
+      "npz_sha256": "7e6d99a42e0372b2f34f781cef48efd5912102f0644cd139ee69de09431c8db7",
+      "path": "/tmp/torchwave-nr33-v2/npz/SXS_BBH_2265_258wv-a5t45_Lev2_N3.npz",
+      "q": 2.9999583576714945,
+      "resolution": "Lev2",
+      "selection": {
+        "candidate_rank": 2,
+        "target_q": 3
+      },
+      "source_split": "validation_only",
+      "split": "validation_only",
+      "sxs_id": "SXS:BBH:2265",
+      "target_q": 3
+    },
+    {
+      "candidate_rank": 2,
+      "extrapolation_order": 2,
+      "id": "SXS:BBH:2265/Lev3/N2",
+      "metadata": {
+        "eccentricity": 7.17e-05,
+        "extraction_frame_type": "inertial",
+        "extrapolation_order": 2,
+        "final_mass_fraction": 0.9710985434721972,
+        "final_spin": [
+          5.3326860993654436e-08,
+          -7.735070876293862e-08,
+          0.5406090348112912
+        ],
+        "final_spin_magnitude": 0.5406090348112994,
+        "frame_transform": "none",
+        "initial_spin1": [
+          1.54177e-11,
+          -4.74938e-11,
+          -7.0784767e-09
+        ],
+        "initial_spin2": [
+          1.64519e-11,
+          -1.62843e-11,
+          -6.90100228e-08
+        ],
+        "memory_integration_start_time_waveform_M": 1077.5,
+        "memory_time_note": "selected sidecar group add_memory integration start retained separately; never used as relaxation_time",
+        "npz_sha256": "e71ffcc06737ebc6b969b57a8cb4b0106075aed35b81bfdfc50cf47e91daca9c",
+        "peak_time": 30556.345367388192,
+        "peak_time_h22": 30556.345367388192,
+        "record_id": "258wv-a5t45",
+        "reference_mass1": 0.7500097310012441,
+        "reference_mass2": 0.24999389181355253,
+        "reference_spin1": [
+          7.139661994914472e-08,
+          -5.454190023516652e-08,
+          8.310310779581836e-06
+        ],
+        "reference_spin2": [
+          6.404327245255476e-08,
+          1.4342777428877783e-08,
+          7.14361976879799e-06
+        ],
+        "reference_time": 1077.4960964311986,
+        "reference_time_M": 1077.4960964311986,
+        "reference_time_code": 1077.5,
+        "relaxation_time": 1077.4960964311986,
+        "relaxation_time_M": 1077.4960964311986,
+        "relaxation_time_code": 1077.5,
+        "remnant_mass": 0.9711020615823694,
+        "remnant_mass_fraction": 0.9710985434721972,
+        "remnant_spin": [
+          5.3326860993654436e-08,
+          -7.735070876293862e-08,
+          0.5406090348112912
+        ],
+        "resolution": "Lev3",
+        "source_frame_type": "inertial",
+        "source_identity": {
+          "alternative_names": null,
+          "api_id": "258wv-a5t45",
+          "creators": [
+            {
+              "person_or_org": {
+                "name": "SXS Collaboration",
+                "type": "organizational"
+              }
+            }
+          ],
+          "doi": "10.26138/SXS:BBH:2265v3.0",
+          "h5_group": null,
+          "license": null,
+          "metadata_sha256": "f564d8563f285e62409278cc1b9d1596f86125a5e92ad2fb5f61d152833026ca",
+          "record_id": "258wv-a5t45",
+          "record_url": "https://data.caltech.edu/records/258wv-a5t45",
+          "selected_files": {
+            "h5": {
+              "checksum": "md5:2a7336507c63dbea3b3980cd6d3a783a",
+              "content": "https://data.caltech.edu/api/records/258wv-a5t45/files/Lev3:Strain_N2.h5/content",
+              "key": "Lev3:Strain_N2.h5",
+              "sha256": "47b99bca2825f3659103e3e08ee926c7749ddfefbcdb679ca6b0dbe5cc550b07",
+              "size": 5894558
+            },
+            "metadata": {
+              "checksum": "md5:ea2133e45d1075aa4f53068a3cc0e437",
+              "content": "https://data.caltech.edu/api/records/258wv-a5t45/files/Lev3:metadata.json/content",
+              "key": "Lev3:metadata.json",
+              "sha256": "f564d8563f285e62409278cc1b9d1596f86125a5e92ad2fb5f61d152833026ca",
+              "size": 3304
+            },
+            "sidecar": {
+              "checksum": "md5:76283d83e102361309030d4a4f6bd9fb",
+              "content": "https://data.caltech.edu/api/records/258wv-a5t45/files/Lev3:Strain_N2.json/content",
+              "key": "Lev3:Strain_N2.json",
+              "sha256": "e5e41ab62c43aba9555d47e7a7dc255b66bb55b5739870a1eea0389fcf4ecd30",
+              "size": 2229
+            }
+          },
+          "simulation_name": null,
+          "source_format": "strain",
+          "title": "Binary black-hole simulation SXS:BBH:2265",
+          "waveform_sidecar_sha256": "e5e41ab62c43aba9555d47e7a7dc255b66bb55b5739870a1eea0389fcf4ecd30"
+        },
+        "sxs_id": "SXS:BBH:2265",
+        "time_conversion": {
+          "Mref": 1.0000036228147966,
+          "formula": "time_M=time_code/(reference_mass1+reference_mass2)",
+          "source_unit": "metadata code units",
+          "target_unit": "waveform M"
+        },
+        "time_end": 30739.839673885424
+      },
+      "npz_path": "/tmp/torchwave-nr33-v2/npz/SXS_BBH_2265_258wv-a5t45_Lev3_N2.npz",
+      "npz_sha256": "e71ffcc06737ebc6b969b57a8cb4b0106075aed35b81bfdfc50cf47e91daca9c",
+      "path": "/tmp/torchwave-nr33-v2/npz/SXS_BBH_2265_258wv-a5t45_Lev3_N2.npz",
+      "q": 3.000112224984311,
+      "resolution": "Lev3",
+      "selection": {
+        "candidate_rank": 2,
+        "target_q": 3
+      },
+      "source_split": "validation_only",
+      "split": "validation_only",
+      "sxs_id": "SXS:BBH:2265",
+      "target_q": 3
+    },
+    {
+      "candidate_rank": 2,
+      "extrapolation_order": 3,
+      "id": "SXS:BBH:2265/Lev3/N3",
+      "metadata": {
+        "eccentricity": 7.17e-05,
+        "extraction_frame_type": "inertial",
+        "extrapolation_order": 3,
+        "final_mass_fraction": 0.9710985434721972,
+        "final_spin": [
+          5.3326860993654436e-08,
+          -7.735070876293862e-08,
+          0.5406090348112912
+        ],
+        "final_spin_magnitude": 0.5406090348112994,
+        "frame_transform": "none",
+        "initial_spin1": [
+          1.54177e-11,
+          -4.74938e-11,
+          -7.0784767e-09
+        ],
+        "initial_spin2": [
+          1.64519e-11,
+          -1.62843e-11,
+          -6.90100228e-08
+        ],
+        "memory_integration_start_time_waveform_M": 1077.5,
+        "memory_time_note": "selected sidecar group add_memory integration start retained separately; never used as relaxation_time",
+        "npz_sha256": "b34ee2d0a4c94dccd412023047429859c0d7c4716c3a36990d7080090853ee45",
+        "peak_time": 30556.345367388192,
+        "peak_time_h22": 30556.345367388192,
+        "record_id": "258wv-a5t45",
+        "reference_mass1": 0.7500097310012441,
+        "reference_mass2": 0.24999389181355253,
+        "reference_spin1": [
+          7.139661994914472e-08,
+          -5.454190023516652e-08,
+          8.310310779581836e-06
+        ],
+        "reference_spin2": [
+          6.404327245255476e-08,
+          1.4342777428877783e-08,
+          7.14361976879799e-06
+        ],
+        "reference_time": 1077.4960964311986,
+        "reference_time_M": 1077.4960964311986,
+        "reference_time_code": 1077.5,
+        "relaxation_time": 1077.4960964311986,
+        "relaxation_time_M": 1077.4960964311986,
+        "relaxation_time_code": 1077.5,
+        "remnant_mass": 0.9711020615823694,
+        "remnant_mass_fraction": 0.9710985434721972,
+        "remnant_spin": [
+          5.3326860993654436e-08,
+          -7.735070876293862e-08,
+          0.5406090348112912
+        ],
+        "resolution": "Lev3",
+        "source_frame_type": "inertial",
+        "source_identity": {
+          "alternative_names": null,
+          "api_id": "258wv-a5t45",
+          "creators": [
+            {
+              "person_or_org": {
+                "name": "SXS Collaboration",
+                "type": "organizational"
+              }
+            }
+          ],
+          "doi": "10.26138/SXS:BBH:2265v3.0",
+          "h5_group": "/Strain_N3.dir",
+          "license": null,
+          "metadata_sha256": "f564d8563f285e62409278cc1b9d1596f86125a5e92ad2fb5f61d152833026ca",
+          "record_id": "258wv-a5t45",
+          "record_url": "https://data.caltech.edu/records/258wv-a5t45",
+          "selected_files": {
+            "h5": {
+              "checksum": "md5:6a6c0fdf3d1bf58a26e6301ebeecff93",
+              "content": "https://data.caltech.edu/api/records/258wv-a5t45/files/Lev3:ExtraWaveforms.h5/content",
+              "key": "Lev3:ExtraWaveforms.h5",
+              "sha256": "93c58789edf20b912402c86191fc4490d85f7c375ce2df1ec33705963d0cd2f3",
+              "size": 53888107
+            },
+            "metadata": {
+              "checksum": "md5:ea2133e45d1075aa4f53068a3cc0e437",
+              "content": "https://data.caltech.edu/api/records/258wv-a5t45/files/Lev3:metadata.json/content",
+              "key": "Lev3:metadata.json",
+              "sha256": "f564d8563f285e62409278cc1b9d1596f86125a5e92ad2fb5f61d152833026ca",
+              "size": 3304
+            },
+            "sidecar": {
+              "checksum": "md5:eaa079d15da55be39b2a1405d9f306a5",
+              "content": "https://data.caltech.edu/api/records/258wv-a5t45/files/Lev3:ExtraWaveforms.json/content",
+              "key": "Lev3:ExtraWaveforms.json",
+              "sha256": "cb67c25cdaaa291f932c93fde5b2307e8fe504ec9e828ceafb38e0d25208bb4b",
+              "size": 17442
+            }
+          },
+          "simulation_name": null,
+          "source_format": "extra",
+          "title": "Binary black-hole simulation SXS:BBH:2265",
+          "waveform_sidecar_sha256": "cb67c25cdaaa291f932c93fde5b2307e8fe504ec9e828ceafb38e0d25208bb4b"
+        },
+        "sxs_id": "SXS:BBH:2265",
+        "time_conversion": {
+          "Mref": 1.0000036228147966,
+          "formula": "time_M=time_code/(reference_mass1+reference_mass2)",
+          "source_unit": "metadata code units",
+          "target_unit": "waveform M"
+        },
+        "time_end": 30739.839673885424
+      },
+      "npz_path": "/tmp/torchwave-nr33-v2/npz/SXS_BBH_2265_258wv-a5t45_Lev3_N3.npz",
+      "npz_sha256": "b34ee2d0a4c94dccd412023047429859c0d7c4716c3a36990d7080090853ee45",
+      "path": "/tmp/torchwave-nr33-v2/npz/SXS_BBH_2265_258wv-a5t45_Lev3_N3.npz",
+      "q": 3.000112224984311,
+      "resolution": "Lev3",
+      "selection": {
+        "candidate_rank": 2,
+        "target_q": 3
+      },
+      "source_split": "holdout",
+      "split": "holdout",
+      "sxs_id": "SXS:BBH:2265",
+      "target_q": 3
+    },
+    {
+      "candidate_rank": 1,
+      "extrapolation_order": 2,
+      "id": "SXS:BBH:2485/Lev4/N2",
+      "metadata": {
+        "eccentricity": 0.0006994,
+        "extraction_frame_type": "inertial",
+        "extrapolation_order": 2,
+        "final_mass_fraction": 0.9779136201685305,
+        "final_spin": [
+          -7.955861930865195e-08,
+          -3.432336585300082e-07,
+          0.4717100250493942
+        ],
+        "final_spin_magnitude": 0.4717100250495258,
+        "frame_transform": "none",
+        "initial_spin1": [
+          -1.6895e-11,
+          6.40961e-11,
+          -2.11070205e-08
+        ],
+        "initial_spin2": [
+          1.268e-13,
+          1.1936e-12,
+          -1.76700432e-08
+        ],
+        "memory_integration_start_time_waveform_M": 981.0,
+        "memory_time_note": "selected sidecar group add_memory integration start retained separately; never used as relaxation_time",
+        "npz_sha256": "44c9e6b773a40c54af5a4b2e5626694bfdba3cf44b5b0e3fd07d97d5d2eabe20",
+        "peak_time": 6967.062953442249,
+        "peak_time_h22": 6967.062953442249,
+        "record_id": "5mjz7-2gs59",
+        "reference_mass1": 0.7997755913378535,
+        "reference_mass2": 0.19999297878735894,
+        "reference_spin1": [
+          6.2471779956447e-08,
+          -3.4175555072920597e-07,
+          5.405493869694506e-06
+        ],
+        "reference_spin2": [
+          1.0346356806622072e-07,
+          7.224013036043086e-08,
+          -0.00011311273428382054
+        ],
+        "reference_time": 981.2270852614803,
+        "reference_time_M": 981.2270852614803,
+        "reference_time_code": 981.0,
+        "relaxation_time": 981.2270852614803,
+        "relaxation_time_M": 981.2270852614803,
+        "relaxation_time_code": 981.0,
+        "remnant_mass": 0.9776873017418617,
+        "remnant_mass_fraction": 0.9779136201685305,
+        "remnant_spin": [
+          -7.955861930865195e-08,
+          -3.432336585300082e-07,
+          0.4717100250493942
+        ],
+        "resolution": "Lev4",
+        "source_frame_type": "inertial",
+        "source_identity": {
+          "alternative_names": null,
+          "api_id": "5mjz7-2gs59",
+          "creators": [
+            {
+              "person_or_org": {
+                "name": "SXS Collaboration",
+                "type": "organizational"
+              }
+            }
+          ],
+          "doi": "10.26138/SXS:BBH:2485v3.0",
+          "h5_group": null,
+          "license": null,
+          "metadata_sha256": "e29d377fbbabfdc4e931812b1fff63c083e9d15dbe65d0c466efbc1f48ba1aee",
+          "record_id": "5mjz7-2gs59",
+          "record_url": "https://data.caltech.edu/records/5mjz7-2gs59",
+          "selected_files": {
+            "h5": {
+              "checksum": "md5:015794d2e86ee88752efcd90b5311ecb",
+              "content": "https://data.caltech.edu/api/records/5mjz7-2gs59/files/Lev4:Strain_N2.h5/content",
+              "key": "Lev4:Strain_N2.h5",
+              "sha256": "eb6cb4b7c0db9d2f0be554c1a0b60d3f06ef554e56fe05b94934bb170f788cf8",
+              "size": 2819481
+            },
+            "metadata": {
+              "checksum": "md5:ddbde2e2401c63578be83a06b40b95e2",
+              "content": "https://data.caltech.edu/api/records/5mjz7-2gs59/files/Lev4:metadata.json/content",
+              "key": "Lev4:metadata.json",
+              "sha256": "e29d377fbbabfdc4e931812b1fff63c083e9d15dbe65d0c466efbc1f48ba1aee",
+              "size": 3288
+            },
+            "sidecar": {
+              "checksum": "md5:2bdb99e9be940543f11c70cbc37e4aae",
+              "content": "https://data.caltech.edu/api/records/5mjz7-2gs59/files/Lev4:Strain_N2.json/content",
+              "key": "Lev4:Strain_N2.json",
+              "sha256": "caa7aa03826741dfec5f3ca9a017cfde7b2f0d7ee080eb410483dbc222d4e890",
+              "size": 2226
+            }
+          },
+          "simulation_name": null,
+          "source_format": "strain",
+          "title": "Binary black-hole simulation SXS:BBH:2485",
+          "waveform_sidecar_sha256": "caa7aa03826741dfec5f3ca9a017cfde7b2f0d7ee080eb410483dbc222d4e890"
+        },
+        "sxs_id": "SXS:BBH:2485",
+        "time_conversion": {
+          "Mref": 0.9997685701252124,
+          "formula": "time_M=time_code/(reference_mass1+reference_mass2)",
+          "source_unit": "metadata code units",
+          "target_unit": "waveform M"
+        },
+        "time_end": 7119.992272473341
+      },
+      "npz_path": "/tmp/torchwave-nr33-v2/npz/SXS_BBH_2485_5mjz7-2gs59_Lev4_N2.npz",
+      "npz_sha256": "44c9e6b773a40c54af5a4b2e5626694bfdba3cf44b5b0e3fd07d97d5d2eabe20",
+      "path": "/tmp/torchwave-nr33-v2/npz/SXS_BBH_2485_5mjz7-2gs59_Lev4_N2.npz",
+      "q": 3.999018346480098,
+      "resolution": "Lev4",
+      "selection": {
+        "candidate_rank": 1,
+        "target_q": 4
+      },
+      "source_split": "validation_only",
+      "split": "validation_only",
+      "sxs_id": "SXS:BBH:2485",
+      "target_q": 4
+    },
+    {
+      "candidate_rank": 1,
+      "extrapolation_order": 3,
+      "id": "SXS:BBH:2485/Lev4/N3",
+      "metadata": {
+        "eccentricity": 0.0006994,
+        "extraction_frame_type": "inertial",
+        "extrapolation_order": 3,
+        "final_mass_fraction": 0.9779136201685305,
+        "final_spin": [
+          -7.955861930865195e-08,
+          -3.432336585300082e-07,
+          0.4717100250493942
+        ],
+        "final_spin_magnitude": 0.4717100250495258,
+        "frame_transform": "none",
+        "initial_spin1": [
+          -1.6895e-11,
+          6.40961e-11,
+          -2.11070205e-08
+        ],
+        "initial_spin2": [
+          1.268e-13,
+          1.1936e-12,
+          -1.76700432e-08
+        ],
+        "memory_integration_start_time_waveform_M": 981.0,
+        "memory_time_note": "selected sidecar group add_memory integration start retained separately; never used as relaxation_time",
+        "npz_sha256": "67a3ed0abadefeafdaed6e17a2ec5565b18697852540ebf32b5f77d0804de8c2",
+        "peak_time": 6966.962932679182,
+        "peak_time_h22": 6966.962932679182,
+        "record_id": "5mjz7-2gs59",
+        "reference_mass1": 0.7997755913378535,
+        "reference_mass2": 0.19999297878735894,
+        "reference_spin1": [
+          6.2471779956447e-08,
+          -3.4175555072920597e-07,
+          5.405493869694506e-06
+        ],
+        "reference_spin2": [
+          1.0346356806622072e-07,
+          7.224013036043086e-08,
+          -0.00011311273428382054
+        ],
+        "reference_time": 981.2270852614803,
+        "reference_time_M": 981.2270852614803,
+        "reference_time_code": 981.0,
+        "relaxation_time": 981.2270852614803,
+        "relaxation_time_M": 981.2270852614803,
+        "relaxation_time_code": 981.0,
+        "remnant_mass": 0.9776873017418617,
+        "remnant_mass_fraction": 0.9779136201685305,
+        "remnant_spin": [
+          -7.955861930865195e-08,
+          -3.432336585300082e-07,
+          0.4717100250493942
+        ],
+        "resolution": "Lev4",
+        "source_frame_type": "inertial",
+        "source_identity": {
+          "alternative_names": null,
+          "api_id": "5mjz7-2gs59",
+          "creators": [
+            {
+              "person_or_org": {
+                "name": "SXS Collaboration",
+                "type": "organizational"
+              }
+            }
+          ],
+          "doi": "10.26138/SXS:BBH:2485v3.0",
+          "h5_group": "/Strain_N3.dir",
+          "license": null,
+          "metadata_sha256": "e29d377fbbabfdc4e931812b1fff63c083e9d15dbe65d0c466efbc1f48ba1aee",
+          "record_id": "5mjz7-2gs59",
+          "record_url": "https://data.caltech.edu/records/5mjz7-2gs59",
+          "selected_files": {
+            "h5": {
+              "checksum": "md5:114d98f2d3c78e9e6e5c4ed92802ea01",
+              "content": "https://data.caltech.edu/api/records/5mjz7-2gs59/files/Lev4:ExtraWaveforms.h5/content",
+              "key": "Lev4:ExtraWaveforms.h5",
+              "sha256": "aa5258864de5e05ccd68d4b45528ecf4cc9be8b53ee43403181ecbe309e01e92",
+              "size": 25164940
+            },
+            "metadata": {
+              "checksum": "md5:ddbde2e2401c63578be83a06b40b95e2",
+              "content": "https://data.caltech.edu/api/records/5mjz7-2gs59/files/Lev4:metadata.json/content",
+              "key": "Lev4:metadata.json",
+              "sha256": "e29d377fbbabfdc4e931812b1fff63c083e9d15dbe65d0c466efbc1f48ba1aee",
+              "size": 3288
+            },
+            "sidecar": {
+              "checksum": "md5:fc2428a90e8ab73d3fcbcd39c270d51e",
+              "content": "https://data.caltech.edu/api/records/5mjz7-2gs59/files/Lev4:ExtraWaveforms.json/content",
+              "key": "Lev4:ExtraWaveforms.json",
+              "sha256": "ef37b77d6564c3afa44e4ef27467ca46ac7adb7a12e5e1ef9ffc3df898c3ca83",
+              "size": 17421
+            }
+          },
+          "simulation_name": null,
+          "source_format": "extra",
+          "title": "Binary black-hole simulation SXS:BBH:2485",
+          "waveform_sidecar_sha256": "ef37b77d6564c3afa44e4ef27467ca46ac7adb7a12e5e1ef9ffc3df898c3ca83"
+        },
+        "sxs_id": "SXS:BBH:2485",
+        "time_conversion": {
+          "Mref": 0.9997685701252124,
+          "formula": "time_M=time_code/(reference_mass1+reference_mass2)",
+          "source_unit": "metadata code units",
+          "target_unit": "waveform M"
+        },
+        "time_end": 7119.992272473341
+      },
+      "npz_path": "/tmp/torchwave-nr33-v2/npz/SXS_BBH_2485_5mjz7-2gs59_Lev4_N3.npz",
+      "npz_sha256": "67a3ed0abadefeafdaed6e17a2ec5565b18697852540ebf32b5f77d0804de8c2",
+      "path": "/tmp/torchwave-nr33-v2/npz/SXS_BBH_2485_5mjz7-2gs59_Lev4_N3.npz",
+      "q": 3.999018346480098,
+      "resolution": "Lev4",
+      "selection": {
+        "candidate_rank": 1,
+        "target_q": 4
+      },
+      "source_split": "validation_only",
+      "split": "validation_only",
+      "sxs_id": "SXS:BBH:2485",
+      "target_q": 4
+    },
+    {
+      "candidate_rank": 1,
+      "extrapolation_order": 2,
+      "id": "SXS:BBH:2485/Lev5/N2",
+      "metadata": {
+        "eccentricity": 0.0009793,
+        "extraction_frame_type": "inertial",
+        "extrapolation_order": 2,
+        "final_mass_fraction": 0.9779198333168586,
+        "final_spin": [
+          -3.223627288819924e-07,
+          -4.320612308034716e-07,
+          0.4716696587282867
+        ],
+        "final_spin_magnitude": 0.47166965872859473,
+        "frame_transform": "none",
+        "initial_spin1": [
+          -1.6895e-11,
+          6.40961e-11,
+          -2.11070205e-08
+        ],
+        "initial_spin2": [
+          1.268e-13,
+          1.1936e-12,
+          -1.76700432e-08
+        ],
+        "memory_integration_start_time_waveform_M": 1344.0,
+        "memory_time_note": "selected sidecar group add_memory integration start retained separately; never used as relaxation_time",
+        "npz_sha256": "576e0d81fa157a655d137971911b77054b80e7341b3863f00e6a0c44c0000154",
+        "peak_time": 6956.901697048977,
+        "peak_time_h22": 6956.901697048977,
+        "record_id": "5mjz7-2gs59",
+        "reference_mass1": 0.7998280023359201,
+        "reference_mass2": 0.20000601212853936,
+        "reference_spin1": [
+          -3.7700319004299177e-07,
+          -1.0299705762034445e-07,
+          -2.2514243664691422e-05
+        ],
+        "reference_spin2": [
+          2.4140736654569644e-07,
+          1.470060265165636e-07,
+          -8.676519097488299e-05
+        ],
+        "reference_time": 1344.2231215947238,
+        "reference_time_M": 1344.2231215947238,
+        "reference_time_code": 1344.0,
+        "relaxation_time": 1344.2231215947238,
+        "relaxation_time_M": 1344.2231215947238,
+        "relaxation_time_code": 1344.0,
+        "remnant_mass": 0.9777575127696099,
+        "remnant_mass_fraction": 0.9779198333168586,
+        "remnant_spin": [
+          -3.223627288819924e-07,
+          -4.320612308034716e-07,
+          0.4716696587282867
+        ],
+        "resolution": "Lev5",
+        "source_frame_type": "inertial",
+        "source_identity": {
+          "alternative_names": null,
+          "api_id": "5mjz7-2gs59",
+          "creators": [
+            {
+              "person_or_org": {
+                "name": "SXS Collaboration",
+                "type": "organizational"
+              }
+            }
+          ],
+          "doi": "10.26138/SXS:BBH:2485v3.0",
+          "h5_group": null,
+          "license": null,
+          "metadata_sha256": "193816d6873130dd746250a0cee7b7b9c3eed57c6288233fdbee4b381d5d490f",
+          "record_id": "5mjz7-2gs59",
+          "record_url": "https://data.caltech.edu/records/5mjz7-2gs59",
+          "selected_files": {
+            "h5": {
+              "checksum": "md5:c01e5cdf46726fa8fa5ec6a39232e154",
+              "content": "https://data.caltech.edu/api/records/5mjz7-2gs59/files/Lev5:Strain_N2.h5/content",
+              "key": "Lev5:Strain_N2.h5",
+              "sha256": "b7e9215d86c16b13ecb150293b9ca6146fa7807890dd4878e14d65db41634874",
+              "size": 2703518
+            },
+            "metadata": {
+              "checksum": "md5:353372bf8b7200986c5f2e3675d6d39a",
+              "content": "https://data.caltech.edu/api/records/5mjz7-2gs59/files/Lev5:metadata.json/content",
+              "key": "Lev5:metadata.json",
+              "sha256": "193816d6873130dd746250a0cee7b7b9c3eed57c6288233fdbee4b381d5d490f",
+              "size": 3289
+            },
+            "sidecar": {
+              "checksum": "md5:cb3ade49a1afbafefdb84a25a88ee0c8",
+              "content": "https://data.caltech.edu/api/records/5mjz7-2gs59/files/Lev5:Strain_N2.json/content",
+              "key": "Lev5:Strain_N2.json",
+              "sha256": "0bf37ead12ca2c02b2eb27b5b7eb0f170b64831a1c03e476750ecf6d0cd87f43",
+              "size": 2227
+            }
+          },
+          "simulation_name": null,
+          "source_format": "strain",
+          "title": "Binary black-hole simulation SXS:BBH:2485",
+          "waveform_sidecar_sha256": "0bf37ead12ca2c02b2eb27b5b7eb0f170b64831a1c03e476750ecf6d0cd87f43"
+        },
+        "sxs_id": "SXS:BBH:2485",
+        "time_conversion": {
+          "Mref": 0.9998340144644595,
+          "formula": "time_M=time_code/(reference_mass1+reference_mass2)",
+          "source_unit": "metadata code units",
+          "target_unit": "waveform M"
+        },
+        "time_end": 7110.420954570029
+      },
+      "npz_path": "/tmp/torchwave-nr33-v2/npz/SXS_BBH_2485_5mjz7-2gs59_Lev5_N2.npz",
+      "npz_sha256": "576e0d81fa157a655d137971911b77054b80e7341b3863f00e6a0c44c0000154",
+      "path": "/tmp/torchwave-nr33-v2/npz/SXS_BBH_2485_5mjz7-2gs59_Lev5_N2.npz",
+      "q": 3.9990197985742983,
+      "resolution": "Lev5",
+      "selection": {
+        "candidate_rank": 1,
+        "target_q": 4
+      },
+      "source_split": "validation_only",
+      "split": "validation_only",
+      "sxs_id": "SXS:BBH:2485",
+      "target_q": 4
+    },
+    {
+      "candidate_rank": 1,
+      "extrapolation_order": 3,
+      "id": "SXS:BBH:2485/Lev5/N3",
+      "metadata": {
+        "eccentricity": 0.0009793,
+        "extraction_frame_type": "inertial",
+        "extrapolation_order": 3,
+        "final_mass_fraction": 0.9779198333168586,
+        "final_spin": [
+          -3.223627288819924e-07,
+          -4.320612308034716e-07,
+          0.4716696587282867
+        ],
+        "final_spin_magnitude": 0.47166965872859473,
+        "frame_transform": "none",
+        "initial_spin1": [
+          -1.6895e-11,
+          6.40961e-11,
+          -2.11070205e-08
+        ],
+        "initial_spin2": [
+          1.268e-13,
+          1.1936e-12,
+          -1.76700432e-08
+        ],
+        "memory_integration_start_time_waveform_M": 1344.0,
+        "memory_time_note": "selected sidecar group add_memory integration start retained separately; never used as relaxation_time",
+        "npz_sha256": "5e47a5334555f5b19db2fa398ddc412aba214b953d3c1ac91b1594c579309146",
+        "peak_time": 6956.901697048977,
+        "peak_time_h22": 6956.901697048977,
+        "record_id": "5mjz7-2gs59",
+        "reference_mass1": 0.7998280023359201,
+        "reference_mass2": 0.20000601212853936,
+        "reference_spin1": [
+          -3.7700319004299177e-07,
+          -1.0299705762034445e-07,
+          -2.2514243664691422e-05
+        ],
+        "reference_spin2": [
+          2.4140736654569644e-07,
+          1.470060265165636e-07,
+          -8.676519097488299e-05
+        ],
+        "reference_time": 1344.2231215947238,
+        "reference_time_M": 1344.2231215947238,
+        "reference_time_code": 1344.0,
+        "relaxation_time": 1344.2231215947238,
+        "relaxation_time_M": 1344.2231215947238,
+        "relaxation_time_code": 1344.0,
+        "remnant_mass": 0.9777575127696099,
+        "remnant_mass_fraction": 0.9779198333168586,
+        "remnant_spin": [
+          -3.223627288819924e-07,
+          -4.320612308034716e-07,
+          0.4716696587282867
+        ],
+        "resolution": "Lev5",
+        "source_frame_type": "inertial",
+        "source_identity": {
+          "alternative_names": null,
+          "api_id": "5mjz7-2gs59",
+          "creators": [
+            {
+              "person_or_org": {
+                "name": "SXS Collaboration",
+                "type": "organizational"
+              }
+            }
+          ],
+          "doi": "10.26138/SXS:BBH:2485v3.0",
+          "h5_group": "/Strain_N3.dir",
+          "license": null,
+          "metadata_sha256": "193816d6873130dd746250a0cee7b7b9c3eed57c6288233fdbee4b381d5d490f",
+          "record_id": "5mjz7-2gs59",
+          "record_url": "https://data.caltech.edu/records/5mjz7-2gs59",
+          "selected_files": {
+            "h5": {
+              "checksum": "md5:aa30be5f872dcb7faa800db1b0410377",
+              "content": "https://data.caltech.edu/api/records/5mjz7-2gs59/files/Lev5:ExtraWaveforms.h5/content",
+              "key": "Lev5:ExtraWaveforms.h5",
+              "sha256": "d1171ae305a23c7a2ad2a0156b72e8f8ed7d318ab02d806d16ce5fe72feafe91",
+              "size": 24148973
+            },
+            "metadata": {
+              "checksum": "md5:353372bf8b7200986c5f2e3675d6d39a",
+              "content": "https://data.caltech.edu/api/records/5mjz7-2gs59/files/Lev5:metadata.json/content",
+              "key": "Lev5:metadata.json",
+              "sha256": "193816d6873130dd746250a0cee7b7b9c3eed57c6288233fdbee4b381d5d490f",
+              "size": 3289
+            },
+            "sidecar": {
+              "checksum": "md5:3e41488ee862afd1adb92cd4bb90e506",
+              "content": "https://data.caltech.edu/api/records/5mjz7-2gs59/files/Lev5:ExtraWaveforms.json/content",
+              "key": "Lev5:ExtraWaveforms.json",
+              "sha256": "e2bd5c4e392b403c42f8df5d7f9deb32a40ae28bc898769c9a89e0e0f63ec2f5",
+              "size": 17428
+            }
+          },
+          "simulation_name": null,
+          "source_format": "extra",
+          "title": "Binary black-hole simulation SXS:BBH:2485",
+          "waveform_sidecar_sha256": "e2bd5c4e392b403c42f8df5d7f9deb32a40ae28bc898769c9a89e0e0f63ec2f5"
+        },
+        "sxs_id": "SXS:BBH:2485",
+        "time_conversion": {
+          "Mref": 0.9998340144644595,
+          "formula": "time_M=time_code/(reference_mass1+reference_mass2)",
+          "source_unit": "metadata code units",
+          "target_unit": "waveform M"
+        },
+        "time_end": 7110.420954570029
+      },
+      "npz_path": "/tmp/torchwave-nr33-v2/npz/SXS_BBH_2485_5mjz7-2gs59_Lev5_N3.npz",
+      "npz_sha256": "5e47a5334555f5b19db2fa398ddc412aba214b953d3c1ac91b1594c579309146",
+      "path": "/tmp/torchwave-nr33-v2/npz/SXS_BBH_2485_5mjz7-2gs59_Lev5_N3.npz",
+      "q": 3.9990197985742983,
+      "resolution": "Lev5",
+      "selection": {
+        "candidate_rank": 1,
+        "target_q": 4
+      },
+      "source_split": "training",
+      "split": "training",
+      "sxs_id": "SXS:BBH:2485",
+      "target_q": 4
+    },
+    {
+      "candidate_rank": 1,
+      "extrapolation_order": 2,
+      "id": "SXS:BBH:3619/Lev2/N2",
+      "metadata": {
+        "eccentricity": 6.5e-05,
+        "extraction_frame_type": "inertial",
+        "extrapolation_order": 2,
+        "final_mass_fraction": 0.9823332673498798,
+        "final_spin": [
+          -4.3507592961406337e-07,
+          -1.3484352966880415e-06,
+          0.416711218987324
+        ],
+        "final_spin_magnitude": 0.41671121898973285,
+        "frame_transform": "none",
+        "initial_spin1": [
+          -2.06037e-11,
+          2.42083e-11,
+          -9.2366842e-09
+        ],
+        "initial_spin2": [
+          1.10991e-11,
+          4.37097e-11,
+          -6.48637908e-08
+        ],
+        "memory_integration_start_time_waveform_M": 200.5,
+        "memory_time_note": "selected sidecar group add_memory integration start retained separately; never used as relaxation_time",
+        "npz_sha256": "c4b01b6bfbf8dd27d8a31e664e3fd1dff506d767ff0b51eaeda63ec5086c89a3",
+        "peak_time": 7844.221888249004,
+        "peak_time_h22": 7844.221888249004,
+        "record_id": "6fw56-9q785",
+        "reference_mass1": 0.8333743295600046,
+        "reference_mass2": 0.1666638542392763,
+        "reference_spin1": [
+          -1.1862051287896509e-07,
+          -3.5373901681722207e-07,
+          8.058981822367275e-06
+        ],
+        "reference_spin2": [
+          2.345192743305528e-07,
+          1.0091163616059513e-07,
+          6.381987821909476e-05
+        ],
+        "reference_time": 200.49234444056253,
+        "reference_time_M": 200.49234444056253,
+        "reference_time_code": 200.5,
+        "relaxation_time": 200.49234444056253,
+        "relaxation_time_M": 200.49234444056253,
+        "relaxation_time_code": 200.5,
+        "remnant_mass": 0.9823707765661872,
+        "remnant_mass_fraction": 0.9823332673498798,
+        "remnant_spin": [
+          -4.3507592961406337e-07,
+          -1.3484352966880415e-06,
+          0.416711218987324
+        ],
+        "resolution": "Lev2",
+        "source_frame_type": "inertial",
+        "source_identity": {
+          "alternative_names": null,
+          "api_id": "6fw56-9q785",
+          "creators": [
+            {
+              "person_or_org": {
+                "name": "SXS Collaboration",
+                "type": "organizational"
+              }
+            }
+          ],
+          "doi": "10.26138/SXS:BBH:3619v3.0",
+          "h5_group": null,
+          "license": null,
+          "metadata_sha256": "8b1305d0c7f1f5fece402b0e1c65f3ac00461b1cc41534ca08ae6202a4901988",
+          "record_id": "6fw56-9q785",
+          "record_url": "https://data.caltech.edu/records/6fw56-9q785",
+          "selected_files": {
+            "h5": {
+              "checksum": "md5:176cf650dac7672796bdd1a709f51af9",
+              "content": "https://data.caltech.edu/api/records/6fw56-9q785/files/Lev2:Strain_N2.h5/content",
+              "key": "Lev2:Strain_N2.h5",
+              "sha256": "251ae2c0e69159d59d94ff9e1dace833b81bdab639525d7eb67d6ab0dec7947f",
+              "size": 3814528
+            },
+            "metadata": {
+              "checksum": "md5:ff63fa10b797e22feeb216793661203e",
+              "content": "https://data.caltech.edu/api/records/6fw56-9q785/files/Lev2:metadata.json/content",
+              "key": "Lev2:metadata.json",
+              "sha256": "8b1305d0c7f1f5fece402b0e1c65f3ac00461b1cc41534ca08ae6202a4901988",
+              "size": 3340
+            },
+            "sidecar": {
+              "checksum": "md5:a685135bc12a6fc7abe722d8dd221726",
+              "content": "https://data.caltech.edu/api/records/6fw56-9q785/files/Lev2:Strain_N2.json/content",
+              "key": "Lev2:Strain_N2.json",
+              "sha256": "5d7ad5314930b12965b6faa4f8ccfabf76609cc813ee38757fe3f46040d75c9c",
+              "size": 2227
+            }
+          },
+          "simulation_name": null,
+          "source_format": "strain",
+          "title": "Binary black-hole simulation SXS:BBH:3619",
+          "waveform_sidecar_sha256": "5d7ad5314930b12965b6faa4f8ccfabf76609cc813ee38757fe3f46040d75c9c"
+        },
+        "sxs_id": "SXS:BBH:3619",
+        "time_conversion": {
+          "Mref": 1.0000381837992809,
+          "formula": "time_M=time_code/(reference_mass1+reference_mass2)",
+          "source_unit": "metadata code units",
+          "target_unit": "waveform M"
+        },
+        "time_end": 7998.810364993623
+      },
+      "npz_path": "/tmp/torchwave-nr33-v2/npz/SXS_BBH_3619_6fw56-9q785_Lev2_N2.npz",
+      "npz_sha256": "c4b01b6bfbf8dd27d8a31e664e3fd1dff506d767ff0b51eaeda63ec5086c89a3",
+      "path": "/tmp/torchwave-nr33-v2/npz/SXS_BBH_3619_6fw56-9q785_Lev2_N2.npz",
+      "q": 5.000330355756348,
+      "resolution": "Lev2",
+      "selection": {
+        "candidate_rank": 1,
+        "target_q": 5
+      },
+      "source_split": "validation_only",
+      "split": "validation_only",
+      "sxs_id": "SXS:BBH:3619",
+      "target_q": 5
+    },
+    {
+      "candidate_rank": 1,
+      "extrapolation_order": 3,
+      "id": "SXS:BBH:3619/Lev2/N3",
+      "metadata": {
+        "eccentricity": 6.5e-05,
+        "extraction_frame_type": "inertial",
+        "extrapolation_order": 3,
+        "final_mass_fraction": 0.9823332673498798,
+        "final_spin": [
+          -4.3507592961406337e-07,
+          -1.3484352966880415e-06,
+          0.416711218987324
+        ],
+        "final_spin_magnitude": 0.41671121898973285,
+        "frame_transform": "none",
+        "initial_spin1": [
+          -2.06037e-11,
+          2.42083e-11,
+          -9.2366842e-09
+        ],
+        "initial_spin2": [
+          1.10991e-11,
+          4.37097e-11,
+          -6.48637908e-08
+        ],
+        "memory_integration_start_time_waveform_M": 200.5,
+        "memory_time_note": "selected sidecar group add_memory integration start retained separately; never used as relaxation_time",
+        "npz_sha256": "9df4bf369398654e866d1842e678dcb604b46dfcf7767f618f6ad3eb67f2a719",
+        "peak_time": 7844.221888249004,
+        "peak_time_h22": 7844.221888249004,
+        "record_id": "6fw56-9q785",
+        "reference_mass1": 0.8333743295600046,
+        "reference_mass2": 0.1666638542392763,
+        "reference_spin1": [
+          -1.1862051287896509e-07,
+          -3.5373901681722207e-07,
+          8.058981822367275e-06
+        ],
+        "reference_spin2": [
+          2.345192743305528e-07,
+          1.0091163616059513e-07,
+          6.381987821909476e-05
+        ],
+        "reference_time": 200.49234444056253,
+        "reference_time_M": 200.49234444056253,
+        "reference_time_code": 200.5,
+        "relaxation_time": 200.49234444056253,
+        "relaxation_time_M": 200.49234444056253,
+        "relaxation_time_code": 200.5,
+        "remnant_mass": 0.9823707765661872,
+        "remnant_mass_fraction": 0.9823332673498798,
+        "remnant_spin": [
+          -4.3507592961406337e-07,
+          -1.3484352966880415e-06,
+          0.416711218987324
+        ],
+        "resolution": "Lev2",
+        "source_frame_type": "inertial",
+        "source_identity": {
+          "alternative_names": null,
+          "api_id": "6fw56-9q785",
+          "creators": [
+            {
+              "person_or_org": {
+                "name": "SXS Collaboration",
+                "type": "organizational"
+              }
+            }
+          ],
+          "doi": "10.26138/SXS:BBH:3619v3.0",
+          "h5_group": "/Strain_N3.dir",
+          "license": null,
+          "metadata_sha256": "8b1305d0c7f1f5fece402b0e1c65f3ac00461b1cc41534ca08ae6202a4901988",
+          "record_id": "6fw56-9q785",
+          "record_url": "https://data.caltech.edu/records/6fw56-9q785",
+          "selected_files": {
+            "h5": {
+              "checksum": "md5:89b559d00ac6fd846df91f34f5860ca8",
+              "content": "https://data.caltech.edu/api/records/6fw56-9q785/files/Lev2:ExtraWaveforms.h5/content",
+              "key": "Lev2:ExtraWaveforms.h5",
+              "sha256": "6bb79ebf289b9eb2cf7a1b6a57e59303c188d3bae31c1cb5f011888324b20c1e",
+              "size": 33092210
+            },
+            "metadata": {
+              "checksum": "md5:ff63fa10b797e22feeb216793661203e",
+              "content": "https://data.caltech.edu/api/records/6fw56-9q785/files/Lev2:metadata.json/content",
+              "key": "Lev2:metadata.json",
+              "sha256": "8b1305d0c7f1f5fece402b0e1c65f3ac00461b1cc41534ca08ae6202a4901988",
+              "size": 3340
+            },
+            "sidecar": {
+              "checksum": "md5:9ce973077162b2ea5ac4813c82687116",
+              "content": "https://data.caltech.edu/api/records/6fw56-9q785/files/Lev2:ExtraWaveforms.json/content",
+              "key": "Lev2:ExtraWaveforms.json",
+              "sha256": "648452c48a66cd6b7d1352ec95a8cbfaa9eaf76269c61d0f11dd33b42f3903e4",
+              "size": 17428
+            }
+          },
+          "simulation_name": null,
+          "source_format": "extra",
+          "title": "Binary black-hole simulation SXS:BBH:3619",
+          "waveform_sidecar_sha256": "648452c48a66cd6b7d1352ec95a8cbfaa9eaf76269c61d0f11dd33b42f3903e4"
+        },
+        "sxs_id": "SXS:BBH:3619",
+        "time_conversion": {
+          "Mref": 1.0000381837992809,
+          "formula": "time_M=time_code/(reference_mass1+reference_mass2)",
+          "source_unit": "metadata code units",
+          "target_unit": "waveform M"
+        },
+        "time_end": 7998.810364993623
+      },
+      "npz_path": "/tmp/torchwave-nr33-v2/npz/SXS_BBH_3619_6fw56-9q785_Lev2_N3.npz",
+      "npz_sha256": "9df4bf369398654e866d1842e678dcb604b46dfcf7767f618f6ad3eb67f2a719",
+      "path": "/tmp/torchwave-nr33-v2/npz/SXS_BBH_3619_6fw56-9q785_Lev2_N3.npz",
+      "q": 5.000330355756348,
+      "resolution": "Lev2",
+      "selection": {
+        "candidate_rank": 1,
+        "target_q": 5
+      },
+      "source_split": "validation_only",
+      "split": "validation_only",
+      "sxs_id": "SXS:BBH:3619",
+      "target_q": 5
+    },
+    {
+      "candidate_rank": 1,
+      "extrapolation_order": 2,
+      "id": "SXS:BBH:3619/Lev3/N2",
+      "metadata": {
+        "eccentricity": 7.36e-05,
+        "extraction_frame_type": "inertial",
+        "extrapolation_order": 2,
+        "final_mass_fraction": 0.9823182330542443,
+        "final_spin": [
+          -4.377584542086743e-07,
+          -1.3513250770253546e-06,
+          0.4166362582018201
+        ],
+        "final_spin_magnitude": 0.41663625820424155,
+        "frame_transform": "none",
+        "initial_spin1": [
+          -2.06037e-11,
+          2.42083e-11,
+          -9.2366842e-09
+        ],
+        "initial_spin2": [
+          1.10991e-11,
+          4.37097e-11,
+          -6.48637908e-08
+        ],
+        "memory_integration_start_time_waveform_M": 342.5,
+        "memory_time_note": "selected sidecar group add_memory integration start retained separately; never used as relaxation_time",
+        "npz_sha256": "4367aa357e4fe2854cf8877b4248c246284c4ed08e7c141bc3af8adfa29f87c3",
+        "peak_time": 7822.31110321981,
+        "peak_time_h22": 7822.31110321981,
+        "record_id": "6fw56-9q785",
+        "reference_mass1": 0.8333698952394436,
+        "reference_mass2": 0.16666373670500956,
+        "reference_spin1": [
+          -1.862594377758453e-07,
+          -7.538666584078424e-07,
+          2.4928526444539652e-06
+        ],
+        "reference_spin2": [
+          1.7420500475352218e-07,
+          2.1350378535028193e-08,
+          6.575236634019233e-05
+        ],
+        "reference_time": 342.48848144641613,
+        "reference_time_M": 342.48848144641613,
+        "reference_time_code": 342.5,
+        "relaxation_time": 342.48848144641613,
+        "relaxation_time_M": 342.48848144641613,
+        "relaxation_time_code": 342.5,
+        "remnant_mass": 0.9823512703264937,
+        "remnant_mass_fraction": 0.9823182330542443,
+        "remnant_spin": [
+          -4.377584542086743e-07,
+          -1.3513250770253546e-06,
+          0.4166362582018201
+        ],
+        "resolution": "Lev3",
+        "source_frame_type": "inertial",
+        "source_identity": {
+          "alternative_names": null,
+          "api_id": "6fw56-9q785",
+          "creators": [
+            {
+              "person_or_org": {
+                "name": "SXS Collaboration",
+                "type": "organizational"
+              }
+            }
+          ],
+          "doi": "10.26138/SXS:BBH:3619v3.0",
+          "h5_group": null,
+          "license": null,
+          "metadata_sha256": "9226d3622cfc51e96a4841724168157c5a6b6c22db8d08bfeaa45fb95fbfd085",
+          "record_id": "6fw56-9q785",
+          "record_url": "https://data.caltech.edu/records/6fw56-9q785",
+          "selected_files": {
+            "h5": {
+              "checksum": "md5:bad0925ff865cc144c2091f2f4aefdc7",
+              "content": "https://data.caltech.edu/api/records/6fw56-9q785/files/Lev3:Strain_N2.h5/content",
+              "key": "Lev3:Strain_N2.h5",
+              "sha256": "274557fb43434ed93c0a5f2c989be152216ec256bb8888a23fbfbfd8f20feaf9",
+              "size": 3699208
+            },
+            "metadata": {
+              "checksum": "md5:36bf4cc58ec6ef560746be61321b9547",
+              "content": "https://data.caltech.edu/api/records/6fw56-9q785/files/Lev3:metadata.json/content",
+              "key": "Lev3:metadata.json",
+              "sha256": "9226d3622cfc51e96a4841724168157c5a6b6c22db8d08bfeaa45fb95fbfd085",
+              "size": 3339
+            },
+            "sidecar": {
+              "checksum": "md5:9ebeb958fee86210c3eda7efb526b1da",
+              "content": "https://data.caltech.edu/api/records/6fw56-9q785/files/Lev3:Strain_N2.json/content",
+              "key": "Lev3:Strain_N2.json",
+              "sha256": "eb86644dead5a85a6af12250ad2d4ed1bca2845bae083a20877af57987320bc8",
+              "size": 2226
+            }
+          },
+          "simulation_name": null,
+          "source_format": "strain",
+          "title": "Binary black-hole simulation SXS:BBH:3619",
+          "waveform_sidecar_sha256": "eb86644dead5a85a6af12250ad2d4ed1bca2845bae083a20877af57987320bc8"
+        },
+        "sxs_id": "SXS:BBH:3619",
+        "time_conversion": {
+          "Mref": 1.0000336319444532,
+          "formula": "time_M=time_code/(reference_mass1+reference_mass2)",
+          "source_unit": "metadata code units",
+          "target_unit": "waveform M"
+        },
+        "time_end": 7976.900293931303
+      },
+      "npz_path": "/tmp/torchwave-nr33-v2/npz/SXS_BBH_3619_6fw56-9q785_Lev3_N2.npz",
+      "npz_sha256": "4367aa357e4fe2854cf8877b4248c246284c4ed08e7c141bc3af8adfa29f87c3",
+      "path": "/tmp/torchwave-nr33-v2/npz/SXS_BBH_3619_6fw56-9q785_Lev3_N2.npz",
+      "q": 5.000307275688211,
+      "resolution": "Lev3",
+      "selection": {
+        "candidate_rank": 1,
+        "target_q": 5
+      },
+      "source_split": "validation_only",
+      "split": "validation_only",
+      "sxs_id": "SXS:BBH:3619",
+      "target_q": 5
+    },
+    {
+      "candidate_rank": 1,
+      "extrapolation_order": 3,
+      "id": "SXS:BBH:3619/Lev3/N3",
+      "metadata": {
+        "eccentricity": 7.36e-05,
+        "extraction_frame_type": "inertial",
+        "extrapolation_order": 3,
+        "final_mass_fraction": 0.9823182330542443,
+        "final_spin": [
+          -4.377584542086743e-07,
+          -1.3513250770253546e-06,
+          0.4166362582018201
+        ],
+        "final_spin_magnitude": 0.41663625820424155,
+        "frame_transform": "none",
+        "initial_spin1": [
+          -2.06037e-11,
+          2.42083e-11,
+          -9.2366842e-09
+        ],
+        "initial_spin2": [
+          1.10991e-11,
+          4.37097e-11,
+          -6.48637908e-08
+        ],
+        "memory_integration_start_time_waveform_M": 342.5,
+        "memory_time_note": "selected sidecar group add_memory integration start retained separately; never used as relaxation_time",
+        "npz_sha256": "753e1627c915ab9a7f3b052da344d4a4e570f2defb0c9ef15f8a360398f94632",
+        "peak_time": 7822.31110321981,
+        "peak_time_h22": 7822.31110321981,
+        "record_id": "6fw56-9q785",
+        "reference_mass1": 0.8333698952394436,
+        "reference_mass2": 0.16666373670500956,
+        "reference_spin1": [
+          -1.862594377758453e-07,
+          -7.538666584078424e-07,
+          2.4928526444539652e-06
+        ],
+        "reference_spin2": [
+          1.7420500475352218e-07,
+          2.1350378535028193e-08,
+          6.575236634019233e-05
+        ],
+        "reference_time": 342.48848144641613,
+        "reference_time_M": 342.48848144641613,
+        "reference_time_code": 342.5,
+        "relaxation_time": 342.48848144641613,
+        "relaxation_time_M": 342.48848144641613,
+        "relaxation_time_code": 342.5,
+        "remnant_mass": 0.9823512703264937,
+        "remnant_mass_fraction": 0.9823182330542443,
+        "remnant_spin": [
+          -4.377584542086743e-07,
+          -1.3513250770253546e-06,
+          0.4166362582018201
+        ],
+        "resolution": "Lev3",
+        "source_frame_type": "inertial",
+        "source_identity": {
+          "alternative_names": null,
+          "api_id": "6fw56-9q785",
+          "creators": [
+            {
+              "person_or_org": {
+                "name": "SXS Collaboration",
+                "type": "organizational"
+              }
+            }
+          ],
+          "doi": "10.26138/SXS:BBH:3619v3.0",
+          "h5_group": "/Strain_N3.dir",
+          "license": null,
+          "metadata_sha256": "9226d3622cfc51e96a4841724168157c5a6b6c22db8d08bfeaa45fb95fbfd085",
+          "record_id": "6fw56-9q785",
+          "record_url": "https://data.caltech.edu/records/6fw56-9q785",
+          "selected_files": {
+            "h5": {
+              "checksum": "md5:1cd49d85764705ccf7c82081ca9462d8",
+              "content": "https://data.caltech.edu/api/records/6fw56-9q785/files/Lev3:ExtraWaveforms.h5/content",
+              "key": "Lev3:ExtraWaveforms.h5",
+              "sha256": "63a65616dc70c73d0ef4cb0bb491e7a0f83e234dd2a57c7e25b764e3347014f2",
+              "size": 32342503
+            },
+            "metadata": {
+              "checksum": "md5:36bf4cc58ec6ef560746be61321b9547",
+              "content": "https://data.caltech.edu/api/records/6fw56-9q785/files/Lev3:metadata.json/content",
+              "key": "Lev3:metadata.json",
+              "sha256": "9226d3622cfc51e96a4841724168157c5a6b6c22db8d08bfeaa45fb95fbfd085",
+              "size": 3339
+            },
+            "sidecar": {
+              "checksum": "md5:5725043f02ae4b7c40c32c4ea77b51ef",
+              "content": "https://data.caltech.edu/api/records/6fw56-9q785/files/Lev3:ExtraWaveforms.json/content",
+              "key": "Lev3:ExtraWaveforms.json",
+              "sha256": "26544cba1e279bfa36b6e512f9f972582b7b5cc47f92e876d5a0627b02cf5ae3",
+              "size": 17421
+            }
+          },
+          "simulation_name": null,
+          "source_format": "extra",
+          "title": "Binary black-hole simulation SXS:BBH:3619",
+          "waveform_sidecar_sha256": "26544cba1e279bfa36b6e512f9f972582b7b5cc47f92e876d5a0627b02cf5ae3"
+        },
+        "sxs_id": "SXS:BBH:3619",
+        "time_conversion": {
+          "Mref": 1.0000336319444532,
+          "formula": "time_M=time_code/(reference_mass1+reference_mass2)",
+          "source_unit": "metadata code units",
+          "target_unit": "waveform M"
+        },
+        "time_end": 7976.900293931303
+      },
+      "npz_path": "/tmp/torchwave-nr33-v2/npz/SXS_BBH_3619_6fw56-9q785_Lev3_N3.npz",
+      "npz_sha256": "753e1627c915ab9a7f3b052da344d4a4e570f2defb0c9ef15f8a360398f94632",
+      "path": "/tmp/torchwave-nr33-v2/npz/SXS_BBH_3619_6fw56-9q785_Lev3_N3.npz",
+      "q": 5.000307275688211,
+      "resolution": "Lev3",
+      "selection": {
+        "candidate_rank": 1,
+        "target_q": 5
+      },
+      "source_split": "training",
+      "split": "training",
+      "sxs_id": "SXS:BBH:3619",
+      "target_q": 5
+    },
+    {
+      "candidate_rank": 2,
+      "extrapolation_order": 2,
+      "id": "SXS:BBH:2489/Lev4/N2",
+      "metadata": {
+        "eccentricity": 0.000581,
+        "extraction_frame_type": "inertial",
+        "extrapolation_order": 2,
+        "final_mass_fraction": 0.9854595729592849,
+        "final_spin": [
+          6.201454967518577e-08,
+          6.511685208519308e-08,
+          0.37255891662828394
+        ],
+        "final_spin_magnitude": 0.37255891662829477,
+        "frame_transform": "none",
+        "initial_spin1": [
+          1.103123e-10,
+          -3.12905e-11,
+          -2.75505818e-08
+        ],
+        "initial_spin2": [
+          1.75083e-11,
+          -6.5385e-12,
+          -1.762869199e-07
+        ],
+        "memory_integration_start_time_waveform_M": 1486.0,
+        "memory_time_note": "selected sidecar group add_memory integration start retained separately; never used as relaxation_time",
+        "npz_sha256": "1518073f8eb969a1f7de93e96437dc8b1db0154f30bc4d34152ddbce5cdee4bb",
+        "peak_time": 8963.377806950317,
+        "peak_time_h22": 8963.377806950317,
+        "record_id": "q7rzh-bzw94",
+        "reference_mass1": 0.8569522213469654,
+        "reference_mass2": 0.14286523625976574,
+        "reference_spin1": [
+          4.148625815135158e-08,
+          1.0818234994398777e-07,
+          2.1209304692131968e-05
+        ],
+        "reference_spin2": [
+          8.594287355655044e-08,
+          -3.7295082470420033e-08,
+          -0.0001553610911158705
+        ],
+        "reference_time": 1486.2713075215217,
+        "reference_time_M": 1486.2713075215217,
+        "reference_time_code": 1486.0,
+        "relaxation_time": 1486.2713075215217,
+        "relaxation_time_M": 1486.2713075215217,
+        "relaxation_time_code": 1486.0,
+        "remnant_mass": 0.9852796848103672,
+        "remnant_mass_fraction": 0.9854595729592849,
+        "remnant_spin": [
+          6.201454967518577e-08,
+          6.511685208519308e-08,
+          0.37255891662828394
+        ],
+        "resolution": "Lev4",
+        "source_frame_type": "inertial",
+        "source_identity": {
+          "alternative_names": null,
+          "api_id": "q7rzh-bzw94",
+          "creators": [
+            {
+              "person_or_org": {
+                "name": "SXS Collaboration",
+                "type": "organizational"
+              }
+            }
+          ],
+          "doi": "10.26138/SXS:BBH:2489v3.0",
+          "h5_group": null,
+          "license": null,
+          "metadata_sha256": "5f0cbf843aaa82c8615a7d9501e0c626761daaa1fe0e8536f9853b8dd7db53cc",
+          "record_id": "q7rzh-bzw94",
+          "record_url": "https://data.caltech.edu/records/q7rzh-bzw94",
+          "selected_files": {
+            "h5": {
+              "checksum": "md5:fcbde53990076fc892aaf53d0fb45307",
+              "content": "https://data.caltech.edu/api/records/q7rzh-bzw94/files/Lev4:Strain_N2.h5/content",
+              "key": "Lev4:Strain_N2.h5",
+              "sha256": "798421d056e969d392d86ff26c73c2aef8b506804a55e729d384c584e763515c",
+              "size": 3423156
+            },
+            "metadata": {
+              "checksum": "md5:abd06c4edcac7e1614669cea9fd56735",
+              "content": "https://data.caltech.edu/api/records/q7rzh-bzw94/files/Lev4:metadata.json/content",
+              "key": "Lev4:metadata.json",
+              "sha256": "5f0cbf843aaa82c8615a7d9501e0c626761daaa1fe0e8536f9853b8dd7db53cc",
+              "size": 3319
+            },
+            "sidecar": {
+              "checksum": "md5:9e86dac0ee91e09038cbe9de19135475",
+              "content": "https://data.caltech.edu/api/records/q7rzh-bzw94/files/Lev4:Strain_N2.json/content",
+              "key": "Lev4:Strain_N2.json",
+              "sha256": "4084142b21547f716a842e726272f3188602122b50795c99473f9f3967a278c6",
+              "size": 2226
+            }
+          },
+          "simulation_name": null,
+          "source_format": "strain",
+          "title": "Binary black-hole simulation SXS:BBH:2489",
+          "waveform_sidecar_sha256": "4084142b21547f716a842e726272f3188602122b50795c99473f9f3967a278c6"
+        },
+        "sxs_id": "SXS:BBH:2489",
+        "time_conversion": {
+          "Mref": 0.9998174576067311,
+          "formula": "time_M=time_code/(reference_mass1+reference_mass2)",
+          "source_unit": "metadata code units",
+          "target_unit": "waveform M"
+        },
+        "time_end": 9117.303222110999
+      },
+      "npz_path": "/tmp/torchwave-nr33-v3-search/npz/SXS_BBH_2489_q7rzh-bzw94_Lev4_N2.npz",
+      "npz_sha256": "1518073f8eb969a1f7de93e96437dc8b1db0154f30bc4d34152ddbce5cdee4bb",
+      "path": "/tmp/torchwave-nr33-v3-search/npz/SXS_BBH_2489_q7rzh-bzw94_Lev4_N2.npz",
+      "q": 5.998325721372874,
+      "resolution": "Lev4",
+      "selection": {
+        "candidate_rank": 2,
+        "target_q": 6.0
+      },
+      "source_split": "validation_only",
+      "split": "validation_only",
+      "sxs_id": "SXS:BBH:2489",
+      "target_q": 6.0
+    },
+    {
+      "candidate_rank": 2,
+      "extrapolation_order": 3,
+      "id": "SXS:BBH:2489/Lev4/N3",
+      "metadata": {
+        "eccentricity": 0.000581,
+        "extraction_frame_type": "inertial",
+        "extrapolation_order": 3,
+        "final_mass_fraction": 0.9854595729592849,
+        "final_spin": [
+          6.201454967518577e-08,
+          6.511685208519308e-08,
+          0.37255891662828394
+        ],
+        "final_spin_magnitude": 0.37255891662829477,
+        "frame_transform": "none",
+        "initial_spin1": [
+          1.103123e-10,
+          -3.12905e-11,
+          -2.75505818e-08
+        ],
+        "initial_spin2": [
+          1.75083e-11,
+          -6.5385e-12,
+          -1.762869199e-07
+        ],
+        "memory_integration_start_time_waveform_M": 1486.0,
+        "memory_time_note": "selected sidecar group add_memory integration start retained separately; never used as relaxation_time",
+        "npz_sha256": "513fa0cea2dbd7fb3eaea6c9c963edb796c7eee7abab412aeee610c9cfc8a762",
+        "peak_time": 8963.27778945226,
+        "peak_time_h22": 8963.27778945226,
+        "record_id": "q7rzh-bzw94",
+        "reference_mass1": 0.8569522213469654,
+        "reference_mass2": 0.14286523625976574,
+        "reference_spin1": [
+          4.148625815135158e-08,
+          1.0818234994398777e-07,
+          2.1209304692131968e-05
+        ],
+        "reference_spin2": [
+          8.594287355655044e-08,
+          -3.7295082470420033e-08,
+          -0.0001553610911158705
+        ],
+        "reference_time": 1486.2713075215217,
+        "reference_time_M": 1486.2713075215217,
+        "reference_time_code": 1486.0,
+        "relaxation_time": 1486.2713075215217,
+        "relaxation_time_M": 1486.2713075215217,
+        "relaxation_time_code": 1486.0,
+        "remnant_mass": 0.9852796848103672,
+        "remnant_mass_fraction": 0.9854595729592849,
+        "remnant_spin": [
+          6.201454967518577e-08,
+          6.511685208519308e-08,
+          0.37255891662828394
+        ],
+        "resolution": "Lev4",
+        "source_frame_type": "inertial",
+        "source_identity": {
+          "alternative_names": null,
+          "api_id": "q7rzh-bzw94",
+          "creators": [
+            {
+              "person_or_org": {
+                "name": "SXS Collaboration",
+                "type": "organizational"
+              }
+            }
+          ],
+          "doi": "10.26138/SXS:BBH:2489v3.0",
+          "h5_group": "/Strain_N3.dir",
+          "license": null,
+          "metadata_sha256": "5f0cbf843aaa82c8615a7d9501e0c626761daaa1fe0e8536f9853b8dd7db53cc",
+          "record_id": "q7rzh-bzw94",
+          "record_url": "https://data.caltech.edu/records/q7rzh-bzw94",
+          "selected_files": {
+            "h5": {
+              "checksum": "md5:04e32ed8f8e237fb6e00e31311b47aa6",
+              "content": "https://data.caltech.edu/api/records/q7rzh-bzw94/files/Lev4:ExtraWaveforms.h5/content",
+              "key": "Lev4:ExtraWaveforms.h5",
+              "sha256": "2878ddac91df739f30f13ef5765636951f4d82cf0f8d229eb955b8f2ea8585bb",
+              "size": 29815237
+            },
+            "metadata": {
+              "checksum": "md5:abd06c4edcac7e1614669cea9fd56735",
+              "content": "https://data.caltech.edu/api/records/q7rzh-bzw94/files/Lev4:metadata.json/content",
+              "key": "Lev4:metadata.json",
+              "sha256": "5f0cbf843aaa82c8615a7d9501e0c626761daaa1fe0e8536f9853b8dd7db53cc",
+              "size": 3319
+            },
+            "sidecar": {
+              "checksum": "md5:c8eb81da32462fc9c98020931fe97d91",
+              "content": "https://data.caltech.edu/api/records/q7rzh-bzw94/files/Lev4:ExtraWaveforms.json/content",
+              "key": "Lev4:ExtraWaveforms.json",
+              "sha256": "9fe543210d2e1f7496a67064c8566f844764be4879973634071b08af37950511",
+              "size": 17421
+            }
+          },
+          "simulation_name": null,
+          "source_format": "extra",
+          "title": "Binary black-hole simulation SXS:BBH:2489",
+          "waveform_sidecar_sha256": "9fe543210d2e1f7496a67064c8566f844764be4879973634071b08af37950511"
+        },
+        "sxs_id": "SXS:BBH:2489",
+        "time_conversion": {
+          "Mref": 0.9998174576067311,
+          "formula": "time_M=time_code/(reference_mass1+reference_mass2)",
+          "source_unit": "metadata code units",
+          "target_unit": "waveform M"
+        },
+        "time_end": 9117.303222110999
+      },
+      "npz_path": "/tmp/torchwave-nr33-v3-search/npz/SXS_BBH_2489_q7rzh-bzw94_Lev4_N3.npz",
+      "npz_sha256": "513fa0cea2dbd7fb3eaea6c9c963edb796c7eee7abab412aeee610c9cfc8a762",
+      "path": "/tmp/torchwave-nr33-v3-search/npz/SXS_BBH_2489_q7rzh-bzw94_Lev4_N3.npz",
+      "q": 5.998325721372874,
+      "resolution": "Lev4",
+      "selection": {
+        "candidate_rank": 2,
+        "target_q": 6.0
+      },
+      "source_split": "validation_only",
+      "split": "validation_only",
+      "sxs_id": "SXS:BBH:2489",
+      "target_q": 6.0
+    },
+    {
+      "candidate_rank": 2,
+      "extrapolation_order": 2,
+      "id": "SXS:BBH:2489/Lev5/N2",
+      "metadata": {
+        "eccentricity": 0.0005865,
+        "extraction_frame_type": "inertial",
+        "extrapolation_order": 2,
+        "final_mass_fraction": 0.9854730505917932,
+        "final_spin": [
+          8.558128468899628e-09,
+          -6.124001395371179e-08,
+          0.37249726901402225
+        ],
+        "final_spin_magnitude": 0.3724972690140274,
+        "frame_transform": "none",
+        "initial_spin1": [
+          1.103123e-10,
+          -3.12905e-11,
+          -2.75505818e-08
+        ],
+        "initial_spin2": [
+          1.75083e-11,
+          -6.5385e-12,
+          -1.762869199e-07
+        ],
+        "memory_integration_start_time_waveform_M": 1365.5,
+        "memory_time_note": "selected sidecar group add_memory integration start retained separately; never used as relaxation_time",
+        "npz_sha256": "4e0cd6d523650ea8f8fbd22ff205ac6db099a5ecf09b498f2ca27d3579af5b2a",
+        "peak_time": 8958.171562378928,
+        "peak_time_h22": 8958.171562378928,
+        "record_id": "q7rzh-bzw94",
+        "reference_mass1": 0.8571165582055427,
+        "reference_mass2": 0.14286390369547078,
+        "reference_spin1": [
+          -1.632542959241831e-08,
+          -4.014101712121008e-08,
+          2.781092542991518e-05
+        ],
+        "reference_spin2": [
+          1.9387042315560961e-07,
+          -3.2375442847324826e-07,
+          -2.747210060483763e-05
+        ],
+        "reference_time": 1365.5266797954387,
+        "reference_time_M": 1365.5266797954387,
+        "reference_time_code": 1365.5,
+        "relaxation_time": 1365.5266797954387,
+        "relaxation_time_M": 1365.5266797954387,
+        "relaxation_time_code": 1365.5,
+        "remnant_mass": 0.9854537963217822,
+        "remnant_mass_fraction": 0.9854730505917932,
+        "remnant_spin": [
+          8.558128468899628e-09,
+          -6.124001395371179e-08,
+          0.37249726901402225
+        ],
+        "resolution": "Lev5",
+        "source_frame_type": "inertial",
+        "source_identity": {
+          "alternative_names": null,
+          "api_id": "q7rzh-bzw94",
+          "creators": [
+            {
+              "person_or_org": {
+                "name": "SXS Collaboration",
+                "type": "organizational"
+              }
+            }
+          ],
+          "doi": "10.26138/SXS:BBH:2489v3.0",
+          "h5_group": null,
+          "license": null,
+          "metadata_sha256": "4fa8e121c0876468dfe06fa34aa5e964d0e6f830ae14da3c76e193ec4ea47489",
+          "record_id": "q7rzh-bzw94",
+          "record_url": "https://data.caltech.edu/records/q7rzh-bzw94",
+          "selected_files": {
+            "h5": {
+              "checksum": "md5:62917bd996e07e02049f0709b64b0190",
+              "content": "https://data.caltech.edu/api/records/q7rzh-bzw94/files/Lev5:Strain_N2.h5/content",
+              "key": "Lev5:Strain_N2.h5",
+              "sha256": "836833bf78bdfadadac88f6abc87e2997d63cfb8e402a58596da506233a850df",
+              "size": 3111143
+            },
+            "metadata": {
+              "checksum": "md5:5fc5c937261b1b5182a4cfb479c15168",
+              "content": "https://data.caltech.edu/api/records/q7rzh-bzw94/files/Lev5:metadata.json/content",
+              "key": "Lev5:metadata.json",
+              "sha256": "4fa8e121c0876468dfe06fa34aa5e964d0e6f830ae14da3c76e193ec4ea47489",
+              "size": 3328
+            },
+            "sidecar": {
+              "checksum": "md5:42bade03670bc8025b46c1b8dee662f6",
+              "content": "https://data.caltech.edu/api/records/q7rzh-bzw94/files/Lev5:Strain_N2.json/content",
+              "key": "Lev5:Strain_N2.json",
+              "sha256": "cd682463311f5cc3a65a00ba9375d5005ced5382590bb9304706b6f59f49c98f",
+              "size": 2231
+            }
+          },
+          "simulation_name": null,
+          "source_format": "strain",
+          "title": "Binary black-hole simulation SXS:BBH:2489",
+          "waveform_sidecar_sha256": "cd682463311f5cc3a65a00ba9375d5005ced5382590bb9304706b6f59f49c98f"
+        },
+        "sxs_id": "SXS:BBH:2489",
+        "time_conversion": {
+          "Mref": 0.9999804619010134,
+          "formula": "time_M=time_code/(reference_mass1+reference_mass2)",
+          "source_unit": "metadata code units",
+          "target_unit": "waveform M"
+        },
+        "time_end": 9112.171770505498
+      },
+      "npz_path": "/tmp/torchwave-nr33-v3-search/npz/SXS_BBH_2489_q7rzh-bzw94_Lev5_N2.npz",
+      "npz_sha256": "4e0cd6d523650ea8f8fbd22ff205ac6db099a5ecf09b498f2ca27d3579af5b2a",
+      "path": "/tmp/torchwave-nr33-v3-search/npz/SXS_BBH_2489_q7rzh-bzw94_Lev5_N2.npz",
+      "q": 5.999531974378745,
+      "resolution": "Lev5",
+      "selection": {
+        "candidate_rank": 2,
+        "target_q": 6.0
+      },
+      "source_split": "validation_only",
+      "split": "validation_only",
+      "sxs_id": "SXS:BBH:2489",
+      "target_q": 6.0
+    },
+    {
+      "candidate_rank": 2,
+      "extrapolation_order": 3,
+      "id": "SXS:BBH:2489/Lev5/N3",
+      "metadata": {
+        "eccentricity": 0.0005865,
+        "extraction_frame_type": "inertial",
+        "extrapolation_order": 3,
+        "final_mass_fraction": 0.9854730505917932,
+        "final_spin": [
+          8.558128468899628e-09,
+          -6.124001395371179e-08,
+          0.37249726901402225
+        ],
+        "final_spin_magnitude": 0.3724972690140274,
+        "frame_transform": "none",
+        "initial_spin1": [
+          1.103123e-10,
+          -3.12905e-11,
+          -2.75505818e-08
+        ],
+        "initial_spin2": [
+          1.75083e-11,
+          -6.5385e-12,
+          -1.762869199e-07
+        ],
+        "memory_integration_start_time_waveform_M": 1365.5,
+        "memory_time_note": "selected sidecar group add_memory integration start retained separately; never used as relaxation_time",
+        "npz_sha256": "95a7ac1b35d1a4a86c0205ac314e8235312abff8bcab9079fe7311044ee32e54",
+        "peak_time": 8958.171562378928,
+        "peak_time_h22": 8958.171562378928,
+        "record_id": "q7rzh-bzw94",
+        "reference_mass1": 0.8571165582055427,
+        "reference_mass2": 0.14286390369547078,
+        "reference_spin1": [
+          -1.632542959241831e-08,
+          -4.014101712121008e-08,
+          2.781092542991518e-05
+        ],
+        "reference_spin2": [
+          1.9387042315560961e-07,
+          -3.2375442847324826e-07,
+          -2.747210060483763e-05
+        ],
+        "reference_time": 1365.5266797954387,
+        "reference_time_M": 1365.5266797954387,
+        "reference_time_code": 1365.5,
+        "relaxation_time": 1365.5266797954387,
+        "relaxation_time_M": 1365.5266797954387,
+        "relaxation_time_code": 1365.5,
+        "remnant_mass": 0.9854537963217822,
+        "remnant_mass_fraction": 0.9854730505917932,
+        "remnant_spin": [
+          8.558128468899628e-09,
+          -6.124001395371179e-08,
+          0.37249726901402225
+        ],
+        "resolution": "Lev5",
+        "source_frame_type": "inertial",
+        "source_identity": {
+          "alternative_names": null,
+          "api_id": "q7rzh-bzw94",
+          "creators": [
+            {
+              "person_or_org": {
+                "name": "SXS Collaboration",
+                "type": "organizational"
+              }
+            }
+          ],
+          "doi": "10.26138/SXS:BBH:2489v3.0",
+          "h5_group": "/Strain_N3.dir",
+          "license": null,
+          "metadata_sha256": "4fa8e121c0876468dfe06fa34aa5e964d0e6f830ae14da3c76e193ec4ea47489",
+          "record_id": "q7rzh-bzw94",
+          "record_url": "https://data.caltech.edu/records/q7rzh-bzw94",
+          "selected_files": {
+            "h5": {
+              "checksum": "md5:888d8601f6b177dec346c88f50c96205",
+              "content": "https://data.caltech.edu/api/records/q7rzh-bzw94/files/Lev5:ExtraWaveforms.h5/content",
+              "key": "Lev5:ExtraWaveforms.h5",
+              "sha256": "0163b9042b268f5f84ccc247d55581827647a64fdb71f234f2da9eb0d5630d27",
+              "size": 27302882
+            },
+            "metadata": {
+              "checksum": "md5:5fc5c937261b1b5182a4cfb479c15168",
+              "content": "https://data.caltech.edu/api/records/q7rzh-bzw94/files/Lev5:metadata.json/content",
+              "key": "Lev5:metadata.json",
+              "sha256": "4fa8e121c0876468dfe06fa34aa5e964d0e6f830ae14da3c76e193ec4ea47489",
+              "size": 3328
+            },
+            "sidecar": {
+              "checksum": "md5:38f2a0d223547231f167a6d5deb060f8",
+              "content": "https://data.caltech.edu/api/records/q7rzh-bzw94/files/Lev5:ExtraWaveforms.json/content",
+              "key": "Lev5:ExtraWaveforms.json",
+              "sha256": "478de4ea7da2711e5ddeae6f40c5aac1a7a9f01de10faddb5d9d66fa623b8b57",
+              "size": 17456
+            }
+          },
+          "simulation_name": null,
+          "source_format": "extra",
+          "title": "Binary black-hole simulation SXS:BBH:2489",
+          "waveform_sidecar_sha256": "478de4ea7da2711e5ddeae6f40c5aac1a7a9f01de10faddb5d9d66fa623b8b57"
+        },
+        "sxs_id": "SXS:BBH:2489",
+        "time_conversion": {
+          "Mref": 0.9999804619010134,
+          "formula": "time_M=time_code/(reference_mass1+reference_mass2)",
+          "source_unit": "metadata code units",
+          "target_unit": "waveform M"
+        },
+        "time_end": 9112.171770505498
+      },
+      "npz_path": "/tmp/torchwave-nr33-v3-search/npz/SXS_BBH_2489_q7rzh-bzw94_Lev5_N3.npz",
+      "npz_sha256": "95a7ac1b35d1a4a86c0205ac314e8235312abff8bcab9079fe7311044ee32e54",
+      "path": "/tmp/torchwave-nr33-v3-search/npz/SXS_BBH_2489_q7rzh-bzw94_Lev5_N3.npz",
+      "q": 5.999531974378745,
+      "resolution": "Lev5",
+      "selection": {
+        "candidate_rank": 2,
+        "target_q": 6.0
+      },
+      "source_split": "holdout",
+      "split": "holdout",
+      "sxs_id": "SXS:BBH:2489",
+      "target_q": 6.0
+    },
+    {
+      "candidate_rank": 2,
+      "extrapolation_order": 2,
+      "id": "SXS:BBH:2707/Lev3/N2",
+      "metadata": {
+        "eccentricity": 0.0003591,
+        "extraction_frame_type": "inertial",
+        "extrapolation_order": 2,
+        "final_mass_fraction": 0.9894460407788213,
+        "final_spin": [
+          4.097025039958646e-07,
+          -3.742207422146967e-07,
+          0.30677832623807405
+        ],
+        "final_spin_magnitude": 0.30677832623857587,
+        "frame_transform": "none",
+        "initial_spin1": [
+          -5.194e-13,
+          4.2742e-12,
+          4.56150727e-08
+        ],
+        "initial_spin2": [
+          3.5833e-12,
+          -1.3486e-12,
+          -2.47938555e-08
+        ],
+        "memory_integration_start_time_waveform_M": 580.0,
+        "memory_time_note": "selected sidecar group add_memory integration start retained separately; never used as relaxation_time",
+        "npz_sha256": "208c80ac29f95af812a565164e4d0377e28302044d3828c8970ea0723193628e",
+        "peak_time": 9759.90276473659,
+        "peak_time_h22": 9759.90276473659,
+        "record_id": "gwmd0-0rd53",
+        "reference_mass1": 0.8888904891628832,
+        "reference_mass2": 0.11111036819835267,
+        "reference_spin1": [
+          5.049048112075649e-07,
+          -3.082913295755971e-07,
+          -5.4187038263466744e-05
+        ],
+        "reference_spin2": [
+          2.5065006857631234e-07,
+          2.476995427550291e-07,
+          6.780184243765521e-05
+        ],
+        "reference_time": 579.9995027309096,
+        "reference_time_M": 579.9995027309096,
+        "reference_time_code": 580.0,
+        "relaxation_time": 579.9995027309096,
+        "relaxation_time_M": 579.9995027309096,
+        "relaxation_time_code": 580.0,
+        "remnant_mass": 0.9894468890915015,
+        "remnant_mass_fraction": 0.9894460407788213,
+        "remnant_spin": [
+          4.097025039958646e-07,
+          -3.742207422146967e-07,
+          0.30677832623807405
+        ],
+        "resolution": "Lev3",
+        "source_frame_type": "inertial",
+        "source_identity": {
+          "alternative_names": null,
+          "api_id": "gwmd0-0rd53",
+          "creators": [
+            {
+              "person_or_org": {
+                "name": "SXS Collaboration",
+                "type": "organizational"
+              }
+            }
+          ],
+          "doi": "10.26138/SXS:BBH:2707v3.0",
+          "h5_group": null,
+          "license": null,
+          "metadata_sha256": "970d22ac379f147e7868d415d00d3a8e855c939c11d60cc9290c5839bb9ec0df",
+          "record_id": "gwmd0-0rd53",
+          "record_url": "https://data.caltech.edu/records/gwmd0-0rd53",
+          "selected_files": {
+            "h5": {
+              "checksum": "md5:a924de65fae7f5775f85629f826dfcf5",
+              "content": "https://data.caltech.edu/api/records/gwmd0-0rd53/files/Lev3:Strain_N2.h5/content",
+              "key": "Lev3:Strain_N2.h5",
+              "sha256": "d62bd24c4f105ac56cf2fc4e446f0ad3f6b2162f5ee85f8213c130580244a08a",
+              "size": 4171672
+            },
+            "metadata": {
+              "checksum": "md5:59526b1142318f75deb8ccca6e25d67c",
+              "content": "https://data.caltech.edu/api/records/gwmd0-0rd53/files/Lev3:metadata.json/content",
+              "key": "Lev3:metadata.json",
+              "sha256": "970d22ac379f147e7868d415d00d3a8e855c939c11d60cc9290c5839bb9ec0df",
+              "size": 3324
+            },
+            "sidecar": {
+              "checksum": "md5:13234c11129a8620ff28c581eacdb9bd",
+              "content": "https://data.caltech.edu/api/records/gwmd0-0rd53/files/Lev3:Strain_N2.json/content",
+              "key": "Lev3:Strain_N2.json",
+              "sha256": "d10eb188e72b4fa9d7340816b5aa98083cbce5926c972aa360db103235226013",
+              "size": 2227
+            }
+          },
+          "simulation_name": null,
+          "source_format": "strain",
+          "title": "Binary black-hole simulation SXS:BBH:2707",
+          "waveform_sidecar_sha256": "d10eb188e72b4fa9d7340816b5aa98083cbce5926c972aa360db103235226013"
+        },
+        "sxs_id": "SXS:BBH:2707",
+        "time_conversion": {
+          "Mref": 1.0000008573612358,
+          "formula": "time_M=time_code/(reference_mass1+reference_mass2)",
+          "source_unit": "metadata code units",
+          "target_unit": "waveform M"
+        },
+        "time_end": 9910.099087710938
+      },
+      "npz_path": "/tmp/torchwave-nr33-v3-search/npz/SXS_BBH_2707_gwmd0-0rd53_Lev3_N2.npz",
+      "npz_sha256": "208c80ac29f95af812a565164e4d0377e28302044d3828c8970ea0723193628e",
+      "path": "/tmp/torchwave-nr33-v3-search/npz/SXS_BBH_2707_gwmd0-0rd53_Lev3_N2.npz",
+      "q": 8.000067892638501,
+      "resolution": "Lev3",
+      "selection": {
+        "candidate_rank": 2,
+        "target_q": 8.0
+      },
+      "source_split": "validation_only",
+      "split": "validation_only",
+      "sxs_id": "SXS:BBH:2707",
+      "target_q": 8.0
+    },
+    {
+      "candidate_rank": 2,
+      "extrapolation_order": 3,
+      "id": "SXS:BBH:2707/Lev3/N3",
+      "metadata": {
+        "eccentricity": 0.0003591,
+        "extraction_frame_type": "inertial",
+        "extrapolation_order": 3,
+        "final_mass_fraction": 0.9894460407788213,
+        "final_spin": [
+          4.097025039958646e-07,
+          -3.742207422146967e-07,
+          0.30677832623807405
+        ],
+        "final_spin_magnitude": 0.30677832623857587,
+        "frame_transform": "none",
+        "initial_spin1": [
+          -5.194e-13,
+          4.2742e-12,
+          4.56150727e-08
+        ],
+        "initial_spin2": [
+          3.5833e-12,
+          -1.3486e-12,
+          -2.47938555e-08
+        ],
+        "memory_integration_start_time_waveform_M": 580.0,
+        "memory_time_note": "selected sidecar group add_memory integration start retained separately; never used as relaxation_time",
+        "npz_sha256": "4ca36575e61548887248a9c667e08f241d77ff74a496da4f0b9acc2be9cb94ce",
+        "peak_time": 9759.90276473659,
+        "peak_time_h22": 9759.90276473659,
+        "record_id": "gwmd0-0rd53",
+        "reference_mass1": 0.8888904891628832,
+        "reference_mass2": 0.11111036819835267,
+        "reference_spin1": [
+          5.049048112075649e-07,
+          -3.082913295755971e-07,
+          -5.4187038263466744e-05
+        ],
+        "reference_spin2": [
+          2.5065006857631234e-07,
+          2.476995427550291e-07,
+          6.780184243765521e-05
+        ],
+        "reference_time": 579.9995027309096,
+        "reference_time_M": 579.9995027309096,
+        "reference_time_code": 580.0,
+        "relaxation_time": 579.9995027309096,
+        "relaxation_time_M": 579.9995027309096,
+        "relaxation_time_code": 580.0,
+        "remnant_mass": 0.9894468890915015,
+        "remnant_mass_fraction": 0.9894460407788213,
+        "remnant_spin": [
+          4.097025039958646e-07,
+          -3.742207422146967e-07,
+          0.30677832623807405
+        ],
+        "resolution": "Lev3",
+        "source_frame_type": "inertial",
+        "source_identity": {
+          "alternative_names": null,
+          "api_id": "gwmd0-0rd53",
+          "creators": [
+            {
+              "person_or_org": {
+                "name": "SXS Collaboration",
+                "type": "organizational"
+              }
+            }
+          ],
+          "doi": "10.26138/SXS:BBH:2707v3.0",
+          "h5_group": "/Strain_N3.dir",
+          "license": null,
+          "metadata_sha256": "970d22ac379f147e7868d415d00d3a8e855c939c11d60cc9290c5839bb9ec0df",
+          "record_id": "gwmd0-0rd53",
+          "record_url": "https://data.caltech.edu/records/gwmd0-0rd53",
+          "selected_files": {
+            "h5": {
+              "checksum": "md5:e19678be46735ee1edefd21a51858f6b",
+              "content": "https://data.caltech.edu/api/records/gwmd0-0rd53/files/Lev3:ExtraWaveforms.h5/content",
+              "key": "Lev3:ExtraWaveforms.h5",
+              "sha256": "815037dba3cf2efd0cffddf63641a977a32cbe1ac106cdbe0971ada1c51dbb16",
+              "size": 36423088
+            },
+            "metadata": {
+              "checksum": "md5:59526b1142318f75deb8ccca6e25d67c",
+              "content": "https://data.caltech.edu/api/records/gwmd0-0rd53/files/Lev3:metadata.json/content",
+              "key": "Lev3:metadata.json",
+              "sha256": "970d22ac379f147e7868d415d00d3a8e855c939c11d60cc9290c5839bb9ec0df",
+              "size": 3324
+            },
+            "sidecar": {
+              "checksum": "md5:7eae73b6fe72f8fdf3295525bf58b721",
+              "content": "https://data.caltech.edu/api/records/gwmd0-0rd53/files/Lev3:ExtraWaveforms.json/content",
+              "key": "Lev3:ExtraWaveforms.json",
+              "sha256": "3c85f63505109a7d5411f861e0748484c4e834f67e8f095ff2c1210e56667e45",
+              "size": 17428
+            }
+          },
+          "simulation_name": null,
+          "source_format": "extra",
+          "title": "Binary black-hole simulation SXS:BBH:2707",
+          "waveform_sidecar_sha256": "3c85f63505109a7d5411f861e0748484c4e834f67e8f095ff2c1210e56667e45"
+        },
+        "sxs_id": "SXS:BBH:2707",
+        "time_conversion": {
+          "Mref": 1.0000008573612358,
+          "formula": "time_M=time_code/(reference_mass1+reference_mass2)",
+          "source_unit": "metadata code units",
+          "target_unit": "waveform M"
+        },
+        "time_end": 9910.099087710938
+      },
+      "npz_path": "/tmp/torchwave-nr33-v3-search/npz/SXS_BBH_2707_gwmd0-0rd53_Lev3_N3.npz",
+      "npz_sha256": "4ca36575e61548887248a9c667e08f241d77ff74a496da4f0b9acc2be9cb94ce",
+      "path": "/tmp/torchwave-nr33-v3-search/npz/SXS_BBH_2707_gwmd0-0rd53_Lev3_N3.npz",
+      "q": 8.000067892638501,
+      "resolution": "Lev3",
+      "selection": {
+        "candidate_rank": 2,
+        "target_q": 8.0
+      },
+      "source_split": "validation_only",
+      "split": "validation_only",
+      "sxs_id": "SXS:BBH:2707",
+      "target_q": 8.0
+    },
+    {
+      "candidate_rank": 2,
+      "extrapolation_order": 2,
+      "id": "SXS:BBH:2707/Lev4/N2",
+      "metadata": {
+        "eccentricity": 0.000311,
+        "extraction_frame_type": "inertial",
+        "extrapolation_order": 2,
+        "final_mass_fraction": 0.9894366469179036,
+        "final_spin": [
+          4.1774192507484624e-07,
+          -3.9607823018772555e-07,
+          0.30674019654220114
+        ],
+        "final_spin_magnitude": 0.3067401965427413,
+        "frame_transform": "none",
+        "initial_spin1": [
+          -5.194e-13,
+          4.2742e-12,
+          4.56150727e-08
+        ],
+        "initial_spin2": [
+          3.5833e-12,
+          -1.3486e-12,
+          -2.47938555e-08
+        ],
+        "memory_integration_start_time_waveform_M": 1403.0,
+        "memory_time_note": "selected sidecar group add_memory integration start retained separately; never used as relaxation_time",
+        "npz_sha256": "9f38ee56d4c283735d6da5d8bf0ebbc4f420e81f591a758e46bb91ebc1dc901f",
+        "peak_time": 9748.727588544381,
+        "peak_time_h22": 9748.727588544381,
+        "record_id": "gwmd0-0rd53",
+        "reference_mass1": 0.8889079170671736,
+        "reference_mass2": 0.11111141740010638,
+        "reference_spin1": [
+          7.461460142095138e-07,
+          -1.9176737079272778e-07,
+          -1.9191127179912824e-05
+        ],
+        "reference_spin2": [
+          -1.5018544209039986e-07,
+          3.4885587363822575e-07,
+          8.056836355224296e-05
+        ],
+        "reference_time": 1402.9728742668676,
+        "reference_time_M": 1402.9728742668676,
+        "reference_time_code": 1403.0,
+        "relaxation_time": 1402.9728742668676,
+        "relaxation_time_M": 1402.9728742668676,
+        "relaxation_time_code": 1403.0,
+        "remnant_mass": 0.9894557771483791,
+        "remnant_mass_fraction": 0.9894366469179036,
+        "remnant_spin": [
+          4.1774192507484624e-07,
+          -3.9607823018772555e-07,
+          0.30674019654220114
+        ],
+        "resolution": "Lev4",
+        "source_frame_type": "inertial",
+        "source_identity": {
+          "alternative_names": null,
+          "api_id": "gwmd0-0rd53",
+          "creators": [
+            {
+              "person_or_org": {
+                "name": "SXS Collaboration",
+                "type": "organizational"
+              }
+            }
+          ],
+          "doi": "10.26138/SXS:BBH:2707v3.0",
+          "h5_group": null,
+          "license": null,
+          "metadata_sha256": "a1e2217b722f8ce544ec8d0f341a77e194d8d42e48b276ce8ab94632ddfcc451",
+          "record_id": "gwmd0-0rd53",
+          "record_url": "https://data.caltech.edu/records/gwmd0-0rd53",
+          "selected_files": {
+            "h5": {
+              "checksum": "md5:670227adaf551e8ff8c0139786644d14",
+              "content": "https://data.caltech.edu/api/records/gwmd0-0rd53/files/Lev4:Strain_N2.h5/content",
+              "key": "Lev4:Strain_N2.h5",
+              "sha256": "7769a7d24bf27df6dad07385ba2d3e6bccba7d0160f2ed1b33060c2fac226e3e",
+              "size": 3823735
+            },
+            "metadata": {
+              "checksum": "md5:cf1a2f488279c42f49b72df6619782b4",
+              "content": "https://data.caltech.edu/api/records/gwmd0-0rd53/files/Lev4:metadata.json/content",
+              "key": "Lev4:metadata.json",
+              "sha256": "a1e2217b722f8ce544ec8d0f341a77e194d8d42e48b276ce8ab94632ddfcc451",
+              "size": 3464
+            },
+            "sidecar": {
+              "checksum": "md5:0307ccdd712a86b52c33e756b64d1646",
+              "content": "https://data.caltech.edu/api/records/gwmd0-0rd53/files/Lev4:Strain_N2.json/content",
+              "key": "Lev4:Strain_N2.json",
+              "sha256": "d5284f703307cf48de8dcdd4cf7e1f44332c15bb5348d5172a8ad0db3f2b67ca",
+              "size": 2231
+            }
+          },
+          "simulation_name": null,
+          "source_format": "strain",
+          "title": "Binary black-hole simulation SXS:BBH:2707",
+          "waveform_sidecar_sha256": "d5284f703307cf48de8dcdd4cf7e1f44332c15bb5348d5172a8ad0db3f2b67ca"
+        },
+        "sxs_id": "SXS:BBH:2707",
+        "time_conversion": {
+          "Mref": 1.00001933446728,
+          "formula": "time_M=time_code/(reference_mass1+reference_mass2)",
+          "source_unit": "metadata code units",
+          "target_unit": "waveform M"
+        },
+        "time_end": 9898.921131097854
+      },
+      "npz_path": "/tmp/torchwave-nr33-v3-search/npz/SXS_BBH_2707_gwmd0-0rd53_Lev4_N2.npz",
+      "npz_sha256": "9f38ee56d4c283735d6da5d8bf0ebbc4f420e81f591a758e46bb91ebc1dc901f",
+      "path": "/tmp/torchwave-nr33-v3-search/npz/SXS_BBH_2707_gwmd0-0rd53_Lev4_N2.npz",
+      "q": 8.000149200385618,
+      "resolution": "Lev4",
+      "selection": {
+        "candidate_rank": 2,
+        "target_q": 8.0
+      },
+      "source_split": "validation_only",
+      "split": "validation_only",
+      "sxs_id": "SXS:BBH:2707",
+      "target_q": 8.0
+    },
+    {
+      "candidate_rank": 2,
+      "extrapolation_order": 3,
+      "id": "SXS:BBH:2707/Lev4/N3",
+      "metadata": {
+        "eccentricity": 0.000311,
+        "extraction_frame_type": "inertial",
+        "extrapolation_order": 3,
+        "final_mass_fraction": 0.9894366469179036,
+        "final_spin": [
+          4.1774192507484624e-07,
+          -3.9607823018772555e-07,
+          0.30674019654220114
+        ],
+        "final_spin_magnitude": 0.3067401965427413,
+        "frame_transform": "none",
+        "initial_spin1": [
+          -5.194e-13,
+          4.2742e-12,
+          4.56150727e-08
+        ],
+        "initial_spin2": [
+          3.5833e-12,
+          -1.3486e-12,
+          -2.47938555e-08
+        ],
+        "memory_integration_start_time_waveform_M": 1403.0,
+        "memory_time_note": "selected sidecar group add_memory integration start retained separately; never used as relaxation_time",
+        "npz_sha256": "e1f68f22085e99e4198b338aa3dd1bce88161927440a9de204c214ee6b84c8c8",
+        "peak_time": 9748.727588544381,
+        "peak_time_h22": 9748.727588544381,
+        "record_id": "gwmd0-0rd53",
+        "reference_mass1": 0.8889079170671736,
+        "reference_mass2": 0.11111141740010638,
+        "reference_spin1": [
+          7.461460142095138e-07,
+          -1.9176737079272778e-07,
+          -1.9191127179912824e-05
+        ],
+        "reference_spin2": [
+          -1.5018544209039986e-07,
+          3.4885587363822575e-07,
+          8.056836355224296e-05
+        ],
+        "reference_time": 1402.9728742668676,
+        "reference_time_M": 1402.9728742668676,
+        "reference_time_code": 1403.0,
+        "relaxation_time": 1402.9728742668676,
+        "relaxation_time_M": 1402.9728742668676,
+        "relaxation_time_code": 1403.0,
+        "remnant_mass": 0.9894557771483791,
+        "remnant_mass_fraction": 0.9894366469179036,
+        "remnant_spin": [
+          4.1774192507484624e-07,
+          -3.9607823018772555e-07,
+          0.30674019654220114
+        ],
+        "resolution": "Lev4",
+        "source_frame_type": "inertial",
+        "source_identity": {
+          "alternative_names": null,
+          "api_id": "gwmd0-0rd53",
+          "creators": [
+            {
+              "person_or_org": {
+                "name": "SXS Collaboration",
+                "type": "organizational"
+              }
+            }
+          ],
+          "doi": "10.26138/SXS:BBH:2707v3.0",
+          "h5_group": "/Strain_N3.dir",
+          "license": null,
+          "metadata_sha256": "a1e2217b722f8ce544ec8d0f341a77e194d8d42e48b276ce8ab94632ddfcc451",
+          "record_id": "gwmd0-0rd53",
+          "record_url": "https://data.caltech.edu/records/gwmd0-0rd53",
+          "selected_files": {
+            "h5": {
+              "checksum": "md5:4ba4af033dffff6c5b259a8b549bdd2f",
+              "content": "https://data.caltech.edu/api/records/gwmd0-0rd53/files/Lev4:ExtraWaveforms.h5/content",
+              "key": "Lev4:ExtraWaveforms.h5",
+              "sha256": "0d6e58b9d5e3c2724567d2c2f1b46542603fca56a9d8fd53c1c82ed57492070c",
+              "size": 33524907
+            },
+            "metadata": {
+              "checksum": "md5:cf1a2f488279c42f49b72df6619782b4",
+              "content": "https://data.caltech.edu/api/records/gwmd0-0rd53/files/Lev4:metadata.json/content",
+              "key": "Lev4:metadata.json",
+              "sha256": "a1e2217b722f8ce544ec8d0f341a77e194d8d42e48b276ce8ab94632ddfcc451",
+              "size": 3464
+            },
+            "sidecar": {
+              "checksum": "md5:8c435ddc334a3fef8e4bfb954b9480b0",
+              "content": "https://data.caltech.edu/api/records/gwmd0-0rd53/files/Lev4:ExtraWaveforms.json/content",
+              "key": "Lev4:ExtraWaveforms.json",
+              "sha256": "45be29d8023ca36be5df327304e1310f03c1840f01c2afd36d40c9185432504b",
+              "size": 17456
+            }
+          },
+          "simulation_name": null,
+          "source_format": "extra",
+          "title": "Binary black-hole simulation SXS:BBH:2707",
+          "waveform_sidecar_sha256": "45be29d8023ca36be5df327304e1310f03c1840f01c2afd36d40c9185432504b"
+        },
+        "sxs_id": "SXS:BBH:2707",
+        "time_conversion": {
+          "Mref": 1.00001933446728,
+          "formula": "time_M=time_code/(reference_mass1+reference_mass2)",
+          "source_unit": "metadata code units",
+          "target_unit": "waveform M"
+        },
+        "time_end": 9898.921131097854
+      },
+      "npz_path": "/tmp/torchwave-nr33-v3-search/npz/SXS_BBH_2707_gwmd0-0rd53_Lev4_N3.npz",
+      "npz_sha256": "e1f68f22085e99e4198b338aa3dd1bce88161927440a9de204c214ee6b84c8c8",
+      "path": "/tmp/torchwave-nr33-v3-search/npz/SXS_BBH_2707_gwmd0-0rd53_Lev4_N3.npz",
+      "q": 8.000149200385618,
+      "resolution": "Lev4",
+      "selection": {
+        "candidate_rank": 2,
+        "target_q": 8.0
+      },
+      "source_split": "training",
+      "split": "training",
+      "sxs_id": "SXS:BBH:2707",
+      "target_q": 8.0
+    }
+  ]
+}

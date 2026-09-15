@@ -1,0 +1,575 @@
+--- before/src/torchwave/approximants/imrphenom_xhm.py
++++ after/src/torchwave/approximants/imrphenom_xhm.py
+@@ -759,6 +759,15 @@
+                 h1_fit = getattr(XHMParameterFits, f"amp_insp1_{lm_str}")(eta, s1, s2, S)
+                 h2_fit = getattr(XHMParameterFits, f"amp_insp2_{lm_str}")(eta, s1, s2, S)
+                 h3_fit = getattr(XHMParameterFits, f"amp_insp3_{lm_str}")(eta, s1, s2, S)
++                if m % 2 != 0:
++                    # The odd-m calibration surfaces are allowed to carry the
++                    # sign of the full strain.  Reconstructed amplitudes use
++                    # their non-negative magnitudes (arXiv:2001.10914v2,
++                    # Sec. V.A.2), so fold these collocation targets before
++                    # solving for the inspiral reconstruction coefficients.
++                    h1_fit = torch.abs(h1_fit)
++                    h2_fit = torch.abs(h2_fit)
++                    h3_fit = torch.abs(h3_fit)
+ 
+                 rhs_insp = torch.stack([h1_fit - h1_pn, h2_fit - h2_pn, h3_fit - h3_pn], dim=-1)
+                 inv_mat = _INSP_MAT_INV.to(device=device, dtype=dtype)
+@@ -924,6 +933,12 @@
+ 
+                 v_int1_fit = getattr(XHMParameterFits, f"amp_int1_{lm_str}")(eta, s1, s2, S)
+                 v_int2_fit = getattr(XHMParameterFits, f"amp_int2_{lm_str}")(eta, s1, s2, S)
++                if m % 2 != 0:
++                    # Eq. (5.3) fits the intermediate amplitude itself.  The
++                    # odd-m fit may be negative because its sign is folded
++                    # from the strain; the reconstructed amplitude is |fit|.
++                    v_int1_fit = torch.abs(v_int1_fit)
++                    v_int2_fit = torch.abs(v_int2_fit)
+ 
+                 h_ins_at_cut = eval_h_ins(f_ins_a)
+                 dh_ins_at_cut = eval_dh_ins(f_ins_a)
+--- before/tests/data/generate_xhm_amplitude_author_samples.py
++++ after/tests/data/generate_xhm_amplitude_author_samples.py
+@@ -0,0 +1,109 @@
++"""Evaluate pinned author math records; no native fit imports or network access."""
++from pathlib import Path
++import ast, hashlib, re, math, json
++ROOT = Path(__file__).resolve().parents[2]
++BASE = ROOT / 'docs/reviews/2026-09-12-clean-room/source-assets/pass-14-amplitude/AmpFits'
++PAIRS = {')': '(', ']': '[', '}': '{'}
++
++def split_top(s):
++    out = []
++    start = 0
++    st = []
++    quote = False
++    esc = False
++    for i, c in enumerate(s):
++        if quote:
++            if esc:
++                esc = False
++            elif c == '\\':
++                esc = True
++            elif c == '"':
++                quote = False
++            continue
++        if c == '"':
++            quote = True
++        elif c in '({[':
++            st.append(c)
++        elif c in ')}]':
++            if st and st[-1] == PAIRS[c]:
++                st.pop()
++        elif c == ',' and len(st) == 1:
++            out.append(s[start:i])
++            start = i + 1
++    out.append(s[start:])
++    return out
++
++def expr(path, idx):
++    t = Path(path).read_text()
++    p = t.index('"3DFits" ->')
++    p = t.index('{', p)
++    st = []
++    quote = False
++    esc = False
++    for i in range(p, len(t)):
++        c = t[i]
++        if quote:
++            if esc:
++                esc = False
++            elif c == '\\':
++                esc = True
++            elif c == '"':
++                quote = False
++            continue
++        if c == '"':
++            quote = True
++        elif c in '({[':
++            st.append(c)
++        elif c in ')}]':
++            st.pop()
++            if not st:
++                end = i + 1
++                break
++    es = split_top(t[p:end])
++    es[0] = es[0].lstrip()[1:]
++    es[-1] = es[-1].rstrip()[:-1]
++    x = split_top(es[idx - 1].strip())[0].strip()
++    return x[1:] if x.startswith('{') else x
++
++def py(s):
++    s = re.sub('\\s+', '', s)
++    s = s.replace('\\[Eta]', 'eta').replace('\\[Chi]1', 'chi1').replace('\\[Chi]2', 'chi2')
++    s = re.sub('([0-9.]+)\\*\\^([+-]?[0-9]+)', '\\1e\\2', s)
++    s = s.replace('Sqrt[', 'sqrt(').replace('[', '(').replace(']', ')').replace('^', '**')
++    return s
++
++def ev(s, eta, c1, c2):
++    d = math.sqrt(1 - 4 * eta)
++    m1 = (1 + d) / 2
++    m2 = (1 - d) / 2
++    S = (m1 * m1 * c1 + m2 * m2 * c2) / (1 - 2 * eta)
++    expression = py(s)
++    tree = ast.parse(expression, mode='eval')
++    allowed = (ast.Expression, ast.BinOp, ast.UnaryOp, ast.Add, ast.Sub, ast.Mult, ast.Div, ast.Pow, ast.USub, ast.UAdd, ast.Call, ast.Name, ast.Load, ast.Constant)
++    if any((not isinstance(n, allowed) for n in ast.walk(tree))):
++        raise ValueError('Non-arithmetic source expression')
++    if any((isinstance(n, ast.Name) and n.id not in ('eta', 'chi1', 'chi2', 'S', 'sqrt') for n in ast.walk(tree))):
++        raise ValueError('Unexpected source variable')
++    return float(eval(compile(tree, '<author math>', 'eval'), {'sqrt': math.sqrt, '__builtins__': {}}, {'eta': eta, 'chi1': c1, 'chi2': c2, 'S': S}))
++SAMPLES = [('equal_mass_unequal_spin', 0.25, 0.6, -0.3), ('q2_mixed_spin', 2 / 9, 0.4, -0.2), ('q4_mixed_spin', 0.16, -0.8, 0.5)]
++
++def build_fixture():
++    for key, expected in ASSET_SHA.items():
++        mode, k = key.split('/')
++        path = BASE / mode / f'CoefficientStatsInt{k}.m'
++        if hashlib.sha256(path.read_bytes()).hexdigest() != expected:
++            raise RuntimeError(f'Unexpected author source hash: {path}')
++    rows = []
++    for name, eta, c1, c2 in SAMPLES:
++        vals = {}
++        for mode in CHOSEN:
++            for k in [1, 2]:
++                key = f'{mode}_int{k}'
++                path = BASE / mode / f'CoefficientStatsInt{k}.m'
++                vals[key] = ev(expr(path, CHOSEN[mode][k]), eta, c1, c2)
++        rows.append({'name': name, 'eta': eta, 'chi1': c1, 'chi2': c2, 'values': vals})
++    return {'format': 'pass14-xhm-author-amplitude-v1', 'source_url': 'https://export.arxiv.org/e-print/2001.10914v2', 'asset_root': 'docs/reviews/2026-09-12-clean-room/source-assets/pass-14-amplitude/AmpFits', 'asset_sha256': ASSET_SHA, 'selection': {f'{m}_int{k}': i for m, d in CHOSEN.items() for k, i in d.items()}, 'samples': rows}
++CHOSEN = {'21': {1: 2, 2: 1}, '32': {1: 4, 2: 1}, '33': {1: 3, 2: 1}, '44': {1: 2, 2: 1}}
++ASSET_SHA = {'21/1': 'e0c25f0119cffdf50552a4e9d78a92470f0e4c28e57f83ed94aad7d5d1427fdf', '21/2': '80be60a0c5159263d3190e2b93e08a208d199cd66095668814607a1bf4cad723', '32/1': 'f5882de942f2f23dcffc550b7974152cabe110d5af86c32eb186f06a8cdbe561', '32/2': 'd5ac1aabf9d76117942afa47907dd6a8dab1d084d2c65594ee92796c98cbba2d', '33/1': '1b79d8a6eafff0816365dd83dfbed33a2879d2f92c05d096c518396e06a6b7e2', '33/2': 'b43e4b5e2e05310440938b42e89a68886d0aa5e6110e3988df04c0ea77f120b6', '44/1': '36dc12cce856046df1336bdac11d8da5ea51746a445e75f0e35652f9dd686188', '44/2': 'a31ffbf07d27f7e8799541afeb8f45c274c6c28d00b87ee53b1c77e781f8637b'}
++if __name__ == '__main__':
++    Path(__file__).with_name('xhm_amplitude_author_samples.json').write_text(json.dumps(build_fixture(), indent=2) + '\n')
+--- before/tests/data/generate_xhm_phase_author_samples.py
++++ after/tests/data/generate_xhm_phase_author_samples.py
+@@ -0,0 +1,78 @@
++"""Regenerate xhm_phase_author_samples.json from archived author math only."""
++
++import json
++import re
++import hashlib
++import ast
++from decimal import Decimal, getcontext
++from pathlib import Path
++
++getcontext().prec = 80
++ROOT = Path(__file__).parents[2]
++ASSETS = ROOT / "docs/reviews/2026-09-12-clean-room/source-assets/pass-14-phase"
++OUT = Path(__file__).with_name("xhm_phase_author_samples.json")
++RAW_INPUTS = [("0.12", "0.4", "-0.2"), ("0.18", "0.7", "0.1"),
++              ("0.24", "-0.6", "0.8"), ("0.25", "0.3", "-0.5")]
++EXPECTED_SHA = {
++    "21": "5b3ab0e7f04092f99f8983b02f7cb985cf4bfd13b3e4022b16cf020d57987716",
++    "33": "7cb4273b6b46f4be4f82b5a48e03705fa0f1d832effd71c79ade845c2d91afe8",
++    "44": "6dd15b7cf9fded8c3cdd329c7535d688f3d25633a9508c00ebf7fad2b29d5c8f",
++}
++
++
++def source_expression(mode):
++    text = (ASSETS / f"3Dfit_p6_lm_{mode}.m").read_text()
++    path = ASSETS / f"3Dfit_p6_lm_{mode}.m"
++    if hashlib.sha256(path.read_bytes()).hexdigest() != EXPECTED_SHA[mode]:
++        raise RuntimeError(f"unexpected source hash for p6_{mode}")
++    expr = re.search(r"^\{\{\{(.*?),\s*\{f", text, re.S | re.M).group(1)
++    expr = expr.replace(r"\[Eta]", "eta").replace("*^", "e").replace("^", "**")
++    # Turn every literal into a Decimal constructor; this is independent of
++    # Torch and of the native implementation's evaluation order.
++    return re.sub(
++        r"(?<![\w.])(?:\d+\.\d*|\.\d+|\d+)(?:e[+-]?\d+)?",
++        lambda m: f"Decimal('{m.group(0)}')",
++        re.sub(r"\s+", "", expr),
++    )
++
++
++def make_spin(eta, chi1, chi2):
++    delta = (Decimal(1) - Decimal(4) * eta).sqrt()
++    m1, m2 = (Decimal(1) + delta) / 2, (Decimal(1) - delta) / 2
++    return (m1 * m1 * chi1 + m2 * m2 * chi2) / (Decimal(1) - Decimal(2) * eta)
++
++
++def main():
++    rows = []
++    for eta_text, chi1_text, chi2_text in RAW_INPUTS:
++        eta, chi1, chi2 = map(Decimal, (eta_text, chi1_text, chi2_text))
++        rows.append({"eta": float(eta), "S": float(make_spin(eta, chi1, chi2)),
++                     "chi1": float(chi1), "chi2": float(chi2)})
++    expected = {}
++    for mode in ("21", "33", "44"):
++        expr = source_expression(mode)
++        tree = ast.parse(expr, mode="eval")
++        allowed = (ast.Expression, ast.BinOp, ast.UnaryOp, ast.Add, ast.Sub,
++                   ast.Mult, ast.Pow, ast.USub, ast.Call, ast.Name, ast.Load,
++                   ast.Constant)
++        if any(not isinstance(node, allowed) for node in ast.walk(tree)):
++            raise RuntimeError(f"non-arithmetic author expression in p6_{mode}")
++        fn = eval("lambda eta, S: " + expr, {"Decimal": Decimal, "__builtins__": {}}, {})
++        expected[mode] = [float(fn(Decimal(str(row["eta"])),
++                                    Decimal(str(row["S"])))) for row in rows]
++    files = {}
++    for mode in ("21", "33", "44"):
++        path = ASSETS / f"3Dfit_p6_lm_{mode}.m"
++        files[mode] = {"url": f"https://arxiv.org/src/2001.10914v2/anc/ParspaceFits/PhaseFits/{mode}/3Dfit_p6_lm_{mode}.m",
++                       "sha256": hashlib.sha256(path.read_bytes()).hexdigest()}
++    data = {"description": "FP64 samples evaluated independently from the author Mathematica p6 expressions",
++            "inputs": rows, "expected_p6": expected,
++            "source": {"paper": "https://arxiv.org/abs/2001.10914",
++                        "ancillary_base": "https://arxiv.org/src/2001.10914v2/anc/ParspaceFits/PhaseFits",
++                        "files": files,
++                        "evaluation": "Decimal(80) arithmetic over the first expanded expression; no network or native imports."}}
++    OUT.write_text(json.dumps(data, indent=2) + "\n")
++
++
++if __name__ == "__main__":
++    main()
+--- before/tests/data/xhm_amplitude_author_samples.json
++++ after/tests/data/xhm_amplitude_author_samples.json
+@@ -0,0 +1,75 @@
++{
++  "format": "pass14-xhm-author-amplitude-v1",
++  "source_url": "https://export.arxiv.org/e-print/2001.10914v2",
++  "asset_root": "docs/reviews/2026-09-12-clean-room/source-assets/pass-14-amplitude/AmpFits",
++  "asset_sha256": {
++    "21/1": "e0c25f0119cffdf50552a4e9d78a92470f0e4c28e57f83ed94aad7d5d1427fdf",
++    "21/2": "80be60a0c5159263d3190e2b93e08a208d199cd66095668814607a1bf4cad723",
++    "32/1": "f5882de942f2f23dcffc550b7974152cabe110d5af86c32eb186f06a8cdbe561",
++    "32/2": "d5ac1aabf9d76117942afa47907dd6a8dab1d084d2c65594ee92796c98cbba2d",
++    "33/1": "1b79d8a6eafff0816365dd83dfbed33a2879d2f92c05d096c518396e06a6b7e2",
++    "33/2": "b43e4b5e2e05310440938b42e89a68886d0aa5e6110e3988df04c0ea77f120b6",
++    "44/1": "36dc12cce856046df1336bdac11d8da5ea51746a445e75f0e35652f9dd686188",
++    "44/2": "a31ffbf07d27f7e8799541afeb8f45c274c6c28d00b87ee53b1c77e781f8637b"
++  },
++  "selection": {
++    "21_int1": 2,
++    "21_int2": 1,
++    "32_int1": 4,
++    "32_int2": 1,
++    "33_int1": 3,
++    "33_int2": 1,
++    "44_int1": 2,
++    "44_int2": 1
++  },
++  "samples": [
++    {
++      "name": "equal_mass_unequal_spin",
++      "eta": 0.25,
++      "chi1": 0.6,
++      "chi2": -0.3,
++      "values": {
++        "21_int1": -2.0164145499510484,
++        "21_int2": -1.9804527572620008,
++        "32_int1": 0.04615576802986017,
++        "32_int2": 1.668514220628236,
++        "33_int1": 0.31916110453359436,
++        "33_int2": 0.3593494826905837,
++        "44_int1": 1.0662076457895362,
++        "44_int2": 0.9906473645336512
++      }
++    },
++    {
++      "name": "q2_mixed_spin",
++      "eta": 0.2222222222222222,
++      "chi1": 0.4,
++      "chi2": -0.2,
++      "values": {
++        "21_int1": 1.0965393384759192,
++        "21_int2": 0.9176228082726382,
++        "32_int1": 0.05131800312817049,
++        "32_int2": 1.4519807954359707,
++        "33_int1": 3.1867588458804823,
++        "33_int2": 3.0943385856107803,
++        "44_int1": 1.1807150723591453,
++        "44_int2": 1.0101846297287764
++      }
++    },
++    {
++      "name": "q4_mixed_spin",
++      "eta": 0.16,
++      "chi1": -0.8,
++      "chi2": 0.5,
++      "values": {
++        "21_int1": 7.018279262238133,
++        "21_int2": 7.107926423329883,
++        "32_int1": 0.017597513191632306,
++        "32_int2": 0.735408767604805,
++        "33_int1": 4.586880211810632,
++        "33_int2": 4.275225119145652,
++        "44_int1": 1.593794853397639,
++        "44_int2": 1.4239175996169242
++      }
++    }
++  ]
++}
+--- before/tests/data/xhm_phase_author_samples.json
++++ after/tests/data/xhm_phase_author_samples.json
+@@ -0,0 +1,68 @@
++{
++  "description": "FP64 samples evaluated independently from the author Mathematica p6 expressions",
++  "inputs": [
++    {
++      "eta": 0.12,
++      "S": 0.3846487849050518,
++      "chi1": 0.4,
++      "chi2": -0.2
++    },
++    {
++      "eta": 0.18,
++      "S": 0.6480391854123053,
++      "chi1": 0.7,
++      "chi2": 0.1
++    },
++    {
++      "eta": 0.24,
++      "S": -0.16923076923076924,
++      "chi1": -0.6,
++      "chi2": 0.8
++    },
++    {
++      "eta": 0.25,
++      "S": -0.1,
++      "chi1": 0.3,
++      "chi2": -0.5
++    }
++  ],
++  "expected_p6": {
++    "21": [
++      3093.756671414766,
++      3091.1998290884017,
++      3097.5749996730838,
++      3098.409823687984
++    ],
++    "33": [
++      39.91120226932898,
++      42.28584500255977,
++      38.45509532341934,
++      37.966092389781856
++    ],
++    "44": [
++      105.56824786704394,
++      86.59111580609708,
++      83.60012483346077,
++      93.23201490669729
++    ]
++  },
++  "source": {
++    "paper": "https://arxiv.org/abs/2001.10914",
++    "ancillary_base": "https://arxiv.org/src/2001.10914v2/anc/ParspaceFits/PhaseFits",
++    "files": {
++      "21": {
++        "url": "https://arxiv.org/src/2001.10914v2/anc/ParspaceFits/PhaseFits/21/3Dfit_p6_lm_21.m",
++        "sha256": "5b3ab0e7f04092f99f8983b02f7cb985cf4bfd13b3e4022b16cf020d57987716"
++      },
++      "33": {
++        "url": "https://arxiv.org/src/2001.10914v2/anc/ParspaceFits/PhaseFits/33/3Dfit_p6_lm_33.m",
++        "sha256": "7cb4273b6b46f4be4f82b5a48e03705fa0f1d832effd71c79ade845c2d91afe8"
++      },
++      "44": {
++        "url": "https://arxiv.org/src/2001.10914v2/anc/ParspaceFits/PhaseFits/44/3Dfit_p6_lm_44.m",
++        "sha256": "6dd15b7cf9fded8c3cdd329c7535d688f3d25633a9508c00ebf7fad2b29d5c8f"
++      }
++    },
++    "evaluation": "Decimal(80) arithmetic over the first expanded expression; no network or native imports."
++  }
++}
+--- before/tests/test_pass14_xhm_amplitude.py
++++ after/tests/test_pass14_xhm_amplitude.py
+@@ -0,0 +1,37 @@
++"""Independent FP64 checks of the eight archived author amplitude expressions.
++
++Expected values come from the independent author-expression generator. Normal
++tests compare native raw fits with this fixture without requiring the ignored
++source cache or deriving expected values from native output.
++"""
++import json
++from pathlib import Path
++import torch
++from torchwave.approximants.xhm_fits import XHMParameterFits
++
++DATA = Path(__file__).parent / "data" / "xhm_amplitude_author_samples.json"
++
++
++def test_native_raw_fits_match_independent_author_samples():
++    fixture = json.loads(DATA.read_text())
++    for sample in fixture["samples"]:
++        eta, chi1, chi2 = (
++            torch.tensor(sample[key], dtype=torch.float64)
++            for key in ("eta", "chi1", "chi2")
++        )
++        delta = torch.sqrt(1 - 4 * eta)
++        m1, m2 = (1 + delta) / 2, (1 - delta) / 2
++        spin = (m1.square() * chi1 + m2.square() * chi2) / (1 - 2 * eta)
++        for key, value in sample["values"].items():
++            mode, node = key.split("_")
++            actual = getattr(XHMParameterFits, f"amp_{node}_{mode}")(
++                eta, chi1, chi2, spin
++            )
++            expected = torch.tensor(value, dtype=torch.float64)
++            torch.testing.assert_close(actual, expected, rtol=2e-12, atol=0)
++
++
++def test_equal_mass_unequal_spin_odd_modes_can_be_nonzero():
++    fixture = json.loads(DATA.read_text())
++    sample = next(x for x in fixture["samples"] if x["name"] == "equal_mass_unequal_spin")
++    assert any(abs(sample["values"][key]) > 0.0 for key in ("21_int1", "21_int2", "33_int1", "33_int2"))
+--- before/tests/test_pass14_xhm_odd_amplitude.py
++++ after/tests/test_pass14_xhm_odd_amplitude.py
+@@ -0,0 +1,131 @@
++"""Production-path checks for the odd-m amplitude sign convention."""
++
++import torch
++
++from torchwave.approximants import imrphenom_xhm as xhm
++from torchwave.approximants.imrphenom_xhm import IMRPhenomXHM
++from torchwave.approximants.xhm_fits import XHMParameterFits
++
++
++DTYPE = torch.float64
++
++
++def _equal_mass_odd_fit_values():
++    mass = torch.tensor(35.0, dtype=DTYPE)
++    chi1 = torch.tensor(0.6, dtype=DTYPE)
++    chi2 = torch.tensor(-0.3, dtype=DTYPE)
++    eta = mass * mass / (2.0 * mass).square()
++    _, _, _, spin = XHMParameterFits.compute_spin_variables(eta, chi1, chi2)
++    inspiral = torch.stack([
++        getattr(XHMParameterFits, f"amp_insp{i}_21")(eta, chi1, chi2, spin)
++        for i in (1, 2, 3)
++    ])
++    intermediate = torch.stack([
++        getattr(XHMParameterFits, f"amp_int{i}_21")(eta, chi1, chi2, spin)
++        for i in (1, 2)
++    ])
++    return mass, chi1, chi2, inspiral, intermediate
++
++
++def test_odd_inspiral_targets_are_abs_before_production_collocation(monkeypatch):
++    """The actual inspiral collocation target uses |raw odd-m fit|."""
++    mass, chi1, chi2, raw_inspiral, _ = _equal_mass_odd_fit_values()
++    assert (raw_inspiral < 0).all()
++
++    target = []
++    pn_values = []
++    original_matmul = xhm.torch.matmul
++    original_pn = xhm._pn_amplitude_ratio
++
++    def capture_matmul(left, right, *args, **kwargs):
++        if tuple(left.shape) == (3,) and tuple(right.shape[-2:]) == (3, 3):
++            target.append(left.detach().clone())
++        return original_matmul(left, right, *args, **kwargs)
++
++    def capture_pn(l, m, frequency, *args, **kwargs):
++        value = original_pn(l, m, frequency, *args, **kwargs)
++        if (l, m) == (2, 1) and len(pn_values) < 3:
++            pn_values.append(value.detach().clone())
++        return value
++
++    monkeypatch.setattr(xhm.torch, "matmul", capture_matmul)
++    monkeypatch.setattr(xhm, "_pn_amplitude_ratio", capture_pn)
++    IMRPhenomXHM(modes=((2, 1),))(
++        torch.tensor([20.0, 30.0, 40.0], dtype=DTYPE),
++        mass1=mass, mass2=mass, chi1=chi1, chi2=chi2,
++        distance=100.0, return_unprojected_modes=True,
++    )
++
++    assert len(target) == 1
++    assert len(pn_values) == 3
++    expected = raw_inspiral.abs() - torch.stack(pn_values)
++    torch.testing.assert_close(target[0], expected, rtol=5e-12, atol=0)
++
++
++def test_odd_intermediate_targets_are_abs_and_gradients_are_finite(monkeypatch):
++    """The six-condition production solve receives 1/|raw odd-m fit|."""
++    mass, chi1, chi2, _, raw_intermediate = _equal_mass_odd_fit_values()
++    assert (raw_intermediate < 0).all()
++    rhs_targets = []
++    original_solve = torch.linalg.solve
++
++    def capture_solve(matrix, rhs, *args, **kwargs):
++        if tuple(matrix.shape[-2:]) == (6, 6):
++            rhs_targets.append(rhs.detach().clone())
++        return original_solve(matrix, rhs, *args, **kwargs)
++
++    monkeypatch.setattr(torch.linalg, "solve", capture_solve)
++    frequency = torch.tensor([20.0, 30.0, 40.0], dtype=DTYPE, requires_grad=True)
++    mass_input = mass.detach().clone().requires_grad_()
++    chi1_input = chi1.detach().clone().requires_grad_()
++    chi2_input = chi2.detach().clone().requires_grad_()
++    mode = IMRPhenomXHM(modes=((2, 1),))(
++        frequency, mass1=mass_input, mass2=mass_input,
++        chi1=chi1_input, chi2=chi2_input, distance=100.0,
++        return_unprojected_modes=True,
++    )[2][(2, 1)]
++    gradients = torch.autograd.grad(
++        (mode.abs() * 1.0e22).sum(),
++        (frequency, mass_input, chi1_input, chi2_input),
++    )
++
++    assert len(rhs_targets) == 1
++    torch.testing.assert_close(
++        rhs_targets[0][2:4], 1.0 / raw_intermediate.abs(),
++        rtol=5e-12, atol=0,
++    )
++    for gradient in gradients:
++        assert torch.isfinite(gradient).all()
++        assert torch.abs(gradient).max() > 0.0
++
++
++def test_even_mode_intermediate_target_sign_is_unchanged(monkeypatch):
++    """Even-m consumers retain their existing raw-target behavior."""
++    rhs_targets = []
++    original_solve = torch.linalg.solve
++    monkeypatch.setattr(
++        XHMParameterFits, "amp_int1_44",
++        staticmethod(lambda eta, *args: -0.25 * torch.ones_like(eta)),
++    )
++    monkeypatch.setattr(
++        XHMParameterFits, "amp_int2_44",
++        staticmethod(lambda eta, *args: -0.5 * torch.ones_like(eta)),
++    )
++
++    def capture_solve(matrix, rhs, *args, **kwargs):
++        if tuple(matrix.shape[-2:]) == (6, 6):
++            rhs_targets.append(rhs.detach().clone())
++        return original_solve(matrix, rhs, *args, **kwargs)
++
++    monkeypatch.setattr(torch.linalg, "solve", capture_solve)
++    IMRPhenomXHM(modes=((4, 4),))(
++        torch.tensor([20.0, 30.0, 40.0], dtype=DTYPE),
++        mass1=35.0, mass2=35.0, chi1=0.6, chi2=-0.3,
++        distance=100.0, return_unprojected_modes=True,
++    )
++
++    assert len(rhs_targets) == 1
++    torch.testing.assert_close(
++        rhs_targets[0][2:4], torch.full((2,), 1.0e12, dtype=DTYPE),
++        rtol=0.0, atol=0.0,
++    )
+--- before/tests/test_pass14_xhm_phase.py
++++ after/tests/test_pass14_xhm_phase.py
+@@ -0,0 +1,25 @@
++import json
++from pathlib import Path
++
++import torch
++
++from torchwave.approximants.xhm_fits import XHMParameterFits
++
++
++_SAMPLES = json.loads(
++    (Path(__file__).parent / "data" / "xhm_phase_author_samples.json").read_text()
++)
++
++
++def test_author_p6_phase_fits_match_independent_math_samples():
++    """The three nonmixing p6 expressions reproduce author-math FP64 samples."""
++    inputs = _SAMPLES["inputs"]
++    eta = torch.tensor([row["eta"] for row in inputs], dtype=torch.float64)
++    chi1 = torch.tensor([row["chi1"] for row in inputs], dtype=torch.float64)
++    chi2 = torch.tensor([row["chi2"] for row in inputs], dtype=torch.float64)
++    spin = torch.tensor([row["S"] for row in inputs], dtype=torch.float64)
++
++    for mode in ("21", "33", "44"):
++        expected = torch.tensor(_SAMPLES["expected_p6"][mode], dtype=torch.float64)
++        actual = getattr(XHMParameterFits, f"phase_p6_{mode}")(eta, chi1, chi2, spin)
++        torch.testing.assert_close(actual, expected, rtol=2e-12, atol=0)

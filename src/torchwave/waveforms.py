@@ -33,12 +33,17 @@ from torchwave.approximants.imrphenom_xhm import (
     IMRPhenomXHM,
 )
 from torchwave.approximants.imrphenom_xp import IMRPhenomXP
+from torchwave.approximants.precession_nnlo_waveform_clean import waveform as clean_nnlo_waveform
+from torchwave.approximants.phenompv2_waveform_clean import waveform as clean_pv2_waveform
 from torchwave.approximants.imrphenom_xphm import IMRPhenomXPHM
 from torchwave.approximants.imrphenom_nsbh import IMRPhenomNSBH
 from torchwave.approximants.taylorf2_eccentric import TaylorF2_Eccentric
 from torchwave.approximants.kerr_ringdown import KerrRingdown, get_ringdown_waveform
 from torchwave.approximants.eob.waveform import SEOBNR_ODE
+from torchwave.approximants.eob.published_waveform import (
+    SEOBNRv4Published, SEOBNRv4PublishedNonspinning)
 from torchwave.approximants.rom.surrogate import SEOBNR_ROM
+from torchwave.approximants.rom.official_wrapper import OfficialSEOBNRv4ROM
 from torchwave.approximants.imrphenom_xas import IMRPhenomXAS
 from torchwave.approximants.teobresums import TEOBResumS
 
@@ -73,9 +78,14 @@ _APPROXIMANTS = {
     "ringdown": KerrRingdown,
     "seobnr": SEOBNR_ODE,
     "seobnrode": SEOBNR_ODE,
+    "seobnrv4published": SEOBNRv4Published,
+    "seobnrv4publishednonspinning": SEOBNRv4PublishedNonspinning,
     "seobnrv5": SEOBNR_ODE,
-    "seobnrrom": SEOBNR_ROM,
-    "seobnrv4rom": SEOBNR_ROM,
+    # Canonical SEOBNR_ROM dispatch uses the official external release.  The
+    # legacy TorchWave surrogate remains available through its direct class.
+    "seobnrrom": OfficialSEOBNRv4ROM,
+    "seobnrv4rom": OfficialSEOBNRv4ROM,
+    "officialseobnrv4rom": OfficialSEOBNRv4ROM,
     "seobnrv5rom": SEOBNR_ROM,
     "teobresums": TEOBResumS,
     "teobresum": TEOBResumS,
@@ -115,6 +125,7 @@ def _get_fd_waveform_raw(
     modes: Optional[Sequence[Tuple[int, int]]] = None,
     device: Optional[Union[str, torch.device]] = None,
     dtype: torch.dtype = torch.float64,
+    frequency_support: Optional[str] = None,
     **kwargs,
 ) -> Tuple[torch.Tensor, torch.Tensor]:
     """Generate frequency-domain gravitational-wave polarizations h_plus(f) and h_cross(f).
@@ -140,6 +151,10 @@ def _get_fd_waveform_raw(
         f_final: Ending frequency for evaluation grid in Hz
         delta_f: Frequency spacing for uniform evaluation grid in Hz
         sample_frequencies: Pre-computed tensor of frequencies in Hz
+        frequency_support: Pv2 grid contract, either ``"sequence"`` (the
+            supplied sequence is authoritative) or ``"uniform"`` (the
+            supplied uniform grid covers an exclusive ``f_final`` edge;
+            standard power-of-two padding above that edge is zeroed)
         modes: Optional sequence of (l, m) harmonic modes for multipolar approximants
         device: PyTorch device ('cpu', 'cuda', 'mps')
         dtype: Floating point precision (default torch.float64)
@@ -152,6 +167,10 @@ def _get_fd_waveform_raw(
         raise ValueError(
             f"Approximant '{approximant}' not recognized. Available: {list(_APPROXIMANTS.keys())}"
         )
+    if frequency_support not in (None, "sequence", "uniform"):
+        raise ValueError("frequency_support must be 'sequence' or 'uniform'")
+    if frequency_support == "sequence" and sample_frequencies is None:
+        raise ValueError("frequency_support='sequence' requires sample_frequencies")
 
     # Resolve frequency vector
     if sample_frequencies is not None:
@@ -169,6 +188,31 @@ def _get_fd_waveform_raw(
                 "Either `sample_frequencies` or all of (`f_lower`, `f_final`, `delta_f`) must be provided."
             )
         f = torch.arange(f_lower, f_final + delta_f / 2.0, delta_f, dtype=dtype, device=device)
+
+    if key == "imrphenompv2" and frequency_support == "uniform" and sample_frequencies is not None:
+        if f.ndim != 1 or f.numel() < 2:
+            raise ValueError("frequency_support='uniform' requires a one-dimensional grid with at least two points")
+        if not bool(torch.isfinite(f).all().item()):
+            raise ValueError("frequency_support='uniform' requires finite frequencies")
+        if f_final is None:
+            raise ValueError("frequency_support='uniform' requires f_final to define the conditioned endpoint")
+        diffs = f[1:] - f[:-1]
+        if bool(torch.any(diffs <= 0.0)):
+            raise ValueError("frequency_support='uniform' requires strictly increasing frequencies")
+        step = diffs[0] if delta_f is None else torch.as_tensor(delta_f, dtype=f.dtype, device=f.device)
+        if bool(step <= 0.0) or not bool(torch.allclose(diffs, step, rtol=1.0e-7, atol=1.0e-12)):
+            raise ValueError("frequency_support='uniform' requires equally spaced frequencies")
+        requested_fmax = torch.as_tensor(f_final, dtype=f.dtype, device=f.device)
+        endpoint_tol = 1.0e-12 + 1.0e-10 * torch.maximum(
+            requested_fmax.abs(), torch.ones_like(requested_fmax)
+        )
+        if not bool(torch.isfinite(requested_fmax).item()) or not bool(
+            f[-1] + endpoint_tol >= requested_fmax
+        ) or not bool(requested_fmax + endpoint_tol >= f[0]):
+            raise ValueError(
+                "frequency_support='uniform' requires the grid to cover f_final "
+                "with f_final on or after its first sample"
+            )
 
     model_cls = _APPROXIMANTS[key]
     model_kwargs = dict(kwargs)
@@ -258,6 +302,7 @@ def _get_fd_waveform_raw(
             inclination=inclination,
             phic=phic,
             tc=tc,
+            f_lower=f_lower,
             **model_kwargs,
         )
     elif key in ("imrphenomdnrtidal", "imrphenomdnrtidalv2", "nrtidal", "nrtidalv2"):
@@ -277,6 +322,14 @@ def _get_fd_waveform_raw(
             **model_kwargs,
         )
     elif key in ("imrphenomxp", "phenomxp", "xp"):
+        if (model_kwargs.get("prec_version") == 102 and
+                model_kwargs.get("convention") in (0, 1) and
+                model_kwargs.get("final_spin_mod") == 0):
+            return clean_nnlo_waveform(
+                f, mass1, mass2, spin1x, spin1y, s1z, spin2x, spin2y, s2z,
+                distance, inclination, phic, tc, f_ref,
+                prec_version=102, convention=model_kwargs["convention"], final_spin_mod=0,
+            )
         model = IMRPhenomXP()
         return model(
             f=f,
@@ -294,7 +347,30 @@ def _get_fd_waveform_raw(
             tc=tc,
             **model_kwargs,
         )
-    elif key in ("imrphenomp", "imrphenompv2"):
+    elif key == "imrphenompv2":
+        clean_kwargs = dict(model_kwargs)
+        for name in ("f_ref", "phasing_convention", "reference_frame"):
+            clean_kwargs.pop(name, None)
+        return clean_pv2_waveform(
+            f,
+            mass1,
+            mass2,
+            spin1x=spin1x,
+            spin1y=spin1y,
+            spin1z=s1z,
+            spin2x=spin2x,
+            spin2y=spin2y,
+            spin2z=s2z,
+            distance=distance,
+            inclination=inclination,
+            phic=phic,
+            tc=tc,
+            f_ref=f_ref,
+            phasing_convention=phasing_convention,
+            reference_frame=reference_frame,
+            **clean_kwargs,
+        )
+    elif key == "imrphenomp":
         model = model_cls()
         if "precession_version" not in model_kwargs:
             model_kwargs["precession_version"] = "v2"
@@ -314,7 +390,35 @@ def _get_fd_waveform_raw(
             tc=tc,
             **model_kwargs,
         )
-    elif key in ("imrphenomd", "imrphenomxas", "phenomxas", "xas", "seobnrrom", "seobnrv4rom", "seobnrv5rom"):
+    elif key in ("seobnrrom", "seobnrv4rom", "officialseobnrv4rom"):
+        # This route is deliberately separate from the legacy surrogate.
+        # The official release is external data and cannot be silently
+        # replaced by an in-tree approximation.
+        if lambda1 is not None and torch.any(as_tensor(lambda1) != 0):
+            raise ValueError("SEOBNRv4_ROM does not support tidal deformability")
+        if lambda2 is not None and torch.any(as_tensor(lambda2) != 0):
+            raise ValueError("SEOBNRv4_ROM does not support tidal deformability")
+        if phasing_convention not in (None, "coalescence", "reference_frequency"):
+            raise ValueError("unsupported phasing_convention for SEOBNRv4_ROM")
+        if reference_frame not in (None, "coalescence", "reference_frequency"):
+            raise ValueError("unsupported reference_frame for SEOBNRv4_ROM")
+        # Do not silently discard misspelled or unsupported model options.
+        for name in ("f_ref", "phasing_convention", "reference_frame"):
+            model_kwargs.pop(name, None)
+        constructor_keys = {"model_path", "node_policy", "ringdown_mf"}
+        constructor_kwargs = {k: model_kwargs.pop(k) for k in tuple(model_kwargs) if k in constructor_keys}
+        if model_kwargs:
+            raise TypeError("unsupported SEOBNRv4_ROM options: " + ", ".join(sorted(model_kwargs)))
+        constructor_kwargs.setdefault("flow", f_lower)
+        constructor_kwargs.setdefault("fhigh", f_final)
+        model = model_cls(**constructor_kwargs)
+        return model(
+            f, mass1, mass2, s1z, s2z,
+            distance=distance, inclination=inclination, phic=phic, tc=tc,
+            f_ref=(0.0 if f_ref is None else f_ref),
+            flow=f_lower, fhigh=f_final,
+        )
+    elif key in ("imrphenomd", "imrphenomxas", "phenomxas", "xas", "seobnrv5rom"):
         model = model_cls()
         return model(
             f=f,
@@ -382,19 +486,41 @@ def _get_fd_waveform_raw(
             **model_kwargs,
         )
     elif key in ("kerrringdown", "ringdown"):
+        # The standard physical 220 path is the clean analytic implementation.
+        # Explicit mode/amplitude primitives retain the established API.
+        explicit_legacy = any(k in model_kwargs for k in ("amplitudes", "phases", "energy_mode"))
+        if modes is not None and not explicit_legacy:
+            raise ValueError(
+                "fresh KerrRingdown supports only the physical (2,2,0) mode; "
+                "use explicit amplitudes/phases/energy_mode for the legacy primitive"
+            )
+        if not explicit_legacy:
+            from torchwave.approximants.kerr_ringdown_public_clean import kerr220_fd
+            final_mass = model_kwargs.pop("final_mass", mass1)
+            final_spin = model_kwargs.pop("final_spin", s1z)
+            energy_fraction = model_kwargs.pop("energy_fraction", 0.01)
+            if model_kwargs:
+                raise TypeError(f"unsupported clean KerrRingdown options: {sorted(model_kwargs)}")
+            return kerr220_fd(f, final_mass, final_spin, distance, energy_fraction,
+                              inclination, phic, tc)
         final_mass = model_kwargs.pop("final_mass", mass1)
         final_spin = model_kwargs.pop("final_spin", s1z)
         return get_ringdown_waveform(
             final_mass=final_mass,
             final_spin=final_spin,
             frequencies=f,
+            distance=distance,
             inclination=inclination,
+            phi=phic,
+            t0=tc,
             **model_kwargs,
         )
-    elif key in ("seobnr", "seobnrode", "seobnrv5"):
+    elif key in ("seobnr", "seobnrode", "seobnrv5", "seobnrv4published",
+                 "seobnrv4publishednonspinning"):
         model = model_cls()
         return model(
             f=f,
+            f_lower=f_lower,
             mass1=mass1,
             mass2=mass2,
             chi1=s1z,
@@ -421,6 +547,7 @@ def _get_fd_waveform_raw(
             inclination=inclination,
             phic=phic,
             tc=tc,
+            f_lower=f_lower,
             **model_kwargs,
         )
     else:
@@ -456,6 +583,7 @@ def get_fd_waveform(
     modes: Optional[Sequence[Tuple[int, int]]] = None,
     device: Optional[Union[str, torch.device]] = None,
     dtype: torch.dtype = torch.float64,
+    frequency_support: Optional[str] = None,
     **kwargs,
 ) -> Tuple[torch.Tensor, torch.Tensor]:
     """Generate frequency-domain gravitational-wave polarizations h_plus(f) and h_cross(f)."""
@@ -484,6 +612,7 @@ def get_fd_waveform(
         f_final=f_final,
         delta_f=delta_f,
         sample_frequencies=sample_frequencies,
+        frequency_support=frequency_support,
         modes=modes,
         device=device,
         dtype=dtype,
@@ -494,12 +623,16 @@ def get_fd_waveform(
         f = sample_frequencies
         if f is None and delta_f is not None and f_lower is not None and f_final is not None:
             f = torch.arange(f_lower, f_final + delta_f / 2.0, delta_f, dtype=dtype, device=device)
-        if f is not None and torch.is_tensor(f):
-            f_eval = f if f.dim() == hp.dim() else f.reshape(*([1] * (hp.dim() - f.dim())), -1)
+        if f is not None:
+            # Preserve frequency batch axes; ordinary broadcasting prepends
+            # any missing parameter axes. Flattening here merges rows/samples.
+            f_eval = torch.as_tensor(f, device=hp.device, dtype=hp.real.dtype)
             zero_mask = f_eval <= 0.0
             if f_lower is not None:
                 zero_mask = zero_mask | (f_eval < f_lower)
-            if f_final is not None:
+            key = approximant.lower().replace("_", "").replace("-", "")
+            pv2_sequence = key == "imrphenompv2" and sample_frequencies is not None and frequency_support != "uniform"
+            if f_final is not None and not pv2_sequence:
                 zero_mask = zero_mask | (f_eval >= f_final)
             hp = torch.where(zero_mask, torch.zeros_like(hp), hp)
             hc = torch.where(zero_mask, torch.zeros_like(hc), hc)

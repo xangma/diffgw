@@ -1,0 +1,277 @@
+{
+  "chi": 0.0,
+  "fixed_stencils": "natural cubic full-series splines at strides 1, 2, and 4",
+  "input_before_after": {
+    "after": "captured NQC-corrected waveform targets and residuals",
+    "before": "uncorrected captured waveform targets and residuals"
+  },
+  "interpretation": "uncorrected waveform_targets are the pre-NQC values; their residuals are expected inputs to the NQC solve. corrected_waveform_targets use the captured sampled_corrected_amplitude and sampled_corrected_phase. Both are (A, A', A'', phase', phase''); numerical_attachment defines phase' and phase'' as positive GW frequency and derivative for h=A*exp(-i phase). Basis derivative deltas are reported separately. Fixed refinement quantifies sampling sensitivity without attributing any residual to a particular model component.",
+  "match_time_M": 145.3463628365255,
+  "nu": 0.24,
+  "provenance": {
+    "argv": [
+      "scripts/diagnose_eob_nqc_stencil_clean.py"
+    ],
+    "capture_sha256": "65dcf7c08d94ab24cc2b0bae9823313181d85a0c961c2dd0f9d9cae12941296b",
+    "clean_module_sha256": {
+      "src/torchwave/approximants/eob/nqc.py": "f023b84fc0a48e59feb6b543d234635df965e04ee9aff05672ea3ff984d0cf85",
+      "src/torchwave/approximants/eob/numerical_attachment.py": "775aa6f40d4cfe2bffa836d7af0b58dc8521411571d5c124230890eb5de91cb1",
+      "src/torchwave/approximants/eob/seobnrv4_flux.py": "9395f930449651c6607de4aa780cfd75545d95ba67fe4b4d653e2852fef407a8",
+      "src/torchwave/approximants/eob/seobnrv4_hamiltonian.py": "5b1a5b877129e5235b8f92974a01ab450176e8e924d374ca0fc413334fad177f"
+    },
+    "dependencies": {
+      "numpy": "2.3.5",
+      "torch": "2.9.1"
+    },
+    "public_target_api": "unavailable; target_vector is the clean published-equation evaluation only",
+    "reference_implementation_imported": false,
+    "script_sha256": "793bcb5cf4384d30833e94346da06ad4be2ce0caa2cdc35376687d83ccb77c1c",
+    "state_columns": "(r, phi, p_r_star, p_phi); omega recomputed by clean Hamiltonian",
+    "sys_executable": "/Users/xangma/miniconda3/envs/pycbcorig313/bin/python",
+    "trajectory_evolution": false
+  },
+  "recomputed_row_checks": {
+    "max_abs_phase_basis_error": 6.661338147750939e-16,
+    "max_abs_products_error": 5.551115123125783e-16,
+    "omega_max": 0.16441545652779616,
+    "omega_min": 0.05137343061606597
+  },
+  "rows": {
+    "1": {
+      "basis_first_derivative": [
+        -0.03715883265073193,
+        -0.003841781205625332
+      ],
+      "basis_second_derivative": [
+        -0.008179303766683521,
+        -0.001349510867484569
+      ],
+      "corrected_target_residual": [
+        -1.1102230246251565e-16,
+        -8.489535944621995e-16,
+        6.418664428090026e-13,
+        1.542654892716655e-13,
+        -1.3585429656237658e-11
+      ],
+      "corrected_waveform_targets": [
+        0.3761667223169393,
+        -8.489535944621995e-16,
+        -0.0009690387636624584,
+        0.3548235861847097,
+        0.011022771030396361
+      ],
+      "first_derivative": [
+        0.005819880771725168,
+        0.015245747674520162,
+        0.0063337463949054715,
+        0.004036424236834037,
+        -0.03715883265073193,
+        -0.003841781205625332
+      ],
+      "max_abs_basis_first_delta_vs_stride1": 0.0,
+      "max_abs_basis_second_delta_vs_stride1": 0.0,
+      "sample_count": 9653,
+      "second_derivative": [
+        -0.0008450484393837279,
+        0.004498042933740059,
+        0.002068690846291376,
+        0.0013844196688101074,
+        -0.008179303766683521,
+        -0.001349510867484569
+      ],
+      "step_M": 0.015625,
+      "target_residual": [
+        0.050371635105372514,
+        0.005819880771725168,
+        0.00012399032492059698,
+        -0.06917844655374111,
+        -0.0041782520791291775
+      ],
+      "target_vector": [
+        0.37616672231693943,
+        0.0,
+        -0.0009690387643043249,
+        0.35482358618455545,
+        0.011022771043981791
+      ],
+      "value": [
+        0.42653835742231194,
+        0.08433212205787473,
+        0.029143089395339616,
+        0.017131952768021246,
+        -0.44464915184252235,
+        -0.016636917541486215
+      ],
+      "waveform_phase": 23.69236024128023,
+      "waveform_phase_first_derivative": 0.28564513963081434,
+      "waveform_phase_second_derivative": 0.0068445189648526136,
+      "waveform_targets": [
+        0.42653835742231194,
+        0.005819880771725168,
+        -0.0008450484393837279,
+        0.28564513963081434,
+        0.0068445189648526136
+      ]
+    },
+    "2": {
+      "basis_first_derivative": [
+        -0.03715883250897399,
+        -0.0038417811564027244
+      ],
+      "basis_second_derivative": [
+        -0.008179275916119217,
+        -0.001349497751243498
+      ],
+      "corrected_target_residual": [
+        -5.029310301551959e-14,
+        -4.4598696001674475e-11,
+        -1.6660794878377468e-08,
+        4.5452808183910065e-10,
+        1.5857560694589046e-07
+      ],
+      "corrected_waveform_targets": [
+        0.37616672231688913,
+        -4.4598696001674475e-11,
+        -0.0009690554250992033,
+        0.35482358663908353,
+        0.011022929619588737
+      ],
+      "first_derivative": [
+        0.005819880819117546,
+        0.015245747555480686,
+        0.0063337463311804966,
+        0.00403642419109092,
+        -0.03715883250897399,
+        -0.0038417811564027244
+      ],
+      "max_abs_basis_first_delta_vs_stride1": 1.417579387208434e-10,
+      "max_abs_basis_second_delta_vs_stride1": 3.0245180574449415e-08,
+      "sample_count": 4827,
+      "second_derivative": [
+        -0.0008450348311597392,
+        0.004498012688559485,
+        0.002068673686179158,
+        0.0013844071233158539,
+        -0.008179275916119217,
+        -0.001349497751243498
+      ],
+      "step_M": 0.03125,
+      "target_residual": [
+        0.05037163510544207,
+        0.005819880819117546,
+        0.00012400393314458572,
+        -0.06917844659324812,
+        -0.004178266133458545
+      ],
+      "target_vector": [
+        0.37616672231693943,
+        0.0,
+        -0.0009690387643043249,
+        0.35482358618455545,
+        0.011022771043981791
+      ],
+      "value": [
+        0.4265383574223815,
+        0.08433212205768453,
+        0.029143089395241628,
+        0.01713195276795181,
+        -0.44464915184226356,
+        -0.016636917541409984
+      ],
+      "waveform_phase": 23.692360241280184,
+      "waveform_phase_first_derivative": 0.28564513959130733,
+      "waveform_phase_second_derivative": 0.006844504910523246,
+      "waveform_targets": [
+        0.4265383574223815,
+        0.005819880819117546,
+        -0.0008450348311597392,
+        0.28564513959130733,
+        0.006844504910523246
+      ]
+    },
+    "4": {
+      "basis_first_derivative": [
+        -0.037158831511113516,
+        -0.0038417811963872787
+      ],
+      "basis_second_derivative": [
+        -0.00817965606668727,
+        -0.001349590001939745
+      ],
+      "corrected_target_residual": [
+        1.180366915320974e-11,
+        5.755983936689803e-10,
+        5.3796028542203375e-09,
+        -4.1297802400031e-09,
+        -2.6014342079279384e-07
+      ],
+      "corrected_waveform_targets": [
+        0.3761667223287431,
+        5.755983936689803e-10,
+        -0.0009690333847014707,
+        0.3548235820547752,
+        0.011022510900560998
+      ],
+      "first_derivative": [
+        0.005819880669958448,
+        0.015245747471881847,
+        0.0063337463990814375,
+        0.004036424266857222,
+        -0.037158831511113516,
+        -0.0038417811963872787
+      ],
+      "max_abs_basis_first_delta_vs_stride1": 1.1396184135259446e-09,
+      "max_abs_basis_second_delta_vs_stride1": 3.5230000374961157e-07,
+      "sample_count": 2414,
+      "second_derivative": [
+        -0.0008451122568021227,
+        0.004498254791144093,
+        0.0020687915835849177,
+        0.0013844889271550042,
+        -0.00817965606668727,
+        -0.001349590001939745
+      ],
+      "step_M": 0.0625,
+      "target_residual": [
+        0.05037163512271192,
+        0.005819880669958448,
+        0.00012392650750220216,
+        -0.06917844618073804,
+        -0.00417823150949414
+      ],
+      "target_vector": [
+        0.37616672231693943,
+        0.0,
+        -0.0009690387643043249,
+        0.35482358618455545,
+        0.011022771043981791
+      ],
+      "value": [
+        0.42653835743965135,
+        0.08433212198755467,
+        0.029143089364277255,
+        0.01713195274730446,
+        -0.4446491517064233,
+        -0.01663691751677366
+      ],
+      "waveform_phase": 23.692360241282625,
+      "waveform_phase_first_derivative": 0.2856451400038174,
+      "waveform_phase_second_derivative": 0.006844539534487651,
+      "waveform_targets": [
+        0.42653835743965135,
+        0.005819880669958448,
+        -0.0008451122568021227,
+        0.2856451400038174,
+        0.006844539534487651
+      ]
+    }
+  },
+  "status": "clean_room_nqc_stencil_sensitivity",
+  "target_names": [
+    "A",
+    "A_prime",
+    "A_second",
+    "omega",
+    "omega_prime"
+  ]
+}

@@ -1,0 +1,1002 @@
+{
+  "status": "finished",
+  "case": {
+    "expected_gate": {
+      "complex_relative_l2": 1e-06,
+      "mismatch": 1e-08
+    },
+    "grid": {
+      "df": 0.5,
+      "fhigh": 512.0,
+      "flow": 25.0
+    },
+    "id": "TEOB_continuous_equal_bbh",
+    "lal_name": "TEOBResumS",
+    "oracle_api": "SimInspiralFD",
+    "params": {
+      "chi1": 0.0,
+      "chi2": 0.0,
+      "distance": 100.0,
+      "inclination": 0.0,
+      "lambda1": 0.0,
+      "lambda2": 0.0,
+      "mass1": 20.0,
+      "mass2": 20.0,
+      "phic": 0.0,
+      "tc": 0.0
+    },
+    "torch_name": "TEOBResumS"
+  },
+  "host": "RONI2",
+  "cwd": "/Users/xangma/repos/torchwave",
+  "pid": 93441,
+  "command": "/Users/xangma/miniconda3/envs/pycbcorig313/bin/python scripts/teob_grid_output_resampling.py --case equal_bbh",
+  "input_sha256": "3a82dc09763a07adc3beee0f7ff61dd54552f16be714a8f73402f8412dd42572",
+  "nominal_sha256": "657bb798aaa1b3b0cdb37ee10aa529c1b9da5737c4fa7ea29b7f852f5bda8527",
+  "script_sha256": "97ba859608dde70417a933412793c2e2feb9866184e4ba68fed6b31c64708354",
+  "protocol_sha256": "60b9898717c4036f6ca6e4eceea8e5a208c3bd95df7a7b6614fcb73d9ba7d51d",
+  "source_hashes_before": {
+    "src/torchwave/__init__.py": "db42aeba20b5f4a4b57d4edabcf1fe860a2be94db0d9d252d281c2079d3d9176",
+    "src/torchwave/approximants/__init__.py": "50cdc46775f1fd8c960bd9eecb3df0c9a0880062284227c70e012f1af3a7bba5",
+    "src/torchwave/approximants/continuous_wave.py": "3d38063738e437742fbe76144900fe367647feba32327b174039a535e3edd00f",
+    "src/torchwave/approximants/emri_kludge.py": "0bbfd934d35d2dc561eefad8b605289a173ba6f347336d013e5c3d28c76526e1",
+    "src/torchwave/approximants/eob/__init__.py": "cba1fb28097542ef6b4b80eb6f7ddc4105418b4c225052d94f3dac7b85636356",
+    "src/torchwave/approximants/eob/adaptive_driver_clean.py": "27db5a25123f4d054a9919a11752b207cfc6accc377a8eeaf21f4b49087867e0",
+    "src/torchwave/approximants/eob/attachment.py": "097165aa7a6dcf87c5458fb26eade17a9c6bdf43c8e001c0929c1eb6ea2975e7",
+    "src/torchwave/approximants/eob/conditioned_waveform_clean.py": "c8ca45a490842f291e30616a52850f148397a8aad3e49c764c9a45c1bff99ec6",
+    "src/torchwave/approximants/eob/continuous_matching.py": "5db6aefa91cfdade8bb709381efe31144efc34054672263eec1c707a70cd1a06",
+    "src/torchwave/approximants/eob/events.py": "c1ae1182e4c2f9cf5f8a2857ea5d73802dbbb68b59739709849f973503bdfd5d",
+    "src/torchwave/approximants/eob/factorized_modes.py": "d4b10cbcbbecc4de84329a13cdca43d90d4fa5aa168248fc2e874211d29f8315",
+    "src/torchwave/approximants/eob/hamiltonian.py": "d26a87ded2a197a000704b77b075cdc72ee2315741bdacc29fb25f912158a441",
+    "src/torchwave/approximants/eob/initial_conditions.py": "68363208874bfaf39dad5d5668e5f128553144b4db31f64f0283278ed710458f",
+    "src/torchwave/approximants/eob/integrator.py": "a036f6b7580450a847bc1d56ebf745de6cdb5c2ee397d31cf1014d483eebe26b",
+    "src/torchwave/approximants/eob/merger_ringdown.py": "0db678173690ce0f7918c6fef2d9cb4864bf55a8dae3a6f80a47d0563ac7237d",
+    "src/torchwave/approximants/eob/nqc.py": "c8683181f7cf911df1e1b85cd6999cdb03e7c594e867315359040e9eb03ca552",
+    "src/torchwave/approximants/eob/nqc_analytic_clean.py": "28161546b97d0e182a7d7557b7d132f92a1d705a5f3120b1b0c51c06d31b8b99",
+    "src/torchwave/approximants/eob/numerical_attachment.py": "b042ed739c89ac53ec1829d005b404d86f16d18dc4f4dd710bd58000de5c4a93",
+    "src/torchwave/approximants/eob/numerical_derivative_clean.py": "2400ef464b292a0887f1eed68ced5579ab55ae6afe1f0f859226f9aaba180152",
+    "src/torchwave/approximants/eob/published_waveform.py": "7a4ceb62563f066ac8cd4d68ab5cc32e61143bc3a429a4420ff17b12ee021595",
+    "src/torchwave/approximants/eob/radiation_reaction.py": "dfb8853fc929145c3d61b7af49c16426560a12dc14ba9e664659af4a4449834d",
+    "src/torchwave/approximants/eob/remnant.py": "e7690cd5df1bcde2f579954762116beb20db606dae809835b148dae73c4cb007",
+    "src/torchwave/approximants/eob/seobnrv4_amplitude22.py": "941a7e6c4a3e92dc7860b91076958b09aa9a934e6799c33936409a5d09178eca",
+    "src/torchwave/approximants/eob/seobnrv4_flux.py": "9395f930449651c6607de4aa780cfd75545d95ba67fe4b4d653e2852fef407a8",
+    "src/torchwave/approximants/eob/seobnrv4_hamiltonian.py": "5b1a5b877129e5235b8f92974a01ab450176e8e924d374ca0fc413334fad177f",
+    "src/torchwave/approximants/eob/seobnrv4_mode22.py": "4bb182b480b741877429f7a85c08d175fcf20ea9517540aaadaaef0ead199190",
+    "src/torchwave/approximants/eob/td_fd_conditioning_clean.py": "d8a9ad936a0e6fb8e0c59a35428a7e2c70e372dca0b8d87f6d890d38dcd30a8a",
+    "src/torchwave/approximants/eob/teob_adaptive_continuation_clean.py": "7b8722ecc28af74eeb2fe29d2e7c1782123106d63fbeba60c82ca81f6b70b869",
+    "src/torchwave/approximants/eob/teob_conditioned_waveform_clean.py": "6f671bec34b0b9e8f6aa4dd9b7198e1da2a7b95aa7aaaadb78013f1c02b39dbb",
+    "src/torchwave/approximants/eob/teob_healy2014_remnant_clean.py": "ff65443236f379b3d1f4aebec5482833c43edd36b90418955ee3bfcea67f3dd2",
+    "src/torchwave/approximants/eob/teob_merger_nqc_clean.py": "a3902d99a6578714cd11c36ea4da0c2a83cfe7993aaa66c5ec95b48f2d1e3788",
+    "src/torchwave/approximants/eob/teob_nqc_clean.py": "8ec2d77a57b96e8246bdae3ca8c62c4e2a17cabf1c5554aa1e47fe25b1ea8f46",
+    "src/torchwave/approximants/eob/teob_orbital_potential_closed_clean.py": "b6c8b2ba574234145c2dd254553ae0cc5abe20616ea2571d17732e27cdbf19b3",
+    "src/torchwave/approximants/eob/teob_postadiabatic_clean.py": "06d0620283798a28c477e6e70b3a3720e337c53a8d8af8a78be17646a7be7550",
+    "src/torchwave/approximants/eob/teob_postmerger.py": "7324ff72dc1fd36149f137b9f8eafa68f354fd897ff5d56478ce5a6cf2f8c5f6",
+    "src/torchwave/approximants/eob/teob_published_driver.py": "58376bbd318f5b5f33922759416fc3b1d2531cb7edafb0e9d8d5c1edadfa8845",
+    "src/torchwave/approximants/eob/teob_radial_acceleration_clean.py": "6e16681eae0daade84bc540f12ee6fe40b3ad08929444273faf03123b7bbc3f9",
+    "src/torchwave/approximants/eob/teob_radiation_clean.py": "dca2c9791403467d85572f25a062cbc995d8228743d33b6b2e5dc28c13336bd6",
+    "src/torchwave/approximants/eob/teob_ringdown_assembly_clean.py": "bb6bc86986cbcd52c360c98ae3358baa7e6e03223b19485eaf24617cddbee7ff",
+    "src/torchwave/approximants/eob/teob_trajectory.py": "6728419dd6b7c6f2a7a340f017f52b5dd54bc399d212884f9975643cd58db785",
+    "src/torchwave/approximants/eob/teob_uib2016_postmerger.py": "2a560838c801820540a9ec585a8291b7ad316ab6765a928bf06de882681db3a5",
+    "src/torchwave/approximants/eob/teob_uib2016_remnant.py": "9ea727ec726f82c62c2ad6e399ee084e02daf275c145a3503e0666271010e755",
+    "src/torchwave/approximants/eob/teob_vacuum_driver_clean.py": "5188f9161c793cf79b1992abe562fd9ae58925319a44c730d6eb079050e43e41",
+    "src/torchwave/approximants/eob/teob_waveform_state_clean.py": "b247c91659b18341301356eca2def7cde270b0aaa7a9e16c85f8ba40f1861552",
+    "src/torchwave/approximants/eob/waveform.py": "1e9d61e31284c667ca0b27877646ba5553d9dbd3ebbe72d1090d9917acc4bc79",
+    "src/torchwave/approximants/hm_21_pn_clean.py": "8a69dd0d6435674b9c3f78dddf7356dbaea85ef105a820c81d7a8a6a155b5c95",
+    "src/torchwave/approximants/hm_assembly_clean.py": "8b985c5fcbf778fb8d43e626beaf89d5d3080fd3210342e1e56eea858a715d6c",
+    "src/torchwave/approximants/imrphenom_hm.py": "9f4054232e2fea72f5b0e5f3cfd68aef119f30edb48a0f7c4724a56133b46c8b",
+    "src/torchwave/approximants/imrphenom_hm_clean.py": "cbf474aa50241a06608bbfc69a9682f05b00ab3044fb507eb17c2f96921f0887",
+    "src/torchwave/approximants/imrphenom_hm_phase_clean.py": "59b67127968bb76a327e0bfac58f6e4d7f7c53e73387045f7b17f5777e30cc38",
+    "src/torchwave/approximants/imrphenom_hm_qnm_n61.py": "350c958aef4e1554d5c2d6a6bc22f8b9bf3513c2a000f08dc3cb3de1cde05b06",
+    "src/torchwave/approximants/imrphenom_nsbh.py": "a2b38665db46a38a15882490f1329420284458eaa57a80d971bba0aa987b22ab",
+    "src/torchwave/approximants/imrphenom_xas.py": "d82413363ee09b332337344b54c51cab785ec338b43adda551d5f88b76b58a44",
+    "src/torchwave/approximants/imrphenom_xhm.py": "c54a2f8f3eb74f5b49836feca3a524d939f02991c71f8c089da58d362021aa31",
+    "src/torchwave/approximants/imrphenom_xp.py": "be61b7aec433b8ff6a8606deb5add16472ba460e9882bdded3ef6905105e2631",
+    "src/torchwave/approximants/imrphenom_xphm.py": "4ab171aa839835c6064b391df4506e1e3f6308815dc098df4b573a24b0af837c",
+    "src/torchwave/approximants/imrphenomd.py": "77779b5733cdeb3289adb621f10a0a447ddd27014e46581f04e74b276583833e",
+    "src/torchwave/approximants/imrphenomd_nrtidal.py": "1349d1addada8d8858d0f3b099f4992ccecdc6ad490ec0379bcb6b6cf6897792",
+    "src/torchwave/approximants/imrphenomp.py": "df155863ce8ef3886386dfb46de4cf73e212f33f4640aafa44220149a4a9812f",
+    "src/torchwave/approximants/kerr_angular.py": "ad2b0bb82de180254cedd0c3fc31058a980f03e187b20219d4829053668172aa",
+    "src/torchwave/approximants/kerr_angular_table_convention.py": "d8256c9504ad470b9e075a630cca3c963c7f87aacf02c29c1722910788ac6a93",
+    "src/torchwave/approximants/kerr_qnm_author.py": "292f0a74f055800d0af12b95f839fac16f84ded3d91fc99e086206fa3ded7911",
+    "src/torchwave/approximants/kerr_qnm_d_sampling_clean.py": "5b342ea33a081ff41bfde00369a01fe9a8495216664ccb941fdc33aa6cfd8009",
+    "src/torchwave/approximants/kerr_qnm_generated.py": "3361bbf72224e93ce445169d5bb66e95ca27b5bdf6475d6de6ff7514bdf0283f",
+    "src/torchwave/approximants/kerr_qnm_interp.py": "a75c959cacf6c0f1413f9e8eeb427e1fb6f214e2d77c44941b28868b0d2d0679",
+    "src/torchwave/approximants/kerr_qnm_london_published.py": "74dc85b21585392bfe0bf2339064eefd2dc026e8b85eb8163ea7548fc653177e",
+    "src/torchwave/approximants/kerr_qnm_table_convention.py": "c4c85d17b079306df73c74f4bb755b7f4256fbdf49fef6a85cd9810367d800f6",
+    "src/torchwave/approximants/kerr_ringdown.py": "952fd6c40a263e4d3727f683a354e746908142b473a71c92c30171802db8f4ac",
+    "src/torchwave/approximants/kerr_ringdown_energy.py": "0c283b5145e929d6e465db37b1bead329073af90ab89c887826c2e2be303ba37",
+    "src/torchwave/approximants/kerr_ringdown_public_clean.py": "e585144576334e1836defaf3c3f809708e1600ef8e03a2e816e3813af6e64616",
+    "src/torchwave/approximants/memory.py": "33374f62c2f4e134ea1a338782173d864539379c1eedd8078ddca5fc52045470",
+    "src/torchwave/approximants/nrtidal_published_fits.py": "8c1d9a0fa2db4575d1e74184a45feec4004a8c063d838cbd4ec5dbe91da9954a",
+    "src/torchwave/approximants/nsbh_clean_amplitude.py": "dbd8d551ccbefdbbdf5a216b3793803ba1818feb53c57a84e92d6f7329cb5774",
+    "src/torchwave/approximants/nsbh_clean_phase.py": "a887f592b32a40a1d4903ce32bb97859bd06f5fa54e72396cb75c4d5f1fd90ec",
+    "src/torchwave/approximants/nsbh_phase_baseline.py": "74e13c9abe4172dc38e2ddf3f96593e57d7922dfbdbf153b2f096d5a3e84e156",
+    "src/torchwave/approximants/phenom_meco.py": "fb33a9ebfdc530111e56a0e560c53163bfa788706838e158d6d13a98fb103e49",
+    "src/torchwave/approximants/phenomd_unrounded_fits.py": "2f6ce30ffccd8574372a4bc13970eef9516da87bec2bfabb164fddea668c51e7",
+    "src/torchwave/approximants/phenompv2_waveform_clean.py": "716d3e38037c4352e57bf70850cb0bb11217dabd0d0e6d7f4a2481cfb69f8544",
+    "src/torchwave/approximants/polynomial_interval.py": "ceefc9c1526b9d22bb7fbaa4565a16d9976eb90709a501fc18aa46d155cb19e0",
+    "src/torchwave/approximants/ppe.py": "04bade0e334f9f9bf8d55792efab1fa0b8ff17edc6106c9c19d8fd1aa4a5e6ad",
+    "src/torchwave/approximants/precession_beta_clean.py": "13eb469547bd648f3b6effbe4cef66d81ba0740240c5ba1fd86bb2c3d913f2d2",
+    "src/torchwave/approximants/precession_msa.py": "851baecd58a4b934c11ceec539d3218faebf04196c28bc868499c453123d01d6",
+    "src/torchwave/approximants/precession_msa_angles_clean.py": "259705bd0fe0ead9aef45922a8d61cee598b0cd6ba0d1ec655ca6d4a14bdf4e2",
+    "src/torchwave/approximants/precession_msa_initial_clean.py": "25f4920b9c852d82e22299c57a49252ae8e7fc88fd613eb26b347a91f26a0aab",
+    "src/torchwave/approximants/precession_msa_oscillatory_clean.py": "a0e3e5e56cbbc295036c0fce42436ae30e4d9704e40ad1e2d59d327d5e49649a",
+    "src/torchwave/approximants/precession_msa_pn_clean.py": "12e9fabcb181828283829aab20beb73ec52fc0ad0b9a5b6c47cc808fdf23f8eb",
+    "src/torchwave/approximants/precession_msa_reference_l_clean.py": "2ee1059e626c0d7076c7e205100803b05c01a3ee40f87b2b3fb392cf7fd124c0",
+    "src/torchwave/approximants/precession_msa_secular_clean.py": "d40d1b2253305ba563bac248480e28b51daa9af94b9f1b6b92716e98f6afbddb",
+    "src/torchwave/approximants/precession_msa_waveform_clean.py": "002af508a4a8501f02c0e59a1416e30d917ce187c8dc79814aac80b0ae1b1ab7",
+    "src/torchwave/approximants/precession_nnlo_clean.py": "6d1b5a713fd19e96ee0f2214936f2ffa731eea2a9e28a254f32d6e22f77f3ea9",
+    "src/torchwave/approximants/precession_nnlo_waveform_clean.py": "838742009880e5d9affb77b01ecda775ea3b7a33a1c0a754668551cb8bb7b774",
+    "src/torchwave/approximants/precession_ode.py": "e816267a6710a659e2852c20497379e29f48ff2ac9d66a53b1743db9a77bef9b",
+    "src/torchwave/approximants/precession_source_frame_clean.py": "1f7273265036504d3083e0bd6b4d1677d6ddfc0f257e3e8979fe5a2b14467eda",
+    "src/torchwave/approximants/precession_twisting_clean.py": "32485331071e15ad683bcb0b903ce94dc75eddf47298e63620cafcc1c9717b62",
+    "src/torchwave/approximants/rom/__init__.py": "bea88a61fec8fde49c94e93fa42b78fc9f94d1f5d1fabf4763659c49e9a0f9ea",
+    "src/torchwave/approximants/rom/bspline.py": "45184b2cc3d857fdba8844d1c86245d7a696cb1c302bf4179420cd87a6f712a9",
+    "src/torchwave/approximants/rom/generator.py": "a06c1040801507f457d836f16b120b374dc38d0220712722f7447c8ecc381f01",
+    "src/torchwave/approximants/rom/glue.py": "011fefed60c32f8d06ae026302320f4bdd694eb2e1bc54c5752e0ba2a56ee8ac",
+    "src/torchwave/approximants/rom/official.py": "b0af35a773c5cea5573b04746bcf84b5a789e1727ee927546902a5c1ee7ff76b",
+    "src/torchwave/approximants/rom/official_wrapper.py": "a5e45364dc24355e153e12bc3e30c4e8798c66c8f71e66c1cd6427070803fe3f",
+    "src/torchwave/approximants/rom/surrogate.py": "c57567c4b13dba3d75020aaa11119c97999fd5472cfe812429661dbbbb3fdcd0",
+    "src/torchwave/approximants/taylorf2.py": "4f6d2536bd8a3fab691da6c724f09148b00b0521f4b005fdf8fc91a72c9db97d",
+    "src/torchwave/approximants/taylorf2_eccentric.py": "f6debf294f561ec18e4982c36eb554cdfe1fd5192d85e794c8966c188deac5bd",
+    "src/torchwave/approximants/taylorf2_hm.py": "fd30750e0fa8795120cba61ef98fc3df68d1644e2b7f442578079758f9a1a711",
+    "src/torchwave/approximants/teobresums.py": "05e15d8fd9888ee8d454d61fbc8454fe5c652747780f77c771718557ce0294f3",
+    "src/torchwave/approximants/xhm_amplitude_clean.py": "d10bf39f21d58a31b5bdfd56242d9c73ba82e0db61e662ed73e4290cef0db5e4",
+    "src/torchwave/approximants/xhm_fits.py": "6704f0c59a1e1527f5c31063d1bac8ab84f7349207acc3f1c24532c370167548",
+    "src/torchwave/approximants/xhm_inspiral_assembly_clean.py": "c68dda9efd5abdad9938ed33d35bc1d534221af7e80afa37b3d6ec6506cc5e45",
+    "src/torchwave/approximants/xhm_inspiral_assembly_release122022_clean.py": "3a8ec52088ab24d0f618b5e2a6a6f4e5d04b10717c2f01706fad597234ff4bd1",
+    "src/torchwave/approximants/xhm_intermediate_amplitude_clean.py": "613d4d5ebf131db3d72160b81e41edbc23c66a33c7588954a985f74e1d6b8338",
+    "src/torchwave/approximants/xhm_phase_clean.py": "7b1c201f4c8744fdd60a684cea46ff366dc7c000991d6b0aa8d48b63c322483f",
+    "src/torchwave/approximants/xhm_spa_clean.py": "00b0f2775d605a33b6e74c0a673138b900b1f015420f9ffbf42476bdf4f0d9ed",
+    "src/torchwave/constants.py": "1ae479e07b44a19d23b9a9eaed4b8b8b8bf38b4293717a91d321b59f2d1ac4e3",
+    "src/torchwave/conversions.py": "2cb04a754b927839dd056eec2372e4fb840e8298fbc3da67f847e3db8f323302",
+    "src/torchwave/detectors/__init__.py": "4e445658bcb157530ffafcf588f349473c1f28dea6478b484c08200023ea3764",
+    "src/torchwave/detectors/lisa.py": "d1351340229c67db751bccde5cae51be9b6bb9a95bcd03895c07261bcea55ea6",
+    "src/torchwave/detectors/network.py": "634b179fcd05834e27f80981141d56db8ca56d05d17acd30853944eef05d5777",
+    "src/torchwave/detectors/psd.py": "7b88a6eedd9ea25ff34f83e66f00ae1c68ea405c99f24b88ff738250eb4a8449",
+    "src/torchwave/detectors/pta.py": "891d613c25fef397674f3fcb5d1834c21aa3eb17044e389a0af6ee1240a4a2d2",
+    "src/torchwave/external_data.py": "2e77a3ec77f59f91c7ae765d763b4b444e77add0e59c4f02f097303bd42e89d8",
+    "src/torchwave/inference/__init__.py": "ddb9cea34efe3ffa995806bd8c529419a03ac03ec5d6aa08f31901332f0ba006",
+    "src/torchwave/inference/f_statistic.py": "3806ee5770180fab38235d6072b051291b470c08fbba9022a7df2c9943175b38",
+    "src/torchwave/inference/fisher.py": "fad61ccf45f66acd13e3afa1d6330589449a2f2094490c25f928a7439a05c470",
+    "src/torchwave/inference/likelihood.py": "dfe1a38096306065eeba60c535685378c34e8d9ae41f246aa8c1fc478d316853",
+    "src/torchwave/inference/mcmc.py": "f2c6a50daafa701364fc54fd9c499161a10e1bd082b059e8ae78be61a51c8f3c",
+    "src/torchwave/inference/relative_binning.py": "fa57a8d2b3c8c3beca432b0fdd4317799d92db8f503961c0f13f60a8441da9af",
+    "src/torchwave/inference/wavelet_glitch.py": "ca823a53a896de3b8067dcc031cac87dab2d1f291b50f6adcee5bf458eff29c4",
+    "src/torchwave/phenomd_published_fits.py": "55992c5c6d46e1430d2c86915dcedf44741beaddf039ff95faea944531bde2dd",
+    "src/torchwave/provenance.py": "ab4397670b6e3075904f12c3d37cd68fad0f923b2538eed88742be6135e48320",
+    "src/torchwave/waveforms.py": "9885b94bd4b18b48ae5bbdea614e4c0225f0ef6fb9e147f1044e3f204cd0809e",
+    "scripts/teob_continuous_fd_attribution.py": "ed25afe1d2a93e2fb023e6dff9c58939d82cb2c85c482182d9f92b643dfb3ff5",
+    "tests/parity_harness.py": "e284c19d2c2a523fb362bd5adf7cf1908f632cf7decccae01bf5503f39bf1d61",
+    "scripts/diagnose_teob_conditioned_waveform_clean.py": "fed7af813ed01ab1f924a7194eef04b88e88f91fef8708e4e48b7e6e72b44df8"
+  },
+  "variants": {
+    "baseline": {
+      "post_attachment_mode_bitwise": true,
+      "nominal_bitwise": true,
+      "fd_change_vs_nominal": {
+        "h_plus": 0.0,
+        "h_cross": 0.0
+      },
+      "acceptance": {
+        "status": "FAILED",
+        "case_id": "TEOB_continuous_equal_bbh",
+        "strict": true,
+        "torch_name": "TEOBResumS",
+        "lal_name": "TEOBResumS",
+        "params": {
+          "chi1": 0.0,
+          "chi2": 0.0,
+          "distance": 100.0,
+          "inclination": 0.0,
+          "lambda1": 0.0,
+          "lambda2": 0.0,
+          "mass1": 20.0,
+          "mass2": 20.0,
+          "phic": 0.0,
+          "tc": 0.0
+        },
+        "grid": {
+          "df": 0.5,
+          "fhigh": 512.0,
+          "flow": 25.0
+        },
+        "reference_kind": "lal_binary",
+        "oracle_api": "SimInspiralFD",
+        "oracle_fhigh": 512.0,
+        "oracle_convergence": null,
+        "verification_scope": "full_polarizations",
+        "plus": {
+          "complex_relative_l2": 0.00010303510208864271,
+          "relative_norm_error": 8.440375809940565e-07,
+          "magnitude_relative_l2": 7.021745521978111e-05,
+          "flat_mismatch": 5.307764450179775e-09,
+          "psd_mismatch": 7.973527282878479e-09,
+          "optimized_match": 0.9999999956016571,
+          "finite": true,
+          "dc_zero": true,
+          "out_of_band_zero": true
+        },
+        "cross": {
+          "complex_relative_l2": 8.253938853855928e-05,
+          "relative_norm_error": 1.8359946838185235e-06,
+          "magnitude_relative_l2": 4.602491250963438e-05,
+          "flat_mismatch": 3.4046835351020377e-09,
+          "psd_mismatch": 6.005943631315347e-09,
+          "optimized_match": 0.9999999972749988,
+          "finite": true,
+          "dc_zero": true,
+          "out_of_band_zero": true
+        },
+        "psd_mismatches_plus": {
+          "aLIGOZeroDetHighPower": 7.973527282878479e-09,
+          "CosmicExplorer": 3.672732118431554e-10,
+          "EinsteinTelescope": 1.8915491395432582e-10
+        },
+        "psd_mismatches_cross": {
+          "aLIGOZeroDetHighPower": 6.005943631315347e-09,
+          "CosmicExplorer": 2.706959101317352e-10,
+          "EinsteinTelescope": 1.490491063904642e-10
+        },
+        "projections": {
+          "H1_sky0": {
+            "complex_relative_l2": 9.35468410911759e-05,
+            "relative_norm_error": 9.19966155670725e-08,
+            "magnitude_relative_l2": 6.472238208886088e-05,
+            "flat_mismatch": 4.375501960751649e-09,
+            "psd_mismatch": 6.832513110843763e-09,
+            "optimized_match": 0.9999999963234634,
+            "finite": true,
+            "dc_zero": true,
+            "out_of_band_zero": true,
+            "psd_mismatches": {
+              "aLIGOZeroDetHighPower": 6.832513110843763e-09,
+              "CosmicExplorer": 3.1150948487379537e-10,
+              "EinsteinTelescope": 1.6293133509037716e-10
+            }
+          },
+          "H1_sky1": {
+            "complex_relative_l2": 8.502755500067169e-05,
+            "relative_norm_error": 1.2557732778702116e-06,
+            "magnitude_relative_l2": 5.235053576339735e-05,
+            "flat_mismatch": 3.6140496151304546e-09,
+            "psd_mismatch": 6.131317342727982e-09,
+            "optimized_match": 0.9999999970466456,
+            "finite": true,
+            "dc_zero": true,
+            "out_of_band_zero": true,
+            "psd_mismatches": {
+              "aLIGOZeroDetHighPower": 6.131317342727982e-09,
+              "CosmicExplorer": 2.771834983761323e-10,
+              "EinsteinTelescope": 1.502709068290642e-10
+            }
+          },
+          "L1_sky0": {
+            "complex_relative_l2": 9.249173452939677e-05,
+            "relative_norm_error": 5.627124680412227e-08,
+            "magnitude_relative_l2": 6.344372063574949e-05,
+            "flat_mismatch": 4.2773589115086e-09,
+            "psd_mismatch": 6.731728952047433e-09,
+            "optimized_match": 0.9999999964144988,
+            "finite": true,
+            "dc_zero": true,
+            "out_of_band_zero": true,
+            "psd_mismatches": {
+              "aLIGOZeroDetHighPower": 6.731728952047433e-09,
+              "CosmicExplorer": 3.0669633499513793e-10,
+              "EinsteinTelescope": 1.6100243360739341e-10
+            }
+          },
+          "L1_sky1": {
+            "complex_relative_l2": 8.452704088909034e-05,
+            "relative_norm_error": 1.3484559631522359e-06,
+            "magnitude_relative_l2": 5.1407036958156395e-05,
+            "flat_mismatch": 3.5714959878418995e-09,
+            "psd_mismatch": 6.101550487080942e-09,
+            "optimized_match": 0.9999999970878773,
+            "finite": true,
+            "dc_zero": true,
+            "out_of_band_zero": true,
+            "psd_mismatches": {
+              "aLIGOZeroDetHighPower": 6.101550487080942e-09,
+              "CosmicExplorer": 2.754897421297642e-10,
+              "EinsteinTelescope": 1.4971113238004818e-10
+            }
+          },
+          "V1_sky0": {
+            "complex_relative_l2": 8.29804253568054e-05,
+            "relative_norm_error": 2.0463098341854287e-06,
+            "magnitude_relative_l2": 4.261369201342875e-05,
+            "flat_mismatch": 3.4407747762088547e-09,
+            "psd_mismatch": 6.13488526646222e-09,
+            "optimized_match": 0.9999999972901573,
+            "finite": true,
+            "dc_zero": true,
+            "out_of_band_zero": true,
+            "psd_mismatches": {
+              "aLIGOZeroDetHighPower": 6.13488526646222e-09,
+              "CosmicExplorer": 2.768011375664514e-10,
+              "EinsteinTelescope": 1.5313983414699806e-10
+            }
+          },
+          "V1_sky1": {
+            "complex_relative_l2": 0.00010256660453097571,
+            "relative_norm_error": 1.1046551938231491e-06,
+            "magnitude_relative_l2": 7.222376261505902e-05,
+            "flat_mismatch": 5.259349844521921e-09,
+            "psd_mismatch": 7.827577030994348e-09,
+            "optimized_match": 0.9999999955897863,
+            "finite": true,
+            "dc_zero": true,
+            "out_of_band_zero": true,
+            "psd_mismatches": {
+              "aLIGOZeroDetHighPower": 7.827577030994348e-09,
+              "CosmicExplorer": 3.6035552319901853e-10,
+              "EinsteinTelescope": 1.8463841566784822e-10
+            }
+          }
+        },
+        "gate": {
+          "complex_relative_l2": 1e-06,
+          "mismatch": 1e-08
+        }
+      },
+      "output_sha256": "657bb798aaa1b3b0cdb37ee10aa529c1b9da5737c4fa7ea29b7f852f5bda8527"
+    },
+    "accepted_amplitude": {
+      "post_attachment_mode_bitwise": true,
+      "fd_change_vs_nominal": {
+        "h_plus": 5.0865448614188205e-08,
+        "h_cross": 3.250709962552614e-08
+      },
+      "acceptance": {
+        "status": "FAILED",
+        "case_id": "TEOB_continuous_equal_bbh",
+        "strict": true,
+        "torch_name": "TEOBResumS",
+        "lal_name": "TEOBResumS",
+        "params": {
+          "chi1": 0.0,
+          "chi2": 0.0,
+          "distance": 100.0,
+          "inclination": 0.0,
+          "lambda1": 0.0,
+          "lambda2": 0.0,
+          "mass1": 20.0,
+          "mass2": 20.0,
+          "phic": 0.0,
+          "tc": 0.0
+        },
+        "grid": {
+          "df": 0.5,
+          "fhigh": 512.0,
+          "flow": 25.0
+        },
+        "reference_kind": "lal_binary",
+        "oracle_api": "SimInspiralFD",
+        "oracle_fhigh": 512.0,
+        "oracle_convergence": null,
+        "verification_scope": "full_polarizations",
+        "plus": {
+          "complex_relative_l2": 0.00010303418300298346,
+          "relative_norm_error": 8.383251178941571e-07,
+          "magnitude_relative_l2": 7.021682827114322e-05,
+          "flat_mismatch": 5.307674744159385e-09,
+          "psd_mismatch": 7.972336124595358e-09,
+          "optimized_match": 0.9999999956021417,
+          "finite": true,
+          "dc_zero": true,
+          "out_of_band_zero": true
+        },
+        "cross": {
+          "complex_relative_l2": 8.254025385444311e-05,
+          "relative_norm_error": 1.8382391736771755e-06,
+          "magnitude_relative_l2": 4.601563810765113e-05,
+          "flat_mismatch": 3.404750592572725e-09,
+          "psd_mismatch": 6.006390051993549e-09,
+          "optimized_match": 0.9999999972746215,
+          "finite": true,
+          "dc_zero": true,
+          "out_of_band_zero": true
+        },
+        "psd_mismatches_plus": {
+          "aLIGOZeroDetHighPower": 7.972336124595358e-09,
+          "CosmicExplorer": 3.6721414797824536e-10,
+          "EinsteinTelescope": 1.8908985488508279e-10
+        },
+        "psd_mismatches_cross": {
+          "aLIGOZeroDetHighPower": 6.006390051993549e-09,
+          "CosmicExplorer": 2.7069080310582194e-10,
+          "EinsteinTelescope": 1.490242373947126e-10
+        },
+        "projections": {
+          "H1_sky0": {
+            "complex_relative_l2": 9.354654362826189e-05,
+            "relative_norm_error": 9.204780025821284e-08,
+            "magnitude_relative_l2": 6.472307795204273e-05,
+            "flat_mismatch": 4.375473761086823e-09,
+            "psd_mismatch": 6.8322453250502235e-09,
+            "optimized_match": 0.9999999963235936,
+            "finite": true,
+            "dc_zero": true,
+            "out_of_band_zero": true,
+            "psd_mismatches": {
+              "aLIGOZeroDetHighPower": 6.8322453250502235e-09,
+              "CosmicExplorer": 3.115022684241353e-10,
+              "EinsteinTelescope": 1.629276713543959e-10
+            }
+          },
+          "H1_sky1": {
+            "complex_relative_l2": 8.502809230751673e-05,
+            "relative_norm_error": 1.256391512508952e-06,
+            "magnitude_relative_l2": 5.234562220724719e-05,
+            "flat_mismatch": 3.614094357118347e-09,
+            "psd_mismatch": 6.13166351026706e-09,
+            "optimized_match": 0.9999999970464049,
+            "finite": true,
+            "dc_zero": true,
+            "out_of_band_zero": true,
+            "psd_mismatches": {
+              "aLIGOZeroDetHighPower": 6.13166351026706e-09,
+              "CosmicExplorer": 2.771850526883668e-10,
+              "EinsteinTelescope": 1.502622470894721e-10
+            }
+          },
+          "L1_sky0": {
+            "complex_relative_l2": 9.249153611074254e-05,
+            "relative_norm_error": 5.612966142365569e-08,
+            "magnitude_relative_l2": 6.344397537278483e-05,
+            "flat_mismatch": 4.277340814873298e-09,
+            "psd_mismatch": 6.731551427385796e-09,
+            "optimized_match": 0.9999999964145837,
+            "finite": true,
+            "dc_zero": true,
+            "out_of_band_zero": true,
+            "psd_mismatches": {
+              "aLIGOZeroDetHighPower": 6.731551427385796e-09,
+              "CosmicExplorer": 3.066920051253419e-10,
+              "EinsteinTelescope": 1.6100054622825155e-10
+            }
+          },
+          "L1_sky1": {
+            "complex_relative_l2": 8.452764467951409e-05,
+            "relative_norm_error": 1.3492509610718619e-06,
+            "magnitude_relative_l2": 5.140155562643173e-05,
+            "flat_mismatch": 3.57154605890031e-09,
+            "psd_mismatch": 6.101928295976222e-09,
+            "optimized_match": 0.9999999970876133,
+            "finite": true,
+            "dc_zero": true,
+            "out_of_band_zero": true,
+            "psd_mismatches": {
+              "aLIGOZeroDetHighPower": 6.101928295976222e-09,
+              "CosmicExplorer": 2.7549107439739373e-10,
+              "EinsteinTelescope": 1.497010293505241e-10
+            }
+          },
+          "V1_sky0": {
+            "complex_relative_l2": 8.298133295232146e-05,
+            "relative_norm_error": 2.050676235948498e-06,
+            "magnitude_relative_l2": 4.260090878286599e-05,
+            "flat_mismatch": 3.4408409455011224e-09,
+            "psd_mismatch": 6.135201680024238e-09,
+            "optimized_match": 0.9999999972897403,
+            "finite": true,
+            "dc_zero": true,
+            "out_of_band_zero": true,
+            "psd_mismatches": {
+              "aLIGOZeroDetHighPower": 6.135201680024238e-09,
+              "CosmicExplorer": 2.767819307081254e-10,
+              "EinsteinTelescope": 1.5309253864614902e-10
+            }
+          },
+          "V1_sky1": {
+            "complex_relative_l2": 0.00010256564757426909,
+            "relative_norm_error": 1.1011984152304129e-06,
+            "magnitude_relative_l2": 7.222536181417247e-05,
+            "flat_mismatch": 5.259255475564828e-09,
+            "psd_mismatch": 7.826478798378389e-09,
+            "optimized_match": 0.9999999955902855,
+            "finite": true,
+            "dc_zero": true,
+            "out_of_band_zero": true,
+            "psd_mismatches": {
+              "aLIGOZeroDetHighPower": 7.826478798378389e-09,
+              "CosmicExplorer": 3.6031222450105815e-10,
+              "EinsteinTelescope": 1.8459656025981985e-10
+            }
+          }
+        },
+        "gate": {
+          "complex_relative_l2": 1e-06,
+          "mismatch": 1e-08
+        }
+      },
+      "output_sha256": "b31d58380cd9c7770a9ab7267e984b0472fcd537a93079fa48c4efe3eed478a9"
+    },
+    "accepted_phase": {
+      "post_attachment_mode_bitwise": true,
+      "fd_change_vs_nominal": {
+        "h_plus": 4.998996432106094e-07,
+        "h_cross": 7.827202541104959e-07
+      },
+      "acceptance": {
+        "status": "FAILED",
+        "case_id": "TEOB_continuous_equal_bbh",
+        "strict": true,
+        "torch_name": "TEOBResumS",
+        "lal_name": "TEOBResumS",
+        "params": {
+          "chi1": 0.0,
+          "chi2": 0.0,
+          "distance": 100.0,
+          "inclination": 0.0,
+          "lambda1": 0.0,
+          "lambda2": 0.0,
+          "mass1": 20.0,
+          "mass2": 20.0,
+          "phic": 0.0,
+          "tc": 0.0
+        },
+        "grid": {
+          "df": 0.5,
+          "fhigh": 512.0,
+          "flow": 25.0
+        },
+        "reference_kind": "lal_binary",
+        "oracle_api": "SimInspiralFD",
+        "oracle_fhigh": 512.0,
+        "oracle_convergence": null,
+        "verification_scope": "full_polarizations",
+        "plus": {
+          "complex_relative_l2": 0.00010304541662735032,
+          "relative_norm_error": 9.00490736592454e-07,
+          "magnitude_relative_l2": 7.022246518095508e-05,
+          "flat_mismatch": 5.308778305845863e-09,
+          "psd_mismatch": 7.98558708048347e-09,
+          "optimized_match": 0.9999999955968496,
+          "finite": true,
+          "dc_zero": true,
+          "out_of_band_zero": true
+        },
+        "cross": {
+          "complex_relative_l2": 8.256343339080434e-05,
+          "relative_norm_error": 1.8950056127610272e-06,
+          "magnitude_relative_l2": 4.581245129347194e-05,
+          "flat_mismatch": 3.406558368723722e-09,
+          "psd_mismatch": 6.017929377044595e-09,
+          "optimized_match": 0.999999997265866,
+          "finite": true,
+          "dc_zero": true,
+          "out_of_band_zero": true
+        },
+        "psd_mismatches_plus": {
+          "aLIGOZeroDetHighPower": 7.98558708048347e-09,
+          "CosmicExplorer": 3.6791614199671585e-10,
+          "EinsteinTelescope": 1.898661228239007e-10
+        },
+        "psd_mismatches_cross": {
+          "aLIGOZeroDetHighPower": 6.017929377044595e-09,
+          "CosmicExplorer": 2.706915802619392e-10,
+          "EinsteinTelescope": 1.4856560426323995e-10
+        },
+        "projections": {
+          "H1_sky0": {
+            "complex_relative_l2": 9.357976665979322e-05,
+            "relative_norm_error": 1.0620444731209307e-07,
+            "magnitude_relative_l2": 6.458154903419298e-05,
+            "flat_mismatch": 4.378581497377354e-09,
+            "psd_mismatch": 6.859435242034806e-09,
+            "optimized_match": 0.9999999963100461,
+            "finite": true,
+            "dc_zero": true,
+            "out_of_band_zero": true,
+            "psd_mismatches": {
+              "aLIGOZeroDetHighPower": 6.859435242034806e-09,
+              "CosmicExplorer": 3.122916369946438e-10,
+              "EinsteinTelescope": 1.6336165753472187e-10
+            }
+          },
+          "H1_sky1": {
+            "complex_relative_l2": 8.505821240078412e-05,
+            "relative_norm_error": 1.295162951349346e-06,
+            "magnitude_relative_l2": 5.214450271556453e-05,
+            "flat_mismatch": 3.616606347733864e-09,
+            "psd_mismatch": 6.150337128474348e-09,
+            "optimized_match": 0.9999999970348776,
+            "finite": true,
+            "dc_zero": true,
+            "out_of_band_zero": true,
+            "psd_mismatches": {
+              "aLIGOZeroDetHighPower": 6.150337128474348e-09,
+              "CosmicExplorer": 2.7745172825888176e-10,
+              "EinsteinTelescope": 1.5004353315362096e-10
+            }
+          },
+          "L1_sky0": {
+            "complex_relative_l2": 9.252465181322126e-05,
+            "relative_norm_error": 4.8461455321621774e-08,
+            "magnitude_relative_l2": 6.329362975442072e-05,
+            "flat_mismatch": 4.2804042532651465e-09,
+            "psd_mismatch": 6.758013371133131e-09,
+            "optimized_match": 0.9999999964010325,
+            "finite": true,
+            "dc_zero": true,
+            "out_of_band_zero": true,
+            "psd_mismatches": {
+              "aLIGOZeroDetHighPower": 6.758013371133131e-09,
+              "CosmicExplorer": 3.074126508906261e-10,
+              "EinsteinTelescope": 1.613416067414164e-10
+            }
+          },
+          "L1_sky1": {
+            "complex_relative_l2": 8.455750581899414e-05,
+            "relative_norm_error": 1.3911869729140232e-06,
+            "magnitude_relative_l2": 5.119830408068477e-05,
+            "flat_mismatch": 3.5740133075279346e-09,
+            "psd_mismatch": 6.1199222356478344e-09,
+            "optimized_match": 0.9999999970764073,
+            "finite": true,
+            "dc_zero": true,
+            "out_of_band_zero": true,
+            "psd_mismatches": {
+              "aLIGOZeroDetHighPower": 6.1199222356478344e-09,
+              "CosmicExplorer": 2.757375439088605e-10,
+              "EinsteinTelescope": 1.4946299753404446e-10
+            }
+          },
+          "V1_sky0": {
+            "complex_relative_l2": 8.299479489816064e-05,
+            "relative_norm_error": 2.1103149890494087e-06,
+            "magnitude_relative_l2": 4.2436983019443256e-05,
+            "flat_mismatch": 3.441833928974347e-09,
+            "psd_mismatch": 6.139816655093e-09,
+            "optimized_match": 0.9999999972843653,
+            "finite": true,
+            "dc_zero": true,
+            "out_of_band_zero": true,
+            "psd_mismatches": {
+              "aLIGOZeroDetHighPower": 6.139816655093e-09,
+              "CosmicExplorer": 2.765879747457234e-10,
+              "EinsteinTelescope": 1.5253409646476257e-10
+            }
+          },
+          "V1_sky1": {
+            "complex_relative_l2": 0.00010258517427021867,
+            "relative_norm_error": 1.1657991899608484e-06,
+            "magnitude_relative_l2": 7.219102611681403e-05,
+            "flat_mismatch": 5.2611852652262314e-09,
+            "psd_mismatch": 7.847027694296571e-09,
+            "optimized_match": 0.9999999955811855,
+            "finite": true,
+            "dc_zero": true,
+            "out_of_band_zero": true,
+            "psd_mismatches": {
+              "aLIGOZeroDetHighPower": 7.847027694296571e-09,
+              "CosmicExplorer": 3.6121583502080057e-10,
+              "EinsteinTelescope": 1.8547241520394664e-10
+            }
+          }
+        },
+        "gate": {
+          "complex_relative_l2": 1e-06,
+          "mismatch": 1e-08
+        }
+      },
+      "output_sha256": "5300a34eda0b353a2f3f475eb0db5e2563dee67c99456aa0bcbe6230fd99e2ec"
+    },
+    "accepted_both": {
+      "post_attachment_mode_bitwise": true,
+      "fd_change_vs_nominal": {
+        "h_plus": 4.490357894657389e-07,
+        "h_cross": 8.152008910993589e-07
+      },
+      "acceptance": {
+        "status": "FAILED",
+        "case_id": "TEOB_continuous_equal_bbh",
+        "strict": true,
+        "torch_name": "TEOBResumS",
+        "lal_name": "TEOBResumS",
+        "params": {
+          "chi1": 0.0,
+          "chi2": 0.0,
+          "distance": 100.0,
+          "inclination": 0.0,
+          "lambda1": 0.0,
+          "lambda2": 0.0,
+          "mass1": 20.0,
+          "mass2": 20.0,
+          "phic": 0.0,
+          "tc": 0.0
+        },
+        "grid": {
+          "df": 0.5,
+          "fhigh": 512.0,
+          "flow": 25.0
+        },
+        "reference_kind": "lal_binary",
+        "oracle_api": "SimInspiralFD",
+        "oracle_fhigh": 512.0,
+        "oracle_convergence": null,
+        "verification_scope": "full_polarizations",
+        "plus": {
+          "complex_relative_l2": 0.00010304420623715978,
+          "relative_norm_error": 8.94778334543033e-07,
+          "magnitude_relative_l2": 7.022163806876363e-05,
+          "flat_mismatch": 5.308658623803808e-09,
+          "psd_mismatch": 7.984300443020231e-09,
+          "optimized_match": 0.9999999955973626,
+          "finite": true,
+          "dc_zero": true,
+          "out_of_band_zero": true
+        },
+        "cross": {
+          "complex_relative_l2": 8.256466210408474e-05,
+          "relative_norm_error": 1.8972501642607183e-06,
+          "magnitude_relative_l2": 4.580348244590567e-05,
+          "flat_mismatch": 3.4066554022160744e-09,
+          "psd_mismatch": 6.018472942237452e-09,
+          "optimized_match": 0.9999999972654606,
+          "finite": true,
+          "dc_zero": true,
+          "out_of_band_zero": true
+        },
+        "psd_mismatches_plus": {
+          "aLIGOZeroDetHighPower": 7.984300443020231e-09,
+          "CosmicExplorer": 3.678437554555103e-10,
+          "EinsteinTelescope": 1.897858536992203e-10
+        },
+        "psd_mismatches_cross": {
+          "aLIGOZeroDetHighPower": 6.018472942237452e-09,
+          "CosmicExplorer": 2.707006840907411e-10,
+          "EinsteinTelescope": 1.4855583430062325e-10
+        },
+        "projections": {
+          "H1_sky0": {
+            "complex_relative_l2": 9.357937555209266e-05,
+            "relative_norm_error": 1.0625564606345768e-07,
+            "magnitude_relative_l2": 6.458219127875085e-05,
+            "flat_mismatch": 4.378544526950634e-09,
+            "psd_mismatch": 6.859135703862762e-09,
+            "optimized_match": 0.9999999963101842,
+            "finite": true,
+            "dc_zero": true,
+            "out_of_band_zero": true,
+            "psd_mismatches": {
+              "aLIGOZeroDetHighPower": 6.859135703862762e-09,
+              "CosmicExplorer": 3.1228053476439754e-10,
+              "EinsteinTelescope": 1.6335344188433965e-10
+            }
+          },
+          "H1_sky1": {
+            "complex_relative_l2": 8.505897836827093e-05,
+            "relative_norm_error": 1.295781227256287e-06,
+            "magnitude_relative_l2": 5.21397484741717e-05,
+            "flat_mismatch": 3.6166708516915946e-09,
+            "psd_mismatch": 6.150749354283391e-09,
+            "optimized_match": 0.9999999970346184,
+            "finite": true,
+            "dc_zero": true,
+            "out_of_band_zero": true,
+            "psd_mismatches": {
+              "aLIGOZeroDetHighPower": 6.150749354283391e-09,
+              "CosmicExplorer": 2.774622753776157e-10,
+              "EinsteinTelescope": 1.500448654212505e-10
+            }
+          },
+          "L1_sky0": {
+            "complex_relative_l2": 9.252439478580589e-05,
+            "relative_norm_error": 4.831985965361338e-08,
+            "magnitude_relative_l2": 6.32938497197718e-05,
+            "flat_mismatch": 4.280380605514722e-09,
+            "psd_mismatch": 6.7578163065462604e-09,
+            "optimized_match": 0.9999999964011218,
+            "finite": true,
+            "dc_zero": true,
+            "out_of_band_zero": true,
+            "psd_mismatches": {
+              "aLIGOZeroDetHighPower": 6.7578163065462604e-09,
+              "CosmicExplorer": 3.074055454632685e-10,
+              "EinsteinTelescope": 1.613368327824105e-10
+            }
+          },
+          "L1_sky1": {
+            "complex_relative_l2": 8.455836067589196e-05,
+            "relative_norm_error": 1.391982019324037e-06,
+            "magnitude_relative_l2": 5.1193002088563225e-05,
+            "flat_mismatch": 3.5740841397569056e-09,
+            "psd_mismatch": 6.1203715429059e-09,
+            "optimized_match": 0.9999999970761237,
+            "finite": true,
+            "dc_zero": true,
+            "out_of_band_zero": true,
+            "psd_mismatches": {
+              "aLIGOZeroDetHighPower": 6.1203715429059e-09,
+              "CosmicExplorer": 2.7574897920601416e-10,
+              "EinsteinTelescope": 1.4946366366785924e-10
+            }
+          },
+          "V1_sky0": {
+            "complex_relative_l2": 8.299609976100945e-05,
+            "relative_norm_error": 2.114681460224747e-06,
+            "magnitude_relative_l2": 4.2424594939993055e-05,
+            "flat_mismatch": 3.4419329608681437e-09,
+            "psd_mismatch": 6.140233543838747e-09,
+            "optimized_match": 0.999999997283917,
+            "finite": true,
+            "dc_zero": true,
+            "out_of_band_zero": true,
+            "psd_mismatches": {
+              "aLIGOZeroDetHighPower": 6.140233543838747e-09,
+              "CosmicExplorer": 2.765840889651372e-10,
+              "EinsteinTelescope": 1.5250356533158538e-10
+            }
+          },
+          "V1_sky1": {
+            "complex_relative_l2": 0.00010258389727196165,
+            "relative_norm_error": 1.1623424796987356e-06,
+            "magnitude_relative_l2": 7.219243614837753e-05,
+            "flat_mismatch": 5.261058699801424e-09,
+            "psd_mismatch": 7.84581799528894e-09,
+            "optimized_match": 0.9999999955817157,
+            "finite": true,
+            "dc_zero": true,
+            "out_of_band_zero": true,
+            "psd_mismatches": {
+              "aLIGOZeroDetHighPower": 7.84581799528894e-09,
+              "CosmicExplorer": 3.611565491112856e-10,
+              "EinsteinTelescope": 1.8541423951745628e-10
+            }
+          }
+        },
+        "gate": {
+          "complex_relative_l2": 1e-06,
+          "mismatch": 1e-08
+        }
+      },
+      "output_sha256": "1da82942ecaa4f7eb18e41180b4dae16a72cdb084f8667fe9ff54107c700b00b"
+    }
+  },
+  "pre_samples": 1556,
+  "post_samples": 31,
+  "attachment_time_M": 7708.876857822408,
+  "pre_max_amplitude_change": 1.8868019291407023e-07,
+  "pre_max_phase_change": 8.462056030111853e-06,
+  "elapsed_seconds": 2.4283721446990967,
+  "source_hashes_after": {
+    "src/torchwave/__init__.py": "db42aeba20b5f4a4b57d4edabcf1fe860a2be94db0d9d252d281c2079d3d9176",
+    "src/torchwave/approximants/__init__.py": "50cdc46775f1fd8c960bd9eecb3df0c9a0880062284227c70e012f1af3a7bba5",
+    "src/torchwave/approximants/continuous_wave.py": "3d38063738e437742fbe76144900fe367647feba32327b174039a535e3edd00f",
+    "src/torchwave/approximants/emri_kludge.py": "0bbfd934d35d2dc561eefad8b605289a173ba6f347336d013e5c3d28c76526e1",
+    "src/torchwave/approximants/eob/__init__.py": "cba1fb28097542ef6b4b80eb6f7ddc4105418b4c225052d94f3dac7b85636356",
+    "src/torchwave/approximants/eob/adaptive_driver_clean.py": "27db5a25123f4d054a9919a11752b207cfc6accc377a8eeaf21f4b49087867e0",
+    "src/torchwave/approximants/eob/attachment.py": "097165aa7a6dcf87c5458fb26eade17a9c6bdf43c8e001c0929c1eb6ea2975e7",
+    "src/torchwave/approximants/eob/conditioned_waveform_clean.py": "c8ca45a490842f291e30616a52850f148397a8aad3e49c764c9a45c1bff99ec6",
+    "src/torchwave/approximants/eob/continuous_matching.py": "5db6aefa91cfdade8bb709381efe31144efc34054672263eec1c707a70cd1a06",
+    "src/torchwave/approximants/eob/events.py": "c1ae1182e4c2f9cf5f8a2857ea5d73802dbbb68b59739709849f973503bdfd5d",
+    "src/torchwave/approximants/eob/factorized_modes.py": "d4b10cbcbbecc4de84329a13cdca43d90d4fa5aa168248fc2e874211d29f8315",
+    "src/torchwave/approximants/eob/hamiltonian.py": "d26a87ded2a197a000704b77b075cdc72ee2315741bdacc29fb25f912158a441",
+    "src/torchwave/approximants/eob/initial_conditions.py": "68363208874bfaf39dad5d5668e5f128553144b4db31f64f0283278ed710458f",
+    "src/torchwave/approximants/eob/integrator.py": "a036f6b7580450a847bc1d56ebf745de6cdb5c2ee397d31cf1014d483eebe26b",
+    "src/torchwave/approximants/eob/merger_ringdown.py": "0db678173690ce0f7918c6fef2d9cb4864bf55a8dae3a6f80a47d0563ac7237d",
+    "src/torchwave/approximants/eob/nqc.py": "c8683181f7cf911df1e1b85cd6999cdb03e7c594e867315359040e9eb03ca552",
+    "src/torchwave/approximants/eob/nqc_analytic_clean.py": "28161546b97d0e182a7d7557b7d132f92a1d705a5f3120b1b0c51c06d31b8b99",
+    "src/torchwave/approximants/eob/numerical_attachment.py": "b042ed739c89ac53ec1829d005b404d86f16d18dc4f4dd710bd58000de5c4a93",
+    "src/torchwave/approximants/eob/numerical_derivative_clean.py": "2400ef464b292a0887f1eed68ced5579ab55ae6afe1f0f859226f9aaba180152",
+    "src/torchwave/approximants/eob/published_waveform.py": "7a4ceb62563f066ac8cd4d68ab5cc32e61143bc3a429a4420ff17b12ee021595",
+    "src/torchwave/approximants/eob/radiation_reaction.py": "dfb8853fc929145c3d61b7af49c16426560a12dc14ba9e664659af4a4449834d",
+    "src/torchwave/approximants/eob/remnant.py": "e7690cd5df1bcde2f579954762116beb20db606dae809835b148dae73c4cb007",
+    "src/torchwave/approximants/eob/seobnrv4_amplitude22.py": "941a7e6c4a3e92dc7860b91076958b09aa9a934e6799c33936409a5d09178eca",
+    "src/torchwave/approximants/eob/seobnrv4_flux.py": "9395f930449651c6607de4aa780cfd75545d95ba67fe4b4d653e2852fef407a8",
+    "src/torchwave/approximants/eob/seobnrv4_hamiltonian.py": "5b1a5b877129e5235b8f92974a01ab450176e8e924d374ca0fc413334fad177f",
+    "src/torchwave/approximants/eob/seobnrv4_mode22.py": "4bb182b480b741877429f7a85c08d175fcf20ea9517540aaadaaef0ead199190",
+    "src/torchwave/approximants/eob/td_fd_conditioning_clean.py": "d8a9ad936a0e6fb8e0c59a35428a7e2c70e372dca0b8d87f6d890d38dcd30a8a",
+    "src/torchwave/approximants/eob/teob_adaptive_continuation_clean.py": "7b8722ecc28af74eeb2fe29d2e7c1782123106d63fbeba60c82ca81f6b70b869",
+    "src/torchwave/approximants/eob/teob_conditioned_waveform_clean.py": "6f671bec34b0b9e8f6aa4dd9b7198e1da2a7b95aa7aaaadb78013f1c02b39dbb",
+    "src/torchwave/approximants/eob/teob_healy2014_remnant_clean.py": "ff65443236f379b3d1f4aebec5482833c43edd36b90418955ee3bfcea67f3dd2",
+    "src/torchwave/approximants/eob/teob_merger_nqc_clean.py": "a3902d99a6578714cd11c36ea4da0c2a83cfe7993aaa66c5ec95b48f2d1e3788",
+    "src/torchwave/approximants/eob/teob_nqc_clean.py": "8ec2d77a57b96e8246bdae3ca8c62c4e2a17cabf1c5554aa1e47fe25b1ea8f46",
+    "src/torchwave/approximants/eob/teob_orbital_potential_closed_clean.py": "b6c8b2ba574234145c2dd254553ae0cc5abe20616ea2571d17732e27cdbf19b3",
+    "src/torchwave/approximants/eob/teob_postadiabatic_clean.py": "06d0620283798a28c477e6e70b3a3720e337c53a8d8af8a78be17646a7be7550",
+    "src/torchwave/approximants/eob/teob_postmerger.py": "7324ff72dc1fd36149f137b9f8eafa68f354fd897ff5d56478ce5a6cf2f8c5f6",
+    "src/torchwave/approximants/eob/teob_published_driver.py": "58376bbd318f5b5f33922759416fc3b1d2531cb7edafb0e9d8d5c1edadfa8845",
+    "src/torchwave/approximants/eob/teob_radial_acceleration_clean.py": "6e16681eae0daade84bc540f12ee6fe40b3ad08929444273faf03123b7bbc3f9",
+    "src/torchwave/approximants/eob/teob_radiation_clean.py": "dca2c9791403467d85572f25a062cbc995d8228743d33b6b2e5dc28c13336bd6",
+    "src/torchwave/approximants/eob/teob_ringdown_assembly_clean.py": "bb6bc86986cbcd52c360c98ae3358baa7e6e03223b19485eaf24617cddbee7ff",
+    "src/torchwave/approximants/eob/teob_trajectory.py": "6728419dd6b7c6f2a7a340f017f52b5dd54bc399d212884f9975643cd58db785",
+    "src/torchwave/approximants/eob/teob_uib2016_postmerger.py": "2a560838c801820540a9ec585a8291b7ad316ab6765a928bf06de882681db3a5",
+    "src/torchwave/approximants/eob/teob_uib2016_remnant.py": "9ea727ec726f82c62c2ad6e399ee084e02daf275c145a3503e0666271010e755",
+    "src/torchwave/approximants/eob/teob_vacuum_driver_clean.py": "5188f9161c793cf79b1992abe562fd9ae58925319a44c730d6eb079050e43e41",
+    "src/torchwave/approximants/eob/teob_waveform_state_clean.py": "b247c91659b18341301356eca2def7cde270b0aaa7a9e16c85f8ba40f1861552",
+    "src/torchwave/approximants/eob/waveform.py": "1e9d61e31284c667ca0b27877646ba5553d9dbd3ebbe72d1090d9917acc4bc79",
+    "src/torchwave/approximants/hm_21_pn_clean.py": "8a69dd0d6435674b9c3f78dddf7356dbaea85ef105a820c81d7a8a6a155b5c95",
+    "src/torchwave/approximants/hm_assembly_clean.py": "8b985c5fcbf778fb8d43e626beaf89d5d3080fd3210342e1e56eea858a715d6c",
+    "src/torchwave/approximants/imrphenom_hm.py": "9f4054232e2fea72f5b0e5f3cfd68aef119f30edb48a0f7c4724a56133b46c8b",
+    "src/torchwave/approximants/imrphenom_hm_clean.py": "cbf474aa50241a06608bbfc69a9682f05b00ab3044fb507eb17c2f96921f0887",
+    "src/torchwave/approximants/imrphenom_hm_phase_clean.py": "59b67127968bb76a327e0bfac58f6e4d7f7c53e73387045f7b17f5777e30cc38",
+    "src/torchwave/approximants/imrphenom_hm_qnm_n61.py": "350c958aef4e1554d5c2d6a6bc22f8b9bf3513c2a000f08dc3cb3de1cde05b06",
+    "src/torchwave/approximants/imrphenom_nsbh.py": "a2b38665db46a38a15882490f1329420284458eaa57a80d971bba0aa987b22ab",
+    "src/torchwave/approximants/imrphenom_xas.py": "d82413363ee09b332337344b54c51cab785ec338b43adda551d5f88b76b58a44",
+    "src/torchwave/approximants/imrphenom_xhm.py": "c54a2f8f3eb74f5b49836feca3a524d939f02991c71f8c089da58d362021aa31",
+    "src/torchwave/approximants/imrphenom_xp.py": "be61b7aec433b8ff6a8606deb5add16472ba460e9882bdded3ef6905105e2631",
+    "src/torchwave/approximants/imrphenom_xphm.py": "4ab171aa839835c6064b391df4506e1e3f6308815dc098df4b573a24b0af837c",
+    "src/torchwave/approximants/imrphenomd.py": "77779b5733cdeb3289adb621f10a0a447ddd27014e46581f04e74b276583833e",
+    "src/torchwave/approximants/imrphenomd_nrtidal.py": "1349d1addada8d8858d0f3b099f4992ccecdc6ad490ec0379bcb6b6cf6897792",
+    "src/torchwave/approximants/imrphenomp.py": "df155863ce8ef3886386dfb46de4cf73e212f33f4640aafa44220149a4a9812f",
+    "src/torchwave/approximants/kerr_angular.py": "ad2b0bb82de180254cedd0c3fc31058a980f03e187b20219d4829053668172aa",
+    "src/torchwave/approximants/kerr_angular_table_convention.py": "d8256c9504ad470b9e075a630cca3c963c7f87aacf02c29c1722910788ac6a93",
+    "src/torchwave/approximants/kerr_qnm_author.py": "292f0a74f055800d0af12b95f839fac16f84ded3d91fc99e086206fa3ded7911",
+    "src/torchwave/approximants/kerr_qnm_d_sampling_clean.py": "5b342ea33a081ff41bfde00369a01fe9a8495216664ccb941fdc33aa6cfd8009",
+    "src/torchwave/approximants/kerr_qnm_generated.py": "3361bbf72224e93ce445169d5bb66e95ca27b5bdf6475d6de6ff7514bdf0283f",
+    "src/torchwave/approximants/kerr_qnm_interp.py": "a75c959cacf6c0f1413f9e8eeb427e1fb6f214e2d77c44941b28868b0d2d0679",
+    "src/torchwave/approximants/kerr_qnm_london_published.py": "74dc85b21585392bfe0bf2339064eefd2dc026e8b85eb8163ea7548fc653177e",
+    "src/torchwave/approximants/kerr_qnm_table_convention.py": "c4c85d17b079306df73c74f4bb755b7f4256fbdf49fef6a85cd9810367d800f6",
+    "src/torchwave/approximants/kerr_ringdown.py": "952fd6c40a263e4d3727f683a354e746908142b473a71c92c30171802db8f4ac",
+    "src/torchwave/approximants/kerr_ringdown_energy.py": "0c283b5145e929d6e465db37b1bead329073af90ab89c887826c2e2be303ba37",
+    "src/torchwave/approximants/kerr_ringdown_public_clean.py": "e585144576334e1836defaf3c3f809708e1600ef8e03a2e816e3813af6e64616",
+    "src/torchwave/approximants/memory.py": "33374f62c2f4e134ea1a338782173d864539379c1eedd8078ddca5fc52045470",
+    "src/torchwave/approximants/nrtidal_published_fits.py": "8c1d9a0fa2db4575d1e74184a45feec4004a8c063d838cbd4ec5dbe91da9954a",
+    "src/torchwave/approximants/nsbh_clean_amplitude.py": "dbd8d551ccbefdbbdf5a216b3793803ba1818feb53c57a84e92d6f7329cb5774",
+    "src/torchwave/approximants/nsbh_clean_phase.py": "a887f592b32a40a1d4903ce32bb97859bd06f5fa54e72396cb75c4d5f1fd90ec",
+    "src/torchwave/approximants/nsbh_phase_baseline.py": "74e13c9abe4172dc38e2ddf3f96593e57d7922dfbdbf153b2f096d5a3e84e156",
+    "src/torchwave/approximants/phenom_meco.py": "fb33a9ebfdc530111e56a0e560c53163bfa788706838e158d6d13a98fb103e49",
+    "src/torchwave/approximants/phenomd_unrounded_fits.py": "2f6ce30ffccd8574372a4bc13970eef9516da87bec2bfabb164fddea668c51e7",
+    "src/torchwave/approximants/phenompv2_waveform_clean.py": "716d3e38037c4352e57bf70850cb0bb11217dabd0d0e6d7f4a2481cfb69f8544",
+    "src/torchwave/approximants/polynomial_interval.py": "ceefc9c1526b9d22bb7fbaa4565a16d9976eb90709a501fc18aa46d155cb19e0",
+    "src/torchwave/approximants/ppe.py": "04bade0e334f9f9bf8d55792efab1fa0b8ff17edc6106c9c19d8fd1aa4a5e6ad",
+    "src/torchwave/approximants/precession_beta_clean.py": "13eb469547bd648f3b6effbe4cef66d81ba0740240c5ba1fd86bb2c3d913f2d2",
+    "src/torchwave/approximants/precession_msa.py": "851baecd58a4b934c11ceec539d3218faebf04196c28bc868499c453123d01d6",
+    "src/torchwave/approximants/precession_msa_angles_clean.py": "259705bd0fe0ead9aef45922a8d61cee598b0cd6ba0d1ec655ca6d4a14bdf4e2",
+    "src/torchwave/approximants/precession_msa_initial_clean.py": "25f4920b9c852d82e22299c57a49252ae8e7fc88fd613eb26b347a91f26a0aab",
+    "src/torchwave/approximants/precession_msa_oscillatory_clean.py": "a0e3e5e56cbbc295036c0fce42436ae30e4d9704e40ad1e2d59d327d5e49649a",
+    "src/torchwave/approximants/precession_msa_pn_clean.py": "12e9fabcb181828283829aab20beb73ec52fc0ad0b9a5b6c47cc808fdf23f8eb",
+    "src/torchwave/approximants/precession_msa_reference_l_clean.py": "2ee1059e626c0d7076c7e205100803b05c01a3ee40f87b2b3fb392cf7fd124c0",
+    "src/torchwave/approximants/precession_msa_secular_clean.py": "d40d1b2253305ba563bac248480e28b51daa9af94b9f1b6b92716e98f6afbddb",
+    "src/torchwave/approximants/precession_msa_waveform_clean.py": "002af508a4a8501f02c0e59a1416e30d917ce187c8dc79814aac80b0ae1b1ab7",
+    "src/torchwave/approximants/precession_nnlo_clean.py": "6d1b5a713fd19e96ee0f2214936f2ffa731eea2a9e28a254f32d6e22f77f3ea9",
+    "src/torchwave/approximants/precession_nnlo_waveform_clean.py": "838742009880e5d9affb77b01ecda775ea3b7a33a1c0a754668551cb8bb7b774",
+    "src/torchwave/approximants/precession_ode.py": "e816267a6710a659e2852c20497379e29f48ff2ac9d66a53b1743db9a77bef9b",
+    "src/torchwave/approximants/precession_source_frame_clean.py": "1f7273265036504d3083e0bd6b4d1677d6ddfc0f257e3e8979fe5a2b14467eda",
+    "src/torchwave/approximants/precession_twisting_clean.py": "32485331071e15ad683bcb0b903ce94dc75eddf47298e63620cafcc1c9717b62",
+    "src/torchwave/approximants/rom/__init__.py": "bea88a61fec8fde49c94e93fa42b78fc9f94d1f5d1fabf4763659c49e9a0f9ea",
+    "src/torchwave/approximants/rom/bspline.py": "45184b2cc3d857fdba8844d1c86245d7a696cb1c302bf4179420cd87a6f712a9",
+    "src/torchwave/approximants/rom/generator.py": "a06c1040801507f457d836f16b120b374dc38d0220712722f7447c8ecc381f01",
+    "src/torchwave/approximants/rom/glue.py": "011fefed60c32f8d06ae026302320f4bdd694eb2e1bc54c5752e0ba2a56ee8ac",
+    "src/torchwave/approximants/rom/official.py": "b0af35a773c5cea5573b04746bcf84b5a789e1727ee927546902a5c1ee7ff76b",
+    "src/torchwave/approximants/rom/official_wrapper.py": "a5e45364dc24355e153e12bc3e30c4e8798c66c8f71e66c1cd6427070803fe3f",
+    "src/torchwave/approximants/rom/surrogate.py": "c57567c4b13dba3d75020aaa11119c97999fd5472cfe812429661dbbbb3fdcd0",
+    "src/torchwave/approximants/taylorf2.py": "4f6d2536bd8a3fab691da6c724f09148b00b0521f4b005fdf8fc91a72c9db97d",
+    "src/torchwave/approximants/taylorf2_eccentric.py": "f6debf294f561ec18e4982c36eb554cdfe1fd5192d85e794c8966c188deac5bd",
+    "src/torchwave/approximants/taylorf2_hm.py": "fd30750e0fa8795120cba61ef98fc3df68d1644e2b7f442578079758f9a1a711",
+    "src/torchwave/approximants/teobresums.py": "05e15d8fd9888ee8d454d61fbc8454fe5c652747780f77c771718557ce0294f3",
+    "src/torchwave/approximants/xhm_amplitude_clean.py": "d10bf39f21d58a31b5bdfd56242d9c73ba82e0db61e662ed73e4290cef0db5e4",
+    "src/torchwave/approximants/xhm_fits.py": "6704f0c59a1e1527f5c31063d1bac8ab84f7349207acc3f1c24532c370167548",
+    "src/torchwave/approximants/xhm_inspiral_assembly_clean.py": "c68dda9efd5abdad9938ed33d35bc1d534221af7e80afa37b3d6ec6506cc5e45",
+    "src/torchwave/approximants/xhm_inspiral_assembly_release122022_clean.py": "3a8ec52088ab24d0f618b5e2a6a6f4e5d04b10717c2f01706fad597234ff4bd1",
+    "src/torchwave/approximants/xhm_intermediate_amplitude_clean.py": "613d4d5ebf131db3d72160b81e41edbc23c66a33c7588954a985f74e1d6b8338",
+    "src/torchwave/approximants/xhm_phase_clean.py": "7b1c201f4c8744fdd60a684cea46ff366dc7c000991d6b0aa8d48b63c322483f",
+    "src/torchwave/approximants/xhm_spa_clean.py": "00b0f2775d605a33b6e74c0a673138b900b1f015420f9ffbf42476bdf4f0d9ed",
+    "src/torchwave/constants.py": "1ae479e07b44a19d23b9a9eaed4b8b8b8bf38b4293717a91d321b59f2d1ac4e3",
+    "src/torchwave/conversions.py": "2cb04a754b927839dd056eec2372e4fb840e8298fbc3da67f847e3db8f323302",
+    "src/torchwave/detectors/__init__.py": "4e445658bcb157530ffafcf588f349473c1f28dea6478b484c08200023ea3764",
+    "src/torchwave/detectors/lisa.py": "d1351340229c67db751bccde5cae51be9b6bb9a95bcd03895c07261bcea55ea6",
+    "src/torchwave/detectors/network.py": "634b179fcd05834e27f80981141d56db8ca56d05d17acd30853944eef05d5777",
+    "src/torchwave/detectors/psd.py": "7b88a6eedd9ea25ff34f83e66f00ae1c68ea405c99f24b88ff738250eb4a8449",
+    "src/torchwave/detectors/pta.py": "891d613c25fef397674f3fcb5d1834c21aa3eb17044e389a0af6ee1240a4a2d2",
+    "src/torchwave/external_data.py": "2e77a3ec77f59f91c7ae765d763b4b444e77add0e59c4f02f097303bd42e89d8",
+    "src/torchwave/inference/__init__.py": "ddb9cea34efe3ffa995806bd8c529419a03ac03ec5d6aa08f31901332f0ba006",
+    "src/torchwave/inference/f_statistic.py": "3806ee5770180fab38235d6072b051291b470c08fbba9022a7df2c9943175b38",
+    "src/torchwave/inference/fisher.py": "fad61ccf45f66acd13e3afa1d6330589449a2f2094490c25f928a7439a05c470",
+    "src/torchwave/inference/likelihood.py": "dfe1a38096306065eeba60c535685378c34e8d9ae41f246aa8c1fc478d316853",
+    "src/torchwave/inference/mcmc.py": "f2c6a50daafa701364fc54fd9c499161a10e1bd082b059e8ae78be61a51c8f3c",
+    "src/torchwave/inference/relative_binning.py": "fa57a8d2b3c8c3beca432b0fdd4317799d92db8f503961c0f13f60a8441da9af",
+    "src/torchwave/inference/wavelet_glitch.py": "ca823a53a896de3b8067dcc031cac87dab2d1f291b50f6adcee5bf458eff29c4",
+    "src/torchwave/phenomd_published_fits.py": "55992c5c6d46e1430d2c86915dcedf44741beaddf039ff95faea944531bde2dd",
+    "src/torchwave/provenance.py": "ab4397670b6e3075904f12c3d37cd68fad0f923b2538eed88742be6135e48320",
+    "src/torchwave/waveforms.py": "9885b94bd4b18b48ae5bbdea614e4c0225f0ef6fb9e147f1044e3f204cd0809e",
+    "scripts/teob_continuous_fd_attribution.py": "ed25afe1d2a93e2fb023e6dff9c58939d82cb2c85c482182d9f92b643dfb3ff5",
+    "tests/parity_harness.py": "e284c19d2c2a523fb362bd5adf7cf1908f632cf7decccae01bf5503f39bf1d61",
+    "scripts/diagnose_teob_conditioned_waveform_clean.py": "fed7af813ed01ab1f924a7194eef04b88e88f91fef8708e4e48b7e6e72b44df8"
+  },
+  "source_changes": []
+}

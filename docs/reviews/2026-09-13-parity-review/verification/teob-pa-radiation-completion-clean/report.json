@@ -1,0 +1,800 @@
+{
+  "actionable_hypotheses": [
+    "The published Eq.(23) tail gauge removes the approximately 0.0223 rad initial phase offset; the remaining phase grows across the PA interval while amplitude stays at the 1e-6 level.",
+    "The derivative residual is small but nonzero and accumulates, which points to PA time/phase evolution (flux or torque/quadrature) rather than a constant carrier gauge.",
+    "The patched radiation table changes the regenerated PA endpoint relative to the frozen pre-patch fixture; the resulting state/time/phase differences are recorded as a radiation-completion effect, not treated as helper reproduction or strict production parity.",
+    "The explicit PNSpinOrder=0 public PA control is accepted, but it has 19050 samples versus the 19048-sample default fixture; its shape and waveform difference are recorded without truncation, alignment, or use as a strict fixture replacement.",
+    "The default-spin versus PNSpinOrder=0 comparison is an attribution control only; other public evolution options may change with that setting, so it does not isolate horizon absorption."
+  ],
+  "clean_helper_reproduction": {
+    "max_abs_phase_error": 0.00039464208759909525,
+    "max_abs_state_error": 0.00039464208759909525,
+    "max_abs_time_error": 0.026825527240362135,
+    "points": 60,
+    "status": "complete"
+  },
+  "description": "bounded clean-room public TEOB PA residual diagnostic after the clean radiation-table patch",
+  "elapsed_seconds": 0.7602844159991946,
+  "fixture": {
+    "Msec": 0.00024627454738206334,
+    "cache": "/tmp/torchwave-teob-pa-public-gauge.npz",
+    "cache_sha256": "c81bcb89086833fa6c44fc44a26eb54ee93adc2ff14fca5976944aaae54c8fb0",
+    "excluded_non_pa_cache": "/tmp/torchwave-public-teob-q1p5-r20-dt0p5M.npz",
+    "excluded_non_pa_cache_sha256": "09eaa8b00288c94947b2bb4b40ada7780dc51ac98491a48cbb8f60ed50ab686c",
+    "pa_end_radius": 14.099999999999996,
+    "pa_knots": 60,
+    "pa_start_radius": 19.999999999999996,
+    "pa_time_end_M": 9523.90971465474,
+    "pa_time_start_M": 0.0,
+    "public_samples": 19048,
+    "public_time_end_M": 9523.5,
+    "public_time_start_M": 0.0
+  },
+  "host": "RONI2",
+  "leading_order_horizon_probe": {
+    "candidate_input_gauge_assertion": {
+      "candidate_input_gauges": {
+        "current_clean": "pregauge r0=2M",
+        "leading_order": "pregauge r0=2M"
+      },
+      "same_input_gauge": true,
+      "status": "passed",
+      "tail_applications_during_projection": {
+        "current_clean": 1,
+        "leading_order": 1
+      }
+    },
+    "candidate_vs_current_clean_tail": {
+      "final_phase_error_ratio": 0.002001628012292737,
+      "note": "Ratios use the same dense public grid; neither branch is aligned or fitted.",
+      "phase_rms_ratio": 0.0020357484165407502,
+      "raw_relative_l2_ratio": 0.00199470519007467
+    },
+    "current_clean_pa_candidate": {
+      "after_tail": {
+        "amplitude_pointwise": {
+          "count": 19048,
+          "finite": 19048,
+          "max_abs": 4.966843218934258e-07,
+          "mean": 9.18926185619558e-08,
+          "rms": 1.4113925975617523e-07
+        },
+        "amplitude_relative_l2": 1.6263363349935289e-07,
+        "clean_amplitude_dense_max": 0.10181689052889573,
+        "clean_amplitude_dense_min": 0.07239751645041465,
+        "direction": "clean_over_public",
+        "endpoint_phase": 132.1702202313548,
+        "endpoint_radius": 14.099999999999996,
+        "endpoint_time_M": 9523.93654018198,
+        "final_phase_error": -4.295653491205809e-05,
+        "initial_phase_error": -1.2576427707424409e-09,
+        "initial_ratio_imag": -1.257642770733923e-09,
+        "initial_ratio_real": 0.9999999999932271,
+        "interpolation": {
+          "abscissa": "clean PA time knots",
+          "extrapolation": false,
+          "kind": "natural cubic",
+          "ordinates": "clean amplitude and lifted positive waveform phase independently",
+          "query_grid": "full public uniform time grid"
+        },
+        "label": "published_r0_2M_over_sqrt_e_tail",
+        "pa_knots": 60,
+        "phase_convention": "phase=2*orbital_phi-unwrap(angle(mode*exp(2i*orbital_phi))); clean_mode=scale*amplitude*exp(-1j*phase)",
+        "phase_derivative_residual": {
+          "count": 19048,
+          "direction": "d(clean/public phase)/dM",
+          "final": -5.483114811933318e-10,
+          "finite": 19048,
+          "initial": -5.559457268331363e-13,
+          "max_abs": 3.3260960331947986e-08,
+          "mean": -4.510228316478799e-09,
+          "rms": 7.3915105393266086e-09,
+          "units": "radians per M"
+        },
+        "phase_radians": {
+          "count": 19048,
+          "finite": 19048,
+          "max_abs": 4.295653491205809e-05,
+          "mean": -8.158892158419336e-06,
+          "rms": 1.3306797820040077e-05
+        },
+        "raw_relative_l2": 1.537686374561534e-05,
+        "samples": 19048,
+        "status": "complete"
+      },
+      "before_tail": {
+        "amplitude_pointwise": {
+          "count": 19048,
+          "finite": 19048,
+          "max_abs": 4.966843218934258e-07,
+          "mean": 9.189261855567843e-08,
+          "rms": 1.4113925973254069e-07
+        },
+        "amplitude_relative_l2": 1.6263363347176891e-07,
+        "clean_amplitude_dense_max": 0.10181689052889573,
+        "clean_amplitude_dense_min": 0.07239751645041465,
+        "direction": "clean_over_public",
+        "endpoint_phase": 132.1702202313548,
+        "endpoint_radius": 14.099999999999996,
+        "endpoint_time_M": 9523.93654018198,
+        "final_phase_error": 0.037601384838865444,
+        "initial_phase_error": 0.022328357753001897,
+        "initial_ratio_imag": 0.0223265024779488,
+        "initial_ratio_real": 0.9997507325696524,
+        "interpolation": {
+          "abscissa": "clean PA time knots",
+          "extrapolation": false,
+          "kind": "natural cubic",
+          "ordinates": "clean amplitude and lifted positive waveform phase independently",
+          "query_grid": "full public uniform time grid"
+        },
+        "label": "baseline_2M",
+        "pa_knots": 60,
+        "phase_convention": "phase=2*orbital_phi-unwrap(angle(mode*exp(2i*orbital_phi))); clean_mode=scale*amplitude*exp(-1j*phase)",
+        "phase_derivative_residual": {
+          "count": 19048,
+          "direction": "d(clean/public phase)/dM",
+          "final": 4.595706969104385e-06,
+          "finite": 19048,
+          "initial": 6.549249250142886e-07,
+          "max_abs": 4.595706969104385e-06,
+          "mean": 1.6037735976309405e-06,
+          "rms": 1.870458519777378e-06,
+          "units": "radians per M"
+        },
+        "phase_radians": {
+          "count": 19048,
+          "finite": 19048,
+          "max_abs": 0.037601384838865444,
+          "mean": 0.027563069485715873,
+          "rms": 0.027862900853092128
+        },
+        "raw_relative_l2": 0.028679010547600057,
+        "samples": 19048,
+        "status": "complete"
+      },
+      "endpoint_phase": 132.1702202313548,
+      "endpoint_radius": 14.099999999999996,
+      "endpoint_time_M": 9523.93654018198,
+      "mode_input_gauge": "pregauge r0=2M",
+      "points": 60,
+      "status": "complete",
+      "tail_applications": 1,
+      "tail_factor": "exp(-2 i Hreal Omega) for m=2"
+    },
+    "horizon_flux_comparison_on_current_clean_pa": {
+      "direction": "(leading_order - current_clean) / current_clean",
+      "final_current_flux": 1.9517995266899816e-10,
+      "final_leading_order_flux": 1.4064996976435227e-10,
+      "initial_current_flux": 1.243942055443633e-11,
+      "initial_leading_order_flux": 1.021201670593172e-11,
+      "relative_difference": {
+        "count": 60,
+        "finite": 60,
+        "max_abs": 0.27938311368033897,
+        "mean": -0.22258739581440834,
+        "rms": 0.22449348366330374
+      }
+    },
+    "interpretation": "This branch is an equation-level sensitivity check only. It does not select a production horizon prescription or modify the clean helper. The runtime mode already carries one TEOB tail; it is converted to the pregauge form before projection, so `after_tail` is the physical one-tail LO candidate and `before_tail` is its pregauge diagnostic.",
+    "leading_order_flux_formula": "F_H=(32/5)*nu**2*r_omega**4*Omega**5*(X1**4+X2**4)*vphi**8; F_phi,H=-F_H/nu",
+    "leading_order_pa_candidate": {
+      "after_tail": {
+        "amplitude_pointwise": {
+          "count": 19048,
+          "finite": 19048,
+          "max_abs": 4.6168273204472143e-08,
+          "mean": 1.651348712154689e-10,
+          "rms": 3.733289623529786e-09
+        },
+        "amplitude_relative_l2": 4.518113042917057e-09,
+        "clean_amplitude_dense_max": 0.10181684465877529,
+        "clean_amplitude_dense_min": 0.072397516451064,
+        "direction": "clean_over_public",
+        "endpoint_phase": 132.17030522060074,
+        "endpoint_radius": 14.099999999999996,
+        "endpoint_time_M": 9523.94216423246,
+        "final_phase_error": -8.59830035910064e-08,
+        "initial_phase_error": -1.2581325962826965e-09,
+        "initial_ratio_imag": -1.25813259628546e-09,
+        "initial_ratio_real": 1.0000000000021965,
+        "interpolation": {
+          "abscissa": "clean PA time knots",
+          "extrapolation": false,
+          "kind": "natural cubic",
+          "ordinates": "clean amplitude and lifted positive waveform phase independently",
+          "query_grid": "full public uniform time grid"
+        },
+        "label": "published_r0_2M_over_sqrt_e_tail",
+        "pa_knots": 60,
+        "phase_convention": "phase=2*orbital_phi-unwrap(angle(mode*exp(2i*orbital_phi))); clean_mode=scale*amplitude*exp(-1j*phase)",
+        "phase_derivative_residual": {
+          "count": 19048,
+          "direction": "d(clean/public phase)/dM",
+          "final": -2.747807687731812e-10,
+          "finite": 19048,
+          "initial": -1.3315643724013985e-13,
+          "max_abs": 1.6366356568429266e-09,
+          "mean": -8.903149881985117e-12,
+          "rms": 1.5995915830283281e-10,
+          "units": "radians per M"
+        },
+        "phase_radians": {
+          "count": 19048,
+          "finite": 19048,
+          "max_abs": 8.59830035910064e-08,
+          "mean": 1.9524763160501055e-08,
+          "rms": 2.708929259137449e-08
+        },
+        "raw_relative_l2": 3.067230992044995e-08,
+        "samples": 19048,
+        "status": "complete"
+      },
+      "before_tail": {
+        "amplitude_pointwise": {
+          "count": 19048,
+          "finite": 19048,
+          "max_abs": 4.616827298242754e-08,
+          "mean": 1.6513490829090284e-10,
+          "rms": 3.733289621875673e-09
+        },
+        "amplitude_relative_l2": 4.5181130416901386e-09,
+        "clean_amplitude_dense_max": 0.10181684465877527,
+        "clean_amplitude_dense_min": 0.07239751645106401,
+        "direction": "clean_over_public",
+        "endpoint_phase": 132.17030522060074,
+        "endpoint_radius": 14.099999999999996,
+        "endpoint_time_M": 9523.94216423246,
+        "final_phase_error": 0.03764422955362089,
+        "initial_phase_error": 0.022328357752617798,
+        "initial_ratio_imag": 0.022326502477765055,
+        "initial_ratio_real": 0.9997507325786283,
+        "interpolation": {
+          "abscissa": "clean PA time knots",
+          "extrapolation": false,
+          "kind": "natural cubic",
+          "ordinates": "clean amplitude and lifted positive waveform phase independently",
+          "query_grid": "full public uniform time grid"
+        },
+        "label": "baseline_2M",
+        "pa_knots": 60,
+        "phase_convention": "phase=2*orbital_phi-unwrap(angle(mode*exp(2i*orbital_phi))); clean_mode=scale*amplitude*exp(-1j*phase)",
+        "phase_derivative_residual": {
+          "count": 19048,
+          "direction": "d(clean/public phase)/dM",
+          "final": 4.595972427343109e-06,
+          "finite": 19048,
+          "initial": 6.549251922727262e-07,
+          "max_abs": 4.595972427343109e-06,
+          "mean": 1.6082722097236455e-06,
+          "rms": 1.8772115079073636e-06,
+          "units": "radians per M"
+        },
+        "phase_radians": {
+          "count": 19048,
+          "finite": 19048,
+          "max_abs": 0.03764422955362089,
+          "mean": 0.02757124339529056,
+          "rms": 0.027872461927963877
+        },
+        "raw_relative_l2": 0.028690708685127537,
+        "samples": 19048,
+        "status": "complete"
+      },
+      "endpoint_phase": 132.17030522060074,
+      "endpoint_radius": 14.099999999999996,
+      "endpoint_time_M": 9523.94216423246,
+      "mode_input_gauge": "pregauge r0=2M",
+      "points": 60,
+      "status": "complete",
+      "tail_applications": 1,
+      "tail_factor": "exp(-2 i Hreal Omega) for m=2"
+    },
+    "primary_source": "https://arxiv.org/pdf/1406.6913v1 Sec. IV.B Eqs. (98)-(99)",
+    "status": "diagnostic_only",
+    "tail_convention": {
+      "removed_factor": "exp(-2 i Hreal Omega) for m=2",
+      "returned_mode_gauge": "pregauge r0=2M",
+      "runtime_mode_gauge": "TEOB tail-corrected r0=2GM/sqrt(e)",
+      "tail_application_for_projection": 1
+    },
+    "zero_spin_identity": {
+      "1_minus_4nu_plus_2nu2": 0.15520000000000003,
+      "X1": 0.6,
+      "X1_fourth_plus_X2_fourth": 0.1552,
+      "X2": 0.4,
+      "absolute_difference": 2.7755575615628914e-17,
+      "ratio_used": "(X1**4 + X2**4) * vphi**8"
+    }
+  },
+  "output_cache": {
+    "arrays": [
+      "clean_baseline_Hreal",
+      "clean_baseline_Omega",
+      "clean_baseline_mode_pregauge_imag",
+      "clean_baseline_mode_pregauge_real",
+      "clean_baseline_pa_phase",
+      "clean_baseline_pa_time_M",
+      "clean_lo_Hreal",
+      "clean_lo_Omega",
+      "clean_lo_mode_pregauge_imag",
+      "clean_lo_mode_pregauge_real",
+      "clean_lo_pa_phase",
+      "clean_lo_pa_time_M",
+      "frozen_Hreal",
+      "frozen_Omega",
+      "frozen_mode_before_imag",
+      "frozen_mode_before_real",
+      "frozen_pa_phase",
+      "frozen_pa_time_M",
+      "public_default_hp_minus_i_hc_imag",
+      "public_default_hp_minus_i_hc_real",
+      "public_hc",
+      "public_hp",
+      "public_time_M"
+    ],
+    "path": "docs/reviews/2026-09-13-parity-review/verification/teob-pa-radiation-completion-clean/pa-radiation-completion.npz",
+    "sha256": "0971fa9bd6ffb8c807d6f837547243f44539172fcd461e815b8f40e223ef9439"
+  },
+  "pa_endpoints": {
+    "frozen_fixture": {
+      "phase": 132.1698255892672,
+      "time_M": 9523.90971465474
+    },
+    "regenerated_clean_baseline": {
+      "phase": 132.1702202313548,
+      "time_M": 9523.93654018198
+    },
+    "regenerated_leading_order_horizon": {
+      "phase": 132.17030522060074,
+      "time_M": 9523.94216423246
+    }
+  },
+  "pa_grid_refinement": [
+    {
+      "dr": 0.2,
+      "elapsed_seconds": 0.06827729102224112,
+      "endpoint_phase": 130.53587219872776,
+      "endpoint_radius": 14.199999999999996,
+      "endpoint_time_M": 9437.340376443537,
+      "max_abs_angular_balance": 6.289857957392231e-14,
+      "max_abs_radial_balance": 1.2428090918588722e-18,
+      "pa_order": 8,
+      "points": 30,
+      "status": "complete"
+    },
+    {
+      "dr": 0.1,
+      "elapsed_seconds": 0.06714487500721589,
+      "endpoint_phase": 132.1702202313548,
+      "endpoint_radius": 14.099999999999996,
+      "endpoint_time_M": 9523.93654018198,
+      "max_abs_angular_balance": 3.0546276771035996e-13,
+      "max_abs_radial_balance": 1.3718227976375428e-18,
+      "pa_order": 8,
+      "points": 60,
+      "status": "complete"
+    }
+  ],
+  "pa_order_runs": [
+    {
+      "dr": 0.1,
+      "elapsed_seconds": 0.03880883299279958,
+      "endpoint_phase": 132.13495845070565,
+      "endpoint_radius": 14.099999999999996,
+      "endpoint_time_M": 9521.614514813848,
+      "max_abs_angular_balance": 1.0015034078103232e-07,
+      "max_abs_radial_balance": 1.105377996166862e-18,
+      "pa_order": 2,
+      "points": 60,
+      "status": "complete"
+    },
+    {
+      "dr": 0.1,
+      "elapsed_seconds": 0.03955229200073518,
+      "endpoint_phase": 132.17031642298906,
+      "endpoint_radius": 14.099999999999996,
+      "endpoint_time_M": 9523.942394060592,
+      "max_abs_angular_balance": 5.600220795182621e-10,
+      "max_abs_radial_balance": 1.2349740370967699e-18,
+      "pa_order": 4,
+      "points": 60,
+      "status": "complete"
+    },
+    {
+      "dr": 0.1,
+      "elapsed_seconds": 0.05348720800247975,
+      "endpoint_phase": 132.17021952900916,
+      "endpoint_radius": 14.099999999999996,
+      "endpoint_time_M": 9523.936499232379,
+      "max_abs_angular_balance": 5.458024738549602e-12,
+      "max_abs_radial_balance": 1.125892075358177e-18,
+      "pa_order": 6,
+      "points": 60,
+      "status": "complete"
+    },
+    {
+      "dr": 0.1,
+      "elapsed_seconds": 0.06861504199332558,
+      "endpoint_phase": 132.1702202313548,
+      "endpoint_radius": 14.099999999999996,
+      "endpoint_time_M": 9523.93654018198,
+      "max_abs_angular_balance": 3.0546276771035996e-13,
+      "max_abs_radial_balance": 1.3718227976375428e-18,
+      "pa_order": 8,
+      "points": 60,
+      "status": "complete"
+    }
+  ],
+  "projection_and_phase": {
+    "baseline_r0_2M": {
+      "amplitude_pointwise": {
+        "count": 19048,
+        "finite": 19048,
+        "max_abs": 2.6464388971358943e-06,
+        "mean": 5.790691787705541e-07,
+        "rms": 8.546674253960194e-07
+      },
+      "amplitude_relative_l2": 9.793415094076306e-07,
+      "clean_amplitude_dense_max": 0.10181710941011327,
+      "clean_amplitude_dense_min": 0.07239751644675596,
+      "direction": "clean_over_public",
+      "endpoint_phase": 132.1698255892672,
+      "endpoint_radius": 14.099999999999996,
+      "endpoint_time_M": 9523.90971465474,
+      "final_phase_error": 0.03737554742889434,
+      "initial_phase_error": 0.022328357755165968,
+      "initial_ratio_imag": 0.022326502478984035,
+      "initial_ratio_real": 0.9997507325190805,
+      "interpolation": {
+        "abscissa": "clean PA time knots",
+        "extrapolation": false,
+        "kind": "natural cubic",
+        "ordinates": "clean amplitude and lifted positive waveform phase independently",
+        "query_grid": "full public uniform time grid"
+      },
+      "label": "baseline_2M",
+      "pa_knots": 60,
+      "phase_convention": "phase=2*orbital_phi-unwrap(angle(mode*exp(2i*orbital_phi))); clean_mode=scale*amplitude*exp(-1j*phase)",
+      "phase_derivative_residual": {
+        "count": 19048,
+        "direction": "d(clean/public phase)/dM",
+        "final": 4.594467668594948e-06,
+        "finite": 19048,
+        "initial": 6.549227223456855e-07,
+        "max_abs": 4.594467668594948e-06,
+        "mean": 1.5800611110170207e-06,
+        "rms": 1.8358569150698874e-06,
+        "units": "radians per M"
+      },
+      "phase_radians": {
+        "count": 19048,
+        "finite": 19048,
+        "max_abs": 0.03737554742889434,
+        "mean": 0.0275170635810627,
+        "rms": 0.027809404043806357
+      },
+      "raw_relative_l2": 0.028613933872491983,
+      "samples": 19048,
+      "status": "fixture"
+    },
+    "comparison_grid": "full public uniform time grid",
+    "mode_after_gauge": "TEOB r0=2GM/sqrt(e)",
+    "mode_before_gauge": "pregauge r0=2M",
+    "primary_source": "https://arxiv.org/pdf/1212.4357v2 Eq.(23)",
+    "projection": "h_plus - i h_cross = -sqrt(5/(4 pi))*Msec*c/d*h22",
+    "published_r0_2M_over_sqrt_e_tail": {
+      "amplitude_pointwise": {
+        "count": 19048,
+        "finite": 19048,
+        "max_abs": 2.6464388969138497e-06,
+        "mean": 5.790691787338925e-07,
+        "rms": 8.546674253775088e-07
+      },
+      "amplitude_relative_l2": 9.793415093901014e-07,
+      "clean_amplitude_dense_max": 0.10181710941011325,
+      "clean_amplitude_dense_min": 0.07239751644675596,
+      "direction": "clean_over_public",
+      "endpoint_phase": 132.1698255892672,
+      "endpoint_radius": 14.099999999999996,
+      "endpoint_time_M": 9523.90971465474,
+      "final_phase_error": -0.0002689172040388708,
+      "initial_phase_error": -1.2548840793617639e-09,
+      "initial_ratio_imag": -1.254884079289848e-09,
+      "initial_ratio_real": 0.9999999999426912,
+      "interpolation": {
+        "abscissa": "clean PA time knots",
+        "extrapolation": false,
+        "kind": "natural cubic",
+        "ordinates": "clean amplitude and lifted positive waveform phase independently",
+        "query_grid": "full public uniform time grid"
+      },
+      "label": "published_r0_2M_over_sqrt_e_tail",
+      "pa_knots": 60,
+      "phase_convention": "phase=2*orbital_phi-unwrap(angle(mode*exp(2i*orbital_phi))); clean_mode=scale*amplitude*exp(-1j*phase)",
+      "phase_derivative_residual": {
+        "count": 19048,
+        "direction": "d(clean/public phase)/dM",
+        "final": -1.8156922369696321e-09,
+        "finite": 19048,
+        "initial": -3.779165108758187e-12,
+        "max_abs": 1.8518500171629728e-07,
+        "mean": -2.823565770922322e-08,
+        "rms": 4.4534999202171046e-08,
+        "units": "radians per M"
+      },
+      "phase_radians": {
+        "count": 19048,
+        "finite": 19048,
+        "max_abs": 0.0002689172040388708,
+        "mean": -5.41885261830396e-05,
+        "rms": 8.644619346045747e-05
+      },
+      "raw_relative_l2": 9.961661384772711e-05,
+      "samples": 19048,
+      "status": "fixture"
+    },
+    "scale": -1.509279792662595e-20,
+    "tail_applications": 1,
+    "tail_gauge": "mode_after = mode_before*exp(-2 i Hreal Omega)"
+  },
+  "public_spin_option": {
+    "api": "SimIMRTEOBResumS",
+    "binary": "TEOBResumS",
+    "default_spin": {
+      "api": "SimIMRTEOBResumS",
+      "delta_t_M": 0.5,
+      "delta_t_seconds": 0.00012313727369103167,
+      "elapsed_seconds": 0.006164624996017665,
+      "epoch_seconds": 0.0,
+      "f_ref_hz": 20.0,
+      "label": "default_spin_with_TEOB_use_postadiabatic_2",
+      "mode_array": "[(2,+2)]",
+      "pa_key": "TEOB_use_postadiabatic",
+      "pa_only_length_ok": true,
+      "pa_only_length_range": [
+        18000,
+        20000
+      ],
+      "pa_value": 2,
+      "pn_tidal_order": 0,
+      "samples": 19048,
+      "spin_order": null,
+      "status": "ok",
+      "use_post_adiabatic": true
+    },
+    "default_spin_fixture_comparison": {
+      "exact_float64": true,
+      "fixture_samples": 19048,
+      "generated_samples": 19048,
+      "max_abs": 0.0,
+      "relative_l2": 0.0,
+      "status": "ok"
+    },
+    "default_vs_explicit_PNSpinOrder_0": {
+      "first": [
+        19048
+      ],
+      "second": [
+        19050
+      ],
+      "status": "shape_mismatch"
+    },
+    "explicit_PNSpinOrder_0": {
+      "api": "SimIMRTEOBResumS",
+      "delta_t_M": 0.5,
+      "delta_t_seconds": 0.00012313727369103167,
+      "elapsed_seconds": 0.006316957995295525,
+      "epoch_seconds": 0.0,
+      "f_ref_hz": 20.0,
+      "label": "explicit_PNSpinOrder_0_with_TEOB_use_postadiabatic_2",
+      "mode_array": "[(2,+2)]",
+      "pa_key": "TEOB_use_postadiabatic",
+      "pa_only_length_ok": true,
+      "pa_only_length_range": [
+        18000,
+        20000
+      ],
+      "pa_value": 2,
+      "pn_tidal_order": 0,
+      "samples": 19050,
+      "spin_order": 0,
+      "status": "ok",
+      "use_post_adiabatic": true
+    },
+    "explicit_PNSpinOrder_0_fixture_comparison": {
+      "fixture_samples": 19048,
+      "generated_samples": 19050,
+      "status": "shape_mismatch"
+    },
+    "interpretation": "The direct public PA route uses the exact TEOB_use_postadiabatic key and returns the frozen 19048-sample default waveform exactly.  The explicit PNSpinOrder=0 PA route is accepted as a separate 19050-sample control; its different length is recorded rather than truncated or aligned. This comparison is an attribution control only: changing the public spin-order option can alter other evolution choices, so it cannot isolate the horizon prescription.",
+    "mode_array": "[(2,+2)]",
+    "pa_key": "TEOB_use_postadiabatic",
+    "pa_value": 2,
+    "pn_tidal_order": 0
+  },
+  "radiation_patch_comparison": {
+    "comparison_metric": "raw_relative_l2, after exactly one TEOB tail",
+    "frozen_fixture_projection": {
+      "absolute_difference": -2.728801342874454e-16,
+      "observed_raw_relative_l2": 9.961661384772711e-05,
+      "reference_raw_relative_l2": 9.9616613848e-05,
+      "relative_difference": -2.7393034529744157e-12
+    },
+    "interpretation": "The frozen fixture projection preserves the prior baseline value. The regenerated clean baseline and diagnostic-only leading-order horizon branch use the patched radiation table and are reported as new candidates; no alignment, tuning, or threshold change is applied.",
+    "reference_report_values": {
+      "baseline_pregauge_corrected_raw_relative_l2": 9.9616613848e-05,
+      "leading_order_horizon_raw_relative_l2": 8.4221181441e-05,
+      "source": "previous corrected dense-grid PA report before the radiation-table patch"
+    },
+    "regenerated_clean_baseline": {
+      "absolute_difference": -8.423975010238466e-05,
+      "endpoint_phase": 132.1702202313548,
+      "endpoint_time_M": 9523.93654018198,
+      "observed_raw_relative_l2": 1.537686374561534e-05,
+      "reference_raw_relative_l2": 9.9616613848e-05,
+      "relative_difference": -0.845639566015784,
+      "whole_pa_curve_metrics": {
+        "amplitude_pointwise": {
+          "count": 19048,
+          "finite": 19048,
+          "max_abs": 4.966843218934258e-07,
+          "mean": 9.18926185619558e-08,
+          "rms": 1.4113925975617523e-07
+        },
+        "amplitude_relative_l2": 1.6263363349935289e-07,
+        "clean_amplitude_dense_max": 0.10181689052889573,
+        "clean_amplitude_dense_min": 0.07239751645041465,
+        "direction": "clean_over_public",
+        "endpoint_phase": 132.1702202313548,
+        "endpoint_radius": 14.099999999999996,
+        "endpoint_time_M": 9523.93654018198,
+        "final_phase_error": -4.295653491205809e-05,
+        "initial_phase_error": -1.2576427707424409e-09,
+        "initial_ratio_imag": -1.257642770733923e-09,
+        "initial_ratio_real": 0.9999999999932271,
+        "interpolation": {
+          "abscissa": "clean PA time knots",
+          "extrapolation": false,
+          "kind": "natural cubic",
+          "ordinates": "clean amplitude and lifted positive waveform phase independently",
+          "query_grid": "full public uniform time grid"
+        },
+        "label": "published_r0_2M_over_sqrt_e_tail",
+        "pa_knots": 60,
+        "phase_convention": "phase=2*orbital_phi-unwrap(angle(mode*exp(2i*orbital_phi))); clean_mode=scale*amplitude*exp(-1j*phase)",
+        "phase_derivative_residual": {
+          "count": 19048,
+          "direction": "d(clean/public phase)/dM",
+          "final": -5.483114811933318e-10,
+          "finite": 19048,
+          "initial": -5.559457268331363e-13,
+          "max_abs": 3.3260960331947986e-08,
+          "mean": -4.510228316478799e-09,
+          "rms": 7.3915105393266086e-09,
+          "units": "radians per M"
+        },
+        "phase_radians": {
+          "count": 19048,
+          "finite": 19048,
+          "max_abs": 4.295653491205809e-05,
+          "mean": -8.158892158419336e-06,
+          "rms": 1.3306797820040077e-05
+        },
+        "raw_relative_l2": 1.537686374561534e-05,
+        "samples": 19048,
+        "status": "complete"
+      }
+    },
+    "regenerated_leading_order_horizon": {
+      "absolute_difference": -8.419050913107955e-05,
+      "endpoint_phase": 132.17030522060074,
+      "endpoint_time_M": 9523.94216423246,
+      "observed_raw_relative_l2": 3.067230992044995e-08,
+      "reference_raw_relative_l2": 8.4221181441e-05,
+      "relative_difference": -0.9996358124002104,
+      "whole_pa_curve_metrics": {
+        "amplitude_pointwise": {
+          "count": 19048,
+          "finite": 19048,
+          "max_abs": 4.6168273204472143e-08,
+          "mean": 1.651348712154689e-10,
+          "rms": 3.733289623529786e-09
+        },
+        "amplitude_relative_l2": 4.518113042917057e-09,
+        "clean_amplitude_dense_max": 0.10181684465877529,
+        "clean_amplitude_dense_min": 0.072397516451064,
+        "direction": "clean_over_public",
+        "endpoint_phase": 132.17030522060074,
+        "endpoint_radius": 14.099999999999996,
+        "endpoint_time_M": 9523.94216423246,
+        "final_phase_error": -8.59830035910064e-08,
+        "initial_phase_error": -1.2581325962826965e-09,
+        "initial_ratio_imag": -1.25813259628546e-09,
+        "initial_ratio_real": 1.0000000000021965,
+        "interpolation": {
+          "abscissa": "clean PA time knots",
+          "extrapolation": false,
+          "kind": "natural cubic",
+          "ordinates": "clean amplitude and lifted positive waveform phase independently",
+          "query_grid": "full public uniform time grid"
+        },
+        "label": "published_r0_2M_over_sqrt_e_tail",
+        "pa_knots": 60,
+        "phase_convention": "phase=2*orbital_phi-unwrap(angle(mode*exp(2i*orbital_phi))); clean_mode=scale*amplitude*exp(-1j*phase)",
+        "phase_derivative_residual": {
+          "count": 19048,
+          "direction": "d(clean/public phase)/dM",
+          "final": -2.747807687731812e-10,
+          "finite": 19048,
+          "initial": -1.3315643724013985e-13,
+          "max_abs": 1.6366356568429266e-09,
+          "mean": -8.903149881985117e-12,
+          "rms": 1.5995915830283281e-10,
+          "units": "radians per M"
+        },
+        "phase_radians": {
+          "count": 19048,
+          "finite": 19048,
+          "max_abs": 8.59830035910064e-08,
+          "mean": 1.9524763160501055e-08,
+          "rms": 2.708929259137449e-08
+        },
+        "raw_relative_l2": 3.067230992044995e-08,
+        "samples": 19048,
+        "status": "complete"
+      }
+    }
+  },
+  "revision_note": "This report is a new radiation-completion rerun; the earlier corrected dense-grid artifact remains unchanged for comparison. The regenerated public waveform now uses SimIMRTEOBResumS with the exact TEOB_use_postadiabatic key, an explicit (2,+2) ModeArray, PNTidalOrder=0, and f_ref=20 Hz.  Residuals use independent natural-cubic interpolation of clean amplitude and lifted positive phase onto the full public uniform grid.  The LO branch correction removes the TEOB tail already present in the runtime mode and applies it exactly once during projection; the diagnostic remains read-only and does not edit the clean runtime.",
+  "runtime_sha256_after": {
+    "src/torchwave/approximants/eob/teob_postadiabatic_clean.py": "97de447367d6e5bb61e596c579bb698fdf36e61756394a800166767de4025807",
+    "src/torchwave/approximants/eob/teob_radiation_clean.py": "dca2c9791403467d85572f25a062cbc995d8228743d33b6b2e5dc28c13336bd6",
+    "src/torchwave/approximants/teobresums.py": "05e15d8fd9888ee8d454d61fbc8454fe5c652747780f77c771718557ce0294f3"
+  },
+  "runtime_sha256_before": {
+    "src/torchwave/approximants/eob/teob_postadiabatic_clean.py": "97de447367d6e5bb61e596c579bb698fdf36e61756394a800166767de4025807",
+    "src/torchwave/approximants/eob/teob_radiation_clean.py": "dca2c9791403467d85572f25a062cbc995d8228743d33b6b2e5dc28c13336bd6",
+    "src/torchwave/approximants/teobresums.py": "05e15d8fd9888ee8d454d61fbc8454fe5c652747780f77c771718557ce0294f3"
+  },
+  "runtime_unchanged": true,
+  "scope": {
+    "comparison_uses_full_public_uniform_grid": true,
+    "no_alignment_or_fit": true,
+    "non_pa_fixture_used_for_metrics": false,
+    "physical_parameters": {
+      "ModeArray": "[(2,+2)]",
+      "PNTidalOrder": 0,
+      "TEOB_use_postadiabatic": 2,
+      "chi1": 0.0,
+      "chi2": 0.0,
+      "delta_t_M": 0.5,
+      "distance_mpc": 100.0,
+      "f_min_hz": 14.45059083415894,
+      "f_ref_hz": 20.0,
+      "inclination": 0.0,
+      "lambda1": 0.0,
+      "lambda2": 0.0,
+      "mass1_msun": 30.0,
+      "mass2_msun": 20.0,
+      "modes": "explicit 22 mode only (face-on projection)",
+      "phi_ref": 0.0
+    },
+    "public_api": "SimIMRTEOBResumS",
+    "read_only": true
+  },
+  "tail_convention_assertion": {
+    "checks": {
+      "phase_formula": true,
+      "reapply_once": true,
+      "recover_pregauge": true
+    },
+    "formula": "pregauge -> pregauge*exp(-2 i Hreal Omega) exactly once",
+    "status": "passed",
+    "test_values": {
+      "Hreal": 1.25,
+      "Omega": 0.17
+    }
+  },
+  "working_directory": "/Users/xangma/repos/torchwave"
+}

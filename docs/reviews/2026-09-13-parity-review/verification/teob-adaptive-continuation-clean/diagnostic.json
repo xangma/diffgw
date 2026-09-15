@@ -1,0 +1,87 @@
+{
+  "command": "/Users/xangma/miniconda3/envs/pycbcorig313/bin/python scripts/diagnose_teob_adaptive_continuation_clean.py --output docs/reviews/2026-09-13-parity-review/verification/teob-adaptive-continuation-clean/diagnostic.json",
+  "continuation": {
+    "adaptive_next_step": 0.22274437513717563,
+    "adaptive_samples": 580,
+    "endpoint_state": [
+      1.4864345788486484,
+      212.84839064677598,
+      -0.5006437557954939,
+      2.678305669914087
+    ],
+    "endpoint_time": 12318.826873406742,
+    "first_ode_step": 42.32201145727413,
+    "fixed_samples": 22,
+    "fixed_step": 0.1,
+    "peak_event_frequency": 0.1752882353034708,
+    "peak_event_index": 639,
+    "peak_event_radius": 1.8410829047817987,
+    "peak_event_time": 12316.726873406744,
+    "phase_seam_error": 0.0,
+    "samples": 661,
+    "statistics": {
+      "accepted_steps": 600,
+      "adaptive_accepted_steps": 579,
+      "adaptive_evaluations": 3625,
+      "adaptive_rejected_steps": 30,
+      "evaluations": 3751,
+      "fixed_accepted_steps": 21,
+      "fixed_evaluations": 126,
+      "fixed_rejected_steps": 0,
+      "rejected_steps": 30,
+      "termination": "complete"
+    },
+    "status": "complete",
+    "target_time": 12318.726873406744,
+    "valid_samples": 661
+  },
+  "cwd": "/Users/xangma/repos/torchwave",
+  "device": "cpu",
+  "elapsed_seconds": 30.105016707995674,
+  "host": "RONI2",
+  "pa": {
+    "endpoint_state": [
+      14.0,
+      133.78440068084652,
+      -0.0013289760842339585,
+      4.204470355230013
+    ],
+    "endpoint_time": 9608.553736478192,
+    "samples": 61,
+    "status": "complete"
+  },
+  "pid": 58407,
+  "probe": {
+    "atol": 1e-13,
+    "continuation_duration": 2.0,
+    "dr": 0.1,
+    "fixed_step_cap": 0.1,
+    "max_accepted_steps": 2000,
+    "max_duration": 6000.0,
+    "max_evaluations": 30000,
+    "max_rejected_steps": 10000,
+    "nu": 0.24,
+    "pa_order": 8,
+    "r0": 20.0,
+    "r_min": 14.0,
+    "rtol": 1e-11
+  },
+  "python": "/Users/xangma/miniconda3/envs/pycbcorig313/bin/python",
+  "source_hashes_unchanged": true,
+  "source_sha256_after": {
+    "adaptive_driver": "28f657e4248da3403c245c5928e277c1d3fdd9cd6c47aab32b017e7c8cfab2d0",
+    "continuation": "7b8722ecc28af74eeb2fe29d2e7c1782123106d63fbeba60c82ca81f6b70b869",
+    "contract": "c8e608314e9825083f4a4312f9c2597bc00af3c337a9007cf64cefb18c39bbc2",
+    "pa": "97de447367d6e5bb61e596c579bb698fdf36e61756394a800166767de4025807",
+    "vacuum_driver": "3b6e1d0f0cd69352e82a203eb8d9592db87cef662988cf3f4859906ae0977fd6"
+  },
+  "source_sha256_before": {
+    "adaptive_driver": "28f657e4248da3403c245c5928e277c1d3fdd9cd6c47aab32b017e7c8cfab2d0",
+    "continuation": "7b8722ecc28af74eeb2fe29d2e7c1782123106d63fbeba60c82ca81f6b70b869",
+    "contract": "c8e608314e9825083f4a4312f9c2597bc00af3c337a9007cf64cefb18c39bbc2",
+    "pa": "97de447367d6e5bb61e596c579bb698fdf36e61756394a800166767de4025807",
+    "vacuum_driver": "3b6e1d0f0cd69352e82a203eb8d9592db87cef662988cf3f4859906ae0977fd6"
+  },
+  "started_unix": 1789392062.887219,
+  "status": "complete"
+}

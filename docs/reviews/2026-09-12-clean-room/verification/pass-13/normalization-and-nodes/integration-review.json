@@ -1,0 +1,11 @@
+{
+  "changed_files": [
+    "src/torchwave/approximants/imrphenom_xhm.py",
+    "tests/test_pass12_higher_modes.py",
+    "tests/test_pass13_xhm_amplitude.py",
+    "tests/test_pass13_xhm_phase.py"
+  ],
+  "runtime_review": "Parent independently checked Eqs4.5/4.6/5.3/6.2, TableIV, Eq5.5/TableVII/Fig8. Runtime diff is limited to the two amplitude inverse targets and the default nonmixing phase subset. Earlier dirty work and acceptance harness remain unchanged.",
+  "test_review": "Normalized physical strain checks at both 21 nodes; solve node/RHS capture; p6 waveform sensitivity with p5 exclusion for all three nonmixing modes; phase-sensitive finite/nonzero gradients. Existing parameter-veto test changed from 32 to 21 native physical inputs because corrected normalization activates an unrelated pole fallback in its former control.",
+  "initial_integration": "55 passed, 1 failed in 4.68s before repairing the obsolete 32 control; after repair agent reports 18 passed for pass 12 plus 3 amplitude and 3 phase tests."
+}

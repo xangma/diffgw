@@ -1,0 +1,334 @@
+{
+  "purpose": "bounded sensitivity of the frozen q3 Lev3 prediction to corrected remnant metadata; no refit and no LAL",
+  "case_id": "SXS:BBH:0030/Lev3/N3",
+  "frequency_bins": {
+    "source": "/Users/xangma/repos/torchwave/docs/reviews/2026-09-15-independent-calibration/nr33-frozen-predictions.json",
+    "count": 3364,
+    "Mf_range": [
+      0.11803782403600639,
+      0.29996321461029124
+    ],
+    "sha256": "9241af344ff1af25a2019d9180cf3f9b7b27e9103efd2c01eaa2c194b73b993e"
+  },
+  "formula_source": {
+    "script": "scripts/run_nr33_frozen_validation.py::prepare_inputs",
+    "prediction_expression": "a022*delta*exp(log_a)*ringdown_shape(f,f_ring_33,f_damp_33,lambda,sigma_33)",
+    "helper_script": "/Users/xangma/repos/torchwave/scripts/fit_nr33_amplitude_pilot.py",
+    "helper_sha256": "e307ef505094a5f3d568690d3a9f44cff58d9683d3c29f91e62cc7d2f17ed554",
+    "kerr_solver": "/Users/xangma/repos/torchwave/scripts/kerr_leaver_solver.py",
+    "kerr_solver_sha256": "a7b07b28962b676271645fd60cf6bd7c2684c8c92e801579897f2d8f84698fc9"
+  },
+  "controls": {
+    "sigma_33": 1.3,
+    "frozen_frequency_bins": true,
+    "f_rd_rule": "0.95*f_ring_33",
+    "fmax": 0.3
+  },
+  "baseline_reproduction": {
+    "max_absolute_difference": 0.0,
+    "relative_l2": 0.0,
+    "saved_qnm": {
+      "f_ring_33": 0.12424598451476766,
+      "f_damp_33": 0.014397104093154513,
+      "qnm_source": "independent scripts/kerr_leaver_solver.py",
+      "qnm_solver": {
+        "omega_remnant": [
+          0.7581876468879315,
+          -0.08785560770450497
+        ],
+        "radial_residual": [
+          -8.881784197001252e-15,
+          5.995204332975845e-15
+        ],
+        "cf_depth": 1024,
+        "cf_error": 0.0,
+        "angular_error": 3.9080836092714983e-14,
+        "helper_sha256": "a7b07b28962b676271645fd60cf6bd7c2684c8c92e801579897f2d8f84698fc9"
+      }
+    },
+    "recomputed_qnm": {
+      "f_ring_33": 0.12424598451476766,
+      "f_damp_33": 0.014397104093154513,
+      "qnm_source": "independent scripts/kerr_leaver_solver.py",
+      "qnm_solver": {
+        "omega_remnant": [
+          0.7581876468879315,
+          -0.08785560770450497
+        ],
+        "radial_residual": [
+          -8.881784197001252e-15,
+          5.995204332975845e-15
+        ],
+        "cf_depth": 1024,
+        "cf_error": 0.0,
+        "angular_error": 3.9080836092714983e-14,
+        "helper_sha256": "a7b07b28962b676271645fd60cf6bd7c2684c8c92e801579897f2d8f84698fc9"
+      }
+    },
+    "q": 2.999993377707023
+  },
+  "metadata_inputs": {
+    "manifest_q": 2.999993377707023,
+    "manifest_final_mass_fraction": 0.971212971306,
+    "manifest_final_spin_magnitude": 0.5406441997000001,
+    "exact_Lev3_reference_mass_ratio": 2.999951112567489,
+    "exact_Lev3_reference_mass1": 0.749995563588,
+    "exact_Lev3_reference_mass2": 0.250002595191,
+    "exact_Lev3_remnant_mass": 0.971106575935,
+    "exact_Lev3_remnant_mass_fraction": 0.971108363960113,
+    "exact_Lev3_remnant_spin_vector": [
+      -1.79212849674e-07,
+      6.7125103093e-08,
+      0.540365644227
+    ],
+    "exact_Lev3_remnant_spin_magnitude": 0.5403656442270338,
+    "cache_path": "/tmp/torchwave-nr33-metadata-audit/SXS_BBH_0030_Lev3_metadata.json",
+    "source_url": "https://zenodo.org/api/records/13167328/files/Lev3:metadata.json/content",
+    "cache_sha256": "674d2143c6ee76796e86abec374019cd80145dd7ad423badfbb1028e1fcb951e",
+    "cache_md5": "88e1adb02580896c2afc2c3c9dbc3cd5",
+    "consistency_report_sha256": "d70be44329d8dc418e0836bd3b39bc37dbfa83668ba6e13998fff0fee0bad29e"
+  },
+  "variants": [
+    {
+      "name": "manifest_baseline",
+      "description": "manifest remnant metadata and q",
+      "q": 2.999993377707023,
+      "qnm": {
+        "f_ring_33": 0.12424598451476766,
+        "f_damp_33": 0.014397104093154513,
+        "qnm_source": "independent scripts/kerr_leaver_solver.py",
+        "qnm_solver": {
+          "omega_remnant": [
+            0.7581876468879315,
+            -0.08785560770450497
+          ],
+          "radial_residual": [
+            -8.881784197001252e-15,
+            5.995204332975845e-15
+          ],
+          "cf_depth": 1024,
+          "cf_error": 0.0,
+          "angular_error": 3.9080836092714983e-14,
+          "helper_sha256": "a7b07b28962b676271645fd60cf6bd7c2684c8c92e801579897f2d8f84698fc9"
+        }
+      },
+      "qnm_shift_from_manifest": {
+        "f_ring_33_absolute": 0.0,
+        "f_ring_33_relative": 0.0,
+        "f_damp_33_absolute": 0.0,
+        "f_damp_33_relative": 0.0
+      },
+      "prediction_change_relative_l2": 0.0,
+      "prediction_norm_ratio_over_manifest": 1.0,
+      "prediction_max_relative_change": 0.0,
+      "prediction_first_last": [
+        1.0801292531000068,
+        1.3750655059193299e-05
+      ]
+    },
+    {
+      "name": "correct_Lev3_remnant_mass_only",
+      "description": "exact Lev3 remnant_mass/(reference_mass1+reference_mass2); baseline spin",
+      "q": 2.999993377707023,
+      "qnm": {
+        "f_ring_33": 0.12425936823501925,
+        "f_damp_33": 0.014398654942579291,
+        "qnm_source": "independent scripts/kerr_leaver_solver.py",
+        "qnm_solver": {
+          "omega_remnant": [
+            0.7581876468879315,
+            -0.08785560770450497
+          ],
+          "radial_residual": [
+            -8.881784197001252e-15,
+            5.995204332975845e-15
+          ],
+          "cf_depth": 1024,
+          "cf_error": 0.0,
+          "angular_error": 3.9080836092714983e-14,
+          "helper_sha256": "a7b07b28962b676271645fd60cf6bd7c2684c8c92e801579897f2d8f84698fc9"
+        }
+      },
+      "qnm_shift_from_manifest": {
+        "f_ring_33_absolute": 1.3383720251586295e-05,
+        "f_ring_33_relative": 0.00010771953962018799,
+        "f_damp_33_absolute": 1.5508494247782473e-06,
+        "f_damp_33_relative": 0.00010771953962018799
+      },
+      "prediction_change_relative_l2": 0.0005445614228254744,
+      "prediction_norm_ratio_over_manifest": 1.0003893211471635,
+      "prediction_max_relative_change": 0.0012725262196191522,
+      "prediction_first_last": [
+        1.0800058082713107,
+        1.3768153128293062e-05
+      ]
+    },
+    {
+      "name": "correct_Lev3_remnant_spin_only",
+      "description": "exact Lev3 remnant spin-vector magnitude; baseline mass fraction",
+      "q": 2.999993377707023,
+      "qnm": {
+        "f_ring_33": 0.1242257865268868,
+        "f_damp_33": 0.01439810222463794,
+        "qnm_source": "independent scripts/kerr_leaver_solver.py",
+        "qnm_solver": {
+          "omega_remnant": [
+            0.7580643924828651,
+            -0.08786169861330705
+          ],
+          "radial_residual": [
+            -1.7763568394002505e-15,
+            -2.55351295663786e-15
+          ],
+          "cf_depth": 1024,
+          "cf_error": 0.0,
+          "angular_error": 7.105566134123854e-14,
+          "helper_sha256": "a7b07b28962b676271645fd60cf6bd7c2684c8c92e801579897f2d8f84698fc9"
+        }
+      },
+      "qnm_shift_from_manifest": {
+        "f_ring_33_absolute": -2.0197987880860024e-05,
+        "f_ring_33_relative": -0.00016256451232399272,
+        "f_damp_33_absolute": 9.98131483426895e-07,
+        "f_damp_33_relative": 6.93286286581607e-05
+      },
+      "prediction_change_relative_l2": 0.0009175946114694466,
+      "prediction_norm_ratio_over_manifest": 0.9992274241028916,
+      "prediction_max_relative_change": 0.001677360175395659,
+      "prediction_first_last": [
+        1.080064372514319,
+        1.3744997406977801e-05
+      ]
+    },
+    {
+      "name": "correct_Lev3_remnant_mass_and_spin",
+      "description": "exact Lev3 remnant mass fraction and spin-vector magnitude; baseline q",
+      "q": 2.999993377707023,
+      "qnm": {
+        "f_ring_33": 0.12423916807142044,
+        "f_damp_33": 0.014399653181580981,
+        "qnm_source": "independent scripts/kerr_leaver_solver.py",
+        "qnm_solver": {
+          "omega_remnant": [
+            0.7580643924828651,
+            -0.08786169861330705
+          ],
+          "radial_residual": [
+            -1.7763568394002505e-15,
+            -2.55351295663786e-15
+          ],
+          "cf_depth": 1024,
+          "cf_error": 0.0,
+          "angular_error": 7.105566134123854e-14,
+          "helper_sha256": "a7b07b28962b676271645fd60cf6bd7c2684c8c92e801579897f2d8f84698fc9"
+        }
+      },
+      "qnm_shift_from_manifest": {
+        "f_ring_33_absolute": -6.816443347226753e-06,
+        "f_ring_33_relative": -5.486248407826633e-05,
+        "f_damp_33_absolute": 2.549088426468532e-06,
+        "f_damp_33_relative": 0.0001770556363263065
+      },
+      "prediction_change_relative_l2": 0.00040225741536105593,
+      "prediction_norm_ratio_over_manifest": 0.999617271188382,
+      "prediction_max_relative_change": 0.000860444689172013,
+      "prediction_first_last": [
+        1.0799421039291615,
+        1.3762486737311619e-05
+      ]
+    },
+    {
+      "name": "reference_q_only",
+      "description": "exact Lev3 reference_mass_ratio; baseline QNM",
+      "q": 2.999951112567489,
+      "qnm": {
+        "f_ring_33": 0.12424598451476766,
+        "f_damp_33": 0.014397104093154513,
+        "qnm_source": "independent scripts/kerr_leaver_solver.py",
+        "qnm_solver": {
+          "omega_remnant": [
+            0.7581876468879315,
+            -0.08785560770450497
+          ],
+          "radial_residual": [
+            -8.881784197001252e-15,
+            5.995204332975845e-15
+          ],
+          "cf_depth": 1024,
+          "cf_error": 0.0,
+          "angular_error": 3.9080836092714983e-14,
+          "helper_sha256": "a7b07b28962b676271645fd60cf6bd7c2684c8c92e801579897f2d8f84698fc9"
+        }
+      },
+      "qnm_shift_from_manifest": {
+        "f_ring_33_absolute": 0.0,
+        "f_ring_33_relative": 0.0,
+        "f_damp_33_absolute": 0.0,
+        "f_damp_33_relative": 0.0
+      },
+      "prediction_change_relative_l2": 1.7377014832440989e-06,
+      "prediction_norm_ratio_over_manifest": 1.0000008862876695,
+      "prediction_max_relative_change": 4.159902597056231e-05,
+      "prediction_first_last": [
+        1.080128279095767,
+        1.3751227073050217e-05
+      ]
+    },
+    {
+      "name": "correct_Lev3_remnant_and_reference_q",
+      "description": "exact Lev3 remnant inputs and exact Lev3 reference_mass_ratio",
+      "q": 2.999951112567489,
+      "qnm": {
+        "f_ring_33": 0.12423916807142044,
+        "f_damp_33": 0.014399653181580981,
+        "qnm_source": "independent scripts/kerr_leaver_solver.py",
+        "qnm_solver": {
+          "omega_remnant": [
+            0.7580643924828651,
+            -0.08786169861330705
+          ],
+          "radial_residual": [
+            -1.7763568394002505e-15,
+            -2.55351295663786e-15
+          ],
+          "cf_depth": 1024,
+          "cf_error": 0.0,
+          "angular_error": 7.105566134123854e-14,
+          "helper_sha256": "a7b07b28962b676271645fd60cf6bd7c2684c8c92e801579897f2d8f84698fc9"
+        }
+      },
+      "qnm_shift_from_manifest": {
+        "f_ring_33_absolute": -6.816443347226753e-06,
+        "f_ring_33_relative": -5.486248407826633e-05,
+        "f_damp_33_absolute": 2.549088426468532e-06,
+        "f_damp_33_relative": 0.0001770556363263065
+      },
+      "prediction_change_relative_l2": 0.0004010665834487121,
+      "prediction_norm_ratio_over_manifest": 0.9996181583880458,
+      "prediction_max_relative_change": 0.0009020738290261843,
+      "prediction_first_last": [
+        1.0799411320903407,
+        1.3763059165254165e-05
+      ]
+    }
+  ],
+  "calibration_sha256": "f447acda86f64f1d13745c8a5d725acdf295b050a2638d1731d4b6a139e1358d",
+  "manifest_sha256": "53504f1a5143afec714c23fae19c124932f55b8a35bde641e1b89ca363208aea",
+  "run": {
+    "started_utc": "2026-09-15T10:13:44.238348+00:00",
+    "finished_utc": "2026-09-15T10:13:44.931401+00:00",
+    "host": "RONI2",
+    "cwd": "/Users/xangma/repos/torchwave",
+    "python": "/Users/xangma/miniconda3/envs/pycbcorig313/bin/python",
+    "command": [
+      "scripts/diagnose_nr33_metadata_effect.py",
+      "--output",
+      "docs/reviews/2026-09-15-independent-calibration/extraction-diagnosis/metadata-prediction-effect.json"
+    ],
+    "script_sha256": "ade96191e83632b4f12e3ade02002d93b02b2919c93d039c4f81c224644f9b1a"
+  },
+  "limitations": [
+    "This is a metadata-only perturbation of the frozen analytic prediction on its saved bins.",
+    "It bounds remnant-input sensitivity and does not validate the whole fitted model or explain NR extraction errors."
+  ]
+}

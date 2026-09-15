@@ -1,0 +1,61 @@
+{
+  "provenance": "Root diagnostic: public GSL binary central derivative on clean Hamiltonian at fixed 65-point neighborhoods of match/peak, analytic elsewhere. Local component attribution, not a physical trajectory or complete GSL derivative series. No fitting, no library implementation source read or runtime writes.",
+  "initial_step": 0.0001,
+  "public_binary_fixture_sha256": "7bf76ba9b81515bdd22377a8569bc0ee8809717baeb43d7f887b71ecdeb9d88a",
+  "selected_samples": 130,
+  "callback_evaluations": 2080,
+  "max_reported_derivative_error_in_omega": 1.0135375075133664e-10,
+  "omega_max_change": 1.3727935455065676e-11,
+  "omega0_max_change": 1.1567163893388965e-11,
+  "results": {
+    "analytic": {
+      "raw_relative_l2": 4.4229410577698237e-05,
+      "amplitude_relative_l2": 2.7970093681348065e-07,
+      "peak": 5002.7187423706055,
+      "match": 4998.346362836525,
+      "boundary_frequency": 0.3547086050989492,
+      "coeff_a": [
+        4.114751530047683,
+        -47.07717764720065,
+        56.88775014837794
+      ],
+      "coeff_b": [
+        4.129267832669519,
+        -21.933411785746042
+      ]
+    },
+    "public_numeric_omega_in_nqc_only": {
+      "raw_relative_l2": 0.00010076158037872963,
+      "amplitude_relative_l2": 2.7970091572552314e-07,
+      "peak": 5002.7187423706055,
+      "match": 4998.346362836525,
+      "boundary_frequency": 0.3547086076157484,
+      "coeff_a": [
+        4.1151447989080925,
+        -47.08059149952934,
+        56.891621569175214
+      ],
+      "coeff_b": [
+        4.129467026069072,
+        -21.93533802116782
+      ]
+    },
+    "public_numeric_omega_in_nqc_and_mode": {
+      "raw_relative_l2": 0.00012283299950013147,
+      "amplitude_relative_l2": 2.7970046716581877e-07,
+      "peak": 5002.7187423706055,
+      "match": 4998.346362836525,
+      "boundary_frequency": 0.3547086085986848,
+      "coeff_a": [
+        4.119535880152792,
+        -47.11871230599992,
+        56.9348535818741
+      ],
+      "coeff_b": [
+        4.129544790523016,
+        -21.936090016971967
+      ]
+    }
+  },
+  "elapsed_s": 3.2204550830065273
+}

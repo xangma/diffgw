@@ -1,0 +1,689 @@
+{
+  "paper": "arXiv:2001.10914v2",
+  "purpose": "bounded low-frequency absolute-scale validation of the clean non-reexpanded (2,1) SPA branch",
+  "equations": [
+    "Appendix E E1 (global h_lm normalization)",
+    "Appendix E E3 (SPA expression retained for (2,1) when q<40)",
+    "Appendix E E4-E7 (published TaylorT4 xdot; displayed relative v2, v3, v4, v5 and v7 terms; no printed relative v6 term)",
+    "Appendix E E8 (re-expanded SPA normalization)",
+    "Appendix E E10=(21) (verified re-expansion target)"
+  ],
+  "time_domain_sources": [
+    "Arun et al., arXiv:0810.5336 Eq. (4.17b), rendered PDF p. 12",
+    "Buonanno, Faye and Hinderer, arXiv:1209.6349 Eqs. (4.26) and (4.27a), rendered PDF p. 12",
+    "Blanchet, arXiv:1310.1528v6 Eq. (492), H21, rendered PDF p. 214"
+  ],
+  "mode": [
+    2,
+    1
+  ],
+  "legacy_control": {
+    "purpose": "preserved public/native comparison from the earlier diagnostic",
+    "modes": [
+      [
+        2,
+        2
+      ],
+      [
+        2,
+        1
+      ],
+      [
+        3,
+        3
+      ],
+      [
+        3,
+        2
+      ],
+      [
+        4,
+        4
+      ]
+    ],
+    "cases": [
+      [
+        40.0,
+        15.0,
+        0.3,
+        -0.2
+      ],
+      [
+        55.0,
+        11.0,
+        -0.4,
+        0.2
+      ],
+      [
+        27.0,
+        16.0,
+        -0.25,
+        0.15
+      ]
+    ],
+    "frequency_hz": [
+      20.0,
+      512.0,
+      1.0
+    ],
+    "metric_labels": {
+      "shape_only_normalized_*": "the original L2-normalized comparisons; shape only",
+      "physical_scale_acceptance_like_*": "the original unnormalized comparisons; physical M^2/D scale retained and acceptance-like"
+    }
+  },
+  "branch": "non-reexpanded Eq. E3, explicitly limited to q < 40",
+  "cases": [
+    {
+      "label": "q1p5",
+      "q": 1.5,
+      "m1_msun": 1.5,
+      "m2_msun": 1.0,
+      "chi1_aligned": 0.08,
+      "chi2_aligned": 0.03
+    },
+    {
+      "label": "q3",
+      "q": 3.0,
+      "m1_msun": 3.0,
+      "m2_msun": 1.0,
+      "chi1_aligned": 0.08,
+      "chi2_aligned": 0.03
+    },
+    {
+      "label": "q10",
+      "q": 10.0,
+      "m1_msun": 10.0,
+      "m2_msun": 1.0,
+      "chi1_aligned": 0.08,
+      "chi2_aligned": 0.03
+    },
+    {
+      "label": "q50",
+      "q": 50.0,
+      "m1_msun": 50.0,
+      "m2_msun": 1.0,
+      "chi1_aligned": 0.08,
+      "chi2_aligned": 0.03
+    }
+  ],
+  "frequency_hz": [
+    20.0,
+    80.0,
+    5.0
+  ],
+  "distance_mpc": 500.0,
+  "distance_argument_m": 1.5428387907456836e+25,
+  "distance_seconds_for_clean_branch": 5.14635625271695e+16,
+  "public_api": "SimIMRPhenomXHMFrequencySequenceOneMode(..., distance_m, ...)->COMPLEX16FrequencySeries",
+  "public_output_contract": "distance-corrected physical Fourier-domain strain/Hz; public arrays are not dimensionless",
+  "metric_labels": {
+    "physical_scale_acceptance_like_*": "raw physical M^2/D scale is retained; acceptance-like validation only, not a raw calibration metric",
+    "shape_only_normalized_*": "L2-normalized shape comparison; scale is intentionally removed"
+  },
+  "coefficient_policy": "public values are validation outputs only; no coefficient is inferred or fitted",
+  "comparison_interpretation": "The clean branch and the re-expanded E10 baseline are pure PN expressions, while the public XHM series contains calibrated higher-order phenomenological terms. The raw comparisons describe scale agreement on this grid and do not select the branch or imply coefficient recovery.",
+  "npz": "/tmp/torchwave-xhm-spa-public-raw.npz",
+  "source_hashes": {
+    "paper_tex": "5c7132720db24d9caaa804f53d6961b075996cacee00b3ce0a51865a6dbf107e",
+    "clean_spa_helper": "5b0e6f93c6c946230f6d40c6bdce9c4e7f41dd46254b4338ddeac9fd18744028",
+    "script": "99f1d3b5d66b637794878143c8c0a85b4ad987ffb8b57ab266656516c4487387"
+  },
+  "raw_npz_sha256": "c9200b6193957cfd45ec725a73fc16c7f369731e65a9ba782f75d8e78fde48e1",
+  "python": "3.13.9",
+  "numpy": "2.3.5",
+  "torch": "2.9.1",
+  "legacy_rows": [
+    {
+      "case": 0,
+      "experimental_phase_connections": false,
+      "mode": [
+        2,
+        2
+      ],
+      "native_norm_physical": 6.4280369479900995e-22,
+      "public_norm_physical": 6.428036947990091e-22,
+      "shape_only_normalized_relative_l2": 2.0000000000000004,
+      "shape_only_normalized_amplitude_relative_l2": 6.536960393601319e-15,
+      "physical_scale_acceptance_like_relative_l2": 2.0000000000000013,
+      "physical_scale_acceptance_like_amplitude_relative_l2": 6.702925343974453e-15
+    },
+    {
+      "case": 0,
+      "experimental_phase_connections": false,
+      "mode": [
+        2,
+        1
+      ],
+      "native_norm_physical": 9.804301608488692e-23,
+      "public_norm_physical": 2.0822155838548318e-23,
+      "shape_only_normalized_relative_l2": 1.3889278175574105,
+      "shape_only_normalized_amplitude_relative_l2": 1.0225779003498356,
+      "physical_scale_acceptance_like_relative_l2": 4.778816461456483,
+      "physical_scale_acceptance_like_amplitude_relative_l2": 4.321719433889386
+    },
+    {
+      "case": 0,
+      "experimental_phase_connections": false,
+      "mode": [
+        3,
+        3
+      ],
+      "native_norm_physical": 1.9100600422269033e-22,
+      "public_norm_physical": 8.626715985645315e-23,
+      "shape_only_normalized_relative_l2": 1.4250646126478344,
+      "shape_only_normalized_amplitude_relative_l2": 0.8337710979474582,
+      "physical_scale_acceptance_like_relative_l2": 2.443471058305888,
+      "physical_scale_acceptance_like_amplitude_relative_l2": 1.7358837440248016
+    },
+    {
+      "case": 0,
+      "experimental_phase_connections": false,
+      "mode": [
+        3,
+        2
+      ],
+      "native_norm_physical": 1.3163163879473916e-23,
+      "public_norm_physical": 1.1172143225566762e-23,
+      "shape_only_normalized_relative_l2": 1.7320095603497045,
+      "shape_only_normalized_amplitude_relative_l2": 0.4568896550094663,
+      "physical_scale_acceptance_like_relative_l2": 1.8884465506583552,
+      "physical_scale_acceptance_like_amplitude_relative_l2": 0.5269816314311202
+    },
+    {
+      "case": 0,
+      "experimental_phase_connections": false,
+      "mode": [
+        4,
+        4
+      ],
+      "native_norm_physical": 4.6275894262474985e-23,
+      "public_norm_physical": 2.37261000138724e-23,
+      "shape_only_normalized_relative_l2": 0.8991683328902552,
+      "shape_only_normalized_amplitude_relative_l2": 0.5987188032506457,
+      "physical_scale_acceptance_like_relative_l2": 1.5748726484775366,
+      "physical_scale_acceptance_like_amplitude_relative_l2": 1.2658819832426322
+    },
+    {
+      "case": 0,
+      "experimental_phase_connections": true,
+      "mode": [
+        2,
+        2
+      ],
+      "native_norm_physical": 6.4280369479900995e-22,
+      "public_norm_physical": 6.428036947990091e-22,
+      "shape_only_normalized_relative_l2": 2.0000000000000004,
+      "shape_only_normalized_amplitude_relative_l2": 6.536960393601319e-15,
+      "physical_scale_acceptance_like_relative_l2": 2.0000000000000013,
+      "physical_scale_acceptance_like_amplitude_relative_l2": 6.702925343974453e-15
+    },
+    {
+      "case": 0,
+      "experimental_phase_connections": true,
+      "mode": [
+        2,
+        1
+      ],
+      "native_norm_physical": 9.804301608488694e-23,
+      "public_norm_physical": 2.0822155838548318e-23,
+      "shape_only_normalized_relative_l2": 1.363926678410119,
+      "shape_only_normalized_amplitude_relative_l2": 1.0225779003498356,
+      "physical_scale_acceptance_like_relative_l2": 4.744788757924041,
+      "physical_scale_acceptance_like_amplitude_relative_l2": 4.3217194338893865
+    },
+    {
+      "case": 0,
+      "experimental_phase_connections": true,
+      "mode": [
+        3,
+        3
+      ],
+      "native_norm_physical": 1.9100600422269035e-22,
+      "public_norm_physical": 8.626715985645315e-23,
+      "shape_only_normalized_relative_l2": 1.4362665038467226,
+      "shape_only_normalized_amplitude_relative_l2": 0.8337710979474582,
+      "physical_scale_acceptance_like_relative_l2": 2.457950071654046,
+      "physical_scale_acceptance_like_amplitude_relative_l2": 1.7358837440248016
+    },
+    {
+      "case": 0,
+      "experimental_phase_connections": true,
+      "mode": [
+        3,
+        2
+      ],
+      "native_norm_physical": 1.3163163879473915e-23,
+      "public_norm_physical": 1.1172143225566762e-23,
+      "shape_only_normalized_relative_l2": 1.3535982477430148,
+      "shape_only_normalized_amplitude_relative_l2": 0.4568896550094663,
+      "physical_scale_acceptance_like_relative_l2": 1.4800388094567927,
+      "physical_scale_acceptance_like_amplitude_relative_l2": 0.5269816314311202
+    },
+    {
+      "case": 0,
+      "experimental_phase_connections": true,
+      "mode": [
+        4,
+        4
+      ],
+      "native_norm_physical": 4.6275894262474985e-23,
+      "public_norm_physical": 2.37261000138724e-23,
+      "shape_only_normalized_relative_l2": 1.4990402418842022,
+      "shape_only_normalized_amplitude_relative_l2": 0.5987188032506457,
+      "physical_scale_acceptance_like_relative_l2": 2.299159666192818,
+      "physical_scale_acceptance_like_amplitude_relative_l2": 1.2658819832426322
+    },
+    {
+      "case": 1,
+      "experimental_phase_connections": false,
+      "mode": [
+        2,
+        2
+      ],
+      "native_norm_physical": 5.189404891620976e-22,
+      "public_norm_physical": 5.189404891620962e-22,
+      "shape_only_normalized_relative_l2": 2.0,
+      "shape_only_normalized_amplitude_relative_l2": 4.014224392831913e-15,
+      "physical_scale_acceptance_like_relative_l2": 2.0000000000000027,
+      "physical_scale_acceptance_like_amplitude_relative_l2": 4.909333751710595e-15
+    },
+    {
+      "case": 1,
+      "experimental_phase_connections": false,
+      "mode": [
+        2,
+        1
+      ],
+      "native_norm_physical": 1.6573313327844885e-22,
+      "public_norm_physical": 4.6568739187332466e-23,
+      "shape_only_normalized_relative_l2": 1.4565492627457506,
+      "shape_only_normalized_amplitude_relative_l2": 0.8533956171755329,
+      "physical_scale_acceptance_like_relative_l2": 3.7547633736458024,
+      "physical_scale_acceptance_like_amplitude_relative_l2": 3.023212720622115
+    },
+    {
+      "case": 1,
+      "experimental_phase_connections": false,
+      "mode": [
+        3,
+        3
+      ],
+      "native_norm_physical": 1.7630650793734995e-22,
+      "public_norm_physical": 1.0834334109586665e-22,
+      "shape_only_normalized_relative_l2": 1.4271376118858452,
+      "shape_only_normalized_amplitude_relative_l2": 0.75656997140421,
+      "physical_scale_acceptance_like_relative_l2": 1.9255762911903274,
+      "physical_scale_acceptance_like_amplitude_relative_l2": 1.1510683948281477
+    },
+    {
+      "case": 1,
+      "experimental_phase_connections": false,
+      "mode": [
+        3,
+        2
+      ],
+      "native_norm_physical": 1.1046339137066064e-23,
+      "public_norm_physical": 1.2001088674998988e-23,
+      "shape_only_normalized_relative_l2": 1.659168126637778,
+      "shape_only_normalized_amplitude_relative_l2": 0.37506392340077543,
+      "physical_scale_acceptance_like_relative_l2": 1.593789553573653,
+      "physical_scale_acceptance_like_amplitude_relative_l2": 0.3685250505610036
+    },
+    {
+      "case": 1,
+      "experimental_phase_connections": false,
+      "mode": [
+        4,
+        4
+      ],
+      "native_norm_physical": 9.169459505048349e-23,
+      "public_norm_physical": 3.072011913555177e-23,
+      "shape_only_normalized_relative_l2": 1.158313487876807,
+      "shape_only_normalized_amplitude_relative_l2": 0.9388635592897759,
+      "physical_scale_acceptance_like_relative_l2": 2.818565658434365,
+      "physical_scale_acceptance_like_amplitude_relative_l2": 2.563320894261112
+    },
+    {
+      "case": 1,
+      "experimental_phase_connections": true,
+      "mode": [
+        2,
+        2
+      ],
+      "native_norm_physical": 5.189404891620976e-22,
+      "public_norm_physical": 5.189404891620962e-22,
+      "shape_only_normalized_relative_l2": 2.0,
+      "shape_only_normalized_amplitude_relative_l2": 4.014224392831913e-15,
+      "physical_scale_acceptance_like_relative_l2": 2.0000000000000027,
+      "physical_scale_acceptance_like_amplitude_relative_l2": 4.909333751710595e-15
+    },
+    {
+      "case": 1,
+      "experimental_phase_connections": true,
+      "mode": [
+        2,
+        1
+      ],
+      "native_norm_physical": 1.6573313327844887e-22,
+      "public_norm_physical": 4.6568739187332466e-23,
+      "shape_only_normalized_relative_l2": 1.4330994721982404,
+      "shape_only_normalized_amplitude_relative_l2": 0.8533956171755328,
+      "physical_scale_acceptance_like_relative_l2": 3.7225114562564534,
+      "physical_scale_acceptance_like_amplitude_relative_l2": 3.023212720622115
+    },
+    {
+      "case": 1,
+      "experimental_phase_connections": true,
+      "mode": [
+        3,
+        3
+      ],
+      "native_norm_physical": 1.7630650793734997e-22,
+      "public_norm_physical": 1.0834334109586665e-22,
+      "shape_only_normalized_relative_l2": 1.4928073874976326,
+      "shape_only_normalized_amplitude_relative_l2": 0.75656997140421,
+      "physical_scale_acceptance_like_relative_l2": 2.004964143730337,
+      "physical_scale_acceptance_like_amplitude_relative_l2": 1.1510683948281477
+    },
+    {
+      "case": 1,
+      "experimental_phase_connections": true,
+      "mode": [
+        3,
+        2
+      ],
+      "native_norm_physical": 1.1046339137066064e-23,
+      "public_norm_physical": 1.2001088674998988e-23,
+      "shape_only_normalized_relative_l2": 1.4010373075096898,
+      "shape_only_normalized_amplitude_relative_l2": 0.37506392340077543,
+      "physical_scale_acceptance_like_relative_l2": 1.3465047883000671,
+      "physical_scale_acceptance_like_amplitude_relative_l2": 0.3685250505610036
+    },
+    {
+      "case": 1,
+      "experimental_phase_connections": true,
+      "mode": [
+        4,
+        4
+      ],
+      "native_norm_physical": 9.169459505048349e-23,
+      "public_norm_physical": 3.072011913555177e-23,
+      "shape_only_normalized_relative_l2": 1.3211924555053915,
+      "shape_only_normalized_amplitude_relative_l2": 0.9388635592897759,
+      "physical_scale_acceptance_like_relative_l2": 3.0248582399101913,
+      "physical_scale_acceptance_like_amplitude_relative_l2": 2.563320894261112
+    },
+    {
+      "case": 2,
+      "experimental_phase_connections": false,
+      "mode": [
+        2,
+        2
+      ],
+      "native_norm_physical": 5.682868788643573e-22,
+      "public_norm_physical": 5.682868788643565e-22,
+      "shape_only_normalized_relative_l2": 2.0000000000000004,
+      "shape_only_normalized_amplitude_relative_l2": 6.021389697116283e-15,
+      "physical_scale_acceptance_like_relative_l2": 2.0000000000000013,
+      "physical_scale_acceptance_like_amplitude_relative_l2": 6.13739288379665e-15
+    },
+    {
+      "case": 2,
+      "experimental_phase_connections": false,
+      "mode": [
+        2,
+        1
+      ],
+      "native_norm_physical": 4.716633091382423e-23,
+      "public_norm_physical": 1.9691173825511642e-23,
+      "shape_only_normalized_relative_l2": 1.3614003880148804,
+      "shape_only_normalized_amplitude_relative_l2": 0.6700574126389657,
+      "physical_scale_acceptance_like_relative_l2": 2.527123301084149,
+      "physical_scale_acceptance_like_amplitude_relative_l2": 1.7384782962753482
+    },
+    {
+      "case": 2,
+      "experimental_phase_connections": false,
+      "mode": [
+        3,
+        3
+      ],
+      "native_norm_physical": 8.553041633380945e-23,
+      "public_norm_physical": 3.8791932386789145e-23,
+      "shape_only_normalized_relative_l2": 1.4307601457462136,
+      "shape_only_normalized_amplitude_relative_l2": 0.8676758656921255,
+      "physical_scale_acceptance_like_relative_l2": 2.4423674424800486,
+      "physical_scale_acceptance_like_amplitude_relative_l2": 1.7639761822470044
+    },
+    {
+      "case": 2,
+      "experimental_phase_connections": false,
+      "mode": [
+        3,
+        2
+      ],
+      "native_norm_physical": 6.4930403495982154e-24,
+      "public_norm_physical": 6.588625523512365e-24,
+      "shape_only_normalized_relative_l2": 1.6405678960995946,
+      "shape_only_normalized_amplitude_relative_l2": 0.5370781183254424,
+      "physical_scale_acceptance_like_relative_l2": 1.6286886783559598,
+      "physical_scale_acceptance_like_amplitude_relative_l2": 0.5333653673445723
+    },
+    {
+      "case": 2,
+      "experimental_phase_connections": false,
+      "mode": [
+        4,
+        4
+      ],
+      "native_norm_physical": 2.2529174233329128e-23,
+      "public_norm_physical": 1.3546087001554678e-23,
+      "shape_only_normalized_relative_l2": 0.8573088068589759,
+      "shape_only_normalized_amplitude_relative_l2": 0.5111647733952547,
+      "physical_scale_acceptance_like_relative_l2": 1.289242869700569,
+      "physical_scale_acceptance_like_amplitude_relative_l2": 0.9350568902699341
+    },
+    {
+      "case": 2,
+      "experimental_phase_connections": true,
+      "mode": [
+        2,
+        2
+      ],
+      "native_norm_physical": 5.682868788643573e-22,
+      "public_norm_physical": 5.682868788643565e-22,
+      "shape_only_normalized_relative_l2": 2.0000000000000004,
+      "shape_only_normalized_amplitude_relative_l2": 6.021389697116283e-15,
+      "physical_scale_acceptance_like_relative_l2": 2.0000000000000013,
+      "physical_scale_acceptance_like_amplitude_relative_l2": 6.13739288379665e-15
+    },
+    {
+      "case": 2,
+      "experimental_phase_connections": true,
+      "mode": [
+        2,
+        1
+      ],
+      "native_norm_physical": 4.716633091382423e-23,
+      "public_norm_physical": 1.9691173825511642e-23,
+      "shape_only_normalized_relative_l2": 1.3681671195591103,
+      "shape_only_normalized_amplitude_relative_l2": 0.6700574126389657,
+      "physical_scale_acceptance_like_relative_l2": 2.5358615948880514,
+      "physical_scale_acceptance_like_amplitude_relative_l2": 1.7384782962753482
+    },
+    {
+      "case": 2,
+      "experimental_phase_connections": true,
+      "mode": [
+        3,
+        3
+      ],
+      "native_norm_physical": 8.553041633380945e-23,
+      "public_norm_physical": 3.8791932386789145e-23,
+      "shape_only_normalized_relative_l2": 1.439875419728622,
+      "shape_only_normalized_amplitude_relative_l2": 0.8676758656921255,
+      "physical_scale_acceptance_like_relative_l2": 2.4541500023173164,
+      "physical_scale_acceptance_like_amplitude_relative_l2": 1.7639761822470044
+    },
+    {
+      "case": 2,
+      "experimental_phase_connections": true,
+      "mode": [
+        3,
+        2
+      ],
+      "native_norm_physical": 6.4930403495982154e-24,
+      "public_norm_physical": 6.588625523512365e-24,
+      "shape_only_normalized_relative_l2": 1.3152586526943093,
+      "shape_only_normalized_amplitude_relative_l2": 0.5370781183254424,
+      "physical_scale_acceptance_like_relative_l2": 1.3057637656405596,
+      "physical_scale_acceptance_like_amplitude_relative_l2": 0.5333653673445723
+    },
+    {
+      "case": 2,
+      "experimental_phase_connections": true,
+      "mode": [
+        4,
+        4
+      ],
+      "native_norm_physical": 2.252917423332913e-23,
+      "public_norm_physical": 1.3546087001554678e-23,
+      "shape_only_normalized_relative_l2": 1.4826059591088452,
+      "shape_only_normalized_amplitude_relative_l2": 0.5111647733952547,
+      "physical_scale_acceptance_like_relative_l2": 2.0237519168871883,
+      "physical_scale_acceptance_like_amplitude_relative_l2": 0.9350568902699341
+    }
+  ],
+  "spa_rows": [
+    {
+      "label": "q1p5",
+      "q": 1.5,
+      "m1_msun": 1.5,
+      "m2_msun": 1.0,
+      "chi1_aligned": 0.08,
+      "chi2_aligned": 0.03,
+      "mode": [
+        2,
+        1
+      ],
+      "public_amplitude_units": "physical Fourier-domain strain/Hz (SI)",
+      "public_amplitude_min": 2.3301074492558878e-26,
+      "public_amplitude_max": 7.500083811709692e-26,
+      "public_amplitude_l2": 1.530943574839583e-25,
+      "public_complex_sha256": "5972b765c104bcde78eb3f003dd6a2aef7bde96ada28f966b254f9d5e10e5025",
+      "expanded_e10_amplitude_units": "physical Fourier-domain strain/Hz (SI)",
+      "expanded_e10_amplitude_l2": 1.5321666879268458e-25,
+      "expanded_e10_amplitude_sha256": "6b39e9dd65572aa844f3835c6267d927c10a9f2c4b02d63ed7866e5032da7e10",
+      "expanded_e10_physical_scale_acceptance_like_relative_l2": 0.0010584368497505141,
+      "expanded_e10_physical_scale_acceptance_like_ratio_at_20hz": 1.0002180104022471,
+      "expanded_e10_physical_scale_acceptance_like_ratio_at_80hz": 1.002881242687235,
+      "branch_domain": "q < 40",
+      "branch_status": "evaluated",
+      "branch_amplitude_units": "physical Fourier-domain strain/Hz (SI)",
+      "branch_amplitude_l2": 1.5326375772465975e-25,
+      "branch_amplitude_sha256": "a0135ff6ff17133af2767561f516042ac54133a299e2a81ebd20803e030ae399",
+      "physical_scale_acceptance_like_relative_l2": 0.0014761214585315766,
+      "physical_scale_acceptance_like_ratio_at_20hz": 1.0002948943967591,
+      "physical_scale_acceptance_like_ratio_at_80hz": 1.0040571564973362,
+      "nonreexpanded_closer_to_public_than_expanded_e10": false,
+      "nonreexpanded_minus_expanded_e10_physical_scale_acceptance_like_relative_l2": 0.00041750681347384796,
+      "shape_only_normalized_relative_l2": 0.0009764824366495692
+    },
+    {
+      "label": "q3",
+      "q": 3.0,
+      "m1_msun": 3.0,
+      "m2_msun": 1.0,
+      "chi1_aligned": 0.08,
+      "chi2_aligned": 0.03,
+      "mode": [
+        2,
+        1
+      ],
+      "public_amplitude_units": "physical Fourier-domain strain/Hz (SI)",
+      "public_amplitude_min": 9.00675436817477e-26,
+      "public_amplitude_max": 2.8971654357377004e-25,
+      "public_amplitude_l2": 5.9187647922507345e-25,
+      "public_complex_sha256": "c261dcf824a62e62a13b339f5e1a7225852d1235ae99b28b428c896145367ac6",
+      "expanded_e10_amplitude_units": "physical Fourier-domain strain/Hz (SI)",
+      "expanded_e10_amplitude_l2": 5.922771566694517e-25,
+      "expanded_e10_amplitude_sha256": "c018ad652ff5f7ef6d92bd5ba5fd6da73dac48978613d7cd7baac37192a27c51",
+      "expanded_e10_physical_scale_acceptance_like_relative_l2": 0.0010471580769462262,
+      "expanded_e10_physical_scale_acceptance_like_ratio_at_20hz": 1.0000869065399665,
+      "expanded_e10_physical_scale_acceptance_like_ratio_at_80hz": 1.0032937123531174,
+      "branch_domain": "q < 40",
+      "branch_status": "evaluated",
+      "branch_amplitude_units": "physical Fourier-domain strain/Hz (SI)",
+      "branch_amplitude_l2": 5.927613525606152e-25,
+      "branch_amplitude_sha256": "7355f359e806479cc5f3c04fb1545dce4bc2c572160d34cdbaa56570100bc3cf",
+      "physical_scale_acceptance_like_relative_l2": 0.0021523351995144453,
+      "physical_scale_acceptance_like_ratio_at_20hz": 1.0002913678641487,
+      "physical_scale_acceptance_like_ratio_at_80hz": 1.0064140630714364,
+      "nonreexpanded_closer_to_public_than_expanded_e10": false,
+      "nonreexpanded_minus_expanded_e10_physical_scale_acceptance_like_relative_l2": 0.0011093810507066097,
+      "shape_only_normalized_relative_l2": 0.001547207808283629
+    },
+    {
+      "label": "q10",
+      "q": 10.0,
+      "m1_msun": 10.0,
+      "m2_msun": 1.0,
+      "chi1_aligned": 0.08,
+      "chi2_aligned": 0.03,
+      "mode": [
+        2,
+        1
+      ],
+      "public_amplitude_units": "physical Fourier-domain strain/Hz (SI)",
+      "public_amplitude_min": 2.956299015680689e-25,
+      "public_amplitude_max": 1.0135196320875258e-24,
+      "public_amplitude_l2": 2.039970785807988e-24,
+      "public_complex_sha256": "61bfae5a16d22699a5a78f9eff665020dd115bcd40295c3dcf28062c58d046a5",
+      "expanded_e10_amplitude_units": "physical Fourier-domain strain/Hz (SI)",
+      "expanded_e10_amplitude_l2": 2.0599379387251466e-24,
+      "expanded_e10_amplitude_sha256": "dd6485ec5240a3e7bdc967605b5702369209d2ad643d85d8ed9fb9a74a79fdfe",
+      "expanded_e10_physical_scale_acceptance_like_relative_l2": 0.013221701610410133,
+      "expanded_e10_physical_scale_acceptance_like_ratio_at_20hz": 1.0026358402663806,
+      "expanded_e10_physical_scale_acceptance_like_ratio_at_80hz": 1.0385475312983332,
+      "branch_domain": "q < 40",
+      "branch_status": "evaluated",
+      "branch_amplitude_units": "physical Fourier-domain strain/Hz (SI)",
+      "branch_amplitude_l2": 2.072782382240416e-24,
+      "branch_amplitude_sha256": "adf023e4c6d833e0b4dd34692f16d3c269df35fca4d08ad904129a287dfb22a6",
+      "physical_scale_acceptance_like_relative_l2": 0.021716066058055313,
+      "physical_scale_acceptance_like_ratio_at_20hz": 1.00424549933468,
+      "physical_scale_acceptance_like_ratio_at_80hz": 1.063179312724043,
+      "nonreexpanded_closer_to_public_than_expanded_e10": false,
+      "nonreexpanded_minus_expanded_e10_physical_scale_acceptance_like_relative_l2": 0.008412203517015686,
+      "shape_only_normalized_relative_l2": 0.014474511254022195
+    },
+    {
+      "label": "q50",
+      "q": 50.0,
+      "m1_msun": 50.0,
+      "m2_msun": 1.0,
+      "chi1_aligned": 0.08,
+      "chi2_aligned": 0.03,
+      "mode": [
+        2,
+        1
+      ],
+      "public_amplitude_units": "physical Fourier-domain strain/Hz (SI)",
+      "public_amplitude_min": 3.3479354229874386e-25,
+      "public_amplitude_max": 3.1918692763757726e-24,
+      "public_amplitude_l2": 5.216235443827765e-24,
+      "public_complex_sha256": "9c0921cbad4fc2ac25a33f2525712e322dc3bbaf512d852606331d06ddeb81c1",
+      "expanded_e10_amplitude_units": "physical Fourier-domain strain/Hz (SI)",
+      "expanded_e10_amplitude_l2": 6.1656108511525574e-24,
+      "expanded_e10_amplitude_sha256": "5f5b4c5f8910fcbc40ff80e9d60b992c1b21055211a209f3fcfbe7cf14dff27d",
+      "expanded_e10_physical_scale_acceptance_like_relative_l2": 0.306451816186929,
+      "expanded_e10_physical_scale_acceptance_like_ratio_at_20hz": 1.0128653556785971,
+      "expanded_e10_physical_scale_acceptance_like_ratio_at_80hz": 2.2688622541184595,
+      "branch_domain": "q < 40",
+      "branch_status": "vetoed_q_ge_40",
+      "branch_error": "the non-reexpanded (2,1) branch is defined only for q < 40",
+      "physical_scale_acceptance_like_relative_l2": null,
+      "shape_only_normalized_relative_l2": null
+    }
+  ]
+}

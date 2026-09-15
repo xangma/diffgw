@@ -1,0 +1,315 @@
+{
+  "model": "XHM-v2 Eq.42 (3,3) ringdown amplitude only",
+  "sigma_33": 1.3,
+  "f_rd_rule": "0.95*f_ring_33",
+  "controls": {
+    "pad_factor": 4,
+    "start_taper_duration": 500.0,
+    "end_taper_duration": 20.0,
+    "fmax": 0.3,
+    "sample_dt": 0.1
+  },
+  "train_q": [
+    1.4999898222503383,
+    2.000020628268884,
+    3.9990197985742983,
+    5.000307275688211,
+    8.000149200385618
+  ],
+  "holdout_q": [
+    3.000112224984311,
+    5.999531974378745
+  ],
+  "direct_train": [
+    {
+      "log_abs_a_lambda": -6.16027373754522,
+      "lambda": 0.788652301446081,
+      "relative_rms": 0.00727578080064467,
+      "n_frequency_samples": 5797,
+      "optimizer_status": 2,
+      "case_id": "SXS:BBH:2331/Lev3/N3",
+      "q": 1.4999898222503383,
+      "eta": 0.24000032568666327,
+      "delta": 0.19999674310684912,
+      "f_ring_33": 0.13682702388539458,
+      "f_damp_33": 0.014047638430781035,
+      "f_rd": 0.12998567269112485,
+      "qnm": {
+        "f_ring_33": 0.13682702388539458,
+        "f_damp_33": 0.014047638430781035,
+        "qnm_source": "independent scripts/kerr_leaver_solver.py",
+        "qnm_solver": {
+          "omega_remnant": [
+            0.8212427472236687,
+            -0.0843146393841199
+          ],
+          "radial_residual": [
+            -1.1546319456101628e-14,
+            6.772360450213455e-15
+          ],
+          "cf_depth": 1024,
+          "cf_error": 0.0,
+          "angular_error": 1.0667388882858398e-14,
+          "helper_sha256": "a7b07b28962b676271645fd60cf6bd7c2684c8c92e801579897f2d8f84698fc9"
+        }
+      },
+      "fft": {
+        "native_dt": 0.10000116221181088,
+        "sample_dt": 0.1,
+        "n_samples": 85242,
+        "nfft": 340968,
+        "retained_time": [
+          1422.7283794167408,
+          9946.828379416742
+        ],
+        "taper_flat_window": [
+          1922.0257539920792,
+          9926.844105043987
+        ],
+        "frequency_convention": "conjugate h33; numpy FFT f>0"
+      },
+      "input_npz_sha256": "54abd57e0ef61fecffb0940bd206f66cded52695b2a04e7d288cfce10e6f3532"
+    },
+    {
+      "log_abs_a_lambda": -5.72720946321128,
+      "lambda": 0.7674777680714573,
+      "relative_rms": 0.005724322883016449,
+      "n_frequency_samples": 10837,
+      "optimizer_status": 4,
+      "case_id": "SXS:BBH:1166/Lev3/N3",
+      "q": 2.000020628268884,
+      "eta": 0.22222145821226358,
+      "delta": 0.3333379173615652,
+      "f_ring_33": 0.13218835378379595,
+      "f_damp_33": 0.01418853857765706,
+      "f_rd": 0.12557893609460616,
+      "qnm": {
+        "f_ring_33": 0.13218835378379595,
+        "f_damp_33": 0.01418853857765706,
+        "qnm_source": "independent scripts/kerr_leaver_solver.py",
+        "qnm_solver": {
+          "omega_remnant": [
+            0.7983820882485845,
+            -0.0856949552254281
+          ],
+          "radial_residual": [
+            -2.220446049250313e-15,
+            -2.1094237467877974e-15
+          ],
+          "cf_depth": 1024,
+          "cf_error": 0.0,
+          "angular_error": 4.618557806403223e-14,
+          "helper_sha256": "a7b07b28962b676271645fd60cf6bd7c2684c8c92e801579897f2d8f84698fc9"
+        }
+      },
+      "fft": {
+        "native_dt": 0.3453473537192622,
+        "sample_dt": 0.1,
+        "n_samples": 155341,
+        "nfft": 621364,
+        "retained_time": [
+          402.6512609900311,
+          15936.651260990031
+        ],
+        "taper_flat_window": [
+          901.4895068254059,
+          15916.730197338124
+        ],
+        "frequency_convention": "conjugate h33; numpy FFT f>0"
+      },
+      "input_npz_sha256": "e2eeaaa12b643ab44befa4a564622b12e90863b54f0c2738bd350ff3b75143ce"
+    },
+    {
+      "log_abs_a_lambda": -5.447971861789976,
+      "lambda": 0.7373189766994419,
+      "relative_rms": 0.006216491946247396,
+      "n_frequency_samples": 4317,
+      "optimizer_status": 2,
+      "case_id": "SXS:BBH:2485/Lev5/N3",
+      "q": 3.9990197985742983,
+      "eta": 0.16002352790906166,
+      "delta": 0.5999215685102122,
+      "f_ring_33": 0.11875273493430182,
+      "f_damp_33": 0.014513121162099565,
+      "f_rd": 0.11281509818758671,
+      "qnm": {
+        "f_ring_33": 0.11875273493430182,
+        "f_damp_33": 0.014513121162099565,
+        "qnm_source": "independent scripts/kerr_leaver_solver.py",
+        "qnm_solver": {
+          "omega_remnant": [
+            0.7296704236564001,
+            -0.08917516950480764
+          ],
+          "radial_residual": [
+            -1.199040866595169e-14,
+            6.439293542825908e-15
+          ],
+          "cf_depth": 1024,
+          "cf_error": 0.0,
+          "angular_error": 7.105644194726877e-15,
+          "helper_sha256": "a7b07b28962b676271645fd60cf6bd7c2684c8c92e801579897f2d8f84698fc9"
+        }
+      },
+      "fft": {
+        "native_dt": 0.10001649571768212,
+        "sample_dt": 0.1,
+        "n_samples": 57654,
+        "nfft": 230616,
+        "retained_time": [
+          1345.0942014927812,
+          7110.394201492782
+        ],
+        "taper_flat_window": [
+          1844.2231215947238,
+          7090.420954570029
+        ],
+        "frequency_convention": "conjugate h33; numpy FFT f>0"
+      },
+      "input_npz_sha256": "5e47a5334555f5b19db2fa398ddc412aba214b953d3c1ac91b1594c579309146"
+    },
+    {
+      "log_abs_a_lambda": -5.459691068471259,
+      "lambda": 0.7403893035573343,
+      "relative_rms": 0.006183319830702699,
+      "n_frequency_samples": 5826,
+      "optimizer_status": 2,
+      "case_id": "SXS:BBH:3619/Lev3/N3",
+      "q": 5.000307275688211,
+      "eta": 0.13888319881692,
+      "delta": 0.6666837366640348,
+      "f_ring_33": 0.11493782467102906,
+      "f_damp_33": 0.014581906632562628,
+      "f_rd": 0.1091909334374776,
+      "qnm": {
+        "f_ring_33": 0.11493782467102906,
+        "f_damp_33": 0.014581906632562628,
+        "qnm_source": "independent scripts/kerr_leaver_solver.py",
+        "qnm_solver": {
+          "omega_remnant": [
+            0.7094063096535598,
+            -0.09000080349116289
+          ],
+          "radial_residual": [
+            1.7763568394002505e-15,
+            -2.220446049250313e-16
+          ],
+          "cf_depth": 1024,
+          "cf_error": 0.0,
+          "angular_error": 3.197453152923794e-14,
+          "helper_sha256": "a7b07b28962b676271645fd60cf6bd7c2684c8c92e801579897f2d8f84698fc9"
+        }
+      },
+      "fft": {
+        "native_dt": 0.3106798963062829,
+        "sample_dt": 0.1,
+        "n_samples": 76341,
+        "nfft": 305364,
+        "retained_time": [
+          342.8580318411265,
+          7976.858031841127
+        ],
+        "taper_flat_window": [
+          842.4884814464161,
+          7956.900293931303
+        ],
+        "frequency_convention": "conjugate h33; numpy FFT f>0"
+      },
+      "input_npz_sha256": "753e1627c915ab9a7f3b052da344d4a4e570f2defb0c9ef15f8a360398f94632"
+    },
+    {
+      "log_abs_a_lambda": -5.560567740406743,
+      "lambda": 0.7302233416196965,
+      "relative_rms": 0.00815046293142473,
+      "n_frequency_samples": 6694,
+      "optimizer_status": 4,
+      "case_id": "SXS:BBH:2707/Lev4/N3",
+      "q": 8.000149200385618,
+      "eta": 0.09876399946795744,
+      "delta": 0.7777814616768455,
+      "f_ring_33": 0.10842638022210019,
+      "f_damp_33": 0.014671178627755084,
+      "f_rd": 0.10300506121099517,
+      "qnm": {
+        "f_ring_33": 0.10842638022210019,
+        "f_damp_33": 0.014671178627755084,
+        "qnm_source": "independent scripts/kerr_leaver_solver.py",
+        "qnm_solver": {
+          "omega_remnant": [
+            0.6740666170981376,
+            -0.09120798578903082
+          ],
+          "radial_residual": [
+            -1.199040866595169e-14,
+            3.774758283725532e-15
+          ],
+          "cf_depth": 1024,
+          "cf_error": 0.0,
+          "angular_error": 1.0658177176412646e-14,
+          "helper_sha256": "a7b07b28962b676271645fd60cf6bd7c2684c8c92e801579897f2d8f84698fc9"
+        }
+      },
+      "fft": {
+        "native_dt": 0.4162911727307801,
+        "sample_dt": 0.1,
+        "n_samples": 84958,
+        "nfft": 339832,
+        "retained_time": [
+          1403.1609893304744,
+          9898.860989330475
+        ],
+        "taper_flat_window": [
+          1902.9728742668676,
+          9878.921131097854
+        ],
+        "frequency_convention": "conjugate h33; numpy FFT f>0"
+      },
+      "input_npz_sha256": "e1f68f22085e99e4198b338aa3dd1bce88161927440a9de204c214ee6b84c8c8"
+    }
+  ],
+  "parameter_fit": {
+    "degree": 2,
+    "coordinate": "x=4*eta-1",
+    "log_abs_a_lambda_over_delta_coefficients": [
+      -4.512187355706956,
+      0.971670037661788,
+      -0.5697358841889637
+    ],
+    "log_abs_a_lambda_train_rms": 0.001499826071048049,
+    "lambda_coefficients": [
+      0.7937140739566705,
+      0.21857482324801583,
+      0.19316055184011058
+    ],
+    "lambda_train_rms": 0.003837438465381533
+  },
+  "provenance": {
+    "manifest_path": "/Users/xangma/repos/torchwave/docs/reviews/2026-09-15-independent-calibration-v3-search/nr33-qualified-manifest.json",
+    "manifest_sha256": "990df8e246ba978fc47735407be05b49eb9a3f261565ccc4a946029704cc5160",
+    "fitter_script_sha256": "e307ef505094a5f3d568690d3a9f44cff58d9683d3c29f91e62cc7d2f17ed554",
+    "qnm_helper_path": "/Users/xangma/repos/torchwave/scripts/kerr_leaver_solver.py",
+    "qnm_helper_sha256": "a7b07b28962b676271645fd60cf6bd7c2684c8c92e801579897f2d8f84698fc9",
+    "quality_report_sha256": "99f814ccd6e8183459d90b0a724841f1e220c2b28fb5a9c4677ee511a8822746",
+    "quality_policy_sha256": "1a863811b90c410cd5a9b0b52a0bd53696b869a0d503cb8fa61d9c054842138d",
+    "orchestrator_sha256": "c244b3b7abb3d74f33bfe1a009c377617866245aee7ff84318ef3a000a6741b1"
+  },
+  "split": {
+    "rule": "predeclared target q=3,6 holdout; q=1.5,2,4,5,8 training; NR-only quality selection",
+    "train_case_ids": [
+      "SXS:BBH:2331/Lev3/N3",
+      "SXS:BBH:1166/Lev3/N3",
+      "SXS:BBH:2485/Lev5/N3",
+      "SXS:BBH:3619/Lev3/N3",
+      "SXS:BBH:2707/Lev4/N3"
+    ],
+    "holdout_case_ids": [
+      "SXS:BBH:2265/Lev3/N3",
+      "SXS:BBH:2489/Lev5/N3"
+    ],
+    "excluded_case_ids": []
+  },
+  "limitations": [
+    "ringdown subcomponent only",
+    "no full-XHM or LAL parity claim"
+  ]
+}

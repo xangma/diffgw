@@ -1,0 +1,11 @@
+{"started_utc": "2026-09-12T21:58:36.426285+00:00", "command": ["python", "/campaign/scripts/prepare-independent-p11.py", "--num-procs", "16"], "cwd": "/campaign/preparation/independent-p11", "expected_exit_code": 0, "timeout_seconds": 180.0, "output_bytes_before": 0, "cpu_stat_before": "usage_usec 84716\nuser_usec 50426\nsystem_usec 34290\ncore_sched.force_idle_usec 0\nnr_periods 2\nnr_throttled 0\nthrottled_usec 0\nnr_bursts 0\nburst_usec 0"}
+The BBH pipeline is still experimental. Please review the generated input files.
+Traceback (most recent call last):
+  File "/campaign/scripts/prepare-independent-p11.py", line 260, in <module>
+    main()
+  File "/campaign/scripts/prepare-independent-p11.py", line 148, in main
+    initial_data.generate_id(
+  File "/work/spectre/build/bin/python/spectre/Pipelines/Bbh/InitialData.py", line 374, in generate_id
+    return schedule(
+TypeError: schedule() missing 1 required positional argument: 'scheduler'
+{"started_utc": "2026-09-12T21:58:36.426285+00:00", "command": ["python", "/campaign/scripts/prepare-independent-p11.py", "--num-procs", "16"], "cwd": "/campaign/preparation/independent-p11", "expected_exit_code": 0, "timeout_seconds": 180.0, "output_bytes_before": 0, "cpu_stat_before": "usage_usec 84716\nuser_usec 50426\nsystem_usec 34290\ncore_sched.force_idle_usec 0\nnr_periods 2\nnr_throttled 0\nthrottled_usec 0\nnr_bursts 0\nburst_usec 0", "container_child_pid": 7, "ended_utc": "2026-09-12T21:58:37.091876+00:00", "wall_seconds": 0.6657884159358218, "exit_code": 1, "watchdog_reason": null, "accepted_exit": false, "child_max_rss_kib": 98812, "cgroup_memory_peak_bytes": "59383808", "cgroup_memory_events": "low 0\nhigh 0\nmax 0\noom 0\noom_kill 0\noom_group_kill 0", "cpu_stat_after": "usage_usec 740920\nuser_usec 548682\nsystem_usec 192238\ncore_sched.force_idle_usec 0\nnr_periods 9\nnr_throttled 2\nthrottled_usec 1237\nnr_bursts 0\nburst_usec 0", "output_bytes_after": 0, "filesystem_free_bytes_after": 317193707520}

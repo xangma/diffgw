@@ -1,0 +1,28 @@
+{
+  "host": "len",
+  "pid": 2211621,
+  "cwd": "/home/xangma/simulations/torchwave-nr/2026-09-12-pilot",
+  "started_utc": "2026-09-13T00:49:26.995284+00:00",
+  "status": "running",
+  "completed": [
+    {
+      "stage": "p11-preparation-v2",
+      "reused": true,
+      "wall_seconds": 1.5174819889944047,
+      "metrics_sha256": "539d449604b9615e59d0e7db359cf51fa86f5bb64da24a2dc9a85bca0d600588"
+    }
+  ],
+  "plan_sha256": "7c0e2279009b420602485768e5d46d4802dd7c252b98aca6dcefcc2c76827b6e",
+  "current_owned_service": "torchwave-nr-p11-solve-32pe.service",
+  "stage": "p11-solve-32pe",
+  "updated_utc": "2026-09-13T00:49:27.393175+00:00",
+  "command": [
+    "spectre",
+    "schedule",
+    "/campaign/independent-p11/InitialData.yaml",
+    "--no-schedule",
+    "--num-procs",
+    "32",
+    "--submit"
+  ]
+}

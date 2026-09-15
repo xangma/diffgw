@@ -1,0 +1,376 @@
+{
+  "convention": "All complex frequencies use negative imaginary damping for exp(-i omega t). The public API reports positive damping, so its imaginary part is negated before multiplying by M_sun.",
+  "knot_spins": [
+    0.0,
+    0.9404337856471654,
+    0.9968377223398388,
+    0.9991824769620586
+  ],
+  "method": "Independent Leaver eigenproblem and generated spline/table interpolants compared with public Berti-style QNM API; no waveform fitting",
+  "midpoint_spin": 0.996882905276427,
+  "public_api": "SimIMREOBGenerateQNMFreqV2fromFinal(mass=1 solar mass, spin, l=2,m=2,n=0); output is angular frequency per supplied mass",
+  "references": [
+    "https://arxiv.org/abs/0905.2975",
+    "https://arxiv.org/abs/1512.02248"
+  ],
+  "source_hashes": {
+    "/Users/xangma/repos/torchwave/scripts/diagnose_kerr_qnm_interpolation.py": "97d76d607eae36aa95dd15e5a388a356819637441f418c7efb9d8b1c440be653",
+    "scripts/kerr_leaver_solver.py": "a7b07b28962b676271645fd60cf6bd7c2684c8c92e801579897f2d8f84698fc9",
+    "src/torchwave/approximants/kerr_qnm_generated.py": "3361bbf72224e93ce445169d5bb66e95ca27b5bdf6475d6de6ff7514bdf0283f",
+    "src/torchwave/approximants/kerr_qnm_london_published.py": "74dc85b21585392bfe0bf2339064eefd2dc026e8b85eb8163ea7548fc653177e"
+  },
+  "spins": [
+    {
+      "abs_generated_public": 3.1597169973007163e-07,
+      "abs_generated_solver": 0.0,
+      "abs_london_public": 5.455811205906082e-05,
+      "abs_solver_public": 3.1597169973007163e-07,
+      "generated_omega": [
+        0.3736716844180418,
+        -0.0889623156889357
+      ],
+      "london_omega": [
+        0.37365201926604874,
+        -0.08901306768521626
+      ],
+      "public_omega": [
+        0.373672,
+        -0.0889623
+      ],
+      "solver_omega": [
+        0.3736716844180418,
+        -0.0889623156889357
+      ],
+      "spin": 0.0
+    },
+    {
+      "abs_generated_public": 4.6163455955061854e-07,
+      "abs_generated_solver": 1.6541228641404726e-14,
+      "abs_london_public": 0.00015152880196635195,
+      "abs_solver_public": 4.6163457377927275e-07,
+      "generated_omega": [
+        0.38701753836646446,
+        -0.08870569902764977
+      ],
+      "london_omega": [
+        0.38690070570360247,
+        -0.08880163240254456
+      ],
+      "public_omega": [
+        0.387018,
+        -0.0887057
+      ],
+      "solver_omega": [
+        0.38701753836645025,
+        -0.0887056990276413
+      ],
+      "spin": 0.1
+    },
+    {
+      "abs_generated_public": 3.2600378613650175e-07,
+      "abs_generated_solver": 1.0205600981444537e-15,
+      "abs_london_public": 0.00022894690228190156,
+      "abs_solver_public": 3.2600378515761706e-07,
+      "generated_omega": [
+        0.40214532424765603,
+        -0.0883111662076027
+      ],
+      "london_omega": [
+        0.4019567197582579,
+        -0.08844145833805954
+      ],
+      "public_omega": [
+        0.402145,
+        -0.0883112
+      ],
+      "solver_omega": [
+        0.4021453242476551,
+        -0.08831116620760308
+      ],
+      "spin": 0.2
+    },
+    {
+      "abs_generated_public": 4.357653049427856e-08,
+      "abs_generated_solver": 4.449557262054371e-16,
+      "abs_london_public": 0.00014527800728548882,
+      "abs_solver_public": 4.3576530207272055e-08,
+      "generated_omega": [
+        0.4641230259759386,
+        -0.08563883498806404
+      ],
+      "london_omega": [
+        0.4640171485472242,
+        -0.08573830461972237
+      ],
+      "public_omega": [
+        0.464123,
+        -0.0856388
+      ],
+      "solver_omega": [
+        0.46412302597593813,
+        -0.08563883498806402
+      ],
+      "spin": 0.5
+    },
+    {
+      "abs_generated_public": 2.450260234503871e-07,
+      "abs_generated_solver": 3.447170978769293e-16,
+      "abs_london_public": 0.0001923677194673343,
+      "abs_solver_public": 2.450260236422065e-07,
+      "generated_omega": [
+        0.5326002435510183,
+        -0.08079287315500741
+      ],
+      "london_omega": [
+        0.5327863492673407,
+        -0.08074515808911832
+      ],
+      "public_omega": [
+        0.5326,
+        -0.0807929
+      ],
+      "solver_omega": [
+        0.5326002435510185,
+        -0.08079287315500767
+      ],
+      "spin": 0.7
+    },
+    {
+      "abs_generated_public": 2.744867697487866e-07,
+      "abs_generated_solver": 2.2591401799415137e-16,
+      "abs_london_public": 5.804234276557782e-05,
+      "abs_solver_public": 2.744867695232052e-07,
+      "generated_omega": [
+        0.6716142721321628,
+        -0.06486923587579595
+      ],
+      "london_omega": [
+        0.6716700435394974,
+        -0.06485409916444959
+      ],
+      "public_omega": [
+        0.671614,
+        -0.0648692
+      ],
+      "solver_omega": [
+        0.6716142721321626,
+        -0.0648692358757959
+      ],
+      "spin": 0.9
+    },
+    {
+      "abs_generated_public": 8.147643927640078e-09,
+      "abs_generated_solver": 1.1123893155135927e-16,
+      "abs_london_public": 0.00011969772962513412,
+      "abs_solver_public": 8.147643938271262e-09,
+      "generated_omega": [
+        0.7463199987169307,
+        -0.053149008045982514
+      ],
+      "london_omega": [
+        0.7462207610009629,
+        -0.05321592658326502
+      ],
+      "public_omega": [
+        0.74632,
+        -0.053148999999999995
+      ],
+      "solver_omega": [
+        0.7463199987169306,
+        -0.05314900804598251
+      ],
+      "spin": 0.95
+    },
+    {
+      "abs_generated_public": 3.4212254663781355e-07,
+      "abs_generated_solver": 1.22614398128331e-16,
+      "abs_london_public": 4.8975824378503695e-06,
+      "abs_solver_public": 3.421225465307539e-07,
+      "generated_omega": [
+        0.870892658735783,
+        -0.029390424219231853
+      ],
+      "london_omega": [
+        0.8708907271908244,
+        -0.02939473827755995
+      ],
+      "public_omega": [
+        0.8708929999999999,
+        -0.0293904
+      ],
+      "solver_omega": [
+        0.8708926587357831,
+        -0.029390424219231905
+      ],
+      "spin": 0.99
+    },
+    {
+      "abs_generated_public": 1.4822564909361937e-07,
+      "abs_generated_solver": 2.0518486441330165e-15,
+      "abs_london_public": 0.00018404282869471543,
+      "abs_solver_public": 1.482256510253888e-07,
+      "generated_omega": [
+        0.39238548534723794,
+        -0.0885779764656492
+      ],
+      "london_omega": [
+        0.3922382743244891,
+        -0.08868826512331655
+      ],
+      "public_omega": [
+        0.39238563116826397,
+        -0.08857800305646371
+      ],
+      "solver_omega": [
+        0.39238548534723616,
+        -0.08857797646564818
+      ],
+      "spin": 0.137
+    },
+    {
+      "abs_generated_public": 1.023888412843537e-06,
+      "abs_generated_solver": 4.494775313252277e-16,
+      "abs_london_public": 0.00018167222932759458,
+      "abs_solver_public": 1.0238884132739271e-06,
+      "generated_omega": [
+        0.5291377258329534,
+        -0.08108561835281661
+      ],
+      "london_omega": [
+        0.5293134927920106,
+        -0.0810438873091554
+      ],
+      "public_omega": [
+        0.529136711604606,
+        -0.08108575866796636
+      ],
+      "solver_omega": [
+        0.5291377258329538,
+        -0.08108561835281668
+      ],
+      "spin": 0.6921198429
+    },
+    {
+      "abs_generated_public": 2.33335116782593e-07,
+      "abs_generated_solver": 4.545902364027965e-16,
+      "abs_london_public": 0.00014626454928782975,
+      "abs_solver_public": 2.3333511723548897e-07,
+      "generated_omega": [
+        0.6433148020833515,
+        -0.06875617278058062
+      ],
+      "london_omega": [
+        0.6434505734194749,
+        -0.06870240054804644
+      ],
+      "public_omega": [
+        0.6433145792888029,
+        -0.06875624211935652
+      ],
+      "solver_omega": [
+        0.6433148020833519,
+        -0.06875617278058052
+      ],
+      "spin": 0.8731664442
+    },
+    {
+      "abs_generated_public": 5.303506242565293e-08,
+      "abs_generated_solver": 1.2412670766236366e-16,
+      "abs_london_public": 9.39865364035178e-05,
+      "abs_solver_public": 5.303506245331363e-08,
+      "generated_omega": [
+        0.7286262769672672,
+        -0.05610812986247475
+      ],
+      "london_omega": [
+        0.7285498079063977,
+        -0.05616277988622529
+      ],
+      "public_omega": [
+        0.7286262432749121,
+        -0.056108088904654345
+      ],
+      "solver_omega": [
+        0.7286262769672673,
+        -0.056108129862474695
+      ],
+      "spin": 0.9404337856471654
+    },
+    {
+      "abs_generated_public": 1.025865192648261e-06,
+      "abs_generated_solver": 2.0816681711721685e-17,
+      "abs_london_public": 8.988607258306125e-05,
+      "abs_solver_public": 1.0258651926524057e-06,
+      "generated_omega": [
+        0.9237236574704889,
+        -0.01789199489382338
+      ],
+      "london_omega": [
+        0.9238058275065175,
+        -0.017858120340310275
+      ],
+      "public_omega": [
+        0.9237226521455886,
+        -0.017892199151597454
+      ],
+      "solver_omega": [
+        0.9237236574704889,
+        -0.01789199489382336
+      ],
+      "spin": 0.9968377223398388
+    },
+    {
+      "abs_generated_public": 6.688121342362359e-07,
+      "abs_generated_solver": 2.506240203509369e-16,
+      "abs_london_public": 0.00010113557917504023,
+      "abs_solver_public": 6.688121344361199e-07,
+      "generated_omega": [
+        0.9599410840380762,
+        -0.009575680022912422
+      ],
+      "london_omega": [
+        0.9600343518364368,
+        -0.009538293014314404
+      ],
+      "public_omega": [
+        0.9599404243490475,
+        -0.00957579011403952
+      ],
+      "solver_omega": [
+        0.9599410840380764,
+        -0.009575680022912538
+      ],
+      "spin": 0.9991824769620586
+    },
+    {
+      "abs_generated_public": 7.22073286003775e-07,
+      "abs_generated_solver": 3.122502256758253e-17,
+      "abs_london_public": 9.01765953283321e-05,
+      "abs_solver_public": 7.220732859979046e-07,
+      "generated_omega": [
+        0.9242353062872398,
+        -0.017776862175494478
+      ],
+      "london_omega": [
+        0.9243180314724426,
+        -0.017742785034505233
+      ],
+      "public_omega": [
+        0.9242345970899934,
+        -0.01777699792930141
+      ],
+      "solver_omega": [
+        0.9242353062872398,
+        -0.01777686217549451
+      ],
+      "spin": 0.996882905276427
+    }
+  ],
+  "table_coordinate": "x=-log(1-a); exact clean-table knot probes are listed separately from conventional spins",
+  "versions": {
+    "lal": "7.7.0",
+    "lalsimulation": "6.2.0",
+    "python": "3.13.9 | packaged by conda-forge | (main, Oct 22 2025, 23:38:18) [Clang 19.1.7 ]",
+    "torch": "2.9.1"
+  }
+}

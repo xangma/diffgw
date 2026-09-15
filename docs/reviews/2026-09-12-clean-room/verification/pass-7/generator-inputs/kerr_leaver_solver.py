@@ -1,0 +1,309 @@
+#!/usr/bin/env python3
+"""Independent spin -2 Kerr eigenproblem solver, in units M=1.
+
+The radial recurrence and its asymptotic remainder are reconstructed from
+Cook & Zalutskiy, arXiv:1410.7698v2, Eqs. (23)--(44). The angular matrix follows
+their Eqs. (49)--(56). No external QNM implementation or numerical table is
+read. NumPy and SciPy supply generic linear algebra and root finding. Optional
+gmpy2 supplies higher precision arithmetic for near-extremal damped branches;
+it is required when generating the full spin domain for those modes.
+
+The convention is exp(-i omega t), Re(omega)>0, Im(omega)<0, and the returned
+separation constant is A, with A(c=0)=ell*(ell+1)-2, not lambda.
+"""
+
+from dataclasses import dataclass
+from functools import lru_cache
+import cmath
+import math
+
+import numpy as np
+from scipy.optimize import root
+
+
+@dataclass(frozen=True)
+class KerrRoot:
+    omega: complex
+    separation_constant: complex
+    radial_residual: complex
+    cf_depth: int
+    cf_error: float
+    angular_error: float
+    converged: bool
+    metadata: dict
+
+
+@lru_cache(maxsize=128)
+def _angular_basis(m: int, ell_max: int):
+    ell = np.arange(max(2, abs(m)), ell_max + 2, dtype=float)
+    upper = ell[1:]
+    off = np.sqrt((upper**2-m*m)*(upper**2-4)/(upper**2*(4*upper**2-1)))
+    x = np.diag(2*m/(ell*(ell+1))) + np.diag(off, 1) + np.diag(off, -1)
+    return np.diag(ell[:-1]*(ell[:-1]+1)-2), x[:-1, :-1], (x @ x)[:-1, :-1]
+
+
+def angular_eigenvalue(c, ell, m, seed=None, ell_max=20):
+    """Select A on the spherical branch, or nearest a continuation seed."""
+    if ell < max(2, abs(m)) or ell_max < ell + 3:
+        raise ValueError("Require ell>=max(2,abs(m)) and ell_max>=ell+3")
+    c = complex(c)
+    if not np.isfinite(c) or abs(c) > 2:
+        raise ValueError("Angular solver requires finite |a*omega|<=2")
+    if c == 0:
+        return complex(ell*(ell+1)-2)
+    a0, x, x2 = _angular_basis(m, ell_max)
+    previous = complex(ell*(ell+1)-2) if seed is None else complex(seed)
+    steps = range(1, 9) if seed is None else (8,)
+    for step in steps:
+        z = c*(step/8)
+        eigenvalues = np.linalg.eigvals(a0-z*z*x2-4*z*x)
+        previous = complex(eigenvalues[np.argmin(abs(eigenvalues-previous))])
+    return previous
+
+
+def _angular_extended(a, omega, ell, m, seed, ell_max, precision):
+    """Refine a complex-symmetric Rayleigh quotient in generic MP arithmetic.
+
+    The NumPy eigenvector supplies a direction, not an external eigenvalue.
+    Its direction error enters the stationary Rayleigh quotient quadratically.
+    Every matrix coefficient and c=a*omega is recomputed at the requested
+    precision. Basis enlargement is checked separately by the root corrector.
+    """
+    import gmpy2
+    c_double = a*omega
+    anchor = angular_eigenvalue(c_double, ell, m, seed, ell_max)
+    a0, x, x2 = _angular_basis(m, ell_max)
+    values, vectors = np.linalg.eig(a0-c_double*c_double*x2-4*c_double*x)
+    direction = vectors[:, np.argmin(abs(values-anchor))]
+    with gmpy2.context(gmpy2.get_context(), precision=precision):
+        c = gmpy2.mpfr(a)*gmpy2.mpc(omega)
+        ls = list(range(max(2, abs(m)), ell_max+2))
+        v = [gmpy2.mpc(z) for z in direction]+[gmpy2.mpc(0)]
+        diagonal = [gmpy2.mpfr(2*m)/(l*(l+1)) for l in ls]
+        off = [gmpy2.sqrt(gmpy2.mpfr((l*l-m*m)*(l*l-4))/(l*l*(4*l*l-1))) for l in ls[1:]]
+        xv = [diagonal[k]*v[k]+(off[k-1]*v[k-1] if k else 0)
+              +(off[k]*v[k+1] if k+1<len(v) else 0) for k in range(len(v))]
+        norm = sum(z*z for z in v)
+        if abs(norm) < 1e-8:
+            raise ValueError("Angular eigenvector is near a self-orthogonal degeneracy")
+        diagonal_part = sum((l*(l+1)-2)*z*z for l,z in zip(ls,v))
+        return (diagonal_part-c*c*sum(z*z for z in xv)
+                -4*c*sum(z*w for z,w in zip(v,xv)))/norm
+
+
+def _radial_parameters(a, m, omega, separation_constant, sqrt_real=math.sqrt, sqrt_complex=cmath.sqrt):
+    # Eq. (23): outgoing at infinity, ingoing at r+, either consistent r- sign.
+    s = -2
+    b = sqrt_real((1-a)*(1+a))
+    sigma_plus = (2*omega*(1+b)-m*a)/(2*b)
+    sigma_minus = (2*omega*(1-b)-m*a)/(2*b)
+    xi, eta = -s-1j*sigma_plus, -s+1j*sigma_minus
+    p = 1j*b*omega
+    alpha = 1-4j*omega
+    gamma, delta = 1+s+2*eta, 1+s+2*xi
+    sigma = (separation_constant+a*a*omega*omega-8*omega*omega
+             +p*(2*alpha+gamma-delta)
+             +(1+s-(gamma+delta)/2)*(s+(gamma+delta)/2))
+    d0, d1, d2 = delta, 4*p-2*alpha+gamma-delta-2, 2*alpha-gamma+2
+    d3, d4 = alpha*(4*p-delta)-sigma, alpha*(alpha-gamma+1)
+    # Eq. (38): explicitly select the minimal solution Re(u1)<0.
+    u1 = sqrt_complex(-4*p)
+    if u1.real > 0:
+        u1 = -u1
+    if u1.real == 0:
+        raise ValueError("The minimal asymptotic branch is degenerate")
+    u2 = -(8*p-4*alpha+2*gamma+2*delta+3)/4
+    u3 = (32*p*(2*p-4*alpha+gamma+3*delta+4)
+          +4*(gamma+delta)*(gamma+delta-2)+16*sigma+3)/(32*u1)
+    return d0, d1, d2, d3, d4, u1, u2, u3
+
+
+def radial_residual(a, m, n, omega, separation_constant, depth=512, precision=53):
+    """Unscaled n-inverted radial continued fraction, Eqs. (39), (44)."""
+    if not 0 <= n < depth:
+        raise ValueError("Require 0<=n<depth")
+    if precision > 53:
+        import gmpy2
+        with gmpy2.context(gmpy2.get_context(), precision=precision):
+            parameters = _radial_parameters(gmpy2.mpfr(a), m, gmpy2.mpc(omega),
+                gmpy2.mpc(separation_constant), gmpy2.sqrt, gmpy2.sqrt)
+            return complex(_fraction(parameters, n, depth, gmpy2.sqrt))
+    parameters = _radial_parameters(a, m, complex(omega), complex(separation_constant))
+    return _fraction(parameters, n, depth)
+
+
+def _fraction(parameters, n, depth, square_root=math.sqrt):
+    d0, d1, d2, d3, d4, u1, u2, u3 = parameters
+    beta_linear, gamma_linear, gamma_constant = d1+2, d2-3, d4-d2+2
+    def coefficients(k):
+        square = k*k
+        return ((k+1)*(k+d0), -2*square+beta_linear*k+d3,
+                square+gamma_linear*k+gamma_constant)
+    remainder = 1+u1/square_root(depth)+u2/depth+u3/(depth*square_root(depth))
+    for k in range(depth, n, -1):
+        alpha, beta, gamma = coefficients(k)
+        remainder = -gamma/(beta+alpha*remainder)
+    left = 0j
+    for k in range(1, n+1):
+        alpha_previous, beta_previous, _ = coefficients(k-1)
+        _, _, gamma = coefficients(k)
+        left = alpha_previous*gamma/(beta_previous-left)
+    alpha, beta, _ = coefficients(n)
+    return beta-left+alpha*remainder
+
+
+def _correct(a, ell, m, n, omega_seed, angular_seed, strict=False, fixed_a=None):
+    ell_max = max(ell+8, 24 if strict else 18)
+    max_depth = 131072
+    # Resolve the horizon scale before moving the root: a shallow truncated
+    # fraction can have a different basin near extremality and relabel a mode.
+    horizon_scale = math.sqrt((1-a)*(1+a))
+    damped = a*m < 0 or (abs(m) < ell and -complex(omega_seed).imag > 3*horizon_scale)
+    initial_depth = 512 if strict else 128
+    if damped:
+        decay = -_radial_parameters(a, m, complex(omega_seed), 0.)[5].real
+        # The ratio of minimal to dominant recurrence solutions decreases
+        # exponentially in |Re(u1)|*sqrt(N). Resolve that scale before Newton
+        # correction, then certify the result by explicit depth doubling.
+        estimate = ((4.5 if strict else 3.5)/decay)**2
+        initial_depth = max(initial_depth, 2**int(math.ceil(math.log2(estimate))))
+    initial_depth = min(max_depth//2, initial_depth)
+    precision = (160 if strict else 113) if horizon_scale < .03 and damped else 53
+    tolerance = 3e-13 if strict else 1e-12
+    omega = complex(omega_seed)
+    def angular(z, seed, basis=ell_max):
+        if fixed_a is not None:
+            return complex(fixed_a)
+        if precision > 53:
+            return _angular_extended(a, z, ell, m, seed, basis, precision)
+        return angular_eigenvalue(a*z, ell, m, seed, basis)
+    def radial(z, eigenvalue, depth):
+        return radial_residual(a, m, n, z, eigenvalue, depth, precision)
+    anchor = angular(omega, angular_seed)
+    total_evaluations, success = 0, False
+    frequency_change, cf_error = float("inf"), float("inf")
+    for depth in (initial_depth*2**k for k in range(int(math.log2(max_depth/initial_depth))+1)):
+        def objective(parts):
+            z = complex(*parts)
+            try:
+                eigenvalue = angular(z, anchor)
+                value = radial(z, eigenvalue, depth)
+            except (ValueError, ZeroDivisionError, OverflowError):
+                return (1e100, 1e100)
+            return (value.real, value.imag)
+        solution = root(objective, [omega.real, omega.imag], method="hybr",
+                        options={"xtol": 3e-12, "maxfev": 100})
+        total_evaluations += solution.nfev
+        refined = complex(*solution.x)
+        frequency_change = abs(refined-omega)
+        omega = refined
+        anchor = angular(omega, anchor)
+        residual = radial(omega, anchor, depth)
+        deeper = radial(omega, anchor, 2*depth)
+        cf_error = abs(deeper-residual)
+        # At high spin the raw recurrence grows as 1/sqrt(1-a^2). Check both
+        # its scaled residual and the corresponding frequency displacement.
+        derivative_step = 1e-6
+        shifted_a = angular(omega+derivative_step, anchor)
+        derivative = (radial(omega+derivative_step, shifted_a, depth)
+                      -residual)/derivative_step
+        derivative_size = max(abs(derivative), 1e-12)
+        frequency_error = (abs(residual)+cf_error)/derivative_size
+        if depth > initial_depth and frequency_change < tolerance and frequency_error < tolerance:
+            success = True
+            break
+    refined_angular = angular(omega, anchor, ell_max+4)
+    angular_error = float(abs(refined_angular-anchor))
+    physical = omega.real > 0 and omega.imag < 0
+    return KerrRoot(omega, complex(anchor), residual, depth, cf_error, angular_error,
+                    bool(success and physical and angular_error < 3e-11),
+                    {"angular_ell_max": ell_max, "frequency_depth_change": frequency_change,
+                     "estimated_frequency_error": frequency_error,
+                     "radial_derivative_magnitude": derivative_size,
+                     "root_evaluations": total_evaluations, "strict": strict,
+                     "arithmetic_bits": precision,
+                     "branch_origin": "provided seed; overtone identity requires continuation",
+                     "minimal_remainder_real_part": _radial_parameters(a, m, omega, anchor)[5].real})
+
+
+def _wkb_seed(ell, n):
+    """Parabolic-barrier WKB of the analytic Regge--Wheeler potential.
+
+    V=(1-2/r)*(ell*(ell+1)/r^2-6/r^3), omega^2=Vpeak-i(n+1/2)sqrt(-2V''r*).
+    Used only at large ell to initialize numerical branch continuation.
+    """
+    angular = ell*(ell+1)
+    radius = (3*(angular+3)+math.sqrt(9*(angular+3)**2-96*angular))/(2*angular)
+    potential = angular/radius**2-(2*angular+6)/radius**3+12/radius**4
+    second = 6*angular/radius**4-12*(2*angular+6)/radius**5+240/radius**6
+    second *= (1-2/radius)**2
+    return cmath.sqrt(potential-1j*(n+.5)*math.sqrt(-2*second))
+
+
+@lru_cache(maxsize=3)
+def _schwarzschild_roots(n):
+    # Quantization at large ell is well separated in the WKB limit. Follow
+    # each fixed-n root through continuously varied A to label low-ell roots;
+    # the n-fold inversion by itself does not identify an overtone.
+    seed = _wkb_seed(20, n)
+    roots = {}
+    for effective_ell in np.linspace(20., 2., 181):
+        eigenvalue = effective_ell*(effective_ell+1)-2
+        result = _correct(0., 2, 0, n, seed, eigenvalue, fixed_a=eigenvalue)
+        if not result.converged:
+            raise RuntimeError(f"Schwarzschild WKB continuation failed at ell={effective_ell}, n={n}")
+        if abs(result.omega-seed) > .1:
+            raise RuntimeError("Schwarzschild continuation made an unexpectedly large branch jump")
+        seed = result.omega
+        if abs(effective_ell-round(effective_ell)) < 1e-12:
+            roots[round(effective_ell)] = result
+    return roots
+
+
+def solve(a, ell, m, n, omega_seed=None, angular_seed=None, strict=False):
+    """Solve one low Kerr overtone with refinement diagnostics.
+
+    Without a frequency seed, labels originate in large-ell Schwarzschild WKB
+    continuation followed by spin continuation. A supplied frequency seed is
+    a local branch predictor: callers generating grids must preserve distinct
+    overtone branches. ``converged`` certifies numerical refinement, not the
+    label of an arbitrary user-provided seed. Supported: ell=2..12, n=0..2,
+    |m|<=ell, |a|<1 and |a*omega|<=2.
+    """
+    if any(int(x) != x for x in (ell, m, n)):
+        raise ValueError("ell, m, and n must be integers")
+    ell, m, n, a = int(ell), int(m), int(n), float(a)
+    if not np.isfinite(a) or abs(a) >= 1 or not 2 <= ell <= 12 or abs(m) > ell or not 0 <= n <= 2:
+        raise ValueError("Require ell=2..12, |m|<=ell, n=0..2 and finite |a|<1")
+    if omega_seed is not None:
+        if not np.isfinite(omega_seed):
+            raise ValueError("Frequency seed must be finite")
+        return _correct(a, ell, m, n, omega_seed, angular_seed, strict)
+    initial = _schwarzschild_roots(n)[ell]
+    if a == 0:
+        result = _correct(a, ell, m, n, initial.omega, initial.separation_constant, strict)
+    else:
+        # Logarithmic distance to extremality keeps relative changes of the
+        # zero-damping frequency and overtone spacing small all the way in.
+        target_coordinate = -math.log1p(-abs(a))
+        count = max(2, int(math.ceil(target_coordinate/.025))+1)
+        spins = np.sign(a)*(-np.expm1(-np.linspace(0., target_coordinate, count)))
+        spins[-1] = a
+        previous = [(0., initial)]
+        for spin in spins[1:]:
+            coordinate = -math.log1p(-abs(float(spin)))
+            seed, angular_seed = previous[-1][1].omega, previous[-1][1].separation_constant
+            if len(previous) > 1:
+                x0, r0 = previous[-2]
+                x1, r1 = previous[-1]
+                ratio = (coordinate-x1)/(x1-x0)
+                seed += ratio*(r1.omega-r0.omega)
+                angular_seed += ratio*(r1.separation_constant-r0.separation_constant)
+            result = _correct(float(spin), ell, m, n, seed, angular_seed,
+                              strict and spin == spins[-1])
+            if not result.converged or abs(result.omega-seed) > .1*abs(previous[-1][1].omega.imag):
+                raise RuntimeError(f"Spin continuation failed at a={spin}, mode={(ell,m,n)}")
+            previous = (previous+[(coordinate, result)])[-2:]
+    return KerrRoot(result.omega, result.separation_constant, result.radial_residual,
+                    result.cf_depth, result.cf_error, result.angular_error, result.converged,
+                    {**result.metadata, "branch_origin": "large-ell WKB then separation/spin continuation"})

@@ -1,0 +1,22 @@
+{
+  "passed": true,
+  "checks": [
+    "accept completed exit",
+    "parse all Python helpers",
+    "reject exit_code",
+    "reject accepted_exit",
+    "reject watchdog_reason",
+    "reject oom",
+    "reject oom_kill",
+    "reject oom_group_kill",
+    "reject traversal and noncampaign paths",
+    "reject modified helper",
+    "malformed metrics obey per-stage deadline",
+    "reject metrics older than job",
+    "launcher rejects stale metrics before remote commands",
+    "failure stops the owned service",
+    "waiting failure does not stop the external controlled-ID service"
+  ],
+  "scope": "isolated validation and failure handling; no remote launch",
+  "driver_sha256": "2081791c07d76d1338cfee5ac61df5c4a0f94e026fb85285c543ff22951db93e"
+}

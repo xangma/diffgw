@@ -1,0 +1,31 @@
+{
+  "command": [
+    "docker",
+    "run",
+    "--rm",
+    "--network",
+    "none",
+    "--cpus",
+    "2",
+    "--memory",
+    "4g",
+    "--read-only",
+    "--user",
+    "1000:1000",
+    "--tmpfs",
+    "/tmp:rw,nosuid,nodev,size=1g",
+    "--mount",
+    "type=bind,src=/home/xangma/simulations/torchwave-nr/2026-09-12-pilot,dst=/campaign,readonly",
+    "--env",
+    "HOME=/tmp",
+    "--env",
+    "PYTHONDONTWRITEBYTECODE=1",
+    "--entrypoint",
+    "python",
+    "sha256:4d03ce10bf6deb922444b293b39e0c3753d92ac69c70f99ecb9cef49ba64b42f",
+    "/campaign/scripts/capture-environment.py"
+  ],
+  "exit_code": 1,
+  "stderr": "Traceback (most recent call last):\n  File \"/campaign/scripts/capture-environment.py\", line 49, in <module>\n    assert all(record[\"exit_code\"] == 0 for key, record in report.items() if key in commands)\nAssertionError\n",
+  "utc": "2026-09-12T19:42:31.772440+00:00"
+}

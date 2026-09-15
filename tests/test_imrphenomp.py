@@ -9,6 +9,22 @@ from torchwave.approximants.imrphenomd import IMRPhenomD
 from torchwave.waveforms import get_fd_waveform
 
 
+def test_imrphenomp_pv2_opening_angle_uses_physical_in_plane_spin():
+    """Pv2 uses S_perp=m1^2 chi_p; A1 is only in the chi_p definition."""
+    l = torch.tensor(0.8, dtype=torch.float64)
+    chip = torch.tensor(0.2, dtype=torch.float64)
+    m1_norm = torch.tensor(35.0 / 60.0, dtype=torch.float64)
+    spin_parallel = torch.tensor(0.03, dtype=torch.float64)
+    beta = IMRPhenomP.pv2_opening_angle(l, chip, m1_norm, spin_parallel)
+
+    expected = torch.atan2(chip * m1_norm.square(), l + spin_parallel)
+    torch.testing.assert_close(beta, expected, rtol=0.0, atol=1e-15)
+
+    a1 = 2.0 + 1.5 / (35.0 / 25.0)
+    legacy = torch.atan2(a1 * chip * m1_norm.square(), l + spin_parallel)
+    assert not torch.isclose(beta, legacy, rtol=1e-6, atol=1e-6)
+
+
 def test_imrphenomp_aligned_spin_limit():
     """Verify that in the aligned-spin limit (chip=0), IMRPhenomP face-on reduces to IMRPhenomD."""
     f = torch.linspace(20.0, 300.0, 100, dtype=torch.float64)
@@ -113,6 +129,27 @@ def test_imrphenomp_autograd():
     ]:
         assert p.grad is not None, f"Gradient for {p_name} is None"
         assert not torch.isnan(p.grad), f"Gradient for {p_name} is NaN"
+
+
+def test_imrphenomp_aligned_cone_has_finite_gradients():
+    """The exact zero-cone convention must not create NaN derivatives."""
+    # The wrapper separately masks DC; keep the differentiability check on
+    # positive frequencies because d(f**(1/3))/df is singular at f=0.
+    f = torch.tensor([20.0, 80.0], dtype=torch.float64)
+    params = {
+        name: torch.tensor(value, dtype=torch.float64, requires_grad=True)
+        for name, value in {
+            "mass1": 30.0, "mass2": 20.0,
+            "spin1x": 0.0, "spin1y": 0.0, "spin1z": 0.3,
+            "spin2x": 0.0, "spin2y": 0.0, "spin2z": -0.2,
+            "inclination": 0.4,
+        }.items()
+    }
+    hp, hc = IMRPhenomP()(f, **params)
+    assert torch.isfinite(hp).all() and torch.isfinite(hc).all()
+    (hp.abs().square() + hc.abs().square()).sum().backward()
+    for name, value in params.items():
+        assert value.grad is not None and torch.isfinite(value.grad).all(), name
 
 
 def test_imrphenomp_lal_parity():

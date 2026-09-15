@@ -1,0 +1,488 @@
+--- pass-9/src/torchwave/approximants/imrphenom_xas.py
++++ pass-10/src/torchwave/approximants/imrphenom_xas.py
+@@ -328,6 +328,46 @@
+         num_s = 0.25 * (1.0 + s_delta)**2 * chi1 + 0.25 * (1.0 - s_delta)**2 * chi2
+         ratio_s = num_s / den
+         return (m1**2 * chi1 + m2**2 * chi2) + (2.0 * math.sqrt(3.0) * eta + 20.0830030082033 * eta**2 - 12.333573402277912 * eta**3)/(1.0 + 7.2388440419467335 * eta) + 0.3223660562764661 * s_delta * eta**2 * (1.0 + 9.332575956437443 * eta) * (chi1 - chi2) - 0.059808322561702126 * eta**3 * (chi1 - chi2)**2 + (2.3170397514509933 * s_delta * (1.0 - 3.2624649875884852 * eta) * eta**3 * (chi1 - chi2) * ratio_s) + (((-0.8561951310209386 * eta - 0.09939065676370885 * eta**2 + 1.668810429851045 * eta**3) * ratio_s + (0.5881660363307388 * eta - 2.149269067519131 * eta**2 + 3.4768263932898678 * eta**3) * ratio_s**2 + (0.142443244743048 * eta - 0.9598353840147513 * eta**2 + 1.9595643107593743 * eta**3) * ratio_s**3)/(1.0 + (-0.9142232693081653 + 2.3191363426522633 * eta - 9.710576749140989 * eta**3) * ratio_s))
++
++    @staticmethod
++    def fit_final_spin_nnlo(
++        eta: torch.Tensor,
++        chi1: torch.Tensor,
++        chi2: torch.Tensor,
++        chi_p: torch.Tensor,
++    ) -> torch.Tensor:
++        """NNLO remnant from the orthogonal-spin prescription.
++
++        Pratten et al. Eq. (4.17), with the Pv2 mass scaling described in
++        arXiv:1809.10113. Printed Eq. (4.25) has an apparent extra square;
++        see the source audit in pass-10-nnlo-remnant.md.
++        """
++        a_parallel = XASParameterFits.fit_final_spin(eta, chi1, chi2)
++        mass_discriminant = torch.clamp(1.0 - 4.0 * eta, min=0.0)
++        safe_discriminant = torch.where(
++            mass_discriminant > 0.0, mass_discriminant, torch.ones_like(mass_discriminant)
++        )
++        sqrt_discriminant = torch.where(
++            mass_discriminant > 0.0,
++            torch.sqrt(safe_discriminant),
++            torch.zeros_like(mass_discriminant),
++        )
++        m1_norm = 0.5 * (1.0 + sqrt_discriminant)
++        s_perp = chi_p * m1_norm.square()
++        zero_parallel = (a_parallel == 0.0) & (chi_p != 0.0)
++        if bool(torch.any(zero_parallel)):
++            raise ValueError(
++                "NNLO precessing final-spin sign is undefined when "
++                "a_parallel_fin is zero and chi_p is nonzero."
++            )
++        # Use a vector norm instead of safe_sqrt: the inherited helper has a
++        # 1e-12 dead zone that would erase physically small NNLO remnants.
++        magnitude = torch.linalg.vector_norm(
++            torch.stack((a_parallel, s_perp), dim=-1), dim=-1
++        )
++        signed = torch.where(a_parallel < 0.0, -magnitude, magnitude)
++        # Eq. (4.25) reduces exactly to the aligned fit at chi_p == 0.
++        return torch.where(chi_p == 0.0, a_parallel, signed)
+ 
+     @staticmethod
+     def fit_erad(eta: torch.Tensor, chi1: torch.Tensor, chi2: torch.Tensor) -> torch.Tensor:
+@@ -739,6 +779,9 @@
+         f_eval = as_tensor(freqs, device=device, dtype=dtype)
+         m1 = as_tensor(mass1, device=device, dtype=dtype)
+         m2 = as_tensor(mass2, device=device, dtype=dtype)
++        final_spin_override = kwargs.pop("_final_spin_override", None)
++        if final_spin_override is not None:
++            final_spin_override = as_tensor(final_spin_override, device=device, dtype=dtype)
+ 
+         s1z_arg = kwargs.pop("spin1z", None) if spin1z is None else spin1z
+         s2z_arg = kwargs.pop("spin2z", None) if spin2z is None else spin2z
+@@ -785,11 +828,15 @@
+         # Batching alignment
+         is_batched = any(
+             t.dim() > 0 for t in (m1, m2, s1z, s2z, dist, inc, phi0, t0)
+-        )
++        ) or (final_spin_override is not None and final_spin_override.dim() > 0)
+         if is_batched:
+-            m1, m2, s1z, s2z, dist, inc, phi0, t0 = torch.broadcast_tensors(
+-                m1, m2, s1z, s2z, dist, inc, phi0, t0
+-            )
++            broadcast_args = (m1, m2, s1z, s2z, dist, inc, phi0, t0)
++            if final_spin_override is not None:
++                broadcast_args += (final_spin_override,)
++            broadcasted = torch.broadcast_tensors(*broadcast_args)
++            m1, m2, s1z, s2z, dist, inc, phi0, t0 = broadcasted[:8]
++            if final_spin_override is not None:
++                final_spin_override = broadcasted[8]
+ 
+         # Canonical ordering: m1 >= m2, swap spins if needed
+         swap_mask = m1 < m2
+@@ -808,7 +855,10 @@
+ 
+         # 1. Evaluate XAS Parameter Fits
+         f_meco = XASParameterFits.fit_f_meco(eta, s1_eff, s2_eff)
+-        final_spin = XASParameterFits.fit_final_spin(eta, s1_eff, s2_eff)
++        final_spin = (
++            XASParameterFits.fit_final_spin(eta, s1_eff, s2_eff)
++            if final_spin_override is None else final_spin_override
++        )
+         erad = XASParameterFits.fit_erad(eta, s1_eff, s2_eff)
+         m_final = torch.clamp(1.0 - erad, min=0.1)
+ 
+@@ -1373,5 +1423,3 @@
+ 
+     def __call__(self, *args, **kwargs):
+         return self.forward(*args, **kwargs)
+-
+-
+--- pass-9/src/torchwave/approximants/imrphenom_xhm.py
++++ pass-10/src/torchwave/approximants/imrphenom_xhm.py
+@@ -524,6 +524,9 @@
+         phi_c = as_tensor(kwargs.pop("phic", phic), device=device, dtype=dtype)
+         t_c = as_tensor(kwargs.pop("tc", tc), device=device, dtype=dtype)
+         phi_0 = as_tensor(kwargs.pop("phi0", phi0), device=device, dtype=dtype)
++        final_spin_override = kwargs.pop("_final_spin_override", None)
++        if final_spin_override is not None:
++            final_spin_override = as_tensor(final_spin_override, device=device, dtype=dtype)
+ 
+         active_modes = tuple(modes) if modes is not None else self.modes
+ 
+@@ -545,7 +548,10 @@
+         m_sec = total_mass * MSUN_SEC
+ 
+         # Final remnant properties from XAS fits
+-        chi_f = XASParameterFits.fit_final_spin(eta, s1, s2)
++        chi_f = (
++            XASParameterFits.fit_final_spin(eta, s1, s2)
++            if final_spin_override is None else final_spin_override
++        )
+         erad = XASParameterFits.fit_erad(eta, s1, s2)
+         m_f = 1.0 - erad
+ 
+@@ -655,6 +661,7 @@
+             phasing_convention=phasing_convention,
+             reference_frame=reference_frame,
+             return_phase=True,
++            _final_spin_override=final_spin_override,
+         )
+         amp_22_phys = torch.abs(hp_22_raw)
+ 
+@@ -674,6 +681,7 @@
+                 distance=m_sec * C_SI / MPC_SI, inclination=0.0, phic=0.0, tc=0.0,
+                 f_ref=f_ref, phasing_convention=phasing_convention,
+                 reference_frame=reference_frame, return_phase=True,
++                _final_spin_override=final_spin_override,
+             )
+             if mf_target.ndim == m_sec.ndim:
+                 return hp.squeeze(-1), phase.squeeze(-1)
+@@ -1144,6 +1152,7 @@
+                         phasing_convention=phasing_convention,
+                         reference_frame=reference_frame,
+                         return_phase=True,
++                        _final_spin_override=final_spin_override,
+                     )
+                     delta_target_u = _unsqueeze_to(delta_target, mf_grid)
+                     carrier_p_at_ins, carrier_dp_at_ins = eval_carrier_phi_and_deriv((2.0 / m_flt) * f_ins_p)
+--- pass-9/src/torchwave/approximants/imrphenom_xp.py
++++ pass-10/src/torchwave/approximants/imrphenom_xp.py
+@@ -21,8 +21,12 @@
+     component_masses_to_eta,
+     component_masses_to_delta,
+ )
+-from torchwave.approximants.imrphenom_xas import IMRPhenomXAS
+-from torchwave.approximants.precession_msa import evaluate_msa_precession, resolve_precession_version
++from torchwave.approximants.imrphenom_xas import IMRPhenomXAS, XASParameterFits
++from torchwave.approximants.precession_msa import (
++    compute_effective_chip,
++    evaluate_msa_precession,
++    resolve_precession_version,
++)
+ from torchwave.approximants.imrphenom_xphm import wigner_small_d_matrix
+ 
+ 
+@@ -151,7 +155,14 @@
+             )
+ 
+         total_mass = m1 + m2
++        eta = component_masses_to_eta(m1, m2)
+         m_sec = total_mass * MSUN_SEC
++        final_spin_override = None
++        # Table V FinalSpinMod=0 is the NNLO (versions 101--104) remnant model.
++        # An explicit MSA version takes precedence over the method label.
++        if p_ver in (101, 102, 103, 104):
++            chip = compute_effective_chip(m1, m2, s1x, s1y, s2x, s2y)
++            final_spin_override = XASParameterFits.fit_final_spin_nnlo(eta, s1z, s2z, chip)
+         is_batched = total_mass.dim() >= 1
+ 
+         f_eval = freqs if (not is_batched or freqs.dim() > 1) else freqs.unsqueeze(0)
+@@ -199,6 +210,7 @@
+             f_ref=fref,
+             phasing_convention=phasing_convention,
+             reference_frame=reference_frame,
++            _final_spin_override=final_spin_override,
+         )
+ 
+         # Twist-up for (l=2, mp=2)
+--- pass-9/src/torchwave/approximants/imrphenom_xphm.py
++++ pass-10/src/torchwave/approximants/imrphenom_xphm.py
+@@ -23,7 +23,12 @@
+     component_masses_to_delta,
+ )
+ from torchwave.approximants.imrphenom_xhm import IMRPhenomXHM
+-from torchwave.approximants.precession_msa import evaluate_msa_precession, resolve_precession_version
++from torchwave.approximants.imrphenom_xas import XASParameterFits
++from torchwave.approximants.precession_msa import (
++    compute_effective_chip,
++    evaluate_msa_precession,
++    resolve_precession_version,
++)
+ 
+ 
+ def wigner_small_d_matrix(l: int, beta: torch.Tensor) -> torch.Tensor:
+@@ -220,6 +225,13 @@
+ 
+         total_mass = m1 + m2
+         m_sec = total_mass * MSUN_SEC
++        final_spin_override = None
++        # Table V FinalSpinMod=0 is the NNLO (versions 101--104) remnant model.
++        # An explicit MSA version takes precedence over the method label.
++        if p_ver in (101, 102, 103, 104):
++            eta = component_masses_to_eta(m1, m2)
++            chip = compute_effective_chip(m1, m2, s1x, s1y, s2x, s2y)
++            final_spin_override = XASParameterFits.fit_final_spin_nnlo(eta, s1z, s2z, chip)
+         is_batched = total_mass.dim() >= 1
+ 
+         f_eval = freqs if (not is_batched or freqs.dim() > 1) else freqs.unsqueeze(0)
+@@ -290,6 +302,7 @@
+             return_unprojected_modes=True,
+             phasing_convention=phasing_convention,
+             reference_frame=reference_frame,
++            _final_spin_override=final_spin_override,
+         )
+ 
+         h_plus_total = torch.zeros(f_eval.shape, dtype=complex_dtype, device=device)
+--- pass-9/src/torchwave/approximants/precession_msa.py
++++ pass-10/src/torchwave/approximants/precession_msa.py
+@@ -30,6 +30,23 @@
+     if version not in (101, 102, 103, 104, 220, 221, 222, 223, 224):
+         raise ValueError(f"Unsupported precession version: {version}.")
+     return version
++
++
++def compute_effective_chip(
++    m1: torch.Tensor,
++    m2: torch.Tensor,
++    s1x: torch.Tensor,
++    s1y: torch.Tensor,
++    s2x: torch.Tensor,
++    s2y: torch.Tensor,
++) -> torch.Tensor:
++    """Published effective in-plane spin, Eqs. (4.7)--(4.9), for m1 >= m2."""
++    q_pratten = m1 / m2
++    a1_coeff = 2.0 + 1.5 / q_pratten
++    a2_coeff = 2.0 + 1.5 * q_pratten
++    s1_perp = m1.square() * torch.linalg.vector_norm(torch.stack((s1x, s1y), dim=-1), dim=-1)
++    s2_perp = m2.square() * torch.linalg.vector_norm(torch.stack((s2x, s2y), dim=-1), dim=-1)
++    return torch.maximum(a1_coeff * s1_perp, a2_coeff * s2_perp) / (a1_coeff * m1.square())
+ 
+ 
+ def elliptic_f(phi: torch.Tensor, parameter: torch.Tensor) -> torch.Tensor:
+@@ -570,13 +587,9 @@
+         fallback_to_nnlo = torch.ones_like(eta,dtype=torch.bool)
+         alpha_msa_dyn = gamma_msa_dyn = beta_msa = torch.zeros_like(v)
+ 
+-    # NNLO Fallback Computation Path
+-    a1_coeff = 2.0 + 1.5 / q_pratten
+-    a2_coeff = 2.0 + 1.5 * q_pratten
+-    s1_perp = (m1 * m1) * torch.linalg.vector_norm(torch.stack((s1x, s1y), dim=-1), dim=-1)
+-    s2_perp = (m2 * m2) * torch.linalg.vector_norm(torch.stack((s2x, s2y), dim=-1), dim=-1)
+-    s_p = torch.maximum(a1_coeff * s1_perp, a2_coeff * s2_perp)
+-    chip = s_p / (a1_coeff * m1 * m1)
++    # NNLO fallback and remnant paths share the same exact-zero-safe effective
++    # chi_p construction.
++    chip = compute_effective_chip(m1, m2, s1x, s1y, s2x, s2y)
+     chi_l = m1_norm * s1z + m2_norm * s2z
+ 
+     (
+--- pass-9/tests/test_clean_room_precession_equations.py
++++ pass-10/tests/test_clean_room_precession_equations.py
+@@ -5,12 +5,33 @@
+ import torch
+ 
+ from torchwave.approximants.imrphenomp import IMRPhenomP
++from torchwave.approximants.imrphenom_xas import XASParameterFits
+ from torchwave.approximants.imrphenom_xp import IMRPhenomXP
+ from torchwave.approximants.imrphenom_xphm import IMRPhenomXPHM, wigner_small_d_matrix
+-from torchwave.approximants.precession_msa import evaluate_msa_precession, compute_l_3pn
++from torchwave.approximants.precession_msa import (
++    evaluate_msa_precession, compute_l_3pn, compute_effective_chip,
++)
+ from torchwave.approximants.precession_ode import SpinPrecessionODE
+ 
+ DTYPE = torch.float64
++
++
++def carrier_with_same_remnant(model, f, params):
++    """Rotation closure compares carriers with the same remnant, including spin tilt."""
++    def t(value):
++        return torch.as_tensor(value, dtype=f.dtype, device=f.device)
++    m1, m2 = t(params['mass1']), t(params['mass2'])
++    chi1, chi2 = t(params['spin1z']), t(params['spin2z'])
++    chip = compute_effective_chip(
++        m1, m2, *(t(params.get(key, 0.0)) for key in ('spin1x', 'spin1y', 'spin2x', 'spin2y')),
++    )
++    final_spin = XASParameterFits.fit_final_spin_nnlo(m1*m2/(m1+m2)**2, chi1, chi2, chip)
++    options = dict(mass1=m1, mass2=m2, chi1=chi1, chi2=chi2,
++                   inclination=params['inclination'], f_ref=params['f_ref'],
++                   _final_spin_override=final_spin)
++    if isinstance(model, IMRPhenomXP):
++        return model.xas_model(f, phi_c=params['phic'], **options)
++    return model.xhm_model(f, phic=params['phic'], modes=model.modes, **options)
+ 
+ 
+ def test_appendix_a_signed_elements_and_group_law():
+@@ -67,9 +88,9 @@
+     hp, hc = model(f, **params)
+     assert torch.isfinite(hp).all() and torch.isfinite(hc).all()
+     assert hp[0] == 0 and hc[0] == 0
+-    hp0, hc0 = model(f, **{**params, 'spin1x':0., 'spin1y':0.})
+     # Pv2 retains its inherited distinct frame mapping pending derivation.
+     if not isinstance(model, IMRPhenomP):
++        hp0, hc0 = carrier_with_same_remnant(model, f, params)
+         for h, h0 in ((hp,hp0),(hc,hc0)):
+             torch.testing.assert_close(h[2], h0[2], rtol=3e-13, atol=1e-35)
+     swapped = {**params, 'mass1':20., 'mass2':40., 'spin1x':0., 'spin1y':0.,
+@@ -132,5 +153,7 @@
+     f = torch.tensor([lm[1]*40./2],dtype=DTYPE)
+     model = IMRPhenomXPHM(modes=[lm])
+     params = dict(mass1=40.,mass2=20.,spin1z=.4,spin2z=-.2,phic=.3,f_ref=40.,inclination=.7)
+-    for h, h0 in zip(model(f, spin1x=.3, spin1y=.2, **params),model(f, **params)):
++    precessing_params = dict(params, spin1x=.3, spin1y=.2)
++    for h, h0 in zip(model(f, **precessing_params),
++                     carrier_with_same_remnant(model, f, precessing_params)):
+         torch.testing.assert_close(h,h0,atol=1e-34,rtol=5e-12)
+--- pass-9/tests/test_pass10_nnlo_remnant.py
++++ pass-10/tests/test_pass10_nnlo_remnant.py
+@@ -0,0 +1,162 @@
++"""Primary-equation checks for the NNLO precessing remnant plumbing."""
++
++import pytest
++import torch
++
++from torchwave.approximants.imrphenom_xas import XASParameterFits
++from torchwave.approximants.imrphenom_xp import IMRPhenomXP
++from torchwave.approximants.imrphenom_xphm import IMRPhenomXPHM
++from torchwave.approximants.precession_msa import compute_effective_chip
++
++
++DTYPE = torch.float64
++
++
++def t(value, *, requires_grad=False):
++    return torch.tensor(value, dtype=DTYPE, requires_grad=requires_grad)
++
++
++@pytest.mark.parametrize("symmetric_mass_ratio", [0.24, 0.25])
++def test_nnlo_final_spin_matches_equations_and_aligned_limit(symmetric_mass_ratio):
++    eta = t([symmetric_mass_ratio])
++    chi1, chi2, chip = t([0.4]), t([-0.2]), t([0.3])
++    aligned = XASParameterFits.fit_final_spin(eta, chi1, chi2)
++    m_big_over_m = 0.5 * (1.0 + torch.sqrt(1.0 - 4.0 * eta))
++    expected = torch.sign(aligned) * torch.sqrt(
++        aligned.square() + (chip * m_big_over_m.square()).square()
++    )
++    actual = XASParameterFits.fit_final_spin_nnlo(eta, chi1, chi2, chip)
++    torch.testing.assert_close(actual, expected, atol=0.0, rtol=1e-14)
++    torch.testing.assert_close(
++        XASParameterFits.fit_final_spin_nnlo(eta, chi1, chi2, torch.zeros_like(chip)),
++        aligned,
++        atol=0.0, rtol=0.0,
++    )
++
++
++def test_nnlo_final_spin_rejects_undefined_zero_parallel_sign(monkeypatch):
++    def zero_aligned_fit(eta, chi1, chi2):
++        return torch.zeros_like(eta)
++
++    monkeypatch.setattr(XASParameterFits, "fit_final_spin", staticmethod(zero_aligned_fit))
++    with pytest.raises(ValueError, match="sign is undefined"):
++        XASParameterFits.fit_final_spin_nnlo(t([0.24]), t([0.4]), t([-0.2]), t([0.3]))
++
++
++def test_nnlo_signed_negative_and_tiny_magnitude(monkeypatch):
++    def tiny_negative_fit(eta, chi1, chi2):
++        return torch.full_like(eta, -1.0e-8)
++
++    monkeypatch.setattr(XASParameterFits, "fit_final_spin", staticmethod(tiny_negative_fit))
++    result = XASParameterFits.fit_final_spin_nnlo(
++        t([0.24]), t([0.4]), t([-0.2]), t([1.0e-8])
++    )
++    expected = -(1.0 + (0.6**2) ** 2) ** 0.5 * 1.0e-8
++    torch.testing.assert_close(result, t([expected]), atol=1e-16, rtol=1e-12)
++
++
++def test_nnlo_chip_mass_body_and_in_plane_rotation_invariants():
++    m1, m2 = t(30.0), t(20.0)
++    spins = (t(0.3), t(0.2), t(-0.2), t(0.1))
++    direct = compute_effective_chip(m1, m2, *spins)
++    scaled = compute_effective_chip(2.0 * m1, 2.0 * m2, *spins)
++    angle = t(0.73)
++    c, s = torch.cos(angle), torch.sin(angle)
++    rotated = (c * spins[0] - s * spins[1], s * spins[0] + c * spins[1],
++               c * spins[2] - s * spins[3], s * spins[2] + c * spins[3])
++    torch.testing.assert_close(scaled, direct)
++    torch.testing.assert_close(compute_effective_chip(m1, m2, *rotated), direct)
++
++    equal_mass = compute_effective_chip(
++        t(30.0), t(30.0), spins[0], spins[1], spins[2], spins[3]
++    )
++    torch.testing.assert_close(equal_mass, torch.maximum(torch.hypot(spins[0], spins[1]), torch.hypot(spins[2], spins[3])))
++
++
++@pytest.mark.parametrize("model", [IMRPhenomXP, IMRPhenomXPHM])
++def test_nnlo_waveform_is_invariant_under_body_relabeling(model):
++    frequency = t([25.0, 80.0, 180.0])
++    bodies = dict(mass1=40.0, mass2=20.0, spin1x=0.3, spin1y=0.2,
++                  spin1z=0.1, spin2x=-0.2, spin2y=0.3, spin2z=-0.1)
++    swapped = dict(mass1=bodies["mass2"], mass2=bodies["mass1"])
++    for axis in "xyz":
++        swapped[f"spin1{axis}"] = bodies[f"spin2{axis}"]
++        swapped[f"spin2{axis}"] = bodies[f"spin1{axis}"]
++    instance = model()
++    for version in (101, 102, 103, 104):
++        options = dict(inclination=0.7, phic=0.3, f_ref=40.0, prec_version=version)
++        original = instance(frequency, **bodies, **options)
++        relabeled = instance(frequency, **swapped, **options)
++        for actual, expected in zip(relabeled, original):
++            torch.testing.assert_close(actual, expected, atol=0.0, rtol=1e-13)
++
++
++@pytest.mark.parametrize("model", [IMRPhenomXP, IMRPhenomXPHM])
++def test_nnlo_mixed_batch_zero_in_plane_row_has_finite_gradients_and_aligned_limit(model):
++    frequency = t([20.0, 40.0])
++    spin1x = t([0.0, 0.20], requires_grad=True)
++    spin1y = t([0.0, 0.10], requires_grad=True)
++    spin2x = t([0.0, 0.05])
++    spin2y = t([0.0, 0.02])
++    kwargs = dict(
++        mass1=t([30.0, 30.0]),
++        mass2=t([20.0, 20.0]),
++        spin1x=spin1x,
++        spin1y=spin1y,
++        spin1z=t([0.4, 0.4]),
++        spin2x=spin2x,
++        spin2y=spin2y,
++        spin2z=t([-0.2, -0.2]),
++    )
++    hp, hc = model()(f=frequency, **kwargs)
++    loss = hp.real.sum() + hc.real.sum()
++    grad_x, grad_y = torch.autograd.grad(loss, (spin1x, spin1y))
++    assert torch.isfinite(grad_x).all()
++    assert torch.isfinite(grad_y).all()
++
++    aligned_kwargs = dict(
++        mass1=30.0,
++        mass2=20.0,
++        spin1x=0.0,
++        spin1y=0.0,
++        spin1z=0.4,
++        spin2x=0.0,
++        spin2y=0.0,
++        spin2z=-0.2,
++    )
++    aligned = model()(f=frequency, **aligned_kwargs)
++    torch.testing.assert_close(hp[0], aligned[0], atol=0.0, rtol=2e-6)
++    torch.testing.assert_close(hc[0], aligned[1], atol=0.0, rtol=2e-6)
++
++
++def test_nnlo_chip_is_zero_and_differentiable_at_aligned_spin():
++    x = t([0.0], requires_grad=True)
++    y = t([0.0], requires_grad=True)
++    u = t([0.0], requires_grad=True)
++    v = t([0.0], requires_grad=True)
++    chip = compute_effective_chip(t([30.0]), t([20.0]), x, y, u, v)
++    gradients = torch.autograd.grad(chip.sum(), (x, y, u, v))
++    assert torch.equal(chip, torch.zeros_like(chip))
++    assert all(torch.isfinite(gradient).all() for gradient in gradients)
++
++
++@pytest.mark.parametrize("model", [IMRPhenomXP, IMRPhenomXPHM])
++def test_nnlo_version_dispatch_keeps_msa_explicit_versions_distinct(model):
++    frequency = t([25.0, 40.0, 80.0])
++    kwargs = dict(
++        mass1=40.0, mass2=20.0, spin1x=0.3, spin1y=0.2, spin1z=0.1,
++        spin2x=-0.2, spin2y=0.3, spin2z=-0.1, inclination=0.7, phic=0.3,
++        f_ref=40.0,
++    )
++    instance = model() if model is IMRPhenomXP else model(modes=[(2, 2)])
++    default = instance(frequency, **kwargs)
++    explicit_nnlo = instance(frequency, **kwargs, prec_version=102)
++    method_nnlo = instance(frequency, **kwargs, precession_method="nnlo", prec_version=102)
++    method_msa_nnlo = instance(frequency, **kwargs, precession_method="msa", prec_version=102)
++    method_msa = instance(frequency, **kwargs, precession_method="msa")
++    explicit_msa = instance(frequency, **kwargs, prec_version=223)
++    for expected in (explicit_nnlo, method_nnlo, method_msa_nnlo):
++        for actual, reference in zip(expected, default):
++            torch.testing.assert_close(actual, reference, atol=0.0, rtol=0.0)
++    for actual, reference in zip(method_msa, explicit_msa):
++        torch.testing.assert_close(actual, reference, atol=0.0, rtol=0.0)

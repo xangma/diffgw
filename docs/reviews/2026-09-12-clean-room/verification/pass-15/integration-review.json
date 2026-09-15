@@ -1,0 +1,19 @@
+{
+  "changed_files": [
+    "src/torchwave/approximants/imrphenom_xhm.py",
+    "src/torchwave/approximants/polynomial_interval.py",
+    "tests/test_pass13_xhm_amplitude.py",
+    "tests/test_pass15_polynomial_interval.py",
+    "tests/test_pass15_xhm_pole_selection.py",
+    "tests/test_pass15_xhm_vetoes.py"
+  ],
+  "runtime_review": "Parent reviewed the incremental runtime diff. Monotonicity compares all four A/A0 values (documented interpretation), high-q veto removes each remaining node. Partial-node quartics retain both boundary derivatives and the selected value. Pole fallback removes both derivatives while retaining surviving values; linear is selected only when both the active and corresponding value-only polynomial fail. Parent replaced provisional swapped/ungated sampled branches with selected coefficient arrays and two interval checks. No raw calibration coefficients changed.",
+  "numerical_review": "Derivative recursion, affine interval transformation, amplitude-scaled tolerance, broadcast and detached decisions reviewed. Parent compared 600 seeded degree0..5 polynomials against independent NumPy derivative-root extrema with no mismatches. Numerical guard, not exact certification: near-roundoff minima, clustered critical roots and extreme overflow/underflow remain floating-point limitations.",
+  "test_review": "Production checks cover both partial-node directions, common endpoint/interior amplitude units, heterogeneous gradients and inactive fallback isolation. Two older collocation/fallback tests now explicitly retain nodes unless parameter-vetoed so they test their original reconstruction contract independently of new monotonicity selection. Genuine negative-denominator assertion strengthened from 5% threshold to zero. Frozen parity inventories, cases, grids and tolerances unchanged.",
+  "focused_tests_passed": 71,
+  "focused_tests_skipped": 1,
+  "ordinary_tests_passed": 1140,
+  "ordinary_tests_skipped": 9,
+  "input_hashes_stable": 189,
+  "source_boundary": "Three fresh-context GPT-5.6 Luna subagents used primary-paper mathematics and native source/tests. Excluded LAL/PyCBC source, translated ports, notebooks, source-derived prior spec, all verifier artifacts and waveform binary residuals. Parent-only binary validation, no coefficient tuning. Instruction boundary, not OS isolation; inherited provenance uncertified."
+}

@@ -1,0 +1,556 @@
+{
+  "status": "complete",
+  "diagnostic_scope": "component attribution; no trajectory rerun, alignment, fitting, or production routing",
+  "inputs": {
+    "nqc_cache": {
+      "path": "/Users/xangma/repos/torchwave/docs/reviews/2026-09-13-parity-review/verification/teob-merger-nqc-clean/physical-input-output.npz",
+      "report_path": "/Users/xangma/repos/torchwave/docs/reviews/2026-09-13-parity-review/verification/teob-merger-nqc-clean/diagnostic.json",
+      "sha256": "06bb6d88d9b148cc481c8b45a694ea0d132ec195f0c109fc83ba0e024421d334",
+      "report": {
+        "cache_arrays": [
+          "time",
+          "state",
+          "mode",
+          "amplitude",
+          "phase",
+          "orbital_frequency",
+          "radial_acceleration",
+          "corrected_amplitude",
+          "corrected_phase",
+          "aux_time",
+          "aux_state",
+          "aux_amplitude",
+          "aux_phase",
+          "aux_orbital_frequency",
+          "aux_radial_acceleration",
+          "aux_corrected_amplitude",
+          "aux_corrected_phase"
+        ],
+        "cache_path": "docs/reviews/2026-09-13-parity-review/verification/teob-merger-nqc-clean/physical-input-output.npz",
+        "cache_sha256": "06bb6d88d9b148cc481c8b45a694ea0d132ec195f0c109fc83ba0e024421d334",
+        "command": "/Users/xangma/miniconda3/envs/pycbcorig313/bin/python scripts/diagnose_teob_merger_nqc_clean.py --output docs/reviews/2026-09-13-parity-review/verification/teob-merger-nqc-clean/diagnostic.json --cache docs/reviews/2026-09-13-parity-review/verification/teob-merger-nqc-clean/physical-input-output.npz",
+        "continuation": {
+          "adaptive_samples": 580,
+          "endpoint_state": [
+            1.4864345788486484,
+            212.84839064677598,
+            -0.5006437557954939,
+            2.678305669914087
+          ],
+          "endpoint_time": 12318.826873406742,
+          "fixed_samples": 22,
+          "peak_event_frequency": 0.1752882353034708,
+          "peak_event_index": 639,
+          "peak_event_time": 12316.726873406744,
+          "phase_seam_error": 0.0,
+          "samples": 661,
+          "statistics": {
+            "accepted_steps": 600,
+            "adaptive_accepted_steps": 579,
+            "adaptive_evaluations": 3625,
+            "adaptive_rejected_steps": 30,
+            "evaluations": 3751,
+            "fixed_accepted_steps": 21,
+            "fixed_evaluations": 126,
+            "fixed_rejected_steps": 0,
+            "rejected_steps": 30
+          },
+          "status": "complete",
+          "valid_samples": 661
+        },
+        "cwd": "/Users/xangma/repos/torchwave",
+        "device": "cpu",
+        "elapsed_seconds": 28.649956958019175,
+        "host": "RONI2",
+        "mode": {
+          "amplitude_max": 0.4972243016416821,
+          "amplitude_min": 0.07239797845867381,
+          "phase_final": 422.5535042429696,
+          "phase_initial": -3.017168722205661,
+          "samples": 661
+        },
+        "nqc": {
+          "amplitude_coefficients": [
+            -0.12638567597533554,
+            1.482289030442369
+          ],
+          "amplitude_condition": 1.1504891688329797,
+          "amplitude_matrix": [
+            [
+              0.4139572563838155,
+              -0.03507862587787396
+            ],
+            [
+              0.13873606924450402,
+              0.00882911940009228
+            ]
+          ],
+          "amplitude_residual": [
+            0.0,
+            -3.469446951953614e-18
+          ],
+          "auxiliary_samples": 202,
+          "auxiliary_spacing": 0.1,
+          "cut_last_index": 659,
+          "cut_start_index": 574,
+          "matching_index": 168,
+          "negative_auxiliary_samples": 0,
+          "phase_coefficients": [
+            0.16430793959517773,
+            4.22116780033991
+          ],
+          "phase_condition": 1.2636734408062182,
+          "phase_matrix": [
+            [
+              -0.16299018079876826,
+              -0.004318244328841616
+            ],
+            [
+              -0.04689135111260654,
+              0.002012979888607891
+            ]
+          ],
+          "phase_residual": [
+            0.0,
+            8.673617379884035e-19
+          ],
+          "t_nqc": 12315.452448035621,
+          "t_peak_grid": 12316.452448035621,
+          "target_provenance": "Nagar, Riemenschneider & Pratten (2017), arXiv:1703.06814v1, Appendix A Table II (q=1) and Table IV + Eq. (A3) (q>1); A_RW=A/(nu*sqrt(24))=|Psi_22|/nu",
+          "targets": [
+            0.317783696,
+            -0.0019246396,
+            0.38280077079999997,
+            0.0114928308
+          ]
+        },
+        "pid": 90124,
+        "probe": {
+          "atol": 1e-13,
+          "continuation_duration": 2.0,
+          "dr": 0.1,
+          "effective_spin": 0.0,
+          "fixed_step_cap": 0.1,
+          "max_accepted_steps": 2000,
+          "max_duration": 6000.0,
+          "max_evaluations": 30000,
+          "max_rejected_steps": 10000,
+          "nu": 0.24,
+          "pa_order": 8,
+          "r0": 20.0,
+          "r_min": 14.0,
+          "rtol": 1e-11
+        },
+        "python": "/Users/xangma/miniconda3/envs/pycbcorig313/bin/python",
+        "source_hashes_unchanged": true,
+        "source_sha256_after": {
+          "adaptive_driver": "28f657e4248da3403c245c5928e277c1d3fdd9cd6c47aab32b017e7c8cfab2d0",
+          "continuation": "7b8722ecc28af74eeb2fe29d2e7c1782123106d63fbeba60c82ca81f6b70b869",
+          "contract": "f84736109b0ecd8cd43b7dea52698a2bb8f6f9b74906c558e1ff428ab32c4331",
+          "factorized_modes": "d4b10cbcbbecc4de84329a13cdca43d90d4fa5aa168248fc2e874211d29f8315",
+          "hamiltonian": "05e15d8fd9888ee8d454d61fbc8454fe5c652747780f77c771718557ce0294f3",
+          "mode_driver": "58376bbd318f5b5f33922759416fc3b1d2531cb7edafb0e9d8d5c1edadfa8845",
+          "module": "f705514ef981b3f0a557efeebe508b52fdb70c634a8ac8f2c357f30761871068",
+          "nqc_basis": "8ec2d77a57b96e8246bdae3ca8c62c4e2a17cabf1c5554aa1e47fe25b1ea8f46",
+          "numerical_attachment": "775aa6f40d4cfe2bffa836d7af0b58dc8521411571d5c124230890eb5de91cb1",
+          "pa": "97de447367d6e5bb61e596c579bb698fdf36e61756394a800166767de4025807",
+          "script": "40f0214738ffc49377baaa9dea82ead8e4c8dd83e0c8bec8e2bf45ddcfb3cea5",
+          "test": "ca53e2df5a23dc6b73f47d65192d634d039b383687e80c6011cc0939b4894782",
+          "trajectory": "6728419dd6b7c6f2a7a340f017f52b5dd54bc399d212884f9975643cd58db785",
+          "vacuum_driver": "3b6e1d0f0cd69352e82a203eb8d9592db87cef662988cf3f4859906ae0977fd6"
+        },
+        "source_sha256_before": {
+          "adaptive_driver": "28f657e4248da3403c245c5928e277c1d3fdd9cd6c47aab32b017e7c8cfab2d0",
+          "continuation": "7b8722ecc28af74eeb2fe29d2e7c1782123106d63fbeba60c82ca81f6b70b869",
+          "contract": "f84736109b0ecd8cd43b7dea52698a2bb8f6f9b74906c558e1ff428ab32c4331",
+          "factorized_modes": "d4b10cbcbbecc4de84329a13cdca43d90d4fa5aa168248fc2e874211d29f8315",
+          "hamiltonian": "05e15d8fd9888ee8d454d61fbc8454fe5c652747780f77c771718557ce0294f3",
+          "mode_driver": "58376bbd318f5b5f33922759416fc3b1d2531cb7edafb0e9d8d5c1edadfa8845",
+          "module": "f705514ef981b3f0a557efeebe508b52fdb70c634a8ac8f2c357f30761871068",
+          "nqc_basis": "8ec2d77a57b96e8246bdae3ca8c62c4e2a17cabf1c5554aa1e47fe25b1ea8f46",
+          "numerical_attachment": "775aa6f40d4cfe2bffa836d7af0b58dc8521411571d5c124230890eb5de91cb1",
+          "pa": "97de447367d6e5bb61e596c579bb698fdf36e61756394a800166767de4025807",
+          "script": "40f0214738ffc49377baaa9dea82ead8e4c8dd83e0c8bec8e2bf45ddcfb3cea5",
+          "test": "ca53e2df5a23dc6b73f47d65192d634d039b383687e80c6011cc0939b4894782",
+          "trajectory": "6728419dd6b7c6f2a7a340f017f52b5dd54bc399d212884f9975643cd58db785",
+          "vacuum_driver": "3b6e1d0f0cd69352e82a203eb8d9592db87cef662988cf3f4859906ae0977fd6"
+        },
+        "started_unix": 1789394001.980499,
+        "status": "complete"
+      }
+    },
+    "public_fixture": {
+      "path": "/tmp/torchwave-public-teob-q1p5-r20-dt0p5M.npz",
+      "metadata_path": "/tmp/torchwave-public-teob-q1p5-r20-dt0p5M.json",
+      "sha256": "09eaa8b00288c94947b2bb4b40ada7780dc51ac98491a48cbb8f60ed50ab686c",
+      "samples": 24938,
+      "epoch_seconds": -3.033305451,
+      "delta_t_seconds": 0.00012313727369103167,
+      "msec_seconds": 0.00024627454738206334,
+      "metadata": {
+        "origin": "public lalsimulation.SimIMRTEOBResumS binary API",
+        "lalsimulation": "6.2.0",
+        "lal": "7.7.0",
+        "mass1_msun": 30.0,
+        "mass2_msun": 20.0,
+        "Msec": 0.00024627454738206334,
+        "f_min": 14.45059083415894,
+        "Kepler_radius_double": 19.999999999999996,
+        "PN_tidal_order": 0,
+        "spin_order": "default",
+        "mode_array": [
+          [
+            2,
+            2
+          ]
+        ],
+        "delta_t_M": 0.5,
+        "epoch_seconds": -3.033305451,
+        "epoch_M": -12316.763885040122,
+        "samples": 24938,
+        "elapsed_seconds": 0.023312750010518357,
+        "fixture": "/tmp/torchwave-public-teob-q1p5-r20-dt0p5M.npz",
+        "sha256": "09eaa8b00288c94947b2bb4b40ada7780dc51ac98491a48cbb8f60ed50ab686c"
+      }
+    },
+    "public_metadata": {
+      "origin": "public lalsimulation.SimIMRTEOBResumS binary API",
+      "lalsimulation": "6.2.0",
+      "lal": "7.7.0",
+      "mass1_msun": 30.0,
+      "mass2_msun": 20.0,
+      "Msec": 0.00024627454738206334,
+      "f_min": 14.45059083415894,
+      "Kepler_radius_double": 19.999999999999996,
+      "PN_tidal_order": 0,
+      "spin_order": "default",
+      "mode_array": [
+        [
+          2,
+          2
+        ]
+      ],
+      "delta_t_M": 0.5,
+      "epoch_seconds": -3.033305451,
+      "epoch_M": -12316.763885040122,
+      "samples": 24938,
+      "elapsed_seconds": 0.023312750010518357,
+      "fixture": "/tmp/torchwave-public-teob-q1p5-r20-dt0p5M.npz",
+      "sha256": "09eaa8b00288c94947b2bb4b40ada7780dc51ac98491a48cbb8f60ed50ab686c"
+    },
+    "final_mass_fraction": 0.9552307291557802,
+    "final_spin": 0.6640306341929765,
+    "nu": 0.24,
+    "fixed_step": 0.1,
+    "output_step_initial_mass": 0.5,
+    "projection_scale_h22_to_faceon_strain": -1.509279792662595e-20,
+    "projection_scale_formula": "-sqrt(5/(4*pi))*(50*lal.MTSUN_SI*lal.C_SI)/(100e6*lal.PC_SI)",
+    "public_relative_time_initial_mass": [
+      0.0,
+      12468.5
+    ],
+    "public_physical_time_initial_mass": [
+      -12316.763885040122,
+      151.73611495987825
+    ],
+    "public_epoch_initial_mass": -12316.763885040122,
+    "output_grid_max_abs_difference_initial_mass": 0.0
+  },
+  "frozen_trajectory_evidence": {
+    "full_samples": 661,
+    "full_support_initial_mass": [
+      0.0,
+      12318.826873406742
+    ],
+    "full_initial_radius": 20.0,
+    "auxiliary_samples": 202,
+    "auxiliary_support_initial_mass": [
+      12298.552448035622,
+      12318.652448035622
+    ],
+    "auxiliary_initial_radius": 3.904654157981023,
+    "frozen_initial_radius_policy": "r0=20.0 exactly; cached PA chart has 61 knots",
+    "public_initial_radius_policy": "public metadata reports inverse Kepler r0=19.999999999999996; public chart has 60 knots",
+    "trajectory_difference_policy": "reported as a fixture limitation; no radius or knot adjustment"
+  },
+  "authoritative_pre_gauge": {
+    "mode_semantics": "cached corrected mode, pre-TEOB-tail gauge; authoritative input",
+    "events": {
+      "peak_knot_index_auxiliary": 179,
+      "peak_time_initial_mass": 12316.455779791677,
+      "peak_first_derivative": 8.283909263995467e-06,
+      "peak_second_derivative": -0.002486349277737788,
+      "merger_time_initial_mass": 12313.455779791677,
+      "match_time_initial_mass": 12315.455779791677,
+      "match_time_final_mass": 12892.650334517513,
+      "strictly_earlier_index_joined": 742,
+      "attachment_index_joined": 741,
+      "attachment_time_initial_mass": 12315.352448035621,
+      "attachment_time_final_mass": 12892.54215986096,
+      "output_boundary_index": 24631,
+      "output_boundary_time_initial_mass": 12315.5,
+      "epoch_coordinate_start_initial_mass": 0.0,
+      "joined_support_initial_mass": [
+        0.0,
+        12318.652448035622
+      ],
+      "extended_support_initial_mass": [
+        0.0,
+        12468.652448036168
+      ],
+      "output_support_initial_mass": [
+        0.0,
+        12468.5
+      ],
+      "joined_samples": 775,
+      "extended_samples": 2275,
+      "output_samples": 24938,
+      "extension_samples": 1500,
+      "auxiliary_spacing_initial_mass": 0.1000000000003638,
+      "ringdown_phase0": 0.34855902272400696,
+      "auxiliary_amplitude_negative": false
+    },
+    "metrics_vs_public_unaligned": {
+      "full": {
+        "samples": 24938,
+        "l2": 1.2638311465378415e-20,
+        "relative_l2": 0.05418533973791214,
+        "rms": 8.003100006275575e-23,
+        "max_abs": 7.789869265680974e-22
+      },
+      "pre_boundary": {
+        "samples": 24631,
+        "l2": 1.2152493036140987e-20,
+        "relative_l2": 0.05248405984385816,
+        "rms": 7.743269212450655e-23,
+        "max_abs": 7.789869265680974e-22
+      },
+      "post_boundary": {
+        "samples": 307,
+        "l2": 3.470422121653262e-21,
+        "relative_l2": 0.12361000484474037,
+        "rms": 1.9806745225602627e-22,
+        "max_abs": 7.514920688737867e-22
+      },
+      "amplitude_full": {
+        "samples": 24938,
+        "l2": 3.472101249681229e-22,
+        "relative_l2": 0.001488624380984691,
+        "rms": 2.1986776959275757e-24,
+        "max_abs": 4.094450825435933e-23
+      },
+      "amplitude_post_boundary": {
+        "samples": 307,
+        "l2": 1.713420407937879e-22,
+        "relative_l2": 0.006102885974729252,
+        "rms": 9.779006787856239e-24,
+        "max_abs": 3.0119102983490833e-23
+      },
+      "phase_full_radians": {
+        "samples": 24938,
+        "l2": 6.070617571710745,
+        "rms": 0.03844165390237927,
+        "max_abs": 0.14054045826929967,
+        "first": 0.022272795648263902,
+        "last": 0.12884195130476433
+      },
+      "phase_post_boundary_radians": {
+        "samples": 307,
+        "l2": 2.1250100653013533,
+        "rms": 0.12128073038335241,
+        "max_abs": 0.13313093621400185,
+        "first": 0.13313093621400185,
+        "last": 0.12884195130476433
+      }
+    }
+  },
+  "diagnostic_tail_gauge_rerun": {
+    "mode_semantics": "same frozen trajectory, one exp(-i*m*Hreal*Omega) phase gauge, then clean NQC rerun",
+    "tail_gauge": {
+      "m": 2,
+      "factor": "exp(-i*m*Hreal*Omega)",
+      "mode_factor_reconstruction_max_abs": 1.846186058743713e-14,
+      "full_hreal_range": [
+        0.96615991753432,
+        0.9942591886188855
+      ],
+      "auxiliary_hreal_range": [
+        0.9662713532171402,
+        0.9789091546737737
+      ],
+      "full_phase_increment_range": [
+        0.022328359010049873,
+        0.33957835125577546
+      ],
+      "auxiliary_phase_increment_range": [
+        0.2231926900481174,
+        0.33959461601539026
+      ]
+    },
+    "nqc": {
+      "amplitude_coefficients": [
+        -0.12638567597533554,
+        1.482289030442369
+      ],
+      "phase_coefficients": [
+        0.17456146724130386,
+        2.9059523260880136
+      ],
+      "matching_index": 168,
+      "t_peak_grid": 12316.452448035621,
+      "t_nqc": 12315.452448035621,
+      "auxiliary_spacing": 0.1,
+      "auxiliary_samples": 202,
+      "negative_auxiliary_samples": 0
+    },
+    "coefficients_delta_vs_cached": {
+      "amplitude": [
+        0.0,
+        0.0
+      ],
+      "phase": [
+        0.010253527646126137,
+        -1.3152154742518967
+      ]
+    },
+    "events": {
+      "peak_knot_index_auxiliary": 179,
+      "peak_time_initial_mass": 12316.455779791677,
+      "peak_first_derivative": 8.283909263995467e-06,
+      "peak_second_derivative": -0.002486349277737788,
+      "merger_time_initial_mass": 12313.455779791677,
+      "match_time_initial_mass": 12315.455779791677,
+      "match_time_final_mass": 12892.650334517513,
+      "strictly_earlier_index_joined": 742,
+      "attachment_index_joined": 741,
+      "attachment_time_initial_mass": 12315.352448035621,
+      "attachment_time_final_mass": 12892.54215986096,
+      "output_boundary_index": 24631,
+      "output_boundary_time_initial_mass": 12315.5,
+      "epoch_coordinate_start_initial_mass": 0.0,
+      "joined_support_initial_mass": [
+        0.0,
+        12318.652448035622
+      ],
+      "extended_support_initial_mass": [
+        0.0,
+        12468.652448036168
+      ],
+      "output_support_initial_mass": [
+        0.0,
+        12468.5
+      ],
+      "joined_samples": 775,
+      "extended_samples": 2275,
+      "output_samples": 24938,
+      "extension_samples": 1500,
+      "auxiliary_spacing_initial_mass": 0.1000000000003638,
+      "ringdown_phase0": 0.5271974431083524,
+      "auxiliary_amplitude_negative": false
+    },
+    "metrics_vs_public_unaligned": {
+      "full": {
+        "samples": 24938,
+        "l2": 2.0218469938648145e-21,
+        "relative_l2": 0.008668441710805793,
+        "rms": 1.2803168946749216e-23,
+        "max_abs": 2.7452537091724442e-22
+      },
+      "pre_boundary": {
+        "samples": 24631,
+        "l2": 1.2922902284991776e-21,
+        "relative_l2": 0.005581129525149814,
+        "rms": 8.234155008465719e-24,
+        "max_abs": 2.5710315792354044e-22
+      },
+      "post_boundary": {
+        "samples": 307,
+        "l2": 1.554944125017272e-21,
+        "relative_l2": 0.05538422822613894,
+        "rms": 8.874534867704445e-23,
+        "max_abs": 2.7452537091724442e-22
+      },
+      "amplitude_full": {
+        "samples": 24938,
+        "l2": 3.4721012496812234e-22,
+        "relative_l2": 0.0014886243809846887,
+        "rms": 2.198677695927572e-24,
+        "max_abs": 4.094450825435933e-23
+      },
+      "amplitude_post_boundary": {
+        "samples": 307,
+        "l2": 1.7134204079378758e-22,
+        "relative_l2": 0.00610288597472924,
+        "rms": 9.77900678785622e-24,
+        "max_abs": 3.011910298349008e-23
+      },
+      "phase_full_radians": {
+        "samples": 24938,
+        "l2": 1.0409817704326518,
+        "rms": 0.006591925856792346,
+        "max_abs": 0.06405609300611534,
+        "first": 4.887757868987464e-05,
+        "last": -0.049796469079581004
+      },
+      "phase_post_boundary_radians": {
+        "samples": 307,
+        "l2": 1.0096694611300394,
+        "rms": 0.057624879849334544,
+        "max_abs": 0.06405609300611534,
+        "first": -0.04550748416187388,
+        "last": -0.049796469079581004
+      }
+    }
+  },
+  "comparison_conventions": {
+    "complex_public_mode": "h_plus - 1j*h_cross",
+    "raw": "same-index complex samples on the absolute half-M grid; no time or phase alignment",
+    "phase": "continuous angle of clean*conj(public), unwrapped in output order",
+    "amplitude": "absolute strain amplitude difference",
+    "post_boundary": "output samples with relative time >= native attachment time",
+    "tail_gauge_application": "diagnostic branch only; frozen pre-gauge branch is not modified"
+  },
+  "source_hashes": {
+    "script": "dcee9cdc8acc16cf44f1cff950b5083153c616108edd08732a42c79c9f373ec1",
+    "ringdown_assembly": "df3d21ce4fad55a84d0e1550ac376b8931eecbc0b4076dc9f6235b076ed0befa",
+    "postmerger": "7324ff72dc1fd36149f137b9f8eafa68f354fd897ff5d56478ce5a6cf2f8c5f6",
+    "uib_remnant": "9ea727ec726f82c62c2ad6e399ee084e02daf275c145a3503e0666271010e755",
+    "nqc": "f705514ef981b3f0a557efeebe508b52fdb70c634a8ac8f2c357f30761871068",
+    "hamiltonian": "05e15d8fd9888ee8d454d61fbc8454fe5c652747780f77c771718557ce0294f3",
+    "assembly_contract": "f84736109b0ecd8cd43b7dea52698a2bb8f6f9b74906c558e1ff428ab32c4331"
+  },
+  "data_hashes": {
+    "nqc_cache": "06bb6d88d9b148cc481c8b45a694ea0d132ec195f0c109fc83ba0e024421d334",
+    "nqc_report": "45fc32baae3a2a5d194c02e0aaab271dfcd3baf7b672b043a35b101fcee72400",
+    "public_fixture": "09eaa8b00288c94947b2bb4b40ada7780dc51ac98491a48cbb8f60ed50ab686c",
+    "public_metadata": "047faee14ab7d0747d5ee887ce75d83019a2d0e6ff74cf6408f4f8a7dfe2a070"
+  },
+  "output_cache": {
+    "path": "/Users/xangma/repos/torchwave/verification/teob-ringdown-assembly-clean/physical-assembly-output.npz",
+    "sha256": "cfa711dec6f69206a59002058eba0bf2ad6b48fa43b04501170e11165b41aeb6",
+    "arrays": [
+      "output_time",
+      "public_mode",
+      "authoritative_mode",
+      "gauge_mode",
+      "gauge_mode_before_nqc",
+      "hreal",
+      "auxiliary_hreal",
+      "gauge_phase_increment"
+    ]
+  },
+  "notes": [
+    "The clean UIB2016 nonspinning remnant API supplies final mass fraction and spin.",
+    "The ringdown ansatz is appended and sampled through the isolated assembly API; no runtime driver is changed.",
+    "The tail-gauge branch is a component attribution diagnostic. Its residual ranking does not choose a derivative, gauge, or NQC policy.",
+    "The frozen trajectory uses exact r0=20.0 and 61 PA knots, while the public binary metadata uses r0=19.999999999999996 and 60 knots; this difference is retained as-is.",
+    "No full inspiral or trajectory validation is claimed; only the bounded cached postmerger support is compared."
+  ],
+  "runtime": {
+    "cwd": "/Users/xangma/repos/torchwave",
+    "host": "RONI2",
+    "platform": "macOS-26.6-arm64-arm-64bit-Mach-O",
+    "python": "/Users/xangma/miniconda3/envs/pycbcorig313/bin/python",
+    "torch": "2.9.1"
+  }
+}
