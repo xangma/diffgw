@@ -39,6 +39,8 @@ from torchwave.approximants.xhm_fits import XHMParameterFits, _nonnegative_sqrt
 from torchwave.approximants.xhm_native_fits import (
     eval_native_ringdown_params,
     eval_native_33_ringdown_params,
+    eval_native_33_phase_params,
+    native_ringdown_phase_33,
 )
 from torchwave.approximants.imrphenom_hm import _swsh_projection_coefficients
 from torchwave.approximants.polynomial_interval import polynomial_has_nonpositive
@@ -1283,16 +1285,21 @@ class IMRPhenomXHM(nn.Module):
                         )
 
                     # Ringdown phase connection at f_rd_p
-                    alpha_2_lm = (f_damp["22"] / f_damp_lm) * alpha2_22
+                    if self.calibration in ("torchwave_nr", "native", "torchwave") and (l, m) == (3, 3):
+                        alpha_2_lm, alpha_lambda_lm = eval_native_33_phase_params(eta)
+                    else:
+                        alpha_2_lm = (f_damp["22"] / f_damp_lm) * alpha2_22
+                        alpha_lambda_lm = alpha_lambda_22
+
                     dphi_rd_val = eval_dphi_int(f_rd_p)
                     lor_rd_at_cut = f_damp_lm / ((f_damp_lm**2) + (f_rd_p - f_ring_lm)**2)
                     dt_rd = dphi_rd_val - (
-                        alpha_2_lm * (f_ring_lm**2) / (f_rd_p**2) + alpha_lambda_22 * lor_rd_at_cut
+                        alpha_2_lm * (f_ring_lm**2) / (f_rd_p**2) + alpha_lambda_lm * lor_rd_at_cut
                     )
                     phi_int_at_cut = eval_phi_int(f_rd_p)
                     phi_rd_base = (
                         -alpha_2_lm * (f_ring_lm**2) / f_rd_p
-                        + alpha_lambda_22 * torch.atan((f_rd_p - f_ring_lm) / f_damp_lm)
+                        + alpha_lambda_lm * torch.atan((f_rd_p - f_ring_lm) / f_damp_lm)
                         + dt_rd * f_rd_p
                     )
                     dphi_rd_shift = phi_int_at_cut - phi_rd_base
@@ -1301,7 +1308,7 @@ class IMRPhenomXHM(nn.Module):
                         damp_u = _unsqueeze_to(f_damp_lm, f_in)
                         ring_u = _unsqueeze_to(f_ring_lm, f_in)
                         a2_u = _unsqueeze_to(alpha_2_lm, f_in)
-                        alam_u = _unsqueeze_to(alpha_lambda_22, f_in)
+                        alam_u = _unsqueeze_to(alpha_lambda_lm, f_in)
                         dt_u = _unsqueeze_to(dt_rd, f_in)
                         shift_u = _unsqueeze_to(dphi_rd_shift, f_in)
                         return (

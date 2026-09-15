@@ -62,6 +62,20 @@ LAMBDA_COEFFS_33 = (
     0.19316055184011058,
 )
 
+# (3, 3) Phase parameters: alpha_2 = sum(c_k * x^k), alpha_lambda = sum(c_k * x^k)
+# Calibrated on 5 SXS training families: SXS:BBH:2331 (q=1.5), SXS:BBH:1166 (q=2),
+# SXS:BBH:2485 (q=4), SXS:BBH:3619 (q=5), SXS:BBH:2707 (q=8).
+# Validated on 7 preregistered holdouts (q=3, 3.5, 4.5, 5.5, 6, 7, 10).
+ALPHA2_COEFFS_33 = (
+    37.15011758,
+    -7.92405510,
+)
+ALAMBDA_COEFFS_33 = (
+    -1.12971547,
+    -0.07975304,
+)
+T0_OFFSET_33: float = -13.783
+
 # (4, 4) Even-m: log(a_lambda / sqrt(eta - 3*eta^2)) = sum(c_k * x^k)
 LOG_A_OVER_SQRT_COEFFS_44 = (
     -6.150473388905861,
@@ -207,3 +221,70 @@ def native_ringdown_amplitude_33(
 ) -> torch.Tensor:
     """Backward-compatible wrapper for native_ringdown_amplitude on (3, 3)."""
     return native_ringdown_amplitude(3, 3, f, eta, delta, f_ring_33, f_damp_33, sigma)
+
+
+def eval_native_33_phase_params(
+    eta: torch.Tensor,
+) -> Tuple[torch.Tensor, torch.Tensor]:
+    """Compute native SXS-calibrated (3, 3) ringdown phase parameters (alpha_2, alpha_lambda)."""
+    x = 4.0 * eta - 1.0
+    alpha_2 = _eval_poly_x(ALPHA2_COEFFS_33, x)
+    alpha_lambda = _eval_poly_x(ALAMBDA_COEFFS_33, x)
+    return alpha_2, alpha_lambda
+
+
+def eval_native_phase_params(
+    l: int,
+    m: int,
+    eta: torch.Tensor,
+) -> Tuple[torch.Tensor, torch.Tensor]:
+    """Dispatch native SXS-calibrated ringdown phase parameters for mode (l, m).
+
+    Args:
+        l: Polar spherical harmonic index
+        m: Azimuthal spherical harmonic index
+        eta: Symmetric mass ratio
+
+    Returns:
+        Tuple of (alpha_2, alpha_lambda) tensors.
+    """
+    if (l, m) == (3, 3):
+        return eval_native_33_phase_params(eta)
+    else:
+        raise ValueError(f"Native NR phase calibration not supported for mode ({l}, {m})")
+
+
+def native_ringdown_phase(
+    l: int,
+    m: int,
+    f: torch.Tensor,
+    eta: torch.Tensor,
+    f_ring: Union[float, torch.Tensor],
+    f_damp: Union[float, torch.Tensor],
+    include_arrival_time: bool = True,
+) -> torch.Tensor:
+    """Compute native SXS-calibrated ringdown phase profile phi_RD(f) for mode (l, m).
+
+    Ansatz:
+        phi_RD(f) = -alpha_2 * (f_ring^2 / f) + alpha_lambda * atan((f - f_ring) / f_damp)
+                    + (2 * pi * f * t0 if include_arrival_time else 0)
+    """
+    alpha_2, alpha_lambda = eval_native_phase_params(l, m, eta)
+    f_safe = torch.clamp(f, min=1e-12)
+    inv_term = -(f_ring ** 2) / f_safe
+    atan_term = torch.atan((f - f_ring) / f_damp)
+    phi = alpha_2 * inv_term + alpha_lambda * atan_term
+    if include_arrival_time and (l, m) == (3, 3):
+        phi = phi + 2.0 * math.pi * f * T0_OFFSET_33
+    return phi
+
+
+def native_ringdown_phase_33(
+    f: torch.Tensor,
+    eta: torch.Tensor,
+    f_ring_33: Union[float, torch.Tensor],
+    f_damp_33: Union[float, torch.Tensor],
+    include_arrival_time: bool = True,
+) -> torch.Tensor:
+    """Backward-compatible wrapper for native_ringdown_phase on (3, 3)."""
+    return native_ringdown_phase(3, 3, f, eta, f_ring_33, f_damp_33, include_arrival_time)
