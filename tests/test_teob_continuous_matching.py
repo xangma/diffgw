@@ -93,3 +93,75 @@ def test_nqc_gradient_includes_moving_event_and_explicit_targets():
 def test_unknown_matching_policy_rejected_before_assembly():
     with pytest.raises(ValueError, match="matching_method"):
         assemble_teob_merger_nqc(torch.arange(8.), torch.ones(8, 4), matching_method="unknown")
+
+
+def test_attach_seobnrv4_continuous_matching():
+    from tests.test_clean_room_eob_attachment import inputs
+    from torchwave.approximants.eob.attachment import attach_seobnrv4_22
+
+    args = inputs()
+    query = torch.linspace(0, 50, 64, dtype=torch.float64)
+    res_cont = attach_seobnrv4_22(*args, query, matching_method="continuous")
+    res_grid = attach_seobnrv4_22(*args, query, matching_method="grid")
+
+    assert torch.isfinite(res_cont.mode).all()
+    assert torch.isfinite(res_grid.mode).all()
+    torch.testing.assert_close(res_cont.match_time, res_grid.match_time, rtol=1e-5, atol=1e-4)
+    assert res_cont.mode.shape == query.shape
+    assert res_grid.mode.shape == query.shape
+
+
+def test_seobnr_ode_waveform_continuous_matching():
+    from torchwave.waveforms import get_fd_waveform
+
+    f = torch.tensor([30.0, 40.0, 50.0], dtype=torch.float64)
+    hp, hc = get_fd_waveform(
+        "SEOBNR_ODE",
+        mass1=30.0,
+        mass2=20.0,
+        sample_frequencies=f,
+        f_lower=30.0,
+        num_steps=8,
+        dt_geom=1.0,
+        matching_method="continuous",
+    )
+    assert hp.shape == f.shape
+    assert hc.shape == f.shape
+    assert torch.isfinite(hp).all()
+    assert torch.isfinite(hc).all()
+    assert torch.any(hp.abs() > 0)
+
+
+def test_teobresums_continuous_matching_interface(monkeypatch):
+    from torchwave.approximants.teobresums import TEOBResumS
+    from torchwave.approximants.eob import teob_conditioned_waveform_clean as adapter
+    from types import SimpleNamespace
+
+    captured = {}
+    f = torch.linspace(25.0, 80.0, 10, dtype=torch.float64)
+
+    def fake_conditioned(mass1=None, mass2=None, **kwargs):
+        captured.update(mass1=mass1, mass2=mass2, **kwargs)
+        n = f.numel()
+        return SimpleNamespace(
+            frequencies=f,
+            h_plus=torch.ones(n, dtype=torch.float64),
+            h_cross=torch.ones(n, dtype=torch.float64) * 0.5,
+        )
+
+    monkeypatch.setattr(adapter, "conditioned_teob_fd", fake_conditioned)
+
+    # Test via instance constructor
+    model = TEOBResumS(matching_method="continuous")
+    hp, hc = model(
+        f=f,
+        mass1=30.0,
+        mass2=20.0,
+        f_lower=20.0,
+    )
+    assert captured["matching_method"] == "continuous"
+    assert captured["radial_acceleration_policy"] == "conservative"
+    assert hp.shape == f.shape
+    assert hc.shape == f.shape
+    assert torch.allclose(hp.real, torch.ones_like(f))
+

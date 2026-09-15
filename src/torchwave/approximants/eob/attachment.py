@@ -47,7 +47,8 @@ def _local_mode_interpolate(query, time, mode):
 
 
 def attach_seobnrv4_22(time, state, orbital_frequency, base_mode, base_frequency,
-                       nu, chi, sigma, output_time, *, valid=None):
+                       nu, chi, sigma, output_time, *, valid=None,
+                       matching_method: str = "continuous"):
     """Locate Omega's peak, solve all five NQC conditions, and attach ringdown.
 
     Input samples are on the final axis, except ``state`` is (..., N, 4) in
@@ -67,10 +68,10 @@ def attach_seobnrv4_22(time, state, orbital_frequency, base_mode, base_frequency
     corrected samples are locally interpolated on the source grid; times before input start
     are zero. Output samples occupy the last axis and may be batched.
 
-    Peak/stencil selection is discrete. Within a selected stencil gradients
-    are retained. This interpolation is an explicit numerical choice; reduce
-    trajectory spacing to check convergence. Unresolved peaks, insufficient
-    pre-peak history, or ill-conditioned matching fail without a fallback.
+    ``matching_method="continuous"`` locates the peak continuously using
+    natural cubic spline root-finding, eliminating discrete knot-shifting
+    sensitivities. ``matching_method="grid"`` preserves the discrete seven-sample
+    stencil peak selection.
     """
     reals = (time, state, orbital_frequency, base_frequency, nu, chi, output_time)
     if not all(isinstance(value, torch.Tensor) for value in (*reals, base_mode, sigma)):
@@ -100,7 +101,42 @@ def attach_seobnrv4_22(time, state, orbital_frequency, base_mode, base_frequency
     query = output_time.expand(batch+(output_time.shape[-1],))
     if valid is None:
         valid = torch.ones_like(time, dtype=torch.bool)
-    peak = orbital_frequency_peak(time, omega, valid=valid)
+    if matching_method == "continuous":
+        from .continuous_matching import continuous_spline_peak
+        from .numerical_attachment import natural_cubic_spline
+        if time.ndim == 1:
+            t_v = time[valid]
+            om_v = omega[valid]
+            peak_time = continuous_spline_peak(t_v, om_v)
+            spline = natural_cubic_spline(t_v, om_v, scalar_output=True)
+            peak_frequency = spline(peak_time)
+            peak_curvature = spline.derivative(peak_time, 2)
+            peak_idx = torch.searchsorted(time, peak_time)
+            peak = OrbitalFrequencyPeak(peak_time, peak_frequency, peak_curvature, peak_idx)
+        else:
+            flat_time = time.reshape(-1, count)
+            flat_omega = omega.reshape(-1, count)
+            flat_valid = valid.reshape(-1, count)
+            pts, pfreqs, pcurvs, pidxs = [], [], [], []
+            for t_i, om_i, v_i in zip(flat_time, flat_omega, flat_valid):
+                t_sub = t_i[v_i]
+                om_sub = om_i[v_i]
+                pt = continuous_spline_peak(t_sub, om_sub)
+                sp = natural_cubic_spline(t_sub, om_sub, scalar_output=True)
+                pts.append(pt)
+                pfreqs.append(sp(pt))
+                pcurvs.append(sp.derivative(pt, 2))
+                pidxs.append(torch.searchsorted(t_i, pt))
+            peak = OrbitalFrequencyPeak(
+                torch.stack(pts).reshape(time.shape[:-1]),
+                torch.stack(pfreqs).reshape(time.shape[:-1]),
+                torch.stack(pcurvs).reshape(time.shape[:-1]),
+                torch.stack(pidxs).reshape(time.shape[:-1]),
+            )
+    elif matching_method == "grid":
+        peak = orbital_frequency_peak(time, omega, valid=valid)
+    else:
+        raise ValueError(f"matching_method must be 'continuous' or 'grid', got {matching_method!r}")
     valid = valid.expand(time.shape)
     match = peak.time+seobnrv4_nqc_time_offset(nu, chi)
     index = torch.searchsorted(time.contiguous(), match.unsqueeze(-1).contiguous()).squeeze(-1).clamp(1, count-1)

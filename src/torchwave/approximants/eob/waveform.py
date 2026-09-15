@@ -92,6 +92,7 @@ class SEOBNR_ODE:
         include_pan_v8: Optional[bool] = None,
         include_positive_chi_540: Optional[bool] = None,
         final_spin_fit_order: Optional[Tuple[int, int]] = None,
+        matching_method: str = "continuous",
     ) -> Tuple[torch.Tensor, torch.Tensor]:
         """Generate frequency-domain polarizations via EOB dynamical integration.
 
@@ -241,6 +242,7 @@ class SEOBNR_ODE:
                     init_state, dt_geom, num_steps,
                     post_peak_duration=seobnrv4_nqc_time_offset(nqc_nu, nqc_chi).clamp_min(0)
                     + dt_geom,
+                    matching_method=matching_method,
                 )
             except ValueError as error:
                 if "peak not reached within num_steps" not in str(error):
@@ -315,6 +317,7 @@ class SEOBNR_ODE:
                 sigma,
                 output_time,
                 valid=attachment_trajectory.valid.movedim(0, -1),
+                matching_method=matching_method,
             )
             h22_full_real = attached.mode.real.movedim(-1, 0)
             h22_full_imag = attached.mode.imag.movedim(-1, 0)

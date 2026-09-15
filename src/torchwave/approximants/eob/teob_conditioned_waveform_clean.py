@@ -349,7 +349,7 @@ class ConditionedTEOBFD:
     inclination: Tensor
     phic: Tensor
     tc: Tensor
-    matching_method: str = "grid"
+    matching_method: str = "continuous"
 
     @property
     def hplus(self) -> Tensor:
@@ -494,7 +494,7 @@ def conditioned_teob_fd(
     horizon_policy: Optional[str] = None,
     remnant_policy: str = "uib2016",
     nqc_target_policy: str = "published-2017",
-    matching_method: str = "grid",
+    matching_method: str = "continuous",
     pa_initializer_policy: str = "analytic",
     nqc_targets: object = None,
     nqc_target_provenance: Optional[str] = None,
@@ -515,9 +515,9 @@ def conditioned_teob_fd(
     The adapter intentionally requires the trajectory and horizon attribution
     policies.  The remnant policy defaults to the pre-existing UIB2016 route
     and must be named as ``"teob-healy-jf"`` to opt into the hybrid diagnostic.
-    ``matching_method="continuous"`` shares an accepted-trajectory spline
+    ``matching_method="continuous"`` (the default) shares an accepted-trajectory spline
     peak between NQC and ringdown, with matching at the exact physical time.
-    The default ``"grid"`` preserves the existing compatibility convention.
+    The opt-in ``"grid"`` preserves the legacy auxiliary-grid attachment convention.
     """
     if type(mode) is not tuple or mode != (2, 2):
         raise NotImplementedError("the clean orchestration adapter supports only mode (2,2)")

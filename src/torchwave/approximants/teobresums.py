@@ -745,11 +745,15 @@ def compute_tidal_merger_frequency(
 class TEOBResumS:
     """Prototype tidal waveform generator retaining its historical API name."""
 
-    @staticmethod
+    def __init__(self, matching_method: Optional[str] = None, **kwargs):
+        self.default_matching_method = matching_method
+        self.init_kwargs = kwargs
+
     def __call__(
-        f: torch.Tensor,
-        mass1: Union[float, torch.Tensor],
-        mass2: Union[float, torch.Tensor],
+        self,
+        f: torch.Tensor = None,
+        mass1: Union[float, torch.Tensor] = None,
+        mass2: Union[float, torch.Tensor] = None,
         chi1: Union[float, torch.Tensor] = 0.0,
         chi2: Union[float, torch.Tensor] = 0.0,
         lambda1: Union[float, torch.Tensor] = 0.0,
@@ -765,6 +769,8 @@ class TEOBResumS:
         taper_width_ratio: float = 0.1,
         f_lower: Optional[Union[float, torch.Tensor]] = None,
         integration_mode: str = "diagnostic_fixed",
+        matching_method: Optional[str] = None,
+        **kwargs,
     ) -> Tuple[torch.Tensor, torch.Tensor]:
         """Generate prototype tidal polarizations with a heuristic merger taper.
 
@@ -783,10 +789,21 @@ class TEOBResumS:
             taper_width_ratio: Fractional width for smooth post-merger tapering
             f_lower: Requested starting gravitational-wave frequency in Hz. If
                 omitted, the lowest positive sample in ``f`` is used.
+            integration_mode: ``diagnostic_fixed``, ``physical_event``, or ``clean``.
+            matching_method: ``continuous`` for continuous NQC attachment, or
+                ``diagnostic_fixed``.
 
         Returns:
             (h_plus, h_cross) frequency-domain complex tensors
         """
+        if not isinstance(self, TEOBResumS):
+            # Invoked as static/class call: shift arguments
+            f, mass1, mass2 = self, f, mass1
+            self = None
+
+        if matching_method is None:
+            matching_method = getattr(self, "default_matching_method", None) or "diagnostic_fixed"
+
         device = f.device
         dtype = f.dtype if f.is_floating_point() else torch.float64
 
@@ -840,6 +857,42 @@ class TEOBResumS:
             if (not bool(torch.isfinite(f_start_hz).all())
                     or bool((f_start_hz <= 0).any())):
                 raise ValueError("f_lower must be finite and positive")
+
+        if (
+            (matching_method == "continuous" or integration_mode == "clean")
+            and not is_batched
+            and bool((s1 == 0).all())
+            and bool((s2 == 0).all())
+            and bool((l1 == 0).all())
+            and bool((l2 == 0).all())
+        ):
+            from torchwave.approximants.eob.teob_conditioned_waveform_clean import conditioned_teob_fd
+            positive_f = f[f > 0]
+            f_min = f_start_hz if f_lower is not None else (positive_f.min() if positive_f.numel() > 0 else torch.as_tensor(20.0, dtype=dtype, device=device))
+            f_max = f.max() if f.numel() > 0 else torch.as_tensor(256.0, dtype=dtype, device=device)
+            delta_f = f[1] - f[0] if f.numel() > 1 else torch.as_tensor(0.5, dtype=dtype, device=device)
+            res = conditioned_teob_fd(
+                mass1=m1,
+                mass2=m2,
+                f_low=f_min,
+                f_max=f_max,
+                delta_f=delta_f,
+                distance=dist,
+                inclination=inc,
+                phic=phi_c,
+                tc=t_c,
+                radial_acceleration_policy=kwargs.get("radial_acceleration_policy", "conservative"),
+                horizon_policy=kwargs.get("horizon_policy", "current"),
+                remnant_policy=kwargs.get("remnant_policy", "uib2016"),
+                matching_method="continuous",
+                pa_kwargs=kwargs.get("pa_kwargs"),
+                continuation_kwargs=kwargs.get("continuation_kwargs"),
+                dtype=dtype,
+                device=device,
+            )
+            hp = _interp1d(f, res.frequencies, res.h_plus)
+            hc = _interp1d(f, res.frequencies, res.h_cross)
+            return hp, hc
 
         # For the dominant quadrupole, f_gw = Omega_orb / pi, so the
         # dimensionless circular frequency is M Omega = pi M_sec f_lower.

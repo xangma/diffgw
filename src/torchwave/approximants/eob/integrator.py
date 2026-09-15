@@ -123,7 +123,8 @@ class EOBTrajectoryIntegrator:
 
     def integrate_to_frequency_peak(self, initial_state, dt, num_steps, *,
                                     post_peak_duration=0.,
-                                    richardson_extrapolation=False):
+                                    richardson_extrapolation=False,
+                                    matching_method="continuous"):
         """Integrate through a resolved Omega maximum in each batch row.
 
         Fixed-step RK4 retains at least two samples beyond each observed maximum and
@@ -208,5 +209,37 @@ class EOBTrajectoryIntegrator:
             raise ValueError("orbital-frequency peak not reached within num_steps")
         time = torch.arange(len(states), dtype=state.dtype, device=state.device)*dt
         trajectory, frequency, valid = torch.stack(states), torch.stack(frequencies), torch.stack(masks)
-        peak = orbital_frequency_peak(time, frequency.movedim(0, -1), valid=valid.movedim(0, -1))
+        if matching_method == "continuous":
+            from .continuous_matching import continuous_spline_peak
+            from .numerical_attachment import natural_cubic_spline
+            if frequency.ndim == 1:
+                t_sub = time[valid]
+                om_sub = frequency[valid]
+                pt = continuous_spline_peak(t_sub, om_sub)
+                sp = natural_cubic_spline(t_sub, om_sub, scalar_output=True)
+                peak = OrbitalFrequencyPeak(pt, sp(pt), sp.derivative(pt, 2), torch.searchsorted(time, pt))
+            else:
+                flat_time = time.expand(frequency.shape[1:] + (time.shape[-1],)).reshape(-1, time.shape[-1])
+                flat_omega = frequency.movedim(0, -1).reshape(-1, time.shape[-1])
+                flat_valid = valid.movedim(0, -1).reshape(-1, time.shape[-1])
+                pts, pfreqs, pcurvs, pidxs = [], [], [], []
+                for t_i, om_i, v_i in zip(flat_time, flat_omega, flat_valid):
+                    t_sub = t_i[v_i]
+                    om_sub = om_i[v_i]
+                    pt = continuous_spline_peak(t_sub, om_sub)
+                    sp = natural_cubic_spline(t_sub, om_sub, scalar_output=True)
+                    pts.append(pt)
+                    pfreqs.append(sp(pt))
+                    pcurvs.append(sp.derivative(pt, 2))
+                    pidxs.append(torch.searchsorted(t_i, pt))
+                peak = OrbitalFrequencyPeak(
+                    torch.stack(pts).reshape(frequency.shape[1:]),
+                    torch.stack(pfreqs).reshape(frequency.shape[1:]),
+                    torch.stack(pcurvs).reshape(frequency.shape[1:]),
+                    torch.stack(pidxs).reshape(frequency.shape[1:]),
+                )
+        elif matching_method == "grid":
+            peak = orbital_frequency_peak(time, frequency.movedim(0, -1), valid=valid.movedim(0, -1))
+        else:
+            raise ValueError(f"matching_method must be 'continuous' or 'grid', got {matching_method!r}")
         return FrequencyPeakTrajectory(time, trajectory, frequency, valid, peak)
