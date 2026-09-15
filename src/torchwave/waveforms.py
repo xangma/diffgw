@@ -288,10 +288,13 @@ def _get_fd_waveform_raw(
             **model_kwargs,
         )
     elif key in ("imrphenomhm", "imrphenomxhm"):
+        calibration = model_kwargs.pop("calibration", "torchwave_nr")
+        init_kwargs = {}
         if modes is not None:
-            model = model_cls(modes=modes)
-        else:
-            model = model_cls()
+            init_kwargs["modes"] = modes
+        if key == "imrphenomxhm":
+            init_kwargs["calibration"] = calibration
+        model = model_cls(**init_kwargs)
         return model(
             f=f,
             mass1=mass1,
@@ -449,10 +452,12 @@ def _get_fd_waveform_raw(
             **model_kwargs,
         )
     elif key in ("imrphenomxphm",):
+        calibration = model_kwargs.pop("calibration", "torchwave_nr")
+        init_kwargs = {}
         if modes is not None:
-            model = model_cls(modes=modes)
-        else:
-            model = model_cls()
+            init_kwargs["modes"] = modes
+        init_kwargs["calibration"] = calibration
+        model = model_cls(**init_kwargs)
         return model(
             f=f,
             mass1=mass1,

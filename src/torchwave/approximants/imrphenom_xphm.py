@@ -73,13 +73,18 @@ class IMRPhenomXPHM(nn.Module):
 
     SUPPORTED_MODES = ((2, 2), (2, 1), (3, 3), (3, 2), (4, 4))
 
-    def __init__(self, modes: Optional[Sequence[Tuple[int, int]]] = None):
+    def __init__(
+        self,
+        modes: Optional[Sequence[Tuple[int, int]]] = None,
+        calibration: str = "torchwave_nr",
+    ):
         super().__init__()
+        self.calibration = calibration.lower()
         self.modes = tuple(modes) if modes is not None else self.SUPPORTED_MODES
         for lm in self.modes:
             if lm not in self.SUPPORTED_MODES:
                 raise ValueError(f"Mode {lm} not supported. Supported: {self.SUPPORTED_MODES}")
-        self.xhm_model = IMRPhenomXHM(modes=self.modes)
+        self.xhm_model = IMRPhenomXHM(modes=self.modes, calibration=self.calibration)
 
     def forward(
         self,

@@ -52,11 +52,13 @@ dependencies.
 
 ## Scope of this notice
 
-The independent NR `(3,3)` calibration pilot uses seven SXS datasets under
-CC-BY-4.0. Versioned dataset links, creator records, and processing changes are
-listed in [the pilot attribution notice](docs/reviews/2026-09-15-independent-calibration/DATA_ATTRIBUTION.md).
+The native Numerical Relativity higher-harmonic calibrations in `xhm_native_fits.py`
+for modes (2,1), (3,3), (4,4), and (3,2) use public SXS datasets under CC-BY-4.0.
+Versioned dataset links, creator records, and processing changes are listed in
+[the pilot attribution notice](docs/reviews/2026-09-15-independent-calibration/DATA_ATTRIBUTION.md)
+and [the expanded validation attribution notice](docs/reviews/2026-09-15-independent-calibration-expanded/DATA_ATTRIBUTION.md).
 That notice accompanies the processed NR and calibration data. The independently
-written pilot software remains under MIT.
+written TorchWave calibration software and polynomial surfaces remain strictly under MIT.
 
 This records the identified third-party terms above. It does not certify the provenance
 of inherited calibration arrays elsewhere in the repository. Their review is

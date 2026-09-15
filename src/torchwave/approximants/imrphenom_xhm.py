@@ -36,6 +36,10 @@ from torchwave.approximants.imrphenom_xas import (
     safe_sqrt,
 )
 from torchwave.approximants.xhm_fits import XHMParameterFits, _nonnegative_sqrt
+from torchwave.approximants.xhm_native_fits import (
+    eval_native_ringdown_params,
+    eval_native_33_ringdown_params,
+)
 from torchwave.approximants.imrphenom_hm import _swsh_projection_coefficients
 from torchwave.approximants.polynomial_interval import polynomial_has_nonpositive
 
@@ -542,9 +546,11 @@ class IMRPhenomXHM(nn.Module):
         base_22: Optional[nn.Module] = None,
         *,
         experimental_phase_connections: bool = False,
+        calibration: str = "torchwave_nr",
     ):
         self.carrier = carrier
         super().__init__()
+        self.calibration = calibration.lower()
         self.modes = tuple(modes) if modes is not None else self.SUPPORTED_MODES
         for lm in self.modes:
             if lm not in self.SUPPORTED_MODES:
@@ -832,8 +838,11 @@ class IMRPhenomXHM(nn.Module):
                 gamma_insp = abc[..., 2]
 
                 # Ringdown amplitude parameters
-                alambda_fit = getattr(XHMParameterFits, f"amp_alambda_{lm_str}")(eta, s1, s2, S)
-                lambda_fit = getattr(XHMParameterFits, f"amp_lambda_{lm_str}")(eta, s1, s2, S)
+                if self.calibration in ("torchwave_nr", "native", "torchwave") and (l, m) in ((2, 1), (3, 2), (3, 3), (4, 4)):
+                    alambda_fit, lambda_fit = eval_native_ringdown_params(l, m, eta, delta)
+                else:
+                    alambda_fit = getattr(XHMParameterFits, f"amp_alambda_{lm_str}")(eta, s1, s2, S)
+                    lambda_fit = getattr(XHMParameterFits, f"amp_lambda_{lm_str}")(eta, s1, s2, S)
 
                 def eval_h_rd(f_in: torch.Tensor) -> torch.Tensor:
                     w = _unsqueeze_to(f_damp_lm * sigma_lm, f_in)
