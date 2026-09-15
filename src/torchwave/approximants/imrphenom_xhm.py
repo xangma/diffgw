@@ -542,6 +542,8 @@ class IMRPhenomXHM(nn.Module):
     def get_supported_modes(self):
         return self.SUPPORTED_MODES
 
+    SUPPORTED_CALIBRATIONS = ("sovereign", "torchwave_nr", "native", "torchwave")
+
     def __init__(
         self,
         modes: Optional[Sequence[Tuple[int, int]]] = None,
@@ -549,11 +551,15 @@ class IMRPhenomXHM(nn.Module):
         base_22: Optional[nn.Module] = None,
         *,
         experimental_phase_connections: bool = False,
-        calibration: str = "torchwave_nr",
+        calibration: str = "sovereign",
     ):
         self.carrier = carrier
         super().__init__()
         self.calibration = calibration.lower()
+        if self.calibration not in self.SUPPORTED_CALIBRATIONS:
+            raise ValueError(
+                f"Unsupported calibration '{calibration}'. Sovereign calibration is the sole supported standard."
+            )
         self.modes = tuple(modes) if modes is not None else self.SUPPORTED_MODES
         for lm in self.modes:
             if lm not in self.SUPPORTED_MODES:
@@ -840,12 +846,8 @@ class IMRPhenomXHM(nn.Module):
                 beta_insp = abc[..., 1]
                 gamma_insp = abc[..., 2]
 
-                # Ringdown amplitude parameters
-                if self.calibration in ("torchwave_nr", "native", "torchwave") and (l, m) in ((2, 1), (3, 2), (3, 3), (4, 4)):
-                    alambda_fit, lambda_fit = eval_native_ringdown_params(l, m, eta, delta)
-                else:
-                    alambda_fit = getattr(XHMParameterFits, f"amp_alambda_{lm_str}")(eta, s1, s2, S)
-                    lambda_fit = getattr(XHMParameterFits, f"amp_lambda_{lm_str}")(eta, s1, s2, S)
+                # Ringdown amplitude parameters (Sovereign SXS NR calibrated)
+                alambda_fit, lambda_fit = eval_native_ringdown_params(l, m, eta, delta)
 
                 def eval_h_rd(f_in: torch.Tensor) -> torch.Tensor:
                     w = _unsqueeze_to(f_damp_lm * sigma_lm, f_in)
@@ -1285,12 +1287,8 @@ class IMRPhenomXHM(nn.Module):
                             - (1.0 / 3.0) * a_4_u / (f_in**3)
                         )
 
-                    # Ringdown phase connection at f_rd_p
-                    if self.calibration in ("torchwave_nr", "native", "torchwave") and (l, m) in ((2, 1), (3, 3), (4, 4)):
-                        alpha_2_lm, alpha_lambda_lm = eval_native_phase_params(l, m, eta)
-                    else:
-                        alpha_2_lm = (f_damp["22"] / f_damp_lm) * alpha2_22
-                        alpha_lambda_lm = alpha_lambda_22
+                    # Ringdown phase connection at f_rd_p (Sovereign SXS NR calibrated)
+                    alpha_2_lm, alpha_lambda_lm = eval_native_phase_params(l, m, eta)
 
                     dphi_rd_val = eval_dphi_int(f_rd_p)
                     lor_rd_at_cut = f_damp_lm / ((f_damp_lm**2) + (f_rd_p - f_ring_lm)**2)

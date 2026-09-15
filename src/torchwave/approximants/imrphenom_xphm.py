@@ -76,7 +76,7 @@ class IMRPhenomXPHM(nn.Module):
     def __init__(
         self,
         modes: Optional[Sequence[Tuple[int, int]]] = None,
-        calibration: str = "torchwave_nr",
+        calibration: str = "sovereign",
     ):
         super().__init__()
         self.calibration = calibration.lower()

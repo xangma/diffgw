@@ -903,12 +903,12 @@ SOVEREIGN_MODELS: Dict[str, Dict[str, Any]] = {
     "IMRPhenomXHM": {
         "status": "SOVEREIGN_NR_CALIBRATED",
         "description": "Sovereign SXS Numerical Relativity ringdown amplitude and phase calibrations across all higher harmonics ((2,1), (3,3), (4,4), (3,2)), replacing uncertified legacy C-table anomalies.",
-        "calibration": "torchwave_nr",
+        "calibration": "sovereign",
     },
     "IMRPhenomXPHM": {
         "status": "SOVEREIGN_NR_CALIBRATED",
         "description": "Multi-mode precessing waveform incorporating sovereign SXS NR higher harmonic calibrations.",
-        "calibration": "torchwave_nr",
+        "calibration": "sovereign",
     },
     "SEOBNR_ODE": {
         "status": "SOVEREIGN_CONTINUOUS_MATCHING",

@@ -96,11 +96,11 @@ def test_native_ringdown_amplitude_profile(lm):
 
 
 def test_imrphenom_xhm_native_waveform():
-    """Verify IMRPhenomXHM generates finite polarizations with native calibration."""
+    """Verify IMRPhenomXHM defaults to sovereign calibration and rejects invalid options."""
     from torchwave.waveforms import get_fd_waveform
 
     f = torch.linspace(20.0, 400.0, 100, dtype=torch.float64)
-    hp_nat, hc_nat = get_fd_waveform(
+    hp_def, hc_def = get_fd_waveform(
         approximant="IMRPhenomXHM",
         mass1=40.0,
         mass2=20.0,
@@ -108,13 +108,13 @@ def test_imrphenom_xhm_native_waveform():
         chi2=-0.1,
         inclination=0.8,
         sample_frequencies=f,
-        calibration="torchwave_nr",
     )
-    assert torch.all(torch.isfinite(hp_nat))
-    assert torch.all(torch.isfinite(hc_nat))
-    assert torch.linalg.vector_norm(hp_nat).item() > 0.0
+    assert torch.all(torch.isfinite(hp_def))
+    assert torch.all(torch.isfinite(hc_def))
+    assert torch.linalg.vector_norm(hp_def).item() > 0.0
 
-    hp_leg, hc_leg = get_fd_waveform(
+    # Explicit calibration="sovereign" matches default exactly
+    hp_sov, hc_sov = get_fd_waveform(
         approximant="IMRPhenomXHM",
         mass1=40.0,
         mass2=20.0,
@@ -122,19 +122,43 @@ def test_imrphenom_xhm_native_waveform():
         chi2=-0.1,
         inclination=0.8,
         sample_frequencies=f,
-        calibration="legacy",
+        calibration="sovereign",
     )
-    # Native SXS calibration should differ from legacy calibration
-    diff = torch.linalg.vector_norm(hp_nat - hp_leg) / torch.linalg.vector_norm(hp_leg)
-    assert diff.item() > 0.0
+    assert torch.allclose(hp_def, hp_sov)
+    assert torch.allclose(hc_def, hc_sov)
+
+    # Aliases match sovereign exactly
+    for alias in ("torchwave_nr", "native", "torchwave"):
+        hp_alias, hc_alias = get_fd_waveform(
+            approximant="IMRPhenomXHM",
+            mass1=40.0,
+            mass2=20.0,
+            chi1=0.2,
+            chi2=-0.1,
+            inclination=0.8,
+            sample_frequencies=f,
+            calibration=alias,
+        )
+        assert torch.allclose(hp_def, hp_alias)
+        assert torch.allclose(hc_def, hc_alias)
+
+    # Legacy/invalid options are cleanly rejected
+    with pytest.raises(ValueError, match="Unsupported calibration"):
+        get_fd_waveform(
+            approximant="IMRPhenomXHM",
+            mass1=40.0,
+            mass2=20.0,
+            sample_frequencies=f,
+            calibration="legacy",
+        )
 
 
 def test_imrphenom_xphm_native_waveform():
-    """Verify precessing IMRPhenomXPHM generates finite polarizations with native calibration."""
+    """Verify precessing IMRPhenomXPHM defaults to sovereign calibration and rejects invalid options."""
     from torchwave.waveforms import get_fd_waveform
 
     f = torch.linspace(20.0, 400.0, 100, dtype=torch.float64)
-    hp_nat, hc_nat = get_fd_waveform(
+    hp_def, hc_def = get_fd_waveform(
         approximant="IMRPhenomXPHM",
         mass1=40.0,
         mass2=20.0,
@@ -146,11 +170,38 @@ def test_imrphenom_xphm_native_waveform():
         spin2z=-0.1,
         inclination=0.8,
         sample_frequencies=f,
-        calibration="torchwave_nr",
     )
-    assert torch.all(torch.isfinite(hp_nat))
-    assert torch.all(torch.isfinite(hc_nat))
-    assert torch.linalg.vector_norm(hp_nat).item() > 0.0
+    assert torch.all(torch.isfinite(hp_def))
+    assert torch.all(torch.isfinite(hc_def))
+    assert torch.linalg.vector_norm(hp_def).item() > 0.0
+
+    # Explicit calibration="sovereign" matches default
+    hp_sov, hc_sov = get_fd_waveform(
+        approximant="IMRPhenomXPHM",
+        mass1=40.0,
+        mass2=20.0,
+        spin1x=0.1,
+        spin1y=0.0,
+        spin1z=0.2,
+        spin2x=0.0,
+        spin2y=0.1,
+        spin2z=-0.1,
+        inclination=0.8,
+        sample_frequencies=f,
+        calibration="sovereign",
+    )
+    assert torch.allclose(hp_def, hp_sov)
+    assert torch.allclose(hc_def, hc_sov)
+
+    # Legacy/invalid options are cleanly rejected
+    with pytest.raises(ValueError, match="Unsupported calibration"):
+        get_fd_waveform(
+            approximant="IMRPhenomXPHM",
+            mass1=40.0,
+            mass2=20.0,
+            sample_frequencies=f,
+            calibration="legacy",
+        )
 
 
 @pytest.mark.parametrize("lm", [(2, 1), (3, 3), (4, 4), (3, 2)])
