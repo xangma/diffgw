@@ -1,0 +1,69 @@
+[build-system]
+requires = ["setuptools>=61.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "diffgw"
+version = "0.1.0"
+description = "High-performance, batched, differentiable gravitational-wave modeling and inference engine in PyTorch (torchwave) and JAX (jaxwave)"
+readme = "README.md"
+authors = [
+    { name = "Xan Morice-Atkinson" }
+]
+license = { text = "MIT" }
+requires-python = ">=3.10"
+dependencies = [
+    "numpy>=1.20.0",
+]
+
+[project.scripts]
+torchwave-bench = "torchwave.benchmark:main"
+torchwave-profile = "torchwave.profile:main"
+torchwave-generate-qnm = "torchwave.qnm.generate:main"
+torchwave-generate-london-qnm = "torchwave.qnm.london:main"
+torchwave-data = "torchwave.external_data:main"
+
+[project.urls]
+Repository = "https://github.com/xangma/diffgw"
+Documentation = "https://github.com/xangma/diffgw/blob/main/docs/usage.md"
+Issues = "https://github.com/xangma/diffgw/issues"
+
+[project.optional-dependencies]
+torch = [
+    "torch>=2.0.0",
+]
+jax = [
+    "jax>=0.4.28",
+    "jaxlib>=0.4.28",
+]
+all = [
+    "torch>=2.0.0",
+    "jax>=0.4.28",
+    "jaxlib>=0.4.28",
+    "scipy>=1.8.0",
+    "h5py>=3.0",
+]
+dev = [
+    "pytest>=7.0.0",
+    "scipy>=1.8.0",
+]
+
+qnm-generation = [
+    "scipy>=1.8.0",
+    "gmpy2>=2.2.0",
+]
+
+rom-official = [
+    "h5py>=3.0",
+]
+
+[tool.setuptools]
+license-files = ["LICENSE", "THIRD_PARTY_NOTICES.md"]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+python_files = ["test_*.py"]
+pythonpath = ["src", "tests"]
