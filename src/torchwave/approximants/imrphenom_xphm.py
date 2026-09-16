@@ -6,21 +6,18 @@ Mathematical references for the inherited model and audited corrections:
 - Chatziioannou et al. (2017), Phys. Rev. D 95, 104004 (arXiv:1703.03967)
 """
 
-from typing import Dict, List, Optional, Sequence, Tuple, Union
+from typing import Dict, Optional, Sequence, Tuple, Union
 import math
 import torch
 import torch.nn as nn
 
 from torchwave.constants import (
-    C_SI,
     MSUN_SEC,
-    MPC_SI,
     PI,
 )
 from torchwave.conversions import (
     as_tensor,
     component_masses_to_eta,
-    component_masses_to_delta,
 )
 from torchwave.approximants.imrphenom_xhm import IMRPhenomXHM
 from torchwave.approximants.imrphenom_xas import XASParameterFits

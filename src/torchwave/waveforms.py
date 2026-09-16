@@ -9,14 +9,12 @@ import math
 import torch
 
 from torchwave.constants import (
-    C_SI,
     MSUN_SEC,
     PI,
 )
 from torchwave.conversions import (
     as_tensor,
     component_masses_to_chirp_mass,
-    component_masses_to_eta,
 )
 from torchwave.approximants.taylorf2 import TaylorF2
 from torchwave.approximants.taylorf2_hm import TaylorF2_HM
@@ -52,7 +50,6 @@ from torchwave.approximants.teobresums import TEOBResumS
 _APPROXIMANTS = {
     "taylorf2": TaylorF2,
     "taylorf2hm": TaylorF2_HM,
-    "taylorf2_hm": TaylorF2_HM,
     "imrphenomd": IMRPhenomD,
     "imrphenomp": IMRPhenomP,
     "imrphenompv2": IMRPhenomP,
@@ -72,7 +69,6 @@ _APPROXIMANTS = {
     "imrphenomnsbh": IMRPhenomNSBH,
     "nsbh": IMRPhenomNSBH,
     "taylorf2eccentric": TaylorF2_Eccentric,
-    "taylorf2_eccentric": TaylorF2_Eccentric,
     "eccentrictaylorf2": TaylorF2_Eccentric,
     "kerrringdown": KerrRingdown,
     "ringdown": KerrRingdown,
@@ -254,8 +250,7 @@ def _get_fd_waveform_raw(
 
     # Reject unsupported in-plane spins on aligned-spin models
     precessing_keys = {
-        "imrphenomp", "imrphenompv2", "imrphenomxp", "imrphenomxphm",
-        "seobnr", "seobnrode", "seobnrv5",
+        "imrphenomp", "imrphenompv2", "imrphenomxp", "phenomxp", "xp", "imrphenomxphm",
     }
     has_in_plane = (
         (isinstance(spin1x, torch.Tensor) and (spin1x != 0.0).any()) or (not isinstance(spin1x, torch.Tensor) and spin1x != 0.0) or
@@ -268,7 +263,7 @@ def _get_fd_waveform_raw(
             f"Approximant '{approximant}' only supports aligned spins; non-zero in-plane spins were provided."
         )
 
-    if key in ("taylorf2", "taylorf2hm", "taylorf2_hm"):
+    if key in ("taylorf2", "taylorf2hm"):
         if modes is not None:
             model = model_cls(modes=modes)
         else:
@@ -435,7 +430,7 @@ def _get_fd_waveform_raw(
             tc=tc,
             **model_kwargs,
         )
-    elif key in ("taylorf2eccentric", "taylorf2_eccentric", "eccentrictaylorf2"):
+    elif key in ("taylorf2eccentric", "eccentrictaylorf2"):
         model = model_cls()
         return model(
             f=f,
@@ -591,7 +586,55 @@ def get_fd_waveform(
     frequency_support: Optional[str] = None,
     **kwargs,
 ) -> Tuple[torch.Tensor, torch.Tensor]:
-    """Generate frequency-domain gravitational-wave polarizations h_plus(f) and h_cross(f)."""
+    """Generate frequency-domain gravitational-wave polarizations h_plus(f) and h_cross(f).
+
+    Parameters
+    ----------
+    approximant : str
+        Waveform model name (e.g., 'IMRPhenomD', 'IMRPhenomXHM', 'IMRPhenomXP',
+        'IMRPhenomXPHM', 'TaylorF2', 'SEOBNRv4_ROM', 'TEOBResumS', etc.).
+    mass1, mass2 : float or torch.Tensor
+        Component masses in solar masses (M_sun).
+    chi1, chi2 : float or torch.Tensor, optional
+        Aligned dimensionless spins in [-1, 1]. Deprecated in favor of spin1z, spin2z.
+    spin1x, spin1y, spin1z : float or torch.Tensor, optional
+        Dimensionless Cartesian spin components for body 1.
+    spin2x, spin2y, spin2z : float or torch.Tensor, optional
+        Dimensionless Cartesian spin components for body 2.
+    distance : float or torch.Tensor, default 100.0
+        Luminosity distance in Megaparsecs (Mpc).
+    inclination : float or torch.Tensor, default 0.0
+        Inclination angle between line of sight and orbital angular momentum in radians.
+    phic : float or torch.Tensor, default 0.0
+        Coalescence phase in radians.
+    tc : float or torch.Tensor, default 0.0
+        Time of coalescence in seconds.
+    lambda1, lambda2 : float or torch.Tensor, optional
+        Dimensionless tidal deformabilities Lambda1, Lambda2.
+    f_ref : float or torch.Tensor, optional
+        Reference frequency in Hz.
+    f_lower : float, optional
+        Low-frequency cutoff in Hz. Required if sample_frequencies is not provided.
+    f_final : float, optional
+        High-frequency cutoff in Hz. Defaults to ISCO or Nyquist limit if omitted.
+    delta_f : float, optional
+        Frequency bin width in Hz for uniform grids.
+    sample_frequencies : torch.Tensor, optional
+        Explicit arbitrary frequency grid in Hz.
+    modes : sequence of (l, m) tuples, optional
+        Spherical harmonic modes to include for higher-order approximants.
+    device : str or torch.device, optional
+        Target torch device for waveform tensors.
+    dtype : torch.dtype, default torch.float64
+        Floating-point dtype for real parameters and grid.
+    **kwargs : dict
+        Approximant-specific keyword arguments (e.g. calibration='sovereign').
+
+    Returns
+    -------
+    h_plus, h_cross : torch.Tensor
+        Complex Fourier amplitudes of the plus and cross gravitational wave polarizations.
+    """
     out = _get_fd_waveform_raw(
         approximant=approximant,
         mass1=mass1,
@@ -651,8 +694,8 @@ def get_td_waveform(
     approximant: str,
     mass1: Union[float, torch.Tensor],
     mass2: Union[float, torch.Tensor],
-    chi1: Union[float, torch.Tensor] = 0.0,
-    chi2: Union[float, torch.Tensor] = 0.0,
+    chi1: Union[float, torch.Tensor, object] = _UNSET,
+    chi2: Union[float, torch.Tensor, object] = _UNSET,
     spin1x: Union[float, torch.Tensor] = 0.0,
     spin1y: Union[float, torch.Tensor] = 0.0,
     spin1z: Optional[Union[float, torch.Tensor]] = None,

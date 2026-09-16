@@ -13,7 +13,7 @@ in docs/reviews/2026-09-12-clean-room/pass-2-higher-modes.md. Inherited fit
 assembly and phase conventions are not certified by those checks.
 """
 
-from typing import Dict, List, Optional, Sequence, Tuple, Union
+from typing import Dict, Optional, Sequence, Tuple, Union
 from functools import wraps
 import math
 import torch
@@ -38,10 +38,7 @@ from torchwave.approximants.imrphenom_xas import (
 from torchwave.approximants.xhm_fits import XHMParameterFits, _nonnegative_sqrt
 from torchwave.approximants.xhm_native_fits import (
     eval_native_ringdown_params,
-    eval_native_33_ringdown_params,
-    eval_native_33_phase_params,
     eval_native_phase_params,
-    native_ringdown_phase_33,
 )
 from torchwave.approximants.imrphenom_hm import _swsh_projection_coefficients
 from torchwave.approximants.polynomial_interval import polynomial_has_nonpositive
@@ -712,8 +709,7 @@ class IMRPhenomXHM(nn.Module):
             "44": torch.tensor(1.33, device=device, dtype=dtype),
         }
 
-        # 22-mode phase parameters for ringdown rescaling (Eq. 6.5)
-        alpha_lambda_22 = XHMParameterFits.phase_rd_alpha_lambda(eta, s1, s2, S)
+        # 22-mode phase parameter for ringdown rescaling (Eq. 6.5)
         alpha2_22 = XHMParameterFits.phase_rd_alpha2(eta, s1, s2, S)
 
         # Batching alignment

@@ -9,10 +9,9 @@ from torchwave.approximants.imrphenomd_nrtidal import (
     IMRPhenomD_NRTidal,
     IMRPhenomD_NRTidalv2,
 )
-from torchwave.approximants.imrphenom_hm import (
-    IMRPhenomHM,
-    IMRPhenomXHM,
-)
+from torchwave.approximants.imrphenom_hm import IMRPhenomHM
+from torchwave.approximants.imrphenom_xhm import IMRPhenomXHM
+from torchwave.approximants.teobresums import TEOBResumS
 from torchwave.detectors.network import (
     Detector,
     DetectorNetwork,
@@ -99,6 +98,7 @@ __all__ = [
     "IMRPhenomXP",
     "IMRPhenomXPHM",
     "IMRPhenomNSBH",
+    "TEOBResumS",
     "SpinPrecessionODE",
     "KerrRingdown",
     "sampled_kerr_single_mode_reference",

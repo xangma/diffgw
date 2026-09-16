@@ -155,7 +155,7 @@ Waveform generation in TorchWave is 100% MIT licensed, runs natively in PyTorch 
   - Bohé et al. (2017), *Improved effective-one-body model of spinning, nonprecessing binary black holes for the era of advanced detector observations with advanced LIGO*, Phys. Rev. D 95, 044028 ([DOI:10.1103/PhysRevD.95.044028](https://doi.org/10.1103/PhysRevD.95.044028))
   - Nagar et al. (2018), *Time-domain effective-one-body gravitational waveforms for coalescing compact binaries with spin and tidal deformability effects*, Phys. Rev. D 98, 104052 ([DOI:10.1103/PhysRevD.98.104052](https://doi.org/10.1103/PhysRevD.98.104052))
 - **Mathematical Form**:
-  Implemented in `src/torchwave/approximants/continuous_matching.py`. Replaces legacy LAL 7-point discrete finite-difference stencils with continuous cubic Hermite spline root-finding for the orbital frequency maximum $d\Omega/dt = 0$, guaranteeing $C^1$ smooth attachment into Kerr QNM ringdown without numerical stencil knot artifacts.
+  Implemented in `src/torchwave/approximants/eob/continuous_matching.py`. Replaces legacy LAL 7-point discrete finite-difference stencils with continuous cubic Hermite spline root-finding for the orbital frequency maximum $d\Omega/dt = 0$, guaranteeing $C^1$ smooth attachment into Kerr QNM ringdown without numerical stencil knot artifacts.
 
 ---
 
@@ -196,7 +196,7 @@ Waveform generation in TorchWave is 100% MIT licensed, runs natively in PyTorch 
 
 ## 5. Third-Party Data Attribution
 
-The sovereign calibration surfaces in `torchwave` were trained on numerical relativity simulations produced by the **Simulating eXtreme Spacetimes (SXS) Project** (http://www.black-holes.org). These simulations are released under the Creative Commons Attribution 4.0 International (CC-BY-4.0) license. Complete data citations and catalog IDs are documented in `THIRD_PARTY_NOTICES.md` and `docs/reviews/2026-09-15-independent-calibration/DATA_ATTRIBUTION.md`.
+The sovereign calibration surfaces in `torchwave` were trained on numerical relativity simulations produced by the **Simulating eXtreme Spacetimes (SXS) Project** (http://www.black-holes.org). These simulations are released under the Creative Commons Attribution 4.0 International (CC-BY-4.0) license. Complete data citations and catalog IDs are documented in [THIRD_PARTY_NOTICES.md](../THIRD_PARTY_NOTICES.md) and `docs/reviews/2026-09-15-independent-calibration/DATA_ATTRIBUTION.md`.
 
 ---
 
