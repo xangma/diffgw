@@ -197,3 +197,15 @@ Waveform generation in TorchWave is 100% MIT licensed, runs natively in PyTorch 
 ## 5. Third-Party Data Attribution
 
 The sovereign calibration surfaces in `torchwave` were trained on numerical relativity simulations produced by the **Simulating eXtreme Spacetimes (SXS) Project** (http://www.black-holes.org). These simulations are released under the Creative Commons Attribution 4.0 International (CC-BY-4.0) license. Complete data citations and catalog IDs are documented in `THIRD_PARTY_NOTICES.md` and `docs/reviews/2026-09-15-independent-calibration/DATA_ATTRIBUTION.md`.
+
+---
+
+## 6. Documented Differences from LALSimulation
+
+For complete technical descriptions of where and why TorchWave departs from LALSimulation, see [**docs/differences_from_lal.md**](differences_from_lal.md).
+
+In summary:
+- **`IMRPhenomXHM` & `IMRPhenomXPHM`**: Replaces uncertified closed C-tables (including the legacy $3321.83$ ringdown sign error, $(3,2)$ 3-vs-4 condition mismatch, and uncertified $(2,2)$ damping fallback) with sovereign SXS Numerical Relativity calibrations across $(\ell, m) \in \{(2,1), (3,3), (4,4), (3,2)\}$ and native Kerr Leaver quasinormal mode frequencies.
+- **`SEOBNR_ODE` & `TEOBResumS`**: Replaces LAL's discrete 7-point finite-difference stencil (which creates step-size dependent knot errors at the merger seam) with continuous cubic Hermite spline root-finding ([`continuous_matching.py`](../src/torchwave/approximants/continuous_matching.py)) for true $C^1$ smooth ringdown attachment.
+- **`TaylorF2_HM`**: Implements complete analytical post-Newtonian higher multipoles from Kidder (2008) and Arun et al. (2009) where LAL's `SimInspiralChooseFDModes` lacks an implementation.
+- **`IMRPhenomXAS` & `IMRPhenomD`**: Ingests canonical APS PRD supplemental symbolic Mathematica surfaces and reconciles literature rounding and time gauge alignment.
