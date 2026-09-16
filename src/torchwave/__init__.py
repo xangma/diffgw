@@ -76,6 +76,7 @@ from torchwave.detectors.pta import (
     hellings_downs_correlation,
     stochastic_gwb_spectrum,
 )
+from torchwave import benchmark, profile
 
 __version__ = "0.1.0"
 __author__ = "Xan Morice-Atkinson"
@@ -139,4 +140,6 @@ __all__ = [
     "PTANetwork",
     "hellings_downs_correlation",
     "stochastic_gwb_spectrum",
+    "benchmark",
+    "profile",
 ]

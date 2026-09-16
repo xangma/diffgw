@@ -17,6 +17,10 @@ dependencies = [
     "numpy>=1.20.0",
 ]
 
+[project.scripts]
+torchwave-bench = "torchwave.benchmark:main"
+torchwave-profile = "torchwave.profile:main"
+
 [project.optional-dependencies]
 dev = [
     "pytest>=7.0.0",

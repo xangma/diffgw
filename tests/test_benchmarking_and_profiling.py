@@ -10,7 +10,8 @@ from pathlib import Path
 import pytest
 import torch
 
-from scripts.benchmark import (
+import torchwave
+from torchwave.benchmark import (
     DEFAULT_MODEL_SPECS,
     _has_lal,
     benchmark_torchwave_model,
@@ -20,11 +21,25 @@ from scripts.benchmark import (
     resolve_dtype,
     run_benchmark_suite,
 )
-from scripts.profile_waveform import (
+from torchwave.profile import (
     run_cprofile,
     run_memory_profile,
     run_torch_profiler,
 )
+from scripts.benchmark import run_benchmark_suite as script_run_benchmark_suite
+from scripts.profile_waveform import run_torch_profiler as script_run_torch_profiler
+
+
+def test_package_exports():
+    """Verify that benchmark and profile modules are exported at top-level torchwave."""
+    assert hasattr(torchwave, "benchmark")
+    assert hasattr(torchwave, "profile")
+    assert "benchmark" in torchwave.__all__
+    assert "profile" in torchwave.__all__
+    assert callable(torchwave.benchmark.run_benchmark_suite)
+    assert callable(torchwave.profile.run_torch_profiler)
+    assert callable(script_run_benchmark_suite)
+    assert callable(script_run_torch_profiler)
 
 
 def test_benchmark_suite_api():
@@ -183,3 +198,50 @@ def test_profile_waveform_cli(tmp_path: Path):
     assert "torch_profiler_output" in prof_data
     assert "cprofile_output" in prof_data
     assert "memory_profile" in prof_data
+
+
+def test_module_execution_benchmark(tmp_path: Path):
+    """Verify python -m torchwave.benchmark executes properly."""
+    json_path = tmp_path / "bench_module.json"
+    cmd = [
+        sys.executable,
+        "-m", "torchwave.benchmark",
+        "--models", "TaylorF2",
+        "--batch-sizes", "1",
+        "--device", "cpu",
+        "--dtype", "float64",
+        "--iterations", "2",
+        "--warmup", "1",
+        "--json-out", str(json_path),
+    ]
+    p = subprocess.run(cmd, capture_output=True, text=True, env=dict(os.environ, PYTHONPATH="src"))
+    assert p.returncode == 0, f"Module execution failed: {p.stderr}"
+    assert json_path.exists()
+    with open(json_path, "r") as f:
+        data = json.load(f)
+    assert "benchmarks" in data
+    assert data["benchmarks"][0]["model"] == "TaylorF2"
+
+
+def test_module_execution_profile(tmp_path: Path):
+    """Verify python -m torchwave.profile executes properly."""
+    json_path = tmp_path / "prof_module.json"
+    cmd = [
+        sys.executable,
+        "-m", "torchwave.profile",
+        "--model", "TaylorF2",
+        "--batch-size", "1",
+        "--device", "cpu",
+        "--dtype", "float64",
+        "--mode", "memory",
+        "--top-k", "5",
+        "--json-out", str(json_path),
+    ]
+    p = subprocess.run(cmd, capture_output=True, text=True, env=dict(os.environ, PYTHONPATH="src"))
+    assert p.returncode == 0, f"Module execution failed: {p.stderr}"
+    assert json_path.exists()
+    with open(json_path, "r") as f:
+        data = json.load(f)
+    assert data["model"] == "TaylorF2"
+    assert "memory_profile" in data
+

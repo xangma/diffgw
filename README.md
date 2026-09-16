@@ -139,8 +139,71 @@ The [NQC](docs/reviews/2026-09-12-clean-room/pass-3-eob-nqc.md),
 [remnant](docs/reviews/2026-09-12-clean-room/pass-6-eob-remnant.md)
 components are also available independently.
 
+---
+
+## Benchmarking & Profiling
+
+TorchWave includes built-in benchmarking and deep profiling tools exposed directly as CLI commands, Python modules, and library APIs.
+
+### Command-Line Interface
+
+```bash
+# Benchmark popular models across batch sizes
+torchwave-bench --models popular --batch-sizes 1,10,100,1000
+
+# Compare against LALSimulation baseline and export Markdown summary
+torchwave-bench --models TaylorF2,IMRPhenomD,IMRPhenomXAS --compare-lal --markdown-out benchmark.md
+
+# Benchmark with autograd backward pass
+torchwave-bench --models IMRPhenomD --batch-sizes 100 --backward
+
+# Deep operator, cProfile, and memory profiling
+torchwave-profile --model IMRPhenomD --mode all --top-k 15
+torchwave-profile --model TaylorF2 --trace-out trace_f2.json
+```
+
+Or invoke directly via Python:
+```bash
+python -m torchwave.benchmark --models TaylorF2 --batch-sizes 1,10
+python -m torchwave.profile --model IMRPhenomXAS --mode memory
+```
+
+### Programmatic Python API
+
+```python
+import torch
+from torchwave import benchmark, profile
+
+# Run benchmark suite programmatically
+results = benchmark.run_benchmark_suite(
+    models=["TaylorF2", "IMRPhenomD"],
+    batch_sizes=[1, 100],
+    device=torch.device("cpu"),
+    dtype=torch.float64,
+    iterations=20,
+    measure_backward=True,
+)
+print(benchmark.format_table(results))
+
+# Profile PyTorch operator kernels or memory allocations
+spec = benchmark.DEFAULT_MODEL_SPECS["IMRPhenomD"]
+torch_table = profile.run_torch_profiler(
+    model_name="IMRPhenomD",
+    batch_size=10,
+    device=torch.device("cpu"),
+    dtype=torch.float64,
+    grid=spec["grid"],
+    params=spec["params"],
+    measure_backward=True,
+)
+print(torch_table)
+```
+
+---
+
 ### External waveform data
 
 Optional large waveform datasets remain outside the MIT source distribution.
 See [external-data.md](docs/external-data.md) for the SEOBNRv4ROM v3 source,
 search paths, verification, and the explicit fetch command.
+
