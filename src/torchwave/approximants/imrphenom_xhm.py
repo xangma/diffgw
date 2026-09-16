@@ -28,7 +28,6 @@ from torchwave.constants import (
 from torchwave.conversions import (
     as_tensor,
     component_masses_to_eta,
-    component_masses_to_delta,
 )
 from torchwave.approximants.imrphenom_xas import (
     IMRPhenomXAS,
@@ -146,7 +145,7 @@ def _value_and_derivative(function, frequency: torch.Tensor):
     with torch.enable_grad():
         probe = frequency.clone().requires_grad_(True)
         value = function(probe)
-        derivative = torch.autograd.grad(value.sum(), probe, create_graph=True)[0]
+        derivative = torch.autograd.grad(value.sum(), probe, create_graph=outer_grad)[0]
     if not outer_grad:
         return value.detach(), derivative.detach()
     return value, derivative
@@ -167,7 +166,7 @@ def _allow_internal_frequency_derivatives(function):
     return evaluate
 
 
-def _pn_phase_lambda(l, m, frequency, eta, delta):
+def _pn_phase_lambda(l, m, frequency, eta, delta):  # noqa: E741
     """Frequency-dependent part of Eq. (4.9), expanded through linear f.
 
     The constant PN argument is absorbed in the separate phase convention.
@@ -485,7 +484,7 @@ def _pn_amplitude_h44(
 
 
 def _pn_amplitude_ratio(
-    l: int,
+    l: int,  # noqa: E741
     m: int,
     f: torch.Tensor,
     eta: torch.Tensor,
@@ -718,9 +717,6 @@ class IMRPhenomXHM(nn.Module):
             f_eval = f.unsqueeze(0)
             m_sec_eval = m_sec.unsqueeze(-1)
             eta_eval = eta.unsqueeze(-1)
-            delta_eval = delta.unsqueeze(-1)
-            chi_s_eval = chi_s.unsqueeze(-1)
-            chi_a_eval = chi_a.unsqueeze(-1)
             dist_eval = dist.unsqueeze(-1)
             inc_eval = inc.unsqueeze(-1)
             phi0_eval = phi_0.unsqueeze(-1)
@@ -730,9 +726,6 @@ class IMRPhenomXHM(nn.Module):
             f_eval = f
             m_sec_eval = m_sec
             eta_eval = eta
-            delta_eval = delta
-            chi_s_eval = chi_s
-            chi_a_eval = chi_a
             dist_eval = dist
             inc_eval = inc
             phi0_eval = phi_0
@@ -744,22 +737,43 @@ class IMRPhenomXHM(nn.Module):
         mf_grid = m_sec_eval * f_safe
 
         # Evaluate carrier (2, 2) mode at face-on (iota=0)
-        hp_22_raw, _, phi_22_carrier = self.base_22(
-            f=f_eval,
-            mass1=m1,
-            mass2=m2,
-            chi1=s1,
-            chi2=s2,
-            distance=dist,
-            inclination=0.0,
-            phic=0.0,
-            tc=0.0,
-            f_ref=f_ref,
-            phasing_convention=phasing_convention,
-            reference_frame=reference_frame,
-            return_phase=True,
-            _final_spin_override=final_spin_override,
-        )
+        carrier_state = None
+        if hasattr(self.base_22, "build_state"):
+            carrier_state = self.base_22.build_state(
+                mass1=m1,
+                mass2=m2,
+                chi1=s1,
+                chi2=s2,
+                f_ref=f_ref,
+                _final_spin_override=final_spin_override,
+                device=device,
+                dtype=dtype,
+            )
+            hp_22_raw, _, phi_22_carrier = carrier_state.eval_waveform(
+                f=f_eval,
+                distance=dist,
+                inclination=0.0,
+                phi_c=0.0,
+                t_c=0.0,
+                return_phase=True,
+            )
+        else:
+            hp_22_raw, _, phi_22_carrier = self.base_22(
+                f=f_eval,
+                mass1=m1,
+                mass2=m2,
+                chi1=s1,
+                chi2=s2,
+                distance=dist,
+                inclination=0.0,
+                phic=0.0,
+                tc=0.0,
+                f_ref=f_ref,
+                phasing_convention=phasing_convention,
+                reference_frame=reference_frame,
+                return_phase=True,
+                _final_spin_override=final_spin_override,
+            )
         amp_22_phys = torch.abs(hp_22_raw)
 
         # Base physical leading quadrupole factor A0_phys
@@ -773,19 +787,40 @@ class IMRPhenomXHM(nn.Module):
             # An explicit singleton frequency axis keeps batch axes distinct.
             target_grid = mf_target.unsqueeze(-1) if mf_target.ndim == m_sec.ndim else mf_target
             target_hz = target_grid / _unsqueeze_to(m_sec, target_grid)
-            hp, _, phase = self.base_22(
-                f=target_hz, mass1=m1, mass2=m2, chi1=s1, chi2=s2,
-                distance=m_sec * C_SI / MPC_SI, inclination=0.0, phic=0.0, tc=0.0,
-                f_ref=f_ref, phasing_convention=phasing_convention,
-                reference_frame=reference_frame, return_phase=True,
-                _final_spin_override=final_spin_override,
-            )
+            if carrier_state is not None:
+                hp, _, phase = carrier_state.eval_waveform(
+                    f=target_hz,
+                    distance=m_sec * C_SI / MPC_SI,
+                    inclination=0.0,
+                    phi_c=0.0,
+                    t_c=0.0,
+                    return_phase=True,
+                )
+            else:
+                hp, _, phase = self.base_22(
+                    f=target_hz, mass1=m1, mass2=m2, chi1=s1, chi2=s2,
+                    distance=m_sec * C_SI / MPC_SI, inclination=0.0, phic=0.0, tc=0.0,
+                    f_ref=f_ref, phasing_convention=phasing_convention,
+                    reference_frame=reference_frame, return_phase=True,
+                    _final_spin_override=final_spin_override,
+                )
             if mf_target.ndim == m_sec.ndim:
                 return hp.squeeze(-1), phase.squeeze(-1)
             return hp, phase
 
+        def eval_carrier_phase_at(mf_target: torch.Tensor):
+            target_grid = mf_target.unsqueeze(-1) if mf_target.ndim == m_sec.ndim else mf_target
+            target_hz = target_grid / _unsqueeze_to(m_sec, target_grid)
+            if carrier_state is not None:
+                phase = carrier_state.eval_phase(target_hz)
+            else:
+                phase = eval_carrier_at(mf_target)[1]
+            if mf_target.ndim == m_sec.ndim:
+                return phase.squeeze(-1)
+            return phase
+
         def eval_carrier_phi_and_deriv(mf_target: torch.Tensor):
-            return _value_and_derivative(lambda x: eval_carrier_at(x)[1], mf_target)
+            return _value_and_derivative(eval_carrier_phase_at, mf_target)
 
         h_plus_total = torch.zeros_like(
             amp_22_phys, dtype=torch.complex128 if dtype == torch.float64 else torch.complex64
@@ -797,7 +832,7 @@ class IMRPhenomXHM(nn.Module):
         exp_neg_i_phi22 = torch.complex(torch.cos(phi_22_carrier), -torch.sin(phi_22_carrier))
         h22_mode_strain = (mode_norm * amp_22_phys).to(exp_neg_i_phi22.dtype) * exp_neg_i_phi22
 
-        for l, m in active_modes:
+        for l, m in active_modes:  # noqa: E741
             lm_str = f"{l}{m}"
             if (l, m) == (2, 2):
                 h_mode = h22_mode_strain
@@ -1327,22 +1362,25 @@ class IMRPhenomXHM(nn.Module):
 
                     # Evaluate carrier phase on scaled frequency grid (2/m) * f
                     f_scaled_grid = (2.0 / m_flt) * f_eval
-                    _, _, phi_22_scaled = self.base_22(
-                        f=f_scaled_grid,
-                        mass1=m1,
-                        mass2=m2,
-                        chi1=s1,
-                        chi2=s2,
-                        distance=dist,
-                        inclination=0.0,
-                        phic=0.0,
-                        tc=0.0,
-                        f_ref=f_ref,
-                        phasing_convention=phasing_convention,
-                        reference_frame=reference_frame,
-                        return_phase=True,
-                        _final_spin_override=final_spin_override,
-                    )
+                    if carrier_state is not None:
+                        phi_22_scaled = carrier_state.eval_phase(f_scaled_grid)
+                    else:
+                        _, _, phi_22_scaled = self.base_22(
+                            f=f_scaled_grid,
+                            mass1=m1,
+                            mass2=m2,
+                            chi1=s1,
+                            chi2=s2,
+                            distance=dist,
+                            inclination=0.0,
+                            phic=0.0,
+                            tc=0.0,
+                            f_ref=f_ref,
+                            phasing_convention=phasing_convention,
+                            reference_frame=reference_frame,
+                            return_phase=True,
+                            _final_spin_override=final_spin_override,
+                        )
                     delta_target_u = _unsqueeze_to(delta_target, mf_grid)
                     carrier_p_at_ins, carrier_dp_at_ins = eval_carrier_phi_and_deriv((2.0 / m_flt) * f_ins_p)
                     phi_ins_grid = (m_flt / 2.0) * phi_22_scaled + delta_target_u

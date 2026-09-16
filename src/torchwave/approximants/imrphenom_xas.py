@@ -694,11 +694,660 @@ def solve_intermediate_amplitude_quartic(
     return c0, c1, c2, c3, c4
 
 
+class XASCarrierState:
+    """Precomputed intrinsic fits and collocation coefficients for IMRPhenomXAS."""
+
+    def __init__(
+        self,
+        mass1,
+        mass2,
+        chi1=_UNSET,
+        chi2=_UNSET,
+        spin1z=None,
+        spin2z=None,
+        f_ref=None,
+        final_spin_override=None,
+        device=None,
+        dtype=torch.float64,
+    ):
+        m1 = as_tensor(mass1, device=device, dtype=dtype)
+        m2 = as_tensor(mass2, device=device, dtype=dtype)
+        if final_spin_override is not None:
+            final_spin_override = as_tensor(final_spin_override, device=device, dtype=dtype)
+
+        if chi1 is not _UNSET and spin1z is not None:
+            t_chi1 = as_tensor(chi1, device=device, dtype=dtype)
+            t_s1z = as_tensor(spin1z, device=device, dtype=dtype)
+            if not torch.allclose(t_chi1, t_s1z, atol=1e-12, rtol=1e-8):
+                raise ValueError(f"Conflicting spin1 definitions: chi1={chi1} and spin1z={spin1z}")
+            s1z = t_s1z
+        elif spin1z is not None:
+            s1z = as_tensor(spin1z, device=device, dtype=dtype)
+        elif chi1 is not _UNSET:
+            s1z = as_tensor(chi1, device=device, dtype=dtype)
+        else:
+            s1z = as_tensor(0.0, device=device, dtype=dtype)
+
+        if chi2 is not _UNSET and spin2z is not None:
+            t_chi2 = as_tensor(chi2, device=device, dtype=dtype)
+            t_s2z = as_tensor(spin2z, device=device, dtype=dtype)
+            if not torch.allclose(t_chi2, t_s2z, atol=1e-12, rtol=1e-8):
+                raise ValueError(f"Conflicting spin2 definitions: chi2={chi2} and spin2z={spin2z}")
+            s2z = t_s2z
+        elif spin2z is not None:
+            s2z = as_tensor(spin2z, device=device, dtype=dtype)
+        elif chi2 is not _UNSET:
+            s2z = as_tensor(chi2, device=device, dtype=dtype)
+        else:
+            s2z = as_tensor(0.0, device=device, dtype=dtype)
+
+        is_batched = any(
+            t.dim() > 0 for t in (m1, m2, s1z, s2z)
+        ) or (final_spin_override is not None and final_spin_override.dim() > 0)
+        if is_batched:
+            broadcast_args = (m1, m2, s1z, s2z)
+            if final_spin_override is not None:
+                broadcast_args += (final_spin_override,)
+            broadcasted = torch.broadcast_tensors(*broadcast_args)
+            m1, m2, s1z, s2z = broadcasted[:4]
+            if final_spin_override is not None:
+                final_spin_override = broadcasted[4]
+
+        swap_mask = m1 < m2
+        if torch.any(swap_mask):
+            m1_eff = torch.where(swap_mask, m2, m1)
+            m2_eff = torch.where(swap_mask, m1, m2)
+            s1_eff = torch.where(swap_mask, s2z, s1z)
+            s2_eff = torch.where(swap_mask, s1z, s2z)
+        else:
+            m1_eff, m2_eff, s1_eff, s2_eff = m1, m2, s1z, s2z
+
+        self.m1_eff = m1_eff
+        self.m2_eff = m2_eff
+        self.s1_eff = s1_eff
+        self.s2_eff = s2_eff
+        self.is_batched = is_batched
+        self.dtype = dtype
+        self.device = device
+        self.f_ref = f_ref
+
+        total_mass = m1_eff + m2_eff
+        eta = component_masses_to_eta(m1_eff, m2_eff)
+        delta = component_masses_to_delta(m1_eff, m2_eff)
+        m_sec = total_mass * MSUN_SEC
+
+        self.total_mass = total_mass
+        self.eta = eta
+        self.delta = delta
+        self.m_sec = m_sec
+
+        # 1. Evaluate XAS Parameter Fits
+        f_meco = XASParameterFits.fit_f_meco(eta, s1_eff, s2_eff)
+        aligned_final_spin = XASParameterFits.fit_final_spin(eta, s1_eff, s2_eff)
+        final_spin = aligned_final_spin if final_spin_override is None else final_spin_override
+        erad = XASParameterFits.fit_erad(eta, s1_eff, s2_eff)
+        m_final = torch.clamp(1.0 - erad, min=0.1)
+
+        f_rd = XASParameterFits.fit_re_omega(final_spin) / m_final
+        f_damp = XASParameterFits.fit_im_omega(final_spin) / m_final
+
+        chi_fit = torch.clamp(aligned_final_spin, -0.999, 0.999)
+        z1 = 1.0 + (1.0 - chi_fit**2) ** (1.0 / 3.0) * (
+            torch.sign(1.0 + chi_fit) * torch.abs(1.0 + chi_fit) ** (1.0 / 3.0)
+            + torch.sign(1.0 - chi_fit) * torch.abs(1.0 - chi_fit) ** (1.0 / 3.0)
+        )
+        z2 = torch.sqrt(torch.clamp(3.0 * chi_fit**2 + z1**2, min=1e-12))
+        r_isco = 3.0 + z2 - torch.sign(chi_fit) * torch.sqrt(torch.clamp((3.0 - z1) * (3.0 + z1 + 2.0 * z2), min=1e-12))
+        f_isco = 1.0 / (PI * (r_isco**1.5 + chi_fit))
+
+        lam = XASParameterFits.fit_rd_amp_gamma2(eta, s1_eff, s2_eff)
+        sigma = XASParameterFits.fit_rd_amp_gamma3(eta, s1_eff, s2_eff)
+        v1_rd = XASParameterFits.fit_rd_amp_v1(eta, s1_eff, s2_eff)
+
+        diff_lam = torch.clamp(1.0 - lam**2, min=0.0)
+        f_peak = torch.abs(f_rd + f_damp * sigma * (safe_sqrt(diff_lam) - 1.0) / torch.clamp(lam, min=1e-8))
+
+        width_rd = sigma * f_damp
+        exp_peak = torch.exp(torch.clamp(lam * (f_peak - f_rd) / width_rd, max=30.0))
+        a_r = v1_rd * ((f_peak - f_rd)**2 + width_rd**2) / width_rd * exp_peak
+
+        r2 = XASParameterFits.fit_ins_amp_r2(eta, s1_eff, s2_eff)
+        r3 = XASParameterFits.fit_ins_amp_r3(eta, s1_eff, s2_eff)
+        r4 = XASParameterFits.fit_ins_amp_r4(eta, s1_eff, s2_eff)
+
+        f_trans_amp = f_meco + 0.25 * (f_isco - f_meco)
+        f_T_phase = 0.6 * (0.5 * f_rd + f_isco)
+        delta_R = 0.03 * (f_T_phase - f_meco)
+        f_trans_phase = f_meco - delta_R
+
+        rho1, rho2, rho3 = solve_inspiral_residual_collocation(f_trans_amp, r2, r3, r4)
+
+        # Intermediate amplitude collocation
+        vA_amp = XASParameterFits.fit_int_amp_va(eta, s1_eff, s2_eff)
+        f1_col = f_trans_amp
+        f4_col = f_peak
+        x1_pi = PI * f1_col
+        pn_at_trans, dpn_trans = IMRPhenomXAS.pn_amp_func(
+            eta, s1_eff, s2_eff, x1_pi, delta, return_both=True
+        )
+        val1 = (
+            pn_at_trans
+            + rho1 * (x1_pi ** (7.0 / 3.0))
+            + rho2 * (x1_pi ** (8.0 / 3.0))
+            + rho3 * (x1_pi ** 3.0)
+        )
+        val4 = v1_rd
+        dpseudo_trans = PI * (
+            (7.0 / 3.0) * rho1 * (x1_pi ** (4.0 / 3.0))
+            + (8.0 / 3.0) * rho2 * (x1_pi ** (5.0 / 3.0))
+            + 3.0 * rho3 * (x1_pi ** 2.0)
+        )
+        d1_val = dpn_trans + dpseudo_trans
+
+        f1_pow = torch.pow(torch.clamp(f1_col, min=1e-8), 7.0 / 6.0)
+        f4_pow = torch.pow(torch.clamp(f4_col, min=1e-8), 7.0 / 6.0)
+        b1_amp = val1 / f1_pow
+        b4_amp = val4 / f4_pow
+        db1_amp = (d1_val - (7.0 / 6.0) * val1 / f1_col) / f1_pow
+
+        delta_f_peak_rd = f4_col - f_rd
+        d4_shape = -2.0 * delta_f_peak_rd / (delta_f_peak_rd**2 + width_rd**2) - (lam / width_rd)
+        d4_val = val4 * d4_shape
+        db4_amp = (d4_val - (7.0 / 6.0) * val4 / f4_col) / f4_pow
+        b_mid_amp = vA_amp
+
+        c0_amp, c1_amp, c2_amp, c3_amp, c4_amp = solve_intermediate_amplitude_quartic(
+            f1_col, f4_col, b1_amp, db1_amp, b_mid_amp, b4_amp, db4_amp
+        )
+
+        # Ringdown phase collocation
+        f_L_rd = f_T_phase
+        f_H_rd = f_rd + 1.25 * f_damp
+        delta_rd = f_H_rd - f_L_rd
+        fn_rd = [
+            f_L_rd,
+            f_L_rd + 0.5 * (1.0 - 1.0 / math.sqrt(2.0)) * delta_rd,
+            f_L_rd + 0.5 * delta_rd,
+            f_rd,
+            f_H_rd,
+        ]
+        v4_rd = -XASParameterFits.fit_rd_phase_v4(eta, s1_eff, s2_eff)
+        d12_rd = -XASParameterFits.fit_rd_phase_d12(eta, s1_eff, s2_eff)
+        d24_rd = -XASParameterFits.fit_rd_phase_d24(eta, s1_eff, s2_eff)
+        d34_rd = -XASParameterFits.fit_rd_phase_d34(eta, s1_eff, s2_eff)
+        d54_rd = -XASParameterFits.fit_rd_phase_d54(eta, s1_eff, s2_eff)
+
+        vn_rd = [
+            v4_rd + d24_rd + d12_rd,
+            v4_rd + d24_rd,
+            v4_rd + d34_rd,
+            v4_rd,
+            v4_rd + d54_rd,
+        ]
+        A_rd_rows = []
+        for fn in fn_rd:
+            lorentz_entry = 1.0 / torch.clamp((fn - f_rd)**2 + f_damp**2, min=1e-12)
+            row = torch.stack([
+                torch.ones_like(fn),
+                torch.pow(torch.clamp(fn, min=1e-8), -1.0 / 3.0),
+                torch.pow(torch.clamp(fn, min=1e-8), -2.0),
+                torch.pow(torch.clamp(fn, min=1e-8), -4.0),
+                lorentz_entry,
+            ], dim=-1)
+            A_rd_rows.append(row)
+        c_coeffs = torch.linalg.solve(torch.stack(A_rd_rows, dim=-2), torch.stack(vn_rd, dim=-1))
+        c_rd_val, c1_val, c2_val, c4_val, c0_val = [c_coeffs[..., i] for i in range(5)]
+
+        def eval_dphi_rd_val(f_in: torch.Tensor) -> torch.Tensor:
+            f_safe = torch.clamp(f_in, min=1e-8)
+            poly = (
+                c_rd_val
+                + c1_val * torch.pow(f_safe, -1.0 / 3.0)
+                + c2_val / (f_safe**2)
+                + c4_val / (f_safe**4)
+            )
+            lorentz = c0_val / torch.clamp((f_safe - f_rd)**2 + f_damp**2, min=1e-12)
+            return (1.0 / eta) * (poly + lorentz)
+
+        def eval_phi_rd_val(f_in: torch.Tensor) -> torch.Tensor:
+            f_safe = torch.clamp(f_in, min=1e-8)
+            poly = (
+                c_rd_val * f_safe
+                + 1.5 * c1_val * torch.pow(f_safe, 2.0 / 3.0)
+                - c2_val / f_safe
+                - (1.0 / 3.0) * c4_val / (f_safe**3)
+            )
+            lorentz = (c0_val / f_damp) * torch.atan((f_safe - f_rd) / f_damp)
+            return (1.0 / eta) * (poly + lorentz)
+
+        # Inspiral pseudo-PN phase
+        f_L_ins = 0.0026 * torch.ones_like(f_meco)
+        f_H_ins = 1.02 * f_meco
+        delta_ins = f_H_ins - f_L_ins
+        fn_ins = [
+            f_L_ins,
+            f_L_ins + 0.25 * delta_ins,
+            f_L_ins + 0.75 * delta_ins,
+            f_H_ins,
+        ]
+        v3_ins = XASParameterFits.fit_ins_phase_v3_104(eta, s1_eff, s2_eff)
+        d13_ins = XASParameterFits.fit_ins_phase_d13_104(eta, s1_eff, s2_eff)
+        d23_ins = XASParameterFits.fit_ins_phase_d23_104(eta, s1_eff, s2_eff)
+        d43_ins = XASParameterFits.fit_ins_phase_d43_104(eta, s1_eff, s2_eff)
+        vn_ins = [
+            v3_ins + d13_ins,
+            v3_ins + d23_ins,
+            v3_ins,
+            v3_ins + d43_ins,
+        ]
+        A_ins_rows = [
+            torch.stack([
+                torch.ones_like(fn),
+                torch.pow(torch.clamp(fn, min=1e-8), 1.0 / 3.0),
+                torch.pow(torch.clamp(fn, min=1e-8), 2.0 / 3.0),
+                fn,
+            ], dim=-1)
+            for fn in fn_ins
+        ]
+        sig_raw = torch.linalg.solve(torch.stack(A_ins_rows, dim=-2), torch.stack(vn_ins, dim=-1))
+        sig_cal = (-5.0 / (128.0 * (PI ** (5.0 / 3.0)))) * sig_raw
+        sig1_cal, sig2, sig3, sig4 = [sig_cal[..., i] for i in range(4)]
+
+        # Intermediate phase collocation
+        f_L_int = f_trans_phase
+        f_H_int = f_T_phase + 0.5 * delta_R
+        delta_int = f_H_int - f_L_int
+        fn_int = [
+            f_L_int,
+            f_L_int + 0.5 * (1.0 - 1.0 / math.sqrt(2.0)) * delta_int,
+            f_L_int + 0.5 * delta_int,
+            f_L_int + 0.5 * (1.0 + 1.0 / math.sqrt(2.0)) * delta_int,
+            f_H_int,
+        ]
+        v5_int = eta * eval_dphi_rd_val(f_T_phase)
+        v3m_rdv4 = -XASParameterFits.fit_int_phase_v3m_rdv4(eta, s1_eff, s2_eff)
+        v3_int = v4_rd + v3m_rdv4
+        v2m_rdv4 = -XASParameterFits.fit_int_phase_v2m_rdv4(eta, s1_eff, s2_eff)
+        v2_direct = -XASParameterFits.fit_int_phase_v2(eta, s1_eff, s2_eff)
+        v2_int = 0.75 * (v4_rd + v2m_rdv4) + 0.25 * v2_direct
+        d43_int = -XASParameterFits.fit_int_phase_d43(eta, s1_eff, s2_eff)
+        v4_int = v3_int + d43_int
+
+        dphi_tf2_trans = d_pn_phase_canonical_torch(f_trans_phase, eta, s1_eff, s2_eff, delta)
+        f_trans_safe = torch.clamp(f_trans_phase, min=1e-8)
+        d_pseudo_trans_raw = (
+            sig1_cal
+            + sig2 * torch.pow(f_trans_safe, 1.0 / 3.0)
+            + sig3 * torch.pow(f_trans_safe, 2.0 / 3.0)
+            + sig4 * f_trans_safe
+        )
+        v1_int = eta * dphi_tf2_trans + d_pseudo_trans_raw
+        vn_int = [v1_int, v2_int, v3_int, v4_int, v5_int]
+
+        A_int_rows = []
+        b_int_entries = []
+        for i, fn in enumerate(fn_int):
+            lorentz_int = 4.0 * c0_val / torch.clamp((fn - f_rd)**2 + (2.0 * f_damp)**2, min=1e-12)
+            b_entry = vn_int[i] - lorentz_int
+            row = torch.stack([
+                torch.ones_like(fn),
+                torch.pow(torch.clamp(fn, min=1e-8), -1.0),
+                torch.pow(torch.clamp(fn, min=1e-8), -2.0),
+                torch.pow(torch.clamp(fn, min=1e-8), -3.0),
+                torch.pow(torch.clamp(fn, min=1e-8), -4.0),
+            ], dim=-1)
+            A_int_rows.append(row)
+            b_int_entries.append(b_entry)
+
+        b_coeffs = torch.linalg.solve(torch.stack(A_int_rows, dim=-2), torch.stack(b_int_entries, dim=-1))
+        b0_val, b1_val, b2_val, b3_val, b4_val = [b_coeffs[..., i] for i in range(5)]
+
+        def eval_dphi_int_val(f_in: torch.Tensor) -> torch.Tensor:
+            f_safe = torch.clamp(f_in, min=1e-8)
+            poly = (
+                b0_val
+                + b1_val / f_safe
+                + b2_val / (f_safe**2)
+                + b3_val / (f_safe**3)
+                + b4_val / (f_safe**4)
+            )
+            lorentz = 4.0 * c0_val / torch.clamp((f_safe - f_rd)**2 + (2.0 * f_damp)**2, min=1e-12)
+            return (1.0 / eta) * (poly + lorentz)
+
+        def eval_phi_int_val(f_in: torch.Tensor) -> torch.Tensor:
+            f_safe = torch.clamp(f_in, min=1e-8)
+            poly = (
+                b0_val * f_safe
+                + b1_val * torch.log(f_safe)
+                - b2_val / f_safe
+                - 0.5 * b3_val / (f_safe**2)
+                - (1.0 / 3.0) * b4_val / (f_safe**3)
+            )
+            lorentz = (2.0 * c0_val / f_damp) * torch.atan((f_safe - f_rd) / (2.0 * f_damp))
+            return (1.0 / eta) * (poly + lorentz)
+
+        f_join_rd = f_H_int
+        dt_rd = eval_dphi_int_val(f_join_rd) - eval_dphi_rd_val(f_join_rd)
+        dphi_rd = eval_phi_int_val(f_join_rd) - (eval_phi_rd_val(f_join_rd) + dt_rd * f_join_rd)
+
+        f_fit = f_rd - f_damp
+        dpsi_fit = eval_dphi_rd_val(f_fit) + dt_rd
+        m1_sq = m1_eff * m1_eff
+        m2_sq = m2_eff * m2_eff
+        m_sq_sum = torch.clamp(m1_sq + m2_sq, min=1e-12)
+        s_tot = (m1_sq * s1_eff + m2_sq * s2_eff) / m_sq_sum
+        delta_chi = s1_eff - s2_eff
+        linb_val = compute_phenomx_linb(eta, s_tot, delta_chi, delta)
+        psi4_val = compute_phenomx_psi4(eta, s_tot, delta_chi)
+        t_hybrid = -2.0 * PI * (500.0 + psi4_val)
+        tshift = -(linb_val + t_hybrid) - dpsi_fit
+        tshift_sec = tshift * m_sec
+
+        d_pseudo_tail = (
+            sig2 * torch.pow(f_trans_safe, 1.0 / 3.0)
+            + sig3 * torch.pow(f_trans_safe, 2.0 / 3.0)
+            + sig4 * f_trans_safe
+        )
+        sigma_1 = eta * (eval_dphi_int_val(f_trans_phase) - dphi_tf2_trans) - d_pseudo_tail
+
+        def eval_phi_ins_raw(f_in: torch.Tensor, eta_p, s1_p, s2_p, d_p, sig1_p, sig2_p, sig3_p, sig4_p):
+            tf2 = pn_phase_canonical_torch(f_in, eta_p, s1_p, s2_p, d_p)
+            f_safe = torch.clamp(f_in, min=1e-8)
+            pseudo = (1.0 / eta_p) * (
+                sig1_p * f_safe
+                + 0.75 * sig2_p * torch.pow(f_safe, 4.0 / 3.0)
+                + 0.60 * sig3_p * torch.pow(f_safe, 5.0 / 3.0)
+                + 0.50 * sig4_p * torch.pow(f_safe, 2.0)
+            )
+            return tf2 + pseudo
+
+        phi_ins_trans = eval_phi_ins_raw(f_trans_phase, eta, s1_eff, s2_eff, delta, sigma_1, sig2, sig3, sig4)
+        sigma_0 = eta * (eval_phi_int_val(f_trans_phase) - phi_ins_trans)
+
+        # Store precomputed fields
+        self.f_trans_amp = f_trans_amp
+        self.f_peak = f_peak
+        self.f_trans_phase = f_trans_phase
+        self.f_join_rd = f_join_rd
+        self.f_rd = f_rd
+        self.f_damp = f_damp
+        self.width_rd = width_rd
+        self.lam = lam
+        self.a_r = a_r
+
+        self.rho1 = rho1
+        self.rho2 = rho2
+        self.rho3 = rho3
+
+        self.c0_amp = c0_amp
+        self.c1_amp = c1_amp
+        self.c2_amp = c2_amp
+        self.c3_amp = c3_amp
+        self.c4_amp = c4_amp
+        self.f1_col = f1_col
+        self.f4_col = f4_col
+
+        self.c_rd_val = c_rd_val
+        self.c1_val = c1_val
+        self.c2_val = c2_val
+        self.c4_val = c4_val
+        self.c0_val = c0_val
+        self.dt_rd = dt_rd
+        self.dphi_rd = dphi_rd
+
+        self.sig0 = sigma_0
+        self.sig1 = sigma_1
+        self.sig2 = sig2
+        self.sig3 = sig3
+        self.sig4 = sig4
+
+        self.b0_val = b0_val
+        self.b1_val = b1_val
+        self.b2_val = b2_val
+        self.b3_val = b3_val
+        self.b4_val = b4_val
+
+        self.tshift_sec = tshift_sec
+
+    def eval_waveform(
+        self,
+        f: torch.Tensor,
+        distance: Union[float, torch.Tensor] = 100.0,
+        inclination: Union[float, torch.Tensor] = 0.0,
+        phi_c: Union[float, torch.Tensor] = 0.0,
+        t_c: Union[float, torch.Tensor] = 0.0,
+        return_phase: bool = False,
+    ):
+        f_eval = as_tensor(f, device=self.device, dtype=self.dtype)
+        dist = as_tensor(distance, device=self.device, dtype=self.dtype)
+        inc = as_tensor(inclination, device=self.device, dtype=self.dtype)
+        phi0 = as_tensor(phi_c, device=self.device, dtype=self.dtype)
+        t0 = as_tensor(t_c, device=self.device, dtype=self.dtype)
+
+        if self.is_batched:
+            f_eval_b = f_eval.unsqueeze(0) if f_eval.dim() == 1 else f_eval
+            m_sec_eval = self.m_sec.unsqueeze(-1) if self.m_sec.dim() == 1 else self.m_sec
+            def u(t: torch.Tensor) -> torch.Tensor:
+                return t.unsqueeze(-1) if t.dim() == 1 else t
+        else:
+            f_eval_b = f_eval
+            m_sec_eval = self.m_sec
+            def u(t: torch.Tensor) -> torch.Tensor:
+                return t
+
+        f_eval_safe = torch.clamp(f_eval_b, min=1e-8)
+        mf = m_sec_eval * f_eval_safe
+
+        eta_u = u(self.eta)
+        s1_u = u(self.s1_eff)
+        s2_u = u(self.s2_eff)
+        d_u = safe_sqrt(1.0 - 4.0 * eta_u)
+        pi_mf = PI * mf
+
+        # 1. Amplitude
+        pn_amp = IMRPhenomXAS.pn_amp_func(eta_u, s1_u, s2_u, pi_mf, d_u)
+        scaled_amp_ins = (
+            pn_amp
+            + u(self.rho1) * (pi_mf ** (7.0 / 3.0))
+            + u(self.rho2) * (pi_mf ** (8.0 / 3.0))
+            + u(self.rho3) * (pi_mf ** 3.0)
+        )
+
+        f_rd_u = u(self.f_rd)
+        width_rd_u = u(self.width_rd)
+        lam_u = u(self.lam)
+        a_r_u = u(self.a_r)
+
+        exp_arg_mr = -(lam_u * (mf - f_rd_u)) / width_rd_u
+        scaled_amp_mr = (a_r_u * width_rd_u / ((mf - f_rd_u)**2 + width_rd_u**2)) * torch.exp(torch.clamp(exp_arg_mr, -50.0, 50.0))
+
+        f1_u = u(self.f1_col)
+        f4_u = u(self.f4_col)
+        delta_f_u = torch.clamp(f4_u - f1_u, min=1e-8)
+        u_int = (mf - f1_u) / delta_f_u
+        poly_inv = u(self.c0_amp) + u_int * (u(self.c1_amp) + u_int * (u(self.c2_amp) + u_int * (u(self.c3_amp) + u_int * u(self.c4_amp))))
+        mf_pow = torch.pow(torch.clamp(mf, min=1e-8), 7.0 / 6.0)
+        scaled_amp_int = mf_pow / torch.clamp(poly_inv, min=1e-12)
+
+        scaled_amp = torch.where(
+            mf <= u(self.f_trans_amp),
+            scaled_amp_ins,
+            torch.where(
+                mf <= u(self.f_peak),
+                scaled_amp_int,
+                scaled_amp_mr,
+            ),
+        )
+
+        dist_sec = (u(dist) * MPC_SI) / C_SI
+        leading_amp_factor = (
+            torch.sqrt(5.0 * eta_u / 24.0)
+            * (m_sec_eval ** (5.0 / 6.0))
+            / (PI ** (2.0 / 3.0) * dist_sec)
+        )
+        full_amp = leading_amp_factor * (f_eval_safe ** (-7.0 / 6.0)) * scaled_amp
+
+        # 2. Phase
+        sig1_u = u(self.sig1)
+        sig2_u = u(self.sig2)
+        sig3_u = u(self.sig3)
+        sig4_u = u(self.sig4)
+        sig0_u = u(self.sig0)
+
+        b0_u = u(self.b0_val)
+        b1_u = u(self.b1_val)
+        b2_u = u(self.b2_val)
+        b3_u = u(self.b3_val)
+        b4_u = u(self.b4_val)
+
+        c_rd_u = u(self.c_rd_val)
+        c1_u = u(self.c1_val)
+        c2_u = u(self.c2_val)
+        c4_u = u(self.c4_val)
+        c0_u = u(self.c0_val)
+        dt_rd_u = u(self.dt_rd)
+        dphi_rd_u = u(self.dphi_rd)
+        f_damp_u = u(self.f_damp)
+
+        def eval_grid_phi_ins(f_in: torch.Tensor) -> torch.Tensor:
+            tf2 = pn_phase_canonical_torch(f_in, eta_u, s1_u, s2_u, d_u)
+            f_safe = torch.clamp(f_in, min=1e-8)
+            pseudo = (1.0 / eta_u) * (
+                sig1_u * f_safe
+                + 0.75 * sig2_u * torch.pow(f_safe, 4.0 / 3.0)
+                + 0.60 * sig3_u * torch.pow(f_safe, 5.0 / 3.0)
+                + 0.50 * sig4_u * torch.pow(f_safe, 2.0)
+                + sig0_u
+            )
+            return tf2 + pseudo
+
+        def eval_grid_phi_int(f_in: torch.Tensor) -> torch.Tensor:
+            f_safe = torch.clamp(f_in, min=1e-8)
+            poly = (
+                b0_u * f_safe
+                + b1_u * torch.log(f_safe)
+                - b2_u / f_safe
+                - 0.5 * b3_u / (f_safe**2)
+                - (1.0 / 3.0) * b4_u / (f_safe**3)
+            )
+            lorentz = (2.0 * c0_u / f_damp_u) * torch.atan((f_safe - u(self.f_rd)) / (2.0 * f_damp_u))
+            return (1.0 / eta_u) * (poly + lorentz)
+
+        def eval_grid_phi_rd(f_in: torch.Tensor) -> torch.Tensor:
+            f_safe = torch.clamp(f_in, min=1e-8)
+            poly = (
+                c_rd_u * f_safe
+                + 1.5 * c1_u * torch.pow(f_safe, 2.0 / 3.0)
+                - c2_u / f_safe
+                - (1.0 / 3.0) * c4_u / (f_safe**3)
+            )
+            lorentz = (c0_u / f_damp_u) * torch.atan((f_safe - u(self.f_rd)) / f_damp_u)
+            return (1.0 / eta_u) * (poly + lorentz) + dt_rd_u * f_safe + dphi_rd_u
+
+        phi_ins_val = eval_grid_phi_ins(mf)
+        phi_int_val = eval_grid_phi_int(mf)
+        phi_rd_val = eval_grid_phi_rd(mf)
+
+        psi_raw = torch.where(
+            mf <= u(self.f_trans_phase),
+            phi_ins_val,
+            torch.where(
+                mf <= u(self.f_join_rd),
+                phi_int_val,
+                phi_rd_val,
+            ),
+        )
+
+        tshift_u = u(self.tshift_sec)
+        if self.f_ref is not None:
+            fref_t = as_tensor(self.f_ref, device=self.device, dtype=self.dtype)
+            fref_u = fref_t.unsqueeze(-1) if (self.is_batched and f_eval_b.dim() > fref_t.dim()) else fref_t
+            mf_ref = m_sec_eval * fref_u
+            psi_ref = torch.where(
+                mf_ref <= u(self.f_trans_phase),
+                eval_grid_phi_ins(mf_ref),
+                torch.where(
+                    mf_ref <= u(self.f_join_rd),
+                    eval_grid_phi_int(mf_ref),
+                    eval_grid_phi_rd(mf_ref),
+                ),
+            )
+            total_phase = (
+                psi_raw
+                - psi_ref
+                + tshift_u * (f_eval_b - fref_u)
+                + 2.0 * PI * f_eval_b * u(t0)
+                - 2.0 * u(phi0)
+                + 3.0 * PI / 4.0
+            )
+        else:
+            total_phase = (
+                psi_raw
+                + tshift_u * f_eval_b
+                + 2.0 * PI * f_eval_b * u(t0)
+                - 2.0 * u(phi0)
+                + 3.0 * PI / 4.0
+            )
+
+        cos_inc = torch.cos(u(inc))
+        plus_factor = 0.5 * (1.0 + cos_inc * cos_inc)
+        cross_factor = cos_inc
+
+        exp_minus_i_phase = torch.complex(torch.cos(total_phase), -torch.sin(total_phase))
+        h_plus = (plus_factor * full_amp).to(exp_minus_i_phase.dtype) * exp_minus_i_phase
+        h_cross = torch.complex(
+            -cross_factor * full_amp * torch.sin(total_phase),
+            -cross_factor * full_amp * torch.cos(total_phase),
+        )
+
+        h_plus = torch.where(f_eval_b > 0.0, h_plus, torch.zeros_like(h_plus))
+        h_cross = torch.where(f_eval_b > 0.0, h_cross, torch.zeros_like(h_cross))
+
+        if return_phase:
+            return h_plus, h_cross, total_phase
+        return h_plus, h_cross
+
+    def eval_phase(self, f: torch.Tensor) -> torch.Tensor:
+        """Evaluate carrier phase without amplitude overhead."""
+        return self.eval_waveform(f, inclination=0.0, phi_c=0.0, t_c=0.0, return_phase=True)[2]
+
+    def __call__(self, *args, **kwargs):
+        return self.eval_waveform(*args, **kwargs)
+
+
 class IMRPhenomXAS(nn.Module):
     """Clean-Room 4th-generation aligned-spin frequency-domain IMRPhenomXAS waveform model."""
 
     def __init__(self):
         super().__init__()
+
+    def build_state(
+        self,
+        mass1: Union[float, torch.Tensor] = 30.0,
+        mass2: Union[float, torch.Tensor] = 30.0,
+        chi1: Union[float, torch.Tensor, object] = _UNSET,
+        chi2: Union[float, torch.Tensor, object] = _UNSET,
+        spin1z: Optional[Union[float, torch.Tensor]] = None,
+        spin2z: Optional[Union[float, torch.Tensor]] = None,
+        f_ref: Optional[Union[float, torch.Tensor]] = None,
+        _final_spin_override: Optional[Union[float, torch.Tensor]] = None,
+        device=None,
+        dtype=torch.float64,
+        **kwargs,
+    ) -> XASCarrierState:
+        """Construct precomputed carrier state for reusable evaluations."""
+        return XASCarrierState(
+            mass1=mass1,
+            mass2=mass2,
+            chi1=chi1,
+            chi2=chi2,
+            spin1z=spin1z,
+            spin2z=spin2z,
+            f_ref=f_ref,
+            final_spin_override=_final_spin_override,
+            device=device,
+            dtype=dtype,
+        )
 
     @staticmethod
     def pn_amp_func(
@@ -919,7 +1568,6 @@ class IMRPhenomXAS(nn.Module):
         eta_u = unsqueeze_param(eta)
         s1_u = unsqueeze_param(s1_eff)
         s2_u = unsqueeze_param(s2_eff)
-        f_meco_u = unsqueeze_param(f_meco)
         f_trans_amp_u = unsqueeze_param(f_trans_amp)
         f_peak_u = unsqueeze_param(f_peak)
         f_rd_u = unsqueeze_param(f_rd)
@@ -927,9 +1575,6 @@ class IMRPhenomXAS(nn.Module):
         a_r_u = unsqueeze_param(a_r)
         width_rd_u = unsqueeze_param(width_rd)
         lam_u = unsqueeze_param(lam)
-        r2_u = unsqueeze_param(r2)
-        r3_u = unsqueeze_param(r3)
-        r4_u = unsqueeze_param(r4)
 
         # 2. Inspiral PN Amplitude (published PN amplitude Eq. 6.4, author manuscript Eq. 69)
         d_u = safe_sqrt(1.0 - 4.0 * eta_u)
@@ -962,7 +1607,6 @@ class IMRPhenomXAS(nn.Module):
 
         f1_col = f_trans_amp
         f4_col = f_peak
-        f_mid_col = 0.5 * (f1_col + f4_col)
 
         x1_pi = PI * f1_col
         pn_at_trans, dpn_trans = self.pn_amp_func(

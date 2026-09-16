@@ -72,9 +72,9 @@ def test_hm_eq9_reaches_all_modes_and_phase_boundary_offsets(monkeypatch, f_ref)
     f = mf / msec
     params = dict(mass1=m1, mass2=m2, chi1=s1, chi2=s2,
                   f_ref=f_ref, return_unprojected_modes=True)
-    _, _, corrected = model(f, **params)
+    _, _, corrected = model._legacy_forward(f, **params)
     monkeypatch.setattr(hm_module, "_d_ringdown_phase_correction", lambda mf, *args: torch.zeros_like(mf))
-    _, _, unchanged = model(f, **params)
+    _, _, unchanged = model._legacy_forward(f, **params)
     eta = m1 * m2 / (m1 + m2)**2
     chi_pn = (s1 + s2) / 2.0 * (1.0 - 76.0 / 113.0 * eta) + (m1 - m2) / (m1 + m2) * (s1 - s2) / 2.0
     a4 = model.base_22.eval_table_v("alpha4", eta, chi_pn)

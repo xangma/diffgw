@@ -5,9 +5,11 @@ import importlib.util
 import io
 import tarfile
 
+from pathlib import Path
+
 def _load_checker():
-    path = "scripts/xhm_no_contact_archive_check.py"
-    spec = importlib.util.spec_from_file_location("xhm_no_contact_archive_check", path)
+    path = Path(__file__).resolve().parent.parent / "scripts" / "xhm_no_contact_archive_check.py"
+    spec = importlib.util.spec_from_file_location("xhm_no_contact_archive_check", str(path))
     assert spec and spec.loader
     module = importlib.util.module_from_spec(spec)
     spec.loader.exec_module(module)

@@ -74,7 +74,11 @@ def test_decision_is_detached_and_nonfinite_inputs_are_conservative():
 
 @pytest.mark.parametrize("device", ["cuda", "mps"])
 def test_available_accelerator_matches_cpu(device):
-    if not getattr(torch, f"{device}").is_available():
+    is_avail = (
+        torch.cuda.is_available() if device == "cuda"
+        else (hasattr(torch.backends, "mps") and torch.backends.mps.is_available())
+    )
+    if not is_avail:
         pytest.skip(f"{device} unavailable")
     coefficients = torch.tensor([0.28089, -1.06, 1.0], dtype=torch.float32, device=device)
     result = polynomial_has_nonpositive(coefficients, 0.0, 1.0)
