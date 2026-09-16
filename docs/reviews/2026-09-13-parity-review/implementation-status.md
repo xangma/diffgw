@@ -917,7 +917,7 @@ does not claim a production `prec_version` or full-band native-MSA parity.
 
 All 209 printed PhenomD Table V coefficients were verified against the primary
 paper's TeX. Using them literally worsens the tested waveforms; see the
-[published-fit experiment](../../../phenomd_published_report.md). This leaves
+[published-fit experiment](phenomd_published_report.md). This leaves
 the inherited full-precision coefficients' provenance unresolved.
 
 ## Work in progress
