@@ -1,8 +1,8 @@
-# Differences Between diffgw (TorchWave / JAXWave) and LALSimulation
+# Technical Comparison and Reference Validation
 
-This document provides a comprehensive technical overview of where and why **diffgw** (**TorchWave** in PyTorch and **JAXWave** in JAX) diverges from **LALSimulation** (LALSuite). 
+This document provides a technical comparison between **diffgw** (**TorchWave** in PyTorch and **JAXWave** in JAX) and reference implementations in **LALSimulation** (LALSuite).
 
-diffgw is an independent, 100% MIT-licensed gravitational-wave modeling framework developed under strict clean-room principles with zero runtime dependency on LAL.
+diffgw is an independent, 100% MIT-licensed gravitational-wave modeling framework. All models are derived directly from primary peer-reviewed literature and engineered natively for GPU tensor batching, autograd differentiation, and XLA compilation.
 
 ---
 
@@ -109,7 +109,7 @@ The unified `diffgw` architecture extracts zero-dependency physical constants, u
 
 #### Physical & Numerical Differences from LAL
 * **Coprecessing-Frame Mode Deviations (~0.4% effect)**:
-  In LALSimulation, calling `IMRPhenomXPNR` turns on `PhenomXPNRUseTunedCoprec = 1` by default. This injects numerical-relativity-calibrated antisymmetric coprecessing mode amplitudes ($h_{\ell, m}^{\rm asym}$) and a precession-induced shift to the coprecessing ringdown frequency ($\Delta f_{\rm ring}$). TorchWave's sovereign implementation couples the complete PNR tuned angles to the clean-room `IMRPhenomXHM` coprecessing carrier. In LAL itself, toggling `PhenomXPNRUseTunedCoprec` on vs. off accounts for $\approx 0.9\%$ mismatch ($1 - \mathcal{M} \approx 9 \times 10^{-3}$), representing the primary source of residual difference ($\approx 80\%$).
+  In LALSimulation, calling `IMRPhenomXPNR` turns on `PhenomXPNRUseTunedCoprec = 1` by default. This injects numerical-relativity-calibrated antisymmetric coprecessing mode amplitudes ($h_{\ell, m}^{\rm asym}$) and a precession-induced shift to the coprecessing ringdown frequency ($\Delta f_{\rm ring}$). TorchWave's implementation couples the complete PNR tuned angles to the native `IMRPhenomXHM` coprecessing carrier. In LAL itself, toggling `PhenomXPNRUseTunedCoprec` on vs. off accounts for $\approx 0.9\%$ mismatch ($1 - \mathcal{M} \approx 9 \times 10^{-3}$), representing the primary source of residual difference ($\approx 80\%$).
 * **Adaptive C-Spline vs. Tensor-Batched RK4 Inspiral (~0.1% effect)**:
   LAL integrates the 3.5PN orbit-averaged SpinTaylor ODE using an adaptive-step Runge-Kutta Cash-Karp 4-5 integrator in C on an irregular time mesh, followed by cubic spline interpolation onto the user grid. TorchWave integrates on a monotonic velocity coordinate grid ($v = (\pi M f)^{1/3}$) with fixed-size RK4 steps. This design is strictly required to preserve **native GPU batching** and **exact reverse-mode PyTorch autograd differentiability** without divergent branching or dynamic memory reallocations. Over $\sim 1000$ inspiral cycles, the subtle difference in the orbit-averaged precession phase accumulation amounts to $\sim 0.1 - 0.2\text{ rad}$ at high frequencies.
 * **Analytical vs. Discrete Attachment & Quadrature (< 0.05% effect)**:
@@ -132,19 +132,19 @@ The unified `diffgw` architecture extracts zero-dependency physical constants, u
 | **`IMRPhenomXAS`** | Reference C implementation. | Canonical APS PRD supplemental symbolic Mathematica deposit. | Exact analytical fidelity ($4.2 \times 10^{-14}$ complex relative $L_2$ error). |
 | **`IMRPhenomD`** | C implementation with double-precision polynomial constants and reference time gauge. | Reconciled double-precision polynomial fits and exact reference gauge. | Strict double-precision parity ($< 10^{-6}$ relative $L_2$, $< 10^{-8}$ mismatch). |
 | **`IMRPhenomXPHM-SpinTaylor`** | Adaptive C-spline SpinTaylor integrator (`prec_version=320`). | Fixed-grid velocity-space RK4 integrator. | Near-perfect match ($\mathcal{M} \ge 0.9996$); 100% GPU-batchable and autograd differentiable. |
-| **`IMRPhenomXPNR`** | Adaptive C-spline SpinTaylor inspiral + tuned coprec deviations. | PNR tuned angles with tensor-batched RK4 inspiral and clean-room XHM coprecessing carrier. | Overlap $\ge 0.993$–$0.997$; preserves 100% GPU-batchability and exact autograd differentiability. |
-| **10 Other Models** | Standard C routines (`TaylorF2`, `TaylorF2_Eccentric`, `IMRPhenomPv2`, `IMRPhenomXP`, `IMRPhenomHM`, `IMRPhenomD_NRTidal`, `IMRPhenomD_NRTidalv2`, `IMRPhenomNSBH`, `KerrRingdown`, `SEOBNR_ROM`). | Pure PyTorch clean-room analytical / official ROM implementations. | Exact parity ($\le 10^{-6}$ to $10^{-12}$ error) with native autograd and GPU batching. |
+| **`IMRPhenomXPNR`** | Adaptive C-spline SpinTaylor inspiral + tuned coprec deviations. | PNR tuned angles with tensor-batched RK4 inspiral and native XHM coprecessing carrier. | Overlap $\ge 0.993$–$0.997$; preserves 100% GPU-batchability and exact autograd differentiability. |
+| **10 Other Models** | Standard C routines (`TaylorF2`, `TaylorF2_Eccentric`, `IMRPhenomPv2`, `IMRPhenomXP`, `IMRPhenomHM`, `IMRPhenomD_NRTidal`, `IMRPhenomD_NRTidalv2`, `IMRPhenomNSBH`, `KerrRingdown`, `SEOBNR_ROM`). | Pure PyTorch native analytical / official ROM implementations. | Exact parity ($\le 10^{-6}$ to $10^{-12}$ error) with native autograd and GPU batching. |
 
 ---
 
-## Verifying Parity and Sovereign Behavior
+## Verifying Parity and Numerical Accuracy
 
-TorchWave includes an automated parity and sovereign audit harness in `tests/parity_harness.py`:
+TorchWave includes an automated parity and numerical validation harness in `tests/parity_harness.py`:
 
 ```bash
 # Verify exact analytical parity models (TaylorF2, TaylorF2_Eccentric)
 PYTHONPATH=src python tests/parity_harness.py --scope=analytic
 
-# Verify full 21-case catalog across all 17 models (17 exact LAL parity, 4 sovereign physics calibrations)
+# Verify full 21-case catalog across all 17 models
 PYTHONPATH=src python tests/parity_harness.py --scope=catalog
 ```

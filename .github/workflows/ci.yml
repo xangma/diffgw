@@ -1,0 +1,48 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    name: "test (${{ matrix.os }}, py${{ matrix.python-version }})"
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+        python-version: ["3.10", "3.11", "3.12"]
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python ${{ matrix.python-version }}
+        uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+          cache: 'pip'
+
+      - name: Install test runner
+        run: |
+          python -m pip install --upgrade pip
+          pip install pytest
+
+      - name: "Step 1: Verify PyTorch without JAX"
+        run: |
+          pip install .[torch]
+          pytest tests/test_diffgw.py
+
+      - name: "Step 2: Verify JAX without PyTorch"
+        run: |
+          pip uninstall -y torch
+          pip install .[jax]
+          pytest tests/test_diffgw.py
+
+      - name: "Step 3: Verify core suite with all and dev"
+        run: |
+          pip install .[all,dev]
+          pytest tests/test_diffgw.py tests/test_mit_packaging.py tests/test_external_data.py tests/test_taylorf2_hm_external_api.py

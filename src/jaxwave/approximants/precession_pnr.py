@@ -1,9 +1,8 @@
-"""Sovereign pure JAX PNR (PhenomX Precession Numerical Relativity) angle engine.
+"""Pure JAX PNR (PhenomX Precession Numerical Relativity) angle engine.
 
-Provides sovereign (clean-room, pure JAX, zero runtime LAL dependency)
-implementation of the NR-tuned precession angles (alpha, beta, gamma), two-spin
-to single-spin mapping, multi-harmonic linear frequency mapping, and minimal-rotation
-coprecessing phase quadrature for IMRPhenomXPNR (prec_version=330).
+Provides a native JAX implementation of the NR-tuned precession angles (alpha,
+beta, gamma), two-spin to single-spin mapping, multi-harmonic linear frequency mapping,
+and minimal-rotation coprecessing phase quadrature for IMRPhenomXPNR (prec_version=330).
 
 References:
 - Hamilton et al. (2021), Phys. Rev. D 104, 124027 (arXiv:2107.08876)

@@ -401,7 +401,9 @@ class TaylorF2:
         plus_factor = 0.5 * (1.0 + cos_i * cos_i)
         cross_factor = cos_i
 
-        if (m1.ndim >= 1) and (f.ndim == 1 or f.shape[0] != m1.shape[0]):
+        f_eval = jnp.expand_dims(f, 0) if (m1.ndim >= 1 and f.ndim == 1) else f
+
+        if (m1.ndim >= 1) and (f_eval.ndim > m1.ndim):
             plus_factor = jnp.expand_dims(plus_factor, -1)
             cross_factor = jnp.expand_dims(cross_factor, -1)
 
@@ -415,18 +417,18 @@ class TaylorF2:
                 m_sec = total_mass * MSUN_SEC
                 f_isco = 1.0 / (6.0 * jnp.sqrt(6.0) * PI * m_sec)
 
-            if m1.ndim >= 1 and f.ndim > m1.ndim:
+            if m1.ndim >= 1 and f_eval.ndim > m1.ndim:
                 f_isco = jnp.expand_dims(f_isco, -1)
 
             if smooth_cutoff:
                 f_start = (1.0 - roll_off_delta) * f_isco
-                theta = jnp.clip((f - f_start) / (f_isco - f_start), 0.0, 1.0)
+                theta = jnp.clip((f_eval - f_start) / (f_isco - f_start), 0.0, 1.0)
                 window = 0.5 * (1.0 + jnp.cos(PI * theta))
-                window = jnp.where(f < f_start, 1.0, window)
-                window = jnp.where(f > f_isco, 0.0, window)
+                window = jnp.where(f_eval < f_start, 1.0, window)
+                window = jnp.where(f_eval > f_isco, 0.0, window)
                 amp = amp * window
             else:
-                mask = (f <= f_isco) & (f > 0.0)
+                mask = (f_eval <= f_isco) & (f_eval > 0.0)
                 amp = jnp.where(mask, amp, 0.0)
 
         # Polarizations: h+ = amp * plus_factor * e^(-i*psi), hx = amp * cross_factor * e^(-i*(psi + pi/2))

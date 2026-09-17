@@ -1,6 +1,6 @@
-"""Sovereign pure PyTorch SpinTaylorT4 spin-precession dynamics and Euler angle engine.
+"""Pure PyTorch SpinTaylorT4 spin-precession dynamics and Euler angle engine.
 
-Provides sovereign (clean-room, pure PyTorch, zero runtime LAL dependency)
+Provides a native, autograd-differentiable PyTorch implementation of the
 numerical integration of 3.5PN orbit-averaged SpinTaylorT4 equations of motion,
 computation of J-frame Euler precession angles (alpha, beta, gamma), and smooth
 C^1 analytical continuation into the merger-ringdown regime.

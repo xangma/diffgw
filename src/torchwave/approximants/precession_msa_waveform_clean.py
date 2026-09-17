@@ -393,11 +393,25 @@ def transport_msa_angles_for_phi_ref(
     phi_phi = _as_f64(phi_phi, device=device)
     delta_alpha = _principal_phase_delta(_as_f64(_a0_phi, device=device), a0_zero)
     delta_phi_j = _principal_phase_delta(phi_phi, phi_zero)
-    gamma_shift = torch.zeros_like(delta_phi_j)
-    gamma_omitted = bool(aligned and int(convention) == 1)
-    if int(convention) == 1 and not gamma_omitted:
-        gamma_shift = -delta_phi_j
-    shifted = {"alpha": alpha + delta_alpha, "gamma": gamma + gamma_shift}
+    is_tensor_aligned = isinstance(aligned, torch.Tensor)
+    if is_tensor_aligned:
+        aligned_omitted = aligned & (int(convention) == 1)
+        delta_phi_j_u = delta_phi_j.unsqueeze(-1) if (gamma.ndim > delta_phi_j.ndim and delta_phi_j.ndim > 0) else delta_phi_j
+        delta_alpha_u = delta_alpha.unsqueeze(-1) if (alpha.ndim > delta_alpha.ndim and delta_alpha.ndim > 0) else delta_alpha
+        gamma_shift = torch.where(aligned_omitted.unsqueeze(-1) if gamma.ndim > aligned_omitted.ndim else aligned_omitted,
+                                  torch.zeros_like(delta_phi_j_u), -delta_phi_j_u)
+        shifted = {"alpha": alpha + delta_alpha_u, "gamma": gamma + gamma_shift}
+        phi_anchor = torch.where(aligned_omitted | (int(convention) == 0), phi_phi, phi_zero)
+        gamma_omitted = aligned_omitted
+    else:
+        gamma_shift = torch.zeros_like(delta_phi_j)
+        gamma_omitted = bool(aligned and int(convention) == 1)
+        if int(convention) == 1 and not gamma_omitted:
+            gamma_shift = -delta_phi_j
+        delta_alpha_u = delta_alpha.unsqueeze(-1) if (alpha.ndim > delta_alpha.ndim and delta_alpha.ndim > 0) else delta_alpha
+        gamma_shift_u = gamma_shift.unsqueeze(-1) if (gamma.ndim > gamma_shift.ndim and gamma_shift.ndim > 0) else gamma_shift
+        shifted = {"alpha": alpha + delta_alpha_u, "gamma": gamma + gamma_shift_u}
+        phi_anchor = phi_phi if int(convention) == 0 or gamma_omitted else phi_zero
     if isinstance(angles, Mapping) and "beta" not in angles and "cos_beta" in angles:
         shifted["cos_beta"] = _as_f64(angles["cos_beta"], device=device)
     else:
@@ -406,7 +420,6 @@ def transport_msa_angles_for_phi_ref(
     # ``pi-phi_j``.  Pairing it with phi_zero after the explicit -delta_phi_j
     # transport gives the same total phase as the current geometry.  The
     # aligned branch deliberately keeps its current fallback phi_j.
-    phi_anchor = phi_phi if int(convention) == 0 or gamma_omitted else phi_zero
     anchor = {
         "alpha0": a0_zero,
         "theta_jn": theta_phi,
@@ -580,6 +593,41 @@ def compose_msa_waveform(
     flat = tuple(value.reshape(-1) for value in (m1, m2, c1, c2, dist, tc_t, fr, fs))
     angle_rows = tuple(value.reshape((n_rows, f.numel())) for value in (alpha, beta, gamma))
     geom_rows = tuple(value.reshape(-1) for value in (theta, zeta_t, carrier_phase))
+    if n_rows > 1:
+        try:
+            h_carrier = carrier(
+                f=f_safe,
+                mass1=flat[0].reshape(batch_shape),
+                mass2=flat[1].reshape(batch_shape),
+                chi1=flat[2].reshape(batch_shape),
+                chi2=flat[3].reshape(batch_shape),
+                distance=flat[4].reshape(batch_shape),
+                inclination=torch.zeros(batch_shape, dtype=_DTYPE, device=f.device),
+                phi_c=geom_rows[2].reshape(batch_shape),
+                t_c=flat[5].reshape(batch_shape),
+                f_ref=flat[6].reshape(batch_shape),
+                _final_spin_override=flat[7].reshape(batch_shape),
+            )
+            if isinstance(h_carrier, (tuple, list)) and len(h_carrier) >= 1:
+                h22 = torch.as_tensor(h_carrier[0], dtype=torch.complex128)
+                if h22.shape[-1] == f.numel() and h22.numel() == n_rows * f.numel():
+                    hneg = 2.0 * h22 / _SQRT_H22
+                    hp, hc = project_twisted_positive_modes(
+                        {(2, 2): hneg},
+                        alpha,
+                        gamma,
+                        beta,
+                        theta.unsqueeze(-1),
+                        zeta_t.unsqueeze(-1),
+                    )
+                    support = f > 0.0
+                    hp = torch.where(support, hp, torch.zeros_like(hp))
+                    hc = torch.where(support, hc, torch.zeros_like(hc))
+                    out_dtype = torch.complex64 if fi.dtype == torch.float32 else torch.complex128
+                    return (hp.reshape(tuple(batch_shape) + (f.numel(),)).to(out_dtype),
+                            hc.reshape(tuple(batch_shape) + (f.numel(),)).to(out_dtype))
+        except Exception:
+            pass
     h_plus_rows, h_cross_rows = [], []
     for index in range(n_rows):
         h_carrier = carrier(
@@ -810,10 +858,13 @@ def waveform(
     # the same canonical state for its source-frame geometry and remnant fit.
     m1, m2, s1, s2, rest = _canonical_source_parameters(m1, m2, s1, s2, dist, inc, phi0, tc_t, fr)
     dist, inc, phi0, tc_t, fr = rest
-    rows = []
     n_rows = math.prod(m1.shape) if m1.shape else 1
     flat_scalars = tuple(value.reshape(-1) for value in (m1, m2, dist, inc, phi0, tc_t, fr))
     flat_spins = (s1.reshape((n_rows, 3)), s2.reshape((n_rows, 3)))
+    all_alpha, all_beta, all_gamma = [], [], []
+    all_a0, all_theta, all_zeta, all_phi = [], [], [], []
+    all_final = []
+    beta_key = "cos_beta"
     for index in range(n_rows):
         rm1, rm2 = m1.reshape(-1)[index], m2.reshape(-1)[index]
         rs1, rs2 = flat_spins[0][index], flat_spins[1][index]
@@ -903,14 +954,46 @@ def waveform(
             if rfinal.numel() not in (1, n_rows):
                 raise ValueError("final_spin_override must be scalar or match the parameter batch")
             rfinal = rfinal[0 if rfinal.numel() == 1 else index]
-        rows.append(compose_msa_waveform(
-            f, rm1, rm2, rs1[2], rs2[2],
-            transported_angles, composition_geometry, rfinal,
-            distance=rdist, tc=rtc, f_ref=rfr, convention=convention,
+
+        beta_key = "cos_beta" if "cos_beta" in transported_angles else "beta"
+        all_alpha.append(transported_angles["alpha"])
+        all_beta.append(transported_angles[beta_key])
+        all_gamma.append(transported_angles["gamma"])
+        all_a0.append(composition_geometry["alpha0"])
+        all_theta.append(composition_geometry["theta_jn"])
+        all_zeta.append(composition_geometry["zeta"])
+        all_phi.append(composition_geometry["phi_j"])
+        all_final.append(rfinal)
+
+    if n_rows == 1:
+        single_angles = {"alpha": all_alpha[0], beta_key: all_beta[0], "gamma": all_gamma[0]}
+        single_geom = (all_a0[0], all_theta[0], all_zeta[0], all_phi[0])
+        single_final = all_final[0]
+        hp, hc = compose_msa_waveform(
+            f, m1, m2, s1[..., 2], s2[..., 2],
+            single_angles, single_geom, single_final,
+            distance=dist, tc=tc_t, f_ref=fr, convention=convention,
             angle_order="alpha_beta_gamma", angles_are_absolute=False, xas_model=xas_model,
-        ))
-    hp = torch.stack([item[0].reshape(-1) for item in rows]).reshape(tuple(m1.shape) + (f.numel(),))
-    hc = torch.stack([item[1].reshape(-1) for item in rows]).reshape(tuple(m1.shape) + (f.numel(),))
+        )
+    else:
+        batched_angles = {
+            "alpha": torch.stack(all_alpha).reshape(tuple(m1.shape) + (f.numel(),)),
+            beta_key: torch.stack(all_beta).reshape(tuple(m1.shape) + (f.numel(),)),
+            "gamma": torch.stack(all_gamma).reshape(tuple(m1.shape) + (f.numel(),)),
+        }
+        batched_geom = (
+            torch.stack(all_a0).reshape(m1.shape),
+            torch.stack(all_theta).reshape(m1.shape),
+            torch.stack(all_zeta).reshape(m1.shape),
+            torch.stack(all_phi).reshape(m1.shape),
+        )
+        batched_final = torch.stack(all_final).reshape(m1.shape)
+        hp, hc = compose_msa_waveform(
+            f, m1, m2, s1[..., 2], s2[..., 2],
+            batched_angles, batched_geom, batched_final,
+            distance=dist, tc=tc_t, f_ref=fr, convention=convention,
+            angle_order="alpha_beta_gamma", angles_are_absolute=False, xas_model=xas_model,
+        )
     out_dtype = torch.complex64 if fi.dtype == torch.float32 else torch.complex128
     return hp.to(out_dtype), hc.to(out_dtype)
 

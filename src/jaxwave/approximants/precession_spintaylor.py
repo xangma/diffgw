@@ -1,9 +1,9 @@
-"""Sovereign pure JAX SpinTaylorT4 spin-precession dynamics and Euler angle engine.
+"""Pure JAX SpinTaylorT4 spin-precession dynamics and Euler angle engine.
 
-Provides sovereign (clean-room, pure JAX, zero runtime LAL dependency)
-numerical integration of 3.5PN orbit-averaged SpinTaylorT4 equations of motion,
-computation of J-frame Euler precession angles (alpha, beta, gamma), and smooth
-C^1 analytical continuation into the merger-ringdown regime.
+Provides a native JAX implementation of the numerical integration of 3.5PN
+orbit-averaged SpinTaylorT4 equations of motion, computation of J-frame Euler
+precession angles (alpha, beta, gamma), and smooth C^1 analytical continuation
+into the merger-ringdown regime.
 
 References:
 - Colleoni et al. (2025), Phys. Rev. D 111, 064025 (arXiv:2412.16721)

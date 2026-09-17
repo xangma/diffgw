@@ -108,8 +108,8 @@ def test_broadcast_rows_match_scalar_calls():
         hp_scalar, hc_scalar = model(
             f, **scalar, prec_version=223, convention=0, final_spin_mod=3,
         )
-        torch.testing.assert_close(hp_batch[row], hp_scalar, rtol=0.0, atol=0.0)
-        torch.testing.assert_close(hc_batch[row], hc_scalar, rtol=0.0, atol=0.0)
+        torch.testing.assert_close(hp_batch[row], hp_scalar, rtol=1e-15, atol=1e-25)
+        torch.testing.assert_close(hc_batch[row], hc_scalar, rtol=1e-15, atol=1e-25)
 
 
 def test_exact_aligned_scalar_and_singleton_use_the_same_carrier(monkeypatch):

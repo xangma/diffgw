@@ -256,10 +256,12 @@ def evaluate_d_qnm_220(final_spin) -> Tuple[torch.Tensor, torch.Tensor]:
     working_spin = spin.to(_working_dtype(spin))
     _validate_spin(spin, working_spin)
     cubic = _evaluate_cubic(spin)
-    generated = independent_cyclic_qnm_220(spin)
     compatibility = (working_spin >= COMPATIBILITY_SPIN_MIN) & (
         working_spin <= COMPATIBILITY_SPIN_MAX
     )
+    if bool(torch.all(compatibility).item()):
+        return cubic[0].to(spin.dtype), cubic[1].to(spin.dtype)
+    generated = independent_cyclic_qnm_220(spin)
     return tuple(
         torch.where(compatibility, rounded, generated_value)
         for rounded, generated_value in zip(cubic, generated)

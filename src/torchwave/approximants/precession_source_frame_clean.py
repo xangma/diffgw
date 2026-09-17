@@ -80,56 +80,59 @@ def source_frame_geometry(
                                      pn_version=102, compat_102=False)
     spin = torch.stack((n1*n1*s1x + n2*n2*s2x,
                         n1*n1*s1y + n2*n2*s2y,
-                        n1*n1*s1z + n2*n2*s2z))
-    J = spin + torch.stack((torch.zeros_like(L), torch.zeros_like(L), L))
-    jhat = J / torch.linalg.vector_norm(J)
+                        n1*n1*s1z + n2*n2*s2z), dim=0)
+    J = spin + torch.stack((torch.zeros_like(L), torch.zeros_like(L), L), dim=0)
+    jhat = J / torch.linalg.vector_norm(J, dim=0, keepdim=True)
 
     # Observer basis used by Appendix C/Table IV (x-y ordering is intentional).
     n = torch.stack((torch.sin(iota)*torch.sin(phi_ref),
-                     torch.sin(iota)*torch.cos(phi_ref), torch.cos(iota)))
+                     torch.sin(iota)*torch.cos(phi_ref), torch.cos(iota)), dim=0)
     observer_x = torch.stack((-torch.cos(iota)*torch.sin(phi_ref),
-                              -torch.cos(iota)*torch.cos(phi_ref), torch.sin(iota)))
-    yj = torch.linalg.cross(jhat, n)
+                              -torch.cos(iota)*torch.cos(phi_ref), torch.sin(iota)), dim=0)
+    yj = torch.linalg.cross(jhat, n, dim=0)
     # At exact face-on alignment the Euler azimuth is gauge-degenerate.  Use
     # the supplied observer tangent as the continuous limiting basis; this
     # keeps the physical polarization limit finite while leaving generic
     # geometries unchanged.
     eps = torch.finfo(torch.float64).eps
-    y_norm = torch.linalg.vector_norm(yj)
-    tangent = torch.linalg.cross(jhat, observer_x)
-    tangent_norm = torch.linalg.vector_norm(tangent)
+    y_norm = torch.linalg.vector_norm(yj, dim=0)
+    tangent = torch.linalg.cross(jhat, observer_x, dim=0)
+    tangent_norm = torch.linalg.vector_norm(tangent, dim=0)
     # Select denominators algebraically.  This avoids evaluating a singular
     # inactive branch in autograd while preserving the exact generic result.
     y_den = torch.where(y_norm > eps, y_norm, torch.ones_like(y_norm))
     t_den = torch.where(tangent_norm > eps, tangent_norm, torch.ones_like(tangent_norm))
-    yj_generic = yj / y_den
-    yj_fallback = tangent / t_den
-    yj = torch.where(y_norm > eps, yj_generic, yj_fallback)
-    xj = torch.linalg.cross(yj, jhat)
+    y_den_k = y_den.unsqueeze(0) if y_den.ndim > 0 else y_den
+    t_den_k = t_den.unsqueeze(0) if t_den.ndim > 0 else t_den
+    y_norm_k = y_norm.unsqueeze(0) if y_norm.ndim > 0 else y_norm
+    yj_generic = yj / y_den_k
+    yj_fallback = tangent / t_den_k
+    yj = torch.where(y_norm_k > eps, yj_generic, yj_fallback)
+    xj = torch.linalg.cross(yj, jhat, dim=0)
     alpha_r = torch.hypot(yj[2], xj[2])
     alpha0 = torch.atan2(torch.where(alpha_r > eps, yj[2], torch.zeros_like(yj[2])),
                         torch.where(alpha_r > eps, xj[2], torch.ones_like(xj[2])))
     j_perp = torch.hypot(J[0], J[1])
     phi_num = torch.where(j_perp > eps, J[1], torch.zeros_like(J[1]))
     phi_den = torch.where(j_perp > eps, J[0], torch.ones_like(J[0]))
-    phi_j = torch.where(j_perp > torch.finfo(torch.float64).eps,
+    phi_j = torch.where(j_perp > eps,
                         torch.atan2(phi_num, phi_den),
-                        torch.as_tensor(torch.pi / 2, dtype=torch.float64) - phi_ref)
+                        torch.as_tensor(torch.pi / 2, dtype=torch.float64, device=J.device) - phi_ref)
     # Exact endpoint values are retained.  Euler-angle derivatives at exact
     # alignment are gauge-degenerate; callers should differentiate the
     # projected waveform (the physical limit), rather than theta_jn itself.
-    jn = torch.clamp(torch.dot(jhat, n), -1., 1.)
+    jn = torch.clamp((jhat * n).sum(dim=0), -1., 1.)
     # atan2(sin(theta), cos(theta)) has the correct exact endpoints.  At
     # alignment the angular coordinate is gauge-degenerate, so explicitly
     # stop its endpoint derivative; this prevents an undefined 0/0 derivative
     # from contaminating the differentiable projected waveform.
-    cross_norm = torch.linalg.vector_norm(torch.linalg.cross(jhat, n))
+    cross_norm = torch.linalg.vector_norm(torch.linalg.cross(jhat, n, dim=0), dim=0)
     raw_theta = torch.atan2(cross_norm, jn)
     endpoint = cross_norm <= eps
     endpoint_raw = torch.where(endpoint, raw_theta.detach(), raw_theta)
-    theta_jn = endpoint_raw + endpoint * (torch.where(jn < 0, torch.pi, torch.zeros_like(jn)) - endpoint_raw)
+    theta_jn = endpoint_raw + endpoint * (torch.where(jn < 0, torch.as_tensor(torch.pi, dtype=torch.float64, device=jn.device), torch.zeros_like(jn)) - endpoint_raw)
     x_sphere = torch.cos(theta_jn)*xj - torch.sin(theta_jn)*jhat
-    zeta = torch.atan2(torch.dot(observer_x, yj), torch.dot(observer_x, x_sphere))
+    zeta = torch.atan2((observer_x * yj).sum(dim=0), (observer_x * x_sphere).sum(dim=0))
     return alpha0, theta_jn, zeta, phi_j
 
 

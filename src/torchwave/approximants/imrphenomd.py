@@ -50,6 +50,27 @@ from torchwave.approximants.phenomd_unrounded_fits import (
 # Inherited unrounded fitting coefficients; see module provenance caveat.
 TABLE_V_COEFFS: Dict[str, Tuple[float, ...]] = TABLE_V_UNROUNDED_COEFFS
 
+_TABLE_V_KEYS = (
+    "rho1", "rho2", "rho3", "v2",
+    "gamma1", "gamma2", "gamma3",
+    "sigma1", "sigma2", "sigma3", "sigma4",
+    "beta2", "beta3",
+    "alpha1", "alpha2", "alpha3", "alpha4", "alpha5",
+)
+_TABLE_V_MATRIX_DATA = tuple(TABLE_V_COEFFS[k] for k in _TABLE_V_KEYS)
+_TABLE_V_CACHE: Dict[Tuple[str, torch.dtype], torch.Tensor] = {}
+
+
+def _get_table_v_matrix(device: torch.device, dtype: torch.dtype) -> torch.Tensor:
+    # Use string representation of device so 'cuda:0' matches 'cuda'
+    key = (str(device), dtype)
+    mat = _TABLE_V_CACHE.get(key)
+    if mat is None:
+        with torch.inference_mode(False):
+            mat = torch.tensor(_TABLE_V_MATRIX_DATA, device=device, dtype=dtype)
+        _TABLE_V_CACHE[key] = mat
+    return mat
+
 
 
 class IMRPhenomD:
@@ -75,9 +96,7 @@ class IMRPhenomD:
     @staticmethod
     def eval_table_v(name: str, eta: torch.Tensor, chi_pn: torch.Tensor) -> torch.Tensor:
         """Evaluate hierarchical polynomial mapping (Eq. 31 of Khan et al. 2016)."""
-        coeffs = TABLE_V_COEFFS[name]
-        c = [torch.tensor(val, dtype=eta.dtype, device=eta.device) for val in coeffs]
-
+        c = TABLE_V_COEFFS[name]
         eta2 = eta * eta
         x = chi_pn - 1.0
         x2 = x * x
@@ -90,6 +109,23 @@ class IMRPhenomD:
             + x3 * (c[8] + c[9] * eta + c[10] * eta2)
         )
         return poly
+
+    @staticmethod
+    def eval_all_table_v(eta: torch.Tensor, chi_pn: torch.Tensor) -> Tuple[torch.Tensor, ...]:
+        """Evaluate all 18 hierarchical polynomial mappings simultaneously via GEMM."""
+        x = chi_pn - 1.0
+        eta2 = eta * eta
+        x2 = x * x
+        x3 = x2 * x
+        features = torch.stack([
+            torch.ones_like(eta), eta,
+            x, x * eta, x * eta2,
+            x2, x2 * eta, x2 * eta2,
+            x3, x3 * eta, x3 * eta2,
+        ], dim=-1)
+        matrix = _get_table_v_matrix(eta.device, eta.dtype)
+        res = features @ matrix.T
+        return tuple(res[..., i] for i in range(18))
 
     @staticmethod
     def remnant_properties(
@@ -377,24 +413,13 @@ class IMRPhenomD:
 
         # Evaluate Table V phenomenological coefficients using unscaled reduced spin chi_pn
         # (Khan et al. 2016 arXiv:1508.07253, Eq. 24 and Tab. V)
-        rho1 = IMRPhenomD.eval_table_v("rho1", eta, chi_pn)
-        rho2 = IMRPhenomD.eval_table_v("rho2", eta, chi_pn)
-        rho3 = IMRPhenomD.eval_table_v("rho3", eta, chi_pn)
-        v2 = IMRPhenomD.eval_table_v("v2", eta, chi_pn)
-        gamma1 = IMRPhenomD.eval_table_v("gamma1", eta, chi_pn)
-        gamma2 = IMRPhenomD.eval_table_v("gamma2", eta, chi_pn)
-        gamma3 = IMRPhenomD.eval_table_v("gamma3", eta, chi_pn)
-        sigma1 = IMRPhenomD.eval_table_v("sigma1", eta, chi_pn)
-        sigma2 = IMRPhenomD.eval_table_v("sigma2", eta, chi_pn)
-        sigma3 = IMRPhenomD.eval_table_v("sigma3", eta, chi_pn)
-        sigma4 = IMRPhenomD.eval_table_v("sigma4", eta, chi_pn)
-        beta2 = IMRPhenomD.eval_table_v("beta2", eta, chi_pn)
-        beta3 = IMRPhenomD.eval_table_v("beta3", eta, chi_pn)
-        alpha1_raw = IMRPhenomD.eval_table_v("alpha1", eta, chi_pn)
-        alpha2 = IMRPhenomD.eval_table_v("alpha2", eta, chi_pn)
-        alpha3 = IMRPhenomD.eval_table_v("alpha3", eta, chi_pn)
-        alpha4 = IMRPhenomD.eval_table_v("alpha4", eta, chi_pn)
-        alpha5 = IMRPhenomD.eval_table_v("alpha5", eta, chi_pn)
+        (
+            rho1, rho2, rho3, v2,
+            gamma1, gamma2, gamma3,
+            sigma1, sigma2, sigma3, sigma4,
+            beta2, beta3,
+            alpha1_raw, alpha2, alpha3, alpha4, alpha5,
+        ) = IMRPhenomD.eval_all_table_v(eta, chi_pn)
 
         # Remnant black hole properties & QNM frequencies
         m_final, a_final, f_rd, f_damp = (IMRPhenomD.remnant_properties if remnant_provider is None else remnant_provider)(m1, m2, s1, s2)

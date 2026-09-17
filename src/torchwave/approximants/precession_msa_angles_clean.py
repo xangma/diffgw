@@ -326,9 +326,18 @@ def assemble_precession_msa_angles(
             1.0 + psi1 * v0 + psi2 * v0.square()
         )
         psi0 = torch.where(degenerate, psi_ref, psi0)
+    f_grid = f if total.dim() == 0 else (f.unsqueeze(0) if f.dim() == 1 else f)
+    total_u = total if total.dim() == 0 else total.unsqueeze(-1)
+    v0_u = v0 if v0.dim() == 0 else v0.unsqueeze(-1)
+    psi0_u = psi0 if psi0.dim() == 0 else psi0.unsqueeze(-1)
+    delta_u = delta if delta.dim() == 0 else delta.unsqueeze(-1)
+    g0_u = g["g0"] if g["g0"].dim() == 0 else g["g0"].unsqueeze(-1)
+    psi1_u = psi1 if psi1.dim() == 0 else psi1.unsqueeze(-1)
+    psi2_u = psi2 if psi2.dim() == 0 else psi2.unsqueeze(-1)
+
     psi_raw = anchored_psi(
-        (math.pi * total * MTSUN_SI * f).pow(1 / 3), v0, psi0,
-        delta if native_v223 else delta, g["g0"], psi1, psi2,
+        (math.pi * total_u * MTSUN_SI * f_grid).pow(1 / 3), v0_u, psi0_u,
+        delta_u if native_v223 else delta_u, g0_u, psi1_u, psi2_u,
     )
     # Fixed reference roots and c1/Sav define the MSA expansion.
     if native_v223:
@@ -348,8 +357,8 @@ def assemble_precession_msa_angles(
         coeff[1][..., 5] = 0
     elif order != 6:
         raise ValueError("order must be 5 or 6")
-    v = (math.pi * total * MTSUN_SI * f).pow(1 / 3)
-    L = eta / v
+    v = (math.pi * total_u * MTSUN_SI * f_grid).pow(1 / 3)
+    L = eta[..., None] / v
     c1_current = c1[..., None]
     sav_current = sav[..., None]
     J = torch.sqrt(L.square() + 2 * c1_current / v + sav_current)
@@ -404,14 +413,16 @@ def assemble_precession_msa_angles(
     s3, sm, sp = roots.unbind(-1)
     spin_s3, spin_sm, spin_sp = spin_roots.unbind(-1)
     psi = anchored_psi(
-        (math.pi * total * MTSUN_SI * f).pow(1 / 3), v0, psi0,
-        delta if native_v223 else delta, g["g0"], psi1, psi2,
+        (math.pi * total_u * MTSUN_SI * f_grid).pow(1 / 3), v0_u, psi0_u,
+        delta_u if native_v223 else delta_u, g0_u, psi1_u, psi2_u,
     )
     S2_raw = spin_oscillation(psi, spin_sp, spin_sm, spin_s3)
     S2 = torch.where(freq_degenerate, sp, S2_raw) if native_v223 else S2_raw
     sav_for_angles = sav_current
+    coeff_0 = coeff[0].unsqueeze(-2) if coeff[0].dim() > 1 else coeff[0]
+    coeff_1 = coeff[1].unsqueeze(-2) if coeff[1].dim() > 1 else coeff[1]
     secular_phi, secular_zeta = anchored_angles(
-        v, v0[..., None], coeff[0], coeff[1], eta[..., None],
+        v, v0_u, coeff_0, coeff_1, eta[..., None],
         c1[..., None],
         sav_for_angles,
     )
@@ -521,12 +532,12 @@ def assemble_precession_msa_angles(
             # 3PN opening-beta L (259/72).  Equation-level callers retain
             # their Newtonian ``cos_beta`` default unless beta_pn is explicit.
             Lb = orbital_angular_momentum_nonconserved_3pn(
-                cm1[..., None], cm2[..., None], f,
+                cm1[..., None], cm2[..., None], f_grid,
                 cs1[..., 2, None], cs2[..., 2, None],
             )
         else:
             Lb = orbital_angular_momentum(
-                cm1[..., None], cm2[..., None], f,
+                cm1[..., None], cm2[..., None], f_grid,
                 cs1[..., 2, None], cs2[..., 2, None],
                 pn_version=beta_pn_version, compat_102=beta_compat_102,
             )

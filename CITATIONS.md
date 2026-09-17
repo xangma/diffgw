@@ -107,7 +107,7 @@ If you use `torchwave` in scientific work, please cite the underlying models and
 
 ## 2. IMRPhenomD Phenomenological Model
 
-The fundamental Kerr mode now uses an independently generated spectral approximation, with development eigenproblem solves from [Stein (2019), qnm](https://doi.org/10.21105/joss.01683). It has no QNM data-file or solver runtime dependency. See the [derivation and validation record](docs/reviews/2026-09-11-independent/qnm.md).
+The fundamental Kerr mode now uses an independently generated spectral approximation, with development eigenproblem solves from [Stein (2019), qnm](https://doi.org/10.21105/joss.01683). It has no QNM data-file or solver runtime dependency. See the [derivation and validation record](https://github.com/xangma/diffgw/blob/archive/clean-room-reviews/docs/reviews/2026-09-11-independent/qnm.md).
 
 ```bibtex
 @article{Husa:2015iqa,

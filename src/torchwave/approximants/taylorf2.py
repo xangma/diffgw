@@ -355,46 +355,54 @@ class TaylorF2:
             phenom_d_calibration=phenom_d_calibration,
         )
 
-        def unsqueeze_if_needed(t: torch.Tensor) -> torch.Tensor:
-            if t.dim() >= 1 and f.dim() > t.dim():
+        def unsqueeze_to_m_sec(t: torch.Tensor) -> torch.Tensor:
+            if t.dim() >= 1 and m_sec.dim() > t.dim():
                 return t.unsqueeze(-1)
             return t
 
-        phi0 = unsqueeze_if_needed(phi0)
-        phi2 = unsqueeze_if_needed(phi2)
-        phi3 = unsqueeze_if_needed(phi3)
-        phi4 = unsqueeze_if_needed(phi4)
-        phi5 = unsqueeze_if_needed(phi5)
-        phi5_log = unsqueeze_if_needed(phi5_log)
-        phi6 = unsqueeze_if_needed(phi6)
-        phi6_log = unsqueeze_if_needed(phi6_log)
-        phi7 = unsqueeze_if_needed(phi7)
-        phi10_t = unsqueeze_if_needed(phi10_t)
-        phi12_t = unsqueeze_if_needed(phi12_t)
-        phi13_t = unsqueeze_if_needed(phi13_t)
+        phi0 = unsqueeze_to_m_sec(phi0)
+        phi2 = unsqueeze_to_m_sec(phi2)
+        phi3 = unsqueeze_to_m_sec(phi3)
+        phi4 = unsqueeze_to_m_sec(phi4)
+        phi5 = unsqueeze_to_m_sec(phi5)
+        phi5_log = unsqueeze_to_m_sec(phi5_log)
+        phi6 = unsqueeze_to_m_sec(phi6)
+        phi6_log = unsqueeze_to_m_sec(phi6_log)
+        phi7 = unsqueeze_to_m_sec(phi7)
+        phi10_t = unsqueeze_to_m_sec(phi10_t)
+        phi12_t = unsqueeze_to_m_sec(phi12_t)
+        phi13_t = unsqueeze_to_m_sec(phi13_t)
+        LN_4 = 1.3862943611198906
 
-        ln_v = torch.log(v)
-        ln_4v = torch.log(4.0 * v)
+        def _calc_raw(f_in: torch.Tensor) -> torch.Tensor:
+            f_s = torch.clamp(f_in, min=1e-8)
+            v_val = (PI * m_sec * f_s) ** (1.0 / 3.0)
+            v2_v = v_val * v_val
+            v3_v = v2_v * v_val
+            v4_v = v2_v * v2_v
+            v5_v = v4_v * v_val
+            v6_v = v3_v * v3_v
+            v7_v = v6_v * v_val
+            ln_v_v = torch.log(v_val)
+            pn_sum_v = (
+                phi0
+                + phi2 * v2_v
+                + phi3 * v3_v
+                + phi4 * v4_v
+                + (phi5 + phi5_log * ln_v_v) * v5_v
+                + (phi6 + phi6_log * (LN_4 + ln_v_v)) * v6_v
+                + phi7 * v7_v
+                + phi10_t * (v5_v * v5_v)
+                + phi12_t * (v6_v * v6_v)
+                + phi13_t * (v6_v * v7_v)
+            )
+            return -(PI / 4.0) + (3.0 / (128.0 * eta * v5_v)) * pn_sum_v
 
-        # Point-particle & spin polynomial sum
-        pn_sum = (
-            phi0
-            + phi2 * v2
-            + phi3 * v3
-            + phi4 * v4
-            + (phi5 + phi5_log * ln_v) * v5
-            + (phi6 + phi6_log * ln_4v) * v6
-            + phi7 * v7
-            + phi10_t * (v5 * v5)  # 5PN tidal (v^10)
-            + phi12_t * (v6 * v6)  # 6PN tidal (v^12)
-            + phi13_t * (v6 * v7)  # 6.5PN tidal (v^13)
-        )
+        # Raw SPA phasing on target grid
+        psi_raw = _calc_raw(f)
 
-        # Raw SPA phasing (t_c=0, phi_c=0): Psi_raw(f) = -pi/4 + 3/(128*eta*v^5) * pn_sum
-        psi_raw = -(PI / 4.0) + (3.0 / (128.0 * eta * v5)) * pn_sum
-
-        t_c_t = unsqueeze_if_needed(as_tensor(tc, device=f.device, dtype=f.dtype))
-        phi_c_t = unsqueeze_if_needed(as_tensor(phic, device=f.device, dtype=f.dtype))
+        t_c_t = unsqueeze_to_m_sec(as_tensor(tc, device=f.device, dtype=f.dtype))
+        phi_c_t = unsqueeze_to_m_sec(as_tensor(phic, device=f.device, dtype=f.dtype))
 
         conv = reference_frame if reference_frame is not None else (
             phasing_convention if phasing_convention is not None else ("reference_frequency" if f_ref is not None else "coalescence")
@@ -405,34 +413,13 @@ class TaylorF2:
             ref_f = f_ref if f_ref is not None else (f.reshape(-1)[0] if f.numel() > 0 else 20.0)
             f_ref_t = as_tensor(ref_f, device=f.device, dtype=f.dtype)
             if f_ref_t.dim() == 0:
-                f_ref_eval = f_ref_t.reshape(1)
+                f_ref_eval = f_ref_t.reshape(1, 1) if m_sec.dim() == 2 else f_ref_t.reshape(1)
             elif total_mass.dim() >= 1 and f_ref_t.dim() == 1 and f_ref_t.shape[0] == total_mass.shape[0]:
                 f_ref_eval = f_ref_t.reshape(-1, 1)
             else:
                 f_ref_eval = f_ref_t
 
-            # Reference phase evaluated at tc=0, phic=0
-            psi_ref = TaylorF2.evaluate_phase(
-                f=f_ref_eval,
-                mass1=mass1,
-                mass2=mass2,
-                chi1=chi1,
-                chi2=chi2,
-                lambda1=lambda1,
-                lambda2=lambda2,
-                tc=torch.zeros_like(t_c_t),
-                phic=torch.zeros_like(phi_c_t),
-                f_ref=None,
-                quad_monopole1=quad_monopole1,
-                quad_monopole2=quad_monopole2,
-                spin_order=spin_order,
-                tidal_order=tidal_order,
-                phenom_d_calibration=phenom_d_calibration,
-                phasing_convention="coalescence",
-            )
-
-            if total_mass.dim() >= 1 and f.dim() > total_mass.dim():
-                psi_ref = unsqueeze_if_needed(psi_ref)
+            psi_ref = _calc_raw(f_ref_eval)
 
             # Transformed SPA phase: Psi(f) -> (Psi_raw(f) - Psi_raw(f_ref)) + 3*pi/4 + 2*pi*f*t_c - 2*phi_c
             psi = (psi_raw - psi_ref) + (3.0 * PI / 4.0) + 2.0 * PI * f * t_c_t - 2.0 * phi_c_t

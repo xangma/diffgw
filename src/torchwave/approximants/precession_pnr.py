@@ -1,9 +1,9 @@
-"""Sovereign pure PyTorch PNR (PhenomX Precession Numerical Relativity) angle engine.
+"""Pure PyTorch PNR (PhenomX Precession Numerical Relativity) angle engine.
 
-Provides sovereign (clean-room, pure PyTorch, zero runtime LAL dependency)
-implementation of the NR-tuned precession angles (alpha, beta, gamma), two-spin
-to single-spin mapping, multi-harmonic linear frequency mapping, and minimal-rotation
-coprecessing phase quadrature for IMRPhenomXPNR (prec_version=330).
+Provides a native, autograd-differentiable PyTorch implementation of the NR-tuned
+precession angles (alpha, beta, gamma), two-spin to single-spin mapping,
+multi-harmonic linear frequency mapping, and minimal-rotation coprecessing phase
+quadrature for IMRPhenomXPNR (prec_version=330).
 
 References:
 - Hamilton et al. (2021), Phys. Rev. D 104, 124027 (arXiv:2107.08876)

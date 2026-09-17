@@ -312,21 +312,38 @@ class XASParameterFits:
     """26 Hierarchical Parameter Space Fits from Pratten et al. (2020)."""
 
     @staticmethod
-    def fit_f_meco(eta: torch.Tensor, chi1: torch.Tensor, chi2: torch.Tensor) -> torch.Tensor:
-        delta, m1, m2, s_tot_r, chi_pn_hat = compute_spin_variables(eta, chi1, chi2)
+    def _prepare_spin_vars(
+        eta: torch.Tensor,
+        chi1: torch.Tensor,
+        chi2: torch.Tensor,
+        spin_vars: Optional[Tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]] = None,
+    ) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]:
+        if spin_vars is not None:
+            return spin_vars
+        return compute_spin_variables(eta, chi1, chi2)
+
+    @staticmethod
+    def fit_f_meco(
+        eta: torch.Tensor,
+        chi1: torch.Tensor,
+        chi2: torch.Tensor,
+        spin_vars: Optional[Tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]] = None,
+    ) -> torch.Tensor:
+        delta, m1, m2, s_tot_r, chi_pn_hat = XASParameterFits._prepare_spin_vars(eta, chi1, chi2, spin_vars)
         S = chi_pn_hat
-        diff = torch.clamp(1.0 - 4.0 * eta, min=0.0)
-        s_delta = safe_sqrt(diff)
+        s_delta = delta
         return (0.018744340279608845 + 0.0077903147004616865 * eta + 0.003940354686136861 * eta**2 - 0.00006693930988501673 * eta**3)/(1.0 - 0.10423384680638834 * eta) + (S**3 * (-0.0028303320109541955 - 0.01319368225506923 * eta - 0.014331096768277578 * eta**2 + 0.00015144033978081733 * eta**3 - 0.865598311695623 * eta**4) + S * (0.0101926920659295 + 0.009158503243006886 * eta + 0.013708626030328923 * eta**2 - 0.020320785712379934 * eta**3 - 0.025528737356553345 * eta**4) + S**2 * (-0.0009694741018756255 - 0.0003933817108395515 * eta - 0.00037579451118948445 * eta**2 + 0.0011504883794752892 * eta**3 + 0.8394906079170564 * eta**4))/(1.0 + S**2 * (-0.22006798741315858 - 1.0787955021207019 * eta - 0.7365550694256703 * eta**2 - 0.07337456927445352 * eta**3 - 95.6841985329734 * eta**4) + S**3 * (0.13153712995215916 + 0.5316213737412727 * eta + 0.47333562697783144 * eta**2 - 0.2879144067301339 * eta**3 + 37.50017276813759 * eta**4) + S * (-0.5471477439918454 - 0.4661075156477155 * eta + 0.94000545001549 * eta**2 + 0.19300625361069154 * eta**3 + 55.72974629895666 * eta**4)) - 0.028476219509487793 * s_delta * (1.0 - 2.8320701810535875 * eta) * eta**2 * (chi1 - chi2) - 0.0011713735642446144 * S * s_delta * eta * (1.0 + 4.905810747693807 * eta) * (chi1 - chi2) + 0.00034375176678815234 * (1.0 + 0.047545158629336504 * eta) * eta**2 * (chi1 - chi2)**2
 
     @staticmethod
-    def fit_final_spin(eta: torch.Tensor, chi1: torch.Tensor, chi2: torch.Tensor) -> torch.Tensor:
-        delta, m1, m2, s_tot_r, chi_pn_hat = compute_spin_variables(eta, chi1, chi2)
-        diff = torch.clamp(1.0 - 4.0 * eta, min=0.0)
-        s_delta = safe_sqrt(diff)
-        den = torch.clamp(0.25 * (1.0 - s_delta)**2 + 0.25 * (1.0 + s_delta)**2, min=1e-12)
-        num_s = 0.25 * (1.0 + s_delta)**2 * chi1 + 0.25 * (1.0 - s_delta)**2 * chi2
-        ratio_s = num_s / den
+    def fit_final_spin(
+        eta: torch.Tensor,
+        chi1: torch.Tensor,
+        chi2: torch.Tensor,
+        spin_vars: Optional[Tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]] = None,
+    ) -> torch.Tensor:
+        delta, m1, m2, s_tot_r, chi_pn_hat = XASParameterFits._prepare_spin_vars(eta, chi1, chi2, spin_vars)
+        s_delta = delta
+        ratio_s = s_tot_r
         return (m1**2 * chi1 + m2**2 * chi2) + (2.0 * math.sqrt(3.0) * eta + 20.0830030082033 * eta**2 - 12.333573402277912 * eta**3)/(1.0 + 7.2388440419467335 * eta) + 0.3223660562764661 * s_delta * eta**2 * (1.0 + 9.332575956437443 * eta) * (chi1 - chi2) - 0.059808322561702126 * eta**3 * (chi1 - chi2)**2 + (2.3170397514509933 * s_delta * (1.0 - 3.2624649875884852 * eta) * eta**3 * (chi1 - chi2) * ratio_s) + (((-0.8561951310209386 * eta - 0.09939065676370885 * eta**2 + 1.668810429851045 * eta**3) * ratio_s + (0.5881660363307388 * eta - 2.149269067519131 * eta**2 + 3.4768263932898678 * eta**3) * ratio_s**2 + (0.142443244743048 * eta - 0.9598353840147513 * eta**2 + 1.9595643107593743 * eta**3) * ratio_s**3)/(1.0 + (-0.9142232693081653 + 2.3191363426522633 * eta - 9.710576749140989 * eta**3) * ratio_s))
 
     @staticmethod
@@ -335,6 +352,7 @@ class XASParameterFits:
         chi1: torch.Tensor,
         chi2: torch.Tensor,
         chi_p: torch.Tensor,
+        spin_vars: Optional[Tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]] = None,
     ) -> torch.Tensor:
         """NNLO remnant from the orthogonal-spin prescription.
 
@@ -342,17 +360,9 @@ class XASParameterFits:
         arXiv:1809.10113. Printed Eq. (4.25) has an apparent extra square;
         see the source audit in pass-10-nnlo-remnant.md.
         """
-        a_parallel = XASParameterFits.fit_final_spin(eta, chi1, chi2)
-        mass_discriminant = torch.clamp(1.0 - 4.0 * eta, min=0.0)
-        safe_discriminant = torch.where(
-            mass_discriminant > 0.0, mass_discriminant, torch.ones_like(mass_discriminant)
-        )
-        sqrt_discriminant = torch.where(
-            mass_discriminant > 0.0,
-            torch.sqrt(safe_discriminant),
-            torch.zeros_like(mass_discriminant),
-        )
-        m1_norm = 0.5 * (1.0 + sqrt_discriminant)
+        a_parallel = XASParameterFits.fit_final_spin(eta, chi1, chi2, spin_vars=spin_vars)
+        delta, m1, m2, s_tot_r, chi_pn_hat = XASParameterFits._prepare_spin_vars(eta, chi1, chi2, spin_vars)
+        m1_norm = m1
         s_perp = chi_p * m1_norm.square()
         zero_parallel = (a_parallel == 0.0) & (chi_p != 0.0)
         if bool(torch.any(zero_parallel)):
@@ -370,11 +380,15 @@ class XASParameterFits:
         return torch.where(chi_p == 0.0, a_parallel, signed)
 
     @staticmethod
-    def fit_erad(eta: torch.Tensor, chi1: torch.Tensor, chi2: torch.Tensor) -> torch.Tensor:
-        delta, m1, m2, s_tot_r, chi_pn_hat = compute_spin_variables(eta, chi1, chi2)
+    def fit_erad(
+        eta: torch.Tensor,
+        chi1: torch.Tensor,
+        chi2: torch.Tensor,
+        spin_vars: Optional[Tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]] = None,
+    ) -> torch.Tensor:
+        delta, m1, m2, s_tot_r, chi_pn_hat = XASParameterFits._prepare_spin_vars(eta, chi1, chi2, spin_vars)
         S = s_tot_r
-        diff = torch.clamp(1.0 - 4.0 * eta, min=0.0)
-        s_delta = safe_sqrt(diff)
+        s_delta = delta
         return (((1.0 - (2.0 * math.sqrt(2.0))/3.0) * eta + 0.5609904135313374 * eta**2 - 0.84667563764404 * eta**3 + 3.145145224278187 * eta**4) * (1.0 + S**3 * (-0.6320191645391563 + 4.952698546796005 * eta - 10.023747993978121 * eta**2) + S**2 * (-0.17762802148331427 + 2.176667900182948 * eta**2) + S * (-0.13084389181783257 - 1.1387311580238488 * eta + 5.49074464410971 * eta**2)))/(1.0 + S * (-0.9919475346968611 + 0.367620218664352 * eta + 4.274567337924067 * eta**2)) - 0.01978238971523653 * S * (1.0 - 4.91667749015812 * eta) * s_delta * eta * (chi1 - chi2) - 0.09803730445895877 * s_delta * (1.0 - 3.2283713377939134 * eta) * eta**2 * (chi1 - chi2) + 0.01118530335431078 * eta**3 * (chi1 - chi2)**2
 
     @staticmethod
@@ -386,83 +400,123 @@ class XASParameterFits:
         return (0.014158792290965177 - 0.036989395871554566 * chi + 0.026822526296575368 * chi**2 + 0.0008490933750566702 * chi**3 - 0.004843996907020524 * chi**4 - 0.00014745235759327472 * chi**5 + 0.0001504546201236794 * chi**6)/(1.0 - 2.5900842798681376 * chi + 1.8952576220623967 * chi**2 - 0.31416610693042507 * chi**4 + 0.009002719412204133 * chi**6)
 
     @staticmethod
-    def fit_rd_phase_v4(eta: torch.Tensor, chi1: torch.Tensor, chi2: torch.Tensor) -> torch.Tensor:
-        delta, m1, m2, s_tot_r, chi_pn_hat = compute_spin_variables(eta, chi1, chi2)
+    def fit_rd_phase_v4(
+        eta: torch.Tensor,
+        chi1: torch.Tensor,
+        chi2: torch.Tensor,
+        spin_vars: Optional[Tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]] = None,
+    ) -> torch.Tensor:
+        delta, m1, m2, s_tot_r, chi_pn_hat = XASParameterFits._prepare_spin_vars(eta, chi1, chi2, spin_vars)
         S = s_tot_r
-        diff = torch.clamp(1.0 - 4.0 * eta, min=0.0)
-        s_delta = safe_sqrt(diff)
+        s_delta = delta
         return (-85.86062966719405 - 4616.740713893726 * eta - 4925.756920247186 * eta**2 + 7732.064464348168 * eta**3 + 12828.269960300782 * eta**4 - 39783.51698102803 * eta**5)/(1.0 + 50.206318806624004 * eta) + 1.0/(1.0 - 0.7296287086910567 * S) * (S**5 * (-1.2063256175329689 - 71.27762576872973 * eta + 525.2433260555774 * eta**2 - 3694.966448470397 * eta**4) + S * (-24.3227986251876 + 50.486023013297824 * eta - 68.32357318404479 * eta**2 - 784.9846285170445 * eta**4) + S**4 * (-1.6801247900898901 - 22.787218950338005 * eta + 76.14492931844407 * eta**2 + 443.82596298646126 * eta**4) + S**2 * (26.62429171331935 - 19.393782361017912 * eta + 13.267927535346725 * eta**2 - 1092.5128972959326 * eta**3 + 2512.1286891850964 * eta**4) + S**3 * (2.7988319050960873 + 11.23611485713071 * eta - 308.98946497905865 * eta**2 + 74.22317145570902 * eta**3 + 3103.82205886183 * eta**4)) + 22.363215261437862 * s_delta * eta * (1.0 + 6.979410949083638 * eta) * (chi1 - chi2)
 
     @staticmethod
-    def fit_rd_phase_d12(eta: torch.Tensor, chi1: torch.Tensor, chi2: torch.Tensor) -> torch.Tensor:
-        delta, m1, m2, s_tot_r, chi_pn_hat = compute_spin_variables(eta, chi1, chi2)
+    def fit_rd_phase_d12(
+        eta: torch.Tensor,
+        chi1: torch.Tensor,
+        chi2: torch.Tensor,
+        spin_vars: Optional[Tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]] = None,
+    ) -> torch.Tensor:
+        delta, m1, m2, s_tot_r, chi_pn_hat = XASParameterFits._prepare_spin_vars(eta, chi1, chi2, spin_vars)
         S = s_tot_r
-        diff = torch.clamp(1.0 - 4.0 * eta, min=0.0)
-        s_delta = safe_sqrt(diff)
+        s_delta = delta
         return (105.20788785973124 * eta - 180.6010479828692 * eta**2 + 888.4400102515314 * eta**3)/(1.0 + 8.902372184046389 * eta - 22.624125956853074 * eta**2 + 145.96004727185382 * eta**3) + 1.0/(1.0 - 0.6628745847248266 * S) * (S * (0.06519048552628343 - 25.25397971063995 * eta + 58.59408241189781 * eta**2 + 160.14971486043524 * eta**3 - 308.62513664956975 * eta**4) + S**3 * (0.20035146870472367 - 0.28745205203100666 * eta - 47.56042058800358 * eta**4) + S**5 * (-0.2697933899920511 + 4.917070939324979 * eta - 11.61488280763592 * eta**2 - 22.384949087140086 * eta**4) + S**4 * (5.7756520242745735 * eta - 43.97332874253772 * eta**2 + 338.7263666984089 * eta**4) + S**2 * (-5.215945111216946 * eta + 153.95945758807616 * eta**2 - 693.0504179144295 * eta**3 + 835.1725103648205 * eta**4)) - 23.504907495268824 * s_delta * eta**2 * (chi1 - chi2)
 
     @staticmethod
-    def fit_rd_phase_d24(eta: torch.Tensor, chi1: torch.Tensor, chi2: torch.Tensor) -> torch.Tensor:
-        delta, m1, m2, s_tot_r, chi_pn_hat = compute_spin_variables(eta, chi1, chi2)
+    def fit_rd_phase_d24(
+        eta: torch.Tensor,
+        chi1: torch.Tensor,
+        chi2: torch.Tensor,
+        spin_vars: Optional[Tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]] = None,
+    ) -> torch.Tensor:
+        delta, m1, m2, s_tot_r, chi_pn_hat = XASParameterFits._prepare_spin_vars(eta, chi1, chi2, spin_vars)
         S = s_tot_r
-        diff = torch.clamp(1.0 - 4.0 * eta, min=0.0)
-        s_delta = safe_sqrt(diff)
+        s_delta = delta
         return (141.0810872141363 * eta - 140.61969701245934 * eta**2 - 964.7406436083945 * eta**3)/(1.0 + 1.489446079834234 * eta - 14.913035142611465 * eta**2) + (S**2 * (-62.997389062600035 * eta**2 + 808.457330742532 * eta**3 - 2177.554979351284 * eta**4) + S**3 * (0.04497628581617564 + 64.42947340363101 * eta**2 - 1031.846477275069 * eta**4) + S * (17.36495157980372 * eta - 191.00932194869588 * eta**2 + 930.3458437154668 * eta**3 - 774.3633787391745 * eta**4))/(1.0 - 0.7267610313751913 * S) - 36.66374091965371 * s_delta * (1.0 - 2.4985114985688504 * eta) * eta**2 * (chi1 - chi2)
 
     @staticmethod
-    def fit_rd_phase_d34(eta: torch.Tensor, chi1: torch.Tensor, chi2: torch.Tensor) -> torch.Tensor:
-        delta, m1, m2, s_tot_r, chi_pn_hat = compute_spin_variables(eta, chi1, chi2)
+    def fit_rd_phase_d34(
+        eta: torch.Tensor,
+        chi1: torch.Tensor,
+        chi2: torch.Tensor,
+        spin_vars: Optional[Tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]] = None,
+    ) -> torch.Tensor:
+        delta, m1, m2, s_tot_r, chi_pn_hat = XASParameterFits._prepare_spin_vars(eta, chi1, chi2, spin_vars)
         S = s_tot_r
-        diff = torch.clamp(1.0 - 4.0 * eta, min=0.0)
-        s_delta = safe_sqrt(diff)
+        s_delta = delta
         return (20.78926405455721 * eta - 34.0584882353451 * eta**2)/(1.0 - 2.4438124009563715 * eta) + (S**4 * (-13.743271480938104 * eta + 215.78111099820157 * eta**2 - 633.1966645925428 * eta**3) + S * (1.7280582989361533 * eta + 73.8367329022058 * eta**2 - 27.976989112929353 * eta**3) + S**2 * (0.046849371468156265 + 6.404060932334562 * eta**3) + S**3 * (18.41570325463385 * eta - 95.57802408341716 * eta**2 + 109.04824706217418 * eta**3))/(1.0 - 0.6862449113932192 * S) + 641.8965762829259 * s_delta * eta**5 * (chi1 - chi2)
 
     @staticmethod
-    def fit_rd_phase_d54(eta: torch.Tensor, chi1: torch.Tensor, chi2: torch.Tensor) -> torch.Tensor:
-        delta, m1, m2, s_tot_r, chi_pn_hat = compute_spin_variables(eta, chi1, chi2)
+    def fit_rd_phase_d54(
+        eta: torch.Tensor,
+        chi1: torch.Tensor,
+        chi2: torch.Tensor,
+        spin_vars: Optional[Tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]] = None,
+    ) -> torch.Tensor:
+        delta, m1, m2, s_tot_r, chi_pn_hat = XASParameterFits._prepare_spin_vars(eta, chi1, chi2, spin_vars)
         S = s_tot_r
-        diff = torch.clamp(1.0 - 4.0 * eta, min=0.0)
-        s_delta = safe_sqrt(diff)
+        s_delta = delta
         return (27.115659682906863 * eta + 86.27786287161335 * eta**2 + 458.9062853034756 * eta**3)/(1.0 + 3.842206776152707 * eta) + (S * (-7.9407123129681425 * eta + 134.88158268621922 * eta**2 - 316.26970506215554 * eta**3) + S**2 * (9.486783128047414 * eta - 56.05992404859163 * eta**2 + 90.31815139272628 * eta**3))/(1.0 - 0.7162058321905909 * S) + 43.82713604567481 * s_delta * eta**3 * (chi1 - chi2)
 
     @staticmethod
-    def fit_int_phase_v3m_rdv4(eta: torch.Tensor, chi1: torch.Tensor, chi2: torch.Tensor) -> torch.Tensor:
-        delta, m1, m2, s_tot_r, chi_pn_hat = compute_spin_variables(eta, chi1, chi2)
+    def fit_int_phase_v3m_rdv4(
+        eta: torch.Tensor,
+        chi1: torch.Tensor,
+        chi2: torch.Tensor,
+        spin_vars: Optional[Tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]] = None,
+    ) -> torch.Tensor:
+        delta, m1, m2, s_tot_r, chi_pn_hat = XASParameterFits._prepare_spin_vars(eta, chi1, chi2, spin_vars)
         S = s_tot_r
-        diff = torch.clamp(1.0 - 4.0 * eta, min=0.0)
-        s_delta = safe_sqrt(diff)
+        s_delta = delta
         return (1126.192427433476 * eta + 49971.74098746552 * eta**2 - 151223.6768602053 * eta**3 + 165076.56749477904 * eta**4)/(1.0 + 171.61217161845025 * eta - 219.68661343717181 * eta**2) + (S**2 * (0.6231339367834515 + 352.35779776330685 * eta**2 - 1216.9113947539156 * eta**3) + S**3 * (1.8572098220199154 + 5.314000623130095 * eta - 146.83065579241452 * eta**3) + S * (-0.1012039136028863 - 48.20617033143495 * eta + 611.6690734410048 * eta**3))/(1.0 - 0.6532315504175634 * S) + 2993.3598520496153 * s_delta * eta**6 * (chi1 - chi2)
 
     @staticmethod
-    def fit_int_phase_v2m_rdv4(eta: torch.Tensor, chi1: torch.Tensor, chi2: torch.Tensor) -> torch.Tensor:
-        delta, m1, m2, s_tot_r, chi_pn_hat = compute_spin_variables(eta, chi1, chi2)
+    def fit_int_phase_v2m_rdv4(
+        eta: torch.Tensor,
+        chi1: torch.Tensor,
+        chi2: torch.Tensor,
+        spin_vars: Optional[Tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]] = None,
+    ) -> torch.Tensor:
+        delta, m1, m2, s_tot_r, chi_pn_hat = XASParameterFits._prepare_spin_vars(eta, chi1, chi2, spin_vars)
         S = s_tot_r
-        diff = torch.clamp(1.0 - 4.0 * eta, min=0.0)
-        s_delta = safe_sqrt(diff)
+        s_delta = delta
         return (5922.569864228316 * eta + 602389.5594011653 * eta**2 + 3.7640340576735158e6 * eta**3)/(1.0 + 679.1804843216742 * eta + 10958.704454953331 * eta**2 + 5951.2947288393925 * eta**3) + (S**2 * (5.698079566469573 + 1666.1885442623043 * eta**2 - 4822.805948280586 * eta**3) + S**3 * (0.12180900324633681 - 49.747709066193856 * eta + 60.310245458525685 * eta**3) + S * (6.303589009894369 - 235.25353286241696 * eta + 1190.8227608409995 * eta**3))/(1.0 - 0.9342533635272585 * S + 0.33719529332509046 * S**2) + 356.74395864902294 * s_delta * eta**2 * (chi1 - chi2) + 1693.326644293169 * S * s_delta * eta**4 * (chi1 - chi2)
 
     @staticmethod
-    def fit_int_phase_v2(eta: torch.Tensor, chi1: torch.Tensor, chi2: torch.Tensor) -> torch.Tensor:
-        delta, m1, m2, s_tot_r, chi_pn_hat = compute_spin_variables(eta, chi1, chi2)
+    def fit_int_phase_v2(
+        eta: torch.Tensor,
+        chi1: torch.Tensor,
+        chi2: torch.Tensor,
+        spin_vars: Optional[Tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]] = None,
+    ) -> torch.Tensor:
+        delta, m1, m2, s_tot_r, chi_pn_hat = XASParameterFits._prepare_spin_vars(eta, chi1, chi2, spin_vars)
         S = s_tot_r
-        diff = torch.clamp(1.0 - 4.0 * eta, min=0.0)
-        s_delta = safe_sqrt(diff)
+        s_delta = delta
         return (-82.54500000000004 - 5.58197349185435e6 * eta - 3.5225742421184325e8 * eta**2 + 1.4667258334378073e9 * eta**3)/(1.0 + 66757.12830903867 * eta + 5.385164380400193e6 * eta**2 + 2.5176585751772933e6 * eta**3) + 1.0/(1.0 - 0.8701509070254784 * S) * (S**4 * (-5.177484941416572 - 25.296842861196225 * eta + 563.6928051341912 * eta**2 - 1651.1500106393162 * eta**3) + S**2 * (31.383395109529374 + 115.62928454134006 * eta + 93.46377341300065 * eta**2 - 1002.7844776356748 * eta**3) + S**3 * (0.7494310966563801 + 15.377057130883575 * eta - 361.73347121847803 * eta**3) + S**5 * (-4.33748476948353 - 32.59778212915618 * eta + 753.7974313753849 * eta**3) + S * (-16.895476355144673 - 180.72945628412236 * eta - 148.77146757915585 * eta**2 + 1187.8865105889788 * eta**3)) + 515.9898508588834 * S * s_delta * eta**3 * (chi1 - chi2) + 7343.130973149263 * s_delta * (1.0 - 2.7899288785686136 * eta) * eta**3 * (chi1 - chi2)
 
     @staticmethod
-    def fit_int_phase_d43(eta: torch.Tensor, chi1: torch.Tensor, chi2: torch.Tensor) -> torch.Tensor:
-        delta, m1, m2, s_tot_r, chi_pn_hat = compute_spin_variables(eta, chi1, chi2)
+    def fit_int_phase_d43(
+        eta: torch.Tensor,
+        chi1: torch.Tensor,
+        chi2: torch.Tensor,
+        spin_vars: Optional[Tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]] = None,
+    ) -> torch.Tensor:
+        delta, m1, m2, s_tot_r, chi_pn_hat = XASParameterFits._prepare_spin_vars(eta, chi1, chi2, spin_vars)
         S = s_tot_r
-        diff = torch.clamp(1.0 - 4.0 * eta, min=0.0)
-        s_delta = safe_sqrt(diff)
+        s_delta = delta
         return (0.4248820426833804 - 906.746595921514 * eta - 282820.39946006844 * eta**2 - 967049.2793750163 * eta**3 + 670077.5414916876 * eta**4)/(1.0 + 1670.9440812294847 * eta + 19783.077247023448 * eta**2) + 1.0/(1.0 - 0.8037103306872213 * S) * (S**3 * (-0.38725361227427885 + 49.164956405737726 * eta - 756.8519869409022 * eta**2 + 3997.8072248553326 * eta**3 - 7028.6084180951 * eta**4) + S**2 * (-0.9135448758751145 - 216.9402989048149 * eta**2 + 705.5621487950621 * eta**3 + 183.05885330208667 * eta**4) + S * (-0.183360658260814 - 10.320162679182692 * eta + 572.1237749921615 * eta**2 - 2812.5299662423513 * eta**3 + 3970.0416726126005 * eta**4)) - 514.8494071830514 * s_delta * (1.0 - 2.900625093731255 * eta) * eta**3 * (chi1 - chi2)
 
     @staticmethod
-    def fit_ins_phase_v3_104(eta: torch.Tensor, chi1: torch.Tensor, chi2: torch.Tensor) -> torch.Tensor:
-        delta, m1, m2, s_tot_r, chi_pn_hat = compute_spin_variables(eta, chi1, chi2)
+    def fit_ins_phase_v3_104(
+        eta: torch.Tensor,
+        chi1: torch.Tensor,
+        chi2: torch.Tensor,
+        spin_vars: Optional[Tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]] = None,
+    ) -> torch.Tensor:
+        delta, m1, m2, s_tot_r, chi_pn_hat = XASParameterFits._prepare_spin_vars(eta, chi1, chi2, spin_vars)
         S = chi_pn_hat
-        diff = torch.clamp(1.0 - 4.0 * eta, min=0.0)
-        s_delta = safe_sqrt(diff)
+        s_delta = delta
         poly = (15415.000000000007 + 873401.6255736464 * eta + 376665.64637025696 * eta**2 - 3.9719980569125614e6 * eta**3 + 8.913612508054944e6 * eta**4)/(1.0 + 46.83697749859996 * eta)
         num = (S * (-41128.99121975055 + 103900.17020301468 * eta + 204908.3295566087 * eta**2 - 481840.2512293736 * eta**3)
                + S**2 * (21412.439160773596 - 127668.16906015616 * eta - 21533.26033634209 * eta**2 + 60432.60921041872 * eta**3)
@@ -474,11 +528,15 @@ class XASParameterFits:
         return poly + num / den + asym
 
     @staticmethod
-    def fit_ins_phase_d13_104(eta: torch.Tensor, chi1: torch.Tensor, chi2: torch.Tensor) -> torch.Tensor:
-        delta, m1, m2, s_tot_r, chi_pn_hat = compute_spin_variables(eta, chi1, chi2)
+    def fit_ins_phase_d13_104(
+        eta: torch.Tensor,
+        chi1: torch.Tensor,
+        chi2: torch.Tensor,
+        spin_vars: Optional[Tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]] = None,
+    ) -> torch.Tensor:
+        delta, m1, m2, s_tot_r, chi_pn_hat = XASParameterFits._prepare_spin_vars(eta, chi1, chi2, spin_vars)
         S = chi_pn_hat
-        diff = torch.clamp(1.0 - 4.0 * eta, min=0.0)
-        s_delta = safe_sqrt(diff)
+        s_delta = delta
         poly = (-17294.000000000007 - 19943.076428555978 * eta + 483033.0998073767 * eta**2)/(1.0 + 4.460294035404433 * eta)
         num = (15977.134017269265 * S**5
                + S**2 * (33147.25683264146 + 30466.10848184382 * eta - 371521.74016586377 * eta**2)
@@ -490,11 +548,15 @@ class XASParameterFits:
         return poly + num / den + asym
 
     @staticmethod
-    def fit_ins_phase_d23_104(eta: torch.Tensor, chi1: torch.Tensor, chi2: torch.Tensor) -> torch.Tensor:
-        delta, m1, m2, s_tot_r, chi_pn_hat = compute_spin_variables(eta, chi1, chi2)
+    def fit_ins_phase_d23_104(
+        eta: torch.Tensor,
+        chi1: torch.Tensor,
+        chi2: torch.Tensor,
+        spin_vars: Optional[Tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]] = None,
+    ) -> torch.Tensor:
+        delta, m1, m2, s_tot_r, chi_pn_hat = XASParameterFits._prepare_spin_vars(eta, chi1, chi2, spin_vars)
         S = chi_pn_hat
-        diff = torch.clamp(1.0 - 4.0 * eta, min=0.0)
-        s_delta = safe_sqrt(diff)
+        s_delta = delta
         poly = (-7579.300000000004 - 120297.86185566607 * eta + 1.1694356931282217e6 * eta**2 - 557253.0066989232 * eta**3)/(1.0 + 18.53018618227582 * eta)
         num = (S**3 * (29103.18384520831 - 83201.347573164 * eta + 262407.5466511699 * eta**2 - 556365.2985387266 * eta**3)
                + S**2 * (43478.71192391914 - 103093.04638355851 * eta + 32933.786598761995 * eta**2 + 213637.97730777826 * eta**3)
@@ -504,11 +566,15 @@ class XASParameterFits:
         return poly + num / den + asym
 
     @staticmethod
-    def fit_ins_phase_d43_104(eta: torch.Tensor, chi1: torch.Tensor, chi2: torch.Tensor) -> torch.Tensor:
-        delta, m1, m2, s_tot_r, chi_pn_hat = compute_spin_variables(eta, chi1, chi2)
+    def fit_ins_phase_d43_104(
+        eta: torch.Tensor,
+        chi1: torch.Tensor,
+        chi2: torch.Tensor,
+        spin_vars: Optional[Tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]] = None,
+    ) -> torch.Tensor:
+        delta, m1, m2, s_tot_r, chi_pn_hat = XASParameterFits._prepare_spin_vars(eta, chi1, chi2, spin_vars)
         S = chi_pn_hat
-        diff = torch.clamp(1.0 - 4.0 * eta, min=0.0)
-        s_delta = safe_sqrt(diff)
+        s_delta = delta
         poly = (2439.000000000001 - 31133.52170083207 * eta + 28867.73328134167 * eta**2)/(1.0 + 0.41143032589262585 * eta)
         num = (S * (-4310.811205784324 + 22028.99761552467 * eta - 61330.14992532162 * eta**2 + 100525.85671979685 * eta**3)
                + S**2 * (-2637.8441241924743 + 6912.6434374319915 * eta - 31405.568787158234 * eta**2 + 103315.67513958282 * eta**3))
@@ -517,77 +583,114 @@ class XASParameterFits:
         return poly + num / den + asym
 
     @staticmethod
-    def fit_rd_amp_v1(eta: torch.Tensor, chi1: torch.Tensor, chi2: torch.Tensor) -> torch.Tensor:
-        delta, m1, m2, s_tot_r, chi_pn_hat = compute_spin_variables(eta, chi1, chi2)
+    def fit_rd_amp_v1(
+        eta: torch.Tensor,
+        chi1: torch.Tensor,
+        chi2: torch.Tensor,
+        spin_vars: Optional[Tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]] = None,
+    ) -> torch.Tensor:
+        delta, m1, m2, s_tot_r, chi_pn_hat = XASParameterFits._prepare_spin_vars(eta, chi1, chi2, spin_vars)
         S = s_tot_r
-        diff = torch.clamp(1.0 - 4.0 * eta, min=0.0)
-        s_delta = safe_sqrt(diff)
+        s_delta = delta
         return (0.03689164742964719 + 25.417967754401182 * eta + 162.52904393600332 * eta**2)/(1.0 + 61.19874463331437 * eta - 29.628854485544874 * eta**2) + 1.0/(1.0 - 0.7061712786224095 * S) * (S**3 * (-0.141004080435711 - 4.361351839814927 * eta + 33.88984111814397 * eta**2 - 57.855959010022126 * eta**3) + S**4 * (0.037377032197484866 + 0.20299180950548312 * eta + 3.6044803067540183 * eta**2 - 21.53253800848744 * eta**3) + S**2 * (-0.018612493617899906 - 0.7848945943652349 * eta + 1.693629940464679 * eta**2 + 2.649202944790132 * eta**3) + S * (0.10135328197996034 + 3.3931773240261367 * eta - 19.543610795533272 * eta**2 + 34.12180954678677 * eta**3) + S**5 * (0.12815084497386642 + 6.3490731834449345 * eta - 50.90205546408008 * eta**2 + 93.76529966357677 * eta**3)) - 0.04426571511345366 * s_delta * eta**2 * (chi1 - chi2)
 
     @staticmethod
-    def fit_rd_amp_gamma2(eta: torch.Tensor, chi1: torch.Tensor, chi2: torch.Tensor) -> torch.Tensor:
-        delta, m1, m2, s_tot_r, chi_pn_hat = compute_spin_variables(eta, chi1, chi2)
+    def fit_rd_amp_gamma2(
+        eta: torch.Tensor,
+        chi1: torch.Tensor,
+        chi2: torch.Tensor,
+        spin_vars: Optional[Tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]] = None,
+    ) -> torch.Tensor:
+        delta, m1, m2, s_tot_r, chi_pn_hat = XASParameterFits._prepare_spin_vars(eta, chi1, chi2, spin_vars)
         S = s_tot_r
-        diff = torch.clamp(1.0 - 4.0 * eta, min=0.0)
-        s_delta = safe_sqrt(diff)
+        s_delta = delta
         return (0.8312293675316895 + 7.480371544268765 * eta - 18.256121237800397 * eta**2)/(1.0 + 10.915453595496611 * eta - 30.578409433912874 * eta**2) + (S * (0.15136992284561207 - 0.037837484199517595 * eta + 0.06523602736595462 * eta**2) + S**2 * (0.008214660865068921 - 0.7347334045130285 * eta + 1.2082315610784062 * eta**2))/(1.0 - 0.8813747076716566 * S + 0.25789638030057566 * S**2) - 0.00548054788508203 * s_delta * eta * (chi1 - chi2)
 
     @staticmethod
-    def fit_rd_amp_gamma3(eta: torch.Tensor, chi1: torch.Tensor, chi2: torch.Tensor) -> torch.Tensor:
-        delta, m1, m2, s_tot_r, chi_pn_hat = compute_spin_variables(eta, chi1, chi2)
+    def fit_rd_amp_gamma3(
+        eta: torch.Tensor,
+        chi1: torch.Tensor,
+        chi2: torch.Tensor,
+        spin_vars: Optional[Tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]] = None,
+    ) -> torch.Tensor:
+        delta, m1, m2, s_tot_r, chi_pn_hat = XASParameterFits._prepare_spin_vars(eta, chi1, chi2, spin_vars)
         S = s_tot_r
         return S**2 * (-0.05633734476062242 + 0.4168560229353532 * eta - 0.6330998412809531 * eta**2) + S * (0.07179105336478316 - 0.8752427297525086 * eta + 2.331724812782498 * eta**2) + (1.3666000000000007 - 4.091333144596439 * eta + 2.109081209912545 * eta**2 - 4.222259944408823 * eta**3)/(1.0 - 2.7440263888207594 * eta)
 
     @staticmethod
-    def fit_int_amp_va(eta: torch.Tensor, chi1: torch.Tensor, chi2: torch.Tensor) -> torch.Tensor:
-        delta, m1, m2, s_tot_r, chi_pn_hat = compute_spin_variables(eta, chi1, chi2)
+    def fit_int_amp_va(
+        eta: torch.Tensor,
+        chi1: torch.Tensor,
+        chi2: torch.Tensor,
+        spin_vars: Optional[Tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]] = None,
+    ) -> torch.Tensor:
+        delta, m1, m2, s_tot_r, chi_pn_hat = XASParameterFits._prepare_spin_vars(eta, chi1, chi2, spin_vars)
         # Note: The author release candidate .m file specifies S = PhenAux`chiPNhat,
         # but observed compatible waveform behavior evaluates with the mass-weighted
         # total spin S = s_tot_r ((m1^2*chi1 + m2^2*chi2)/(m1^2 + m2^2)). We preserve this
         # observed compatibility choice while leaving all numerical fit coefficients untouched.
         S = s_tot_r
-        diff = torch.clamp(1.0 - 4.0 * eta, min=0.0)
-        s_delta = safe_sqrt(diff)
+        s_delta = delta
         return (1.4873184918202145 + 1974.6112656679577 * eta + 27563.641024162127 * eta**2 - 19837.908020966777 * eta**3)/(1.0 + 143.29004876335128 * eta + 458.4097306093354 * eta**2) + (S**2 * (0.2581300732787427 - 20.585173470211412 * eta + 238.10747802180947 * eta**2 - 550.5211729822532 * eta**3) + S**3 * (-1.5330947512293267 + 117.53109774114579 * eta**3) + S * (2.210151840454939 - 28.903614896319482 * eta + 127.47796975276957 * eta**3))/(1.0 - 0.833383399912328 * S + 0.0790674746971072 * S**2) - 0.016404056649860943 * s_delta * eta**2 * (1.0 + 18073.173360917353 * eta) * (chi1 - chi2)
 
     @staticmethod
-    def fit_int_amp_v2(eta: torch.Tensor, chi1: torch.Tensor, chi2: torch.Tensor) -> torch.Tensor:
-        delta, m1, m2, s_tot_r, chi_pn_hat = compute_spin_variables(eta, chi1, chi2)
+    def fit_int_amp_v2(
+        eta: torch.Tensor,
+        chi1: torch.Tensor,
+        chi2: torch.Tensor,
+        spin_vars: Optional[Tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]] = None,
+    ) -> torch.Tensor:
+        delta, m1, m2, s_tot_r, chi_pn_hat = XASParameterFits._prepare_spin_vars(eta, chi1, chi2, spin_vars)
         S = chi_pn_hat
-        diff = torch.clamp(1.0 - 4.0 * eta, min=0.0)
-        s_delta = safe_sqrt(diff)
+        s_delta = delta
         return (2.2436523786378983 + 2162.4749081764216 * eta + 24460.158604784723 * eta**2 - 12112.140570900956 * eta**3)/(1.0 + 120.78623282522702 * eta + 416.4179522274108 * eta**2) + (S**2 * (-1.6646004496154818 + 39.690635399351976 * eta - 72.25797935657836 * eta**2) + S * (2.0740930179437536 - 57.61505238282958 * eta + 127.67945689822587 * eta**2))/(1.0 - 1.2256937428769066 * S + 0.3083001769574955 * S**2) - 59.52510939953099 * s_delta * (1.0 - 0.22052532962015753 * eta) * eta**2 * (chi1 - chi2)
 
     @staticmethod
-    def fit_int_amp_v3(eta: torch.Tensor, chi1: torch.Tensor, chi2: torch.Tensor) -> torch.Tensor:
-        delta, m1, m2, s_tot_r, chi_pn_hat = compute_spin_variables(eta, chi1, chi2)
+    def fit_int_amp_v3(
+        eta: torch.Tensor,
+        chi1: torch.Tensor,
+        chi2: torch.Tensor,
+        spin_vars: Optional[Tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]] = None,
+    ) -> torch.Tensor:
+        delta, m1, m2, s_tot_r, chi_pn_hat = XASParameterFits._prepare_spin_vars(eta, chi1, chi2, spin_vars)
         S = chi_pn_hat
-        diff = torch.clamp(1.0 - 4.0 * eta, min=0.0)
-        s_delta = safe_sqrt(diff)
+        s_delta = delta
         return (1.195392410912163 + 1677.2558976605421 * eta + 24838.37133975971 * eta**2 - 17277.938868280915 * eta**3)/(1.0 + 144.78606839716073 * eta + 428.8155916011666 * eta**2) + (S**3 * (-0.8003280997506247 + 7.795342953446871 * eta - 13.184393749315833 * eta**2) + S**2 * (-0.386783853162149 - 0.27672690933853966 * eta + 23.606779769106137 * eta**2) + S * (1.4482201622320323 - 31.52459226147479 * eta + 57.36570415789376 * eta**2))/(1.0 - 0.6762974720861794 * S) - 333.7662575986524 * s_delta * (1.0 - 1.5946715606839124 * eta) * eta**3 * (chi1 - chi2)
 
     @staticmethod
-    def fit_ins_amp_r2(eta: torch.Tensor, chi1: torch.Tensor, chi2: torch.Tensor) -> torch.Tensor:
-        delta, m1, m2, s_tot_r, chi_pn_hat = compute_spin_variables(eta, chi1, chi2)
+    def fit_ins_amp_r2(
+        eta: torch.Tensor,
+        chi1: torch.Tensor,
+        chi2: torch.Tensor,
+        spin_vars: Optional[Tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]] = None,
+    ) -> torch.Tensor:
+        delta, m1, m2, s_tot_r, chi_pn_hat = XASParameterFits._prepare_spin_vars(eta, chi1, chi2, spin_vars)
         S = chi_pn_hat
-        diff = torch.clamp(1.0 - 4.0 * eta, min=0.0)
-        s_delta = safe_sqrt(diff)
+        s_delta = delta
         return (-0.015178276424448592 - 0.06098548699809163 * eta + 0.4845148547154606 * eta**2)/(1.0 + 0.09799277215675059 * eta) + (S**2 * (0.01761591799745109 - 0.14404522791467844 * eta**2) + S**3 * (0.04834642258922544 * eta - 0.14189350657140673 * eta**2) + S * (0.02300153747158323 + 0.10495263104245876 * eta**2))/(1.0 - 0.7340448493183307 * S) + 0.0018724905795891192 * s_delta * eta**4 * (1.0 + 18642.946301236665 * eta) * (chi1 - chi2)
 
     @staticmethod
-    def fit_ins_amp_r3(eta: torch.Tensor, chi1: torch.Tensor, chi2: torch.Tensor) -> torch.Tensor:
-        delta, m1, m2, s_tot_r, chi_pn_hat = compute_spin_variables(eta, chi1, chi2)
+    def fit_ins_amp_r3(
+        eta: torch.Tensor,
+        chi1: torch.Tensor,
+        chi2: torch.Tensor,
+        spin_vars: Optional[Tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]] = None,
+    ) -> torch.Tensor:
+        delta, m1, m2, s_tot_r, chi_pn_hat = XASParameterFits._prepare_spin_vars(eta, chi1, chi2, spin_vars)
         S = chi_pn_hat
-        diff = torch.clamp(1.0 - 4.0 * eta, min=0.0)
-        s_delta = safe_sqrt(diff)
+        s_delta = delta
         return (-0.058572000924124644 - 1.1970535595488723 * eta + 8.4630293045015 * eta**2)/(1.0 + 15.430818840453686 * eta) + (S**2 * (0.014205902285185442 + 0.15983328269721747 * eta - 0.6217809035345132 * eta**2) + S * (0.06565764662955027 + 0.1549903163554525 * eta - 0.5920753389376068 * eta**2))/(1.0 - 0.7506812446570147 * S) + 0.004389995099201855 * s_delta * eta**4 * (1.0 + 24110.628277402946 * eta) * (chi1 - chi2)
 
     @staticmethod
-    def fit_ins_amp_r4(eta: torch.Tensor, chi1: torch.Tensor, chi2: torch.Tensor) -> torch.Tensor:
-        delta, m1, m2, s_tot_r, chi_pn_hat = compute_spin_variables(eta, chi1, chi2)
+    def fit_ins_amp_r4(
+        eta: torch.Tensor,
+        chi1: torch.Tensor,
+        chi2: torch.Tensor,
+        spin_vars: Optional[Tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]] = None,
+    ) -> torch.Tensor:
+        delta, m1, m2, s_tot_r, chi_pn_hat = XASParameterFits._prepare_spin_vars(eta, chi1, chi2, spin_vars)
         S = chi_pn_hat
-        diff = torch.clamp(1.0 - 4.0 * eta, min=0.0)
-        s_delta = safe_sqrt(diff)
+        s_delta = delta
         return (-0.16212854591357853 + 1.617404703616985 * eta - 3.186012733446088 * eta**2 + 5.629598195000046 * eta**3)/(1.0 + 0.04507019231274476 * eta) + (S * (0.17181513336730567 - 0.7052458802501439 * eta + 3.135888331572798 * eta**2 - 7.011766659007688 * eta**3) + S**2 * (-0.053724666247616855 + 0.8911265203926036 * eta - 3.213198718784471 * eta**2 + 3.263330418001537 * eta**3))/(1.0 - 0.9769624571137318 * S + 0.17086112329779823 * S**2) + 0.05575955418803233 * s_delta * eta**4 * (1.0 + 3746.865071813145 * eta) * (chi1 - chi2)
 
 
@@ -782,10 +885,11 @@ class XASCarrierState:
         self.m_sec = m_sec
 
         # 1. Evaluate XAS Parameter Fits
-        f_meco = XASParameterFits.fit_f_meco(eta, s1_eff, s2_eff)
-        aligned_final_spin = XASParameterFits.fit_final_spin(eta, s1_eff, s2_eff)
+        spin_vars = compute_spin_variables(eta, s1_eff, s2_eff)
+        f_meco = XASParameterFits.fit_f_meco(eta, s1_eff, s2_eff, spin_vars=spin_vars)
+        aligned_final_spin = XASParameterFits.fit_final_spin(eta, s1_eff, s2_eff, spin_vars=spin_vars)
         final_spin = aligned_final_spin if final_spin_override is None else final_spin_override
-        erad = XASParameterFits.fit_erad(eta, s1_eff, s2_eff)
+        erad = XASParameterFits.fit_erad(eta, s1_eff, s2_eff, spin_vars=spin_vars)
         m_final = torch.clamp(1.0 - erad, min=0.1)
 
         f_rd = XASParameterFits.fit_re_omega(final_spin) / m_final
@@ -800,9 +904,9 @@ class XASCarrierState:
         r_isco = 3.0 + z2 - torch.sign(chi_fit) * torch.sqrt(torch.clamp((3.0 - z1) * (3.0 + z1 + 2.0 * z2), min=1e-12))
         f_isco = 1.0 / (PI * (r_isco**1.5 + chi_fit))
 
-        lam = XASParameterFits.fit_rd_amp_gamma2(eta, s1_eff, s2_eff)
-        sigma = XASParameterFits.fit_rd_amp_gamma3(eta, s1_eff, s2_eff)
-        v1_rd = XASParameterFits.fit_rd_amp_v1(eta, s1_eff, s2_eff)
+        lam = XASParameterFits.fit_rd_amp_gamma2(eta, s1_eff, s2_eff, spin_vars=spin_vars)
+        sigma = XASParameterFits.fit_rd_amp_gamma3(eta, s1_eff, s2_eff, spin_vars=spin_vars)
+        v1_rd = XASParameterFits.fit_rd_amp_v1(eta, s1_eff, s2_eff, spin_vars=spin_vars)
 
         diff_lam = torch.clamp(1.0 - lam**2, min=0.0)
         f_peak = torch.abs(f_rd + f_damp * sigma * (safe_sqrt(diff_lam) - 1.0) / torch.clamp(lam, min=1e-8))
@@ -811,9 +915,9 @@ class XASCarrierState:
         exp_peak = torch.exp(torch.clamp(lam * (f_peak - f_rd) / width_rd, max=30.0))
         a_r = v1_rd * ((f_peak - f_rd)**2 + width_rd**2) / width_rd * exp_peak
 
-        r2 = XASParameterFits.fit_ins_amp_r2(eta, s1_eff, s2_eff)
-        r3 = XASParameterFits.fit_ins_amp_r3(eta, s1_eff, s2_eff)
-        r4 = XASParameterFits.fit_ins_amp_r4(eta, s1_eff, s2_eff)
+        r2 = XASParameterFits.fit_ins_amp_r2(eta, s1_eff, s2_eff, spin_vars=spin_vars)
+        r3 = XASParameterFits.fit_ins_amp_r3(eta, s1_eff, s2_eff, spin_vars=spin_vars)
+        r4 = XASParameterFits.fit_ins_amp_r4(eta, s1_eff, s2_eff, spin_vars=spin_vars)
 
         f_trans_amp = f_meco + 0.25 * (f_isco - f_meco)
         f_T_phase = 0.6 * (0.5 * f_rd + f_isco)
@@ -823,7 +927,7 @@ class XASCarrierState:
         rho1, rho2, rho3 = solve_inspiral_residual_collocation(f_trans_amp, r2, r3, r4)
 
         # Intermediate amplitude collocation
-        vA_amp = XASParameterFits.fit_int_amp_va(eta, s1_eff, s2_eff)
+        vA_amp = XASParameterFits.fit_int_amp_va(eta, s1_eff, s2_eff, spin_vars=spin_vars)
         f1_col = f_trans_amp
         f4_col = f_peak
         x1_pi = PI * f1_col
@@ -871,11 +975,11 @@ class XASCarrierState:
             f_rd,
             f_H_rd,
         ]
-        v4_rd = -XASParameterFits.fit_rd_phase_v4(eta, s1_eff, s2_eff)
-        d12_rd = -XASParameterFits.fit_rd_phase_d12(eta, s1_eff, s2_eff)
-        d24_rd = -XASParameterFits.fit_rd_phase_d24(eta, s1_eff, s2_eff)
-        d34_rd = -XASParameterFits.fit_rd_phase_d34(eta, s1_eff, s2_eff)
-        d54_rd = -XASParameterFits.fit_rd_phase_d54(eta, s1_eff, s2_eff)
+        v4_rd = -XASParameterFits.fit_rd_phase_v4(eta, s1_eff, s2_eff, spin_vars=spin_vars)
+        d12_rd = -XASParameterFits.fit_rd_phase_d12(eta, s1_eff, s2_eff, spin_vars=spin_vars)
+        d24_rd = -XASParameterFits.fit_rd_phase_d24(eta, s1_eff, s2_eff, spin_vars=spin_vars)
+        d34_rd = -XASParameterFits.fit_rd_phase_d34(eta, s1_eff, s2_eff, spin_vars=spin_vars)
+        d54_rd = -XASParameterFits.fit_rd_phase_d54(eta, s1_eff, s2_eff, spin_vars=spin_vars)
 
         vn_rd = [
             v4_rd + d24_rd + d12_rd,
@@ -930,10 +1034,10 @@ class XASCarrierState:
             f_L_ins + 0.75 * delta_ins,
             f_H_ins,
         ]
-        v3_ins = XASParameterFits.fit_ins_phase_v3_104(eta, s1_eff, s2_eff)
-        d13_ins = XASParameterFits.fit_ins_phase_d13_104(eta, s1_eff, s2_eff)
-        d23_ins = XASParameterFits.fit_ins_phase_d23_104(eta, s1_eff, s2_eff)
-        d43_ins = XASParameterFits.fit_ins_phase_d43_104(eta, s1_eff, s2_eff)
+        v3_ins = XASParameterFits.fit_ins_phase_v3_104(eta, s1_eff, s2_eff, spin_vars=spin_vars)
+        d13_ins = XASParameterFits.fit_ins_phase_d13_104(eta, s1_eff, s2_eff, spin_vars=spin_vars)
+        d23_ins = XASParameterFits.fit_ins_phase_d23_104(eta, s1_eff, s2_eff, spin_vars=spin_vars)
+        d43_ins = XASParameterFits.fit_ins_phase_d43_104(eta, s1_eff, s2_eff, spin_vars=spin_vars)
         vn_ins = [
             v3_ins + d13_ins,
             v3_ins + d23_ins,
@@ -965,12 +1069,12 @@ class XASCarrierState:
             f_H_int,
         ]
         v5_int = eta * eval_dphi_rd_val(f_T_phase)
-        v3m_rdv4 = -XASParameterFits.fit_int_phase_v3m_rdv4(eta, s1_eff, s2_eff)
+        v3m_rdv4 = -XASParameterFits.fit_int_phase_v3m_rdv4(eta, s1_eff, s2_eff, spin_vars=spin_vars)
         v3_int = v4_rd + v3m_rdv4
-        v2m_rdv4 = -XASParameterFits.fit_int_phase_v2m_rdv4(eta, s1_eff, s2_eff)
-        v2_direct = -XASParameterFits.fit_int_phase_v2(eta, s1_eff, s2_eff)
+        v2m_rdv4 = -XASParameterFits.fit_int_phase_v2m_rdv4(eta, s1_eff, s2_eff, spin_vars=spin_vars)
+        v2_direct = -XASParameterFits.fit_int_phase_v2(eta, s1_eff, s2_eff, spin_vars=spin_vars)
         v2_int = 0.75 * (v4_rd + v2m_rdv4) + 0.25 * v2_direct
-        d43_int = -XASParameterFits.fit_int_phase_d43(eta, s1_eff, s2_eff)
+        d43_int = -XASParameterFits.fit_int_phase_d43(eta, s1_eff, s2_eff, spin_vars=spin_vars)
         v4_int = v3_int + d43_int
 
         dphi_tf2_trans = d_pn_phase_canonical_torch(f_trans_phase, eta, s1_eff, s2_eff, delta)
@@ -1503,14 +1607,15 @@ class IMRPhenomXAS(nn.Module):
         m_sec = total_mass * MSUN_SEC
 
         # 1. Evaluate XAS Parameter Fits
-        f_meco = XASParameterFits.fit_f_meco(eta, s1_eff, s2_eff)
+        spin_vars = compute_spin_variables(eta, s1_eff, s2_eff)
+        f_meco = XASParameterFits.fit_f_meco(eta, s1_eff, s2_eff, spin_vars=spin_vars)
         # The aligned-spin remnant controls the ISCO and transition fits.  A
         # precessing caller may provide an explicit remnant only for the Kerr
         # ringdown frequencies; retain the aligned fit for the carrier's
         # inspiral/ISCO quantities.
-        aligned_final_spin = XASParameterFits.fit_final_spin(eta, s1_eff, s2_eff)
+        aligned_final_spin = XASParameterFits.fit_final_spin(eta, s1_eff, s2_eff, spin_vars=spin_vars)
         final_spin = aligned_final_spin if final_spin_override is None else final_spin_override
-        erad = XASParameterFits.fit_erad(eta, s1_eff, s2_eff)
+        erad = XASParameterFits.fit_erad(eta, s1_eff, s2_eff, spin_vars=spin_vars)
         m_final = torch.clamp(1.0 - erad, min=0.1)
 
         f_rd = XASParameterFits.fit_re_omega(final_spin) / m_final
@@ -1527,9 +1632,9 @@ class IMRPhenomXAS(nn.Module):
         f_isco = 1.0 / (PI * (r_isco**1.5 + chi_fit))
 
         # Amplitude Ringdown Parameters: gamma2 is decay (lambda), gamma3 is width (sigma)
-        lam = XASParameterFits.fit_rd_amp_gamma2(eta, s1_eff, s2_eff)
-        sigma = XASParameterFits.fit_rd_amp_gamma3(eta, s1_eff, s2_eff)
-        v1_rd = XASParameterFits.fit_rd_amp_v1(eta, s1_eff, s2_eff)
+        lam = XASParameterFits.fit_rd_amp_gamma2(eta, s1_eff, s2_eff, spin_vars=spin_vars)
+        sigma = XASParameterFits.fit_rd_amp_gamma3(eta, s1_eff, s2_eff, spin_vars=spin_vars)
+        v1_rd = XASParameterFits.fit_rd_amp_v1(eta, s1_eff, s2_eff, spin_vars=spin_vars)
 
         diff_lam = torch.clamp(1.0 - lam**2, min=0.0)
         f_peak = torch.abs(f_rd + f_damp * sigma * (safe_sqrt(diff_lam) - 1.0) / torch.clamp(lam, min=1e-8))
@@ -1540,9 +1645,9 @@ class IMRPhenomXAS(nn.Module):
         a_r = v1_rd * ((f_peak - f_rd)**2 + width_rd**2) / width_rd * exp_peak
 
         # Inspiral pseudo-PN Amplitude coefficients
-        r2 = XASParameterFits.fit_ins_amp_r2(eta, s1_eff, s2_eff)
-        r3 = XASParameterFits.fit_ins_amp_r3(eta, s1_eff, s2_eff)
-        r4 = XASParameterFits.fit_ins_amp_r4(eta, s1_eff, s2_eff)
+        r2 = XASParameterFits.fit_ins_amp_r2(eta, s1_eff, s2_eff, spin_vars=spin_vars)
+        r3 = XASParameterFits.fit_ins_amp_r3(eta, s1_eff, s2_eff, spin_vars=spin_vars)
+        r4 = XASParameterFits.fit_ins_amp_r4(eta, s1_eff, s2_eff, spin_vars=spin_vars)
 
         # Transition frequencies
         f_trans_amp = f_meco + 0.25 * (f_isco - f_meco)
@@ -1603,7 +1708,7 @@ class IMRPhenomXAS(nn.Module):
 
         # 4. Intermediate Scaled Amplitude: 4th-order (quartic) inverse polynomial collocation
         # (Pratten et al. 2020 Eq. 6.7 and Table II, default IntermediateAmpVersion104)
-        vA_amp = XASParameterFits.fit_int_amp_va(eta, s1_eff, s2_eff)
+        vA_amp = XASParameterFits.fit_int_amp_va(eta, s1_eff, s2_eff, spin_vars=spin_vars)
 
         f1_col = f_trans_amp
         f4_col = f_peak
@@ -1704,11 +1809,11 @@ class IMRPhenomXAS(nn.Module):
             f_H_rd,
         ]
 
-        v4_rd = -XASParameterFits.fit_rd_phase_v4(eta, s1_eff, s2_eff)
-        d12_rd = -XASParameterFits.fit_rd_phase_d12(eta, s1_eff, s2_eff)
-        d24_rd = -XASParameterFits.fit_rd_phase_d24(eta, s1_eff, s2_eff)
-        d34_rd = -XASParameterFits.fit_rd_phase_d34(eta, s1_eff, s2_eff)
-        d54_rd = -XASParameterFits.fit_rd_phase_d54(eta, s1_eff, s2_eff)
+        v4_rd = -XASParameterFits.fit_rd_phase_v4(eta, s1_eff, s2_eff, spin_vars=spin_vars)
+        d12_rd = -XASParameterFits.fit_rd_phase_d12(eta, s1_eff, s2_eff, spin_vars=spin_vars)
+        d24_rd = -XASParameterFits.fit_rd_phase_d24(eta, s1_eff, s2_eff, spin_vars=spin_vars)
+        d34_rd = -XASParameterFits.fit_rd_phase_d34(eta, s1_eff, s2_eff, spin_vars=spin_vars)
+        d54_rd = -XASParameterFits.fit_rd_phase_d54(eta, s1_eff, s2_eff, spin_vars=spin_vars)
 
         v5_rd = v4_rd + d54_rd
         v3_rd = v4_rd + d34_rd
@@ -1773,10 +1878,10 @@ class IMRPhenomXAS(nn.Module):
             f_H_ins,
         ]
 
-        v3_ins = XASParameterFits.fit_ins_phase_v3_104(eta, s1_eff, s2_eff)
-        d13_ins = XASParameterFits.fit_ins_phase_d13_104(eta, s1_eff, s2_eff)
-        d23_ins = XASParameterFits.fit_ins_phase_d23_104(eta, s1_eff, s2_eff)
-        d43_ins = XASParameterFits.fit_ins_phase_d43_104(eta, s1_eff, s2_eff)
+        v3_ins = XASParameterFits.fit_ins_phase_v3_104(eta, s1_eff, s2_eff, spin_vars=spin_vars)
+        d13_ins = XASParameterFits.fit_ins_phase_d13_104(eta, s1_eff, s2_eff, spin_vars=spin_vars)
+        d23_ins = XASParameterFits.fit_ins_phase_d23_104(eta, s1_eff, s2_eff, spin_vars=spin_vars)
+        d43_ins = XASParameterFits.fit_ins_phase_d43_104(eta, s1_eff, s2_eff, spin_vars=spin_vars)
 
         vn_ins = [
             v3_ins + d13_ins,
@@ -1823,13 +1928,13 @@ class IMRPhenomXAS(nn.Module):
         # Note: v5_int evaluates at calibration start f_T_phase, even though fifth collocation node is f_H_int
         # (Observed compatibility convention distinguishing calibration-value frequency and node/join frequency)
         v5_int = eta * eval_dphi_rd_val(f_T_phase)
-        v3m_rdv4 = -XASParameterFits.fit_int_phase_v3m_rdv4(eta, s1_eff, s2_eff)
+        v3m_rdv4 = -XASParameterFits.fit_int_phase_v3m_rdv4(eta, s1_eff, s2_eff, spin_vars=spin_vars)
         v3_int = v4_rd + v3m_rdv4
-        v2m_rdv4 = -XASParameterFits.fit_int_phase_v2m_rdv4(eta, s1_eff, s2_eff)
-        v2_direct = -XASParameterFits.fit_int_phase_v2(eta, s1_eff, s2_eff)
+        v2m_rdv4 = -XASParameterFits.fit_int_phase_v2m_rdv4(eta, s1_eff, s2_eff, spin_vars=spin_vars)
+        v2_direct = -XASParameterFits.fit_int_phase_v2(eta, s1_eff, s2_eff, spin_vars=spin_vars)
         # Pratten et al. (2020) arXiv:2001.11412v1 Eq. (95): weighted average for intermediate collocation point v2
         v2_int = 0.75 * (v4_rd + v2m_rdv4) + 0.25 * v2_direct
-        d43_int = -XASParameterFits.fit_int_phase_d43(eta, s1_eff, s2_eff)
+        d43_int = -XASParameterFits.fit_int_phase_d43(eta, s1_eff, s2_eff, spin_vars=spin_vars)
         v4_int = v3_int + d43_int
 
         # Boundary derivative from inspiral at f_trans_phase
