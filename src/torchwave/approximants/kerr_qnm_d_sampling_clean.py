@@ -195,6 +195,8 @@ def _as_spin(final_spin) -> torch.Tensor:
 
 
 def _validate_spin(spin: torch.Tensor, working_spin: torch.Tensor) -> None:
+    if hasattr(torch.compiler, "is_compiling") and torch.compiler.is_compiling():
+        return
     if bool(
         torch.any(
             ~torch.isfinite(working_spin)
@@ -256,6 +258,8 @@ def evaluate_d_qnm_220(final_spin) -> Tuple[torch.Tensor, torch.Tensor]:
     working_spin = spin.to(_working_dtype(spin))
     _validate_spin(spin, working_spin)
     cubic = _evaluate_cubic(spin)
+    if hasattr(torch.compiler, "is_compiling") and torch.compiler.is_compiling():
+        return cubic[0].to(spin.dtype), cubic[1].to(spin.dtype)
     compatibility = (working_spin >= COMPATIBILITY_SPIN_MIN) & (
         working_spin <= COMPATIBILITY_SPIN_MAX
     )

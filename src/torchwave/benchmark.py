@@ -271,6 +271,7 @@ def benchmark_torchwave_model(
     iterations: int = 20,
     warmup: int = 5,
     measure_backward: bool = False,
+    compile: bool = False,
 ) -> Dict[str, Any]:
     """Benchmark TorchWave waveform generation on a specific model."""
     flow = float(grid["flow"])
@@ -295,23 +296,36 @@ def benchmark_torchwave_model(
                 kw[k] = v
         return kw
 
+    def eval_fn(**kwargs):
+        return get_fd_waveform(
+            model_name,
+            sample_frequencies=freqs,
+            device=device,
+            dtype=dtype,
+            **kwargs,
+        )
+
+    t_compile = 0.0
+    if compile:
+        try:
+            torch._dynamo.config.capture_scalar_outputs = True
+        except Exception:
+            pass
+        eval_fn = torch.compile(eval_fn, fullgraph=False)
+
     ctx = contextlib.nullcontext() if measure_backward else torch.inference_mode()
 
     with ctx:
-        # Warmup
+        # Warmup (and compile on first call if compile=True)
+        t0_warmup = time.perf_counter()
         for _ in range(warmup):
             inputs = make_inputs(req_grad=measure_backward)
-            hp, hc = get_fd_waveform(
-                model_name,
-                sample_frequencies=freqs,
-                device=device,
-                dtype=dtype,
-                **inputs,
-            )
+            hp, hc = eval_fn(**inputs)
             if measure_backward:
                 loss = (hp.abs().sum() + hc.abs().sum())
                 loss.backward()
             sync_device(device)
+        t_compile = (time.perf_counter() - t0_warmup) * 1000.0
 
         # Measurement
         fwd_times: List[float] = []
@@ -324,13 +338,7 @@ def benchmark_torchwave_model(
             sync_device(device)
             t_start = time.perf_counter()
 
-            hp, hc = get_fd_waveform(
-                model_name,
-                sample_frequencies=freqs,
-                device=device,
-                dtype=dtype,
-                **inputs,
-            )
+            hp, hc = eval_fn(**inputs)
             sync_device(device)
             t_fwd_end = time.perf_counter()
 
@@ -347,12 +355,15 @@ def benchmark_torchwave_model(
             fwd_times.append((t_fwd_end - t_start) * 1000.0)
 
     stats = calculate_sample_statistics(total_times, batch_size)
+    framework_name = "torchwave_compiled" if compile else "torchwave"
     stats.update({
-        "framework": "torchwave",
+        "framework": framework_name,
         "model": model_name,
         "batch_size": batch_size,
         "device": str(device),
         "dtype": str(dtype).replace("torch.", ""),
+        "compiled": compile,
+        "compile_warmup_ms": round(t_compile, 2) if compile else 0.0,
         "n_freq_bins": n_freqs,
         "iterations": iterations,
     })

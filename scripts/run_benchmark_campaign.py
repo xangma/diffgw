@@ -15,6 +15,11 @@ import time
 from pathlib import Path
 from typing import Any, Dict, List, Optional
 
+# Prevent JAX from hogging 90% of GPU VRAM when benchmarking alongside PyTorch
+os.environ["XLA_PYTHON_CLIENT_PREALLOCATE"] = "false"
+os.environ["TORCHDYNAMO_CAPTURE_SCALAR_OUTPUTS"] = "1"
+os.environ["KMP_DUPLICATE_LIB_OK"] = "TRUE"
+
 # Ensure repository root and scripts directory are on sys.path
 _REPO_ROOT = Path(__file__).resolve().parent.parent
 _SRC_DIR = _REPO_ROOT / "src"
@@ -204,8 +209,8 @@ def main():
     parser.add_argument(
         "--backends",
         type=str,
-        default="torch,jax,lal,ripple",
-        help="Comma-separated backends to benchmark (torch, jax, lal, ripple).",
+        default="torch,torch_compiled,jax,lal,ripple",
+        help="Comma-separated backends to benchmark (torch, torch_compiled, jax, lal, ripple).",
     )
     parser.add_argument(
         "--devices",
@@ -354,7 +359,51 @@ def main():
                         except Exception as e:
                             if dev_str == "cuda":
                                 torch.cuda.empty_cache()
-                            print(f"[TORCH | {dev_str.upper():4s} | {dt_str:7s}] {model_name:20s} | B={bsz:<5d} | ERROR: {e}", flush=True)
+    # 1b. TorchWave (Compiled / torch.compile) Benchmarks
+    if any(b in backends for b in ("torch_compiled", "torchwave_compiled", "compiled")):
+        import torch
+        for dev_str in devices:
+            dev = resolve_device(dev_str)
+            batch_list = cuda_batches if dev_str == "cuda" else cpu_batches
+
+            for dt_str in dtypes:
+                dt = getattr(torch, dt_str)
+                print(f"\n--- Backend: TorchWave (Compiled) | Device: {dev_str.upper()} | Precision: {dt_str} ---")
+
+                for model_name in models:
+                    spec = DEFAULT_MODEL_SPECS.get(model_name)
+                    if not spec:
+                        continue
+
+                    for bsz in batch_list:
+                        try:
+                            if dev_str == "cuda":
+                                torch.cuda.empty_cache()
+                            res = benchmark_torchwave_model(
+                                model_name=model_name,
+                                batch_size=bsz,
+                                device=dev,
+                                dtype=dt,
+                                grid=spec["grid"],
+                                params=spec["params"],
+                                iterations=args.iterations,
+                                warmup=args.warmup,
+                                measure_backward=False,
+                                compile=True,
+                            )
+                            if dev_str == "cuda":
+                                torch.cuda.empty_cache()
+                            all_benchmarks.append(res)
+                            print(
+                                f"[TORCH-JIT | {dev_str.upper():4s} | {dt_str:7s}] {model_name:20s} | B={bsz:<5d} | "
+                                f"Med: {res['median_ms']:8.3f} ms (95% CI: [{res['median_ci_95'][0]:.2f}, {res['median_ci_95'][1]:.2f}]) | "
+                                f"Throughput: {res['wf_per_sec']:10,.1f} wf/s | JIT: {res.get('compile_warmup_ms', 0.0):.1f} ms",
+                                flush=True,
+                            )
+                        except Exception as e:
+                            if dev_str == "cuda":
+                                torch.cuda.empty_cache()
+                            print(f"[TORCH-JIT | {dev_str.upper():4s} | {dt_str:7s}] {model_name:20s} | B={bsz:<5d} | ERROR: {e}", flush=True)
 
     # 2. JAXWave Benchmarks
     if "jax" in backends:

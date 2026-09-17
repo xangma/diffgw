@@ -695,11 +695,11 @@ torchwave-generate-london-qnm --output-dir ./london_qnm
 For the full protocol specification, see [**docs/benchmarking_protocol.md**](benchmarking_protocol.md). For detailed figure walkthroughs, hardware scaling on RTX 5090, and physical interpretation, see [**docs/performance.md**](performance.md).
 
 ### Running a Multi-Backend Benchmark Campaign
-The benchmark runner sweeps across all requested backends (`torchwave`, `jaxwave`, `lalsimulation`, `ripple`), devices, and batch sizes:
+The benchmark runner sweeps across all requested backends (`torch` [eager], `torch_compiled` [`torch.compile`], `jaxwave`, `lalsimulation`, `ripple`), devices, and batch sizes:
 ```bash
 python scripts/run_benchmark_campaign.py \
-    --models TaylorF2,IMRPhenomD,IMRPhenomXAS,IMRPhenomXP \
-    --backends torch,jax,lal,ripple \
+    --models TaylorF2,IMRPhenomD,IMRPhenomXAS,IMRPhenomXP,IMRPhenomXHM \
+    --backends torch,torch_compiled,jax,lal,ripple \
     --devices cuda,cpu \
     --cuda-batch-sizes 1,10,100,1000 \
     --cpu-batch-sizes 1,10,100 \

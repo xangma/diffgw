@@ -11,10 +11,11 @@ The protocol adapts the controlled scientific benchmarking principles establishe
 ### 1.1 Multi-Backend Comparison Matrix
 Every benchmark campaign measures performance across four primary backends under identical physical parameters, sampling rates, and frequency grids:
 
-1. **`torchwave` (PyTorch)**: Differentiable PyTorch approximants evaluated on GPU (CUDA / ROCm / Apple Silicon MPS) and CPU.
-2. **`jaxwave` (JAX)**: Differentiable JAX approximants compiled via `jax.jit` and vectorized via `jax.vmap` on GPU and CPU.
-3. **`lalsimulation` (C / LALSuite)**: The canonical LIGO-Virgo-KAGRA single-core reference C implementation, serving as the scientific oracle and single-waveform baseline.
-4. **`ripple` (JAX)**: External open-source differentiable JAX approximants (Edwards et al.), providing an independent GPU-accelerated baseline where models intersect.
+1. **`torchwave` (PyTorch Eager)**: Differentiable PyTorch approximants evaluated in standard eager execution (`torch.inference_mode()`) on GPU (CUDA / ROCm / Apple Silicon MPS) and CPU.
+2. **`torchwave_compiled` (PyTorch Compiled)**: Differentiable PyTorch approximants compiled via `torch.compile()` with TorchDynamo and TorchInductor/Triton kernel fusion.
+3. **`jaxwave` (JAX)**: Differentiable JAX approximants compiled via `jax.jit` and vectorized via `jax.vmap` on GPU and CPU.
+4. **`lalsimulation` (C / LALSuite)**: The canonical LIGO-Virgo-KAGRA single-core reference C implementation, serving as the scientific oracle and single-waveform baseline.
+5. **`ripple` (JAX)**: External open-source differentiable JAX approximants (Edwards et al.), providing an independent GPU-accelerated baseline where models intersect.
 
 ### 1.2 The Gatekeeper Rule (Parity First)
 > [!IMPORTANT]

@@ -91,10 +91,13 @@ def plot_throughput_vs_batch(
     axes = axes[0]
 
     colors = {
-        ("torchwave", "cuda", "float64"): ("#1f77b4", "o-", "Torch CUDA FP64"),
-        ("torchwave", "cuda", "float32"): ("#17becf", "s--", "Torch CUDA FP32"),
-        ("torchwave", "cpu", "float64"): ("#ff7f0e", "^-", "Torch CPU FP64"),
-        ("torchwave", "cpu", "float32"): ("#bcbd22", "v--", "Torch CPU FP32"),
+        ("torchwave_compiled", "cuda", "float64"): ("#0044aa", "P-", "Torch CUDA FP64 (Compiled)"),
+        ("torchwave_compiled", "cuda", "float32"): ("#0088cc", "X--", "Torch CUDA FP32 (Compiled)"),
+        ("torchwave_compiled", "cpu", "float64"): ("#b2182b", "v-", "Torch CPU FP64 (Compiled)"),
+        ("torchwave", "cuda", "float64"): ("#1f77b4", "o-", "Torch CUDA FP64 (Eager)"),
+        ("torchwave", "cuda", "float32"): ("#17becf", "s--", "Torch CUDA FP32 (Eager)"),
+        ("torchwave", "cpu", "float64"): ("#ff7f0e", "^-", "Torch CPU FP64 (Eager)"),
+        ("torchwave", "cpu", "float32"): ("#bcbd22", "v--", "Torch CPU FP32 (Eager)"),
         ("jaxwave", "cpu", "float64"): ("#2ca02c", "d-", "JAX CPU FP64"),
         ("jaxwave", "cuda", "float64"): ("#98df8a", "D-", "JAX CUDA FP64"),
         ("ripple", "cuda", "float64"): ("#9467bd", "p-", "Ripple CUDA"),
@@ -223,8 +226,14 @@ def plot_latency_per_waveform(
         ax = axes[idx]
         model_benches = [b for b in benchmarks if b.get("model") == model]
 
-        for dev, col, mark, lbl in [("cuda", "#1f77b4", "o-", "CUDA (FP64)"), ("cpu", "#ff7f0e", "^-", "CPU (FP64)")]:
-            points = [b for b in model_benches if b.get("device") == dev and b.get("dtype") == "float64" and b.get("framework") == "torchwave"]
+        series_configs = [
+            ("cuda", "torchwave_compiled", "#0044aa", "P-", "CUDA FP64 (Compiled)"),
+            ("cuda", "torchwave", "#1f77b4", "o-", "CUDA FP64 (Eager)"),
+            ("cpu", "torchwave", "#ff7f0e", "^-", "CPU FP64 (Eager)"),
+        ]
+
+        for dev, fw, col, mark, lbl in series_configs:
+            points = [b for b in model_benches if b.get("device") == dev and b.get("dtype") == "float64" and b.get("framework") == fw]
             if not points:
                 continue
             points.sort(key=lambda x: x.get("batch_size", 1))
@@ -293,21 +302,39 @@ def plot_speedup_vs_lal(
         "IMRPhenomXHM": "#9467bd",
     }
 
+    has_compiled = any(b.get("framework") == "torchwave_compiled" for b in benchmarks)
+
     for model in models:
         if model not in lal_baselines:
             continue
         lal_ms = lal_baselines[model]
-        cuda_points = [
+        col = model_palette.get(model, "#333333")
+
+        # Plot compiled curve if present
+        if has_compiled:
+            comp_points = [
+                b for b in benchmarks
+                if b.get("model") == model and b.get("framework") == "torchwave_compiled" and b.get("device") == "cuda" and b.get("dtype") == "float64"
+            ]
+            if comp_points:
+                comp_points.sort(key=lambda x: x.get("batch_size", 1))
+                bs = [p.get("batch_size", 1) for p in comp_points]
+                speedups = [(p.get("wf_per_sec", 1.0) / (1000.0 / lal_ms)) for p in comp_points]
+                ax.plot(bs, speedups, "P-", color=col, linewidth=2.2, label=f"{model} (Compiled)")
+
+        # Plot eager curve
+        eager_points = [
             b for b in benchmarks
             if b.get("model") == model and b.get("framework") == "torchwave" and b.get("device") == "cuda" and b.get("dtype") == "float64"
         ]
-        if not cuda_points:
-            continue
-        cuda_points.sort(key=lambda x: x.get("batch_size", 1))
-        bs = [p.get("batch_size", 1) for p in cuda_points]
-        speedups = [(p.get("wf_per_sec", 1.0) / (1000.0 / lal_ms)) for p in cuda_points]
-        col = model_palette.get(model, "#333333")
-        ax.plot(bs, speedups, "o-", color=col, linewidth=2.2, label=f"{model} (TorchWave CUDA)")
+        if eager_points:
+            eager_points.sort(key=lambda x: x.get("batch_size", 1))
+            bs = [p.get("batch_size", 1) for p in eager_points]
+            speedups = [(p.get("wf_per_sec", 1.0) / (1000.0 / lal_ms)) for p in eager_points]
+            lbl = f"{model} (Eager)" if has_compiled else f"{model} (TorchWave CUDA)"
+            ls = "--" if has_compiled else "-"
+            mk = "o" if has_compiled else "o"
+            ax.plot(bs, speedups, f"{mk}{ls}", color=col, linewidth=1.5 if has_compiled else 2.2, alpha=0.6 if has_compiled else 1.0, label=lbl)
 
     ax.set_xscale("log")
     ax.set_yscale("log")

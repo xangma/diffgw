@@ -21,12 +21,13 @@ All benchmarks reported here were executed on a dedicated high-performance works
 
 | Milestone | Backend / Device | Approximant | Throughput | Amortized Latency |
 | :--- | :--- | :--- | :--- | :--- |
-| **Peak FP64 Throughput** | JAXWave CUDA (WSL2) | `TaylorF2` | **1,374,700 wf/s** | $0.73\ \mu\text{s / wf}$ |
+| **Peak FP64 Throughput (JAX)** | JAXWave CUDA (WSL2) | `TaylorF2` | **1,427,783 wf/s** | $0.70\ \mu\text{s / wf}$ |
+| **Peak FP64 Throughput (Torch)** | TorchWave Compiled CUDA | `TaylorF2` | **732,641 wf/s** | $1.36\ \mu\text{s / wf}$ |
 | **Peak FP32 Throughput** | TorchWave CUDA (Native) | `TaylorF2` | **1,068,449 wf/s** | $0.94\ \mu\text{s / wf}$ |
-| **Aligned-Spin Peak** | JAXWave CUDA (WSL2) | `IMRPhenomD` | **405,816 wf/s** | $2.46\ \mu\text{s / wf}$ |
-| **Higher-Harmonic Peak** | JAXWave CUDA (WSL2) | `IMRPhenomXHM` | **46,285 wf/s** | $21.6\ \mu\text{s / wf}$ |
-| **Maximum Speedup vs LAL** | TorchWave CUDA | `TaylorF2` ($B=5000$) | **$55.7\times$** | single-core C baseline |
-| **Maximum Speedup vs LAL** | JAXWave CUDA | `IMRPhenomD` ($B=5000$) | **$164.7\times$** | single-core C baseline |
+| **Aligned-Spin Peak (Torch)** | TorchWave Compiled CUDA | `IMRPhenomD` | **378,242 wf/s** | $2.64\ \mu\text{s / wf}$ |
+| **Aligned-Spin Peak (JAX)** | JAXWave CUDA (WSL2) | `IMRPhenomD` | **405,816 wf/s** | $2.46\ \mu\text{s / wf}$ |
+| **Maximum Speedup vs LAL (Torch)** | TorchWave Compiled CUDA | `IMRPhenomD` ($B=5000$) | **$153.5\times$** | single-core C baseline |
+| **Maximum Speedup vs LAL (JAX)** | JAXWave CUDA | `IMRPhenomD` ($B=5000$) | **$164.7\times$** | single-core C baseline |
 
 ---
 
@@ -49,8 +50,11 @@ Figure 1 plots generated waveforms per second (throughput, logarithmic y-axis) a
   - **Launch Overhead Bound ($B < 10$)**: At small batch sizes, GPU throughput is constrained by CUDA driver kernel launch overhead ($\sim 10\text{--}50\ \mu\text{s}$).
   - **Linear Amortization ($10 \le B \le 1000$)**: As batch size expands, tensor arithmetic parallelizes across the RTX 5090's 170 Streaming Multiprocessors, scaling almost linearly with batch size.
   - **Memory Bandwidth & Compute Saturation ($B \ge 5000$)**: Throughput reaches its hardware maximum.
-- **JAX XLA JIT vs. PyTorch Eager Execution**: JAXWave compiled with `@jax.jit` fuses multi-stage mathematical expressions (e.g. polynomial expansions, exponential phase shifts) into monolithic GPU kernels, reducing intermediate global memory round-trips. This delivers a $3.7\times$ to $26\times$ throughput advantage over eager PyTorch at large batches.
-- **LALSimulation Single-Core Baseline**: Indicated by the red dotted horizontal line. At $B=1$, single-core LAL C code is competitive with or faster than unamortized GPU calls; at $B \ge 100$, GPU execution decisively outpaces LAL.
+- **JAX XLA JIT vs. PyTorch Eager vs. PyTorch Compiled**:
+  - **Eager PyTorch**: In standard eager mode, every mathematical operation dispatches a distinct CUDA kernel, writing intermediate tensors back to VRAM. At $B=5,000$, this makes eager PyTorch memory-bandwidth bound.
+  - **Compiled PyTorch (`torch.compile`)**: Uses TorchInductor to fuse operations and generate optimized Triton GPU kernels. For `IMRPhenomD`, compiled PyTorch achieves **$378,242\text{ wf/s}$** at $B=5000$ ($4.3\times$ faster than eager, and virtually matching JAXWave's $405,816\text{ wf/s}$).
+  - **JAXWave with `@jax.jit`**: Reaches **$1,427,783\text{ wf/s}$** for `TaylorF2` and **$405,816\text{ wf/s}$** for `IMRPhenomD`.
+- **LALSimulation Single-Core Baseline**: Indicated by the red dotted horizontal line. At $B=1$, single-core LAL C code is competitive with unamortized eager GPU calls; at $B \ge 10$, compiled GPU execution decisively outpaces LAL.
 
 ---
 
@@ -58,14 +62,16 @@ Figure 1 plots generated waveforms per second (throughput, logarithmic y-axis) a
 ![Figure 2: Per-Waveform Generation Latency](../artifacts/benchmarks/plots/fig2_latency_vs_batch.png)
 
 #### What This Plot Shows
-Figure 2 plots the amortized per-waveform generation latency in milliseconds ($t_{\text{median}} / B$) across batch sizes for PyTorch on CPU (orange triangles) versus CUDA GPU (blue circles).
+Figure 2 plots the amortized per-waveform generation latency in milliseconds ($t_{\text{median}} / B$) across batch sizes for PyTorch on CPU (orange triangles), eager CUDA GPU (light blue circles), and compiled CUDA GPU (dark blue plus markers).
 
 #### Key Takeaways: When to Use CPU vs. GPU
 - **The Crossover Point ($B_{\text{cross}}$)**:
-  - For `TaylorF2` and `IMRPhenomD`, the CPU and GPU curves cross at **$B \approx 50\text{--}100$**.
-  - For `IMRPhenomXP`, the crossover occurs earlier at **$B \approx 10\text{--}20$** due to the heavy computational cost of precession frames.
-- **Scalar Workloads ($B = 1$)**: CPU generation is $5\times$ to $15\times$ faster in wall-clock latency ($0.5\text{ ms}$ on CPU vs $5\text{ ms}$ on CUDA) because it avoids PCIe host-to-device dispatch and CUDA context synchronization.
-- **Batched Workloads ($B \ge 1000$)**: CUDA amortizes generation latency down to **$0.003\text{--}0.02\text{ ms / waveform}$** ($3\text{--}20\ \mu\text{s}$), making GPU execution **$50\times\text{--}100\times$ faster per waveform** than single-core CPU execution.
+  - **In Eager Mode**: The CPU and GPU curves cross at **$B \approx 50\text{--}100$**.
+  - **In Compiled Mode**: Compilation slashes scalar launch latency, shifting the crossover point down to **$B \approx 1\text{--}10$**. For `IMRPhenomXAS`, compiled CUDA is faster than CPU even at $B=1$ ($3.4\text{ ms}$ vs $6.0\text{ ms}$).
+- **Scalar Workloads ($B = 1$)**:
+  - Eager GPU: $\sim 10\text{--}120\text{ ms}$ due to unamortized kernel launch and context dispatch.
+  - Compiled GPU: $\sim 0.38\text{--}4.3\text{ ms}$ ($25\times\text{--}30\times$ faster than eager), making GPU execution practical for serial single-waveform inference in PyCBC and Bilby.
+- **Batched Workloads ($B \ge 1000$)**: CUDA amortizes generation latency down to **$0.0013\text{--}0.006\text{ ms / waveform}$** ($1.3\text{--}6.0\ \mu\text{s}$), delivering $>150\times$ acceleration over single-core CPU execution.
 
 ---
 
@@ -73,14 +79,14 @@ Figure 2 plots the amortized per-waveform generation latency in milliseconds ($t
 ![Figure 3: GPU Speedup vs LAL](../artifacts/benchmarks/plots/fig3_speedup_vs_lal.png)
 
 #### What This Plot Shows
-Figure 3 displays the effective acceleration factor ($t_{\text{LAL}} / t_{\text{amortized}}$) relative to the canonical single-core C `lalsimulation` implementation. The dashed horizontal line represents parity ($1\times$).
+Figure 3 displays the effective acceleration factor ($t_{\text{LAL}} / t_{\text{amortized}}$) relative to the canonical single-core C `lalsimulation` implementation. The dashed horizontal line represents parity ($1\times$). Solid lines with plus markers denote **Compiled TorchWave**; dashed lines denote **Eager TorchWave**.
 
 #### Quantitative Speedup Breakdown
-- At $B = 1$: GPU execution operates below parity ($0.003\times\text{--}0.05\times$) due to kernel launch latency.
-- At $B = 10$: GPU approaches parity ($0.04\times\text{--}0.5\times$).
-- At $B = 100$: All models cross parity, delivering **$3\times\text{--}5\times$** acceleration over single-core LAL.
-- At $B = 1,000$: Speedups reach **$3\times\text{--}12\times$** for precessing/higher-order models and **$12\times\text{--}30\times$** for aligned-spin models.
-- At $B = 5,000$: Speedup reaches **$55.7\times$** in TorchWave and **$>160\times$** in JAXWave.
+- At $B = 1$: Compiled Torch reaches $0.15\times\text{--}0.31\times$ parity, up from $0.005\times\text{--}0.04\times$ in eager mode.
+- At $B = 10$: Compiled Torch crosses parity for all aligned-spin and PN models (**$1.5\times\text{--}4.7\times$ faster than LAL**).
+- At $B = 100$: Compiled Torch reaches **$13\times\text{--}45\times$** acceleration over single-core LAL.
+- At $B = 1,000$: Speedups reach **$80\times\text{--}150\times$** for compiled models.
+- At $B = 5,000$: Speedup reaches **$153.5\times$** for compiled `IMRPhenomD`, compared to **$36.1\times$** in eager mode.
 
 ---
 
