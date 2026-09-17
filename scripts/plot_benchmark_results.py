@@ -66,17 +66,28 @@ def load_benchmark_data(receipt_paths: Union[Path, List[Path]]) -> Dict[str, Any
     return {"benchmarks": list(all_benchmarks_map.values()), "provenance": merged_provenance}
 
 
+CANONICAL_MODEL_ORDER = ["TaylorF2", "IMRPhenomD", "IMRPhenomXAS", "IMRPhenomXP", "IMRPhenomXHM"]
+
+
+def sort_models(models: List[str]) -> List[str]:
+    """Sort models in canonical physics progression order."""
+    ordered = [m for m in CANONICAL_MODEL_ORDER if m in models]
+    remaining = sorted([m for m in models if m not in CANONICAL_MODEL_ORDER])
+    return ordered + remaining
+
+
 def plot_throughput_vs_batch(
     benchmarks: List[Dict[str, Any]],
     output_dir: Path,
     provenance: Optional[Dict[str, Any]] = None,
 ):
     """Figure 1: Throughput (wf/s) vs. Batch Size for all models."""
-    models = sorted(list(set(b["model"] for b in benchmarks if "model" in b)))
+    available_models = list(set(b["model"] for b in benchmarks if "model" in b))
+    models = sort_models(available_models)
     if not models:
         return
 
-    fig, axes = plt.subplots(1, len(models), figsize=(5.5 * len(models), 5), squeeze=False)
+    fig, axes = plt.subplots(1, len(models), figsize=(5.2 * len(models), 5.5), squeeze=False)
     axes = axes[0]
 
     colors = {
@@ -93,6 +104,9 @@ def plot_throughput_vs_batch(
     gpu_devs = provenance.get("gpu", {}).get("devices", []) if provenance else []
     gpu_name = gpu_devs[0].get("name", "GPU") if gpu_devs else "Host Platform"
 
+    legend_entries = {}
+    lal_line_entry = None
+
     for idx, model in enumerate(models):
         ax = axes[idx]
         model_benches = [b for b in benchmarks if b.get("model") == model]
@@ -101,7 +115,21 @@ def plot_throughput_vs_batch(
         lal_entry = next((b for b in model_benches if b.get("framework") == "lalsimulation"), None)
         if lal_entry:
             lal_tps = lal_entry.get("wf_per_sec", 0.0)
-            ax.axhline(lal_tps, color="#d62728", linestyle=":", linewidth=2, label=f"LAL C Baseline ({lal_tps:.1f} wf/s)")
+            line = ax.axhline(lal_tps, color="#d62728", linestyle=":", linewidth=2.0, alpha=0.85)
+            if lal_line_entry is None:
+                lal_line_entry = (line, "LAL C Baseline (CPU single-core)")
+            # Annotate LAL baseline on plot edge without occluding data
+            ax.text(
+                0.96, lal_tps * 1.18,
+                f"LAL: {lal_tps:,.0f} wf/s",
+                color="#d62728",
+                fontsize=9,
+                fontweight="semibold",
+                ha="right",
+                va="bottom",
+                transform=ax.get_yaxis_transform(),
+                alpha=0.95,
+            )
 
         # Plot each framework / device / dtype curve
         curves = {}
@@ -124,7 +152,9 @@ def plot_throughput_vs_batch(
             style = colors.get(key, ("#7f7f7f", "x-", f"{key[0]} {key[1]}"))
             col, mark, lbl = style
 
-            ax.plot(bs, tps, mark, color=col, label=lbl)
+            line, = ax.plot(bs, tps, mark, color=col, label=lbl)
+            if lbl not in legend_entries:
+                legend_entries[lbl] = line
 
             # Draw confidence band if available
             has_ci = all(p[2] is not None for p in points)
@@ -138,16 +168,38 @@ def plot_throughput_vs_batch(
         ax.set_xlabel("Batch Size (B)")
         if idx == 0:
             ax.set_ylabel("Throughput (waveforms / sec)")
-        ax.set_title(f"{model}")
-        ax.legend(loc="upper left", framealpha=0.9)
+        ax.set_title(f"{model}", pad=10)
 
-    fig.suptitle(f"Gravitational-Wave Waveform Throughput Scaling ({gpu_name})", y=1.02)
-    fig.tight_layout()
+    # Build unified figure-level legend positioned cleanly above subplots
+    handles = []
+    labels = []
+    if lal_line_entry:
+        handles.append(lal_line_entry[0])
+        labels.append(lal_line_entry[1])
+    for lbl, h in legend_entries.items():
+        handles.append(h)
+        labels.append(lbl)
+
+    fig.suptitle(f"Gravitational-Wave Waveform Throughput Scaling ({gpu_name})", y=0.98, fontsize=15)
+    ncols = min(len(handles), 5)
+    fig.legend(
+        handles,
+        labels,
+        loc="upper center",
+        bbox_to_anchor=(0.5, 0.93),
+        ncol=ncols,
+        frameon=True,
+        framealpha=0.9,
+        facecolor="#fcfcfc",
+        edgecolor="#d0d0d0",
+        fontsize=9.5,
+    )
+    fig.subplots_adjust(top=0.76, bottom=0.14, left=0.05, right=0.98, wspace=0.22)
 
     out_png = output_dir / "fig1_throughput_vs_batch.png"
     out_pdf = output_dir / "fig1_throughput_vs_batch.pdf"
-    fig.savefig(out_png)
-    fig.savefig(out_pdf)
+    fig.savefig(out_png, bbox_inches="tight")
+    fig.savefig(out_pdf, bbox_inches="tight")
     plt.close(fig)
     print(f"  -> Generated: {out_png}")
 
@@ -157,12 +209,15 @@ def plot_latency_per_waveform(
     output_dir: Path,
 ):
     """Figure 2: Per-Waveform Latency vs. Batch Size showing GPU Amortization Crossover."""
-    models = sorted(list(set(b["model"] for b in benchmarks if "model" in b)))
+    available_models = list(set(b["model"] for b in benchmarks if "model" in b))
+    models = sort_models(available_models)
     if not models:
         return
 
-    fig, axes = plt.subplots(1, len(models), figsize=(5.5 * len(models), 5), squeeze=False)
+    fig, axes = plt.subplots(1, len(models), figsize=(5.2 * len(models), 5.2), squeeze=False)
     axes = axes[0]
+
+    legend_entries = {}
 
     for idx, model in enumerate(models):
         ax = axes[idx]
@@ -176,23 +231,38 @@ def plot_latency_per_waveform(
             bs = [p.get("batch_size", 1) for p in points]
             # per-waveform latency in ms
             per_wf_ms = [p.get("median_ms", 1.0) / p.get("batch_size", 1) for p in points]
-            ax.plot(bs, per_wf_ms, mark, color=col, label=lbl)
+            line, = ax.plot(bs, per_wf_ms, mark, color=col, label=lbl)
+            if lbl not in legend_entries:
+                legend_entries[lbl] = line
 
         ax.set_xscale("log")
         ax.set_yscale("log")
         ax.set_xlabel("Batch Size (B)")
         if idx == 0:
             ax.set_ylabel("Per-Waveform Latency (ms / wf)")
-        ax.set_title(f"{model}: Crossover")
-        ax.legend(loc="upper right")
+        ax.set_title(f"{model}: Crossover", pad=10)
 
-    fig.suptitle("Per-Waveform Generation Latency (GPU Batch Amortization Crossover)", y=1.02)
-    fig.tight_layout()
+    fig.suptitle("Per-Waveform Generation Latency (GPU Batch Amortization Crossover)", y=0.98, fontsize=15)
+    handles = list(legend_entries.values())
+    labels = list(legend_entries.keys())
+    fig.legend(
+        handles,
+        labels,
+        loc="upper center",
+        bbox_to_anchor=(0.5, 0.92),
+        ncol=len(labels),
+        frameon=True,
+        framealpha=0.9,
+        facecolor="#fcfcfc",
+        edgecolor="#d0d0d0",
+        fontsize=10,
+    )
+    fig.subplots_adjust(top=0.78, bottom=0.14, left=0.05, right=0.98, wspace=0.22)
 
     out_png = output_dir / "fig2_latency_vs_batch.png"
     out_pdf = output_dir / "fig2_latency_vs_batch.pdf"
-    fig.savefig(out_png)
-    fig.savefig(out_pdf)
+    fig.savefig(out_png, bbox_inches="tight")
+    fig.savefig(out_pdf, bbox_inches="tight")
     plt.close(fig)
     print(f"  -> Generated: {out_png}")
 
@@ -202,7 +272,8 @@ def plot_speedup_vs_lal(
     output_dir: Path,
 ):
     """Figure 3: Speedup Factor relative to LALSimulation Single-Core Baseline."""
-    models = sorted(list(set(b["model"] for b in benchmarks if "model" in b)))
+    available_models = list(set(b["model"] for b in benchmarks if "model" in b))
+    models = sort_models(available_models)
     lal_baselines = {}
     for b in benchmarks:
         if b.get("framework") == "lalsimulation":
@@ -212,8 +283,20 @@ def plot_speedup_vs_lal(
         print("  [Notice] No LALSimulation baselines in receipt; skipping Fig 3 (Speedup vs LAL).")
         return
 
-    fig, ax = plt.subplots(figsize=(8, 5))
-    for model, lal_ms in lal_baselines.items():
+    fig, ax = plt.subplots(figsize=(9.2, 5.2))
+    
+    model_palette = {
+        "TaylorF2": "#1f77b4",
+        "IMRPhenomD": "#ff7f0e",
+        "IMRPhenomXAS": "#2ca02c",
+        "IMRPhenomXP": "#d62728",
+        "IMRPhenomXHM": "#9467bd",
+    }
+
+    for model in models:
+        if model not in lal_baselines:
+            continue
+        lal_ms = lal_baselines[model]
         cuda_points = [
             b for b in benchmarks
             if b.get("model") == model and b.get("framework") == "torchwave" and b.get("device") == "cuda" and b.get("dtype") == "float64"
@@ -222,23 +305,31 @@ def plot_speedup_vs_lal(
             continue
         cuda_points.sort(key=lambda x: x.get("batch_size", 1))
         bs = [p.get("batch_size", 1) for p in cuda_points]
-        # Speedup vs LAL single-waveform = (B * lal_ms) / torch_batch_ms = torch_wf_per_sec / lal_wf_per_sec
         speedups = [(p.get("wf_per_sec", 1.0) / (1000.0 / lal_ms)) for p in cuda_points]
-        ax.plot(bs, speedups, "o-", label=f"{model} (CUDA vs LAL)")
+        col = model_palette.get(model, "#333333")
+        ax.plot(bs, speedups, "o-", color=col, linewidth=2.2, label=f"{model} (TorchWave CUDA)")
 
     ax.set_xscale("log")
     ax.set_yscale("log")
-    ax.axhline(1.0, color="gray", linestyle="--", alpha=0.7, label="1x Baseline (Parity with LAL)")
+    ax.axhline(1.0, color="gray", linestyle="--", alpha=0.7, linewidth=1.8, label="1x Baseline (Parity with LAL)")
     ax.set_xlabel("Batch Size (B)")
     ax.set_ylabel("Speedup Factor vs LALSimulation C CPU (x)")
-    ax.set_title("TorchWave GPU Speedup vs. Single-Core LALSimulation Baseline")
-    ax.legend(loc="upper left")
+    ax.set_title("GPU Speedup vs. Single-Core LALSimulation Baseline", pad=12)
+    # Move legend completely outside axes to the right
+    ax.legend(
+        bbox_to_anchor=(1.02, 1.0),
+        loc="upper left",
+        borderaxespad=0.0,
+        frameon=True,
+        framealpha=0.95,
+        facecolor="#fcfcfc",
+        edgecolor="#d0d0d0",
+    )
 
-    fig.tight_layout()
     out_png = output_dir / "fig3_speedup_vs_lal.png"
     out_pdf = output_dir / "fig3_speedup_vs_lal.pdf"
-    fig.savefig(out_png)
-    fig.savefig(out_pdf)
+    fig.savefig(out_png, bbox_inches="tight")
+    fig.savefig(out_pdf, bbox_inches="tight")
     plt.close(fig)
     print(f"  -> Generated: {out_png}")
 
@@ -247,26 +338,25 @@ def plot_model_comparison_bar(
     benchmarks: List[Dict[str, Any]],
     output_dir: Path,
 ):
-    """Figure 4: Cross-Model Throughput Comparison Bar Chart (B=1 vs B=1000)."""
-    models = ["TaylorF2", "IMRPhenomD", "IMRPhenomXAS", "IMRPhenomXP"]
+    """Figure 4: Cross-Model Throughput Comparison Bar Chart (B=1 vs B=100 vs B=1000)."""
+    models = ["TaylorF2", "IMRPhenomD", "IMRPhenomXAS", "IMRPhenomXP", "IMRPhenomXHM"]
     active_models = [m for m in models if any(b.get("model") == m for b in benchmarks)]
     if not active_models:
         return
 
-    fig, ax = plt.subplots(figsize=(9, 5))
+    fig, ax = plt.subplots(figsize=(10.0, 5.2))
     x = np.arange(len(active_models))
-    width = 0.25
+    width = 0.24
 
     b1_tps = []
     b100_tps = []
     b1000_tps = []
 
-    for m in active_models:
-        # Fallback to CPU if CUDA is not available
-        cuda_present = any(b.get("device") == "cuda" for b in benchmarks)
-        target_dev = "cuda" if cuda_present else "cpu"
-        dev_label = target_dev.upper()
+    cuda_present = any(b.get("device") == "cuda" for b in benchmarks)
+    target_dev = "cuda" if cuda_present else "cpu"
+    dev_label = target_dev.upper()
 
+    for m in active_models:
         def get_tps(bsz):
             matches = [
                 b.get("wf_per_sec", 0.0) for b in benchmarks
@@ -281,17 +371,33 @@ def plot_model_comparison_bar(
     label_mid = "Batch 100" if cuda_present else "Batch 5"
     label_high = "Batch 1,000" if cuda_present else "Batch 10"
 
-    r1 = ax.bar(x - width, b1_tps, width, label=f"Batch 1 ({dev_label} FP64)", color="#a1c9f4")
-    r2 = ax.bar(x, b100_tps, width, label=f"{label_mid} ({dev_label} FP64)", color="#4878d0")
-    r3 = ax.bar(x + width, b1000_tps, width, label=f"{label_high} ({dev_label} FP64)", color="#1b458b")
+    r1 = ax.bar(x - width, b1_tps, width, label=f"Batch 1 ({dev_label} FP64)", color="#a1c9f4", edgecolor="#6baed6", linewidth=0.8)
+    r2 = ax.bar(x, b100_tps, width, label=f"{label_mid} ({dev_label} FP64)", color="#4878d0", edgecolor="#2171b5", linewidth=0.8)
+    r3 = ax.bar(x + width, b1000_tps, width, label=f"{label_high} ({dev_label} FP64)", color="#1b458b", edgecolor="#08306b", linewidth=0.8)
 
     ax.set_ylabel("Throughput (waveforms / sec)")
-    ax.set_title(f"TorchWave Approximant Throughput Across Workload Scales ({dev_label})")
+    ax.set_title(f"TorchWave Approximant Throughput Across Workload Scales ({dev_label})", pad=12)
     ax.set_xticks(x)
     ax.set_xticklabels(active_models)
     if any(v > 0 for v in b1_tps + b100_tps + b1000_tps):
         ax.set_yscale("log")
-    ax.legend()
+        # Ensure log scale bottom doesn't clip small values
+        all_vals = [v for v in b1_tps + b100_tps + b1000_tps if v > 0]
+        if all_vals:
+            min_val = min(all_vals)
+            max_val = max(all_vals)
+            ax.set_ylim(min_val * 0.4, max_val * 4.0)
+
+    # Move legend completely outside axes to the right
+    ax.legend(
+        bbox_to_anchor=(1.02, 1.0),
+        loc="upper left",
+        borderaxespad=0.0,
+        frameon=True,
+        framealpha=0.95,
+        facecolor="#fcfcfc",
+        edgecolor="#d0d0d0",
+    )
 
     fig.tight_layout()
     out_png = output_dir / "fig4_model_breakdown_bar.png"
