@@ -555,20 +555,25 @@ class IMRPhenomD:
 
             # Exact analytical derivative d phi_tf2 / d(Mf)
             dv_du = (PI / 3.0) * (PI * u) ** (-2.0 / 3.0)
+            inv_v = 1.0 / v
+            inv_v2 = inv_v * inv_v
+            inv_v3 = inv_v2 * inv_v
+            inv_v4 = inv_v2 * inv_v2
+            inv_v6 = inv_v3 * inv_v3
             d_pn_sum_dv = (
-                -5.0 * c0 * (v ** -6)
-                - 3.0 * c2 * (v ** -4)
-                - 2.0 * c3 * (v ** -3)
-                - c4 * (v ** -2)
-                + c5_log * (v ** -1)
+                -5.0 * c0 * inv_v6
+                - 3.0 * c2 * inv_v4
+                - 2.0 * c3 * inv_v3
+                - c4 * inv_v2
+                + c5_log * inv_v
                 + (c6 + c6_log * ln_4v + c6_log)
                 + 2.0 * c7 * v
             )
             dphi_tf2 = (3.0 / (128.0 * eta_m)) * d_pn_sum_dv * dv_du
-            return phi_tf2, dphi_tf2
+            return phi_tf2, dphi_tf2, v, v2, v4, v5
 
         # Inspiral phase and derivative at f1_ph = 0.018
-        phi_tf2_f1, dphi_tf2_f1 = eval_tf2_at(f1_ph)
+        phi_tf2_f1, dphi_tf2_f1, *_ = eval_tf2_at(f1_ph)
         phi_ins_f1 = phi_tf2_f1 + (1.0 / eta) * (
             sigma1 * f1_ph
             + (3.0 / 4.0) * sigma2 * (f1_ph ** (4.0 / 3.0))
@@ -701,30 +706,43 @@ class IMRPhenomD:
         v4_eval = v2_eval * v2_eval
         v5_eval = v4_eval * v_eval
         v6_eval = v3_eval * v3_eval
+        v7_eval = v6_eval * v_eval
+        v8_eval = v7_eval * v_eval
+        v9_eval = v8_eval * v_eval
 
+        # Horner's scheme for PN amplitude polynomial
         pn_amp = (
             unsqueeze_param(a_pn[0])
-            + unsqueeze_param(a_pn[1]) * v_eval
-            + unsqueeze_param(a_pn[2]) * v2_eval
-            + unsqueeze_param(a_pn[3]) * v3_eval
-            + unsqueeze_param(a_pn[4]) * v4_eval
-            + unsqueeze_param(a_pn[5]) * v5_eval
-            + unsqueeze_param(a_pn[6]) * v6_eval
+            + v_eval * (
+                unsqueeze_param(a_pn[1])
+                + v_eval * (
+                    unsqueeze_param(a_pn[2])
+                    + v_eval * (
+                        unsqueeze_param(a_pn[3])
+                        + v_eval * (
+                            unsqueeze_param(a_pn[4])
+                            + v_eval * (
+                                unsqueeze_param(a_pn[5])
+                                + v_eval * unsqueeze_param(a_pn[6])
+                            )
+                        )
+                    )
+                )
+            )
         )
+        inv_pi_7_3 = PI ** (-7.0 / 3.0)
+        inv_pi_8_3 = PI ** (-8.0 / 3.0)
+        inv_pi_3 = PI ** (-3.0)
         scaled_amp_ins = (
             pn_amp
-            + rho1_u * (mf ** (7.0 / 3.0))
-            + rho2_u * (mf ** (8.0 / 3.0))
-            + rho3_u * (mf ** 3.0)
+            + (rho1_u * inv_pi_7_3) * v7_eval
+            + (rho2_u * inv_pi_8_3) * v8_eval
+            + (rho3_u * inv_pi_3) * v9_eval
         )
 
-        # Region IIa: Intermediate (0.014 < Mf <= f_peak)
+        # Region IIa: Intermediate (0.014 < Mf <= f_peak) using Horner's scheme
         scaled_amp_int = (
-            d0_u
-            + d1_c_u * mf
-            + d2_u * (mf * mf)
-            + d3_c_u * (mf**3)
-            + d4_u * (mf**4)
+            d0_u + mf * (d1_c_u + mf * (d2_u + mf * (d3_c_u + mf * d4_u)))
         )
 
         # Region IIb: Merger-Ringdown (Mf > f_peak)
@@ -779,31 +797,41 @@ class IMRPhenomD:
 
         # 2. Piecewise Phase & Analytical Derivative
         # Region I: Inspiral (Mf <= 0.018)
-        phi_tf2_grid, dphi_tf2_grid = eval_tf2_at(mf)
+        phi_tf2_grid, dphi_tf2_grid, v_g, v2_g, v4_g, v5_g = eval_tf2_at(mf)
+        inv_pi_1_3 = PI ** (-1.0 / 3.0)
+        inv_pi_2_3 = PI ** (-2.0 / 3.0)
+        inv_pi_4_3 = PI ** (-4.0 / 3.0)
+        inv_pi_5_3 = PI ** (-5.0 / 3.0)
+
         phi_ins_grid = phi_tf2_grid + (1.0 / eta_u) * (
             sigma1_u * mf
-            + (3.0 / 4.0) * sigma2_u * (mf ** (4.0 / 3.0))
-            + (3.0 / 5.0) * sigma3_u * (mf ** (5.0 / 3.0))
-            + 0.5 * sigma4_u * (mf ** 2.0)
+            + ((3.0 / 4.0) * inv_pi_4_3) * sigma2_u * v4_g
+            + ((3.0 / 5.0) * inv_pi_5_3) * sigma3_u * v5_g
+            + 0.5 * sigma4_u * (mf * mf)
         )
         dphi_ins_grid = dphi_tf2_grid + (1.0 / eta_u) * (
             sigma1_u
-            + sigma2_u * (mf ** (1.0 / 3.0))
-            + sigma3_u * (mf ** (2.0 / 3.0))
+            + (inv_pi_1_3 * sigma2_u) * v_g
+            + (inv_pi_2_3 * sigma3_u) * v2_g
             + sigma4_u * mf
         )
 
         # Region IIa: Intermediate (0.018 < Mf <= 0.5 * f_rd)
+        inv_mf = 1.0 / mf
+        inv_mf2 = inv_mf * inv_mf
+        inv_mf3 = inv_mf2 * inv_mf
+        inv_mf4 = inv_mf2 * inv_mf2
+
         phi_int_grid = (1.0 / eta_u) * (
             beta0_u
             + beta1_u * mf
             + beta2_u * torch.log(mf)
-            - (beta3_u / 3.0) * (mf ** -3.0)
+            - (beta3_u / 3.0) * inv_mf3
         )
         dphi_int_grid = (1.0 / eta_u) * (
             beta1_u
-            + beta2_u * (mf ** -1.0)
-            + beta3_u * (mf ** -4.0)
+            + beta2_u * inv_mf
+            + beta3_u * inv_mf4
         )
 
         # Region IIb: Merger-Ringdown (Mf > 0.5 * f_rd)
@@ -811,14 +839,14 @@ class IMRPhenomD:
         phi_mr_grid = (1.0 / eta_u) * (
             alpha0_u
             + alpha1_u * mf
-            - alpha2_u * (mf ** -1.0)
+            - alpha2_u * inv_mf
             + (4.0 / 3.0) * alpha3_u * (mf ** 0.75)
             + alpha4_u * torch.atan(atan_arg_grid)
         )
         d_atan_grid = (alpha4_u / f_damp_u) / (1.0 + atan_arg_grid * atan_arg_grid)
         dphi_mr_grid = (1.0 / eta_u) * (
             alpha1_u
-            + alpha2_u * (mf ** -2.0)
+            + alpha2_u * inv_mf2
             + alpha3_u * (mf ** -0.25)
             + d_atan_grid
         )
@@ -854,7 +882,7 @@ class IMRPhenomD:
                 fref_u = fref_t
 
             mf_ref = m_sec_eval * fref_u
-            phi_tf2_ref, dphi_tf2_ref = eval_tf2_at(mf_ref)
+            phi_tf2_ref, dphi_tf2_ref, *_ = eval_tf2_at(mf_ref)
 
             phi_ins_ref = phi_tf2_ref + (1.0 / eta_u) * (
                 sigma1_u * mf_ref

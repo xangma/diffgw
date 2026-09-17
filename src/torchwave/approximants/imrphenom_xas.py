@@ -203,7 +203,7 @@ def pn_phase_canonical_torch(
     )
 
     pn = c0 + c2 * v2 + c3 * v3 + c4 * v4 + c5 * v5 + c6 * v6 + c7 * v7 + c8 * v8
-    return 3.0 / (128.0 * eta) * torch.pow(v, -5.0) * pn - PI / 4.0
+    return 3.0 / (128.0 * eta * v5) * pn - PI / 4.0
 
 
 def d_pn_phase_canonical_torch(
@@ -224,16 +224,21 @@ def d_pn_phase_canonical_torch(
     pi_mf = PI * mf
     v = torch.pow(torch.clamp(pi_mf, min=1e-12), 1.0 / 3.0)
     log_v = torch.log(v)
-    dv_dmf = (PI / 3.0) * torch.pow(v, -2.0)
+    inv_v = 1.0 / v
+    inv_v2 = inv_v * inv_v
+    inv_v3 = inv_v2 * inv_v
+    inv_v4 = inv_v2 * inv_v2
+    inv_v6 = inv_v3 * inv_v3
+    dv_dmf = (PI / 3.0) * inv_v2
 
     c0 = 1.0
-    d_term0 = -5.0 * c0 * torch.pow(v, -6.0)
+    d_term0 = -5.0 * c0 * inv_v6
 
     c2 = 3715.0 / 756.0 + 55.0 * eta / 9.0
-    d_term2 = -3.0 * c2 * torch.pow(v, -4.0)
+    d_term2 = -3.0 * c2 * inv_v4
 
     c3 = -16.0 * PI + 113.0 / 3.0 * delta * chi_a + (113.0 / 3.0 - 76.0 * eta / 3.0) * chi_s
-    d_term3 = -2.0 * c3 * torch.pow(v, -3.0)
+    d_term3 = -2.0 * c3 * inv_v3
 
     c4 = (
         15293365.0 / 508032.0 + 27145.0 * eta / 504.0 + 3085.0 * eta**2 / 72.0
@@ -241,14 +246,14 @@ def d_pn_phase_canonical_torch(
         - 405.0 / 4.0 * delta * chi_a * chi_s
         + (-405.0 / 8.0 + 5.0 * eta / 2.0) * chi_s**2
     )
-    d_term4 = -1.0 * c4 * torch.pow(v, -2.0)
+    d_term4 = -1.0 * c4 * inv_v2
 
     c5_const = (
         (38645.0 * PI / 756.0 - 65.0 * PI * eta / 9.0)
         + chi_a * (-140.0 * delta * eta / 9.0 - 732985.0 * delta / 2268.0)
         + chi_s * (340.0 * eta**2 / 9.0 + 24260.0 * eta / 81.0 - 732985.0 / 2268.0)
     )
-    d_term5 = c5_const * 3.0 * torch.pow(v, -1.0)
+    d_term5 = c5_const * 3.0 * inv_v
 
     gamma_e = 0.57721566490153286
     c6_const = (
@@ -1470,21 +1475,27 @@ class IMRPhenomXAS(nn.Module):
         Exact frequency derivative w.r.t. dimensionless M*f is:
         d(A_PN)/d(Mf) = pi * d(A_PN)/dx = pi * ((2/3)*t2 + t3 + (4/3)*t4 + (5/3)*t5 + 2*t6) / x.
         """
+        v_x = torch.pow(torch.clamp(pi_mf, min=1e-12), 1.0 / 3.0)
+        v_x2 = v_x * v_x
+        x_4_3 = pi_mf * v_x
+        x_5_3 = pi_mf * v_x2
+        x_2 = pi_mf * pi_mf
+
         t1 = torch.ones_like(pi_mf)
-        t2 = (1.0 / 672.0) * (pi_mf ** (2.0 / 3.0)) * (-969.0 + 1804.0 * eta_u)
+        t2 = (1.0 / 672.0) * v_x2 * (-969.0 + 1804.0 * eta_u)
         t3 = (1.0 / 48.0) * pi_mf * ((81.0 * (1.0 + d_u) - 44.0 * eta_u) * s1_u + (81.0 - 81.0 * d_u - 44.0 * eta_u) * s2_u)
-        t4 = (1.0 / 8128512.0) * (pi_mf ** (4.0 / 3.0)) * (
+        t4 = (1.0 / 8128512.0) * x_4_3 * (
             -27312085.0 + 35371056.0 * eta_u**2 - 10287648.0 * (1.0 + d_u) * s1_u**2
             - 10287648.0 * s2_u**2 + 10287648.0 * d_u * s2_u**2
             + 24.0 * eta_u * (-1975055.0 + 857304.0 * s1_u**2 - 994896.0 * s1_u * s2_u + 857304.0 * s2_u**2)
         )
-        t5 = (1.0 / 32256.0) * (pi_mf ** (5.0 / 3.0)) * (
+        t5 = (1.0 / 32256.0) * x_5_3 * (
             42840.0 * PI * (-1.0 + 4.0 * eta_u)
             + (287213.0 * (1.0 + d_u) - 4.0 * (93414.0 + 2083.0 * d_u) * eta_u - 35632.0 * eta_u**2) * s1_u
             - 6048.0 * (-1.0 - d_u + (3.0 + d_u) * eta_u) * s1_u**3
             + s2_u * (-35632.0 * eta_u**2 - (-1.0 + d_u) * (287213.0 + 6048.0 * s2_u**2) + 4.0 * eta_u * (-93414.0 + 2083.0 * d_u + 1512.0 * (-3.0 + d_u) * s2_u**2))
         )
-        t6 = -(1.0 / 60085960704.0) * (pi_mf ** 2.0) * (
+        t6 = -(1.0 / 60085960704.0) * x_2 * (
             -324322727232.0 * eta_u**3
             - 336.0 * eta_u**2 * (-3248849057.0 + 1809550512.0 * s1_u**2 - 2954929824.0 * s1_u * s2_u + 1809550512.0 * s2_u**2)
             + 12.0 * eta_u * (-545384828789.0 + 21384760320.0 * PI**2 + 77616.0 * (-158633.0 + 282718.0 * d_u) * s1_u**2 + 49568837472.0 * s1_u * s2_u - 12312458928.0 * s2_u**2 - 21943440288.0 * d_u * s2_u**2 - 8345272320.0 * PI * (s1_u + s2_u))
@@ -2074,11 +2085,16 @@ class IMRPhenomXAS(nn.Module):
         def eval_grid_phi_ins(f_in: torch.Tensor) -> torch.Tensor:
             tf2 = pn_phase_canonical_torch(f_in, eta_u, s1_u, s2_u, d_u)
             f_safe = torch.clamp(f_in, min=1e-8)
+            v_safe = torch.pow(f_safe, 1.0 / 3.0)
+            v_safe2 = v_safe * v_safe
+            f_4_3 = f_safe * v_safe
+            f_5_3 = f_safe * v_safe2
+            f_sq = f_safe * f_safe
             pseudo = (1.0 / eta_u) * (
                 sig1_u * f_safe
-                + 0.75 * sig2_u * torch.pow(f_safe, 4.0 / 3.0)
-                + 0.60 * sig3_u * torch.pow(f_safe, 5.0 / 3.0)
-                + 0.50 * sig4_u * torch.pow(f_safe, 2.0)
+                + 0.75 * sig2_u * f_4_3
+                + 0.60 * sig3_u * f_5_3
+                + 0.50 * sig4_u * f_sq
                 + sig0_u
             )
             return tf2 + pseudo

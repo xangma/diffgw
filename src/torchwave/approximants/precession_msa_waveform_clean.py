@@ -865,10 +865,11 @@ def waveform(
     all_a0, all_theta, all_zeta, all_phi = [], [], [], []
     all_final = []
     beta_key = "cos_beta"
-    for index in range(n_rows):
-        rm1, rm2 = m1.reshape(-1)[index], m2.reshape(-1)[index]
-        rs1, rs2 = flat_spins[0][index], flat_spins[1][index]
-        rdist, rinc, rphi, rtc, rfr = (value[index] for value in flat_scalars[2:])
+    if n_rows == 1:
+        rm1, rm2 = m1.reshape(-1)[0], m2.reshape(-1)[0]
+        rs1, rs2 = s1.reshape((1, 3))[0], s2.reshape((1, 3))[0]
+        flat_scalars = tuple(value.reshape(-1) for value in (dist, inc, phi0, tc_t, fr))
+        rdist, rinc, rphi, rtc, rfr = (value[0] for value in flat_scalars)
         angle_kwargs = dict(
             f_ref=rfr, order=order, beta_pn=beta_pn,
             beta_pn_version=beta_pn_version,
@@ -884,40 +885,18 @@ def waveform(
             rm1, rm2, rs1[0], rs1[1], rs1[2], rs2[0], rs2[1], rs2[2],
             rinc, rphi, rfr, **geometry_kwargs,
         )
-        # The MSA angles are assembled at the zero-phase source-frame
-        # anchor.  Carry the Appendix C/Table IV coordinate change explicitly
-        # instead of relying on the generic composer to absorb ``phiRef``
-        # into the current alpha0/phiJ values.  The two geometry calls are
-        # still entirely clean and contain no public angle provider.
         geom_zero = source_frame_geometry(
             rm1, rm2, rs1[0], rs1[1], rs1[2], rs2[0], rs2[1], rs2[2],
             rinc, torch.zeros_like(rphi), rfr, **geometry_kwargs,
         )
-        # This value retains the pre-existing near-aligned Euler-gauge
-        # selector.  Test its squared norm directly: ``sqrt(0)`` would leave
-        # an infinite inactive derivative in an otherwise finite waveform.
         transverse_sq = (
             torch.sum(rs1[:2].square()) + torch.sum(rs2[:2].square())
         )
         legacy_aligned = bool(transverse_sq <= 1.0e-28)
-        # The endpoint chart correction below is deliberately stricter than
-        # the older near-aligned selector.  A nonzero transverse spin must
-        # retain the generic MSA chart, even when its squared magnitude falls
-        # inside the legacy tolerance.
         exact_transverse_zero = bool(
             torch.all(rs1[:2] == 0.0) and torch.all(rs2[:2] == 0.0)
         )
         if selected == "v223" and legacy_aligned:
-            # The public v223 source-frame chart chooses alpha0=pi on the
-            # exactly aligned Euler-gauge branch.  The clean geometry uses
-            # the same continuous tangent with alpha0=0, which is an
-            # equivalent chart for generic beta only when the corresponding
-            # alpha/gamma chart relation is also preserved.  Apply the
-            # pre-existing gauge choice to both reference geometries so the
-            # transported relative angles remain unchanged.  At finite beta,
-            # independent alpha/gamma changes alter the O(beta) sidebands;
-            # the exact-zero convention-1 correction below restores that
-            # relation explicitly.
             alpha_shift = torch.as_tensor(
                 math.pi, dtype=geom[0].dtype, device=geom[0].device,
             )
@@ -929,12 +908,6 @@ def waveform(
             geom_zero, geom, convention=convention, aligned=legacy_aligned,
         )
         if selected == "v223" and convention == 1 and exact_transverse_zero:
-            # Table IV's convention-1 endpoint chart differs from the clean
-            # aligned tangent by delta_alpha=-phi_J and delta_gamma=+phi_J.
-            # Apply both shifts to the relative angles before Eq. (45): their
-            # sum is preserved, while the finite root-regularized beta keeps
-            # the m'!=2 terms on the same public chart.  Do not set beta to
-            # zero and do not apply this mapping to tiny nonzero spins.
             endpoint_phi_j = _as_f64(
                 composition_geometry["phi_j"], device=f.device,
             )
@@ -950,47 +923,78 @@ def waveform(
                 compatibility=selected,
             )
         else:
-            rfinal = _as_f64(final_spin_override, device=f.device).reshape(-1)
-            if rfinal.numel() not in (1, n_rows):
-                raise ValueError("final_spin_override must be scalar or match the parameter batch")
-            rfinal = rfinal[0 if rfinal.numel() == 1 else index]
+            rfinal = _as_f64(final_spin_override, device=f.device).reshape(-1)[0]
 
-        beta_key = "cos_beta" if "cos_beta" in transported_angles else "beta"
-        all_alpha.append(transported_angles["alpha"])
-        all_beta.append(transported_angles[beta_key])
-        all_gamma.append(transported_angles["gamma"])
-        all_a0.append(composition_geometry["alpha0"])
-        all_theta.append(composition_geometry["theta_jn"])
-        all_zeta.append(composition_geometry["zeta"])
-        all_phi.append(composition_geometry["phi_j"])
-        all_final.append(rfinal)
-
-    if n_rows == 1:
-        single_angles = {"alpha": all_alpha[0], beta_key: all_beta[0], "gamma": all_gamma[0]}
-        single_geom = (all_a0[0], all_theta[0], all_zeta[0], all_phi[0])
-        single_final = all_final[0]
+        single_angles = {"alpha": transported_angles["alpha"], "cos_beta": transported_angles["cos_beta"], "gamma": transported_angles["gamma"]}
+        single_geom = (composition_geometry["alpha0"], composition_geometry["theta_jn"], composition_geometry["zeta"], composition_geometry["phi_j"])
         hp, hc = compose_msa_waveform(
             f, m1, m2, s1[..., 2], s2[..., 2],
-            single_angles, single_geom, single_final,
+            single_angles, single_geom, rfinal,
             distance=dist, tc=tc_t, f_ref=fr, convention=convention,
             angle_order="alpha_beta_gamma", angles_are_absolute=False, xas_model=xas_model,
         )
     else:
-        batched_angles = {
-            "alpha": torch.stack(all_alpha).reshape(tuple(m1.shape) + (f.numel(),)),
-            beta_key: torch.stack(all_beta).reshape(tuple(m1.shape) + (f.numel(),)),
-            "gamma": torch.stack(all_gamma).reshape(tuple(m1.shape) + (f.numel(),)),
-        }
-        batched_geom = (
-            torch.stack(all_a0).reshape(m1.shape),
-            torch.stack(all_theta).reshape(m1.shape),
-            torch.stack(all_zeta).reshape(m1.shape),
-            torch.stack(all_phi).reshape(m1.shape),
+        # Fully vectorized batched evaluation path
+        angle_kwargs = dict(
+            f_ref=fr, order=order, beta_pn=beta_pn,
+            beta_pn_version=beta_pn_version,
+            beta_compat_102=beta_compat_102, average_mode=average_mode,
         )
-        batched_final = torch.stack(all_final).reshape(m1.shape)
+        if selected == "v223":
+            angle_kwargs["compatibility"] = "v223"
+        angle_values = assemble_precession_msa_angles(
+            f_safe, m1, m2, s1, s2, **angle_kwargs,
+        )
+        geometry_kwargs = {"compatibility": "v223"} if selected == "v223" else {}
+        geom = source_frame_geometry(
+            m1, m2, s1[..., 0], s1[..., 1], s1[..., 2], s2[..., 0], s2[..., 1], s2[..., 2],
+            inc, phi0, fr, **geometry_kwargs,
+        )
+        geom_zero = source_frame_geometry(
+            m1, m2, s1[..., 0], s1[..., 1], s1[..., 2], s2[..., 0], s2[..., 1], s2[..., 2],
+            inc, torch.zeros_like(phi0), fr, **geometry_kwargs,
+        )
+        transverse_sq = (
+            torch.sum(s1[..., :2].square(), dim=-1) + torch.sum(s2[..., :2].square(), dim=-1)
+        )
+        legacy_aligned = transverse_sq <= 1.0e-28
+        exact_transverse_zero = (
+            torch.all(s1[..., :2] == 0.0, dim=-1) & torch.all(s2[..., :2] == 0.0, dim=-1)
+        )
+        if selected == "v223" and torch.any(legacy_aligned):
+            alpha_shift = torch.as_tensor(
+                math.pi, dtype=geom[0].dtype, device=geom[0].device,
+            )
+            geom = (torch.where(legacy_aligned, geom[0] + alpha_shift, geom[0]), *geom[1:])
+            geom_zero = (torch.where(legacy_aligned, geom_zero[0] + alpha_shift, geom_zero[0]), *geom_zero[1:])
+        transported_angles, composition_geometry, _transport = transport_msa_angles_for_phi_ref(
+            {"alpha": angle_values["alpha"], "gamma": angle_values["gamma"],
+             "cos_beta": angle_values["cos_beta"]},
+            geom_zero, geom, convention=convention, aligned=legacy_aligned,
+        )
+        if selected == "v223" and convention == 1 and torch.any(exact_transverse_zero):
+            endpoint_phi_j = _as_f64(
+                composition_geometry["phi_j"], device=f.device,
+            )
+            ep_u = endpoint_phi_j.unsqueeze(-1) if transported_angles["alpha"].ndim > endpoint_phi_j.ndim else endpoint_phi_j
+            exact_u = exact_transverse_zero.unsqueeze(-1) if transported_angles["alpha"].ndim > exact_transverse_zero.ndim else exact_transverse_zero
+            transported_angles["alpha"] = torch.where(
+                exact_u, transported_angles["alpha"] - ep_u, transported_angles["alpha"]
+            )
+            transported_angles["gamma"] = torch.where(
+                exact_u, transported_angles["gamma"] + ep_u, transported_angles["gamma"]
+            )
+        if final_spin_override is None:
+            rfinal, _ = _native_msa_final_spin(
+                m1, m2, s1, s2, fr, angle_values,
+                compatibility=selected,
+            )
+        else:
+            rfinal = _as_f64(final_spin_override, device=f.device).expand(m1.shape)
+
         hp, hc = compose_msa_waveform(
             f, m1, m2, s1[..., 2], s2[..., 2],
-            batched_angles, batched_geom, batched_final,
+            transported_angles, composition_geometry, rfinal,
             distance=dist, tc=tc_t, f_ref=fr, convention=convention,
             angle_order="alpha_beta_gamma", angles_are_absolute=False, xas_model=xas_model,
         )

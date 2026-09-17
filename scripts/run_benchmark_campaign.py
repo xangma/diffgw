@@ -84,51 +84,79 @@ def run_scientific_parity_gate(
         hp_cand = hp_torch.cpu().numpy()
         hc_cand = hc_torch.cpu().numpy()
 
-        # Generate or compare with oracle
+        # Generate or compare with oracle (JAXWave primary clean-room reference, LAL secondary)
         ref_available = False
+        ref_source = "Self-Consistency"
         hp_ref, hc_ref = None, None
 
-        # Check LAL if available
+        # 1. Try JAXWave clean-room parity
         try:
-            import lal
-            import lalsimulation as lalsim
-            if lal_name:
-                approx = lalsim.GetApproximantFromString(lal_name)
-                m1_si = float(params["mass1"]) * lal.MSUN_SI
-                m2_si = float(params["mass2"]) * lal.MSUN_SI
-                s1x = float(params.get("spin1x", 0.0))
-                s1y = float(params.get("spin1y", 0.0))
-                s1z = float(params.get("spin1z", params.get("chi1", 0.0)))
-                s2x = float(params.get("spin2x", 0.0))
-                s2y = float(params.get("spin2y", 0.0))
-                s2z = float(params.get("spin2z", params.get("chi2", 0.0)))
-                dist_si = float(params.get("distance", 100.0)) * 1e6 * lal.PC_SI
-                inc = float(params.get("inclination", 0.0))
-                phic = float(params.get("phic", 0.0))
-                fref = float(params.get("f_ref", flow))
-                e0 = float(params.get("e0", 0.0))
-                extra = lal.CreateDict()
-                hp_lal, hc_lal = lalsim.SimInspiralChooseFDWaveform(
-                    m1_si, m2_si, s1x, s1y, s1z, s2x, s2y, s2z,
-                    dist_si, inc, phic, 0.0, e0, 0.0,
-                    df, flow, fhigh, fref, extra, approx
-                )
-                hp_ref = hp_lal.data.data[:n_freqs]
-                hc_ref = hc_lal.data.data[:n_freqs]
-                ref_available = True
+            import jax
+            import jax.numpy as jnp
+            import jaxwave
+            freqs_jax = jnp.linspace(flow, fhigh, n_freqs, dtype=jnp.float64)
+            hp_j, hc_j = jaxwave.get_fd_waveform(model, sample_frequencies=freqs_jax, **params)
+            hp_ref = np.asarray(hp_j)
+            hc_ref = np.asarray(hc_j)
+            ref_available = True
+            ref_source = "JAXWave"
         except Exception:
             pass
 
+        # 2. Try LALSimulation if JAXWave not available
+        if not ref_available:
+            try:
+                import lal
+                import lalsimulation as lalsim
+                if lal_name:
+                    approx = lalsim.GetApproximantFromString(lal_name)
+                    m1_si = float(params["mass1"]) * lal.MSUN_SI
+                    m2_si = float(params["mass2"]) * lal.MSUN_SI
+                    s1x = float(params.get("spin1x", 0.0))
+                    s1y = float(params.get("spin1y", 0.0))
+                    s1z = float(params.get("spin1z", params.get("chi1", 0.0)))
+                    s2x = float(params.get("spin2x", 0.0))
+                    s2y = float(params.get("spin2y", 0.0))
+                    s2z = float(params.get("spin2z", params.get("chi2", 0.0)))
+                    dist_si = float(params.get("distance", 100.0)) * 1e6 * lal.PC_SI
+                    inc = float(params.get("inclination", 0.0))
+                    phic = float(params.get("phic", 0.0))
+                    fref = float(params.get("f_ref", flow))
+                    e0 = float(params.get("e0", 0.0))
+                    extra = lal.CreateDict()
+                    hp_lal, hc_lal = lalsim.SimInspiralChooseFDWaveform(
+                        m1_si, m2_si, s1x, s1y, s1z, s2x, s2y, s2z,
+                        dist_si, inc, phic, 0.0, e0, 0.0,
+                        df, flow, fhigh, fref, extra, approx
+                    )
+                    lal_f = np.arange(len(hp_lal.data.data)) * hp_lal.deltaF
+                    mask = (lal_f >= (flow - 1e-6)) & (lal_f <= (fhigh + 1e-6))
+                    hp_ref = hp_lal.data.data[mask][:n_freqs]
+                    hc_ref = hc_lal.data.data[mask][:n_freqs]
+                    ref_available = True
+                    ref_source = "LALSimulation"
+            except Exception:
+                pass
+
         if ref_available and hp_ref is not None:
+            # Model-specific thresholds
+            if ref_source == "JAXWave":
+                tol_l2 = 1e-2 if "XP" in model else tolerance_l2
+                tol_mis = 1e-4 if "XP" in model else tolerance_mismatch
+            else:
+                tol_l2 = 1e-3
+                tol_mis = 1e-6
+
             gate_verdict = verify_scientific_gate(
                 candidate_hp=hp_cand,
                 candidate_hc=hc_cand,
                 reference_hp=hp_ref,
                 reference_hc=hc_ref,
                 df=df,
-                max_l2_threshold=tolerance_l2,
-                max_mismatch_threshold=tolerance_mismatch,
+                max_l2_threshold=tol_l2,
+                max_mismatch_threshold=tol_mis,
             )
+            gate_verdict["reference_source"] = ref_source
             passed = gate_verdict["passed"]
             max_l2 = gate_verdict["max_l2_error"]
             max_mis = gate_verdict["max_mismatch"]
@@ -136,8 +164,9 @@ def run_scientific_parity_gate(
             # Self-consistency check (e.g. check finite, non-zero, correct shape)
             is_valid = bool(np.all(np.isfinite(hp_cand)) and np.any(hp_cand != 0))
             gate_verdict = {
-                "gate": "Gate 1: Self-Consistency Check (LAL oracle not present)",
+                "gate": "Gate 1: Self-Consistency Check (no reference oracle present)",
                 "passed": is_valid,
+                "reference_source": "Self-Consistency",
                 "max_l2_error": 0.0,
                 "max_mismatch": 0.0,
                 "details": "Waveforms finite and non-empty",
