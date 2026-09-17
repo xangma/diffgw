@@ -124,6 +124,12 @@ def run_scientific_parity_gate(
                     fref = float(params.get("f_ref", flow))
                     e0 = float(params.get("e0", 0.0))
                     extra = lal.CreateDict()
+                    if "lambda1" in params:
+                        lalsim.SimInspiralWaveformParamsInsertTidalLambda1(extra, float(params["lambda1"]))
+                    if "lambda2" in params:
+                        lalsim.SimInspiralWaveformParamsInsertTidalLambda2(extra, float(params["lambda2"]))
+                    if "prec_version" in params and hasattr(lalsim, "SimInspiralWaveformParamsInsertPhenomXPrecVersion"):
+                        lalsim.SimInspiralWaveformParamsInsertPhenomXPrecVersion(extra, int(params["prec_version"]))
                     hp_lal, hc_lal = lalsim.SimInspiralChooseFDWaveform(
                         m1_si, m2_si, s1x, s1y, s1z, s2x, s2y, s2z,
                         dist_si, inc, phic, 0.0, e0, 0.0,
@@ -192,7 +198,7 @@ def main():
     parser.add_argument(
         "--models",
         type=str,
-        default="TaylorF2,IMRPhenomD,IMRPhenomXAS,IMRPhenomXP",
+        default="TaylorF2,IMRPhenomD,IMRPhenomXAS,IMRPhenomXP,IMRPhenomXHM",
         help="Comma-separated model names.",
     )
     parser.add_argument(
@@ -253,6 +259,11 @@ def main():
         action="store_true",
         help="Automatically generate publication plots from benchmark results.",
     )
+    parser.add_argument(
+        "--gate-only",
+        action="store_true",
+        help="Run only Gate 1 Scientific Qualification and exit.",
+    )
 
     args = parser.parse_args()
 
@@ -286,6 +297,10 @@ def main():
             sys.exit(1)
     else:
         gate_summary = {"skipped": True}
+
+    if args.gate_only:
+        print("\n[Gate Only] Gate 1 parity checks complete. Exiting as requested.")
+        sys.exit(0 if gate_summary.get("all_passed", True) else 1)
 
     all_benchmarks = []
 

@@ -11,7 +11,7 @@ Generates standardized figures from sealed DiffGW benchmark receipts:
 import argparse
 import json
 from pathlib import Path
-from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional, Union
 
 import matplotlib
 matplotlib.use("Agg")
@@ -40,11 +40,30 @@ def configure_matplotlib_style():
     })
 
 
-def load_benchmark_data(receipt_path: Path) -> Dict[str, Any]:
-    """Load benchmark receipt and normalize schema if needed."""
-    with open(receipt_path, "r") as f:
-        data = json.load(f)
-    return data
+def load_benchmark_data(receipt_paths: Union[Path, List[Path]]) -> Dict[str, Any]:
+    """Load benchmark receipts and merge them with deduplication."""
+    if isinstance(receipt_paths, Path):
+        receipt_paths = [receipt_paths]
+
+    all_benchmarks_map = {}
+    merged_provenance = {}
+
+    for p in receipt_paths:
+        with open(p, "r") as f:
+            data = json.load(f)
+        if not merged_provenance:
+            merged_provenance = data.get("provenance", data.get("metadata", {}))
+        for b in data.get("benchmarks", []):
+            key = (
+                b.get("framework"),
+                b.get("model"),
+                b.get("batch_size"),
+                b.get("device"),
+                b.get("dtype"),
+            )
+            all_benchmarks_map[key] = b
+
+    return {"benchmarks": list(all_benchmarks_map.values()), "provenance": merged_provenance}
 
 
 def plot_throughput_vs_batch(
@@ -283,12 +302,12 @@ def plot_model_comparison_bar(
     print(f"  -> Generated: {out_png}")
 
 
-def plot_all_figures(receipt_path: Path, output_dir: Path):
-    """Load benchmark receipt and render all four publication-grade figures."""
+def plot_all_figures(receipt_paths: Union[Path, List[Path]], output_dir: Path):
+    """Load benchmark receipt(s) and render all four publication-grade figures."""
     configure_matplotlib_style()
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    data = load_benchmark_data(receipt_path)
+    data = load_benchmark_data(receipt_paths)
     benchmarks = data.get("benchmarks", [])
     provenance = data.get("provenance", data.get("metadata", {}))
 
@@ -302,17 +321,19 @@ def plot_all_figures(receipt_path: Path, output_dir: Path):
 
 def main():
     parser = argparse.ArgumentParser(description="Generate publication figures from DiffGW benchmark receipts.")
-    parser.add_argument("--input", "-i", type=str, required=True, help="Path to benchmark JSON receipt.")
+    parser.add_argument("--input", "-i", type=str, required=True, help="Path(s) to benchmark JSON receipt(s), comma-separated.")
     parser.add_argument("--output-dir", "-o", type=str, default=None, help="Directory to save output figures.")
     args = parser.parse_args()
 
-    input_path = Path(args.input)
-    if not input_path.exists():
-        print(f"Error: Input file not found: {input_path}")
-        sys.exit(1)
+    raw_inputs = [p.strip() for p in args.input.split(",") if p.strip()]
+    input_paths = [Path(p) for p in raw_inputs]
+    for p in input_paths:
+        if not p.exists():
+            print(f"Error: Input file not found: {p}")
+            sys.exit(1)
 
-    out_dir = Path(args.output_dir) if args.output_dir else input_path.parent / "plots"
-    plot_all_figures(input_path, out_dir)
+    out_dir = Path(args.output_dir) if args.output_dir else input_paths[0].parent / "plots"
+    plot_all_figures(input_paths, out_dir)
 
 
 if __name__ == "__main__":

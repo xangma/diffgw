@@ -88,6 +88,7 @@ DEFAULT_MODEL_SPECS: Dict[str, Dict[str, Any]] = {
             "spin1x": 0.2, "spin1y": 0.1, "spin1z": 0.2,
             "spin2x": -0.1, "spin2y": 0.15, "spin2z": -0.1,
             "f_ref": 20.0, "inclination": 0.7,
+            "prec_version": 223,
         },
         "grid": {"flow": 20.0, "fhigh": 512.0, "df": 0.25},
         "lal_name": "IMRPhenomXPHM",
@@ -130,7 +131,7 @@ DEFAULT_MODEL_SPECS: Dict[str, Dict[str, Any]] = {
 }
 
 ALL_MODELS = list(DEFAULT_MODEL_SPECS.keys())
-POPULAR_MODELS = ["TaylorF2", "IMRPhenomD", "IMRPhenomXAS", "IMRPhenomXP", "IMRPhenomD_NRTidalv2"]
+POPULAR_MODELS = ["TaylorF2", "IMRPhenomD", "IMRPhenomXAS", "IMRPhenomXP", "IMRPhenomXHM", "IMRPhenomD_NRTidalv2"]
 
 
 def _has_lal() -> bool:
@@ -227,6 +228,8 @@ def benchmark_lal_model(
         lalsim.SimInspiralWaveformParamsInsertTidalLambda1(extra, float(params["lambda1"]))
     if "lambda2" in params:
         lalsim.SimInspiralWaveformParamsInsertTidalLambda2(extra, float(params["lambda2"]))
+    if "prec_version" in params and hasattr(lalsim, "SimInspiralWaveformParamsInsertPhenomXPrecVersion"):
+        lalsim.SimInspiralWaveformParamsInsertPhenomXPrecVersion(extra, int(params["prec_version"]))
 
     # Warmup
     for _ in range(warmup):
