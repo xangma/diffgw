@@ -5,7 +5,7 @@
 - **`torchwave`**: Native PyTorch implementation optimized for CPU, NVIDIA CUDA, and Apple Silicon MPS, with autograd and batched tensor computation `(B,) -> (B, N)`.
 - **`jaxwave`**: Native JAX implementation with automatic FP64 precision, `@jax.jit` XLA compilation, `jax.vmap` batch vectorization, and reverse/forward-mode automatic differentiation (`jax.grad`, `jax.jacfwd`).
 
-Both packages operate under strict clean-room principles with **zero runtime dependency on LAL**.
+Both packages are fully self-contained Python libraries requiring only standard scientific dependencies, distributed under the permissive **MIT License**.
 
 ---
 
@@ -675,14 +675,51 @@ torchwave-data verify seobnrv4-rom-v3
 ```
 
 ### `torchwave-generate-qnm`
-Generate clean-room Kerr quasinormal mode tables directly from the Leaver continued-fraction eigenproblem:
+Generate Kerr quasinormal mode tables directly from the Leaver continued-fraction eigenproblem:
 ```bash
 torchwave-generate-qnm --output-dir ./qnm_data --modes 2,2,0
 ```
 
 ### `torchwave-generate-london-qnm`
-Recompute the clean-room London $N=61$ quasinormal mode polynomial fits:
+Recompute the London $N=61$ quasinormal mode polynomial fits:
 ```bash
 torchwave-generate-london-qnm --output-dir ./london_qnm
 ```
+
+---
+
+## Controlled Benchmarking Protocol
+
+`diffgw` implements a formal, reproducible benchmarking methodology adapted from PyCBC's controlled benchmark protocol, enforcing Gate 1 scientific parity qualification before timing measurements, capturing machine-readable hardware provenance, computing 2,000-sample bootstrap 95% confidence intervals, and sealing receipts with SHA-256 cryptographic hashes (`SCHEMA_VERSION = 1`).
+
+For the full protocol specification, see [**docs/benchmarking_protocol.md**](benchmarking_protocol.md).
+
+### Running a Multi-Backend Benchmark Campaign
+The benchmark runner sweeps across all requested backends (`torchwave`, `jaxwave`, `lalsimulation`, `ripple`), devices, and batch sizes:
+```bash
+python scripts/run_benchmark_campaign.py \
+    --models TaylorF2,IMRPhenomD,IMRPhenomXAS,IMRPhenomXP \
+    --backends torch,jax,lal,ripple \
+    --devices cuda,cpu \
+    --cuda-batch-sizes 1,10,100,1000 \
+    --cpu-batch-sizes 1,10,100 \
+    --dtypes float64,float32 \
+    --iterations 15 \
+    --warmup 3 \
+    --output artifacts/benchmarks/benchmark_receipt.json \
+    --plot
+```
+
+### Generating Publication Figures
+To render publication-grade plots from any sealed benchmark receipt:
+```bash
+python scripts/plot_benchmark_results.py \
+    --input artifacts/benchmarks/benchmark_receipt.json \
+    --output-dir artifacts/benchmarks/plots
+```
+This generates:
+1. `fig1_throughput_vs_batch`: Throughput scaling vs. batch size across backends and devices.
+2. `fig2_latency_vs_batch`: Per-waveform generation latency and CPU/GPU amortization crossovers.
+3. `fig3_speedup_vs_lal`: Speedup relative to single-core C LALSimulation oracle.
+4. `fig4_model_breakdown_bar`: Cross-model throughput breakdown across batch scales.
 

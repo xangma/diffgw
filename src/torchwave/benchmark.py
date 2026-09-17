@@ -10,6 +10,7 @@ Can be run programmatically or via CLI:
 """
 
 import argparse
+import contextlib
 import copy
 import json
 import os
@@ -22,6 +23,7 @@ import numpy as np
 import torch
 
 from torchwave.waveforms import get_fd_waveform
+from torchwave.protocol import calculate_sample_statistics
 
 # Canonical parameters for all 17 catalog models
 DEFAULT_MODEL_SPECS: Dict[str, Dict[str, Any]] = {
@@ -246,15 +248,14 @@ def benchmark_lal_model(
         t1 = time.perf_counter()
         timings.append((t1 - t0) * 1000.0)  # ms
 
-    timings = np.array(timings)
-    mean_ms = float(np.mean(timings))
-    return {
-        "mean_ms": mean_ms,
-        "std_ms": float(np.std(timings)),
-        "median_ms": float(np.median(timings)),
-        "min_ms": float(np.min(timings)),
-        "wf_per_sec": 1000.0 / mean_ms if mean_ms > 0 else 0.0,
-    }
+    stats = calculate_sample_statistics(timings, batch_size=1)
+    stats.update({
+        "framework": "lalsimulation",
+        "device": "cpu",
+        "dtype": "float64",
+        "lal_name": lal_name,
+    })
+    return stats
 
 
 def benchmark_torchwave_model(
@@ -291,81 +292,302 @@ def benchmark_torchwave_model(
                 kw[k] = v
         return kw
 
-    # Warmup
-    for _ in range(warmup):
-        inputs = make_inputs(req_grad=measure_backward)
-        hp, hc = get_fd_waveform(
-            model_name,
-            sample_frequencies=freqs,
-            device=device,
-            dtype=dtype,
-            **inputs,
-        )
-        if measure_backward:
-            loss = (hp.abs().sum() + hc.abs().sum())
-            loss.backward()
-        sync_device(device)
+    ctx = contextlib.nullcontext() if measure_backward else torch.inference_mode()
 
-    # Measurement
-    fwd_times: List[float] = []
-    bwd_times: List[float] = []
-    total_times: List[float] = []
-
-    for _ in range(iterations):
-        inputs = make_inputs(req_grad=measure_backward)
-
-        sync_device(device)
-        t_start = time.perf_counter()
-
-        hp, hc = get_fd_waveform(
-            model_name,
-            sample_frequencies=freqs,
-            device=device,
-            dtype=dtype,
-            **inputs,
-        )
-        sync_device(device)
-        t_fwd_end = time.perf_counter()
-
-        if measure_backward:
-            loss = (hp.abs().sum() + hc.abs().sum())
-            loss.backward()
+    with ctx:
+        # Warmup
+        for _ in range(warmup):
+            inputs = make_inputs(req_grad=measure_backward)
+            hp, hc = get_fd_waveform(
+                model_name,
+                sample_frequencies=freqs,
+                device=device,
+                dtype=dtype,
+                **inputs,
+            )
+            if measure_backward:
+                loss = (hp.abs().sum() + hc.abs().sum())
+                loss.backward()
             sync_device(device)
-            t_bwd_end = time.perf_counter()
-            bwd_times.append((t_bwd_end - t_fwd_end) * 1000.0)
-            total_times.append((t_bwd_end - t_start) * 1000.0)
-        else:
-            total_times.append((t_fwd_end - t_start) * 1000.0)
 
-        fwd_times.append((t_fwd_end - t_start) * 1000.0)
+        # Measurement
+        fwd_times: List[float] = []
+        bwd_times: List[float] = []
+        total_times: List[float] = []
 
-    fwd_arr = np.array(fwd_times)
-    total_arr = np.array(total_times)
-    mean_total_ms = float(np.mean(total_arr))
+        for _ in range(iterations):
+            inputs = make_inputs(req_grad=measure_backward)
 
-    wf_per_sec = (batch_size * 1000.0) / mean_total_ms if mean_total_ms > 0 else 0.0
+            sync_device(device)
+            t_start = time.perf_counter()
 
-    res: Dict[str, Any] = {
+            hp, hc = get_fd_waveform(
+                model_name,
+                sample_frequencies=freqs,
+                device=device,
+                dtype=dtype,
+                **inputs,
+            )
+            sync_device(device)
+            t_fwd_end = time.perf_counter()
+
+            if measure_backward:
+                loss = (hp.abs().sum() + hc.abs().sum())
+                loss.backward()
+                sync_device(device)
+                t_bwd_end = time.perf_counter()
+                bwd_times.append((t_bwd_end - t_fwd_end) * 1000.0)
+                total_times.append((t_bwd_end - t_start) * 1000.0)
+            else:
+                total_times.append((t_fwd_end - t_start) * 1000.0)
+
+            fwd_times.append((t_fwd_end - t_start) * 1000.0)
+
+    stats = calculate_sample_statistics(total_times, batch_size)
+    stats.update({
+        "framework": "torchwave",
         "model": model_name,
         "batch_size": batch_size,
         "device": str(device),
         "dtype": str(dtype).replace("torch.", ""),
         "n_freq_bins": n_freqs,
         "iterations": iterations,
-        "mean_ms": mean_total_ms,
-        "std_ms": float(np.std(total_arr)),
-        "median_ms": float(np.median(total_arr)),
-        "min_ms": float(np.min(total_arr)),
-        "max_ms": float(np.max(total_arr)),
-        "p95_ms": float(np.percentile(total_arr, 95)),
-        "wf_per_sec": wf_per_sec,
-    }
+    })
 
     if measure_backward:
-        res["forward_mean_ms"] = float(np.mean(fwd_arr))
-        res["backward_mean_ms"] = float(np.mean(bwd_times))
+        stats["forward_mean_ms"] = float(np.mean(fwd_times))
+        stats["backward_mean_ms"] = float(np.mean(bwd_times))
 
-    return res
+    return stats
+
+
+def benchmark_jaxwave_model(
+    model_name: str,
+    batch_size: int,
+    grid: Dict[str, float],
+    params: Dict[str, Any],
+    iterations: int = 20,
+    warmup: int = 5,
+    use_jit: bool = True,
+    device_name: str = "cpu",
+) -> Optional[Dict[str, Any]]:
+    """Benchmark jaxwave waveform generation."""
+    try:
+        import jax
+        import jax.numpy as jnp
+        import jaxwave
+    except ImportError:
+        return None
+
+    flow = float(grid["flow"])
+    fhigh = float(grid["fhigh"])
+    df = float(grid["df"])
+    n_freqs = int(round((fhigh - flow) / df)) + 1
+    freqs = jnp.linspace(flow, fhigh, n_freqs, dtype=jnp.float64)
+
+    kw = {}
+    for k, v in params.items():
+        if isinstance(v, (int, float)):
+            if batch_size > 1:
+                kw[k] = jnp.full((batch_size,), float(v), dtype=jnp.float64)
+            else:
+                kw[k] = float(v)
+        else:
+            kw[k] = v
+
+    def eval_fn(frequencies, **kwargs):
+        return jaxwave.get_fd_waveform(model_name, sample_frequencies=frequencies, **kwargs)
+
+    if use_jit:
+        eval_fn = jax.jit(eval_fn)
+
+    # Warmup / JIT compile
+    t0_compile = time.perf_counter()
+    for _ in range(warmup):
+        res = eval_fn(freqs, **kw)
+        if isinstance(res, tuple):
+            res[0].block_until_ready()
+            res[1].block_until_ready()
+    t_compile = (time.perf_counter() - t0_compile) * 1000.0
+
+    timings = []
+    for _ in range(iterations):
+        t0 = time.perf_counter()
+        res = eval_fn(freqs, **kw)
+        if isinstance(res, tuple):
+            res[0].block_until_ready()
+            res[1].block_until_ready()
+        t1 = time.perf_counter()
+        timings.append((t1 - t0) * 1000.0)
+
+    stats = calculate_sample_statistics(timings, batch_size)
+    stats.update({
+        "framework": "jaxwave",
+        "model": model_name,
+        "batch_size": batch_size,
+        "device": device_name,
+        "dtype": "float64",
+        "use_jit": use_jit,
+        "compile_warmup_ms": round(t_compile, 2),
+        "n_freq_bins": n_freqs,
+        "iterations": iterations,
+    })
+    return stats
+
+
+def benchmark_ripple_model(
+    model_name: str,
+    batch_size: int,
+    grid: Dict[str, float],
+    params: Dict[str, Any],
+    iterations: int = 20,
+    warmup: int = 5,
+    use_jit: bool = True,
+    device_name: str = "cpu",
+) -> Optional[Dict[str, Any]]:
+    """Benchmark ripple JAX waveform generation if ripple / ripplegw is installed."""
+    try:
+        import jax
+        import jax.numpy as jnp
+        has_ripplegw = False
+        try:
+            import ripplegw
+            has_ripplegw = True
+        except ImportError:
+            import ripple
+            from ripple import waveforms as r_waveforms
+    except ImportError:
+        return None
+
+    flow = float(grid["flow"])
+    fhigh = float(grid["fhigh"])
+    df = float(grid["df"])
+    n_freqs = int(round((fhigh - flow) / df)) + 1
+    freqs = jnp.linspace(flow, fhigh, n_freqs, dtype=jnp.float64)
+
+    m1 = float(params["mass1"])
+    m2 = float(params["mass2"])
+    s1z = float(params.get("spin1z", params.get("chi1", 0.0)))
+    s2z = float(params.get("spin2z", params.get("chi2", 0.0)))
+    dist = float(params.get("distance", 100.0))
+    tc = 0.0
+    phic = float(params.get("phic", 0.0))
+    incl = float(params.get("inclination", 0.0))
+    fref = float(params.get("f_ref", flow))
+
+    if has_ripplegw:
+        if model_name not in ripplegw.list_waveforms():
+            return None
+        wf = ripplegw.waveform(model_name, f_ref=fref)
+        Mc, eta = ripplegw.conversions.ms_to_Mc_eta(jnp.array([m1, m2]))
+        p_dict = {}
+        for p_name in wf.parameter_names:
+            if p_name == "M_c":
+                val = Mc
+            elif p_name == "eta":
+                val = eta
+            elif p_name in ("s1_z", "s1z"):
+                val = s1z
+            elif p_name in ("s2_z", "s2z"):
+                val = s2z
+            elif p_name in ("s1_x", "s1x"):
+                val = float(params.get("spin1x", 0.0))
+            elif p_name in ("s1_y", "s1y"):
+                val = float(params.get("spin1y", 0.0))
+            elif p_name in ("s2_x", "s2x"):
+                val = float(params.get("spin2x", 0.0))
+            elif p_name in ("s2_y", "s2y"):
+                val = float(params.get("spin2y", 0.0))
+            elif p_name == "d_L":
+                val = dist
+            elif p_name in ("phase_c", "phi_c"):
+                val = phic
+            elif p_name in ("iota", "inclination"):
+                val = incl
+            elif p_name in ("lambda_1", "lambda1"):
+                val = float(params.get("lambda1", 0.0))
+            elif p_name in ("lambda_2", "lambda2"):
+                val = float(params.get("lambda2", 0.0))
+            else:
+                val = float(params.get(p_name, 0.0))
+
+            if batch_size > 1:
+                p_dict[p_name] = jnp.full((batch_size,), val, dtype=jnp.float64)
+            else:
+                p_dict[p_name] = jnp.float64(val)
+
+        if batch_size > 1:
+            def gen_fn(p, f):
+                return jax.vmap(wf, in_axes=(None, 0))(f, p)
+        else:
+            def gen_fn(p, f):
+                return wf(f, p)
+
+        arg_input = p_dict
+    else:
+        ripple_model_map = {
+            "TaylorF2": getattr(r_waveforms, "TaylorF2", None),
+            "IMRPhenomD": getattr(r_waveforms, "IMRPhenomD", None),
+            "IMRPhenomPv2": getattr(r_waveforms, "IMRPhenomPv2", None),
+            "IMRPhenomXAS": getattr(r_waveforms, "IMRPhenomXAS", None),
+        }
+        r_mod = ripple_model_map.get(model_name)
+        if r_mod is None:
+            return None
+
+        theta = jnp.array([m1, m2, s1z, s2z, dist, tc, phic, incl], dtype=jnp.float64)
+        if batch_size > 1:
+            arg_input = jnp.tile(theta, (batch_size, 1))
+            def gen_fn(t_batch, f):
+                return jax.vmap(lambda t: r_mod.gen_waveform(f, t, f_ref=fref))(t_batch)
+        else:
+            arg_input = theta
+            def gen_fn(t_scalar, f):
+                return r_mod.gen_waveform(f, t_scalar, f_ref=fref)
+
+    if use_jit:
+        gen_fn = jax.jit(gen_fn)
+
+    def _sync(res):
+        if isinstance(res, dict):
+            for v in res.values():
+                if hasattr(v, "block_until_ready"):
+                    v.block_until_ready()
+        elif isinstance(res, (tuple, list)):
+            for v in res:
+                if hasattr(v, "block_until_ready"):
+                    v.block_until_ready()
+        elif hasattr(res, "block_until_ready"):
+            res.block_until_ready()
+
+    # Warmup
+    t0_compile = time.perf_counter()
+    for _ in range(warmup):
+        res = gen_fn(arg_input, freqs)
+        _sync(res)
+    t_compile = (time.perf_counter() - t0_compile) * 1000.0
+
+    timings = []
+    for _ in range(iterations):
+        t0 = time.perf_counter()
+        res = gen_fn(arg_input, freqs)
+        _sync(res)
+        t1 = time.perf_counter()
+        timings.append((t1 - t0) * 1000.0)
+
+    stats = calculate_sample_statistics(timings, batch_size)
+    stats.update({
+        "framework": "ripple",
+        "model": model_name,
+        "batch_size": batch_size,
+        "device": device_name,
+        "dtype": "float64",
+        "use_jit": use_jit,
+        "compile_warmup_ms": round(t_compile, 2),
+        "n_freq_bins": n_freqs,
+        "iterations": iterations,
+    })
+    return stats
 
 
 def run_benchmark_suite(

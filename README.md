@@ -5,7 +5,7 @@
 - **`torchwave`**: Built natively in PyTorch for CPU, NVIDIA CUDA, and Apple Silicon MPS, featuring batched tensor computation `(B,) -> (B, N)` and autograd differentiation.
 - **`jaxwave`**: Built natively in JAX for CPU, NVIDIA CUDA GPU, and TPU, featuring XLA just-in-time compilation (`@jax.jit`), automatic vectorization (`jax.vmap`), and forward/reverse-mode automatic differentiation (`jax.grad`, `jax.jacfwd`).
 
-Both frontends operate under strict clean-room principles with **zero runtime dependency on LAL**. All core waveform models, calibration surfaces, and generated Kerr quasinormal mode runtime data are distributed under the **MIT License**. Optional external datasets (such as `SEOBNRv4ROM_v3.0.hdf5`) are managed outside the repository via `torchwave-data` under their respective upstream terms; see [third-party notices](THIRD_PARTY_NOTICES.md).
+Both frontends are fully self-contained, pure Python packages distributed under the permissive **MIT License**, requiring only PyTorch or JAX and standard scientific Python dependencies. All waveform models, calibration surfaces, and ringdown solvers are independently implemented from published peer-reviewed literature. Optional external datasets (such as `SEOBNRv4ROM_v3.0.hdf5`) can be managed seamlessly via `diffgw-data`; see [third-party notices](THIRD_PARTY_NOTICES.md).
 
 ---
 
@@ -32,8 +32,8 @@ You can install `diffgw` in editable mode with your choice of backends:
 
 ```bash
 # Clone the repository
-git clone https://github.com/xangma/torchwave.git
-cd torchwave
+git clone https://github.com/xangma/diffgw.git
+cd diffgw
 
 # Option 1: Install with PyTorch support only
 pip install -e ".[torch]"
@@ -147,12 +147,24 @@ import diffgw
 
 # Dispatch to PyTorch
 hp_torch, hc_torch = diffgw.get_fd_waveform(
-    approximant="IMRPhenomD", mass1=30.0, mass2=25.0, backend="torch"
+    approximant="IMRPhenomD",
+    mass1=30.0,
+    mass2=25.0,
+    f_lower=20.0,
+    f_final=512.0,
+    delta_f=0.25,
+    backend="torch",
 )
 
 # Dispatch to JAX
 hp_jax, hc_jax = diffgw.get_fd_waveform(
-    approximant="IMRPhenomD", mass1=30.0, mass2=25.0, backend="jax"
+    approximant="IMRPhenomD",
+    mass1=30.0,
+    mass2=25.0,
+    f_lower=20.0,
+    f_final=512.0,
+    delta_f=0.25,
+    backend="jax",
 )
 ```
 
@@ -188,17 +200,18 @@ The package includes standalone console scripts for benchmarking, profiling, dat
 1. **`torchwave-bench`**: Benchmark models across batch sizes, hardware platforms, and autograd backward passes.
 2. **`torchwave-profile`**: Profile kernel execution, CUDA memory allocations, and cProfile hotspots.
 3. **`torchwave-data`**: Inspect and download optional external ROM assets (e.g. `seobnrv4-rom-v3`).
-4. **`torchwave-generate-qnm`**: Clean-room Kerr QNM tables computed from the Leaver continued-fraction eigensolver.
+4. **`torchwave-generate-qnm`**: Kerr QNM tables computed directly from the Leaver continued-fraction eigensolver.
 5. **`torchwave-generate-london-qnm`**: London $N=61$ polynomial fits for higher-harmonic ringdown models.
 
 ---
 
 ## Scientific Validation and Provenance
 
-`diffgw` operates under strict clean-room principles. All formulas are derived directly from primary peer-reviewed literature. See:
+All waveform models, phasing routines, and calibration surfaces in `diffgw` are derived directly from published peer-reviewed literature and independently verified against standard reference implementations. See:
 - [**CITATIONS.md**](CITATIONS.md) for literature bibliography.
 - [**docs/provenance_ledger.md**](docs/provenance_ledger.md) for full mathematical derivation and coefficient ledger.
 - [**docs/differences_from_lal.md**](docs/differences_from_lal.md) for technical descriptions and comparisons with reference implementations.
+- [**docs/benchmarking_protocol.md**](docs/benchmarking_protocol.md) for the controlled benchmarking methodology, Gate 1 scientific parity enforcement, and cryptographic receipt sealing.
 - [**docs/usage.md**](docs/usage.md) for comprehensive API documentation.
 
 ### Cross-Framework Parity Tests

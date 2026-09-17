@@ -13,6 +13,7 @@ Can be run programmatically or via CLI:
 """
 
 import argparse
+import contextlib
 import cProfile
 import io
 import json
@@ -45,6 +46,7 @@ def run_torch_profiler(
     sort_by: str = "cpu_time_total",
     measure_backward: bool = False,
     trace_path: Optional[str] = None,
+    profile_memory: bool = False,
 ) -> str:
     """Profile waveform generation using PyTorch's native profiler."""
     flow = float(grid["flow"])
@@ -67,13 +69,16 @@ def run_torch_profiler(
         else:
             kw[k] = v
 
+    ctx = contextlib.nullcontext() if measure_backward else torch.inference_mode()
+
     # Warmup
-    hp, hc = get_fd_waveform(
-        model_name, sample_frequencies=freqs, device=device, dtype=dtype, **kw
-    )
-    if measure_backward:
-        (hp.abs().sum() + hc.abs().sum()).backward()
-    sync_device(device)
+    with ctx:
+        hp, hc = get_fd_waveform(
+            model_name, sample_frequencies=freqs, device=device, dtype=dtype, **kw
+        )
+        if measure_backward:
+            (hp.abs().sum() + hc.abs().sum()).backward()
+        sync_device(device)
 
     activities = [torch.profiler.ProfilerActivity.CPU]
     if device.type == "cuda" and torch.cuda.is_available():
@@ -82,18 +87,19 @@ def run_torch_profiler(
     with torch.profiler.profile(
         activities=activities,
         record_shapes=True,
-        profile_memory=True,
+        profile_memory=profile_memory,
         with_stack=False,
     ) as prof:
-        with torch.profiler.record_function(f"{model_name}_generation"):
-            hp, hc = get_fd_waveform(
-                model_name, sample_frequencies=freqs, device=device, dtype=dtype, **kw
-            )
-            if measure_backward:
-                with torch.profiler.record_function(f"{model_name}_backward"):
-                    loss = (hp.abs().sum() + hc.abs().sum())
-                    loss.backward()
-            sync_device(device)
+        with ctx:
+            with torch.profiler.record_function(f"{model_name}_generation"):
+                hp, hc = get_fd_waveform(
+                    model_name, sample_frequencies=freqs, device=device, dtype=dtype, **kw
+                )
+                if measure_backward:
+                    with torch.profiler.record_function(f"{model_name}_backward"):
+                        loss = (hp.abs().sum() + hc.abs().sum())
+                        loss.backward()
+                sync_device(device)
 
     if trace_path:
         prof.export_chrome_trace(trace_path)
