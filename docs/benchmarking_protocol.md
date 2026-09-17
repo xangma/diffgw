@@ -103,4 +103,6 @@ Benchmark receipts feed directly into automated plotting tools (`scripts/plot_be
 3. **Figure 3: Speedup vs. LALSimulation**:
    - Speedup factor normalized directly to single-core C LALSimulation ($t_{\text{LAL}} / t_{\text{backend}}$).
 4. **Figure 4: Cross-Model Approximant Breakdown**:
-   - Multi-model bar chart comparing non-spinning (`TaylorF2`), aligned-spin (`IMRPhenomD`, `IMRPhenomXAS`), and precessing (`IMRPhenomXP`) models.
+   - Multi-model bar chart comparing non-spinning (`TaylorF2`), aligned-spin (`IMRPhenomD`, `IMRPhenomXAS`), precessing (`IMRPhenomXP`), and higher-harmonic (`IMRPhenomXHM`) models.
+
+For a detailed walkthrough of the generated figures, hardware scaling on the RTX 5090, and physical interpretation of the results, see [**docs/performance.md**](performance.md).

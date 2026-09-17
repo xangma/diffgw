@@ -212,6 +212,7 @@ All waveform models, phasing routines, and calibration surfaces in `diffgw` are 
 - [**docs/provenance_ledger.md**](docs/provenance_ledger.md) for full mathematical derivation and coefficient ledger.
 - [**docs/differences_from_lal.md**](docs/differences_from_lal.md) for technical descriptions and comparisons with reference implementations.
 - [**docs/benchmarking_protocol.md**](docs/benchmarking_protocol.md) for the controlled benchmarking methodology, Gate 1 scientific parity enforcement, and cryptographic receipt sealing.
+- [**docs/performance.md**](docs/performance.md) for the detailed performance analysis, figure walkthrough, and RTX 5090 scaling benchmarks.
 - [**docs/usage.md**](docs/usage.md) for comprehensive API documentation.
 
 ### Cross-Framework Parity Tests
