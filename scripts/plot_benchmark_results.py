@@ -80,6 +80,7 @@ def plot_throughput_vs_batch(
     benchmarks: List[Dict[str, Any]],
     output_dir: Path,
     provenance: Optional[Dict[str, Any]] = None,
+    all_lines: bool = False,
 ):
     """Figure 1: Throughput (wf/s) vs. Batch Size for all models."""
     available_models = list(set(b["model"] for b in benchmarks if "model" in b))
@@ -87,25 +88,44 @@ def plot_throughput_vs_batch(
     if not models:
         return
 
-    fig, axes = plt.subplots(1, len(models), figsize=(5.2 * len(models), 5.5), squeeze=False)
+    fig, axes = plt.subplots(1, len(models), figsize=(5.0 * len(models), 4.8), squeeze=False)
     axes = axes[0]
 
-    colors = {
-        ("torchwave_compiled", "cuda", "float64"): ("#0044aa", "P-", "Torch CUDA FP64 (Compiled)"),
-        ("torchwave_compiled", "cuda", "float32"): ("#0088cc", "X--", "Torch CUDA FP32 (Compiled)"),
-        ("torchwave_compiled", "cpu", "float64"): ("#b2182b", "v-", "Torch CPU FP64 (Compiled)"),
-        ("torchwave", "cuda", "float64"): ("#1f77b4", "o-", "Torch CUDA FP64 (Eager)"),
-        ("torchwave", "cuda", "float32"): ("#17becf", "s--", "Torch CUDA FP32 (Eager)"),
-        ("torchwave", "cpu", "float64"): ("#ff7f0e", "^-", "Torch CPU FP64 (Eager)"),
-        ("torchwave", "cpu", "float32"): ("#bcbd22", "v--", "Torch CPU FP32 (Eager)"),
-        ("jaxwave", "cpu", "float64"): ("#2ca02c", "d-", "JAX CPU FP64"),
-        ("jaxwave", "cuda", "float64"): ("#98df8a", "D-", "JAX CUDA FP64"),
-        ("ripple", "cuda", "float64"): ("#9467bd", "p-", "Ripple CUDA"),
-        ("ripple", "cpu", "float64"): ("#8c564b", "v-", "Ripple CPU FP64"),
-    }
+    has_cuda = any(b.get("device") == "cuda" for b in benchmarks)
+
+    if all_lines:
+        colors = {
+            ("torchwave_compiled", "cuda", "float64"): ("#0044aa", "P-", "Torch CUDA FP64 (Compiled)"),
+            ("torchwave_compiled", "cuda", "float32"): ("#0088cc", "X--", "Torch CUDA FP32 (Compiled)"),
+            ("torchwave_compiled", "cpu", "float64"): ("#b2182b", "v-", "Torch CPU FP64 (Compiled)"),
+            ("torchwave", "cuda", "float64"): ("#1f77b4", "o-", "Torch CUDA FP64 (Eager)"),
+            ("torchwave", "cuda", "float32"): ("#17becf", "s--", "Torch CUDA FP32 (Eager)"),
+            ("torchwave", "cpu", "float64"): ("#ff7f0e", "^-", "Torch CPU FP64 (Eager)"),
+            ("torchwave", "cpu", "float32"): ("#bcbd22", "v--", "Torch CPU FP32 (Eager)"),
+            ("jaxwave", "cpu", "float64"): ("#2ca02c", "d-", "JAX CPU FP64"),
+            ("jaxwave", "cuda", "float64"): ("#98df8a", "D-", "JAX CUDA FP64"),
+            ("ripple", "cuda", "float64"): ("#9467bd", "p-", "Ripple CUDA"),
+            ("ripple", "cpu", "float64"): ("#8c564b", "v-", "Ripple CPU FP64"),
+        }
+    elif has_cuda:
+        # Standard publication view: FP64 GPU comparison (uncluttered, no redundant CPU/FP32 flatlines)
+        colors = {
+            ("torchwave_compiled", "cuda", "float64"): ("#08519c", "P-", "TorchWave (Compiled)"),
+            ("torchwave", "cuda", "float64"): ("#4292c6", "o--", "TorchWave (Eager)"),
+            ("jaxwave", "cuda", "float64"): ("#238b45", "D-", "JAXWave (CUDA)"),
+            ("ripple", "cuda", "float64"): ("#807dba", "p-", "Ripple (CUDA)"),
+        }
+    else:
+        # CPU-only publication view
+        colors = {
+            ("torchwave_compiled", "cpu", "float64"): ("#b2182b", "P-", "TorchWave (Compiled)"),
+            ("torchwave", "cpu", "float64"): ("#ff7f0e", "o-", "TorchWave (CPU)"),
+            ("jaxwave", "cpu", "float64"): ("#2ca02c", "d-", "JAXWave (CPU)"),
+            ("ripple", "cpu", "float64"): ("#8c564b", "v-", "Ripple (CPU)"),
+        }
 
     gpu_devs = provenance.get("gpu", {}).get("devices", []) if provenance else []
-    gpu_name = gpu_devs[0].get("name", "GPU") if gpu_devs else "Host Platform"
+    gpu_name = gpu_devs[0].get("name", "GPU") if gpu_devs else ("RTX 5090" if has_cuda else "CPU")
 
     legend_entries = {}
     lal_line_entry = None
@@ -118,15 +138,15 @@ def plot_throughput_vs_batch(
         lal_entry = next((b for b in model_benches if b.get("framework") == "lalsimulation"), None)
         if lal_entry:
             lal_tps = lal_entry.get("wf_per_sec", 0.0)
-            line = ax.axhline(lal_tps, color="#d62728", linestyle=":", linewidth=2.0, alpha=0.85)
+            line = ax.axhline(lal_tps, color="#d62728", linestyle=":", linewidth=1.8, alpha=0.9)
             if lal_line_entry is None:
-                lal_line_entry = (line, "LAL C Baseline (CPU single-core)")
+                lal_line_entry = (line, "LALSimulation C (CPU single-core)")
             # Annotate LAL baseline on plot edge without occluding data
             ax.text(
                 0.96, lal_tps * 1.18,
                 f"LAL: {lal_tps:,.0f} wf/s",
                 color="#d62728",
-                fontsize=9,
+                fontsize=8.5,
                 fontweight="semibold",
                 ha="right",
                 va="bottom",
@@ -135,43 +155,35 @@ def plot_throughput_vs_batch(
             )
 
         # Plot each framework / device / dtype curve
-        curves = {}
-        for b in model_benches:
-            fw = b.get("framework", "torchwave")
-            if fw == "lalsimulation":
+        for key, (col, mark, lbl) in colors.items():
+            fw, dev, dt = key
+            points = [
+                b for b in model_benches
+                if b.get("framework") == fw and b.get("device") == dev and b.get("dtype") == dt
+            ]
+            if not points:
                 continue
-            dev = b.get("device", "cpu")
-            dt = b.get("dtype", "float64")
-            key = (fw, dev, dt)
-            if key not in curves:
-                curves[key] = []
-            curves[key].append((b.get("batch_size", 1), b.get("wf_per_sec", 0.0), b.get("wf_per_sec_ci_95")))
-
-        for key, points in curves.items():
-            points.sort(key=lambda x: x[0])
-            bs = [p[0] for p in points]
-            tps = [p[1] for p in points]
-
-            style = colors.get(key, ("#7f7f7f", "x-", f"{key[0]} {key[1]}"))
-            col, mark, lbl = style
+            points.sort(key=lambda x: x.get("batch_size", 1))
+            bs = [p.get("batch_size", 1) for p in points]
+            tps = [p.get("wf_per_sec", 0.0) for p in points]
 
             line, = ax.plot(bs, tps, mark, color=col, label=lbl)
             if lbl not in legend_entries:
                 legend_entries[lbl] = line
 
             # Draw confidence band if available
-            has_ci = all(p[2] is not None for p in points)
+            has_ci = all(p.get("wf_per_sec_ci_95") is not None for p in points)
             if has_ci:
-                ci_low = [p[2][0] for p in points]
-                ci_high = [p[2][1] for p in points]
-                ax.fill_between(bs, ci_low, ci_high, color=col, alpha=0.15)
+                ci_low = [p["wf_per_sec_ci_95"][0] for p in points]
+                ci_high = [p["wf_per_sec_ci_95"][1] for p in points]
+                ax.fill_between(bs, ci_low, ci_high, color=col, alpha=0.12)
 
         ax.set_xscale("log")
         ax.set_yscale("log")
         ax.set_xlabel("Batch Size (B)")
         if idx == 0:
             ax.set_ylabel("Throughput (waveforms / sec)")
-        ax.set_title(f"{model}", pad=10)
+        ax.set_title(f"{model}", pad=8)
 
     # Build unified figure-level legend positioned cleanly above subplots
     handles = []
@@ -183,7 +195,8 @@ def plot_throughput_vs_batch(
         handles.append(h)
         labels.append(lbl)
 
-    fig.suptitle(f"Gravitational-Wave Waveform Throughput Scaling ({gpu_name})", y=0.98, fontsize=15)
+    title_dev = gpu_name if has_cuda else "CPU"
+    fig.suptitle(f"Gravitational-Wave Waveform Throughput Scaling ({title_dev}, FP64)", y=0.98, fontsize=14)
     ncols = min(len(handles), 5)
     fig.legend(
         handles,
@@ -192,12 +205,12 @@ def plot_throughput_vs_batch(
         bbox_to_anchor=(0.5, 0.93),
         ncol=ncols,
         frameon=True,
-        framealpha=0.9,
+        framealpha=0.95,
         facecolor="#fcfcfc",
         edgecolor="#d0d0d0",
         fontsize=9.5,
     )
-    fig.subplots_adjust(top=0.76, bottom=0.14, left=0.05, right=0.98, wspace=0.22)
+    fig.subplots_adjust(top=0.78, bottom=0.14, left=0.05, right=0.98, wspace=0.22)
 
     out_png = output_dir / "fig1_throughput_vs_batch.png"
     out_pdf = output_dir / "fig1_throughput_vs_batch.pdf"
@@ -292,57 +305,50 @@ def plot_speedup_vs_lal(
         print("  [Notice] No LALSimulation baselines in receipt; skipping Fig 3 (Speedup vs LAL).")
         return
 
-    fig, ax = plt.subplots(figsize=(9.2, 5.2))
+    # 1. Primary Clean Single Plot: One curve per model (Compiled GPU acceleration, Eager fallback)
+    fig, ax = plt.subplots(figsize=(8.2, 4.8))
     
     model_palette = {
-        "TaylorF2": "#1f77b4",
-        "IMRPhenomD": "#ff7f0e",
-        "IMRPhenomXAS": "#2ca02c",
-        "IMRPhenomXP": "#d62728",
-        "IMRPhenomXHM": "#9467bd",
+        "TaylorF2": ("#1f77b4", "s-"),
+        "IMRPhenomD": ("#ff7f0e", "o-"),
+        "IMRPhenomXAS": ("#2ca02c", "^-"),
+        "IMRPhenomXP": ("#d62728", "v--"),
+        "IMRPhenomXHM": ("#9467bd", "D-"),
     }
-
-    has_compiled = any(b.get("framework") == "torchwave_compiled" for b in benchmarks)
 
     for model in models:
         if model not in lal_baselines:
             continue
         lal_ms = lal_baselines[model]
-        col = model_palette.get(model, "#333333")
+        col, mark = model_palette.get(model, ("#333333", "o-"))
 
-        # Plot compiled curve if present
-        if has_compiled:
-            comp_points = [
-                b for b in benchmarks
-                if b.get("model") == model and b.get("framework") == "torchwave_compiled" and b.get("device") == "cuda" and b.get("dtype") == "float64"
-            ]
-            if comp_points:
-                comp_points.sort(key=lambda x: x.get("batch_size", 1))
-                bs = [p.get("batch_size", 1) for p in comp_points]
-                speedups = [(p.get("wf_per_sec", 1.0) / (1000.0 / lal_ms)) for p in comp_points]
-                ax.plot(bs, speedups, "P-", color=col, linewidth=2.2, label=f"{model} (Compiled)")
-
-        # Plot eager curve
-        eager_points = [
+        # Prefer compiled if available, else eager
+        comp_points = [
             b for b in benchmarks
-            if b.get("model") == model and b.get("framework") == "torchwave" and b.get("device") == "cuda" and b.get("dtype") == "float64"
+            if b.get("model") == model and b.get("framework") == "torchwave_compiled" and b.get("device") == "cuda" and b.get("dtype") == "float64"
         ]
-        if eager_points:
-            eager_points.sort(key=lambda x: x.get("batch_size", 1))
-            bs = [p.get("batch_size", 1) for p in eager_points]
-            speedups = [(p.get("wf_per_sec", 1.0) / (1000.0 / lal_ms)) for p in eager_points]
-            lbl = f"{model} (Eager)" if has_compiled else f"{model} (TorchWave CUDA)"
-            ls = "--" if has_compiled else "-"
-            mk = "o" if has_compiled else "o"
-            ax.plot(bs, speedups, f"{mk}{ls}", color=col, linewidth=1.5 if has_compiled else 2.2, alpha=0.6 if has_compiled else 1.0, label=lbl)
+        if comp_points:
+            comp_points.sort(key=lambda x: x.get("batch_size", 1))
+            bs = [p.get("batch_size", 1) for p in comp_points]
+            speedups = [(p.get("wf_per_sec", 1.0) / (1000.0 / lal_ms)) for p in comp_points]
+            ax.plot(bs, speedups, mark, color=col, linewidth=2.2, label=f"{model} (Compiled)")
+        else:
+            eager_points = [
+                b for b in benchmarks
+                if b.get("model") == model and b.get("framework") == "torchwave" and b.get("device") == "cuda" and b.get("dtype") == "float64"
+            ]
+            if eager_points:
+                eager_points.sort(key=lambda x: x.get("batch_size", 1))
+                bs = [p.get("batch_size", 1) for p in eager_points]
+                speedups = [(p.get("wf_per_sec", 1.0) / (1000.0 / lal_ms)) for p in eager_points]
+                ax.plot(bs, speedups, mark, color=col, linewidth=2.0, label=f"{model} (Eager)")
 
     ax.set_xscale("log")
     ax.set_yscale("log")
-    ax.axhline(1.0, color="gray", linestyle="--", alpha=0.7, linewidth=1.8, label="1x Baseline (Parity with LAL)")
+    ax.axhline(1.0, color="#777777", linestyle="--", alpha=0.8, linewidth=1.5, label="1x Baseline (Parity with LAL)")
     ax.set_xlabel("Batch Size (B)")
     ax.set_ylabel("Speedup Factor vs LALSimulation C CPU (x)")
-    ax.set_title("GPU Speedup vs. Single-Core LALSimulation Baseline", pad=12)
-    # Move legend completely outside axes to the right
+    ax.set_title("TorchWave GPU Speedup vs. Single-Core LALSimulation Baseline", pad=10)
     ax.legend(
         bbox_to_anchor=(1.02, 1.0),
         loc="upper left",
@@ -359,6 +365,63 @@ def plot_speedup_vs_lal(
     fig.savefig(out_pdf, bbox_inches="tight")
     plt.close(fig)
     print(f"  -> Generated: {out_png}")
+
+    # 2. Side-by-side two-panel plot: (a) Compiled vs (b) Eager for detailed multi-panel reporting
+    fig, (ax_comp, ax_eag) = plt.subplots(1, 2, figsize=(11.5, 4.8), sharey=True)
+    for model in models:
+        if model not in lal_baselines:
+            continue
+        lal_ms = lal_baselines[model]
+        col, mark = model_palette.get(model, ("#333333", "o-"))
+
+        comp_points = [
+            b for b in benchmarks
+            if b.get("model") == model and b.get("framework") == "torchwave_compiled" and b.get("device") == "cuda" and b.get("dtype") == "float64"
+        ]
+        if comp_points:
+            comp_points.sort(key=lambda x: x.get("batch_size", 1))
+            bs = [p.get("batch_size", 1) for p in comp_points]
+            speedups = [(p.get("wf_per_sec", 1.0) / (1000.0 / lal_ms)) for p in comp_points]
+            ax_comp.plot(bs, speedups, mark, color=col, linewidth=2.2, label=model)
+
+        eager_points = [
+            b for b in benchmarks
+            if b.get("model") == model and b.get("framework") == "torchwave" and b.get("device") == "cuda" and b.get("dtype") == "float64"
+        ]
+        if eager_points:
+            eager_points.sort(key=lambda x: x.get("batch_size", 1))
+            bs = [p.get("batch_size", 1) for p in eager_points]
+            speedups = [(p.get("wf_per_sec", 1.0) / (1000.0 / lal_ms)) for p in eager_points]
+            ax_eag.plot(bs, speedups, mark, color=col, linewidth=2.0, label=model)
+
+    for ax_sub, title in [(ax_comp, "Compiled Mode (torch.compile)"), (ax_eag, "Eager Mode")]:
+        ax_sub.set_xscale("log")
+        ax_sub.set_yscale("log")
+        ax_sub.axhline(1.0, color="#777777", linestyle="--", alpha=0.8, linewidth=1.5, label="1x LAL Baseline")
+        ax_sub.set_xlabel("Batch Size (B)")
+        ax_sub.set_title(title, pad=8)
+        ax_sub.grid(True, alpha=0.3, linestyle="--")
+
+    ax_comp.set_ylabel("Speedup Factor vs LALSimulation C (x)")
+
+    handles, labels = ax_eag.get_legend_handles_labels()
+    fig.legend(
+        handles, labels,
+        loc="upper center",
+        bbox_to_anchor=(0.5, 0.94),
+        ncol=len(handles),
+        frameon=True,
+        framealpha=0.95,
+        facecolor="#fcfcfc",
+        edgecolor="#d0d0d0",
+        fontsize=9.5,
+    )
+    fig.suptitle("TorchWave GPU Speedup vs. Single-Core LALSimulation Baseline", y=1.01, fontsize=14)
+    fig.subplots_adjust(top=0.82, wspace=0.12)
+    fig.savefig(output_dir / "fig3_speedup_vs_lal_two_panel.png", bbox_inches="tight")
+    fig.savefig(output_dir / "fig3_speedup_vs_lal_two_panel.pdf", bbox_inches="tight")
+    plt.close(fig)
+    print(f"  -> Generated: {output_dir / 'fig3_speedup_vs_lal_two_panel.png'}")
 
 
 def plot_model_comparison_bar(
@@ -435,7 +498,11 @@ def plot_model_comparison_bar(
     print(f"  -> Generated: {out_png}")
 
 
-def plot_all_figures(receipt_paths: Union[Path, List[Path]], output_dir: Path):
+def plot_all_figures(
+    receipt_paths: Union[Path, List[Path]],
+    output_dir: Path,
+    all_lines: bool = False,
+):
     """Load benchmark receipt(s) and render all four publication-grade figures."""
     configure_matplotlib_style()
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -445,7 +512,7 @@ def plot_all_figures(receipt_paths: Union[Path, List[Path]], output_dir: Path):
     provenance = data.get("provenance", data.get("metadata", {}))
 
     print(f"Rendering benchmark figures to: {output_dir.resolve()}")
-    plot_throughput_vs_batch(benchmarks, output_dir, provenance)
+    plot_throughput_vs_batch(benchmarks, output_dir, provenance, all_lines=all_lines)
     plot_latency_per_waveform(benchmarks, output_dir)
     plot_speedup_vs_lal(benchmarks, output_dir)
     plot_model_comparison_bar(benchmarks, output_dir)
@@ -454,8 +521,15 @@ def plot_all_figures(receipt_paths: Union[Path, List[Path]], output_dir: Path):
 
 def main():
     parser = argparse.ArgumentParser(description="Generate publication figures from DiffGW benchmark receipts.")
-    parser.add_argument("--input", "-i", type=str, required=True, help="Path(s) to benchmark JSON receipt(s), comma-separated.")
+    parser.add_argument(
+        "--input", "-i", "--receipt",
+        type=str,
+        dest="input",
+        required=True,
+        help="Path(s) to benchmark JSON receipt(s), comma-separated.",
+    )
     parser.add_argument("--output-dir", "-o", type=str, default=None, help="Directory to save output figures.")
+    parser.add_argument("--all-lines", action="store_true", help="Include all cross-precision and CPU curves in Fig 1.")
     args = parser.parse_args()
 
     raw_inputs = [p.strip() for p in args.input.split(",") if p.strip()]
@@ -466,7 +540,7 @@ def main():
             sys.exit(1)
 
     out_dir = Path(args.output_dir) if args.output_dir else input_paths[0].parent / "plots"
-    plot_all_figures(input_paths, out_dir)
+    plot_all_figures(input_paths, out_dir, all_lines=args.all_lines)
 
 
 if __name__ == "__main__":
