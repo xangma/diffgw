@@ -140,30 +140,38 @@ def _unsqueeze_to(tensor: Union[float, torch.Tensor], target: torch.Tensor) -> t
 
 
 def _value_and_derivative(function, frequency: torch.Tensor):
-    """Value and pointwise frequency derivative, retaining parameter gradients."""
-    outer_grad = torch.is_grad_enabled()
-    with torch.enable_grad():
-        probe = frequency.clone().requires_grad_(True)
-        value = function(probe)
-        derivative = torch.autograd.grad(value.sum(), probe, create_graph=outer_grad)[0]
-    if not outer_grad:
-        return value.detach(), derivative.detach()
-    return value, derivative
+    """Value and pointwise frequency derivative using forward-mode JVP, retaining parameter gradients."""
+    tangent = torch.ones_like(frequency)
+    try:
+        return torch.func.jvp(function, (frequency,), (tangent,))
+    except Exception:
+        outer_grad = torch.is_grad_enabled()
+        with torch.enable_grad():
+            probe = frequency.clone().requires_grad_(True)
+            value = function(probe)
+            derivative = torch.autograd.grad(value.sum(), probe, create_graph=outer_grad)[0]
+        if not outer_grad:
+            return value.detach(), derivative.detach()
+        return value, derivative
 
 
 def _allow_internal_frequency_derivatives(function):
-    """Keep local derivative probes usable for callers in inference mode."""
-    @wraps(function)
-    def evaluate(*args, **kwargs):
-        if not torch.is_inference_mode_enabled():
-            return function(*args, **kwargs)
-        # Inference tensors cannot be saved by autograd. Recreate input tensors
-        # outside that mode; no_grad preserves the caller's detached outputs.
-        with torch.inference_mode(False), torch.no_grad():
-            args = tuple(value.clone() if isinstance(value, torch.Tensor) else value for value in args)
-            kwargs = {key: value.clone() if isinstance(value, torch.Tensor) else value for key, value in kwargs.items()}
-            return function(*args, **kwargs)
-    return evaluate
+    """Passthrough preserving function signature without forcing inference-mode tensor cloning."""
+    return function
+
+
+def _pn_phase_lambda_coeff(l, m, eta, delta):
+    if (l, m) == (2, 1):
+        coefficient = torch.where(delta != 0, torch.full_like(delta, -0.5 * (1.0 + math.log(16.0))), torch.zeros_like(delta))
+    elif (l, m) == (3, 3):
+        coefficient = torch.where(delta != 0, torch.full_like(delta, -21.0 / 5.0 + 6.0 * math.log(1.5)), torch.zeros_like(delta))
+    elif (l, m) == (3, 2):
+        coefficient = (3.0 - 66.0 * eta / 5.0) / (1.0 - 3.0 * eta)
+    elif (l, m) == (4, 4):
+        coefficient = (eta * (3579.0 - 2880.0 * math.log(2.0)) - 1008.0 + 960.0 * math.log(2.0)) / (120.0 * (3.0 * eta - 1.0))
+    else:
+        raise ValueError(f"Unsupported PN phase mode {(l, m)}")
+    return coefficient * (2.0 * PI / float(m))
 
 
 def _pn_phase_lambda(l, m, frequency, eta, delta):  # noqa: E741
@@ -177,17 +185,8 @@ def _pn_phase_lambda(l, m, frequency, eta, delta):  # noqa: E741
     """
     eta = _unsqueeze_to(eta, frequency)
     delta = _unsqueeze_to(delta, frequency)
-    if (l, m) == (2, 1):
-        coefficient = torch.where(delta != 0, torch.full_like(delta, -0.5 * (1.0 + math.log(16.0))), torch.zeros_like(delta))
-    elif (l, m) == (3, 3):
-        coefficient = torch.where(delta != 0, torch.full_like(delta, -21.0 / 5.0 + 6.0 * math.log(1.5)), torch.zeros_like(delta))
-    elif (l, m) == (3, 2):
-        coefficient = (3.0 - 66.0 * eta / 5.0) / (1.0 - 3.0 * eta)
-    elif (l, m) == (4, 4):
-        coefficient = (eta * (3579.0 - 2880.0 * math.log(2.0)) - 1008.0 + 960.0 * math.log(2.0)) / (120.0 * (3.0 * eta - 1.0))
-    else:
-        raise ValueError(f"Unsupported PN phase mode {(l, m)}")
-    return coefficient * (2.0 * PI / float(m)) * frequency
+    coeff = _pn_phase_lambda_coeff(l, m, eta, delta)
+    return coeff * frequency
 
 
 def _spherical_32_from_spheroidal(h22, h32_s, alpha222, alpha232, alpha322, alpha332):
@@ -1390,9 +1389,8 @@ class IMRPhenomXHM(nn.Module):
                         # intermediate derivative. Its fit-target/time-gauge
                         # convention must be established before enabling this
                         # reconstruction by default (see the pass-2 audit).
-                        lambda_at_ins, lambda_dp_at_ins = _value_and_derivative(
-                            lambda x: _pn_phase_lambda(l, m, x, eta, delta), f_ins_p,
-                        )
+                        lambda_dp_at_ins = _pn_phase_lambda_coeff(l, m, eta, delta)
+                        lambda_at_ins = lambda_dp_at_ins * f_ins_p
                         dphi_ins = eval_dphi_int(f_ins_p) - carrier_dp_at_ins - lambda_dp_at_ins
                         phi_ins_grid = phi_ins_grid + _pn_phase_lambda(l, m, mf_grid, eta, delta) + _unsqueeze_to(dphi_ins, mf_grid) * mf_grid
                         phi_ins_at_ins = phi_ins_at_ins + lambda_at_ins + dphi_ins * f_ins_p
@@ -1509,9 +1507,8 @@ class IMRPhenomXHM(nn.Module):
                     phi_ins_32_grid = phi_22_carrier + delta_target_32
                     phi_ins_at_ins_32 = carrier_p_at_ins + delta_target_32
                     if self.experimental_phase_connections:
-                        lambda_at_ins, lambda_dp_at_ins = _value_and_derivative(
-                            lambda x: _pn_phase_lambda(l, m, x, eta, delta), f_ins_p,
-                        )
+                        lambda_dp_at_ins = _pn_phase_lambda_coeff(l, m, eta, delta)
+                        lambda_at_ins = lambda_dp_at_ins * f_ins_p
                         dphi_ins_32 = eval_dphi_int_32(f_ins_p) - carrier_dp_at_ins - lambda_dp_at_ins
                         phi_ins_32_grid = phi_ins_32_grid + _pn_phase_lambda(l, m, mf_grid, eta, delta) + _unsqueeze_to(dphi_ins_32, mf_grid) * mf_grid
                         phi_ins_at_ins_32 = phi_ins_at_ins_32 + lambda_at_ins + dphi_ins_32 * f_ins_p

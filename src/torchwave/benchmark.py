@@ -311,7 +311,7 @@ def benchmark_torchwave_model(
             torch._dynamo.config.capture_scalar_outputs = True
         except Exception:
             pass
-        eval_fn = torch.compile(eval_fn, fullgraph=False)
+        eval_fn = torch.compile(eval_fn, fullgraph=False, dynamic=False)
 
     ctx = contextlib.nullcontext() if measure_backward else torch.inference_mode()
 
