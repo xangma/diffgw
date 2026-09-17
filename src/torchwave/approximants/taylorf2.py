@@ -321,22 +321,11 @@ class TaylorF2:
             else:
                 f = f.unsqueeze(0)  # (1, N_f) for frequency grids
 
-        f_safe = torch.clamp(f, min=1e-8)
-
         # Total mass in seconds
         m_sec = total_mass * MSUN_SEC
         if m_sec.dim() >= 1 and f.dim() > m_sec.dim():
             m_sec = m_sec.unsqueeze(-1)
             eta = eta.unsqueeze(-1)
-
-        # PN expansion parameter v = (pi * M * f)^(1/3)
-        v = (PI * m_sec * f_safe) ** (1.0 / 3.0)
-        v2 = v * v
-        v3 = v2 * v
-        v4 = v2 * v2
-        v5 = v4 * v
-        v6 = v3 * v3
-        v7 = v6 * v
 
         (
             phi0, phi2, phi3, phi4, phi5, phi5_log,

@@ -5,6 +5,48 @@ import math
 import torch
 
 
+_SQRT6 = math.sqrt(6.0)
+
+
+def _wigner_d_l2(m: int, mp: int, c: torch.Tensor, s: torch.Tensor) -> torch.Tensor:
+    c2 = c * c
+    s2 = s * s
+    c4 = c2 * c2
+    s4 = s2 * s2
+    cs = c * s
+    if mp == 2:
+        if m == -2: return s4
+        if m == -1: return 2.0 * s2 * cs
+        if m == 0:  return _SQRT6 * c2 * s2
+        if m == 1:  return 2.0 * c2 * cs
+        if m == 2:  return c4
+    elif mp == -2:
+        if m == -2: return c4
+        if m == -1: return -2.0 * c2 * cs
+        if m == 0:  return _SQRT6 * c2 * s2
+        if m == 1:  return -2.0 * s2 * cs
+        if m == 2:  return s4
+    elif mp == 1:
+        if m == -2: return 2.0 * s2 * cs
+        if m == -1: return s2 * (3.0 * c2 - s2)
+        if m == 0:  return _SQRT6 * cs * (c2 - s2)
+        if m == 1:  return c2 * (c2 - 3.0 * s2)
+        if m == 2:  return -2.0 * c2 * cs
+    elif mp == -1:
+        if m == -2: return 2.0 * c2 * cs
+        if m == -1: return c2 * (c2 - 3.0 * s2)
+        if m == 0:  return -_SQRT6 * cs * (c2 - s2)
+        if m == 1:  return s2 * (3.0 * c2 - s2)
+        if m == 2:  return -2.0 * s2 * cs
+    elif mp == 0:
+        if m == -2: return _SQRT6 * c2 * s2
+        if m == -1: return _SQRT6 * cs * (c2 - s2)
+        if m == 0:  return c4 - 4.0 * c2 * s2 + s4
+        if m == 1:  return -_SQRT6 * cs * (c2 - s2)
+        if m == 2:  return _SQRT6 * c2 * s2
+    raise ValueError(f"Invalid magnetic indices m={m}, mp={mp}")
+
+
 def wigner_d(l: int, m: int, mp: int, beta):
     """Real Wigner small-d element using the finite factorial sum (Eq. 45)."""
     if not (-l <= m <= l and -l <= mp <= l):
@@ -16,6 +58,8 @@ def wigner_d(l: int, m: int, mp: int, beta):
     else:
         b = torch.as_tensor(beta, dtype=torch.float64)
     c, s = torch.cos(b/2), torch.sin(b/2)
+    if l == 2:
+        return _wigner_d_l2(m, mp, c, s)
     pref = math.sqrt(math.factorial(l+m)*math.factorial(l-m)*
                       math.factorial(l+mp)*math.factorial(l-mp))
     total = torch.zeros_like(b)

@@ -39,6 +39,33 @@ def wigner_small_d_matrix(l: int, beta: jnp.ndarray) -> jnp.ndarray:
         d^l_{m, m'}(beta) = sum_k (-1)^k * [sqrt((l+m)!(l-m)!(l+m')!(l-m')!) /
                             ((l+m-k)! k! (l-m'-k)! (k-m+m')!)] * (cos beta/2)^(2l+m-m'-2k) * (sin beta/2)^(2k-m+m')
     """
+    if l == 2:
+        c = jnp.cos(0.5 * beta)
+        s = jnp.sin(0.5 * beta)
+        c2 = c * c
+        s2 = s * s
+        c4 = c2 * c2
+        s4 = s2 * s2
+        c2s2 = c2 * s2
+        cs = c * s
+        c3s = c2 * cs
+        cs3 = s2 * cs
+        sqrt6 = math.sqrt(6.0)
+        sqrt6_c2s2 = sqrt6 * c2s2
+        sqrt6_cs_c2ms2 = sqrt6 * cs * (c2 - s2)
+        c2_c2m3s2 = c2 * (c2 - 3.0 * s2)
+        s2_3c2ms2 = s2 * (3.0 * c2 - s2)
+        c4_4c2s2_s4 = c4 - 4.0 * c2s2 + s4
+
+        r0 = [c4, 2.0 * c3s, sqrt6_c2s2, 2.0 * cs3, s4]
+        r1 = [-2.0 * c3s, c2_c2m3s2, sqrt6_cs_c2ms2, s2_3c2ms2, 2.0 * cs3]
+        r2 = [sqrt6_c2s2, -sqrt6_cs_c2ms2, c4_4c2s2_s4, sqrt6_cs_c2ms2, sqrt6_c2s2]
+        r3 = [-2.0 * cs3, s2_3c2ms2, -sqrt6_cs_c2ms2, c2_c2m3s2, 2.0 * c3s]
+        r4 = [s4, -2.0 * cs3, sqrt6_c2s2, -2.0 * c3s, c4]
+
+        rows = [jnp.stack(r, axis=-1) for r in (r0, r1, r2, r3, r4)]
+        return jnp.stack(rows, axis=-2)
+
     c = jnp.cos(0.5 * beta)
     s = jnp.sin(0.5 * beta)
     fact = math.factorial

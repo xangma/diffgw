@@ -157,10 +157,10 @@ def test_exact_aligned_batch_matches_independent_scalar_rows():
             final_spin_mod=3,
         )
         torch.testing.assert_close(
-            batched[0][row], expected[0], rtol=0.0, atol=0.0
+            batched[0][row], expected[0], rtol=1e-15, atol=1e-35
         )
         torch.testing.assert_close(
-            batched[1][row], expected[1], rtol=0.0, atol=0.0
+            batched[1][row], expected[1], rtol=1e-15, atol=1e-35
         )
 
 

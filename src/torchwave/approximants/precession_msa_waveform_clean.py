@@ -398,8 +398,9 @@ def transport_msa_angles_for_phi_ref(
         aligned_omitted = aligned & (int(convention) == 1)
         delta_phi_j_u = delta_phi_j.unsqueeze(-1) if (gamma.ndim > delta_phi_j.ndim and delta_phi_j.ndim > 0) else delta_phi_j
         delta_alpha_u = delta_alpha.unsqueeze(-1) if (alpha.ndim > delta_alpha.ndim and delta_alpha.ndim > 0) else delta_alpha
-        gamma_shift = torch.where(aligned_omitted.unsqueeze(-1) if gamma.ndim > aligned_omitted.ndim else aligned_omitted,
-                                  torch.zeros_like(delta_phi_j_u), -delta_phi_j_u)
+        apply_gamma_shift = (int(convention) == 1) & (~aligned_omitted)
+        apply_u = apply_gamma_shift.unsqueeze(-1) if gamma.ndim > apply_gamma_shift.ndim else apply_gamma_shift
+        gamma_shift = torch.where(apply_u, -delta_phi_j_u, torch.zeros_like(delta_phi_j_u))
         shifted = {"alpha": alpha + delta_alpha_u, "gamma": gamma + gamma_shift}
         phi_anchor = torch.where(aligned_omitted | (int(convention) == 0), phi_phi, phi_zero)
         gamma_omitted = aligned_omitted
@@ -858,146 +859,70 @@ def waveform(
     # the same canonical state for its source-frame geometry and remnant fit.
     m1, m2, s1, s2, rest = _canonical_source_parameters(m1, m2, s1, s2, dist, inc, phi0, tc_t, fr)
     dist, inc, phi0, tc_t, fr = rest
-    n_rows = math.prod(m1.shape) if m1.shape else 1
-    flat_scalars = tuple(value.reshape(-1) for value in (m1, m2, dist, inc, phi0, tc_t, fr))
-    flat_spins = (s1.reshape((n_rows, 3)), s2.reshape((n_rows, 3)))
-    all_alpha, all_beta, all_gamma = [], [], []
-    all_a0, all_theta, all_zeta, all_phi = [], [], [], []
-    all_final = []
-    beta_key = "cos_beta"
-    if n_rows == 1:
-        rm1, rm2 = m1.reshape(-1)[0], m2.reshape(-1)[0]
-        rs1, rs2 = s1.reshape((1, 3))[0], s2.reshape((1, 3))[0]
-        flat_scalars = tuple(value.reshape(-1) for value in (dist, inc, phi0, tc_t, fr))
-        rdist, rinc, rphi, rtc, rfr = (value[0] for value in flat_scalars)
-        angle_kwargs = dict(
-            f_ref=rfr, order=order, beta_pn=beta_pn,
-            beta_pn_version=beta_pn_version,
-            beta_compat_102=beta_compat_102, average_mode=average_mode,
+    # Fully vectorized evaluation path
+    angle_kwargs = dict(
+        f_ref=fr, order=order, beta_pn=beta_pn,
+        beta_pn_version=beta_pn_version,
+        beta_compat_102=beta_compat_102, average_mode=average_mode,
+    )
+    if selected == "v223":
+        angle_kwargs["compatibility"] = "v223"
+    angle_values = assemble_precession_msa_angles(
+        f_safe, m1, m2, s1, s2, **angle_kwargs,
+    )
+    geometry_kwargs = {"compatibility": "v223"} if selected == "v223" else {}
+    geom = source_frame_geometry(
+        m1, m2, s1[..., 0], s1[..., 1], s1[..., 2], s2[..., 0], s2[..., 1], s2[..., 2],
+        inc, phi0, fr, **geometry_kwargs,
+    )
+    geom_zero = source_frame_geometry(
+        m1, m2, s1[..., 0], s1[..., 1], s1[..., 2], s2[..., 0], s2[..., 1], s2[..., 2],
+        inc, torch.zeros_like(phi0), fr, **geometry_kwargs,
+    )
+    transverse_sq = (
+        torch.sum(s1[..., :2].square(), dim=-1) + torch.sum(s2[..., :2].square(), dim=-1)
+    )
+    legacy_aligned = transverse_sq <= 1.0e-28
+    exact_transverse_zero = (
+        torch.all(s1[..., :2] == 0.0, dim=-1) & torch.all(s2[..., :2] == 0.0, dim=-1)
+    )
+    if selected == "v223" and torch.any(legacy_aligned):
+        alpha_shift = torch.as_tensor(
+            math.pi, dtype=geom[0].dtype, device=geom[0].device,
         )
-        if selected == "v223":
-            angle_kwargs["compatibility"] = "v223"
-        angle_values = assemble_precession_msa_angles(
-            f_safe, rm1, rm2, rs1, rs2, **angle_kwargs,
+        geom = (torch.where(legacy_aligned, geom[0] + alpha_shift, geom[0]), *geom[1:])
+        geom_zero = (torch.where(legacy_aligned, geom_zero[0] + alpha_shift, geom_zero[0]), *geom_zero[1:])
+    transported_angles, composition_geometry, _transport = transport_msa_angles_for_phi_ref(
+        {"alpha": angle_values["alpha"], "gamma": angle_values["gamma"],
+         "cos_beta": angle_values["cos_beta"]},
+        geom_zero, geom, convention=convention, aligned=legacy_aligned,
+    )
+    if selected == "v223" and convention == 1 and torch.any(exact_transverse_zero):
+        endpoint_phi_j = _as_f64(
+            composition_geometry["phi_j"], device=f.device,
         )
-        geometry_kwargs = {"compatibility": "v223"} if selected == "v223" else {}
-        geom = source_frame_geometry(
-            rm1, rm2, rs1[0], rs1[1], rs1[2], rs2[0], rs2[1], rs2[2],
-            rinc, rphi, rfr, **geometry_kwargs,
+        ep_u = endpoint_phi_j.unsqueeze(-1) if transported_angles["alpha"].ndim > endpoint_phi_j.ndim else endpoint_phi_j
+        exact_u = exact_transverse_zero.unsqueeze(-1) if transported_angles["alpha"].ndim > exact_transverse_zero.ndim else exact_transverse_zero
+        transported_angles["alpha"] = torch.where(
+            exact_u, transported_angles["alpha"] - ep_u, transported_angles["alpha"]
         )
-        geom_zero = source_frame_geometry(
-            rm1, rm2, rs1[0], rs1[1], rs1[2], rs2[0], rs2[1], rs2[2],
-            rinc, torch.zeros_like(rphi), rfr, **geometry_kwargs,
+        transported_angles["gamma"] = torch.where(
+            exact_u, transported_angles["gamma"] + ep_u, transported_angles["gamma"]
         )
-        transverse_sq = (
-            torch.sum(rs1[:2].square()) + torch.sum(rs2[:2].square())
-        )
-        legacy_aligned = bool(transverse_sq <= 1.0e-28)
-        exact_transverse_zero = bool(
-            torch.all(rs1[:2] == 0.0) and torch.all(rs2[:2] == 0.0)
-        )
-        if selected == "v223" and legacy_aligned:
-            alpha_shift = torch.as_tensor(
-                math.pi, dtype=geom[0].dtype, device=geom[0].device,
-            )
-            geom = (geom[0] + alpha_shift, *geom[1:])
-            geom_zero = (geom_zero[0] + alpha_shift, *geom_zero[1:])
-        transported_angles, composition_geometry, _transport = transport_msa_angles_for_phi_ref(
-            {"alpha": angle_values["alpha"], "gamma": angle_values["gamma"],
-             "cos_beta": angle_values["cos_beta"]},
-            geom_zero, geom, convention=convention, aligned=legacy_aligned,
-        )
-        if selected == "v223" and convention == 1 and exact_transverse_zero:
-            endpoint_phi_j = _as_f64(
-                composition_geometry["phi_j"], device=f.device,
-            )
-            transported_angles["alpha"] = (
-                transported_angles["alpha"] - endpoint_phi_j
-            )
-            transported_angles["gamma"] = (
-                transported_angles["gamma"] + endpoint_phi_j
-            )
-        if final_spin_override is None:
-            rfinal, _ = _native_msa_final_spin(
-                rm1, rm2, rs1, rs2, rfr, angle_values,
-                compatibility=selected,
-            )
-        else:
-            rfinal = _as_f64(final_spin_override, device=f.device).reshape(-1)[0]
-
-        single_angles = {"alpha": transported_angles["alpha"], "cos_beta": transported_angles["cos_beta"], "gamma": transported_angles["gamma"]}
-        single_geom = (composition_geometry["alpha0"], composition_geometry["theta_jn"], composition_geometry["zeta"], composition_geometry["phi_j"])
-        hp, hc = compose_msa_waveform(
-            f, m1, m2, s1[..., 2], s2[..., 2],
-            single_angles, single_geom, rfinal,
-            distance=dist, tc=tc_t, f_ref=fr, convention=convention,
-            angle_order="alpha_beta_gamma", angles_are_absolute=False, xas_model=xas_model,
+    if final_spin_override is None:
+        rfinal, _ = _native_msa_final_spin(
+            m1, m2, s1, s2, fr, angle_values,
+            compatibility=selected,
         )
     else:
-        # Fully vectorized batched evaluation path
-        angle_kwargs = dict(
-            f_ref=fr, order=order, beta_pn=beta_pn,
-            beta_pn_version=beta_pn_version,
-            beta_compat_102=beta_compat_102, average_mode=average_mode,
-        )
-        if selected == "v223":
-            angle_kwargs["compatibility"] = "v223"
-        angle_values = assemble_precession_msa_angles(
-            f_safe, m1, m2, s1, s2, **angle_kwargs,
-        )
-        geometry_kwargs = {"compatibility": "v223"} if selected == "v223" else {}
-        geom = source_frame_geometry(
-            m1, m2, s1[..., 0], s1[..., 1], s1[..., 2], s2[..., 0], s2[..., 1], s2[..., 2],
-            inc, phi0, fr, **geometry_kwargs,
-        )
-        geom_zero = source_frame_geometry(
-            m1, m2, s1[..., 0], s1[..., 1], s1[..., 2], s2[..., 0], s2[..., 1], s2[..., 2],
-            inc, torch.zeros_like(phi0), fr, **geometry_kwargs,
-        )
-        transverse_sq = (
-            torch.sum(s1[..., :2].square(), dim=-1) + torch.sum(s2[..., :2].square(), dim=-1)
-        )
-        legacy_aligned = transverse_sq <= 1.0e-28
-        exact_transverse_zero = (
-            torch.all(s1[..., :2] == 0.0, dim=-1) & torch.all(s2[..., :2] == 0.0, dim=-1)
-        )
-        if selected == "v223" and torch.any(legacy_aligned):
-            alpha_shift = torch.as_tensor(
-                math.pi, dtype=geom[0].dtype, device=geom[0].device,
-            )
-            geom = (torch.where(legacy_aligned, geom[0] + alpha_shift, geom[0]), *geom[1:])
-            geom_zero = (torch.where(legacy_aligned, geom_zero[0] + alpha_shift, geom_zero[0]), *geom_zero[1:])
-        transported_angles, composition_geometry, _transport = transport_msa_angles_for_phi_ref(
-            {"alpha": angle_values["alpha"], "gamma": angle_values["gamma"],
-             "cos_beta": angle_values["cos_beta"]},
-            geom_zero, geom, convention=convention, aligned=legacy_aligned,
-        )
-        if selected == "v223" and convention == 1 and torch.any(exact_transverse_zero):
-            endpoint_phi_j = _as_f64(
-                composition_geometry["phi_j"], device=f.device,
-            )
-            ep_u = endpoint_phi_j.unsqueeze(-1) if transported_angles["alpha"].ndim > endpoint_phi_j.ndim else endpoint_phi_j
-            exact_u = exact_transverse_zero.unsqueeze(-1) if transported_angles["alpha"].ndim > exact_transverse_zero.ndim else exact_transverse_zero
-            transported_angles["alpha"] = torch.where(
-                exact_u, transported_angles["alpha"] - ep_u, transported_angles["alpha"]
-            )
-            transported_angles["gamma"] = torch.where(
-                exact_u, transported_angles["gamma"] + ep_u, transported_angles["gamma"]
-            )
-        if final_spin_override is None:
-            rfinal, _ = _native_msa_final_spin(
-                m1, m2, s1, s2, fr, angle_values,
-                compatibility=selected,
-            )
-        else:
-            rfinal = _as_f64(final_spin_override, device=f.device).expand(m1.shape)
+        rfinal = _as_f64(final_spin_override, device=f.device).expand(m1.shape)
 
-        hp, hc = compose_msa_waveform(
-            f, m1, m2, s1[..., 2], s2[..., 2],
-            transported_angles, composition_geometry, rfinal,
-            distance=dist, tc=tc_t, f_ref=fr, convention=convention,
-            angle_order="alpha_beta_gamma", angles_are_absolute=False, xas_model=xas_model,
-        )
+    hp, hc = compose_msa_waveform(
+        f, m1, m2, s1[..., 2], s2[..., 2],
+        transported_angles, composition_geometry, rfinal,
+        distance=dist, tc=tc_t, f_ref=fr, convention=convention,
+        angle_order="alpha_beta_gamma", angles_are_absolute=False, xas_model=xas_model,
+    )
     out_dtype = torch.complex64 if fi.dtype == torch.float32 else torch.complex128
     return hp.to(out_dtype), hc.to(out_dtype)
 

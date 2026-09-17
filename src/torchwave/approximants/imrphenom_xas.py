@@ -1832,18 +1832,22 @@ class IMRPhenomXAS(nn.Module):
         v1_rd_ph = v2_rd + d12_rd
         vn_rd = [v1_rd_ph, v2_rd, v3_rd, v4_rd, v5_rd]
 
-        A_rd_rows = []
-        for fn in fn_rd:
-            lorentz_entry = 1.0 / torch.clamp((fn - f_rd)**2 + f_damp**2, min=1e-12)
-            row = torch.stack([
-                torch.ones_like(fn),
-                torch.pow(torch.clamp(fn, min=1e-8), -1.0 / 3.0),
-                torch.pow(torch.clamp(fn, min=1e-8), -2.0),
-                torch.pow(torch.clamp(fn, min=1e-8), -4.0),
-                lorentz_entry,
-            ], dim=-1)
-            A_rd_rows.append(row)
-        A_rd_mat = torch.stack(A_rd_rows, dim=-2)
+        fn_rd_stack = torch.stack(fn_rd, dim=-1)
+        fn_rd_safe = torch.clamp(fn_rd_stack, min=1e-8)
+        f_rd_u = f_rd.unsqueeze(-1) if f_rd.ndim > 0 else f_rd
+        f_damp_u = f_damp.unsqueeze(-1) if f_damp.ndim > 0 else f_damp
+        lorentz_rd = 1.0 / torch.clamp((fn_rd_stack - f_rd_u)**2 + f_damp_u**2, min=1e-12)
+        inv_cbrt_fn = torch.pow(fn_rd_safe, -1.0 / 3.0)
+        inv_fn = 1.0 / fn_rd_safe
+        inv_fn2 = inv_fn * inv_fn
+        inv_fn4 = inv_fn2 * inv_fn2
+        A_rd_mat = torch.stack([
+            torch.ones_like(fn_rd_stack),
+            inv_cbrt_fn,
+            inv_fn2,
+            inv_fn4,
+            lorentz_rd,
+        ], dim=-1)
         b_rd_vec = torch.stack(vn_rd, dim=-1)
 
         c_coeffs = torch.linalg.solve(A_rd_mat, b_rd_vec)
@@ -1901,16 +1905,16 @@ class IMRPhenomXAS(nn.Module):
             v3_ins + d43_ins,
         ]
 
-        A_ins_rows = []
-        for fn in fn_ins:
-            row = torch.stack([
-                torch.ones_like(fn),
-                torch.pow(torch.clamp(fn, min=1e-8), 1.0 / 3.0),
-                torch.pow(torch.clamp(fn, min=1e-8), 2.0 / 3.0),
-                fn,
-            ], dim=-1)
-            A_ins_rows.append(row)
-        A_ins_mat = torch.stack(A_ins_rows, dim=-2)
+        fn_ins_stack = torch.stack(fn_ins, dim=-1)
+        fn_ins_safe = torch.clamp(fn_ins_stack, min=1e-8)
+        v_ins = torch.pow(fn_ins_safe, 1.0 / 3.0)
+        v_ins2 = v_ins * v_ins
+        A_ins_mat = torch.stack([
+            torch.ones_like(fn_ins_stack),
+            v_ins,
+            v_ins2,
+            fn_ins_stack,
+        ], dim=-1)
         b_ins_vec = torch.stack(vn_ins, dim=-1)
 
         sig_raw = torch.linalg.solve(A_ins_mat, b_ins_vec)
@@ -1951,33 +1955,35 @@ class IMRPhenomXAS(nn.Module):
         # Boundary derivative from inspiral at f_trans_phase
         dphi_tf2_trans = d_pn_phase_canonical_torch(f_trans_phase, eta, s1_eff, s2_eff, delta)
         f_trans_safe = torch.clamp(f_trans_phase, min=1e-8)
+        v_tr = torch.pow(f_trans_safe, 1.0 / 3.0)
+        v_tr2 = v_tr * v_tr
         d_pseudo_trans_raw = (
             sig1_cal
-            + sig2 * torch.pow(f_trans_safe, 1.0 / 3.0)
-            + sig3 * torch.pow(f_trans_safe, 2.0 / 3.0)
+            + sig2 * v_tr
+            + sig3 * v_tr2
             + sig4 * f_trans_safe
         )
         v1_int = eta * dphi_tf2_trans + d_pseudo_trans_raw
 
         vn_int = [v1_int, v2_int, v3_int, v4_int, v5_int]
 
-        A_int_rows = []
-        b_int_entries = []
-        for i, fn in enumerate(fn_int):
-            lorentz_int = 4.0 * c0_val / torch.clamp((fn - f_rd)**2 + (2.0 * f_damp)**2, min=1e-12)
-            b_entry = vn_int[i] - lorentz_int
-            row = torch.stack([
-                torch.ones_like(fn),
-                torch.pow(torch.clamp(fn, min=1e-8), -1.0),
-                torch.pow(torch.clamp(fn, min=1e-8), -2.0),
-                torch.pow(torch.clamp(fn, min=1e-8), -3.0),
-                torch.pow(torch.clamp(fn, min=1e-8), -4.0),
-            ], dim=-1)
-            A_int_rows.append(row)
-            b_int_entries.append(b_entry)
-
-        A_int_mat = torch.stack(A_int_rows, dim=-2)
-        b_int_vec = torch.stack(b_int_entries, dim=-1)
+        fn_int_stack = torch.stack(fn_int, dim=-1)
+        vn_int_stack = torch.stack(vn_int, dim=-1)
+        fn_int_safe = torch.clamp(fn_int_stack, min=1e-8)
+        c0_u = c0_val.unsqueeze(-1) if c0_val.ndim > 0 else c0_val
+        lorentz_int = 4.0 * c0_u / torch.clamp((fn_int_stack - f_rd_u)**2 + (2.0 * f_damp_u)**2, min=1e-12)
+        b_int_vec = vn_int_stack - lorentz_int
+        inv_int = 1.0 / fn_int_safe
+        inv_int2 = inv_int * inv_int
+        inv_int3 = inv_int2 * inv_int
+        inv_int4 = inv_int2 * inv_int2
+        A_int_mat = torch.stack([
+            torch.ones_like(fn_int_stack),
+            inv_int,
+            inv_int2,
+            inv_int3,
+            inv_int4,
+        ], dim=-1)
 
         b_coeffs = torch.linalg.solve(A_int_mat, b_int_vec)
         b0_val, b1_val, b2_val, b3_val, b4_val = (
