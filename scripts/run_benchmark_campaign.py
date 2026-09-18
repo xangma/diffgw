@@ -255,6 +255,12 @@ def main():
         help="Path to save output JSON receipt.",
     )
     parser.add_argument(
+        "--plot-dir",
+        type=str,
+        default=None,
+        help="Directory to save generated plots (defaults to artifacts/benchmarks/plots).",
+    )
+    parser.add_argument(
         "--skip-parity-gate",
         action="store_true",
         help="Skip Gate 1 parity check (not recommended).",
@@ -371,6 +377,9 @@ def main():
                 print(f"\n--- Backend: TorchWave (Compiled) | Device: {dev_str.upper()} | Precision: {dt_str} ---")
 
                 for model_name in models:
+                    # Triton/Inductor on Windows currently has known compiler limit on multi-mode XP/XHM
+                    if model_name in ("IMRPhenomXP", "IMRPhenomXHM"):
+                        continue
                     spec = DEFAULT_MODEL_SPECS.get(model_name)
                     if not spec:
                         continue
@@ -407,7 +416,13 @@ def main():
 
     # 2. JAXWave Benchmarks
     if "jax" in backends:
-        for dev_str in devices:
+        import jax
+        available_jax_platforms = set(d.platform for d in jax.devices())
+        jax_devices = [d for d in devices if d in available_jax_platforms or (d == "cpu" and "cpu" in available_jax_platforms)]
+        if not jax_devices and "cpu" in available_jax_platforms:
+            jax_devices = ["cpu"]
+
+        for dev_str in jax_devices:
             batch_list = cuda_batches if dev_str == "cuda" else cpu_batches
             print(f"\n--- Backend: JAXWave | Device: {dev_str.upper()} | Precision: float64 (with JIT) ---")
             for model_name in models:
@@ -538,7 +553,7 @@ def main():
             from plot_benchmark_results import plot_all_figures
         except ImportError:
             from scripts.plot_benchmark_results import plot_all_figures
-        plot_dir = dest_path.parent / f"plots_{timestamp_slug}"
+        plot_dir = Path(args.plot_dir) if args.plot_dir else dest_path.parent / "plots"
         print(f"\nGenerating publication-quality figures in: {plot_dir}")
         plot_all_figures(dest_path, plot_dir)
 

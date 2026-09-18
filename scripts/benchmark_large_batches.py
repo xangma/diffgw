@@ -223,6 +223,17 @@ def main():
         default=None,
         help="Optional path to output sealed receipt JSON.",
     )
+    parser.add_argument(
+        "--plot",
+        action="store_true",
+        help="Generate publication-grade plots (Fig 5 & 6) for VRAM and throughput.",
+    )
+    parser.add_argument(
+        "--plot-dir",
+        type=str,
+        default=None,
+        help="Optional path to output plots directory.",
+    )
 
     args = parser.parse_args()
 
@@ -314,6 +325,128 @@ def main():
     print(f"Benchmark finished! Sealed receipt saved to: {out_path.resolve()}")
     print(f"Content Seal SHA-256: {sealed['content_sha256']}")
     print("=" * 95)
+
+    if args.plot:
+        plot_dir = Path(args.plot_dir) if args.plot_dir else _REPO_ROOT / "artifacts" / "benchmarks" / "plots"
+        print(f"\nGenerating publication-quality figures in: {plot_dir}")
+        plot_large_batch_figures(results, plot_dir, provenance)
+
+
+def plot_large_batch_figures(results: List[Dict[str, Any]], output_dir: Path, provenance: Optional[Dict[str, Any]] = None):
+    """Plot Fig 5 (VRAM Scaling) and Fig 6 (Ultra-Large Batch Throughput)."""
+    import matplotlib
+    matplotlib.use("Agg")
+    import matplotlib.pyplot as plt
+
+    plt.rcParams.update({
+        "font.size": 11,
+        "axes.labelsize": 13,
+        "axes.titlesize": 14,
+        "xtick.labelsize": 11,
+        "ytick.labelsize": 11,
+        "legend.fontsize": 10,
+        "figure.titlesize": 16,
+        "figure.dpi": 300,
+        "savefig.dpi": 300,
+        "savefig.bbox": "tight",
+        "axes.grid": True,
+        "grid.alpha": 0.35,
+        "grid.linestyle": "--",
+        "lines.linewidth": 2.0,
+        "lines.markersize": 7,
+    })
+
+    output_dir.mkdir(parents=True, exist_ok=True)
+    models = ["TaylorF2", "IMRPhenomD", "IMRPhenomXAS", "IMRPhenomXP", "IMRPhenomXHM"]
+    model_colors = {
+        "TaylorF2": "#1f77b4",
+        "IMRPhenomD": "#ff7f0e",
+        "IMRPhenomXAS": "#2ca02c",
+        "IMRPhenomXP": "#d62728",
+        "IMRPhenomXHM": "#9467bd",
+    }
+    model_markers = {
+        "TaylorF2": "o",
+        "IMRPhenomD": "s",
+        "IMRPhenomXAS": "^",
+        "IMRPhenomXP": "D",
+        "IMRPhenomXHM": "v",
+    }
+
+    # Fig 5: VRAM Scaling (2 subplots: Peak VRAM MB & Memory per waveform KB)
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 5.5))
+
+    for m in models:
+        for dt_str, ls, alpha in [("float64", "-", 1.0), ("float32", "--", 0.85)]:
+            pts = [r for r in results if r.get("model") == m and r.get("dtype") == dt_str and r.get("status") == "SUCCESS"]
+            if not pts:
+                continue
+            pts.sort(key=lambda x: x["batch_size"])
+            bs = [p["batch_size"] for p in pts]
+            peak_vram = [p["peak_vram_mb"] for p in pts]
+            vram_per_wf = [p["vram_per_waveform_kb"] for p in pts]
+            lbl = f"{m} ({'FP64' if dt_str == 'float64' else 'FP32'})"
+            c = model_colors.get(m, "#333333")
+            mk = model_markers.get(m, "o")
+
+            ax1.plot(bs, peak_vram, linestyle=ls, marker=mk, color=c, alpha=alpha, label=lbl)
+            ax2.plot(bs, vram_per_wf, linestyle=ls, marker=mk, color=c, alpha=alpha, label=lbl)
+
+    ax1.set_xscale("log")
+    ax1.set_yscale("log")
+    ax1.set_xlabel("Batch Size (B)")
+    ax1.set_ylabel("Peak Allocated VRAM (MB)")
+    ax1.set_title("Peak VRAM Scaling Across Batch Sizes")
+    ax1.grid(True, which="both", alpha=0.3)
+
+    ax2.set_xscale("log")
+    ax2.set_xlabel("Batch Size (B)")
+    ax2.set_ylabel("VRAM per Waveform (KB / wf)")
+    ax2.set_title("Amortized Memory Footprint per Waveform")
+    ax2.grid(True, which="both", alpha=0.3)
+
+    handles, labels = ax1.get_legend_handles_labels()
+    fig.legend(handles, labels, loc="lower center", ncol=5, bbox_to_anchor=(0.5, -0.1), frameon=True)
+    fig.suptitle("DiffGW GPU Memory Footprint & Scaling on NVIDIA RTX 5090 (32GB GDDR7)", fontsize=14, y=1.02)
+    fig.tight_layout()
+
+    f5_png = output_dir / "fig5_vram_scaling.png"
+    f5_pdf = output_dir / "fig5_vram_scaling.pdf"
+    fig.savefig(f5_png, bbox_inches="tight")
+    fig.savefig(f5_pdf, bbox_inches="tight")
+    plt.close(fig)
+    print(f"  -> Generated: {f5_png}")
+
+    # Fig 6: Ultra-Large Batch Throughput Saturation
+    fig, ax = plt.subplots(figsize=(10, 6))
+    for m in models:
+        for dt_str, ls, alpha in [("float64", "-", 1.0), ("float32", "--", 0.85)]:
+            pts = [r for r in results if r.get("model") == m and r.get("dtype") == dt_str and r.get("status") == "SUCCESS"]
+            if not pts:
+                continue
+            pts.sort(key=lambda x: x["batch_size"])
+            bs = [p["batch_size"] for p in pts]
+            tps = [p["wf_per_sec"] for p in pts]
+            lbl = f"{m} ({'FP64' if dt_str == 'float64' else 'FP32'})"
+            c = model_colors.get(m, "#333333")
+            mk = model_markers.get(m, "o")
+            ax.plot(bs, tps, linestyle=ls, marker=mk, color=c, alpha=alpha, label=lbl)
+
+    ax.set_xscale("log")
+    ax.set_yscale("log")
+    ax.set_xlabel("Batch Size (B)")
+    ax.set_ylabel("Waveform Throughput (waveforms / sec)")
+    ax.set_title("DiffGW Ultra-Large Batch Throughput Saturation (NVIDIA RTX 5090 32GB)", pad=12)
+    ax.grid(True, which="both", alpha=0.35)
+    ax.legend(bbox_to_anchor=(1.02, 1.0), loc="upper left", frameon=True)
+    fig.tight_layout()
+
+    f6_png = output_dir / "fig6_ultra_batch_throughput.png"
+    f6_pdf = output_dir / "fig6_ultra_batch_throughput.pdf"
+    fig.savefig(f6_png, bbox_inches="tight")
+    fig.savefig(f6_pdf, bbox_inches="tight")
+    plt.close(fig)
+    print(f"  -> Generated: {f6_png}")
 
 
 if __name__ == "__main__":

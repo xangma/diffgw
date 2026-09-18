@@ -73,13 +73,38 @@ def elliptic_K_agm(m, iterations=12):
     return torch.pi / (2 * a)
 
 
+_LEGGAUSS_DATA: dict = {}
+for _ord in (24, 48, 64):
+    import numpy as _np
+    _n, _w = _np.polynomial.legendre.leggauss(_ord)
+    _LEGGAUSS_DATA[_ord] = (tuple(float(x) for x in _n), tuple(float(x) for x in _w))
+
+_LEGGAUSS_CACHE: dict = {}
+
+
+@torch.compiler.disable
+def _get_leggauss(order: int, dtype: torch.dtype, device: torch.device):
+    key = (order, dtype, device)
+    val = _LEGGAUSS_CACHE.get(key)
+    if val is None:
+        if order in _LEGGAUSS_DATA:
+            n_tup, w_tup = _LEGGAUSS_DATA[order]
+        else:
+            import numpy as _np
+            n_arr, w_arr = _np.polynomial.legendre.leggauss(order)
+            n_tup = tuple(float(x) for x in n_arr)
+            w_tup = tuple(float(x) for x in w_arr)
+        nodes = torch.tensor(n_tup, dtype=dtype, device=device)
+        weights = torch.tensor(w_tup, dtype=dtype, device=device)
+        _LEGGAUSS_CACHE[key] = (nodes, weights)
+        return nodes, weights
+    return val
+
+
 def elliptic_E_quadrature(m, quadrature=48):
     """Complete E(m), evaluated by fixed quadrature for autograd support."""
     m = torch.as_tensor(m)
-    import numpy as np
-    n, w = np.polynomial.legendre.leggauss(quadrature)
-    x = torch.as_tensor(n, dtype=m.dtype, device=m.device)
-    weights = torch.as_tensor(w, dtype=m.dtype, device=m.device)
+    x, weights = _get_leggauss(quadrature, m.dtype, m.device)
     theta = (x + 1) * (torch.pi / 4)
     return (weights * torch.sqrt(1 - m.unsqueeze(-1) * torch.sin(theta) ** 2)).sum(-1) * (torch.pi / 4)
 
@@ -118,10 +143,7 @@ def averaged_spin_couplings(mean_s1l, mean_s2l, S_plus2, S_minus2, q, eta, v0):
 def jacobi_sn(u, m, iterations=16, quadrature=64):
     """Differentiable Jacobi sn via period reduction and fixed inversion of F."""
     u, m = torch.broadcast_tensors(torch.as_tensor(u), torch.as_tensor(m))
-    import numpy as np
-    n, w = np.polynomial.legendre.leggauss(quadrature)
-    nodes = torch.as_tensor(n, dtype=u.dtype, device=u.device)
-    weights = torch.as_tensor(w, dtype=u.dtype, device=u.device)
+    nodes, weights = _get_leggauss(quadrature, u.dtype, u.device)
     K = elliptic_K_agm(m)
     # sn has period 4K and sn(2K-u)=sn(u); fold into the invertible [-K,K].
     r = torch.remainder(u + 2 * K, 4 * K) - 2 * K
@@ -149,9 +171,7 @@ def initial_phase(S2, S_plus2, S_minus2, S3_2, triple_product):
     m = (S_plus2 - S_minus2) / (S_plus2 - S3_2)
     y = ((S_plus2 - S2) / (S_plus2 - S_minus2)).clamp(0, 1).sqrt()
     amp = torch.asin(y)
-    n, w = __import__('numpy').polynomial.legendre.leggauss(24)
-    nodes = torch.as_tensor(n, dtype=amp.dtype, device=amp.device)
-    weights = torch.as_tensor(w, dtype=amp.dtype, device=amp.device)
+    nodes, weights = _get_leggauss(24, amp.dtype, amp.device)
     z = amp.unsqueeze(-1) * (nodes + 1) / 2
     base = (weights * (1 - m.unsqueeze(-1) * torch.sin(z)**2).rsqrt()).sum(-1) * amp / 2
     return torch.where(triple_product < 0, -base, base)
