@@ -63,20 +63,24 @@ def _natural_cubic_derivative(nodes, values, query):
     x = x.to(solve_dtype)
     y = y.to(solve_dtype)
     q = q.to(solve_dtype)
-    if not (
-        bool(torch.isfinite(x).all())
-        and bool(torch.isfinite(y).all())
-        and bool(torch.isfinite(q).all())
-    ):
-        raise ValueError("natural cubic inputs must be finite")
-    widths = x[1:] - x[:-1]
-    if bool(torch.any(widths <= 0.0)):
-        raise ValueError("natural cubic nodes must be strictly increasing")
-    step = widths[0]
-    if not bool(torch.allclose(widths, step, rtol=1.0e-6, atol=1.0e-12)):
-        raise ValueError("natural cubic nodes must be uniformly spaced")
-    if bool(torch.any((q < x[0]) | (q > x[-1]))):
-        raise ValueError("natural cubic query lies outside the interpolation interval")
+    if not (hasattr(torch.compiler, "is_compiling") and torch.compiler.is_compiling()):
+        if not (
+            bool(torch.isfinite(x).all())
+            and bool(torch.isfinite(y).all())
+            and bool(torch.isfinite(q).all())
+        ):
+            raise ValueError("natural cubic inputs must be finite")
+        widths = x[1:] - x[:-1]
+        if bool(torch.any(widths <= 0.0)):
+            raise ValueError("natural cubic nodes must be strictly increasing")
+        step = widths[0]
+        if not bool(torch.allclose(widths, step, rtol=1.0e-6, atol=1.0e-12)):
+            raise ValueError("natural cubic nodes must be uniformly spaced")
+        if bool(torch.any((q < x[0]) | (q > x[-1]))):
+            raise ValueError("natural cubic query lies outside the interpolation interval")
+    else:
+        widths = x[1:] - x[:-1]
+        step = widths[0]
 
     # For equally spaced nodes, the interior moment system is
     # M[i-1] + 4 M[i] + M[i+1] = 6 (y[i-1] - 2 y[i] + y[i+1]) / h**2.
@@ -115,8 +119,9 @@ def _phase_sample_bounds(frd, total_mass_seconds):
         torch.as_tensor(PHASE_SPLINE_CUTOFF_MF, dtype=frd.dtype, device=frd.device)
         / total_mass_seconds,
     )
-    if bool(high <= low):
-        raise ValueError("Pv2 phase-spline support is empty at the remnant frequency")
+    if not (hasattr(torch.compiler, "is_compiling") and torch.compiler.is_compiling()):
+        if bool(torch.any(high <= low)):
+            raise ValueError("Pv2 phase-spline support is empty at the remnant frequency")
     return low, high
 
 
@@ -167,8 +172,11 @@ def _geometry(m1, m2, s1x, s1y, s1z, s2x, s2y, s2z, iota, phi, fref):
     # LAL's public source-frame API reports the polarization gauge with the
     # spin-weighted (rather than geometric tangent) zero, i.e. +pi/2 here.
     zeta = torch.atan2(torch.dot(ox, y), torch.dot(ox, xs)) + math.pi / 2
-    # Its ``phi_aligned`` is the passive azimuth of J.
-    phi_j = -torch.atan2(J[1], J[0]) if torch.linalg.vector_norm(J[:2]) > 1e-14 else math.pi/2 - phi
+    phi_j = torch.where(
+        torch.linalg.vector_norm(J[:2]) > 1e-14,
+        -torch.atan2(J[1], J[0]),
+        torch.as_tensor(math.pi / 2 - phi, dtype=J.dtype, device=J.device),
+    )
     return alpha0, theta, zeta, phi_j
 
 
@@ -192,11 +200,20 @@ def waveform(frequency, mass1, mass2, spin1x=0., spin1y=0., spin1z=0.,
     )
     fi = torch.as_tensor(frequency)
     fi = fi if fi.is_floating_point() else fi.to(torch.float64)
-    f = fi.to(torch.float64).reshape(-1); pos = f[f > 0]
-    if not pos.numel(): raise ValueError("frequency grid must contain a positive frequency")
+    f = fi.to(torch.float64).reshape(-1)
+    f_inf = torch.where(f > 0.0, f, torch.as_tensor(float("inf"), device=f.device, dtype=torch.float64))
+    pos_min = f_inf.min()
+    if not (hasattr(torch.compiler, "is_compiling") and torch.compiler.is_compiling()):
+        if bool(torch.isinf(pos_min)):
+            raise ValueError("frequency grid must contain a positive frequency")
+    pos_min_fallback = torch.where(torch.isinf(pos_min), torch.as_tensor(20.0, device=f.device, dtype=torch.float64), pos_min)
+    if f_ref is None:
+        fr = pos_min_fallback
+    else:
+        f_ref_t = torch.as_tensor(f_ref, dtype=torch.float64, device=f.device)
+        fr = torch.where(f_ref_t > 0.0, f_ref_t, pos_min_fallback)
     vals = [torch.as_tensor(x, dtype=torch.float64, device=f.device) for x in
             (mass1,mass2,spin1x,spin1y,spin1z,spin2x,spin2y,spin2z,distance,inclination,phic,tc)]
-    fr = pos.min() if f_ref is None else torch.as_tensor(f_ref, dtype=torch.float64, device=f.device)
     vals.append(fr); vals = torch.broadcast_tensors(*vals)
     if not (hasattr(torch.compiler, "is_compiling") and torch.compiler.is_compiling()):
         if torch.any(vals[0] <= 0) or torch.any(vals[1] <= 0) or torch.any(vals[8] <= 0):

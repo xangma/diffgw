@@ -25,8 +25,9 @@ _C52 = -4283.0 * math.pi / 1092.0
 
 def _validate_frequency(frequency_hz: torch.Tensor) -> torch.Tensor:
     """Validate the positive GW-frequency domain required by Eq. (18)."""
-    if not torch.isfinite(frequency_hz).all() or not (frequency_hz > 0).all():
-        raise ValueError("NRTidalv2 frequency must contain finite strictly positive values")
+    if not torch.compiler.is_compiling():
+        if not torch.isfinite(frequency_hz).all() or not (frequency_hz > 0).all():
+            raise ValueError("NRTidalv2 frequency must contain finite strictly positive values")
     return frequency_hz
 
 # The remaining Padé coefficients are constrained by Eq. (21).  Computing

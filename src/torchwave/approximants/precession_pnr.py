@@ -336,7 +336,7 @@ def evaluate_pnr_precession(
 
     # In-plane spin check
     in_plane_sq = s1x * s1x + s1y * s1y + s2x * s2x + s2y * s2y
-    if bool((in_plane_sq == 0).all()):
+    if not torch.compiler.is_compiling() and bool((in_plane_sq == 0).all()):
         return a_st, b_st, g_st, th_jn, zeta, cp
 
     # 2. PNR single spin & fits
@@ -436,9 +436,11 @@ def evaluate_pnr_precession(
     # 6. Outside calibration window smooth blending
     w = pnr_angles_window(q, chi_mag)
     w_u = u_param(w)
-    alpha_final = w_u * alpha_pnr + (1.0 - w_u) * a_st
-    beta_final = w_u * beta_pnr + (1.0 - w_u) * b_st
-    gamma_final = w_u * gamma_pnr + (1.0 - w_u) * g_st
+    has_in_plane = u_param(in_plane_sq > 0)
+    w_effective = torch.where(has_in_plane, w_u, torch.zeros_like(w_u))
+    alpha_final = w_effective * alpha_pnr + (1.0 - w_effective) * a_st
+    beta_final = w_effective * beta_pnr + (1.0 - w_effective) * b_st
+    gamma_final = w_effective * gamma_pnr + (1.0 - w_effective) * g_st
 
     if not is_batched and alpha_final.dim() > f.dim():
         alpha_final = alpha_final.squeeze(0)

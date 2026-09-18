@@ -802,10 +802,11 @@ class IMRPhenomNSBH(nn.Module):
         # explicit zero before evaluating the logarithmic phase expressions.
         ref_f = f_ref if f_ref is not None else 30.0
         ref_f = as_tensor(ref_f, device=device, dtype=dtype)
-        if torch.any(~torch.isfinite(ref_f)):
-            raise ValueError("f_ref must contain only finite, non-negative values")
-        if torch.any(ref_f < 0.0):
-            raise ValueError("f_ref must be non-negative; zero selects the lowest positive frequency")
+        if not torch.compiler.is_compiling():
+            if torch.any(~torch.isfinite(ref_f)):
+                raise ValueError("f_ref must contain only finite, non-negative values")
+            if torch.any(ref_f < 0.0):
+                raise ValueError("f_ref must be non-negative; zero selects the lowest positive frequency")
         first_positive = torch.amin(
             torch.where(
                 f_eval > 0.0,

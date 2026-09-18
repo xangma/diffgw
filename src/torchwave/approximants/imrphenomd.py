@@ -11,6 +11,7 @@ the paper citations alone do not establish the origin of every stored digit.
 
 from typing import Dict, Optional, Tuple, Union
 import torch
+import torch.nn as nn
 import math
 
 from torchwave.constants import (
@@ -73,8 +74,11 @@ def _get_table_v_matrix(device: torch.device, dtype: torch.dtype) -> torch.Tenso
 
 
 
-class IMRPhenomD:
+class IMRPhenomD(nn.Module):
     """IMRPhenomD Frequency-Domain Aligned-Spin Phenomenological Waveform Model."""
+
+    def __init__(self):
+        super().__init__()
 
     @staticmethod
     def amplitude_peak_frequency(f_rd, f_damp, gamma2, gamma3):
@@ -353,9 +357,8 @@ class IMRPhenomD:
         ) / eta
         return slope_peak
 
-    @staticmethod
-
-    def __call__(
+    def forward(
+        self,
         f: torch.Tensor,
         mass1: Union[float, torch.Tensor],
         mass2: Union[float, torch.Tensor],
@@ -994,6 +997,12 @@ class IMRPhenomD:
             return h_plus, h_cross, total_phase
 
         return h_plus, h_cross
+
+    def __call__(*args, **kwargs):
+        if len(args) > 0 and isinstance(args[0], IMRPhenomD):
+            return super(IMRPhenomD, args[0]).__call__(*args[1:], **kwargs)
+        inst = IMRPhenomD()
+        return inst(*args, **kwargs)
 
     evaluate = __call__
 

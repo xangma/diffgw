@@ -31,8 +31,27 @@ def _raw(mu, c, coeff):
     return torch.exp(c * mu) * (1 + mu) ** 2 * total
 
 
+def _norm_vectorized(c, coeff, n_intervals=32):
+    nodes = torch.tensor(_K21_NODES, dtype=c.real.dtype, device=c.device)
+    weights = torch.tensor(_K21_WEIGHTS, dtype=c.real.dtype, device=c.device)
+    edges = torch.linspace(-1.0, 1.0, n_intervals + 1, dtype=c.real.dtype, device=c.device)
+    lo = edges[:-1]
+    hi = edges[1:]
+    x = (hi.unsqueeze(1) - lo.unsqueeze(1)) / 2 * nodes.unsqueeze(0) + (hi.unsqueeze(1) + lo.unsqueeze(1)) / 2
+    w = (hi.unsqueeze(1) - lo.unsqueeze(1)) / 2 * weights.unsqueeze(0)
+    x_flat = x.reshape(-1)
+    w_flat = w.reshape(-1)
+    c_in = c.reshape(-1, 1)
+    coeff_in = coeff.reshape(-1, 1, coeff.shape[-1])
+    y = _raw(x_flat, c_in, coeff_in).abs().square()
+    k = (y * w_flat.unsqueeze(0)).sum(dim=-1)
+    return torch.sqrt(2 * math.pi * k).real.reshape(c.shape)
+
+
 def _norm(c, coeff, tol=1e-6, max_intervals=1000):
     """Globally adaptive embedded K21/G10 norm (inferred numerical convention)."""
+    if torch.compiler.is_compiling():
+        return _norm_vectorized(c, coeff)
     nodes = torch.tensor(_K21_NODES, dtype=c.real.dtype, device=c.device)
     weights = torch.tensor(_K21_WEIGHTS, dtype=c.real.dtype, device=c.device)
     gweights = torch.tensor(_G10_WEIGHTS, dtype=c.real.dtype, device=c.device)
@@ -61,12 +80,14 @@ def spin_weighted_spheroidal_harmonic_table_compat(spin, theta, phi=0.0, *, n_te
         spin = torch.as_tensor(spin)
     if not spin.is_floating_point():
         spin = spin.to(torch.float64)
-    if (spin.abs() > 0.9996).any() or not torch.isfinite(spin).all():
-        raise ValueError("spin must be finite and in [-0.9996,0.9996]")
+    if not torch.compiler.is_compiling():
+        if (spin.abs() > 0.9996).any() or not torch.isfinite(spin).all():
+            raise ValueError("spin must be finite and in [-0.9996,0.9996]")
     theta = torch.as_tensor(theta, dtype=spin.dtype, device=spin.device)
     phi = torch.as_tensor(phi, dtype=spin.dtype, device=spin.device)
-    if not torch.isfinite(theta).all() or not torch.isfinite(phi).all():
-        raise ValueError("theta and phi must be finite")
+    if not torch.compiler.is_compiling():
+        if not torch.isfinite(theta).all() or not torch.isfinite(phi).all():
+            raise ValueError("theta and phi must be finite")
     real, damp = signed_qnm_220(spin.to(torch.float64))
     # The angular callable's public eigenvalue uses 2 M omega; our QNM helper
     # returns M omega, so c=(a)(2M omega)=spin*(M omega).

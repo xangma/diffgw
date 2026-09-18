@@ -459,8 +459,8 @@ def evaluate_spintaylor_precession(
     if is_batched and f_eval.dim() == 1:
         f_eval = f_eval.unsqueeze(0)
 
-    pos_f = f_eval[f_eval > 0]
-    f_min_grid = pos_f.min() if pos_f.numel() > 0 else f_ref_t
+    pos_f_min = torch.where(f_eval > 0, f_eval, torch.full_like(f_eval, float("inf"))).amin()
+    f_min_grid = torch.where(torch.isfinite(pos_f_min), pos_f_min, f_ref_t)
     # Clamp minimum physical frequency for ODE stability in PN band
     f_min_eval = torch.minimum(f_ref_t, torch.clamp(f_min_grid, min=torch.tensor(15.0, dtype=f.dtype, device=f.device)))
     v_min = (PI * m_sec * f_min_eval).pow(1.0 / 3.0)
@@ -618,13 +618,9 @@ def evaluate_spintaylor_precession(
     # Reference value offset alignment at f_ref
     u_ref = (v0 - v_min) / torch.clamp(v_trans - v_min, min=1e-12)
     idx_ref = torch.clamp((u_ref * float(n_nodes - 1)).to(torch.int64), 0, n_nodes - 2)
-    if alpha_nodes.dim() > 1:
-        idx_g = idx_ref if idx_ref.dim() == alpha_nodes.dim() else idx_ref.unsqueeze(-1)
-        alpha_ref_val = torch.gather(alpha_nodes, -1, idx_g).squeeze(-1)
-        gamma_ref_val = torch.gather(gamma_nodes, -1, idx_g).squeeze(-1)
-    else:
-        alpha_ref_val = alpha_nodes[idx_ref]
-        gamma_ref_val = gamma_nodes[idx_ref]
+    idx_g = idx_ref.unsqueeze(-1)
+    alpha_ref_val = torch.gather(alpha_nodes, -1, idx_g).squeeze(-1)
+    gamma_ref_val = torch.gather(gamma_nodes, -1, idx_g).squeeze(-1)
 
     # In LAL, alpha(f_ref) = 0 for SpinTaylor
     alpha_offset = -alpha_ref_val

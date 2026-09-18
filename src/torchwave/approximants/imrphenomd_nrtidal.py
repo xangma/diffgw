@@ -198,10 +198,11 @@ def _nrtidal_self_spin_components(
     xa = mass1 / total_mass
     xb = mass2 / total_mass
 
-    # If spins are effectively zero, return zeros
-    if torch.all(torch.abs(chi1) < 1e-12) and torch.all(torch.abs(chi2) < 1e-12):
-        zero = torch.zeros_like(x)
-        return zero, zero
+    # If spins are effectively zero, return zeros (eager shortcut)
+    if not (hasattr(torch.compiler, "is_compiling") and torch.compiler.is_compiling()):
+        if torch.all(torch.abs(chi1) < 1e-12) and torch.all(torch.abs(chi2) < 1e-12):
+            zero = torch.zeros_like(x)
+            return zero, zero
 
     cq1, coc1 = _quadrupole_monopole_constants(lambda1)
     cq2, coc2 = _quadrupole_monopole_constants(lambda2)

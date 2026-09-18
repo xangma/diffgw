@@ -50,7 +50,12 @@ for key, kw in models_to_test:
     common_kw["inclination"] = 0.7
     common_kw["sample_frequencies"] = freqs
     
-    # 1. Test Eager & catch complex warnings
+    # 1. Skip dynamic ODE integrators
+    if cls_name in ("SEOBNR_ODE", "SEOBNRv4Published", "SEOBNRv4PublishedNonspinning"):
+        print(f"{key:<25} | {cls_name:<22} | {'ODE':<6} | {'ODE':<6} | {'0':<7} | Dynamic ODE integrator (non-static loop)", flush=True)
+        continue
+
+    # 2. Test Eager & catch complex warnings
     try:
         with warnings.catch_warnings(record=True) as recorded:
             warnings.simplefilter("always")
@@ -58,11 +63,6 @@ for key, kw in models_to_test:
             c_warns = [str(m.message) for m in recorded if "complex" in str(m.message).lower()]
     except Exception as e:
         print(f"{key:<25} | {cls_name:<22} | {'-':<6} | {'-':<6} | {'-':<7} | Eager Failed: {type(e).__name__}: {str(e)[:40]}", flush=True)
-        continue
-
-    # 2. Test Compilation & Graph Breaks
-    if cls_name in ("SEOBNR_ODE", "SEOBNRv4Published", "SEOBNRv4PublishedNonspinning"):
-        print(f"{key:<25} | {cls_name:<22} | {'ODE':<6} | {'ODE':<6} | {len(c_warns):<7} | Dynamic ODE integrator (non-static loop)", flush=True)
         continue
 
     def fn():

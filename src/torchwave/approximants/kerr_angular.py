@@ -143,8 +143,9 @@ def leaver_frobenius_coefficients(
         c = torch.as_tensor(c, dtype=torch.complex128)
     elif c.dtype not in (torch.complex64, torch.complex128):
         c = c.to(torch.complex128 if c.dtype == torch.float64 else torch.complex64)
-    if not bool(torch.all(torch.isfinite(c))):
-        raise ValueError("c must be finite.")
+    if not torch.compiler.is_compiling():
+        if not bool(torch.all(torch.isfinite(c))):
+            raise ValueError("c must be finite.")
 
     n = torch.arange(n_terms, dtype=c.real.dtype, device=c.device)
     def recurrence_matrix(cvalue):

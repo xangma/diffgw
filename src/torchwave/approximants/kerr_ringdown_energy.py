@@ -84,9 +84,10 @@ def ringdown_amplitude_from_energy_fraction(
         # rounding before the chosen dtype is applied.
         value = torch.as_tensor(value, dtype=dtype, device=device)
         invalid_sign = value < 0 if name == "energy_fraction" else value <= 0
-        if bool(torch.any(~torch.isfinite(value) | invalid_sign)):
-            domain = "nonnegative" if name == "energy_fraction" else "positive"
-            raise ValueError(f"{name} must be finite and {domain}")
+        if not torch.compiler.is_compiling():
+            if bool(torch.any(~torch.isfinite(value) | invalid_sign)):
+                domain = "nonnegative" if name == "energy_fraction" else "positive"
+                raise ValueError(f"{name} must be finite and {domain}")
         converted.append(value)
     mass, distance, efficiency, omega, tau = torch.broadcast_tensors(*converted)
 

@@ -22,15 +22,17 @@ def _params(final_mass, final_spin, distance, energy_fraction, inclination, phic
         if v.is_floating_point(): dtype=v.dtype if dtype is None else torch.promote_types(dtype,v.dtype)
     dtype=dtype or torch.float64
     out=[torch.as_tensor(v,dtype=dtype,device=device) for v in vals]
-    if not all(torch.isfinite(v).all() for v in out):
-        raise ValueError('physical parameters must be finite')
+    if not torch.compiler.is_compiling():
+        if not all(torch.isfinite(v).all() for v in out):
+            raise ValueError('physical parameters must be finite')
     params=list(torch.broadcast_tensors(*[torch.as_tensor(v,dtype=dtype,device=device) for v in out]))
     return params
 
 def _grid(g, params):
     g = torch.as_tensor(g, dtype=params[0].dtype, device=params[0].device)
-    if not torch.isfinite(g).all():
-        raise ValueError('time/frequency grid must be finite')
+    if not torch.compiler.is_compiling():
+        if not torch.isfinite(g).all():
+            raise ValueError('time/frequency grid must be finite')
     params=list(torch.broadcast_tensors(*params))
     if g.ndim:
         grid_ndim=g.ndim

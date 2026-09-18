@@ -1260,7 +1260,9 @@ class IMRPhenomHM(nn.Module):
 
         # The time shift is applied to the complete complex positive-mode sum,
         # matching the public D convention while retaining full complex scale.
-        if torch.any(t_c != 0):
+        if not torch.compiler.is_compiling() and not torch.any(t_c != 0):
+            pass
+        else:
             angle = -2.0 * PI * f_eval * tc_eval
             shift = torch.complex(torch.cos(angle), torch.sin(angle))
             h_plus_total = h_plus_total * shift
