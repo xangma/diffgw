@@ -9,7 +9,7 @@ from importlib import import_module
 import diffgw_core as core
 
 __version__ = "0.1.0"
-__all__ = ["core", "torch", "jax", "get_fd_waveform", "get_td_waveform", "WaveformGenerator"]
+__all__ = ["core", "torch", "jax", "get_fd_waveform", "get_td_waveform", "WaveformGenerator", "list_approximants"]
 
 
 def _backend(name):
@@ -43,6 +43,11 @@ def get_fd_waveform(*args, backend="torch", **kwargs):
 def get_td_waveform(*args, backend="torch", **kwargs):
     """Generate time-domain polarizations using the selected frontend's public API."""
     return _backend(backend).get_td_waveform(*args, **kwargs)
+
+
+def list_approximants(*args, backend="torch", **kwargs):
+    """List available approximants using the selected frontend's public API."""
+    return _backend(backend).list_approximants(*args, **kwargs)
 
 
 class WaveformGenerator:

@@ -4,7 +4,7 @@ Permissively licensed (MIT), pure PyTorch implementation adhering strictly to
 clean-room literature derivations.
 """
 
-from typing import Any, Dict, Optional, Sequence, Tuple, Union
+from typing import Any, Dict, List, Optional, Sequence, Tuple, Union
 import math
 import torch
 
@@ -101,6 +101,144 @@ _APPROXIMANTS = {
 }
 
 
+_CANONICAL_APPROXIMANTS: List[str] = [
+    "TaylorF2",
+    "TaylorF2_HM",
+    "TaylorF2_Eccentric",
+    "IMRPhenomD",
+    "IMRPhenomD_NRTidal",
+    "IMRPhenomD_NRTidalv2",
+    "IMRPhenomHM",
+    "IMRPhenomXAS",
+    "IMRPhenomXHM",
+    "IMRPhenomP",
+    "IMRPhenomXP",
+    "IMRPhenomXPHM",
+    "IMRPhenomNSBH",
+    "KerrRingdown",
+    "SEOBNRv4_ROM",
+    "SEOBNR_ODE",
+    "TEOBResumS",
+]
+
+_APPROXIMANT_CATEGORIES: Dict[str, List[str]] = {
+    "aligned_spin": ["TaylorF2", "IMRPhenomD", "IMRPhenomXAS", "SEOBNRv4_ROM"],
+    "higher_modes": ["TaylorF2_HM", "IMRPhenomHM", "IMRPhenomXHM", "IMRPhenomXPHM"],
+    "precessing": ["IMRPhenomP", "IMRPhenomXP", "IMRPhenomXPHM"],
+    "tidal": ["IMRPhenomD_NRTidal", "IMRPhenomD_NRTidalv2", "IMRPhenomNSBH", "TEOBResumS"],
+    "eccentric": ["TaylorF2_Eccentric"],
+    "ringdown": ["KerrRingdown"],
+    "eob": ["SEOBNRv4_ROM", "SEOBNR_ODE", "TEOBResumS"],
+    "frequency_domain": [
+        "TaylorF2",
+        "TaylorF2_HM",
+        "TaylorF2_Eccentric",
+        "IMRPhenomD",
+        "IMRPhenomD_NRTidal",
+        "IMRPhenomD_NRTidalv2",
+        "IMRPhenomHM",
+        "IMRPhenomXAS",
+        "IMRPhenomXHM",
+        "IMRPhenomP",
+        "IMRPhenomXP",
+        "IMRPhenomXPHM",
+        "IMRPhenomNSBH",
+        "KerrRingdown",
+        "SEOBNRv4_ROM",
+    ],
+    "time_domain": ["SEOBNR_ODE", "TEOBResumS"],
+}
+
+
+def list_approximants(
+    category: Optional[str] = None,
+    by_category: bool = False,
+) -> Union[List[str], Dict[str, List[str]]]:
+    """List available gravitational-wave waveform approximants in TorchWave.
+
+    Parameters
+    ----------
+    category : str, optional
+        Filter by model category: 'aligned_spin', 'higher_modes', 'precessing',
+        'tidal', 'eccentric', 'ringdown', 'eob', 'frequency_domain', 'time_domain'.
+        Defaults to None (all models).
+    by_category : bool, optional
+        If True, returns a dictionary mapping category names to lists of approximant names.
+        Defaults to False.
+
+    Returns
+    -------
+    List[str] or Dict[str, List[str]]
+        List of canonical approximant names, or dict of categories if by_category is True.
+    """
+    if by_category:
+        return {k: list(v) for k, v in _APPROXIMANT_CATEGORIES.items()}
+    if category is not None:
+        cat_key = category.lower().replace("-", "_").replace(" ", "_")
+        if cat_key not in _APPROXIMANT_CATEGORIES:
+            raise ValueError(
+                f"Unknown category '{category}'. Available: {sorted(_APPROXIMANT_CATEGORIES.keys())}"
+            )
+        return list(_APPROXIMANT_CATEGORIES[cat_key])
+    return list(_CANONICAL_APPROXIMANTS)
+
+
+_PARAMETER_NAME_MAP: Dict[str, str] = {
+    "mass_1": "mass1",
+    "m1": "mass1",
+    "mass_2": "mass2",
+    "m2": "mass2",
+    "spin_1z": "spin1z",
+    "spin_2z": "spin2z",
+    "spin_1x": "spin1x",
+    "spin_1y": "spin1y",
+    "spin_2x": "spin2x",
+    "spin_2y": "spin2y",
+    "s1z": "spin1z",
+    "s2z": "spin2z",
+    "s1x": "spin1x",
+    "s1y": "spin1y",
+    "s2x": "spin2x",
+    "s2y": "spin2y",
+    "chi_1": "chi1",
+    "chi_2": "chi2",
+    "luminosity_distance": "distance",
+    "dist": "distance",
+    "theta_jn": "inclination",
+    "inc": "inclination",
+    "iota": "inclination",
+    "phase": "phic",
+    "coa_phase": "phic",
+    "phi_c": "phic",
+    "geocent_time": "tc",
+    "t_c": "tc",
+    "time": "tc",
+    "lambda_1": "lambda1",
+    "lambda_2": "lambda2",
+    "flow": "f_lower",
+    "f_low": "f_lower",
+    "f_min": "f_lower",
+    "fmin": "f_lower",
+    "fhigh": "f_final",
+    "f_max": "f_final",
+    "fmax": "f_final",
+    "df": "delta_f",
+    "deltaf": "delta_f",
+    "dt": "delta_t",
+    "deltat": "delta_t",
+    "freqs": "sample_frequencies",
+    "frequencies": "sample_frequencies",
+}
+
+
+def normalize_waveform_params(params: Dict[str, Any]) -> Dict[str, Any]:
+    """Map common astrophysical and parameter-estimation aliases to standard TorchWave names."""
+    normalized: Dict[str, Any] = {}
+    for k, v in params.items():
+        norm_k = _PARAMETER_NAME_MAP.get(k, k)
+        normalized[norm_k] = v
+    return normalized
+
 
 _UNSET = object()
 
@@ -172,8 +310,11 @@ def _get_fd_waveform_raw(
     """
     key = approximant.lower().replace("_", "").replace("-", "")
     if key not in _APPROXIMANTS:
+        import difflib
+        matches = difflib.get_close_matches(approximant, _CANONICAL_APPROXIMANTS, n=1, cutoff=0.4)
+        hint = f" Did you mean '{matches[0]}'?" if matches else ""
         raise ValueError(
-            f"Approximant '{approximant}' not recognized. Available: {list(_APPROXIMANTS.keys())}"
+            f"Approximant '{approximant}' not recognized.{hint} Available models: {_CANONICAL_APPROXIMANTS}"
         )
     if frequency_support not in (None, "sequence", "uniform"):
         raise ValueError("frequency_support must be 'sequence' or 'uniform'")
@@ -235,8 +376,8 @@ def _get_fd_waveform_raw(
 
     # Spin resolution and validation
     if chi1 is not _UNSET and spin1z is not None:
-        t_chi1 = as_tensor(chi1)
-        t_s1z = as_tensor(spin1z)
+        t_chi1 = as_tensor(chi1, device=device, dtype=dtype)
+        t_s1z = as_tensor(spin1z, device=device, dtype=dtype)
         if not torch.allclose(t_chi1, t_s1z, atol=1e-12, rtol=1e-8):
             raise ValueError(f"Conflicting spin1 definitions: chi1={chi1} and spin1z={spin1z}")
         s1z = spin1z
@@ -248,8 +389,8 @@ def _get_fd_waveform_raw(
         s1z = 0.0
 
     if chi2 is not _UNSET and spin2z is not None:
-        t_chi2 = as_tensor(chi2)
-        t_s2z = as_tensor(spin2z)
+        t_chi2 = as_tensor(chi2, device=device, dtype=dtype)
+        t_s2z = as_tensor(spin2z, device=device, dtype=dtype)
         if not torch.allclose(t_chi2, t_s2z, atol=1e-12, rtol=1e-8):
             raise ValueError(f"Conflicting spin2 definitions: chi2={chi2} and spin2z={spin2z}")
         s2z = spin2z
@@ -407,9 +548,9 @@ def _get_fd_waveform_raw(
         # This route is deliberately separate from the legacy surrogate.
         # The official release is external data and cannot be silently
         # replaced by an in-tree approximation.
-        if lambda1 is not None and torch.any(as_tensor(lambda1) != 0):
+        if lambda1 is not None and torch.any(as_tensor(lambda1, device=device, dtype=dtype) != 0):
             raise ValueError("SEOBNRv4_ROM does not support tidal deformability")
-        if lambda2 is not None and torch.any(as_tensor(lambda2) != 0):
+        if lambda2 is not None and torch.any(as_tensor(lambda2, device=device, dtype=dtype) != 0):
             raise ValueError("SEOBNRv4_ROM does not support tidal deformability")
         if phasing_convention not in (None, "coalescence", "reference_frequency"):
             raise ValueError("unsupported phasing_convention for SEOBNRv4_ROM")
@@ -596,8 +737,8 @@ def _get_fd_waveform_raw(
 
 def get_fd_waveform(
     approximant: str,
-    mass1: Union[float, torch.Tensor],
-    mass2: Union[float, torch.Tensor],
+    mass1: Optional[Union[float, torch.Tensor]] = None,
+    mass2: Optional[Union[float, torch.Tensor]] = None,
     chi1: Union[float, torch.Tensor, object] = _UNSET,
     chi2: Union[float, torch.Tensor, object] = _UNSET,
     spin1x: Union[float, torch.Tensor] = 0.0,
@@ -633,7 +774,7 @@ def get_fd_waveform(
         Waveform model name (e.g., 'IMRPhenomD', 'IMRPhenomXHM', 'IMRPhenomXP',
         'IMRPhenomXPHM', 'TaylorF2', 'SEOBNRv4_ROM', 'TEOBResumS', etc.).
     mass1, mass2 : float or torch.Tensor
-        Component masses in solar masses (M_sun).
+        Component masses in solar masses (M_sun). Standard aliases (mass_1, m1, etc.) accepted.
     chi1, chi2 : float or torch.Tensor, optional
         Aligned dimensionless spins in [-1, 1]. Deprecated in favor of spin1z, spin2z.
     spin1x, spin1y, spin1z : float or torch.Tensor, optional
@@ -674,6 +815,55 @@ def get_fd_waveform(
     h_plus, h_cross : torch.Tensor
         Complex Fourier amplitudes of the plus and cross gravitational wave polarizations.
     """
+    if kwargs:
+        norm_kwargs = normalize_waveform_params(kwargs)
+        if mass1 is None and "mass1" in norm_kwargs:
+            mass1 = norm_kwargs.pop("mass1")
+        if mass2 is None and "mass2" in norm_kwargs:
+            mass2 = norm_kwargs.pop("mass2")
+        if chi1 is _UNSET and "chi1" in norm_kwargs:
+            chi1 = norm_kwargs.pop("chi1")
+        if chi2 is _UNSET and "chi2" in norm_kwargs:
+            chi2 = norm_kwargs.pop("chi2")
+        if spin1z is None and "spin1z" in norm_kwargs:
+            spin1z = norm_kwargs.pop("spin1z")
+        if spin2z is None and "spin2z" in norm_kwargs:
+            spin2z = norm_kwargs.pop("spin2z")
+        if spin1x == 0.0 and "spin1x" in norm_kwargs:
+            spin1x = norm_kwargs.pop("spin1x")
+        if spin1y == 0.0 and "spin1y" in norm_kwargs:
+            spin1y = norm_kwargs.pop("spin1y")
+        if spin2x == 0.0 and "spin2x" in norm_kwargs:
+            spin2x = norm_kwargs.pop("spin2x")
+        if spin2y == 0.0 and "spin2y" in norm_kwargs:
+            spin2y = norm_kwargs.pop("spin2y")
+        if distance == 100.0 and "distance" in norm_kwargs:
+            distance = norm_kwargs.pop("distance")
+        if inclination == 0.0 and "inclination" in norm_kwargs:
+            inclination = norm_kwargs.pop("inclination")
+        if phic == 0.0 and "phic" in norm_kwargs:
+            phic = norm_kwargs.pop("phic")
+        if tc == 0.0 and "tc" in norm_kwargs:
+            tc = norm_kwargs.pop("tc")
+        if lambda1 is None and "lambda1" in norm_kwargs:
+            lambda1 = norm_kwargs.pop("lambda1")
+        if lambda2 is None and "lambda2" in norm_kwargs:
+            lambda2 = norm_kwargs.pop("lambda2")
+        if f_ref is None and "f_ref" in norm_kwargs:
+            f_ref = norm_kwargs.pop("f_ref")
+        if f_lower is None and "f_lower" in norm_kwargs:
+            f_lower = norm_kwargs.pop("f_lower")
+        if f_final is None and "f_final" in norm_kwargs:
+            f_final = norm_kwargs.pop("f_final")
+        if delta_f is None and "delta_f" in norm_kwargs:
+            delta_f = norm_kwargs.pop("delta_f")
+        if sample_frequencies is None and "sample_frequencies" in norm_kwargs:
+            sample_frequencies = norm_kwargs.pop("sample_frequencies")
+        kwargs = norm_kwargs
+
+    if mass1 is None or mass2 is None:
+        raise TypeError("get_fd_waveform() requires both 'mass1' and 'mass2' (or aliases 'mass_1', 'm1', etc.)")
+
     out = _get_fd_waveform_raw(
         approximant=approximant,
         mass1=mass1,
@@ -735,8 +925,8 @@ def get_fd_waveform(
 
 def get_td_waveform(
     approximant: str,
-    mass1: Union[float, torch.Tensor],
-    mass2: Union[float, torch.Tensor],
+    mass1: Optional[Union[float, torch.Tensor]] = None,
+    mass2: Optional[Union[float, torch.Tensor]] = None,
     chi1: Union[float, torch.Tensor, object] = _UNSET,
     chi2: Union[float, torch.Tensor, object] = _UNSET,
     spin1x: Union[float, torch.Tensor] = 0.0,
@@ -776,7 +966,7 @@ def get_td_waveform(
 
     Args:
         approximant: Waveform approximant name
-        mass1, mass2: Component masses in solar masses
+        mass1, mass2: Component masses in solar masses (aliases mass_1, m1 accepted)
         chi1, chi2: Aligned dimensionless spins
         spin1x, spin1y, spin1z: 3D primary spin components
         spin2x, spin2y, spin2z: 3D secondary spin components
@@ -798,6 +988,52 @@ def get_td_waveform(
     Returns:
         (h_plus, h_cross) or (h_plus, h_cross, times)
     """
+    if kwargs:
+        norm_kwargs = normalize_waveform_params(kwargs)
+        if mass1 is None and "mass1" in norm_kwargs:
+            mass1 = norm_kwargs.pop("mass1")
+        if mass2 is None and "mass2" in norm_kwargs:
+            mass2 = norm_kwargs.pop("mass2")
+        if chi1 is _UNSET and "chi1" in norm_kwargs:
+            chi1 = norm_kwargs.pop("chi1")
+        if chi2 is _UNSET and "chi2" in norm_kwargs:
+            chi2 = norm_kwargs.pop("chi2")
+        if spin1z is None and "spin1z" in norm_kwargs:
+            spin1z = norm_kwargs.pop("spin1z")
+        if spin2z is None and "spin2z" in norm_kwargs:
+            spin2z = norm_kwargs.pop("spin2z")
+        if spin1x == 0.0 and "spin1x" in norm_kwargs:
+            spin1x = norm_kwargs.pop("spin1x")
+        if spin1y == 0.0 and "spin1y" in norm_kwargs:
+            spin1y = norm_kwargs.pop("spin1y")
+        if spin2x == 0.0 and "spin2x" in norm_kwargs:
+            spin2x = norm_kwargs.pop("spin2x")
+        if spin2y == 0.0 and "spin2y" in norm_kwargs:
+            spin2y = norm_kwargs.pop("spin2y")
+        if distance == 100.0 and "distance" in norm_kwargs:
+            distance = norm_kwargs.pop("distance")
+        if inclination == 0.0 and "inclination" in norm_kwargs:
+            inclination = norm_kwargs.pop("inclination")
+        if phic == 0.0 and "phic" in norm_kwargs:
+            phic = norm_kwargs.pop("phic")
+        if tc == 0.0 and "tc" in norm_kwargs:
+            tc = norm_kwargs.pop("tc")
+        if lambda1 is None and "lambda1" in norm_kwargs:
+            lambda1 = norm_kwargs.pop("lambda1")
+        if lambda2 is None and "lambda2" in norm_kwargs:
+            lambda2 = norm_kwargs.pop("lambda2")
+        if f_lower == 20.0 and "f_lower" in norm_kwargs:
+            f_lower = norm_kwargs.pop("f_lower")
+        if f_final is None and "f_final" in norm_kwargs:
+            f_final = norm_kwargs.pop("f_final")
+        if delta_t == 1.0 / 2048.0 and "delta_t" in norm_kwargs:
+            delta_t = norm_kwargs.pop("delta_t")
+        if duration is None and "duration" in norm_kwargs:
+            duration = norm_kwargs.pop("duration")
+        kwargs = norm_kwargs
+
+    if mass1 is None or mass2 is None:
+        raise TypeError("get_td_waveform() requires both 'mass1' and 'mass2' (or aliases 'mass_1', 'm1', etc.)")
     m1_t = as_tensor(mass1, device=device, dtype=dtype)
     m2_t = as_tensor(mass2, device=device, dtype=dtype)
 
@@ -926,15 +1162,25 @@ class WaveformGenerator:
         delta_f: Optional[float] = None,
         sample_frequencies: Optional[Any] = None,
         modes: Optional[Sequence[Tuple[int, int]]] = None,
+        device: Optional[Union[str, torch.device]] = None,
+        dtype: torch.dtype = torch.float64,
         **default_kwargs,
     ):
-        self.approximant = approximant
-        self.f_lower = f_lower
-        self.f_final = f_final
-        self.delta_f = delta_f
-        self.sample_frequencies = sample_frequencies
-        self.modes = modes
-        self.default_kwargs = default_kwargs
+        norm_init = normalize_waveform_params(default_kwargs)
+        self.approximant = norm_init.pop("approximant", approximant)
+        self.f_lower = norm_init.pop("f_lower", f_lower)
+        self.f_final = norm_init.pop("f_final", f_final)
+        self.delta_f = norm_init.pop("delta_f", delta_f)
+        sf = norm_init.pop("sample_frequencies", sample_frequencies)
+        self.sample_frequencies = sf
+        self.modes = norm_init.pop("modes", modes)
+        self.device = norm_init.pop("device", device)
+        self.dtype = norm_init.pop("dtype", dtype)
+        self.default_kwargs = norm_init
+        if sf is not None:
+            self._cached_frequencies = torch.as_tensor(sf, dtype=self.dtype, device=self.device)
+        else:
+            self._cached_frequencies = None
 
     def generate_fd_waveform(
         self,
@@ -946,39 +1192,28 @@ class WaveformGenerator:
         if parameters is not None:
             params.update(parameters)
         params.update(kwargs)
+        normalized_params = normalize_waveform_params(params)
 
-        name_map = {
-            "mass_1": "mass1",
-            "mass_2": "mass2",
-            "spin_1z": "spin1z",
-            "spin_2z": "spin2z",
-            "spin_1x": "spin1x",
-            "spin_1y": "spin1y",
-            "spin_2x": "spin2x",
-            "spin_2y": "spin2y",
-            "luminosity_distance": "distance",
-            "theta_jn": "inclination",
-            "phase": "phic",
-            "geocent_time": "tc",
-            "lambda_1": "lambda1",
-            "lambda_2": "lambda2",
-        }
-        normalized_params = {}
-        for k, v in params.items():
-            norm_k = name_map.get(k, k)
-            normalized_params[norm_k] = v
+        sf = normalized_params.pop(
+            "sample_frequencies",
+            self._cached_frequencies if self._cached_frequencies is not None else self.sample_frequencies,
+        )
 
         call_kwargs = {
             "approximant": normalized_params.pop("approximant", self.approximant),
             "f_lower": normalized_params.pop("f_lower", self.f_lower),
             "f_final": normalized_params.pop("f_final", self.f_final),
             "delta_f": normalized_params.pop("delta_f", self.delta_f),
-            "sample_frequencies": normalized_params.pop("sample_frequencies", self.sample_frequencies),
+            "sample_frequencies": sf,
             "modes": normalized_params.pop("modes", self.modes),
+            "device": normalized_params.pop("device", self.device),
+            "dtype": normalized_params.pop("dtype", self.dtype),
         }
         call_kwargs.update(normalized_params)
 
         return get_fd_waveform(**call_kwargs)
+
+    get_fd_waveform = generate_fd_waveform
 
     def __call__(self, *args, **kwargs):
         if args and isinstance(args[0], dict):
@@ -990,5 +1225,8 @@ __all__ = [
     "get_fd_waveform",
     "get_td_waveform",
     "WaveformGenerator",
+    "list_approximants",
+    "normalize_waveform_params",
 ]
+
 

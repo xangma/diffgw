@@ -105,3 +105,18 @@ where = ["src"]
 testpaths = ["tests"]
 python_files = ["test_*.py"]
 pythonpath = ["src", "tests"]
+
+[tool.ruff]
+line-length = 120
+target-version = "py310"
+
+[tool.ruff.lint]
+select = ["E", "F", "W"]
+ignore = [
+    "E741",  # Ambiguous variable name 'l' (standard harmonic multipole index in gravitational wave physics)
+    "E501",  # Line too long
+    "E402",  # Module level import not at top of file
+    "E701",  # Multiple statements on one line (colon)
+    "E702",  # Multiple statements on one line (semicolon)
+]
+

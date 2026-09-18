@@ -1,6 +1,12 @@
 """torchwave: High-performance, clean-room gravitational-wave waveform generator in PyTorch."""
 
-from torchwave.waveforms import get_fd_waveform, get_td_waveform, WaveformGenerator
+from torchwave.waveforms import (
+    get_fd_waveform,
+    get_td_waveform,
+    WaveformGenerator,
+    list_approximants,
+    normalize_waveform_params,
+)
 from torchwave.approximants.taylorf2 import TaylorF2
 from torchwave.approximants.taylorf2_hm import TaylorF2_HM
 from torchwave.approximants.imrphenomd import IMRPhenomD
@@ -92,6 +98,8 @@ __all__ = [
     "get_td_waveform",
     "get_ringdown_waveform",
     "WaveformGenerator",
+    "list_approximants",
+    "normalize_waveform_params",
     "TaylorF2",
     "TaylorF2_HM",
     "TaylorF2_Eccentric",

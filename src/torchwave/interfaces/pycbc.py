@@ -8,11 +8,9 @@ and parameter estimation workflows.
 from __future__ import annotations
 
 import math
-from typing import Any, Dict, Optional, Tuple, Union
-import numpy as np
+from typing import Any, Dict, Sequence, Tuple
 import torch
 
-import torchwave
 from torchwave.waveforms import get_fd_waveform
 
 try:

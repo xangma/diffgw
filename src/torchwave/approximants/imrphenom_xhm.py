@@ -14,7 +14,6 @@ assembly and phase conventions are not certified by those checks.
 """
 
 from typing import Dict, Optional, Sequence, Tuple, Union
-from functools import wraps
 import math
 import torch
 import torch.nn as nn
@@ -40,7 +39,6 @@ from torchwave.approximants.xhm_native_fits import (
     eval_native_phase_params,
 )
 from torchwave.approximants.imrphenom_hm import (
-    _swsh_projection_coefficients,
     _swsh_projection_coefficients_cartesian,
 )
 from torchwave.approximants.polynomial_interval import polynomial_has_nonpositive
@@ -144,8 +142,13 @@ def _unsqueeze_to(tensor: Union[float, torch.Tensor], target: torch.Tensor) -> t
 
 def _value_and_derivative(function, frequency: torch.Tensor):
     """Value and pointwise frequency derivative using forward-mode JVP, retaining parameter gradients."""
-    tangent = torch.ones_like(frequency)
-    return torch.func.jvp(function, (frequency,), (tangent,))
+    is_scalar = frequency.dim() == 0
+    freq_input = frequency.unsqueeze(0) if is_scalar else frequency
+    tangent = torch.ones_like(freq_input)
+    val, deriv = torch.func.jvp(function, (freq_input,), (tangent,))
+    if is_scalar:
+        return val.squeeze(0), deriv.squeeze(0)
+    return val, deriv
 
 
 def _allow_internal_frequency_derivatives(function):
@@ -189,11 +192,28 @@ def _spherical_32_from_spheroidal_cartesian(h22_re, h22_im, h32_s, r_re, r_im, c
     return mixed_re, mixed_im
 
 
+def _spherical_32_from_spheroidal(h22, h32_s, alpha222, alpha232, alpha322, alpha332):
+    """Eliminate h22,S from the two simultaneous equations in Eq. (A3)."""
+    ratio = alpha322 / alpha222
+    return ratio * h22 + (alpha332 - ratio * alpha232) * h32_s
+
+
 def _carrier_h22_ratio_cartesian(strain, phase, phase_reference, a0):
     """Put the physical carrier in the H_lm normalization of Eq. (4.6) in Cartesian real components."""
     amp = torch.abs(strain / a0)
     dphi = phase - phase_reference
     return amp * torch.cos(dphi), -amp * torch.sin(dphi)
+
+
+def _carrier_h22_ratio(strain, phase, phase_reference, a0):
+    """Put the physical carrier in the H_lm normalization of Eq. (4.6)."""
+    amp = torch.abs(strain / a0)
+    dphi = phase - phase_reference
+    return torch.complex(amp * torch.cos(dphi), -amp * torch.sin(dphi))
+
+
+_DEFAULT_CARRIER_H22_RATIO = _carrier_h22_ratio
+_DEFAULT_SPHERICAL_32_FROM_SPHEROIDAL = _spherical_32_from_spheroidal
 
 
 def _eval_f_isco(chi: torch.Tensor) -> torch.Tensor:
@@ -988,6 +1008,18 @@ class IMRPhenomXHM(nn.Module):
                         # distance normalization is applied.
                         a0 = _unsqueeze_to(m_sec * torch.sqrt(5.0 * eta / 24.0) / PI ** (2.0 / 3.0), f_in) * f_in ** (-7.0 / 6.0)
                         phase_s = eval_phi_32_s(f_in)
+                        if _carrier_h22_ratio is not _DEFAULT_CARRIER_H22_RATIO or _spherical_32_from_spheroidal is not _DEFAULT_SPHERICAL_32_FROM_SPHEROIDAL:
+                            rel22 = _carrier_h22_ratio(strain22, phase22, phase_s, a0)
+                            alpha222 = torch.complex(a222_re, a222_im)
+                            alpha232 = torch.complex(a232_re, a232_im)
+                            alpha322 = torch.complex(a322_re, a322_im)
+                            alpha332 = torch.complex(a332_re, a332_im)
+                            mixed = _spherical_32_from_spheroidal(
+                                rel22, eval_h_rd_s(f_in),
+                                _unsqueeze_to(alpha222, f_in), _unsqueeze_to(alpha232, f_in),
+                                _unsqueeze_to(alpha322, f_in), _unsqueeze_to(alpha332, f_in),
+                            )
+                            return mixed.real, mixed.imag
                         # Eq. (4.6) defines H_lm against A^0_22. The common
                         # sqrt(16*pi/5) factor in the paper's A^0_22 and mode
                         # amplitude cancels, leaving the native carrier ratio.

@@ -6,7 +6,7 @@ All conversions strictly implement peer-reviewed formulations:
 - Tidal parameter combinations: Flanagan & Hinderer (2008), PRD 77, 021502; Vines et al. (2011), PRD 83, 084051; Wade et al. (2014), PRD 89, 103012.
 """
 
-from typing import Tuple, Union
+from typing import Any, Tuple, Union
 import math
 import torch
 
@@ -14,18 +14,18 @@ from torchwave.constants import MSUN_SEC, PI
 
 
 def as_tensor(
-    x: Union[float, int, torch.Tensor],
+    x: Union[float, int, torch.Tensor, Any],
     device: Union[str, torch.device, None] = None,
     dtype: torch.dtype = torch.float64,
 ) -> torch.Tensor:
-    """Ensure input is converted to a torch.Tensor with specified dtype and device."""
+    """Ensure input is converted to a torch.Tensor with specified dtype and device without unnecessary copies."""
     if isinstance(x, torch.Tensor):
         if device is not None and x.device != torch.device(device):
             x = x.to(device=device)
         if x.dtype != dtype and x.is_floating_point():
             x = x.to(dtype=dtype)
         return x
-    return torch.tensor(x, dtype=dtype, device=device)
+    return torch.as_tensor(x, dtype=dtype, device=device)
 
 
 def component_masses_to_chirp_mass(

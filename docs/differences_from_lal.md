@@ -36,10 +36,10 @@ The unified `diffgw` architecture extracts zero-dependency physical constants, u
 * **Damping Width Scaling**: Outside the core calibration range, the reference implementation applies a damping width scaling relative to the $(2,2)$ mode:
   $$\alpha_2^{\ell m} = \frac{f_{\rm damp}^{22}}{f_{\rm damp}^{\ell m}} \alpha_2^{22}, \quad \alpha_\lambda^{\ell m} = \alpha_\lambda^{22}$$
 
-#### TorchWave Formulation
+#### Independent NR Calibration & Native QNM
 * **Independent SXS NR Calibrations**: TorchWave independently calibrates ringdown amplitude and phase surfaces directly against raw, high-resolution **SXS Numerical Relativity simulations** (released under CC-BY-4.0).
 * **Native Kerr Leaver QNM Solver**: Ringdown frequencies $f_{\rm ring}$ and damping widths $f_{\rm damp}$ are computed natively using TorchWave's exact spectral Leaver solver for Kerr perturbation theory, rather than relying on external tables.
-* **Smooth Formulations in $x = 4\eta - 1$**: Fits are parametrized using low-order polynomials in the symmetric mass ratio coordinate $x = 4\eta - 1 \in [-1, 0]$:
+* **Smooth Parametrizations in $x = 4\eta - 1$**: Fits are parametrized using low-order polynomials in the symmetric mass ratio coordinate $x = 4\eta - 1 \in [-1, 0]$:
   * **Amplitude**: Exact Lorentzian profile with calibrated $|A_\lambda|$ and $\lambda$ for all higher harmonics, maintaining monotonic behavior across mass ratios.
   * **Phase**: Smooth rational phase surfaces for $\alpha_2$ and $\alpha_\lambda$ with arrival time offsets $t_0$ aligned across $(2,1), (3,3), (4,4), (3,2)$.
 * **Holdout Validation**: Verified against unseen SXS holdout simulations ($1 \le q \le 10$), achieving Phase RMS error $< 0.02\text{ rad}$ for $(3,3)$ ($< 0.15\text{ rad}$ for other modes), overlap matches $> 99.9\%$, and arrival time consistency within $\pm 0.20 M$.
@@ -50,11 +50,11 @@ The unified `diffgw` architecture extracts zero-dependency physical constants, u
 
 * **Approximant Type**: Time-domain Effective-One-Body numerical integrators with Kerr quasinormal mode ringdown attachment.
 
-#### Numerical and Formulation Differences
+#### Reference Attachment Conventions
 * **Finite-Difference Peak Finding**: In reference EOB implementations, the time-domain ODE inspiral is matched to the merger-ringdown quasinormal modes via Next-to-Quasi-Circular (NQC) corrections at the peak of the orbital frequency $\Omega(t)$. The reference implementation locates this peak ($d\Omega/dt = 0$) and evaluates time derivatives using a 7-point finite-difference stencil.
 * **Step-Size Considerations**: Because adaptive ODE integrators (such as Runge-Kutta-Fehlberg or Dormand-Prince) vary step sizes dynamically, evaluating finite-difference stencils across adaptive or interpolated trajectories can exhibit sensitivity to local step-size spacing near the attachment boundary.
 
-#### TorchWave Formulation
+#### Continuous Spline Attachment
 * **Continuous Spline Attachment**: Implemented in [`src/torchwave/approximants/continuous_matching.py`](file:///Users/xangma/repos/torchwave/src/torchwave/approximants/continuous_matching.py). TorchWave fits a continuous cubic Hermite spline to the trajectory and solves for the root of $d\Omega/dt = 0$ using Brent-Dekker / Newton-Raphson root-finding.
 * **Analytical $C^1$ Continuity**: Matching coefficients and time shifts are computed directly from the continuous spline's analytical derivatives, providing smooth, differentiable $C^1$ continuity into the Kerr QNM ringdown independent of ODE step size.
 
@@ -68,7 +68,7 @@ The unified `diffgw` architecture extracts zero-dependency physical constants, u
 * **PhenomD Double-Precision Tables & Gauge**: The canonical PhenomD paper ([Khan et al. 2016 Paper II, Table V](https://doi.org/10.1103/PhysRevD.93.044007)) prints polynomial coefficients rounded to 5–6 decimal digits, whereas the reference C implementation uses full double-precision coefficients along with a specific global time-origin shift convention ($t_0$). An implementation evaluating only the printed constants in the paper exhibits small norm and phase differences compared to the C baseline.
 * **PhenomXAS Implementation Details**: The reference C implementation contains specific numerical branch choices and conventions relative to the primary paper.
 
-#### TorchWave Formulation
+#### Primary Literature Specification & Double-Precision Gauge
 * **Canonical APS PRD Symbolic Fits**: For `IMRPhenomXAS`, TorchWave ingests the exact 26 rational parameter-space fits directly from the canonical author deposit with the American Physical Society (`IMRPhenomXAS_Parameter_Space_Fits_Public_Release_Candidate.m`, SHA256 `94b9334c...`), achieving exact agreement to **$4.2 \times 10^{-14}$**.
 * **Precise Gauge Alignment**: For `IMRPhenomD`, TorchWave incorporates full double-precision polynomial expressions and resolves the reference time-origin gauge, achieving parity to **$< 1.0 \times 10^{-6}$** relative $L_2$ error and **$< 10^{-8}$** mismatch across standard parameter space.
 
@@ -81,7 +81,7 @@ The unified `diffgw` architecture extracts zero-dependency physical constants, u
 #### API and Mode Availability
 * **Frequency-Domain Mode Scope**: In LALSimulation, the frequency-domain multi-mode generator `SimInspiralChooseFDModes` does not generate higher multipoles for `TaylorF2`; standard calls return the dominant $(2,2)$ mode. LALSimulation does not currently provide a higher-multipole frequency-domain generator for TaylorF2.
 
-#### TorchWave Formulation
+#### Analytical Post-Newtonian Higher Multipoles
 * **Analytical Post-Newtonian Multipoles**: TorchWave implements analytical post-Newtonian higher multipoles $(\ell, m) \in \{(2,1), (3,3), (3,2), (4,4)\}$ derived directly from primary post-Newtonian literature ([Kidder 2008, Phys. Rev. D 77, 044016](https://doi.org/10.1103/PhysRevD.77.044016); [Arun et al. 2009, Phys. Rev. D 79, 104023](https://doi.org/10.1103/PhysRevD.79.104023)).
 * The dominant $(2,2)$ mode matches LAL's `TaylorF2` to **$1.6 \times 10^{-12}$**.
 
