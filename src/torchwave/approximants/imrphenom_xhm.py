@@ -39,7 +39,10 @@ from torchwave.approximants.xhm_native_fits import (
     eval_native_ringdown_params,
     eval_native_phase_params,
 )
-from torchwave.approximants.imrphenom_hm import _swsh_projection_coefficients
+from torchwave.approximants.imrphenom_hm import (
+    _swsh_projection_coefficients,
+    _swsh_projection_coefficients_cartesian,
+)
 from torchwave.approximants.polynomial_interval import polynomial_has_nonpositive
 
 
@@ -142,17 +145,7 @@ def _unsqueeze_to(tensor: Union[float, torch.Tensor], target: torch.Tensor) -> t
 def _value_and_derivative(function, frequency: torch.Tensor):
     """Value and pointwise frequency derivative using forward-mode JVP, retaining parameter gradients."""
     tangent = torch.ones_like(frequency)
-    try:
-        return torch.func.jvp(function, (frequency,), (tangent,))
-    except Exception:
-        outer_grad = torch.is_grad_enabled()
-        with torch.enable_grad():
-            probe = frequency.clone().requires_grad_(True)
-            value = function(probe)
-            derivative = torch.autograd.grad(value.sum(), probe, create_graph=outer_grad)[0]
-        if not outer_grad:
-            return value.detach(), derivative.detach()
-        return value, derivative
+    return torch.func.jvp(function, (frequency,), (tangent,))
 
 
 def _allow_internal_frequency_derivatives(function):
@@ -189,24 +182,18 @@ def _pn_phase_lambda(l, m, frequency, eta, delta):  # noqa: E741
     return coeff * frequency
 
 
-def _spherical_32_from_spheroidal(h22, h32_s, alpha222, alpha232, alpha322, alpha332):
-    """Eliminate h22,S from the two simultaneous equations in Eq. (A3).
-
-    Coefficients here are entries of the published matrix, in row order.
-    In particular, the available quadrupole input is spherical, not spheroidal.
-    """
-    ratio = alpha322 / alpha222
-    return ratio * h22 + (alpha332 - ratio * alpha232) * h32_s
+def _spherical_32_from_spheroidal_cartesian(h22_re, h22_im, h32_s, r_re, r_im, c_re, c_im):
+    """Eliminate h22,S from the two simultaneous equations in Eq. (A3) using Cartesian real components."""
+    mixed_re = (r_re * h22_re - r_im * h22_im) + c_re * h32_s
+    mixed_im = (r_re * h22_im + r_im * h22_re) + c_im * h32_s
+    return mixed_re, mixed_im
 
 
-def _carrier_h22_ratio(strain, phase, phase_reference, a0):
-    """Put the physical carrier in the H_lm normalization of Eq. (4.6).
-
-    Here ``a0`` is the native physical leading quadrupole amplitude. The
-    paper's ``A^0_22`` and spherical mode amplitude both carry the common
-    ``sqrt(16*pi/5)`` factor, so it cancels in their ratio.
-    """
-    return torch.abs(strain / a0) * torch.exp(-1j * (phase - phase_reference))
+def _carrier_h22_ratio_cartesian(strain, phase, phase_reference, a0):
+    """Put the physical carrier in the H_lm normalization of Eq. (4.6) in Cartesian real components."""
+    amp = torch.abs(strain / a0)
+    dphi = phase - phase_reference
+    return amp * torch.cos(dphi), -amp * torch.sin(dphi)
 
 
 def _eval_f_isco(chi: torch.Tensor) -> torch.Tensor:
@@ -821,20 +808,22 @@ class IMRPhenomXHM(nn.Module):
         def eval_carrier_phi_and_deriv(mf_target: torch.Tensor):
             return _value_and_derivative(eval_carrier_phase_at, mf_target)
 
-        h_plus_total = torch.zeros_like(
-            amp_22_phys, dtype=torch.complex128 if dtype == torch.float64 else torch.complex64
-        )
-        h_cross_total = torch.zeros_like(h_plus_total)
+        h_plus_re = torch.zeros_like(amp_22_phys)
+        h_plus_im = torch.zeros_like(amp_22_phys)
+        h_cross_re = torch.zeros_like(amp_22_phys)
+        h_cross_im = torch.zeros_like(amp_22_phys)
         mode_dict = {}
 
-        # Store h22 for mode-mixing with (3,2)
-        exp_neg_i_phi22 = torch.complex(torch.cos(phi_22_carrier), -torch.sin(phi_22_carrier))
-        h22_mode_strain = (mode_norm * amp_22_phys).to(exp_neg_i_phi22.dtype) * exp_neg_i_phi22
+        # Store h22 Cartesian components for (2,2) and mode-mixing with (3,2)
+        h22_amp = mode_norm * amp_22_phys
+        h22_re = h22_amp * torch.cos(phi_22_carrier)
+        h22_im = -h22_amp * torch.sin(phi_22_carrier)
 
         for l, m in active_modes:  # noqa: E741
             lm_str = f"{l}{m}"
             if (l, m) == (2, 2):
-                h_mode = h22_mode_strain
+                h_mode_re = h22_re
+                h_mode_im = h22_im
             else:
                 m_flt = float(m)
                 f_ins_a = f_ins_amp[lm_str]
@@ -976,10 +965,21 @@ class IMRPhenomXHM(nn.Module):
                         )
 
                     eval_h_rd_s = eval_h_rd
-                    alpha222 = torch.complex(*XHMParameterFits.mixing_alpha222(chi_f))
-                    alpha232 = torch.complex(*XHMParameterFits.mixing_alpha223(chi_f))
-                    alpha322 = torch.complex(*XHMParameterFits.mixing_alpha322(chi_f))
-                    alpha332 = torch.complex(*XHMParameterFits.mixing_alpha333(chi_f))
+                    a222_re, a222_im = XHMParameterFits.mixing_alpha222(chi_f)
+                    a232_re, a232_im = XHMParameterFits.mixing_alpha223(chi_f)
+                    a322_re, a322_im = XHMParameterFits.mixing_alpha322(chi_f)
+                    a332_re, a332_im = XHMParameterFits.mixing_alpha333(chi_f)
+
+                    # ratio r = alpha322 / alpha222
+                    d = a222_re**2 + a222_im**2
+                    r_re = (a322_re * a222_re + a322_im * a222_im) / d
+                    r_im = (a322_im * a222_re - a322_re * a222_im) / d
+
+                    # c = alpha332 - ratio * alpha232
+                    ra_re = r_re * a232_re - r_im * a232_im
+                    ra_im = r_re * a232_im + r_im * a232_re
+                    c_re = a332_re - ra_re
+                    c_im = a332_im - ra_im
 
                     def eval_mixed_rd_relative(f_in: torch.Tensor):
                         strain22, phase22 = eval_carrier_at(f_in)
@@ -991,20 +991,22 @@ class IMRPhenomXHM(nn.Module):
                         # Eq. (4.6) defines H_lm against A^0_22. The common
                         # sqrt(16*pi/5) factor in the paper's A^0_22 and mode
                         # amplitude cancels, leaving the native carrier ratio.
-                        relative22 = _carrier_h22_ratio(strain22, phase22, phase_s, a0)
-                        return _spherical_32_from_spheroidal(
-                            relative22, eval_h_rd_s(f_in),
-                            _unsqueeze_to(alpha222, f_in), _unsqueeze_to(alpha232, f_in),
-                            _unsqueeze_to(alpha322, f_in), _unsqueeze_to(alpha332, f_in),
+                        rel22_re, rel22_im = _carrier_h22_ratio_cartesian(strain22, phase22, phase_s, a0)
+                        return _spherical_32_from_spheroidal_cartesian(
+                            rel22_re, rel22_im, eval_h_rd_s(f_in),
+                            _unsqueeze_to(r_re, f_in), _unsqueeze_to(r_im, f_in),
+                            _unsqueeze_to(c_re, f_in), _unsqueeze_to(c_im, f_in),
                         )
 
                     def eval_phi_32_rd(f_in: torch.Tensor):
                         # Factoring out the smooth spheroidal phase avoids
                         # wrapping its many orbital cycles into [-pi, pi].
-                        return eval_phi_32_s(f_in) - torch.angle(eval_mixed_rd_relative(f_in))
+                        mixed_re, mixed_im = eval_mixed_rd_relative(f_in)
+                        return eval_phi_32_s(f_in) - torch.atan2(mixed_im, mixed_re)
 
                     def eval_h_rd(f_in: torch.Tensor) -> torch.Tensor:
-                        return torch.abs(eval_mixed_rd_relative(f_in))
+                        mixed_re, mixed_im = eval_mixed_rd_relative(f_in)
+                        return torch.hypot(mixed_re, mixed_im)
 
                 def eval_dh_rd(f_in: torch.Tensor) -> torch.Tensor:
                     return _value_and_derivative(eval_h_rd, f_in)[1]
@@ -1411,8 +1413,8 @@ class IMRPhenomXHM(nn.Module):
                             phi_rd_grid,
                         ),
                     )
-                    exp_neg_i_psi = torch.complex(torch.cos(psi_lm), -torch.sin(psi_lm))
-                    h_mode = amp_lm_phys.to(exp_neg_i_psi.dtype) * exp_neg_i_psi
+                    h_mode_re = amp_lm_phys * torch.cos(psi_lm)
+                    h_mode_im = -amp_lm_phys * torch.sin(psi_lm)
 
                 else:
                     # ---------------------------------------------------------
@@ -1533,37 +1535,62 @@ class IMRPhenomXHM(nn.Module):
 
                     # Both amplitude and phase are already spherical here.
                     # Each has its own published transition frequency (Table II).
-                    h_mode = amp_lm_phys * torch.exp(-1j * phi_32_imr)
+                    h_mode_re = amp_lm_phys * torch.cos(phi_32_imr)
+                    h_mode_im = -amp_lm_phys * torch.sin(phi_32_imr)
 
             # Apply the Fourier time shift and orbital phase once, after the
             # intrinsic joins and (3,2) mixing. Their factors must be common to
             # every frequency region (García-Quirós et al., Sec. II B and Eq. (2.13)).
             extrinsic_phase = 2.0 * PI * f_eval * tc_eval - float(m) * phic_eval
-            h_mode = h_mode * torch.complex(torch.cos(extrinsic_phase), -torch.sin(extrinsic_phase))
+            cos_ext = torch.cos(extrinsic_phase)
+            sin_ext = torch.sin(extrinsic_phase)
+            # Complex multiplication: (h_re + i * h_im) * (cos_ext - i * sin_ext)
+            # Re = h_re * cos_ext + h_im * sin_ext
+            # Im = -h_re * sin_ext + h_im * cos_ext
+            h_rot_re = h_mode_re * cos_ext + h_mode_im * sin_ext
+            h_rot_im = -h_mode_re * sin_ext + h_mode_im * cos_ext
 
             # Apply body exchange swap phase (-1)^m for odd-m modes when swapped
             if m % 2 != 0:
-                h_mode = torch.where(_unsqueeze_to(swap_mask, h_mode), -h_mode, h_mode)
+                swap_u = _unsqueeze_to(swap_mask, h_rot_re)
+                h_rot_re = torch.where(swap_u, -h_rot_re, h_rot_re)
+                h_rot_im = torch.where(swap_u, -h_rot_im, h_rot_im)
 
             # Spin-weighted spherical harmonics projection
-            d_plus, d_cross = _swsh_projection_coefficients(l, m, inc_eval, phi0_eval)
-            hp_lm = d_plus * h_mode
-            hc_lm = d_cross * h_mode
+            dp_re, dp_im, dc_re, dc_im = _swsh_projection_coefficients_cartesian(l, m, inc_eval, phi0_eval)
+            hp_lm_re = dp_re * h_rot_re - dp_im * h_rot_im
+            hp_lm_im = dp_re * h_rot_im + dp_im * h_rot_re
+            hc_lm_re = dc_re * h_rot_re - dc_im * h_rot_im
+            hc_lm_im = dc_re * h_rot_im + dc_im * h_rot_re
 
-            h_plus_total = h_plus_total + hp_lm
-            h_cross_total = h_cross_total + hc_lm
+            h_plus_re = h_plus_re + hp_lm_re
+            h_plus_im = h_plus_im + hp_lm_im
+            h_cross_re = h_cross_re + hc_lm_re
+            h_cross_im = h_cross_im + hc_lm_im
 
             if return_modes:
-                mode_dict[(l, m)] = (hp_lm, hc_lm)
+                mode_dict[(l, m)] = (
+                    torch.view_as_complex(torch.stack([hp_lm_re, hp_lm_im], dim=-1)),
+                    torch.view_as_complex(torch.stack([hc_lm_re, hc_lm_im], dim=-1)),
+                )
             elif return_unprojected_modes:
-                mode_dict[(l, m)] = h_mode
+                h_unproj = torch.view_as_complex(torch.stack([h_rot_re, h_rot_im], dim=-1))
+                mode_dict[(l, m)] = h_unproj
                 # Negative-m mode satisfies equatorial reflection symmetry: h_{l, -m} = (-1)^l * conj(h_{l, m})
                 sign_l = 1.0 if l % 2 == 0 else -1.0
-                mode_dict[(l, -m)] = sign_l * torch.conj(h_mode)
+                mode_dict[(l, -m)] = torch.view_as_complex(
+                    torch.stack([sign_l * h_rot_re, -sign_l * h_rot_im], dim=-1)
+                )
 
-        # Enforce exact finite zeros for DC and non-positive frequency bins
-        h_plus_total = torch.where(f_eval > 0.0, h_plus_total, torch.zeros_like(h_plus_total))
-        h_cross_total = torch.where(f_eval > 0.0, h_cross_total, torch.zeros_like(h_cross_total))
+        # Enforce exact finite zeros for DC and non-positive frequency bins on real floats
+        pos_mask = f_eval > 0.0
+        h_plus_re = torch.where(pos_mask, h_plus_re, torch.zeros_like(h_plus_re))
+        h_plus_im = torch.where(pos_mask, h_plus_im, torch.zeros_like(h_plus_im))
+        h_cross_re = torch.where(pos_mask, h_cross_re, torch.zeros_like(h_cross_re))
+        h_cross_im = torch.where(pos_mask, h_cross_im, torch.zeros_like(h_cross_im))
+
+        h_plus_total = torch.view_as_complex(torch.stack([h_plus_re, h_plus_im], dim=-1))
+        h_cross_total = torch.view_as_complex(torch.stack([h_cross_re, h_cross_im], dim=-1))
 
         if return_modes or return_unprojected_modes:
             return h_plus_total, h_cross_total, mode_dict

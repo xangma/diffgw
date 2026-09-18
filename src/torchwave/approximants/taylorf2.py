@@ -586,20 +586,28 @@ class TaylorF2:
         plus_factor = 0.5 * (1.0 + cos_inc * cos_inc)
         cross_factor = cos_inc
 
-        # Complex exponential exp(-i * psi)
-        exp_minus_i_psi = torch.complex(torch.cos(psi), -torch.sin(psi))
+        # Real Cartesian polarizations
+        cos_psi = torch.cos(psi)
+        sin_psi = torch.sin(psi)
 
-        h_plus = (plus_factor * amp).to(exp_minus_i_psi.dtype) * exp_minus_i_psi
-        h_cross = torch.complex(
-            -cross_factor * amp * torch.sin(psi),
-            -cross_factor * amp * torch.cos(psi),
+        h_plus_re = plus_factor * amp * cos_psi
+        h_plus_im = -plus_factor * amp * sin_psi
+
+        h_cross_re = -cross_factor * amp * sin_psi
+        h_cross_im = -cross_factor * amp * cos_psi
+
+        # Enforce exact finite zeros for DC and non-positive frequency bins directly on real floats
+        pos_mask = f_eval > 0.0
+        zero = torch.zeros_like(h_plus_re)
+        h_plus_re = torch.where(pos_mask, h_plus_re, zero)
+        h_plus_im = torch.where(pos_mask, h_plus_im, zero)
+        h_cross_re = torch.where(pos_mask, h_cross_re, zero)
+        h_cross_im = torch.where(pos_mask, h_cross_im, zero)
+
+        return (
+            torch.view_as_complex(torch.stack([h_plus_re, h_plus_im], dim=-1)),
+            torch.view_as_complex(torch.stack([h_cross_re, h_cross_im], dim=-1)),
         )
-
-        # Enforce exact finite zeros for DC and non-positive frequency bins
-        h_plus = torch.where(f_eval > 0.0, h_plus, torch.zeros_like(h_plus))
-        h_cross = torch.where(f_eval > 0.0, h_cross, torch.zeros_like(h_cross))
-
-        return h_plus, h_cross
 
     evaluate = __call__
 

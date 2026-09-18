@@ -596,13 +596,15 @@ def compute_msa_final_spin(
     (v0, m1, m2, s1x, s1y, s1z, s2x, s2y, s2z) = torch.broadcast_tensors(
         v0, m1, m2, s1x, s1y, s1z, s2x, s2y, s2z
     )
-    if any(bool(torch.any(~torch.isfinite(x))) for x in
-           (v0, m1, m2, s1x, s1y, s1z, s2x, s2y, s2z)):
-        raise ValueError("MSA final spin requires finite masses, spins, and v0.")
-    if bool(torch.any((m1 <= 0) | (m2 <= 0) | (v0 <= 0))):
-        raise ValueError("MSA final spin requires positive masses and v0.")
-    if bool(torch.any(torch.stack((s1x, s1y, s1z), -1).square().sum(-1) > 1.0 + 1e-12)) or bool(torch.any(torch.stack((s2x, s2y, s2z), -1).square().sum(-1) > 1.0 + 1e-12)):
-        raise ValueError("MSA final spin requires each dimensionless spin magnitude <= 1.")
+    is_comp = hasattr(torch.compiler, "is_compiling") and torch.compiler.is_compiling()
+    if not is_comp:
+        if any(bool(torch.any(~torch.isfinite(x))) for x in
+               (v0, m1, m2, s1x, s1y, s1z, s2x, s2y, s2z)):
+            raise ValueError("MSA final spin requires finite masses, spins, and v0.")
+        if bool(torch.any((m1 <= 0) | (m2 <= 0) | (v0 <= 0))):
+            raise ValueError("MSA final spin requires positive masses and v0.")
+        if bool(torch.any(torch.stack((s1x, s1y, s1z), -1).square().sum(-1) > 1.0 + 1e-12)) or bool(torch.any(torch.stack((s2x, s2y, s2z), -1).square().sum(-1) > 1.0 + 1e-12)):
+            raise ValueError("MSA final spin requires each dimensionless spin magnitude <= 1.")
     total_mass = m1 + m2
     eta = m1 * m2 / total_mass.square()
     aligned = (s1x == 0) & (s1y == 0) & (s2x == 0) & (s2y == 0)
@@ -610,31 +612,35 @@ def compute_msa_final_spin(
     # aligned limit is supplied directly by the calibrated nonprecessing fit.
     a_aligned = XASParameterFits.fit_final_spin(eta, s1z, s2z)
     m_final_fit = 1.0 - XASParameterFits.fit_erad(eta, s1z, s2z)
-    if bool(torch.any(~torch.isfinite(a_aligned) | (torch.abs(a_aligned) > 1.0 + 1e-10))):
-        raise ValueError("MSA final spin fit is outside the Kerr domain.")
-    if bool(torch.any(~torch.isfinite(m_final_fit) | (m_final_fit <= 0))):
-        raise ValueError("MSA final spin is outside the positive remnant-mass domain.")
-    if bool(torch.all(aligned)):
-        return a_aligned
+    if not is_comp:
+        if bool(torch.any(~torch.isfinite(a_aligned) | (torch.abs(a_aligned) > 1.0 + 1e-10))):
+            raise ValueError("MSA final spin fit is outside the Kerr domain.")
+        if bool(torch.any(~torch.isfinite(m_final_fit) | (m_final_fit <= 0))):
+            raise ValueError("MSA final spin is outside the positive remnant-mass domain.")
+        if bool(torch.all(aligned)):
+            return a_aligned
     sav_sq, s1_l_avg, s2_l_avg, valid = compute_msa_averaged_couplings(
         v0, m1, m2, s1x, s1y, s1z, s2x, s2y, s2z
     )
     unequal = m1 != m2
-    if bool(torch.any((~unequal) & (~aligned))):
-        raise ValueError("MSA final_spin_mod=3 is unsupported for nonaligned equal-mass rows.")
+    if not is_comp:
+        if bool(torch.any((~unequal) & (~aligned))):
+            raise ValueError("MSA final_spin_mod=3 is unsupported for nonaligned equal-mass rows.")
 
     a_parallel = a_aligned
     m_final = m_final_fit
     s_parallel = s1_l_avg + s2_l_avg
     l_fin = m_final.square() * a_parallel - s_parallel
     s_fin_sq = compute_msa_final_spin_squared(sav_sq, s1_l_avg, s2_l_avg, l_fin)
-    if bool(torch.any(~torch.isfinite(s_fin_sq) | (s_fin_sq < -1e-12))):
-        raise ValueError("MSA final spin produced an invalid remnant-spin square.")
+    if not is_comp:
+        if bool(torch.any(~torch.isfinite(s_fin_sq) | (s_fin_sq < -1e-12))):
+            raise ValueError("MSA final spin produced an invalid remnant-spin square.")
     magnitude = torch.sqrt(torch.clamp(s_fin_sq, min=0.0)) / m_final.square()
     # Eq. (31) fixes the sign in the co-precessing frame by the aligned fit.
     signed = torch.where(a_parallel < 0.0, -magnitude, magnitude)
-    if bool(torch.any(~torch.isfinite(magnitude) | (magnitude > 1.0 + 1e-10))):
-        raise ValueError("MSA final spin exceeds the physical Kerr bound.")
+    if not is_comp:
+        if bool(torch.any(~torch.isfinite(magnitude) | (magnitude > 1.0 + 1e-10))):
+            raise ValueError("MSA final spin exceeds the physical Kerr bound.")
     # Only machine-level root degeneracies are assigned the analytic aligned
     # limit.  A genuinely failed nonaligned root is an unsupported point and
     # must be surfaced rather than silently replacing the MSA result.
@@ -642,8 +648,9 @@ def compute_msa_final_spin(
     eps = torch.finfo(v0.dtype).eps
     numerical_degeneracy = inplane_sq <= 10.0 * eps * (1.0 + s1z.square() + s2z.square())
     unsupported = (~valid) & (~numerical_degeneracy)
-    if bool(torch.any(unsupported)):
-        raise ValueError("MSA final spin has a nonaligned row outside the supported root domain.")
+    if not is_comp:
+        if bool(torch.any(unsupported)):
+            raise ValueError("MSA final spin has a nonaligned row outside the supported root domain.")
     return torch.where(numerical_degeneracy, a_aligned, signed)
 
 def evaluate_msa_precession(
@@ -777,10 +784,11 @@ def evaluate_msa_precession(
     if v.dim() > requires_nnlo.dim():
         requires_nnlo = requires_nnlo.unsqueeze(-1)
     unsupported_nnlo = (l_plus_sl <= 0) | (l0+sl_geom <= 0)
-    if bool(torch.any(requires_nnlo & unsupported_nnlo)):
-        raise ValueError("NNLO precessing rotation is unsupported when L + S_parallel <= 0 "
-                         "at the reference or an evaluated frequency; the secular expansion "
-                         "does not support J anti-aligned with L.")
+    if not (hasattr(torch.compiler, "is_compiling") and torch.compiler.is_compiling()):
+        if bool(torch.any(requires_nnlo & unsupported_nnlo)):
+            raise ValueError("NNLO precessing rotation is unsupported when L + S_parallel <= 0 "
+                             "at the reference or an evaluated frequency; the secular expansion "
+                             "does not support J anti-aligned with L.")
     # Eq. (4.4): atan2 also preserves the zero-cone and L+S_parallel<0 limits.
     beta_nnlo = torch.atan2(sp_geom, l_plus_sl)
 

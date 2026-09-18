@@ -309,6 +309,7 @@ def benchmark_torchwave_model(
     if compile:
         try:
             torch._dynamo.config.capture_scalar_outputs = True
+            torch._dynamo.config.cache_size_limit = 256
         except Exception:
             pass
         eval_fn = torch.compile(eval_fn, fullgraph=False, dynamic=False)

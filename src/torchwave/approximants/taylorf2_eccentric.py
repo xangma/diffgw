@@ -408,15 +408,19 @@ class TaylorF2_Eccentric(nn.Module):
             f0_ref = as_tensor(f0_ecc, device=device, dtype=dtype)
         elif f_lower is not None:
             f0_ref = as_tensor(f_lower, device=device, dtype=dtype)
-        elif f_ref is not None and (as_tensor(f_ref, device=device, dtype=dtype) > 0.0).all():
-            f0_ref = as_tensor(f_ref, device=device, dtype=dtype)
+        elif f_ref is not None:
+            f_ref_t = as_tensor(f_ref, device=device, dtype=dtype)
+            f_inf = torch.where(f > 0.0, f, torch.as_tensor(float("inf"), device=device, dtype=dtype))
+            f0_min = f_inf.min()
+            f0_fallback = torch.where(torch.isinf(f0_min), torch.as_tensor(20.0, device=device, dtype=dtype), f0_min)
+            f0_ref = torch.where(f_ref_t > 0.0, f_ref_t, f0_fallback)
         else:
-            pos_f = f[f > 0.0]
-            f0_val = pos_f.min() if pos_f.numel() > 0 else 20.0
-            f0_ref = as_tensor(f0_val, device=device, dtype=dtype)
+            f_inf = torch.where(f > 0.0, f, torch.as_tensor(float("inf"), device=device, dtype=dtype))
+            f0_min = f_inf.min()
+            f0_ref = torch.where(torch.isinf(f0_min), torch.as_tensor(20.0, device=device, dtype=dtype), f0_min)
 
         # Baseline quasi-circular phase and amplitude from TaylorF2
-        f_ref_circ = f0_ref if f_ref is None or (as_tensor(f_ref, device=device, dtype=dtype) <= 0.0).all() else f_ref
+        f_ref_circ = f0_ref
 
         psi_circ = TaylorF2.evaluate_phase(
             f=f,

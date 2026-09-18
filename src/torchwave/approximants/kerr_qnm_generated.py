@@ -18203,10 +18203,12 @@ def dimensionless_qnm(l, m, n, final_spin):
         raise TypeError("final_spin must have a floating dtype")
     working_dtype = torch.float32 if spin.device.type == "mps" else torch.float64
     working_spin = spin.to(working_dtype)
-    if bool(torch.any(~torch.isfinite(working_spin) | (working_spin < SPIN_MIN)
-                      | (working_spin > SPIN_MAX))):
-        raise ValueError(f"QNM spin domain is [{SPIN_MIN}, {SPIN_MAX}]")
-    x = -torch.log1p(-working_spin)
+    if not (hasattr(torch.compiler, "is_compiling") and torch.compiler.is_compiling()):
+        if bool(torch.any(~torch.isfinite(working_spin) | (working_spin < SPIN_MIN)
+                          | (working_spin > SPIN_MAX))):
+            raise ValueError(f"QNM spin domain is [{SPIN_MIN}, {SPIN_MAX}]")
+    orig_shape = working_spin.shape
+    x = (-torch.log1p(-working_spin)).reshape(-1)
     knots, coefficients, origin = _spline_tensors(mode, spin.device)
     interval = (torch.searchsorted(knots, x.contiguous(), right=True) - 1).clamp(
         min=DEGREE, max=len(coefficients) - 1)
@@ -18217,7 +18219,7 @@ def dimensionless_qnm(l, m, n, final_spin):
             right = knots[interval + 1 + j - r]
             alpha = ((x - left) / (right - left)).unsqueeze(-1)
             values[j] = (1.0 - alpha) * values[j - 1] + alpha * values[j]
-    result = (values[DEGREE] + origin).to(spin.dtype)
+    result = (values[DEGREE] + origin).reshape(orig_shape + (2,)).to(spin.dtype)
     return result[..., 0], -result[..., 1]
 
 

@@ -710,7 +710,7 @@ def get_fd_waveform(
         f = sample_frequencies
         if f is None and delta_f is not None and f_lower is not None and f_final is not None:
             f = torch.arange(f_lower, f_final + delta_f / 2.0, delta_f, dtype=dtype, device=device)
-        if f is not None:
+        if f is not None and (f_lower is not None or f_final is not None):
             # Preserve frequency batch axes; ordinary broadcasting prepends
             # any missing parameter axes. Flattening here merges rows/samples.
             f_eval = torch.as_tensor(f, device=hp.device, dtype=hp.real.dtype)
@@ -721,8 +721,12 @@ def get_fd_waveform(
             pv2_sequence = key == "imrphenompv2" and sample_frequencies is not None and frequency_support != "uniform"
             if f_final is not None and not pv2_sequence:
                 zero_mask = zero_mask | (f_eval >= f_final)
-            hp = torch.where(zero_mask, torch.zeros_like(hp), hp)
-            hc = torch.where(zero_mask, torch.zeros_like(hc), hc)
+            hp_re = torch.where(zero_mask, torch.zeros_like(hp.real), hp.real)
+            hp_im = torch.where(zero_mask, torch.zeros_like(hp.imag), hp.imag)
+            hc_re = torch.where(zero_mask, torch.zeros_like(hc.real), hc.real)
+            hc_im = torch.where(zero_mask, torch.zeros_like(hc.imag), hc.imag)
+            hp = torch.view_as_complex(torch.stack([hp_re, hp_im], dim=-1))
+            hc = torch.view_as_complex(torch.stack([hc_re, hc_im], dim=-1))
         if len(out) == 2:
             return hp, hc
         return (hp, hc) + out[2:]

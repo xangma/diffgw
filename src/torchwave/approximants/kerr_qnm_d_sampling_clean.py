@@ -216,12 +216,14 @@ def _evaluate_cubic(spin: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:
 
     dtype = _working_dtype(spin)
     working_spin = spin.to(dtype)
+    orig_shape = working_spin.shape
     knots, coefficients = _cubic_tensors(spin.device)
     interval = (torch.searchsorted(knots, working_spin.contiguous(), right=True) - 1).clamp(
         min=0, max=N_KNOTS - 2
     )
-    dx = working_spin - knots[interval]
-    selected = coefficients[interval]
+    interval_flat = interval.reshape(-1)
+    dx = working_spin - knots[interval_flat].reshape(orig_shape)
+    selected = coefficients[interval_flat].reshape(orig_shape + coefficients.shape[1:])
     value = selected[..., 3, :] * dx.unsqueeze(-1) + selected[..., 2, :]
     value = value * dx.unsqueeze(-1) + selected[..., 1, :]
     value = value * dx.unsqueeze(-1) + selected[..., 0, :]
@@ -263,7 +265,7 @@ def evaluate_d_qnm_220(final_spin) -> Tuple[torch.Tensor, torch.Tensor]:
     compatibility = (working_spin >= COMPATIBILITY_SPIN_MIN) & (
         working_spin <= COMPATIBILITY_SPIN_MAX
     )
-    if bool(torch.all(compatibility).item()):
+    if bool(torch.all(compatibility)):
         return cubic[0].to(spin.dtype), cubic[1].to(spin.dtype)
     generated = independent_cyclic_qnm_220(spin)
     return tuple(

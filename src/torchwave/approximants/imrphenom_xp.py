@@ -372,7 +372,7 @@ class IMRPhenomXP(nn.Module):
         )
 
         # Table IV supplies the carrier's independent orbital-phase argument.
-        hp_carrier, _ = self.xas_model(
+        hp_carrier_re, hp_carrier_im, _, _ = self.xas_model(
             f=f_eval,
             mass1=m1,
             mass2=m2,
@@ -386,6 +386,7 @@ class IMRPhenomXP(nn.Module):
             phasing_convention=phasing_convention,
             reference_frame=reference_frame,
             _final_spin_override=final_spin_override,
+            _return_cartesian=True,
         )
 
         # Twist-up for (l=2, mp=2)
@@ -393,8 +394,10 @@ class IMRPhenomXP(nn.Module):
         d_beta = wigner_small_d_matrix(2, beta)
         d_jn = wigner_small_d_matrix(2, unsqueeze_param(theta_jn))
 
-        term_plus = torch.zeros(f_eval.shape, dtype=complex_dtype, device=device)
-        term_cross = torch.zeros(f_eval.shape, dtype=complex_dtype, device=device)
+        term_plus_re = torch.zeros_like(f_eval)
+        term_plus_im = torch.zeros_like(f_eval)
+        term_cross_re = torch.zeros_like(f_eval)
+        term_cross_im = torch.zeros_like(f_eval)
 
         for m_val in range(-2, 3):
             m_idx = m_val + 2
@@ -406,21 +409,30 @@ class IMRPhenomXP(nn.Module):
             cos_m = torch.cos(m_phase)
             sin_m = torch.sin(m_phase)
 
-            exp_minus_ima = torch.complex(cos_m, sin_m)
-            exp_plus_ima = torch.complex(cos_m, -sin_m)
+            dm_sum = dm_minus + dm_plus
+            dm_diff = dm_minus - dm_plus
 
-            a_m_minus = exp_minus_ima * dm_minus * y_lm
-            a_m_plus_star = exp_plus_ima * dm_plus * y_lm
+            term_plus_re = term_plus_re + y_lm * dm_sum * cos_m
+            term_plus_im = term_plus_im + y_lm * dm_diff * sin_m
 
-            term_plus = term_plus + (a_m_minus + a_m_plus_star)
-            term_cross = term_cross + (a_m_minus - a_m_plus_star)
+            term_cross_re = term_cross_re + y_lm * dm_diff * cos_m
+            term_cross_im = term_cross_im + y_lm * dm_sum * sin_m
 
         # Coprecessing angle factor: exp(2i * gamma) = exp(-2i * epsilon)
         two_gamma = 2.0 * gamma
-        exp_two_gamma = torch.complex(torch.cos(two_gamma), torch.sin(two_gamma))
+        cos_2g = torch.cos(two_gamma)
+        sin_2g = torch.sin(two_gamma)
 
-        hp_raw = scale_2 * exp_two_gamma * hp_carrier * term_plus
-        hc_raw = 1j * scale_2 * exp_two_gamma * hp_carrier * term_cross
+        k_re = scale_2 * (cos_2g * hp_carrier_re - sin_2g * hp_carrier_im)
+        k_im = scale_2 * (cos_2g * hp_carrier_im + sin_2g * hp_carrier_re)
+
+        # hp_raw = K * term_plus
+        hp_raw_re = k_re * term_plus_re - k_im * term_plus_im
+        hp_raw_im = k_re * term_plus_im + k_im * term_plus_re
+
+        # hc_raw = 1j * K * term_cross
+        hc_raw_re = -(k_re * term_cross_im + k_im * term_cross_re)
+        hc_raw_im = k_re * term_cross_re - k_im * term_cross_im
 
         # C22 / D6--D7: rotate to the observer basis. The minus is the m=2
         # source-azimuth conversion exp(i*m*pi/2), as in XPHM.
@@ -428,12 +440,14 @@ class IMRPhenomXP(nn.Module):
         cos_2z = torch.cos(two_zeta)
         sin_2z = torch.sin(two_zeta)
 
-        hp_precess = -(cos_2z * hp_raw + sin_2z * hc_raw)
-        hc_precess = -(-sin_2z * hp_raw + cos_2z * hc_raw)
+        hp_precess_re = -(cos_2z * hp_raw_re + sin_2z * hc_raw_re)
+        hp_precess_im = -(cos_2z * hp_raw_im + sin_2z * hc_raw_im)
+        hc_precess_re = -(-sin_2z * hp_raw_re + cos_2z * hc_raw_re)
+        hc_precess_im = -(-sin_2z * hp_raw_im + cos_2z * hc_raw_im)
 
         # If aligned-spin limit, evaluate exact non-precessing waveform
         if convention == 1 and is_aligned.any():
-            hp_al, hc_al = self.xas_model(
+            hp_al_re, hp_al_im, hc_al_re, hc_al_im = self.xas_model(
                 f=f_eval,
                 mass1=m1,
                 mass2=m2,
@@ -446,15 +460,23 @@ class IMRPhenomXP(nn.Module):
                 f_ref=fref,
                 phasing_convention=phasing_convention,
                 reference_frame=reference_frame,
+                _return_cartesian=True,
             )
             is_al_u = unsqueeze_param(is_aligned)
-            hp_final = torch.where(is_al_u, hp_al, hp_precess)
-            hc_final = torch.where(is_al_u, hc_al, hc_precess)
+            hp_final_re = torch.where(is_al_u, hp_al_re, hp_precess_re)
+            hp_final_im = torch.where(is_al_u, hp_al_im, hp_precess_im)
+            hc_final_re = torch.where(is_al_u, hc_al_re, hc_precess_re)
+            hc_final_im = torch.where(is_al_u, hc_al_im, hc_precess_im)
         else:
-            hp_final = hp_precess
-            hc_final = hc_precess
+            hp_final_re = hp_precess_re
+            hp_final_im = hp_precess_im
+            hc_final_re = hc_precess_re
+            hc_final_im = hc_precess_im
 
-        return hp_final, hc_final
+        return (
+            torch.view_as_complex(torch.stack([hp_final_re, hp_final_im], dim=-1)),
+            torch.view_as_complex(torch.stack([hc_final_re, hc_final_im], dim=-1)),
+        )
 
     def __call__(self, *args, **kwargs):
         return self.forward(*args, **kwargs)

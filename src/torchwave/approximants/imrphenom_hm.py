@@ -63,6 +63,75 @@ QNM_FITS: Dict[Tuple[int, int], Dict[str, Tuple[float, float, float]]] = {
 }
 
 
+def _swsh_projection_coefficients_cartesian(
+    l: int,
+    m: int,
+    iota: torch.Tensor,
+    phi0: torch.Tensor,
+) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]:
+    """Compute polarization projection coefficients (dp_re, dp_im, dc_re, dc_im) for mode (l, m) in pure Cartesian real arithmetic.
+
+    For positive frequencies, the coefficient of the positive-m mode and its
+    negative-m partner are combined as
+        d_plus  = 0.5 * (Y_{l,m} + (-1)^l * conj(Y_{l,-m}))
+        d_cross = -0.5i * (Y_{l,m} - (-1)^l * conj(Y_{l,-m}))
+    where Y_{l,m} = {}_{-2}Y_{lm}(iota, phi0).
+
+    Returns:
+        (dp_re, dp_im, dc_re, dc_im) real tensors.
+    """
+    cos_i = torch.cos(iota)
+    sin_i = torch.sin(iota)
+
+    one_plus_cos = 1.0 + cos_i
+    one_minus_cos = 1.0 - cos_i
+
+    m_phi0 = float(m) * phi0
+    cos_m = torch.cos(m_phi0)
+    sin_m = torch.sin(m_phi0)
+
+    if l == 2 and m == 2:
+        c_norm = math.sqrt(5.0 / (64.0 * math.pi))
+        A = c_norm * (one_plus_cos * one_plus_cos)
+        B = c_norm * (one_minus_cos * one_minus_cos)
+        sign_l = 1.0
+    elif l == 2 and m == 1:
+        c_norm = math.sqrt(5.0 / (16.0 * math.pi))
+        A = c_norm * sin_i * one_plus_cos
+        B = c_norm * sin_i * one_minus_cos
+        sign_l = 1.0
+    elif l == 3 and m == 3:
+        c_norm = math.sqrt(21.0 / (128.0 * math.pi))
+        A = -c_norm * sin_i * (one_plus_cos * one_plus_cos)
+        B = c_norm * sin_i * (one_minus_cos * one_minus_cos)
+        sign_l = -1.0
+    elif l == 3 and m == 2:
+        c_norm = math.sqrt(7.0 / (4.0 * math.pi)) * 0.25
+        A = c_norm * (one_plus_cos * one_plus_cos) * (3.0 * cos_i - 2.0)
+        B = c_norm * (one_minus_cos * one_minus_cos) * (3.0 * cos_i + 2.0)
+        sign_l = -1.0
+    elif l == 4 and m == 4:
+        c_norm = math.sqrt(63.0 / (256.0 * math.pi))
+        A = c_norm * (sin_i * sin_i) * (one_plus_cos * one_plus_cos)
+        B = c_norm * (sin_i * sin_i) * (one_minus_cos * one_minus_cos)
+        sign_l = 1.0
+    elif l == 4 and m == 3:
+        c_norm = 3.0 * math.sqrt(14.0) / (16.0 * math.sqrt(math.pi))
+        A = c_norm * sin_i * (one_plus_cos * one_plus_cos) * (1.0 - 2.0 * cos_i)
+        B = c_norm * sin_i * (one_minus_cos * one_minus_cos) * (1.0 + 2.0 * cos_i)
+        sign_l = 1.0
+    else:
+        raise ValueError(f"Mode ({l}, {m}) not currently supported.")
+
+    k_plus = 0.5 * (A + sign_l * B)
+    k_cross = 0.5 * (A - sign_l * B)
+    dp_re = k_plus * cos_m
+    dp_im = k_plus * sin_m
+    dc_re = k_cross * sin_m
+    dc_im = -k_cross * cos_m
+    return dp_re, dp_im, dc_re, dc_im
+
+
 def _swsh_projection_coefficients(
     l: int,
     m: int,
@@ -71,68 +140,12 @@ def _swsh_projection_coefficients(
 ) -> Tuple[torch.Tensor, torch.Tensor]:
     """Compute polarization projection coefficients d_plus and d_cross for mode (l, m).
 
-    For positive frequencies, the coefficient of the positive-m mode and its
-    negative-m partner are combined as
-        d_plus  = 0.5 * (Y_{l,m} + (-1)^l * conj(Y_{l,-m}))
-        d_cross = -0.5i * (Y_{l,m} - (-1)^l * conj(Y_{l,-m}))
-    where Y_{l,m} = {}_{-2}Y_{lm}(iota, phi0).  This is the native positive
-    mode projection used by the production assembly.
-
     Returns:
         (d_plus, d_cross) complex tensors.
     """
-    cos_i = torch.cos(iota)
-    sin_i = torch.sin(iota)
-
-    one_plus_cos = 1.0 + cos_i
-    one_minus_cos = 1.0 - cos_i
-
-    # Phase factors exp(i * m * phi0)
-    m_phi0 = float(m) * phi0
-    exp_pos = torch.complex(torch.cos(m_phi0), torch.sin(m_phi0))
-    exp_neg = torch.conj(exp_pos)
-
-    if l == 2 and m == 2:
-        c_norm = math.sqrt(5.0 / (64.0 * math.pi))
-        ylm = c_norm * (one_plus_cos * one_plus_cos) * exp_pos
-        yl_negm = c_norm * (one_minus_cos * one_minus_cos) * exp_neg
-        sign_l = 1.0
-    elif l == 2 and m == 1:
-        c_norm = math.sqrt(5.0 / (16.0 * math.pi))
-        ylm = c_norm * sin_i * one_plus_cos * exp_pos
-        yl_negm = c_norm * sin_i * one_minus_cos * exp_neg
-        sign_l = 1.0
-    elif l == 3 and m == 3:
-        c_norm = math.sqrt(21.0 / (128.0 * math.pi))
-        ylm = -c_norm * sin_i * (one_plus_cos * one_plus_cos) * exp_pos
-        yl_negm = c_norm * sin_i * (one_minus_cos * one_minus_cos) * exp_neg
-        sign_l = -1.0
-    elif l == 3 and m == 2:
-        c_norm = math.sqrt(7.0 / (4.0 * math.pi)) * 0.25
-        ylm = c_norm * (one_plus_cos * one_plus_cos) * (3.0 * cos_i - 2.0) * exp_pos
-        yl_negm = c_norm * (one_minus_cos * one_minus_cos) * (3.0 * cos_i + 2.0) * exp_neg
-        sign_l = -1.0
-    elif l == 4 and m == 4:
-        c_norm = math.sqrt(63.0 / (256.0 * math.pi))
-        ylm = c_norm * (sin_i * sin_i) * (one_plus_cos * one_plus_cos) * exp_pos
-        yl_negm = c_norm * (sin_i * sin_i) * (one_minus_cos * one_minus_cos) * exp_neg
-        sign_l = 1.0
-    elif l == 4 and m == 3:
-        c_norm = 3.0 * math.sqrt(14.0) / (16.0 * math.sqrt(math.pi))
-        ylm = c_norm * sin_i * (one_plus_cos * one_plus_cos) * (1.0 - 2.0 * cos_i) * exp_pos
-        yl_negm = c_norm * sin_i * (one_minus_cos * one_minus_cos) * (1.0 + 2.0 * cos_i) * exp_neg
-        sign_l = 1.0
-    else:
-        raise ValueError(f"Mode ({l}, {m}) not currently supported.")
-
-    # For a positive-m mode ``z``, the negative-m partner is fixed by the
-    # real strain symmetry.  Keep the positive harmonic in the first term;
-    # swapping the two terms changes the sign of every odd-ell projection.
-    ylm_neg_star = torch.conj(yl_negm)
-    d_plus = 0.5 * (ylm + sign_l * ylm_neg_star)
-    diff = ylm - sign_l * ylm_neg_star
-    d_cross = -0.5j * diff
-
+    dp_re, dp_im, dc_re, dc_im = _swsh_projection_coefficients_cartesian(l, m, iota, phi0)
+    d_plus = torch.view_as_complex(torch.stack([dp_re, dp_im], dim=-1))
+    d_cross = torch.view_as_complex(torch.stack([dc_re, dc_im], dim=-1))
     return d_plus, d_cross
 
 
@@ -1284,5 +1297,6 @@ __all__ = [
     "frequency_mapping_phase",
     "h_hat_multipole",
     "_swsh_projection_coefficients",
+    "_swsh_projection_coefficients_cartesian",
     "QNM_FITS",
 ]

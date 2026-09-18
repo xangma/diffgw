@@ -969,18 +969,26 @@ class IMRPhenomD:
         plus_factor = 0.5 * (1.0 + cos_inc * cos_inc)
         cross_factor = cos_inc
 
-        # Complex polarizations h_plus and h_cross
-        exp_minus_i_phase = torch.complex(torch.cos(total_phase), -torch.sin(total_phase))
+        # Real Cartesian polarizations
+        cos_total = torch.cos(total_phase)
+        sin_total = torch.sin(total_phase)
 
-        h_plus = (plus_factor * full_amp).to(exp_minus_i_phase.dtype) * exp_minus_i_phase
-        h_cross = torch.complex(
-            -cross_factor * full_amp * torch.sin(total_phase),
-            -cross_factor * full_amp * torch.cos(total_phase),
-        )
+        h_plus_re = plus_factor * full_amp * cos_total
+        h_plus_im = -plus_factor * full_amp * sin_total
 
-        # Enforce exact finite zeros for DC and non-positive frequency bins
-        h_plus = torch.where(f_eval > 0.0, h_plus, torch.zeros_like(h_plus))
-        h_cross = torch.where(f_eval > 0.0, h_cross, torch.zeros_like(h_cross))
+        h_cross_re = -cross_factor * full_amp * sin_total
+        h_cross_im = -cross_factor * full_amp * cos_total
+
+        # Enforce exact finite zeros for DC and non-positive frequency bins directly on real floats
+        pos_mask = f_eval > 0.0
+        zero = torch.zeros_like(h_plus_re)
+        h_plus_re = torch.where(pos_mask, h_plus_re, zero)
+        h_plus_im = torch.where(pos_mask, h_plus_im, zero)
+        h_cross_re = torch.where(pos_mask, h_cross_re, zero)
+        h_cross_im = torch.where(pos_mask, h_cross_im, zero)
+
+        h_plus = torch.view_as_complex(torch.stack([h_plus_re, h_plus_im], dim=-1))
+        h_cross = torch.view_as_complex(torch.stack([h_cross_re, h_cross_im], dim=-1))
 
         if return_phase:
             return h_plus, h_cross, total_phase

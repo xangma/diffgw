@@ -198,12 +198,17 @@ def waveform(frequency, mass1, mass2, spin1x=0., spin1y=0., spin1z=0.,
             (mass1,mass2,spin1x,spin1y,spin1z,spin2x,spin2y,spin2z,distance,inclination,phic,tc)]
     fr = pos.min() if f_ref is None else torch.as_tensor(f_ref, dtype=torch.float64, device=f.device)
     vals.append(fr); vals = torch.broadcast_tensors(*vals)
-    if torch.any(vals[0] <= 0) or torch.any(vals[1] <= 0) or torch.any(vals[8] <= 0):
-        raise ValueError("masses and distance must be positive")
+    if not (hasattr(torch.compiler, "is_compiling") and torch.compiler.is_compiling()):
+        if torch.any(vals[0] <= 0) or torch.any(vals[1] <= 0) or torch.any(vals[8] <= 0):
+            raise ValueError("masses and distance must be positive")
     shape = vals[0].shape; flat = [x.reshape(-1) for x in vals]; hp, hc = [], []
     for i in range(flat[0].numel()):
         a = [x[i] for x in flat]; m1,m2,x1,y1,z1,x2,y2,z2,d,inc,pc,tc,rf = a
-        if bool(m1 < m2): m1,m2,x1,x2,y1,y2,z1,z2 = m2,m1,x2,x1,y2,y1,z2,z1
+        swap = m1 < m2
+        m1, m2 = torch.where(swap, m2, m1), torch.where(swap, m1, m2)
+        x1, x2 = torch.where(swap, x2, x1), torch.where(swap, x1, x2)
+        y1, y2 = torch.where(swap, y2, y1), torch.where(swap, y1, y2)
+        z1, z2 = torch.where(swap, z2, z1), torch.where(swap, z1, z2)
         M = (m1+m2)*MSUN_SEC; v=(math.pi*M*torch.where(f>0,f,torch.ones_like(f))).pow(1/3)
         vr=(math.pi*M*rf).pow(1/3); eta=m1*m2/(m1+m2).square(); delta=(m1-m2)/(m1+m2)
         chip=effective_chip(m1,m2,x1,y1,x2,y2)

@@ -243,10 +243,6 @@ def polynomial_has_nonpositive(
         tolerance_bound = 512.0 * eps * torch.maximum(c0.abs(), torch.full_like(c0, torch.finfo(coefficients.dtype).tiny))
         strictly_positive = (c0 - tail_sum) > tolerance_bound
 
-        resolved = result | strictly_positive | nonfinite
-        if resolved.all():
-            return (result | nonfinite).detach()
-
         derivative = _derivative(coefficients)
         stationary, stationary_mask = _roots_in_interval(
             derivative, degree - 1, -torch.ones_like(center), torch.ones_like(center)
@@ -261,6 +257,7 @@ def polynomial_has_nonpositive(
         )
         tolerance = (512.0 * torch.finfo(coefficients.dtype).eps) * value_scale
         result = result | torch.any(stationary_mask & (stationary_values <= tolerance), dim=-1)
+        result = torch.where(strictly_positive, torch.zeros_like(result), result)
         return (result | nonfinite).detach()
 
 

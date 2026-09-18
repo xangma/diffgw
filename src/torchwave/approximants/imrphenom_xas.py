@@ -369,12 +369,13 @@ class XASParameterFits:
         delta, m1, m2, s_tot_r, chi_pn_hat = XASParameterFits._prepare_spin_vars(eta, chi1, chi2, spin_vars)
         m1_norm = m1
         s_perp = chi_p * m1_norm.square()
-        zero_parallel = (a_parallel == 0.0) & (chi_p != 0.0)
-        if bool(torch.any(zero_parallel)):
-            raise ValueError(
-                "NNLO precessing final-spin sign is undefined when "
-                "a_parallel_fin is zero and chi_p is nonzero."
-            )
+        if not (hasattr(torch.compiler, "is_compiling") and torch.compiler.is_compiling()):
+            zero_parallel = (a_parallel == 0.0) & (chi_p != 0.0)
+            if bool(torch.any(zero_parallel)):
+                raise ValueError(
+                    "NNLO precessing final-spin sign is undefined when "
+                    "a_parallel_fin is zero and chi_p is nonzero."
+                )
         # Use a vector norm instead of safe_sqrt: the inherited helper has a
         # 1e-12 dead zone that would erase physically small NNLO remnants.
         magnitude = torch.linalg.vector_norm(
@@ -862,13 +863,10 @@ class XASCarrierState:
                 final_spin_override = broadcasted[4]
 
         swap_mask = m1 < m2
-        if torch.any(swap_mask):
-            m1_eff = torch.where(swap_mask, m2, m1)
-            m2_eff = torch.where(swap_mask, m1, m2)
-            s1_eff = torch.where(swap_mask, s2z, s1z)
-            s2_eff = torch.where(swap_mask, s1z, s2z)
-        else:
-            m1_eff, m2_eff, s1_eff, s2_eff = m1, m2, s1z, s2z
+        m1_eff = torch.where(swap_mask, m2, m1)
+        m2_eff = torch.where(swap_mask, m1, m2)
+        s1_eff = torch.where(swap_mask, s2z, s1z)
+        s2_eff = torch.where(swap_mask, s1z, s2z)
 
         self.m1_eff = m1_eff
         self.m2_eff = m2_eff
@@ -1402,15 +1400,20 @@ class XASCarrierState:
         plus_factor = 0.5 * (1.0 + cos_inc * cos_inc)
         cross_factor = cos_inc
 
-        exp_minus_i_phase = torch.complex(torch.cos(total_phase), -torch.sin(total_phase))
-        h_plus = (plus_factor * full_amp).to(exp_minus_i_phase.dtype) * exp_minus_i_phase
-        h_cross = torch.complex(
-            -cross_factor * full_amp * torch.sin(total_phase),
-            -cross_factor * full_amp * torch.cos(total_phase),
-        )
+        h_plus_re = plus_factor * full_amp * torch.cos(total_phase)
+        h_plus_im = -plus_factor * full_amp * torch.sin(total_phase)
+        h_cross_re = -cross_factor * full_amp * torch.sin(total_phase)
+        h_cross_im = -cross_factor * full_amp * torch.cos(total_phase)
 
-        h_plus = torch.where(f_eval_b > 0.0, h_plus, torch.zeros_like(h_plus))
-        h_cross = torch.where(f_eval_b > 0.0, h_cross, torch.zeros_like(h_cross))
+        pos_mask = f_eval_b > 0.0
+        zero = torch.zeros_like(h_plus_re)
+        h_plus_re = torch.where(pos_mask, h_plus_re, zero)
+        h_plus_im = torch.where(pos_mask, h_plus_im, zero)
+        h_cross_re = torch.where(pos_mask, h_cross_re, zero)
+        h_cross_im = torch.where(pos_mask, h_cross_im, zero)
+
+        h_plus = torch.view_as_complex(torch.stack([h_plus_re, h_plus_im], dim=-1))
+        h_cross = torch.view_as_complex(torch.stack([h_cross_re, h_cross_im], dim=-1))
 
         if return_phase:
             return h_plus, h_cross, total_phase
@@ -1582,6 +1585,7 @@ class IMRPhenomXAS(nn.Module):
         t0 = as_tensor(kwargs.pop("tc", t_c), device=device, dtype=dtype)
 
         # Pop supported optional aliases and check for unknown kwargs
+        _return_cartesian = kwargs.pop("_return_cartesian", False)
         kwargs.pop("f_lower", None)
         kwargs.pop("f_final", None)
         kwargs.pop("delta_f", None)
@@ -1604,13 +1608,10 @@ class IMRPhenomXAS(nn.Module):
 
         # Canonical ordering: m1 >= m2, swap spins if needed
         swap_mask = m1 < m2
-        if torch.any(swap_mask):
-            m1_eff = torch.where(swap_mask, m2, m1)
-            m2_eff = torch.where(swap_mask, m1, m2)
-            s1_eff = torch.where(swap_mask, s2z, s1z)
-            s2_eff = torch.where(swap_mask, s1z, s2z)
-        else:
-            m1_eff, m2_eff, s1_eff, s2_eff = m1, m2, s1z, s2z
+        m1_eff = torch.where(swap_mask, m2, m1)
+        m2_eff = torch.where(swap_mask, m1, m2)
+        s1_eff = torch.where(swap_mask, s2z, s1z)
+        s2_eff = torch.where(swap_mask, s1z, s2z)
 
         total_mass = m1_eff + m2_eff
         eta = component_masses_to_eta(m1_eff, m2_eff)
@@ -2178,17 +2179,31 @@ class IMRPhenomXAS(nn.Module):
         cos_inc = torch.cos(unsqueeze_param(inc))
         plus_factor = 0.5 * (1.0 + cos_inc * cos_inc)
         cross_factor = cos_inc
+        # Real Cartesian projections
+        cos_total = torch.cos(total_phase)
+        sin_total = torch.sin(total_phase)
 
-        exp_minus_i_phase = torch.complex(torch.cos(total_phase), -torch.sin(total_phase))
-        h_plus = (plus_factor * full_amp).to(exp_minus_i_phase.dtype) * exp_minus_i_phase
-        h_cross = torch.complex(
-            -cross_factor * full_amp * torch.sin(total_phase),
-            -cross_factor * full_amp * torch.cos(total_phase),
-        )
+        h_plus_re = plus_factor * full_amp * cos_total
+        h_plus_im = -plus_factor * full_amp * sin_total
 
-        # Enforce exact finite zeros for DC and non-positive frequency bins
-        h_plus = torch.where(f_eval_b > 0.0, h_plus, torch.zeros_like(h_plus))
-        h_cross = torch.where(f_eval_b > 0.0, h_cross, torch.zeros_like(h_cross))
+        h_cross_re = -cross_factor * full_amp * sin_total
+        h_cross_im = -cross_factor * full_amp * cos_total
+
+        # Enforce exact finite zeros for DC and non-positive frequency bins directly on real floats
+        pos_mask = f_eval_b > 0.0
+        zero = torch.zeros_like(h_plus_re)
+        h_plus_re = torch.where(pos_mask, h_plus_re, zero)
+        h_plus_im = torch.where(pos_mask, h_plus_im, zero)
+        h_cross_re = torch.where(pos_mask, h_cross_re, zero)
+        h_cross_im = torch.where(pos_mask, h_cross_im, zero)
+
+        if _return_cartesian:
+            if return_phase:
+                return h_plus_re, h_plus_im, h_cross_re, h_cross_im, total_phase
+            return h_plus_re, h_plus_im, h_cross_re, h_cross_im
+
+        h_plus = torch.view_as_complex(torch.stack([h_plus_re, h_plus_im], dim=-1))
+        h_cross = torch.view_as_complex(torch.stack([h_cross_re, h_cross_im], dim=-1))
 
         if return_phase:
             return h_plus, h_cross, total_phase

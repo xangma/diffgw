@@ -212,30 +212,31 @@ class IMRPhenomXPHM(nn.Module):
 
         # Canonical body ordering: primary mass m1 >= m2
         swap_mask = m1 < m2
-        if torch.any(swap_mask):
-            m1_eff = torch.where(swap_mask, m2, m1)
-            m2_eff = torch.where(swap_mask, m1, m2)
-            s1x_eff = torch.where(swap_mask, s2x, s1x)
-            s1y_eff = torch.where(swap_mask, s2y, s1y)
-            s1z_eff = torch.where(swap_mask, s2z, s1z)
-            s2x_eff = torch.where(swap_mask, s1x, s2x)
-            s2y_eff = torch.where(swap_mask, s1y, s2y)
-            s2z_eff = torch.where(swap_mask, s1z, s2z)
-            m1, m2 = m1_eff, m2_eff
-            s1x, s1y, s1z = s1x_eff, s1y_eff, s1z_eff
-            s2x, s2y, s2z = s2x_eff, s2y_eff, s2z_eff
+        m1_eff = torch.where(swap_mask, m2, m1)
+        m2_eff = torch.where(swap_mask, m1, m2)
+        s1x_eff = torch.where(swap_mask, s2x, s1x)
+        s1y_eff = torch.where(swap_mask, s2y, s1y)
+        s1z_eff = torch.where(swap_mask, s2z, s1z)
+        s2x_eff = torch.where(swap_mask, s1x, s2x)
+        s2y_eff = torch.where(swap_mask, s1y, s2y)
+        s2z_eff = torch.where(swap_mask, s1z, s2z)
+        m1, m2 = m1_eff, m2_eff
+        s1x, s1y, s1z = s1x_eff, s1y_eff, s1z_eff
+        s2x, s2y, s2z = s2x_eff, s2y_eff, s2z_eff
 
         active_modes = tuple(modes) if modes is not None else self.modes
 
         # In-plane spin check
         in_plane_sq = s1x * s1x + s1y * s1y + s2x * s2x + s2y * s2y
         is_aligned = in_plane_sq == 0
-        if precession_method.lower() == "ode" and bool(torch.any((~is_aligned) & (phi_0 != 0))):
-            raise ValueError("Nonzero observer azimuth requires NNLO/MSA analytical frame geometry.")
+        if not (hasattr(torch.compiler, "is_compiling") and torch.compiler.is_compiling()):
+            if precession_method.lower() == "ode" and bool(torch.any((~is_aligned) & (phi_0 != 0))):
+                raise ValueError("Nonzero observer azimuth requires NNLO/MSA analytical frame geometry.")
 
         # Fast path: if purely aligned scalar, directly return IMRPhenomXHM
-        if convention == 1 and is_aligned.dim() == 0 and bool(is_aligned):
-            return self.xhm_model(
+        if not (hasattr(torch.compiler, "is_compiling") and torch.compiler.is_compiling()):
+            if convention == 1 and is_aligned.dim() == 0 and bool(is_aligned):
+                return self.xhm_model(
                 f=freqs,
                 mass1=m1,
                 mass2=m2,
@@ -391,8 +392,10 @@ class IMRPhenomXPHM(nn.Module):
             _final_spin_override=final_spin_override,
         )
 
-        h_plus_total = torch.zeros(f_eval.shape, dtype=complex_dtype, device=device)
-        h_cross_total = torch.zeros(f_eval.shape, dtype=complex_dtype, device=device)
+        h_plus_re = torch.zeros_like(f_eval)
+        h_plus_im = torch.zeros_like(f_eval)
+        h_cross_re = torch.zeros_like(f_eval)
+        h_cross_im = torch.zeros_like(f_eval)
         mode_dict = {}
 
         unique_l = sorted(list(set(l for l, _ in active_modes)))
@@ -465,8 +468,20 @@ class IMRPhenomXPHM(nn.Module):
         for l, mp in active_modes:
             # C4 uses source azimuth pi/2-phi_ref, while the carrier modes use
             # zero azimuth. The mode-dependent conversion is exp(i*mp*pi/2).
-            # A blanket minus accounts only for mp=2.
-            h_mode = (1j ** mp) * coprec_dict[(l, mp)]
+            # Compute h_mode = (1j ** mp) * coprec_dict[(l, mp)] in Cartesian arithmetic
+            h_coprec = coprec_dict[(l, mp)]
+            h_coprec_re = h_coprec.real
+            h_coprec_im = h_coprec.imag
+            mp_mod4 = mp % 4
+            if mp_mod4 == 0:
+                h_mode_re, h_mode_im = h_coprec_re, h_coprec_im
+            elif mp_mod4 == 1:
+                h_mode_re, h_mode_im = -h_coprec_im, h_coprec_re
+            elif mp_mod4 == 2:
+                h_mode_re, h_mode_im = -h_coprec_re, -h_coprec_im
+            else:
+                h_mode_re, h_mode_im = h_coprec_im, -h_coprec_re
+
             alpha, beta, gamma = angles_by_mp.get(mp, angles_by_mp[2])
 
             scale_l = math.sqrt((2 * l + 1) / 5.0) / norm_mode
@@ -474,8 +489,12 @@ class IMRPhenomXPHM(nn.Module):
             d_beta_l = wigner_small_d_matrix(l, beta)
             d_jn_l = d_mat_jn[l]
 
-            term_plus = torch.zeros(f_eval.shape, dtype=complex_dtype, device=device)
-            term_cross = torch.zeros(f_eval.shape, dtype=complex_dtype, device=device)
+            term_plus_re = torch.zeros_like(f_eval)
+            term_plus_im = torch.zeros_like(f_eval)
+            term_cross_re = torch.zeros_like(f_eval)
+            term_cross_im = torch.zeros_like(f_eval)
+
+            sign_l = 1.0 if (l % 2 == 0) else -1.0
 
             for m_val in range(-l, l + 1):
                 m_idx = m_val + l
@@ -488,34 +507,55 @@ class IMRPhenomXPHM(nn.Module):
                 cos_m = torch.cos(m_phase)
                 sin_m = torch.sin(m_phase)
 
-                exp_minus_ima = torch.complex(cos_m, sin_m)
-                exp_plus_ima = torch.complex(cos_m, -sin_m)
+                dm_sum = dm_minus + sign_l * dm_plus
+                dm_diff = dm_minus - sign_l * dm_plus
 
-                a_m_minus = exp_minus_ima * dm_minus * y_lm
-                a_m_plus_star = exp_plus_ima * dm_plus * y_lm
+                term_plus_re = term_plus_re + y_lm * dm_sum * cos_m
+                term_plus_im = term_plus_im + y_lm * dm_diff * sin_m
 
-                term_plus = term_plus + (a_m_minus + ((-1) ** l) * a_m_plus_star)
-                term_cross = term_cross + (a_m_minus - ((-1) ** l) * a_m_plus_star)
+                term_cross_re = term_cross_re + y_lm * dm_diff * cos_m
+                term_cross_im = term_cross_im + y_lm * dm_sum * sin_m
 
             # Phase factor exp(-i * mp' * gamma) for mp' = mp
             mp_gamma = float(mp) * gamma
-            exp_neg_im_gamma = torch.complex(torch.cos(mp_gamma), torch.sin(mp_gamma))
+            cos_g = torch.cos(mp_gamma)
+            sin_g = torch.sin(mp_gamma)
 
-            hp_raw = scale_l * exp_neg_im_gamma * h_mode * term_plus
-            hc_raw = 1j * scale_l * exp_neg_im_gamma * h_mode * term_cross
+            # K = scale_l * (cos_g + i sin_g) * (h_mode_re + i h_mode_im)
+            k_re = scale_l * (cos_g * h_mode_re - sin_g * h_mode_im)
+            k_im = scale_l * (cos_g * h_mode_im + sin_g * h_mode_re)
+
+            # hp_raw = K * term_plus
+            hp_raw_re = k_re * term_plus_re - k_im * term_plus_im
+            hp_raw_im = k_re * term_plus_im + k_im * term_plus_re
+
+            # hc_raw = 1j * K * term_cross
+            hc_raw_re = -(k_re * term_cross_im + k_im * term_cross_re)
+            hc_raw_im = k_re * term_cross_re - k_im * term_cross_im
 
             # Rotate from the spherical projection basis to the observer basis.
-            hp_lm = cos_2z * hp_raw + sin_2z * hc_raw
-            hc_lm = -sin_2z * hp_raw + cos_2z * hc_raw
+            hp_lm_re = cos_2z * hp_raw_re + sin_2z * hc_raw_re
+            hp_lm_im = cos_2z * hp_raw_im + sin_2z * hc_raw_im
+            hc_lm_re = -sin_2z * hp_raw_re + cos_2z * hc_raw_re
+            hc_lm_im = -sin_2z * hp_raw_im + cos_2z * hc_raw_im
 
-            h_plus_total = h_plus_total + hp_lm
-            h_cross_total = h_cross_total + hc_lm
+            h_plus_re = h_plus_re + hp_lm_re
+            h_plus_im = h_plus_im + hp_lm_im
+            h_cross_re = h_cross_re + hc_lm_re
+            h_cross_im = h_cross_im + hc_lm_im
 
             if return_modes:
-                mode_dict[(l, mp)] = (hp_lm, hc_lm)
+                mode_dict[(l, mp)] = (
+                    torch.view_as_complex(torch.stack([hp_lm_re, hp_lm_im], dim=-1)),
+                    torch.view_as_complex(torch.stack([hc_lm_re, hc_lm_im], dim=-1)),
+                )
 
         # If aligned-spin limit, blend with exact IMRPhenomXHM
-        if convention == 1 and is_aligned.any():
+        should_blend_aligned = (convention == 1) and (
+            (hasattr(torch.compiler, "is_compiling") and torch.compiler.is_compiling())
+            or bool(is_aligned.any())
+        )
+        if should_blend_aligned:
             out_al = self.xhm_model(
                 f=freqs,
                 mass1=m1,
@@ -536,8 +576,10 @@ class IMRPhenomXPHM(nn.Module):
             is_al_u = unsqueeze_param(is_aligned)
             if return_modes:
                 hp_al, hc_al, dict_al = out_al
-                h_plus_total = torch.where(is_al_u, hp_al, h_plus_total)
-                h_cross_total = torch.where(is_al_u, hc_al, h_cross_total)
+                h_plus_re = torch.where(is_al_u, hp_al.real, h_plus_re)
+                h_plus_im = torch.where(is_al_u, hp_al.imag, h_plus_im)
+                h_cross_re = torch.where(is_al_u, hc_al.real, h_cross_re)
+                h_cross_im = torch.where(is_al_u, hc_al.imag, h_cross_im)
                 for k in active_modes:
                     hp_m, hc_m = mode_dict[k]
                     hp_m_al, hc_m_al = dict_al[k]
@@ -547,8 +589,13 @@ class IMRPhenomXPHM(nn.Module):
                     )
             else:
                 hp_al, hc_al = out_al
-                h_plus_total = torch.where(is_al_u, hp_al, h_plus_total)
-                h_cross_total = torch.where(is_al_u, hc_al, h_cross_total)
+                h_plus_re = torch.where(is_al_u, hp_al.real, h_plus_re)
+                h_plus_im = torch.where(is_al_u, hp_al.imag, h_plus_im)
+                h_cross_re = torch.where(is_al_u, hc_al.real, h_cross_re)
+                h_cross_im = torch.where(is_al_u, hc_al.imag, h_cross_im)
+
+        h_plus_total = torch.view_as_complex(torch.stack([h_plus_re, h_plus_im], dim=-1))
+        h_cross_total = torch.view_as_complex(torch.stack([h_cross_re, h_cross_im], dim=-1))
 
         if return_modes:
             return h_plus_total, h_cross_total, mode_dict
