@@ -91,7 +91,25 @@ Timing measurements were obtained across 15 timed iterations (following 3 untime
 
 ---
 
-## 4. Architectural & Physical Observations
+## 4. Publication Figures
+
+The controlled benchmark campaign automatically generates four standardized, publication-quality figures:
+
+### Figure 1: Waveform Throughput Scaling Across Workloads
+![Figure 1: Waveform Throughput Scaling](../artifacts/benchmarks/plots/fig1_throughput_vs_batch.png)
+
+### Figure 2: Per-Waveform Latency & Amortization
+![Figure 2: Per-Waveform Generation Latency](../artifacts/benchmarks/plots/fig2_latency_vs_batch.png)
+
+### Figure 3: Speedup Factor vs. LALSimulation Single-Core Baseline
+![Figure 3: Speedup vs LAL](../artifacts/benchmarks/plots/fig3_speedup_vs_lal.png)
+
+### Figure 4: Cross-Model Throughput Breakdown
+![Figure 4: Model Breakdown Bar Chart](../artifacts/benchmarks/plots/fig4_model_breakdown_bar.png)
+
+---
+
+## 5. Architectural & Physical Observations
 
 1. **Analytical vs. Multi-Harmonic Hierarchy**:
    - `TaylorF2` evaluates closed-form post-Newtonian polynomial expansions, yielding the highest throughput across all frameworks ($>18,000\text{ wf/s}$ in Torch, $>81,000\text{ wf/s}$ in JAX).
@@ -108,7 +126,7 @@ Timing measurements were obtained across 15 timed iterations (following 3 untime
 
 ---
 
-## 5. Reproducing Benchmarks & Generating Local Plots
+## 6. Reproducing Benchmarks & Generating Local Plots
 
 Benchmark receipts are self-contained and cryptographically sealed with SHA-256 hashes according to schema `diffgw-benchmark-receipt/v1`. To avoid repository bloat, generated receipts and plot artifacts are git-ignored and stored locally in `artifacts/benchmarks/`.
 
