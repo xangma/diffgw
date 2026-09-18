@@ -25,6 +25,8 @@ def on_page_markdown(markdown: str, page, config, files) -> str:
     # Externalize links pointing above docs root to GitHub source repository
     github_blob = "https://github.com/xangma/diffgw/blob/main"
     markdown = markdown.replace("../src/", f"{github_blob}/src/")
+    markdown = markdown.replace("../../examples/", f"{github_blob}/examples/")
+    markdown = markdown.replace("../examples/", f"{github_blob}/examples/")
     markdown = markdown.replace("../THIRD_PARTY_NOTICES.md", f"{github_blob}/THIRD_PARTY_NOTICES.md")
     markdown = markdown.replace("../CITATIONS.md", f"{github_blob}/CITATIONS.md")
     

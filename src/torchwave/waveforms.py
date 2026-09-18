@@ -966,15 +966,22 @@ def get_td_waveform(
 
     Args:
         approximant: Waveform approximant name
-        mass1, mass2: Component masses in solar masses (aliases mass_1, m1 accepted)
-        chi1, chi2: Aligned dimensionless spins
-        spin1x, spin1y, spin1z: 3D primary spin components
-        spin2x, spin2y, spin2z: 3D secondary spin components
+        mass1: Component mass of primary in solar masses
+        mass2: Component mass of secondary in solar masses
+        chi1: Dimensionless aligned spin of body 1
+        chi2: Dimensionless aligned spin of body 2
+        spin1x: Primary dimensionless spin x-component
+        spin1y: Primary dimensionless spin y-component
+        spin1z: Primary dimensionless spin z-component
+        spin2x: Secondary dimensionless spin x-component
+        spin2y: Secondary dimensionless spin y-component
+        spin2z: Secondary dimensionless spin z-component
         distance: Luminosity distance in Mpc
         inclination: Orbital inclination in radians
         phic: Coalescence phase in radians
         tc: Requested coalescence peak time offset in seconds
-        lambda1, lambda2: Tidal deformabilities
+        lambda1: Dimensionless tidal deformability of body 1
+        lambda2: Dimensionless tidal deformability of body 2
         delta_t: Sampling interval in seconds (default 1/2048 s)
         f_lower: Low-frequency cutoff in Hz
         f_final: High-frequency cutoff in Hz (defaults to Nyquist 1/(2*delta_t))

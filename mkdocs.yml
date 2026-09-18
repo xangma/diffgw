@@ -7,15 +7,26 @@ copyright: Copyright &copy; 2024–2026 Xan Morice-Atkinson. MIT Licensed.
 
 theme:
   name: material
+  icon:
+    logo: material/waveform
+    repo: fontawesome/brands/github
+  font:
+    text: Inter
+    code: JetBrains Mono
   features:
     - navigation.instant
     - navigation.tracking
     - navigation.tabs
+    - navigation.tabs.sticky
     - navigation.sections
     - navigation.top
+    - navigation.path
+    - navigation.indexes
     - search.suggest
     - search.highlight
+    - search.share
     - content.code.copy
+    - content.tabs.link
   palette:
     - scheme: default
       primary: indigo
@@ -34,6 +45,8 @@ markdown_extensions:
   - admonition
   - pymdownx.details
   - pymdownx.superfences
+  - pymdownx.tabbed:
+      alternate_style: true
   - pymdownx.highlight:
       anchor_linenums: true
       line_spans: __span
@@ -76,18 +89,20 @@ validation:
   unrecognized_links: info
 
 nav:
-  - Overview: index.md
-  - Usage & Guide: usage.md
+  - Home: index.md
+  - User Guide:
+      - Getting Started & Usage: usage.md
+      - External Datasets: external-data.md
   - Tutorials:
       - 1. Quickstart & Parity: tutorials/01_quickstart_and_parity.md
-      - 2. Fisher Analysis: tutorials/02_fisher_analysis.md
-      - 3. Parameter Estimation & NUTS: tutorials/03_parameter_estimation_nuts.md
-  - Performance & Benchmarks: performance.md
-  - Differences from LAL: differences_from_lal.md
-  - Benchmarking Protocol: benchmarking_protocol.md
-  - Provenance Ledger: provenance_ledger.md
-  - External Data: external-data.md
+      - 2. Fisher Information: tutorials/02_fisher_analysis.md
+      - 3. Bayesian Inference & NUTS: tutorials/03_parameter_estimation_nuts.md
+  - Benchmarks & Validation:
+      - Performance Scaling: performance.md
+      - Differences from LAL: differences_from_lal.md
+      - Controlled Benchmark Protocol: benchmarking_protocol.md
+      - Mathematical Provenance Ledger: provenance_ledger.md
   - API Reference:
-      - torchwave: api/torchwave.md
-      - jaxwave: api/jaxwave.md
-      - diffgw: api/diffgw.md
+      - torchwave (PyTorch): api/torchwave.md
+      - jaxwave (JAX): api/jaxwave.md
+      - diffgw (Unified): api/diffgw.md

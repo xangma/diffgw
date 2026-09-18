@@ -1,27 +1,172 @@
 # DiffGW: Differentiable Gravitational-Wave Modeling & Inference
 
-**DiffGW** is a high-performance, batched, autograd-differentiable gravitational-wave (GW) modeling and Bayesian parameter estimation engine. It provides two native, first-class frontends backed by a shared analytical physics core (`diffgw_core`):
+<p align="center">
+  <a href="https://xangma.github.io/diffgw/"><img src="https://img.shields.io/badge/docs-diffgw-indigo.svg" alt="Documentation"></a>
+  <a href="https://github.com/xangma/diffgw"><img src="https://img.shields.io/badge/github-diffgw-blue.svg" alt="GitHub"></a>
+  <img src="https://img.shields.io/badge/python-3.10%20%7C%203.11%20%7C%203.12-blue.svg" alt="Python">
+  <img src="https://img.shields.io/badge/framework-PyTorch%20%7C%20JAX-orange.svg" alt="Frameworks">
+  <img src="https://img.shields.io/badge/precision-FP64%20Parity-success.svg" alt="Precision">
+  <img src="https://img.shields.io/badge/license-MIT-green.svg" alt="License">
+</p>
+
+**DiffGW** is a high-performance, batched, autograd-differentiable gravitational-wave (GW) modeling and Bayesian parameter estimation engine. It provides two native, first-class frontends backed by a shared zero-dependency analytical physics core (`diffgw_core`):
 
 - **`torchwave`**: Built natively in PyTorch for CPU, NVIDIA CUDA, and Apple Silicon MPS, featuring batched tensor computation `(B,) -> (B, N)` and autograd automatic differentiation.
-- **`jaxwave`**: Built natively in JAX for CPU, NVIDIA CUDA GPU, and TPU, featuring XLA just-in-time compilation (`@jax.jit`), automatic vectorization (`jax.vmap`), and forward/reverse-mode automatic differentiation (`jax.grad`, `jax.jacfwd`).
+- **`jaxwave`**: Built natively in JAX for CPU, NVIDIA CUDA GPU, and Google Cloud TPU, featuring XLA just-in-time compilation (`@jax.jit`), automatic vectorization (`jax.vmap`), and forward/reverse-mode automatic differentiation (`jax.grad`, `jax.jvp`).
 
-Both packages are distributed under the permissive **MIT License** and require only PyTorch or JAX and standard scientific Python dependencies. All waveform approximants, calibration surfaces, and ringdown solvers are independently implemented from published peer-reviewed literature.
+Both packages are distributed under the permissive **MIT License** and require only standard scientific Python dependencies. All waveform approximants, calibration surfaces, and ringdown eigensolvers are independently implemented from published peer-reviewed literature under strict clean-room principles.
 
 ---
 
-## Key Features
+<div class="grid cards" markdown>
 
-- **Extreme Scalability**: Generates up to **14.4 million waveforms per second** on an NVIDIA GeForce RTX 5090 using fused Inductor JIT kernels (`torch.compile`).
-- **Full Mathematical Parity**: PyTorch (`torchwave`) and JAX (`jaxwave`) waveforms agree to double-precision numerical noise ($L_2 \le 10^{-11}$, mismatch $\le 10^{-14}$), continuously verified by 1,021 automated tests.
-- **Native Autodiff**: Exact parameter gradients for gradient-based optimization (MAP), Hamiltonian Monte Carlo (HMC/NUTS), Fisher Information Matrix (FIM) calculations, and neural posterior estimation.
-- **Scientific Parity**: Calibrated against LIGO-Virgo-KAGRA `LALSimulation` C implementations with documented continuous spline matching enhancements.
-- **Detector Networks & Likelihoods**: Built-in detector geometry projections (`H1`, `L1`, `V1`, `K1`, `ET`, `CE`, `LISA`, `PTA`), Whittle Gaussian likelihoods, and relative binning acceleration.
+- :zap: **Fused JIT Scalability**
+    ---
+    Generates up to **14.4 million waveforms per second** on an NVIDIA GeForce RTX 5090 using fused Inductor JIT kernels (`torch.compile`) and JAX XLA compilation.
+
+- :dart: **Double-Precision Parity**
+    ---
+    PyTorch (`torchwave`) and JAX (`jaxwave`) agree to double-precision numerical noise ($L_2 \le 10^{-11}$, mismatch $\le 10^{-14}$), continuously verified by 1,021 automated tests.
+
+- :twisted_rightwards_arrows: **Co-Equal Frontends**
+    ---
+    Unified physics contracts guarantee exact functional and numerical parity between PyTorch and JAX across all 12 waveform model families.
+
+- :triangular_ruler: **Native Autodiff**
+    ---
+    Exact parameter gradients for forward-mode Fisher Information Matrix (FIM), Maximum A Posteriori (MAP) optimization, and No-U-Turn Sampler (NUTS) MCMC.
+
+- :telescope: **Detector Networks**
+    ---
+    Built-in antenna projections and noise PSDs for Ground interferometers (`H1`, `L1`, `V1`, `K1`, `ET`, `CE`), Space (`LISANetwork`), and Pulsar Timing Arrays (`PTANetwork`).
+
+- :rocket: **Accelerated Likelihoods**
+    ---
+    Standard Whittle Gaussian likelihood and $50\times$ faster heterodyned Relative Binning for ultra-fast parameter estimation.
+
+</div>
+
+---
+
+## Quickstart
+
+=== "PyTorch (`torchwave`)"
+
+    ```python
+    import torch
+    import torchwave
+
+    # Generate equal-mass binary black hole waveform
+    hp, hc = torchwave.get_fd_waveform(
+        approximant="IMRPhenomD",
+        mass1=30.0,
+        mass2=25.0,
+        chi1=0.2,
+        chi2=-0.1,
+        f_lower=20.0,
+        f_final=512.0,
+        delta_f=0.25,
+        dtype=torch.float64,
+    )
+
+    print("PyTorch polarization shape:", hp.shape)  # torch.Size([1969])
+
+    # Batched generation across 10,000 systems in a single call (B, N)
+    m1_b = torch.linspace(20.0, 50.0, 10000, dtype=torch.float64)
+    m2_b = torch.linspace(15.0, 45.0, 10000, dtype=torch.float64)
+    hp_batch, hc_batch = torchwave.get_fd_waveform(
+        approximant="IMRPhenomD",
+        mass1=m1_b, mass2=m2_b,
+        f_lower=20.0, f_final=512.0, delta_f=1.0,
+    )
+    print("Batched tensor shape:", hp_batch.shape)  # torch.Size([10000, 493])
+    ```
+
+=== "JAX (`jaxwave`)"
+
+    ```python
+    import jax
+    import jax.numpy as jnp
+    import jaxwave
+
+    # Class-based generator with cached XLA JIT compilation
+    generator = jaxwave.WaveformGenerator(
+        approximant="IMRPhenomD",
+        f_lower=20.0,
+        f_final=512.0,
+        delta_f=0.25,
+        use_jit=True,
+    )
+
+    hp, hc = generator.generate_fd_waveform(
+        mass1=30.0, mass2=25.0, chi1=0.2, chi2=-0.1
+    )
+    print("JAX polarization shape:", hp.shape)  # (1969,)
+
+    # Compute exact gradient of plus-polarization power with respect to chirp mass
+    @jax.jit
+    @jax.grad
+    def mc_loss(mc):
+        hp_val, _ = generator(chirp_mass=mc, mass_ratio=1.0)
+        return jnp.sum(jnp.abs(hp_val) ** 2)
+
+    grad = mc_loss(26.1)
+    print(f"d(Power)/d(M_c) = {grad:.4e}")
+    ```
+
+=== "Unified Dispatch (`diffgw`)"
+
+    ```python
+    import diffgw
+
+    # Dispatch to PyTorch backend
+    hp_t, hc_t = diffgw.get_fd_waveform(
+        "IMRPhenomD", mass1=30.0, mass2=25.0,
+        f_lower=20.0, f_final=512.0, delta_f=0.25,
+        backend="torch",
+    )
+
+    # Dispatch to JAX backend
+    hp_j, hc_j = diffgw.get_fd_waveform(
+        "IMRPhenomD", mass1=30.0, mass2=25.0,
+        f_lower=20.0, f_final=512.0, delta_f=0.25,
+        backend="jax",
+    )
+    ```
+
+---
+
+## Installation
+
+=== "PyTorch Support"
+
+    ```bash
+    git clone https://github.com/xangma/diffgw.git
+    cd diffgw
+    pip install -e ".[torch]"
+    ```
+
+=== "JAX Support"
+
+    ```bash
+    git clone https://github.com/xangma/diffgw.git
+    cd diffgw
+    pip install -e ".[jax]"
+    ```
+
+=== "All Backends & Development"
+
+    ```bash
+    git clone https://github.com/xangma/diffgw.git
+    cd diffgw
+    pip install -e ".[all,dev,docs]"
+    ```
 
 ---
 
 ## Waveform Models & Framework Parity
 
-All models below are natively implemented in **both PyTorch (`torchwave`) and JAX (`jaxwave`)** with cross-framework parity:
+All models below are natively implemented in **both PyTorch (`torchwave`) and JAX (`jaxwave`)** with verified mathematical parity:
 
 | Family | Approximant(s) | Harmonics / Multipoles | Physical Features & Regimes |
 | :--- | :--- | :---: | :--- |
@@ -35,103 +180,32 @@ All models below are natively implemented in **both PyTorch (`torchwave`) and JA
 
 ---
 
-## Installation
-
-```bash
-# Clone the repository
-git clone https://github.com/xangma/diffgw.git
-cd diffgw
-
-# Install with PyTorch support only
-pip install -e ".[torch]"
-
-# Install with JAX support only
-pip install -e ".[jax]"
-
-# Install all backends, inference tools, and dev dependencies
-pip install -e ".[all,dev]"
-```
-
----
-
-## Quick Example: PyTorch (`torchwave`)
-
-```python
-import torch
-import torchwave
-
-# Generate equal-mass binary black hole waveform
-hp, hc = torchwave.get_fd_waveform(
-    approximant="IMRPhenomD",
-    mass1=30.0,
-    mass2=30.0,
-    chi1=0.2,
-    chi2=-0.1,
-    f_lower=20.0,
-    f_final=1024.0,
-    delta_f=0.25,
-    distance=410.0,
-    device="cuda",
-)
-
-# Batched generation across 10,000 systems in a single call
-m1 = torch.linspace(10.0, 50.0, 10000, device="cuda")
-m2 = torch.linspace(10.0, 50.0, 10000, device="cuda")
-hp_batch, hc_batch = torchwave.get_fd_waveform(
-    approximant="IMRPhenomD",
-    mass1=m1,
-    mass2=m2,
-    f_lower=20.0,
-    f_final=512.0,
-    delta_f=1.0,
-    device="cuda",
-)
-print("Batched output tensor:", hp_batch.shape)  # torch.Size([10000, 493])
-```
-
----
-
-## Quick Example: JAX (`jaxwave`)
-
-```python
-import jax
-import jax.numpy as jnp
-import jaxwave
-
-# JIT-compile waveform generator
-generator = jaxwave.WaveformGenerator(approximant="IMRPhenomD")
-
-# Compute exact gradient of plus-polarization power with respect to chirp mass
-@jax.jit
-@jax.grad
-def mc_loss(mc):
-    hp, hc = generator(chirp_mass=mc, mass_ratio=1.0, f_lower=20.0, delta_f=0.25)
-    return jnp.sum(jnp.abs(hp) ** 2)
-
-grad = mc_loss(26.1)
-print("d(Power)/d(M_c):", grad)
-```
-
----
-
 ## Documentation Navigation
 
-### Core Guides & Reference
-- **[Usage Guide](usage.md)**: In-depth usage guide covering all approximants, batching, JAX JIT, detectors, and Bayesian inference.
-- **[Performance & Benchmarks](performance.md)**: Complete benchmark report on NVIDIA RTX 5090 across PyTorch eager, PyTorch Inductor (`torch.compile`), JAXWave CUDA, and LALSimulation.
-- **[Differences from LAL](differences_from_lal.md)**: Detailed audit of architectural improvements and numerical enhancements over LALSimulation.
-- **[Benchmarking Protocol](benchmarking_protocol.md)**: Strict multi-tier benchmarking protocol, hardware specs, and reproducibility requirements.
-- **[Provenance Ledger](provenance_ledger.md)**: Complete mathematical and primary literature derivation provenance ledger.
-- **[External Datasets](external-data.md)**: Guide to fetching and managing external ROM and surrogate datasets.
-- **[Scientific Citations](../CITATIONS.md)**: Literature bibliography for all models, phasing expressions, and calibrations.
-- **[Third-Party Notices](../THIRD_PARTY_NOTICES.md)**: Dataset attributions, license terms, and provenance notices.
+<div class="grid cards" markdown>
 
-### Step-by-Step Tutorials
-- **[Tutorial 1: Quickstart & Parity Check](tutorials/01_quickstart_and_parity.md)**: Getting started, batched generation, and double-precision PyTorch vs JAX parity.
-- **[Tutorial 2: Fisher Analysis](tutorials/02_fisher_analysis.md)**: Forward-mode automatic differentiation and parameter covariance matrices.
-- **[Tutorial 3: Parameter Estimation & NUTS](tutorials/03_parameter_estimation_nuts.md)**: Relative binning likelihood, Adam MAP optimization, and NUTS MCMC.
+- :material-book-open-page-variant: **[User Guide](usage.md)**
+    ---
+    In-depth guide covering all approximants, batching, JAX JIT, detectors, and Bayesian inference.
 
-### API Reference
-- **[`torchwave` API](api/torchwave.md)**: PyTorch waveform functions, approximants, and inference tools.
-- **[`jaxwave` API](api/jaxwave.md)**: JAX waveform functions, shape bucketing, and inference tools.
-- **[`diffgw` API](api/diffgw.md)**: Unified backend dispatch interface.
+- :material-speedometer: **[Performance & Benchmarks](performance.md)**
+    ---
+    Complete benchmark report on NVIDIA RTX 5090 across PyTorch eager, Inductor (`torch.compile`), JAX CUDA, and LAL.
+
+- :material-school: **[Step-by-Step Tutorials](tutorials/01_quickstart_and_parity.md)**
+    ---
+    Practical guides for quickstart & parity, forward-mode Fisher analysis, and NUTS Bayesian inference.
+
+- :material-code-tags: **[API Reference](api/torchwave.md)**
+    ---
+    Auto-generated function signatures, parameter descriptions, and return types for `torchwave`, `jaxwave`, and `diffgw`.
+
+- :material-scale-balance: **[Differences from LAL](differences_from_lal.md)**
+    ---
+    Detailed audit of continuous cubic Hermite spline matching and architectural improvements over LALSimulation.
+
+- :material-certificate: **[Provenance & Citations](provenance_ledger.md)**
+    ---
+    Complete mathematical provenance ledger and primary literature citations ([`CITATIONS.md`](../CITATIONS.md)).
+
+</div>

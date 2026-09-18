@@ -9,7 +9,7 @@ Strict Clean-Room Implementation based exclusively on published literature:
   Statist. Sci. 7, 457
 """
 
-from typing import Callable, Dict, List, Optional, Sequence, Tuple, Union
+from typing import Any, Callable, Dict, List, Optional, Sequence, Tuple, Union
 import math
 import torch
 import torch.nn as nn
@@ -401,7 +401,7 @@ class NUTS:
         initial_positions: torch.Tensor,
         n_samples: int = 400,
         n_warmup: int = 200,
-        **chain_kwargs,
+        **chain_kwargs: Any,
     ) -> torch.Tensor:
         """Run multiple NUTS chains starting from given initial positions.
 
@@ -409,7 +409,7 @@ class NUTS:
             initial_positions: Initial positions for each chain, shape (n_chains, D).
             n_samples: Number of post-warmup samples per chain.
             n_warmup: Number of warmup samples per chain.
-            **chain_kwargs: Passed to sample_chain().
+            chain_kwargs: Arbitrary keyword arguments passed to sample_chain.
 
         Returns:
             Tensor of samples of shape (n_chains, n_samples, D).
