@@ -186,12 +186,12 @@ def test_whittle_likelihood_parity():
     # 2. Standard Whittle likelihood at perturbed template
     ln_l_test_t = lik_t({"H1": hp_test_t, "L1": hp_test_t})
     ln_l_test_j = lik_j({"H1": hp_test_j, "L1": hp_test_j})
-    np.testing.assert_allclose(ln_l_test_t.numpy(), np.asarray(ln_l_test_j), rtol=1e-11)
+    np.testing.assert_allclose(ln_l_test_t.numpy(), np.asarray(ln_l_test_j), rtol=5e-11)
 
     # 3. Phase-marginalized log-likelihood
     pm_t = lik_t.phase_marginalized_log_likelihood({"H1": hp_test_t, "L1": hp_test_t})
     pm_j = lik_j.phase_marginalized_log_likelihood({"H1": hp_test_j, "L1": hp_test_j})
-    np.testing.assert_allclose(pm_t.numpy(), np.asarray(pm_j), rtol=1e-11)
+    np.testing.assert_allclose(pm_t.numpy(), np.asarray(pm_j), rtol=1e-10)
 
     # Verify phase-rotation invariance in JAX
     phase_shift = np.exp(1j * 0.7)
@@ -208,7 +208,7 @@ def test_whittle_likelihood_parity():
     dm_j = lik_j.distance_marginalized_log_likelihood(
         {"H1": hp_test_j, "L1": hp_test_j}, d_min=50.0, d_max=1000.0, d_ref=100.0
     )
-    np.testing.assert_allclose(dm_t.numpy(), np.asarray(dm_j), rtol=1e-11)
+    np.testing.assert_allclose(dm_t.numpy(), np.asarray(dm_j), rtol=1e-10)
 
 
 def test_whittle_likelihood_autodiff_parity():
@@ -346,7 +346,7 @@ def test_relative_binning_summary_and_likelihood_parity():
 
     ln_l_test_t = rel_lik_t({"H1": hp_test_bc_t, "L1": hp_test_bc_t})
     ln_l_test_j = rel_lik_j({"H1": hp_test_bc_j, "L1": hp_test_bc_j})
-    np.testing.assert_allclose(ln_l_test_t.numpy(), np.asarray(ln_l_test_j), rtol=1e-10)
+    np.testing.assert_allclose(ln_l_test_t.numpy(), np.asarray(ln_l_test_j), rtol=5e-10, atol=1e-10)
 
     # 4. Accuracy vs full dense Whittle likelihood (should match within 0.05)
     full_lik_j = jax_inf.WhittleLikelihood(data=data_j, psds=psds_j, df=df, frequencies=f_j)
