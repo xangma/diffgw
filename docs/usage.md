@@ -720,7 +720,7 @@ torchwave-generate-london-qnm --output-dir ./london_qnm
 
 `diffgw` implements a formal, reproducible benchmarking methodology adapted from PyCBC's controlled benchmark protocol, enforcing Gate 1 scientific parity qualification before timing measurements, capturing machine-readable hardware provenance, computing 2,000-sample bootstrap 95% confidence intervals, and sealing receipts with SHA-256 cryptographic hashes (`SCHEMA_VERSION = 1`).
 
-For the full protocol specification, see [**docs/benchmarking_protocol.md**](benchmarking_protocol.md). For detailed figure walkthroughs, hardware scaling on RTX 5090, and physical interpretation, see [**docs/performance.md**](performance.md).
+For the full protocol specification, see [**Benchmarking Protocol**](benchmarking_protocol.md). For detailed figure walkthroughs, hardware scaling on RTX 5090, and physical interpretation, see [**Performance Report**](performance.md).
 
 ### Running a Multi-Backend Benchmark Campaign
 The benchmark runner sweeps across all requested backends (`torch` [eager], `torch_compiled` [`torch.compile`], `jaxwave`, `lalsimulation`, `ripple`), devices, and batch sizes:

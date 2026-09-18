@@ -106,4 +106,4 @@ Benchmark receipts feed directly into automated plotting tools (`scripts/plot_be
 4. **Figure 4: Cross-Model Approximant Breakdown**:
    - Multi-model bar chart comparing non-spinning (`TaylorF2`), aligned-spin (`IMRPhenomD`, `IMRPhenomXAS`), precessing (`IMRPhenomXP`), and higher-harmonic (`IMRPhenomXHM`) models.
 
-For a detailed walkthrough of the generated figures, hardware scaling on the RTX 5090, and physical interpretation of the results, see [**docs/performance.md**](performance.md).
+For a detailed walkthrough of the generated figures, hardware scaling on the RTX 5090, and physical interpretation of the results, see [**Performance Report**](performance.md).

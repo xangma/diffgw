@@ -1,11 +1,14 @@
 # diffgw (torchwave & jaxwave)
 
+[![Documentation](https://img.shields.io/badge/docs-diffgw-blue.svg)](https://xangma.github.io/diffgw/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
 **diffgw** is a high-performance, batched, autograd-differentiable gravitational-wave (GW) modeling and inference engine. It provides two native, first-class, co-equal frontends powered by a shared zero-dependency analytical physics core (`diffgw_core`):
 
 - **`torchwave`**: Built natively in PyTorch for CPU, NVIDIA CUDA, and Apple Silicon MPS, featuring batched tensor computation `(B,) -> (B, N)` and autograd differentiation.
 - **`jaxwave`**: Built natively in JAX for CPU, NVIDIA CUDA GPU, and TPU, featuring XLA just-in-time compilation (`@jax.jit`), automatic vectorization (`jax.vmap`), and forward/reverse-mode automatic differentiation (`jax.grad`, `jax.jacfwd`).
 
-Both frontends are fully self-contained, pure Python packages distributed under the permissive **MIT License**, requiring only PyTorch or JAX and standard scientific Python dependencies. All waveform models, calibration surfaces, and ringdown solvers are independently implemented from published peer-reviewed literature. Optional external datasets (such as `SEOBNRv4ROM_v3.0.hdf5`) can be managed seamlessly via `diffgw-data`; see [third-party notices](THIRD_PARTY_NOTICES.md).
+Both frontends are fully self-contained, pure Python packages distributed under the permissive **MIT License**, requiring only PyTorch or JAX and standard scientific Python dependencies. All waveform models, calibration surfaces, and ringdown solvers are independently implemented from published peer-reviewed literature. Optional external datasets (such as `SEOBNRv4ROM_v3.0.hdf5`) can be managed seamlessly via [`diffgw-data`](docs/external-data.md); see [third-party notices](THIRD_PARTY_NOTICES.md).
 
 ---
 
@@ -224,7 +227,7 @@ The package includes standalone console scripts for benchmarking, profiling, dat
 
 1. **`torchwave-bench`**: Benchmark models across batch sizes, hardware platforms, and autograd backward passes.
 2. **`torchwave-profile`**: Profile kernel execution, CUDA memory allocations, and cProfile hotspots.
-3. **`torchwave-data`**: Inspect and download optional external ROM assets (e.g. `seobnrv4-rom-v3`).
+3. **`torchwave-data`**: Inspect, verify, and download optional external ROM assets (see [external datasets guide](docs/external-data.md)).
 4. **`torchwave-generate-qnm`**: Kerr QNM tables computed directly from the Leaver continued-fraction eigensolver.
 5. **`torchwave-generate-london-qnm`**: London $N=61$ polynomial fits for higher-harmonic ringdown models.
 
@@ -233,12 +236,15 @@ The package includes standalone console scripts for benchmarking, profiling, dat
 ## Scientific Validation and Provenance
 
 All waveform models, phasing routines, and calibration surfaces in `diffgw` are derived directly from published peer-reviewed literature and independently verified against standard reference implementations. See:
+- [**Documentation Portal**](https://xangma.github.io/diffgw/) (or local [docs/index.md](docs/index.md)) for the complete web documentation.
 - [**CITATIONS.md**](CITATIONS.md) for literature bibliography.
-- [**docs/provenance_ledger.md**](docs/provenance_ledger.md) for full mathematical derivation and coefficient ledger.
+- [**docs/usage.md**](docs/usage.md) for comprehensive API documentation and examples.
+- [**docs/performance.md**](docs/performance.md) for the detailed performance analysis, figure walkthrough, and RTX 5090 scaling benchmarks.
 - [**docs/differences_from_lal.md**](docs/differences_from_lal.md) for technical descriptions and comparisons with reference implementations.
 - [**docs/benchmarking_protocol.md**](docs/benchmarking_protocol.md) for the controlled benchmarking methodology, Gate 1 scientific parity enforcement, and cryptographic receipt sealing.
-- [**docs/performance.md**](docs/performance.md) for the detailed performance analysis, figure walkthrough, and RTX 5090 scaling benchmarks.
-- [**docs/usage.md**](docs/usage.md) for comprehensive API documentation.
+- [**docs/provenance_ledger.md**](docs/provenance_ledger.md) for full mathematical derivation and coefficient ledger.
+- [**docs/external-data.md**](docs/external-data.md) for external ROM dataset management and offline caching.
+- [**CONTRIBUTING.md**](CONTRIBUTING.md) for development guidelines, testing protocols, and parity standards.
 
 ### Cross-Framework Parity Tests
 To verify complete mathematical parity between PyTorch and JAX on your system:

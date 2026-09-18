@@ -122,3 +122,5 @@ print("d(Power)/d(M_c):", grad)
 - **[Benchmarking Protocol](benchmarking_protocol.md)**: Strict multi-tier benchmarking protocol, hardware specs, and reproducibility requirements.
 - **[Provenance Ledger](provenance_ledger.md)**: Complete mathematical and primary literature derivation provenance ledger.
 - **[External Datasets](external-data.md)**: Guide to fetching and managing external ROM and surrogate datasets.
+- **[Scientific Citations](../CITATIONS.md)**: Literature bibliography for all models, phasing expressions, and calibrations.
+- **[Third-Party Notices](../THIRD_PARTY_NOTICES.md)**: Dataset attributions, license terms, and provenance notices.

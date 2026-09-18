@@ -148,7 +148,7 @@ Forward-mode automatic differentiation ($\partial h / \partial \theta_i$) is uti
 > [!TIP]
 > **Recompile Elimination**:
 > - **PyTorch `dynamic=True`**: Compiles an initial specialized kernel at $B=1$, generalizes the leading dimension symbolically at $B=10$, and executes all subsequent batch sizes ($B=50, 100, 500, \dots$) in milliseconds with zero recompilations.
-> - **JAX Shape Bucketing**: Using [`BucketedWaveformEvaluator`](file:///Users/xangma/repos/torchwave/src/jaxwave/inference/bucketing.py) routes variable-proposal MCMC batches into static power-of-two buckets ($B \in \{1, 8, 16, 32, \dots\}$), completely eliminating XLA recompilation during sampling.
+> - **JAX Shape Bucketing**: Using [`BucketedWaveformEvaluator`](usage.md#shape-bucketing-for-mcmc-sampling-bucketedwaveformevaluator) routes variable-proposal MCMC batches into static power-of-two buckets ($B \in \{1, 8, 16, 32, \dots\}$), completely eliminating XLA recompilation during sampling.
 > - **Apple Silicon Metal Note**: On macOS MPS, PyTorch Inductor restricts Metal kernel argument buffers to 31 (`[[buffer(31)]]`). Eager autograd or CPU compilation is recommended for large dynamic graphs on Apple Silicon.
 
 ---

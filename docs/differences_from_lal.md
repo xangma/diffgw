@@ -55,7 +55,7 @@ The unified `diffgw` architecture extracts zero-dependency physical constants, u
 * **Step-Size Considerations**: Because adaptive ODE integrators (such as Runge-Kutta-Fehlberg or Dormand-Prince) vary step sizes dynamically, evaluating finite-difference stencils across adaptive or interpolated trajectories can exhibit sensitivity to local step-size spacing near the attachment boundary.
 
 #### Continuous Spline Attachment
-* **Continuous Spline Attachment**: Implemented in [`src/torchwave/approximants/continuous_matching.py`](../src/torchwave/approximants/eob/continuous_matching.py). TorchWave fits a continuous cubic Hermite spline to the trajectory and solves for the root of $d\Omega/dt = 0$ using Brent-Dekker / Newton-Raphson root-finding.
+* **Continuous Spline Attachment**: Implemented in [`src/torchwave/approximants/eob/continuous_matching.py`](../src/torchwave/approximants/eob/continuous_matching.py). TorchWave fits a continuous cubic Hermite spline to the trajectory and solves for the root of $d\Omega/dt = 0$ using Brent-Dekker / Newton-Raphson root-finding.
 * **Analytical $C^1$ Continuity**: Matching coefficients and time shifts are computed directly from the continuous spline's analytical derivatives, providing smooth, differentiable $C^1$ continuity into the Kerr QNM ringdown independent of ODE step size.
 
 ---
