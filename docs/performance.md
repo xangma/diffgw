@@ -87,15 +87,18 @@ Timing measurements were collected across 15 timed iterations (following 3 untim
 
 ## 4. Ultra-Large Batch Scaling & GPU Memory Footprint ($B = 1,000 \to 50,000$)
 
-Waveform generation was profiled at extreme scales up to $B=50,000$ to characterize peak saturation throughput and exact GDDR7 VRAM memory footprints on the RTX 5090:
+Waveform generation was profiled at extreme scales up to $B=50,000$ using **PyTorch (CUDA eager mode)** to characterize peak saturation throughput and exact GDDR7 VRAM memory footprints on the RTX 5090. Eager PyTorch was selected for this study because it enables precise tensor memory allocation tracking via `torch.cuda.max_memory_allocated()`, whereas JAX/XLA preallocates the GPU memory pool by default:
 
-| Approximant | Max Batch ($B$) | Peak Throughput (FP32) | Peak Throughput (FP64) | Peak VRAM Footprint | VRAM Overhead / Waveform |
+| Approximant (PyTorch Eager) | Max Batch ($B$) | Peak Throughput (FP32) | Peak Throughput (FP64) | Peak VRAM Footprint | VRAM Overhead / Waveform |
 | :--- | :--- | :--- | :--- | :--- | :--- |
 | **TaylorF2** | 50,000 | **1,114,576 wf/s** ($44.9\text{ ms}$) | **505,733 wf/s** ($98.9\text{ ms}$) | 6.19 GB (FP32) / 12.31 GB (FP64) | **126.8 KB / wf** (FP32) / **252.1 KB / wf** (FP64) |
 | **IMRPhenomD** | 50,000 | **384,837 wf/s** ($129.9\text{ ms}$) | **157,106 wf/s** ($B=25k$) | 20.71 GB | **424.1 KB / wf** (FP32) / **848.2 KB / wf** (FP64) |
 | **IMRPhenomXAS**| 50,000 | **299,209 wf/s** ($167.1\text{ ms}$) | **139,009 wf/s** ($359.7\text{ ms}$) | 13.23 GB (FP32) / 26.45 GB (FP64) | **271.0 KB / wf** (FP32) / **541.7 KB / wf** (FP64) |
 | **IMRPhenomXP** | 5,000 | **3,724 wf/s** ($1.34\text{ s}$) | **3,720 wf/s** ($1.34\text{ s}$) | 16.96 GB ($B=5k$) | **3.47 MB / wf** (3D Precession Frame Tracking) |
 | **IMRPhenomXHM**| 50,000 | **23,499 wf/s** ($2.13\text{ s}$) | **9,916 wf/s** ($B=25k$) | 26.44 GB | **541.5 KB / wf** (FP32) / **1.08 MB / wf** (FP64) |
+
+> [!NOTE]
+> For JAXWave CUDA and PyTorch Inductor (`torch.compile`) throughput comparisons across $B = 1 \to 5,000$, see [Section 3: Comprehensive Benchmark Results](#3-comprehensive-benchmark-results-rtx-5090).
 
 > [!TIP]
 > Memory scaling is strictly linear $O(B)$ with zero dynamic reallocation. Batches of 50,000 waveforms for `TaylorF2`, `IMRPhenomXAS`, and `IMRPhenomXHM` fit comfortably inside the 32 GB frame buffer.
