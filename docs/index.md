@@ -116,7 +116,8 @@ print("d(Power)/d(M_c):", grad)
 
 ## Documentation Navigation
 
-- **[Usage Guide & API Reference](usage.md)**: In-depth usage guide covering all approximants, batching, JAX JIT, detectors, and Bayesian inference.
+### Core Guides & Reference
+- **[Usage Guide](usage.md)**: In-depth usage guide covering all approximants, batching, JAX JIT, detectors, and Bayesian inference.
 - **[Performance & Benchmarks](performance.md)**: Complete benchmark report on NVIDIA RTX 5090 across PyTorch eager, PyTorch Inductor (`torch.compile`), JAXWave CUDA, and LALSimulation.
 - **[Differences from LAL](differences_from_lal.md)**: Detailed audit of architectural improvements and numerical enhancements over LALSimulation.
 - **[Benchmarking Protocol](benchmarking_protocol.md)**: Strict multi-tier benchmarking protocol, hardware specs, and reproducibility requirements.
@@ -124,3 +125,13 @@ print("d(Power)/d(M_c):", grad)
 - **[External Datasets](external-data.md)**: Guide to fetching and managing external ROM and surrogate datasets.
 - **[Scientific Citations](../CITATIONS.md)**: Literature bibliography for all models, phasing expressions, and calibrations.
 - **[Third-Party Notices](../THIRD_PARTY_NOTICES.md)**: Dataset attributions, license terms, and provenance notices.
+
+### Step-by-Step Tutorials
+- **[Tutorial 1: Quickstart & Parity Check](tutorials/01_quickstart_and_parity.md)**: Getting started, batched generation, and double-precision PyTorch vs JAX parity.
+- **[Tutorial 2: Fisher Analysis](tutorials/02_fisher_analysis.md)**: Forward-mode automatic differentiation and parameter covariance matrices.
+- **[Tutorial 3: Parameter Estimation & NUTS](tutorials/03_parameter_estimation_nuts.md)**: Relative binning likelihood, Adam MAP optimization, and NUTS MCMC.
+
+### API Reference
+- **[`torchwave` API](api/torchwave.md)**: PyTorch waveform functions, approximants, and inference tools.
+- **[`jaxwave` API](api/jaxwave.md)**: JAX waveform functions, shape bucketing, and inference tools.
+- **[`diffgw` API](api/diffgw.md)**: Unified backend dispatch interface.

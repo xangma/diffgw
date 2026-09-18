@@ -233,6 +233,15 @@ The package includes standalone console scripts for benchmarking, profiling, dat
 
 ---
 
+## Tutorials & Runnable Examples
+
+Step-by-step walkthroughs paired with runnable standalone scripts:
+1. **[Tutorial 1: Quickstart & Parity Check](docs/tutorials/01_quickstart_and_parity.md)** ([`examples/01_quickstart_and_parity.py`](examples/01_quickstart_and_parity.py)): Waveform generation, batched evaluations, and double-precision PyTorch vs JAX parity verification.
+2. **[Tutorial 2: Fisher Analysis](docs/tutorials/02_fisher_analysis.md)** ([`examples/02_fisher_analysis.py`](examples/02_fisher_analysis.py)): Forward-mode autodiff (`torch.autograd.forward_ad` & `jax.jvp`), noise-weighted Fisher Information Matrix, and Cramér-Rao parameter bounds.
+3. **[Tutorial 3: Parameter Estimation & NUTS](docs/tutorials/03_parameter_estimation_nuts.md)** ([`examples/03_parameter_estimation_nuts.py`](examples/03_parameter_estimation_nuts.py)): Synthetic signal injection in detector noise, accelerated relative binning likelihood, Adam MAP optimization, and No-U-Turn Sampler (NUTS) MCMC.
+
+---
+
 ## Scientific Validation and Provenance
 
 All waveform models, phasing routines, and calibration surfaces in `diffgw` are derived directly from published peer-reviewed literature and independently verified against standard reference implementations. See:

@@ -56,6 +56,16 @@ extra_css:
 
 plugins:
   - search
+  - mkdocstrings:
+      default_handler: python
+      handlers:
+        python:
+          paths: [src]
+          options:
+            show_root_heading: true
+            show_source: true
+            heading_level: 3
+            docstring_style: google
 
 hooks:
   - docs/hooks.py
@@ -67,9 +77,17 @@ validation:
 
 nav:
   - Overview: index.md
-  - Usage & Quickstart: usage.md
+  - Usage & Guide: usage.md
+  - Tutorials:
+      - 1. Quickstart & Parity: tutorials/01_quickstart_and_parity.md
+      - 2. Fisher Analysis: tutorials/02_fisher_analysis.md
+      - 3. Parameter Estimation & NUTS: tutorials/03_parameter_estimation_nuts.md
   - Performance & Benchmarks: performance.md
   - Differences from LAL: differences_from_lal.md
   - Benchmarking Protocol: benchmarking_protocol.md
   - Provenance Ledger: provenance_ledger.md
   - External Data: external-data.md
+  - API Reference:
+      - torchwave: api/torchwave.md
+      - jaxwave: api/jaxwave.md
+      - diffgw: api/diffgw.md
