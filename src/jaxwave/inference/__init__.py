@@ -32,6 +32,12 @@ from jaxwave.inference.relative_binning import (
     compute_relative_binning_bins,
     compute_relative_binning_summary,
 )
+from jaxwave.inference.bucketing import (
+    get_bucketed_batch_size,
+    pad_parameters_to_bucket,
+    unpad_waveform_from_bucket,
+    BucketedWaveformEvaluator,
+)
 
 __all__ = [
     "noise_weighted_inner_product",
@@ -46,4 +52,9 @@ __all__ = [
     "RelativeBinningLikelihood",
     "compute_relative_binning_bins",
     "compute_relative_binning_summary",
+    "get_bucketed_batch_size",
+    "pad_parameters_to_bucket",
+    "unpad_waveform_from_bucket",
+    "BucketedWaveformEvaluator",
 ]
+

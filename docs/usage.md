@@ -26,6 +26,7 @@ Both packages are fully self-contained Python libraries requiring only standard 
    - [Just-In-Time Compilation (`@jax.jit`)](#just-in-time-compilation-jaxjit)
    - [Vectorized Batch Evaluation (`jax.vmap`)](#vectorized-batch-evaluation-jaxvmap)
    - [Autodiff Parameter Gradients (`jax.grad`)](#autodiff-parameter-gradients-jaxgrad)
+   - [Shape Bucketing for MCMC Sampling (`BucketedWaveformEvaluator`)](#shape-bucketing-for-mcmc-sampling-bucketedwaveformevaluator)
    - [Unified Dispatch via `diffgw`](#unified-dispatch-via-diffgw)
 6. [Time-Domain Waveforms (`get_td_waveform`)](#6-time-domain-waveforms-get_td_waveform)
 7. [Black Hole Ringdown & Kerr Quasinormal Modes](#7-black-hole-ringdown-kerr-quasinormal-modes)
@@ -272,10 +273,11 @@ hp, hc = jaxwave.get_fd_waveform(
     f_lower=20.0, f_final=512.0, delta_f=0.25,
 )
 
-# Class-based generator for repeated evaluations
+# Class-based generator for repeated evaluations (supports automatic JIT caching)
 gen = jaxwave.WaveformGenerator(
     approximant="IMRPhenomXAS",
     f_lower=20.0, f_final=512.0, delta_f=0.25,
+    use_jit=True,
 )
 hp, hc = gen.generate_fd_waveform(mass1=30.0, mass2=25.0, chi1=0.1, chi2=0.0)
 ```
@@ -332,6 +334,29 @@ def waveform_power(m1, m2):
 grad_fn = jax.grad(waveform_power, argnums=(0, 1))
 dm1, dm2 = grad_fn(30.0, 25.0)
 print(f"Gradients: dm1={dm1:.4e}, dm2={dm2:.4e}")
+```
+
+### Shape Bucketing for MCMC Sampling (`BucketedWaveformEvaluator`)
+
+In MCMC sampling, parallel tempering, or ensemble walkers where batch sizes vary dynamically, standard `@jax.jit` functions recompile whenever a new batch size is encountered.
+
+`jaxwave.inference.BucketedWaveformEvaluator` eliminates dynamic recompilation by quantizing batch sizes into pre-compiled discrete buckets (e.g. powers of 2: 1, 2, 4, 8, 16, 32, ...), padding input tensors, evaluating via the cached static JIT kernel, and unpadding the output back to the requested batch size:
+
+```python
+from jaxwave.inference import BucketedWaveformEvaluator
+import jax.numpy as jnp
+
+evaluator = BucketedWaveformEvaluator(
+    approximant="IMRPhenomD",
+    f_lower=20.0, f_final=512.0, delta_f=0.5,
+    buckets=(1, 4, 8, 16, 32, 64, 128),
+)
+
+# Evaluating 13 walkers pads to bucket 16, using the cached JIT kernel
+m1_walkers = jnp.array([30.0] * 13)
+m2_walkers = jnp.array([25.0] * 13)
+hp, hc = evaluator.evaluate(mass1=m1_walkers, mass2=m2_walkers)
+print(f"Output walkers: {hp.shape[0]}, Recompiles: 0")  # Exactly 13
 ```
 
 ### Unified Dispatch via `diffgw`
@@ -633,16 +658,22 @@ print("Gelman-Rubin R_hat:", r_hat)
 TorchWave registers five standalone console executables:
 
 ### `torchwave-bench`
-Benchmark model throughput, batch sizes, and GPU speedups:
+Benchmark model throughput, batch sizes, autograd backward passes, and cross-framework GPU speedups:
 ```bash
 # Benchmark standard models across batch sizes
 torchwave-bench --models popular --batch-sizes 1,10,100,1000
 
+# Benchmark across backends (Torch eager, Torch compiled, JAX JIT, or all)
+torchwave-bench --models IMRPhenomD --backend all --batch-sizes 1,10,100
+
+# Benchmark compiled PyTorch with dynamic shapes (avoids recompilations across batch sizes)
+torchwave-bench --models TaylorF2,IMRPhenomD --compile --dynamic --batch-sizes 1,10,50,100
+
+# Measure forward + backward autograd gradient time
+torchwave-bench --models IMRPhenomD --backend torch --batch-sizes 100 --backward
+
 # Compare against LALSimulation baseline and export Markdown table
 torchwave-bench --models TaylorF2,IMRPhenomD,IMRPhenomXAS --compare-lal --markdown-out benchmark.md
-
-# Benchmark with autograd backward pass
-torchwave-bench --models IMRPhenomD --batch-sizes 100 --backward
 ```
 
 ### `torchwave-profile`

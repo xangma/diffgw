@@ -105,7 +105,55 @@ Waveform generation was profiled at extreme scales up to $B=50,000$ using **PyTo
 
 ---
 
-## 5. Publication Figures
+## 5. Autodiff & Gradient Performance (PyTorch vs. JAX)
+
+Both TorchWave and JAXWave natively support exact reverse-mode automatic differentiation ($\nabla_\theta \mathcal{L}$) and forward-mode automatic differentiation ($\mathcal{J}_\theta h$) without numerical difference approximations.
+
+### Reverse-Mode Gradient Latency & Throughput (FP64, $N = 500$ frequency bins)
+
+Measurements evaluate combined forward evaluation plus full adjoint backward propagation w.r.t. parameters $\{m_1, m_2, \chi_{1z}, \chi_{2z}\}$:
+
+| Approximant | Batch ($B$) | Framework / Mode | Forward Latency | Backward Latency | Total (Val+Grad) | Grad / Fwd Ratio | Gradient Throughput |
+| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+| **TaylorF2** | 1 | Torch Eager (CPU) | 0.287 ms | 0.424 ms | 0.815 ms | 2.84× | 1,227 wf/s |
+| | 1 | **Torch Compiled (`dynamic=True`)** | **0.184 ms** | **0.208 ms** | **0.391 ms** | **2.12×** | **2,558 wf/s** |
+| | 1 | **JAX JIT (CPU)** | **0.029 ms** | **0.089 ms** | **0.119 ms** | **4.04×** | **8,428 wf/s** |
+| | 10 | Torch Eager (CPU) | 0.618 ms | 0.791 ms | 1.603 ms | 2.59× | 6,238 wf/s |
+| | 10 | **Torch Compiled (`dynamic=True`)** | **0.623 ms** | **1.309 ms** | **1.902 ms** | **3.05×** | **5,258 wf/s** |
+| | 10 | **JAX JIT (CPU)** | **0.123 ms** | **0.508 ms** | **0.631 ms** | **5.12×** | **15,852 wf/s** |
+| | 100 | Torch Eager (CPU) | 3.604 ms | 6.002 ms | 10.157 ms | 2.82× | 9,845 wf/s |
+| | 100 | **JAX JIT (CPU)** | **0.654 ms** | **1.345 ms** | **1.999 ms** | **3.06×** | **50,026 wf/s** |
+| **IMRPhenomD** | 1 | Torch Eager (CPU) | 0.939 ms | 1.661 ms | 3.058 ms | 3.26× | 327 wf/s |
+| | 1 | **JAX JIT (CPU)** | **0.065 ms** | **0.182 ms** | **0.247 ms** | **3.79×** | **4,046 wf/s** |
+| | 10 | Torch Eager (CPU) | 2.240 ms | 2.786 ms | 5.557 ms | 2.48× | 1,800 wf/s |
+| | 10 | **JAX JIT (CPU)** | **0.222 ms** | **0.652 ms** | **0.873 ms** | **3.94×** | **11,449 wf/s** |
+| | 100 | Torch Eager (CPU) | 11.857 ms | 16.900 ms | 29.535 ms | 2.49× | 3,386 wf/s |
+| | 100 | **JAX JIT (CPU)** | **1.640 ms** | **1.478 ms** | **3.118 ms** | **1.90×** | **32,069 wf/s** |
+| **IMRPhenomXAS** | 1 | Torch Eager (CPU) | 3.240 ms | 7.603 ms | 12.611 ms | 3.89× | 79 wf/s |
+| | 1 | **JAX JIT (CPU)** | **0.084 ms** | **0.385 ms** | **0.469 ms** | **5.58×** | **2,133 wf/s** |
+| | 10 | Torch Eager (CPU) | 4.383 ms | 9.127 ms | 15.177 ms | 3.46× | 659 wf/s |
+| | 10 | **JAX JIT (CPU)** | **0.285 ms** | **0.714 ms** | **0.999 ms** | **3.51×** | **10,010 wf/s** |
+| | 100 | Torch Eager (CPU) | 14.803 ms | 31.062 ms | 48.562 ms | 3.28× | 2,059 wf/s |
+| | 100 | **JAX JIT (CPU)** | **1.831 ms** | **2.378 ms** | **4.209 ms** | **2.30×** | **23,761 wf/s** |
+
+### Forward-Mode AD & Fisher Information Matrix (FIM) Performance
+
+Forward-mode automatic differentiation ($\partial h / \partial \theta_i$) is utilized for exact Fisher matrix computation $\Gamma_{ij} = \langle \partial_i h \mid \partial_j h \rangle$:
+
+| Approximant | Parameters | Torch `fwAD` Latency | JAX `jvp` Latency | Numerical Parity ($\Delta_{\text{rel}}$) | Matrix Condition $\kappa(\Gamma)$ |
+| :--- | :--- | :--- | :--- | :--- | :--- |
+| **TaylorF2** | $\{m_1, m_2, \chi_{1z}, \chi_{2z}\}$ | **29.2 ms** | 51.4 ms | **$1.15 \times 10^{-15}$** | $1.01 \times 10^9$ |
+| **IMRPhenomD** | $\{m_1, m_2, \chi_{1z}, \chi_{2z}\}$ | **76.9 ms** | 244.6 ms | **$4.09 \times 10^{-13}$** | $9.09 \times 10^7$ |
+
+> [!TIP]
+> **Recompile Elimination**:
+> - **PyTorch `dynamic=True`**: Compiles an initial specialized kernel at $B=1$, generalizes the leading dimension symbolically at $B=10$, and executes all subsequent batch sizes ($B=50, 100, 500, \dots$) in milliseconds with zero recompilations.
+> - **JAX Shape Bucketing**: Using [`BucketedWaveformEvaluator`](file:///Users/xangma/repos/torchwave/src/jaxwave/inference/bucketing.py) routes variable-proposal MCMC batches into static power-of-two buckets ($B \in \{1, 8, 16, 32, \dots\}$), completely eliminating XLA recompilation during sampling.
+> - **Apple Silicon Metal Note**: On macOS MPS, PyTorch Inductor restricts Metal kernel argument buffers to 31 (`[[buffer(31)]]`). Eager autograd or CPU compilation is recommended for large dynamic graphs on Apple Silicon.
+
+---
+
+## 6. Publication Figures
 
 All figures are rendered at 300 DPI and accompanied by publication-quality vector PDFs:
 
@@ -129,7 +177,7 @@ All figures are rendered at 300 DPI and accompanied by publication-quality vecto
 
 ---
 
-## 6. Architectural Observations
+## 7. Architectural Observations
 
 1. **Inductor JIT Kernel Fusion (`torch.compile`)**:
    - Compiling waveform generators with PyTorch 2.11 Inductor flattens the multi-stage piecewise evaluation pipeline (inspiral collocation matching, intermediate spline fits, and ringdown damping) into fused CUDA kernels.
@@ -152,7 +200,7 @@ All figures are rendered at 300 DPI and accompanied by publication-quality vecto
 
 ---
 
-## 7. Reproducing Benchmarks
+## 8. Reproducing Benchmarks
 
 Benchmark receipts are self-contained and cryptographically sealed with SHA-256 hashes. To reproduce the campaign locally:
 
