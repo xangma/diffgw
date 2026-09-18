@@ -116,10 +116,10 @@ def compute_pnr_alpha_coefficients(
     chiboundary = 0.80 - 0.20 * torch.exp(-(((q - 6.0) / 1.5) ** 8))
     chi_eff = torch.where(chi <= chiboundary, chi, chiboundary)
 
-    c_a1 = torch.tensor(COEFF_ARRAYS["A1"], dtype=dtype, device=device)
-    c_a2 = torch.tensor(COEFF_ARRAYS["A2"], dtype=dtype, device=device)
-    c_a3 = torch.tensor(COEFF_ARRAYS["A3"], dtype=dtype, device=device)
-    c_a4 = torch.tensor(COEFF_ARRAYS["A4"], dtype=dtype, device=device)
+    c_a1 = torch.as_tensor(COEFF_ARRAYS["A1"], dtype=dtype, device=device)
+    c_a2 = torch.as_tensor(COEFF_ARRAYS["A2"], dtype=dtype, device=device)
+    c_a3 = torch.as_tensor(COEFF_ARRAYS["A3"], dtype=dtype, device=device)
+    c_a4 = torch.as_tensor(COEFF_ARRAYS["A4"], dtype=dtype, device=device)
 
     sintheta = torch.sqrt(torch.clamp(1.0 - costheta ** 2, min=0.0))
 
@@ -158,12 +158,12 @@ def compute_pnr_beta_coefficients(
     chiboundary = 0.80 - 0.20 * torch.exp(-(((q - 6.0) / 1.5) ** 8))
     chi_eff = torch.where(chi <= chiboundary, chi, chiboundary)
 
-    c_b0 = torch.tensor(COEFF_ARRAYS["B0"], dtype=dtype, device=device)
-    c_b1 = torch.tensor(COEFF_ARRAYS["B1"], dtype=dtype, device=device)
-    c_b2 = torch.tensor(COEFF_ARRAYS["B2"], dtype=dtype, device=device)
-    c_b3 = torch.tensor(COEFF_ARRAYS["B3"], dtype=dtype, device=device)
-    c_b4 = torch.tensor(COEFF_ARRAYS["B4"], dtype=dtype, device=device)
-    c_b5 = torch.tensor(COEFF_ARRAYS["B5"], dtype=dtype, device=device)
+    c_b0 = torch.as_tensor(COEFF_ARRAYS["B0"], dtype=dtype, device=device)
+    c_b1 = torch.as_tensor(COEFF_ARRAYS["B1"], dtype=dtype, device=device)
+    c_b2 = torch.as_tensor(COEFF_ARRAYS["B2"], dtype=dtype, device=device)
+    c_b3 = torch.as_tensor(COEFF_ARRAYS["B3"], dtype=dtype, device=device)
+    c_b4 = torch.as_tensor(COEFF_ARRAYS["B4"], dtype=dtype, device=device)
+    c_b5 = torch.as_tensor(COEFF_ARRAYS["B5"], dtype=dtype, device=device)
 
     sintheta = torch.sqrt(torch.clamp(1.0 - costheta ** 2, min=0.0))
 

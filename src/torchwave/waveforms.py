@@ -184,7 +184,7 @@ def _get_fd_waveform_raw(
     if sample_frequencies is not None:
         f = sample_frequencies
         if not isinstance(f, torch.Tensor):
-            f = torch.tensor(f, dtype=dtype, device=device)
+            f = torch.as_tensor(f, dtype=dtype, device=device)
         else:
             if device is not None and f.device != torch.device(device):
                 f = f.to(device=device)

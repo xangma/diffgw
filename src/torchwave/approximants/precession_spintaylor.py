@@ -450,7 +450,7 @@ def evaluate_spintaylor_precession(
     # Transition frequency f_meco and f_trans
     mf_meco = XASParameterFits.fit_f_meco(eta, s1z_t, s2z_t)
     f_meco = mf_meco / torch.clamp(m_sec, min=1e-24)
-    f_meco = torch.clamp(f_meco, min=f_ref_t + 15.0, max=torch.tensor(800.0, dtype=f.dtype, device=f.device))
+    f_meco = torch.clamp(f_meco, min=f_ref_t + 15.0, max=800.0)
     f_trans = 0.98 * f_meco
     v_trans = (PI * m_sec * f_trans).pow(1.0 / 3.0)
 
@@ -462,7 +462,7 @@ def evaluate_spintaylor_precession(
     pos_f_min = torch.where(f_eval > 0, f_eval, torch.full_like(f_eval, float("inf"))).amin()
     f_min_grid = torch.where(torch.isfinite(pos_f_min), pos_f_min, f_ref_t)
     # Clamp minimum physical frequency for ODE stability in PN band
-    f_min_eval = torch.minimum(f_ref_t, torch.clamp(f_min_grid, min=torch.tensor(15.0, dtype=f.dtype, device=f.device)))
+    f_min_eval = torch.minimum(f_ref_t, torch.clamp(f_min_grid, min=15.0))
     v_min = (PI * m_sec * f_min_eval).pow(1.0 / 3.0)
 
     # Integrate ODE on velocity grid

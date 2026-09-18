@@ -32,8 +32,8 @@ def _raw(mu, c, coeff):
 
 
 def _norm_vectorized(c, coeff, n_intervals=32):
-    nodes = torch.tensor(_K21_NODES, dtype=c.real.dtype, device=c.device)
-    weights = torch.tensor(_K21_WEIGHTS, dtype=c.real.dtype, device=c.device)
+    nodes = torch.as_tensor(_K21_NODES, dtype=c.real.dtype, device=c.device)
+    weights = torch.as_tensor(_K21_WEIGHTS, dtype=c.real.dtype, device=c.device)
     edges = torch.linspace(-1.0, 1.0, n_intervals + 1, dtype=c.real.dtype, device=c.device)
     lo = edges[:-1]
     hi = edges[1:]
@@ -52,9 +52,9 @@ def _norm(c, coeff, tol=1e-6, max_intervals=1000):
     """Globally adaptive embedded K21/G10 norm (inferred numerical convention)."""
     if torch.compiler.is_compiling():
         return _norm_vectorized(c, coeff)
-    nodes = torch.tensor(_K21_NODES, dtype=c.real.dtype, device=c.device)
-    weights = torch.tensor(_K21_WEIGHTS, dtype=c.real.dtype, device=c.device)
-    gweights = torch.tensor(_G10_WEIGHTS, dtype=c.real.dtype, device=c.device)
+    nodes = torch.as_tensor(_K21_NODES, dtype=c.real.dtype, device=c.device)
+    weights = torch.as_tensor(_K21_WEIGHTS, dtype=c.real.dtype, device=c.device)
+    gweights = torch.as_tensor(_G10_WEIGHTS, dtype=c.real.dtype, device=c.device)
     out = []
     for ci, ai in zip(c.reshape(-1), coeff.reshape(-1, coeff.shape[-1])):
         def leaf(lo, hi):

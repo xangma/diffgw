@@ -81,6 +81,31 @@ hp_batch, hc_batch = torchwave.get_fd_waveform(
     delta_f=1.0,
 )
 print("PyTorch Batched Shape:", hp_batch.shape)  # torch.Size([3, 493])
+
+# JIT-compiled waveform evaluation with torch.compile (0 graph breaks, fused GPU kernels)
+f_grid = torch.linspace(20.0, 512.0, 1024, dtype=torch.float64)
+
+@torch.compile
+def fast_waveform(m1, m2, s1z, s2z):
+    return torchwave.get_fd_waveform(
+        approximant="IMRPhenomD",
+        mass1=m1,
+        mass2=m2,
+        chi1=s1z,
+        chi2=s2z,
+        sample_frequencies=f_grid,
+    )
+
+hp_fast, hc_fast = fast_waveform(
+    torch.tensor(30.0), torch.tensor(20.0), torch.tensor(0.2), torch.tensor(-0.1)
+)
+
+# Autograd differentiation with respect to component masses
+m1_param = torch.tensor(30.0, requires_grad=True)
+m2_param = torch.tensor(20.0, requires_grad=True)
+hp, _ = fast_waveform(m1_param, m2_param, 0.2, -0.1)
+(hp.real.pow(2) + hp.imag.pow(2)).sum().backward()
+print(f"Gradients d||hp||^2/dm1 = {m1_param.grad:.4e}, d||hp||^2/dm2 = {m2_param.grad:.4e}")
 ```
 
 ### 2. JAX Frontend (`jaxwave`)
