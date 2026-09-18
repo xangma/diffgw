@@ -73,32 +73,26 @@ def elliptic_K_agm(m, iterations=12):
     return torch.pi / (2 * a)
 
 
-_LEGGAUSS_DATA: dict = {}
+_LEGGAUSS_NODES: dict = {}
+_LEGGAUSS_WEIGHTS: dict = {}
 for _ord in (24, 48, 64):
     import numpy as _np
     _n, _w = _np.polynomial.legendre.leggauss(_ord)
-    _LEGGAUSS_DATA[_ord] = (tuple(float(x) for x in _n), tuple(float(x) for x in _w))
+    _LEGGAUSS_NODES[_ord] = torch.tensor(tuple(float(x) for x in _n), dtype=torch.float64)
+    _LEGGAUSS_WEIGHTS[_ord] = torch.tensor(tuple(float(x) for x in _w), dtype=torch.float64)
 
-_LEGGAUSS_CACHE: dict = {}
 
-
-@torch.compiler.disable
 def _get_leggauss(order: int, dtype: torch.dtype, device: torch.device):
-    key = (order, dtype, device)
-    val = _LEGGAUSS_CACHE.get(key)
-    if val is None:
-        if order in _LEGGAUSS_DATA:
-            n_tup, w_tup = _LEGGAUSS_DATA[order]
-        else:
-            import numpy as _np
-            n_arr, w_arr = _np.polynomial.legendre.leggauss(order)
-            n_tup = tuple(float(x) for x in n_arr)
-            w_tup = tuple(float(x) for x in w_arr)
-        nodes = torch.tensor(n_tup, dtype=dtype, device=device)
-        weights = torch.tensor(w_tup, dtype=dtype, device=device)
-        _LEGGAUSS_CACHE[key] = (nodes, weights)
-        return nodes, weights
-    return val
+    nodes = _LEGGAUSS_NODES.get(order)
+    weights = _LEGGAUSS_WEIGHTS.get(order)
+    if nodes is None:
+        import numpy as _np
+        _n, _w = _np.polynomial.legendre.leggauss(order)
+        nodes = torch.tensor(tuple(float(x) for x in _n), dtype=torch.float64)
+        weights = torch.tensor(tuple(float(x) for x in _w), dtype=torch.float64)
+        _LEGGAUSS_NODES[order] = nodes
+        _LEGGAUSS_WEIGHTS[order] = weights
+    return nodes.to(device=device, dtype=dtype), weights.to(device=device, dtype=dtype)
 
 
 def elliptic_E_quadrature(m, quadrature=48):

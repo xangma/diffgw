@@ -272,23 +272,32 @@ def benchmark_torchwave_model(
     warmup: int = 5,
     measure_backward: bool = False,
     compile: bool = False,
+    dynamic: Optional[bool] = None,
 ) -> Dict[str, Any]:
     """Benchmark TorchWave waveform generation on a specific model."""
+    if dynamic is None:
+        dynamic = True if compile else False
+
     flow = float(grid["flow"])
     fhigh = float(grid["fhigh"])
     df = float(grid["df"])
     n_freqs = int(round((fhigh - flow) / df)) + 1
     freqs = torch.linspace(flow, fhigh, n_freqs, dtype=dtype, device=device)
 
-    # Build input parameters
+    # Build input parameters with consistent 1D rank (batch_size,) across B=1 and B>1
+    # to allow Dynamo to generalize symbolic shapes without rank-transition recompilations.
     def make_inputs(req_grad: bool = False):
         kw = {}
         for k, v in params.items():
             if isinstance(v, (int, float)):
-                if batch_size > 1:
-                    t = torch.full((batch_size,), float(v), dtype=dtype, device=device)
-                else:
-                    t = torch.tensor(float(v), dtype=dtype, device=device)
+                t = torch.full((batch_size,), float(v), dtype=dtype, device=device)
+                if req_grad and k in ("mass1", "mass2", "chi1", "chi2", "spin1z", "spin2z"):
+                    t = t.clone().detach().requires_grad_(True)
+                kw[k] = t
+            elif isinstance(v, torch.Tensor):
+                t = v.to(dtype=dtype, device=device)
+                if t.ndim == 0:
+                    t = t.unsqueeze(0).expand(batch_size)
                 if req_grad and k in ("mass1", "mass2", "chi1", "chi2", "spin1z", "spin2z"):
                     t = t.clone().detach().requires_grad_(True)
                 kw[k] = t
@@ -312,7 +321,7 @@ def benchmark_torchwave_model(
             torch._dynamo.config.cache_size_limit = 256
         except Exception:
             pass
-        eval_fn = torch.compile(eval_fn, fullgraph=False, dynamic=False)
+        eval_fn = torch.compile(eval_fn, fullgraph=False, dynamic=dynamic)
 
     ctx = contextlib.nullcontext() if measure_backward else torch.inference_mode()
 
@@ -364,6 +373,7 @@ def benchmark_torchwave_model(
         "device": str(device),
         "dtype": str(dtype).replace("torch.", ""),
         "compiled": compile,
+        "dynamic": dynamic,
         "compile_warmup_ms": round(t_compile, 2) if compile else 0.0,
         "n_freq_bins": n_freqs,
         "iterations": iterations,
@@ -376,6 +386,7 @@ def benchmark_torchwave_model(
     return stats
 
 
+
 def benchmark_jaxwave_model(
     model_name: str,
     batch_size: int,
@@ -384,9 +395,10 @@ def benchmark_jaxwave_model(
     iterations: int = 20,
     warmup: int = 5,
     use_jit: bool = True,
+    measure_backward: bool = False,
     device_name: str = "cpu",
 ) -> Optional[Dict[str, Any]]:
-    """Benchmark jaxwave waveform generation."""
+    """Benchmark jaxwave waveform generation and reverse-mode autodiff gradients."""
     try:
         import jax
         import jax.numpy as jnp
@@ -401,41 +413,106 @@ def benchmark_jaxwave_model(
     freqs = jnp.linspace(flow, fhigh, n_freqs, dtype=jnp.float64)
 
     kw = {}
+    diff_keys = []
+    diff_vals = []
     for k, v in params.items():
         if isinstance(v, (int, float)):
-            if batch_size > 1:
-                kw[k] = jnp.full((batch_size,), float(v), dtype=jnp.float64)
-            else:
-                kw[k] = float(v)
+            # Uniform 1D array (batch_size,) ensures rank consistency
+            arr = jnp.full((batch_size,), float(v), dtype=jnp.float64)
+            kw[k] = arr
+            if measure_backward and k in ("mass1", "mass2", "chi1", "chi2", "spin1z", "spin2z"):
+                diff_keys.append(k)
+                diff_vals.append(arr)
         else:
             kw[k] = v
 
-    def eval_fn(frequencies, **kwargs):
+    def eval_raw(frequencies, **kwargs):
         return jaxwave.get_fd_waveform(model_name, sample_frequencies=frequencies, **kwargs)
 
-    if use_jit:
-        eval_fn = jax.jit(eval_fn)
+    if measure_backward and diff_keys:
+        fixed_kw = {k: v for k, v in kw.items() if k not in diff_keys}
 
-    # Warmup / JIT compile
-    t0_compile = time.perf_counter()
-    for _ in range(warmup):
-        res = eval_fn(freqs, **kw)
-        if isinstance(res, tuple):
-            res[0].block_until_ready()
-            res[1].block_until_ready()
-    t_compile = (time.perf_counter() - t0_compile) * 1000.0
+        def loss_fn(d_vals):
+            call_kw = dict(fixed_kw)
+            for k, val in zip(diff_keys, d_vals):
+                call_kw[k] = val
+            hp, hc = eval_raw(freqs, **call_kw)
+            return jnp.sum(jnp.abs(hp)**2 + jnp.abs(hc)**2).real
 
-    timings = []
-    for _ in range(iterations):
-        t0 = time.perf_counter()
-        res = eval_fn(freqs, **kw)
-        if isinstance(res, tuple):
-            res[0].block_until_ready()
-            res[1].block_until_ready()
-        t1 = time.perf_counter()
-        timings.append((t1 - t0) * 1000.0)
+        def fwd_only(d_vals):
+            call_kw = dict(fixed_kw)
+            for k, val in zip(diff_keys, d_vals):
+                call_kw[k] = val
+            return eval_raw(freqs, **call_kw)
 
-    stats = calculate_sample_statistics(timings, batch_size)
+        vg_fn = jax.value_and_grad(loss_fn)
+        if use_jit:
+            vg_fn = jax.jit(vg_fn)
+            fwd_only = jax.jit(fwd_only)
+
+        d_inputs = tuple(diff_vals)
+
+        # Warmup / JIT compile
+        t0_compile = time.perf_counter()
+        for _ in range(warmup):
+            val, grads = vg_fn(d_inputs)
+            val.block_until_ready()
+            if isinstance(grads, (tuple, list)):
+                grads[0].block_until_ready()
+        t_compile = (time.perf_counter() - t0_compile) * 1000.0
+
+        fwd_times: List[float] = []
+        bwd_times: List[float] = []
+        total_times: List[float] = []
+
+        for _ in range(iterations):
+            t0 = time.perf_counter()
+            res = fwd_only(d_inputs)
+            if isinstance(res, tuple):
+                res[0].block_until_ready()
+            t_fwd_end = time.perf_counter()
+            fwd_ms = (t_fwd_end - t0) * 1000.0
+            fwd_times.append(fwd_ms)
+
+            t_start_vg = time.perf_counter()
+            val, grads = vg_fn(d_inputs)
+            val.block_until_ready()
+            if isinstance(grads, (tuple, list)):
+                grads[0].block_until_ready()
+            t_end_vg = time.perf_counter()
+            tot_ms = (t_end_vg - t_start_vg) * 1000.0
+            total_times.append(tot_ms)
+            bwd_times.append(max(0.0, tot_ms - fwd_ms))
+
+        stats = calculate_sample_statistics(total_times, batch_size)
+        stats["forward_mean_ms"] = float(np.mean(fwd_times))
+        stats["backward_mean_ms"] = float(np.mean(bwd_times))
+    else:
+        eval_fn = eval_raw
+        if use_jit:
+            eval_fn = jax.jit(eval_fn)
+
+        # Warmup / JIT compile
+        t0_compile = time.perf_counter()
+        for _ in range(warmup):
+            res = eval_fn(freqs, **kw)
+            if isinstance(res, tuple):
+                res[0].block_until_ready()
+                res[1].block_until_ready()
+        t_compile = (time.perf_counter() - t0_compile) * 1000.0
+
+        timings = []
+        for _ in range(iterations):
+            t0 = time.perf_counter()
+            res = eval_fn(freqs, **kw)
+            if isinstance(res, tuple):
+                res[0].block_until_ready()
+                res[1].block_until_ready()
+            t1 = time.perf_counter()
+            timings.append((t1 - t0) * 1000.0)
+
+        stats = calculate_sample_statistics(timings, batch_size)
+
     stats.update({
         "framework": "jaxwave",
         "model": model_name,
@@ -443,6 +520,7 @@ def benchmark_jaxwave_model(
         "device": device_name,
         "dtype": "float64",
         "use_jit": use_jit,
+        "measure_backward": measure_backward,
         "compile_warmup_ms": round(t_compile, 2),
         "n_freq_bins": n_freqs,
         "iterations": iterations,
@@ -614,10 +692,22 @@ def run_benchmark_suite(
     warmup: int = 5,
     measure_backward: bool = False,
     compare_lal: bool = False,
+    compile: bool = False,
+    dynamic: Optional[bool] = None,
+    backend: str = "torch",
 ) -> Dict[str, Any]:
     """Execute the full benchmark matrix across selected models and batch sizes."""
     results = []
     lal_cache: Dict[str, Optional[Dict[str, float]]] = {}
+
+    backends_to_run = []
+    if backend in ("torch", "all"):
+        backends_to_run.append("torch")
+    if backend in ("torch_compiled", "compiled", "all") or compile:
+        if "torch_compiled" not in backends_to_run:
+            backends_to_run.append("torch_compiled")
+    if backend in ("jax", "jaxwave", "all"):
+        backends_to_run.append("jaxwave")
 
     for model_name in models:
         spec = DEFAULT_MODEL_SPECS.get(model_name)
@@ -639,34 +729,66 @@ def run_benchmark_suite(
             lal_cache[model_name] = None
 
         for bsz in batch_sizes:
-            try:
-                bench = benchmark_torchwave_model(
-                    model_name=model_name,
-                    batch_size=bsz,
-                    device=device,
-                    dtype=dtype,
-                    grid=grid,
-                    params=params,
-                    iterations=iterations,
-                    warmup=warmup,
-                    measure_backward=measure_backward,
-                )
+            for b_mode in backends_to_run:
+                try:
+                    if b_mode == "torch":
+                        bench = benchmark_torchwave_model(
+                            model_name=model_name,
+                            batch_size=bsz,
+                            device=device,
+                            dtype=dtype,
+                            grid=grid,
+                            params=params,
+                            iterations=iterations,
+                            warmup=warmup,
+                            measure_backward=measure_backward,
+                            compile=False,
+                        )
+                    elif b_mode == "torch_compiled":
+                        bench = benchmark_torchwave_model(
+                            model_name=model_name,
+                            batch_size=bsz,
+                            device=device,
+                            dtype=dtype,
+                            grid=grid,
+                            params=params,
+                            iterations=iterations,
+                            warmup=warmup,
+                            measure_backward=measure_backward,
+                            compile=True,
+                            dynamic=dynamic,
+                        )
+                    elif b_mode == "jaxwave":
+                        bench = benchmark_jaxwave_model(
+                            model_name=model_name,
+                            batch_size=bsz,
+                            grid=grid,
+                            params=params,
+                            iterations=iterations,
+                            warmup=warmup,
+                            use_jit=True,
+                            measure_backward=measure_backward,
+                            device_name=str(device.type),
+                        )
+                        if bench is None:
+                            continue
 
-                if compare_lal and lal_name:
-                    l_res = lal_cache.get(lal_name)
-                    if l_res:
-                        bench["lal_mean_ms"] = l_res["mean_ms"]
-                        bench["lal_wf_per_sec"] = l_res["wf_per_sec"]
-                        # Speedup ratio: TorchWave throughput vs LAL single-waveform throughput
-                        bench["speedup_vs_lal"] = bench["wf_per_sec"] / l_res["wf_per_sec"]
+                    if compare_lal and lal_name:
+                        l_res = lal_cache.get(lal_name)
+                        if l_res:
+                            bench["lal_mean_ms"] = l_res["mean_ms"]
+                            bench["lal_wf_per_sec"] = l_res["wf_per_sec"]
+                            # Speedup ratio: throughput vs LAL single-waveform throughput
+                            bench["speedup_vs_lal"] = bench["wf_per_sec"] / l_res["wf_per_sec"]
 
-                results.append(bench)
-            except Exception as e:
-                results.append({
-                    "model": model_name,
-                    "batch_size": bsz,
-                    "error": f"{type(e).__name__}: {str(e)}",
-                })
+                    results.append(bench)
+                except Exception as e:
+                    results.append({
+                        "framework": b_mode,
+                        "model": model_name,
+                        "batch_size": bsz,
+                        "error": f"{type(e).__name__}: {str(e)}",
+                    })
 
     meta = {
         "timestamp": time.strftime("%Y-%m-%d %H:%M:%S"),
@@ -680,9 +802,13 @@ def run_benchmark_suite(
         "warmup": warmup,
         "measure_backward": measure_backward,
         "compare_lal": compare_lal,
+        "compile": compile,
+        "dynamic": dynamic,
+        "backend": backend,
     }
 
     return {"metadata": meta, "benchmarks": results}
+
 
 
 def format_table(data: Dict[str, Any]) -> str:
@@ -693,8 +819,11 @@ def format_table(data: Dict[str, Any]) -> str:
 
     compare_lal = data.get("metadata", {}).get("compare_lal", False)
     measure_backward = data.get("metadata", {}).get("measure_backward", False)
+    has_multiple_frameworks = len({b.get("framework", "torch") for b in benchmarks}) > 1 or any(b.get("framework") != "torchwave" for b in benchmarks)
 
     headers = ["Model", "Batch", "Mean Latency", "Median", "P95", "Throughput (WF/s)"]
+    if has_multiple_frameworks:
+        headers.insert(0, "Framework")
     if measure_backward:
         headers.extend(["Fwd (ms)", "Bwd (ms)"])
     if compare_lal:
@@ -704,6 +833,8 @@ def format_table(data: Dict[str, Any]) -> str:
     for b in benchmarks:
         if "error" in b:
             err_row = [b["model"], str(b["batch_size"]), f"ERROR: {b['error'][:25]}", "-", "-", "-"]
+            if has_multiple_frameworks:
+                err_row.insert(0, b.get("framework", "torch"))
             if measure_backward:
                 err_row.extend(["-", "-"])
             if compare_lal:
@@ -717,6 +848,8 @@ def format_table(data: Dict[str, Any]) -> str:
         thr_str = f"{b['wf_per_sec']:,.1f}"
 
         row = [b["model"], str(b["batch_size"]), mean_str, med_str, p95_str, thr_str]
+        if has_multiple_frameworks:
+            row.insert(0, b.get("framework", "torch"))
 
         if measure_backward:
             fwd_str = f"{b.get('forward_mean_ms', 0.0):.3f}"
@@ -835,6 +968,24 @@ def main(argv: Optional[List[str]] = None) -> None:
         help="Measure forward + backward autograd gradient time.",
     )
     parser.add_argument(
+        "--compile",
+        action="store_true",
+        help="Compile waveform function with torch.compile.",
+    )
+    parser.add_argument(
+        "--dynamic",
+        action=argparse.BooleanOptionalAction,
+        default=True,
+        help="Enable dynamic shapes for torch.compile to avoid recompiles across varying batch sizes (default: True).",
+    )
+    parser.add_argument(
+        "--backend",
+        type=str,
+        default="torch",
+        choices=["torch", "torch_compiled", "jaxwave", "all"],
+        help="Execution framework/backend to benchmark ('torch', 'torch_compiled', 'jaxwave', 'all').",
+    )
+    parser.add_argument(
         "--compare-lal",
         action="store_true",
         help="Benchmark corresponding LALSimulation approximant as baseline.",
@@ -871,7 +1022,8 @@ def main(argv: Optional[List[str]] = None) -> None:
     print("=" * 80)
     print("TORCHWAVE PERFORMANCE BENCHMARK")
     print(f"Device: {device} | Precision: {dtype} | Models: {len(selected_models)} | Batches: {batch_sizes}")
-    print(f"Iterations: {args.iterations} (warmup: {args.warmup}) | Autograd Backward: {args.backward}")
+    print(f"Backend: {args.backend} | Compile: {args.compile} (dynamic={args.dynamic}) | Backward: {args.backward}")
+    print(f"Iterations: {args.iterations} (warmup: {args.warmup})")
     print("=" * 80)
 
     suite_results = run_benchmark_suite(
@@ -883,6 +1035,9 @@ def main(argv: Optional[List[str]] = None) -> None:
         warmup=args.warmup,
         measure_backward=args.backward,
         compare_lal=args.compare_lal,
+        compile=args.compile,
+        dynamic=args.dynamic,
+        backend=args.backend,
     )
 
     table_str = format_table(suite_results)

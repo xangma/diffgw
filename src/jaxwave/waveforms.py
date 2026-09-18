@@ -708,6 +708,7 @@ class WaveformGenerator:
         delta_f: Optional[float] = None,
         sample_frequencies: Optional[Any] = None,
         modes: Optional[Sequence[Tuple[int, int]]] = None,
+        use_jit: bool = False,
         **default_kwargs,
     ):
         self.approximant = approximant
@@ -716,7 +717,49 @@ class WaveformGenerator:
         self.delta_f = delta_f
         self.sample_frequencies = sample_frequencies
         self.modes = modes
+        self.use_jit = use_jit
         self.default_kwargs = default_kwargs
+        self._compiled_fd_fn = None
+        self._compiled_param_order = None
+
+    def get_compiled_fd_waveform(
+        self,
+        parameter_order: Tuple[str, ...] = ("mass1", "mass2", "spin1z", "spin2z", "distance", "inclination", "phic", "tc"),
+    ):
+        """Return a cached @jax.jit compiled function evaluating (hp, hc) for an ordered parameter vector.
+
+        Closing statically over grid specifications and approximant metadata guarantees zero recompilations
+        across repeated evaluations (e.g. within MCMC or parameter sweeps).
+        """
+        if self._compiled_fd_fn is not None and self._compiled_param_order == parameter_order:
+            return self._compiled_fd_fn
+
+        approx = self.approximant
+        f_low = self.f_lower
+        f_fin = self.f_final
+        df = self.delta_f
+        s_freqs = self.sample_frequencies
+        m_modes = self.modes
+        d_kwargs = dict(self.default_kwargs)
+
+        def _raw_eval(*param_values):
+            kw = dict(d_kwargs)
+            for k, val in zip(parameter_order, param_values):
+                kw[k] = val
+            return get_fd_waveform(
+                approximant=approx,
+                f_lower=f_low,
+                f_final=f_fin,
+                delta_f=df,
+                sample_frequencies=s_freqs,
+                modes=m_modes,
+                **kw,
+            )
+
+        jitted_eval = jax.jit(_raw_eval)
+        self._compiled_fd_fn = jitted_eval
+        self._compiled_param_order = parameter_order
+        return jitted_eval
 
     def generate_fd_waveform(
         self,
@@ -732,6 +775,8 @@ class WaveformGenerator:
         name_map = {
             "mass_1": "mass1",
             "mass_2": "mass2",
+            "chi_1": "chi1",
+            "chi_2": "chi2",
             "spin_1z": "spin1z",
             "spin_2z": "spin2z",
             "spin_1x": "spin1x",
@@ -750,6 +795,15 @@ class WaveformGenerator:
             norm_k = name_map.get(k, k)
             normalized_params[norm_k] = v
 
+        if self.use_jit:
+            # Check if parameters match standard order for cached JIT execution
+            std_order = ("mass1", "mass2", "chi1", "chi2", "spin1z", "spin2z", "distance", "inclination", "phic", "tc", "lambda1", "lambda2")
+            if all(k in normalized_params for k in ("mass1", "mass2")):
+                order = tuple(k for k in std_order if k in normalized_params)
+                compiled_fn = self.get_compiled_fd_waveform(parameter_order=order)
+                args = tuple(jnp.asarray(normalized_params[k], dtype=jnp.float64) for k in order)
+                return compiled_fn(*args)
+
         call_kwargs = {
             "approximant": normalized_params.pop("approximant", self.approximant),
             "f_lower": normalized_params.pop("f_lower", self.f_lower),
@@ -761,6 +815,7 @@ class WaveformGenerator:
         call_kwargs.update(normalized_params)
 
         return get_fd_waveform(**call_kwargs)
+
 
     def generate_td_waveform(
         self,
