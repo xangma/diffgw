@@ -1,0 +1,75 @@
+site_name: DiffGW Documentation
+site_description: High-performance, batched, differentiable gravitational-wave modeling in PyTorch (torchwave) and JAX (jaxwave)
+site_url: https://xangma.github.io/diffgw/
+repo_url: https://github.com/xangma/diffgw
+repo_name: xangma/diffgw
+copyright: Copyright &copy; 2024–2026 Xan Morice-Atkinson. MIT Licensed.
+
+theme:
+  name: material
+  features:
+    - navigation.instant
+    - navigation.tracking
+    - navigation.tabs
+    - navigation.sections
+    - navigation.top
+    - search.suggest
+    - search.highlight
+    - content.code.copy
+  palette:
+    - scheme: default
+      primary: indigo
+      accent: deep purple
+      toggle:
+        icon: material/brightness-7
+        name: Switch to dark mode
+    - scheme: slate
+      primary: indigo
+      accent: deep purple
+      toggle:
+        icon: material/brightness-4
+        name: Switch to light mode
+
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.arithmatex:
+      generic: true
+  - tables
+  - attr_list
+  - md_in_html
+
+extra_javascript:
+  - javascripts/katex.js
+  - https://unpkg.com/katex@0/dist/katex.min.js
+  - https://unpkg.com/katex@0/dist/contrib/auto-render.min.js
+
+extra_css:
+  - https://unpkg.com/katex@0/dist/katex.min.css
+
+plugins:
+  - search
+
+hooks:
+  - docs/hooks.py
+
+validation:
+  omitted_files: info
+  absolute_links: info
+  unrecognized_links: info
+
+nav:
+  - Overview: index.md
+  - Usage & Quickstart: usage.md
+  - Performance & Benchmarks: performance.md
+  - Differences from LAL: differences_from_lal.md
+  - Benchmarking Protocol: benchmarking_protocol.md
+  - Provenance Ledger: provenance_ledger.md
+  - External Data: external-data.md

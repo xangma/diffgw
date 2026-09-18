@@ -81,7 +81,7 @@ Timing measurements were collected across 15 timed iterations (following 3 untim
 | | 5,000 | 6,336.2 wf/s | - | **53,388.5 wf/s** | 9,259.9 wf/s (FP32) | - |
 
 > [!NOTE]
-> Per-waveform latency scales inversely with throughput ($\text{Latency} = B / \text{Throughput}$). For full latency distributions with 95% bootstrap confidence intervals, see [Figure 2](#figure-2-per-waveform-latency--amortization) and `artifacts/benchmarks/benchmark_receipt.json`.
+> Per-waveform latency scales inversely with throughput ($\text{Latency} = B / \text{Throughput}$). For full latency distributions with 95% bootstrap confidence intervals, see [Figure 2](#figure-2-per-waveform-latency-amortization) and `artifacts/benchmarks/benchmark_receipt.json`.
 
 ---
 
@@ -98,7 +98,7 @@ Waveform generation was profiled at extreme scales up to $B=50,000$ using **PyTo
 | **IMRPhenomXHM**| 50,000 | **23,499 wf/s** ($2.13\text{ s}$) | **9,916 wf/s** ($B=25k$) | 26.44 GB | **541.5 KB / wf** (FP32) / **1.08 MB / wf** (FP64) |
 
 > [!NOTE]
-> For JAXWave CUDA and PyTorch Inductor (`torch.compile`) throughput comparisons across $B = 1 \to 5,000$, see [Section 3: Comprehensive Benchmark Results](#3-comprehensive-benchmark-results-rtx-5090).
+> For JAXWave CUDA and PyTorch Inductor (`torch.compile`) throughput comparisons across $B = 1 \to 5,000$, see [Section 3: Comprehensive Multi-Backend Throughput Matrix](#3-comprehensive-multi-backend-throughput-matrix).
 
 > [!TIP]
 > Memory scaling is strictly linear $O(B)$ with zero dynamic reallocation. Batches of 50,000 waveforms for `TaylorF2`, `IMRPhenomXAS`, and `IMRPhenomXHM` fit comfortably inside the 32 GB frame buffer.
