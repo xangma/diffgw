@@ -55,7 +55,7 @@ The unified `diffgw` architecture extracts zero-dependency physical constants, u
 * **Step-Size Considerations**: Because adaptive ODE integrators (such as Runge-Kutta-Fehlberg or Dormand-Prince) vary step sizes dynamically, evaluating finite-difference stencils across adaptive or interpolated trajectories can exhibit sensitivity to local step-size spacing near the attachment boundary.
 
 #### Continuous Spline Attachment
-* **Continuous Spline Attachment**: Implemented in [`src/torchwave/approximants/continuous_matching.py`](file:///Users/xangma/repos/torchwave/src/torchwave/approximants/continuous_matching.py). TorchWave fits a continuous cubic Hermite spline to the trajectory and solves for the root of $d\Omega/dt = 0$ using Brent-Dekker / Newton-Raphson root-finding.
+* **Continuous Spline Attachment**: Implemented in [`src/torchwave/approximants/continuous_matching.py`](../src/torchwave/approximants/eob/continuous_matching.py). TorchWave fits a continuous cubic Hermite spline to the trajectory and solves for the root of $d\Omega/dt = 0$ using Brent-Dekker / Newton-Raphson root-finding.
 * **Analytical $C^1$ Continuity**: Matching coefficients and time shifts are computed directly from the continuous spline's analytical derivatives, providing smooth, differentiable $C^1$ continuity into the Kerr QNM ringdown independent of ODE step size.
 
 ---
@@ -126,7 +126,7 @@ The unified `diffgw` architecture extracts zero-dependency physical constants, u
 | :--- | :--- | :--- | :--- |
 | **`IMRPhenomXHM`** | C calibration tables (`122022`); 3-point solve on $(3,2)$ with $\alpha_2^{32}=\alpha_2^{22}$. | Independent SXS NR amplitude and phase fits; native Kerr Leaver QNM solver. | Monotonic amplitude profiles and continuous phase matching; achieves $>99.9\%$ match with raw NR holdouts. |
 | **`IMRPhenomXPHM`** | Multipolar precession using reference XHM C-tables. | Multipolar precession coupled to independent SXS NR calibrated modes. | Consistent multi-mode frame precession across higher harmonics. |
-| **`SEOBNR_ODE`** | 7-point finite-difference stencil for peak finding ($d\Omega/dt=0$) and NQC attachment. | Continuous cubic Hermite spline root-finding ([`continuous_matching.py`](file:///Users/xangma/repos/torchwave/src/torchwave/approximants/continuous_matching.py)). | Step-size independent peak finding; guarantees exact $C^1$ smooth ringdown matching. |
+| **`SEOBNR_ODE`** | 7-point finite-difference stencil for peak finding ($d\Omega/dt=0$) and NQC attachment. | Continuous cubic Hermite spline root-finding ([`continuous_matching.py`](../src/torchwave/approximants/eob/continuous_matching.py)). | Step-size independent peak finding; guarantees exact $C^1$ smooth ringdown matching. |
 | **`TEOBResumS`** | 7-point finite-difference stencil for NQC attachment. | Continuous cubic Hermite spline root-finding. | Exact $C^1$ smooth attachment into ringdown. |
 | **`TaylorF2_HM`** | `SimInspiralChooseFDModes` provides $(2,2)$ mode. | Full analytical PN higher multipoles from Kidder (2008) and Arun et al. (2009). | Multi-mode post-Newtonian inspiral in the frequency domain. |
 | **`IMRPhenomXAS`** | Reference C implementation. | Canonical APS PRD supplemental symbolic Mathematica deposit. | Exact analytical fidelity ($4.2 \times 10^{-14}$ complex relative $L_2$ error). |
