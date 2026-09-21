@@ -1,6 +1,6 @@
 # Scientific Citations and Provenance
 
-`torchwave` is implemented under a strict clean-room protocol. Physical models follow primary literature; additional permissively licensed calibration releases are identified below and in the provenance ledger.
+The models follow the primary literature cited below and identified author calibration releases. Software adaptations, data provenance and unresolved terms are recorded in the [provenance ledger](docs/provenance_ledger.md) and [third-party notices](THIRD_PARTY_NOTICES.md).
 
 If you use `torchwave` in scientific work, please cite the underlying models and papers:
 
@@ -37,7 +37,7 @@ If you use `torchwave` in scientific work, please cite the underlying models and
 
 @article{Arun:2008kb,
     author = "Arun, K. G. and Buonanno, Alessandra and Faye, Guillaume and Ochsner, Evan",
-    title = "{Higher-order spin effects in the amplitude and phase of gravitational waveforms emitted by inspiraling compact binaries: Aligned systems}",
+    title = "{Higher-order spin effects in the amplitude and phase of gravitational waveforms emitted by inspiraling compact binaries: Ready-to-use gravitational waveforms}",
     eprint = "0810.5336",
     archivePrefix = "arXiv",
     primaryClass = "gr-qc",
@@ -51,7 +51,7 @@ If you use `torchwave` in scientific work, please cite the underlying models and
 
 @article{Bohe:2013cla,
     author = "Boh{\'e}, Alejandro and Marsat, Sylvain and Blanchet, Luc",
-    title = "{Next-to-next-to-leading order spin-orbit effects in the gravitational wave flux and phasing of compact binaries}",
+    title = "{Next-to-next-to-leading order spin-orbit effects in the gravitational wave flux and orbital phasing of compact binaries}",
     eprint = "1303.7412",
     archivePrefix = "arXiv",
     primaryClass = "gr-qc",
@@ -64,7 +64,7 @@ If you use `torchwave` in scientific work, please cite the underlying models and
 
 @article{Flanagan:2007ix,
     author = "Flanagan, {\'E}anna {\'E}. and Hinderer, Tanja",
-    title = "{Constraining neutron star tidal deformability with gravitational wave observations of binary inspirals}",
+    title = "{Constraining neutron star tidal Love numbers with gravitational wave detectors}",
     eprint = "0709.1915",
     archivePrefix = "arXiv",
     primaryClass = "astro-ph",
@@ -76,7 +76,7 @@ If you use `torchwave` in scientific work, please cite the underlying models and
 }
 
 @article{Vines:2011ud,
-    author = "Vines, Justin and Flanagan, {\'E}anna {\'E}. and Hinderer, Tanja",
+    author = "Vines, Justin and Hinderer, Tanja and Flanagan, {\'E}anna {\'E}.",
     title = "{Post-1-Newtonian tidal effects in the gravitational waveform from binary inspirals}",
     eprint = "1101.1673",
     archivePrefix = "arXiv",
@@ -89,8 +89,8 @@ If you use `torchwave` in scientific work, please cite the underlying models and
 }
 
 @article{Wade:2014vqa,
-    author = "Wade, Leslie and Creighton, Jolien D. E. and Ochsner, Evan and Lackey, Benjamin D. and Farr, Will M. and Littenberg, Tyson B. and Raymond, Vivien",
-    title = "{Systematic and statistical errors in a methodology for estimating equation-of-state parameters from coalescing binary neutron stars}",
+    author = "Wade, Leslie and Creighton, Jolien D. E. and Ochsner, Evan and Lackey, Benjamin D. and Farr, Benjamin F. and Littenberg, Tyson B. and Raymond, Vivien",
+    title = "{Systematic and statistical errors in a bayesian approach to the estimation of the neutron-star equation of state using advanced gravitational wave detectors}",
     eprint = "1402.5156",
     archivePrefix = "arXiv",
     primaryClass = "gr-qc",
@@ -107,7 +107,7 @@ If you use `torchwave` in scientific work, please cite the underlying models and
 
 ## 2. IMRPhenomD Phenomenological Model
 
-The fundamental Kerr mode now uses an independently generated spectral approximation, with development eigenproblem solves from [Stein (2019), qnm](https://doi.org/10.21105/joss.01683). It has no QNM data-file or solver runtime dependency. See the [derivation and validation record](https://github.com/xangma/diffgw/blob/archive/clean-room-reviews/docs/reviews/2026-09-11-independent/qnm.md).
+The current PhenomD fundamental Kerr-mode representation uses eigenvalues from the native Kerr solver, with rounding and natural cubic interpolation described in the [provenance ledger](docs/provenance_ledger.md). The earlier spectral representation used development eigenproblem solves from [Stein (2019), qnm](https://doi.org/10.21105/joss.01683); its [historical derivation and validation record](https://github.com/xangma/diffgw/blob/archive/clean-room-reviews/docs/reviews/2026-09-11-independent/qnm.md) describes that earlier implementation.
 
 ```bibtex
 @article{Husa:2015iqa,
@@ -190,11 +190,11 @@ The fundamental Kerr mode now uses an independently generated spectral approxima
     eprint = "2303.18046",
     archivePrefix = "arXiv",
     primaryClass = "gr-qc",
-    doi = "10.1103/PhysRevD.108.124040",
+    doi = "10.1103/PhysRevD.108.124037",
     journal = "Phys. Rev. D",
     volume = "108",
     number = "12",
-    pages = "124040",
+    pages = "124037",
     year = "2023"
 }
 
@@ -234,8 +234,8 @@ The fundamental Kerr mode now uses an independently generated spectral approxima
 ```bibtex
 @article{Dietrich:2017aum,
     author = "Dietrich, Tim and Bernuzzi, Sebastiano and Tichy, Wolfgang",
-    title = "{Closed-form tidal approximants for binary neutron star waveforms constructed from high-resolution numerical-relativity simulations}",
-    eprint = "1706.01111",
+    title = "{Closed-form tidal approximants for binary neutron star gravitational waveforms constructed from high-resolution numerical relativity simulations}",
+    eprint = "1706.02969",
     archivePrefix = "arXiv",
     primaryClass = "gr-qc",
     doi = "10.1103/PhysRevD.96.121501",
@@ -248,7 +248,7 @@ The fundamental Kerr mode now uses an independently generated spectral approxima
 
 @article{Dietrich:2018uni,
     author = "Dietrich, Tim and others",
-    title = "{An improved analytical tidal waveform model for binary neutron star inspirals}",
+    title = "{Matter imprints in waveform models for neutron star binaries: tidal and self-spin effects}",
     eprint = "1804.02235",
     archivePrefix = "arXiv",
     primaryClass = "gr-qc",
@@ -262,7 +262,7 @@ The fundamental Kerr mode now uses an independently generated spectral approxima
 
 @article{Dietrich:2019kaq,
     author = "Dietrich, Tim and others",
-    title = "{Matter transcriptions: Tidal effects in binary neutron star mergers within the SEOBNR and IMRPhenom frameworks and an improved NRTidal model}",
+    title = "{Improving the NRTidal model for binary neutron star systems}",
     eprint = "1905.06011",
     archivePrefix = "arXiv",
     primaryClass = "gr-qc",
@@ -293,14 +293,14 @@ The fundamental Kerr mode now uses an independently generated spectral approxima
 
 @article{Kidder:2007rt,
     author = "Kidder, Lawrence E.",
-    title = "{Using full test-particle metric perturbations to compute gravitational waveforms from inspiralling compact binaries: Amplitude corrections to 3PN order}",
+    title = "{Using Full Information When Computing Modes of Post-Newtonian Waveforms From Inspiralling Compact Binaries in Circular Orbit}",
     eprint = "0710.0614",
     archivePrefix = "arXiv",
     primaryClass = "gr-qc",
-    doi = "10.1103/PhysRevD.77.044012",
+    doi = "10.1103/PhysRevD.77.044016",
     journal = "Phys. Rev. D",
     volume = "77",
-    pages = "044012",
+    pages = "044016",
     year = "2008"
 }
 
@@ -340,7 +340,7 @@ The fundamental Kerr mode now uses an independently generated spectral approxima
 ```bibtex
 @article{Anderson:2000yy,
     author = "Anderson, Warren G. and Brady, Patrick R. and Creighton, Jolien D. E. and Flanagan, {\'E}anna {\'E}.",
-    title = "{An excess power statistic for detection of gravitational wave bursts}",
+    title = "{An excess power statistic for detection of burst sources of gravitational radiation}",
     eprint = "gr-qc/0008066",
     doi = "10.1103/PhysRevD.63.042003",
     journal = "Phys. Rev. D",
@@ -351,7 +351,7 @@ The fundamental Kerr mode now uses an independently generated spectral approxima
 
 @article{Schutz:2011tw,
     author = "Schutz, Bernard F.",
-    title = "{Networks of gravitational wave detectors and their run planning}",
+    title = "{Networks of gravitational wave detectors and three figures of merit}",
     eprint = "1102.5421",
     archivePrefix = "arXiv",
     primaryClass = "astro-ph.IM",
@@ -381,7 +381,7 @@ The fundamental Kerr mode now uses an independently generated spectral approxima
 ```bibtex
 @article{Pratten:2020ceb,
     author = "Pratten, Geraint and others",
-    title = "{Computationally efficient models for the spectrum of full inspiral, merger and ringdown of precessing black-hole binaries: IMRPhenomXPHM}",
+    title = "{Computationally efficient models for the dominant and sub-dominant harmonic modes of precessing binary black holes}",
     eprint = "2004.06503",
     archivePrefix = "arXiv",
     primaryClass = "gr-qc",
@@ -394,14 +394,14 @@ The fundamental Kerr mode now uses an independently generated spectral approxima
 
 @article{Khan:2019kot,
     author = "Khan, Sebastian and others",
-    title = "{Phenomenological model for the gravitational-wave signal from precessing of black hole binaries with higher-order modes}",
+    title = "{Including higher order multipoles in gravitational-wave models for precessing binary black holes}",
     eprint = "1911.06050",
     archivePrefix = "arXiv",
     primaryClass = "gr-qc",
-    doi = "10.1103/PhysRevLett.124.081101",
-    journal = "Phys. Rev. Lett.",
-    volume = "124",
-    pages = "081101",
+    doi = "10.1103/PhysRevD.101.024056",
+    journal = "Phys. Rev. D",
+    volume = "101",
+    pages = "024056",
     year = "2020"
 }
 ```
@@ -413,20 +413,20 @@ The fundamental Kerr mode now uses an independently generated spectral approxima
 ```bibtex
 @article{Pannarale:2015jka,
     author = "Pannarale, Francesco and others",
-    title = "{Aligning spins in neutron-star black-hole binaries}",
+    title = "{Gravitational-wave cutoff frequencies of tidally disruptive neutron star-black hole binary mergers}",
     eprint = "1509.06209",
     archivePrefix = "arXiv",
     primaryClass = "gr-qc",
-    doi = "10.1103/PhysRevD.92.084032",
+    doi = "10.1103/PhysRevD.92.081504",
     journal = "Phys. Rev. D",
     volume = "92",
-    pages = "084032",
+    pages = "081504",
     year = "2015"
 }
 
 @article{Matas:2020wab,
     author = "Matas, Andrew and others",
-    title = "{Aligned-spin neutron-star\textendash{}black-hole waveforms with tidal disruption effects using the SEOBNRv4_ROM_NRTidalv2_NSBH model}",
+    title = "{An aligned-spin neutron-star--black-hole waveform model based on the effective-one-body approach and numerical-relativity simulations}",
     eprint = "2004.10001",
     archivePrefix = "arXiv",
     primaryClass = "gr-qc",
@@ -458,7 +458,7 @@ The fundamental Kerr mode now uses an independently generated spectral approxima
 ```bibtex
 @article{Moore:2016qxz,
     author = "Moore, Blake and Favata, Marc and Arun, K. G. and Mishra, Chandra Kant",
-    title = "{Gravitational-wave Phasing for Eccentric Compact Binaries in the Stationary Phase Approximation: Including Post-Newtonian Corrections to Small Eccentricity}",
+    title = "{Gravitational-wave phasing for low-eccentricity inspiralling compact binaries to 3PN order}",
     eprint = "1605.00304",
     archivePrefix = "arXiv",
     primaryClass = "gr-qc",
@@ -471,14 +471,14 @@ The fundamental Kerr mode now uses an independently generated spectral approxima
 
 @article{Yunes:2009yz,
     author = "Yunes, Nicol{\'a}s and Arun, K. G. and Berti, Emanuele and Will, Clifford M.",
-    title = "{Post-Newtonian, quasi-circular binary inspirals in parameterized post-Einsteinian gravity}",
-    eprint = "0909.4263",
+    title = "{Post-Circular Expansion of Eccentric Binary Inspirals: Fourier-Domain Waveforms in the Stationary Phase Approximation}",
+    eprint = "0906.0313",
     archivePrefix = "arXiv",
     primaryClass = "gr-qc",
-    doi = "10.1103/PhysRevD.80.084018",
+    doi = "10.1103/PhysRevD.80.084001",
     journal = "Phys. Rev. D",
     volume = "80",
-    pages = "084018",
+    pages = "084001",
     year = "2009"
 }
 ```
@@ -520,7 +520,7 @@ The fundamental Kerr mode now uses an independently generated spectral approxima
 ```bibtex
 @article{Cutler:1994ys,
     author = "Cutler, Curt and Flanagan, {\'E}anna {\'E}.",
-    title = "{Gravitational waves from coalescing compact binaries: How accurately can one measure their properties?}",
+    title = "{Gravitational waves from merging compact binaries: How accurately can one extract the binary's parameters from the inspiral waveform?}",
     eprint = "gr-qc/9402014",
     doi = "10.1103/PhysRevD.49.2658",
     journal = "Phys. Rev. D",
@@ -531,8 +531,8 @@ The fundamental Kerr mode now uses an independently generated spectral approxima
 
 @article{Veitch:2014wba,
     author = "Veitch, John and others",
-    title = "{Parameter estimation for compact binaries with ground-based gravitational-wave observations using the LALInference software library}",
-    eprint = "1409.7788",
+    title = "{Robust parameter estimation for compact binaries with ground-based gravitational-wave observations using the LALInference software library}",
+    eprint = "1409.7215",
     archivePrefix = "arXiv",
     primaryClass = "gr-qc",
     doi = "10.1103/PhysRevD.91.042003",
@@ -544,7 +544,7 @@ The fundamental Kerr mode now uses an independently generated spectral approxima
 
 @article{Thrane:2018qnx,
     author = "Thrane, Eric and Talbot, Colm",
-    title = "{An introduction to parameter estimation for gravitational-wave astronomy}",
+    title = "{An introduction to Bayesian inference in gravitational-wave astronomy: parameter estimation, model selection, and hierarchical models}",
     eprint = "1809.02293",
     archivePrefix = "arXiv",
     primaryClass = "astro-ph.IM",
@@ -590,7 +590,7 @@ The fundamental Kerr mode now uses an independently generated spectral approxima
 
 @article{Pratten:2020fqn,
     author = "Pratten, Geraint and others",
-    title = "{Let’s twist again: canonically transformed aligned-spin waveform model for binary black holes}",
+    title = "{Setting the cornerstone for the IMRPhenomX family of models for gravitational waves from compact binaries: The dominant harmonic for non-precessing quasi-circular black holes}",
     eprint = "2001.11412",
     archivePrefix = "arXiv",
     primaryClass = "gr-qc",
@@ -603,7 +603,7 @@ The fundamental Kerr mode now uses an independently generated spectral approxima
 
 @article{Chatziioannou:2017tdb,
     author = "Chatziioannou, Katerina and Klein, Antoine and Yunes, Nicol{\'a}s and Cornish, Neil",
-    title = "{Two-body problem in general relativity with spins: Precession on radiation-reaction timescales}",
+    title = "{Constructing Gravitational Waves from Generic Spin-Precessing Compact Binary Inspirals}",
     eprint = "1703.03967",
     archivePrefix = "arXiv",
     primaryClass = "gr-qc",
@@ -616,8 +616,8 @@ The fundamental Kerr mode now uses an independently generated spectral approxima
 
 @article{Kidder:1995zr,
     author = "Kidder, Lawrence E.",
-    title = "{Coalescing binary systems of compact objects to (post)**(5/2)-Newtonian order. 5. Spin effects}",
-    eprint = "gr-qc/9506014",
+    title = "{Coalescing binary systems of compact objects to (post)$^{5/2}$-Newtonian order. V. Spin effects}",
+    eprint = "gr-qc/9506022",
     doi = "10.1103/PhysRevD.52.821",
     journal = "Phys. Rev. D",
     volume = "52",
@@ -627,8 +627,8 @@ The fundamental Kerr mode now uses an independently generated spectral approxima
 
 @article{Racine:2008qv,
     author = "Racine, Etienne",
-    title = "{Analysis of spin precession in binary black hole systems including two-spin effects}",
-    eprint = "0803.1848",
+    title = "{Analysis of spin precession in binary black hole systems including quadrupole-monopole interaction}",
+    eprint = "0803.1820",
     archivePrefix = "arXiv",
     primaryClass = "gr-qc",
     doi = "10.1103/PhysRevD.78.044021",
@@ -649,19 +649,6 @@ The fundamental Kerr mode now uses an independently generated spectral approxima
     volume = "36",
     pages = "105011",
     year = "2019"
-}
-
-@article{Babak:2021mhe,
-    author = "Babak, Stanislav and others",
-    title = "{LISA Data Challenge: First sprint}",
-    eprint = "2101.05872",
-    archivePrefix = "arXiv",
-    primaryClass = "gr-qc",
-    doi = "10.1103/PhysRevD.103.084014",
-    journal = "Phys. Rev. D",
-    volume = "103",
-    pages = "084014",
-    year = "2021"
 }
 
 @article{Tinto:2004wu,
@@ -692,14 +679,10 @@ The fundamental Kerr mode now uses an independently generated spectral approxima
 
 @article{Cornish:2010qw,
     author = "Cornish, Neil J.",
-    title = "{Heterodyned Likelihood for Fast Gravitational Wave Parameter Estimation}",
+    title = "{Fast Fisher Matrices and Lazy Likelihoods}",
     eprint = "1007.4820",
     archivePrefix = "arXiv",
     primaryClass = "gr-qc",
-    doi = "10.1103/PhysRevD.82.022002",
-    journal = "Phys. Rev. D",
-    volume = "82",
-    pages = "022002",
     year = "2010"
 }
 ```
@@ -732,8 +715,8 @@ The fundamental Kerr mode now uses an independently generated spectral approxima
 }
 
 @article{Chua:2020stf,
-    author = "Chua, Alvin J. K. and Galley, Chad R. and Vallisneri, Michele",
-    title = "{Fast and accurate gravitational-wave waveforms for extreme mass-ratio inspirals with deep neural networks}",
+    author = "Chua, Alvin J. K. and Katz, Michael L. and Warburton, Niels and Hughes, Scott A.",
+    title = "{Rapid generation of fully relativistic extreme-mass-ratio-inspiral waveform templates for LISA data analysis}",
     eprint = "2008.06071",
     archivePrefix = "arXiv",
     primaryClass = "gr-qc",
@@ -795,7 +778,7 @@ The fundamental Kerr mode now uses an independently generated spectral approxima
 ```bibtex
 @article{Yunes:2009bv,
     author = "Yunes, Nicolas and Pretorius, Frans",
-    title = "{Dynamical Systems Approach to Runaway Instabilities in Black Hole-Torus Systems}",
+    title = "{Fundamental Theoretical Bias in Gravitational Wave Astrophysics and the Parameterized Post-Einsteinian Framework}",
     eprint = "0909.3328",
     archivePrefix = "arXiv",
     primaryClass = "gr-qc",
@@ -808,7 +791,7 @@ The fundamental Kerr mode now uses an independently generated spectral approxima
 
 @article{Mirshekari:2011yq,
     author = "Mirshekari, Saeed and Yunes, Nicolas and Will, Clifford M.",
-    title = "{Constraining Generic Post-Einsteinian Extensions of Gravity with Gravitational Waves}",
+    title = "{Constraining Lorentz-violating, Modified Dispersion Relations with Gravitational Waves}",
     eprint = "1110.2720",
     archivePrefix = "arXiv",
     primaryClass = "gr-qc",
@@ -854,8 +837,8 @@ The fundamental Kerr mode now uses an independently generated spectral approxima
 ```bibtex
 @article{Damour:2009wj,
     author = "Damour, Thibault and Nagar, Alessandro",
-    title = "{Effective one body description of tidal effects in inspiralling compact binaries}",
-    eprint = "0906.0096",
+    title = "{Effective One Body description of tidal effects in inspiralling compact binaries}",
+    eprint = "0911.5041",
     archivePrefix = "arXiv",
     primaryClass = "gr-qc",
     doi = "10.1103/PhysRevD.81.084016",
@@ -867,7 +850,7 @@ The fundamental Kerr mode now uses an independently generated spectral approxima
 
 @article{Bernuzzi:2014kca,
     author = "Bernuzzi, Sebastiano and Nagar, Alessandro and Dietrich, Tim and Damour, Thibault",
-    title = "{Modeling the dynamics of tidally interacting binary neutron stars}",
+    title = "{Modeling the dynamics of tidally-interacting binary neutron stars up to merger}",
     eprint = "1412.4553",
     archivePrefix = "arXiv",
     primaryClass = "gr-qc",
@@ -880,8 +863,8 @@ The fundamental Kerr mode now uses an independently generated spectral approxima
 
 @article{Nagar:2018zoe,
     author = "Nagar, Alessandro and others",
-    title = "{Time-domain effective-one-body gravitational waveforms for coalescing compact binaries with spin: I. Aligned spins}",
-    eprint = "1805.03891",
+    title = "{Time-domain effective-one-body gravitational waveforms for coalescing compact binaries with nonprecessing spins, tides and self-spin effects}",
+    eprint = "1806.01772",
     archivePrefix = "arXiv",
     primaryClass = "gr-qc",
     doi = "10.1103/PhysRevD.98.104052",
@@ -906,15 +889,6 @@ The fundamental Kerr mode now uses an independently generated spectral approxima
     volume = "58",
     pages = "063001",
     year = "1998"
-}
-
-@article{Prix:2011qv,
-    author = "Prix, Reinhard",
-    title = "{The F-statistic and its generalizations in continuous gravitational-wave data analysis}",
-    eprint = "1108.3546",
-    archivePrefix = "arXiv",
-    primaryClass = "gr-qc",
-    year = "2011"
 }
 ```
 
@@ -947,15 +921,15 @@ The fundamental Kerr mode now uses an independently generated spectral approxima
 }
 
 @article{Talbot:2018sll,
-    author = "Talbot, Colm and Thrane, Eric and Biscoveanu, Sylvia and Smith, Rory",
-    title = "{Measuring the gravitational-wave memory effect of binary black hole mergers with second-generation gravitational-wave detectors}",
+    author = "Talbot, Colm and Thrane, Eric and Lasky, Paul D. and Lin, Fuhui",
+    title = "{Gravitational-wave memory: waveforms and phenomenology}",
     eprint = "1807.00990",
     archivePrefix = "arXiv",
     primaryClass = "astro-ph.HE",
-    doi = "10.1103/PhysRevD.98.084031",
+    doi = "10.1103/PhysRevD.98.064031",
     journal = "Phys. Rev. D",
     volume = "98",
-    pages = "084031",
+    pages = "064031",
     year = "2018"
 }
 ```
@@ -968,7 +942,7 @@ The fundamental Kerr mode now uses an independently generated spectral approxima
 @article{Cornish:2014kda,
     author = "Cornish, Neil J. and Littenberg, Tyson B.",
     title = "{BayesWave: Bayesian Inference for Gravitational Wave Bursts and Instrument Glitches}",
-    eprint = "1410.3838",
+    eprint = "1410.3835",
     archivePrefix = "arXiv",
     primaryClass = "gr-qc",
     doi = "10.1088/0264-9381/32/13/135012",
@@ -979,15 +953,15 @@ The fundamental Kerr mode now uses an independently generated spectral approxima
 }
 
 @article{Chatziioannou:2021ezd,
-    author = "Chatziioannou, Katerina and others",
-    title = "{Modeling transient noise in gravitational-wave detectors}",
+    author = "Chatziioannou, Katerina and Isi, Maximiliano and Haster, Carl-Johan and Littenberg, Tyson B.",
+    title = "{A morphology-independent test of the mixed polarization content of gravitational wave signals from compact binary coalescences}",
     eprint = "2105.01521",
     archivePrefix = "arXiv",
     primaryClass = "gr-qc",
-    doi = "10.1103/PhysRevD.104.044015",
+    doi = "10.1103/PhysRevD.104.044005",
     journal = "Phys. Rev. D",
     volume = "104",
-    pages = "044015",
+    pages = "044005",
     year = "2021"
 }
 ```

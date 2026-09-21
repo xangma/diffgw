@@ -7,28 +7,15 @@ quadrature for IMRPhenomXPNR (prec_version=330).
 
 References:
 - Hamilton et al. (2021), Phys. Rev. D 104, 124027 (arXiv:2107.08876)
-- Pürrer et al. (2022), arXiv:2205.05845
 - Pratten et al. (2021), Phys. Rev. D 103, 104056 (arXiv:2004.06503)
 
-Design Motivations & Differences from LALSimulation:
-1. Coprecessing-Frame Mode Deviations:
-   LALSimulation's IMRPhenomXPNR enables PhenomXPNRUseTunedCoprec=1 by default,
-   which injects NR-calibrated antisymmetric mode amplitudes and a precession-induced
-   ringdown frequency shift. TorchWave pairs the PNR tuned angles with the clean-room
-   symmetric IMRPhenomXHM coprecessing carrier. Toggling this coprecessing deviation
-   in LAL itself accounts for ~0.9% waveform difference (80% of the residual mismatch).
-2. Tensor-Batched RK4 vs. Adaptive C Spline:
-   LAL integrates the 3.5PN SpinTaylor ODE using an adaptive Cash-Karp 4-5 integrator
-   in C with dynamic non-uniform stepping, followed by cubic spline interpolation.
-   TorchWave integrates on a monotonic velocity coordinate grid with fixed-size RK4
-   steps to guarantee 100% GPU-batchability and exact reverse-mode autograd gradients.
-   Over ~1000 inspiral cycles, the subtle difference in precession phase accumulation
-   is ~0.1-0.2 rad at high frequencies (~15% of residual mismatch).
-3. Continuous Attachment & Frequency Quadrature:
-   TorchWave solves the quadratic extremum condition analytically and evaluates C^1
-   quadratic rescaling (1 + b1 Mf + b2 Mf^2) and minimal rotation condition
-   dgamma = -cos(beta) dalpha directly on the frequency grid using midpoint
-   quadrature, avoiding heuristic root-lookup tables and non-uniform spline meshes.
+DiffGW combines these angles with its native symmetric IMRPhenomXHM
+coprecessing carrier. The carrier, integration grid, angle attachment, and
+frequency quadrature all affect external-reference comparisons. The optional
+tests in tests/test_imrphenom_xpnr.py specify selected LAL configurations and
+acceptance criteria; they do not establish an error decomposition or an
+accuracy bound throughout parameter space. Autodiff gives derivatives of the
+implemented numerical scheme, which require separate validation.
 """
 
 from typing import Dict, Optional, Sequence, Tuple, Union

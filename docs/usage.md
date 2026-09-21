@@ -1,11 +1,11 @@
 # diffgw User Guide & API Reference (torchwave & jaxwave)
 
-**diffgw** is a high-performance, batched, autograd-differentiable gravitational-wave (GW) modeling and Bayesian inference engine. It offers two first-class, co-equal frontends backed by a shared zero-dependency analytical physics engine (`diffgw_core`):
+**diffgw** provides batched gravitational-wave models and inference tools through two native frontends, sharing constants and coefficient tables in the framework-independent `diffgw_core` package:
 
-- **`torchwave`**: Native PyTorch implementation optimized for CPU, NVIDIA CUDA, and Apple Silicon MPS, with autograd and batched tensor computation `(B,) -> (B, N)`.
+- **`torchwave`**: PyTorch tensor evaluation, batching `(B,) -> (B, N)`, and autograd on supported model paths.
 - **`jaxwave`**: Native JAX implementation with automatic FP64 precision, `@jax.jit` XLA compilation, `jax.vmap` batch vectorization, and reverse/forward-mode automatic differentiation (`jax.grad`, `jax.jacfwd`).
 
-Both packages are fully self-contained Python libraries requiring only standard scientific dependencies, distributed under the permissive **MIT License**.
+The original software is **MIT licensed**. Framework dependencies, optional external assets, and attributed adaptations are described in the [installation instructions](index.md#installation), [data guide](external-data.md), and [third-party notices](../THIRD_PARTY_NOTICES.md).
 
 ---
 
@@ -106,31 +106,29 @@ print("Data type:", hp.dtype)               # complex128
 
 ## 2. Model Availability & Cross-Framework Parity
 
-All models below are natively implemented in **both PyTorch (`torchwave`) and JAX (`jaxwave`)** with complete cross-framework parity. Evaluated waveforms in PyTorch and JAX agree to double-precision numerical noise ($L_2 \le 10^{-11}$, mismatch $\le 10^{-14}$), continuously verified by 1,021 automated tests on CPU and remote NVIDIA RTX 4090 GPU (`len`).
+The catalog lists implemented model families. Interface availability, agreement with an external reference, and cross-framework consistency are separate properties; consult [validation evidence](validation.md) and the [model comparison](comparison.md#model-specific-differences-from-lal) for the tested configurations and known differences.
 
 | Family | Approximant(s) | Harmonics / Multipoles | Physical Features & Regimes |
 | :--- | :--- | :---: | :--- |
-| **Post-Newtonian** | `TaylorF2`<br>`TaylorF2_HM`<br>`TaylorF2_Eccentric` | $(2,2)$<br>$(2,1), (3,3), (3,2), (4,4)$<br>$(2,2)$ | 3.5PN point-particle & spin phasing, BNS tidal deformability<br>Analytical 3PN higher-order multipoles<br>Moore et al. (2016) 3PN stationary-phase eccentric corrections |
+| **Post-Newtonian** | `TaylorF2`<br>`TaylorF2_HM`<br>`TaylorF2_Eccentric` | $(2,2)$<br>Eight modes through $\ell=4$<br>$(2,2)$ | 3.5PN point-particle & spin phasing, BNS tidal deformability<br>Leading-order higher-mode amplitudes<br>Moore et al. (2016) 3PN stationary-phase eccentric corrections |
 | **Aligned-Spin IMR** | `IMRPhenomD`<br>`IMRPhenomHM`<br>`IMRPhenomXAS`<br>`IMRPhenomXHM` | $(2,2)$<br>$(2,\pm 2), (2,\pm 1), (3,\pm 3), (3,\pm 2), (4,\pm 4)$<br>$(2,\pm 2)$<br>$(2,\pm 2), (2,\pm 1), (3,\pm 3), (3,\pm 2), (4,\pm 4)$ | Aligned-spin dominant mode, 5-collocation intermediate<br>Multi-harmonic PhenomD calibration with mode mixing<br>4th-generation aligned-spin dominant mode (Pratten et al. 2020)<br>4th-generation higher multipoles (García-Quirós et al. 2020) |
 | **Native Time-Domain IMR** | `IMRPhenomT`, `IMRPhenomTHM`, `IMRPhenomTP`, `IMRPhenomTPHM` | Up to $(5,\pm 5)$ | Aligned or precessing black hole binaries; see the [T-family guide](imrphenomt.md) |
 | **Precessing IMR** | `IMRPhenomP` / `Pv2`<br>`IMRPhenomXP`<br>`IMRPhenomXPHM` | $(2,\pm 2)$ twisted<br>$(2,\pm 2)$ twisted<br>Multipolar twisted | Generic 3D spins with NNLO PN precession angles & Wigner $d$-matrices<br>4th-gen precessing carrier with MSA analytical precession<br>Multipolar precession supporting MSA (`v223`), SpinTaylor (`v320`), and PNR (`v330`) |
 | **Tidal & Matter** | `IMRPhenomD_NRTidal`<br>`IMRPhenomD_NRTidalv2`<br>`IMRPhenomNSBH` | $(2,2)$<br>$(2,2)$<br>$(2,2)$ | Dietrich et al. (2017) rational Padé BNS tidal phasing (NRTidal v1)<br>Dietrich et al. (2019) NRTidal v2 with self-spin & Planck windowing<br>Neutron star–black hole model with tidal disruption & remnant torus |
-| **Effective-One-Body** | `SEOBNR_ROM` (v4/v5)<br>`SEOBNR_ODE`<br>`TEOBResumS` | $(2,2)$<br>$(2,2)$<br>$(2,2)$ | Fast B-spline reduced-order surrogate for aligned-spin SEOBNR<br>Time-domain Hamiltonian ODE integrator with continuous QNM matching<br>Damour-Nagar EOB dynamics with spin-orbit coupling and tidal potentials |
+| **Effective-One-Body** | `SEOBNR_ROM` / `SEOBNRv4_ROM`<br>`SEOBNR_ODE`<br>`TEOBResumS` | $(2,2)$<br>$(2,2)$<br>$(2,2)$ | External SEOBNRv4 ROM data with a native evaluation wrapper<br>Time-domain Hamiltonian ODE integrator with continuous QNM matching<br>Damour-Nagar EOB dynamics with spin-orbit coupling and tidal potentials |
 | **Ringdown & Bursts** | `KerrRingdown`<br>`SineGaussian`<br>`MemoryWaveform` | $(2,2,0), (l,m,n)$<br>Burst packet<br>$(2,0)$ | Damped sinusoids from Kerr quasinormal modes (time & frequency domain)<br>Standard unmodeled sine-Gaussian burst wavelet<br>Non-linear Christodoulou gravitational-wave memory effect $h_{20}^{\text{mem}}(t)$ |
 | **Specialized Models** | `ContinuousWave`<br>`EMRIKludge`<br>`ParameterizedPostEinstein`<br>`SpinPrecessionODE` | Monochromatic<br>Multi-harmonic<br>Modified phasing<br>Orbit-averaged | Continuous waves from triaxial rotating neutron stars with Doppler modulation<br>Extreme mass ratio inspirals (LISA) with Kerr geodesic orbital frequencies<br>Model-independent testing of General Relativity ($\beta_{\rm ppE}, b_{\rm ppE}$)<br>Orbit-averaged spin precession ODE integrator |
-| **Time-Domain Tools** | `get_td_waveform`<br>`HybridMECO` | All models<br>Diagnostic | FFT conditioning and Parseval-preserving time-domain waveform generation<br>Minimum Energy Circular Orbit hybrid velocity & frequency root solver |
+| **Time-Domain Tools** | `get_td_waveform`<br>`HybridMECO` | Supported FD models<br>Diagnostic | FFT conditioning and time-domain waveform generation<br>Minimum Energy Circular Orbit hybrid velocity & frequency root solver |
 
 ---
 
 ## 3. Hardware Acceleration & Precision
 
-Both frontends support hardware acceleration across platforms:
-- **PyTorch (`torchwave`)**: CPU, NVIDIA CUDA, and Apple Silicon MPS.
-- **JAX (`jaxwave`)**: CPU, NVIDIA CUDA GPU, and Google Cloud TPU.
+The [published FP64 benchmarks](package_benchmarks.md) cover CPU and NVIDIA CUDA for both frontends. Other framework targets are not established by those results. PyTorch MPS does not support FP64; use CPU for the FP64 examples on Apple Silicon. Model operations and available precision determine device compatibility.
 
 ### PyTorch Device & Precision
 ```python
-device = "cuda" if torch.cuda.is_available() else ("mps" if torch.backends.mps.is_available() else "cpu")
+device = "cuda" if torch.cuda.is_available() else "cpu"
 
 hp_f64, hc_f64 = torchwave.get_fd_waveform(
     approximant="IMRPhenomD",
@@ -180,7 +178,7 @@ print("Batched tensor shape:", hp_batch.shape)  # torch.Size([4, 493])
 ```
 
 ### Generic 3D Precessing Spins (MSA, SpinTaylor, PNR)
-To simulate binary systems with orbital precession, supply 3D spin vectors (`spin1x`, `spin1y`, `spin1z`, `spin2x`, `spin2y`, `spin2z`). `torchwave` provides three state-of-the-art precession implementations under `IMRPhenomXPHM`:
+To simulate binary systems with orbital precession, supply 3D spin vectors (`spin1x`, `spin1y`, `spin1z`, `spin2x`, `spin2y`, `spin2z`). `torchwave` provides three precession prescriptions under `IMRPhenomXPHM`:
 
 1. **Analytical Multi-Scale Analysis (`msa`, default)**:
    ```python
@@ -258,7 +256,7 @@ hp_ecc, hc_ecc = torchwave.get_fd_waveform(
 
 ## 5. JAX Frontend & Acceleration (`jaxwave`)
 
-`jaxwave` provides a pure JAX implementation designed for high-performance scientific computing and machine learning workflows.
+`jaxwave` provides tensor waveform models for JAX scientific computing and machine learning workflows. Transformation and device support depend on the selected path; for example, the Kerr angular eigensolver uses a host CPU callback.
 
 ### Waveform Generation & `WaveformGenerator`
 Generate waveforms using the direct functional interface or preconfigured generator:
@@ -284,7 +282,7 @@ hp, hc = gen.generate_fd_waveform(mass1=30.0, mass2=25.0, chi1=0.1, chi2=0.0)
 ```
 
 ### Just-In-Time Compilation (`@jax.jit`)
-Every `jaxwave` approximant is designed to be fully traceable and compilable via XLA:
+The following IMRPhenomD path supports JAX tracing and XLA compilation. Transformation support is model- and option-dependent; external-data callbacks and numerical solvers require separate checks:
 
 ```python
 import jax
@@ -298,7 +296,7 @@ def fast_waveform(m1, m2, s1z, s2z):
         f_lower=20.0, f_final=512.0, delta_f=0.5,
     )
 
-# First call triggers XLA compilation; subsequent calls execute in microseconds on GPU
+# First call compiles; compatible subsequent calls reuse the compiled function
 hp, hc = fast_waveform(35.0, 25.0, 0.2, -0.1)
 ```
 
@@ -321,7 +319,7 @@ print("JAX batched shape:", hp_batch.shape)  # (3, 985)
 ```
 
 ### Autodiff Parameter Gradients (`jax.grad`)
-Compute exact mathematical derivatives $\partial h / \partial \theta$:
+Compute derivatives $\partial h / \partial \theta$ of the implemented numerical model using automatic differentiation. Piecewise branches, interpolation, solver settings, and supported derivative orders still matter:
 
 ```python
 import jax
@@ -341,7 +339,7 @@ print(f"Gradients: dm1={dm1:.4e}, dm2={dm2:.4e}")
 
 In MCMC sampling, parallel tempering, or ensemble walkers where batch sizes vary dynamically, standard `@jax.jit` functions recompile whenever a new batch size is encountered.
 
-`jaxwave.inference.BucketedWaveformEvaluator` eliminates dynamic recompilation by quantizing batch sizes into pre-compiled discrete buckets (e.g. powers of 2: 1, 2, 4, 8, 16, 32, ...), padding input tensors, evaluating via the cached static JIT kernel, and unpadding the output back to the requested batch size:
+`jaxwave.inference.BucketedWaveformEvaluator` reduces the number of distinct batch shapes by padding inputs to discrete buckets, caching each bucket evaluator, and unpadding its outputs. A new bucket compiles on first use; changes to dtype or other traced shapes may also trigger compilation:
 
 ```python
 from jaxwave.inference import BucketedWaveformEvaluator
@@ -357,7 +355,7 @@ evaluator = BucketedWaveformEvaluator(
 m1_walkers = jnp.array([30.0] * 13)
 m2_walkers = jnp.array([25.0] * 13)
 hp, hc = evaluator.evaluate(mass1=m1_walkers, mass2=m2_walkers)
-print(f"Output walkers: {hp.shape[0]}, Recompiles: 0")  # Exactly 13
+print(f"Output walkers: {hp.shape[0]}")  # 13
 ```
 
 ### Unified Dispatch via `diffgw`
@@ -554,7 +552,7 @@ print(f"JAX Optimal SNR: {snr_jax:.2f}")
 
 ### Whittle Gaussian Likelihood
 
-Evaluate the exact frequency-domain Gaussian noise log-likelihood:
+Evaluate the discrete Whittle log-likelihood for stationary Gaussian noise with a fixed PSD, up to a parameter-independent normalization:
 
 $$\ln \mathcal{L}(\theta) = -\frac{1}{2} \sum_{k} \langle d_k - h_k(\theta) \mid d_k - h_k(\theta) \rangle$$
 
@@ -569,13 +567,13 @@ log_lik_marg = whittle_pt.phase_marginalized_log_likelihood(strains)
 # JAX Whittle Likelihood
 from jaxwave.inference.likelihood import WhittleLikelihood as JAXWhittleLikelihood
 
-whittle_jx = JAXWhittleLikelihood(data=strains_jax, psd=psd_jax, df=0.25)
+whittle_jx = JAXWhittleLikelihood(data=strains_jax, psds=psds_jax, df=0.25)
 log_lik_jx = whittle_jx(template_jax)
 ```
 
 ### Accelerated Relative Binning Likelihood
 
-For fast parameter estimation without evaluating tens of thousands of dense frequency points, both frontends implement **Relative Binning** (Zackay et al. 2018). The data is compressed into summary coefficients across $\sim 30\text{--}50$ bins, evaluating candidate templates only at bin centers:
+Both frontends implement a **relative-binning approximation** using precomputed summary coefficients and candidate waveforms at bin centers. The ratio to a suitable fiducial waveform should vary slowly within each bin. Choose the bin count and validate likelihood and gradient errors against dense evaluation over the relevant parameter region. Runtime depends on the workload; see [validation evidence](validation.md#relative-binning) and the [method paper](https://arxiv.org/abs/1806.08792).
 
 ```python
 # PyTorch Relative Binning
@@ -586,7 +584,7 @@ rel_bin = RelativeBinningLikelihood(
     psds=psds,
     h0=strains,             # Fiducial reference waveform
     frequencies=f_grid,
-    n_bins=40,              # Number of adaptive frequency bins
+    n_bins=40,              # Chosen bin count; validate for the intended parameter region
     df=0.25,
 )
 
@@ -604,15 +602,20 @@ template_bins = network.project_fd_strain(
 fast_log_lik = rel_bin(template_bins)
 
 # JAX Relative Binning
-from jaxwave.inference.relative_binning import setup_relative_binning, relative_binning_log_likelihood
+from jaxwave.inference.relative_binning import RelativeBinningLikelihood as JAXRelativeBinningLikelihood
 
-rb_setup = setup_relative_binning(f_grid, strains_jax["H1"], h0_jax, psd_jax, n_bins=40)
-fast_ll_jax = relative_binning_log_likelihood(template_bin_jax, rb_setup)
+# Supply matching detector dictionaries and a fiducial waveform on the dense grid.
+rb_jax = JAXRelativeBinningLikelihood(
+    data=strains_jax, psds=psds_jax, h0=h0_jax,
+    frequencies=f_grid_jax, n_bins=40, df=0.25,
+)
+# Evaluate candidate detector templates at rb_jax.bin_centers.
+fast_ll_jax = rb_jax(template_bins_jax)
 ```
 
 ### Fisher Information Matrix & Sky Localization
 
-Compute parameter uncertainties and covariances using automatic differentiation:
+Compute local Fisher uncertainty forecasts using automatic differentiation. Interpreting the inverse matrix as a posterior covariance requires a suitable local Gaussian approximation; see the [Fisher tutorial](tutorials/02_fisher_analysis.md).
 
 $$\Gamma_{ij} = \sum_k 4 \, \text{Re} \int_{f_{\text{low}}}^{f_{\text{high}}} \frac{1}{S_n^k(f)} \frac{\partial h_k(f)}{\partial \theta_i} \left(\frac{\partial h_k(f)}{\partial \theta_j}\right)^* df$$
 
@@ -642,24 +645,27 @@ print(f"PyTorch sigma(mass1): {torch.sqrt(cov[0, 0]).item():.4f} Msun")
 
 # JAX Fisher Matrix
 from jaxwave.inference.fisher import fisher_information_matrix as jax_fisher
+from jaxwave.inference.fisher import covariance_matrix as jax_covariance
 
-def jax_wf_fn(theta):
-    # theta = [mass1, mass2]
+def jax_wf_fn(p):
     hp_m, _ = jaxwave.get_fd_waveform(
         approximant="IMRPhenomD",
-        mass1=theta[0], mass2=theta[1],
-        sample_frequencies=f_grid,
+        mass1=p["mass1"], mass2=p["mass2"],
+        sample_frequencies=f_grid_jax,
     )
     return hp_m
 
-gamma_jax = jax_fisher(jnp.array([30.0, 25.0]), jax_wf_fn, psd_jax, f_grid, df=0.25)
-cov_jax = jnp.linalg.inv(gamma_jax)
+gamma_jax, param_names_jax = jax_fisher(
+    parameters_dict=params, waveform_fn=jax_wf_fn,
+    psd_dict=psds_jax["H1"], frequencies=f_grid_jax, df=0.25,
+)
+cov_jax = jax_covariance(gamma_jax)
 print(f"JAX sigma(mass1): {jnp.sqrt(cov_jax[0, 0]):.4f} Msun")
 ```
 
 ### Gradient-Based MAP Optimization
 
-Quickly find the Maximum A Posteriori (MAP) parameter estimate using Adam optimization directly on the log-likelihood gradient:
+The `optimize_map` helper optimizes the log likelihood with Adam and optional box bounds. This is equivalent to MAP optimization for a uniform prior within those bounds; the helper does not accept a general prior. Check convergence separately from the requested iteration count:
 
 ```python
 from torchwave.inference import optimize_map
@@ -679,16 +685,10 @@ best_params, loss_history = optimize_map(
 
 ### No-U-Turn Sampler (NUTS) MCMC
 
-Run Hamiltonian Monte Carlo with dual-averaging step-size adaptation and Gelman-Rubin convergence diagnostics:
+The sampler provides Hamiltonian Monte Carlo with dual-averaging step-size adaptation. Supply a differentiable `log_posterior(theta)` that includes the intended priors and likelihood, using the same detector projection for data and templates. The fragment below assumes that function is defined; `sample_parallel` currently runs the chains sequentially. Gelman-Rubin statistics are one diagnostic and do not establish convergence by themselves.
 
 ```python
 from torchwave.inference import NUTS, gelman_rubin
-
-def log_posterior(theta):
-    hp_cand, _ = torchwave.get_fd_waveform(
-        "IMRPhenomD", mass1=theta[0], mass2=theta[1], sample_frequencies=f_grid
-    )
-    return whittle_pt({"H1": hp_cand, "L1": hp_cand, "V1": hp_cand})
 
 sampler = NUTS(log_prob_fn=log_posterior, target_accept=0.65)
 initial_positions = torch.tensor([[30.1, 24.9], [29.8, 25.2]])
@@ -712,7 +712,7 @@ torchwave-bench --models popular --batch-sizes 1,10,100,1000
 # Benchmark across backends (Torch eager, Torch compiled, JAX JIT, or all)
 torchwave-bench --models IMRPhenomD --backend all --batch-sizes 1,10,100
 
-# Benchmark compiled PyTorch with dynamic shapes (avoids recompilations across batch sizes)
+# Benchmark compiled PyTorch with dynamic shapes (can reduce recompilation across batch sizes)
 torchwave-bench --models TaylorF2,IMRPhenomD --compile --dynamic --batch-sizes 1,10,50,100
 
 # Measure forward + backward autograd gradient time
@@ -764,9 +764,9 @@ torchwave-generate-london-qnm --output-dir ./london_qnm
 
 ## Controlled Benchmarking Protocol
 
-`diffgw` implements a formal, reproducible benchmarking methodology adapted from PyCBC's controlled benchmark protocol, enforcing Gate 1 scientific parity qualification before timing measurements, capturing machine-readable hardware provenance, computing 2,000-sample bootstrap 95% confidence intervals, and sealing receipts with SHA-256 cryptographic hashes (`SCHEMA_VERSION = 1`).
+The [measured package benchmarks](package_benchmarks.md) publish pinned configurations, raw repeated timings, numerical-reference checks, and confidence intervals. Their `scripts/compare_packages.py` harness is distinct from the older campaign runner shown below. A legacy receipt marked `gate_passed` can include a JAXWave reference or self-consistency fallback; it does not by itself establish agreement with LAL.
 
-For the full protocol specification, see [**Benchmarking Protocol**](benchmarking_protocol.md). For detailed figure walkthroughs, hardware scaling on RTX 5090, and physical interpretation, see [**Performance Report**](performance.md).
+See the [benchmark protocol](benchmarking_protocol.md) for timing and validation requirements and the [performance report](performance.md) for the scope of published evidence.
 
 ### Running a Multi-Backend Benchmark Campaign
 The benchmark runner sweeps across all requested backends (`torch` [eager], `torch_compiled` [`torch.compile`], `jaxwave`, `lalsimulation`, `ripple`), devices, and batch sizes:
@@ -784,8 +784,8 @@ python scripts/run_benchmark_campaign.py \
     --plot
 ```
 
-### Generating Publication Figures
-To render publication-grade plots from any sealed benchmark receipt:
+### Generating Figures
+To render plots from a legacy campaign receipt:
 ```bash
 python scripts/plot_benchmark_results.py \
     --input artifacts/benchmarks/benchmark_receipt.json \

@@ -59,11 +59,12 @@ def fisher_information_matrix(
         df: Frequency resolution in Hz
         frequencies: Optional frequency vector in Hz
         parameter_order: Optional explicit order of parameter keys
-        method: "autodiff" (forward-mode JVP), "hessian" (exact Whittle Hessian), or "finite_diff"
+        method: "autodiff" (forward-mode JVP), "hessian" (autodiff Whittle Hessian), or "finite_diff"
         step_sizes: Optional dict of step sizes for finite differences
 
     Returns:
-        (fisher_matrix, param_names): (P, P) symmetric positive definite Fisher matrix and list of parameter names.
+        (fisher_matrix, param_names): (P, P) symmetric Fisher matrix and list of parameter names.
+        Degenerate parameters can make the matrix singular.
     """
     if parameter_order is None:
         param_names = list(parameters_dict.keys())
@@ -97,7 +98,7 @@ def fisher_information_matrix(
             raise TypeError(f"Unsupported waveform_fn output type: {type(wf_out)}")
 
     if method == "hessian":
-        # Compute Fisher matrix via exact Hessian of the Whittle log-likelihood at fiducial theta
+        # Compute Fisher matrix via the autodiff Hessian of the Whittle log-likelihood at fiducial theta
         def neg_log_lik_vec(theta_vec: jnp.ndarray) -> jnp.ndarray:
             p_dict = {name: theta_vec[idx] for idx, name in enumerate(param_names)}
             strains = eval_strains(p_dict)
@@ -223,7 +224,11 @@ def covariance_matrix(
     fisher_matrix: jnp.ndarray,
     eps: float = 1.0e-12,
 ) -> jnp.ndarray:
-    """Invert Fisher information matrix with eigenvalue regularization to obtain covariance matrix Sigma = Gamma^(-1).
+    """Compute a regularized inverse Fisher matrix for local uncertainty forecasts.
+
+    Interpreting this as a posterior covariance requires a suitable local Gaussian
+    approximation. Eigenvalue flooring changes the inverse in ill-conditioned
+    directions; inspect conditioning and regularization before interpretation.
 
     Literature: Vallisneri (2008) Phys. Rev. D 77, 042001.
 
@@ -232,7 +237,7 @@ def covariance_matrix(
         eps: Minimum relative eigenvalue floor (regularization threshold)
 
     Returns:
-        (P, P) regularized symmetric covariance matrix Sigma.
+        (P, P) symmetric regularized inverse Fisher matrix.
     """
     gamma = as_array(fisher_matrix, dtype=jnp.float64)
     gamma_sym = 0.5 * (gamma + jnp.swapaxes(gamma, -2, -1))
@@ -299,7 +304,11 @@ def optimize_map(
     f_low: Optional[float] = None,
     f_high: Optional[float] = None,
 ) -> Tuple[Dict[str, float], List[float]]:
-    """Maximum A Posteriori (MAP) parameter optimizer driven directly by gradient of log-likelihood in JAX.
+    """Optimize the log likelihood with JAX Adam and optional box bounds.
+
+    This objective is equivalent to MAP for a uniform prior within the bounds.
+    No general prior is evaluated. Check convergence independently of the
+    requested iteration count.
 
     Solves: argmax_theta ln L(theta)
     where: ln L(theta) = <d | h(theta)> - 0.5 * <h(theta) | h(theta)>

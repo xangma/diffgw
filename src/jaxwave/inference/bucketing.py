@@ -1,6 +1,6 @@
 """Shape bucketing and padding utilities for JAX MCMC and sampling.
 
-Eliminates XLA recompilations during variable-batch or adaptive proposal sampling
+Reduces the number of distinct compiled batch shapes during variable-batch or adaptive proposal sampling
 (e.g. parallel tempering, ensemble MCMC, NumPyro, BlackJAX) by padding arbitrary
 batch sizes to fixed bucket thresholds.
 """
@@ -35,7 +35,7 @@ def pad_parameters_to_bucket(
 ) -> Tuple[Dict[str, jnp.ndarray], jnp.ndarray]:
     """Pad parameter arrays along axis 0 up to bucket_size.
 
-    Pads using the edge (last) value of each parameter array to guarantee physical validity.
+    Pads using the last value of each parameter array to reuse an existing parameter row.
 
     Returns:
         padded_parameters: Dict with arrays of length bucket_size.
@@ -85,8 +85,9 @@ def unpad_waveform_from_bucket(
 class BucketedWaveformEvaluator:
     """Manages JIT-compiled waveform evaluators across fixed shape buckets.
 
-    Guarantees zero XLA recompilations across variable proposal batch sizes by
-    routing evaluations to the nearest bucket size and caching the compiled kernel.
+    Routes evaluations to the nearest bucket size and caches each evaluator.
+    Each new bucket compiles on first use. Changed dtypes or other traced shapes
+    can trigger additional compilations.
     """
 
     def __init__(

@@ -1,6 +1,6 @@
 # Tutorial 1: Quickstart & Cross-Framework Parity Check
 
-This tutorial guides you through generating gravitational waveforms with **DiffGW** in both **PyTorch (`torchwave`)** and **JAX (`jaxwave`)**, performing batched tensor evaluations, and verifying mathematical parity between the two frontends down to machine precision.
+This tutorial guides you through generating gravitational waveforms with **DiffGW** in both **PyTorch (`torchwave`)** and **JAX (`jaxwave`)**, performing batched tensor evaluations, and measuring numerical agreement between the two frontends for one FP64 IMRPhenomD example.
 
 > [!TIP]
 > A complete, runnable Python script companion for this tutorial is located at [`examples/01_quickstart_and_parity.py`](../../examples/01_quickstart_and_parity.py).
@@ -9,7 +9,7 @@ This tutorial guides you through generating gravitational waveforms with **DiffG
 
 ## 1. Single Waveform Generation in PyTorch
 
-In `torchwave`, waveforms are evaluated in double precision (`torch.float64`) using physical astrophysical units ($M_\odot$ for masses, $\text{Mpc}$ for distance, $\text{Hz}$ for frequencies):
+This example evaluates waveforms in double precision (`torch.float64`) using physical astrophysical units ($M_\odot$ for masses, $\text{Mpc}$ for distance, $\text{Hz}$ for frequencies):
 
 ```python
 import torch
@@ -60,7 +60,7 @@ print(f"JAX hp shape: {hp_jax.shape}, dtype: {hp_jax.dtype}")
 
 ## 3. Mathematical Parity Verification
 
-A core design principle of DiffGW is zero-discrepancy parity across frontends. We can measure the relative $L_2$ error and the overlap mismatch:
+For the plus polarization in this example, measure the relative $L_2$ error and the flat-weight overlap mismatch, without phase or time optimization:
 
 $$\Delta_{L_2} = \frac{\|h_{\text{torch}} - h_{\text{jax}}\|_2}{\|h_{\text{jax}}\|_2}, \quad 1 - \mathcal{M} = 1 - \frac{\Re\langle h_{\text{torch}} \mid h_{\text{jax}} \rangle}{\|h_{\text{torch}}\| \|h_{\text{jax}}\|}$$
 
@@ -75,17 +75,17 @@ inner = np.real(np.vdot(hp_t_np, hp_j_np))
 norm_prod = np.sqrt(np.real(np.vdot(hp_t_np, hp_t_np)) * np.real(np.vdot(hp_j_np, hp_j_np)))
 mismatch = max(0.0, 1.0 - inner / norm_prod)
 
-print(f"Relative L2 Error: {l2_error:.4e}")  # ~ 1.28e-13
-print(f"Waveform Mismatch: {mismatch:.4e}")  # 0.00e+00
+print(f"Relative L2 Error: {l2_error:.4e}")
+print(f"Waveform Mismatch: {mismatch:.4e}")
 ```
 
-Both metrics satisfy Gate 1 scientific qualification ($L_2 \le 10^{-11}$, mismatch $\le 10^{-14}$).
+The companion script asserts $L_2 < 10^{-11}$ and mismatch $< 10^{-14}$ for this case. Passing establishes frontend consistency for these inputs; it does not independently validate the physical model or cover other parameters. The [validation guide](../validation.md) distinguishes these checks.
 
 ---
 
 ## 4. Batched Generation across Multiple Systems
 
-Pass 1D tensors of shape `(B,)` for astrophysical parameters to compute $B$ waveforms simultaneously in a single fused kernel:
+Pass 1D tensors of shape `(B,)` for astrophysical parameters to compute $B$ waveforms simultaneously in one batched tensor evaluation:
 
 ```python
 m1_b = torch.tensor([25.0, 30.0, 45.0, 60.0], dtype=torch.float64)

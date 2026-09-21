@@ -755,8 +755,9 @@ class WaveformGenerator:
     ):
         """Return a cached @jax.jit compiled function evaluating (hp, hc) for an ordered parameter vector.
 
-        Closing statically over grid specifications and approximant metadata guarantees zero recompilations
-        across repeated evaluations (e.g. within MCMC or parameter sweeps).
+        The callable closes over grid specifications and approximant metadata.
+        Repeated calls with compatible parameter shapes and dtypes can reuse
+        compilation; new signatures may require recompilation.
         """
         if self._compiled_fd_fn is not None and self._compiled_param_order == parameter_order:
             return self._compiled_fd_fn

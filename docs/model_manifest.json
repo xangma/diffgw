@@ -6,7 +6,7 @@
     "torchwave",
     "jaxwave"
   ],
-  "description": "High-performance, batched, differentiable gravitational waveform models in PyTorch (torchwave) and JAX (jaxwave) with sovereign Numerical Relativity calibrations and certified clean-room provenance.",
+  "description": "Gravitational waveform implementations for PyTorch (torchwave) and JAX (jaxwave), with per-model reference evidence, native NR calibration components and documented provenance limitations.",
   "acceptance_gates": {
     "direct_cpu_fp64": {
       "complex_relative_l2": 1e-06,
@@ -71,7 +71,7 @@
         ]
       },
       "status": "verified_declared_cases",
-      "notes": "Uniform strict CPU FP64 gates apply to both polarizations and detector projections. See docs/provenance_ledger.md and docs/comparison.md for model verification details.",
+      "notes": "The declared frozen catalog and available holdout cases passed the CPU FP64 gates for polarizations and detector projections. Results are historical and configuration-specific; they do not establish full-domain accuracy. See the pinned validation artifacts and docs/provenance_ledger.md.",
       "primary_references": [
         {
           "citation": "Buonanno, Iyer, Ochsner, Pan, Sathyaprakash (2009), Phys. Rev. D 80, 084043",
@@ -198,7 +198,7 @@
         "ecc_order": "Up to 6 (3PN eccentric phase expansion)"
       },
       "status": "verified_declared_cases",
-      "notes": "Uniform strict CPU FP64 gates apply to both polarizations and detector projections. See docs/provenance_ledger.md and docs/comparison.md for model verification details.",
+      "notes": "The declared frozen catalog and available holdout cases passed the CPU FP64 gates for polarizations and detector projections. Results are historical and configuration-specific; they do not establish full-domain accuracy. See the pinned validation artifacts and docs/provenance_ledger.md.",
       "primary_references": [
         {
           "citation": "Moore, Favata, Arun, Mishra (2016), Phys. Rev. D 93, 124061",
@@ -242,7 +242,7 @@
         "(2,2)"
       ],
       "status": "verified_declared_cases",
-      "notes": "Uniform strict CPU FP64 gates apply to both polarizations and detector projections. See docs/provenance_ledger.md and docs/comparison.md for model verification details.",
+      "notes": "The declared frozen catalog and available holdout cases passed the CPU FP64 gates for polarizations and detector projections. Results are historical and configuration-specific; they do not establish full-domain accuracy. See the pinned validation artifacts and docs/provenance_ledger.md.",
       "primary_references": [
         {
           "citation": "Husa et al. (2016), Phys. Rev. D 93, 044006",
@@ -303,7 +303,7 @@
       ],
       "frame_convention": "P-frame precession angle twisting via single effective precession parameter chi_p",
       "status": "verified_declared_cases",
-      "notes": "Uniform strict CPU FP64 gates apply to both polarizations and detector projections. See docs/provenance_ledger.md and docs/comparison.md for model verification details.",
+      "notes": "The declared frozen catalog and available holdout cases passed the CPU FP64 gates for polarizations and detector projections. Results are historical and configuration-specific; they do not establish full-domain accuracy. See the pinned validation artifacts and docs/provenance_ledger.md.",
       "primary_references": [
         {
           "citation": "Hannam et al. (2014), Phys. Rev. Lett. 113, 151101",
@@ -409,7 +409,7 @@
       ],
       "frame_convention": "London frequency mapping and spin-weighted spherical-harmonic projection; target phase compatibility remains unresolved.",
       "status": "verified_declared_cases",
-      "notes": "Uniform strict CPU FP64 gates apply to both polarizations and detector projections. See docs/provenance_ledger.md and docs/comparison.md for model verification details.",
+      "notes": "The declared frozen catalog and available holdout cases passed the CPU FP64 gates for polarizations and detector projections. Results are historical and configuration-specific; they do not establish full-domain accuracy. See the pinned validation artifacts and docs/provenance_ledger.md.",
       "primary_references": [
         {
           "citation": "London et al. (2018), Phys. Rev. Lett. 120, 161102",
@@ -460,7 +460,7 @@
       ],
       "frame_convention": "Garc\u00eda-Quir\u00f3s et al. (2020) spherical harmonic decomposition and collocation reconstruction",
       "status": "sovereign_nr_calibrated",
-      "notes": "Uniform strict CPU FP64 gates apply to both polarizations and detector projections. IMRPhenomXHM employs sovereign SXS Numerical Relativity calibrations for ringdown amplitude and phase across all four higher harmonics ((2,1), (3,3), (4,4), and (3,2)), providing 100% MIT, pure PyTorch formulations with smooth amplitude profiles and continuous phase matching supporting exact autograd gradients and batch broadcasting.",
+      "notes": "Native SXS NR fits supply ringdown amplitude and phase components for (2,1), (3,3), (4,4) and (3,2). Phase-component tests use reference amplitudes, restricted ringdown bands and affine phase/time alignment. These checks do not validate a complete multimode waveform. The frozen catalog and holdout full-waveform LAL comparisons did not pass the strict gates.",
       "primary_references": [
         {
           "citation": "Garc\u00eda-Quir\u00f3s et al. (2020), Phys. Rev. D 102, 064002",
@@ -519,7 +519,7 @@
       ],
       "frame_convention": "XPHM precession dynamics evaluated cleanly in native PyTorch with batch broadcasting.",
       "status": "sovereign_nr_calibrated",
-      "notes": "Precessing multi-mode waveform model incorporating sovereign SXS Numerical Relativity calibrations across all higher harmonics ((2,1), (3,3), (4,4), and (3,2)). Precession dynamics evaluated cleanly with batch broadcasting and autograd support.",
+      "notes": "Precessing multimode waveform incorporating native SXS NR ringdown fits for (2,1), (3,3), (4,4) and (3,2). The phase-component checks described for IMRPhenomXHM do not validate precession or the complete waveform. The frozen catalog and holdout LAL comparisons did not pass the strict gates.",
       "primary_references": [
         {
           "citation": "Pratten et al. (2021), Phys. Rev. D 103, 104056",
@@ -558,7 +558,7 @@
           ]
         }
       },
-      "precession_domain": "Sovereign native PyTorch precession and multi-mode evaluation with full autograd and batch support.",
+      "precession_domain": "Tensor precession and multimode evaluation; gradient and batching support must be checked for the selected path. Passing component tests does not establish complete precession-domain accuracy.",
       "convention_evidence": "docs/provenance_ledger.md"
     },
     "IMRPhenomXPHM-SpinTaylor": {
@@ -578,8 +578,8 @@
         "(3,2)",
         "(4,4) coprecessing"
       ],
-      "status": "verified_declared_cases",
-      "notes": "Precessing multi-mode waveform model driven by sovereign fixed-grid velocity-space RK4 SpinTaylor numerical integration (prec_version=320). Overlap >= 0.9996 against LAL.",
+      "status": "optional_reference_tests",
+      "notes": "Fixed-grid velocity-space RK4 SpinTaylor integration. tests/test_imrphenom_xphm_spintaylor.py defines three optional LAL IMRPhenomXPHM comparisons (prec_version=320, final_spin_mod=2), requiring time/phase-optimized plus-polarization match >= 0.98 over 20-300 Hz. This is a test threshold, not an observed full-domain bound; this model is outside the frozen catalog.",
       "primary_references": [
         {
           "citation": "Pratten et al. (2021), Phys. Rev. D 103, 104056",
@@ -609,15 +609,11 @@
         "(2,2)"
       ],
       "status": "sovereign_nr_calibrated",
-      "notes": "Precessing model with Numerical-Relativity-tuned PhenomPNR opening and precession angles (prec_version=330, final_spin_mod=2). Overlap >= 0.993-0.9972 against LAL.",
+      "notes": "NR-tuned PhenomPNR opening and precession angles. tests/test_imrphenom_xpnr.py defines four optional comparisons against default LAL IMRPhenomXPNR, requiring time/phase-optimized plus-polarization match >= 0.99 over 20-400 Hz. This is a test threshold, not an observed full-domain bound; this model is outside the frozen catalog.",
       "primary_references": [
         {
           "citation": "Hamilton et al. (2021), Phys. Rev. D 104, 124027",
           "doi": "10.1103/PhysRevD.104.124027"
-        },
-        {
-          "citation": "Pürrer et al. (2022), arXiv:2205.05845",
-          "url": "https://arxiv.org/abs/2205.05845"
         }
       ]
     },
@@ -635,7 +631,7 @@
         "(2,2)"
       ],
       "status": "verified_declared_cases",
-      "notes": "Uniform strict CPU FP64 gates apply to both polarizations and detector projections. See docs/provenance_ledger.md and docs/comparison.md for model verification details.",
+      "notes": "The declared frozen catalog and available holdout cases passed the CPU FP64 gates for polarizations and detector projections. Results are historical and configuration-specific; they do not establish full-domain accuracy. See the pinned validation artifacts and docs/provenance_ledger.md.",
       "primary_references": [
         {
           "citation": "Pratten et al. (2020), Phys. Rev. D 102, 064001",
@@ -687,7 +683,7 @@
         "(2,2)"
       ],
       "status": "verified_declared_cases",
-      "notes": "Uniform strict CPU FP64 gates apply to both polarizations and detector projections. See docs/provenance_ledger.md and docs/comparison.md for model verification details.",
+      "notes": "The declared frozen catalog and available holdout cases passed the CPU FP64 gates for polarizations and detector projections. Results are historical and configuration-specific; they do not establish full-domain accuracy. See the pinned validation artifacts and docs/provenance_ledger.md.",
       "primary_references": [
         {
           "citation": "Dietrich et al. (2017), Phys. Rev. D 96, 121501",
@@ -734,7 +730,7 @@
         "(2,2)"
       ],
       "status": "verified_declared_cases",
-      "notes": "Uniform strict CPU FP64 gates apply to both polarizations and detector projections. See docs/provenance_ledger.md and docs/comparison.md for model verification details.",
+      "notes": "The declared frozen catalog and available holdout cases passed the CPU FP64 gates for polarizations and detector projections. Results are historical and configuration-specific; they do not establish full-domain accuracy. See the pinned validation artifacts and docs/provenance_ledger.md.",
       "primary_references": [
         {
           "citation": "Dietrich et al. (2019), Phys. Rev. D 100, 044003",
@@ -930,7 +926,7 @@
         "(2,2)"
       ],
       "status": "sovereign_continuous_matching",
-      "notes": "Clean-room continuous NQC attachment via cubic spline root-finding (continuous_matching.py), providing smooth C1 joining of inspiral ODE dynamics to Kerr QNM ringdown without discrete finite-difference stencil sensitivity.",
+      "notes": "Experimental EOB waveform with continuous attachment based on a natural cubic spline through accepted integration samples. The selected interior peak is locally differentiable, with piecewise interval selection. Auxiliary resampling-spacing invariance does not establish integration-step convergence or full-waveform accuracy. The frozen LAL catalog case did not pass.",
       "primary_references": [
         {
           "citation": "Buonanno & Damour (1999), Phys. Rev. D 59, 084006",
@@ -982,8 +978,8 @@
           "merger-ringdown C1 matching",
           "published final mass and signed final-spin fits"
         ],
-        "remaining": "Continuous cubic spline root-finding attachment in continuous_matching.py provides smooth C1 joining of inspiral ODE dynamics to Kerr QNM ringdown without discrete finite-difference stencil artifacts.",
-        "integration_assessment": "src/torchwave/approximants/continuous_matching.py"
+        "remaining": "Complete waveform agreement and integration-resolution convergence remain to be established. Continuous attachment is a component improvement, not a complete EOB accuracy result.",
+        "integration_assessment": "src/torchwave/approximants/eob/continuous_matching.py"
       }
     },
     "SEOBNR_ROM": {
@@ -991,7 +987,7 @@
       "aliases": [
         "seobnrrom",
         "seobnrv4rom",
-        "seobnrv5rom"
+        "officialseobnrv4rom"
       ],
       "lal_approximant": "SEOBNRv4_ROM",
       "domain": "frequency_domain",
@@ -1000,14 +996,15 @@
         "(2,2)"
       ],
       "asset": {
-        "file": "src/torchwave/data/seobnr_surrogate.pt",
-        "sha256": "8316be966b297f474be810024a6add2d5e64559ee3c506302e8ea83372085414",
-        "frequency_coordinate": "Dimensionless geometric M*f in [0.0002, 0.30]",
-        "generator": "torchwave.approximants.eob.SEOBNR_ODE",
-        "license": "MIT"
+        "file": "SEOBNRv4ROM_v3.0.hdf5",
+        "sha256": "4ff5317967d757fcad9323a74b75f4f63894ed87f4b1852d46cbe47cde488b9c",
+        "source": "https://doi.org/10.5281/zenodo.14999310",
+        "bundled": false,
+        "required_for": "canonical SEOBNR_ROM / SEOBNRv4ROM official-data wrapper",
+        "license": "Upstream data terms; redistribution review unresolved"
       },
       "status": "verified_declared_cases_external_data",
-      "notes": "The fresh official-ROM wrapper passes the frozen catalog and five additional parameter probes below 3e-11 polarization relative L2. Tensor B-splines, basis reconstruction, published 31-knot phase stitching and waveform gauge are independently implemented. Official SEOBNRv4ROM HDF5 calibration data remain external and are never bundled; redistribution terms are unresolved.",
+      "notes": "The official-data wrapper passed the frozen catalog case with maximum polarization relative L2 approximately 1.20e-11. Tensor B-splines reconstruct the external official HDF5 calibration data. The data are required and not bundled; redistribution terms remain unresolved. The bundled src/torchwave/data/seobnr_surrogate.pt asset and seobnrv5rom alias belong to a separate native prototype and do not inherit this reference result.",
       "primary_references": [
         {
           "citation": "P\u00fcrrer (2014), Class. Quantum Grav. 31, 195010",
@@ -1050,7 +1047,7 @@
       "domain": "frequency_domain (internal time-domain dynamics)",
       "spins": "aligned",
       "status": "sovereign_continuous_matching",
-      "notes": "Clean-room continuous NQC attachment via cubic spline root-finding (continuous_matching.py), providing smooth time-domain matching and continuous derivatives.",
+      "notes": "Experimental EOB waveform with continuous attachment based on a natural cubic spline through accepted integration samples. The selected interior peak is locally differentiable, with piecewise interval selection. Auxiliary resampling-spacing invariance does not establish integration-step convergence or full-waveform accuracy. The frozen LAL catalog case did not pass.",
       "primary_references": [
         {
           "citation": "Nagar et al. (2018), Phys. Rev. D 98, 104052",
@@ -1083,21 +1080,23 @@
     }
   },
   "verification": {
-    "date": "2026-09-15",
-    "catalog_passed": true,
+    "date": "2026-09-14",
+    "catalog_passed": false,
     "catalog_cases_passed": 17,
     "catalog_cases_total": 21,
-    "exact_lal_parity_cases": 17,
-    "sovereign_calibrated_cases": 4,
+    "holdout_passed": false,
     "holdout_cases_passed": 11,
     "holdout_cases_total": 13,
-    "scope": "Full 17-model catalog parity and sovereign calibration audit: 12 models verified against LAL binary oracles under strict CPU FP64 gates (complex L2 <= 1e-6, mismatch <= 1e-8), 4 models certified with sovereign physics calibrations (IMRPhenomXHM, IMRPhenomXPHM via SXS NR ringdown amplitude & phase, SEOBNR_ODE, TEOBResumS via continuous cubic spline NQC attachment), and 1 analytical multi-mode extension (TaylorF2_HM providing frequency-domain higher multipoles).",
-    "evidence": "docs/provenance_ledger.md",
-    "unit_tests_passed": 93,
+    "scope": "Historical frozen 17-model reference suite, not the full current model inventory or a parameter-domain certificate. Both strict suites failed overall. The 17 passing catalog cases include a TaylorF2_HM dominant-mode-only check. Native NR ringdown and continuous EOB attachment tests have separate component scope and do not change the reference-suite results.",
+    "evidence": {
+      "catalog": "https://github.com/xangma/diffgw/blob/0be15a5b80dd5383da054165f6834461798d70dc/docs/reviews/2026-09-13-parity-review/verification/reference-contracts-checkpoint3/catalog.json",
+      "holdout": "https://github.com/xangma/diffgw/blob/0be15a5b80dd5383da054165f6834461798d70dc/docs/reviews/2026-09-13-parity-review/verification/reference-contracts-checkpoint3/holdout.json",
+      "source_record": "https://github.com/xangma/diffgw/blob/0be15a5b80dd5383da054165f6834461798d70dc/docs/reviews/2026-09-13-parity-review/verification/reference-contracts-checkpoint3/source-record.json"
+    },
     "source_and_test_inputs_changed_during_runs": false,
-    "provenance": "100% MIT standalone codebase. SXS NR simulations under CC-BY-4.0 used for independent calibrations; external SEOBNRv4_ROM data resolved under CC-BY-4.0; Leaver QNM eigensolver solved independently.",
+    "provenance": "Original software is MIT licensed; third-party data and adaptations retain their identified terms. Some inherited calibration provenance and external author-data redistribution terms remain unresolved. See THIRD_PARTY_NOTICES.md.",
     "catalog_taxonomy": {
-      "verified_exact_lal_parity": [
+      "reference_agreement_declared_cases": [
         "TaylorF2",
         "TaylorF2_Eccentric",
         "IMRPhenomD",
@@ -1111,13 +1110,15 @@
         "KerrRingdown",
         "SEOBNR_ROM"
       ],
-      "sovereign_physics_calibrated": [
+      "native_nr_ringdown_components": [
         "IMRPhenomXHM",
-        "IMRPhenomXPHM",
+        "IMRPhenomXPHM"
+      ],
+      "experimental_eob_components": [
         "SEOBNR_ODE",
         "TEOBResumS"
       ],
-      "unresolved_external_oracle": [
+      "higher_mode_reference_unresolved": [
         "TaylorF2_HM"
       ]
     }
@@ -1381,8 +1382,8 @@
     }
   },
   "validation_artifacts": {
-    "catalog": "archive/clean-room-reviews:docs/reviews/2026-09-13-parity-review/verification/reference-contracts-checkpoint3/catalog.json",
-    "holdout": "archive/clean-room-reviews:docs/reviews/2026-09-13-parity-review/verification/reference-contracts-checkpoint3/holdout.json",
-    "source_record": "archive/clean-room-reviews:docs/reviews/2026-09-13-parity-review/verification/reference-contracts-checkpoint3/source-record.json"
+    "catalog": "https://github.com/xangma/diffgw/blob/0be15a5b80dd5383da054165f6834461798d70dc/docs/reviews/2026-09-13-parity-review/verification/reference-contracts-checkpoint3/catalog.json",
+    "holdout": "https://github.com/xangma/diffgw/blob/0be15a5b80dd5383da054165f6834461798d70dc/docs/reviews/2026-09-13-parity-review/verification/reference-contracts-checkpoint3/holdout.json",
+    "source_record": "https://github.com/xangma/diffgw/blob/0be15a5b80dd5383da054165f6834461798d70dc/docs/reviews/2026-09-13-parity-review/verification/reference-contracts-checkpoint3/source-record.json"
   }
 }

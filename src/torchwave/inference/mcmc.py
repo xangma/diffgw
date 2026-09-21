@@ -1,8 +1,8 @@
 """Pure PyTorch No-U-Turn Sampler (NUTS) and Hamiltonian Monte Carlo (HMC).
 
-Strict Clean-Room Implementation based exclusively on published literature:
-- Hoffman & Gelman (2011), "The No-U-Turn Sampler: Adaptively Setting Path Lengths in Hamiltonian Monte Carlo",
-  J. Mach. Learn. Res. 15, 1593 (arXiv:1111.4246)
+Method references:
+- Hoffman & Gelman (2014), "The No-U-Turn Sampler: Adaptively Setting Path Lengths in Hamiltonian Monte Carlo",
+  J. Mach. Learn. Res. 15, 1593–1623 (2011 preprint: arXiv:1111.4246)
 - Betancourt (2017), "A Conceptual Introduction to Hamiltonian Monte Carlo",
   arXiv:1701.02434
 - Gelman & Rubin (1992), "Inference from Iterative Simulation Using Multiple Sequences",
@@ -20,7 +20,7 @@ from torchwave.conversions import as_tensor
 def gelman_rubin(chains: torch.Tensor) -> torch.Tensor:
     """Compute the Gelman-Rubin potential scale reduction factor R_hat for multiple MCMC chains.
 
-    Literature: Gelman & Rubin (1992); Hoffman & Gelman (2011).
+    Literature: Gelman & Rubin (1992); Hoffman & Gelman (2014).
 
     Args:
         chains: Tensor of MCMC samples of shape (n_chains, n_samples, n_params).
@@ -28,7 +28,8 @@ def gelman_rubin(chains: torch.Tensor) -> torch.Tensor:
 
     Returns:
         Tensor of shape (n_params,) containing R_hat for each parameter.
-        Values close to 1.0 (typically R_hat < 1.05 or < 1.1) indicate convergence.
+        Values near 1 are one diagnostic and do not establish convergence.
+        This implementation uses the basic, unsplit variance-ratio statistic.
     """
     if chains.dim() != 3:
         raise ValueError(f"Expected chains tensor of shape (n_chains, n_samples, n_params), got {chains.shape}")
@@ -100,7 +101,7 @@ def leapfrog_step(
 class NUTS:
     """Pure PyTorch No-U-Turn Sampler (NUTS) with Dual-Averaging Step-Size Adaptation.
 
-    Literature: Hoffman & Gelman (2011) Algorithms 3, 5, 6; Betancourt (2017).
+    Literature: Hoffman & Gelman (2014) Algorithms 3, 5, 6; Betancourt (2017).
     """
 
     def __init__(
@@ -403,7 +404,7 @@ class NUTS:
         n_warmup: int = 200,
         **chain_kwargs: Any,
     ) -> torch.Tensor:
-        """Run multiple NUTS chains starting from given initial positions.
+        """Run multiple NUTS chains sequentially from given initial positions.
 
         Args:
             initial_positions: Initial positions for each chain, shape (n_chains, D).

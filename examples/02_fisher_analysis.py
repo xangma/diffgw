@@ -2,9 +2,9 @@
 """Tutorial 2: Forward-Mode AD & Fisher Information Matrix (FIM) Analysis
 
 This script demonstrates:
-1. Exact parameter derivatives using forward-mode autodiff in PyTorch and JAX.
+1. Derivatives of the implemented waveform using forward-mode autodiff in PyTorch and JAX.
 2. Computing the noise-weighted Fisher Information Matrix (FIM) with aLIGO PSD.
-3. Inverting the Fisher matrix to obtain parameter covariance and 1-sigma errors.
+3. Inverting the Fisher matrix for local Gaussian covariance and uncertainty forecasts.
 4. Validating cross-framework numerical agreement of the Fisher matrix.
 """
 
@@ -101,7 +101,7 @@ def main():
     print(f"  Matrix condition number kappa(Gamma): {cond_t:.2e}")
     assert rel_diff < 1e-10, f"Fisher parity {rel_diff} exceeds tolerance 1e-10!"
 
-    print("\n[4] 1-Sigma Parameter Measurement Uncertainties (Cramer-Rao Bound):")
+    print("\n[4] Local Fisher Uncertainty Forecasts (check conditioning and assumptions):")
     print(f"{'Parameter':<10} | {'True Value':<12} | {'Torch sigma':<15} | {'JAX sigma':<15}")
     print("-" * 60)
     for i, name in enumerate(param_order):

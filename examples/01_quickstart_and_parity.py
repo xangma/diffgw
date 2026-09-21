@@ -3,9 +3,9 @@
 
 This script demonstrates:
 1. Generating frequency-domain gravitational waveforms in PyTorch (torchwave).
-2. Generating identical waveforms in JAX (jaxwave) with JIT compilation.
+2. Generating corresponding waveforms in JAX (jaxwave) with JIT compilation.
 3. Batched multi-binary evaluation without Python loops.
-4. Verifying cross-framework numerical parity to double precision (mismatch < 1e-14).
+4. Checking one FP64 IMRPhenomD plus-polarization case (L2 < 1e-11, mismatch < 1e-14).
 """
 
 import sys
@@ -86,7 +86,7 @@ def main():
     print(f"  Waveform Mismatch: {mismatch:.4e}")
     assert l2_error < 1e-11, f"L2 error {l2_error} exceeds gate 1e-11!"
     assert mismatch < 1e-14, f"Mismatch {mismatch} exceeds gate 1e-14!"
-    print("  => Parity Gate PASSED: PyTorch and JAX agree to double-precision noise.")
+    print("  => Example check PASSED for this IMRPhenomD plus-polarization case.")
 
     # -------------------------------------------------------------------------
     # 4. Batched Waveform Generation

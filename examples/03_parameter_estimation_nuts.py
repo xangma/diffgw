@@ -2,11 +2,15 @@
 """Tutorial 3: Differentiable Bayesian Parameter Estimation & NUTS MCMC
 
 This script demonstrates:
-1. Setting up a synthetic gravitational-wave injection in Advanced LIGO noise.
-2. Constructing an accelerated Relative Binning Likelihood (heterodyned).
-3. Fast gradient-based Maximum A Posteriori (MAP) estimation via Adam optimization.
-4. Sampling the posterior with the No-U-Turn Sampler (NUTS) MCMC.
-5. Evaluating Gelman-Rubin convergence diagnostics across parallel chains.
+1. Setting up a synthetic signal with an illustrative real Gaussian perturbation.
+2. Constructing an approximate relative-binning likelihood.
+3. Taking 30 Adam steps on an illustrative penalized-likelihood objective.
+4. Demonstrating No-U-Turn Sampler (NUTS) MCMC from fixed scaled starting points.
+5. Evaluating Gelman-Rubin diagnostics across chains executed sequentially.
+
+This short API example does not establish convergence, likelihood-approximation
+accuracy, or a speedup. The finite out-of-range penalty in log_posterior does
+not define a proper uniform box prior.
 """
 
 import torch
@@ -32,7 +36,7 @@ def main():
     torch.manual_seed(42)
 
     # -------------------------------------------------------------------------
-    # 1. Setup Injection & Detector Noise
+    # 1. Setup Injection & Illustrative Noise
     # -------------------------------------------------------------------------
     f_dense = torch.linspace(30.0, 200.0, 1024, dtype=torch.float64)
     df = float(f_dense[1] - f_dense[0])
@@ -51,13 +55,13 @@ def main():
     model = TaylorF2()
     hp_true, _ = model(f=f_dense, mass1=m1_true, mass2=m2_true, distance=400.0)
 
-    # Inject into realistic detector noise
+    # Add a real Gaussian perturbation, not a full complex detector-noise realization
     noise_std = torch.sqrt(psd_vals / (4.0 * df))
-    noise_fd = torch.randn_like(f_dense) * noise_std * 0.1  # High SNR injection
+    noise_fd = torch.randn_like(f_dense) * noise_std * 0.1
     data_fd = hp_true + noise_fd
 
     # -------------------------------------------------------------------------
-    # 2. Accelerated Relative Binning Likelihood
+    # 2. Approximate Relative-Binning Likelihood
     # -------------------------------------------------------------------------
     print("\n[2] Precomputing Relative Binning Likelihood (20 summary bins)...")
     rel_lik = RelativeBinningLikelihood(
@@ -74,6 +78,7 @@ def main():
     def log_posterior(u: torch.Tensor) -> torch.Tensor:
         mc = mc_true + u[0] * 0.05
         eta = eta_true + u[1] * 0.005
+        # Finite demonstration penalty, not a zero-probability prior outside this box
         if eta > 0.2499 or eta < 0.20 or mc < 27.0 or mc > 29.5:
             return torch.tensor(-1e8, dtype=torch.float64)
         m1, m2 = mc_eta_to_m1_m2(mc, eta)
@@ -81,9 +86,9 @@ def main():
         return rel_lik({"H1": hp_summary}).squeeze()
 
     # -------------------------------------------------------------------------
-    # 3. Gradient-Based MAP Optimization via Adam
+    # 3. Gradient-Based Optimization via Adam
     # -------------------------------------------------------------------------
-    print("\n[3] Running gradient-based MAP optimization (Adam)...")
+    print("\n[3] Running gradient-based optimization (Adam)...")
     u_param = torch.tensor([0.05, -0.05], dtype=torch.float64, requires_grad=True)
     optimizer = torch.optim.Adam([u_param], lr=0.01)
 
@@ -95,14 +100,15 @@ def main():
 
     mc_map = (mc_true + u_param[0] * 0.05).item()
     eta_map = (eta_true + u_param[1] * 0.005).item()
-    print(f"  MAP Optimization complete (30 steps).")
-    print(f"  MAP Estimate: Chirp Mass = {mc_map:.4f} Msun, eta = {eta_map:.4f}")
+    print("  Adam run complete (30 steps); convergence has not been checked.")
+    print(f"  Optimization candidate: Chirp Mass = {mc_map:.4f} Msun, eta = {eta_map:.4f}")
 
     # -------------------------------------------------------------------------
-    # 4. Posterior Sampling with No-U-Turn Sampler (NUTS)
+    # 4. Sampling with No-U-Turn Sampler (NUTS)
     # -------------------------------------------------------------------------
-    print("\n[4] Sampling posterior using No-U-Turn Sampler (NUTS) across 4 chains...")
+    print("\n[4] Demonstrating NUTS across 4 chains executed sequentially...")
     sampler = NUTS(log_posterior, target_accept=0.65, max_depth=5)
+    # Fixed scaled starting positions, independent of the Adam result above
     init_positions = torch.tensor([
         [0.05, -0.05],
         [-0.05, 0.05],
@@ -110,7 +116,7 @@ def main():
         [-0.02, -0.02],
     ], dtype=torch.float64)
 
-    # 50 post-warmup samples across 4 chains
+    # 50 post-warmup samples and 30 warmup steps per chain; execution is sequential
     chains_u = sampler.sample_parallel(init_positions, n_samples=50, n_warmup=30)
     chains_mc = mc_true + chains_u[:, :, 0] * 0.05
     chains_eta = eta_true + chains_u[:, :, 1] * 0.005
@@ -123,10 +129,11 @@ def main():
 
     r_hat = gelman_rubin(chains)
 
-    print(f"\n[5] Posterior Analysis:")
+    print("\n[5] Short-run sample summaries (not validated posterior uncertainties):")
     print(f"  Chirp Mass (M_c): {mean_mc:.4f} +/- {std_mc:.4f} Msun (True: {mc_true:.4f})")
     print(f"  Mass Ratio (eta): {mean_eta:.4f} +/- {std_eta:.4f} (True: {eta_true:.4f})")
     print(f"  Gelman-Rubin R_hat: M_c = {r_hat[0].item():.3f}, eta = {r_hat[1].item():.3f}")
+    print("  R_hat alone does not establish convergence or relative-binning accuracy.")
 
     print("\n" + "=" * 70)
     print("Tutorial 3 completed successfully!")

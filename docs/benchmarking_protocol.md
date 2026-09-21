@@ -1,154 +1,174 @@
-# Controlled Executable Benchmark Protocol & Methodology for DiffGW
+# Benchmarking protocol
 
-This document defines the formal benchmarking methodology and protocol for gravitational-wave approximants in **`diffgw`** (`torchwave` and `jaxwave`), establishing consistent performance tracking across releases, architectures, and hardware environments.
-
-The protocol adapts the controlled scientific benchmarking principles established in PyCBC's `torch_benchmark_protocol.rst`. These requirements describe qualified evidence; the legacy harness limitations below must be accounted for when interpreting existing results.
-
----
+This protocol defines the evidence required for DiffGW performance comparisons.
+The [published FP64 campaign](package_benchmarks.md) records its actual workload,
+adapters and limitations. Requirements for additional workloads below do not
+imply that those workloads have been measured.
 
 ## 1. Reference & Scientific Scope
 
 ### 1.1 Multi-Backend Comparison Matrix
-The legacy campaign supports five backend labels. Select the supported subset
-for each model and record omissions; match physical parameters, precision,
-sampling rates and frequency grids:
 
-1. **`torchwave` (PyTorch Eager)**: Differentiable PyTorch approximants evaluated in eager execution (`torch.inference_mode()` for forward-only timing). Record the actual tested device; framework support alone does not qualify a model/device combination.
-2. **`torchwave_compiled` (PyTorch Compiled)**: Differentiable PyTorch approximants compiled via `torch.compile()` with TorchDynamo and TorchInductor/Triton kernel fusion.
-3. **`jaxwave` (JAX)**: Differentiable JAX approximants compiled via `jax.jit` and vectorized via `jax.vmap` on GPU and CPU.
-4. **`lalsimulation` (C / LALSuite)**: An external waveform reference and CPU single-waveform baseline. Pin the LAL version and exact approximant options before claiming same-model agreement.
-5. **`ripple` (JAX)**: External differentiable JAX approximants from the [active GW-JAX-Team project](https://github.com/GW-JAX-Team/ripple), providing an additional CPU/GPU implementation where models intersect.
+The package-comparison runner accepts five backend labels:
 
-These are execution backends, not five independent physical models. DiffGW's
-PyTorch and JAX frontends share physics inputs. Record frontend agreement,
-same-model external-reference agreement and independent NR validation separately;
-see the [package comparison](comparison.md#physics-coverage-and-scientific-agreement).
+| Label | Timed implementation |
+| --- | --- |
+| `torch` | DiffGW PyTorch eager execution |
+| `torch_compiled` | DiffGW with `torch.compile` |
+| `jax` | DiffGW with `jax.jit` |
+| `lal` | LALSimulation public API on CPU, with a Python loop for batches |
+| `ripple` | Ripple public JAX API with JIT and vectorization |
+
+Select the supported subset for each model and record omissions. Match physical
+parameters, precision, modes, conventions and sampling grids. These execution
+backends are not five independent physical models: DiffGW's frontends share
+physics inputs. Record frontend consistency, same-model external-reference
+agreement and independent NR validation separately; see the
+[package comparison](comparison.md#physics-coverage-and-scientific-agreement).
 
 ### 1.2 The Gatekeeper Rule (Parity First)
-> [!IMPORTANT]
-> **A timing result is scientifically qualified only for the model, reference, precision and configurations that passed its declared accuracy checks.**
 
-For a **strict same-model LAL comparison**, the required Gate 1 checks are:
+A timing result is qualified only for the model, reference, precision and
+configurations that passed its declared accuracy checks.
 
-- Compare candidate waveforms ($h_+, h_\times$) against the pinned LAL model and options across the specified grid and parameter cases. Record conventions and any alignment.
-- **Strict FP64 tolerances**:
-  - Max relative $L_2$ error: $\frac{\|h_{\text{candidate}} - h_{\text{oracle}}\|_2}{\|h_{\text{oracle}}\|_2} \le 10^{-11}$
-  - Max phase mismatch: $1 - \mathcal{M} \le 10^{-14}$
-- Retain the reference identity and raw errors. Stop the qualified campaign on failure, or label retained timings as diagnostic and unqualified. Do not relax tolerances merely to record timings.
+For the package campaign's **strict same-model LAL comparison**:
 
-**Legacy harness limitation:** `scripts/run_benchmark_campaign.py` does not
-enforce this strict LAL contract. It first uses JAXWave as its reference, falls
-back to LAL with $L_2 \le 10^{-3}$ and mismatch $\le 10^{-6}$ tolerances, and can
-fall back to self-consistency. Leaving its gate enabled is preferable to skipping
-it, but a legacy pass must not be labelled a strict LAL pass. Obtain an explicit
-same-configuration LAL comparison before making that claim.
+- Compare both polarizations of every timed binary with the pinned LAL model
+  and options on the same physical grid.
+- Require direct relative L2 error at most `1e-11`, without alignment, and
+  mismatch at most `1e-14`. This mismatch uses flat frequency weights and
+  maximizes constant phase, without maximizing time.
+- Retain errors per binary/polarization, reference identity and configuration.
+  Reject nonfinite, zero-norm, wrong-shape or wrong-dtype outputs.
+- Stop on failure, or retain the timing explicitly as diagnostic and
+  unqualified. Do not relax tolerances merely to obtain a timing.
 
-The narrower `scripts/compare_packages.py` runner performs explicit LAL checks
-for FP64 `TaylorF2`, `IMRPhenomD` and `IMRPhenomXAS`. It saves errors for both
-polarizations of every binary. Its mismatch uses flat frequency weights and
-maximizes constant phase, but not time; its relative $L_2$ error uses the direct
-complex waveforms without alignment. Unqualified timings are retained only with
-`--record-unqualified` and remain labelled as such. It does not measure
-time-domain, derivative, Fisher or memory workloads.
+These are implementation-agreement thresholds for this campaign. Passing them
+does not establish physical accuracy throughout a calibration domain; failing
+them does not alone decide suitability for an astrophysical analysis.
+Models with independent calibrations require an appropriate external reference
+or held-out NR test, with separately justified tolerances.
 
-For models with independent calibrations, record the appropriate external
-reference or held-out NR test and its justified tolerances instead. Passing
-Torch/JAX agreement is not independent physical validation. A receipt hash
-does not change the meaning of the reference or qualification checks.
+`scripts/compare_packages.py` implements these checks for FP64 `TaylorF2`,
+`IMRPhenomD` and `IMRPhenomXAS`. It retains failed timings only with
+`--record-unqualified`. It measures forward waveform generation, not
+time-domain, derivative, Fisher, likelihood or memory workloads.
+
+**Legacy harness limitation:** `scripts/run_benchmark_campaign.py` first uses
+JAXWave as its reference, falls back to LAL with relative L2 at most `1e-3`
+and mismatch at most `1e-6`, and can fall back to self-consistency. Its pass
+status must not be labelled a strict LAL pass. Obtain explicit same-configuration
+LAL errors before reusing those timings as qualified results.
 
 ### 1.3 Precision and device qualification
 
-Begin comparisons with FP64 where supported. Evaluate FP32 separately and report
-its errors and acceptance criteria alongside its timings; an FP64 pass cannot
-qualify an FP32 result. Record real and complex dtypes, accelerator, compiler
-options and any mixed-precision operations. Where a device cannot execute the
-required precision, mark that configuration unavailable rather than silently
-changing precision or thresholds.
-
----
+Begin with FP64 where supported. Evaluate FP32 separately, reporting its errors
+and acceptance criteria alongside its timings. Record real and complex dtypes,
+accelerator and compiler settings, including mixed precision. An FP64 pass does
+not qualify FP32, and framework device support alone does not qualify a
+particular model/device combination.
 
 ## 2. Timing Boundaries & Instrumentation
 
 ### 2.1 Boundary Definitions
-To ensure meaningful comparisons between interpreted Python frontends, compiled kernels, and C libraries:
 
-1. **Calculation-Stage Timing**:
-   - Measures only the core mathematical generation of $h_+$ and $h_\times$ over the frequency grid.
-   - Excludes initialization, parameter parsing, disk I/O and JIT compilation. Record the actual boundary for each adapter and report cold-start/compilation costs separately.
-   - For GPU executions, the timing interval **strictly synchronizes** device queues at both boundaries:
-     - PyTorch: `torch.cuda.synchronize(device)` (or `torch.mps.synchronize()`)
-     - JAX: `res[0].block_until_ready(); res[1].block_until_ready()`
-2. **Warm-Up Runs**:
-   - To eliminate JIT compilation overhead, PyTorch kernel caching, and CUDA driver initialization, every configuration executes $W \ge 3$ unrecorded warm-up evaluations before timing starts.
-3. **Unprofiled Execution**:
-   - Official timing runs are executed **completely uninstrumented** (no PyTorch Profiler, cProfile, or memory profilers active). Profiling sessions are run separately and documented in isolated sections.
-4. **Inference Mode**:
-   - When measuring pure forward generation (`measure_backward=False`), execution runs inside `torch.inference_mode()`, preventing autograd graph accumulation and memory runaway.
+The published campaign times calls through public waveform adapters, from
+resident inputs to completed outputs. It excludes setup, input transfers and
+output conversion to NumPy. Necessary Python dispatch, parameter handling and
+batch assembly inside an adapter remain timed. For example, LAL's boundary
+includes its scalar-call loop, padded grid and slicing/stacking. Document these
+differences rather than describe the interval as kernel-only execution.
 
----
+For each configuration:
+
+1. Record at least three untimed warmups and at least 15 timed calls. Warmup
+   count alone does not prove that compilation or initialization has finished.
+2. Ensure previous device work has finished before starting the timer, then
+   wait for every measured output before stopping it. Use the appropriate
+   PyTorch device synchronization or JAX `block_until_ready`; apply this to
+   asynchronous CPU execution as well as GPU execution.
+3. Measure first-call cost separately and state whether caches were cleared.
+   A first call can include evaluation and cache loading; it is not automatically
+   a cold-start or isolated compilation measurement.
+4. Keep profiling sessions separate from latency measurements. Record inference
+   and gradient settings; the published Torch forward adapter uses
+   `torch.inference_mode()`.
+5. Record compilation settings and evidence that compiled graphs were captured.
+   Do not infer kernel fusion or zero Python overhead from a compiler flag.
+
+Dynamic shapes and bucketing can reduce repeated compilation, but a new shape,
+bucket, dtype or static configuration can still compile. A claim of no
+recompilation requires compiler counters or logs for the stated workload.
+
+### 2.2 Derivative, analysis and memory workloads
+
+Derivative comparisons must use the same objective, differentiated parameters,
+precision and derivative order, and validate derivatives independently of
+waveform values. Distinguish directly timed backward execution from a difference
+between separately measured forward and value-and-gradient times. Fisher and
+likelihood comparisons must also match PSDs, detector projections, integration
+rules and approximation settings. Synchronize their outputs before stopping
+the timer, and save their own receipts.
+
+Memory reports must identify the measured quantity, device, precision, batch,
+autograd mode and allocator settings. PyTorch's `max_memory_allocated` measures
+peak tensor allocations tracked by its allocator; it is not total device memory
+use. Report reserved memory separately and use consistent byte units: MiB/KiB
+for division by powers of 1024, MB/KB for powers of 1000. Call a batch the
+largest tested batch unless an actual capacity limit has been measured.
 
 ## 3. Workload Scaling & Convergence
 
-### 3.1 Geometric Batch Sweeps
-Gravitational-wave parameter estimation (PE) and matched-filter searches rely heavily on batched waveform generation. Performance must be characterized across geometric batch sizes:
-$$B \in \{1, 10, 100, 1000\}$$
+Use batches of 1, 10, 100 and 1,000 to distinguish scalar latency from batch
+throughput. Larger sweeps may characterize scaling, but saturation and the
+limiting hardware resource require measurements rather than inference from
+batch size alone.
 
-- **Batch 1**: Measures single-waveform latency (relevant for low-latency search alerts and scalar MCMC steps).
-- **Batch 10–100**: Represents parallel MCMC walker steps, particle swarm optimizations, and small matched-filter template batches.
-- **Batch 1000**: Measures larger-batch throughput. Saturation and the limiting hardware resource must be measured rather than inferred from batch size.
-
-### 3.2 Fixed Frequency Grids & Parameters
-Comparisons must be matched on identical frequency grids:
-- Canonical inspection grid: $f_{\text{low}} = 20\text{ Hz}$, $f_{\text{high}} = 512\text{ Hz}$, $\Delta f = 0.25\text{ Hz}$ ($N_{\text{freq}} = 1,969$).
-- Parameter definitions (masses, spins, distances, reference frequencies) are frozen across all backends.
-
----
+The published campaign uses 20–512 Hz inclusive at 0.25 Hz spacing: 1,969 bins.
+Record the exact grid and parameters for every campaign, including whether a
+batch repeats one binary or contains distinct binaries. Match physical inputs
+across packages and disclose parameter conversions excluded from timing.
+Legacy model defaults need not use this grid.
 
 ## 4. Host Conditions & Hardware Provenance
 
-Benchmark receipts should capture machine-readable hardware and environment provenance:
-1. **Host**: Hostname, OS platform, kernel version, Python runtime.
-2. **CPU**: Model name, physical core count, logical core count, frequency governor, thread limits (`OMP_NUM_THREADS=1`, `MKL_NUM_THREADS=1`).
-3. **GPU**: Device model, VRAM capacity, CUDA driver version, CUDA runtime version.
-4. **Software Revisions**: Git commit SHA, PyTorch version, JAX version, LALSimulation version, Ripple version.
+Record hostname, OS, Python and package versions, CPU model, process affinity,
+thread settings, GPU model/memory, driver/runtime versions and source/runner
+hashes. Describe clock and reservation controls, or their absence. A requested
+commit label is not proof that the working tree matches it; independently
+verify the source used. Report CPU and GPU comparisons separately and explain
+that cross-device ratios combine hardware and implementation differences.
 
----
+## 5. Statistical Reporting and Receipts
 
-## 5. Statistical Rigor & Cryptographic Sealing
+Retain every raw timing with its model, backend, device, dtype, batch,
+configuration and qualification result. Report the median complete-batch
+latency and a 95% percentile-bootstrap interval using 2,000 seeded resamples.
+The published campaign uses 25 timed calls. Its intervals describe variation
+within that run, not across machines or independent campaigns. Additional
+percentiles and IQR can be calculated from the saved samples.
 
-### 5.1 Metrics Reported
-For each configuration $( \text{model}, \text{backend}, \text{device}, \text{dtype}, B )$ across $N \ge 15$ iterations:
-- **Median Latency ($t_{50}$)**: Primary timing metric robust against system jitter.
-- **Bootstrap 95% Confidence Interval**: Calculated via 2,000 deterministic percentile-bootstrap resamples of the median.
-- **Percentiles**: $p_{05}, p_{16}, p_{50}, p_{84}, p_{95}$ and interquartile range (IQR).
-- **Throughput**: Waveforms per second:
-  $$\text{Throughput} = \frac{B}{t_{50}}$$
-- **Batch vs. amortized latency**: $t_{50}$ is the latency of the whole batch;
-  $t_{50}/B = 1/\text{Throughput}$ is the amortized time per waveform. Only
-  $B=1$ measures a single-waveform request directly.
+For batch size $B$ and median batch latency $t$ in seconds:
 
-### 5.2 Cryptographic Artifact Sealing (`SCHEMA_VERSION = 1`)
-The legacy campaign emits JSON receipts using schema
-`diffgw-benchmark-receipt/v1` with a SHA-256 digest over canonicalized content.
-This allows detection of content changes when the digest is checked against a
-trusted copy; it does not authenticate the experiment or certify its scientific
-qualification. Preserve raw timings, reference metrics and software provenance
-with published results.
+- Throughput is $B/t$ waveforms per second.
+- Amortized time per waveform is $t/B$ seconds.
+- Only $B=1$ directly measures a single-waveform request's latency.
 
----
+The committed package receipts use `diffgw-package-comparison/v1`; the legacy
+runner uses `diffgw-benchmark-receipt/v1`. A SHA-256 digest detects content
+changes when checked against a trusted copy. It does not authenticate the
+experiment or qualify its scientific result. Publish the raw data, source and
+runner provenance alongside any numerical claims.
 
-## 6. Publication-Grade Plotting Standards
+## 6. Presenting Comparisons
 
-Benchmark receipts feed directly into automated plotting tools (`scripts/plot_benchmark_results.py`), generating four standardized figures:
+Tables and plots must identify the model, workload, device, precision, batch,
+timing boundary and qualification status. Show failures and omissions explicitly.
+Ratios should compare matched batch workloads; multiplying a scalar baseline
+by a batch size is an extrapolation, not a measured batch baseline.
 
-1. **Figure 1: Throughput vs. Batch Size ($B$)**:
-   - Log-log plot showing throughput ($\text{wf/s}$) vs $B$ from $1$ to $1000$.
-   - Highlights GPU scaling curves vs CPU ceilings and LALSimulation baseline.
-2. **Figure 2: Per-Waveform Latency vs. Batch Size**:
-   - Shows any measured CPU-to-GPU amortization crossover for the chosen workload.
-3. **Figure 3: Speedup vs. LALSimulation**:
-   - For a batch time $t_{\text{backend}}$ and scalar LAL time $t_{\text{LAL}}$, report $B\,t_{\text{LAL}}/t_{\text{backend}}$. Label GPU-to-single-core-CPU ratios explicitly and compare qualified configurations.
-4. **Figure 4: Cross-Model Approximant Breakdown**:
-   - Multi-model bar chart comparing non-spinning (`TaylorF2`), aligned-spin (`IMRPhenomD`, `IMRPhenomXAS`), precessing (`IMRPhenomXP`), and higher-harmonic (`IMRPhenomXHM`) models.
-
-For a detailed walkthrough of the generated figures, hardware scaling on the RTX 5090, and physical interpretation of the results, see [**Performance Report**](performance.md).
+Do not derive end-to-end inference speedups from waveform-generation timings,
+or memory, derivative or physical-accuracy claims from a forward-only campaign.
+Legacy plotting scripts do not independently establish qualification. See the
+[performance summary](performance.md) and [complete package results](package_benchmarks.md)
+for the supported measurements.

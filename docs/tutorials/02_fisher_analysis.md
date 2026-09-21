@@ -1,6 +1,6 @@
 # Tutorial 2: Forward-Mode AD & Fisher Information Matrix Analysis
 
-This tutorial demonstrates how to compute exact parameter derivatives with forward-mode automatic differentiation, construct the noise-weighted **Fisher Information Matrix (FIM)**, and estimate $1\text{-}\sigma$ parameter measurement uncertainties under the Cramér-Rao lower bound.
+This tutorial demonstrates how to compute derivatives of the implemented waveform with forward-mode automatic differentiation, construct the noise-weighted **Fisher Information Matrix (FIM)**, and construct local uncertainty forecasts from its inverse.
 
 > [!TIP]
 > A complete, runnable Python script companion for this tutorial is located at [`examples/02_fisher_analysis.py`](../../examples/02_fisher_analysis.py).
@@ -13,15 +13,17 @@ For a gravitational-wave signal $h(f; \theta)$ parameterized by $\theta = \{\the
 
 $$\Gamma_{ij} = \left\langle \frac{\partial h}{\partial \theta_i} \;\middle|\; \frac{\partial h}{\partial \theta_j} \right\rangle = 4 \Re \int_{f_{\text{low}}}^{f_{\text{high}}} \frac{\frac{\partial h^*(f)}{\partial \theta_i} \frac{\partial h(f)}{\partial \theta_j}}{S_n(f)} df$$
 
-Under the Cramér-Rao inequality, the covariance matrix of any unbiased parameter estimator satisfies:
+Under the regularity assumptions of the Cramér-Rao inequality and for an invertible Fisher matrix, an unbiased estimator obeys the matrix bound
 
-$$\Sigma = \Gamma^{-1}, \quad \sigma(\theta_i) \ge \sqrt{\Sigma_{ii}}$$
+$$\operatorname{Cov}(\hat\theta) \succeq \Gamma^{-1}.$$
+
+Using $\Sigma_F=\Gamma^{-1}$ as a posterior covariance is a local Gaussian approximation, not an identity. Check conditioning, signal strength, parameter degeneracies, and priors before interpreting $\sqrt{(\Sigma_F)_{ii}}$ as uncertainty. See [Vallisneri (2008)](https://arxiv.org/abs/gr-qc/0703086).
 
 ---
 
 ## 2. Setting Up Detector Noise & Parameters
 
-We evaluate a binary black hole system with parameters $\theta = \{m_1, m_2, \chi_{1z}, \chi_{2z}\}$ against the Advanced LIGO Zero-Detuned High-Power PSD:
+We use the plus polarization, without a detector-network projection, for a binary black hole system with parameters $\theta = \{m_1, m_2, \chi_{1z}, \chi_{2z}\}$ against the Advanced LIGO Zero-Detuned High-Power PSD:
 
 ```python
 import torch
@@ -42,7 +44,7 @@ param_order = ["mass1", "mass2", "chi1", "chi2"]
 
 ## 3. PyTorch Forward-Mode AD (`fwAD`)
 
-`torchwave.inference.fisher_information_matrix` evaluates directional derivatives using PyTorch dual levels (`torch.autograd.forward_ad`), avoiding the memory overhead of reverse-mode tape recording:
+`torchwave.inference.fisher_information_matrix` evaluates directional derivatives using PyTorch dual levels (`torch.autograd.forward_ad`), differentiating one parameter direction at a time:
 
 ```python
 def waveform_model(p):
@@ -73,6 +75,7 @@ for i, name in enumerate(param_names):
 In JAX, directional derivatives are computed using `jax.jvp`:
 
 ```python
+import numpy as np
 import jax
 import jax.numpy as jnp
 jax.config.update("jax_enable_x64", True)
@@ -98,8 +101,10 @@ gamma_jax, _ = jax_fim(
 )
 
 # Compare PyTorch and JAX Fisher matrices
-rel_diff = torch.max(torch.abs(gamma - torch.from_numpy(np.asarray(gamma_jax))) / gamma).item()
-print(f"Max relative difference: {rel_diff:.4e}")  # ~ 1.15e-13
+gamma_np = gamma.detach().cpu().numpy()
+gamma_jax_np = np.asarray(gamma_jax)
+rel_diff = np.linalg.norm(gamma_np - gamma_jax_np) / np.linalg.norm(gamma_jax_np)
+print(f"Relative matrix norm difference: {rel_diff:.4e}")
 ```
 
-Both frameworks produce numerically indistinguishable Fisher matrices down to floating-point precision ($10^{-13}$).
+This comparison measures agreement for one model, grid, parameter set, and derivative calculation. It does not establish the accuracy of a posterior forecast or all waveform derivatives. The helper `covariance_matrix` floors small eigenvalues before inversion; uncertainty forecasts in regularized directions depend on that choice. The companion script checks a separate elementwise relative-error tolerance of `1e-10` for this example.

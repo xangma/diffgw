@@ -180,5 +180,5 @@ taskset -c 0 python scripts/compare_packages.py \
 `taskset` is Linux-specific; use an available core and record affinity on other
 hosts. LAL remains the CPU accuracy reference during the GPU campaign. See the
 [benchmark protocol](benchmarking_protocol.md) for the broader qualification
-requirements and the [historical performance report](performance.md) for the
-separate, earlier FP32/FP64 campaign.
+requirements and the [performance summary](performance.md) for interpretation
+and the scope of these measurements.

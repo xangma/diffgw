@@ -107,8 +107,8 @@ The numerical solver requires `f_lower >= 1 Hz` and a reference frequency
 no higher than the aligned carrier frequency at its amplitude peak. It uses
 a fixed intrinsic grid independent of waveform samples. Direct queries earlier
 than its integration interval (down to `min(1 Hz, f_ref/2)`) return NaN.
-Numerical evolution is slower and uses more differentiation memory than
-the analytical methods.
+The published waveform benchmark does not measure this numerical solver's
+timing or differentiation memory use.
 
 ## Arbitrary grids and derivatives
 
@@ -177,6 +177,6 @@ The reconstruction and calibration fits follow the authors' MIT-licensed
 Tests cover independent author-reference values, branch continuity,
 frequency inversion, gradients, batching, JIT, and Torch/JAX FP64 parity.
 Optional LAL binary comparisons have measured residuals documented in
-[Differences from LAL](comparison.md#model-specific-differences-from-lal). LALSuite is not a runtime
+[model comparison](comparison.md#model-specific-differences-from-lal). LALSuite is not a runtime
 dependency. See [citations](../CITATIONS.md) and
 [third-party notices](../THIRD_PARTY_NOTICES.md).

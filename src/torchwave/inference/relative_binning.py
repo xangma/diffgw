@@ -1,11 +1,11 @@
-"""Clean-room Accelerated Gravitational-Wave Likelihood via Relative Binning (Heterodyning).
+"""Approximate Gravitational-Wave Likelihood via Relative Binning (Heterodyning).
 
-Strict Clean-Room Implementation based exclusively on published literature:
-- Zackay, Dai, Venumhav (2018), "Relative Binning and Fast Likelihood Evaluation for Gravitational Wave Parameter Estimation",
+Method references:
+- Zackay, Dai, Venumadhav (2018), "Relative Binning and Fast Likelihood Evaluation for Gravitational Wave Parameter Estimation",
   arXiv:1806.08792
-- Cornish (2010), "Heterodyned Likelihood for Fast Gravitational Wave Parameter Estimation",
+- Cornish (2010), "Fast Fisher Matrices and Lazy Likelihoods",
   arXiv:1007.4820
-- Dai, Venumhav, Zackay (2018), "Parameter Estimation for Gravitational Wave Signals from Compact Binary Coalescence with Fast Likelihood Evaluation",
+- Dai, Venumadhav, Zackay (2018), "Parameter Estimation for GW170817 using Relative Binning",
   arXiv:1806.08793
 """
 
@@ -30,16 +30,16 @@ def compute_relative_binning_bins(
 
     For compact binary inspiral waveforms, the phase difference Delta Psi(f) is
     dominated by the leading 0PN chirp mass variation Delta Psi ~ Delta M_c * f^(-5/3).
-    Bins are placed uniformly in f^gamma to bound the phase variation across each bin:
-        Delta Psi(f_{k+1}) - Delta Psi(f_k) <= Delta phi_max.
+    Bins are placed uniformly in f^gamma as a spacing heuristic. This function
+    does not enforce a phase-error or likelihood-error bound.
 
     Args:
         f_min: Minimum frequency cutoff in Hz.
         f_max: Maximum frequency cutoff in Hz.
-        n_bins: Number of bins (typical M in [30, 80]).
+        n_bins: Number of bins; validate approximation error for the intended workload.
         gamma: Frequency power-law scaling exponent (default -5/3 for leading PN chirp).
         frequencies: Optional dense frequency tensor. If provided, bin edges are snapped
-            to exact grid values.
+            to nearby grid values, then adjusted if needed to remain increasing.
         device: PyTorch device.
         dtype: PyTorch float dtype (default torch.float64).
 
@@ -186,14 +186,16 @@ def compute_relative_binning_summary(
 
 
 class RelativeBinningLikelihood(nn.Module):
-    """Accelerated Gravitational-Wave Likelihood via Relative Binning (Zackay et al. 2018).
+    """Approximate Whittle log-likelihood using relative binning (Zackay et al. 2018).
 
-    Evaluates the Gaussian Whittle log-likelihood:
-        ln L(d | theta) = -1/2 * <d - h(theta) | d - h(theta)>
-                        = <d | h(theta)> - 1/2 <h(theta) | h(theta)> - 1/2 <d | d>
-    in O(M) operations (M ~ 30-80 bins) instead of O(N_f) (N_f ~ 10^4 - 10^6 points),
-    speeding up likelihood evaluations by 50-1000x while maintaining machine precision
-    and full autograd differentiability.
+    Precomputes summary coefficients from dense data and a fiducial waveform,
+    then evaluates candidate waveforms at M bin frequencies instead of N_f dense
+    frequencies. The approximation uses local linear waveform ratios.
+
+    Accuracy and evaluation cost depend on binning, the reference waveform,
+    signal properties, and parameter displacement. Validate likelihood and
+    gradient errors against dense evaluation over the intended parameter region.
+    Autodiff differentiates this approximation, not the dense likelihood.
     """
 
     def __init__(
@@ -244,7 +246,7 @@ class RelativeBinningLikelihood(nn.Module):
         self.register_buffer("bin_edges", edges, persistent=True)
         self.n_bins = len(edges) - 1
 
-        # Snap bin centers to exact frequencies in f_dense for machine precision matching
+        # Use the same dense-grid frequencies for fiducial and candidate evaluations
         raw_centers = 0.5 * (edges[:-1] + edges[1:])
         center_indices = torch.argmin(torch.abs(f_dense.unsqueeze(1) - raw_centers.unsqueeze(0)), dim=0)
         centers = f_dense[center_indices]

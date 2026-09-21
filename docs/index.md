@@ -5,44 +5,44 @@
   <a href="https://github.com/xangma/diffgw"><img src="https://img.shields.io/badge/github-diffgw-blue.svg" alt="GitHub"></a>
   <img src="https://img.shields.io/badge/python-3.10%20--%203.14-blue.svg" alt="Python">
   <img src="https://img.shields.io/badge/framework-PyTorch%20%7C%20JAX-orange.svg" alt="Frameworks">
-  <img src="https://img.shields.io/badge/precision-FP64%20Parity-success.svg" alt="Precision">
+  <img src="https://img.shields.io/badge/precision-FP64%20Support-success.svg" alt="Precision">
   <img src="https://img.shields.io/badge/license-MIT-green.svg" alt="License">
 </p>
 
-**DiffGW** is a high-performance, batched, autograd-differentiable gravitational-wave (GW) modeling and Bayesian parameter estimation engine. It provides two native, first-class frontends backed by a shared zero-dependency analytical physics core (`diffgw_core`):
+**DiffGW** provides batched gravitational-wave models and inference tools in two native frontends, sharing constants and coefficient tables through the framework-independent `diffgw_core` package:
 
-- **`torchwave`**: Built natively in PyTorch for CPU, NVIDIA CUDA, and Apple Silicon MPS, featuring batched tensor computation `(B,) -> (B, N)` and autograd automatic differentiation.
-- **`jaxwave`**: Built natively in JAX for CPU, NVIDIA CUDA GPU, and Google Cloud TPU, featuring XLA just-in-time compilation (`@jax.jit`), automatic vectorization (`jax.vmap`), and forward/reverse-mode automatic differentiation (`jax.grad`, `jax.jvp`).
+- **`torchwave`**: PyTorch tensor evaluation, batched parameters, and autograd on supported model paths.
+- **`jaxwave`**: JAX evaluation with JIT compilation, vectorization, and automatic differentiation on supported model paths.
 
-Both packages are distributed under the permissive **MIT License** and require only standard scientific Python dependencies. All waveform approximants, calibration surfaces, and ringdown eigensolvers are independently implemented from published peer-reviewed literature under strict clean-room principles.
+The original software is distributed under the **MIT License**, with PyTorch or JAX and scientific Python dependencies. Waveform models follow published literature, with calibration provenance recorded explicitly. IMRPhenomT also uses the authors' MIT-licensed calibration release and reconstruction formulas; see the [provenance ledger](provenance_ledger.md) and [third-party notices](../THIRD_PARTY_NOTICES.md).
 
 ---
 
 <div class="grid cards" markdown>
 
-- :zap: **Fused JIT Scalability**
+- :zap: **Batched Execution**
     ---
-    The reported peak is **14.4 million waveforms per second** for **FP32 TaylorF2**, batch **5,000**, on an **NVIDIA GeForce RTX 5090** using `torch.compile`. See the [performance report](performance.md) for grids, precision and qualification limits.
+    Tensor batches and optional compilation support repeated waveform evaluation. [Measured benchmarks](package_benchmarks.md) report CPU/CUDA timings with the model, grid, precision, batch size and numerical checks.
 
-- :dart: **Double-Precision Parity**
+- :dart: **Numerical Validation**
     ---
-    PyTorch (`torchwave`) and JAX (`jaxwave`) agree to double-precision numerical noise ($L_2 \le 10^{-11}$, mismatch $\le 10^{-14}$), continuously verified by 1,021 automated tests.
+    Reference comparisons and cross-framework tests cover declared cases with model-specific tolerances. [Validation evidence](validation.md) records their scope and outstanding differences.
 
-- :twisted_rightwards_arrows: **Co-Equal Frontends**
+- :twisted_rightwards_arrows: **Two Native Frontends**
     ---
-    Unified physics contracts guarantee exact functional and numerical parity between PyTorch and JAX across all 12 waveform model families.
+    PyTorch and JAX interfaces share physical constants and coefficient tables. Select either backend through the unified `diffgw` interface.
 
 - :triangular_ruler: **Native Autodiff**
     ---
-    Exact parameter gradients for forward-mode Fisher Information Matrix (FIM), Maximum A Posteriori (MAP) optimization, and No-U-Turn Sampler (NUTS) MCMC.
+    Supported model paths provide derivatives for Fisher forecasts, MAP optimization, and gradient-based sampling. Derivative checks and statistical assumptions are described in the [tutorials](tutorials/02_fisher_analysis.md).
 
 - :telescope: **Detector Networks**
     ---
-    Built-in antenna projections and noise PSDs for Ground interferometers (`H1`, `L1`, `V1`, `K1`, `ET`, `CE`), Space (`LISANetwork`), and Pulsar Timing Arrays (`PTANetwork`).
+    Ground-detector projections and analytical noise models, plus LISA and pulsar-timing response utilities.
 
-- :rocket: **Accelerated Likelihoods**
+- :rocket: **Likelihood Tools**
     ---
-    Standard Whittle Gaussian likelihood and $50\times$ faster heterodyned Relative Binning for ultra-fast parameter estimation.
+    Dense Whittle Gaussian likelihood and a relative-binning approximation that evaluates candidate waveforms at fewer frequencies. Accuracy and cost depend on the grid, binning and fiducial waveform; see [likelihood validation](validation.md#relative-binning).
 
 </div>
 
@@ -56,7 +56,7 @@ Both packages are distributed under the permissive **MIT License** and require o
     import torch
     import torchwave
 
-    # Generate equal-mass binary black hole waveform
+    # Generate a binary black hole waveform
     hp, hc = torchwave.get_fd_waveform(
         approximant="IMRPhenomD",
         mass1=30.0,
@@ -103,7 +103,7 @@ Both packages are distributed under the permissive **MIT License** and require o
     )
     print("JAX polarization shape:", hp.shape)  # (1969,)
 
-    # Compute exact gradient of plus-polarization power with respect to chirp mass
+    # Differentiate the implemented plus-polarization power with respect to chirp mass
     @jax.jit
     @jax.grad
     def mc_loss(mc):
@@ -166,17 +166,19 @@ Both packages are distributed under the permissive **MIT License** and require o
 
 ## Waveform Models & Framework Parity
 
-All models below are natively implemented in **both PyTorch (`torchwave`) and JAX (`jaxwave`)** with verified mathematical parity:
+The catalog lists implemented model families. Interface availability, agreement with an external reference, and cross-framework consistency are separate properties; consult [validation evidence](validation.md) and the [model comparison](comparison.md#model-specific-differences-from-lal) for the tested configurations and known differences.
 
 | Family | Approximant(s) | Harmonics / Multipoles | Physical Features & Regimes |
 | :--- | :--- | :---: | :--- |
-| **Post-Newtonian** | `TaylorF2`<br>`TaylorF2_HM`<br>`TaylorF2_Eccentric` | $(2,2)$<br>$(2,1), (3,3), (3,2), (4,4)$<br>$(2,2)$ | 3.5PN point-particle & spin phasing, BNS tidal deformability<br>Analytical 3PN higher-order multipoles<br>Moore et al. (2016) 3PN stationary-phase eccentric corrections |
+| **Post-Newtonian** | `TaylorF2`<br>`TaylorF2_HM`<br>`TaylorF2_Eccentric` | $(2,2)$<br>Eight modes through $\ell=4$<br>$(2,2)$ | 3.5PN point-particle & spin phasing, BNS tidal deformability<br>Leading-order higher-mode amplitudes<br>Moore et al. (2016) 3PN stationary-phase eccentric corrections |
 | **Aligned-Spin IMR** | `IMRPhenomD`<br>`IMRPhenomHM`<br>`IMRPhenomXAS`<br>`IMRPhenomXHM` | $(2,2)$<br>$(2,\pm 2), (2,\pm 1), (3,\pm 3), (3,\pm 2), (4,\pm 4)$<br>$(2,\pm 2)$<br>$(2,\pm 2), (2,\pm 1), (3,\pm 3), (3,\pm 2), (4,\pm 4)$ | Aligned-spin dominant mode, 5-collocation intermediate<br>Multi-harmonic PhenomD calibration with mode mixing<br>4th-generation aligned-spin dominant mode (Pratten et al. 2020)<br>4th-generation higher multipoles (García-Quirós et al. 2020) |
+| **Native Time-Domain IMR** | `IMRPhenomT`, `IMRPhenomTHM`, `IMRPhenomTP`, `IMRPhenomTPHM` | Up to $(5,\pm 5)$ | Aligned or precessing black hole binaries; see the [T-family guide](imrphenomt.md) |
 | **Precessing IMR** | `IMRPhenomP` / `Pv2`<br>`IMRPhenomXP`<br>`IMRPhenomXPHM` | $(2,\pm 2)$ twisted<br>$(2,\pm 2)$ twisted<br>Multipolar twisted | Generic 3D spins with NNLO PN precession angles & Wigner $d$-matrices<br>4th-gen precessing carrier with MSA analytical precession<br>Multipolar precession supporting MSA (`v223`), SpinTaylor (`v320`), and PNR (`v330`) |
 | **Tidal & Matter** | `IMRPhenomD_NRTidal`<br>`IMRPhenomD_NRTidalv2`<br>`IMRPhenomNSBH` | $(2,2)$<br>$(2,2)$<br>$(2,2)$ | Dietrich et al. (2017) rational Padé BNS tidal phasing (NRTidal v1)<br>Dietrich et al. (2019) NRTidal v2 with self-spin & Planck windowing<br>Neutron star–black hole model with tidal disruption & remnant torus |
-| **Effective-One-Body** | `SEOBNR_ROM` (v4/v5)<br>`SEOBNR_ODE`<br>`TEOBResumS` | $(2,2)$<br>$(2,2)$<br>$(2,2)$ | Fast B-spline reduced-order surrogate for aligned-spin SEOBNR<br>Time-domain Hamiltonian ODE integrator with continuous QNM matching<br>Damour-Nagar EOB dynamics with spin-orbit coupling and tidal potentials |
+| **Effective-One-Body** | `SEOBNR_ROM` / `SEOBNRv4_ROM`<br>`SEOBNR_ODE`<br>`TEOBResumS` | $(2,2)$<br>$(2,2)$<br>$(2,2)$ | External SEOBNRv4 ROM data with a native evaluation wrapper<br>Time-domain Hamiltonian ODE integrator with continuous QNM matching<br>Damour-Nagar EOB dynamics with spin-orbit coupling and tidal potentials |
 | **Ringdown & Bursts** | `KerrRingdown`<br>`SineGaussian`<br>`MemoryWaveform` | $(2,2,0), (l,m,n)$<br>Burst packet<br>$(2,0)$ | Damped sinusoids from Kerr quasinormal modes (time & frequency domain)<br>Standard unmodeled sine-Gaussian burst wavelet<br>Non-linear Christodoulou gravitational-wave memory effect $h_{20}^{\text{mem}}(t)$ |
 | **Specialized Models** | `ContinuousWave`<br>`EMRIKludge`<br>`ParameterizedPostEinstein`<br>`SpinPrecessionODE` | Monochromatic<br>Multi-harmonic<br>Modified phasing<br>Orbit-averaged | Continuous waves from triaxial rotating neutron stars with Doppler modulation<br>Extreme mass ratio inspirals (LISA) with Kerr geodesic orbital frequencies<br>Model-independent testing of General Relativity ($\beta_{\rm ppE}, b_{\rm ppE}$)<br>Orbit-averaged spin precession ODE integrator |
+| **Time-Domain Tools** | `get_td_waveform`<br>`HybridMECO` | Supported FD models<br>Diagnostic | FFT conditioning and time-domain waveform generation<br>Minimum Energy Circular Orbit hybrid velocity & frequency root solver |
 
 ---
 
@@ -186,7 +188,7 @@ All models below are natively implemented in **both PyTorch (`torchwave`) and JA
 
 - :material-table: **[Package Comparison](comparison.md)**
     ---
-    Compare DiffGW, LALSimulation, Ripple, PhenomXPy and GWFAST by workflow, model coverage, derivatives and execution.
+    How DiffGW's tensor backends, model coverage, derivatives and measured performance compare with related packages.
 
 - :material-book-open-page-variant: **[User Guide](usage.md)**
     ---
@@ -194,7 +196,7 @@ All models below are natively implemented in **both PyTorch (`torchwave`) and JA
 
 - :material-speedometer: **[Performance & Benchmarks](performance.md)**
     ---
-    Complete benchmark report on NVIDIA RTX 5090 across PyTorch eager, Inductor (`torch.compile`), JAX CUDA, and LAL.
+    Recorded FP64 waveform benchmarks on CPU and RTX 5090, with timing boundaries, numerical checks and reproduction commands.
 
 - :material-school: **[Step-by-Step Tutorials](tutorials/01_quickstart_and_parity.md)**
     ---
@@ -206,6 +208,6 @@ All models below are natively implemented in **both PyTorch (`torchwave`) and JA
 
 - :material-certificate: **[Provenance & Citations](provenance_ledger.md)**
     ---
-    Complete mathematical provenance ledger and primary literature citations ([`CITATIONS.md`](../CITATIONS.md)).
+    Mathematical sources, calibration provenance and primary literature citations ([`CITATIONS.md`](../CITATIONS.md)).
 
 </div>

@@ -144,71 +144,48 @@ variants were not timed in that campaign.
 
 ### Native IMRPhenomT family
 
-The residuals below are historical time-domain observations, separate from
-the new frequency-domain timing campaign. The current regression tests retain
-one pinned author-reference fixture and five optional LAL cases, with LAL
-acceptance bounds of relative L2 below `1e-3` and mismatch below `1e-6`.
-
 `IMRPhenomT` evaluates the aligned-spin dominant `(2,±2)` time-domain model
 from Estellés et al. (2021), using the authors' MIT-licensed phenomxpy
 calibration and reconstruction release pinned in the provenance ledger.
-The time-domain sampling wrapper follows diffgw's existing returned-time
-convention: the amplitude peak is at `tc`, with a shared fixed grid for
-batches and explicit `duration`. It does not promise LAL's automatically
+The family also provides `THM`, `TP` and `TPHM`, with NNLO, MSA and numerical
+precession for the latter two. All four have native time-domain evaluation;
+there is no direct frequency-domain implementation.
+
+The sampling wrapper places the amplitude peak at `tc`, with a shared fixed
+grid for batches and explicit `duration`. It does not promise LAL's automatically
 selected epoch or array length. `phic` fixes orbital phase at `f_ref`.
+Optional black-box LAL comparisons and Torch/JAX tests accompany the
+implementation; LAL is not a runtime dependency.
 
-The family also provides `THM`, `TP` and `TPHM`, with NNLO precession for
-the latter two; there is no direct frequency-domain implementation.
-Optional black-box LAL checks and native
-Torch/JAX parity tests accompany the implementation; LAL is not a runtime
-dependency.
+The [pinned author-reference test](https://github.com/xangma/diffgw/blob/5226141/tests/test_phenomt_reference.py)
+checks both frontends for masses `(60, 6)` and aligned spins `(0.9, 0.1)` at
+five dimensionless times. Frequency and amplitude use `rtol=1e-11` and
+`atol=1e-13`; phase, after subtracting its value at time zero, uses
+`rtol=1e-11` and `atol=1e-10`. This is an implementation check using shared
+author calibration, rather than independent physical validation.
 
-Validation against the pinned author implementation reproduces dimensionless
-frequency and amplitude within `2e-14` absolute error across five checked
-mass/spin configurations, including mass ratio 10 and primary spin 0.9.
-Phase agrees up to an arbitrary integration constant at approximately
-`1e-11` radians. A pinned high-spin reference test requires no external oracle.
+The optional LAL regression tests define the following acceptance criteria:
 
-Against the installed LALSimulation binary (version 6.2.1), five cases at
-2048 Hz sampling, 20 Hz reference frequency and inclination 0.5 give direct
-complex-strain relative L2 errors from `4.6e-6` to `5.7e-4`. The largest
-residual occurs for masses `(60, 6)` and spins `(0.9, 0.1)`; its normalized
-mismatch is `7.6e-8`. Here mismatch uses an unweighted complex inner product,
-maximizes constant phase, and applies no time shift. These results establish
-close agreement for the tested cases, not bitwise equivalence to LAL.
-The optional regression cases are in the
-[IMRPhenomT reference tests](https://github.com/xangma/diffgw/blob/5226141/tests/test_phenomt_reference.py).
+| Model | Cases and sampling | Direct complex relative L2 | Mismatch |
+| --- | --- | ---: | ---: |
+| T | Five mass/spin configurations; 2048 Hz | `< 1e-3` | `< 1e-6` |
+| THM | Three configurations; 2048 Hz; five mode pairs | `< 1e-3` | `< 1e-6` |
+| TP / TPHM, NNLO | Three configurations; 2048 Hz, except the mass-ratio-10 case at 32768 Hz | `< 1e-2` | `< 1e-4` |
 
-For THM, three additional cases with component masses `(40, 15)`, `(30, 25)`,
-and `(60, 6)` give direct complex-strain relative L2 errors of `1.8e-5`,
-`7.1e-5`, and `1.8e-4`, respectively. The largest mismatch is `9.6e-9`.
-These checks use the complete LAL time grid at 2048 Hz and all five supported
-mode pairs, with no time, phase, or amplitude adjustment for the L2 metric.
-The mass, spin, and viewing-angle configurations are retained in
-`tests/test_phenomt_family_lal.py`.
+These are **test thresholds**, not measured worst-case errors over the model's
+domain. Each comparison uses LAL's returned time grid. Relative L2 applies no
+time, phase or amplitude adjustment; mismatch uses an unweighted complex inner
+product maximized over constant phase, without a time shift. Exact inputs are
+retained in the T reference test and
+[family reference tests](https://github.com/xangma/diffgw/blob/main/tests/test_phenomt_family_lal.py).
+The NNLO tests select `PhenomXPrecVersion=10210` and `PhenomXPFinalSpinMod=0`,
+which differ from LAL's default numerical precession.
 
-For TP/TPHM, the oracle uses `PhenomXPrecVersion=10210` and
-`PhenomXPFinalSpinMod=0` in LALSimulation 6.2.1. Those options differ from
-LAL's default numerical precession. With the same cases, the direct relative
-L2 errors are:
-
-| Masses (solar masses) | Sample rate (Hz) | TP | TPHM |
-| --- | ---: | ---: | ---: |
-| 40, 15 | 2048 | 0.0028 | 0.0028 |
-| 30, 25 (aligned) | 2048 | 0.000071 | 0.000071 |
-| 60, 6 | 32768 | 0.0068 | 0.0087 |
-
-The largest mismatch in this table is `3.6e-5`. These are measured cases,
-not an accuracy guarantee over the model's parameter space. In particular,
-the rapidly precessing `(60, 6)` case at **2048 Hz** has relative L2 errors
-of **0.111 (TP)** and **0.142 (TPHM)**, with mismatches `0.0060` and `0.0099`.
-Binary angle diagnostics show that LAL starts the post-merger continuation
-two samples before its first nonnegative time sample. This implementation
-anchors it at physical time `tc`, so evaluating an existing time on a denser
-grid cannot change its waveform. The published NNLO orbital-angular-momentum
-series also retains a pi-squared term absent from LAL's 102 beta prescription.
-Both differences remain explicit; the implementation does not apply a
-sample-dependent shift or fit a correction to the binary output.
+NNLO reference agreement is sensitive to sampling, particularly for the rapidly
+precessing mass-ratio-10 case. DiffGW anchors ringdown continuation at physical
+time `tc`, independently of the requested sampling grid, and uses the published
+orbital-angular-momentum series. Grid-invariance tests and the precession
+conventions are documented in the [T-family guide](imrphenomt.md).
 
 For the additional precession methods, the same `(40, 15)` generic-spin
 case at 2048 Hz gives the following direct complex-strain errors against
@@ -265,8 +242,10 @@ provides NR surrogate models with their own calibration domains and data assets.
 ## Sources and versions
 
 The capability comparison was checked on **21 September 2026** against upstream
-documentation and DiffGW baseline **`5226141`**, which also underlies the measured
-benchmarks. The exact benchmark environment is recorded in the receipts.
+documentation. DiffGW capabilities describe the current implementation; the
+waveform timing campaign uses baseline **`5226141`**. Model-specific validation
+records above are separate from that campaign. The exact benchmark environment
+is recorded in its receipts.
 
 | Distribution | Published version checked | Release date | Code licence reported upstream |
 | --- | --- | --- | --- |

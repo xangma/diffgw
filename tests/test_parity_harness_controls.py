@@ -195,20 +195,47 @@ def test_manifest_consistency_and_drift_detection():
 def test_manifest_validation_matches_referenced_artifacts():
     """Keep validation coverage and metrics tied to their declared strict artifacts."""
     import json
+    import os
+    import re
+    import subprocess
     from pathlib import Path
 
     root = Path(__file__).parents[1]
     manifest = json.loads((root / "docs/model_manifest.json").read_text())
-    references = manifest.get("validation_artifacts", {})
-    source_record_path = root / references.get("source_record", "")
-    if not references or not source_record_path.exists():
-        pytest.skip("Historical review artifacts archived on archive/clean-room-reviews branch")
-    source_record = json.loads(source_record_path.read_text())
+    references = manifest["validation_artifacts"]
+
+    def read_artifact(reference):
+        if "://" not in reference:
+            return json.loads((root / reference).read_text())
+        match = re.fullmatch(
+            r"https://github\.com/xangma/diffgw/blob/([0-9a-f]{40})/([^?#]+)",
+            reference,
+        )
+        assert match, f"Artifact URL must pin a same-repository commit: {reference}"
+        commit, path = match.groups()
+        git_env = {**os.environ, "GIT_NO_LAZY_FETCH": "1"}
+        available = subprocess.run(
+            ["git", "cat-file", "-e", f"{commit}^{{commit}}"],
+            cwd=root, env=git_env, capture_output=True, text=True,
+        )
+        if available.returncode:
+            pytest.skip(f"Historical artifact commit {commit} is unavailable locally")
+        result = subprocess.run(
+            ["git", "show", f"{commit}:{path}"],
+            cwd=root, env=git_env, capture_output=True, text=True, check=True,
+        )
+        return json.loads(result.stdout)
+
+    source_record = read_artifact(references["source_record"])
     assert source_record["changed_inputs"] == []
     assert source_record["working_tree_changes"] == []
 
     for scope in ("catalog", "holdout"):
-        artifact = json.loads((root / references[scope]).read_text())
+        artifact = read_artifact(references[scope])
+        assert artifact["scope"] == scope
+        assert artifact["strict"] is True
+        assert artifact["catalog_passed"] is artifact["suite_passed"]
+        assert manifest["verification"][f"{scope}_passed"] is artifact["suite_passed"]
         results = artifact["results"]
         assert artifact["num_cases"] == len(results)
         assert artifact["num_passed"] == sum(
@@ -220,6 +247,9 @@ def test_manifest_validation_matches_referenced_artifacts():
 
         for model_name, model in manifest["models"].items():
             model_results = [result for result in results if result["torch_name"] == model_name]
+            if "validation" not in model:
+                assert not model_results, f"Missing validation metadata for {model_name}"
+                continue
             validation = model["validation"][scope]
             assert validation["case_ids"] == [result["case_id"] for result in model_results]
             assert validation["cases_total"] == len(model_results)

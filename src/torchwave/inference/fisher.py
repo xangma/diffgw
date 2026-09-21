@@ -197,7 +197,8 @@ def fisher_information_matrix(
         parameter_order: Optional explicit order of parameter keys
 
     Returns:
-        (fisher_matrix, param_names): (P, P) symmetric positive definite Fisher matrix and list of parameter names.
+        (fisher_matrix, param_names): (P, P) symmetric Fisher matrix and list of parameter names.
+        Degenerate parameters can make the matrix singular.
     """
     if parameter_order is None:
         param_names = list(parameters_dict.keys())
@@ -318,7 +319,11 @@ def covariance_matrix(
     fisher_matrix: torch.Tensor,
     eps: float = 1.0e-12,
 ) -> torch.Tensor:
-    """Invert Fisher information matrix with eigenvalue regularization to obtain covariance matrix Sigma = Gamma^(-1).
+    """Compute a regularized inverse Fisher matrix for local uncertainty forecasts.
+
+    Interpreting this as a posterior covariance requires a suitable local Gaussian
+    approximation. Eigenvalue flooring changes the inverse in ill-conditioned
+    directions; inspect conditioning and regularization before interpretation.
 
     Literature: Vallisneri (2008) Phys. Rev. D 77, 042001.
 
@@ -327,7 +332,7 @@ def covariance_matrix(
         eps: Minimum relative eigenvalue floor (regularization threshold)
 
     Returns:
-        (P, P) regularized symmetric covariance matrix Sigma.
+        (P, P) symmetric regularized inverse Fisher matrix.
     """
     gamma_sym = 0.5 * (fisher_matrix + fisher_matrix.transpose(-2, -1))
     eigenvalues, eigenvectors = torch.linalg.eigh(gamma_sym)
@@ -392,7 +397,11 @@ def optimize_map(
     f_low: Optional[float] = None,
     f_high: Optional[float] = None,
 ) -> Tuple[Dict[str, float], List[float]]:
-    """Maximum A Posteriori (MAP) parameter optimizer driven directly by gradient of log-likelihood.
+    """Optimize the log likelihood with Adam and optional box bounds.
+
+    This objective is equivalent to MAP for a uniform prior within the bounds.
+    No general prior is evaluated. Check convergence independently of the
+    requested iteration count.
 
     Solves: argmax_theta ln L(theta)
     where: ln L(theta) = <d | h(theta)> - 0.5 * <h(theta) | h(theta)>

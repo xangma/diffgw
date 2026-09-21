@@ -1,6 +1,6 @@
 # Contributing to diffgw (torchwave & jaxwave)
 
-Thank you for your interest in contributing to **diffgw**! diffgw provides native, autograd-differentiable gravitational-wave modeling in both PyTorch (`torchwave`) and JAX (`jaxwave`), powered by a zero-dependency analytical core (`diffgw_core`).
+Thank you for your interest in contributing to **diffgw**! diffgw provides native, autograd-differentiable gravitational-wave modeling in both PyTorch (`torchwave`) and JAX (`jaxwave`), powered by a framework-independent analytical core (`diffgw_core`).
 
 We welcome contributions ranging from new waveform approximants and detector networks to bug fixes, performance optimizations, and documentation improvements.
 
@@ -26,11 +26,11 @@ diffgw is released under the permissive **MIT License**. To ensure diffgw remain
 1. **Literature-First Derivations**:
    - All physics models, waveform phasing expressions, ringdown fits, and coordinate transformations should be derived directly from primary **peer-reviewed literature**, public technical reports, or independent first-principles derivations.
 2. **Original Implementations**:
-   - diffgw is an independent, native Python/PyTorch/JAX framework. All contributions must be original code rather than adapted or copied from copyleft/GPL codebases.
+   - diffgw is an independent, native Python/PyTorch/JAX framework. Contributions must not copy or adapt copyleft/GPL implementation code. Permissively licensed adaptations require explicit source, version, license, and attribution records.
    - Standard reference tools are welcome as external benchmarks and validation oracles for unit test tolerances.
 3. **Citation & Provenance Documentation**:
    - Every new approximant or calibration must cite its foundational paper in [`CITATIONS.md`](CITATIONS.md).
-   - Document derivations, coefficient sources, and sign conventions in [`docs/provenance_ledger.md`](docs/provenance_ledger.md) and [`docs/differences_from_lal.md`](docs/differences_from_lal.md).
+   - Document derivations, coefficient sources, and sign conventions in [`docs/provenance_ledger.md`](docs/provenance_ledger.md) and [`docs/comparison.md`](docs/comparison.md#model-specific-differences-from-lal).
 4. **Third-Party Data & Calibration Assets**:
    - External calibration datasets (such as Numerical Relativity waveforms or public surrogate meshes) must have documented license terms compatible with distribution or external download.
    - Record all dataset attributions in [`THIRD_PARTY_NOTICES.md`](THIRD_PARTY_NOTICES.md).
@@ -39,13 +39,13 @@ diffgw is released under the permissive **MIT License**. To ensure diffgw remain
 
 ## 3. Cross-Framework FP64 Parity Requirement
 
-A defining feature of diffgw is complete cross-framework parity between PyTorch (`torchwave`) and JAX (`jaxwave`).
+Contributions should maintain numerical consistency between PyTorch (`torchwave`) and JAX (`jaxwave`). The standards below are development targets; current coverage and model-specific exceptions are recorded in the [validation guide](docs/validation.md).
 
 ### Parity Standards
 - **Co-Equal Implementations**: Any new waveform approximant, detector projection, or inference tool must be implemented in **both** `torchwave` (PyTorch) and `jaxwave` (JAX), sharing common analytical physics constants and coefficient tables via `diffgw_core`.
-- **FP64 Precision**: All waveform computations enforce double precision (`torch.float64` in PyTorch, `jax.config.update("jax_enable_x64", True)` in JAX).
+- **FP64 Precision**: Reference checks must use double precision (`torch.float64` in PyTorch, `jax.config.update("jax_enable_x64", True)` in JAX).
 - **Mathematical Agreement**:
-  - Waveform evaluations across both frontends must match to double-precision numerical tolerance:
+  - Target the following cross-frontend tolerances, documenting any justified model-specific exceptions and metric definitions:
     $$\text{Relative } L_2 \text{ error} \le 10^{-11}, \quad \text{Mismatch } 1 - \mathcal{O}(h_{\text{torch}}, h_{\text{jax}}) \le 10^{-14}$$
   - Parity tests must cover polarizations ($h_+$, $h_\times$), individual multipoles $(\ell, m)$, phase derivatives, and edge parameter regimes (e.g., extreme mass ratios, near-extremal spins).
 - **Mandatory Parity Tests**: Add a dedicated parity test under `tests/parity/test_<model>_parity.py` for each new model or modification.
@@ -133,3 +133,10 @@ Before submitting a pull request:
 3. Ensure formatting conforms to project standards (`ruff format` and `ruff check`).
 4. Update [`CITATIONS.md`](CITATIONS.md) and [`docs/provenance_ledger.md`](docs/provenance_ledger.md) with relevant academic references and mathematical derivations.
 5. Provide a clear PR description explaining the scientific motivation, mathematical derivation, and verification benchmarks.
+
+
+## 6. Documentation Evidence
+
+Quantitative claims must link to committed measurements or a reproducible test and state their scope. A test threshold is an acceptance criterion, not a measured outcome. For each performance comparison, identify the baseline, source versions, model/options, parameter set, frequency/time grid, dtype, device, batch size, timing boundary, synchronization, repetitions, and uncertainty. Keep failed numerical checks visible and separate diagnostic timings from qualified results.
+
+Distinguish interface availability, frontend consistency, external-reference agreement, derivative checks, and independent physical validation. Numerical tolerances are not exact equality or parameter-domain guarantees. A method paper supports the algorithm description; its performance numbers do not establish DiffGW's performance. Use [validation evidence](docs/validation.md) and the [benchmark protocol](docs/benchmarking_protocol.md) when writing or updating claims.
