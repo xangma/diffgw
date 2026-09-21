@@ -1,0 +1,76 @@
+{
+  "generated_utc": "2026-09-21T19:56:42.793686+00:00",
+  "reproduction": "python scripts/validate_phenomt_precession.py --output receipt.json",
+  "versions": {
+    "python": "3.13.7",
+    "torch": "2.14.0",
+    "numpy": "2.5.3",
+    "lalsimulation": "6.2.1"
+  },
+  "parameters": {
+    "mass1": 40.0,
+    "mass2": 15.0,
+    "spin1": [
+      0.2,
+      0.1,
+      0.3
+    ],
+    "spin2": [
+      0.0,
+      0.1,
+      -0.2
+    ],
+    "distance_mpc": 100.0,
+    "inclination": 0.8,
+    "phic": 0.3,
+    "f_lower_hz": 20.0,
+    "f_ref_hz": 20.0,
+    "sample_rate_hz": 2048
+  },
+  "metrics": {
+    "relative_l2": "norm(actual-reference)/norm(reference); no alignment",
+    "mismatch": "1-abs(vdot(actual,reference))/(norm(actual)*norm(reference)); unweighted, constant-phase maximization only, no time shift"
+  },
+  "results": [
+    {
+      "approximant": "IMRPhenomTP",
+      "method": "msa",
+      "precession_version": 22310,
+      "final_spin_mod": 3,
+      "samples": 2935,
+      "epoch_seconds": -1.297896538,
+      "relative_l2": 0.003788480630643731,
+      "mismatch": 7.176034973355172e-06
+    },
+    {
+      "approximant": "IMRPhenomTPHM",
+      "method": "msa",
+      "precession_version": 22310,
+      "final_spin_mod": 3,
+      "samples": 2935,
+      "epoch_seconds": -1.297896538,
+      "relative_l2": 0.003882715398057058,
+      "mismatch": 7.5371571551796634e-06
+    },
+    {
+      "approximant": "IMRPhenomTP",
+      "method": "numerical",
+      "precession_version": 300,
+      "final_spin_mod": 4,
+      "samples": 2935,
+      "epoch_seconds": -1.297896538,
+      "relative_l2": 0.02727938687505817,
+      "mismatch": 0.0003642228742606335
+    },
+    {
+      "approximant": "IMRPhenomTPHM",
+      "method": "numerical",
+      "precession_version": 300,
+      "final_spin_mod": 4,
+      "samples": 2935,
+      "epoch_seconds": -1.297896538,
+      "relative_l2": 0.027624253531308544,
+      "mismatch": 0.0003746106076552014
+    }
+  ]
+}

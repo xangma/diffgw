@@ -1,4 +1,4 @@
-"""Native time-domain IMRPhenomTP (NNLO precession) in Torch."""
+"""Native time-domain IMRPhenomTP in Torch."""
 
 from __future__ import annotations
 
@@ -7,7 +7,9 @@ import torch
 
 from torchwave.constants import MSUN_SEC
 from .imrphenomt import IMRPhenomT
-from ._phenomt_precession import _canonicalize_components, nnlo_final_spin, nnlo_geometry, project_modes
+from ._phenomt_precession import _canonicalize_components, project_modes
+from ._phenomt_dispatch import prepare_precession, precession_geometry, carrier_frequency
+from diffgw_core.phenomt_options import resolve_precession
 
 
 def _mode_key(key):
@@ -23,10 +25,9 @@ def _mode_key(key):
 class IMRPhenomTP(IMRPhenomT):
     """Precessing dominant-harmonic PhenomT.
 
-    ``precession_method='nnlo'`` is the supported native prescription.  The
-    implementation uses the published NNLO Euler-angle series and the
-    differentiable finite Wigner-d rotation; numerical and MSA ODE variants
-    are intentionally rejected until independently audited.
+    Select the Euler-angle prescription with ``precession_method`` and its
+    continuation with ``precession_version``. NNLO remains the default.
+    Rotations and mode projection use native differentiable tensors.
     """
 
     def time_domain(
@@ -48,9 +49,10 @@ class IMRPhenomTP(IMRPhenomT):
         precession_method="nnlo",
         modes=None,
         final_spin=None,
+        precession_version=None,
+        _precession_state=None,
     ):
-        if str(precession_method).lower() != "nnlo":
-            raise ValueError("IMRPhenomTP supports only precession_method='nnlo'")
+        method, version = resolve_precession(precession_method, precession_version)
         if modes is not None:
             requested = tuple(_mode_key(mode) for mode in modes)
             if not requested or any((l, abs(m)) != (2, 2) for l, m in requested):
@@ -72,6 +74,9 @@ class IMRPhenomTP(IMRPhenomT):
             spin2x,
             spin2y,
             final_spin=final_spin,
+            precession_method=method,
+            precession_version=version,
+            _precession_state=_precession_state,
         )
 
     # IMRPhenomT assigns ``forward`` at class definition time, so bind the
@@ -97,7 +102,11 @@ def _project_t(
     spin2y,
     modes=((2, 2),),
     final_spin=None,
+    precession_method="nnlo",
+    precession_version=10210,
+    _precession_state=None,
 ):
+    method, version = resolve_precession(precession_method, precession_version)
     t = torch.as_tensor(times, dtype=torch.float64)
     vals = [
         torch.as_tensor(x, dtype=t.dtype, device=t.device)
@@ -110,8 +119,10 @@ def _project_t(
         vals.append(torch.as_tensor(final_spin, dtype=t.dtype, device=t.device))
         m1, m2, z1, z2, dist, inc, pc, tcenter, fr, x1, y1, x2, y2, fs = torch.broadcast_tensors(*vals)
     m1, m2, x1, y1, z1, x2, y2, z2 = _canonicalize_components(m1, m2, x1, y1, z1, x2, y2, z2)
-    if fs is None:
-        fs = nnlo_final_spin(m1, m2, x1, y1, z1, x2, y2, z2)
+    fs, prepared = prepare_precession(
+        method, m1, m2, x1, y1, z1, x2, y2, z2, fr,
+        final_spin=fs, prepared=_precession_state,
+    )
     # Construct the coprecessing 22 value from the face-on aligned carrier.
     hp0, hc0 = IMRPhenomT.time_domain(
         model,
@@ -142,7 +153,7 @@ def _project_t(
     # continuation.  Taking it from the coefficient state keeps that value
     # independent of the requested time grid.
     fpeak = state_angle[13] / (2.0 * math.pi * (m1 + m2) * MSUN_SEC)
-    a, b, g, thjn, zeta = nnlo_geometry(
+    a, b, g, thjn, zeta = precession_geometry(
         shifted,
         freq,
         m1,
@@ -158,6 +169,10 @@ def _project_t(
         fr,
         frequency_peak=fpeak,
         final_spin=fs,
+        precession_method=method,
+        precession_version=version,
+        prepared=prepared,
+        frequency_at_time=lambda query: carrier_frequency(model, state_angle, m1, m2, query),
     )
     hp_rot, hc_rot = project_modes({(2, 2): h22}, a, b, g, thjn[..., None], zeta[..., None])
     # In the aligned limit the NNLO Euler gauge is singular, while the

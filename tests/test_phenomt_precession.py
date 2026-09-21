@@ -44,9 +44,9 @@ def test_nonaligned_tp_is_finite_and_responds_to_inplane_spin():
     assert torch.linalg.vector_norm(precessing - aligned) > 1e-8 * torch.linalg.vector_norm(aligned)
 
 
-def test_tp_rejects_unimplemented_precession_prescriptions():
-    with pytest.raises(ValueError, match="precession_method='nnlo'"):
-        IMRPhenomTP().time_domain(torch.tensor([-0.1], dtype=torch.float64), 30.0, 20.0, precession_method="numerical")
+def test_tp_rejects_unknown_precession_prescriptions():
+    with pytest.raises(ValueError, match="precession_method"):
+        IMRPhenomTP().time_domain(torch.tensor([-0.1], dtype=torch.float64), 30.0, 20.0, precession_method="unknown")
 
 
 def test_tp_intrinsic_gradients_are_finite():

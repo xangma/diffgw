@@ -12,6 +12,7 @@ import jax.numpy as jnp
 
 from diffgw_core.constants import MSUN_SEC
 from .imrphenom_xas import XASParameterFits
+from ._phenomt_angle_options import apply_angle_option, canonical_precession_version
 
 
 def _safe_norm(x, y):
@@ -114,7 +115,10 @@ def _raw_angles(v, eta, delta, m1, chi_l, chi_p):
     basis = jnp.stack((v**-3, v**-2, v**-1, v, jnp.log(v**3)), axis=-1)
     if v.ndim == eta.ndim:
         return jnp.sum(aa * basis, axis=-1), jnp.sum(ee * basis, axis=-1)
-    return jnp.sum(aa[..., None, :] * basis, axis=-1), jnp.sum(ee[..., None, :] * basis, axis=-1)
+    extra = v.ndim - eta.ndim
+    aa = aa.reshape(aa.shape[:-1] + (1,) * extra + (aa.shape[-1],))
+    ee = ee.reshape(ee.shape[:-1] + (1,) * extra + (ee.shape[-1],))
+    return jnp.sum(aa * basis, axis=-1), jnp.sum(ee * basis, axis=-1)
 
 
 def _orbital_angular_momentum(m1, m2, f, s1z, s2z):
@@ -198,8 +202,15 @@ def nnlo_geometry(
     f_ref,
     frequency_peak=None,
     final_spin=None,
+    precession_version=10210,
+    frequency_at_time=None,
+    meco_time=None,
+    reference_time=None,
 ):
     """Return ``alpha, beta, gamma, theta_jn, zeta`` on a time grid."""
+    version = canonical_precession_version("nnlo", precession_version)
+    if version in (10211, 10221) and (frequency_at_time is None or reference_time is None):
+        raise ValueError("NNLO numerical angle options require frequency_at_time and reference_time")
     mass1, mass2, spin1x, spin1y, spin1z, spin2x, spin2y, spin2z = _canonicalize_components(
         mass1, mass2, spin1x, spin1y, spin1z, spin2x, spin2y, spin2z
     )
@@ -212,7 +223,6 @@ def nnlo_geometry(
     fp = jnp.maximum(frequency_peak, jnp.finfo(frequency.dtype).tiny)
     v_peak = (math.pi * ms * fp) ** (1.0 / 3.0)
     v = (math.pi * ms[..., None] * f) ** (1.0 / 3.0)
-    v = jnp.where(times >= 0, v_peak[..., None], v)
     v0 = (math.pi * ms * fr) ** (1.0 / 3.0)
     chip = _effective_chip(mass1, mass2, spin1x, spin1y, spin2x, spin2y)
     eta = mass1 * mass2 / mass**2
@@ -246,11 +256,13 @@ def nnlo_geometry(
     gamma = -epsilon_raw + epsilon_ref_t + math.pi - phi_j_t
     alpha_peak = alpha_peak_raw - alpha_ref_raw + alpha0
     gamma_peak = -epsilon_peak_raw + epsilon_ref_raw + math.pi - phi_j
-    if f.ndim > mass1.ndim:
+    post = times >= 0
+    f_angle = f if version == 10200 else jnp.where(post, fp[..., None], f)
+    if f_angle.ndim > mass1.ndim:
         beta_dyn = _clean_beta(
             mass1[..., None],
             mass2[..., None],
-            f,
+            f_angle,
             spin1x[..., None],
             spin1y[..., None],
             spin1z[..., None],
@@ -259,8 +271,34 @@ def nnlo_geometry(
             spin2z[..., None],
         )
     else:
-        beta_dyn = _clean_beta(mass1, mass2, f, spin1x, spin1y, spin1z, spin2x, spin2y, spin2z)
+        beta_dyn = _clean_beta(mass1, mass2, f_angle, spin1x, spin1y, spin1z, spin2x, spin2y, spin2z)
     beta_peak = _clean_beta(mass1, mass2, fp, spin1x, spin1y, spin1z, spin2x, spin2y, spin2z)
+
+    def angle_evaluator(query):
+        if frequency_at_time is None:
+            raise ValueError("frequency_at_time is required for numerical angle options")
+        fq = jnp.maximum(frequency_at_time(query), jnp.finfo(frequency.dtype).tiny)
+        fq_angle = jnp.where(query >= 0, fp[..., None, None] if query.ndim > fp.ndim + 1 else fp[..., None], fq)
+        def expand_param(value):
+            return value.reshape(value.shape + (1,) * (query.ndim - value.ndim))
+        vv = (math.pi * expand_param(ms) * fq_angle) ** (1.0 / 3.0)
+        aa, _ee = _raw_angles(vv, eta, -delta, x1, chi_l / x1, chip)
+        aa = aa - expand_param(alpha_ref_raw) + expand_param(alpha0)
+        b = _clean_beta(
+            expand_param(mass1) if fq_angle.ndim > mass1.ndim else mass1,
+            expand_param(mass2) if fq_angle.ndim > mass2.ndim else mass2,
+            fq_angle,
+            expand_param(spin1x) if fq_angle.ndim > spin1x.ndim else spin1x,
+            expand_param(spin1y) if fq_angle.ndim > spin1y.ndim else spin1y,
+            expand_param(spin1z) if fq_angle.ndim > spin1z.ndim else spin1z,
+            expand_param(spin2x) if fq_angle.ndim > spin2x.ndim else spin2x,
+            expand_param(spin2y) if fq_angle.ndim > spin2y.ndim else spin2y,
+            expand_param(spin2z) if fq_angle.ndim > spin2z.ndim else spin2z,
+        )
+        return aa, b
+
+    if version == 10221 and meco_time is None:
+        raise ValueError("NNLO option 10221 requires meco_time from the carrier model")
     # ``project_modes`` uses the standard ``d^l_{m,2}`` spin-weighted
     # harmonic convention, for which the source-frame polarization angle is
     # already in the required basis.  The clean positive-mode helper uses a
@@ -280,13 +318,25 @@ def nnlo_geometry(
     f22 = fits.IMRPhenomT_fringfit(af, 22) / mf
     f21 = fits.IMRPhenomT_fringfit(af, 21) / mf
     slope = (2.0 * math.pi / ms) * (f22 - f21)
-    alpha_rd = alpha_peak[..., None] + slope[..., None] * times
-    gamma_rd = gamma_peak[..., None] - jnp.cos(beta_peak)[..., None] * (alpha_rd - alpha_peak[..., None])
-    post = times >= 0
+    alpha, beta_dyn, gamma = apply_angle_option(
+        times,
+        alpha,
+        beta_dyn,
+        gamma,
+        alpha_peak,
+        beta_peak,
+        gamma_peak,
+        slope,
+        version,
+        angle_evaluator=angle_evaluator if version in (10211, 10221) else None,
+        meco_time=meco_time if version == 10221 else None,
+        reference_time=reference_time if version in (10211, 10221) else None,
+        gamma_reference=math.pi - phi_j if version in (10211, 10221) else None,
+    )
     return (
-        jnp.where(post, alpha_rd, alpha),
-        jnp.where(post, beta_peak[..., None], beta_dyn),
-        jnp.where(post, gamma_rd, gamma),
+        alpha,
+        beta_dyn,
+        gamma,
         theta_jn,
         zeta,
     )

@@ -52,3 +52,38 @@ def test_lal_binary_reference(name, case):
     tolerance = 1e-3 if name == "IMRPhenomTHM" else 1e-2
     assert relative_l2 < tolerance
     assert 1 - overlap < tolerance**2
+
+
+@pytest.mark.parametrize("name", ["IMRPhenomTP", "IMRPhenomTPHM"])
+@pytest.mark.parametrize("method,version,spin_mode,l2_limit,mismatch_limit", [
+    ("msa", 22310, 3, 0.01, 1e-4),
+    ("numerical", 300, 4, 0.04, 1e-3),
+])
+def test_additional_precession_binary_reference(name, method, version, spin_mode,
+                                               l2_limit, mismatch_limit):
+    """Measured clean-room residual bounds, not a claim of exact LAL parity."""
+    lal = pytest.importorskip("lal")
+    ls = pytest.importorskip("lalsimulation")
+    import torch
+
+    m1, m2, s1, s2, inclination, phase = CASES[0]
+    options = lal.CreateDict()
+    ls.SimInspiralWaveformParamsInsertPhenomXPrecVersion(options, version)
+    ls.SimInspiralWaveformParamsInsertPhenomXPFinalSpinMod(options, spin_mode)
+    dt = 1/2048
+    hp, hc = getattr(ls, "Sim" + name)(
+        m1*lal.MSUN_SI, m2*lal.MSUN_SI, *s1, *s2, 100e6*lal.PC_SI,
+        inclination, dt, 20.0, 20.0, phase, options,
+    )
+    times = torch.from_numpy(float(hp.epoch) + dt*np.arange(hp.data.length))
+    a, b = getattr(importlib.import_module("torchwave"), name)().time_domain(
+        times, m1, m2, chi1=s1[2], chi2=s2[2],
+        spin1x=s1[0], spin1y=s1[1], spin2x=s2[0], spin2y=s2[1],
+        distance=100.0, inclination=inclination, phic=phase, f_ref=20.0,
+        precession_method=method, precession_version=version,
+    )
+    actual, reference = (a-1j*b).detach().numpy(), hp.data.data-1j*hc.data.data
+    assert np.isfinite(actual).all()
+    assert np.linalg.norm(actual-reference)/np.linalg.norm(reference) < l2_limit
+    overlap = abs(np.vdot(actual, reference))/(np.linalg.norm(actual)*np.linalg.norm(reference))
+    assert 1-overlap < mismatch_limit

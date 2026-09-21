@@ -71,9 +71,10 @@ def test_family_catalogue():
 
 @pytest.mark.parametrize("backend", ["torchwave", "jaxwave"])
 @pytest.mark.parametrize("name", ["IMRPhenomTP", "IMRPhenomTPHM"])
-def test_precessing_start_uses_same_remnant_as_waveform(backend, name):
+@pytest.mark.parametrize("method", ["nnlo", "msa", "numerical"])
+def test_precessing_start_uses_same_remnant_as_waveform(backend, name, method):
     module = importlib.import_module(backend)
-    precession = importlib.import_module(f"{backend}.approximants._phenomt_precession")
+    precession = importlib.import_module(f"{backend}.approximants._phenomt_dispatch")
     if backend == "torchwave":
         import torch
         def array(x):
@@ -85,13 +86,13 @@ def test_precessing_start_uses_same_remnant_as_waveform(backend, name):
 
     mass1, mass2 = map(array, (40.0, 15.0))
     sx1, sy1, sz1, sx2, sy2, sz2 = map(array, (0.6, 0.1, 0.3, 0.1, 0.2, -0.2))
-    af = precession.nnlo_final_spin(mass1, mass2, sx1, sy1, sz1, sx2, sy2, sz2)
+    af, prepared = precession.prepare_precession(method, mass1, mass2, sx1, sy1, sz1, sx2, sy2, sz2, array(20.0))
     start = module.IMRPhenomT().time_at_frequency(
         250.0, mass1, mass2, sz1, sz2, _final_spin_override=af,
     )
     kwargs = dict(mass1=mass1, mass2=mass2, chi1=sz1, chi2=sz2,
                   spin1x=sx1, spin1y=sy1, spin2x=sx2, spin2y=sy2,
-                  inclination=0.8, f_ref=20.0)
+                  inclination=0.8, f_ref=20.0, precession_method=method)
     hp, hc, times = module.get_td_waveform(
         name, **kwargs, f_lower=250.0, delta_t=1 / 8192, duration=0.03,
         t_pad=0.02, return_times=True,

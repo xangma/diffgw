@@ -16,6 +16,10 @@ from .imrphenom_xas import XASParameterFits
 from .precession_beta_clean import orbital_angular_momentum
 from .precession_nnlo_clean import coefficients as _angle_coefficients
 from .precession_source_frame_clean import source_frame_geometry
+from ._phenomt_angle_options import (
+    apply_angle_option,
+    canonical_precession_version,
+)
 
 
 def _safe_norm(x, y):
@@ -72,7 +76,9 @@ def _raw_angles(v, eta, delta, m1, chi_l, chi_p):
     aa, ee = _angle_coefficients(eta, delta, m1, chi_l, chi_p)
     basis = torch.stack((v**-3, v**-2, v**-1, v, torch.log(v**3)), dim=-1)
     if v.ndim > eta.ndim:
-        aa, ee = aa[..., None, :], ee[..., None, :]
+        extra = v.ndim - eta.ndim
+        aa = aa.reshape(aa.shape[:-1] + (1,) * extra + (aa.shape[-1],))
+        ee = ee.reshape(ee.shape[:-1] + (1,) * extra + (ee.shape[-1],))
     return (aa * basis).sum(dim=-1), (ee * basis).sum(dim=-1)
 
 
@@ -92,8 +98,15 @@ def nnlo_geometry(
     f_ref,
     frequency_peak=None,
     final_spin=None,
+    precession_version=10210,
+    frequency_at_time=None,
+    meco_time=None,
+    reference_time=None,
 ):
     """Return ``alpha, beta, gamma, theta_jn, zeta`` on a time grid."""
+    version = canonical_precession_version("nnlo", precession_version)
+    if version in (10211, 10221) and (frequency_at_time is None or reference_time is None):
+        raise ValueError("NNLO numerical angle options require frequency_at_time and reference_time")
     mass1, mass2, spin1x, spin1y, spin1z, spin2x, spin2y, spin2z = _canonicalize_components(
         mass1, mass2, spin1x, spin1y, spin1z, spin2x, spin2y, spin2z
     )
@@ -106,7 +119,6 @@ def nnlo_geometry(
     fp = torch.clamp(frequency_peak, min=torch.finfo(frequency.dtype).tiny)
     v_peak = (math.pi * ms * fp) ** (1.0 / 3.0)
     v = (math.pi * ms[..., None] * f) ** (1.0 / 3.0)
-    v = torch.where(times >= 0, v_peak[..., None], v)
     v0 = (math.pi * ms * fr) ** (1.0 / 3.0)
     chip = _effective_chip(mass1, mass2, spin1x, spin1y, spin2x, spin2y)
     eta = mass1 * mass2 / m.square()
@@ -142,10 +154,12 @@ def nnlo_geometry(
     gamma = -epsilon_raw + epsilon_ref_t + math.pi - phi_j_t
     alpha_peak = alpha_peak_raw - alpha_ref_raw + alpha0
     gamma_peak = -epsilon_peak_raw + epsilon_ref_raw + math.pi - phi_j
+    post = times >= 0
+    f_angle = f if version == 10200 else torch.where(post, fp[..., None], f)
     beta_dyn = _nnlo_beta(
         mass1[..., None] if f.ndim > mass1.ndim else mass1,
         mass2[..., None] if f.ndim > mass2.ndim else mass2,
-        f,
+        f_angle,
         spin1x[..., None] if f.ndim > spin1x.ndim else spin1x,
         spin1y[..., None] if f.ndim > spin1y.ndim else spin1y,
         spin1z[..., None] if f.ndim > spin1z.ndim else spin1z,
@@ -164,6 +178,35 @@ def nnlo_geometry(
         spin2y,
         spin2z,
     )
+
+    def angle_evaluator(query):
+        if frequency_at_time is None:
+            raise ValueError("frequency_at_time is required for numerical angle options")
+        fq = torch.clamp(frequency_at_time(query), min=torch.finfo(frequency.dtype).tiny)
+        def expand_param(value):
+            return value.reshape(value.shape + (1,) * (query.ndim - value.ndim))
+
+        fq_angle = torch.where(query >= 0, expand_param(fp), fq)
+        vv = (math.pi * expand_param(ms) * fq_angle) ** (1.0 / 3.0)
+        aa, _ee = _raw_angles(vv, eta, -delta, x1, chi_l / x1, chip)
+        alpha_ref_q = alpha_ref_raw.reshape(alpha_ref_raw.shape + (1,) * (query.ndim - alpha_ref_raw.ndim))
+        alpha0_q = alpha0.reshape(alpha0.shape + (1,) * (query.ndim - alpha0.ndim))
+        aa = aa - alpha_ref_q + alpha0_q
+        b = _nnlo_beta(
+            expand_param(mass1) if fq_angle.ndim > mass1.ndim else mass1,
+            expand_param(mass2) if fq_angle.ndim > mass2.ndim else mass2,
+            fq_angle,
+            expand_param(spin1x) if fq_angle.ndim > spin1x.ndim else spin1x,
+            expand_param(spin1y) if fq_angle.ndim > spin1y.ndim else spin1y,
+            expand_param(spin1z) if fq_angle.ndim > spin1z.ndim else spin1z,
+            expand_param(spin2x) if fq_angle.ndim > spin2x.ndim else spin2x,
+            expand_param(spin2y) if fq_angle.ndim > spin2y.ndim else spin2y,
+            expand_param(spin2z) if fq_angle.ndim > spin2z.ndim else spin2z,
+        )
+        return aa, b
+
+    if version == 10221 and meco_time is None:
+        raise ValueError("NNLO option 10221 requires meco_time from the carrier model")
     # ``project_modes`` uses the standard ``d^l_{m,2}`` spin-weighted
     # harmonic convention, for which the source-frame polarization angle is
     # already in the required basis.  The clean positive-mode helper uses a
@@ -186,13 +229,25 @@ def nnlo_geometry(
     f22 = fits.IMRPhenomT_fringfit(af, 22) / mf
     f21 = fits.IMRPhenomT_fringfit(af, 21) / mf
     slope = (2.0 * math.pi / ms) * (f22 - f21)
-    alpha_rd = alpha_peak[..., None] + slope[..., None] * times
-    gamma_rd = gamma_peak[..., None] - torch.cos(beta_peak)[..., None] * (alpha_rd - alpha_peak[..., None])
-    post = times >= 0
+    alpha, beta_dyn, gamma = apply_angle_option(
+        times,
+        alpha,
+        beta_dyn,
+        gamma,
+        alpha_peak,
+        beta_peak,
+        gamma_peak,
+        slope,
+        version,
+        angle_evaluator=angle_evaluator if version in (10211, 10221) else None,
+        meco_time=meco_time if version == 10221 else None,
+        reference_time=reference_time if version in (10211, 10221) else None,
+        gamma_reference=math.pi - phi_j if version in (10211, 10221) else None,
+    )
     return (
-        torch.where(post, alpha_rd, alpha),
-        torch.where(post, beta_peak[..., None], beta_dyn),
-        torch.where(post, gamma_rd, gamma),
+        alpha,
+        beta_dyn,
+        gamma,
         theta_jn,
         zeta,
     )

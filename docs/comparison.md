@@ -210,6 +210,27 @@ series also retains a pi-squared term absent from LAL's 102 beta prescription.
 Both differences remain explicit; the implementation does not apply a
 sample-dependent shift or fit a correction to the binary output.
 
+For the additional precession methods, the same `(40, 15)` generic-spin
+case at 2048 Hz gives the following direct complex-strain errors against
+LALSimulation 6.2.1. The angle and remnant-spin options are matched explicitly.
+The [recorded results and environment](validation/phenomt_precession_20260921.json)
+can be reproduced with `python scripts/validate_phenomt_precession.py`.
+
+| Method / LAL options | TP relative L2 | TPHM relative L2 | Largest mismatch |
+| --- | ---: | ---: | ---: |
+| MSA / `22310`, `FinalSpinMod=3` | 0.00379 | 0.00388 | 0.00000754 |
+| Numerical / `300`, `FinalSpinMod=4` | 0.0273 | 0.0276 | 0.000375 |
+
+These measurements use the full returned LAL time grid without time, phase,
+or amplitude adjustment for relative L2. Numerical precession follows the
+published N4LO equations with the PhenomT frequency evolution, fixed intrinsic
+integration nodes, and a physical-time ringdown boundary. It is a native
+reconstruction with measurable differences from LAL, not an exact binary
+replacement. The MSA and numerical regression checks are retained in
+`tests/test_phenomt_family_lal.py`; these cases do not establish accuracy
+throughout parameter space. NNLO remains the default. See the
+[precession options and numerical domain](imrphenomt.md#higher-modes-and-precession).
+
 ### Reproducing model checks
 
 DiffGW's catalog harness retains model-specific references and diagnostic

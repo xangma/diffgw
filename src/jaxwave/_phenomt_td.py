@@ -5,6 +5,7 @@ import jax
 import jax.numpy as jnp
 
 from .approximants.imrphenomt import IMRPhenomT
+from diffgw_core.phenomt_options import resolve_precession
 
 
 def generate_td(
@@ -47,7 +48,10 @@ def generate_td(
     if approximant != "imrphenomt" and "modes" in kwargs:
         model_options["modes"] = kwargs.pop("modes")
     if precessing:
-        model_options["precession_method"] = kwargs.pop("precession_method", "nnlo")
+        method, version = resolve_precession(
+            kwargs.pop("precession_method", "nnlo"), kwargs.pop("precession_version", None),
+        )
+        model_options.update(precession_method=method, precession_version=version)
 
     def array(value):
         return jnp.asarray(value, dtype=dtype)
@@ -59,6 +63,8 @@ def generate_td(
     for name, value in (("delta_t", delta_t), ("f_lower", f_lower)):
         if not math.isfinite(value) or value <= 0:
             raise ValueError(f"{name} must be finite and positive")
+    if precessing and method == "numerical" and f_lower < 1.0:
+        raise ValueError("numerical precession requires f_lower >= 1 Hz")
     if f_lower >= 0.5 / delta_t:
         raise ValueError("f_lower must be below the Nyquist frequency")
     if not math.isfinite(t_pad) or t_pad < 0:
@@ -114,12 +120,12 @@ def generate_td(
         model = IMRPhenomT()
     final_spin = None
     if precessing:
-        from .approximants._phenomt_precession import nnlo_final_spin
-        final_spin = nnlo_final_spin(
-            m1, m2, array(spin1x), array(spin1y), s1,
-            array(spin2x), array(spin2y), s2,
+        from .approximants._phenomt_dispatch import prepare_precession
+        final_spin, prepared = prepare_precession(
+            method, m1, m2, array(spin1x), array(spin1y), s1,
+            array(spin2x), array(spin2y), s2, array(f_ref),
         )
-        model_options["final_spin"] = final_spin
+        model_options.update(final_spin=final_spin, _precession_state=prepared)
     start = IMRPhenomT().time_at_frequency(
         array(f_lower), m1, m2, chi1=s1, chi2=s2,
         _final_spin_override=final_spin,

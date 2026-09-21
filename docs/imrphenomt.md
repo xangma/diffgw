@@ -8,13 +8,13 @@ parameters, calibrated mode content, and sampling conventions.
 | --- | --- | --- |
 | `IMRPhenomT` | Aligned | `(2, ±2)` |
 | `IMRPhenomTHM` | Aligned | `(2, ±2)`, `(2, ±1)`, `(3, ±3)`, `(4, ±4)`, `(5, ±5)` |
-| `IMRPhenomTP` | Precessing, NNLO angles | `(2, ±2)` |
-| `IMRPhenomTPHM` | Precessing, NNLO angles | Same set as THM |
+| `IMRPhenomTP` | Precessing, selectable angles | `(2, ±2)` |
+| `IMRPhenomTPHM` | Precessing, selectable angles | Same set as THM |
 
-The precessing variants expose the published **NNLO** option. Numerical
-spin evolution and MSA precession are not implemented for this family.
-Consequently, the default here differs from LAL's default numerical
-precession prescription; see [validation](#scope-and-validation).
+The precessing variants accept **NNLO**, double-spin **MSA**, and **numerical**
+spin evolution. NNLO remains the default for compatibility with existing
+calls. Choose the method explicitly when comparing with LAL; see
+[validation](#scope-and-validation).
 
 ## Generate a sampled waveform
 
@@ -72,6 +72,44 @@ hp, hc, times = diffgw.get_td_waveform(
 quadrupole carrier. The aligned variants reject nonzero transverse spins.
 Spin vectors must have magnitude at most one.
 
+Set `precession_method` and, optionally, `precession_version`:
+
+| Method | Default version | Remnant spin |
+| --- | --- | --- |
+| `"nnlo"` | `10210` | Effective single-spin prescription (`FinalSpinMod=0`) |
+| `"msa"` | `22310` | Precession-averaged double-spin prescription (`FinalSpinMod=3`) |
+| `"numerical"` | `300` | Spin projections evolved to coalescence (`FinalSpinMod=4`) |
+
+Precessing MSA requires unequal component masses and a supported MSA root
+and remnant-spin domain. Its singular equal-mass limit is not implemented;
+use numerical precession for those systems. Aligned equal-mass binaries
+remain supported. Unsupported MSA points raise errors in eager evaluation
+and produce NaN for affected rows when traced by JAX.
+
+NNLO and MSA support the following continuation choices:
+
+| NNLO | MSA | Euler-angle treatment |
+| --- | --- | --- |
+| `10200` | `22300` | Analytical angles throughout the waveform |
+| `10210` | `22310` | Analytical inspiral, quasinormal-mode ringdown continuation |
+| `10211` | `22311` | Numerical minimal-rotation gamma, with ringdown continuation |
+| `10221` | `22321` | Linear alpha/beta from MECO to the peak, numerical gamma, ringdown continuation |
+
+The aliases `102` and `223` select `10210` and `22310`. Versions must match
+the selected method. For example, use `precession_method="msa",
+precession_version=22311` in the waveform call above. Numerical version
+`300` evolves both spins and the orbital-plane direction using the aligned
+T carrier frequency, then continues the angles through ringdown.
+The spin equations include N4LO terms. Orbital-plane evolution uses the
+nonspinning 3PN angular-momentum magnitude, with the spin-dependent angular
+momentum corrections disabled as described in Sec. II.4.1 of the model paper.
+The numerical solver requires `f_lower >= 1 Hz` and a reference frequency
+no higher than the aligned carrier frequency at its amplitude peak. It uses
+a fixed intrinsic grid independent of waveform samples. Direct queries earlier
+than its integration interval (down to `min(1 Hz, f_ref/2)`) return NaN.
+Numerical evolution is slower and uses more differentiation memory than
+the analytical methods.
+
 ## Arbitrary grids and derivatives
 
 The model class accepts a shared one-dimensional grid, with parameter batch
@@ -117,19 +155,20 @@ start mask is discontinuous when its boundary crosses a sample.
 
 All four models use native time-domain evaluation; frequency-domain dispatch
 raises an error. The public wrappers reject nonzero tidal deformabilities,
-`f_final`, unsupported modes, and unknown options. TP/TPHM accept only
-`precession_method="nnlo"`; unsupported precession methods raise an error.
+`f_final`, unsupported modes, and unknown options. Unsupported precession
+methods and incompatible version selections raise an error.
 
-The NNLO prescription follows the option described in Appendix A of
+The precession prescriptions follow the options described in Appendix A of
 [Estellés et al. (2022)](https://arxiv.org/abs/2105.05872).
-The carrier retains its aligned-spin inspiral and merger; the NNLO remnant
-spin modifies its ringdown. Angles use the aligned carrier's frequency
-through its amplitude peak.
-After the peak, the opening angle is held constant and the other angles
+The carrier retains its aligned-spin inspiral and merger; the selected
+remnant spin modifies its ringdown. Angles use the aligned carrier's
+frequency through its amplitude peak.
+For the ringdown-continuation options, the opening angle is held constant
+after the peak and the other angles
 follow the remnant's quasinormal frequencies and minimal-rotation condition.
 The transition is defined at physical time `tc`, independently of the
-requested sampling grid. This corresponds to the published `10210` angle
-prescription with the NNLO remnant-spin choice (`FinalSpinMod=0`).
+requested sampling grid. The default corresponds to the published `10210`
+angle prescription with the NNLO remnant-spin choice (`FinalSpinMod=0`).
 Precessing results must be compared with the same angle and remnant-spin
 options in an external reference, rather than its default configuration.
 

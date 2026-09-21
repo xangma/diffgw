@@ -262,10 +262,16 @@ For complete technical descriptions of formulations and comparisons with LALSimu
   No LALSuite, SciPy or phenomxpy waveform calls are made at runtime.
 - Scope: T, THM, TP and TPHM for black hole binaries. THM includes mode
   pairs `(2,2)`, `(2,1)`, `(3,3)`, `(4,4)` and `(5,5)`. TP/TPHM implement
-  published NNLO twisting; numerical and MSA precession and tides are absent.
+  published NNLO, multiple-scale analysis (MSA), and numerical precession.
+  Tidal corrections are absent.
 - Precession reference: [arXiv:2105.05872](https://arxiv.org/abs/2105.05872).
   The native rotation uses published Euler-angle and Wigner-matrix formulas
-  with the repository's NNLO tensor implementation. The upstream numerical
+  with the repository's NNLO tensor implementation. MSA uses the published
+  two-spin equations of [Chatziioannou et al.](https://arxiv.org/abs/1703.03967)
+  and the repository's existing clean-room algebra. Numerical precession uses
+  the orbit-averaged spin equations through N4LO in
+  [Sturani's technical note, LIGO-T1500554](https://dcc.ligo.org/public/0122/T1500554/023/dLdS.pdf),
+  with the PhenomT frequency evolution. The upstream phenomxpy numerical
   and MSA modules identify GPL-derived code and were excluded from adaptation.
 - Verification: LALSimulation is used only through its installed binary
   Python bindings as an optional black-box oracle. No coefficients or
@@ -288,3 +294,9 @@ For complete technical descriptions of formulations and comparisons with LALSimu
   `test_phenomt_precession.py` suites. Physical-time invariance under grid
   changes and time translations is checked in `test_phenomt_time_grid.py`. Cross-backend higher-mode and
   precession tests also cover JAX compilation and parameter gradients.
+
+  The additional prescription tests cover method/version selection, matching
+  remnant spins, batch behavior, reference-time anchoring, and invariance under
+  changes to the requested output grid. The NNLO default is retained for
+  compatibility; numerical precession is selected explicitly with
+  `precession_method="numerical"`.

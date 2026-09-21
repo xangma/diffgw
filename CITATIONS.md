@@ -1033,7 +1033,7 @@ The higher-mode reconstruction is described in:
 ```
 
 For TP/TPHM, cite the precessing family paper, whose Appendix A describes
-the NNLO option exposed here:
+the precession options exposed here:
 
 ```bibtex
 @article{Estelles:2022PhenomTPHM,
@@ -1049,3 +1049,10 @@ the NNLO option exposed here:
     year = "2022"
 }
 ```
+
+The numerical precession equations are documented in Riccardo Sturani,
+[Note on the derivation of the angular momentum and spin precessing equations in SpinTaylor codes, LIGO-T1500554](https://dcc.ligo.org/public/0122/T1500554/023/dLdS.pdf),
+Eqs. (3), (21), (22), (24), and (25). MSA uses
+[Chatziioannou et al., Phys. Rev. D 95, 104004 (2017)](https://doi.org/10.1103/PhysRevD.95.104004)
+and the precession conventions of
+[Pratten et al., Phys. Rev. D 103, 104056 (2021)](https://doi.org/10.1103/PhysRevD.103.104056).

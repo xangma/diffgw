@@ -1,12 +1,17 @@
-"""Native time-domain IMRPhenomTPHM with published NNLO twisting."""
+"""Native time-domain IMRPhenomTPHM."""
 
 from __future__ import annotations
 
+import math
 import torch
+
+from diffgw_core.constants import MSUN_SEC
 
 from .imrphenomt import IMRPhenomT
 from .imrphenomtp import _mode_key
-from ._phenomt_precession import _canonicalize_components, nnlo_final_spin, nnlo_geometry, project_modes
+from ._phenomt_precession import _canonicalize_components, project_modes
+from ._phenomt_dispatch import prepare_precession, precession_geometry, carrier_frequency
+from diffgw_core.phenomt_options import resolve_precession
 
 
 DEFAULT_MODES = ((2, 2), (2, 1), (3, 3), (4, 4), (5, 5))
@@ -24,9 +29,9 @@ def _as_complex_mode(value, dtype, device):
 class IMRPhenomTPHM(IMRPhenomT):
     """Precessing multipolar PhenomT model.
 
-    The currently supported precession prescription is the published NNLO
-    angle series.  All mode rotation and projection remain native tensor
-    operations and therefore support batching and autograd/JAX transforms.
+    Select the Euler-angle prescription with ``precession_method`` and its
+    continuation with ``precession_version``. NNLO remains the default.
+    Rotations and mode projection use native differentiable tensors.
     """
 
     def time_domain(
@@ -48,9 +53,10 @@ class IMRPhenomTPHM(IMRPhenomT):
         precession_method="nnlo",
         modes=None,
         final_spin=None,
+        precession_version=None,
+        _precession_state=None,
     ):
-        if str(precession_method).lower() != "nnlo":
-            raise ValueError("IMRPhenomTPHM supports only precession_method='nnlo'")
+        method, version = resolve_precession(precession_method, precession_version)
         requested = tuple(_mode_key(mode) for mode in modes) if modes is not None else DEFAULT_MODES
         positive = tuple(dict.fromkeys((l, abs(m)) for l, m in requested))
         if not positive:
@@ -69,8 +75,10 @@ class IMRPhenomTPHM(IMRPhenomT):
             vals.append(torch.as_tensor(final_spin, dtype=t.dtype, device=t.device))
             m1, m2, z1, z2, dist, inc, pc, tcenter, fr, x1, y1, x2, y2, fs = torch.broadcast_tensors(*vals)
         m1, m2, x1, y1, z1, x2, y2, z2 = _canonicalize_components(m1, m2, x1, y1, z1, x2, y2, z2)
-        if fs is None:
-            fs = nnlo_final_spin(m1, m2, x1, y1, z1, x2, y2, z2)
+        fs, prepared = prepare_precession(
+            method, m1, m2, x1, y1, z1, x2, y2, z2, fr,
+            final_spin=fs, prepared=_precession_state,
+        )
         try:
             from .imrphenomthm import IMRPhenomTHM
 
@@ -102,10 +110,10 @@ class IMRPhenomTPHM(IMRPhenomT):
         # remnant enters only the post-peak QNM continuation.
         state_angle = self._coeff(m1, m2, z1, z2)
         shifted = t.reshape((1,) * m1.ndim + (-1,)) - tcenter[..., None]
-        freq = self._evaluate(shifted / ((m1 + m2)[..., None] * 4.925490947641267e-6), state_angle)[0]
-        freq = freq / (2.0 * 3.141592653589793 * (m1 + m2)[..., None] * 4.925490947641267e-6)
-        fpeak = state_angle[13] / (2.0 * 3.141592653589793 * (m1 + m2) * 4.925490947641267e-6)
-        a, b, g, thjn, zeta = nnlo_geometry(
+        freq = self._evaluate(shifted / ((m1 + m2)[..., None] * MSUN_SEC), state_angle)[0]
+        freq = freq / (2.0 * math.pi * (m1 + m2)[..., None] * MSUN_SEC)
+        fpeak = state_angle[13] / (2.0 * math.pi * (m1 + m2) * MSUN_SEC)
+        a, b, g, thjn, zeta = precession_geometry(
             shifted,
             freq,
             m1,
@@ -121,6 +129,10 @@ class IMRPhenomTPHM(IMRPhenomT):
             fr,
             frequency_peak=fpeak,
             final_spin=fs,
+            precession_method=method,
+            precession_version=version,
+            prepared=prepared,
+            frequency_at_time=lambda query: carrier_frequency(self, state_angle, m1, m2, query),
         )
         hp_rot, hc_rot = project_modes(cp, a, b, g, thjn[..., None], zeta[..., None])
         hp_al, hc_al = thm.time_domain(

@@ -1,4 +1,4 @@
-"""Native JAX time-domain IMRPhenomTPHM with NNLO twisting."""
+"""Native JAX time-domain IMRPhenomTPHM."""
 
 from __future__ import annotations
 
@@ -7,7 +7,9 @@ import jax.numpy as jnp
 
 from diffgw_core.constants import MSUN_SEC
 from .imrphenomt import IMRPhenomT
-from ._phenomt_precession import _canonicalize_components, nnlo_final_spin, nnlo_geometry, project_modes
+from ._phenomt_precession import _canonicalize_components, project_modes
+from ._phenomt_dispatch import prepare_precession, precession_geometry, carrier_frequency
+from diffgw_core.phenomt_options import resolve_precession
 
 
 DEFAULT_MODES = ((2, 2), (2, 1), (3, 3), (4, 4), (5, 5))
@@ -28,7 +30,7 @@ def _as_complex(value, dtype):
 
 
 class IMRPhenomTPHM(IMRPhenomT):
-    """Precessing multipolar PhenomT; only the published NNLO path is enabled."""
+    """Precessing multipolar PhenomT with selectable Euler-angle prescriptions."""
 
     def time_domain(
         self,
@@ -49,9 +51,10 @@ class IMRPhenomTPHM(IMRPhenomT):
         precession_method="nnlo",
         modes=None,
         final_spin=None,
+        precession_version=None,
+        _precession_state=None,
     ):
-        if str(precession_method).lower() != "nnlo":
-            raise ValueError("IMRPhenomTPHM supports only precession_method='nnlo'")
+        method, version = resolve_precession(precession_method, precession_version)
         requested = tuple(_mode_key(mode) for mode in modes) if modes is not None else DEFAULT_MODES
         positive = tuple(dict.fromkeys((l, abs(m)) for l, m in requested))
         if not positive:
@@ -70,8 +73,10 @@ class IMRPhenomTPHM(IMRPhenomT):
             vals.append(jnp.asarray(final_spin, dtype=t.dtype))
             m1, m2, z1, z2, dist, inc, pc, tcenter, fr, x1, y1, x2, y2, fs = jnp.broadcast_arrays(*vals)
         m1, m2, x1, y1, z1, x2, y2, z2 = _canonicalize_components(m1, m2, x1, y1, z1, x2, y2, z2)
-        if fs is None:
-            fs = nnlo_final_spin(m1, m2, x1, y1, z1, x2, y2, z2)
+        fs, prepared = prepare_precession(
+            method, m1, m2, x1, y1, z1, x2, y2, z2, fr,
+            final_spin=fs, prepared=_precession_state,
+        )
         from .imrphenomthm import IMRPhenomTHM
 
         thm = IMRPhenomTHM()
@@ -103,7 +108,7 @@ class IMRPhenomTPHM(IMRPhenomT):
         freq = self._evaluate(shifted / ((m1 + m2)[..., None] * MSUN_SEC), state_angle)[0]
         freq = freq / (2.0 * math.pi * (m1 + m2)[..., None] * MSUN_SEC)
         fpeak = state_angle[13] / (2.0 * math.pi * (m1 + m2) * MSUN_SEC)
-        a, b, g, thjn, zeta = nnlo_geometry(
+        a, b, g, thjn, zeta = precession_geometry(
             shifted,
             freq,
             m1,
@@ -119,6 +124,10 @@ class IMRPhenomTPHM(IMRPhenomT):
             fr,
             frequency_peak=fpeak,
             final_spin=fs,
+            precession_method=method,
+            precession_version=version,
+            prepared=prepared,
+            frequency_at_time=lambda query: carrier_frequency(self, state_angle, m1, m2, query),
         )
         hp_rot, hc_rot = project_modes(cp, a, b, g, thjn[..., None], zeta[..., None])
         hp_al, hc_al = thm.time_domain(
