@@ -22,7 +22,7 @@ Both packages are distributed under the permissive **MIT License** and require o
 
 - :zap: **Fused JIT Scalability**
     ---
-    Generates up to **14.4 million waveforms per second** on an NVIDIA GeForce RTX 5090 using fused Inductor JIT kernels (`torch.compile`) and JAX XLA compilation.
+    The reported peak is **14.4 million waveforms per second** for **FP32 TaylorF2**, batch **5,000**, on an **NVIDIA GeForce RTX 5090** using `torch.compile`. See the [performance report](performance.md) for grids, precision and qualification limits.
 
 - :dart: **Double-Precision Parity**
     ---
@@ -184,6 +184,10 @@ All models below are natively implemented in **both PyTorch (`torchwave`) and JA
 
 <div class="grid cards" markdown>
 
+- :material-table: **[Package Comparison](comparison.md)**
+    ---
+    Compare DiffGW, LALSimulation, Ripple, PhenomXPy and GWFAST by workflow, model coverage, derivatives and execution.
+
 - :material-book-open-page-variant: **[User Guide](usage.md)**
     ---
     In-depth guide covering all approximants, batching, JAX JIT, detectors, and Bayesian inference.
@@ -199,10 +203,6 @@ All models below are natively implemented in **both PyTorch (`torchwave`) and JA
 - :material-code-tags: **[API Reference](api/torchwave.md)**
     ---
     Auto-generated function signatures, parameter descriptions, and return types for `torchwave`, `jaxwave`, and `diffgw`.
-
-- :material-scale-balance: **[Differences from LAL](differences_from_lal.md)**
-    ---
-    Detailed audit of continuous cubic Hermite spline matching and architectural improvements over LALSimulation.
 
 - :material-certificate: **[Provenance & Citations](provenance_ledger.md)**
     ---

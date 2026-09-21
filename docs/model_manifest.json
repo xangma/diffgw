@@ -71,7 +71,7 @@
         ]
       },
       "status": "verified_declared_cases",
-      "notes": "Uniform strict CPU FP64 gates apply to both polarizations and detector projections. See docs/provenance_ledger.md and docs/differences_from_lal.md for model verification details.",
+      "notes": "Uniform strict CPU FP64 gates apply to both polarizations and detector projections. See docs/provenance_ledger.md and docs/comparison.md for model verification details.",
       "primary_references": [
         {
           "citation": "Buonanno, Iyer, Ochsner, Pan, Sathyaprakash (2009), Phys. Rev. D 80, 084043",
@@ -198,7 +198,7 @@
         "ecc_order": "Up to 6 (3PN eccentric phase expansion)"
       },
       "status": "verified_declared_cases",
-      "notes": "Uniform strict CPU FP64 gates apply to both polarizations and detector projections. See docs/provenance_ledger.md and docs/differences_from_lal.md for model verification details.",
+      "notes": "Uniform strict CPU FP64 gates apply to both polarizations and detector projections. See docs/provenance_ledger.md and docs/comparison.md for model verification details.",
       "primary_references": [
         {
           "citation": "Moore, Favata, Arun, Mishra (2016), Phys. Rev. D 93, 124061",
@@ -242,7 +242,7 @@
         "(2,2)"
       ],
       "status": "verified_declared_cases",
-      "notes": "Uniform strict CPU FP64 gates apply to both polarizations and detector projections. See docs/provenance_ledger.md and docs/differences_from_lal.md for model verification details.",
+      "notes": "Uniform strict CPU FP64 gates apply to both polarizations and detector projections. See docs/provenance_ledger.md and docs/comparison.md for model verification details.",
       "primary_references": [
         {
           "citation": "Husa et al. (2016), Phys. Rev. D 93, 044006",
@@ -303,7 +303,7 @@
       ],
       "frame_convention": "P-frame precession angle twisting via single effective precession parameter chi_p",
       "status": "verified_declared_cases",
-      "notes": "Uniform strict CPU FP64 gates apply to both polarizations and detector projections. See docs/provenance_ledger.md and docs/differences_from_lal.md for model verification details.",
+      "notes": "Uniform strict CPU FP64 gates apply to both polarizations and detector projections. See docs/provenance_ledger.md and docs/comparison.md for model verification details.",
       "primary_references": [
         {
           "citation": "Hannam et al. (2014), Phys. Rev. Lett. 113, 151101",
@@ -409,7 +409,7 @@
       ],
       "frame_convention": "London frequency mapping and spin-weighted spherical-harmonic projection; target phase compatibility remains unresolved.",
       "status": "verified_declared_cases",
-      "notes": "Uniform strict CPU FP64 gates apply to both polarizations and detector projections. See docs/provenance_ledger.md and docs/differences_from_lal.md for model verification details.",
+      "notes": "Uniform strict CPU FP64 gates apply to both polarizations and detector projections. See docs/provenance_ledger.md and docs/comparison.md for model verification details.",
       "primary_references": [
         {
           "citation": "London et al. (2018), Phys. Rev. Lett. 120, 161102",
@@ -635,7 +635,7 @@
         "(2,2)"
       ],
       "status": "verified_declared_cases",
-      "notes": "Uniform strict CPU FP64 gates apply to both polarizations and detector projections. See docs/provenance_ledger.md and docs/differences_from_lal.md for model verification details.",
+      "notes": "Uniform strict CPU FP64 gates apply to both polarizations and detector projections. See docs/provenance_ledger.md and docs/comparison.md for model verification details.",
       "primary_references": [
         {
           "citation": "Pratten et al. (2020), Phys. Rev. D 102, 064001",
@@ -687,7 +687,7 @@
         "(2,2)"
       ],
       "status": "verified_declared_cases",
-      "notes": "Uniform strict CPU FP64 gates apply to both polarizations and detector projections. See docs/provenance_ledger.md and docs/differences_from_lal.md for model verification details.",
+      "notes": "Uniform strict CPU FP64 gates apply to both polarizations and detector projections. See docs/provenance_ledger.md and docs/comparison.md for model verification details.",
       "primary_references": [
         {
           "citation": "Dietrich et al. (2017), Phys. Rev. D 96, 121501",
@@ -734,7 +734,7 @@
         "(2,2)"
       ],
       "status": "verified_declared_cases",
-      "notes": "Uniform strict CPU FP64 gates apply to both polarizations and detector projections. See docs/provenance_ledger.md and docs/differences_from_lal.md for model verification details.",
+      "notes": "Uniform strict CPU FP64 gates apply to both polarizations and detector projections. See docs/provenance_ledger.md and docs/comparison.md for model verification details.",
       "primary_references": [
         {
           "citation": "Dietrich et al. (2019), Phys. Rev. D 100, 044003",
@@ -1213,7 +1213,7 @@
       "conventions": "Initial orbital phase zero; phic rotates h22 by exp(-2i*phic); tc sets NQC amplitude peak; finite Fourier sum uses exp(-2*pi*i*f*t). No taper. Target phase/time compatibility unresolved.",
       "numerical_limits": "Discrete peak/stencil/sample-count selection; local quartic matching and linear earlier interpolation. Float64 preferred; finer step checks required. Two-input convergence is not a 1e-6 accuracy certificate.",
       "report": "docs/provenance_ledger.md (Section 2.7)",
-      "source_audit": "docs/differences_from_lal.md",
+      "source_audit": "docs/comparison.md",
       "convergence_evidence": "tests/test_clean_room_eob_published_driver.py",
       "lal_td_diagnostic": "tests/test_clean_room_eob_published_driver.py",
       "frozen_catalog_member": false,

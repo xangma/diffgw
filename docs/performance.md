@@ -8,12 +8,17 @@ For the formal benchmarking protocol, Gate 1 scientific qualification rules, and
 
 ## 1. Executive Summary & Hardware Setup
 
-All benchmarks reported here were executed under controlled, reproducible conditions in accordance with the DiffGW Benchmarking Protocol:
+This report preserves timings from the existing RTX 5090 campaign. Its numerical
+qualification has the limitations described in Section 2; the timing tables do
+not establish strict LAL agreement for every model, backend or precision.
+For the separately measured FP64 DiffGW/Ripple/LAL comparison, with explicit
+errors for every timed binary, see [measured package benchmarks](package_benchmarks.md).
+
 - **GPU Accelerator**: NVIDIA GeForce RTX 5090 (32,607 MiB GDDR7, Blackwell sm_120 architecture, Driver 610.88, CUDA 13.0)
-- **Host Workstation**: Windows 11 Workstation `mac` (`ssh-mac.xangma.com`), Intel Core 13th Gen / x86_64
+- **Host Workstation**: Windows 11 Workstation `mac`; the legacy receipt identifies an AMD64 Family 25 processor and 8 logical cores.
 - **Software Stack**: PyTorch 2.11.0+cu130, JAX 0.11.1, LALSimulation 6.2.0, Ripple 0.4.0
 - **Controlled Frequency Grid**: $f_{\text{low}} = 20\text{ Hz}$, $f_{\text{high}} = 512\text{ Hz}$, $\Delta f = 0.25\text{ Hz}$ ($N_{\text{freq}} = 1,969$ bins)
-- **Parity Gate**: Verified double-precision agreement against LALSimulation ($L_2 \le 10^{-11}$, phase mismatch $1 - \mathcal{M} \le 10^{-14}$) prior to timing sweeps.
+- **Qualification scope**: The aligned-model errors reported below meet the stated FP64 thresholds. XP exceeds them; XHM uses another reference. FP64 results do not qualify the FP32 timing columns.
 
 ### Key Performance Highlights on NVIDIA RTX 5090
 
@@ -34,21 +39,41 @@ All benchmarks reported here were executed under controlled, reproducible condit
 
 ## 2. Gate 1: Scientific Qualification Parity Results
 
-In strict adherence to the Gatekeeper Rule, no waveform timing is valid without prior numerical verification against the scientific oracle (`lalsimulation`):
+Strict LAL qualification requires both relative $L_2 \le 10^{-11}$ and mismatch
+$1 - \mathcal{M} \le 10^{-14}$ against the same LAL model and configuration.
+The reported numbers below must be interpreted with their reference identity:
 
-| Approximant | Waveform Type | Max Relative $L_2$ Error | Max Phase Mismatch ($1 - \mathcal{M}$) | Scientific Gate Status |
+| Approximant | Waveform Type | Max Relative $L_2$ Error | Max Phase Mismatch ($1 - \mathcal{M}$) | Interpretation of reported errors |
 | :--- | :--- | :--- | :--- | :--- |
-| **TaylorF2** | PN Inspiral | $3.409 \times 10^{-13}$ | $0.000$ | **PASS** ($\le 10^{-11}$) |
-| **IMRPhenomD** | 2nd-Gen Aligned-Spin IMR | $1.717 \times 10^{-14}$ | $1.110 \times 10^{-16}$ | **PASS** ($\le 10^{-11}$) |
-| **IMRPhenomXAS** | 4th-Gen Aligned-Spin IMR | $2.115 \times 10^{-14}$ | $0.000$ | **PASS** ($\le 10^{-11}$) |
-| **IMRPhenomXP** | Precessing-Spin IMR | $6.234 \times 10^{-3}$ | $1.943 \times 10^{-5}$ | **PASS** (Within precession tolerance) |
-| **IMRPhenomXHM** | Higher Multipoles IMR | $1.460 \times 10^{-12}$ | $2.220 \times 10^{-16}$ | **PASS** ($\le 10^{-11}$ vs sovereign NR / JAXWave) |
+| **TaylorF2** | PN Inspiral | $3.409 \times 10^{-13}$ | $0.000$ | Below strict thresholds; reference identity must be confirmed |
+| **IMRPhenomD** | 2nd-Gen Aligned-Spin IMR | $1.717 \times 10^{-14}$ | $1.110 \times 10^{-16}$ | Below strict thresholds; reference identity must be confirmed |
+| **IMRPhenomXAS** | 4th-Gen Aligned-Spin IMR | $2.115 \times 10^{-14}$ | $0.000$ | Below strict thresholds; reference identity must be confirmed |
+| **IMRPhenomXP** | Precessing-Spin IMR | $6.234 \times 10^{-3}$ | $1.943 \times 10^{-5}$ | **FAIL** (both strict thresholds exceeded) |
+| **IMRPhenomXHM** | Higher Multipoles IMR | $1.460 \times 10^{-12}$ | $2.220 \times 10^{-16}$ | **OTHER REFERENCE** (not a strict LAL qualification) |
+
+The legacy `run_benchmark_campaign.py` gate prefers JAXWave as its reference,
+falls back to LAL with relaxed tolerances, and can fall back to self-consistency.
+Its pass status alone therefore does **not** establish the strict LAL gate
+described above, including for the three aligned rows. Preserve the actual
+reference, configuration and raw errors when reproducing those claims.
+
+The historical XHM row was described as comparison with “sovereign NR /
+JAXWave”; that label does not identify an independent reference measurement.
+Torch/JAX agreement and validation against held-out NR answer separate questions.
+See the [package comparison](comparison.md#physics-coverage-and-scientific-agreement)
+and [benchmark protocol](benchmarking_protocol.md#12-the-gatekeeper-rule-parity-first).
+XP and XHM timings below are retained as diagnostic performance measurements,
+not evidence of passing strict LAL parity. The FP32 measurements also require
+their own accuracy assessment before use in a scientific workload.
 
 ---
 
 ## 3. Comprehensive Multi-Backend Throughput Matrix
 
-Timing measurements were collected across 15 timed iterations (following 3 untimed warmup evaluations). All medians and 95% bootstrap confidence intervals are cryptographically sealed in `artifacts/benchmarks/benchmark_receipt.json`.
+The campaign reports 15 timed iterations after 3 untimed warmup evaluations,
+with medians and 95% bootstrap confidence intervals in
+`artifacts/benchmarks/benchmark_receipt.json`. A receipt's checksum detects
+changes to its contents; it does not establish numerical qualification.
 
 ### Waveform Throughput ($\text{wf/s}$) on NVIDIA RTX 5090 (32 GB)
 
@@ -81,7 +106,7 @@ Timing measurements were collected across 15 timed iterations (following 3 untim
 | | 5,000 | 6,336.2 wf/s | - | **53,388.5 wf/s** | 9,259.9 wf/s (FP32) | - |
 
 > [!NOTE]
-> Per-waveform latency scales inversely with throughput ($\text{Latency} = B / \text{Throughput}$). For full latency distributions with 95% bootstrap confidence intervals, see [Figure 2](#figure-2-per-waveform-latency-amortization) and `artifacts/benchmarks/benchmark_receipt.json`.
+> For throughput $R$ in waveforms/s and batch size $B$, total batch latency is $B/R$ seconds; amortized time per waveform is $1/R$ seconds. Neither a large-batch throughput nor its amortized time gives single-waveform request latency. See [Figure 2](#figure-2-per-waveform-latency-amortization) and `artifacts/benchmarks/benchmark_receipt.json`.
 
 ---
 
@@ -101,7 +126,7 @@ Waveform generation was profiled at extreme scales up to $B=50,000$ using **PyTo
 > For JAXWave CUDA and PyTorch Inductor (`torch.compile`) throughput comparisons across $B = 1 \to 5,000$, see [Section 3: Comprehensive Multi-Backend Throughput Matrix](#3-comprehensive-multi-backend-throughput-matrix).
 
 > [!TIP]
-> Memory scaling is strictly linear $O(B)$ with zero dynamic reallocation. Batches of 50,000 waveforms for `TaylorF2`, `IMRPhenomXAS`, and `IMRPhenomXHM` fit comfortably inside the 32 GB frame buffer.
+> The table reports observed peak PyTorch allocations for these configurations. Memory use depends on precision, model, batch size and execution mode; these measurements do not establish allocation-free execution or sufficient memory for another workload.
 
 ---
 
@@ -184,8 +209,8 @@ All figures are rendered at 300 DPI and accompanied by publication-quality vecto
    - At $B=5,000$, `IMRPhenomD` and `IMRPhenomXAS` reach over **3,300,000 – 3,500,000 wf/s** in FP32 on the RTX 5090 ($0.28\ \mu\text{s}$ per waveform).
    - In double precision, compiled `IMRPhenomD` achieves **437,817 wf/s** ($11.4\text{ ms}$ for 5,000 waveforms).
 
-2. **Memory Footprint Linearity $O(B)$**:
-   - Memory overhead scales strictly linearly with batch size without dynamic allocations:
+2. **Reported Memory Footprint per Waveform**:
+   - The large-batch observations correspond to approximately:
      - `TaylorF2`: **127 KB / wf** (FP32) / **252 KB / wf** (FP64)
      - `IMRPhenomXAS`: **271 KB / wf** (FP32) / **542 KB / wf** (FP64)
      - `IMRPhenomD`: **424 KB / wf** (FP32) / **848 KB / wf** (FP64)
@@ -193,35 +218,50 @@ All figures are rendered at 300 DPI and accompanied by publication-quality vecto
      - `IMRPhenomXP`: **3.47 MB / wf** (due to 3D Euler angle evolution and rotation matrices).
 
 3. **Crossover vs. Single-Core LALSimulation**:
-   - Single-waveform ($B=1$) execution in pure C on CPU has minimal launch latency ($0.2\text{ ms}$ for TaylorF2, $0.4\text{ ms}$ for PhenomD).
-   - At $B \ge 10$, vectorized batched evaluation amortizes launch overhead.
-   - At $B = 100$, TorchWave is **55× faster** than single-core C.
-   - At $B = 5,000$, TorchWave Compiled is **>3,000× faster** than single-core C.
+   - Vectorized execution can amortize dispatch overhead as batches grow; the crossover depends on the model, precision and adapter.
+   - Compute speed ratios only from matched, qualified configurations. GPU-to-single-core-CPU ratios compare both implementation and hardware.
+   - The [measured package benchmarks](package_benchmarks.md) separate CPU and GPU batch latencies and retain accuracy failures explicitly.
 
 ---
 
 ## 8. Reproducing Benchmarks
 
-Benchmark receipts are self-contained and cryptographically sealed with SHA-256 hashes. To reproduce the campaign locally:
+For a package comparison, use the dedicated FP64 aligned-model runner. Install
+LALSuite, PyTorch, JAX and the pinned Ripple version, and run against the declared
+DiffGW source revision. Every model/batch has explicit same-configuration LAL
+errors. `--record-unqualified` retains failed cases as diagnostic timings; it
+does not change the tolerances or qualify those cases.
+
+The [measured comparison's reproduction section](package_benchmarks.md#reproduction-and-receipts)
+provides the CPU/GPU commands, thread settings, pinned environment and raw
+receipts. That runner measures forward waveforms, first-call cost and warmed
+execution, not derivatives, time-domain generation, Fisher calculations or peak
+memory. Its first-call time includes execution and compilation/cache loading as
+applicable, rather than isolating compile time.
+
+For historical reproduction, start with the FP64 aligned subset and keep the legacy gate enabled. This
+command reproduces the **legacy timing workflow**, whose gate limitations are
+listed in Section 2; it does not by itself establish strict LAL qualification.
+Run explicit same-configuration LAL checks and retain their raw metrics before
+presenting timings as qualified. Evaluate FP32 as a separate accuracy campaign.
 
 ```bash
-# 1. Run multi-backend campaign (Torch, Compiled Torch, JAX, LAL)
+# 1. Run the legacy timing workflow (strict LAL checks required separately)
 python scripts/run_benchmark_campaign.py \
-    --models TaylorF2,IMRPhenomD,IMRPhenomXAS,IMRPhenomXP,IMRPhenomXHM \
+    --models TaylorF2,IMRPhenomD,IMRPhenomXAS \
     --backends torch,torch_compiled,jax,lal \
     --devices cuda,cpu \
     --cuda-batch-sizes 1,10,100,1000,5000 \
     --cpu-batch-sizes 1,10,100 \
-    --dtypes float64,float32 \
+    --dtypes float64 \
     --output artifacts/benchmarks/benchmark_receipt.json \
-    --plot --plot-dir artifacts/benchmarks/plots \
-    --skip-parity-gate
+    --plot --plot-dir artifacts/benchmarks/plots
 
-# 2. Run ultra-large batch & VRAM scaling (B = 1,000 to 50,000)
+# 2. Optional scaling diagnostics after qualifying the configurations
 python scripts/benchmark_large_batches.py \
-    --models TaylorF2,IMRPhenomD,IMRPhenomXAS,IMRPhenomXP,IMRPhenomXHM \
+    --models TaylorF2,IMRPhenomD,IMRPhenomXAS \
     --batch-sizes 1000,5000,10000,25000,50000 \
-    --device cuda --dtypes float32,float64 \
+    --device cuda --dtypes float64 \
     --output artifacts/benchmarks/batch_scaling.json \
     --plot --plot-dir artifacts/benchmarks/plots
 ```

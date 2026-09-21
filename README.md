@@ -20,7 +20,7 @@ Both frontends are fully self-contained, pure Python packages distributed under 
 
 ## Key Highlights
 
-- **Fused JIT Scalability**: Generates up to **14.4 million waveforms per second** on an NVIDIA GeForce RTX 5090 using fused Inductor JIT kernels (`torch.compile`) and JAX XLA compilation.
+- **Fused JIT Scalability**: The reported peak is **14.4 million waveforms per second** for **FP32 TaylorF2**, batch **5,000**, on an **NVIDIA GeForce RTX 5090** using `torch.compile`. See the [performance report](docs/performance.md) for grids, precision and qualification limits.
 - **Double-Precision Parity**: PyTorch (`torchwave`) and JAX (`jaxwave`) agree to double-precision numerical noise ($L_2 \le 10^{-11}$, mismatch $\le 10^{-14}$), continuously verified by 1,021 automated tests.
 - **Co-Equal Frontends**: Unified physics contracts guarantee exact functional and numerical parity between PyTorch and JAX across all 12 waveform model families.
 - **Native Autodiff**: Exact parameter gradients for forward-mode Fisher Information Matrix (FIM), Maximum A Posteriori (MAP) optimization, and No-U-Turn Sampler (NUTS) MCMC.
@@ -252,8 +252,8 @@ The complete documentation is organized into five balanced sections matching the
   - [2. Fisher Information Analysis](docs/tutorials/02_fisher_analysis.md) ([`examples/02_fisher_analysis.py`](examples/02_fisher_analysis.py))
   - [3. Bayesian Parameter Estimation & NUTS](docs/tutorials/03_parameter_estimation_nuts.md) ([`examples/03_parameter_estimation_nuts.py`](examples/03_parameter_estimation_nuts.py))
 - **Benchmarks & Scientific Validation**:
+  - [Package Comparison](docs/comparison.md) — Compare DiffGW, LALSimulation, Ripple, PhenomXPy and GWFAST by workflow, models, derivatives and execution.
   - [Performance & Scaling Report](docs/performance.md) — NVIDIA RTX 5090 scaling analysis across PyTorch eager, Inductor (`torch.compile`), JAX CUDA, and LAL.
-  - [Differences from LAL](docs/differences_from_lal.md) — Mathematical improvements including $C^1$ cubic Hermite spline interpolation.
   - [Controlled Benchmark Protocol](docs/benchmarking_protocol.md) — Benchmarking methodology, Gate 1 scientific parity enforcement, and cryptographic receipts.
   - [Mathematical Provenance Ledger](docs/provenance_ledger.md) — Phasing derivations, calibration tables, and literature provenance.
 - **API Reference**:

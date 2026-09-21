@@ -2,14 +2,14 @@
 
 This document records mathematical sources, asset provenance, and calibration
 provenance in TorchWave. Current verified results and technical differences from
-LALSimulation are documented in [**Differences from LAL**](differences_from_lal.md).
+LALSimulation are documented in [**Differences from LAL**](comparison.md#model-specific-differences-from-lal).
 
 ## 1. Clean-Room Architecture Principles
 
 1. **Literature Derivation**: Physical formulas and calibration parameters are independently derived from peer-reviewed primary literature, open Numerical Relativity catalogs (SXS), or public author data deposits. Separately named numerical compatibility conventions are documented openly.
 2. **Separated Reference Audit and Implementation**: Reference audits evaluate public LAL binary outputs strictly as black-box validation oracles. Reference source code stays outside the repository; implementations are developed from analytical equations and physical contracts. Historical clean-room review records and audit transcripts are preserved on git branch `archive/clean-room-reviews`.
 3. **Black-Box Binary Oracle Testing**: Implementers use LALSimulation Python bindings exclusively as an external verification oracle for acceptance gates and parity testing. Calibration coefficients and residual fits are never fitted to LAL outputs.
-4. **Transparent Residual Accounting**: Where clean-room implementations have documented formulation choices or differences relative to reference codes, these are recorded openly in [Differences from LAL](differences_from_lal.md) and tracked by declarative acceptance suites.
+4. **Transparent Residual Accounting**: Where clean-room implementations have documented formulation choices or differences relative to reference codes, these are recorded openly in [Differences from LAL](comparison.md#model-specific-differences-from-lal) and tracked by declarative acceptance suites.
 
 ---
 
@@ -240,7 +240,7 @@ The sovereign calibration surfaces in `torchwave` were trained on numerical rela
 
 ## 6. Documented Differences from LALSimulation
 
-For complete technical descriptions of formulations and comparisons with LALSimulation, see [**Differences from LAL**](differences_from_lal.md).
+For complete technical descriptions of formulations and comparisons with LALSimulation, see [**Differences from LAL**](comparison.md#model-specific-differences-from-lal).
 
 ## Native aligned-spin IMRPhenomT (2026-09-21)
 
@@ -270,7 +270,7 @@ For complete technical descriptions of formulations and comparisons with LALSimu
   `tests/test_phenomt_reference.py` retains numerical values from the pinned
   MIT author implementation and optional LAL binary comparisons spanning
   equal masses, mass ratio 10 and spins from -0.9 to 0.9. Measured LAL
-  residuals are recorded in [Differences from LAL](differences_from_lal.md).
+  residuals are recorded in [Differences from LAL](comparison.md#model-specific-differences-from-lal).
   FP64 cross-backend tests require relative L2 error at most `1e-11` and
   mismatch at most `1e-14`, including the high-spin mass-ratio-10 JIT case.
   Phase-sensitive mass/spin gradients are checked against finite differences
