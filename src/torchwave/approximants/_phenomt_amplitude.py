@@ -74,7 +74,7 @@ def _merger_basis(t, alpha, derivative=False):
     return torch.stack((torch.ones_like(t), sech1, sech2 ** (1 / 7), t**2), dim=-1)
 
 
-def amplitude_coefficients(eta, delta, chi1, chi2, fd, fd2, omega, domega):
+def amplitude_coefficients(eta, delta, chi1, chi2, fd, fd2, omega, domega, rd_fd=None, rd_fd2=None):
     """Solve amplitude matching; callbacks evaluate angular frequency in M units."""
     pn = _pn_coefficients(eta, delta, chi1, chi2)
     spin = fits._s_tot_r(eta, chi1, chi2, delta)
@@ -100,33 +100,34 @@ def amplitude_coefficients(eta, delta, chi1, chi2, fd, fd2, omega, domega):
     derivative = sign * (acut.conj() * da_dx).real / abs_cut * dx_dt
 
     alpha = 2 * math.pi * fd
-    alpha2 = 2 * math.pi * fd2
+    rd_alpha = alpha if rd_fd is None else 2 * math.pi * rd_fd
+    alpha2 = 2 * math.pi * (fd2 if rd_fd2 is None else rd_fd2)
     peak = fits._IMRPhenomT_PeakAmp(eta, spin, dchi, delta, 22)
     midpoint = fits._IMRPhenomT_Intermediate_Amp_CP1(eta, spin, dchi, delta, 22)
     c3 = fits._IMRPhenomT_Ringdown_Amp_C3(eta, spin, dchi, 22)
-    c2 = (alpha2 - alpha) / 2
-    bound = -0.5 * alpha / torch.tanh(c3)
+    c2 = (alpha2 - rd_alpha) / 2
+    bound = -0.5 * rd_alpha / torch.tanh(c3)
     c2 = torch.where(c2 > torch.abs(bound), bound, c2)
-    c1 = peak * alpha * torch.cosh(c3) ** 2 / c2
+    c1 = peak * rd_alpha * torch.cosh(c3) ** 2 / c2
     c4 = peak - c1 * torch.tanh(c3)
 
     mt = eta[..., None] * 0 + torch.tensor((-150.0, -25.0, 0.0), dtype=eta.dtype, device=eta.device)
     matrix = torch.cat((_merger_basis(mt, alpha), _merger_basis(mt[..., :1], alpha, derivative=True)), dim=-2)
     rhs = torch.stack(((sign * abs_cut)[..., 0], midpoint, peak, derivative[..., 0]), dim=-1)
     merger = torch.linalg.solve(matrix, rhs[..., None])[..., 0]
-    return pn, pseudo, merger, alpha, c1, c2, c3, c4
+    return pn, pseudo, merger, alpha, c1, c2, c3, c4, rd_alpha
 
 
 def amplitude(times, state, omega):
     """Return |h22| with inactive branches evaluated only on finite safe domains."""
-    pn, pseudo, merger, alpha, c1, c2, c3, c4 = state
+    pn, pseudo, merger, alpha, c1, c2, c3, c4, rd_alpha = state
     inspiral_times = torch.clamp(times, max=-150.0)
     x = (omega(inspiral_times) / 2) ** (2 / 3)
     inspiral = torch.abs(_pn(x, pn, pseudo))
     merger_times = torch.clamp(times, min=-150.0, max=0.0)
     middle = torch.sum(_merger_basis(merger_times, alpha) * merger[..., None, :], dim=-1)
     rd_times = torch.clamp(times, min=0.0)
-    ringdown = torch.exp(-alpha[..., None] * rd_times) * (
+    ringdown = torch.exp(-rd_alpha[..., None] * rd_times) * (
         c1[..., None] * torch.tanh(c2[..., None] * rd_times + c3[..., None]) + c4[..., None]
     )
     return torch.where(times < -150.0, inspiral, torch.abs(torch.where(times < 0.0, middle, ringdown)))

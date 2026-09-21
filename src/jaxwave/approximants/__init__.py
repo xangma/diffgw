@@ -3,6 +3,9 @@
 from .taylorf2 import TaylorF2
 from .imrphenomd import IMRPhenomD
 from .imrphenomt import IMRPhenomT
+from .imrphenomthm import IMRPhenomTHM
+from .imrphenomtp import IMRPhenomTP
+from .imrphenomtphm import IMRPhenomTPHM
 from .imrphenomd_nrtidal import IMRPhenomD_NRTidal, IMRPhenomD_NRTidalv2
 from .taylorf2_hm import TaylorF2_HM
 from .imrphenom_hm import IMRPhenomHM
@@ -102,6 +105,9 @@ __all__ = [
     "TaylorF2",
     "IMRPhenomD",
     "IMRPhenomT",
+    "IMRPhenomTHM",
+    "IMRPhenomTP",
+    "IMRPhenomTPHM",
     "IMRPhenomD_NRTidal",
     "IMRPhenomD_NRTidalv2",
     "TaylorF2_HM",

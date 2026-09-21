@@ -1,4 +1,4 @@
-"""Sampling and validation for the native dominant-mode IMRPhenomT API."""
+"""Sampling and validation for the native IMRPhenomT waveform family."""
 
 import math
 import jax
@@ -9,6 +9,7 @@ from .approximants.imrphenomt import IMRPhenomT
 
 def generate_td(
     *,
+    approximant="imrphenomt",
     mass1,
     mass2,
     chi1,
@@ -36,6 +37,17 @@ def generate_td(
     **kwargs,
 ):
     """Evaluate on a fixed physical time grid, with no FFT or periodic wrap."""
+    names = {
+        "imrphenomt": "IMRPhenomT", "imrphenomthm": "IMRPhenomTHM",
+        "imrphenomtp": "IMRPhenomTP", "imrphenomtphm": "IMRPhenomTPHM",
+    }
+    model_name = names[approximant]
+    precessing = approximant in ("imrphenomtp", "imrphenomtphm")
+    model_options = {}
+    if approximant != "imrphenomt" and "modes" in kwargs:
+        model_options["modes"] = kwargs.pop("modes")
+    if precessing:
+        model_options["precession_method"] = kwargs.pop("precession_method", "nnlo")
 
     def array(value):
         return jnp.asarray(value, dtype=dtype)
@@ -54,7 +66,7 @@ def generate_td(
     if duration is not None and (not math.isfinite(duration) or duration <= 0):
         raise ValueError("duration must be finite and positive")
     if f_final is not None:
-        raise ValueError("IMRPhenomT does not support the frequency-domain f_final cutoff")
+        raise ValueError(f"{model_name} does not support the frequency-domain f_final cutoff")
     f_ref = kwargs.pop("f_ref", None)
     if f_ref is None:
         f_ref = f_lower
@@ -63,7 +75,7 @@ def generate_td(
         f_ref = jnp.where(f_ref == 0, array(f_lower), f_ref)
     require(jnp.isfinite(array(f_ref)) & (array(f_ref) > 0), "f_ref must be finite and nonnegative")
     if kwargs:
-        raise TypeError(f"Unsupported IMRPhenomT options: {', '.join(sorted(kwargs))}")
+        raise TypeError(f"Unsupported {model_name} options: {', '.join(sorted(kwargs))}")
 
     def spin(chi, z, label):
         if chi is not None and z is not None:
@@ -73,20 +85,46 @@ def generate_td(
         return result
 
     s1, s2 = spin(chi1, spin1z, "spin1"), spin(chi2, spin2z, "spin2")
-    for value in (spin1x, spin1y, spin2x, spin2y):
-        require(array(value) == 0, "IMRPhenomT only supports aligned spins")
+    if precessing:
+        for sx, sy, sz in ((spin1x, spin1y, s1), (spin2x, spin2y, s2)):
+            norm_sq = array(sx)**2 + array(sy)**2 + sz**2
+            require(jnp.isfinite(norm_sq) & (norm_sq <= 1), "Spin-vector norms must not exceed 1")
+        model_options.update(spin1x=array(spin1x), spin1y=array(spin1y),
+                             spin2x=array(spin2x), spin2y=array(spin2y))
+    else:
+        for value in (spin1x, spin1y, spin2x, spin2y):
+            require(array(value) == 0, f"{model_name} only supports aligned spins")
     for value in (lambda1, lambda2):
         if value is not None:
-            require(array(value) == 0, "IMRPhenomT does not support tidal deformability")
+            require(array(value) == 0, f"{model_name} does not support tidal deformability")
     m1, m2, dist = array(mass1), array(mass2), array(distance)
     for name, value in (("mass1", m1), ("mass2", m2), ("distance", dist)):
         require(jnp.isfinite(value) & (value > 0), f"{name} must be finite and positive")
     for name, value in (("inclination", inclination), ("phic", phic), ("tc", tc)):
         require(jnp.isfinite(array(value)), f"{name} must be finite")
 
-    model = IMRPhenomT()
-    start = model.time_at_frequency(array(f_lower), m1, m2, chi1=s1, chi2=s2)
-    require(jnp.isfinite(start), "f_lower is outside the IMRPhenomT frequency range")
+    if approximant == "imrphenomthm":
+        from .approximants.imrphenomthm import IMRPhenomTHM
+        model = IMRPhenomTHM()
+    elif precessing:
+        from .approximants.imrphenomtp import IMRPhenomTP
+        from .approximants.imrphenomtphm import IMRPhenomTPHM
+        model = IMRPhenomTP() if approximant == "imrphenomtp" else IMRPhenomTPHM()
+    else:
+        model = IMRPhenomT()
+    final_spin = None
+    if precessing:
+        from .approximants._phenomt_precession import nnlo_final_spin
+        final_spin = nnlo_final_spin(
+            m1, m2, array(spin1x), array(spin1y), s1,
+            array(spin2x), array(spin2y), s2,
+        )
+        model_options["final_spin"] = final_spin
+    start = IMRPhenomT().time_at_frequency(
+        array(f_lower), m1, m2, chi1=s1, chi2=s2,
+        _final_spin_override=final_spin,
+    )
+    require(jnp.isfinite(start), f"f_lower is outside the {model_name} frequency range")
     if duration is None:
         # Grid shape is necessarily static; automatic sizing is an eager operation.
         duration = max(2.0, float(jnp.max(-start - array(tc))) + t_pad + delta_t)
@@ -106,6 +144,7 @@ def generate_td(
         phic=array(phic),
         tc=array(tc),
         f_ref=array(f_ref),
+        **model_options,
     )
     active = times >= (start + array(tc))[..., None]
     hp = jnp.where(active, hp, 0.0)

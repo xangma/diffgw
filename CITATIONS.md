@@ -993,7 +993,7 @@ The fundamental Kerr mode now uses an independently generated spectral approxima
 ```
 
 
-## Native IMRPhenomT
+## Native IMRPhenomT family
 
 ```bibtex
 @article{Estelles:2021PhenomT,
@@ -1010,12 +1010,12 @@ The fundamental Kerr mode now uses an independently generated spectral approxima
 }
 ```
 
-The aligned-spin `(2,±2)` implementation uses the MIT-licensed author release
+The aligned-spin carrier and higher harmonics use the MIT-licensed author release
 [phenomxpy](https://gitlab.com/imrphenom-dev/phenomxpy/-/tree/4121fafa0484f3db2a7352f4eea697faaaf29f65/phenomxpy/phenomt)
 for calibration expressions and reconstruction conventions. See
 [third-party notices](THIRD_PARTY_NOTICES.md) for the retained license.
 
-The updated dominant-mode reconstruction is also described in:
+The higher-mode reconstruction is described in:
 
 ```bibtex
 @article{Estelles:2020PhenomTHM,
@@ -1024,7 +1024,28 @@ The updated dominant-mode reconstruction is also described in:
     eprint = "2012.11923",
     archivePrefix = "arXiv",
     primaryClass = "gr-qc",
-    year = "2020"
+    doi = "10.1103/PhysRevD.105.084039",
+    journal = "Phys. Rev. D",
+    volume = "105",
+    pages = "084039",
+    year = "2022"
 }
 ```
-Only its dominant-mode improvements are implemented here.
+
+For TP/TPHM, cite the precessing family paper, whose Appendix A describes
+the NNLO option exposed here:
+
+```bibtex
+@article{Estelles:2022PhenomTPHM,
+    author = "Estellés, Héctor and others",
+    title = "{New twists in compact binary waveform modelling: a fast time domain model for precession}",
+    eprint = "2105.05872",
+    archivePrefix = "arXiv",
+    primaryClass = "gr-qc",
+    doi = "10.1103/PhysRevD.105.084040",
+    journal = "Phys. Rev. D",
+    volume = "105",
+    pages = "084040",
+    year = "2022"
+}
+```

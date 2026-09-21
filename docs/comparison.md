@@ -142,7 +142,7 @@ use optimized plus-polarization overlaps with model-specific tolerances.
 Their scope differs from the direct, both-polarization FP64 gate above; these
 variants were not timed in that campaign.
 
-### Native IMRPhenomT
+### Native IMRPhenomT family
 
 The residuals below are historical time-domain observations, separate from
 the new frequency-domain timing campaign. The current regression tests retain
@@ -157,8 +157,9 @@ convention: the amplitude peak is at `tc`, with a shared fixed grid for
 batches and explicit `duration`. It does not promise LAL's automatically
 selected epoch or array length. `phic` fixes orbital phase at `f_ref`.
 
-At baseline `5226141`, DiffGW provides no `THM`, `TP` or `TPHM` variant
-and no direct frequency-domain implementation. Optional black-box LAL checks and native
+The family also provides `THM`, `TP` and `TPHM`, with NNLO precession for
+the latter two; there is no direct frequency-domain implementation.
+Optional black-box LAL checks and native
 Torch/JAX parity tests accompany the implementation; LAL is not a runtime
 dependency.
 
@@ -177,6 +178,37 @@ maximizes constant phase, and applies no time shift. These results establish
 close agreement for the tested cases, not bitwise equivalence to LAL.
 The optional regression cases are in the
 [IMRPhenomT reference tests](https://github.com/xangma/diffgw/blob/5226141/tests/test_phenomt_reference.py).
+
+For THM, three additional cases with component masses `(40, 15)`, `(30, 25)`,
+and `(60, 6)` give direct complex-strain relative L2 errors of `1.8e-5`,
+`7.1e-5`, and `1.8e-4`, respectively. The largest mismatch is `9.6e-9`.
+These checks use the complete LAL time grid at 2048 Hz and all five supported
+mode pairs, with no time, phase, or amplitude adjustment for the L2 metric.
+The mass, spin, and viewing-angle configurations are retained in
+`tests/test_phenomt_family_lal.py`.
+
+For TP/TPHM, the oracle uses `PhenomXPrecVersion=10210` and
+`PhenomXPFinalSpinMod=0` in LALSimulation 6.2.1. Those options differ from
+LAL's default numerical precession. With the same cases, the direct relative
+L2 errors are:
+
+| Masses (solar masses) | Sample rate (Hz) | TP | TPHM |
+| --- | ---: | ---: | ---: |
+| 40, 15 | 2048 | 0.0028 | 0.0028 |
+| 30, 25 (aligned) | 2048 | 0.000071 | 0.000071 |
+| 60, 6 | 32768 | 0.0068 | 0.0087 |
+
+The largest mismatch in this table is `3.6e-5`. These are measured cases,
+not an accuracy guarantee over the model's parameter space. In particular,
+the rapidly precessing `(60, 6)` case at **2048 Hz** has relative L2 errors
+of **0.111 (TP)** and **0.142 (TPHM)**, with mismatches `0.0060` and `0.0099`.
+Binary angle diagnostics show that LAL starts the post-merger continuation
+two samples before its first nonnegative time sample. This implementation
+anchors it at physical time `tc`, so evaluating an existing time on a denser
+grid cannot change its waveform. The published NNLO orbital-angular-momentum
+series also retains a pi-squared term absent from LAL's 102 beta prescription.
+Both differences remain explicit; the implementation does not apply a
+sample-dependent shift or fit a correction to the binary output.
 
 ### Reproducing model checks
 

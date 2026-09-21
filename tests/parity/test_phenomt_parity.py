@@ -105,7 +105,7 @@ def test_jax_phenomt_join_continuity_and_phase_frequency_relation():
     )
     from jaxwave.approximants._phenomt_amplitude import _merger_basis, _pn
 
-    pn, pseudo, merger, alpha, c1, c2, c3, c4 = state[8]
+    pn, pseudo, merger, alpha, c1, c2, c3, c4, rd_alpha = state[8]
 
     def omega_cb(u):
         return model._omega_insp(u, state[1], state[2], state[5], state[6], state[7])
@@ -118,7 +118,7 @@ def test_jax_phenomt_join_continuity_and_phase_frequency_relation():
         return jnp.sum(_merger_basis(u, alpha) * merger, axis=-1)
 
     def ringdown(u):
-        return jnp.exp(-alpha * u) * (c1 * jnp.tanh(c2 * u + c3) + c4)
+        return jnp.exp(-rd_alpha * u) * (c1 * jnp.tanh(c2 * u + c3) + c4)
 
     np.testing.assert_allclose(
         np.asarray(inspiral(jnp.asarray([-150.0], dtype=dtype))),

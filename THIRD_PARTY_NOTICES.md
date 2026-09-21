@@ -78,7 +78,7 @@ these supplementary assets, so this notice makes no licensing assurance.
 
 ## IMRPhenomT author formulas and calibration expressions — MIT
 
-`src/diffgw_core/phenomt_fits.py` transcribes the dominant-mode branches from
+`src/diffgw_core/phenomt_fits.py` transcribes the aligned dominant- and higher-mode fit branches from
 `phenomxpy/phenomt/fits.py`; the native Torch and JAX reconstruction follows
 `internals.py` and `numba_ansatze.py` alongside the published model equations.
 The code has been adapted to framework-native tensor algebra, differentiable

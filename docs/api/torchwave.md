@@ -30,6 +30,21 @@ See the [IMRPhenomT guide](../imrphenomt.md) for examples and conventions.
       members: [time_domain, frequency, time_at_frequency]
       heading_level: 3
 
+::: torchwave.IMRPhenomTHM
+    options:
+      members: [time_domain, modes]
+      heading_level: 3
+
+::: torchwave.IMRPhenomTP
+    options:
+      members: [time_domain]
+      heading_level: 3
+
+::: torchwave.IMRPhenomTPHM
+    options:
+      members: [time_domain]
+      heading_level: 3
+
 ---
 
 ## Bayesian Inference & Differentiable Likelihoods

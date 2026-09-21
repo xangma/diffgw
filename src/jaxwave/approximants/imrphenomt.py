@@ -228,7 +228,8 @@ class IMRPhenomT:
         return M, eta, delta, S, dchi, af, mf
 
     @staticmethod
-    def _coeff(m1, m2, chi1, chi2):
+    def _coeff(m1, m2, chi1, chi2, final_spin=None):
+        """Reconstruct the carrier, optionally using a precessing remnant spin."""
         M, eta, delta, S, dchi, af, mf = IMRPhenomT._state(m1, m2, chi1, chi2)
         t0 = _t(_fit_any(("IMRPhenomT_Inspiral_TaylorT3_t0",), eta, S, dchi, delta), eta)
         freq_cp = [_t(_fit_any(("IMRPhenomT_Inspiral_Freq_CP",), eta, S, dchi, delta, i), eta) for i in range(1, 6)]
@@ -245,6 +246,14 @@ class IMRPhenomT:
         fr = _t(_fit_any(("IMRPhenomT_fringfit",), af, 22), eta) / mf
         fd = _t(_fit_any(("IMRPhenomT_fdampfit",), af, 22), eta) / mf
         fd2 = _t(_fit_any(("IMRPhenomT_fdampn2fit",), af, 22), eta) / mf
+        # The NNLO precessing remnant changes only ringdown (TPHM Sec. II C).
+        # Preserve the calibrated aligned-spin inspiral and merger joins.
+        rd_fr, rd_fd, rd_fd2 = fr, fd, fd2
+        if final_spin is not None:
+            rd_af = jnp.asarray(final_spin, dtype=eta.dtype) + jnp.zeros_like(eta)
+            rd_fr = _t(_fit_any(("IMRPhenomT_fringfit",), rd_af, 22), eta) / mf
+            rd_fd = _t(_fit_any(("IMRPhenomT_fdampfit",), rd_af, 22), eta) / mf
+            rd_fd2 = _t(_fit_any(("IMRPhenomT_fdampn2fit",), rd_af, 22), eta) / mf
 
         th = jnp.asarray((0.33, 0.45, 0.55, 0.65, 0.75, 0.82), dtype=eta.dtype)
         qmat = jnp.stack([th ** (8 + j) for j in range(6)], -1)
@@ -324,7 +333,7 @@ class IMRPhenomT:
             dd = c1f[..., None] * c2f[..., None] ** 2 * c3f[..., None] * er / (1 + c3f[..., None] * er) ** 2
             return jnp.where(tt < tcut[..., None], di, jnp.where(tt < 0, dm, dd))
 
-        amp_state = amplitude_coefficients(eta, delta, chi1, chi2, fd, fd2, omega_cb, domega_cb)
+        amp_state = amplitude_coefficients(eta, delta, chi1, chi2, fd, fd2, omega_cb, domega_cb, rd_fd, rd_fd2)
 
         # Analytic phase offsets make all three regions C0 continuous.
         p5 = jnp.asarray(5.0, dtype=eta.dtype) ** (jnp.arange(8, dtype=eta.dtype) / 8)
@@ -370,6 +379,8 @@ class IMRPhenomT:
             phoff_m,
             phoff_r,
             p5,
+            2 * PI * rd_fr,
+            (1 + c3f) * (2 * PI * rd_fr - omega_peak) / (c2f * c3f),
         )
 
     @staticmethod
@@ -438,13 +449,15 @@ class IMRPhenomT:
             phom,
             phor,
             p5,
+            rd_wr,
+            rd_c1f,
         ) = state
         ui = jnp.minimum(u, tcut[..., None])
         win = IMRPhenomT._omega_insp(ui, eta, delta, s1, s2, wc)
         um = jnp.clip(u, tcut[..., None], 0.0)
         ur = jnp.maximum(u, jnp.zeros_like(u))
         ex = jnp.exp(-c2f[..., None] * ur)
-        wring = wr[..., None] - c1f[..., None] * c2f[..., None] * c3f[..., None] * ex / (1 + c3f[..., None] * ex)
+        wring = rd_wr[..., None] - rd_c1f[..., None] * c2f[..., None] * c3f[..., None] * ex / (1 + c3f[..., None] * ex)
         x = jnp.arcsinh(alpha[..., None] * um)
         wm = wr[..., None] * (
             1
@@ -468,8 +481,8 @@ class IMRPhenomT:
         )
         er = jnp.exp(-c2f[..., None] * ur)
         pr = (
-            c1f[..., None] * jnp.log((1 + c3f[..., None] * er) / (1 + c3f[..., None]))
-            + wr[..., None] * ur
+            rd_c1f[..., None] * jnp.log((1 + c3f[..., None] * er) / (1 + c3f[..., None]))
+            + rd_wr[..., None] * ur
             + phor[..., None]
         )
         phase = jnp.where(u < tcut[..., None], pi, jnp.where(u < 0, pm, pr))
@@ -509,6 +522,8 @@ class IMRPhenomT:
             phom,
             phor,
             p5,
+            rd_wr,
+            rd_c1f,
         ) = state
         ui = jnp.minimum(u, tcut[..., None])
         um = jnp.clip(u, tcut[..., None], 0.0)
@@ -524,7 +539,7 @@ class IMRPhenomT:
         )
         dm = -wr[..., None] * dqx * dx
         er = jnp.exp(-c2f[..., None] * ur)
-        dd = c1f[..., None] * c2f[..., None] ** 2 * c3f[..., None] * er / (1 + c3f[..., None] * er) ** 2
+        dd = rd_c1f[..., None] * c2f[..., None] ** 2 * c3f[..., None] * er / (1 + c3f[..., None] * er) ** 2
         return jnp.where(u < tcut[..., None], di, jnp.where(u < 0, dm, dd))
 
     def time_domain(
@@ -539,6 +554,8 @@ class IMRPhenomT:
         phic: TensorLike = 0.0,
         tc: TensorLike = 0.0,
         f_ref: TensorLike = 20.0,
+        *,
+        _final_spin_override=None,
     ) -> tuple[jnp.ndarray, jnp.ndarray]:
         """Return h_plus, h_cross on times in seconds relative to the peak.
 
@@ -550,7 +567,7 @@ class IMRPhenomT:
             jnp.asarray(v, dtype=t.dtype) for v in (mass1, mass2, chi1, chi2, distance, inclination, phic, tc, f_ref)
         ]
         m1, m2, c1, c2, d, inc, pc, tcenter, fr = jnp.broadcast_arrays(m1, m2, c1, c2, d, inc, pc, tcenter, fr)
-        state = self._coeff(m1, m2, c1, c2)
+        state = self._coeff(m1, m2, c1, c2, final_spin=_final_spin_override)
         M = state[0]
         u = (t.reshape((1,) * M.ndim + (-1,)) - tcenter[..., None]) / (M[..., None] * MSUN_SEC)
         omega, phase, amp_state = self._evaluate(u, state)
@@ -561,7 +578,7 @@ class IMRPhenomT:
         # lower/reference frequency.  Subtract the analytic phase at that
         # frequency, as the author implementation does.
         fphase = jnp.where(fr > 0, fr, jnp.full_like(fr, 20.0))
-        tref = self.time_at_frequency(fphase, m1, m2, c1, c2)
+        tref = self.time_at_frequency(fphase, m1, m2, c1, c2, _final_spin_override=_final_spin_override)
         uref = tref / (M * MSUN_SEC)
         phref = self._evaluate(uref[..., None], state)[1][..., 0]
         ph = phase - phref[..., None] + 2.0 * pc[..., None]
@@ -574,7 +591,7 @@ class IMRPhenomT:
     forward = time_domain
     __call__ = time_domain
 
-    def frequency(self, times, mass1, mass2, chi1=0.0, chi2=0.0):
+    def frequency(self, times, mass1, mass2, chi1=0.0, chi2=0.0, *, _final_spin_override=None):
         """Instantaneous gravitational-wave frequency in Hz at peak-relative times."""
         t = jnp.asarray(times, dtype=jnp.float64)
         m1 = jnp.asarray(mass1, dtype=t.dtype)
@@ -584,9 +601,9 @@ class IMRPhenomT:
         m1, m2, c1, c2 = jnp.broadcast_arrays(m1, m2, c1, c2)
         M = m1 + m2
         u = t.reshape((1,) * M.ndim + (-1,)) / (M[..., None] * MSUN_SEC)
-        return self._evaluate(u, self._coeff(m1, m2, c1, c2))[0] / (2 * PI * M[..., None] * MSUN_SEC)
+        return self._evaluate(u, self._coeff(m1, m2, c1, c2, final_spin=_final_spin_override))[0] / (2 * PI * M[..., None] * MSUN_SEC)
 
-    def time_at_frequency(self, frequency, mass1, mass2, chi1=0.0, chi2=0.0):
+    def time_at_frequency(self, frequency, mass1, mass2, chi1=0.0, chi2=0.0, *, _final_spin_override=None):
         """Return peak-relative time at a requested instantaneous frequency.
 
         The bracket is grown from the Newtonian inspiral estimate so that it
@@ -603,17 +620,17 @@ class IMRPhenomT:
         m1, m2, c1, c2, f = jnp.broadcast_arrays(m1, m2, c1, c2, f)
         M = m1 + m2
         target = 2 * PI * f * M * MSUN_SEC
-        st = self._coeff(m1, m2, c1, c2)
+        st = self._coeff(m1, m2, c1, c2, final_spin=_final_spin_override)
 
         # Eager calls give a useful exception.  Under jit these conditions are
         # represented by ``valid`` below, yielding NaN rather than selecting a
         # clipped endpoint when the requested root does not exist.
-        concrete = not any(isinstance(v, jax.core.Tracer) for v in (f, m1, m2, c1, c2))
-        valid = jnp.isfinite(f) & (f > 0) & (target < 2 * PI * st[17])
+        concrete = not any(isinstance(v, jax.core.Tracer) for v in (f, m1, m2, c1, c2, _final_spin_override))
+        valid = jnp.isfinite(f) & (f > 0) & (target < st[30])
         if concrete:
             if not bool(jnp.all(jnp.isfinite(f) & (f > 0))):
                 raise ValueError("frequency must be finite and positive")
-            if bool(jnp.any(target >= 2 * PI * st[17])):
+            if bool(jnp.any(target >= st[30])):
                 raise ValueError("frequency is above the supported IMRPhenomT range")
 
         # Newtonian leading-order time, buffered as in the author solver.

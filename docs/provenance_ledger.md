@@ -242,7 +242,7 @@ The sovereign calibration surfaces in `torchwave` were trained on numerical rela
 
 For complete technical descriptions of formulations and comparisons with LALSimulation, see [**Differences from LAL**](comparison.md#model-specific-differences-from-lal).
 
-## Native aligned-spin IMRPhenomT (2026-09-21)
+## Native IMRPhenomT family (2026-09-21)
 
 - Physics: Estellés et al., Phys. Rev. D **103**, 124060 (2021),
   [arXiv:2004.08302](https://arxiv.org/abs/2004.08302),
@@ -251,8 +251,8 @@ For complete technical descriptions of formulations and comparisons with LALSimu
   [arXiv:2012.11923](https://arxiv.org/abs/2012.11923), Eqs. 14–31.
 - Calibration and reconstruction reference: the MIT-licensed author repository
   [phenomxpy, pinned revision](https://gitlab.com/imrphenom-dev/phenomxpy/-/tree/4121fafa0484f3db2a7352f4eea697faaaf29f65/phenomxpy/phenomt).
-  Shared calibration expressions retain only the `(2,2)` branches of
-  `fits.py`; `internals.py` and `numba_ansatze.py` provide the reconstruction
+  Shared calibration expressions include the supported `(2,2)`, `(2,1)`,
+  `(3,3)`, `(4,4)` and `(5,5)` branches of `fits.py`; `internals.py` and `numba_ansatze.py` provide the reconstruction
   conventions. This is an attributed adaptation of permissive author math,
   not a claim that the numerical calibration coefficients were independently
   derived from the paper. The complete MIT notice is retained in
@@ -260,8 +260,13 @@ For complete technical descriptions of formulations and comparisons with LALSimu
 - Runtime: framework-native tensor operations and differentiable matching in
   both frontends, with backend-independent algebraic fits in `diffgw_core`.
   No LALSuite, SciPy or phenomxpy waveform calls are made at runtime.
-- Scope: aligned-spin black hole `(2,±2)` polarizations only; higher modes,
-  precession and tidal corrections are not included.
+- Scope: T, THM, TP and TPHM for black hole binaries. THM includes mode
+  pairs `(2,2)`, `(2,1)`, `(3,3)`, `(4,4)` and `(5,5)`. TP/TPHM implement
+  published NNLO twisting; numerical and MSA precession and tides are absent.
+- Precession reference: [arXiv:2105.05872](https://arxiv.org/abs/2105.05872).
+  The native rotation uses published Euler-angle and Wigner-matrix formulas
+  with the repository's NNLO tensor implementation. The upstream numerical
+  and MSA modules identify GPL-derived code and were excluded from adaptation.
 - Verification: LALSimulation is used only through its installed binary
   Python bindings as an optional black-box oracle. No coefficients or
   residuals are fitted to those outputs, and no GPL implementation source
@@ -275,3 +280,11 @@ For complete technical descriptions of formulations and comparisons with LALSimu
   mismatch at most `1e-14`, including the high-spin mass-ratio-10 JIT case.
   Phase-sensitive mass/spin gradients are checked against finite differences
   in Torch and against Torch derivatives in JAX.
+  Higher-mode fixtures from the same pinned author release are retained in
+  `tests/test_phenomthm_reference.py`; fit regressions are in
+  `tests/test_phenomthm_fits.py`. Family dispatch, remnant-spin propagation,
+  precession, and optional LAL comparisons have dedicated
+  `test_phenomt_family_*`, `test_phenomt_remnant.py`, and
+  `test_phenomt_precession.py` suites. Physical-time invariance under grid
+  changes and time translations is checked in `test_phenomt_time_grid.py`. Cross-backend higher-mode and
+  precession tests also cover JAX compilation and parameter gradients.

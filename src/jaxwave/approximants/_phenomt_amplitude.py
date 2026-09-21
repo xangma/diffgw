@@ -73,7 +73,7 @@ def _merger_basis(t, alpha, derivative=False):
     return jnp.stack((jnp.ones_like(phi), sech1, sech2 ** (1 / 7), tb**2), axis=-1)
 
 
-def amplitude_coefficients(eta, delta, chi1, chi2, fd, fd2, omega, domega):
+def amplitude_coefficients(eta, delta, chi1, chi2, fd, fd2, omega, domega, rd_fd=None, rd_fd2=None):
     pn = _pn_coefficients(eta, delta, chi1, chi2)
     spin = fits._s_tot_r(eta, chi1, chi2, delta)
     dchi = chi1 - chi2
@@ -95,31 +95,32 @@ def amplitude_coefficients(eta, delta, chi1, chi2, fd, fd2, omega, domega):
     dx_dt = 2 / 3 * xcut / omega_cp[..., -1:] * domega(cp_times[..., -1:])
     derivative = sign * (acut.conj() * da_dx).real / abs_cut * dx_dt
     alpha = 2 * math.pi * fd
-    alpha2 = 2 * math.pi * fd2
+    rd_alpha = alpha if rd_fd is None else 2 * math.pi * rd_fd
+    alpha2 = 2 * math.pi * (fd2 if rd_fd2 is None else rd_fd2)
     peak = fits._IMRPhenomT_PeakAmp(eta, spin, dchi, delta, 22)
     midpoint = fits._IMRPhenomT_Intermediate_Amp_CP1(eta, spin, dchi, delta, 22)
     c3 = fits._IMRPhenomT_Ringdown_Amp_C3(eta, spin, dchi, 22)
-    c2 = (alpha2 - alpha) / 2
-    bound = -0.5 * alpha / jnp.tanh(c3)
+    c2 = (alpha2 - rd_alpha) / 2
+    bound = -0.5 * rd_alpha / jnp.tanh(c3)
     c2 = jnp.where(c2 > jnp.abs(bound), bound, c2)
-    c1 = peak * alpha * jnp.cosh(c3) ** 2 / c2
+    c1 = peak * rd_alpha * jnp.cosh(c3) ** 2 / c2
     c4 = peak - c1 * jnp.tanh(c3)
     mt = eta[..., None] * 0 + jnp.asarray((-150.0, -25.0, 0.0), dtype=eta.dtype)
     matrix = jnp.concatenate((_merger_basis(mt, alpha), _merger_basis(mt[..., :1], alpha, derivative=True)), axis=-2)
     rhs = jnp.stack(((sign * abs_cut)[..., 0], midpoint, peak, derivative[..., 0]), axis=-1)
     merger = jnp.linalg.solve(matrix, rhs[..., None])[..., 0]
-    return pn, pseudo, merger, alpha, c1, c2, c3, c4
+    return pn, pseudo, merger, alpha, c1, c2, c3, c4, rd_alpha
 
 
 def amplitude(times, state, omega):
-    pn, pseudo, merger, alpha, c1, c2, c3, c4 = state
+    pn, pseudo, merger, alpha, c1, c2, c3, c4, rd_alpha = state
     inspiral_times = jnp.minimum(times, -150.0)
     x = (omega(inspiral_times) / 2) ** (2 / 3)
     inspiral = jnp.abs(_pn(x, pn, pseudo))
     merger_times = jnp.clip(times, -150.0, 0.0)
     middle = jnp.sum(_merger_basis(merger_times, alpha) * merger[..., None, :], axis=-1)
     rd_times = jnp.maximum(times, 0.0)
-    ringdown = jnp.exp(-alpha[..., None] * rd_times) * (
+    ringdown = jnp.exp(-rd_alpha[..., None] * rd_times) * (
         c1[..., None] * jnp.tanh(c2[..., None] * rd_times + c3[..., None]) + c4[..., None]
     )
     return jnp.where(times < -150.0, inspiral, jnp.abs(jnp.where(times < 0.0, middle, ringdown)))

@@ -22,6 +22,9 @@ from jaxwave.approximants.taylorf2_hm import TaylorF2_HM
 from jaxwave.approximants.taylorf2_eccentric import TaylorF2_Eccentric
 from jaxwave.approximants.imrphenomd import IMRPhenomD
 from jaxwave.approximants.imrphenomt import IMRPhenomT
+from jaxwave.approximants.imrphenomthm import IMRPhenomTHM
+from jaxwave.approximants.imrphenomtp import IMRPhenomTP
+from jaxwave.approximants.imrphenomtphm import IMRPhenomTPHM
 from jaxwave.approximants.imrphenomp import IMRPhenomP
 from jaxwave.approximants.phenompv2_waveform import IMRPhenomPv2
 from jaxwave.approximants.imrphenomd_nrtidal import (
@@ -69,6 +72,9 @@ _APPROXIMANTS = {
     "eccentrictaylorf2": TaylorF2_Eccentric,
     "imrphenomd": IMRPhenomD,
     "imrphenomt": IMRPhenomT,
+    "imrphenomthm": IMRPhenomTHM,
+    "imrphenomtp": IMRPhenomTP,
+    "imrphenomtphm": IMRPhenomTPHM,
     "imrphenomp": IMRPhenomP,
     "imrphenompv2": IMRPhenomPv2,
     "imrphenomdnrtidal": IMRPhenomD_NRTidal,
@@ -128,8 +134,8 @@ def _get_fd_waveform_raw(
 ) -> Tuple[jnp.ndarray, jnp.ndarray]:
     """Internal raw frequency-domain waveform generator."""
     key = approximant.lower().replace("_", "").replace("-", "")
-    if key == "imrphenomt":
-        raise ValueError("IMRPhenomT is a native time-domain model; use get_td_waveform()")
+    if key in ("imrphenomt", "imrphenomthm", "imrphenomtp", "imrphenomtphm"):
+        raise ValueError(f"{approximant} is a native time-domain model; use get_td_waveform()")
     if key not in _APPROXIMANTS:
         raise ValueError(
             f"Approximant '{approximant}' not recognized. Available: {list(_APPROXIMANTS.keys())}"
@@ -603,15 +609,16 @@ def get_td_waveform(
     - Allen et al. (2012), Phys. Rev. D 85, 122006 (arXiv:gr-qc/0509116)
     - Buonanno et al. (2009), Phys. Rev. D 80, 084043 (arXiv:0907.0700)
 
-    IMRPhenomT is evaluated natively in time; f_ref fixes its orbital phase.
+    The IMRPhenomT family is evaluated natively in time; f_ref fixes its orbital phase.
     Other models use the inverse Fourier path, which conserves signal energy:
         int |h(t)|^2 dt = 2 * int |h_tilde(f)|^2 df
     """
-    if approximant.lower().replace("_", "").replace("-", "") == "imrphenomt":
+    key = approximant.lower().replace("_", "").replace("-", "")
+    if key in ("imrphenomt", "imrphenomthm", "imrphenomtp", "imrphenomtphm"):
         from ._phenomt_td import generate_td
 
         return generate_td(
-            mass1=mass1, mass2=mass2,
+            approximant=key, mass1=mass1, mass2=mass2,
             chi1=None if chi1 is _UNSET else chi1,
             chi2=None if chi2 is _UNSET else chi2,
             spin1z=spin1z, spin2z=spin2z, spin1x=spin1x, spin1y=spin1y,

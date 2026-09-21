@@ -20,6 +20,9 @@ from .approximants.phenom_meco import (
 from .approximants.taylorf2 import TaylorF2
 from .approximants.imrphenomd import IMRPhenomD
 from .approximants.imrphenomt import IMRPhenomT
+from .approximants.imrphenomthm import IMRPhenomTHM
+from .approximants.imrphenomtp import IMRPhenomTP
+from .approximants.imrphenomtphm import IMRPhenomTPHM
 from .approximants.imrphenomd_nrtidal import IMRPhenomD_NRTidal, IMRPhenomD_NRTidalv2
 from .approximants.taylorf2_hm import TaylorF2_HM
 from .approximants.imrphenom_hm import IMRPhenomHM
@@ -108,6 +111,9 @@ __all__ = [
     "TaylorF2",
     "IMRPhenomD",
     "IMRPhenomT",
+    "IMRPhenomTHM",
+    "IMRPhenomTP",
+    "IMRPhenomTPHM",
     "IMRPhenomD_NRTidal",
     "IMRPhenomD_NRTidalv2",
     "TaylorF2_HM",

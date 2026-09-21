@@ -11,6 +11,9 @@ from torchwave.approximants.taylorf2 import TaylorF2
 from torchwave.approximants.taylorf2_hm import TaylorF2_HM
 from torchwave.approximants.imrphenomd import IMRPhenomD
 from torchwave.approximants.imrphenomt import IMRPhenomT
+from torchwave.approximants.imrphenomthm import IMRPhenomTHM
+from torchwave.approximants.imrphenomtp import IMRPhenomTP
+from torchwave.approximants.imrphenomtphm import IMRPhenomTPHM
 from torchwave.approximants.imrphenomp import IMRPhenomP
 from torchwave.approximants.imrphenomd_nrtidal import (
     IMRPhenomD_NRTidal,
@@ -106,6 +109,9 @@ __all__ = [
     "TaylorF2_Eccentric",
     "IMRPhenomD",
     "IMRPhenomT",
+    "IMRPhenomTHM",
+    "IMRPhenomTP",
+    "IMRPhenomTPHM",
     "IMRPhenomD_NRTidal",
     "IMRPhenomD_NRTidalv2",
     "IMRPhenomHM",

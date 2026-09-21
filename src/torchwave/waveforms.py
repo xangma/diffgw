@@ -20,6 +20,9 @@ from torchwave.approximants.taylorf2 import TaylorF2
 from torchwave.approximants.taylorf2_hm import TaylorF2_HM
 from torchwave.approximants.imrphenomd import IMRPhenomD
 from torchwave.approximants.imrphenomt import IMRPhenomT
+from torchwave.approximants.imrphenomthm import IMRPhenomTHM
+from torchwave.approximants.imrphenomtp import IMRPhenomTP
+from torchwave.approximants.imrphenomtphm import IMRPhenomTPHM
 from torchwave.approximants.imrphenomp import IMRPhenomP
 from torchwave.approximants.imrphenomd_nrtidal import (
     IMRPhenomD_NRTidal,
@@ -53,6 +56,9 @@ _APPROXIMANTS = {
     "taylorf2hm": TaylorF2_HM,
     "imrphenomd": IMRPhenomD,
     "imrphenomt": IMRPhenomT,
+    "imrphenomthm": IMRPhenomTHM,
+    "imrphenomtp": IMRPhenomTP,
+    "imrphenomtphm": IMRPhenomTPHM,
     "imrphenomp": IMRPhenomP,
     "imrphenompv2": IMRPhenomP,
     "imrphenomxp": IMRPhenomXP,
@@ -109,6 +115,9 @@ _CANONICAL_APPROXIMANTS: List[str] = [
     "TaylorF2_Eccentric",
     "IMRPhenomD",
     "IMRPhenomT",
+    "IMRPhenomTHM",
+    "IMRPhenomTP",
+    "IMRPhenomTPHM",
     "IMRPhenomD_NRTidal",
     "IMRPhenomD_NRTidalv2",
     "IMRPhenomHM",
@@ -125,9 +134,9 @@ _CANONICAL_APPROXIMANTS: List[str] = [
 ]
 
 _APPROXIMANT_CATEGORIES: Dict[str, List[str]] = {
-    "aligned_spin": ["IMRPhenomT", "TaylorF2", "IMRPhenomD", "IMRPhenomXAS", "SEOBNRv4_ROM"],
-    "higher_modes": ["TaylorF2_HM", "IMRPhenomHM", "IMRPhenomXHM", "IMRPhenomXPHM"],
-    "precessing": ["IMRPhenomP", "IMRPhenomXP", "IMRPhenomXPHM"],
+    "aligned_spin": ["IMRPhenomT", "IMRPhenomTHM", "TaylorF2", "IMRPhenomD", "IMRPhenomXAS", "SEOBNRv4_ROM"],
+    "higher_modes": ["IMRPhenomTHM", "IMRPhenomTPHM", "TaylorF2_HM", "IMRPhenomHM", "IMRPhenomXHM", "IMRPhenomXPHM"],
+    "precessing": ["IMRPhenomTP", "IMRPhenomTPHM", "IMRPhenomP", "IMRPhenomXP", "IMRPhenomXPHM"],
     "tidal": ["IMRPhenomD_NRTidal", "IMRPhenomD_NRTidalv2", "IMRPhenomNSBH", "TEOBResumS"],
     "eccentric": ["TaylorF2_Eccentric"],
     "ringdown": ["KerrRingdown"],
@@ -149,7 +158,7 @@ _APPROXIMANT_CATEGORIES: Dict[str, List[str]] = {
         "KerrRingdown",
         "SEOBNRv4_ROM",
     ],
-    "time_domain": ["IMRPhenomT", "SEOBNR_ODE", "TEOBResumS"],
+    "time_domain": ["IMRPhenomT", "IMRPhenomTHM", "IMRPhenomTP", "IMRPhenomTPHM", "SEOBNR_ODE", "TEOBResumS"],
 }
 
 
@@ -312,8 +321,8 @@ def _get_fd_waveform_raw(
         (h_plus, h_cross): Complex tensors of frequency-domain polarizations.
     """
     key = approximant.lower().replace("_", "").replace("-", "")
-    if key == "imrphenomt":
-        raise ValueError("IMRPhenomT is a native time-domain model; use get_td_waveform()")
+    if key in ("imrphenomt", "imrphenomthm", "imrphenomtp", "imrphenomtphm"):
+        raise ValueError(f"{approximant} is a native time-domain model; use get_td_waveform()")
     if key not in _APPROXIMANTS:
         import difflib
         matches = difflib.get_close_matches(approximant, _CANONICAL_APPROXIMANTS, n=1, cutoff=0.4)
@@ -966,7 +975,7 @@ def get_td_waveform(
     - Allen et al. (2012), Phys. Rev. D 85, 122006 (arXiv:gr-qc/0509116)
     - Buonanno et al. (2009), Phys. Rev. D 80, 084043 (arXiv:0907.0700)
 
-    IMRPhenomT is evaluated natively in time; f_ref fixes its orbital phase.
+    The IMRPhenomT family is evaluated natively in time; f_ref fixes its orbital phase.
     Other models use the inverse Fourier path, which conserves signal energy:
         int |h(t)|^2 dt = 2 * int |h_tilde(f)|^2 df
 
@@ -1047,11 +1056,12 @@ def get_td_waveform(
 
     if mass1 is None or mass2 is None:
         raise TypeError("get_td_waveform() requires both 'mass1' and 'mass2' (or aliases 'mass_1', 'm1', etc.)")
-    if approximant.lower().replace("_", "").replace("-", "") == "imrphenomt":
+    key = approximant.lower().replace("_", "").replace("-", "")
+    if key in ("imrphenomt", "imrphenomthm", "imrphenomtp", "imrphenomtphm"):
         from ._phenomt_td import generate_td
 
         return generate_td(
-            mass1=mass1, mass2=mass2,
+            approximant=key, mass1=mass1, mass2=mass2,
             chi1=None if chi1 is _UNSET else chi1,
             chi2=None if chi2 is _UNSET else chi2,
             spin1z=spin1z, spin2z=spin2z, spin1x=spin1x, spin1y=spin1y,
