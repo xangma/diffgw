@@ -112,6 +112,7 @@ All models below are natively implemented in **both PyTorch (`torchwave`) and JA
 | :--- | :--- | :---: | :--- |
 | **Post-Newtonian** | `TaylorF2`<br>`TaylorF2_HM`<br>`TaylorF2_Eccentric` | $(2,2)$<br>$(2,1), (3,3), (3,2), (4,4)$<br>$(2,2)$ | 3.5PN point-particle & spin phasing, BNS tidal deformability<br>Analytical 3PN higher-order multipoles<br>Moore et al. (2016) 3PN stationary-phase eccentric corrections |
 | **Aligned-Spin IMR** | `IMRPhenomD`<br>`IMRPhenomHM`<br>`IMRPhenomXAS`<br>`IMRPhenomXHM` | $(2,2)$<br>$(2,\pm 2), (2,\pm 1), (3,\pm 3), (3,\pm 2), (4,\pm 4)$<br>$(2,\pm 2)$<br>$(2,\pm 2), (2,\pm 1), (3,\pm 3), (3,\pm 2), (4,\pm 4)$ | Aligned-spin dominant mode, 5-collocation intermediate<br>Multi-harmonic PhenomD calibration with mode mixing<br>4th-generation aligned-spin dominant mode (Pratten et al. 2020)<br>4th-generation higher multipoles (García-Quirós et al. 2020) |
+| **Native Time-Domain IMR** | `IMRPhenomT` | $(2,\pm 2)$ | Aligned-spin black hole binaries; native inspiral, merger and ringdown (Estellés et al. 2021) |
 | **Precessing IMR** | `IMRPhenomP` / `Pv2`<br>`IMRPhenomXP`<br>`IMRPhenomXPHM` | $(2,\pm 2)$ twisted<br>$(2,\pm 2)$ twisted<br>Multipolar twisted | Generic 3D spins with NNLO PN precession angles & Wigner $d$-matrices<br>4th-gen precessing carrier with MSA analytical precession<br>Multipolar precession supporting MSA (`v223`), SpinTaylor (`v320`), and PNR (`v330`) |
 | **Tidal & Matter** | `IMRPhenomD_NRTidal`<br>`IMRPhenomD_NRTidalv2`<br>`IMRPhenomNSBH` | $(2,2)$<br>$(2,2)$<br>$(2,2)$ | Dietrich et al. (2017) rational Padé BNS tidal phasing (NRTidal v1)<br>Dietrich et al. (2019) NRTidal v2 with self-spin & Planck windowing<br>Neutron star–black hole model with tidal disruption & remnant torus |
 | **Effective-One-Body** | `SEOBNR_ROM` (v4/v5)<br>`SEOBNR_ODE`<br>`TEOBResumS` | $(2,2)$<br>$(2,2)$<br>$(2,2)$ | Fast B-spline reduced-order surrogate for aligned-spin SEOBNR<br>Time-domain Hamiltonian ODE integrator with continuous QNM matching<br>Damour-Nagar EOB dynamics with spin-orbit coupling and tidal potentials |
@@ -373,7 +374,8 @@ hp_j, hc_j = diffgw.get_fd_waveform("IMRPhenomD", mass1=30.0, mass2=25.0, backen
 
 ## 6. Time-Domain Waveforms (`get_td_waveform`)
 
-`torchwave.get_td_waveform` generates time-domain polarizations obeying Parseval's energy conservation theorem:
+`get_td_waveform` is available in both frontends. Frequency-domain models use
+a conditioned inverse Fourier transform:
 
 ```python
 hp_td, hc_td, times = torchwave.get_td_waveform(
@@ -386,6 +388,49 @@ hp_td, hc_td, times = torchwave.get_td_waveform(
 )
 print("Time series duration:", times[-1].item() - times[0].item(), "seconds")
 ```
+
+### Native IMRPhenomT
+
+See the [IMRPhenomT guide](imrphenomt.md) for arbitrary grids, differentiation,
+JAX compilation, and validation details.
+
+```python
+from torchwave import get_td_waveform  # or: from jaxwave import get_td_waveform
+
+hp, hc, times = get_td_waveform(
+    "IMRPhenomT", mass1=30.0, mass2=25.0,
+    chi1=0.2, chi2=-0.1, distance=100.0, inclination=0.5,
+    f_lower=20.0, f_ref=20.0, delta_t=1 / 2048,
+    duration=2.0, return_times=True,
+)
+```
+
+This evaluates the native aligned-spin dominant `(2,±2)` model, including
+inspiral, merger and ringdown. `IMRPhenomTHM`, `IMRPhenomTP` and
+`IMRPhenomTPHM` are not implemented. Masses are in solar masses, distance in
+Mpc, times in seconds and frequencies in Hz. `phic` is the orbital reference
+phase at `f_ref`; omitted or zero `f_ref` uses `f_lower`.
+
+With `center_coalescence=True`, the returned time grid ends near `t_pad`
+and the model's amplitude peak is at `tc`. Samples before the intrinsic
+frequency reaches `f_lower` are zero. A supplied `duration` can truncate the
+inspiral; otherwise it is estimated from the model's frequency evolution.
+With `center_coalescence=False`, the grid starts at zero and `tc` sets the
+peak location on that grid. There is no periodic wrapping or Fourier taper.
+
+For an arbitrary fixed time grid, call
+`IMRPhenomT().time_domain(times, mass1, mass2, chi1=..., chi2=..., f_ref=...)`
+from either frontend. This lower-level interface does not apply an `f_lower`
+mask. Parameter batches broadcast with the time dimension last. Fixed grids
+support first-order automatic differentiation; the JAX model supports `jit`
+and `vmap`. The frequency inversion uses an implicit first derivative;
+higher-order derivatives through that inversion are not supported.
+Automatic duration selection is an eager operation because it changes array
+shape. Use a fixed duration inside JAX transformations.
+
+`get_fd_waveform("IMRPhenomT", ...)` raises an error. Nonzero in-plane spins,
+tidal deformabilities, `f_final`, and unrecognized options are rejected by
+the time-domain wrapper.
 
 ---
 
@@ -750,4 +795,3 @@ This generates:
 2. `fig2_latency_vs_batch`: Per-waveform generation latency and CPU/GPU amortization crossovers.
 3. `fig3_speedup_vs_lal`: Speedup relative to single-core C LALSimulation oracle.
 4. `fig4_model_breakdown_bar`: Cross-model throughput breakdown across batch scales.
-

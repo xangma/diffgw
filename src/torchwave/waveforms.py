@@ -1,7 +1,7 @@
 """High-level gravitational-wave waveform generation API.
 
-Permissively licensed (MIT), pure PyTorch implementation adhering strictly to
-clean-room literature derivations.
+Permissively licensed (MIT), native PyTorch models with documented literature
+and calibration provenance in docs/provenance_ledger.md.
 """
 
 from typing import Any, Dict, List, Optional, Sequence, Tuple, Union
@@ -19,6 +19,7 @@ from torchwave.conversions import (
 from torchwave.approximants.taylorf2 import TaylorF2
 from torchwave.approximants.taylorf2_hm import TaylorF2_HM
 from torchwave.approximants.imrphenomd import IMRPhenomD
+from torchwave.approximants.imrphenomt import IMRPhenomT
 from torchwave.approximants.imrphenomp import IMRPhenomP
 from torchwave.approximants.imrphenomd_nrtidal import (
     IMRPhenomD_NRTidal,
@@ -51,6 +52,7 @@ _APPROXIMANTS = {
     "taylorf2": TaylorF2,
     "taylorf2hm": TaylorF2_HM,
     "imrphenomd": IMRPhenomD,
+    "imrphenomt": IMRPhenomT,
     "imrphenomp": IMRPhenomP,
     "imrphenompv2": IMRPhenomP,
     "imrphenomxp": IMRPhenomXP,
@@ -106,6 +108,7 @@ _CANONICAL_APPROXIMANTS: List[str] = [
     "TaylorF2_HM",
     "TaylorF2_Eccentric",
     "IMRPhenomD",
+    "IMRPhenomT",
     "IMRPhenomD_NRTidal",
     "IMRPhenomD_NRTidalv2",
     "IMRPhenomHM",
@@ -122,7 +125,7 @@ _CANONICAL_APPROXIMANTS: List[str] = [
 ]
 
 _APPROXIMANT_CATEGORIES: Dict[str, List[str]] = {
-    "aligned_spin": ["TaylorF2", "IMRPhenomD", "IMRPhenomXAS", "SEOBNRv4_ROM"],
+    "aligned_spin": ["IMRPhenomT", "TaylorF2", "IMRPhenomD", "IMRPhenomXAS", "SEOBNRv4_ROM"],
     "higher_modes": ["TaylorF2_HM", "IMRPhenomHM", "IMRPhenomXHM", "IMRPhenomXPHM"],
     "precessing": ["IMRPhenomP", "IMRPhenomXP", "IMRPhenomXPHM"],
     "tidal": ["IMRPhenomD_NRTidal", "IMRPhenomD_NRTidalv2", "IMRPhenomNSBH", "TEOBResumS"],
@@ -146,7 +149,7 @@ _APPROXIMANT_CATEGORIES: Dict[str, List[str]] = {
         "KerrRingdown",
         "SEOBNRv4_ROM",
     ],
-    "time_domain": ["SEOBNR_ODE", "TEOBResumS"],
+    "time_domain": ["IMRPhenomT", "SEOBNR_ODE", "TEOBResumS"],
 }
 
 
@@ -309,6 +312,8 @@ def _get_fd_waveform_raw(
         (h_plus, h_cross): Complex tensors of frequency-domain polarizations.
     """
     key = approximant.lower().replace("_", "").replace("-", "")
+    if key == "imrphenomt":
+        raise ValueError("IMRPhenomT is a native time-domain model; use get_td_waveform()")
     if key not in _APPROXIMANTS:
         import difflib
         matches = difflib.get_close_matches(approximant, _CANONICAL_APPROXIMANTS, n=1, cutoff=0.4)
@@ -961,7 +966,8 @@ def get_td_waveform(
     - Allen et al. (2012), Phys. Rev. D 85, 122006 (arXiv:gr-qc/0509116)
     - Buonanno et al. (2009), Phys. Rev. D 80, 084043 (arXiv:0907.0700)
 
-    Guarantees exact conservation of signal energy (Parseval's theorem):
+    IMRPhenomT is evaluated natively in time; f_ref fixes its orbital phase.
+    Other models use the inverse Fourier path, which conserves signal energy:
         int |h(t)|^2 dt = 2 * int |h_tilde(f)|^2 df
 
     Args:
@@ -1009,21 +1015,21 @@ def get_td_waveform(
             spin1z = norm_kwargs.pop("spin1z")
         if spin2z is None and "spin2z" in norm_kwargs:
             spin2z = norm_kwargs.pop("spin2z")
-        if spin1x == 0.0 and "spin1x" in norm_kwargs:
+        if "spin1x" in norm_kwargs and spin1x == 0.0:
             spin1x = norm_kwargs.pop("spin1x")
-        if spin1y == 0.0 and "spin1y" in norm_kwargs:
+        if "spin1y" in norm_kwargs and spin1y == 0.0:
             spin1y = norm_kwargs.pop("spin1y")
-        if spin2x == 0.0 and "spin2x" in norm_kwargs:
+        if "spin2x" in norm_kwargs and spin2x == 0.0:
             spin2x = norm_kwargs.pop("spin2x")
-        if spin2y == 0.0 and "spin2y" in norm_kwargs:
+        if "spin2y" in norm_kwargs and spin2y == 0.0:
             spin2y = norm_kwargs.pop("spin2y")
-        if distance == 100.0 and "distance" in norm_kwargs:
+        if "distance" in norm_kwargs and distance == 100.0:
             distance = norm_kwargs.pop("distance")
-        if inclination == 0.0 and "inclination" in norm_kwargs:
+        if "inclination" in norm_kwargs and inclination == 0.0:
             inclination = norm_kwargs.pop("inclination")
-        if phic == 0.0 and "phic" in norm_kwargs:
+        if "phic" in norm_kwargs and phic == 0.0:
             phic = norm_kwargs.pop("phic")
-        if tc == 0.0 and "tc" in norm_kwargs:
+        if "tc" in norm_kwargs and tc == 0.0:
             tc = norm_kwargs.pop("tc")
         if lambda1 is None and "lambda1" in norm_kwargs:
             lambda1 = norm_kwargs.pop("lambda1")
@@ -1041,6 +1047,21 @@ def get_td_waveform(
 
     if mass1 is None or mass2 is None:
         raise TypeError("get_td_waveform() requires both 'mass1' and 'mass2' (or aliases 'mass_1', 'm1', etc.)")
+    if approximant.lower().replace("_", "").replace("-", "") == "imrphenomt":
+        from ._phenomt_td import generate_td
+
+        return generate_td(
+            mass1=mass1, mass2=mass2,
+            chi1=None if chi1 is _UNSET else chi1,
+            chi2=None if chi2 is _UNSET else chi2,
+            spin1z=spin1z, spin2z=spin2z, spin1x=spin1x, spin1y=spin1y,
+            spin2x=spin2x, spin2y=spin2y, distance=distance,
+            inclination=inclination, phic=phic, tc=tc, lambda1=lambda1, lambda2=lambda2,
+            delta_t=delta_t, f_lower=f_lower, f_final=f_final, duration=duration,
+            t_pad=t_pad, center_coalescence=center_coalescence,
+            return_times=return_times, device=device, dtype=dtype, **kwargs,
+        )
+
     m1_t = as_tensor(mass1, device=device, dtype=dtype)
     m2_t = as_tensor(mass2, device=device, dtype=dtype)
 
@@ -1235,5 +1256,4 @@ __all__ = [
     "list_approximants",
     "normalize_waveform_params",
 ]
-
 

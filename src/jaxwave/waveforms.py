@@ -1,7 +1,7 @@
 """High-level gravitational-wave waveform generation API in JAX.
 
-Permissively licensed (MIT), pure JAX implementation adhering strictly to
-clean-room literature derivations and matching torchwave API.
+Permissively licensed (MIT), native JAX models matching the torchwave API.
+Literature and calibration provenance is recorded in docs/provenance_ledger.md.
 """
 
 from typing import Any, Dict, Optional, Sequence, Tuple, Union
@@ -21,6 +21,7 @@ from jaxwave.approximants.taylorf2 import TaylorF2
 from jaxwave.approximants.taylorf2_hm import TaylorF2_HM
 from jaxwave.approximants.taylorf2_eccentric import TaylorF2_Eccentric
 from jaxwave.approximants.imrphenomd import IMRPhenomD
+from jaxwave.approximants.imrphenomt import IMRPhenomT
 from jaxwave.approximants.imrphenomp import IMRPhenomP
 from jaxwave.approximants.phenompv2_waveform import IMRPhenomPv2
 from jaxwave.approximants.imrphenomd_nrtidal import (
@@ -67,6 +68,7 @@ _APPROXIMANTS = {
     "taylorf2eccentric": TaylorF2_Eccentric,
     "eccentrictaylorf2": TaylorF2_Eccentric,
     "imrphenomd": IMRPhenomD,
+    "imrphenomt": IMRPhenomT,
     "imrphenomp": IMRPhenomP,
     "imrphenompv2": IMRPhenomPv2,
     "imrphenomdnrtidal": IMRPhenomD_NRTidal,
@@ -126,6 +128,8 @@ def _get_fd_waveform_raw(
 ) -> Tuple[jnp.ndarray, jnp.ndarray]:
     """Internal raw frequency-domain waveform generator."""
     key = approximant.lower().replace("_", "").replace("-", "")
+    if key == "imrphenomt":
+        raise ValueError("IMRPhenomT is a native time-domain model; use get_td_waveform()")
     if key not in _APPROXIMANTS:
         raise ValueError(
             f"Approximant '{approximant}' not recognized. Available: {list(_APPROXIMANTS.keys())}"
@@ -599,9 +603,25 @@ def get_td_waveform(
     - Allen et al. (2012), Phys. Rev. D 85, 122006 (arXiv:gr-qc/0509116)
     - Buonanno et al. (2009), Phys. Rev. D 80, 084043 (arXiv:0907.0700)
 
-    Guarantees exact conservation of signal energy (Parseval's theorem):
+    IMRPhenomT is evaluated natively in time; f_ref fixes its orbital phase.
+    Other models use the inverse Fourier path, which conserves signal energy:
         int |h(t)|^2 dt = 2 * int |h_tilde(f)|^2 df
     """
+    if approximant.lower().replace("_", "").replace("-", "") == "imrphenomt":
+        from ._phenomt_td import generate_td
+
+        return generate_td(
+            mass1=mass1, mass2=mass2,
+            chi1=None if chi1 is _UNSET else chi1,
+            chi2=None if chi2 is _UNSET else chi2,
+            spin1z=spin1z, spin2z=spin2z, spin1x=spin1x, spin1y=spin1y,
+            spin2x=spin2x, spin2y=spin2y, distance=distance,
+            inclination=inclination, phic=phic, tc=tc, lambda1=lambda1, lambda2=lambda2,
+            delta_t=delta_t, f_lower=f_lower, f_final=f_final, duration=duration,
+            t_pad=t_pad, center_coalescence=center_coalescence,
+            return_times=return_times, **kwargs,
+        )
+
     m1_t = as_array(mass1, dtype=jnp.float64)
     m2_t = as_array(mass2, dtype=jnp.float64)
 

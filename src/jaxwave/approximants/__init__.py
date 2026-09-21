@@ -2,6 +2,7 @@
 
 from .taylorf2 import TaylorF2
 from .imrphenomd import IMRPhenomD
+from .imrphenomt import IMRPhenomT
 from .imrphenomd_nrtidal import IMRPhenomD_NRTidal, IMRPhenomD_NRTidalv2
 from .taylorf2_hm import TaylorF2_HM
 from .imrphenom_hm import IMRPhenomHM
@@ -100,6 +101,7 @@ __all__ = [
     "SEOBNRv4PublishedNonspinning",
     "TaylorF2",
     "IMRPhenomD",
+    "IMRPhenomT",
     "IMRPhenomD_NRTidal",
     "IMRPhenomD_NRTidalv2",
     "TaylorF2_HM",

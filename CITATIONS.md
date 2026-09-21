@@ -1,6 +1,6 @@
 # Scientific Citations and Provenance
 
-`torchwave` is implemented under a strict clean-room protocol. All mathematical formulas, post-Newtonian expansions, collocation points, and fit coefficients are derived exclusively from published peer-reviewed journal articles and arXiv preprints.
+`torchwave` is implemented under a strict clean-room protocol. Physical models follow primary literature; additional permissively licensed calibration releases are identified below and in the provenance ledger.
 
 If you use `torchwave` in scientific work, please cite the underlying models and papers:
 
@@ -992,3 +992,39 @@ The fundamental Kerr mode now uses an independently generated spectral approxima
 }
 ```
 
+
+## Native IMRPhenomT
+
+```bibtex
+@article{Estelles:2021PhenomT,
+    author = "Estellés, Héctor and others",
+    title = "{IMRPhenomTP: A phenomenological time domain model for dominant quadrupole gravitational wave signal of coalescing binary black holes}",
+    eprint = "2004.08302",
+    archivePrefix = "arXiv",
+    primaryClass = "gr-qc",
+    doi = "10.1103/PhysRevD.103.124060",
+    journal = "Phys. Rev. D",
+    volume = "103",
+    pages = "124060",
+    year = "2021"
+}
+```
+
+The aligned-spin `(2,±2)` implementation uses the MIT-licensed author release
+[phenomxpy](https://gitlab.com/imrphenom-dev/phenomxpy/-/tree/4121fafa0484f3db2a7352f4eea697faaaf29f65/phenomxpy/phenomt)
+for calibration expressions and reconstruction conventions. See
+[third-party notices](THIRD_PARTY_NOTICES.md) for the retained license.
+
+The updated dominant-mode reconstruction is also described in:
+
+```bibtex
+@article{Estelles:2020PhenomTHM,
+    author = "Estellés, Héctor and others",
+    title = "{Time domain phenomenological model of gravitational wave subdominant harmonics for quasi-circular non-precessing binary black hole coalescences}",
+    eprint = "2012.11923",
+    archivePrefix = "arXiv",
+    primaryClass = "gr-qc",
+    year = "2020"
+}
+```
+Only its dominant-mode improvements are implemented here.

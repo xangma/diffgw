@@ -10,3 +10,8 @@ This section provides the auto-generated reference documentation for the unified
     options:
       show_root_heading: true
       heading_level: 3
+
+::: diffgw.get_td_waveform
+    options:
+      show_root_heading: true
+      heading_level: 3

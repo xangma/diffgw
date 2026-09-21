@@ -21,6 +21,15 @@ This section provides the auto-generated reference documentation for PyTorch-bas
       show_root_heading: true
       heading_level: 3
 
+## Native Time-Domain Models
+
+See the [IMRPhenomT guide](../imrphenomt.md) for examples and conventions.
+
+::: torchwave.IMRPhenomT
+    options:
+      members: [time_domain, frequency, time_at_frequency]
+      heading_level: 3
+
 ---
 
 ## Bayesian Inference & Differentiable Likelihoods

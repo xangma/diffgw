@@ -75,3 +75,38 @@ directory layout), and the XAS release-candidate file is under
 source or wheel distributions. Their URLs and pinned hashes are retained by
 the verification tests and metadata; no MIT grant has been established for
 these supplementary assets, so this notice makes no licensing assurance.
+
+## IMRPhenomT author formulas and calibration expressions — MIT
+
+`src/diffgw_core/phenomt_fits.py` transcribes the dominant-mode branches from
+`phenomxpy/phenomt/fits.py`; the native Torch and JAX reconstruction follows
+`internals.py` and `numba_ansatze.py` alongside the published model equations.
+The code has been adapted to framework-native tensor algebra, differentiable
+matching and batching; no runtime dependency on phenomxpy or LALSuite is used.
+
+- Source: https://gitlab.com/imrphenom-dev/phenomxpy
+- Pinned commit: `4121fafa0484f3db2a7352f4eea697faaaf29f65`
+- Module copyright: Copyright (C) 2023, 2024, 2025 Cecilio García Quirós
+- Repository license (retained verbatim below):
+
+```text
+MIT License
+
+Copyright (c) 2018 Paul D. Lasky
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+```

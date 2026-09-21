@@ -2,7 +2,7 @@
 
 This document provides a technical comparison between **diffgw** (**TorchWave** in PyTorch and **JAXWave** in JAX) and reference implementations in **LALSimulation** (LALSuite).
 
-diffgw is an independent, 100% MIT-licensed gravitational-wave modeling framework. All models are derived directly from primary peer-reviewed literature and engineered natively for GPU tensor batching, autograd differentiation, and XLA compilation.
+diffgw is an independent, 100% MIT-licensed gravitational-wave modeling framework. Models follow primary peer-reviewed literature and are engineered natively for tensor batching and automatic differentiation. Additional permissively licensed author calibrations are identified in the provenance ledger.
 
 ---
 
@@ -148,3 +148,33 @@ PYTHONPATH=src python tests/parity_harness.py --scope=analytic
 # Verify full 21-case catalog across all 17 models
 PYTHONPATH=src python tests/parity_harness.py --scope=catalog
 ```
+
+## Native IMRPhenomT
+
+`IMRPhenomT` evaluates the aligned-spin dominant `(2,±2)` time-domain model
+from Estellés et al. (2021), using the authors' MIT-licensed phenomxpy
+calibration and reconstruction release pinned in the provenance ledger.
+The time-domain sampling wrapper follows diffgw's existing returned-time
+convention: the amplitude peak is at `tc`, with a shared fixed grid for
+batches and explicit `duration`. It does not promise LAL's automatically
+selected epoch or array length. `phic` fixes orbital phase at `f_ref`.
+
+This addition provides no `THM`, `TP` or `TPHM` variant and no direct
+frequency-domain implementation. Optional black-box LAL checks and native
+Torch/JAX parity tests accompany the implementation; LAL is not a runtime
+dependency.
+
+Validation against the pinned author implementation reproduces dimensionless
+frequency and amplitude within `2e-14` absolute error across five checked
+mass/spin configurations, including mass ratio 10 and primary spin 0.9.
+Phase agrees up to an arbitrary integration constant at approximately
+`1e-11` radians. A pinned high-spin reference test requires no external oracle.
+
+Against the installed LALSimulation binary (version 6.2.1), five cases at
+2048 Hz sampling, 20 Hz reference frequency and inclination 0.5 give direct
+complex-strain relative L2 errors from `4.6e-6` to `5.7e-4`. The largest
+residual occurs for masses `(60, 6)` and spins `(0.9, 0.1)`; its normalized
+mismatch is `7.6e-8`. Here mismatch uses an unweighted complex inner product,
+maximizes constant phase, and applies no time shift. These results establish
+close agreement for the tested cases, not bitwise equivalence to LAL.
+The optional regression cases are in `tests/test_phenomt_reference.py`.

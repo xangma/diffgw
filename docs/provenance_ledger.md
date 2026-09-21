@@ -241,3 +241,37 @@ The sovereign calibration surfaces in `torchwave` were trained on numerical rela
 ## 6. Documented Differences from LALSimulation
 
 For complete technical descriptions of formulations and comparisons with LALSimulation, see [**Differences from LAL**](differences_from_lal.md).
+
+## Native aligned-spin IMRPhenomT (2026-09-21)
+
+- Physics: Estellés et al., Phys. Rev. D **103**, 124060 (2021),
+  [arXiv:2004.08302](https://arxiv.org/abs/2004.08302),
+  [DOI](https://doi.org/10.1103/PhysRevD.103.124060).
+- Updated dominant-mode ansatz: Estellés et al.,
+  [arXiv:2012.11923](https://arxiv.org/abs/2012.11923), Eqs. 14–31.
+- Calibration and reconstruction reference: the MIT-licensed author repository
+  [phenomxpy, pinned revision](https://gitlab.com/imrphenom-dev/phenomxpy/-/tree/4121fafa0484f3db2a7352f4eea697faaaf29f65/phenomxpy/phenomt).
+  Shared calibration expressions retain only the `(2,2)` branches of
+  `fits.py`; `internals.py` and `numba_ansatze.py` provide the reconstruction
+  conventions. This is an attributed adaptation of permissive author math,
+  not a claim that the numerical calibration coefficients were independently
+  derived from the paper. The complete MIT notice is retained in
+  [THIRD_PARTY_NOTICES.md](../THIRD_PARTY_NOTICES.md).
+- Runtime: framework-native tensor operations and differentiable matching in
+  both frontends, with backend-independent algebraic fits in `diffgw_core`.
+  No LALSuite, SciPy or phenomxpy waveform calls are made at runtime.
+- Scope: aligned-spin black hole `(2,±2)` polarizations only; higher modes,
+  precession and tidal corrections are not included.
+- Verification: LALSimulation is used only through its installed binary
+  Python bindings as an optional black-box oracle. No coefficients or
+  residuals are fitted to those outputs, and no GPL implementation source
+  is used. Backend and behavioral tests are in `tests/test_imrphenomt.py`,
+  `tests/test_phenomt_public.py` and `tests/parity/test_phenomt_parity.py`.
+  `tests/test_phenomt_reference.py` retains numerical values from the pinned
+  MIT author implementation and optional LAL binary comparisons spanning
+  equal masses, mass ratio 10 and spins from -0.9 to 0.9. Measured LAL
+  residuals are recorded in [Differences from LAL](differences_from_lal.md).
+  FP64 cross-backend tests require relative L2 error at most `1e-11` and
+  mismatch at most `1e-14`, including the high-spin mass-ratio-10 JIT case.
+  Phase-sensitive mass/spin gradients are checked against finite differences
+  in Torch and against Torch derivatives in JAX.

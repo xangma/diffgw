@@ -16,6 +16,20 @@ This section provides the auto-generated reference documentation for JAX-based w
       show_root_heading: true
       heading_level: 3
 
+::: jaxwave.get_td_waveform
+    options:
+      show_root_heading: true
+      heading_level: 3
+
+## Native Time-Domain Models
+
+See the [IMRPhenomT guide](../imrphenomt.md) for examples and conventions.
+
+::: jaxwave.IMRPhenomT
+    options:
+      members: [time_domain, frequency, time_at_frequency]
+      heading_level: 3
+
 ---
 
 ## Shape Bucketing & MCMC Evaluators
