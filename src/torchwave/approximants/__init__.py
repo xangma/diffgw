@@ -8,8 +8,7 @@ from torchwave.approximants.imrphenomthm import IMRPhenomTHM
 from torchwave.approximants.imrphenomtp import IMRPhenomTP
 from torchwave.approximants.imrphenomtphm import IMRPhenomTPHM
 from torchwave.approximants.imrphenomp import IMRPhenomP
-from torchwave.approximants.eob.waveform import SEOBNR_ODE
-from torchwave.approximants.rom.surrogate import SEOBNR_ROM
+from torchwave.approximants.rom import SEOBNR_ROM
 
 from torchwave.approximants.imrphenomd_nrtidal import (
     IMRPhenomD_NRTidal,
@@ -33,7 +32,6 @@ from torchwave.approximants.kerr_ringdown import (
     kerr_single_mode_fourier_reference,
 )
 
-from torchwave.approximants.precession_ode import SpinPrecessionODE
 
 from torchwave.approximants.emri_kludge import (
     EMRIKludge,
@@ -46,9 +44,7 @@ from torchwave.approximants.ppe import (
     modified_dispersion_phase_shift,
 )
 from torchwave.approximants.teobresums import (
-    TEOBResumS,
     TEOBResumSHamiltonian,
-    compute_tidal_merger_frequency,
 )
 from torchwave.approximants.continuous_wave import (
     ContinuousWave,
@@ -83,14 +79,13 @@ __all__ = [
     "IMRPhenomXP",
     "IMRPhenomXPHM",
     "IMRPhenomNSBH",
-    "SpinPrecessionODE",
     "KerrRingdown",
     "evaluate_qnm",
     "get_ringdown_waveform",
     "sampled_kerr_single_mode_reference",
     "kerr_single_mode_reference",
     "kerr_single_mode_fourier_reference",
-    "SEOBNR_ODE",
+
     "SEOBNR_ROM",
     "EMRIKludge",
     "kerr_geodesic_frequencies",
@@ -98,9 +93,7 @@ __all__ = [
     "ParameterizedPostEinstein",
     "ppe_phase_shift",
     "modified_dispersion_phase_shift",
-    "TEOBResumS",
     "TEOBResumSHamiltonian",
-    "compute_tidal_merger_frequency",
     "ContinuousWave",
     "continuous_wave_strain",
     "continuous_wave_h0",

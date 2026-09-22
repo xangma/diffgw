@@ -1,7 +1,5 @@
 """Parity tests between torchwave.approximants.rom and jaxwave.approximants.rom."""
 
-from pathlib import Path
-import pytest
 import numpy as np
 import torch
 import jax
@@ -9,7 +7,6 @@ jax.config.update("jax_enable_x64", True)
 import jax.numpy as jnp
 
 from torchwave.approximants.rom import (
-    SEOBNR_ROM as TorchSEOBNR_ROM,
     OfficialSEOBNRv4ROM as TorchOfficialSEOBNRv4ROM,
     bspline_basis as torch_bspline_basis,
     tensor_product_basis as torch_tensor_product_basis,
@@ -18,7 +15,6 @@ from torchwave.approximants.rom import (
     table_convention_ringdown_mf as torch_table_convention_ringdown_mf,
 )
 from jaxwave.approximants.rom import (
-    SEOBNR_ROM as JaxSEOBNR_ROM,
     OfficialSEOBNRv4ROM as JaxOfficialSEOBNRv4ROM,
     bspline_basis as jax_bspline_basis,
     tensor_product_basis as jax_tensor_product_basis,
@@ -26,9 +22,6 @@ from jaxwave.approximants.rom import (
     independent_ringdown_mf as jax_independent_ringdown_mf,
     table_convention_ringdown_mf as jax_table_convention_ringdown_mf,
 )
-
-ROM_HDF5 = Path("/private/tmp/torchwave-oracle-data/SEOBNRv4ROM_v3.0.hdf5")
-
 
 def test_bspline_basis_parity():
     breaks = np.array([0.0, 0.25, 0.5, 0.75, 1.0])
@@ -134,48 +127,9 @@ def test_ringdown_mf_parity():
         np.testing.assert_allclose(float(j_tab), t_tab.item(), rtol=1e-14, atol=1e-15)
 
 
-def test_seobnr_rom_surrogate_parity():
-    # Test SEOBNR_ROM class
-    t_rom = TorchSEOBNR_ROM()
-    j_rom = JaxSEOBNR_ROM()
-
-    f = np.linspace(20.0, 500.0, 120)
-    test_cases = [
-        (30.0, 20.0, 0.0, 0.0),
-        (35.0, 25.0, 0.3, -0.2),
-        (50.0, 10.0, -0.5, 0.4),
-    ]
-
-    for m1, m2, s1, s2 in test_cases:
-        t_hp, t_hc = t_rom(
-            torch.tensor(f, dtype=torch.float64),
-            mass1=m1,
-            mass2=m2,
-            chi1=s1,
-            chi2=s2,
-            distance=100.0,
-            inclination=0.5,
-            phic=0.2,
-        )
-        j_hp, j_hc = j_rom(
-            jnp.array(f, dtype=jnp.float64),
-            mass1=m1,
-            mass2=m2,
-            chi1=s1,
-            chi2=s2,
-            distance=100.0,
-            inclination=0.5,
-            phic=0.2,
-        )
-
-        np.testing.assert_allclose(np.asarray(j_hp), t_hp.numpy(), rtol=1e-12, atol=1e-25)
-        np.testing.assert_allclose(np.asarray(j_hc), t_hc.numpy(), rtol=1e-12, atol=1e-25)
-
-
-@pytest.mark.skipif(not ROM_HDF5.is_file(), reason="SEOBNRv4ROM HDF5 file not present")
-def test_official_seobnrv4_rom_parity():
-    t_wrapper = TorchOfficialSEOBNRv4ROM(ROM_HDF5, flow=20.0, fhigh=256.0)
-    j_wrapper = JaxOfficialSEOBNRv4ROM(ROM_HDF5, flow=20.0, fhigh=256.0)
+def test_official_seobnrv4_rom_parity(official_rom_path):
+    t_wrapper = TorchOfficialSEOBNRv4ROM(official_rom_path, flow=20.0, fhigh=256.0)
+    j_wrapper = JaxOfficialSEOBNRv4ROM(official_rom_path, flow=20.0, fhigh=256.0)
 
     f = np.array([20.0, 30.0, 50.0, 100.0, 200.0])
     test_cases = [

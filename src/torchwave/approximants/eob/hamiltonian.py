@@ -1,11 +1,12 @@
-"""Prototype Effective-One-Body conservative Hamiltonian.
+"""Equation-level EOB Hamiltonian components and shared derivative machinery.
 
-The nonspinning sector implements the uncalibrated 3PN model of Damour and
-Nagar, PRD 76, 044003 (2007), arXiv:0704.3550v2, Eqs. (2)-(11). The inherited
-spin terms have not been established as the calibrated SEOBNRv4 Hamiltonian.
-This module does not implement the full SEOBNRv4 or SEOBNRv5 conservative model.
+Nonspinning3PNHamiltonian implements Damour--Nagar 0704.3550v2,
+Eqs. (2)--(11), with no spin terms or waveform calibration. Its checks cover
+Schwarzschild geodesics, the published PN expansion and the radial mass shell.
+This is a conservative component, not a complete waveform approximant.
 """
 
+from abc import ABC, abstractmethod
 from typing import Optional, Tuple
 import copy
 import torch
@@ -27,13 +28,8 @@ def _ordinary_tensor_attributes(model):
     return local_model
 
 
-class EOBHamiltonian:
-    """Conservative Effective-One-Body Hamiltonian for aligned-spin binary black holes.
-
-    Implements the energy mapping:
-        H_real = M * sqrt(1 + 2 * nu * (H_eff / mu - 1))
-    in geometric units where total mass M = 1 and reduced mass mu = nu.
-    """
+class _HamiltonianBase(ABC):
+    """Parameter bookkeeping and Hamilton equations; no model-specific physics."""
 
     def __init__(
         self,
@@ -67,103 +63,6 @@ class EOBHamiltonian:
 
         self.a_plus = self.a1 + self.a2
         self.a_minus = self.a1 - self.a2
-
-    def metric_potentials(self, r: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
-        """Compute the 3PN Padé potentials and xi = dr/dr_* = sqrt(A/B).
-
-        Damour--Nagar arXiv:0704.3550v2 Eqs. (2)-(3), (6) and the following
-        Padé prescription: A=P^1_3[A_3PN], D=P^0_3[D_3PN], B=D/A.
-        The model is defined outside its effective horizon, where A > 0.
-        """
-        u = 1.0 / r
-        u2 = u * u
-        u3 = u2 * u
-
-        nu = self.nu
-        if r.dim() > nu.dim():
-            nu = nu.unsqueeze(-1)
-
-        # Solve the Padé coefficient equations for the published 3PN series
-        # 1 - 2u + 2 nu u^3 + a4 nu u^4. No calibration constants enter.
-        a4 = (94.0 / 3.0) - (41.0 / 32.0) * (PI * PI)
-        d1 = nu * (a4 + 4.0) / (8.0 - 2.0 * nu)
-        a_potential = (1.0 + (d1 - 2.0) * u) / (
-            1.0 + d1 * u + 2.0 * d1 * u2 + (4.0 * d1 - 2.0 * nu) * u3
-        )
-        d_potential = 1.0 / (
-            1.0 + 6.0 * nu * u2 + 2.0 * nu * (26.0 - 3.0 * nu) * u3
-        )
-        b_potential = d_potential / a_potential
-        xi = a_potential / torch.sqrt(d_potential)
-
-        return a_potential, b_potential, xi
-
-    def gyro_factors(self, r: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:
-        """Return inherited prototype spin couplings, not calibrated v4 factors."""
-        u = 1.0 / r
-        nu = self.nu
-        if r.dim() > nu.dim():
-            nu = nu.unsqueeze(-1)
-
-        # Leading PN expansions for gyro-gravitomagnetic couplings
-        g_plus = 2.0 - (9.0 / 8.0) * nu * u
-        g_minus = (5.0 / 4.0) * nu * u
-
-        return g_plus, g_minus
-
-    def effective_hamiltonian(
-        self,
-        r: torch.Tensor,
-        pr_star: torch.Tensor,
-        pphi: torch.Tensor,
-    ) -> torch.Tensor:
-        """Compute the effective Hamiltonian H_eff / mu for equatorial aligned-spin orbits.
-
-        Args:
-            r: Dimensionless radial separation r / M
-            pr_star: Conjugate momentum to tortoise coordinate r_* (p_{r_*} / mu)
-            pphi: Orbital angular momentum (p_phi / (mu * M))
-
-        Returns:
-            Dimensionless effective Hamiltonian H_eff / mu
-        """
-        a_plus = self.a_plus
-        a_minus = self.a_minus
-        delta = self.delta
-        nu = self.nu
-
-        if r.dim() > a_plus.dim():
-            a_plus = a_plus.unsqueeze(-1)
-            a_minus = a_minus.unsqueeze(-1)
-            delta = delta.unsqueeze(-1)
-        if r.dim() > nu.dim():
-            nu = nu.unsqueeze(-1)
-
-        r2 = r * r
-        r3 = r2 * r
-        a_plus2 = a_plus * a_plus
-
-        a_pot, _, _ = self.metric_potentials(r)
-        g_plus, g_minus = self.gyro_factors(r)
-
-        # 1. Odd-in-spin contribution (spin-orbit interaction)
-        # H_odd = pphi * (g_a+ * a+ + g_a- * delta * a-) / (r^3 + a+^2 * (r + 2))
-        so_num = pphi * (g_plus * a_plus + g_minus * delta * a_minus)
-        so_den = r3 + a_plus2 * (r + 2.0)
-        h_odd = so_num / so_den
-
-        # Damour--Nagar Eq. (7): the quadratic tortoise momentum is OUTSIDE
-        # A. The quartic term is 3PN accurate after their stated truncation of
-        # the tortoise transformation. The spin-spin term remains a prototype.
-        spin_spin_term = (a_plus2 / r2) * (1.0 + 2.0 / r) * (pphi * pphi)
-        z3 = 2.0 * nu * (4.0 - 3.0 * nu)
-        angular_term = 1.0 + (pphi * pphi) / r2 + spin_spin_term
-        h_even = torch.sqrt(
-            pr_star.square() + a_pot * (angular_term + z3 * pr_star.pow(4) / r2)
-        )
-
-        h_eff = h_odd + h_even
-        return h_eff
 
     def real_hamiltonian_from_eff(self, h_eff: torch.Tensor) -> torch.Tensor:
         """Compute the real Hamiltonian H_real / M from dimensionless H_eff / mu."""
@@ -260,3 +159,64 @@ class EOBHamiltonian:
         dpr_star_dt = -(xi / h_real) * dh_dr
 
         return dr_dt, omega, dpr_star_dt
+
+    @abstractmethod
+    def metric_potentials(self, r):
+        """Return A, B and the tortoise conversion xi for a supplied model."""
+        raise NotImplementedError
+
+    @abstractmethod
+    def effective_hamiltonian(self, r, pr_star, pphi):
+        """Return a model's reduced effective Hamiltonian."""
+        raise NotImplementedError
+
+
+class Nonspinning3PNHamiltonian(_HamiltonianBase):
+    """Uncalibrated, strictly nonspinning 3PN conservative component."""
+
+    def __init__(self, nu, delta=None):
+        zero = torch.zeros_like(nu)
+        super().__init__(nu, zero, zero, delta=delta)
+
+    def metric_potentials(self, r: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
+        """Compute the 3PN Padé potentials and xi = dr/dr_* = sqrt(A/B).
+
+        Damour--Nagar arXiv:0704.3550v2 Eqs. (2)-(3), (6) and the following
+        Padé prescription: A=P^1_3[A_3PN], D=P^0_3[D_3PN], B=D/A.
+        The model is defined outside its effective horizon, where A > 0.
+        """
+        u = 1.0 / r
+        u2 = u * u
+        u3 = u2 * u
+
+        nu = self.nu
+        if r.dim() > nu.dim():
+            nu = nu.unsqueeze(-1)
+
+        # Solve the Padé coefficient equations for the published 3PN series
+        # 1 - 2u + 2 nu u^3 + a4 nu u^4. No calibration constants enter.
+        a4 = (94.0 / 3.0) - (41.0 / 32.0) * (PI * PI)
+        d1 = nu * (a4 + 4.0) / (8.0 - 2.0 * nu)
+        a_potential = (1.0 + (d1 - 2.0) * u) / (
+            1.0 + d1 * u + 2.0 * d1 * u2 + (4.0 * d1 - 2.0 * nu) * u3
+        )
+        d_potential = 1.0 / (
+            1.0 + 6.0 * nu * u2 + 2.0 * nu * (26.0 - 3.0 * nu) * u3
+        )
+        b_potential = d_potential / a_potential
+        xi = a_potential / torch.sqrt(d_potential)
+
+        return a_potential, b_potential, xi
+
+    def effective_hamiltonian(self, r, pr_star, pphi):
+        """DN Eq. (7), including the published quartic tortoise momentum."""
+        nu = self.nu
+        if r.dim() > nu.dim():
+            nu = nu.unsqueeze(-1)
+        a, _, _ = self.metric_potentials(r)
+        z3 = 2.0 * nu * (4.0 - 3.0 * nu)
+        return torch.sqrt(pr_star**2 + a * (1.0 + pphi**2 / r**2
+                                             + z3 * pr_star**4 / r**2))
+
+
+__all__ = ["Nonspinning3PNHamiltonian"]

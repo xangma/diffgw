@@ -30,11 +30,6 @@ models_to_test = [
     ("imrphenomnsbh", dict(mass1=5.0, mass2=1.4, chi1=0.1, chi2=0.0, lambda2=400.0)),
     ("kerrringdown", dict(mass1=50.0, mass2=10.0, chi1=0.7, chi2=0.0)),
     ("seobnrrom", dict(mass1=30.0, mass2=20.0, chi1=0.2, chi2=-0.1)),
-    ("seobnrv5rom", dict(mass1=30.0, mass2=20.0, chi1=0.2, chi2=-0.1)),
-    ("teobresums", dict(mass1=30.0, mass2=20.0, chi1=0.2, chi2=-0.1)),
-    ("seobnr", dict(mass1=30.0, mass2=20.0, chi1=0.2, chi2=-0.1)),
-    ("seobnrv4published", dict(mass1=30.0, mass2=20.0, chi1=0.2, chi2=-0.1)),
-    ("seobnrv4publishednonspinning", dict(mass1=30.0, mass2=20.0)),
 ]
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -50,11 +45,6 @@ for key, kw in models_to_test:
     common_kw["inclination"] = 0.7
     common_kw["sample_frequencies"] = freqs
     
-    # 1. Skip dynamic ODE integrators
-    if cls_name in ("SEOBNR_ODE", "SEOBNRv4Published", "SEOBNRv4PublishedNonspinning"):
-        print(f"{key:<25} | {cls_name:<22} | {'ODE':<6} | {'ODE':<6} | {'0':<7} | Dynamic ODE integrator (non-static loop)", flush=True)
-        continue
-
     # 2. Test Eager & catch complex warnings
     try:
         with warnings.catch_warnings(record=True) as recorded:

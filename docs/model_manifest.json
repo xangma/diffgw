@@ -1,6 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
-  "manifest_version": "1.4.0",
+  "manifest_version": "1.5.0",
   "project": "diffgw",
   "frontends": [
     "torchwave",
@@ -912,76 +912,6 @@
         "waveform_diagnostic": "tests/test_kerr_ringdown_public_clean.py"
       }
     },
-    "SEOBNR_ODE": {
-      "name": "SEOBNR_ODE",
-      "aliases": [
-        "seobnr",
-        "seobnrode",
-        "seobnrv5"
-      ],
-      "lal_approximant": "SEOBNRv4",
-      "domain": "frequency_domain (internal time-domain dynamics)",
-      "spins": "aligned",
-      "modes": [
-        "(2,2)"
-      ],
-      "status": "sovereign_continuous_matching",
-      "notes": "Experimental EOB waveform with continuous attachment based on a natural cubic spline through accepted integration samples. The selected interior peak is locally differentiable, with piecewise interval selection. Auxiliary resampling-spacing invariance does not establish integration-step convergence or full-waveform accuracy. The frozen LAL catalog case did not pass.",
-      "primary_references": [
-        {
-          "citation": "Buonanno & Damour (1999), Phys. Rev. D 59, 084006",
-          "doi": "10.1103/PhysRevD.59.084006"
-        },
-        {
-          "citation": "Boh\u00e9 et al. (2017), Phys. Rev. D 95, 044028",
-          "doi": "10.1103/PhysRevD.95.044028"
-        }
-      ],
-      "validation": {
-        "catalog": {
-          "case_ids": [
-            "SEOBNR_ODE_diagnostic"
-          ],
-          "cases_passed": 0,
-          "cases_total": 1,
-          "status": "sovereign_continuous_matching",
-          "max_polarization_complex_relative_l2": 1.0206987417441302,
-          "max_projection_complex_relative_l2": 1.020583698890503,
-          "verification_scopes": [
-            "full_polarizations"
-          ]
-        },
-        "holdout": {
-          "case_ids": [],
-          "cases_passed": 0,
-          "cases_total": 0,
-          "max_polarization_complex_relative_l2": null,
-          "max_projection_complex_relative_l2": null,
-          "verification_scopes": []
-        }
-      },
-      "experimental_components": {
-        "conservative_model": [
-          "prototype (default)",
-          "seobnrv4_published"
-        ],
-        "radiation_model": [
-          "prototype (default)",
-          "din2009_nonspinning",
-          "pan2011_leading_spin"
-        ],
-        "standalone": [
-          "seobnrv4_published_amplitude22",
-          "published complex 22 mode and phase components",
-          "35-mode spinning flux",
-          "NQC calibration",
-          "merger-ringdown C1 matching",
-          "published final mass and signed final-spin fits"
-        ],
-        "remaining": "Complete waveform agreement and integration-resolution convergence remain to be established. Continuous attachment is a component improvement, not a complete EOB accuracy result.",
-        "integration_assessment": "src/torchwave/approximants/eob/continuous_matching.py"
-      }
-    },
     "SEOBNR_ROM": {
       "name": "SEOBNR_ROM",
       "aliases": [
@@ -1004,7 +934,7 @@
         "license": "Upstream data terms; redistribution review unresolved"
       },
       "status": "verified_declared_cases_external_data",
-      "notes": "The official-data wrapper passed the frozen catalog case with maximum polarization relative L2 approximately 1.20e-11. Tensor B-splines reconstruct the external official HDF5 calibration data. The data are required and not bundled; redistribution terms remain unresolved. The bundled src/torchwave/data/seobnr_surrogate.pt asset and seobnrv5rom alias belong to a separate native prototype and do not inherit this reference result.",
+      "notes": "The official-data wrapper passed the frozen catalog case with maximum polarization relative L2 approximately 1.20e-11. Tensor B-splines reconstruct the external official HDF5 calibration data. The data are required and not bundled; redistribution terms remain unresolved. The unvalidated bundled native surrogate and seobnrv5rom alias have been removed. Public SEOBNR_ROM classes select this official evaluator.",
       "primary_references": [
         {
           "citation": "P\u00fcrrer (2014), Class. Quantum Grav. 31, 195010",
@@ -1024,46 +954,6 @@
           "cases_total": 1,
           "max_polarization_complex_relative_l2": 1.203823245233543e-11,
           "max_projection_complex_relative_l2": 2.988495218951695e-07,
-          "verification_scopes": [
-            "full_polarizations"
-          ]
-        },
-        "holdout": {
-          "case_ids": [],
-          "cases_passed": 0,
-          "cases_total": 0,
-          "max_polarization_complex_relative_l2": null,
-          "max_projection_complex_relative_l2": null,
-          "verification_scopes": []
-        }
-      }
-    },
-    "TEOBResumS": {
-      "name": "TEOBResumS",
-      "aliases": [
-        "teobresums"
-      ],
-      "lal_approximant": "TEOBResumS",
-      "domain": "frequency_domain (internal time-domain dynamics)",
-      "spins": "aligned",
-      "status": "sovereign_continuous_matching",
-      "notes": "Experimental EOB waveform with continuous attachment based on a natural cubic spline through accepted integration samples. The selected interior peak is locally differentiable, with piecewise interval selection. Auxiliary resampling-spacing invariance does not establish integration-step convergence or full-waveform accuracy. The frozen LAL catalog case did not pass.",
-      "primary_references": [
-        {
-          "citation": "Nagar et al. (2018), Phys. Rev. D 98, 104052",
-          "doi": "10.1103/PhysRevD.98.104052"
-        }
-      ],
-      "validation": {
-        "catalog": {
-          "case_ids": [
-            "TEOBResumS_diagnostic"
-          ],
-          "cases_passed": 0,
-          "cases_total": 1,
-          "status": "sovereign_continuous_matching",
-          "max_polarization_complex_relative_l2": 1.0008418600455444,
-          "max_projection_complex_relative_l2": 1.0009047518112315,
           "verification_scopes": [
             "full_polarizations"
           ]
@@ -1163,63 +1053,6 @@
     "unit_test_skip_reason": "CUDA unavailable on verification host",
     "source_and_test_inputs_changed_during_runs": false,
     "provenance": "Fresh-context implementers used papers and author mathematical data; inherited coefficient provenance is not certified."
-  },
-  "experimental_implementations": {
-    "SEOBNRv4Published": {
-      "status": "experimental_published_reconstruction_parity_not_achieved",
-      "api": "torchwave.get_fd_waveform(approximant=\"SEOBNRv4Published\", ...)",
-      "modes": [
-        "(2,2)",
-        "(2,-2)"
-      ],
-      "flux_modes": "35 positive-m modes through ell=8, with symmetry-paired flux",
-      "required_choices": {
-        "spin_truncation": [
-          "tabulated",
-          "generic-leading-ell8"
-        ],
-        "spin_v6": [
-          "bohe_total_energy",
-          "pan_test_particle",
-          "bohe_plus_pan",
-          "none"
-        ],
-        "include_pan_v8": [
-          false,
-          true
-        ],
-        "include_positive_chi_540": [
-          false,
-          true
-        ],
-        "final_spin_fit_order": [
-          [
-            1,
-            2
-          ],
-          [
-            3,
-            3
-          ],
-          [
-            3,
-            4
-          ]
-        ]
-      },
-      "final_spin_domain": [
-        0.0,
-        0.99999
-      ],
-      "conventions": "Initial orbital phase zero; phic rotates h22 by exp(-2i*phic); tc sets NQC amplitude peak; finite Fourier sum uses exp(-2*pi*i*f*t). No taper. Target phase/time compatibility unresolved.",
-      "numerical_limits": "Discrete peak/stencil/sample-count selection; local quartic matching and linear earlier interpolation. Float64 preferred; finer step checks required. Two-input convergence is not a 1e-6 accuracy certificate.",
-      "report": "docs/provenance_ledger.md (Section 2.7)",
-      "source_audit": "docs/comparison.md",
-      "convergence_evidence": "tests/test_clean_room_eob_published_driver.py",
-      "lal_td_diagnostic": "tests/test_clean_room_eob_published_driver.py",
-      "frozen_catalog_member": false,
-      "scope": "Explicit experimental assembly; does not replace SEOBNR_ODE or certify SEOBNRv4/ROM. Required choices were frozen before binary probing."
-    }
   },
   "verification/pass-7": {
     "date": "2026-09-12",

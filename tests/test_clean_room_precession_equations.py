@@ -11,7 +11,6 @@ from torchwave.approximants.imrphenom_xphm import IMRPhenomXPHM, wigner_small_d_
 from torchwave.approximants.precession_msa import (
     evaluate_msa_precession, compute_l_3pn, compute_effective_chip,
 )
-from torchwave.approximants.precession_ode import SpinPrecessionODE
 
 DTYPE = torch.float64
 
@@ -120,31 +119,6 @@ def test_scalar_masses_with_batched_spins_match_scalar_calls():
         for i, sx in enumerate((.1,.3)):
             for h, hs in zip(batch, model(f, spin1x=sx, **params)):
                 torch.testing.assert_close(h[i], hs, atol=1e-34, rtol=2e-12)
-
-
-def test_epsilon_has_positive_minimal_rotation_derivative():
-    # Eq3.1 gamma_dot=-alpha_dot*cos(beta); epsilon=-gamma.
-    alpha = torch.linspace(-2.,5.,101,dtype=DTYPE)
-    beta = .37
-    l = torch.stack((math.sin(beta)*torch.cos(alpha), math.sin(beta)*torch.sin(alpha),
-                     torch.full_like(alpha,math.cos(beta))),dim=-1)
-    _, b, eps = SpinPrecessionODE.extract_euler_angles(l, torch.tensor([0.,0.,1.],dtype=DTYPE))
-    torch.testing.assert_close(b, torch.full_like(b,beta), atol=1e-14,rtol=1e-14)
-    torch.testing.assert_close(eps, math.cos(beta)*(alpha-alpha[0]), atol=1e-13,rtol=1e-13)
-
-
-def test_ode_reference_initialization_and_requested_grid_independence():
-    params = dict(mass1=40.,mass2=20.,spin1x=.3,spin1y=.2,spin1z=.1,
-                  spin2x=-.2,spin2y=.1,spin2z=-.1,f_ref=40.)
-    fine = torch.tensor([25.,40.,55.,80.],dtype=DTYPE)
-    coarse = torch.tensor([80.,25.,40.],dtype=DTYPE)
-    result = SpinPrecessionODE.compute_angles_frequency(fine,**params)
-    sparse = SpinPrecessionODE.compute_angles_frequency(coarse,**params)
-    for full, subset in zip(result,sparse):
-        torch.testing.assert_close(full[[3,0,1]],subset,atol=1e-13,rtol=1e-13)
-    assert result[2][1] == 0
-    changed = SpinPrecessionODE.compute_angles_frequency(fine,**{**params,'f_ref':55.})
-    assert not torch.allclose(result[0],changed[0])
 
 
 @pytest.mark.parametrize('lm', IMRPhenomXPHM.SUPPORTED_MODES)

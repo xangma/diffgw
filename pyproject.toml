@@ -82,6 +82,9 @@ dev = [
     "pytest>=7.0.0",
     "scipy>=1.8.0",
     "ruff>=0.1.0",
+    "build>=1.0",
+    "setuptools>=61.0",
+    "wheel",
 ]
 docs = [
     "mkdocs-material>=9.5.0",
@@ -100,10 +103,7 @@ rom-official = [
 
 [tool.setuptools]
 license-files = ["LICENSE", "THIRD_PARTY_NOTICES.md"]
-
-[tool.setuptools.package-data]
-diffgw_core = ["data/*"]
-torchwave = ["data/*"]
+include-package-data = false
 
 [tool.setuptools.packages.find]
 where = ["src"]
@@ -126,4 +126,3 @@ ignore = [
     "E701",  # Multiple statements on one line (colon)
     "E702",  # Multiple statements on one line (semicolon)
 ]
-

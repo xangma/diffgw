@@ -5,17 +5,17 @@ and Damour--Nagar, arXiv:0704.3550v2, Eqs. (6)-(11).
 """
 
 from typing import Tuple
+import copy
 import jax
 import jax.numpy as jnp
 
-from jaxwave.approximants.eob.hamiltonian import EOBHamiltonian
-from jaxwave.approximants.eob.radiation_reaction import EOBRadiationReaction
+from jaxwave.approximants.eob.hamiltonian import _HamiltonianBase
 from jaxwave.conversions import as_array
 
 
 def _solve_quasicircular_initial_conditions_single(
-    hamiltonian: EOBHamiltonian,
-    radiation_reaction: EOBRadiationReaction,
+    hamiltonian: _HamiltonianBase,
+    radiation_reaction,
     omega_start: jnp.ndarray,
     max_iter: int = 25,
     tol: float = 1e-8,
@@ -65,8 +65,8 @@ def _solve_quasicircular_initial_conditions_single(
 
 
 def find_quasicircular_initial_conditions(
-    hamiltonian: EOBHamiltonian,
-    radiation_reaction: EOBRadiationReaction,
+    hamiltonian: _HamiltonianBase,
+    radiation_reaction,
     omega_start: jnp.ndarray,
     max_iter: int = 25,
     tol: float = 1e-8,
@@ -88,14 +88,20 @@ def find_quasicircular_initial_conditions(
         omega_start.shape, hamiltonian.nu.shape, hamiltonian.chi1.shape, hamiltonian.chi2.shape
     )
     w_flat = jnp.broadcast_to(omega_start, batch_shape).reshape(-1)
-    nu_flat = jnp.broadcast_to(hamiltonian.nu, batch_shape).reshape(-1)
-    c1_flat = jnp.broadcast_to(hamiltonian.chi1, batch_shape).reshape(-1)
-    c2_flat = jnp.broadcast_to(hamiltonian.chi2, batch_shape).reshape(-1)
+    def scalar_parameters(model, index):
+        # Slice parameter arrays without assuming any particular constructor.
+        # Factorized fluxes have a model-selection string; the nonspinning
+        # Hamiltonian has no spin arguments. Preserve those explicit choices.
+        result = copy.copy(model)
+        for name, value in vars(model).items():
+            if isinstance(value, jnp.ndarray):
+                setattr(result, name, jnp.broadcast_to(value, batch_shape).reshape(-1)[index])
+        return result
 
     r_list, pr_list, pp_list = [], [], []
-    for w, nu, c1, c2 in zip(w_flat, nu_flat, c1_flat, c2_flat):
-        ham_i = type(hamiltonian)(nu, c1, c2)
-        rr_i = type(radiation_reaction)(nu, c1, c2)
+    for index, w in enumerate(w_flat):
+        ham_i = scalar_parameters(hamiltonian, index)
+        rr_i = scalar_parameters(radiation_reaction, index)
         r_i, pr_i, pp_i = _solve_quasicircular_initial_conditions_single(
             ham_i, rr_i, w, max_iter, tol
         )

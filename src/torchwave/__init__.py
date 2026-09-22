@@ -21,7 +21,6 @@ from torchwave.approximants.imrphenomd_nrtidal import (
 )
 from torchwave.approximants.imrphenom_hm import IMRPhenomHM
 from torchwave.approximants.imrphenom_xhm import IMRPhenomXHM
-from torchwave.approximants.teobresums import TEOBResumS
 from torchwave.detectors.network import (
     Detector,
     DetectorNetwork,
@@ -47,7 +46,6 @@ from torchwave.detectors.psd import (
     get_psd,
 )
 from torchwave.approximants.imrphenom_xas import IMRPhenomXAS
-from torchwave.approximants.precession_ode import SpinPrecessionODE
 from torchwave.approximants.precession_spintaylor import (
     SpinTaylorT4Engine,
     evaluate_spintaylor_precession,
@@ -121,8 +119,6 @@ __all__ = [
     "IMRPhenomXP",
     "IMRPhenomXPHM",
     "IMRPhenomNSBH",
-    "TEOBResumS",
-    "SpinPrecessionODE",
     "SpinTaylorT4Engine",
     "evaluate_spintaylor_precession",
     "evaluate_pnr_precession",

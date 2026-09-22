@@ -96,8 +96,7 @@ frontend scope and validation evidence, see the [model catalogue](models.md).
 | `SEOBNRv4HM`, `SEOBNRv4P`, `SEOBNRv4PHM` | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Native" aria-label="Native">✓</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Wrapper unverified" aria-label="Wrapper unverified">W?</abbr> |
 | `SEOBNRv4_ROM_NRTidalv2`, `SEOBNRv4_ROM_NRTidalv2_NSBH`, `SEOBNRv4T_surrogate` | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Native" aria-label="Native">✓</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Wrapper unverified" aria-label="Wrapper unverified">W?</abbr> |
 | `SEOBNRv5_ROM`, `SEOBNRv5HM_ROM`, `SEOBNRv5_ROM_NRTidalv3` | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Native" aria-label="Native">✓</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Wrapper unverified" aria-label="Wrapper unverified">W?</abbr> |
-| `SEOBNR_ODE` | <abbr title="Native" aria-label="Native">✓</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> |
-| `TEOBResumS` | <abbr title="Native" aria-label="Native">✓</abbr> | <abbr title="Native" aria-label="Native">✓</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Wrapper unverified" aria-label="Wrapper unverified">W?</abbr> |
+| `TEOBResumS` | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Native" aria-label="Native">✓</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Wrapper unverified" aria-label="Wrapper unverified">W?</abbr> |
 | `TEOBResumSPA` | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="External" aria-label="External">E</abbr> |
 
 <div class="coverage-notes" markdown="1">
@@ -144,7 +143,7 @@ frontend scope and validation evidence, see the [model catalogue](models.md).
 
 | Model or variant | DiffGW | LAL | Ripple | Phenom<wbr>XPy | GWFAST |
 | --- | --- | --- | --- | --- | --- |
-| `EMRIKludge`, `ParameterizedPostEinstein`, `SpinPrecessionODE`, `HybridMECO` | <abbr title="Native" aria-label="Native">✓</abbr> | <abbr title="Unverified" aria-label="Unverified">?</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> |
+| `EMRIKludge`, `ParameterizedPostEinstein`, `HybridMECO` | <abbr title="Native" aria-label="Native">✓</abbr> | <abbr title="Unverified" aria-label="Unverified">?</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> |
 
 </div>
 

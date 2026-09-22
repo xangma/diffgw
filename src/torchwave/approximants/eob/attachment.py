@@ -2,8 +2,10 @@
 
 The caller supplies the complex inspiral mode, its continuous positive GW
 frequency, and the fundamental remnant QNM. No unresolved residual-phase or
-remnant-fit selection is inferred here. This is an experimental reconstruction
-with an explicit local interpolation, not a claim of LAL implementation parity.
+remnant-fit selection is inferred here. Its local interpolation is checked
+against prescribed analytic signals, the five NQC conditions and a C1 join.
+These are matching-component checks, not complete waveform validation or
+a claim of LAL implementation parity.
 """
 
 from typing import NamedTuple

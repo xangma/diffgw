@@ -3,7 +3,6 @@
 The external HDF5 is intentionally not packaged with TorchWave.  These tests
 are skipped when that separately obtained public data file is unavailable.
 """
-from pathlib import Path
 
 import pytest
 import torch
@@ -12,15 +11,10 @@ from torchwave.approximants.rom.bspline import load_official_rom
 from torchwave.approximants.rom.glue import OfficialROMGlue
 
 
-ROM = Path("/private/tmp/torchwave-oracle-data/SEOBNRv4ROM_v3.0.hdf5")
-
-
 @pytest.fixture(scope="module")
-def glue():
-    if not ROM.is_file():
-        pytest.skip("external public SEOBNRv4 ROM data is unavailable")
-    low = load_official_rom(ROM, "sub1")
-    high = load_official_rom(ROM, "sub2")
+def glue(official_rom_path):
+    low = load_official_rom(official_rom_path, "sub1")
+    high = load_official_rom(official_rom_path, "sub2")
     return OfficialROMGlue(low, high, ringdown_mf=0.012)
 
 

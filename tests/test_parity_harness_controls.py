@@ -79,11 +79,20 @@ def test_missing_and_unresolved_catalog_coverage(monkeypatch):
     for name in ph.UNRESOLVED_ORACLE_REASONS:
         assert unresolved["catalog_coverage"][name]["status"] == "UNRESOLVED_ORACLE"
 
-    # Synthetic positive control for the aggregation logic, not a parity claim.
+    assert not unresolved["catalog_passed"]
+    for name in ("IMRPhenomXPHM-SpinTaylor", "IMRPhenomXPNR"):
+        assert unresolved["catalog_coverage"][name]["status"] == "MISSING_COVERAGE"
+
+    # Synthetic positive control only for the subset with frozen cases.
     monkeypatch.setattr(ph, "UNRESOLVED_ORACLE_REASONS", {})
+    still_missing = ph.run_full_parity_suite(scope="catalog")
+    assert not still_missing["catalog_passed"]
+    covered = sorted({case["torch_name"] for case in ph.get_canonical_catalog_cases()})
+    monkeypatch.setattr(ph, "MANIFEST_MODELS", covered)
+    monkeypatch.setattr(ph, "get_manifest_models", lambda: covered)
     resolved = ph.run_full_parity_suite(scope="catalog")
     assert resolved["catalog_passed"] and resolved["suite_passed"]
-    assert set(resolved["catalog_coverage"]) == set(MANIFEST_MODELS)
+    assert set(resolved["catalog_coverage"]) == set(covered)
 
     missing = ph.run_full_parity_suite(scope="analytic")
     assert not missing["catalog_passed"]
@@ -173,23 +182,21 @@ def test_invalid_waveform_inputs_fail():
         ph.aLIGOZeroDetHighPower = orig_psd
 
 
-def test_manifest_consistency_and_drift_detection():
-    """Verify that docs/model_manifest.json matches harness models, and simulated drift causes catalog failure."""
+def test_manifest_consistency_and_drift_detection(monkeypatch):
+    """Detect catalog drift without running the waveform oracles."""
     import tests.parity_harness as ph
     actual_manifest_models = ph.get_manifest_models()
-    assert len(actual_manifest_models) == 17, f"Expected 17 models in docs/model_manifest.json, found {len(actual_manifest_models)}"
-    assert set(actual_manifest_models) == set(ph.MANIFEST_MODELS), "Manifest models must match harness MANIFEST_MODELS"
+    assert len(actual_manifest_models) == 17
+    assert set(actual_manifest_models) == set(ph.MANIFEST_MODELS)
 
-    # Injected manifest drift: add a fake model to manifest output
-    orig_get = ph.get_manifest_models
-    try:
-        ph.get_manifest_models = lambda: sorted(actual_manifest_models + ["DriftedModel_v1"])
-        suite_res = ph.run_full_parity_suite(scope="catalog", strict=False)
-        assert suite_res["catalog_passed"] is False, "Catalog drift must fail catalog acceptance"
-        assert len(suite_res.get("manifest_drift_errors", [])) > 0, "Drift error must be recorded"
-        assert any("DriftedModel_v1" in err for err in suite_res["manifest_drift_errors"])
-    finally:
-        ph.get_manifest_models = orig_get
+    monkeypatch.setattr(ph, "run_oracle_comparison", lambda case, strict=False: {
+        "status": "PASSED", "torch_name": case["torch_name"], "case_id": case["id"],
+    })
+    monkeypatch.setattr(ph, "get_manifest_models",
+                        lambda: sorted(actual_manifest_models + ["DriftedModel_v1"]))
+    suite_res = ph.run_full_parity_suite(scope="catalog", strict=False)
+    assert suite_res["catalog_passed"] is False
+    assert any("DriftedModel_v1" in err for err in suite_res["manifest_drift_errors"])
 
 
 def test_manifest_validation_matches_referenced_artifacts():
@@ -241,7 +248,11 @@ def test_manifest_validation_matches_referenced_artifacts():
         assert artifact["num_passed"] == sum(
             result["status"] == "PASSED" for result in results
         )
-        assert {result["torch_name"] for result in results} <= manifest["models"].keys()
+        # Retired models remain part of historical evidence, not the release API.
+        assert {result["torch_name"] for result in results} <= artifact["catalog_coverage"].keys()
+        assert {result["case_id"] for result in results} == {
+            case["id"] for case in artifact["metadata"]["executed_inventory"]
+        }
         assert manifest["verification"][f"{scope}_cases_total"] == artifact["num_cases"]
         assert manifest["verification"][f"{scope}_cases_passed"] == artifact["num_passed"]
 

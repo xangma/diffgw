@@ -41,13 +41,8 @@ from torchwave.approximants.imrphenom_xphm import IMRPhenomXPHM
 from torchwave.approximants.imrphenom_nsbh import IMRPhenomNSBH
 from torchwave.approximants.taylorf2_eccentric import TaylorF2_Eccentric
 from torchwave.approximants.kerr_ringdown import KerrRingdown, get_ringdown_waveform
-from torchwave.approximants.eob.waveform import SEOBNR_ODE
-from torchwave.approximants.eob.published_waveform import (
-    SEOBNRv4Published, SEOBNRv4PublishedNonspinning)
-from torchwave.approximants.rom.surrogate import SEOBNR_ROM
 from torchwave.approximants.rom.official_wrapper import OfficialSEOBNRv4ROM
 from torchwave.approximants.imrphenom_xas import IMRPhenomXAS
-from torchwave.approximants.teobresums import TEOBResumS
 
 
 
@@ -92,20 +87,10 @@ _APPROXIMANTS = {
     "eccentrictaylorf2": TaylorF2_Eccentric,
     "kerrringdown": KerrRingdown,
     "ringdown": KerrRingdown,
-    "seobnr": SEOBNR_ODE,
-    "seobnrode": SEOBNR_ODE,
-    "seobnrv4published": SEOBNRv4Published,
-    "seobnrv4publishednonspinning": SEOBNRv4PublishedNonspinning,
-    "seobnrv5": SEOBNR_ODE,
-    # Canonical SEOBNR_ROM dispatch uses the official external release.  The
-    # legacy TorchWave surrogate remains available through its direct class.
+    # All public ROM names use the official external release.
     "seobnrrom": OfficialSEOBNRv4ROM,
     "seobnrv4rom": OfficialSEOBNRv4ROM,
     "officialseobnrv4rom": OfficialSEOBNRv4ROM,
-    "seobnrv5rom": SEOBNR_ROM,
-    "teobresums": TEOBResumS,
-    "teobresum": TEOBResumS,
-    "teob": TEOBResumS,
 }
 
 
@@ -129,18 +114,17 @@ _CANONICAL_APPROXIMANTS: List[str] = [
     "IMRPhenomNSBH",
     "KerrRingdown",
     "SEOBNRv4_ROM",
-    "SEOBNR_ODE",
-    "TEOBResumS",
+
 ]
 
 _APPROXIMANT_CATEGORIES: Dict[str, List[str]] = {
     "aligned_spin": ["IMRPhenomT", "IMRPhenomTHM", "TaylorF2", "IMRPhenomD", "IMRPhenomXAS", "SEOBNRv4_ROM"],
     "higher_modes": ["IMRPhenomTHM", "IMRPhenomTPHM", "TaylorF2_HM", "IMRPhenomHM", "IMRPhenomXHM", "IMRPhenomXPHM"],
     "precessing": ["IMRPhenomTP", "IMRPhenomTPHM", "IMRPhenomP", "IMRPhenomXP", "IMRPhenomXPHM"],
-    "tidal": ["IMRPhenomD_NRTidal", "IMRPhenomD_NRTidalv2", "IMRPhenomNSBH", "TEOBResumS"],
+    "tidal": ["IMRPhenomD_NRTidal", "IMRPhenomD_NRTidalv2", "IMRPhenomNSBH"],
     "eccentric": ["TaylorF2_Eccentric"],
     "ringdown": ["KerrRingdown"],
-    "eob": ["SEOBNRv4_ROM", "SEOBNR_ODE", "TEOBResumS"],
+    "eob": ["SEOBNRv4_ROM"],
     "frequency_domain": [
         "TaylorF2",
         "TaylorF2_HM",
@@ -158,7 +142,7 @@ _APPROXIMANT_CATEGORIES: Dict[str, List[str]] = {
         "KerrRingdown",
         "SEOBNRv4_ROM",
     ],
-    "time_domain": ["IMRPhenomT", "IMRPhenomTHM", "IMRPhenomTP", "IMRPhenomTPHM", "SEOBNR_ODE", "TEOBResumS"],
+    "time_domain": ["IMRPhenomT", "IMRPhenomTHM", "IMRPhenomTP", "IMRPhenomTPHM"],
 }
 
 
@@ -586,7 +570,7 @@ def _get_fd_waveform_raw(
             f_ref=(0.0 if f_ref is None else f_ref),
             flow=f_lower, fhigh=f_final,
         )
-    elif key in ("imrphenomd", "imrphenomxas", "phenomxas", "xas", "seobnrv5rom"):
+    elif key in ("imrphenomd", "imrphenomxas", "phenomxas", "xas"):
         model = model_cls()
         return model(
             f=f,
@@ -709,41 +693,6 @@ def _get_fd_waveform_raw(
             t0=tc,
             **model_kwargs,
         )
-    elif key in ("seobnr", "seobnrode", "seobnrv5", "seobnrv4published",
-                 "seobnrv4publishednonspinning"):
-        model = model_cls()
-        return model(
-            f=f,
-            f_lower=f_lower,
-            mass1=mass1,
-            mass2=mass2,
-            chi1=s1z,
-            chi2=s2z,
-            distance=distance,
-            inclination=inclination,
-            phic=phic,
-            tc=tc,
-            **model_kwargs,
-        )
-    elif key in ("teobresums", "teobresum", "teob"):
-        model = model_cls()
-        lam1 = lambda1 if lambda1 is not None else 0.0
-        lam2 = lambda2 if lambda2 is not None else 0.0
-        return model(
-            f=f,
-            mass1=mass1,
-            mass2=mass2,
-            chi1=s1z,
-            chi2=s2z,
-            lambda1=lam1,
-            lambda2=lam2,
-            distance=distance,
-            inclination=inclination,
-            phic=phic,
-            tc=tc,
-            f_lower=f_lower,
-            **model_kwargs,
-        )
     else:
 
         raise NotImplementedError(f"Approximant {approximant} not yet wired.")
@@ -786,7 +735,7 @@ def get_fd_waveform(
     ----------
     approximant : str
         Waveform model name (e.g., 'IMRPhenomD', 'IMRPhenomXHM', 'IMRPhenomXP',
-        'IMRPhenomXPHM', 'TaylorF2', 'SEOBNRv4_ROM', 'TEOBResumS', etc.).
+        'IMRPhenomXPHM', 'TaylorF2', 'SEOBNRv4_ROM', etc.).
     mass1, mass2 : float or torch.Tensor
         Component masses in solar masses (M_sun). Standard aliases (mass_1, m1, etc.) accepted.
     chi1, chi2 : float or torch.Tensor, optional

@@ -12,7 +12,7 @@ from typing import NamedTuple
 import torch
 
 from torchwave.constants import EULER_GAMMA
-from torchwave.approximants.eob.hamiltonian import EOBHamiltonian
+from torchwave.approximants.eob.hamiltonian import _HamiltonianBase
 
 
 class DeformedKerrPotentials(NamedTuple):
@@ -24,7 +24,7 @@ class DeformedKerrPotentials(NamedTuple):
     xi: torch.Tensor
 
 
-class SEOBNRv4Hamiltonian(EOBHamiltonian):
+class SEOBNRv4Hamiltonian(_HamiltonianBase):
     """Aligned-spin Hamiltonian with the published v4 calibration coefficients.
 
     Units are M=1, momenta are divided by mu, and spins by M^2. The inherited

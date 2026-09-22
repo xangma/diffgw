@@ -113,19 +113,9 @@ DEFAULT_MODEL_SPECS: Dict[str, Dict[str, Any]] = {
         "grid": {"flow": 50.0, "fhigh": 500.0, "df": 0.25},
         "lal_name": None,
     },
-    "SEOBNR_ODE": {
-        "params": {"mass1": 30.0, "mass2": 20.0, "chi1": 0.0, "chi2": 0.0},
-        "grid": {"flow": 20.0, "fhigh": 256.0, "df": 0.5},
-        "lal_name": None,
-    },
     "SEOBNR_ROM": {
         "params": {"mass1": 30.0, "mass2": 20.0, "chi1": 0.0, "chi2": 0.0},
         "grid": {"flow": 20.0, "fhigh": 256.0, "df": 0.5},
-        "lal_name": None,
-    },
-    "TEOBResumS": {
-        "params": {"mass1": 1.4, "mass2": 1.4, "chi1": 0.0, "chi2": 0.0, "lambda1": 0.0, "lambda2": 0.0},
-        "grid": {"flow": 30.0, "fhigh": 500.0, "df": 0.5},
         "lal_name": None,
     },
 }
