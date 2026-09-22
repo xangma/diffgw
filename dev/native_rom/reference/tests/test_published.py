@@ -13,6 +13,7 @@ from dev.native_rom.reference.published import (
     D, calibration, chi, mass_spin, nu, peak_targets, ringdown_shape,
 )
 from dev.native_rom.reference.ringdown import h22
+from dev.native_rom.reference.remnant import final_mass_fraction
 
 
 def test_manifest_is_explicit_and_versioned():
@@ -119,3 +120,30 @@ def test_ringdown_shape_printed_constant_terms():
     values = {key: expr.subs({nu: 0, chi: 0}) for key, expr in ringdown_shape().items()}
     assert values == {"c1f": D("0.0830664"), "c2f": D("-0.623953"),
                       "d1f": D("0.147584"), "d2f": D("2.46654")}
+
+
+def test_remnant_mass_paper_limit_and_identity():
+    n, e, f = sp.symbols("n e f")
+    barausse_form = n*(1-e)+4*n**2*(4*f+e-1)
+    combined_form = n*(1-4*n)*(1-e)+16*n**2*f
+    assert sp.expand(barausse_form-combined_form) == 0
+
+    q, c1, c2 = sp.symbols("q c1 c2")
+    a = (q**2*c1+c2)/(q+1)**2
+    paper_spin_argument = a*(1+1/q)**2/(1+1/q**2)
+    weighted_spin = (q**2*c1+c2)/(q**2+1)
+    assert sp.cancel(paper_spin_argument-weighted_spin) == 0
+
+    with mp.workdps(60):
+        # At equal mass, the ISCO contribution cancels and the Hemberger fit
+        # is recovered exactly, including its printed central coefficients.
+        b0, b1, b2 = mp.mpf("0.00258"), mp.mpf("-0.07730"), mp.mpf("-1.6939")
+        for spin in ("-0.9", "0", "0.8"):
+            expected = 1-b0-b1/(b2+mp.mpf(spin))
+            assert abs(final_mass_fraction(1, 1, spin, spin)-expected) < mp.mpf("1e-55")
+        assert final_mass_fraction(30, 20, ".7", "-.2") == final_mass_fraction(
+            20, 30, "-.2", ".7")
+        assert final_mass_fraction(30, 20, ".7", "-.2") == final_mass_fraction(
+            3, 2, ".7", "-.2")
+    with pytest.raises(ValueError):
+        final_mass_fraction(-1, 2, 0, 0)

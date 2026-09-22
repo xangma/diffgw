@@ -1,4 +1,4 @@
-# SEOBNRv4 source specification: paper components 0.1.0
+# SEOBNRv4 source specification: paper components 0.2.0
 
 **Status: incomplete research specification.** This version establishes an
 independent executable source of truth for the components marked `executable`
@@ -70,6 +70,32 @@ They do **not** establish that the current inspiral supplies the correct peak,
 remnant, or QNM. The paper explicitly says the amplitude is only `C¹` at
 attachment; no second-derivative continuity is claimed.
 
+`remnant.final_mass_fraction` independently evaluates the aligned-spin
+remnant-mass prescription named in Bohé et al. Sec. II.C. Bohé points to
+[Taracchini et al. (2014)](https://arxiv.org/html/1311.2544), whose
+merger-ringdown paragraph specifies the
+[Barausse et al. (2012) Eq. (18)](https://arxiv.org/html/1206.3803)
+formula with its equal-mass fit replaced by
+[Hemberger et al. (2013)](https://arxiv.org/html/1305.5991)'s hyperbola.
+Those earlier sources do not print the full unequal-mass expression.
+[Ossokine et al. (2020), Eq. (21)](https://arxiv.org/html/2004.09442)
+prints it and explicitly identifies it as the fit used in previous EOB
+models. In particular, that equation specifies the unequal-mass spin
+argument of the Hemberger term.
+For `a=(m1² chi1+m2² chi2)/M²` and
+`s=(m1² chi1+m2² chi2)/(m1²+m2²)`, the resulting radiated fraction is
+
+`E_rad/M = nu(1-4nu)[1-E_ISCO(a)] + 16nu²[0.00258-0.07730/(s-1.6939)]`,
+
+and `M_final/M=1-E_rad/M`. The test suite checks the algebraic identity
+against Barausse's Eq. (18), the Hemberger equal-mass limit, and both tensor
+frontends at nonspinning, unequal-mass, and aligned/antialigned-spin points.
+The existing frontend formula agrees with this explicit 2020 restatement of
+the earlier EOB prescription; its 2020 citation is not evidence of a changed
+fit.
+This is component-level transcription evidence only. The remnant-spin fit
+choice and exact QNM tabulation remain open.
+
 ## Evidence and implementation map
 
 The canonical [manifest](manifest.json) assigns stable IDs, exact paper
@@ -94,8 +120,8 @@ dependency or distribution asset changes in this branch.
 
 The manifest names each remaining component and its next discriminating task.
 Most urgently, the full Hamiltonian and factorized radiation/flux need equation
-review; the remnant/QNM interpolation knots need independently documented
-provenance; the ODE initial conditions and solver need a converged campaign;
+review; the remnant-spin choice and QNM interpolation knots need independently
+documented provenance; the ODE initial conditions and solver need a converged campaign;
 and the public-binary comparison requires matched phase/time and conditioning
 conventions. The [first frozen generator campaign](../evidence/2026-09-22/README.md)
 failed its direct complex/amplitude convergence gate. The current generator and

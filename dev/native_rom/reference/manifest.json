@@ -1,5 +1,5 @@
 {
-  "specification": "seobnrv4-paper-components/0.1.0",
+  "specification": "seobnrv4-paper-components/0.2.0",
   "model": "SEOBNRv4 dominant (2,2) mode, aligned-spin black-hole binaries",
   "source": {
     "id": "bohe-2017-v3",
@@ -64,10 +64,19 @@
       "blocker": "Reference the two NQC matching systems, peak selection, branch behavior, and derivatives independently of current helpers."
     },
     {
-      "id": "V4-REMNANT-QNM",
+      "id": "V4-REMNANT-MASS",
+      "source": "bohe-2017-v3, Sec. II.C; Taracchini et al. (2014), merger-ringdown prescription; Barausse et al. (2012), Eqs. (17)-(18); Hemberger et al. (2013), equal-mass radiated-energy fit; Ossokine et al. (2020), Eq. (21), full unequal-mass expression identified as the previous EOB fit",
+      "status": "executable",
+      "reference": "remnant.final_mass_fraction",
+      "torch": "src/torchwave/approximants/eob/remnant.py:eob_final_mass_fraction",
+      "jax": "src/jaxwave/approximants/eob/remnant.py:eob_final_mass_fraction",
+      "test": "dev/native_rom/reference/tests/test_published.py:test_remnant_mass_paper_limit_and_identity; dev/native_rom/reference/tests/test_torch.py:test_remnant_mass_against_reference; dev/native_rom/reference/tests/test_jax.py:test_remnant_mass_against_reference"
+    },
+    {
+      "id": "V4-REMNANT-SPIN-QNM",
       "source": "bohe-2017-v3, Sec. II.C, cited remnant and QNM works",
       "status": "pending",
-      "blocker": "Pin final-mass/final-spin fit versions and independently reconstruct the QNM interpolation knots; current knot provenance is incomplete."
+      "blocker": "Pin the Hofmann final-spin fit order and independently reconstruct the Berti QNM convention and any interpolation knots; current knot provenance is incomplete."
     },
     {
       "id": "V4-ODE-IC",

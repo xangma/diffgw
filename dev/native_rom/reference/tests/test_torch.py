@@ -5,7 +5,9 @@ import torch
 
 from dev.native_rom.reference.published import calibration, evaluate, mass_spin, peak_targets, ringdown_shape
 from dev.native_rom.reference.ringdown import h22
+from dev.native_rom.reference.remnant import final_mass_fraction
 from torchwave.approximants.eob.merger_ringdown import merger_ringdown_22, seobnrv4_merger_shape
+from torchwave.approximants.eob.remnant import eob_final_mass_fraction
 from torchwave.approximants.eob.nqc import seobnrv4_nqc_parameters, seobnrv4_nqc_targets, seobnrv4_nqc_time_offset
 from torchwave.approximants.eob.seobnrv4_hamiltonian import SEOBNRv4Hamiltonian
 
@@ -45,3 +47,13 @@ def test_ringdown_against_reference():
         expected = complex(h22(t, nu=n, chi=c, sigma=complex(.55, -.08),
                                amplitude=.35, frequency=.32, phase=.4))
         assert sample == pytest.approx(expected, rel=3e-13, abs=3e-14)
+
+
+@pytest.mark.parametrize("m1,m2,s1,s2", [
+    (30., 20., 0., 0.), (45., 5., .8, -.3),
+    (20., 20., -.9, -.9), (20., 20., .8, .8),
+])
+def test_remnant_mass_against_reference(m1, m2, s1, s2):
+    actual = eob_final_mass_fraction(*map(scalar, (m1, m2, s1, s2)))
+    expected = final_mass_fraction(m1, m2, s1, s2)
+    assert float(actual) == pytest.approx(float(expected), rel=2e-14, abs=1e-14)
