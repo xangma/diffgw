@@ -4,7 +4,7 @@ This comparison measures FP64 forward waveform generation in DiffGW, Ripple and
 LALSimulation on `mac`, on **21 September 2026**. It covers `TaylorF2`,
 `IMRPhenomD` and `IMRPhenomXAS`, each at batches of **1, 10, 100 and 1,000**.
 For workload selection and the summary plot, start with [performance](performance.md).
-For capabilities and model differences, see [package comparison](comparison.md).
+For coverage, see the [package comparison](comparison.md); for scientific discrepancies, see [Differences from LAL](differences_from_lal.md).
 
 ## Workload and environment
 

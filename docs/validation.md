@@ -5,13 +5,17 @@ below supports a particular implementation, configuration, and numerical check.
 A model name or available API does not establish accuracy throughout its
 parameter space.
 
+If you are replacing a LAL waveform, start with [Differences from LAL](differences_from_lal.md).
+It identifies intentional modeling choices, unresolved discrepancies and their
+practical implications. The reports below provide the underlying evidence.
+
 ## What each check establishes
 
 | Check | Evidence | Scope |
 | --- | --- | --- |
 | Waveform performance and LAL agreement | [FP64 package benchmarks](package_benchmarks.md), with committed CPU/CUDA receipts | Forward evaluation of TaylorF2, IMRPhenomD and IMRPhenomXAS on declared grids and binary samples. Both polarizations are checked; failed configurations remain visible. |
 | PyTorch/JAX consistency | [Parity tests](https://github.com/xangma/diffgw/tree/main/tests/parity) | Agreement between two implementations for specified inputs and per-test tolerances. Shared coefficients or shared mistakes can produce agreement. |
-| Broader model reference checks | [Model comparison](comparison.md#model-specific-differences-from-lal), [manifest](model_manifest.json), and linked archived runs | Frozen cases and model-specific metrics. The archived catalog has 17/21 passing cases and the holdout set 11/13; this is partial validation, not a passing whole-catalog result. New model additions have separate evidence, including the [T-family report](validation/phenomt.md). |
+| Broader model reference checks | [Differences from LAL](differences_from_lal.md#model-specific-differences), [manifest](model_manifest.json), and linked archived runs | Frozen cases and model-specific metrics. The archived catalog has 17/21 passing cases and the holdout set 11/13; this is partial validation, not a passing whole-catalog result. New model additions have separate evidence, including the [T-family report](validation/phenomt.md). |
 | Derivatives and Fisher matrices | [Inference parity tests](https://github.com/xangma/diffgw/blob/main/tests/parity/test_inference_parity.py), [Fisher example](../examples/02_fisher_analysis.py) | Selected parameters, models and derivative orders. Waveform-value agreement alone does not validate derivatives or posterior uncertainties. |
 | Relative-binning likelihood | [Numerical tests](https://github.com/xangma/diffgw/blob/main/tests/test_relative_binning.py) and inference parity tests | [Local approximation and gradient checks](validation/inference.md#relative-binning). There is no published DiffGW timing campaign establishing a general likelihood speedup. |
 | Physical calibration and provenance | [Provenance ledger](provenance_ledger.md) and [third-party notices](../THIRD_PARTY_NOTICES.md) | Literature, calibration sources, component checks, and unresolved asset provenance. A reference implementation check is distinct from independent physical validation. |
@@ -19,7 +23,7 @@ parameter space.
 ## Waveform agreement and physical validation
 
 Start with [model support](models.md#backend-support-and-evidence) for the
-configuration you intend to use. The [comparison notes](comparison.md#model-specific-differences-from-lal)
+configuration you intend to use. The [differences from LAL](differences_from_lal.md#model-specific-differences)
 summarize deliberate model differences and unresolved reference failures.
 The [PhenomT report](validation/phenomt.md) contains its measured errors,
 regression thresholds and component diagnostics.
@@ -31,7 +35,7 @@ and precession checks. Each threshold belongs to its stated reference and
 configuration; a passing label from one check cannot qualify another.
 
 Independent physical validation requires an appropriate physical reference and
-coverage statement. The XHM/XPHM NR checks described in the comparison use a
+coverage statement. The XHM/XPHM NR checks described in the LAL-differences page use a
 restricted ringdown phase band and reference amplitudes; they do not establish
 full-waveform amplitude and phase accuracy. Calibration provenance is tracked
 in the [ledger](provenance_ledger.md), separately from implementation agreement.
@@ -69,7 +73,7 @@ is illustrative and does not supply a converged posterior or a proper box prior.
 ## Reproducing the inference checks
 
 Use the [inference check commands](validation/inference.md#reproducing-the-inference-checks).
-The [catalog commands](comparison.md#reproducing-model-checks) and
+The [catalog commands](differences_from_lal.md#reproducing-model-checks) and
 [PhenomT report](validation/phenomt.md) cover waveform checks. Record revisions,
 configurations, results and skips; tests linked on `main` describe the current
 checks, whereas dated reports describe their recorded runs. A skipped optional

@@ -11,8 +11,8 @@ imply that those workloads have been measured.
 | --- | --- |
 | Reproduce the published FP64 package comparison | `scripts/compare_packages.py`; use the [exact campaign commands, revision and receipts](package_benchmarks.md#reproduction-and-receipts). |
 | Regenerate its maintained figures | `scripts/plot_package_benchmarks.py`; use the [plot commands](package_benchmarks.md#regenerating-the-plots). |
-| Explore local latency, compilation or backward cost | [`torchwave-bench`](usage.md#torchwave-bench); these exploratory runs do not automatically reproduce the published campaign. |
-| Diagnose operators and allocations | [`torchwave-profile`](usage.md#torchwave-profile); profile separately from latency measurements. |
+| Explore local latency, compilation or backward cost | [`torchwave-bench`](guides/cli.md#torchwave-bench); these exploratory runs do not automatically reproduce the published campaign. |
+| Diagnose operators and allocations | [`torchwave-profile`](guides/cli.md#torchwave-profile); profile separately from latency measurements. |
 | Inspect or rerun a legacy campaign | `scripts/run_benchmark_campaign.py` and `scripts/plot_benchmark_results.py`; apply the [legacy qualification limitation](#legacy-campaigns) before interpreting results. |
 
 For the published experiment, its report owns the exact physical parameters,
@@ -39,7 +39,7 @@ parameters, precision, modes, conventions and sampling grids. These execution
 backends are not five independent physical models: DiffGW's frontends share
 physics inputs. Record frontend consistency, same-model external-reference
 agreement and independent NR validation separately; see the
-[package comparison](comparison.md#physics-coverage-and-scientific-agreement).
+[validation overview](validation.md#waveform-agreement-and-physical-validation).
 
 ### 1.2 The Gatekeeper Rule (Parity First)
 

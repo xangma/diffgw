@@ -1,4 +1,4 @@
-# DiffGW: Differentiable Gravitational-Wave Modeling & Inference
+# DiffGW
 
 <p align="center">
   <a href="https://xangma.github.io/diffgw/"><img src="https://img.shields.io/badge/docs-diffgw-indigo.svg" alt="Documentation"></a>
@@ -9,204 +9,69 @@
   <img src="https://img.shields.io/badge/license-MIT-green.svg" alt="License">
 </p>
 
-**DiffGW** provides batched gravitational-wave models and inference tools in two native frontends, sharing constants and coefficient tables through the framework-independent `diffgw_core` package:
+DiffGW provides gravitational-wave models and analysis tools in native
+**PyTorch** and **JAX**. Generate waveform tensors, batch binary parameters,
+and differentiate supported model paths within your chosen framework.
+Use the unified `diffgw` interface or either frontend directly.
 
-- **`torchwave`**: PyTorch tensor evaluation, batched parameters, and autograd on supported model paths.
-- **`jaxwave`**: JAX evaluation with JIT compilation, vectorization, and automatic differentiation on supported model paths.
+<a id="installation"></a>
+<a id="documentation-navigation"></a>
 
-The original software is distributed under the **MIT License**, with PyTorch or JAX and scientific Python dependencies. Waveform models follow published literature, with calibration provenance recorded explicitly. IMRPhenomT also uses the authors' MIT-licensed calibration release and reconstruction formulas; see the [provenance ledger](provenance_ledger.md) and [third-party notices](../THIRD_PARTY_NOTICES.md).
+## Start with your question
 
----
+| I want to… | Start here |
+| --- | --- |
+| Try DiffGW on a binary system | [Installation](installation.md), then [quickstart](tutorials/01_quickstart_and_parity.md) |
+| Compare waveform coverage with other packages | [Dated package comparison](comparison.md) |
+| Choose and configure a DiffGW waveform | [Waveform catalog](models.md) and [parameter conventions](conventions.md) |
+| Understand a difference from LAL | [Differences from LAL](differences_from_lal.md) |
+| Assess accuracy or derivative evidence | [Validation](validation.md) |
+| Evaluate speed for my workload | [Performance](performance.md) |
+| Use batching, gradients or inference tools | [User guide](usage.md) |
+| Look up an exact function | [Unified API](api/diffgw.md), [PyTorch API](api/torchwave.md), [JAX API](api/jaxwave.md) |
 
-<div class="grid cards" markdown>
+<a id="quickstart"></a>
 
-- :zap: **Batched Execution**
-    ---
-    Tensor batches and optional compilation support repeated waveform evaluation. [Measured benchmarks](package_benchmarks.md) report CPU/CUDA timings with the model, grid, precision, batch size and numerical checks.
+## Generate a waveform
 
-- :dart: **Numerical Validation**
-    ---
-    Reference comparisons and cross-framework tests cover declared cases with model-specific tolerances. [Validation evidence](validation.md) records their scope and outstanding differences.
+After installing either backend, this example generates frequency-domain
+IMRPhenomD polarizations through the unified API:
 
-- :twisted_rightwards_arrows: **Two Native Frontends**
-    ---
-    PyTorch and JAX interfaces share physical constants and coefficient tables. Select either backend through the unified `diffgw` interface.
+```python
+import diffgw
 
-- :triangular_ruler: **Native Autodiff**
-    ---
-    Supported model paths provide derivatives for Fisher forecasts, MAP optimization, and gradient-based sampling. Derivative checks and statistical assumptions are described in the [tutorials](tutorials/02_fisher_analysis.md).
+hp, hc = diffgw.get_fd_waveform(
+    "IMRPhenomD",
+    backend="torch",  # use "jax" for JAX arrays
+    mass1=30.0,
+    mass2=25.0,
+    chi1=0.2,
+    chi2=-0.1,
+    distance=410.0,
+    f_lower=20.0,
+    f_final=512.0,
+    delta_f=0.25,
+)
+```
 
-- :telescope: **Detector Networks**
-    ---
-    Ground-detector projections and analytical noise models, plus LISA and pulsar-timing response utilities.
+Masses are in solar masses, distance in Mpc and frequencies in Hz. The
+[quickstart](tutorials/01_quickstart_and_parity.md) demonstrates both frontends
+and a scoped numerical consistency check. For modes, precession, tides and
+time-domain sampling, continue to [waveform generation](guides/waveform-generation.md).
 
-- :rocket: **Likelihood Tools**
-    ---
-    Dense Whittle Gaussian likelihood and a relative-binning approximation that evaluates candidate waveforms at fewer frequencies. Accuracy and cost depend on the grid, binning and fiducial waveform; see [likelihood validation](validation/inference.md#relative-binning).
+<a id="waveform-models-framework-parity"></a>
 
-</div>
+## Scope and evidence
 
----
+The [catalog](models.md) covers inspiral, merger-ringdown, tidal, precessing,
+higher-mode and specialized models. Availability, agreement with LAL and
+independent physical validation are separate properties. Each model's
+restrictions and evidence are linked from its catalog entry.
 
-## Quickstart
+Detector projections, likelihoods and Fisher tools connect waveforms to
+[analysis workflows](guides/inference.md). Derivative support and measured
+performance depend on the selected model, parameters and execution path.
 
-=== "PyTorch (`torchwave`)"
-
-    ```python
-    import torch
-    import torchwave
-
-    # Generate a binary black hole waveform
-    hp, hc = torchwave.get_fd_waveform(
-        approximant="IMRPhenomD",
-        mass1=30.0,
-        mass2=25.0,
-        chi1=0.2,
-        chi2=-0.1,
-        f_lower=20.0,
-        f_final=512.0,
-        delta_f=0.25,
-        dtype=torch.float64,
-    )
-
-    print("PyTorch polarization shape:", hp.shape)  # torch.Size([1969])
-
-    # Batched generation across 10,000 systems in a single call (B, N)
-    m1_b = torch.linspace(20.0, 50.0, 10000, dtype=torch.float64)
-    m2_b = torch.linspace(15.0, 45.0, 10000, dtype=torch.float64)
-    hp_batch, hc_batch = torchwave.get_fd_waveform(
-        approximant="IMRPhenomD",
-        mass1=m1_b, mass2=m2_b,
-        f_lower=20.0, f_final=512.0, delta_f=1.0,
-    )
-    print("Batched tensor shape:", hp_batch.shape)  # torch.Size([10000, 493])
-    ```
-
-=== "JAX (`jaxwave`)"
-
-    ```python
-    import jax
-    import jax.numpy as jnp
-    import jaxwave
-
-    # Class-based generator with cached XLA JIT compilation
-    generator = jaxwave.WaveformGenerator(
-        approximant="IMRPhenomD",
-        f_lower=20.0,
-        f_final=512.0,
-        delta_f=0.25,
-        use_jit=True,
-    )
-
-    hp, hc = generator.generate_fd_waveform(
-        mass1=30.0, mass2=25.0, chi1=0.2, chi2=-0.1
-    )
-    print("JAX polarization shape:", hp.shape)  # (1969,)
-
-    # Differentiate the implemented plus-polarization power with respect to chirp mass
-    @jax.jit
-    @jax.grad
-    def mc_loss(mc):
-        hp_val, _ = generator(chirp_mass=mc, mass_ratio=1.0)
-        return jnp.sum(jnp.abs(hp_val) ** 2)
-
-    grad = mc_loss(26.1)
-    print(f"d(Power)/d(M_c) = {grad:.4e}")
-    ```
-
-=== "Unified Dispatch (`diffgw`)"
-
-    ```python
-    import diffgw
-
-    # Dispatch to PyTorch backend
-    hp_t, hc_t = diffgw.get_fd_waveform(
-        "IMRPhenomD", mass1=30.0, mass2=25.0,
-        f_lower=20.0, f_final=512.0, delta_f=0.25,
-        backend="torch",
-    )
-
-    # Dispatch to JAX backend
-    hp_j, hc_j = diffgw.get_fd_waveform(
-        "IMRPhenomD", mass1=30.0, mass2=25.0,
-        f_lower=20.0, f_final=512.0, delta_f=0.25,
-        backend="jax",
-    )
-    ```
-
----
-
-## Installation
-
-=== "PyTorch Support"
-
-    ```bash
-    git clone https://github.com/xangma/diffgw.git
-    cd diffgw
-    pip install -e ".[torch]"
-    ```
-
-=== "JAX Support"
-
-    ```bash
-    git clone https://github.com/xangma/diffgw.git
-    cd diffgw
-    pip install -e ".[jax]"
-    ```
-
-=== "All Backends & Development"
-
-    ```bash
-    git clone https://github.com/xangma/diffgw.git
-    cd diffgw
-    pip install -e ".[all,dev,docs]"
-    ```
-
----
-
-## Waveform Models & Framework Parity
-
-Use the [model support catalog](models.md) to compare physical features,
-backend and derivative restrictions, external data requirements, and validation
-status. [Accuracy and validation](validation.md) distinguishes frontend
-consistency, external-reference agreement and independent physical evidence.
-
----
-
-## Documentation Navigation
-
-<div class="grid cards" markdown>
-
-- :material-table: **[Package Comparison](comparison.md)**
-    ---
-    How DiffGW's tensor backends, model coverage, derivatives and measured performance compare with related packages.
-
-- :material-format-list-checks: **[Model Support](models.md)**
-    ---
-    Physical coverage, backend and derivative restrictions, external data, and known limitations.
-
-- :material-check-decagram: **[Accuracy & Validation](validation.md)**
-    ---
-    Waveform agreement, derivative evidence, physical validation and detailed reports.
-
-- :material-book-open-page-variant: **[User Guide](usage.md)**
-    ---
-    In-depth guide covering all approximants, batching, JAX JIT, detectors, and Bayesian inference.
-
-- :material-speedometer: **[Performance & Benchmarks](performance.md)**
-    ---
-    Recorded FP64 waveform benchmarks on CPU and RTX 5090, with timing boundaries, numerical checks and reproduction commands.
-
-- :material-school: **[Step-by-Step Tutorials](tutorials/01_quickstart_and_parity.md)**
-    ---
-    Practical guides for quickstart & parity, forward-mode Fisher analysis, and an illustrative NUTS API walkthrough.
-
-- :material-code-tags: **[API Reference](api/torchwave.md)**
-    ---
-    Auto-generated function signatures, parameter descriptions, and return types for `torchwave`, `jaxwave`, and `diffgw`.
-
-- :material-certificate: **[Provenance & Citations](provenance_ledger.md)**
-    ---
-    Mathematical sources, calibration provenance and primary literature citations ([`CITATIONS.md`](../CITATIONS.md)).
-
-</div>
+DiffGW's original software is MIT-licensed. Literature, author calibrations and
+optional external assets are documented in the [provenance ledger](provenance_ledger.md),
+[external-data guide](external-data.md) and [third-party notices](../THIRD_PARTY_NOTICES.md).

@@ -49,8 +49,8 @@ receipts are maintained in that report.
 
 ## Compilation and derivatives
 
-The [usage guide](usage.md#5-jax-frontend-acceleration-jaxwave) shows JAX JIT,
-vectorization and shape bucketing. The [benchmark CLI examples](usage.md#torchwave-bench)
+The [usage guide](guides/execution.md#jax-compilation-batching-and-transforms) shows JAX JIT,
+vectorization and shape bucketing. The [benchmark CLI examples](guides/cli.md#torchwave-bench)
 show compiled PyTorch execution. `dynamic=True` and bucketing can reduce
 recompilation, but a new shape, dtype, bucket or static configuration can still
 compile. Warm the signatures used by your workload before timing.

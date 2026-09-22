@@ -1,193 +1,149 @@
-# DiffGW compared with related packages
+# DiffGW and related waveform packages
 
-DiffGW brings gravitational-wave models into **native PyTorch and JAX** workflows.
-Its waveforms are tensors that can be batched over binaries, compiled for repeated
-evaluation, and differentiated through supported waveform and analysis paths.
-The same package includes detector projections, likelihoods and Fisher tools,
-so waveform generation can stay inside the framework used for inference.
+This page is a dated coverage map for DiffGW, LALSimulation, Ripple, PhenomXPy
+and GWFAST. It records named models and execution boundaries documented by each
+project; a shared name does not establish identical physics, conventions,
+parameter domains or validation. The external documentation snapshot was checked
+on **22 September 2026**. See [differences from LAL](differences_from_lal.md)
+for model-specific numerical and convention differences, [validation](validation.md)
+for evidence, and [performance](performance.md) for the separate benchmark
+campaign.
 
-This page explains how that design compares with LALSimulation, Ripple,
-PhenomXPy and GWFAST, and where DiffGW's model implementations differ. Use [model support](models.md)
-to select an approximant, and [accuracy and validation](validation.md) to assess
-the evidence for your configuration.
+## Reading the coverage table
 
-## What DiffGW provides
+The table covers DiffGW's catalog and selected alternatives available elsewhere;
+it is not an exhaustive catalog of every package. Entries identify named models
+or explicitly grouped variants, rather than assigning entire families to a package.
 
-- **Two native backends.** `torchwave` and `jaxwave` share an analytical physics
-  core and expose corresponding waveform APIs. The unified `diffgw` interface
-  selects either backend, so PyTorch and JAX users can work with familiar tensor
-  and differentiation tools.
-- **Batched, compiled evaluation.** Parameters for multiple binaries become
-  waveform arrays of shape `(B, N)`. Supported paths use `torch.compile` or
-  `jax.jit`, with broadcasting and JAX `vmap` for vectorization. CPU and CUDA
-  performance is measured [below](#measured-batch-performance).
-- **Waveforms connected to analysis.** Detector responses, noise PSDs, Whittle
-  and relative-binning likelihoods, and forward-mode Fisher calculations are
-  available alongside waveform generation. The tutorials demonstrate
-  [Fisher analysis](tutorials/02_fisher_analysis.md) and
-  [gradient-based inference](tutorials/03_parameter_estimation_nuts.md).
-- **Frequency- and time-domain models.** The catalogue spans post-Newtonian,
-  phenomenological, tidal, precessing and higher-mode models, with native
-  time-domain IMRPhenomT, EOB implementations and Kerr ringdown tools. The
-  [model notes](#model-specific-differences-from-lal) identify each family's
-  calibration and validation scope.
+- **Native** means the project documents an implementation of that named model.
+- **External** means the project exposes another library's implementation through
+a runtime wrapper.
+- **Not listed** means the checked project documentation does not name the
+variant. It is not evidence that the software cannot provide it.
+- **Native + external asset** means native evaluation depends on a separately
+acquired model or calibration asset.
+- **Unverified** means the available documentation was insufficient to assign a
+more specific status.
 
-DiffGW's code is MIT-licensed. The native waveform implementations run without
-LAL; optional black-box LAL comparisons provide reference checks. Installation
-can select [PyTorch, JAX or both](usage.md), with
-[external ROM data](external-data.md) acquired separately where required.
+A status is a capability statement, not an accuracy or calibration claim. For
+DiffGW, the [model catalogue](models.md) describes frontend scope and links to evidence. The
+[manifest](model_manifest.json) records selected configurations; the T-family
+report is separate.
 
-## How DiffGW differs
+## Waveform coverage
 
-| Related package | Common ground | DiffGW's approach |
-| --- | --- | --- |
-| **[LALSimulation](https://lscsoft.docs.ligo.org/lalsuite/7.26/lalsimulation/index.html)** | Established waveform families and reference conventions. | Native tensor implementations make batching and automatic differentiation part of waveform evaluation. LAL supplies compiled C routines with Python bindings; its waveform API does not document a general native PyTorch/JAX autodiff interface. DiffGW records numerical agreement and deliberate modeling differences per approximant. |
-| **[Ripple](https://github.com/GW-JAX-Team/ripple)** | Differentiable JAX waveforms, JIT compilation and vectorization. | DiffGW provides a PyTorch implementation alongside JAX, plus native time-domain IMRPhenomT, EOB and Kerr QNM tools. Ripple's [catalogue](https://gw-jax-team.github.io/ripple/stable/guides/catalogue/) includes frequency-domain CBC models with precessing higher modes and NRTidalv3 variants, as well as burst and pulsar models; the catalogues overlap without being identical. |
-| **[PhenomXPy](https://gitlab.com/imrphenom-dev/phenomxpy)** | Native time-domain PhenomT physics and the authors' calibration and reconstruction formulas. | DiffGW integrates the model into both tensor backends, with shared time grids, batching and first-order derivatives. PhenomXPy documents the T/THM/TP/TPHM family using Numba on CPU and CuPy on GPU, with parallel evaluation over time samples; native PyTorch/JAX autodiff is not documented in its [package overview](https://pypi.org/project/phenomxpy/). |
-| **[GWFAST](https://gwfast.readthedocs.io/en/latest/)** | Differentiable waveforms, detector responses, SNR and Fisher calculations. | DiffGW connects these calculations to its PyTorch and JAX waveform APIs and Bayesian likelihood tools. GWFAST focuses on detector-network and population forecasting, with JAX/analytical derivatives for native models and numerical waveform derivatives by default for its [external LAL/TEOB wrappers](https://gwfast.readthedocs.io/en/latest/waveforms.html). |
+| Family | Named model or variant | DiffGW | LALSimulation | Ripple | PhenomXPy | GWFAST |
+| --- | --- | --- | --- | --- | --- | --- |
+| Post-Newtonian | `TaylorF2` | Native | Native | Native (tidal-capable) | Not listed | Native (`TaylorF2_RestrictedPN`) |
+| Post-Newtonian | `TaylorF2_HM` | Native (eight modes) | Not listed | Not listed | Not listed | Not listed |
+| Post-Newtonian | `TaylorF2_Eccentric` | Native | Native (`TaylorF2Ecc`) | Not listed | Not listed | Native (eccentric option) |
+| Aligned-spin IMR | `IMRPhenomD` | Native | Native | Native | Not listed | Native |
+| Aligned-spin IMR | `IMRPhenomD_NRTidal` | Native | Native | Not listed | Not listed | Not listed |
+| Aligned-spin IMR | `IMRPhenomD_NRTidalv2` | Native | Native | Native | Not listed | Native |
+| Aligned-spin IMR | `IMRPhenomHM` | Native | Native | Native | Not listed | Native |
+| Aligned-spin IMR | `IMRPhenomXAS` | Native | Native | Native | Not listed | Not listed |
+| Aligned-spin IMR | `IMRPhenomXHM` | Native | Native | Native | Not listed | Wrapper unverified |
+| Tidal matter | `IMRPhenomNSBH` | Native | Native | Not listed | Not listed | Native |
+| Precessing IMR | `IMRPhenomP` | Native | Native | Not listed | Not listed | Wrapper unverified |
+| Precessing IMR | `IMRPhenomPv2` | Native | Native | Native | Not listed | Wrapper unverified |
+| Precessing IMR | `IMRPhenomXP`, `IMRPhenomXPHM` | Native | Native | Native | Not listed | Wrapper unverified |
+| Precessing IMR | XPHM MSA, SpinTaylor and PNR options | Native (documented options) | Unverified (options not enumerated here) | Unverified (options not enumerated here) | Not listed | Wrapper unverified |
+| Time-domain IMR | `IMRPhenomT`, `IMRPhenomTHM`, `IMRPhenomTP`, `IMRPhenomTPHM` | Native | Native | Not listed | Native | Wrapper unverified |
+| Effective-one-body | `SEOBNR_ROM`, `SEOBNRv4_ROM` | Native + external asset | Native (`SEOBNRv4_ROM`) | Not listed | Not listed | Wrapper unverified |
+| Effective-one-body | `SEOBNRv4HM`, `SEOBNRv4P`, `SEOBNRv4PHM` | Not listed | Native | Not listed | Not listed | Wrapper unverified |
+| Effective-one-body and tidal | `SEOBNRv4_ROM_NRTidalv2`, `SEOBNRv4_ROM_NRTidalv2_NSBH`, `SEOBNRv4T_surrogate` | Not listed | Native | Not listed | Not listed | Wrapper unverified |
+| Effective-one-body | `SEOBNRv5_ROM`, `SEOBNRv5HM_ROM`, `SEOBNRv5_ROM_NRTidalv3` | Not listed | Native | Not listed | Not listed | Wrapper unverified |
+| Effective-one-body | `SEOBNR_ODE` | Native | Not listed | Not listed | Not listed | Not listed |
+| Effective-one-body | `TEOBResumS` | Native | Native | Not listed | Not listed | Wrapper unverified |
+| Effective-one-body | `TEOBResumSPA` | Not listed | Not listed | Not listed | Not listed | External |
+| Phenomenological tidal | `IMRPhenomXAS_NRTidalv2` | Not listed | Native | Not listed | Not listed | Wrapper unverified |
+| Phenomenological tidal | `IMRPhenomXAS_NRTidalv3`, `IMRPhenomXP_NRTidalv3` | Not listed | Native | Native | Not listed | Wrapper unverified |
+| NR surrogate | `NRSur4d2s`, `NRSur7dq4` | Not listed | Native | Not listed | Not listed | Wrapper unverified |
+| Ringdown and bursts | `KerrRingdown` | Native | Unverified | Not listed | Not listed | Not listed |
+| Ringdown and bursts | `SineGaussian` | Native | Native (burst routines) | Native (time domain) | Not listed | Not listed |
+| Ringdown and bursts | `MemoryWaveform` | Native | Not listed | Not listed | Not listed | Not listed |
+| Continuous waves | `ContinuousWave` | Native | Unverified | Not listed under this name | Not listed | Not listed |
+| Continuous waves | `ExactPulsarSignal`, `PulsarSignal`, `BinaryPulsarSignal` | Not listed under these names | Unverified | Native | Not listed | Not listed |
+| Specialized | `EMRIKludge`, `ParameterizedPostEinstein`, `SpinPrecessionODE`, `HybridMECO` | Native | Unverified | Not listed | Not listed | Not listed |
 
-Derivative and compilation support is documented per DiffGW model. For example,
-[native IMRPhenomT](imrphenomt.md) supports first-order derivatives on fixed
-grids; higher-order derivatives through its frequency inversion are unsupported,
-and automatic duration selection is an eager operation because it changes array
-shape. The CPU/CUDA measurements below cover FP64 execution; MPS has precision
-and compiler limitations, and no TPU measurements are reported here.
+The LAL column is based on the [LALSimInspiral approximant API][lal-inspiral]
+and [LALSimulation module index][lal-modules]. The Ripple column uses the
+project's [current waveform catalogue][ripple-catalogue]. PhenomXPy's official
+repository documents the four T-family entries in its [README][phenomxpy].
+GWFAST's [waveform documentation][gwfast-waveforms] identifies its native Python
+models and its separate [LAL and TEOBResumS wrappers][gwfast-waveforms].
 
-## Measured batch performance
+`Native` does not mean the implementation is independent of published
+calibration data. `External` identifies a runtime wrapper; it
+also does not imply numerical equivalence. For all columns, omitted options,
+modes, domains and derivative orders remain unverified.
 
-In the [21 September 2026 FP64 campaign](package_benchmarks.md), LAL has the
-lowest single-waveform CPU latency for all three measured models. At 1,000
-binaries, compiled DiffGW PyTorch has the lowest measured CPU batch latency for
-IMRPhenomD and IMRPhenomXAS. GPU ordering depends on model, batch and backend.
-These are warmed forward-waveform measurements with resident inputs; they do
-not measure derivative or end-to-end inference performance.
+**Wrapper unverified** means GWFAST documents a generic LAL interface, but the
+checked page does not establish that this particular model, domain and option
+set work through it. `TEOBResumSPA` is a separately named frequency-domain
+variant, not a claim of identical behavior to `TEOBResumS`.
 
-The [performance overview](performance.md) presents the results by workload,
-with links to complete scaling plots, accuracy qualifications and raw receipts.
-PhenomXPy and GWFAST are compared by capability here; they were not timed.
+<a id="what-diffgw-provides"></a>
+<a id="how-diffgw-differs"></a>
 
-## Physics coverage and scientific agreement
+## Execution capabilities
 
-DiffGW combines implementations of published waveform models with independently
-calibrated components. For example, PhenomD and PhenomXAS closely reproduce the
-tested LAL outputs, while the XHM/XPHM higher-mode ringdown uses independent
-SXS-based fits. These distinctions are recorded in the
-[model manifest](model_manifest.json) and
-[provenance ledger](provenance_ledger.md), alongside reference versions, tested
-configurations and unresolved cases.
+Model coverage and execution capabilities are separate questions. The following
+summary records the interfaces documented on the same date; it does not infer
+support for every model in a package's catalogue.
 
-DiffGW separates three kinds of validation:
+| Package | Native execution interfaces | Batching and compilation | Differentiation and external boundaries |
+| --- | --- | --- | --- |
+| **DiffGW** | Native PyTorch (`torchwave`) and JAX (`jaxwave`) frontends under `diffgw`; frequency- and time-domain models are listed in the [catalogue](models.md). | Waveforms expose batch-shaped tensor evaluation. Supported paths document `torch.compile` and `jax.jit`; measured CPU/CUDA scope is in [performance](performance.md). | Automatic differentiation is model- and path-specific. Native evaluation does not call LAL; ROMs and explicitly documented data assets remain external. See [validation](validation.md). |
+| **LALSimulation** | LAL's documented high-level routines generate time- or frequency-domain waveforms for named approximants. | The checked API documents scalar waveform-generation entry points and sequence/grid variants; this page makes no blanket claim about tensor batching or autodiff. | No general native PyTorch/JAX autodiff interface is documented in the checked LAL pages. |
+| **Ripple** | Differentiable JAX waveform functions; the current catalogue lists frequency-domain CBC models, time-domain bursts and continuous waves. | JAX execution supports compilation and accelerator use; see the [project documentation][ripple-readme]. | Support depends on the model and transformed path. The current catalogue does not list the T family. |
+| **PhenomXPy** | Python T, THM, TP and TPHM implementations, with time-domain and Fourier-transformed polarizations. | The README documents Numba CPU acceleration and CuPy GPU execution, parallelized over time samples. | The README does not document a native PyTorch/JAX autodiff interface. |
+| **GWFAST** | Vectorised Python waveform models plus detector/Fisher analysis; native model list is in the [waveform documentation](https://gwfast.readthedocs.io/en/latest/waveforms.html). | Native models are documented as vectorised; the package uses JAX for automatic differentiation. | LAL and TEOBResumS are explicit wrappers; the documentation states that derivatives through wrapped models use numerical differentiation. |
 
-| Check | Evidence it provides |
-| --- | --- |
-| **Torch/JAX agreement** | Consistency between DiffGW's two implementations for the tested inputs. |
-| **Same-model reference agreement** | Agreement with a specified LAL or author implementation, using declared modes, conventions, grids and tolerances. |
-| **Independent physical validation** | Agreement with NR or another independent physical reference over a stated test set. |
-
-The checks serve different purposes: frontend agreement does not establish
-physical accuracy, and a shared author calibration makes the PhenomXPy
-comparison an implementation check. Reference results retain direct complex
-errors and the definition of any phase/time alignment or mismatch weighting.
-Gradient checks are separate from waveform-value checks.
-
-## Model-specific differences from LAL
-
-DiffGW implements waveform physics in its own tensor backends. The following
-details explain how its coefficients, conventions, calibration and numerical
-methods relate to LAL, and summarize the available reference evidence.
-
-| Model or family | DiffGW implementation | Reference evidence |
-| --- | --- | --- |
-| **IMRPhenomD / IMRPhenomXAS** | Published models with explicit coefficient precision, reference-phase and time-origin conventions. XAS uses the author-supplied symbolic calibration deposit identified in the provenance ledger. | Both DiffGW frontends pass the strict LAL gate for all measured D/XAS configurations in the [FP64 campaign](package_benchmarks.md#accuracy-across-the-measured-configurations). |
-| **IMRPhenomXP** | The documented clean path uses MSA version 223, `convention=1`, `final_spin_mod=3` and `phi0=0`. Nonzero `phi0` retains legacy geometry; unsupported cases use explicit fallback. | Frozen catalog and holdout cases agree closely. The manifest records residuals at exact alignment, zero spin and tiny in-plane spins, with detector-projection errors distinguished from polarization errors. |
-| **IMRPhenomXHM / IMRPhenomXPHM** | Five modes: `(2,2)`, `(2,1)`, `(3,3)`, `(3,2)` and `(4,4)`. The four higher modes use independent SXS-based ringdown fits and native Kerr QNM calculations; XPHM adds precession to this carrier. | The calibration differs from LAL's. Recorded NR checks examine phase in a restricted ringdown band with reference amplitudes and affine phase alignment; they do not validate full-waveform amplitude and phase accuracy. |
-| **SEOBNR_ODE / TEOBResumS** | Native EOB dynamics with continuous spline peak location and ringdown attachment, using their own modeling and numerical choices. | The manifest's LAL diagnostic cases have polarization relative L2 errors about 1.02 and 1.00 respectively, failing the reference checks. These implementations are not currently validated as LAL-equivalent. |
-| **TaylorF2_HM** | Literature-based frequency-domain PN extension with eight leading-order modes through `l=4`: `(2,2)`, `(2,1)`, `(3,1)`, `(3,2)`, `(3,3)`, `(4,2)`, `(4,3)`, `(4,4)`. | The external TaylorF2 check covers `(2,2)`. An independent full-waveform reference for the higher modes, higher-PN completeness and spin-amplitude completeness remain unresolved in the manifest. |
-| **SEOBNR_ROM** | Data-backed reduced-order evaluation; the chosen surrogate and calibration asset define the model. Official SEOBNRv4ROM data are external. | Validation applies to the selected asset. See [external data](external-data.md) for acquisition and [third-party notices](../THIRD_PARTY_NOTICES.md) for unresolved redistribution terms. |
-
-The EOB [peak locator](../src/torchwave/approximants/eob/continuous_matching.py)
-solves a natural cubic spline's derivative on accepted samples, selecting an
-interior maximum and rejecting unresolved or tied maxima. The selected root is
-locally differentiable, while interval and maximum selection remain piecewise;
-continuous attachment does not remove integration-step dependence.
-JAX's non-symmetric Kerr angular eigensolver uses a host CPU callback.
-
-### Numerical precession: SpinTaylor and PNR
-
-`IMRPhenomXPHM-SpinTaylor` (`prec_version=320`) integrates spin-precession
-equations with fixed-grid RK4 in velocity space. `IMRPhenomXPNR`
-(`prec_version=330`, `final_spin_mod=2`) combines NR-tuned PNR angles with
-DiffGW's native XHM coprecessing carrier. The carrier, precession integration,
-angle attachment and minimal-rotation quadrature contribute to differences from
-LAL; comparisons specify the precession and tuned-coprecessing options.
-
-The [SpinTaylor tests](https://github.com/xangma/diffgw/blob/5226141/tests/test_imrphenom_xphm_spintaylor.py)
-and [PNR tests](https://github.com/xangma/diffgw/blob/5226141/tests/test_imrphenom_xpnr.py)
-use optimized plus-polarization overlaps with model-specific tolerances.
-Their scope differs from the direct, both-polarization FP64 gate above; these
-variants were not timed in that campaign.
-
-### Native IMRPhenomT family
-
-T, THM, TP and TPHM have native time-domain evaluation in both frontends.
-The precessing variants offer NNLO (default), MSA and numerical prescriptions;
-reference comparisons must match angle and remnant-spin options. Fixed-grid
-first derivatives are supported, with restrictions on frequency inversion and
-automatic duration selection described in the [model guide](imrphenomt.md).
-
-The [reference-validation report](validation/phenomt.md) records author checks,
-LAL regression criteria, measured residuals and diagnostic experiments. Numerical
-precession retains unresolved reference differences, including the strongly
-spinning 10:1 case; agreement in the documented cases does not establish accuracy
-throughout parameter space or independent physical accuracy.
-
-### Reproducing model checks
-
-DiffGW's catalog harness retains model-specific references and diagnostic
-failures:
-
-```bash
-PYTHONPATH=src python tests/parity_harness.py --scope=analytic
-PYTHONPATH=src python tests/parity_harness.py --scope=catalog
-```
-
-Each result records its reference identity, metrics and verification scope.
-The [benchmark protocol](benchmarking_protocol.md#12-the-gatekeeper-rule-parity-first)
-sets out how those checks qualify performance results, and the
-[package benchmark report](package_benchmarks.md#reproduction-and-receipts)
-provides timing receipts and reproduction commands.
+For DiffGW's actual model options, derivative order, device limits and
+unresolved cases, use the [model catalogue](models.md), [usage guidance](usage.md)
+and [validation evidence](validation.md). For LAL-reference differences, use
+the canonical [differences-from-LAL page](differences_from_lal.md).
 
 ## Related analysis and waveform projects
 
-DiffGW's waveform and analysis components also overlap with projects that work
-at different levels. [Jim](https://github.com/GW-JAX-Team/Jim) provides JAX
-Bayesian inference using Ripple;
-[Bilby](https://bilby-dev.github.io/bilby/api/bilby.gw.source.html) and
+[Jim](https://github.com/GW-JAX-Team/Jim) provides JAX Bayesian inference using
+Ripple. [Bilby](https://bilby-dev.github.io/bilby/api/bilby.gw.source.html) and
 [PyCBC](https://pycbc.org/pycbc/latest/html/waveform.html) provide analysis
-frameworks that integrate waveform providers.
-[WF4Py](https://github.com/CosmoStatGW/WF4Py) supplies standalone Python waveform
-models associated with GWFAST.
-[pySEOBNR](https://waveforms.docs.ligo.org/software/pyseobnr) and
-[TEOBResumS](https://teobresums.bitbucket.io/) are reference points for DiffGW's
-EOB work, while [GWSurrogate](https://github.com/sxs-collaboration/gwsurrogate)
-provides NR surrogate models with their own calibration domains and data assets.
+frameworks that integrate waveform providers. [WF4Py](https://github.com/CosmoStatGW/WF4Py)
+supplies standalone Python waveform models associated with GWFAST.
+[pySEOBNR](https://waveforms.docs.ligo.org/software/pyseobnr),
+[TEOBResumS](https://teobresums.bitbucket.io/) and
+[GWSurrogate](https://github.com/sxs-collaboration/gwsurrogate) are related
+model and data projects with their own calibration domains and assets.
 
 ## Sources and versions
 
-The capability comparison was checked on **21 September 2026** against upstream
-documentation. DiffGW capabilities describe the current implementation; the
-waveform timing campaign uses baseline **`5226141`**. Model-specific validation
-records above are separate from that campaign. The exact benchmark environment
-is recorded in its receipts.
+Coverage was checked on **22 September 2026**. The DiffGW column describes this
+checkout; timing receipts separately pin their own source revision. The LAL
+approximant list is pinned to **LALSuite 7.26 / LALSimulation 6.2.1**; its module
+index is rolling documentation. Ripple's stable catalogue, PhenomXPy's main-branch
+README and GWFAST's latest documentation are moving targets. The GWFAST page
+identifies itself as **1.1.2**. These are documentation observations, not fresh
+execution tests of every entry. Recheck sources when updating this table.
 
-| Distribution | Published version checked | Release date | Code licence reported upstream |
-| --- | --- | --- | --- |
-| [LALSuite](https://pypi.org/project/lalsuite/) (includes LALSimulation) | 7.26.15 | 13 June 2026 | GPL-2.0-or-later |
-| [rippleGW](https://pypi.org/project/rippleGW/) | 0.4.0 | 2 September 2026 | MIT |
-| [PhenomXPy](https://pypi.org/project/phenomxpy/) | 2.0.3 | 22 June 2026 | MIT |
-| [GWFAST](https://pypi.org/project/gwfast/) | 1.1.2 | 4 November 2024 | [GNU GPLv3](https://github.com/CosmoStatGW/gwfast/blob/master/LICENSE) |
+<a id="measured-batch-performance"></a>
 
-Upstream development documentation and `stable`/`latest` URLs can move beyond
-these releases. DiffGW's [third-party notices](../THIRD_PARTY_NOTICES.md) record
-calibration provenance and external-asset terms separately from its MIT code
-licence.
+Published timing results are in [Performance](performance.md).
+
+<a id="physics-coverage-and-scientific-agreement"></a>
+<a id="model-specific-differences-from-lal"></a>
+<a id="numerical-precession-spintaylor-and-pnr"></a>
+<a id="native-imrphenomt-family"></a>
+<a id="reproducing-model-checks"></a>
+
+For detailed reference differences and reproduction commands, see
+[Differences from LAL](differences_from_lal.md). The [validation overview](validation.md)
+explains what each kind of evidence establishes.
+
+[lal-inspiral]: https://lscsoft.docs.ligo.org/lalsuite/7.26/lalsimulation/group___l_a_l_sim_inspiral__h.html
+[lal-modules]: https://lscsoft.docs.ligo.org/lalsuite/lalsimulation/modules.html
+[ripple-readme]: https://github.com/GW-JAX-Team/ripple
+[ripple-catalogue]: https://gw-jax-team.github.io/ripple/stable/guides/catalogue/
+[phenomxpy]: https://gitlab.com/imrphenom-dev/phenomxpy/-/blob/main/README.md
+[gwfast-waveforms]: https://gwfast.readthedocs.io/en/latest/waveforms.html

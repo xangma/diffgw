@@ -1,8 +1,9 @@
-# Model support and selection
+# Waveform catalog and support
 
 Choose a model by its physical content, then check the evidence and execution
 restrictions for the options you need. The catalog records implemented families;
 a familiar approximant name does not establish equivalence to an external model.
+For availability in other packages, use the [dated package comparison](comparison.md).
 
 ## Model catalog
 
@@ -20,24 +21,25 @@ a familiar approximant name does not establish equivalence to an external model.
 
 ## Backend support and evidence
 
-Both frontends expose the catalog through native tensor APIs. This is interface
-availability, not a claim that every model, device, option or derivative order
-has been validated. The table summarizes documented evidence; missing coverage
-should be treated as unestablished. See the [model manifest](model_manifest.json)
-for recorded configurations and [package comparison](comparison.md#model-specific-differences-from-lal)
-for modeling differences. The manifest does not yet include the T family; its
-evidence is recorded separately in the [T-family report](validation/phenomt.md).
+The native Torch and JAX interfaces share the catalog, but transformation,
+device and derivative support depend on the selected path. Use this table to
+find execution restrictions and the relevant evidence. Scientific differences
+and reference outcomes are maintained on [Differences from LAL](differences_from_lal.md).
 
-| Model or family | Frontends and execution scope | Evidence and limitations | Details |
-| --- | --- | --- | --- |
-| TaylorF2, IMRPhenomD, IMRPhenomXAS | Torch eager/compiled and JAX JIT measured on CPU/CUDA in FP64 | D/XAS pass the campaign's strict LAL check; TaylorF2 misses its direct-error threshold. Only the specified populations and grids are covered. | [Campaign and accuracy table](package_benchmarks.md#accuracy-across-the-measured-configurations) |
-| IMRPhenomXP | Native Torch/JAX; options and reference phase matter | The documented clean path uses MSA 223, convention 1, final-spin option 3 and zero reference phase; small-spin/aligned cases retain residuals. | [Reference differences](comparison.md#model-specific-differences-from-lal) |
-| IMRPhenomXHM / XPHM and SpinTaylor / PNR variants | Native tensor paths; gradient and batching support depend on the selected path | Independent higher-mode ringdown fits differ from LAL. Restricted NR phase checks do not validate the full waveform. Numerical precession has separate reference criteria. | [Model differences](comparison.md#model-specific-differences-from-lal), [precession variants](comparison.md#numerical-precession-spintaylor-and-pnr) |
-| IMRPhenomT / THM / TP / TPHM | Both frontends; native TD only, shared batch grid; first derivatives on fixed grids | No higher derivatives through frequency inversion. Automatic duration selection is eager. Numerical precession has unresolved reference differences, especially the strongly spinning 10:1 case. | [Usage and conventions](imrphenomt.md), [reference report](validation/phenomt.md) |
-| SEOBNR_ODE / TEOBResumS | Native EOB implementations with their own numerical/modeling choices | Recorded external-reference checks fail; these are not established as LAL-equivalent implementations. | [Reference differences](comparison.md#model-specific-differences-from-lal) |
-| SEOBNR_ROM / SEOBNRv4_ROM | Native evaluation using a selected external data asset | Support and validation depend on that asset; official ROM data are acquired separately. | [External data](external-data.md) |
-| TaylorF2_HM | Leading-order higher-mode amplitudes through degree 4 | External TaylorF2 comparison covers the dominant mode. Independent full-waveform higher-mode validation and higher-PN/spin-amplitude completeness remain unresolved. | [Reference differences](comparison.md#model-specific-differences-from-lal) |
-| Remaining catalog models | Interface and physical features listed above | Consult the per-model manifest. The published forward campaign does not benchmark these models or establish their device/derivative coverage. | [Manifest](model_manifest.json), [validation overview](validation.md) |
+| Model or family | Execution scope and restrictions | Model guidance and evidence |
+| --- | --- | --- |
+| TaylorF2, IMRPhenomD, IMRPhenomXAS | Torch eager/compiled and JAX JIT measured on CPU/CUDA in FP64 for the specified grids and populations. | [Generation](guides/waveform-generation.md), [reference qualifications](package_benchmarks.md#accuracy-across-the-measured-configurations) |
+| IMRPhenomXP | Native Torch/JAX; precession, final-spin and reference-phase options affect comparisons. | [Reference options and limitations](differences_from_lal.md#model-specific-differences) |
+| IMRPhenomXHM / XPHM, IMRPhenomXPHM-SpinTaylor and IMRPhenomXPNR | Mode selection and precession prescriptions have separate restrictions. Gradient and batching support depend on the selected path. | [Generation](guides/waveform-generation.md), [model differences](differences_from_lal.md#model-specific-differences), [numerical precession](differences_from_lal.md#numerical-precession-spintaylor-and-pnr) |
+| IMRPhenomT / THM / TP / TPHM | Both frontends; native TD only, shared batch grid and first derivatives on fixed grids. No higher derivatives through frequency inversion; automatic duration selection is eager. | [T-family guide](imrphenomt.md), [reference report](validation/phenomt.md) |
+| SEOBNR_ODE / TEOBResumS | Native EOB dynamics with model-specific numerical choices; not validated as LAL-equivalent. | [Known differences and failed reference checks](differences_from_lal.md#model-specific-differences) |
+| SEOBNR_ROM / SEOBNRv4_ROM | Native evaluation using a selected external data asset. The asset determines the surrogate and its validation scope. | [External data](external-data.md), [reference limitations](differences_from_lal.md#model-specific-differences) |
+| TaylorF2_HM | Leading-order higher-mode amplitudes through degree 4; independent full-waveform validation is incomplete. | [Mode content above](#model-catalog), [reference scope](differences_from_lal.md#model-specific-differences) |
+| Remaining catalog models | Listed physical features do not establish device, transformation or derivative coverage. | [Recorded configurations](model_manifest.json), [validation overview](validation.md) |
+
+The [manifest](model_manifest.json) records selected configurations; it does not
+yet include the T family, whose evidence is in its separate report. Missing
+coverage should be treated as unestablished.
 
 ## Parameter domains and conventions
 
@@ -47,18 +49,18 @@ checks must not be extrapolated to a model's entire physical domain. Where a
 calibration range or option is not established by the linked model documentation
 and provenance, this catalog makes no domain-wide accuracy claim.
 
-The [waveform guide](usage.md#4-frequency-domain-waveforms-get_fd_waveform)
-describes generation and parameters. Check units, reference phase/frequency,
-spin frames, sampling and mode selection before comparing providers. The
+The [waveform guide](guides/waveform-generation.md)
+describes generation. The [parameters and conventions reference](conventions.md)
+covers units, reference phase/frequency, spin frames, sampling and mode selection. The
 [T-family guide](imrphenomt.md) specifies its time origin, duration, conventions
 and rejected options. Other model-specific conventions are recorded in the
-[manifest](model_manifest.json) and [comparison notes](comparison.md#model-specific-differences-from-lal).
+[manifest](model_manifest.json) and [differences from LAL](differences_from_lal.md#model-specific-differences).
 
 ## Differentiation and hardware
 
 See [derivative support and evidence](validation.md#derivative-support-and-evidence)
 for the documented parameters, derivative orders and checks. A waveform-value
 check does not qualify its derivatives. CPU/CUDA measurements do not establish
-support on other accelerators; [precision and device guidance](usage.md#3-hardware-acceleration-precision)
+support on other accelerators; [precision and device guidance](guides/execution.md)
 explains the FP64 restriction on PyTorch MPS. JAX's non-symmetric Kerr angular
-eigensolver uses a host CPU callback, as recorded in the comparison notes.
+eigensolver uses a host CPU callback, as recorded in [Differences from LAL](differences_from_lal.md#model-specific-differences).

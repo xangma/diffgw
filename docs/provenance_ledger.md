@@ -2,7 +2,7 @@
 
 This document records mathematical sources, asset provenance, and calibration
 provenance in TorchWave. Model-specific comparisons with LALSimulation are
-recorded on the [comparison page](comparison.md#model-specific-differences-from-lal).
+recorded on [Differences from LAL](differences_from_lal.md#model-specific-differences).
 Numerical agreement, physical calibration and software/data provenance are separate
 claims; evidence for one does not establish the others.
 
@@ -259,7 +259,7 @@ The native calibration surfaces in `torchwave` were trained on numerical relativ
 
 ## 6. Documented Differences from LALSimulation
 
-Model-specific formulations, reference configurations and limitations are described on the [comparison page](comparison.md#model-specific-differences-from-lal).
+Model-specific formulations, reference configurations and limitations are described on [Differences from LAL](differences_from_lal.md#model-specific-differences).
 
 ## Native IMRPhenomT family (2026-09-21)
 
@@ -307,7 +307,7 @@ Model-specific formulations, reference configurations and limitations are descri
   `tests/test_phenomt_reference.py` retains numerical values from the pinned
   MIT author implementation and optional LAL binary comparisons spanning
   equal masses, mass ratio 10 and spins from -0.9 to 0.9. Measured LAL
-  residuals are recorded in the [model comparison](comparison.md#model-specific-differences-from-lal).
+  residuals are recorded in [Differences from LAL](differences_from_lal.md#model-specific-differences).
   FP64 cross-backend tests require relative L2 error at most `1e-11` and
   mismatch at most `1e-14`, including the high-spin mass-ratio-10 JIT case.
   Phase-sensitive mass/spin gradients are checked against finite differences

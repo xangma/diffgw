@@ -92,28 +92,37 @@ validation:
   unrecognized_links: info
 
 nav:
-  - Home: index.md
-  - Choose a Model:
-      - Compare Packages: comparison.md
-      - Model Support: models.md
-  - User Guide:
-      - Waveforms and Analysis: usage.md
-      - IMRPhenomT Family: imrphenomt.md
-      - External Datasets: external-data.md
-  - Tutorials:
-      - 1. Quickstart & Parity: tutorials/01_quickstart_and_parity.md
-      - 2. Fisher Information: tutorials/02_fisher_analysis.md
-      - 3. NUTS API Walkthrough: tutorials/03_parameter_estimation_nuts.md
-  - Accuracy & Validation:
-      - Evidence Overview: validation.md
-      - IMRPhenomT Reference Report: validation/phenomt.md
-      - Inference Checks: validation/inference.md
-      - Mathematical Provenance: provenance_ledger.md
+  - Start here:
+      - Overview: index.md
+      - Installation: installation.md
+      - Quickstart: tutorials/01_quickstart_and_parity.md
+  - Package comparison: comparison.md
+  - Waveforms:
+      - Catalog and support: models.md
+      - Parameters and conventions: conventions.md
+      - IMRPhenomT family: imrphenomt.md
+  - User guide:
+      - Overview: usage.md
+      - Waveform generation: guides/waveform-generation.md
+      - Batching, devices and differentiation: guides/execution.md
+      - Detectors and inference: guides/inference.md
+      - Tutorials:
+          - Fisher analysis: tutorials/02_fisher_analysis.md
+          - NUTS API walkthrough: tutorials/03_parameter_estimation_nuts.md
+  - Validation:
+      - Evidence overview: validation.md
+      - Differences from LAL: differences_from_lal.md
+      - IMRPhenomT reference report: validation/phenomt.md
+      - Inference checks: validation/inference.md
   - Performance:
-      - Results Overview: performance.md
-      - "21 Sep 2026: FP64 Waveforms": package_benchmarks.md
-      - Reproduce & Methodology: benchmarking_protocol.md
-  - API Reference:
-      - diffgw (Unified): api/diffgw.md
-      - torchwave (PyTorch): api/torchwave.md
-      - jaxwave (JAX): api/jaxwave.md
+      - Results overview: performance.md
+      - "21 Sep 2026: FP64 waveforms": package_benchmarks.md
+      - Running benchmarks: benchmarking_protocol.md
+  - Reference:
+      - API:
+          - diffgw (unified): api/diffgw.md
+          - torchwave (PyTorch): api/torchwave.md
+          - jaxwave (JAX): api/jaxwave.md
+      - Command-line tools: guides/cli.md
+      - External datasets: external-data.md
+      - Provenance and citations: provenance_ledger.md

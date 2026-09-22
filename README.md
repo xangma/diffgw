@@ -233,35 +233,21 @@ The package includes standalone console scripts for benchmarking, profiling, dat
 
 ## Documentation Directory
 
-The documentation is available in the repository and through the [**Online Documentation Portal**](https://xangma.github.io/diffgw/):
+Read the [online documentation](https://xangma.github.io/diffgw/) or browse the
+same pages in this repository:
 
-- **User Guide**:
-  - [Getting Started & Usage Guide](docs/usage.md) — Comprehensive guide covering approximants, parameters, batching, JIT, and detector networks.
-  - [External Datasets](docs/external-data.md) — Managing offline ROM datasets and cache verification.
-- **Tutorials**:
-  - [1. Quickstart & Parity Check](docs/tutorials/01_quickstart_and_parity.md) ([`examples/01_quickstart_and_parity.py`](examples/01_quickstart_and_parity.py))
-  - [2. Fisher Information Analysis](docs/tutorials/02_fisher_analysis.md) ([`examples/02_fisher_analysis.py`](examples/02_fisher_analysis.py))
-  - [3. NUTS API Walkthrough](docs/tutorials/03_parameter_estimation_nuts.md) ([`examples/03_parameter_estimation_nuts.py`](examples/03_parameter_estimation_nuts.py))
-- **Choose a Model**:
-  - [Compare Packages](docs/comparison.md) — Capabilities and differences from related projects.
-  - [Model Support](docs/models.md) — Physical coverage, execution restrictions, and evidence status.
-- **Accuracy & Validation**:
-  - [Evidence Overview](docs/validation.md) — Waveform, derivative and physical validation.
-  - [IMRPhenomT Reference Report](docs/validation/phenomt.md) — Measured residuals and diagnostic experiments.
-  - [Inference Checks](docs/validation/inference.md) — Likelihood checks and statistical interpretation.
-  - [Mathematical Provenance](docs/provenance_ledger.md) — Literature and calibration sources.
-- **Performance**:
-  - [Results Overview](docs/performance.md) — Results by workload and evidence gaps.
-  - [21 September 2026: FP64 Waveforms](docs/package_benchmarks.md) — Detailed results and raw receipts.
-  - [Reproduce & Methodology](docs/benchmarking_protocol.md) — Runner selection and measurement requirements.
-- **API Reference**:
-  - [`torchwave` API](docs/api/torchwave.md) — PyTorch frontend reference.
-  - [`jaxwave` API](docs/api/jaxwave.md) — JAX frontend reference.
-  - [`diffgw` API](docs/api/diffgw.md) — Unified dispatch reference.
-- **Project & Community**:
-  - [Citations](CITATIONS.md) — Literature citations and BibTeX entries.
-  - [Contributing Guidelines](CONTRIBUTING.md) — Development workflow, testing protocols, and parity requirements.
-  - [Third-Party Notices](THIRD_PARTY_NOTICES.md) — Licensing and attribution notices.
+| Section | Contents |
+| --- | --- |
+| Start here | [Overview](docs/index.md), [installation](docs/installation.md), [quickstart](docs/tutorials/01_quickstart_and_parity.md) |
+| Package comparison | [Dated waveform coverage and execution capabilities](docs/comparison.md) |
+| Waveforms | [Catalog and support](docs/models.md), [parameters and conventions](docs/conventions.md), [T-family guide](docs/imrphenomt.md) |
+| User guide | [Generation, execution and inference](docs/usage.md), [Fisher tutorial](docs/tutorials/02_fisher_analysis.md), [NUTS API walkthrough](docs/tutorials/03_parameter_estimation_nuts.md) |
+| Validation | [Evidence overview](docs/validation.md), [differences from LAL](docs/differences_from_lal.md), [T-family report](docs/validation/phenomt.md), [inference checks](docs/validation/inference.md) |
+| Performance | [Results](docs/performance.md), [dated FP64 benchmark](docs/package_benchmarks.md), [running benchmarks](docs/benchmarking_protocol.md) |
+| Reference | [Unified API](docs/api/diffgw.md), [Torch](docs/api/torchwave.md), [JAX](docs/api/jaxwave.md), [CLI](docs/guides/cli.md), [external data](docs/external-data.md), [provenance](docs/provenance_ledger.md) |
+
+For project contributions and attribution, see [contributing](CONTRIBUTING.md),
+[citations](CITATIONS.md) and [third-party notices](THIRD_PARTY_NOTICES.md).
 
 ---
 
