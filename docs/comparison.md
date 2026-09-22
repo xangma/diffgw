@@ -3,41 +3,34 @@
 This page is a dated coverage map for DiffGW, LALSimulation, Ripple, PhenomXPy
 and GWFAST. It records named models and execution boundaries documented by each
 project; a shared name does not establish identical physics, conventions,
-parameter domains or validation. The external documentation snapshot was checked
-on **22 September 2026**. See [differences from LAL](differences_from_lal.md)
+parameter domains or validation. See [differences from LAL](differences_from_lal.md)
 for model-specific numerical and convention differences, [validation](validation.md)
 for evidence, and [performance](performance.md) for measured benchmark
 workloads.
 
-## Reading the coverage table
-
-The table covers DiffGW's catalog and selected alternatives available elsewhere;
-it is not an exhaustive catalog of every package. Entries identify named models
-or explicitly grouped variants, rather than assigning entire families to a package.
-
-- **Native** means the project documents an implementation of that named model.
-- **External** means the project exposes another library's implementation through
-a runtime wrapper.
-- **- (not listed)** means the checked project documentation does not name the
-variant. It is not evidence that the software cannot provide it.
-- **Native + external asset** means native evaluation depends on a separately
-acquired model or calibration asset.
-- **Unverified** means the available documentation was insufficient to assign a
-more specific status.
-
-A status is a capability statement, not an accuracy or calibration claim. For
-DiffGW, the [model catalogue](models.md) describes frontend scope and links to evidence. The
-[manifest](model_manifest.json) records selected configurations; the T-family
-report is separate.
-
 ## Waveform coverage
 
-<div class="waveform-coverage" markdown="1">
+<a id="reading-the-coverage-table"></a>
 
-Checked **22 September 2026**. **N** = native · **N+A** = native with an external asset ·
-**E** = external wrapper · **-** = not listed · **?** = unverified · **W?** = wrapper unverified.
-“Not listed” does not mean unsupported. LAL denotes LALSimulation. Notes below each
-group retain model names and qualifications. See the [status definitions](#reading-the-coverage-table).
+Checked **22 September 2026**; see [sources and versions](#sources-and-versions).
+The table covers DiffGW's catalog and selected alternatives, not every model in
+other packages. Entries identify named models or explicitly grouped variants.
+LAL denotes LALSimulation.
+
+**Legend**
+
+- **N** (native): the package documents an implementation of the named model.
+- **N+A** (native with an external asset): evaluation requires separately acquired model or calibration data.
+- **E** (external wrapper): the package calls another library's implementation.
+- **-** (not listed): the checked documentation does not name the variant; this does not establish that it is unsupported.
+- **?** (unverified): the documentation is insufficient to assign a status.
+- **W?** (wrapper unverified): GWFAST documents a generic LAL interface, but support for this model and its options is unconfirmed.
+
+These statuses describe documented availability, not accuracy or calibration.
+Notes below each group explain model-specific qualifications. For DiffGW's
+frontend scope and validation evidence, see the [model catalogue](models.md).
+
+<div class="waveform-coverage" markdown="1">
 
 ### Post-Newtonian
 
@@ -167,9 +160,7 @@ calibration data. `External` identifies a runtime wrapper; it
 also does not imply numerical equivalence. For all columns, omitted options,
 modes, domains and derivative orders remain unverified.
 
-**Wrapper unverified** means GWFAST documents a generic LAL interface, but the
-checked page does not establish that this particular model, domain and option
-set work through it. `TEOBResumSPA` is a separately named frequency-domain
+`TEOBResumSPA` is a separately named frequency-domain
 variant, not a claim of identical behavior to `TEOBResumS`.
 
 <a id="what-diffgw-provides"></a>
