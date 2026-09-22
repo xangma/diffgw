@@ -1,5 +1,5 @@
 {
-  "specification": "seobnrv4-paper-components/0.3.0",
+  "specification": "seobnrv4-paper-components/0.4.0",
   "model": "SEOBNRv4 dominant (2,2) mode, aligned-spin black-hole binaries",
   "source": {
     "id": "bohe-2017-v3",
@@ -82,10 +82,26 @@
       "test": "dev/native_rom/reference/tests/test_published.py:test_hofmann_published_limits; dev/native_rom/reference/tests/test_torch.py:test_hofmann_spin_against_reference; dev/native_rom/reference/tests/test_jax.py:test_hofmann_spin_against_reference"
     },
     {
-      "id": "V4-REMNANT-SPIN-CHOICE-QNM",
-      "source": "bohe-2017-v3, Sec. II.C, cited remnant and QNM works",
+      "id": "V4-QNM-220-PAPER-CHECK",
+      "source": "bohe-2017-v3, Sec. II.C and Appendix B; Berti et al. (2006), Sec. II.1, Eq. (1), Appendix E, Eqs. (73)-(74), Tables II and VIII",
+      "status": "diagnostic",
+      "reference": "qnm.berti_220_fit; qnm.sigma_initial_mass_units",
+      "torch": "src/torchwave/approximants/kerr_qnm_generated.py:dimensionless_qnm",
+      "jax": "src/jaxwave/approximants/kerr_qnm_interp.py:evaluate_kerr_qnm_220",
+      "test": "dev/native_rom/reference/tests/test_published.py:test_berti_fit_is_a_diagnostic_and_qnm_convention; dev/native_rom/reference/tests/test_torch.py:test_qnm_against_berti_numerical_table; dev/native_rom/reference/tests/test_jax.py:test_qnm_against_berti_numerical_table",
+      "condition": "The printed analytic fit only diagnoses scale and convention; four-decimal table checks diagnose native equation solves. Neither reproduces SEOBNRv4's unspecified historical interpolation."
+    },
+    {
+      "id": "V4-REMNANT-SPIN-CHOICE",
+      "source": "bohe-2017-v3, Sec. II.C; Hofmann et al. (2016), Table 1",
       "status": "pending",
-      "blocker": "Bohé et al. cite Hofmann but do not specify which of Table 1's three fit orders they use. The development assembler selects (3,4), while Hofmann et al. identify (1,2) as avoiding overfitting. Pin the actual SEOBNRv4 choice and independently reconstruct the Berti QNM convention and any interpolation knots; current knot provenance is incomplete."
+      "blocker": "Bohé et al. cite Hofmann but do not specify which Table 1 fit order they use. The development assembler selects (3,4), while Hofmann et al. identify (1,2) as less prone to overfitting. Pin the actual SEOBNRv4 choice."
+    },
+    {
+      "id": "V4-QNM-INTERPOLATION",
+      "source": "bohe-2017-v3, Sec. II.C and Appendix B; Berti et al. (2006), Appendix E",
+      "status": "pending",
+      "blocker": "Bohé et al. specify interpolation of Berti's numerical results, not Berti's approximate analytic fit. Independently identify the exact historical SEOBNRv4 numerical knots, precision, and interpolation rule, or qualify a documented native replacement against whole-waveform evidence."
     },
     {
       "id": "V4-ODE-IC",

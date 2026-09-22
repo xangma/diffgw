@@ -12,6 +12,7 @@ from dev.native_rom.reference import SPEC_VERSION
 from dev.native_rom.reference.published import (
     D, calibration, chi, mass_spin, nu, peak_targets, ringdown_shape,
 )
+from dev.native_rom.reference.qnm import berti_220_fit, sigma_initial_mass_units
 from dev.native_rom.reference.ringdown import h22
 from dev.native_rom.reference.remnant import final_mass_fraction, final_spin_projection
 
@@ -23,14 +24,16 @@ def test_manifest_is_explicit_and_versioned():
     assert manifest["specification"] == SPEC_VERSION
     components = manifest["components"]
     assert len({item["id"] for item in components}) == len(components)
-    assert {item["status"] for item in components} == {"executable", "conditional", "pending"}
+    assert {item["status"] for item in components} == {
+        "executable", "conditional", "diagnostic", "pending",
+    }
     assert any(item["status"] == "pending" for item in components)
     for item in components:
         assert item["source"].startswith("bohe-2017-v3")
         if item["status"] == "pending":
             assert item["blocker"]
         else:
-            if item["status"] == "conditional":
+            if item["status"] in {"conditional", "diagnostic"}:
                 assert item["condition"]
             assert all(item[key] for key in ("reference", "torch", "jax", "test"))
             for mapping in (item["torch"], item["jax"]):
@@ -120,6 +123,24 @@ def test_ringdown_shape_printed_constant_terms():
     values = {key: expr.subs({nu: 0, chi: 0}) for key, expr in ringdown_shape().items()}
     assert values == {"c1f": D("0.0830664"), "c2f": D("-0.623953"),
                       "d1f": D("0.147584"), "d2f": D("2.46654")}
+
+
+def test_berti_fit_is_a_diagnostic_and_qnm_convention():
+    with mp.workdps(60):
+        frequency, damping = berti_220_fit(0)
+        assert frequency == mp.mpf("0.3683")
+        assert abs(frequency/(2*damping)-mp.mpf("2.1187")) < mp.mpf("1e-59")
+        # The fit differs from the numerical value printed in Berti Table II.
+        assert abs(frequency-mp.mpf("0.3737")) > mp.mpf("0.005")
+        sigma = sigma_initial_mass_units("0.6", "0.08", "0.95")
+        assert abs(sigma-mp.mpc(mp.mpf("0.6")/mp.mpf("0.95"),
+                                -mp.mpf("0.08")/mp.mpf("0.95"))) < mp.mpf("1e-59")
+        assert abs(mp.exp(-1j*sigma*mp.mpf("0.95"))
+                   -mp.exp(mp.mpc("-0.08", "-0.6"))) < mp.mpf("1e-59")
+    with pytest.raises(ValueError):
+        berti_220_fit("0.995")
+    with pytest.raises(ValueError):
+        sigma_initial_mass_units("0.6", "0.08", "0")
 
 
 def test_remnant_mass_paper_limit_and_identity():

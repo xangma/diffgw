@@ -6,6 +6,7 @@ import torch
 from dev.native_rom.reference.published import calibration, evaluate, mass_spin, peak_targets, ringdown_shape
 from dev.native_rom.reference.ringdown import h22
 from dev.native_rom.reference.remnant import final_mass_fraction, final_spin_projection
+from torchwave.approximants.kerr_qnm_generated import dimensionless_qnm
 from torchwave.approximants.eob.merger_ringdown import merger_ringdown_22, seobnrv4_merger_shape
 from torchwave.approximants.eob.remnant import eob_final_mass_fraction, hofmann_final_spin
 from torchwave.approximants.eob.nqc import seobnrv4_nqc_parameters, seobnrv4_nqc_targets, seobnrv4_nqc_time_offset
@@ -67,3 +68,13 @@ def test_hofmann_spin_against_reference(fit_order, m1, m2, s1, s2):
     actual = hofmann_final_spin(*map(scalar, (m1, m2, s1, s2)), fit_order=fit_order)
     expected = final_spin_projection(m1, m2, s1, s2, fit_order=fit_order)
     assert float(actual) == pytest.approx(float(expected), rel=3e-13, abs=3e-14)
+
+
+@pytest.mark.parametrize("spin,frequency,damping", [
+    (0., .3737, .0890), (.8, .5860, .0756), (.98, .8254, .0386),
+])
+def test_qnm_against_berti_numerical_table(spin, frequency, damping):
+    # Berti et al. (2006), Appendix E, Table II prints four decimals.
+    actual_frequency, actual_damping = dimensionless_qnm(2, 2, 0, scalar(spin))
+    assert float(actual_frequency) == pytest.approx(frequency, abs=5.1e-5)
+    assert float(actual_damping) == pytest.approx(damping, abs=5.1e-5)
