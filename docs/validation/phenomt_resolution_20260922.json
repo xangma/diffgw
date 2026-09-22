@@ -1,0 +1,244 @@
+{
+  "generated_utc": "2026-09-22T06:16:47.798525+00:00",
+  "reproduction": "python scripts/diagnose_phenomt_precession.py --backend torch --case high_mass_ratio --sample-rate 2048 --backward-steps 128 512 2048 4096 --output receipt.json",
+  "versions": {
+    "python": "3.13.7",
+    "numpy": "2.5.3",
+    "lalsimulation": "6.2.1",
+    "torch": "2.14.0"
+  },
+  "dtype": "float64",
+  "device": "cpu",
+  "precession_version": 300,
+  "final_spin_mod": 4,
+  "parameters": {
+    "high_mass_ratio": {
+      "mass1": 60.0,
+      "mass2": 6.0,
+      "spin1": [
+        0.2,
+        0.1,
+        0.8
+      ],
+      "spin2": [
+        0.1,
+        0.0,
+        0.1
+      ],
+      "distance_mpc": 100.0,
+      "inclination": 1.2,
+      "phic": 0.1,
+      "f_lower_hz": 20.0,
+      "f_ref_hz": 20.0
+    }
+  },
+  "conventions": {
+    "coprec22": "Native h22 uses the native evolved final spin. One phase rotation fixes the first sample to the reference phase; no time shift, amplitude scaling, or fit.",
+    "polarizations": "IMRPhenomTP hplus-i*hcross; no alignment or scaling.",
+    "relative_l2": "norm(actual-reference)/norm(reference)",
+    "mismatch": "1-abs(vdot(actual,reference))/(norm(actual)*norm(reference)); unweighted, constant-phase maximization only, no time shift",
+    "beta": "Native minus reference opening angle at the listed sample times.",
+    "resolution": "Forward step count is half the backward count; both cover the full intrinsic interval. Consecutive native waveforms use the same output grid."
+  },
+  "results": [
+    {
+      "case": "high_mass_ratio",
+      "backend": "torch",
+      "sample_rate_hz": 2048,
+      "backward_steps": 128,
+      "forward_steps": 64,
+      "native_final_spin": 0.8734413461358469,
+      "samples": 5718,
+      "epoch_seconds": -2.629817046,
+      "mode_phase_anchor_radians": -0.00014043658848095222,
+      "coprec22": {
+        "all": {
+          "relative_l2": 0.0003051885583438765,
+          "mismatch": 4.651089147156284e-08
+        },
+        "inspiral": {
+          "relative_l2": 4.160899358389319e-05,
+          "mismatch": 7.664511247895689e-10
+        },
+        "ringdown": {
+          "relative_l2": 0.0021754145212141253,
+          "mismatch": 1.5917707403279024e-06
+        }
+      },
+      "coprec22_amplitude_relative_l2": 5.755442479394958e-05,
+      "beta_sample_times_seconds": [
+        -2.629817046,
+        -0.9999342334999999,
+        -0.10003188974999988,
+        6.576650000011952e-05
+      ],
+      "beta_difference_radians": [
+        -3.22994183144798e-05,
+        -0.003062611358119527,
+        0.009529861367253256,
+        -0.010476882496363193
+      ],
+      "polarizations": {
+        "relative_l2": 0.30844261210902935,
+        "mismatch": 0.047540005585508416
+      },
+      "invariant_absolute_errors": {
+        "lhat": 2.220446049250313e-16,
+        "tangent": 2.220446049250313e-16,
+        "spin1": 2.220446049250313e-16,
+        "spin2": 2.168404344971009e-19,
+        "lhat_dot_tangent": 1.1102230246251565e-16
+      }
+    },
+    {
+      "case": "high_mass_ratio",
+      "backend": "torch",
+      "sample_rate_hz": 2048,
+      "backward_steps": 512,
+      "forward_steps": 256,
+      "native_final_spin": 0.8734339035652005,
+      "samples": 5718,
+      "epoch_seconds": -2.629817046,
+      "mode_phase_anchor_radians": -0.00014043658848095222,
+      "coprec22": {
+        "all": {
+          "relative_l2": 0.00031379881737303526,
+          "mismatch": 4.916789586584258e-08
+        },
+        "inspiral": {
+          "relative_l2": 4.160899358389319e-05,
+          "mismatch": 7.664511247895689e-10
+        },
+        "ringdown": {
+          "relative_l2": 0.0022379129686461038,
+          "mismatch": 1.6824939168547104e-06
+        }
+      },
+      "coprec22_amplitude_relative_l2": 5.917102099997951e-05,
+      "beta_sample_times_seconds": [
+        -2.629817046,
+        -0.9999342334999999,
+        -0.10003188974999988,
+        6.576650000011952e-05
+      ],
+      "beta_difference_radians": [
+        -3.229941871754627e-05,
+        -0.003092440698323734,
+        0.009680821512251692,
+        -0.010515040414119742
+      ],
+      "polarizations": {
+        "relative_l2": 0.30842246643175236,
+        "mismatch": 0.04753420166501798
+      },
+      "invariant_absolute_errors": {
+        "lhat": 2.220446049250313e-16,
+        "tangent": 2.220446049250313e-16,
+        "spin1": 2.220446049250313e-16,
+        "spin2": 2.168404344971009e-19,
+        "lhat_dot_tangent": 1.1102230246251565e-16
+      },
+      "relative_l2_from_previous_resolution": 0.0001759356533970171
+    },
+    {
+      "case": "high_mass_ratio",
+      "backend": "torch",
+      "sample_rate_hz": 2048,
+      "backward_steps": 2048,
+      "forward_steps": 1024,
+      "native_final_spin": 0.8734338931529954,
+      "samples": 5718,
+      "epoch_seconds": -2.629817046,
+      "mode_phase_anchor_radians": -0.00014043658848095222,
+      "coprec22": {
+        "all": {
+          "relative_l2": 0.0003138108659188594,
+          "mismatch": 4.917166540607809e-08
+        },
+        "inspiral": {
+          "relative_l2": 4.160899358389319e-05,
+          "mismatch": 7.664511247895689e-10
+        },
+        "ringdown": {
+          "relative_l2": 0.0022380004025706808,
+          "mismatch": 1.682622596699268e-06
+        }
+      },
+      "coprec22_amplitude_relative_l2": 5.91732825268554e-05,
+      "beta_sample_times_seconds": [
+        -2.629817046,
+        -0.9999342334999999,
+        -0.10003188974999988,
+        6.576650000011952e-05
+      ],
+      "beta_difference_radians": [
+        -3.229941869895003e-05,
+        -0.003092617950428672,
+        0.009681437243448276,
+        -0.010515225930296496
+      ],
+      "polarizations": {
+        "relative_l2": 0.3084223695220892,
+        "mismatch": 0.04753417277866945
+      },
+      "invariant_absolute_errors": {
+        "lhat": 2.220446049250313e-16,
+        "tangent": 2.220446049250313e-16,
+        "spin1": 3.3306690738754696e-16,
+        "spin2": 2.168404344971009e-19,
+        "lhat_dot_tangent": 1.1102230246251565e-16
+      },
+      "relative_l2_from_previous_resolution": 6.366137452535795e-07
+    },
+    {
+      "case": "high_mass_ratio",
+      "backend": "torch",
+      "sample_rate_hz": 2048,
+      "backward_steps": 4096,
+      "forward_steps": 2048,
+      "native_final_spin": 0.8734338931327075,
+      "samples": 5718,
+      "epoch_seconds": -2.629817046,
+      "mode_phase_anchor_radians": -0.00014043658848095222,
+      "coprec22": {
+        "all": {
+          "relative_l2": 0.00031381088939810625,
+          "mismatch": 4.917167306661696e-08
+        },
+        "inspiral": {
+          "relative_l2": 4.160899358389319e-05,
+          "mismatch": 7.664511247895689e-10
+        },
+        "ringdown": {
+          "relative_l2": 0.0022380005729548944,
+          "mismatch": 1.6826228469435378e-06
+        }
+      },
+      "coprec22_amplitude_relative_l2": 5.917328692617431e-05,
+      "beta_sample_times_seconds": [
+        -2.629817046,
+        -0.9999342334999999,
+        -0.10003188974999988,
+        6.576650000011952e-05
+      ],
+      "beta_difference_radians": [
+        -3.229941869747899e-05,
+        -0.003092618657244889,
+        0.009681439468077924,
+        -0.010515226638308672
+      ],
+      "polarizations": {
+        "relative_l2": 0.30842236914487564,
+        "mismatch": 0.04753417266544324
+      },
+      "invariant_absolute_errors": {
+        "lhat": 2.220446049250313e-16,
+        "tangent": 2.220446049250313e-16,
+        "spin1": 3.3306690738754696e-16,
+        "spin2": 2.168404344971009e-19,
+        "lhat_dot_tangent": 1.1102230246251565e-16
+      },
+      "relative_l2_from_previous_resolution": 2.3201371137523476e-09
+    }
+  ]
+}

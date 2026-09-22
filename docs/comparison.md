@@ -226,9 +226,53 @@ separate inspiral/ringdown metrics are recorded there.
 
 The large 10:1 residual persists at 16384 Hz (TP relative L2 `0.308`, TPHM
 `0.307`); see the [higher-rate receipt](validation/phenomt_numerical_highrate_20260922.json).
-This rules out output sampling as its main cause for this case. The origin
-of the remaining reference differences is unresolved. No production coefficients
-are adjusted to fit the binary oracle.
+This rules out output sampling as its main cause for this case.
+
+The [component receipt](validation/phenomt_components_20260922.json) separates
+the dominant co-precessing mode from the projected TP polarizations. The native
+mode uses its own evolved remnant spin. Since the co-precessing API has an
+independent phase convention, this diagnostic applies one constant phase rotation
+fixed by the first mode sample, with no time shift or amplitude scaling. The
+polarization comparison remains unaligned. Both Torch and JAX give these results:
+
+| Numerical case | Co-precessing `(2,2)` relative L2, initial phase anchored | TP polarization relative L2, unaligned |
+| --- | ---: | ---: |
+| Baseline `(40, 15)` | 0.000138 | 0.0234 |
+| Single-spin `(35, 20)` | 0.00000515 | 0.0263 |
+| Equal masses `(30, 30)` | 0.000210 | 0.0174 |
+| Strongly spinning `(60, 6)` | 0.000314 | 0.308 |
+
+For the 10:1 case, doubling the intrinsic integration steps from 2048 backward /
+1024 forward to 4096 / 2048 changes the native TP strain by relative L2
+`2.32e-9`, while its reference error remains `0.308`; see the
+[resolution receipt](validation/phenomt_resolution_20260922.json). The opening
+angle differs from the reference by about `0.0105` radians near the peak at both
+resolutions. This focuses the remaining investigation on precession evolution
+and frame/phase conventions: neither the dominant-mode shape nor integration
+resolution explains the large residual. These diagnostics do not identify a
+specific missing physical term or establish higher-mode carrier agreement.
+
+A separate [quadrupole sensitivity receipt](validation/phenomt_quadrupole_20260922.json)
+varies only the native self-quadrupole coupling in the spin equations. Setting
+both coefficients to zero instead of their black-hole value of one reduces TP
+relative L2 from `0.308` to `0.0181` for the 10:1 case and from `0.0234` to
+`0.00364` for the baseline. Torch and JAX reproduce this sensitivity. This
+experiment directs attention to the treatment of quadrupole coupling, but does
+not establish which equations the reference uses. Production retains the
+black-hole coupling: suppressing a physical term solely to improve reference
+agreement would change the model. The mathematical basis is the orbit-averaged
+spin equation in [Sturani, Eq. (21)](https://dcc.ligo.org/public/0122/T1500554/023/dLdS.pdf)
+and the [quadrupole-monopole contribution for Kerr black holes](https://arxiv.org/abs/0803.1820).
+
+Reproduce the component check with
+`python scripts/diagnose_phenomt_precession.py --output receipt.json`.
+Add `--backend torch --case high_mass_ratio --backward-steps 128 512 2048 4096`
+for the integration-resolution check. Both scripts use LAL binary outputs only;
+no implementation source or fitted production correction is used.
+For the separate sensitivity experiment, use
+`--case baseline high_mass_ratio --quadrupole-kappa 1 0`.
+The zero-coupling option exists only in the diagnostic script, not the waveform
+API. It leaves the reference settings unchanged.
 
 The MSA and numerical regression checks are retained in
 `tests/test_phenomt_family_lal.py`. Numerical checks cover the baseline,
