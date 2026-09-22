@@ -1,4 +1,4 @@
-# SEOBNRv4 source specification: paper components 0.2.0
+# SEOBNRv4 source specification: paper components 0.3.0
 
 **Status: incomplete research specification.** This version establishes an
 independent executable source of truth for the components marked `executable`
@@ -96,6 +96,18 @@ fit.
 This is component-level transcription evidence only. The remnant-spin fit
 choice and exact QNM tabulation remain open.
 
+`remnant.final_spin_projection` evaluates the aligned-spin formula of
+[Hofmann, Barausse and Rezzolla (2016), Eqs. (2)–(7), (11) and Table 1](https://arxiv.org/html/1605.01938)
+using mpmath and the paper's printed coefficients. It requires an explicit
+`fit_order` of `(1,2)`, `(3,3)`, or `(3,4)`; Eq. (11) fixes the unprinted
+`k00` from the equal-mass, zero-spin value `0.68646`. Tests check that limit,
+body exchange, mass-scale invariance, and each variant against Torch and JAX.
+The SEOBNRv4 paper cites Hofmann but does not identify a Table 1 order.
+Hofmann et al. regard `(1,2)` as the choice less prone to overfitting; the
+development assembler currently chooses `(3,4)`. Component agreement does
+not establish which variant defines SEOBNRv4, so model-level selection is
+still pending.
+
 ## Evidence and implementation map
 
 The canonical [manifest](manifest.json) assigns stable IDs, exact paper
@@ -121,9 +133,9 @@ dependency or distribution asset changes in this branch.
 The manifest names each remaining component and its next discriminating task.
 Most urgently, the full Hamiltonian and factorized radiation/flux need equation
 review; the remnant-spin choice and QNM interpolation knots need independently
-documented provenance; the ODE initial conditions and solver need a converged campaign;
-and the public-binary comparison requires matched phase/time and conditioning
-conventions. The [first frozen generator campaign](../evidence/2026-09-22/README.md)
+documented provenance; the ODE initial conditions and solver need a converged
+campaign; and the public-binary comparison requires matched phase/time and
+conditioning conventions. The [first frozen generator campaign](../evidence/2026-09-22/README.md)
 failed its direct complex/amplitude convergence gate. The current generator and
 ROM work therefore stay on this development branch. Reference completion,
 frontend component checks, generator numerical convergence, public-binary

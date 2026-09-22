@@ -13,7 +13,7 @@ from dev.native_rom.reference.published import (
     D, calibration, chi, mass_spin, nu, peak_targets, ringdown_shape,
 )
 from dev.native_rom.reference.ringdown import h22
-from dev.native_rom.reference.remnant import final_mass_fraction
+from dev.native_rom.reference.remnant import final_mass_fraction, final_spin_projection
 
 
 def test_manifest_is_explicit_and_versioned():
@@ -147,3 +147,16 @@ def test_remnant_mass_paper_limit_and_identity():
             3, 2, ".7", "-.2")
     with pytest.raises(ValueError):
         final_mass_fraction(-1, 2, 0, 0)
+
+
+@pytest.mark.parametrize("fit_order", [(1, 2), (3, 3), (3, 4)])
+def test_hofmann_published_limits(fit_order):
+    with mp.workdps(60):
+        assert abs(final_spin_projection(1, 1, 0, 0, fit_order=fit_order)
+                   - mp.mpf("0.68646")) < mp.mpf("1e-55")
+        a = final_spin_projection(30, 20, ".7", "-.2", fit_order=fit_order)
+        b = final_spin_projection(20, 30, "-.2", ".7", fit_order=fit_order)
+        c = final_spin_projection(3, 2, ".7", "-.2", fit_order=fit_order)
+        assert a == b == c
+    with pytest.raises(ValueError):
+        final_spin_projection(1, 1, 0, 0, fit_order=(2, 2))
