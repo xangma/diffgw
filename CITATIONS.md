@@ -1026,7 +1026,11 @@ the precession options exposed here:
 
 The numerical precession equations are documented in Riccardo Sturani,
 [Note on the derivation of the angular momentum and spin precessing equations in SpinTaylor codes, LIGO-T1500554](https://dcc.ligo.org/public/0122/T1500554/023/dLdS.pdf),
-Eqs. (3), (21), (22), (24), and (25). MSA uses
+Eqs. (3), (21), (22), (24), and (25). The PhenomTP numerical path excludes
+the Eq. (24) N3LO quadratic-spin terms, as specified by the `phenomtp`
+parameter in the
+[public LAL API](https://lscsoft.docs.ligo.org/lalsuite/7.26/lalsimulation/_l_a_l_sim_inspiral_8h.html);
+the internal derivative helper retains the full-equation option. MSA uses
 [Chatziioannou et al., Phys. Rev. D 95, 104004 (2017)](https://doi.org/10.1103/PhysRevD.95.104004)
 and the precession conventions of
 [Pratten et al., Phys. Rev. D 103, 104056 (2021)](https://doi.org/10.1103/PhysRevD.103.104056).

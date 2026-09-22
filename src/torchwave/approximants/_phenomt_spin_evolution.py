@@ -2,7 +2,7 @@
 
 All spins are dimensionless physical spins divided by ``M**2`` and the
 returned derivatives are with respect to ``t/M``.  Coefficients are from
-Sturani, LIGO-T1500554, Eqs. (3), (22), (24), and (25); the Eq. (24) ``b``
+Sturani, LIGO-T1500554, Eqs. (3), (21), (22), (24), and (25); the Eq. (24) ``b``
 term multiplies the full companion spin vector.
 """
 from __future__ import annotations
@@ -10,17 +10,26 @@ import math
 import torch
 
 
-def spin_derivatives(v, lhat, s1, s2, m1_fraction, m2_fraction):
+def spin_derivatives(v, lhat, s1, s2, m1_fraction, m2_fraction,
+                     *, quadrupole_kappa1=1.0, quadrupole_kappa2=1.0,
+                     include_n3lo_ss=True):
     """Return ``(dLhat/d(t/M), dS1/d(t/M), dS2/d(t/M))`` through N4LO.
 
     Inputs broadcast over arbitrary leading dimensions; the final state axis
-    must have length three.  ``m1_fraction + m2_fraction`` is one.
+    must have length three.  ``m1_fraction + m2_fraction`` is one.  The
+    published equations are returned by default.  ``include_n3lo_ss=False``
+    removes only the v8/N3LO quadratic-spin term (the public PhenomTP
+    ``spinO=6`` selection); it does not remove the v6 self-spin term.
+    ``quadrupole_kappa*`` are the dimensionless quadrupole couplings, with
+    ``kappa=1`` for a GR black hole.
     """
     lhat, s1, s2 = torch.broadcast_tensors(lhat, s1, s2)
     lead = lhat.shape[:-1]
     v = torch.broadcast_to(torch.as_tensor(v, device=lhat.device, dtype=lhat.dtype), lead)[..., None]
     m1 = torch.broadcast_to(torch.as_tensor(m1_fraction, device=lhat.device, dtype=lhat.dtype), lead)[..., None]
     m2 = torch.broadcast_to(torch.as_tensor(m2_fraction, device=lhat.device, dtype=lhat.dtype), lead)[..., None]
+    kappa1 = torch.broadcast_to(torch.as_tensor(quadrupole_kappa1, device=lhat.device, dtype=lhat.dtype), lead)[..., None]
+    kappa2 = torch.broadcast_to(torch.as_tensor(quadrupole_kappa2, device=lhat.device, dtype=lhat.dtype), lead)[..., None]
     eta = m1 * m2
     l1 = (lhat * s1).sum(-1, keepdim=True)
     l2 = (lhat * s2).sum(-1, keepdim=True)
@@ -31,23 +40,29 @@ def spin_derivatives(v, lhat, s1, s2, m1_fraction, m2_fraction):
     s12 = torch.linalg.cross(s1, s2)
     # Orbit-averaged NLO spin-spin terms.
     ds1 = ds1 + v**6 * (-0.5*s12 - 1.5*l2*torch.linalg.cross(lhat,s1)
-                         + 1.5*(1.0-1.0/m1)*l1*torch.linalg.cross(lhat,s1))
+                         + 1.5*kappa1*(1.0-1.0/m1)*l1*torch.linalg.cross(lhat,s1))
     ds2 = ds2 + v**6 * (0.5*s12 - 1.5*l1*torch.linalg.cross(lhat,s2)
-                         + 1.5*(1.0-1.0/m2)*l2*torch.linalg.cross(lhat,s2))
+                         + 1.5*kappa2*(1.0-1.0/m2)*l2*torch.linalg.cross(lhat,s2))
     # NNLO spin-orbit, Sturani Eq. (22).
     q1 = 9/8 - m1/2 + 7*m1**2/12 - 7*m1**3/6 - m1**4/24
     q2 = 9/8 - m2/2 + 7*m2**2/12 - 7*m2**3/6 - m2**4/24
     ds1 = ds1 + q1*v**7*torch.linalg.cross(lhat,s1)
     ds2 = ds2 + q2*v**7*torch.linalg.cross(lhat,s2)
-    # N3LO orbit-averaged quadratic spin, Sturani Eq. (24), kappa=1.
-    a1 = -13/4 + 9*m1/4 + m1**2
-    a2 = -13/4 + 9*m2/4 + m2**2
-    b1 = m1/2 + m1**2/2
-    b2 = m2/2 + m2**2/2
-    d1 = -3/2 - 3*m1/2 - m1**2/2
-    d2 = -3/2 - 3*m2/2 - m2**2/2
-    ds1 = ds1 + v**8*torch.linalg.cross(a1*l1*lhat + b1*s2 + d1*l2*lhat, s1)
-    ds2 = ds2 + v**8*torch.linalg.cross(a2*l2*lhat + b2*s1 + d2*l1*lhat, s2)
+    if include_n3lo_ss:
+        # N3LO orbit-averaged quadratic spin, Sturani Eq. (24).  Written in
+        # the general quadrupole couplings so kappa=1 gives the BH
+        # coefficients, while the companion and L-projection terms are
+        # retained independently of kappa.
+        a1 = (9/(4*m1) - 13/4 + 3*m1/4 + m1**2/4
+              + kappa1*(-9/(4*m1) + 3*m1/2 + 3*m1**2/4))
+        a2 = (9/(4*m2) - 13/4 + 3*m2/4 + m2**2/4
+              + kappa2*(-9/(4*m2) + 3*m2/2 + 3*m2**2/4))
+        b1 = m1/2 + m1**2/2
+        b2 = m2/2 + m2**2/2
+        d1 = -3/2 - 3*m1/2 - m1**2/2
+        d2 = -3/2 - 3*m2/2 - m2**2/2
+        ds1 = ds1 + v**8*torch.linalg.cross(a1*l1*lhat + b1*s2 + d1*l2*lhat, s1)
+        ds2 = ds2 + v**8*torch.linalg.cross(a2*l2*lhat + b2*s1 + d2*l1*lhat, s2)
     # N4LO spin-orbit, Sturani Eq. (25).
     r1 = 27/16 - 51*m1/8 + 181*m1**2/16 - 23*m1**3/6 - 39*m1**4/16 - 3*m1**5/8 - m1**6/48
     r2 = 27/16 - 51*m2/8 + 181*m2**2/16 - 23*m2**3/6 - 39*m2**4/16 - 3*m2**5/8 - m2**6/48

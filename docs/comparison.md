@@ -190,22 +190,49 @@ conventions are documented in the [T-family guide](imrphenomt.md).
 For the additional precession methods, the same `(40, 15)` generic-spin
 case at 2048 Hz gives the following direct complex-strain errors against
 LALSimulation 6.2.1. The angle and remnant-spin options are matched explicitly.
-The [recorded results and environment](validation/phenomt_precession_20260921.json)
-can be reproduced with `python scripts/validate_phenomt_precession.py`.
+The [MSA receipt](validation/phenomt_precession_20260921.json) and updated
+[numerical receipt](validation/phenomt_numerical_20260922.json) record the
+environment and reproduction commands. Use
+`python scripts/validate_phenomt_precession.py` for the baseline comparison.
 
 | Method / LAL options | TP relative L2 | TPHM relative L2 | Largest mismatch |
 | --- | ---: | ---: | ---: |
 | MSA / `22310`, `FinalSpinMod=3` | 0.00379 | 0.00388 | 0.00000754 |
-| Numerical / `300`, `FinalSpinMod=4` | 0.0273 | 0.0276 | 0.000375 |
+| Numerical / `300`, `FinalSpinMod=4` | 0.0234 | 0.0236 | 0.000274 |
 
 These measurements use the full returned LAL time grid without time, phase,
-or amplitude adjustment for relative L2. Numerical precession follows the
-published N4LO equations with the PhenomT frequency evolution, fixed intrinsic
-integration nodes, and a physical-time ringdown boundary. It is a native
-reconstruction with measurable differences from LAL, not an exact binary
-replacement. The MSA and numerical regression checks are retained in
-`tests/test_phenomt_family_lal.py`; these cases do not establish accuracy
-throughout parameter space. NNLO remains the default. See the
+or amplitude adjustment for relative L2. Numerical precession uses the
+PhenomT frequency evolution, fixed intrinsic integration nodes, and a
+physical-time ringdown boundary. It now excludes the N3LO quadratic-spin
+terms according to the public `phenomtp` API specification, retaining the
+leading self-spin terms and N4LO spin-orbit terms. This reduces the baseline
+error from about 2.8% to 2.4%; it does not eliminate the reference differences.
+The full published spin equations remain available in the internal helper.
+
+Additional numerical cases at 2048 Hz give the following errors. Both native
+backends are included in the receipt; their reported errors agree to the
+displayed precision. The spins, viewing geometry, reference frequency, and
+separate inspiral/ringdown metrics are recorded there.
+
+| Numerical case | TP relative L2 | TPHM relative L2 | Largest mismatch |
+| --- | ---: | ---: | ---: |
+| Single-spin, masses `(35, 20)` | 0.0263 | 0.0264 | 0.000343 |
+| Equal masses `(30, 30)` | 0.0174 | 0.0173 | 0.000148 |
+| Strongly spinning, masses `(60, 6)` | 0.308 | 0.307 | 0.0475 |
+
+The large 10:1 residual persists at 16384 Hz (TP relative L2 `0.308`, TPHM
+`0.307`); see the [higher-rate receipt](validation/phenomt_numerical_highrate_20260922.json).
+This rules out output sampling as its main cause for this case. The origin
+of the remaining reference differences is unresolved. No production coefficients
+are adjusted to fit the binary oracle.
+
+The MSA and numerical regression checks are retained in
+`tests/test_phenomt_family_lal.py`. Numerical checks cover the baseline,
+single-spin, and equal-mass cases with relative L2 below `0.03` and mismatch
+below `0.0005`. The 10:1 case does **not** meet those bounds and is recorded
+as a limitation, rather than widening the regression tolerance. These checks
+do not establish reference agreement throughout parameter space or physical
+accuracy against numerical relativity. NNLO remains the default. See the
 [precession options and numerical domain](imrphenomt.md#higher-modes-and-precession).
 
 ### Reproducing model checks

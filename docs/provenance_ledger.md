@@ -290,7 +290,14 @@ Model-specific formulations, reference configurations and limitations are descri
   and the repository's existing clean-room algebra. Numerical precession uses
   the orbit-averaged spin equations through N4LO in
   [Sturani's technical note, LIGO-T1500554](https://dcc.ligo.org/public/0122/T1500554/023/dLdS.pdf),
-  with the PhenomT frequency evolution. The upstream phenomxpy numerical
+  with the PhenomT frequency evolution. The numerical PhenomTP path omits
+  the N3LO quadratic-spin contribution (Eq. 24), following the `phenomtp`
+  parameter description in the
+  [public LAL API](https://lscsoft.docs.ligo.org/lalsuite/7.26/lalsimulation/_l_a_l_sim_inspiral_8h.html).
+  The complete published equations remain available in the internal spin
+  derivative helper. Leading self-spin terms and the nonspinning 3PN
+  angular-momentum denominator are retained; binary-oracle residuals alone
+  do not justify altering those equations. The upstream phenomxpy numerical
   and MSA modules identify GPL-derived code and were excluded from adaptation.
 - Verification: LALSimulation is used only through its installed binary
   Python bindings as an optional black-box oracle. No coefficients or

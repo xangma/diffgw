@@ -57,29 +57,38 @@ def test_lal_binary_reference(name, case):
 @pytest.mark.parametrize("name", ["IMRPhenomTP", "IMRPhenomTPHM"])
 @pytest.mark.parametrize("method,version,spin_mode,l2_limit,mismatch_limit", [
     ("msa", 22310, 3, 0.01, 1e-4),
-    ("numerical", 300, 4, 0.04, 1e-3),
+    ("numerical", 300, 4, 0.03, 5e-4),
+])
+@pytest.mark.parametrize("case,fref", [
+    (CASES[0], 20.0),
+    ((35.0, 20.0, (0.3, 0.0, 0.4), (0.0, 0.0, 0.0), 1.1, 0.2), 30.0),
+    ((30.0, 30.0, (0.2, -0.1, 0.4), (-0.12, 0.08, -0.3), 0.8, 0.3), 20.0),
 ])
 def test_additional_precession_binary_reference(name, method, version, spin_mode,
-                                               l2_limit, mismatch_limit):
+                                               l2_limit, mismatch_limit, case, fref):
     """Measured clean-room residual bounds, not a claim of exact LAL parity."""
     lal = pytest.importorskip("lal")
     ls = pytest.importorskip("lalsimulation")
     import torch
 
-    m1, m2, s1, s2, inclination, phase = CASES[0]
+    # The extra holdouts exercise numerical precession. MSA has its separate
+    # supported-domain checks; its original binary comparison is retained.
+    if method == "msa" and case != CASES[0]:
+        pytest.skip("additional holdouts cover numerical precession")
+    m1, m2, s1, s2, inclination, phase = case
     options = lal.CreateDict()
     ls.SimInspiralWaveformParamsInsertPhenomXPrecVersion(options, version)
     ls.SimInspiralWaveformParamsInsertPhenomXPFinalSpinMod(options, spin_mode)
     dt = 1/2048
     hp, hc = getattr(ls, "Sim" + name)(
         m1*lal.MSUN_SI, m2*lal.MSUN_SI, *s1, *s2, 100e6*lal.PC_SI,
-        inclination, dt, 20.0, 20.0, phase, options,
+        inclination, dt, 20.0, fref, phase, options,
     )
     times = torch.from_numpy(float(hp.epoch) + dt*np.arange(hp.data.length))
     a, b = getattr(importlib.import_module("torchwave"), name)().time_domain(
         times, m1, m2, chi1=s1[2], chi2=s2[2],
         spin1x=s1[0], spin1y=s1[1], spin2x=s2[0], spin2y=s2[1],
-        distance=100.0, inclination=inclination, phic=phase, f_ref=20.0,
+        distance=100.0, inclination=inclination, phic=phase, f_ref=fref,
         precession_method=method, precession_version=version,
     )
     actual, reference = (a-1j*b).detach().numpy(), hp.data.data-1j*hc.data.data

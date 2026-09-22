@@ -6,8 +6,17 @@ import math
 import jax.numpy as jnp
 
 
-def spin_derivatives(v, lhat, s1, s2, m1_fraction, m2_fraction):
-    """Return ``(dLhat/d(t/M), dS1/d(t/M), dS2/d(t/M))`` through N4LO."""
+def spin_derivatives(v, lhat, s1, s2, m1_fraction, m2_fraction,
+                     *, quadrupole_kappa1=1.0, quadrupole_kappa2=1.0,
+                     include_n3lo_ss=True):
+    """Return ``(dLhat/d(t/M), dS1/d(t/M), dS2/d(t/M))`` through N4LO.
+
+    The published equations are the default.  ``include_n3lo_ss=False``
+    removes only the v8/N3LO quadratic-spin term selected out by public
+    PhenomTP ``spinO=6`` documentation; the v6 self-spin term remains.
+    ``quadrupole_kappa*`` are dimensionless quadrupole couplings, equal to
+    one for a GR black hole.
+    """
     lhat, s1, s2 = jnp.broadcast_arrays(
         jnp.asarray(lhat), jnp.asarray(s1), jnp.asarray(s2)
     )
@@ -16,6 +25,8 @@ def spin_derivatives(v, lhat, s1, s2, m1_fraction, m2_fraction):
     v = jnp.broadcast_to(jnp.asarray(v, dtype=dtype), lead)[..., None]
     m1 = jnp.broadcast_to(jnp.asarray(m1_fraction, dtype=dtype), lead)[..., None]
     m2 = jnp.broadcast_to(jnp.asarray(m2_fraction, dtype=dtype), lead)[..., None]
+    kappa1 = jnp.broadcast_to(jnp.asarray(quadrupole_kappa1, dtype=dtype), lead)[..., None]
+    kappa2 = jnp.broadcast_to(jnp.asarray(quadrupole_kappa2, dtype=dtype), lead)[..., None]
 
     eta = m1 * m2
     l1 = jnp.sum(lhat * s1, axis=-1, keepdims=True)
@@ -28,8 +39,8 @@ def spin_derivatives(v, lhat, s1, s2, m1_fraction, m2_fraction):
 
     ds1 = c1 * v**5 * x1
     ds2 = c2 * v**5 * x2
-    ds1 = ds1 + v**6 * (-0.5 * s12 - 1.5 * l2 * x1 + 1.5 * (1.0 - 1.0 / m1) * l1 * x1)
-    ds2 = ds2 + v**6 * (0.5 * s12 - 1.5 * l1 * x2 + 1.5 * (1.0 - 1.0 / m2) * l2 * x2)
+    ds1 = ds1 + v**6 * (-0.5 * s12 - 1.5 * l2 * x1 + 1.5 * kappa1 * (1.0 - 1.0 / m1) * l1 * x1)
+    ds2 = ds2 + v**6 * (0.5 * s12 - 1.5 * l1 * x2 + 1.5 * kappa2 * (1.0 - 1.0 / m2) * l2 * x2)
 
     # NNLO spin-orbit, Sturani Eq. (22).
     q1 = 9 / 8 - m1 / 2 + 7 * m1**2 / 12 - 7 * m1**3 / 6 - m1**4 / 24
@@ -37,15 +48,19 @@ def spin_derivatives(v, lhat, s1, s2, m1_fraction, m2_fraction):
     ds1 = ds1 + q1 * v**7 * x1
     ds2 = ds2 + q2 * v**7 * x2
 
-    # N3LO orbit-averaged quadratic spin, Sturani Eq. (24), kappa=1.
-    a1 = -13 / 4 + 9 * m1 / 4 + m1**2
-    a2 = -13 / 4 + 9 * m2 / 4 + m2**2
-    b1 = m1 / 2 + m1**2 / 2
-    b2 = m2 / 2 + m2**2 / 2
-    d1 = -3 / 2 - 3 * m1 / 2 - m1**2 / 2
-    d2 = -3 / 2 - 3 * m2 / 2 - m2**2 / 2
-    ds1 = ds1 + v**8 * jnp.cross(a1 * l1 * lhat + b1 * s2 + d1 * l2 * lhat, s1)
-    ds2 = ds2 + v**8 * jnp.cross(a2 * l2 * lhat + b2 * s1 + d2 * l1 * lhat, s2)
+    if include_n3lo_ss:
+        # N3LO orbit-averaged quadratic spin, Sturani Eq. (24), with the
+        # public quadrupole coupling convention.  kappa=1 is the BH case.
+        a1 = (9 / (4 * m1) - 13 / 4 + 3 * m1 / 4 + m1**2 / 4
+              + kappa1 * (-9 / (4 * m1) + 3 * m1 / 2 + 3 * m1**2 / 4))
+        a2 = (9 / (4 * m2) - 13 / 4 + 3 * m2 / 4 + m2**2 / 4
+              + kappa2 * (-9 / (4 * m2) + 3 * m2 / 2 + 3 * m2**2 / 4))
+        b1 = m1 / 2 + m1**2 / 2
+        b2 = m2 / 2 + m2**2 / 2
+        d1 = -3 / 2 - 3 * m1 / 2 - m1**2 / 2
+        d2 = -3 / 2 - 3 * m2 / 2 - m2**2 / 2
+        ds1 = ds1 + v**8 * jnp.cross(a1 * l1 * lhat + b1 * s2 + d1 * l2 * lhat, s1)
+        ds2 = ds2 + v**8 * jnp.cross(a2 * l2 * lhat + b2 * s1 + d2 * l1 * lhat, s2)
 
     # N4LO spin-orbit, Sturani Eq. (25).
     r1 = 27 / 16 - 51 * m1 / 8 + 181 * m1**2 / 16 - 23 * m1**3 / 6 - 39 * m1**4 / 16 - 3 * m1**5 / 8 - m1**6 / 48

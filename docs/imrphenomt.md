@@ -85,6 +85,12 @@ and remnant-spin domain. Its singular equal-mass limit is not implemented;
 use numerical precession for those systems. Aligned equal-mass binaries
 remain supported. Unsupported MSA points raise errors in eager evaluation
 and produce NaN for affected rows when traced by JAX.
+The equal-mass regularization must preserve version 223's radiation-reaction
+and angle expansion orders. The equal-mass invariants described by
+[Gerosa et al.](https://arxiv.org/abs/1612.05263) alone do not supply that
+complete limit; substituting a leading-order equal-mass angle model would
+change the selected prescription. See also the discussion of singular
+couplings in Sec. IV.2 of [Pratten et al.](https://arxiv.org/abs/2004.06503).
 
 NNLO and MSA support the following continuation choices:
 
@@ -100,7 +106,15 @@ the selected method. For example, use `precession_method="msa",
 precession_version=22311` in the waveform call above. Numerical version
 `300` evolves both spins and the orbital-plane direction using the aligned
 T carrier frequency, then continues the angles through ringdown.
-The spin equations include N4LO terms. Orbital-plane evolution uses the
+The spin equations retain the leading spin-orbit and spin-spin terms and
+the NNLO and N4LO spin-orbit terms. They exclude the N3LO (3PN) quadratic-spin
+terms, following the `phenomtp` selection documented in the
+[public LAL API](https://lscsoft.docs.ligo.org/lalsuite/7.26/lalsimulation/_l_a_l_sim_inspiral_8h.html).
+The leading self-spin coupling is retained with the black-hole quadrupole
+coefficient equal to one. The internal `spin_derivatives` helper also offers
+the full published equations, including N3LO quadratic-spin terms, for
+independent equation checks.
+Orbital-plane evolution uses the
 nonspinning 3PN angular-momentum magnitude, with the spin-dependent angular
 momentum corrections disabled as described in Sec. II.4.1 of the model paper.
 The numerical solver requires `f_lower >= 1 Hz` and a reference frequency

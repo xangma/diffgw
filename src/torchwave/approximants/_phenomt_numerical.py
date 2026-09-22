@@ -112,7 +112,11 @@ def _normalize(state, spin_norms):
 
 def _rates(q, v, state, x1, x2):
     l, s1, s2, e = _split(state)
-    dl, ds1, ds2 = spin_derivatives(v, l, s1, s2, x1, x2)
+    # Public PhenomTP documents spinO=7 with spinO=6 omitted for
+    # orbit-averaged quantities; this is the v8/N3LO quadratic-spin term.
+    # Keep the published v6 self-spin contribution enabled.
+    dl, ds1, ds2 = spin_derivatives(v, l, s1, s2, x1, x2,
+                                    include_n3lo_ss=False)
     de = _cross(_cross(l, dl), e)
     # q = (1 - (t/M)/20)^(3/8) approximately resolves precession phase.
     du_dq = -(160.0 / 3.0) * q ** (5.0 / 3.0)
