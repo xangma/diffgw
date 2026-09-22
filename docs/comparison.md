@@ -19,8 +19,8 @@ LAL denotes LALSimulation.
 
 **Legend**
 
-- **N** (native): the package documents an implementation of the named model.
-- **N+A** (native with an external asset): evaluation requires separately acquired model or calibration data.
+- **✓** (native): the package documents an implementation of the named model.
+- **✓ + asset** (native with an external asset): evaluation requires separately acquired model or calibration data.
 - **E** (external wrapper): the package calls another library's implementation.
 - **-** (not listed): the checked documentation does not name the variant; this does not establish that it is unsupported.
 - **?** (unverified): the documentation is insufficient to assign a status.
@@ -36,9 +36,9 @@ frontend scope and validation evidence, see the [model catalogue](models.md).
 
 | Model or variant | DiffGW | LAL | Ripple | Phenom<wbr>XPy | GWFAST |
 | --- | --- | --- | --- | --- | --- |
-| `TaylorF2` <sup>1</sup> | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Native (tidal-capable)" aria-label="Native (tidal-capable)">N</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Native (TaylorF2_RestrictedPN)" aria-label="Native (TaylorF2_RestrictedPN)">N</abbr> |
-| `TaylorF2_HM` <sup>2</sup> | <abbr title="Native (eight modes)" aria-label="Native (eight modes)">N</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> |
-| `TaylorF2_Eccentric` <sup>3</sup> | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Native (TaylorF2Ecc)" aria-label="Native (TaylorF2Ecc)">N</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Native (eccentric option)" aria-label="Native (eccentric option)">N</abbr> |
+| `TaylorF2` <sup>1</sup> | <abbr title="Native" aria-label="Native">✓</abbr> | <abbr title="Native" aria-label="Native">✓</abbr> | <abbr title="Native (tidal-capable)" aria-label="Native (tidal-capable)">✓</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Native (TaylorF2_RestrictedPN)" aria-label="Native (TaylorF2_RestrictedPN)">✓</abbr> |
+| `TaylorF2_HM` <sup>2</sup> | <abbr title="Native (eight modes)" aria-label="Native (eight modes)">✓</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> |
+| `TaylorF2_Eccentric` <sup>3</sup> | <abbr title="Native" aria-label="Native">✓</abbr> | <abbr title="Native (TaylorF2Ecc)" aria-label="Native (TaylorF2Ecc)">✓</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Native (eccentric option)" aria-label="Native (eccentric option)">✓</abbr> |
 
 <div class="coverage-notes" markdown="1">
 
@@ -52,29 +52,29 @@ frontend scope and validation evidence, see the [model catalogue](models.md).
 
 | Model or variant | DiffGW | LAL | Ripple | Phenom<wbr>XPy | GWFAST |
 | --- | --- | --- | --- | --- | --- |
-| `IMRPhenomD` | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Native" aria-label="Native">N</abbr> |
-| `IMRPhenomHM` | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Native" aria-label="Native">N</abbr> |
-| `IMRPhenomXAS` | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> |
-| `IMRPhenomXHM` | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Wrapper unverified" aria-label="Wrapper unverified">W?</abbr> |
+| `IMRPhenomD` | <abbr title="Native" aria-label="Native">✓</abbr> | <abbr title="Native" aria-label="Native">✓</abbr> | <abbr title="Native" aria-label="Native">✓</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Native" aria-label="Native">✓</abbr> |
+| `IMRPhenomHM` | <abbr title="Native" aria-label="Native">✓</abbr> | <abbr title="Native" aria-label="Native">✓</abbr> | <abbr title="Native" aria-label="Native">✓</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Native" aria-label="Native">✓</abbr> |
+| `IMRPhenomXAS` | <abbr title="Native" aria-label="Native">✓</abbr> | <abbr title="Native" aria-label="Native">✓</abbr> | <abbr title="Native" aria-label="Native">✓</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> |
+| `IMRPhenomXHM` | <abbr title="Native" aria-label="Native">✓</abbr> | <abbr title="Native" aria-label="Native">✓</abbr> | <abbr title="Native" aria-label="Native">✓</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Wrapper unverified" aria-label="Wrapper unverified">W?</abbr> |
 
 ### Tidal models
 
 | Model or variant | DiffGW | LAL | Ripple | Phenom<wbr>XPy | GWFAST |
 | --- | --- | --- | --- | --- | --- |
-| `IMRPhenomD_NRTidal` | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> |
-| `IMRPhenomD_NRTidalv2` | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Native" aria-label="Native">N</abbr> |
-| `IMRPhenomNSBH` | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Native" aria-label="Native">N</abbr> |
-| `IMRPhenomXAS_NRTidalv2` | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Wrapper unverified" aria-label="Wrapper unverified">W?</abbr> |
-| `IMRPhenomXAS_NRTidalv3`, `IMRPhenomXP_NRTidalv3` | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Wrapper unverified" aria-label="Wrapper unverified">W?</abbr> |
+| `IMRPhenomD_NRTidal` | <abbr title="Native" aria-label="Native">✓</abbr> | <abbr title="Native" aria-label="Native">✓</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> |
+| `IMRPhenomD_NRTidalv2` | <abbr title="Native" aria-label="Native">✓</abbr> | <abbr title="Native" aria-label="Native">✓</abbr> | <abbr title="Native" aria-label="Native">✓</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Native" aria-label="Native">✓</abbr> |
+| `IMRPhenomNSBH` | <abbr title="Native" aria-label="Native">✓</abbr> | <abbr title="Native" aria-label="Native">✓</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Native" aria-label="Native">✓</abbr> |
+| `IMRPhenomXAS_NRTidalv2` | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Native" aria-label="Native">✓</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Wrapper unverified" aria-label="Wrapper unverified">W?</abbr> |
+| `IMRPhenomXAS_NRTidalv3`, `IMRPhenomXP_NRTidalv3` | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Native" aria-label="Native">✓</abbr> | <abbr title="Native" aria-label="Native">✓</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Wrapper unverified" aria-label="Wrapper unverified">W?</abbr> |
 
 ### Precessing IMR
 
 | Model or variant | DiffGW | LAL | Ripple | Phenom<wbr>XPy | GWFAST |
 | --- | --- | --- | --- | --- | --- |
-| `IMRPhenomP` | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Wrapper unverified" aria-label="Wrapper unverified">W?</abbr> |
-| `IMRPhenomPv2` | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Wrapper unverified" aria-label="Wrapper unverified">W?</abbr> |
-| `IMRPhenomXP`, `IMRPhenomXPHM` | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Wrapper unverified" aria-label="Wrapper unverified">W?</abbr> |
-| XPHM MSA, SpinTaylor and PNR options <sup>4</sup> | <abbr title="Native (documented options)" aria-label="Native (documented options)">N</abbr> | <abbr title="Unverified (options not enumerated here)" aria-label="Unverified (options not enumerated here)">?</abbr> | <abbr title="Unverified (options not enumerated here)" aria-label="Unverified (options not enumerated here)">?</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Wrapper unverified" aria-label="Wrapper unverified">W?</abbr> |
+| `IMRPhenomP` | <abbr title="Native" aria-label="Native">✓</abbr> | <abbr title="Native" aria-label="Native">✓</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Wrapper unverified" aria-label="Wrapper unverified">W?</abbr> |
+| `IMRPhenomPv2` | <abbr title="Native" aria-label="Native">✓</abbr> | <abbr title="Native" aria-label="Native">✓</abbr> | <abbr title="Native" aria-label="Native">✓</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Wrapper unverified" aria-label="Wrapper unverified">W?</abbr> |
+| `IMRPhenomXP`, `IMRPhenomXPHM` | <abbr title="Native" aria-label="Native">✓</abbr> | <abbr title="Native" aria-label="Native">✓</abbr> | <abbr title="Native" aria-label="Native">✓</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Wrapper unverified" aria-label="Wrapper unverified">W?</abbr> |
+| XPHM MSA, SpinTaylor and PNR options <sup>4</sup> | <abbr title="Native (documented options)" aria-label="Native (documented options)">✓</abbr> | <abbr title="Unverified (options not enumerated here)" aria-label="Unverified (options not enumerated here)">?</abbr> | <abbr title="Unverified (options not enumerated here)" aria-label="Unverified (options not enumerated here)">?</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Wrapper unverified" aria-label="Wrapper unverified">W?</abbr> |
 
 <div class="coverage-notes" markdown="1">
 
@@ -86,18 +86,18 @@ frontend scope and validation evidence, see the [model catalogue](models.md).
 
 | Model or variant | DiffGW | LAL | Ripple | Phenom<wbr>XPy | GWFAST |
 | --- | --- | --- | --- | --- | --- |
-| `IMRPhenomT`, `IMRPhenomTHM`, `IMRPhenomTP`, `IMRPhenomTPHM` | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Wrapper unverified" aria-label="Wrapper unverified">W?</abbr> |
+| `IMRPhenomT`, `IMRPhenomTHM`, `IMRPhenomTP`, `IMRPhenomTPHM` | <abbr title="Native" aria-label="Native">✓</abbr> | <abbr title="Native" aria-label="Native">✓</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Native" aria-label="Native">✓</abbr> | <abbr title="Wrapper unverified" aria-label="Wrapper unverified">W?</abbr> |
 
 ### Effective-one-body
 
 | Model or variant | DiffGW | LAL | Ripple | Phenom<wbr>XPy | GWFAST |
 | --- | --- | --- | --- | --- | --- |
-| `SEOBNR_ROM`, `SEOBNRv4_ROM` <sup>5</sup> | <abbr title="Native + external asset" aria-label="Native + external asset">N+A</abbr> | <abbr title="Native (SEOBNRv4_ROM)" aria-label="Native (SEOBNRv4_ROM)">N</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Wrapper unverified" aria-label="Wrapper unverified">W?</abbr> |
-| `SEOBNRv4HM`, `SEOBNRv4P`, `SEOBNRv4PHM` | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Wrapper unverified" aria-label="Wrapper unverified">W?</abbr> |
-| `SEOBNRv4_ROM_NRTidalv2`, `SEOBNRv4_ROM_NRTidalv2_NSBH`, `SEOBNRv4T_surrogate` | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Wrapper unverified" aria-label="Wrapper unverified">W?</abbr> |
-| `SEOBNRv5_ROM`, `SEOBNRv5HM_ROM`, `SEOBNRv5_ROM_NRTidalv3` | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Wrapper unverified" aria-label="Wrapper unverified">W?</abbr> |
-| `SEOBNR_ODE` | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> |
-| `TEOBResumS` | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Wrapper unverified" aria-label="Wrapper unverified">W?</abbr> |
+| `SEOBNR_ROM`, `SEOBNRv4_ROM` <sup>5</sup> | <abbr title="Native + external asset" aria-label="Native + external asset">✓ + asset</abbr> | <abbr title="Native (SEOBNRv4_ROM)" aria-label="Native (SEOBNRv4_ROM)">✓</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Wrapper unverified" aria-label="Wrapper unverified">W?</abbr> |
+| `SEOBNRv4HM`, `SEOBNRv4P`, `SEOBNRv4PHM` | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Native" aria-label="Native">✓</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Wrapper unverified" aria-label="Wrapper unverified">W?</abbr> |
+| `SEOBNRv4_ROM_NRTidalv2`, `SEOBNRv4_ROM_NRTidalv2_NSBH`, `SEOBNRv4T_surrogate` | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Native" aria-label="Native">✓</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Wrapper unverified" aria-label="Wrapper unverified">W?</abbr> |
+| `SEOBNRv5_ROM`, `SEOBNRv5HM_ROM`, `SEOBNRv5_ROM_NRTidalv3` | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Native" aria-label="Native">✓</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Wrapper unverified" aria-label="Wrapper unverified">W?</abbr> |
+| `SEOBNR_ODE` | <abbr title="Native" aria-label="Native">✓</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> |
+| `TEOBResumS` | <abbr title="Native" aria-label="Native">✓</abbr> | <abbr title="Native" aria-label="Native">✓</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Wrapper unverified" aria-label="Wrapper unverified">W?</abbr> |
 | `TEOBResumSPA` | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="External" aria-label="External">E</abbr> |
 
 <div class="coverage-notes" markdown="1">
@@ -110,15 +110,15 @@ frontend scope and validation evidence, see the [model catalogue](models.md).
 
 | Model or variant | DiffGW | LAL | Ripple | Phenom<wbr>XPy | GWFAST |
 | --- | --- | --- | --- | --- | --- |
-| `NRSur4d2s`, `NRSur7dq4` | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Wrapper unverified" aria-label="Wrapper unverified">W?</abbr> |
+| `NRSur4d2s`, `NRSur7dq4` | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Native" aria-label="Native">✓</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Wrapper unverified" aria-label="Wrapper unverified">W?</abbr> |
 
 ### Ringdown and bursts
 
 | Model or variant | DiffGW | LAL | Ripple | Phenom<wbr>XPy | GWFAST |
 | --- | --- | --- | --- | --- | --- |
-| `KerrRingdown` | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Unverified" aria-label="Unverified">?</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> |
-| `SineGaussian` <sup>6</sup> | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Native (burst routines)" aria-label="Native (burst routines)">N</abbr> | <abbr title="Native (time domain)" aria-label="Native (time domain)">N</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> |
-| `MemoryWaveform` | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> |
+| `KerrRingdown` | <abbr title="Native" aria-label="Native">✓</abbr> | <abbr title="Unverified" aria-label="Unverified">?</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> |
+| `SineGaussian` <sup>6</sup> | <abbr title="Native" aria-label="Native">✓</abbr> | <abbr title="Native (burst routines)" aria-label="Native (burst routines)">✓</abbr> | <abbr title="Native (time domain)" aria-label="Native (time domain)">✓</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> |
+| `MemoryWaveform` | <abbr title="Native" aria-label="Native">✓</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> |
 
 <div class="coverage-notes" markdown="1">
 
@@ -130,8 +130,8 @@ frontend scope and validation evidence, see the [model catalogue](models.md).
 
 | Model or variant | DiffGW | LAL | Ripple | Phenom<wbr>XPy | GWFAST |
 | --- | --- | --- | --- | --- | --- |
-| `ContinuousWave` <sup>7</sup> | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Unverified" aria-label="Unverified">?</abbr> | <abbr title="Not listed under this name" aria-label="Not listed under this name">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> |
-| `ExactPulsarSignal`, `PulsarSignal`, `BinaryPulsarSignal` <sup>8</sup> | <abbr title="Not listed under these names" aria-label="Not listed under these names">-</abbr> | <abbr title="Unverified" aria-label="Unverified">?</abbr> | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> |
+| `ContinuousWave` <sup>7</sup> | <abbr title="Native" aria-label="Native">✓</abbr> | <abbr title="Unverified" aria-label="Unverified">?</abbr> | <abbr title="Not listed under this name" aria-label="Not listed under this name">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> |
+| `ExactPulsarSignal`, `PulsarSignal`, `BinaryPulsarSignal` <sup>8</sup> | <abbr title="Not listed under these names" aria-label="Not listed under these names">-</abbr> | <abbr title="Unverified" aria-label="Unverified">?</abbr> | <abbr title="Native" aria-label="Native">✓</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> |
 
 <div class="coverage-notes" markdown="1">
 
@@ -144,7 +144,7 @@ frontend scope and validation evidence, see the [model catalogue](models.md).
 
 | Model or variant | DiffGW | LAL | Ripple | Phenom<wbr>XPy | GWFAST |
 | --- | --- | --- | --- | --- | --- |
-| `EMRIKludge`, `ParameterizedPostEinstein`, `SpinPrecessionODE`, `HybridMECO` | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Unverified" aria-label="Unverified">?</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> |
+| `EMRIKludge`, `ParameterizedPostEinstein`, `SpinPrecessionODE`, `HybridMECO` | <abbr title="Native" aria-label="Native">✓</abbr> | <abbr title="Unverified" aria-label="Unverified">?</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> |
 
 </div>
 
