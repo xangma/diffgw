@@ -21,7 +21,60 @@ import lal
 import lalsimulation as ls
 import numpy as np
 
-from validate_phenomt_precession import CASES, metrics, parameters
+try:
+    from scripts.validate_phenomt_precession import CASES, metrics, parameters
+except ModuleNotFoundError:
+    from validate_phenomt_precession import CASES, metrics, parameters
+
+
+def _rotation_matrix(alpha, beta, gamma):
+    """Active Rz(alpha) Ry(beta) Rz(gamma), PhenomTP Eqs. (4), (8)."""
+    ca, sa = np.cos(alpha), np.sin(alpha)
+    cb, sb = np.cos(beta), np.sin(beta)
+    cg, sg = np.cos(gamma), np.sin(gamma)
+    return np.stack((ca*cb*cg-sa*sg, -ca*cb*sg-sa*cg, ca*sb,
+                     sa*cb*cg+ca*sg, -sa*cb*sg+ca*cg, sa*sb,
+                     -sb*cg, sb*sg, cb), axis=-1).reshape(alpha.shape + (3, 3))
+
+
+def source_frame_differences(times, coprec, prepared, numerical, tensor, array,
+                             fref, native_reference_time):
+    """Compare inspiral triads after removing each constant reference frame.
+
+    Eq. (8) in arXiv:2105.05872 removes R_ref from the returned binary
+    R(t). Native states already live in the reference orbital frame.
+    The second clock comparison anchors elapsed time at f_ref, without a fit.
+    """
+    if fref != 20.:
+        return dict(status="skipped", reason="f_ref differs from f_lower=20 Hz; "
+                    "the first binary sample is not the reference orientation.")
+    alpha, cosbeta, gamma = (series.data.data for series in coprec[1:4])
+    reference = _rotation_matrix(alpha, np.arccos(np.clip(cosbeta, -1., 1.)), gamma)
+    reference = reference[0].T @ reference
+    shift = native_reference_time - times[0]
+    rows = []
+    for clock, offset in (("peak_time", 0.), ("elapsed_from_reference", shift)):
+        use = (times < 0) & (times + offset < 0)
+        state = array(numerical._interpolate(prepared, tensor(times[use] + offset)))
+        lhat, _, _, tangent = np.split(state, 4, axis=-1)
+        lhat = lhat / np.linalg.norm(lhat, axis=-1, keepdims=True)
+        tangent = tangent - np.sum(tangent*lhat, axis=-1, keepdims=True)*lhat
+        tangent = tangent / np.linalg.norm(tangent, axis=-1, keepdims=True)
+        native = np.stack((tangent, np.cross(lhat, tangent), lhat), axis=-1)
+        expected = reference[use]
+        # Stable small-angle distances for unit vectors and proper rotations.
+        axis_error = 2*np.arcsin(np.clip(np.linalg.norm(
+            lhat-expected[..., 2], axis=-1) / 2, 0., 1.))
+        triad_error = 2*np.arcsin(np.clip(np.linalg.norm(
+            native-expected, axis=(-2, -1)) / (2*np.sqrt(2)), 0., 1.))
+        rows.append(dict(clock=clock, samples=int(use.sum()),
+                         initial_triad_angle_radians=float(triad_error[0]),
+                         max_axis_angle_radians=float(axis_error.max()),
+                         rms_axis_angle_radians=float(np.sqrt(np.mean(axis_error**2))),
+                         last_axis_angle_radians=float(axis_error[-1]),
+                         max_triad_angle_radians=float(triad_error.max()),
+                         last_triad_angle_radians=float(triad_error[-1])))
+    return dict(status="measured", reference_time_shift_seconds=shift, comparisons=rows)
 
 
 def diagnose(backend, case, rate, backward_counts, kappa):
@@ -61,6 +114,9 @@ def diagnose(backend, case, rate, backward_counts, kappa):
     hp, hc = ls.SimIMRPhenomTP(*arguments)
     strain_times = float(hp.epoch) + np.arange(hp.data.length) * hp.deltaT
     reference_strain = hp.data.data - 1j * hc.data.data
+    native_reference_time = float(array(frontend.IMRPhenomT().time_at_frequency(
+        fref, m1, m2, s1[2], s2[2],
+    )))
     results = []
     previous = None
     for nb in backward_counts:
@@ -121,6 +177,10 @@ def diagnose(backend, case, rate, backward_counts, kappa):
             beta_sample_times_seconds=times[selected].tolist(),
             beta_difference_radians=(beta - reference_beta[selected]).tolist(),
             polarizations=metrics(strain, reference_strain),
+            source_frame=source_frame_differences(
+                times, coprec, prepared, numerical, tensor, array, fref,
+                native_reference_time,
+            ),
             invariant_absolute_errors=norm_errors,
         )
         if previous is not None:
@@ -172,6 +232,11 @@ def main():
             mismatch="1-abs(vdot(actual,reference))/(norm(actual)*norm(reference)); "
                      "unweighted, constant-phase maximization only, no time shift",
             beta="Native minus reference opening angle at the listed sample times.",
+            source_frame="For f_ref=f_lower=20 Hz, compare native Lhat and transported tangent "
+                         "with R_ref.T @ R(t) from binary Euler angles (PhenomTP Eq.8), before "
+                         "the peak. Report both the original peak-relative clock and elapsed "
+                         "time from each model's f_ref. This removes constant frame choices; "
+                         "the reference-time shift is determined by f_ref, never fitted.",
             resolution="Forward step count is half the backward count; both cover the full "
                        "intrinsic interval. Consecutive native waveforms use the same output grid.",
             quadrupole="Native kappa=1 is the production black-hole prescription. kappa=0 only "
@@ -181,7 +246,7 @@ def main():
         results=results,
     )
     args.output.parent.mkdir(parents=True, exist_ok=True)
-    args.output.write_text(json.dumps(receipt, indent=2) + "\n")
+    args.output.write_text(json.dumps(receipt, indent=2, allow_nan=False) + "\n")
 
 
 if __name__ == "__main__":

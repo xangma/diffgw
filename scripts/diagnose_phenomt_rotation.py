@@ -37,13 +37,13 @@ def _mode_keys(series, only22):
     )
 
 
-def _public_case(case, rate, only22):
+def _public_case(case, rate, only22, distance_mpc=100.0):
     m1, m2, s1, s2, inc, phase, fref = CASES[case]
     options = lal.CreateDict()
     ls.SimInspiralWaveformParamsInsertPhenomXPrecVersion(options, 300)
     ls.SimInspiralWaveformParamsInsertPhenomXPFinalSpinMod(options, 4)
     args = (m1 * lal.MSUN_SI, m2 * lal.MSUN_SI, *s1, *s2,
-            100e6 * lal.PC_SI, inc, 1 / rate, 20., fref, phase, options,
+            distance_mpc * 1e6 * lal.PC_SI, inc, 1 / rate, 20., fref, phase, options,
             only22)
     coprec, alpha, cosbeta, gamma, _ = ls.SimIMRPhenomTPHM_CoprecModes(*args)
     jmodes, ja, jb, jg, _ = ls.SimIMRPhenomTPHM_JModes(*args)
@@ -78,6 +78,156 @@ def _public_case(case, rate, only22):
         fref=fref,
         alpha=alpha.data.data, beta=np.arccos(np.clip(cosbeta.data.data, -1., 1.)),
         gamma=gamma.data.data,
+    )
+
+
+def _metrics(actual, reference):
+    """Return scale-aware vector metrics without inventing zero-norm passes."""
+    actual = np.asarray(actual)
+    reference = np.asarray(reference)
+    norm = np.linalg.norm(reference)
+    if norm == 0.:
+        relative = 0. if np.linalg.norm(actual) == 0. else float("inf")
+    else:
+        relative = float(np.linalg.norm(actual - reference) / norm)
+    return dict(relative_l2=relative, max_absolute=float(np.max(np.abs(actual - reference))))
+
+
+def _native_rotation_matrix(precession, ell, alpha, beta, gamma, tensor):
+    """Build the same D convention as project_modes for one scalar angle."""
+    def d(m, mp):
+        value = precession.wigner_d(ell, m, mp, tensor(beta))
+        return float(np.asarray(value))
+
+    ms = tuple(range(-ell, ell + 1))
+    return np.asarray([
+        [np.exp(-1j * m * alpha) * d(m, mp) * np.exp(-1j * mp * gamma)
+         for mp in ms]
+        for m in ms
+    ], dtype=np.complex128)
+
+
+def _mpmath_rotation_matrix(ell, alpha, beta, gamma):
+    """Independent high-precision factorial-sum oracle, used only by diagnostics."""
+    try:
+        import mpmath as mp
+    except ImportError:
+        return None
+    mp = mp.mp.clone()
+    mp.dps = 80
+    alpha, beta, gamma = (mp.mpf(repr(float(value))) for value in (alpha, beta, gamma))
+
+    def d(m, mp_index):
+        c, s = mp.cos(beta / 2), mp.sin(beta / 2)
+        pref = mp.sqrt(
+            mp.factorial(ell + m) * mp.factorial(ell - m)
+            * mp.factorial(ell + mp_index) * mp.factorial(ell - mp_index)
+        )
+        result = mp.mpf("0")
+        for k in range(2 * ell + 1):
+            a, q, r, z = ell + mp_index - k, k, m - mp_index + k, ell - m - k
+            if min(a, q, r, z) < 0:
+                continue
+            result += ((-1) ** (k + m - mp_index)) * pref / (
+                mp.factorial(a) * mp.factorial(q) * mp.factorial(r) * mp.factorial(z)
+            ) * c ** (2 * ell + mp_index - m - 2 * k) * s ** (m - mp_index + 2 * k)
+        return result
+
+    ms = tuple(range(-ell, ell + 1))
+    return np.asarray([
+        [complex(mp.exp(-1j * m * alpha) * d(m, mp_index)
+                 * mp.exp(-1j * mp_index * gamma)) for mp_index in ms]
+        for m in ms
+    ], dtype=np.complex128)
+
+
+def reference_measure(backend, case, rate=2048, distance_mpc=100.0):
+    """Check Eq. 8 per mode at the initial f_ref=f_min reference sample.
+
+    This is intentionally separate from ``measure``: it reports public J/L0
+    mode discrepancies, while the ordinary rotation gate remains unchanged.
+    """
+    data = _public_case(case, rate, only22=0, distance_mpc=distance_mpc)
+    if data["l0"] is None:
+        raise ValueError(f"reference check requires f_ref=f_min for {case}")
+    prefix = "torchwave" if backend == "torch" else "jaxwave"
+    precession = importlib.import_module(prefix + ".approximants._phenomt_precession")
+    if backend == "torch":
+        import torch
+
+        def tensor(value):
+            return torch.as_tensor(value, dtype=torch.float64)
+    else:
+        import jax
+        import jax.numpy as jnp
+        jax.config.update("jax_enable_x64", True)
+
+        def tensor(value):
+            return jnp.asarray(value, dtype=jnp.float64)
+
+    alpha_ref, beta_ref, gamma_ref = (float(data[key][0]) for key in ("alpha", "beta", "gamma"))
+    rows = []
+    for ell in sorted({key[0] for key in data["coprec"]}):
+        ms = tuple(range(-ell, ell + 1))
+        coprec = np.asarray([data["coprec"][(ell, m)][0] for m in ms])
+        jmode = np.asarray([data["jmode"][(ell, m)][0] for m in ms])
+        l0mode = np.asarray([data["l0"][(ell, m)][0] for m in ms])
+        matrix = _native_rotation_matrix(
+            precession, ell, alpha_ref, beta_ref, gamma_ref, tensor,
+        )
+        inverse = _native_rotation_matrix(
+            precession, ell, -gamma_ref, -beta_ref, -alpha_ref, tensor,
+        )
+        forward_error = matrix @ coprec
+        inverse_error = inverse @ jmode
+        cp_l0 = _metrics(coprec, l0mode)
+        inv_l0 = _metrics(inverse_error, l0mode)
+        cp_delta = np.abs(coprec - l0mode)
+        inv_delta = np.abs(inverse_error - l0mode)
+        cp_max = int(ms[int(np.argmax(cp_delta))])
+        inv_max = int(ms[int(np.argmax(inv_delta))])
+        pm2 = tuple(ms.index(m) for m in (-2, 2) if m in ms)
+        unitarity_error = float(np.linalg.norm(
+            matrix.conj().T @ matrix - np.eye(2 * ell + 1)
+        ))
+        mp_matrix = _mpmath_rotation_matrix(ell, alpha_ref, beta_ref, gamma_ref)
+        if mp_matrix is None:
+            high_precision = dict(status="skipped", reason="mpmath is unavailable")
+        else:
+            matrix_norm = np.linalg.norm(mp_matrix)
+            high_precision = dict(
+                status="measured",
+                native_matrix_relative_l2=float(np.linalg.norm(matrix - mp_matrix) / matrix_norm),
+                mpmath_forward_relative_l2=_metrics(mp_matrix @ coprec, jmode)["relative_l2"],
+                precision_decimal_digits=80,
+                applied_matrix_dtype="complex128 (after 80-digit evaluation)",
+            )
+        pm2_values = (-2, 2)
+        pm2_amplitudes = {
+            "coprec": {str(m): float(abs(coprec[ms.index(m)])) for m in pm2_values},
+            "inverse_predicted": {str(m): float(abs(inverse_error[ms.index(m)])) for m in pm2_values},
+            "l0_public": {str(m): float(abs(l0mode[ms.index(m)])) for m in pm2_values},
+        }
+        rows.append(dict(
+            ell=ell,
+            initial_sample=0,
+            coprec_l0=dict(**cp_l0, max_over_m_absolute=float(cp_delta.max()), max_over_m_m=int(cp_max),
+                           pm2_max_absolute=float(cp_delta[list(pm2)].max()) if pm2 else 0.),
+            inverse_l0=dict(**inv_l0, max_over_m_absolute=float(inv_delta.max()), max_over_m_m=int(inv_max),
+                            pm2_max_absolute=float(inv_delta[list(pm2)].max()) if pm2 else 0.),
+            pm2_amplitudes=pm2_amplitudes,
+            native_matrix_unitarity_error=unitarity_error,
+            native_forward_relative_l2=_metrics(forward_error, jmode)["relative_l2"],
+            native_roundtrip_relative_l2=_metrics(inverse @ forward_error, coprec)["relative_l2"],
+            high_precision=high_precision,
+            coprec_norm=float(np.linalg.norm(coprec)),
+            j_mode_norm=float(np.linalg.norm(jmode)),
+            l0_mode_norm=float(np.linalg.norm(l0mode)),
+        ))
+    return dict(
+        backend=backend, case=case, sample_rate_hz=rate, distance_mpc=distance_mpc,
+        reference_angles=dict(alpha=alpha_ref, beta=beta_ref, gamma=gamma_ref),
+        rows=rows,
     )
 
 
@@ -232,12 +382,30 @@ def main():
                         help="LAL mode selection: 1 is 22-only; 0 requests all available modes.")
     parser.add_argument("--sample-rate", type=int, default=2048)
     parser.add_argument("--samples", type=int, default=0, help="Optional evenly spaced diagnostic samples.")
+    parser.add_argument("--reference-check", action="store_true",
+                        help="Also check per-mode Eq. 8 inversion at f_ref=f_min.")
+    parser.add_argument("--reference-case", choices=("baseline", "high_mass_ratio"), nargs="+",
+                        default=("baseline", "high_mass_ratio"))
+    parser.add_argument("--reference-rate", type=int, nargs="+", default=(512, 2048, 8192))
+    parser.add_argument("--reference-distance", type=float, nargs="+", default=(50., 100., 200.))
+    parser.add_argument("--reference-backend", choices=("torch", "jax"), nargs="+", default=None)
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
-    if args.sample_rate <= 0 or args.samples < 0:
-        parser.error("sample rate must be positive and samples nonnegative")
+    if (args.sample_rate <= 0 or args.samples < 0 or any(rate <= 0 for rate in args.reference_rate)
+            or any(distance <= 0 for distance in args.reference_distance)):
+        parser.error("sample rates and distances must be positive; samples must be nonnegative")
     versions = dict(python=platform.python_version(), numpy=np.__version__, lalsimulation=ls.__version__)
-    for backend in args.backend:
+    try:
+        import mpmath
+        versions["mpmath"] = mpmath.__version__
+    except ImportError:
+        pass
+    used_backends = set(args.backend)
+    used_cases = set(args.case)
+    if args.reference_check:
+        used_backends.update(args.reference_backend or args.backend)
+        used_cases.update(args.reference_case)
+    for backend in sorted(used_backends):
         versions[backend] = importlib.import_module(backend).__version__
     results = []
     for case in args.case:
@@ -252,14 +420,35 @@ def main():
                     inverse_worst = max(view["relative_l2"] for view in row["inverse_l0"]["views"])
                     print(f"{case}/only22={only22}/{backend}: inverse-L0 L2={inverse_worst:.3e}",
                           file=sys.stderr, flush=True)
+    reference_results = []
+    if args.reference_check:
+        reference_backends = args.reference_backend or args.backend
+        for case in args.reference_case:
+            for rate in args.reference_rate:
+                for distance in args.reference_distance:
+                    for backend in reference_backends:
+                        row = reference_measure(backend, case, rate, distance)
+                        reference_results.append(row)
+                        worst = max(item["inverse_l0"]["relative_l2"] for item in row["rows"])
+                        print(f"reference/{case}/{rate} Hz/{distance:g} Mpc/{backend}: "
+                              f"inverse-L0 mode L2={worst:.3e}", file=sys.stderr, flush=True)
+    reproduction = ("python scripts/diagnose_phenomt_rotation.py --backend "
+                    + " ".join(args.backend) + " --case " + " ".join(args.case)
+                    + " --only22 " + " ".join(map(str, args.only22))
+                    + f" --sample-rate {args.sample_rate} --samples {args.samples}"
+                    + " --output receipt.json")
+    if args.reference_check:
+        reproduction += (" --reference-check --reference-backend "
+                         + " ".join(args.reference_backend or args.backend)
+                         + " --reference-case " + " ".join(args.reference_case)
+                         + " --reference-rate " + " ".join(map(str, args.reference_rate))
+                         + " --reference-distance "
+                         + " ".join(map(str, args.reference_distance)))
     receipt = dict(
         generated_utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),
-        reproduction="python scripts/diagnose_phenomt_rotation.py --backend "
-                     + " ".join(args.backend) + " --case " + " ".join(args.case)
-                     + " --only22 " + " ".join(map(str, args.only22))
-                     + f" --sample-rate {args.sample_rate} --samples {args.samples} --output receipt.json",
+        reproduction=reproduction,
         versions=versions, dtype="float64", device="cpu", precession_version=300,
-        final_spin_mod=4, parameters={case: parameters(case) for case in args.case},
+        final_spin_mod=4, parameters={case: parameters(case) for case in sorted(used_cases)},
         scope="Isolated project_modes rotation/convention checks against public binary J-frame and L0 modes; "
               "does not validate native spin evolution, carrier, or physical waveform accuracy.",
         conventions={
@@ -269,8 +458,10 @@ def main():
             "relative_l2": "norm(project_modes output - direct J-frame projection)/norm(direct projection).",
             "inverse_l0": "For f_ref=f_min=20 Hz, Eq. 8 uses constants (-gamma_ref,-beta_ref,-alpha_ref) on all signed J modes and compares with public L0Modes.",
             "inverse_l0_status": "Full-mode inverse values are measured diagnostics; only22 inverse values are suitable for the strict convention check.",
+            "reference_check": "At the initial f_ref=f_min sample, Eq. 8 implies coprec=L0. Per-ell relative metrics divide by the corresponding mode-vector norm; absolute metrics use strain units. Reference rows override the listed sample rate and distance. The factorial Wigner oracle uses 80 decimal digits, then rounds to complex128 before matrix-vector multiplication.",
         },
         results=results,
+        reference_results=reference_results,
     )
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(receipt, indent=2, allow_nan=False) + "\n")

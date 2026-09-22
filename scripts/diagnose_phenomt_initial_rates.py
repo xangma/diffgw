@@ -136,6 +136,118 @@ def spin_taylor_control(m1, m2, spin, fref, rate, kappa):
                 chi1_even_rate_per_second=even.tolist())
 
 
+def published_odd_prediction(m1, m2, spin, fref, so_order, l_order):
+    """Evaluate the published one-spin SO numerator and L denominator.
+
+    This is deliberately an independent diagnostic transcription of Sturani
+    T1500554v23 Eqs. (3), (5), (22), and (25), rather than a call into the native
+    RHS.  The ``so_order`` choices retain terms through v^5, v^7, or v^9 and
+    ``l_order`` selects the published nonspin 2PN or 3PN L factor.
+    """
+    total_mass = m1 + m2
+    x1 = m1 / total_mass
+    eta = x1 * (1 - x1)
+    v = (math.pi * total_mass * MSUN_SEC * fref) ** (1 / 3)
+    c1 = 1.5 - x1 - 0.5 * x1**2
+    q1 = 9 / 8 - x1 / 2 + 7 * x1**2 / 12 - 7 * x1**3 / 6 - x1**4 / 24
+    r1 = (27 / 16 - 51 * x1 / 8 + 181 * x1**2 / 16 - 23 * x1**3 / 6
+          - 39 * x1**4 / 16 - 3 * x1**5 / 8 - x1**6 / 48)
+    numerator = c1 * v**5
+    if so_order >= 7:
+        numerator += q1 * v**7
+    if so_order >= 9:
+        numerator += r1 * v**9
+    l_factor = 1 + (1.5 + eta / 6) * v**2
+    if l_order >= 2:
+        l_factor += (27 / 8 - 19 * eta / 8 + eta**2 / 24) * v**4
+    if l_order >= 3:
+        l_factor += (135 / 16 + (-6889 / 144 + 41 * math.pi**2 / 24) * eta
+                     + 31 * eta**2 / 24 + 7 * eta**3 / 1296) * v**6
+    angular_momentum = eta / v * l_factor
+    spin_vector = x1**2 * np.asarray(spin, dtype=float)
+    cross = np.cross(np.array([0., 0., 1.]), spin_vector)
+    rate = -numerator * cross / (angular_momentum * total_mass * MSUN_SEC)
+    return rate
+
+
+def odd_rate_sweep():
+    """Return the bounded odd-rate publication-order sweep definition."""
+    return (
+        dict(label="equal_mass", m1=30., m2=30., spin=(.3, 0., .4), inc=1.0),
+        dict(label="single_spin", m1=35., m2=20., spin=(.3, 0., .4), inc=1.1),
+        dict(label="high_mass_ratio", m1=60., m2=6., spin=(.2, .1, .8), inc=1.2),
+    )
+
+
+def run_odd_rate_sweep(backends=("torch", "jax"), rate=16384):
+    """Compare binary odd rates with unmodified published SO/L truncations."""
+    frequencies = (20., 30., 40.)
+    amplitudes = (.5, 1.)
+    rows = []
+    for case in odd_rate_sweep():
+        for frequency in frequencies:
+            for amplitude in amplitudes:
+                spin = amplitude * np.asarray(case["spin"], dtype=float)
+                signed = [binary_rate(case["m1"], case["m2"], sign * spin,
+                                      case["inc"], 0., frequency, rate)
+                          for sign in (1., -1.)]
+                observed = (np.asarray(signed[0]["rate_per_second"])
+                            - np.asarray(signed[1]["rate_per_second"])) / 2
+                uncertainty = 0.5 * sum(
+                    row["stencil_difference_per_second"] for row in signed)
+                predictions = {}
+                for so_order, so_label in ((5, "v5"), (7, "v5_v7"), (9, "v5_v7_v9")):
+                    for l_order, l_label in ((2, "L2PN"), (3, "L3PN")):
+                        vector = published_odd_prediction(
+                            case["m1"], case["m2"], spin, frequency, so_order, l_order)
+                        predictions[f"{so_label}_{l_label}"] = dict(
+                            rate_per_second=vector.tolist(),
+                            norm_per_second=float(np.linalg.norm(vector)),
+                        )
+                reference = np.asarray(predictions["v5_v7_v9_L3PN"]["rate_per_second"])
+                angle = math.atan2(float(np.linalg.norm(np.cross(observed, reference))),
+                                   float(np.dot(observed, reference)))
+                native_comparison = {}
+                for backend in backends:
+                    native = np.asarray(native_rate(
+                        backend, case["m1"], case["m2"], spin, frequency)["odd_rate_per_second"])
+                    difference = native - reference
+                    native_comparison[backend] = dict(
+                        rate_per_second=native.tolist(),
+                        norm_per_second=float(np.linalg.norm(native)),
+                        max_abs_difference_per_second=float(np.max(np.abs(difference))),
+                        relative_difference=float(np.linalg.norm(difference) / np.linalg.norm(reference)),
+                    )
+                rows.append(dict(
+                    case=case["label"], mass1=case["m1"], mass2=case["m2"],
+                    spin1=spin.tolist(), spin_amplitude_scale=amplitude,
+                    spin2=[0., 0., 0.], inclination=case["inc"],
+                    phic=0., distance_mpc=100., f_lower_hz=frequency,
+                    f_ref_hz=frequency, sample_rate_hz=rate,
+                    observed_odd_rate_per_second=observed.tolist(),
+                    observed_odd_norm_per_second=float(np.linalg.norm(observed)),
+                    direction_angle_to_v9_l3pn_rad=angle,
+                    stencil_uncertainty_per_second=uncertainty,
+                    signed_frequency_metrics=[dict(
+                        sign=sign,
+                        initial_carrier_frequency_hz=row["initial_carrier_frequency_hz"],
+                        carrier_frequency_relative_error=row["carrier_frequency_relative_error"],
+                        epoch_seconds=row["epoch_seconds"],
+                    ) for sign, row in zip((1, -1), signed)],
+                    native_full_formula_comparison=native_comparison,
+                    predictions=predictions,
+                ))
+    by_amplitude = {(row["case"], row["f_ref_hz"], row["spin_amplitude_scale"]): row
+                    for row in rows}
+    for row in rows:
+        half = by_amplitude[(row["case"], row["f_ref_hz"], .5)]
+        full = by_amplitude[(row["case"], row["f_ref_hz"], 1.)]
+        row["amplitude_double_half_relative_residual"] = (
+            full["observed_odd_norm_per_second"]
+            / (2 * half["observed_odd_norm_per_second"]) - 1)
+    return rows
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--case", choices=tuple(CASES), nargs="+",
@@ -143,6 +255,8 @@ def main():
     parser.add_argument("--sample-rate", type=int, nargs="+", default=[2048, 16384])
     parser.add_argument("--backend", choices=("torch", "jax"), nargs="+", default=["torch", "jax"])
     parser.add_argument("--phase", type=float, nargs="+", default=[0., .7])
+    parser.add_argument("--odd-rate-sweep", action="store_true",
+                        help="Run the bounded published SO numerator/L denominator sweep")
     parser.add_argument("--output", type=Path, required=True)
     args = parser.parse_args()
     if any(rate <= 0 for rate in args.sample_rate):
@@ -184,7 +298,9 @@ def main():
         reproduction="python scripts/diagnose_phenomt_initial_rates.py --case " + " ".join(args.case)
                      + " --sample-rate " + " ".join(map(str, args.sample_rate))
                      + " --backend " + " ".join(args.backend)
-                     + " --phase " + " ".join(map(str, args.phase)) + " --output receipt.json",
+                     + " --phase " + " ".join(map(str, args.phase))
+                     + (" --odd-rate-sweep" if args.odd_rate_sweep else "")
+                     + " --output receipt.json",
         versions=dict(python=platform.python_version(), numpy=np.__version__, lalsimulation=ls.__version__,
                       **{backend: importlib.import_module(backend).__version__ for backend in args.backend}),
         precession_version=300, final_spin_mod=4, dtype="float64", device="cpu",
@@ -208,8 +324,18 @@ def main():
                              "Spin vectors are chi_i=S_i/m_i^2. This directly measures "
                              "spin parity without Euler-frame reconstruction; only its initial "
                              "spin-even rate is compared with native PV300, not its full dynamics.",
+            odd_rate_sweep="Opt-in sweep uses fixed sample rate 16384 Hz, phase 0, and zero "
+                           "companion spin. Rates and stencil uncertainties are in 1/s. It "
+                           "records signed carrier-frequency anchoring metrics from binary_rate "
+                           "and compares the selected native frontends' odd rates with the independent full "
+                           "v5+v7+v9 over L3PN formula; no residual fitting is performed. "
+                           "The SO numerator follows Sturani Eqs. (3), (22), and (25), with "
+                           "nonspin L from Eq. (5) and the PhenomTP Eq. (13) constraint. "
+                           "Amplitude residuals compare full/(2*half)-1 for each mass/frequency pair.",
         ), results=results, spin_taylor_positive_controls=positive_controls,
     )
+    if args.odd_rate_sweep:
+        receipt["odd_rate_sweep"] = run_odd_rate_sweep(args.backend)
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(json.dumps(receipt, indent=2, allow_nan=False) + "\n")
 

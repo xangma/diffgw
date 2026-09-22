@@ -117,3 +117,23 @@ def test_project_modes_rotation_against_public_lal(backend, only22):
     assert result["inverse_l0"]["status"] in ("measured", "skipped")
     if only22:
         assert max(view["relative_l2"] for view in result["inverse_l0"]["views"]) < 5e-12
+
+
+def test_reference_frame_per_mode_diagnostic_against_public_lal():
+    """Eq. 8 per-mode controls keep the ell=5 residual explicitly measured."""
+    pytest.importorskip("lal")
+    pytest.importorskip("lalsimulation")
+    pytest.importorskip("torch")
+    from scripts.diagnose_phenomt_rotation import reference_measure
+
+    result = reference_measure("torch", "baseline", rate=2048, distance_mpc=100.)
+    rows = {row["ell"]: row for row in result["rows"]}
+    assert max(rows[ell]["inverse_l0"]["relative_l2"] for ell in (2, 3, 4)) < 5e-12
+    assert max(rows[ell]["coprec_l0"]["relative_l2"] for ell in (2, 3, 4)) < 5e-12
+    assert max(row["native_matrix_unitarity_error"] for row in rows.values()) < 5e-14
+    for row in rows.values():
+        assert row["native_forward_relative_l2"] < 5e-12
+        assert row["native_roundtrip_relative_l2"] < 5e-12
+        if row["high_precision"]["status"] == "measured":
+            assert row["high_precision"]["native_matrix_relative_l2"] < 5e-14
+            assert row["high_precision"]["mpmath_forward_relative_l2"] < 5e-12

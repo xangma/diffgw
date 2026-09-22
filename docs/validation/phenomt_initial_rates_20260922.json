@@ -1,6 +1,6 @@
 {
-  "generated_utc": "2026-09-22T07:10:53.014315+00:00",
-  "reproduction": "python scripts/diagnose_phenomt_initial_rates.py --case single_spin high_mass_ratio --sample-rate 2048 16384 --backend torch jax --phase 0.0 0.7 --output receipt.json",
+  "generated_utc": "2026-09-22T07:33:04.444526+00:00",
+  "reproduction": "python scripts/diagnose_phenomt_initial_rates.py --case single_spin high_mass_ratio --sample-rate 2048 16384 --backend torch jax --phase 0.0 0.7 --odd-rate-sweep --output receipt.json",
   "versions": {
     "python": "3.13.7",
     "numpy": "2.5.3",
@@ -17,7 +17,8 @@
     "spin_parity": "Even=(rate(+S1)+rate(-S1))/2; odd=(rate(+S1)-rate(-S1))/2; S2=0, fixed masses/f_ref/source triad. Each J-frame is rotated back using its own initial beta and spin azimuth; initial Lhat=(0,0,1) and the complete Rz(alpha0)Ry(beta0)Rz(gamma0) reference triad are checked.",
     "physics": "Sturani T1500554v23 Eq.21: native even rate is (3/2)*kappa1*(1/x1-1)*v^6*(Lhat.S1)*(Lhat cross S1)/(L_NS*M_seconds), where S1=x1^2*chi1, L_NS is the nonspin 3PN angular momentum and kappa1=1. The v8 term is excluded as in production PV300.",
     "scope": "Binary diagnostic only. Near-zero spin-even behavior does not uniquely identify the reference equations, internal quadrupole parameter, or denominator. Finite differences, reference-frequency anchoring, spin-dependent denominators and axis definitions can affect rates. No production equations are changed.",
-    "positive_control": "SpinTaylorT4 public binary with explicit quadparam1/2=0 or 1, spinO=5, tideO=0, phaseO=7, lscorr=0, lambda1/2=0. Spin vectors are chi_i=S_i/m_i^2. This directly measures spin parity without Euler-frame reconstruction; only its initial spin-even rate is compared with native PV300, not its full dynamics."
+    "positive_control": "SpinTaylorT4 public binary with explicit quadparam1/2=0 or 1, spinO=5, tideO=0, phaseO=7, lscorr=0, lambda1/2=0. Spin vectors are chi_i=S_i/m_i^2. This directly measures spin parity without Euler-frame reconstruction; only its initial spin-even rate is compared with native PV300, not its full dynamics.",
+    "odd_rate_sweep": "Opt-in sweep uses fixed sample rate 16384 Hz, phase 0, and zero companion spin. Rates and stencil uncertainties are in 1/s. It records signed carrier-frequency anchoring metrics from binary_rate and compares the selected native frontends' odd rates with the independent full v5+v7+v9 over L3PN formula; no residual fitting is performed. The SO numerator follows Sturani Eqs. (3), (22), and (25), with nonspin L from Eq. (5) and the PhenomTP Eq. (13) constraint. Amplitude residuals compare full/(2*half)-1 for each mass/frequency pair."
   },
   "results": [
     {
@@ -2045,6 +2046,2114 @@
           ]
         }
       ]
+    }
+  ],
+  "odd_rate_sweep": [
+    {
+      "case": "equal_mass",
+      "mass1": 30.0,
+      "mass2": 30.0,
+      "spin1": [
+        0.15,
+        0.0,
+        0.2
+      ],
+      "spin_amplitude_scale": 0.5,
+      "spin2": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "inclination": 1.0,
+      "phic": 0.0,
+      "distance_mpc": 100.0,
+      "f_lower_hz": 20.0,
+      "f_ref_hz": 20.0,
+      "sample_rate_hz": 16384,
+      "observed_odd_rate_per_second": [
+        -2.521939446720506e-09,
+        -0.14657363180253777,
+        -6.85991731353763e-16
+      ],
+      "observed_odd_norm_per_second": 0.1465736318025378,
+      "direction_angle_to_v9_l3pn_rad": 1.7205955912439456e-08,
+      "stencil_uncertainty_per_second": 2.339101079856862e-09,
+      "signed_frequency_metrics": [
+        {
+          "sign": 1,
+          "initial_carrier_frequency_hz": 19.999999993669267,
+          "carrier_frequency_relative_error": 3.1653668575160054e-10,
+          "epoch_seconds": -0.88065038
+        },
+        {
+          "sign": -1,
+          "initial_carrier_frequency_hz": 20.000000022014035,
+          "carrier_frequency_relative_error": 1.1007017519659712e-09,
+          "epoch_seconds": -0.824609909
+        }
+      ],
+      "native_full_formula_comparison": {
+        "torch": {
+          "rate_per_second": [
+            0.0,
+            -0.14653829876812885,
+            0.0
+          ],
+          "norm_per_second": 0.14653829876812885,
+          "max_abs_difference_per_second": 5.551115123125783e-17,
+          "relative_difference": 3.788166758991413e-16
+        },
+        "jax": {
+          "rate_per_second": [
+            0.0,
+            -0.1465382987681289,
+            0.0
+          ],
+          "norm_per_second": 0.1465382987681289,
+          "max_abs_difference_per_second": 0.0,
+          "relative_difference": 0.0
+        }
+      },
+      "predictions": {
+        "v5_L2PN": {
+          "rate_per_second": [
+            -0.0,
+            -0.1365045337183869,
+            -0.0
+          ],
+          "norm_per_second": 0.1365045337183869
+        },
+        "v5_L3PN": {
+          "rate_per_second": [
+            -0.0,
+            -0.13647209306210048,
+            -0.0
+          ],
+          "norm_per_second": 0.13647209306210048
+        },
+        "v5_v7_L2PN": {
+          "rate_per_second": [
+            -0.0,
+            -0.14604800493758668,
+            -0.0
+          ],
+          "norm_per_second": 0.14604800493758668
+        },
+        "v5_v7_L3PN": {
+          "rate_per_second": [
+            -0.0,
+            -0.14601329625062634,
+            -0.0
+          ],
+          "norm_per_second": 0.14601329625062634
+        },
+        "v5_v7_v9_L2PN": {
+          "rate_per_second": [
+            -0.0,
+            -0.14657313225295698,
+            -0.0
+          ],
+          "norm_per_second": 0.14657313225295698
+        },
+        "v5_v7_v9_L3PN": {
+          "rate_per_second": [
+            -0.0,
+            -0.1465382987681289,
+            -0.0
+          ],
+          "norm_per_second": 0.1465382987681289
+        }
+      },
+      "amplitude_double_half_relative_residual": -3.9799497031367537e-11
+    },
+    {
+      "case": "equal_mass",
+      "mass1": 30.0,
+      "mass2": 30.0,
+      "spin1": [
+        0.3,
+        0.0,
+        0.4
+      ],
+      "spin_amplitude_scale": 1.0,
+      "spin2": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "inclination": 1.0,
+      "phic": 0.0,
+      "distance_mpc": 100.0,
+      "f_lower_hz": 20.0,
+      "f_ref_hz": 20.0,
+      "sample_rate_hz": 16384,
+      "observed_odd_rate_per_second": [
+        -3.220928072601312e-10,
+        -0.2931472635934085,
+        -3.840428777282226e-14
+      ],
+      "observed_odd_norm_per_second": 0.2931472635934085,
+      "direction_angle_to_v9_l3pn_rad": 1.0987406315905808e-09,
+      "stencil_uncertainty_per_second": 9.459897971652215e-10,
+      "signed_frequency_metrics": [
+        {
+          "sign": 1,
+          "initial_carrier_frequency_hz": 19.99999996839147,
+          "carrier_frequency_relative_error": 1.5804264563712422e-09,
+          "epoch_seconds": -0.908551816
+        },
+        {
+          "sign": -1,
+          "initial_carrier_frequency_hz": 20.0000000142473,
+          "carrier_frequency_relative_error": 7.12364833788115e-10,
+          "epoch_seconds": -0.796577178
+        }
+      ],
+      "native_full_formula_comparison": {
+        "torch": {
+          "rate_per_second": [
+            0.0,
+            -0.2930765975362578,
+            0.0
+          ],
+          "norm_per_second": 0.2930765975362578,
+          "max_abs_difference_per_second": 0.0,
+          "relative_difference": 0.0
+        },
+        "jax": {
+          "rate_per_second": [
+            0.0,
+            -0.2930765975362578,
+            0.0
+          ],
+          "norm_per_second": 0.2930765975362578,
+          "max_abs_difference_per_second": 0.0,
+          "relative_difference": 0.0
+        }
+      },
+      "predictions": {
+        "v5_L2PN": {
+          "rate_per_second": [
+            -0.0,
+            -0.2730090674367738,
+            -0.0
+          ],
+          "norm_per_second": 0.2730090674367738
+        },
+        "v5_L3PN": {
+          "rate_per_second": [
+            -0.0,
+            -0.27294418612420096,
+            -0.0
+          ],
+          "norm_per_second": 0.27294418612420096
+        },
+        "v5_v7_L2PN": {
+          "rate_per_second": [
+            -0.0,
+            -0.29209600987517337,
+            -0.0
+          ],
+          "norm_per_second": 0.29209600987517337
+        },
+        "v5_v7_L3PN": {
+          "rate_per_second": [
+            -0.0,
+            -0.2920265925012527,
+            -0.0
+          ],
+          "norm_per_second": 0.2920265925012527
+        },
+        "v5_v7_v9_L2PN": {
+          "rate_per_second": [
+            -0.0,
+            -0.29314626450591397,
+            -0.0
+          ],
+          "norm_per_second": 0.29314626450591397
+        },
+        "v5_v7_v9_L3PN": {
+          "rate_per_second": [
+            -0.0,
+            -0.2930765975362578,
+            -0.0
+          ],
+          "norm_per_second": 0.2930765975362578
+        }
+      },
+      "amplitude_double_half_relative_residual": -3.9799497031367537e-11
+    },
+    {
+      "case": "equal_mass",
+      "mass1": 30.0,
+      "mass2": 30.0,
+      "spin1": [
+        0.15,
+        0.0,
+        0.2
+      ],
+      "spin_amplitude_scale": 0.5,
+      "spin2": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "inclination": 1.0,
+      "phic": 0.0,
+      "distance_mpc": 100.0,
+      "f_lower_hz": 30.0,
+      "f_ref_hz": 30.0,
+      "sample_rate_hz": 16384,
+      "observed_odd_rate_per_second": [
+        -9.120695852243317e-10,
+        -0.3247485988286991,
+        5.6828316915355846e-14
+      ],
+      "observed_odd_norm_per_second": 0.3247485988286991,
+      "direction_angle_to_v9_l3pn_rad": 2.80854048419109e-09,
+      "stencil_uncertainty_per_second": 2.1314568707434864e-09,
+      "signed_frequency_metrics": [
+        {
+          "sign": 1,
+          "initial_carrier_frequency_hz": 29.99999998992504,
+          "carrier_frequency_relative_error": 3.358320288526784e-10,
+          "epoch_seconds": -0.276428885
+        },
+        {
+          "sign": -1,
+          "initial_carrier_frequency_hz": 30.00000003792144,
+          "carrier_frequency_relative_error": 1.2640479774006508e-09,
+          "epoch_seconds": -0.249702856
+        }
+      ],
+      "native_full_formula_comparison": {
+        "torch": {
+          "rate_per_second": [
+            0.0,
+            -0.324579600225735,
+            0.0
+          ],
+          "norm_per_second": 0.324579600225735,
+          "max_abs_difference_per_second": 5.551115123125783e-17,
+          "relative_difference": 1.710247692481337e-16
+        },
+        "jax": {
+          "rate_per_second": [
+            0.0,
+            -0.3245796002257348,
+            0.0
+          ],
+          "norm_per_second": 0.3245796002257348,
+          "max_abs_difference_per_second": 2.7755575615628914e-16,
+          "relative_difference": 8.551238462406685e-16
+        }
+      },
+      "predictions": {
+        "v5_L2PN": {
+          "rate_per_second": [
+            -0.0,
+            -0.29570341864579,
+            -0.0
+          ],
+          "norm_per_second": 0.29570341864579
+        },
+        "v5_L3PN": {
+          "rate_per_second": [
+            -0.0,
+            -0.29555122805003514,
+            -0.0
+          ],
+          "norm_per_second": 0.29555122805003514
+        },
+        "v5_v7_L2PN": {
+          "rate_per_second": [
+            -0.0,
+            -0.32279346888613525,
+            -0.0
+          ],
+          "norm_per_second": 0.32279346888613525
+        },
+        "v5_v7_L3PN": {
+          "rate_per_second": [
+            -0.0,
+            -0.3226273357701891,
+            -0.0
+          ],
+          "norm_per_second": 0.3226273357701891
+        },
+        "v5_v7_v9_L2PN": {
+          "rate_per_second": [
+            -0.0,
+            -0.32474673863708303,
+            -0.0
+          ],
+          "norm_per_second": 0.32474673863708303
+        },
+        "v5_v7_v9_L3PN": {
+          "rate_per_second": [
+            -0.0,
+            -0.32457960022573507,
+            -0.0
+          ],
+          "norm_per_second": 0.32457960022573507
+        }
+      },
+      "amplitude_double_half_relative_residual": -4.884347371003628e-10
+    },
+    {
+      "case": "equal_mass",
+      "mass1": 30.0,
+      "mass2": 30.0,
+      "spin1": [
+        0.3,
+        0.0,
+        0.4
+      ],
+      "spin_amplitude_scale": 1.0,
+      "spin2": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "inclination": 1.0,
+      "phic": 0.0,
+      "distance_mpc": 100.0,
+      "f_lower_hz": 30.0,
+      "f_ref_hz": 30.0,
+      "sample_rate_hz": 16384,
+      "observed_odd_rate_per_second": [
+        -1.2403962449021827e-09,
+        -0.6494971973401612,
+        2.8823522448538275e-13
+      ],
+      "observed_odd_norm_per_second": 0.6494971973401612,
+      "direction_angle_to_v9_l3pn_rad": 1.9097792622831968e-09,
+      "stencil_uncertainty_per_second": 3.4174205096662657e-09,
+      "signed_frequency_metrics": [
+        {
+          "sign": 1,
+          "initial_carrier_frequency_hz": 30.000000014957628,
+          "carrier_frequency_relative_error": 4.985876156382574e-10,
+          "epoch_seconds": -0.290045457
+        },
+        {
+          "sign": -1,
+          "initial_carrier_frequency_hz": 30.00000003558806,
+          "carrier_frequency_relative_error": 1.1862686388752763e-09,
+          "epoch_seconds": -0.236668166
+        }
+      ],
+      "native_full_formula_comparison": {
+        "torch": {
+          "rate_per_second": [
+            0.0,
+            -0.6491592004514699,
+            0.0
+          ],
+          "norm_per_second": 0.6491592004514699,
+          "max_abs_difference_per_second": 2.220446049250313e-16,
+          "relative_difference": 3.420495384962674e-16
+        },
+        "jax": {
+          "rate_per_second": [
+            0.0,
+            -0.6491592004514696,
+            0.0
+          ],
+          "norm_per_second": 0.6491592004514696,
+          "max_abs_difference_per_second": 5.551115123125783e-16,
+          "relative_difference": 8.551238462406685e-16
+        }
+      },
+      "predictions": {
+        "v5_L2PN": {
+          "rate_per_second": [
+            -0.0,
+            -0.59140683729158,
+            -0.0
+          ],
+          "norm_per_second": 0.59140683729158
+        },
+        "v5_L3PN": {
+          "rate_per_second": [
+            -0.0,
+            -0.5911024561000703,
+            -0.0
+          ],
+          "norm_per_second": 0.5911024561000703
+        },
+        "v5_v7_L2PN": {
+          "rate_per_second": [
+            -0.0,
+            -0.6455869377722705,
+            -0.0
+          ],
+          "norm_per_second": 0.6455869377722705
+        },
+        "v5_v7_L3PN": {
+          "rate_per_second": [
+            -0.0,
+            -0.6452546715403782,
+            -0.0
+          ],
+          "norm_per_second": 0.6452546715403782
+        },
+        "v5_v7_v9_L2PN": {
+          "rate_per_second": [
+            -0.0,
+            -0.6494934772741661,
+            -0.0
+          ],
+          "norm_per_second": 0.6494934772741661
+        },
+        "v5_v7_v9_L3PN": {
+          "rate_per_second": [
+            -0.0,
+            -0.6491592004514701,
+            -0.0
+          ],
+          "norm_per_second": 0.6491592004514701
+        }
+      },
+      "amplitude_double_half_relative_residual": -4.884347371003628e-10
+    },
+    {
+      "case": "equal_mass",
+      "mass1": 30.0,
+      "mass2": 30.0,
+      "spin1": [
+        0.15,
+        0.0,
+        0.2
+      ],
+      "spin_amplitude_scale": 0.5,
+      "spin2": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "inclination": 1.0,
+      "phic": 0.0,
+      "distance_mpc": 100.0,
+      "f_lower_hz": 40.0,
+      "f_ref_hz": 40.0,
+      "sample_rate_hz": 16384,
+      "observed_odd_rate_per_second": [
+        -5.427187161359303e-10,
+        -0.5691412794423532,
+        -2.411771227771417e-13
+      ],
+      "observed_odd_norm_per_second": 0.5691412794423532,
+      "direction_angle_to_v9_l3pn_rad": 9.53574778929531e-10,
+      "stencil_uncertainty_per_second": 1.2461471611702618e-08,
+      "signed_frequency_metrics": [
+        {
+          "sign": 1,
+          "initial_carrier_frequency_hz": 40.00000000849354,
+          "carrier_frequency_relative_error": 2.1233836910994341e-10,
+          "epoch_seconds": -0.119615576
+        },
+        {
+          "sign": -1,
+          "initial_carrier_frequency_hz": 39.99999996957764,
+          "carrier_frequency_relative_error": 7.605590601755807e-10,
+          "epoch_seconds": -0.104901848
+        }
+      ],
+      "native_full_formula_comparison": {
+        "torch": {
+          "rate_per_second": [
+            0.0,
+            -0.5686336924677657,
+            0.0
+          ],
+          "norm_per_second": 0.5686336924677657,
+          "max_abs_difference_per_second": 2.220446049250313e-16,
+          "relative_difference": 3.9048795009208584e-16
+        },
+        "jax": {
+          "rate_per_second": [
+            0.0,
+            -0.5686336924677656,
+            0.0
+          ],
+          "norm_per_second": 0.5686336924677656,
+          "max_abs_difference_per_second": 1.1102230246251565e-16,
+          "relative_difference": 1.9524397504604292e-16
+        }
+      },
+      "predictions": {
+        "v5_L2PN": {
+          "rate_per_second": [
+            -0.0,
+            -0.507852019994266,
+            -0.0
+          ],
+          "norm_per_second": 0.507852019994266
+        },
+        "v5_L3PN": {
+          "rate_per_second": [
+            -0.0,
+            -0.5074032858019133,
+            -0.0
+          ],
+          "norm_per_second": 0.5074032858019133
+        },
+        "v5_v7_L2PN": {
+          "rate_per_second": [
+            -0.0,
+            -0.5642135975253207,
+            -0.0
+          ],
+          "norm_per_second": 0.5642135975253207
+        },
+        "v5_v7_L3PN": {
+          "rate_per_second": [
+            -0.0,
+            -0.5637150626706148,
+            -0.0
+          ],
+          "norm_per_second": 0.5637150626706148
+        },
+        "v5_v7_v9_L2PN": {
+          "rate_per_second": [
+            -0.0,
+            -0.5691365772299933,
+            -0.0
+          ],
+          "norm_per_second": 0.5691365772299933
+        },
+        "v5_v7_v9_L3PN": {
+          "rate_per_second": [
+            -0.0,
+            -0.5686336924677655,
+            -0.0
+          ],
+          "norm_per_second": 0.5686336924677655
+        }
+      },
+      "amplitude_double_half_relative_residual": -8.651632743550408e-10
+    },
+    {
+      "case": "equal_mass",
+      "mass1": 30.0,
+      "mass2": 30.0,
+      "spin1": [
+        0.3,
+        0.0,
+        0.4
+      ],
+      "spin_amplitude_scale": 1.0,
+      "spin2": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "inclination": 1.0,
+      "phic": 0.0,
+      "distance_mpc": 100.0,
+      "f_lower_hz": 40.0,
+      "f_ref_hz": 40.0,
+      "sample_rate_hz": 16384,
+      "observed_odd_rate_per_second": [
+        -8.718171633175085e-11,
+        -1.138282557899906,
+        -1.7980003986275002e-12
+      ],
+      "observed_odd_norm_per_second": 1.138282557899906,
+      "direction_angle_to_v9_l3pn_rad": 7.660686212874728e-11,
+      "stencil_uncertainty_per_second": 2.287401704320457e-08,
+      "signed_frequency_metrics": [
+        {
+          "sign": 1,
+          "initial_carrier_frequency_hz": 39.99999992773951,
+          "carrier_frequency_relative_error": 1.8065122731059091e-09,
+          "epoch_seconds": -0.127360805
+        },
+        {
+          "sign": -1,
+          "initial_carrier_frequency_hz": 40.000000010957194,
+          "carrier_frequency_relative_error": 2.7392976775786337e-10,
+          "epoch_seconds": -0.097995267
+        }
+      ],
+      "native_full_formula_comparison": {
+        "torch": {
+          "rate_per_second": [
+            0.0,
+            -1.1372673849355313,
+            0.0
+          ],
+          "norm_per_second": 1.1372673849355313,
+          "max_abs_difference_per_second": 2.220446049250313e-16,
+          "relative_difference": 1.9524397504604292e-16
+        },
+        "jax": {
+          "rate_per_second": [
+            0.0,
+            -1.137267384935531,
+            0.0
+          ],
+          "norm_per_second": 1.137267384935531,
+          "max_abs_difference_per_second": 0.0,
+          "relative_difference": 0.0
+        }
+      },
+      "predictions": {
+        "v5_L2PN": {
+          "rate_per_second": [
+            -0.0,
+            -1.015704039988532,
+            -0.0
+          ],
+          "norm_per_second": 1.015704039988532
+        },
+        "v5_L3PN": {
+          "rate_per_second": [
+            -0.0,
+            -1.0148065716038266,
+            -0.0
+          ],
+          "norm_per_second": 1.0148065716038266
+        },
+        "v5_v7_L2PN": {
+          "rate_per_second": [
+            -0.0,
+            -1.1284271950506415,
+            -0.0
+          ],
+          "norm_per_second": 1.1284271950506415
+        },
+        "v5_v7_L3PN": {
+          "rate_per_second": [
+            -0.0,
+            -1.1274301253412295,
+            -0.0
+          ],
+          "norm_per_second": 1.1274301253412295
+        },
+        "v5_v7_v9_L2PN": {
+          "rate_per_second": [
+            -0.0,
+            -1.1382731544599867,
+            -0.0
+          ],
+          "norm_per_second": 1.1382731544599867
+        },
+        "v5_v7_v9_L3PN": {
+          "rate_per_second": [
+            -0.0,
+            -1.137267384935531,
+            -0.0
+          ],
+          "norm_per_second": 1.137267384935531
+        }
+      },
+      "amplitude_double_half_relative_residual": -8.651632743550408e-10
+    },
+    {
+      "case": "single_spin",
+      "mass1": 35.0,
+      "mass2": 20.0,
+      "spin1": [
+        0.15,
+        0.0,
+        0.2
+      ],
+      "spin_amplitude_scale": 0.5,
+      "spin2": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "inclination": 1.1,
+      "phic": 0.0,
+      "distance_mpc": 100.0,
+      "f_lower_hz": 20.0,
+      "f_ref_hz": 20.0,
+      "sample_rate_hz": 16384,
+      "observed_odd_rate_per_second": [
+        -8.285675703649712e-10,
+        -0.17972075608320898,
+        9.341041709186791e-14
+      ],
+      "observed_odd_norm_per_second": 0.17972075608320898,
+      "direction_angle_to_v9_l3pn_rad": 4.61030541873955e-09,
+      "stencil_uncertainty_per_second": 5.546614107036233e-10,
+      "signed_frequency_metrics": [
+        {
+          "sign": 1,
+          "initial_carrier_frequency_hz": 20.000000005346294,
+          "carrier_frequency_relative_error": 2.6731461488793684e-10,
+          "epoch_seconds": -1.111877258
+        },
+        {
+          "sign": -1,
+          "initial_carrier_frequency_hz": 19.999996541023197,
+          "carrier_frequency_relative_error": 1.7294884013807632e-07,
+          "epoch_seconds": -1.022077606
+        }
+      ],
+      "native_full_formula_comparison": {
+        "torch": {
+          "rate_per_second": [
+            0.0,
+            -0.17965523376327658,
+            0.0
+          ],
+          "norm_per_second": 0.17965523376327658,
+          "max_abs_difference_per_second": 2.7755575615628914e-17,
+          "relative_difference": 1.5449355431638108e-16
+        },
+        "jax": {
+          "rate_per_second": [
+            0.0,
+            -0.17965523376327658,
+            0.0
+          ],
+          "norm_per_second": 0.17965523376327658,
+          "max_abs_difference_per_second": 2.7755575615628914e-17,
+          "relative_difference": 1.5449355431638108e-16
+        }
+      },
+      "predictions": {
+        "v5_L2PN": {
+          "rate_per_second": [
+            -0.0,
+            -0.16658943767760906,
+            -0.0
+          ],
+          "norm_per_second": 0.16658943767760906
+        },
+        "v5_L3PN": {
+          "rate_per_second": [
+            -0.0,
+            -0.1665315030598934,
+            -0.0
+          ],
+          "norm_per_second": 0.1665315030598934
+        },
+        "v5_v7_L2PN": {
+          "rate_per_second": [
+            -0.0,
+            -0.17885316012886684,
+            -0.0
+          ],
+          "norm_per_second": 0.17885316012886684
+        },
+        "v5_v7_L3PN": {
+          "rate_per_second": [
+            -0.0,
+            -0.17879096057045693,
+            -0.0
+          ],
+          "norm_per_second": 0.17879096057045693
+        },
+        "v5_v7_v9_L2PN": {
+          "rate_per_second": [
+            -0.0,
+            -0.17971773399354804,
+            -0.0
+          ],
+          "norm_per_second": 0.17971773399354804
+        },
+        "v5_v7_v9_L3PN": {
+          "rate_per_second": [
+            -0.0,
+            -0.1796552337632766,
+            -0.0
+          ],
+          "norm_per_second": 0.1796552337632766
+        }
+      },
+      "amplitude_double_half_relative_residual": 1.1187451520733305e-07
+    },
+    {
+      "case": "single_spin",
+      "mass1": 35.0,
+      "mass2": 20.0,
+      "spin1": [
+        0.3,
+        0.0,
+        0.4
+      ],
+      "spin_amplitude_scale": 1.0,
+      "spin2": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "inclination": 1.1,
+      "phic": 0.0,
+      "distance_mpc": 100.0,
+      "f_lower_hz": 20.0,
+      "f_ref_hz": 20.0,
+      "sample_rate_hz": 16384,
+      "observed_odd_rate_per_second": [
+        -4.761062437006592e-10,
+        -0.35944155237876285,
+        1.012106943841866e-12
+      ],
+      "observed_odd_norm_per_second": 0.35944155237876285,
+      "direction_angle_to_v9_l3pn_rad": 1.324575070181435e-09,
+      "stencil_uncertainty_per_second": 3.910807955638926e-10,
+      "signed_frequency_metrics": [
+        {
+          "sign": 1,
+          "initial_carrier_frequency_hz": 20.00000001114674,
+          "carrier_frequency_relative_error": 5.573368433431369e-10,
+          "epoch_seconds": -1.156740842
+        },
+        {
+          "sign": -1,
+          "initial_carrier_frequency_hz": 19.999998809985026,
+          "carrier_frequency_relative_error": 5.950074866145627e-08,
+          "epoch_seconds": -0.977169736
+        }
+      ],
+      "native_full_formula_comparison": {
+        "torch": {
+          "rate_per_second": [
+            0.0,
+            -0.35931046752655316,
+            0.0
+          ],
+          "norm_per_second": 0.35931046752655316,
+          "max_abs_difference_per_second": 5.551115123125783e-17,
+          "relative_difference": 1.5449355431638108e-16
+        },
+        "jax": {
+          "rate_per_second": [
+            0.0,
+            -0.35931046752655316,
+            0.0
+          ],
+          "norm_per_second": 0.35931046752655316,
+          "max_abs_difference_per_second": 5.551115123125783e-17,
+          "relative_difference": 1.5449355431638108e-16
+        }
+      },
+      "predictions": {
+        "v5_L2PN": {
+          "rate_per_second": [
+            -0.0,
+            -0.3331788753552181,
+            -0.0
+          ],
+          "norm_per_second": 0.3331788753552181
+        },
+        "v5_L3PN": {
+          "rate_per_second": [
+            -0.0,
+            -0.3330630061197868,
+            -0.0
+          ],
+          "norm_per_second": 0.3330630061197868
+        },
+        "v5_v7_L2PN": {
+          "rate_per_second": [
+            -0.0,
+            -0.3577063202577337,
+            -0.0
+          ],
+          "norm_per_second": 0.3577063202577337
+        },
+        "v5_v7_L3PN": {
+          "rate_per_second": [
+            -0.0,
+            -0.35758192114091386,
+            -0.0
+          ],
+          "norm_per_second": 0.35758192114091386
+        },
+        "v5_v7_v9_L2PN": {
+          "rate_per_second": [
+            -0.0,
+            -0.3594354679870961,
+            -0.0
+          ],
+          "norm_per_second": 0.3594354679870961
+        },
+        "v5_v7_v9_L3PN": {
+          "rate_per_second": [
+            -0.0,
+            -0.3593104675265532,
+            -0.0
+          ],
+          "norm_per_second": 0.3593104675265532
+        }
+      },
+      "amplitude_double_half_relative_residual": 1.1187451520733305e-07
+    },
+    {
+      "case": "single_spin",
+      "mass1": 35.0,
+      "mass2": 20.0,
+      "spin1": [
+        0.15,
+        0.0,
+        0.2
+      ],
+      "spin_amplitude_scale": 0.5,
+      "spin2": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "inclination": 1.1,
+      "phic": 0.0,
+      "distance_mpc": 100.0,
+      "f_lower_hz": 30.0,
+      "f_ref_hz": 30.0,
+      "sample_rate_hz": 16384,
+      "observed_odd_rate_per_second": [
+        1.4959294070544053e-10,
+        -0.3998115702177202,
+        -1.0300648175399518e-13
+      ],
+      "observed_odd_norm_per_second": 0.3998115702177202,
+      "direction_angle_to_v9_l3pn_rad": 3.7415869702819863e-10,
+      "stencil_uncertainty_per_second": 1.2661860157159536e-09,
+      "signed_frequency_metrics": [
+        {
+          "sign": 1,
+          "initial_carrier_frequency_hz": 29.999999998435218,
+          "carrier_frequency_relative_error": 5.215938791991448e-11,
+          "epoch_seconds": -0.349507024
+        },
+        {
+          "sign": -1,
+          "initial_carrier_frequency_hz": 29.999999998873523,
+          "carrier_frequency_relative_error": 3.754918598275481e-11,
+          "epoch_seconds": -0.306024228
+        }
+      ],
+      "native_full_formula_comparison": {
+        "torch": {
+          "rate_per_second": [
+            0.0,
+            -0.3994984416388575,
+            0.0
+          ],
+          "norm_per_second": 0.3994984416388575,
+          "max_abs_difference_per_second": 1.1102230246251565e-16,
+          "relative_difference": 2.779042191180276e-16
+        },
+        "jax": {
+          "rate_per_second": [
+            0.0,
+            -0.39949844163885756,
+            0.0
+          ],
+          "norm_per_second": 0.39949844163885756,
+          "max_abs_difference_per_second": 5.551115123125783e-17,
+          "relative_difference": 1.389521095590138e-16
+        }
+      },
+      "predictions": {
+        "v5_L2PN": {
+          "rate_per_second": [
+            -0.0,
+            -0.36168699631750095,
+            -0.0
+          ],
+          "norm_per_second": 0.36168699631750095
+        },
+        "v5_L3PN": {
+          "rate_per_second": [
+            -0.0,
+            -0.36141401547694235,
+            -0.0
+          ],
+          "norm_per_second": 0.36141401547694235
+        },
+        "v5_v7_L2PN": {
+          "rate_per_second": [
+            -0.0,
+            -0.396577072563567,
+            -0.0
+          ],
+          "norm_per_second": 0.396577072563567
+        },
+        "v5_v7_L3PN": {
+          "rate_per_second": [
+            -0.0,
+            -0.3962777586713982,
+            -0.0
+          ],
+          "norm_per_second": 0.3962777586713982
+        },
+        "v5_v7_v9_L2PN": {
+          "rate_per_second": [
+            -0.0,
+            -0.3998001881559552,
+            -0.0
+          ],
+          "norm_per_second": 0.3998001881559552
+        },
+        "v5_v7_v9_L3PN": {
+          "rate_per_second": [
+            -0.0,
+            -0.3994984416388576,
+            -0.0
+          ],
+          "norm_per_second": 0.3994984416388576
+        }
+      },
+      "amplitude_double_half_relative_residual": -2.7520245893253303e-07
+    },
+    {
+      "case": "single_spin",
+      "mass1": 35.0,
+      "mass2": 20.0,
+      "spin1": [
+        0.3,
+        0.0,
+        0.4
+      ],
+      "spin_amplitude_scale": 1.0,
+      "spin2": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "inclination": 1.1,
+      "phic": 0.0,
+      "distance_mpc": 100.0,
+      "f_lower_hz": 30.0,
+      "f_ref_hz": 30.0,
+      "sample_rate_hz": 16384,
+      "observed_odd_rate_per_second": [
+        -5.670129570832802e-10,
+        -0.7996229203771859,
+        -2.306106261503244e-13
+      ],
+      "observed_odd_norm_per_second": 0.7996229203771859,
+      "direction_angle_to_v9_l3pn_rad": 7.091004891553126e-10,
+      "stencil_uncertainty_per_second": 1.9248607826981698e-09,
+      "signed_frequency_metrics": [
+        {
+          "sign": 1,
+          "initial_carrier_frequency_hz": 29.999999648605495,
+          "carrier_frequency_relative_error": 1.1713150116499094e-08,
+          "epoch_seconds": -0.371898901
+        },
+        {
+          "sign": -1,
+          "initial_carrier_frequency_hz": 29.999991962997154,
+          "carrier_frequency_relative_error": 2.679000948857535e-07,
+          "epoch_seconds": -0.285069125
+        }
+      ],
+      "native_full_formula_comparison": {
+        "torch": {
+          "rate_per_second": [
+            0.0,
+            -0.7989968832777151,
+            0.0
+          ],
+          "norm_per_second": 0.7989968832777151,
+          "max_abs_difference_per_second": 1.1102230246251565e-16,
+          "relative_difference": 1.389521095590138e-16
+        },
+        "jax": {
+          "rate_per_second": [
+            0.0,
+            -0.7989968832777152,
+            0.0
+          ],
+          "norm_per_second": 0.7989968832777152,
+          "max_abs_difference_per_second": 0.0,
+          "relative_difference": 0.0
+        }
+      },
+      "predictions": {
+        "v5_L2PN": {
+          "rate_per_second": [
+            -0.0,
+            -0.7233739926350019,
+            -0.0
+          ],
+          "norm_per_second": 0.7233739926350019
+        },
+        "v5_L3PN": {
+          "rate_per_second": [
+            -0.0,
+            -0.7228280309538847,
+            -0.0
+          ],
+          "norm_per_second": 0.7228280309538847
+        },
+        "v5_v7_L2PN": {
+          "rate_per_second": [
+            -0.0,
+            -0.793154145127134,
+            -0.0
+          ],
+          "norm_per_second": 0.793154145127134
+        },
+        "v5_v7_L3PN": {
+          "rate_per_second": [
+            -0.0,
+            -0.7925555173427964,
+            -0.0
+          ],
+          "norm_per_second": 0.7925555173427964
+        },
+        "v5_v7_v9_L2PN": {
+          "rate_per_second": [
+            -0.0,
+            -0.7996003763119104,
+            -0.0
+          ],
+          "norm_per_second": 0.7996003763119104
+        },
+        "v5_v7_v9_L3PN": {
+          "rate_per_second": [
+            -0.0,
+            -0.7989968832777152,
+            -0.0
+          ],
+          "norm_per_second": 0.7989968832777152
+        }
+      },
+      "amplitude_double_half_relative_residual": -2.7520245893253303e-07
+    },
+    {
+      "case": "single_spin",
+      "mass1": 35.0,
+      "mass2": 20.0,
+      "spin1": [
+        0.15,
+        0.0,
+        0.2
+      ],
+      "spin_amplitude_scale": 0.5,
+      "spin2": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "inclination": 1.1,
+      "phic": 0.0,
+      "distance_mpc": 100.0,
+      "f_lower_hz": 40.0,
+      "f_ref_hz": 40.0,
+      "sample_rate_hz": 16384,
+      "observed_odd_rate_per_second": [
+        -4.971641723336965e-10,
+        -0.7033439106180195,
+        -1.2900759017442224e-13
+      ],
+      "observed_odd_norm_per_second": 0.7033439106180195,
+      "direction_angle_to_v9_l3pn_rad": 7.068578849779677e-10,
+      "stencil_uncertainty_per_second": 6.964062705816387e-09,
+      "signed_frequency_metrics": [
+        {
+          "sign": 1,
+          "initial_carrier_frequency_hz": 39.999999992224154,
+          "carrier_frequency_relative_error": 1.9439616583127872e-10,
+          "epoch_seconds": -0.151821663
+        },
+        {
+          "sign": -1,
+          "initial_carrier_frequency_hz": 39.99999999182927,
+          "carrier_frequency_relative_error": 2.0426826896624561e-10,
+          "epoch_seconds": -0.127364572
+        }
+      ],
+      "native_full_formula_comparison": {
+        "torch": {
+          "rate_per_second": [
+            0.0,
+            -0.7024021448266531,
+            0.0
+          ],
+          "norm_per_second": 0.7024021448266531,
+          "max_abs_difference_per_second": 1.1102230246251565e-16,
+          "relative_difference": 1.580608819039341e-16
+        },
+        "jax": {
+          "rate_per_second": [
+            0.0,
+            -0.7024021448266531,
+            0.0
+          ],
+          "norm_per_second": 0.7024021448266531,
+          "max_abs_difference_per_second": 1.1102230246251565e-16,
+          "relative_difference": 1.580608819039341e-16
+        }
+      },
+      "predictions": {
+        "v5_L2PN": {
+          "rate_per_second": [
+            -0.0,
+            -0.6224378133353217,
+            -0.0
+          ],
+          "norm_per_second": 0.6224378133353217
+        },
+        "v5_L3PN": {
+          "rate_per_second": [
+            -0.0,
+            -0.6216297934089281,
+            -0.0
+          ],
+          "norm_per_second": 0.6216297934089281
+        },
+        "v5_v7_L2PN": {
+          "rate_per_second": [
+            -0.0,
+            -0.6951751647466744,
+            -0.0
+          ],
+          "norm_per_second": 0.6951751647466744
+        },
+        "v5_v7_L3PN": {
+          "rate_per_second": [
+            -0.0,
+            -0.6942727205612236,
+            -0.0
+          ],
+          "norm_per_second": 0.6942727205612236
+        },
+        "v5_v7_v9_L2PN": {
+          "rate_per_second": [
+            -0.0,
+            -0.7033151559715167,
+            -0.0
+          ],
+          "norm_per_second": 0.7033151559715167
+        },
+        "v5_v7_v9_L3PN": {
+          "rate_per_second": [
+            -0.0,
+            -0.7024021448266532,
+            -0.0
+          ],
+          "norm_per_second": 0.7024021448266532
+        }
+      },
+      "amplitude_double_half_relative_residual": 4.391487173904807e-11
+    },
+    {
+      "case": "single_spin",
+      "mass1": 35.0,
+      "mass2": 20.0,
+      "spin1": [
+        0.3,
+        0.0,
+        0.4
+      ],
+      "spin_amplitude_scale": 1.0,
+      "spin2": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "inclination": 1.1,
+      "phic": 0.0,
+      "distance_mpc": 100.0,
+      "f_lower_hz": 40.0,
+      "f_ref_hz": 40.0,
+      "sample_rate_hz": 16384,
+      "observed_odd_rate_per_second": [
+        -1.3094145419692378e-11,
+        -1.4066878212978136,
+        -1.2514083923615086e-12
+      ],
+      "observed_odd_norm_per_second": 1.4066878212978136,
+      "direction_angle_to_v9_l3pn_rad": 9.3509077775671e-12,
+      "stencil_uncertainty_per_second": 1.3343638118194115e-08,
+      "signed_frequency_metrics": [
+        {
+          "sign": 1,
+          "initial_carrier_frequency_hz": 40.00000000675537,
+          "carrier_frequency_relative_error": 1.688842399261148e-10,
+          "epoch_seconds": -0.164919743
+        },
+        {
+          "sign": -1,
+          "initial_carrier_frequency_hz": 39.99999999453321,
+          "carrier_frequency_relative_error": 1.3666967557668386e-10,
+          "epoch_seconds": -0.116066881
+        }
+      ],
+      "native_full_formula_comparison": {
+        "torch": {
+          "rate_per_second": [
+            0.0,
+            -1.4048042896533064,
+            0.0
+          ],
+          "norm_per_second": 1.4048042896533064,
+          "max_abs_difference_per_second": 0.0,
+          "relative_difference": 0.0
+        },
+        "jax": {
+          "rate_per_second": [
+            0.0,
+            -1.4048042896533062,
+            0.0
+          ],
+          "norm_per_second": 1.4048042896533062,
+          "max_abs_difference_per_second": 2.220446049250313e-16,
+          "relative_difference": 1.580608819039341e-16
+        }
+      },
+      "predictions": {
+        "v5_L2PN": {
+          "rate_per_second": [
+            -0.0,
+            -1.2448756266706433,
+            -0.0
+          ],
+          "norm_per_second": 1.2448756266706433
+        },
+        "v5_L3PN": {
+          "rate_per_second": [
+            -0.0,
+            -1.2432595868178562,
+            -0.0
+          ],
+          "norm_per_second": 1.2432595868178562
+        },
+        "v5_v7_L2PN": {
+          "rate_per_second": [
+            -0.0,
+            -1.3903503294933488,
+            -0.0
+          ],
+          "norm_per_second": 1.3903503294933488
+        },
+        "v5_v7_L3PN": {
+          "rate_per_second": [
+            -0.0,
+            -1.3885454411224472,
+            -0.0
+          ],
+          "norm_per_second": 1.3885454411224472
+        },
+        "v5_v7_v9_L2PN": {
+          "rate_per_second": [
+            -0.0,
+            -1.4066303119430335,
+            -0.0
+          ],
+          "norm_per_second": 1.4066303119430335
+        },
+        "v5_v7_v9_L3PN": {
+          "rate_per_second": [
+            -0.0,
+            -1.4048042896533064,
+            -0.0
+          ],
+          "norm_per_second": 1.4048042896533064
+        }
+      },
+      "amplitude_double_half_relative_residual": 4.391487173904807e-11
+    },
+    {
+      "case": "high_mass_ratio",
+      "mass1": 60.0,
+      "mass2": 6.0,
+      "spin1": [
+        0.1,
+        0.05,
+        0.4
+      ],
+      "spin_amplitude_scale": 0.5,
+      "spin2": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "inclination": 1.2,
+      "phic": 0.0,
+      "distance_mpc": 100.0,
+      "f_lower_hz": 20.0,
+      "f_ref_hz": 20.0,
+      "sample_rate_hz": 16384,
+      "observed_odd_rate_per_second": [
+        0.11282658907309358,
+        -0.22565317783065297,
+        7.985483412465812e-12
+      ],
+      "observed_odd_norm_per_second": 0.2522879225546499,
+      "direction_angle_to_v9_l3pn_rad": 5.602207899460367e-10,
+      "stencil_uncertainty_per_second": 1.6287760689010219e-10,
+      "signed_frequency_metrics": [
+        {
+          "sign": 1,
+          "initial_carrier_frequency_hz": 19.999999989042458,
+          "carrier_frequency_relative_error": 5.478770770395158e-10,
+          "epoch_seconds": -2.246190704
+        },
+        {
+          "sign": -1,
+          "initial_carrier_frequency_hz": 20.000000006072362,
+          "carrier_frequency_relative_error": 3.0361801961475976e-10,
+          "epoch_seconds": -1.5153328209999999
+        }
+      ],
+      "native_full_formula_comparison": {
+        "torch": {
+          "rate_per_second": [
+            0.11250776391260461,
+            -0.22501552782520923,
+            0.0
+          ],
+          "norm_per_second": 0.2515750081050816,
+          "max_abs_difference_per_second": 8.326672684688674e-17,
+          "relative_difference": 3.7004880352776313e-16
+        },
+        "jax": {
+          "rate_per_second": [
+            0.11250776391260461,
+            -0.22501552782520923,
+            0.0
+          ],
+          "norm_per_second": 0.2515750081050816,
+          "max_abs_difference_per_second": 8.326672684688674e-17,
+          "relative_difference": 3.7004880352776313e-16
+        }
+      },
+      "predictions": {
+        "v5_L2PN": {
+          "rate_per_second": [
+            0.10082464535009844,
+            -0.20164929070019688,
+            -0.0
+          ],
+          "norm_per_second": 0.2254507608101282
+        },
+        "v5_L3PN": {
+          "rate_per_second": [
+            0.10060617957825412,
+            -0.20121235915650823,
+            -0.0
+          ],
+          "norm_per_second": 0.22496225649352733
+        },
+        "v5_v7_L2PN": {
+          "rate_per_second": [
+            0.11132091236955309,
+            -0.22264182473910618,
+            -0.0
+          ],
+          "norm_per_second": 0.2489211273756179
+        },
+        "v5_v7_L3PN": {
+          "rate_per_second": [
+            0.11107970339769128,
+            -0.22215940679538257,
+            -0.0
+          ],
+          "norm_per_second": 0.24838176771775208
+        },
+        "v5_v7_v9_L2PN": {
+          "rate_per_second": [
+            0.11275207391010852,
+            -0.22550414782021705,
+            -0.0
+          ],
+          "norm_per_second": 0.2521213018670832
+        },
+        "v5_v7_v9_L3PN": {
+          "rate_per_second": [
+            0.11250776391260457,
+            -0.22501552782520914,
+            -0.0
+          ],
+          "norm_per_second": 0.25157500810508154
+        }
+      },
+      "amplitude_double_half_relative_residual": -2.3866956366802583e-07
+    },
+    {
+      "case": "high_mass_ratio",
+      "mass1": 60.0,
+      "mass2": 6.0,
+      "spin1": [
+        0.2,
+        0.1,
+        0.8
+      ],
+      "spin_amplitude_scale": 1.0,
+      "spin2": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "inclination": 1.2,
+      "phic": 0.0,
+      "distance_mpc": 100.0,
+      "f_lower_hz": 20.0,
+      "f_ref_hz": 20.0,
+      "sample_rate_hz": 16384,
+      "observed_odd_rate_per_second": [
+        0.22565312411016236,
+        -0.45130624803795466,
+        -4.7289170724754015e-12
+      ],
+      "observed_odd_norm_per_second": 0.504575724682403,
+      "direction_angle_to_v9_l3pn_rad": 1.619089842567055e-10,
+      "stencil_uncertainty_per_second": 2.0104651379595996e-10,
+      "signed_frequency_metrics": [
+        {
+          "sign": 1,
+          "initial_carrier_frequency_hz": 19.999996946788595,
+          "carrier_frequency_relative_error": 1.52660570185148e-07,
+          "epoch_seconds": -2.625439673
+        },
+        {
+          "sign": -1,
+          "initial_carrier_frequency_hz": 19.999998250964374,
+          "carrier_frequency_relative_error": 8.745178126101649e-08,
+          "epoch_seconds": -1.189078044
+        }
+      ],
+      "native_full_formula_comparison": {
+        "torch": {
+          "rate_per_second": [
+            0.22501552782520923,
+            -0.45003105565041845,
+            0.0
+          ],
+          "norm_per_second": 0.5031500162101632,
+          "max_abs_difference_per_second": 1.6653345369377348e-16,
+          "relative_difference": 3.7004880352776313e-16
+        },
+        "jax": {
+          "rate_per_second": [
+            0.22501552782520923,
+            -0.45003105565041845,
+            0.0
+          ],
+          "norm_per_second": 0.5031500162101632,
+          "max_abs_difference_per_second": 1.6653345369377348e-16,
+          "relative_difference": 3.7004880352776313e-16
+        }
+      },
+      "predictions": {
+        "v5_L2PN": {
+          "rate_per_second": [
+            0.20164929070019688,
+            -0.40329858140039376,
+            -0.0
+          ],
+          "norm_per_second": 0.4509015216202564
+        },
+        "v5_L3PN": {
+          "rate_per_second": [
+            0.20121235915650823,
+            -0.40242471831301646,
+            -0.0
+          ],
+          "norm_per_second": 0.44992451298705466
+        },
+        "v5_v7_L2PN": {
+          "rate_per_second": [
+            0.22264182473910618,
+            -0.44528364947821236,
+            -0.0
+          ],
+          "norm_per_second": 0.4978422547512358
+        },
+        "v5_v7_L3PN": {
+          "rate_per_second": [
+            0.22215940679538257,
+            -0.44431881359076514,
+            -0.0
+          ],
+          "norm_per_second": 0.49676353543550417
+        },
+        "v5_v7_v9_L2PN": {
+          "rate_per_second": [
+            0.22550414782021705,
+            -0.4510082956404341,
+            -0.0
+          ],
+          "norm_per_second": 0.5042426037341664
+        },
+        "v5_v7_v9_L3PN": {
+          "rate_per_second": [
+            0.22501552782520914,
+            -0.4500310556504183,
+            -0.0
+          ],
+          "norm_per_second": 0.5031500162101631
+        }
+      },
+      "amplitude_double_half_relative_residual": -2.3866956366802583e-07
+    },
+    {
+      "case": "high_mass_ratio",
+      "mass1": 60.0,
+      "mass2": 6.0,
+      "spin1": [
+        0.1,
+        0.05,
+        0.4
+      ],
+      "spin_amplitude_scale": 0.5,
+      "spin2": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "inclination": 1.2,
+      "phic": 0.0,
+      "distance_mpc": 100.0,
+      "f_lower_hz": 30.0,
+      "f_ref_hz": 30.0,
+      "sample_rate_hz": 16384,
+      "observed_odd_rate_per_second": [
+        0.2529206732714482,
+        -0.5058413469514268,
+        -1.4612186487179118e-11
+      ],
+      "observed_odd_norm_per_second": 0.565547818715373,
+      "direction_angle_to_v9_l3pn_rad": 3.240818580191893e-10,
+      "stencil_uncertainty_per_second": 4.067863272786795e-10,
+      "signed_frequency_metrics": [
+        {
+          "sign": 1,
+          "initial_carrier_frequency_hz": 30.000000039317992,
+          "carrier_frequency_relative_error": 1.3105998508677885e-09,
+          "epoch_seconds": -0.678897071
+        },
+        {
+          "sign": -1,
+          "initial_carrier_frequency_hz": 29.999999984485314,
+          "carrier_frequency_relative_error": 5.171562067474156e-10,
+          "epoch_seconds": -0.341645356
+        }
+      ],
+      "native_full_formula_comparison": {
+        "torch": {
+          "rate_per_second": [
+            0.2514657076927641,
+            -0.5029314153855282,
+            0.0
+          ],
+          "norm_per_second": 0.5622944164111123,
+          "max_abs_difference_per_second": 3.3306690738754696e-16,
+          "relative_difference": 6.622511483642967e-16
+        },
+        "jax": {
+          "rate_per_second": [
+            0.2514657076927641,
+            -0.5029314153855282,
+            0.0
+          ],
+          "norm_per_second": 0.5622944164111123,
+          "max_abs_difference_per_second": 3.3306690738754696e-16,
+          "relative_difference": 6.622511483642967e-16
+        }
+      },
+      "predictions": {
+        "v5_L2PN": {
+          "rate_per_second": [
+            0.2176490825905207,
+            -0.4352981651810414,
+            -0.0
+          ],
+          "norm_per_second": 0.48667814391287034
+        },
+        "v5_L3PN": {
+          "rate_per_second": [
+            0.2166335948367147,
+            -0.4332671896734294,
+            -0.0
+          ],
+          "norm_per_second": 0.48440744426504156
+        },
+        "v5_v7_L2PN": {
+          "rate_per_second": [
+            0.2473396967326999,
+            -0.4946793934653998,
+            -0.0
+          ],
+          "norm_per_second": 0.5530683754284996
+        },
+        "v5_v7_L3PN": {
+          "rate_per_second": [
+            0.24618568114911624,
+            -0.4923713622982325,
+            -0.0
+          ],
+          "norm_per_second": 0.5504879181365124
+        },
+        "v5_v7_v9_L2PN": {
+          "rate_per_second": [
+            0.2526444738340757,
+            -0.5052889476681514,
+            -0.0
+          ],
+          "norm_per_second": 0.5649302176326602
+        },
+        "v5_v7_v9_L3PN": {
+          "rate_per_second": [
+            0.25146570769276394,
+            -0.5029314153855279,
+            -0.0
+          ],
+          "norm_per_second": 0.562294416411112
+        }
+      },
+      "amplitude_double_half_relative_residual": 9.756475627398231e-10
+    },
+    {
+      "case": "high_mass_ratio",
+      "mass1": 60.0,
+      "mass2": 6.0,
+      "spin1": [
+        0.2,
+        0.1,
+        0.8
+      ],
+      "spin_amplitude_scale": 1.0,
+      "spin2": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "inclination": 1.2,
+      "phic": 0.0,
+      "distance_mpc": 100.0,
+      "f_lower_hz": 30.0,
+      "f_ref_hz": 30.0,
+      "sample_rate_hz": 16384,
+      "observed_odd_rate_per_second": [
+        0.5058413474989856,
+        -1.011682694658616,
+        2.750267249048156e-12
+      ],
+      "observed_odd_norm_per_second": 1.1310956385342965,
+      "direction_angle_to_v9_l3pn_rad": 1.3419656924418603e-10,
+      "stencil_uncertainty_per_second": 1.2085495845669654e-09,
+      "signed_frequency_metrics": [
+        {
+          "sign": 1,
+          "initial_carrier_frequency_hz": 29.999999992093983,
+          "carrier_frequency_relative_error": 2.6353386139987833e-10,
+          "epoch_seconds": -0.880603822
+        },
+        {
+          "sign": -1,
+          "initial_carrier_frequency_hz": 29.999999955445453,
+          "carrier_frequency_relative_error": 1.4851515572900098e-09,
+          "epoch_seconds": -0.221401589
+        }
+      ],
+      "native_full_formula_comparison": {
+        "torch": {
+          "rate_per_second": [
+            0.5029314153855282,
+            -1.0058628307710564,
+            0.0
+          ],
+          "norm_per_second": 1.1245888328222247,
+          "max_abs_difference_per_second": 6.661338147750939e-16,
+          "relative_difference": 6.622511483642967e-16
+        },
+        "jax": {
+          "rate_per_second": [
+            0.5029314153855282,
+            -1.0058628307710564,
+            0.0
+          ],
+          "norm_per_second": 1.1245888328222247,
+          "max_abs_difference_per_second": 6.661338147750939e-16,
+          "relative_difference": 6.622511483642967e-16
+        }
+      },
+      "predictions": {
+        "v5_L2PN": {
+          "rate_per_second": [
+            0.4352981651810414,
+            -0.8705963303620828,
+            -0.0
+          ],
+          "norm_per_second": 0.9733562878257407
+        },
+        "v5_L3PN": {
+          "rate_per_second": [
+            0.4332671896734294,
+            -0.8665343793468588,
+            -0.0
+          ],
+          "norm_per_second": 0.9688148885300831
+        },
+        "v5_v7_L2PN": {
+          "rate_per_second": [
+            0.4946793934653998,
+            -0.9893587869307996,
+            -0.0
+          ],
+          "norm_per_second": 1.1061367508569993
+        },
+        "v5_v7_L3PN": {
+          "rate_per_second": [
+            0.4923713622982325,
+            -0.984742724596465,
+            -0.0
+          ],
+          "norm_per_second": 1.1009758362730249
+        },
+        "v5_v7_v9_L2PN": {
+          "rate_per_second": [
+            0.5052889476681514,
+            -1.0105778953363027,
+            -0.0
+          ],
+          "norm_per_second": 1.1298604352653203
+        },
+        "v5_v7_v9_L3PN": {
+          "rate_per_second": [
+            0.5029314153855279,
+            -1.0058628307710558,
+            -0.0
+          ],
+          "norm_per_second": 1.124588832822224
+        }
+      },
+      "amplitude_double_half_relative_residual": 9.756475627398231e-10
+    },
+    {
+      "case": "high_mass_ratio",
+      "mass1": 60.0,
+      "mass2": 6.0,
+      "spin1": [
+        0.1,
+        0.05,
+        0.4
+      ],
+      "spin_amplitude_scale": 0.5,
+      "spin2": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "inclination": 1.2,
+      "phic": 0.0,
+      "distance_mpc": 100.0,
+      "f_lower_hz": 40.0,
+      "f_ref_hz": 40.0,
+      "sample_rate_hz": 16384,
+      "observed_odd_rate_per_second": [
+        0.4481047004045421,
+        -0.8962094007265805,
+        1.1250427318867485e-12
+      ],
+      "observed_odd_norm_per_second": 1.00199257106794,
+      "direction_angle_to_v9_l3pn_rad": 3.6840525654891795e-11,
+      "stencil_uncertainty_per_second": 2.0890175717102853e-09,
+      "signed_frequency_metrics": [
+        {
+          "sign": 1,
+          "initial_carrier_frequency_hz": 40.00000005444374,
+          "carrier_frequency_relative_error": 1.3610934601615554e-09,
+          "epoch_seconds": -0.276316665
+        },
+        {
+          "sign": -1,
+          "initial_carrier_frequency_hz": 40.0000000009972,
+          "carrier_frequency_relative_error": 2.4929835973352965e-11,
+          "epoch_seconds": -0.103542764
+        }
+      ],
+      "native_full_formula_comparison": {
+        "torch": {
+          "rate_per_second": [
+            0.44384984846171865,
+            -0.8876996969234373,
+            0.0
+          ],
+          "norm_per_second": 0.9924784329633833,
+          "max_abs_difference_per_second": 5.551115123125783e-16,
+          "relative_difference": 6.25337052875502e-16
+        },
+        "jax": {
+          "rate_per_second": [
+            0.44384984846171865,
+            -0.8876996969234373,
+            0.0
+          ],
+          "norm_per_second": 0.9924784329633833,
+          "max_abs_difference_per_second": 5.551115123125783e-16,
+          "relative_difference": 6.25337052875502e-16
+        }
+      },
+      "predictions": {
+        "v5_L2PN": {
+          "rate_per_second": [
+            0.3725248317402559,
+            -0.7450496634805118,
+            -0.0
+          ],
+          "norm_per_second": 0.8329908470778835
+        },
+        "v5_L3PN": {
+          "rate_per_second": [
+            0.3695597820729475,
+            -0.739119564145895,
+            -0.0
+          ],
+          "norm_per_second": 0.8263607944651187
+        },
+        "v5_v7_L2PN": {
+          "rate_per_second": [
+            0.4340864543669394,
+            -0.8681729087338788,
+            -0.0
+          ],
+          "norm_per_second": 0.9706468200763368
+        },
+        "v5_v7_L3PN": {
+          "rate_per_second": [
+            0.4306314151656836,
+            -0.8612628303313672,
+            -0.0
+          ],
+          "norm_per_second": 0.9629211175574024
+        },
+        "v5_v7_v9_L2PN": {
+          "rate_per_second": [
+            0.4474109417120022,
+            -0.8948218834240044,
+            -0.0
+          ],
+          "norm_per_second": 1.000441279545233
+        },
+        "v5_v7_v9_L3PN": {
+          "rate_per_second": [
+            0.4438498484617184,
+            -0.8876996969234368,
+            -0.0
+          ],
+          "norm_per_second": 0.9924784329633828
+        }
+      },
+      "amplitude_double_half_relative_residual": 1.5391382834906153e-08
+    },
+    {
+      "case": "high_mass_ratio",
+      "mass1": 60.0,
+      "mass2": 6.0,
+      "spin1": [
+        0.2,
+        0.1,
+        0.8
+      ],
+      "spin_amplitude_scale": 1.0,
+      "spin2": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "inclination": 1.2,
+      "phic": 0.0,
+      "distance_mpc": 100.0,
+      "f_lower_hz": 40.0,
+      "f_ref_hz": 40.0,
+      "sample_rate_hz": 16384,
+      "observed_odd_rate_per_second": [
+        0.8962094144625792,
+        -1.7924188291111685,
+        1.024908876765651e-12
+      ],
+      "observed_odd_norm_per_second": 2.0039851729799825,
+      "direction_angle_to_v9_l3pn_rad": 4.1513539747652206e-11,
+      "stencil_uncertainty_per_second": 1.1437163099277629e-08,
+      "signed_frequency_metrics": [
+        {
+          "sign": 1,
+          "initial_carrier_frequency_hz": 40.000000003996426,
+          "carrier_frequency_relative_error": 9.991074634285724e-11,
+          "epoch_seconds": -0.402374736
+        },
+        {
+          "sign": -1,
+          "initial_carrier_frequency_hz": 39.999999999493525,
+          "carrier_frequency_relative_error": 1.2661871551244985e-11,
+          "epoch_seconds": -0.060737514
+        }
+      ],
+      "native_full_formula_comparison": {
+        "torch": {
+          "rate_per_second": [
+            0.8876996969234372,
+            -1.7753993938468744,
+            0.0
+          ],
+          "norm_per_second": 1.9849568659267665,
+          "max_abs_difference_per_second": 8.881784197001252e-16,
+          "relative_difference": 5.002696423004016e-16
+        },
+        "jax": {
+          "rate_per_second": [
+            0.8876996969234372,
+            -1.7753993938468744,
+            0.0
+          ],
+          "norm_per_second": 1.9849568659267665,
+          "max_abs_difference_per_second": 8.881784197001252e-16,
+          "relative_difference": 5.002696423004016e-16
+        }
+      },
+      "predictions": {
+        "v5_L2PN": {
+          "rate_per_second": [
+            0.7450496634805118,
+            -1.4900993269610237,
+            -0.0
+          ],
+          "norm_per_second": 1.665981694155767
+        },
+        "v5_L3PN": {
+          "rate_per_second": [
+            0.739119564145895,
+            -1.47823912829179,
+            -0.0
+          ],
+          "norm_per_second": 1.6527215889302374
+        },
+        "v5_v7_L2PN": {
+          "rate_per_second": [
+            0.8681729087338788,
+            -1.7363458174677575,
+            -0.0
+          ],
+          "norm_per_second": 1.9412936401526737
+        },
+        "v5_v7_L3PN": {
+          "rate_per_second": [
+            0.8612628303313672,
+            -1.7225256606627344,
+            -0.0
+          ],
+          "norm_per_second": 1.9258422351148048
+        },
+        "v5_v7_v9_L2PN": {
+          "rate_per_second": [
+            0.8948218834240044,
+            -1.7896437668480087,
+            -0.0
+          ],
+          "norm_per_second": 2.000882559090466
+        },
+        "v5_v7_v9_L3PN": {
+          "rate_per_second": [
+            0.8876996969234368,
+            -1.7753993938468735,
+            -0.0
+          ],
+          "norm_per_second": 1.9849568659267656
+        }
+      },
+      "amplitude_double_half_relative_residual": 1.5391382834906153e-08
     }
   ]
 }

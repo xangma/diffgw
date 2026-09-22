@@ -274,6 +274,20 @@ For the separate sensitivity experiment, use
 The zero-coupling option exists only in the diagnostic script, not the waveform
 API. It leaves the reference settings unchanged.
 
+A [source-frame trajectory receipt](validation/phenomt_source_frame_20260922.json)
+compares the orbital axis and transported tangent after removing the constant
+reference rotation, using [PhenomTP Eq. (8)](https://arxiv.org/html/2105.05872).
+It uses all inspiral samples at 2048 Hz and also checks elapsed time from each
+model's reference frequency. The reference-time offsets are `-0.34 ns` for the
+baseline and `1.12 microseconds` for the 10:1 case. Accounting for these offsets
+leaves maximum orbital-axis differences of `0.0728` and `0.389` radians,
+respectively, with both frontends agreeing. Suppressing the native quadrupole
+term for diagnosis reduces those maxima to `0.0352` and `0.0635` radians.
+Thus constant frame choices and reference-time offsets do not explain the
+trajectory drift, and the zero-coupling experiment still leaves a measurable
+evolution difference. Reproduce with the sensitivity command above; the receipt
+records both clock conventions and initial-triad checks.
+
 Two further diagnostics isolate the rotation and the initial spin response:
 
 - The [rotation receipt](validation/phenomt_rotation_20260922.json) supplies
@@ -286,8 +300,20 @@ Two further diagnostics isolate the rotation and the initial spin response:
   waveform agreement. The inverse J-to-L0 frame check, for the three cases
   with `f_ref=f_lower=20 Hz`, has a separate higher-mode residual reaching
   `1.3e-9` in the full projected strain. Per-degree checks localize this
-  residual to ℓ=5. Its origin remains unresolved; the full-mode inverse
-  results are measurements, not a passing accuracy gate.
+  residual to ℓ=5. A [reference-sample receipt](validation/phenomt_rotation_reference_20260922.json)
+  checks the baseline and 10:1 cases at 512, 2048, and 8192 Hz and distances
+  of 50, 100, and 200 Mpc. At the reference sample, Eq. (8) requires the
+  co-precessing and L0 modes to coincide. The binary L0 output instead contains
+  ℓ=5, m=±2 components with amplitudes `1.44e-32` and `5.98e-31` at 100 Mpc,
+  respectively, while those co-precessing components are zero. Inverting the
+  binary J modes gives amplitudes below `2e-40` in these components. Native
+  rotation matrices agree with an independent 80-digit factorial evaluation
+  to relative error below `3e-16`; applying either matrix reproduces the binary
+  J modes below `3e-16`. The residual is independent of sampling rate and its
+  absolute size scales inversely with distance. These checks identify an
+  inconsistency among the tested public frame outputs, without identifying
+  its internal cause. Full-mode inverse results remain measurements, not a
+  passing accuracy gate, and no native correction is introduced.
 - The [initial-rate receipt](validation/phenomt_initial_rates_20260922.json)
   reverses a single tilted spin at fixed masses and reference frequency. The
   companion spin is set to zero, and each run starts at `f_lower=f_ref`.
@@ -323,9 +349,27 @@ the inferred rates. The literature audit found no instruction in
 black-hole quadrupole. Native production therefore retains it. This is a
 documented reference difference, not a correction fitted to binary output.
 
+The initial-rate receipt also separates the **spin-odd response** across three
+mass ratios, reference frequencies of 20, 30, and 40 Hz, and two spin amplitudes.
+An independent evaluation of [Sturani Eqs. (3), (5), (22), and (25)](https://dcc.ligo.org/public/0122/T1500554/023/dLdS.pdf)
+agrees with both native frontends below `9e-16` relative. No transcription error
+was found in the `v^9` spin-orbit coefficient. Binary and native rate directions
+agree within `1.8e-8` radians, but their magnitudes differ by `0.024%`–`0.959%`.
+Doubling the spin amplitude preserves the binary odd-rate scaling within
+`2.8e-7` relative; the receipt retains frequency anchoring and derivative-stencil
+sensitivity alongside these measurements. Using the published nonspin 2PN
+angular momentum instead of 3PN reduces the rate discrepancy, but leaves up
+to `0.155%`. Thus changing that truncation alone does not explain the reference
+behavior. These are diagnostic evaluations of published terms, with no fitted
+coefficients or production changes.
+
 Reproduce these checks with
 `python scripts/diagnose_phenomt_rotation.py --output rotation.json` and
 `python scripts/diagnose_phenomt_initial_rates.py --output initial-rates.json`.
+Add `--reference-check` to the rotation command for the per-mode reference
+controls, or `--odd-rate-sweep` to the initial-rate command for the published-order
+sweep. The latter uses 16384 Hz and the selected frontends independently of the
+main diagnostic's sampling-rate selection. Each receipt records its exact command.
 All reference calls use public binaries; no reference implementation source
 is read or incorporated.
 

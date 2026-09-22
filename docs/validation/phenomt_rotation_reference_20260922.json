@@ -1,0 +1,4119 @@
+{
+  "generated_utc": "2026-09-22T07:34:27.692947+00:00",
+  "reproduction": "python scripts/diagnose_phenomt_rotation.py --backend torch --case baseline high_mass_ratio --only22 0 --sample-rate 2048 --samples 257 --output receipt.json --reference-check --reference-backend torch --reference-case baseline high_mass_ratio --reference-rate 512 2048 8192 --reference-distance 50.0 100.0 200.0",
+  "versions": {
+    "python": "3.13.7",
+    "numpy": "2.5.3",
+    "lalsimulation": "6.2.1",
+    "mpmath": "1.3.0",
+    "torch": "2.14.0"
+  },
+  "dtype": "float64",
+  "device": "cpu",
+  "precession_version": 300,
+  "final_spin_mod": 4,
+  "parameters": {
+    "baseline": {
+      "mass1": 40.0,
+      "mass2": 15.0,
+      "spin1": [
+        0.2,
+        0.1,
+        0.3
+      ],
+      "spin2": [
+        0.0,
+        0.1,
+        -0.2
+      ],
+      "distance_mpc": 100.0,
+      "inclination": 0.8,
+      "phic": 0.3,
+      "f_lower_hz": 20.0,
+      "f_ref_hz": 20.0
+    },
+    "high_mass_ratio": {
+      "mass1": 60.0,
+      "mass2": 6.0,
+      "spin1": [
+        0.2,
+        0.1,
+        0.8
+      ],
+      "spin2": [
+        0.1,
+        0.0,
+        0.1
+      ],
+      "distance_mpc": 100.0,
+      "inclination": 1.2,
+      "phic": 0.1,
+      "f_lower_hz": 20.0,
+      "f_ref_hz": 20.0
+    }
+  },
+  "scope": "Isolated project_modes rotation/convention checks against public binary J-frame and L0 modes; does not validate native spin evolution, carrier, or physical waveform accuracy.",
+  "conventions": {
+    "angles": "Public alpha, acos(cosbeta), epsilon series are passed as alpha,beta,gamma.",
+    "projection": "J-frame modes are projected at phi=0 with exp(2 i zeta), matching project_modes.",
+    "modes": "only22=1 checks the complete l=2 set; only22=0 checks all available l=2..5 signed modes.",
+    "relative_l2": "norm(project_modes output - direct J-frame projection)/norm(direct projection).",
+    "inverse_l0": "For f_ref=f_min=20 Hz, Eq. 8 uses constants (-gamma_ref,-beta_ref,-alpha_ref) on all signed J modes and compares with public L0Modes.",
+    "inverse_l0_status": "Full-mode inverse values are measured diagnostics; only22 inverse values are suitable for the strict convention check.",
+    "reference_check": "At the initial f_ref=f_min sample, Eq. 8 implies coprec=L0. Per-ell relative metrics divide by the corresponding mode-vector norm; absolute metrics use strain units. Reference rows override the listed sample rate and distance. The factorial Wigner oracle uses 80 decimal digits, then rounds to complex128 before matrix-vector multiplication."
+  },
+  "results": [
+    {
+      "case": "baseline",
+      "backend": "torch",
+      "only22": 0,
+      "sample_rate_hz": 2048,
+      "modes": [
+        [
+          2,
+          -2
+        ],
+        [
+          2,
+          -1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          -3
+        ],
+        [
+          3,
+          -2
+        ],
+        [
+          3,
+          -1
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          3,
+          2
+        ],
+        [
+          3,
+          3
+        ],
+        [
+          4,
+          -4
+        ],
+        [
+          4,
+          -3
+        ],
+        [
+          4,
+          -2
+        ],
+        [
+          4,
+          -1
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          1
+        ],
+        [
+          4,
+          2
+        ],
+        [
+          4,
+          3
+        ],
+        [
+          4,
+          4
+        ],
+        [
+          5,
+          -5
+        ],
+        [
+          5,
+          -4
+        ],
+        [
+          5,
+          -3
+        ],
+        [
+          5,
+          -2
+        ],
+        [
+          5,
+          -1
+        ],
+        [
+          5,
+          0
+        ],
+        [
+          5,
+          1
+        ],
+        [
+          5,
+          2
+        ],
+        [
+          5,
+          3
+        ],
+        [
+          5,
+          4
+        ],
+        [
+          5,
+          5
+        ]
+      ],
+      "views": [
+        {
+          "theta_jn": 0.3,
+          "zeta": 0.2,
+          "relative_l2": 6.387219514179623e-16,
+          "max_absolute": 3.803664322502939e-36,
+          "reference_norm": 2.5298474394309068e-20,
+          "input_mode_norm": 6.014317582269544e-20,
+          "samples": 257
+        },
+        {
+          "theta_jn": 1.1,
+          "zeta": -0.4,
+          "relative_l2": 6.818108503237445e-16,
+          "max_absolute": 4.817175275977972e-36,
+          "reference_norm": 1.4615773189370824e-20,
+          "input_mode_norm": 6.014317582269544e-20,
+          "samples": 257
+        },
+        {
+          "theta_jn": 2.0,
+          "zeta": 1.0,
+          "relative_l2": 6.266690321561551e-16,
+          "max_absolute": 3.4680071765448715e-36,
+          "reference_norm": 1.3811664119568575e-20,
+          "input_mode_norm": 6.014317582269544e-20,
+          "samples": 257
+        }
+      ],
+      "inverse_l0": {
+        "status": "measured",
+        "reason": "Full signed-mode inverse residual is reported for diagnosis; no full-mode accuracy gate is claimed.",
+        "views": [
+          {
+            "theta_l0": 0.3,
+            "zeta": 0.2,
+            "relative_l2": 7.040561884408283e-11,
+            "max_absolute": 8.296041157874905e-31,
+            "reference_norm": 2.5934415597416512e-20,
+            "input_j_mode_norm": 6.014317582269536e-20,
+            "per_ell": [
+              {
+                "ell": 2,
+                "projected_relative_l2": 1.8026790185095202e-16,
+                "max_absolute": 8.411152881937987e-37,
+                "reference_norm": 2.5914219146053566e-20,
+                "input_j_mode_norm": 5.972937117995809e-20
+              },
+              {
+                "ell": 3,
+                "projected_relative_l2": 3.5224451820698834e-16,
+                "max_absolute": 8.737489915704332e-38,
+                "reference_norm": 9.3783610476186e-22,
+                "input_j_mode_norm": 6.737429534490838e-21
+              },
+              {
+                "ell": 4,
+                "projected_relative_l2": 8.058491087077777e-16,
+                "max_absolute": 3.009178902981709e-38,
+                "reference_norm": 8.971275045232096e-23,
+                "input_j_mode_norm": 1.962870793000515e-21
+              },
+              {
+                "ell": 5,
+                "projected_relative_l2": 2.231410512484712e-07,
+                "max_absolute": 8.296080178840757e-31,
+                "reference_norm": 8.18285088978799e-24,
+                "input_j_mode_norm": 5.983293442608767e-22
+              }
+            ],
+            "samples": 257
+          },
+          {
+            "theta_l0": 1.1,
+            "zeta": -0.4,
+            "relative_l2": 9.094768180217095e-11,
+            "max_absolute": 6.723126531672993e-31,
+            "reference_norm": 1.6270091951505218e-20,
+            "input_j_mode_norm": 6.014317582269536e-20,
+            "per_ell": [
+              {
+                "ell": 2,
+                "projected_relative_l2": 1.5531932660099047e-16,
+                "max_absolute": 5.3196801709626755e-37,
+                "reference_norm": 1.6193235330635287e-20,
+                "input_j_mode_norm": 5.972937117995809e-20
+              },
+              {
+                "ell": 3,
+                "projected_relative_l2": 2.7300205248722605e-16,
+                "max_absolute": 1.8844608008273444e-37,
+                "reference_norm": 2.1484016306601667e-21,
+                "input_j_mode_norm": 6.737429534490838e-21
+              },
+              {
+                "ell": 4,
+                "projected_relative_l2": 2.2573864445215513e-16,
+                "max_absolute": 9.991701981989444e-38,
+                "reference_norm": 6.334435582052851e-22,
+                "input_j_mode_norm": 1.962870793000515e-21
+              },
+              {
+                "ell": 5,
+                "projected_relative_l2": 8.500887989876648e-09,
+                "max_absolute": 6.723107268031765e-31,
+                "reference_norm": 1.740671881780847e-22,
+                "input_j_mode_norm": 5.983293442608767e-22
+              }
+            ],
+            "samples": 257
+          },
+          {
+            "theta_l0": 2.0,
+            "zeta": 1.0,
+            "relative_l2": 1.0359135208804736e-10,
+            "max_absolute": 5.811231777170905e-31,
+            "reference_norm": 1.2346870608476853e-20,
+            "input_j_mode_norm": 6.014317582269536e-20,
+            "per_ell": [
+              {
+                "ell": 2,
+                "projected_relative_l2": 3.1611447822303643e-16,
+                "max_absolute": 7.754699793211446e-37,
+                "reference_norm": 1.2340685507607298e-20,
+                "input_j_mode_norm": 5.972937117995809e-20
+              },
+              {
+                "ell": 3,
+                "projected_relative_l2": 5.320151224998886e-16,
+                "max_absolute": 2.741700404922865e-37,
+                "reference_norm": 1.7899313917300267e-21,
+                "input_j_mode_norm": 6.737429534490838e-21
+              },
+              {
+                "ell": 4,
+                "projected_relative_l2": 6.317080394443852e-16,
+                "max_absolute": 2.1289108148801267e-37,
+                "reference_norm": 6.251106196344789e-22,
+                "input_j_mode_norm": 1.962870793000515e-21
+              },
+              {
+                "ell": 5,
+                "projected_relative_l2": 6.772584042288993e-09,
+                "max_absolute": 5.811244227587714e-31,
+                "reference_norm": 1.8885387231613556e-22,
+                "input_j_mode_norm": 5.983293442608767e-22
+              }
+            ],
+            "samples": 257
+          }
+        ]
+      }
+    },
+    {
+      "case": "high_mass_ratio",
+      "backend": "torch",
+      "only22": 0,
+      "sample_rate_hz": 2048,
+      "modes": [
+        [
+          2,
+          -2
+        ],
+        [
+          2,
+          -1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          -3
+        ],
+        [
+          3,
+          -2
+        ],
+        [
+          3,
+          -1
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          3,
+          2
+        ],
+        [
+          3,
+          3
+        ],
+        [
+          4,
+          -4
+        ],
+        [
+          4,
+          -3
+        ],
+        [
+          4,
+          -2
+        ],
+        [
+          4,
+          -1
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          1
+        ],
+        [
+          4,
+          2
+        ],
+        [
+          4,
+          3
+        ],
+        [
+          4,
+          4
+        ],
+        [
+          5,
+          -5
+        ],
+        [
+          5,
+          -4
+        ],
+        [
+          5,
+          -3
+        ],
+        [
+          5,
+          -2
+        ],
+        [
+          5,
+          -1
+        ],
+        [
+          5,
+          0
+        ],
+        [
+          5,
+          1
+        ],
+        [
+          5,
+          2
+        ],
+        [
+          5,
+          3
+        ],
+        [
+          5,
+          4
+        ],
+        [
+          5,
+          5
+        ]
+      ],
+      "views": [
+        {
+          "theta_jn": 0.3,
+          "zeta": 0.2,
+          "relative_l2": 5.874562281376403e-16,
+          "max_absolute": 2.071006217084368e-36,
+          "reference_norm": 1.405833357326126e-20,
+          "input_mode_norm": 3.4069248673063466e-20,
+          "samples": 257
+        },
+        {
+          "theta_jn": 1.1,
+          "zeta": -0.4,
+          "relative_l2": 7.128128529753002e-16,
+          "max_absolute": 1.698579168271515e-36,
+          "reference_norm": 8.591821625350258e-21,
+          "input_mode_norm": 3.4069248673063466e-20,
+          "samples": 257
+        },
+        {
+          "theta_jn": 2.0,
+          "zeta": 1.0,
+          "relative_l2": 7.4678003158313e-16,
+          "max_absolute": 1.8064407284917394e-36,
+          "reference_norm": 8.217822084479762e-21,
+          "input_mode_norm": 3.4069248673063466e-20,
+          "samples": 257
+        }
+      ],
+      "inverse_l0": {
+        "status": "measured",
+        "reason": "Full signed-mode inverse residual is reported for diagnosis; no full-mode accuracy gate is claimed.",
+        "views": [
+          {
+            "theta_l0": 0.3,
+            "zeta": 0.2,
+            "relative_l2": 8.069744912424537e-10,
+            "max_absolute": 3.686579563094992e-30,
+            "reference_norm": 1.4447049869538976e-20,
+            "input_j_mode_norm": 3.4069248673063466e-20,
+            "per_ell": [
+              {
+                "ell": 2,
+                "projected_relative_l2": 1.9272431195724264e-16,
+                "max_absolute": 7.754699793211446e-37,
+                "reference_norm": 1.4408613245797977e-20,
+                "input_j_mode_norm": 3.326654917008428e-20
+              },
+              {
+                "ell": 3,
+                "projected_relative_l2": 5.360206438061141e-16,
+                "max_absolute": 1.2758988097162341e-37,
+                "reference_norm": 1.0144436847080924e-21,
+                "input_j_mode_norm": 6.968807105666899e-21
+              },
+              {
+                "ell": 4,
+                "projected_relative_l2": 6.437558182100099e-16,
+                "max_absolute": 2.387228350066198e-38,
+                "reference_norm": 1.1766100978661892e-22,
+                "input_j_mode_norm": 2.197605869671317e-21
+              },
+              {
+                "ell": 5,
+                "projected_relative_l2": 7.372911849913149e-07,
+                "max_absolute": 3.6865814997014564e-30,
+                "reference_norm": 1.5812479068511443e-23,
+                "input_j_mode_norm": 8.103501878782097e-22
+              }
+            ],
+            "samples": 257
+          },
+          {
+            "theta_l0": 1.1,
+            "zeta": -0.4,
+            "relative_l2": 9.553833517300732e-10,
+            "max_absolute": 3.0162265799057096e-30,
+            "reference_norm": 9.983927277849255e-21,
+            "input_j_mode_norm": 3.4069248673063466e-20,
+            "per_ell": [
+              {
+                "ell": 2,
+                "projected_relative_l2": 1.6892415525300234e-16,
+                "max_absolute": 4.205576440968993e-37,
+                "reference_norm": 9.556541606055583e-21,
+                "input_j_mode_norm": 3.326654917008428e-20
+              },
+              {
+                "ell": 3,
+                "projected_relative_l2": 2.1639020537556863e-16,
+                "max_absolute": 1.3299200427406689e-37,
+                "reference_norm": 2.242412404344837e-21,
+                "input_j_mode_norm": 6.968807105666899e-21
+              },
+              {
+                "ell": 4,
+                "projected_relative_l2": 2.1627835117681122e-16,
+                "max_absolute": 5.256970551211242e-38,
+                "reference_norm": 6.98608528993099e-22,
+                "input_j_mode_norm": 2.197605869671317e-21
+              },
+              {
+                "ell": 5,
+                "projected_relative_l2": 3.839193488564692e-08,
+                "max_absolute": 3.0162263304393718e-30,
+                "reference_norm": 2.4845005185024545e-22,
+                "input_j_mode_norm": 8.103501878782097e-22
+              }
+            ],
+            "samples": 257
+          },
+          {
+            "theta_l0": 2.0,
+            "zeta": 1.0,
+            "relative_l2": 1.2367540959306128e-09,
+            "max_absolute": 2.7449922203718986e-30,
+            "reference_norm": 7.018962980809311e-21,
+            "input_j_mode_norm": 3.4069248673063466e-20,
+            "per_ell": [
+              {
+                "ell": 2,
+                "projected_relative_l2": 3.2895332362786845e-16,
+                "max_absolute": 5.48340080984573e-37,
+                "reference_norm": 6.5949114239855664e-21,
+                "input_j_mode_norm": 3.326654917008428e-20
+              },
+              {
+                "ell": 3,
+                "projected_relative_l2": 4.577511499139212e-16,
+                "max_absolute": 2.628485275605621e-37,
+                "reference_norm": 1.8731165363378798e-21,
+                "input_j_mode_norm": 6.968807105666899e-21
+              },
+              {
+                "ell": 4,
+                "projected_relative_l2": 6.015331802307362e-16,
+                "max_absolute": 1.6042375850908568e-37,
+                "reference_norm": 6.746338011502005e-22,
+                "input_j_mode_norm": 2.197605869671317e-21
+              },
+              {
+                "ell": 5,
+                "projected_relative_l2": 3.21518348419946e-08,
+                "max_absolute": 2.7449925293687176e-30,
+                "reference_norm": 2.699917979098083e-22,
+                "input_j_mode_norm": 8.103501878782097e-22
+              }
+            ],
+            "samples": 257
+          }
+        ]
+      }
+    }
+  ],
+  "reference_results": [
+    {
+      "backend": "torch",
+      "case": "baseline",
+      "sample_rate_hz": 512,
+      "distance_mpc": 50.0,
+      "reference_angles": {
+        "alpha": -2.6232882899862147,
+        "beta": 0.1217976388304497,
+        "gamma": 2.6232882899862147
+      },
+      "rows": [
+        {
+          "ell": 2,
+          "initial_sample": 0,
+          "coprec_l0": {
+            "relative_l2": 3.2797299466210117e-17,
+            "max_absolute": 1.5679092305554883e-37,
+            "max_over_m_absolute": 1.5679092305554883e-37,
+            "max_over_m_m": 1,
+            "pm2_max_absolute": 4.316268319425587e-39
+          },
+          "inverse_l0": {
+            "relative_l2": 1.3422693318696552e-16,
+            "max_absolute": 7.60762861160185e-37,
+            "max_over_m_absolute": 7.60762861160185e-37,
+            "max_over_m_m": -2,
+            "pm2_max_absolute": 7.60762861160185e-37
+          },
+          "pm2_amplitudes": {
+            "coprec": {
+              "-2": 4.09518836623587e-21,
+              "2": 4.09518836623587e-21
+            },
+            "inverse_predicted": {
+              "-2": 4.095188366235871e-21,
+              "2": 4.09518836623587e-21
+            },
+            "l0_public": {
+              "-2": 4.09518836623587e-21,
+              "2": 4.09518836623587e-21
+            }
+          },
+          "native_matrix_unitarity_error": 7.050858231721621e-16,
+          "native_forward_relative_l2": 2.6221510344424096e-16,
+          "native_roundtrip_relative_l2": 2.95745192485576e-16,
+          "high_precision": {
+            "status": "measured",
+            "native_matrix_relative_l2": 1.7099884775664954e-16,
+            "mpmath_forward_relative_l2": 1.837885069100293e-16,
+            "precision_decimal_digits": 80,
+            "applied_matrix_dtype": "complex128 (after 80-digit evaluation)"
+          },
+          "coprec_norm": 5.7946757296741294e-21,
+          "j_mode_norm": 5.7946757296741294e-21,
+          "l0_mode_norm": 5.7946757296741294e-21
+        },
+        {
+          "ell": 3,
+          "initial_sample": 0,
+          "coprec_l0": {
+            "relative_l2": 3.961176605750581e-16,
+            "max_absolute": 1.4106697484909914e-37,
+            "max_over_m_absolute": 1.4106697484909914e-37,
+            "max_over_m_m": -3,
+            "pm2_max_absolute": 3.3242750824790095e-39
+          },
+          "inverse_l0": {
+            "relative_l2": 1.257792337881596e-16,
+            "max_absolute": 4.711152002068361e-38,
+            "max_over_m_absolute": 4.711152002068361e-38,
+            "max_over_m_m": 3,
+            "pm2_max_absolute": 2.9516219914287303e-38
+          },
+          "pm2_amplitudes": {
+            "coprec": {
+              "-2": 0.0,
+              "2": 0.0
+            },
+            "inverse_predicted": {
+              "-2": 2.6611385186001584e-38,
+              "2": 2.6591728704275244e-38
+            },
+            "l0_public": {
+              "-2": 3.3242750824790095e-39,
+              "2": 2.938735877055719e-39
+            }
+          },
+          "native_matrix_unitarity_error": 6.803879321178177e-16,
+          "native_forward_relative_l2": 1.4851020667876723e-16,
+          "native_roundtrip_relative_l2": 2.0894707614776376e-16,
+          "high_precision": {
+            "status": "measured",
+            "native_matrix_relative_l2": 1.3977342662580964e-16,
+            "mpmath_forward_relative_l2": 1.3290829181707889e-16,
+            "precision_decimal_digits": 80,
+            "applied_matrix_dtype": "complex128 (after 80-digit evaluation)"
+          },
+          "coprec_norm": 5.042089591787817e-22,
+          "j_mode_norm": 5.042089591787818e-22,
+          "l0_mode_norm": 5.042089591787819e-22
+        },
+        {
+          "ell": 4,
+          "initial_sample": 0,
+          "coprec_l0": {
+            "relative_l2": 1.121239513358968e-16,
+            "max_absolute": 1.1754943508222875e-38,
+            "max_over_m_absolute": 1.1754943508222875e-38,
+            "max_over_m_m": 4,
+            "pm2_max_absolute": 7.572949016808052e-40
+          },
+          "inverse_l0": {
+            "relative_l2": 1.28820838856608e-16,
+            "max_absolute": 1.1756378350279878e-38,
+            "max_over_m_absolute": 1.1756378350279878e-38,
+            "max_over_m_m": -4,
+            "pm2_max_absolute": 1.6393604713566243e-39
+          },
+          "pm2_amplitudes": {
+            "coprec": {
+              "-2": 0.0,
+              "2": 0.0
+            },
+            "inverse_predicted": {
+              "-2": 9.195033083519188e-40,
+              "2": 1.0930359217725517e-39
+            },
+            "l0_public": {
+              "-2": 7.269783826134587e-40,
+              "2": 7.572949016808052e-40
+            }
+          },
+          "native_matrix_unitarity_error": 6.0199130468088605e-16,
+          "native_forward_relative_l2": 8.724903651048286e-17,
+          "native_roundtrip_relative_l2": 1.5592729803247216e-16,
+          "high_precision": {
+            "status": "measured",
+            "native_matrix_relative_l2": 1.5744935355121363e-16,
+            "mpmath_forward_relative_l2": 1.5595668650892627e-16,
+            "precision_decimal_digits": 80,
+            "applied_matrix_dtype": "complex128 (after 80-digit evaluation)"
+          },
+          "coprec_norm": 1.082464358241993e-22,
+          "j_mode_norm": 1.082464358241993e-22,
+          "l0_mode_norm": 1.0824643582419929e-22
+        },
+        {
+          "ell": 5,
+          "initial_sample": 0,
+          "coprec_l0": {
+            "relative_l2": 2.1157981400407184e-09,
+            "max_absolute": 2.883338611824592e-32,
+            "max_over_m_absolute": 2.883338611824592e-32,
+            "max_over_m_m": 2,
+            "pm2_max_absolute": 2.883338611824592e-32
+          },
+          "inverse_l0": {
+            "relative_l2": 2.1157981419134305e-09,
+            "max_absolute": 2.883338614290704e-32,
+            "max_over_m_absolute": 2.883338614290704e-32,
+            "max_over_m_m": 2,
+            "pm2_max_absolute": 2.883338614290704e-32
+          },
+          "pm2_amplitudes": {
+            "coprec": {
+              "-2": 0.0,
+              "2": 0.0
+            },
+            "inverse_predicted": {
+              "-2": 4.431851160830928e-41,
+              "2": 4.5241547127747797e-41
+            },
+            "l0_public": {
+              "-2": 2.883338611570362e-32,
+              "2": 2.883338611824592e-32
+            }
+          },
+          "native_matrix_unitarity_error": 6.916172675921932e-16,
+          "native_forward_relative_l2": 2.2257660536267755e-16,
+          "native_roundtrip_relative_l2": 3.4186903307738687e-16,
+          "high_precision": {
+            "status": "measured",
+            "native_matrix_relative_l2": 1.7381709363900292e-16,
+            "mpmath_forward_relative_l2": 2.1745526783539376e-16,
+            "precision_decimal_digits": 80,
+            "applied_matrix_dtype": "complex128 (after 80-digit evaluation)"
+          },
+          "coprec_norm": 1.9272427233999556e-23,
+          "j_mode_norm": 1.9272427233999562e-23,
+          "l0_mode_norm": 1.9272427233999565e-23
+        }
+      ]
+    },
+    {
+      "backend": "torch",
+      "case": "baseline",
+      "sample_rate_hz": 512,
+      "distance_mpc": 100.0,
+      "reference_angles": {
+        "alpha": -2.6232882899862147,
+        "beta": 0.1217976388304497,
+        "gamma": 2.6232882899862147
+      },
+      "rows": [
+        {
+          "ell": 2,
+          "initial_sample": 0,
+          "coprec_l0": {
+            "relative_l2": 3.2797299466210117e-17,
+            "max_absolute": 7.839546152777441e-38,
+            "max_over_m_absolute": 7.839546152777441e-38,
+            "max_over_m_m": 1,
+            "pm2_max_absolute": 2.1581341597127935e-39
+          },
+          "inverse_l0": {
+            "relative_l2": 1.3422693318696552e-16,
+            "max_absolute": 3.803814305800925e-37,
+            "max_over_m_absolute": 3.803814305800925e-37,
+            "max_over_m_m": -2,
+            "pm2_max_absolute": 3.803814305800925e-37
+          },
+          "pm2_amplitudes": {
+            "coprec": {
+              "-2": 2.047594183117935e-21,
+              "2": 2.047594183117935e-21
+            },
+            "inverse_predicted": {
+              "-2": 2.0475941831179356e-21,
+              "2": 2.047594183117935e-21
+            },
+            "l0_public": {
+              "-2": 2.047594183117935e-21,
+              "2": 2.047594183117935e-21
+            }
+          },
+          "native_matrix_unitarity_error": 7.050858231721621e-16,
+          "native_forward_relative_l2": 2.6221510344424096e-16,
+          "native_roundtrip_relative_l2": 2.95745192485576e-16,
+          "high_precision": {
+            "status": "measured",
+            "native_matrix_relative_l2": 1.7099884775664954e-16,
+            "mpmath_forward_relative_l2": 1.837885069100293e-16,
+            "precision_decimal_digits": 80,
+            "applied_matrix_dtype": "complex128 (after 80-digit evaluation)"
+          },
+          "coprec_norm": 2.8973378648370647e-21,
+          "j_mode_norm": 2.8973378648370647e-21,
+          "l0_mode_norm": 2.8973378648370647e-21
+        },
+        {
+          "ell": 3,
+          "initial_sample": 0,
+          "coprec_l0": {
+            "relative_l2": 3.961176605750581e-16,
+            "max_absolute": 7.053348742454957e-38,
+            "max_over_m_absolute": 7.053348742454957e-38,
+            "max_over_m_m": -3,
+            "pm2_max_absolute": 1.6621375412395048e-39
+          },
+          "inverse_l0": {
+            "relative_l2": 1.257792337881596e-16,
+            "max_absolute": 2.3555760010341805e-38,
+            "max_over_m_absolute": 2.3555760010341805e-38,
+            "max_over_m_m": 3,
+            "pm2_max_absolute": 1.4758109957143651e-38
+          },
+          "pm2_amplitudes": {
+            "coprec": {
+              "-2": 0.0,
+              "2": 0.0
+            },
+            "inverse_predicted": {
+              "-2": 1.3305692593000792e-38,
+              "2": 1.3295864352137622e-38
+            },
+            "l0_public": {
+              "-2": 1.6621375412395048e-39,
+              "2": 1.4693679385278594e-39
+            }
+          },
+          "native_matrix_unitarity_error": 6.803879321178177e-16,
+          "native_forward_relative_l2": 1.4851020667876723e-16,
+          "native_roundtrip_relative_l2": 2.0894707614776376e-16,
+          "high_precision": {
+            "status": "measured",
+            "native_matrix_relative_l2": 1.3977342662580964e-16,
+            "mpmath_forward_relative_l2": 1.3290829181707889e-16,
+            "precision_decimal_digits": 80,
+            "applied_matrix_dtype": "complex128 (after 80-digit evaluation)"
+          },
+          "coprec_norm": 2.5210447958939086e-22,
+          "j_mode_norm": 2.521044795893909e-22,
+          "l0_mode_norm": 2.5210447958939096e-22
+        },
+        {
+          "ell": 4,
+          "initial_sample": 0,
+          "coprec_l0": {
+            "relative_l2": 1.121239513358968e-16,
+            "max_absolute": 5.877471754111438e-39,
+            "max_over_m_absolute": 5.877471754111438e-39,
+            "max_over_m_m": 4,
+            "pm2_max_absolute": 3.786474508404026e-40
+          },
+          "inverse_l0": {
+            "relative_l2": 1.28820838856608e-16,
+            "max_absolute": 5.878189175139939e-39,
+            "max_over_m_absolute": 5.878189175139939e-39,
+            "max_over_m_m": -4,
+            "pm2_max_absolute": 8.196802356783122e-40
+          },
+          "pm2_amplitudes": {
+            "coprec": {
+              "-2": 0.0,
+              "2": 0.0
+            },
+            "inverse_predicted": {
+              "-2": 4.597516541759594e-40,
+              "2": 5.4651796088627585e-40
+            },
+            "l0_public": {
+              "-2": 3.6348919130672936e-40,
+              "2": 3.786474508404026e-40
+            }
+          },
+          "native_matrix_unitarity_error": 6.0199130468088605e-16,
+          "native_forward_relative_l2": 8.724903651048286e-17,
+          "native_roundtrip_relative_l2": 1.5592729803247216e-16,
+          "high_precision": {
+            "status": "measured",
+            "native_matrix_relative_l2": 1.5744935355121363e-16,
+            "mpmath_forward_relative_l2": 1.5595668650892627e-16,
+            "precision_decimal_digits": 80,
+            "applied_matrix_dtype": "complex128 (after 80-digit evaluation)"
+          },
+          "coprec_norm": 5.412321791209966e-23,
+          "j_mode_norm": 5.412321791209966e-23,
+          "l0_mode_norm": 5.412321791209964e-23
+        },
+        {
+          "ell": 5,
+          "initial_sample": 0,
+          "coprec_l0": {
+            "relative_l2": 2.1157981400407184e-09,
+            "max_absolute": 1.441669305912296e-32,
+            "max_over_m_absolute": 1.441669305912296e-32,
+            "max_over_m_m": 2,
+            "pm2_max_absolute": 1.441669305912296e-32
+          },
+          "inverse_l0": {
+            "relative_l2": 2.1157981419134305e-09,
+            "max_absolute": 1.441669307145352e-32,
+            "max_over_m_absolute": 1.441669307145352e-32,
+            "max_over_m_m": 2,
+            "pm2_max_absolute": 1.441669307145352e-32
+          },
+          "pm2_amplitudes": {
+            "coprec": {
+              "-2": 0.0,
+              "2": 0.0
+            },
+            "inverse_predicted": {
+              "-2": 2.215925580415464e-41,
+              "2": 2.2620773563873899e-41
+            },
+            "l0_public": {
+              "-2": 1.441669305785181e-32,
+              "2": 1.441669305912296e-32
+            }
+          },
+          "native_matrix_unitarity_error": 6.916172675921932e-16,
+          "native_forward_relative_l2": 2.2257660536267755e-16,
+          "native_roundtrip_relative_l2": 3.4186903307738687e-16,
+          "high_precision": {
+            "status": "measured",
+            "native_matrix_relative_l2": 1.7381709363900292e-16,
+            "mpmath_forward_relative_l2": 2.1745526783539376e-16,
+            "precision_decimal_digits": 80,
+            "applied_matrix_dtype": "complex128 (after 80-digit evaluation)"
+          },
+          "coprec_norm": 9.636213616999778e-24,
+          "j_mode_norm": 9.636213616999781e-24,
+          "l0_mode_norm": 9.636213616999782e-24
+        }
+      ]
+    },
+    {
+      "backend": "torch",
+      "case": "baseline",
+      "sample_rate_hz": 512,
+      "distance_mpc": 200.0,
+      "reference_angles": {
+        "alpha": -2.6232882899862147,
+        "beta": 0.1217976388304497,
+        "gamma": 2.6232882899862147
+      },
+      "rows": [
+        {
+          "ell": 2,
+          "initial_sample": 0,
+          "coprec_l0": {
+            "relative_l2": 3.2797299466210117e-17,
+            "max_absolute": 3.9197730763887207e-38,
+            "max_over_m_absolute": 3.9197730763887207e-38,
+            "max_over_m_m": 1,
+            "pm2_max_absolute": 1.0790670798563967e-39
+          },
+          "inverse_l0": {
+            "relative_l2": 1.3422693318696552e-16,
+            "max_absolute": 1.9019071529004626e-37,
+            "max_over_m_absolute": 1.9019071529004626e-37,
+            "max_over_m_m": -2,
+            "pm2_max_absolute": 1.9019071529004626e-37
+          },
+          "pm2_amplitudes": {
+            "coprec": {
+              "-2": 1.0237970915589676e-21,
+              "2": 1.0237970915589676e-21
+            },
+            "inverse_predicted": {
+              "-2": 1.0237970915589678e-21,
+              "2": 1.0237970915589676e-21
+            },
+            "l0_public": {
+              "-2": 1.0237970915589676e-21,
+              "2": 1.0237970915589676e-21
+            }
+          },
+          "native_matrix_unitarity_error": 7.050858231721621e-16,
+          "native_forward_relative_l2": 2.6221510344424096e-16,
+          "native_roundtrip_relative_l2": 2.95745192485576e-16,
+          "high_precision": {
+            "status": "measured",
+            "native_matrix_relative_l2": 1.7099884775664954e-16,
+            "mpmath_forward_relative_l2": 1.837885069100293e-16,
+            "precision_decimal_digits": 80,
+            "applied_matrix_dtype": "complex128 (after 80-digit evaluation)"
+          },
+          "coprec_norm": 1.4486689324185324e-21,
+          "j_mode_norm": 1.4486689324185324e-21,
+          "l0_mode_norm": 1.4486689324185324e-21
+        },
+        {
+          "ell": 3,
+          "initial_sample": 0,
+          "coprec_l0": {
+            "relative_l2": 3.961176605750581e-16,
+            "max_absolute": 3.5266743712274785e-38,
+            "max_over_m_absolute": 3.5266743712274785e-38,
+            "max_over_m_m": -3,
+            "pm2_max_absolute": 8.310687706197524e-40
+          },
+          "inverse_l0": {
+            "relative_l2": 1.257792337881596e-16,
+            "max_absolute": 1.1777880005170902e-38,
+            "max_over_m_absolute": 1.1777880005170902e-38,
+            "max_over_m_m": 3,
+            "pm2_max_absolute": 7.379054978571826e-39
+          },
+          "pm2_amplitudes": {
+            "coprec": {
+              "-2": 0.0,
+              "2": 0.0
+            },
+            "inverse_predicted": {
+              "-2": 6.652846296500396e-39,
+              "2": 6.647932176068811e-39
+            },
+            "l0_public": {
+              "-2": 8.310687706197524e-40,
+              "2": 7.346839692639297e-40
+            }
+          },
+          "native_matrix_unitarity_error": 6.803879321178177e-16,
+          "native_forward_relative_l2": 1.4851020667876723e-16,
+          "native_roundtrip_relative_l2": 2.0894707614776376e-16,
+          "high_precision": {
+            "status": "measured",
+            "native_matrix_relative_l2": 1.3977342662580964e-16,
+            "mpmath_forward_relative_l2": 1.3290829181707889e-16,
+            "precision_decimal_digits": 80,
+            "applied_matrix_dtype": "complex128 (after 80-digit evaluation)"
+          },
+          "coprec_norm": 1.2605223979469543e-22,
+          "j_mode_norm": 1.2605223979469546e-22,
+          "l0_mode_norm": 1.2605223979469548e-22
+        },
+        {
+          "ell": 4,
+          "initial_sample": 0,
+          "coprec_l0": {
+            "relative_l2": 1.121239513358968e-16,
+            "max_absolute": 2.938735877055719e-39,
+            "max_over_m_absolute": 2.938735877055719e-39,
+            "max_over_m_m": 4,
+            "pm2_max_absolute": 1.893237254202013e-40
+          },
+          "inverse_l0": {
+            "relative_l2": 1.28820838856608e-16,
+            "max_absolute": 2.9390945875699695e-39,
+            "max_over_m_absolute": 2.9390945875699695e-39,
+            "max_over_m_m": -4,
+            "pm2_max_absolute": 4.098401178391561e-40
+          },
+          "pm2_amplitudes": {
+            "coprec": {
+              "-2": 0.0,
+              "2": 0.0
+            },
+            "inverse_predicted": {
+              "-2": 2.298758270879797e-40,
+              "2": 2.7325898044313792e-40
+            },
+            "l0_public": {
+              "-2": 1.8174459565336468e-40,
+              "2": 1.893237254202013e-40
+            }
+          },
+          "native_matrix_unitarity_error": 6.0199130468088605e-16,
+          "native_forward_relative_l2": 8.724903651048286e-17,
+          "native_roundtrip_relative_l2": 1.5592729803247216e-16,
+          "high_precision": {
+            "status": "measured",
+            "native_matrix_relative_l2": 1.5744935355121363e-16,
+            "mpmath_forward_relative_l2": 1.5595668650892627e-16,
+            "precision_decimal_digits": 80,
+            "applied_matrix_dtype": "complex128 (after 80-digit evaluation)"
+          },
+          "coprec_norm": 2.706160895604983e-23,
+          "j_mode_norm": 2.706160895604983e-23,
+          "l0_mode_norm": 2.706160895604982e-23
+        },
+        {
+          "ell": 5,
+          "initial_sample": 0,
+          "coprec_l0": {
+            "relative_l2": 2.1157981400407184e-09,
+            "max_absolute": 7.20834652956148e-33,
+            "max_over_m_absolute": 7.20834652956148e-33,
+            "max_over_m_m": 2,
+            "pm2_max_absolute": 7.20834652956148e-33
+          },
+          "inverse_l0": {
+            "relative_l2": 2.1157981419134305e-09,
+            "max_absolute": 7.20834653572676e-33,
+            "max_over_m_absolute": 7.20834653572676e-33,
+            "max_over_m_m": 2,
+            "pm2_max_absolute": 7.20834653572676e-33
+          },
+          "pm2_amplitudes": {
+            "coprec": {
+              "-2": 0.0,
+              "2": 0.0
+            },
+            "inverse_predicted": {
+              "-2": 1.107962790207732e-41,
+              "2": 1.1310386781936949e-41
+            },
+            "l0_public": {
+              "-2": 7.208346528925904e-33,
+              "2": 7.20834652956148e-33
+            }
+          },
+          "native_matrix_unitarity_error": 6.916172675921932e-16,
+          "native_forward_relative_l2": 2.2257660536267755e-16,
+          "native_roundtrip_relative_l2": 3.4186903307738687e-16,
+          "high_precision": {
+            "status": "measured",
+            "native_matrix_relative_l2": 1.7381709363900292e-16,
+            "mpmath_forward_relative_l2": 2.1745526783539376e-16,
+            "precision_decimal_digits": 80,
+            "applied_matrix_dtype": "complex128 (after 80-digit evaluation)"
+          },
+          "coprec_norm": 4.818106808499889e-24,
+          "j_mode_norm": 4.8181068084998904e-24,
+          "l0_mode_norm": 4.818106808499891e-24
+        }
+      ]
+    },
+    {
+      "backend": "torch",
+      "case": "baseline",
+      "sample_rate_hz": 2048,
+      "distance_mpc": 50.0,
+      "reference_angles": {
+        "alpha": -2.6232882899862147,
+        "beta": 0.1217976388304497,
+        "gamma": 2.6232882899862147
+      },
+      "rows": [
+        {
+          "ell": 2,
+          "initial_sample": 0,
+          "coprec_l0": {
+            "relative_l2": 3.2797299466210117e-17,
+            "max_absolute": 1.5679092305554883e-37,
+            "max_over_m_absolute": 1.5679092305554883e-37,
+            "max_over_m_m": 1,
+            "pm2_max_absolute": 4.316268319425587e-39
+          },
+          "inverse_l0": {
+            "relative_l2": 1.3422693318696552e-16,
+            "max_absolute": 7.60762861160185e-37,
+            "max_over_m_absolute": 7.60762861160185e-37,
+            "max_over_m_m": -2,
+            "pm2_max_absolute": 7.60762861160185e-37
+          },
+          "pm2_amplitudes": {
+            "coprec": {
+              "-2": 4.09518836623587e-21,
+              "2": 4.09518836623587e-21
+            },
+            "inverse_predicted": {
+              "-2": 4.095188366235871e-21,
+              "2": 4.09518836623587e-21
+            },
+            "l0_public": {
+              "-2": 4.09518836623587e-21,
+              "2": 4.09518836623587e-21
+            }
+          },
+          "native_matrix_unitarity_error": 7.050858231721621e-16,
+          "native_forward_relative_l2": 2.6221510344424096e-16,
+          "native_roundtrip_relative_l2": 2.95745192485576e-16,
+          "high_precision": {
+            "status": "measured",
+            "native_matrix_relative_l2": 1.7099884775664954e-16,
+            "mpmath_forward_relative_l2": 1.837885069100293e-16,
+            "precision_decimal_digits": 80,
+            "applied_matrix_dtype": "complex128 (after 80-digit evaluation)"
+          },
+          "coprec_norm": 5.7946757296741294e-21,
+          "j_mode_norm": 5.7946757296741294e-21,
+          "l0_mode_norm": 5.7946757296741294e-21
+        },
+        {
+          "ell": 3,
+          "initial_sample": 0,
+          "coprec_l0": {
+            "relative_l2": 3.961176605750581e-16,
+            "max_absolute": 1.4106697484909914e-37,
+            "max_over_m_absolute": 1.4106697484909914e-37,
+            "max_over_m_m": -3,
+            "pm2_max_absolute": 3.3242750824790095e-39
+          },
+          "inverse_l0": {
+            "relative_l2": 1.257792337881596e-16,
+            "max_absolute": 4.711152002068361e-38,
+            "max_over_m_absolute": 4.711152002068361e-38,
+            "max_over_m_m": 3,
+            "pm2_max_absolute": 2.9516219914287303e-38
+          },
+          "pm2_amplitudes": {
+            "coprec": {
+              "-2": 0.0,
+              "2": 0.0
+            },
+            "inverse_predicted": {
+              "-2": 2.6611385186001584e-38,
+              "2": 2.6591728704275244e-38
+            },
+            "l0_public": {
+              "-2": 3.3242750824790095e-39,
+              "2": 2.938735877055719e-39
+            }
+          },
+          "native_matrix_unitarity_error": 6.803879321178177e-16,
+          "native_forward_relative_l2": 1.4851020667876723e-16,
+          "native_roundtrip_relative_l2": 2.0894707614776376e-16,
+          "high_precision": {
+            "status": "measured",
+            "native_matrix_relative_l2": 1.3977342662580964e-16,
+            "mpmath_forward_relative_l2": 1.3290829181707889e-16,
+            "precision_decimal_digits": 80,
+            "applied_matrix_dtype": "complex128 (after 80-digit evaluation)"
+          },
+          "coprec_norm": 5.042089591787817e-22,
+          "j_mode_norm": 5.042089591787818e-22,
+          "l0_mode_norm": 5.042089591787819e-22
+        },
+        {
+          "ell": 4,
+          "initial_sample": 0,
+          "coprec_l0": {
+            "relative_l2": 1.121239513358968e-16,
+            "max_absolute": 1.1754943508222875e-38,
+            "max_over_m_absolute": 1.1754943508222875e-38,
+            "max_over_m_m": 4,
+            "pm2_max_absolute": 7.572949016808052e-40
+          },
+          "inverse_l0": {
+            "relative_l2": 1.28820838856608e-16,
+            "max_absolute": 1.1756378350279878e-38,
+            "max_over_m_absolute": 1.1756378350279878e-38,
+            "max_over_m_m": -4,
+            "pm2_max_absolute": 1.6393604713566243e-39
+          },
+          "pm2_amplitudes": {
+            "coprec": {
+              "-2": 0.0,
+              "2": 0.0
+            },
+            "inverse_predicted": {
+              "-2": 9.195033083519188e-40,
+              "2": 1.0930359217725517e-39
+            },
+            "l0_public": {
+              "-2": 7.269783826134587e-40,
+              "2": 7.572949016808052e-40
+            }
+          },
+          "native_matrix_unitarity_error": 6.0199130468088605e-16,
+          "native_forward_relative_l2": 8.724903651048286e-17,
+          "native_roundtrip_relative_l2": 1.5592729803247216e-16,
+          "high_precision": {
+            "status": "measured",
+            "native_matrix_relative_l2": 1.5744935355121363e-16,
+            "mpmath_forward_relative_l2": 1.5595668650892627e-16,
+            "precision_decimal_digits": 80,
+            "applied_matrix_dtype": "complex128 (after 80-digit evaluation)"
+          },
+          "coprec_norm": 1.082464358241993e-22,
+          "j_mode_norm": 1.082464358241993e-22,
+          "l0_mode_norm": 1.0824643582419929e-22
+        },
+        {
+          "ell": 5,
+          "initial_sample": 0,
+          "coprec_l0": {
+            "relative_l2": 2.1157981400407184e-09,
+            "max_absolute": 2.883338611824592e-32,
+            "max_over_m_absolute": 2.883338611824592e-32,
+            "max_over_m_m": 2,
+            "pm2_max_absolute": 2.883338611824592e-32
+          },
+          "inverse_l0": {
+            "relative_l2": 2.1157981419134305e-09,
+            "max_absolute": 2.883338614290704e-32,
+            "max_over_m_absolute": 2.883338614290704e-32,
+            "max_over_m_m": 2,
+            "pm2_max_absolute": 2.883338614290704e-32
+          },
+          "pm2_amplitudes": {
+            "coprec": {
+              "-2": 0.0,
+              "2": 0.0
+            },
+            "inverse_predicted": {
+              "-2": 4.431851160830928e-41,
+              "2": 4.5241547127747797e-41
+            },
+            "l0_public": {
+              "-2": 2.883338611570362e-32,
+              "2": 2.883338611824592e-32
+            }
+          },
+          "native_matrix_unitarity_error": 6.916172675921932e-16,
+          "native_forward_relative_l2": 2.2257660536267755e-16,
+          "native_roundtrip_relative_l2": 3.4186903307738687e-16,
+          "high_precision": {
+            "status": "measured",
+            "native_matrix_relative_l2": 1.7381709363900292e-16,
+            "mpmath_forward_relative_l2": 2.1745526783539376e-16,
+            "precision_decimal_digits": 80,
+            "applied_matrix_dtype": "complex128 (after 80-digit evaluation)"
+          },
+          "coprec_norm": 1.9272427233999556e-23,
+          "j_mode_norm": 1.9272427233999562e-23,
+          "l0_mode_norm": 1.9272427233999565e-23
+        }
+      ]
+    },
+    {
+      "backend": "torch",
+      "case": "baseline",
+      "sample_rate_hz": 2048,
+      "distance_mpc": 100.0,
+      "reference_angles": {
+        "alpha": -2.6232882899862147,
+        "beta": 0.1217976388304497,
+        "gamma": 2.6232882899862147
+      },
+      "rows": [
+        {
+          "ell": 2,
+          "initial_sample": 0,
+          "coprec_l0": {
+            "relative_l2": 3.2797299466210117e-17,
+            "max_absolute": 7.839546152777441e-38,
+            "max_over_m_absolute": 7.839546152777441e-38,
+            "max_over_m_m": 1,
+            "pm2_max_absolute": 2.1581341597127935e-39
+          },
+          "inverse_l0": {
+            "relative_l2": 1.3422693318696552e-16,
+            "max_absolute": 3.803814305800925e-37,
+            "max_over_m_absolute": 3.803814305800925e-37,
+            "max_over_m_m": -2,
+            "pm2_max_absolute": 3.803814305800925e-37
+          },
+          "pm2_amplitudes": {
+            "coprec": {
+              "-2": 2.047594183117935e-21,
+              "2": 2.047594183117935e-21
+            },
+            "inverse_predicted": {
+              "-2": 2.0475941831179356e-21,
+              "2": 2.047594183117935e-21
+            },
+            "l0_public": {
+              "-2": 2.047594183117935e-21,
+              "2": 2.047594183117935e-21
+            }
+          },
+          "native_matrix_unitarity_error": 7.050858231721621e-16,
+          "native_forward_relative_l2": 2.6221510344424096e-16,
+          "native_roundtrip_relative_l2": 2.95745192485576e-16,
+          "high_precision": {
+            "status": "measured",
+            "native_matrix_relative_l2": 1.7099884775664954e-16,
+            "mpmath_forward_relative_l2": 1.837885069100293e-16,
+            "precision_decimal_digits": 80,
+            "applied_matrix_dtype": "complex128 (after 80-digit evaluation)"
+          },
+          "coprec_norm": 2.8973378648370647e-21,
+          "j_mode_norm": 2.8973378648370647e-21,
+          "l0_mode_norm": 2.8973378648370647e-21
+        },
+        {
+          "ell": 3,
+          "initial_sample": 0,
+          "coprec_l0": {
+            "relative_l2": 3.961176605750581e-16,
+            "max_absolute": 7.053348742454957e-38,
+            "max_over_m_absolute": 7.053348742454957e-38,
+            "max_over_m_m": -3,
+            "pm2_max_absolute": 1.6621375412395048e-39
+          },
+          "inverse_l0": {
+            "relative_l2": 1.257792337881596e-16,
+            "max_absolute": 2.3555760010341805e-38,
+            "max_over_m_absolute": 2.3555760010341805e-38,
+            "max_over_m_m": 3,
+            "pm2_max_absolute": 1.4758109957143651e-38
+          },
+          "pm2_amplitudes": {
+            "coprec": {
+              "-2": 0.0,
+              "2": 0.0
+            },
+            "inverse_predicted": {
+              "-2": 1.3305692593000792e-38,
+              "2": 1.3295864352137622e-38
+            },
+            "l0_public": {
+              "-2": 1.6621375412395048e-39,
+              "2": 1.4693679385278594e-39
+            }
+          },
+          "native_matrix_unitarity_error": 6.803879321178177e-16,
+          "native_forward_relative_l2": 1.4851020667876723e-16,
+          "native_roundtrip_relative_l2": 2.0894707614776376e-16,
+          "high_precision": {
+            "status": "measured",
+            "native_matrix_relative_l2": 1.3977342662580964e-16,
+            "mpmath_forward_relative_l2": 1.3290829181707889e-16,
+            "precision_decimal_digits": 80,
+            "applied_matrix_dtype": "complex128 (after 80-digit evaluation)"
+          },
+          "coprec_norm": 2.5210447958939086e-22,
+          "j_mode_norm": 2.521044795893909e-22,
+          "l0_mode_norm": 2.5210447958939096e-22
+        },
+        {
+          "ell": 4,
+          "initial_sample": 0,
+          "coprec_l0": {
+            "relative_l2": 1.121239513358968e-16,
+            "max_absolute": 5.877471754111438e-39,
+            "max_over_m_absolute": 5.877471754111438e-39,
+            "max_over_m_m": 4,
+            "pm2_max_absolute": 3.786474508404026e-40
+          },
+          "inverse_l0": {
+            "relative_l2": 1.28820838856608e-16,
+            "max_absolute": 5.878189175139939e-39,
+            "max_over_m_absolute": 5.878189175139939e-39,
+            "max_over_m_m": -4,
+            "pm2_max_absolute": 8.196802356783122e-40
+          },
+          "pm2_amplitudes": {
+            "coprec": {
+              "-2": 0.0,
+              "2": 0.0
+            },
+            "inverse_predicted": {
+              "-2": 4.597516541759594e-40,
+              "2": 5.4651796088627585e-40
+            },
+            "l0_public": {
+              "-2": 3.6348919130672936e-40,
+              "2": 3.786474508404026e-40
+            }
+          },
+          "native_matrix_unitarity_error": 6.0199130468088605e-16,
+          "native_forward_relative_l2": 8.724903651048286e-17,
+          "native_roundtrip_relative_l2": 1.5592729803247216e-16,
+          "high_precision": {
+            "status": "measured",
+            "native_matrix_relative_l2": 1.5744935355121363e-16,
+            "mpmath_forward_relative_l2": 1.5595668650892627e-16,
+            "precision_decimal_digits": 80,
+            "applied_matrix_dtype": "complex128 (after 80-digit evaluation)"
+          },
+          "coprec_norm": 5.412321791209966e-23,
+          "j_mode_norm": 5.412321791209966e-23,
+          "l0_mode_norm": 5.412321791209964e-23
+        },
+        {
+          "ell": 5,
+          "initial_sample": 0,
+          "coprec_l0": {
+            "relative_l2": 2.1157981400407184e-09,
+            "max_absolute": 1.441669305912296e-32,
+            "max_over_m_absolute": 1.441669305912296e-32,
+            "max_over_m_m": 2,
+            "pm2_max_absolute": 1.441669305912296e-32
+          },
+          "inverse_l0": {
+            "relative_l2": 2.1157981419134305e-09,
+            "max_absolute": 1.441669307145352e-32,
+            "max_over_m_absolute": 1.441669307145352e-32,
+            "max_over_m_m": 2,
+            "pm2_max_absolute": 1.441669307145352e-32
+          },
+          "pm2_amplitudes": {
+            "coprec": {
+              "-2": 0.0,
+              "2": 0.0
+            },
+            "inverse_predicted": {
+              "-2": 2.215925580415464e-41,
+              "2": 2.2620773563873899e-41
+            },
+            "l0_public": {
+              "-2": 1.441669305785181e-32,
+              "2": 1.441669305912296e-32
+            }
+          },
+          "native_matrix_unitarity_error": 6.916172675921932e-16,
+          "native_forward_relative_l2": 2.2257660536267755e-16,
+          "native_roundtrip_relative_l2": 3.4186903307738687e-16,
+          "high_precision": {
+            "status": "measured",
+            "native_matrix_relative_l2": 1.7381709363900292e-16,
+            "mpmath_forward_relative_l2": 2.1745526783539376e-16,
+            "precision_decimal_digits": 80,
+            "applied_matrix_dtype": "complex128 (after 80-digit evaluation)"
+          },
+          "coprec_norm": 9.636213616999778e-24,
+          "j_mode_norm": 9.636213616999781e-24,
+          "l0_mode_norm": 9.636213616999782e-24
+        }
+      ]
+    },
+    {
+      "backend": "torch",
+      "case": "baseline",
+      "sample_rate_hz": 2048,
+      "distance_mpc": 200.0,
+      "reference_angles": {
+        "alpha": -2.6232882899862147,
+        "beta": 0.1217976388304497,
+        "gamma": 2.6232882899862147
+      },
+      "rows": [
+        {
+          "ell": 2,
+          "initial_sample": 0,
+          "coprec_l0": {
+            "relative_l2": 3.2797299466210117e-17,
+            "max_absolute": 3.9197730763887207e-38,
+            "max_over_m_absolute": 3.9197730763887207e-38,
+            "max_over_m_m": 1,
+            "pm2_max_absolute": 1.0790670798563967e-39
+          },
+          "inverse_l0": {
+            "relative_l2": 1.3422693318696552e-16,
+            "max_absolute": 1.9019071529004626e-37,
+            "max_over_m_absolute": 1.9019071529004626e-37,
+            "max_over_m_m": -2,
+            "pm2_max_absolute": 1.9019071529004626e-37
+          },
+          "pm2_amplitudes": {
+            "coprec": {
+              "-2": 1.0237970915589676e-21,
+              "2": 1.0237970915589676e-21
+            },
+            "inverse_predicted": {
+              "-2": 1.0237970915589678e-21,
+              "2": 1.0237970915589676e-21
+            },
+            "l0_public": {
+              "-2": 1.0237970915589676e-21,
+              "2": 1.0237970915589676e-21
+            }
+          },
+          "native_matrix_unitarity_error": 7.050858231721621e-16,
+          "native_forward_relative_l2": 2.6221510344424096e-16,
+          "native_roundtrip_relative_l2": 2.95745192485576e-16,
+          "high_precision": {
+            "status": "measured",
+            "native_matrix_relative_l2": 1.7099884775664954e-16,
+            "mpmath_forward_relative_l2": 1.837885069100293e-16,
+            "precision_decimal_digits": 80,
+            "applied_matrix_dtype": "complex128 (after 80-digit evaluation)"
+          },
+          "coprec_norm": 1.4486689324185324e-21,
+          "j_mode_norm": 1.4486689324185324e-21,
+          "l0_mode_norm": 1.4486689324185324e-21
+        },
+        {
+          "ell": 3,
+          "initial_sample": 0,
+          "coprec_l0": {
+            "relative_l2": 3.961176605750581e-16,
+            "max_absolute": 3.5266743712274785e-38,
+            "max_over_m_absolute": 3.5266743712274785e-38,
+            "max_over_m_m": -3,
+            "pm2_max_absolute": 8.310687706197524e-40
+          },
+          "inverse_l0": {
+            "relative_l2": 1.257792337881596e-16,
+            "max_absolute": 1.1777880005170902e-38,
+            "max_over_m_absolute": 1.1777880005170902e-38,
+            "max_over_m_m": 3,
+            "pm2_max_absolute": 7.379054978571826e-39
+          },
+          "pm2_amplitudes": {
+            "coprec": {
+              "-2": 0.0,
+              "2": 0.0
+            },
+            "inverse_predicted": {
+              "-2": 6.652846296500396e-39,
+              "2": 6.647932176068811e-39
+            },
+            "l0_public": {
+              "-2": 8.310687706197524e-40,
+              "2": 7.346839692639297e-40
+            }
+          },
+          "native_matrix_unitarity_error": 6.803879321178177e-16,
+          "native_forward_relative_l2": 1.4851020667876723e-16,
+          "native_roundtrip_relative_l2": 2.0894707614776376e-16,
+          "high_precision": {
+            "status": "measured",
+            "native_matrix_relative_l2": 1.3977342662580964e-16,
+            "mpmath_forward_relative_l2": 1.3290829181707889e-16,
+            "precision_decimal_digits": 80,
+            "applied_matrix_dtype": "complex128 (after 80-digit evaluation)"
+          },
+          "coprec_norm": 1.2605223979469543e-22,
+          "j_mode_norm": 1.2605223979469546e-22,
+          "l0_mode_norm": 1.2605223979469548e-22
+        },
+        {
+          "ell": 4,
+          "initial_sample": 0,
+          "coprec_l0": {
+            "relative_l2": 1.121239513358968e-16,
+            "max_absolute": 2.938735877055719e-39,
+            "max_over_m_absolute": 2.938735877055719e-39,
+            "max_over_m_m": 4,
+            "pm2_max_absolute": 1.893237254202013e-40
+          },
+          "inverse_l0": {
+            "relative_l2": 1.28820838856608e-16,
+            "max_absolute": 2.9390945875699695e-39,
+            "max_over_m_absolute": 2.9390945875699695e-39,
+            "max_over_m_m": -4,
+            "pm2_max_absolute": 4.098401178391561e-40
+          },
+          "pm2_amplitudes": {
+            "coprec": {
+              "-2": 0.0,
+              "2": 0.0
+            },
+            "inverse_predicted": {
+              "-2": 2.298758270879797e-40,
+              "2": 2.7325898044313792e-40
+            },
+            "l0_public": {
+              "-2": 1.8174459565336468e-40,
+              "2": 1.893237254202013e-40
+            }
+          },
+          "native_matrix_unitarity_error": 6.0199130468088605e-16,
+          "native_forward_relative_l2": 8.724903651048286e-17,
+          "native_roundtrip_relative_l2": 1.5592729803247216e-16,
+          "high_precision": {
+            "status": "measured",
+            "native_matrix_relative_l2": 1.5744935355121363e-16,
+            "mpmath_forward_relative_l2": 1.5595668650892627e-16,
+            "precision_decimal_digits": 80,
+            "applied_matrix_dtype": "complex128 (after 80-digit evaluation)"
+          },
+          "coprec_norm": 2.706160895604983e-23,
+          "j_mode_norm": 2.706160895604983e-23,
+          "l0_mode_norm": 2.706160895604982e-23
+        },
+        {
+          "ell": 5,
+          "initial_sample": 0,
+          "coprec_l0": {
+            "relative_l2": 2.1157981400407184e-09,
+            "max_absolute": 7.20834652956148e-33,
+            "max_over_m_absolute": 7.20834652956148e-33,
+            "max_over_m_m": 2,
+            "pm2_max_absolute": 7.20834652956148e-33
+          },
+          "inverse_l0": {
+            "relative_l2": 2.1157981419134305e-09,
+            "max_absolute": 7.20834653572676e-33,
+            "max_over_m_absolute": 7.20834653572676e-33,
+            "max_over_m_m": 2,
+            "pm2_max_absolute": 7.20834653572676e-33
+          },
+          "pm2_amplitudes": {
+            "coprec": {
+              "-2": 0.0,
+              "2": 0.0
+            },
+            "inverse_predicted": {
+              "-2": 1.107962790207732e-41,
+              "2": 1.1310386781936949e-41
+            },
+            "l0_public": {
+              "-2": 7.208346528925904e-33,
+              "2": 7.20834652956148e-33
+            }
+          },
+          "native_matrix_unitarity_error": 6.916172675921932e-16,
+          "native_forward_relative_l2": 2.2257660536267755e-16,
+          "native_roundtrip_relative_l2": 3.4186903307738687e-16,
+          "high_precision": {
+            "status": "measured",
+            "native_matrix_relative_l2": 1.7381709363900292e-16,
+            "mpmath_forward_relative_l2": 2.1745526783539376e-16,
+            "precision_decimal_digits": 80,
+            "applied_matrix_dtype": "complex128 (after 80-digit evaluation)"
+          },
+          "coprec_norm": 4.818106808499889e-24,
+          "j_mode_norm": 4.8181068084998904e-24,
+          "l0_mode_norm": 4.818106808499891e-24
+        }
+      ]
+    },
+    {
+      "backend": "torch",
+      "case": "baseline",
+      "sample_rate_hz": 8192,
+      "distance_mpc": 50.0,
+      "reference_angles": {
+        "alpha": -2.6232882899862147,
+        "beta": 0.1217976388304497,
+        "gamma": 2.6232882899862147
+      },
+      "rows": [
+        {
+          "ell": 2,
+          "initial_sample": 0,
+          "coprec_l0": {
+            "relative_l2": 3.2797299466210117e-17,
+            "max_absolute": 1.5679092305554883e-37,
+            "max_over_m_absolute": 1.5679092305554883e-37,
+            "max_over_m_m": 1,
+            "pm2_max_absolute": 4.316268319425587e-39
+          },
+          "inverse_l0": {
+            "relative_l2": 1.3422693318696552e-16,
+            "max_absolute": 7.60762861160185e-37,
+            "max_over_m_absolute": 7.60762861160185e-37,
+            "max_over_m_m": -2,
+            "pm2_max_absolute": 7.60762861160185e-37
+          },
+          "pm2_amplitudes": {
+            "coprec": {
+              "-2": 4.09518836623587e-21,
+              "2": 4.09518836623587e-21
+            },
+            "inverse_predicted": {
+              "-2": 4.095188366235871e-21,
+              "2": 4.09518836623587e-21
+            },
+            "l0_public": {
+              "-2": 4.09518836623587e-21,
+              "2": 4.09518836623587e-21
+            }
+          },
+          "native_matrix_unitarity_error": 7.050858231721621e-16,
+          "native_forward_relative_l2": 2.6221510344424096e-16,
+          "native_roundtrip_relative_l2": 2.95745192485576e-16,
+          "high_precision": {
+            "status": "measured",
+            "native_matrix_relative_l2": 1.7099884775664954e-16,
+            "mpmath_forward_relative_l2": 1.837885069100293e-16,
+            "precision_decimal_digits": 80,
+            "applied_matrix_dtype": "complex128 (after 80-digit evaluation)"
+          },
+          "coprec_norm": 5.7946757296741294e-21,
+          "j_mode_norm": 5.7946757296741294e-21,
+          "l0_mode_norm": 5.7946757296741294e-21
+        },
+        {
+          "ell": 3,
+          "initial_sample": 0,
+          "coprec_l0": {
+            "relative_l2": 3.961176605750581e-16,
+            "max_absolute": 1.4106697484909914e-37,
+            "max_over_m_absolute": 1.4106697484909914e-37,
+            "max_over_m_m": -3,
+            "pm2_max_absolute": 3.3242750824790095e-39
+          },
+          "inverse_l0": {
+            "relative_l2": 1.257792337881596e-16,
+            "max_absolute": 4.711152002068361e-38,
+            "max_over_m_absolute": 4.711152002068361e-38,
+            "max_over_m_m": 3,
+            "pm2_max_absolute": 2.9516219914287303e-38
+          },
+          "pm2_amplitudes": {
+            "coprec": {
+              "-2": 0.0,
+              "2": 0.0
+            },
+            "inverse_predicted": {
+              "-2": 2.6611385186001584e-38,
+              "2": 2.6591728704275244e-38
+            },
+            "l0_public": {
+              "-2": 3.3242750824790095e-39,
+              "2": 2.938735877055719e-39
+            }
+          },
+          "native_matrix_unitarity_error": 6.803879321178177e-16,
+          "native_forward_relative_l2": 1.4851020667876723e-16,
+          "native_roundtrip_relative_l2": 2.0894707614776376e-16,
+          "high_precision": {
+            "status": "measured",
+            "native_matrix_relative_l2": 1.3977342662580964e-16,
+            "mpmath_forward_relative_l2": 1.3290829181707889e-16,
+            "precision_decimal_digits": 80,
+            "applied_matrix_dtype": "complex128 (after 80-digit evaluation)"
+          },
+          "coprec_norm": 5.042089591787817e-22,
+          "j_mode_norm": 5.042089591787818e-22,
+          "l0_mode_norm": 5.042089591787819e-22
+        },
+        {
+          "ell": 4,
+          "initial_sample": 0,
+          "coprec_l0": {
+            "relative_l2": 1.121239513358968e-16,
+            "max_absolute": 1.1754943508222875e-38,
+            "max_over_m_absolute": 1.1754943508222875e-38,
+            "max_over_m_m": 4,
+            "pm2_max_absolute": 7.572949016808052e-40
+          },
+          "inverse_l0": {
+            "relative_l2": 1.28820838856608e-16,
+            "max_absolute": 1.1756378350279878e-38,
+            "max_over_m_absolute": 1.1756378350279878e-38,
+            "max_over_m_m": -4,
+            "pm2_max_absolute": 1.6393604713566243e-39
+          },
+          "pm2_amplitudes": {
+            "coprec": {
+              "-2": 0.0,
+              "2": 0.0
+            },
+            "inverse_predicted": {
+              "-2": 9.195033083519188e-40,
+              "2": 1.0930359217725517e-39
+            },
+            "l0_public": {
+              "-2": 7.269783826134587e-40,
+              "2": 7.572949016808052e-40
+            }
+          },
+          "native_matrix_unitarity_error": 6.0199130468088605e-16,
+          "native_forward_relative_l2": 8.724903651048286e-17,
+          "native_roundtrip_relative_l2": 1.5592729803247216e-16,
+          "high_precision": {
+            "status": "measured",
+            "native_matrix_relative_l2": 1.5744935355121363e-16,
+            "mpmath_forward_relative_l2": 1.5595668650892627e-16,
+            "precision_decimal_digits": 80,
+            "applied_matrix_dtype": "complex128 (after 80-digit evaluation)"
+          },
+          "coprec_norm": 1.082464358241993e-22,
+          "j_mode_norm": 1.082464358241993e-22,
+          "l0_mode_norm": 1.0824643582419929e-22
+        },
+        {
+          "ell": 5,
+          "initial_sample": 0,
+          "coprec_l0": {
+            "relative_l2": 2.1157981400407184e-09,
+            "max_absolute": 2.883338611824592e-32,
+            "max_over_m_absolute": 2.883338611824592e-32,
+            "max_over_m_m": 2,
+            "pm2_max_absolute": 2.883338611824592e-32
+          },
+          "inverse_l0": {
+            "relative_l2": 2.1157981419134305e-09,
+            "max_absolute": 2.883338614290704e-32,
+            "max_over_m_absolute": 2.883338614290704e-32,
+            "max_over_m_m": 2,
+            "pm2_max_absolute": 2.883338614290704e-32
+          },
+          "pm2_amplitudes": {
+            "coprec": {
+              "-2": 0.0,
+              "2": 0.0
+            },
+            "inverse_predicted": {
+              "-2": 4.431851160830928e-41,
+              "2": 4.5241547127747797e-41
+            },
+            "l0_public": {
+              "-2": 2.883338611570362e-32,
+              "2": 2.883338611824592e-32
+            }
+          },
+          "native_matrix_unitarity_error": 6.916172675921932e-16,
+          "native_forward_relative_l2": 2.2257660536267755e-16,
+          "native_roundtrip_relative_l2": 3.4186903307738687e-16,
+          "high_precision": {
+            "status": "measured",
+            "native_matrix_relative_l2": 1.7381709363900292e-16,
+            "mpmath_forward_relative_l2": 2.1745526783539376e-16,
+            "precision_decimal_digits": 80,
+            "applied_matrix_dtype": "complex128 (after 80-digit evaluation)"
+          },
+          "coprec_norm": 1.9272427233999556e-23,
+          "j_mode_norm": 1.9272427233999562e-23,
+          "l0_mode_norm": 1.9272427233999565e-23
+        }
+      ]
+    },
+    {
+      "backend": "torch",
+      "case": "baseline",
+      "sample_rate_hz": 8192,
+      "distance_mpc": 100.0,
+      "reference_angles": {
+        "alpha": -2.6232882899862147,
+        "beta": 0.1217976388304497,
+        "gamma": 2.6232882899862147
+      },
+      "rows": [
+        {
+          "ell": 2,
+          "initial_sample": 0,
+          "coprec_l0": {
+            "relative_l2": 3.2797299466210117e-17,
+            "max_absolute": 7.839546152777441e-38,
+            "max_over_m_absolute": 7.839546152777441e-38,
+            "max_over_m_m": 1,
+            "pm2_max_absolute": 2.1581341597127935e-39
+          },
+          "inverse_l0": {
+            "relative_l2": 1.3422693318696552e-16,
+            "max_absolute": 3.803814305800925e-37,
+            "max_over_m_absolute": 3.803814305800925e-37,
+            "max_over_m_m": -2,
+            "pm2_max_absolute": 3.803814305800925e-37
+          },
+          "pm2_amplitudes": {
+            "coprec": {
+              "-2": 2.047594183117935e-21,
+              "2": 2.047594183117935e-21
+            },
+            "inverse_predicted": {
+              "-2": 2.0475941831179356e-21,
+              "2": 2.047594183117935e-21
+            },
+            "l0_public": {
+              "-2": 2.047594183117935e-21,
+              "2": 2.047594183117935e-21
+            }
+          },
+          "native_matrix_unitarity_error": 7.050858231721621e-16,
+          "native_forward_relative_l2": 2.6221510344424096e-16,
+          "native_roundtrip_relative_l2": 2.95745192485576e-16,
+          "high_precision": {
+            "status": "measured",
+            "native_matrix_relative_l2": 1.7099884775664954e-16,
+            "mpmath_forward_relative_l2": 1.837885069100293e-16,
+            "precision_decimal_digits": 80,
+            "applied_matrix_dtype": "complex128 (after 80-digit evaluation)"
+          },
+          "coprec_norm": 2.8973378648370647e-21,
+          "j_mode_norm": 2.8973378648370647e-21,
+          "l0_mode_norm": 2.8973378648370647e-21
+        },
+        {
+          "ell": 3,
+          "initial_sample": 0,
+          "coprec_l0": {
+            "relative_l2": 3.961176605750581e-16,
+            "max_absolute": 7.053348742454957e-38,
+            "max_over_m_absolute": 7.053348742454957e-38,
+            "max_over_m_m": -3,
+            "pm2_max_absolute": 1.6621375412395048e-39
+          },
+          "inverse_l0": {
+            "relative_l2": 1.257792337881596e-16,
+            "max_absolute": 2.3555760010341805e-38,
+            "max_over_m_absolute": 2.3555760010341805e-38,
+            "max_over_m_m": 3,
+            "pm2_max_absolute": 1.4758109957143651e-38
+          },
+          "pm2_amplitudes": {
+            "coprec": {
+              "-2": 0.0,
+              "2": 0.0
+            },
+            "inverse_predicted": {
+              "-2": 1.3305692593000792e-38,
+              "2": 1.3295864352137622e-38
+            },
+            "l0_public": {
+              "-2": 1.6621375412395048e-39,
+              "2": 1.4693679385278594e-39
+            }
+          },
+          "native_matrix_unitarity_error": 6.803879321178177e-16,
+          "native_forward_relative_l2": 1.4851020667876723e-16,
+          "native_roundtrip_relative_l2": 2.0894707614776376e-16,
+          "high_precision": {
+            "status": "measured",
+            "native_matrix_relative_l2": 1.3977342662580964e-16,
+            "mpmath_forward_relative_l2": 1.3290829181707889e-16,
+            "precision_decimal_digits": 80,
+            "applied_matrix_dtype": "complex128 (after 80-digit evaluation)"
+          },
+          "coprec_norm": 2.5210447958939086e-22,
+          "j_mode_norm": 2.521044795893909e-22,
+          "l0_mode_norm": 2.5210447958939096e-22
+        },
+        {
+          "ell": 4,
+          "initial_sample": 0,
+          "coprec_l0": {
+            "relative_l2": 1.121239513358968e-16,
+            "max_absolute": 5.877471754111438e-39,
+            "max_over_m_absolute": 5.877471754111438e-39,
+            "max_over_m_m": 4,
+            "pm2_max_absolute": 3.786474508404026e-40
+          },
+          "inverse_l0": {
+            "relative_l2": 1.28820838856608e-16,
+            "max_absolute": 5.878189175139939e-39,
+            "max_over_m_absolute": 5.878189175139939e-39,
+            "max_over_m_m": -4,
+            "pm2_max_absolute": 8.196802356783122e-40
+          },
+          "pm2_amplitudes": {
+            "coprec": {
+              "-2": 0.0,
+              "2": 0.0
+            },
+            "inverse_predicted": {
+              "-2": 4.597516541759594e-40,
+              "2": 5.4651796088627585e-40
+            },
+            "l0_public": {
+              "-2": 3.6348919130672936e-40,
+              "2": 3.786474508404026e-40
+            }
+          },
+          "native_matrix_unitarity_error": 6.0199130468088605e-16,
+          "native_forward_relative_l2": 8.724903651048286e-17,
+          "native_roundtrip_relative_l2": 1.5592729803247216e-16,
+          "high_precision": {
+            "status": "measured",
+            "native_matrix_relative_l2": 1.5744935355121363e-16,
+            "mpmath_forward_relative_l2": 1.5595668650892627e-16,
+            "precision_decimal_digits": 80,
+            "applied_matrix_dtype": "complex128 (after 80-digit evaluation)"
+          },
+          "coprec_norm": 5.412321791209966e-23,
+          "j_mode_norm": 5.412321791209966e-23,
+          "l0_mode_norm": 5.412321791209964e-23
+        },
+        {
+          "ell": 5,
+          "initial_sample": 0,
+          "coprec_l0": {
+            "relative_l2": 2.1157981400407184e-09,
+            "max_absolute": 1.441669305912296e-32,
+            "max_over_m_absolute": 1.441669305912296e-32,
+            "max_over_m_m": 2,
+            "pm2_max_absolute": 1.441669305912296e-32
+          },
+          "inverse_l0": {
+            "relative_l2": 2.1157981419134305e-09,
+            "max_absolute": 1.441669307145352e-32,
+            "max_over_m_absolute": 1.441669307145352e-32,
+            "max_over_m_m": 2,
+            "pm2_max_absolute": 1.441669307145352e-32
+          },
+          "pm2_amplitudes": {
+            "coprec": {
+              "-2": 0.0,
+              "2": 0.0
+            },
+            "inverse_predicted": {
+              "-2": 2.215925580415464e-41,
+              "2": 2.2620773563873899e-41
+            },
+            "l0_public": {
+              "-2": 1.441669305785181e-32,
+              "2": 1.441669305912296e-32
+            }
+          },
+          "native_matrix_unitarity_error": 6.916172675921932e-16,
+          "native_forward_relative_l2": 2.2257660536267755e-16,
+          "native_roundtrip_relative_l2": 3.4186903307738687e-16,
+          "high_precision": {
+            "status": "measured",
+            "native_matrix_relative_l2": 1.7381709363900292e-16,
+            "mpmath_forward_relative_l2": 2.1745526783539376e-16,
+            "precision_decimal_digits": 80,
+            "applied_matrix_dtype": "complex128 (after 80-digit evaluation)"
+          },
+          "coprec_norm": 9.636213616999778e-24,
+          "j_mode_norm": 9.636213616999781e-24,
+          "l0_mode_norm": 9.636213616999782e-24
+        }
+      ]
+    },
+    {
+      "backend": "torch",
+      "case": "baseline",
+      "sample_rate_hz": 8192,
+      "distance_mpc": 200.0,
+      "reference_angles": {
+        "alpha": -2.6232882899862147,
+        "beta": 0.1217976388304497,
+        "gamma": 2.6232882899862147
+      },
+      "rows": [
+        {
+          "ell": 2,
+          "initial_sample": 0,
+          "coprec_l0": {
+            "relative_l2": 3.2797299466210117e-17,
+            "max_absolute": 3.9197730763887207e-38,
+            "max_over_m_absolute": 3.9197730763887207e-38,
+            "max_over_m_m": 1,
+            "pm2_max_absolute": 1.0790670798563967e-39
+          },
+          "inverse_l0": {
+            "relative_l2": 1.3422693318696552e-16,
+            "max_absolute": 1.9019071529004626e-37,
+            "max_over_m_absolute": 1.9019071529004626e-37,
+            "max_over_m_m": -2,
+            "pm2_max_absolute": 1.9019071529004626e-37
+          },
+          "pm2_amplitudes": {
+            "coprec": {
+              "-2": 1.0237970915589676e-21,
+              "2": 1.0237970915589676e-21
+            },
+            "inverse_predicted": {
+              "-2": 1.0237970915589678e-21,
+              "2": 1.0237970915589676e-21
+            },
+            "l0_public": {
+              "-2": 1.0237970915589676e-21,
+              "2": 1.0237970915589676e-21
+            }
+          },
+          "native_matrix_unitarity_error": 7.050858231721621e-16,
+          "native_forward_relative_l2": 2.6221510344424096e-16,
+          "native_roundtrip_relative_l2": 2.95745192485576e-16,
+          "high_precision": {
+            "status": "measured",
+            "native_matrix_relative_l2": 1.7099884775664954e-16,
+            "mpmath_forward_relative_l2": 1.837885069100293e-16,
+            "precision_decimal_digits": 80,
+            "applied_matrix_dtype": "complex128 (after 80-digit evaluation)"
+          },
+          "coprec_norm": 1.4486689324185324e-21,
+          "j_mode_norm": 1.4486689324185324e-21,
+          "l0_mode_norm": 1.4486689324185324e-21
+        },
+        {
+          "ell": 3,
+          "initial_sample": 0,
+          "coprec_l0": {
+            "relative_l2": 3.961176605750581e-16,
+            "max_absolute": 3.5266743712274785e-38,
+            "max_over_m_absolute": 3.5266743712274785e-38,
+            "max_over_m_m": -3,
+            "pm2_max_absolute": 8.310687706197524e-40
+          },
+          "inverse_l0": {
+            "relative_l2": 1.257792337881596e-16,
+            "max_absolute": 1.1777880005170902e-38,
+            "max_over_m_absolute": 1.1777880005170902e-38,
+            "max_over_m_m": 3,
+            "pm2_max_absolute": 7.379054978571826e-39
+          },
+          "pm2_amplitudes": {
+            "coprec": {
+              "-2": 0.0,
+              "2": 0.0
+            },
+            "inverse_predicted": {
+              "-2": 6.652846296500396e-39,
+              "2": 6.647932176068811e-39
+            },
+            "l0_public": {
+              "-2": 8.310687706197524e-40,
+              "2": 7.346839692639297e-40
+            }
+          },
+          "native_matrix_unitarity_error": 6.803879321178177e-16,
+          "native_forward_relative_l2": 1.4851020667876723e-16,
+          "native_roundtrip_relative_l2": 2.0894707614776376e-16,
+          "high_precision": {
+            "status": "measured",
+            "native_matrix_relative_l2": 1.3977342662580964e-16,
+            "mpmath_forward_relative_l2": 1.3290829181707889e-16,
+            "precision_decimal_digits": 80,
+            "applied_matrix_dtype": "complex128 (after 80-digit evaluation)"
+          },
+          "coprec_norm": 1.2605223979469543e-22,
+          "j_mode_norm": 1.2605223979469546e-22,
+          "l0_mode_norm": 1.2605223979469548e-22
+        },
+        {
+          "ell": 4,
+          "initial_sample": 0,
+          "coprec_l0": {
+            "relative_l2": 1.121239513358968e-16,
+            "max_absolute": 2.938735877055719e-39,
+            "max_over_m_absolute": 2.938735877055719e-39,
+            "max_over_m_m": 4,
+            "pm2_max_absolute": 1.893237254202013e-40
+          },
+          "inverse_l0": {
+            "relative_l2": 1.28820838856608e-16,
+            "max_absolute": 2.9390945875699695e-39,
+            "max_over_m_absolute": 2.9390945875699695e-39,
+            "max_over_m_m": -4,
+            "pm2_max_absolute": 4.098401178391561e-40
+          },
+          "pm2_amplitudes": {
+            "coprec": {
+              "-2": 0.0,
+              "2": 0.0
+            },
+            "inverse_predicted": {
+              "-2": 2.298758270879797e-40,
+              "2": 2.7325898044313792e-40
+            },
+            "l0_public": {
+              "-2": 1.8174459565336468e-40,
+              "2": 1.893237254202013e-40
+            }
+          },
+          "native_matrix_unitarity_error": 6.0199130468088605e-16,
+          "native_forward_relative_l2": 8.724903651048286e-17,
+          "native_roundtrip_relative_l2": 1.5592729803247216e-16,
+          "high_precision": {
+            "status": "measured",
+            "native_matrix_relative_l2": 1.5744935355121363e-16,
+            "mpmath_forward_relative_l2": 1.5595668650892627e-16,
+            "precision_decimal_digits": 80,
+            "applied_matrix_dtype": "complex128 (after 80-digit evaluation)"
+          },
+          "coprec_norm": 2.706160895604983e-23,
+          "j_mode_norm": 2.706160895604983e-23,
+          "l0_mode_norm": 2.706160895604982e-23
+        },
+        {
+          "ell": 5,
+          "initial_sample": 0,
+          "coprec_l0": {
+            "relative_l2": 2.1157981400407184e-09,
+            "max_absolute": 7.20834652956148e-33,
+            "max_over_m_absolute": 7.20834652956148e-33,
+            "max_over_m_m": 2,
+            "pm2_max_absolute": 7.20834652956148e-33
+          },
+          "inverse_l0": {
+            "relative_l2": 2.1157981419134305e-09,
+            "max_absolute": 7.20834653572676e-33,
+            "max_over_m_absolute": 7.20834653572676e-33,
+            "max_over_m_m": 2,
+            "pm2_max_absolute": 7.20834653572676e-33
+          },
+          "pm2_amplitudes": {
+            "coprec": {
+              "-2": 0.0,
+              "2": 0.0
+            },
+            "inverse_predicted": {
+              "-2": 1.107962790207732e-41,
+              "2": 1.1310386781936949e-41
+            },
+            "l0_public": {
+              "-2": 7.208346528925904e-33,
+              "2": 7.20834652956148e-33
+            }
+          },
+          "native_matrix_unitarity_error": 6.916172675921932e-16,
+          "native_forward_relative_l2": 2.2257660536267755e-16,
+          "native_roundtrip_relative_l2": 3.4186903307738687e-16,
+          "high_precision": {
+            "status": "measured",
+            "native_matrix_relative_l2": 1.7381709363900292e-16,
+            "mpmath_forward_relative_l2": 2.1745526783539376e-16,
+            "precision_decimal_digits": 80,
+            "applied_matrix_dtype": "complex128 (after 80-digit evaluation)"
+          },
+          "coprec_norm": 4.818106808499889e-24,
+          "j_mode_norm": 4.8181068084998904e-24,
+          "l0_mode_norm": 4.818106808499891e-24
+        }
+      ]
+    },
+    {
+      "backend": "torch",
+      "case": "high_mass_ratio",
+      "sample_rate_hz": 512,
+      "distance_mpc": 50.0,
+      "reference_angles": {
+        "alpha": -2.6799370738265824,
+        "beta": 0.1857161056858135,
+        "gamma": 2.6799370738265824
+      },
+      "rows": [
+        {
+          "ell": 2,
+          "initial_sample": 0,
+          "coprec_l0": {
+            "relative_l2": 1.653410013162228e-16,
+            "max_absolute": 4.532523980356614e-37,
+            "max_over_m_absolute": 4.532523980356614e-37,
+            "max_over_m_m": -2,
+            "pm2_max_absolute": 4.532523980356614e-37
+          },
+          "inverse_l0": {
+            "relative_l2": 1.8372763972351067e-16,
+            "max_absolute": 4.106377589266653e-37,
+            "max_over_m_absolute": 4.106377589266653e-37,
+            "max_over_m_m": -2,
+            "pm2_max_absolute": 4.106377589266653e-37
+          },
+          "pm2_amplitudes": {
+            "coprec": {
+              "-2": 2.2479000382094172e-21,
+              "2": 2.2479000382094172e-21
+            },
+            "inverse_predicted": {
+              "-2": 2.2479000382094172e-21,
+              "2": 2.2479000382094176e-21
+            },
+            "l0_public": {
+              "-2": 2.247900038209417e-21,
+              "2": 2.2479000382094172e-21
+            }
+          },
+          "native_matrix_unitarity_error": 5.479877270295011e-16,
+          "native_forward_relative_l2": 2.761471449458093e-16,
+          "native_roundtrip_relative_l2": 3.368432482543073e-16,
+          "high_precision": {
+            "status": "measured",
+            "native_matrix_relative_l2": 7.689607348860434e-17,
+            "mpmath_forward_relative_l2": 1.3308252691371394e-16,
+            "precision_decimal_digits": 80,
+            "applied_matrix_dtype": "complex128 (after 80-digit evaluation)"
+          },
+          "coprec_norm": 3.1835709341469585e-21,
+          "j_mode_norm": 3.1835709341469577e-21,
+          "l0_mode_norm": 3.183570934146958e-21
+        },
+        {
+          "ell": 3,
+          "initial_sample": 0,
+          "coprec_l0": {
+            "relative_l2": 4.464021288022197e-16,
+            "max_absolute": 1.882856126172754e-37,
+            "max_over_m_absolute": 1.882856126172754e-37,
+            "max_over_m_m": -3,
+            "pm2_max_absolute": 1.3142426378028104e-38
+          },
+          "inverse_l0": {
+            "relative_l2": 1.7247204394207215e-16,
+            "max_absolute": 5.470806307003492e-38,
+            "max_over_m_absolute": 5.470806307003492e-38,
+            "max_over_m_m": 2,
+            "pm2_max_absolute": 5.470806307003492e-38
+          },
+          "pm2_amplitudes": {
+            "coprec": {
+              "-2": 0.0,
+              "2": 0.0
+            },
+            "inverse_predicted": {
+              "-2": 5.132281567981053e-38,
+              "2": 5.359165798054391e-38
+            },
+            "l0_public": {
+              "-2": 1.2910821087148667e-38,
+              "2": 1.3142426378028104e-38
+            }
+          },
+          "native_matrix_unitarity_error": 8.38511442413309e-16,
+          "native_forward_relative_l2": 1.421246084556809e-16,
+          "native_roundtrip_relative_l2": 3.801614243772167e-16,
+          "high_precision": {
+            "status": "measured",
+            "native_matrix_relative_l2": 1.7530494872313007e-16,
+            "mpmath_forward_relative_l2": 1.3362346618390705e-16,
+            "precision_decimal_digits": 80,
+            "applied_matrix_dtype": "complex128 (after 80-digit evaluation)"
+          },
+          "coprec_norm": 5.291966712655969e-22,
+          "j_mode_norm": 5.291966712655969e-22,
+          "l0_mode_norm": 5.291966712655967e-22
+        },
+        {
+          "ell": 4,
+          "initial_sample": 0,
+          "coprec_l0": {
+            "relative_l2": 9.532916199102059e-17,
+            "max_absolute": 8.401948528079474e-39,
+            "max_over_m_absolute": 8.401948528079474e-39,
+            "max_over_m_m": -3,
+            "pm2_max_absolute": 2.352136365223619e-39
+          },
+          "inverse_l0": {
+            "relative_l2": 1.8517709022769781e-16,
+            "max_absolute": 1.1959788530477942e-38,
+            "max_over_m_absolute": 1.1959788530477942e-38,
+            "max_over_m_m": -4,
+            "pm2_max_absolute": 2.4642049458802695e-39
+          },
+          "pm2_amplitudes": {
+            "coprec": {
+              "-2": 0.0,
+              "2": 0.0
+            },
+            "inverse_predicted": {
+              "-2": 2.5821398168117693e-39,
+              "2": 2.5975000834778688e-39
+            },
+            "l0_public": {
+              "-2": 2.2873048432180395e-39,
+              "2": 2.352136365223619e-39
+            }
+          },
+          "native_matrix_unitarity_error": 6.38781798198436e-16,
+          "native_forward_relative_l2": 1.674052102511575e-16,
+          "native_roundtrip_relative_l2": 1.9677381114290298e-16,
+          "high_precision": {
+            "status": "measured",
+            "native_matrix_relative_l2": 1.6412987340317968e-16,
+            "mpmath_forward_relative_l2": 1.3701203806545654e-16,
+            "precision_decimal_digits": 80,
+            "applied_matrix_dtype": "complex128 (after 80-digit evaluation)"
+          },
+          "coprec_norm": 1.223356457899594e-22,
+          "j_mode_norm": 1.2233564578995943e-22,
+          "l0_mode_norm": 1.223356457899594e-22
+        },
+        {
+          "ell": 5,
+          "initial_sample": 0,
+          "coprec_l0": {
+            "relative_l2": 5.547367645620023e-08,
+            "max_absolute": 1.1958950318628316e-30,
+            "max_over_m_absolute": 1.1958950318628316e-30,
+            "max_over_m_m": -2,
+            "pm2_max_absolute": 1.1958950318628316e-30
+          },
+          "inverse_l0": {
+            "relative_l2": 5.5473676455533995e-08,
+            "max_absolute": 1.195895031853488e-30,
+            "max_over_m_absolute": 1.195895031853488e-30,
+            "max_over_m_m": 2,
+            "pm2_max_absolute": 1.195895031853488e-30
+          },
+          "pm2_amplitudes": {
+            "coprec": {
+              "-2": 0.0,
+              "2": 0.0
+            },
+            "inverse_predicted": {
+              "-2": 2.1091055534061507e-40,
+              "2": 1.578422590215474e-40
+            },
+            "l0_public": {
+              "-2": 1.1958950318628318e-30,
+              "2": 1.1958950318541169e-30
+            }
+          },
+          "native_matrix_unitarity_error": 6.043761227988202e-16,
+          "native_forward_relative_l2": 1.524915443871092e-16,
+          "native_roundtrip_relative_l2": 1.101004578614885e-16,
+          "high_precision": {
+            "status": "measured",
+            "native_matrix_relative_l2": 2.031822810285918e-16,
+            "mpmath_forward_relative_l2": 8.520952551313964e-17,
+            "precision_decimal_digits": 80,
+            "applied_matrix_dtype": "complex128 (after 80-digit evaluation)"
+          },
+          "coprec_norm": 3.0487450648132175e-23,
+          "j_mode_norm": 3.0487450648132175e-23,
+          "l0_mode_norm": 3.048745064813222e-23
+        }
+      ]
+    },
+    {
+      "backend": "torch",
+      "case": "high_mass_ratio",
+      "sample_rate_hz": 512,
+      "distance_mpc": 100.0,
+      "reference_angles": {
+        "alpha": -2.6799370738265824,
+        "beta": 0.1857161056858135,
+        "gamma": 2.6799370738265824
+      },
+      "rows": [
+        {
+          "ell": 2,
+          "initial_sample": 0,
+          "coprec_l0": {
+            "relative_l2": 1.653410013162228e-16,
+            "max_absolute": 2.266261990178307e-37,
+            "max_over_m_absolute": 2.266261990178307e-37,
+            "max_over_m_m": -2,
+            "pm2_max_absolute": 2.266261990178307e-37
+          },
+          "inverse_l0": {
+            "relative_l2": 1.8372763972351067e-16,
+            "max_absolute": 2.0531887946333267e-37,
+            "max_over_m_absolute": 2.0531887946333267e-37,
+            "max_over_m_m": -2,
+            "pm2_max_absolute": 2.0531887946333267e-37
+          },
+          "pm2_amplitudes": {
+            "coprec": {
+              "-2": 1.1239500191047086e-21,
+              "2": 1.1239500191047086e-21
+            },
+            "inverse_predicted": {
+              "-2": 1.1239500191047086e-21,
+              "2": 1.1239500191047088e-21
+            },
+            "l0_public": {
+              "-2": 1.1239500191047084e-21,
+              "2": 1.1239500191047086e-21
+            }
+          },
+          "native_matrix_unitarity_error": 5.479877270295011e-16,
+          "native_forward_relative_l2": 2.761471449458093e-16,
+          "native_roundtrip_relative_l2": 3.368432482543073e-16,
+          "high_precision": {
+            "status": "measured",
+            "native_matrix_relative_l2": 7.689607348860434e-17,
+            "mpmath_forward_relative_l2": 1.3308252691371394e-16,
+            "precision_decimal_digits": 80,
+            "applied_matrix_dtype": "complex128 (after 80-digit evaluation)"
+          },
+          "coprec_norm": 1.5917854670734792e-21,
+          "j_mode_norm": 1.5917854670734789e-21,
+          "l0_mode_norm": 1.591785467073479e-21
+        },
+        {
+          "ell": 3,
+          "initial_sample": 0,
+          "coprec_l0": {
+            "relative_l2": 4.464021288022197e-16,
+            "max_absolute": 9.41428063086377e-38,
+            "max_over_m_absolute": 9.41428063086377e-38,
+            "max_over_m_m": -3,
+            "pm2_max_absolute": 6.571213189014052e-39
+          },
+          "inverse_l0": {
+            "relative_l2": 1.7247204394207215e-16,
+            "max_absolute": 2.735403153501746e-38,
+            "max_over_m_absolute": 2.735403153501746e-38,
+            "max_over_m_m": 2,
+            "pm2_max_absolute": 2.735403153501746e-38
+          },
+          "pm2_amplitudes": {
+            "coprec": {
+              "-2": 0.0,
+              "2": 0.0
+            },
+            "inverse_predicted": {
+              "-2": 2.566140783990526e-38,
+              "2": 2.679582899027196e-38
+            },
+            "l0_public": {
+              "-2": 6.455410543574334e-39,
+              "2": 6.571213189014052e-39
+            }
+          },
+          "native_matrix_unitarity_error": 8.38511442413309e-16,
+          "native_forward_relative_l2": 1.421246084556809e-16,
+          "native_roundtrip_relative_l2": 3.801614243772167e-16,
+          "high_precision": {
+            "status": "measured",
+            "native_matrix_relative_l2": 1.7530494872313007e-16,
+            "mpmath_forward_relative_l2": 1.3362346618390705e-16,
+            "precision_decimal_digits": 80,
+            "applied_matrix_dtype": "complex128 (after 80-digit evaluation)"
+          },
+          "coprec_norm": 2.6459833563279846e-22,
+          "j_mode_norm": 2.6459833563279846e-22,
+          "l0_mode_norm": 2.6459833563279837e-22
+        },
+        {
+          "ell": 4,
+          "initial_sample": 0,
+          "coprec_l0": {
+            "relative_l2": 9.532916199102059e-17,
+            "max_absolute": 4.200974264039737e-39,
+            "max_over_m_absolute": 4.200974264039737e-39,
+            "max_over_m_m": -3,
+            "pm2_max_absolute": 1.1760681826118095e-39
+          },
+          "inverse_l0": {
+            "relative_l2": 1.8517709022769781e-16,
+            "max_absolute": 5.979894265238971e-39,
+            "max_over_m_absolute": 5.979894265238971e-39,
+            "max_over_m_m": -4,
+            "pm2_max_absolute": 1.2321024729401348e-39
+          },
+          "pm2_amplitudes": {
+            "coprec": {
+              "-2": 0.0,
+              "2": 0.0
+            },
+            "inverse_predicted": {
+              "-2": 1.2910699084058846e-39,
+              "2": 1.2987500417389344e-39
+            },
+            "l0_public": {
+              "-2": 1.1436524216090197e-39,
+              "2": 1.1760681826118095e-39
+            }
+          },
+          "native_matrix_unitarity_error": 6.38781798198436e-16,
+          "native_forward_relative_l2": 1.674052102511575e-16,
+          "native_roundtrip_relative_l2": 1.9677381114290298e-16,
+          "high_precision": {
+            "status": "measured",
+            "native_matrix_relative_l2": 1.6412987340317968e-16,
+            "mpmath_forward_relative_l2": 1.3701203806545654e-16,
+            "precision_decimal_digits": 80,
+            "applied_matrix_dtype": "complex128 (after 80-digit evaluation)"
+          },
+          "coprec_norm": 6.11678228949797e-23,
+          "j_mode_norm": 6.116782289497972e-23,
+          "l0_mode_norm": 6.11678228949797e-23
+        },
+        {
+          "ell": 5,
+          "initial_sample": 0,
+          "coprec_l0": {
+            "relative_l2": 5.547367645620023e-08,
+            "max_absolute": 5.979475159314158e-31,
+            "max_over_m_absolute": 5.979475159314158e-31,
+            "max_over_m_m": -2,
+            "pm2_max_absolute": 5.979475159314158e-31
+          },
+          "inverse_l0": {
+            "relative_l2": 5.5473676455533995e-08,
+            "max_absolute": 5.97947515926744e-31,
+            "max_over_m_absolute": 5.97947515926744e-31,
+            "max_over_m_m": 2,
+            "pm2_max_absolute": 5.97947515926744e-31
+          },
+          "pm2_amplitudes": {
+            "coprec": {
+              "-2": 0.0,
+              "2": 0.0
+            },
+            "inverse_predicted": {
+              "-2": 1.0545527767030753e-40,
+              "2": 7.89211295107737e-41
+            },
+            "l0_public": {
+              "-2": 5.979475159314159e-31,
+              "2": 5.9794751592705845e-31
+            }
+          },
+          "native_matrix_unitarity_error": 6.043761227988202e-16,
+          "native_forward_relative_l2": 1.524915443871092e-16,
+          "native_roundtrip_relative_l2": 1.101004578614885e-16,
+          "high_precision": {
+            "status": "measured",
+            "native_matrix_relative_l2": 2.031822810285918e-16,
+            "mpmath_forward_relative_l2": 8.520952551313964e-17,
+            "precision_decimal_digits": 80,
+            "applied_matrix_dtype": "complex128 (after 80-digit evaluation)"
+          },
+          "coprec_norm": 1.5243725324066088e-23,
+          "j_mode_norm": 1.5243725324066088e-23,
+          "l0_mode_norm": 1.524372532406611e-23
+        }
+      ]
+    },
+    {
+      "backend": "torch",
+      "case": "high_mass_ratio",
+      "sample_rate_hz": 512,
+      "distance_mpc": 200.0,
+      "reference_angles": {
+        "alpha": -2.6799370738265824,
+        "beta": 0.1857161056858135,
+        "gamma": 2.6799370738265824
+      },
+      "rows": [
+        {
+          "ell": 2,
+          "initial_sample": 0,
+          "coprec_l0": {
+            "relative_l2": 1.653410013162228e-16,
+            "max_absolute": 1.1331309950891534e-37,
+            "max_over_m_absolute": 1.1331309950891534e-37,
+            "max_over_m_m": -2,
+            "pm2_max_absolute": 1.1331309950891534e-37
+          },
+          "inverse_l0": {
+            "relative_l2": 1.8372763972351067e-16,
+            "max_absolute": 1.0265943973166633e-37,
+            "max_over_m_absolute": 1.0265943973166633e-37,
+            "max_over_m_m": -2,
+            "pm2_max_absolute": 1.0265943973166633e-37
+          },
+          "pm2_amplitudes": {
+            "coprec": {
+              "-2": 5.619750095523543e-22,
+              "2": 5.619750095523543e-22
+            },
+            "inverse_predicted": {
+              "-2": 5.619750095523543e-22,
+              "2": 5.619750095523544e-22
+            },
+            "l0_public": {
+              "-2": 5.619750095523542e-22,
+              "2": 5.619750095523543e-22
+            }
+          },
+          "native_matrix_unitarity_error": 5.479877270295011e-16,
+          "native_forward_relative_l2": 2.761471449458093e-16,
+          "native_roundtrip_relative_l2": 3.368432482543073e-16,
+          "high_precision": {
+            "status": "measured",
+            "native_matrix_relative_l2": 7.689607348860434e-17,
+            "mpmath_forward_relative_l2": 1.3308252691371394e-16,
+            "precision_decimal_digits": 80,
+            "applied_matrix_dtype": "complex128 (after 80-digit evaluation)"
+          },
+          "coprec_norm": 7.958927335367396e-22,
+          "j_mode_norm": 7.958927335367394e-22,
+          "l0_mode_norm": 7.958927335367395e-22
+        },
+        {
+          "ell": 3,
+          "initial_sample": 0,
+          "coprec_l0": {
+            "relative_l2": 4.464021288022197e-16,
+            "max_absolute": 4.707140315431885e-38,
+            "max_over_m_absolute": 4.707140315431885e-38,
+            "max_over_m_m": -3,
+            "pm2_max_absolute": 3.285606594507026e-39
+          },
+          "inverse_l0": {
+            "relative_l2": 1.7247204394207215e-16,
+            "max_absolute": 1.367701576750873e-38,
+            "max_over_m_absolute": 1.367701576750873e-38,
+            "max_over_m_m": 2,
+            "pm2_max_absolute": 1.367701576750873e-38
+          },
+          "pm2_amplitudes": {
+            "coprec": {
+              "-2": 0.0,
+              "2": 0.0
+            },
+            "inverse_predicted": {
+              "-2": 1.283070391995263e-38,
+              "2": 1.339791449513598e-38
+            },
+            "l0_public": {
+              "-2": 3.227705271787167e-39,
+              "2": 3.285606594507026e-39
+            }
+          },
+          "native_matrix_unitarity_error": 8.38511442413309e-16,
+          "native_forward_relative_l2": 1.421246084556809e-16,
+          "native_roundtrip_relative_l2": 3.801614243772167e-16,
+          "high_precision": {
+            "status": "measured",
+            "native_matrix_relative_l2": 1.7530494872313007e-16,
+            "mpmath_forward_relative_l2": 1.3362346618390705e-16,
+            "precision_decimal_digits": 80,
+            "applied_matrix_dtype": "complex128 (after 80-digit evaluation)"
+          },
+          "coprec_norm": 1.3229916781639923e-22,
+          "j_mode_norm": 1.3229916781639923e-22,
+          "l0_mode_norm": 1.3229916781639918e-22
+        },
+        {
+          "ell": 4,
+          "initial_sample": 0,
+          "coprec_l0": {
+            "relative_l2": 9.532916199102059e-17,
+            "max_absolute": 2.1004871320198685e-39,
+            "max_over_m_absolute": 2.1004871320198685e-39,
+            "max_over_m_m": -3,
+            "pm2_max_absolute": 5.880340913059048e-40
+          },
+          "inverse_l0": {
+            "relative_l2": 1.8517709022769781e-16,
+            "max_absolute": 2.9899471326194855e-39,
+            "max_over_m_absolute": 2.9899471326194855e-39,
+            "max_over_m_m": -4,
+            "pm2_max_absolute": 6.160512364700674e-40
+          },
+          "pm2_amplitudes": {
+            "coprec": {
+              "-2": 0.0,
+              "2": 0.0
+            },
+            "inverse_predicted": {
+              "-2": 6.455349542029423e-40,
+              "2": 6.493750208694672e-40
+            },
+            "l0_public": {
+              "-2": 5.718262108045099e-40,
+              "2": 5.880340913059048e-40
+            }
+          },
+          "native_matrix_unitarity_error": 6.38781798198436e-16,
+          "native_forward_relative_l2": 1.674052102511575e-16,
+          "native_roundtrip_relative_l2": 1.9677381114290298e-16,
+          "high_precision": {
+            "status": "measured",
+            "native_matrix_relative_l2": 1.6412987340317968e-16,
+            "mpmath_forward_relative_l2": 1.3701203806545654e-16,
+            "precision_decimal_digits": 80,
+            "applied_matrix_dtype": "complex128 (after 80-digit evaluation)"
+          },
+          "coprec_norm": 3.058391144748985e-23,
+          "j_mode_norm": 3.058391144748986e-23,
+          "l0_mode_norm": 3.058391144748985e-23
+        },
+        {
+          "ell": 5,
+          "initial_sample": 0,
+          "coprec_l0": {
+            "relative_l2": 5.547367645620023e-08,
+            "max_absolute": 2.989737579657079e-31,
+            "max_over_m_absolute": 2.989737579657079e-31,
+            "max_over_m_m": -2,
+            "pm2_max_absolute": 2.989737579657079e-31
+          },
+          "inverse_l0": {
+            "relative_l2": 5.5473676455533995e-08,
+            "max_absolute": 2.98973757963372e-31,
+            "max_over_m_absolute": 2.98973757963372e-31,
+            "max_over_m_m": 2,
+            "pm2_max_absolute": 2.98973757963372e-31
+          },
+          "pm2_amplitudes": {
+            "coprec": {
+              "-2": 0.0,
+              "2": 0.0
+            },
+            "inverse_predicted": {
+              "-2": 5.272763883515377e-41,
+              "2": 3.946056475538685e-41
+            },
+            "l0_public": {
+              "-2": 2.9897375796570794e-31,
+              "2": 2.9897375796352923e-31
+            }
+          },
+          "native_matrix_unitarity_error": 6.043761227988202e-16,
+          "native_forward_relative_l2": 1.524915443871092e-16,
+          "native_roundtrip_relative_l2": 1.101004578614885e-16,
+          "high_precision": {
+            "status": "measured",
+            "native_matrix_relative_l2": 2.031822810285918e-16,
+            "mpmath_forward_relative_l2": 8.520952551313964e-17,
+            "precision_decimal_digits": 80,
+            "applied_matrix_dtype": "complex128 (after 80-digit evaluation)"
+          },
+          "coprec_norm": 7.621862662033044e-24,
+          "j_mode_norm": 7.621862662033044e-24,
+          "l0_mode_norm": 7.621862662033056e-24
+        }
+      ]
+    },
+    {
+      "backend": "torch",
+      "case": "high_mass_ratio",
+      "sample_rate_hz": 2048,
+      "distance_mpc": 50.0,
+      "reference_angles": {
+        "alpha": -2.6799370738265824,
+        "beta": 0.1857161056858135,
+        "gamma": 2.6799370738265824
+      },
+      "rows": [
+        {
+          "ell": 2,
+          "initial_sample": 0,
+          "coprec_l0": {
+            "relative_l2": 1.653410013162228e-16,
+            "max_absolute": 4.532523980356614e-37,
+            "max_over_m_absolute": 4.532523980356614e-37,
+            "max_over_m_m": -2,
+            "pm2_max_absolute": 4.532523980356614e-37
+          },
+          "inverse_l0": {
+            "relative_l2": 1.8372763972351067e-16,
+            "max_absolute": 4.106377589266653e-37,
+            "max_over_m_absolute": 4.106377589266653e-37,
+            "max_over_m_m": -2,
+            "pm2_max_absolute": 4.106377589266653e-37
+          },
+          "pm2_amplitudes": {
+            "coprec": {
+              "-2": 2.2479000382094172e-21,
+              "2": 2.2479000382094172e-21
+            },
+            "inverse_predicted": {
+              "-2": 2.2479000382094172e-21,
+              "2": 2.2479000382094176e-21
+            },
+            "l0_public": {
+              "-2": 2.247900038209417e-21,
+              "2": 2.2479000382094172e-21
+            }
+          },
+          "native_matrix_unitarity_error": 5.479877270295011e-16,
+          "native_forward_relative_l2": 2.761471449458093e-16,
+          "native_roundtrip_relative_l2": 3.368432482543073e-16,
+          "high_precision": {
+            "status": "measured",
+            "native_matrix_relative_l2": 7.689607348860434e-17,
+            "mpmath_forward_relative_l2": 1.3308252691371394e-16,
+            "precision_decimal_digits": 80,
+            "applied_matrix_dtype": "complex128 (after 80-digit evaluation)"
+          },
+          "coprec_norm": 3.1835709341469585e-21,
+          "j_mode_norm": 3.1835709341469577e-21,
+          "l0_mode_norm": 3.183570934146958e-21
+        },
+        {
+          "ell": 3,
+          "initial_sample": 0,
+          "coprec_l0": {
+            "relative_l2": 4.464021288022197e-16,
+            "max_absolute": 1.882856126172754e-37,
+            "max_over_m_absolute": 1.882856126172754e-37,
+            "max_over_m_m": -3,
+            "pm2_max_absolute": 1.3142426378028104e-38
+          },
+          "inverse_l0": {
+            "relative_l2": 1.7247204394207215e-16,
+            "max_absolute": 5.470806307003492e-38,
+            "max_over_m_absolute": 5.470806307003492e-38,
+            "max_over_m_m": 2,
+            "pm2_max_absolute": 5.470806307003492e-38
+          },
+          "pm2_amplitudes": {
+            "coprec": {
+              "-2": 0.0,
+              "2": 0.0
+            },
+            "inverse_predicted": {
+              "-2": 5.132281567981053e-38,
+              "2": 5.359165798054391e-38
+            },
+            "l0_public": {
+              "-2": 1.2910821087148667e-38,
+              "2": 1.3142426378028104e-38
+            }
+          },
+          "native_matrix_unitarity_error": 8.38511442413309e-16,
+          "native_forward_relative_l2": 1.421246084556809e-16,
+          "native_roundtrip_relative_l2": 3.801614243772167e-16,
+          "high_precision": {
+            "status": "measured",
+            "native_matrix_relative_l2": 1.7530494872313007e-16,
+            "mpmath_forward_relative_l2": 1.3362346618390705e-16,
+            "precision_decimal_digits": 80,
+            "applied_matrix_dtype": "complex128 (after 80-digit evaluation)"
+          },
+          "coprec_norm": 5.291966712655969e-22,
+          "j_mode_norm": 5.291966712655969e-22,
+          "l0_mode_norm": 5.291966712655967e-22
+        },
+        {
+          "ell": 4,
+          "initial_sample": 0,
+          "coprec_l0": {
+            "relative_l2": 9.532916199102059e-17,
+            "max_absolute": 8.401948528079474e-39,
+            "max_over_m_absolute": 8.401948528079474e-39,
+            "max_over_m_m": -3,
+            "pm2_max_absolute": 2.352136365223619e-39
+          },
+          "inverse_l0": {
+            "relative_l2": 1.8517709022769781e-16,
+            "max_absolute": 1.1959788530477942e-38,
+            "max_over_m_absolute": 1.1959788530477942e-38,
+            "max_over_m_m": -4,
+            "pm2_max_absolute": 2.4642049458802695e-39
+          },
+          "pm2_amplitudes": {
+            "coprec": {
+              "-2": 0.0,
+              "2": 0.0
+            },
+            "inverse_predicted": {
+              "-2": 2.5821398168117693e-39,
+              "2": 2.5975000834778688e-39
+            },
+            "l0_public": {
+              "-2": 2.2873048432180395e-39,
+              "2": 2.352136365223619e-39
+            }
+          },
+          "native_matrix_unitarity_error": 6.38781798198436e-16,
+          "native_forward_relative_l2": 1.674052102511575e-16,
+          "native_roundtrip_relative_l2": 1.9677381114290298e-16,
+          "high_precision": {
+            "status": "measured",
+            "native_matrix_relative_l2": 1.6412987340317968e-16,
+            "mpmath_forward_relative_l2": 1.3701203806545654e-16,
+            "precision_decimal_digits": 80,
+            "applied_matrix_dtype": "complex128 (after 80-digit evaluation)"
+          },
+          "coprec_norm": 1.223356457899594e-22,
+          "j_mode_norm": 1.2233564578995943e-22,
+          "l0_mode_norm": 1.223356457899594e-22
+        },
+        {
+          "ell": 5,
+          "initial_sample": 0,
+          "coprec_l0": {
+            "relative_l2": 5.547367645620023e-08,
+            "max_absolute": 1.1958950318628316e-30,
+            "max_over_m_absolute": 1.1958950318628316e-30,
+            "max_over_m_m": -2,
+            "pm2_max_absolute": 1.1958950318628316e-30
+          },
+          "inverse_l0": {
+            "relative_l2": 5.5473676455533995e-08,
+            "max_absolute": 1.195895031853488e-30,
+            "max_over_m_absolute": 1.195895031853488e-30,
+            "max_over_m_m": 2,
+            "pm2_max_absolute": 1.195895031853488e-30
+          },
+          "pm2_amplitudes": {
+            "coprec": {
+              "-2": 0.0,
+              "2": 0.0
+            },
+            "inverse_predicted": {
+              "-2": 2.1091055534061507e-40,
+              "2": 1.578422590215474e-40
+            },
+            "l0_public": {
+              "-2": 1.1958950318628318e-30,
+              "2": 1.1958950318541169e-30
+            }
+          },
+          "native_matrix_unitarity_error": 6.043761227988202e-16,
+          "native_forward_relative_l2": 1.524915443871092e-16,
+          "native_roundtrip_relative_l2": 1.101004578614885e-16,
+          "high_precision": {
+            "status": "measured",
+            "native_matrix_relative_l2": 2.031822810285918e-16,
+            "mpmath_forward_relative_l2": 8.520952551313964e-17,
+            "precision_decimal_digits": 80,
+            "applied_matrix_dtype": "complex128 (after 80-digit evaluation)"
+          },
+          "coprec_norm": 3.0487450648132175e-23,
+          "j_mode_norm": 3.0487450648132175e-23,
+          "l0_mode_norm": 3.048745064813222e-23
+        }
+      ]
+    },
+    {
+      "backend": "torch",
+      "case": "high_mass_ratio",
+      "sample_rate_hz": 2048,
+      "distance_mpc": 100.0,
+      "reference_angles": {
+        "alpha": -2.6799370738265824,
+        "beta": 0.1857161056858135,
+        "gamma": 2.6799370738265824
+      },
+      "rows": [
+        {
+          "ell": 2,
+          "initial_sample": 0,
+          "coprec_l0": {
+            "relative_l2": 1.653410013162228e-16,
+            "max_absolute": 2.266261990178307e-37,
+            "max_over_m_absolute": 2.266261990178307e-37,
+            "max_over_m_m": -2,
+            "pm2_max_absolute": 2.266261990178307e-37
+          },
+          "inverse_l0": {
+            "relative_l2": 1.8372763972351067e-16,
+            "max_absolute": 2.0531887946333267e-37,
+            "max_over_m_absolute": 2.0531887946333267e-37,
+            "max_over_m_m": -2,
+            "pm2_max_absolute": 2.0531887946333267e-37
+          },
+          "pm2_amplitudes": {
+            "coprec": {
+              "-2": 1.1239500191047086e-21,
+              "2": 1.1239500191047086e-21
+            },
+            "inverse_predicted": {
+              "-2": 1.1239500191047086e-21,
+              "2": 1.1239500191047088e-21
+            },
+            "l0_public": {
+              "-2": 1.1239500191047084e-21,
+              "2": 1.1239500191047086e-21
+            }
+          },
+          "native_matrix_unitarity_error": 5.479877270295011e-16,
+          "native_forward_relative_l2": 2.761471449458093e-16,
+          "native_roundtrip_relative_l2": 3.368432482543073e-16,
+          "high_precision": {
+            "status": "measured",
+            "native_matrix_relative_l2": 7.689607348860434e-17,
+            "mpmath_forward_relative_l2": 1.3308252691371394e-16,
+            "precision_decimal_digits": 80,
+            "applied_matrix_dtype": "complex128 (after 80-digit evaluation)"
+          },
+          "coprec_norm": 1.5917854670734792e-21,
+          "j_mode_norm": 1.5917854670734789e-21,
+          "l0_mode_norm": 1.591785467073479e-21
+        },
+        {
+          "ell": 3,
+          "initial_sample": 0,
+          "coprec_l0": {
+            "relative_l2": 4.464021288022197e-16,
+            "max_absolute": 9.41428063086377e-38,
+            "max_over_m_absolute": 9.41428063086377e-38,
+            "max_over_m_m": -3,
+            "pm2_max_absolute": 6.571213189014052e-39
+          },
+          "inverse_l0": {
+            "relative_l2": 1.7247204394207215e-16,
+            "max_absolute": 2.735403153501746e-38,
+            "max_over_m_absolute": 2.735403153501746e-38,
+            "max_over_m_m": 2,
+            "pm2_max_absolute": 2.735403153501746e-38
+          },
+          "pm2_amplitudes": {
+            "coprec": {
+              "-2": 0.0,
+              "2": 0.0
+            },
+            "inverse_predicted": {
+              "-2": 2.566140783990526e-38,
+              "2": 2.679582899027196e-38
+            },
+            "l0_public": {
+              "-2": 6.455410543574334e-39,
+              "2": 6.571213189014052e-39
+            }
+          },
+          "native_matrix_unitarity_error": 8.38511442413309e-16,
+          "native_forward_relative_l2": 1.421246084556809e-16,
+          "native_roundtrip_relative_l2": 3.801614243772167e-16,
+          "high_precision": {
+            "status": "measured",
+            "native_matrix_relative_l2": 1.7530494872313007e-16,
+            "mpmath_forward_relative_l2": 1.3362346618390705e-16,
+            "precision_decimal_digits": 80,
+            "applied_matrix_dtype": "complex128 (after 80-digit evaluation)"
+          },
+          "coprec_norm": 2.6459833563279846e-22,
+          "j_mode_norm": 2.6459833563279846e-22,
+          "l0_mode_norm": 2.6459833563279837e-22
+        },
+        {
+          "ell": 4,
+          "initial_sample": 0,
+          "coprec_l0": {
+            "relative_l2": 9.532916199102059e-17,
+            "max_absolute": 4.200974264039737e-39,
+            "max_over_m_absolute": 4.200974264039737e-39,
+            "max_over_m_m": -3,
+            "pm2_max_absolute": 1.1760681826118095e-39
+          },
+          "inverse_l0": {
+            "relative_l2": 1.8517709022769781e-16,
+            "max_absolute": 5.979894265238971e-39,
+            "max_over_m_absolute": 5.979894265238971e-39,
+            "max_over_m_m": -4,
+            "pm2_max_absolute": 1.2321024729401348e-39
+          },
+          "pm2_amplitudes": {
+            "coprec": {
+              "-2": 0.0,
+              "2": 0.0
+            },
+            "inverse_predicted": {
+              "-2": 1.2910699084058846e-39,
+              "2": 1.2987500417389344e-39
+            },
+            "l0_public": {
+              "-2": 1.1436524216090197e-39,
+              "2": 1.1760681826118095e-39
+            }
+          },
+          "native_matrix_unitarity_error": 6.38781798198436e-16,
+          "native_forward_relative_l2": 1.674052102511575e-16,
+          "native_roundtrip_relative_l2": 1.9677381114290298e-16,
+          "high_precision": {
+            "status": "measured",
+            "native_matrix_relative_l2": 1.6412987340317968e-16,
+            "mpmath_forward_relative_l2": 1.3701203806545654e-16,
+            "precision_decimal_digits": 80,
+            "applied_matrix_dtype": "complex128 (after 80-digit evaluation)"
+          },
+          "coprec_norm": 6.11678228949797e-23,
+          "j_mode_norm": 6.116782289497972e-23,
+          "l0_mode_norm": 6.11678228949797e-23
+        },
+        {
+          "ell": 5,
+          "initial_sample": 0,
+          "coprec_l0": {
+            "relative_l2": 5.547367645620023e-08,
+            "max_absolute": 5.979475159314158e-31,
+            "max_over_m_absolute": 5.979475159314158e-31,
+            "max_over_m_m": -2,
+            "pm2_max_absolute": 5.979475159314158e-31
+          },
+          "inverse_l0": {
+            "relative_l2": 5.5473676455533995e-08,
+            "max_absolute": 5.97947515926744e-31,
+            "max_over_m_absolute": 5.97947515926744e-31,
+            "max_over_m_m": 2,
+            "pm2_max_absolute": 5.97947515926744e-31
+          },
+          "pm2_amplitudes": {
+            "coprec": {
+              "-2": 0.0,
+              "2": 0.0
+            },
+            "inverse_predicted": {
+              "-2": 1.0545527767030753e-40,
+              "2": 7.89211295107737e-41
+            },
+            "l0_public": {
+              "-2": 5.979475159314159e-31,
+              "2": 5.9794751592705845e-31
+            }
+          },
+          "native_matrix_unitarity_error": 6.043761227988202e-16,
+          "native_forward_relative_l2": 1.524915443871092e-16,
+          "native_roundtrip_relative_l2": 1.101004578614885e-16,
+          "high_precision": {
+            "status": "measured",
+            "native_matrix_relative_l2": 2.031822810285918e-16,
+            "mpmath_forward_relative_l2": 8.520952551313964e-17,
+            "precision_decimal_digits": 80,
+            "applied_matrix_dtype": "complex128 (after 80-digit evaluation)"
+          },
+          "coprec_norm": 1.5243725324066088e-23,
+          "j_mode_norm": 1.5243725324066088e-23,
+          "l0_mode_norm": 1.524372532406611e-23
+        }
+      ]
+    },
+    {
+      "backend": "torch",
+      "case": "high_mass_ratio",
+      "sample_rate_hz": 2048,
+      "distance_mpc": 200.0,
+      "reference_angles": {
+        "alpha": -2.6799370738265824,
+        "beta": 0.1857161056858135,
+        "gamma": 2.6799370738265824
+      },
+      "rows": [
+        {
+          "ell": 2,
+          "initial_sample": 0,
+          "coprec_l0": {
+            "relative_l2": 1.653410013162228e-16,
+            "max_absolute": 1.1331309950891534e-37,
+            "max_over_m_absolute": 1.1331309950891534e-37,
+            "max_over_m_m": -2,
+            "pm2_max_absolute": 1.1331309950891534e-37
+          },
+          "inverse_l0": {
+            "relative_l2": 1.8372763972351067e-16,
+            "max_absolute": 1.0265943973166633e-37,
+            "max_over_m_absolute": 1.0265943973166633e-37,
+            "max_over_m_m": -2,
+            "pm2_max_absolute": 1.0265943973166633e-37
+          },
+          "pm2_amplitudes": {
+            "coprec": {
+              "-2": 5.619750095523543e-22,
+              "2": 5.619750095523543e-22
+            },
+            "inverse_predicted": {
+              "-2": 5.619750095523543e-22,
+              "2": 5.619750095523544e-22
+            },
+            "l0_public": {
+              "-2": 5.619750095523542e-22,
+              "2": 5.619750095523543e-22
+            }
+          },
+          "native_matrix_unitarity_error": 5.479877270295011e-16,
+          "native_forward_relative_l2": 2.761471449458093e-16,
+          "native_roundtrip_relative_l2": 3.368432482543073e-16,
+          "high_precision": {
+            "status": "measured",
+            "native_matrix_relative_l2": 7.689607348860434e-17,
+            "mpmath_forward_relative_l2": 1.3308252691371394e-16,
+            "precision_decimal_digits": 80,
+            "applied_matrix_dtype": "complex128 (after 80-digit evaluation)"
+          },
+          "coprec_norm": 7.958927335367396e-22,
+          "j_mode_norm": 7.958927335367394e-22,
+          "l0_mode_norm": 7.958927335367395e-22
+        },
+        {
+          "ell": 3,
+          "initial_sample": 0,
+          "coprec_l0": {
+            "relative_l2": 4.464021288022197e-16,
+            "max_absolute": 4.707140315431885e-38,
+            "max_over_m_absolute": 4.707140315431885e-38,
+            "max_over_m_m": -3,
+            "pm2_max_absolute": 3.285606594507026e-39
+          },
+          "inverse_l0": {
+            "relative_l2": 1.7247204394207215e-16,
+            "max_absolute": 1.367701576750873e-38,
+            "max_over_m_absolute": 1.367701576750873e-38,
+            "max_over_m_m": 2,
+            "pm2_max_absolute": 1.367701576750873e-38
+          },
+          "pm2_amplitudes": {
+            "coprec": {
+              "-2": 0.0,
+              "2": 0.0
+            },
+            "inverse_predicted": {
+              "-2": 1.283070391995263e-38,
+              "2": 1.339791449513598e-38
+            },
+            "l0_public": {
+              "-2": 3.227705271787167e-39,
+              "2": 3.285606594507026e-39
+            }
+          },
+          "native_matrix_unitarity_error": 8.38511442413309e-16,
+          "native_forward_relative_l2": 1.421246084556809e-16,
+          "native_roundtrip_relative_l2": 3.801614243772167e-16,
+          "high_precision": {
+            "status": "measured",
+            "native_matrix_relative_l2": 1.7530494872313007e-16,
+            "mpmath_forward_relative_l2": 1.3362346618390705e-16,
+            "precision_decimal_digits": 80,
+            "applied_matrix_dtype": "complex128 (after 80-digit evaluation)"
+          },
+          "coprec_norm": 1.3229916781639923e-22,
+          "j_mode_norm": 1.3229916781639923e-22,
+          "l0_mode_norm": 1.3229916781639918e-22
+        },
+        {
+          "ell": 4,
+          "initial_sample": 0,
+          "coprec_l0": {
+            "relative_l2": 9.532916199102059e-17,
+            "max_absolute": 2.1004871320198685e-39,
+            "max_over_m_absolute": 2.1004871320198685e-39,
+            "max_over_m_m": -3,
+            "pm2_max_absolute": 5.880340913059048e-40
+          },
+          "inverse_l0": {
+            "relative_l2": 1.8517709022769781e-16,
+            "max_absolute": 2.9899471326194855e-39,
+            "max_over_m_absolute": 2.9899471326194855e-39,
+            "max_over_m_m": -4,
+            "pm2_max_absolute": 6.160512364700674e-40
+          },
+          "pm2_amplitudes": {
+            "coprec": {
+              "-2": 0.0,
+              "2": 0.0
+            },
+            "inverse_predicted": {
+              "-2": 6.455349542029423e-40,
+              "2": 6.493750208694672e-40
+            },
+            "l0_public": {
+              "-2": 5.718262108045099e-40,
+              "2": 5.880340913059048e-40
+            }
+          },
+          "native_matrix_unitarity_error": 6.38781798198436e-16,
+          "native_forward_relative_l2": 1.674052102511575e-16,
+          "native_roundtrip_relative_l2": 1.9677381114290298e-16,
+          "high_precision": {
+            "status": "measured",
+            "native_matrix_relative_l2": 1.6412987340317968e-16,
+            "mpmath_forward_relative_l2": 1.3701203806545654e-16,
+            "precision_decimal_digits": 80,
+            "applied_matrix_dtype": "complex128 (after 80-digit evaluation)"
+          },
+          "coprec_norm": 3.058391144748985e-23,
+          "j_mode_norm": 3.058391144748986e-23,
+          "l0_mode_norm": 3.058391144748985e-23
+        },
+        {
+          "ell": 5,
+          "initial_sample": 0,
+          "coprec_l0": {
+            "relative_l2": 5.547367645620023e-08,
+            "max_absolute": 2.989737579657079e-31,
+            "max_over_m_absolute": 2.989737579657079e-31,
+            "max_over_m_m": -2,
+            "pm2_max_absolute": 2.989737579657079e-31
+          },
+          "inverse_l0": {
+            "relative_l2": 5.5473676455533995e-08,
+            "max_absolute": 2.98973757963372e-31,
+            "max_over_m_absolute": 2.98973757963372e-31,
+            "max_over_m_m": 2,
+            "pm2_max_absolute": 2.98973757963372e-31
+          },
+          "pm2_amplitudes": {
+            "coprec": {
+              "-2": 0.0,
+              "2": 0.0
+            },
+            "inverse_predicted": {
+              "-2": 5.272763883515377e-41,
+              "2": 3.946056475538685e-41
+            },
+            "l0_public": {
+              "-2": 2.9897375796570794e-31,
+              "2": 2.9897375796352923e-31
+            }
+          },
+          "native_matrix_unitarity_error": 6.043761227988202e-16,
+          "native_forward_relative_l2": 1.524915443871092e-16,
+          "native_roundtrip_relative_l2": 1.101004578614885e-16,
+          "high_precision": {
+            "status": "measured",
+            "native_matrix_relative_l2": 2.031822810285918e-16,
+            "mpmath_forward_relative_l2": 8.520952551313964e-17,
+            "precision_decimal_digits": 80,
+            "applied_matrix_dtype": "complex128 (after 80-digit evaluation)"
+          },
+          "coprec_norm": 7.621862662033044e-24,
+          "j_mode_norm": 7.621862662033044e-24,
+          "l0_mode_norm": 7.621862662033056e-24
+        }
+      ]
+    },
+    {
+      "backend": "torch",
+      "case": "high_mass_ratio",
+      "sample_rate_hz": 8192,
+      "distance_mpc": 50.0,
+      "reference_angles": {
+        "alpha": -2.6799370738265824,
+        "beta": 0.1857161056858135,
+        "gamma": 2.6799370738265824
+      },
+      "rows": [
+        {
+          "ell": 2,
+          "initial_sample": 0,
+          "coprec_l0": {
+            "relative_l2": 1.653410013162228e-16,
+            "max_absolute": 4.532523980356614e-37,
+            "max_over_m_absolute": 4.532523980356614e-37,
+            "max_over_m_m": -2,
+            "pm2_max_absolute": 4.532523980356614e-37
+          },
+          "inverse_l0": {
+            "relative_l2": 1.8372763972351067e-16,
+            "max_absolute": 4.106377589266653e-37,
+            "max_over_m_absolute": 4.106377589266653e-37,
+            "max_over_m_m": -2,
+            "pm2_max_absolute": 4.106377589266653e-37
+          },
+          "pm2_amplitudes": {
+            "coprec": {
+              "-2": 2.2479000382094172e-21,
+              "2": 2.2479000382094172e-21
+            },
+            "inverse_predicted": {
+              "-2": 2.2479000382094172e-21,
+              "2": 2.2479000382094176e-21
+            },
+            "l0_public": {
+              "-2": 2.247900038209417e-21,
+              "2": 2.2479000382094172e-21
+            }
+          },
+          "native_matrix_unitarity_error": 5.479877270295011e-16,
+          "native_forward_relative_l2": 2.761471449458093e-16,
+          "native_roundtrip_relative_l2": 3.368432482543073e-16,
+          "high_precision": {
+            "status": "measured",
+            "native_matrix_relative_l2": 7.689607348860434e-17,
+            "mpmath_forward_relative_l2": 1.3308252691371394e-16,
+            "precision_decimal_digits": 80,
+            "applied_matrix_dtype": "complex128 (after 80-digit evaluation)"
+          },
+          "coprec_norm": 3.1835709341469585e-21,
+          "j_mode_norm": 3.1835709341469577e-21,
+          "l0_mode_norm": 3.183570934146958e-21
+        },
+        {
+          "ell": 3,
+          "initial_sample": 0,
+          "coprec_l0": {
+            "relative_l2": 4.464021288022197e-16,
+            "max_absolute": 1.882856126172754e-37,
+            "max_over_m_absolute": 1.882856126172754e-37,
+            "max_over_m_m": -3,
+            "pm2_max_absolute": 1.3142426378028104e-38
+          },
+          "inverse_l0": {
+            "relative_l2": 1.7247204394207215e-16,
+            "max_absolute": 5.470806307003492e-38,
+            "max_over_m_absolute": 5.470806307003492e-38,
+            "max_over_m_m": 2,
+            "pm2_max_absolute": 5.470806307003492e-38
+          },
+          "pm2_amplitudes": {
+            "coprec": {
+              "-2": 0.0,
+              "2": 0.0
+            },
+            "inverse_predicted": {
+              "-2": 5.132281567981053e-38,
+              "2": 5.359165798054391e-38
+            },
+            "l0_public": {
+              "-2": 1.2910821087148667e-38,
+              "2": 1.3142426378028104e-38
+            }
+          },
+          "native_matrix_unitarity_error": 8.38511442413309e-16,
+          "native_forward_relative_l2": 1.421246084556809e-16,
+          "native_roundtrip_relative_l2": 3.801614243772167e-16,
+          "high_precision": {
+            "status": "measured",
+            "native_matrix_relative_l2": 1.7530494872313007e-16,
+            "mpmath_forward_relative_l2": 1.3362346618390705e-16,
+            "precision_decimal_digits": 80,
+            "applied_matrix_dtype": "complex128 (after 80-digit evaluation)"
+          },
+          "coprec_norm": 5.291966712655969e-22,
+          "j_mode_norm": 5.291966712655969e-22,
+          "l0_mode_norm": 5.291966712655967e-22
+        },
+        {
+          "ell": 4,
+          "initial_sample": 0,
+          "coprec_l0": {
+            "relative_l2": 9.532916199102059e-17,
+            "max_absolute": 8.401948528079474e-39,
+            "max_over_m_absolute": 8.401948528079474e-39,
+            "max_over_m_m": -3,
+            "pm2_max_absolute": 2.352136365223619e-39
+          },
+          "inverse_l0": {
+            "relative_l2": 1.8517709022769781e-16,
+            "max_absolute": 1.1959788530477942e-38,
+            "max_over_m_absolute": 1.1959788530477942e-38,
+            "max_over_m_m": -4,
+            "pm2_max_absolute": 2.4642049458802695e-39
+          },
+          "pm2_amplitudes": {
+            "coprec": {
+              "-2": 0.0,
+              "2": 0.0
+            },
+            "inverse_predicted": {
+              "-2": 2.5821398168117693e-39,
+              "2": 2.5975000834778688e-39
+            },
+            "l0_public": {
+              "-2": 2.2873048432180395e-39,
+              "2": 2.352136365223619e-39
+            }
+          },
+          "native_matrix_unitarity_error": 6.38781798198436e-16,
+          "native_forward_relative_l2": 1.674052102511575e-16,
+          "native_roundtrip_relative_l2": 1.9677381114290298e-16,
+          "high_precision": {
+            "status": "measured",
+            "native_matrix_relative_l2": 1.6412987340317968e-16,
+            "mpmath_forward_relative_l2": 1.3701203806545654e-16,
+            "precision_decimal_digits": 80,
+            "applied_matrix_dtype": "complex128 (after 80-digit evaluation)"
+          },
+          "coprec_norm": 1.223356457899594e-22,
+          "j_mode_norm": 1.2233564578995943e-22,
+          "l0_mode_norm": 1.223356457899594e-22
+        },
+        {
+          "ell": 5,
+          "initial_sample": 0,
+          "coprec_l0": {
+            "relative_l2": 5.547367645620023e-08,
+            "max_absolute": 1.1958950318628316e-30,
+            "max_over_m_absolute": 1.1958950318628316e-30,
+            "max_over_m_m": -2,
+            "pm2_max_absolute": 1.1958950318628316e-30
+          },
+          "inverse_l0": {
+            "relative_l2": 5.5473676455533995e-08,
+            "max_absolute": 1.195895031853488e-30,
+            "max_over_m_absolute": 1.195895031853488e-30,
+            "max_over_m_m": 2,
+            "pm2_max_absolute": 1.195895031853488e-30
+          },
+          "pm2_amplitudes": {
+            "coprec": {
+              "-2": 0.0,
+              "2": 0.0
+            },
+            "inverse_predicted": {
+              "-2": 2.1091055534061507e-40,
+              "2": 1.578422590215474e-40
+            },
+            "l0_public": {
+              "-2": 1.1958950318628318e-30,
+              "2": 1.1958950318541169e-30
+            }
+          },
+          "native_matrix_unitarity_error": 6.043761227988202e-16,
+          "native_forward_relative_l2": 1.524915443871092e-16,
+          "native_roundtrip_relative_l2": 1.101004578614885e-16,
+          "high_precision": {
+            "status": "measured",
+            "native_matrix_relative_l2": 2.031822810285918e-16,
+            "mpmath_forward_relative_l2": 8.520952551313964e-17,
+            "precision_decimal_digits": 80,
+            "applied_matrix_dtype": "complex128 (after 80-digit evaluation)"
+          },
+          "coprec_norm": 3.0487450648132175e-23,
+          "j_mode_norm": 3.0487450648132175e-23,
+          "l0_mode_norm": 3.048745064813222e-23
+        }
+      ]
+    },
+    {
+      "backend": "torch",
+      "case": "high_mass_ratio",
+      "sample_rate_hz": 8192,
+      "distance_mpc": 100.0,
+      "reference_angles": {
+        "alpha": -2.6799370738265824,
+        "beta": 0.1857161056858135,
+        "gamma": 2.6799370738265824
+      },
+      "rows": [
+        {
+          "ell": 2,
+          "initial_sample": 0,
+          "coprec_l0": {
+            "relative_l2": 1.653410013162228e-16,
+            "max_absolute": 2.266261990178307e-37,
+            "max_over_m_absolute": 2.266261990178307e-37,
+            "max_over_m_m": -2,
+            "pm2_max_absolute": 2.266261990178307e-37
+          },
+          "inverse_l0": {
+            "relative_l2": 1.8372763972351067e-16,
+            "max_absolute": 2.0531887946333267e-37,
+            "max_over_m_absolute": 2.0531887946333267e-37,
+            "max_over_m_m": -2,
+            "pm2_max_absolute": 2.0531887946333267e-37
+          },
+          "pm2_amplitudes": {
+            "coprec": {
+              "-2": 1.1239500191047086e-21,
+              "2": 1.1239500191047086e-21
+            },
+            "inverse_predicted": {
+              "-2": 1.1239500191047086e-21,
+              "2": 1.1239500191047088e-21
+            },
+            "l0_public": {
+              "-2": 1.1239500191047084e-21,
+              "2": 1.1239500191047086e-21
+            }
+          },
+          "native_matrix_unitarity_error": 5.479877270295011e-16,
+          "native_forward_relative_l2": 2.761471449458093e-16,
+          "native_roundtrip_relative_l2": 3.368432482543073e-16,
+          "high_precision": {
+            "status": "measured",
+            "native_matrix_relative_l2": 7.689607348860434e-17,
+            "mpmath_forward_relative_l2": 1.3308252691371394e-16,
+            "precision_decimal_digits": 80,
+            "applied_matrix_dtype": "complex128 (after 80-digit evaluation)"
+          },
+          "coprec_norm": 1.5917854670734792e-21,
+          "j_mode_norm": 1.5917854670734789e-21,
+          "l0_mode_norm": 1.591785467073479e-21
+        },
+        {
+          "ell": 3,
+          "initial_sample": 0,
+          "coprec_l0": {
+            "relative_l2": 4.464021288022197e-16,
+            "max_absolute": 9.41428063086377e-38,
+            "max_over_m_absolute": 9.41428063086377e-38,
+            "max_over_m_m": -3,
+            "pm2_max_absolute": 6.571213189014052e-39
+          },
+          "inverse_l0": {
+            "relative_l2": 1.7247204394207215e-16,
+            "max_absolute": 2.735403153501746e-38,
+            "max_over_m_absolute": 2.735403153501746e-38,
+            "max_over_m_m": 2,
+            "pm2_max_absolute": 2.735403153501746e-38
+          },
+          "pm2_amplitudes": {
+            "coprec": {
+              "-2": 0.0,
+              "2": 0.0
+            },
+            "inverse_predicted": {
+              "-2": 2.566140783990526e-38,
+              "2": 2.679582899027196e-38
+            },
+            "l0_public": {
+              "-2": 6.455410543574334e-39,
+              "2": 6.571213189014052e-39
+            }
+          },
+          "native_matrix_unitarity_error": 8.38511442413309e-16,
+          "native_forward_relative_l2": 1.421246084556809e-16,
+          "native_roundtrip_relative_l2": 3.801614243772167e-16,
+          "high_precision": {
+            "status": "measured",
+            "native_matrix_relative_l2": 1.7530494872313007e-16,
+            "mpmath_forward_relative_l2": 1.3362346618390705e-16,
+            "precision_decimal_digits": 80,
+            "applied_matrix_dtype": "complex128 (after 80-digit evaluation)"
+          },
+          "coprec_norm": 2.6459833563279846e-22,
+          "j_mode_norm": 2.6459833563279846e-22,
+          "l0_mode_norm": 2.6459833563279837e-22
+        },
+        {
+          "ell": 4,
+          "initial_sample": 0,
+          "coprec_l0": {
+            "relative_l2": 9.532916199102059e-17,
+            "max_absolute": 4.200974264039737e-39,
+            "max_over_m_absolute": 4.200974264039737e-39,
+            "max_over_m_m": -3,
+            "pm2_max_absolute": 1.1760681826118095e-39
+          },
+          "inverse_l0": {
+            "relative_l2": 1.8517709022769781e-16,
+            "max_absolute": 5.979894265238971e-39,
+            "max_over_m_absolute": 5.979894265238971e-39,
+            "max_over_m_m": -4,
+            "pm2_max_absolute": 1.2321024729401348e-39
+          },
+          "pm2_amplitudes": {
+            "coprec": {
+              "-2": 0.0,
+              "2": 0.0
+            },
+            "inverse_predicted": {
+              "-2": 1.2910699084058846e-39,
+              "2": 1.2987500417389344e-39
+            },
+            "l0_public": {
+              "-2": 1.1436524216090197e-39,
+              "2": 1.1760681826118095e-39
+            }
+          },
+          "native_matrix_unitarity_error": 6.38781798198436e-16,
+          "native_forward_relative_l2": 1.674052102511575e-16,
+          "native_roundtrip_relative_l2": 1.9677381114290298e-16,
+          "high_precision": {
+            "status": "measured",
+            "native_matrix_relative_l2": 1.6412987340317968e-16,
+            "mpmath_forward_relative_l2": 1.3701203806545654e-16,
+            "precision_decimal_digits": 80,
+            "applied_matrix_dtype": "complex128 (after 80-digit evaluation)"
+          },
+          "coprec_norm": 6.11678228949797e-23,
+          "j_mode_norm": 6.116782289497972e-23,
+          "l0_mode_norm": 6.11678228949797e-23
+        },
+        {
+          "ell": 5,
+          "initial_sample": 0,
+          "coprec_l0": {
+            "relative_l2": 5.547367645620023e-08,
+            "max_absolute": 5.979475159314158e-31,
+            "max_over_m_absolute": 5.979475159314158e-31,
+            "max_over_m_m": -2,
+            "pm2_max_absolute": 5.979475159314158e-31
+          },
+          "inverse_l0": {
+            "relative_l2": 5.5473676455533995e-08,
+            "max_absolute": 5.97947515926744e-31,
+            "max_over_m_absolute": 5.97947515926744e-31,
+            "max_over_m_m": 2,
+            "pm2_max_absolute": 5.97947515926744e-31
+          },
+          "pm2_amplitudes": {
+            "coprec": {
+              "-2": 0.0,
+              "2": 0.0
+            },
+            "inverse_predicted": {
+              "-2": 1.0545527767030753e-40,
+              "2": 7.89211295107737e-41
+            },
+            "l0_public": {
+              "-2": 5.979475159314159e-31,
+              "2": 5.9794751592705845e-31
+            }
+          },
+          "native_matrix_unitarity_error": 6.043761227988202e-16,
+          "native_forward_relative_l2": 1.524915443871092e-16,
+          "native_roundtrip_relative_l2": 1.101004578614885e-16,
+          "high_precision": {
+            "status": "measured",
+            "native_matrix_relative_l2": 2.031822810285918e-16,
+            "mpmath_forward_relative_l2": 8.520952551313964e-17,
+            "precision_decimal_digits": 80,
+            "applied_matrix_dtype": "complex128 (after 80-digit evaluation)"
+          },
+          "coprec_norm": 1.5243725324066088e-23,
+          "j_mode_norm": 1.5243725324066088e-23,
+          "l0_mode_norm": 1.524372532406611e-23
+        }
+      ]
+    },
+    {
+      "backend": "torch",
+      "case": "high_mass_ratio",
+      "sample_rate_hz": 8192,
+      "distance_mpc": 200.0,
+      "reference_angles": {
+        "alpha": -2.6799370738265824,
+        "beta": 0.1857161056858135,
+        "gamma": 2.6799370738265824
+      },
+      "rows": [
+        {
+          "ell": 2,
+          "initial_sample": 0,
+          "coprec_l0": {
+            "relative_l2": 1.653410013162228e-16,
+            "max_absolute": 1.1331309950891534e-37,
+            "max_over_m_absolute": 1.1331309950891534e-37,
+            "max_over_m_m": -2,
+            "pm2_max_absolute": 1.1331309950891534e-37
+          },
+          "inverse_l0": {
+            "relative_l2": 1.8372763972351067e-16,
+            "max_absolute": 1.0265943973166633e-37,
+            "max_over_m_absolute": 1.0265943973166633e-37,
+            "max_over_m_m": -2,
+            "pm2_max_absolute": 1.0265943973166633e-37
+          },
+          "pm2_amplitudes": {
+            "coprec": {
+              "-2": 5.619750095523543e-22,
+              "2": 5.619750095523543e-22
+            },
+            "inverse_predicted": {
+              "-2": 5.619750095523543e-22,
+              "2": 5.619750095523544e-22
+            },
+            "l0_public": {
+              "-2": 5.619750095523542e-22,
+              "2": 5.619750095523543e-22
+            }
+          },
+          "native_matrix_unitarity_error": 5.479877270295011e-16,
+          "native_forward_relative_l2": 2.761471449458093e-16,
+          "native_roundtrip_relative_l2": 3.368432482543073e-16,
+          "high_precision": {
+            "status": "measured",
+            "native_matrix_relative_l2": 7.689607348860434e-17,
+            "mpmath_forward_relative_l2": 1.3308252691371394e-16,
+            "precision_decimal_digits": 80,
+            "applied_matrix_dtype": "complex128 (after 80-digit evaluation)"
+          },
+          "coprec_norm": 7.958927335367396e-22,
+          "j_mode_norm": 7.958927335367394e-22,
+          "l0_mode_norm": 7.958927335367395e-22
+        },
+        {
+          "ell": 3,
+          "initial_sample": 0,
+          "coprec_l0": {
+            "relative_l2": 4.464021288022197e-16,
+            "max_absolute": 4.707140315431885e-38,
+            "max_over_m_absolute": 4.707140315431885e-38,
+            "max_over_m_m": -3,
+            "pm2_max_absolute": 3.285606594507026e-39
+          },
+          "inverse_l0": {
+            "relative_l2": 1.7247204394207215e-16,
+            "max_absolute": 1.367701576750873e-38,
+            "max_over_m_absolute": 1.367701576750873e-38,
+            "max_over_m_m": 2,
+            "pm2_max_absolute": 1.367701576750873e-38
+          },
+          "pm2_amplitudes": {
+            "coprec": {
+              "-2": 0.0,
+              "2": 0.0
+            },
+            "inverse_predicted": {
+              "-2": 1.283070391995263e-38,
+              "2": 1.339791449513598e-38
+            },
+            "l0_public": {
+              "-2": 3.227705271787167e-39,
+              "2": 3.285606594507026e-39
+            }
+          },
+          "native_matrix_unitarity_error": 8.38511442413309e-16,
+          "native_forward_relative_l2": 1.421246084556809e-16,
+          "native_roundtrip_relative_l2": 3.801614243772167e-16,
+          "high_precision": {
+            "status": "measured",
+            "native_matrix_relative_l2": 1.7530494872313007e-16,
+            "mpmath_forward_relative_l2": 1.3362346618390705e-16,
+            "precision_decimal_digits": 80,
+            "applied_matrix_dtype": "complex128 (after 80-digit evaluation)"
+          },
+          "coprec_norm": 1.3229916781639923e-22,
+          "j_mode_norm": 1.3229916781639923e-22,
+          "l0_mode_norm": 1.3229916781639918e-22
+        },
+        {
+          "ell": 4,
+          "initial_sample": 0,
+          "coprec_l0": {
+            "relative_l2": 9.532916199102059e-17,
+            "max_absolute": 2.1004871320198685e-39,
+            "max_over_m_absolute": 2.1004871320198685e-39,
+            "max_over_m_m": -3,
+            "pm2_max_absolute": 5.880340913059048e-40
+          },
+          "inverse_l0": {
+            "relative_l2": 1.8517709022769781e-16,
+            "max_absolute": 2.9899471326194855e-39,
+            "max_over_m_absolute": 2.9899471326194855e-39,
+            "max_over_m_m": -4,
+            "pm2_max_absolute": 6.160512364700674e-40
+          },
+          "pm2_amplitudes": {
+            "coprec": {
+              "-2": 0.0,
+              "2": 0.0
+            },
+            "inverse_predicted": {
+              "-2": 6.455349542029423e-40,
+              "2": 6.493750208694672e-40
+            },
+            "l0_public": {
+              "-2": 5.718262108045099e-40,
+              "2": 5.880340913059048e-40
+            }
+          },
+          "native_matrix_unitarity_error": 6.38781798198436e-16,
+          "native_forward_relative_l2": 1.674052102511575e-16,
+          "native_roundtrip_relative_l2": 1.9677381114290298e-16,
+          "high_precision": {
+            "status": "measured",
+            "native_matrix_relative_l2": 1.6412987340317968e-16,
+            "mpmath_forward_relative_l2": 1.3701203806545654e-16,
+            "precision_decimal_digits": 80,
+            "applied_matrix_dtype": "complex128 (after 80-digit evaluation)"
+          },
+          "coprec_norm": 3.058391144748985e-23,
+          "j_mode_norm": 3.058391144748986e-23,
+          "l0_mode_norm": 3.058391144748985e-23
+        },
+        {
+          "ell": 5,
+          "initial_sample": 0,
+          "coprec_l0": {
+            "relative_l2": 5.547367645620023e-08,
+            "max_absolute": 2.989737579657079e-31,
+            "max_over_m_absolute": 2.989737579657079e-31,
+            "max_over_m_m": -2,
+            "pm2_max_absolute": 2.989737579657079e-31
+          },
+          "inverse_l0": {
+            "relative_l2": 5.5473676455533995e-08,
+            "max_absolute": 2.98973757963372e-31,
+            "max_over_m_absolute": 2.98973757963372e-31,
+            "max_over_m_m": 2,
+            "pm2_max_absolute": 2.98973757963372e-31
+          },
+          "pm2_amplitudes": {
+            "coprec": {
+              "-2": 0.0,
+              "2": 0.0
+            },
+            "inverse_predicted": {
+              "-2": 5.272763883515377e-41,
+              "2": 3.946056475538685e-41
+            },
+            "l0_public": {
+              "-2": 2.9897375796570794e-31,
+              "2": 2.9897375796352923e-31
+            }
+          },
+          "native_matrix_unitarity_error": 6.043761227988202e-16,
+          "native_forward_relative_l2": 1.524915443871092e-16,
+          "native_roundtrip_relative_l2": 1.101004578614885e-16,
+          "high_precision": {
+            "status": "measured",
+            "native_matrix_relative_l2": 2.031822810285918e-16,
+            "mpmath_forward_relative_l2": 8.520952551313964e-17,
+            "precision_decimal_digits": 80,
+            "applied_matrix_dtype": "complex128 (after 80-digit evaluation)"
+          },
+          "coprec_norm": 7.621862662033044e-24,
+          "j_mode_norm": 7.621862662033044e-24,
+          "l0_mode_norm": 7.621862662033056e-24
+        }
+      ]
+    }
+  ]
+}
