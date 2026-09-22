@@ -56,22 +56,26 @@ and compiler limitations, and no TPU measurements are reported here.
 DiffGW's batching advantage is visible in the
 [FP64 package benchmarks](package_benchmarks.md): at **1,000 binaries**,
 compiled PyTorch has the lowest measured CPU batch latency for both
-IMRPhenomD and IMRPhenomXAS. The table shows complete-batch median latencies
+IMRPhenomD and IMRPhenomXAS. The plot shows complete-batch median latencies
 for that batch size, with **1,969 frequency bins and both polarizations**.
-CPU results use one Ryzen 9 7950X3D core; GPU results use the same RTX 5090.
+CPU results use one logical Ryzen 9 7950X3D CPU; GPU results use the same RTX 5090.
 
-| Workload | DiffGW | Compared implementation | Speedup in this workload |
-| --- | ---: | ---: | ---: |
-| CPU, IMRPhenomD | Compiled PyTorch: **73.1 ms** | LAL: 199 ms | **2.7×** |
-| CPU, IMRPhenomXAS | Compiled PyTorch: **114 ms** | LAL: 160 ms | **1.4×** |
-| CPU, IMRPhenomXAS | Compiled PyTorch: **114 ms** | Ripple JAX JIT: 400 ms | **3.5×** |
-| GPU, IMRPhenomXAS | JAX JIT: **4.70 ms** | Ripple JAX JIT: 5.34 ms | **1.1×** |
+[![Complete-batch latency for DiffGW, Ripple and LALSimulation at 1,000 binaries, with separate CPU and GPU panels for IMRPhenomD and IMRPhenomXAS. Lower is faster; hollow markers denote failed agreement checks.](benchmarks/plots/package-latency-summary.svg)](benchmarks/plots/package-latency-summary.svg)
 
-Every comparison in this table passes the campaign's strict LAL reference gate:
+Axes are logarithmic, with a shared scale within each hardware row. Error bars
+are 95% bootstrap intervals within the recorded run on 21 September 2026;
+they do not measure variation across machines or independent runs. Select the
+plot to view it at full size. The
+[batch-scaling plots](package_benchmarks.md#warmed-batch-latency) cover all four
+batch sizes and include TaylorF2.
+
+Filled markers pass the campaign's strict LAL reference gate; hollow markers
+and † identify diagnostic timings that fail it. The gate requires
 direct relative L2 at most `1e-11` and flat-weight, constant-phase-maximized
 mismatch at most `1e-14`, for every binary and both polarizations. Across all
-measured batches and devices, DiffGW's largest relative L2 error is `9.21e-13`
-for PhenomD and `1.67e-13` for PhenomXAS.
+measured batches and devices, DiffGW passes for PhenomD and PhenomXAS, with
+largest relative L2 errors of `9.21e-13` and `1.67e-13` respectively. LAL's
+agreement with itself is a consistency check.
 
 These are warmed waveform-generation timings with inputs already on the device;
 they exclude transfers, setup and derivative evaluation. LAL has the lowest

@@ -80,20 +80,22 @@ The maxima below include both devices, all four batch sizes and both polarizatio
 Each implementation/model has eight configurations; counts refer to batches,
 not individual binaries. Thresholds are the same for every package.
 
-| Model | Implementation | Qualified configurations | Maximum relative L2 | Maximum mismatch |
-| --- | --- | ---: | ---: | ---: |
-| TaylorF2 | DiffGW Torch eager | 0/8 | 3.437e-11 | 5.551e-16 |
-| TaylorF2 | DiffGW Torch compiled | 0/8 | 3.438e-11 | 5.551e-16 |
-| TaylorF2 | DiffGW JAX JIT | 0/8 | 3.424e-11 | 5.551e-16 |
-| TaylorF2 | Ripple JAX JIT | 0/8 | 3.066e-11 | 5.551e-16 |
-| IMRPhenomD | DiffGW Torch eager | 8/8 | 9.169e-13 | 6.661e-16 |
-| IMRPhenomD | DiffGW Torch compiled | 8/8 | 9.211e-13 | 5.551e-16 |
-| IMRPhenomD | DiffGW JAX JIT | 8/8 | 9.083e-13 | 6.661e-16 |
-| IMRPhenomD | Ripple JAX JIT | 2/8 | 2.806e-11 | 6.661e-16 |
-| IMRPhenomXAS | DiffGW Torch eager | 8/8 | 1.674e-13 | 5.551e-16 |
-| IMRPhenomXAS | DiffGW Torch compiled | 8/8 | 1.521e-13 | 5.551e-16 |
-| IMRPhenomXAS | DiffGW JAX JIT | 8/8 | 1.658e-13 | 4.441e-16 |
-| IMRPhenomXAS | Ripple JAX JIT | 8/8 | 1.680e-13 | 6.661e-16 |
+??? abstract "Detailed accuracy table"
+
+    | Model | Implementation | Qualified configurations | Maximum relative L2 | Maximum mismatch |
+    | --- | --- | ---: | ---: | ---: |
+    | TaylorF2 | DiffGW Torch eager | 0/8 | 3.437e-11 | 5.551e-16 |
+    | TaylorF2 | DiffGW Torch compiled | 0/8 | 3.438e-11 | 5.551e-16 |
+    | TaylorF2 | DiffGW JAX JIT | 0/8 | 3.424e-11 | 5.551e-16 |
+    | TaylorF2 | Ripple JAX JIT | 0/8 | 3.066e-11 | 5.551e-16 |
+    | IMRPhenomD | DiffGW Torch eager | 8/8 | 9.169e-13 | 6.661e-16 |
+    | IMRPhenomD | DiffGW Torch compiled | 8/8 | 9.211e-13 | 5.551e-16 |
+    | IMRPhenomD | DiffGW JAX JIT | 8/8 | 9.083e-13 | 6.661e-16 |
+    | IMRPhenomD | Ripple JAX JIT | 2/8 | 2.806e-11 | 6.661e-16 |
+    | IMRPhenomXAS | DiffGW Torch eager | 8/8 | 1.674e-13 | 5.551e-16 |
+    | IMRPhenomXAS | DiffGW Torch compiled | 8/8 | 1.521e-13 | 5.551e-16 |
+    | IMRPhenomXAS | DiffGW JAX JIT | 8/8 | 1.658e-13 | 4.441e-16 |
+    | IMRPhenomXAS | Ripple JAX JIT | 8/8 | 1.680e-13 | 6.661e-16 |
 
 ## Warmed batch latency
 
@@ -103,45 +105,59 @@ above and denotes a diagnostic timing. Throughput is `1,000 × batch / milliseco
 amortized time is batch latency divided by batch size. For batches larger than
 one, amortized time is not single-waveform request latency.
 
+The plots show every measured configuration, with logarithmic axes and a shared
+latency scale across models within each figure. Filled markers pass the agreement
+gate; hollow markers fail it. Dashed segments connect points where either endpoint
+fails. Error bars show the recorded 95% intervals, which can be smaller than the
+markers. Select a plot to view it at full size, or expand its table for exact values.
+
 ### One CPU core
 
-| Model | Implementation | B = 1 | B = 10 | B = 100 | B = 1,000 |
-| --- | --- | ---: | ---: | ---: | ---: |
-| TaylorF2 | LALSimulation | 0.111 [0.11, 0.117] | 1.35 [1.31, 1.37] | 14.3 [13.7, 14.6] | 142 [142, 144] |
-| TaylorF2 | DiffGW Torch eager | 0.593 [0.554, 0.633]† | 1.4 [1.31, 1.43]† | 8.08 [7.81, 8.56]† | 94.4 [88.7, 102]† |
-| TaylorF2 | DiffGW Torch compiled | 0.172 [0.152, 0.208]† | 0.579 [0.538, 0.648]† | 4.31 [4.23, 4.46]† | 44.2 [43, 45.2]† |
-| TaylorF2 | DiffGW JAX JIT | 0.157 [0.134, 0.164]† | 0.96 [0.93, 1.04]† | 12.6 [12, 14.7]† | 120 [118, 122]† |
-| TaylorF2 | Ripple JAX JIT | 0.124 [0.105, 0.137]† | 0.963 [0.922, 1.02]† | 8.85 [8.51, 9.18]† | 101 [99.6, 102]† |
-| IMRPhenomD | LALSimulation | 0.209 [0.192, 0.223] | 1.81 [1.77, 1.9] | 18.7 [18.1, 19.6] | 199 [196, 200] |
-| IMRPhenomD | DiffGW Torch eager | 1.88 [1.76, 1.95] | 3.85 [3.73, 3.91] | 20 [19.3, 20.6] | 207 [205, 209] |
-| IMRPhenomD | DiffGW Torch compiled | 0.626 [0.573, 0.643] | 1.25 [1.17, 1.33] | 7.6 [7.06, 7.81] | 73.1 [71.9, 74.5] |
-| IMRPhenomD | DiffGW JAX JIT | 0.326 [0.304, 0.341] | 2.23 [2.18, 2.29] | 22.6 [22.1, 22.9] | 321 [314, 329] |
-| IMRPhenomD | Ripple JAX JIT | 0.485 [0.469, 0.501] | 3.8 [3.78, 3.94]† | 49.3 [48.6, 49.5]† | 539 [525, 550]† |
-| IMRPhenomXAS | LALSimulation | 0.159 [0.154, 0.18] | 1.65 [1.63, 1.72] | 15.8 [15.4, 16.3] | 160 [157, 166] |
-| IMRPhenomXAS | DiffGW Torch eager | 5.55 [5.44, 5.68] | 7.71 [7.58, 7.96] | 25.4 [25, 25.6] | 272 [265, 315] |
-| IMRPhenomXAS | DiffGW Torch compiled | 0.366 [0.341, 0.398] | 1.5 [1.4, 1.54] | 10.8 [10.5, 11] | 114 [113, 114] |
-| IMRPhenomXAS | DiffGW JAX JIT | 0.424 [0.407, 0.456] | 3.33 [3.17, 3.41] | 32.4 [31.7, 32.8] | 450 [443, 453] |
-| IMRPhenomXAS | Ripple JAX JIT | 0.345 [0.332, 0.355] | 3.05 [3, 3.14] | 30.9 [30.4, 31.7] | 400 [396, 406] |
+[![CPU batch-latency scaling for TaylorF2, IMRPhenomD and IMRPhenomXAS, comparing all five measured implementations on one logical Ryzen 9 7950X3D CPU.](benchmarks/plots/package-latency-cpu.svg)](benchmarks/plots/package-latency-cpu.svg)
+
+??? abstract "Complete CPU timing table"
+
+    | Model | Implementation | B = 1 | B = 10 | B = 100 | B = 1,000 |
+    | --- | --- | ---: | ---: | ---: | ---: |
+    | TaylorF2 | LALSimulation | 0.111 [0.11, 0.117] | 1.35 [1.31, 1.37] | 14.3 [13.7, 14.6] | 142 [142, 144] |
+    | TaylorF2 | DiffGW Torch eager | 0.593 [0.554, 0.633]† | 1.4 [1.31, 1.43]† | 8.08 [7.81, 8.56]† | 94.4 [88.7, 102]† |
+    | TaylorF2 | DiffGW Torch compiled | 0.172 [0.152, 0.208]† | 0.579 [0.538, 0.648]† | 4.31 [4.23, 4.46]† | 44.2 [43, 45.2]† |
+    | TaylorF2 | DiffGW JAX JIT | 0.157 [0.134, 0.164]† | 0.96 [0.93, 1.04]† | 12.6 [12, 14.7]† | 120 [118, 122]† |
+    | TaylorF2 | Ripple JAX JIT | 0.124 [0.105, 0.137]† | 0.963 [0.922, 1.02]† | 8.85 [8.51, 9.18]† | 101 [99.6, 102]† |
+    | IMRPhenomD | LALSimulation | 0.209 [0.192, 0.223] | 1.81 [1.77, 1.9] | 18.7 [18.1, 19.6] | 199 [196, 200] |
+    | IMRPhenomD | DiffGW Torch eager | 1.88 [1.76, 1.95] | 3.85 [3.73, 3.91] | 20 [19.3, 20.6] | 207 [205, 209] |
+    | IMRPhenomD | DiffGW Torch compiled | 0.626 [0.573, 0.643] | 1.25 [1.17, 1.33] | 7.6 [7.06, 7.81] | 73.1 [71.9, 74.5] |
+    | IMRPhenomD | DiffGW JAX JIT | 0.326 [0.304, 0.341] | 2.23 [2.18, 2.29] | 22.6 [22.1, 22.9] | 321 [314, 329] |
+    | IMRPhenomD | Ripple JAX JIT | 0.485 [0.469, 0.501] | 3.8 [3.78, 3.94]† | 49.3 [48.6, 49.5]† | 539 [525, 550]† |
+    | IMRPhenomXAS | LALSimulation | 0.159 [0.154, 0.18] | 1.65 [1.63, 1.72] | 15.8 [15.4, 16.3] | 160 [157, 166] |
+    | IMRPhenomXAS | DiffGW Torch eager | 5.55 [5.44, 5.68] | 7.71 [7.58, 7.96] | 25.4 [25, 25.6] | 272 [265, 315] |
+    | IMRPhenomXAS | DiffGW Torch compiled | 0.366 [0.341, 0.398] | 1.5 [1.4, 1.54] | 10.8 [10.5, 11] | 114 [113, 114] |
+    | IMRPhenomXAS | DiffGW JAX JIT | 0.424 [0.407, 0.456] | 3.33 [3.17, 3.41] | 32.4 [31.7, 32.8] | 450 [443, 453] |
+    | IMRPhenomXAS | Ripple JAX JIT | 0.345 [0.332, 0.355] | 3.05 [3, 3.14] | 30.9 [30.4, 31.7] | 400 [396, 406] |
 
 ### RTX 5090 GPU
 
-| Model | Implementation | B = 1 | B = 10 | B = 100 | B = 1,000 |
-| --- | --- | ---: | ---: | ---: | ---: |
-| TaylorF2 | DiffGW Torch eager | 12.3 [11, 13.2]† | 3.86 [3.71, 3.96]† | 13.2 [10.6, 13.4]† | 12.2 [4.86, 18.8]† |
-| TaylorF2 | DiffGW Torch compiled | 0.293 [0.277, 0.333]† | 0.322 [0.296, 0.335]† | 0.368 [0.365, 0.371]† | 1.46 [1.43, 1.47]† |
-| TaylorF2 | DiffGW JAX JIT | 0.308 [0.286, 1.18]† | 0.114 [0.108, 1.17]† | 1.38 [1.36, 1.42]† | 1.23 [1.21, 1.24]† |
-| TaylorF2 | Ripple JAX JIT | 0.246 [0.229, 0.277]† | 0.156 [0.149, 0.184]† | 0.264 [0.23, 0.277]† | 1.29 [1.26, 1.31]† |
-| IMRPhenomD | DiffGW Torch eager | 12 [11.8, 12.6] | 11.7 [11.2, 14.5] | 36.8 [35.1, 40.8] | 32.9 [19.2, 40] |
-| IMRPhenomD | DiffGW Torch compiled | 1.54 [1.48, 1.58] | 0.776 [0.742, 0.796] | 1.51 [1.41, 1.58] | 3.48 [3.39, 3.59] |
-| IMRPhenomD | DiffGW JAX JIT | 1.95 [1.88, 1.97] | 2.85 [2.09, 2.95] | 1.57 [1.55, 1.6] | 3.78 [3.73, 3.81] |
-| IMRPhenomD | Ripple JAX JIT | 1.24 [1.23, 1.27] | 1.39 [1.34, 1.43]† | 1.37 [1.35, 1.39]† | 4.54 [4.51, 4.57]† |
-| IMRPhenomXAS | DiffGW Torch eager | 75.7 [60.2, 98.6] | 69.4 [51.1, 97.7] | 76.6 [48.5, 109] | 130 [113, 139] |
-| IMRPhenomXAS | DiffGW Torch compiled | 2.76 [2.61, 2.86] | 2.31 [2.17, 2.37] | 1.54 [1.48, 2.4] | 5.75 [5.58, 5.76] |
-| IMRPhenomXAS | DiffGW JAX JIT | 2.59 [2.57, 2.62] | 3.48 [3.22, 4] | 1.58 [1.54, 1.63] | 4.7 [3.79, 4.74] |
-| IMRPhenomXAS | Ripple JAX JIT | 2.75 [2.5, 2.77] | 1.58 [1.56, 1.63] | 2.58 [2.56, 2.72] | 5.34 [5.23, 5.37] |
+[![GPU batch-latency scaling for TaylorF2, IMRPhenomD and IMRPhenomXAS, comparing DiffGW Torch eager, Torch compiled, JAX JIT and Ripple JAX JIT on an RTX 5090.](benchmarks/plots/package-latency-gpu.svg)](benchmarks/plots/package-latency-gpu.svg)
 
-The LAL CPU baseline is intentionally absent from the GPU table. Compare GPU
-implementations on that table; a ratio to the CPU baseline combines hardware
+??? abstract "Complete GPU timing table"
+
+    | Model | Implementation | B = 1 | B = 10 | B = 100 | B = 1,000 |
+    | --- | --- | ---: | ---: | ---: | ---: |
+    | TaylorF2 | DiffGW Torch eager | 12.3 [11, 13.2]† | 3.86 [3.71, 3.96]† | 13.2 [10.6, 13.4]† | 12.2 [4.86, 18.8]† |
+    | TaylorF2 | DiffGW Torch compiled | 0.293 [0.277, 0.333]† | 0.322 [0.296, 0.335]† | 0.368 [0.365, 0.371]† | 1.46 [1.43, 1.47]† |
+    | TaylorF2 | DiffGW JAX JIT | 0.308 [0.286, 1.18]† | 0.114 [0.108, 1.17]† | 1.38 [1.36, 1.42]† | 1.23 [1.21, 1.24]† |
+    | TaylorF2 | Ripple JAX JIT | 0.246 [0.229, 0.277]† | 0.156 [0.149, 0.184]† | 0.264 [0.23, 0.277]† | 1.29 [1.26, 1.31]† |
+    | IMRPhenomD | DiffGW Torch eager | 12 [11.8, 12.6] | 11.7 [11.2, 14.5] | 36.8 [35.1, 40.8] | 32.9 [19.2, 40] |
+    | IMRPhenomD | DiffGW Torch compiled | 1.54 [1.48, 1.58] | 0.776 [0.742, 0.796] | 1.51 [1.41, 1.58] | 3.48 [3.39, 3.59] |
+    | IMRPhenomD | DiffGW JAX JIT | 1.95 [1.88, 1.97] | 2.85 [2.09, 2.95] | 1.57 [1.55, 1.6] | 3.78 [3.73, 3.81] |
+    | IMRPhenomD | Ripple JAX JIT | 1.24 [1.23, 1.27] | 1.39 [1.34, 1.43]† | 1.37 [1.35, 1.39]† | 4.54 [4.51, 4.57]† |
+    | IMRPhenomXAS | DiffGW Torch eager | 75.7 [60.2, 98.6] | 69.4 [51.1, 97.7] | 76.6 [48.5, 109] | 130 [113, 139] |
+    | IMRPhenomXAS | DiffGW Torch compiled | 2.76 [2.61, 2.86] | 2.31 [2.17, 2.37] | 1.54 [1.48, 2.4] | 5.75 [5.58, 5.76] |
+    | IMRPhenomXAS | DiffGW JAX JIT | 2.59 [2.57, 2.62] | 3.48 [3.22, 4] | 1.58 [1.54, 1.63] | 4.7 [3.79, 4.74] |
+    | IMRPhenomXAS | Ripple JAX JIT | 2.75 [2.5, 2.77] | 1.58 [1.56, 1.63] | 2.58 [2.56, 2.72] | 5.34 [5.23, 5.37] |
+
+LALSimulation was measured on the CPU only. Compare GPU implementations in the
+GPU plot and table; a ratio to the CPU baseline combines hardware
 and implementation differences.
 
 ## Reproduction and receipts
@@ -182,3 +198,21 @@ hosts. LAL remains the CPU accuracy reference during the GPU campaign. See the
 [benchmark protocol](benchmarking_protocol.md) for the broader qualification
 requirements and the [performance summary](performance.md) for interpretation
 and the scope of these measurements.
+
+### Regenerating the plots
+
+With Matplotlib installed, regenerate the maintained SVG figures from the two
+committed receipts without rerunning the benchmarks:
+
+```bash
+python scripts/plot_package_benchmarks.py
+```
+
+The generator verifies receipt hashes, configuration completeness and matching
+CPU/GPU workloads before plotting. It uses the recorded medians, bootstrap
+intervals and qualification flags. All 108 timed configurations appear in the
+scaling plots; the comparison-page overview selects PhenomD/XAS at batch 1,000
+and includes every measured implementation for those cases.
+
+Use `--format pdf --output-dir /tmp/diffgw-plots` for a PDF export, or
+`--format png` for raster images.

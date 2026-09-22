@@ -24,24 +24,18 @@ The campaign requires direct relative L2 at most `1e-11` and flat-weight,
 constant-phase-maximized mismatch at most `1e-14`. All measured DiffGW
 PhenomD/XAS configurations pass; all measured DiffGW and Ripple TaylorF2
 configurations miss the L2 threshold. Failed configurations remain explicitly
-labelled diagnostic in the full tables. This gate measures implementation
+labelled diagnostic in the plots and full tables. This gate measures implementation
 agreement for the sampled inputs, not physical accuracy across a model's domain.
 
 ## Reading the results
 
-At **batch 1,000**, the following qualified configurations give these median
-**complete-batch latencies** in milliseconds:
-
-| Model | CPU LAL | CPU DiffGW Torch compiled | GPU DiffGW Torch compiled | GPU DiffGW JAX JIT |
-| --- | ---: | ---: | ---: | ---: |
-| IMRPhenomD | 199 | 73.1 | 3.48 | 3.78 |
-| IMRPhenomXAS | 160 | 114 | 5.75 | 4.70 |
-
-Compiled DiffGW has the lowest measured CPU batch latency among the tested
-implementations for these two models at this batch size. LAL has the lowest
+The [comparison plot](comparison.md#measured-batch-performance) shows
+complete-batch latencies at **batch 1,000**. Compiled DiffGW has the lowest
+measured CPU batch latency among the tested implementations for IMRPhenomD
+and IMRPhenomXAS at this batch size. LAL has the lowest
 single-waveform CPU latency for all three measured models. Results depend on
 model, batch size, backend and hardware; the
-[complete tables](package_benchmarks.md#warmed-batch-latency) include Ripple,
+[scaling plots and complete tables](package_benchmarks.md#warmed-batch-latency) include Ripple,
 eager execution, smaller batches, failed accuracy checks and 95% bootstrap
 intervals. Those intervals describe variation within this run.
 
