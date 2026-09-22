@@ -102,7 +102,7 @@ class SEOBNRv4Hamiltonian(_HamiltonianBase):
 
         The nu*log form is established in 1311.2544 Eq. (2) and 1608.01907
         Eq. (A1), and is required by the PN coefficients. Tortoise xi follows
-        1202.0790 Eq. (14): sqrt(Delta_t*Delta_r)/(r^2+a^2).
+        Pan et al. 0912.3466 Eq. (28): sqrt(Delta_t*Delta_r)/(r^2+a^2).
         """
         nu = self._parameter(self.nu, r)
         a, _, _ = self.spin_combinations(r)

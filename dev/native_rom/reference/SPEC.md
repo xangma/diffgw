@@ -1,4 +1,4 @@
-# SEOBNRv4 source specification: paper components 0.4.0
+# SEOBNRv4 source specification: paper components 0.5.0
 
 **Status: incomplete research specification.** This version establishes an
 independent executable source of truth for the components marked `executable`
@@ -45,6 +45,43 @@ another `nu` to a backend-normalized amplitude.
 rationals for `K`, `d_SO`, `d_SS`, and `Delta t22_peak/M` (Eqs. 25, 26, 29–32).
 The nonspinning polynomials remain separate so the `chi=0` reduction is
 testable. No six-significant-digit numerical-compatibility rounding is applied.
+
+`hamiltonian.radial_potentials` independently evaluates the deformed-Kerr
+radial-potential block in Bohé Eqs. (2)–(3), using the explicit
+`Delta_0`–`Delta_5` and inverse-`D` equations in
+[Steinhoff et al. (2016), Appendix A](https://arxiv.org/html/1608.01907).
+The factor multiplying the logarithm is `nu`, as printed in Steinhoff's
+Eq. (A1) and [Taracchini et al. (2014), Eq. (2)](https://arxiv.org/html/1311.2544).
+Bohé's printed Eq. (2) omits that factor; omitting it also breaks the Kerr
+test-mass limit. The scalar reference evaluates the paper coefficients in
+mpmath at high precision, differentiates `Delta_t` independently, and uses
+the continuous horizon-product limit at zero spin. The tortoise factor
+`xi=sqrt(Delta_t Delta_r)/(r²+a²)` follows
+[Pan et al. (2010), Eq. (28)](https://arxiv.org/html/0912.3466).
+`hamiltonian.energy_map` checks Bohé Eq. (1), including the distinction
+between the total real energy and reduced-mass-normalized binding energy.
+`hamiltonian.nonspinning_effective_hamiltonian` also checks the deformed-metric
+orbital Hamiltonian and 3PN tortoise-momentum quartic term at zero spin,
+including the exact Schwarzschild test-mass limit. Its finite-mass-ratio
+quartic prescription is conditional: [Pan et al. (2012), Eqs. (14)–(15)](https://arxiv.org/html/1202.0790)
+describe 3PN truncation but print an extra radial factor in Eq. (15) that is
+dimensionally inconsistent. The scalar comparison checks the stated truncated
+choice, not the exact historical implementation. These checks do not validate
+the spin-coupled effective Hamiltonian.
+
+`flux.emitted_flux` independently evaluates Bohé Eq. (9) from supplied
+**pre-NQC** positive-`m` mode amplitudes through `ell=8`:
+
+`F = sum[(m Omega)² |D_L h_lm|²] / (8 pi)`.
+
+The factor of two relative to the full `m=-ell...ell` sum accounts for the
+negative-`m` partners. [Pan et al. (2011), Eqs. (3), (30)](https://arxiv.org/html/1006.0431)
+provide the independent Newtonian check `F_22=(32/5) nu² Omega^(10/3)`.
+Torch composes 35 supplied factorized amplitudes with this normalization,
+but this reference does not yet verify each amplitude formula, the high-`ell`
+spin truncation, or a JAX factorized-flux path. The JAX development assembler
+currently uses a 1.5PN prototype flux and Newtonian `(2,2)` mode, so no
+cross-backend whole-waveform SEOBNRv4 claim follows from these checks.
 
 `published.peak_targets` encodes the NR/Teukolsky peak amplitude, amplitude
 curvature, GW frequency, and frequency slope (Appendix A, Eqs. 33–44). For
@@ -164,13 +201,16 @@ dependency or distribution asset changes in this branch.
 ## Promotion blockers
 
 The manifest names each remaining component and its next discriminating task.
-Most urgently, the full Hamiltonian and factorized radiation/flux need equation
-review; the remnant-spin choice and QNM interpolation details need independently
-documented provenance; the ODE initial conditions and solver need a converged
-campaign; and the public-binary comparison requires matched phase/time and
-conditioning conventions. The [first frozen generator campaign](../evidence/2026-09-22/README.md)
-failed its direct complex/amplitude convergence gate. The current generator and
-ROM work therefore stay on this development branch. Reference completion,
-frontend component checks, generator numerical convergence, public-binary
-parity, and physical/NR holdouts are separate gates. No ROM training or release
-promotion follows from this version alone.
+Most urgently, the remainder of the spin Hamiltonian and all factorized mode
+amplitudes need equation review; the remnant-spin choice and QNM interpolation
+details need independently documented provenance. The ODE initial conditions,
+solver, event location, and output-grid coupling need a converged campaign.
+The [first frozen generator campaign](../evidence/2026-09-22/README.md) failed
+its direct convergence gate. The [tighter campaign and peak-anchored
+whole-waveform diagnostic](../evidence/2026-09-23/README.md) still fail the
+numerical gate; the latter compares only two rows and does not establish
+public-binary parity. The current generator and ROM work therefore stay on
+this development branch. Reference completion, frontend component checks,
+generator numerical convergence, public-binary parity, and physical/NR
+holdouts are separate gates. No ROM training or release promotion follows
+from this version alone.

@@ -1,5 +1,5 @@
 {
-  "specification": "seobnrv4-paper-components/0.4.0",
+  "specification": "seobnrv4-paper-components/0.5.0",
   "model": "SEOBNRv4 dominant (2,2) mode, aligned-spin black-hole binaries",
   "source": {
     "id": "bohe-2017-v3",
@@ -46,16 +46,54 @@
       "condition": "Requires independently validated peak data and remnant QNM inputs."
     },
     {
+      "id": "V4-HAM-RADIAL",
+      "source": "bohe-2017-v3, Eqs. (2)-(3); Steinhoff et al. 1608.01907v2, Appendix A, Eqs. (A1)-(A3); Pan et al. 0912.3466, Eq. (28)",
+      "status": "executable",
+      "reference": "hamiltonian.body_parameters; hamiltonian.radial_coefficients; hamiltonian.radial_potentials",
+      "torch": "src/torchwave/approximants/eob/seobnrv4_hamiltonian.py:SEOBNRv4Hamiltonian.deformed_kerr_potentials",
+      "jax": "src/jaxwave/approximants/eob/seobnrv4_hamiltonian.py:SEOBNRv4Hamiltonian.deformed_kerr_potentials",
+      "test": "dev/native_rom/reference/tests/test_published.py:test_radial_potential_paper_limits_and_symmetry; dev/native_rom/reference/tests/test_torch.py:test_radial_potentials_and_energy_map_against_reference; dev/native_rom/reference/tests/test_jax.py:test_radial_potentials_and_energy_map_against_reference"
+    },
+    {
+      "id": "V4-HAM-ENERGY-MAP",
+      "source": "bohe-2017-v3, Eq. (1)",
+      "status": "executable",
+      "reference": "hamiltonian.energy_map",
+      "torch": "src/torchwave/approximants/eob/seobnrv4_hamiltonian.py:SEOBNRv4Hamiltonian.real_hamiltonian_from_eff",
+      "jax": "src/jaxwave/approximants/eob/seobnrv4_hamiltonian.py:SEOBNRv4Hamiltonian.real_hamiltonian_from_eff",
+      "test": "dev/native_rom/reference/tests/test_published.py:test_energy_map_paper_normalization; dev/native_rom/reference/tests/test_torch.py:test_radial_potentials_and_energy_map_against_reference; dev/native_rom/reference/tests/test_jax.py:test_radial_potentials_and_energy_map_against_reference"
+    },
+    {
+      "id": "V4-HAM-NONSPIN",
+      "source": "bohe-2017-v3, Sec. II A; Barausse and Buonanno 0912.3517v2, Eqs. (6), (162)-(164); Pan et al. 1202.0790v2, Eqs. (14)-(15)",
+      "status": "conditional",
+      "reference": "hamiltonian.nonspinning_effective_hamiltonian",
+      "torch": "src/torchwave/approximants/eob/seobnrv4_hamiltonian.py:SEOBNRv4Hamiltonian.effective_hamiltonian",
+      "jax": "src/jaxwave/approximants/eob/seobnrv4_hamiltonian.py:SEOBNRv4Hamiltonian.effective_hamiltonian",
+      "test": "dev/native_rom/reference/tests/test_published.py:test_nonspinning_effective_hamiltonian_schwarzschild_limit; dev/native_rom/reference/tests/test_torch.py:test_nonspinning_effective_hamiltonian_against_reference; dev/native_rom/reference/tests/test_jax.py:test_nonspinning_effective_hamiltonian_against_reference",
+      "condition": "The finite-nu 3PN tortoise quartic follows the truncated prescription; Pan et al.'s printed Eq. (15) retains a dimensionally inconsistent factor and cannot establish the exact historical choice."
+    },
+    {
+      "id": "V4-FLUX-NORM-9",
+      "source": "bohe-2017-v3, Eq. (9); Pan et al. 1006.0431, Eqs. (3) and (30)",
+      "status": "conditional",
+      "reference": "flux.emitted_flux; flux.newtonian_22_mode",
+      "torch": "src/torchwave/approximants/eob/factorized_modes.py:energy_flux_from_modes; src/torchwave/approximants/eob/seobnrv4_flux.py:SEOBNRv4PublishedFlux.energy_flux",
+      "jax": null,
+      "test": "dev/native_rom/reference/tests/test_published.py:test_flux_paper_normalization_and_mode_partner; dev/native_rom/reference/tests/test_torch.py:test_mode_flux_normalization_against_reference; dev/native_rom/reference/tests/test_torch.py:test_35_mode_flux_composition_against_reference",
+      "condition": "Requires externally supplied pre-NQC mode amplitudes; the 35 amplitude formulas and a JAX factorized implementation are not yet validated."
+    },
+    {
       "id": "V4-HAM-1-3",
       "source": "bohe-2017-v3, Eqs. (1)-(3), cited Hamiltonian papers",
       "status": "pending",
-      "blocker": "Derive and independently check the full deformed-Kerr/spin Hamiltonian and cited radial coefficients, resolving ambiguities in the cited source equations."
+      "blocker": "The radial-potential, energy-map and nonspinning orbital slices are checked; derive and independently check the remaining spin mapping and complete effective Hamiltonian."
     },
     {
       "id": "V4-FLUX-4-9",
       "source": "bohe-2017-v3, Eqs. (4)-(9), cited factorized-mode papers",
       "status": "pending",
-      "blocker": "Reference all factorized modes through ell=8, flux normalization, and the NQC-free dynamics prescription."
+      "blocker": "The scalar flux normalization and Torch 35-mode composition are checked; independently reference all 35 factorized amplitudes, high-ell spin truncation, and NQC-free dynamics, then implement the JAX path."
     },
     {
       "id": "V4-NQC-7",

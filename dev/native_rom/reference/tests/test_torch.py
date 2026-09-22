@@ -3,6 +3,10 @@
 import pytest
 import torch
 
+from dev.native_rom.reference.flux import emitted_flux, newtonian_22_mode
+from dev.native_rom.reference.hamiltonian import (
+    body_parameters, energy_map, nonspinning_effective_hamiltonian, radial_potentials,
+)
 from dev.native_rom.reference.published import calibration, evaluate, mass_spin, peak_targets, ringdown_shape
 from dev.native_rom.reference.ringdown import h22
 from dev.native_rom.reference.remnant import final_mass_fraction, final_spin_projection
@@ -11,10 +15,69 @@ from torchwave.approximants.eob.merger_ringdown import merger_ringdown_22, seobn
 from torchwave.approximants.eob.remnant import eob_final_mass_fraction, hofmann_final_spin
 from torchwave.approximants.eob.nqc import seobnrv4_nqc_parameters, seobnrv4_nqc_targets, seobnrv4_nqc_time_offset
 from torchwave.approximants.eob.seobnrv4_hamiltonian import SEOBNRv4Hamiltonian
+from torchwave.approximants.eob.seobnrv4_flux import SEOBNRv4PublishedFlux
+from torchwave.approximants.eob.factorized_modes import energy_flux_from_modes
 
 
 def scalar(x):
     return torch.tensor(x, dtype=torch.float64)
+
+
+@pytest.mark.parametrize("m1,m2,s1,s2,r", [
+    (30., 20., 0., 0., 9.), (45., 5., .8, -.3, 7.), (20., 20., -.9, .7, 12.),
+])
+def test_radial_potentials_and_energy_map_against_reference(m1, m2, s1, s2, r):
+    n, a, k = body_parameters(m1, m2, s1, s2)
+    expected = radial_potentials(r, n, a, k)
+    ham = SEOBNRv4Hamiltonian(scalar(n), scalar(s1), scalar(s2))
+    actual = ham.deformed_kerr_potentials(scalar(r))
+    for key, value in zip(("delta_t", "delta_r", "delta_t_prime", "lambda_t",
+                           "lambda_t_prime", "xi"), actual):
+        assert float(value) == pytest.approx(float(expected[key]), rel=2e-12, abs=2e-12)
+    lapse, g_rr, xi = ham.metric_potentials(scalar(r))
+    for value, key in zip((lapse, g_rr, xi), ("lapse_squared", "g_rr", "xi")):
+        assert float(value) == pytest.approx(float(expected[key]), rel=2e-12, abs=2e-12)
+    h_eff = scalar(.94)
+    total, _ = energy_map(n, .94)
+    assert float(ham.real_hamiltonian_from_eff(h_eff)) == pytest.approx(float(total), rel=2e-14)
+    # Binding energy map is checked directly from the public effective H.
+    actual_eff = ham.effective_hamiltonian(scalar(r), scalar(.01), scalar(3.))
+    _, actual_reduced = energy_map(n, float(actual_eff))
+    assert float(ham.reduced_binding_hamiltonian(scalar(r), scalar(.01), scalar(3.))) == pytest.approx(
+        float(actual_reduced), rel=2e-13, abs=2e-14)
+
+
+def test_mode_flux_normalization_against_reference():
+    omega = scalar(.04)
+    mode = complex(newtonian_22_mode(.24, .04, .37))
+    modes = {(2, 2): torch.tensor(mode, dtype=torch.complex128),
+             (3, 2): torch.tensor(2*mode, dtype=torch.complex128)}
+    actual = energy_flux_from_modes(modes, omega)
+    expected = emitted_flux(.04, {(2, 2): mode, (3, 2): 2*mode})
+    assert float(actual) == pytest.approx(float(expected), rel=2e-14)
+
+
+@pytest.mark.parametrize("m1,m2,r,pr_star,pphi", [
+    (30., 20., 9., .01, 3.), (20., 20., 6.5, -.08, 2.7),
+])
+def test_nonspinning_effective_hamiltonian_against_reference(m1, m2, r, pr_star, pphi):
+    n, a, k = body_parameters(m1, m2, 0, 0)
+    assert a == 0
+    expected = nonspinning_effective_hamiltonian(r, pr_star, pphi, n, k)
+    ham = SEOBNRv4Hamiltonian(scalar(n), scalar(0), scalar(0))
+    actual = ham.effective_hamiltonian(scalar(r), scalar(pr_star), scalar(pphi))
+    assert float(actual) == pytest.approx(float(expected), rel=2e-12)
+
+
+def test_35_mode_flux_composition_against_reference():
+    ham = SEOBNRv4Hamiltonian(scalar(.24), scalar(.3), scalar(-.2))
+    state = scalar([9., 0., -.01, 3.])
+    flux = SEOBNRv4PublishedFlux(spin_truncation="tabulated")
+    args = flux.from_hamiltonian(state, ham)
+    modes = flux.amplitudes(state, **args)
+    assert len(modes) == 35
+    expected = emitted_flux(float(args["omega"]), {key: float(value) for key, value in modes.items()})
+    assert float(flux.energy_flux(state, **args)) == pytest.approx(float(expected), rel=2e-13)
 
 
 @pytest.mark.parametrize("m1,m2,s1,s2", [(30., 20., 0., 0.), (45., 5., .8, -.3), (20., 20., -.9, .7)])

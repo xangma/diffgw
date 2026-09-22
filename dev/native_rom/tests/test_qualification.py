@@ -123,6 +123,16 @@ def test_default_numerical_source_budget_remains_strict():
     assert q.Settings().relative_l2_limit == 1e-6
 
 
+def test_tighter_tolerance_plan_preserves_declared_error_budget():
+    atol, rtol = q.validate_tolerance_levels((1e-12, 1e-13, 1e-14),
+                                              (1e-11, 1e-12, 1e-13))
+    plan = q.run_plan(q.Settings(atol_levels=atol, rtol_levels=rtol))
+    assert [run["rtol"] for run in plan[:3]] == list(rtol)
+    assert q.Settings(atol_levels=atol, rtol_levels=rtol).relative_l2_limit == 1e-6
+    with pytest.raises(ValueError, match="strictly decreasing"):
+        q.validate_tolerance_levels((1e-12, 1e-12, 1e-14), rtol)
+
+
 def test_source_snapshot_ignores_generated_egg_info_but_tracks_sources_and_assets(tmp_path, monkeypatch):
     monkeypatch.setattr(q, "ROOT", tmp_path)
     runner = tmp_path / "dev/native_rom/qualify_generator.py"

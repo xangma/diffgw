@@ -9,6 +9,10 @@ import pytest
 import sympy as sp
 
 from dev.native_rom.reference import SPEC_VERSION
+from dev.native_rom.reference.flux import emitted_flux, newtonian_22_mode
+from dev.native_rom.reference.hamiltonian import (
+    body_parameters, energy_map, nonspinning_effective_hamiltonian, radial_potentials,
+)
 from dev.native_rom.reference.published import (
     D, calibration, chi, mass_spin, nu, peak_targets, ringdown_shape,
 )
@@ -35,8 +39,11 @@ def test_manifest_is_explicit_and_versioned():
         else:
             if item["status"] in {"conditional", "diagnostic"}:
                 assert item["condition"]
-            assert all(item[key] for key in ("reference", "torch", "jax", "test"))
-            for mapping in (item["torch"], item["jax"]):
+            assert all(item[key] for key in ("reference", "test"))
+            assert item.get("torch") or item.get("jax")
+            for mapping in (item.get("torch"), item.get("jax")):
+                if mapping is None:
+                    continue
                 for entry in mapping.split("; "):
                     assert (repository / entry.split(":")[0]).is_file()
             for entry in item["test"].split("; "):
@@ -55,6 +62,52 @@ def test_parameter_mapping():
     assert mass_spin(2, 3, sp.Rational(-1, 4), sp.Rational(1, 2)) == (n, c)
     with pytest.raises(ValueError):
         mass_spin(1, -1, 0, 0)
+
+
+def test_radial_potential_paper_limits_and_symmetry():
+    with mp.workdps(70):
+        zero = radial_potentials(12, 0, mp.mpf("0.4"), mp.mpf("1.7"))
+        assert abs(zero["delta_t"]/144 - (1-mp.mpf(2)/12+mp.mpf("0.16")/144)) < mp.mpf("1e-55")
+        for m1, m2, s1, s2 in ((30, 20, ".6", "-.2"), (20, 20, "-.8", ".8")):
+            args = body_parameters(m1, m2, s1, s2)
+            exchanged = body_parameters(m2, m1, s2, s1)
+            assert all(abs(x-y) < mp.mpf("1e-65") for x, y in zip(args, exchanged))
+            p = radial_potentials(9, *args)
+            h = mp.mpf("1e-5")
+            finite_slope = (radial_potentials(9+h, *args)["delta_t"]
+                            - radial_potentials(9-h, *args)["delta_t"])/(2*h)
+            assert abs(p["delta_t_prime"]-finite_slope) < mp.mpf("1e-9")
+            assert p["delta_t"] > 0 and p["delta_r"] > 0 and p["xi"] > 0
+
+
+def test_energy_map_paper_normalization():
+    with mp.workdps(70):
+        n, h_eff = mp.mpf("0.24"), mp.mpf("0.94")
+        total, reduced = energy_map(n, h_eff)
+        assert abs((total-1)/n-reduced) < mp.mpf("1e-59")
+        assert abs(total**2-(1+2*n*(h_eff-1))) < mp.mpf("1e-59")
+
+
+def test_nonspinning_effective_hamiltonian_schwarzschild_limit():
+    with mp.workdps(70):
+        r, pr_star, p_phi = mp.mpf(12), mp.mpf("0.03"), mp.mpf("3.2")
+        expected = mp.sqrt(pr_star**2 + (1-2/r)*(1+p_phi**2/r**2))
+        actual = nonspinning_effective_hamiltonian(r, pr_star, p_phi, 0, 1.7)
+        assert abs(actual-expected) < mp.mpf("1e-55")
+
+
+def test_flux_paper_normalization_and_mode_partner():
+    with mp.workdps(70):
+        n, w, phase = mp.mpf("0.24"), mp.mpf("0.04"), mp.mpf("0.37")
+        mode = newtonian_22_mode(n, w, phase)
+        actual = emitted_flux(w, {(2, 2): mode})
+        expected = mp.mpf(32)/5*n**2*w**(mp.mpf(10)/3)
+        assert abs(actual/expected-1) < mp.mpf("1e-59")
+        # The 1/(8*pi) positive-m norm counts each negative-m partner once.
+        two_modes = emitted_flux(w, {(2, 2): mode, (3, 2): 2*mode})
+        assert abs(two_modes/actual-5) < mp.mpf("1e-59")
+        with pytest.raises(ValueError):
+            emitted_flux(w, {(2, -2): mode})
 
 
 def test_calibration_fits():

@@ -111,6 +111,16 @@ def run_plan(settings):
         for i, dt in enumerate(settings.dt_levels_M[1:], start=1)]
 
 
+def validate_tolerance_levels(atol_levels, rtol_levels):
+    """Require three strictly tighter positive tolerance pairs."""
+    if (len(atol_levels) != 3 or len(rtol_levels) != 3
+            or any(not math.isfinite(x) or x <= 0 for x in (*atol_levels, *rtol_levels))
+            or any(levels[i] <= levels[i+1] for levels in (atol_levels, rtol_levels)
+                   for i in range(2))):
+        raise ValueError("expected three finite positive tolerances, strictly decreasing")
+    return tuple(atol_levels), tuple(rtol_levels)
+
+
 def mode_metrics(candidate, reference):
     """Direct complex and amplitude errors; no fitted or maximized alignment."""
     a, b = np.asarray(candidate), np.asarray(reference)
@@ -345,6 +355,8 @@ def main(argv=None):
     parser.add_argument("--json-out", type=Path, required=True)
     parser.add_argument("--max-run-seconds", type=float, default=600.)
     parser.add_argument("--max-evaluations", type=int, default=200000)
+    parser.add_argument("--atol-levels", type=float, nargs=3, default=Settings.atol_levels)
+    parser.add_argument("--rtol-levels", type=float, nargs=3, default=Settings.rtol_levels)
     parser.add_argument("--compare-lal", action="store_true")
     parser.add_argument("--lal-version")
     parser.add_argument("--lalsimulation-version")
@@ -352,12 +364,17 @@ def main(argv=None):
     args = parser.parse_args(argv)
     if not math.isfinite(args.max_run_seconds) or args.max_run_seconds <= 0 or args.max_evaluations <= 0:
         parser.error("resource bounds must be finite and positive")
+    try:
+        atol_levels, rtol_levels = validate_tolerance_levels(args.atol_levels, args.rtol_levels)
+    except ValueError as exc:
+        parser.error(str(exc))
     if ((args.compare_lal and not (args.lal_version and args.lalsimulation_version)) or
             (not args.compare_lal and (args.lal_version or args.lalsimulation_version))):
         parser.error("--compare-lal requires exact --lal-version and --lalsimulation-version pins")
     rows = validate_rows(json.loads(args.inputs.read_text()) if args.inputs else [
         dict(mass1=30., mass2=20., chi1=0., chi2=0., omega_start=.04)])
-    settings = Settings(max_run_seconds=args.max_run_seconds, max_evaluations=args.max_evaluations)
+    settings = Settings(atol_levels=atol_levels, rtol_levels=rtol_levels,
+                        max_run_seconds=args.max_run_seconds, max_evaluations=args.max_evaluations)
     config = dict(rows=rows, settings=asdict(settings), scientific_choices=CHOICES,
                   dtype="float64", device="cpu", execution="one scalar row per solve",
                   reference_pins=dict(lal=args.lal_version, lalsimulation=args.lalsimulation_version))
