@@ -19,27 +19,84 @@ For availability in other packages, use the [dated package comparison](compariso
 | **Specialized Models** | `ContinuousWave`<br>`EMRIKludge`<br>`ParameterizedPostEinstein`<br>`SpinPrecessionODE` | Monochromatic<br>Multi-harmonic<br>Modified phasing<br>Orbit-averaged | Continuous waves from triaxial rotating neutron stars with Doppler modulation<br>Extreme mass ratio inspirals (LISA) with Kerr geodesic orbital frequencies<br>Model-independent testing of General Relativity ($\beta_{\rm ppE}, b_{\rm ppE}$)<br>Orbit-averaged spin precession ODE integrator |
 | **Time-Domain Tools** | `get_td_waveform`<br>`HybridMECO` | Supported FD models<br>Diagnostic | FFT conditioning and time-domain waveform generation<br>Minimum Energy Circular Orbit hybrid velocity & frequency root solver |
 
-## Backend support and evidence
+<a id="backend-support-and-evidence"></a>
 
-The native Torch and JAX interfaces share the catalog, but transformation,
-device and derivative support depend on the selected path. Use this table to
-find execution restrictions and the relevant evidence. Scientific differences
-and reference outcomes are maintained on [Differences from LAL](differences_from_lal.md).
+## Generating a waveform
 
-| Model or family | Execution scope and restrictions | Model guidance and evidence |
-| --- | --- | --- |
-| TaylorF2, IMRPhenomD, IMRPhenomXAS | Torch eager/compiled and JAX JIT measured on CPU/CUDA in FP64 for the specified grids and populations. | [Generation](guides/waveform-generation.md), [reference qualifications](package_benchmarks.md#accuracy-across-the-measured-configurations) |
-| IMRPhenomXP | Native Torch/JAX; precession, final-spin and reference-phase options affect comparisons. | [Reference options and limitations](differences_from_lal.md#model-specific-differences) |
-| IMRPhenomXHM / XPHM, IMRPhenomXPHM-SpinTaylor and IMRPhenomXPNR | Mode selection and precession prescriptions have separate restrictions. Gradient and batching support depend on the selected path. | [Generation](guides/waveform-generation.md), [model differences](differences_from_lal.md#model-specific-differences), [numerical precession](differences_from_lal.md#numerical-precession-spintaylor-and-pnr) |
-| IMRPhenomT / THM / TP / TPHM | Both frontends; native TD only, shared batch grid and first derivatives on fixed grids. No higher derivatives through frequency inversion; automatic duration selection is eager. | [T-family guide](imrphenomt.md), [reference report](validation/phenomt.md) |
-| SEOBNR_ODE / TEOBResumS | Native EOB dynamics with model-specific numerical choices; not validated as LAL-equivalent. | [Known differences and failed reference checks](differences_from_lal.md#model-specific-differences) |
-| SEOBNR_ROM / SEOBNRv4_ROM | Native evaluation using a selected external data asset. The asset determines the surrogate and its validation scope. | [External data](external-data.md), [reference limitations](differences_from_lal.md#model-specific-differences) |
-| TaylorF2_HM | Leading-order higher-mode amplitudes through degree 4; independent full-waveform validation is incomplete. | [Mode content above](#model-catalog), [reference scope](differences_from_lal.md#model-specific-differences) |
-| Remaining catalog models | Listed physical features do not establish device, transformation or derivative coverage. | [Recorded configurations](model_manifest.json), [validation overview](validation.md) |
+Select a frontend with `backend="torch"` or `backend="jax"` in the unified
+`diffgw` API, or call `torchwave` / `jaxwave` directly. For example,
+`IMRPhenomXP` is available through `get_fd_waveform` in **both** frontends,
+just as `TaylorF2`, `IMRPhenomD` and `IMRPhenomXAS` are. The
+[generation guide](guides/waveform-generation.md) explains the shared interface;
+its examples illustrate that interface rather than enumerate every available model.
 
-The [manifest](model_manifest.json) records selected configurations; it does not
-yet include the T family, whose evidence is in its separate report. Missing
-coverage should be treated as unestablished.
+| Generation task | Guide |
+| --- | --- |
+| Generate frequency-domain polarizations | [Frequency grids and batching](guides/waveform-generation.md#frequency-domain-waveforms-get_fd_waveform); [IMRPhenomXP example](guides/waveform-generation.md#imrphenomxp) |
+| Set precessing spins, modes, tides or eccentricity | [Model parameters and examples](guides/waveform-generation.md#generic-3d-precessing-spins-msa-spintaylor-pnr), [parameter conventions](conventions.md) |
+| Generate native T / THM / TP / TPHM time series | [T-family generation guide](imrphenomt.md#generate-a-sampled-waveform); these models require `get_td_waveform` |
+| Convert a supported frequency-domain model to a time series | [Time-domain generation](guides/waveform-generation.md#time-domain-waveforms-get_td_waveform) using a conditioned inverse Fourier transform |
+
+The catalog also includes model classes and diagnostic tools, which have their
+own entry points. Consult the [PyTorch](api/torchwave.md) or [JAX](api/jaxwave.md)
+API reference for these; a catalog entry does not imply support through both
+`get_fd_waveform` and `get_td_waveform`.
+
+## Execution restrictions
+
+Generation, batching, compilation and differentiation are separate capabilities.
+Use the [execution guide](guides/execution.md) for device, precision and transform
+setup, then check the restrictions of the model and options you select:
+
+- **T family:** native time-domain evaluation only. Parameter batches share a
+  time grid. Fixed grids support first derivatives; higher derivatives through
+  frequency inversion are unsupported. Automatic duration selection is eager;
+  supply a fixed duration inside JAX transformations. See the
+  [grid and derivative restrictions](imrphenomt.md#arbitrary-grids-and-derivatives).
+- **SEOBNR_ROM / SEOBNRv4_ROM:** native evaluation requires a selected
+  [external data asset](external-data.md). Its identity and provenance determine
+  which surrogate you are evaluating.
+- **Precessing and higher-mode paths:** mode selection and the precession
+  prescription can change batching and derivative support. Check the
+  [precession examples](guides/waveform-generation.md#generic-3d-precessing-spins-msa-spintaylor-pnr)
+  and [numerical-precession restrictions](differences_from_lal.md#numerical-precession-spintaylor-and-pnr).
+- **Precision and devices:** PyTorch MPS does not support the FP64 examples;
+  use CPU on Apple Silicon. JAX's non-symmetric Kerr angular eigensolver uses a
+  host CPU callback. See [hardware guidance](guides/execution.md#hardware-acceleration-and-precision)
+  and [model-specific limitations](differences_from_lal.md#model-specific-differences).
+
+<a id="differentiation-and-hardware"></a>
+
+## Validation coverage
+
+Evidence answers **what was checked, with which settings**. It does not define
+which waveforms can be generated. The published timing campaigns cover selected
+models and settings; that is a measurement scope, not the full supported catalog.
+
+- **Measured execution and waveform agreement:** the
+  [FP64 campaign](package_benchmarks.md) covers `TaylorF2`, `IMRPhenomD` and
+  `IMRPhenomXAS` with Torch eager/compiled and JAX JIT on CPU/CUDA for specified
+  grids and populations. Its [accuracy qualifications](package_benchmarks.md#accuracy-across-the-measured-configurations)
+  include failed configurations. These measurements do not establish other
+  models' performance or support on other accelerators. A separate
+  [PhenomXPy comparison](package_benchmarks.md#phenomxpy-time-domain-comparison-22-september-2026)
+  measures T/THM on CPU with Torch eager and JAX JIT; failed strict agreement
+  checks are marked as diagnostic timings.
+- **Model-specific reference agreement:** [Differences from LAL](differences_from_lal.md#model-specific-differences)
+  records configurations, deliberate differences and unresolved discrepancies,
+  including XP's precession, final-spin and reference-phase choices. `SEOBNR_ODE`
+  and `TEOBResumS` are not validated as LAL-equivalent; independent full-waveform
+  validation of `TaylorF2_HM` remains incomplete. ROM evidence applies to the
+  selected asset. The [T-family report](validation/phenomt.md) is a separate record.
+- **Derivatives:** [derivative support and evidence](validation.md#derivative-support-and-evidence)
+  states the checked parameters, derivative orders and restrictions. Waveform-value
+  agreement and framework autodiff do not establish derivative accuracy.
+
+The [validation overview](validation.md) distinguishes mathematical-reference
+checks, frontend consistency, external-reference agreement and physical validation.
+The [manifest](model_manifest.json) records selected configurations, not a complete
+support matrix; it does not yet include the T family. Treat a missing check as
+unestablished evidence, not as evidence that generation is unavailable.
 
 ## Parameter domains and conventions
 
@@ -55,12 +112,3 @@ covers units, reference phase/frequency, spin frames, sampling and mode selectio
 [T-family guide](imrphenomt.md) specifies its time origin, duration, conventions
 and rejected options. Other model-specific conventions are recorded in the
 [manifest](model_manifest.json) and [differences from LAL](differences_from_lal.md#model-specific-differences).
-
-## Differentiation and hardware
-
-See [derivative support and evidence](validation.md#derivative-support-and-evidence)
-for the documented parameters, derivative orders and checks. A waveform-value
-check does not qualify its derivatives. CPU/CUDA measurements do not establish
-support on other accelerators; [precision and device guidance](guides/execution.md)
-explains the FP64 restriction on PyTorch MPS. JAX's non-symmetric Kerr angular
-eigensolver uses a host CPU callback, as recorded in [Differences from LAL](differences_from_lal.md#model-specific-differences).

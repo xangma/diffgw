@@ -15,6 +15,7 @@ practical implications. The reports below provide the underlying evidence.
 | --- | --- | --- |
 | Waveform performance and LAL agreement | [FP64 package benchmarks](package_benchmarks.md), with committed CPU/CUDA receipts | Forward evaluation of TaylorF2, IMRPhenomD and IMRPhenomXAS on declared grids and binary samples. Both polarizations are checked; failed configurations remain visible. |
 | PyTorch/JAX consistency | [Parity tests](https://github.com/xangma/diffgw/tree/main/tests/parity) | Agreement between two implementations for specified inputs and per-test tolerances. Shared coefficients or shared mistakes can produce agreement. |
+| Time-domain performance and PhenomXPy agreement | [T/THM CPU comparison](package_benchmarks.md#phenomxpy-time-domain-comparison-22-september-2026), with a pinned author reference and receipt | Both polarizations on a fixed time segment; every binary checked, with strict-gate failures retained as diagnostic timings. Shared author fits mean this is not independent physical validation. |
 | Broader model reference checks | [Differences from LAL](differences_from_lal.md#model-specific-differences), [manifest](model_manifest.json), and linked archived runs | Frozen cases and model-specific metrics. The archived catalog has 17/21 passing cases and the holdout set 11/13; this is partial validation, not a passing whole-catalog result. New model additions have separate evidence, including the [T-family report](validation/phenomt.md). |
 | Derivatives and Fisher matrices | [Inference parity tests](https://github.com/xangma/diffgw/blob/main/tests/parity/test_inference_parity.py), [Fisher example](../examples/02_fisher_analysis.py) | Selected parameters, models and derivative orders. Waveform-value agreement alone does not validate derivatives or posterior uncertainties. |
 | Relative-binning likelihood | [Numerical tests](https://github.com/xangma/diffgw/blob/main/tests/test_relative_binning.py) and inference parity tests | [Local approximation and gradient checks](validation/inference.md#relative-binning). There is no published DiffGW timing campaign establishing a general likelihood speedup. |
@@ -22,7 +23,7 @@ practical implications. The reports below provide the underlying evidence.
 
 ## Waveform agreement and physical validation
 
-Start with [model support](models.md#backend-support-and-evidence) for the
+Start with [execution restrictions](models.md#execution-restrictions) for the
 configuration you intend to use. The [differences from LAL](differences_from_lal.md#model-specific-differences)
 summarize deliberate model differences and unresolved reference failures.
 The [PhenomT report](validation/phenomt.md) contains its measured errors,

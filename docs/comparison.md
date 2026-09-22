@@ -6,8 +6,8 @@ project; a shared name does not establish identical physics, conventions,
 parameter domains or validation. The external documentation snapshot was checked
 on **22 September 2026**. See [differences from LAL](differences_from_lal.md)
 for model-specific numerical and convention differences, [validation](validation.md)
-for evidence, and [performance](performance.md) for the separate benchmark
-campaign.
+for evidence, and [performance](performance.md) for measured benchmark
+workloads.
 
 ## Reading the coverage table
 
@@ -18,7 +18,7 @@ or explicitly grouped variants, rather than assigning entire families to a packa
 - **Native** means the project documents an implementation of that named model.
 - **External** means the project exposes another library's implementation through
 a runtime wrapper.
-- **Not listed** means the checked project documentation does not name the
+- **- (not listed)** means the checked project documentation does not name the
 variant. It is not evidence that the software cannot provide it.
 - **Native + external asset** means native evaluation depends on a separately
 acquired model or calibration asset.
@@ -32,39 +32,128 @@ report is separate.
 
 ## Waveform coverage
 
-| Family | Named model or variant | DiffGW | LALSimulation | Ripple | PhenomXPy | GWFAST |
-| --- | --- | --- | --- | --- | --- | --- |
-| Post-Newtonian | `TaylorF2` | Native | Native | Native (tidal-capable) | Not listed | Native (`TaylorF2_RestrictedPN`) |
-| Post-Newtonian | `TaylorF2_HM` | Native (eight modes) | Not listed | Not listed | Not listed | Not listed |
-| Post-Newtonian | `TaylorF2_Eccentric` | Native | Native (`TaylorF2Ecc`) | Not listed | Not listed | Native (eccentric option) |
-| Aligned-spin IMR | `IMRPhenomD` | Native | Native | Native | Not listed | Native |
-| Aligned-spin IMR | `IMRPhenomD_NRTidal` | Native | Native | Not listed | Not listed | Not listed |
-| Aligned-spin IMR | `IMRPhenomD_NRTidalv2` | Native | Native | Native | Not listed | Native |
-| Aligned-spin IMR | `IMRPhenomHM` | Native | Native | Native | Not listed | Native |
-| Aligned-spin IMR | `IMRPhenomXAS` | Native | Native | Native | Not listed | Not listed |
-| Aligned-spin IMR | `IMRPhenomXHM` | Native | Native | Native | Not listed | Wrapper unverified |
-| Tidal matter | `IMRPhenomNSBH` | Native | Native | Not listed | Not listed | Native |
-| Precessing IMR | `IMRPhenomP` | Native | Native | Not listed | Not listed | Wrapper unverified |
-| Precessing IMR | `IMRPhenomPv2` | Native | Native | Native | Not listed | Wrapper unverified |
-| Precessing IMR | `IMRPhenomXP`, `IMRPhenomXPHM` | Native | Native | Native | Not listed | Wrapper unverified |
-| Precessing IMR | XPHM MSA, SpinTaylor and PNR options | Native (documented options) | Unverified (options not enumerated here) | Unverified (options not enumerated here) | Not listed | Wrapper unverified |
-| Time-domain IMR | `IMRPhenomT`, `IMRPhenomTHM`, `IMRPhenomTP`, `IMRPhenomTPHM` | Native | Native | Not listed | Native | Wrapper unverified |
-| Effective-one-body | `SEOBNR_ROM`, `SEOBNRv4_ROM` | Native + external asset | Native (`SEOBNRv4_ROM`) | Not listed | Not listed | Wrapper unverified |
-| Effective-one-body | `SEOBNRv4HM`, `SEOBNRv4P`, `SEOBNRv4PHM` | Not listed | Native | Not listed | Not listed | Wrapper unverified |
-| Effective-one-body and tidal | `SEOBNRv4_ROM_NRTidalv2`, `SEOBNRv4_ROM_NRTidalv2_NSBH`, `SEOBNRv4T_surrogate` | Not listed | Native | Not listed | Not listed | Wrapper unverified |
-| Effective-one-body | `SEOBNRv5_ROM`, `SEOBNRv5HM_ROM`, `SEOBNRv5_ROM_NRTidalv3` | Not listed | Native | Not listed | Not listed | Wrapper unverified |
-| Effective-one-body | `SEOBNR_ODE` | Native | Not listed | Not listed | Not listed | Not listed |
-| Effective-one-body | `TEOBResumS` | Native | Native | Not listed | Not listed | Wrapper unverified |
-| Effective-one-body | `TEOBResumSPA` | Not listed | Not listed | Not listed | Not listed | External |
-| Phenomenological tidal | `IMRPhenomXAS_NRTidalv2` | Not listed | Native | Not listed | Not listed | Wrapper unverified |
-| Phenomenological tidal | `IMRPhenomXAS_NRTidalv3`, `IMRPhenomXP_NRTidalv3` | Not listed | Native | Native | Not listed | Wrapper unverified |
-| NR surrogate | `NRSur4d2s`, `NRSur7dq4` | Not listed | Native | Not listed | Not listed | Wrapper unverified |
-| Ringdown and bursts | `KerrRingdown` | Native | Unverified | Not listed | Not listed | Not listed |
-| Ringdown and bursts | `SineGaussian` | Native | Native (burst routines) | Native (time domain) | Not listed | Not listed |
-| Ringdown and bursts | `MemoryWaveform` | Native | Not listed | Not listed | Not listed | Not listed |
-| Continuous waves | `ContinuousWave` | Native | Unverified | Not listed under this name | Not listed | Not listed |
-| Continuous waves | `ExactPulsarSignal`, `PulsarSignal`, `BinaryPulsarSignal` | Not listed under these names | Unverified | Native | Not listed | Not listed |
-| Specialized | `EMRIKludge`, `ParameterizedPostEinstein`, `SpinPrecessionODE`, `HybridMECO` | Native | Unverified | Not listed | Not listed | Not listed |
+<div class="waveform-coverage" markdown="1">
+
+Checked **22 September 2026**. **N** = native · **N+A** = native with an external asset ·
+**E** = external wrapper · **-** = not listed · **?** = unverified · **W?** = wrapper unverified.
+“Not listed” does not mean unsupported. LAL denotes LALSimulation. Notes below each
+group retain model names and qualifications. See the [status definitions](#reading-the-coverage-table).
+
+### Post-Newtonian
+
+| Model or variant | DiffGW | LAL | Ripple | Phenom<wbr>XPy | GWFAST |
+| --- | --- | --- | --- | --- | --- |
+| `TaylorF2` <sup>1</sup> | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Native (tidal-capable)" aria-label="Native (tidal-capable)">N</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Native (TaylorF2_RestrictedPN)" aria-label="Native (TaylorF2_RestrictedPN)">N</abbr> |
+| `TaylorF2_HM` <sup>2</sup> | <abbr title="Native (eight modes)" aria-label="Native (eight modes)">N</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> |
+| `TaylorF2_Eccentric` <sup>3</sup> | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Native (TaylorF2Ecc)" aria-label="Native (TaylorF2Ecc)">N</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Native (eccentric option)" aria-label="Native (eccentric option)">N</abbr> |
+
+<div class="coverage-notes" markdown="1">
+
+- **1.** Ripple: Native (tidal-capable). GWFAST: Native (`TaylorF2_RestrictedPN`).
+- **2.** DiffGW: Native (eight modes).
+- **3.** LALSimulation: Native (`TaylorF2Ecc`). GWFAST: Native (eccentric option).
+
+</div>
+
+### Aligned-spin IMR
+
+| Model or variant | DiffGW | LAL | Ripple | Phenom<wbr>XPy | GWFAST |
+| --- | --- | --- | --- | --- | --- |
+| `IMRPhenomD` | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Native" aria-label="Native">N</abbr> |
+| `IMRPhenomHM` | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Native" aria-label="Native">N</abbr> |
+| `IMRPhenomXAS` | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> |
+| `IMRPhenomXHM` | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Wrapper unverified" aria-label="Wrapper unverified">W?</abbr> |
+
+### Tidal models
+
+| Model or variant | DiffGW | LAL | Ripple | Phenom<wbr>XPy | GWFAST |
+| --- | --- | --- | --- | --- | --- |
+| `IMRPhenomD_NRTidal` | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> |
+| `IMRPhenomD_NRTidalv2` | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Native" aria-label="Native">N</abbr> |
+| `IMRPhenomNSBH` | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Native" aria-label="Native">N</abbr> |
+| `IMRPhenomXAS_NRTidalv2` | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Wrapper unverified" aria-label="Wrapper unverified">W?</abbr> |
+| `IMRPhenomXAS_NRTidalv3`, `IMRPhenomXP_NRTidalv3` | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Wrapper unverified" aria-label="Wrapper unverified">W?</abbr> |
+
+### Precessing IMR
+
+| Model or variant | DiffGW | LAL | Ripple | Phenom<wbr>XPy | GWFAST |
+| --- | --- | --- | --- | --- | --- |
+| `IMRPhenomP` | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Wrapper unverified" aria-label="Wrapper unverified">W?</abbr> |
+| `IMRPhenomPv2` | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Wrapper unverified" aria-label="Wrapper unverified">W?</abbr> |
+| `IMRPhenomXP`, `IMRPhenomXPHM` | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Wrapper unverified" aria-label="Wrapper unverified">W?</abbr> |
+| XPHM MSA, SpinTaylor and PNR options <sup>4</sup> | <abbr title="Native (documented options)" aria-label="Native (documented options)">N</abbr> | <abbr title="Unverified (options not enumerated here)" aria-label="Unverified (options not enumerated here)">?</abbr> | <abbr title="Unverified (options not enumerated here)" aria-label="Unverified (options not enumerated here)">?</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Wrapper unverified" aria-label="Wrapper unverified">W?</abbr> |
+
+<div class="coverage-notes" markdown="1">
+
+- **4.** DiffGW: Native (documented options). LALSimulation: Unverified (options not enumerated here). Ripple: Unverified (options not enumerated here).
+
+</div>
+
+### Time-domain IMR
+
+| Model or variant | DiffGW | LAL | Ripple | Phenom<wbr>XPy | GWFAST |
+| --- | --- | --- | --- | --- | --- |
+| `IMRPhenomT`, `IMRPhenomTHM`, `IMRPhenomTP`, `IMRPhenomTPHM` | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Wrapper unverified" aria-label="Wrapper unverified">W?</abbr> |
+
+### Effective-one-body
+
+| Model or variant | DiffGW | LAL | Ripple | Phenom<wbr>XPy | GWFAST |
+| --- | --- | --- | --- | --- | --- |
+| `SEOBNR_ROM`, `SEOBNRv4_ROM` <sup>5</sup> | <abbr title="Native + external asset" aria-label="Native + external asset">N+A</abbr> | <abbr title="Native (SEOBNRv4_ROM)" aria-label="Native (SEOBNRv4_ROM)">N</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Wrapper unverified" aria-label="Wrapper unverified">W?</abbr> |
+| `SEOBNRv4HM`, `SEOBNRv4P`, `SEOBNRv4PHM` | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Wrapper unverified" aria-label="Wrapper unverified">W?</abbr> |
+| `SEOBNRv4_ROM_NRTidalv2`, `SEOBNRv4_ROM_NRTidalv2_NSBH`, `SEOBNRv4T_surrogate` | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Wrapper unverified" aria-label="Wrapper unverified">W?</abbr> |
+| `SEOBNRv5_ROM`, `SEOBNRv5HM_ROM`, `SEOBNRv5_ROM_NRTidalv3` | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Wrapper unverified" aria-label="Wrapper unverified">W?</abbr> |
+| `SEOBNR_ODE` | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> |
+| `TEOBResumS` | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Wrapper unverified" aria-label="Wrapper unverified">W?</abbr> |
+| `TEOBResumSPA` | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="External" aria-label="External">E</abbr> |
+
+<div class="coverage-notes" markdown="1">
+
+- **5.** LALSimulation: Native (`SEOBNRv4_ROM`).
+
+</div>
+
+### NR surrogate
+
+| Model or variant | DiffGW | LAL | Ripple | Phenom<wbr>XPy | GWFAST |
+| --- | --- | --- | --- | --- | --- |
+| `NRSur4d2s`, `NRSur7dq4` | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Wrapper unverified" aria-label="Wrapper unverified">W?</abbr> |
+
+### Ringdown and bursts
+
+| Model or variant | DiffGW | LAL | Ripple | Phenom<wbr>XPy | GWFAST |
+| --- | --- | --- | --- | --- | --- |
+| `KerrRingdown` | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Unverified" aria-label="Unverified">?</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> |
+| `SineGaussian` <sup>6</sup> | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Native (burst routines)" aria-label="Native (burst routines)">N</abbr> | <abbr title="Native (time domain)" aria-label="Native (time domain)">N</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> |
+| `MemoryWaveform` | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> |
+
+<div class="coverage-notes" markdown="1">
+
+- **6.** LALSimulation: Native (burst routines). Ripple: Native (time domain).
+
+</div>
+
+### Continuous waves
+
+| Model or variant | DiffGW | LAL | Ripple | Phenom<wbr>XPy | GWFAST |
+| --- | --- | --- | --- | --- | --- |
+| `ContinuousWave` <sup>7</sup> | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Unverified" aria-label="Unverified">?</abbr> | <abbr title="Not listed under this name" aria-label="Not listed under this name">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> |
+| `ExactPulsarSignal`, `PulsarSignal`, `BinaryPulsarSignal` <sup>8</sup> | <abbr title="Not listed under these names" aria-label="Not listed under these names">-</abbr> | <abbr title="Unverified" aria-label="Unverified">?</abbr> | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> |
+
+<div class="coverage-notes" markdown="1">
+
+- **7.** Ripple: Not listed under this name.
+- **8.** DiffGW: Not listed under these names.
+
+</div>
+
+### Specialized
+
+| Model or variant | DiffGW | LAL | Ripple | Phenom<wbr>XPy | GWFAST |
+| --- | --- | --- | --- | --- | --- |
+| `EMRIKludge`, `ParameterizedPostEinstein`, `SpinPrecessionODE`, `HybridMECO` | <abbr title="Native" aria-label="Native">N</abbr> | <abbr title="Unverified" aria-label="Unverified">?</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> | <abbr title="Not listed" aria-label="Not listed">-</abbr> |
+
+</div>
 
 The LAL column is based on the [LALSimInspiral approximant API][lal-inspiral]
 and [LALSimulation module index][lal-modules]. The Ripple column uses the
@@ -97,7 +186,7 @@ support for every model in a package's catalogue.
 | **DiffGW** | Native PyTorch (`torchwave`) and JAX (`jaxwave`) frontends under `diffgw`; frequency- and time-domain models are listed in the [catalogue](models.md). | Waveforms expose batch-shaped tensor evaluation. Supported paths document `torch.compile` and `jax.jit`; measured CPU/CUDA scope is in [performance](performance.md). | Automatic differentiation is model- and path-specific. Native evaluation does not call LAL; ROMs and explicitly documented data assets remain external. See [validation](validation.md). |
 | **LALSimulation** | LAL's documented high-level routines generate time- or frequency-domain waveforms for named approximants. | The checked API documents scalar waveform-generation entry points and sequence/grid variants; this page makes no blanket claim about tensor batching or autodiff. | No general native PyTorch/JAX autodiff interface is documented in the checked LAL pages. |
 | **Ripple** | Differentiable JAX waveform functions; the current catalogue lists frequency-domain CBC models, time-domain bursts and continuous waves. | JAX execution supports compilation and accelerator use; see the [project documentation][ripple-readme]. | Support depends on the model and transformed path. The current catalogue does not list the T family. |
-| **PhenomXPy** | Python T, THM, TP and TPHM implementations, with time-domain and Fourier-transformed polarizations. | The README documents Numba CPU acceleration and CuPy GPU execution, parallelized over time samples. | The README does not document a native PyTorch/JAX autodiff interface. |
+| **PhenomXPy** | Python T, THM, TP and TPHM implementations, with time-domain and Fourier-transformed polarizations. | The README documents Numba CPU acceleration and CuPy GPU execution, parallelized over time samples. [T/THM CPU timings](package_benchmarks.md#phenomxpy-time-domain-comparison-22-september-2026) compare it with DiffGW. | The README does not document a native PyTorch/JAX autodiff interface. |
 | **GWFAST** | Vectorised Python waveform models plus detector/Fisher analysis; native model list is in the [waveform documentation](https://gwfast.readthedocs.io/en/latest/waveforms.html). | Native models are documented as vectorised; the package uses JAX for automatic differentiation. | LAL and TEOBResumS are explicit wrappers; the documentation states that derivatives through wrapped models use numerical differentiation. |
 
 For DiffGW's actual model options, derivative order, device limits and

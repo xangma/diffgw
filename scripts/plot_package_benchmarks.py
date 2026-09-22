@@ -24,6 +24,7 @@ from matplotlib.ticker import FuncFormatter, LogLocator, NullLocator
 
 ROOT = Path(__file__).resolve().parents[1]
 STYLES = {
+    "phenomxpy": ("PhenomXPy Numba", "#b55315", "v"),
     "lal": ("LALSimulation", "#4b5563", "D"),
     "torch": ("DiffGW Torch eager", "#008a91", "o"),
     "torch_compiled": ("DiffGW Torch compiled", "#1764b0", "^"),
@@ -39,7 +40,8 @@ def load_receipt(path: Path, device: str) -> dict:
     payload = json.dumps(data, sort_keys=True, separators=(",", ":"), allow_nan=False)
     if hashlib.sha256(payload.encode()).hexdigest() != content_hash:
         raise ValueError(f"Receipt content hash does not match: {path}")
-    if data["schema"] != "diffgw-package-comparison/v1" or data["configuration"]["device"] != device:
+    td = data["schema"] == "diffgw-phenomxpy-comparison/v1"
+    if data["schema"] not in ("diffgw-package-comparison/v1", "diffgw-phenomxpy-comparison/v1") or data["configuration"].get("device", "cpu") != device:
         raise ValueError(f"Unexpected receipt schema/device: {path}")
     config, gate = data["configuration"], data["qualification"]
     expected = set(itertools.product(config["models"], config["backends"], config["batches"]))
@@ -49,7 +51,7 @@ def load_receipt(path: Path, device: str) -> dict:
         if key in seen or row["backend"] not in STYLES:
             raise ValueError(f"Duplicate or unsupported series: {key}")
         seen.add(key)
-        if row["device"] != device or row["dtype"] != "float64" or row.get("output_dtype") != "complex128":
+        if row["device"] != device or row.get("dtype", "float64" if td else None) != "float64" or row.get("output_dtype") != ("float64" if td else "complex128"):
             raise ValueError(f"Expected {device} FP64 result: {key}")
         accuracy = row["accuracy"]
         qualified = (
@@ -92,6 +94,8 @@ def check_matched_campaign(cpu: dict, gpu: dict) -> None:
 
 def hardware(receipt: dict) -> str:
     provenance = receipt["provenance"]
+    if receipt["schema"] == "diffgw-phenomxpy-comparison/v1":
+        return provenance["cpu"] + (" · CPU (unpinned)" if provenance.get("cpu_affinity") is None else " · CPU")
     if receipt["configuration"]["device"] == "cpu":
         return provenance["cpu"].replace(" 16-Core Processor", "") + " · one logical CPU"
     return provenance["gpu"].split(",")[0] + " · CUDA"
@@ -113,6 +117,11 @@ def footnotes(fig, receipt: dict) -> None:
     gate = receipt["qualification"]
     provenance = receipt["provenance"]
     packages = provenance["packages"]
+    if receipt["schema"] == "diffgw-phenomxpy-comparison/v1":
+        fig.text(0.04, 0.080, "Filled: passes PhenomXPy agreement gate.  Hollow / †: fails gate; diagnostic timing.", fontsize=10)
+        fig.text(0.04, 0.049, f"Direct L2 ≤ {gate['max_relative_l2']:.0e}; unmaximized mismatch ≤ {gate['max_mismatch']:.0e}.  95% bootstrap intervals.", fontsize=9)
+        fig.text(0.04, 0.018, f"{provenance['timestamp'][:10]} · PhenomXPy {gate['reference'].split()[-1][:7]} · Coefficient setup included; resident inputs; no derivatives.", fontsize=9)
+        return
     fig.text(0.04, 0.080, "Filled: passes LAL agreement gate.  Hollow / †: fails gate; diagnostic timing.", fontsize=10)
     fig.text(0.04, 0.049,
              f"Gate: relative L2 ≤ {gate['max_relative_l2']:.0e}, mismatch ≤ {gate['max_mismatch']:.0e}. "
@@ -140,8 +149,9 @@ def plot_scaling(receipt: dict, output: Path, fmt: str) -> None:
     fig, axes = plt.subplots(1, len(models), figsize=(12, 5.5), squeeze=False, sharey=True)
     fig.subplots_adjust(left=0.075, right=0.98, top=0.69, bottom=0.24, wspace=0.15)
     fig.suptitle("Warmed waveform generation · " + hardware(receipt), y=0.96, fontsize=15, weight="bold")
+    grid_label = (f"{receipt['time_grid']['samples']:,} time samples" if "time_grid" in receipt else f"{receipt['frequency_grid']['bins']:,} frequencies")
     fig.text(0.5, 0.88,
-             f"FP64 · {receipt['frequency_grid']['bins']:,} frequencies · both polarizations · "
+             f"FP64 · {grid_label} · both polarizations · "
              f"median of {config['iterations']} calls · lower is faster", ha="center", fontsize=11)
     handles = [Line2D([], [], color=color, marker=marker, label=label, linewidth=1.6)
                for backend, (label, color, marker) in STYLES.items() if backend in config["backends"]]
@@ -169,7 +179,7 @@ def plot_scaling(receipt: dict, output: Path, fmt: str) -> None:
         ax.yaxis.set_major_formatter(FuncFormatter(lambda value, _: f"{value:g}"))
     axes[0][0].set_ylabel("Milliseconds per complete batch (log scale)")
     footnotes(fig, receipt)
-    suffix = "cpu" if config["device"] == "cpu" else "gpu"
+    suffix = "phenomxpy-cpu" if "time_grid" in receipt else ("cpu" if config["device"] == "cpu" else "gpu")
     save(fig, output, f"package-latency-{suffix}", fmt)
 
 
@@ -219,11 +229,19 @@ def plot_summary(cpu: dict, gpu: dict, output: Path, fmt: str) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--phenomxpy", type=Path, help="Render only the time-domain PhenomXPy receipt")
     parser.add_argument("--cpu", type=Path, default=ROOT / "docs/benchmarks/mac-20260921-cpu.json")
     parser.add_argument("--gpu", type=Path, default=ROOT / "docs/benchmarks/mac-20260921-gpu.json")
     parser.add_argument("--output-dir", type=Path, default=ROOT / "docs/benchmarks/plots")
     parser.add_argument("--format", choices=("svg", "png", "pdf"), default="svg")
     args = parser.parse_args()
+    if args.phenomxpy:
+        receipt = load_receipt(args.phenomxpy, "cpu")
+        if receipt["schema"] != "diffgw-phenomxpy-comparison/v1":
+            parser.error("--phenomxpy requires the time-domain receipt")
+        configure_style()
+        plot_scaling(receipt, args.output_dir, args.format)
+        return
     cpu, gpu = load_receipt(args.cpu, "cpu"), load_receipt(args.gpu, "cuda")
     check_matched_campaign(cpu, gpu)
     configure_style()

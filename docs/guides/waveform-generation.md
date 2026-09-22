@@ -101,6 +101,28 @@ hp_batch, hc_batch = torchwave.get_fd_waveform(
 print("Batched tensor shape:", hp_batch.shape)  # torch.Size([4, 493])
 ```
 
+### IMRPhenomXP
+
+`IMRPhenomXP` uses the same frequency-domain generation interface on both
+frontends. Supply Cartesian spin components for a precessing binary:
+
+```python
+import diffgw
+
+hp, hc = diffgw.get_fd_waveform(
+    approximant="IMRPhenomXP",
+    backend="torch",  # Use "jax" for the JAX frontend.
+    mass1=40.0, mass2=25.0,
+    spin1x=0.3, spin1y=0.1, spin1z=0.2,
+    spin2x=0.0, spin2y=-0.2, spin2z=-0.1,
+    distance=410.0, inclination=0.5,
+    f_ref=20.0, f_lower=20.0, f_final=512.0, delta_f=0.5,
+)
+```
+
+This demonstrates generation. For comparisons with LAL, also check the
+[reference conventions and model options](../differences_from_lal.md#model-specific-differences).
+
 ### Generic 3D Precessing Spins (MSA, SpinTaylor, PNR)
 To simulate binary systems with orbital precession, supply 3D spin vectors (`spin1x`, `spin1y`, `spin1z`, `spin2x`, `spin2y`, `spin2z`). `torchwave` provides three precession prescriptions under `IMRPhenomXPHM`:
 

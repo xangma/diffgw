@@ -10,6 +10,7 @@ imply that those workloads have been measured.
 | Purpose | Tool and instructions |
 | --- | --- |
 | Reproduce the published FP64 package comparison | `scripts/compare_packages.py`; use the [exact campaign commands, revision and receipts](package_benchmarks.md#reproduction-and-receipts). |
+| Reproduce the PhenomXPy time-domain comparison | `scripts/compare_phenomxpy.py`; use the [T/THM workload and source-install instructions](package_benchmarks.md#phenomxpy-time-domain-comparison-22-september-2026). |
 | Regenerate its maintained figures | `scripts/plot_package_benchmarks.py`; use the [plot commands](package_benchmarks.md#regenerating-the-plots). |
 | Explore local latency, compilation or backward cost | [`torchwave-bench`](guides/cli.md#torchwave-bench); these exploratory runs do not automatically reproduce the published campaign. |
 | Diagnose operators and allocations | [`torchwave-profile`](guides/cli.md#torchwave-profile); profile separately from latency measurements. |
@@ -67,6 +68,16 @@ justified tolerances.
 `scripts/compare_packages.py` implements the published checks for FP64 TaylorF2,
 IMRPhenomD and IMRPhenomXAS. It retains failed timings only with
 `--record-unqualified`. It measures forward waveform generation.
+
+`scripts/compare_phenomxpy.py` measures CPU IMRPhenomT/THM polarizations against
+a pinned PhenomXPy Git install. Its labels are `phenomxpy` (Numba scalar loop),
+`torch` (eager tensor batch), and `jax` (JIT tensor batch). Both packages rebuild
+parameter-dependent coefficients inside the timer. It uses real FP64 samples,
+a shared time grid, and direct per-polarization errors with no time, phase or
+sign maximization. The report records modes, constants, grid checks and failures.
+This is PhenomXPy implementation agreement, not an independent physical test
+or a LAL qualification. Source hashes and the exact reference commit are
+recorded; a PyPI wheel without that Git provenance is rejected.
 
 <a id="legacy-campaigns"></a>
 **Legacy harness limitation:** `scripts/run_benchmark_campaign.py` first uses

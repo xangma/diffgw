@@ -4,7 +4,9 @@ Choose results that match your model, batch size and hardware. The published
 [21 September 2026 campaign](package_benchmarks.md) measures warmed FP64 forward
 waveform generation for TaylorF2, IMRPhenomD and IMRPhenomXAS, with both
 polarizations on 1,969 frequency bins. CPU measurements use one logical Ryzen 9
-7950X3D CPU; GPU measurements use an RTX 5090.
+7950X3D CPU; GPU measurements use an RTX 5090. A separate
+[22 September PhenomXPy comparison](package_benchmarks.md#phenomxpy-time-domain-comparison-22-september-2026)
+measures IMRPhenomT/THM time-domain polarizations on an Apple M4 Max CPU.
 
 ## Reading the results
 
@@ -13,7 +15,8 @@ polarizations on 1,969 frequency bins. CPU measurements use one logical Ryzen 9
 | One waveform on CPU | LALSimulation has the lowest measured latency for each of the three models. | [CPU results, B = 1](package_benchmarks.md#one-cpu-core) |
 | Large batches on CPU | At B = 1,000, compiled DiffGW PyTorch has the lowest measured batch latency for PhenomD and PhenomXAS. | [CPU scaling](package_benchmarks.md#one-cpu-core) |
 | Batches on GPU | Ordering varies with model, batch and backend; compilation and workload size matter. | [GPU scaling](package_benchmarks.md#rtx-5090-gpu) |
-| Gradients, inference, time-domain models or memory limits | These workloads have no published measurements in this campaign. | [Evidence gaps](#workloads-without-published-measurements) |
+| Time-domain T/THM on CPU | Compare PhenomXPy Numba with DiffGW Torch eager and JAX JIT, with agreement failures marked. | [PhenomXPy timings](package_benchmarks.md#time-domain-batch-latency) |
+| Gradients, inference or memory limits | These workloads have no published measurements in this campaign. | [Evidence gaps](#workloads-without-published-measurements) |
 
 The overview below shows **milliseconds per complete batch of 1,000 binaries**;
 lower is faster. The [full report](package_benchmarks.md#warmed-batch-latency)
@@ -42,10 +45,11 @@ combine hardware and implementation differences.
 | Published campaign | Scope and source | Evidence |
 | --- | --- | --- |
 | [21 September 2026: FP64 forward waveforms](package_benchmarks.md) | TaylorF2, PhenomD and PhenomXAS; batches 1–1,000; source `5226141` | CPU/CUDA plots, raw timings, reference errors, environment and reproduction commands |
+| [22 September 2026: PhenomXPy comparison](package_benchmarks.md#phenomxpy-time-domain-comparison-22-september-2026) | PhenomT and PhenomTHM; batches 1–1,000; Apple M4 Max CPU; source hashes recorded | CPU plot, raw timings, PhenomXPy agreement errors, environment and reproduction commands |
 
-The report is a dated measurement of its pinned source, not a performance
+Each report is a dated measurement of its pinned source, not a performance
 claim for every subsequent version. Detailed settings, numerical tables and
-receipts are maintained in that report.
+receipts are maintained alongside each campaign.
 
 ## Compilation and derivatives
 
@@ -55,15 +59,17 @@ show compiled PyTorch execution. `dynamic=True` and bucketing can reduce
 recompilation, but a new shape, dtype, bucket or static configuration can still
 compile. Warm the signatures used by your workload before timing.
 
-The campaign checks that Torch captured at least one graph; it does not establish
+The frequency-domain campaign checks that Torch captured at least one graph; it does not establish
 that the complete call is compiled. First-call costs include cache loading or
 compilation, with caches not cleared, so they do not measure isolated compilation
 or cold start. Derivative availability and order are [model-specific](validation.md#derivative-support-and-evidence).
 
 ## Workloads without published measurements
 
-The campaign does not measure derivative, Fisher, likelihood, time-domain,
-FP32 or peak-memory workloads. It also supplies no controlled cold-start result
+The published campaigns do not measure derivative, Fisher, likelihood,
+FP32 or peak-memory workloads. The time-domain measurement covers only
+T/THM on CPU, with no compiled PyTorch or precessing T-family results.
+Neither supplies a controlled cold-start result
 or end-to-end inference speedup. These require separate matched workloads,
 numerical checks and saved measurements. The [NUTS tutorial](tutorials/03_parameter_estimation_nuts.md)
 is an API walkthrough, not a benchmark or converged inference result.

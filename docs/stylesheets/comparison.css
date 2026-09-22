@@ -1,0 +1,78 @@
+/* Keep all package columns visible, including on narrow screens. */
+.md-typeset .waveform-coverage .md-typeset__table {
+  display: block;
+}
+
+.md-typeset .waveform-coverage table:not([class]) {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+
+.md-typeset .waveform-coverage table:not([class]) th,
+.md-typeset .waveform-coverage table:not([class]) td {
+  min-width: 0;
+  padding: .6em .35em;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.md-typeset .waveform-coverage table:not([class]) th:first-child,
+.md-typeset .waveform-coverage table:not([class]) td:first-child {
+  width: 34%;
+  text-align: left;
+}
+
+.md-typeset .waveform-coverage code {
+  white-space: normal;
+  overflow-wrap: anywhere;
+}
+
+.md-typeset .waveform-coverage abbr {
+  border-bottom: 0;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.md-typeset .waveform-coverage .coverage-notes {
+  font-size: .7rem;
+}
+
+/* On phones each model gets a full-width name and five labelled statuses. */
+@media screen and (max-width: 600px) {
+  .md-typeset .waveform-coverage table:not([class]) thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+  }
+
+  .md-typeset .waveform-coverage table:not([class]) tbody {
+    display: block;
+  }
+
+  .md-typeset .waveform-coverage table:not([class]) tbody tr {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+  }
+
+  .md-typeset .waveform-coverage table:not([class]) td:first-child {
+    grid-column: 1 / -1;
+    width: auto;
+    background: var(--md-default-fg-color--lightest);
+  }
+
+  .md-typeset .waveform-coverage td:not(:first-child)::before {
+    display: block;
+    min-height: 2.8em;
+    margin-bottom: .35em;
+    font-weight: 700;
+  }
+
+  .md-typeset .waveform-coverage td:nth-child(2)::before { content: "DiffGW"; }
+  .md-typeset .waveform-coverage td:nth-child(3)::before { content: "LAL"; }
+  .md-typeset .waveform-coverage td:nth-child(4)::before { content: "Ripple"; }
+  .md-typeset .waveform-coverage td:nth-child(5)::before { content: "Phenom\200bXPy"; }
+  .md-typeset .waveform-coverage td:nth-child(6)::before { content: "GWFAST"; }
+}
