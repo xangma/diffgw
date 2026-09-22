@@ -191,6 +191,6 @@ The reconstruction and calibration fits follow the authors' MIT-licensed
 Tests cover independent author-reference values, branch continuity,
 frequency inversion, gradients, batching, JIT, and Torch/JAX FP64 parity.
 Optional LAL binary comparisons have measured residuals documented in
-[model comparison](comparison.md#model-specific-differences-from-lal). LALSuite is not a runtime
+[T-family reference report](validation/phenomt.md). LALSuite is not a runtime
 dependency. See [citations](../CITATIONS.md) and
 [third-party notices](../THIRD_PARTY_NOTICES.md).

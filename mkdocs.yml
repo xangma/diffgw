@@ -93,22 +93,27 @@ validation:
 
 nav:
   - Home: index.md
+  - Choose a Model:
+      - Compare Packages: comparison.md
+      - Model Support: models.md
   - User Guide:
-      - Getting Started & Usage: usage.md
+      - Waveforms and Analysis: usage.md
       - IMRPhenomT Family: imrphenomt.md
       - External Datasets: external-data.md
   - Tutorials:
       - 1. Quickstart & Parity: tutorials/01_quickstart_and_parity.md
       - 2. Fisher Information: tutorials/02_fisher_analysis.md
-      - 3. Bayesian Inference & NUTS: tutorials/03_parameter_estimation_nuts.md
-  - Benchmarks & Validation:
-      - Validation Evidence: validation.md
-      - Package Comparison: comparison.md
-      - Measured Package Benchmarks: package_benchmarks.md
-      - Performance Scaling: performance.md
-      - Controlled Benchmark Protocol: benchmarking_protocol.md
-      - Mathematical Provenance Ledger: provenance_ledger.md
+      - 3. NUTS API Walkthrough: tutorials/03_parameter_estimation_nuts.md
+  - Accuracy & Validation:
+      - Evidence Overview: validation.md
+      - IMRPhenomT Reference Report: validation/phenomt.md
+      - Inference Checks: validation/inference.md
+      - Mathematical Provenance: provenance_ledger.md
+  - Performance:
+      - Results Overview: performance.md
+      - "21 Sep 2026: FP64 Waveforms": package_benchmarks.md
+      - Reproduce & Methodology: benchmarking_protocol.md
   - API Reference:
+      - diffgw (Unified): api/diffgw.md
       - torchwave (PyTorch): api/torchwave.md
       - jaxwave (JAX): api/jaxwave.md
-      - diffgw (Unified): api/diffgw.md

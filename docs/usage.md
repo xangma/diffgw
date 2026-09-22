@@ -1,4 +1,4 @@
-# diffgw User Guide & API Reference (torchwave & jaxwave)
+# Waveform and analysis user guide
 
 **diffgw** provides batched gravitational-wave models and inference tools through two native frontends, sharing constants and coefficient tables in the framework-independent `diffgw_core` package:
 
@@ -106,19 +106,10 @@ print("Data type:", hp.dtype)               # complex128
 
 ## 2. Model Availability & Cross-Framework Parity
 
-The catalog lists implemented model families. Interface availability, agreement with an external reference, and cross-framework consistency are separate properties; consult [validation evidence](validation.md) and the [model comparison](comparison.md#model-specific-differences-from-lal) for the tested configurations and known differences.
-
-| Family | Approximant(s) | Harmonics / Multipoles | Physical Features & Regimes |
-| :--- | :--- | :---: | :--- |
-| **Post-Newtonian** | `TaylorF2`<br>`TaylorF2_HM`<br>`TaylorF2_Eccentric` | $(2,2)$<br>Eight modes through $\ell=4$<br>$(2,2)$ | 3.5PN point-particle & spin phasing, BNS tidal deformability<br>Leading-order higher-mode amplitudes<br>Moore et al. (2016) 3PN stationary-phase eccentric corrections |
-| **Aligned-Spin IMR** | `IMRPhenomD`<br>`IMRPhenomHM`<br>`IMRPhenomXAS`<br>`IMRPhenomXHM` | $(2,2)$<br>$(2,\pm 2), (2,\pm 1), (3,\pm 3), (3,\pm 2), (4,\pm 4)$<br>$(2,\pm 2)$<br>$(2,\pm 2), (2,\pm 1), (3,\pm 3), (3,\pm 2), (4,\pm 4)$ | Aligned-spin dominant mode, 5-collocation intermediate<br>Multi-harmonic PhenomD calibration with mode mixing<br>4th-generation aligned-spin dominant mode (Pratten et al. 2020)<br>4th-generation higher multipoles (García-Quirós et al. 2020) |
-| **Native Time-Domain IMR** | `IMRPhenomT`, `IMRPhenomTHM`, `IMRPhenomTP`, `IMRPhenomTPHM` | Up to $(5,\pm 5)$ | Aligned or precessing black hole binaries; see the [T-family guide](imrphenomt.md) |
-| **Precessing IMR** | `IMRPhenomP` / `Pv2`<br>`IMRPhenomXP`<br>`IMRPhenomXPHM` | $(2,\pm 2)$ twisted<br>$(2,\pm 2)$ twisted<br>Multipolar twisted | Generic 3D spins with NNLO PN precession angles & Wigner $d$-matrices<br>4th-gen precessing carrier with MSA analytical precession<br>Multipolar precession supporting MSA (`v223`), SpinTaylor (`v320`), and PNR (`v330`) |
-| **Tidal & Matter** | `IMRPhenomD_NRTidal`<br>`IMRPhenomD_NRTidalv2`<br>`IMRPhenomNSBH` | $(2,2)$<br>$(2,2)$<br>$(2,2)$ | Dietrich et al. (2017) rational Padé BNS tidal phasing (NRTidal v1)<br>Dietrich et al. (2019) NRTidal v2 with self-spin & Planck windowing<br>Neutron star–black hole model with tidal disruption & remnant torus |
-| **Effective-One-Body** | `SEOBNR_ROM` / `SEOBNRv4_ROM`<br>`SEOBNR_ODE`<br>`TEOBResumS` | $(2,2)$<br>$(2,2)$<br>$(2,2)$ | External SEOBNRv4 ROM data with a native evaluation wrapper<br>Time-domain Hamiltonian ODE integrator with continuous QNM matching<br>Damour-Nagar EOB dynamics with spin-orbit coupling and tidal potentials |
-| **Ringdown & Bursts** | `KerrRingdown`<br>`SineGaussian`<br>`MemoryWaveform` | $(2,2,0), (l,m,n)$<br>Burst packet<br>$(2,0)$ | Damped sinusoids from Kerr quasinormal modes (time & frequency domain)<br>Standard unmodeled sine-Gaussian burst wavelet<br>Non-linear Christodoulou gravitational-wave memory effect $h_{20}^{\text{mem}}(t)$ |
-| **Specialized Models** | `ContinuousWave`<br>`EMRIKludge`<br>`ParameterizedPostEinstein`<br>`SpinPrecessionODE` | Monochromatic<br>Multi-harmonic<br>Modified phasing<br>Orbit-averaged | Continuous waves from triaxial rotating neutron stars with Doppler modulation<br>Extreme mass ratio inspirals (LISA) with Kerr geodesic orbital frequencies<br>Model-independent testing of General Relativity ($\beta_{\rm ppE}, b_{\rm ppE}$)<br>Orbit-averaged spin precession ODE integrator |
-| **Time-Domain Tools** | `get_td_waveform`<br>`HybridMECO` | Supported FD models<br>Diagnostic | FFT conditioning and time-domain waveform generation<br>Minimum Energy Circular Orbit hybrid velocity & frequency root solver |
+Use the [model support catalog](models.md) to compare physical features,
+backend and derivative restrictions, external data requirements, and validation
+status. [Accuracy and validation](validation.md) distinguishes frontend
+consistency, external-reference agreement and independent physical evidence.
 
 ---
 
@@ -429,7 +420,9 @@ shape. Use a fixed duration inside JAX transformations.
 
 `get_fd_waveform` raises an error for every T-family model. Nonzero tidal
 deformabilities, `f_final`, and unrecognized options are rejected. Only TP
-and TPHM accept transverse spins, with `precession_method="nnlo"`.
+and TPHM accept transverse spins. They offer `precession_method="nnlo"`
+(the default), `"msa"`, or `"numerical"`; see the [T-family guide](imrphenomt.md#higher-modes-and-precession)
+for versions and domain restrictions.
 
 ---
 
@@ -573,7 +566,7 @@ log_lik_jx = whittle_jx(template_jax)
 
 ### Accelerated Relative Binning Likelihood
 
-Both frontends implement a **relative-binning approximation** using precomputed summary coefficients and candidate waveforms at bin centers. The ratio to a suitable fiducial waveform should vary slowly within each bin. Choose the bin count and validate likelihood and gradient errors against dense evaluation over the relevant parameter region. Runtime depends on the workload; see [validation evidence](validation.md#relative-binning) and the [method paper](https://arxiv.org/abs/1806.08792).
+Both frontends implement a **relative-binning approximation** using precomputed summary coefficients and candidate waveforms at bin centers. The ratio to a suitable fiducial waveform should vary slowly within each bin. Choose the bin count and validate likelihood and gradient errors against dense evaluation over the relevant parameter region. Runtime depends on the workload; see [validation evidence](validation/inference.md#relative-binning) and the [method paper](https://arxiv.org/abs/1806.08792).
 
 ```python
 # PyTorch Relative Binning
@@ -764,35 +757,20 @@ torchwave-generate-london-qnm --output-dir ./london_qnm
 
 ## Controlled Benchmarking Protocol
 
-The [measured package benchmarks](package_benchmarks.md) publish pinned configurations, raw repeated timings, numerical-reference checks, and confidence intervals. Their `scripts/compare_packages.py` harness is distinct from the older campaign runner shown below. A legacy receipt marked `gate_passed` can include a JAXWave reference or self-consistency fallback; it does not by itself establish agreement with LAL.
-
-See the [benchmark protocol](benchmarking_protocol.md) for timing and validation requirements and the [performance report](performance.md) for the scope of published evidence.
+To reproduce published results, use `scripts/compare_packages.py` with the
+[dated campaign's commands and environment](package_benchmarks.md#reproduction-and-receipts).
+Regenerate its figures with the [maintained plot command](package_benchmarks.md#regenerating-the-plots).
+For a new experiment, follow the [benchmark methodology](benchmarking_protocol.md).
 
 ### Running a Multi-Backend Benchmark Campaign
-The benchmark runner sweeps across all requested backends (`torch` [eager], `torch_compiled` [`torch.compile`], `jaxwave`, `lalsimulation`, `ripple`), devices, and batch sizes:
-```bash
-python scripts/run_benchmark_campaign.py \
-    --models TaylorF2,IMRPhenomD,IMRPhenomXAS,IMRPhenomXP,IMRPhenomXHM \
-    --backends torch,torch_compiled,jax,lal,ripple \
-    --devices cuda,cpu \
-    --cuda-batch-sizes 1,10,100,1000 \
-    --cpu-batch-sizes 1,10,100 \
-    --dtypes float64,float32 \
-    --iterations 15 \
-    --warmup 3 \
-    --output artifacts/benchmarks/benchmark_receipt.json \
-    --plot
-```
+
+The [runner guide](benchmarking_protocol.md#choose-a-runner) distinguishes the
+maintained package comparison, local CLI experiments and legacy campaigns.
+The older `run_benchmark_campaign.py` can use JAXWave or self-consistency as its
+reference; its `gate_passed` flag alone does not establish LAL agreement.
 
 ### Generating Figures
-To render plots from a legacy campaign receipt:
-```bash
-python scripts/plot_benchmark_results.py \
-    --input artifacts/benchmarks/benchmark_receipt.json \
-    --output-dir artifacts/benchmarks/plots
-```
-This generates:
-1. `fig1_throughput_vs_batch`: Throughput scaling vs. batch size across backends and devices.
-2. `fig2_latency_vs_batch`: Per-waveform generation latency and CPU/GPU amortization crossovers.
-3. `fig3_speedup_vs_lal`: Speedup relative to single-core C LALSimulation oracle.
-4. `fig4_model_breakdown_bar`: Cross-model throughput breakdown across batch scales.
+
+Use the [published campaign's plot instructions](package_benchmarks.md#regenerating-the-plots)
+for maintained CPU/GPU figures. `plot_benchmark_results.py` reads the separate
+legacy receipt format; see the [legacy qualification rules](benchmarking_protocol.md#legacy-campaigns).

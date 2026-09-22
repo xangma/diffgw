@@ -1,10 +1,10 @@
-# Measured package benchmarks
+# FP64 waveform benchmark: 21 September 2026
 
 This comparison measures FP64 forward waveform generation in DiffGW, Ripple and
 LALSimulation on `mac`, on **21 September 2026**. It covers `TaylorF2`,
 `IMRPhenomD` and `IMRPhenomXAS`, each at batches of **1, 10, 100 and 1,000**.
-For DiffGW's capabilities, model coverage and differences from related packages,
-see the [package comparison](comparison.md).
+For workload selection and the summary plot, start with [performance](performance.md).
+For capabilities and model differences, see [package comparison](comparison.md).
 
 ## Workload and environment
 
@@ -23,10 +23,10 @@ package versions are recorded in each receipt.
 | Precision | FP64 inputs, verified `complex128` output |
 | Frequency grid | 20–512 Hz inclusive, 0.25 Hz spacing, 1,969 bins |
 | Fixed parameters | Distance 400 Mpc, inclination 0.7 rad, reference phase 0, reference frequency 20 Hz |
-| TaylorF2 population | Nonspinning; component masses in [1.4, 1.7) and [1.1, 1.3) solar masses; zero tides |
+| TaylorF2 population | Nonspinning; component masses in [1.4, 1.7) and [1.1, 1.3) solar masses; zero tides through adapter defaults (explicit zero inputs for Ripple) |
 | PhenomD/XAS population | Component masses in [30, 40) and [20, 25) solar masses; aligned spins independently in [−0.2, 0.2) |
 | Sampling | Seed 20260921; distinct binaries; smaller batches are prefixes of larger batches |
-| Timing | 3 untimed warmups, 25 timed calls; median and 95% bootstrap interval using 2,000 resamples |
+| Timing | 3 untimed warmups, 25 timed calls; median and 95% percentile-bootstrap interval using 2,000 seeded resamples |
 
 CPU and GPU campaigns run sequentially. The GPU benchmark's host process is
 also pinned to logical CPU 0, so dispatch uses one host core.
@@ -38,8 +38,8 @@ run, not uncertainty across machines or independent campaigns.
 
 Each timed call generates both polarizations for the complete batch from inputs
 already resident on the selected device, and waits for completion. Setup,
-host/device transfers and output conversion to NumPy are excluded. Both packages
-compile with fixed extrinsic parameters; masses and spins remain runtime inputs.
+host/device transfers and output conversion to NumPy are excluded. The compiled
+DiffGW and Ripple adapters fix extrinsic parameters; masses and spins remain runtime inputs.
 DiffGW's Torch path uses inference mode; the JAX paths use `jax.jit`. The
 `torch.compile` adapter checks that at least one graph was captured; its measured
 call can still include Python work around compiled graphs.
@@ -211,7 +211,7 @@ python scripts/plot_package_benchmarks.py
 The generator verifies receipt hashes, configuration completeness and matching
 CPU/GPU workloads before plotting. It uses the recorded medians, bootstrap
 intervals and qualification flags. All 108 timed configurations appear in the
-scaling plots; the comparison-page overview selects PhenomD/XAS at batch 1,000
+scaling plots; the performance overview selects PhenomD/XAS at batch 1,000
 and includes every measured implementation for those cases.
 
 Use `--format pdf --output-dir /tmp/diffgw-plots` for a PDF export, or

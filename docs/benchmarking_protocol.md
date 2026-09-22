@@ -1,9 +1,24 @@
-# Benchmarking protocol
+# Reproduce benchmarks and methodology
 
 This protocol defines the evidence required for DiffGW performance comparisons.
 The [published FP64 campaign](package_benchmarks.md) records its actual workload,
 adapters and limitations. Requirements for additional workloads below do not
 imply that those workloads have been measured.
+
+## Choose a runner
+
+| Purpose | Tool and instructions |
+| --- | --- |
+| Reproduce the published FP64 package comparison | `scripts/compare_packages.py`; use the [exact campaign commands, revision and receipts](package_benchmarks.md#reproduction-and-receipts). |
+| Regenerate its maintained figures | `scripts/plot_package_benchmarks.py`; use the [plot commands](package_benchmarks.md#regenerating-the-plots). |
+| Explore local latency, compilation or backward cost | [`torchwave-bench`](usage.md#torchwave-bench); these exploratory runs do not automatically reproduce the published campaign. |
+| Diagnose operators and allocations | [`torchwave-profile`](usage.md#torchwave-profile); profile separately from latency measurements. |
+| Inspect or rerun a legacy campaign | `scripts/run_benchmark_campaign.py` and `scripts/plot_benchmark_results.py`; apply the [legacy qualification limitation](#legacy-campaigns) before interpreting results. |
+
+For the published experiment, its report owns the exact physical parameters,
+software environment, thresholds and commands. The sections below define how to
+qualify and report further experiments; they do not imply those experiments
+have been performed.
 
 ## 1. Reference & Scientific Scope
 
@@ -31,34 +46,35 @@ agreement and independent NR validation separately; see the
 A timing result is qualified only for the model, reference, precision and
 configurations that passed its declared accuracy checks.
 
-For the package campaign's **strict same-model LAL comparison**:
+For a same-model reference comparison:
 
-- Compare both polarizations of every timed binary with the pinned LAL model
-  and options on the same physical grid.
-- Require direct relative L2 error at most `1e-11`, without alignment, and
-  mismatch at most `1e-14`. This mismatch uses flat frequency weights and
-  maximizes constant phase, without maximizing time.
+- Compare both polarizations of every timed binary with a pinned reference and
+  matched options on the same physical grid.
+- Declare direct-error and mismatch tolerances, including weighting and any
+  maximization over phase or time. The [published campaign's criteria](package_benchmarks.md#numerical-qualification)
+  define its strict FP64 LAL gate.
 - Retain errors per binary/polarization, reference identity and configuration.
   Reject nonfinite, zero-norm, wrong-shape or wrong-dtype outputs.
 - Stop on failure, or retain the timing explicitly as diagnostic and
   unqualified. Do not relax tolerances merely to obtain a timing.
 
-These are implementation-agreement thresholds for this campaign. Passing them
-does not establish physical accuracy throughout a calibration domain; failing
-them does not alone decide suitability for an astrophysical analysis.
-Models with independent calibrations require an appropriate external reference
-or held-out NR test, with separately justified tolerances.
+Implementation agreement does not establish physical accuracy throughout a
+calibration domain; failing a strict implementation gate does not alone decide
+suitability for an astrophysical analysis. Models with independent calibrations
+require an appropriate external reference or held-out NR test, with separately
+justified tolerances.
 
-`scripts/compare_packages.py` implements these checks for FP64 `TaylorF2`,
-`IMRPhenomD` and `IMRPhenomXAS`. It retains failed timings only with
-`--record-unqualified`. It measures forward waveform generation, not
-time-domain, derivative, Fisher, likelihood or memory workloads.
+`scripts/compare_packages.py` implements the published checks for FP64 TaylorF2,
+IMRPhenomD and IMRPhenomXAS. It retains failed timings only with
+`--record-unqualified`. It measures forward waveform generation.
 
+<a id="legacy-campaigns"></a>
 **Legacy harness limitation:** `scripts/run_benchmark_campaign.py` first uses
 JAXWave as its reference, falls back to LAL with relative L2 at most `1e-3`
 and mismatch at most `1e-6`, and can fall back to self-consistency. Its pass
 status must not be labelled a strict LAL pass. Obtain explicit same-configuration
-LAL errors before reusing those timings as qualified results.
+LAL errors before reusing those timings as qualified results. Legacy plotting
+scripts and artifacts are separate from the maintained package-campaign figures.
 
 ### 1.3 Precision and device qualification
 
@@ -124,7 +140,6 @@ throughput. Larger sweeps may characterize scaling, but saturation and the
 limiting hardware resource require measurements rather than inference from
 batch size alone.
 
-The published campaign uses 20–512 Hz inclusive at 0.25 Hz spacing: 1,969 bins.
 Record the exact grid and parameters for every campaign, including whether a
 batch repeats one binary or contains distinct binaries. Match physical inputs
 across packages and disclose parameter conversions excluded from timing.

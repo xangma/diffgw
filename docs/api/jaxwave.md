@@ -2,6 +2,9 @@
 
 This section provides the auto-generated reference documentation for JAX-based waveform generation, JIT compilation, shape-bucketing, and inference modules in **`jaxwave`**.
 
+For physical coverage and execution restrictions, see [model support](../models.md).
+For numerical qualification, see [accuracy and validation](../validation.md).
+
 ---
 
 ## Core Waveform Functions

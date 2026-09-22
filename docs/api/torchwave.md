@@ -2,6 +2,9 @@
 
 This section provides the auto-generated reference documentation for PyTorch-based waveform generation, approximants, detector projections, and inference modules in **`torchwave`**.
 
+For physical coverage and execution restrictions, see [model support](../models.md).
+For numerical qualification, see [accuracy and validation](../validation.md).
+
 ---
 
 ## Core Waveform Functions

@@ -1,4 +1,4 @@
-# Tutorial 3: Parameter Estimation & No-U-Turn Sampler (NUTS) MCMC
+# Tutorial 3: NUTS API walkthrough
 
 This tutorial illustrates an inference workflow with a synthetic signal: approximate **relative binning**, gradient-based optimization, and **NUTS** sampling. The short run demonstrates the API; it is not a validated detector-noise simulation or a converged parameter-estimation result. The excerpts below use the parameter bounds, scaled coordinates, and `log_posterior` defined in the companion script. Despite that function's name, its finite out-of-range penalty does not define a proper uniform box prior; specify a proper prior before interpreting samples as a posterior.
 
