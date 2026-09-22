@@ -5,6 +5,9 @@ pilot surrogate, and development checks. It is excluded from release packages.
 The prototypes are not registered runtime models, qualified SEOBNRv4 generators,
 or replacements for the official ROM data. No trained asset is promoted here.
 
+The [first frozen qualification run](evidence/2026-09-22/README.md) failed the ODE
+convergence budget. The generator is not qualified for independent ROM training.
+
 ## Numerical evidence
 
 From the repository root, using a development environment with Torch and NumPy:
