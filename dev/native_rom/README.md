@@ -8,6 +8,12 @@ or replacements for the official ROM data. No trained asset is promoted here.
 The [first frozen qualification run](evidence/2026-09-22/README.md) failed the ODE
 convergence budget. The generator is not qualified for independent ROM training.
 
+The versioned [SEOBNRv4 paper reference](reference/SPEC.md) now pins the
+published calibration, peak, and ringdown equations and maps them to both
+frontends. Its [manifest](reference/manifest.json) marks unresolved generator
+components explicitly. Resolve those entries and validate the complete
+generator before extending the ROM work or promoting any model.
+
 ## Numerical evidence
 
 From the repository root, using a development environment with Torch and NumPy:

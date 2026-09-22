@@ -1,0 +1,91 @@
+{
+  "specification": "seobnrv4-paper-components/0.1.0",
+  "model": "SEOBNRv4 dominant (2,2) mode, aligned-spin black-hole binaries",
+  "source": {
+    "id": "bohe-2017-v3",
+    "title": "Improved effective-one-body model of spinning, nonprecessing binary black holes for the era of gravitational-wave astrophysics with advanced detectors",
+    "version": "arXiv:1611.03703v3, 2017-03-29",
+    "url": "https://arxiv.org/html/1611.03703"
+  },
+  "components": [
+    {
+      "id": "V4-PARAM-8",
+      "source": "bohe-2017-v3, Eq. (8)",
+      "status": "executable",
+      "reference": "published.mass_spin",
+      "torch": "src/torchwave/approximants/eob/nqc.py:seobnrv4_nqc_parameters",
+      "jax": "src/jaxwave/approximants/eob/nqc.py:seobnrv4_nqc_parameters",
+      "test": "dev/native_rom/reference/tests/test_published.py:test_parameter_mapping; dev/native_rom/reference/tests/test_torch.py:test_fits_against_reference; dev/native_rom/reference/tests/test_jax.py:test_fits_against_reference"
+    },
+    {
+      "id": "V4-CAL-25-32",
+      "source": "bohe-2017-v3, Eqs. (25), (26), (29)-(32)",
+      "status": "executable",
+      "reference": "published.calibration",
+      "torch": "src/torchwave/approximants/eob/seobnrv4_hamiltonian.py:SEOBNRv4Hamiltonian.calibration_parameters; src/torchwave/approximants/eob/nqc.py:seobnrv4_nqc_time_offset",
+      "jax": "src/jaxwave/approximants/eob/seobnrv4_hamiltonian.py:SEOBNRv4Hamiltonian.calibration_parameters; src/jaxwave/approximants/eob/nqc.py:seobnrv4_nqc_time_offset",
+      "test": "dev/native_rom/reference/tests/test_published.py:test_calibration_fits; dev/native_rom/reference/tests/test_torch.py:test_fits_against_reference; dev/native_rom/reference/tests/test_jax.py:test_fits_against_reference"
+    },
+    {
+      "id": "V4-PEAK-A",
+      "source": "bohe-2017-v3, Appendix A, Eqs. (33)-(44)",
+      "status": "executable",
+      "reference": "published.peak_targets",
+      "torch": "src/torchwave/approximants/eob/nqc.py:seobnrv4_nqc_targets",
+      "jax": "src/jaxwave/approximants/eob/nqc.py:seobnrv4_nqc_targets",
+      "test": "dev/native_rom/reference/tests/test_published.py:test_peak_targets; dev/native_rom/reference/tests/test_torch.py:test_fits_against_reference; dev/native_rom/reference/tests/test_jax.py:test_fits_against_reference"
+    },
+    {
+      "id": "V4-RD-10-17",
+      "source": "bohe-2017-v3, Eqs. (10)-(17), peak attachment",
+      "status": "conditional",
+      "reference": "published.ringdown_shape; ringdown.h22",
+      "torch": "src/torchwave/approximants/eob/merger_ringdown.py:seobnrv4_merger_shape; src/torchwave/approximants/eob/merger_ringdown.py:merger_ringdown_22",
+      "jax": "src/jaxwave/approximants/eob/merger_ringdown.py:seobnrv4_merger_shape; src/jaxwave/approximants/eob/merger_ringdown.py:merger_ringdown_22",
+      "test": "dev/native_rom/reference/tests/test_published.py:test_ringdown_continuity; dev/native_rom/reference/tests/test_torch.py:test_ringdown_against_reference; dev/native_rom/reference/tests/test_jax.py:test_ringdown_against_reference",
+      "condition": "Requires independently validated peak data and remnant QNM inputs."
+    },
+    {
+      "id": "V4-HAM-1-3",
+      "source": "bohe-2017-v3, Eqs. (1)-(3), cited Hamiltonian papers",
+      "status": "pending",
+      "blocker": "Derive and independently check the full deformed-Kerr/spin Hamiltonian and cited radial coefficients, resolving ambiguities in the cited source equations."
+    },
+    {
+      "id": "V4-FLUX-4-9",
+      "source": "bohe-2017-v3, Eqs. (4)-(9), cited factorized-mode papers",
+      "status": "pending",
+      "blocker": "Reference all factorized modes through ell=8, flux normalization, and the NQC-free dynamics prescription."
+    },
+    {
+      "id": "V4-NQC-7",
+      "source": "bohe-2017-v3, Eq. (7), Appendix A",
+      "status": "pending",
+      "blocker": "Reference the two NQC matching systems, peak selection, branch behavior, and derivatives independently of current helpers."
+    },
+    {
+      "id": "V4-REMNANT-QNM",
+      "source": "bohe-2017-v3, Sec. II.C, cited remnant and QNM works",
+      "status": "pending",
+      "blocker": "Pin final-mass/final-spin fit versions and independently reconstruct the QNM interpolation knots; current knot provenance is incomplete."
+    },
+    {
+      "id": "V4-ODE-IC",
+      "source": "bohe-2017-v3, Sec. II, cited initial-condition prescription",
+      "status": "pending",
+      "blocker": "Specify initial conditions, tortoise momentum, solver, event/matching semantics, and demonstrate numerical convergence across the domain."
+    },
+    {
+      "id": "V4-TD-FD-CONVENTIONS",
+      "source": "bohe-2017-v3, Secs. II and VII",
+      "status": "pending",
+      "blocker": "Resolve mode/polarization signs, mass/distance scaling, reference phase/time, TD conditioning, FFT convention, and sample support against the named public-binary oracle."
+    },
+    {
+      "id": "V4-ROM-VII",
+      "source": "bohe-2017-v3, Sec. VII; Pürrer 2014 and 2016 ROM papers",
+      "status": "pending",
+      "blocker": "Only after a qualified generator: pin training domain/grids, patch joins, SVD/interpolation, own asset hashes, and untouched holdouts. Official ROM tables are third-party author data."
+    }
+  ]
+}
