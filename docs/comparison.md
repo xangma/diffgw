@@ -274,6 +274,61 @@ For the separate sensitivity experiment, use
 The zero-coupling option exists only in the diagnostic script, not the waveform
 API. It leaves the reference settings unchanged.
 
+Two further diagnostics isolate the rotation and the initial spin response:
+
+- The [rotation receipt](validation/phenomt_rotation_20260922.json) supplies
+  binary co-precessing modes and Euler angles to the native `project_modes`,
+  then compares against binary inertial modes projected with the reference
+  spherical harmonics. It covers both frontends, all four cases, three viewing
+  directions, and both the dominant-mode and full higher-mode selections.
+  Relative L2 is below `8e-16`. This checks rotation conventions independently
+  of the native carrier and precession evolution; it does not establish full
+  waveform agreement. The inverse J-to-L0 frame check, for the three cases
+  with `f_ref=f_lower=20 Hz`, has a separate higher-mode residual reaching
+  `1.3e-9` in the full projected strain. Per-degree checks localize this
+  residual to ℓ=5. Its origin remains unresolved; the full-mode inverse
+  results are measurements, not a passing accuracy gate.
+- The [initial-rate receipt](validation/phenomt_initial_rates_20260922.json)
+  reverses a single tilted spin at fixed masses and reference frequency. The
+  companion spin is set to zero, and each run starts at `f_lower=f_ref`.
+  Averaging the rates for opposite spins cancels the native spin-orbit terms
+  and retains the self-quadrupole contribution of Sturani Eq. (21). The binary
+  rate is differentiated from its returned orbital-axis angles and rotated
+  back into the common initial source frame. The full initial Euler triad
+  agrees with this frame mapping to below `5e-16`; the initial carrier
+  frequency differs from `f_ref` by less than `3e-7` relative.
+
+At 16384 Hz, the norms of these **spin-even initial orbital-axis rates** are:
+
+| Single-spin configuration | Native black-hole rate (1/s) | PhenomTP binary rate (1/s) |
+| --- | ---: | ---: |
+| Masses `(35, 20)`, spin1 `(0.3, 0, 0.4)`, reference 30 Hz | 0.0447 | 0.000000202 |
+| Masses `(60, 6)`, spin1 `(0.2, 0.1, 0.8)`, reference 20 Hz | 0.0686 | 0.0000000328 |
+
+The receipt includes two sampling rates, two reference phases, two derivative
+stencils, and controls with the spin in the orbital plane, where the native
+self-quadrupole torque vanishes. It also includes a positive control using the
+public `SpinTaylorT4` binary with explicit quadrupole parameters zero and one.
+With one, its spin-even **individual-spin** derivative agrees with the native
+published term to relative error below `5e-8` at 16384 Hz; with zero, that
+response is suppressed. This control uses `spinO=5` and compares only the
+initial spin-even derivative, not the full SpinTaylor and PhenomTP dynamics.
+
+These results support a strongly suppressed self-quadrupole response in the
+tested PhenomTP binary output. They do not uniquely identify its internal
+quadrupole settings or equations: finite differences, frequency anchoring,
+axis definitions, and spin-dependent angular-momentum denominators can affect
+the inferred rates. The literature audit found no instruction in
+[PhenomTP Sec. II.4.1](https://arxiv.org/html/2105.05872) to suppress the
+black-hole quadrupole. Native production therefore retains it. This is a
+documented reference difference, not a correction fitted to binary output.
+
+Reproduce these checks with
+`python scripts/diagnose_phenomt_rotation.py --output rotation.json` and
+`python scripts/diagnose_phenomt_initial_rates.py --output initial-rates.json`.
+All reference calls use public binaries; no reference implementation source
+is read or incorporated.
+
 The MSA and numerical regression checks are retained in
 `tests/test_phenomt_family_lal.py`. Numerical checks cover the baseline,
 single-spin, and equal-mass cases with relative L2 below `0.03` and mismatch

@@ -1,0 +1,2050 @@
+{
+  "generated_utc": "2026-09-22T07:10:53.014315+00:00",
+  "reproduction": "python scripts/diagnose_phenomt_initial_rates.py --case single_spin high_mass_ratio --sample-rate 2048 16384 --backend torch jax --phase 0.0 0.7 --output receipt.json",
+  "versions": {
+    "python": "3.13.7",
+    "numpy": "2.5.3",
+    "lalsimulation": "6.2.1",
+    "torch": "2.14.0",
+    "jax": "0.11.2"
+  },
+  "precession_version": 300,
+  "final_spin_mod": 4,
+  "dtype": "float64",
+  "device": "cpu",
+  "conventions": {
+    "derivative": "Initial time derivative of the returned unit axis; 9-point one-sided polynomial stencil, with a 5-point stencil sensitivity check.",
+    "spin_parity": "Even=(rate(+S1)+rate(-S1))/2; odd=(rate(+S1)-rate(-S1))/2; S2=0, fixed masses/f_ref/source triad. Each J-frame is rotated back using its own initial beta and spin azimuth; initial Lhat=(0,0,1) and the complete Rz(alpha0)Ry(beta0)Rz(gamma0) reference triad are checked.",
+    "physics": "Sturani T1500554v23 Eq.21: native even rate is (3/2)*kappa1*(1/x1-1)*v^6*(Lhat.S1)*(Lhat cross S1)/(L_NS*M_seconds), where S1=x1^2*chi1, L_NS is the nonspin 3PN angular momentum and kappa1=1. The v8 term is excluded as in production PV300.",
+    "scope": "Binary diagnostic only. Near-zero spin-even behavior does not uniquely identify the reference equations, internal quadrupole parameter, or denominator. Finite differences, reference-frequency anchoring, spin-dependent denominators and axis definitions can affect rates. No production equations are changed.",
+    "positive_control": "SpinTaylorT4 public binary with explicit quadparam1/2=0 or 1, spinO=5, tideO=0, phaseO=7, lscorr=0, lambda1/2=0. Spin vectors are chi_i=S_i/m_i^2. This directly measures spin parity without Euler-frame reconstruction; only its initial spin-even rate is compared with native PV300, not its full dynamics."
+  },
+  "results": [
+    {
+      "case": "single_spin",
+      "in_plane_control": false,
+      "parameters": {
+        "mass1": 35.0,
+        "mass2": 20.0,
+        "spin1": [
+          0.3,
+          0.0,
+          0.4
+        ],
+        "spin2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "distance_mpc": 100.0,
+        "inclination": 1.1,
+        "phic": 0.0,
+        "f_lower_hz": 30.0,
+        "f_ref_hz": 30.0
+      },
+      "sample_rate_hz": 2048,
+      "signed_binary_rates": [
+        {
+          "rate_per_second": [
+            2.44027243093913e-09,
+            -0.7996234744360335,
+            -6.606293024502986e-10
+          ],
+          "stencil_difference_per_second": 3.080125078451938e-07,
+          "initial_axis_error": 1.4576036185475794e-17,
+          "initial_triad_error": 1.9929397135264252e-17,
+          "initial_carrier_frequency_hz": 29.999999653800884,
+          "carrier_frequency_relative_error": 1.1539970534713007e-08,
+          "epoch_seconds": -0.371898901
+        },
+        {
+          "rate_per_second": [
+            1.1281204623609388e-08,
+            0.7996229037593608,
+            -1.7365340221652386e-10
+          ],
+          "stencil_difference_per_second": 9.567459580967598e-08,
+          "initial_axis_error": 2.0388215050351914e-17,
+          "initial_triad_error": 2.7364864881108245e-17,
+          "initial_carrier_frequency_hz": 29.999991954825116,
+          "carrier_frequency_relative_error": 2.6817249609845106e-07,
+          "epoch_seconds": -0.285069125
+        }
+      ],
+      "binary_even_rate_per_second": [
+        6.8607385272742594e-09,
+        -2.853383363476958e-07,
+        -4.1714135233341125e-10
+      ],
+      "binary_odd_rate_per_second": [
+        -4.420466096335129e-09,
+        -0.7996231890976973,
+        -2.4348795011688736e-10
+      ],
+      "native": {
+        "torch": {
+          "even_rate_per_second": [
+            -0.0,
+            0.04469737941530805,
+            -0.0
+          ],
+          "odd_rate_per_second": [
+            0.0,
+            -0.7989968832777151,
+            0.0
+          ],
+          "chi1_even_rate_per_second": [
+            0.0,
+            -0.10023043972794742,
+            0.0
+          ]
+        },
+        "jax": {
+          "even_rate_per_second": [
+            -0.0,
+            0.0446973794153081,
+            -0.0
+          ],
+          "odd_rate_per_second": [
+            0.0,
+            -0.7989968832777152,
+            0.0
+          ],
+          "chi1_even_rate_per_second": [
+            0.0,
+            -0.10023043972794742,
+            0.0
+          ]
+        }
+      },
+      "binary_even_to_odd_norm": 3.569445130024755e-07
+    },
+    {
+      "case": "single_spin",
+      "in_plane_control": false,
+      "parameters": {
+        "mass1": 35.0,
+        "mass2": 20.0,
+        "spin1": [
+          0.3,
+          0.0,
+          0.4
+        ],
+        "spin2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "distance_mpc": 100.0,
+        "inclination": 1.1,
+        "phic": 0.7,
+        "f_lower_hz": 30.0,
+        "f_ref_hz": 30.0
+      },
+      "sample_rate_hz": 2048,
+      "signed_binary_rates": [
+        {
+          "rate_per_second": [
+            2.44027243093913e-09,
+            -0.7996234744369937,
+            -6.606293024502986e-10
+          ],
+          "stencil_difference_per_second": 3.0801314542386375e-07,
+          "initial_axis_error": 1.4576036185475794e-17,
+          "initial_triad_error": 1.9929397135264252e-17,
+          "initial_carrier_frequency_hz": 29.999999653800884,
+          "carrier_frequency_relative_error": 1.1539970534713007e-08,
+          "epoch_seconds": -0.371898901
+        },
+        {
+          "rate_per_second": [
+            1.1281204623609388e-08,
+            0.7996229037594367,
+            -1.7365340221652386e-10
+          ],
+          "stencil_difference_per_second": 9.567474510245585e-08,
+          "initial_axis_error": 2.0388215050351914e-17,
+          "initial_triad_error": 2.7364864881108245e-17,
+          "initial_carrier_frequency_hz": 29.999991954825116,
+          "carrier_frequency_relative_error": 2.6817249609845106e-07,
+          "epoch_seconds": -0.285069125
+        }
+      ],
+      "binary_even_rate_per_second": [
+        6.8607385272742594e-09,
+        -2.8533877849401534e-07,
+        -4.1714135233341125e-10
+      ],
+      "binary_odd_rate_per_second": [
+        -4.420466096335129e-09,
+        -0.7996231890982152,
+        -2.4348795011688736e-10
+      ],
+      "native": {
+        "torch": {
+          "even_rate_per_second": [
+            -0.0,
+            0.04469737941530805,
+            -0.0
+          ],
+          "odd_rate_per_second": [
+            0.0,
+            -0.7989968832777151,
+            0.0
+          ],
+          "chi1_even_rate_per_second": [
+            0.0,
+            -0.10023043972794742,
+            0.0
+          ]
+        },
+        "jax": {
+          "even_rate_per_second": [
+            -0.0,
+            0.0446973794153081,
+            -0.0
+          ],
+          "odd_rate_per_second": [
+            0.0,
+            -0.7989968832777152,
+            0.0
+          ],
+          "chi1_even_rate_per_second": [
+            0.0,
+            -0.10023043972794742,
+            0.0
+          ]
+        }
+      },
+      "binary_even_to_odd_norm": 3.5694506578523165e-07
+    },
+    {
+      "case": "single_spin",
+      "in_plane_control": false,
+      "parameters": {
+        "mass1": 35.0,
+        "mass2": 20.0,
+        "spin1": [
+          0.3,
+          0.0,
+          0.4
+        ],
+        "spin2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "distance_mpc": 100.0,
+        "inclination": 1.1,
+        "phic": 0.0,
+        "f_lower_hz": 30.0,
+        "f_ref_hz": 30.0
+      },
+      "sample_rate_hz": 16384,
+      "signed_binary_rates": [
+        {
+          "rate_per_second": [
+            -1.0240947747641867e-09,
+            -0.7996231224942111,
+            -1.4916369489720792e-12
+          ],
+          "stencil_difference_per_second": 2.5219832205802613e-09,
+          "initial_axis_error": 1.4576036185475794e-17,
+          "initial_triad_error": 1.9929397135264252e-17,
+          "initial_carrier_frequency_hz": 29.999999648605495,
+          "carrier_frequency_relative_error": 1.1713150116499094e-08,
+          "epoch_seconds": -0.371898901
+        },
+        {
+          "rate_per_second": [
+            1.0993113940237372e-10,
+            0.7996227182601605,
+            -1.0304156966714304e-12
+          ],
+          "stencil_difference_per_second": 1.3277383448160782e-09,
+          "initial_axis_error": 2.0388215050351914e-17,
+          "initial_triad_error": 2.7364864881108245e-17,
+          "initial_carrier_frequency_hz": 29.999991962997154,
+          "carrier_frequency_relative_error": 2.679000948857535e-07,
+          "epoch_seconds": -0.285069125
+        }
+      ],
+      "binary_even_rate_per_second": [
+        -4.570818176809065e-10,
+        -2.0211702528305509e-07,
+        -1.2610263228217548e-12
+      ],
+      "binary_odd_rate_per_second": [
+        -5.670129570832802e-10,
+        -0.7996229203771859,
+        -2.306106261503244e-13
+      ],
+      "native": {
+        "torch": {
+          "even_rate_per_second": [
+            -0.0,
+            0.04469737941530805,
+            -0.0
+          ],
+          "odd_rate_per_second": [
+            0.0,
+            -0.7989968832777151,
+            0.0
+          ],
+          "chi1_even_rate_per_second": [
+            0.0,
+            -0.10023043972794742,
+            0.0
+          ]
+        },
+        "jax": {
+          "even_rate_per_second": [
+            -0.0,
+            0.0446973794153081,
+            -0.0
+          ],
+          "odd_rate_per_second": [
+            0.0,
+            -0.7989968832777152,
+            0.0
+          ],
+          "chi1_even_rate_per_second": [
+            0.0,
+            -0.10023043972794742,
+            0.0
+          ]
+        }
+      },
+      "binary_even_to_odd_norm": 2.5276606882360977e-07
+    },
+    {
+      "case": "single_spin",
+      "in_plane_control": false,
+      "parameters": {
+        "mass1": 35.0,
+        "mass2": 20.0,
+        "spin1": [
+          0.3,
+          0.0,
+          0.4
+        ],
+        "spin2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "distance_mpc": 100.0,
+        "inclination": 1.1,
+        "phic": 0.7,
+        "f_lower_hz": 30.0,
+        "f_ref_hz": 30.0
+      },
+      "sample_rate_hz": 16384,
+      "signed_binary_rates": [
+        {
+          "rate_per_second": [
+            -1.0240947747641867e-09,
+            -0.7996231224785357,
+            -1.4916369489720792e-12
+          ],
+          "stencil_difference_per_second": 2.5091421097728343e-09,
+          "initial_axis_error": 1.4576036185475794e-17,
+          "initial_triad_error": 1.9929397135264252e-17,
+          "initial_carrier_frequency_hz": 29.999999648605495,
+          "carrier_frequency_relative_error": 1.1713150116499094e-08,
+          "epoch_seconds": -0.371898901
+        },
+        {
+          "rate_per_second": [
+            1.0993113940237372e-10,
+            0.7996227182654052,
+            -1.0304156966714304e-12
+          ],
+          "stencil_difference_per_second": 1.333476353892297e-09,
+          "initial_axis_error": 2.0388215050351914e-17,
+          "initial_triad_error": 2.7364864881108245e-17,
+          "initial_carrier_frequency_hz": 29.999991962997154,
+          "carrier_frequency_relative_error": 2.679000948857535e-07,
+          "epoch_seconds": -0.285069125
+        }
+      ],
+      "binary_even_rate_per_second": [
+        -4.570818176809065e-10,
+        -2.0210656526131743e-07,
+        -1.2610263228217548e-12
+      ],
+      "binary_odd_rate_per_second": [
+        -5.670129570832802e-10,
+        -0.7996229203719705,
+        -2.306106261503244e-13
+      ],
+      "native": {
+        "torch": {
+          "even_rate_per_second": [
+            -0.0,
+            0.04469737941530805,
+            -0.0
+          ],
+          "odd_rate_per_second": [
+            0.0,
+            -0.7989968832777151,
+            0.0
+          ],
+          "chi1_even_rate_per_second": [
+            0.0,
+            -0.10023043972794742,
+            0.0
+          ]
+        },
+        "jax": {
+          "even_rate_per_second": [
+            -0.0,
+            0.0446973794153081,
+            -0.0
+          ],
+          "odd_rate_per_second": [
+            0.0,
+            -0.7989968832777152,
+            0.0
+          ],
+          "chi1_even_rate_per_second": [
+            0.0,
+            -0.10023043972794742,
+            0.0
+          ]
+        }
+      },
+      "binary_even_to_odd_norm": 2.527529876657242e-07
+    },
+    {
+      "case": "single_spin",
+      "in_plane_control": true,
+      "parameters": {
+        "mass1": 35.0,
+        "mass2": 20.0,
+        "spin1": [
+          0.3,
+          0.0,
+          0.0
+        ],
+        "spin2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "distance_mpc": 100.0,
+        "inclination": 1.1,
+        "phic": 0.0,
+        "f_lower_hz": 30.0,
+        "f_ref_hz": 30.0
+      },
+      "sample_rate_hz": 2048,
+      "signed_binary_rates": [
+        {
+          "rate_per_second": [
+            -2.4670832647625178e-08,
+            -0.7996235502469354,
+            -7.33932236015911e-10
+          ],
+          "stencil_difference_per_second": 3.467693196695801e-07,
+          "initial_axis_error": 1.655380591496271e-17,
+          "initial_triad_error": 2.306654588333982e-17,
+          "initial_carrier_frequency_hz": 30.00000000008537,
+          "carrier_frequency_relative_error": 2.8457236567192012e-12,
+          "epoch_seconds": -0.327520047
+        },
+        {
+          "rate_per_second": [
+            2.4670832646756658e-08,
+            0.7996235502496458,
+            -7.339322230025931e-10
+          ],
+          "stencil_difference_per_second": 3.467716510475366e-07,
+          "initial_axis_error": 1.655380591496271e-17,
+          "initial_triad_error": 2.306654588333982e-17,
+          "initial_carrier_frequency_hz": 30.00000000008537,
+          "carrier_frequency_relative_error": 2.8457236567192012e-12,
+          "epoch_seconds": -0.327520047
+        }
+      ],
+      "binary_even_rate_per_second": [
+        -4.342598954229889e-19,
+        1.3551937350086973e-12,
+        -7.33932229509252e-10
+      ],
+      "binary_odd_rate_per_second": [
+        -2.4670832647190918e-08,
+        -0.7996235502482907,
+        -6.506658946623769e-18
+      ],
+      "native": {
+        "torch": {
+          "even_rate_per_second": [
+            -0.0,
+            0.0,
+            -0.0
+          ],
+          "odd_rate_per_second": [
+            0.0,
+            -0.7989968832777151,
+            0.0
+          ],
+          "chi1_even_rate_per_second": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "jax": {
+          "even_rate_per_second": [
+            -0.0,
+            0.0,
+            -0.0
+          ],
+          "odd_rate_per_second": [
+            0.0,
+            -0.7989968832777152,
+            0.0
+          ],
+          "chi1_even_rate_per_second": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      },
+      "binary_even_to_odd_norm": 9.178487557697767e-10
+    },
+    {
+      "case": "single_spin",
+      "in_plane_control": true,
+      "parameters": {
+        "mass1": 35.0,
+        "mass2": 20.0,
+        "spin1": [
+          0.3,
+          0.0,
+          0.0
+        ],
+        "spin2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "distance_mpc": 100.0,
+        "inclination": 1.1,
+        "phic": 0.7,
+        "f_lower_hz": 30.0,
+        "f_ref_hz": 30.0
+      },
+      "sample_rate_hz": 2048,
+      "signed_binary_rates": [
+        {
+          "rate_per_second": [
+            -2.4670832647625178e-08,
+            -0.7996235502485209,
+            -7.33932236015911e-10
+          ],
+          "stencil_difference_per_second": 3.4677066935059124e-07,
+          "initial_axis_error": 4.284782081263001e-17,
+          "initial_triad_error": 6.057882960316446e-17,
+          "initial_carrier_frequency_hz": 30.00000000008537,
+          "carrier_frequency_relative_error": 2.8457236567192012e-12,
+          "epoch_seconds": -0.327520047
+        },
+        {
+          "rate_per_second": [
+            2.4670832646756658e-08,
+            0.7996235502482878,
+            -7.339322230025931e-10
+          ],
+          "stencil_difference_per_second": 3.4677037689017293e-07,
+          "initial_axis_error": 1.655380591496271e-17,
+          "initial_triad_error": 2.306654588333982e-17,
+          "initial_carrier_frequency_hz": 30.00000000008537,
+          "carrier_frequency_relative_error": 2.8457236567192012e-12,
+          "epoch_seconds": -0.327520047
+        }
+      ],
+      "binary_even_rate_per_second": [
+        -4.342598954229889e-19,
+        -1.1657341758564144e-13,
+        -7.33932229509252e-10
+      ],
+      "binary_odd_rate_per_second": [
+        -2.4670832647190918e-08,
+        -0.7996235502484044,
+        -6.506658946623769e-18
+      ],
+      "native": {
+        "torch": {
+          "even_rate_per_second": [
+            -0.0,
+            0.0,
+            -0.0
+          ],
+          "odd_rate_per_second": [
+            0.0,
+            -0.7989968832777151,
+            0.0
+          ],
+          "chi1_even_rate_per_second": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "jax": {
+          "even_rate_per_second": [
+            -0.0,
+            0.0,
+            -0.0
+          ],
+          "odd_rate_per_second": [
+            0.0,
+            -0.7989968832777152,
+            0.0
+          ],
+          "chi1_even_rate_per_second": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      },
+      "binary_even_to_odd_norm": 9.178472026482557e-10
+    },
+    {
+      "case": "single_spin",
+      "in_plane_control": true,
+      "parameters": {
+        "mass1": 35.0,
+        "mass2": 20.0,
+        "spin1": [
+          0.3,
+          0.0,
+          0.0
+        ],
+        "spin2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "distance_mpc": 100.0,
+        "inclination": 1.1,
+        "phic": 0.0,
+        "f_lower_hz": 30.0,
+        "f_ref_hz": 30.0
+      },
+      "sample_rate_hz": 16384,
+      "signed_binary_rates": [
+        {
+          "rate_per_second": [
+            -6.372427274632099e-10,
+            -0.7996231402853592,
+            -6.550147659401569e-13
+          ],
+          "stencil_difference_per_second": 1.8368882943273314e-09,
+          "initial_axis_error": 1.655380591496271e-17,
+          "initial_triad_error": 2.306654588333982e-17,
+          "initial_carrier_frequency_hz": 30.000000004094964,
+          "carrier_frequency_relative_error": 1.3649881225319405e-10,
+          "epoch_seconds": -0.327520047
+        },
+        {
+          "rate_per_second": [
+            6.372427265946902e-10,
+            0.7996231403120649,
+            -6.550017526287906e-13
+          ],
+          "stencil_difference_per_second": 1.8600951205481364e-09,
+          "initial_axis_error": 1.655380591496271e-17,
+          "initial_triad_error": 2.306654588333982e-17,
+          "initial_carrier_frequency_hz": 30.000000004094964,
+          "carrier_frequency_relative_error": 1.3649881225319405e-10,
+          "epoch_seconds": -0.327520047
+        }
+      ],
+      "binary_even_rate_per_second": [
+        -4.342598437242006e-19,
+        1.3352874361771683e-11,
+        -6.550082592844738e-13
+      ],
+      "binary_odd_rate_per_second": [
+        -6.3724272702895e-10,
+        -0.7996231402987121,
+        -6.506655683137759e-18
+      ],
+      "native": {
+        "torch": {
+          "even_rate_per_second": [
+            -0.0,
+            0.0,
+            -0.0
+          ],
+          "odd_rate_per_second": [
+            0.0,
+            -0.7989968832777151,
+            0.0
+          ],
+          "chi1_even_rate_per_second": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "jax": {
+          "even_rate_per_second": [
+            -0.0,
+            0.0,
+            -0.0
+          ],
+          "odd_rate_per_second": [
+            0.0,
+            -0.7989968832777152,
+            0.0
+          ],
+          "chi1_even_rate_per_second": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      },
+      "binary_even_to_odd_norm": 1.6719038423950112e-11
+    },
+    {
+      "case": "single_spin",
+      "in_plane_control": true,
+      "parameters": {
+        "mass1": 35.0,
+        "mass2": 20.0,
+        "spin1": [
+          0.3,
+          0.0,
+          0.0
+        ],
+        "spin2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "distance_mpc": 100.0,
+        "inclination": 1.1,
+        "phic": 0.7,
+        "f_lower_hz": 30.0,
+        "f_ref_hz": 30.0
+      },
+      "sample_rate_hz": 16384,
+      "signed_binary_rates": [
+        {
+          "rate_per_second": [
+            -6.372427274632099e-10,
+            -0.7996231403131049,
+            -6.550147659401569e-13
+          ],
+          "stencil_difference_per_second": 1.8634781683931626e-09,
+          "initial_axis_error": 4.284782081263001e-17,
+          "initial_triad_error": 6.057882960316446e-17,
+          "initial_carrier_frequency_hz": 30.000000004094964,
+          "carrier_frequency_relative_error": 1.3649881225319405e-10,
+          "epoch_seconds": -0.327520047
+        },
+        {
+          "rate_per_second": [
+            6.372427265946902e-10,
+            0.7996231403022666,
+            -6.550017526287906e-13
+          ],
+          "stencil_difference_per_second": 1.8521789952399e-09,
+          "initial_axis_error": 1.655380591496271e-17,
+          "initial_triad_error": 2.306654588333982e-17,
+          "initial_carrier_frequency_hz": 30.000000004094964,
+          "carrier_frequency_relative_error": 1.3649881225319405e-10,
+          "epoch_seconds": -0.327520047
+        }
+      ],
+      "binary_even_rate_per_second": [
+        -4.342598437242006e-19,
+        -5.419165116649083e-12,
+        -6.550082592844738e-13
+      ],
+      "binary_odd_rate_per_second": [
+        -6.3724272702895e-10,
+        -0.7996231403076857,
+        -6.506655683137759e-18
+      ],
+      "native": {
+        "torch": {
+          "even_rate_per_second": [
+            -0.0,
+            0.0,
+            -0.0
+          ],
+          "odd_rate_per_second": [
+            0.0,
+            -0.7989968832777151,
+            0.0
+          ],
+          "chi1_even_rate_per_second": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "jax": {
+          "even_rate_per_second": [
+            -0.0,
+            0.0,
+            -0.0
+          ],
+          "odd_rate_per_second": [
+            0.0,
+            -0.7989968832777152,
+            0.0
+          ],
+          "chi1_even_rate_per_second": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      },
+      "binary_even_to_odd_norm": 6.8264740707453085e-12
+    },
+    {
+      "case": "high_mass_ratio",
+      "in_plane_control": false,
+      "parameters": {
+        "mass1": 60.0,
+        "mass2": 6.0,
+        "spin1": [
+          0.2,
+          0.1,
+          0.8
+        ],
+        "spin2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "distance_mpc": 100.0,
+        "inclination": 1.2,
+        "phic": 0.0,
+        "f_lower_hz": 20.0,
+        "f_ref_hz": 20.0
+      },
+      "sample_rate_hz": 2048,
+      "signed_binary_rates": [
+        {
+          "rate_per_second": [
+            0.22565311411137476,
+            -0.4513062288518174,
+            -1.5235488432943942e-11
+          ],
+          "stencil_difference_per_second": 1.0625122377227311e-08,
+          "initial_axis_error": 2.7326175619423653e-17,
+          "initial_triad_error": 3.175088977639657e-16,
+          "initial_carrier_frequency_hz": 19.999996948436436,
+          "carrier_frequency_relative_error": 1.5257817820302222e-07,
+          "epoch_seconds": -2.625439673
+        },
+        {
+          "rate_per_second": [
+            -0.22565313967816708,
+            0.4513062835634021,
+            -4.496737498272489e-12
+          ],
+          "stencil_difference_per_second": 3.8816127553779795e-09,
+          "initial_axis_error": 4.4289515173602914e-17,
+          "initial_triad_error": 4.2998752849492583e-16,
+          "initial_carrier_frequency_hz": 19.99999825298075,
+          "carrier_frequency_relative_error": 8.73509625742841e-08,
+          "epoch_seconds": -1.189078044
+        }
+      ],
+      "binary_even_rate_per_second": [
+        -1.2783396161064609e-08,
+        2.7355792325822748e-08,
+        -9.866112965608216e-12
+      ],
+      "binary_odd_rate_per_second": [
+        0.2256531268947709,
+        -0.4513062562076098,
+        -5.369375467335726e-12
+      ],
+      "native": {
+        "torch": {
+          "even_rate_per_second": [
+            -0.030698834125987617,
+            0.061397668251975235,
+            -0.0
+          ],
+          "odd_rate_per_second": [
+            0.22501552782520923,
+            -0.45003105565041845,
+            0.0
+          ],
+          "chi1_even_rate_per_second": [
+            0.012727674886088574,
+            -0.025455349772177147,
+            0.0
+          ]
+        },
+        "jax": {
+          "even_rate_per_second": [
+            -0.030698834125987617,
+            0.061397668251975235,
+            -0.0
+          ],
+          "odd_rate_per_second": [
+            0.22501552782520923,
+            -0.45003105565041845,
+            0.0
+          ],
+          "chi1_even_rate_per_second": [
+            0.012727674886088574,
+            -0.025455349772177147,
+            0.0
+          ]
+        }
+      },
+      "binary_even_to_odd_norm": 5.984290155415345e-08
+    },
+    {
+      "case": "high_mass_ratio",
+      "in_plane_control": false,
+      "parameters": {
+        "mass1": 60.0,
+        "mass2": 6.0,
+        "spin1": [
+          0.2,
+          0.1,
+          0.8
+        ],
+        "spin2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "distance_mpc": 100.0,
+        "inclination": 1.2,
+        "phic": 0.7,
+        "f_lower_hz": 20.0,
+        "f_ref_hz": 20.0
+      },
+      "sample_rate_hz": 2048,
+      "signed_binary_rates": [
+        {
+          "rate_per_second": [
+            0.2256531141115482,
+            -0.45130622885185107,
+            -1.526172516361735e-11
+          ],
+          "stencil_difference_per_second": 1.0625316867296022e-08,
+          "initial_axis_error": 1.1568225199923928e-16,
+          "initial_triad_error": 2.945992578940396e-16,
+          "initial_carrier_frequency_hz": 19.999996948436436,
+          "carrier_frequency_relative_error": 1.5257817820302222e-07,
+          "epoch_seconds": -2.625439673
+        },
+        {
+          "rate_per_second": [
+            -0.22565313968320277,
+            0.4513062835734901,
+            -4.501296101863967e-12
+          ],
+          "stencil_difference_per_second": 3.891463011960465e-09,
+          "initial_axis_error": 4.4289515173602914e-17,
+          "initial_triad_error": 4.2998752849492583e-16,
+          "initial_carrier_frequency_hz": 19.99999825298075,
+          "carrier_frequency_relative_error": 8.73509625742841e-08,
+          "epoch_seconds": -1.189078044
+        }
+      ],
+      "binary_even_rate_per_second": [
+        -1.278582728581057e-08,
+        2.7360819526700553e-08,
+        -9.881510632740659e-12
+      ],
+      "binary_odd_rate_per_second": [
+        0.2256531268973755,
+        -0.4513062562126706,
+        -5.380214530876692e-12
+      ],
+      "native": {
+        "torch": {
+          "even_rate_per_second": [
+            -0.030698834125987617,
+            0.061397668251975235,
+            -0.0
+          ],
+          "odd_rate_per_second": [
+            0.22501552782520923,
+            -0.45003105565041845,
+            0.0
+          ],
+          "chi1_even_rate_per_second": [
+            0.012727674886088574,
+            -0.025455349772177147,
+            0.0
+          ]
+        },
+        "jax": {
+          "even_rate_per_second": [
+            -0.030698834125987617,
+            0.061397668251975235,
+            -0.0
+          ],
+          "odd_rate_per_second": [
+            0.22501552782520923,
+            -0.45003105565041845,
+            0.0
+          ],
+          "chi1_even_rate_per_second": [
+            0.012727674886088574,
+            -0.025455349772177147,
+            0.0
+          ]
+        }
+      },
+      "binary_even_to_odd_norm": 5.985396767472204e-08
+    },
+    {
+      "case": "high_mass_ratio",
+      "in_plane_control": false,
+      "parameters": {
+        "mass1": 60.0,
+        "mass2": 6.0,
+        "spin1": [
+          0.2,
+          0.1,
+          0.8
+        ],
+        "spin2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "distance_mpc": 100.0,
+        "inclination": 1.2,
+        "phic": 0.0,
+        "f_lower_hz": 20.0,
+        "f_ref_hz": 20.0
+      },
+      "sample_rate_hz": 16384,
+      "signed_binary_rates": [
+        {
+          "rate_per_second": [
+            0.22565310961678364,
+            -0.4513062186435991,
+            -7.22645089487418e-13
+          ],
+          "stencil_difference_per_second": 2.6245049013384234e-10,
+          "initial_axis_error": 2.7326175619423653e-17,
+          "initial_triad_error": 3.175088977639657e-16,
+          "initial_carrier_frequency_hz": 19.999996946788595,
+          "carrier_frequency_relative_error": 1.52660570185148e-07,
+          "epoch_seconds": -2.625439673
+        },
+        {
+          "rate_per_second": [
+            -0.2256531386035411,
+            0.4513062774323102,
+            8.735189055463384e-12
+          ],
+          "stencil_difference_per_second": 1.396425374580776e-10,
+          "initial_axis_error": 4.4289515173602914e-17,
+          "initial_triad_error": 4.2998752849492583e-16,
+          "initial_carrier_frequency_hz": 19.999998250964374,
+          "carrier_frequency_relative_error": 8.745178126101649e-08,
+          "epoch_seconds": -1.189078044
+        }
+      ],
+      "binary_even_rate_per_second": [
+        -1.4493378733271278e-08,
+        2.9394355560707908e-08,
+        4.006271982987983e-12
+      ],
+      "binary_odd_rate_per_second": [
+        0.22565312411016236,
+        -0.45130624803795466,
+        -4.7289170724754015e-12
+      ],
+      "native": {
+        "torch": {
+          "even_rate_per_second": [
+            -0.030698834125987617,
+            0.061397668251975235,
+            -0.0
+          ],
+          "odd_rate_per_second": [
+            0.22501552782520923,
+            -0.45003105565041845,
+            0.0
+          ],
+          "chi1_even_rate_per_second": [
+            0.012727674886088574,
+            -0.025455349772177147,
+            0.0
+          ]
+        },
+        "jax": {
+          "even_rate_per_second": [
+            -0.030698834125987617,
+            0.061397668251975235,
+            -0.0
+          ],
+          "odd_rate_per_second": [
+            0.22501552782520923,
+            -0.45003105565041845,
+            0.0
+          ],
+          "chi1_even_rate_per_second": [
+            0.012727674886088574,
+            -0.025455349772177147,
+            0.0
+          ]
+        }
+      },
+      "binary_even_to_odd_norm": 6.495210225436553e-08
+    },
+    {
+      "case": "high_mass_ratio",
+      "in_plane_control": false,
+      "parameters": {
+        "mass1": 60.0,
+        "mass2": 6.0,
+        "spin1": [
+          0.2,
+          0.1,
+          0.8
+        ],
+        "spin2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "distance_mpc": 100.0,
+        "inclination": 1.2,
+        "phic": 0.7,
+        "f_lower_hz": 20.0,
+        "f_ref_hz": 20.0
+      },
+      "sample_rate_hz": 16384,
+      "signed_binary_rates": [
+        {
+          "rate_per_second": [
+            0.2256531096253362,
+            -0.4513062186506565,
+            -1.5640911205163472e-12
+          ],
+          "stencil_difference_per_second": 2.684768369097986e-10,
+          "initial_axis_error": 1.1568225199923928e-16,
+          "initial_triad_error": 2.945992578940396e-16,
+          "initial_carrier_frequency_hz": 19.999996946788595,
+          "carrier_frequency_relative_error": 1.52660570185148e-07,
+          "epoch_seconds": -2.625439673
+        },
+        {
+          "rate_per_second": [
+            -0.22565313853946387,
+            0.4513062773041072,
+            8.748470383588048e-12
+          ],
+          "stencil_difference_per_second": 1.0962820095094563e-10,
+          "initial_axis_error": 4.4289515173602914e-17,
+          "initial_triad_error": 4.2998752849492583e-16,
+          "initial_carrier_frequency_hz": 19.999998250964374,
+          "carrier_frequency_relative_error": 8.745178126101649e-08,
+          "epoch_seconds": -1.189078044
+        }
+      ],
+      "binary_even_rate_per_second": [
+        -1.445706383773615e-08,
+        2.932672535371772e-08,
+        3.5921896315358505e-12
+      ],
+      "binary_odd_rate_per_second": [
+        0.22565312408240001,
+        -0.45130624797738184,
+        -5.156280752052198e-12
+      ],
+      "native": {
+        "torch": {
+          "even_rate_per_second": [
+            -0.030698834125987617,
+            0.061397668251975235,
+            -0.0
+          ],
+          "odd_rate_per_second": [
+            0.22501552782520923,
+            -0.45003105565041845,
+            0.0
+          ],
+          "chi1_even_rate_per_second": [
+            0.012727674886088574,
+            -0.025455349772177147,
+            0.0
+          ]
+        },
+        "jax": {
+          "even_rate_per_second": [
+            -0.030698834125987617,
+            0.061397668251975235,
+            -0.0
+          ],
+          "odd_rate_per_second": [
+            0.22501552782520923,
+            -0.45003105565041845,
+            0.0
+          ],
+          "chi1_even_rate_per_second": [
+            0.012727674886088574,
+            -0.025455349772177147,
+            0.0
+          ]
+        }
+      },
+      "binary_even_to_odd_norm": 6.480005942037523e-08
+    },
+    {
+      "case": "high_mass_ratio",
+      "in_plane_control": true,
+      "parameters": {
+        "mass1": 60.0,
+        "mass2": 6.0,
+        "spin1": [
+          0.2,
+          0.1,
+          0.0
+        ],
+        "spin2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "distance_mpc": 100.0,
+        "inclination": 1.2,
+        "phic": 0.0,
+        "f_lower_hz": 20.0,
+        "f_ref_hz": 20.0
+      },
+      "sample_rate_hz": 2048,
+      "signed_binary_rates": [
+        {
+          "rate_per_second": [
+            0.22565317819421907,
+            -0.4513063602628222,
+            -3.2325487517831705e-12
+          ],
+          "stencil_difference_per_second": 3.1812985528606546e-09,
+          "initial_axis_error": 1.2577072426390877e-16,
+          "initial_triad_error": 1.8094421531119201e-16,
+          "initial_carrier_frequency_hz": 20.000000002553186,
+          "carrier_frequency_relative_error": 1.2765921653112855e-10,
+          "epoch_seconds": -1.871951041
+        },
+        {
+          "rate_per_second": [
+            -0.2256531781970093,
+            0.45130636026275983,
+            -4.594236398425443e-12
+          ],
+          "stencil_difference_per_second": 3.1815593181416066e-09,
+          "initial_axis_error": 6.769241396318155e-17,
+          "initial_triad_error": 1.497901326927488e-16,
+          "initial_carrier_frequency_hz": 20.000000002553186,
+          "carrier_frequency_relative_error": 1.2765921653112855e-10,
+          "epoch_seconds": -1.871951041
+        }
+      ],
+      "binary_even_rate_per_second": [
+        -1.3951201305317795e-12,
+        -3.11972669919669e-14,
+        -3.913392575104307e-12
+      ],
+      "binary_odd_rate_per_second": [
+        0.2256531781956142,
+        -0.45130636026279103,
+        6.808438233211363e-13
+      ],
+      "native": {
+        "torch": {
+          "even_rate_per_second": [
+            0.0,
+            0.0,
+            -0.0
+          ],
+          "odd_rate_per_second": [
+            0.22501552782520923,
+            -0.45003105565041845,
+            0.0
+          ],
+          "chi1_even_rate_per_second": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "jax": {
+          "even_rate_per_second": [
+            0.0,
+            0.0,
+            -0.0
+          ],
+          "odd_rate_per_second": [
+            0.22501552782520923,
+            -0.45003105565041845,
+            0.0
+          ],
+          "chi1_even_rate_per_second": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      },
+      "binary_even_to_odd_norm": 8.234150119355359e-12
+    },
+    {
+      "case": "high_mass_ratio",
+      "in_plane_control": true,
+      "parameters": {
+        "mass1": 60.0,
+        "mass2": 6.0,
+        "spin1": [
+          0.2,
+          0.1,
+          0.0
+        ],
+        "spin2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "distance_mpc": 100.0,
+        "inclination": 1.2,
+        "phic": 0.7,
+        "f_lower_hz": 20.0,
+        "f_ref_hz": 20.0
+      },
+      "sample_rate_hz": 2048,
+      "signed_binary_rates": [
+        {
+          "rate_per_second": [
+            0.22565317819282324,
+            -0.4513063602576664,
+            -3.80307535693231e-12
+          ],
+          "stencil_difference_per_second": 3.17692764011207e-09,
+          "initial_axis_error": 7.638470375597251e-17,
+          "initial_triad_error": 2.7772917432763307e-16,
+          "initial_carrier_frequency_hz": 20.000000002553186,
+          "carrier_frequency_relative_error": 1.2765921653112855e-10,
+          "epoch_seconds": -1.871951041
+        },
+        {
+          "rate_per_second": [
+            -0.2256531781946484,
+            0.45130636026215953,
+            -3.5996304146288797e-12
+          ],
+          "stencil_difference_per_second": 3.1800785645449425e-09,
+          "initial_axis_error": 6.769241396318155e-17,
+          "initial_triad_error": 1.497901326927488e-16,
+          "initial_carrier_frequency_hz": 20.000000002553186,
+          "carrier_frequency_relative_error": 1.2765921653112855e-10,
+          "epoch_seconds": -1.871951041
+        }
+      ],
+      "binary_even_rate_per_second": [
+        -9.12575570666263e-13,
+        2.24656404590462e-12,
+        -3.701352885780595e-12
+      ],
+      "binary_odd_rate_per_second": [
+        0.22565317819373581,
+        -0.451306360259913,
+        -1.0172247115171498e-13
+      ],
+      "native": {
+        "torch": {
+          "even_rate_per_second": [
+            0.0,
+            0.0,
+            -0.0
+          ],
+          "odd_rate_per_second": [
+            0.22501552782520923,
+            -0.45003105565041845,
+            0.0
+          ],
+          "chi1_even_rate_per_second": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "jax": {
+          "even_rate_per_second": [
+            0.0,
+            0.0,
+            -0.0
+          ],
+          "odd_rate_per_second": [
+            0.22501552782520923,
+            -0.45003105565041845,
+            0.0
+          ],
+          "chi1_even_rate_per_second": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      },
+      "binary_even_to_odd_norm": 8.769570061438042e-12
+    },
+    {
+      "case": "high_mass_ratio",
+      "in_plane_control": true,
+      "parameters": {
+        "mass1": 60.0,
+        "mass2": 6.0,
+        "spin1": [
+          0.2,
+          0.1,
+          0.0
+        ],
+        "spin2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "distance_mpc": 100.0,
+        "inclination": 1.2,
+        "phic": 0.0,
+        "f_lower_hz": 20.0,
+        "f_ref_hz": 20.0
+      },
+      "sample_rate_hz": 16384,
+      "signed_binary_rates": [
+        {
+          "rate_per_second": [
+            0.22565317793063056,
+            -0.4513063559326215,
+            -1.2018782918053714e-12
+          ],
+          "stencil_difference_per_second": 4.209675452849277e-11,
+          "initial_axis_error": 1.2577072426390877e-16,
+          "initial_triad_error": 1.8094421531119201e-16,
+          "initial_carrier_frequency_hz": 19.999999992426147,
+          "carrier_frequency_relative_error": 3.786926328075424e-10,
+          "epoch_seconds": -1.871951041
+        },
+        {
+          "rate_per_second": [
+            -0.22565317788623745,
+            0.45130635587303347,
+            5.844321085165083e-12
+          ],
+          "stencil_difference_per_second": 4.693551027677197e-11,
+          "initial_axis_error": 6.769241396318155e-17,
+          "initial_triad_error": 1.497901326927488e-16,
+          "initial_carrier_frequency_hz": 19.999999992426147,
+          "carrier_frequency_relative_error": 3.786926328075424e-10,
+          "epoch_seconds": -1.871951041
+        }
+      ],
+      "binary_even_rate_per_second": [
+        2.2196550153452677e-11,
+        -2.979400059999193e-11,
+        2.321221396679856e-12
+      ],
+      "binary_odd_rate_per_second": [
+        0.225653177908434,
+        -0.45130635590282747,
+        -3.523099688485227e-12
+      ],
+      "native": {
+        "torch": {
+          "even_rate_per_second": [
+            0.0,
+            0.0,
+            -0.0
+          ],
+          "odd_rate_per_second": [
+            0.22501552782520923,
+            -0.45003105565041845,
+            0.0
+          ],
+          "chi1_even_rate_per_second": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "jax": {
+          "even_rate_per_second": [
+            0.0,
+            0.0,
+            -0.0
+          ],
+          "odd_rate_per_second": [
+            0.22501552782520923,
+            -0.45003105565041845,
+            0.0
+          ],
+          "chi1_even_rate_per_second": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      },
+      "binary_even_to_odd_norm": 7.377634632813159e-11
+    },
+    {
+      "case": "high_mass_ratio",
+      "in_plane_control": true,
+      "parameters": {
+        "mass1": 60.0,
+        "mass2": 6.0,
+        "spin1": [
+          0.2,
+          0.1,
+          0.0
+        ],
+        "spin2": [
+          0.0,
+          0.0,
+          0.0
+        ],
+        "distance_mpc": 100.0,
+        "inclination": 1.2,
+        "phic": 0.7,
+        "f_lower_hz": 20.0,
+        "f_ref_hz": 20.0
+      },
+      "sample_rate_hz": 16384,
+      "signed_binary_rates": [
+        {
+          "rate_per_second": [
+            0.22565317793983317,
+            -0.4513063559371558,
+            -4.549220134568288e-12
+          ],
+          "stencil_difference_per_second": 3.897852942474905e-11,
+          "initial_axis_error": 7.638470375597251e-17,
+          "initial_triad_error": 2.7772917432763307e-16,
+          "initial_carrier_frequency_hz": 19.999999992426147,
+          "carrier_frequency_relative_error": 3.786926328075424e-10,
+          "epoch_seconds": -1.871951041
+        },
+        {
+          "rate_per_second": [
+            -0.2256531779078035,
+            0.45130635591136314,
+            4.685404126754835e-12
+          ],
+          "stencil_difference_per_second": 3.0499467799685395e-11,
+          "initial_axis_error": 6.769241396318155e-17,
+          "initial_triad_error": 1.497901326927488e-16,
+          "initial_carrier_frequency_hz": 19.999999992426147,
+          "carrier_frequency_relative_error": 3.786926328075424e-10,
+          "epoch_seconds": -1.871951041
+        }
+      ],
+      "binary_even_rate_per_second": [
+        1.6014828352339805e-11,
+        -1.2896322898470203e-11,
+        6.809199609327353e-14
+      ],
+      "binary_odd_rate_per_second": [
+        0.22565317792381834,
+        -0.4513063559242595,
+        -4.617312130661561e-12
+      ],
+      "native": {
+        "torch": {
+          "even_rate_per_second": [
+            0.0,
+            0.0,
+            -0.0
+          ],
+          "odd_rate_per_second": [
+            0.22501552782520923,
+            -0.45003105565041845,
+            0.0
+          ],
+          "chi1_even_rate_per_second": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        },
+        "jax": {
+          "even_rate_per_second": [
+            0.0,
+            0.0,
+            -0.0
+          ],
+          "odd_rate_per_second": [
+            0.22501552782520923,
+            -0.45003105565041845,
+            0.0
+          ],
+          "chi1_even_rate_per_second": [
+            0.0,
+            0.0,
+            0.0
+          ]
+        }
+      },
+      "binary_even_to_odd_norm": 4.0750994535427173e-11
+    }
+  ],
+  "spin_taylor_positive_controls": [
+    {
+      "case": "single_spin",
+      "sample_rate_hz": 2048,
+      "mass1": 35.0,
+      "mass2": 20.0,
+      "spin1": [
+        0.3,
+        0.0,
+        0.4
+      ],
+      "spin2": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "f_start_hz": 30.0,
+      "f_end_hz": 31.5,
+      "native": {
+        "torch": {
+          "even_rate_per_second": [
+            -0.0,
+            0.04469737941530805,
+            -0.0
+          ],
+          "odd_rate_per_second": [
+            0.0,
+            -0.7989968832777151,
+            0.0
+          ],
+          "chi1_even_rate_per_second": [
+            0.0,
+            -0.10023043972794742,
+            0.0
+          ]
+        },
+        "jax": {
+          "even_rate_per_second": [
+            -0.0,
+            0.0446973794153081,
+            -0.0
+          ],
+          "odd_rate_per_second": [
+            0.0,
+            -0.7989968832777152,
+            0.0
+          ],
+          "chi1_even_rate_per_second": [
+            0.0,
+            -0.10023043972794742,
+            0.0
+          ]
+        }
+      },
+      "binary": [
+        {
+          "kappa1": 0.0,
+          "kappa2": 0.0,
+          "signed_rates": [
+            {
+              "chi1_rate_per_second": [
+                2.404551813713768e-06,
+                1.7772443550017274,
+                -2.7947803317657574e-07
+              ],
+              "stencil_difference_per_second": 2.425614982612597e-06
+            },
+            {
+              "chi1_rate_per_second": [
+                -8.67088315592568e-08,
+                -1.7772448994775059,
+                -1.5334207362216468e-08
+              ],
+              "stencil_difference_per_second": 9.892294704516242e-08
+            }
+          ],
+          "chi1_even_rate_per_second": [
+            1.1589214910772555e-06,
+            -2.722378892316968e-07,
+            -1.474061202693961e-07
+          ]
+        },
+        {
+          "kappa1": 1.0,
+          "kappa2": 1.0,
+          "signed_rates": [
+            {
+              "chi1_rate_per_second": [
+                1.8350279735387942e-06,
+                1.6770140281469423,
+                -2.1280971794403886e-07
+              ],
+              "stencil_difference_per_second": 1.8527757997985302e-06
+            },
+            {
+              "chi1_rate_per_second": [
+                -1.0307685354565832e-07,
+                -1.8774753454650888,
+                -1.8295802271632577e-08
+              ],
+              "stencil_difference_per_second": 1.1580450700446051e-07
+            }
+          ],
+          "chi1_even_rate_per_second": [
+            8.659755599965679e-07,
+            -0.10023065865907321,
+            -1.1555276010783572e-07
+          ]
+        }
+      ]
+    },
+    {
+      "case": "single_spin",
+      "sample_rate_hz": 16384,
+      "mass1": 35.0,
+      "mass2": 20.0,
+      "spin1": [
+        0.3,
+        0.0,
+        0.4
+      ],
+      "spin2": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "f_start_hz": 30.0,
+      "f_end_hz": 31.5,
+      "native": {
+        "torch": {
+          "even_rate_per_second": [
+            -0.0,
+            0.04469737941530805,
+            -0.0
+          ],
+          "odd_rate_per_second": [
+            0.0,
+            -0.7989968832777151,
+            0.0
+          ],
+          "chi1_even_rate_per_second": [
+            0.0,
+            -0.10023043972794742,
+            0.0
+          ]
+        },
+        "jax": {
+          "even_rate_per_second": [
+            -0.0,
+            0.0446973794153081,
+            -0.0
+          ],
+          "odd_rate_per_second": [
+            0.0,
+            -0.7989968832777152,
+            0.0
+          ],
+          "chi1_even_rate_per_second": [
+            0.0,
+            -0.10023043972794742,
+            0.0
+          ]
+        }
+      },
+      "binary": [
+        {
+          "kappa1": 0.0,
+          "kappa2": 0.0,
+          "signed_rates": [
+            {
+              "chi1_rate_per_second": [
+                -1.7772230241283604e-08,
+                1.7772448707551918,
+                2.039774655334791e-09
+              ],
+              "stencil_difference_per_second": 1.9143779089521895e-08
+            },
+            {
+              "chi1_rate_per_second": [
+                3.659925772170336e-09,
+                -1.7772448661198261,
+                6.071905722356344e-10
+              ],
+              "stencil_difference_per_second": 4.164750881552413e-09
+            }
+          ],
+          "chi1_even_rate_per_second": [
+            -7.056152234556634e-09,
+            2.3176828234383606e-09,
+            1.3234826137852127e-09
+          ]
+        },
+        {
+          "kappa1": 1.0,
+          "kappa2": 1.0,
+          "signed_rates": [
+            {
+              "chi1_rate_per_second": [
+                -1.383639841373227e-08,
+                1.677014429808455,
+                1.580841463213068e-09
+              ],
+              "stencil_difference_per_second": 1.4978354929229432e-08
+            },
+            {
+              "chi1_rate_per_second": [
+                5.143417745531731e-09,
+                -1.8774753065408956,
+                8.329206605569954e-10
+              ],
+              "stencil_difference_per_second": 5.821674974860995e-09
+            }
+          ],
+          "chi1_even_rate_per_second": [
+            -4.34649033410027e-09,
+            -0.10023043836622025,
+            1.2068810618850317e-09
+          ]
+        }
+      ]
+    },
+    {
+      "case": "high_mass_ratio",
+      "sample_rate_hz": 2048,
+      "mass1": 60.0,
+      "mass2": 6.0,
+      "spin1": [
+        0.2,
+        0.1,
+        0.8
+      ],
+      "spin2": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "f_start_hz": 20.0,
+      "f_end_hz": 21.0,
+      "native": {
+        "torch": {
+          "even_rate_per_second": [
+            -0.030698834125987617,
+            0.061397668251975235,
+            -0.0
+          ],
+          "odd_rate_per_second": [
+            0.22501552782520923,
+            -0.45003105565041845,
+            0.0
+          ],
+          "chi1_even_rate_per_second": [
+            0.012727674886088574,
+            -0.025455349772177147,
+            0.0
+          ]
+        },
+        "jax": {
+          "even_rate_per_second": [
+            -0.030698834125987617,
+            0.061397668251975235,
+            -0.0
+          ],
+          "odd_rate_per_second": [
+            0.22501552782520923,
+            -0.45003105565041845,
+            0.0
+          ],
+          "chi1_even_rate_per_second": [
+            0.012727674886088574,
+            -0.025455349772177147,
+            0.0
+          ]
+        }
+      },
+      "binary": [
+        {
+          "kappa1": 0.0,
+          "kappa2": 0.0,
+          "signed_rates": [
+            {
+              "chi1_rate_per_second": [
+                -0.09210687467383907,
+                0.1842136749982567,
+                6.2796603047469545e-09
+              ],
+              "stencil_difference_per_second": 3.456173656701429e-08
+            },
+            {
+              "chi1_rate_per_second": [
+                0.09210684105633007,
+                -0.18421368842855368,
+                1.1617568614476041e-09
+              ],
+              "stencil_difference_per_second": 3.1701835065060524e-09
+            }
+          ],
+          "chi1_even_rate_per_second": [
+            -1.680875449938668e-08,
+            -6.7151484928196226e-09,
+            3.7207085830972793e-09
+          ]
+        },
+        {
+          "kappa1": 1.0,
+          "kappa2": 1.0,
+          "signed_rates": [
+            {
+              "chi1_rate_per_second": [
+                -0.07937918764593888,
+                0.15875833013990687,
+                3.814911527140214e-09
+              ],
+              "stencil_difference_per_second": 2.101351514872263e-08
+            },
+            {
+              "chi1_rate_per_second": [
+                0.10483451417280129,
+                -0.2096690397105646,
+                2.1105000485416824e-09
+              ],
+              "stencil_difference_per_second": 5.704912883295773e-09
+            }
+          ],
+          "chi1_even_rate_per_second": [
+            0.012727663263431208,
+            -0.02545535478532887,
+            2.9627057878409482e-09
+          ]
+        }
+      ]
+    },
+    {
+      "case": "high_mass_ratio",
+      "sample_rate_hz": 16384,
+      "mass1": 60.0,
+      "mass2": 6.0,
+      "spin1": [
+        0.2,
+        0.1,
+        0.8
+      ],
+      "spin2": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "f_start_hz": 20.0,
+      "f_end_hz": 21.0,
+      "native": {
+        "torch": {
+          "even_rate_per_second": [
+            -0.030698834125987617,
+            0.061397668251975235,
+            -0.0
+          ],
+          "odd_rate_per_second": [
+            0.22501552782520923,
+            -0.45003105565041845,
+            0.0
+          ],
+          "chi1_even_rate_per_second": [
+            0.012727674886088574,
+            -0.025455349772177147,
+            0.0
+          ]
+        },
+        "jax": {
+          "even_rate_per_second": [
+            -0.030698834125987617,
+            0.061397668251975235,
+            -0.0
+          ],
+          "odd_rate_per_second": [
+            0.22501552782520923,
+            -0.45003105565041845,
+            0.0
+          ],
+          "chi1_even_rate_per_second": [
+            0.012727674886088574,
+            -0.025455349772177147,
+            0.0
+          ]
+        }
+      },
+      "binary": [
+        {
+          "kappa1": 0.0,
+          "kappa2": 0.0,
+          "signed_rates": [
+            {
+              "chi1_rate_per_second": [
+                -0.09210684339487263,
+                0.1842136864269029,
+                3.95846741446475e-11
+              ],
+              "stencil_difference_per_second": 1.6696035284763235e-10
+            },
+            {
+              "chi1_rate_per_second": [
+                0.0921068432386539,
+                -0.18421368648174202,
+                8.569605543237778e-11
+              ],
+              "stencil_difference_per_second": 7.989856034726936e-11
+            }
+          ],
+          "chi1_even_rate_per_second": [
+            -7.810936619723208e-11,
+            -2.741956661722611e-11,
+            6.264036478851264e-11
+          ]
+        },
+        {
+          "kappa1": 1.0,
+          "kappa2": 1.0,
+          "signed_rates": [
+            {
+              "chi1_rate_per_second": [
+                -0.07937916843916243,
+                0.15875833669128608,
+                2.6938366813643918e-11
+              ],
+              "stencil_difference_per_second": 9.328971457860502e-11
+            },
+            {
+              "chi1_rate_per_second": [
+                0.10483451811253358,
+                -0.2096690362685526,
+                4.0981398037197216e-11
+              ],
+              "stencil_difference_per_second": 4.091823689817322e-11
+            }
+          ],
+          "chi1_even_rate_per_second": [
+            0.012727674836685576,
+            -0.025455349788633258,
+            3.395988242542057e-11
+          ]
+        }
+      ]
+    }
+  ]
+}

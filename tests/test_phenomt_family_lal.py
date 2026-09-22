@@ -96,3 +96,24 @@ def test_additional_precession_binary_reference(name, method, version, spin_mode
     assert np.linalg.norm(actual-reference)/np.linalg.norm(reference) < l2_limit
     overlap = abs(np.vdot(actual, reference))/(np.linalg.norm(actual)*np.linalg.norm(reference))
     assert 1-overlap < mismatch_limit
+
+
+@pytest.mark.parametrize("backend", ["torch", "jax"])
+@pytest.mark.parametrize("only22", [1, 0])
+def test_project_modes_rotation_against_public_lal(backend, only22):
+    """Check only the native mode-rotation convention against public LAL.
+
+    The binary oracle supplies both complete coprecessing modes and its
+    already-rotated J-frame modes.  This deliberately says nothing about the
+    native spin evolution, carrier, or waveform accuracy.
+    """
+    pytest.importorskip("lal")
+    pytest.importorskip("lalsimulation")
+    pytest.importorskip(backend)
+    from scripts.diagnose_phenomt_rotation import measure
+
+    result = measure(backend, "baseline", 2048, only22, samples=257)
+    assert max(view["relative_l2"] for view in result["views"]) < 5e-12
+    assert result["inverse_l0"]["status"] in ("measured", "skipped")
+    if only22:
+        assert max(view["relative_l2"] for view in result["inverse_l0"]["views"]) < 5e-12

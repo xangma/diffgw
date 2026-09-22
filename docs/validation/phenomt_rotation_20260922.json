@@ -1,0 +1,2998 @@
+{
+  "generated_utc": "2026-09-22T07:15:18.778101+00:00",
+  "reproduction": "python scripts/diagnose_phenomt_rotation.py --backend torch jax --case baseline single_spin equal_mass high_mass_ratio --only22 1 0 --sample-rate 2048 --samples 257 --output receipt.json",
+  "versions": {
+    "python": "3.13.7",
+    "numpy": "2.5.3",
+    "lalsimulation": "6.2.1",
+    "torch": "2.14.0",
+    "jax": "0.11.2"
+  },
+  "dtype": "float64",
+  "device": "cpu",
+  "precession_version": 300,
+  "final_spin_mod": 4,
+  "parameters": {
+    "baseline": {
+      "mass1": 40.0,
+      "mass2": 15.0,
+      "spin1": [
+        0.2,
+        0.1,
+        0.3
+      ],
+      "spin2": [
+        0.0,
+        0.1,
+        -0.2
+      ],
+      "distance_mpc": 100.0,
+      "inclination": 0.8,
+      "phic": 0.3,
+      "f_lower_hz": 20.0,
+      "f_ref_hz": 20.0
+    },
+    "single_spin": {
+      "mass1": 35.0,
+      "mass2": 20.0,
+      "spin1": [
+        0.3,
+        0.0,
+        0.4
+      ],
+      "spin2": [
+        0.0,
+        0.0,
+        0.0
+      ],
+      "distance_mpc": 100.0,
+      "inclination": 1.1,
+      "phic": 0.2,
+      "f_lower_hz": 20.0,
+      "f_ref_hz": 30.0
+    },
+    "equal_mass": {
+      "mass1": 30.0,
+      "mass2": 30.0,
+      "spin1": [
+        0.2,
+        -0.1,
+        0.4
+      ],
+      "spin2": [
+        -0.12,
+        0.08,
+        -0.3
+      ],
+      "distance_mpc": 100.0,
+      "inclination": 0.8,
+      "phic": 0.3,
+      "f_lower_hz": 20.0,
+      "f_ref_hz": 20.0
+    },
+    "high_mass_ratio": {
+      "mass1": 60.0,
+      "mass2": 6.0,
+      "spin1": [
+        0.2,
+        0.1,
+        0.8
+      ],
+      "spin2": [
+        0.1,
+        0.0,
+        0.1
+      ],
+      "distance_mpc": 100.0,
+      "inclination": 1.2,
+      "phic": 0.1,
+      "f_lower_hz": 20.0,
+      "f_ref_hz": 20.0
+    }
+  },
+  "scope": "Isolated project_modes rotation/convention checks against public binary J-frame and L0 modes; does not validate native spin evolution, carrier, or physical waveform accuracy.",
+  "conventions": {
+    "angles": "Public alpha, acos(cosbeta), epsilon series are passed as alpha,beta,gamma.",
+    "projection": "J-frame modes are projected at phi=0 with exp(2 i zeta), matching project_modes.",
+    "modes": "only22=1 checks the complete l=2 set; only22=0 checks all available l=2..5 signed modes.",
+    "relative_l2": "norm(project_modes output - direct J-frame projection)/norm(direct projection).",
+    "inverse_l0": "For f_ref=f_min=20 Hz, Eq. 8 uses constants (-gamma_ref,-beta_ref,-alpha_ref) on all signed J modes and compares with public L0Modes.",
+    "inverse_l0_status": "Full-mode inverse values are measured diagnostics; only22 inverse values are suitable for the strict convention check."
+  },
+  "results": [
+    {
+      "case": "baseline",
+      "backend": "torch",
+      "only22": 1,
+      "sample_rate_hz": 2048,
+      "modes": [
+        [
+          2,
+          -2
+        ],
+        [
+          2,
+          -1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          2
+        ]
+      ],
+      "views": [
+        {
+          "theta_jn": 0.3,
+          "zeta": 0.2,
+          "relative_l2": 4.3911062989468996e-16,
+          "max_absolute": 3.0457782246639575e-36,
+          "reference_norm": 2.5282058719274563e-20,
+          "input_mode_norm": 5.967272194267334e-20,
+          "samples": 257
+        },
+        {
+          "theta_jn": 1.1,
+          "zeta": -0.4,
+          "relative_l2": 4.1176451898249884e-16,
+          "max_absolute": 1.3299200427406688e-36,
+          "reference_norm": 1.4485601184246537e-20,
+          "input_mode_norm": 5.967272194267334e-20,
+          "samples": 257
+        },
+        {
+          "theta_jn": 2.0,
+          "zeta": 1.0,
+          "relative_l2": 3.5854034728381103e-16,
+          "max_absolute": 1.7743346442394537e-36,
+          "reference_norm": 1.3703311531065035e-20,
+          "input_mode_norm": 5.967272194267334e-20,
+          "samples": 257
+        }
+      ],
+      "inverse_l0": {
+        "status": "measured",
+        "reason": "Full signed-mode inverse residual is reported for diagnosis; no full-mode accuracy gate is claimed.",
+        "views": [
+          {
+            "theta_l0": 0.3,
+            "zeta": 0.2,
+            "relative_l2": 1.5801717820859216e-16,
+            "max_absolute": 7.754699793211446e-37,
+            "reference_norm": 2.591383334917068e-20,
+            "input_j_mode_norm": 5.967272194267334e-20,
+            "per_ell": [
+              {
+                "ell": 2,
+                "projected_relative_l2": 1.5801717820859216e-16,
+                "max_absolute": 7.754699793211446e-37,
+                "reference_norm": 2.591383334917068e-20,
+                "input_j_mode_norm": 5.967272194267334e-20
+              }
+            ],
+            "samples": 257
+          },
+          {
+            "theta_l0": 1.1,
+            "zeta": -0.4,
+            "relative_l2": 1.6503071100776898e-16,
+            "max_absolute": 6.781288249452821e-37,
+            "reference_norm": 1.614096026251806e-20,
+            "input_j_mode_norm": 5.967272194267334e-20,
+            "per_ell": [
+              {
+                "ell": 2,
+                "projected_relative_l2": 1.6503071100776898e-16,
+                "max_absolute": 6.781288249452821e-37,
+                "reference_norm": 1.614096026251806e-20,
+                "input_j_mode_norm": 5.967272194267334e-20
+              }
+            ],
+            "samples": 257
+          },
+          {
+            "theta_l0": 2.0,
+            "zeta": 1.0,
+            "relative_l2": 3.2259406074906084e-16,
+            "max_absolute": 9.590189812737484e-37,
+            "reference_norm": 1.2255021623315047e-20,
+            "input_j_mode_norm": 5.967272194267334e-20,
+            "per_ell": [
+              {
+                "ell": 2,
+                "projected_relative_l2": 3.2259406074906084e-16,
+                "max_absolute": 9.590189812737484e-37,
+                "reference_norm": 1.2255021623315047e-20,
+                "input_j_mode_norm": 5.967272194267334e-20
+              }
+            ],
+            "samples": 257
+          }
+        ]
+      }
+    },
+    {
+      "case": "baseline",
+      "backend": "jax",
+      "only22": 1,
+      "sample_rate_hz": 2048,
+      "modes": [
+        [
+          2,
+          -2
+        ],
+        [
+          2,
+          -1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          2
+        ]
+      ],
+      "views": [
+        {
+          "theta_jn": 0.3,
+          "zeta": 0.2,
+          "relative_l2": 4.0219061140999733e-16,
+          "max_absolute": 1.9636034115324017e-36,
+          "reference_norm": 2.5282058719274563e-20,
+          "input_mode_norm": 5.967272194267334e-20,
+          "samples": 257
+        },
+        {
+          "theta_jn": 1.1,
+          "zeta": -0.4,
+          "relative_l2": 3.227375270708615e-16,
+          "max_absolute": 1.1404112832872107e-36,
+          "reference_norm": 1.4485601184246537e-20,
+          "input_mode_norm": 5.967272194267334e-20,
+          "samples": 257
+        },
+        {
+          "theta_jn": 2.0,
+          "zeta": 1.0,
+          "relative_l2": 3.309675075502774e-16,
+          "max_absolute": 1.6822305763875973e-36,
+          "reference_norm": 1.3703311531065035e-20,
+          "input_mode_norm": 5.967272194267334e-20,
+          "samples": 257
+        }
+      ],
+      "inverse_l0": {
+        "status": "measured",
+        "reason": "Full signed-mode inverse residual is reported for diagnosis; no full-mode accuracy gate is claimed.",
+        "views": [
+          {
+            "theta_l0": 0.3,
+            "zeta": 0.2,
+            "relative_l2": 1.4291418581321146e-16,
+            "max_absolute": 7.754699793211446e-37,
+            "reference_norm": 2.591383334917068e-20,
+            "input_j_mode_norm": 5.967272194267334e-20,
+            "per_ell": [
+              {
+                "ell": 2,
+                "projected_relative_l2": 1.4291418581321146e-16,
+                "max_absolute": 7.754699793211446e-37,
+                "reference_norm": 2.591383334917068e-20,
+                "input_j_mode_norm": 5.967272194267334e-20
+              }
+            ],
+            "samples": 257
+          },
+          {
+            "theta_l0": 1.1,
+            "zeta": -0.4,
+            "relative_l2": 2.715176113511901e-16,
+            "max_absolute": 8.411152881937987e-37,
+            "reference_norm": 1.614096026251806e-20,
+            "input_j_mode_norm": 5.967272194267334e-20,
+            "per_ell": [
+              {
+                "ell": 2,
+                "projected_relative_l2": 2.715176113511901e-16,
+                "max_absolute": 8.411152881937987e-37,
+                "reference_norm": 1.614096026251806e-20,
+                "input_j_mode_norm": 5.967272194267334e-20
+              }
+            ],
+            "samples": 257
+          },
+          {
+            "theta_l0": 2.0,
+            "zeta": 1.0,
+            "relative_l2": 3.646235622000624e-16,
+            "max_absolute": 7.88195040062594e-37,
+            "reference_norm": 1.2255021623315047e-20,
+            "input_j_mode_norm": 5.967272194267334e-20,
+            "per_ell": [
+              {
+                "ell": 2,
+                "projected_relative_l2": 3.646235622000624e-16,
+                "max_absolute": 7.88195040062594e-37,
+                "reference_norm": 1.2255021623315047e-20,
+                "input_j_mode_norm": 5.967272194267334e-20
+              }
+            ],
+            "samples": 257
+          }
+        ]
+      }
+    },
+    {
+      "case": "baseline",
+      "backend": "torch",
+      "only22": 0,
+      "sample_rate_hz": 2048,
+      "modes": [
+        [
+          2,
+          -2
+        ],
+        [
+          2,
+          -1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          -3
+        ],
+        [
+          3,
+          -2
+        ],
+        [
+          3,
+          -1
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          3,
+          2
+        ],
+        [
+          3,
+          3
+        ],
+        [
+          4,
+          -4
+        ],
+        [
+          4,
+          -3
+        ],
+        [
+          4,
+          -2
+        ],
+        [
+          4,
+          -1
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          1
+        ],
+        [
+          4,
+          2
+        ],
+        [
+          4,
+          3
+        ],
+        [
+          4,
+          4
+        ],
+        [
+          5,
+          -5
+        ],
+        [
+          5,
+          -4
+        ],
+        [
+          5,
+          -3
+        ],
+        [
+          5,
+          -2
+        ],
+        [
+          5,
+          -1
+        ],
+        [
+          5,
+          0
+        ],
+        [
+          5,
+          1
+        ],
+        [
+          5,
+          2
+        ],
+        [
+          5,
+          3
+        ],
+        [
+          5,
+          4
+        ],
+        [
+          5,
+          5
+        ]
+      ],
+      "views": [
+        {
+          "theta_jn": 0.3,
+          "zeta": 0.2,
+          "relative_l2": 6.387219514179623e-16,
+          "max_absolute": 3.803664322502939e-36,
+          "reference_norm": 2.5298474394309068e-20,
+          "input_mode_norm": 6.014317582269544e-20,
+          "samples": 257
+        },
+        {
+          "theta_jn": 1.1,
+          "zeta": -0.4,
+          "relative_l2": 6.818108503237445e-16,
+          "max_absolute": 4.817175275977972e-36,
+          "reference_norm": 1.4615773189370824e-20,
+          "input_mode_norm": 6.014317582269544e-20,
+          "samples": 257
+        },
+        {
+          "theta_jn": 2.0,
+          "zeta": 1.0,
+          "relative_l2": 6.266690321561551e-16,
+          "max_absolute": 3.4680071765448715e-36,
+          "reference_norm": 1.3811664119568575e-20,
+          "input_mode_norm": 6.014317582269544e-20,
+          "samples": 257
+        }
+      ],
+      "inverse_l0": {
+        "status": "measured",
+        "reason": "Full signed-mode inverse residual is reported for diagnosis; no full-mode accuracy gate is claimed.",
+        "views": [
+          {
+            "theta_l0": 0.3,
+            "zeta": 0.2,
+            "relative_l2": 7.040561884408283e-11,
+            "max_absolute": 8.296041157874905e-31,
+            "reference_norm": 2.5934415597416512e-20,
+            "input_j_mode_norm": 6.014317582269536e-20,
+            "per_ell": [
+              {
+                "ell": 2,
+                "projected_relative_l2": 1.8026790185095202e-16,
+                "max_absolute": 8.411152881937987e-37,
+                "reference_norm": 2.5914219146053566e-20,
+                "input_j_mode_norm": 5.972937117995809e-20
+              },
+              {
+                "ell": 3,
+                "projected_relative_l2": 3.5224451820698834e-16,
+                "max_absolute": 8.737489915704332e-38,
+                "reference_norm": 9.3783610476186e-22,
+                "input_j_mode_norm": 6.737429534490838e-21
+              },
+              {
+                "ell": 4,
+                "projected_relative_l2": 8.058491087077777e-16,
+                "max_absolute": 3.009178902981709e-38,
+                "reference_norm": 8.971275045232096e-23,
+                "input_j_mode_norm": 1.962870793000515e-21
+              },
+              {
+                "ell": 5,
+                "projected_relative_l2": 2.231410512484712e-07,
+                "max_absolute": 8.296080178840757e-31,
+                "reference_norm": 8.18285088978799e-24,
+                "input_j_mode_norm": 5.983293442608767e-22
+              }
+            ],
+            "samples": 257
+          },
+          {
+            "theta_l0": 1.1,
+            "zeta": -0.4,
+            "relative_l2": 9.094768180217095e-11,
+            "max_absolute": 6.723126531672993e-31,
+            "reference_norm": 1.6270091951505218e-20,
+            "input_j_mode_norm": 6.014317582269536e-20,
+            "per_ell": [
+              {
+                "ell": 2,
+                "projected_relative_l2": 1.5531932660099047e-16,
+                "max_absolute": 5.3196801709626755e-37,
+                "reference_norm": 1.6193235330635287e-20,
+                "input_j_mode_norm": 5.972937117995809e-20
+              },
+              {
+                "ell": 3,
+                "projected_relative_l2": 2.7300205248722605e-16,
+                "max_absolute": 1.8844608008273444e-37,
+                "reference_norm": 2.1484016306601667e-21,
+                "input_j_mode_norm": 6.737429534490838e-21
+              },
+              {
+                "ell": 4,
+                "projected_relative_l2": 2.2573864445215513e-16,
+                "max_absolute": 9.991701981989444e-38,
+                "reference_norm": 6.334435582052851e-22,
+                "input_j_mode_norm": 1.962870793000515e-21
+              },
+              {
+                "ell": 5,
+                "projected_relative_l2": 8.500887989876648e-09,
+                "max_absolute": 6.723107268031765e-31,
+                "reference_norm": 1.740671881780847e-22,
+                "input_j_mode_norm": 5.983293442608767e-22
+              }
+            ],
+            "samples": 257
+          },
+          {
+            "theta_l0": 2.0,
+            "zeta": 1.0,
+            "relative_l2": 1.0359135208804736e-10,
+            "max_absolute": 5.811231777170905e-31,
+            "reference_norm": 1.2346870608476853e-20,
+            "input_j_mode_norm": 6.014317582269536e-20,
+            "per_ell": [
+              {
+                "ell": 2,
+                "projected_relative_l2": 3.1611447822303643e-16,
+                "max_absolute": 7.754699793211446e-37,
+                "reference_norm": 1.2340685507607298e-20,
+                "input_j_mode_norm": 5.972937117995809e-20
+              },
+              {
+                "ell": 3,
+                "projected_relative_l2": 5.320151224998886e-16,
+                "max_absolute": 2.741700404922865e-37,
+                "reference_norm": 1.7899313917300267e-21,
+                "input_j_mode_norm": 6.737429534490838e-21
+              },
+              {
+                "ell": 4,
+                "projected_relative_l2": 6.317080394443852e-16,
+                "max_absolute": 2.1289108148801267e-37,
+                "reference_norm": 6.251106196344789e-22,
+                "input_j_mode_norm": 1.962870793000515e-21
+              },
+              {
+                "ell": 5,
+                "projected_relative_l2": 6.772584042288993e-09,
+                "max_absolute": 5.811244227587714e-31,
+                "reference_norm": 1.8885387231613556e-22,
+                "input_j_mode_norm": 5.983293442608767e-22
+              }
+            ],
+            "samples": 257
+          }
+        ]
+      }
+    },
+    {
+      "case": "baseline",
+      "backend": "jax",
+      "only22": 0,
+      "sample_rate_hz": 2048,
+      "modes": [
+        [
+          2,
+          -2
+        ],
+        [
+          2,
+          -1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          -3
+        ],
+        [
+          3,
+          -2
+        ],
+        [
+          3,
+          -1
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          3,
+          2
+        ],
+        [
+          3,
+          3
+        ],
+        [
+          4,
+          -4
+        ],
+        [
+          4,
+          -3
+        ],
+        [
+          4,
+          -2
+        ],
+        [
+          4,
+          -1
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          1
+        ],
+        [
+          4,
+          2
+        ],
+        [
+          4,
+          3
+        ],
+        [
+          4,
+          4
+        ],
+        [
+          5,
+          -5
+        ],
+        [
+          5,
+          -4
+        ],
+        [
+          5,
+          -3
+        ],
+        [
+          5,
+          -2
+        ],
+        [
+          5,
+          -1
+        ],
+        [
+          5,
+          0
+        ],
+        [
+          5,
+          1
+        ],
+        [
+          5,
+          2
+        ],
+        [
+          5,
+          3
+        ],
+        [
+          5,
+          4
+        ],
+        [
+          5,
+          5
+        ]
+      ],
+      "views": [
+        {
+          "theta_jn": 0.3,
+          "zeta": 0.2,
+          "relative_l2": 6.178143208489116e-16,
+          "max_absolute": 3.4680071765448715e-36,
+          "reference_norm": 2.5298474394309068e-20,
+          "input_mode_norm": 6.014317582269544e-20,
+          "samples": 257
+        },
+        {
+          "theta_jn": 1.1,
+          "zeta": -0.4,
+          "relative_l2": 6.09352276353609e-16,
+          "max_absolute": 3.76158192263132e-36,
+          "reference_norm": 1.4615773189370824e-20,
+          "input_mode_norm": 6.014317582269544e-20,
+          "samples": 257
+        },
+        {
+          "theta_jn": 2.0,
+          "zeta": 1.0,
+          "relative_l2": 6.274430837140464e-16,
+          "max_absolute": 3.8360759250949936e-36,
+          "reference_norm": 1.3811664119568575e-20,
+          "input_mode_norm": 6.014317582269544e-20,
+          "samples": 257
+        }
+      ],
+      "inverse_l0": {
+        "status": "measured",
+        "reason": "Full signed-mode inverse residual is reported for diagnosis; no full-mode accuracy gate is claimed.",
+        "views": [
+          {
+            "theta_l0": 0.3,
+            "zeta": 0.2,
+            "relative_l2": 7.040560893622011e-11,
+            "max_absolute": 8.296032834709129e-31,
+            "reference_norm": 2.5934415597416512e-20,
+            "input_j_mode_norm": 6.014317582269536e-20,
+            "per_ell": [
+              {
+                "ell": 2,
+                "projected_relative_l2": 1.4573496108103213e-16,
+                "max_absolute": 8.411152881937987e-37,
+                "reference_norm": 2.5914219146053566e-20,
+                "input_j_mode_norm": 5.972937117995809e-20
+              },
+              {
+                "ell": 3,
+                "projected_relative_l2": 3.362019002083817e-16,
+                "max_absolute": 9.180904372539874e-38,
+                "reference_norm": 9.3783610476186e-22,
+                "input_j_mode_norm": 6.737429534490838e-21
+              },
+              {
+                "ell": 4,
+                "projected_relative_l2": 8.933113374818746e-16,
+                "max_absolute": 2.507630401231039e-38,
+                "reference_norm": 8.971275045232096e-23,
+                "input_j_mode_norm": 1.962870793000515e-21
+              },
+              {
+                "ell": 5,
+                "projected_relative_l2": 2.2314105119472483e-07,
+                "max_absolute": 8.296080191474055e-31,
+                "reference_norm": 8.18285088978799e-24,
+                "input_j_mode_norm": 5.983293442608767e-22
+              }
+            ],
+            "samples": 257
+          },
+          {
+            "theta_l0": 1.1,
+            "zeta": -0.4,
+            "relative_l2": 9.094767375451181e-11,
+            "max_absolute": 6.723129019635239e-31,
+            "reference_norm": 1.6270091951505218e-20,
+            "input_j_mode_norm": 6.014317582269536e-20,
+            "per_ell": [
+              {
+                "ell": 2,
+                "projected_relative_l2": 2.623641626725878e-16,
+                "max_absolute": 7.581710750398528e-37,
+                "reference_norm": 1.6193235330635287e-20,
+                "input_j_mode_norm": 5.972937117995809e-20
+              },
+              {
+                "ell": 3,
+                "projected_relative_l2": 2.404888455268885e-16,
+                "max_absolute": 1.9386749483028614e-37,
+                "reference_norm": 2.1484016306601667e-21,
+                "input_j_mode_norm": 6.737429534490838e-21
+              },
+              {
+                "ell": 4,
+                "projected_relative_l2": 4.894257438513065e-16,
+                "max_absolute": 9.47713843799816e-38,
+                "reference_norm": 6.334435582052851e-22,
+                "input_j_mode_norm": 1.962870793000515e-21
+              },
+              {
+                "ell": 5,
+                "projected_relative_l2": 8.500888025063098e-09,
+                "max_absolute": 6.723107373991925e-31,
+                "reference_norm": 1.740671881780847e-22,
+                "input_j_mode_norm": 5.983293442608767e-22
+              }
+            ],
+            "samples": 257
+          },
+          {
+            "theta_l0": 2.0,
+            "zeta": 1.0,
+            "relative_l2": 1.035913171976961e-10,
+            "max_absolute": 5.811229503238303e-31,
+            "reference_norm": 1.2346870608476853e-20,
+            "input_j_mode_norm": 6.014317582269536e-20,
+            "per_ell": [
+              {
+                "ell": 2,
+                "projected_relative_l2": 3.5016913077881164e-16,
+                "max_absolute": 7.161838610469865e-37,
+                "reference_norm": 1.2340685507607298e-20,
+                "input_j_mode_norm": 5.972937117995809e-20
+              },
+              {
+                "ell": 3,
+                "projected_relative_l2": 4.899364687723912e-16,
+                "max_absolute": 2.4908278724110683e-37,
+                "reference_norm": 1.7899313917300267e-21,
+                "input_j_mode_norm": 6.737429534490838e-21
+              },
+              {
+                "ell": 4,
+                "projected_relative_l2": 7.858891174908925e-16,
+                "max_absolute": 2.454504264415502e-37,
+                "reference_norm": 6.251106196344789e-22,
+                "input_j_mode_norm": 1.962870793000515e-21
+              },
+              {
+                "ell": 5,
+                "projected_relative_l2": 6.772584086829584e-09,
+                "max_absolute": 5.81124421806099e-31,
+                "reference_norm": 1.8885387231613556e-22,
+                "input_j_mode_norm": 5.983293442608767e-22
+              }
+            ],
+            "samples": 257
+          }
+        ]
+      }
+    },
+    {
+      "case": "single_spin",
+      "backend": "torch",
+      "only22": 1,
+      "sample_rate_hz": 2048,
+      "modes": [
+        [
+          2,
+          -2
+        ],
+        [
+          2,
+          -1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          2
+        ]
+      ],
+      "views": [
+        {
+          "theta_jn": 0.3,
+          "zeta": 0.2,
+          "relative_l2": 3.9083573752099034e-16,
+          "max_absolute": 3.061705863802353e-36,
+          "reference_norm": 2.975984820867086e-20,
+          "input_mode_norm": 7.015060480157387e-20,
+          "samples": 257
+        },
+        {
+          "theta_jn": 1.1,
+          "zeta": -0.4,
+          "relative_l2": 3.64336960458419e-16,
+          "max_absolute": 1.3562576498905642e-36,
+          "reference_norm": 1.7032676034499615e-20,
+          "input_mode_norm": 7.015060480157387e-20,
+          "samples": 257
+        },
+        {
+          "theta_jn": 2.0,
+          "zeta": 1.0,
+          "relative_l2": 3.223636097888485e-16,
+          "max_absolute": 1.0128369294453764e-36,
+          "reference_norm": 1.60872487733456e-20,
+          "input_mode_norm": 7.015060480157387e-20,
+          "samples": 257
+        }
+      ],
+      "inverse_l0": {
+        "status": "skipped",
+        "reason": "f_ref differs from f_min=20 Hz; the first sample is not the reference orientation.",
+        "views": []
+      }
+    },
+    {
+      "case": "single_spin",
+      "backend": "jax",
+      "only22": 1,
+      "sample_rate_hz": 2048,
+      "modes": [
+        [
+          2,
+          -2
+        ],
+        [
+          2,
+          -1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          2
+        ]
+      ],
+      "views": [
+        {
+          "theta_jn": 0.3,
+          "zeta": 0.2,
+          "relative_l2": 3.645525359362897e-16,
+          "max_absolute": 2.795996773025386e-36,
+          "reference_norm": 2.975984820867086e-20,
+          "input_mode_norm": 7.015060480157387e-20,
+          "samples": 257
+        },
+        {
+          "theta_jn": 1.1,
+          "zeta": -0.4,
+          "relative_l2": 2.969720129267263e-16,
+          "max_absolute": 1.3064391542970632e-36,
+          "reference_norm": 1.7032676034499615e-20,
+          "input_mode_norm": 7.015060480157387e-20,
+          "samples": 257
+        },
+        {
+          "theta_jn": 2.0,
+          "zeta": 1.0,
+          "relative_l2": 3.1864496238437876e-16,
+          "max_absolute": 1.0128369294453764e-36,
+          "reference_norm": 1.60872487733456e-20,
+          "input_mode_norm": 7.015060480157387e-20,
+          "samples": 257
+        }
+      ],
+      "inverse_l0": {
+        "status": "skipped",
+        "reason": "f_ref differs from f_min=20 Hz; the first sample is not the reference orientation.",
+        "views": []
+      }
+    },
+    {
+      "case": "single_spin",
+      "backend": "torch",
+      "only22": 0,
+      "sample_rate_hz": 2048,
+      "modes": [
+        [
+          2,
+          -2
+        ],
+        [
+          2,
+          -1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          -3
+        ],
+        [
+          3,
+          -2
+        ],
+        [
+          3,
+          -1
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          3,
+          2
+        ],
+        [
+          3,
+          3
+        ],
+        [
+          4,
+          -4
+        ],
+        [
+          4,
+          -3
+        ],
+        [
+          4,
+          -2
+        ],
+        [
+          4,
+          -1
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          1
+        ],
+        [
+          4,
+          2
+        ],
+        [
+          4,
+          3
+        ],
+        [
+          4,
+          4
+        ],
+        [
+          5,
+          -5
+        ],
+        [
+          5,
+          -4
+        ],
+        [
+          5,
+          -3
+        ],
+        [
+          5,
+          -2
+        ],
+        [
+          5,
+          -1
+        ],
+        [
+          5,
+          0
+        ],
+        [
+          5,
+          1
+        ],
+        [
+          5,
+          2
+        ],
+        [
+          5,
+          3
+        ],
+        [
+          5,
+          4
+        ],
+        [
+          5,
+          5
+        ]
+      ],
+      "views": [
+        {
+          "theta_jn": 0.3,
+          "zeta": 0.2,
+          "relative_l2": 5.753581668565127e-16,
+          "max_absolute": 4.5295444487240404e-36,
+          "reference_norm": 2.978641731512997e-20,
+          "input_mode_norm": 7.036358345250498e-20,
+          "samples": 257
+        },
+        {
+          "theta_jn": 1.1,
+          "zeta": -0.4,
+          "relative_l2": 5.793009889835158e-16,
+          "max_absolute": 2.2034170494095697e-36,
+          "reference_norm": 1.7161911281478645e-20,
+          "input_mode_norm": 7.036358345250498e-20,
+          "samples": 257
+        },
+        {
+          "theta_jn": 2.0,
+          "zeta": 1.0,
+          "relative_l2": 5.539992574189213e-16,
+          "max_absolute": 2.73847297542871e-36,
+          "reference_norm": 1.6178853246196038e-20,
+          "input_mode_norm": 7.036358345250498e-20,
+          "samples": 257
+        }
+      ],
+      "inverse_l0": {
+        "status": "skipped",
+        "reason": "f_ref differs from f_min=20 Hz; the first sample is not the reference orientation.",
+        "views": []
+      }
+    },
+    {
+      "case": "single_spin",
+      "backend": "jax",
+      "only22": 0,
+      "sample_rate_hz": 2048,
+      "modes": [
+        [
+          2,
+          -2
+        ],
+        [
+          2,
+          -1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          -3
+        ],
+        [
+          3,
+          -2
+        ],
+        [
+          3,
+          -1
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          3,
+          2
+        ],
+        [
+          3,
+          3
+        ],
+        [
+          4,
+          -4
+        ],
+        [
+          4,
+          -3
+        ],
+        [
+          4,
+          -2
+        ],
+        [
+          4,
+          -1
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          1
+        ],
+        [
+          4,
+          2
+        ],
+        [
+          4,
+          3
+        ],
+        [
+          4,
+          4
+        ],
+        [
+          5,
+          -5
+        ],
+        [
+          5,
+          -4
+        ],
+        [
+          5,
+          -3
+        ],
+        [
+          5,
+          -2
+        ],
+        [
+          5,
+          -1
+        ],
+        [
+          5,
+          0
+        ],
+        [
+          5,
+          1
+        ],
+        [
+          5,
+          2
+        ],
+        [
+          5,
+          3
+        ],
+        [
+          5,
+          4
+        ],
+        [
+          5,
+          5
+        ]
+      ],
+      "views": [
+        {
+          "theta_jn": 0.3,
+          "zeta": 0.2,
+          "relative_l2": 5.531991347579007e-16,
+          "max_absolute": 4.2557441367701404e-36,
+          "reference_norm": 2.978641731512997e-20,
+          "input_mode_norm": 7.036358345250498e-20,
+          "samples": 257
+        },
+        {
+          "theta_jn": 1.1,
+          "zeta": -0.4,
+          "relative_l2": 5.480755323081511e-16,
+          "max_absolute": 2.2691608494314877e-36,
+          "reference_norm": 1.7161911281478645e-20,
+          "input_mode_norm": 7.036358345250498e-20,
+          "samples": 257
+        },
+        {
+          "theta_jn": 2.0,
+          "zeta": 1.0,
+          "relative_l2": 5.431784909061659e-16,
+          "max_absolute": 2.6598400854813376e-36,
+          "reference_norm": 1.6178853246196038e-20,
+          "input_mode_norm": 7.036358345250498e-20,
+          "samples": 257
+        }
+      ],
+      "inverse_l0": {
+        "status": "skipped",
+        "reason": "f_ref differs from f_min=20 Hz; the first sample is not the reference orientation.",
+        "views": []
+      }
+    },
+    {
+      "case": "equal_mass",
+      "backend": "torch",
+      "only22": 1,
+      "sample_rate_hz": 2048,
+      "modes": [
+        [
+          2,
+          -2
+        ],
+        [
+          2,
+          -1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          2
+        ]
+      ],
+      "views": [
+        {
+          "theta_jn": 0.3,
+          "zeta": 0.2,
+          "relative_l2": 4.1116270289505194e-16,
+          "max_absolute": 4.0687729496716926e-36,
+          "reference_norm": 3.657636927660911e-20,
+          "input_mode_norm": 8.582322006868124e-20,
+          "samples": 257
+        },
+        {
+          "theta_jn": 1.1,
+          "zeta": -0.4,
+          "relative_l2": 4.056980583088363e-16,
+          "max_absolute": 2.2723935502320652e-36,
+          "reference_norm": 2.0545765860407003e-20,
+          "input_mode_norm": 8.582322006868124e-20,
+          "samples": 257
+        },
+        {
+          "theta_jn": 2.0,
+          "zeta": 1.0,
+          "relative_l2": 3.59626418706097e-16,
+          "max_absolute": 1.550939958642289e-36,
+          "reference_norm": 1.9635728887380285e-20,
+          "input_mode_norm": 8.582322006868124e-20,
+          "samples": 257
+        }
+      ],
+      "inverse_l0": {
+        "status": "measured",
+        "reason": "Full signed-mode inverse residual is reported for diagnosis; no full-mode accuracy gate is claimed.",
+        "views": [
+          {
+            "theta_l0": 0.3,
+            "zeta": 0.2,
+            "relative_l2": 1.8158730123170893e-16,
+            "max_absolute": 1.3562576498905642e-36,
+            "reference_norm": 3.677362088971583e-20,
+            "input_j_mode_norm": 8.582322006868122e-20,
+            "per_ell": [
+              {
+                "ell": 2,
+                "projected_relative_l2": 1.8158730123170893e-16,
+                "max_absolute": 1.3562576498905642e-36,
+                "reference_norm": 3.677362088971583e-20,
+                "input_j_mode_norm": 8.582322006868122e-20
+              }
+            ],
+            "samples": 257
+          },
+          {
+            "theta_l0": 1.1,
+            "zeta": -0.4,
+            "relative_l2": 1.705522279906762e-16,
+            "max_absolute": 1.0639360341925351e-36,
+            "reference_norm": 2.0969184676870007e-20,
+            "input_j_mode_norm": 8.582322006868122e-20,
+            "per_ell": [
+              {
+                "ell": 2,
+                "projected_relative_l2": 1.705522279906762e-16,
+                "max_absolute": 1.0639360341925351e-36,
+                "reference_norm": 2.0969184676870007e-20,
+                "input_j_mode_norm": 8.582322006868122e-20
+              }
+            ],
+            "samples": 257
+          },
+          {
+            "theta_l0": 2.0,
+            "zeta": 1.0,
+            "relative_l2": 3.1835626031704995e-16,
+            "max_absolute": 1.999308216205884e-36,
+            "reference_norm": 1.9230620935965472e-20,
+            "input_j_mode_norm": 8.582322006868122e-20,
+            "per_ell": [
+              {
+                "ell": 2,
+                "projected_relative_l2": 3.1835626031704995e-16,
+                "max_absolute": 1.999308216205884e-36,
+                "reference_norm": 1.9230620935965472e-20,
+                "input_j_mode_norm": 8.582322006868122e-20
+              }
+            ],
+            "samples": 257
+          }
+        ]
+      }
+    },
+    {
+      "case": "equal_mass",
+      "backend": "jax",
+      "only22": 1,
+      "sample_rate_hz": 2048,
+      "modes": [
+        [
+          2,
+          -2
+        ],
+        [
+          2,
+          -1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          2
+        ]
+      ],
+      "views": [
+        {
+          "theta_jn": 0.3,
+          "zeta": 0.2,
+          "relative_l2": 3.791498138023589e-16,
+          "max_absolute": 3.2138970035280715e-36,
+          "reference_norm": 3.657636927660911e-20,
+          "input_mode_norm": 8.582322006868124e-20,
+          "samples": 257
+        },
+        {
+          "theta_jn": 1.1,
+          "zeta": -0.4,
+          "relative_l2": 3.2187277473301435e-16,
+          "max_absolute": 2.25756895807235e-36,
+          "reference_norm": 2.0545765860407003e-20,
+          "input_mode_norm": 8.582322006868124e-20,
+          "samples": 257
+        },
+        {
+          "theta_jn": 2.0,
+          "zeta": 1.0,
+          "relative_l2": 3.3999739116541565e-16,
+          "max_absolute": 1.9636034115324017e-36,
+          "reference_norm": 1.9635728887380285e-20,
+          "input_mode_norm": 8.582322006868124e-20,
+          "samples": 257
+        }
+      ],
+      "inverse_l0": {
+        "status": "measured",
+        "reason": "Full signed-mode inverse residual is reported for diagnosis; no full-mode accuracy gate is claimed.",
+        "views": [
+          {
+            "theta_l0": 0.3,
+            "zeta": 0.2,
+            "relative_l2": 1.7742373303307093e-16,
+            "max_absolute": 1.6069485017640358e-36,
+            "reference_norm": 3.677362088971583e-20,
+            "input_j_mode_norm": 8.582322006868122e-20,
+            "per_ell": [
+              {
+                "ell": 2,
+                "projected_relative_l2": 1.7742373303307093e-16,
+                "max_absolute": 1.6069485017640358e-36,
+                "reference_norm": 3.677362088971583e-20,
+                "input_j_mode_norm": 8.582322006868122e-20
+              }
+            ],
+            "samples": 257
+          },
+          {
+            "theta_l0": 1.1,
+            "zeta": -0.4,
+            "relative_l2": 2.799729683186279e-16,
+            "max_absolute": 1.51123045961151e-36,
+            "reference_norm": 2.0969184676870007e-20,
+            "input_j_mode_norm": 8.582322006868122e-20,
+            "per_ell": [
+              {
+                "ell": 2,
+                "projected_relative_l2": 2.799729683186279e-16,
+                "max_absolute": 1.51123045961151e-36,
+                "reference_norm": 2.0969184676870007e-20,
+                "input_j_mode_norm": 8.582322006868122e-20
+              }
+            ],
+            "samples": 257
+          },
+          {
+            "theta_l0": 2.0,
+            "zeta": 1.0,
+            "relative_l2": 4.00152974176141e-16,
+            "max_absolute": 2.5303454504675246e-36,
+            "reference_norm": 1.9230620935965472e-20,
+            "input_j_mode_norm": 8.582322006868122e-20,
+            "per_ell": [
+              {
+                "ell": 2,
+                "projected_relative_l2": 4.00152974176141e-16,
+                "max_absolute": 2.5303454504675246e-36,
+                "reference_norm": 1.9230620935965472e-20,
+                "input_j_mode_norm": 8.582322006868122e-20
+              }
+            ],
+            "samples": 257
+          }
+        ]
+      }
+    },
+    {
+      "case": "equal_mass",
+      "backend": "torch",
+      "only22": 0,
+      "sample_rate_hz": 2048,
+      "modes": [
+        [
+          2,
+          -2
+        ],
+        [
+          2,
+          -1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          -3
+        ],
+        [
+          3,
+          -2
+        ],
+        [
+          3,
+          -1
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          3,
+          2
+        ],
+        [
+          3,
+          3
+        ],
+        [
+          4,
+          -4
+        ],
+        [
+          4,
+          -3
+        ],
+        [
+          4,
+          -2
+        ],
+        [
+          4,
+          -1
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          1
+        ],
+        [
+          4,
+          2
+        ],
+        [
+          4,
+          3
+        ],
+        [
+          4,
+          4
+        ],
+        [
+          5,
+          -5
+        ],
+        [
+          5,
+          -4
+        ],
+        [
+          5,
+          -3
+        ],
+        [
+          5,
+          -2
+        ],
+        [
+          5,
+          -1
+        ],
+        [
+          5,
+          0
+        ],
+        [
+          5,
+          1
+        ],
+        [
+          5,
+          2
+        ],
+        [
+          5,
+          3
+        ],
+        [
+          5,
+          4
+        ],
+        [
+          5,
+          5
+        ]
+      ],
+      "views": [
+        {
+          "theta_jn": 0.3,
+          "zeta": 0.2,
+          "relative_l2": 5.688321270386422e-16,
+          "max_absolute": 5.319680170962675e-36,
+          "reference_norm": 3.6599617738151646e-20,
+          "input_mode_norm": 8.587010274744054e-20,
+          "samples": 257
+        },
+        {
+          "theta_jn": 1.1,
+          "zeta": -0.4,
+          "relative_l2": 5.372324907206083e-16,
+          "max_absolute": 2.1278720683850702e-36,
+          "reference_norm": 2.072110984114079e-20,
+          "input_mode_norm": 8.587010274744054e-20,
+          "samples": 257
+        },
+        {
+          "theta_jn": 2.0,
+          "zeta": 1.0,
+          "relative_l2": 5.135018833870182e-16,
+          "max_absolute": 3.9272068230648034e-36,
+          "reference_norm": 1.9819759091443045e-20,
+          "input_mode_norm": 8.587010274744054e-20,
+          "samples": 257
+        }
+      ],
+      "inverse_l0": {
+        "status": "measured",
+        "reason": "Full signed-mode inverse residual is reported for diagnosis; no full-mode accuracy gate is claimed.",
+        "views": [
+          {
+            "theta_l0": 0.3,
+            "zeta": 0.2,
+            "relative_l2": 9.520970670504676e-16,
+            "max_absolute": 1.8118177794896162e-35,
+            "reference_norm": 3.6794299147080954e-20,
+            "input_j_mode_norm": 8.587010274744048e-20,
+            "per_ell": [
+              {
+                "ell": 2,
+                "projected_relative_l2": 2.00981332239852e-16,
+                "max_absolute": 1.6423301017539368e-36,
+                "reference_norm": 3.6783880372371824e-20,
+                "input_j_mode_norm": 8.584569369254546e-20
+              },
+              {
+                "ell": 3,
+                "projected_relative_l2": 2.1659691361059543e-16,
+                "max_absolute": 7.346839692639297e-39,
+                "reference_norm": 4.7770576698447496e-23,
+                "input_j_mode_norm": 3.0358970556442773e-22
+              },
+              {
+                "ell": 4,
+                "projected_relative_l2": 1.887280734009176e-16,
+                "max_absolute": 8.31200026712918e-39,
+                "reference_norm": 1.1336687324566323e-22,
+                "input_j_mode_norm": 2.0240080957383067e-21
+              },
+              {
+                "ell": 5,
+                "projected_relative_l2": 1.7799219834169666e-11,
+                "max_absolute": 1.2443620461003552e-35,
+                "reference_norm": 7.3626977209895e-25,
+                "input_j_mode_norm": 5.1427820451125734e-23
+              }
+            ],
+            "samples": 257
+          },
+          {
+            "theta_l0": 1.1,
+            "zeta": -0.4,
+            "relative_l2": 9.562574556934684e-16,
+            "max_absolute": 1.1458941776751784e-35,
+            "reference_norm": 2.1140781320246432e-20,
+            "input_j_mode_norm": 8.587010274744048e-20,
+            "per_ell": [
+              {
+                "ell": 2,
+                "projected_relative_l2": 1.8448890388790368e-16,
+                "max_absolute": 1.0639360341925351e-36,
+                "reference_norm": 2.1046625204793636e-20,
+                "input_j_mode_norm": 8.584569369254546e-20
+              },
+              {
+                "ell": 3,
+                "projected_relative_l2": 3.4756800557867e-16,
+                "max_absolute": 2.1191525779540066e-38,
+                "reference_norm": 9.783855090908541e-23,
+                "input_j_mode_norm": 3.0358970556442773e-22
+              },
+              {
+                "ell": 4,
+                "projected_relative_l2": 1.8099220602292346e-16,
+                "max_absolute": 5.256970551211242e-38,
+                "reference_norm": 6.899321156063414e-22,
+                "input_j_mode_norm": 2.0240080957383067e-21
+              },
+              {
+                "ell": 5,
+                "projected_relative_l2": 6.437931986628485e-13,
+                "max_absolute": 1.0531294190361425e-35,
+                "reference_norm": 1.7227595658322946e-23,
+                "input_j_mode_norm": 5.1427820451125734e-23
+              }
+            ],
+            "samples": 257
+          },
+          {
+            "theta_l0": 2.0,
+            "zeta": 1.0,
+            "relative_l2": 1.3078001927061252e-15,
+            "max_absolute": 2.0138520365089149e-35,
+            "reference_norm": 1.941820072646547e-20,
+            "input_j_mode_norm": 8.587010274744048e-20,
+            "per_ell": [
+              {
+                "ell": 2,
+                "projected_relative_l2": 3.421765224056519e-16,
+                "max_absolute": 1.6822305763875973e-36,
+                "reference_norm": 1.9321022105865117e-20,
+                "input_j_mode_norm": 8.584569369254546e-20
+              },
+              {
+                "ell": 3,
+                "projected_relative_l2": 6.267837679531081e-16,
+                "max_absolute": 5.021714068012612e-38,
+                "reference_norm": 9.196384737023592e-23,
+                "input_j_mode_norm": 3.0358970556442773e-22
+              },
+              {
+                "ell": 4,
+                "projected_relative_l2": 4.670454925751844e-16,
+                "max_absolute": 1.1089591526496586e-37,
+                "reference_norm": 6.810499465152215e-22,
+                "input_j_mode_norm": 2.0240080957383067e-21
+              },
+              {
+                "ell": 5,
+                "projected_relative_l2": 6.113598519473517e-13,
+                "max_absolute": 1.1060003652595138e-35,
+                "reference_norm": 1.9053672002869128e-23,
+                "input_j_mode_norm": 5.1427820451125734e-23
+              }
+            ],
+            "samples": 257
+          }
+        ]
+      }
+    },
+    {
+      "case": "equal_mass",
+      "backend": "jax",
+      "only22": 0,
+      "sample_rate_hz": 2048,
+      "modes": [
+        [
+          2,
+          -2
+        ],
+        [
+          2,
+          -1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          -3
+        ],
+        [
+          3,
+          -2
+        ],
+        [
+          3,
+          -1
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          3,
+          2
+        ],
+        [
+          3,
+          3
+        ],
+        [
+          4,
+          -4
+        ],
+        [
+          4,
+          -3
+        ],
+        [
+          4,
+          -2
+        ],
+        [
+          4,
+          -1
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          1
+        ],
+        [
+          4,
+          2
+        ],
+        [
+          4,
+          3
+        ],
+        [
+          4,
+          4
+        ],
+        [
+          5,
+          -5
+        ],
+        [
+          5,
+          -4
+        ],
+        [
+          5,
+          -3
+        ],
+        [
+          5,
+          -2
+        ],
+        [
+          5,
+          -1
+        ],
+        [
+          5,
+          0
+        ],
+        [
+          5,
+          1
+        ],
+        [
+          5,
+          2
+        ],
+        [
+          5,
+          3
+        ],
+        [
+          5,
+          4
+        ],
+        [
+          5,
+          5
+        ]
+      ],
+      "views": [
+        {
+          "theta_jn": 0.3,
+          "zeta": 0.2,
+          "relative_l2": 5.327818104053369e-16,
+          "max_absolute": 4.549026450239117e-36,
+          "reference_norm": 3.6599617738151646e-20,
+          "input_mode_norm": 8.587010274744054e-20,
+          "samples": 257
+        },
+        {
+          "theta_jn": 1.1,
+          "zeta": -0.4,
+          "relative_l2": 5.020935379483429e-16,
+          "max_absolute": 2.7125152997811284e-36,
+          "reference_norm": 2.072110984114079e-20,
+          "input_mode_norm": 8.587010274744054e-20,
+          "samples": 257
+        },
+        {
+          "theta_jn": 2.0,
+          "zeta": 1.0,
+          "relative_l2": 5.133465582604877e-16,
+          "max_absolute": 4.0513477177815057e-36,
+          "reference_norm": 1.9819759091443045e-20,
+          "input_mode_norm": 8.587010274744054e-20,
+          "samples": 257
+        }
+      ],
+      "inverse_l0": {
+        "status": "measured",
+        "reason": "Full signed-mode inverse residual is reported for diagnosis; no full-mode accuracy gate is claimed.",
+        "views": [
+          {
+            "theta_l0": 0.3,
+            "zeta": 0.2,
+            "relative_l2": 9.306433943198183e-16,
+            "max_absolute": 1.705619214265916e-35,
+            "reference_norm": 3.6794299147080954e-20,
+            "input_j_mode_norm": 8.587010274744048e-20,
+            "per_ell": [
+              {
+                "ell": 2,
+                "projected_relative_l2": 1.7816007894547269e-16,
+                "max_absolute": 1.5163421500797057e-36,
+                "reference_norm": 3.6783880372371824e-20,
+                "input_j_mode_norm": 8.584569369254546e-20
+              },
+              {
+                "ell": 3,
+                "projected_relative_l2": 2.719164923695443e-16,
+                "max_absolute": 8.846766501414141e-39,
+                "reference_norm": 4.7770576698447496e-23,
+                "input_j_mode_norm": 3.0358970556442773e-22
+              },
+              {
+                "ell": 4,
+                "projected_relative_l2": 1.9372387410408947e-16,
+                "max_absolute": 8.31200026712918e-39,
+                "reference_norm": 1.1336687324566323e-22,
+                "input_j_mode_norm": 2.0240080957383067e-21
+              },
+              {
+                "ell": 5,
+                "projected_relative_l2": 1.7799265015275068e-11,
+                "max_absolute": 1.2443655381821918e-35,
+                "reference_norm": 7.3626977209895e-25,
+                "input_j_mode_norm": 5.1427820451125734e-23
+              }
+            ],
+            "samples": 257
+          },
+          {
+            "theta_l0": 1.1,
+            "zeta": -0.4,
+            "relative_l2": 9.343364031176088e-16,
+            "max_absolute": 1.0232609117372454e-35,
+            "reference_norm": 2.1140781320246432e-20,
+            "input_j_mode_norm": 8.587010274744048e-20,
+            "per_ell": [
+              {
+                "ell": 2,
+                "projected_relative_l2": 2.9398751633980425e-16,
+                "max_absolute": 1.6822305763875973e-36,
+                "reference_norm": 2.1046625204793636e-20,
+                "input_j_mode_norm": 8.584569369254546e-20
+              },
+              {
+                "ell": 3,
+                "projected_relative_l2": 2.6934778604339056e-16,
+                "max_absolute": 1.662400053425836e-38,
+                "reference_norm": 9.783855090908541e-23,
+                "input_j_mode_norm": 3.0358970556442773e-22
+              },
+              {
+                "ell": 4,
+                "projected_relative_l2": 2.6660780326340235e-16,
+                "max_absolute": 6.649600213703344e-38,
+                "reference_norm": 6.899321156063414e-22,
+                "input_j_mode_norm": 2.0240080957383067e-21
+              },
+              {
+                "ell": 5,
+                "projected_relative_l2": 6.437195173740501e-13,
+                "max_absolute": 1.0529418983264834e-35,
+                "reference_norm": 1.7227595658322946e-23,
+                "input_j_mode_norm": 5.1427820451125734e-23
+              }
+            ],
+            "samples": 257
+          },
+          {
+            "theta_l0": 2.0,
+            "zeta": 1.0,
+            "relative_l2": 1.3434759627208328e-15,
+            "max_absolute": 2.0865763123157407e-35,
+            "reference_norm": 1.941820072646547e-20,
+            "input_j_mode_norm": 8.587010274744048e-20,
+            "per_ell": [
+              {
+                "ell": 2,
+                "projected_relative_l2": 4.255810956251772e-16,
+                "max_absolute": 2.445028249710358e-36,
+                "reference_norm": 1.9321022105865117e-20,
+                "input_j_mode_norm": 8.584569369254546e-20
+              },
+              {
+                "ell": 3,
+                "projected_relative_l2": 4.956819690707436e-16,
+                "max_absolute": 3.7172395252594516e-38,
+                "reference_norm": 9.196384737023592e-23,
+                "input_j_mode_norm": 3.0358970556442773e-22
+              },
+              {
+                "ell": 4,
+                "projected_relative_l2": 5.098057004766629e-16,
+                "max_absolute": 1.3142426378028104e-37,
+                "reference_norm": 6.810499465152215e-22,
+                "input_j_mode_norm": 2.0240080957383067e-21
+              },
+              {
+                "ell": 5,
+                "projected_relative_l2": 6.113425240611757e-13,
+                "max_absolute": 1.1060003652595138e-35,
+                "reference_norm": 1.9053672002869128e-23,
+                "input_j_mode_norm": 5.1427820451125734e-23
+              }
+            ],
+            "samples": 257
+          }
+        ]
+      }
+    },
+    {
+      "case": "high_mass_ratio",
+      "backend": "torch",
+      "only22": 1,
+      "sample_rate_hz": 2048,
+      "modes": [
+        [
+          2,
+          -2
+        ],
+        [
+          2,
+          -1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          2
+        ]
+      ],
+      "views": [
+        {
+          "theta_jn": 0.3,
+          "zeta": 0.2,
+          "relative_l2": 3.9723279223827813e-16,
+          "max_absolute": 1.3464414220772567e-36,
+          "reference_norm": 1.3948371624396383e-20,
+          "input_mode_norm": 3.3205540665873656e-20,
+          "samples": 257
+        },
+        {
+          "theta_jn": 1.1,
+          "zeta": -0.4,
+          "relative_l2": 3.875992004731481e-16,
+          "max_absolute": 5.720202393407231e-37,
+          "reference_norm": 8.12086091577688e-21,
+          "input_mode_norm": 3.3205540665873656e-20,
+          "samples": 257
+        },
+        {
+          "theta_jn": 2.0,
+          "zeta": 1.0,
+          "relative_l2": 3.345830220807995e-16,
+          "max_absolute": 6.021469094972465e-37,
+          "reference_norm": 7.713620122446143e-21,
+          "input_mode_norm": 3.3205540665873656e-20,
+          "samples": 257
+        }
+      ],
+      "inverse_l0": {
+        "status": "measured",
+        "reason": "Full signed-mode inverse residual is reported for diagnosis; no full-mode accuracy gate is claimed.",
+        "views": [
+          {
+            "theta_l0": 0.3,
+            "zeta": 0.2,
+            "relative_l2": 1.69958158306697e-16,
+            "max_absolute": 4.435836610598634e-37,
+            "reference_norm": 1.440709076569737e-20,
+            "input_j_mode_norm": 3.3205540665873656e-20,
+            "per_ell": [
+              {
+                "ell": 2,
+                "projected_relative_l2": 1.69958158306697e-16,
+                "max_absolute": 4.435836610598634e-37,
+                "reference_norm": 1.440709076569737e-20,
+                "input_j_mode_norm": 3.3205540665873656e-20
+              }
+            ],
+            "samples": 257
+          },
+          {
+            "theta_l0": 1.1,
+            "zeta": -0.4,
+            "relative_l2": 1.5448524278474466e-16,
+            "max_absolute": 2.350988701644575e-37,
+            "reference_norm": 9.519819786729689e-21,
+            "input_j_mode_norm": 3.3205540665873656e-20,
+            "per_ell": [
+              {
+                "ell": 2,
+                "projected_relative_l2": 1.5448524278474466e-16,
+                "max_absolute": 2.350988701644575e-37,
+                "reference_norm": 9.519819786729689e-21,
+                "input_j_mode_norm": 3.3205540665873656e-20
+              }
+            ],
+            "samples": 257
+          },
+          {
+            "theta_l0": 2.0,
+            "zeta": 1.0,
+            "relative_l2": 3.26386696876487e-16,
+            "max_absolute": 5.3196801709626755e-37,
+            "reference_norm": 6.5323226157448845e-21,
+            "input_j_mode_norm": 3.3205540665873656e-20,
+            "per_ell": [
+              {
+                "ell": 2,
+                "projected_relative_l2": 3.26386696876487e-16,
+                "max_absolute": 5.3196801709626755e-37,
+                "reference_norm": 6.5323226157448845e-21,
+                "input_j_mode_norm": 3.3205540665873656e-20
+              }
+            ],
+            "samples": 257
+          }
+        ]
+      }
+    },
+    {
+      "case": "high_mass_ratio",
+      "backend": "jax",
+      "only22": 1,
+      "sample_rate_hz": 2048,
+      "modes": [
+        [
+          2,
+          -2
+        ],
+        [
+          2,
+          -1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          2
+        ]
+      ],
+      "views": [
+        {
+          "theta_jn": 0.3,
+          "zeta": 0.2,
+          "relative_l2": 3.869162816865723e-16,
+          "max_absolute": 1.0513941102422483e-36,
+          "reference_norm": 1.3948371624396383e-20,
+          "input_mode_norm": 3.3205540665873656e-20,
+          "samples": 257
+        },
+        {
+          "theta_jn": 1.1,
+          "zeta": -0.4,
+          "relative_l2": 3.140320054355291e-16,
+          "max_absolute": 6.026056881615134e-37,
+          "reference_norm": 8.12086091577688e-21,
+          "input_mode_norm": 3.3205540665873656e-20,
+          "samples": 257
+        },
+        {
+          "theta_jn": 2.0,
+          "zeta": 1.0,
+          "relative_l2": 3.1747566152449764e-16,
+          "max_absolute": 4.898579397622451e-37,
+          "reference_norm": 7.713620122446143e-21,
+          "input_mode_norm": 3.3205540665873656e-20,
+          "samples": 257
+        }
+      ],
+      "inverse_l0": {
+        "status": "measured",
+        "reason": "Full signed-mode inverse residual is reported for diagnosis; no full-mode accuracy gate is claimed.",
+        "views": [
+          {
+            "theta_l0": 0.3,
+            "zeta": 0.2,
+            "relative_l2": 1.6919694923823748e-16,
+            "max_absolute": 4.205576440968993e-37,
+            "reference_norm": 1.440709076569737e-20,
+            "input_j_mode_norm": 3.3205540665873656e-20,
+            "per_ell": [
+              {
+                "ell": 2,
+                "projected_relative_l2": 1.6919694923823748e-16,
+                "max_absolute": 4.205576440968993e-37,
+                "reference_norm": 1.440709076569737e-20,
+                "input_j_mode_norm": 3.3205540665873656e-20
+              }
+            ],
+            "samples": 257
+          },
+          {
+            "theta_l0": 1.1,
+            "zeta": -0.4,
+            "relative_l2": 2.1899547473232743e-16,
+            "max_absolute": 4.70197740328915e-37,
+            "reference_norm": 9.519819786729689e-21,
+            "input_j_mode_norm": 3.3205540665873656e-20,
+            "per_ell": [
+              {
+                "ell": 2,
+                "projected_relative_l2": 2.1899547473232743e-16,
+                "max_absolute": 4.70197740328915e-37,
+                "reference_norm": 9.519819786729689e-21,
+                "input_j_mode_norm": 3.3205540665873656e-20
+              }
+            ],
+            "samples": 257
+          },
+          {
+            "theta_l0": 2.0,
+            "zeta": 1.0,
+            "relative_l2": 3.2235532427735907e-16,
+            "max_absolute": 5.20546275161626e-37,
+            "reference_norm": 6.5323226157448845e-21,
+            "input_j_mode_norm": 3.3205540665873656e-20,
+            "per_ell": [
+              {
+                "ell": 2,
+                "projected_relative_l2": 3.2235532427735907e-16,
+                "max_absolute": 5.20546275161626e-37,
+                "reference_norm": 6.5323226157448845e-21,
+                "input_j_mode_norm": 3.3205540665873656e-20
+              }
+            ],
+            "samples": 257
+          }
+        ]
+      }
+    },
+    {
+      "case": "high_mass_ratio",
+      "backend": "torch",
+      "only22": 0,
+      "sample_rate_hz": 2048,
+      "modes": [
+        [
+          2,
+          -2
+        ],
+        [
+          2,
+          -1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          -3
+        ],
+        [
+          3,
+          -2
+        ],
+        [
+          3,
+          -1
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          3,
+          2
+        ],
+        [
+          3,
+          3
+        ],
+        [
+          4,
+          -4
+        ],
+        [
+          4,
+          -3
+        ],
+        [
+          4,
+          -2
+        ],
+        [
+          4,
+          -1
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          1
+        ],
+        [
+          4,
+          2
+        ],
+        [
+          4,
+          3
+        ],
+        [
+          4,
+          4
+        ],
+        [
+          5,
+          -5
+        ],
+        [
+          5,
+          -4
+        ],
+        [
+          5,
+          -3
+        ],
+        [
+          5,
+          -2
+        ],
+        [
+          5,
+          -1
+        ],
+        [
+          5,
+          0
+        ],
+        [
+          5,
+          1
+        ],
+        [
+          5,
+          2
+        ],
+        [
+          5,
+          3
+        ],
+        [
+          5,
+          4
+        ],
+        [
+          5,
+          5
+        ]
+      ],
+      "views": [
+        {
+          "theta_jn": 0.3,
+          "zeta": 0.2,
+          "relative_l2": 5.874562281376403e-16,
+          "max_absolute": 2.071006217084368e-36,
+          "reference_norm": 1.405833357326126e-20,
+          "input_mode_norm": 3.4069248673063466e-20,
+          "samples": 257
+        },
+        {
+          "theta_jn": 1.1,
+          "zeta": -0.4,
+          "relative_l2": 7.128128529753002e-16,
+          "max_absolute": 1.698579168271515e-36,
+          "reference_norm": 8.591821625350258e-21,
+          "input_mode_norm": 3.4069248673063466e-20,
+          "samples": 257
+        },
+        {
+          "theta_jn": 2.0,
+          "zeta": 1.0,
+          "relative_l2": 7.4678003158313e-16,
+          "max_absolute": 1.8064407284917394e-36,
+          "reference_norm": 8.217822084479762e-21,
+          "input_mode_norm": 3.4069248673063466e-20,
+          "samples": 257
+        }
+      ],
+      "inverse_l0": {
+        "status": "measured",
+        "reason": "Full signed-mode inverse residual is reported for diagnosis; no full-mode accuracy gate is claimed.",
+        "views": [
+          {
+            "theta_l0": 0.3,
+            "zeta": 0.2,
+            "relative_l2": 8.069744912424537e-10,
+            "max_absolute": 3.686579563094992e-30,
+            "reference_norm": 1.4447049869538976e-20,
+            "input_j_mode_norm": 3.4069248673063466e-20,
+            "per_ell": [
+              {
+                "ell": 2,
+                "projected_relative_l2": 1.9272431195724264e-16,
+                "max_absolute": 7.754699793211446e-37,
+                "reference_norm": 1.4408613245797977e-20,
+                "input_j_mode_norm": 3.326654917008428e-20
+              },
+              {
+                "ell": 3,
+                "projected_relative_l2": 5.360206438061141e-16,
+                "max_absolute": 1.2758988097162341e-37,
+                "reference_norm": 1.0144436847080924e-21,
+                "input_j_mode_norm": 6.968807105666899e-21
+              },
+              {
+                "ell": 4,
+                "projected_relative_l2": 6.437558182100099e-16,
+                "max_absolute": 2.387228350066198e-38,
+                "reference_norm": 1.1766100978661892e-22,
+                "input_j_mode_norm": 2.197605869671317e-21
+              },
+              {
+                "ell": 5,
+                "projected_relative_l2": 7.372911849913149e-07,
+                "max_absolute": 3.6865814997014564e-30,
+                "reference_norm": 1.5812479068511443e-23,
+                "input_j_mode_norm": 8.103501878782097e-22
+              }
+            ],
+            "samples": 257
+          },
+          {
+            "theta_l0": 1.1,
+            "zeta": -0.4,
+            "relative_l2": 9.553833517300732e-10,
+            "max_absolute": 3.0162265799057096e-30,
+            "reference_norm": 9.983927277849255e-21,
+            "input_j_mode_norm": 3.4069248673063466e-20,
+            "per_ell": [
+              {
+                "ell": 2,
+                "projected_relative_l2": 1.6892415525300234e-16,
+                "max_absolute": 4.205576440968993e-37,
+                "reference_norm": 9.556541606055583e-21,
+                "input_j_mode_norm": 3.326654917008428e-20
+              },
+              {
+                "ell": 3,
+                "projected_relative_l2": 2.1639020537556863e-16,
+                "max_absolute": 1.3299200427406689e-37,
+                "reference_norm": 2.242412404344837e-21,
+                "input_j_mode_norm": 6.968807105666899e-21
+              },
+              {
+                "ell": 4,
+                "projected_relative_l2": 2.1627835117681122e-16,
+                "max_absolute": 5.256970551211242e-38,
+                "reference_norm": 6.98608528993099e-22,
+                "input_j_mode_norm": 2.197605869671317e-21
+              },
+              {
+                "ell": 5,
+                "projected_relative_l2": 3.839193488564692e-08,
+                "max_absolute": 3.0162263304393718e-30,
+                "reference_norm": 2.4845005185024545e-22,
+                "input_j_mode_norm": 8.103501878782097e-22
+              }
+            ],
+            "samples": 257
+          },
+          {
+            "theta_l0": 2.0,
+            "zeta": 1.0,
+            "relative_l2": 1.2367540959306128e-09,
+            "max_absolute": 2.7449922203718986e-30,
+            "reference_norm": 7.018962980809311e-21,
+            "input_j_mode_norm": 3.4069248673063466e-20,
+            "per_ell": [
+              {
+                "ell": 2,
+                "projected_relative_l2": 3.2895332362786845e-16,
+                "max_absolute": 5.48340080984573e-37,
+                "reference_norm": 6.5949114239855664e-21,
+                "input_j_mode_norm": 3.326654917008428e-20
+              },
+              {
+                "ell": 3,
+                "projected_relative_l2": 4.577511499139212e-16,
+                "max_absolute": 2.628485275605621e-37,
+                "reference_norm": 1.8731165363378798e-21,
+                "input_j_mode_norm": 6.968807105666899e-21
+              },
+              {
+                "ell": 4,
+                "projected_relative_l2": 6.015331802307362e-16,
+                "max_absolute": 1.6042375850908568e-37,
+                "reference_norm": 6.746338011502005e-22,
+                "input_j_mode_norm": 2.197605869671317e-21
+              },
+              {
+                "ell": 5,
+                "projected_relative_l2": 3.21518348419946e-08,
+                "max_absolute": 2.7449925293687176e-30,
+                "reference_norm": 2.699917979098083e-22,
+                "input_j_mode_norm": 8.103501878782097e-22
+              }
+            ],
+            "samples": 257
+          }
+        ]
+      }
+    },
+    {
+      "case": "high_mass_ratio",
+      "backend": "jax",
+      "only22": 0,
+      "sample_rate_hz": 2048,
+      "modes": [
+        [
+          2,
+          -2
+        ],
+        [
+          2,
+          -1
+        ],
+        [
+          2,
+          0
+        ],
+        [
+          2,
+          1
+        ],
+        [
+          2,
+          2
+        ],
+        [
+          3,
+          -3
+        ],
+        [
+          3,
+          -2
+        ],
+        [
+          3,
+          -1
+        ],
+        [
+          3,
+          0
+        ],
+        [
+          3,
+          1
+        ],
+        [
+          3,
+          2
+        ],
+        [
+          3,
+          3
+        ],
+        [
+          4,
+          -4
+        ],
+        [
+          4,
+          -3
+        ],
+        [
+          4,
+          -2
+        ],
+        [
+          4,
+          -1
+        ],
+        [
+          4,
+          0
+        ],
+        [
+          4,
+          1
+        ],
+        [
+          4,
+          2
+        ],
+        [
+          4,
+          3
+        ],
+        [
+          4,
+          4
+        ],
+        [
+          5,
+          -5
+        ],
+        [
+          5,
+          -4
+        ],
+        [
+          5,
+          -3
+        ],
+        [
+          5,
+          -2
+        ],
+        [
+          5,
+          -1
+        ],
+        [
+          5,
+          0
+        ],
+        [
+          5,
+          1
+        ],
+        [
+          5,
+          2
+        ],
+        [
+          5,
+          3
+        ],
+        [
+          5,
+          4
+        ],
+        [
+          5,
+          5
+        ]
+      ],
+      "views": [
+        {
+          "theta_jn": 0.3,
+          "zeta": 0.2,
+          "relative_l2": 5.771757389467884e-16,
+          "max_absolute": 1.6069485017640358e-36,
+          "reference_norm": 1.405833357326126e-20,
+          "input_mode_norm": 3.4069248673063466e-20,
+          "samples": 257
+        },
+        {
+          "theta_jn": 1.1,
+          "zeta": -0.4,
+          "relative_l2": 7.136209576177611e-16,
+          "max_absolute": 1.8289422883480005e-36,
+          "reference_norm": 8.591821625350258e-21,
+          "input_mode_norm": 3.4069248673063466e-20,
+          "samples": 257
+        },
+        {
+          "theta_jn": 2.0,
+          "zeta": 1.0,
+          "relative_l2": 7.388383263874641e-16,
+          "max_absolute": 1.8064407284917394e-36,
+          "reference_norm": 8.217822084479762e-21,
+          "input_mode_norm": 3.4069248673063466e-20,
+          "samples": 257
+        }
+      ],
+      "inverse_l0": {
+        "status": "measured",
+        "reason": "Full signed-mode inverse residual is reported for diagnosis; no full-mode accuracy gate is claimed.",
+        "views": [
+          {
+            "theta_l0": 0.3,
+            "zeta": 0.2,
+            "relative_l2": 8.069745071944589e-10,
+            "max_absolute": 3.6865796459553824e-30,
+            "reference_norm": 1.4447049869538976e-20,
+            "input_j_mode_norm": 3.4069248673063466e-20,
+            "per_ell": [
+              {
+                "ell": 2,
+                "projected_relative_l2": 1.800181015425144e-16,
+                "max_absolute": 5.720202393407231e-37,
+                "reference_norm": 1.4408613245797977e-20,
+                "input_j_mode_norm": 3.326654917008428e-20
+              },
+              {
+                "ell": 3,
+                "projected_relative_l2": 5.025035609430903e-16,
+                "max_absolute": 1.1987737265921855e-37,
+                "reference_norm": 1.0144436847080924e-21,
+                "input_j_mode_norm": 6.968807105666899e-21
+              },
+              {
+                "ell": 4,
+                "projected_relative_l2": 9.09843606953737e-16,
+                "max_absolute": 4.5885778196939295e-38,
+                "reference_norm": 1.1766100978661892e-22,
+                "input_j_mode_norm": 2.197605869671317e-21
+              },
+              {
+                "ell": 5,
+                "projected_relative_l2": 7.372911849055445e-07,
+                "max_absolute": 3.686581498809149e-30,
+                "reference_norm": 1.5812479068511443e-23,
+                "input_j_mode_norm": 8.103501878782097e-22
+              }
+            ],
+            "samples": 257
+          },
+          {
+            "theta_l0": 1.1,
+            "zeta": -0.4,
+            "relative_l2": 9.553833521954822e-10,
+            "max_absolute": 3.016226960344763e-30,
+            "reference_norm": 9.983927277849255e-21,
+            "input_j_mode_norm": 3.4069248673063466e-20,
+            "per_ell": [
+              {
+                "ell": 2,
+                "projected_relative_l2": 2.0477344057316634e-16,
+                "max_absolute": 5.9475832404151226e-37,
+                "reference_norm": 9.556541606055583e-21,
+                "input_j_mode_norm": 3.326654917008428e-20
+              },
+              {
+                "ell": 3,
+                "projected_relative_l2": 3.7908540590148993e-16,
+                "max_absolute": 2.1027882204844966e-37,
+                "reference_norm": 2.242412404344837e-21,
+                "input_j_mode_norm": 6.968807105666899e-21
+              },
+              {
+                "ell": 4,
+                "projected_relative_l2": 3.6439670312653553e-16,
+                "max_absolute": 1.0513941102422483e-37,
+                "reference_norm": 6.98608528993099e-22,
+                "input_j_mode_norm": 2.197605869671317e-21
+              },
+              {
+                "ell": 5,
+                "projected_relative_l2": 3.83919348602445e-08,
+                "max_absolute": 3.016226320350437e-30,
+                "reference_norm": 2.4845005185024545e-22,
+                "input_j_mode_norm": 8.103501878782097e-22
+              }
+            ],
+            "samples": 257
+          },
+          {
+            "theta_l0": 2.0,
+            "zeta": 1.0,
+            "relative_l2": 1.2367541133239186e-09,
+            "max_absolute": 2.744992181260827e-30,
+            "reference_norm": 7.018962980809311e-21,
+            "input_j_mode_norm": 3.4069248673063466e-20,
+            "per_ell": [
+              {
+                "ell": 2,
+                "projected_relative_l2": 3.4843252706639576e-16,
+                "max_absolute": 5.64237288394698e-37,
+                "reference_norm": 6.5949114239855664e-21,
+                "input_j_mode_norm": 3.326654917008428e-20
+              },
+              {
+                "ell": 3,
+                "projected_relative_l2": 4.3603490716131875e-16,
+                "max_absolute": 2.454504264415502e-37,
+                "reference_norm": 1.8731165363378798e-21,
+                "input_j_mode_norm": 6.968807105666899e-21
+              },
+              {
+                "ell": 4,
+                "projected_relative_l2": 6.769175812912301e-16,
+                "max_absolute": 1.970487600156485e-37,
+                "reference_norm": 6.746338011502005e-22,
+                "input_j_mode_norm": 2.197605869671317e-21
+              },
+              {
+                "ell": 5,
+                "projected_relative_l2": 3.2151834811787975e-08,
+                "max_absolute": 2.7449925260641728e-30,
+                "reference_norm": 2.699917979098083e-22,
+                "input_j_mode_norm": 8.103501878782097e-22
+              }
+            ],
+            "samples": 257
+          }
+        ]
+      }
+    }
+  ]
+}
