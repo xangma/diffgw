@@ -13,7 +13,8 @@ from dev.native_rom.reference.flux import (
     emitted_flux, factorized_22_amplitude, factorized_31_amplitude,
     factorized_42_amplitude,
     factorized_43_amplitude, factorized_55_amplitude, factorized_62_amplitude,
-    factorized_66_64_amplitudes, factorized_8_even_amplitudes,
+    factorized_54_52_amplitudes, factorized_66_64_amplitudes,
+    factorized_7_even_amplitudes, factorized_8_even_amplitudes,
     newtonian_22_mode,
 )
 from dev.native_rom.reference.hamiltonian import (
@@ -166,6 +167,38 @@ def test_factorized_55_newtonian_limit_and_mass_exchange():
         exchanged = factorized_55_amplitude(20, 30, "-.4", ".7", ".08", ".077", ".91", ".975")
         assert abs(forward-exchanged) < mp.mpf("1e-60")
         assert factorized_55_amplitude(20, 20, ".9", "-.9", ".08", ".077", ".91", ".975") == 0
+
+
+def test_factorized_54_52_newtonian_limits_and_mass_exchange():
+    with mp.workdps(70):
+        w, n = mp.mpf("1e-15"), mp.mpf("0.24")
+        c6 = mp.mpf("0.6")**5+mp.mpf("0.4")**5
+        constants = (mp.mpf(256)/1485*mp.sqrt(33*mp.pi),
+                     mp.mpf(16)/1485*mp.sqrt(11*mp.pi))
+        actual = factorized_54_52_amplitudes(30, 20, 0, 0, w, w, 3, 1)
+        assert all(abs(value/(constant*n*c6*w**2*3*w**(mp.mpf(1)/3))-1)
+                   < mp.mpf("1e-9") for value, constant in zip(actual, constants))
+        forward = factorized_54_52_amplitudes(30, 20, ".7", "-.4", ".08", ".077", 3, ".975")
+        exchanged = factorized_54_52_amplitudes(20, 30, "-.4", ".7", ".08", ".077", 3, ".975")
+        assert all(abs(a-b) < mp.mpf("1e-60") for a, b in zip(forward, exchanged))
+
+
+def test_factorized_7_even_newtonian_limits_and_spin_truncation():
+    with mp.workdps(70):
+        w, n = mp.mpf("1e-15"), mp.mpf("0.24")
+        c8 = mp.mpf("0.6")**7+mp.mpf("0.4")**7
+        constants = (mp.mpf(648)/25025*mp.sqrt(2145*mp.pi),
+                     mp.mpf(1024)/225225*mp.sqrt(330*mp.pi),
+                     mp.mpf(8)/45045*mp.sqrt(15*mp.pi))
+        actual = factorized_7_even_amplitudes(30, 20, 0, 0, w, w, 3, 1)
+        assert all(abs(value/(constant*n*c8*w**(mp.mpf(8)/3)*3*w**(mp.mpf(1)/3))-1)
+                   < mp.mpf("1e-9") for value, constant in zip(actual, constants))
+        forward = factorized_7_even_amplitudes(30, 20, ".7", "-.4", ".08", ".077", 3, ".975")
+        exchanged = factorized_7_even_amplitudes(20, 30, "-.4", ".7", ".08", ".077", 3, ".975")
+        assert all(abs(a-b) < mp.mpf("1e-60") for a, b in zip(forward, exchanged))
+        # The selected printed 1PN truncation has no explicit spin terms.
+        nonspin = factorized_7_even_amplitudes(30, 20, 0, 0, ".08", ".077", 3, ".975")
+        assert all(abs(a-b) < mp.mpf("1e-60") for a, b in zip(forward, nonspin))
 
 
 def test_factorized_31_newtonian_limit_exchange_and_equal_mass_spin():

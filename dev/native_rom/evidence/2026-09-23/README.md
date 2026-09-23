@@ -468,6 +468,14 @@ SEOBNRv4. Conditional scalar coverage is now 16 of 35 amplitudes. Nineteen
 remain without scalar references, and this does not close the full-flux,
 numerical-convergence, or whole-waveform qualification gates.
 
+Reference specification 0.8.6 adds J-source scalar checks for `(5,4)`,
+`(5,2)`, `(7,6)`, `(7,4)`, and `(7,2)` from the same pinned primary papers.
+Their Newtonian and mass-exchange limits and four frozen Torch rows per mode
+agree within floating precision. The `(5,4)` and `(5,2)` finite-mass spin
+completion is explicitly hybrid; the three `ℓ=7` checks use only the printed
+1PN truncation. Conditional scalar coverage is 21 of 35 amplitudes; fourteen
+remain, in addition to unresolved historical assembly and both-backend gates.
+
 The exact-hash [ODE](aligned_spin_nqc_matching_inputs_ode.json) and
 [grid](aligned_spin_nqc_matching_inputs_grid.json) NQC matching-input replays
 reconstruct the frozen amplitude and phase matrices and right-hand sides from

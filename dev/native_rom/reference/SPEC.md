@@ -1,4 +1,4 @@
-# SEOBNRv4 source specification: paper components 0.8.5
+# SEOBNRv4 source specification: paper components 0.8.6
 
 **Status: incomplete research specification.** This version establishes an
 independent executable source of truth for the components marked `executable`
@@ -132,6 +132,22 @@ remain conditional rather than historically established.
 [Pan Eq. (77h)](https://arxiv.org/html/1006.0431). Its Newtonian limit,
 mass-exchange symmetry, and four frozen Torch values agree. Its finite-mass
 spin completion remains a declared hybrid.
+`flux.factorized_54_52_amplitudes` checks the odd-parity `(5,4)` and `(5,2)`
+moduli with the angular-momentum source. [Damour--Iyer--Nagar Eqs. (105),
+(107)](https://arxiv.org/html/0811.2069) fix finite-mass 1PN terms;
+[Taracchini et al. Eqs. (53b), (53d)](https://arxiv.org/html/1202.0790)
+give nonspin 2PN terms, and [Pan Eqs. (77b), (77d)](https://arxiv.org/html/1006.0431)
+give test-particle spin terms. The latter use the declared finite-mass
+`chiK=(1-2nu)chiS+delta chiA` hybrid; its historical v4 use is unverified.
+Both Newtonian limits, exchange symmetry, and four frozen Torch rows agree.
+`flux.factorized_7_even_amplitudes` checks odd-parity `(7,6)`, `(7,4)`,
+and `(7,2)` with the angular-momentum source. Its finite-mass 1PN terms
+are [Damour--Iyer--Nagar Eqs. (116), (118), (120)](https://arxiv.org/html/0811.2069)
+and [Taracchini et al. Eqs. (55b), (55d), (55f)](https://arxiv.org/html/1202.0790).
+[Pan Eqs. (77i)--(77k)](https://arxiv.org/html/1006.0431) print no spin
+terms at this truncation. Newtonian limits, exchange symmetry, the selected
+spin truncation, and four frozen Torch rows agree; historical truncation
+and omitted higher-order physics remain open.
 `flux.factorized_8_even_amplitudes` adds `(8,8)`, `(8,6)`, `(8,4)`, and
 `(8,2)` from [Damour--Iyer--Nagar Eqs. (122), (124), (126), (128)](https://arxiv.org/html/0811.2069)
 and [Taracchini et al. Eqs. (56a), (56c), (56e), (56g)](https://arxiv.org/html/1202.0790).
@@ -181,7 +197,7 @@ with Torch for unequal-mass aligned spins and equal-mass unequal spins, without
 dividing by the mass difference. The papers do not print the complete
 assembled historical v4 `(2,1)` polynomial, so this component agreement
 does not establish its historical truncation or waveform parity.
-Torch composes all 35 supplied modes with the flux normalization, but 24
+Torch composes all 35 supplied modes with the flux normalization, but 14
 other modes lack scalar amplitude references, the complete historical `(2,1)`
 spin prescription is unresolved, and the high-`ell` spin truncation and JAX
 factorized-flux path still need independent checks. The JAX

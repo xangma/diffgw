@@ -2,8 +2,8 @@
 
 Bohé et al. 1611.03703v3 Eq. (9) sums both signs of m through ell=8.
 Reflection symmetry folds that into a positive-m sum with 1/(8*pi).
-The dominant and fifteen subdominant moduli have conditional scalar checks;
-19 modes have no scalar amplitude reference, and the complete historical
+The dominant and twenty subdominant moduli have conditional scalar checks;
+14 modes have no scalar amplitude reference, and the complete historical
 (2,1) spin prescription also remains unresolved.
 """
 
@@ -164,6 +164,77 @@ def factorized_55_amplitude(m1, m2, chi1, chi2, omega,
         newtonian = mp.mpf(125)/792*mp.sqrt(330*mp.pi)
         return +(newtonian*n*vphi**5*he*_tail_modulus(5, 5, w, hr)
                  *abs(x2**4-x1**4)*abs(rho)**5)
+
+
+def factorized_54_52_amplitudes(m1, m2, chi1, chi2, omega,
+                               omega_zero_radial, pphi, h_real, *, digits=60):
+    """Conditional J-source pre-NQC (5,4) and (5,2) moduli.
+
+    DIN 0811.2069v2 Eqs. (4)-(7), (16), (105), (107) give Newtonian
+    factors and finite-mass 1PN residuals. Taracchini 1202.0790v2
+    Eqs. (53b), (53d) give 2PN nonspin terms. Pan 1006.0431v2
+    Eqs. (77b), (77d) give test-particle spin terms. Applying those
+    terms to finite masses through q=chiK is an explicit hybrid choice.
+    """
+    with mp.workdps(digits):
+        m1, m2, s1, s2, w, w0, j, hr = map(
+            lambda value: mp.mpf(str(value)),
+            (m1, m2, chi1, chi2, omega, omega_zero_radial, pphi, h_real),
+        )
+        if min(m1, m2, w, w0, j, hr) <= 0 or max(abs(s1), abs(s2)) > 1:
+            raise ValueError("Require physical masses/spins and positive orbital inputs")
+        x1, x2 = m1/(m1+m2), m2/(m1+m2)
+        n, delta = x1*x2, x1-x2
+        q = (1-2*n)*(s1+s2)/2+delta*(s1-s2)/2
+        c6 = x1**5+x2**5
+        v, vphi = mp.root(w, 3), w*w0**(-mp.mpf(2)/3)
+        polynomials = (
+            (4, mp.mpf(256)/1485*mp.sqrt(33*mp.pi),
+             33320*n**3-127610*n**2+96019*n-17448,
+             mp.mpf(16213384)/15526875),
+            (2, mp.mpf(16)/1485*mp.sqrt(11*mp.pi),
+             21980*n**3-104930*n**2+84679*n-15828,
+             mp.mpf(7187914)/15526875),
+        )
+        common = n*c6*vphi**6*j*v
+        return tuple(+(constant*common*_tail_modulus(5, m, w, hr)
+                       *abs(1+polynomial/(13650*c6)*v**2-2*q/15*v**3
+                            +(2*q**2/5-nonspin_2pn)*v**4)**5)
+                     for m, constant, polynomial, nonspin_2pn in polynomials)
+
+
+def factorized_7_even_amplitudes(m1, m2, chi1, chi2, omega,
+                                 omega_zero_radial, pphi, h_real, *, digits=60):
+    """Conditional J-source pre-NQC (7,6), (7,4), (7,2) moduli.
+
+    DIN 0811.2069v2 Eqs. (4)-(7), (16), (116), (118), (120) and
+    Taracchini 1202.0790v2 Eqs. (55b), (55d), (55f) give the printed
+    1PN residuals. Pan 1006.0431v2 Eqs. (77i)-(77k) have no spin
+    term in this selected truncation; that does not prove one vanishes.
+    """
+    with mp.workdps(digits):
+        m1, m2, s1, s2, w, w0, j, hr = map(
+            lambda value: mp.mpf(str(value)),
+            (m1, m2, chi1, chi2, omega, omega_zero_radial, pphi, h_real),
+        )
+        if min(m1, m2, w, w0, j, hr) <= 0 or max(abs(s1), abs(s2)) > 1:
+            raise ValueError("Require physical masses/spins and positive orbital inputs")
+        x1, x2 = m1/(m1+m2), m2/(m1+m2)
+        n = x1*x2
+        c8 = x1**7+x2**7
+        v, vphi = mp.root(w, 3), w*w0**(-mp.mpf(2)/3)
+        polynomials = (
+            (6, mp.mpf(648)/25025*mp.sqrt(2145*mp.pi), 1666,
+             6104*n**4-29351*n**3+37828*n**2-16185*n+2144),
+            (4, mp.mpf(1024)/225225*mp.sqrt(330*mp.pi), 14994,
+             41076*n**4-217959*n**3+298872*n**2-131805*n+17756),
+            (2, mp.mpf(8)/45045*mp.sqrt(15*mp.pi), 14994,
+             32760*n**4-190239*n**3+273924*n**2-123489*n+16832),
+        )
+        common = n*c8*vphi**8*j*v
+        return tuple(+(constant*common*_tail_modulus(7, m, w, hr)
+                       *abs(1-polynomial/(denominator*c8)*v**2)**7)
+                     for m, constant, denominator, polynomial in polynomials)
 
 
 def factorized_31_amplitude(m1, m2, chi1, chi2, omega,
