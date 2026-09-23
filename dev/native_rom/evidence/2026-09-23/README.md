@@ -330,10 +330,44 @@ dev/native_rom/evidence/2026-09-23/hermite_local_nqc_fixed_restart_campaign.json
 dev/native_rom/evidence/2026-09-23/local_nqc_fixed_restart_whole_waveform.json
 --json-out /tmp/seobnrv4-peak-anchor.json`.
 
+The [inspiral residual profile](inspiral_residual_diagnostic.json) replays those
+same two native waveforms and the pinned public binary, verifying their hashes
+and the quadratic-peak metrics before partitioning the complex squared error.
+For `t<-20 M`, phase accounts for 94.07% of the nonspinning error and 96.19%
+of the aligned-spin error; the corresponding amplitude fractions are 5.93%
+and 3.81%. Ten-`M` bins show a time-dependent phase residual: the nonspinning
+mean moves from `-0.01442 rad` near `-225 M` to `+0.00761 rad` near `-75 M`;
+the aligned-spin mean rises to `+0.01471 rad` near `-100 M` and falls toward
+zero at the peak. Mode-frequency residuals change sign in both rows. This
+localizes the measured shape difference to inspiral phase evolution but does
+not identify whether initial conditions, Hamiltonian, flux, waveform phase,
+or numerical treatment is responsible. It remains a two-row diagnostic, with
+the aligned-spin numerical gate failed. Reproduce with `PYTHONPATH=src:. python
+-m dev.native_rom.diagnose_inspiral_residual --campaign
+dev/native_rom/evidence/2026-09-23/hermite_local_nqc_fixed_restart_campaign.json
+--whole-waveform
+dev/native_rom/evidence/2026-09-23/local_nqc_fixed_restart_whole_waveform.json
+--peak-anchor dev/native_rom/evidence/2026-09-23/peak_anchor_diagnostic.json
+--json-out /tmp/seobnrv4-inspiral-residual.json`.
+
+A separate audit of the [LAL SEOBNRv4 driver](https://lscsoft.docs.ligo.org/lalsuite/7.26/lalsimulation/_l_a_l_sim_i_m_r_spin_aligned_e_o_b_8c_source.html)
+and [factorized-flux source](https://lscsoft.docs.ligo.org/lalsuite/7.26/lalsimulation/_l_a_l_sim_i_m_r_spin_e_o_b_factorized_flux_8c_source.html)
+narrows one hypothesis: the flux routine can multiply its `(2,2)` mode by
+NQC, but the v4 driver initializes those coefficients to zero before orbital
+evolution and calculates waveform NQC afterward. Omission of a *nonzero*
+NQC factor in the native inspiral flux therefore does not explain this early
+v4 phase residual. This is a source audit, not a copied implementation rule
+or proof that the remaining 35-mode flux agrees. The
+[LAL initial-condition source](https://lscsoft.docs.ligo.org/lalsuite/7.26/lalsimulation/_l_a_l_sim_i_m_r_spin_e_o_b_initial_conditions_8c_source.html)
+also uses a particular circular-root and radial-momentum calculation; the
+paper-derived native initial state has not yet been checked against it with a
+controlled waveform ablation.
+
 The next numerical check is to localize the aligned-spin ODE sensitivity and
 grid nonmonotonicity, then extend convergence to parameter-boundary rows.
-Investigate residual whole-waveform shape differences without fitting
-correction coefficients to the LAL binary.
+Independently check initial conditions and the remaining Hamiltonian/flux
+components, then use controlled waveform ablations to investigate the phase
+residual without fitting correction coefficients to the LAL binary.
 The separate [paper-component reference](../../reference/SPEC.md) now checks
 the aligned-spin Hamiltonian and dominant pre-NQC `(2,2)` amplitude at selected
 points. The conditional quartic choice and remaining 34 flux amplitudes still

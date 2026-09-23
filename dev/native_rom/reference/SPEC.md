@@ -271,6 +271,15 @@ and amplitude budgets (`3.387e-6` and `1.466e-6`) and its grid monotonicity
 gate (complex error increases from `1.946e-8` to `1.114e-7`). The paired
 sampled-peak LAL difference is `0.01336093`, reduced to about `0.0078–0.0081`
 by sub-sample peak fitting, with a failed numerical prerequisite.
+With quadratic-power peak fits, the corresponding nonspinning difference is
+`0.006949`. In a replay of the same two frozen waveforms, inspiral
+(`t<-20 M`) squared complex error is 94.07%/96.19% phase-related
+(nonspinning/aligned), with time-dependent residual phase and frequency.
+This does not distinguish initial-data, Hamiltonian, flux, waveform-phase,
+or numerical causes. The [regional evidence](../evidence/2026-09-23/README.md)
+records the bins and the separate LAL source audit. In particular, the LAL
+v4 trajectory begins with zero NQC flux coefficients; omitting a nonzero NQC
+factor from the native inspiral flux cannot explain this early residual.
 The separate public-binary whole-waveform comparison
 compares only two rows and does not establish public-binary parity. The current
 generator and ROM work therefore stay on this development branch. Reference
