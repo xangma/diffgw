@@ -67,8 +67,14 @@ def _run(name, row, prior, plan):
     if plan["include_match_bracket"]:
         match_index = int(np.searchsorted(accepted_times, match_local, side="right")-1)
         indices.append(match_index)
-    if min(indices) < 0 or max(indices) >= intervals or len(set(indices)) != len(indices):
-        raise ValueError(f"{name} off-grid accepted brackets unavailable or duplicate")
+    if min(indices) < 0 or max(indices) >= intervals:
+        raise ValueError(f"{name} off-grid accepted brackets unavailable")
+    if plan["duplicate_bracket_rule"] != (
+        "If the match bracket equals a fractional-index bracket, evaluate it once and report "
+        "the unique selected indices in original order."
+    ):
+        raise ValueError("off-grid bracket duplicate rule differs from frozen plan")
+    indices = list(dict.fromkeys(indices))
     query = np.array([accepted_times[index]+fraction*(accepted_times[index+1]-accepted_times[index])
                       for index in indices for fraction in plan["within_bracket_fraction"]])
     field, _ = _physics(row)

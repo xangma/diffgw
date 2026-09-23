@@ -6,6 +6,7 @@
   "level": "ode_2",
   "accepted_bracket_index_fraction": [0.1, 0.5, 0.9],
   "include_match_bracket": true,
+  "duplicate_bracket_rule": "If the match bracket equals a fractional-index bracket, evaluate it once and report the unique selected indices in original order.",
   "within_bracket_fraction": [0.25, 0.5, 0.75],
   "dense_reference": {
     "solver": "scipy.integrate.solve_ivp:DOP853",
