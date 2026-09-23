@@ -2,9 +2,9 @@
 
 Bohé et al. 1611.03703v3 Eq. (9) sums both signs of m through ell=8.
 Reflection symmetry folds that into a positive-m sum with 1/(8*pi).
-The dominant and twenty subdominant moduli have conditional scalar checks;
-14 modes have no scalar amplitude reference, and the complete historical
-(2,1) spin prescription also remains unresolved.
+All 35 pre-NQC moduli have conditional scalar checks. Historical spin and
+high-ell truncations, including the complete (2,1) prescription, remain
+unresolved.
 """
 
 import mpmath as mp
@@ -235,6 +235,186 @@ def factorized_7_even_amplitudes(m1, m2, chi1, chi2, omega,
         return tuple(+(constant*common*_tail_modulus(7, m, w, hr)
                        *abs(1-polynomial/(denominator*c8)*v**2)**7)
                      for m, constant, denominator, polynomial in polynomials)
+
+
+def factorized_6_odd_amplitudes(m1, m2, chi1, chi2, omega,
+                                omega_zero_radial, pphi, h_real, *, digits=60):
+    """Conditional J-source pre-NQC (6,5), (6,3), and (6,1) moduli.
+
+    DIN 0811.2069v2 Eqs. (4)-(7), (16), (110), (112), (114) and
+    Taracchini 1202.0790v2 Eqs. (54b), (54d), (54f) fix the finite-mass
+    1PN terms. Pan 1006.0431v2 Eqs. (77f)-(77h) give test-particle
+    spin terms, extended here through q=chiK as a declared hybrid.
+    """
+    with mp.workdps(digits):
+        m1, m2, s1, s2, w, w0, j, hr = map(
+            lambda value: mp.mpf(str(value)),
+            (m1, m2, chi1, chi2, omega, omega_zero_radial, pphi, h_real),
+        )
+        if min(m1, m2, w, w0, j, hr) <= 0 or max(abs(s1), abs(s2)) > 1:
+            raise ValueError("Require physical masses/spins and positive orbital inputs")
+        x1, x2 = m1/(m1+m2), m2/(m1+m2)
+        n, delta = x1*x2, x1-x2
+        q = (1-2*n)*(s1+s2)/2+delta*(s1-s2)/2
+        c7 = x2**6-x1**6
+        v, vphi = mp.root(w, 3), w*w0**(-mp.mpf(2)/3)
+        polynomials = (
+            (5, mp.mpf(625)/27027*mp.sqrt(2145*mp.pi),
+             220*n**3-910*n**2+838*n-185),
+            (3, mp.mpf(81)/5005*mp.sqrt(13*mp.pi),
+             156*n**3-750*n**2+742*n-169),
+            (1, mp.sqrt(130*mp.pi)/135135,
+             124*n**3-670*n**2+694*n-161),
+        )
+        common = n*abs(c7)*vphi**7*j*v
+        return tuple(+(constant*common*_tail_modulus(6, m, w, hr)
+                       *abs(1+polynomial/(144*(1-4*n+3*n**2))*v**2
+                            -2*q/9*v**3)**6)
+                     for m, constant, polynomial in polynomials)
+
+
+def factorized_8_odd_amplitudes(m1, m2, chi1, chi2, omega,
+                                omega_zero_radial, pphi, h_real, *, digits=60):
+    """Conditional tabulated J-source pre-NQC (8,7),(8,5),(8,3),(8,1).
+
+    DIN 0811.2069v2 Eqs. (4)-(7), (16), (123), (125), (127), (129),
+    Taracchini 1202.0790v2 Eqs. (56b), (56d), (56f), (56h), and Pan
+    1006.0431v2 Eqs. (77l)-(77m) give the printed 1PN truncation.
+    No spin term is printed there; omitted terms need not vanish.
+    """
+    with mp.workdps(digits):
+        m1, m2, s1, s2, w, w0, j, hr = map(
+            lambda value: mp.mpf(str(value)),
+            (m1, m2, chi1, chi2, omega, omega_zero_radial, pphi, h_real),
+        )
+        if min(m1, m2, w, w0, j, hr) <= 0 or max(abs(s1), abs(s2)) > 1:
+            raise ValueError("Require physical masses/spins and positive orbital inputs")
+        x1, x2 = m1/(m1+m2), m2/(m1+m2)
+        n = x1*x2
+        c9 = x2**8-x1**8
+        v, vphi = mp.root(w, 3), w*w0**(-mp.mpf(2)/3)
+        polynomials = (
+            (7, mp.mpf(117649)/15752880*mp.sqrt(34034*mp.pi), 18240,
+             38920*n**4-207550*n**3+309498*n**2-154099*n+23478),
+            (5, mp.mpf(15625)/22054032*mp.sqrt(24310*mp.pi), 3648,
+             6056*n**4-34598*n**3+54642*n**2-28055*n+4350),
+            (3, mp.mpf(81)/1361360*mp.sqrt(1122*mp.pi), 18240,
+             24520*n**4-149950*n**3+249018*n**2-131059*n+20598),
+            (1, mp.sqrt(1190*mp.pi)/110270160, 18240,
+             21640*n**4-138430*n**3+236922*n**2-126451*n+20022),
+        )
+        common = n*abs(c9)*vphi**9*j*v
+        return tuple(+(constant*common*_tail_modulus(8, m, w, hr)
+                       *abs(1-polynomial/(denominator*(1-6*n+10*n**2-4*n**3))
+                            *v**2)**8)
+                     for m, constant, denominator, polynomial in polynomials)
+
+
+def factorized_41_amplitude(m1, m2, chi1, chi2, omega,
+                            omega_zero_radial, pphi, h_real, *, digits=60):
+    """Conditional regularized J-source pre-NQC (4,1) modulus.
+
+    DIN 0811.2069v2 Eqs. (4)-(7), (16), (103), Taracchini
+    1202.0790v2 Eq. (52d), and Pan 1006.0431v2 Eqs. (28i), (41i)
+    give the selected nonspin and spin terms. The finite-mass leading
+    spin term is kept outside c5, so equal-mass unequal-spin values
+    stay finite. The full historical v4 hybrid is unverified.
+    """
+    with mp.workdps(digits):
+        m1, m2, s1, s2, w, w0, j, hr = map(
+            lambda value: mp.mpf(str(value)),
+            (m1, m2, chi1, chi2, omega, omega_zero_radial, pphi, h_real),
+        )
+        if min(m1, m2, w, w0, j, hr) <= 0 or max(abs(s1), abs(s2)) > 1:
+            raise ValueError("Require physical masses/spins and positive orbital inputs")
+        x1, x2 = m1/(m1+m2), m2/(m1+m2)
+        n, delta = x1*x2, x1-x2
+        cs, ca = (s1+s2)/2, (s1-s2)/2
+        q = (1-2*n)*cs+delta*ca
+        c5 = x2**4-x1**4
+        v, vphi = mp.root(w, 3), w*w0**(-mp.mpf(2)/3)
+        el1 = mp.euler+mp.log(2*v)
+        rho = (1+(288*n**2-1385*n+602)/(528*(2*n-1))*v**2
+               -mp.mpf(7775491)/21141120*v**4
+               +(mp.mpf(1227423222031)/1758095539200-1571*el1/6930)*v**6)
+        residual = (c5*(rho**4+3*q**2/2*v**4
+                        -(10*q**3/3+mp.mpf(20033)*q/13860)*v**5)
+                    -5*n/2*(delta*cs-ca)*v)
+        return +(mp.sqrt(2*mp.pi)/105*n*vphi**5*j*v
+                 *_tail_modulus(4, 1, w, hr)*abs(residual))
+
+
+def factorized_53_51_amplitudes(m1, m2, chi1, chi2, omega,
+                                omega_zero_radial, h_eff, h_real, *, digits=60):
+    """Conditional H-source pre-NQC (5,3) and (5,1) moduli.
+
+    DIN 0811.2069v2 Eqs. (4)-(7), (106), (108), Taracchini
+    1202.0790v2 Eqs. (53c), (53e), and Pan 1006.0431v2 Eqs.
+    (77c), (77e) give the selected terms. Finite-mass use of
+    test-particle spin through q=chiK is a declared hybrid.
+    """
+    with mp.workdps(digits):
+        m1, m2, s1, s2, w, w0, he, hr = map(
+            lambda value: mp.mpf(str(value)),
+            (m1, m2, chi1, chi2, omega, omega_zero_radial, h_eff, h_real),
+        )
+        if min(m1, m2, w, w0, he, hr) <= 0 or max(abs(s1), abs(s2)) > 1:
+            raise ValueError("Require physical masses/spins and positive frequency/energy")
+        x1, x2 = m1/(m1+m2), m2/(m1+m2)
+        n, delta = x1*x2, x1-x2
+        q = (1-2*n)*(s1+s2)/2+delta*(s1-s2)/2
+        c5 = x2**4-x1**4
+        v, vphi = mp.root(w, 3), w*w0**(-mp.mpf(2)/3)
+        polynomials = (
+            (3, mp.mpf(9)/440*mp.sqrt(66*mp.pi),
+             176*n**2-850*n+375, mp.mpf(410833)/709800, -mp.mpf(103)/325),
+            (1, mp.sqrt(77*mp.pi)/13860,
+             8*n**2-626*n+319, mp.mpf(31877)/304200, mp.mpf(139)/975),
+        )
+        common = n*abs(c5)*vphi**5*he
+        return tuple(+(constant*common*_tail_modulus(5, m, w, hr)
+                       *abs(1+polynomial/(390*(2*n-1))*v**2
+                            -2*q/3*v**3+(q**2/2-nonspin_2pn)*v**4
+                            +spin_25pn*q*v**5)**5)
+                     for m, constant, polynomial, nonspin_2pn, spin_25pn in polynomials)
+
+
+def factorized_7_odd_amplitudes(m1, m2, chi1, chi2, omega,
+                                omega_zero_radial, h_eff, h_real, *, digits=60):
+    """Conditional H-source pre-NQC (7,7),(7,5),(7,3),(7,1) moduli.
+
+    DIN 0811.2069v2 Eqs. (4)-(7), (115), (117), (119), (121),
+    Taracchini 1202.0790v2 Eqs. (55a), (55c), (55e), (55g), and
+    Pan 1006.0431v2 Eqs. (77i)-(77k) fix the selected truncation.
+    Finite-mass use of test-particle spin is a declared hybrid.
+    """
+    with mp.workdps(digits):
+        m1, m2, s1, s2, w, w0, he, hr = map(
+            lambda value: mp.mpf(str(value)),
+            (m1, m2, chi1, chi2, omega, omega_zero_radial, h_eff, h_real),
+        )
+        if min(m1, m2, w, w0, he, hr) <= 0 or max(abs(s1), abs(s2)) > 1:
+            raise ValueError("Require physical masses/spins and positive frequency/energy")
+        x1, x2 = m1/(m1+m2), m2/(m1+m2)
+        n, delta = x1*x2, x1-x2
+        q = (1-2*n)*(s1+s2)/2+delta*(s1-s2)/2
+        c7 = x2**6-x1**6
+        v, vphi = mp.root(w, 3), w*w0**(-mp.mpf(2)/3)
+        polynomials = (
+            (7, mp.mpf(16807)/772200*mp.sqrt(30030*mp.pi),
+             1380*n**3-4963*n**2+4246*n-906),
+            (5, mp.mpf(3125)/216216*mp.sqrt(330*mp.pi),
+             804*n**3-3523*n**2+3382*n-762),
+            (3, mp.mpf(243)/200200*mp.sqrt(30*mp.pi),
+             420*n**3-2563*n**2+2806*n-666),
+            (1, mp.sqrt(10*mp.pi)/1081080,
+             228*n**3-2083*n**2+2518*n-618),
+        )
+        common = n*abs(c7)*vphi**7*he
+        return tuple(+(constant*common*_tail_modulus(7, m, w, hr)
+                       *abs(1+polynomial/(714*(1-4*n+3*n**2))*v**2
+                            -2*q/3*v**3)**7)
+                     for m, constant, polynomial in polynomials)
 
 
 def factorized_31_amplitude(m1, m2, chi1, chi2, omega,

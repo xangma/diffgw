@@ -3,13 +3,17 @@
 import pytest
 import torch
 
+from dev.native_rom.reference import flux as scalar_flux
 from dev.native_rom.reference.flux import (
     emitted_flux, factorized_22_amplitude, factorized_33_44_amplitudes,
     factorized_21_nonspin_amplitude, factorized_21_spin_amplitude,
     factorized_31_amplitude, factorized_32_amplitude, factorized_42_amplitude,
     factorized_43_amplitude, factorized_55_amplitude, factorized_62_amplitude,
     factorized_54_52_amplitudes, factorized_66_64_amplitudes,
-    factorized_7_even_amplitudes, factorized_8_even_amplitudes,
+    factorized_6_odd_amplitudes, factorized_7_even_amplitudes,
+    factorized_8_even_amplitudes, factorized_8_odd_amplitudes,
+    factorized_41_amplitude, factorized_53_51_amplitudes,
+    factorized_7_odd_amplitudes,
     newtonian_22_mode,
 )
 from dev.native_rom.reference.hamiltonian import (
@@ -157,6 +161,90 @@ def test_factorized_7_even_amplitudes_against_reference(m1, m2, s1, s2, w, w0, j
         x1=scalar(m1/(m1+m2)), x2=scalar(m2/(m1+m2)),
         chi1=scalar(s1), chi2=scalar(s2))
     for mode, value in zip(((7, 6), (7, 4), (7, 2)), expected):
+        assert float(modes[mode]) == pytest.approx(float(value), rel=3e-12, abs=2e-14)
+
+
+@pytest.mark.parametrize("m1,m2,s1,s2,w,w0,j,he,hr", [
+    (30., 20., 0., 0., .04, .039, 3., .95, .988),
+    (30., 20., .2, -.1, .06, .057, 3.2, .93, .981),
+    (45., 5., -.8, .3, .10, .095, 2.8, .89, .973),
+    (20., 20., -.9, .7, .08, .077, 3., .91, .975),
+])
+def test_factorized_6_odd_amplitudes_against_reference(m1, m2, s1, s2, w, w0, j, he, hr):
+    expected = factorized_6_odd_amplitudes(m1, m2, s1, s2, w, w0, j, hr)
+    modes = SEOBNRv4PublishedFlux(spin_truncation="tabulated").amplitudes(
+        scalar([9., 0., -.01, j]), omega=scalar(w), omega_zero_radial=scalar(w0),
+        heff_over_mu=scalar(he), hreal_over_M=scalar(hr),
+        x1=scalar(m1/(m1+m2)), x2=scalar(m2/(m1+m2)),
+        chi1=scalar(s1), chi2=scalar(s2))
+    for mode, value in zip(((6, 5), (6, 3), (6, 1)), expected):
+        assert float(modes[mode]) == pytest.approx(float(value), rel=3e-12, abs=2e-14)
+
+
+@pytest.mark.parametrize("m1,m2,s1,s2,w,w0,j,he,hr", [
+    (30., 20., 0., 0., .04, .039, 3., .95, .988),
+    (30., 20., .2, -.1, .06, .057, 3.2, .93, .981),
+    (45., 5., -.8, .3, .10, .095, 2.8, .89, .973),
+    (20., 20., -.9, .7, .08, .077, 3., .91, .975),
+])
+def test_factorized_8_odd_amplitudes_against_reference(m1, m2, s1, s2, w, w0, j, he, hr):
+    expected = factorized_8_odd_amplitudes(m1, m2, s1, s2, w, w0, j, hr)
+    modes = SEOBNRv4PublishedFlux(spin_truncation="tabulated").amplitudes(
+        scalar([9., 0., -.01, j]), omega=scalar(w), omega_zero_radial=scalar(w0),
+        heff_over_mu=scalar(he), hreal_over_M=scalar(hr),
+        x1=scalar(m1/(m1+m2)), x2=scalar(m2/(m1+m2)),
+        chi1=scalar(s1), chi2=scalar(s2))
+    for mode, value in zip(((8, 7), (8, 5), (8, 3), (8, 1)), expected):
+        assert float(modes[mode]) == pytest.approx(float(value), rel=3e-12, abs=2e-14)
+
+
+@pytest.mark.parametrize("m1,m2,s1,s2,w,w0,j,he,hr", [
+    (30., 20., 0., 0., .04, .039, 3., .95, .988),
+    (30., 20., .2, -.1, .06, .057, 3.2, .93, .981),
+    (45., 5., -.8, .3, .10, .095, 2.8, .89, .973),
+    (20., 20., -.9, .7, .08, .077, 3., .91, .975),
+])
+def test_factorized_41_amplitude_against_reference(m1, m2, s1, s2, w, w0, j, he, hr):
+    expected = factorized_41_amplitude(m1, m2, s1, s2, w, w0, j, hr)
+    modes = SEOBNRv4PublishedFlux(spin_truncation="tabulated").amplitudes(
+        scalar([9., 0., -.01, j]), omega=scalar(w), omega_zero_radial=scalar(w0),
+        heff_over_mu=scalar(he), hreal_over_M=scalar(hr),
+        x1=scalar(m1/(m1+m2)), x2=scalar(m2/(m1+m2)),
+        chi1=scalar(s1), chi2=scalar(s2))
+    assert float(modes[4, 1]) == pytest.approx(float(expected), rel=3e-12, abs=2e-14)
+
+
+@pytest.mark.parametrize("m1,m2,s1,s2,w,w0,j,he,hr", [
+    (30., 20., 0., 0., .04, .039, 3., .95, .988),
+    (30., 20., .2, -.1, .06, .057, 3.2, .93, .981),
+    (45., 5., -.8, .3, .10, .095, 2.8, .89, .973),
+    (20., 20., -.9, .7, .08, .077, 3., .91, .975),
+])
+def test_factorized_53_51_amplitudes_against_reference(m1, m2, s1, s2, w, w0, j, he, hr):
+    expected = factorized_53_51_amplitudes(m1, m2, s1, s2, w, w0, he, hr)
+    modes = SEOBNRv4PublishedFlux(spin_truncation="tabulated").amplitudes(
+        scalar([9., 0., -.01, j]), omega=scalar(w), omega_zero_radial=scalar(w0),
+        heff_over_mu=scalar(he), hreal_over_M=scalar(hr),
+        x1=scalar(m1/(m1+m2)), x2=scalar(m2/(m1+m2)),
+        chi1=scalar(s1), chi2=scalar(s2))
+    for mode, value in zip(((5, 3), (5, 1)), expected):
+        assert float(modes[mode]) == pytest.approx(float(value), rel=3e-12, abs=2e-14)
+
+
+@pytest.mark.parametrize("m1,m2,s1,s2,w,w0,j,he,hr", [
+    (30., 20., 0., 0., .04, .039, 3., .95, .988),
+    (30., 20., .2, -.1, .06, .057, 3.2, .93, .981),
+    (45., 5., -.8, .3, .10, .095, 2.8, .89, .973),
+    (20., 20., -.9, .7, .08, .077, 3., .91, .975),
+])
+def test_factorized_7_odd_amplitudes_against_reference(m1, m2, s1, s2, w, w0, j, he, hr):
+    expected = factorized_7_odd_amplitudes(m1, m2, s1, s2, w, w0, he, hr)
+    modes = SEOBNRv4PublishedFlux(spin_truncation="tabulated").amplitudes(
+        scalar([9., 0., -.01, j]), omega=scalar(w), omega_zero_radial=scalar(w0),
+        heff_over_mu=scalar(he), hreal_over_M=scalar(hr),
+        x1=scalar(m1/(m1+m2)), x2=scalar(m2/(m1+m2)),
+        chi1=scalar(s1), chi2=scalar(s2))
+    for mode, value in zip(((7, 7), (7, 5), (7, 3), (7, 1)), expected):
         assert float(modes[mode]) == pytest.approx(float(value), rel=3e-12, abs=2e-14)
 
 
@@ -376,6 +464,51 @@ def test_35_mode_flux_composition_against_reference():
     assert len(modes) == 35
     expected = emitted_flux(float(args["omega"]), {key: float(value) for key, value in modes.items()})
     assert float(flux.energy_flux(state, **args)) == pytest.approx(float(expected), rel=2e-13)
+
+
+def test_35_mode_flux_from_independent_scalar_amplitudes():
+    """Compose all declared paper mode oracles, including the weak modes."""
+    m1, m2, s1, s2 = 30., 20., .2, -.1
+    w, w0, j, he, hr = .06, .057, 3.2, .93, .981
+    base = (m1, m2, s1, s2, w, w0)
+    h_args, j_args = (*base, he, hr), (*base, j, hr)
+    ref = {
+        (2, 2): scalar_flux.factorized_22_amplitude(*h_args),
+        (2, 1): scalar_flux.factorized_21_spin_amplitude(*j_args),
+        (3, 1): scalar_flux.factorized_31_amplitude(*h_args),
+        (3, 2): scalar_flux.factorized_32_amplitude(*j_args),
+        (4, 1): scalar_flux.factorized_41_amplitude(*j_args),
+        (4, 2): scalar_flux.factorized_42_amplitude(*h_args),
+        (4, 3): scalar_flux.factorized_43_amplitude(*j_args),
+        (5, 5): scalar_flux.factorized_55_amplitude(*h_args),
+        (6, 2): scalar_flux.factorized_62_amplitude(*h_args),
+    }
+    grouped = (
+        (((3, 3), (4, 4)), scalar_flux.factorized_33_44_amplitudes(*h_args)),
+        (((5, 4), (5, 2)), scalar_flux.factorized_54_52_amplitudes(*j_args)),
+        (((5, 3), (5, 1)), scalar_flux.factorized_53_51_amplitudes(*h_args)),
+        (((6, 6), (6, 4)), scalar_flux.factorized_66_64_amplitudes(*h_args)),
+        (((6, 5), (6, 3), (6, 1)), scalar_flux.factorized_6_odd_amplitudes(*j_args)),
+        (((7, 7), (7, 5), (7, 3), (7, 1)), scalar_flux.factorized_7_odd_amplitudes(*h_args)),
+        (((7, 6), (7, 4), (7, 2)), scalar_flux.factorized_7_even_amplitudes(*j_args)),
+        (((8, 8), (8, 6), (8, 4), (8, 2)),
+         scalar_flux.factorized_8_even_amplitudes(*h_args, spin_truncation="tabulated")),
+        (((8, 7), (8, 5), (8, 3), (8, 1)), scalar_flux.factorized_8_odd_amplitudes(*j_args)),
+    )
+    for keys, values in grouped:
+        ref.update(zip(keys, values))
+    assert len(ref) == 35
+    flux = SEOBNRv4PublishedFlux(spin_truncation="tabulated")
+    state = scalar([9., 0., -.01, j])
+    args = dict(omega=scalar(w), omega_zero_radial=scalar(w0),
+                heff_over_mu=scalar(he), hreal_over_M=scalar(hr),
+                x1=scalar(m1/(m1+m2)), x2=scalar(m2/(m1+m2)),
+                chi1=scalar(s1), chi2=scalar(s2))
+    actual_modes = flux.amplitudes(state, **args)
+    assert set(actual_modes) == set(ref)
+    expected_flux = scalar_flux.emitted_flux(w, ref)
+    assert float(flux.energy_flux(state, **args)) == pytest.approx(
+        float(expected_flux), rel=3e-12, abs=2e-14)
 
 
 @pytest.mark.parametrize("m1,m2,s1,s2", [(30., 20., 0., 0.), (45., 5., .8, -.3), (20., 20., -.9, .7)])

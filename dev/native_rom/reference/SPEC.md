@@ -1,4 +1,4 @@
-# SEOBNRv4 source specification: paper components 0.8.6
+# SEOBNRv4 source specification: paper components 0.8.7
 
 **Status: incomplete research specification.** This version establishes an
 independent executable source of truth for the components marked `executable`
@@ -148,6 +148,19 @@ and [Taracchini et al. Eqs. (55b), (55d), (55f)](https://arxiv.org/html/1202.079
 terms at this truncation. Newtonian limits, exchange symmetry, the selected
 spin truncation, and four frozen Torch rows agree; historical truncation
 and omitted higher-order physics remain open.
+`flux.factorized_6_odd_amplitudes` checks `(6,5)`, `(6,3)`, and `(6,1)`
+using DIN Eqs. (110), (112), (114) and Pan Eqs. (77f)--(77h). Their
+test-particle spin terms use the declared `chiK` finite-mass hybrid.
+`flux.factorized_8_odd_amplitudes` checks `(8,7)`, `(8,5)`, `(8,3)`, and
+`(8,1)` using DIN Eqs. (123), (125), (127), (129) at the printed
+nonspinning 1PN truncation. Its omitted higher-order spin physics is
+not established as zero. `flux.factorized_41_amplitude` combines the
+DIN Eq. (103) J-source residual with Pan Eqs. (28i), (41i), retaining
+the finite unequal-spin signal at equal mass without division by
+`delta`. `flux.factorized_53_51_amplitudes` uses DIN Eqs. (106), (108)
+and Pan Eqs. (77c), (77e). `flux.factorized_7_odd_amplitudes` uses DIN
+Eqs. (115), (117), (119), (121) and Pan Eqs. (77i)--(77k). These
+seven modes also have Newtonian, exchange, and frozen Torch checks.
 `flux.factorized_8_even_amplitudes` adds `(8,8)`, `(8,6)`, `(8,4)`, and
 `(8,2)` from [Damour--Iyer--Nagar Eqs. (122), (124), (126), (128)](https://arxiv.org/html/0811.2069)
 and [Taracchini et al. Eqs. (56a), (56c), (56e), (56g)](https://arxiv.org/html/1202.0790).
@@ -197,10 +210,10 @@ with Torch for unequal-mass aligned spins and equal-mass unequal spins, without
 dividing by the mass difference. The papers do not print the complete
 assembled historical v4 `(2,1)` polynomial, so this component agreement
 does not establish its historical truncation or waveform parity.
-Torch composes all 35 supplied modes with the flux normalization, but 14
-other modes lack scalar amplitude references, the complete historical `(2,1)`
-spin prescription is unresolved, and the high-`ell` spin truncation and JAX
-factorized-flux path still need independent checks. The JAX
+All 35 Torch mode moduli now have conditional scalar references and frozen
+point checks. This establishes the declared factorized reconstruction only:
+the complete historical `(2,1)` spin prescription, high-`ell` spin truncation,
+and JAX factorized-flux path still need independent checks. The JAX
 development assembler currently uses a 1.5PN prototype flux and Newtonian `(2,2)` mode, so no
 cross-backend whole-waveform SEOBNRv4 claim follows from these checks.
 

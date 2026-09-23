@@ -476,6 +476,17 @@ completion is explicitly hybrid; the three `ℓ=7` checks use only the printed
 1PN truncation. Conditional scalar coverage is 21 of 35 amplitudes; fourteen
 remain, in addition to unresolved historical assembly and both-backend gates.
 
+Reference specification 0.8.7 covers the remaining fourteen declared
+pre-NQC flux moduli: `(4,1)`, `(5,3)`, `(5,1)`, the three odd-`m` `ℓ=6`
+modes, the four odd-`m` `ℓ=7` modes, and the four odd-`m` `ℓ=8` modes.
+Independent paper-derived scalar values agree with frozen Torch rows and
+Newtonian, body-exchange, and equal-mass limits. The `(4,1)` finite
+equal-mass unequal-spin contribution is retained. This completes
+**conditional scalar coverage of 35/35 modes** for the declared hybrid
+reconstruction. It does not identify historical v4 spin or high-`ℓ`
+truncations, establish the JAX torque, or close convergence and
+whole-waveform gates.
+
 The exact-hash [ODE](aligned_spin_nqc_matching_inputs_ode.json) and
 [grid](aligned_spin_nqc_matching_inputs_grid.json) NQC matching-input replays
 reconstruct the frozen amplitude and phase matrices and right-hand sides from

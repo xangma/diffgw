@@ -1,5 +1,5 @@
 {
-  "specification": "seobnrv4-paper-components/0.8.6",
+  "specification": "seobnrv4-paper-components/0.8.7",
   "model": "SEOBNRv4 dominant (2,2) mode, aligned-spin black-hole binaries",
   "source": {
     "id": "bohe-2017-v3",
@@ -99,8 +99,8 @@
       "reference": "flux.emitted_flux; flux.newtonian_22_mode",
       "torch": "src/torchwave/approximants/eob/factorized_modes.py:energy_flux_from_modes; src/torchwave/approximants/eob/seobnrv4_flux.py:SEOBNRv4PublishedFlux.energy_flux",
       "jax": null,
-      "test": "dev/native_rom/reference/tests/test_published.py:test_flux_paper_normalization_and_mode_partner; dev/native_rom/reference/tests/test_torch.py:test_mode_flux_normalization_against_reference; dev/native_rom/reference/tests/test_torch.py:test_35_mode_flux_composition_against_reference",
-      "condition": "Requires externally supplied pre-NQC mode amplitudes; 14 mode amplitudes, the complete historical (2,1) spin choice and ell=8 truncation, and a JAX factorized implementation are not yet independently checked."
+      "test": "dev/native_rom/reference/tests/test_published.py:test_flux_paper_normalization_and_mode_partner; dev/native_rom/reference/tests/test_torch.py:test_mode_flux_normalization_against_reference; dev/native_rom/reference/tests/test_torch.py:test_35_mode_flux_composition_against_reference; dev/native_rom/reference/tests/test_torch.py:test_35_mode_flux_from_independent_scalar_amplitudes",
+      "condition": "Requires externally supplied pre-NQC mode amplitudes; complete historical (2,1) spin choice, high-ell truncation, and a JAX factorized implementation remain unverified."
     },
     {
       "id": "V4-FLUX-22-AMPLITUDE",
@@ -160,7 +160,7 @@
       "torch": "src/torchwave/approximants/eob/seobnrv4_flux.py:SEOBNRv4PublishedFlux.amplitudes",
       "jax": null,
       "test": "dev/native_rom/reference/tests/test_published.py:test_factorized_31_newtonian_limit_exchange_and_equal_mass_spin; dev/native_rom/reference/tests/test_torch.py:test_factorized_31_amplitude_against_reference",
-      "condition": "Regularized pre-NQC even-parity modulus of a declared finite-mass nonspin and spin hybrid at frozen points. The historical v4 hybrid choice, other 14 mode amplitudes, complete (2,1) spin prescription, and JAX are unverified."
+      "condition": "Regularized pre-NQC even-parity modulus of a declared finite-mass nonspin and spin hybrid at frozen points. The historical v4 hybrid choice, complete (2,1) spin prescription, and JAX are unverified."
     },
     {
       "id": "V4-FLUX-42-AMPLITUDE",
@@ -170,7 +170,7 @@
       "torch": "src/torchwave/approximants/eob/seobnrv4_flux.py:SEOBNRv4PublishedFlux.amplitudes",
       "jax": null,
       "test": "dev/native_rom/reference/tests/test_published.py:test_factorized_42_newtonian_limit_and_mass_exchange; dev/native_rom/reference/tests/test_torch.py:test_factorized_42_amplitude_against_reference",
-      "condition": "Pre-NQC modulus of a declared finite-mass nonspin and test-particle/generic-mass spin hybrid at frozen points. The historical v4 hybrid choice, other 14 mode amplitudes, complete (2,1) spin prescription, and JAX are unverified."
+      "condition": "Pre-NQC modulus of a declared finite-mass nonspin and test-particle/generic-mass spin hybrid at frozen points. The historical v4 hybrid choice, complete (2,1) spin prescription, and JAX are unverified."
     },
     {
       "id": "V4-FLUX-43-AMPLITUDE",
@@ -180,7 +180,7 @@
       "torch": "src/torchwave/approximants/eob/seobnrv4_flux.py:SEOBNRv4PublishedFlux.amplitudes",
       "jax": null,
       "test": "dev/native_rom/reference/tests/test_published.py:test_factorized_43_newtonian_limit_and_equal_mass_spin; dev/native_rom/reference/tests/test_torch.py:test_factorized_43_amplitude_against_reference",
-      "condition": "Regularized pre-NQC J-source modulus of a declared finite-mass nonspin and spin hybrid at frozen points. The historical v4 hybrid choice, other 14 mode amplitudes, complete (2,1) spin prescription, and JAX are unverified."
+      "condition": "Regularized pre-NQC J-source modulus of a declared finite-mass nonspin and spin hybrid at frozen points. The historical v4 hybrid choice, complete (2,1) spin prescription, and JAX are unverified."
     },
     {
       "id": "V4-FLUX-55-AMPLITUDE",
@@ -190,7 +190,7 @@
       "torch": "src/torchwave/approximants/eob/seobnrv4_flux.py:SEOBNRv4PublishedFlux.amplitudes",
       "jax": null,
       "test": "dev/native_rom/reference/tests/test_published.py:test_factorized_55_newtonian_limit_and_mass_exchange; dev/native_rom/reference/tests/test_torch.py:test_factorized_55_amplitude_against_reference",
-      "condition": "Pre-NQC modulus of a declared finite-mass nonspin and test-particle-spin hybrid at frozen points. The historical v4 hybrid choice, other 14 mode amplitudes, complete (2,1) spin prescription, and JAX are unverified."
+      "condition": "Pre-NQC modulus of a declared finite-mass nonspin and test-particle-spin hybrid at frozen points. The historical v4 hybrid choice, complete (2,1) spin prescription, and JAX are unverified."
     },
     {
       "id": "V4-FLUX-54-52-AMPLITUDES",
@@ -200,7 +200,7 @@
       "torch": "src/torchwave/approximants/eob/seobnrv4_flux.py:SEOBNRv4PublishedFlux.amplitudes",
       "jax": null,
       "test": "dev/native_rom/reference/tests/test_published.py:test_factorized_54_52_newtonian_limits_and_mass_exchange; dev/native_rom/reference/tests/test_torch.py:test_factorized_54_52_amplitudes_against_reference",
-      "condition": "Pre-NQC J-source moduli with finite-mass nonspin terms and declared test-particle-spin effective-spin hybrid. Historical v4 spin choice, other 14 amplitudes, and JAX are unverified."
+      "condition": "Pre-NQC J-source moduli with finite-mass nonspin terms and declared test-particle-spin effective-spin hybrid. Historical v4 spin choice and JAX are unverified."
     },
     {
       "id": "V4-FLUX-66-64-AMPLITUDES",
@@ -210,7 +210,7 @@
       "torch": "src/torchwave/approximants/eob/seobnrv4_flux.py:SEOBNRv4PublishedFlux.amplitudes",
       "jax": null,
       "test": "dev/native_rom/reference/tests/test_published.py:test_factorized_66_64_newtonian_limits_and_mass_exchange; dev/native_rom/reference/tests/test_torch.py:test_factorized_66_64_amplitudes_against_reference",
-      "condition": "Pre-NQC even-parity moduli of a declared finite-mass nonspin and test-particle-spin hybrid at frozen points. The effective-spin selection, historical v4 hybrid choice, other 14 mode amplitudes, complete (2,1) spin prescription, and JAX are unverified."
+      "condition": "Pre-NQC even-parity moduli of a declared finite-mass nonspin and test-particle-spin hybrid at frozen points. The effective-spin selection, historical v4 hybrid choice, complete (2,1) spin prescription, and JAX are unverified."
     },
     {
       "id": "V4-FLUX-62-AMPLITUDE",
@@ -220,7 +220,7 @@
       "torch": "src/torchwave/approximants/eob/seobnrv4_flux.py:SEOBNRv4PublishedFlux.amplitudes",
       "jax": null,
       "test": "dev/native_rom/reference/tests/test_published.py:test_factorized_62_newtonian_limit_and_mass_exchange; dev/native_rom/reference/tests/test_torch.py:test_factorized_62_amplitude_against_reference",
-      "condition": "Pre-NQC even-parity modulus of a declared finite-mass nonspin and test-particle-spin hybrid at frozen points. Historical v4 parity, the other 14 mode amplitudes, and JAX remain unverified."
+      "condition": "Pre-NQC even-parity modulus of a declared finite-mass nonspin and test-particle-spin hybrid at frozen points. Historical v4 parity and JAX remain unverified."
     },
     {
       "id": "V4-FLUX-7-EVEN-AMPLITUDES",
@@ -230,7 +230,7 @@
       "torch": "src/torchwave/approximants/eob/seobnrv4_flux.py:SEOBNRv4PublishedFlux.amplitudes",
       "jax": null,
       "test": "dev/native_rom/reference/tests/test_published.py:test_factorized_7_even_newtonian_limits_and_spin_truncation; dev/native_rom/reference/tests/test_torch.py:test_factorized_7_even_amplitudes_against_reference",
-      "condition": "Pre-NQC J-source moduli at the printed 1PN truncation. Higher spin terms are not established as zero; historical truncation, other 14 amplitudes, and JAX are unverified."
+      "condition": "Pre-NQC J-source moduli at the printed 1PN truncation. Higher spin terms are not established as zero; historical truncation and JAX are unverified."
     },
     {
       "id": "V4-FLUX-8-EVEN-AMPLITUDES",
@@ -240,7 +240,57 @@
       "torch": "src/torchwave/approximants/eob/seobnrv4_flux.py:SEOBNRv4PublishedFlux.amplitudes",
       "jax": null,
       "test": "dev/native_rom/reference/tests/test_published.py:test_factorized_8_even_newtonian_limits_exchange_and_truncation; dev/native_rom/reference/tests/test_torch.py:test_factorized_8_even_amplitudes_against_reference",
-      "condition": "Pre-NQC even-parity moduli at frozen points for both explicit high-ell truncations. Pan's generic leading-spin term and its finite-mass effective-spin application are a declared hybrid; historical selection, other 14 modes, and JAX remain unverified."
+      "condition": "Pre-NQC even-parity moduli at frozen points for both explicit high-ell truncations. Pan's generic leading-spin term and its finite-mass effective-spin application are a declared hybrid; historical selection and JAX remain unverified."
+    },
+    {
+      "id": "V4-FLUX-6-ODD-AMPLITUDES",
+      "source": "bohe-2017-v3, Eq. (9); Damour, Iyer and Nagar 0811.2069v2 Eqs. (4)-(7), (16), (110), (112), (114); Taracchini et al. 1202.0790v2 Eqs. (54b), (54d), (54f); Pan et al. 1006.0431v2 Eqs. (77f)-(77h)",
+      "status": "conditional",
+      "reference": "flux.factorized_6_odd_amplitudes",
+      "torch": "src/torchwave/approximants/eob/seobnrv4_flux.py:SEOBNRv4PublishedFlux.amplitudes",
+      "jax": null,
+      "test": "dev/native_rom/reference/tests/test_published.py:test_factorized_6_odd_newtonian_limits_and_mass_exchange; dev/native_rom/reference/tests/test_torch.py:test_factorized_6_odd_amplitudes_against_reference",
+      "condition": "Pre-NQC J-source moduli with finite-mass nonspin terms and declared test-particle-spin effective-spin hybrid. Historical spin choice and JAX are unverified."
+    },
+    {
+      "id": "V4-FLUX-8-ODD-AMPLITUDES",
+      "source": "bohe-2017-v3, Eq. (9); Damour, Iyer and Nagar 0811.2069v2 Eqs. (4)-(7), (16), (123), (125), (127), (129); Taracchini et al. 1202.0790v2 Eqs. (56b), (56d), (56f), (56h); Pan et al. 1006.0431v2 Eqs. (77l)-(77m)",
+      "status": "conditional",
+      "reference": "flux.factorized_8_odd_amplitudes",
+      "torch": "src/torchwave/approximants/eob/seobnrv4_flux.py:SEOBNRv4PublishedFlux.amplitudes",
+      "jax": null,
+      "test": "dev/native_rom/reference/tests/test_published.py:test_factorized_8_odd_newtonian_limits_exchange_and_truncation; dev/native_rom/reference/tests/test_torch.py:test_factorized_8_odd_amplitudes_against_reference",
+      "condition": "Pre-NQC J-source moduli at the printed 1PN truncation. Higher spin terms are not established as zero; historical truncation and JAX are unverified."
+    },
+    {
+      "id": "V4-FLUX-41-AMPLITUDE",
+      "source": "bohe-2017-v3, Eq. (9); Damour, Iyer and Nagar 0811.2069v2 Eqs. (4)-(7), (16), (103); Taracchini et al. 1202.0790v2 Eq. (52d); Pan et al. 1006.0431v2 Eqs. (28i), (41i)",
+      "status": "conditional",
+      "reference": "flux.factorized_41_amplitude",
+      "torch": "src/torchwave/approximants/eob/seobnrv4_flux.py:SEOBNRv4PublishedFlux.amplitudes",
+      "jax": null,
+      "test": "dev/native_rom/reference/tests/test_published.py:test_factorized_41_newtonian_exchange_and_equal_mass_spin; dev/native_rom/reference/tests/test_torch.py:test_factorized_41_amplitude_against_reference",
+      "condition": "Regularized pre-NQC J-source modulus including a finite equal-mass unequal-spin limit. Historical hybrid choice and JAX are unverified."
+    },
+    {
+      "id": "V4-FLUX-53-51-AMPLITUDES",
+      "source": "bohe-2017-v3, Eq. (9); Damour, Iyer and Nagar 0811.2069v2 Eqs. (4)-(7), (106), (108); Taracchini et al. 1202.0790v2 Eqs. (53c), (53e); Pan et al. 1006.0431v2 Eqs. (77c), (77e)",
+      "status": "conditional",
+      "reference": "flux.factorized_53_51_amplitudes",
+      "torch": "src/torchwave/approximants/eob/seobnrv4_flux.py:SEOBNRv4PublishedFlux.amplitudes",
+      "jax": null,
+      "test": "dev/native_rom/reference/tests/test_published.py:test_factorized_53_51_newtonian_exchange_and_equal_mass_limit; dev/native_rom/reference/tests/test_torch.py:test_factorized_53_51_amplitudes_against_reference",
+      "condition": "Pre-NQC H-source moduli with finite-mass nonspin terms and declared test-particle-spin effective-spin hybrid. Historical spin choice and JAX are unverified."
+    },
+    {
+      "id": "V4-FLUX-7-ODD-AMPLITUDES",
+      "source": "bohe-2017-v3, Eq. (9); Damour, Iyer and Nagar 0811.2069v2 Eqs. (4)-(7), (115), (117), (119), (121); Taracchini et al. 1202.0790v2 Eqs. (55a), (55c), (55e), (55g); Pan et al. 1006.0431v2 Eqs. (77i)-(77k)",
+      "status": "conditional",
+      "reference": "flux.factorized_7_odd_amplitudes",
+      "torch": "src/torchwave/approximants/eob/seobnrv4_flux.py:SEOBNRv4PublishedFlux.amplitudes",
+      "jax": null,
+      "test": "dev/native_rom/reference/tests/test_published.py:test_factorized_7_odd_newtonian_exchange_and_equal_mass_limit; dev/native_rom/reference/tests/test_torch.py:test_factorized_7_odd_amplitudes_against_reference",
+      "condition": "Pre-NQC H-source moduli with finite-mass nonspin terms and declared test-particle-spin effective-spin hybrid. Historical spin choice and JAX are unverified."
     },
     {
       "id": "V4-HAM-1-3",
@@ -252,7 +302,7 @@
       "id": "V4-FLUX-4-9",
       "source": "bohe-2017-v3, Eqs. (4)-(9); Pan et al. 1006.0431v2, Eqs. (28)-(30), (41)-(42), and Appendices C-F; Taracchini et al. 1311.2544v1, Eq. (4)",
       "status": "pending",
-      "blocker": "Scalar flux normalization and 21 conditional pre-NQC moduli are checked at frozen points: (2,2), (2,1), (3,1), (3,2), (3,3), (4,2), (4,3), (4,4), (5,2), (5,4), (5,5), (6,2), (6,4), (6,6), (7,2), (7,4), (7,6), (8,2), (8,4), (8,6), (8,8). Independently reference the other 14 amplitudes, complete historical (2,1) spin and high-ell truncation choices, NQC-free dynamics, and the JAX path."
+      "blocker": "Scalar normalization and all 35 declared pre-NQC moduli have conditional independent paper checks at frozen points. Establish historical (2,1) spin and high-ell truncation choices, NQC-free dynamics, and JAX factorized flux before qualifying the full historical torque."
     },
     {
       "id": "V4-NQC-7",
