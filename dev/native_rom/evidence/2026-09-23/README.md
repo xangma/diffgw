@@ -74,6 +74,23 @@ The source hash remained fixed. Reproduce with
 `PYTHONPATH=src:. python -m dev.native_rom.diagnose_ode_tolerance --json-out
 /tmp/seobnrv4-ode-regions.json`.
 
+The [orbital-phase diagnostic](orbital_phase.json) integrates the same
+provisional Hamiltonian, flux, and initial state to `165 M` using the native
+adaptive solver and SciPy DOP853. This is an independent **integrator** check,
+not an independent physics reference. At native `rtol=1e-13`, accepted orbital
+phase states differ from the tighter DOP853 solution by at most `1.31e-11 rad`;
+cubic Hermite samples built from those states and derivatives differ by at most
+`3.93e-11 rad`. The current natural-cubic output samples differ by up to
+`1.30e-6 rad`. The two DOP853 tolerance levels differ by up to `1.18e-10 rad`,
+so the exact last digits of the smaller comparisons are not established.
+The several-order gap nonetheless identifies natural-cubic **resampling** as
+a major source of early waveform phase sensitivity. It does not determine
+whether changing the published-convention sampler preserves LAL parity, nor
+does it establish full-waveform convergence. All source hashes stayed fixed.
+Reproduce with `PYTHONPATH=src:. python -m
+dev.native_rom.diagnose_orbital_phase --json-out
+/tmp/seobnrv4-orbital-phase.json`.
+
 The [whole-waveform diagnostic](whole_waveform.json) used the tightest
 `dt/M=0.125`, `rtol=1e-13`, `atol=1e-14` settings and the pinned public
 LALSuite `lal=7.7.1`, `lalsimulation=6.2.1` `SEOBNRv4` binary. The
@@ -110,9 +127,10 @@ PYTHONPATH=src python -m dev.native_rom.compare_whole_waveforms \
   --json-out /tmp/seobnrv4-whole-waveform.json
 ```
 
-The next numerical experiment should compare the orbital phase trajectory at
-fixed times with an independent integration method, then rerun the declared
-gates without tuning the thresholds to these observations.
+The next numerical experiment should test derivative-aware resampling in the
+development generator, then rerun the declared gates without tuning their
+thresholds to these observations. Public-binary comparison must be repeated
+if that choice is promoted.
 Independent review of the full spin Hamiltonian and all 35 factorized mode
 amplitudes is still required before these diagnostics can support a native
 SEOBNRv4 claim.

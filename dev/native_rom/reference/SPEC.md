@@ -214,9 +214,14 @@ restart sample; it does not resolve the ODE-tolerance failure or change the
 default algorithm. A still tighter three-level campaign also failed both
 numerical gates with nonmonotonic errors. Its regional diagnostic finds a
 phase-dominated ODE discrepancy already present before attachment, without
-identifying its numerical cause. The whole-waveform diagnostic compares
-only two rows and does not establish public-binary parity. The current generator
-and ROM work therefore stay on this development branch. Reference completion,
-frontend component checks, generator numerical convergence, public-binary
-parity, and physical/NR holdouts are separate gates. No ROM training or release promotion follows
+identifying its numerical cause. A separate early-orbit cross-integrator check
+finds accepted states stable to about `1e-10` against DOP853, while the current
+natural-cubic output sampler differs by up to `1.30e-6 rad`. Derivative-aware
+resampling remains a development hypothesis until the whole generator passes
+the declared gates and public-binary comparison. The whole-waveform diagnostic
+compares only two rows and does not establish public-binary parity. The current
+generator and ROM work therefore stay on this development branch. Reference
+completion, frontend component checks, generator numerical convergence,
+public-binary parity, and physical/NR holdouts are separate gates. No ROM
+training or release promotion follows
 from this version alone.
