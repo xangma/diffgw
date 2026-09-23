@@ -61,7 +61,7 @@ jobs:
           python -m pip install 'numpy==1.26.4' 'jax[cpu]==0.4.29'
           python -m pip install --index-url https://download.pytorch.org/whl/cpu torch
           python -m pip install -e '.[reference,torch,jax,dev]'
-          python -m pip install 'lalsuite==7.21'
+          python -m pip install 'lalsuite==7.21' 'numpy==1.26.4'
       - name: Verify oracle dependencies and waveform checks
         run: |
           python -c "import lal, lalsimulation, torch, jax, sympy; import importlib.metadata as m; print({name: m.version(name) for name in ('lalsuite', 'numpy', 'scipy', 'sympy', 'torch', 'jax', 'jaxlib')})"
