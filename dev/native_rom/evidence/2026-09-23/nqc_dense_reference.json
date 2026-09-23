@@ -1,0 +1,209 @@
+{
+  "comparisons": {
+    "step_0.025": {
+      "dop853_tolerance_matrix_max_absolute_difference": 1.3197591110236662e-10,
+      "local_polynomial_matrix_max_absolute_difference": [
+        5.03077457122969e-09,
+        2.986492508155747e-09
+      ],
+      "natural_cubic_matrix_max_absolute_difference": [
+        1.2483416727410157e-08,
+        1.400462663631724e-07
+      ]
+    },
+    "step_0.05": {
+      "dop853_tolerance_matrix_max_absolute_difference": 1.327549181695531e-10,
+      "local_polynomial_matrix_max_absolute_difference": [
+        4.975846287086361e-09,
+        2.932343231079604e-09
+      ],
+      "natural_cubic_matrix_max_absolute_difference": [
+        1.2428488443266827e-08,
+        1.4010041564024855e-07
+      ]
+    },
+    "step_0.1": {
+      "dop853_tolerance_matrix_max_absolute_difference": 1.27325464407968e-10,
+      "local_polynomial_matrix_max_absolute_difference": [
+        4.105063674403331e-09,
+        3.8520154149734864e-09
+      ],
+      "natural_cubic_matrix_max_absolute_difference": [
+        1.1557705830583798e-08,
+        1.4097662770669317e-07
+      ]
+    },
+    "step_0.2": {
+      "dop853_tolerance_matrix_max_absolute_difference": 6.796727590463458e-11,
+      "local_polynomial_matrix_max_absolute_difference": [
+        6.011581345916062e-08,
+        6.123939297331127e-08
+      ],
+      "natural_cubic_matrix_max_absolute_difference": [
+        4.967301842767613e-08,
+        1.549877973617414e-07
+      ]
+    }
+  },
+  "git_head": "ac0c2178029bd0550b40c26666a272fe9b8593ba",
+  "hermite_evidence": "dev/native_rom/evidence/2026-09-23/nqc_derivatives.json",
+  "hermite_evidence_sha256": "16cce742a16b2b14b813d4ef3b0de312ddd17d35d6c821fead13419100b028fd",
+  "match_time_M": 310.426813922543,
+  "process": {
+    "argv": [
+      "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw/dev/native_rom/diagnose_nqc_dense_reference.py",
+      "--json-out",
+      "dev/native_rom/evidence/2026-09-23/nqc_dense_reference.json"
+    ],
+    "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+    "host": "RONI2",
+    "pid": 55879
+  },
+  "row": {
+    "chi1": 0.0,
+    "chi2": 0.0,
+    "mass1": 30.0,
+    "mass2": 20.0,
+    "omega_start": 0.04
+  },
+  "runs": [
+    {
+      "atol": 1e-12,
+      "evaluations": 712,
+      "match_phase_basis": [
+        -0.4439231674299485,
+        -0.016560089221322547
+      ],
+      "match_state": [
+        2.8954432862290886,
+        18.06330068082166,
+        -0.19314231426189438,
+        2.8484550760813576
+      ],
+      "matrices": {
+        "step_0.025": [
+          [
+            -0.037040583373747486,
+            -0.00381937305211259
+          ],
+          [
+            -0.008118327524438602,
+            -0.0013375530319053213
+          ]
+        ],
+        "step_0.05": [
+          [
+            -0.037040583150260244,
+            -0.003819372984146477
+          ],
+          [
+            -0.008118327469510318,
+            -0.0013375530117185756
+          ]
+        ],
+        "step_0.1": [
+          [
+            -0.03704057957154935,
+            -0.0038193718956986613
+          ],
+          [
+            -0.008118326598727705,
+            -0.0013375526887648168
+          ]
+        ],
+        "step_0.2": [
+          [
+            -0.03704052218508724,
+            -0.003819354422900664
+          ],
+          [
+            -0.008118312646916238,
+            -0.001337547506628572
+          ]
+        ]
+      },
+      "rtol": 1e-11,
+      "seconds": 5.053981542005204
+    },
+    {
+      "atol": 1e-13,
+      "evaluations": 826,
+      "match_phase_basis": [
+        -0.4439231674222797,
+        -0.01656008922051744
+      ],
+      "match_state": [
+        2.895443286237226,
+        18.063300680811764,
+        -0.19314231425886763,
+        2.8484550760845817
+      ],
+      "matrices": {
+        "step_0.025": [
+          [
+            -0.03704058337600772,
+            -0.0038193730522464993
+          ],
+          [
+            -0.008118327656414513,
+            -0.0013375530459584317
+          ]
+        ],
+        "step_0.05": [
+          [
+            -0.037040583152649534,
+            -0.0038193729842950098
+          ],
+          [
+            -0.008118327602265236,
+            -0.001337553025836796
+          ]
+        ],
+        "step_0.1": [
+          [
+            -0.03704057957484389,
+            -0.0038193718959488635
+          ],
+          [
+            -0.00811832672605317,
+            -0.001337552702317373
+          ]
+        ],
+        "step_0.2": [
+          [
+            -0.03704052218746633,
+            -0.0038193544230662752
+          ],
+          [
+            -0.008118312714883514,
+            -0.001337547513856254
+          ]
+        ]
+      },
+      "rtol": 1e-12,
+      "seconds": 5.8031803329940885
+    }
+  ],
+  "schema": "diffgw.seobnrv4.nqc_dense_reference_diagnostic.v1",
+  "scope": {
+    "algorithm_choice_made": false,
+    "development_only": true,
+    "independent_integrator": true,
+    "independent_physics": false,
+    "numerical_generator_qualified": false,
+    "same_provisional_vector_field": true
+  },
+  "source_sha256_after": "f68721562ec613e0183a307cfcbb306d2bca2783591632b9a9e1025a0bb0e03d",
+  "source_sha256_before": "f68721562ec613e0183a307cfcbb306d2bca2783591632b9a9e1025a0bb0e03d",
+  "sources_unchanged": true,
+  "steps_M": [
+    0.2,
+    0.1,
+    0.05,
+    0.025
+  ],
+  "versions": {
+    "numpy": "2.5.3",
+    "torch": "2.14.0"
+  }
+}

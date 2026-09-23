@@ -228,7 +228,11 @@ finding is not an independent validation of the historical NQC prescription.
 Local-polynomial differentiation of the same fine-grid basis reduces the
 cross-tolerance coefficient spread by about an order of magnitude, but its
 absolute coefficients depend on the differentiation window and order; no
-replacement rule has been selected.
+replacement rule has been selected. A separate DOP853 dense-trajectory check
+of the same provisional equations places the tight-run natural-cubic NQC
+phase-basis derivative matrix about `1.40e-7` from its five-point estimate,
+versus `2.99e-9` for a local polynomial matrix. This isolates a numerical
+derivative discrepancy without resolving historical calibration conventions.
 The separate public-binary whole-waveform comparison
 compares only two rows and does not establish public-binary parity. The current
 generator and ROM work therefore stay on this development branch. Reference

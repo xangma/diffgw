@@ -162,6 +162,22 @@ not an independent physical model or a qualification gate. Reproduce with
 `PYTHONPATH=src:. python -m dev.native_rom.diagnose_nqc_derivatives --json-out
 /tmp/seobnrv4-nqc-derivatives.json`.
 
+The [DOP853 dense-trajectory check](nqc_dense_reference.json) independently
+integrates the same provisional vector field from the same initial state to
+the frozen `310.4268139 M` NQC match. Five-point derivatives of its NQC phase
+basis at steps `0.025–0.2 M` are compared with the two Hermite-run matrices.
+At `0.025 M`, changing DOP853 tolerance from `1e-11` to `1e-12` changes the
+matrix by at most `1.32e-10`; the `0.025` and `0.05 M` derivative estimates
+at the tighter tolerance agree within `2.24e-10`. The tight Hermite run's
+natural-cubic matrix differs from DOP853 by `1.40e-7`, whereas its local
+degree-six `0.25 M` polynomial matrix differs by `2.99e-9`. This identifies
+the full-series natural-cubic **basis derivative** as a numerical outlier for
+this row. The DOP853 check validates integration and differentiation of the
+same provisional equations, not the equations' physical correctness or an
+alternative historical NQC rule. Reproduce with `PYTHONPATH=src:. python -m
+dev.native_rom.diagnose_nqc_dense_reference --json-out
+/tmp/seobnrv4-nqc-dense-reference.json`.
+
 The [whole-waveform diagnostic](whole_waveform.json) used the tightest
 `dt/M=0.125`, `rtol=1e-13`, `atol=1e-14` settings and the pinned public
 LALSuite `lal=7.7.1`, `lalsimulation=6.2.1` `SEOBNRv4` binary. The
@@ -198,11 +214,11 @@ PYTHONPATH=src python -m dev.native_rom.compare_whole_waveforms \
   --json-out /tmp/seobnrv4-whole-waveform.json
 ```
 
-The next numerical experiment should evaluate the NQC basis derivatives
-directly along the ODE vector field or an independent dense integrator, then
-isolate the moving coarse/fine restart in the Hermite route. Rerun the same
-declared gates without tuning their thresholds. Public-binary comparison must
-be repeated if a numerical choice is promoted.
+The next numerical experiment should test an opt-in derivative estimator for
+NQC against this dense-trajectory check, then isolate the moving coarse/fine
+restart in the Hermite route. Rerun the same declared gates without tuning
+their thresholds. Public-binary comparison must be repeated if a numerical
+choice is promoted.
 Independent review of the full spin Hamiltonian and all 35 factorized mode
 amplitudes is still required before these diagnostics can support a native
 SEOBNRv4 claim.
