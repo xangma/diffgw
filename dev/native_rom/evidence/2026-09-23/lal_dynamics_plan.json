@@ -1,0 +1,17 @@
+{
+  "schema": "diffgw.seobnrv4.lal-dynamics-plan.v1",
+  "purpose": "Isolate initial-state and vector-field differences against the pinned compiled ordinary-SEOBNRv4 dynamics before changing the native generator.",
+  "prior_whole_waveform": "dev/native_rom/evidence/2026-09-23/local_nqc_fixed_restart_whole_waveform.json",
+  "prior_sha256": "a0b56c6f1e16a868221fe09bf9b358c29a8dc74fb74427dd3a65bf715777edc5",
+  "rows": [0, 1],
+  "reference_api": "lalsimulation.SimIMRSpinAlignedEOBModes",
+  "reference_version": 4,
+  "reference_nqc_flag": 0,
+  "reference_dynamics_columns": ["time_M", "r", "phi", "pr_star", "pphi"],
+  "reference_output_steps_M": [0.125, 0.0625],
+  "frequency_targets_Momega": [0.04, 0.05],
+  "frequency_selection": "Nearest low-sampling dynamics point using the centered numerical derivative of orbital phase.",
+  "derivative": "Five-point centered derivative on the uniform low-sampling dynamics grid; compare native vector field at the identical recorded state.",
+  "continuation": "Start DOP853 from the compiled reference state at the 0.04 frequency target and compare to the same low-sampling reference trajectory through the 0.05 target; rtol=1e-12, atol=1e-13, first_step=0.125 M.",
+  "interpretation": "Diagnostic only. Sampled reference derivatives have truncation/interpolation error; their agreement does not prove Hamiltonian or flux parity. A continuation uses the reference initial state, so it does not validate native initial conditions or the finished waveform. Do not promote or train the ROM from this result."
+}
