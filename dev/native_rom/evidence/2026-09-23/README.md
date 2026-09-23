@@ -538,11 +538,51 @@ retroactively mark the predeclared grid gate as passed. Reproduce with
 --campaign dev/native_rom/evidence/2026-09-23/nqc_second_derivative_campaign.json
 --json-out /tmp/seobnrv4-nqc-grid-initial-step.json`.
 
-Next, design an independent output-sampling test that does not change the
-solver trajectory when `dt_geom` changes, then extend numerical tests to
-parameter-boundary rows. Keep the frozen qualification result failed.
-Independently check the historical initial-state prescription and the remaining
-Hamiltonian/flux components, including the `(2,1)` spin terms and `(5,5)`
+The [fixed-trajectory output-sampling check](output_sampling_aligned_spin.json)
+holds the first trial step and provisional vector field fixed through `165 M`
+for the aligned-spin row. All three output grids (`0.5`, `0.25`, `0.125 M`)
+have identical SHA-256 hashes for accepted times, states, and derivatives;
+their nested Hermite samples agree exactly. Against an independent DOP853
+integration of the *same* equations, the maximum Hermite-state differences
+are `3.32e-11` in radius and `3.77e-11 rad` in orbital phase, including a
+fixed off-grid probe. The corresponding natural-cubic differences reach
+`6.86e-7` and `1.26e-6 rad`. Two DOP853 tolerance settings differ by as much
+as `1.90e-10` in radius, so the Hermite comparison is not an absolute error
+bound at its last digits. It supports the output-sampling diagnosis without
+establishing full-waveform convergence or physical model fidelity. Reproduce
+with `PYTHONPATH=src:. python -m dev.native_rom.diagnose_output_sampling
+--json-out /tmp/seobnrv4-output-sampling.json`.
+
+The [parameter-boundary plan](parameter_boundary_plan.json) was committed
+before its [six-row campaign](parameter_boundary_campaign.json). These are
+exploratory one-factor stress points, **not** asserted calibration-domain
+boundaries. All 30 scalar solves (five per row) completed without exceptions;
+the source hashes stayed fixed. The table gives the finer comparison's direct,
+unaligned, whole-waveform complex relative L2. The same `1e-6` complex and
+amplitude budgets, decreasing-error rule, and `0.05 M` event gates apply to
+each row. Both start-frequency rows pass; four other rows fail at least one
+declared gate.
+
+| Changed parameter | Refined ODE L2 | Refined grid L2 | Failed gate |
+| --- | ---: | ---: | --- |
+| Equal masses, unequal spins (`25+25`, `+0.2,-0.2`) | `5.80e-8` | `3.71e-10` | Grid error increased from `3.46e-11` |
+| Mass ratio four, nonspinning (`40+10`) | `3.11e-7` | `6.44e-11` | ODE error increased from `1.53e-7`; grid error from `2.99e-11` |
+| Strong aligned spin (`+0.8,+0.8`) | `6.57e-6` | `1.17e-9` | ODE complex-error budget |
+| Strong antialigned spin (`-0.8,-0.8`) | `5.85e-7` | `2.39e-10` | Grid error increased from `1.98e-10` |
+| Lower start frequency (`M Omega=0.03`) | `5.87e-8` | `3.75e-10` | None |
+| Higher start frequency (`M Omega=0.05`) | `5.76e-8` | `8.14e-11` | None |
+
+The campaign preserves the earlier aligned-spin failure; passing a different
+row cannot qualify the generator. It also does not compare these boundary
+waveforms with an independent physical reference. Reproduce with
+`PYTHONPATH=src:. python -m dev.native_rom.diagnose_parameter_boundaries
+--json-out /tmp/seobnrv4-parameter-boundaries.json`; exit status 1 is expected
+while the frozen aggregate gate fails.
+
+Next, diagnose the strong-aligned-spin ODE sensitivity and the grid/first-step
+coupling across the failing rows without changing the frozen results. Check the
+historical initial-state prescription and remaining Hamiltonian/flux
+components independently, including the `(2,1)` spin terms and `(5,5)`
 amplitude, without fitting correction coefficients to the LAL binary.
 The separate [paper-component reference](../../reference/SPEC.md) now checks
 the aligned-spin Hamiltonian and pre-NQC `(2,2)`, `(3,2)`, `(3,3)`, and `(4,4)` amplitudes

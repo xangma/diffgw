@@ -16,6 +16,16 @@ numerical gates for an aligned-spin row; its sampled-peak difference of
 `0.01336` falls to about `0.0078–0.0081` with sub-sample anchoring. These
 comparisons do not validate the physical generator.
 
+The later [fixed-trajectory output-sampling check](evidence/2026-09-23/README.md)
+finds identical accepted trajectories across three grids and much smaller
+Hermite-versus-DOP853 differences than natural-cubic differences through
+`165 M`. In a predeclared
+[six-row exploratory parameter campaign](evidence/2026-09-23/README.md),
+both start-frequency rows pass the numerical gates, but four mass-ratio/spin
+rows fail at least one. In particular, the strong aligned-spin row's refined
+ODE complex error is `6.57e-6`, above the `1e-6` budget. The provisional
+generator remains unqualified; no ROM training or release promotion follows.
+
 The versioned [SEOBNRv4 paper reference](reference/SPEC.md) pins published
 calibration, Hamiltonian, selected flux, leading initial-state, peak, and
 ringdown components and maps applicable checks to the frontends. Its
