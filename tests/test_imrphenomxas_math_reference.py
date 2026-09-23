@@ -10,6 +10,7 @@ sp = pytest.importorskip("sympy")
 pytest.importorskip("mpmath")
 
 from diffgw_reference import imrphenomxas_intermediate as ref
+from diffgw_reference import imrphenomxas_fifth_order as fifth
 
 # Magnitudes from the pinned LALSuite 7.21 / LALSimulation 5.3.1 binary via
 # SimInspiralChooseFDWaveform(IMRPhenomXAS), default options, CPU FP64:
@@ -74,6 +75,44 @@ def test_paper_quartic_and_physical_slope_constraints():
     assert sp.degree(ref.inverse_polynomial(f1=f1, f3=f3, coefficients=fitted), ref.F) == 4
 
 
+def test_paper_fifth_order_and_physical_slope_constraints():
+    """Recover Eq. (72) from its four amplitudes and two boundary slopes."""
+    nodes = (sp.Rational(1, 50), sp.Rational(1, 25),
+             sp.Rational(3, 50), sp.Rational(1, 10))
+    f1, f2, f3, f4 = nodes
+    k = sp.Rational(3, 2)
+    original = tuple(map(sp.Rational, (1, 2, -1, 3, 2, -2)))
+    amplitude = fifth.paper_amplitude(f1=f1, f4=f4, k=k, coefficients=original)
+    slope = sp.diff(amplitude, fifth.F)
+    values = tuple(amplitude.subs(fifth.F, node) for node in nodes)
+    d1, d4 = slope.subs(fifth.F, f1), slope.subs(fifth.F, f4)
+    fitted = fifth.physical_collocation_coefficients(
+        *nodes, *values, d1, d4, k
+    )
+    assert all(sp.simplify(got - want) == 0 for got, want in zip(fitted, original))
+    reconstructed = fifth.paper_amplitude(f1=f1, f4=f4, k=k, coefficients=fitted)
+    assert sp.simplify(reconstructed - amplitude) == 0
+    assert sp.degree(fifth.inverse_polynomial(f1=f1, f4=f4, coefficients=fitted),
+                     fifth.F) == 5
+    for node, value in zip(nodes, values):
+        assert sp.simplify(reconstructed.subs(fifth.F, node) - value) == 0
+    for node, derivative in ((f1, d1), (f4, d4)):
+        assert sp.simplify(sp.diff(reconstructed, fifth.F).subs(fifth.F, node)
+                           - derivative) == 0
+
+
+def test_fifth_order_reference_only_evidence():
+    assert set(fifth.COMPONENT_SOURCES) == set(fifth.COMPONENT_IDS.values())
+    for source, *locations in fifth.COMPONENT_SOURCES.values():
+        assert source in fifth.SOURCES
+        assert set(locations) <= set(fifth.SOURCES[source]["equations"])
+    assert fifth.SPEC_VERSION == "imrphenomxas-intermediate-amplitude-fifth-order/v1"
+    documentation = (Path(__file__).resolve().parents[1] / "docs" / "math"
+                     / "imrphenomxas.md").read_text()
+    for component in fifth.COMPONENT_IDS.values():
+        assert component in documentation
+
+
 def test_observed_quartic_and_normalization_distinction():
     f1, f3, k = sp.Rational(1, 50), sp.Rational(1, 10), sp.Rational(3, 2)
     original = tuple(map(sp.Rational, (1, 2, -1, 3, 2)))
@@ -93,6 +132,8 @@ def test_observed_quartic_and_normalization_distinction():
 @pytest.mark.parametrize("m1,m2,chi1,chi2", [
     (30.0, 30.0, 0.0, 0.0),
     (50.0, 10.0, 0.5, -0.3),
+    (45.0, 20.0, 0.35, 0.6),
+    (90.0, 30.0, -0.4, -0.6),
 ])
 def test_full_frontend_intermediate_amplitude_shape(backend, m1, m2, chi1, chi2):
     """The complete carrier must use K/P, including its frequency prefactor."""
@@ -106,7 +147,8 @@ def test_full_frontend_intermediate_amplitude_shape(backend, m1, m2, chi1, chi2)
 
         state = XASCarrierState(m1, m2, chi1=chi1, chi2=chi2)
     f1, f3 = float(state.f1_col), float(state.f4_col)
-    mf = np.asarray([f1 + (f3 - f1) * fraction for fraction in (.2, .5, .8)])
+    mf = np.asarray([f1 + (f3 - f1) * fraction
+                     for fraction in (1e-5, .2, .5, .8, 1 - 1e-5)])
     hp, _ = state.eval_waveform(array(mf / float(state.m_sec)), distance=500.0)
     if name == "torch":
         actual = np.abs(hp.detach().cpu().numpy())
@@ -119,7 +161,7 @@ def test_full_frontend_intermediate_amplitude_shape(backend, m1, m2, chi1, chi2)
         ).evalf(40))
         for f in mf
     ])
-    np.testing.assert_allclose(actual / actual[1], expected / expected[1],
+    np.testing.assert_allclose(actual / actual[2], expected / expected[2],
                                rtol=3e-12, atol=3e-12)
     printed = np.asarray([
         float(ref.paper_amplitude(
@@ -127,7 +169,7 @@ def test_full_frontend_intermediate_amplitude_shape(backend, m1, m2, chi1, chi2)
         ).evalf(40))
         for f in mf
     ])
-    assert np.max(np.abs(actual / actual[1] - printed / printed[1])) > 0.1
+    assert np.max(np.abs(actual / actual[2] - printed / printed[2])) > 0.1
 
 
 def test_external_binary_intermediate_amplitude_fixture(backend):

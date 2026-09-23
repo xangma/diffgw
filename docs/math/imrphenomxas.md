@@ -1,4 +1,4 @@
-# IMRPhenomXAS intermediate amplitude: quartic option
+# IMRPhenomXAS intermediate amplitude
 
 Specification `imrphenomxas-intermediate-amplitude-quartic/v1` covers one
 component of the nonprecessing dominant-mode model. Its source is
@@ -84,3 +84,36 @@ distinct convention during calibration, remains unresolved without further
 author clarification or independent calibration evidence. Neither the
 published parameter-space fits nor any LAL source or constants have been
 copied into this component.
+
+## Fifth-order paper option
+
+Specification `imrphenomxas-intermediate-amplitude-fifth-order/v1` records
+the paper's Eq. (72), Eqs. (73)–(78), and Table 1 as a **reference-only**
+component. The paper uses this option for its reported results, but the
+current Torch and JAX carriers implement the quartic option above. No
+frontend or LAL parity is claimed for the fifth-order component.
+
+For four supplied nodes `0<f1<f2<f3<f4`, define `t=(f-f1)/(f4-f1)` and
+`P5(t)=c0+c1*t+c2*t²+c3*t³+c4*t⁴+c5*t⁵`. The printed equation is
+`A(f)=K*f^(-7/6)/P5(t)`. Let `B=A/(K*f^(-7/6))=1/P5`.
+Given the four physical amplitudes `A(fi)=ai` and endpoint slopes
+`A'(f1)=d1`, `A'(f4)=d4`, the [scalar reference](../../src/diffgw_reference/imrphenomxas_fifth_order.py)
+converts them to `B(fi)` and
+`B'(fj)=(A'(fj)+7*A(fj)/(6*fj))/(K*fj^(-7/6))` for `j=1,4`.
+It solves the resulting six linear constraints on `P5` exactly in SymPy.
+The [maintained test](../../tests/test_imrphenomxas_math_reference.py)
+recovers a known fifth-degree polynomial from all six physical constraints,
+including both derivatives.
+
+| Component ID | Evidence | Reference and frontend status | Maintained check |
+| --- | --- | --- | --- |
+| `phenomxas.amp.intermediate.fifth_order.v1` | Eqs. (67), (72) | `paper_amplitude` in the scalar reference; reference-only | `test_paper_fifth_order_and_physical_slope_constraints` |
+| `phenomxas.amp.intermediate.fifth_order_collocation.v1` | Eqs. (73)–(78), Table 1 | `collocation_coefficients` and `physical_collocation_coefficients`; reference-only | `test_paper_fifth_order_and_physical_slope_constraints`, `test_fifth_order_reference_only_evidence` |
+
+The caller supplies the four nodes and collocation amplitudes. The printed
+Table 1 labels `f1` as `f1^W` and prints its two interior-frequency formulas
+in terms of `f_T^A` and `f_peak`; this component does not reinterpret those
+notations or import parameter-space fits. As with the quartic paper equation,
+this is a literal literature specification, not evidence that the production
+carrier uses the same frequency prefactor. Full inspiral/merger-ringdown
+amplitude components and physical validation remain pending.
