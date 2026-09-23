@@ -114,6 +114,7 @@ def reconstruct_seobnrv4_22_adaptive(
     dt_geom: float = 0.5,
     diagnostic_coarse_initial_step_M: Optional[float] = None,
     diagnostic_restart_time_M: Optional[float] = None,
+    diagnostic_fine_max_step_M: Optional[float] = None,
     diagnostic_hermite_resampling: bool = False,
     diagnostic_local_nqc_derivatives: bool = False,
     diagnostic_matching_second_derivatives: bool = False,
@@ -150,6 +151,10 @@ def reconstruct_seobnrv4_22_adaptive(
             and (not math.isfinite(float(diagnostic_restart_time_M))
                  or diagnostic_restart_time_M <= 0)):
         raise ValueError("diagnostic_restart_time_M must be finite and positive")
+    if (diagnostic_fine_max_step_M is not None
+            and (not math.isfinite(float(diagnostic_fine_max_step_M))
+                 or diagnostic_fine_max_step_M <= 0)):
+        raise ValueError("diagnostic_fine_max_step_M must be finite and positive")
     if (diagnostic_restart_time_M is not None
             and not math.isclose(round(diagnostic_restart_time_M / dt_geom) * dt_geom,
                                  diagnostic_restart_time_M,
@@ -269,6 +274,7 @@ def reconstruct_seobnrv4_22_adaptive(
             max_rejected_steps=max_rejected_steps, max_evaluations=max_evaluations,
             max_accepted_steps=maximum_steps,
             max_duration=max_duration,
+            max_step=diagnostic_fine_max_step_M,
         )
         fine_runs.append(_diagnostic_hermite_output(fine_run)
                          if diagnostic_hermite_resampling else fine_run)

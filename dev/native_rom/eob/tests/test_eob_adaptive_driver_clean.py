@@ -37,6 +37,9 @@ def test_diagnostic_grid_overrides_reject_invalid_values_before_solve():
     with pytest.raises(TypeError, match="diagnostic_hermite_resampling"):
         reconstruct_seobnrv4_22_adaptive(
             omega, 30.0, 30.0, diagnostic_hermite_resampling="yes")
+    with pytest.raises(ValueError, match="diagnostic_fine_max_step_M"):
+        reconstruct_seobnrv4_22_adaptive(
+            omega, 30.0, 30.0, diagnostic_fine_max_step_M=0.0)
 
 
 def test_diagnostic_hermite_resampling_reproduces_cubic_on_nonuniform_knots():
