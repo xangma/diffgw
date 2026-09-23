@@ -617,6 +617,28 @@ retuned. Reproduce with `PYTHONPATH=src:. python -m
 dev.native_rom.diagnose_boundary_strong_spin_nqc_inputs --json-out
 /tmp/seobnrv4-boundary-strong-spin-nqc-inputs.json`.
 
+The [phase-basis error-trace plan](boundary_strong_spin_basis_trace_plan.json)
+was committed before its [frozen replay and numerical partition](boundary_strong_spin_basis_trace.json).
+The plan was amended before the final replay to cover the entire local fit
+window and its bracketing accepted knots with dense DOP853; the first attempt
+had extrapolated the far-side dense output and is not evidence. Both final
+replays match their frozen waveform hashes, and cubic Hermite reconstruction
+of the native output from accepted states agrees within `3.6e-15`. For
+`p1=pr*/(r Ω)`, the medium-to-fine change in `p1''` is `+2.57147e-9`.
+Evaluating the same cubic Hermite map on dense states at the native accepted
+times attributes `+2.57169e-9` to output interpolation; accepted-state
+evolution, the degree-six derivative fit, and the restart state together
+contribute about `-2.14e-13`. The medium and fine local windows use six and
+ten accepted knots, respectively. At the looser dense tolerance, the
+interpolation contribution is `+2.57274e-9`, so its dominance is stable;
+the tiny restart-coordinate contributions are below the dense numerical
+spread and should not be interpreted individually. This traces the frozen
+NQC sensitivity to resampling the fine trajectory with cubic Hermite, not
+to a physics correction. The qualification failure is unchanged. Reproduce
+with `PYTHONPATH=src:. python -m
+dev.native_rom.diagnose_boundary_strong_spin_basis_trace --json-out
+/tmp/seobnrv4-boundary-strong-spin-basis-trace.json`.
+
 The [boundary first-step plan](boundary_grid_first_step_plan.json) was also
 committed before its [nine-run control](boundary_grid_first_step.json). It
 replays the three rows whose default grid errors increased, holding only the
@@ -633,9 +655,10 @@ gates remain failed. Reproduce with `PYTHONPATH=src:. python -m
 dev.native_rom.diagnose_boundary_grid_first_step --json-out
 /tmp/seobnrv4-boundary-grid-first-step.json`.
 
-Next, examine why the strong-spin ODE trajectory perturbs that phase-basis
-second derivative. Check the historical initial-state prescription and
-remaining Hamiltonian/flux components independently, including the `(2,1)` spin terms and `(5,5)`
+Next, test a frozen fine-output interpolation or accepted-step control
+across the failing campaign rows. Check the historical initial-state
+prescription and remaining Hamiltonian/flux components independently,
+including the `(2,1)` spin terms and `(5,5)`
 amplitude, without fitting correction coefficients to the LAL binary.
 The separate [paper-component reference](../../reference/SPEC.md) now checks
 the aligned-spin Hamiltonian and pre-NQC `(2,2)`, `(3,2)`, `(3,3)`, and `(4,4)` amplitudes
