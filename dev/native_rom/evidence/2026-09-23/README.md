@@ -655,8 +655,30 @@ gates remain failed. Reproduce with `PYTHONPATH=src:. python -m
 dev.native_rom.diagnose_boundary_grid_first_step --json-out
 /tmp/seobnrv4-boundary-grid-first-step.json`.
 
-Next, test a frozen fine-output interpolation or accepted-step control
-across the failing campaign rows. Check the historical initial-state
+The [fine accepted-step cap plan](boundary_fine_step_cap_plan.json) was
+committed before its [four-row control](boundary_fine_step_cap.json). It
+replays an uncapped strong aligned-spin run exactly, then caps only the fine
+stage's accepted steps at `0.125 M` for the three frozen ODE tolerance levels
+in each of the four failing boundary rows. All 12 capped solves complete,
+their accepted steps obey the cap, the recorded sources stay unchanged, and
+all medium-to-fine event-time differences are zero. In strong aligned spin,
+the medium-to-fine complex relative L2 falls from `6.56623e-6` to
+`3.30022e-10`, passing its ODE error budget; the phase-basis `p1''` change
+falls from `+2.57147e-9` to `-2.30e-13`. This supports the cubic Hermite
+output interpolation diagnosis for that row. In mass ratio four, the complex
+error falls from `3.10513e-7` to `4.76183e-8`, but its monotonicity gate
+still fails: the capped coarse-to-medium error is `1.60292e-9`. The
+equal-mass and antialigned-spin ODE gates pass, as they already did before
+this control. Their separate frozen output-grid failures were not re-run
+here. These are numerical controls on the same provisional equations, not a
+production interpolation choice or independent SEOBNRv4 validation.
+Reproduce with `PYTHONPATH=src:. /Users/xangma/repos/diffgw/.venv/bin/python
+-m dev.native_rom.diagnose_boundary_fine_step_cap --json-out
+/tmp/seobnrv4-boundary-fine-step-cap.json`.
+
+Next, attribute the remaining mass-ratio-four ODE nonmonotonicity, then test
+any combined numerical candidate across all six frozen boundary rows without
+relaxing the gates. Check the historical initial-state
 prescription and remaining Hamiltonian/flux components independently,
 including the `(2,1)` spin terms and `(5,5)`
 amplitude, without fitting correction coefficients to the LAL binary.
