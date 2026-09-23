@@ -1,5 +1,5 @@
 {
-  "specification": "seobnrv4-paper-components/0.8.0",
+  "specification": "seobnrv4-paper-components/0.8.3",
   "model": "SEOBNRv4 dominant (2,2) mode, aligned-spin black-hole binaries",
   "source": {
     "id": "bohe-2017-v3",
@@ -100,7 +100,7 @@
       "torch": "src/torchwave/approximants/eob/factorized_modes.py:energy_flux_from_modes; src/torchwave/approximants/eob/seobnrv4_flux.py:SEOBNRv4PublishedFlux.energy_flux",
       "jax": null,
       "test": "dev/native_rom/reference/tests/test_published.py:test_flux_paper_normalization_and_mode_partner; dev/native_rom/reference/tests/test_torch.py:test_mode_flux_normalization_against_reference; dev/native_rom/reference/tests/test_torch.py:test_35_mode_flux_composition_against_reference",
-      "condition": "Requires externally supplied pre-NQC mode amplitudes; 32 amplitude formulas and a JAX factorized implementation are not yet independently checked."
+      "condition": "Requires externally supplied pre-NQC mode amplitudes; 27 mode amplitudes, the complete historical (2,1) spin choice, and a JAX factorized implementation are not yet independently checked."
     },
     {
       "id": "V4-FLUX-22-AMPLITUDE",
@@ -110,7 +110,7 @@
       "torch": "src/torchwave/approximants/eob/seobnrv4_amplitude22.py:seobnrv4_published_amplitude22; src/torchwave/approximants/eob/seobnrv4_flux.py:SEOBNRv4PublishedFlux.amplitudes",
       "jax": null,
       "test": "dev/native_rom/reference/tests/test_published.py:test_factorized_22_newtonian_limit; dev/native_rom/reference/tests/test_torch.py:test_factorized_22_amplitude_against_reference",
-      "condition": "Pre-NQC modulus only, using Bohé replacement of the 3.5PN term rather than retaining an additional Pan cubic Kerr-spin term; phase, NQC, and 31 mode amplitudes are not established."
+      "condition": "Pre-NQC modulus only, using Bohé replacement of the 3.5PN term rather than retaining an additional Pan cubic Kerr-spin term; phase, NQC, and other mode amplitudes are not established."
     },
     {
       "id": "V4-FLUX-33-44-AMPLITUDES",
@@ -120,7 +120,7 @@
       "torch": "src/torchwave/approximants/eob/seobnrv4_flux.py:SEOBNRv4PublishedFlux.amplitudes",
       "jax": null,
       "test": "dev/native_rom/reference/tests/test_torch.py:test_factorized_33_44_amplitudes_against_reference",
-      "condition": "Pre-NQC moduli of the published hybridized factorized reconstruction at tested points only; historical v4 implementation choices, remaining 31 modes, and JAX are unverified."
+      "condition": "Pre-NQC moduli of the published hybridized factorized reconstruction at tested points only; historical v4 implementation choices, other mode amplitudes, and JAX are unverified."
     },
     {
       "id": "V4-FLUX-32-AMPLITUDE",
@@ -130,7 +130,7 @@
       "torch": "src/torchwave/approximants/eob/seobnrv4_flux.py:SEOBNRv4PublishedFlux.amplitudes",
       "jax": null,
       "test": "dev/native_rom/reference/tests/test_torch.py:test_factorized_32_amplitude_against_reference",
-      "condition": "Pre-NQC J-source modulus at tested points only; historical v4 implementation choices, remaining 31 modes, and JAX are unverified."
+      "condition": "Pre-NQC J-source modulus at tested points only; historical v4 implementation choices, other mode amplitudes, and JAX are unverified."
     },
     {
       "id": "V4-FLUX-21-NONSPIN-AMPLITUDE",
@@ -150,7 +150,37 @@
       "torch": "src/torchwave/approximants/eob/seobnrv4_flux.py:SEOBNRv4PublishedFlux.amplitudes",
       "jax": null,
       "test": "dev/native_rom/reference/tests/test_torch.py:test_factorized_21_spin_amplitude_against_reference",
-      "condition": "Paper-based reconstructed pre-NQC J-source modulus at tested spin points, including equal-mass unequal-spin regularization. The complete historical v4 (2,1) polynomial is not printed in the cited papers; historical truncation, remaining 30 modes, and JAX are unverified."
+      "condition": "Paper-based reconstructed pre-NQC J-source modulus at tested spin points, including equal-mass unequal-spin regularization. The complete historical v4 (2,1) polynomial is not printed in the cited papers; historical truncation, other mode amplitudes, and JAX are unverified."
+    },
+    {
+      "id": "V4-FLUX-42-AMPLITUDE",
+      "source": "bohe-2017-v3, Eq. (9); Damour, Iyer and Nagar 0811.2069v2, Eq. (102); Pan et al. 1006.0431v2, Eqs. (29h), (38h), (42h)",
+      "status": "conditional",
+      "reference": "flux.factorized_42_amplitude",
+      "torch": "src/torchwave/approximants/eob/seobnrv4_flux.py:SEOBNRv4PublishedFlux.amplitudes",
+      "jax": null,
+      "test": "dev/native_rom/reference/tests/test_published.py:test_factorized_42_newtonian_limit_and_mass_exchange; dev/native_rom/reference/tests/test_torch.py:test_factorized_42_amplitude_against_reference",
+      "condition": "Pre-NQC modulus of a declared finite-mass nonspin and test-particle/generic-mass spin hybrid at frozen points. The historical v4 hybrid choice, other 27 mode amplitudes, complete (2,1) spin prescription, and JAX are unverified."
+    },
+    {
+      "id": "V4-FLUX-43-AMPLITUDE",
+      "source": "bohe-2017-v3, Eq. (9); Damour, Iyer and Nagar 0811.2069v2, Eq. (101); Pan et al. 1006.0431v2, Eqs. (29g), (38g), (41g); Taracchini et al. 1202.0790v2, Appendix A",
+      "status": "conditional",
+      "reference": "flux.factorized_43_amplitude",
+      "torch": "src/torchwave/approximants/eob/seobnrv4_flux.py:SEOBNRv4PublishedFlux.amplitudes",
+      "jax": null,
+      "test": "dev/native_rom/reference/tests/test_published.py:test_factorized_43_newtonian_limit_and_equal_mass_spin; dev/native_rom/reference/tests/test_torch.py:test_factorized_43_amplitude_against_reference",
+      "condition": "Regularized pre-NQC J-source modulus of a declared finite-mass nonspin and spin hybrid at frozen points. The historical v4 hybrid choice, other 27 mode amplitudes, complete (2,1) spin prescription, and JAX are unverified."
+    },
+    {
+      "id": "V4-FLUX-55-AMPLITUDE",
+      "source": "bohe-2017-v3, Eq. (9); Damour, Iyer and Nagar 0811.2069v2, Eqs. (4)-(7), (104); Pan et al. 1006.0431v2, Eq. (77a)",
+      "status": "conditional",
+      "reference": "flux.factorized_55_amplitude",
+      "torch": "src/torchwave/approximants/eob/seobnrv4_flux.py:SEOBNRv4PublishedFlux.amplitudes",
+      "jax": null,
+      "test": "dev/native_rom/reference/tests/test_published.py:test_factorized_55_newtonian_limit_and_mass_exchange; dev/native_rom/reference/tests/test_torch.py:test_factorized_55_amplitude_against_reference",
+      "condition": "Pre-NQC modulus of a declared finite-mass nonspin and test-particle-spin hybrid at frozen points. The historical v4 hybrid choice, other 27 mode amplitudes, complete (2,1) spin prescription, and JAX are unverified."
     },
     {
       "id": "V4-HAM-1-3",
@@ -162,7 +192,7 @@
       "id": "V4-FLUX-4-9",
       "source": "bohe-2017-v3, Eqs. (4)-(9); Pan et al. 1006.0431v2, Eqs. (28)-(30), (41)-(42), and Appendices C-F; Taracchini et al. 1311.2544v1, Eq. (4)",
       "status": "pending",
-      "blocker": "The scalar flux normalization and pre-NQC (2,2), (3,2), (3,3), and (4,4) moduli, plus nonspinning (2,1), are checked; independently reference the other 31 complete factorized amplitudes, high-ell spin truncation, and NQC-free dynamics, then implement the JAX path."
+      "blocker": "Scalar flux normalization and conditional pre-NQC (2,2), (2,1), (3,2), (3,3), (4,2), (4,3), (4,4), and (5,5) moduli are checked at frozen points. Independently reference the other 27 amplitudes, complete historical (2,1) spin and high-ell truncation choices, NQC-free dynamics, and the JAX path."
     },
     {
       "id": "V4-NQC-7",
@@ -190,25 +220,29 @@
     },
     {
       "id": "V4-QNM-220-PAPER-CHECK",
-      "source": "bohe-2017-v3, Sec. II.C and Appendix B; Berti et al. (2006), Sec. II.1, Eq. (1), Appendix E, Eqs. (73)-(74), Tables II and VIII",
+      "source": "bohe-2017-v3, Sec. II.C and Appendix B; Berti et al. (2006), Sec. II.1, Eq. (1), Appendix E, Eqs. (73)-(74), Tables II and VIII; Berti author archive l2.tar.gz/n1l2m2.dat; Cook (2019) author archive KerrQNM_00.h5",
       "status": "diagnostic",
       "reference": "qnm.berti_220_fit; qnm.sigma_initial_mass_units",
       "torch": "src/torchwave/approximants/kerr_qnm_generated.py:dimensionless_qnm",
       "jax": "src/jaxwave/approximants/kerr_qnm_interp.py:evaluate_kerr_qnm_220",
-      "test": "dev/native_rom/reference/tests/test_published.py:test_berti_fit_is_a_diagnostic_and_qnm_convention; dev/native_rom/reference/tests/test_torch.py:test_qnm_against_berti_numerical_table; dev/native_rom/reference/tests/test_jax.py:test_qnm_against_berti_numerical_table",
-      "condition": "The printed analytic fit only diagnoses scale and convention; four-decimal table checks diagnose native equation solves. Neither reproduces SEOBNRv4's unspecified historical interpolation."
+      "test": "dev/native_rom/reference/tests/test_published.py:test_berti_fit_is_a_diagnostic_and_qnm_convention; dev/native_rom/reference/tests/test_torch.py:test_qnm_against_berti_numerical_table; dev/native_rom/reference/tests/test_torch.py:test_qnm_against_cook_independent_author_data; dev/native_rom/reference/tests/test_jax.py:test_qnm_against_berti_numerical_table; dev/native_rom/reference/tests/test_jax.py:test_qnm_against_cook_independent_author_data",
+      "condition": "The printed analytic fit only diagnoses scale and convention. Three moderate-spin Berti archive values check native equation solves to 1e-9; sparse Cook author values independently check j=0.999 and the raw Torch spline at j=0.99990625. Berti's older j=0.9999 value differs from the later Cook-validated root. Neither source reproduces SEOBNRv4's unspecified historical interpolation."
     },
     {
       "id": "V4-REMNANT-SPIN-CHOICE",
       "source": "bohe-2017-v3, Sec. II.C; Hofmann et al. (2016), Table 1",
-      "status": "pending",
-      "blocker": "Bohé et al. cite Hofmann but do not specify which Table 1 fit order they use. The development assembler selects (3,4), while Hofmann et al. identify (1,2) as less prone to overfitting. Pin the actual SEOBNRv4 choice."
+      "status": "conditional",
+      "reference": "remnant.final_spin_projection with fit_order=(3,4)",
+      "torch": "src/torchwave/approximants/eob/remnant.py:hofmann_final_spin",
+      "jax": "src/jaxwave/approximants/eob/remnant.py:hofmann_final_spin",
+      "test": "dev/native_rom/reference/tests/test_torch.py:test_hofmann_spin_against_reference; dev/native_rom/reference/tests/test_jax.py:test_hofmann_spin_against_reference",
+      "condition": "The pinned LAL 7.7.1/lalsimulation 6.2.1 SEOBNRv4 binary selects Hofmann (3,4) at four discriminating rows; see evidence/2026-09-23/remnant_qnm_binary.json and the explicit public-binary gate. The paper omits the order, and this result does not establish physical accuracy or other LAL versions."
     },
     {
       "id": "V4-QNM-INTERPOLATION",
       "source": "bohe-2017-v3, Sec. II.C and Appendix B; Berti et al. (2006), Appendix E",
       "status": "pending",
-      "blocker": "Bohé et al. specify interpolation of Berti's numerical results, not Berti's approximate analytic fit. Independently identify the exact historical SEOBNRv4 numerical knots, precision, and interpolation rule, or qualify a documented native replacement against whole-waveform evidence."
+      "blocker": "Bohé et al. specify interpolation of Berti's numerical results, not Berti's approximate analytic fit. An explicit pinned-binary gate finds native Torch/JAX QNM errors below 6e-7 at nine signed-spin points through the binary's j=0.9996 limit. The historical knots and interpolation rule are not identified; the native frontends clamp at |j|=0.9999 even though the raw Torch spline reaches 0.99999. Qualify the native replacement across the supported domain and through whole-waveform evidence."
     },
     {
       "id": "V4-IC-LEADING-ADIABATIC",

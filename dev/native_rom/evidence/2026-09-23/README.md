@@ -746,12 +746,56 @@ Reproduce with `PYTHONPATH=src:. /Users/xangma/repos/diffgw/.venv/bin/python
 -m dev.native_rom.diagnose_rkf45_offgrid_reference --json-out
 /tmp/seobnrv4-rkf45-offgrid-reference.json`.
 
-Next, check the historical initial-state
-prescription and remaining Hamiltonian/flux components independently,
-including the `(2,1)` spin terms and `(5,5)`
-amplitude, without fitting correction coefficients to the LAL binary.
-The separate [paper-component reference](../../reference/SPEC.md) now checks
-the aligned-spin Hamiltonian and pre-NQC `(2,2)`, `(3,2)`, `(3,3)`, and `(4,4)` amplitudes
-at selected points, as well as nonspinning `(2,1)`. The conditional quartic
-choice and remaining 31 complete flux amplitudes still require independent
-review before these diagnostics can support a native SEOBNRv4 claim.
+At this earlier stage, the next checks were the historical initial-state
+prescription and remaining Hamiltonian/flux components, without fitting
+correction coefficients to the LAL binary. The later component gate below
+records the subsequent flux and remnant checks; the conditional quartic
+choice and remaining amplitudes still need independent review before these
+diagnostics can support a native SEOBNRv4 claim.
+
+## Later component gate: remnant and QNM (reference 0.8.3)
+
+The independent scalar [reference](../../reference/SPEC.md) now also checks
+the published hybrid pre-NQC `(4,2)`, `(4,3)`, and `(5,5)` amplitudes. Their Newtonian
+limits and body-exchange checks pass, and four frozen Torch comparisons per
+mode pass. Twenty-seven mode amplitudes still lack scalar references, while
+the complete historical `(2,1)` spin choice remains unresolved.
+
+The explicit [public-binary component probe](../../compare_remnant_qnm_lal.py)
+was run on the local host with `lal=7.7.1` and `lalsimulation=6.2.1`. Its
+[JSON result](remnant_qnm_binary.json) records binary hashes, inputs, values,
+thresholds, and gates. The `SEOBNRv4` remnant call selects Hofmann's `(3,4)`
+variant at four discriminating rows; the largest absolute remnant-mass and
+selected-spin differences from the independent scalar fit are `1.2e-16` and
+`2.3e-16`. Both native QNM frontends differ from the public-binary QNM call
+by at most `4.8e-7` in dimensionless real frequency or damping across nine
+signed-spin points. This is a bounded component comparison, not a
+whole-waveform or domain-wide qualification.
+
+The reference suite also checks three sparse `n1l2m2.dat` values from the
+[authors' l=2 archive](https://blackholes.tecnico.ulisboa.pt/Webpagecodes/l2.tar.gz)
+to `1e-9` absolute for each native frontend. The archive is not packaged;
+its download SHA-256 and the copied validation values are recorded in the
+[reference specification](../../reference/SPEC.md).
+A second independent author check uses [Cook's high-accuracy Kerr QNM
+dataset](https://zenodo.org/records/2650358), file `KerrQNM_00.h5`, MD5
+`34c04f3b03bbb99935d1f91f7296bd02`, SHA-256
+`d5853acabc1a07b66b4fae437c02e1435a9d2b3561bd7e4752b9721c9cd48923`.
+Dataset `/n00/m+02/{2,2,0}` has `(j,Re Mω,Im Mω)` in its first three
+columns. At `j=0.999`, both native frontends agree within `3e-16`; at
+`j=0.99990625`, the raw Torch spline differs by `2.7e-13` in frequency and
+`6.8e-13` in damping. The older Berti archive's `j=0.9999` row differs
+from our independently solved value by `1.0152e-7` and `3.3590e-7`,
+respectively. A fresh strict Kerr root reproduces the native value, so
+denser spline interpolation would not resolve this discrepancy. These samples
+are validation-only; neither author archive is bundled or consumed by the
+generator. The signed-spin frontends clamp at `|j|=0.9999`, and the pinned
+public LAL QNM call rejects `j>0.9996`.
+Reproduce the public-binary probe from the repository root with:
+
+```sh
+PYTHONPATH=src:. /Users/xangma/repos/diffgw/.venv/bin/python \
+  -m dev.native_rom.compare_remnant_qnm_lal \
+  --lal-version 7.7.1 --lalsimulation-version 6.2.1 \
+  --json-out /tmp/seobnrv4-remnant-qnm-binary.json
+```

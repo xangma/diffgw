@@ -10,7 +10,9 @@ import sympy as sp
 
 from dev.native_rom.reference import SPEC_VERSION
 from dev.native_rom.reference.flux import (
-    emitted_flux, factorized_22_amplitude, newtonian_22_mode,
+    emitted_flux, factorized_22_amplitude, factorized_42_amplitude,
+    factorized_43_amplitude, factorized_55_amplitude,
+    newtonian_22_mode,
 )
 from dev.native_rom.reference.hamiltonian import (
     aligned_effective_hamiltonian, body_parameters, effective_spin_mapping, energy_map,
@@ -147,6 +149,48 @@ def test_factorized_22_newtonian_limit():
         actual = factorized_22_amplitude(30, 20, 0, 0, w, w, 1, 1)
         expected = abs(newtonian_22_mode(mp.mpf("0.24"), w))
         assert abs(actual/expected-1) < mp.mpf("1e-9")
+
+
+def test_factorized_55_newtonian_limit_and_mass_exchange():
+    with mp.workdps(70):
+        w = mp.mpf("1e-15")
+        n = mp.mpf("0.24")
+        x1, x2 = mp.mpf("0.6"), mp.mpf("0.4")
+        expected = (mp.mpf(125)/792*mp.sqrt(330*mp.pi)*n*w**(mp.mpf(5)/3)
+                    *abs(x2**4-x1**4))
+        actual = factorized_55_amplitude(30, 20, 0, 0, w, w, 1, 1)
+        assert abs(actual/expected-1) < mp.mpf("1e-9")
+        forward = factorized_55_amplitude(30, 20, ".7", "-.4", ".08", ".077", ".91", ".975")
+        exchanged = factorized_55_amplitude(20, 30, "-.4", ".7", ".08", ".077", ".91", ".975")
+        assert abs(forward-exchanged) < mp.mpf("1e-60")
+        assert factorized_55_amplitude(20, 20, ".9", "-.9", ".08", ".077", ".91", ".975") == 0
+
+
+def test_factorized_42_newtonian_limit_and_mass_exchange():
+    with mp.workdps(70):
+        w = mp.mpf("1e-15")
+        n = mp.mpf("0.24")
+        expected = mp.mpf(8)/63*mp.sqrt(mp.pi)*n*w**(mp.mpf(4)/3)*(1-3*n)
+        actual = factorized_42_amplitude(30, 20, 0, 0, w, w, 1, 1)
+        assert abs(actual/expected-1) < mp.mpf("1e-9")
+        forward = factorized_42_amplitude(30, 20, ".7", "-.4", ".08", ".077", ".91", ".975")
+        exchanged = factorized_42_amplitude(20, 30, "-.4", ".7", ".08", ".077", ".91", ".975")
+        assert abs(forward-exchanged) < mp.mpf("1e-60")
+
+
+def test_factorized_43_newtonian_limit_and_equal_mass_spin():
+    with mp.workdps(70):
+        w = mp.mpf("1e-15")
+        n, delta = mp.mpf("0.24"), mp.mpf("0.2")
+        expected = (mp.mpf(9)/5*mp.sqrt(2*mp.pi/7)*n*w**(mp.mpf(5)/3)
+                    *3*w**(mp.mpf(1)/3)*delta*(1-2*n))
+        actual = factorized_43_amplitude(30, 20, 0, 0, w, w, 3, 1)
+        assert abs(actual/expected-1) < mp.mpf("1e-9")
+        forward = factorized_43_amplitude(30, 20, ".7", "-.4", ".08", ".077", 3, ".975")
+        exchanged = factorized_43_amplitude(20, 30, "-.4", ".7", ".08", ".077", 3, ".975")
+        assert abs(forward-exchanged) < mp.mpf("1e-60")
+        assert factorized_43_amplitude(20, 20, ".9", ".9", ".08", ".077", 3, ".975") == 0
+        assert factorized_43_amplitude(20, 20, ".9", "-.9", ".08", ".077", 3, ".975") > 0
 
 
 def test_calibration_fits():

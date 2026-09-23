@@ -2,8 +2,9 @@
 
 Bohé et al. 1611.03703v3 Eq. (9) sums both signs of m through ell=8.
 Reflection symmetry folds that into a positive-m sum with 1/(8*pi).
-The dominant and four subdominant moduli for the studied rows are checked below;
-the other 30 mode amplitudes remain pending independent reference checks.
+The dominant and seven subdominant moduli have conditional scalar checks;
+27 modes have no scalar amplitude reference, and the complete historical
+(2,1) spin prescription also remains unresolved.
 """
 
 import mpmath as mp
@@ -133,6 +134,103 @@ def factorized_33_44_amplitudes(m1, m2, chi1, chi2, omega,
         a44 = (mp.mpf(64)/9*mp.sqrt(mp.pi/7)*n*vphi**4*he
                *_tail_modulus(4, 4, w, hr)*(1-3*n)*abs(rho44)**4)
         return +a33, +a44
+
+
+def factorized_55_amplitude(m1, m2, chi1, chi2, omega,
+                            omega_zero_radial, h_eff, h_real, *, digits=60):
+    """Published pre-NQC |R h55/M| for the hybridized even-parity mode.
+
+    DIN 0811.2069v2 Eqs. (4)--(7), (104) fix the Newtonian factor and
+    finite-mass nonspin rho. Pan 1006.0431v2 Eq. (77a) supplies the
+    test-particle spin terms. The hybrid choice applies those terms to
+    q=(1-2nu)chiS+delta chiA; it is not historical-v4 parity evidence.
+    """
+    with mp.workdps(digits):
+        m1, m2, s1, s2, w, w0, he, hr = map(
+            lambda value: mp.mpf(str(value)),
+            (m1, m2, chi1, chi2, omega, omega_zero_radial, h_eff, h_real),
+        )
+        if min(m1, m2, w, w0, he, hr) <= 0 or max(abs(s1), abs(s2)) > 1:
+            raise ValueError("Require physical masses/spins and positive frequency/energy")
+        x1, x2 = m1/(m1+m2), m2/(m1+m2)
+        n, delta = x1*x2, x1-x2
+        cs, ca = (s1+s2)/2, (s1-s2)/2
+        q = (1-2*n)*cs+delta*ca
+        v, vphi = mp.root(w, 3), w*w0**(-mp.mpf(2)/3)
+        rho = (1+(512*n**2-1298*n+487)/(390*(2*n-1))*v**2
+               -2*q/3*v**3+(q**2/2-mp.mpf(3353747)/2129400)*v**4
+               -241*q/195*v**5)
+        # DIN (5) with Y_(5,-5)(pi/2,0) gives 125*sqrt(330*pi)/792.
+        newtonian = mp.mpf(125)/792*mp.sqrt(330*mp.pi)
+        return +(newtonian*n*vphi**5*he*_tail_modulus(5, 5, w, hr)
+                 *abs(x2**4-x1**4)*abs(rho)**5)
+
+
+def factorized_42_amplitude(m1, m2, chi1, chi2, omega,
+                            omega_zero_radial, h_eff, h_real, *, digits=60):
+    """Published pre-NQC |R h42/M| for the hybridized even-parity mode.
+
+    Pan 1006.0431v2 Eq. (38h) fixes the Newtonian factor. DIN
+    0811.2069v2 Eq. (102) supplies finite-mass nonspin rho; Pan Eqs.
+    (29h), (42h) supply test-particle and generic-mass spin terms.
+    This declared hybrid is not historical-v4 parity evidence.
+    """
+    with mp.workdps(digits):
+        m1, m2, s1, s2, w, w0, he, hr = map(
+            lambda value: mp.mpf(str(value)),
+            (m1, m2, chi1, chi2, omega, omega_zero_radial, h_eff, h_real),
+        )
+        if min(m1, m2, w, w0, he, hr) <= 0 or max(abs(s1), abs(s2)) > 1:
+            raise ValueError("Require physical masses/spins and positive frequency/energy")
+        x1, x2 = m1/(m1+m2), m2/(m1+m2)
+        n, delta = x1*x2, x1-x2
+        cs, ca = (s1+s2)/2, (s1-s2)/2
+        q = (1-2*n)*cs+delta*ca
+        v, vphi = mp.root(w, 3), w*w0**(-mp.mpf(2)/3)
+        el2 = mp.euler+mp.log(4*v)
+        rho = (1+(285*n**2-3530*n+1146)/(1320*(3*n-1))*v**2
+               -((78*n**2-59*n+10)*cs+(10-21*n)*delta*ca)
+               /(15*(1-3*n))*v**3
+               +((-379526805*n**4-3047981160*n**3+1204388696*n**2
+                  +295834536*n-114859044)/(317116800*(1-3*n)**2)
+                 +q**2/2)*v**4
+               -7*q/110*v**5
+               +(mp.mpf(848238724511)/219761942400-3142*el2/3465
+                 +2323*q**2/3960)*v**6)
+        return +(mp.mpf(8)/63*mp.sqrt(mp.pi)*n*vphi**4*he
+                 *_tail_modulus(4, 2, w, hr)*(1-3*n)*abs(rho)**4)
+
+
+def factorized_43_amplitude(m1, m2, chi1, chi2, omega,
+                            omega_zero_radial, pphi, h_real, *, digits=60):
+    """Conditional pre-NQC |R h43/M| with regularized odd-mass spin term.
+
+    Pan 1006.0431v2 Eqs. (29g), (38g), (41g) and DIN 0811.2069v2
+    Eq. (101) give the J-source leading mode, nonspin rho, and spin
+    additions. Taracchini 1202.0790v2 Appendix A adds the printed
+    test-particle v**6 term. No division by mass difference is needed.
+    """
+    with mp.workdps(digits):
+        m1, m2, s1, s2, w, w0, j, hr = map(
+            lambda value: mp.mpf(str(value)),
+            (m1, m2, chi1, chi2, omega, omega_zero_radial, pphi, h_real),
+        )
+        if min(m1, m2, w, w0, j, hr) <= 0 or max(abs(s1), abs(s2)) > 1:
+            raise ValueError("Require physical masses/spins and positive orbital inputs")
+        x1, x2 = m1/(m1+m2), m2/(m1+m2)
+        n, delta = x1*x2, x1-x2
+        cs, ca = (s1+s2)/2, (s1-s2)/2
+        q = (1-2*n)*cs+delta*ca
+        v, vphi = mp.root(w, 3), w*w0**(-mp.mpf(2)/3)
+        el3 = mp.euler+mp.log(6*v)
+        rho = (1+(160*n**2-547*n+222)/(176*(2*n-1))*v**2
+               -mp.mpf(6894273)/7047040*v**4
+               +(mp.mpf(1664224207351)/195343948800-1571*el3/770)*v**6)
+        c = x2**4-x1**4
+        residual = (c*(rho**4+3*q**2/2*v**4-12113*q/1540*v**5)
+                    -5*n/2*(delta*cs-ca)*v)
+        return +(mp.mpf(9)/5*mp.sqrt(2*mp.pi/7)*n*vphi**5*j*v
+                 *_tail_modulus(4, 3, w, hr)*abs(residual))
 
 
 def factorized_32_amplitude(m1, m2, chi1, chi2, omega,

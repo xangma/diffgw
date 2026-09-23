@@ -40,6 +40,12 @@ ringdown components and maps applicable checks to the frontends. Its
 [manifest](reference/manifest.json) marks unresolved generator components
 explicitly. Resolve those entries and validate the complete generator before
 extending the ROM work or promoting any model.
+A separate [pinned public-binary component check](evidence/2026-09-23/README.md)
+identifies the Hofmann `(3,4)` remnant-spin choice for the tested LAL version
+and bounds native fundamental QNM differences at nine signed-spin points.
+The reference also checks sparse Berti and Cook author QNM values and the
+published hybrid `(4,2)`, `(4,3)`, and `(5,5)` flux amplitudes. These component
+results do not change the failed whole-waveform or release gates.
 
 ## Numerical evidence
 

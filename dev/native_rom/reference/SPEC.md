@@ -1,4 +1,4 @@
-# SEOBNRv4 source specification: paper components 0.8.0
+# SEOBNRv4 source specification: paper components 0.8.3
 
 **Status: incomplete research specification.** This version establishes an
 independent executable source of truth for the components marked `executable`
@@ -102,6 +102,27 @@ It agrees with the native 35-mode flux at nonspinning, aligned-spin,
 equal-mass unequal-spin, and unequal-mass sample points. These two modes
 account for most of the higher-mode flux at the tested initial states, but
 their paper-component agreement does not establish historical v4 parity.
+`flux.factorized_55_amplitude` separately evaluates the even-parity `(5,5)`
+modulus from [Damour--Iyer--Nagar Eqs. (4)--(7), (104)](https://arxiv.org/html/0811.2069)
+and [Pan Eq. (77a)](https://arxiv.org/html/1006.0431). Its Newtonian limit,
+mass-exchange symmetry, equal-mass zero, and Torch values at the frozen
+nonspinning and spinning points agree. It uses a declared hybrid of the
+finite-mass nonspin residual and test-particle spin terms, so this is still
+conditional paper-component evidence rather than historical v4 parity.
+`flux.factorized_42_amplitude` evaluates the even-parity `(4,2)` modulus
+from [Pan Eq. (38h), (29h), (42h)](https://arxiv.org/html/1006.0431)
+and [Damour--Iyer--Nagar Eq. (102)](https://arxiv.org/html/0811.2069).
+Its Newtonian limit, body-exchange symmetry, and four frozen Torch values
+agree. The finite-mass nonspin and spin completion is a declared hybrid;
+this check does not establish historical v4 parity.
+`flux.factorized_43_amplitude` evaluates the odd-parity `(4,3)` pre-NQC
+modulus with a regularized mass-difference residual. It combines
+[Damour--Iyer--Nagar Eq. (101)](https://arxiv.org/html/0811.2069),
+[Pan Eqs. (29g), (38g), (41g)](https://arxiv.org/html/1006.0431), and
+[Taracchini et al., Appendix A](https://arxiv.org/html/1202.0790).
+Its Newtonian limit, body-exchange behavior, equal-mass equal-spin zero,
+and four frozen Torch values agree. The high-order hybrid is conditional;
+this does not establish the complete historical v4 prescription.
 `flux.factorized_32_amplitude` independently evaluates the pre-NQC `(3,2)`
 modulus with the odd-parity angular-momentum source. It uses
 [Damour--Iyer--Nagar Eq. (53)](https://arxiv.org/html/0811.2069) for the
@@ -129,8 +150,9 @@ with Torch for unequal-mass aligned spins and equal-mass unequal spins, without
 dividing by the mass difference. The papers do not print the complete
 assembled historical v4 `(2,1)` polynomial, so this component agreement
 does not establish its historical truncation or waveform parity.
-Torch composes all 35 supplied modes with the flux normalization, but the
-other 30 amplitude formulas, high-`ell` spin truncation, and JAX
+Torch composes all 35 supplied modes with the flux normalization, but 27
+other modes lack scalar amplitude references, the complete historical `(2,1)`
+spin prescription is unresolved, and the high-`ell` spin truncation and JAX
 factorized-flux path still need independent checks. The JAX
 development assembler currently uses a 1.5PN prototype flux and Newtonian `(2,2)` mode, so no
 cross-backend whole-waveform SEOBNRv4 claim follows from these checks.
@@ -205,9 +227,13 @@ using mpmath and the paper's printed coefficients. It requires an explicit
 body exchange, mass-scale invariance, and each variant against Torch and JAX.
 The SEOBNRv4 paper cites Hofmann but does not identify a Table 1 order.
 Hofmann et al. regard `(1,2)` as the choice less prone to overfitting; the
-development assembler currently chooses `(3,4)`. Component agreement does
-not establish which variant defines SEOBNRv4, so model-level selection is
-still pending.
+development assembler chooses `(3,4)`. A pinned public-binary component check
+of `lal=7.7.1`, `lalsimulation=6.2.1` selects `(3,4)` at four rows that
+distinguish it from `(1,2)` and `(3,3)`; remnant mass and selected spin differ
+from the independent scalar reference by at most `2.3e-16`. This resolves
+the fit choice for that binary, not for unspecified historical versions or
+physical accuracy. The recorded [binary evidence](../evidence/2026-09-23/remnant_qnm_binary.json)
+contains the input rows, all candidate values, and binary hashes.
 
 ## Fundamental QNM: published data and diagnostic
 
@@ -218,6 +244,14 @@ The papers do not specify the historical interpolation knots, precision, or
 rule. An analytic fit to those results is therefore not an exact SEOBNRv4 QNM
 prescription. The Berti numerical table and fitted coefficients are the
 authors' numbers, not newly generated diffGW data.
+The authors also host an [l=2 numerical data archive](https://blackholes.tecnico.ulisboa.pt/Webpagecodes/l2.tar.gz),
+which supplies an independent numerical source; it is not bundled with diffGW.
+The downloaded archive's SHA-256 is
+`0569faae28e14366480cf594ea398f3d33ac9d3f82dbbddd43a68d920d807086`.
+The archive's `n1l2m2.dat` indexes the fundamental as `n1` and reports the
+frequency and signed damping at spin `0`, `0.8`, and `0.98` to roughly ten
+decimal places. Three sparse values in `qnm.BERTI_AUTHOR_220_SAMPLES` are
+author numbers used only for validation, with no table asset redistributed.
 
 Berti uses time dependence `exp(+i omega t)` and a positive imaginary frequency
 `+1/tau`. Bohé's Eq. (10) uses `exp(-i sigma t)` with
@@ -235,10 +269,30 @@ damping by `M_f/M` to use the initial-mass time of the waveform. Neither
 function is selected as the model's QNM source. Berti Table II gives numerical
 `(M_f omega_R,M_f/tau)` values `(0.3737,0.0890)` at `j=0`,
 `(0.5860,0.0756)` at `j=0.8`, and `(0.8254,0.0386)` at `j=0.98`.
-The native Torch/JAX Kerr equation solves agree with these at the table's
-printed four-decimal precision. Their generated spline numbers are ours, but
+The native Torch/JAX Kerr equation solves agree with the higher-precision
+author archive values at those same three spins to `1e-9` absolute. Their
+generated spline numbers are ours, but
 this agreement does not establish equivalence to SEOBNRv4's historical
 interpolation or qualify the full generator.
+The older Berti archive diverges from the independent Kerr solve near extremal
+spin: at `j=0.9999`, its frequency and positive damping exceed the native
+values by `1.0152e-7` and `3.3590e-7`. A later, high-accuracy
+[Cook (2019) author dataset](https://zenodo.org/records/2650358),
+`KerrQNM_00.h5` dataset `/n00/m+02/{2,2,0}`, agrees with the native raw
+Torch spline at `j=0.99990625` to `2.7e-13` in frequency and `6.8e-13` in
+damping. Its archive MD5 is `34c04f3b03bbb99935d1f91f7296bd02` and
+SHA-256 is `d5853acabc1a07b66b4fae437c02e1435a9d2b3561bd7e4752b9721c9cd48923`.
+At `j=0.999`, both frontends also match a Cook author row within `3e-16`.
+These sparse author values validate the independent equation solve; they are
+not generator inputs or packaged assets. The signed-spin Torch/JAX frontends
+intentionally clamp at `|j|=0.9999`, whereas the underlying generated Torch
+spline reaches `0.99999`.
+An explicit pinned-binary check at nine signed-spin values from `-0.9` to
+`0.9996` finds both native backends within `4.8e-7` absolute in dimensionless
+frequency and damping of the `SEOBNRv4` public QNM call. The binary values at
+some grid points carry fewer printed digits than the independent native Kerr
+solves. The public binary rejects remnant spins above `0.9996`; its full
+historical interpolation and domain-wide error remain open.
 
 ## Evidence and implementation map
 
@@ -263,9 +317,9 @@ dependency or distribution asset changes in this branch.
 ## Promotion blockers
 
 The manifest names each remaining component and its next discriminating task.
-Most urgently, the Hamiltonian's conditional quartic choice and the other 31
-factorized mode amplitudes need equation review; the remnant-spin choice and
-QNM interpolation details need independently documented provenance. The ODE initial conditions,
+Most urgently, the Hamiltonian's conditional quartic choice and 27
+factorized mode amplitudes need equation review; the complete historical
+`(2,1)` spin prescription and QNM interpolation details remain open. The ODE initial conditions,
 solver, event location, and output-grid coupling need converged campaigns across
 the intended parameter domain.
 The [first frozen generator campaign](../evidence/2026-09-22/README.md) failed
