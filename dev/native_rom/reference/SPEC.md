@@ -193,8 +193,10 @@ modulus with the odd-parity angular-momentum source. It uses
 [Damour--Iyer--Nagar Eq. (53)](https://arxiv.org/html/0811.2069) for the
 finite-mass nonspin terms and [Pan Eqs. (29d), (38d), (42d), Appendix F.1](https://arxiv.org/html/1006.0431)
 for the spin terms, including the quadratic term that compensates the
-0.5PN spin term when the residual is cubed. It agrees with Torch at the
-tested nonspinning, aligned-spin, equal-mass, and unequal-mass points.
+0.5PN spin term when the residual is cubed. It agrees with Torch and JAX at
+the tested nonspinning, aligned-spin, equal-mass, and unequal-mass points.
+The JAX `(2,2)+(3,2)+(3,3)+(4,4)` partial flux agrees with the scalar
+reference at one frozen aligned-spin point; this is not the full torque.
 `flux.factorized_21_nonspin_amplitude` checks the `(2,1)` J-source modulus
 only for zero spins. It uses [Pan Eq. (38b)](https://arxiv.org/html/1006.0431)
 for the leading mode and [Damour--Iyer--Nagar Eq. (51)](https://arxiv.org/html/0811.2069)

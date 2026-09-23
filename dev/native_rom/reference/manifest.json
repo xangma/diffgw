@@ -99,7 +99,7 @@
       "reference": "flux.emitted_flux; flux.newtonian_22_mode",
       "torch": "src/torchwave/approximants/eob/factorized_modes.py:energy_flux_from_modes; src/torchwave/approximants/eob/seobnrv4_flux.py:SEOBNRv4PublishedFlux.energy_flux",
       "jax": "src/jaxwave/approximants/eob/seobnrv4_flux.py:emitted_flux_from_modes",
-      "test": "dev/native_rom/reference/tests/test_published.py:test_flux_paper_normalization_and_mode_partner; dev/native_rom/reference/tests/test_torch.py:test_mode_flux_normalization_against_reference; dev/native_rom/reference/tests/test_torch.py:test_35_mode_flux_composition_against_reference; dev/native_rom/reference/tests/test_torch.py:test_35_mode_flux_from_independent_scalar_amplitudes; dev/native_rom/reference/tests/test_jax.py:test_pre_nqc_emitted_flux_normalization_against_reference; dev/native_rom/reference/tests/test_jax.py:test_pre_nqc_22_flux_against_scalar_reference; dev/native_rom/reference/tests/test_jax.py:test_three_mode_partial_flux_against_scalar_reference; tests/test_clean_room_jax_seobnrv4_flux.py:test_newtonian_22_flux_and_gradient",
+      "test": "dev/native_rom/reference/tests/test_published.py:test_flux_paper_normalization_and_mode_partner; dev/native_rom/reference/tests/test_torch.py:test_mode_flux_normalization_against_reference; dev/native_rom/reference/tests/test_torch.py:test_35_mode_flux_composition_against_reference; dev/native_rom/reference/tests/test_torch.py:test_35_mode_flux_from_independent_scalar_amplitudes; dev/native_rom/reference/tests/test_jax.py:test_pre_nqc_emitted_flux_normalization_against_reference; dev/native_rom/reference/tests/test_jax.py:test_pre_nqc_22_flux_against_scalar_reference; dev/native_rom/reference/tests/test_jax.py:test_three_mode_partial_flux_against_scalar_reference; dev/native_rom/reference/tests/test_jax.py:test_four_mode_partial_flux_against_scalar_reference; tests/test_clean_room_jax_seobnrv4_flux.py:test_newtonian_22_flux_and_gradient",
       "condition": "Requires externally supplied pre-NQC mode amplitudes; complete historical (2,1) spin choice, high-ell truncation, and a full JAX factorized implementation remain unverified."
     },
     {
@@ -128,9 +128,9 @@
       "status": "conditional",
       "reference": "flux.factorized_32_amplitude",
       "torch": "src/torchwave/approximants/eob/seobnrv4_flux.py:SEOBNRv4PublishedFlux.amplitudes",
-      "jax": null,
-      "test": "dev/native_rom/reference/tests/test_torch.py:test_factorized_32_amplitude_against_reference",
-      "condition": "Pre-NQC J-source modulus at tested points only; historical v4 implementation choices, other mode amplitudes, and JAX are unverified."
+      "jax": "src/jaxwave/approximants/eob/seobnrv4_amplitude32.py:seobnrv4_published_amplitude32",
+      "test": "dev/native_rom/reference/tests/test_torch.py:test_factorized_32_amplitude_against_reference; dev/native_rom/reference/tests/test_jax.py:test_factorized_32_amplitude_against_reference; tests/test_clean_room_jax_seobnrv4_amplitude32.py:test_batched_jit_exchange_and_equal_mass_unequal_spin",
+      "condition": "Pre-NQC J-source modulus at tested points only; historical v4 implementation choices and other mode amplitudes remain unverified."
     },
     {
       "id": "V4-FLUX-21-NONSPIN-AMPLITUDE",
