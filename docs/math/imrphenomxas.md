@@ -115,5 +115,59 @@ Table 1 labels `f1` as `f1^W` and prints its two interior-frequency formulas
 in terms of `f_T^A` and `f_peak`; this component does not reinterpret those
 notations or import parameter-space fits. As with the quartic paper equation,
 this is a literal literature specification, not evidence that the production
-carrier uses the same frequency prefactor. Full inspiral/merger-ringdown
-amplitude components and physical validation remain pending.
+carrier uses the same frequency prefactor. Physical validation remains pending.
+
+## Inspiral and merger-ringdown amplitude
+
+Specification `imrphenomxas-inspiral-ringdown-amplitude/v1` independently
+transcribes [Pratten et al., arXiv:2001.11412v1](https://arxiv.org/html/2001.11412v1)
+into the [SymPy reference](../../src/diffgw_reference/imrphenomxas_amplitude.py).
+Frequency is dimensionless `f=Mf`. Eq. (67) gives
+`A0=sqrt(2 eta/(3 pi^(1/3))) f^(-7/6)`. Eqs. (68)–(69) give
+`A_Ins/A0=sum_{i=0}^6 A_i(pi f)^(i/3) + sum_{i=1}^3 rho_i(pi f)^((6+i)/3)`.
+The seven `A_i` are exact rational expressions in `eta`, ordered spins, and
+`delta=(m1-m2)/(m1+m2)` from Appendix A.1, Eqs. (120)–(126). The `rho_i`
+are calibrated inputs; this component does not infer their physical values
+from the paper or native fit constants.
+The physical domain used for the scalar comparisons has `f>0`,
+`0<eta<=1/4`, and `|chi1|,|chi2|<=1`; the carriers order the masses so
+`delta>=0`. Ringdown requires `f_damp>0`, `sigma>0`, and a positive join
+frequency. The simple stationary-peak expression assumes `0<lambda<1`.
+
+The printed Eq. (70) collocation nodes are `{1/2,3/4,1} f_MECO`.
+The [Torch](../../src/torchwave/approximants/imrphenom_xas.py) and
+[JAX](../../src/jaxwave/approximants/imrphenom_xas.py) carriers instead
+pass `f_T^A=f_MECO+(f_ISCO-f_MECO)/4` (Eq. (52)) to the same three-node
+helper. These endpoints are generally different. Tests check exact recovery
+at the paper's nodes and helper algebra for a supplied endpoint. They do
+not claim the carrier endpoint agrees with printed Eq. (70).
+
+Eq. (84) prints `A_MR=a_R Gamma/((f-f_RD)^2+Gamma^2)
+exp[-lambda(f-f_RD)/Gamma]`, where `Gamma=sigma f_damp`. The reference
+also solves `a_R` from a supplied amplitude at one node. Differentiating
+Eq. (84) gives the stationary point
+`f_RD+Gamma(sqrt(1-lambda^2)-1)/lambda` when `0<lambda<1` and the result
+is positive. Printed Eq. (59) instead contains `sqrt(1-lambda)`. The
+reference keeps both formulas separate; the carriers use the stationary
+formula with numerical guards. This does not establish which expression
+was intended in the paper's calibration.
+
+The carriers use Eq. (84) as a *scaled* ringdown shape, multiplying it by
+`f^(-7/6)` in full waveform assembly. That differs from printed Eq. (84)
+as a physical amplitude. The [maintained tests](../../tests/test_imrphenomxas_amplitude_math_reference.py)
+check the PN coefficients and `d/d(Mf)` against both native helpers, the
+collocation solve, the ringdown stationary point and one-node scale, and
+full carrier *shape* for inspiral and ringdown at four binary/spin points.
+The full-carrier checks use native fitted parameters as supplied inputs;
+they establish equation implementation, not independent calibration or
+physical validation against hybrid/NR waveforms. Phase, tapering, cutoff,
+and full waveform composition remain outside this component.
+
+| Component ID | Published evidence | Native relationship | Maintained check |
+| --- | --- | --- | --- |
+| `phenomxas.amp.inspiral.pn.v1` | Eqs. (67), (69), (119)–(126) | `IMRPhenomXAS.pn_amp_func` in Torch/JAX | `test_frontend_pn_shape_and_derivative` |
+| `phenomxas.amp.inspiral.pseudo_pn.v1` | Eq. (68) | Full inspiral carrier assembly | `test_full_frontend_inspiral_and_ringdown_shapes` |
+| `phenomxas.amp.inspiral.collocation.v1` | Eqs. (52), (68), (70) | `solve_inspiral_residual_collocation`; carrier endpoint differs from Eq. (70) | `test_collocation_endpoint_distinction_and_exact_recovery`, `test_frontend_collocation_solve` |
+| `phenomxas.amp.ringdown.lorentzian.v1` | Eq. (84) | Ringdown expression in both carriers, then extra `f^(-7/6)` | `test_ringdown_stationary_peak_and_scale`, `test_full_frontend_inspiral_and_ringdown_shapes` |
+| `phenomxas.amp.ringdown.peak_printed.v1` | Eq. (59) | Paper-literal reference only | `test_ringdown_stationary_peak_and_scale` |
+| `phenomxas.amp.ringdown.peak_stationary.v1` | Derived from Eq. (84) | Carrier join frequencies within the guard-free domain | `test_ringdown_stationary_peak_and_scale` |
