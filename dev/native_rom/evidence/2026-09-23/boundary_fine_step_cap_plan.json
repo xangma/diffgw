@@ -1,0 +1,38 @@
+{
+  "schema": "diffgw.seobnrv4.boundary-fine-step-cap-plan.v1",
+  "purpose": "Test whether reducing accepted-step cubic Hermite output error resolves the frozen parameter-boundary ODE convergence failures, without altering the provisional equations or matching rule.",
+  "frozen_campaign_sha256": "090bd698a49818d8fdf34d122fcebcf14de021feaa81f4309d6723d1f3c607a2",
+  "rows": [
+    "equal_mass_unequal_spin",
+    "mass_ratio_four_nonspinning",
+    "strong_aligned_spin",
+    "strong_antialigned_spin"
+  ],
+  "levels": ["ode_1", "ode_2"],
+  "fine_accepted_max_step_M": 0.125,
+  "unchanged_choices": {
+    "hermite_resampling": true,
+    "local_nqc_phase_derivatives": true,
+    "local_matching_second_derivatives": true,
+    "local_second_window_M": 0.5,
+    "local_second_degree": 6,
+    "fixed_restart_time_M": 165.0,
+    "output_grid_M": 0.5,
+    "coarse_adaptive_driver": "unchanged",
+    "fine_vector_field": "unchanged",
+    "nqc_matching": "unchanged"
+  },
+  "baseline_replay": {
+    "row": "strong_aligned_spin",
+    "level": "ode_1",
+    "require_exact_frozen_waveform_and_stage_statistics": true
+  },
+  "metrics": [
+    "native accepted-step maxima and counts",
+    "whole-waveform complex and amplitude relative L2 at nested samples, without alignment",
+    "event time differences",
+    "phase NQC matching matrix second-derivative row and coefficients",
+    "frozen versus controlled ODE complex-error budget and monotonicity"
+  ],
+  "interpretation": "A cap-induced improvement would support a numerical interpolation diagnosis only. No gate, input row, tolerance, grid, local polynomial, physical coefficient, or release artifact may be retuned. Failed solves and regressions must be recorded. The same provisional equations are not independent SEOBNRv4 validation."
+}
