@@ -2,8 +2,8 @@
 
 Bohé et al. 1611.03703v3 Eq. (9) sums both signs of m through ell=8.
 Reflection symmetry folds that into a positive-m sum with 1/(8*pi).
-The dominant factorized modulus is checked below; all other mode amplitudes
-remain pending independent reference checks.
+The dominant and two leading subdominant moduli for the studied rows are checked below;
+the other 32 mode amplitudes remain pending independent reference checks.
 """
 
 import mpmath as mp
@@ -76,3 +76,58 @@ def factorized_22_amplitude(m1, m2, chi1, chi2, omega, omega_zero_radial,
         tail_sq = 4*mp.pi*khat/(-mp.expm1(-4*mp.pi*khat))
         tail_sq *= (1+4*khat**2)*(1+khat**2)
         return +(8*mp.sqrt(mp.pi/5)*n*vphi**2*he*mp.sqrt(tail_sq)*rho**2)
+
+
+def factorized_33_44_amplitudes(m1, m2, chi1, chi2, omega,
+                               omega_zero_radial, h_eff, h_real, *, digits=60):
+    """Published pre-NQC moduli of two leading subdominant flux modes.
+
+    Newtonian constants: Pan et al. 1006.0431v2 Eqs. (38c), (38f).
+    Nonspin rho: Damour--Iyer--Nagar 0811.2069v2 Eqs. (52), (62).
+    Generic leading spin and test-particle completion: Pan Eqs. (28c),
+    (29f), (41c), (42f). The odd-m spin term is combined before taking
+    the modulus, so the equal-mass unequal-spin limit stays finite.
+    """
+    with mp.workdps(digits):
+        m1, m2, s1, s2, w, w0, he, hr = map(
+            lambda x: mp.mpf(str(x)),
+            (m1, m2, chi1, chi2, omega, omega_zero_radial, h_eff, h_real),
+        )
+        if min(m1, m2, w, w0, he, hr) <= 0 or max(abs(s1), abs(s2)) > 1:
+            raise ValueError("Require physical masses/spins and positive frequency/energy")
+        x1, x2 = m1/(m1+m2), m2/(m1+m2)
+        n, delta = x1*x2, x1-x2
+        cs, ca = (s1+s2)/2, (s1-s2)/2
+        q = (1-2*n)*cs+delta*ca
+        v, vphi = mp.root(w, 3), w*w0**(-mp.mpf(2)/3)
+        el3 = mp.euler+mp.log(6*v)
+        el4 = mp.euler+mp.log(8*v)
+        rho33 = (1+(2*n/3-mp.mpf(7)/6)*v**2
+                 +(149*n**2/330-1861*n/990-mp.mpf(6719)/3960)*v**4
+                 +(mp.mpf(3203101567)/227026800-26*el3/7)*v**6
+                 +(13*el3/3-mp.mpf(57566572157)/8562153600)*v**8)
+        # Pan (28c): omit its generic-mass spin term at v^3, because
+        # (41c) replaces it rather than adding a second copy.
+        higher33 = (3*q**2/2*v**4+2*q/3*v**5-7*q**2/4*v**6
+                    +(6187*q/330-q**3)*v**7)
+        residual33 = (delta*(rho33**3+higher33)
+                      -((2-5*n/2)*delta*cs+(2-19*n/2)*ca)*v**3)
+        rho44 = (1+(2625*n**2-5870*n+1614)/(1320*(3*n-1))*v**2
+                 +(1252563795*n**4-6733146000*n**3-313857376*n**2
+                   +2338945704*n-511573572)/(317116800*(1-3*n)**2)*v**4
+                 +(mp.mpf(16600939332793)/1098809712000-12568*el4/3465)*v**6
+                 -((42*n**2-41*n+10)*cs+(10-39*n)*delta*ca)
+                 /(15*(1-3*n))*v**3
+                 +q**2/2*v**4-69*q/55*v**5+217*q**2/3960*v**6)
+
+        def tail(ell, m):
+            khat = m*w*hr
+            squared = 4*mp.pi*khat/(-mp.expm1(-4*mp.pi*khat))
+            for degree in range(1, ell+1):
+                squared *= 1+4*khat**2/degree**2
+            return mp.sqrt(squared)
+
+        a33 = 3*mp.sqrt(6*mp.pi/7)*n*vphi**3*he*tail(3, 3)*abs(residual33)
+        a44 = (mp.mpf(64)/9*mp.sqrt(mp.pi/7)*n*vphi**4*he
+               *tail(4, 4)*(1-3*n)*abs(rho44)**4)
+        return +a33, +a44

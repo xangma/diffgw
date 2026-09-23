@@ -363,13 +363,28 @@ also uses a particular circular-root and radial-momentum calculation; the
 paper-derived native initial state has not yet been checked against it with a
 controlled waveform ablation.
 
+The [initial-momentum ablation](initial_momentum_ablation.json) replays the
+nonspinning frozen row and verifies both its native waveform hash and the
+pinned public-binary comparison before changing one initial-state component.
+Setting the solved `p_r*=-0.00781014` to zero while retaining `r` and `p_phi`
+raises the quadratic-peak complex relative L2 from `0.006949` to `0.087420`.
+Thus a missing initial radial momentum does not explain this row's residual;
+the test does not validate the exact radial-momentum prescription or identify
+the remaining phase cause. Reproduce with
+`PYTHONPATH=src:. /Users/xangma/repos/diffgw/.venv/bin/python -m dev.native_rom.diagnose_initial_momentum
+--whole-waveform dev/native_rom/evidence/2026-09-23/local_nqc_fixed_restart_whole_waveform.json
+--peak-anchor dev/native_rom/evidence/2026-09-23/peak_anchor_diagnostic.json
+--json-out /tmp/seobnrv4-initial-momentum-ablation.json` on RONI2 with the
+frozen Python environment; the diagnostic rejects a different LAL binary.
+
 The next numerical check is to localize the aligned-spin ODE sensitivity and
 grid nonmonotonicity, then extend convergence to parameter-boundary rows.
-Independently check initial conditions and the remaining Hamiltonian/flux
-components, then use controlled waveform ablations to investigate the phase
-residual without fitting correction coefficients to the LAL binary.
+Independently check the exact initial-state prescription and the remaining
+Hamiltonian/flux components, then use controlled waveform ablations to
+investigate the phase residual without fitting correction coefficients to the
+LAL binary.
 The separate [paper-component reference](../../reference/SPEC.md) now checks
-the aligned-spin Hamiltonian and dominant pre-NQC `(2,2)` amplitude at selected
-points. The conditional quartic choice and remaining 34 flux amplitudes still
-require independent review before these diagnostics can support a native
-SEOBNRv4 claim.
+the aligned-spin Hamiltonian and pre-NQC `(2,2)`, `(3,3)`, and `(4,4)` amplitudes
+at selected points. The conditional quartic choice and remaining 32 flux
+amplitudes still require independent review before these diagnostics can
+support a native SEOBNRv4 claim.
