@@ -1,5 +1,5 @@
 {
-  "specification": "seobnrv4-paper-components/0.6.0",
+  "specification": "seobnrv4-paper-components/0.7.0",
   "model": "SEOBNRv4 dominant (2,2) mode, aligned-spin black-hole binaries",
   "source": {
     "id": "bohe-2017-v3",
@@ -179,6 +179,16 @@
       "source": "bohe-2017-v3, Sec. II.C and Appendix B; Berti et al. (2006), Appendix E",
       "status": "pending",
       "blocker": "Bohé et al. specify interpolation of Berti's numerical results, not Berti's approximate analytic fit. Independently identify the exact historical SEOBNRv4 numerical knots, precision, and interpolation rule, or qualify a documented native replacement against whole-waveform evidence."
+    },
+    {
+      "id": "V4-IC-LEADING-ADIABATIC",
+      "source": "Buonanno--Damour gr-qc/0001013v2, arXiv HTML Eqs. (68), (69), (77), (83); Damour--Nagar 0704.3550v2, Eqs. (7)-(11)",
+      "status": "conditional",
+      "reference": "initial_conditions.leading_adiabatic_state",
+      "torch": "src/torchwave/approximants/eob/initial_conditions.py:find_quasicircular_initial_conditions",
+      "jax": "src/jaxwave/approximants/eob/initial_conditions.py:find_quasicircular_initial_conditions",
+      "test": "dev/native_rom/reference/tests/test_torch.py:test_leading_adiabatic_initial_state_against_scalar_reference; dev/native_rom/reference/tests/test_jax.py:test_leading_adiabatic_initial_state_against_scalar_reference",
+      "condition": "Uses a supplied torque; neither the full 35-mode torque nor the historical SEOBNRv4 initial-data procedure is established by this check."
     },
     {
       "id": "V4-ODE-IC",

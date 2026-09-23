@@ -1,0 +1,60 @@
+{
+  "limitation": "Scalar check consumes the native torque; it does not validate 35-mode flux or LAL initial-data parity.",
+  "rows": [
+    {
+      "absolute_difference": {
+        "pphi": 7.105427357601002e-15,
+        "pr_star": 1.1015494072452725e-16,
+        "r": 5.329070518200751e-15
+      },
+      "native_35_mode_torque": -0.0007467624230684799,
+      "native_initial_state": {
+        "pphi": 3.575069905671427,
+        "pr_star": -0.007810140508150903,
+        "r": 8.55223483136696
+      },
+      "row": {
+        "chi1": 0.0,
+        "chi2": 0.0,
+        "mass1": 30.0,
+        "mass2": 20.0,
+        "omega_start": 0.04
+      },
+      "scalar_hamiltonian_radial_response_step_0p001_relative": -5.21364245682228e-07,
+      "scalar_initial_state": {
+        "pphi": 3.575069905671434,
+        "pr_star": -0.007810140508150792,
+        "r": 8.552234831366965
+      }
+    },
+    {
+      "absolute_difference": {
+        "pphi": 1.2434497875801753e-14,
+        "pr_star": 3.0617869350990645e-16,
+        "r": 1.7763568394002505e-14
+      },
+      "native_35_mode_torque": -0.000738962256799298,
+      "native_initial_state": {
+        "pphi": 3.539470617537794,
+        "pr_star": -0.007398486341382798,
+        "r": 8.5375270080271
+      },
+      "row": {
+        "chi1": 0.2,
+        "chi2": -0.1,
+        "mass1": 30.0,
+        "mass2": 20.0,
+        "omega_start": 0.04
+      },
+      "scalar_hamiltonian_radial_response_step_0p001_relative": -5.214990516805218e-07,
+      "scalar_initial_state": {
+        "pphi": 3.5394706175378063,
+        "pr_star": -0.007398486341382492,
+        "r": 8.537527008027118
+      }
+    }
+  ],
+  "schema": "diffgw.seobnrv4.initial-state-scalar-check.v1",
+  "specification": "seobnrv4-paper-components/0.7.0",
+  "status": "conditional_component_check"
+}

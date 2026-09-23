@@ -11,6 +11,7 @@ from dev.native_rom.reference.hamiltonian import (
     aligned_effective_hamiltonian, body_parameters, effective_spin_mapping, energy_map,
     nonspinning_effective_hamiltonian, radial_potentials,
 )
+from dev.native_rom.reference.initial_conditions import leading_adiabatic_state
 from dev.native_rom.reference.published import calibration, evaluate, mass_spin, peak_targets, ringdown_shape
 from dev.native_rom.reference.ringdown import h22
 from dev.native_rom.reference.remnant import final_mass_fraction, final_spin_projection
@@ -19,6 +20,7 @@ from torchwave.approximants.eob.merger_ringdown import merger_ringdown_22, seobn
 from torchwave.approximants.eob.remnant import eob_final_mass_fraction, hofmann_final_spin
 from torchwave.approximants.eob.nqc import seobnrv4_nqc_parameters, seobnrv4_nqc_targets, seobnrv4_nqc_time_offset
 from torchwave.approximants.eob.seobnrv4_hamiltonian import SEOBNRv4Hamiltonian
+from torchwave.approximants.eob.initial_conditions import find_quasicircular_initial_conditions
 from torchwave.approximants.eob.seobnrv4_flux import SEOBNRv4PublishedFlux
 from torchwave.approximants.eob.seobnrv4_amplitude22 import seobnrv4_published_amplitude22
 from torchwave.approximants.eob.factorized_modes import energy_flux_from_modes
@@ -135,6 +137,26 @@ def test_aligned_effective_hamiltonian_against_reference(m1, m2, s1, s2, r, pr_s
     expected = aligned_effective_hamiltonian(m1, m2, s1, s2, r, pr_star, pphi)
     actual = ham.effective_hamiltonian(scalar(r), scalar(pr_star), scalar(pphi))
     assert float(actual) == pytest.approx(float(expected), rel=2e-12, abs=2e-13)
+
+
+@pytest.mark.parametrize("m1,m2,s1,s2,omega", [
+    (30., 20., 0., 0., .04),
+    (30., 20., .2, -.1, .04),
+    (45., 5., -.8, .3, .025),
+])
+def test_leading_adiabatic_initial_state_against_scalar_reference(m1, m2, s1, s2, omega):
+    torque = -.0007
+    class ConstantTorque:
+        def radiation_reaction_forces(self, frequency, pr_star, pphi, *, r, hamiltonian):
+            return torch.zeros_like(pphi), torch.full_like(pphi, torque)
+
+    n = m1*m2/(m1+m2)**2
+    ham = SEOBNRv4Hamiltonian(scalar(n), scalar(s1), scalar(s2),
+                              delta=scalar((m1-m2)/(m1+m2)))
+    actual = find_quasicircular_initial_conditions(ham, ConstantTorque(), scalar(omega))
+    expected = leading_adiabatic_state(m1, m2, s1, s2, omega, torque)
+    for value, reference in zip(actual, expected):
+        assert float(value) == pytest.approx(float(reference), rel=2e-11, abs=2e-13)
 
 
 def test_35_mode_flux_composition_against_reference():

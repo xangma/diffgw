@@ -36,7 +36,7 @@ def test_manifest_is_explicit_and_versioned():
     }
     assert any(item["status"] == "pending" for item in components)
     for item in components:
-        assert item["source"].startswith("bohe-2017-v3")
+        assert item["source"].startswith(("bohe-2017-v3", "Buonanno--Damour gr-qc/0001013v2"))
         if item["status"] == "pending":
             assert item["blocker"]
         else:

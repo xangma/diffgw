@@ -16,11 +16,12 @@ numerical gates for an aligned-spin row; its sampled-peak difference of
 `0.01336` falls to about `0.0078–0.0081` with sub-sample anchoring. These
 comparisons do not validate the physical generator.
 
-The versioned [SEOBNRv4 paper reference](reference/SPEC.md) now pins the
-published calibration, peak, and ringdown equations and maps them to both
-frontends. Its [manifest](reference/manifest.json) marks unresolved generator
-components explicitly. Resolve those entries and validate the complete
-generator before extending the ROM work or promoting any model.
+The versioned [SEOBNRv4 paper reference](reference/SPEC.md) pins published
+calibration, Hamiltonian, selected flux, leading initial-state, peak, and
+ringdown components and maps applicable checks to the frontends. Its
+[manifest](reference/manifest.json) marks unresolved generator components
+explicitly. Resolve those entries and validate the complete generator before
+extending the ROM work or promoting any model.
 
 ## Numerical evidence
 

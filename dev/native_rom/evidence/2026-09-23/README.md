@@ -360,8 +360,8 @@ v4 phase residual. This is a source audit, not a copied implementation rule
 or proof that the remaining 35-mode flux agrees. The
 [LAL initial-condition source](https://lscsoft.docs.ligo.org/lalsuite/7.26/lalsimulation/_l_a_l_sim_i_m_r_spin_e_o_b_initial_conditions_8c_source.html)
 also uses a particular circular-root and radial-momentum calculation; the
-paper-derived native initial state has not yet been checked against it with a
-controlled waveform ablation.
+paper-derived native initial state has not yet been checked against the
+historical LAL state with a controlled waveform ablation.
 
 The [initial-momentum ablation](initial_momentum_ablation.json) replays the
 nonspinning frozen row and verifies both its native waveform hash and the
@@ -377,9 +377,23 @@ the remaining phase cause. Reproduce with
 --json-out /tmp/seobnrv4-initial-momentum-ablation.json` on RONI2 with the
 frozen Python environment; the diagnostic rejects a different LAL binary.
 
+The [independent leading-adiabatic initial-state check](initial_state_scalar_check.json)
+solves the published circular conditions with the high-precision scalar
+Hamiltonian and converts a **supplied** torque to inward `p_r*`. For the two
+frozen rows, native and scalar `r`, `p_phi`, and `p_r*` differ by at most
+`1.8e-14`, `1.3e-14`, and `3.1e-16`, respectively. This rules out a
+transcription error in those native equations at these points. It does not
+validate the native 35-mode torque or reproduce LAL's historical Cartesian
+root and radial-momentum procedure. A finite `0.001` radial derivative step
+changes the native Hamiltonian's local linear response by roughly `5.2e-7`
+relative; that local calculation is not a measured LAL initial-state or
+waveform difference. Reproduce with `PYTHONPATH=src:. /Users/xangma/repos/diffgw/.venv/bin/python
+-m dev.native_rom.diagnose_initial_state --json-out
+/tmp/seobnrv4-initial-state-scalar-check.json` in the frozen environment.
+
 The next numerical check is to localize the aligned-spin ODE sensitivity and
 grid nonmonotonicity, then extend convergence to parameter-boundary rows.
-Independently check the exact initial-state prescription and the remaining
+Independently check the historical initial-state prescription and the remaining
 Hamiltonian/flux components, then use controlled waveform ablations to
 investigate the phase residual without fitting correction coefficients to the
 LAL binary.

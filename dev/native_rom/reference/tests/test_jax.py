@@ -8,6 +8,7 @@ from dev.native_rom.reference.hamiltonian import (
     aligned_effective_hamiltonian, body_parameters, effective_spin_mapping, energy_map,
     nonspinning_effective_hamiltonian, radial_potentials,
 )
+from dev.native_rom.reference.initial_conditions import leading_adiabatic_state
 from dev.native_rom.reference.published import calibration, evaluate, mass_spin, peak_targets, ringdown_shape
 from dev.native_rom.reference.ringdown import h22
 from dev.native_rom.reference.remnant import final_mass_fraction, final_spin_projection
@@ -16,12 +17,32 @@ from jaxwave.approximants.eob.merger_ringdown import merger_ringdown_22, seobnrv
 from jaxwave.approximants.eob.remnant import eob_final_mass_fraction, hofmann_final_spin
 from jaxwave.approximants.eob.nqc import seobnrv4_nqc_parameters, seobnrv4_nqc_targets, seobnrv4_nqc_time_offset
 from jaxwave.approximants.eob.seobnrv4_hamiltonian import SEOBNRv4Hamiltonian
+from jaxwave.approximants.eob.initial_conditions import find_quasicircular_initial_conditions
 
 jax.config.update("jax_enable_x64", True)
 
 
 def scalar(x):
     return jnp.asarray(x, dtype=jnp.float64)
+
+
+@pytest.mark.parametrize("m1,m2,s1,s2,omega", [
+    (30., 20., 0., 0., .04),
+    (30., 20., .2, -.1, .04),
+])
+def test_leading_adiabatic_initial_state_against_scalar_reference(m1, m2, s1, s2, omega):
+    torque = -.0007
+    class ConstantTorque:
+        def radiation_reaction_forces(self, frequency, pr_star, pphi, *, r, hamiltonian):
+            return jnp.zeros_like(pphi), jnp.full_like(pphi, torque)
+
+    n = m1*m2/(m1+m2)**2
+    ham = SEOBNRv4Hamiltonian(scalar(n), scalar(s1), scalar(s2),
+                              delta=scalar((m1-m2)/(m1+m2)))
+    actual = find_quasicircular_initial_conditions(ham, ConstantTorque(), scalar(omega))
+    expected = leading_adiabatic_state(m1, m2, s1, s2, omega, torque)
+    for value, reference in zip(actual, expected):
+        assert float(value) == pytest.approx(float(reference), rel=2e-11, abs=2e-13)
 
 
 @pytest.mark.parametrize("m1,m2,s1,s2,r", [

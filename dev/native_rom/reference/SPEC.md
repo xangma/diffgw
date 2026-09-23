@@ -1,4 +1,4 @@
-# SEOBNRv4 source specification: paper components 0.6.0
+# SEOBNRv4 source specification: paper components 0.7.0
 
 **Status: incomplete research specification.** This version establishes an
 independent executable source of truth for the components marked `executable`
@@ -107,6 +107,16 @@ other 32 amplitude formulas, high-`ell` spin truncation, and JAX
 factorized-flux path still need independent checks. The JAX
 development assembler currently uses a 1.5PN prototype flux and Newtonian `(2,2)` mode, so no
 cross-backend whole-waveform SEOBNRv4 claim follows from these checks.
+
+`initial_conditions.leading_adiabatic_state` independently solves the
+published circular conditions and converts a **supplied** torque to the
+leading inward tortoise momentum using the scalar Hamiltonian. Its circular
+root and radial momentum agree with the Torch and JAX initializers at the
+tested nonspinning and aligned-spin points. The scalar calculation takes the
+torque as an input; this establishes neither the 35-mode flux nor the
+historical SEOBNRv4 initial-data prescription. The latter uses a particular
+Cartesian root solve and finite-step radial response in the
+[public LAL source](https://lscsoft.docs.ligo.org/lalsuite/7.26/lalsimulation/_l_a_l_sim_i_m_r_spin_e_o_b_initial_conditions_8c_source.html).
 
 `published.peak_targets` encodes the NR/Teukolsky peak amplitude, amplitude
 curvature, GW frequency, and frequency slope (Appendix A, Eqs. 33–44). For
