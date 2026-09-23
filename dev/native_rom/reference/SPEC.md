@@ -1,4 +1,4 @@
-# SEOBNRv4 source specification: paper components 0.8.8
+# SEOBNRv4 source specification: paper components 0.8.9
 
 **Status: incomplete research specification.** This version establishes an
 independent executable source of truth for the components marked `executable`
@@ -197,6 +197,14 @@ for the spin terms, including the quadratic term that compensates the
 the tested nonspinning, aligned-spin, equal-mass, and unequal-mass points.
 The JAX `(2,2)+(3,2)+(3,3)+(4,4)` partial flux agrees with the scalar
 reference at one frozen aligned-spin point; this is not the full torque.
+`flux.factorized_42_amplitude` evaluates the pre-NQC even-parity `(4,2)`
+modulus using [Damour--Iyer--Nagar Eq. (102)](https://arxiv.org/html/0811.2069)
+for finite-mass nonspin terms and [Pan Eqs. (29h), (38h), (42h)](https://arxiv.org/html/1006.0431)
+for its spin hybrid. JAX agrees with the independent scalar reference at four
+frozen points, including equal-mass unequal-spin and mass-ratio-nine cases;
+its five-mode partial flux agrees at one aligned-spin point. JIT, derivative,
+exchange, Newtonian-limit, and domain checks pass. Historical v4 mode
+selection and the rest of the flux remain conditional.
 `flux.factorized_21_nonspin_amplitude` checks the `(2,1)` J-source modulus
 only for zero spins. It uses [Pan Eq. (38b)](https://arxiv.org/html/1006.0431)
 for the leading mode and [Damour--Iyer--Nagar Eq. (51)](https://arxiv.org/html/0811.2069)

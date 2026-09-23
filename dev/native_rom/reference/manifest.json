@@ -1,5 +1,5 @@
 {
-  "specification": "seobnrv4-paper-components/0.8.8",
+  "specification": "seobnrv4-paper-components/0.8.9",
   "model": "SEOBNRv4 dominant (2,2) mode, aligned-spin black-hole binaries",
   "source": {
     "id": "bohe-2017-v3",
@@ -168,9 +168,9 @@
       "status": "conditional",
       "reference": "flux.factorized_42_amplitude",
       "torch": "src/torchwave/approximants/eob/seobnrv4_flux.py:SEOBNRv4PublishedFlux.amplitudes",
-      "jax": null,
-      "test": "dev/native_rom/reference/tests/test_published.py:test_factorized_42_newtonian_limit_and_mass_exchange; dev/native_rom/reference/tests/test_torch.py:test_factorized_42_amplitude_against_reference",
-      "condition": "Pre-NQC modulus of a declared finite-mass nonspin and test-particle/generic-mass spin hybrid at frozen points. The historical v4 hybrid choice, complete (2,1) spin prescription, and JAX are unverified."
+      "jax": "src/jaxwave/approximants/eob/seobnrv4_amplitude42.py:seobnrv4_published_amplitude42",
+      "test": "dev/native_rom/reference/tests/test_published.py:test_factorized_42_newtonian_limit_and_mass_exchange; dev/native_rom/reference/tests/test_torch.py:test_factorized_42_amplitude_against_reference; dev/native_rom/reference/tests/test_jax.py:test_factorized_42_amplitude_against_reference; dev/native_rom/reference/tests/test_jax.py:test_five_mode_partial_flux_against_scalar_reference; tests/test_clean_room_jax_seobnrv4_amplitude42.py:test_batched_jit_exchange_and_equal_mass_unequal_spin",
+      "condition": "Pre-NQC modulus of a declared finite-mass nonspin and test-particle/generic-mass spin hybrid at frozen points. The historical v4 hybrid choice, complete (2,1) spin prescription, and other JAX mode amplitudes are unverified."
     },
     {
       "id": "V4-FLUX-43-AMPLITUDE",

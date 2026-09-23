@@ -10,6 +10,7 @@ from dev.native_rom.reference.hamiltonian import (
 )
 from dev.native_rom.reference.flux import (
     emitted_flux, factorized_22_amplitude, factorized_32_amplitude,
+    factorized_42_amplitude,
     factorized_33_44_amplitudes,
 )
 from dev.native_rom.reference.initial_conditions import leading_adiabatic_state
@@ -24,6 +25,7 @@ from jaxwave.approximants.eob.nqc import seobnrv4_nqc_parameters, seobnrv4_nqc_t
 from jaxwave.approximants.eob.seobnrv4_hamiltonian import SEOBNRv4Hamiltonian
 from jaxwave.approximants.eob.seobnrv4_amplitude22 import seobnrv4_published_amplitude22
 from jaxwave.approximants.eob.seobnrv4_amplitude32 import seobnrv4_published_amplitude32
+from jaxwave.approximants.eob.seobnrv4_amplitude42 import seobnrv4_published_amplitude42
 from jaxwave.approximants.eob.seobnrv4_amplitudes33_44 import seobnrv4_published_amplitudes33_44
 from jaxwave.approximants.eob.seobnrv4_flux import emitted_flux_from_modes
 from jaxwave.approximants.eob.initial_conditions import find_quasicircular_initial_conditions
@@ -129,6 +131,40 @@ def test_four_mode_partial_flux_against_scalar_reference():
                   chi1=scalar(s1), chi2=scalar(s2))
     modes = {(2, 2): seobnrv4_published_amplitude22(scalar(w), heff_over_mu=scalar(he), **shared),
              (3, 2): seobnrv4_published_amplitude32(scalar(w), pphi=scalar(j), **shared)}
+    modes.update(zip(((3, 3), (4, 4)), seobnrv4_published_amplitudes33_44(
+        scalar(w), heff_over_mu=scalar(he), **shared)))
+    assert float(emitted_flux_from_modes(scalar(w), modes)) == pytest.approx(
+        float(emitted_flux(w, scalar_modes)), rel=4e-12)
+
+
+@pytest.mark.parametrize("m1,m2,s1,s2,w,w0,he,hr", [
+    (30., 20., 0., 0., .04, .039, .95, .988),
+    (30., 20., .2, -.1, .06, .057, .93, .981),
+    (20., 20., .7, -.4, .08, .077, .91, .975),
+    (45., 5., -.8, .3, .10, .095, .89, .973),
+])
+def test_factorized_42_amplitude_against_reference(m1, m2, s1, s2, w, w0, he, hr):
+    expected = factorized_42_amplitude(m1, m2, s1, s2, w, w0, he, hr)
+    actual = seobnrv4_published_amplitude42(
+        scalar(w), omega_zero_radial=scalar(w0), heff_over_mu=scalar(he),
+        hreal_over_M=scalar(hr), x1=scalar(m1/(m1+m2)),
+        x2=scalar(m2/(m1+m2)), chi1=scalar(s1), chi2=scalar(s2))
+    assert float(actual) == pytest.approx(float(expected), rel=3e-12, abs=2e-14)
+
+
+def test_five_mode_partial_flux_against_scalar_reference():
+    m1, m2, s1, s2, w, w0, j, he, hr = 30., 20., .2, -.1, .06, .057, 3.2, .93, .981
+    scalar_modes = {(2, 2): factorized_22_amplitude(m1, m2, s1, s2, w, w0, he, hr),
+                    (3, 2): factorized_32_amplitude(m1, m2, s1, s2, w, w0, j, hr),
+                    (4, 2): factorized_42_amplitude(m1, m2, s1, s2, w, w0, he, hr)}
+    scalar_modes.update(zip(((3, 3), (4, 4)),
+                            factorized_33_44_amplitudes(m1, m2, s1, s2, w, w0, he, hr)))
+    shared = dict(omega_zero_radial=scalar(w0), hreal_over_M=scalar(hr),
+                  x1=scalar(m1/(m1+m2)), x2=scalar(m2/(m1+m2)),
+                  chi1=scalar(s1), chi2=scalar(s2))
+    modes = {(2, 2): seobnrv4_published_amplitude22(scalar(w), heff_over_mu=scalar(he), **shared),
+             (3, 2): seobnrv4_published_amplitude32(scalar(w), pphi=scalar(j), **shared),
+             (4, 2): seobnrv4_published_amplitude42(scalar(w), heff_over_mu=scalar(he), **shared)}
     modes.update(zip(((3, 3), (4, 4)), seobnrv4_published_amplitudes33_44(
         scalar(w), heff_over_mu=scalar(he), **shared)))
     assert float(emitted_flux_from_modes(scalar(w), modes)) == pytest.approx(
