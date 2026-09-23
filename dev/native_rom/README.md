@@ -46,6 +46,10 @@ and bounds native fundamental QNM differences at nine signed-spin points.
 The reference also checks sparse Berti and Cook author QNM values and the
 published hybrid `(4,2)`, `(4,3)`, and `(5,5)` flux amplitudes. These component
 results do not change the failed whole-waveform or release gates.
+A frozen aligned-spin waveform replay tests the paper-derived higher-spin
+`(2,1)` rho hybrid: peak-fitted complex relative L2 changes only from
+`0.00807196` to `0.00806111`. This candidate remains development-only while
+the compiled component and full model are unqualified.
 
 ## Numerical evidence
 

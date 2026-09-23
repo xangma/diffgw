@@ -256,6 +256,13 @@ Zero-spin and equal-mass unequal-spin controls agree as expected. These
 numbers isolate the factorization choice; the surrogate inputs are not EOB
 dynamics and no compiled historical component was compared. Neither scalar
 candidate is therefore qualified as historical v4.
+
+The [frozen aligned-spin whole-waveform sensitivity](../evidence/2026-09-23/mode_21_whole_waveform_diagnostic.json)
+replays the original waveform hash and changes only this flux prescription.
+Its quadratic-peak complex relative L2 improves from `0.0080719610` to
+`0.0080611104`. This small effect does not establish compiled `(2,1)` parity
+or close the waveform discrepancy.
+
 All 35 Torch mode moduli now have conditional scalar references and frozen
 point checks. This establishes the declared factorized reconstruction only:
 the complete historical `(2,1)` spin prescription, high-`ell` spin truncation,

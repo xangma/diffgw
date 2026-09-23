@@ -7,6 +7,7 @@ from dev.native_rom.reference import flux as scalar_flux
 from dev.native_rom.reference.flux import (
     emitted_flux, factorized_22_amplitude, factorized_33_44_amplitudes,
     factorized_21_nonspin_amplitude, factorized_21_spin_amplitude,
+    factorized_21_rho_hybrid_amplitude,
     factorized_31_amplitude, factorized_32_amplitude, factorized_42_amplitude,
     factorized_43_amplitude, factorized_55_amplitude, factorized_62_amplitude,
     factorized_54_52_amplitudes, factorized_66_64_amplitudes,
@@ -395,6 +396,46 @@ def test_factorized_21_spin_amplitude_against_reference(m1, m2, s1, s2,
         x1=scalar(m1/(m1+m2)), x2=scalar(m2/(m1+m2)),
         chi1=scalar(s1), chi2=scalar(s2))[(2, 1)]
     assert float(actual) == pytest.approx(float(expected), rel=3e-12, abs=2e-14)
+
+
+@pytest.mark.parametrize("m1,m2,s1,s2,w,w0,j,he,hr", [
+    (40., 10., .7, -.3, .01, .0098, 4.7, .97, .99),
+    (40., 10., .7, -.3, .04, .039, 3., .91, .98),
+    (40., 10., 0., 0., .02, .019, 3.6, .95, .985),
+    (20., 20., .7, -.3, .02, .019, 3.6, .95, .985),
+])
+def test_factorized_21_rho_hybrid_against_reference(m1, m2, s1, s2,
+                                                     w, w0, j, he, hr):
+    expected = factorized_21_rho_hybrid_amplitude(m1, m2, s1, s2, w, w0, j, hr)
+    model = SEOBNRv4PublishedFlux(spin_truncation="generic-leading-ell8",
+                                  mode_21_higher_spin="rho_hybrid")
+    state = scalar([9., 0., -.01, j])
+    actual = model.amplitudes(
+        state, omega=scalar(w), omega_zero_radial=scalar(w0),
+        heff_over_mu=scalar(he), hreal_over_M=scalar(hr),
+        x1=scalar(m1/(m1+m2)), x2=scalar(m2/(m1+m2)),
+        chi1=scalar(s1), chi2=scalar(s2))[(2, 1)]
+    assert float(actual) == pytest.approx(float(expected), rel=3e-12, abs=2e-14)
+
+
+def test_factorized_21_rho_hybrid_batch_and_gradient():
+    model = SEOBNRv4PublishedFlux(spin_truncation="tabulated",
+                                  mode_21_higher_spin="rho_hybrid")
+    spins = scalar([.3, -.2]).requires_grad_()
+    state = scalar([[9., 0., -.01, 3.], [9., 0., -.01, 3.]])
+    args = dict(omega=scalar([.02, .03]), omega_zero_radial=scalar([.019, .029]),
+                heff_over_mu=scalar([.95, .94]), hreal_over_M=scalar([.985, .98]),
+                x1=scalar([.8, .8]), x2=scalar([.2, .2]),
+                chi1=spins, chi2=scalar([-.1, -.1]))
+    amplitudes = model.amplitudes(state, **args)[(2, 1)]
+    flux = model.energy_flux(state, **args)
+    assert amplitudes.shape == (2,) and flux.shape == (2,)
+    gradient = torch.autograd.grad(flux.sum(), spins)[0]
+    assert bool(torch.isfinite(gradient).all())
+    assert bool((gradient != 0).all())
+
+    with pytest.raises(ValueError, match="mode_21_higher_spin"):
+        SEOBNRv4PublishedFlux(spin_truncation="tabulated", mode_21_higher_spin="unknown")
 
 
 @pytest.mark.parametrize("m1,m2,r,pr_star,pphi", [

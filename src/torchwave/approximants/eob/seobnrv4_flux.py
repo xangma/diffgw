@@ -109,6 +109,16 @@ def _higher_kerr_f(v: Tensor, q: Tensor) -> dict[tuple[int, int], Tensor]:
     }
 
 
+def _higher_kerr_rho21(v: Tensor, q: Tensor) -> Tensor:
+    """Pan (29b) spin-dependent rho21 terms at v**4 through v**7."""
+    el1 = EULER_GAMMA+math.log(2)+torch.log(v)
+    return ((-865*q**2/1792-405*q**4/2048)*v**4
+            +(-98635*q/75264+2031*q**3/7168-1701*q**5/8192)*v**5
+            +(-15309*q**6/65536+3897*q**4/16384+9032393*q**2/1806336)*v**6
+            +(-72171*q**7/262144+18603*q**5/65536-55169*q**3/16384
+              +(107*el1/140-3859374457/1159065600)*q)*v**7)
+
+
 class SEOBNRv4PublishedFlux(nn.Module):
     """Positive-m amplitude moduli and flux for a declared reconstruction.
 
@@ -127,7 +137,8 @@ class SEOBNRv4PublishedFlux(nn.Module):
     """
 
     def __init__(self, lmax: int = 8, *, spin_truncation: str,
-                 retain_pan_cubic_spin: bool = False):
+                 retain_pan_cubic_spin: bool = False,
+                 mode_21_higher_spin: str = "taylor_f"):
         super().__init__()
         if type(lmax) is not int or not 2 <= lmax <= 8:
             raise ValueError("lmax must be an integer from 2 through 8")
@@ -135,9 +146,12 @@ class SEOBNRv4PublishedFlux(nn.Module):
             raise NotImplementedError("Choose tabulated or generic-leading-ell8 explicitly")
         if not isinstance(retain_pan_cubic_spin, bool):
             raise TypeError("retain_pan_cubic_spin must be an explicit bool")
+        if mode_21_higher_spin not in {"taylor_f", "rho_hybrid"}:
+            raise ValueError("mode_21_higher_spin must be taylor_f or rho_hybrid")
         self.lmax = lmax
         self.spin_truncation = spin_truncation
         self.retain_pan_cubic_spin = retain_pan_cubic_spin
+        self.mode_21_higher_spin = mode_21_higher_spin
         self.mode_indices = tuple((ell, m) for ell in range(2, lmax+1)
                                   for m in range(1, ell+1))
         self._constants = {mode: abs(_newtonian_constant(*mode)) for mode in self.mode_indices}
@@ -197,7 +211,10 @@ class SEOBNRv4PublishedFlux(nn.Module):
             v, nu, delta, cs, ca,
             retain_pan_cubic_spin=self.retain_pan_cubic_spin,
         )
-        higher_f = _higher_kerr_f(v, (1-2*nu)*cs+delta*ca)
+        kerr_spin = (1-2*nu)*cs+delta*ca
+        higher_f = _higher_kerr_f(v, kerr_spin)
+        if self.mode_21_higher_spin == "rho_hybrid":
+            rho[2, 1] = rho[2, 1]+_higher_kerr_rho21(v, kerr_spin)
         result = {}
         for ell, m in self.mode_indices:
             epsilon = (ell+m) % 2
@@ -205,7 +222,8 @@ class SEOBNRv4PublishedFlux(nn.Module):
             c = b**p+(-1)**m*a**p
             mass_residual = c*rho[ell, m]**ell
             if ell <= 4 and m % 2:
-                mass_residual = mass_residual+c*higher_f[ell, m]
+                if (ell, m) != (2, 1) or self.mode_21_higher_spin == "taylor_f":
+                    mass_residual = mass_residual+c*higher_f[ell, m]
                 mass_residual = mass_residual+_mass_times_leading_spin_f(
                     ell, m, v, a, b, s1, s2)
                 if (ell, m) == (2, 1):

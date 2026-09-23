@@ -861,6 +861,22 @@ dev.native_rom.diagnose_mode_21_rho_hybrid --plan
 dev/native_rom/evidence/2026-09-23/mode_21_rho_hybrid_plan.json --json-out
 /tmp/seobnrv4-mode-21-rho-hybrid.json`.
 
+The [frozen whole-waveform sensitivity plan](mode_21_whole_waveform_plan.json)
+replays the aligned-spin row above with the original Taylor-`f` `(2,1)` flux
+and the paper-derived higher-spin `rho21` hybrid. The baseline native waveform
+hash and sampled-peak metric exactly reproduce the prior comparison; both runs
+use the same pinned binary, fixed-restart numerical choices, and independent
+quadratic-power peak fits. The [result](mode_21_whole_waveform_diagnostic.json)
+changes fitted complex relative L2 from `0.0080719610` to `0.0080611104`.
+The fitted inspiral-window value changes from `0.00931421` to `0.00930171`;
+post-peak is essentially unchanged. This supports the `(2,1)` prescription
+as a small contributor to this row's residual, while leaving the historical
+compiled component and overall waveform parity unverified. Reproduce with
+`PYTHONPATH=src python -m
+dev.native_rom.diagnose_mode_21_whole_waveform --plan
+dev/native_rom/evidence/2026-09-23/mode_21_whole_waveform_plan.json --json-out
+/tmp/seobnrv4-mode-21-whole-waveform.json`.
+
 ## Later component gate: remnant and QNM (reference 0.8.3)
 
 The independent scalar [reference](../../reference/SPEC.md) now also checks
