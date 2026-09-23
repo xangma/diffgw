@@ -332,6 +332,16 @@ respectively; its second-derivative row dominates, with a small opposing
 matrix contribution in the ODE pair. These are algebraic attributions under
 the selected numerical discretization, not evidence for changing the
 published NQC targets or a validated differentiation rule.
+A subsequent [two-row dense-output check](../evidence/2026-09-23/nqc_second_derivatives_two_rows.json)
+finds that a fixed local polynomial reduces the amplitude-product and
+waveform-phase second-derivative discrepancy against DOP853 under the same
+provisional equations. The [predeclared opt-in test](../evidence/2026-09-23/nqc_second_derivative_campaign.json)
+passes the ODE tolerance gate on both rows and both gates on the nonspinning
+row, but fails aligned-spin grid monotonicity (`5.69e-11` to `4.89e-10`). Its
+[peak-anchored whole-waveform comparison](../evidence/2026-09-23/nqc_second_derivative_waveforms.json)
+remains near the frozen `0.00695` nonspinning and `0.00807` aligned-spin complex
+relative L2 values. The candidate is an unvalidated numerical experiment, not
+the historical SEOBNRv4 NQC prescription.
 With quadratic-power peak fits, the corresponding nonspinning difference is
 `0.006949`. In a replay of the same two frozen waveforms, inspiral
 (`t<-20 M`) squared complex error is 94.07%/96.19% phase-related

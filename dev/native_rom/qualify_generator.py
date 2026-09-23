@@ -202,6 +202,7 @@ def bounded_run(seconds):
 
 def native_run(row, level, settings, *, diagnostic_hermite_resampling=False,
                diagnostic_local_nqc_derivatives=False,
+               diagnostic_matching_second_derivatives=False,
                diagnostic_restart_time_M=None):
     import torch
     from dev.native_rom.eob.torch.adaptive_driver_clean import reconstruct_seobnrv4_22_adaptive
@@ -212,6 +213,7 @@ def native_run(row, level, settings, *, diagnostic_hermite_resampling=False,
             **CHOICES, **{k: level[k] for k in ("atol", "rtol", "dt_geom")},
             diagnostic_hermite_resampling=diagnostic_hermite_resampling,
             diagnostic_local_nqc_derivatives=diagnostic_local_nqc_derivatives,
+            diagnostic_matching_second_derivatives=diagnostic_matching_second_derivatives,
             diagnostic_restart_time_M=diagnostic_restart_time_M,
             ringdown_duration=settings.ringdown_duration_M,
             num_steps=settings.max_accepted_steps, max_accepted_steps=settings.max_accepted_steps,

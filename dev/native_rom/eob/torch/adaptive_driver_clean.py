@@ -81,6 +81,24 @@ def _diagnostic_local_nqc_phase_matrix(time, state, orbital_frequency, match_tim
     return torch.stack((polynomial[1] / window, 2 * polynomial[2] / window**2))
 
 
+def _diagnostic_local_matching_second(time, nqc, match_time):
+    """Predeclared local second derivatives for five NQC matching inputs."""
+    window = 0.5
+    selected = (time - match_time).detach().abs() <= window
+    chart = (time[selected] - match_time) / window
+    if chart.numel() < 9 or not bool((chart.min() < 0) & (chart.max() > 0)):
+        raise ValueError("local NQC second derivative requires two-sided samples")
+    values = torch.cat((nqc.sampled_amplitude.unsqueeze(-1),
+                        nqc.sampled_products,
+                        nqc.sampled_waveform_phase.unsqueeze(-1)), dim=-1)[selected]
+    design = torch.stack([chart.pow(k) for k in range(7)], dim=-1)
+    if not bool(torch.isfinite(design).all()) or not bool(torch.isfinite(values).all()):
+        raise ValueError("nonfinite local NQC second derivative input")
+    polynomial = torch.linalg.lstsq(
+        design, values - values[chart.numel() // 2], driver="gels").solution
+    return 2 * polynomial[2] / window**2
+
+
 def reconstruct_seobnrv4_22_adaptive(
     omega_start: Tensor,
     mass1,
@@ -98,6 +116,7 @@ def reconstruct_seobnrv4_22_adaptive(
     diagnostic_restart_time_M: Optional[float] = None,
     diagnostic_hermite_resampling: bool = False,
     diagnostic_local_nqc_derivatives: bool = False,
+    diagnostic_matching_second_derivatives: bool = False,
     num_steps: int = 20000,
     ringdown_duration: float = 150.0,
     atol: float = 1.0e-10,
@@ -140,6 +159,8 @@ def reconstruct_seobnrv4_22_adaptive(
         raise TypeError("diagnostic_hermite_resampling must be bool")
     if not isinstance(diagnostic_local_nqc_derivatives, bool):
         raise TypeError("diagnostic_local_nqc_derivatives must be bool")
+    if not isinstance(diagnostic_matching_second_derivatives, bool):
+        raise TypeError("diagnostic_matching_second_derivatives must be bool")
     if not isinstance(num_steps, int) or num_steps < 4:
         raise ValueError("num_steps must be an integer of at least four")
     if not math.isfinite(float(ringdown_duration)) or ringdown_duration <= 0:
@@ -297,6 +318,9 @@ def reconstruct_seobnrv4_22_adaptive(
         phase_matrix = (_diagnostic_local_nqc_phase_matrix(
             row_fine_time, row_fine_state, fine_field[..., 1], match_local)
             if diagnostic_local_nqc_derivatives else None)
+        matching_second = (_diagnostic_local_matching_second(
+            row_fine_time, provisional.nqc, match_local)
+            if diagnostic_matching_second_derivatives else None)
         output_count = max(
             2,
             int(torch.ceil((match_local + ringdown_duration).detach() / fine_step).item()) + 1,
@@ -307,6 +331,7 @@ def reconstruct_seobnrv4_22_adaptive(
             row_fine_frequency, nu.reshape(-1)[row], chi.reshape(-1)[row],
             sigma.reshape(-1)[row], row_output_time,
             diagnostic_phase_matrix=phase_matrix,
+            diagnostic_matching_second=matching_second,
         )
         coarse_coefficients = attachment.calibration.coefficients
         row_coarse_mode = _apply_calibrated_nqc(

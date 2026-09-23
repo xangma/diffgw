@@ -477,10 +477,40 @@ dev/native_rom/evidence/2026-09-23/aligned_spin_fixed_restart_campaign.json
 --pair ode --json-out /tmp/seobnrv4-nqc-matching-inputs.json`, replacing `ode`
 with `grid` for the grid pair.
 
-The next numerical check is to compare the amplitude-product and waveform-phase
-second derivatives with a dense-trajectory reference across more than one row,
-then test a predeclared candidate differentiation rule against both numerical
-convergence gates before extending to parameter-boundary rows.
+The [two-row dense-output check](nqc_second_derivatives_two_rows.json) replays
+the frozen nonspinning and aligned-spin waveforms with exact array hashes, then
+differentiates the same provisional equations on independent DOP853 dense
+trajectories. At the match, the natural-spline errors in the four amplitude
+second derivatives are `7.1e-9–1.0e-7`; fixed ±`0.5 M` degree-six local-fit
+errors are `1.9e-11–1.8e-10`. Waveform-phase second-derivative errors change
+from `1.7e-8–4.0e-8` to `3.5e-11–2.0e-10`, with the aligned-spin local error
+comparable to the DOP853 tolerance spread. This is a numerical comparison
+under shared provisional physics, not a validation of a published NQC rule.
+
+The [candidate rule](nqc_second_derivative_candidate.md) was committed before
+the five-level runs. It replaces only second derivatives of `A`, `A q_1`,
+`A q_2`, `A q_3`, and unwrapped waveform phase at the NQC match. It keeps the
+existing local phase-basis matrix, the first derivatives, and all other
+choices. The [campaign](nqc_second_derivative_campaign.json) uses the original
+`1e-6` waveform budgets, refinement monotonicity, and `0.05 M` event gates:
+
+| Row | Refined ODE complex L2 | Refined grid complex L2 | Numerical gates |
+| --- | ---: | ---: | --- |
+| Nonspinning | `6.47e-8` | `4.72e-11` | Both pass |
+| Aligned spin | `1.39e-7` | `4.89e-10` | ODE passes; grid monotonicity fails (`5.69e-11` to `4.89e-10`) |
+
+The aligned-spin grid values are well below the error budget, but the
+predeclared monotonicity gate still fails. No post-run tuning or gate relaxation
+was made. The [hash-verified whole-waveform replay](nqc_second_derivative_waveforms.json)
+uses each waveform's independently fitted amplitude peak, without optimizing
+a relative shift, phase, scale, or coefficients. Its quadratic-peak complex
+relative L2 is `0.00694919` nonspinning and `0.00807026` aligned spin, versus
+the frozen baseline's `0.00694939` and `0.00807196`. The remaining difference
+is essentially unchanged. This opt-in experiment neither qualifies the
+generator nor licenses ROM training or release promotion.
+
+Next, isolate the aligned-spin grid floor without changing this candidate's
+declared gate; then extend numerical tests to parameter-boundary rows.
 Independently check the historical initial-state prescription and the remaining
 Hamiltonian/flux components, including the `(2,1)` spin terms and `(5,5)`
 amplitude, without fitting correction coefficients to the LAL binary.

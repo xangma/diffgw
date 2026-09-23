@@ -416,6 +416,7 @@ def _full_series_nqc(
     *,
     max_condition: float,
     diagnostic_phase_matrix: Optional[Tensor] = None,
+    diagnostic_matching_second: Optional[Tensor] = None,
 ) -> FullSeriesNQC:
     q, p = nqc_22_basis(r, pr_star, orbital_frequency)
     products = base_amplitude.unsqueeze(-1) * q
@@ -428,6 +429,14 @@ def _full_series_nqc(
     value = _eval_batch_scalar(combined_spline, match_time)
     first = _eval_batch_scalar(combined_spline, match_time, derivative=1)
     second = _eval_batch_scalar(combined_spline, match_time, derivative=2)
+    if diagnostic_matching_second is not None:
+        if (not isinstance(diagnostic_matching_second, Tensor)
+                or diagnostic_matching_second.shape != second[..., :5].shape
+                or diagnostic_matching_second.dtype != second.dtype
+                or diagnostic_matching_second.device != second.device
+                or not bool(torch.isfinite(diagnostic_matching_second).all())):
+            raise ValueError("diagnostic_matching_second must contain five finite second derivatives")
+        second = torch.cat((diagnostic_matching_second[..., :4], second[..., 4:]), dim=-1)
     if bool((value[..., 0] <= 0).any()):
         raise ValueError("full-series base amplitude is nonpositive at match_time")
     amplitude_matrix = torch.stack((value[..., 1:4], first[..., 1:4],
@@ -451,6 +460,8 @@ def _full_series_nqc(
     waveform_phase_spline = natural_cubic_spline(time, waveform_phase)
     phase_first = _eval_batch_scalar(waveform_phase_spline, match_time, derivative=1)
     phase_second = _eval_batch_scalar(waveform_phase_spline, match_time, derivative=2)
+    if diagnostic_matching_second is not None:
+        phase_second = diagnostic_matching_second[..., 4]
     phase_rhs = torch.stack((phase_first - targets.frequency,
                              phase_second - targets.frequency_derivative), dim=-1)
     a, amplitude_condition, amplitude_residual = _matching_solve(
@@ -719,6 +730,7 @@ def attach_seobnrv4_22_numerical_compatibility(
     mass_scale: Tensor | float = 1.0,
     max_condition: float = 1.0e10,
     diagnostic_phase_matrix: Optional[Tensor] = None,
+    diagnostic_matching_second: Optional[Tensor] = None,
 ) -> NumericalAttachedMode22:
     """Attach the full-series NQC and discrete-boundary v4 ringdown.
 
@@ -831,6 +843,7 @@ def attach_seobnrv4_22_numerical_compatibility(
         time, state[..., 0], state[..., 2], orbital_frequency, amplitude,
         frequency, _unwrap_mode_phase(base_mode), match, targets,
         max_condition=max_condition, diagnostic_phase_matrix=diagnostic_phase_matrix,
+        diagnostic_matching_second=diagnostic_matching_second,
     )
     coefficients = nqc.calibration.coefficients
     corrected = base_mode * nqc_22_factor(
