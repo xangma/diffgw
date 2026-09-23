@@ -17,6 +17,7 @@ the default fixed-step published route.
 """
 
 from __future__ import annotations
+from dataclasses import replace
 import math
 from typing import Optional
 import torch
@@ -38,6 +39,27 @@ from torchwave.approximants.eob.adaptive_driver_clean import (
     _apply_calibrated_nqc,
 )
 
+
+def _diagnostic_hermite_output(run):
+    """Resample one scalar accepted trajectory with its accepted derivatives."""
+    if run.time.ndim != 1 or run.state.ndim != 2 or run.time.numel() < 2:
+        raise ValueError("diagnostic Hermite resampling requires scalar accepted states")
+    query = run.output_time
+    left = torch.searchsorted(run.time.detach(), query.detach(), right=True) - 1
+    left = left.clamp(0, run.time.numel() - 2)
+    t0, t1 = run.time[left], run.time[left + 1]
+    h = t1 - t0
+    u = (query - t0) / h
+    u2, u3 = u * u, u * u * u
+    y0, y1 = run.state[left], run.state[left + 1]
+    f0, f1 = run.derivative[left], run.derivative[left + 1]
+    sample = ((2*u3 - 3*u2 + 1).unsqueeze(-1) * y0
+              + ((u3 - 2*u2 + u) * h).unsqueeze(-1) * f0
+              + (-2*u3 + 3*u2).unsqueeze(-1) * y1
+              + ((u3 - u2) * h).unsqueeze(-1) * f1)
+    return replace(run, output_state=sample)
+
+
 def reconstruct_seobnrv4_22_adaptive(
     omega_start: Tensor,
     mass1,
@@ -53,6 +75,7 @@ def reconstruct_seobnrv4_22_adaptive(
     dt_geom: float = 0.5,
     diagnostic_coarse_initial_step_M: Optional[float] = None,
     diagnostic_restart_time_M: Optional[float] = None,
+    diagnostic_hermite_resampling: bool = False,
     num_steps: int = 20000,
     ringdown_duration: float = 150.0,
     atol: float = 1.0e-10,
@@ -72,6 +95,7 @@ def reconstruct_seobnrv4_22_adaptive(
     is intentionally independent of the fixed-step default reconstruction.
     The diagnostic overrides isolate solver-start and restart-sample effects
     in grid-convergence studies; neither changes the published default.
+    Hermite resampling is a separate opt-in numerical experiment.
     """
     if not isinstance(omega_start, Tensor) or omega_start.dtype not in (torch.float32, torch.float64):
         raise TypeError("omega_start must be a float32/float64 tensor")
@@ -90,6 +114,8 @@ def reconstruct_seobnrv4_22_adaptive(
                                  diagnostic_restart_time_M,
                                  rel_tol=0.0, abs_tol=1.0e-10)):
         raise ValueError("diagnostic_restart_time_M must lie on the output grid")
+    if not isinstance(diagnostic_hermite_resampling, bool):
+        raise TypeError("diagnostic_hermite_resampling must be bool")
     if not isinstance(num_steps, int) or num_steps < 4:
         raise ValueError("num_steps must be an integer of at least four")
     if not math.isfinite(float(ringdown_duration)) or ringdown_duration <= 0:
@@ -148,14 +174,16 @@ def reconstruct_seobnrv4_22_adaptive(
     coarse_runs = []
     for row in range(rows):
         row_field = EOBTrajectoryIntegrator(row_hamiltonians[row], rr).vector_field
-        coarse_runs.append(integrate_adaptive(
+        coarse_run = integrate_adaptive(
             row_field, initial_flat[row], dt_geom,
             event=AlignedSpinV4Event("coarse"), atol=atol, rtol=rtol,
             initial_step=diagnostic_coarse_initial_step_M,
             controller=GSL_STATE_SCALED_CONTROLLER,
             max_rejected_steps=max_rejected_steps, max_evaluations=max_evaluations,
             max_accepted_steps=maximum_steps, max_duration=max_duration,
-        ))
+        )
+        coarse_runs.append(_diagnostic_hermite_output(coarse_run)
+                           if diagnostic_hermite_resampling else coarse_run)
     coarse_counts = [int(run.output_valid.sum().detach()) for run in coarse_runs]
     if len(set(coarse_counts)) != 1:
         raise ValueError(
@@ -190,13 +218,15 @@ def reconstruct_seobnrv4_22_adaptive(
         # tensors on their native graph while making the event count local.
         row_initial = restart_state[row]
         row_field = EOBTrajectoryIntegrator(row_hamiltonians[row], rr).vector_field
-        fine_runs.append(integrate_adaptive(
+        fine_run = integrate_adaptive(
             row_field, row_initial, fine_step, event=fine_events[row],
             atol=atol, rtol=rtol, controller=GSL_STATE_SCALED_CONTROLLER,
             max_rejected_steps=max_rejected_steps, max_evaluations=max_evaluations,
             max_accepted_steps=maximum_steps,
             max_duration=max_duration,
-        ))
+        )
+        fine_runs.append(_diagnostic_hermite_output(fine_run)
+                         if diagnostic_hermite_resampling else fine_run)
     if any(tuple(run.output_state.shape[:-2]) for run in fine_runs):
         raise RuntimeError("unexpected fine trajectory shape")
     fine_counts = [int(run.output_valid.sum().detach()) for run in fine_runs]

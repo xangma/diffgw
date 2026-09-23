@@ -1,9 +1,9 @@
-"""Development-only comparison of early v4 orbital phase integrators.
+"""Development-only comparison of v4 orbital phase integrators.
 
 Both integrators use the same provisional Hamiltonian, flux, and initial
 condition. This checks numerical integration, not independent physics parity.
 Run with ``PYTHONPATH=src:. python -m dev.native_rom.diagnose_orbital_phase
---json-out /tmp/orbital-phase.json``.
+--t-end 310 --json-out /tmp/orbital-phase.json``. The default endpoint is 165 M.
 """
 
 import argparse
@@ -55,7 +55,11 @@ def state_error(candidate, reference):
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--json-out", required=True, type=Path)
+    parser.add_argument("--t-end", type=float, default=T_END_M)
     args = parser.parse_args()
+    if not np.isfinite(args.t_end) or args.t_end <= 0 or args.t_end / OUTPUT_STEP_M != round(args.t_end / OUTPUT_STEP_M):
+        parser.error("--t-end must be positive, finite, and on the output grid")
+    t_end = args.t_end
     source_before = snapshot()
     torch.set_num_threads(1)
     m1 = torch.tensor(ROW["mass1"], dtype=torch.float64)
@@ -72,7 +76,7 @@ def main():
         r0, pr0, pphi0 = find_quasicircular_initial_conditions(ham, rr, start)
         initial = torch.stack((r0, torch.zeros_like(r0), pr0, pphi0))
     field = EOBTrajectoryIntegrator(ham, rr).vector_field
-    output_times = np.arange(round(T_END_M / OUTPUT_STEP_M) + 1) * OUTPUT_STEP_M
+    output_times = np.arange(round(t_end / OUTPUT_STEP_M) + 1) * OUTPUT_STEP_M
     initial_numpy = initial.detach().cpu().numpy()
 
     adaptive = {}
@@ -84,7 +88,7 @@ def main():
         started = time.monotonic()
         with torch.no_grad():
             run = integrate_adaptive(
-                field, initial, OUTPUT_STEP_M, t_end=T_END_M,
+                field, initial, OUTPUT_STEP_M, t_end=t_end,
                 atol=atol, rtol=rtol, initial_step=OUTPUT_STEP_M,
                 controller=GSL_STATE_SCALED_CONTROLLER,
             )
@@ -118,7 +122,7 @@ def main():
         name = f"dop853_rtol_{rtol:.0e}"
         started = time.monotonic()
         solution = solve_ivp(
-            scipy_field, (0.0, T_END_M), initial_numpy, method="DOP853",
+            scipy_field, (0.0, t_end), initial_numpy, method="DOP853",
             rtol=rtol, atol=atol, t_eval=output_times, first_step=OUTPUT_STEP_M,
             dense_output=True,
         )
@@ -151,7 +155,7 @@ def main():
                    development_only=True, same_vector_field=True,
                    independent_integrator=True),
         row=ROW, state_order=["r", "phi", "pr_star", "pphi"],
-        t_end_M=T_END_M, output_step_M=OUTPUT_STEP_M,
+        t_end_M=t_end, output_step_M=OUTPUT_STEP_M,
         initial_state=initial_numpy.tolist(),
         adaptive=adaptive_stats, scipy=scipy_stats, comparisons=comparisons,
         accepted_state_comparisons=accepted_comparisons,

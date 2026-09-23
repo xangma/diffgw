@@ -200,7 +200,7 @@ def bounded_run(seconds):
         signal.signal(signal.SIGALRM, previous)
 
 
-def native_run(row, level, settings):
+def native_run(row, level, settings, *, diagnostic_hermite_resampling=False):
     import torch
     from dev.native_rom.eob.torch.adaptive_driver_clean import reconstruct_seobnrv4_22_adaptive
     with bounded_run(settings.max_run_seconds), torch.no_grad():
@@ -208,6 +208,7 @@ def native_run(row, level, settings):
             torch.tensor(row["omega_start"], dtype=torch.float64),
             **{k: row[k] for k in ("mass1", "mass2", "chi1", "chi2")},
             **CHOICES, **{k: level[k] for k in ("atol", "rtol", "dt_geom")},
+            diagnostic_hermite_resampling=diagnostic_hermite_resampling,
             ringdown_duration=settings.ringdown_duration_M,
             num_steps=settings.max_accepted_steps, max_accepted_steps=settings.max_accepted_steps,
             max_evaluations=settings.max_evaluations, max_rejected_steps=settings.max_rejected_steps)

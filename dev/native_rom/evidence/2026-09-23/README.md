@@ -91,6 +91,61 @@ Reproduce with `PYTHONPATH=src:. python -m
 dev.native_rom.diagnose_orbital_phase --json-out
 /tmp/seobnrv4-orbital-phase.json`.
 
+The [310 M](orbital_phase_310.json) and [314 M](orbital_phase_314.json)
+extensions use the same vector field and initial state, continuing almost to
+the orbital-frequency peak. At all three native tolerances (`rtol=1e-13` to
+`1e-15`), accepted orbital-phase states differ from DOP853 `rtol=1e-12` by at
+most `1.22e-10 rad`; the two DOP853 settings differ by as much as
+`7.47e-10 rad`. Hermite output samples differ by at most `5.48e-10 rad`,
+while natural-cubic output samples reach `7.58e-8 rad` at `rtol=1e-14`.
+This checks the same provisional ODE through `314 M`, not its physical
+Hamiltonian or flux. Reproduce by adding `--t-end 310` or `--t-end 314`
+to the preceding command.
+
+An opt-in [Hermite resampling campaign](hermite_campaign.json) then replaced
+only the accepted-state output interpolant in the development generator. It
+retained the original `rtol=(1e-11,1e-12,1e-13)`, paired absolute tolerances,
+default restart and initial-step rules, and all declared gates. It completed
+all five solves and the pinned LAL diagnostic, with unchanged source hashes.
+
+| Hermite comparison | Coarse to medium complex L2 | Medium to fine complex L2 | `1e-6` gate |
+| --- | ---: | ---: | --- |
+| ODE tolerances | 1.236e-5 | 6.833e-6 | **Failed** |
+| Output grid `dt/M=0.5,0.25,0.125` | 2.940e-7 | 6.553e-6 | **Failed** |
+
+The ODE error decreased but exceeded the budget; the grid error increased.
+The moving coarse/fine restart is still present in the grid check. The raw
+full-support LAL complex error was `1.987`, with no fitted alignment; that
+metric is not a model-parity test. Thus derivative-aware resampling removes
+the early interpolation discrepancy but does **not** qualify the full
+waveform. Reproduce with `PYTHONPATH=src:. python -m
+dev.native_rom.diagnose_hermite_campaign --json-out
+/tmp/seobnrv4-hermite-campaign.json`; its nonzero exit is expected while the
+gate fails.
+
+The [Hermite error attribution](hermite_error.json) retained all three ODE
+levels at `dt/M=0.5`, with the restart fixed by the default rule at `165 M`
+and the reported peak at `314.7991867 M` in every run. For the refined
+`rtol=1e-12` to `1e-13` pair, the coarse/fine sampled orbital phases differ
+by at most `3.52e-9`/`4.64e-9 rad`, but the solved NQC phase coefficients
+change by up to `4.68e-4`. At the attachment boundary, the *raw* fine-grid
+waveform phases differ by `4.91e-9 rad`; applying a single shared coefficient
+vector to both runs gives a `6.65e-9 rad` difference, while applying each
+run's own coefficients gives `1.34e-5 rad`. This exact series-level
+counterfactual identifies the NQC coefficient change as the dominant phase
+amplifier for this row. Re-evaluating the same two-by-two matching system
+separates its inputs: in the refined pair the phase-basis derivative matrix
+changes by at most `1.53e-7`, and the waveform-phase derivative right-hand
+side by at most `2.15e-8`. Holding the medium matrix fixed, the right-hand
+side change contributes at most `4.23e-5` to the coefficients; changing the
+matrix contributes up to `5.11e-4` and dominates the observed `4.68e-4`
+coefficient change. This is an exact local decomposition for this pair, not
+a universal error budget. It points to the sampled NQC basis derivatives as
+the next numerical target; it does not establish whether the calibration
+matches the historical SEOBNRv4 algorithm. Reproduce with `PYTHONPATH=src:.
+python -m dev.native_rom.diagnose_hermite_error --json-out
+/tmp/seobnrv4-hermite-error.json`.
+
 The [whole-waveform diagnostic](whole_waveform.json) used the tightest
 `dt/M=0.125`, `rtol=1e-13`, `atol=1e-14` settings and the pinned public
 LALSuite `lal=7.7.1`, `lalsimulation=6.2.1` `SEOBNRv4` binary. The
@@ -127,10 +182,11 @@ PYTHONPATH=src python -m dev.native_rom.compare_whole_waveforms \
   --json-out /tmp/seobnrv4-whole-waveform.json
 ```
 
-The next numerical experiment should test derivative-aware resampling in the
-development generator, then rerun the declared gates without tuning their
-thresholds to these observations. Public-binary comparison must be repeated
-if that choice is promoted.
+The next numerical experiment should compare NQC basis derivatives against
+an independent derivative evaluation, then isolate the moving coarse/fine
+restart in the Hermite route. Rerun the same declared gates without tuning
+their thresholds. Public-binary comparison must be repeated if a numerical
+choice is promoted.
 Independent review of the full spin Hamiltonian and all 35 factorized mode
 amplitudes is still required before these diagnostics can support a native
 SEOBNRv4 claim.
