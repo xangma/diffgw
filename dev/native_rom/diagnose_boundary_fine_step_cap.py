@@ -26,6 +26,8 @@ from torchwave.approximants.eob.nqc import (
 PLAN = q.ROOT / "dev/native_rom/evidence/2026-09-23/boundary_fine_step_cap_plan.json"
 CAMPAIGN = q.ROOT / "dev/native_rom/evidence/2026-09-23/parameter_boundary_campaign.json"
 GENERATOR = "dev/native_rom/eob/torch/adaptive_driver_clean.py"
+GENERATOR_TEST = "dev/native_rom/eob/tests/test_eob_adaptive_driver_clean.py"
+CAMPAIGN_SCRIPT = "dev/native_rom/diagnose_parameter_boundaries.py"
 
 
 def _run(row, level, settings, cap):
@@ -101,9 +103,10 @@ def main(argv=None):
             or not campaign["sources_unchanged"]):
         parser.error("predeclared plan or frozen campaign mismatch")
     sources = q.source_snapshot()
+    sources[CAMPAIGN_SCRIPT] = q.sha256(q.ROOT / CAMPAIGN_SCRIPT)
     changed = {key for key in sources.keys() | campaign["source_sha256_before"].keys()
                if sources.get(key) != campaign["source_sha256_before"].get(key)}
-    if changed != {GENERATOR}:
+    if changed != {GENERATOR, GENERATOR_TEST}:
         parser.error(f"unexpected generator source changes since frozen campaign: {sorted(changed)}")
     settings = q.Settings(atol_levels=tuple(campaign["settings"]["atol_levels"]),
                           rtol_levels=tuple(campaign["settings"]["rtol_levels"]),
@@ -192,6 +195,7 @@ def main(argv=None):
                               error_ratio=outcome.get("comparison", {}).get(
                                   "medium_to_fine_complex_error_ratio"))), flush=True)
     report["source_sha256_after"] = q.source_snapshot()
+    report["source_sha256_after"][CAMPAIGN_SCRIPT] = q.sha256(q.ROOT / CAMPAIGN_SCRIPT)
     report["sources_unchanged"] = sources == report["source_sha256_after"]
     report["status"] = ("diagnostic_complete" if report["sources_unchanged"] and
                         all(not row["errors"] and len(row["cases"]) == 3
