@@ -34,6 +34,22 @@ def _dense_natural_second_derivatives(knots, values):
     return second
 
 
+def test_diagnostic_local_nqc_phase_matrix_recovers_cubic_trajectory():
+    from dev.native_rom.eob.torch.adaptive_driver_clean import (
+        _diagnostic_local_nqc_phase_matrix,
+    )
+
+    time = torch.linspace(-0.5, 0.5, 65, dtype=torch.float64)
+    state = torch.zeros((time.numel(), 4), dtype=time.dtype)
+    state[:, 0] = 10.0
+    state[:, 2] = 0.3 + 0.05*time
+    omega = torch.full_like(time, 0.1)
+    matrix = _diagnostic_local_nqc_phase_matrix(
+        time, state, omega, torch.tensor(0.0, dtype=time.dtype))
+    expected = torch.tensor([[0.05, 0.0135], [0.0, 0.0045]], dtype=time.dtype)
+    torch.testing.assert_close(matrix, expected, rtol=1e-10, atol=1e-12)
+
+
 def test_natural_spline_matches_dense_unequal_knot_system_and_endpoints():
     knots = torch.tensor([0.0, 0.13, 0.8, 1.9, 2.05, 3.7], dtype=torch.float64)
     values = torch.tensor([1.2, -0.4, 0.9, 2.1, -0.2, 1.7], dtype=torch.float64)

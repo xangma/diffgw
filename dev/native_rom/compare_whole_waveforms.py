@@ -109,37 +109,62 @@ def compare_public_binary(row, run):
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--qualification", type=Path, required=True)
+    prerequisite = parser.add_mutually_exclusive_group(required=True)
+    prerequisite.add_argument("--qualification", type=Path)
+    prerequisite.add_argument("--diagnostic-campaign", type=Path)
     parser.add_argument("--inputs", type=Path, required=True)
     parser.add_argument("--json-out", type=Path, required=True)
     parser.add_argument("--max-run-seconds", type=float, default=600.)
     args = parser.parse_args(argv)
-    prior = json.loads(args.qualification.read_text())
-    if (prior.get("status") not in {"numerical_checks_passed", "failed"}
-            or not prior.get("sources_unchanged")
-            or len(prior.get("results", [{}])[0].get("runs", [])) != 5):
-        parser.error("the prerequisite numerical campaign is incomplete or sources changed")
-    if q.source_snapshot() != prior["source_sha256_after"]:
+    prior_path = args.diagnostic_campaign or args.qualification
+    prior = json.loads(prior_path.read_text())
+    diagnostic = args.diagnostic_campaign is not None
+    if diagnostic:
+        if (prior.get("schema") != "diffgw.seobnrv4.hermite_local_nqc_campaign_diagnostic.v1"
+                or prior.get("status") not in {"diagnostic_numerical_gates_passed", "failed"}
+                or not prior.get("sources_unchanged")
+                or len(prior.get("result", {}).get("runs", [])) != 5):
+            parser.error("the diagnostic numerical campaign is incomplete or sources changed")
+        numerical_result = prior["result"]
+        numerical_choice = prior["numerical_choice"]
+        if not numerical_choice.get("hermite_resampling") or not numerical_choice.get(
+                "local_nqc_phase_derivatives"):
+            parser.error("the diagnostic campaign has unexpected numerical choices")
+    else:
+        if (prior.get("status") not in {"numerical_checks_passed", "failed"}
+                or not prior.get("sources_unchanged")
+                or len(prior.get("results", [{}])[0].get("runs", [])) != 5):
+            parser.error("the prerequisite numerical campaign is incomplete or sources changed")
+        numerical_result = prior["results"][0]
+        numerical_choice = dict(hermite_resampling=False, local_nqc_phase_derivatives=False)
+    expected_sources = q.source_snapshot()
+    if diagnostic:
+        campaign_source = q.ROOT / "dev/native_rom/diagnose_hermite_campaign.py"
+        expected_sources[str(campaign_source.relative_to(q.ROOT))] = q.sha256(campaign_source)
+    if expected_sources != prior["source_sha256_after"]:
         parser.error("generator sources differ from the numerical campaign")
     if not math.isfinite(args.max_run_seconds) or args.max_run_seconds <= 0:
         parser.error("max-run-seconds must be finite and positive")
     rows = q.validate_rows(json.loads(args.inputs.read_text()))
-    if rows[0] != prior["config"]["rows"][0]:
+    if rows[0] != (prior["row"] if diagnostic else prior["config"]["rows"][0]):
         parser.error("the first comparison row must be the converged campaign row")
-    pins = prior["config"]["reference_pins"]
+    pins = (dict(lal=prior["lal_binary"]["lal_version"],
+                 lalsimulation=prior["lal_binary"]["lalsimulation_version"])
+            if diagnostic else prior["config"]["reference_pins"])
     identity = q.lal_binary_identity(pins["lal"], pins["lalsimulation"])
     if identity != prior["lal_binary"]:
         parser.error("public binary identity differs from the numerical campaign")
-    settings = q.Settings(**{**prior["config"]["settings"],
+    settings = q.Settings(**{**(prior["settings"] if diagnostic else prior["config"]["settings"]),
                              "max_run_seconds": args.max_run_seconds})
     level = dict(name="grid_2", atol=settings.atol_levels[-1],
                  rtol=settings.rtol_levels[-1], dt_geom=settings.dt_levels_M[-1])
     import torch
     torch.set_num_threads(1)
     output = dict(schema="diffgw.whole-waveform-diagnostic.v1", scope=q.SCOPE,
-                  whole_waveform_parity_validated=False, prerequisite=str(args.qualification),
-                  prerequisite_numerical_checks_passed=prior["results"][0]["numerical_checks_passed"],
-                  prerequisite_sha256=q.sha256(args.qualification),
+                  whole_waveform_parity_validated=False, prerequisite=str(prior_path),
+                  prerequisite_numerical_checks_passed=numerical_result["numerical_checks_passed"],
+                  prerequisite_sha256=q.sha256(prior_path),
+                  numerical_choice=numerical_choice,
                   source_manifest_sha256=prior["source_manifest_sha256"],
                   script_sha256=q.sha256(__file__), lal_binary=identity,
                   process=dict(host=socket.gethostname(), cwd=str(Path.cwd()), pid=os.getpid(),
@@ -150,13 +175,16 @@ def main(argv=None):
         print(f"row={index} whole_waveform", flush=True)
         started = time.monotonic()
         try:
-            run = q.native_run(row, level, settings)
+            run = q.native_run(
+                row, level, settings,
+                diagnostic_hermite_resampling=numerical_choice["hermite_resampling"],
+                diagnostic_local_nqc_derivatives=numerical_choice["local_nqc_phase_derivatives"])
             comparison = compare_public_binary(row, run)
             output["results"].append(dict(row=row, native=q.summarize_run(run),
                                           comparison=comparison,
                                           elapsed_seconds=time.monotonic()-started,
                                           numerical_convergence_prechecked=(
-                                              index == 0 and prior["results"][0]["numerical_checks_passed"])))
+                                              index == 0 and numerical_result["numerical_checks_passed"])))
         except Exception as exc:
             output["errors"].append(dict(row=index, type=type(exc).__name__, message=str(exc)))
             break

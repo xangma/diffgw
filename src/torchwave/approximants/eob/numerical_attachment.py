@@ -415,6 +415,7 @@ def _full_series_nqc(
     targets: NQCMatchingTargets,
     *,
     max_condition: float,
+    diagnostic_phase_matrix: Optional[Tensor] = None,
 ) -> FullSeriesNQC:
     q, p = nqc_22_basis(r, pr_star, orbital_frequency)
     products = base_amplitude.unsqueeze(-1) * q
@@ -434,6 +435,14 @@ def _full_series_nqc(
     amplitude_rhs = torch.stack(targets[:3], dim=-1) - torch.stack(
         (value[..., 0], first[..., 0], second[..., 0]), dim=-1)
     phase_matrix = torch.stack((first[..., 4:6], second[..., 4:6]), dim=-2)
+    if diagnostic_phase_matrix is not None:
+        if (not isinstance(diagnostic_phase_matrix, Tensor)
+                or diagnostic_phase_matrix.shape != phase_matrix.shape
+                or diagnostic_phase_matrix.dtype != phase_matrix.dtype
+                or diagnostic_phase_matrix.device != phase_matrix.device
+                or not bool(torch.isfinite(diagnostic_phase_matrix).all())):
+            raise ValueError("diagnostic_phase_matrix must be a finite matching-matrix tensor")
+        phase_matrix = diagnostic_phase_matrix
     # The phase RHS is based on the first and second derivatives of the full
     # unwrapped waveform-phase spline.  In the h=A*exp(-i*phi) convention
     # these are the positive GW frequency and its derivative.  A separately
@@ -709,6 +718,7 @@ def attach_seobnrv4_22_numerical_compatibility(
     match_time: Optional[Tensor] = None,
     mass_scale: Tensor | float = 1.0,
     max_condition: float = 1.0e10,
+    diagnostic_phase_matrix: Optional[Tensor] = None,
 ) -> NumericalAttachedMode22:
     """Attach the full-series NQC and discrete-boundary v4 ringdown.
 
@@ -820,7 +830,7 @@ def attach_seobnrv4_22_numerical_compatibility(
     nqc = _full_series_nqc(
         time, state[..., 0], state[..., 2], orbital_frequency, amplitude,
         frequency, _unwrap_mode_phase(base_mode), match, targets,
-        max_condition=max_condition,
+        max_condition=max_condition, diagnostic_phase_matrix=diagnostic_phase_matrix,
     )
     coefficients = nqc.calibration.coefficients
     corrected = base_mode * nqc_22_factor(

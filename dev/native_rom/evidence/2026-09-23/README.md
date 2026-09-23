@@ -214,11 +214,36 @@ PYTHONPATH=src python -m dev.native_rom.compare_whole_waveforms \
   --json-out /tmp/seobnrv4-whole-waveform.json
 ```
 
-The next numerical experiment should test an opt-in derivative estimator for
-NQC against this dense-trajectory check, then isolate the moving coarse/fine
-restart in the Hermite route. Rerun the same declared gates without tuning
-their thresholds. Public-binary comparison must be repeated if a numerical
-choice is promoted.
+The [opt-in local-NQC campaign](hermite_local_nqc_campaign.json) carries out
+that derivative experiment. A degree-six polynomial over ±`0.5 M` supplies
+only the two NQC phase-basis derivatives; the waveform-phase RHS and all
+other matching terms retain their original full-series splines. This window
+was chosen **after** inspecting the one-row dense DOP853 comparison: its
+tight-run phase-matrix difference was `1.92e-10` versus `2.99e-9` for the
+previously reported ±`0.25 M` degree-six estimate. It is a post-hoc
+numerical choice for diagnosis, not a published SEOBNRv4 prescription.
+With Hermite trajectory sampling and the original tolerances, the ODE gate
+passed: medium-to-fine complex relative L2 fell to `6.52e-7`, below `1e-6`.
+The grid gate **failed** monotonicity: coarse-to-medium `2.46e-8`,
+medium-to-fine `6.61e-7`. The default restart and initial-step rules were
+unchanged, and no generator or ROM is qualified. Reproduce with
+`PYTHONPATH=src:. python -m dev.native_rom.diagnose_hermite_campaign
+--local-nqc --json-out /tmp/seobnrv4-hermite-local-nqc.json`.
+
+The [matching whole-waveform diagnostic](local_nqc_whole_waveform.json) used
+that failed campaign as its prerequisite, the same opt-in numerical choices,
+and the pinned public LAL binary. With the unchanged peak-only alignment,
+complex relative L2 was `0.02171096` on the nonspinning row and `0.01335888`
+on the aligned-spin row. The aligned row still has no convergence campaign;
+neither comparison is a parity or physical-validation claim. Reproduce with
+`PYTHONPATH=src:. python -m dev.native_rom.compare_whole_waveforms
+--diagnostic-campaign /tmp/seobnrv4-hermite-local-nqc.json --inputs
+dev/native_rom/evidence/2026-09-23/whole_waveform_inputs.json --json-out
+/tmp/seobnrv4-local-nqc-whole.json`.
+
+The next discriminating check is to record the restart epoch at each output
+grid and hold it fixed across grids. Only after grid convergence is established
+can this numerical choice be considered for broader parameter coverage.
 Independent review of the full spin Hamiltonian and all 35 factorized mode
 amplitudes is still required before these diagnostics can support a native
 SEOBNRv4 claim.

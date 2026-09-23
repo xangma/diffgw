@@ -233,6 +233,13 @@ of the same provisional equations places the tight-run natural-cubic NQC
 phase-basis derivative matrix about `1.40e-7` from its five-point estimate,
 versus `2.99e-9` for a local polynomial matrix. This isolates a numerical
 derivative discrepancy without resolving historical calibration conventions.
+An opt-in ±`0.5 M`, degree-six local derivative experiment passes the original
+ODE tolerance gate on that row (`6.52e-7` medium-to-fine complex relative L2),
+but its output-grid error increases from `2.46e-8` to `6.61e-7`, so the grid
+gate fails. That window was selected after inspecting the same row's DOP853
+diagnostic; it is not an independently validated model rule. Peak-anchored
+whole-waveform complex relative L2 remains `0.02171096` nonspinning and
+`0.01335888` for one exploratory aligned-spin row.
 The separate public-binary whole-waveform comparison
 compares only two rows and does not establish public-binary parity. The current
 generator and ROM work therefore stay on this development branch. Reference

@@ -33,13 +33,16 @@ def snapshot():
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--json-out", required=True, type=Path)
+    parser.add_argument("--local-nqc", action="store_true",
+                        help="use the diagnostic degree-six local NQC phase derivatives")
     args = parser.parse_args()
     torch.set_num_threads(1)
     settings = Settings(atol_levels=(1e-12, 1e-13, 1e-14),
                         rtol_levels=(1e-11, 1e-12, 1e-13))
     before = snapshot()
     report = dict(
-        schema="diffgw.seobnrv4.hermite_campaign_diagnostic.v1",
+        schema=("diffgw.seobnrv4.hermite_local_nqc_campaign_diagnostic.v1"
+                if args.local_nqc else "diffgw.seobnrv4.hermite_campaign_diagnostic.v1"),
         scope=dict(physics_validated=False, production_asset=False,
                    production_promotion_allowed=False,
                    training_generator_qualified=False,
@@ -48,6 +51,9 @@ def main():
                                rtol_levels=settings.rtol_levels,
                                dt_levels_M=settings.dt_levels_M),
         numerical_choice=dict(hermite_resampling=True,
+                              local_nqc_phase_derivatives=args.local_nqc,
+                              local_nqc_window_M=0.5 if args.local_nqc else None,
+                              local_nqc_degree=6 if args.local_nqc else None,
                               default_restart_rule=True,
                               default_initial_step_rule=True),
         source_sha256_before=before, source_manifest_sha256=canonical_hash(before),
@@ -62,7 +68,8 @@ def main():
 
         def runner(row, level, runner_settings):
             return native_run(row, level, runner_settings,
-                              diagnostic_hermite_resampling=True)
+                              diagnostic_hermite_resampling=True,
+                              diagnostic_local_nqc_derivatives=args.local_nqc)
 
         report["result"] = qualify_row(
             ROW, settings, runner=runner, oracle=compare_lal,
