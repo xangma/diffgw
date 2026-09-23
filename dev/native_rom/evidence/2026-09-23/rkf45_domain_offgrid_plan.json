@@ -1,0 +1,18 @@
+{
+  "schema": "diffgw.seobnrv4.rkf45-domain-offgrid-plan.v1",
+  "purpose": "Test development-only Fehlberg output sampling against locally seeded DOP853 throughout each fine-stage trajectory, independently of a nested output-grid identity.",
+  "combined_evidence": "rkf45_fixed_start_boundary_combined.json",
+  "rows": ["equal_mass_unequal_spin", "high_start_frequency", "low_start_frequency", "mass_ratio_four_nonspinning", "strong_aligned_spin", "strong_antialigned_spin"],
+  "level": "ode_2",
+  "accepted_bracket_index_fraction": [0.1, 0.5, 0.9],
+  "include_match_bracket": true,
+  "within_bracket_fraction": [0.25, 0.5, 0.75],
+  "dense_reference": {
+    "solver": "scipy.integrate.solve_ivp:DOP853",
+    "seed": "preceding accepted fine-stage state for each off-grid query",
+    "rtol_atol": [[1e-12, 1e-13], [1e-13, 1e-14]],
+    "first_step_rule": "min(0.015625 M, one quarter of the maximum query displacement in each bracket)"
+  },
+  "permitted_prior_source_drift": ["dev/native_rom/diagnose_rkf45_output_boundaries.py", "src/jaxwave/approximants/eob/events.py", "src/jaxwave/approximants/eob/integrator.py", "src/torchwave/approximants/eob/integrator.py"],
+  "interpretation": "Same provisional ODE and accepted states; waveform hashes must replay. Do not infer historical SEOBNRv4 parity, domain-wide error bounds, or release qualification from these finite probes."
+}
