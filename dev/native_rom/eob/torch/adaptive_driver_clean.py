@@ -38,6 +38,7 @@ from torchwave.approximants.eob.adaptive_driver_clean import (
     _stack_adaptive_trajectories,
     _preserve_output_phase,
     _apply_calibrated_nqc,
+    _rkf45_trial,
 )
 
 
@@ -58,6 +59,31 @@ def _diagnostic_hermite_output(run):
               + ((u3 - 2*u2 + u) * h).unsqueeze(-1) * f0
               + (-2*u3 + 3*u2).unsqueeze(-1) * y1
               + ((u3 - u2) * h).unsqueeze(-1) * f1)
+    return replace(run, output_state=sample)
+
+
+def _diagnostic_rkf45_output(run, vector_field):
+    """Sample a scalar accepted trajectory by fixed Fehlberg substeps.
+
+    Each output query starts at its preceding accepted state.  This changes
+    only output sampling: accepted states, derivatives, event times and solver
+    statistics remain those of the original adaptive run.  The diagnostic is
+    deliberately separate from the published reconstruction path.
+    """
+    if run.time.ndim != 1 or run.state.ndim != 2 or run.time.numel() < 2:
+        raise ValueError("diagnostic Fehlberg resampling requires scalar accepted states")
+    query = run.output_time
+    left = torch.searchsorted(run.time.detach(), query.detach(), right=True) - 1
+    left = left.clamp(0, run.time.numel() - 2)
+    step = query - run.time[left]
+    if not bool(((step >= 0) & (step <= run.time[left + 1] - run.time[left])).all()):
+        raise ValueError("output query lies outside its accepted step")
+    _, sample, _, _ = _rkf45_trial(
+        vector_field, run.time[left], run.state[left], step,
+        run.derivative[left], 1,
+    )
+    sample = torch.where((query == run.time[-1]).unsqueeze(-1),
+                         run.state[-1], sample)
     return replace(run, output_state=sample)
 
 
@@ -116,6 +142,7 @@ def reconstruct_seobnrv4_22_adaptive(
     diagnostic_restart_time_M: Optional[float] = None,
     diagnostic_fine_max_step_M: Optional[float] = None,
     diagnostic_hermite_resampling: bool = False,
+    diagnostic_rkf45_resampling: bool = False,
     diagnostic_local_nqc_derivatives: bool = False,
     diagnostic_matching_second_derivatives: bool = False,
     num_steps: int = 20000,
@@ -162,6 +189,10 @@ def reconstruct_seobnrv4_22_adaptive(
         raise ValueError("diagnostic_restart_time_M must lie on the output grid")
     if not isinstance(diagnostic_hermite_resampling, bool):
         raise TypeError("diagnostic_hermite_resampling must be bool")
+    if not isinstance(diagnostic_rkf45_resampling, bool):
+        raise TypeError("diagnostic_rkf45_resampling must be bool")
+    if diagnostic_hermite_resampling and diagnostic_rkf45_resampling:
+        raise ValueError("choose one diagnostic output resampler")
     if not isinstance(diagnostic_local_nqc_derivatives, bool):
         raise TypeError("diagnostic_local_nqc_derivatives must be bool")
     if not isinstance(diagnostic_matching_second_derivatives, bool):
@@ -232,8 +263,11 @@ def reconstruct_seobnrv4_22_adaptive(
             max_rejected_steps=max_rejected_steps, max_evaluations=max_evaluations,
             max_accepted_steps=maximum_steps, max_duration=max_duration,
         )
-        coarse_runs.append(_diagnostic_hermite_output(coarse_run)
-                           if diagnostic_hermite_resampling else coarse_run)
+        coarse_runs.append(
+            _diagnostic_rkf45_output(coarse_run, row_field)
+            if diagnostic_rkf45_resampling else
+            _diagnostic_hermite_output(coarse_run)
+            if diagnostic_hermite_resampling else coarse_run)
     coarse_counts = [int(run.output_valid.sum().detach()) for run in coarse_runs]
     if len(set(coarse_counts)) != 1:
         raise ValueError(
@@ -276,8 +310,11 @@ def reconstruct_seobnrv4_22_adaptive(
             max_duration=max_duration,
             max_step=diagnostic_fine_max_step_M,
         )
-        fine_runs.append(_diagnostic_hermite_output(fine_run)
-                         if diagnostic_hermite_resampling else fine_run)
+        fine_runs.append(
+            _diagnostic_rkf45_output(fine_run, row_field)
+            if diagnostic_rkf45_resampling else
+            _diagnostic_hermite_output(fine_run)
+            if diagnostic_hermite_resampling else fine_run)
     if any(tuple(run.output_state.shape[:-2]) for run in fine_runs):
         raise RuntimeError("unexpected fine trajectory shape")
     fine_counts = [int(run.output_valid.sum().detach()) for run in fine_runs]

@@ -1,0 +1,85 @@
+{
+  "acceptance": "Use all frozen ODE and output-grid gates, including the strict error-decrease gate, without relaxing thresholds or changing any row. Run the mass-ratio-four pilot first, then the complete six-row campaign only if it passes both checks. Accepted ODE states, event times, equations, and attachment rules must remain unchanged. A passing numerical campaign is still insufficient for SEOBNRv4 physics fidelity or production/training promotion.",
+  "baseline_evidence": [
+    "parameter_boundary_campaign.json",
+    "boundary_fine_step_cap.json",
+    "boundary_q4_capped_attribution.json",
+    "boundary_q4_capped_basis_trace.json"
+  ],
+  "candidate": {
+    "fine_max_step_M": 0.125,
+    "fixed_restart_time_M": 165.0,
+    "local_matching_second_derivatives": true,
+    "local_nqc_phase_derivatives": true,
+    "local_second_degree": 6,
+    "local_second_window_M": 0.5,
+    "output_resampler": "one_fifth_order_fehlberg_substep_from_preceding_accepted_state"
+  },
+  "pilot": "mass_ratio_four_nonspinning",
+  "purpose": "Test whether direct Fehlberg output substeps remove the traced Hermite interpolation contribution to NQC phase derivatives and improve numerical convergence on all six frozen boundary rows.",
+  "rows": {
+    "equal_mass_unequal_spin": {
+      "chi1": 0.2,
+      "chi2": -0.2,
+      "mass1": 25.0,
+      "mass2": 25.0,
+      "omega_start": 0.04
+    },
+    "high_start_frequency": {
+      "chi1": 0.2,
+      "chi2": -0.1,
+      "mass1": 30.0,
+      "mass2": 20.0,
+      "omega_start": 0.05
+    },
+    "low_start_frequency": {
+      "chi1": 0.2,
+      "chi2": -0.1,
+      "mass1": 30.0,
+      "mass2": 20.0,
+      "omega_start": 0.03
+    },
+    "mass_ratio_four_nonspinning": {
+      "chi1": 0.0,
+      "chi2": 0.0,
+      "mass1": 40.0,
+      "mass2": 10.0,
+      "omega_start": 0.04
+    },
+    "strong_aligned_spin": {
+      "chi1": 0.8,
+      "chi2": 0.8,
+      "mass1": 30.0,
+      "mass2": 20.0,
+      "omega_start": 0.04
+    },
+    "strong_antialigned_spin": {
+      "chi1": -0.8,
+      "chi2": -0.8,
+      "mass1": 30.0,
+      "mass2": 20.0,
+      "omega_start": 0.04
+    }
+  },
+  "schema": "diffgw.seobnrv4.rkf45-output-boundary-plan.v1",
+  "settings": {
+    "atol_levels": [
+      1e-12,
+      1e-13,
+      1e-14
+    ],
+    "dt_levels_M": [
+      0.5,
+      0.25,
+      0.125
+    ],
+    "event_time_limit_M": 0.05,
+    "max_run_seconds": 600.0,
+    "relative_l2_limit": 1e-06,
+    "rtol_levels": [
+      1e-11,
+      1e-12,
+      1e-13
+    ]
+  }
+}
