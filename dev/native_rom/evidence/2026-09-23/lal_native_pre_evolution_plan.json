@@ -1,0 +1,13 @@
+{
+  "schema": "diffgw.seobnrv4.lal-native-pre-evolution-plan.v1",
+  "purpose": "Test whether native quasicircular initial conditions at the compiled reference's earlier start frequency reproduce its state at the requested waveform cutoff.",
+  "dynamics_diagnostic": "dev/native_rom/evidence/2026-09-23/lal_dynamics_diagnostic.json",
+  "dynamics_sha256": "eadbeca687df9b696d0e846fc17e563f9c1b9d7be6e7c793123e009e6ecbd283",
+  "rows": [0, 1],
+  "reference_step_M": 0.125,
+  "native_start_Momega": 0.03162277660168379,
+  "cutoff_Momega": 0.04,
+  "native_solver": "DOP853 with rtol=1e-12, atol=1e-13, first_step=0.125 M, starting at t=0 from native quasicircular r,phi=0,pr_star,pphi.",
+  "comparisons": ["reference initial state", "reference state at the nearest sampled cutoff time", "native frequency-crossing state versus sampled reference cutoff state"],
+  "interpretation": "Diagnostic only. Agreement at the sampled cutoff does not validate merger, NQC, ringdown, full waveforms, parameter-domain coverage, numerical convergence, or the ROM. The compiled reference is not a native training asset."
+}
