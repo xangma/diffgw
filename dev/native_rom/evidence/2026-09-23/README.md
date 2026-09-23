@@ -450,8 +450,37 @@ dev/native_rom/evidence/2026-09-23/local_nqc_fixed_restart_whole_waveform.json
 --selection SELECTION --json-out /tmp/seobnrv4-flux-ablation.json`, where
 `SELECTION` is `three-mode`, `omit-21`, `omit-32`, or `omit-55`.
 
-The next numerical check is to localize the aligned-spin ODE sensitivity and
-grid nonmonotonicity, then extend convergence to parameter-boundary rows.
+The exact-hash [ODE](aligned_spin_nqc_matching_inputs_ode.json) and
+[grid](aligned_spin_nqc_matching_inputs_grid.json) NQC matching-input replays
+reconstruct the frozen amplitude and phase matrices and right-hand sides from
+the replayed fine trajectory. Their solved coefficients agree with the stored
+calibration to at most `3.0e-12`; the exact matrix/RHS decomposition closes
+each observed coefficient difference to at most `4.1e-12`. The unscaled
+amplitude and phase matrix condition numbers are about `1.06e4` and `97.4`;
+the generator reports smaller, row/column-equilibrated conditions (`833` and
+`8.52`).
+
+| Refined pair | Amplitude matrix / total coefficient-difference norm | Phase RHS / total coefficient-difference norm | Dominant changed input |
+| --- | ---: | ---: | --- |
+| ODE | `0.01705 / 0.01982` (`86%`) | `0.000296 / 0.000278` (`107%`) | Amplitude-basis second derivative; waveform-phase second derivative |
+| Grid | `0.000552 / 0.000641` (`86%`) | `9.30e-6 / 9.38e-6` (`99%`) | Same two second-derivative inputs |
+
+The `107%` reflects partial cancellation by a smaller phase-matrix change;
+these vector contributions are algebraic, not independently measured error
+budgets. The amplitude target itself is identical across runs. These results
+identify numerical sensitivity in the sampled second derivatives, but do not
+select a validated derivative rule or make the aligned-spin convergence gates
+pass. Reproduce either replay with `PYTHONPATH=src:.
+/Users/xangma/repos/diffgw/.venv/bin/python -m
+dev.native_rom.diagnose_nqc_matching_inputs --campaign
+dev/native_rom/evidence/2026-09-23/aligned_spin_fixed_restart_campaign.json
+--pair ode --json-out /tmp/seobnrv4-nqc-matching-inputs.json`, replacing `ode`
+with `grid` for the grid pair.
+
+The next numerical check is to compare the amplitude-product and waveform-phase
+second derivatives with a dense-trajectory reference across more than one row,
+then test a predeclared candidate differentiation rule against both numerical
+convergence gates before extending to parameter-boundary rows.
 Independently check the historical initial-state prescription and the remaining
 Hamiltonian/flux components, including the `(2,1)` spin terms and `(5,5)`
 amplitude, without fitting correction coefficients to the LAL binary.

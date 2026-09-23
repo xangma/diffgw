@@ -1,0 +1,372 @@
+{
+  "campaign_sha256": "c6338a26f7a7250dcef53ceb2377f39096ac609f7606e77aeef0d713e7060262",
+  "comparison": {
+    "amplitude": {
+      "closure_max_abs": 4.086178118957451e-12,
+      "coefficient_delta_l2": 0.0006412486268854384,
+      "delta_coefficients": [
+        4.69528270929942e-05,
+        -0.00041953287222895597,
+        0.0004826876864285623
+      ],
+      "delta_matrix": [
+        [
+          4.458648728000725e-11,
+          1.782052977405968e-11,
+          1.1152245793510929e-11
+        ],
+        [
+          8.114365603051343e-11,
+          2.8886268377270596e-11,
+          1.7253449970805468e-11
+        ],
+        [
+          6.669728000365666e-09,
+          2.276469714991569e-09,
+          1.329885498057258e-09
+        ]
+      ],
+      "delta_rhs": [
+        -2.2610802119515938e-11,
+        9.102193825050175e-12,
+        6.532309864467484e-10
+      ],
+      "matrix_contribution": [
+        4.041527830378895e-05,
+        -0.00036109899391876334,
+        0.0004154479637796916
+      ],
+      "matrix_contribution_l2": 0.0005519265247641282,
+      "matrix_row_contributions": [
+        [
+          8.961906974976337e-09,
+          -6.573815673904225e-08,
+          6.921312113288561e-08
+        ],
+        [
+          -2.1663622379614834e-07,
+          1.8103196301648937e-06,
+          -2.0107565175264276e-06
+        ],
+        [
+          4.0622952620610106e-05,
+          -0.00036284357539218914,
+          0.0004173895071760851
+        ]
+      ],
+      "rhs_contribution": [
+        6.5375483496080016e-06,
+        -5.8433874628701286e-05,
+        6.72397185626926e-05
+      ],
+      "rhs_contribution_l2": 8.932209690181007e-05,
+      "rhs_row_contributions": [
+        [
+          -8.91923871177285e-09,
+          6.542517279688735e-08,
+          -6.888359264325958e-08
+        ],
+        [
+          -4.579415460158471e-08,
+          3.826786470394927e-07,
+          -4.250484670393634e-07
+        ],
+        [
+          6.59226174292136e-06,
+          -5.888197844853767e-05,
+          6.773365062237521e-05
+        ]
+      ]
+    },
+    "phase": {
+      "closure_max_abs": 1.9436048712641514e-15,
+      "coefficient_delta_l2": 9.383511849276349e-06,
+      "delta_coefficients": [
+        -7.899420406687341e-07,
+        9.350202468283442e-06
+      ],
+      "delta_matrix": [
+        [
+          -2.4289358718787568e-11,
+          -3.4173480017996027e-12
+        ],
+        [
+          3.46077333457373e-14,
+          -6.545081317199664e-13
+        ]
+      ],
+      "delta_rhs": [
+        -6.377232075749362e-12,
+        -3.06170568585562e-09
+      ],
+      "matrix_contribution": [
+        -7.2284697537545425e-09,
+        7.961678404092314e-08
+      ],
+      "matrix_contribution_l2": 7.994424979946924e-08,
+      "matrix_row_contributions": [
+        [
+          -1.3135634984699823e-09,
+          9.57830868960616e-09
+        ],
+        [
+          -5.914906255284561e-09,
+          7.003847535131698e-08
+        ]
+      ],
+      "rhs_contribution": [
+        -7.827135728585844e-07,
+        9.270585685925275e-06
+      ],
+      "rhs_contribution_l2": 9.303569180546767e-06,
+      "rhs_row_contributions": [
+        [
+          5.41848455434453e-10,
+          -3.951077945742795e-09
+        ],
+        [
+          -7.832554213140189e-07,
+          9.274536763871018e-06
+        ]
+      ]
+    }
+  },
+  "pair": "grid",
+  "process": {
+    "argv": [
+      "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw/dev/native_rom/diagnose_nqc_matching_inputs.py",
+      "--campaign",
+      "dev/native_rom/evidence/2026-09-23/aligned_spin_fixed_restart_campaign.json",
+      "--pair",
+      "grid",
+      "--json-out",
+      "dev/native_rom/evidence/2026-09-23/aligned_spin_nqc_matching_inputs_grid.json"
+    ],
+    "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+    "host": "RONI2",
+    "pid": 36996
+  },
+  "row": {
+    "chi1": 0.2,
+    "chi2": -0.1,
+    "mass1": 30.0,
+    "mass2": 20.0,
+    "omega_start": 0.04
+  },
+  "runs": [
+    {
+      "elapsed_seconds": 49.61464749998413,
+      "fine_step_M": 0.015625,
+      "hashes": {
+        "mode": "5158da02f1844abb4e4cfb9eae8cc4bbb2bf7aa3e6b53efa0efaaa5722908d14",
+        "time": "928135dff3d273b222d5c841f38270a7c1f4757fa6dead0e556fe2f0bc4efb0f"
+      },
+      "level": {
+        "atol": 1e-14,
+        "dt_geom": 0.25,
+        "rtol": 1e-13
+      },
+      "local_phase_fit_samples": 64,
+      "match_time_local_M": 165.0001986506888,
+      "name": "grid_1",
+      "systems": {
+        "amplitude": {
+          "base": [
+            0.41533387579564407,
+            0.005527182250918239,
+            -0.0005624221700156397
+          ],
+          "coefficients": [
+            8.79507356528535,
+            -87.28173469259896,
+            102.27055326629218
+          ],
+          "condition": 10578.083346447123,
+          "matrix": [
+            [
+              0.06402736527270492,
+              0.02150497461299035,
+              0.01246308582742001
+            ],
+            [
+              0.010843394869998644,
+              0.0043327516827669455,
+              0.002711185538541233
+            ],
+            [
+              0.0030021981614832736,
+              0.001319441511462937,
+              0.000864463689795631
+            ]
+          ],
+          "reconstruction_max_abs_error": 2.6005864128819667e-12,
+          "rhs": [
+            -0.039259418001734325,
+            -0.005527182250918239,
+            -0.00034941042408046744
+          ],
+          "singular_values": [
+            0.06979714902797227,
+            0.0009261656929005972,
+            6.598279361394439e-06
+          ],
+          "target": [
+            0.37607445779390974,
+            0.0,
+            -0.0009118325940961072
+          ]
+        },
+        "phase": {
+          "base": [
+            0.2829139486376842,
+            0.006297471932662824
+          ],
+          "coefficients": [
+            5.5651958099358305,
+            -35.03160373789467
+          ],
+          "condition": 97.40497958046438,
+          "matrix": [
+            [
+              -0.03063457478145024,
+              -0.002587158515347363
+            ],
+            [
+              -0.006265654539482847,
+              -0.0008592680981042059
+            ]
+          ],
+          "reconstruction_max_abs_error": 2.842170943040401e-14,
+          "rhs": [
+            -0.07985509529612406,
+            -0.004768054872234412
+          ],
+          "singular_values": [
+            0.03138572135069497,
+            0.0003222188586854313
+          ],
+          "target": [
+            0.36276904393380827,
+            0.011065526804897237
+          ]
+        }
+      }
+    },
+    {
+      "elapsed_seconds": 49.67907899999409,
+      "fine_step_M": 0.015625,
+      "hashes": {
+        "mode": "c0a393cb032b67b0e663fa458ce0ad49e0b9e38d3b46b3a91114a0c048baf14b",
+        "time": "44e687351455e50a5a7feb1e765e28124741ef496b427c5629f88b32a2770714"
+      },
+      "level": {
+        "atol": 1e-14,
+        "dt_geom": 0.125,
+        "rtol": 1e-13
+      },
+      "local_phase_fit_samples": 64,
+      "match_time_local_M": 165.0001986506888,
+      "name": "grid_2",
+      "systems": {
+        "amplitude": {
+          "base": [
+            0.41533387581825487,
+            0.005527182241816045,
+            -0.0005624228232466262
+          ],
+          "coefficients": [
+            8.795120518112443,
+            -87.28215422547119,
+            102.27103595397861
+          ],
+          "condition": 10578.083551901273,
+          "matrix": [
+            [
+              0.0640273653172914,
+              0.02150497463081088,
+              0.012463085838572256
+            ],
+            [
+              0.0108433949511423,
+              0.004332751711653214,
+              0.002711185555794683
+            ],
+            [
+              0.003002204831211274,
+              0.001319443787932652,
+              0.000864465019681129
+            ]
+          ],
+          "reconstruction_max_abs_error": 1.6626700016786344e-12,
+          "rhs": [
+            -0.03925941802434513,
+            -0.005527182241816045,
+            -0.000349409770849481
+          ],
+          "singular_values": [
+            0.06979714943764895,
+            0.0009261657055297541,
+            6.598279271967351e-06
+          ],
+          "target": [
+            0.37607445779390974,
+            0.0,
+            -0.0009118325940961072
+          ]
+        },
+        "phase": {
+          "base": [
+            0.282913948631307,
+            0.0062974688709571385
+          ],
+          "coefficients": [
+            5.56519501999379,
+            -35.0315943876922
+          ],
+          "condition": 97.40497954063993,
+          "matrix": [
+            [
+              -0.030634574805739598,
+              -0.002587158518764711
+            ],
+            [
+              -0.006265654539448239,
+              -0.000859268098758714
+            ]
+          ],
+          "reconstruction_max_abs_error": 8.881784197001252e-16,
+          "rhs": [
+            -0.07985509530250129,
+            -0.004768057933940098
+          ],
+          "singular_values": [
+            0.031385721374691845,
+            0.0003222188590635337
+          ],
+          "target": [
+            0.36276904393380827,
+            0.011065526804897237
+          ]
+        }
+      }
+    }
+  ],
+  "schema": "diffgw.seobnrv4.nqc-matching-inputs.v1",
+  "scope": {
+    "description": "Scalar CPU float64 numerical stability evidence only; no training or promotion.",
+    "known_limitations": [
+      "Convergence cannot establish correctness of the equations or published model fidelity.",
+      "The adaptive prototype uses a diagnostic QNM spline with independently generated values and black-box-inferred knot metadata; this is not wholly literature-specified provenance.",
+      "Changing dt also changes the adaptive initial step and coarse/fine restart sampling; the grid check measures the complete generator's grid sensitivity.",
+      "No time, phase, amplitude, or coefficient fitting is performed.",
+      "No derivatives, batched execution, accelerators, or JAX are qualified here."
+    ],
+    "physics_validated": false,
+    "production_asset": false,
+    "production_promotion_allowed": false,
+    "training_generator_qualified": false
+  },
+  "script_sha256": "9a08c97f536be66e7479b71ee258e9503d8d987bd15c61b5f25d54243dc8828c",
+  "source_manifest_sha256": "5ba0b8127c874095962a4c2ae4c990fe0f534b7f49cdaaeaabba66fa1007b7e3",
+  "status": "diagnostic_complete"
+}

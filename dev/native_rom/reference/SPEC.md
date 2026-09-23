@@ -322,7 +322,16 @@ waveform discrepancies. The shared fine-run NQC coefficients already amplify
 the difference on the coarse prefix. The amplitude and phase matching systems
 have condition numbers near `833` and `8.52` with roundoff-level solve
 residuals; the sampled input responsible for coefficient drift remains
-unresolved.
+unresolved in that first replay. A [matching-input attribution](../evidence/2026-09-23/README.md)
+reconstructs both frozen NQC systems and closes their coefficient changes to
+roundoff. In both refined ODE and grid pairs, the amplitude basis matrix
+contributes about 86% of the coefficient-difference vector norm, predominantly
+through the second-derivative row. The phase RHS contributes about 107% and
+99% of the phase coefficient-difference norm in the ODE and grid pairs,
+respectively; its second-derivative row dominates, with a small opposing
+matrix contribution in the ODE pair. These are algebraic attributions under
+the selected numerical discretization, not evidence for changing the
+published NQC targets or a validated differentiation rule.
 With quadratic-power peak fits, the corresponding nonspinning difference is
 `0.006949`. In a replay of the same two frozen waveforms, inspiral
 (`t<-20 M`) squared complex error is 94.07%/96.19% phase-related
