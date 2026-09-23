@@ -689,16 +689,31 @@ its exact matrix-row contribution to the phase-coefficient change is about
 `-9.83e-8` rad. The coarse-to-medium pair has a larger raw-mode difference
 (`2.60130e-9`) yet a much smaller full-waveform difference (`1.60292e-9`).
 This localizes the nonmonotonicity to the NQC phase matching input, not to
-an event-time shift. It does not yet distinguish accepted-state error,
+an event-time shift. This first replay did not distinguish accepted-state error,
 Hermite output interpolation, and local derivative-fit error in that input.
 Reproduce with `PYTHONPATH=src:. /Users/xangma/repos/diffgw/.venv/bin/python
 -m dev.native_rom.diagnose_boundary_q4_capped_attribution --json-out
 /tmp/seobnrv4-boundary-q4-capped-attribution.json`.
 
-Next, trace that mass-ratio-four matching derivative through the accepted
-trajectory and output sampling, then test
-any combined numerical candidate across all six frozen boundary rows without
-relaxing the gates. Check the historical initial-state
+The subsequent [phase-basis trace plan](boundary_q4_capped_basis_trace_plan.json)
+preceded its [dense numerical control](boundary_q4_capped_basis_trace.json).
+It again replays both capped waveform hashes and reconstructs the exact
+native local-fit derivative. The first-column medium-to-fine second-derivative
+change is `-5.78227e-10`; the exact between-run partition attributes
+`-5.75542e-10` (about `99.5%`) to cubic Hermite interpolation on the two
+accepted-step meshes. Fine accepted-state evolution contributes
+`-1.72e-13`, local derivative fitting `+1.24e-12`, and the restart state
+`-3.75e-12`. The partition closes exactly at recorded precision; the tight
+and loose DOP853 continuous references differ by `1.81e-11` in that column.
+This explains why a `0.125 M` cap reduces the waveform error but still leaves
+a nonmonotone NQC phase response. The DOP853 control uses the same provisional
+vector field and therefore does not validate SEOBNRv4 physics. Reproduce with
+`PYTHONPATH=src:. /Users/xangma/repos/diffgw/.venv/bin/python -m
+dev.native_rom.diagnose_boundary_q4_capped_basis_trace --json-out
+/tmp/seobnrv4-boundary-q4-capped-basis-trace.json`.
+
+Next, test a numerical output-sampling candidate across all six frozen
+boundary rows without relaxing the gates. Check the historical initial-state
 prescription and remaining Hamiltonian/flux components independently,
 including the `(2,1)` spin terms and `(5,5)`
 amplitude, without fitting correction coefficients to the LAL binary.
