@@ -13,6 +13,7 @@ import sys
 from . import qualify_generator as q
 
 import torch
+import torchwave
 
 
 PLAN = q.ROOT / "dev/native_rom/evidence/2026-09-23/rkf45_output_boundary_plan.json"
@@ -24,6 +25,9 @@ def main(argv=None):
     parser.add_argument("--row", choices=json.loads(PLAN.read_text())["rows"])
     args = parser.parse_args(argv)
     torch.set_num_threads(1)
+    module_path = Path(torchwave.__file__).resolve()
+    if not module_path.is_relative_to(q.ROOT / "src"):
+        parser.error(f"torchwave loaded outside this checkout: {module_path}")
     plan = json.loads(PLAN.read_text())
     rows = plan["rows"]
     q.validate_rows(list(rows.values()))
@@ -54,7 +58,8 @@ def main(argv=None):
         plan_sha256=q.sha256(PLAN), source_sha256_before=before,
         source_manifest_sha256=q.canonical_hash(before),
         git_head=subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip(),
-        process=dict(argv=sys.argv, cwd=os.getcwd(), host=socket.gethostname(), pid=os.getpid()),
+        process=dict(argv=sys.argv, cwd=os.getcwd(), host=socket.gethostname(), pid=os.getpid(),
+                     torchwave_module=str(module_path), pythonpath=os.environ.get("PYTHONPATH")),
         settings=config, selected_rows=list(rows if args.row is None else [args.row]),
         rows={}, status="running")
     q.write_evidence(args.json_out, report)
