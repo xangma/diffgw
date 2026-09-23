@@ -1,5 +1,5 @@
 {
-  "specification": "seobnrv4-paper-components/0.8.9",
+  "specification": "seobnrv4-paper-components/0.8.10",
   "model": "SEOBNRv4 dominant (2,2) mode, aligned-spin black-hole binaries",
   "source": {
     "id": "bohe-2017-v3",
@@ -174,13 +174,13 @@
     },
     {
       "id": "V4-FLUX-43-AMPLITUDE",
-      "source": "bohe-2017-v3, Eq. (9); Damour, Iyer and Nagar 0811.2069v2, Eq. (101); Pan et al. 1006.0431v2, Eqs. (29g), (38g), (41g); Taracchini et al. 1202.0790v2, Appendix A",
+      "source": "bohe-2017-v3, Eq. (9); Damour, Iyer and Nagar 0811.2069v2, Eq. (101); Pan et al. 1006.0431v2, Eqs. (29g), (38g), (41g), (42g); Taracchini et al. 1202.0790v2, Eq. (52b)",
       "status": "conditional",
       "reference": "flux.factorized_43_amplitude",
       "torch": "src/torchwave/approximants/eob/seobnrv4_flux.py:SEOBNRv4PublishedFlux.amplitudes",
-      "jax": null,
-      "test": "dev/native_rom/reference/tests/test_published.py:test_factorized_43_newtonian_limit_and_equal_mass_spin; dev/native_rom/reference/tests/test_torch.py:test_factorized_43_amplitude_against_reference",
-      "condition": "Regularized pre-NQC J-source modulus of a declared finite-mass nonspin and spin hybrid at frozen points. The historical v4 hybrid choice, complete (2,1) spin prescription, and JAX are unverified."
+      "jax": "src/jaxwave/approximants/eob/seobnrv4_amplitude43.py:seobnrv4_published_amplitude43",
+      "test": "dev/native_rom/reference/tests/test_published.py:test_factorized_43_newtonian_limit_and_equal_mass_spin; dev/native_rom/reference/tests/test_torch.py:test_factorized_43_amplitude_against_reference; dev/native_rom/reference/tests/test_jax.py:test_factorized_43_amplitude_against_reference; dev/native_rom/reference/tests/test_jax.py:test_six_mode_partial_flux_against_scalar_reference; tests/test_clean_room_jax_seobnrv4_amplitude43.py:test_batched_jit_exchange_and_equal_mass_unequal_spin",
+      "condition": "Regularized pre-NQC J-source modulus of a declared finite-mass nonspin and spin hybrid at frozen points. The historical v4 hybrid choice, complete (2,1) spin prescription, and other JAX mode amplitudes are unverified."
     },
     {
       "id": "V4-FLUX-55-AMPLITUDE",

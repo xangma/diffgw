@@ -1,4 +1,4 @@
-# SEOBNRv4 source specification: paper components 0.8.9
+# SEOBNRv4 source specification: paper components 0.8.10
 
 **Status: incomplete research specification.** This version establishes an
 independent executable source of truth for the components marked `executable`
@@ -205,6 +205,14 @@ frozen points, including equal-mass unequal-spin and mass-ratio-nine cases;
 its five-mode partial flux agrees at one aligned-spin point. JIT, derivative,
 exchange, Newtonian-limit, and domain checks pass. Historical v4 mode
 selection and the rest of the flux remain conditional.
+`flux.factorized_43_amplitude` uses the J-source `(4,3)` Newtonian factor and
+finite-mass nonspin residual from [Damour--Iyer--Nagar Eq. (101)](https://arxiv.org/html/0811.2069)
+and [Taracchini et al. Eq. (52b)](https://arxiv.org/html/1202.0790), with the
+regularized spin terms from [Pan Eqs. (41g), (42g)](https://arxiv.org/html/1006.0431).
+JAX agrees with the independent scalar reference at four points, including
+the finite equal-mass unequal-spin limit; its six-mode partial flux agrees
+at one aligned-spin point. These checks do not determine the historical
+SEOBNRv4 hybrid or the remaining flux modes.
 `flux.factorized_21_nonspin_amplitude` checks the `(2,1)` J-source modulus
 only for zero spins. It uses [Pan Eq. (38b)](https://arxiv.org/html/1006.0431)
 for the leading mode and [Damour--Iyer--Nagar Eq. (51)](https://arxiv.org/html/0811.2069)
