@@ -1,0 +1,17 @@
+{
+  "schema": "diffgw.seobnrv4.rkf45-offgrid-reference-plan.v1",
+  "purpose": "Check development-only output interpolation against independent, locally seeded DOP853 solutions at fixed off-grid times near the NQC match.",
+  "combined_evidence": "rkf45_fixed_start_boundary_combined.json",
+  "rows": ["mass_ratio_four_nonspinning", "strong_aligned_spin"],
+  "level": "ode_2",
+  "probe_time_M": "match_time_local_M + 0.0078125 M + k*0.0625 M, k=-7,...,7",
+  "dense_reference": {
+    "solver": "scipy.integrate.solve_ivp:DOP853",
+    "seed": "preceding accepted fine-stage state for each off-grid query",
+    "rtol_atol": [[1e-12, 1e-13], [1e-13, 1e-14]],
+    "first_step_rule": "min(0.015625 M, one quarter of the query displacement)",
+    "local_phase_second_degree": 6,
+    "local_phase_second_window_M": 0.5
+  },
+  "interpretation": "This compares numerical output sampling for the same provisional ODE and accepted states. It is not an independent SEOBNRv4 physics reference, a complete waveform test, or release qualification. Report all sampler errors and dense-reference spread without retuning thresholds."
+}
