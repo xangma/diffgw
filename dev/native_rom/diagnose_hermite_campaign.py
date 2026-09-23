@@ -17,7 +17,7 @@ import torch
 
 from dev.native_rom.qualify_generator import (
     Settings, canonical_hash, compare_lal, lal_binary_identity, native_run,
-    qualify_row, sha256, source_snapshot, write_evidence,
+    qualify_row, sha256, source_snapshot, validate_rows, write_evidence,
 )
 
 
@@ -34,6 +34,8 @@ def snapshot():
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--json-out", required=True, type=Path)
+    parser.add_argument("--inputs", type=Path,
+                        help="JSON file containing exactly one validated binary row")
     parser.add_argument("--local-nqc", action="store_true",
                         help="use the diagnostic degree-six local NQC phase derivatives")
     parser.add_argument("--fixed-restart-time-M", type=float,
@@ -43,6 +45,13 @@ def main():
             not args.local_nqc or not math.isfinite(args.fixed_restart_time_M)
             or args.fixed_restart_time_M <= 0):
         parser.error("a fixed restart requires --local-nqc and a positive finite epoch")
+    try:
+        rows = validate_rows(json.loads(args.inputs.read_text())) if args.inputs else [ROW]
+    except (OSError, ValueError, json.JSONDecodeError) as exc:
+        parser.error(f"invalid input rows: {exc}")
+    if len(rows) != 1:
+        parser.error("the diagnostic campaign requires exactly one input row")
+    row = rows[0]
     torch.set_num_threads(1)
     settings = Settings(atol_levels=(1e-12, 1e-13, 1e-14),
                         rtol_levels=(1e-11, 1e-12, 1e-13))
@@ -56,7 +65,9 @@ def main():
                    production_promotion_allowed=False,
                    training_generator_qualified=False,
                    development_only=True, no_coefficient_fitting=True),
-        row=ROW, settings=dict(atol_levels=settings.atol_levels,
+        row=row, input_file=(dict(path=str(args.inputs), sha256=sha256(args.inputs))
+                             if args.inputs else None),
+        settings=dict(atol_levels=settings.atol_levels,
                                rtol_levels=settings.rtol_levels,
                                dt_levels_M=settings.dt_levels_M),
         numerical_choice=dict(hermite_resampling=True,
@@ -83,7 +94,7 @@ def main():
                               diagnostic_restart_time_M=args.fixed_restart_time_M)
 
         report["result"] = qualify_row(
-            ROW, settings, runner=runner, oracle=compare_lal,
+            row, settings, runner=runner, oracle=compare_lal,
             progress=lambda name: print(f"run={name}", flush=True),
         )
     except Exception as exc:

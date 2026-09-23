@@ -1,9 +1,14 @@
-"""Scalar paper reference for the SEOBNRv4 radial potentials and energy map.
+"""Scalar paper reference for selected SEOBNRv4 Hamiltonian components.
 
-This deliberately stops before the spin-coupled effective Hamiltonian.  The
-point-mass coefficients are Steinhoff et al. 1608.01907v2, Appendix A;
+This checks the aligned-spin effective Hamiltonian at selected points, while
+the full historical generator remains unqualified. The point-mass
+coefficients are Steinhoff et al. 1608.01907v2, Appendix A;
 SEOBNRv4's 4PN increment and energy map are Bohé et al. 1611.03703v3,
-Eqs. (3) and (1).  No tensor frontend or implementation data is imported.
+Eqs. (3) and (1). The spin map follows Barausse--Buonanno 1107.2904,
+Eqs. (50)--(52), with the v2/v4 choices stated by Taracchini et al.
+1311.2544v1. The aligned Hamiltonian follows Barausse--Buonanno
+0912.3517v2, Eqs. (161)--(164). No tensor frontend or implementation data
+is imported.
 """
 
 import mpmath as mp
@@ -118,6 +123,44 @@ def energy_map(n, h_eff, *, digits=60):
         return total, 2*(h_eff - 1)/(total + 1)
 
 
+def effective_spin_mapping(m1, m2, chi1, chi2, r, q_minus_one,
+                           radial_momentum_squared, *, digits=60):
+    """Aligned S*/M² from BB Eqs. (50)--(52), with v2/v4 zero-gauge choice.
+
+    q_minus_one is Q-1 and radial_momentum_squared is
+    (Delta_r/Sigma)*(n.p_hat)**2, in the paper's dimensionless variables.
+    The calibrated 4.5PN addition d_SO*nu*S_Kerr/r³ is from Taracchini et al.
+    1311.2544v1, effective-one-body model paragraph.
+    """
+    with mp.workdps(digits):
+        n_sym, c = mass_spin(m1, m2, chi1, chi2)
+        m1, m2, chi1, chi2, r, q, p = map(
+            _mp, (m1, m2, chi1, chi2, r, q_minus_one, radial_momentum_squared))
+        if min(m1, m2, r) <= 0 or abs(chi1) > 1 or abs(chi2) > 1 or q < p or p < 0:
+            raise ValueError("Require positive masses/r, physical spins, and Q-1 >= radial >= 0")
+        n = _mp(n_sym)
+        a = (m1**2*chi1 + m2**2*chi2)/(m1+m2)**2
+        sigma_star = n*(chi1+chi2)
+        d_so = _mp(calibration()["d_SO"].subs({nu: n_sym, chi: c}))
+        u = 1/r
+
+        # Set a_0...a_3 and b_0...b_3 to zero in printed Eqs. (51)--(52).
+        first_star = n*(7*u/6 + q/3 - 5*p/2)
+        first_kerr = n*(-2*u/3 + q/4 - 3*p)
+        second_star = (
+            n*(353-27*n)*u**2/36 + 5*n**2*p**2
+            - n*(23+3*n)*q**2/72 + n*(-103+60*n)*u*q/36
+            + n*(16-21*n)*p*q/12 + n*(47-54*n)*u*p/12
+        )
+        second_kerr = (
+            -n*(56+21*n)*u**2/9 + 135*n**2*p**2/24
+            - 45*n*q**2/144 + n*(-109+51*n)*u*q/36
+            + n*(6-39*n)*p*q/24 - n*(16+147*n)*u*p/24
+        )
+        return +(sigma_star*(1+first_star+second_star)
+                 + a*(first_kerr+second_kerr+d_so*n*u**3))
+
+
 def nonspinning_effective_hamiltonian(r, p_r_star, p_phi, n, k, *, digits=60):
     """Equatorial orbital H_eff/mu, with spins zero and 3PN p_r* quartic.
 
@@ -134,3 +177,54 @@ def nonspinning_effective_hamiltonian(r, p_r_star, p_phi, n, k, *, digits=60):
         angular = p_phi**2*r**2/metric["lambda_t"]
         quartic = 2*n*(4-3*n)*p_r_star**4/r**2
         return mp.sqrt(metric["lapse_squared"])*mp.sqrt(1+radial+angular+quartic)
+
+
+def aligned_effective_hamiltonian(m1, m2, chi1, chi2, r, p_r_star, p_phi,
+                                  *, digits=60):
+    """Aligned H_eff/mu from Barausse--Buonanno (161)--(164) and v4 choices.
+
+    Uses the paper's equatorial spin couplings, the zero-gauge spin mapping,
+    Taracchini's calibrated spin-spin term, and the v4 radial potential. This
+    is an independent scalar component check, not a validated time evolution.
+    """
+    with mp.workdps(digits):
+        n_sym, c = mass_spin(m1, m2, chi1, chi2)
+        m1, m2, chi1, chi2, r, pr_star, p_phi = map(
+            _mp, (m1, m2, chi1, chi2, r, p_r_star, p_phi))
+        if min(m1, m2, r) <= 0 or abs(chi1) > 1 or abs(chi2) > 1:
+            raise ValueError("Require positive masses/r and physical aligned spins")
+        n, a, k = body_parameters(m1, m2, chi1, chi2)
+        d_ss = _mp(calibration()["d_SS"].subs({nu: n_sym, chi: c}))
+        x1, x2 = m1/(m1+m2), m2/(m1+m2)
+        s1, s2 = x1**2*chi1, x2**2*chi2
+
+        geometry = radial_potentials(r, n, a, k, digits=digits)
+        dt, dr = geometry["delta_t"], geometry["delta_r"]
+        lam, lam_r = geometry["lambda_t"], geometry["lambda_t_prime"]
+        b, j = mp.sqrt(dt), mp.sqrt(dr)
+        lapse = mp.sqrt(geometry["lapse_squared"])
+        p_r = pr_star/geometry["xi"]
+        radial = dr*p_r**2/r**2
+        q = radial + p_phi**2*r**2/lam
+        root_q = mp.sqrt(1+q)
+
+        # Equatorial metric gradients in Barausse--Buonanno (162)--(163).
+        nu_r = (geometry["delta_t_prime"]/dt + 2/r - lam_r/lam)/2
+        b_r = geometry["delta_t_prime"]/(2*b) - b/j
+        omega = 2*a*r/lam
+        omega_r = 2*a*(lam-r*lam_r)/lam**2
+        mapped_spin = effective_spin_mapping(m1, m2, chi1, chi2, r, q, radial,
+                                             digits=digits)
+
+        so = (lapse**2/r
+              * (-root_q*j*(b_r-2*b*nu_r) + (r*lapse-b)*(root_q+1)
+                 + (b*nu_r-b_r)*j)
+              / (b**2*(root_q+1)*root_q))
+        ss = (omega + b*omega_r*j/(2*r*lapse)
+              + (p_phi**2 - b**2*dr*p_r**2/(r**2*lapse**2))
+              * lapse*omega_r*j/(2*r*b*(root_q+1)*root_q))
+        quartic = 2*n*(4-3*n)*pr_star**4/r**2
+        geodesic = omega*p_phi + lapse*mp.sqrt(1+q+quartic)
+        spin = so*p_phi*mapped_spin + ss*mapped_spin
+        spin += -mapped_spin**2/(2*r**3) + d_ss*n*(s1**2+s2**2)/r**4
+        return +(geodesic+spin)

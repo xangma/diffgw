@@ -9,9 +9,12 @@ import pytest
 import sympy as sp
 
 from dev.native_rom.reference import SPEC_VERSION
-from dev.native_rom.reference.flux import emitted_flux, newtonian_22_mode
+from dev.native_rom.reference.flux import (
+    emitted_flux, factorized_22_amplitude, newtonian_22_mode,
+)
 from dev.native_rom.reference.hamiltonian import (
-    body_parameters, energy_map, nonspinning_effective_hamiltonian, radial_potentials,
+    aligned_effective_hamiltonian, body_parameters, effective_spin_mapping, energy_map,
+    nonspinning_effective_hamiltonian, radial_potentials,
 )
 from dev.native_rom.reference.published import (
     D, calibration, chi, mass_spin, nu, peak_targets, ringdown_shape,
@@ -96,6 +99,34 @@ def test_nonspinning_effective_hamiltonian_schwarzschild_limit():
         assert abs(actual-expected) < mp.mpf("1e-55")
 
 
+def test_effective_spin_mapping_limits_and_exchange():
+    with mp.workdps(70):
+        args = (30, 20, ".6", "-.2", 9, ".15", ".002")
+        actual = effective_spin_mapping(*args)
+        exchanged = effective_spin_mapping(20, 30, "-.2", ".6", 9, ".15", ".002")
+        assert abs(actual-exchanged) < mp.mpf("1e-59")
+        assert effective_spin_mapping(30, 20, 0, 0, 9, ".15", ".002") == 0
+        # In the test-particle limit both S* and every correction to S_Kerr
+        # vanish with nu; the map itself must tend to zero.
+        assert abs(effective_spin_mapping(1, "1e-8", ".6", 0, 9, ".15", ".002")) < mp.mpf("1e-6")
+    with pytest.raises(ValueError):
+        effective_spin_mapping(30, 20, ".6", "-.2", 9, ".001", ".002")
+
+
+def test_aligned_effective_hamiltonian_symmetries_and_nonspin_limit():
+    with mp.workdps(70):
+        args = (30, 20, ".6", "-.2", 9, ".01", 3)
+        actual = aligned_effective_hamiltonian(*args)
+        exchanged = aligned_effective_hamiltonian(20, 30, "-.2", ".6", 9, ".01", 3)
+        rescaled = aligned_effective_hamiltonian(3, 2, ".6", "-.2", 9, ".01", 3)
+        assert abs(actual-exchanged) < mp.mpf("1e-58")
+        assert abs(actual-rescaled) < mp.mpf("1e-58")
+        n, _, k = body_parameters(30, 20, 0, 0)
+        nonspin = nonspinning_effective_hamiltonian(9, ".01", 3, n, k)
+        assert abs(aligned_effective_hamiltonian(30, 20, 0, 0, 9, ".01", 3)
+                   - nonspin) < mp.mpf("1e-58")
+
+
 def test_flux_paper_normalization_and_mode_partner():
     with mp.workdps(70):
         n, w, phase = mp.mpf("0.24"), mp.mpf("0.04"), mp.mpf("0.37")
@@ -108,6 +139,14 @@ def test_flux_paper_normalization_and_mode_partner():
         assert abs(two_modes/actual-5) < mp.mpf("1e-59")
         with pytest.raises(ValueError):
             emitted_flux(w, {(2, -2): mode})
+
+
+def test_factorized_22_newtonian_limit():
+    with mp.workdps(70):
+        w = mp.mpf("1e-15")
+        actual = factorized_22_amplitude(30, 20, 0, 0, w, w, 1, 1)
+        expected = abs(newtonian_22_mode(mp.mpf("0.24"), w))
+        assert abs(actual/expected-1) < mp.mpf("1e-9")
 
 
 def test_calibration_fits():

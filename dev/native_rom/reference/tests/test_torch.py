@@ -3,9 +3,12 @@
 import pytest
 import torch
 
-from dev.native_rom.reference.flux import emitted_flux, newtonian_22_mode
+from dev.native_rom.reference.flux import (
+    emitted_flux, factorized_22_amplitude, newtonian_22_mode,
+)
 from dev.native_rom.reference.hamiltonian import (
-    body_parameters, energy_map, nonspinning_effective_hamiltonian, radial_potentials,
+    aligned_effective_hamiltonian, body_parameters, effective_spin_mapping, energy_map,
+    nonspinning_effective_hamiltonian, radial_potentials,
 )
 from dev.native_rom.reference.published import calibration, evaluate, mass_spin, peak_targets, ringdown_shape
 from dev.native_rom.reference.ringdown import h22
@@ -16,6 +19,7 @@ from torchwave.approximants.eob.remnant import eob_final_mass_fraction, hofmann_
 from torchwave.approximants.eob.nqc import seobnrv4_nqc_parameters, seobnrv4_nqc_targets, seobnrv4_nqc_time_offset
 from torchwave.approximants.eob.seobnrv4_hamiltonian import SEOBNRv4Hamiltonian
 from torchwave.approximants.eob.seobnrv4_flux import SEOBNRv4PublishedFlux
+from torchwave.approximants.eob.seobnrv4_amplitude22 import seobnrv4_published_amplitude22
 from torchwave.approximants.eob.factorized_modes import energy_flux_from_modes
 
 
@@ -57,6 +61,26 @@ def test_mode_flux_normalization_against_reference():
     assert float(actual) == pytest.approx(float(expected), rel=2e-14)
 
 
+@pytest.mark.parametrize("m1,m2,s1,s2,w,w0,he,hr", [
+    (30., 20., 0., 0., .04, .039, .95, .988),
+    (30., 20., .6, -.2, .07, .068, .91, .978),
+    (20., 20., -.9, .7, .11, .105, .89, .972),
+])
+def test_factorized_22_amplitude_against_reference(m1, m2, s1, s2, w, w0, he, hr):
+    expected = factorized_22_amplitude(m1, m2, s1, s2, w, w0, he, hr)
+    actual = seobnrv4_published_amplitude22(
+        scalar(w), omega_zero_radial=scalar(w0), heff_over_mu=scalar(he),
+        hreal_over_M=scalar(hr), x1=scalar(m1/(m1+m2)), x2=scalar(m2/(m1+m2)),
+        chi1=scalar(s1), chi2=scalar(s2))
+    assert float(actual) == pytest.approx(float(expected), rel=2e-12, abs=2e-14)
+    from_flux = SEOBNRv4PublishedFlux(spin_truncation="tabulated").amplitudes(
+        scalar([9., 0., .01, 3.]), omega=scalar(w), omega_zero_radial=scalar(w0),
+        heff_over_mu=scalar(he), hreal_over_M=scalar(hr),
+        x1=scalar(m1/(m1+m2)), x2=scalar(m2/(m1+m2)),
+        chi1=scalar(s1), chi2=scalar(s2))[(2, 2)]
+    assert float(from_flux) == pytest.approx(float(expected), rel=2e-12, abs=2e-14)
+
+
 @pytest.mark.parametrize("m1,m2,r,pr_star,pphi", [
     (30., 20., 9., .01, 3.), (20., 20., 6.5, -.08, 2.7),
 ])
@@ -67,6 +91,32 @@ def test_nonspinning_effective_hamiltonian_against_reference(m1, m2, r, pr_star,
     ham = SEOBNRv4Hamiltonian(scalar(n), scalar(0), scalar(0))
     actual = ham.effective_hamiltonian(scalar(r), scalar(pr_star), scalar(pphi))
     assert float(actual) == pytest.approx(float(expected), rel=2e-12)
+
+
+@pytest.mark.parametrize("m1,m2,s1,s2,r,q,p", [
+    (30., 20., .6, -.2, 9., .15, .002),
+    (45., 5., -.8, .3, 7., .24, .01),
+    (20., 20., -.9, .7, 12., .09, 0.),
+])
+def test_effective_spin_mapping_against_reference(m1, m2, s1, s2, r, q, p):
+    n, _, _ = body_parameters(m1, m2, s1, s2)
+    ham = SEOBNRv4Hamiltonian(scalar(n), scalar(s1), scalar(s2))
+    expected = effective_spin_mapping(m1, m2, s1, s2, r, q, p)
+    actual = ham.effective_spin(scalar(r), scalar(q), scalar(p))
+    assert float(actual) == pytest.approx(float(expected), rel=2e-12, abs=2e-13)
+
+
+@pytest.mark.parametrize("m1,m2,s1,s2,r,pr_star,pphi", [
+    (30., 20., .6, -.2, 9., .01, 3.),
+    (45., 5., -.8, .3, 7., -.03, 2.6),
+    (20., 20., -.9, .7, 12., 0., 3.5),
+])
+def test_aligned_effective_hamiltonian_against_reference(m1, m2, s1, s2, r, pr_star, pphi):
+    n, _, _ = body_parameters(m1, m2, s1, s2)
+    ham = SEOBNRv4Hamiltonian(scalar(n), scalar(s1), scalar(s2))
+    expected = aligned_effective_hamiltonian(m1, m2, s1, s2, r, pr_star, pphi)
+    actual = ham.effective_hamiltonian(scalar(r), scalar(pr_star), scalar(pphi))
+    assert float(actual) == pytest.approx(float(expected), rel=2e-12, abs=2e-13)
 
 
 def test_35_mode_flux_composition_against_reference():

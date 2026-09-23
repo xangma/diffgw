@@ -265,17 +265,46 @@ dev.native_rom.diagnose_hermite_campaign --local-nqc
 The [matching fixed-restart whole-waveform diagnostic](local_nqc_fixed_restart_whole_waveform.json)
 uses the same pinned public LAL binary and peak-only alignment. Complex relative
 L2 is `0.02171172` over `[-310,150] M` for the numerically checked nonspinning
-row and `0.01336093` over `[-330,150] M` for the aligned-spin row. The latter
-has **no** dedicated convergence campaign. These percent-scale shape errors
-are descriptive, not a parity pass or a physical-fidelity test. Reproduce with
+row and `0.01336093` over `[-330,150] M` for the aligned-spin row. The
+aligned-spin row's dedicated numerical campaign below **failed**. These
+percent-scale shape errors are descriptive, not a parity pass or a
+physical-fidelity test. Reproduce with
 `PYTHONPATH=src:. python -m dev.native_rom.compare_whole_waveforms
 --diagnostic-campaign /tmp/seobnrv4-fixed-restart.json --inputs
 dev/native_rom/evidence/2026-09-23/whole_waveform_inputs.json --json-out
 /tmp/seobnrv4-fixed-restart-whole-waveform.json`.
 
-The next numerical check is to repeat convergence across aligned-spin and
-parameter-boundary rows, then investigate the residual whole-waveform shape
-differences without fitting correction coefficients to the LAL binary.
-Independent review of the full spin Hamiltonian and all 35 factorized mode
-amplitudes is still required before these diagnostics can support a native
+The [dedicated aligned-spin campaign](aligned_spin_fixed_restart_campaign.json)
+uses the [frozen row](aligned_spin_convergence_input.json), the same Hermite,
+local NQC, and `165 M` fixed-restart choices, and unchanged gates. All five
+solves completed with the same restart epoch. The ODE complex relative L2
+changes from `3.576e-6` to `3.387e-6` with refinement, exceeding the `1e-6`
+budget; the refined-pair amplitude error is `1.466e-6`. Grid complex error
+increases from `1.946e-8` to `1.114e-7`, so its monotonicity gate also fails
+despite remaining below the absolute budget. Event-time gates pass. This shows
+that the nonspinning fixed-restart pass does not transfer to this spin row.
+Reproduce with `PYTHONPATH=src:. python -m
+dev.native_rom.diagnose_hermite_campaign --inputs
+dev/native_rom/evidence/2026-09-23/aligned_spin_convergence_input.json
+--local-nqc --fixed-restart-time-M 165 --json-out
+/tmp/seobnrv4-aligned-fixed-restart.json` (exit status 1 is the expected gate
+failure).
+
+The [paired aligned-spin whole-waveform diagnostic](aligned_spin_fixed_restart_whole_waveform.json)
+records a `0.01336093` peak-anchored complex relative L2 difference over
+`[-330,150] M`, matching the earlier two-row comparison, and explicitly marks
+its convergence prerequisite as failed. Reproduce with `PYTHONPATH=src:. python
+-m dev.native_rom.compare_whole_waveforms --diagnostic-campaign
+/tmp/seobnrv4-aligned-fixed-restart.json --inputs
+dev/native_rom/evidence/2026-09-23/aligned_spin_convergence_input.json
+--json-out /tmp/seobnrv4-aligned-fixed-restart-whole-waveform.json`.
+
+The next numerical check is to localize the aligned-spin ODE sensitivity and
+grid nonmonotonicity, then extend convergence to parameter-boundary rows.
+Investigate residual whole-waveform shape differences without fitting
+correction coefficients to the LAL binary.
+The separate [paper-component reference](../../reference/SPEC.md) now checks
+the aligned-spin Hamiltonian and dominant pre-NQC `(2,2)` amplitude at selected
+points. The conditional quartic choice and remaining 34 flux amplitudes still
+require independent review before these diagnostics can support a native
 SEOBNRv4 claim.

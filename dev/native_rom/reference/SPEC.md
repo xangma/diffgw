@@ -1,4 +1,4 @@
-# SEOBNRv4 source specification: paper components 0.5.0
+# SEOBNRv4 source specification: paper components 0.6.0
 
 **Status: incomplete research specification.** This version establishes an
 independent executable source of truth for the components marked `executable`
@@ -66,8 +66,21 @@ including the exact Schwarzschild test-mass limit. Its finite-mass-ratio
 quartic prescription is conditional: [Pan et al. (2012), Eqs. (14)–(15)](https://arxiv.org/html/1202.0790)
 describe 3PN truncation but print an extra radial factor in Eq. (15) that is
 dimensionally inconsistent. The scalar comparison checks the stated truncated
-choice, not the exact historical implementation. These checks do not validate
-the spin-coupled effective Hamiltonian.
+choice, not the exact historical implementation.
+
+`hamiltonian.effective_spin_mapping` checks the aligned, zero-gauge
+3.5PN mapping in [Barausse and Buonanno (2011), Eqs. (50)–(52)](https://arxiv.org/html/1107.2904)
+with the calibrated `d_SO nu S_Kerr/r³` term stated by
+[Taracchini et al. (2014)](https://arxiv.org/html/1311.2544).
+`hamiltonian.aligned_effective_hamiltonian` evaluates the equatorial
+geodesic and spin terms in [Barausse and Buonanno (2010), Eqs. (161)–(164)](https://arxiv.org/html/0912.3517),
+including Taracchini's `d_SS nu (S1²+S2²)/r⁴` addition and Bohé's radial
+potential. Both tensor frontends agree with this separate high-precision
+scalar evaluation at the tested aligned-spin points; the nonspinning limit,
+body exchange, and mass-scale invariance also hold. The full Hamiltonian
+check inherits the finite-mass-ratio tortoise-quartic ambiguity above, and
+component agreement does not validate the resulting dynamics or prove exact
+historical implementation parity.
 
 `flux.emitted_flux` independently evaluates Bohé Eq. (9) from supplied
 **pre-NQC** positive-`m` mode amplitudes through `ell=8`:
@@ -77,10 +90,14 @@ the spin-coupled effective Hamiltonian.
 The factor of two relative to the full `m=-ell...ell` sum accounts for the
 negative-`m` partners. [Pan et al. (2011), Eqs. (3), (30)](https://arxiv.org/html/1006.0431)
 provide the independent Newtonian check `F_22=(32/5) nu² Omega^(10/3)`.
-Torch composes 35 supplied factorized amplitudes with this normalization,
-but this reference does not yet verify each amplitude formula, the high-`ell`
-spin truncation, or a JAX factorized-flux path. The JAX development assembler
-currently uses a 1.5PN prototype flux and Newtonian `(2,2)` mode, so no
+`flux.factorized_22_amplitude` checks the published pre-NQC dominant-mode
+modulus, including the non-Keplerian Newtonian prefactor, rest-energy tail,
+and Bohé's 2.5PN/3.5PN spin replacements. It agrees with the standalone Torch
+amplitude and the `(2,2)` entry of Torch's 35-mode flux on the tested points,
+and has the correct Newtonian limit. Torch composes all 35 supplied modes with
+the flux normalization, but the other 34 amplitude formulas, high-`ell` spin
+truncation, and JAX factorized-flux path still need independent checks. The JAX
+development assembler currently uses a 1.5PN prototype flux and Newtonian `(2,2)` mode, so no
 cross-backend whole-waveform SEOBNRv4 claim follows from these checks.
 
 `published.peak_targets` encodes the NR/Teukolsky peak amplitude, amplitude
@@ -201,9 +218,9 @@ dependency or distribution asset changes in this branch.
 ## Promotion blockers
 
 The manifest names each remaining component and its next discriminating task.
-Most urgently, the remainder of the spin Hamiltonian and all factorized mode
-amplitudes need equation review; the remnant-spin choice and QNM interpolation
-details need independently documented provenance. The ODE initial conditions,
+Most urgently, the Hamiltonian's conditional quartic choice and the other 34
+factorized mode amplitudes need equation review; the remnant-spin choice and
+QNM interpolation details need independently documented provenance. The ODE initial conditions,
 solver, event location, and output-grid coupling need converged campaigns across
 the intended parameter domain.
 The [first frozen generator campaign](../evidence/2026-09-22/README.md) failed
@@ -247,6 +264,11 @@ whole-waveform complex relative L2 remains `0.02171096` nonspinning and
 `0.01335888` for one exploratory aligned-spin row. With the restart fixed at
 `165 M` on all grids, the nonspinning output-grid error decreases from
 `2.46e-8` to `4.78e-9`; its peak-anchored LAL difference is still `0.02171172`.
+The same fixed-restart campaign on an aligned-spin row fails its ODE complex
+and amplitude budgets (`3.387e-6` and `1.466e-6`) and its grid monotonicity
+gate (complex error increases from `1.946e-8` to `1.114e-7`). The paired
+peak-anchored LAL difference is `0.01336093`, with a failed numerical
+prerequisite.
 The separate public-binary whole-waveform comparison
 compares only two rows and does not establish public-binary parity. The current
 generator and ROM work therefore stay on this development branch. Reference

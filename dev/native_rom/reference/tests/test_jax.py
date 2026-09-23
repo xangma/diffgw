@@ -5,7 +5,8 @@ import jax.numpy as jnp
 import pytest
 
 from dev.native_rom.reference.hamiltonian import (
-    body_parameters, energy_map, nonspinning_effective_hamiltonian, radial_potentials,
+    aligned_effective_hamiltonian, body_parameters, effective_spin_mapping, energy_map,
+    nonspinning_effective_hamiltonian, radial_potentials,
 )
 from dev.native_rom.reference.published import calibration, evaluate, mass_spin, peak_targets, ringdown_shape
 from dev.native_rom.reference.ringdown import h22
@@ -74,6 +75,32 @@ def test_nonspinning_effective_hamiltonian_against_reference(m1, m2, r, pr_star,
     ham = SEOBNRv4Hamiltonian(scalar(n), scalar(0), scalar(0))
     actual = ham.effective_hamiltonian(scalar(r), scalar(pr_star), scalar(pphi))
     assert float(actual) == pytest.approx(float(expected), rel=2e-12)
+
+
+@pytest.mark.parametrize("m1,m2,s1,s2,r,q,p", [
+    (30., 20., .6, -.2, 9., .15, .002),
+    (45., 5., -.8, .3, 7., .24, .01),
+    (20., 20., -.9, .7, 12., .09, 0.),
+])
+def test_effective_spin_mapping_against_reference(m1, m2, s1, s2, r, q, p):
+    n, _, _ = body_parameters(m1, m2, s1, s2)
+    ham = SEOBNRv4Hamiltonian(scalar(n), scalar(s1), scalar(s2))
+    expected = effective_spin_mapping(m1, m2, s1, s2, r, q, p)
+    actual = ham.effective_spin(scalar(r), scalar(q), scalar(p))
+    assert float(actual) == pytest.approx(float(expected), rel=2e-12, abs=2e-13)
+
+
+@pytest.mark.parametrize("m1,m2,s1,s2,r,pr_star,pphi", [
+    (30., 20., .6, -.2, 9., .01, 3.),
+    (45., 5., -.8, .3, 7., -.03, 2.6),
+    (20., 20., -.9, .7, 12., 0., 3.5),
+])
+def test_aligned_effective_hamiltonian_against_reference(m1, m2, s1, s2, r, pr_star, pphi):
+    n, _, _ = body_parameters(m1, m2, s1, s2)
+    ham = SEOBNRv4Hamiltonian(scalar(n), scalar(s1), scalar(s2))
+    expected = aligned_effective_hamiltonian(m1, m2, s1, s2, r, pr_star, pphi)
+    actual = ham.effective_hamiltonian(scalar(r), scalar(pr_star), scalar(pphi))
+    assert float(actual) == pytest.approx(float(expected), rel=2e-12, abs=2e-13)
 
 
 def test_ringdown_against_reference():

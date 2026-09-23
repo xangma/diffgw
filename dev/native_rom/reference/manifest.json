@@ -1,5 +1,5 @@
 {
-  "specification": "seobnrv4-paper-components/0.5.0",
+  "specification": "seobnrv4-paper-components/0.6.0",
   "model": "SEOBNRv4 dominant (2,2) mode, aligned-spin black-hole binaries",
   "source": {
     "id": "bohe-2017-v3",
@@ -74,6 +74,25 @@
       "condition": "The finite-nu 3PN tortoise quartic follows the truncated prescription; Pan et al.'s printed Eq. (15) retains a dimensionally inconsistent factor and cannot establish the exact historical choice."
     },
     {
+      "id": "V4-HAM-SPIN-MAP",
+      "source": "bohe-2017-v3, Sec. II A; Barausse and Buonanno 1107.2904v1, Eqs. (50)-(52); Taracchini et al. 1311.2544v1, effective-one-body model paragraph",
+      "status": "executable",
+      "reference": "hamiltonian.effective_spin_mapping",
+      "torch": "src/torchwave/approximants/eob/seobnrv4_hamiltonian.py:SEOBNRv4Hamiltonian.effective_spin",
+      "jax": "src/jaxwave/approximants/eob/seobnrv4_hamiltonian.py:SEOBNRv4Hamiltonian.effective_spin",
+      "test": "dev/native_rom/reference/tests/test_published.py:test_effective_spin_mapping_limits_and_exchange; dev/native_rom/reference/tests/test_torch.py:test_effective_spin_mapping_against_reference; dev/native_rom/reference/tests/test_jax.py:test_effective_spin_mapping_against_reference"
+    },
+    {
+      "id": "V4-HAM-ALIGNED",
+      "source": "bohe-2017-v3, Sec. II A; Barausse and Buonanno 0912.3517v2, Eqs. (161)-(164); Taracchini et al. 1311.2544v1, effective-one-body model paragraph",
+      "status": "conditional",
+      "reference": "hamiltonian.aligned_effective_hamiltonian",
+      "torch": "src/torchwave/approximants/eob/seobnrv4_hamiltonian.py:SEOBNRv4Hamiltonian.effective_hamiltonian",
+      "jax": "src/jaxwave/approximants/eob/seobnrv4_hamiltonian.py:SEOBNRv4Hamiltonian.effective_hamiltonian",
+      "test": "dev/native_rom/reference/tests/test_published.py:test_aligned_effective_hamiltonian_symmetries_and_nonspin_limit; dev/native_rom/reference/tests/test_torch.py:test_aligned_effective_hamiltonian_against_reference; dev/native_rom/reference/tests/test_jax.py:test_aligned_effective_hamiltonian_against_reference",
+      "condition": "The finite-nu tortoise quartic follows the stated truncated prescription; paper-component agreement does not identify every historical implementation choice or validate the numerical flow."
+    },
+    {
       "id": "V4-FLUX-NORM-9",
       "source": "bohe-2017-v3, Eq. (9); Pan et al. 1006.0431, Eqs. (3) and (30)",
       "status": "conditional",
@@ -81,19 +100,29 @@
       "torch": "src/torchwave/approximants/eob/factorized_modes.py:energy_flux_from_modes; src/torchwave/approximants/eob/seobnrv4_flux.py:SEOBNRv4PublishedFlux.energy_flux",
       "jax": null,
       "test": "dev/native_rom/reference/tests/test_published.py:test_flux_paper_normalization_and_mode_partner; dev/native_rom/reference/tests/test_torch.py:test_mode_flux_normalization_against_reference; dev/native_rom/reference/tests/test_torch.py:test_35_mode_flux_composition_against_reference",
-      "condition": "Requires externally supplied pre-NQC mode amplitudes; the 35 amplitude formulas and a JAX factorized implementation are not yet validated."
+      "condition": "Requires externally supplied pre-NQC mode amplitudes; the other 34 amplitude formulas and a JAX factorized implementation are not yet validated."
+    },
+    {
+      "id": "V4-FLUX-22-AMPLITUDE",
+      "source": "bohe-2017-v3, Sec. II B and Eqs. (4)-(5); Taracchini et al. 1311.2544v1, Eq. (4); Pan et al. 1006.0431v2, Eqs. (28)-(30); Buonanno et al. 1209.6349v2, Eq. (4.27b)",
+      "status": "conditional",
+      "reference": "flux.factorized_22_amplitude",
+      "torch": "src/torchwave/approximants/eob/seobnrv4_amplitude22.py:seobnrv4_published_amplitude22; src/torchwave/approximants/eob/seobnrv4_flux.py:SEOBNRv4PublishedFlux.amplitudes",
+      "jax": null,
+      "test": "dev/native_rom/reference/tests/test_published.py:test_factorized_22_newtonian_limit; dev/native_rom/reference/tests/test_torch.py:test_factorized_22_amplitude_against_reference",
+      "condition": "Pre-NQC modulus only, using Bohé replacement of the 3.5PN term rather than retaining an additional Pan cubic Kerr-spin term; phase, NQC, and other 34 mode amplitudes are not established."
     },
     {
       "id": "V4-HAM-1-3",
-      "source": "bohe-2017-v3, Eqs. (1)-(3), cited Hamiltonian papers",
+      "source": "bohe-2017-v3, Eqs. (1)-(3); Barausse and Buonanno 0912.3517v2, Eqs. (161)-(164); Barausse and Buonanno 1107.2904v1, Eqs. (50)-(52); Taracchini et al. 1311.2544v1, effective-one-body model paragraph",
       "status": "pending",
-      "blocker": "The radial-potential, energy-map and nonspinning orbital slices are checked; derive and independently check the remaining spin mapping and complete effective Hamiltonian."
+      "blocker": "Radial, spin map, and aligned-spin Hamiltonian components match the cited paper reconstruction on tested points. Resolve the finite-nu quartic ambiguity and historical prescription, then validate the resulting numerical dynamics and waveforms."
     },
     {
       "id": "V4-FLUX-4-9",
-      "source": "bohe-2017-v3, Eqs. (4)-(9), cited factorized-mode papers",
+      "source": "bohe-2017-v3, Eqs. (4)-(9); Pan et al. 1006.0431v2, Eqs. (28)-(30), (41)-(42), and Appendices C-F; Taracchini et al. 1311.2544v1, Eq. (4)",
       "status": "pending",
-      "blocker": "The scalar flux normalization and Torch 35-mode composition are checked; independently reference all 35 factorized amplitudes, high-ell spin truncation, and NQC-free dynamics, then implement the JAX path."
+      "blocker": "The scalar flux normalization and dominant pre-NQC (2,2) modulus are checked; independently reference the other 34 factorized amplitudes, high-ell spin truncation, and NQC-free dynamics, then implement the JAX path."
     },
     {
       "id": "V4-NQC-7",
