@@ -342,6 +342,17 @@ row, but fails aligned-spin grid monotonicity (`5.69e-11` to `4.89e-10`). Its
 remains near the frozen `0.00695` nonspinning and `0.00807` aligned-spin complex
 relative L2 values. The candidate is an unvalidated numerical experiment, not
 the historical SEOBNRv4 NQC prescription.
+An [exact-hash replay](../evidence/2026-09-23/nqc_grid_floor.json) finds a
+`3.62e-10` raw pre-NQC inspiral difference in the failed refined grid pair,
+so matching alone cannot account for the `4.89e-10` whole-waveform difference.
+A [controlled replay](../evidence/2026-09-23/nqc_grid_initial_step.json) fixes
+the coarse ODE's first trial step at `0.5 M` while keeping the candidate and
+`165 M` restart unchanged; all three output grids then agree exactly on nested
+samples. For this aligned-spin row, the failed frozen grid monotonicity is
+attributable to the solver's default first-step dependence on output spacing.
+The control reuses one numerical trajectory and does not constitute an
+independent convergence-order or physical-accuracy check. The original gate
+remains failed.
 With quadratic-power peak fits, the corresponding nonspinning difference is
 `0.006949`. In a replay of the same two frozen waveforms, inspiral
 (`t<-20 M`) squared complex error is 94.07%/96.19% phase-related

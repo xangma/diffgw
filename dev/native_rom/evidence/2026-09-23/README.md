@@ -509,8 +509,38 @@ the frozen baseline's `0.00694939` and `0.00807196`. The remaining difference
 is essentially unchanged. This opt-in experiment neither qualifies the
 generator nor licenses ROM training or release promotion.
 
-Next, isolate the aligned-spin grid floor without changing this candidate's
-declared gate; then extend numerical tests to parameter-boundary rows.
+The [aligned-spin grid attribution](nqc_grid_floor.json) replays the three
+frozen grid waveforms with exact array hashes and reconstructs their NQC
+matching systems. In the refined grid pair, the raw pre-NQC inspiral already
+differs by `3.62e-10` complex relative L2, versus `4.89e-10` for the finished
+waveform. Holding the finer run's NQC coefficients common gives `4.29e-10`
+before attachment, while changing coefficients at the same coarse trajectory
+gives `7.02e-10`; these are interacting counterfactuals, not additive error
+shares. The reconstructed amplitude and phase coefficient changes have L2
+norms `3.55e-6` and `6.44e-8`, respectively. Both trajectory and matching
+vary with the grid, so the local second-derivative fit alone does not explain
+the failed monotonicity. Reproduce with `PYTHONPATH=src:. python -m
+dev.native_rom.diagnose_nqc_grid_floor --campaign
+dev/native_rom/evidence/2026-09-23/nqc_second_derivative_campaign.json
+--json-out /tmp/seobnrv4-nqc-grid-floor.json`.
+
+The [fixed-first-step control](nqc_grid_initial_step.json) keeps the same
+candidate, tolerances, `165 M` restart, and three output grids, while setting
+the coarse ODE's first trial step to `0.5 M` for every grid. Its baseline has
+the exact frozen waveform hash. All three waveforms then agree **exactly on
+nested samples** (`0` complex relative L2), and their coarse and fine accepted
+step counts are identically `596` and `424`. Thus the frozen aligned-spin grid
+failure is caused by coupling the initial ODE step to `dt_geom` in this row.
+This control makes the grids sample the same trajectory; zero error is not a
+convergence-order measurement, validation of the equations, or a reason to
+retroactively mark the predeclared grid gate as passed. Reproduce with
+`PYTHONPATH=src:. python -m dev.native_rom.diagnose_nqc_grid_initial_step
+--campaign dev/native_rom/evidence/2026-09-23/nqc_second_derivative_campaign.json
+--json-out /tmp/seobnrv4-nqc-grid-initial-step.json`.
+
+Next, design an independent output-sampling test that does not change the
+solver trajectory when `dt_geom` changes, then extend numerical tests to
+parameter-boundary rows. Keep the frozen qualification result failed.
 Independently check the historical initial-state prescription and the remaining
 Hamiltonian/flux components, including the `(2,1)` spin terms and `(5,5)`
 amplitude, without fitting correction coefficients to the LAL binary.
