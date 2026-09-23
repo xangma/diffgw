@@ -280,6 +280,17 @@ historical SEOBNRv4 initial-data prescription. The latter uses a particular
 Cartesian root solve and finite-step radial response in the
 [public LAL source](https://lscsoft.docs.ligo.org/lalsuite/7.26/lalsimulation/_l_a_l_sim_i_m_r_spin_e_o_b_initial_conditions_8c_source.html).
 
+The pinned [aligned-spin implementation](https://lscsoft.docs.ligo.org/lalsuite/7.26/lalsimulation/_l_a_l_sim_i_m_r_spin_aligned_e_o_b_8c_source.html)
+starts its internal evolution at the smaller of the requested orbital
+frequency and `10^(-3/2)`, the latter corresponding to the safety radius near
+`10 M`. For requests above that limit, it subsequently cuts the waveform at
+the requested frequency using the `(2,2)` mode. This source observation is a
+reference behavior, not an independent derivation of the historical initial
+data or a validation of our runtime's cutoff convention. The development
+[native warm-start comparison](../evidence/2026-09-23/inline_warmstart_diagnostic.json)
+checks a fully native pre-evolution for two cases; its broader parameter
+domain, gradients, and whole-waveform convergence remain to be established.
+
 `published.peak_targets` encodes the NR/Teukolsky peak amplitude, amplitude
 curvature, GW frequency, and frequency slope (Appendix A, Eqs. 33–44). For
 the quadratic fits, the printed linear coefficient `A1` is held fixed and
@@ -552,6 +563,12 @@ The largest native state difference is `1.61e-11`, while two tight DOP853
 references differ by up to `2.47e-10`. This strengthens numerical evidence
 for that provisional ODE; it does not resolve the physical or whole-waveform
 discrepancies above.
+An opt-in fully native start from `M Omega=10^(-3/2)` reduces the two-row
+peak-fitted LAL differences to about `5.02e-4` and `1.69e-3`. Its frozen
+[convergence campaign](../evidence/2026-09-23/inline_warmstart_convergence.json)
+passes both numerical checks on the nonspinning row but fails the aligned-spin
+ODE complex and amplitude budgets (`3.71e-6` and `1.50e-6` against `1e-6`).
+The start-state correction is therefore still a development diagnostic.
 The separate public-binary whole-waveform comparison
 compares only two rows and does not establish public-binary parity. The current
 generator and ROM work therefore stay on this development branch. Reference

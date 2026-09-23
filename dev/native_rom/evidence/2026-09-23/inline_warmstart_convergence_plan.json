@@ -1,0 +1,24 @@
+{
+  "schema": "diffgw.seobnrv4.inline-warmstart-convergence-plan.v1",
+  "purpose": "Test whole-waveform self-convergence after the inline native warm start, holding the warm-start rule, coarse first trial, and fine restart fixed across levels.",
+  "prior_inline": "dev/native_rom/evidence/2026-09-23/inline_warmstart_diagnostic.json",
+  "prior_inline_sha256": "08074d71e658b2266ff259f765abe74bdca23e584442c6bd3e69533523d91f6c",
+  "rows": [0, 1],
+  "native_start_Momega": 0.03162277660168379,
+  "coarse_first_step_M": 0.5,
+  "fixed_restart_time_M": 165.0,
+  "hermite_resampling": true,
+  "local_nqc_phase_derivatives": true,
+  "ode_levels": [
+    {"name": "ode_0", "atol": 1e-12, "rtol": 1e-11, "dt_geom": 0.5},
+    {"name": "ode_1", "atol": 1e-13, "rtol": 1e-12, "dt_geom": 0.5},
+    {"name": "ode_2", "atol": 1e-14, "rtol": 1e-13, "dt_geom": 0.5}
+  ],
+  "grid_levels": [
+    {"name": "ode_2", "atol": 1e-14, "rtol": 1e-13, "dt_geom": 0.5},
+    {"name": "grid_1", "atol": 1e-14, "rtol": 1e-13, "dt_geom": 0.25},
+    {"name": "grid_2", "atol": 1e-14, "rtol": 1e-13, "dt_geom": 0.125}
+  ],
+  "gates": {"complex_relative_l2": 1e-6, "amplitude_relative_l2": 1e-6, "event_time_difference_M": 0.05, "refinement_must_decrease_error": true},
+  "interpretation": "Self-convergence only; passing does not establish historical or NR physical accuracy, JAX parity, ROM readiness, or release qualification."
+}

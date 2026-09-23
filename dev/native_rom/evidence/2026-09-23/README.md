@@ -939,3 +939,53 @@ tests pass with the worktree source on `PYTHONPATH`. This checks event
 arithmetic on synthetic trajectories; it does not establish convergence or
 historical SEOBNRv4 matching on physical trajectories. The earlier frozen
 campaigns above retain their own source hashes and results.
+
+## Historical start state and fully native pre-evolution
+
+The [pinned public implementation](https://lscsoft.docs.ligo.org/lalsuite/7.26/lalsimulation/_l_a_l_sim_i_m_r_spin_aligned_e_o_b_8c_source.html)
+evolves from the smaller of the requested orbital frequency and
+`10^(-3/2)` when high requested frequencies would put the initial radius
+inside roughly `10 M`. Its waveform is subsequently cut using the `(2,2)`
+mode frequency. This explains why solving our quasicircular state directly at
+the requested `M Omega=0.04` did not reproduce the compiled starting state.
+The [sampled-dynamics comparison](lal_dynamics_diagnostic.json) shows that,
+at the *same* compiled state, the native vector field is close across both
+frozen rows. It is a numerical comparison to a pinned binary, not an
+independent component derivation.
+
+The [LAL-state ablation](lal_initial_state_ablation.json) changes only the
+native starting orbital state at the requested frequency. Fitted whole-mode
+complex relative L2 drops from `0.0069493895` to `0.00009907599` without spin
+and from `0.0080719610` to `0.0012186187` for spins `(+0.2,-0.1)`. This is
+causal diagnosis and uses compiled reference states, so it cannot be a native
+runtime recipe. The [native pre-evolution](lal_native_pre_evolution.json)
+instead solves at `10^(-3/2)` and evolves the native Hamiltonian and flux to
+the requested frequency. Using that generated state in the frozen waveform
+produces L2 `0.0005016011` and `0.0016858791` in the two cases
+([intervention](native_warmstart_whole_waveform.json)).
+
+The opt-in [inline native driver](../../eob/torch/warm_start.py) uses a bounded
+Fehlberg 4/5 trajectory and refines the first frequency crossing within its
+last accepted step. Its [predeclared numerical check](inline_warmstart_plan.json)
+and [result](inline_warmstart_diagnostic.json) show state differences from an
+independent native DOP853 solve below `8e-11` in `r`, `6e-12` in `pr_star`,
+and `9e-12` in `pphi`, with crossing-time differences below `1.5e-8 M`.
+The resulting whole-waveform L2 values are `0.00050160696` and
+`0.00168588680`, within `8e-9` of the frozen-state intervention. No external
+state or table is loaded at runtime. These two cases establish a reproducible
+native start-state correction, not release qualification: the spin residual,
+mode-based cutoff convention, broader holdouts, gradient behavior, full
+waveform convergence, JAX parity, and ROM training remain open.
+
+The frozen [inline warm-start convergence plan](inline_warmstart_convergence_plan.json)
+holds the early-start frequency, coarse first trial, fixed restart, and NQC
+derivative rule constant while refining ODE tolerances and the output grid.
+Its [result](inline_warmstart_convergence.json) passes all predeclared checks
+for the nonspinning row: the refined tolerance pair has complex relative L2
+`5.77e-7` and amplitude relative L2 `3.11e-7`. The aligned-spin row decreases
+with refinement but fails both `1e-6` budgets: `3.71e-6` complex and
+`1.50e-6` amplitude. All nested-grid comparisons are identical because the
+fixed coarse first step and Hermite sampler reuse the same numerical
+trajectory; this checks grid independence under that rule, not absolute
+interpolation accuracy. The aligned-spin ODE tolerance failure is a release
+blocker, and neither row establishes physical or domain-wide qualification.

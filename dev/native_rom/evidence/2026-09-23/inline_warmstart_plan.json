@@ -1,0 +1,13 @@
+{
+  "schema": "diffgw.seobnrv4.inline-warmstart-plan.v1",
+  "purpose": "Check the opt-in, wholly native Fehlberg pre-evolution and crossing refinement against a separately integrated native DOP853 diagnostic, then compare the complete resulting waveform with the pinned public LAL mode.",
+  "native_pre_evolution": "dev/native_rom/evidence/2026-09-23/lal_native_pre_evolution.json",
+  "native_pre_evolution_sha256": "237646a519b8eb5b492c7635d184cf23167f7fd1cfb64d391207c93907f044e7",
+  "frozen_warmstart_waveform": "dev/native_rom/evidence/2026-09-23/native_warmstart_whole_waveform.json",
+  "frozen_warmstart_waveform_sha256": "fd0595d2a340b53e3368f1db9c758dee5292449d745b7f20de9ae16fdc3aaf5d",
+  "rows": [0, 1],
+  "native_start_Momega": 0.03162277660168379,
+  "integration": {"method": "Fehlberg 4/5", "atol": 1e-12, "rtol": 1e-11, "first_step_M": 0.125, "crossing_frequency_tolerance": 1e-12},
+  "diagnostic_gates": {"max_abs_state_difference_from_native_DOP853": 5e-5, "max_abs_crossing_time_difference_M": 0.05, "max_abs_frequency_residual": 1e-11, "max_absolute_complex_relative_l2_change_from_frozen_intervention": 0.0002},
+  "interpretation": "These are numerical equivalence and two-case physical comparison checks, not release qualification. The runtime must not read the frozen reference or DOP853 states."
+}

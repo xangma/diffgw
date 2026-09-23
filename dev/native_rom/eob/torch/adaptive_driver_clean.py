@@ -140,6 +140,7 @@ def reconstruct_seobnrv4_22_adaptive(
     final_spin_fit_order=(3, 4),
     dt_geom: float = 0.5,
     diagnostic_coarse_initial_step_M: Optional[float] = None,
+    diagnostic_warm_start_Momega: Optional[float] = None,
     diagnostic_restart_time_M: Optional[float] = None,
     diagnostic_fine_max_step_M: Optional[float] = None,
     diagnostic_hermite_resampling: bool = False,
@@ -175,6 +176,10 @@ def reconstruct_seobnrv4_22_adaptive(
             and (not math.isfinite(float(diagnostic_coarse_initial_step_M))
                  or diagnostic_coarse_initial_step_M <= 0)):
         raise ValueError("diagnostic_coarse_initial_step_M must be finite and positive")
+    if (diagnostic_warm_start_Momega is not None
+            and (not math.isfinite(float(diagnostic_warm_start_Momega))
+                 or diagnostic_warm_start_Momega <= 0)):
+        raise ValueError("diagnostic_warm_start_Momega must be finite and positive")
     if (diagnostic_restart_time_M is not None
             and (not math.isfinite(float(diagnostic_restart_time_M))
                  or diagnostic_restart_time_M <= 0)):
@@ -250,9 +255,25 @@ def reconstruct_seobnrv4_22_adaptive(
     row_hamiltonians = [SEOBNRv4Hamiltonian(
         flat_nu[row], flat_s1[row], flat_s2[row], delta=flat_delta[row])
         for row in range(rows)]
-    r0, pr0, pphi0 = find_quasicircular_initial_conditions(ham, rr, start)
-    initial = torch.stack((r0, torch.zeros_like(r0), pr0, pphi0), dim=-1)
-    initial_flat = initial.reshape(rows, 4)
+    if diagnostic_warm_start_Momega is None:
+        r0, pr0, pphi0 = find_quasicircular_initial_conditions(ham, rr, start)
+        initial = torch.stack((r0, torch.zeros_like(r0), pr0, pphi0), dim=-1)
+        initial_flat = initial.reshape(rows, 4)
+    else:
+        from .warm_start import native_frequency_warm_start
+        flat_start = start.reshape(-1)
+        initial_rows = []
+        for row in range(rows):
+            warm_frequency = flat_start[row].new_tensor(diagnostic_warm_start_Momega)
+            if bool(flat_start[row] <= warm_frequency):
+                r0, pr0, pphi0 = find_quasicircular_initial_conditions(
+                    row_hamiltonians[row], rr, flat_start[row])
+                initial_rows.append(torch.stack((r0, torch.zeros_like(r0), pr0, pphi0)))
+            else:
+                result = native_frequency_warm_start(
+                    row_hamiltonians[row], rr, warm_frequency, flat_start[row])
+                initial_rows.append(result.state)
+        initial_flat = torch.stack(initial_rows)
     # Run every coarse row through a scalar closure.  A full-batch EOB field
     # would bind all Hamiltonian parameters while the adaptive loop selected a
     # shrinking subset after row-specific event histories diverged.
