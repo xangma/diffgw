@@ -1,0 +1,50 @@
+{
+  "schema": "diffgw.seobnrv4.reference-grid-plan.v1",
+  "purpose": "Measure output-grid and independently estimated peak-anchor effects within the public binary itself before setting a parity gate.",
+  "prior_whole_waveform": "dev/native_rom/evidence/2026-09-23/whole_waveform.json",
+  "prior_whole_waveform_sha256": "c9783cf6006cdd632ff258277951739073898b3555ac5f3c09fa31e2602d1377",
+  "row_index": 1,
+  "row": {
+    "chi1": 0.2,
+    "chi2": -0.1,
+    "mass1": 30.0,
+    "mass2": 20.0,
+    "omega_start": 0.04
+  },
+  "steps_M": [
+    0.5,
+    0.125,
+    0.03125
+  ],
+  "anchors": [
+    "independent_peaks",
+    "shared_fine_peak"
+  ],
+  "interpretation": "Reference self-consistency diagnostic only; no native waveform or physical fidelity claim.",
+  "windows_M": [
+    [
+      -325,
+      -20
+    ],
+    [
+      -20,
+      0
+    ],
+    [
+      0,
+      5
+    ],
+    [
+      5,
+      20
+    ],
+    [
+      20,
+      40
+    ],
+    [
+      40,
+      150
+    ]
+  ]
+}

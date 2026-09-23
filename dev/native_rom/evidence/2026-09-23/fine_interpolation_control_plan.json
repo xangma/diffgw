@@ -1,0 +1,14 @@
+{
+  "schema": "diffgw.seobnrv4.fine-interpolation-control-plan.v1",
+  "purpose": "Repeat the aligned-spin comparison at the frozen 0.125 M output grid to separate grid/peak-fit effects from the residual after cubic interpolation.",
+  "prior_interpolation": "dev/native_rom/evidence/2026-09-23/interpolation_control.json",
+  "prior_interpolation_sha256": "cd15fb8e0090552fd5031a607461587141a3870c60d61bcde2f3bed68e16e250",
+  "prior_convergence": "dev/native_rom/evidence/2026-09-23/inline_warmstart_convergence.json",
+  "prior_convergence_sha256": "53c3380dbbbfe5f426674f079398f0baa44311bfdc475e93ffb6438211e755ed",
+  "convergence_plan": "dev/native_rom/evidence/2026-09-23/inline_warmstart_convergence_plan.json",
+  "row_index": 1,
+  "level_name": "grid_2",
+  "interpolants": ["linear_complex", "cubic_complex", "quintic_complex"],
+  "windows_M": [[-325, -20], [-20, 0], [0, 5], [5, 20], [20, 40], [40, 150]],
+  "interpretation": "Diagnostic grid control only; no model change, physical gate, or release qualification."
+}

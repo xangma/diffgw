@@ -1,0 +1,15 @@
+{
+  "schema": "diffgw.seobnrv4.late-mode-shape-plan.v1",
+  "purpose": "Locate the aligned-spin physical discrepancy around the native and public waveform amplitude peaks without fitting model parameters.",
+  "prior_physical": "dev/native_rom/evidence/2026-09-23/inline_warmstart_local_second_physical.json",
+  "prior_physical_sha256": "75e939bb148334a263a3808bd38d7e8c9b67fbd2f53fd2300c9b08ed6fa3fdd5",
+  "convergence_plan": "dev/native_rom/evidence/2026-09-23/inline_warmstart_convergence_plan.json",
+  "public_waveform": "dev/native_rom/evidence/2026-09-23/whole_waveform.json",
+  "public_waveform_sha256": "c9783cf6006cdd632ff258277951739073898b3555ac5f3c09fa31e2602d1377",
+  "row_index": 1,
+  "level_name": "ode_2",
+  "sample_times_M": [-20, -10, -5, -1, 0, 1, 5, 10, 20, 40],
+  "fit_window_M": [2, 20],
+  "peak_amplitude_normalization": "Diagnostic ablation: one real scale equal to the public/native amplitude ratio at independently fitted peaks; never applied to the generator.",
+  "interpretation": "Shape localization only. This cannot qualify waveform physics, the ROM, or release."
+}

@@ -1,0 +1,12 @@
+{
+  "schema": "diffgw.seobnrv4.late-tail-shape-plan.v1",
+  "purpose": "Localize the post-peak discrepancy unresolved by the fixed 0-40 M samples in the prior diagnostic.",
+  "prior_shape": "dev/native_rom/evidence/2026-09-23/late_mode_shape.json",
+  "prior_shape_sha256": "95cb239dfb399605eb8780bca845cb88e7655d30253ed90c532d12151031a8fa",
+  "convergence_plan": "dev/native_rom/evidence/2026-09-23/inline_warmstart_convergence_plan.json",
+  "row_index": 1,
+  "level_name": "ode_2",
+  "sample_times_M": [0, 1, 2, 5, 10, 20, 30, 40, 50, 60, 80, 100, 120, 140, 149],
+  "windows_M": [[0, 5], [5, 20], [20, 40], [40, 80], [80, 150]],
+  "interpretation": "Adaptive follow-up to the preceding fixed-sample result, for diagnosis only; no waveform fit, production correction, or release qualification."
+}

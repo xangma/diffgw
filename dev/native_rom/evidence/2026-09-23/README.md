@@ -1087,3 +1087,47 @@ by at most `2.27e-10`. Neither resolves the `1.33e-5` to `4.87e-5` residual.
 This does not compare the native Hamiltonian energy or circular frequency to
 unexposed public values. Same-state mode-level parity and the full
 Hamiltonian-derived inputs remain open release blockers.
+
+## Comparison-grid and reference-grid controls
+
+The [late-mode shape](late_mode_shape.json) and [late-tail](late_tail_shape.json)
+diagnostics replay the frozen aligned-spin `ode_2` waveform without changing
+its generated array. On the `0.5 M` grid, the linearly interpolated post-peak
+complex L2 is `0.00605183`. Rescaling by the measured peak amplitude worsens
+it slightly to `0.00607063`. The squared-error contribution, normalized by
+the entire post-peak public norm, is `2.45e-5` in `5–20 M`, but only
+`3.10e-10` in `80–150 M`. These numbers do not identify a ringdown-fit
+coefficient error; the comparison samples themselves require a grid control.
+
+The [interpolation control](interpolation_control.json) replaces only linear
+complex interpolation onto the public grid. At native `dt/M=0.5`, cubic and
+quintic interpolation reduce post-peak L2 from `0.00605183` to `0.00074329`
+and `0.00074098`; the whole-waveform L2 becomes about `0.000855`. On the
+frozen [native `0.125 M` grid](fine_interpolation_control.json), cubic and
+quintic agree to `9.43e-8`, with post-peak L2 `0.00045028`, but whole-waveform
+L2 is `0.00168110`. Thus the apparent coarse-grid whole-waveform improvement
+does not persist with native-grid refinement. These are comparison-method
+controls, not native model changes or validated physical gates.
+
+The [pinned public self-grid check](reference_grid.json) generates the same
+aligned-spin `SEOBNRv4` row at `dt/M=0.5`, `0.125`, and `0.03125`. Comparing
+the public complex modes on their shared LAL epoch with quintic interpolation
+gives L2 `0.00083420` then `0.00054429`. Independently fitting each public
+waveform's amplitude peak before comparison gives `0.00719454` then
+`0.00117984`; the fitted peak locations change by `0.02671 M` then
+`0.00870 M`. A single post-peak complex-scalar *diagnostic fit* reduces the
+raw post-peak self-difference to `6.97e-6` and `5.33e-6`, showing that most
+of that raw post-peak difference is a nearly constant phase convention
+change. The fitted scalar is never used for the native parity numbers.
+
+The [fine-reference control](fine_reference_control.json) replays the exact
+native `0.125 M` waveform hash and holds its numerical choices fixed. With
+quintic complex interpolation and independent peak-only anchors, replacing
+the public `0.125 M` output with `0.03125 M` changes whole-waveform L2 from
+`0.00168110` to `0.00283599` and post-peak L2 from `0.00045028` to
+`0.00143230`. The `0.00117984` public self-difference under the same anchor
+convention is comparable to this movement. We cannot attribute the change to
+native physics or claim a converged parity score until the reference-grid and
+peak-anchor conventions are controlled. The aligned-spin flux discrepancy,
+whole-waveform convergence across the domain, JAX parity, and ROM
+training/holdouts still block release.

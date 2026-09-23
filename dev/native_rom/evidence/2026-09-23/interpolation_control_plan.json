@@ -1,0 +1,14 @@
+{
+  "schema": "diffgw.seobnrv4.interpolation-control-plan.v1",
+  "purpose": "Separate physical aligned-spin waveform residual from comparison-grid interpolation error after the late-tail window diagnostic.",
+  "prior_shape": "dev/native_rom/evidence/2026-09-23/late_mode_shape.json",
+  "prior_shape_sha256": "95cb239dfb399605eb8780bca845cb88e7655d30253ed90c532d12151031a8fa",
+  "prior_tail": "dev/native_rom/evidence/2026-09-23/late_tail_shape.json",
+  "prior_tail_sha256": "b006c8532c9a446c8f89601020cea7606965beca2cc06166cceed69cf22c541b",
+  "convergence_plan": "dev/native_rom/evidence/2026-09-23/inline_warmstart_convergence_plan.json",
+  "row_index": 1,
+  "level_name": "ode_2",
+  "interpolants": ["linear_complex", "cubic_complex", "quintic_complex"],
+  "windows_M": [[-325, -20], [-20, 0], [0, 5], [5, 20], [20, 40], [40, 150]],
+  "interpretation": "Diagnostic interpolation control, not a change to native waveform output or a fidelity claim."
+}

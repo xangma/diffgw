@@ -1,0 +1,43 @@
+{
+  "schema": "diffgw.seobnrv4.fine-reference-control-plan.v1",
+  "purpose": "Compare the frozen native fine-grid waveform with 0.03125 M public output after controlling interpolation and public self-grid behavior.",
+  "prior_fine_interpolation": "dev/native_rom/evidence/2026-09-23/fine_interpolation_control.json",
+  "prior_fine_interpolation_sha256": "ae6303ddf71d458fb5d59842184b7bdb5558bfee80d818e81ba5c08665c8ae34",
+  "prior_reference_grid": "dev/native_rom/evidence/2026-09-23/reference_grid.json",
+  "prior_reference_grid_sha256": "64faa3558bcc8220fb3506b7b0a8c84ba3e94e06781846e97aafdea0346b4c43",
+  "convergence_plan": "dev/native_rom/evidence/2026-09-23/inline_warmstart_convergence_plan.json",
+  "native_level_name": "grid_2",
+  "reference_step_M": 0.03125,
+  "interpolants": [
+    "linear_complex",
+    "cubic_complex",
+    "quintic_complex"
+  ],
+  "windows_M": [
+    [
+      -325,
+      -20
+    ],
+    [
+      -20,
+      0
+    ],
+    [
+      0,
+      5
+    ],
+    [
+      5,
+      20
+    ],
+    [
+      20,
+      40
+    ],
+    [
+      40,
+      150
+    ]
+  ],
+  "interpretation": "No fitted relative shift, phase, or amplitude; no physical parity or release claim."
+}
