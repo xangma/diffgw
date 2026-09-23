@@ -171,3 +171,62 @@ and full waveform composition remain outside this component.
 | `phenomxas.amp.ringdown.lorentzian.v1` | Eq. (84) | Ringdown expression in both carriers, then extra `f^(-7/6)` | `test_ringdown_stationary_peak_and_scale`, `test_full_frontend_inspiral_and_ringdown_shapes` |
 | `phenomxas.amp.ringdown.peak_printed.v1` | Eq. (59) | Paper-literal reference only | `test_ringdown_stationary_peak_and_scale` |
 | `phenomxas.amp.ringdown.peak_stationary.v1` | Derived from Eq. (84) | Carrier join frequencies within the guard-free domain | `test_ringdown_stationary_peak_and_scale` |
+
+## Intermediate and merger-ringdown phase
+
+Specification `imrphenomxas-intermediate-ringdown-phase/v1` transcribes
+[Pratten et al., arXiv:2001.11412v1](https://arxiv.org/html/2001.11412v1),
+Eqs. (90) and (92)–(97), into an independent
+[SymPy reference](../../src/diffgw_reference/imrphenomxas_phase_branches.py).
+Its frequency `f` means dimensionless `Mf`, with `f>0`, `eta>0`, and
+`f_damp>0`. All collocation values, ringdown frequencies, and fitted
+coefficients are supplied inputs. The reference gives both phase
+derivatives and their explicit antiderivatives; additive and affine phase
+gauges are kept separate.
+
+Eq. (96) has a constant, powers `f^(-1/3)`, `f^(-2)`, and `f^(-4)`, and a
+Lorentzian proportional to `c0 a_phi`. The five nodes of Eq. (97) begin at
+`f_T^phi`, put the fourth node at `f_RD`, and end at
+`f_RD+1.25 f_damp`. Eq. (90) has five inverse-power coefficients and a
+broadened Lorentzian with width `2 f_damp`; its five nodes follow Eq. (92).
+Independent linear solves recover coefficients from supplied values of
+`eta phi'(f)` at those nodes.
+Eqs. (93)–(95) define the intermediate fitted-value offsets and the
+weighted second value used by the native carriers. The prose after Eq. (90)
+lists `b5` among “five” coefficients; the displayed equation contains only
+`b0` through `b4`, which is the basis specified here.
+
+There is a convention difference: **printed Eq. (90) has a minus sign**
+before the intermediate Lorentzian, whereas the
+[Torch](../../src/torchwave/approximants/imrphenom_xas.py) and
+[JAX](../../src/jaxwave/approximants/imrphenom_xas.py) carriers use a plus
+sign. The reference retains the printed expression and a separately named
+carrier-sign branch. In the native code the factor `a_phi` is absorbed into
+the fitted `c0` supplied to both regions. The paper excerpt does not resolve
+the sign discrepancy; matching the carrier branch does not establish that
+it matches the printed equation.
+
+The [maintained tests](../../tests/test_imrphenomxas_phase_branches_math_reference.py)
+check both primitives by symbolic differentiation, the sign difference,
+five-node collocation recovery, all five carrier ringdown nodes and the four
+intermediate nodes beyond the inspiral boundary, phase values for four
+binary/spin points against both frontends, and the value and derivative at
+their join. They remove the carrier's overall time and phase gauge before
+comparison. Inspiral TaylorF2 terms, the inspiral pseudo-PN fit, the
+calibrated parameter-space fits, and independent physical validation are
+outside this component.
+
+For the native intermediate solve, the fifth fitted derivative is evaluated
+at `f_T^phi`, although the fifth collocation node is
+`f_T^phi + delta_R/2`. The maintained check preserves and exposes that
+choice; it does not derive it from Eq. (92). The fitted collocation values
+remain supplied inputs from the existing author-code-derived fit functions.
+
+| Component ID | Published evidence | Native relationship | Maintained check |
+| --- | --- | --- | --- |
+| `phenomxas.phase.ringdown.ansatz.v1` | Eq. (96) | Both carrier ringdown phase branches | `test_printed_ansatze_primitives_and_sign_distinction`, `test_full_frontend_phase_branches_and_join` |
+| `phenomxas.phase.ringdown.collocation.v1` | Eqs. (96)–(97) | Both carriers' five-node solve | `test_collocation_nodes_and_exact_coefficient_recovery`, `test_native_collocation_values` |
+| `phenomxas.phase.intermediate.printed.v1` | Eq. (90) | Paper-literal minus-sign reference | `test_printed_ansatze_primitives_and_sign_distinction` |
+| `phenomxas.phase.intermediate.collocation.v1` | Eqs. (90), (92)–(95) | Both carriers' five-node solve with native sign | `test_collocation_nodes_and_exact_coefficient_recovery`, `test_native_collocation_values` |
+| `phenomxas.phase.intermediate.carrier_sign.v1` | Eq. (90), sign distinction recorded above | Both carrier intermediate phase branches | `test_printed_ansatze_primitives_and_sign_distinction`, `test_full_frontend_phase_branches_and_join` |
+| `phenomxas.phase.intermediate_ringdown.join.v1` | Antiderivatives of Eqs. (90), (96) | Both carriers' affine ringdown adjustment | `test_full_frontend_phase_branches_and_join` |
