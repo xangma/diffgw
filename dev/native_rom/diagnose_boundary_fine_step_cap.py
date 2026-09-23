@@ -59,7 +59,8 @@ def _run(row, level, settings, cap):
     if len(steps) < 1 or (cap is not None and max(steps) > cap + 1e-12):
         raise ValueError("fine accepted steps do not obey diagnostic cap")
     stages = stages_of(trajectory)
-    run = dict(**level, time=array(result.time), mode=array(result.mode),
+    run = dict(**{key: level[key] for key in ("name", "atol", "rtol", "dt_geom")},
+               time=array(result.time), mode=array(result.mode),
                peak_time_M=float(array(trajectory.peak.time)),
                match_time_M=float(array(result.attachment.match_time)),
                boundary_time_M=float(array(result.attachment.boundary_time)))
