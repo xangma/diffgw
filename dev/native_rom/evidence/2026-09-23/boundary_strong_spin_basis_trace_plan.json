@@ -15,8 +15,10 @@
   "trace": [
     "Replay both frozen waveforms and recover their exact NQC phase-basis second derivatives",
     "Integrate the same provisional vector field densely from the original initial state and independently from each frozen 165 M restart state",
+    "Integrate dense solutions through the full local-fit stencil and its bracketing native accepted knots; never extrapolate dense output",
     "On each restarted dense solution, fit the same degree-six local polynomial on the exact native fine output stencil and also take five-point continuous derivatives",
-    "Partition each native derivative error exactly into fine-stage evolution/output-sampling, local differentiation, and restart-state components",
+    "Evaluate dense states on the native accepted time mesh and apply the same cubic Hermite output map to split accepted-state error from output-interpolation error",
+    "Partition each native derivative error exactly into fine accepted-state evolution, Hermite output interpolation, local differentiation, and restart-state components",
     "Partition the medium-to-fine restart-state contribution by ordered substitutions of r, pr_star, and pphi; verify that phi has no dynamical effect"
   ],
   "dense_reference": {

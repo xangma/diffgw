@@ -94,10 +94,37 @@ def _local_fit(values, chart, window):
     return array(2*coefficients[2]/window**2)
 
 
-def _sampled(field, solution, global_times, chart, window, native_states, native_basis):
+def _hermite(knot_times, states, derivatives, queries):
+    left = np.searchsorted(knot_times, queries, side="right")-1
+    left = np.clip(left, 0, len(knot_times)-2)
+    t0, t1 = knot_times[left], knot_times[left+1]
+    span = t1-t0
+    u = (queries-t0)/span
+    return ((2*u**3-3*u**2+1)[:, None]*states[left]
+            + ((u**3-2*u**2+u)*span)[:, None]*derivatives[left]
+            + (-2*u**3+3*u**2)[:, None]*states[left+1]
+            + ((u**3-u**2)*span)[:, None]*derivatives[left+1])
+
+
+def _sampled(field, solution, global_times, chart, window, native_states,
+             native_basis, accepted_times, accepted_states, accepted_derivatives):
+    if min(global_times) < solution.t[0] or max(global_times) > solution.t[-1]:
+        raise ValueError("dense solution does not cover the full native output stencil")
+    if min(accepted_times) < solution.t[0] or max(accepted_times) > solution.t[-1]:
+        raise ValueError("dense solution does not cover the bracketing accepted knots")
     states = solution.sol(global_times).T
     values = _basis(field, states)
-    return dict(second=_local_fit(values, chart, window).tolist(),
+    dense_accepted_states = solution.sol(accepted_times).T
+    with torch.no_grad():
+        dense_accepted_derivatives = array(field(torch.from_numpy(dense_accepted_states)))
+    dense_hermite_states = _hermite(accepted_times, dense_accepted_states,
+                                    dense_accepted_derivatives, global_times)
+    dense_hermite_basis = _basis(field, dense_hermite_states)
+    return dict(direct_second=_local_fit(values, chart, window).tolist(),
+                accepted_hermite_second=_local_fit(dense_hermite_basis, chart, window).tolist(),
+                max_accepted_state_error=np.max(abs(accepted_states-dense_accepted_states), axis=0).tolist(),
+                max_accepted_derivative_error=np.max(abs(accepted_derivatives-dense_accepted_derivatives), axis=0).tolist(),
+                max_hermite_interpolation_state_error=np.max(abs(dense_hermite_states-states), axis=0).tolist(),
                 max_state_error=np.max(abs(native_states-states), axis=0).tolist(),
                 max_basis_error=np.max(abs(native_basis-values), axis=0).tolist())
 
@@ -148,28 +175,50 @@ def _replay(name, row, prior, settings, targets, plan):
     restart_state = array(fine.state[0])
     if not np.array_equal(restart_state, array(fine.output_state[0])):
         raise ValueError("fine accepted and output restart states differ")
+    valid = array(fine.valid).astype(bool)
+    accepted_times = array(fine.time)[valid]
+    accepted_states = array(fine.state)[valid]
+    accepted_derivatives = array(fine.derivative)[valid]
+    left = np.searchsorted(accepted_times, local_times[selected], side="right")-1
+    left = np.clip(left, 0, len(accepted_times)-2)
+    lo, hi = int(left.min()), int(left.max())+2
+    accepted_times = accepted_times[lo:hi]
+    accepted_states = accepted_states[lo:hi]
+    accepted_derivatives = accepted_derivatives[lo:hi]
+    native_reconstructed = _hermite(accepted_times, accepted_states,
+                                    accepted_derivatives, local_times[selected])
+    native_hermite_error = float(np.max(abs(native_reconstructed-native_states)))
+    if native_hermite_error > 1e-12:
+        raise ValueError("accepted-state Hermite map does not recover native output")
     return dict(name=name, array_sha256=hashes, level={key: prior[key] for key in
                                                         ("atol", "rtol", "dt_geom")},
                 match_time_M=match, restart_time_M=restart,
                 restart_state=restart_state.tolist(),
                 native_second=native_second.tolist(),
-                local_fit_samples=len(chart),
+                local_fit_samples=len(chart), accepted_knots=len(accepted_times),
+                native_hermite_reconstruction_error=native_hermite_error,
                 elapsed_seconds=time.monotonic()-started), dict(
                     restart_state=restart_state, global_times=restart+local_times[selected],
-                    chart=chart, native_states=native_states, native_basis=native_basis)
+                    chart=chart, native_states=native_states, native_basis=native_basis,
+                    accepted_times=restart+accepted_times,
+                    accepted_states=accepted_states,
+                    accepted_derivatives=accepted_derivatives)
 
 
-def _partition(native, sampled, continuous, global_reference):
-    native, sampled = np.asarray(native), np.asarray(sampled)
+def _partition(native, accepted_hermite, sampled, continuous, global_reference):
+    native, accepted_hermite = np.asarray(native), np.asarray(accepted_hermite)
+    sampled = np.asarray(sampled)
     continuous, global_reference = np.asarray(continuous), np.asarray(global_reference)
-    fine_stage = native-sampled
+    accepted_error = native-accepted_hermite
+    interpolation = accepted_hermite-sampled
     local_fit = sampled-continuous
     restart = continuous-global_reference
     total = native-global_reference
-    closure = fine_stage+local_fit+restart-total
+    closure = accepted_error+interpolation+local_fit+restart-total
     if np.max(abs(closure)) > 1e-15:
         raise ValueError("derivative error partition does not close")
-    return dict(fine_evolution_and_output_sampling=fine_stage.tolist(),
+    return dict(fine_accepted_state_evolution=accepted_error.tolist(),
+                hermite_output_interpolation=interpolation.tolist(),
                 local_derivative_fit=local_fit.tolist(),
                 restart_state=restart.tolist(), total=total.tolist(),
                 closure_max_abs=float(np.max(abs(closure))))
@@ -245,10 +294,14 @@ def main(argv=None):
         config = plan["dense_reference"]
         steps = config["five_point_steps_M"]
         reference_key = f"{min(steps):g}"
+        dense_end = max(match+2*max(steps),
+                        *(max(local["global_times"][-1], local["accepted_times"][-1])
+                          for local in run_data)) + 1e-9
+        report["dense_end_M"] = dense_end
         dense_levels = []
         for rtol, atol in config["rtol_atol"]:
             global_solution, global_meta = _solve(
-                field, initial, 0., match+2*max(steps), rtol, atol,
+                field, initial, 0., dense_end, rtol, atol,
                 config["global_first_step_M"])
             global_stencils = _continuous(field, global_solution, match, steps)
             global_meta.update(stencils=global_stencils,
@@ -257,14 +310,15 @@ def main(argv=None):
             level = dict(global_reference=global_meta, restarted={})
             for run, local in zip(report["runs"], run_data):
                 solution, meta = _solve(
-                    field, local["restart_state"], restart, match+2*max(steps),
+                    field, local["restart_state"], restart, dense_end,
                     rtol, atol, config["restart_first_step_M"])
                 meta.update(stencils=_continuous(field, solution, match, steps),
                             match_state=solution.sol(match).tolist(),
                             sampled=_sampled(
                                 field, solution, local["global_times"], local["chart"],
                                 config["local_fit_window_M"], local["native_states"],
-                                local["native_basis"]))
+                                local["native_basis"], local["accepted_times"],
+                                local["accepted_states"], local["accepted_derivatives"]))
                 level["restarted"][run["name"]] = meta
                 print(json.dumps(dict(dop_rtol=rtol, run=run["name"],
                                       seconds=meta["elapsed_seconds"],
@@ -278,15 +332,16 @@ def main(argv=None):
         for run in report["runs"]:
             dense = tight["restarted"][run["name"]]
             partitions[run["name"]] = _partition(
-                run["native_second"], dense["sampled"]["second"],
+                run["native_second"], dense["sampled"]["accepted_hermite_second"],
+                dense["sampled"]["direct_second"],
                 dense["stencils"][reference_key]["second"], reference)
         delta = np.asarray(report["runs"][1]["native_second"])-np.asarray(
             report["runs"][0]["native_second"])
         category_delta = {
             key: (np.asarray(partitions["ode_2"][key])
                   -np.asarray(partitions["ode_1"][key])).tolist()
-            for key in ("fine_evolution_and_output_sampling", "local_derivative_fit",
-                        "restart_state")}
+            for key in ("fine_accepted_state_evolution", "hermite_output_interpolation",
+                        "local_derivative_fit", "restart_state")}
         closure = sum(np.asarray(item) for item in category_delta.values())-delta
         if np.max(abs(closure)) > 1e-15:
             raise ValueError("between-run error partition does not close")
@@ -304,7 +359,7 @@ def main(argv=None):
                 value = np.asarray(tight["restarted"]["ode_2"]["stencils"][reference_key]["second"])
                 meta = None
             else:
-                solution, meta = _solve(field, current, restart, match+2*max(steps),
+                solution, meta = _solve(field, current, restart, dense_end,
                                         *config["rtol_atol"][-1],
                                         config["restart_first_step_M"])
                 value = np.asarray(_continuous(field, solution, match, steps)[reference_key]["second"])
