@@ -101,8 +101,10 @@ points, and has the correct Newtonian limit. `flux.factorized_33_44_amplitudes`
 independently evaluates the pre-NQC `(3,3)` and `(4,4)` moduli using
 [Damour--Iyer--Nagar (2009), Eqs. (52), (62)](https://arxiv.org/html/0811.2069)
 and [Pan et al. (2011), Eqs. (28c), (29f), (38c), (38f), (41c), (42f)](https://arxiv.org/html/1006.0431).
-It agrees with the native 35-mode flux at nonspinning, aligned-spin,
-equal-mass unequal-spin, and unequal-mass sample points. These two modes
+It agrees with Torch's native 35-mode flux and the standalone JAX amplitudes
+at nonspinning, aligned-spin, equal-mass unequal-spin, and unequal-mass sample
+points. The JAX `(2,2)+(3,3)+(4,4)` partial flux agrees with the scalar
+reference at one frozen aligned-spin point. These two higher modes
 account for most of the higher-mode flux at the tested initial states, but
 their paper-component agreement does not establish historical v4 parity.
 `flux.factorized_55_amplitude` separately evaluates the even-parity `(5,5)`
@@ -216,7 +218,7 @@ does not establish its historical truncation or waveform parity.
 All 35 Torch mode moduli now have conditional scalar references and frozen
 point checks. This establishes the declared factorized reconstruction only:
 the complete historical `(2,1)` spin prescription, high-`ell` spin truncation,
-and JAX factorized-flux path still need independent checks. The JAX
+and full JAX factorized-flux path still need independent checks. The JAX
 development assembler currently uses a 1.5PN prototype flux and Newtonian `(2,2)` mode, so no
 cross-backend whole-waveform SEOBNRv4 claim follows from these checks.
 
