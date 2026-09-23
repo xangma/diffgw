@@ -2,8 +2,8 @@
 
 Bohé et al. 1611.03703v3 Eq. (9) sums both signs of m through ell=8.
 Reflection symmetry folds that into a positive-m sum with 1/(8*pi).
-The dominant and seven subdominant moduli have conditional scalar checks;
-27 modes have no scalar amplitude reference, and the complete historical
+The dominant and ten subdominant moduli have conditional scalar checks;
+24 modes have no scalar amplitude reference, and the complete historical
 (2,1) spin prescription also remains unresolved.
 """
 
@@ -164,6 +164,75 @@ def factorized_55_amplitude(m1, m2, chi1, chi2, omega,
         newtonian = mp.mpf(125)/792*mp.sqrt(330*mp.pi)
         return +(newtonian*n*vphi**5*he*_tail_modulus(5, 5, w, hr)
                  *abs(x2**4-x1**4)*abs(rho)**5)
+
+
+def factorized_31_amplitude(m1, m2, chi1, chi2, omega,
+                            omega_zero_radial, h_eff, h_real, *, digits=60):
+    """Conditional pre-NQC |R h31/M| with finite equal-mass spin behavior.
+
+    Pan 1006.0431v2 Eqs. (28e), (38e), (41e) fix the Newtonian factor
+    and spin terms; DIN 0811.2069v2 Eq. (54) fixes nonspin rho31.
+    The complete historical v4 hybrid is not identified by those papers.
+    """
+    with mp.workdps(digits):
+        m1, m2, s1, s2, w, w0, he, hr = map(
+            lambda value: mp.mpf(str(value)),
+            (m1, m2, chi1, chi2, omega, omega_zero_radial, h_eff, h_real),
+        )
+        if min(m1, m2, w, w0, he, hr) <= 0 or max(abs(s1), abs(s2)) > 1:
+            raise ValueError("Require physical masses/spins and positive frequency/energy")
+        x1, x2 = m1/(m1+m2), m2/(m1+m2)
+        n, delta = x1*x2, x1-x2
+        cs, ca = (s1+s2)/2, (s1-s2)/2
+        q = (1-2*n)*cs+delta*ca
+        v, vphi = mp.root(w, 3), w*w0**(-mp.mpf(2)/3)
+        el1 = mp.euler+mp.log(2*v)
+        rho = (1+(-2*n/9-mp.mpf(13)/18)*v**2
+               +(-829*n**2/1782-1685*n/1782+mp.mpf(101)/7128)*v**4
+               +(mp.mpf(11706720301)/6129723600-26*el1/63)*v**6
+               +(169*el1/567+mp.mpf(2606097992581)/4854741091200)*v**8)
+        c = x2**2-x1**2
+        higher = (-5*q**2/2*v**4+38*q/9*v**5+43*q**2/12*v**6
+                  +(11*q**3/3-2657*q/594)*v**7)
+        residual = (c*(rho**3+higher)
+                    -((2-13*n/2)*c*cs-(2-11*n/2)*ca)*v**3)
+        return +(mp.sqrt(2*mp.pi/35)/3*n*vphi**3*he
+                 *_tail_modulus(3, 1, w, hr)*abs(residual))
+
+
+def factorized_66_64_amplitudes(m1, m2, chi1, chi2, omega,
+                                omega_zero_radial, h_eff, h_real, *, digits=60):
+    """Conditional pre-NQC (6,6) and (6,4) even-parity moduli.
+
+    DIN 0811.2069v2 Eqs. (4)-(8), (109), (111) give the Newtonian
+    factors and finite-mass 1PN residuals. Taracchini 1202.0790v2
+    Eqs. (54a), (54c) give the nonspin 2PN terms; Pan 1006.0431v2
+    Eqs. (77f), (77g) give the test-particle spin terms. The declared
+    hybrid uses q=(1-2nu)chiS+delta chiA, not historical-v4 evidence.
+    """
+    with mp.workdps(digits):
+        m1, m2, s1, s2, w, w0, he, hr = map(
+            lambda value: mp.mpf(str(value)),
+            (m1, m2, chi1, chi2, omega, omega_zero_radial, h_eff, h_real),
+        )
+        if min(m1, m2, w, w0, he, hr) <= 0 or max(abs(s1), abs(s2)) > 1:
+            raise ValueError("Require physical masses/spins and positive frequency/energy")
+        x1, x2 = m1/(m1+m2), m2/(m1+m2)
+        n, delta = x1*x2, x1-x2
+        cs, ca = (s1+s2)/2, (s1-s2)/2
+        q = (1-2*n)*cs+delta*ca
+        c6 = x1**5+x2**5
+        v, vphi = mp.root(w, 3), w*w0**(-mp.mpf(2)/3)
+        rho66 = (1+(273*n**3-861*n**2+602*n-106)/(84*c6)*v**2
+                 -2*q/3*v**3+(q**2/2-mp.mpf(1025435)/659736)*v**4)
+        rho64 = (1+(133*n**3-581*n**2+462*n-86)/(84*c6)*v**2
+                 -2*q/3*v**3+(q**2/2-mp.mpf(476887)/659736)*v**4)
+        common = n*c6*vphi**6*he
+        a66 = (mp.mpf(432)/3575*mp.sqrt(715*mp.pi)*common
+               *_tail_modulus(6, 6, w, hr)*abs(rho66)**6)
+        a64 = (mp.mpf(1024)/96525*mp.sqrt(390*mp.pi)*common
+               *_tail_modulus(6, 4, w, hr)*abs(rho64)**6)
+        return +a66, +a64
 
 
 def factorized_42_amplitude(m1, m2, chi1, chi2, omega,

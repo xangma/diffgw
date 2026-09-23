@@ -10,8 +10,9 @@ import sympy as sp
 
 from dev.native_rom.reference import SPEC_VERSION
 from dev.native_rom.reference.flux import (
-    emitted_flux, factorized_22_amplitude, factorized_42_amplitude,
-    factorized_43_amplitude, factorized_55_amplitude,
+    emitted_flux, factorized_22_amplitude, factorized_31_amplitude,
+    factorized_42_amplitude,
+    factorized_43_amplitude, factorized_55_amplitude, factorized_66_64_amplitudes,
     newtonian_22_mode,
 )
 from dev.native_rom.reference.hamiltonian import (
@@ -164,6 +165,34 @@ def test_factorized_55_newtonian_limit_and_mass_exchange():
         exchanged = factorized_55_amplitude(20, 30, "-.4", ".7", ".08", ".077", ".91", ".975")
         assert abs(forward-exchanged) < mp.mpf("1e-60")
         assert factorized_55_amplitude(20, 20, ".9", "-.9", ".08", ".077", ".91", ".975") == 0
+
+
+def test_factorized_31_newtonian_limit_exchange_and_equal_mass_spin():
+    with mp.workdps(70):
+        w = mp.mpf("1e-15")
+        n, delta = mp.mpf("0.24"), mp.mpf("0.2")
+        expected = mp.sqrt(2*mp.pi/35)/3*n*w*delta
+        actual = factorized_31_amplitude(30, 20, 0, 0, w, w, 1, 1)
+        assert abs(actual/expected-1) < mp.mpf("1e-9")
+        forward = factorized_31_amplitude(30, 20, ".7", "-.4", ".08", ".077", ".91", ".975")
+        exchanged = factorized_31_amplitude(20, 30, "-.4", ".7", ".08", ".077", ".91", ".975")
+        assert abs(forward-exchanged) < mp.mpf("1e-60")
+        assert factorized_31_amplitude(20, 20, ".9", ".9", ".08", ".077", ".91", ".975") == 0
+        assert factorized_31_amplitude(20, 20, ".9", "-.9", ".08", ".077", ".91", ".975") > 0
+
+
+def test_factorized_66_64_newtonian_limits_and_mass_exchange():
+    with mp.workdps(70):
+        w, n = mp.mpf("1e-15"), mp.mpf("0.24")
+        c6 = mp.mpf("0.6")**5+mp.mpf("0.4")**5
+        expected = (mp.mpf(432)/3575*mp.sqrt(715*mp.pi)*n*c6*w**2,
+                    mp.mpf(1024)/96525*mp.sqrt(390*mp.pi)*n*c6*w**2)
+        actual = factorized_66_64_amplitudes(30, 20, 0, 0, w, w, 1, 1)
+        assert all(abs(value/leading-1) < mp.mpf("1e-9")
+                   for value, leading in zip(actual, expected))
+        forward = factorized_66_64_amplitudes(30, 20, ".7", "-.4", ".08", ".077", ".91", ".975")
+        exchanged = factorized_66_64_amplitudes(20, 30, "-.4", ".7", ".08", ".077", ".91", ".975")
+        assert all(abs(a-b) < mp.mpf("1e-60") for a, b in zip(forward, exchanged))
 
 
 def test_factorized_42_newtonian_limit_and_mass_exchange():

@@ -450,6 +450,15 @@ dev/native_rom/evidence/2026-09-23/local_nqc_fixed_restart_whole_waveform.json
 --selection SELECTION --json-out /tmp/seobnrv4-flux-ablation.json`, where
 `SELECTION` is `three-mode`, `omit-21`, `omit-32`, or `omit-55`.
 
+Reference specification 0.8.4 adds independent high-precision `(3,1)`,
+`(6,4)`, and `(6,6)` pre-NQC moduli from [Pan et al.](https://arxiv.org/html/1006.0431),
+[Damour--Iyer--Nagar](https://arxiv.org/html/0811.2069), and
+[Taracchini et al.](https://arxiv.org/html/1202.0790). Their Newtonian and
+mass-exchange limits pass; `(3,1)` retains its equal-mass spin limit. Four
+frozen Torch points agree for each. This checks 11 of 35 individual flux
+amplitudes conditionally; it does not establish historical hybrid choices or
+a converged full flux.
+
 The exact-hash [ODE](aligned_spin_nqc_matching_inputs_ode.json) and
 [grid](aligned_spin_nqc_matching_inputs_grid.json) NQC matching-input replays
 reconstruct the frozen amplitude and phase matrices and right-hand sides from
