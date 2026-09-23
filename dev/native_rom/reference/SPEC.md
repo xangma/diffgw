@@ -204,14 +204,19 @@ The manifest names each remaining component and its next discriminating task.
 Most urgently, the remainder of the spin Hamiltonian and all factorized mode
 amplitudes need equation review; the remnant-spin choice and QNM interpolation
 details need independently documented provenance. The ODE initial conditions,
-solver, event location, and output-grid coupling need a converged campaign.
+solver, event location, and output-grid coupling need converged campaigns across
+the intended parameter domain.
 The [first frozen generator campaign](../evidence/2026-09-22/README.md) failed
-its direct convergence gate. The [tighter campaign and peak-anchored
+its direct convergence gate. The default [tighter campaign and peak-anchored
 whole-waveform diagnostic](../evidence/2026-09-23/README.md) still fail the
-numerical gate. A controlled grid experiment in that evidence bundle attributes
-most of the grid discrepancy for the nonspinning row to the moving coarse/fine
-restart sample; it does not resolve the ODE-tolerance failure or change the
-default algorithm. A still tighter three-level campaign also failed both
+numerical gate. An opt-in local-derivative, fixed-restart diagnostic passes both
+numerical gates for one nonspinning row, but retains a `0.02171` peak-anchored
+complex relative L2 difference against the public binary. Its post-hoc choices
+and single converged row do not qualify the model. An earlier controlled grid
+experiment in that evidence bundle attributes most of the grid discrepancy for
+the nonspinning row to the moving coarse/fine restart sample; that experiment
+alone did not resolve the ODE-tolerance failure or change the default algorithm.
+A still tighter three-level campaign also failed both
 numerical gates with nonmonotonic errors. Its regional diagnostic finds a
 phase-dominated ODE discrepancy already present before attachment. A separate
 cross-integrator check through `314 M` finds accepted states stable to about
@@ -239,7 +244,9 @@ but its output-grid error increases from `2.46e-8` to `6.61e-7`, so the grid
 gate fails. That window was selected after inspecting the same row's DOP853
 diagnostic; it is not an independently validated model rule. Peak-anchored
 whole-waveform complex relative L2 remains `0.02171096` nonspinning and
-`0.01335888` for one exploratory aligned-spin row.
+`0.01335888` for one exploratory aligned-spin row. With the restart fixed at
+`165 M` on all grids, the nonspinning output-grid error decreases from
+`2.46e-8` to `4.78e-9`; its peak-anchored LAL difference is still `0.02171172`.
 The separate public-binary whole-waveform comparison
 compares only two rows and does not establish public-binary parity. The current
 generator and ROM work therefore stay on this development branch. Reference

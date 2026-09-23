@@ -7,6 +7,10 @@ or replacements for the official ROM data. No trained asset is promoted here.
 
 The [first frozen qualification run](evidence/2026-09-22/README.md) failed the ODE
 convergence budget. The generator is not qualified for independent ROM training.
+An opt-in [fixed-restart numerical diagnostic](evidence/2026-09-23/README.md)
+passes both convergence gates for one nonspinning row; the default route still
+fails, and its peak-anchored public-binary waveform has a `0.02171` complex
+relative L2 shape difference. This does not validate the physical generator.
 
 The versioned [SEOBNRv4 paper reference](reference/SPEC.md) now pins the
 published calibration, peak, and ringdown equations and maps them to both

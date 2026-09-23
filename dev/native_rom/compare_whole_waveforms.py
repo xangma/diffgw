@@ -120,7 +120,9 @@ def main(argv=None):
     prior = json.loads(prior_path.read_text())
     diagnostic = args.diagnostic_campaign is not None
     if diagnostic:
-        if (prior.get("schema") != "diffgw.seobnrv4.hermite_local_nqc_campaign_diagnostic.v1"
+        if (prior.get("schema") not in {
+                "diffgw.seobnrv4.hermite_local_nqc_campaign_diagnostic.v1",
+                "diffgw.seobnrv4.hermite_local_nqc_fixed_restart_diagnostic.v1"}
                 or prior.get("status") not in {"diagnostic_numerical_gates_passed", "failed"}
                 or not prior.get("sources_unchanged")
                 or len(prior.get("result", {}).get("runs", [])) != 5):
@@ -130,6 +132,10 @@ def main(argv=None):
         if not numerical_choice.get("hermite_resampling") or not numerical_choice.get(
                 "local_nqc_phase_derivatives"):
             parser.error("the diagnostic campaign has unexpected numerical choices")
+        fixed_restart = numerical_choice.get("fixed_restart_time_M")
+        if (fixed_restart is not None) != (
+                prior["schema"] == "diffgw.seobnrv4.hermite_local_nqc_fixed_restart_diagnostic.v1"):
+            parser.error("fixed-restart choice does not match the diagnostic schema")
     else:
         if (prior.get("status") not in {"numerical_checks_passed", "failed"}
                 or not prior.get("sources_unchanged")
@@ -178,7 +184,8 @@ def main(argv=None):
             run = q.native_run(
                 row, level, settings,
                 diagnostic_hermite_resampling=numerical_choice["hermite_resampling"],
-                diagnostic_local_nqc_derivatives=numerical_choice["local_nqc_phase_derivatives"])
+                diagnostic_local_nqc_derivatives=numerical_choice["local_nqc_phase_derivatives"],
+                diagnostic_restart_time_M=numerical_choice.get("fixed_restart_time_M"))
             comparison = compare_public_binary(row, run)
             output["results"].append(dict(row=row, native=q.summarize_run(run),
                                           comparison=comparison,

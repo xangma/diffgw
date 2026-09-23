@@ -6,6 +6,7 @@ not promote this provisional physics model or change the default sampler.
 
 import argparse
 import json
+import math
 import os
 from pathlib import Path
 import socket
@@ -35,13 +36,21 @@ def main():
     parser.add_argument("--json-out", required=True, type=Path)
     parser.add_argument("--local-nqc", action="store_true",
                         help="use the diagnostic degree-six local NQC phase derivatives")
+    parser.add_argument("--fixed-restart-time-M", type=float,
+                        help="hold the diagnostic coarse/fine restart at this epoch on every grid")
     args = parser.parse_args()
+    if args.fixed_restart_time_M is not None and (
+            not args.local_nqc or not math.isfinite(args.fixed_restart_time_M)
+            or args.fixed_restart_time_M <= 0):
+        parser.error("a fixed restart requires --local-nqc and a positive finite epoch")
     torch.set_num_threads(1)
     settings = Settings(atol_levels=(1e-12, 1e-13, 1e-14),
                         rtol_levels=(1e-11, 1e-12, 1e-13))
     before = snapshot()
     report = dict(
-        schema=("diffgw.seobnrv4.hermite_local_nqc_campaign_diagnostic.v1"
+        schema=("diffgw.seobnrv4.hermite_local_nqc_fixed_restart_diagnostic.v1"
+                if args.fixed_restart_time_M is not None else
+                "diffgw.seobnrv4.hermite_local_nqc_campaign_diagnostic.v1"
                 if args.local_nqc else "diffgw.seobnrv4.hermite_campaign_diagnostic.v1"),
         scope=dict(physics_validated=False, production_asset=False,
                    production_promotion_allowed=False,
@@ -54,7 +63,8 @@ def main():
                               local_nqc_phase_derivatives=args.local_nqc,
                               local_nqc_window_M=0.5 if args.local_nqc else None,
                               local_nqc_degree=6 if args.local_nqc else None,
-                              default_restart_rule=True,
+                              default_restart_rule=args.fixed_restart_time_M is None,
+                              fixed_restart_time_M=args.fixed_restart_time_M,
                               default_initial_step_rule=True),
         source_sha256_before=before, source_manifest_sha256=canonical_hash(before),
         status="running", process=dict(argv=sys.argv, cwd=os.getcwd(),
@@ -69,7 +79,8 @@ def main():
         def runner(row, level, runner_settings):
             return native_run(row, level, runner_settings,
                               diagnostic_hermite_resampling=True,
-                              diagnostic_local_nqc_derivatives=args.local_nqc)
+                              diagnostic_local_nqc_derivatives=args.local_nqc,
+                              diagnostic_restart_time_M=args.fixed_restart_time_M)
 
         report["result"] = qualify_row(
             ROW, settings, runner=runner, oracle=compare_lal,

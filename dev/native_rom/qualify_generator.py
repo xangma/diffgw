@@ -201,7 +201,8 @@ def bounded_run(seconds):
 
 
 def native_run(row, level, settings, *, diagnostic_hermite_resampling=False,
-               diagnostic_local_nqc_derivatives=False):
+               diagnostic_local_nqc_derivatives=False,
+               diagnostic_restart_time_M=None):
     import torch
     from dev.native_rom.eob.torch.adaptive_driver_clean import reconstruct_seobnrv4_22_adaptive
     with bounded_run(settings.max_run_seconds), torch.no_grad():
@@ -211,6 +212,7 @@ def native_run(row, level, settings, *, diagnostic_hermite_resampling=False,
             **CHOICES, **{k: level[k] for k in ("atol", "rtol", "dt_geom")},
             diagnostic_hermite_resampling=diagnostic_hermite_resampling,
             diagnostic_local_nqc_derivatives=diagnostic_local_nqc_derivatives,
+            diagnostic_restart_time_M=diagnostic_restart_time_M,
             ringdown_duration=settings.ringdown_duration_M,
             num_steps=settings.max_accepted_steps, max_accepted_steps=settings.max_accepted_steps,
             max_evaluations=settings.max_evaluations, max_rejected_steps=settings.max_rejected_steps)
@@ -233,6 +235,7 @@ def native_run(row, level, settings, *, diagnostic_hermite_resampling=False,
                             termination=list(stats.termination), event_time_M=float(array(stats.event_time)))
     return dict(**level, time=array(result.time), mode=array(result.mode), stages=stages,
                 peak_time_M=float(array(result.trajectory.peak.time)),
+                restart_time_M=float(array(result.trajectory.restart_time).reshape(-1)[0]),
                 match_time_M=float(array(result.attachment.match_time)),
                 boundary_time_M=float(array(result.attachment.boundary_time)),
                 final_mass_fraction=float(array(result.final_mass_fraction)),

@@ -241,9 +241,41 @@ neither comparison is a parity or physical-validation claim. Reproduce with
 dev/native_rom/evidence/2026-09-23/whole_waveform_inputs.json --json-out
 /tmp/seobnrv4-local-nqc-whole.json`.
 
-The next discriminating check is to record the restart epoch at each output
-grid and hold it fixed across grids. Only after grid convergence is established
-can this numerical choice be considered for broader parameter coverage.
+The [fixed-restart campaign](hermite_local_nqc_fixed_restart_campaign.json)
+repeated the same five solves and pinned LAL diagnostic with the local NQC
+derivative choice, but held the coarse/fine restart at `165 M` on every grid.
+The original `dt/M=0.5,0.25,0.125` rule had restarted at `165,165,164.875 M`.
+The initial-step rule, tolerances, error budgets, and gates were unchanged;
+the source snapshot stayed fixed during the run. All five recorded restart
+epochs are `165 M`.
+
+| Fixed-restart comparison | Coarse to medium complex L2 | Medium to fine complex L2 | `1e-6` gate |
+| --- | ---: | ---: | --- |
+| ODE tolerances | 1.071e-6 | 6.523e-7 | **Passed** |
+| Output grid `dt/M=0.5,0.25,0.125` | 2.463e-8 | 4.781e-9 | **Passed** |
+
+This controlled comparison attributes the earlier grid nonmonotonicity in
+this **one nonspinning row** to the grid-dependent restart epoch. It is a
+post-hoc diagnostic choice, as is the local NQC derivative window; neither is
+established as the historical SEOBNRv4 prescription. The default generator's
+grid gate remains failed. Reproduce with `PYTHONPATH=src:. python -m
+dev.native_rom.diagnose_hermite_campaign --local-nqc
+--fixed-restart-time-M 165 --json-out /tmp/seobnrv4-fixed-restart.json`.
+
+The [matching fixed-restart whole-waveform diagnostic](local_nqc_fixed_restart_whole_waveform.json)
+uses the same pinned public LAL binary and peak-only alignment. Complex relative
+L2 is `0.02171172` over `[-310,150] M` for the numerically checked nonspinning
+row and `0.01336093` over `[-330,150] M` for the aligned-spin row. The latter
+has **no** dedicated convergence campaign. These percent-scale shape errors
+are descriptive, not a parity pass or a physical-fidelity test. Reproduce with
+`PYTHONPATH=src:. python -m dev.native_rom.compare_whole_waveforms
+--diagnostic-campaign /tmp/seobnrv4-fixed-restart.json --inputs
+dev/native_rom/evidence/2026-09-23/whole_waveform_inputs.json --json-out
+/tmp/seobnrv4-fixed-restart-whole-waveform.json`.
+
+The next numerical check is to repeat convergence across aligned-spin and
+parameter-boundary rows, then investigate the residual whole-waveform shape
+differences without fitting correction coefficients to the LAL binary.
 Independent review of the full spin Hamiltonian and all 35 factorized mode
 amplitudes is still required before these diagnostics can support a native
 SEOBNRv4 claim.
