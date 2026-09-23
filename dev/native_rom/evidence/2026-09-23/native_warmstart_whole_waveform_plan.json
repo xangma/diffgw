@@ -1,0 +1,16 @@
+{
+  "schema": "diffgw.seobnrv4.native-warmstart-whole-waveform-plan.v1",
+  "purpose": "Test whether a fully native quasicircular warm start and evolution from M Omega=10^(-3/2) removes the frozen whole-waveform initial-state residual.",
+  "prior_whole_waveform": "dev/native_rom/evidence/2026-09-23/local_nqc_fixed_restart_whole_waveform.json",
+  "prior_sha256": "a0b56c6f1e16a868221fe09bf9b358c29a8dc74fb74427dd3a65bf715777edc5",
+  "prior_peak_anchor": "dev/native_rom/evidence/2026-09-23/peak_anchor_diagnostic.json",
+  "prior_peak_anchor_sha256": "24faffdafb2736fdff85920bc1aee4324e7b4c5f380b54c4f5bbaea38b2c9e30",
+  "native_pre_evolution": "dev/native_rom/evidence/2026-09-23/lal_native_pre_evolution.json",
+  "native_pre_evolution_sha256": "237646a519b8eb5b492c7635d184cf23167f7fd1cfb64d391207c93907f044e7",
+  "lal_state_ablation": "dev/native_rom/evidence/2026-09-23/lal_initial_state_ablation.json",
+  "lal_state_ablation_sha256": "e8933e0b501d68591dd5bbd18ca8d6c0e8346a38ab00e1d43a9bed33fc442195",
+  "rows": [0, 1],
+  "intervention": "Replace only the native initial r, pr_star, pphi with the fully native DOP853 frequency-crossing state from the frozen pre-evolution diagnostic; leave phase=0 and all subsequent waveform equations and numerical settings unchanged.",
+  "metric": "Complex relative L2 after independent quadratic-power amplitude-peak anchoring, without optimized relative shifts, amplitude scales, or model coefficients.",
+  "interpretation": "Diagnostic only. The frozen state is an instrument for testing causality, not a runtime asset. A successful result must be followed by an inline native warm-start implementation, numerical convergence, broader physical holdouts, JAX checks, and ROM validation before release."
+}
