@@ -246,6 +246,16 @@ pre-NQC `(2,1)` comparison and a public-equation derivation of any correction
 remain necessary. Pan prints both the Taylor residual `f21` in Eq. (28b) and
 the spin-resummed `rho21` in Eq. (29b); their agreement through a chosen PN
 order does not make their finite-frequency hybrids interchangeable.
+The development-only [frozen rho-hybrid discriminator](../evidence/2026-09-23/mode_21_rho_hybrid_diagnostic.json)
+evaluates a separate scalar candidate built from Pan Eq. (29b)'s printed
+`v**4`--`v**7` spin coefficients in `rho21`, with the two audited auxiliary
+truncations. At shared circular surrogate inputs for a 4:1 mass ratio and
+spins `(0.7, -0.3)`, the flux-path candidate exceeds the current Taylor-`f`
+amplitude by 0.20%, 0.67%, and 2.36% at `M*Omega` 0.01, 0.02, and 0.04.
+Zero-spin and equal-mass unequal-spin controls agree as expected. These
+numbers isolate the factorization choice; the surrogate inputs are not EOB
+dynamics and no compiled historical component was compared. Neither scalar
+candidate is therefore qualified as historical v4.
 All 35 Torch mode moduli now have conditional scalar references and frozen
 point checks. This establishes the declared factorized reconstruction only:
 the complete historical `(2,1)` spin prescription, high-`ell` spin truncation,

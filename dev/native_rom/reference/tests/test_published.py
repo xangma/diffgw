@@ -10,7 +10,8 @@ import sympy as sp
 
 from dev.native_rom.reference import SPEC_VERSION
 from dev.native_rom.reference.flux import (
-    emitted_flux, factorized_22_amplitude, factorized_31_amplitude,
+    emitted_flux, factorized_21_rho_hybrid_amplitude,
+    factorized_21_spin_amplitude, factorized_22_amplitude, factorized_31_amplitude,
     factorized_42_amplitude,
     factorized_43_amplitude, factorized_55_amplitude, factorized_62_amplitude,
     factorized_54_52_amplitudes, factorized_66_64_amplitudes,
@@ -30,6 +31,30 @@ from dev.native_rom.reference.published import (
 from dev.native_rom.reference.qnm import berti_220_fit, sigma_initial_mass_units
 from dev.native_rom.reference.ringdown import h22
 from dev.native_rom.reference.remnant import final_mass_fraction, final_spin_projection
+
+
+def test_21_rho_hybrid_limits_and_regularization():
+    args = (40, 10, ".7", "-.3", ".02", ".02", "3.0", ".98")
+    with mp.workdps(70):
+        rho_flux = factorized_21_rho_hybrid_amplitude(*args, digits=70)
+        rho_wave = factorized_21_rho_hybrid_amplitude(
+            *args, auxiliary_spin_order=1, digits=70)
+        assert rho_flux > 0 and rho_wave > 0 and rho_flux != rho_wave
+        assert abs(rho_flux-factorized_21_rho_hybrid_amplitude(
+            10, 40, "-.3", ".7", ".02", ".02", "3.0", ".98",
+            digits=70)) < mp.mpf("1e-65")
+
+        zero = (40, 10, 0, 0, ".02", ".02", "3.0", ".98")
+        assert (factorized_21_rho_hybrid_amplitude(*zero, digits=70)
+                == factorized_21_spin_amplitude(*zero, digits=70))
+
+        equal = (20, 20, ".7", "-.3", ".02", ".02", "3.0", ".98")
+        assert (factorized_21_rho_hybrid_amplitude(*equal, digits=70)
+                == factorized_21_spin_amplitude(*equal, digits=70))
+        assert factorized_21_rho_hybrid_amplitude(*equal, digits=70) > 0
+
+    with pytest.raises(ValueError, match="auxiliary_spin_order"):
+        factorized_21_rho_hybrid_amplitude(*args, auxiliary_spin_order=2)
 
 
 def test_manifest_is_explicit_and_versioned():

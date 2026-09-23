@@ -847,6 +847,20 @@ The audit records behavior only; it contains no upstream source excerpts or
 copied coefficients. No compiled component comparison was performed, so the
 Hamiltonian and `(2,1)` findings do not establish numerical parity.
 
+The [frozen `(2,1)` rho-hybrid diagnostic](mode_21_rho_hybrid_diagnostic.json)
+uses a separate scalar candidate derived from Pan Eq. (29b)'s higher-spin
+`rho21` terms, with the flux and complex-mode auxiliary truncations from the
+audit. At shared circular surrogate inputs for mass ratio 4:1 and spins
+`(+0.7, -0.3)`, the flux-path rho hybrid exceeds our Taylor-`f` amplitude by
+0.20%, 0.67%, and 2.36% at `M*Omega` 0.01, 0.02, and 0.04. Zero-spin and
+equal-mass unequal-spin controls pass. This isolates a finite-frequency
+prescription difference; it does not establish which candidate matches the
+compiled historical component. Reproduce with
+`PYTHONPATH=src:. /Users/xangma/repos/diffgw/.venv/bin/python -m
+dev.native_rom.diagnose_mode_21_rho_hybrid --plan
+dev/native_rom/evidence/2026-09-23/mode_21_rho_hybrid_plan.json --json-out
+/tmp/seobnrv4-mode-21-rho-hybrid.json`.
+
 ## Later component gate: remnant and QNM (reference 0.8.3)
 
 The independent scalar [reference](../../reference/SPEC.md) now also checks

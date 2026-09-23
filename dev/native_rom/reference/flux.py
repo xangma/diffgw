@@ -698,6 +698,34 @@ def factorized_21_spin_amplitude(m1, m2, chi1, chi2, omega,
     after the odd-parity source expansion. No complete historical v4 (2,1)
     polynomial is printed in those papers, so this is a conditional oracle.
     """
+    return _factorized_21_spin_amplitude(
+        m1, m2, chi1, chi2, omega, omega_zero_radial, pphi, h_real,
+        higher_spin="taylor_f", auxiliary_spin_order=3, digits=digits,
+    )
+
+
+def factorized_21_rho_hybrid_amplitude(m1, m2, chi1, chi2, omega,
+                                       omega_zero_radial, pphi, h_real, *,
+                                       auxiliary_spin_order=3, digits=60):
+    """Conditional pre-NQC |R h21/M| with Pan (29b) higher-spin rho.
+
+    Retain the published spin-dependent rho21 coefficients at v**4--v**7,
+    with lower-order spin in a regularized auxiliary factor. The latter can
+    end at v (complex-waveform path) or v**3 (flux path). The selection is
+    source-audited for pinned ordinary v4 but has no compiled parity check.
+    """
+    if auxiliary_spin_order not in (1, 3):
+        raise ValueError("auxiliary_spin_order must be 1 or 3")
+    return _factorized_21_spin_amplitude(
+        m1, m2, chi1, chi2, omega, omega_zero_radial, pphi, h_real,
+        higher_spin="rho", auxiliary_spin_order=auxiliary_spin_order,
+        digits=digits,
+    )
+
+
+def _factorized_21_spin_amplitude(m1, m2, chi1, chi2, omega,
+                                  omega_zero_radial, pphi, h_real, *,
+                                  higher_spin, auxiliary_spin_order, digits):
     with mp.workdps(digits):
         m1, m2, s1, s2, w, w0, j, hr = map(
             lambda value: mp.mpf(str(value)),
@@ -718,15 +746,31 @@ def factorized_21_spin_amplitude(m1, m2, chi1, chi2, omega,
                +(6313*el1/5880-mp.mpf(1168617463883)/911303737344)*x**4
                +(mp.mpf(5029963)/5927040*el1
                  -mp.mpf(63735873771463)/16569158860800)*x**5)
-        higher_kerr_spin = (-3*q**2*v**4+3*q*(4*q**2-27)*v**5/16
-                            +4163*q**2*v**6/252
-                            +(-2593*q**3/168+107*q*el1/35
-                              -mp.mpf(11847887)*q/1058400)*v**7)
+        if higher_spin == "taylor_f":
+            # Pan (28b), after the v and v**3 auxiliary replacements.
+            higher_kerr_spin = (-3*q**2*v**4+3*q*(4*q**2-27)*v**5/16
+                                +4163*q**2*v**6/252
+                                +(-2593*q**3/168+107*q*el1/35
+                                  -mp.mpf(11847887)*q/1058400)*v**7)
+            base = rho**2+higher_kerr_spin
+        else:
+            # Pan (29b): retain spin-dependent rho21 at v**4--v**7 only.
+            higher_kerr_rho = (
+                (-865*q**2/1792-405*q**4/2048)*v**4
+                +(-mp.mpf(98635)*q/75264+2031*q**3/7168
+                  -1701*q**5/8192)*v**5
+                +(-mp.mpf(15309)*q**6/65536+3897*q**4/16384
+                  +mp.mpf(9032393)*q**2/1806336)*v**6
+                +(-mp.mpf(72171)*q**7/262144+18603*q**5/65536
+                  -55169*q**3/16384
+                  +(107*el1/140-mp.mpf(3859374457)/1159065600)*q)*v**7
+            )
+            base = (rho+higher_kerr_rho)**2
         # Multiply by delta before evaluating: the equal-mass unequal-spin
         # limit is finite even though an unregularized f21 contains chiA/delta.
-        residual = (delta*(rho**2+higher_kerr_spin)
-                    -mp.mpf(3)/2*(delta*cs+ca)*v
-                    +(delta*(mp.mpf(61)/12+79*n/84)*cs
-                      +(mp.mpf(61)/12+131*n/84)*ca)*v**3)
+        residual = delta*base-mp.mpf(3)/2*(delta*cs+ca)*v
+        if auxiliary_spin_order == 3:
+            residual += (delta*(mp.mpf(61)/12+79*n/84)*cs
+                         +(mp.mpf(61)/12+131*n/84)*ca)*v**3
         return +(mp.mpf(8)/3*mp.sqrt(mp.pi/5)*n*vphi**3*j*v
                  *_tail_modulus(2, 1, w, hr)*abs(residual))
