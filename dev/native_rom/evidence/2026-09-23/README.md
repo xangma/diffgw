@@ -579,8 +579,42 @@ waveforms with an independent physical reference. Reproduce with
 --json-out /tmp/seobnrv4-parameter-boundaries.json`; exit status 1 is expected
 while the frozen aggregate gate fails.
 
-Next, diagnose the strong-aligned-spin ODE sensitivity and the grid/first-step
-coupling across the failing rows without changing the frozen results. Check the
+The [strong-spin ODE attribution plan](boundary_strong_spin_ode_plan.json) was
+committed before its [two-run replay](boundary_strong_spin_ode.json). Both
+waveform hashes, the frozen whole-waveform comparison, stage statistics, and
+source manifest match the boundary campaign. In the `rtol=1e-12` to `1e-13`
+pair, the unaligned complex relative L2 is `6.566e-6`, while amplitude is
+`1.682e-8`; an exact squared-error decomposition attributes `99.99934%` to
+phase. The common pre-attachment **raw** mode differs by only `3.255e-10`
+complex relative L2. At the attachment boundary, raw phase differs by
+`-2.90e-10 rad`, whereas the change in NQC phase coefficients contributes
+`1.229e-5 rad` to the corrected phase difference. The squared complex error
+is spread across the waveform: `1.6%` before the `165 M` restart, `30.1%`
+from restart to boundary minus `30 M`, `36.0%` over the last `30 M` before
+the boundary, `19.7%` from boundary to peak, and `12.6%` in ringdown. Thus
+NQC matching amplifies a much smaller trajectory/raw-mode difference in this
+row. This does not yet identify which matching input causes the coefficient
+change or validate the provisional equations. Reproduce with
+`PYTHONPATH=src:. python -m dev.native_rom.diagnose_boundary_strong_spin_ode
+--json-out /tmp/seobnrv4-boundary-strong-spin-ode.json`.
+
+The [boundary first-step plan](boundary_grid_first_step_plan.json) was also
+committed before its [nine-run control](boundary_grid_first_step.json). It
+replays the three rows whose default grid errors increased, holding only the
+coarse ODE's first trial step at `0.5 M` across `dt/M=0.5,0.25,0.125`. Each
+`dt=0.5 M` baseline exactly matches the frozen waveform hash. Within each
+row, all three coarse and fine accepted histories have identical time, state,
+and derivative hashes, and the complete waveforms agree exactly at nested
+samples: both adjacent-grid complex and amplitude relative L2 values are
+`0`. This isolates the default grid variation in these rows to coupling the
+first trial step to the output spacing. It does not demonstrate a convergence
+order; in particular, mass-ratio-four's separate ODE monotonicity failure
+and strong aligned spin's ODE error-budget failure remain. The original grid
+gates remain failed. Reproduce with `PYTHONPATH=src:. python -m
+dev.native_rom.diagnose_boundary_grid_first_step --json-out
+/tmp/seobnrv4-boundary-grid-first-step.json`.
+
+Next, isolate the strong-spin NQC matching-input sensitivity and check the
 historical initial-state prescription and remaining Hamiltonian/flux
 components independently, including the `(2,1)` spin terms and `(5,5)`
 amplitude, without fitting correction coefficients to the LAL binary.
