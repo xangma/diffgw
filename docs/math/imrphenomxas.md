@@ -285,3 +285,68 @@ remain supplied inputs from the existing author-code-derived fit functions.
 | `phenomxas.phase.intermediate.collocation.v1` | Eqs. (90), (92)–(95) | Both carriers' five-node solve with native sign | `test_collocation_nodes_and_exact_coefficient_recovery`, `test_native_collocation_values` |
 | `phenomxas.phase.intermediate.carrier_sign.v1` | Eq. (90), sign distinction recorded above | Both carrier intermediate phase branches | `test_printed_ansatze_primitives_and_sign_distinction`, `test_full_frontend_phase_branches_and_join` |
 | `phenomxas.phase.intermediate_ringdown.join.v1` | Antiderivatives of Eqs. (90), (96) | Both carriers' affine ringdown adjustment | `test_full_frontend_phase_branches_and_join` |
+
+## Composed complex polarizations
+
+Specification `imrphenomxas-composed-polarizations-carrier/v1` combines the
+independently recorded amplitude and phase branches in the
+[scalar reference](../../src/diffgw_reference/imrphenomxas_waveform.py).
+It accepts the carrier's calibrated fit outputs, QNM frequencies, and join
+locations as **supplied inputs**. No fitted parameter-space rows or native
+waveform implementation are imported into the reference. The preceding
+sections distinguish paper-literal from carrier conventions; this composition
+selects the **carrier** intermediate-amplitude normalization `K/P`, the
+carrier's plus sign for the intermediate phase Lorentzian, and the carrier's
+phase-fit normalization. Therefore it is a verification specification for the
+present Torch/JAX waveform, not a claim that those disputed choices follow
+from the printed paper.
+
+[Pratten et al., Sec. II.2, Eqs. (6), (14)–(16)](https://arxiv.org/html/2001.11412v1)
+define the positive-frequency mode `h_2,-2=A exp(-i phi)` and the angular
+factors `(1+cos² iota)/2` and `-i cos iota` for plus and cross. Eqs. (66)–(67)
+give the dimensionless Newtonian mode amplitude. Restoring Fourier strain
+units with `M_sec²/D_sec` and the harmonic factor gives the common physical
+scale
+`sqrt(5 eta/24) M_sec^(5/6) f_Hz^(-7/6)/(pi^(2/3) D_sec)`.
+This restoration is a dimensional derivation, **not** an equation printed in
+the paper. `M_sec` and `D_sec` use the independently audited exact SI/IAU
+definitions in [the units specification](units.md); `u=M_sec f_Hz` selects
+the dimensionless intrinsic branches.
+
+For `f_Hz>0`, the carrier assembles
+`Psi=phi_raw(u)-phi_raw(u_ref)+tshift_sec*(f_Hz-f_ref)
++2 pi f_Hz t_c-2 phi_c+3 pi/4` when `f_ref` is supplied. Without `f_ref`,
+the two reference terms are absent. The assembled polarizations are
+`h_+=((1+cos² iota)/2) A_phys exp(-i Psi)` and
+`h_x=-i cos(iota) A_phys exp(-i Psi)`. Both are zero for `f_Hz<=0`.
+The exact `f_ref` subtraction, `tshift_sec`, and fixed `3 pi/4` are carrier
+gauges. The [XHM companion paper, Appendix C](https://arxiv.org/html/2001.10914v1)
+documents related reference-frequency, orbital-phase, and waveform-time
+conventions; its mode-phase relation is distinct from the assembled
+polarization phase. The arbitrary upper reconstruction cutoff discussed in
+XAS Sec. V is not an intrinsic cutoff in this carrier; public wrapper
+`f_lower`/`f_final` limits are outside this component.
+
+The [maintained test](../../tests/test_imrphenomxas_waveform_math_reference.py)
+compares absolute complex plus/cross strain and unwrapped phase with both
+FP64 frontends at equal-mass zero-spin and unequal aligned-spin points. It
+samples both sides of every amplitude and phase transition, the ringdown,
+nonpositive frequencies, and `f_ref` absent or placed in each phase branch,
+with nonzero
+distance, inclination, time, and orbital phase. It also checks the exact
+polarization algebra, and Torch/JAX automatic derivatives against the scalar
+reference for four extrinsic parameters and smooth-branch frequency at
+inspiral, intermediate, and ringdown points. It does not validate
+parameter-space calibration, physical agreement with NR/hybrid waveforms,
+the fifth-order paper amplitude option, the public wrapper's user masks, or
+full-domain intrinsic derivatives.
+
+| Component ID | Evidence | Native relationship | Maintained check |
+| --- | --- | --- | --- |
+| `phenomxas.waveform.branch_selection.v1` | XAS Eqs. (52), (71), (85), (90), (96); carrier join choice | Both `XASCarrierState.eval_waveform` implementations | `test_full_complex_polarizations` |
+| `phenomxas.waveform.physical_scale.v1` | XAS Eqs. (14)–(16), (66)–(67), dimensional restoration; [units](units.md) | SI frequency/mass/distance adapter | `test_full_complex_polarizations`, `test_polarization_and_extrinsic_algebra` |
+| `phenomxas.waveform.phase_adapter.v1` | XAS mode convention Eq. (14); carrier gauge | Reference subtraction, time/phase offset in both carriers | `test_full_complex_polarizations` |
+| `phenomxas.waveform.polarizations.v1` | XAS Eqs. (15)–(16), azimuth fixed in carrier | Positive-frequency plus/cross signs | `test_full_complex_polarizations`, `test_polarization_and_extrinsic_algebra` |
+| `phenomxas.waveform.nonpositive_mask.v1` | XAS positive-frequency mode Eq. (14); carrier mask | Both carriers output zero strain for `f<=0` | `test_full_complex_polarizations` |
+| `phenomxas.waveform.extrinsic_derivatives.v1` | Product rule on the preceding equations | Closed partials at fixed intrinsic inputs | `test_polarization_and_extrinsic_algebra`, `test_native_extrinsic_gradients` |
+| `phenomxas.waveform.frequency_derivatives.v1` | Product rule and chain rule on the preceding equations | Smooth-branch complex `d(h+,hx)/df_Hz` at fixed fits and `f_ref` | `test_native_complex_frequency_gradient` |
