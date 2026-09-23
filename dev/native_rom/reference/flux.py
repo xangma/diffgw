@@ -2,11 +2,20 @@
 
 Bohé et al. 1611.03703v3 Eq. (9) sums both signs of m through ell=8.
 Reflection symmetry folds that into a positive-m sum with 1/(8*pi).
-The dominant and two leading subdominant moduli for the studied rows are checked below;
-the other 32 mode amplitudes remain pending independent reference checks.
+The dominant and three subdominant moduli for the studied rows are checked below;
+the other 31 mode amplitudes remain pending independent reference checks.
 """
 
 import mpmath as mp
+
+
+def _tail_modulus(ell, m, omega, h_real):
+    """Damour--Iyer--Nagar factorized tail modulus, Eqs. (19)--(20)."""
+    khat = m*omega*h_real
+    squared = 4*mp.pi*khat/(-mp.expm1(-4*mp.pi*khat))
+    for degree in range(1, ell+1):
+        squared *= 1+4*khat**2/degree**2
+    return mp.sqrt(squared)
 
 
 def emitted_flux(omega, positive_m_modes, *, digits=60):
@@ -120,14 +129,73 @@ def factorized_33_44_amplitudes(m1, m2, chi1, chi2, omega,
                  /(15*(1-3*n))*v**3
                  +q**2/2*v**4-69*q/55*v**5+217*q**2/3960*v**6)
 
-        def tail(ell, m):
-            khat = m*w*hr
-            squared = 4*mp.pi*khat/(-mp.expm1(-4*mp.pi*khat))
-            for degree in range(1, ell+1):
-                squared *= 1+4*khat**2/degree**2
-            return mp.sqrt(squared)
-
-        a33 = 3*mp.sqrt(6*mp.pi/7)*n*vphi**3*he*tail(3, 3)*abs(residual33)
+        a33 = 3*mp.sqrt(6*mp.pi/7)*n*vphi**3*he*_tail_modulus(3, 3, w, hr)*abs(residual33)
         a44 = (mp.mpf(64)/9*mp.sqrt(mp.pi/7)*n*vphi**4*he
-               *tail(4, 4)*(1-3*n)*abs(rho44)**4)
+               *_tail_modulus(4, 4, w, hr)*(1-3*n)*abs(rho44)**4)
         return +a33, +a44
+
+
+def factorized_32_amplitude(m1, m2, chi1, chi2, omega,
+                            omega_zero_radial, pphi, h_real, *, digits=60):
+    """Published pre-NQC |R h32/M| with the J-source convention.
+
+    Pan 1006.0431v2 Eqs. (29d), (38d), (42d), Appendix F.1;
+    Damour--Iyer--Nagar 0811.2069v2 Eq. (53). The generic-mass 0.5PN
+    spin term also requires the compensating quadratic term in rho.
+    """
+    with mp.workdps(digits):
+        m1, m2, s1, s2, w, w0, j, hr = map(
+            lambda x: mp.mpf(str(x)),
+            (m1, m2, chi1, chi2, omega, omega_zero_radial, pphi, h_real),
+        )
+        if min(m1, m2, w, w0, j, hr) <= 0 or max(abs(s1), abs(s2)) > 1:
+            raise ValueError("Require physical masses/spins and positive frequency/energy")
+        x1, x2 = m1/(m1+m2), m2/(m1+m2)
+        n, delta = x1*x2, x1-x2
+        cs, ca = (s1+s2)/2, (s1-s2)/2
+        q = (1-2*n)*cs+delta*ca
+        v, vphi = mp.root(w, 3), w*w0**(-mp.mpf(2)/3)
+        el2 = mp.euler+mp.log(4*v)
+        spin_linear = -4*n*cs/(3*(3*n-1))
+        rho = (1+spin_linear*v
+               +(320*n**2-1115*n+328)/(270*(3*n-1))*v**2
+               -spin_linear**2*v**2
+               +2*q/9*v**3
+               +(3085640*n**4-20338960*n**3-4725605*n**2
+                 +8050045*n-1444528)/(1603800*(1-3*n)**2)*v**4
+               +q**2/3*v**4-2788*q/1215*v**5
+               +(mp.mpf(5849948554)/940355325-104*el2/63
+                 +488*q**2/405)*v**6
+               +(17056*el2/8505-mp.mpf(10607269449358)/3072140846775)*v**8)
+        return +(mp.mpf(8)/3*mp.sqrt(mp.pi/7)*n*vphi**4*j*v
+                 *_tail_modulus(3, 2, w, hr)*(1-3*n)*abs(rho)**3)
+
+
+def factorized_21_nonspin_amplitude(m1, m2, omega, omega_zero_radial,
+                                    pphi, h_real, *, digits=60):
+    """Published pre-NQC |R h21/M| for zero spins and the J source.
+
+    Pan 1006.0431v2 Eq. (38b) fixes the Newtonian modulus; Damour--Iyer--
+    Nagar 0811.2069v2 Eq. (51) and Damour--Nagar--Bernuzzi 1212.4357v2
+    Eq. (D2) give the hybridized nonspinning residual through v**10.
+    """
+    with mp.workdps(digits):
+        m1, m2, w, w0, j, hr = map(
+            lambda value: mp.mpf(str(value)),
+            (m1, m2, omega, omega_zero_radial, pphi, h_real),
+        )
+        if min(m1, m2, w, w0, j, hr) <= 0:
+            raise ValueError("Require positive masses, frequencies, angular momentum, and energy")
+        x1, x2 = m1/(m1+m2), m2/(m1+m2)
+        n, delta = x1*x2, x1-x2
+        v, vphi = mp.root(w, 3), w*w0**(-mp.mpf(2)/3)
+        x = v**2
+        el1 = mp.euler+mp.log(2*v)
+        rho = (1+(23*n/84-mp.mpf(59)/56)*x
+               +(617*n**2/4704-10993*n/14112-mp.mpf(47009)/56448)*x**2
+               +(mp.mpf(7613184941)/2607897600-107*el1/105)*x**3
+               +(6313*el1/5880-mp.mpf(1168617463883)/911303737344)*x**4
+               +(mp.mpf(5029963)/5927040*el1
+                 -mp.mpf(63735873771463)/16569158860800)*x**5)
+        return +(mp.mpf(8)/3*mp.sqrt(mp.pi/5)*n*vphi**3*j*v
+                 *_tail_modulus(2, 1, w, hr)*abs(delta*rho**2))

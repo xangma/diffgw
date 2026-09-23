@@ -1,4 +1,4 @@
-# SEOBNRv4 source specification: paper components 0.7.0
+# SEOBNRv4 source specification: paper components 0.8.0
 
 **Status: incomplete research specification.** This version establishes an
 independent executable source of truth for the components marked `executable`
@@ -102,8 +102,21 @@ It agrees with the native 35-mode flux at nonspinning, aligned-spin,
 equal-mass unequal-spin, and unequal-mass sample points. These two modes
 account for most of the higher-mode flux at the tested initial states, but
 their paper-component agreement does not establish historical v4 parity.
+`flux.factorized_32_amplitude` independently evaluates the pre-NQC `(3,2)`
+modulus with the odd-parity angular-momentum source. It uses
+[Damour--Iyer--Nagar Eq. (53)](https://arxiv.org/html/0811.2069) for the
+finite-mass nonspin terms and [Pan Eqs. (29d), (38d), (42d), Appendix F.1](https://arxiv.org/html/1006.0431)
+for the spin terms, including the quadratic term that compensates the
+0.5PN spin term when the residual is cubed. It agrees with Torch at the
+tested nonspinning, aligned-spin, equal-mass, and unequal-mass points.
+`flux.factorized_21_nonspin_amplitude` checks the `(2,1)` J-source modulus
+only for zero spins. It uses [Pan Eq. (38b)](https://arxiv.org/html/1006.0431)
+for the leading mode and [Damour--Iyer--Nagar Eq. (51)](https://arxiv.org/html/0811.2069)
+with [Damour--Nagar--Bernuzzi Eq. (D2)](https://arxiv.org/html/1212.4357)
+for the residual through `v**10`. It agrees with Torch at the tested unequal-
+and equal-mass points. This does not check the `(2,1)` spin terms.
 Torch composes all 35 supplied modes with the flux normalization, but the
-other 32 amplitude formulas, high-`ell` spin truncation, and JAX
+other 31 amplitude formulas, high-`ell` spin truncation, and JAX
 factorized-flux path still need independent checks. The JAX
 development assembler currently uses a 1.5PN prototype flux and Newtonian `(2,2)` mode, so no
 cross-backend whole-waveform SEOBNRv4 claim follows from these checks.
@@ -236,7 +249,7 @@ dependency or distribution asset changes in this branch.
 ## Promotion blockers
 
 The manifest names each remaining component and its next discriminating task.
-Most urgently, the Hamiltonian's conditional quartic choice and the other 32
+Most urgently, the Hamiltonian's conditional quartic choice and the other 31
 factorized mode amplitudes need equation review; the remnant-spin choice and
 QNM interpolation details need independently documented provenance. The ODE initial conditions,
 solver, event location, and output-grid coupling need converged campaigns across

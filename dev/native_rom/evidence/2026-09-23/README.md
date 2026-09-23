@@ -391,14 +391,44 @@ waveform difference. Reproduce with `PYTHONPATH=src:. /Users/xangma/repos/diffgw
 -m dev.native_rom.diagnose_initial_state --json-out
 /tmp/seobnrv4-initial-state-scalar-check.json` in the frozen environment.
 
+The [flux subset ablation](flux_subset_ablation.json) and single-mode omissions
+([`(2,1)`](flux_ablation_omit-21.json), [`(3,2)`](flux_ablation_omit-32.json),
+[`(5,5)`](flux_ablation_omit-55.json)) replay the same frozen nonspinning row
+and pinned public binary. Each intervention changes radiation reaction in both
+the initial-state solve and evolution; retained modes keep their original sum
+order. At the native starting state, the `(2,2)`, `(3,3)`, and `(4,4)` modes
+provide `99.96623%` of the **native model's** total flux. The omitted modes
+individually contribute `(2,1): 0.01636%`, `(3,2): 0.01079%`, and
+`(5,5): 0.00526%` at that state.
+
+| Radiation-reaction flux | Retained initial flux | Quadratic-peak complex relative L2 |
+| --- | ---: | ---: |
+| All 35 modes (baseline) | 100% | 0.00694939 |
+| Omit `(2,1)` | 99.98364% | 0.00649327 |
+| Omit `(3,2)` | 99.98921% | 0.00643442 |
+| Omit `(5,5)` | 99.99474% | 0.00673227 |
+| Keep only `(2,2)`, `(3,3)`, `(4,4)` | 99.96623% | 0.00612824 |
+
+Amplitude relative L2 stays near `0.0017` in these runs. Small initial mode
+fractions can therefore accumulate into a measurable full-waveform difference.
+The lower L2 values do not validate mode removal: compensating errors and
+unresolved numerical or implementation differences could produce the same
+pattern. The fractions describe the provisional native implementation at one
+state, not independently verified mode fluxes or phase-error bounds. Reproduce
+each result with `PYTHONPATH=src:. /Users/xangma/repos/diffgw/.venv/bin/python
+-m dev.native_rom.diagnose_flux_subset --whole-waveform
+dev/native_rom/evidence/2026-09-23/local_nqc_fixed_restart_whole_waveform.json
+--peak-anchor dev/native_rom/evidence/2026-09-23/peak_anchor_diagnostic.json
+--selection SELECTION --json-out /tmp/seobnrv4-flux-ablation.json`, where
+`SELECTION` is `three-mode`, `omit-21`, `omit-32`, or `omit-55`.
+
 The next numerical check is to localize the aligned-spin ODE sensitivity and
 grid nonmonotonicity, then extend convergence to parameter-boundary rows.
 Independently check the historical initial-state prescription and the remaining
-Hamiltonian/flux components, then use controlled waveform ablations to
-investigate the phase residual without fitting correction coefficients to the
-LAL binary.
+Hamiltonian/flux components, including the `(2,1)` spin terms and `(5,5)`
+amplitude, without fitting correction coefficients to the LAL binary.
 The separate [paper-component reference](../../reference/SPEC.md) now checks
-the aligned-spin Hamiltonian and pre-NQC `(2,2)`, `(3,3)`, and `(4,4)` amplitudes
-at selected points. The conditional quartic choice and remaining 32 flux
-amplitudes still require independent review before these diagnostics can
-support a native SEOBNRv4 claim.
+the aligned-spin Hamiltonian and pre-NQC `(2,2)`, `(3,2)`, `(3,3)`, and `(4,4)` amplitudes
+at selected points, as well as nonspinning `(2,1)`. The conditional quartic
+choice and remaining 31 complete flux amplitudes still require independent
+review before these diagnostics can support a native SEOBNRv4 claim.
