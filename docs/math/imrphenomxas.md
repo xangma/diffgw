@@ -172,6 +172,61 @@ and full waveform composition remain outside this component.
 | `phenomxas.amp.ringdown.peak_printed.v1` | Eq. (59) | Paper-literal reference only | `test_ringdown_stationary_peak_and_scale` |
 | `phenomxas.amp.ringdown.peak_stationary.v1` | Derived from Eq. (84) | Carrier join frequencies within the guard-free domain | `test_ringdown_stationary_peak_and_scale` |
 
+## Inspiral phase
+
+Specification `imrphenomxas-inspiral-phase/v1` records
+[Pratten et al., arXiv:2001.11412v1](https://arxiv.org/html/2001.11412v1),
+Eqs. (85)–(88) and Appendix A.2 Eqs. (129)–(138), in an independent
+[SymPy reference](../../src/diffgw_reference/imrphenomxas_inspiral_phase.py).
+Its `f` is dimensionless `Mf`, with `f>0`, `eta>0`, aligned component spins,
+`chi_s=(chi1+chi2)/2`, and `chi_a=(chi1-chi2)/2`.
+The intrinsic phase uses `v=(pi f)^(1/3)` and
+`3/(128 eta v^5) sum_k phi_k v^k-pi/4`, followed by the Eq. (85)
+four-coefficient default
+`[sigma0+sigma1 f+(3/4)sigma2 f^(4/3)+(3/5)sigma3 f^(5/3)
++(1/2)sigma4 f^2]/eta`. Its derivative is checked symbolically.
+Coalescence time and phase are separate affine gauges. All fitted values are
+supplied inputs; this reference does not independently reproduce the
+parameter-space calibration.
+
+Eqs. (86) and (129) display a sum through `k=7`, while Appendix A.2 also
+prints the 4PN spin-orbit tail `phi8` in Eq. (138). Both native canonical
+carriers include `phi8`; the reference exposes both the printed truncated sum
+and the carrier's Appendix-extended sum. The existing aligned-spin TaylorF2
+reference includes an additional 3.5PN spin-spin tail from Appendix A.3 that
+is **absent** from this XAS canonical Eq. (137), so it is not reused as an
+unchanged base here.
+
+The four collocation nodes printed in Eq. (88) omit the lower-frequency offset
+at the two middle nodes:
+`{fL, delta/4, 3 delta/4, fH}`, where `fL=0.0026`,
+`fH=1.02 f_MECO`, and `delta=fH-fL`. Both carriers instead use
+`{fL, fL+delta/4, fL+3 delta/4, fH}`. The reference names both
+sets and solves the four-point basis `1, f^(1/3), f^(2/3), f` exactly.
+The native values are `{v3+d13, v3+d23, v3, v3+d43}` and its coefficient
+scale is `-5/(128 pi^(5/3))`. This scale and the supplied fitted values are
+recorded as **carrier conventions**; they are not derived solely from the
+published Eq. (87) residual definition. `sigma1` is restated by the derivative
+join to the intermediate phase and `sigma0` enforces its value join.
+
+The [maintained tests](../../tests/test_imrphenomxas_inspiral_phase_math_reference.py)
+compare the Appendix phase and analytic derivative with both Torch and JAX at
+zero, equal, and unequal spins, recover collocation coefficients, check fitted
+carrier coefficients, and test the inspiral phase and C1 join at four binary
+points. They remove the final carrier time and constant phase gauge before
+comparison. This verifies implementation of the published intrinsic equations
+and explicitly labeled carrier choices, not calibration or physical accuracy
+against hybrid/NR waveforms. Full waveform composition remains a separate
+component.
+
+| Component ID | Published evidence | Native relationship | Maintained check |
+| --- | --- | --- | --- |
+| `phenomxas.phase.inspiral.pn.v1` | Eqs. (86), (129)–(137) | `pn_phase_canonical_*`, `d_pn_phase_canonical_*` in Torch/JAX | `test_native_pn_phase_and_analytic_slope` |
+| `phenomxas.phase.inspiral.spin_tail_4pn.v1` | Eq. (138) | Both canonical PN helpers include this term | `test_printed_pn_tail_and_pseudo_derivative`, `test_native_pn_phase_and_analytic_slope` |
+| `phenomxas.phase.inspiral.pseudo_pn.v1` | Eq. (85) | Both full inspiral carrier branches | `test_printed_pn_tail_and_pseudo_derivative`, `test_native_collocation_and_inspiral_join` |
+| `phenomxas.phase.inspiral.collocation.v1` | Eqs. (87)–(88) | Both carrier four-point solves with the shifted nodes and supplied fits | `test_printed_and_carrier_node_distinction_and_exact_solve`, `test_native_collocation_and_inspiral_join` |
+| `phenomxas.phase.inspiral.join.v1` | Eq. (85), Sec. VII.1 continuity statement | Both carriers' `sigma0`/`sigma1` and full inspiral branch | `test_native_collocation_and_inspiral_join` |
+
 ## Intermediate and merger-ringdown phase
 
 Specification `imrphenomxas-intermediate-ringdown-phase/v1` transcribes
