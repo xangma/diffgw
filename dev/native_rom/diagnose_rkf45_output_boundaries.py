@@ -16,19 +16,23 @@ import torch
 import torchwave
 
 
-PLAN = q.ROOT / "dev/native_rom/evidence/2026-09-23/rkf45_output_boundary_plan.json"
+EVIDENCE = q.ROOT / "dev/native_rom/evidence/2026-09-23"
+PLAN_NAMES = ("rkf45_output_boundary_plan.json",
+              "rkf45_fixed_start_boundary_plan.json")
 
 
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--json-out", required=True, type=Path)
-    parser.add_argument("--row", choices=json.loads(PLAN.read_text())["rows"])
+    parser.add_argument("--plan", choices=PLAN_NAMES, default=PLAN_NAMES[0])
+    parser.add_argument("--row", choices=json.loads((EVIDENCE / PLAN_NAMES[0]).read_text())["rows"])
     args = parser.parse_args(argv)
+    plan_path = EVIDENCE / args.plan
     torch.set_num_threads(1)
     module_path = Path(torchwave.__file__).resolve()
     if not module_path.is_relative_to(q.ROOT / "src"):
         parser.error(f"torchwave loaded outside this checkout: {module_path}")
-    plan = json.loads(PLAN.read_text())
+    plan = json.loads(plan_path.read_text())
     rows = plan["rows"]
     q.validate_rows(list(rows.values()))
     expected = dict(output_resampler="one_fifth_order_fehlberg_substep_from_preceding_accepted_state",
@@ -38,6 +42,8 @@ def main(argv=None):
                     local_second_window_M=0.5,
                     local_second_degree=6,
                     fixed_restart_time_M=165.0)
+    if args.plan == PLAN_NAMES[1]:
+        expected["coarse_initial_step_M"] = 0.5
     if plan["candidate"] != expected:
         parser.error("candidate differs from frozen Fehlberg output plan")
     config = plan["settings"]
@@ -55,7 +61,7 @@ def main(argv=None):
         scope=dict(**q.SCOPE, development_only=True,
                    numerical_generator_qualified=False, independent_physics=False,
                    exploratory_boundaries=True),
-        plan_sha256=q.sha256(PLAN), source_sha256_before=before,
+        plan_sha256=q.sha256(plan_path), plan_name=args.plan, source_sha256_before=before,
         source_manifest_sha256=q.canonical_hash(before),
         git_head=subprocess.check_output(["git", "rev-parse", "HEAD"], text=True).strip(),
         process=dict(argv=sys.argv, cwd=os.getcwd(), host=socket.gethostname(), pid=os.getpid(),
@@ -71,7 +77,8 @@ def main(argv=None):
             diagnostic_local_nqc_derivatives=True,
             diagnostic_matching_second_derivatives=True,
             diagnostic_restart_time_M=165.0,
-            diagnostic_fine_max_step_M=0.125)
+            diagnostic_fine_max_step_M=0.125,
+            diagnostic_coarse_initial_step_M=expected.get("coarse_initial_step_M"))
 
     for name in report["selected_rows"]:
         report["rows"][name] = q.qualify_row(

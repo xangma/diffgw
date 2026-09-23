@@ -1,0 +1,85 @@
+{
+  "acceptance": "Run all five frozen levels on all six rows without changing gate thresholds. Require every ODE gate and every output-grid gate. The fixed first step makes nested grid waveforms identical when their accepted histories coincide; grid pass is an identity/control result, not independent evidence of output interpolation accuracy. Regardless of gate result, do not claim published SEOBNRv4 fidelity, training readiness, or production promotion. Preserve failures and report source hashes.",
+  "baseline_evidence": [
+    "rkf45_output_q4_pilot.json",
+    "boundary_grid_first_step.json",
+    "boundary_fine_step_cap.json",
+    "parameter_boundary_campaign.json"
+  ],
+  "candidate": {
+    "coarse_initial_step_M": 0.5,
+    "fine_max_step_M": 0.125,
+    "fixed_restart_time_M": 165.0,
+    "local_matching_second_derivatives": true,
+    "local_nqc_phase_derivatives": true,
+    "local_second_degree": 6,
+    "local_second_window_M": 0.5,
+    "output_resampler": "one_fifth_order_fehlberg_substep_from_preceding_accepted_state"
+  },
+  "purpose": "Six-row control: isolate ODE tolerance response after replacing Hermite output sampling with one Fehlberg substep, capping fine accepted steps at 0.125 M and fixing the coarse ODE first step at 0.5 M across output grids.",
+  "rows": {
+    "equal_mass_unequal_spin": {
+      "chi1": 0.2,
+      "chi2": -0.2,
+      "mass1": 25.0,
+      "mass2": 25.0,
+      "omega_start": 0.04
+    },
+    "high_start_frequency": {
+      "chi1": 0.2,
+      "chi2": -0.1,
+      "mass1": 30.0,
+      "mass2": 20.0,
+      "omega_start": 0.05
+    },
+    "low_start_frequency": {
+      "chi1": 0.2,
+      "chi2": -0.1,
+      "mass1": 30.0,
+      "mass2": 20.0,
+      "omega_start": 0.03
+    },
+    "mass_ratio_four_nonspinning": {
+      "chi1": 0.0,
+      "chi2": 0.0,
+      "mass1": 40.0,
+      "mass2": 10.0,
+      "omega_start": 0.04
+    },
+    "strong_aligned_spin": {
+      "chi1": 0.8,
+      "chi2": 0.8,
+      "mass1": 30.0,
+      "mass2": 20.0,
+      "omega_start": 0.04
+    },
+    "strong_antialigned_spin": {
+      "chi1": -0.8,
+      "chi2": -0.8,
+      "mass1": 30.0,
+      "mass2": 20.0,
+      "omega_start": 0.04
+    }
+  },
+  "schema": "diffgw.seobnrv4.rkf45-fixed-start-boundary-plan.v1",
+  "settings": {
+    "atol_levels": [
+      1e-12,
+      1e-13,
+      1e-14
+    ],
+    "dt_levels_M": [
+      0.5,
+      0.25,
+      0.125
+    ],
+    "event_time_limit_M": 0.05,
+    "max_run_seconds": 600.0,
+    "relative_l2_limit": 1e-06,
+    "rtol_levels": [
+      1e-11,
+      1e-12,
+      1e-13
+    ]
+  }
+}

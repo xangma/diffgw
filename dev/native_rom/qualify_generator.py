@@ -205,7 +205,8 @@ def native_run(row, level, settings, *, diagnostic_hermite_resampling=False,
                diagnostic_local_nqc_derivatives=False,
                diagnostic_matching_second_derivatives=False,
                diagnostic_restart_time_M=None,
-               diagnostic_fine_max_step_M=None):
+               diagnostic_fine_max_step_M=None,
+               diagnostic_coarse_initial_step_M=None):
     import torch
     from dev.native_rom.eob.torch.adaptive_driver_clean import reconstruct_seobnrv4_22_adaptive
     with bounded_run(settings.max_run_seconds), torch.no_grad():
@@ -219,6 +220,7 @@ def native_run(row, level, settings, *, diagnostic_hermite_resampling=False,
             diagnostic_matching_second_derivatives=diagnostic_matching_second_derivatives,
             diagnostic_restart_time_M=diagnostic_restart_time_M,
             diagnostic_fine_max_step_M=diagnostic_fine_max_step_M,
+            diagnostic_coarse_initial_step_M=diagnostic_coarse_initial_step_M,
             ringdown_duration=settings.ringdown_duration_M,
             num_steps=settings.max_accepted_steps, max_accepted_steps=settings.max_accepted_steps,
             max_evaluations=settings.max_evaluations, max_rejected_steps=settings.max_rejected_steps)
