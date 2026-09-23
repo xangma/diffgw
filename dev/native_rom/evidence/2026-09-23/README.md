@@ -593,10 +593,29 @@ is spread across the waveform: `1.6%` before the `165 M` restart, `30.1%`
 from restart to boundary minus `30 M`, `36.0%` over the last `30 M` before
 the boundary, `19.7%` from boundary to peak, and `12.6%` in ringdown. Thus
 NQC matching amplifies a much smaller trajectory/raw-mode difference in this
-row. This does not yet identify which matching input causes the coefficient
-change or validate the provisional equations. Reproduce with
+row. This does not validate the provisional equations. Reproduce with
 `PYTHONPATH=src:. python -m dev.native_rom.diagnose_boundary_strong_spin_ode
 --json-out /tmp/seobnrv4-boundary-strong-spin-ode.json`.
+
+The [strong-spin NQC matching-input plan](boundary_strong_spin_nqc_inputs_plan.json)
+was committed before its [two-run replay and dense check](boundary_strong_spin_nqc_inputs.json).
+Both waveform hashes and stage statistics still match the frozen campaign.
+Reconstructed phase systems reproduce their stored coefficients within
+`4.6e-13`; the exact matrix/RHS decomposition closes within `1.8e-13`.
+From medium to fine ODE tolerance, the phase coefficients change by
+`[-1.09346e-4, +6.09512e-3]`. The change in the matching matrix accounts
+for `97.6%` of the coefficient-change norm, and its second-derivative row
+alone contributes `+5.90457e-3` to the second phase coefficient. The RHS
+accounts for `2.4%` of the norm. The matrix's first phase-basis second
+derivative changes by `+2.57147e-9`; compared with dense DOP853 of the
+same provisional vector field, its medium/fine errors are `-2.925e-9` and
+`-3.534e-10`. The dense tolerance and stencil spreads for that derivative
+are `2.12e-12` and `4.59e-13`, respectively. This identifies the dominant
+numerical matching input, while the remaining fine error and the underlying
+physics still need independent validation. No coefficients or gates were
+retuned. Reproduce with `PYTHONPATH=src:. python -m
+dev.native_rom.diagnose_boundary_strong_spin_nqc_inputs --json-out
+/tmp/seobnrv4-boundary-strong-spin-nqc-inputs.json`.
 
 The [boundary first-step plan](boundary_grid_first_step_plan.json) was also
 committed before its [nine-run control](boundary_grid_first_step.json). It
@@ -614,9 +633,9 @@ gates remain failed. Reproduce with `PYTHONPATH=src:. python -m
 dev.native_rom.diagnose_boundary_grid_first_step --json-out
 /tmp/seobnrv4-boundary-grid-first-step.json`.
 
-Next, isolate the strong-spin NQC matching-input sensitivity and check the
-historical initial-state prescription and remaining Hamiltonian/flux
-components independently, including the `(2,1)` spin terms and `(5,5)`
+Next, examine why the strong-spin ODE trajectory perturbs that phase-basis
+second derivative. Check the historical initial-state prescription and
+remaining Hamiltonian/flux components independently, including the `(2,1)` spin terms and `(5,5)`
 amplitude, without fitting correction coefficients to the LAL binary.
 The separate [paper-component reference](../../reference/SPEC.md) now checks
 the aligned-spin Hamiltonian and pre-NQC `(2,2)`, `(3,2)`, `(3,3)`, and `(4,4)` amplitudes

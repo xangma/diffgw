@@ -65,7 +65,9 @@ def _system(result, targets):
     error = float((reconstructed - stored).abs().max())
     if error > 1e-7:
         raise ValueError(f"phase system does not recover stored coefficients: {error}")
-    condition = float(torch.linalg.cond(matrix))
+    scaled = matrix / torch.linalg.vector_norm(matrix, dim=-1).unsqueeze(-1)
+    scaled = scaled / torch.linalg.vector_norm(scaled, dim=-2).unsqueeze(-2)
+    condition = float(torch.linalg.cond(scaled))
     if abs(condition - float(fine.calibration.phase_condition)) > 1e-7:
         raise ValueError("phase condition differs from stored calibration")
     return dict(match_time_local_M=float(match), local_fit_samples=int(chart.numel()),
