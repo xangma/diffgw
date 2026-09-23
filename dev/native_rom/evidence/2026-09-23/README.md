@@ -487,6 +487,14 @@ reconstruction. It does not identify historical v4 spin or high-`ℓ`
 truncations, establish the JAX torque, or close convergence and
 whole-waveform gates.
 
+Reference specification 0.8.8 adds an independent high-precision Eq. (7)
+NQC solve at a fixed matching time. Analytic polynomial trajectories verify
+all five corrected peak conditions and recover the same coefficients through
+the Torch and JAX sampled frontends. This establishes the matching algebra
+under exact-sampling conditions. It does not establish the historical peak
+selection or a convergent derivative rule for numerical trajectories; the
+strong-spin convergence failure below remains a release blocker.
+
 The exact-hash [ODE](aligned_spin_nqc_matching_inputs_ode.json) and
 [grid](aligned_spin_nqc_matching_inputs_grid.json) NQC matching-input replays
 reconstruct the frozen amplitude and phase matrices and right-hand sides from

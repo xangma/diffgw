@@ -1,4 +1,4 @@
-# SEOBNRv4 source specification: paper components 0.8.7
+# SEOBNRv4 source specification: paper components 0.8.8
 
 **Status: incomplete research specification.** This version establishes an
 independent executable source of truth for the components marked `executable`
@@ -234,6 +234,21 @@ the quadratic fits, the printed linear coefficient `A1` is held fixed and
 and equal-mass fits at `nu=0.001` and `nu=0.25`. The peak **frequency** fit
 instead uses its printed `nu=0` endpoint. The peak amplitude derivative is
 zero by definition of the attachment peak.
+
+`nqc.match_22` independently forms the two Eq. (7) matching systems at a
+caller-supplied time using high-precision derivatives of smooth scalar
+trajectory and pre-NQC mode functions. With `z=p_r*/(r Omega)`, its three
+amplitude columns are `A*z²`, `A*z²/r`, and `A*z²/r^(3/2)`, differentiated
+zero, one, and two times. Its two phase columns are `z` and `z*p_r*²`,
+differentiated one and two times. The phase right-hand side uses
+`omega_base-omega_target` because the positive-frequency convention is
+`h22=A exp(-i phi)` and Eq. (7) multiplies by `exp(+i b.p)`.
+Analytic degree-six trajectories show that the five corrected matching
+conditions hold at 55-digit accuracy and that Torch and JAX recover the
+scalar coefficients from exact polynomial samples. This qualifies the
+fixed-time algebra only. The paper does not define a trajectory sampling
+and differentiation rule; peak finding, interpolation, branch handling,
+conditioning, and convergence of the numerical generator remain open.
 
 `published.ringdown_shape` gives the four free fit coefficients
 `c1f,c2f,d1f,d2f` (Eqs. 13, 14, 16, 17). `ringdown.h22` evaluates the paper's

@@ -1,5 +1,5 @@
 {
-  "specification": "seobnrv4-paper-components/0.8.7",
+  "specification": "seobnrv4-paper-components/0.8.8",
   "model": "SEOBNRv4 dominant (2,2) mode, aligned-spin black-hole binaries",
   "source": {
     "id": "bohe-2017-v3",
@@ -307,8 +307,12 @@
     {
       "id": "V4-NQC-7",
       "source": "bohe-2017-v3, Eq. (7), Appendix A",
-      "status": "pending",
-      "blocker": "Reference the two NQC matching systems, peak selection, branch behavior, and derivatives independently of current helpers."
+      "status": "conditional",
+      "reference": "nqc.match_22",
+      "torch": "src/torchwave/approximants/eob/nqc.py:calibrate_nqc_22",
+      "jax": "src/jaxwave/approximants/eob/nqc.py:calibrate_nqc_22",
+      "test": "dev/native_rom/reference/tests/test_nqc_matching.py:test_scalar_matching_satisfies_five_paper_conditions; dev/native_rom/reference/tests/test_nqc_matching.py:test_frontend_matching_against_scalar_reference",
+      "condition": "Fixed-time NQC matching algebra only, using caller-supplied smooth functions and exact polynomial samples. Historical peak selection, trajectory differentiation and interpolation, branch behavior, and full-generator convergence remain unverified."
     },
     {
       "id": "V4-REMNANT-MASS",
