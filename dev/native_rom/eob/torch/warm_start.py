@@ -104,6 +104,26 @@ def native_frequency_warm_start(
             high = offset
     else:
         raise RuntimeError("native frequency crossing refinement did not converge")
+    if torch.is_grad_enabled() and (left_state.requires_grad or target.requires_grad):
+        # The bisection comparisons select a value but carry no derivative of
+        # the crossing time. One implicit correction supplies the derivative
+        # of Omega(state(t)) = target at that value. Keep the slope constant
+        # in backward: its parameter derivative is multiplied by the already
+        # bounded frequency residual and is not part of the implicit rule.
+        root = offset.detach().requires_grad_(True)
+        _, root_state, _, _ = _rkf45_trial(
+            field, left_time, left_state, root, left_derivative, 1)
+        root_frequency = field(root_state)[1]
+        slope = torch.autograd.grad(
+            root_frequency, root, retain_graph=True)[0].detach()
+        if not bool(torch.isfinite(slope) & (slope > 0)):
+            raise RuntimeError("native frequency crossing has no positive slope")
+        offset = root - (root_frequency - target) / slope
+        _, candidate, _, _ = _rkf45_trial(
+            field, left_time, left_state, offset, left_derivative, 1)
+        residual = field(candidate)[1] - target
+        if not bool(residual.abs() <= frequency_tolerance):
+            raise RuntimeError("differentiable frequency refinement lost the crossing")
     # The waveform clock and phase begin at the requested-frequency crossing.
     state = torch.stack((candidate[0], torch.zeros_like(candidate[1]),
                          candidate[2], candidate[3]))
