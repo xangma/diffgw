@@ -1,0 +1,15 @@
+{
+  "schema": "diffgw.seobnrv4.initial-radial-probe-plan.v1",
+  "purpose": "Isolate the finite radial-momentum response used by LAL initial data while retaining the native circular root, Hamiltonian, and flux.",
+  "source_reference": "https://lscsoft.docs.ligo.org/lalsuite/7.26/lalsimulation/_l_a_l_sim_i_m_r_spin_e_o_b_initial_conditions_8c_source.html",
+  "source_lines": "1000-1011 and 1050-1066",
+  "prior_native_evolution": "dev/native_rom/evidence/2026-09-23/lal_native_pre_evolution.json",
+  "prior_native_evolution_sha256": "237646a519b8eb5b492c7635d184cf23167f7fd1cfb64d391207c93907f044e7",
+  "row_indices": [0, 1],
+  "cartesian_radial_probe": 0.001,
+  "ode_method": "DOP853",
+  "ode_rtol": 1e-12,
+  "ode_atol": 1e-13,
+  "ode_first_step_M": 0.125,
+  "interpretation": "Native-Hamiltonian emulation of one LAL initial-data choice; it does not reproduce the full LAL circular root, flux, derivatives, or physical waveform."
+}

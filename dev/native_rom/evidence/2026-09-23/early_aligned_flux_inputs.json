@@ -1,0 +1,115 @@
+{
+  "errors": [],
+  "historical_flux_parity_established": false,
+  "plan_sha256": "76e675f711c26b993a5b9239cf277b310230e712d9130603c226bf6017d2f8a6",
+  "points": [
+    {
+      "baseline_relative_to_public": 1.3312490209083094e-05,
+      "baseline_torque": -0.0004379228773270585,
+      "combined_relative_to_baseline": 1.1466968063977845e-07,
+      "combined_torque": -0.00043792292754353497,
+      "finite_omega0_relative_to_baseline": -5.612066367177704e-12,
+      "finite_omega0_torque": -0.0004379228773246008,
+      "omega_native": 0.03199986134430232,
+      "omega_sampled": 0.03199986206844881,
+      "omega_zero_radial_finite": 0.032000227706089714,
+      "omega_zero_radial_finite_relative": 2.0954349366775205e-12,
+      "omega_zero_radial_native": 0.032000227706022656,
+      "sampled_omega_relative_to_baseline": 1.1467529281716793e-07,
+      "sampled_omega_torque": -0.0004379229275459927,
+      "sampled_public_torque": -0.0004379170475606505,
+      "target_Momega": 0.032
+    },
+    {
+      "baseline_relative_to_public": 1.6799447154269842e-05,
+      "baseline_torque": -0.0005398382324153663,
+      "combined_relative_to_baseline": 3.216868371680448e-07,
+      "combined_torque": -0.0005398384060742199,
+      "finite_omega0_relative_to_baseline": 6.418154896437045e-11,
+      "finite_omega0_torque": -0.0005398382324500139,
+      "omega_native": 0.034999673188764555,
+      "omega_sampled": 0.03499967540506669,
+      "omega_zero_radial_finite": 0.03500035810483082,
+      "omega_zero_radial_finite_relative": -2.3955948336151778e-11,
+      "omega_zero_radial_native": 0.03500035810566929,
+      "sampled_omega_relative_to_baseline": 3.2162265628521425e-07,
+      "sampled_omega_torque": -0.0005398384060395726,
+      "sampled_public_torque": -0.0005398291635838603,
+      "target_Momega": 0.035
+    },
+    {
+      "baseline_relative_to_public": 2.3788893620757534e-05,
+      "baseline_torque": -0.000738730584302905,
+      "combined_relative_to_baseline": 1.4226783331405812e-06,
+      "combined_torque": -0.0007387316352789014,
+      "finite_omega0_relative_to_baseline": 2.26852536755473e-10,
+      "finite_omega0_torque": -0.000738730584470488,
+      "omega_native": 0.040000400934535656,
+      "omega_sampled": 0.04000041209338434,
+      "omega_zero_radial_finite": 0.040001772762254806,
+      "omega_zero_radial_finite_relative": -8.461931155778757e-11,
+      "omega_zero_radial_native": 0.04000177276563973,
+      "sampled_omega_relative_to_baseline": 1.4224514797156473e-06,
+      "sampled_omega_torque": -0.0007387316351113179,
+      "sampled_public_torque": -0.0007387130111376669,
+      "target_Momega": 0.04
+    },
+    {
+      "baseline_relative_to_public": 4.8728960118760156e-05,
+      "baseline_torque": -0.0012534672262826973,
+      "combined_relative_to_baseline": -2.6547773535057217e-06,
+      "combined_torque": -0.0012534638986062916,
+      "finite_omega0_relative_to_baseline": 1.9148194141394015e-10,
+      "finite_omega0_torque": -0.0012534672265227136,
+      "omega_native": 0.04999938246407496,
+      "omega_sampled": 0.04999935664202345,
+      "omega_zero_radial_finite": 0.050005151667568505,
+      "omega_zero_radial_finite_relative": -7.132694435085796e-11,
+      "omega_zero_radial_native": 0.05000515167113522,
+      "sampled_omega_relative_to_baseline": -2.654968834781002e-06,
+      "sampled_omega_torque": -0.0012534638983662761,
+      "sampled_public_torque": -0.001253406149104445,
+      "target_Momega": 0.05
+    }
+  ],
+  "prior_sha256": "5c2e6f02269ff8d465702c8a53f4b4c0d17d8e16ad0fb7f8e938e70674b0eada",
+  "process": {
+    "argv": [
+      "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw/dev/native_rom/diagnose_early_aligned_flux_inputs.py",
+      "--json-out",
+      "dev/native_rom/evidence/2026-09-23/early_aligned_flux_inputs.json"
+    ],
+    "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+    "host": "client-3792.default.vpn.port.ac.uk",
+    "pid": 60181
+  },
+  "release_qualified": false,
+  "row": {
+    "chi1": 0.2,
+    "chi2": -0.1,
+    "mass1": 30.0,
+    "mass2": 20.0,
+    "omega_start": 0.03162277660168379
+  },
+  "schema": "diffgw.seobnrv4.early-aligned-flux-inputs.v1",
+  "scope": {
+    "description": "Scalar CPU float64 numerical stability evidence only; no training or promotion.",
+    "known_limitations": [
+      "Convergence cannot establish correctness of the equations or published model fidelity.",
+      "The adaptive prototype uses a diagnostic QNM spline with independently generated values and black-box-inferred knot metadata; this is not wholly literature-specified provenance.",
+      "Changing dt also changes the adaptive initial step and coarse/fine restart sampling; the grid check measures the complete generator's grid sensitivity.",
+      "No time, phase, amplitude, or coefficient fitting is performed.",
+      "No derivatives, batched execution, accelerators, or JAX are qualified here."
+    ],
+    "physics_validated": false,
+    "production_asset": false,
+    "production_promotion_allowed": false,
+    "training_generator_qualified": false
+  },
+  "script_sha256": "f0672b290104bb9e56ae8a2c5a87308b77a31153f4dab6499da7254d9c0e2864",
+  "source_sha256": {
+    "src/torchwave/approximants/eob/seobnrv4_flux.py": "e8aefc3e5eb5df805897cca1130653b77554638b4423fe260b7a602c40456837",
+    "src/torchwave/approximants/eob/seobnrv4_hamiltonian.py": "40f063046e30b9fb5824b8d95980ff9deaa73f231dfe987e453094210b87cf3d"
+  },
+  "status": "diagnostic_complete"
+}

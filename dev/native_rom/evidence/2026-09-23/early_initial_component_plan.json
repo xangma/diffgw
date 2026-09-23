@@ -1,0 +1,13 @@
+{
+  "schema": "diffgw.seobnrv4.early-initial-component-plan.v1",
+  "purpose": "Attribute the native-versus-public cutoff-state residual to the early r, pr_star and pphi initial-state differences using one fixed native vector field.",
+  "prior_native_evolution": "dev/native_rom/evidence/2026-09-23/lal_native_pre_evolution.json",
+  "prior_native_evolution_sha256": "237646a519b8eb5b492c7635d184cf23167f7fd1cfb64d391207c93907f044e7",
+  "row_indices": [0, 1],
+  "initial_component_substitutions": ["r", "pr_star", "pphi", "all"],
+  "ode_method": "DOP853",
+  "ode_rtol": 1e-12,
+  "ode_atol": 1e-13,
+  "ode_first_step_M": 0.125,
+  "interpretation": "Using public-binary initial states is diagnostic only. This measures propagation under the native field, not an admissible native initial-data rule."
+}

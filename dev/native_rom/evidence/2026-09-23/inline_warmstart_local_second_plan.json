@@ -1,0 +1,18 @@
+{
+  "schema": "diffgw.seobnrv4.inline-warmstart-local-second-plan.v1",
+  "purpose": "Test the pre-existing local degree-six second-derivative diagnostic after the native warm start, with all other numerical choices held fixed.",
+  "prior_convergence": "dev/native_rom/evidence/2026-09-23/inline_warmstart_convergence.json",
+  "prior_convergence_sha256": "53c3380dbbbfe5f426674f079398f0baa44311bfdc475e93ffb6438211e755ed",
+  "row_indices": [1, 0],
+  "local_second_window_M": 0.5,
+  "local_second_degree": 6,
+  "matching_second_derivatives": true,
+  "retain_prior_warm_start_restart_first_step_and_levels": true,
+  "gates": {
+    "complex_relative_l2": 1e-6,
+    "amplitude_relative_l2": 1e-6,
+    "event_time_difference_M": 0.05,
+    "refined_error_must_not_increase_beyond_roundoff": true
+  },
+  "interpretation": "A passing result would be a scalar CPU numerical stability diagnostic, not physical fidelity or release qualification."
+}

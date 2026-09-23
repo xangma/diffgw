@@ -1,0 +1,144 @@
+{
+  "errors": [],
+  "plan_sha256": "8405240393330ba8fad23979453da484c1ac99f85644062a13e42c6e4c11aa65",
+  "prior_sha256": "237646a519b8eb5b492c7635d184cf23167f7fd1cfb64d391207c93907f044e7",
+  "process": {
+    "argv": [
+      "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw/dev/native_rom/diagnose_initial_radial_probe.py",
+      "--json-out",
+      "dev/native_rom/evidence/2026-09-23/initial_radial_probe.json"
+    ],
+    "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+    "host": "client-3792.default.vpn.port.ac.uk",
+    "pid": 34818
+  },
+  "release_qualified": false,
+  "results": [
+    {
+      "baseline_replay_max_abs_error": 8.526512829121202e-14,
+      "cutoff_baseline_minus_compiled": {
+        "phi": -2.416286390527489e-06,
+        "pphi": 6.498460125570205e-08,
+        "pr_star": 1.0987927915283302e-07,
+        "r": 4.803925563123812e-06
+      },
+      "cutoff_probe_minus_baseline": {
+        "phi": 1.9933693806706287e-08,
+        "pphi": -6.013149977945886e-10,
+        "pr_star": -9.451490761910875e-10,
+        "r": -4.078677484642412e-08
+      },
+      "cutoff_probe_minus_compiled": {
+        "phi": -2.3963526967207827e-06,
+        "pphi": 6.438328625790746e-08,
+        "pr_star": 1.0893413007664193e-07,
+        "r": 4.763138788277388e-06
+      },
+      "cutoff_time_M": 315.0,
+      "evaluations": {
+        "baseline": 253,
+        "probe": 253
+      },
+      "initial_native_minus_compiled": [
+        -8.490161462759716e-09,
+        0.0,
+        2.095874063606784e-07,
+        -8.807251372644487e-09
+      ],
+      "initial_probe_minus_compiled": [
+        -8.490161462759716e-09,
+        0.0,
+        2.0775696163172902e-07,
+        -8.807251372644487e-09
+      ],
+      "native_start_Momega": 0.03162277660168379,
+      "response": {
+        "finite_response": 0.2538540080115772,
+        "linear_response": 0.25385411682443665,
+        "pr_star_delta": -1.8304447289493875e-09,
+        "tortoise_factor": 0.81165994544559
+      },
+      "row": {
+        "chi1": 0.0,
+        "chi2": 0.0,
+        "mass1": 30.0,
+        "mass2": 20.0,
+        "omega_start": 0.04
+      }
+    },
+    {
+      "baseline_replay_max_abs_error": 6.362910198731697e-12,
+      "cutoff_baseline_minus_compiled": {
+        "phi": 2.5971838368832323e-05,
+        "pphi": -3.500086630747745e-06,
+        "pr_star": -2.813747344686951e-07,
+        "r": -3.325006432675082e-05
+      },
+      "cutoff_probe_minus_baseline": {
+        "phi": 2.414502908720806e-08,
+        "pphi": -8.070708545915295e-10,
+        "pr_star": -3.8499469150882204e-10,
+        "r": -4.919835028260877e-08
+      },
+      "cutoff_probe_minus_compiled": {
+        "phi": 2.599598339791953e-05,
+        "pphi": -3.5008937016023367e-06,
+        "pr_star": -2.817597291602039e-07,
+        "r": -3.3299262677033425e-05
+      },
+      "cutoff_time_M": 328.625,
+      "evaluations": {
+        "baseline": 253,
+        "probe": 253
+      },
+      "initial_native_minus_compiled": [
+        7.721785202363662e-07,
+        0.0,
+        1.7574250629672633e-07,
+        7.914061415092988e-07
+      ],
+      "initial_probe_minus_compiled": [
+        7.721785202363662e-07,
+        0.0,
+        1.7397919992254846e-07,
+        7.914061415092988e-07
+      ],
+      "native_start_Momega": 0.03162277660168379,
+      "response": {
+        "finite_response": 0.25394762088353784,
+        "linear_response": 0.2539477296993763,
+        "pr_star_delta": -1.7633063741778754e-09,
+        "tortoise_factor": 0.8114229109803939
+      },
+      "row": {
+        "chi1": 0.2,
+        "chi2": -0.1,
+        "mass1": 30.0,
+        "mass2": 20.0,
+        "omega_start": 0.04
+      }
+    }
+  ],
+  "schema": "diffgw.seobnrv4.initial-radial-probe.v1",
+  "scope": {
+    "description": "Scalar CPU float64 numerical stability evidence only; no training or promotion.",
+    "known_limitations": [
+      "Convergence cannot establish correctness of the equations or published model fidelity.",
+      "The adaptive prototype uses a diagnostic QNM spline with independently generated values and black-box-inferred knot metadata; this is not wholly literature-specified provenance.",
+      "Changing dt also changes the adaptive initial step and coarse/fine restart sampling; the grid check measures the complete generator's grid sensitivity.",
+      "No time, phase, amplitude, or coefficient fitting is performed.",
+      "No derivatives, batched execution, accelerators, or JAX are qualified here."
+    ],
+    "physics_validated": false,
+    "production_asset": false,
+    "production_promotion_allowed": false,
+    "training_generator_qualified": false
+  },
+  "script_sha256": "166bf1ae3c338492a521b9231b2ef4483e6b6f82ff167702d99f59d04c6fcf9b",
+  "source_sha256": {
+    "src/torchwave/approximants/eob/initial_conditions.py": "520641e8c3037ea1aa6e947c7d9dd92c759333396103cb1d1fffc8aa5019137b",
+    "src/torchwave/approximants/eob/seobnrv4_flux.py": "e8aefc3e5eb5df805897cca1130653b77554638b4423fe260b7a602c40456837",
+    "src/torchwave/approximants/eob/seobnrv4_hamiltonian.py": "40f063046e30b9fb5824b8d95980ff9deaa73f231dfe987e453094210b87cf3d"
+  },
+  "status": "diagnostic_complete"
+}

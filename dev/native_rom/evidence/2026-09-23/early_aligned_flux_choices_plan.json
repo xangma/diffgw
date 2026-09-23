@@ -1,0 +1,17 @@
+{
+  "schema": "diffgw.seobnrv4.early-aligned-flux-choices-plan.v1",
+  "purpose": "At identical pinned-public aligned-spin trajectory states, resolve whether explicit native flux reconstruction choices account for the early angular-momentum torque residual.",
+  "prior_vector_field": "dev/native_rom/evidence/2026-09-23/early_aligned_vector_field.json",
+  "prior_vector_field_sha256": "2f9221b62d04af519f9591e52b5e8e6694b759da3fd3aa69b5a7e8bcc7ab8203",
+  "public_output_step_M": 0.0625,
+  "frequency_targets_Momega": [0.032, 0.035, 0.04, 0.05],
+  "spin_truncation": ["generic-leading-ell8", "tabulated"],
+  "retain_pan_cubic_spin": [true, false],
+  "mode_21_higher_spin": ["taylor_f", "rho_hybrid"],
+  "baseline": {
+    "spin_truncation": "generic-leading-ell8",
+    "retain_pan_cubic_spin": true,
+    "mode_21_higher_spin": "taylor_f"
+  },
+  "interpretation": "This finite-choice sensitivity identifies contributions within the provisional native factorized flux; closeness to a sampled LAL derivative cannot establish the historical mode prescription or complete flux parity."
+}

@@ -989,3 +989,101 @@ fixed coarse first step and Hermite sampler reuse the same numerical
 trajectory; this checks grid independence under that rule, not absolute
 interpolation accuracy. The aligned-spin ODE tolerance failure is a release
 blocker, and neither row establishes physical or domain-wide qualification.
+
+The exact-hash [aligned-spin tolerance replay](inline_warmstart_spin_tolerance.json)
+locates this failure in the sampled NQC matching derivatives. The two raw
+pre-attachment modes differ by only `1.46e-9` in complex relative L2; the
+complete modes differ by `3.71e-6`. The amplitude matching matrix has an
+unscaled condition number near `1.06e4`, and its second-derivative row accounts
+for almost all of the `0.0174` matrix contribution to the `0.0203` amplitude
+coefficient drift. The phase RHS accounts for `0.000303` of the `0.000313`
+phase coefficient drift, dominated by its second-derivative input. The
+algebraic attribution closes to `3.1e-12`; it identifies numerical sensitivity,
+not a validated replacement derivative rule. The frozen [replay plan](inline_warmstart_spin_tolerance_plan.json)
+and report retain the prior waveform hashes and source snapshots.
+
+The predeclared [local-second-derivative candidate](inline_warmstart_local_second_plan.json)
+changes only the NQC matching second-derivative estimate to the previously
+implemented degree-six local fit over `0.5 M`. Its [two-row result](inline_warmstart_local_second.json)
+passes the same `1e-6` scalar CPU whole-waveform self-convergence budgets:
+refined ODE complex relative L2 is `1.00e-7` for aligned spin and `1.07e-7`
+without spin; amplitude L2 is `1.26e-8` and `2.15e-8`. All event-time and
+nested-grid checks pass. This removes the observed aligned-spin numerical
+failure but does not establish that the derivative rule matches historical
+SEOBNRv4, other parameter rows, or an independent waveform. The
+[paired physical comparison plan](inline_warmstart_local_second_physical_plan.json)
+holds all numerical settings fixed while testing that separately.
+
+The [paired result](inline_warmstart_local_second_physical.json) replays both
+frozen `ode_2` waveform hashes and uses the pinned public `SEOBNRv4` binary.
+With independent local peak/phase anchoring, baseline versus local-second
+complex relative L2 is `1.15879e-4` versus `1.16975e-4` without spin, and
+`2.38423e-3` versus `2.38441e-3` with spins `(+0.2,-0.1)`. The native pair
+differs by only `6.81e-7` and `2.43e-7` respectively. Aligned-spin post-peak
+L2 remains `6.052e-3`. The new rule fixes numerical sensitivity without
+resolving this physical discrepancy; these two rows cannot establish
+domain-wide parity.
+
+The native frequency-crossing correction now carries an implicit derivative
+when a Torch graph is active. Physical nonspinning and aligned-spin
+target-frequency checks compare crossing-radius and crossing-time gradients
+with centered finite differences. These are local gradient checks, not
+whole-waveform gradient or domain qualification.
+
+The [frozen initial radial-probe ablation](initial_radial_probe_plan.json)
+replays the historical finite `10^-3` Cartesian radial-momentum response in
+native initial data. Its [result](initial_radial_probe.json) reproduces the
+prior native pre-evolution within `6.4e-12` in the start-to-cutoff state. The
+probe changes the initial `pr_star` by about `-1.8e-9` and the cutoff radius
+by only `-4.1e-8` and `-4.9e-8` in the two rows. The baseline native-minus-LAL
+cutoff-radius differences are `+4.8e-6` and `-3.3e-5`, so this finite-probe
+detail cannot explain the remaining initial-state mismatch. The full
+historical initial-condition rule and `(2,2)`-frequency cutoff are still open.
+
+The [frozen component-ablation plan](early_initial_component_plan.json) and
+[result](early_initial_component.json) propagate isolated early differences
+in `r`, `pr_star`, and `pphi` with the same native vector field. In the
+nonspinning row, substituting only the public `pr_star` reduces the cutoff
+radius residual from `4.80e-6` to `1.34e-7`; substituting all three reduces it
+to `2.31e-7`. In the aligned-spin row, substituting all three *increases* the
+absolute cutoff-radius residual from `3.33e-5` to `4.79e-5`. Single-component
+effects add to the combined change within `1.4e-11` in phase. This isolates
+the nonspinning start-momentum contribution, while the aligned-spin mismatch
+requires attention to the vector field and subsequent waveform construction.
+The public initial states remain diagnostic inputs, never runtime assets.
+
+The [frozen early aligned-spin vector-field comparison](early_aligned_vector_field_plan.json)
+uses two public trajectory output steps and five-point derivatives at four
+frequencies between `M Omega=0.032` and `0.05`. Its [result](early_aligned_vector_field.json)
+finds a stable native-to-public angular-momentum torque excess that grows from
+`1.33e-5` to `4.87e-5` in relative magnitude at the same public states. The
+two-step agreement rules out output differentiation as the main cause. This is
+a local vector-field discrepancy, not a direct measurement of either model's
+individual mode fluxes.
+
+The [predeclared flux-choice sweep](early_aligned_flux_choices_plan.json)
+and [result](early_aligned_flux_choices.json) replay the native torque at those
+states and vary all eight combinations of the exposed ell-8 spin truncation,
+Pan cubic `(2,2)` term, and higher-spin `(2,1)` representation. The largest
+total torque change is `5.11e-7` relative, much smaller than the public
+residual. The native `(2,2)` mode provides `98.99%` to `99.32%` of total flux,
+but its dominance does not establish that it is the mismatched mode: a small
+relative difference in the remaining modes could also explain the residual.
+The [LAL factorized-flux source](https://lscsoft.docs.ligo.org/lalsuite/7.26/lalsimulation/_l_a_l_sim_i_m_r_spin_e_o_b_factorized_flux_8c_source.html)
+sums positive-m modes through the configured ell limit. Its `(2,2)` NQC
+multiplier is unity during the low-sampling v4 evolution because the
+[driver initializes the coefficients to zero](https://lscsoft.docs.ligo.org/lalsuite/7.26/lalsimulation/_l_a_l_sim_i_m_r_spin_aligned_e_o_b_8c_source.html).
+The [LAL factorized-waveform source](https://lscsoft.docs.ligo.org/lalsuite/7.26/lalsimulation/_l_a_l_sim_i_m_r_spin_e_o_b_factorized_waveform_8c_source.html)
+confirms the v4 `(2,2)` residual-coefficient structure used by the native
+reconstruction, but source agreement alone cannot show same-state flux parity.
+
+The [frozen flux-input plan](early_aligned_flux_inputs_plan.json) and
+[result](early_aligned_flux_inputs.json) replace only the native orbital
+frequency with the frequency measured from the public trajectory, or replace
+only the native circular-frequency derivative with a `10^-4` central
+difference of the *native* Hamiltonian. The sampled-frequency intervention
+changes torque by at most `2.66e-6` relative; the finite derivative changes it
+by at most `2.27e-10`. Neither resolves the `1.33e-5` to `4.87e-5` residual.
+This does not compare the native Hamiltonian energy or circular frequency to
+unexposed public values. Same-state mode-level parity and the full
+Hamiltonian-derived inputs remain open release blockers.

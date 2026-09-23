@@ -1,0 +1,605 @@
+{
+  "errors": [],
+  "input_sha256": {
+    "binary": "c9783cf6006cdd632ff258277951739073898b3555ac5f3c09fa31e2602d1377",
+    "candidate": "eea65a98970b72462991081c3814c5bab1b99eceffbe166843b365460038965c",
+    "prior": "53c3380dbbbfe5f426674f079398f0baa44311bfdc475e93ffb6438211e755ed"
+  },
+  "plan_sha256": "c7a339d2cbe8ef11e3a2aa97cfd2373a6ebf6c8722a5ac1e4fa05637ab8cdb86",
+  "process": {
+    "argv": [
+      "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw/dev/native_rom/diagnose_inline_warmstart_local_second_physical.py",
+      "--json-out",
+      "dev/native_rom/evidence/2026-09-23/inline_warmstart_local_second_physical.json"
+    ],
+    "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+    "host": "client-3792.default.vpn.port.ac.uk",
+    "pid": 40130
+  },
+  "release_qualified": false,
+  "results": [
+    {
+      "candidate_minus_baseline_l2": 1.0958123416178575e-06,
+      "comparisons": {
+        "baseline": {
+          "elapsed_seconds": 50.250278374995105,
+          "fitted_peak": {
+            "common_support_M": [
+              -306.12885089932985,
+              149.37114910067015
+            ],
+            "metrics": {
+              "amplitude_relative_l2": 2.9323656744687367e-05,
+              "complex_relative_l2": 0.00011587927570052521,
+              "phase_max_abs_rad": 0.0003397753506950252,
+              "phase_rms_rad": 9.421520821248792e-05,
+              "phase_samples": 845,
+              "relative_norm_error": 2.4875664535239927e-05,
+              "samples": 912,
+              "unmaximized_real_overlap": 0.9999999935952367
+            },
+            "native_peak": {
+              "offset_samples": 0.25886030543942384,
+              "phase_rad": -2.983545738028507,
+              "time_s": -0.0010651260142701346
+            },
+            "reference_peak": {
+              "offset_samples": 0.2577017986597253,
+              "phase_rad": 0.031183701951032004,
+              "time_s": -0.0010649558883391661
+            },
+            "windows": {
+              "inspiral": {
+                "metrics": {
+                  "amplitude_relative_l2": 2.1582979671369423e-05,
+                  "complex_relative_l2": 0.0001283878746005963,
+                  "phase_max_abs_rad": 0.00019429025259399171,
+                  "phase_rms_rad": 0.00010888111757383209,
+                  "phase_samples": 573,
+                  "relative_norm_error": 1.9136177448197955e-05,
+                  "samples": 573,
+                  "unmaximized_real_overlap": 0.9999999919412194
+                },
+                "time_M": [
+                  -306.12885089932985,
+                  -20.128850899329848
+                ]
+              },
+              "late_inspiral": {
+                "metrics": {
+                  "amplitude_relative_l2": 3.5225775399178075e-05,
+                  "complex_relative_l2": 7.447663150000327e-05,
+                  "phase_max_abs_rad": 0.0001277054207252664,
+                  "phase_rms_rad": 6.951218726031963e-05,
+                  "phase_samples": 40,
+                  "relative_norm_error": 3.434935706125852e-05,
+                  "samples": 40,
+                  "unmaximized_real_overlap": 0.9999999978164797
+                },
+                "time_M": [
+                  -19.628850899329823,
+                  -0.1288508993298686
+                ]
+              },
+              "post_peak": {
+                "metrics": {
+                  "amplitude_relative_l2": 5.371140911700052e-05,
+                  "complex_relative_l2": 6.275824351340151e-05,
+                  "phase_max_abs_rad": 0.0003397753506950252,
+                  "phase_rms_rad": 4.708751603069728e-05,
+                  "phase_samples": 232,
+                  "relative_norm_error": 4.942298128196576e-05,
+                  "samples": 299,
+                  "unmaximized_real_overlap": 0.99999999925198
+                },
+                "time_M": [
+                  0.37114910067015483,
+                  149.37114910067015
+                ]
+              }
+            }
+          },
+          "waveform": {
+            "array_dtype": {
+              "mode": "complex128",
+              "time": "float64"
+            },
+            "array_sha256": {
+              "mode": "33079bac929385186551e37f305d5fbef3ce6019b6e65a9776f56015275b9dbd",
+              "time": "e09f767569788c697489ad5050322b06bd31efa3f130849e74b85a454f316fe1"
+            },
+            "atol": 1e-14,
+            "boundary_time_M": 306.078125,
+            "dt_geom": 0.5,
+            "final_mass_fraction": 0.9550166356939277,
+            "final_spin": 0.6638743502317226,
+            "internal_step_M": 0.015625,
+            "match_time_M": 306.08201106609766,
+            "name": "ode_2",
+            "peak_time_M": 310.45438385009766,
+            "restart_time_M": 165.0,
+            "rtol": 1e-13,
+            "samples": 913,
+            "stages": {
+              "coarse": {
+                "accepted": 539,
+                "evaluations": 3380,
+                "event_time_M": 310.49731596669614,
+                "rejected": 29,
+                "termination": [
+                  "event"
+                ]
+              },
+              "fine": {
+                "accepted": 405,
+                "evaluations": 2561,
+                "event_time_M": 145.6162955359608,
+                "rejected": 26,
+                "termination": [
+                  "event"
+                ]
+              }
+            },
+            "support_M": [
+              0.0,
+              456.0
+            ]
+          }
+        },
+        "local_second": {
+          "elapsed_seconds": 49.67320124999969,
+          "fitted_peak": {
+            "common_support_M": [
+              -306.12885089932985,
+              149.37114910067015
+            ],
+            "metrics": {
+              "amplitude_relative_l2": 2.9629723349559166e-05,
+              "complex_relative_l2": 0.00011697508804214307,
+              "phase_max_abs_rad": 0.00034095715451091716,
+              "phase_rms_rad": 9.505496566742162e-05,
+              "phase_samples": 845,
+              "relative_norm_error": 2.5138679343506e-05,
+              "samples": 912,
+              "unmaximized_real_overlap": 0.999999993474227
+            },
+            "native_peak": {
+              "offset_samples": 0.2588669417047291,
+              "phase_rad": -2.98354811518391,
+              "time_s": -0.0010651251970985173
+            },
+            "reference_peak": {
+              "offset_samples": 0.2577017986597253,
+              "phase_rad": 0.031183701951032004,
+              "time_s": -0.0010649558883391661
+            },
+            "windows": {
+              "inspiral": {
+                "metrics": {
+                  "amplitude_relative_l2": 2.1848214579204243e-05,
+                  "complex_relative_l2": 0.00012963560032594988,
+                  "phase_max_abs_rad": 0.0001957611022016511,
+                  "phase_rms_rad": 0.00010999463729454508,
+                  "phase_samples": 573,
+                  "relative_norm_error": 1.934549812854236e-05,
+                  "samples": 573,
+                  "unmaximized_real_overlap": 0.9999999917842707
+                },
+                "time_M": [
+                  -306.12885089932985,
+                  -20.128850899329848
+                ]
+              },
+              "late_inspiral": {
+                "metrics": {
+                  "amplitude_relative_l2": 3.5773092734363446e-05,
+                  "complex_relative_l2": 7.520631874039393e-05,
+                  "phase_max_abs_rad": 0.00012863712277726396,
+                  "phase_rms_rad": 7.007432340384343e-05,
+                  "phase_samples": 40,
+                  "relative_norm_error": 3.486611963554598e-05,
+                  "samples": 40,
+                  "unmaximized_real_overlap": 0.9999999977797505
+                },
+                "time_M": [
+                  -19.628850899329823,
+                  -0.1288508993298686
+                ]
+              },
+              "post_peak": {
+                "metrics": {
+                  "amplitude_relative_l2": 5.402031928697145e-05,
+                  "complex_relative_l2": 6.287447965905706e-05,
+                  "phase_max_abs_rad": 0.00034095715451091716,
+                  "phase_rms_rad": 4.669747948738003e-05,
+                  "phase_samples": 232,
+                  "relative_norm_error": 4.970744782684111e-05,
+                  "samples": 299,
+                  "unmaximized_real_overlap": 0.9999999992587784
+                },
+                "time_M": [
+                  0.37114910067015483,
+                  149.37114910067015
+                ]
+              }
+            }
+          },
+          "waveform": {
+            "array_dtype": {
+              "mode": "complex128",
+              "time": "float64"
+            },
+            "array_sha256": {
+              "mode": "376c6b5990572e47d1e3696d9c1587d34ce94ffbd8a72fe1a0f2dd7171ac7a55",
+              "time": "e09f767569788c697489ad5050322b06bd31efa3f130849e74b85a454f316fe1"
+            },
+            "atol": 1e-14,
+            "boundary_time_M": 306.078125,
+            "dt_geom": 0.5,
+            "final_mass_fraction": 0.9550166356939277,
+            "final_spin": 0.6638743502317226,
+            "internal_step_M": 0.015625,
+            "match_time_M": 306.08201106609766,
+            "name": "ode_2",
+            "peak_time_M": 310.45438385009766,
+            "restart_time_M": 165.0,
+            "rtol": 1e-13,
+            "samples": 913,
+            "stages": {
+              "coarse": {
+                "accepted": 539,
+                "evaluations": 3380,
+                "event_time_M": 310.49731596669614,
+                "rejected": 29,
+                "termination": [
+                  "event"
+                ]
+              },
+              "fine": {
+                "accepted": 405,
+                "evaluations": 2561,
+                "event_time_M": 145.6162955359608,
+                "rejected": 26,
+                "termination": [
+                  "event"
+                ]
+              }
+            },
+            "support_M": [
+              0.0,
+              456.0
+            ]
+          }
+        }
+      },
+      "native_pair": {
+        "amplitude_relative_l2": 3.062528408621841e-07,
+        "boundary_time_M_abs_difference": 0.0,
+        "candidate_samples": 913,
+        "common_samples": 913,
+        "complex_relative_l2": 6.809050384016656e-07,
+        "grid_step_M": 0.5,
+        "match_time_M_abs_difference": 0.0,
+        "peak_time_M_abs_difference": 0.0,
+        "phase_max_abs_rad": 1.1953515867201368e-06,
+        "phase_rms_rad": 6.893504933752874e-07,
+        "phase_samples": 845,
+        "reference_samples": 913,
+        "relative_norm_error": 2.2147665479366196e-07,
+        "samples": 913,
+        "support_end_difference_M": 0.0,
+        "unmaximized_real_overlap": 0.9999999999997928
+      },
+      "row": {
+        "chi1": 0.0,
+        "chi2": 0.0,
+        "mass1": 30.0,
+        "mass2": 20.0,
+        "omega_start": 0.04
+      }
+    },
+    {
+      "candidate_minus_baseline_l2": 1.8004471859884782e-07,
+      "comparisons": {
+        "baseline": {
+          "elapsed_seconds": 51.2535950000165,
+          "fitted_peak": {
+            "common_support_M": [
+              -325.3213559016361,
+              149.67864409836392
+            ],
+            "metrics": {
+              "amplitude_relative_l2": 0.002248348541459067,
+              "complex_relative_l2": 0.00238423251589767,
+              "phase_max_abs_rad": 0.0010775971484436625,
+              "phase_rms_rad": 0.0008646654353106904,
+              "phase_samples": 887,
+              "relative_norm_error": 0.0013005851151730585,
+              "samples": 951,
+              "unmaximized_real_overlap": 0.9999980008784481
+            },
+            "native_peak": {
+              "offset_samples": 0.34763411235567376,
+              "phase_rad": 0.6937347373291423,
+              "time_s": -0.0011862530625546236
+            },
+            "reference_peak": {
+              "offset_samples": -0.357288196727782,
+              "phase_rad": 2.7356696293882012,
+              "time_s": -0.0011868615846951135
+            },
+            "windows": {
+              "inspiral": {
+                "metrics": {
+                  "amplitude_relative_l2": 0.0005309661705108346,
+                  "complex_relative_l2": 0.0010344216496562051,
+                  "phase_max_abs_rad": 0.0010775971484436625,
+                  "phase_rms_rad": 0.0008642150862042845,
+                  "phase_samples": 611,
+                  "relative_norm_error": 0.0004543343293673674,
+                  "samples": 611,
+                  "unmaximized_real_overlap": 0.999999567999494
+                },
+                "time_M": [
+                  -325.3213559016361,
+                  -20.321355901636103
+                ]
+              },
+              "late_inspiral": {
+                "metrics": {
+                  "amplitude_relative_l2": 0.002212252221824002,
+                  "complex_relative_l2": 0.0022374411218410058,
+                  "phase_max_abs_rad": 0.000532433733159213,
+                  "phase_rms_rad": 0.00032992704158404614,
+                  "phase_samples": 40,
+                  "relative_norm_error": 0.0021280668048114793,
+                  "samples": 40,
+                  "unmaximized_real_overlap": 0.9999997607536438
+                },
+                "time_M": [
+                  -19.821355901636082,
+                  -0.32135590163612415
+                ]
+              },
+              "post_peak": {
+                "metrics": {
+                  "amplitude_relative_l2": 0.006033186388404177,
+                  "complex_relative_l2": 0.006051826593249216,
+                  "phase_max_abs_rad": 0.0010115450159145125,
+                  "phase_rms_rad": 0.0009262463735641464,
+                  "phase_samples": 236,
+                  "relative_norm_error": 0.005827119340031217,
+                  "samples": 300,
+                  "unmaximized_real_overlap": 0.9999986575346385
+                },
+                "time_M": [
+                  0.1786440983638993,
+                  149.67864409836392
+                ]
+              }
+            }
+          },
+          "waveform": {
+            "array_dtype": {
+              "mode": "complex128",
+              "time": "float64"
+            },
+            "array_sha256": {
+              "mode": "d9d0a202fecd7913107dfae56665e92c2813357c15651a0fe91da7a98bbb1f06",
+              "time": "2e9259a2546162f709339c603469fa3026686863ae4e409a16cfe65f396f7921"
+            },
+            "atol": 1e-14,
+            "boundary_time_M": 325.625,
+            "dt_geom": 0.5,
+            "final_mass_fraction": 0.9521433597755232,
+            "final_spin": 0.7029227215291914,
+            "internal_step_M": 0.015625,
+            "match_time_M": 325.63143949541535,
+            "name": "ode_2",
+            "peak_time_M": 330.49060821533203,
+            "restart_time_M": 165.0,
+            "rtol": 1e-13,
+            "samples": 952,
+            "stages": {
+              "coarse": {
+                "accepted": 541,
+                "evaluations": 3392,
+                "event_time_M": 330.525917441519,
+                "rejected": 29,
+                "termination": [
+                  "event"
+                ]
+              },
+              "fine": {
+                "accepted": 421,
+                "evaluations": 2657,
+                "event_time_M": 165.6734146563564,
+                "rejected": 26,
+                "termination": [
+                  "event"
+                ]
+              }
+            },
+            "support_M": [
+              0.0,
+              475.5
+            ]
+          }
+        },
+        "local_second": {
+          "elapsed_seconds": 51.03010195799288,
+          "fitted_peak": {
+            "common_support_M": [
+              -325.3213559016361,
+              149.67864409836392
+            ],
+            "metrics": {
+              "amplitude_relative_l2": 0.0022483859274018514,
+              "complex_relative_l2": 0.002384412560616269,
+              "phase_max_abs_rad": 0.0010781064712889368,
+              "phase_rms_rad": 0.0008649966245598816,
+              "phase_samples": 887,
+              "relative_norm_error": 0.0013006621594577883,
+              "samples": 951,
+              "unmaximized_real_overlap": 0.9999980005487864
+            },
+            "native_peak": {
+              "offset_samples": 0.3476357738063731,
+              "phase_rad": 0.6937340087120991,
+              "time_s": -0.001186252857968114
+            },
+            "reference_peak": {
+              "offset_samples": -0.357288196727782,
+              "phase_rad": 2.7356696293882012,
+              "time_s": -0.0011868615846951135
+            },
+            "windows": {
+              "inspiral": {
+                "metrics": {
+                  "amplitude_relative_l2": 0.000531060311300724,
+                  "complex_relative_l2": 0.0010349169957221786,
+                  "phase_max_abs_rad": 0.0010781064712889368,
+                  "phase_rms_rad": 0.0008647599895035862,
+                  "phase_samples": 611,
+                  "relative_norm_error": 0.0004544090654284849,
+                  "samples": 611,
+                  "unmaximized_real_overlap": 0.9999995675206826
+                },
+                "time_M": [
+                  -325.3213559016361,
+                  -20.321355901636103
+                ]
+              },
+              "late_inspiral": {
+                "metrics": {
+                  "amplitude_relative_l2": 0.0022123698468443187,
+                  "complex_relative_l2": 0.002237563654993534,
+                  "phase_max_abs_rad": 0.0005324226183053779,
+                  "phase_rms_rad": 0.0003299827848340977,
+                  "phase_samples": 40,
+                  "relative_norm_error": 0.0021282101541924003,
+                  "samples": 40,
+                  "unmaximized_real_overlap": 0.9999997607845744
+                },
+                "time_M": [
+                  -19.821355901636082,
+                  -0.32135590163612415
+                ]
+              },
+              "post_peak": {
+                "metrics": {
+                  "amplitude_relative_l2": 0.006033201570229367,
+                  "complex_relative_l2": 0.006051839024952846,
+                  "phase_max_abs_rad": 0.00101137159306364,
+                  "phase_rms_rad": 0.0009260885439472536,
+                  "phase_samples": 236,
+                  "relative_norm_error": 0.0058271303920733875,
+                  "samples": 300,
+                  "unmaximized_real_overlap": 0.999998657523727
+                },
+                "time_M": [
+                  0.1786440983638993,
+                  149.67864409836392
+                ]
+              }
+            }
+          },
+          "waveform": {
+            "array_dtype": {
+              "mode": "complex128",
+              "time": "float64"
+            },
+            "array_sha256": {
+              "mode": "cc3125bfb30ec7ef4ff2fe2cc0b56a0c711d1241647567c548ab6e365bb8e133",
+              "time": "2e9259a2546162f709339c603469fa3026686863ae4e409a16cfe65f396f7921"
+            },
+            "atol": 1e-14,
+            "boundary_time_M": 325.625,
+            "dt_geom": 0.5,
+            "final_mass_fraction": 0.9521433597755232,
+            "final_spin": 0.7029227215291914,
+            "internal_step_M": 0.015625,
+            "match_time_M": 325.63143949541535,
+            "name": "ode_2",
+            "peak_time_M": 330.49060821533203,
+            "restart_time_M": 165.0,
+            "rtol": 1e-13,
+            "samples": 952,
+            "stages": {
+              "coarse": {
+                "accepted": 541,
+                "evaluations": 3392,
+                "event_time_M": 330.525917441519,
+                "rejected": 29,
+                "termination": [
+                  "event"
+                ]
+              },
+              "fine": {
+                "accepted": 421,
+                "evaluations": 2657,
+                "event_time_M": 165.6734146563564,
+                "rejected": 26,
+                "termination": [
+                  "event"
+                ]
+              }
+            },
+            "support_M": [
+              0.0,
+              475.5
+            ]
+          }
+        }
+      },
+      "native_pair": {
+        "amplitude_relative_l2": 1.0796117309273885e-07,
+        "boundary_time_M_abs_difference": 0.0,
+        "candidate_samples": 952,
+        "common_samples": 952,
+        "complex_relative_l2": 2.425329619505619e-07,
+        "grid_step_M": 0.5,
+        "match_time_M_abs_difference": 0.0,
+        "peak_time_M_abs_difference": 0.0,
+        "phase_max_abs_rad": 4.2656310495351824e-07,
+        "phase_rms_rad": 2.437316419192533e-07,
+        "phase_samples": 888,
+        "reference_samples": 952,
+        "relative_norm_error": 8.04863337089401e-08,
+        "samples": 952,
+        "support_end_difference_M": 0.0,
+        "unmaximized_real_overlap": 0.9999999999999736
+      },
+      "row": {
+        "chi1": 0.2,
+        "chi2": -0.1,
+        "mass1": 30.0,
+        "mass2": 20.0,
+        "omega_start": 0.04
+      }
+    }
+  ],
+  "schema": "diffgw.seobnrv4.inline-warmstart-local-second-physical.v1",
+  "scope": {
+    "description": "Scalar CPU float64 numerical stability evidence only; no training or promotion.",
+    "known_limitations": [
+      "Convergence cannot establish correctness of the equations or published model fidelity.",
+      "The adaptive prototype uses a diagnostic QNM spline with independently generated values and black-box-inferred knot metadata; this is not wholly literature-specified provenance.",
+      "Changing dt also changes the adaptive initial step and coarse/fine restart sampling; the grid check measures the complete generator's grid sensitivity.",
+      "No time, phase, amplitude, or coefficient fitting is performed.",
+      "No derivatives, batched execution, accelerators, or JAX are qualified here."
+    ],
+    "physics_validated": false,
+    "production_asset": false,
+    "production_promotion_allowed": false,
+    "training_generator_qualified": false
+  },
+  "script_sha256": "9096051340b7610cf4d3e1009d61c2295aa4a168608f63bdf6f9065cbbbdf1f3",
+  "source_sha256": {
+    "dev/native_rom/eob/torch/adaptive_driver_clean.py": "efe33505954f3a4dab2fb56f30dc7c31ae5e15344efaf0e0b7b36444c6bc509b",
+    "dev/native_rom/eob/torch/warm_start.py": "a9818350b18ed04ca645edbf6af4c22760fc51eae540c12f38d171d99a675a20",
+    "dev/native_rom/qualify_generator.py": "d61abb8da4c228aafe5cd2d0601a6a76d113a3fb68286b7d07a2802d0885ac79"
+  },
+  "status": "diagnostic_complete",
+  "whole_waveform_parity_validated": false
+}
