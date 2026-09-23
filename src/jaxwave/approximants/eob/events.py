@@ -39,6 +39,8 @@ def orbital_frequency_peak(
     else:
         valid = as_array(valid, dtype=bool)
     valid = jnp.broadcast_to(valid, frequency.shape)
+    if not bool(jnp.all(valid[..., 0])) or bool(jnp.any(valid[..., 1:] & ~valid[..., :-1])):
+        raise ValueError("valid samples must form contiguous nonempty prefixes")
 
     if bool(jnp.any((frequency <= 0) & valid)):
         raise ValueError("valid orbital frequency samples must be positive")
@@ -65,7 +67,7 @@ def orbital_frequency_peak(
     matrix = jnp.stack([x**k for k in range(7)], axis=-1)
 
     y_center = jnp.take_along_axis(y, jnp.expand_dims(center, -1), axis=-1)
-    coef = jnp.linalg.solve(matrix, y - y_center)
+    coef = jnp.linalg.solve(matrix, jnp.expand_dims(y - y_center, -1)).squeeze(-1)
 
     def derivatives(z):
         first = sum(k * coef[..., k] * (z**(k - 1)) for k in range(1, 7))
@@ -74,6 +76,8 @@ def orbital_frequency_peak(
 
     left = jnp.take_along_axis(x, jnp.expand_dims(center - 1, -1), axis=-1).squeeze(-1)
     right = jnp.take_along_axis(x, jnp.expand_dims(center + 1, -1), axis=-1).squeeze(-1)
+    if bool(jnp.any((derivatives(left)[0] <= 0) | (derivatives(right)[0] >= 0))):
+        raise ValueError("local orbital-frequency maximum has no derivative bracket")
 
     root = jnp.zeros_like(origin)
     for _ in range(24):
@@ -94,7 +98,10 @@ def orbital_frequency_peak(
         jnp.take_along_axis(y, jnp.expand_dims(center, -1), axis=-1).squeeze(-1)
         + sum(coef[..., k] * (root**k) for k in range(7))
     )
-    _, second = derivatives(root)
+    slope, second = derivatives(root)
+    tolerance = 128 * jnp.finfo(time.dtype).eps * jnp.sum(jnp.abs(coef), axis=-1)
+    if bool(jnp.any((jnp.abs(slope) > tolerance) | (second >= 0))):
+        raise ValueError("orbital-frequency peak refinement did not converge to a maximum")
     return OrbitalFrequencyPeak(origin + scale * root, value, second / (scale**2), index)
 
 

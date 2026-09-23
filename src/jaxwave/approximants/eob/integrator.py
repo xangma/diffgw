@@ -32,7 +32,6 @@ class EOBTrajectoryIntegrator:
     def vector_field(self, state: jnp.ndarray) -> jnp.ndarray:
         """Compute dydt = [dr/dt, dphi/dt, dpr_star/dt, dpphi/dt]."""
         r = state[..., 0]
-        phi = state[..., 1]
         pr_star = state[..., 2]
         pphi = state[..., 3]
 
@@ -91,7 +90,7 @@ class EOBTrajectoryIntegrator:
         *,
         post_peak_duration: float = 0.0,
         richardson_extrapolation: bool = False,
-        matching_method: str = "continuous",
+        matching_method: str = "grid",
     ) -> FrequencyPeakTrajectory:
         """Integrate through a resolved Omega maximum in each batch row."""
         initial_state = as_array(initial_state, dtype=jnp.float64)

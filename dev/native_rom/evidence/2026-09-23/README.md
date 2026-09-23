@@ -844,3 +844,19 @@ PYTHONPATH=src:. /Users/xangma/repos/diffgw/.venv/bin/python \
   --lal-version 7.7.1 --lalsimulation-version 6.2.1 \
   --json-out /tmp/seobnrv4-remnant-qnm-binary.json
 ```
+
+## Fixed-step peak-event regression
+
+The Torch and JAX fixed-step integrators now default to the seven-sample
+local-polynomial orbital-frequency peak locator. For an analytic Gaussian
+frequency with peak at `1.37 M`, Torch's former natural-cubic default located
+the peak `0.00104074 M` late at `dt=0.05 M` and gave a center derivative of
+`0.933764` instead of `1`. The local-polynomial locator has a
+`5.41e-12 M` time error and `3.47e-10` derivative error on that same case.
+JAX's batched local-polynomial solve and prefix-mask checks now have direct
+analytic tests. Explicit continuous-spline matching remains available. The
+nearby Torch/JAX event, attachment, published-driver, and release-contract
+tests pass with the worktree source on `PYTHONPATH`. This checks event
+arithmetic on synthetic trajectories; it does not establish convergence or
+historical SEOBNRv4 matching on physical trajectories. The earlier frozen
+campaigns above retain their own source hashes and results.

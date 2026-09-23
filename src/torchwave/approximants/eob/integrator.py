@@ -43,7 +43,6 @@ class EOBTrajectoryIntegrator:
             dstate_dt: Tensor of shape (..., 4)
         """
         r = state[..., 0]
-        phi = state[..., 1]
         pr_star = state[..., 2]
         pphi = state[..., 3]
 
@@ -123,12 +122,12 @@ class EOBTrajectoryIntegrator:
     def integrate_to_frequency_peak(self, initial_state, dt, num_steps, *,
                                     post_peak_duration=0.,
                                     richardson_extrapolation=False,
-                                    matching_method="continuous"):
+                                    matching_method="grid"):
         """Integrate through a resolved Omega maximum in each batch row.
 
         Fixed-step RK4 retains at least two samples beyond each observed maximum and
         then freezes that row. ``valid`` distinguishes frozen padding from
-        evolved samples. A quartic local root refines the peak; it never uses
+        evolved samples. By default, a seven-sample local root refines the peak; it never uses
         a fixed radius as a substitute. This event defines the first maximum
         followed by two decreasing samples, appropriate for a smooth inspiral
         and plunge. Oscillatory/eccentric trajectories need another event rule.
