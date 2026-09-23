@@ -2,7 +2,6 @@
 
 import pytest
 import torch
-import numpy as np
 
 from torchwave.approximants.taylorf2 import TaylorF2
 from torchwave.waveforms import get_fd_waveform
@@ -22,10 +21,10 @@ def test_taylorf2_spin_order_effects():
     for i in range(4):
         assert torch.allclose(coeffs_so4[i], coeffs_so7[i])
 
-    # 3PN (index 6) should differ due to 3PN SS
+    # 3PN (index 6) differs due to both spin-orbit and spin-spin additions.
     assert not torch.allclose(coeffs_so4[6], coeffs_so7[6])
 
-    # 3.5PN (index 8) should differ due to 3.5PN SSS
+    # 3.5PN (index 8) differs due to spin-orbit; cubic spin requires order >= 8.
     assert not torch.allclose(coeffs_so4[8], coeffs_so7[8])
 
 

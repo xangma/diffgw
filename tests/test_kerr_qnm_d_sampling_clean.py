@@ -155,6 +155,23 @@ def test_generated_fallback_is_used_outside_compatibility_interior():
     assert torch.max(torch.abs(rounded[0][2] - generated[0][2])) > 1e-12
 
 
+def test_compiled_endpoint_selection_matches_eager(reference_device):
+    """Compilation must not silently replace generated roots with the cubic."""
+    if reference_device == "mps":
+        pytest.skip("This endpoint comparison requires float64")
+    query = torch.tensor([-0.999, -0.995, -0.994, 0.0, 0.994, 0.995, 0.999],
+                         dtype=torch.float64, device=reference_device,
+                         requires_grad=True)
+    eager = evaluate_d_qnm_220(query)
+    eager_slope = torch.autograd.grad(torch.stack(eager).sum(), query)[0]
+    compiled = torch.compile(evaluate_d_qnm_220, backend="aot_eager", fullgraph=True)
+    actual = compiled(query)
+    for expected, value in zip(eager, actual):
+        torch.testing.assert_close(value, expected, rtol=0.0, atol=1e-14)
+    compiled_slope = torch.autograd.grad(torch.stack(actual).sum(), query)[0]
+    torch.testing.assert_close(compiled_slope, eager_slope, rtol=2e-10, atol=2e-10)
+
+
 def test_unsupported_extremal_and_invalid_inputs_are_explicit():
     with pytest.raises(TypeError, match="floating dtype"):
         evaluate_d_qnm_220(torch.tensor(0))

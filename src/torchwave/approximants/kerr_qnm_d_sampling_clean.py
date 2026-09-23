@@ -260,12 +260,13 @@ def evaluate_d_qnm_220(final_spin) -> Tuple[torch.Tensor, torch.Tensor]:
     working_spin = spin.to(_working_dtype(spin))
     _validate_spin(spin, working_spin)
     cubic = _evaluate_cubic(spin)
-    if hasattr(torch.compiler, "is_compiling") and torch.compiler.is_compiling():
-        return cubic[0].to(spin.dtype), cubic[1].to(spin.dtype)
     compatibility = (working_spin >= COMPATIBILITY_SPIN_MIN) & (
         working_spin <= COMPATIBILITY_SPIN_MAX
     )
-    if bool(torch.all(compatibility)):
+    # A compiled graph cannot branch on tensor values.  Evaluate both paths
+    # there so tracing preserves the same endpoint policy as eager execution.
+    compiling = hasattr(torch.compiler, "is_compiling") and torch.compiler.is_compiling()
+    if not compiling and bool(torch.all(compatibility)):
         return cubic[0].to(spin.dtype), cubic[1].to(spin.dtype)
     generated = independent_cyclic_qnm_220(spin)
     return tuple(

@@ -18,7 +18,7 @@ DiffGW revisions and measurement dates belong to those individual evidence recor
 
 | Model or path | Nature of the difference | What to do before using it |
 | --- | --- | --- |
-| TaylorF2 | The dated FP64 campaign misses its strict direct-error gate, despite very small mismatch. This is a reference discrepancy, not a demonstrated domain-wide physical error. | Inspect [both metrics and thresholds](package_benchmarks.md#accuracy-across-the-measured-configurations) for your accuracy requirement. |
+| TaylorF2 | The dated FP64 campaign misses its strict direct-error gate, despite very small mismatch. The [electric-tidal oracle](validation.md#taylorf2-electric-tides-against-lalsuite-23-september-2026) agrees for nonspinning binaries, but a spinning binary with nonzero deformabilities shows an additional response in the LAL call even at tidal PN order zero. | Inspect [both metrics and thresholds](package_benchmarks.md#accuracy-across-the-measured-configurations); treat spinning-tidal LAL substitution as unqualified. |
 | IMRPhenomD / XAS | Agreement is established for the campaign's configurations, with explicit phase and time conventions. | Match options and grids; do not extrapolate the campaign to untested parameters or derivatives. |
 | IMRPhenomXP | Agreement depends on precession and reference-phase options; aligned and small-spin residuals remain. | Use the recorded option set below and check your configuration independently. |
 | IMRPhenomXHM / XPHM, including SpinTaylor / PNR | Independent higher-mode calibration is intentional. Numerical precession and attachment introduce additional differences. | Treat the carrier and angle prescriptions as scientific model choices; inspect the component checks and their limits below. |

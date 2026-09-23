@@ -825,7 +825,7 @@ class WaveformGenerator:
 
         if self.use_jit:
             # Check if parameters match standard order for cached JIT execution
-            std_order = ("mass1", "mass2", "chi1", "chi2", "spin1z", "spin2z", "distance", "inclination", "phic", "tc", "lambda1", "lambda2")
+            std_order = ("mass1", "mass2", "chi1", "chi2", "spin1z", "spin2z", "distance", "inclination", "phic", "tc", "lambda1", "lambda2", "quad_monopole1", "quad_monopole2")
             if all(k in normalized_params for k in ("mass1", "mass2")):
                 order = tuple(k for k in std_order if k in normalized_params)
                 compiled_fn = self.get_compiled_fd_waveform(parameter_order=order)

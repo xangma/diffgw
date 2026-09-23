@@ -52,14 +52,21 @@ def evaluate_kerr_qnm_220(
     """
     spin = as_array(final_spin, dtype=jnp.float64)
     spin_clamped = jnp.clip(spin, -0.9999, 0.9999)
-    pos_spin = jnp.maximum(spin_clamped, 0.0)
-    neg_spin = jnp.maximum(-spin_clamped, 0.0)
+    return _evaluate_kerr_qnm_220_at_spin(spin_clamped)
+
+
+def _evaluate_kerr_qnm_220_at_spin(
+    spin: jnp.ndarray,
+) -> Tuple[jnp.ndarray, jnp.ndarray]:
+    """Evaluate generated roots for signed spins within the generator's domain."""
+    pos_spin = jnp.maximum(spin, 0.0)
+    neg_spin = jnp.maximum(-spin, 0.0)
     pos_x = -jnp.log1p(-pos_spin)
     neg_x = -jnp.log1p(-neg_spin)
     p_re, p_im = _dimensionless_qnm(pos_x, _KNOTS_220, _COEFFS_220)
     n_re, n_im = _dimensionless_qnm(neg_x, _KNOTS_2M20, _COEFFS_2M20)
-    re = jnp.where(spin_clamped >= 0.0, p_re, n_re)
-    im = jnp.where(spin_clamped >= 0.0, p_im, n_im)
+    re = jnp.where(spin >= 0.0, p_re, n_re)
+    im = jnp.where(spin >= 0.0, p_im, n_im)
     return re, im
 
 

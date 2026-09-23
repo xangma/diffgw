@@ -26,6 +26,7 @@
       "frequency": "Hertz (Hz)",
       "time": "Seconds (s)",
       "spin": "Dimensionless [-1, 1]",
+      "spin_induced_quadrupole": "Dimensionless C_Q; Kerr value 1; independent octupoles remain at Kerr values",
       "tidal_deformability": "Dimensionless Lambda >= 0",
       "eccentricity": "Dimensionless e0 in [0, 0.4)"
     },
@@ -46,8 +47,8 @@
         "(2,2)"
       ],
       "pn_orders": {
-        "spin_order": "Up to 7 (3.5PN spin-orbit, spin-spin, and self-spin)",
-        "tidal_order": "Up to 13 (6.5PN electric quadrupole and octupole tides)"
+        "spin_order": "Historical term groups: default 7 includes spin-orbit through 3.5PN and spin-spin, including non-Kerr spin-induced quadrupoles, through 3PN; 8 adds 3.5PN spin-spin tails and cubic spin. Negative values match 7. See docs/math/taylorf2-aligned-spin.md and docs/math/taylorf2-spin-quadrupole.md.",
+        "tidal_order": "Adiabatic electric quadrupolar phase: default 12 includes 5PN/6PN; 13 or negative values also include the 6.5PN tail. Both lambda1 and lambda2 must be supplied, with explicit zero for a black-hole companion. See docs/math/taylorf2-tidal.md."
       },
       "parameters": {
         "required": [
@@ -66,20 +67,30 @@
           "f_ref",
           "lambda1",
           "lambda2",
+          "quad_monopole1",
+          "quad_monopole2",
           "spin_order",
           "tidal_order"
         ]
       },
       "status": "verified_declared_cases",
-      "notes": "The declared frozen catalog and available holdout cases passed the CPU FP64 gates for polarizations and detector projections. Results are historical and configuration-specific; they do not establish full-domain accuracy. See the pinned validation artifacts and docs/provenance_ledger.md.",
+      "notes": "The declared frozen catalog and available holdout cases passed the CPU FP64 gates for polarizations and detector projections. The separate spin-induced quadrupole mathematical reference verifies the declared non-Kerr phase slice but does not establish complete neutron-star physics or full-domain accuracy. Results are historical and configuration-specific. See the pinned validation artifacts and docs/provenance_ledger.md.",
       "primary_references": [
         {
           "citation": "Buonanno, Iyer, Ochsner, Pan, Sathyaprakash (2009), Phys. Rev. D 80, 084043",
           "doi": "10.1103/PhysRevD.80.084043"
         },
         {
-          "citation": "Mishra, Kaviraj, Arun (2016), Phys. Rev. D 93, 084039",
-          "doi": "10.1103/PhysRevD.93.084039"
+          "citation": "Mishra, Kela, Arun, Faye (2016), Phys. Rev. D 93, 084054",
+          "doi": "10.1103/PhysRevD.93.084054"
+        },
+        {
+          "citation": "Nagar et al. (2019), Phys. Rev. D 99, 044007; spin-induced quadrupole phase",
+          "doi": "10.1103/PhysRevD.99.044007"
+        },
+        {
+          "citation": "Dietrich et al. (2019), Phys. Rev. D 100, 044003; cubic-spin quadrupole phase",
+          "doi": "10.1103/PhysRevD.100.044003"
         },
         {
           "citation": "Vines, Flanagan, Hinderer (2011), Phys. Rev. D 83, 084051",

@@ -15,7 +15,6 @@ Strict Clean-Room Implementation based exclusively on published literature:
 
 from typing import Optional, Tuple, Union
 import torch
-import math
 
 from torchwave.constants import (
     C_SI,
@@ -28,7 +27,6 @@ from torchwave.conversions import (
     as_tensor,
     component_masses_to_eta,
     component_masses_to_delta,
-    component_masses_to_chirp_mass,
     spin_combinations,
     tidal_combinations,
     kerr_isco_frequency,
@@ -53,6 +51,21 @@ class TaylorF2:
         phenom_d_calibration: bool = False,
     ) -> Tuple[torch.Tensor, ...]:
         """Compute the 3.5PN point-particle, spin, and tidal phase coefficients.
+
+        ``spin_order`` selects historical term groups, not a strict PN cutoff:
+        3 adds 1.5PN spin-orbit, 4 adds 2PN spin-spin, 5 adds all remaining
+        spin-orbit terms through 3.5PN, 6 adds 3PN spin-spin, and 8 adds
+        3.5PN spin-spin tails and cubic spin. Negative values select the same
+        spin terms as 7. ``phenom_d_calibration`` omits the additions at 6 and 8.
+        See docs/math/taylorf2-aligned-spin.md for the explicit term map.
+        ``quad_monopole1/2`` are full spin-induced quadrupole coefficients
+        (Kerr=1). Their 2PN, 3PN, and 3.5PN corrections follow
+        docs/math/taylorf2-spin-quadrupole.md; omitted inputs default to 1.
+
+        ``tidal_order`` includes electric quadrupolar phase terms at powers
+        10, 12 (default), and 13; negative values include all three. Both lambdas
+        must be supplied; use explicit zero for a black-hole companion.
+        See docs/math/taylorf2-tidal.md for equations and option semantics.
 
         Returns:
             Tuple of coefficients (phi0, phi2, phi3, phi4, phi5, phi5_log, phi6, phi6_log, phi7, phi10_tidal, phi12_tidal, phi13_tidal)
@@ -86,16 +99,13 @@ class TaylorF2:
             - (405.0 / 4.0) * delta * chi_a * chi_s
             + (-405.0 / 8.0 + 5.0 * eta / 2.0) * (chi_s * chi_s)
         )
-        # Optional quadrupole-monopole deformation for neutron stars (C_Q != 1)
+        # Spin-induced quadrupole corrections relative to the Kerr value C_Q=1.
+        # Nagar et al. (2018), Eqs. (44), (46), (47); Xi=mi/(m1+m2).
         cq1 = 1.0 if quad_monopole1 is None else quad_monopole1
         cq2 = 1.0 if quad_monopole2 is None else quad_monopole2
-        if cq1 != 1.0 or cq2 != 1.0:
-            phi4_qm = -(50.0 / eta) * (
-                (m1_ratio * m1_ratio) * (cq1 - 1.0) * (chi1 * chi1)
-                + (m2_ratio * m2_ratio) * (cq2 - 1.0) * (chi2 * chi2)
-            )
-        else:
-            phi4_qm = torch.zeros_like(eta)
+        q1 = (m1_ratio * chi1) ** 2 * (cq1 - 1.0)
+        q2 = (m2_ratio * chi2) ** 2 * (cq2 - 1.0)
+        phi4_qm = -50.0 * (q1 + q2)
 
         phi4 = phi4_pp
         if spin_order >= 4 or spin_order < 0:
@@ -112,7 +122,8 @@ class TaylorF2:
         phi5 = phi5_bracket
         phi5_log = 3.0 * phi5_bracket
 
-        # 3PN: Point-particle + Spin-Orbit (Khan et al. 2016 Eq. B5) + Spin-Spin (Bohé et al. 2015 Eq. 4.13, Pratten et al. 2020 Eq. A13)
+        # 3PN: Point-particle + Spin-Orbit (Khan et al. 2016 Eq. B5)
+        # + Spin-Spin (Pratten et al. 2020, arXiv:2001.11412v1 Eq. A18).
         phi6_pp_const = (
             (11583231236531.0 / 4694215680.0)
             - (6848.0 / 21.0) * EULER_GAMMA
@@ -131,10 +142,13 @@ class TaylorF2:
         if spin_order >= 5 or spin_order < 0:
             phi6 = phi6 + phi6_so
         if not phenom_d_calibration and (spin_order >= 6 or spin_order < 0):
-            phi6 = phi6 + phi6_ss
+            phi6_qm = (15635.0 / 21.0 + 120.0 * eta) * (q1 + q2) + (2215.0 / 12.0) * delta * (q1 - q2)
+            phi6 = phi6 + phi6_ss + phi6_qm
         phi6_log = -(6848.0 / 21.0) * torch.ones_like(eta)  # multiplier for ln(4v)
 
-        # 3.5PN: Point-particle + Spin-Orbit (Khan et al. 2016 Eq. B6) + Cubic-Spin / SSO (Marsat 2015 Eq. 6.22, Pratten et al. 2020 Eq. A14)
+        # 3.5PN: Point-particle + Spin-Orbit (Khan et al. 2016 Eq. B6)
+        # + Spin-Spin tails and Cubic-Spin (Pratten et al. 2020,
+        # arXiv:2001.11412v1 Eqs. A19 + A24, including the explicit SS tail).
         phi7_pp = (
             (77096675.0 * PI / 254016.0)
             + (378515.0 * PI * eta / 1512.0)
@@ -144,20 +158,33 @@ class TaylorF2:
             delta * (-(25150083775.0 / 3048192.0) + (26804935.0 * eta / 6048.0) - (1985.0 * eta2 / 48.0)) * chi_a
             + (-(25150083775.0 / 3048192.0) + (10566655595.0 * eta / 762048.0) - (1042165.0 * eta2 / 3024.0) + (5345.0 * eta3 / 36.0)) * chi_s
         )
+        phi7_ss = PI * (
+            (30.0 * eta - 815.0 / 2.0) * (chi_s * chi_s)
+            + (1600.0 * eta - 815.0 / 2.0) * (chi_a * chi_a)
+            - 815.0 * delta * chi_s * chi_a
+        )
         phi7_sss = (
-            chi_s * (-1140.0 * PI * delta * chi_a + (80.0 * eta2 - 7270.0 * eta + 14585.0 / 8.0) * (chi_a * chi_a))
+            chi_s * (80.0 * eta2 - 7270.0 * eta + 14585.0 / 8.0) * (chi_a * chi_a)
             + (chi_a * chi_a * chi_a) * (14585.0 * delta / 24.0 - 2380.0 * delta * eta)
-            + (chi_s * chi_s) * (chi_a * (14585.0 * delta / 8.0 - 215.0 * delta * eta / 2.0) + 40.0 * PI * eta - 570.0 * PI)
+            + (chi_s * chi_s) * chi_a * (14585.0 * delta / 8.0 - 215.0 * delta * eta / 2.0)
             + (chi_s * chi_s * chi_s) * (100.0 * eta2 / 3.0 - 475.0 * eta / 6.0 + 14585.0 / 24.0)
-            + (2240.0 * PI * eta - 570.0 * PI) * (chi_a * chi_a)
         )
         phi7 = phi7_pp
         if spin_order >= 5 or spin_order < 0:
             phi7 = phi7 + phi7_so
         if not phenom_d_calibration and spin_order >= 8:
-            phi7 = phi7 + phi7_sss
+            # Dietrich et al. (2019), Eq. (27): C_Q-dependent cubic spin
+            # alongside Nagar et al. (2018), Eq. (52), quadratic-spin tail.
+            phi7_qm = -400.0 * PI * (q1 + q2) + 10.0 * (
+                q1 * ((m1_ratio * m1_ratio + 308.0 * m1_ratio / 3.0) * chi1
+                      + (m2_ratio * m2_ratio - 89.0 * m2_ratio / 3.0) * chi2)
+                + q2 * ((m2_ratio * m2_ratio + 308.0 * m2_ratio / 3.0) * chi2
+                        + (m1_ratio * m1_ratio - 89.0 * m1_ratio / 3.0) * chi1)
+            )
+            phi7 = phi7 + phi7_ss + phi7_sss + phi7_qm
 
-        # Tidal contributions (5PN, 6PN, and 6.5PN) - Wade et al. (2014, arXiv:1402.5156, Eq. 110), Damour et al. (2012, arXiv:1203.4352, Eq. 666)
+        # Electric quadrupolar tides: Wade1402.5156v1 Eq. (4), and
+        # Damour-Nagar-Villain1203.4352v1 Eqs. (B8)-(B12) for the 6.5PN tail.
         if lambda1 is not None and lambda2 is not None and (tidal_order >= 10 or tidal_order < 0):
             lambda_tilde, delta_lambda_tilde = tidal_combinations(mass1, mass2, lambda1, lambda2)
             phi10_tidal = -(39.0 / 2.0) * lambda_tilde
@@ -294,15 +321,18 @@ class TaylorF2:
         """Compute the full SPA phase Psi(f) with configurable phasing convention.
 
         Args:
-            f: Frequency tensor in Hz, shape (N_f,) or (B, N_f)
+            f: Shared frequency grid in Hz, shape (N_f,), or explicit (B, N_f)
+                grids. Use (B, 1) for one frequency per binary.
             mass1, mass2: Component masses in solar masses, shape (B,) or ()
             chi1, chi2: Aligned dimensionless spins, shape (B,) or ()
             lambda1, lambda2: Dimensionless tidal deformabilities, shape (B,) or ()
             tc: Coalescence time in seconds
             phic: Coalescence phase in radians
             f_ref: Reference frequency in Hz
-            quad_monopole1, quad_monopole2: Quadrupole-monopole parameters
-            spin_order: Highest PN spin order (default 5 for LAL baseline, 7 for full PN)
+            quad_monopole1, quad_monopole2: Dimensionless spin-induced quadrupoles
+                (Kerr=1; omitted inputs default to 1)
+            spin_order: Historical term group; see phase_coefficients. Default 5
+                omits 3PN spin-spin, unlike the public waveform's default 7.
             tidal_order: Highest PN tidal order (default 12 for 6PN, 13 for 6.5PN tail)
             phenom_d_calibration: If True, use Khan et al. 2016 Appendix B terms only
             phasing_convention: 'coalescence' or 'reference_frequency'
@@ -314,12 +344,10 @@ class TaylorF2:
         total_mass = mass1 + mass2
         eta = component_masses_to_eta(mass1, mass2)
 
-        # Broadcast parameters to allow batching
+        # A 1D grid is shared, even when N_f == B. Per-binary frequencies
+        # must carry an explicit frequency axis, including the (B, 1) case.
         if f.dim() == 1 and total_mass.dim() >= 1:
-            if f.shape[0] == total_mass.shape[0]:
-                f = f.unsqueeze(-1)  # (B, 1) for per-batch reference frequencies
-            else:
-                f = f.unsqueeze(0)  # (1, N_f) for frequency grids
+            f = f.unsqueeze(0)
 
         # Total mass in seconds
         m_sec = total_mass * MSUN_SEC
@@ -478,6 +506,8 @@ class TaylorF2:
         tidal_order: int = 12,
         phasing_convention: Optional[str] = None,
         reference_frame: Optional[str] = None,
+        quad_monopole1: Optional[Union[float, torch.Tensor]] = None,
+        quad_monopole2: Optional[Union[float, torch.Tensor]] = None,
     ) -> Tuple[torch.Tensor, torch.Tensor]:
         """Generate frequency-domain polarizations (h_plus, h_cross) using TaylorF2.
 
@@ -494,11 +524,14 @@ class TaylorF2:
             f_ref: Reference frequency in Hz for physical reference phasing
             lambda1: Primary tidal deformability
             lambda2: Secondary tidal deformability
+            quad_monopole1, quad_monopole2: Spin-induced quadrupole coefficients C_Qi (Kerr=1)
             f_isco_cutoff: If True, set signal to zero above ISCO
             isco_type: ISCO formulation ("schwarzschild" or "kerr")
             smooth_cutoff: If True, smoothly roll off amplitude to zero at ISCO
             roll_off_delta: Fractional width of smooth roll-off window below ISCO
-            spin_order: Highest PN spin order (default 7 for 3.5PN spin, -1 for all)
+            spin_order: Historical term group; see phase_coefficients. Default 7
+                includes spin-orbit through 3.5PN and spin-spin through 3PN;
+                use 8 to also include 3.5PN spin-spin tails and cubic spin.
             tidal_order: Highest PN tidal order (default 12 for 6PN, 13 for 6.5PN tail)
             phasing_convention: Phasing convention ('coalescence' or 'reference_frequency')
             reference_frame: Alias for phasing_convention
@@ -518,6 +551,8 @@ class TaylorF2:
 
         l1 = as_tensor(lambda1, device=device, dtype=dtype) if lambda1 is not None else None
         l2 = as_tensor(lambda2, device=device, dtype=dtype) if lambda2 is not None else None
+        cq1 = as_tensor(quad_monopole1, device=device, dtype=dtype) if quad_monopole1 is not None else None
+        cq2 = as_tensor(quad_monopole2, device=device, dtype=dtype) if quad_monopole2 is not None else None
 
         # Calculate phase and amplitude
         psi = TaylorF2.evaluate_phase(
@@ -528,6 +563,8 @@ class TaylorF2:
             chi2=s2,
             lambda1=l1,
             lambda2=l2,
+            quad_monopole1=cq1,
+            quad_monopole2=cq2,
             tc=tc,
             phic=phic,
             f_ref=f_ref,
@@ -610,4 +647,3 @@ class TaylorF2:
         )
 
     evaluate = __call__
-
