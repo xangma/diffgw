@@ -1,0 +1,29 @@
+{
+  "schema": "diffgw.seobnrv4.parameter-boundary-plan.v1",
+  "purpose": "Exploratory one-factor-at-a-time numerical stress test of the provisional aligned-spin generator; these are not validated calibration boundaries.",
+  "candidate": {
+    "hermite_resampling": true,
+    "local_nqc_phase_derivatives": true,
+    "local_matching_second_derivatives": true,
+    "local_second_window_M": 0.5,
+    "local_second_degree": 6,
+    "fixed_restart_time_M": 165.0
+  },
+  "settings": {
+    "atol_levels": [1e-12, 1e-13, 1e-14],
+    "rtol_levels": [1e-11, 1e-12, 1e-13],
+    "dt_levels_M": [0.5, 0.25, 0.125],
+    "relative_l2_limit": 1e-6,
+    "event_time_limit_M": 0.05,
+    "max_run_seconds": 600.0
+  },
+  "rows": {
+    "equal_mass_unequal_spin": {"mass1": 25.0, "mass2": 25.0, "chi1": 0.2, "chi2": -0.2, "omega_start": 0.04},
+    "mass_ratio_four_nonspinning": {"mass1": 40.0, "mass2": 10.0, "chi1": 0.0, "chi2": 0.0, "omega_start": 0.04},
+    "strong_aligned_spin": {"mass1": 30.0, "mass2": 20.0, "chi1": 0.8, "chi2": 0.8, "omega_start": 0.04},
+    "strong_antialigned_spin": {"mass1": 30.0, "mass2": 20.0, "chi1": -0.8, "chi2": -0.8, "omega_start": 0.04},
+    "low_start_frequency": {"mass1": 30.0, "mass2": 20.0, "chi1": 0.2, "chi2": -0.1, "omega_start": 0.03},
+    "high_start_frequency": {"mass1": 30.0, "mass2": 20.0, "chi1": 0.2, "chi2": -0.1, "omega_start": 0.05}
+  },
+  "interpretation": "Run all five predeclared levels for each row. Record every failed solve and gate without changing row inputs, tolerances, restart, polynomial window, or degree. Passing gates show only numerical stability of these provisional equations, not SEOBNRv4 fidelity or training readiness."
+}
