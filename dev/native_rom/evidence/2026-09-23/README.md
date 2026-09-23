@@ -459,6 +459,15 @@ frozen Torch points agree for each. This checks 11 of 35 individual flux
 amplitudes conditionally; it does not establish historical hybrid choices or
 a converged full flux.
 
+Reference specification 0.8.5 adds the `(6,2)` and four even `ℓ=8` pre-NQC
+moduli from the same primary papers. Their Newtonian and mass-exchange limits
+pass, and four frozen Torch points per mode agree within floating precision.
+The `ℓ=8` comparison explicitly covers both the tabulated and generic-leading
+spin selections; the source papers do not identify which belongs to historical
+SEOBNRv4. Conditional scalar coverage is now 16 of 35 amplitudes. Nineteen
+remain without scalar references, and this does not close the full-flux,
+numerical-convergence, or whole-waveform qualification gates.
+
 The exact-hash [ODE](aligned_spin_nqc_matching_inputs_ode.json) and
 [grid](aligned_spin_nqc_matching_inputs_grid.json) NQC matching-input replays
 reconstruct the frozen amplitude and phase matrices and right-hand sides from

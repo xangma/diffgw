@@ -7,7 +7,8 @@ from dev.native_rom.reference.flux import (
     emitted_flux, factorized_22_amplitude, factorized_33_44_amplitudes,
     factorized_21_nonspin_amplitude, factorized_21_spin_amplitude,
     factorized_31_amplitude, factorized_32_amplitude, factorized_42_amplitude,
-    factorized_43_amplitude, factorized_55_amplitude, factorized_66_64_amplitudes,
+    factorized_43_amplitude, factorized_55_amplitude, factorized_62_amplitude,
+    factorized_66_64_amplitudes, factorized_8_even_amplitudes,
     newtonian_22_mode,
 )
 from dev.native_rom.reference.hamiltonian import (
@@ -154,6 +155,42 @@ def test_factorized_66_64_amplitudes_against_reference(m1, m2, s1, s2, w, w0, he
         x1=scalar(m1/(m1+m2)), x2=scalar(m2/(m1+m2)),
         chi1=scalar(s1), chi2=scalar(s2))
     for mode, value in zip(((6, 6), (6, 4)), expected):
+        assert float(modes[mode]) == pytest.approx(float(value), rel=3e-12, abs=2e-14)
+
+
+@pytest.mark.parametrize("m1,m2,s1,s2,w,w0,he,hr", [
+    (30., 20., 0., 0., .04, .039, .95, .988),
+    (30., 20., .2, -.1, .06, .057, .93, .981),
+    (45., 5., -.8, .3, .10, .095, .89, .973),
+    (20., 20., -.9, .7, .08, .077, .91, .975),
+])
+def test_factorized_62_amplitude_against_reference(m1, m2, s1, s2, w, w0, he, hr):
+    expected = factorized_62_amplitude(m1, m2, s1, s2, w, w0, he, hr)
+    actual = SEOBNRv4PublishedFlux(spin_truncation="tabulated").amplitudes(
+        scalar([9., 0., -.01, 3.]), omega=scalar(w), omega_zero_radial=scalar(w0),
+        heff_over_mu=scalar(he), hreal_over_M=scalar(hr),
+        x1=scalar(m1/(m1+m2)), x2=scalar(m2/(m1+m2)),
+        chi1=scalar(s1), chi2=scalar(s2))[(6, 2)]
+    assert float(actual) == pytest.approx(float(expected), rel=3e-12, abs=2e-14)
+
+
+@pytest.mark.parametrize("spin_truncation", ["tabulated", "generic-leading-ell8"])
+@pytest.mark.parametrize("m1,m2,s1,s2,w,w0,he,hr", [
+    (30., 20., 0., 0., .04, .039, .95, .988),
+    (30., 20., .2, -.1, .06, .057, .93, .981),
+    (45., 5., -.8, .3, .10, .095, .89, .973),
+    (20., 20., -.9, .7, .08, .077, .91, .975),
+])
+def test_factorized_8_even_amplitudes_against_reference(
+        m1, m2, s1, s2, w, w0, he, hr, spin_truncation):
+    expected = factorized_8_even_amplitudes(
+        m1, m2, s1, s2, w, w0, he, hr, spin_truncation=spin_truncation)
+    modes = SEOBNRv4PublishedFlux(spin_truncation=spin_truncation).amplitudes(
+        scalar([9., 0., -.01, 3.]), omega=scalar(w), omega_zero_radial=scalar(w0),
+        heff_over_mu=scalar(he), hreal_over_M=scalar(hr),
+        x1=scalar(m1/(m1+m2)), x2=scalar(m2/(m1+m2)),
+        chi1=scalar(s1), chi2=scalar(s2))
+    for mode, value in zip(((8, 8), (8, 6), (8, 4), (8, 2)), expected):
         assert float(modes[mode]) == pytest.approx(float(value), rel=3e-12, abs=2e-14)
 
 

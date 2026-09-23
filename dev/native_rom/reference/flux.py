@@ -2,8 +2,8 @@
 
 Bohé et al. 1611.03703v3 Eq. (9) sums both signs of m through ell=8.
 Reflection symmetry folds that into a positive-m sum with 1/(8*pi).
-The dominant and ten subdominant moduli have conditional scalar checks;
-24 modes have no scalar amplitude reference, and the complete historical
+The dominant and fifteen subdominant moduli have conditional scalar checks;
+19 modes have no scalar amplitude reference, and the complete historical
 (2,1) spin prescription also remains unresolved.
 """
 
@@ -233,6 +233,75 @@ def factorized_66_64_amplitudes(m1, m2, chi1, chi2, omega,
         a64 = (mp.mpf(1024)/96525*mp.sqrt(390*mp.pi)*common
                *_tail_modulus(6, 4, w, hr)*abs(rho64)**6)
         return +a66, +a64
+
+
+def factorized_62_amplitude(m1, m2, chi1, chi2, omega,
+                            omega_zero_radial, h_eff, h_real, *, digits=60):
+    """Conditional pre-NQC (6,2) even-parity modulus.
+
+    DIN 0811.2069v2 Eqs. (4)-(8), (113), Taracchini 1202.0790v2
+    Eq. (54e), and Pan 1006.0431v2 Eq. (77h) supply the terms. The
+    finite-mass use of Pan's test-particle spin with q=chiK is a hybrid.
+    """
+    with mp.workdps(digits):
+        m1, m2, s1, s2, w, w0, he, hr = map(
+            lambda value: mp.mpf(str(value)),
+            (m1, m2, chi1, chi2, omega, omega_zero_radial, h_eff, h_real),
+        )
+        if min(m1, m2, w, w0, he, hr) <= 0 or max(abs(s1), abs(s2)) > 1:
+            raise ValueError("Require physical masses/spins and positive frequency/energy")
+        x1, x2 = m1/(m1+m2), m2/(m1+m2)
+        n, delta = x1*x2, x1-x2
+        cs, ca = (s1+s2)/2, (s1-s2)/2
+        q = (1-2*n)*cs+delta*ca
+        c6 = x1**5+x2**5
+        v, vphi = mp.root(w, 3), w*w0**(-mp.mpf(2)/3)
+        rho = (1+(49*n**3-413*n**2+378*n-74)/(84*c6)*v**2
+               -2*q/3*v**3+(q**2/2-mp.mpf(817991)/3298680)*v**4)
+        return +(mp.mpf(16)/19305*mp.sqrt(13*mp.pi)*n*c6*vphi**6*he
+                 *_tail_modulus(6, 2, w, hr)*abs(rho)**6)
+
+
+def factorized_8_even_amplitudes(m1, m2, chi1, chi2, omega,
+                                 omega_zero_radial, h_eff, h_real, *,
+                                 spin_truncation, digits=60):
+    """Conditional pre-NQC (8,8),(8,6),(8,4),(8,2) moduli.
+
+    DIN 0811.2069v2 Eqs. (4)-(8), (122), (124), (126), (128) provide
+    the finite-mass terms; Taracchini 1202.0790v2 Eqs. (56a,c,e,g) and
+    Pan 1006.0431v2 Eqs. (33), (77l,m) expose two spin truncations.
+    Neither identifies the historical SEOBNRv4 high-ell prescription.
+    """
+    if spin_truncation not in {"tabulated", "generic-leading-ell8"}:
+        raise ValueError("Choose an explicit ell=8 spin truncation")
+    with mp.workdps(digits):
+        m1, m2, s1, s2, w, w0, he, hr = map(
+            lambda value: mp.mpf(str(value)),
+            (m1, m2, chi1, chi2, omega, omega_zero_radial, h_eff, h_real),
+        )
+        if min(m1, m2, w, w0, he, hr) <= 0 or max(abs(s1), abs(s2)) > 1:
+            raise ValueError("Require physical masses/spins and positive frequency/energy")
+        x1, x2 = m1/(m1+m2), m2/(m1+m2)
+        n, delta = x1*x2, x1-x2
+        cs, ca = (s1+s2)/2, (s1-s2)/2
+        q = (1-2*n)*cs+delta*ca
+        c8 = x1**7+x2**7
+        v, vphi = mp.root(w, 3), w*w0**(-mp.mpf(2)/3)
+        spin = -2*q/3*v**3 if spin_truncation == "generic-leading-ell8" else 0
+        polynomials = (
+            (8, mp.mpf(131072)/5360355*mp.sqrt(34034*mp.pi), 2736,
+             3482-26778*n+64659*n**2-53445*n**3+12243*n**4),
+            (6, mp.mpf(1944)/2977975*mp.sqrt(255255*mp.pi), 912,
+             1002-7498*n+17269*n**2-13055*n**3+2653*n**4),
+            (4, mp.mpf(1024)/3828825*mp.sqrt(1870*mp.pi), 2736,
+             2666-19434*n+42627*n**2-28965*n**3+4899*n**4),
+            (2, mp.mpf(8)/765765*mp.sqrt(17*mp.pi), 2736,
+             2462-17598*n+37119*n**2-22845*n**3+3063*n**4),
+        )
+        common = n*c8*vphi**8*he
+        return tuple(+(constant*common*_tail_modulus(8, m, w, hr)
+                       *abs(1-polynomial/(denominator*c8)*v**2+spin)**8)
+                     for m, constant, denominator, polynomial in polynomials)
 
 
 def factorized_42_amplitude(m1, m2, chi1, chi2, omega,

@@ -1,4 +1,4 @@
-# SEOBNRv4 source specification: paper components 0.8.4
+# SEOBNRv4 source specification: paper components 0.8.5
 
 **Status: incomplete research specification.** This version establishes an
 independent executable source of truth for the components marked `executable`
@@ -126,6 +126,20 @@ give the nonspin 2PN completion; and
 test-particle spin terms. Both Newtonian limits, mass-exchange symmetry, and
 four frozen Torch values agree. The effective-spin choice and hybridization
 remain conditional rather than historically established.
+`flux.factorized_62_amplitude` adds the even-parity `(6,2)` modulus from
+[Damour--Iyer--Nagar Eq. (113)](https://arxiv.org/html/0811.2069),
+[Taracchini et al. Eq. (54e)](https://arxiv.org/html/1202.0790), and
+[Pan Eq. (77h)](https://arxiv.org/html/1006.0431). Its Newtonian limit,
+mass-exchange symmetry, and four frozen Torch values agree. Its finite-mass
+spin completion remains a declared hybrid.
+`flux.factorized_8_even_amplitudes` adds `(8,8)`, `(8,6)`, `(8,4)`, and
+`(8,2)` from [Damour--Iyer--Nagar Eqs. (122), (124), (126), (128)](https://arxiv.org/html/0811.2069)
+and [Taracchini et al. Eqs. (56a), (56c), (56e), (56g)](https://arxiv.org/html/1202.0790).
+The caller must select `tabulated`, matching [Pan's printed Eq. (77l)--(77m)](https://arxiv.org/html/1006.0431),
+or `generic-leading-ell8`, which also applies Pan Eq. (33)'s test-particle
+spin term with the declared effective-spin mapping. Both choices match the
+Torch branch at four frozen points and pass Newtonian and exchange checks;
+neither is yet identified as the historical SEOBNRv4 high-ℓ truncation.
 `flux.factorized_42_amplitude` evaluates the even-parity `(4,2)` modulus
 from [Pan Eq. (38h), (29h), (42h)](https://arxiv.org/html/1006.0431)
 and [Damour--Iyer--Nagar Eq. (102)](https://arxiv.org/html/0811.2069).

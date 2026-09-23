@@ -12,7 +12,8 @@ from dev.native_rom.reference import SPEC_VERSION
 from dev.native_rom.reference.flux import (
     emitted_flux, factorized_22_amplitude, factorized_31_amplitude,
     factorized_42_amplitude,
-    factorized_43_amplitude, factorized_55_amplitude, factorized_66_64_amplitudes,
+    factorized_43_amplitude, factorized_55_amplitude, factorized_62_amplitude,
+    factorized_66_64_amplitudes, factorized_8_even_amplitudes,
     newtonian_22_mode,
 )
 from dev.native_rom.reference.hamiltonian import (
@@ -193,6 +194,47 @@ def test_factorized_66_64_newtonian_limits_and_mass_exchange():
         forward = factorized_66_64_amplitudes(30, 20, ".7", "-.4", ".08", ".077", ".91", ".975")
         exchanged = factorized_66_64_amplitudes(20, 30, "-.4", ".7", ".08", ".077", ".91", ".975")
         assert all(abs(a-b) < mp.mpf("1e-60") for a, b in zip(forward, exchanged))
+
+
+def test_factorized_62_newtonian_limit_and_mass_exchange():
+    with mp.workdps(70):
+        w, n = mp.mpf("1e-15"), mp.mpf("0.24")
+        c6 = mp.mpf("0.6")**5+mp.mpf("0.4")**5
+        expected = mp.mpf(16)/19305*mp.sqrt(13*mp.pi)*n*c6*w**2
+        actual = factorized_62_amplitude(30, 20, 0, 0, w, w, 1, 1)
+        assert abs(actual/expected-1) < mp.mpf("1e-9")
+        forward = factorized_62_amplitude(30, 20, ".7", "-.4", ".08", ".077", ".91", ".975")
+        exchanged = factorized_62_amplitude(20, 30, "-.4", ".7", ".08", ".077", ".91", ".975")
+        assert abs(forward-exchanged) < mp.mpf("1e-60")
+
+
+def test_factorized_8_even_newtonian_limits_exchange_and_truncation():
+    with mp.workdps(70):
+        w, n = mp.mpf("1e-15"), mp.mpf("0.24")
+        c8 = mp.mpf("0.6")**7+mp.mpf("0.4")**7
+        constants = (mp.mpf(131072)/5360355*mp.sqrt(34034*mp.pi),
+                     mp.mpf(1944)/2977975*mp.sqrt(255255*mp.pi),
+                     mp.mpf(1024)/3828825*mp.sqrt(1870*mp.pi),
+                     mp.mpf(8)/765765*mp.sqrt(17*mp.pi))
+        actual = factorized_8_even_amplitudes(
+            30, 20, 0, 0, w, w, 1, 1, spin_truncation="tabulated")
+        assert all(abs(value/(constant*n*c8*w**(mp.mpf(8)/3))-1) < mp.mpf("1e-9")
+                   for value, constant in zip(actual, constants))
+        forward = factorized_8_even_amplitudes(
+            30, 20, ".7", "-.4", ".08", ".077", ".91", ".975",
+            spin_truncation="generic-leading-ell8")
+        exchanged = factorized_8_even_amplitudes(
+            20, 30, "-.4", ".7", ".08", ".077", ".91", ".975",
+            spin_truncation="generic-leading-ell8")
+        assert all(abs(a-b) < mp.mpf("1e-60") for a, b in zip(forward, exchanged))
+        tabulated = factorized_8_even_amplitudes(
+            30, 20, ".7", "-.4", ".08", ".077", ".91", ".975",
+            spin_truncation="tabulated")
+        assert all(abs(a-b) > mp.mpf("1e-12")*abs(a)
+                   for a, b in zip(forward, tabulated))
+        with pytest.raises(ValueError):
+            factorized_8_even_amplitudes(30, 20, 0, 0, w, w, 1, 1,
+                                         spin_truncation="unspecified")
 
 
 def test_factorized_42_newtonian_limit_and_mass_exchange():
