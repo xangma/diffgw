@@ -36,7 +36,7 @@ source or constants.
 
 | Component ID | Evidence | Torch/JAX relationship | Maintained check |
 | --- | --- | --- | --- |
-| `phenomxas.amp.intermediate.newtonian_factor.v1` | Eq. (67) | Waveform amplitude prefactor; full assembly is not yet qualified | `test_paper_quartic_and_physical_slope_constraints` |
+| `phenomxas.amp.intermediate.newtonian_factor.v1` | Eq. (67) | Waveform amplitude prefactor; full complex assembly is checked below | `test_paper_quartic_and_physical_slope_constraints` |
 | `phenomxas.amp.intermediate.quartic.v1` | Eq. (71) | `solve_intermediate_amplitude_quartic` in [Torch](../../src/torchwave/approximants/imrphenom_xas.py) and [JAX](../../src/jaxwave/approximants/imrphenom_xas.py), algebraic helper only | `test_frontend_quartic_against_scalar_matrix_solve` |
 | `phenomxas.amp.intermediate.collocation.v1` | Eqs. (79)–(83), Table 2 | The same two helpers; full boundary-value adapter is not yet qualified | `test_midpoint_coefficient_derivative`, `test_component_evidence_and_implementation_links` |
 | `phenomxas.amp.intermediate.constant_normalization.v1` | Algebraic variant; pointwise LALSimulation binary check below, **not** the printed Eq. (71) | Full Torch/JAX carrier assembly | `test_observed_quartic_and_normalization_distinction`, `test_full_frontend_intermediate_amplitude_shape`, `test_external_binary_intermediate_amplitude_fixture` |
@@ -350,3 +350,47 @@ full-domain intrinsic derivatives.
 | `phenomxas.waveform.nonpositive_mask.v1` | XAS positive-frequency mode Eq. (14); carrier mask | Both carriers output zero strain for `f<=0` | `test_full_complex_polarizations` |
 | `phenomxas.waveform.extrinsic_derivatives.v1` | Product rule on the preceding equations | Closed partials at fixed intrinsic inputs | `test_polarization_and_extrinsic_algebra`, `test_native_extrinsic_gradients` |
 | `phenomxas.waveform.frequency_derivatives.v1` | Product rule and chain rule on the preceding equations | Smooth-branch complex `d(h+,hx)/df_Hz` at fixed fits and `f_ref` | `test_native_complex_frequency_gradient` |
+
+## Total-mass similarity and derivative
+
+Specification `imrphenomxas-total-mass-scaling/v1` extends the unchanged
+composed-polarization specification. [Pratten et al., Secs. II.1 and V–VII,
+Eqs. (1), (14)–(16), (52)–(67)](https://arxiv.org/html/2001.11412v1)
+parameterize intrinsic fits and transitions by mass ratio, dimensionless spins,
+and `u=M_sec*f_Hz`. The SI amplitude factor above has mass dependence
+`M_sec^(5/6)` at fixed physical frequency and distance. The carrier's
+`tshift_sec=M_sec*tshift` is a separately identified phase-gauge choice.
+At fixed mass ratio and spins, calibrated dimensionless fits, QNM coordinates,
+and joins are unchanged when both component masses scale by `lambda>0`.
+
+Consequently, away from user frequency limits and with distance, inclination,
+and orbital phase fixed, the Fourier strain obeys the exact similarity
+`h(lambda*m1,lambda*m2;f/lambda,f_ref/lambda,lambda*t_c)
+=lambda²*h(m1,m2;f,f_ref,t_c)` for each polarization. Omit both `f_ref`
+arguments when no reference frequency is supplied. This identity follows
+from the dimensional adapter and is not a fitted relation.
+
+For a derivative instead holding physical `f`, `f_ref`, `t_c`, and distance
+fixed, set `a=a(u)` for the selected amplitude shape and `phi=phi(u)` for
+the selected raw phase. With `S` the SI amplitude scale above and `C` either
+polarization's inclination factor, the scalar reference computes
+
+`d h/d ln M = C*S*exp(-i Psi) * [(5/6)*a + u*a' - i*a*Psi_M]`,
+
+where `Psi_M=u*phi'(u)-u_ref*phi'(u_ref)
++tshift_sec*(f-f_ref)`. The reference terms are absent when `f_ref` is
+absent. At `f=f_ref`, `Psi_M=0` exactly. A prime here means differentiation
+with respect to dimensionless `u`. These formulas apply only to smooth
+positive-frequency branch interiors; neither `f` nor `f_ref` may lie on a
+moving join. The [maintained test](../../tests/test_imrphenomxas_waveform_math_reference.py)
+checks the similarity for both frontends at equal and unequal masses, and
+compares the closed full-carrier mass tangent against Torch/JAX automatic
+derivatives through carrier construction at unequal mass, across amplitude
+branches and all reference-frequency phase branches. This does not test
+mass-ratio or spin derivatives of the calibrated fit surfaces, or establish
+independent calibration or physical accuracy.
+
+| Component ID | Evidence | Native relationship | Maintained check |
+| --- | --- | --- | --- |
+| `phenomxas.waveform.mass_scaling.v1` | XAS Eqs. (1), (14)–(16), (52)–(67); dimensional similarity and carrier time gauge | Both `XASCarrierState` constructors and `eval_waveform` | `test_total_mass_similarity` |
+| `phenomxas.waveform.mass_derivatives.v1` | Chain rule on the composed model and mass similarity | Full complex `d(h+,hx)/d ln M` through both native constructors | `test_native_log_total_mass_gradient`, `test_mass_phase_tangent_cancels_at_reference` |

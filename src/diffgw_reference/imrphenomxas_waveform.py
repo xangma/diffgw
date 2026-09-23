@@ -8,7 +8,7 @@ they are not asserted to be the paper-literal alternatives.
 
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from collections.abc import Mapping
 
 import sympy as sp
@@ -20,11 +20,13 @@ from . import imrphenomxas_phase_branches as phase
 from . import imrphenomd_waveform as units
 
 SPEC_VERSION = "imrphenomxas-composed-polarizations-carrier/v1"
+MASS_SCALING_VERSION = "imrphenomxas-total-mass-scaling/v1"
+MASS_SCALING_COMPONENT_VERSIONS = (SPEC_VERSION,)
 COMPONENT_VERSIONS = (amp.SPEC_VERSION, middle.SPEC_VERSION,
                       inspiral.SPEC_VERSION, phase.SPEC_VERSION,
                       "si-iau-waveform-units/v1")
 SOURCES = {
-    "pratten2020v1": ("https://arxiv.org/html/2001.11412v1", "6", "14-16", "52", "66-67", "71", "84", "85", "90", "96"),
+    "pratten2020v1": ("https://arxiv.org/html/2001.11412v1", "1", "6", "14-16", "52", "66-67", "71", "84", "85", "90", "96"),
     "units": "docs/math/units.md",
 }
 COMPONENT_IDS = {
@@ -35,6 +37,8 @@ COMPONENT_IDS = {
     "nonpositive_mask": "phenomxas.waveform.nonpositive_mask.v1",
     "extrinsic_derivatives": "phenomxas.waveform.extrinsic_derivatives.v1",
     "frequency_derivatives": "phenomxas.waveform.frequency_derivatives.v1",
+    "mass_scaling": "phenomxas.waveform.mass_scaling.v1",
+    "mass_derivatives": "phenomxas.waveform.mass_derivatives.v1",
 }
 COMPONENT_SOURCES = {
     COMPONENT_IDS["branch_selection"]: ("pratten2020v1", "52", "71", "85", "90", "96", "carrier-convention"),
@@ -44,6 +48,8 @@ COMPONENT_SOURCES = {
     COMPONENT_IDS["nonpositive_mask"]: ("carrier-convention", "f<=0"),
     COMPONENT_IDS["extrinsic_derivatives"]: ("derived-product-rule", "polarizations", "phase_adapter"),
     COMPONENT_IDS["frequency_derivatives"]: ("derived-product-rule", "branch_selection", "physical_scale", "phase_adapter"),
+    COMPONENT_IDS["mass_scaling"]: ("pratten2020v1", "1", "14-16", "66-67", "dimensional-similarity", "carrier-convention"),
+    COMPONENT_IDS["mass_derivatives"]: ("derived-chain-rule", "mass_scaling", "branch_selection", "phase_adapter"),
 }
 
 U = sp.symbols("u", positive=True)
@@ -110,6 +116,14 @@ class WaveformSpec:
     phase_joins: tuple[sp.Expr, sp.Expr]
     tshift_sec: sp.Expr
 
+    def scaled_total_mass(self, factor):
+        """Scale both component masses at fixed q, spins and dimensionless fits."""
+        factor = exact(factor)
+        if factor <= 0:
+            raise ValueError("total-mass scale must be positive")
+        return replace(self, m_sec=factor * self.m_sec,
+                       tshift_sec=factor * self.tshift_sec)
+
     def expressions(self, frequency_hz, *, inclination=0, tc=0, phic=0,
                     f_ref_hz=None):
         """Return h+, hx and unwrapped phase at one positive frequency."""
@@ -162,6 +176,50 @@ class WaveformSpec:
         cosine = sp.cos(exact(inclination))
         return (sp.Rational(1, 2)*(1+cosine**2)*carrier_prime,
                 -sp.I*cosine*carrier_prime)
+
+    def log_total_mass_derivatives(self, frequency_hz, *, inclination=0,
+                                   tc=0, phic=0, f_ref_hz=None):
+        """Return d(h+,hx,Psi)/d ln M at fixed q, spins, Hz inputs and fits.
+
+        The physical coalescence time and reference frequency remain fixed.
+        The supplied dimensionless fits and joins are mass invariant; the
+        carrier's dimensional time shift scales linearly with total mass.
+        Only smooth positive-frequency branch interiors are supported.
+        """
+        f = exact(frequency_hz)
+        if f <= 0:
+            raise ValueError("mass derivative requires positive frequency")
+        u = self.m_sec * f
+        if u in self.amp_joins or u in self.phase_joins:
+            raise ValueError("mass derivative is undefined at a branch join")
+        a_expr = self.amplitude[branch(u, *self.amp_joins)]
+        p_expr = self.phase[branch(u, *self.phase_joins)]
+        a = a_expr.subs(U, u)
+        a_prime = sp.diff(a_expr, U).subs(U, u)
+        p_prime = sp.diff(p_expr, U).subs(U, u)
+        reference_tangent = sp.S.Zero
+        shift_ref = sp.S.Zero
+        if f_ref_hz is not None:
+            f_ref = exact(f_ref_hz)
+            if f_ref <= 0:
+                raise ValueError("f_ref_hz must be positive")
+            u_ref = self.m_sec * f_ref
+            if u_ref in self.phase_joins:
+                raise ValueError("mass derivative is undefined at a reference join")
+            p_ref_expr = self.phase[branch(u_ref, *self.phase_joins)]
+            reference_tangent = u_ref * sp.diff(p_ref_expr, U).subs(U, u_ref)
+            shift_ref = f_ref
+        phase_tangent = (u * p_prime - reference_tangent
+                         + self.tshift_sec * (f - shift_ref))
+        scale = physical_scale(f, self.m_sec, self.distance_mpc, self.eta)
+        amplitude_tangent = scale * (sp.Rational(5, 6) * a + u * a_prime)
+        _, _, psi = self.expressions(f, inclination=inclination, tc=tc,
+                                     phic=phic, f_ref_hz=f_ref_hz)
+        carrier_tangent = sp.exp(-sp.I * psi) * (
+            amplitude_tangent - sp.I * scale * a * phase_tangent)
+        cosine = sp.cos(exact(inclination))
+        return (sp.Rational(1, 2) * (1 + cosine**2) * carrier_tangent,
+                -sp.I * cosine * carrier_tangent, phase_tangent)
 
 
 def compose(m1, m2, chi1, chi2, distance_mpc, parameters: Mapping[str, object]):

@@ -221,7 +221,152 @@ def test_component_evidence_and_links():
     assert ref.COMPONENT_VERSIONS[:4] == (
         ref.amp.SPEC_VERSION, ref.middle.SPEC_VERSION,
         ref.inspiral.SPEC_VERSION, ref.phase.SPEC_VERSION)
+    assert ref.MASS_SCALING_COMPONENT_VERSIONS == (ref.SPEC_VERSION,)
+    assert "1" in ref.SOURCES["pratten2020v1"]
     doc = (Path(__file__).resolve().parents[1] / "docs" / "math"
            / "imrphenomxas.md").read_text()
     for component in ref.COMPONENT_IDS.values():
         assert component in doc
+
+
+@pytest.mark.parametrize("case", CASES)
+@pytest.mark.parametrize("use_reference", (False, True))
+def test_total_mass_similarity(backend, case, use_reference):
+    """The full carrier obeys Fourier-strain mass homogeneity at fixed q/spins."""
+    name, carrier, array = backend
+    probe = carrier(*case[:2], chi1=case[2], chi2=case[3])
+    m_sec = float(probe.m_sec)
+    f_ref = ((float(probe.f_trans_phase) + float(probe.f_join_rd))
+             / (2*m_sec)) if use_reference else None
+    state = carrier(*case[:2], chi1=case[2], chi2=case[3], f_ref=f_ref)
+    spec = ref.compose(*case, 470., snapshot(state))
+    factor = 1.3
+    scaled = carrier(factor*case[0], factor*case[1],
+                     chi1=case[2], chi2=case[3],
+                     f_ref=None if f_ref is None else f_ref/factor)
+    mf = np.array((.6*min(float(state.f_trans_amp),
+                          float(state.f_trans_phase)),
+                   .5*(float(state.f_trans_amp)+float(state.f_peak)),
+                   1.2*max(float(state.f_peak), float(state.f_join_rd))))
+    frequencies = mf/m_sec
+    options = dict(distance=array(470.), inclination=array(.7),
+                   t_c=array(.003), phi_c=array(.23), return_phase=True)
+    original = state.eval_waveform(array(frequencies), **options)
+    options["t_c"] = array(factor*.003)
+    transformed = scaled.eval_waveform(array(frequencies/factor), **options)
+    for i in (0, 1):
+        np.testing.assert_allclose(as_numpy(transformed[i], name),
+                                   factor**2*as_numpy(original[i], name),
+                                   rtol=3e-10, atol=1e-31)
+    np.testing.assert_allclose(as_numpy(transformed[2], name),
+                               as_numpy(original[2], name),
+                               rtol=3e-10, atol=1e-8)
+    scaled_spec = spec.scaled_total_mass(factor)
+    for f in frequencies:
+        h0 = spec.evaluate(f, inclination=.7, tc=.003, phic=.23,
+                           f_ref_hz=f_ref)
+        h1 = scaled_spec.evaluate(
+            f/factor, inclination=.7, tc=factor*.003, phic=.23,
+            f_ref_hz=None if f_ref is None else f_ref/factor)
+        np.testing.assert_allclose(h1[:2], factor**2*np.array(h0[:2]),
+                                   rtol=3e-10, atol=1e-31)
+        np.testing.assert_allclose(h1[2], h0[2], rtol=3e-10, atol=1e-8)
+
+
+@pytest.mark.parametrize("reference_region", (None, "inspiral", "intermediate", "ringdown"))
+@pytest.mark.parametrize("frequency_region", ("inspiral", "intermediate", "ringdown"))
+def test_native_log_total_mass_gradient(backend, reference_region,
+                                        frequency_region):
+    """Differentiate through all native fit/collocation construction at fixed Hz."""
+    name, carrier, array = backend
+    case = CASES[1]
+    probe = carrier(*case[:2], chi1=case[2], chi2=case[3])
+    m_sec = float(probe.m_sec)
+    p0, p1 = float(probe.f_trans_phase), float(probe.f_join_rd)
+    a0, a1 = float(probe.f_trans_amp), float(probe.f_peak)
+    f_ref = {None: None, "inspiral": .6*p0/m_sec,
+             "intermediate": .5*(p0+p1)/m_sec,
+             "ringdown": 1.1*p1/m_sec}[reference_region]
+    mf = {"inspiral": .6*min(a0, p0),
+          "intermediate": .5*(a0+a1),
+          "ringdown": 1.2*max(a1, p1)}[frequency_region]
+    f = mf/m_sec
+    state = carrier(*case[:2], chi1=case[2], chi2=case[3], f_ref=f_ref)
+    spec = ref.compose(*case, 470., snapshot(state))
+    expected = spec.log_total_mass_derivatives(
+        f, inclination=.7, tc=.003, phic=.23, f_ref_hz=f_ref)
+    expected_h = np.array([complex(sp.N(x, 45)) for x in expected[:2]])
+    expected_phase = float(sp.N(expected[2], 45))
+    base_h = np.array(spec.evaluate(f, inclination=.7, tc=.003,
+                                    phic=.23, f_ref_hz=f_ref)[:2])
+
+    def outputs(scale):
+        state = carrier(scale*case[0], scale*case[1], chi1=case[2],
+                        chi2=case[3], f_ref=f_ref)
+        hp, hc, psi = state.eval_waveform(
+            array([f]), distance=array(470.), inclination=array(.7),
+            t_c=array(.003), phi_c=array(.23), return_phase=True)
+        return hp[0], hc[0], psi[0]
+
+    if name == "torch":
+        import torch
+        scale = array(1.).detach().clone().requires_grad_(True)
+        hp, hc, psi = outputs(scale)
+        values = (hp.real, hp.imag, hc.real, hc.imag, psi)
+        gradient = np.array([
+            float(torch.autograd.grad(value, scale,
+                                      retain_graph=i < 4)[0])
+            for i, value in enumerate(values)])
+    else:
+        import jax
+        import jax.numpy as jnp
+        def real_outputs(scale):
+            hp, hc, psi = outputs(scale)
+            return jnp.stack((hp.real, hp.imag, hc.real, hc.imag, psi))
+        gradient = np.asarray(jax.jacfwd(real_outputs)(array(1.)))
+    actual_h = np.array([complex(*gradient[:2]), complex(*gradient[2:4])])
+    np.testing.assert_allclose(actual_h/base_h, expected_h/base_h,
+                               rtol=2e-7, atol=2e-7)
+    np.testing.assert_allclose(gradient[4], expected_phase,
+                               rtol=2e-7, atol=2e-6)
+
+
+def test_mass_phase_tangent_cancels_at_reference():
+    """At f=f_ref the intrinsic/reference and time-shift tangents cancel."""
+    branch = {name: ref.U**2 + ref.U for name in
+              ("inspiral", "intermediate", "merger_ringdown")}
+    spec = ref.WaveformSpec(sp.Rational(1, 100), sp.Rational(1, 4),
+                            sp.Integer(500), branch,
+                            (sp.Rational(1, 50), sp.Rational(1, 20)),
+                            branch, (sp.Rational(1, 50), sp.Rational(1, 20)),
+                            sp.Rational(1, 1000))
+    _, _, tangent = spec.log_total_mass_derivatives(3, f_ref_hz=3)
+    assert tangent == 0
+    assert spec.scaled_total_mass(2).m_sec == 2*spec.m_sec
+    with pytest.raises(ValueError, match="positive"):
+        spec.scaled_total_mass(0)
+
+
+def test_native_mass_phase_tangent_cancels_at_reference(backend):
+    name, carrier, array = backend
+    case = CASES[1]
+    probe = carrier(*case[:2], chi1=case[2], chi2=case[3])
+    f = .5*(float(probe.f_trans_phase)+float(probe.f_join_rd))/float(probe.m_sec)
+    state = carrier(*case[:2], chi1=case[2], chi2=case[3], f_ref=f)
+    spec = ref.compose(*case, 470., snapshot(state))
+    assert spec.log_total_mass_derivatives(f, f_ref_hz=f)[2] == 0
+
+    def phase(scale):
+        state = carrier(scale*case[0], scale*case[1], chi1=case[2],
+                        chi2=case[3], f_ref=f)
+        return state.eval_waveform(array([f]), distance=array(470.),
+                                   return_phase=True)[2][0]
+
+    if name == "torch":
+        import torch
+        scale = array(1.).detach().clone().requires_grad_(True)
+        actual = float(torch.autograd.grad(phase(scale), scale)[0])
+    else:
+        import jax
+        actual = float(jax.grad(phase)(array(1.)))
+    np.testing.assert_allclose(actual, 0., atol=2e-8)
