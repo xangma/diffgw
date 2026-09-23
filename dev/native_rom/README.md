@@ -26,6 +26,14 @@ rows fail at least one. In particular, the strong aligned-spin row's refined
 ODE complex error is `6.57e-6`, above the `1e-6` budget. The provisional
 generator remains unqualified; no ROM training or release promotion follows.
 
+A later development-only [six-row Fehlberg output-sampling control](evidence/2026-09-23/README.md)
+passes the frozen numerical gates after fixing the first ODE trial step across
+output grids. Its zero grid differences are an identity control. A separate
+two-row off-grid check finds near-roundoff agreement with locally seeded
+DOP853 at the NQC match, while the earlier Hermite sampler has larger local
+errors. Neither check validates the provisional physical equations or changes
+the release catalog.
+
 The versioned [SEOBNRv4 paper reference](reference/SPEC.md) pins published
 calibration, Hamiltonian, selected flux, leading initial-state, peak, and
 ringdown components and maps applicable checks to the frontends. Its

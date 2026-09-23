@@ -712,8 +712,41 @@ vector field and therefore does not validate SEOBNRv4 physics. Reproduce with
 dev.native_rom.diagnose_boundary_q4_capped_basis_trace --json-out
 /tmp/seobnrv4-boundary-q4-capped-basis-trace.json`.
 
-Next, test a numerical output-sampling candidate across all six frozen
-boundary rows without relaxing the gates. Check the historical initial-state
+The [Fehlberg output plan](rkf45_output_boundary_plan.json) froze a
+development-only replacement for cubic Hermite output sampling: one fifth-order
+Fehlberg substep from the preceding accepted state, with the `0.125 M` fine
+accepted-step cap. Its [mass-ratio-four pilot](rkf45_output_q4_pilot.json)
+reduced medium-to-fine complex waveform error from the capped Hermite
+`4.76183e-8` to `4.00764e-11` and passed all ODE gates, but still failed the
+output-grid monotonicity gate. The [fixed-first-step plan](rkf45_fixed_start_boundary_plan.json)
+then froze the same sampler with a common `0.5 M` coarse initial trial step.
+The [combined six-row report](rkf45_fixed_start_boundary_combined.json)
+verifies one plan, unchanged source manifest, five levels per row, and all
+frozen numerical gates. Refined ODE complex errors range from `1.01036e-11`
+to `4.00764e-11`. Every nested-grid waveform difference is exactly zero
+because those grids reuse identical accepted trajectories and sample times;
+this is an identity control, not independent accuracy or convergence evidence.
+The deliberately stopped serial component and three completed per-row
+components are retained in the combined report.
+
+The predeclared [off-grid reference plan](rkf45_offgrid_reference_plan.json)
+tests the mass-ratio-four and strong aligned-spin tight-tolerance runs at
+fixed probes around the NQC match. The [report](rkf45_offgrid_reference.json)
+replays both frozen waveform hashes and starts each DOP853 reference from the
+preceding accepted fine-stage state, isolating local output-sampling error.
+Fehlberg's maximum absolute state difference is `3.55e-15` in each row,
+versus Hermite's `2.62e-11` and `9.00e-12`, respectively. The first NQC
+phase-basis second-derivative difference from the reference is `-1.06e-14`
+and `+3.97e-15` for Fehlberg, versus `+2.82e-10` and `-5.27e-11` for
+Hermite. Two tight DOP853 tolerances agree at recorded floating precision
+on these short local solves. These results support the interpolation-error
+diagnosis for these probes only. The candidate remains development-only and
+does not establish physical SEOBNRv4 fidelity or ROM training readiness.
+Reproduce with `PYTHONPATH=src:. /Users/xangma/repos/diffgw/.venv/bin/python
+-m dev.native_rom.diagnose_rkf45_offgrid_reference --json-out
+/tmp/seobnrv4-rkf45-offgrid-reference.json`.
+
+Next, check the historical initial-state
 prescription and remaining Hamiltonian/flux components independently,
 including the `(2,1)` spin terms and `(5,5)`
 amplitude, without fitting correction coefficients to the LAL binary.
