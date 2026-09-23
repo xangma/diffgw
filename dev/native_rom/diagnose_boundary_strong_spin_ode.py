@@ -160,6 +160,8 @@ def main(argv=None):
                 fixed_restart_time_M=165.0, output_grid_M=0.5)):
         parser.error("plan or frozen campaign differs from the predeclaration")
     sources = q.source_snapshot()
+    campaign_script = "dev/native_rom/diagnose_parameter_boundaries.py"
+    sources[campaign_script] = q.sha256(q.ROOT / campaign_script)
     if (sources != campaign["source_sha256_before"]
             or q.canonical_hash(sources) != campaign["source_manifest_sha256"]):
         parser.error("generator sources differ from the frozen campaign")
@@ -253,6 +255,7 @@ def main(argv=None):
         if report["comparison"]["whole"] != row["checks"]["ode_tolerance"]["medium_to_fine"]:
             raise ValueError("whole-waveform comparison differs from frozen campaign")
         report["source_sha256_after"] = q.source_snapshot()
+        report["source_sha256_after"][campaign_script] = q.sha256(q.ROOT / campaign_script)
         report["sources_unchanged"] = report["source_sha256_after"] == sources
         if not report["sources_unchanged"]:
             raise ValueError("generator sources changed during replay")
