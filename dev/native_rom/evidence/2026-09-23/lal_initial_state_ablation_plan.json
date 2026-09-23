@@ -1,0 +1,17 @@
+{
+  "schema": "diffgw.seobnrv4.lal-initial-state-ablation-plan.v1",
+  "purpose": "Measure the causal contribution of the native quasicircular starting state to the frozen whole-waveform residual.",
+  "prior_whole_waveform": "dev/native_rom/evidence/2026-09-23/local_nqc_fixed_restart_whole_waveform.json",
+  "prior_sha256": "a0b56c6f1e16a868221fe09bf9b358c29a8dc74fb74427dd3a65bf715777edc5",
+  "prior_peak_anchor": "dev/native_rom/evidence/2026-09-23/peak_anchor_diagnostic.json",
+  "prior_peak_anchor_sha256": "24faffdafb2736fdff85920bc1aee4324e7b4c5f380b54c4f5bbaea38b2c9e30",
+  "dynamics_diagnostic": "dev/native_rom/evidence/2026-09-23/lal_dynamics_diagnostic.json",
+  "dynamics_sha256": "eadbeca687df9b696d0e846fc17e563f9c1b9d7be6e7c793123e009e6ecbd283",
+  "rows": [0, 1],
+  "reference_step_M": 0.125,
+  "reference_frequency_Momega": 0.04,
+  "intervention": "Replace only the native initial r, pr_star, pphi with the nearest sampled compiled LALSuite dynamics point at M Omega=0.04. Keep the native initial phase at zero and all subsequent native physics and numerical settings fixed.",
+  "baseline_replay": "Require the native waveform array SHA-256 to match the prior whole-waveform diagnostic for each row.",
+  "metric": "Complex relative L2 after independent quadratic-power amplitude-peak anchoring, without optimizing a relative time shift, phase, amplitude, or model coefficient.",
+  "interpretation": "Sensitivity diagnostic only. The LAL state is not a native initial-condition prescription and may be offset slightly in orbital frequency. Do not use it in production, ROM training, or a release qualification claim."
+}
