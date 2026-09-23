@@ -98,9 +98,9 @@
       "status": "conditional",
       "reference": "flux.emitted_flux; flux.newtonian_22_mode",
       "torch": "src/torchwave/approximants/eob/factorized_modes.py:energy_flux_from_modes; src/torchwave/approximants/eob/seobnrv4_flux.py:SEOBNRv4PublishedFlux.energy_flux",
-      "jax": null,
-      "test": "dev/native_rom/reference/tests/test_published.py:test_flux_paper_normalization_and_mode_partner; dev/native_rom/reference/tests/test_torch.py:test_mode_flux_normalization_against_reference; dev/native_rom/reference/tests/test_torch.py:test_35_mode_flux_composition_against_reference; dev/native_rom/reference/tests/test_torch.py:test_35_mode_flux_from_independent_scalar_amplitudes",
-      "condition": "Requires externally supplied pre-NQC mode amplitudes; complete historical (2,1) spin choice, high-ell truncation, and a JAX factorized implementation remain unverified."
+      "jax": "src/jaxwave/approximants/eob/seobnrv4_flux.py:emitted_flux_from_modes",
+      "test": "dev/native_rom/reference/tests/test_published.py:test_flux_paper_normalization_and_mode_partner; dev/native_rom/reference/tests/test_torch.py:test_mode_flux_normalization_against_reference; dev/native_rom/reference/tests/test_torch.py:test_35_mode_flux_composition_against_reference; dev/native_rom/reference/tests/test_torch.py:test_35_mode_flux_from_independent_scalar_amplitudes; dev/native_rom/reference/tests/test_jax.py:test_pre_nqc_emitted_flux_normalization_against_reference; dev/native_rom/reference/tests/test_jax.py:test_pre_nqc_22_flux_against_scalar_reference; tests/test_clean_room_jax_seobnrv4_flux.py:test_newtonian_22_flux_and_gradient",
+      "condition": "Requires externally supplied pre-NQC mode amplitudes; complete historical (2,1) spin choice, high-ell truncation, and a full JAX factorized implementation remain unverified."
     },
     {
       "id": "V4-FLUX-22-AMPLITUDE",
@@ -108,8 +108,8 @@
       "status": "conditional",
       "reference": "flux.factorized_22_amplitude",
       "torch": "src/torchwave/approximants/eob/seobnrv4_amplitude22.py:seobnrv4_published_amplitude22; src/torchwave/approximants/eob/seobnrv4_flux.py:SEOBNRv4PublishedFlux.amplitudes",
-      "jax": null,
-      "test": "dev/native_rom/reference/tests/test_published.py:test_factorized_22_newtonian_limit; dev/native_rom/reference/tests/test_torch.py:test_factorized_22_amplitude_against_reference",
+      "jax": "src/jaxwave/approximants/eob/seobnrv4_amplitude22.py:seobnrv4_published_amplitude22",
+      "test": "dev/native_rom/reference/tests/test_published.py:test_factorized_22_newtonian_limit; dev/native_rom/reference/tests/test_torch.py:test_factorized_22_amplitude_against_reference; dev/native_rom/reference/tests/test_jax.py:test_factorized_22_amplitude_against_reference; tests/test_clean_room_jax_seobnrv4_amplitude22.py:test_batched_exchange_endpoints_and_jit",
       "condition": "Pre-NQC modulus only, using Bohé replacement of the 3.5PN term rather than retaining an additional Pan cubic Kerr-spin term; phase, NQC, and other mode amplitudes are not established."
     },
     {

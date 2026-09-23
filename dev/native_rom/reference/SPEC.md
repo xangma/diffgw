@@ -90,11 +90,14 @@ historical implementation parity.
 The factor of two relative to the full `m=-ell...ell` sum accounts for the
 negative-`m` partners. [Pan et al. (2011), Eqs. (3), (30)](https://arxiv.org/html/1006.0431)
 provide the independent Newtonian check `F_22=(32/5) nu² Omega^(10/3)`.
+The JAX positive-`m` sum agrees with this scalar normalization for supplied
+complex modes and recovers the Newtonian `(2,2)` flux; it does not yet
+generate the 35 SEOBNRv4 mode moduli.
 `flux.factorized_22_amplitude` checks the published pre-NQC dominant-mode
 modulus, including the non-Keplerian Newtonian prefactor, rest-energy tail,
 and Bohé's 2.5PN/3.5PN spin replacements. It agrees with the standalone Torch
-amplitude and the `(2,2)` entry of Torch's 35-mode flux on the tested points,
-and has the correct Newtonian limit. `flux.factorized_33_44_amplitudes`
+and JAX amplitudes and the `(2,2)` entry of Torch's 35-mode flux on the tested
+points, and has the correct Newtonian limit. `flux.factorized_33_44_amplitudes`
 independently evaluates the pre-NQC `(3,3)` and `(4,4)` moduli using
 [Damour--Iyer--Nagar (2009), Eqs. (52), (62)](https://arxiv.org/html/0811.2069)
 and [Pan et al. (2011), Eqs. (28c), (29f), (38c), (38f), (41c), (42f)](https://arxiv.org/html/1006.0431).

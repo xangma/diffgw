@@ -8,6 +8,7 @@ from dev.native_rom.reference.hamiltonian import (
     aligned_effective_hamiltonian, body_parameters, effective_spin_mapping, energy_map,
     nonspinning_effective_hamiltonian, radial_potentials,
 )
+from dev.native_rom.reference.flux import emitted_flux, factorized_22_amplitude
 from dev.native_rom.reference.initial_conditions import leading_adiabatic_state
 from dev.native_rom.reference.published import calibration, evaluate, mass_spin, peak_targets, ringdown_shape
 from dev.native_rom.reference.ringdown import h22
@@ -18,6 +19,8 @@ from jaxwave.approximants.eob.merger_ringdown import merger_ringdown_22, seobnrv
 from jaxwave.approximants.eob.remnant import eob_final_mass_fraction, hofmann_final_spin
 from jaxwave.approximants.eob.nqc import seobnrv4_nqc_parameters, seobnrv4_nqc_targets, seobnrv4_nqc_time_offset
 from jaxwave.approximants.eob.seobnrv4_hamiltonian import SEOBNRv4Hamiltonian
+from jaxwave.approximants.eob.seobnrv4_amplitude22 import seobnrv4_published_amplitude22
+from jaxwave.approximants.eob.seobnrv4_flux import emitted_flux_from_modes
 from jaxwave.approximants.eob.initial_conditions import find_quasicircular_initial_conditions
 
 jax.config.update("jax_enable_x64", True)
@@ -25,6 +28,43 @@ jax.config.update("jax_enable_x64", True)
 
 def scalar(x):
     return jnp.asarray(x, dtype=jnp.float64)
+
+
+@pytest.mark.parametrize("m1,m2,s1,s2,w,w0,he,hr", [
+    (30., 20., 0., 0., .04, .039, .95, .988),
+    (30., 20., .6, -.2, .07, .068, .91, .978),
+    (20., 20., -.9, .7, .11, .105, .89, .972),
+    (45., 5., -.8, .3, .1, .097, .88, .974),
+])
+def test_factorized_22_amplitude_against_reference(m1, m2, s1, s2, w, w0, he, hr):
+    expected = factorized_22_amplitude(m1, m2, s1, s2, w, w0, he, hr)
+    actual = seobnrv4_published_amplitude22(
+        scalar(w), omega_zero_radial=scalar(w0), heff_over_mu=scalar(he),
+        hreal_over_M=scalar(hr), x1=scalar(m1/(m1+m2)), x2=scalar(m2/(m1+m2)),
+        chi1=scalar(s1), chi2=scalar(s2))
+    assert float(actual) == pytest.approx(float(expected), rel=2e-12, abs=2e-14)
+
+
+def test_pre_nqc_emitted_flux_normalization_against_reference():
+    modes = {(2, 2): .3+.4j, (3, 3): -.07+.02j, (4, 2): .014}
+    expected = emitted_flux(.04, modes)
+    actual = emitted_flux_from_modes(scalar(.04), modes)
+    assert float(actual) == pytest.approx(float(expected), rel=2e-15)
+
+
+@pytest.mark.parametrize("m1,m2,s1,s2,w,w0,he,hr", [
+    (30., 20., 0., 0., .04, .039, .95, .988),
+    (30., 20., .6, -.2, .07, .068, .91, .978),
+])
+def test_pre_nqc_22_flux_against_scalar_reference(m1, m2, s1, s2, w, w0, he, hr):
+    amplitude = factorized_22_amplitude(m1, m2, s1, s2, w, w0, he, hr)
+    expected = emitted_flux(w, {(2, 2): amplitude})
+    actual_amplitude = seobnrv4_published_amplitude22(
+        scalar(w), omega_zero_radial=scalar(w0), heff_over_mu=scalar(he),
+        hreal_over_M=scalar(hr), x1=scalar(m1/(m1+m2)), x2=scalar(m2/(m1+m2)),
+        chi1=scalar(s1), chi2=scalar(s2))
+    actual = emitted_flux_from_modes(scalar(w), {(2, 2): actual_amplitude})
+    assert float(actual) == pytest.approx(float(expected), rel=4e-12)
 
 
 @pytest.mark.parametrize("m1,m2,s1,s2,omega", [
