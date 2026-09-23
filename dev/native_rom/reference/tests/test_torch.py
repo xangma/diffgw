@@ -5,7 +5,8 @@ import torch
 
 from dev.native_rom.reference.flux import (
     emitted_flux, factorized_22_amplitude, factorized_33_44_amplitudes,
-    factorized_21_nonspin_amplitude, factorized_32_amplitude,
+    factorized_21_nonspin_amplitude, factorized_21_spin_amplitude,
+    factorized_32_amplitude,
     newtonian_22_mode,
 )
 from dev.native_rom.reference.hamiltonian import (
@@ -130,6 +131,23 @@ def test_factorized_21_nonspin_amplitude_against_reference(m1, m2, w, w0, j, he,
         heff_over_mu=scalar(he), hreal_over_M=scalar(hr),
         x1=scalar(m1/(m1+m2)), x2=scalar(m2/(m1+m2)),
         chi1=scalar(0.), chi2=scalar(0.))[(2, 1)]
+    assert float(actual) == pytest.approx(float(expected), rel=3e-12, abs=2e-14)
+
+
+@pytest.mark.parametrize("m1,m2,s1,s2,w,w0,j,he,hr", [
+    (30., 20., .2, -.1, .04, .039, 3., .95, .988),
+    (45., 5., -.8, .3, .10, .095, 2.6, .89, .973),
+    (20., 20., -.9, .7, .08, .077, 2.8, .91, .975),
+    (20., 20., .4, .4, .08, .077, 2.8, .91, .975),
+])
+def test_factorized_21_spin_amplitude_against_reference(m1, m2, s1, s2,
+                                                         w, w0, j, he, hr):
+    expected = factorized_21_spin_amplitude(m1, m2, s1, s2, w, w0, j, hr)
+    actual = SEOBNRv4PublishedFlux(spin_truncation="generic-leading-ell8").amplitudes(
+        scalar([9., 0., -.01, j]), omega=scalar(w), omega_zero_radial=scalar(w0),
+        heff_over_mu=scalar(he), hreal_over_M=scalar(hr),
+        x1=scalar(m1/(m1+m2)), x2=scalar(m2/(m1+m2)),
+        chi1=scalar(s1), chi2=scalar(s2))[(2, 1)]
     assert float(actual) == pytest.approx(float(expected), rel=3e-12, abs=2e-14)
 
 

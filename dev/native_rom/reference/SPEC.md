@@ -114,9 +114,23 @@ only for zero spins. It uses [Pan Eq. (38b)](https://arxiv.org/html/1006.0431)
 for the leading mode and [Damour--Iyer--Nagar Eq. (51)](https://arxiv.org/html/0811.2069)
 with [Damour--Nagar--Bernuzzi Eq. (D2)](https://arxiv.org/html/1212.4357)
 for the residual through `v**10`. It agrees with Torch at the tested unequal-
-and equal-mass points. This does not check the `(2,1)` spin terms.
+and equal-mass points. `flux.factorized_21_spin_amplitude` extends this
+conditional reconstruction with the regularized `delta*f21` spin residual.
+The leading `v` term is [Pan Eq. (41b)](https://arxiv.org/html/1006.0431);
+the `v**3` comparable-mass term follows by matching the physical 2PN spin
+mode in [Buonanno--Faye--Hinderer Eqs. (52)--(53a)](https://arxiv.org/html/1209.6349)
+to Pan's odd-parity source and mode; higher Kerr-spin terms come from
+[Pan Eq. (28b)](https://arxiv.org/html/1006.0431).
+Specifically, with `delta=(m1-m2)/M`, the paper-derived spin part through
+`v**3` is `delta*f21^S = -3/2*(delta*chiS+chiA)*v +
+[delta*(61/12+79*nu/84)*chiS+(61/12+131*nu/84)*chiA]*v**3`.
+The scalar result agrees
+with Torch for unequal-mass aligned spins and equal-mass unequal spins, without
+dividing by the mass difference. The papers do not print the complete
+assembled historical v4 `(2,1)` polynomial, so this component agreement
+does not establish its historical truncation or waveform parity.
 Torch composes all 35 supplied modes with the flux normalization, but the
-other 31 amplitude formulas, high-`ell` spin truncation, and JAX
+other 30 amplitude formulas, high-`ell` spin truncation, and JAX
 factorized-flux path still need independent checks. The JAX
 development assembler currently uses a 1.5PN prototype flux and Newtonian `(2,2)` mode, so no
 cross-backend whole-waveform SEOBNRv4 claim follows from these checks.
@@ -302,6 +316,13 @@ and amplitude budgets (`3.387e-6` and `1.466e-6`) and its grid monotonicity
 gate (complex error increases from `1.946e-8` to `1.114e-7`). The paired
 sampled-peak LAL difference is `0.01336093`, reduced to about `0.0078–0.0081`
 by sub-sample peak fitting, with a failed numerical prerequisite.
+Frozen-hash replays of that aligned-spin row find pre-NQC mode discrepancies
+of `2.608e-9` (ODE) and `3.620e-10` (grid), much smaller than the finished
+waveform discrepancies. The shared fine-run NQC coefficients already amplify
+the difference on the coarse prefix. The amplitude and phase matching systems
+have condition numbers near `833` and `8.52` with roundoff-level solve
+residuals; the sampled input responsible for coefficient drift remains
+unresolved.
 With quadratic-power peak fits, the corresponding nonspinning difference is
 `0.006949`. In a replay of the same two frozen waveforms, inspiral
 (`t<-20 M`) squared complex error is 94.07%/96.19% phase-related

@@ -299,6 +299,34 @@ its convergence prerequisite as failed. Reproduce with `PYTHONPATH=src:. python
 dev/native_rom/evidence/2026-09-23/aligned_spin_convergence_input.json
 --json-out /tmp/seobnrv4-aligned-fixed-restart-whole-waveform.json`.
 
+The [ODE](aligned_spin_trajectory_ode.json) and
+[grid](aligned_spin_trajectory_grid.json) trajectory-sensitivity replays verify
+the exact frozen waveform hashes before comparing stages. On the refined ODE
+pair, pre-NQC `(2,2)` modes agree to `2.608e-9` complex relative L2 on the
+common pre-attachment samples, whereas the attached waveform differs by
+`3.387e-6`. The corresponding grid pair is `3.620e-10` before NQC versus
+`1.114e-7` after attachment. Orbital-frequency maximum differences are
+`8.576e-11` and `1.509e-11`, respectively; event times are identical within
+the recorded precision. Even the coarse prefix, which uses the fine-run NQC
+coefficients, differs by `7.209e-7` and `2.408e-8` locally. The amplitude
+NQC coefficients change by up to `0.0149` across the ODE pair and `0.000483`
+across the grid pair. This localizes the observed amplification to NQC
+calibration or its application, before the final ringdown attachment; it does
+not yet identify which matching-system input drives the coefficient drift.
+The replay records amplitude matching condition numbers near `833` and phase
+matching condition numbers near `8.52` on both pairs. Linear-system residuals
+are at floating-point roundoff, so a failed solve is not the observed cause;
+the sampled matching inputs and their derivative estimates remain to be
+isolated. These condition numbers are diagnostics of the chosen normalization,
+not physical validation criteria.
+
+These are diagnostic, post-hoc replays of one aligned-spin row, not numerical
+or physical validation. Reproduce each with `PYTHONPATH=src:. python -m
+dev.native_rom.diagnose_trajectory_sensitivity --campaign
+dev/native_rom/evidence/2026-09-23/aligned_spin_fixed_restart_campaign.json
+--pair ode --json-out /tmp/seobnrv4-aligned-trajectory-ode.json` (substitute
+`grid` for both occurrences of `ode` for the grid pair).
+
 The [peak-resolution diagnostic](peak_anchor_diagnostic.json) found a
 measurement bias in the earlier whole-waveform comparisons: each mode was
 anchored to its highest **sample** on a `0.125 M` grid, although its actual

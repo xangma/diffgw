@@ -2,8 +2,8 @@
 
 Bohé et al. 1611.03703v3 Eq. (9) sums both signs of m through ell=8.
 Reflection symmetry folds that into a positive-m sum with 1/(8*pi).
-The dominant and three subdominant moduli for the studied rows are checked below;
-the other 31 mode amplitudes remain pending independent reference checks.
+The dominant and four subdominant moduli for the studied rows are checked below;
+the other 30 mode amplitudes remain pending independent reference checks.
 """
 
 import mpmath as mp
@@ -199,3 +199,47 @@ def factorized_21_nonspin_amplitude(m1, m2, omega, omega_zero_radial,
                  -mp.mpf(63735873771463)/16569158860800)*x**5)
         return +(mp.mpf(8)/3*mp.sqrt(mp.pi/5)*n*vphi**3*j*v
                  *_tail_modulus(2, 1, w, hr)*abs(delta*rho**2))
+
+
+def factorized_21_spin_amplitude(m1, m2, chi1, chi2, omega,
+                                 omega_zero_radial, pphi, h_real, *, digits=60):
+    """Reconstructed pre-NQC |R h21/M| with a regularized spin residual.
+
+    Pan (38b), (28b), (41b) and DIN (51)/DNB (D2) fix the Newtonian,
+    Kerr-spin, leading comparable-mass, and nonspin pieces. The 2PN
+    comparable-mass spin coefficient follows by matching BFH (52)-(53a)
+    after the odd-parity source expansion. No complete historical v4 (2,1)
+    polynomial is printed in those papers, so this is a conditional oracle.
+    """
+    with mp.workdps(digits):
+        m1, m2, s1, s2, w, w0, j, hr = map(
+            lambda value: mp.mpf(str(value)),
+            (m1, m2, chi1, chi2, omega, omega_zero_radial, pphi, h_real),
+        )
+        if min(m1, m2, w, w0, j, hr) <= 0 or max(abs(s1), abs(s2)) > 1:
+            raise ValueError("Require physical masses/spins and positive orbital inputs")
+        x1, x2 = m1/(m1+m2), m2/(m1+m2)
+        n, delta = x1*x2, x1-x2
+        cs, ca = (s1+s2)/2, (s1-s2)/2
+        q = (1-2*n)*cs+delta*ca
+        v, vphi = mp.root(w, 3), w*w0**(-mp.mpf(2)/3)
+        x = v**2
+        el1 = mp.euler+mp.log(2*v)
+        rho = (1+(23*n/84-mp.mpf(59)/56)*x
+               +(617*n**2/4704-10993*n/14112-mp.mpf(47009)/56448)*x**2
+               +(mp.mpf(7613184941)/2607897600-107*el1/105)*x**3
+               +(6313*el1/5880-mp.mpf(1168617463883)/911303737344)*x**4
+               +(mp.mpf(5029963)/5927040*el1
+                 -mp.mpf(63735873771463)/16569158860800)*x**5)
+        higher_kerr_spin = (-3*q**2*v**4+3*q*(4*q**2-27)*v**5/16
+                            +4163*q**2*v**6/252
+                            +(-2593*q**3/168+107*q*el1/35
+                              -mp.mpf(11847887)*q/1058400)*v**7)
+        # Multiply by delta before evaluating: the equal-mass unequal-spin
+        # limit is finite even though an unregularized f21 contains chiA/delta.
+        residual = (delta*(rho**2+higher_kerr_spin)
+                    -mp.mpf(3)/2*(delta*cs+ca)*v
+                    +(delta*(mp.mpf(61)/12+79*n/84)*cs
+                      +(mp.mpf(61)/12+131*n/84)*ca)*v**3)
+        return +(mp.mpf(8)/3*mp.sqrt(mp.pi/5)*n*vphi**3*j*v
+                 *_tail_modulus(2, 1, w, hr)*abs(residual))
