@@ -791,6 +791,26 @@ Reproduce with `PYTHONPATH=src:. /Users/xangma/repos/diffgw/.venv/bin/python
 -m dev.native_rom.diagnose_rkf45_offgrid_reference --json-out
 /tmp/seobnrv4-rkf45-offgrid-reference.json`.
 
+The [six-row off-grid plan](rkf45_domain_offgrid_plan.json) extends that local
+sampler check to every row in the frozen numerical campaign. It selects fine
+accepted-step brackets at 10%, 50%, and 90% of each trajectory and the NQC
+match bracket, with duplicate brackets evaluated once. Three interior points
+per bracket are compared with two tight DOP853 solves seeded from the preceding
+accepted state. The [completed report](rkf45_domain_offgrid.json) replayed all
+six frozen waveform hashes and verified that generator source hashes stayed
+unchanged during the run. Across the finite probes, the largest absolute
+Fehlberg state difference from the tighter reference is `3.55e-15`; the
+largest Hermite difference is `5.95e-11`, and the largest difference between
+the two reference tolerances is `3.55e-15`. An [initial stopped
+attempt](rkf45_domain_offgrid_attempt1_failed.json) found that the high-start
+row's match bracket duplicates a selected fractional bracket; the duplicate
+rule was frozen before the complete rerun. These are local output-sampling
+checks of the same provisional ODE, not independent trajectory-convergence,
+historical-physics, waveform-parity, or domain-wide accuracy evidence.
+Reproduce with `PYTHONPATH=src:. /Users/xangma/repos/diffgw/.venv/bin/python
+-m dev.native_rom.diagnose_rkf45_domain_offgrid --json-out
+/tmp/seobnrv4-rkf45-domain-offgrid.json`.
+
 At this earlier stage, the next checks were the historical initial-state
 prescription and remaining Hamiltonian/flux components, without fitting
 correction coefficients to the LAL binary. The later component gate below
