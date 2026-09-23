@@ -1,0 +1,23 @@
+{
+  "schema": "diffgw.seobnrv4.boundary-strong-spin-nqc-inputs-plan.v1",
+  "frozen_campaign_sha256": "090bd698a49818d8fdf34d122fcebcf14de021feaa81f4309d6723d1f3c607a2",
+  "row": "strong_aligned_spin",
+  "pair": ["ode_1", "ode_2"],
+  "unchanged_choices": {
+    "hermite_resampling": true,
+    "local_nqc_phase_derivatives": true,
+    "local_matching_second_derivatives": true,
+    "fixed_restart_time_M": 165.0,
+    "output_grid_M": 0.5
+  },
+  "matching_reconstruction": "Rebuild the exact two-by-two phase system from each frozen NQC sample set: local degree-six, half-M-window phase-basis first and second derivatives; natural-spline waveform-phase first derivative; local degree-six waveform-phase second derivative. Verify stored coefficients and decompose their change exactly into RHS and matrix row contributions using the fine system.",
+  "dense_reference": {
+    "integrator": "SciPy DOP853 dense output of the same provisional EOB vector field from the same quasicircular initial state",
+    "first_step_M": 0.5,
+    "tolerances_rtol_atol": [[1e-11, 1e-12], [1e-12, 1e-13]],
+    "five_point_steps_M": [0.2, 0.1, 0.05, 0.025],
+    "quantities": ["waveform_phase", "phase_basis_1", "phase_basis_2"],
+    "derivatives": [1, 2]
+  },
+  "interpretation": "Diagnose numerical input sensitivity only. Dense DOP853 shares provisional physics and is not an independent SEOBNRv4 reference. Preserve the frozen failed gates; do not tune coefficients, change a gate, or promote production code."
+}
