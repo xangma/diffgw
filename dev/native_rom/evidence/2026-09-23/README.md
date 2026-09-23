@@ -676,7 +676,27 @@ Reproduce with `PYTHONPATH=src:. /Users/xangma/repos/diffgw/.venv/bin/python
 -m dev.native_rom.diagnose_boundary_fine_step_cap --json-out
 /tmp/seobnrv4-boundary-fine-step-cap.json`.
 
-Next, attribute the remaining mass-ratio-four ODE nonmonotonicity, then test
+The [mass-ratio-four attribution plan](boundary_q4_capped_attribution_plan.json)
+preceded its [exact capped replay](boundary_q4_capped_attribution.json). All
+three waveform hashes, accepted trajectories, and phase matching systems
+reproduce the cap control exactly. From medium to fine, the pre-attachment raw
+mode changes by only `5.78270e-10` relative L2, but the full waveform changes
+by `4.76183e-8`, with `99.93%` of squared error in phase. The NQC phase-basis
+second-derivative matching row changes by `-5.78227e-10` in its first column;
+its exact matrix-row contribution to the phase-coefficient change is about
+`[+3.97e-7, -3.91e-6]`. The corresponding raw boundary phase difference is
+`-1.39e-9` rad, while the NQC coefficient-change contribution is
+`-9.83e-8` rad. The coarse-to-medium pair has a larger raw-mode difference
+(`2.60130e-9`) yet a much smaller full-waveform difference (`1.60292e-9`).
+This localizes the nonmonotonicity to the NQC phase matching input, not to
+an event-time shift. It does not yet distinguish accepted-state error,
+Hermite output interpolation, and local derivative-fit error in that input.
+Reproduce with `PYTHONPATH=src:. /Users/xangma/repos/diffgw/.venv/bin/python
+-m dev.native_rom.diagnose_boundary_q4_capped_attribution --json-out
+/tmp/seobnrv4-boundary-q4-capped-attribution.json`.
+
+Next, trace that mass-ratio-four matching derivative through the accepted
+trajectory and output sampling, then test
 any combined numerical candidate across all six frozen boundary rows without
 relaxing the gates. Check the historical initial-state
 prescription and remaining Hamiltonian/flux components independently,
