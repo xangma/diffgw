@@ -208,9 +208,15 @@ solver, event location, and output-grid coupling need a converged campaign.
 The [first frozen generator campaign](../evidence/2026-09-22/README.md) failed
 its direct convergence gate. The [tighter campaign and peak-anchored
 whole-waveform diagnostic](../evidence/2026-09-23/README.md) still fail the
-numerical gate; the latter compares only two rows and does not establish
-public-binary parity. The current generator and ROM work therefore stay on
-this development branch. Reference completion, frontend component checks,
-generator numerical convergence, public-binary parity, and physical/NR
-holdouts are separate gates. No ROM training or release promotion follows
+numerical gate. A controlled grid experiment in that evidence bundle attributes
+most of the grid discrepancy for the nonspinning row to the moving coarse/fine
+restart sample; it does not resolve the ODE-tolerance failure or change the
+default algorithm. A still tighter three-level campaign also failed both
+numerical gates with nonmonotonic errors. Its regional diagnostic finds a
+phase-dominated ODE discrepancy already present before attachment, without
+identifying its numerical cause. The whole-waveform diagnostic compares
+only two rows and does not establish public-binary parity. The current generator
+and ROM work therefore stay on this development branch. Reference completion,
+frontend component checks, generator numerical convergence, public-binary
+parity, and physical/NR holdouts are separate gates. No ROM training or release promotion follows
 from this version alone.

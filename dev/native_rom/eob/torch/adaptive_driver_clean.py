@@ -51,6 +51,8 @@ def reconstruct_seobnrv4_22_adaptive(
     include_positive_chi_540: bool = False,
     final_spin_fit_order=(3, 4),
     dt_geom: float = 0.5,
+    diagnostic_coarse_initial_step_M: Optional[float] = None,
+    diagnostic_restart_time_M: Optional[float] = None,
     num_steps: int = 20000,
     ringdown_duration: float = 150.0,
     atol: float = 1.0e-10,
@@ -68,11 +70,26 @@ def reconstruct_seobnrv4_22_adaptive(
     restart state's orbital phase is retained.  The returned mode is the
     coarse prefix followed by every power-of-two-th fine sample.  This helper
     is intentionally independent of the fixed-step default reconstruction.
+    The diagnostic overrides isolate solver-start and restart-sample effects
+    in grid-convergence studies; neither changes the published default.
     """
     if not isinstance(omega_start, Tensor) or omega_start.dtype not in (torch.float32, torch.float64):
         raise TypeError("omega_start must be a float32/float64 tensor")
     if not math.isfinite(float(dt_geom)) or dt_geom <= 0:
         raise ValueError("dt_geom must be finite and positive")
+    if (diagnostic_coarse_initial_step_M is not None
+            and (not math.isfinite(float(diagnostic_coarse_initial_step_M))
+                 or diagnostic_coarse_initial_step_M <= 0)):
+        raise ValueError("diagnostic_coarse_initial_step_M must be finite and positive")
+    if (diagnostic_restart_time_M is not None
+            and (not math.isfinite(float(diagnostic_restart_time_M))
+                 or diagnostic_restart_time_M <= 0)):
+        raise ValueError("diagnostic_restart_time_M must be finite and positive")
+    if (diagnostic_restart_time_M is not None
+            and not math.isclose(round(diagnostic_restart_time_M / dt_geom) * dt_geom,
+                                 diagnostic_restart_time_M,
+                                 rel_tol=0.0, abs_tol=1.0e-10)):
+        raise ValueError("diagnostic_restart_time_M must lie on the output grid")
     if not isinstance(num_steps, int) or num_steps < 4:
         raise ValueError("num_steps must be an integer of at least four")
     if not math.isfinite(float(ringdown_duration)) or ringdown_duration <= 0:
@@ -93,7 +110,7 @@ def reconstruct_seobnrv4_22_adaptive(
     from torchwave.approximants.eob.seobnrv4_flux import SEOBNRv4PublishedFlux
     from torchwave.approximants.eob.seobnrv4_hamiltonian import SEOBNRv4Hamiltonian
     from torchwave.approximants.kerr_qnm_table_convention import signed_qnm_220_table_convention
-    from torchwave.approximants.eob.nqc import seobnrv4_nqc_parameters, seobnrv4_nqc_time_offset
+    from torchwave.approximants.eob.nqc import seobnrv4_nqc_parameters
 
     values = [torch.as_tensor(value, dtype=omega_start.dtype, device=omega_start.device)
               for value in (mass1, mass2, chi1, chi2)]
@@ -134,6 +151,7 @@ def reconstruct_seobnrv4_22_adaptive(
         coarse_runs.append(integrate_adaptive(
             row_field, initial_flat[row], dt_geom,
             event=AlignedSpinV4Event("coarse"), atol=atol, rtol=rtol,
+            initial_step=diagnostic_coarse_initial_step_M,
             controller=GSL_STATE_SCALED_CONTROLLER,
             max_rejected_steps=max_rejected_steps, max_evaluations=max_evaluations,
             max_accepted_steps=maximum_steps, max_duration=max_duration,
@@ -154,6 +172,8 @@ def reconstruct_seobnrv4_22_adaptive(
         restart_index = n_coarse - math.ceil(150.0 / float(dt_geom))
     else:
         restart_index = n_coarse - math.ceil(n_coarse / 2.0)
+    if diagnostic_restart_time_M is not None:
+        restart_index = round(diagnostic_restart_time_M / dt_geom)
     if restart_index < 1 or restart_index >= n_coarse:
         raise AdaptiveIntegrationError("invalid_restart_index", "two-stage restart index is outside the coarse trajectory")
     coarse_state = coarse.output_state

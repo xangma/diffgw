@@ -1,0 +1,216 @@
+{
+  "cases": {
+    "baseline": {
+      "boundary_time_M": 310.421875,
+      "coarse_event_time_M": 314.82810442478797,
+      "dt_geom": 0.5,
+      "fine_event_time_M": 149.95760256852392,
+      "match_time_M": 310.4267986637539,
+      "name": "baseline",
+      "peak_time_M": 314.7991714477539,
+      "restart_time_M": 165.0,
+      "samples": 921
+    },
+    "fine_both_fixed": {
+      "boundary_time_M": 310.421875,
+      "coarse_event_time_M": 314.82810442478797,
+      "dt_geom": 0.125,
+      "fine_event_time_M": 149.95760256852392,
+      "match_time_M": 310.4267986637539,
+      "name": "fine_both_fixed",
+      "peak_time_M": 314.7991714477539,
+      "restart_time_M": 165.0,
+      "samples": 3684
+    },
+    "fine_default": {
+      "boundary_time_M": 310.421875,
+      "coarse_event_time_M": 314.8300373297732,
+      "dt_geom": 0.125,
+      "fine_event_time_M": 150.09291085771386,
+      "match_time_M": 310.4267986637539,
+      "name": "fine_default",
+      "peak_time_M": 314.7991714477539,
+      "restart_time_M": 164.875,
+      "samples": 3684
+    },
+    "fine_fixed_initial": {
+      "boundary_time_M": 310.421875,
+      "coarse_event_time_M": 314.82810442478797,
+      "dt_geom": 0.125,
+      "fine_event_time_M": 150.09270290770354,
+      "match_time_M": 310.4267986637539,
+      "name": "fine_fixed_initial",
+      "peak_time_M": 314.7991714477539,
+      "restart_time_M": 164.875,
+      "samples": 3684
+    },
+    "fine_fixed_restart": {
+      "boundary_time_M": 310.421875,
+      "coarse_event_time_M": 314.8300373297732,
+      "dt_geom": 0.125,
+      "fine_event_time_M": 149.95768252115212,
+      "match_time_M": 310.4267986637539,
+      "name": "fine_fixed_restart",
+      "peak_time_M": 314.7991714477539,
+      "restart_time_M": 165.0,
+      "samples": 3684
+    },
+    "medium_both_fixed": {
+      "boundary_time_M": 310.421875,
+      "coarse_event_time_M": 314.82810442478797,
+      "dt_geom": 0.25,
+      "fine_event_time_M": 149.95760256852392,
+      "match_time_M": 310.4267986637539,
+      "name": "medium_both_fixed",
+      "peak_time_M": 314.7991714477539,
+      "restart_time_M": 165.0,
+      "samples": 1842
+    }
+  },
+  "comparisons": {
+    "fine_both_fixed": {
+      "amplitude_relative_l2": 0.0,
+      "boundary_time_M_abs_difference": 0.0,
+      "candidate_samples": 921,
+      "common_samples": 921,
+      "complex_relative_l2": 0.0,
+      "grid_step_M": 0.5,
+      "match_time_M_abs_difference": 0.0,
+      "peak_time_M_abs_difference": 0.0,
+      "phase_max_abs_rad": 5.2270853478508586e-17,
+      "phase_rms_rad": 1.704456776728519e-17,
+      "phase_samples": 854,
+      "reference_samples": 921,
+      "relative_norm_error": 0.0,
+      "samples": 921,
+      "support_end_difference_M": 0.375,
+      "unmaximized_real_overlap": 1.0
+    },
+    "fine_default": {
+      "amplitude_relative_l2": 2.51377232502216e-07,
+      "boundary_time_M_abs_difference": 0.0,
+      "candidate_samples": 921,
+      "common_samples": 921,
+      "complex_relative_l2": 5.916258406416943e-06,
+      "grid_step_M": 0.5,
+      "match_time_M_abs_difference": 0.0,
+      "peak_time_M_abs_difference": 0.0,
+      "phase_max_abs_rad": 1.1665319235161983e-05,
+      "phase_rms_rad": 6.694587824861765e-06,
+      "phase_samples": 854,
+      "reference_samples": 921,
+      "relative_norm_error": 1.8144757629734443e-07,
+      "samples": 921,
+      "support_end_difference_M": 0.375,
+      "unmaximized_real_overlap": 0.9999999999825155
+    },
+    "fine_fixed_initial": {
+      "amplitude_relative_l2": 2.705991068327327e-07,
+      "boundary_time_M_abs_difference": 0.0,
+      "candidate_samples": 921,
+      "common_samples": 921,
+      "complex_relative_l2": 6.364800285429704e-06,
+      "grid_step_M": 0.5,
+      "match_time_M_abs_difference": 0.0,
+      "peak_time_M_abs_difference": 0.0,
+      "phase_max_abs_rad": 1.2548609874012692e-05,
+      "phase_rms_rad": 7.2017009649922505e-06,
+      "phase_samples": 854,
+      "reference_samples": 921,
+      "relative_norm_error": 1.9532500217245286e-07,
+      "samples": 921,
+      "support_end_difference_M": 0.375,
+      "unmaximized_real_overlap": 0.9999999999797641
+    },
+    "fine_fixed_restart": {
+      "amplitude_relative_l2": 4.240162814094318e-09,
+      "boundary_time_M_abs_difference": 0.0,
+      "candidate_samples": 921,
+      "common_samples": 921,
+      "complex_relative_l2": 9.817302072485604e-08,
+      "grid_step_M": 0.5,
+      "match_time_M_abs_difference": 0.0,
+      "peak_time_M_abs_difference": 0.0,
+      "phase_max_abs_rad": 1.935643042158677e-07,
+      "phase_rms_rad": 1.1111319300142472e-07,
+      "phase_samples": 854,
+      "reference_samples": 921,
+      "relative_norm_error": 3.060620423767091e-09,
+      "samples": 921,
+      "support_end_difference_M": 0.375,
+      "unmaximized_real_overlap": 0.9999999999999953
+    },
+    "medium_both_fixed": {
+      "amplitude_relative_l2": 0.0,
+      "boundary_time_M_abs_difference": 0.0,
+      "candidate_samples": 921,
+      "common_samples": 921,
+      "complex_relative_l2": 0.0,
+      "grid_step_M": 0.5,
+      "match_time_M_abs_difference": 0.0,
+      "peak_time_M_abs_difference": 0.0,
+      "phase_max_abs_rad": 5.2270853478508586e-17,
+      "phase_rms_rad": 1.704456776728519e-17,
+      "phase_samples": 854,
+      "reference_samples": 921,
+      "relative_norm_error": 0.0,
+      "samples": 921,
+      "support_end_difference_M": 0.25,
+      "unmaximized_real_overlap": 1.0
+    },
+    "medium_to_fine_both_fixed": {
+      "amplitude_relative_l2": 0.0,
+      "boundary_time_M_abs_difference": 0.0,
+      "candidate_samples": 1842,
+      "common_samples": 1842,
+      "complex_relative_l2": 0.0,
+      "grid_step_M": 0.25,
+      "match_time_M_abs_difference": 0.0,
+      "peak_time_M_abs_difference": 0.0,
+      "phase_max_abs_rad": 5.2270853478508586e-17,
+      "phase_rms_rad": 1.703616231007927e-17,
+      "phase_samples": 1708,
+      "reference_samples": 1842,
+      "relative_norm_error": 0.0,
+      "samples": 1842,
+      "support_end_difference_M": 0.125,
+      "unmaximized_real_overlap": 1.0000000000000002
+    }
+  },
+  "git_head": "16fad058d423d6e48c0b2ba9f47a934d9dbb8a98",
+  "process": {
+    "argv": [
+      "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw/dev/native_rom/diagnose_grid_coupling.py",
+      "--json-out",
+      "dev/native_rom/evidence/2026-09-23/grid_coupling.json"
+    ],
+    "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+    "host": "RONI2",
+    "pid": 42286
+  },
+  "row": {
+    "chi1": 0.0,
+    "chi2": 0.0,
+    "mass1": 30.0,
+    "mass2": 20.0,
+    "omega_start": 0.04
+  },
+  "schema": "diffgw.seobnrv4.grid_coupling_diagnostic.v1",
+  "scope": {
+    "default_generator_qualified": false,
+    "development_only": true,
+    "no_coefficient_fitting": true,
+    "physics_validated": false
+  },
+  "source_sha256_after": "2a0f9b33db046716683df532df32e957773b440c92b4ab4e1e00c8a542f8fbf5",
+  "source_sha256_before": "2a0f9b33db046716683df532df32e957773b440c92b4ab4e1e00c8a542f8fbf5",
+  "sources_unchanged": true,
+  "tolerances": {
+    "atol": 1e-14,
+    "rtol": 1e-13
+  },
+  "versions": {
+    "numpy": "2.5.3",
+    "torch": "2.14.0"
+  }
+}

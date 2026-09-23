@@ -19,9 +19,60 @@ solves completed. Peak/match time changes at the tightest ODE pair were
 at the last refinement, so these runs show sensitivity rather than demonstrated
 convergence. Changing `dt` also changes the current adaptive initial step and
 coarse/fine restart sampling. Event-peak location uses an explicit `1e-5 M`
-bisection tolerance. Those are investigation targets, not established causes
-of the measured errors. No threshold or waveform coefficient was adjusted to
+bisection tolerance. No threshold or waveform coefficient was adjusted to
 make the gate pass.
+
+The subsequent [grid-coupling diagnostic](grid_coupling.json) held these two
+numerical choices fixed separately. It used the same 30+20 nonspinning row
+with `atol=1e-14`, `rtol=1e-13`, and exact nested waveform samples. The
+default `dt/M=0.125` solve restarted at `164.875 M`, whereas the `0.5 M`
+baseline restarted at `165 M`. Relative to that baseline:
+
+| `dt/M=0.125` choice | Complex relative L2 |
+| --- | ---: |
+| Default first step and restart | 5.916e-6 |
+| First step fixed at `0.5 M` only | 6.365e-6 |
+| Restart fixed at `165 M` only | 9.817e-8 |
+| Both fixed | 0 |
+
+A `0.25 M` run with both fixed was also identical on nested samples. The
+recorded source hash was unchanged during all six solves. Thus the restart
+sample shift accounts for most of the measured grid discrepancy in this row;
+the diagnostic overrides do **not** change the default published-convention
+route or rescue its failed qualification gate. In particular, the ODE
+tolerance error in the first campaign was `8.748e-6`, and no fixed-restart
+run establishes correctness of the equations or full waveform. Reproduce
+this diagnostic with
+`PYTHONPATH=src:. python -m dev.native_rom.diagnose_grid_coupling --json-out
+/tmp/seobnrv4-grid-coupling.json`.
+
+An additional [tighter qualification run](tight_qualification.json) used
+`rtol=(1e-13,1e-14,1e-15)` and paired
+`atol=(1e-14,1e-15,1e-16)`, retaining the same default restart rule and
+declared `1e-6` complex-error gate. All five solves completed and the recorded
+source hash stayed unchanged. The ODE complex differences were `2.159e-6`
+then `1.158e-5`; the grid differences were `1.789e-7` then `2.613e-5`.
+Both checks failed, including their required decreasing-error condition. The
+peak times differed by at most `1.526e-4 M` across the refined grid pair,
+still within the separate `0.05 M` event-time limit. The nonmonotonic results
+do not establish an asymptotic error regime or identify a precision floor.
+This run did not change the waveform or promotion status. Reproduce it with
+the `qualify_generator` command below, replacing both tolerance triples with
+the tighter values and writing a separate JSON output.
+
+The [regional ODE diagnostic](ode_regions.json) repeated its three ODE levels
+at `dt/M=0.5`, partitioning each unaligned complex waveform into fixed time
+windows. In the finest pair, the complex relative L2 was `1.158e-5`, versus
+an amplitude relative L2 of `3.657e-7`; phase RMS was `1.488e-5 rad`.
+Approximately 1% of squared complex error was before the `165 M` restart,
+21% from `165–300 M`, 21% from `300–310 M`, 33% from `310–320 M`, and 24%
+thereafter. The earlier tolerance pair had the same broad distribution, though
+smaller errors. Thus the discrepancy is phase dominated and already present
+in the inspiral, not confined to attachment or ringdown. These are descriptive
+windows, not qualification gates or a determination of the numerical cause.
+The source hash remained fixed. Reproduce with
+`PYTHONPATH=src:. python -m dev.native_rom.diagnose_ode_tolerance --json-out
+/tmp/seobnrv4-ode-regions.json`.
 
 The [whole-waveform diagnostic](whole_waveform.json) used the tightest
 `dt/M=0.125`, `rtol=1e-13`, `atol=1e-14` settings and the pinned public
@@ -59,7 +110,9 @@ PYTHONPATH=src python -m dev.native_rom.compare_whole_waveforms \
   --json-out /tmp/seobnrv4-whole-waveform.json
 ```
 
-The next numerical experiment should isolate event-root precision, adaptive
-initial step, and restart sampling, then rerun the declared gates. Independent
-review of the full spin Hamiltonian and all 35 factorized mode amplitudes is
-still required before these diagnostics can support a native SEOBNRv4 claim.
+The next numerical experiment should compare the orbital phase trajectory at
+fixed times with an independent integration method, then rerun the declared
+gates without tuning the thresholds to these observations.
+Independent review of the full spin Hamiltonian and all 35 factorized mode
+amplitudes is still required before these diagnostics can support a native
+SEOBNRv4 claim.
