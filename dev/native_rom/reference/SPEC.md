@@ -227,9 +227,11 @@ The [first frozen generator campaign](../evidence/2026-09-22/README.md) failed
 its direct convergence gate. The default [tighter campaign and peak-anchored
 whole-waveform diagnostic](../evidence/2026-09-23/README.md) still fail the
 numerical gate. An opt-in local-derivative, fixed-restart diagnostic passes both
-numerical gates for one nonspinning row, but retains a `0.02171` peak-anchored
-complex relative L2 difference against the public binary. Its post-hoc choices
-and single converged row do not qualify the model. An earlier controlled grid
+numerical gates for one nonspinning row, but retains a `0.02171` sampled-peak
+complex relative L2 difference against the public binary. Sub-sample peak
+fitting reduces that metric to about `0.0068–0.0069` without a relative time
+or phase optimization. Its post-hoc choices and single converged row do not
+qualify the model. An earlier controlled grid
 experiment in that evidence bundle attributes most of the grid discrepancy for
 the nonspinning row to the moving coarse/fine restart sample; that experiment
 alone did not resolve the ODE-tolerance failure or change the default algorithm.
@@ -267,8 +269,8 @@ whole-waveform complex relative L2 remains `0.02171096` nonspinning and
 The same fixed-restart campaign on an aligned-spin row fails its ODE complex
 and amplitude budgets (`3.387e-6` and `1.466e-6`) and its grid monotonicity
 gate (complex error increases from `1.946e-8` to `1.114e-7`). The paired
-peak-anchored LAL difference is `0.01336093`, with a failed numerical
-prerequisite.
+sampled-peak LAL difference is `0.01336093`, reduced to about `0.0078–0.0081`
+by sub-sample peak fitting, with a failed numerical prerequisite.
 The separate public-binary whole-waveform comparison
 compares only two rows and does not establish public-binary parity. The current
 generator and ROM work therefore stay on this development branch. Reference

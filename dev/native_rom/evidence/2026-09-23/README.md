@@ -299,6 +299,37 @@ its convergence prerequisite as failed. Reproduce with `PYTHONPATH=src:. python
 dev/native_rom/evidence/2026-09-23/aligned_spin_convergence_input.json
 --json-out /tmp/seobnrv4-aligned-fixed-restart-whole-waveform.json`.
 
+The [peak-resolution diagnostic](peak_anchor_diagnostic.json) found a
+measurement bias in the earlier whole-waveform comparisons: each mode was
+anchored to its highest **sample** on a `0.125 M` grid, although its actual
+amplitude peak lies between samples. Re-running the *same* native waveforms
+and pinned public binary with local sub-sample peak fits changes the complex
+relative L2 as follows:
+
+| Row | Sampled-peak anchor | Quadratic power peak | Quartic power peak |
+| --- | ---: | ---: | ---: |
+| Nonspinning | 0.021712 | 0.006949 | 0.006832 |
+| `chi1=+0.2`, `chi2=-0.1` | 0.013361 | 0.008072 | 0.007817 |
+
+Quadratic fits to amplitude and amplitude squared agree to about `1e-8` in
+the whole-waveform metric. The fits locate each waveform's *own* peak; they
+do not optimize a relative shift, phase, amplitude, or model coefficient.
+The older campaign predates a CLI-only input-row edit to its diagnostic
+runner; all generator source hashes and both replayed native waveform hashes
+match the frozen comparison.
+The prior sampled-anchor numbers remain correct for their stated convention,
+but substantially overstate the shape difference due to peak quantization.
+With quadratic-power anchoring, the residual regional complex error is
+`0.00808`/`0.00931` in inspiral and `0.000587`/`0.000630` post-peak
+(nonspinning/aligned). Its physical or implementation cause remains
+unidentified. This re-anchoring does not change the failed aligned-spin
+numerical gates or qualify either waveform. Reproduce with
+`PYTHONPATH=src:. python -m dev.native_rom.diagnose_peak_anchor --campaign
+dev/native_rom/evidence/2026-09-23/hermite_local_nqc_fixed_restart_campaign.json
+--whole-waveform
+dev/native_rom/evidence/2026-09-23/local_nqc_fixed_restart_whole_waveform.json
+--json-out /tmp/seobnrv4-peak-anchor.json`.
+
 The next numerical check is to localize the aligned-spin ODE sensitivity and
 grid nonmonotonicity, then extend convergence to parameter-boundary rows.
 Investigate residual whole-waveform shape differences without fitting

@@ -9,10 +9,12 @@ The [first frozen qualification run](evidence/2026-09-22/README.md) failed the O
 convergence budget. The generator is not qualified for independent ROM training.
 An opt-in [fixed-restart numerical diagnostic](evidence/2026-09-23/README.md)
 passes both convergence gates for one nonspinning row; the default route still
-fails, and its peak-anchored public-binary waveform has a `0.02171` complex
-relative L2 shape difference. The same diagnostic choices fail both numerical
-gates for an aligned-spin row; its `0.01336` waveform difference is descriptive
-only. This does not validate the physical generator.
+fails. Its sampled-peak public-binary comparison has a `0.02171` complex
+relative L2 difference; [sub-sample peak anchoring](evidence/2026-09-23/README.md)
+reduces it to about `0.0068–0.0069`. The same diagnostic choices fail both
+numerical gates for an aligned-spin row; its sampled-peak difference of
+`0.01336` falls to about `0.0078–0.0081` with sub-sample anchoring. These
+comparisons do not validate the physical generator.
 
 The versioned [SEOBNRv4 paper reference](reference/SPEC.md) now pins the
 published calibration, peak, and ringdown equations and maps them to both
