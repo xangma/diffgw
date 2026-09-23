@@ -63,10 +63,13 @@ between the total real energy and reduced-mass-normalized binding energy.
 `hamiltonian.nonspinning_effective_hamiltonian` also checks the deformed-metric
 orbital Hamiltonian and 3PN tortoise-momentum quartic term at zero spin,
 including the exact Schwarzschild test-mass limit. Its finite-mass-ratio
-quartic prescription is conditional: [Pan et al. (2012), Eqs. (14)–(15)](https://arxiv.org/html/1202.0790)
-describe 3PN truncation but print an extra radial factor in Eq. (15) that is
+quartic prescription follows the 3PN truncation in
+[Pan et al. (2012), Eqs. (14)–(15)](https://arxiv.org/html/1202.0790),
+although the printed Eq. (15) includes an extra radial factor that is
 dimensionally inconsistent. The scalar comparison checks the stated truncated
-choice, not the exact historical implementation.
+choice. A [read-only audit of the pinned v6.2.1 source](../evidence/2026-09-23/historical_v4_component_audit.json)
+finds that ordinary SEOBNRv4 selects the same choice; compiled component
+parity is still untested.
 
 `hamiltonian.effective_spin_mapping` checks the aligned, zero-gauge
 3.5PN mapping in [Barausse and Buonanno (2011), Eqs. (50)–(52)](https://arxiv.org/html/1107.2904)
@@ -78,7 +81,7 @@ including Taracchini's `d_SS nu (S1²+S2²)/r⁴` addition and Bohé's radial
 potential. Both tensor frontends agree with this separate high-precision
 scalar evaluation at the tested aligned-spin points; the nonspinning limit,
 body exchange, and mass-scale invariance also hold. The full Hamiltonian
-check inherits the finite-mass-ratio tortoise-quartic ambiguity above, and
+check inherits the paper's finite-mass-ratio tortoise-quartic ambiguity above, and
 component agreement does not validate the resulting dynamics or prove exact
 historical implementation parity.
 
@@ -232,7 +235,14 @@ The scalar result agrees
 with Torch for unequal-mass aligned spins and equal-mass unequal spins, without
 dividing by the mass difference. The papers do not print the complete
 assembled historical v4 `(2,1)` polynomial, so this component agreement
-does not establish its historical truncation or waveform parity.
+does not establish its historical truncation or waveform parity. The pinned
+[historical audit](../evidence/2026-09-23/historical_v4_component_audit.json)
+confirms that active v4 uses the `v` and `v**3` terms, but finds a different
+higher-order Kerr-spin hybrid from this paper-derived reference. A compiled
+pre-NQC `(2,1)` comparison and a public-equation derivation of any correction
+remain necessary. Pan prints both the Taylor residual `f21` in Eq. (28b) and
+the spin-resummed `rho21` in Eq. (29b); their agreement through a chosen PN
+order does not make their finite-frequency hybrids interchangeable.
 All 35 Torch mode moduli now have conditional scalar references and frozen
 point checks. This establishes the declared factorized reconstruction only:
 the complete historical `(2,1)` spin prescription, high-`ell` spin truncation,
@@ -415,9 +425,10 @@ dependency or distribution asset changes in this branch.
 ## Promotion blockers
 
 The manifest names each remaining component and its next discriminating task.
-Most urgently, the Hamiltonian's conditional quartic choice and 24
-factorized mode amplitudes need equation review; the complete historical
-`(2,1)` spin prescription and QNM interpolation details remain open. The ODE initial conditions,
+Most urgently, the historical `(2,1)` higher-order spin hybrid, high-`ell`
+mode choices, and QNM interpolation details remain open. The pinned source
+audit identifies the Hamiltonian's finite-mass-ratio quartic choice, but its
+compiled component comparison is pending. The ODE initial conditions,
 solver, event location, and output-grid coupling need converged campaigns across
 the intended parameter domain.
 The [first frozen generator campaign](../evidence/2026-09-22/README.md) failed
@@ -514,6 +525,13 @@ or numerical causes. The [regional evidence](../evidence/2026-09-23/README.md)
 records the bins and the separate LAL source audit. In particular, the LAL
 v4 trajectory begins with zero NQC flux coefficients; omitting a nonzero NQC
 factor from the native inspiral flux cannot explain this early residual.
+A [six-row whole-trajectory cross-integrator
+check](../evidence/2026-09-23/rkf45_full_trajectory.json) now passes its
+predeclared diagnostic limits for the fixed-restart fine-stage sampler.
+The largest native state difference is `1.61e-11`, while two tight DOP853
+references differ by up to `2.47e-10`. This strengthens numerical evidence
+for that provisional ODE; it does not resolve the physical or whole-waveform
+discrepancies above.
 The separate public-binary whole-waveform comparison
 compares only two rows and does not establish public-binary parity. The current
 generator and ROM work therefore stay on this development branch. Reference

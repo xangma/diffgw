@@ -71,7 +71,7 @@
       "torch": "src/torchwave/approximants/eob/seobnrv4_hamiltonian.py:SEOBNRv4Hamiltonian.effective_hamiltonian",
       "jax": "src/jaxwave/approximants/eob/seobnrv4_hamiltonian.py:SEOBNRv4Hamiltonian.effective_hamiltonian",
       "test": "dev/native_rom/reference/tests/test_published.py:test_nonspinning_effective_hamiltonian_schwarzschild_limit; dev/native_rom/reference/tests/test_torch.py:test_nonspinning_effective_hamiltonian_against_reference; dev/native_rom/reference/tests/test_jax.py:test_nonspinning_effective_hamiltonian_against_reference",
-      "condition": "The finite-nu 3PN tortoise quartic follows the truncated prescription; Pan et al.'s printed Eq. (15) retains a dimensionally inconsistent factor and cannot establish the exact historical choice."
+      "condition": "The finite-nu 3PN tortoise quartic follows the truncated prescription. Pan et al.'s printed Eq. (15) retains a dimensionally inconsistent factor. A read-only audit of pinned lalsimulation-v6.2.1 identifies the same historical choice, but compiled component parity is untested."
     },
     {
       "id": "V4-HAM-SPIN-MAP",
@@ -150,7 +150,7 @@
       "torch": "src/torchwave/approximants/eob/seobnrv4_flux.py:SEOBNRv4PublishedFlux.amplitudes",
       "jax": null,
       "test": "dev/native_rom/reference/tests/test_torch.py:test_factorized_21_spin_amplitude_against_reference",
-      "condition": "Paper-based reconstructed pre-NQC J-source modulus at tested spin points, including equal-mass unequal-spin regularization. The complete historical v4 (2,1) polynomial is not printed in the cited papers; historical truncation, other mode amplitudes, and JAX are unverified."
+      "condition": "Paper-based reconstructed pre-NQC J-source modulus at tested spin points, including equal-mass unequal-spin regularization. A pinned historical source audit confirms the v and v^3 comparable-mass terms but finds a different higher-order Kerr-spin hybrid. Compiled component parity and JAX are unverified."
     },
     {
       "id": "V4-FLUX-31-AMPLITUDE",
@@ -296,13 +296,13 @@
       "id": "V4-HAM-1-3",
       "source": "bohe-2017-v3, Eqs. (1)-(3); Barausse and Buonanno 0912.3517v2, Eqs. (161)-(164); Barausse and Buonanno 1107.2904v1, Eqs. (50)-(52); Taracchini et al. 1311.2544v1, effective-one-body model paragraph",
       "status": "pending",
-      "blocker": "Radial, spin map, and aligned-spin Hamiltonian components match the cited paper reconstruction on tested points. Resolve the finite-nu quartic ambiguity and historical prescription, then validate the resulting numerical dynamics and waveforms."
+      "blocker": "Radial, spin map, and aligned-spin Hamiltonian components match the cited paper reconstruction on tested points. A pinned source audit identifies the historical finite-nu quartic choice; independently compare the compiled component and validate the resulting numerical dynamics and waveforms."
     },
     {
       "id": "V4-FLUX-4-9",
       "source": "bohe-2017-v3, Eqs. (4)-(9); Pan et al. 1006.0431v2, Eqs. (28)-(30), (41)-(42), and Appendices C-F; Taracchini et al. 1311.2544v1, Eq. (4)",
       "status": "pending",
-      "blocker": "Scalar normalization and all 35 declared pre-NQC moduli have conditional independent paper checks at frozen points. Establish historical (2,1) spin and high-ell truncation choices, NQC-free dynamics, and JAX factorized flux before qualifying the full historical torque."
+      "blocker": "Scalar normalization and all 35 declared pre-NQC moduli have conditional independent paper checks at frozen points. The pinned source audit identifies a different higher-order (2,1) Kerr-spin hybrid. Resolve it from public equations and compiled comparison, then establish high-ell truncation, NQC-free dynamics, and JAX factorized flux before qualifying the full historical torque."
     },
     {
       "id": "V4-NQC-7",

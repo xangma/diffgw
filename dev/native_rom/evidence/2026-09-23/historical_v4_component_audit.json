@@ -1,0 +1,21 @@
+{
+  "schema": "diffgw.seobnrv4.historical-component-audit.v1",
+  "scope": "Read-only behavioral audit of pinned lalsimulation-v6.2.1 source; no source excerpts, copied coefficients, or implementation recipe.",
+  "upstream_tag": "lalsimulation-v6.2.1",
+  "upstream_commit": "5154f04e470d1cc48d6f61193af728b5692474ab",
+  "findings": {
+    "finite_nu_tortoise_quartic": {
+      "behavior": "The active ordinary-SEOBNRv4 Hamiltonian selects the finite-mass 3PN-truncated tortoise quartic represented by the scalar reference.",
+      "public_equations": "Taracchini et al., arXiv:1202.0790, Eqs. (14)-(15)",
+      "remaining_check": "Compare the isolated quartic numerically at finite mass ratio and nonzero radial momentum using a compiled pinned binary. The printed Eq. (15) ambiguity remains part of the paper record."
+    },
+    "mode_21_spin_residual": {
+      "behavior": "The active ordinary-SEOBNRv4 flux and waveform paths retain the comparable-mass (2,1) spin residual through both v and v^3. The scalar reference agrees at this order but its higher Kerr-spin hybrid differs from the historical selection of those terms.",
+      "public_equations": "Pan et al., arXiv:1006.0431, Eqs. (28b), (29b), (41b); Buonanno, Faye and Hinderer, arXiv:1209.6349, Eqs. (52)-(53a)",
+      "remaining_check": "Compare pre-NQC |h21| and its flux contribution with identical supplied dynamics at q=4, spins (+0.7,-0.3), M Omega=(0.01,0.02,0.04); check a smooth nonzero equal-mass unequal-spin limit. Derive any correction from public mathematics."
+    }
+  },
+  "compiled_numerical_comparison_performed": false,
+  "historical_parity_established": false,
+  "release_qualified": false
+}

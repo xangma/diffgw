@@ -811,12 +811,39 @@ Reproduce with `PYTHONPATH=src:. /Users/xangma/repos/diffgw/.venv/bin/python
 -m dev.native_rom.diagnose_rkf45_domain_offgrid --json-out
 /tmp/seobnrv4-rkf45-domain-offgrid.json`.
 
+The [full-trajectory plan](rkf45_full_trajectory_plan.json) extends the
+cross-integrator check from local interpolation probes to every accepted
+fine-stage knot in the six frozen `ode_2` rows. Each DOP853 run starts once
+from that row's first accepted fine state; it is not reseeded at later knots.
+The [completed report](rkf45_full_trajectory.json) replays all six waveform
+hashes, verifies unchanged generator sources, and passes both predeclared
+diagnostic ceilings (`1e-6` native state error and `1e-7` reference spread).
+There are 205–4,902 compared knots per row. The largest absolute native-state
+difference from the tighter reference is `1.61e-11`; the largest spread
+between the two reference tolerances is `2.47e-10`. The latter exceeds the
+native difference, so these data do not resolve error at the last reported
+digits. This checks whole fine-stage trajectories of the same provisional
+ODE from frozen restart states. It does not establish historical equations,
+initial-state accuracy, full-waveform parity, or ROM release qualification.
+Reproduce with `PYTHONPATH=src:. /Users/xangma/repos/diffgw/.venv/bin/python
+-m dev.native_rom.diagnose_rkf45_full_trajectory --json-out
+/tmp/seobnrv4-rkf45-full-trajectory.json`.
+
 At this earlier stage, the next checks were the historical initial-state
 prescription and remaining Hamiltonian/flux components, without fitting
 correction coefficients to the LAL binary. The later component gate below
-records the subsequent flux and remnant checks; the conditional quartic
-choice and remaining amplitudes still need independent review before these
-diagnostics can support a native SEOBNRv4 claim.
+records subsequent flux and remnant checks. The current component status is
+tracked in the [reference specification](../../reference/SPEC.md).
+
+A separate [read-only audit of pinned lalsimulation-v6.2.1
+source](historical_v4_component_audit.json) identifies the active ordinary-v4
+finite-mass-ratio tortoise quartic as the 3PN-truncated choice used by our
+paper-derived scalar reference. It also finds that the active `(2,1)` spin
+residual retains both comparable-mass terms through `v**3`, while its
+higher-order Kerr-spin hybrid differs from our conditional reconstruction.
+The audit records behavior only; it contains no upstream source excerpts or
+copied coefficients. No compiled component comparison was performed, so the
+Hamiltonian and `(2,1)` findings do not establish numerical parity.
 
 ## Later component gate: remnant and QNM (reference 0.8.3)
 

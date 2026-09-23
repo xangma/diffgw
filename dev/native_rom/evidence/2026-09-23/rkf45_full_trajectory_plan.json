@@ -1,0 +1,23 @@
+{
+  "schema": "diffgw.seobnrv4.rkf45-full-trajectory-plan.v1",
+  "purpose": "Compare every accepted fine-stage state with an independently integrated DOP853 trajectory from the same frozen restart state, without reseeding at later knots.",
+  "combined_evidence": "rkf45_fixed_start_boundary_combined.json",
+  "rows": ["equal_mass_unequal_spin", "high_start_frequency", "low_start_frequency", "mass_ratio_four_nonspinning", "strong_aligned_spin", "strong_antialigned_spin"],
+  "level": "ode_2",
+  "stage": "fine",
+  "reference": {
+    "solver": "scipy.integrate.solve_ivp:DOP853",
+    "seed": "first valid accepted fine-stage state, once per solve",
+    "endpoint": "last valid accepted fine-stage time",
+    "rtol_atol": [[1e-12, 1e-13], [1e-13, 1e-14]],
+    "first_step_M": 0.015625,
+    "comparison": "all valid accepted fine-stage knots"
+  },
+  "diagnostic_ceiling": {
+    "native_max_abs_any": 1e-6,
+    "reference_spread_max_abs_any": 1e-7
+  },
+  "permitted_prior_source_drift": ["dev/native_rom/diagnose_rkf45_output_boundaries.py", "src/jaxwave/approximants/eob/events.py", "src/jaxwave/approximants/eob/integrator.py", "src/torchwave/approximants/eob/integrator.py"],
+  "permitted_added_sources": ["src/jaxwave/approximants/eob/seobnrv4_amplitude22.py", "src/jaxwave/approximants/eob/seobnrv4_amplitude32.py", "src/jaxwave/approximants/eob/seobnrv4_amplitude42.py", "src/jaxwave/approximants/eob/seobnrv4_amplitude43.py", "src/jaxwave/approximants/eob/seobnrv4_amplitudes33_44.py", "src/jaxwave/approximants/eob/seobnrv4_flux.py"],
+  "interpretation": "Numerical integrator evidence for the same provisional ODE and frozen restart states only. This cannot establish initial-state accuracy, historical physics parity, full-waveform convergence, or ROM release qualification."
+}
