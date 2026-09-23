@@ -98,15 +98,20 @@ def test_factorized_22_amplitude_against_reference(m1, m2, s1, s2, w, w0, he, hr
     assert float(from_flux) == pytest.approx(float(expected), rel=2e-12, abs=2e-14)
 
 
+@pytest.mark.parametrize("mode_33_higher_spin", ["taylor_f", "lal_v4_rho"])
 @pytest.mark.parametrize("m1,m2,s1,s2,w,w0,he,hr", [
     (30., 20., 0., 0., .04, .039, .95, .988),
     (30., 20., .2, -.1, .06, .057, .93, .981),
     (20., 20., .7, -.4, .08, .077, .91, .975),
     (45., 5., -.8, .3, .10, .095, .89, .973),
 ])
-def test_factorized_33_44_amplitudes_against_reference(m1, m2, s1, s2, w, w0, he, hr):
-    expected = factorized_33_44_amplitudes(m1, m2, s1, s2, w, w0, he, hr)
-    modes = SEOBNRv4PublishedFlux(spin_truncation="generic-leading-ell8").amplitudes(
+def test_factorized_33_44_amplitudes_against_reference(m1, m2, s1, s2, w, w0, he, hr,
+                                                       mode_33_higher_spin):
+    expected = factorized_33_44_amplitudes(
+        m1, m2, s1, s2, w, w0, he, hr, mode_33_higher_spin=mode_33_higher_spin)
+    modes = SEOBNRv4PublishedFlux(
+        spin_truncation="generic-leading-ell8",
+        mode_33_higher_spin=mode_33_higher_spin).amplitudes(
         scalar([9., 0., -.01, 3.]), omega=scalar(w), omega_zero_radial=scalar(w0),
         heff_over_mu=scalar(he), hreal_over_M=scalar(hr),
         x1=scalar(m1/(m1+m2)), x2=scalar(m2/(m1+m2)),

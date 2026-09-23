@@ -23,7 +23,8 @@ def _case(m1=30., m2=20., chi1=.2, chi2=-.1, omega=.06,
 
 
 def _scalar_modes(m1, m2, s1, s2, w, w0, j, he, hr, *,
-                  spin_truncation="tabulated", mode_21_higher_spin="taylor_f"):
+                  spin_truncation="tabulated", mode_21_higher_spin="taylor_f",
+                  mode_33_higher_spin="taylor_f"):
     base = (m1, m2, s1, s2, w, w0)
     h_args, j_args = (*base, he, hr), (*base, j, hr)
     mode21 = (scalar_flux.factorized_21_spin_amplitude if mode_21_higher_spin == "taylor_f"
@@ -40,7 +41,8 @@ def _scalar_modes(m1, m2, s1, s2, w, w0, j, he, hr, *,
         (6, 2): scalar_flux.factorized_62_amplitude(*h_args),
     }
     grouped = (
-        (((3, 3), (4, 4)), scalar_flux.factorized_33_44_amplitudes(*h_args)),
+        (((3, 3), (4, 4)), scalar_flux.factorized_33_44_amplitudes(
+            *h_args, mode_33_higher_spin=mode_33_higher_spin)),
         (((5, 4), (5, 2)), scalar_flux.factorized_54_52_amplitudes(*j_args)),
         (((5, 3), (5, 1)), scalar_flux.factorized_53_51_amplitudes(*h_args)),
         (((6, 6), (6, 4)), scalar_flux.factorized_66_64_amplitudes(*h_args)),
@@ -60,18 +62,22 @@ def _scalar_modes(m1, m2, s1, s2, w, w0, j, he, hr, *,
     (30., 20., .2, -.1, .06, .057, 3.2, .93, .981),
     (45., 5., -.8, .3, .10, .095, 2.6, .89, .973),
 ])
-@pytest.mark.parametrize("spin_truncation,mode_21_higher_spin", [
-    ("tabulated", "taylor_f"),
-    ("generic-leading-ell8", "taylor_f"),
-    ("tabulated", "rho_hybrid"),
+@pytest.mark.parametrize("spin_truncation,mode_21_higher_spin,mode_33_higher_spin", [
+    ("tabulated", "taylor_f", "taylor_f"),
+    ("generic-leading-ell8", "taylor_f", "taylor_f"),
+    ("tabulated", "rho_hybrid", "taylor_f"),
+    ("generic-leading-ell8", "taylor_f", "lal_v4_rho"),
 ])
-def test_all_35_frozen_scalar_modes_and_flux(point, spin_truncation, mode_21_higher_spin):
+def test_all_35_frozen_scalar_modes_and_flux(point, spin_truncation,
+                                             mode_21_higher_spin, mode_33_higher_spin):
     m1, m2, s1, s2, w, w0, j, he, hr = point
     state, args = _case(m1, m2, s1, s2, w, w0, j, he, hr)
     model = SEOBNRv4PublishedFlux(
-        spin_truncation=spin_truncation, mode_21_higher_spin=mode_21_higher_spin)
+        spin_truncation=spin_truncation, mode_21_higher_spin=mode_21_higher_spin,
+        mode_33_higher_spin=mode_33_higher_spin)
     expected = _scalar_modes(*point, spin_truncation=spin_truncation,
-                             mode_21_higher_spin=mode_21_higher_spin)
+                             mode_21_higher_spin=mode_21_higher_spin,
+                             mode_33_higher_spin=mode_33_higher_spin)
     actual = model.amplitudes(state, **args)
     assert set(actual) == set(expected)
     for mode in expected:

@@ -89,7 +89,8 @@ def factorized_22_amplitude(m1, m2, chi1, chi2, omega, omega_zero_radial,
 
 
 def factorized_33_44_amplitudes(m1, m2, chi1, chi2, omega,
-                               omega_zero_radial, h_eff, h_real, *, digits=60):
+                               omega_zero_radial, h_eff, h_real, *, digits=60,
+                               mode_33_higher_spin="taylor_f"):
     """Published pre-NQC moduli of two leading subdominant flux modes.
 
     Newtonian constants: Pan et al. 1006.0431v2 Eqs. (38c), (38f).
@@ -120,6 +121,14 @@ def factorized_33_44_amplitudes(m1, m2, chi1, chi2, omega,
         # (41c) replaces it rather than adding a second copy.
         higher33 = (3*q**2/2*v**4+2*q/3*v**5-7*q**2/4*v**6
                     +(6187*q/330-q**3)*v**7)
+        if mode_33_higher_spin == "lal_v4_rho":
+            # LALSimIMRSpinEOBFactorizedWaveform.c, non-HM v4 coefficients:
+            # rho33v4, rho33v5, rho33v6, rho33v7 are cubed with rho33.
+            rho33 += (q**2/2*v**4-4*q/3*v**5+5*q**2/36*v**6
+                      +(5297*q/2970+q**3/3)*v**7)
+            higher33 = 0
+        elif mode_33_higher_spin != "taylor_f":
+            raise ValueError("mode_33_higher_spin must be taylor_f or lal_v4_rho")
         residual33 = (delta*(rho33**3+higher33)
                       -((2-5*n/2)*delta*cs+(2-19*n/2)*ca)*v**3)
         rho44 = (1+(2625*n**2-5870*n+1614)/(1320*(3*n-1))*v**2

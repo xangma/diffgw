@@ -134,6 +134,7 @@ def reconstruct_seobnrv4_22_adaptive(
     *,
     spin_truncation: str = "generic-leading-ell8",
     diagnostic_mode_21_higher_spin: str = "taylor_f",
+    diagnostic_mode_33_higher_spin: str = "taylor_f",
     spin_v6: str = "bohe_total_energy",
     include_pan_v8: bool = False,
     include_positive_chi_540: bool = False,
@@ -213,6 +214,8 @@ def reconstruct_seobnrv4_22_adaptive(
         )
     if diagnostic_mode_21_higher_spin not in {"taylor_f", "rho_hybrid"}:
         raise ValueError("diagnostic_mode_21_higher_spin must be taylor_f or rho_hybrid")
+    if diagnostic_mode_33_higher_spin not in {"taylor_f", "lal_v4_rho"}:
+        raise ValueError("diagnostic_mode_33_higher_spin must be taylor_f or lal_v4_rho")
     if tuple(final_spin_fit_order) != (3, 4):
         raise ValueError(
             "adaptive numerical compatibility requires final_spin_fit_order=(3, 4)"
@@ -246,7 +249,8 @@ def reconstruct_seobnrv4_22_adaptive(
     ham = SEOBNRv4Hamiltonian(nu, s1, s2, delta=x1 - x2)
     rr = SEOBNRv4PublishedFlux(spin_truncation=spin_truncation,
                                retain_pan_cubic_spin=True,
-                               mode_21_higher_spin=diagnostic_mode_21_higher_spin)
+                               mode_21_higher_spin=diagnostic_mode_21_higher_spin,
+                               mode_33_higher_spin=diagnostic_mode_33_higher_spin)
     # A scalar Hamiltonian is needed for each fine row.  Slicing its tensor
     # parameters preserves the graph while avoiding accidental broadcasting
     # of a row state back across the whole batch.

@@ -302,7 +302,8 @@ class SEOBNRv4PublishedFlux:
 
     def __init__(self, lmax: int = 8, *, spin_truncation: str,
                  retain_pan_cubic_spin: bool = False,
-                 mode_21_higher_spin: str = "taylor_f"):
+                 mode_21_higher_spin: str = "taylor_f",
+                 mode_33_higher_spin: str = "taylor_f"):
         if type(lmax) is not int or not 2 <= lmax <= 8:
             raise ValueError("lmax must be an integer from 2 through 8")
         if spin_truncation not in {"tabulated", "generic-leading-ell8"}:
@@ -311,10 +312,13 @@ class SEOBNRv4PublishedFlux:
             raise TypeError("retain_pan_cubic_spin must be a bool")
         if mode_21_higher_spin not in {"taylor_f", "rho_hybrid"}:
             raise ValueError("mode_21_higher_spin must be taylor_f or rho_hybrid")
+        if mode_33_higher_spin not in {"taylor_f", "lal_v4_rho"}:
+            raise ValueError("mode_33_higher_spin must be taylor_f or lal_v4_rho")
         self.lmax = lmax
         self.spin_truncation = spin_truncation
         self.retain_pan_cubic_spin = retain_pan_cubic_spin
         self.mode_21_higher_spin = mode_21_higher_spin
+        self.mode_33_higher_spin = mode_33_higher_spin
         self.mode_indices = tuple((ell, m) for ell in range(2, lmax+1)
                                   for m in range(1, ell+1))
         self._constants = {mode: abs(_newtonian_constant(*mode))
@@ -363,6 +367,10 @@ class SEOBNRv4PublishedFlux:
         higher_f = _higher_kerr_f(v, kerr_spin)
         if self.mode_21_higher_spin == "rho_hybrid":
             rho[2, 1] = rho[2, 1]+_higher_kerr_rho21(v, kerr_spin)
+        if self.mode_33_higher_spin == "lal_v4_rho":
+            q = kerr_spin
+            rho[3, 3] = (rho[3, 3]+q**2/2*v**4-4*q/3*v**5
+                         +5*q**2/36*v**6+(5297*q/2970+q**3/3)*v**7)
         result = {}
         for ell, m in self.mode_indices:
             epsilon = (ell+m) % 2
@@ -370,7 +378,8 @@ class SEOBNRv4PublishedFlux:
             c = b**p+(-1)**m*a**p
             residual = c*rho[ell, m]**ell
             if ell <= 4 and m % 2:
-                if (ell, m) != (2, 1) or self.mode_21_higher_spin == "taylor_f":
+                if ((ell, m) != (2, 1) or self.mode_21_higher_spin == "taylor_f") and (
+                        (ell, m) != (3, 3) or self.mode_33_higher_spin == "taylor_f"):
                     residual = residual+c*higher_f[ell, m]
                 residual += _odd_mass_leading_spin_f(ell, m, v, a, b, s1, s2)
                 if (ell, m) == (2, 1):

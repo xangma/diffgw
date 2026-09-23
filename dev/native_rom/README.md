@@ -50,6 +50,11 @@ A frozen aligned-spin waveform replay tests the paper-derived higher-spin
 `(2,1)` rho hybrid: peak-fitted complex relative L2 changes only from
 `0.00807196` to `0.00806111`. This candidate remains development-only while
 the compiled component and full model are unqualified.
+The [historical `(3,3)` flux placement check](evidence/2026-09-24/README.md)
+finds a substantial same-state torque improvement through `M Omega=0.12`,
+but a residual near `245 ppm` at `0.15` and peak-anchor-sensitive mixed
+whole-waveform results. That explicit Torch/JAX option remains diagnostic;
+the physical and numerical release gates remain open.
 
 ## Numerical evidence
 
