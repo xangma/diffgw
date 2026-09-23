@@ -1,0 +1,27 @@
+{
+  "schema": "diffgw.seobnrv4.boundary-grid-first-step-plan.v1",
+  "frozen_campaign_sha256": "090bd698a49818d8fdf34d122fcebcf14de021feaa81f4309d6723d1f3c607a2",
+  "rows": [
+    "equal_mass_unequal_spin",
+    "mass_ratio_four_nonspinning",
+    "strong_antialigned_spin"
+  ],
+  "levels": ["ode_2", "grid_1", "grid_2"],
+  "coarse_initial_step_M": 0.5,
+  "unchanged_choices": {
+    "hermite_resampling": true,
+    "local_nqc_phase_derivatives": true,
+    "local_matching_second_derivatives": true,
+    "fixed_restart_time_M": 165.0,
+    "ode_tolerances": [1e-14, 1e-13],
+    "output_grid_M": [0.5, 0.25, 0.125]
+  },
+  "measurements": [
+    "Exact baseline waveform hash against the frozen campaign",
+    "Accepted coarse and fine trajectory hashes and step counts",
+    "Full waveform hashes and exact nested-sample differences across grids",
+    "Unaligned complex and amplitude errors and event-time differences",
+    "Frozen default-grid comparisons retained unchanged"
+  ],
+  "interpretation": "A fixed-first-step control isolates one source of output-grid coupling. Identical accepted histories and nested waveforms would attribute the frozen grid sensitivity to the original first-step change for these rows, not establish convergence order or model fidelity. Record any nonzero residual without changing inputs or gates."
+}
