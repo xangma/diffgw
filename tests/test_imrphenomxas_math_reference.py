@@ -1,4 +1,4 @@
-"""Paper quartic collocation and conditional Torch/JAX helper agreement."""
+"""Printed-paper and observed XAS quartic conventions against both frontends."""
 
 import ast
 from pathlib import Path
@@ -10,6 +10,17 @@ sp = pytest.importorskip("sympy")
 pytest.importorskip("mpmath")
 
 from diffgw_reference import imrphenomxas_intermediate as ref
+
+# Magnitudes from the pinned LALSuite 7.21 / LALSimulation 5.3.1 binary via
+# SimInspiralChooseFDWaveform(IMRPhenomXAS), default options, CPU FP64:
+# 30+30 M_sun, zero spins, 500 Mpc, face-on, f_ref=f_low=20 Hz,
+# f_high=512 Hz, df=0.125 Hz.
+# These are external outputs, separate from the paper-derived scalar reference.
+LAL_XAS_AMPLITUDE_FIXTURE = (
+    (812, 8.450867539309586e-24),
+    (1426, 5.261142244888078e-24),
+    (1760, 4.67947314813724e-24),
+)
 
 
 def exact(value):
@@ -61,6 +72,77 @@ def test_paper_quartic_and_physical_slope_constraints():
     reconstructed = ref.paper_amplitude(f1=f1, f3=f3, k=k, coefficients=fitted)
     assert sp.simplify(reconstructed - amplitude) == 0
     assert sp.degree(ref.inverse_polynomial(f1=f1, f3=f3, coefficients=fitted), ref.F) == 4
+
+
+def test_observed_quartic_and_normalization_distinction():
+    f1, f3, k = sp.Rational(1, 50), sp.Rational(1, 10), sp.Rational(3, 2)
+    original = tuple(map(sp.Rational, (1, 2, -1, 3, 2)))
+    observed = ref.observed_amplitude(f1=f1, f3=f3, k=k, coefficients=original)
+    paper = ref.paper_amplitude(f1=f1, f3=f3, k=k, coefficients=original)
+    assert sp.simplify(paper / observed - ref.F ** -sp.Rational(7, 6)) == 0
+    slope = sp.diff(observed, ref.F)
+    midpoint = (f1 + f3) / 2
+    fitted = ref.observed_collocation_coefficients(
+        f1, f3, observed.subs(ref.F, f1), slope.subs(ref.F, f1),
+        observed.subs(ref.F, midpoint), observed.subs(ref.F, f3),
+        slope.subs(ref.F, f3), k,
+    )
+    assert all(sp.simplify(got - want) == 0 for got, want in zip(fitted, original))
+
+
+@pytest.mark.parametrize("m1,m2,chi1,chi2", [
+    (30.0, 30.0, 0.0, 0.0),
+    (50.0, 10.0, 0.5, -0.3),
+])
+def test_full_frontend_intermediate_amplitude_shape(backend, m1, m2, chi1, chi2):
+    """The complete carrier must use K/P, including its frequency prefactor."""
+    name, _, array = backend
+    if name == "torch":
+        from torchwave.approximants.imrphenom_xas import XASCarrierState
+
+        state = XASCarrierState(m1, m2, chi1=chi1, chi2=chi2)
+    else:
+        from jaxwave.approximants.imrphenom_xas import XASCarrierState
+
+        state = XASCarrierState(m1, m2, chi1=chi1, chi2=chi2)
+    f1, f3 = float(state.f1_col), float(state.f4_col)
+    mf = np.asarray([f1 + (f3 - f1) * fraction for fraction in (.2, .5, .8)])
+    hp, _ = state.eval_waveform(array(mf / float(state.m_sec)), distance=500.0)
+    if name == "torch":
+        actual = np.abs(hp.detach().cpu().numpy())
+    else:
+        actual = np.abs(np.asarray(hp))
+    coefficients = tuple(float(getattr(state, f"c{i}_amp")) for i in range(5))
+    expected = np.asarray([
+        float(ref.observed_amplitude(
+            exact(f), exact(f1), exact(f3), 1, tuple(map(exact, coefficients))
+        ).evalf(40))
+        for f in mf
+    ])
+    np.testing.assert_allclose(actual / actual[1], expected / expected[1],
+                               rtol=3e-12, atol=3e-12)
+    printed = np.asarray([
+        float(ref.paper_amplitude(
+            exact(f), exact(f1), exact(f3), 1, tuple(map(exact, coefficients))
+        ).evalf(40))
+        for f in mf
+    ])
+    assert np.max(np.abs(actual / actual[1] - printed / printed[1])) > 0.1
+
+
+def test_external_binary_intermediate_amplitude_fixture(backend):
+    """Pinned binary amplitudes check the scale and calibrated shape."""
+    name, _, array = backend
+    if name == "torch":
+        from torchwave.approximants.imrphenom_xas import XASCarrierState
+    else:
+        from jaxwave.approximants.imrphenom_xas import XASCarrierState
+    state = XASCarrierState(30.0, 30.0, chi1=0.0, chi2=0.0, f_ref=20.0)
+    frequencies = [index * 0.125 for index, _ in LAL_XAS_AMPLITUDE_FIXTURE]
+    hp, _ = state.eval_waveform(array(frequencies), distance=500.0, inclination=0.0)
+    actual = hp.detach().cpu().numpy() if name == "torch" else np.asarray(hp)
+    expected = [amplitude for _, amplitude in LAL_XAS_AMPLITUDE_FIXTURE]
+    np.testing.assert_allclose(np.abs(actual), expected, rtol=1e-10, atol=0)
 
 
 @pytest.mark.parametrize("f1,f3,values,slopes", [
@@ -138,10 +220,21 @@ def test_component_evidence_and_implementation_links():
     for source, *locations in ref.COMPONENT_SOURCES.values():
         assert source in ref.SOURCES
         assert set(locations) <= set(ref.SOURCES[source]["equations"])
+    assert set(ref.OBSERVED_EVIDENCE) == {ref.OBSERVED_CONVENTION}
+    observed = ref.OBSERVED_EVIDENCE[ref.OBSERVED_CONVENTION]
+    assert observed["kind"] == "binary_oracle"
+    assert observed["version"] == "7.21"
+    assert observed["test"] == test_external_binary_intermediate_amplitude_fixture.__name__
     root = Path(__file__).resolve().parents[1]
     for frontend in ("torchwave", "jaxwave"):
         path = root / "src" / frontend / "approximants" / "imrphenom_xas.py"
         tree = ast.parse(path.read_text())
         assert any(isinstance(node, ast.FunctionDef)
                    and node.name == "solve_intermediate_amplitude_quartic"
+                   for node in tree.body)
+        assert any(isinstance(node, ast.ClassDef)
+                   and node.name == observed["frontend_class"]
+                   and any(isinstance(child, ast.FunctionDef)
+                           and child.name == observed["frontend_method"]
+                           for child in node.body)
                    for node in tree.body)

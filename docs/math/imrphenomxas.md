@@ -39,20 +39,48 @@ source or constants.
 | `phenomxas.amp.intermediate.newtonian_factor.v1` | Eq. (67) | Waveform amplitude prefactor; full assembly is not yet qualified | `test_paper_quartic_and_physical_slope_constraints` |
 | `phenomxas.amp.intermediate.quartic.v1` | Eq. (71) | `solve_intermediate_amplitude_quartic` in [Torch](../../src/torchwave/approximants/imrphenom_xas.py) and [JAX](../../src/jaxwave/approximants/imrphenom_xas.py), algebraic helper only | `test_frontend_quartic_against_scalar_matrix_solve` |
 | `phenomxas.amp.intermediate.collocation.v1` | Eqs. (79)–(83), Table 2 | The same two helpers; full boundary-value adapter is not yet qualified | `test_midpoint_coefficient_derivative`, `test_component_evidence_and_implementation_links` |
+| `phenomxas.amp.intermediate.constant_normalization.v1` | Algebraic variant; pointwise LALSimulation binary check below, **not** the printed Eq. (71) | Full Torch/JAX carrier assembly | `test_observed_quartic_and_normalization_distinction`, `test_full_frontend_intermediate_amplitude_shape`, `test_external_binary_intermediate_amplitude_fixture` |
 
 The [maintained tests](../../tests/test_imrphenomxas_math_reference.py) check
 the paper equation and five physical constraints with a known quartic, then
 compare each native *helper* against the independent scalar matrix solve and
-its midpoint derivative. These tests establish the helper's conditional
-algebra, not agreement of the complete XAS amplitude with Eq. (71).
+its midpoint derivative. Separate tests evaluate each full Torch/JAX carrier
+at interior frequencies against the observed scalar convention and three
+pinned binary amplitude samples. These check assembly and sampled calibrated
+behavior, not whether the fits follow the printed paper equation.
 
-**Open normalization discrepancy.** The current waveform assembly supplies
-the helpers with `scaled_amp/f^(7/6)` at its endpoints and reconstructs
+**Normalization investigation.** The waveform assembly supplies the quartic
+helper with endpoint values of `scaled_amp/f^(7/6)` and reconstructs
 `scaled_amp_int=f^(7/6)/P`. Multiplication by the physical Newtonian
-prefactor, which contains `f^(-7/6)`, therefore gives an intermediate
-amplitude proportional to `1/P`. The printed Eq. (71) gives an amplitude
-proportional to `f^(-7/6)/P`. This is a different functional family. The
-project's parameter fits may absorb some of this difference, but helper
-agreement alone cannot certify literature fidelity. The next XAS step must
-resolve the normalization against the paper's definitions and independent
-waveform evidence before qualifying complete amplitude or waveform claims.
+prefactor gives `A_int=K/P`, where `K` is independent of frequency. Its
+physical boundary slope is `A'/K`; its midpoint fit supplies `A/K`.
+The printed Eqs. (67) and (71) instead give `A_int=K*f^(-7/6)/P`,
+whose boundary conversion is `B'=(A'+7*A/(6*f))/A0`. These two quartic
+families are not interchangeable by changing constant coefficients: equal
+`P` would yield amplitudes in the ratio `f^(-7/6)`.
+
+The implementation convention has direct external evidence. With the pinned
+LALSuite 7.21 binary (LALSimulation 5.3.1), CPU FP64, default XAS settings,
+`m1=m2=30 M_sun`, zero spins, `f_ref=f_low=20 Hz`, `f_high=512 Hz`,
+`distance=500 Mpc`, face-on, and a `0.125 Hz` grid, Torch and LAL agree
+across the 1,373 bins between
+`Mf=0.02731805` and `0.07802608`: magnitude relative L2 is `2.13e-14`
+and maximum pointwise relative error is `3.24e-14`. At the midpoint
+`Mf≈0.05267`, the fitted collocation value is `A/K≈29.14`; multiplying it
+by `f^(7/6)` gives the waveform's Newtonian-normalized shape `A/A0≈0.94`.
+Applying the printed prefactor to the **same** polynomial would multiply
+the midpoint amplitude by about 31. This comparison identifies the
+implementation's normalization; it does not establish that the paper has a
+typographical error or validate the waveform against hybrid/NR data.
+Three raw binary amplitudes at grid indices 812, 1426, and 1760 are retained
+as an external-output fixture in the maintained test, separate from the
+paper-derived scalar reference.
+
+The executable reference therefore retains both functions with separate
+names and evidence. The printed equation remains a literature reference;
+the `K/P` function is a binary-checked implementation reference. Whether
+the authors intended a different normalization for Eq. (71), or used a
+distinct convention during calibration, remains unresolved without further
+author clarification or independent calibration evidence. Neither the
+published parameter-space fits nor any LAL source or constants have been
+copied into this component.
