@@ -237,8 +237,11 @@ dividing by the mass difference. The papers do not print the complete
 assembled historical v4 `(2,1)` polynomial, so this component agreement
 does not establish its historical truncation or waveform parity. The pinned
 [historical audit](../evidence/2026-09-23/historical_v4_component_audit.json)
-confirms that active v4 uses the `v` and `v**3` terms, but finds a different
-higher-order Kerr-spin hybrid from this paper-derived reference. A compiled
+finds that the active ordinary-v4 flux path uses the `v` and `v**3` terms,
+whereas its complex-waveform path uses only the leading `v` term. Both omit
+spin-dependent `rho21` terms through `v**3` and directly retain the published
+Eq. (29b) spin coefficients from `v**4` through `v**7`; this scalar
+reference instead adds Eq. (28b) Taylor higher-spin terms as a residual. A compiled
 pre-NQC `(2,1)` comparison and a public-equation derivation of any correction
 remain necessary. Pan prints both the Taylor residual `f21` in Eq. (28b) and
 the spin-resummed `rho21` in Eq. (29b); their agreement through a chosen PN

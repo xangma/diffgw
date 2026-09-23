@@ -838,9 +838,11 @@ tracked in the [reference specification](../../reference/SPEC.md).
 A separate [read-only audit of pinned lalsimulation-v6.2.1
 source](historical_v4_component_audit.json) identifies the active ordinary-v4
 finite-mass-ratio tortoise quartic as the 3PN-truncated choice used by our
-paper-derived scalar reference. It also finds that the active `(2,1)` spin
-residual retains both comparable-mass terms through `v**3`, while its
-higher-order Kerr-spin hybrid differs from our conditional reconstruction.
+paper-derived scalar reference. It finds that the active `(2,1)` flux path
+retains comparable-mass spin terms through `v**3`, while the complex-waveform
+path retains only the leading `v` term. Both keep the published Eq. (29b)
+spin terms from `v**4` to `v**7` in resummed `rho21`, while omitting its
+lower-order spin terms, unlike our conditional Taylor-residual reconstruction.
 The audit records behavior only; it contains no upstream source excerpts or
 copied coefficients. No compiled component comparison was performed, so the
 Hamiltonian and `(2,1)` findings do not establish numerical parity.
