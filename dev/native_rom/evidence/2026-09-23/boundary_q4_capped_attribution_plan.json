@@ -1,0 +1,33 @@
+{
+  "schema": "diffgw.seobnrv4.boundary-q4-capped-attribution-plan.v1",
+  "purpose": "Locate the residual mass-ratio-four ODE nonmonotonicity after the frozen 0.125 M fine accepted-step cap, without changing the numerical generator or qualification gates.",
+  "fine_step_cap_evidence_sha256": "4d8fbe27d66390b4a0147098ec14aaef62779b45cb740a46200ff0be367ca7e4",
+  "row": "mass_ratio_four_nonspinning",
+  "levels": ["ode_0", "ode_1", "ode_2"],
+  "pairs": [["ode_0", "ode_1"], ["ode_1", "ode_2"]],
+  "fine_accepted_max_step_M": 0.125,
+  "require_exact_capped_waveform_hashes": true,
+  "unchanged_choices": {
+    "hermite_resampling": true,
+    "local_nqc_phase_derivatives": true,
+    "local_matching_second_derivatives": true,
+    "fixed_restart_time_M": 165.0,
+    "output_grid_M": 0.5
+  },
+  "regions": [
+    {"name": "coarse_prefix", "start": 0.0, "end": "restart"},
+    {"name": "fine_early", "start": "restart", "end": "boundary_minus_30"},
+    {"name": "fine_late", "start": "boundary_minus_30", "end": "boundary"},
+    {"name": "attachment_to_peak", "start": "boundary", "end": "peak"},
+    {"name": "ringdown", "start": "peak", "end": null}
+  ],
+  "measurements": [
+    "Exact replay of all three capped waveform hashes, stage statistics, and source manifest",
+    "Unaligned whole-waveform and regional amplitude/phase error for both adjacent tolerance pairs",
+    "Common-support pre-attachment raw mode, orbital state, and frequency differences",
+    "NQC amplitude and phase coefficients, calibration conditions, and residuals",
+    "Exact sampled phase decomposition into raw, shared-basis, and coefficient-change contributions",
+    "Current local phase matching matrix and right-hand-side row attribution"
+  ],
+  "interpretation": "The attribution is within one provisional waveform model. A numerical cause must be separately controlled before changing the generator; no fitted alignment, coefficient tuning, relaxed gate, or release promotion is permitted."
+}
