@@ -1,0 +1,28 @@
+{
+  "schema": "diffgw.seobnrv4.boundary-strong-spin-ode-plan.v1",
+  "frozen_campaign_sha256": "090bd698a49818d8fdf34d122fcebcf14de021feaa81f4309d6723d1f3c607a2",
+  "row": "strong_aligned_spin",
+  "pair": ["ode_1", "ode_2"],
+  "unchanged_choices": {
+    "hermite_resampling": true,
+    "local_nqc_phase_derivatives": true,
+    "local_matching_second_derivatives": true,
+    "fixed_restart_time_M": 165.0,
+    "output_grid_M": 0.5
+  },
+  "regions": [
+    {"name": "coarse_prefix", "start": 0.0, "end": "restart"},
+    {"name": "fine_early", "start": "restart", "end": "boundary_minus_30"},
+    {"name": "fine_late", "start": "boundary_minus_30", "end": "boundary"},
+    {"name": "attachment_to_peak", "start": "boundary", "end": "peak"},
+    {"name": "ringdown", "start": "peak", "end": null}
+  ],
+  "measurements": [
+    "Exact replay of frozen waveform hashes and source manifest",
+    "Accepted coarse/fine trajectories and event statistics",
+    "Unaligned whole-waveform and regional error energy with an exact amplitude/phase decomposition",
+    "Pre-attachment raw mode, orbital state, and frequency differences",
+    "NQC calibration coefficients, conditioning, residuals, and phase attribution"
+  ],
+  "interpretation": "These replays locate numerical sensitivity within one provisional strong-spin waveform. No fitted alignment, coefficient tuning, changed qualification gate, independent physics validation, or production promotion is permitted."
+}
