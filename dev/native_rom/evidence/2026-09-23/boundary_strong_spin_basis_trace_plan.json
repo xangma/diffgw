@@ -1,0 +1,33 @@
+{
+  "schema": "diffgw.seobnrv4.boundary-strong-spin-basis-trace-plan.v1",
+  "frozen_campaign_sha256": "090bd698a49818d8fdf34d122fcebcf14de021feaa81f4309d6723d1f3c607a2",
+  "frozen_input_attribution": "boundary_strong_spin_nqc_inputs.json",
+  "row": "strong_aligned_spin",
+  "pair": ["ode_1", "ode_2"],
+  "unchanged_choices": {
+    "hermite_resampling": true,
+    "local_nqc_phase_derivatives": true,
+    "local_matching_second_derivatives": true,
+    "fixed_restart_time_M": 165.0,
+    "output_grid_M": 0.5
+  },
+  "target": "First NQC phase basis p1=pr_star/(r*orbital_frequency), second time derivative at the common 499.05204396452547 M match",
+  "trace": [
+    "Replay both frozen waveforms and recover their exact NQC phase-basis second derivatives",
+    "Integrate the same provisional vector field densely from the original initial state and independently from each frozen 165 M restart state",
+    "On each restarted dense solution, fit the same degree-six local polynomial on the exact native fine output stencil and also take five-point continuous derivatives",
+    "Partition each native derivative error exactly into fine-stage evolution/output-sampling, local differentiation, and restart-state components",
+    "Partition the medium-to-fine restart-state contribution by ordered substitutions of r, pr_star, and pphi; verify that phi has no dynamical effect"
+  ],
+  "dense_reference": {
+    "method": "SciPy DOP853 with dense output of the same provisional EOB vector field",
+    "rtol_atol": [[1e-11, 1e-12], [1e-12, 1e-13]],
+    "global_first_step_M": 0.5,
+    "restart_first_step_M": 0.5,
+    "five_point_steps_M": [0.05, 0.025],
+    "local_fit_window_M": 0.5,
+    "local_fit_degree": 6,
+    "state_coordinate_order": ["r", "pr_star", "pphi", "phi"]
+  },
+  "interpretation": "This isolates numerical error sources for the existing provisional equations. Dense DOP853 is not an independent SEOBNRv4 physics reference. Do not retune coefficients, alter frozen gates, or promote production code."
+}
