@@ -225,6 +225,10 @@ nonspinning row chiefly to changes in the NQC phase-basis derivative matrix:
 holding the calibrated phase coefficients fixed reduces the refined-pair
 boundary-phase difference from `1.34e-5` to `6.65e-9 rad`. That numerical
 finding is not an independent validation of the historical NQC prescription.
+Local-polynomial differentiation of the same fine-grid basis reduces the
+cross-tolerance coefficient spread by about an order of magnitude, but its
+absolute coefficients depend on the differentiation window and order; no
+replacement rule has been selected.
 The separate public-binary whole-waveform comparison
 compares only two rows and does not establish public-binary parity. The current
 generator and ROM work therefore stay on this development branch. Reference

@@ -1,0 +1,458 @@
+{
+  "comparisons": {
+    "natural_cubic": {
+      "coefficient_max_absolute_difference": 0.00046827670690063883,
+      "matrix_max_absolute_difference": 1.5266165900168494e-07
+    },
+    "window_0.25_degree_4": {
+      "coefficient_max_absolute_difference": 4.483081907125097e-05,
+      "matrix_max_absolute_difference": 1.1125836033715197e-09
+    },
+    "window_0.25_degree_6": {
+      "coefficient_max_absolute_difference": 3.8854455318926284e-05,
+      "matrix_max_absolute_difference": 2.17625797417631e-09
+    },
+    "window_0.5_degree_4": {
+      "coefficient_max_absolute_difference": 4.501711631021976e-05,
+      "matrix_max_absolute_difference": 4.749894453454084e-10
+    },
+    "window_0.5_degree_6": {
+      "coefficient_max_absolute_difference": 4.0995940143062626e-05,
+      "matrix_max_absolute_difference": 2.6380696759031874e-10
+    },
+    "window_1_degree_4": {
+      "coefficient_max_absolute_difference": 4.238130996725431e-05,
+      "matrix_max_absolute_difference": 2.157919676282205e-10
+    },
+    "window_1_degree_6": {
+      "coefficient_max_absolute_difference": 4.100948649465863e-05,
+      "matrix_max_absolute_difference": 4.4374845985239997e-10
+    },
+    "window_2_degree_4": {
+      "coefficient_max_absolute_difference": 4.266276427600246e-05,
+      "matrix_max_absolute_difference": 1.958779319299886e-10
+    },
+    "window_2_degree_6": {
+      "coefficient_max_absolute_difference": 4.275721758162376e-05,
+      "matrix_max_absolute_difference": 2.1040518632942096e-10
+    }
+  },
+  "git_head": "2f9321c7f19debcbf9e45da1b282420734236a77",
+  "levels": [
+    {
+      "atol": 1e-13,
+      "rtol": 1e-12
+    },
+    {
+      "atol": 1e-14,
+      "rtol": 1e-13
+    }
+  ],
+  "method": {
+    "fine_grid_step_M": 0.015625,
+    "polynomial_degrees": [
+      4,
+      6
+    ],
+    "same_fine_grid_samples": true,
+    "same_phase_rhs": true,
+    "windows_M": [
+      0.25,
+      0.5,
+      1.0,
+      2.0
+    ]
+  },
+  "process": {
+    "argv": [
+      "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw/dev/native_rom/diagnose_nqc_derivatives.py",
+      "--json-out",
+      "dev/native_rom/evidence/2026-09-23/nqc_derivatives.json"
+    ],
+    "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+    "host": "RONI2",
+    "pid": 54929
+  },
+  "row": {
+    "chi1": 0.0,
+    "chi2": 0.0,
+    "mass1": 30.0,
+    "mass2": 20.0,
+    "omega_start": 0.04
+  },
+  "runs": [
+    {
+      "atol": 1e-13,
+      "match_time_M": 145.42681392254298,
+      "methods": {
+        "window_0.25_degree_4": {
+          "coefficients": [
+            4.136776448356198,
+            -21.976905055199794
+          ],
+          "condition": 78.44172530331986,
+          "fit_residual_rms": 2.4246642890056577e-10,
+          "matrix": [
+            [
+              -0.03704057468435592,
+              -0.003819370385446146
+            ],
+            [
+              -0.00811831335375099,
+              -0.0013375482380114845
+            ]
+          ],
+          "samples": 32
+        },
+        "window_0.25_degree_6": {
+          "coefficients": [
+            4.1367671061415185,
+            -21.97680810032632
+          ],
+          "condition": 78.44130339126797,
+          "fit_residual_rms": 8.815060693971207e-11,
+          "matrix": [
+            [
+              -0.037040582300900696,
+              -0.0038193729232780067
+            ],
+            [
+              -0.00811832249366403,
+              -0.0013375524082479078
+            ]
+          ],
+          "samples": 32
+        },
+        "window_0.5_degree_4": {
+          "coefficients": [
+            4.136821501683909,
+            -21.977431195068082
+          ],
+          "condition": 78.44415201226,
+          "fit_residual_rms": 8.458433460756141e-09,
+          "matrix": [
+            [
+              -0.03704044092968389,
+              -0.00381932970548328
+            ],
+            [
+              -0.00811821613881287,
+              -0.0013375145606785185
+            ]
+          ],
+          "samples": 64
+        },
+        "window_0.5_degree_6": {
+          "coefficients": [
+            4.136768027906378,
+            -21.976817185694333
+          ],
+          "condition": 78.44128228590866,
+          "fit_residual_rms": 9.982535079009191e-11,
+          "matrix": [
+            [
+              -0.0370405833381497,
+              -0.0038193730931459654
+            ],
+            [
+              -0.008118327200399534,
+              -0.0013375530817622456
+            ]
+          ],
+          "samples": 64
+        },
+        "window_1_degree_4": {
+          "coefficients": [
+            4.137339563824038,
+            -21.98393741878857
+          ],
+          "condition": 78.47097001641887,
+          "fit_residual_rms": 2.770696533513885e-07,
+          "matrix": [
+            [
+              -0.03703827156330003,
+              -0.003818663966288503
+            ],
+            [
+              -0.008117066053895013,
+              -0.0013370935842087265
+            ]
+          ],
+          "samples": 128
+        },
+        "window_1_degree_6": {
+          "coefficients": [
+            4.136761086816603,
+            -21.976732865897574
+          ],
+          "condition": 78.44093793140152,
+          "fit_residual_rms": 1.066619517573292e-09,
+          "matrix": [
+            [
+              -0.037040594422981875,
+              -0.0038193781349350137
+            ],
+            [
+              -0.0081183351562252,
+              -0.0013375571471306816
+            ]
+          ],
+          "samples": 128
+        },
+        "window_2_degree_4": {
+          "coefficients": [
+            4.1456132916241435,
+            -22.091436186114542
+          ],
+          "condition": 78.8946941617374,
+          "fit_residual_rms": 9.616243129191056e-06,
+          "matrix": [
+            [
+              -0.03700143970525073,
+              -0.003807041918259198
+            ],
+            [
+              -0.00809925165248622,
+              -0.0013302841973027875
+            ]
+          ],
+          "samples": 256
+        },
+        "window_2_degree_6": {
+          "coefficients": [
+            4.13636115631007,
+            -21.97162876982102
+          ],
+          "condition": 78.42084054057659,
+          "fit_residual_rms": 1.4835719724435393e-07,
+          "matrix": [
+            [
+              -0.03704136805412797,
+              -0.0038197368169047554
+            ],
+            [
+              -0.008118798221504023,
+              -0.0013378072722163247
+            ]
+          ],
+          "samples": 256
+        }
+      },
+      "native_coefficients": [
+        4.136760007083802,
+        -21.97673446654963
+      ],
+      "native_matrix": [
+        [
+          -0.037040571858105664,
+          -0.0038193717894555294
+        ],
+        [
+          -0.008118315041021874,
+          -0.0013375528644941892
+        ]
+      ],
+      "native_rhs": [
+        -0.06929063665623059,
+        -0.004188476848644545
+      ],
+      "peak_time_M": 314.79918670654297,
+      "restart_time_M": 165.0,
+      "rtol": 1e-12
+    },
+    {
+      "atol": 1e-14,
+      "match_time_M": 145.42681392254298,
+      "methods": {
+        "window_0.25_degree_4": {
+          "coefficients": [
+            4.136771879148475,
+            -21.976860224380722
+          ],
+          "condition": 78.44173016948508,
+          "fit_residual_rms": 2.5782165890886993e-10,
+          "matrix": [
+            [
+              -0.0370405746798457,
+              -0.0038193703983816036
+            ],
+            [
+              -0.008118312241167387,
+              -0.0013375480888177078
+            ]
+          ],
+          "samples": 32
+        },
+        "window_0.25_degree_6": {
+          "coefficients": [
+            4.136763099358932,
+            -21.976769245871
+          ],
+          "condition": 78.44129412979268,
+          "fit_residual_rms": 1.5137053767632873e-11,
+          "matrix": [
+            [
+              -0.03704058342685931,
+              -0.0038193730583039568
+            ],
+            [
+              -0.008118324669922005,
+              -0.0013375527221589968
+            ]
+          ],
+          "samples": 32
+        },
+        "window_0.5_degree_4": {
+          "coefficients": [
+            4.136816893946617,
+            -21.97738617795177
+          ],
+          "condition": 78.44415023028185,
+          "fit_residual_rms": 8.447909266003176e-09,
+          "matrix": [
+            [
+              -0.03704044132647255,
+              -0.003819329761338253
+            ],
+            [
+              -0.008118215663823425,
+              -0.001337514528557671
+            ]
+          ],
+          "samples": 64
+        },
+        "window_0.5_degree_6": {
+          "coefficients": [
+            4.136763843805209,
+            -21.97677618975419
+          ],
+          "condition": 78.44128476829705,
+          "fit_residual_rms": 1.6779015489565837e-11,
+          "matrix": [
+            [
+              -0.037040583553224704,
+              -0.0038193731300245697
+            ],
+            [
+              -0.008118327464206501,
+              -0.001337553100519395
+            ]
+          ],
+          "samples": 64
+        },
+        "window_1_degree_4": {
+          "coefficients": [
+            4.137335237279359,
+            -21.983895037478604
+          ],
+          "condition": 78.47096992372707,
+          "fit_residual_rms": 2.770797304166997e-07,
+          "matrix": [
+            [
+              -0.037038271779092,
+              -0.003818664003068332
+            ],
+            [
+              -0.008117066133269284,
+              -0.0013370935993060272
+            ]
+          ],
+          "samples": 128
+        },
+        "window_1_degree_6": {
+          "coefficients": [
+            4.136756897259344,
+            -21.97669185641108
+          ],
+          "condition": 78.44093854916953,
+          "fit_residual_rms": 1.0465260694315203e-09,
+          "matrix": [
+            [
+              -0.037040594725421136,
+              -0.0038193781814241847
+            ],
+            [
+              -0.00811833559997366,
+              -0.0013375571985739145
+            ]
+          ],
+          "samples": 128
+        },
+        "window_2_degree_4": {
+          "coefficients": [
+            4.14560894609548,
+            -22.091393523350266
+          ],
+          "condition": 78.89469377608043,
+          "fit_residual_rms": 9.616245838706579e-06,
+          "matrix": [
+            [
+              -0.03700143990112866,
+              -0.0038070419528275965
+            ],
+            [
+              -0.008099251746555552,
+              -0.0013302842155278208
+            ]
+          ],
+          "samples": 256
+        },
+        "window_2_degree_6": {
+          "coefficients": [
+            4.136356790210059,
+            -21.97158601260344
+          ],
+          "condition": 78.42083976648391,
+          "fit_residual_rms": 1.4836444851253834e-07,
+          "matrix": [
+            [
+              -0.03704136826453316,
+              -0.003819736852806911
+            ],
+            [
+              -0.008118798236762155,
+              -0.0013378072845556927
+            ]
+          ],
+          "samples": 256
+        }
+      },
+      "native_coefficients": [
+        4.136807718737741,
+        -21.97720274325653
+      ],
+      "native_matrix": [
+        [
+          -0.03704058501493938,
+          -0.0038193732225273113
+        ],
+        [
+          -0.008118467702680876,
+          -0.0013375697447082708
+        ]
+      ],
+      "native_rhs": [
+        -0.06929063833271493,
+        -0.004188498394073751
+      ],
+      "peak_time_M": 314.79918670654297,
+      "restart_time_M": 165.0,
+      "rtol": 1e-13
+    }
+  ],
+  "schema": "diffgw.seobnrv4.nqc_derivative_diagnostic.v1",
+  "scope": {
+    "algorithm_choice_made": false,
+    "development_only": true,
+    "no_coefficient_fitting": true,
+    "numerical_generator_qualified": false,
+    "physics_validated": false
+  },
+  "source_sha256_after": "70b12517456aefa9d5024802ac74b6d2e3f0e7dde6dba48ce188918a4c208992",
+  "source_sha256_before": "70b12517456aefa9d5024802ac74b6d2e3f0e7dde6dba48ce188918a4c208992",
+  "sources_unchanged": true,
+  "versions": {
+    "numpy": "2.5.3",
+    "torch": "2.14.0"
+  }
+}

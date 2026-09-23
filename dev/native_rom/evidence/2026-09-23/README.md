@@ -146,6 +146,22 @@ matches the historical SEOBNRv4 algorithm. Reproduce with `PYTHONPATH=src:.
 python -m dev.native_rom.diagnose_hermite_error --json-out
 /tmp/seobnrv4-hermite-error.json`.
 
+The [local NQC derivative diagnostic](nqc_derivatives.json) differentiates
+the **same** Hermite-sampled phase-basis series with degree-four and degree-six
+polynomials over symmetric `0.25–2 M` windows around the match. It keeps the
+phase right-hand side unchanged. Between `rtol=1e-12` and `1e-13`, the
+natural-cubic phase matrix differs by `1.53e-7` and its fitted coefficients
+by `4.68e-4`. The local-polynomial matrices differ by `1.96e-10–2.18e-9`,
+and their fitted coefficients by `3.89e-5–4.50e-5`. This supports derivative
+sensitivity as the source of the natural-cubic coefficient spread. It does
+**not** establish a replacement: absolute polynomial coefficients depend
+substantially on window and degree (for example, the second coefficient at
+`rtol=1e-12`, degree four, moves from `-21.9769` at `0.25 M` to `-22.0914`
+at `2 M`). The polynomial fit is a diagnostic on the provisional trajectory,
+not an independent physical model or a qualification gate. Reproduce with
+`PYTHONPATH=src:. python -m dev.native_rom.diagnose_nqc_derivatives --json-out
+/tmp/seobnrv4-nqc-derivatives.json`.
+
 The [whole-waveform diagnostic](whole_waveform.json) used the tightest
 `dt/M=0.125`, `rtol=1e-13`, `atol=1e-14` settings and the pinned public
 LALSuite `lal=7.7.1`, `lalsimulation=6.2.1` `SEOBNRv4` binary. The
@@ -182,11 +198,11 @@ PYTHONPATH=src python -m dev.native_rom.compare_whole_waveforms \
   --json-out /tmp/seobnrv4-whole-waveform.json
 ```
 
-The next numerical experiment should compare NQC basis derivatives against
-an independent derivative evaluation, then isolate the moving coarse/fine
-restart in the Hermite route. Rerun the same declared gates without tuning
-their thresholds. Public-binary comparison must be repeated if a numerical
-choice is promoted.
+The next numerical experiment should evaluate the NQC basis derivatives
+directly along the ODE vector field or an independent dense integrator, then
+isolate the moving coarse/fine restart in the Hermite route. Rerun the same
+declared gates without tuning their thresholds. Public-binary comparison must
+be repeated if a numerical choice is promoted.
 Independent review of the full spin Hamiltonian and all 35 factorized mode
 amplitudes is still required before these diagnostics can support a native
 SEOBNRv4 claim.
