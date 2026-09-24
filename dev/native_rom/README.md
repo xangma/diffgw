@@ -516,8 +516,10 @@ amplitude/phase-interpolated full-mode complex relative L2 is `4.81e-4`
 against source, while wheel/source is `5.72e-4`. A hash-matched native replay
 with tighter ODE tolerance changes the q2 mode by only `4.32e-9` complex
 relative L2, with unchanged sampled event times. Thus the q2 source residual
-is not explained by measured ODE error. The two reference binaries themselves
-differ, and this development row is not a release holdout or a domain bound;
+is not explained by measured ODE error. Halving the q2 requested output step
+also leaves all shared complex samples identical at the same internal step.
+The two reference binaries themselves differ, and this development row is
+not a release holdout or a domain bound;
 see the [frozen evidence](evidence/2026-09-24/README.md).
 
 Direct public-binary QNM calls now agree with the native fundamental frequency

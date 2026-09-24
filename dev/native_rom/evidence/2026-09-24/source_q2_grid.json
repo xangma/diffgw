@@ -1,0 +1,294 @@
+{
+  "comparison": {
+    "amplitude_relative_l2": 0.0,
+    "boundary_time_M_abs_difference": 0.0,
+    "candidate_samples": 1036,
+    "common_samples": 1036,
+    "complex_relative_l2": 0.0,
+    "grid_step_M": 0.5,
+    "match_time_M_abs_difference": 0.0,
+    "peak_time_M_abs_difference": 0.0,
+    "phase_max_abs_rad": 5.013772843089428e-17,
+    "phase_rms_rad": 1.5876758008961387e-17,
+    "phase_samples": 976,
+    "reference_samples": 1036,
+    "relative_norm_error": 0.0,
+    "samples": 1036,
+    "support_end_difference_M": 0.0,
+    "unmaximized_real_overlap": 1.0
+  },
+  "errors": [],
+  "gates": {
+    "amplitude_relative_l2": true,
+    "boundary_time_M": true,
+    "complex_relative_l2": true,
+    "match_time_M": true,
+    "peak_time_M": true
+  },
+  "grid_gate_passed": true,
+  "input_sha256": {
+    "campaign": "d8efe4baa182ea39bf9a7d35b6de8621c6e054429ee180eb661e9fbb9f9d59d8",
+    "q2_ode_refinement": "bba1a437bb47b65292c08b8bc2929bd15345906574d9f3d94b97b887a963842c",
+    "q2_probe": "7e91201a2e0e746e14248bbe4577b52d0ea0359e4fcc35975c39794ec3dcb33d"
+  },
+  "levels": {
+    "baseline": {
+      "atol": 3e-15,
+      "dt_geom": 0.5,
+      "name": "ode_3",
+      "rtol": 3e-14
+    },
+    "finer": {
+      "atol": 3e-15,
+      "dt_geom": 0.25,
+      "name": "grid_1",
+      "rtol": 3e-14
+    }
+  },
+  "plan_sha256": "0d8656a3eb44ef780ed9c84a4d12622b7713fa6beea065d8206d1d9ec77f55de",
+  "process": {
+    "argv": [
+      "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw/dev/native_rom/diagnose_source_q2_grid.py",
+      "--json-out",
+      "dev/native_rom/evidence/2026-09-24/source_q2_grid.json"
+    ],
+    "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+    "host": "client-3792.default.vpn.port.ac.uk",
+    "pid": 27745
+  },
+  "release_qualified": false,
+  "row": {
+    "chi1": 0.4,
+    "chi2": -0.3,
+    "mass1": 30.0,
+    "mass2": 15.0,
+    "omega_start": 0.04
+  },
+  "runs": {
+    "baseline": {
+      "elapsed_seconds": 129.9876488329901,
+      "level": {
+        "atol": 3e-15,
+        "dt_geom": 0.5,
+        "name": "ode_3",
+        "rtol": 3e-14
+      },
+      "native": {
+        "array_dtype": {
+          "mode": "complex128",
+          "time": "float64"
+        },
+        "array_sha256": {
+          "mode": "9328baab8d62f7d5bf1788fc702b99943100dfbc855d0f15095b1684c1fb6186",
+          "time": "b378a2655cc7adbf641022793c2308fb0749e842c1f1b93994dbb45f5b58485c"
+        },
+        "atol": 3e-15,
+        "boundary_time_M": 367.71875,
+        "dt_geom": 0.5,
+        "final_mass_fraction": 0.9538276439787159,
+        "final_spin": 0.7315409388875043,
+        "internal_step_M": 0.015625,
+        "match_time_M": 367.72060776196787,
+        "name": "ode_3",
+        "nqc_coefficients": {
+          "amplitude": [
+            23.153741261346546,
+            -211.1739547224082,
+            241.7486597469124
+          ],
+          "phase": [
+            9.520693496684173,
+            -79.8728991100547
+          ]
+        },
+        "nqc_full_spline_phase_matrix": [
+          [
+            -0.018686116602553697,
+            -0.0010378919226629454
+          ],
+          [
+            -0.0028357173657707103,
+            -0.00026971787961208536
+          ]
+        ],
+        "nqc_matching_matrices": {
+          "amplitude": [
+            [
+              0.03423902808770563,
+              0.01077641881615822,
+              0.00604576104772155
+            ],
+            [
+              0.004646905277296455,
+              0.001726998992578384,
+              0.0010430513815098976
+            ],
+            [
+              0.001000832811766827,
+              0.00041053822921489,
+              0.0002598477925138659
+            ]
+          ],
+          "phase": [
+            [
+              -0.018686116764278504,
+              -0.0010378920834255856
+            ],
+            [
+              -0.0028356755276264327,
+              -0.0002697158698821639
+            ]
+          ]
+        },
+        "peak_time_M": 374.96874237060547,
+        "restart_time_M": 100.0,
+        "rtol": 3e-14,
+        "samples": 1036,
+        "stages": {
+          "coarse": {
+            "accepted": 734,
+            "evaluations": 4560,
+            "event_time_M": 374.9884192142935,
+            "rejected": 31,
+            "termination": [
+              "event"
+            ]
+          },
+          "fine": {
+            "accepted": 640,
+            "evaluations": 3981,
+            "event_time_M": 275.08047142715543,
+            "rejected": 28,
+            "termination": [
+              "event"
+            ]
+          }
+        },
+        "support_M": [
+          0.0,
+          517.5
+        ]
+      }
+    },
+    "finer": {
+      "elapsed_seconds": 130.6301746669924,
+      "level": {
+        "atol": 3e-15,
+        "dt_geom": 0.25,
+        "name": "grid_1",
+        "rtol": 3e-14
+      },
+      "native": {
+        "array_dtype": {
+          "mode": "complex128",
+          "time": "float64"
+        },
+        "array_sha256": {
+          "mode": "09244ee088d9918a0c43d960e58dd3968b91c0b354056d20a378529badb67604",
+          "time": "b9fef120ba15c2823466469f76ee30de61fbee92cb796444e57ed25b6dc12697"
+        },
+        "atol": 3e-15,
+        "boundary_time_M": 367.71875,
+        "dt_geom": 0.25,
+        "final_mass_fraction": 0.9538276439787159,
+        "final_spin": 0.7315409388875043,
+        "internal_step_M": 0.015625,
+        "match_time_M": 367.72060776196787,
+        "name": "grid_1",
+        "nqc_coefficients": {
+          "amplitude": [
+            23.153741261346546,
+            -211.1739547224082,
+            241.7486597469124
+          ],
+          "phase": [
+            9.520693496684173,
+            -79.8728991100547
+          ]
+        },
+        "nqc_full_spline_phase_matrix": [
+          [
+            -0.018686116602553697,
+            -0.0010378919226629454
+          ],
+          [
+            -0.0028357173657707103,
+            -0.00026971787961208536
+          ]
+        ],
+        "nqc_matching_matrices": {
+          "amplitude": [
+            [
+              0.03423902808770563,
+              0.01077641881615822,
+              0.00604576104772155
+            ],
+            [
+              0.004646905277296455,
+              0.001726998992578384,
+              0.0010430513815098976
+            ],
+            [
+              0.001000832811766827,
+              0.00041053822921489,
+              0.0002598477925138659
+            ]
+          ],
+          "phase": [
+            [
+              -0.018686116764278504,
+              -0.0010378920834255856
+            ],
+            [
+              -0.0028356755276264327,
+              -0.0002697158698821639
+            ]
+          ]
+        },
+        "peak_time_M": 374.96874237060547,
+        "restart_time_M": 100.0,
+        "rtol": 3e-14,
+        "samples": 2071,
+        "stages": {
+          "coarse": {
+            "accepted": 734,
+            "evaluations": 4560,
+            "event_time_M": 374.9884192142935,
+            "rejected": 31,
+            "termination": [
+              "event"
+            ]
+          },
+          "fine": {
+            "accepted": 640,
+            "evaluations": 3981,
+            "event_time_M": 275.08047142715543,
+            "rejected": 28,
+            "termination": [
+              "event"
+            ]
+          }
+        },
+        "support_M": [
+          0.0,
+          517.5
+        ]
+      }
+    }
+  },
+  "schema": "diffgw.seobnrv4.source-q2-grid.v1",
+  "scope": {
+    "description": "Requested output-grid sensitivity of the q2 development waveform.",
+    "known_limitations": [
+      "Only one output-step refinement is tested; this does not establish asymptotic convergence.",
+      "The requested output step may also change the native internal high-rate step.",
+      "This selected development row cannot establish physical or domain-wide accuracy."
+    ],
+    "physics_validated": false,
+    "production_asset": false,
+    "production_promotion_allowed": false,
+    "training_generator_qualified": false
+  },
+  "script_sha256": "0b0a14a711c107fe591c69ab271011e7dd781368958402f0c778897a64611929",
+  "status": "diagnostic_complete"
+}

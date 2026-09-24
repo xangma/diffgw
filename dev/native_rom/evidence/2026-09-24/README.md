@@ -1777,3 +1777,15 @@ source-binary cause, establish a grid bound, or qualify the domain. Reproduce
 with `PYTHONPATH=src:. python -m
 dev.native_rom.diagnose_source_q2_ode_refinement --json-out
 /tmp/source_q2_ode_refinement.json` in the pinned development environment.
+
+The [q2 output-grid plan](source_q2_grid_plan.json) and
+[result](source_q2_grid.json) replay the exact `ode_3` mode hash, then
+halve the requested output step from `0.5 M` to `0.25 M` at fixed
+tolerances and restart. Both runs retain a `0.015625 M` internal step;
+every nested complex mode sample is identical and the sampled match,
+peak, and boundary times agree. All prespecified grid gates pass. This is
+one selected row and one grid refinement, not a domain-wide or asymptotic
+bound.
+Reproduce with `PYTHONPATH=src:. python -m
+dev.native_rom.diagnose_source_q2_grid --json-out
+/tmp/source_q2_grid.json` in the pinned development environment.

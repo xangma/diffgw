@@ -1,0 +1,18 @@
+{
+  "schema": "diffgw.seobnrv4.source-q2-grid-plan.v1",
+  "purpose": "Replay the q2 peak-preserving ode_3 hash, then halve the requested output step with all other choices fixed; compare exact nested samples without alignment. Diagnostic only.",
+  "baseline_level": {"name": "ode_3", "atol": 3e-15, "rtol": 3e-14, "dt_geom": 0.5},
+  "finer_level": {"name": "grid_1", "atol": 3e-15, "rtol": 3e-14, "dt_geom": 0.25},
+  "relative_l2_limit": 1e-6,
+  "inputs": {
+    "campaign": "dev/native_rom/evidence/2026-09-24/source_candidate_new_rows.json",
+    "q2_probe": "dev/native_rom/evidence/2026-09-24/source_q2_domain_probe.json",
+    "q2_ode_refinement": "dev/native_rom/evidence/2026-09-24/source_q2_ode_refinement.json"
+  },
+  "input_sha256": {
+    "campaign": "d8efe4baa182ea39bf9a7d35b6de8621c6e054429ee180eb661e9fbb9f9d59d8",
+    "q2_probe": "7e91201a2e0e746e14248bbe4577b52d0ea0359e4fcc35975c39794ec3dcb33d",
+    "q2_ode_refinement": "bba1a437bb47b65292c08b8bc2929bd15345906574d9f3d94b97b887a963842c"
+  },
+  "release_qualified": false
+}
