@@ -613,6 +613,25 @@ dev.native_rom.diagnose_source_nqc_wheel_state_fit --source-root
 /tmp/diffgw-lalsuite-pinned-53acc0c/merged-include --gsl-include
 /usr/local/include --json-out /tmp/source-nqc-wheel-state-fit.json`.
 
+The [three-row exact-input plan](source_nqc_exact_rows_plan.json) and
+[result](source_nqc_exact_rows.json) extend that source construction and
+the pinned C NQC fit to the frozen nonspinning, mild mixed-spin, and strong
+aligned-spin rows. Each compiled-source reconstruction reproduces its
+captured five coefficients to at most `1.9e-6` L2. On the wheel's
+hash-frozen public high-rate states, the corresponding fits remain `0.0687`,
+`0.220`, and `1.524` L2 from the wheel-reported coefficients. The original
+source-versus-wheel coefficient gaps are `0.220`, `0.113`, and `8.139` L2,
+respectively. Public-state substitution helps the nonspinning and strong
+aligned rows but does not close any row; on mild mixed spin it increases the
+coefficient gap. These fits retain the pinned source equations and target
+values. The wheel's private raw-mode and fit arrays are still needed to
+attribute the residual precisely. Reproduce with `PYTHONPATH=src:.
+/Users/xangma/repos/diffgw/.venv/bin/python -m
+dev.native_rom.diagnose_source_nqc_exact_rows --source-root
+/Users/xangma/repos/lalsuite-git --headers
+/tmp/diffgw-lalsuite-pinned-53acc0c/merged-include --gsl-include
+/usr/local/include --json-out /tmp/source-nqc-exact-rows.json`.
+
 The [public-mode boundary plan](public_nqc_mode_boundary_plan.json) and
 [result](public_nqc_mode_boundary.json) use both public v4 modes API paths at
 `0.015625 M`: the coefficient-only call and the call returning modes plus low-

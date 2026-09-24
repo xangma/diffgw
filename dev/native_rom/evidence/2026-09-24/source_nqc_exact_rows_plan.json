@@ -1,0 +1,52 @@
+{
+  "schema": "diffgw.seobnrv4.source-nqc-exact-rows-plan.v1",
+  "purpose": "Replay exact pinned-source NQC input calls on source and wheel public high-rate states for three frozen rows. Diagnostic only.",
+  "release_qualified": false,
+  "rows": [
+    "nonspinning",
+    "mild_mixed_spin",
+    "strong_aligned_spin"
+  ],
+  "step_M": 0.125,
+  "local_half_width_M": 4.0,
+  "peak_half_width_M": 4.0,
+  "inputs": {
+    "source_wheel_mode": {
+      "path": "dev/native_rom/evidence/2026-09-24/source_wheel_mode.json",
+      "sha256": "c103f7d884073eb00029a231dd271d49c4a4571455030b11b93c22e298a479da"
+    },
+    "matched_public": {
+      "path": "dev/native_rom/evidence/2026-09-24/matched_output_reference.json",
+      "sha256": "797a2db1003b9e695e6723fc12e7ef362a62e61c2c6981d67da9adff68bbdfe9"
+    },
+    "source_flux_plan": {
+      "path": "dev/native_rom/evidence/2026-09-24/source_flux_initial_plan.json",
+      "sha256": "1167199c8f954f97a5905a1e3b2f67d1555e984e5f1da0a0fc42a77a925f96ea"
+    },
+    "exact_state_adapter": {
+      "path": "dev/native_rom/reference/full_v4_source_nqc_state_adapter.c",
+      "sha256": "d526a3ff6df8078428ba116e9bf09f3b8e69cc78a5cfc8873601290c527e97fa"
+    },
+    "high_adapter": {
+      "path": "dev/native_rom/reference/full_v4_source_high_dynamics_adapter.c",
+      "sha256": "cfec235c177f9593cd394ec81dcc0971a159eea7f81932852bcaae4cadd8bd0b"
+    },
+    "dense_nonspinning": {
+      "path": "dev/native_rom/evidence/2026-09-24/source_nqc_dense_field_nonspinning_f8.json",
+      "sha256": "da1afb699c4b5f37749d392c8ca404e176ac0dc0276e3bdb50b17173261fa726"
+    },
+    "dense_mild_mixed_spin": {
+      "path": "dev/native_rom/evidence/2026-09-24/source_nqc_dense_field_mild_mixed_spin_f8.json",
+      "sha256": "1079251720cfa8bcb9a9f4b43a9c79cd9173b13bad3b87bcaa01e2c7ffce0c96"
+    },
+    "dense_strong_aligned_spin": {
+      "path": "dev/native_rom/evidence/2026-09-24/source_nqc_dense_field_strong_aligned_spin_f8.json",
+      "sha256": "b3eddf1254102076424d14be6cd2d882e0ac32d5e32c895e2aacc6355640f9ff"
+    }
+  },
+  "public_high_sha256": {
+    "nonspinning": "149a815b6360ab0aaad3b65a2f262405057762eab7e214c85dd199f8cb39eb22",
+    "mild_mixed_spin": "e326f1fbfbe55989162d693a3bbf90fb24dc9df78b4e941a18be31f6dd19fa70",
+    "strong_aligned_spin": "6380ff7fc3325d001f0dda9d7703b6b941e7dd8b661e378e5b4235da8a61a56c"
+  }
+}

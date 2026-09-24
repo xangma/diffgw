@@ -342,6 +342,10 @@ source-generator control shows that its public high-rate radius and radial
 momentum equal its captured private NQC inputs. Source and wheel public
 high-rate states differ by up to `8.89e-6` near matching.
 The private wheel fit inputs remain an unresolved release blocker.
+The [three-row exact-source replay](evidence/2026-09-24/source_nqc_exact_rows.json)
+confirms source C fit controls within `1.9e-6` L2 and leaves wheel-coefficient
+gaps of `0.0687`, `0.220`, and `1.524` L2 on nonspinning, mild mixed-spin,
+and strong aligned-spin wheel states, respectively.
 The aligned-spin trajectory replay finds a native-minus-public orbital phase
 span of at most `1.27e-4 rad` from `M Omega=0.0425` through `0.13`, compared
 with `3.36e-5 rad` maximum public-grid sensitivity. Over the later sampled

@@ -1,0 +1,267 @@
+{
+  "errors": [],
+  "input_sha256": {
+    "dense_mild_mixed_spin": "1079251720cfa8bcb9a9f4b43a9c79cd9173b13bad3b87bcaa01e2c7ffce0c96",
+    "dense_nonspinning": "da1afb699c4b5f37749d392c8ca404e176ac0dc0276e3bdb50b17173261fa726",
+    "dense_strong_aligned_spin": "b3eddf1254102076424d14be6cd2d882e0ac32d5e32c895e2aacc6355640f9ff",
+    "exact_state_adapter": "d526a3ff6df8078428ba116e9bf09f3b8e69cc78a5cfc8873601290c527e97fa",
+    "high_adapter": "cfec235c177f9593cd394ec81dcc0971a159eea7f81932852bcaae4cadd8bd0b",
+    "matched_public": "797a2db1003b9e695e6723fc12e7ef362a62e61c2c6981d67da9adff68bbdfe9",
+    "source_flux_plan": "1167199c8f954f97a5905a1e3b2f67d1555e984e5f1da0a0fc42a77a925f96ea",
+    "source_wheel_mode": "c103f7d884073eb00029a231dd271d49c4a4571455030b11b93c22e298a479da"
+  },
+  "pinned_libraries_sha256": {
+    "libgsl.28.dylib": "1eefe0dbead9551d47be3c09bbf786c727f84df1331130ee8a03127b7a95abe8",
+    "libgslcblas.0.dylib": "00a30ab2e9eb5cd36caab9ae9a9975a8280b9b4c2940b15e446c34a151818230",
+    "liblal.20.dylib": "e4c4ed42baed00d30668588e58444f974e3deeda56ba4e5978624640ddb5bde7",
+    "liblalsimulation.37.dylib": "9046c4a673d2ba82b792f7b92d73203ba783b32fc604b5da1139c5c1bc8b3325"
+  },
+  "plan_sha256": "8e5b305709c6e05f3990b54a0098177a729e7563d77000f7a3c834abd1c3677c",
+  "release_qualified": false,
+  "rows": {
+    "mild_mixed_spin": {
+      "row": {
+        "chi1": 0.2,
+        "chi2": -0.1,
+        "mass1": 30.0,
+        "mass2": 20.0,
+        "omega_start": 0.04
+      },
+      "source": {
+        "fitted_coefficients": [
+          8.80152799600481,
+          -87.39945065708787,
+          102.43653288696481,
+          5.568458582600042,
+          -35.09481012875932
+        ],
+        "fitted_minus_reported_l2": 2.5686020235064573e-07,
+        "fitted_minus_reported_max_absolute": 1.8451220284987357e-07,
+        "high_samples": 9638,
+        "match_time_M": 144.7814486506888,
+        "peak_rule": {
+          "first_decline_index": 256,
+          "first_decline_time_M": 149.640625,
+          "initial_derivatives_bracket_root": false,
+          "initial_left_derivative": -1.6777906264110623e-05,
+          "initial_right_derivative": -7.495983899493753e-05,
+          "rule_minus_true_spline_peak_M": 0.020163954381189342,
+          "sampled_maximum_time_M": 149.625,
+          "time_M": 149.64061737060547,
+          "true_spline_peak_M": 149.62045341622428
+        },
+        "reported_coefficients": [
+          8.801528013961178,
+          -87.39945081748289,
+          102.43653307147702,
+          5.56845857615409,
+          -35.09481005232721
+        ],
+        "sample_count": 512
+      },
+      "source_to_wheel_exact_fit_l2": 0.32706302693983985,
+      "source_to_wheel_reported_l2": 0.11261565877341012,
+      "wheel": {
+        "fitted_coefficients": [
+          8.777975098918356,
+          -87.18864635926057,
+          102.193793181769,
+          5.563850576601509,
+          -35.03973532100122
+        ],
+        "fitted_minus_reported_l2": 0.2199391033690837,
+        "fitted_minus_reported_max_absolute": 0.1654120808241828,
+        "high_samples": 9663,
+        "match_time_M": 145.0314486506888,
+        "peak_rule": {
+          "first_decline_index": 272,
+          "first_decline_time_M": 149.890625,
+          "initial_derivatives_bracket_root": false,
+          "initial_left_derivative": -1.7056944426119768e-05,
+          "initial_right_derivative": -7.529458057321484e-05,
+          "rule_minus_true_spline_peak_M": 0.020235854464601744,
+          "sampled_maximum_time_M": 149.875,
+          "time_M": 149.89061737060547,
+          "true_spline_peak_M": 149.87038151614087
+        },
+        "reported_coefficients": [
+          8.79407141054263,
+          -87.33243399509412,
+          102.35920526259318,
+          5.564593755563405,
+          -35.048540145061615
+        ],
+        "sample_count": 512
+      },
+      "wheel_public_high_dynamics_sha256": "e326f1fbfbe55989162d693a3bbf90fb24dc9df78b4e941a18be31f6dd19fa70"
+    },
+    "nonspinning": {
+      "row": {
+        "chi1": 0.0,
+        "chi2": 0.0,
+        "mass1": 30.0,
+        "mass2": 20.0,
+        "omega_start": 0.04
+      },
+      "source": {
+        "fitted_coefficients": [
+          4.093123543776149,
+          -46.878868469341505,
+          56.65849610321716,
+          4.123128847192311,
+          -21.871022306081404
+        ],
+        "fitted_minus_reported_l2": 6.937787214870615e-08,
+        "fitted_minus_reported_max_absolute": 4.780967799433711e-08,
+        "high_samples": 9657,
+        "match_time_M": 145.45574458660548,
+        "peak_rule": {
+          "first_decline_index": 256,
+          "first_decline_time_M": 149.828125,
+          "initial_derivatives_bracket_root": false,
+          "initial_left_derivative": -7.9852535192307e-06,
+          "initial_right_derivative": -7.173826973238355e-05,
+          "rule_minus_true_spline_peak_M": 0.017590210443501064,
+          "sampled_maximum_time_M": 149.8125,
+          "time_M": 149.82811737060547,
+          "true_spline_peak_M": 149.81052716016197
+        },
+        "reported_coefficients": [
+          4.093123548629793,
+          -46.878868511491845,
+          56.65849615102684,
+          4.123128844417303,
+          -21.87102227925578
+        ],
+        "sample_count": 512
+      },
+      "source_to_wheel_exact_fit_l2": 0.15121922568242657,
+      "source_to_wheel_reported_l2": 0.21954556456544083,
+      "wheel": {
+        "fitted_coefficients": [
+          4.1044358915710255,
+          -46.97680087159798,
+          56.769403663692835,
+          4.126176401622535,
+          -21.899983573888008
+        ],
+        "fitted_minus_reported_l2": 0.06873255873731621,
+        "fitted_minus_reported_max_absolute": 0.05130544320277153,
+        "high_samples": 9659,
+        "match_time_M": 145.45574458660548,
+        "peak_rule": {
+          "first_decline_index": 256,
+          "first_decline_time_M": 149.828125,
+          "initial_derivatives_bracket_root": false,
+          "initial_left_derivative": -7.062123751000849e-06,
+          "initial_right_derivative": -7.080590407303671e-05,
+          "rule_minus_true_spline_peak_M": 0.01736212875468368,
+          "sampled_maximum_time_M": 149.8125,
+          "time_M": 149.82811737060547,
+          "true_spline_peak_M": 149.81075524185079
+        },
+        "reported_coefficients": [
+          4.1096455690046065,
+          -47.022036489029496,
+          56.820709106895606,
+          4.126618755907681,
+          -21.9042636004837
+        ],
+        "sample_count": 512
+      },
+      "wheel_public_high_dynamics_sha256": "149a815b6360ab0aaad3b65a2f262405057762eab7e214c85dd199f8cb39eb22"
+    },
+    "strong_aligned_spin": {
+      "row": {
+        "chi1": 0.8,
+        "chi2": 0.8,
+        "mass1": 30.0,
+        "mass2": 20.0,
+        "omega_start": 0.04
+      },
+      "source": {
+        "fitted_coefficients": [
+          172.36472620322954,
+          -1478.7199117786438,
+          1657.1259927402705,
+          43.04742199886767,
+          -1096.0829911132198
+        ],
+        "fitted_minus_reported_l2": 1.871805519605044e-06,
+        "fitted_minus_reported_max_absolute": 1.2316763786657248e-06,
+        "high_samples": 9659,
+        "match_time_M": 137.61454396452547,
+        "peak_rule": {
+          "first_decline_index": 256,
+          "first_decline_time_M": 149.703125,
+          "initial_derivatives_bracket_root": false,
+          "initial_left_derivative": -1.807775218122794e-05,
+          "initial_right_derivative": -6.190602252646023e-05,
+          "rule_minus_true_spline_peak_M": 0.022117102534508604,
+          "sampled_maximum_time_M": 149.6875,
+          "time_M": 149.70311737060547,
+          "true_spline_peak_M": 149.68100026807096
+        },
+        "reported_coefficients": [
+          172.36472611312226,
+          -1478.7199108839393,
+          1657.1259916551278,
+          43.04742202075585,
+          -1096.0829923448962
+        ],
+        "sample_count": 512
+      },
+      "source_to_wheel_exact_fit_l2": 9.441126883729282,
+      "source_to_wheel_reported_l2": 8.138763588332823,
+      "wheel": {
+        "fitted_coefficients": [
+          171.8407949011999,
+          -1473.527013224298,
+          1650.8334554634605,
+          42.963558948644625,
+          -1091.3616439497011
+        ],
+        "fitted_minus_reported_l2": 1.5235636188070878,
+        "fitted_minus_reported_max_absolute": 1.1722945030110168,
+        "high_samples": 9663,
+        "match_time_M": 137.61454396452547,
+        "peak_rule": {
+          "first_decline_index": 256,
+          "first_decline_time_M": 149.703125,
+          "initial_derivatives_bracket_root": false,
+          "initial_left_derivative": -1.7781777853966674e-05,
+          "initial_right_derivative": -6.16126679867138e-05,
+          "rule_minus_true_spline_peak_M": 0.022010234762092296,
+          "sampled_maximum_time_M": 149.6875,
+          "time_M": 149.70311737060547,
+          "true_spline_peak_M": 149.68110713584338
+        },
+        "reported_coefficients": [
+          171.93846862993038,
+          -1474.4946633135366,
+          1652.0057499664715,
+          42.96414675700088,
+          -1091.3945757087818
+        ],
+        "sample_count": 512
+      },
+      "wheel_public_high_dynamics_sha256": "6380ff7fc3325d001f0dda9d7703b6b941e7dd8b661e378e5b4235da8a61a56c"
+    }
+  },
+  "schema": "diffgw.seobnrv4.source-nqc-exact-rows.v1",
+  "scope": {
+    "description": "Three-row exact-source-call NQC fits on source and wheel public states.",
+    "development_only": true,
+    "known_limitations": [
+      "The wheel's private raw-mode and NQC input arrays remain unavailable.",
+      "The source C fit is separately compiled from the installed wheel.",
+      "Three diagnostic rows do not qualify the model or its ROM."
+    ],
+    "physics_validated": false,
+    "production_asset": false,
+    "production_promotion_allowed": false,
+    "training_generator_qualified": false
+  },
+  "script_sha256": "a57333757c4fdb729353274449424a1dc9844e62608e2c587e340f5c9394880e",
+  "status": "diagnostic_complete"
+}
