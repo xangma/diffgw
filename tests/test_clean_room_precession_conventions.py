@@ -134,6 +134,74 @@ def test_wrappers_apply_table_iv_phase_to_each_mode(mode):
         torch.testing.assert_close(h5,h7,atol=1e-34,rtol=2e-11)
 
 
+def test_xp_v223_convention6_batched_phase_and_gradient():
+    model = IMRPhenomXP()
+    f = t([25.,40.,80.])
+    phi = t([-.4,.3]).requires_grad_()
+    p = dict(mass1=40.,mass2=20.,spin1x=.3,spin1y=.2,spin1z=.4,
+             spin2x=-.2,spin2y=.1,spin2z=-.2,inclination=.7,f_ref=40.,
+             convention=6)
+    batch = model(f,phic=phi,**p)
+    for row in range(2):
+        scalar = model(f,phic=phi[row],**p)
+        for actual,expected in zip(batch,scalar):
+            torch.testing.assert_close(actual[row],expected,atol=1e-34,rtol=2e-11)
+
+    def loss(angle):
+        hp,hc = model(f,phic=angle,**p)
+        return 1e22*(hp.real+.3*hc.imag).sum()
+
+    gradient = torch.autograd.grad(loss(phi),phi)[0]
+    for row in range(2):
+        shift = torch.zeros_like(phi)
+        shift[row] = 1e-5
+        finite_diff = (loss(phi.detach()+shift)-loss(phi.detach()-shift))/2e-5
+        torch.testing.assert_close(gradient[row],finite_diff,atol=2e-8,rtol=2e-7)
+
+
+@pytest.mark.parametrize("f_ref,spin1z",((40.,-.95),(25.,-.18)))
+@pytest.mark.parametrize("spin1x",(0.,1e-9))
+def test_xp_v223_convention6_keeps_opposed_j_guard(f_ref,spin1z,spin1x):
+    # For the second row L+S_parallel is positive at f_ref=25 Hz but
+    # negative at an evaluated frequency (40 Hz). The first is already
+    # opposed at f_ref. Convention 6 has no aligned-carrier exemption.
+    f = t([25.,40.,80.])
+    with pytest.raises(ValueError,match='L \\+ S_parallel <= 0'):
+        IMRPhenomXP()(f,mass1=100.,mass2=5.,spin1x=spin1x,spin1z=spin1z,
+                      inclination=.7,phic=.3,f_ref=f_ref,convention=6)
+
+
+def test_xp_v223_convention6_mixed_opposed_j_batch_keeps_legacy_exception():
+    f = t([25.,40.,80.])
+    p = dict(mass1=t([40.,100.]),mass2=t([20.,5.]),spin1x=t([.3,0.]),
+             spin1z=t([.4,-.95]),spin2z=-.2,inclination=.7,phic=.3,
+             f_ref=40.,convention=6)
+    model = IMRPhenomXP()
+    with pytest.raises(ValueError,match='L \\+ S_parallel <= 0') as current:
+        model(f,**p)
+    with pytest.raises(ValueError,match='L \\+ S_parallel <= 0') as legacy:
+        model(f,**p,_force_legacy=True)
+    assert str(current.value) == str(legacy.value)
+
+
+@pytest.mark.parametrize("options",(
+    {"phi0": .4},
+    {"prec_version": 102},
+    {"final_spin_mod": 0},
+    {"phi0": t([0.,.4])},
+))
+def test_xp_convention6_other_tuples_keep_legacy_route(options):
+    model = IMRPhenomXP()
+    f = t([25.,40.,80.])
+    p = dict(mass1=40.,mass2=20.,spin1x=.3,spin1y=.2,spin1z=.4,
+             spin2x=-.2,spin2y=.1,spin2z=-.2,inclination=.7,phic=.3,
+             f_ref=40.,convention=6,**options)
+    current = model(f,**p)
+    legacy = model(f,**p,_force_legacy=True)
+    for actual,expected in zip(current,legacy):
+        torch.testing.assert_close(actual,expected,atol=1e-34,rtol=2e-11)
+
+
 @pytest.mark.parametrize('convention',[0,1,5,6,7])
 def test_batched_source_azimuth_and_gradient_match_scalar_calls(convention):
     model = IMRPhenomXPHM(modes=[(2,2),(3,3)])

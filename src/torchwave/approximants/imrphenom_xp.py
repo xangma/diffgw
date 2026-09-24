@@ -81,7 +81,10 @@ class IMRPhenomXP(nn.Module):
         ``convention`` defaults to 1, and the MSA v223 route defaults to
         ``final_spin_mod=3``. Explicit NNLO choices, including
         ``final_spin_mod=0``, retain their existing behavior.
-        MSA version labels share the published analytical prescription;
+        For v223 with the MSA remnant and zero observer azimuth, convention 6
+        uses the clean convention-1 strain with the Table-IV orbital-phase
+        factor exp(2j*phic). Opposed-J rows retain the established legacy
+        guard. MSA version labels share the published analytical prescription;
         undocumented implementation-specific differences are not reproduced.
         ``phi0`` is an additional source-frame observer azimuth. The clean
         helper has no separate observer-azimuth argument, so nonzero ``phi0``
@@ -174,7 +177,7 @@ class IMRPhenomXP(nn.Module):
             )
         clean_phi0 = not has_nonzero_phi0
         clean_candidate = (
-            p_ver == 223 and convention in (0, 1) and final_spin_mod == 3
+            p_ver == 223 and convention in (0, 1, 6) and final_spin_mod == 3
             and clean_phi0 and not force_legacy
         )
         guard_unsupported = torch.zeros_like(exact_aligned, dtype=torch.bool)
@@ -208,12 +211,41 @@ class IMRPhenomXP(nn.Module):
                     guard_s_ell, guard_sigma_ell,
                 )
                 guard_unsupported = guard_l0 + guard_s_ell <= 0
+                if convention == 6:
+                    # Convention 6 has no exact-aligned carrier bypass: its
+                    # established NNLO fallback rejects L+S_parallel <= 0 at
+                    # the reference or any evaluated frequency. Preserve
+                    # that domain when adapting the clean convention-1 strain.
+                    guard_freqs = as_tensor(freqs, device=device, dtype=dtype)
+                    grid_shape = (1,) * m1.ndim + tuple(guard_freqs.shape)
+                    guard_source_shape = (
+                        tuple(m1.shape) + (1,) * guard_freqs.ndim
+                    )
+                    def expand_source(value):
+                        return value.reshape(guard_source_shape)
+                    guard_grid = guard_freqs.reshape(grid_shape)
+                    guard_f_angles = torch.where(
+                        guard_grid > 0, guard_grid, expand_source(fref_eval)
+                    )
+                    guard_v = (
+                        PI * expand_source(guard_total) * MSUN_SEC
+                        * guard_f_angles
+                    ).pow(1.0 / 3.0)
+                    guard_l = compute_l_3pn(
+                        guard_v, expand_source(guard_eta),
+                        expand_source(guard_delta),
+                        expand_source(guard_s_ell),
+                        expand_source(guard_sigma_ell),
+                    )
+                    if bool(torch.any(guard_unsupported)) or bool(torch.any(
+                        guard_l + expand_source(guard_s_ell) <= 0
+                    )):
+                        clean_candidate = False
             # Ordinary exact aligned/zero-spin rows are nonsingular for the
-            # clean v223 chart and must use the same helper as their
-            # neighboring rows.  Only the physical L+S guard selects the
-            # established fallback; keeping this mask row-local avoids a
-            # singular row changing a valid neighbor's model.
-            legacy_rows = guard_unsupported
+            # clean v223 chart. Conventions 0/1 keep the L+S reference guard
+            # row-local; convention 6 retains its legacy guard for the whole
+            # request when either reference or evaluated frequency is opposed.
+            legacy_rows = guard_unsupported if clean_candidate else exact_aligned
         else:
             legacy_rows = exact_aligned
         if clean_candidate and legacy_rows.dim() > 0 and bool(torch.any(legacy_rows)):
@@ -278,7 +310,7 @@ class IMRPhenomXP(nn.Module):
                 phic=phi_c,
                 tc=t_c,
                 f_ref=fref_eval,
-                convention=convention,
+                convention=1 if convention == 6 else convention,
                 final_spin_mod=3,
                 xas_model=opaque_xas_carrier,
             )
@@ -286,7 +318,17 @@ class IMRPhenomXP(nn.Module):
             # public XP adapter retains the caller's frequency shape, with
             # broadcast source axes preceding it (including scalar grids).
             target_shape = tuple(m1.shape) + tuple(clean_freqs.shape)
-            return clean_hp.reshape(target_shape), clean_hc.reshape(target_shape)
+            clean_hp = clean_hp.reshape(target_shape)
+            clean_hc = clean_hc.reshape(target_shape)
+            if convention == 6:
+                # Table IV changes the quadrupole carrier by phic. Applied
+                # after the complete clean projection, this is the v223
+                # convention-6 output-basis compatibility phase.
+                phase = torch.exp(2j * phi_c).reshape(
+                    tuple(m1.shape) + (1,) * clean_freqs.ndim
+                )
+                return phase * clean_hp, phase * clean_hc
+            return clean_hp, clean_hc
 
         # Canonical body ordering: primary mass m1 >= m2
         swap_mask = m1 < m2

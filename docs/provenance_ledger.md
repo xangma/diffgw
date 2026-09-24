@@ -101,6 +101,12 @@ not validation of the retained official ROM or surviving equation components.
 - **Verification Result**:
   The `IMRPhenomPv2` [catalog][frozen-catalog] and [holdout][frozen-holdout] cases passed the complex relative $L_2 \le 10^{-6}$ and mismatch $\le 10^{-8}$ gates. This does not establish a separate result for every PhenomP variant.
 
+### 2.4a IMRPhenomXP MSA v223 convention-6 output
+
+- **Published convention:** [Pratten et al. (2021), Appendix C Eqs. (67), (79), (81) and Appendix F Table IV](https://arxiv.org/html/2004.06503v2) specify the dominant-mode twist-up, source-frame rotation, polarization basis and convention-dependent Euler offsets and carrier phase. Table IV assigns zero carrier phase to convention 1 and `phic` to convention 6.
+- **Declared native mapping:** For the quadrupole-only XP v223, `final_spin_mod=3`, `phi0=0` route, the complete convention-6 polarizations equal the clean convention-1 polarizations times $\exp(2i\,\mathrm{phic})$. This is an output convention identity after the full rotation and basis projection, not a change to the MSA dynamics or a higher-mode rule. The clean helper remains defined only for conventions 0 and 1.
+- **Compatibility and limits:** The full-strain phase relation is checked against the public LAL v223 binary on generic and aligned dense grids; the largest complex relative $L_2$ errors in those two additional convention-6 fixtures are below $10^{-8}$. The native v223 auxiliary-root endpoint and the existing `L+S_parallel <= 0` guard at the reference or an evaluated frequency remain compatibility behavior. Nonzero `phi0`, other precession versions and other remnant choices retain the established XP route. The existing frozen catalog and holdout qualification numbers below cover convention 1; these additional probes do not certify a parameter domain or JAX convention-6 dispatch.
+
 ### 2.5 IMRPhenomHM (Multipolar Higher Harmonics)
 - **Primary References**:
   - London et al. (2018), *First higher-multipole model of gravitational waves from spinning and coalescing black-hole binaries*, Phys. Rev. Lett. 120, 161102 ([DOI:10.1103/PhysRevLett.120.161102](https://doi.org/10.1103/PhysRevLett.120.161102))

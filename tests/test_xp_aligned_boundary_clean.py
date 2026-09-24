@@ -200,6 +200,36 @@ def test_v223_reference_closure_matches_public_lal_residual():
         )
 
 
+@pytest.mark.parametrize(
+    "spin1,spin2,phic",
+    (
+        ((0.3, 0.2, 0.4), (-0.2, 0.1, -0.2), -0.7),
+        ((0.0, 0.0, 0.4), (0.0, 0.0, -0.2), 0.3),
+    ),
+)
+def test_public_convention6_uses_clean_quadrupole_phase(spin1, spin2, phic):
+    # Pratten et al. Appendix F Table IV changes the orbital-phase carrier
+    # between conventions 1 and 6. The full output includes the Appendix C
+    # rotation and polarization basis, so compare both polarizations with
+    # the public v223 binary in generic and aligned source-frame charts.
+    p = dict(
+        mass1=35.0, mass2=25.0,
+        spin1x=spin1[0], spin1y=spin1[1], spin1z=spin1[2],
+        spin2x=spin2[0], spin2y=spin2[1], spin2z=spin2[2],
+        distance=500.0, inclination=0.7, phic=phic, f_ref=20.0,
+    )
+    model = IMRPhenomXP()
+    convention1 = model(FREQUENCIES, **p, convention=1)
+    convention6 = model(FREQUENCIES, **p, convention=6)
+    phase = torch.exp(torch.tensor(2j * phic, dtype=torch.complex128))
+    for actual, base in zip(convention6, convention1):
+        torch.testing.assert_close(actual, phase * base, rtol=1e-14, atol=1e-35)
+    target = _public_target(
+        6, mass1=35.0, mass2=25.0, spin1=spin1, spin2=spin2, phic=phic,
+    )
+    assert _max_relative_l2(convention6, target) < STRICT_GATE
+
+
 @pytest.mark.parametrize("convention", (0, 1))
 def test_zero_spin_and_fresh_aligned_fixture_match_public_boundary(convention):
     zero = dict(spin1=(0.0, 0.0, 0.0), spin2=(0.0, 0.0, 0.0))
