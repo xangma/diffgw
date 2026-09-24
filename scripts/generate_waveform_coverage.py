@@ -12,6 +12,7 @@ from collections import defaultdict
 from difflib import unified_diff
 import json
 from pathlib import Path
+import posixpath
 
 from diffgw_core.waveform_definitions import WAVEFORMS
 
@@ -108,19 +109,32 @@ def render() -> str:
             for backend in ("torchwave", "jaxwave"):
                 if record["id"] not in _exports(backend):
                     raise ValueError(f"{record['id']} is not exported by {backend}.approximants")
-    lines = ["| Model or variant | Form | Spec status | Torch dispatch | JAX dispatch |",
-             "| --- | --- | --- | --- | --- |"]
+    lines = ["| Model or variant | Form | Spec status | Public dispatch |",
+             "| --- | --- | --- | --- |"]
     for record in records:
         model_id = record["id"]
-        page = f"../{record['guide']}"
+        page = posixpath.relpath(record["guide"], "waveforms")
         stage = record["stage"]
         if stage == "versioned slice":
             stage = "[versioned slice](index.md)"
-        def names(backend: str) -> str:
-            found = aliases[model_id][backend]
-            return ", ".join(f"`{name}`" for name in found) if found else "direct class only"
+        torch_names = aliases[model_id]["torchwave"]
+        jax_names = aliases[model_id]["jaxwave"]
+        shared = [name for name in torch_names if name in jax_names]
+        torch_only = [name for name in torch_names if name not in jax_names]
+        jax_only = [name for name in jax_names if name not in torch_names]
+        if not (torch_names or jax_names):
+            names = "direct class only"
+        else:
+            parts = []
+            if shared:
+                parts.append(", ".join(f"`{name}`" for name in shared))
+            if torch_only:
+                parts.append("Torch only: " + ", ".join(f"`{name}`" for name in torch_only))
+            if jax_only:
+                parts.append("JAX only: " + ", ".join(f"`{name}`" for name in jax_only))
+            names = "; ".join(parts)
         lines.append(f"| [{model_id}]({page}) | {record['kind']} | {stage} | "
-                     f"{names('torchwave')} | {names('jaxwave')} |")
+                     f"{names} |")
     return "\n".join(lines)
 
 

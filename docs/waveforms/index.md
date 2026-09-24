@@ -6,6 +6,9 @@ equations a DiffGW model uses or what a mathematical-reference result covers.
 For every implemented model, including those without a versioned mathematical
 reference, use the [full dispatch and specification coverage](coverage.md) and
 the broader [catalog and support guide](../models.md).
+Provisional entries in the coverage table link to source-backed research
+ledgers. They identify the equations, native components, and missing evidence
+needed before an executable reference can be trusted.
 
 <!-- BEGIN GENERATED WAVEFORM TABLE -->
 

@@ -145,7 +145,7 @@ MIT-licensed [`phenomxpy` revision
 `4121fafa0484f3db2a7352f4eea697faaaf29f65`](https://gitlab.com/imrphenom-dev/phenomxpy/-/tree/4121fafa0484f3db2a7352f4eea697faaaf29f65/phenomxpy/phenomt):
 `fits.py`, `internals.py`, and `numba_ansatze.py`, as recorded in the
 [provenance ledger](../../provenance_ledger.md) and
-[notices](../../../THIRD_PARTY_NOTICES.md). The upstream MSA/numerical
+[notices](https://github.com/xangma/diffgw/blob/5bc907d/THIRD_PARTY_NOTICES.md). The upstream MSA/numerical
 modules identified GPL-derived code and were excluded from adaptation; no
 LAL implementation source was used. A later scalar reference must derive its
 precession expressions from the cited primary equations and state its own

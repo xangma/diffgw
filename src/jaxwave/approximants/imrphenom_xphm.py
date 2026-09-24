@@ -5,7 +5,7 @@ Mathematical references for the inherited model and audited corrections:
 - García-Quirós et al. (2020), Phys. Rev. D 102, 064002 (arXiv:2001.10914)
 - Chatziioannou et al. (2017), Phys. Rev. D 95, 104004 (arXiv:1703.03967)
 - Hamilton et al. (2021), Phys. Rev. D 104, 124027 (arXiv:2107.08876)
-- Colleoni et al. (2025), Phys. Rev. D 111, 064025 (arXiv:2412.16721)
+- Colleoni et al. (2025), Phys. Rev. D 111, 104019 (arXiv:2412.16721)
 """
 
 from typing import Dict, Optional, Sequence, Tuple, Union

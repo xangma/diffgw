@@ -14,43 +14,46 @@ those links are not substitutes for a six-section canonical specification.
 The [support catalog](../models.md), [model evidence manifest](../model_manifest.json),
 and [validation overview](../validation.md) remain the places to assess specific
 options and numerical evidence. A dispatch alias is not a separate mathematical
-model. `Direct class only` means use the class API, not the FD/TD dispatcher.
+model. Aliases without a backend label occur in both dispatchers; exceptions
+are labeled in the table. The same alias can still select different backend
+class routes, as the [Pv2 ledger](research/phenom-precessing.md) explains.
+`Direct class only` means use the class API, not the FD/TD dispatcher.
 
 <!-- BEGIN GENERATED COVERAGE TABLE -->
 
-| Model or variant | Form | Spec status | Torch dispatch | JAX dispatch |
-| --- | --- | --- | --- | --- |
-| [TaylorF2](../math/taylorf2.md) | native FD | [versioned slice](index.md) | `taylorf2` | `taylorf2` |
-| [TaylorF2_HM](../models.md) | higher-mode extension | provisional | `taylorf2hm` | `taylorf2hm` |
-| [TaylorF2_Eccentric](../models.md) | eccentric extension | provisional | `taylorf2eccentric`, `eccentrictaylorf2` | `taylorf2eccentric`, `eccentrictaylorf2` |
-| [IMRPhenomD](../math/imrphenomd-intrinsic.md) | native FD | [versioned slice](index.md) | `imrphenomd` | `imrphenomd` |
-| [IMRPhenomHM](../models.md) | higher-mode extension | provisional | `imrphenomhm` | `imrphenomhm` |
-| [IMRPhenomXAS](../math/imrphenomxas.md) | native FD | [versioned slice](index.md) | `imrphenomxas`, `phenomxas`, `xas` | `imrphenomxas`, `phenomxas`, `xas` |
-| [IMRPhenomXHM](../models.md) | higher-mode extension | provisional | `imrphenomxhm` | `imrphenomxhm` |
-| [IMRPhenomP](../models.md) | precessing composition | provisional | `imrphenomp` | `imrphenomp` |
-| [IMRPhenomPv2](../models.md) | precessing variant | provisional | `imrphenompv2` | `imrphenompv2` |
-| [IMRPhenomXP](../models.md) | precessing composition | provisional | `imrphenomxp`, `phenomxp`, `xp` | `imrphenomxp`, `phenomxp`, `xp` |
-| [IMRPhenomXPHM](../models.md) | precessing higher-mode composition | provisional | `imrphenomxphm`, `phenomxphm`, `xphm` | `imrphenomxphm`, `phenomxphm`, `xphm` |
-| [IMRPhenomXPHM_SpinTaylor](../model_manifest.json) | XPHM precession variant | provisional | `imrphenomxphmspintaylor`, `phenomxphmspintaylor`, `xphmspintaylor` | `imrphenomxphmspintaylor`, `phenomxphmspintaylor`, `xphmspintaylor` |
-| [IMRPhenomXPNR](../model_manifest.json) | XPHM PNR variant | provisional | `imrphenomxpnr`, `phenomxpnr`, `xpnr`, `imrphenomxnpr`, `phenomxnpr`, `xnpr`, `pnr` | `imrphenomxpnr`, `phenomxpnr`, `xpnr`, `pnr` |
-| [IMRPhenomT](../imrphenomt.md) | native TD | provisional | `imrphenomt` | `imrphenomt` |
-| [IMRPhenomTHM](../imrphenomt.md) | T higher-mode extension | provisional | `imrphenomthm` | `imrphenomthm` |
-| [IMRPhenomTP](../imrphenomt.md) | T precessing extension | provisional | `imrphenomtp` | `imrphenomtp` |
-| [IMRPhenomTPHM](../imrphenomt.md) | T precessing higher-mode extension | provisional | `imrphenomtphm` | `imrphenomtphm` |
-| [IMRPhenomD_NRTidal](../models.md) | tidal composition | provisional | `imrphenomdnrtidal`, `nrtidal` | `imrphenomdnrtidal`, `nrtidal` |
-| [IMRPhenomD_NRTidalv2](../models.md) | tidal composition | provisional | `imrphenomdnrtidalv2`, `nrtidalv2` | `imrphenomdnrtidalv2`, `nrtidalv2` |
-| [IMRPhenomNSBH](../models.md) | matter composition | provisional | `imrphenomnsbh`, `nsbh` | `imrphenomnsbh`, `nsbh` |
-| [KerrRingdown](../models.md) | ringdown generator | provisional | `kerrringdown`, `ringdown` | `kerrringdown`, `ringdown` |
-| [OfficialSEOBNRv4ROM](../external-data.md) | external-data wrapper | separate SEOBNR track | `seobnrrom`, `seobnrv4rom`, `officialseobnrv4rom` | `seobnrrom`, `seobnrv4rom`, `officialseobnrv4rom` |
-| [SEOBNR_ROM](../models.md) | native surrogate | separate SEOBNR track | `seobnrv5rom` | `seobnrv5rom` |
-| [SEOBNR_ODE](../models.md) | numerical ODE generator | separate SEOBNR track | `seobnr`, `seobnrode`, `seobnrv5` | `seobnr`, `seobnrode`, `seobnrv5` |
-| [SEOBNRv4Published](../model_manifest.json) | published-model reconstruction | separate SEOBNR track | `seobnrv4published` | `seobnrv4published` |
-| [SEOBNRv4PublishedNonspinning](../model_manifest.json) | published-model restricted variant | separate SEOBNR track | `seobnrv4publishednonspinning` | `seobnrv4publishednonspinning` |
-| [TEOBResumS](../models.md) | numerical ODE generator | provisional | `teobresums`, `teobresum`, `teob` | `teobresums`, `teobresum`, `teob` |
-| [ContinuousWave](../models.md) | direct waveform class | provisional | direct class only | direct class only |
-| [MemoryWaveform](../models.md) | direct waveform class | provisional | direct class only | direct class only |
-| [EMRIKludge](../models.md) | direct waveform class | provisional | direct class only | direct class only |
-| [ParameterizedPostEinstein](../models.md) | direct waveform class | provisional | direct class only | direct class only |
+| Model or variant | Form | Spec status | Public dispatch |
+| --- | --- | --- | --- |
+| [TaylorF2](../math/taylorf2.md) | native FD | [versioned slice](index.md) | `taylorf2` |
+| [TaylorF2_HM](research/tidal-eccentric-higher-modes.md) | higher-mode extension | provisional | `taylorf2hm` |
+| [TaylorF2_Eccentric](research/tidal-eccentric-higher-modes.md) | eccentric extension | provisional | `taylorf2eccentric`, `eccentrictaylorf2` |
+| [IMRPhenomD](../math/imrphenomd-intrinsic.md) | native FD | [versioned slice](index.md) | `imrphenomd` |
+| [IMRPhenomHM](research/phenom-higher-modes.md) | higher-mode extension | provisional | `imrphenomhm` |
+| [IMRPhenomXAS](../math/imrphenomxas.md) | native FD | [versioned slice](index.md) | `imrphenomxas`, `phenomxas`, `xas` |
+| [IMRPhenomXHM](research/phenom-higher-modes.md) | higher-mode extension | provisional | `imrphenomxhm` |
+| [IMRPhenomP](research/phenom-precessing.md) | precessing composition | provisional | `imrphenomp` |
+| [IMRPhenomPv2](research/phenom-precessing.md) | precessing variant | provisional | `imrphenompv2` |
+| [IMRPhenomXP](research/phenom-precessing.md) | precessing composition | provisional | `imrphenomxp`, `phenomxp`, `xp` |
+| [IMRPhenomXPHM](research/phenom-precessing.md) | precessing higher-mode composition | provisional | `imrphenomxphm`, `phenomxphm`, `xphm` |
+| [IMRPhenomXPHM_SpinTaylor](research/phenom-precessing.md) | XPHM precession variant | provisional | `imrphenomxphmspintaylor`, `phenomxphmspintaylor`, `xphmspintaylor` |
+| [IMRPhenomXPNR](research/phenom-precessing.md) | XPHM PNR variant | provisional | `imrphenomxpnr`, `phenomxpnr`, `xpnr`, `pnr`; Torch only: `imrphenomxnpr`, `phenomxnpr`, `xnpr` |
+| [IMRPhenomT](research/imrphenomt-family.md) | native TD | provisional | `imrphenomt` |
+| [IMRPhenomTHM](research/imrphenomt-family.md) | T higher-mode extension | provisional | `imrphenomthm` |
+| [IMRPhenomTP](research/imrphenomt-family.md) | T precessing extension | provisional | `imrphenomtp` |
+| [IMRPhenomTPHM](research/imrphenomt-family.md) | T precessing higher-mode extension | provisional | `imrphenomtphm` |
+| [IMRPhenomD_NRTidal](research/tidal-eccentric-higher-modes.md) | tidal composition | provisional | `imrphenomdnrtidal`, `nrtidal` |
+| [IMRPhenomD_NRTidalv2](research/tidal-eccentric-higher-modes.md) | tidal composition | provisional | `imrphenomdnrtidalv2`, `nrtidalv2` |
+| [IMRPhenomNSBH](research/tidal-eccentric-higher-modes.md) | matter composition | provisional | `imrphenomnsbh`, `nsbh` |
+| [KerrRingdown](../math/standalone-family-research-ledger.md) | ringdown generator | provisional | `kerrringdown`, `ringdown` |
+| [OfficialSEOBNRv4ROM](../external-data.md) | external-data wrapper | separate SEOBNR track | `seobnrrom`, `seobnrv4rom`, `officialseobnrv4rom` |
+| [SEOBNR_ROM](../models.md) | native surrogate | separate SEOBNR track | `seobnrv5rom` |
+| [SEOBNR_ODE](../models.md) | numerical ODE generator | separate SEOBNR track | `seobnr`, `seobnrode`, `seobnrv5` |
+| [SEOBNRv4Published](../model_manifest.json) | published-model reconstruction | separate SEOBNR track | `seobnrv4published` |
+| [SEOBNRv4PublishedNonspinning](../model_manifest.json) | published-model restricted variant | separate SEOBNR track | `seobnrv4publishednonspinning` |
+| [TEOBResumS](../math/standalone-family-research-ledger.md) | numerical ODE generator | provisional | `teobresums`, `teobresum`, `teob` |
+| [ContinuousWave](../math/standalone-family-research-ledger.md) | direct waveform class | provisional | direct class only |
+| [MemoryWaveform](../math/standalone-family-research-ledger.md) | direct waveform class | provisional | direct class only |
+| [EMRIKludge](../math/standalone-family-research-ledger.md) | direct waveform class | provisional | direct class only |
+| [ParameterizedPostEinstein](../math/standalone-family-research-ledger.md) | direct waveform class | provisional | direct class only |
 
 <!-- END GENERATED COVERAGE TABLE -->
 

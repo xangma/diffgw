@@ -6,7 +6,7 @@ precession angles (alpha, beta, gamma), and smooth C^1 analytical continuation
 into the merger-ringdown regime.
 
 References:
-- Colleoni et al. (2025), Phys. Rev. D 111, 064025 (arXiv:2412.16721)
+- Colleoni et al. (2025), Phys. Rev. D 111, 104019 (arXiv:2412.16721)
 - Buonanno et al. (2009), Phys. Rev. D 80, 084043 (arXiv:0907.0700)
 - Blanchet et al. (2006), Phys. Rev. D 74, 104034 (arXiv:gr-qc/0605140)
 - Kidder (1995), Phys. Rev. D 52, 821 (arXiv:gr-qc/9506014)

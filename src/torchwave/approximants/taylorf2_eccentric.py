@@ -36,7 +36,7 @@ class TaylorF2_Eccentric(nn.Module):
     """EccentricTaylorF2 Post-Newtonian Stationary Phase Approximation model.
 
     Implements full 3PN eccentric phase corrections from Moore et al. (2016)
-    Eqs. (1438)-(1484) / Eq. (4.17).
+    Eq. (6.26) of arXiv:1605.00304v2.
     """
 
     def __init__(self):
@@ -55,7 +55,7 @@ class TaylorF2_Eccentric(nn.Module):
         """Compute the eccentric phase correction under SPA up to 3PN order.
 
         Reference: Moore, Favata, Arun, Mishra (2016), Phys. Rev. D 93, 124061,
-        Eqs. (1438)-(1484) [arXiv:1605.00304].
+        Eq. (6.26) [arXiv:1605.00304v2].
 
         Delta Psi_ecc(f, f0) = - (2355 / 1462) * (3 / (128 * eta * v^5)) * e0^2 * (v0 / v)^(19/3)
                                * { 1 + [1PN] + [1.5PN] + [2PN] + [2.5PN] + [3PN] }
@@ -248,7 +248,7 @@ class TaylorF2_Eccentric(nn.Module):
     ) -> torch.Tensor:
         """Compute the leading-order Newtonian eccentric amplitude correction.
 
-        Reference: Moore et al. (2016) Eq. (4.18)
+        Project option; independent primary derivation pending (not Moore et al. Eq. (4.18)).
         A_ecc(f) = A_circ(f) * [ 1 - (743 / 9216) * e0^2 * (f / f0)^(-19/9) ]
         """
         for param in [e0, f0, f]:

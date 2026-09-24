@@ -65,9 +65,9 @@ batching depend on the selected model and numerical path.
   - Huerta et al. (2014), *Accurate and efficient waveforms for compact binaries on eccentric orbits*, Phys. Rev. D 90, 084016 ([DOI:10.1103/PhysRevD.90.084016](https://doi.org/10.1103/PhysRevD.90.084016))
 - **Mathematical Form**:
   $$\Psi_{\rm ecc}(f) = \Psi_{\rm circ}(f) - \frac{3}{128\eta v^5} e_0^2 \left(\frac{v_0}{v}\right)^{19/3} \sum_{j=0}^{6} \Delta\psi_j v^j$$
-  Equations (4.17)–(4.18) of Moore et al. (2016).
+  Equation (6.26) of Moore et al. (2016) gives the eccentric SPA phase. The optional native amplitude factor is a project option whose primary derivation remains pending.
 - **Reference Frequency Priority**:
-  $f_{0,\rm ecc}$ resolves hierarchically from: explicit $f_{0,\rm ecc} \to f_{\rm lower} \to f_{\rm ref} \to 20.0\text{ Hz}$, ensuring complete independence from numerical grid padding and DC sampling density.
+  $f_{0,\rm ecc}$ resolves from an explicit value, then $f_{\rm lower}$, then a positive $f_{\rm ref}$, then the lowest positive frequency-grid sample (20 Hz if none exists). The final grid fallback makes the result dependent on the supplied positive grid.
 - **Verification Result**:
   The two [frozen catalog cases][frozen-catalog] passed, with a maximum polarization complex relative $L_2$ error of approximately $1.64 \times 10^{-12}$.
 
