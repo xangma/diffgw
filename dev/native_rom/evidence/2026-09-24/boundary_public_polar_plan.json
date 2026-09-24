@@ -1,0 +1,27 @@
+{
+  "anchor_angular_frequency_M": 0.1,
+  "max_abs_peak_lag_M": 0.1,
+  "max_postpeak_complex_relative_l2": 0.01,
+  "max_whole_complex_relative_l2": 0.005,
+  "public_control": {
+    "path": "dev/native_rom/evidence/2026-09-24/sxs_2569_public_control.json",
+    "sha256": "cc826a29f83876118678dc8996ffc03467120058ebe0ff7c36318626ac809025"
+  },
+  "purpose": "Prospectively check selected antialigned numerical-screen rows against the pinned public SEOBNRv4 binary using independent Momega=0.1 frequency anchors and amplitude/continuous-phase resampling. Rows were chosen after numerical screens but before these public comparisons. This is a selected implementation-parity diagnostic, not a physical NR or ROM release gate.",
+  "release_qualified": false,
+  "rows": [
+    "q8_strong_antialigned",
+    "q1_extreme_antialigned"
+  ],
+  "schema": "diffgw.seobnrv4.boundary-public-polar-plan.v1",
+  "screens": {
+    "q1_extreme_antialigned": {
+      "path": "dev/native_rom/evidence/2026-09-24/source_rkf_q1_extreme_antialigned_screen.json",
+      "sha256": "c8c54902207cab1947d3f2476ccf1e811c8c76bb0048dc9067d70cc7b6334ba8"
+    },
+    "q8_strong_antialigned": {
+      "path": "dev/native_rom/evidence/2026-09-24/source_rkf_q8_antialigned_screen.json",
+      "sha256": "6a95f186eb7aad704591c92683b073964c64a0e3204d92cf5c47ce405c62e235"
+    }
+  }
+}
