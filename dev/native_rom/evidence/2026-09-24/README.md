@@ -1814,6 +1814,15 @@ dev.native_rom.diagnose_sxs_2123_ode` and then
 `dev.native_rom.diagnose_sxs_2123_ode_extension` using the linked plans,
 the primary comparison result, and the pinned development environment.
 
+A subsequent [first-step plan](sxs_2123_first_step_plan.json) and
+[result](sxs_2123_first_step.json) change only the coarse integrator's
+first trial from `0.25 M` to `0.125 M` at the two tightest tolerance pairs.
+Their direct complex difference is `1.32e-5`, compared with `1.29e-5`
+without this change. Both fail the same budget, so this controlled change
+does not explain the remaining phase drift. Run `PYTHONPATH=src:. python -m
+dev.native_rom.diagnose_sxs_2123_first_step` with its frozen inputs to
+reproduce the result.
+
 To reproduce, download the six archive files and sidecars listed in the
 plan into `/tmp/diffgw-sxs-2123/Lev{3,4}/`, preserving each file's base
 name. Run `PYTHONPATH=src:. python -m dev.native_rom.extract_sxs_2123
