@@ -890,7 +890,13 @@ log-amplitude and phase arrays, with analytic parameter derivatives. A
 reference frequency; its gauge invariance and a withheld complex-waveform row
 pass analytic tests. [Torch/JAX evaluators](rom/backend_evaluation.py) agree
 with the NumPy result and its parameter derivatives, including at interpolation
-nodes. This algebra accepts no physical generator and writes no asset. The
+nodes. A [development-only frequency interpolant](rom/frequency_interpolant.py)
+computes not-a-knot cubic coefficients for the reduced basis once and evaluates
+arbitrary in-domain frequencies. Analytic withheld-frequency waveforms and
+parameter/frequency derivatives pass NumPy, Torch, and JAX checks, including
+at a frequency knot. NumPy rejects out-of-domain queries; JIT-compatible
+backend evaluation returns `NaN`. This algebra accepts no physical generator
+and writes no asset. The
 frequency resolution needed for reliable phase unwrapping, parameter and
 frequency grids, patch boundaries, source-model fidelity, and ROM holdouts are
 still unqualified.
