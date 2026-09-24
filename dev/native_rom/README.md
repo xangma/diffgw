@@ -861,6 +861,8 @@ source-backed 35-mode flux and pre-NQC `(2,2)` mode/frequency. Two fixed-step
 end-to-end Torch/JAX comparisons (equal-mass nonspinning and q=4 mixed spin)
 agree through the complex attached mode within `2e-10` absolute/relative;
 their finite-support frequency projections agree within `2e-9` relative.
+An independent off-grid polynomial Fourier sum and its frequency derivative
+also match the JAX projection.
 This is cross-backend agreement on the same unqualified source choices,
 not physical or numerical release validation. The JAX assembler has no
 qualified adaptive historical route, domain-wide convergence, or gradient
