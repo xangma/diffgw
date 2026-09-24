@@ -2189,5 +2189,12 @@ evaluating the native model on its five IDs. It selects strong aligned,
 mixed-spin, strong anti-aligned, asymmetric aligned, and nonspinning
 configurations, all unused in the earlier comparison. The plan pins two
 catalog resolutions and a start below the catalog reference frequency for
-each case. Extraction and comparisons are pending; no result or release
-claim follows from selection alone.
+each case. Both resolutions for all five cases have been extracted with their
+catalog MD5 checks and locally verified SHA-256 hashes; the decoded modes and
+extraction manifest are outside Git under `/tmp/diffgw-sxs-second-holdout`.
+The [detector-weighted follow-up plan](sxs_second_holdout_weighted_plan.json)
+was frozen before native comparisons. It fixes the same 191 integer masses,
+settled-frequency cutoff, aLIGO design PSD, taper controls, and global
+time/phase optimizer as the earlier five-case diagnostic. Comparisons and
+weighted results are pending; neither selection nor extraction is a release
+claim.
