@@ -2400,9 +2400,12 @@ complex relative L2 is `1.84e-5`. The shared miss does not change the frozen
 physical gate or establish full-domain fidelity, numerical convergence, or a
 qualified ROM.
 
-The [post-hoc 0260 cutoff plan](sxs_0260_initial_cutoff_plan.json) isolates
-the paper-described initial geometric NR frequency and use of earlier common
-NR support at the already failed 22 M⊙ mass. Its
+The [post-hoc 0260 cutoff plan](sxs_0260_initial_cutoff_plan.json) tests
+the paper's Figure 2 caption wording of *initial geometric frequency* and
+earlier common NR support at the already failed 22 M⊙ mass. Section IV.1 of
+the [same paper](https://arxiv.org/html/1611.03703#S4.SS1) specifies the
+starting frequency **after junk radiation has settled**, which is closer to
+the original frozen convention. The
 [result](sxs_0260_initial_cutoff.json) reproduces the frozen settled-frequency,
 relaxed-support overlap `0.9880256` exactly. Changing only the cutoff to the
 catalog's initial orbital frequency yields `0.9878554`; retaining the settled
