@@ -23,7 +23,7 @@ from .diagnose_source_nqc_whole_mode_override import OVERRIDE, override_source
 from .diagnose_source_wheel_mode import _public, _source
 
 
-PLAN = q.ROOT / "dev/native_rom/evidence/2026-09-24/near_extreme_nqc_intervention_plan.json"
+PLAN = q.ROOT / "dev/native_rom/evidence/2026-09-24/near_extreme_nqc_intervention_v2_plan.json"
 ACTIVE = (0, 1, 2, 6, 7)
 
 
@@ -49,7 +49,7 @@ def main(argv=None):
         parser.error("evidence path already exists")
     plan = json.loads(PLAN.read_text())
     paths = {key: q.ROOT / value["path"] for key, value in plan["inputs"].items()}
-    if (plan["schema"] != "diffgw.seobnrv4.near-extreme-nqc-intervention-plan.v1"
+    if (plan["schema"] != "diffgw.seobnrv4.near-extreme-nqc-intervention-plan.v2"
             or plan["row"] != "q10_both_near_extreme_aligned"
             or plan["coefficient_steps_M"] != [0.03125, 0.015625]
             or plan["mode_step_M"] != 0.015625
