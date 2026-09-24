@@ -337,10 +337,10 @@ def _ringdown_projection(l, m, c, inclination, phi, angular_basis):
     c_exp = jnp.expand_dims(c, -1) if c.ndim > 0 else c
     phi_exp = jnp.expand_dims(phi, -1) if hasattr(phi, "ndim") and phi.ndim > 0 else phi
     values = spin_weighted_spheroidal_harmonic(l, m, c_exp, theta, phi_exp)
-    positive_conjugate = jnp.conj(values[..., 0])
-    mirror = ((-1) ** l) * jnp.conj(values[..., 1])
-    return (0.5 * (mirror + ((-1) ** l) * positive_conjugate),
-            0.5j * (mirror - ((-1) ** l) * positive_conjugate))
+    # The conjugated negative-m partner equals the positive-m harmonic at
+    # reflected inclination. Both terms therefore retain exp(+i m phi).
+    positive, mirror = values[..., 0], values[..., 1]
+    return 0.5 * (positive + mirror), -0.5j * (positive - mirror)
 
 
 def _broadcast_parameters(parameters, amplitudes, phases):

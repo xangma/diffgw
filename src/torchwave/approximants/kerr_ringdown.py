@@ -177,10 +177,10 @@ def _ringdown_projection(l, m, c, inclination, phi, angular_basis):
     # Eqs. (48), (57) allow both angular factors from one +m eigensolution.
     theta = torch.stack((inclination, PI - inclination), dim=-1)
     values = spin_weighted_spheroidal_harmonic(l, m, c[..., None], theta, phi[..., None])
-    positive_conjugate = values[..., 0].conj()
-    mirror = ((-1) ** l) * values[..., 1].conj()
-    return (0.5 * (mirror + ((-1) ** l) * positive_conjugate),
-            0.5j * (mirror - ((-1) ** l) * positive_conjugate))
+    # The conjugated negative-m partner equals the positive-m harmonic at
+    # reflected inclination. Both terms therefore retain exp(+i m phi).
+    positive, mirror = values[..., 0], values[..., 1]
+    return 0.5 * (positive + mirror), -0.5j * (positive - mirror)
 
 
 def _broadcast_parameters(parameters, amplitudes, phases):
