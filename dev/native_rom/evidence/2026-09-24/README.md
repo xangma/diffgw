@@ -552,6 +552,67 @@ dev.native_rom.diagnose_source_nqc_whole_mode_override --source-root
 /tmp/diffgw-lalsuite-pinned-53acc0c/merged-include --gsl-include
 /usr/local/include --json-out /tmp/source-nqc-whole-mode-override.json`.
 
+The [wheel-coefficient override plan](source_nqc_wheel_override_plan.json)
+and [result](source_nqc_wheel_override.json) apply a second control to the
+same complete pinned source generator: inject only the five active `(2,2)`
+NQC coefficients reported by the pinned public wheel at the same `0.125 M`
+requested output step. Both baseline mode byte hashes and the previous
+whole-mode comparison replay exactly. Peak-fitted source/wheel complex L2
+falls from `6.48e-4` to `1.13e-5` on the nonspinning row, from `6.54e-4`
+to `2.46e-5` on the mild mixed row, and from `5.80e-3` to `8.58e-6` on
+the strong aligned row. The resulting nonzero residual bounds the combined
+effect of source/wheel dynamics, raw modes, attachment, and remaining numerical
+differences on these rows. The larger baseline difference is overwhelmingly
+caused by the NQC coefficients, but this experiment does not identify why
+the two builds fit different coefficients. The wheel's reported coefficients
+are black-box reference outputs and cannot be used as native release data.
+Reproduce with `PYTHONPATH=src:. /Users/xangma/repos/diffgw/.venv/bin/python
+-m dev.native_rom.diagnose_source_nqc_wheel_override --source-root
+/Users/xangma/repos/lalsuite-git --headers
+/tmp/diffgw-lalsuite-pinned-53acc0c/merged-include --gsl-include
+/usr/local/include --json-out /tmp/source-nqc-wheel-override.json`.
+
+The [wheel-state fit plan](source_nqc_wheel_state_fit_plan.json) and
+[result](source_nqc_wheel_state_fit.json) compile the pinned source field and
+raw-mode functions, then apply the source NQC equations to the wheel's
+hash-replayed public high-rate states for strong aligned spin. A separately
+compiled pinned generator supplies its own public high-rate states as a
+reconstruction control. Its radius and radial momentum match the captured
+private source NQC inputs exactly. An adapter using algebraically equivalent
+mass and spin formulas reconstructs raw amplitude and orbital frequency to
+`3.53e-10` relative and `1.85e-11` absolute, yet moves the sensitive fit by
+`0.215` L2. A second adapter reproduces the generator's exact parameter
+construction and per-state calls. It matches the captured source orbital
+frequency exactly and raw amplitude to `3.33e-16` relative. Its pinned C NQC
+fit is within `2e-6` per coefficient of the captured source coefficients;
+the Python/GSL fit has `2.5e-5` L2 distance.
+The source and wheel high-rate arrays both start at `786.875 M`, while the
+wheel has four more samples at the end. Near the source match their public
+state differences are at most `(3.65e-6, 8.89e-6, 3.91e-7, 1.04e-6)` in
+`(r, phi, pr*, pphi)`.
+
+The source peak-search rule exactly reproduces its captured `149.70311737 M` peak;
+its initial spline derivatives are both negative, so its bisection interval
+does not bracket the actual cubic-spline maximum at `149.68100027 M`. This
+is a source algorithm and grid effect, not a validated peak prescription.
+Applying that same rule to source-field frequencies on the wheel states also
+returns `149.70311737 M`, so this rule does not account for the observed
+source/wheel coefficient difference on this row. The exact-source-call fit
+on the wheel states reduces the L2 distance from the wheel's five reported
+coefficients from `8.14` to `1.524`, without closing it; its pinned C and
+Python/GSL fits agree within `2.48e-5` per coefficient. The earlier
+algebraically equivalent adapter yielded `3.66` L2 distance, and its frozen
+nine-point match-time shift scan over `±0.0625 M` reached only `3.09` at
+`+0.015625 M`. Wheel trajectory differences and parameter construction
+explain parts of the coefficient gap. The remaining private wheel fit inputs
+or implementation are unresolved. The scan is a diagnostic sensitivity
+check, never a fitted model choice. Reproduce with
+`PYTHONPATH=src:. /Users/xangma/repos/diffgw/.venv/bin/python -m
+dev.native_rom.diagnose_source_nqc_wheel_state_fit --source-root
+/Users/xangma/repos/lalsuite-git --headers
+/tmp/diffgw-lalsuite-pinned-53acc0c/merged-include --gsl-include
+/usr/local/include --json-out /tmp/source-nqc-wheel-state-fit.json`.
+
 The [public-mode boundary plan](public_nqc_mode_boundary_plan.json) and
 [result](public_nqc_mode_boundary.json) use both public v4 modes API paths at
 `0.015625 M`: the coefficient-only call and the call returning modes plus low-

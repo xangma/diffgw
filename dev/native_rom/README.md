@@ -318,6 +318,30 @@ peak-fitted whole-mode complex L2 against the wheel drops from `6.48e-4` to
 `2.97e-5` (nonspinning), `6.54e-4` to `5.33e-4` (mild mixed), and `5.80e-3`
 to `3.19e-3` (strong aligned). The strong-spin discrepancy and small post-peak
 regressions remain; this is a numerical attribution, not release validation.
+The [wheel-coefficient override](evidence/2026-09-24/source_nqc_wheel_override.json)
+keeps the same source generator and injects only the pinned wheel's reported
+`(2,2)` NQC coefficients. Its peak-fitted whole-mode complex L2 falls to
+`1.13e-5` (nonspinning), `2.46e-5` (mild mixed), and `8.58e-6` (strong
+aligned). This bounds the residual from dynamics, raw modes, and attachment
+on these three rows and isolates the source/wheel NQC fit as the dominant
+whole-mode mismatch. Wheel coefficients are black-box reference outputs,
+not native model data or a valid release prescription.
+The [wheel-state NQC replay](evidence/2026-09-24/source_nqc_wheel_state_fit.json)
+shows that the pinned source's first-decline peak rule returns a time
+`0.0221 M` after the true cubic-spline maximum on the strong aligned-spin
+row because its derivative interval is unbracketed. It returns the same
+source-field peak time on the wheel's public high-rate states. Replacing
+source states with wheel states reduces the source-fit-to-wheel-coefficient
+L2 gap from `8.14` to `1.52` when the source generator's parameter construction
+and per-state calls are replayed exactly. The pinned source C NQC routine
+confirms the source-input reconstruction within `2e-6` per coefficient and
+the wheel-state replay within `2.5e-5` of the Python/GSL fit. A simpler
+algebraically equivalent adapter leaves a `0.215` L2 source control error:
+the NQC fit is sensitive to floating-point operation order. The compiled
+source-generator control shows that its public high-rate radius and radial
+momentum equal its captured private NQC inputs. Source and wheel public
+high-rate states differ by up to `8.89e-6` near matching.
+The private wheel fit inputs remain an unresolved release blocker.
 The aligned-spin trajectory replay finds a native-minus-public orbital phase
 span of at most `1.27e-4 rad` from `M Omega=0.0425` through `0.13`, compared
 with `3.36e-5 rad` maximum public-grid sensitivity. Over the later sampled

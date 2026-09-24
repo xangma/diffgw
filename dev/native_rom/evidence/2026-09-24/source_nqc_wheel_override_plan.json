@@ -1,0 +1,16 @@
+{
+  "schema": "diffgw.seobnrv4.source-nqc-wheel-override-plan.v1",
+  "purpose": "Replace only the compiled pinned source generator's (2,2) NQC coefficients with the pinned public wheel coefficients at the same requested output step, to bound coefficient-only contribution to the whole-mode gap. Diagnostic only.",
+  "release_qualified": false,
+  "rows": ["nonspinning", "mild_mixed_spin", "strong_aligned_spin"],
+  "step_M": 0.125,
+  "capacity": 50000,
+  "prior_override": "dev/native_rom/evidence/2026-09-24/source_nqc_whole_mode_override.json",
+  "prior_override_sha256": "e667b48155ad8d2f4da5ed5a187c3fc5c71b303fd168df18d9de44de04e7c5bb",
+  "source_wheel_mode": "dev/native_rom/evidence/2026-09-24/source_wheel_mode.json",
+  "source_wheel_mode_sha256": "c103f7d884073eb00029a231dd271d49c4a4571455030b11b93c22e298a479da",
+  "source_flux_plan": "dev/native_rom/evidence/2026-09-24/source_flux_initial_plan.json",
+  "source_flux_plan_sha256": "1167199c8f954f97a5905a1e3b2f67d1555e984e5f1da0a0fc42a77a925f96ea",
+  "adapter": "dev/native_rom/reference/full_v4_source_nqc_override_adapter.c",
+  "adapter_sha256": "40309a9bcd64c0a48d3d63d01694f4d21b74dce53f56dd94ae6f00047e214057"
+}
