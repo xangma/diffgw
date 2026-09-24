@@ -884,6 +884,10 @@ parameter coefficients, as described by
 The v4 ROM also uses overlapping parameter and frequency patches. Independently
 trained tables would define our own approximation to a qualified source model;
 they would not become the authors' official ROM tables.
+The published v4 parameter grid uses symmetric mass ratio `nu`; the current
+development algebra labels its first coordinate `q` and fits log amplitude
+rather than the paper's amplitude. Those coordinates and field choices are
+unqualified design choices, not a replay of the authors' ROM.
 The [in-memory reduced interpolant](rom/reduced_interpolant.py) implements
 SVD compression and **provisional global Chebyshev-Lobatto parameter
 interpolation**, an alternative to the published local tensor-product cubic

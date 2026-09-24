@@ -164,3 +164,16 @@ def test_arbitrary_frequency_spline_and_cross_backend_derivatives():
                                rtol=3e-10, atol=3e-10)
     np.testing.assert_allclose(np.asarray(jax_grad), expected_grad,
                                rtol=3e-10, atol=3e-10)
+
+    torch_q = torch.tensor(values[0], dtype=torch.float64, requires_grad=True)
+    q_loss = evaluate_torch_frequency(interpolant, frequency, torch_q,
+                                       *values[1:]).real.sum()
+    torch_q_grad = torch.autograd.grad(q_loss, torch_q)[0]
+    jax_q_grad = jax.grad(lambda q: jnp.real(
+        evaluate_jax_frequency(interpolant, frequency, q,
+                               *values[1:])).sum())(jnp.asarray(values[0]))
+    expected_q_grad = np.real(jacobian[0].sum())
+    np.testing.assert_allclose(torch_q_grad.item(), expected_q_grad,
+                               rtol=3e-10, atol=3e-10)
+    np.testing.assert_allclose(np.asarray(jax_q_grad), expected_q_grad,
+                               rtol=3e-10, atol=3e-10)
