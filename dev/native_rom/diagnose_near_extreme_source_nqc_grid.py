@@ -19,7 +19,7 @@ from .diagnose_source_flux_initial import _compile, _libraries, _snapshot
 from .diagnose_source_nqc_inputs import CAPTURE, INCLUDE, _capture
 
 
-PLAN = q.ROOT / "dev/native_rom/evidence/2026-09-24/near_extreme_source_nqc_grid_plan.json"
+PLAN = q.ROOT / "dev/native_rom/evidence/2026-09-24/near_extreme_source_nqc_grid_v2_plan.json"
 ACTIVE = (0, 1, 2, 6, 7)
 COLUMNS = ("raw_amplitude", "raw_phase", "radius", "radial_momentum", "orbital_frequency")
 
@@ -30,8 +30,8 @@ def compare_inputs(first: tuple, second: tuple, half_width: float) -> dict:
     fstep, sstep = float(fmeta[1]), float(smeta[1])
     if abs(fstep - sstep) > 1e-12:
         raise ValueError("different internal NQC steps")
-    ft = np.arange(len(fvalues)) * fstep - fmeta[0]
-    st = np.arange(len(svalues)) * sstep - smeta[0]
+    ft = np.arange(len(fvalues)) * fstep - fmeta[2]
+    st = np.arange(len(svalues)) * sstep - smeta[2]
     query = np.arange(-half_width, half_width + fstep/2, fstep)
     if query[0] < max(ft[0], st[0]) or query[-1] > min(ft[-1], st[-1]):
         raise ValueError("common NQC input window unavailable")
@@ -50,7 +50,7 @@ def compare_inputs(first: tuple, second: tuple, half_width: float) -> dict:
             scale=float(np.max(abs(b))),
             max_relative_to_scale=float(np.max(abs(difference)) / max(np.max(abs(b)), 1e-300)),
         )
-    return dict(window_relative_to_orbital_peak_M=[float(query[0]), float(query[-1])],
+    return dict(window_relative_to_NQC_match_M=[float(query[0]), float(query[-1])],
                 samples=len(query), columns=controls)
 
 
@@ -65,7 +65,7 @@ def main(argv=None):
         parser.error("evidence path already exists")
     plan = json.loads(PLAN.read_text())
     paths = {name: q.ROOT / item["path"] for name, item in plan["inputs"].items()}
-    if (plan["schema"] != "diffgw.seobnrv4.near-extreme-source-nqc-grid-plan.v1"
+    if (plan["schema"] != "diffgw.seobnrv4.near-extreme-source-nqc-grid-plan.v2"
             or plan["row"] != "q10_both_near_extreme_aligned"
             or plan["output_steps_M"] != [0.03125, 0.015625]
             or plan["expected_internal_step_M"] != 0.015625

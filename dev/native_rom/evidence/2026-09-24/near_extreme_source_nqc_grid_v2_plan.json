@@ -1,0 +1,31 @@
+{
+  "schema": "diffgw.seobnrv4.near-extreme-source-nqc-grid-plan.v2",
+  "purpose": "Post-hoc capture of pinned complete-source private pre-fit NQC arrays at q10 output steps 0.03125 and 0.015625 M, both expected to produce an internal 0.015625 M grid. Compare peak, targets, inputs, and source coefficients to pinned wheel outputs. No release gate revision. The v1 diagnostic failed after both captures because its symmetric comparison window exceeded the post-orbital-peak support. Compare the same +/-4 M window around NQC match instead.",
+  "row": "q10_both_near_extreme_aligned",
+  "output_steps_M": [
+    0.03125,
+    0.015625
+  ],
+  "expected_internal_step_M": 0.015625,
+  "local_half_width_M": 4.0,
+  "capacity": 50000,
+  "release_qualified": false,
+  "inputs": {
+    "public_nqc": {
+      "path": "dev/native_rom/evidence/2026-09-24/near_extreme_public_nqc_grid.json",
+      "sha256": "48a338b482e516e892e67ddf4d48ddbe00f22c7da06d130ee61b7175648bc981"
+    },
+    "parity": {
+      "path": "dev/native_rom/evidence/2026-09-24/near_extreme_public_polar.json",
+      "sha256": "4e5931d460cf03ebd49a77ef6531c59772c3087c0b3be0fc673dd632b374cdda"
+    },
+    "source_plan": {
+      "path": "dev/native_rom/evidence/2026-09-24/source_flux_initial_plan.json",
+      "sha256": "1167199c8f954f97a5905a1e3b2f67d1555e984e5f1da0a0fc42a77a925f96ea"
+    },
+    "adapter": {
+      "path": "dev/native_rom/reference/full_v4_source_nqc_inputs_adapter.c",
+      "sha256": "0e2006c7a2898b09d56b5d464135b113f4546f43b607ddacbf327761a24a6451"
+    }
+  }
+}
