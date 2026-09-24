@@ -1,0 +1,21 @@
+{
+  "anchor_angular_frequency_M": 0.1,
+  "comparison": "componentwise versus amplitude-phase interpolation on the same native/public waveforms",
+  "purpose": "Post-hoc quantify attenuation from componentwise complex interpolation in public-mode comparisons of the source-backed RKF45 numerical candidate. Replay the selected frozen q4 and q8 fine waveform hashes and compare linear-complex with amplitude/continuous-phase interpolation using identical independently located frequency anchors and public samples. Does not revise the earlier evidence or claim model qualification.",
+  "release_qualified": false,
+  "rows": [
+    "q4_mixed_spin",
+    "q8_high_aligned"
+  ],
+  "schema": "diffgw.seobnrv4.frequency-anchor-polar-plan.v1",
+  "screens": {
+    "q4_mixed_spin": {
+      "path": "dev/native_rom/evidence/2026-09-24/source_rkf_q4_screen.json",
+      "sha256": "a37850ea7a8afcf070e70901ddd57d97f2f1882fe54d952e121ec206b920d487"
+    },
+    "q8_high_aligned": {
+      "path": "dev/native_rom/evidence/2026-09-24/source_rkf_q8_screen.json",
+      "sha256": "1139bcec7f4ff002abc75163d2aaf13697547a97dc9b3ce449d3b7a2b045134b"
+    }
+  }
+}

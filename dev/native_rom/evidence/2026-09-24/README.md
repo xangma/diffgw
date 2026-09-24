@@ -2308,3 +2308,13 @@ Reproduce with `PYTHONPATH=src:. /Users/xangma/repos/diffgw/.venv/bin/python
 -m dev.native_rom.diagnose_sxs_third_postpeak_shape` and the plan, case-plan,
 comparison, parity-plan, parity-result, and json-out arguments in that
 script's help; the decoded anchored arrays must remain at their pinned paths.
+
+The [targeted q4 mixed-spin RKF plan](source_rkf_q4_plan.json) selects the
+previously diagnosed `q=4`, `chi1=+0.8`, `chi2=-0.6` row before running the
+same source-backed three-tolerance and nested-grid screen. The
+[result](source_rkf_q4_screen.json) passes every frozen numerical check.
+Adjacent ODE complex relative L2 values are `3.82e-9` and `1.60e-9`;
+the nested output-grid comparisons are identical to reported precision,
+and sampled orbital-peak, NQC-match, and attachment times agree. The
+source manifest is unchanged. This is numerical evidence on one selected
+row, not an independent physical holdout or a generator/ROM qualification.

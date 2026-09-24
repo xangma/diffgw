@@ -706,6 +706,11 @@ is `1.32e-8`; the finest-pair maximum is `4.76e-9`, with unchanged sampled
 peak, matching, and attachment times. Source hashes agree before and after
 the run. This is a selected-row numerical result, including one row outside
 the NR calibration range; it does not qualify the physical generator or ROM.
+The [separately frozen q4 mixed-spin extension](evidence/2026-09-24/source_rkf_q4_screen.json)
+also passes both numerical checks. Its finest adjacent ODE complex relative L2
+is `1.60e-9`, and sampled peak, matching, and attachment times are unchanged.
+This confirms numerical stability on that selected row; its earlier public-mode
+comparison is being reassessed for complex-interpolation attenuation.
 
 A separately frozen [five-case SXS plan](evidence/2026-09-24/sxs_five_case_physical_plan.json)
 selects low-eccentricity nonprecessing NR configurations across mass ratios
