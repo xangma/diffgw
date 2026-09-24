@@ -2424,3 +2424,16 @@ Refined ODE complex relative L2 is `6.92e-10` and `1.75e-9`, respectively;
 sampled peak, matching, and boundary times agree. This extends selected
 numerical stability toward the high-spin boundary. It does not validate
 physical fidelity, gradients, the entire domain, or a ROM.
+
+The [near-extreme public-parity plan](near_extreme_public_polar_plan.json)
+froze the numerically stable waveform hashes, active LAL binary, frequency
+anchor, and three gates before replay. Its
+[result](near_extreme_public_polar.json) reproduces both native hashes. The
+`q=3` opposed-spin row passes all gates: whole/post-peak complex relative L2
+are `0.0001205`/`0.0002270`, and the peak-lag difference is `-0.03440 M`.
+The `q=10`, double-`+0.95` row passes whole-waveform L2 (`0.002627` versus
+`0.005`) and peak lag (`-0.05667 M` versus `0.1 M`), but **fails** the
+post-peak L2 gate (`0.0100677` versus `0.01`). Its post-peak amplitude L2 is
+`0.0006373`, so the complex residual is primarily phase-sensitive. The
+diagnostic completed, but its parity gates did not all pass; no gate is
+relaxed or converted into a release claim.

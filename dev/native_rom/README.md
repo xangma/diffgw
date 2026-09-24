@@ -982,6 +982,10 @@ passes all predeclared tolerance and output-grid gates for `q=10` with both
 spins `+0.95` and `q=3` with spins `(+0.95,-0.95)`. Their refined ODE complex
 relative L2 values are `6.92e-10` and `1.75e-9`. These selected checks do not
 establish physical accuracy or domain-wide numerical convergence.
+The [pinned public-v4 replay](evidence/2026-09-24/near_extreme_public_polar.json)
+passes all selected parity gates for the q=3 row, while q=10 double-`+0.95`
+fails the frozen post-peak complex-L2 limit (`0.0100677` versus `0.01`).
+This boundary residual remains open.
 
 1. Qualify the physical generator against the published equations and independent
    references over the intended domain, resolve convention/provenance gaps, and
