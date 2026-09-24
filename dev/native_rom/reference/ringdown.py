@@ -13,8 +13,9 @@ from .published import evaluate, ringdown_shape
 def peak_preserving_shape(*, nu, chi, sigma, digits=60):
     """Paper-fit shape with the C1 peak condition imposed when necessary.
 
-    This is an ansatz-derived continuation of Bohé et al. Eq. (12), not an
-    additional printed calibration. It retains all other free coefficients.
+    This follows the ansatz-derived guard in historical SEOBNRv4 source
+    (LALSimIMREOBHybridRingdown.c, Eqs. (57)-(58) of LIGO-T1600383), not an
+    additional printed free-coefficient calibration. Other fits are retained.
     """
     with mp.workdps(digits):
         n, spin = mp.mpf(str(nu)), mp.mpf(str(chi))

@@ -1,0 +1,110 @@
+{
+  "campaign_sha256": "d8efe4baa182ea39bf9a7d35b6de8621c6e054429ee180eb661e9fbb9f9d59d8",
+  "choice": {
+    "calibration": "lal_v4_rounded",
+    "flux": {
+      "mode_21_higher_spin": "rho_hybrid",
+      "mode_31_higher_spin": "lal_v4_rho",
+      "mode_32_spin_square": "lal_v4_zero"
+    },
+    "mode_43_higher_spin": "lal_v4_rho",
+    "nqc_phase_window_M": 1.0,
+    "numerical": {
+      "default_initial_step_rule": true,
+      "default_restart_rule": false,
+      "fixed_restart_time_M": 165.0,
+      "hermite_resampling": true,
+      "local_nqc_degree": 6,
+      "local_nqc_phase_derivatives": true,
+      "local_nqc_window_M": 0.5
+    },
+    "physical": {
+      "hamiltonian_log_derivative": "lal_v4",
+      "mode_33_higher_spin": "lal_v4_rho",
+      "name": "combined"
+    },
+    "spin_truncation": "tabulated"
+  },
+  "errors": [],
+  "native": {
+    "array_sha256": {
+      "mode": "c8644d4e939835684cc96d100e3faa7a3b80d9728cc2dc9dd31ef6508e7cd96b",
+      "time": "5ad34b6326599a4b37370b9d68e36f2ef84bf957c4185ca86f42d5438e69400b"
+    },
+    "boundary_inputs": {
+      "amplitude": 0.24385024490551965,
+      "frequency": 0.4131769588102543,
+      "index": 34157,
+      "phase": 70.5439405202431,
+      "qnm_damping": 0.07210380239580444,
+      "qnm_frequency": 0.6641059545871342
+    },
+    "boundary_time_M": 633.703125,
+    "elapsed_seconds": 151.39064545801375,
+    "match_time_M": 633.7145794172839
+  },
+  "plan_sha256": "44e891bfee963dee6c0277d516a58956628d3478b36c71d748a617daf96d3d8c",
+  "postpeak_profile_sha256": "4e7fd8bfb5ee912f3b521fc406e42006e3e77c4625b53745431844859301ca2d",
+  "process": {
+    "argv": [
+      "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw/dev/native_rom/diagnose_q4_attachment_inputs.py",
+      "--json-out",
+      "/tmp/seobnrv4-q4-attachment-inputs.json"
+    ],
+    "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+    "host": "client-3792.default.vpn.port.ac.uk",
+    "pid": 91076
+  },
+  "release_qualified": false,
+  "row": {
+    "chi1": 0.8,
+    "chi2": -0.6,
+    "mass1": 40.0,
+    "mass2": 10.0,
+    "omega_start": 0.04
+  },
+  "sampled_peak_proxies": {
+    "limitation": "Public output-grid samples do not expose the hidden high-rate LAL ringdown boundary; their backward frequency is not an attachment input.",
+    "native": {
+      "amplitude": 5.83453531441176e-21,
+      "backward_frequency_M": 0.41362357171144126,
+      "index": 1268,
+      "output_step_M": 0.4999999999999988,
+      "phase_rad": 76.95017720614092,
+      "time_s": -0.004060521871782388
+    },
+    "native_fitted_peak_time_s": -0.004112355923610092,
+    "public": {
+      "amplitude": 5.834623483932028e-21,
+      "backward_frequency_M": 0.4109540551609803,
+      "index": 1302,
+      "output_step_M": 0.5000000000000234,
+      "phase_rad": 80.54226633162634,
+      "time_s": -0.004136640654276769
+    },
+    "public_fitted_peak_time_s": -0.004103100598366941
+  },
+  "schema": "diffgw.seobnrv4.q4-attachment-inputs.v1",
+  "scope": {
+    "description": "Scalar CPU float64 numerical stability evidence only; no training or promotion.",
+    "known_limitations": [
+      "Convergence cannot establish correctness of the equations or published model fidelity.",
+      "The adaptive prototype uses a diagnostic QNM spline with independently generated values and black-box-inferred knot metadata; this is not wholly literature-specified provenance.",
+      "Changing dt also changes the adaptive initial step and coarse/fine restart sampling; the grid check measures the complete generator's grid sensitivity.",
+      "No time, phase, amplitude, or coefficient fitting is performed.",
+      "No derivatives, batched execution, accelerators, or JAX are qualified here."
+    ],
+    "physics_validated": false,
+    "production_asset": false,
+    "production_promotion_allowed": false,
+    "training_generator_qualified": false
+  },
+  "script_sha256": "8b4872f6305d753ee817828a2acf2302437bde3006ba820950fc1edfeba4a4f5",
+  "source_sha256": {
+    "dev/native_rom/diagnose_q8_mode_phase.py": "282573a2f786de8cebdd8354d644319d3cee7ce30c88c067a79c85e54b4cdd51",
+    "dev/native_rom/qualify_generator.py": "9c0a07a017ea3dbd20a0d670016a6d0f08eb503d1fef741edf76d3ccc76a1d6f",
+    "src/torchwave/approximants/eob/merger_ringdown.py": "098bb9e6f5328ceb291a5bed02a91d8fa95cc54bbcc7ff45d996e6985d995410",
+    "src/torchwave/approximants/eob/numerical_attachment.py": "70e5c673ed03552972ff4ee75ae8f223a943e1a0dd9605ef6e5c99d7db57e78f"
+  },
+  "status": "diagnostic_complete"
+}

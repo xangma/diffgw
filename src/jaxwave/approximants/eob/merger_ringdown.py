@@ -62,7 +62,8 @@ def seobnrv4_peak_preserving_shape(sigma: jnp.ndarray, shape: MergerRingdownShap
 
     From Bohé et al. (1611.03703v3), Eqs. (2.10), (2.12)-(2.14),
     A''(0)/A(0)=-gamma*[gamma+2*c1f*tanh(c2f)] for A'(0)=0.
-    This is an ansatz-derived continuation, not a printed fit.
+    This is the ansatz-derived guard in historical SEOBNRv4 ringdown source
+    (LALSimIMREOBHybridRingdown.c, Eqs. (57)-(58) of LIGO-T1600383).
     """
     c1, c2, d1, d2 = shape
     damping = -jnp.imag(sigma)

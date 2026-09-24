@@ -1,0 +1,18 @@
+{
+  "schema": "diffgw.seobnrv4.q4-independent-qnm-plan.v1",
+  "purpose": "Replace only the diagnostic native QNM compatibility spline with independently generated Kerr QNM values on the frozen q4 mixed-spin row, then compare the full mode with the same pinned public binary and frequency anchor. No fitting, generator promotion, or training.",
+  "campaign": "dev/native_rom/evidence/2026-09-24/source_candidate_new_rows.json",
+  "campaign_sha256": "d8efe4baa182ea39bf9a7d35b6de8621c6e054429ee180eb661e9fbb9f9d59d8",
+  "baseline_frequency_anchor": "dev/native_rom/evidence/2026-09-24/q4_frequency_anchor.json",
+  "baseline_frequency_anchor_sha256": "0474801cb834080d605cddd4d0993c02848b6f3809ea189c19f6afacb88c9b33",
+  "independent_qnm_source": "src/torchwave/approximants/kerr_qnm_generated.py",
+  "independent_qnm_source_sha256": "82da71c19c50defeab4c32b6950141d845214909e9f52342e3f1cf3b46f08326",
+  "compatibility_qnm_source": "src/torchwave/approximants/kerr_qnm_table_convention.py",
+  "compatibility_qnm_source_sha256": "c4c85d17b079306df73c74f4bb755b7f4256fbdf49fef6a85cd9810367d800f6",
+  "row_name": "q4_mixed_spin",
+  "level_name": "ode_2",
+  "anchor_angular_frequency_M": 0.1,
+  "peak_fit": "quadratic_power",
+  "production_change": false,
+  "release_qualified": false
+}

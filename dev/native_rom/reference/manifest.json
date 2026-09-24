@@ -47,13 +47,13 @@
     },
     {
       "id": "V4-RD-PEAK-CONTINUATION",
-      "source": "bohe-2017-v3, Eqs. (10), (12)-(14), derived peak-curvature condition",
+      "source": "bohe-2017-v3, Eqs. (10), (12)-(14); pinned LAL 53acc0c2cd7ea2d3c83fc71a7bd88035c2861d6c, LALSimIMREOBHybridRingdown.c:1233-1238, Eqs. (57)-(58) of LIGO-T1600383",
       "status": "conditional",
       "reference": "ringdown.peak_preserving_shape; ringdown.h22(peak_preserving=True)",
       "torch": "src/torchwave/approximants/eob/merger_ringdown.py:seobnrv4_peak_preserving_shape; src/torchwave/approximants/eob/numerical_attachment.py:attach_seobnrv4_22_numerical_compatibility",
       "jax": "src/jaxwave/approximants/eob/merger_ringdown.py:seobnrv4_peak_preserving_shape; src/jaxwave/approximants/eob/attachment.py:attach_seobnrv4_22",
       "test": "dev/native_rom/reference/tests/test_published.py:test_ringdown_peak_continuation_is_monotone_after_attachment; dev/native_rom/reference/tests/test_torch.py:test_peak_continuation_against_reference; dev/native_rom/reference/tests/test_jax.py:test_peak_continuation_against_reference",
-      "condition": "An ansatz-derived, uncalibrated continuation of c1f that enforces a non-increasing amplitude after a stationary attachment. It is not a printed SEOBNRv4 fit and requires domain-wide physical and waveform validation before release."
+      "condition": "The historical SEOBNRv4 source applies this same ansatz-derived c1f guard for the (2,2) mode when the stationary-attachment amplitude curvature would be positive. It is not an additional printed free-coefficient fit. Native integration still requires domain-wide physical and waveform validation before release."
     },
     {
       "id": "V4-HAM-RADIAL",

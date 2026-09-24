@@ -49,7 +49,8 @@ def seobnrv4_peak_preserving_shape(sigma, shape):
     A''(0)/A(0) = -gamma * [gamma + 2*c1f*tanh(c2f)] at A'(0)=0,
     where gamma=-Im(sigma)>0.  If the printed free rate c1f makes the
     bracket negative, project only c1f to its nearest admissible boundary.
-    This continuation is derived from the ansatz, not a printed fit.
+    This is the ansatz-derived guard in historical SEOBNRv4 ringdown source
+    (LALSimIMREOBHybridRingdown.c, Eqs. (57)-(58) of LIGO-T1600383).
     """
     c1, c2, d1, d2 = shape
     damping = -sigma.imag

@@ -218,7 +218,8 @@ def native_run(row, level, settings, *, diagnostic_hermite_resampling=False,
                diagnostic_coarse_initial_step_M=None,
                diagnostic_warm_start_Momega=None,
                return_nqc_coefficients=False,
-               return_nqc_samples=False):
+               return_nqc_samples=False,
+               return_boundary_data=False):
     import torch
     from dev.native_rom.eob.torch.adaptive_driver_clean import reconstruct_seobnrv4_22_adaptive
     choices = dict(CHOICES)
@@ -273,6 +274,17 @@ def native_run(row, level, settings, *, diagnostic_hermite_resampling=False,
                   final_mass_fraction=float(array(result.final_mass_fraction)),
                   final_spin=float(array(result.final_spin)),
                   internal_step_M=float(array(result.attachment.internal_step)))
+    if return_boundary_data:
+        from torchwave.approximants.kerr_qnm_table_convention import signed_qnm_220_table_convention
+        qnm_w, qnm_damp = signed_qnm_220_table_convention(result.final_spin)
+        output["boundary_data"] = dict(
+            index=int(array(result.attachment.boundary_index)),
+            amplitude=float(array(result.attachment.boundary_amplitude)),
+            phase=float(array(result.attachment.boundary_phase)),
+            frequency=float(array(result.attachment.boundary_frequency)),
+            qnm_frequency=float(array(qnm_w / result.final_mass_fraction)),
+            qnm_damping=float(array(qnm_damp / result.final_mass_fraction)),
+        )
     if return_nqc_coefficients:
         from torchwave.approximants.eob.numerical_attachment import _eval_batch_scalar
         fine_nqc = result.attachment.fine

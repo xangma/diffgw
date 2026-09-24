@@ -78,7 +78,7 @@ trained basis, parameter interpolation, or holdout definition yet.
 | `V4-HAM-RADIAL` / 0.8.11 | Bohé Eqs. (2)–(3); Steinhoff Appendix A | executable | `hamiltonian.radial_potentials` | `SEOBNRv4Hamiltonian.deformed_kerr_potentials` | Historical derivative convention differs from paper form |
 | `V4-FLUX-NORM-9` / 0.8.11 | Bohé Eq. (9); Pan mode sum | conditional | `flux.emitted_flux` | `SEOBNRv4PublishedFlux.energy_flux` | Historical mode choices and full trajectory coupling |
 | `V4-NQC-7` / 0.8.11 | Bohé Eq. (7) and peak fits | conditional | `nqc.match_22` | Manifest-linked NQC modules | Historical fit differentiation and source/wheel inputs |
-| `V4-RD-PEAK-CONTINUATION` / 0.8.11 | Bohé Eqs. (10), (12)–(14), derived condition | conditional | `ringdown.peak_preserving_shape` | `seobnrv4_peak_preserving_shape` | Uncalibrated continuation needs domain-wide waveform validation |
+| `V4-RD-PEAK-CONTINUATION` / 0.8.11 | Bohé Eqs. (10), (12)–(14); pinned historical LAL ringdown source, Eqs. (57)–(58) of T1600383 | conditional | `ringdown.peak_preserving_shape` | `seobnrv4_peak_preserving_shape` | Historical rule integrated; domain-wide waveform validation remains open |
 | `V4-QNM-INTERPOLATION` / 0.8.11 | Bohé Sec. II.C; Berti numerical data; pinned LAL source | pending | pending | pending | Historical spline identified; native compatibility, physical domain, and waveform impact open |
 | `V4-ODE-IC` / 0.8.11 | Bohé evolution and historical carrier | pending | pending | Development integrators | Domain-wide converged initial conditions and events |
 | `V4-ROM-VII` / 0.8.11 | Bohé Sec. VII | pending | pending | pending | Qualified training generator, bases, and holdouts |
@@ -409,9 +409,13 @@ They do **not** establish that the current inspiral supplies the correct peak,
 remnant, or QNM. The paper explicitly says the amplitude is only `C¹` at
 attachment; no second-derivative continuity is claimed.
 
-`ringdown.peak_preserving_shape` records a separate continuation derived from
-the same ansatz, not an additional fit printed in Bohé et al. For a stationary
-attachment and `gamma=-Im(sigma)>0`, Eq. (12) implies
+`ringdown.peak_preserving_shape` records a continuation derived from the same
+ansatz and implemented in the
+[pinned historical LAL SEOBNRv4 ringdown source](https://git.ligo.org/lscsoft/lalsuite/-/blob/53acc0c2cd7ea2d3c83fc71a7bd88035c2861d6c/lalsimulation/lib/LALSimIMREOBHybridRingdown.c#L1233-1238),
+whose guard cites Eqs. (57)–(58) of LIGO-T1600383. The pinned source file has
+SHA-256 `a92db1fefece5fb3a4b5cca44f7406f2798649a4f096a059fe01c692182c2211`.
+This is not an additional free-coefficient fit printed in Bohé et al. For a
+stationary attachment and `gamma=-Im(sigma)>0`, Eq. (12) implies
 `A''(0)/A(0)=-gamma[gamma+2*c1f*tanh(c2f)]`. If the printed shape gives a
 positive curvature, this continuation replaces only `c1f` by
 `-gamma/(2*tanh(c2f))`, the boundary at which the curvature vanishes. The

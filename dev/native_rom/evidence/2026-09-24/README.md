@@ -1480,10 +1480,56 @@ unchanged control exactly. At the predeclared `M omega22=0.1` anchor, q8 has
 whole-mode complex relative L2 `0.00186519`, postpeak L2 `0.00583740`, and
 native-minus-public peak lag `0.0344231 M`. Q4 has whole-mode L2 `0.00316192`,
 postpeak L2 `0.00997582`, and peak lag `-0.0509413 M`; all are identical to
-their frozen comparators. The paper ansatz supplies the curvature condition,
-but the continuation is our uncalibrated choice, not a coefficient fit printed
-by Bohé et al. These two replays verify integration and preserve the prior
+their frozen comparators. The paper ansatz supplies the curvature condition;
+the [pinned historical LAL source](https://git.ligo.org/lscsoft/lalsuite/-/blob/53acc0c2cd7ea2d3c83fc71a7bd88035c2861d6c/lalsimulation/lib/LALSimIMREOBHybridRingdown.c#L1233-1238)
+implements the same `(2,2)` coefficient guard and cites Eqs. (57)–(58) of
+LIGO-T1600383. The guard is not an additional printed free-coefficient fit
+in Bohé et al. These two replays verify integration and preserve the prior
 physical residuals; they do not qualify the model or ROM. The evidence records
 the input, script, and source hashes. Reproduce with `PYTHONPATH=src:. python
 -m dev.native_rom.diagnose_peak_condition_integrated --json-out
 /tmp/seobnrv4-peak-condition-integrated.json` in the pinned environment.
+
+The [frozen q4 attachment-input plan](q4_attachment_inputs_plan.json) and
+[result](q4_attachment_inputs.json) replay the unchanged mixed-spin `ode_2`
+waveform hash and capture its actual native ringdown boundary: `633.703125 M`,
+amplitude `0.2438502449`, GW frequency `0.4131769588/M`, and fundamental QNM
+`0.6641059546 + 0.0721038024 i` in inverse total-mass units. The public
+`0.5 M` waveform exposes only output-grid peak samples; its backward phase
+difference is not the hidden high-rate LAL attachment frequency. A
+[separate frozen public-grid plan](q4_public_grid_proxy_plan.json) and
+[result](q4_public_grid_proxy.json) compare coarse and fine public modes calls.
+Although their high-rate dynamics share 9631 time samples, the last `30 M`
+has state differences up to `4.11e-5`, and the five active NQC coefficients
+change by up to `0.402%`. A fine-output call therefore cannot supply the
+coarse call's exact hidden attachment inputs. Reproduce with
+`PYTHONPATH=src:. python -m dev.native_rom.diagnose_q4_attachment_inputs
+--json-out /tmp/seobnrv4-q4-attachment-inputs.json` and
+`PYTHONPATH=src:. python -m dev.native_rom.diagnose_q4_public_grid_proxy
+--json-out /tmp/seobnrv4-q4-public-grid-proxy.json` in the pinned environment.
+
+The [frozen QNM parity plan](q4_q8_qnm_parity_plan.json) and
+[result](q4_q8_qnm_parity.json) call the public SEOBNRv4 QNM routine directly
+on both q4 and q8 binaries and again at each recorded native remnant. Native
+and public fundamental `(2,2)` frequency and damping agree within
+`2.3e-16/M` on both rows. This excludes the sampled QNM value as the cause of
+their postpeak residuals; it does not validate the unpublished interpolation
+knots as independent training data, the attachment inputs, or the full
+waveforms. Reproduce with `PYTHONPATH=src:. python -m
+dev.native_rom.diagnose_q4_q8_qnm_parity --json-out
+/tmp/seobnrv4-q4-q8-qnm-parity.json` in the pinned environment.
+
+The [frozen independent-QNM plan](q4_independent_qnm_plan.json) and
+[result](q4_independent_qnm.json) replace only the q4 diagnostic's historical
+compatibility QNM interpolation with the independently generated Kerr root.
+The native remnant, time array, attachment time, amplitude, and attachment
+frequency stay fixed; the QNM changes from
+`(0.664105954587, 0.072103802396)/M` to
+`(0.664106415405, 0.072103675476)/M`. Against the same pinned public mode and
+predeclared `M omega22=0.1` anchor, whole-mode complex relative L2 moves from
+`0.003161923120` to `0.003161866493`, and postpeak L2 from `0.009975818425`
+to `0.009975591731`. This establishes a negligible q4 whole-waveform effect
+for this substitution, not domain-wide parity or an independent-QNM production
+choice. The much larger q4 postpeak residual remains open. Reproduce with
+`PYTHONPATH=src:. python -m dev.native_rom.diagnose_q4_independent_qnm
+--json-out /tmp/seobnrv4-q4-independent-qnm.json` in the pinned environment.

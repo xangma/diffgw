@@ -487,6 +487,16 @@ anchor. Its late QNM decay and phase slopes agree closely with the public
 waveform, while an amplitude and phase offset settles through the attachment
 transient. See the
 [frozen stress evidence](evidence/2026-09-24/README.md).
+Direct public-binary QNM calls now agree with the native fundamental frequency
+and damping to float64 precision on both stress rows. The q4 native boundary
+inputs are captured, but the public coarse-output mode does not expose its
+hidden high-rate attachment inputs; a separate fine-output call changes the
+trajectory and NQC coefficients. Replacing the historical compatibility QNM
+with our independently generated Kerr root changes the q4 whole-mode complex
+L2 by only `5.66e-8` and postpeak L2 by `2.27e-7` against the same public
+waveform. That substitution cannot explain the residual on this row. The
+remaining postpeak offset therefore
+requires an exact coarse-call attachment or pre-attachment comparison.
 Neither row supports generator or ROM release qualification.
 
 ## Numerical evidence
