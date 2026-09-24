@@ -1,0 +1,50 @@
+{
+  "candidate": {
+    "coarse_initial_step_M": 0.125,
+    "coarse_sampler": "natural_cubic",
+    "fine_sampler": "rkf45",
+    "fixed_restart_time_M": 100.0,
+    "local_nqc_phase_derivatives": true,
+    "matching_second_derivatives": true,
+    "nqc_phase_window_M": 1.0,
+    "warm_start_Momega": 0.03162277660168379
+  },
+  "prior_source_candidate": "dev/native_rom/evidence/2026-09-24/source_candidate_new_rows.json",
+  "prior_source_candidate_sha256": "d8efe4baa182ea39bf9a7d35b6de8621c6e054429ee180eb661e9fbb9f9d59d8",
+  "purpose": "Predeclare a near-boundary equal-mass antialigned-spin numerical stress diagnostic for the source-backed physical choices and RKF45 sampler, beyond the prior selected rows. This is not an independent physical holdout or a full-domain release gate.",
+  "qualification_claim": false,
+  "rows": {
+    "q1_extreme_antialigned": {
+      "chi1": -0.95,
+      "chi2": -0.95,
+      "mass1": 30.0,
+      "mass2": 30.0,
+      "omega_start": 0.04
+    }
+  },
+  "schema": "diffgw.seobnrv4.source-rkf-domain-plan.v1",
+  "settings": {
+    "atol_levels": [
+      1e-12,
+      1e-13,
+      1e-14
+    ],
+    "dt_levels_M": [
+      0.5,
+      0.25,
+      0.125
+    ],
+    "event_time_limit_M": 0.05,
+    "max_accepted_steps": 20000,
+    "max_evaluations": 200000,
+    "max_rejected_steps": 10000,
+    "max_run_seconds": 600.0,
+    "relative_l2_limit": 1e-06,
+    "ringdown_duration_M": 150.0,
+    "rtol_levels": [
+      1e-11,
+      1e-12,
+      1e-13
+    ]
+  }
+}

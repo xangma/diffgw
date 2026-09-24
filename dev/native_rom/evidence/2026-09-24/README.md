@@ -2344,3 +2344,12 @@ interpolation. Frequency-anchor to amplitude-peak lags still differ by
 `−0.05094 M` (q4) and `+0.03443 M` (q8), and the post-peak complex residual
 does not vanish. These selected, post-hoc comparisons do not qualify the
 generator or either ROM.
+
+The [frozen q8 strong-antialigned numerical plan](source_rkf_q8_antialigned_plan.json)
+tests `q=8`, `chi1=chi2=-0.85` using the same source-backed choices and RKF45
+sampler, beyond the prior selected rows. Its
+[result](source_rkf_q8_antialigned_screen.json) passes every frozen ODE and
+nested-output-grid gate: refined ODE complex relative L2 is `5.95e-9`, the
+amplitude value is `3.39e-10`, and sampled event times agree. Source hashes
+are unchanged. This is boundary numerical stability on one selected row,
+not a physical-domain bound or release qualification.

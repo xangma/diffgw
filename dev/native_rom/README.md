@@ -716,6 +716,9 @@ source-backed RKF45 q4 and q8 rows lowers post-peak amplitude relative L2
 from `0.00947` to `0.000586` on q4 and from `0.00571` to `0.000329` on q8.
 Post-peak complex relative L2 remains `0.00443` and `0.00102`, respectively;
 the residual phase and timing differences still require physical validation.
+The [q8 strong-antialigned numerical screen](evidence/2026-09-24/source_rkf_q8_antialigned_screen.json)
+also passes its frozen checks, with `5.95e-9` finest-pair ODE complex relative
+L2. It expands the tested spin range but is still one selected numerical row.
 
 A separately frozen [five-case SXS plan](evidence/2026-09-24/sxs_five_case_physical_plan.json)
 selects low-eccentricity nonprecessing NR configurations across mass ratios
