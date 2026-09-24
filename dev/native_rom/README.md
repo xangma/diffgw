@@ -889,6 +889,14 @@ SVD compression and **provisional global Chebyshev-Lobatto parameter
 interpolation**, an alternative to the published local tensor-product cubic
 splines. It accepts supplied log-amplitude and phase arrays and has analytic
 parameter derivatives. A
+[development-only tensor-spline candidate](rom/spline_interpolant.py) now fits
+the SVD projection coefficients on arbitrary increasing parameter grids with
+three tensor-product cubic splines. Its not-a-knot endpoint rule is an explicit
+candidate, not a verified historical ROM detail. Polynomial off-grid and
+boundary waveforms, parameter derivatives, Torch/JAX autodiff, JAX JIT, and
+arbitrary-frequency derivatives pass analytic checks. Neither interpolant has
+been trained on a qualified physical waveform generator.
+A
 [conditioning step](rom/conditioning.py) removes phase and time gauge at a fixed
 reference frequency; its gauge invariance and a withheld complex-waveform row
 pass analytic tests. [Torch/JAX evaluators](rom/backend_evaluation.py) agree

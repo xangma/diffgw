@@ -15,6 +15,35 @@ from .backend_evaluation import _jax_cardinal, _torch_cardinal
 from .reduced_interpolant import _basis_and_derivative
 
 
+def _parameter_factors(model, queries):
+    if hasattr(model, "knots"):
+        from .spline_interpolant import _basis
+
+        return [_basis(knots, x) for knots, x in zip(model.knots, queries)]
+    return [_basis_and_derivative(nodes, x)
+            for nodes, x in zip(model.nodes, queries)]
+
+
+def _torch_parameter_factors(torch, model, queries):
+    if hasattr(model, "knots"):
+        from torchwave.approximants.rom.bspline import bspline_basis
+
+        return [bspline_basis(x, knots[3:-3], order=4, validate_domain=False)
+                for knots, x in zip(model.knots, queries)]
+    return [_torch_cardinal(torch, nodes, x)
+            for nodes, x in zip(model.nodes, queries)]
+
+
+def _jax_parameter_factors(jnp, model, queries):
+    if hasattr(model, "knots"):
+        from jaxwave.approximants.rom.bspline import bspline_basis
+
+        return [bspline_basis(x, knots[3:-3], order=4)
+                for knots, x in zip(model.knots, queries)]
+    return [_jax_cardinal(jnp, nodes, x)
+            for nodes, x in zip(model.nodes, queries)]
+
+
 @dataclass(frozen=True)
 class SplineField:
     mean: np.ndarray  # (4, n_intervals), descending polynomial powers
@@ -70,8 +99,7 @@ class FrequencyReducedInterpolant:
         queries = np.broadcast_arrays(q, chi1, chi2)
         if any(not np.isfinite(x).all() for x in queries):
             raise ValueError("ROM parameters must be finite")
-        factors = [_basis_and_derivative(nodes, x)
-                   for nodes, x in zip(self.model.nodes, queries)]
+        factors = _parameter_factors(self.model, queries)
         amp_spline = _spline_values(self.log_amplitude, self.model.frequency, f)
         phase_spline = _spline_values(self.phase, self.model.frequency, f)
 
@@ -126,8 +154,7 @@ def evaluate_torch_frequency(interpolant, frequency, q, chi1, chi2):
     queries = torch.broadcast_tensors(*(
         torch.as_tensor(x, dtype=torch.float64, device=device)
         for x in (q, chi1, chi2)))
-    cardinal = [_torch_cardinal(torch, nodes, x)
-                for nodes, x in zip(interpolant.model.nodes, queries)]
+    cardinal = _torch_parameter_factors(torch, interpolant.model, queries)
 
     def field(part, spline):
         coefficients = torch.as_tensor(part.coefficients, dtype=torch.float64,
@@ -175,8 +202,7 @@ def evaluate_jax_frequency(interpolant, frequency, q, chi1, chi2):
     f = jnp.asarray(frequency, dtype=jnp.float64)
     queries = jnp.broadcast_arrays(*(
         jnp.asarray(x, dtype=jnp.float64) for x in (q, chi1, chi2)))
-    cardinal = [_jax_cardinal(jnp, nodes, x)
-                for nodes, x in zip(interpolant.model.nodes, queries)]
+    cardinal = _jax_parameter_factors(jnp, interpolant.model, queries)
 
     def field(part, spline):
         coefficients = jnp.asarray(part.coefficients, dtype=jnp.float64)
