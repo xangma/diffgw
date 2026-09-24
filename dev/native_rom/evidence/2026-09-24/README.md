@@ -2488,3 +2488,14 @@ and `0.008626799` for `0.03125 M`/`0.015625 M`. The nonmonotonic behavior
 is already in the public mode output; inversion of the two polarizations
 does not explain it. This does not identify whether its origin is in the
 sampled dynamics, NQC/matching, or ringdown assembly.
+
+The [high-rate dynamics plan](near_extreme_public_dynamics_grid_plan.json)
+compares the public `0.03125 M` and `0.015625 M` pre-orbital-peak state
+outputs at 200 common radii. Its
+[result](near_extreme_public_dynamics_grid.json) finds maximum differences
+`1.25e-6 rad` in orbital phase, `1.26e-6` in radial momentum,
+`6.08e-8` in angular momentum, and `9.73e-6 M` in elapsed time.
+Those small trajectory differences coexist with the `0.00862680` direct-mode
+post-peak discrepancy. The large grid effect is downstream of the sampled
+pre-peak dynamics, though NQC coefficients, matching, and ringdown assembly
+have not yet been separated.

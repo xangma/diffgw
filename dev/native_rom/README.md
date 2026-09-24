@@ -1003,6 +1003,10 @@ control, leaving the public reference's sampling behavior unresolved.
 The [direct `(2,2)` API check](evidence/2026-09-24/near_extreme_direct_modes.json)
 reproduces the same grid errors to `8e-10`, so polarization inversion is not
 the source of this behavior.
+The [public high-rate state check](evidence/2026-09-24/near_extreme_public_dynamics_grid.json)
+agrees at common pre-peak radii to `1.25e-6 rad` in orbital phase despite
+the `0.008627` direct-mode post-peak error, locating the large grid effect
+downstream of the sampled trajectory.
 
 1. Qualify the physical generator against the published equations and independent
    references over the intended domain, resolve convention/provenance gaps, and
