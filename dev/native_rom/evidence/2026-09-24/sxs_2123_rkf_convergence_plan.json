@@ -1,0 +1,16 @@
+{
+  "schema": "diffgw.seobnrv4.sxs-2123-rkf-convergence-plan.v1",
+  "purpose": "Test whether the locally more accurate fine-stage RKF45 output sampler reduces the selected SXS-row whole-waveform tolerance drift and identify its NQC and regional effects. No physical waveform fit or release prescription.",
+  "prior_extension_sha256": "fd714f8a51222044c099cc4dfcc8e490ee4636dda6b819c9e04e657a92b2b837",
+  "prior_sampling_sha256": "cbd4b3b9acc90f1ddf0e091144d99d8b4d7786c0ed3cc43d87c5f9d38a503c09",
+  "prior_reference_sha256": "b250c5aa0a70b926711d43fe2b7f163a36a4bb8cea9bb29b29dd4602fdbac6e9",
+  "levels": ["tighter", "tightest"],
+  "runs": ["tighter_default", "tighter_fine_rkf45", "tightest_fine_rkf45"],
+  "checks": "Replay the frozen tighter default and tightest RKF45 waveform hashes. Require accepted coarse and fine ODE arrays identical within each level across sampling choices. Compare tighter and tightest RKF45 full complex modes without alignment, compare regional errors using the prior frozen peak and report NQC coefficients and boundary data. Retain the frozen 1e-6 complex and amplitude budgets and 0.05 M event-time budget; do not alter any physics or tolerance to improve the result.",
+  "stability_budget": {
+    "complex_relative_l2_max": 1e-6,
+    "amplitude_relative_l2_max": 1e-6,
+    "event_time_difference_M_max": 0.05
+  },
+  "qualification_claim": false
+}

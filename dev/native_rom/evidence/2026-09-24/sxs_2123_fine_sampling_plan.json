@@ -1,0 +1,10 @@
+{
+  "schema": "diffgw.seobnrv4.sxs-2123-fine-sampling-plan.v1",
+  "purpose": "Attribute the selected SXS-row tolerance drift to fine-stage output sampling without changing the accepted coarse or fine ODE trajectories. This is a numerical diagnostic, not a release prescription.",
+  "prior_extension_sha256": "fd714f8a51222044c099cc4dfcc8e490ee4636dda6b819c9e04e657a92b2b837",
+  "level_name": "tightest",
+  "variant": "fine_stage_rkf45_output_sampling_only",
+  "checks": "Replay the exact prior default time and mode hashes at (atol,rtol)=(1e-15,1e-14), dt=0.25 M. Change only the fine-stage output resampler from the production-path default to one Fehlberg substep from each preceding accepted state. Require identical accepted coarse and fine time, state, derivative, and valid arrays; compare complete complex modes directly without alignment. Report the difference against the prior tighter-to-tightest 1.287014271635021e-5 drift and the frozen 1e-6 budget.",
+  "numerical_budget_complex_relative_l2": 1e-6,
+  "qualification_claim": false
+}

@@ -153,6 +153,7 @@ def reconstruct_seobnrv4_22_adaptive(
     diagnostic_fine_max_step_M: Optional[float] = None,
     diagnostic_hermite_resampling: bool = False,
     diagnostic_rkf45_resampling: bool = False,
+    diagnostic_fine_rkf45_resampling: bool = False,
     diagnostic_local_nqc_derivatives: bool = False,
     diagnostic_nqc_phase_window_M: float = 0.5,
     diagnostic_matching_second_derivatives: bool = False,
@@ -206,7 +207,10 @@ def reconstruct_seobnrv4_22_adaptive(
         raise TypeError("diagnostic_hermite_resampling must be bool")
     if not isinstance(diagnostic_rkf45_resampling, bool):
         raise TypeError("diagnostic_rkf45_resampling must be bool")
-    if diagnostic_hermite_resampling and diagnostic_rkf45_resampling:
+    if not isinstance(diagnostic_fine_rkf45_resampling, bool):
+        raise TypeError("diagnostic_fine_rkf45_resampling must be bool")
+    if diagnostic_hermite_resampling and (diagnostic_rkf45_resampling
+                                          or diagnostic_fine_rkf45_resampling):
         raise ValueError("choose one diagnostic output resampler")
     if not isinstance(diagnostic_local_nqc_derivatives, bool):
         raise TypeError("diagnostic_local_nqc_derivatives must be bool")
@@ -379,7 +383,7 @@ def reconstruct_seobnrv4_22_adaptive(
         )
         fine_runs.append(
             _diagnostic_rkf45_output(fine_run, row_field)
-            if diagnostic_rkf45_resampling else
+            if diagnostic_rkf45_resampling or diagnostic_fine_rkf45_resampling else
             _diagnostic_hermite_output(fine_run)
             if diagnostic_hermite_resampling else fine_run)
     if any(tuple(run.output_state.shape[:-2]) for run in fine_runs):

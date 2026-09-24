@@ -1,0 +1,18 @@
+{
+  "schema": "diffgw.seobnrv4.sxs-2123-sampling-reference-plan.v1",
+  "purpose": "Check natural-cubic, Hermite, and local RKF45 state sampling near the SXS-row NQC match against independently integrated, locally seeded DOP853. The reference tests numerical sampling, not SEOBNRv4 physics.",
+  "prior_sampling_sha256": "cbd4b3b9acc90f1ddf0e091144d99d8b4d7786c0ed3cc43d87c5f9d38a503c09",
+  "level_name": "tightest",
+  "probe": "fine-stage local match time + 0.0078125 M + k*0.0625 M for k=-7,...,7",
+  "reference": {
+    "solver": "scipy.integrate.solve_ivp:DOP853",
+    "seed": "preceding accepted fine-stage state for each query",
+    "rtol_atol": [[1e-13, 1e-14], [3e-14, 1e-15]],
+    "first_step_rule": "min(0.015625 M, one quarter of the query displacement)",
+    "vector_field_derivative_tolerance": 1e-10,
+    "local_phase_second_degree": 6,
+    "local_phase_second_window_M": 0.5
+  },
+  "checks": "Replay the frozen default waveform hash. Require independently constructed field derivatives to agree with the native accepted derivatives at the first, middle, and last accepted knots. Compare state errors and phase-basis second derivatives without selecting a sampler based on the public or NR waveform.",
+  "qualification_claim": false
+}

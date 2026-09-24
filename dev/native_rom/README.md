@@ -665,9 +665,22 @@ single-row diagnostic, not detector-noise-weighted faithfulness or a
 release holdout. A separately frozen [ODE tolerance study](evidence/2026-09-24/sxs_2123_ode_plan.json)
 and [extension](evidence/2026-09-24/sxs_2123_ode_extension_plan.json)
 reduce the direct waveform difference to `1.29e-5`, still above the
-predeclared `1e-6` numerical budget. See the
+predeclared `1e-6` numerical budget with the default natural-cubic sampler.
+A fine-stage-only [sampling check](evidence/2026-09-24/sxs_2123_fine_sampling.json)
+holds accepted ODE arrays identical and finds a `5.35e-6` waveform change.
+Against a locally seeded independent
+[DOP853 reference](evidence/2026-09-24/sxs_2123_sampling_reference.json),
+the fine-stage RKF45 sample has at most `3.6e-15` state error near NQC
+matching, versus `4.1e-12` for natural cubic. The frozen
+[two-level RKF45 check](evidence/2026-09-24/sxs_2123_rkf_convergence.json)
+then passes the same complex-mode numerical budget at `2.98e-9`, with
+identical accepted trajectories and event times. At the same tightest
+tolerance, its [fixed-anchor NR check](evidence/2026-09-24/sxs_2123_rkf_nr.json)
+changes the native/Lev4 complex relative L2 only from `0.324417` to
+`0.324419`. RKF45 remains an opt-in development diagnostic; this one-row
+result is not a domain bound or a physical release gate. See the
 [evidence narrative](evidence/2026-09-24/README.md) for checksums,
-conventions, and replay commands. The numerical, physical-domain,
+conventions, and replay commands. The default numerical, physical-domain,
 provenance, cross-backend, and independent-ROM gates below remain open.
 
 The independent ROM construction follows the published reduced-basis and

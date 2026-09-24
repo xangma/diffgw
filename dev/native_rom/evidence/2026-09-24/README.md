@@ -1823,6 +1823,42 @@ does not explain the remaining phase drift. Run `PYTHONPATH=src:. python -m
 dev.native_rom.diagnose_sxs_2123_first_step` with its frozen inputs to
 reproduce the result.
 
+The [fine-sampling plan](sxs_2123_fine_sampling_plan.json) and
+[result](sxs_2123_fine_sampling.json) instead change only the fine-stage
+output sampler from the default natural cubic to a local RKF45 substep at
+the tightest tolerance. Hashes of all accepted coarse and fine time, state,
+derivative, and valid arrays match exactly. The full complex mode changes by
+`5.35e-6`, or `42%` of the default tighter-to-tightest difference; this
+single-level result does not by itself attribute that tolerance difference.
+The frozen [local-reference plan](sxs_2123_sampling_reference_plan.json)
+and [result](sxs_2123_sampling_reference.json) replay the default waveform
+and compare 15 off-grid states near NQC matching to locally seeded DOP853.
+The independently constructed field agrees with accepted derivatives to
+`1.32e-16`. RKF45 differs from the tight DOP853 reference by at most
+`3.55e-15` in state, while natural cubic and Hermite differ by about
+`4.14e-12` and `4.16e-12`; the two DOP853 settings give the same reported
+values. This is a local numerical reference, not an independent waveform
+or physics oracle.
+
+The subsequent [RKF45 convergence plan](sxs_2123_rkf_convergence_plan.json)
+and [result](sxs_2123_rkf_convergence.json) replay the tighter default
+and tightest RKF45 hashes and hold accepted arrays identical within each
+tolerance. The direct tighter-to-tightest RKF45 complex relative L2 is
+`2.98e-9`, versus `1.29e-5` with natural-cubic output, and all frozen
+`1e-6` complex/amplitude and `0.05 M` event-time gates pass. The two RKF45
+NQC coefficient sets are also close, while the default tighter coefficients
+differ visibly. Finally, the post-hoc [NR plan](sxs_2123_rkf_nr_plan.json)
+and [result](sxs_2123_rkf_nr.json) compare both samplers at identical
+tightest tolerance and the original fixed frequency anchor. Native/Lev4
+complex relative L2 changes from `0.324417` to `0.324419`; Lev3/Lev4 on
+the same support remains `0.004160`. Sampling accuracy and one-row
+numerical stability do not resolve the physical difference or qualify the
+domain. Reproduce in order with `diagnose_sxs_2123_fine_sampling`,
+`diagnose_sxs_2123_sampling_reference`,
+`diagnose_sxs_2123_rkf_convergence`, and `compare_sxs_2123_rkf_nr` under
+`PYTHONPATH=src:. python -m dev.native_rom.<module>` and the pinned input
+plans listed in each script's CLI help.
+
 To reproduce, download the six archive files and sidecars listed in the
 plan into `/tmp/diffgw-sxs-2123/Lev{3,4}/`, preserving each file's base
 name. Run `PYTHONPATH=src:. python -m dev.native_rom.extract_sxs_2123

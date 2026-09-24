@@ -1,0 +1,10 @@
+{
+  "schema": "diffgw.seobnrv4.sxs-2123-rkf-nr-plan.v1",
+  "purpose": "Post-hoc independent NR check of the numerically selected fine-stage RKF45 sampler against the unchanged default at the same tightest ODE tolerance. The sampling choice was based on the numerical DOP853 reference and tolerance gate, not optimized against NR.",
+  "prior_comparison_sha256": "3b16faf2f9936989417594a791c2560fb74a28d2ccf2e814c53de0e60d2b5ad0",
+  "prior_rkf_convergence_sha256": "e2eb5c5c13bf404f0775ab31e5124af94b775b72c12f6fff556365b9b670409d",
+  "prior_extension_sha256": "fd714f8a51222044c099cc4dfcc8e490ee4636dda6b819c9e04e657a92b2b837",
+  "level_name": "tightest",
+  "checks": "Verify the MD5-pinned SXS archive extraction and decoded-mode SHA256 values. Replay both frozen tightest waveform hashes and require identical accepted ODE arrays. Apply the original fixed first M omega_22=0.09 crossing, phase rotation, 0.25 M common grid, and Lev4-relative windows. Compare default and RKF45 modes separately to Lev4 and compare them to each other; no time, phase, amplitude, or parameter minimization. This is one post-hoc NR row, not a physical release holdout.",
+  "qualification_claim": false
+}

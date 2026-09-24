@@ -202,6 +202,7 @@ def bounded_run(seconds):
 
 def native_run(row, level, settings, *, diagnostic_hermite_resampling=False,
                diagnostic_rkf45_resampling=False,
+               diagnostic_fine_rkf45_resampling=False,
                diagnostic_spin_truncation=None,
                diagnostic_mode_21_higher_spin="taylor_f",
                diagnostic_mode_31_higher_spin="taylor_f",
@@ -220,7 +221,8 @@ def native_run(row, level, settings, *, diagnostic_hermite_resampling=False,
                diagnostic_warm_start_Momega=None,
                return_nqc_coefficients=False,
                return_nqc_samples=False,
-               return_boundary_data=False):
+               return_boundary_data=False,
+               return_accepted_hashes=False):
     import torch
     from dev.native_rom.eob.torch.adaptive_driver_clean import reconstruct_seobnrv4_22_adaptive
     choices = dict(CHOICES)
@@ -233,6 +235,7 @@ def native_run(row, level, settings, *, diagnostic_hermite_resampling=False,
             **choices, **{k: level[k] for k in ("atol", "rtol", "dt_geom")},
             diagnostic_hermite_resampling=diagnostic_hermite_resampling,
             diagnostic_rkf45_resampling=diagnostic_rkf45_resampling,
+            diagnostic_fine_rkf45_resampling=diagnostic_fine_rkf45_resampling,
             diagnostic_mode_21_higher_spin=diagnostic_mode_21_higher_spin,
             diagnostic_mode_31_higher_spin=diagnostic_mode_31_higher_spin,
             diagnostic_mode_32_spin_square=diagnostic_mode_32_spin_square,
@@ -276,6 +279,12 @@ def native_run(row, level, settings, *, diagnostic_hermite_resampling=False,
                   final_mass_fraction=float(array(result.final_mass_fraction)),
                   final_spin=float(array(result.final_spin)),
                   internal_step_M=float(array(result.attachment.internal_step)))
+    if return_accepted_hashes:
+        output["accepted_array_sha256"] = {
+            name: {key: hashlib.sha256(np.ascontiguousarray(
+                array(getattr(getattr(result.trajectory, name), key))).tobytes()).hexdigest()
+                   for key in ("time", "state", "derivative", "valid")}
+            for name in ("coarse", "fine")}
     if return_boundary_data:
         if diagnostic_qnm_source == "historical_spline":
             from torchwave.approximants.kerr_qnm_table_convention import signed_qnm_220_table_convention as qnm_220

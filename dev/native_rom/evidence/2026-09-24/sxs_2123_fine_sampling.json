@@ -1,0 +1,173 @@
+{
+  "schema": "diffgw.seobnrv4.sxs-2123-fine-sampling.v1",
+  "plan_sha256": "1e502717993981a96d4232049ad0ef6f9da18f89dd8108bfa111068602cecb84",
+  "sampling_plan_sha256": "6bc3e32724fe9cfff69297f8d08544faed7e3a521d05d498a071671e6076fce6",
+  "prior_extension_sha256": "fd714f8a51222044c099cc4dfcc8e490ee4636dda6b819c9e04e657a92b2b837",
+  "script_sha256": "a7669737ebb0e98d156c8d9c1b40e86da493d1c5380fde57b4eadc9dff09d8dc",
+  "generator_source_manifest_sha256": "220b84cb36a664f8dc95b130fac7313c16b40d2510a4104b154128e4b5397917",
+  "row": {
+    "mass1": 0.6666461909340252,
+    "mass2": 0.3333351320337304,
+    "chi1": 0.3000576923564852,
+    "chi2": -0.3000476691830762,
+    "omega_start": 0.04
+  },
+  "level": {
+    "name": "tightest",
+    "atol": 1e-15,
+    "rtol": 1e-14,
+    "dt_geom": 0.25
+  },
+  "runs": {
+    "default_replay": {
+      "native": {
+        "name": "tightest",
+        "atol": 1e-15,
+        "rtol": 1e-14,
+        "dt_geom": 0.25,
+        "stages": {
+          "coarse": {
+            "accepted": 973,
+            "rejected": 29,
+            "evaluations": 5984,
+            "termination": [
+              "event"
+            ],
+            "event_time_M": 360.0421251865655
+          },
+          "fine": {
+            "accepted": 642,
+            "rejected": 25,
+            "evaluations": 3978,
+            "termination": [
+              "event"
+            ],
+            "event_time_M": 149.8665003861687
+          }
+        },
+        "peak_time_M": 360.03124237060547,
+        "restart_time_M": 210.25,
+        "match_time_M": 353.4635006569468,
+        "boundary_time_M": 353.453125,
+        "final_mass_fraction": 0.9561187926502044,
+        "final_spin": 0.7004812182965081,
+        "internal_step_M": 0.015625,
+        "accepted_array_sha256": {
+          "coarse": {
+            "time": "7573ad27d4aeccb1e2c6836b2e193bcad6b388e32cad81c0ff93859ca4a5c330",
+            "state": "8e492ecc09a400f178a83590fd5d9b35b8504cc9b1b7c925832977151ddca668",
+            "derivative": "ddbad29514a4ac142f476b4a179a62b8f0bfb2c37535a315cef3ae2a69875ab7",
+            "valid": "f14493465e1eebac95dd537aca3a87292b7e9bb7e779002942ea5d1a4ee6be8d"
+          },
+          "fine": {
+            "time": "daa288726567db3feded9f99fe0801231f5b219076d173cb9038634b409a0513",
+            "state": "53154105dcf9101fd42eb5035766bb2fe8f2f84cee36fe76d05255f2e17efa5a",
+            "derivative": "2fb6501f1a844c2ab00248503192b17e20afdb2ba045c4db5d96612663003ce7",
+            "valid": "764a33227c4bebe81c0a5675baf732fe116d45ef05c72d7fcbdf4b9c09f7a8b0"
+          }
+        },
+        "samples": 2014,
+        "support_M": [
+          0.0,
+          503.25
+        ],
+        "array_sha256": {
+          "time": "c1b3c814c9415f202255e8ba7977907f11f2cc9c5b246e5127b509d607459e17",
+          "mode": "f7aa4ee77604575c74c86c35c49fb7d5a4e947001a5ee7048c34dab89a3ef77c"
+        },
+        "array_dtype": {
+          "time": "float64",
+          "mode": "complex128"
+        }
+      },
+      "elapsed_seconds": 73.04177970901947
+    },
+    "fine_rkf45": {
+      "native": {
+        "name": "tightest",
+        "atol": 1e-15,
+        "rtol": 1e-14,
+        "dt_geom": 0.25,
+        "stages": {
+          "coarse": {
+            "accepted": 973,
+            "rejected": 29,
+            "evaluations": 5984,
+            "termination": [
+              "event"
+            ],
+            "event_time_M": 360.0421251865655
+          },
+          "fine": {
+            "accepted": 642,
+            "rejected": 25,
+            "evaluations": 3978,
+            "termination": [
+              "event"
+            ],
+            "event_time_M": 149.8665003861687
+          }
+        },
+        "peak_time_M": 360.03124237060547,
+        "restart_time_M": 210.25,
+        "match_time_M": 353.4635006569468,
+        "boundary_time_M": 353.453125,
+        "final_mass_fraction": 0.9561187926502044,
+        "final_spin": 0.7004812182965081,
+        "internal_step_M": 0.015625,
+        "accepted_array_sha256": {
+          "coarse": {
+            "time": "7573ad27d4aeccb1e2c6836b2e193bcad6b388e32cad81c0ff93859ca4a5c330",
+            "state": "8e492ecc09a400f178a83590fd5d9b35b8504cc9b1b7c925832977151ddca668",
+            "derivative": "ddbad29514a4ac142f476b4a179a62b8f0bfb2c37535a315cef3ae2a69875ab7",
+            "valid": "f14493465e1eebac95dd537aca3a87292b7e9bb7e779002942ea5d1a4ee6be8d"
+          },
+          "fine": {
+            "time": "daa288726567db3feded9f99fe0801231f5b219076d173cb9038634b409a0513",
+            "state": "53154105dcf9101fd42eb5035766bb2fe8f2f84cee36fe76d05255f2e17efa5a",
+            "derivative": "2fb6501f1a844c2ab00248503192b17e20afdb2ba045c4db5d96612663003ce7",
+            "valid": "764a33227c4bebe81c0a5675baf732fe116d45ef05c72d7fcbdf4b9c09f7a8b0"
+          }
+        },
+        "samples": 2014,
+        "support_M": [
+          0.0,
+          503.25
+        ],
+        "array_sha256": {
+          "time": "c1b3c814c9415f202255e8ba7977907f11f2cc9c5b246e5127b509d607459e17",
+          "mode": "72f795077a724c2556c8fb1abf8de9198267fae01360153f0dfbd4cccf2c3bd2"
+        },
+        "array_dtype": {
+          "time": "float64",
+          "mode": "complex128"
+        }
+      },
+      "elapsed_seconds": 72.90783766598906
+    }
+  },
+  "accepted_arrays_identical": true,
+  "comparison": {
+    "samples": 2014,
+    "phase_samples": 1888,
+    "complex_relative_l2": 5.3543114523871315e-06,
+    "amplitude_relative_l2": 8.865326875255742e-08,
+    "relative_norm_error": 6.71697341081412e-08,
+    "phase_rms_rad": 5.914813499561212e-06,
+    "phase_max_abs_rad": 1.0543990121843039e-05,
+    "unmaximized_real_overlap": 0.999999999985668,
+    "grid_step_M": 0.25,
+    "common_samples": 2014,
+    "candidate_samples": 2014,
+    "reference_samples": 2014,
+    "support_end_difference_M": 0.0,
+    "peak_time_M_abs_difference": 0.0,
+    "match_time_M_abs_difference": 0.0,
+    "boundary_time_M_abs_difference": 0.0
+  },
+  "prior_tolerance_drift_complex_relative_l2": 1.287014271635021e-05,
+  "sampling_to_tolerance_drift_ratio": 0.4160258025410256,
+  "numerical_budget_passed": false,
+  "release_qualified": false,
+  "interpretation": "One-row fine-stage output-sampling diagnostic with the accepted ODE histories held byte-identical; no physical model or domain validation."
+}
