@@ -764,6 +764,15 @@ time-shift bound, and every NR resolution control remains above `0.99992`.
 This dense post-hoc grid still does not bound the mass continuum or other
 physical parameters.
 
+A [q≈5 long-start tolerance study](evidence/2026-09-24/sxs_2508_tolerance.json)
+finds `2.63e-8` direct complex relative drift between the tight baseline
+and the next-looser solve, and at most `2.0e-9` change in the 145 M⊙ weighted
+native/NR overlap across the three tolerance levels. Event-time budgets pass,
+but the strict monotone error check fails near these float64 tolerances.
+This supports a local numerical stability bound for the sampled waveform;
+it does not remove the `0.994858` native/NR physical residual or establish
+domain-wide convergence.
+
 An independent [low-frequency phase-aligned peak-timing diagnostic](evidence/2026-09-24/sxs_five_case_peak_timing.json)
 fits one time and phase shift in a 500 M early-inspiral window after NR
 relaxation. Native/NR amplitude-peak lags are `-6.78`, `-9.94`, `-3.09`,

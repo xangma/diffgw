@@ -2152,3 +2152,33 @@ independent parameter-domain or ROM release qualification. Reproduce with
 `PYTHONPATH=src:. python -m dev.native_rom.measure_sxs_five_case_dense_mass`
 and the paths named in its `--help` output in the pinned development
 environment.
+
+The post-hoc [q≈5 tolerance plan](sxs_2508_tolerance_plan.json) and
+[result](sxs_2508_tolerance.json) hold the long-start row, `0.25 M` output
+step, and fine RKF45 resampling fixed while loosening ODE tolerances from
+`(atol, rtol)=(1e-15, 1e-14)` to `(1e-14, 1e-13)` and
+`(1e-13, 1e-12)`. Direct, unaligned complex relative errors against the
+tight baseline are `2.63e-8` and `4.39e-8`; all recorded event times agree
+within the `0.05 M` budget. The medium-to-baseline error exceeds the
+loose-to-medium error (`2.63e-8` versus `1.76e-8`), so the strict monotone
+convergence check fails despite meeting the `1e-6` direct-error budget.
+At the post-hoc worst sampled mass of 145 M⊙, the tight baseline exactly
+reproduces the previous `0.994857696114581` weighted native/NR overlap;
+loosening tolerances changes that value by at most `2.0e-9`. The common
+tapered support is used for all three runs. This local numerical stability
+does not explain the physical mismatch or qualify a parameter domain.
+
+The exact run source is preserved in Git commit `933fe40` and pinned by the
+result's `script_sha256`; the generated JSON and external waveform array
+have matching recorded hashes. The computation and JSON write completed,
+then the command exited with a final print-only `json.dumps` argument error.
+The current script fixes that output error without changing the calculation.
+Reproduce with `PYTHONPATH=src:. python -m
+dev.native_rom.diagnose_sxs_2508_tolerance --plan
+dev/native_rom/evidence/2026-09-24/sxs_2508_tolerance_plan.json
+--long-plan dev/native_rom/evidence/2026-09-24/sxs_2508_long_start_plan.json
+--long-result dev/native_rom/evidence/2026-09-24/sxs_2508_long_start.json
+--weighted-plan dev/native_rom/evidence/2026-09-24/sxs_2508_weighted_plan.json
+--baseline-array /tmp/diffgw-sxs-five-case/decoded/sxs_2508_long_start_arrays.npz
+--array-out /tmp/diffgw-sxs-five-case/decoded/sxs_2508_tolerance_arrays.npz
+--json-out dev/native_rom/evidence/2026-09-24/sxs_2508_tolerance.json`.

@@ -156,7 +156,7 @@ def main() -> None:
     print(json.dumps(dict(direct_budget_passed=result["direct_budget_passed"],
                           monotone_direct_error=result["monotone_direct_error"],
                           medium_l2=direct["medium"]["complex_relative_l2"],
-                          weighted=weighted_rows), flush=True))
+                          weighted=weighted_rows)), flush=True)
     if not result["sources_unchanged"]:
         raise ValueError("native generator changed during tolerance run")
 
