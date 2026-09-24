@@ -10,7 +10,10 @@ Validates:
 7. PyTree registration and methods tracer safety.
 """
 
+import json
 import math
+from pathlib import Path
+
 import numpy as np
 import pytest
 import torch
@@ -41,6 +44,21 @@ from jaxwave.approximants.kerr_ringdown import (
     evaluate_qnm as jax_eval_qnm,
     get_ringdown_waveform as jax_get_waveform,
 )
+
+
+def test_jax_qnm_zero_spin_gradient_matches_independent_roots():
+    from jaxwave.approximants.kerr_qnm_interp import evaluate_kerr_qnm_220
+
+    data = Path(__file__).resolve().parents[1] / "data/kerr_qnm_220_leaver.json"
+    rows = {row["a"]: row for row in json.loads(data.read_text())["holdouts"]}
+    expected = np.array([
+        (rows[1e-7][name] - rows[-1e-7][name]) / 2e-7
+        for name in ("wr", "damping")
+    ])
+    gradient = jax.jacfwd(lambda spin: jnp.stack(evaluate_kerr_qnm_220(spin)))(
+        jnp.array(0.0, dtype=jnp.float64)
+    )
+    np.testing.assert_allclose(np.asarray(gradient), expected, rtol=0.0, atol=5e-8)
 
 
 @pytest.mark.parametrize("mass", [40.0, 65.0, 100.0])

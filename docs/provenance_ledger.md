@@ -190,6 +190,7 @@ not validation of the retained official ROM or surviving equation components.
   - **Radial Equation**: Spin $-2$ Kerr radial Teukolsky continued fractions solved via Cook & Zalutskiy Eqs. (23)–(44) with high-order asymptotic remainder conditioning.
   - **Angular Eigenvalues**: Computed via spectral matrix diagonalization of Cook & Zalutskiy Eqs. (49)–(56), supporting exact spherical branches and continuous branch continuation.
   - **Full Kerr Table Generator** (`torchwave.qnm.generate` / `torchwave-generate-qnm`): Generates all 16 positive-$m$ and negative-$m$ low overtones up to $n=2$ across $a \in [0, 0.99999]$ using adaptive degree-5 interpolating splines (`src/torchwave/approximants/kerr_qnm_generated.py`).
+  - The Torch and JAX signed-spin 220 evaluators select the positive-$m$ branch at zero spin. Their branch masks preserve its independent-root derivative there without changing the spline coefficients or values.
   - **London $N=61$ Polynomial Fitter** (`torchwave.qnm.london` / `torchwave-generate-london-qnm`): Solves the exact $N=61$ grid $a = 0.995\sin\theta$ and fits the clean-room rational polynomials for higher-harmonic ringdown models (`src/torchwave/approximants/imrphenom_hm_qnm_n61.py`).
 
 ### 2.13 IMRPhenomXPHM-SpinTaylor (Numerical Orbit-Averaged SpinTaylor Precession)
@@ -259,7 +260,7 @@ catalog counts. Their optional comparison test gates are described in Sections
 
 | Asset | Path | SHA256 Checksum | Provenance / Origin | License |
 |---|---|---|---|---|
-| Independent Kerr QNM Splines | `src/torchwave/approximants/kerr_qnm_generated.py` | `82da71c19c50defeab4c32b6950141d845214909e9f52342e3f1cf3b46f08326` | Clean-room solved via `torchwave.qnm.generate` | MIT |
+| Independent Kerr QNM Splines | `src/torchwave/approximants/kerr_qnm_generated.py` | `e69d64e615dfd7bf054c2c7a9b721509688a1f126a482c7d9d0047f53b370dd3` | Clean-room solved via `torchwave.qnm.generate`; signed-spin branch autodiff corrected at zero | MIT |
 | Independent London N=61 QNM Fits | `src/torchwave/approximants/imrphenom_hm_qnm_n61.py` | `350c958aef4e1554d5c2d6a6bc22f8b9bf3513c2a000f08dc3cb3de1cde05b06` | Clean-room solved via `torchwave.qnm.london` | MIT |
 | PNR Calibration Coefficients | `src/torchwave/approximants/pnr_coefficients.py` | `e15b3fef15512d48873fa1728ffb446068bb38245ac2378d0eb8cb20d4e27355` | Clean-room derived from Hamilton et al. (2021) | MIT |
 | APS IMRPhenomXAS Fits | Supplemental Material (Pratten et al. 2020) | `94b9334c19f3a7909864891ea278ab9a411e4f33b7b7e17cc01d927056d9ac52` | APS PRD Supplemental Material deposit | Redistribution terms unresolved; see third-party notices |

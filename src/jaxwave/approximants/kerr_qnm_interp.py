@@ -59,8 +59,8 @@ def _evaluate_kerr_qnm_220_at_spin(
     spin: jnp.ndarray,
 ) -> Tuple[jnp.ndarray, jnp.ndarray]:
     """Evaluate generated roots for signed spins within the generator's domain."""
-    pos_spin = jnp.maximum(spin, 0.0)
-    neg_spin = jnp.maximum(-spin, 0.0)
+    pos_spin = jnp.where(spin >= 0.0, spin, 0.0)
+    neg_spin = jnp.where(spin < 0.0, -spin, 0.0)
     pos_x = -jnp.log1p(-pos_spin)
     neg_x = -jnp.log1p(-neg_spin)
     p_re, p_im = _dimensionless_qnm(pos_x, _KNOTS_220, _COEFFS_220)
