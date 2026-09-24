@@ -1,0 +1,24 @@
+{
+  "schema": "diffgw.seobnrv4.sxs-2508-tolerance-plan.v1",
+  "purpose": "Post-hoc numerical sensitivity of the lowest weighted-match SXS case. Hold the long-start physical row, native choices, output grid, and fine RKF45 resampling fixed while changing only ODE tolerances. This is neither a physical holdout nor a release gate.",
+  "simulation": "SXS:BBH:2508",
+  "long_result_sha256": "27074a8796991b57b6fb88474ce5b0321c676a76b224343010fad9ab297952f9",
+  "long_plan_sha256": "0740fac5bb4c5ddfbfd279800ac1f2aea262e90f50b976d9c4ddfe4a5f0061b5",
+  "weighted_plan_sha256": "58d34d03997165c49029eb0e25e5c8969aba78a52af61435137dc643a8333c69",
+  "baseline_array_sha256": "3cba0b7664438e17b18b9f0c1c3205fad4f09a61e9b98d01b896dc02b93bb4fa",
+  "baseline_source_manifest_sha256": "220b84cb36a664f8dc95b130fac7313c16b40d2510a4104b154128e4b5397917",
+  "grid_step_M": 0.25,
+  "diagnostic_fine_rkf45_resampling": true,
+  "levels": [
+    {"name": "loose", "atol": 1e-13, "rtol": 1e-12},
+    {"name": "medium", "atol": 1e-14, "rtol": 1e-13},
+    {"name": "baseline", "atol": 1e-15, "rtol": 1e-14}
+  ],
+  "max_run_seconds_per_level": 900,
+  "weighted_mass_msun": 145,
+  "weighted_taper_width_M": 50,
+  "direct_complex_relative_l2_budget": 1e-6,
+  "event_time_difference_budget_M": 0.05,
+  "interpretation": "Compare unaligned raw modes on nested output samples and weighted modes after separately applying the pre-existing fixed-frequency anchor. A three-level monotone trend is only numerical stability evidence; near-floor float64 tolerances and the post-hoc row prevent claiming asymptotic order or physical accuracy.",
+  "qualification_claim": false
+}
