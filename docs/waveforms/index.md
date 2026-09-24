@@ -4,7 +4,8 @@ The library connects a model's **usable waveform**, its **published definition**
 and the **checks actually performed**. Start here when you want to know which
 equations a DiffGW model uses or what a mathematical-reference result covers.
 For every implemented model, including those without a versioned mathematical
-reference, use the broader [catalog and support guide](../models.md).
+reference, use the [full dispatch and specification coverage](coverage.md) and
+the broader [catalog and support guide](../models.md).
 
 <!-- BEGIN GENERATED WAVEFORM TABLE -->
 

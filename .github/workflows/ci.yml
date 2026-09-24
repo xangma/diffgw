@@ -37,6 +37,7 @@ jobs:
           python -m diffgw_reference.aligned_spin_traceability --check
           python -m diffgw_reference.tidal_traceability --check
           python scripts/generate_waveform_library_table.py --check
+          python scripts/generate_waveform_coverage.py --check
       - name: Verify reference agreement without qualification skips
         run: >-
           python -m pytest tests/test_waveform_definitions.py tests/test_*math_reference*.py
