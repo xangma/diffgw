@@ -1,0 +1,27 @@
+{
+  "schema": "diffgw.seobnrv4.source-q2-reference-grid-plan.v1",
+  "purpose": "Compare pinned compiled source and public wheel q2 full modes under 0.5 M and 0.25 M requested output steps, including each binary's self-change and source/wheel difference; development diagnostic only.",
+  "row": {"mass1": 30.0, "mass2": 15.0, "chi1": 0.4, "chi2": -0.3, "omega_start": 0.04},
+  "output_steps_M": [0.5, 0.25],
+  "phase_anchor_M": -100.0,
+  "windows_M": [
+    {"name": "full_inspiral", "start_M": -1000.0, "end_M": -120.0},
+    {"name": "late_inspiral", "start_M": -120.0, "end_M": -30.0},
+    {"name": "merger_neighborhood", "start_M": -30.0, "end_M": 20.0},
+    {"name": "ringdown", "start_M": 20.0, "end_M": 100.0}
+  ],
+  "capacity": 50000,
+  "inputs": {
+    "q2_probe": "dev/native_rom/evidence/2026-09-24/source_q2_domain_probe.json",
+    "source_flux_plan": "dev/native_rom/evidence/2026-09-24/source_flux_initial_plan.json",
+    "mode_adapter": "dev/native_rom/reference/full_v4_source_mode_adapter.c",
+    "q2_native_grid": "dev/native_rom/evidence/2026-09-24/source_q2_grid.json"
+  },
+  "input_sha256": {
+    "q2_probe": "7e91201a2e0e746e14248bbe4577b52d0ea0359e4fcc35975c39794ec3dcb33d",
+    "source_flux_plan": "1167199c8f954f97a5905a1e3b2f67d1555e984e5f1da0a0fc42a77a925f96ea",
+    "mode_adapter": "59d8d7dd6547e84cc53b2ecb76005195bb54174c481146f88fc257a3abf7fcf4",
+    "q2_native_grid": "178f7c1f1def49a9695c959d2aa9476bde368917b594d950911aefe14cd2542e"
+  },
+  "release_qualified": false
+}

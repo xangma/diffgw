@@ -521,6 +521,11 @@ also leaves all shared complex samples identical at the same internal step.
 The two reference binaries themselves differ, and this development row is
 not a release holdout or a domain bound;
 see the [frozen evidence](evidence/2026-09-24/README.md).
+At the same q2 point, requesting `0.25 M` instead of `0.5 M` changes the
+compiled source mode by `6.39e-4` complex relative L2 after peak-clock and
+early-phase alignment; the public wheel changes by `1.31e-4`, and their
+`0.25 M` difference is `1.33e-3`. These reference-grid effects prevent the
+single `0.5 M` comparison from defining a physical release bound.
 
 Direct public-binary QNM calls now agree with the native fundamental frequency
 and damping to float64 precision on both stress rows. The q4 native boundary

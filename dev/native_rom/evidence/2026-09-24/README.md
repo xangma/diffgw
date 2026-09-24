@@ -1789,3 +1789,24 @@ bound.
 Reproduce with `PYTHONPATH=src:. python -m
 dev.native_rom.diagnose_source_q2_grid --json-out
 /tmp/source_q2_grid.json` in the pinned development environment.
+
+The [q2 reference-grid plan](source_q2_reference_grid_plan.json) and
+[result](source_q2_reference_grid.json) replay the exact `0.5 M` compiled
+source and wheel mode hashes, then request `0.25 M` from each reference
+binary. With each full mode on its own orbital-peak clock and one phase
+gauge removed at `-100 M`, the source `0.25 M` versus `0.5 M` full-common
+complex relative L2 is `6.3898e-4`; the wheel's corresponding self-change
+is `1.3112e-4`. At `0.25 M`, wheel/source differs by `1.3314e-3`, versus
+`5.7169e-4` at `0.5 M`. The source self-change exceeds the native/source
+`0.5 M` discrepancy, while the native `0.5 M`/`0.25 M` nested samples are
+identical. Requested output step affects the historical reference
+generators, including their coarse evolution and fit inputs; this
+measurement does not assign the difference to a unique internal operation.
+It rules out treating the two reference steps or binaries as interchangeable
+physical truth and does not define a release tolerance. Reproduce with
+`PYTHONPATH=src:. python -m
+dev.native_rom.diagnose_source_q2_reference_grid --source-root
+/Users/xangma/repos/lalsuite-git --headers
+/tmp/diffgw-lalsuite-pinned-53acc0c/merged-include --gsl-include
+/usr/local/include --json-out /tmp/source_q2_reference_grid.json` in the
+pinned development environment.
