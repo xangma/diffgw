@@ -773,6 +773,15 @@ This supports a local numerical stability bound for the sampled waveform;
 it does not remove the `0.994858` native/NR physical residual or establish
 domain-wide convergence.
 
+The independently selected [second five-case SXS holdout](evidence/2026-09-24/sxs_second_holdout_weighted.json)
+fails its predeclared `0.99` dominant-mode overlap check: the q≈8 aligned-spin
+SXS:BBH:2786 case reaches `0.950004` at 58 M⊙, while its NR-resolution
+control exceeds `0.999694`. A post-hoc [pinned public SEOBNRv4 comparison](evidence/2026-09-24/sxs_2786_public_control.json)
+reaches `0.995721` versus NR at 50 M⊙, compared with `0.950515` for the
+native prototype under the same settings. This exposes a native-specific
+problem in the default prototype. It remains outside production and cannot
+seed a release ROM.
+
 An independent [low-frequency phase-aligned peak-timing diagnostic](evidence/2026-09-24/sxs_five_case_peak_timing.json)
 fits one time and phase shift in a 500 M early-inspiral window after NR
 relaxation. Native/NR amplitude-peak lags are `-6.78`, `-9.94`, `-3.09`,

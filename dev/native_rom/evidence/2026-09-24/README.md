@@ -2195,6 +2195,33 @@ extraction manifest are outside Git under `/tmp/diffgw-sxs-second-holdout`.
 The [detector-weighted follow-up plan](sxs_second_holdout_weighted_plan.json)
 was frozen before native comparisons. It fixes the same 191 integer masses,
 settled-frequency cutoff, aLIGO design PSD, taper controls, and global
-time/phase optimizer as the earlier five-case diagnostic. Comparisons and
-weighted results are pending; neither selection nor extraction is a release
-claim.
+time/phase optimizer as the earlier five-case diagnostic. The
+[fixed-crossing comparison](sxs_second_holdout_comparison.json) finished all
+five cases with the generator source hash unchanged. The
+[weighted result](sxs_second_holdout_weighted.json) gives minimum native/NR
+overlaps of `0.997356`, `0.999439`, `0.994675`, `0.950004`, and `0.999697`
+in plan order, over 191 integer masses from 10 to 200 M⊙. The asymmetric
+aligned-spin case SXS:BBH:2786 is worst at 58 M⊙; its low/high NR control
+never falls below `0.999694`, its time-shift optimizer stays inside the
+predeclared bounds, and 25/100 M taper controls preserve the large deficit.
+The planned selected-case `0.99` proxy check therefore fails. This complex
+`(2,2)` proxy is narrower than the published full-domain criterion, but the
+failure is decisive for this selected test.
+
+The [second holdout timing diagnostic](sxs_second_holdout_peak_timing.json)
+uses a 500 M phase fit beginning 50 M after NR relaxation. Native/high-NR
+amplitude-peak lags are `-6.02`, `-2.73`, `-18.94`, `-22.43`, and `-6.97 M`
+in plan order. The low/high NR timing control reaches `11.63 M` on the
+failed case and `10.37 M` on the nonspinning q≈8 case, despite their high
+weighted agreement. This alignment is explicitly secondary and not an exact
+reproduction of the paper's `5 M` peak-time gate; resolution-dependent early
+phase drift limits its interpretation.
+
+A post-hoc [pinned public SEOBNRv4 control](sxs_2786_public_control.json)
+on SXS:BBH:2786 uses the same NR data and weighted protocol. At 50 M⊙,
+public/NR overlap is `0.995721`, native/NR is `0.950515`, and low/high NR is
+`0.999883`; at 10, 100, and 200 M⊙ public/NR overlaps are `0.997414`,
+`0.996911`, and `0.999102`. Thus the large weighted deficit is specific to
+the native prototype at this parameter point, rather than a shared failure
+of the pinned public model. This control was chosen after opening the holdout
+and is attribution evidence, not a fresh validation case or release pass.
