@@ -290,7 +290,9 @@ TAYLORF2 = WaveformDefinition(
         ConventionDefinition("phase_gauge", "Canonical intrinsic phase uses log(v); paper Eq. 3.18 uses log(v/v_lso), differing by a constant phase gauge."),
     ),
     options=(OptionDefinition("phasing_convention", ("coalescence", "reference_frequency"), "coalescence",
-                              "Reference-frequency mode subtracts intrinsic phase at f_ref; its phase origin is a project convention."),),
+                              "Reference-frequency mode subtracts intrinsic phase at f_ref; its phase origin is a project convention. "
+                              "Native calls select that mode when f_ref is supplied without an explicit convention; "
+                              "coalescence is the default when f_ref is omitted."),),
     carrier_parameters=(), capabilities=("fd", "plus_cross", "torch", "jax", "scalar_reference"),
     evidence=("symbolic_source_transcription", "sampled_torch_jax_comparison"),
     caveats=("This catalog entry covers the nonspinning scalar reference only; native TaylorF2 also has spin options.",

@@ -120,6 +120,27 @@ def test_values_against_reference(backend, case, use_ref):
             assert abs(complex(result) - complex(expected[key])) / scale < 3e-10
 
 
+@pytest.mark.parametrize("use_ref", [False, True])
+def test_public_dispatch_against_nonspinning_reference(backend, use_ref):
+    """The catalog ID reaches the scoped native carrier through the public API."""
+    import diffgw
+
+    name, _, array = backend
+    case = dict(CASES[0], inclination=0.7)
+    frequencies = (20.0, 31.25, 80.0)
+    hp, hc = diffgw.get_fd_waveform(
+        "TaylorF2", backend=name, sample_frequencies=array(frequencies),
+        **case, f_ref=40.0 if use_ref else None, f_isco_cutoff=False,
+    )
+    expressions = ref.waveform_expr(reference_frequency=use_ref)
+    for index, frequency in enumerate(frequencies):
+        values = reference_values(case, frequency)
+        amplitude = float(ref.evaluate(expressions["amplitude"], values, dps=80))
+        for actual, key in ((hp[index], "h_plus"), (hc[index], "h_cross")):
+            expected = complex(ref.evaluate(expressions[key], values, dps=80))
+            assert abs(complex(actual) - expected) / amplitude < 3e-10
+
+
 @lru_cache(maxsize=None)
 def reference_derivatives(use_ref):
     expressions = ref.waveform_expr(reference_frequency=use_ref)

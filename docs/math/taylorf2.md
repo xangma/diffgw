@@ -87,6 +87,17 @@ does not apply the frontends' low-frequency clamp. Its analytic domain is broade
 than the physical slow-inspiral regime of the PN approximation. Evaluation above
 an inspiral termination frequency tests algebra only.
 
+The catalog's `coalescence` default applies when `f_ref` is omitted. Both native
+dispatchers select `reference_frequency` when a positive `f_ref` is supplied
+without an explicit `phasing_convention`. For the cataloged nonspinning,
+unwindowed waveform, call `diffgw.get_fd_waveform("TaylorF2", ...)` with zero
+aligned spins (the native default), no tidal deformabilities, and
+`f_isco_cutoff=False`. Supply a positive `f_ref` for reference-frequency mode;
+otherwise omit it. The native waveform defaults to `f_isco_cutoff=True`, so an
+ordinary call includes an ISCO window outside this reference composition.
+The native fallback that anchors explicit reference-frequency mode to the first
+sample when `f_ref` is absent is also outside this specification.
+
 ## Mathematics and components
 
 ### Intrinsic phase and exact coefficients
@@ -242,7 +253,9 @@ declared comparisons, and source review establishes literature fidelity.
 The maintained numerical suite is
 [`tests/test_taylorf2_math_reference.py`](https://github.com/xangma/diffgw/blob/main/tests/test_taylorf2_math_reference.py).
 It compares each frontend directly to the reference, not just to the other
-frontend. CPU FP64 values cover $(m_1,m_2)=(30,30),(1.4,1.3),(50,5)$ solar masses
+frontend. The public `diffgw.get_fd_waveform` dispatch path is checked for both
+phase conventions with the cataloged nonspinning settings and cutoff disabled.
+CPU FP64 values cover $(m_1,m_2)=(30,30),(1.4,1.3),(50,5)$ solar masses
 at $f=20,31.25,80,160$ Hz, both phase modes, and face-on, inclined, and edge-on
 orientations. First derivatives cover frequency, both component masses, distance,
 inclination, time, phase, and reference frequency for the first two systems at
@@ -358,7 +371,9 @@ Use decimal strings or exact SymPy numbers for deliberate high-precision inputs;
 passing a Python float preserves its existing binary approximation. Evaluation
 uses a private mpmath context and leaves the caller's precision unchanged.
 
-Spin, tidal, eccentric, higher-mode and cutoff extensions remain pending.
+The separately versioned aligned-spin, tidal, and spin-induced quadrupole
+extensions have their own checks and limitations linked above. Eccentric,
+higher-mode, and cutoff behavior remain outside this nonspinning specification.
 Higher-order symbolic derivatives are available, but this first frontend
 qualification covers the selected first derivatives above. No physical
 calibration claim, formal proof, or whole-model verification follows from these checks.
