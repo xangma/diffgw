@@ -1318,3 +1318,25 @@ release qualification. Reproduce on the pinned macOS environment with
 --source-root /Users/xangma/repos/lalsuite-git --headers
 /tmp/diffgw-lalsuite-pinned-53acc0c/merged-include --gsl-include
 /usr/local/include --json-out /tmp/diffgw-wheel-nqc-spline-capture.json`.
+
+A further controlled ablation evaluates the identical source mode with the
+wheel's captured orbital frequency as the cube-root argument, while retaining
+the source state, Hamiltonian, and coefficients. This removes the same-state
+mode phase difference to at most `3.55e-15` in the three matching windows.
+The amplitude difference falls to at most `8.38e-11` but does not vanish;
+the remaining RMS difference is `1.98e-11` to `2.53e-11`. With only this
+amplitude substituted into the captured wheel fit, the coefficient distances
+are `0.00851`, `0.0618`, and `1.291` (L2) for nonspinning, mild mixed-spin,
+and strong aligned-spin rows. The wheel frequency input therefore explains
+the phase discrepancy and part of the amplitude discrepancy, but the source
+mode still differs in amplitude. A separate same-state call to the wheel's
+exported Hamiltonian wrapper, initialized with pinned source coefficients,
+agrees with the source mode's Hamiltonian to at most `8.88e-16` in `H/nu`
+over the same 1,536 samples. This strongly disfavors that Hamiltonian as the
+residual's cause under the controlled initialization; the wheel generator's
+private Hamiltonian argument was not captured directly. Mode prefactors or
+build-level floating-point behavior remain candidates, and this diagnostic
+does not identify one. Compiling the wheel-frequency source-mode ablation with
+`-O2 -ffast-math` raises the amplitude RMS difference on every row (from
+`1.98e-11`–`2.53e-11` to `3.01e-11`–`3.12e-11`), so that simple build switch
+does not close the residual.

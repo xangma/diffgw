@@ -1,6 +1,6 @@
 {
   "schema": "diffgw.seobnrv4.wheel-nqc-spline-capture-plan.v1",
-  "purpose": "Capture the pinned wheel's ten private GSL spline inputs without modifying the wheel, replay its source C fit, and ablate same-state source-mode inputs. Diagnostic only.",
+  "purpose": "Capture the pinned wheel's ten private GSL spline inputs without modifying the wheel, replay its source C fit, and ablate same-state source-mode inputs including the mode's orbital-frequency argument and a Hamiltonian-wrapper control. Diagnostic only.",
   "release_qualified": false,
   "rows": ["nonspinning", "mild_mixed_spin", "strong_aligned_spin"],
   "step_M": 0.125,
@@ -23,6 +23,10 @@
     "exact_state_adapter": {
       "path": "dev/native_rom/reference/full_v4_source_nqc_state_adapter.c",
       "sha256": "d526a3ff6df8078428ba116e9bf09f3b8e69cc78a5cfc8873601290c527e97fa"
+    },
+    "hamiltonian_adapter": {
+      "path": "dev/native_rom/reference/hamiltonian_v4_source_wheel_adapter.c",
+      "sha256": "18c115fa438a44a8b236290aab5b8f46376016adf459aa354944033c0c3dd465"
     },
     "source_high_adapter": {
       "path": "dev/native_rom/reference/full_v4_source_high_dynamics_adapter.c",

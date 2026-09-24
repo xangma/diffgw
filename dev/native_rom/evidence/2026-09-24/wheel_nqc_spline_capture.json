@@ -3,6 +3,7 @@
   "input_sha256": {
     "exact_rows": "fd9fe03219bfba479b14d1e1efc2f83e77bcd0232b07a1e3099c6e96ddd772ce",
     "exact_state_adapter": "d526a3ff6df8078428ba116e9bf09f3b8e69cc78a5cfc8873601290c527e97fa",
+    "hamiltonian_adapter": "18c115fa438a44a8b236290aab5b8f46376016adf459aa354944033c0c3dd465",
     "interposer": "64bdb2fa9147c0ccaba9e33192c3d9139ee46a2b7b0490e84d9f8f530ba45b69",
     "source_flux_plan": "1167199c8f954f97a5905a1e3b2f67d1555e984e5f1da0a0fc42a77a925f96ea",
     "source_high_adapter": "cfec235c177f9593cd394ec81dcc0971a159eea7f81932852bcaae4cadd8bd0b",
@@ -15,7 +16,7 @@
     "liblal.20.dylib": "e4c4ed42baed00d30668588e58444f974e3deeda56ba4e5978624640ddb5bde7",
     "liblalsimulation.37.dylib": "9046c4a673d2ba82b792f7b92d73203ba783b32fc604b5da1139c5c1bc8b3325"
   },
-  "plan_sha256": "877086782b2d6ff8a1817f4199dcbc45c3818e3abf86ae07f04102664007e09d",
+  "plan_sha256": "9d4398d8bcd4f75529662183b2cdb2a2b2f17c84d38b76eb109a1b38bd5fab21",
   "release_qualified": false,
   "rows": {
     "mild_mixed_spin": {
@@ -160,6 +161,18 @@
       "source_internal_control": null,
       "wheel_fit_replay_l2": 7.160723346098895e-15,
       "wheel_match_time_M": 145.0314486506888,
+      "wheel_omega_mode_control": {
+        "amplitude_minus_source_max_abs": 1.4845741302949023e-10,
+        "amplitude_minus_wheel_max_abs": 7.755485142979524e-11,
+        "amplitude_minus_wheel_rms": 2.4932888854664003e-11,
+        "amplitude_only_fit_minus_wheel_l2": 0.06177751819870898,
+        "fast_math_amplitude_minus_wheel_max_abs": 9.375489273821813e-11,
+        "fast_math_amplitude_minus_wheel_rms": 3.0050756131555825e-11,
+        "phase_minus_wheel_max_abs": 3.552713678800501e-15,
+        "sample_count": 512,
+        "source_hamiltonian_wrapper_minus_source_mode_max_abs": 8.881784197001252e-16,
+        "wheel_hamiltonian_wrapper_minus_source_mode_max_abs": 8.881784197001252e-16
+      },
       "wheel_peak_rule": {
         "first_decline_index": 256,
         "first_decline_time_M": 149.890625,
@@ -321,6 +334,18 @@
       "source_internal_control": null,
       "wheel_fit_replay_l2": 3.2171190647067566e-14,
       "wheel_match_time_M": 145.45574458660548,
+      "wheel_omega_mode_control": {
+        "amplitude_minus_source_max_abs": 1.5658480068125868e-10,
+        "amplitude_minus_wheel_max_abs": 8.377204485654488e-11,
+        "amplitude_minus_wheel_rms": 2.530833844375295e-11,
+        "amplitude_only_fit_minus_wheel_l2": 0.008510927811540774,
+        "fast_math_amplitude_minus_wheel_max_abs": 9.760320329732508e-11,
+        "fast_math_amplitude_minus_wheel_rms": 3.0459084471683807e-11,
+        "phase_minus_wheel_max_abs": 3.552713678800501e-15,
+        "sample_count": 512,
+        "source_hamiltonian_wrapper_minus_source_mode_max_abs": 0.0,
+        "wheel_hamiltonian_wrapper_minus_source_mode_max_abs": 8.881784197001252e-16
+      },
       "wheel_peak_rule": {
         "first_decline_index": 256,
         "first_decline_time_M": 149.828125,
@@ -486,6 +511,18 @@
       },
       "wheel_fit_replay_l2": 1.0012603575885306e-12,
       "wheel_match_time_M": 137.61454396452547,
+      "wheel_omega_mode_control": {
+        "amplitude_minus_source_max_abs": 1.3440193402658451e-10,
+        "amplitude_minus_wheel_max_abs": 7.962480674805761e-11,
+        "amplitude_minus_wheel_rms": 1.9833205402326526e-11,
+        "amplitude_only_fit_minus_wheel_l2": 1.2909247657957297,
+        "fast_math_amplitude_minus_wheel_max_abs": 9.468120731881413e-11,
+        "fast_math_amplitude_minus_wheel_rms": 3.1215511262063675e-11,
+        "phase_minus_wheel_max_abs": 3.552713678800501e-15,
+        "sample_count": 512,
+        "source_hamiltonian_wrapper_minus_source_mode_max_abs": 8.881784197001252e-16,
+        "wheel_hamiltonian_wrapper_minus_source_mode_max_abs": 8.881784197001252e-16
+      },
       "wheel_peak_rule": {
         "first_decline_index": 256,
         "first_decline_time_M": 149.703125,
@@ -520,6 +557,7 @@
     "production_promotion_allowed": false,
     "training_generator_qualified": false
   },
-  "script_sha256": "5bd28bb361ea7d8e600a7b64234f8b2034967792e042b6ed881c63bf29d2dc94",
-  "status": "diagnostic_complete"
+  "script_sha256": "b61b29f19fa41de0697b7d609af3f3081234450fb5a64759a8f9a5813174a22c",
+  "status": "diagnostic_complete",
+  "wheel_omega_adapter_sha256": "6b62b461fcc2f8a364ae2d2742ef542ae4a2e408e9cc0c2c6cb0c593df7038f3"
 }

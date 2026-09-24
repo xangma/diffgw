@@ -20,6 +20,7 @@ import tempfile
 import numpy as np
 
 from . import qualify_generator as q
+from .diagnose_hamiltonian_same_state import compile_adapter as compile_hamiltonian_adapter
 from .diagnose_nqc_c_same_input import bind, compile_wrapper
 from .diagnose_nqc_gsl_same_input import GSLCubic
 from .diagnose_public_nqc_mode_boundary import public_call
@@ -142,6 +143,49 @@ def main(argv: list[str] | None = None) -> int:
                 source_plan["full_generator_public_includes"],
                 require_wheel_flux=False,
             )
+            # A controlled one-call ablation: keep the source state, H, and
+            # coefficients, but feed the wheel's captured omega to cbrt(v^3).
+            omega_adapter = directory / "wheel_omega_mode_adapter.c"
+            omega_source = paths["exact_state_adapter"].read_text()
+            substitutions = (
+                ("int diffgw_v4_source_nqc_state(",
+                 "int diffgw_v4_source_nqc_state_wheel_omega("),
+                ("double r, double phi, double pr_star, double pphi, double *out) {",
+                 "double r, double phi, double pr_star, double pphi, "
+                 "double omega_override, double *out) {"),
+                ("&mode, &values, cbrt(out[0]), H, 2, 2, &params, 0)",
+                 "&mode, &values, cbrt(omega_override), H, 2, 2, &params, 0)"),
+                ("nu, &x, &p, &s1, &s2, &sk, &ss, 1, &coeffs);\n  REAL8Vector values",
+                 "nu, &x, &p, &s1, &s2, &sk, &ss, 1, &coeffs);\n"
+                 "  out[3] = H;\n  REAL8Vector values"),
+            )
+            for old, new in substitutions:
+                if omega_source.count(old) != 1:
+                    raise ValueError("Pinned explicit-state adapter changed")
+                omega_source = omega_source.replace(old, new)
+            omega_adapter.write_text(omega_source)
+            report["wheel_omega_adapter_sha256"] = q.sha256(omega_adapter)
+            omega_path = directory / "wheel_omega_mode.dylib"
+            _compile(
+                private, args.headers, args.gsl_include, libraries,
+                omega_adapter, omega_path,
+                source_plan["full_generator_source_includes"],
+                source_plan["full_generator_public_includes"],
+                require_wheel_flux=False,
+            )
+            omega_fast_path = directory / "wheel_omega_mode_fast.dylib"
+            _compile(
+                private, args.headers, args.gsl_include, libraries,
+                omega_adapter, omega_fast_path,
+                source_plan["full_generator_source_includes"],
+                source_plan["full_generator_public_includes"],
+                require_wheel_flux=False, extra_flags=("-ffast-math",),
+            )
+            hamiltonian_path = directory / "source_wheel_hamiltonian.dylib"
+            compile_hamiltonian_adapter(
+                args.headers, args.gsl_include, private / "lalsimulation/lib", libraries,
+                hamiltonian_path,
+            )
             high_path = directory / "source_high.dylib"
             _compile(
                 private, args.headers, args.gsl_include, libraries,
@@ -158,6 +202,18 @@ def main(argv: list[str] | None = None) -> int:
             exact = ctypes.CDLL(str(exact_path)).diffgw_v4_source_nqc_state
             exact.argtypes = [ctypes.c_double] * 8 + [ctypes.POINTER(ctypes.c_double)]
             exact.restype = ctypes.c_int
+            wheel_omega_mode = ctypes.CDLL(str(omega_path)).diffgw_v4_source_nqc_state_wheel_omega
+            wheel_omega_mode.argtypes = [ctypes.c_double] * 9 + [ctypes.POINTER(ctypes.c_double)]
+            wheel_omega_mode.restype = ctypes.c_int
+            wheel_omega_mode_fast = ctypes.CDLL(
+                str(omega_fast_path)).diffgw_v4_source_nqc_state_wheel_omega
+            wheel_omega_mode_fast.argtypes = wheel_omega_mode.argtypes
+            wheel_omega_mode_fast.restype = ctypes.c_int
+            source_wheel_hamiltonian = ctypes.CDLL(
+                str(hamiltonian_path)).diffgw_v4_hamiltonian_same_state
+            source_wheel_hamiltonian.argtypes = [
+                ctypes.c_double] * 7 + [ctypes.POINTER(ctypes.c_double)]
+            source_wheel_hamiltonian.restype = ctypes.c_int
             compiler_adapters = {"-O2": exact}
             for label, optimization, flags in (
                 ("-O0", "-O0", ()),
@@ -259,7 +315,7 @@ def main(argv: list[str] | None = None) -> int:
                 wheel_l2 = float(np.linalg.norm(wheel_fit - reported))
                 if wheel_l2 > 1e-6:
                     raise ValueError(f"Captured wheel NQC fit does not replay: {name}, {wheel_l2}")
-                values = (ctypes.c_double * 3)()
+                values = (ctypes.c_double * 4)()
                 raw_mode = np.empty(high.shape[1], dtype=np.complex128)
                 source_omega = np.empty(high.shape[1], dtype=np.float64)
                 for index in range(high.shape[1]):
@@ -272,6 +328,26 @@ def main(argv: list[str] | None = None) -> int:
                 source_inputs = {
                     "omega": source_omega, "amp": abs(raw_mode), "phase": source_phase,
                 }
+                wheel_omega_raw_mode = np.empty(high.shape[1], dtype=np.complex128)
+                wheel_omega_fast_mode_amplitude = np.empty(high.shape[1], dtype=np.float64)
+                wheel_omega_source_frequency = np.empty(high.shape[1], dtype=np.float64)
+                wheel_omega_source_hamiltonian = np.empty(high.shape[1], dtype=np.float64)
+                for index in range(high.shape[1]):
+                    if wheel_omega_mode(*masses, *high[1:, index], float(omega[index]), values):
+                        raise RuntimeError(f"Wheel-omega source mode failed: {name}/{index}")
+                    wheel_omega_source_frequency[index] = values[0]
+                    wheel_omega_raw_mode[index] = complex(values[1], values[2])
+                    wheel_omega_source_hamiltonian[index] = values[3]
+                    if wheel_omega_mode_fast(*masses, *high[1:, index],
+                                             float(omega[index]), values):
+                        raise RuntimeError(f"Fast wheel-omega mode failed: {name}/{index}")
+                    wheel_omega_fast_mode_amplitude[index] = abs(
+                        complex(values[1], values[2]))
+                if np.max(abs(wheel_omega_source_frequency - source_omega)) > 1e-14:
+                    raise ValueError(f"Wheel-omega ablation changed source frequency: {name}")
+                wheel_omega_mode_amplitude = abs(wheel_omega_raw_mode)
+                wheel_omega_mode_phase = np.unwrap(np.angle(wheel_omega_raw_mode))
+                wheel_omega_mode_phase += phase[0] - wheel_omega_mode_phase[0]
                 source_internal_control = None
                 if name == "strong_aligned_spin":
                     with np.load(paths["source_nqc_inputs"]) as source_npz:
@@ -322,6 +398,48 @@ def main(argv: list[str] | None = None) -> int:
                         "minus_wheel_reported_l2": float(np.linalg.norm(coefficients - reported)),
                     }
                 near = abs(axis - match) <= plan["local_half_width_M"]
+                total_mass = masses[0] + masses[1]
+                x1, x2 = masses[0] / total_mass, masses[1] / total_mass
+                nu = x1 * x2
+                hamiltonian_comparison = np.empty((int(np.count_nonzero(near)), 2))
+                hamiltonian_values = (ctypes.c_double * 5)()
+                for offset, index in enumerate(np.flatnonzero(near)):
+                    rc = source_wheel_hamiltonian(
+                        x1, x2, masses[2], masses[3],
+                        float(high[1, index]), float(high[3, index]),
+                        float(high[4, index]), hamiltonian_values,
+                    )
+                    if rc:
+                        raise RuntimeError(f"Wheel Hamiltonian control failed: {name}/{index}/{rc}")
+                    source_mode_h_over_nu = wheel_omega_source_hamiltonian[index] / nu
+                    hamiltonian_comparison[offset] = (
+                        hamiltonian_values[0] - source_mode_h_over_nu,
+                        hamiltonian_values[1] - source_mode_h_over_nu,
+                    )
+                wheel_omega_amplitude_fit = fit({
+                    "omega": omega, "amp": wheel_omega_mode_amplitude, "phase": phase,
+                })
+                wheel_omega_mode_control = {
+                    "sample_count": int(np.count_nonzero(near)),
+                    "amplitude_minus_source_max_abs": float(np.max(abs(
+                        wheel_omega_mode_amplitude[near] - source_inputs["amp"][near]))),
+                    "amplitude_minus_wheel_max_abs": float(np.max(abs(
+                        wheel_omega_mode_amplitude[near] - amp[near]))),
+                    "amplitude_minus_wheel_rms": float(np.sqrt(np.mean(np.square(
+                        wheel_omega_mode_amplitude[near] - amp[near])))),
+                    "fast_math_amplitude_minus_wheel_max_abs": float(np.max(abs(
+                        wheel_omega_fast_mode_amplitude[near] - amp[near]))),
+                    "fast_math_amplitude_minus_wheel_rms": float(np.sqrt(np.mean(np.square(
+                        wheel_omega_fast_mode_amplitude[near] - amp[near])))),
+                    "phase_minus_wheel_max_abs": float(np.max(abs(
+                        wheel_omega_mode_phase[near] - phase[near]))),
+                    "amplitude_only_fit_minus_wheel_l2": float(np.linalg.norm(
+                        wheel_omega_amplitude_fit - reported)),
+                    "source_hamiltonian_wrapper_minus_source_mode_max_abs": float(
+                        np.max(abs(hamiltonian_comparison[:, 0]))),
+                    "wheel_hamiltonian_wrapper_minus_source_mode_max_abs": float(
+                        np.max(abs(hamiltonian_comparison[:, 1]))),
+                }
                 compiler_controls = {}
                 near_indices = np.flatnonzero(near)
                 for label in plan["compiler_controls"]:
@@ -363,6 +481,7 @@ def main(argv: list[str] | None = None) -> int:
                         for key in wheel_inputs
                     },
                     "source_internal_control": source_internal_control,
+                    "wheel_omega_mode_control": wheel_omega_mode_control,
                     "compiler_controls": compiler_controls,
                     "fit_ablations": variants,
                 }

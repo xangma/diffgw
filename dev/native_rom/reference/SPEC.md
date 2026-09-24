@@ -587,7 +587,12 @@ replays its private NQC fit within `1.01e-12` coefficient L2 on three rows,
 while an exact pinned-source adapter reproduces its own generator inputs.
 The wheel's pre-NQC amplitude samples differ from source evaluation on the
 same states by at most `1.61e-10` around matching and account for most of the
-remaining coefficient gap. The source-versus-wheel numerical origin and an
+remaining coefficient gap. Feeding the wheel's captured orbital frequency to
+the source mode closes the same-state phase difference to `3.55e-15`; the
+amplitude still differs by up to `8.38e-11`. Source and pinned-wheel
+Hamiltonian-wrapper values agree with the source mode's Hamiltonian to
+`8.88e-16` in `H/nu` on the same matching-window states; the wheel generator's
+private argument was not captured. The residual numerical origin and an
 independent, validated NQC rule remain unresolved.
 
 ### Promotion blockers
