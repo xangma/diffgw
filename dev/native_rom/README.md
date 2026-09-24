@@ -883,14 +883,17 @@ and [Pürrer (2016)](https://doi.org/10.1103/PhysRevD.93.064041).
 describes the SEOBNRv4 ROM construction and its parameter patches. Independently
 trained tables would define our own approximation to a qualified source model;
 they would not become the authors' official ROM tables.
-The [in-memory reduced interpolant](rom/reduced_interpolant.py) now implements
-SVD compression and three-parameter Chebyshev-Lobatto interpolation of supplied,
-preconditioned log-amplitude and phase arrays, with analytic parameter
-derivatives. Independent analytic off-grid and boundary holdouts check the
-algebra; [Torch/JAX evaluators](rom/backend_evaluation.py) agree with the NumPy
-result and its parameter derivatives, including at interpolation nodes. It
-accepts no physical generator, writes no asset, and does not
-establish a parameter grid, phase gauge, waveform fidelity, or ROM qualification.
+The [in-memory reduced interpolant](rom/reduced_interpolant.py) implements
+SVD compression and three-parameter Chebyshev-Lobatto interpolation of supplied
+log-amplitude and phase arrays, with analytic parameter derivatives. A
+[conditioning step](rom/conditioning.py) removes phase and time gauge at a fixed
+reference frequency; its gauge invariance and a withheld complex-waveform row
+pass analytic tests. [Torch/JAX evaluators](rom/backend_evaluation.py) agree
+with the NumPy result and its parameter derivatives, including at interpolation
+nodes. This algebra accepts no physical generator and writes no asset. The
+frequency resolution needed for reliable phase unwrapping, parameter and
+frequency grids, patch boundaries, source-model fidelity, and ROM holdouts are
+still unqualified.
 The archived trainer remains separate because its generator is unqualified.
 
 1. Qualify the physical generator against the published equations and independent
