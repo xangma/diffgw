@@ -887,7 +887,9 @@ The [in-memory reduced interpolant](rom/reduced_interpolant.py) now implements
 SVD compression and three-parameter Chebyshev-Lobatto interpolation of supplied,
 preconditioned log-amplitude and phase arrays, with analytic parameter
 derivatives. Independent analytic off-grid and boundary holdouts check the
-algebra. It accepts no physical generator, writes no asset, and does not
+algebra; [Torch/JAX evaluators](rom/backend_evaluation.py) agree with the NumPy
+result and its parameter derivatives, including at interpolation nodes. It
+accepts no physical generator, writes no asset, and does not
 establish a parameter grid, phase gauge, waveform fidelity, or ROM qualification.
 The archived trainer remains separate because its generator is unqualified.
 

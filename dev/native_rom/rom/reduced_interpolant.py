@@ -30,8 +30,9 @@ def _basis_and_derivative(nodes, query):
     weights = (-1.) ** np.arange(nodes.size)
     weights[[0, -1]] *= .5
     difference = query[..., None] - nodes
-    exact = difference == 0
-    safe = np.where(exact, 1., difference)
+    near_node = abs(difference) <= 8 * np.finfo(np.float64).eps * np.maximum(
+        1., abs(nodes))
+    safe = np.where(near_node, 1., difference)
     ratios = weights / safe
     cardinal = ratios / np.sum(ratios, axis=-1, keepdims=True)
     log_derivative = np.sum(cardinal / safe, axis=-1, keepdims=True)
@@ -39,8 +40,8 @@ def _basis_and_derivative(nodes, query):
 
     # At a node, use the spectral differentiation matrix row instead of a
     # cancellation-prone limit of the barycentric formula.
-    at_node = np.any(exact, axis=-1)
-    index = np.argmax(exact, axis=-1)
+    at_node = np.any(near_node, axis=-1)
+    index = np.argmax(near_node, axis=-1)
     node_difference = nodes[index, None] - nodes
     self_node = np.arange(nodes.size) == index[..., None]
     node_safe = np.where(self_node, 1., node_difference)
@@ -48,7 +49,9 @@ def _basis_and_derivative(nodes, query):
     node_derivative = np.where(self_node, 0., node_derivative)
     node_derivative = np.where(
         self_node, -np.sum(node_derivative, axis=-1, keepdims=True), node_derivative)
-    cardinal = np.where(at_node[..., None], exact.astype(np.float64), cardinal)
+    node_cardinal = self_node.astype(np.float64) + (
+        query - nodes[index])[..., None] * node_derivative
+    cardinal = np.where(at_node[..., None], node_cardinal, cardinal)
     derivative = np.where(at_node[..., None], node_derivative, derivative)
     return cardinal, derivative
 
