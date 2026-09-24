@@ -1,0 +1,85 @@
+{
+  "schema": "diffgw.seobnrv4.sxs-2123-optimized-diagnostic.v1",
+  "plan_sha256": "1e502717993981a96d4232049ad0ef6f9da18f89dd8108bfa111068602cecb84",
+  "optimized_plan_sha256": "17c2b1554ad953b90deab77795dfab63d7154066f72044b8f389a8bf8be18d3f",
+  "primary_comparison_sha256": "3b16faf2f9936989417594a791c2560fb74a28d2ccf2e814c53de0e60d2b5ad0",
+  "public_control_sha256": "3d930c119c4bb5a4713376e68e84e86e401529a1f09142817829ad123606cc7a",
+  "script_sha256": "ef7e53f8b640b31f7161a7e09b412b356e35169675d23870b5a6cebc7f58b92b",
+  "pairs": {
+    "native_vs_Lev4": {
+      "window_relative_to_reference_peak_M": [
+        -200.0,
+        100.0
+      ],
+      "samples": 1200,
+      "fixed_anchor_overlap": 0.9582211160550242,
+      "optimized_overlap": 0.9999468173180516,
+      "best_lag_M": -2.421765270311914,
+      "best_phase_rad": -0.26054760495379425,
+      "time_phase_adjusted_metrics": {
+        "samples": 1200,
+        "phase_samples": 1200,
+        "complex_relative_l2": 0.010593091630581825,
+        "amplitude_relative_l2": 0.003395587844400589,
+        "relative_norm_error": 0.0023657126844531806,
+        "phase_rms_rad": 0.04780961153200436,
+        "phase_max_abs_rad": 0.40590479934333795,
+        "unmaximized_real_overlap": 0.999946817318051
+      },
+      "grid_search_max_overlap": 0.9999024077069217,
+      "time_phase_optimized": true,
+      "amplitude_optimized": false
+    },
+    "public_vs_Lev4": {
+      "window_relative_to_reference_peak_M": [
+        -200.0,
+        100.0
+      ],
+      "samples": 1200,
+      "fixed_anchor_overlap": 0.9524738530350757,
+      "optimized_overlap": 0.9999533212747415,
+      "best_lag_M": -2.5893699072037957,
+      "best_phase_rad": -0.2732770162422115,
+      "time_phase_adjusted_metrics": {
+        "samples": 1200,
+        "phase_samples": 1200,
+        "complex_relative_l2": 0.00984702557630186,
+        "amplitude_relative_l2": 0.0033138594619913087,
+        "relative_norm_error": 0.0018529636323465493,
+        "phase_rms_rad": 0.04857183630719086,
+        "phase_max_abs_rad": 0.4113732628173799,
+        "unmaximized_real_overlap": 0.9999533212747418
+      },
+      "grid_search_max_overlap": 0.999895384091581,
+      "time_phase_optimized": true,
+      "amplitude_optimized": false
+    },
+    "Lev3_vs_Lev4": {
+      "window_relative_to_reference_peak_M": [
+        -200.0,
+        100.0
+      ],
+      "samples": 1200,
+      "fixed_anchor_overlap": 0.9999927580078469,
+      "optimized_overlap": 0.9999999653295232,
+      "best_lag_M": 0.03137363461373165,
+      "best_phase_rad": 0.00367859875655829,
+      "time_phase_adjusted_metrics": {
+        "samples": 1200,
+        "phase_samples": 1200,
+        "complex_relative_l2": 0.00027096115902543877,
+        "amplitude_relative_l2": 0.00011890643913812273,
+        "relative_norm_error": 6.390169542624946e-05,
+        "phase_rms_rad": 0.006086549106354298,
+        "phase_max_abs_rad": 0.07129131212318732,
+        "unmaximized_real_overlap": 0.999999965329523
+      },
+      "grid_search_max_overlap": 0.9999927580078469,
+      "time_phase_optimized": true,
+      "amplitude_optimized": false
+    }
+  },
+  "detector_noise_weighted": false,
+  "release_qualified": false,
+  "interpretation": "This is a post-hoc, unweighted single-row alignment diagnostic. It is not the published detector-weighted faithfulness or a physical-validation gate."
+}

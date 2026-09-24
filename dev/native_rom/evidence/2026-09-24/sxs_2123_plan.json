@@ -1,0 +1,58 @@
+{
+  "schema": "diffgw.seobnrv4.sxs-2123-plan.v1",
+  "purpose": "Development-only independent physical comparison of the native (2,2) mode with a post-SEOBNRv4 SXS simulation; not a release holdout or ROM training input.",
+  "catalog": {
+    "url": "https://raw.githubusercontent.com/sxs-collaboration/sxscatalogdata/v3.0.0/simulations.json",
+    "sha256": "132d38520b3562c8f254b3c9aaf8efd4678428f94dbbabfef4436bc50c1c87c6",
+    "simulation": "SXS:BBH:2123",
+    "run_date_earliest": "2018-11-28T12:17:41",
+    "reference_eccentricity": 0.0002914,
+    "waveforms": {
+      "Lev3:Strain_N2.h5": {
+        "md5": "c4e2d91416044fe712a4b4ed9dc492f0",
+        "url": "https://data.caltech.edu/api/records/35m30-4at22/files/Lev3%3AStrain_N2.h5/content"
+      },
+      "Lev3:Strain_N2.json": {
+        "md5": "4fc95a818d81e80311865f20f24a602e",
+        "url": "https://data.caltech.edu/api/records/35m30-4at22/files/Lev3%3AStrain_N2.json/content"
+      },
+      "Lev3:metadata.json": {
+        "md5": "ead1d7dc9b0366d179a1b074c7ae5cfe",
+        "url": "https://data.caltech.edu/api/records/35m30-4at22/files/Lev3%3Ametadata.json/content"
+      },
+      "Lev4:Strain_N2.h5": {
+        "md5": "673215ea723b876b23a0426bbd636004",
+        "url": "https://data.caltech.edu/api/records/35m30-4at22/files/Lev4%3AStrain_N2.h5/content"
+      },
+      "Lev4:Strain_N2.json": {
+        "md5": "5605f124d2e3e3538ec4a392c215ad5b",
+        "url": "https://data.caltech.edu/api/records/35m30-4at22/files/Lev4%3AStrain_N2.json/content"
+      },
+      "Lev4:metadata.json": {
+        "md5": "04e85b3e5c56b3f3d7c15a5129b1e4b8",
+        "url": "https://data.caltech.edu/api/records/35m30-4at22/files/Lev4%3Ametadata.json/content"
+      }
+    }
+  },
+  "row": {
+    "mass1": 0.6666461909340252,
+    "mass2": 0.3333351320337304,
+    "chi1": 0.3000576923564852,
+    "chi2": -0.3000476691830762,
+    "omega_start": 0.04
+  },
+  "method": {
+    "mode": "complex strain h_22 in dimensionless r h/M convention",
+    "grid_step_M": 0.25,
+    "native_atol": 1e-11,
+    "native_rtol": 1e-10,
+    "alignment": "For each pair, find the first positive-frequency crossing of M omega_22=0.09 after junk radiation. Define that crossing as t=0 and rotate each complex mode to zero phase there. Do not optimize time, phase, amplitude, or physical parameters against the residual.",
+    "windows_relative_to_Lev4_amplitude_peak_M": {
+      "inspiral": [-1000, -100],
+      "late_inspiral": [-100, 0],
+      "post_peak": [0, 100]
+    },
+    "checks": "Compare native versus Lev4 and Lev3 versus Lev4 with identical alignment and interpolation; report complex, amplitude, and phase residuals only on common support. Include native self-grid check if an existing matching row is unavailable. A post-hoc reference comparison cannot be called a holdout."
+  },
+  "qualification_claim": false
+}

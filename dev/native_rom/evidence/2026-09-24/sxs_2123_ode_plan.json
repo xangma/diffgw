@@ -1,0 +1,18 @@
+{
+  "schema": "diffgw.seobnrv4.sxs-2123-ode-plan.v1",
+  "purpose": "Post-hoc numerical tolerance refinement of the SXS:BBH:2123 native diagnostic. This tests stability, not physical accuracy or release qualification.",
+  "primary_comparison_sha256": "3b16faf2f9936989417594a791c2560fb74a28d2ccf2e814c53de0e60d2b5ad0",
+  "levels": [
+    {"name": "baseline", "atol": 1e-11, "rtol": 1e-10, "dt_geom": 0.25},
+    {"name": "refined", "atol": 1e-12, "rtol": 1e-11, "dt_geom": 0.25},
+    {"name": "strict", "atol": 1e-13, "rtol": 1e-12, "dt_geom": 0.25}
+  ],
+  "stability_budget": {
+    "strict_vs_refined_complex_relative_l2_max": 1e-6,
+    "strict_vs_refined_amplitude_relative_l2_max": 1e-6,
+    "strict_vs_refined_event_time_difference_M_max": 0.05,
+    "error_decreases_allowing_roundoff": 1e-12
+  },
+  "checks": "Replay the primary native array hash at baseline; use direct complex waveforms on the same output grid without alignment or fit. Evaluate refined-to-strict against the stated budget and require complex L2 to decrease from baseline-to-refined, allowing 1e-12 roundoff.",
+  "qualification_claim": false
+}

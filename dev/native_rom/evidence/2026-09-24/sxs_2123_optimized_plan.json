@@ -1,0 +1,22 @@
+{
+  "schema": "diffgw.seobnrv4.sxs-2123-optimized-plan.v1",
+  "purpose": "Post-hoc secondary diagnostic after fixed-frequency-anchor native, public, and NR comparisons. Quantify how much of their complex residual is removable by one global time and phase shift. This is an unweighted time-domain statistic, not the paper's detector-noise-weighted faithfulness or a release holdout.",
+  "primary_comparison_sha256": "3b16faf2f9936989417594a791c2560fb74a28d2ccf2e814c53de0e60d2b5ad0",
+  "public_control_sha256": "3d930c119c4bb5a4713376e68e84e86e401529a1f09142817829ad123606cc7a",
+  "window_relative_to_Lev4_amplitude_peak_M": [
+    -200.0,
+    100.0
+  ],
+  "grid_step_M": 0.25,
+  "allowed_time_shift_M": [
+    -10.0,
+    10.0
+  ],
+  "phase": "One constant complex rotation chosen analytically after the time shift; no amplitude or intrinsic-parameter optimization.",
+  "pairs": [
+    "native_vs_Lev4",
+    "public_vs_Lev4",
+    "Lev3_vs_Lev4"
+  ],
+  "qualification_claim": false
+}

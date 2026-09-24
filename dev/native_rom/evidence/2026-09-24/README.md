@@ -1765,6 +1765,65 @@ dev.native_rom.diagnose_source_q2_domain_probe --source-root
 /usr/local/include --json-out /tmp/source_q2_domain_probe.json` in the
 pinned development environment.
 
+The [SXS:BBH:2123 physical-comparison plan](sxs_2123_plan.json) pins the
+[SXS catalog v3.0.0](https://github.com/sxs-collaboration/sxscatalogdata/tree/v3.0.0),
+the late-2018 q≈2, spin `(+0.30006,-0.30005)` configuration, and the
+checksums of its Lev3/Lev4 N2 strain and sidecar files. The checked SXS
+`(2,2)` modes were decoded with `sxs==2026.0.5` in an isolated environment;
+no NR arrays or author ROM tables enter the package. The
+[fixed-frequency result](sxs_2123_comparison.json) aligns each waveform at
+its first inspiral `M omega_22=0.09` crossing and removes only its phase
+there. Native-versus-Lev4 complex relative L2 over common support is
+`0.32436`; Lev3-versus-Lev4 is `0.004160` when restricted to that same
+support. The native `0.25 M`/`0.125 M` direct nested-grid difference is
+`3.45e-8`. The large NR residual is concentrated after early inspiral and
+is not an output-grid error. Its fixed-anchor timing convention is stricter
+than the time/phase-maximized, detector-weighted faithfulness in the
+[SEOBNRv4 paper](https://arxiv.org/html/1611.03703).
+
+The explicitly post-hoc [public-model control](sxs_2123_public_control_plan.json)
+and [result](sxs_2123_public_control.json) use the same SXS row and
+alignment: public SEOBNRv4 versus Lev4 is `0.34783` complex relative L2;
+native versus public is `0.02641`. The public model's amplitude peak is
+`2.61 M` before Lev4's after the frequency anchor, versus `2.30 M` for
+native. A subsequent [post-hoc alignment plan](sxs_2123_optimized_plan.json)
+and [result](sxs_2123_optimized.json) compare the shared `[-200,100] M`
+interval around the Lev4 amplitude peak, allowing one global time shift in
+`[-10,10] M` and one phase rotation. Unweighted overlaps are `0.9999468`
+(native/Lev4), `0.9999533` (public/Lev4), and `0.999999965` (Lev3/Lev4).
+These are **not** detector-noise-weighted faithfulness values, domain-wide
+physical validation, or an untouched release holdout. The native/public
+and NR-resolution differences remain material for a release budget; no
+native generator or ROM promotion follows.
+
+The post-hoc [ODE plan](sxs_2123_ode_plan.json) and [result](sxs_2123_ode.json)
+replay the fixed-grid native mode hash, then tighten `(atol,rtol)` through
+`(1e-12,1e-11)` and `(1e-13,1e-12)`. Direct complex relative L2 decreases
+from `3.70e-4` to `1.32e-4`, but misses the frozen `1e-6` numerical
+budget. The subsequent [extension plan](sxs_2123_ode_extension_plan.json)
+and [result](sxs_2123_ode_extension.json) replay the strict mode hash and
+tighten through `(1e-14,1e-13)` and `(1e-15,1e-14)`. The consecutive
+differences fall from `4.99e-5` to `1.29e-5`; the latter still fails the
+same complex-mode budget, though its amplitude error is `2.12e-7` and the
+peak, match, and attachment times agree on the output grid. In the last
+comparison, `72.4%` of squared complex error lies in the last `100 M`
+before peak, `23.4%` after peak, and `4.1%` earlier. This is largely a
+phase-stability issue, not a demonstrated physical modeling error or a
+reason to relax the gate. Reproduce with `PYTHONPATH=src:. python -m
+dev.native_rom.diagnose_sxs_2123_ode` and then
+`dev.native_rom.diagnose_sxs_2123_ode_extension` using the linked plans,
+the primary comparison result, and the pinned development environment.
+
+To reproduce, download the six archive files and sidecars listed in the
+plan into `/tmp/diffgw-sxs-2123/Lev{3,4}/`, preserving each file's base
+name. Run `PYTHONPATH=src:. python -m dev.native_rom.extract_sxs_2123
+--plan dev/native_rom/evidence/2026-09-24/sxs_2123_plan.json --archive-dir
+/tmp/diffgw-sxs-2123 --output-dir /tmp/diffgw-sxs-2123` with
+`sxs==2026.0.5`, then run `compare_sxs_2123`,
+`compare_sxs_2123_public_control`, and `optimize_sxs_2123_alignment` with
+their corresponding plan files under the pinned diffGW development
+environment. Each result records input and script hashes.
+
 The [q2 ODE-refinement plan](source_q2_ode_refinement_plan.json) and
 [result](source_q2_ode_refinement.json) replay that exact native mode hash,
 then tighten `atol,rtol` from `(3e-15,3e-14)` to `(1e-15,1e-14)` at the same

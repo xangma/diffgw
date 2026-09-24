@@ -1,0 +1,18 @@
+{
+  "schema": "diffgw.seobnrv4.sxs-2123-ode-extension-plan.v1",
+  "purpose": "Post-hoc extension after the first SXS-row ODE tolerance budget failed. Test whether further tightening decreases the direct complex mode error below the same numerical threshold; the comparison is not a physical or ROM release gate.",
+  "prior_ode_sha256": "56263f49a4a1dc92c9abd1beaa63e4731f377fd24f0e275e70eb29c062f63f92",
+  "levels": [
+    {"name": "strict_replay", "atol": 1e-13, "rtol": 1e-12, "dt_geom": 0.25},
+    {"name": "tighter", "atol": 1e-14, "rtol": 1e-13, "dt_geom": 0.25},
+    {"name": "tightest", "atol": 1e-15, "rtol": 1e-14, "dt_geom": 0.25}
+  ],
+  "stability_budget": {
+    "tightest_vs_tighter_complex_relative_l2_max": 1e-6,
+    "tightest_vs_tighter_amplitude_relative_l2_max": 1e-6,
+    "tightest_vs_tighter_event_time_difference_M_max": 0.05,
+    "error_decreases_allowing_roundoff": 1e-12
+  },
+  "checks": "Replay the prior strict waveform hash; compare direct complex modes on the same output grid without alignment or fit; report regional contributions at fixed windows relative to the prior amplitude peak and the NQC coefficients and attachment boundary.",
+  "qualification_claim": false
+}

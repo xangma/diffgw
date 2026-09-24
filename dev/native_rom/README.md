@@ -652,6 +652,24 @@ internal consistency on one q8 row; they do not qualify the generator or ROM.
 
 ## Remaining promotion stages
 
+A first independent [SXS:BBH:2123 comparison](evidence/2026-09-24/sxs_2123_plan.json)
+uses archived Lev3/Lev4 `(2,2)` strain, an explicit frequency-crossing
+alignment, and a native output-grid control. On the shared native support,
+the fixed-anchor native/Lev4 complex relative L2 is `0.32436`, while the
+Lev3/Lev4 control is `0.004160`; the native `0.25 M`/`0.125 M` difference
+is `3.45e-8`. Under a separate post-hoc single time/phase adjustment on
+the common `[-200,100] M` peak window, unweighted native/Lev4 overlap is
+`0.9999468`, versus `0.9999533` for the pinned public model and
+`0.999999965` between NR resolutions. The high optimized overlap is a
+single-row diagnostic, not detector-noise-weighted faithfulness or a
+release holdout. A separately frozen [ODE tolerance study](evidence/2026-09-24/sxs_2123_ode_plan.json)
+and [extension](evidence/2026-09-24/sxs_2123_ode_extension_plan.json)
+reduce the direct waveform difference to `1.29e-5`, still above the
+predeclared `1e-6` numerical budget. See the
+[evidence narrative](evidence/2026-09-24/README.md) for checksums,
+conventions, and replay commands. The numerical, physical-domain,
+provenance, cross-backend, and independent-ROM gates below remain open.
+
 The independent ROM construction follows the published reduced-basis and
 parameter-interpolation methods of [Pürrer (2014)](https://doi.org/10.1088/0264-9381/31/19/195010)
 and [Pürrer (2016)](https://doi.org/10.1103/PhysRevD.93.064041).
