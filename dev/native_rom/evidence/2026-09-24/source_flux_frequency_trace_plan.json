@@ -1,0 +1,20 @@
+{
+  "schema": "diffgw.seobnrv4.source-flux-frequency-trace-plan.v1",
+  "purpose": "Localize accumulated inspiral trajectory and phase differences underlying the remaining fitted strong aligned-spin whole-waveform residual after source-backed flux placement.",
+  "source_flux_waveform": "dev/native_rom/evidence/2026-09-24/source_flux_whole_waveform.json",
+  "source_flux_waveform_sha256": "7493f5f3dbc6a425635103b0745fad78885d3df35f21678baf6fbc1fc7b3a2a7",
+  "public_field": "dev/native_rom/evidence/2026-09-24/strong_spin_inspiral_field.json",
+  "public_field_sha256": "4385081fde4f37c2a220cf4c716a3ae98c8d05e8427df78a7615e2dca98e9156",
+  "pre_nqc_mode": "dev/native_rom/evidence/2026-09-24/public_pre_nqc_mode.json",
+  "pre_nqc_mode_sha256": "a4ef5af52c25332e534f78532be7152d2af6009fe6c384d5d710abaccd876474",
+  "row_name": "strong_aligned_spin",
+  "native_level": "ode_2",
+  "public_output_steps_M": [0.125, 0.0625],
+  "orbital_frequencies_Momega": [0.0425, 0.045, 0.05, 0.06, 0.07, 0.08, 0.1, 0.12, 0.13],
+  "phase_anchor_Momega": 0.0425,
+  "mode_comparison_frequencies_Momega": [0.07, 0.08, 0.1, 0.12, 0.13],
+  "public_frequency_method": "Five-point centered derivative of public low-rate orbital phase, then linear crossing interpolation of time and state. Public phase is reported relative to the first frequency point.",
+  "native_frequency_method": "Existing source-flux waveform trajectory frequency and state, linearly interpolated at the same frequency crossings. Exact waveform time/mode hashes must replay the frozen source-flux run.",
+  "mode_method": "Compare the source-flux native raw pre-NQC amplitude and raw mode phase derivative on its fine trajectory with the previously frozen public raw-mode reconstruction at the same frequencies. The public mode mapping has known one-sample uncertainty; this check is contextual, not an exact decomposition of waveform L2.",
+  "release_qualified": false
+}

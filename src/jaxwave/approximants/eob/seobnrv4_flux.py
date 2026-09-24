@@ -402,6 +402,78 @@ class SEOBNRv4PublishedFlux:
         signed = self._signed_amplitudes(state, **quantities)
         return emitted_flux_from_modes(quantities["omega"], signed)
 
+    @staticmethod
+    def from_hamiltonian(state, hamiltonian, *, omega=None):
+        """Supply same-state Hamiltonian energies and orbital frequencies.
+
+        The zero-radial frequency holds radius and angular momentum fixed.
+        The local p_phi derivative uses H_eff/mu divided by H_real/M, as in
+        the conservative EOM. A summed autodiff objective gives elementwise
+        angular partials for parameter batches and trailing trajectory axes.
+        """
+        state = jnp.asarray(state)
+        if state.ndim == 0 or state.shape[-1] != 4:
+            raise ValueError("state must have trailing dimension (r,phi,pr_star,pphi)")
+        if state.dtype not in (jnp.float32, jnp.float64):
+            raise TypeError("state must have float32 or float64 dtype")
+        r, pr_star, pphi = state[..., 0], state[..., 2], state[..., 3]
+        heff = hamiltonian.effective_hamiltonian(r, pr_star, pphi)
+        if heff.shape != pphi.shape:
+            raise ValueError("state batch dimensions must include Hamiltonian parameter batches")
+
+        def frequency(radial_momentum):
+            effective = hamiltonian.effective_hamiltonian(r, radial_momentum, pphi)
+            angular_partial = jax.grad(lambda angular_momentum: jnp.sum(
+                hamiltonian.effective_hamiltonian(r, radial_momentum, angular_momentum)
+            ))(pphi)
+            return angular_partial/hamiltonian.real_hamiltonian_from_eff(effective)
+
+        if omega is None:
+            omega = frequency(pr_star)
+        raw_omega = jnp.asarray(omega)
+        if raw_omega.dtype.kind not in "iuf":
+            raise TypeError("omega must have a real numeric dtype")
+        try:
+            omega = jnp.broadcast_to(jnp.asarray(raw_omega, dtype=state.dtype), heff.shape)
+        except ValueError as exc:
+            raise ValueError("omega must broadcast to state batch dimensions") from exc
+        omega_zero_radial = frequency(jnp.zeros_like(pr_star))
+
+        def parameter(value):
+            value = jnp.asarray(value, dtype=state.dtype)
+            while value.ndim < heff.ndim:
+                value = value[..., None]
+            return value
+
+        return dict(omega=omega,
+                    omega_zero_radial=jnp.asarray(omega_zero_radial, dtype=state.dtype),
+                    heff_over_mu=jnp.asarray(heff, dtype=state.dtype),
+                    hreal_over_M=jnp.asarray(hamiltonian.real_hamiltonian_from_eff(heff),
+                                             dtype=state.dtype),
+                    x1=parameter(hamiltonian.m1), x2=parameter(hamiltonian.m2),
+                    chi1=parameter(hamiltonian.chi1), chi2=parameter(hamiltonian.chi2))
+
+    def radiation_reaction_forces(self, omega, pr_star, pphi, *, r, hamiltonian):
+        """Return reduced-mass (F_r_star,F_phi), with F_phi=-flux/(nu omega).
+
+        The supplied orbital frequency must be finite and positive.
+        """
+        dtype = jnp.result_type(r, pr_star, pphi)
+        if dtype not in (jnp.float32, jnp.float64):
+            raise TypeError("r, pr_star, and pphi must have a real floating dtype")
+        r, pr_star, pphi = jnp.broadcast_arrays(
+            jnp.asarray(r, dtype=dtype), jnp.asarray(pr_star, dtype=dtype),
+            jnp.asarray(pphi, dtype=dtype))
+        state = jnp.stack((r, jnp.zeros_like(r), pr_star, pphi), axis=-1)
+        args = self.from_hamiltonian(state, hamiltonian, omega=omega)
+        nu = args["x1"]*args["x2"]
+        valid = (nu > 0) & (pphi > 0) & jnp.isfinite(args["omega"]) & (args["omega"] > 0)
+        if not isinstance(valid, jax.core.Tracer) and not bool(jnp.all(valid)):
+            raise ValueError("Reduced-mass radiation reaction requires nu>0, p_phi>0, and finite omega>0")
+        flux = self.energy_flux(state, **args)
+        torque = jnp.where(valid, -flux/(nu*args["omega"]), jnp.nan)
+        return pr_star/pphi*torque, torque
+
     def __call__(self, state, **quantities):
         return self.energy_flux(state, **quantities)
 

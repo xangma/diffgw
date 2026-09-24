@@ -1,0 +1,30 @@
+{
+  "schema": "diffgw.seobnrv4.hamiltonian-component-capability-plan.v1",
+  "purpose": "Test whether the pinned compiled lalsimulation wheel exposes a justified SEOBNRv4 aligned-Hamiltonian component oracle at frozen public states. This is a development-only capability check, not a parity claim.",
+  "pinned_source": {
+    "tag": "lalsimulation-v6.2.1",
+    "tag_object": "5154f04e470d1cc48d6f61193af728b5692474ab",
+    "peeled_commit": "a3bc6b5eba1e9e1489616bc5d447a122e492a0d0",
+    "files_sha256": {
+      "lalsimulation/lib/LALSimIMRSpinEOBHamiltonian.c": "629ea1690bb0c7fd913dd39f17299f8412aafd30519293af8d0526b42dab90dc",
+      "lalsimulation/lib/LALSimIMRSpinEOB.h": "700804fad22264c9ae669f4495c56efcc512f602a0d944d77bc8239d5bfb990c",
+      "lalsimulation/lib/LALSimInspiralEOBPostAdiabatic.h": "55aaf7495b952fc34072ae575ab9ba295fc28a8cf62291ae1230c83b04ae7737"
+    }
+  },
+  "pinned_wheel": {
+    "lal_version": "7.7.1",
+    "lalsuite_distribution": "7.26.15",
+    "lalsimulation_version": "6.2.1",
+    "liblalsimulation_sha256": "9046c4a673d2ba82b792f7b92d73203ba783b32fc604b5da1139c5c1bc8b3325",
+    "python_extension_sha256": "2de0af808b258bef03a3a13b15fa71038f48579f5f562e92ebd62c6b9769fd37"
+  },
+  "frozen_public_states": {
+    "evidence": "dev/native_rom/evidence/2026-09-23/early_aligned_vector_field.json",
+    "sha256": "2f9221b62d04af519f9591e52b5e8e6694b759da3fd3aa69b5a7e8bcc7ab8203",
+    "grid_step_M": 0.125,
+    "indices": [181, 1391, 2629, 3882],
+    "interpretation": "The public trajectory states are candidate inputs for a component comparison; sampled ODE derivatives are not Hamiltonian component values."
+  },
+  "access_rule": "Only evaluate compiled component parity if the wheel exposes a callable Hamiltonian with independently justified SEOBNRv4 branch and coefficient initialization. Do not guess opaque C structures or infer Hamiltonian values from public ODE finite differences.",
+  "release_qualified": false
+}

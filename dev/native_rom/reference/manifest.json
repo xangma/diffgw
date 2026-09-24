@@ -296,13 +296,13 @@
       "id": "V4-HAM-1-3",
       "source": "bohe-2017-v3, Eqs. (1)-(3); Barausse and Buonanno 0912.3517v2, Eqs. (161)-(164); Barausse and Buonanno 1107.2904v1, Eqs. (50)-(52); Taracchini et al. 1311.2544v1, effective-one-body model paragraph",
       "status": "pending",
-      "blocker": "Radial, spin map, and aligned-spin Hamiltonian components match the cited paper reconstruction on tested points. A pinned source audit identifies the historical finite-nu quartic choice; independently compare the compiled component and validate the resulting numerical dynamics and waveforms."
+      "blocker": "Paper-derived radial, spin map, and aligned-spin Hamiltonian components pass independent scalar checks. Pinned source and installed-wheel Hamiltonians match bitwise at eight explicit states. The paper-derived native Hamiltonian differs by up to 7.18e-6 relative in the strong-spin row; a development-only variant using both the historical logarithmic derivative and the shorter source calibration decimals matches the wheel within 8.9e-16 absolute at these states. Establish the wheel generator's private initialization path, broader-domain Hamiltonian parity, numerical dynamics convergence, and whole-waveform agreement before qualification."
     },
     {
       "id": "V4-FLUX-4-9",
       "source": "bohe-2017-v3, Eqs. (4)-(9); Pan et al. 1006.0431v2, Eqs. (28)-(30), (41)-(42), and Appendices C-F; Taracchini et al. 1311.2544v1, Eq. (4)",
       "status": "pending",
-      "blocker": "Scalar normalization and all 35 declared pre-NQC moduli have conditional independent paper checks at frozen points. The pinned source audit identifies a different higher-order (2,1) Kerr-spin hybrid. Resolve it from public equations and compiled comparison, then establish high-ell truncation, NQC-free dynamics, and historical source placement for all modes before qualifying the full torque. A JAX 35-mode pre-NQC engine has independent scalar tests at two frozen points, including two spin truncations, but is not wired into a JAX waveform or historically qualified."
+      "blocker": "Scalar normalization and all 35 declared pre-NQC moduli have conditional independent paper checks at frozen points. The pinned source audit identifies a different higher-order (2,1) Kerr-spin hybrid. Resolve it from public equations and compiled comparison, then establish high-ell truncation, NQC-free dynamics, and historical source placement for all modes before qualifying the full torque. A JAX 35-mode pre-NQC engine has independent scalar tests at two frozen points, including two spin truncations. Its same-state radiation-reaction adapter agrees with Torch at two tested points and passes batch, JIT, and gradient checks; a JAX waveform and historical torque qualification remain open."
     },
     {
       "id": "V4-NQC-7",

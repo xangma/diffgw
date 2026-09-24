@@ -86,6 +86,39 @@ Reproduce with `PYTHONPATH=src:. python -m
 dev.native_rom.diagnose_early_source_field --json-out
 /tmp/early-source-field.json` in the pinned development environment.
 
+The [frozen source-flux frequency-trace plan](source_flux_frequency_trace_plan.json)
+and [result](source_flux_frequency_trace.json) replay the combined aligned-spin
+waveform and both pinned public dynamics grids, then compare phase spans from
+`M Omega=0.0425` at nine common frequencies through `0.13`. On the public
+`0.0625 M` grid, the native-minus-public accumulated orbital phase reaches
+`1.27e-4 rad`; the largest `0.125`-versus-`0.0625 M` public phase-span
+difference is `3.36e-5 rad`. With the then-nominal epoch mapping, the native
+raw pre-NQC mode amplitude differs by at most `87 ppm`, while its
+gravitational-wave frequency differs by at most `672 ppm` relative to the
+frozen reconstructed public raw mode. The exact source-backed mapping below
+revises those two raw-mode figures on the same five frequencies. The prior fit
+reports `0.0033308` local relative L2 in its inspiral window. These
+comparisons do not decompose the fitted `0.0029975` whole-waveform residual
+exactly or establish direct public-flux parity. The physical and ROM
+gates remain open. Reproduce with `PYTHONPATH=src:. python -m
+dev.native_rom.diagnose_source_flux_frequency_trace --json-out
+/tmp/source-flux-frequency-trace.json` in the pinned development environment.
+
+The [public mode-component capability plan](public_mode_component_capability_plan.json)
+and [result](public_mode_component_capability.json) audit the pinned wheel and
+`lalsimulation-v6.2.1` source for a raw `(2,2)` mode or factorized-amplitude
+call at an explicit phase-space state. The relevant source routines are
+`static` and absent from the wheel's exported symbols and Python bindings.
+`SimIMRSpinAlignedEOBModes` generates a full waveform from binary inputs; its
+signature does not accept an explicit EOB state. Thus no justified direct
+same-state raw-mode comparison was performed. The separate exact-mapping
+diagnostic below resolves the sampled output index without providing an
+explicit-state mode oracle. A
+separately compiled adapter would first need to reproduce the pinned wheel
+numerically. Reproduce the read-only audit with `PYTHONPATH=src:. python -m
+dev.native_rom.diagnose_public_mode_component_capability --source-repo
+/path/to/pinned/lalsuite-git --json-out /tmp/public-mode-component-capability.json`.
+
 The pinned v4 source's `rho22v2` through `rho22v10` assignments in
 `LALSimIMRSpinEOBFactorizedWaveform.c` agree term by term with the native
 `_rho22` expression when the diagnostic retains the cubic Kerr-spin term.
@@ -279,6 +312,27 @@ dev.native_rom.diagnose_public_pre_nqc_mode --json-out
 dev.native_rom.diagnose_public_mode_grid_alignment --json-out
 /tmp/public-mode-grid-alignment.json`.
 
+The [exact public mode mapping plan](public_mode_exact_mapping_plan.json) and
+[result](public_mode_exact_mapping.json) resolve that bracket for the frozen
+`0.015625 M` outputs without selecting a shift from native residuals. In the
+pinned non-PA v4 source, the uncut mode length is the low-dynamics length plus
+the high-dynamics length and a QNM-dependent ringdown allocation; the returned
+mode loses its first `kMin` samples. The public
+`SimIMREOBGenerateQNMFreqV2` call and returned lengths give `kMin=26236` on
+the aligned row and `12918` on the antialigned row. The exact high-rate mode
+starts at returned indices `24117` and `2166`, respectively: the aligned
+epoch-derived index was one sample late, while the antialigned index was
+correct. The source-backed index changes the aligned maximum raw-amplitude
+residual over the five frozen `M Omega=0.07–0.13` comparisons from `87.0` to
+`0.923 ppm`, and its raw gravitational-wave-frequency residual from `671.6`
+to `92.0 ppm`. The antialigned maxima remain `3.03` and `74.2 ppm`. These
+figures still divide an attached public mode by an inferred NQC factor on a
+separately evolved public trajectory; they are not identical-state mode
+parity, a centered NQC-input comparison, or release qualification. Reproduce
+with `PYTHONPATH=src:. python -m
+dev.native_rom.diagnose_public_mode_exact_mapping --source-repo
+/path/to/pinned/lalsuite-git --json-out /tmp/public-mode-exact-mapping.json`.
+
 **Output-step correction.** The frozen native whole-waveform and direct NQC
 coefficient checks request `0.125 M` output; the public run internally returns
 high dynamics at `0.015625 M`. The preceding mode and dynamics diagnostics
@@ -443,6 +497,40 @@ derivative discrepancy from about `1732–1734 ppm` to `193–203 ppm`.
 The [four-grid public sampling control](hamiltonian_public_grid.json) shows
 nonmonotonic sampled derivative residuals at the finest grid, so these are
 diagnostic sensitivities, not direct compiled-Hamiltonian parity.
+
+The [compiled-component capability plan](hamiltonian_component_capability_plan.json)
+and [result](hamiltonian_component_capability.json) pin four public states,
+the historical source, and the wheel before checking callable entry points.
+The wheel exports a post-adiabatic Hamiltonian wrapper, but this public-API
+check finds no exported SEOBNRv4 coefficient initializer for that wrapper.
+It does not call the wrapper. The source-backed compiled adapter below
+resolves this particular capability gap for the tested states. Reproduce the
+public-API audit with `PYTHONPATH=src:. python -m
+dev.native_rom.diagnose_hamiltonian_component_capability --source-root
+<pinned-lalsuite-source-root> --json-out /tmp/hamiltonian-capability.json`,
+using the annotated tag object, peeled commit, and file hashes in the plan.
+
+The [compiled same-state plan](hamiltonian_same_state_plan.json),
+[result](hamiltonian_same_state.json), and
+[provenance and limits](HAMILTONIAN_SAME_STATE.md) compare eight identical
+states. An adapter compiles the exact pinned source v4 coefficient initializer
+and Hamiltonian, then passes those coefficients to the wheel's exported
+Hamiltonian wrapper. Source and wheel values of `H_real/nu` agree bitwise at
+all eight states. The paper-derived native value differs by at most
+`1.02e-8` relative in four moderate-spin early states and `7.18e-6` in four
+strong aligned-spin states. The [two-factor plan](hamiltonian_source_conventions_plan.json)
+and [result](hamiltonian_source_conventions.json) then compare native variants
+with the pinned header's shorter calibration decimals and the historical
+logarithmic-derivative convention, individually and together. The maximum
+absolute native-minus-wheel gap changes from `2.904e-5` (published decimals
+and mathematical derivative), to `2.918e-5` (source decimals only), to
+`1.426e-7` (historical derivative only), to `8.9e-16` (both). This attributes
+the measured eight-state gap to those two conventions. It does not establish
+the wheel's private generator initialization, dynamics convergence, or
+whole-waveform parity. Reproduce the two-factor result with
+`PYTHONPATH=src:. python -m dev.native_rom.diagnose_hamiltonian_source_conventions
+--source-root /path/to/pinned/lalsuite-git --json-out
+/tmp/hamiltonian-source-conventions.json`.
 
 The [combined late-field result](combined_late_field.json) applies both the
 historical Hamiltonian convention and `(3,3)` flux placement at the same public

@@ -1,0 +1,91 @@
+{
+  "direct_public_mode_component_api_found": false,
+  "finding": "The pinned source defines the tested factorized mode and amplitude routines as static functions, and the pinned wheel exports none of them. The public Python mode API generates a full trajectory from binary inputs and does not accept an explicit phase-space state. Its NQC controls do not resolve the existing one-sample mode-to-dynamics mapping uncertainty.",
+  "limit": "No direct same-state raw (2,2) mode comparison is justified by this wheel. The previous 87 ppm amplitude and 672 ppm frequency gaps remain reconstruction-based. A separately built adapter would require numerical reproduction of the pinned wheel before supporting a public-binary parity claim.",
+  "local_compiled_generator_used": false,
+  "plan_sha256": "4d648503bf4038e76b4d89382dc948af0160454fb2c9cc617c24bc5584332449",
+  "prior_diagnostic_sha256": "b9bbc863876d8e986ad104cbb2a09ba95cbd2560fe9f4511df8be1696fde76a4",
+  "prior_raw_mode_gap": {
+    "max_abs_amplitude_relative": 8.701443191849734e-05,
+    "max_abs_frequency_relative": 0.0006716055308890745
+  },
+  "process": {
+    "argv": [
+      "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw/dev/native_rom/diagnose_public_mode_component_capability.py",
+      "--source-repo",
+      "/Users/xangma/repos/lalsuite-git",
+      "--json-out",
+      "dev/native_rom/evidence/2026-09-24/public_mode_component_capability.json"
+    ],
+    "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+    "host": "client-3792.default.vpn.port.ac.uk",
+    "pid": 13516
+  },
+  "public_waveform_api": {
+    "accepts_explicit_phase_space_state": false,
+    "exported_from_pinned_wheel": true,
+    "name": "SimIMRSpinAlignedEOBModes",
+    "python_binding": true,
+    "signature": "SimIMRSpinAlignedEOBModes(REAL8 deltaT, REAL8 const m1SI, REAL8 const m2SI, REAL8 const fMin, REAL8 const r, REAL8 const spin1z, REAL8 const spin2z, UINT4 SpinAlignedEOBversion, REAL8 const lambda2Tidal1, REAL8 const lambda2Tidal2, REAL8 const omega02Tidal1, REAL8 const omega02Tidal2, REAL8 const lambda3Tidal1, REAL8 const lambda3Tidal2, REAL8 const omega03Tidal1, REAL8 const omega03Tidal2, REAL8 const quadparam1, REAL8 const quadparam2, REAL8Vector nqcCoeffsInput, INT4 const nqcFlag, Dict PAParams, Dict TGRParams) -> int"
+  },
+  "release_qualified": false,
+  "relevant_exported_symbols": [
+    "XLALSimIMRSpinAlignedEOBModes",
+    "XLALSimInspiralEOBPAFluxWrapper"
+  ],
+  "same_state_pre_nqc_mode_parity_performed": false,
+  "schema": "diffgw.seobnrv4.public-mode-component-capability.v1",
+  "script_sha256": "0d035e88557406fcd8d51f74b5e365707103aa745653bcc359f3d3a3ba290bba",
+  "source": {
+    "files_sha256": {
+      "lalsimulation/lib/LALSimIMRSpinEOB.h": "700804fad22264c9ae669f4495c56efcc512f602a0d944d77bc8239d5bfb990c",
+      "lalsimulation/lib/LALSimIMRSpinEOBFactorizedWaveform.c": "2f38bd98af755cefc8554c4c31e20799833f49625a34797f52d1416bc4128a47",
+      "lalsimulation/lib/LALSimIMRSpinEOBFactorizedWaveform.h": "0896b794390972f5ab9d1e4e0df04be8aada1086b7069692ece1d6a1f3bcfc1b",
+      "lalsimulation/lib/LALSimIMRSpinEOBFactorizedWaveform_PA.c": "69b30dc41844e8dfb97346e8c669c55b8a812008727b604a320a8530909459aa"
+    },
+    "peeled_commit": "a3bc6b5eba1e9e1489616bc5d447a122e492a0d0",
+    "repo": "/Users/xangma/repos/lalsuite-git",
+    "tag": "lalsimulation-v6.2.1",
+    "tag_object": "5154f04e470d1cc48d6f61193af728b5692474ab"
+  },
+  "source_component_candidates": [
+    {
+      "exported_from_pinned_wheel": false,
+      "header_declaration": false,
+      "name": "XLALSimIMRSpinEOBGetSpinFactorizedWaveform",
+      "python_binding": false,
+      "source_static_definition": true
+    },
+    {
+      "exported_from_pinned_wheel": false,
+      "header_declaration": true,
+      "name": "XLALSimIMRSpinEOBFluxGetSpinFactorizedWaveform",
+      "python_binding": false,
+      "source_static_definition": true
+    },
+    {
+      "exported_from_pinned_wheel": false,
+      "header_declaration": false,
+      "name": "XLALSimIMRSpinEOBGetAmplitudeResidual",
+      "python_binding": false,
+      "source_static_definition": true
+    },
+    {
+      "exported_from_pinned_wheel": false,
+      "header_declaration": false,
+      "name": "XLALSimIMRSpinEOBGetSpinFactorizedWaveform_PA",
+      "python_binding": false,
+      "source_static_definition": true
+    }
+  ],
+  "status": "capability_limited",
+  "wheel": {
+    "lal_version": "7.7.1",
+    "lalsimulation_version": "6.2.1",
+    "lalsuite_distribution": "7.26.15",
+    "liblalsimulation_sha256": "9046c4a673d2ba82b792f7b92d73203ba783b32fc604b5da1139c5c1bc8b3325",
+    "library": "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/liblalsimulation.37.dylib",
+    "python_extension": "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lalsimulation/_lalsimulation.cpython-313-darwin.so",
+    "python_extension_sha256": "2de0af808b258bef03a3a13b15fa71038f48579f5f562e92ebd62c6b9769fd37"
+  }
+}

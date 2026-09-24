@@ -1,0 +1,106 @@
+{
+  "compiled_component_parity_performed": false,
+  "direct_v4_component_api_found": false,
+  "exported_binary_candidates": [
+    "XLALSEOBNRv4ROMNSBHAmplitudeCorrectionFrequencySeries",
+    "XLALSimIMRSpinEOBWaveform",
+    "XLALSimIMRSpinEOBWaveformAll",
+    "XLALSimInspiralEOBPAHamiltonianWrapper",
+    "XLALSimInspiralWaveformParamsEOBChooseNumOrAnalHamDerIsDefault",
+    "XLALSimInspiralWaveformParamsInsertEOBChooseNumOrAnalHamDer",
+    "XLALSimInspiralWaveformParamsLookupEOBChooseNumOrAnalHamDer",
+    "alphaMRD",
+    "alphaMRD_coeff",
+    "dalphaMRD",
+    "eob_ham",
+    "eob_ham_s"
+  ],
+  "finding": "The pinned wheel exposes waveform APIs and a generic post-adiabatic Hamiltonian wrapper, but no directly callable, documented SEOBNRv4 Hamiltonian component with validated coefficient/branch initialization. Calling the wrapper with guessed SpinEOBHCoeffs or interpreting sampled ODE derivatives as component values would not establish parity.",
+  "frozen_public_states": {
+    "evidence": "dev/native_rom/evidence/2026-09-23/early_aligned_vector_field.json",
+    "evidence_sha256": "2f9221b62d04af519f9591e52b5e8e6694b759da3fd3aa69b5a7e8bcc7ab8203",
+    "grid_step_M": 0.125,
+    "row": {
+      "chi1": 0.2,
+      "chi2": -0.1,
+      "mass1": 30.0,
+      "mass2": 20.0,
+      "omega_start": 0.03162277660168379
+    },
+    "states": [
+      {
+        "frequency_Momega": 0.03199986307263799,
+        "index": 181,
+        "state": {
+          "phi": 0.7197191098146537,
+          "pphi": 3.7065708255662093,
+          "pr_star": -0.004109576354315231,
+          "r": 9.925743845631427
+        },
+        "time_M": 22.625
+      },
+      {
+        "frequency_Momega": 0.0350012581592587,
+        "index": 1391,
+        "state": {
+          "phi": 5.7701022709949,
+          "pphi": 3.633348870035063,
+          "pr_star": -0.005360058421786607,
+          "r": 9.340088903375326
+        },
+        "time_M": 173.875
+      },
+      {
+        "frequency_Momega": 0.04000041369481858,
+        "index": 2629,
+        "state": {
+          "phi": 11.544974413193785,
+          "pphi": 3.5360133883369578,
+          "pr_star": -0.007067640395791411,
+          "r": 8.533336968855892
+        },
+        "time_M": 328.625
+      },
+      {
+        "frequency_Momega": 0.05000577274695909,
+        "index": 3882,
+        "state": {
+          "phi": 18.47109879624555,
+          "pphi": 3.388371983762457,
+          "pr_star": -0.012876477693044034,
+          "r": 7.322691796221816
+        },
+        "time_M": 485.25
+      }
+    ]
+  },
+  "historical_parity_established": false,
+  "next_qualification_step": "Provide a source-backed, independently tested C adapter that initializes the exact v4 branch and coefficients at supplied states, or a public compiled component API; then compare Hamiltonian components numerically.",
+  "pinned_source_peeled_commit": "a3bc6b5eba1e9e1489616bc5d447a122e492a0d0",
+  "pinned_source_tag_object": "5154f04e470d1cc48d6f61193af728b5692474ab",
+  "plan_sha256": "3ef5ad99959da35ca9fc3cd3aebd5e59566c081c74589f7c7d34ff410ffbe3a5",
+  "post_adiabatic_wrapper_exported": true,
+  "post_adiabatic_wrapper_v4_setup_proven": false,
+  "python_candidates": [
+    "FLAG_SEOBNRv4P_HAMILTONIAN_DERIVATIVE_ANALYTICAL",
+    "FLAG_SEOBNRv4P_HAMILTONIAN_DERIVATIVE_NUMERICAL",
+    "SimIMRSpinEOBWaveform",
+    "SimIMRSpinEOBWaveformAll"
+  ],
+  "release_qualified": false,
+  "schema": "diffgw.seobnrv4.hamiltonian-component-capability.v1",
+  "script_sha256": "6fba86360697f52499ce20c82ca5e523b821c070db41f7d28b8f1a817c54868e",
+  "source_sha256": {
+    "lalsimulation/lib/LALSimIMRSpinEOB.h": "700804fad22264c9ae669f4495c56efcc512f602a0d944d77bc8239d5bfb990c",
+    "lalsimulation/lib/LALSimIMRSpinEOBHamiltonian.c": "629ea1690bb0c7fd913dd39f17299f8412aafd30519293af8d0526b42dab90dc",
+    "lalsimulation/lib/LALSimInspiralEOBPostAdiabatic.h": "55aaf7495b952fc34072ae575ab9ba295fc28a8cf62291ae1230c83b04ae7737"
+  },
+  "status": "capability_limited",
+  "wheel": {
+    "lal_version": "7.7.1",
+    "lalsimulation_version": "6.2.1",
+    "lalsuite_distribution": "7.26.15",
+    "liblalsimulation_sha256": "9046c4a673d2ba82b792f7b92d73203ba783b32fc604b5da1139c5c1bc8b3325",
+    "python_extension_sha256": "2de0af808b258bef03a3a13b15fa71038f48579f5f562e92ebd62c6b9769fd37"
+  }
+}

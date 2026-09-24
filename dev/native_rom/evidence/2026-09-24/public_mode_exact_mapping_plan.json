@@ -1,0 +1,19 @@
+{
+  "schema": "diffgw.seobnrv4.public-mode-exact-mapping-plan.v1",
+  "purpose": "Infer the exact high-rate public (2,2) mode-to-dynamics index from pinned v4 output lengths and the public QNM frequency used in the source's ringdown allocation. Reuse frozen one-sample raw-mode reconstruction only after that index is determined; do not select a shift by minimizing native residuals.",
+  "source": {
+    "tag": "lalsimulation-v6.2.1",
+    "tag_object": "5154f04e470d1cc48d6f61193af728b5692474ab",
+    "peeled_commit": "a3bc6b5eba1e9e1489616bc5d447a122e492a0d0",
+    "path": "lalsimulation/lib/LALSimIMRSpinAlignedEOB.c",
+    "sha256": "6b7969bb7cbe714c4937a691838b0b82a7fcc2a199c03ee2bf5215738f1ce1b3",
+    "relevant_lines": [1207, 1256, 1904, 2011, 2083, 3190, 3633, 3714, 3730, 3806]
+  },
+  "boundary_evidence": "dev/native_rom/evidence/2026-09-24/public_nqc_mode_boundary.json",
+  "boundary_evidence_sha256": "a86784cd6a58ec4a574686d6940953a3d1be836e2d44ac8cdcd25a5ba7d0dffd",
+  "grid_alignment_evidence": "dev/native_rom/evidence/2026-09-24/public_mode_grid_alignment.json",
+  "grid_alignment_evidence_sha256": "cd51335690dfb1823b1f03d7752655eceebe41cdbf2bb1724a986f064e661718",
+  "rows": ["strong_aligned_spin", "strong_antialigned_spin"],
+  "output_step_M": 0.015625,
+  "release_qualified": false
+}

@@ -63,8 +63,8 @@ omits the `k5l u^4` contribution while forming an internal derivative of
 the logarithmic radial potential. The potential value itself is the same.
 The [frozen diagnostic](../evidence/2026-09-24/hamiltonian_log_derivative.json)
 isolates that historical convention at sampled public states; it does not
-alter this paper-derived scalar reference or establish compiled component
-parity. The development-only variant is documented in the
+alter this paper-derived scalar reference. A later compiled comparison at
+eight identical states is documented in the
 [campaign evidence](../evidence/2026-09-24/README.md).
 
 `hamiltonian.energy_map` checks Bohé Eq. (1), including the distinction
@@ -78,7 +78,13 @@ although the printed Eq. (15) includes an extra radial factor that is
 dimensionally inconsistent. The scalar comparison checks the stated truncated
 choice. A [read-only audit of the pinned v6.2.1 source](../evidence/2026-09-23/historical_v4_component_audit.json)
 finds that ordinary SEOBNRv4 selects the same choice; compiled component
-parity is still untested.
+parity was subsequently established for the compiled source and wheel wrapper
+at eight explicit aligned-spin states. The
+[same-state diagnostic](../evidence/2026-09-24/hamiltonian_same_state.json)
+and [two-factor convention result](../evidence/2026-09-24/hamiltonian_source_conventions.json)
+show that the paper-derived native Hamiltonian differs from that source, while
+the development-only source-convention variant agrees to floating-point
+precision. This does not qualify full dynamics or waveform generation.
 
 `hamiltonian.effective_spin_mapping` checks the aligned, zero-gauge
 3.5PN mapping in [Barausse and Buonanno (2011), Eqs. (50)–(52)](https://arxiv.org/html/1107.2904)
@@ -91,8 +97,8 @@ potential. Both tensor frontends agree with this separate high-precision
 scalar evaluation at the tested aligned-spin points; the nonspinning limit,
 body exchange, and mass-scale invariance also hold. The full Hamiltonian
 check inherits the paper's finite-mass-ratio tortoise-quartic ambiguity above, and
-component agreement does not validate the resulting dynamics or prove exact
-historical implementation parity.
+component agreement does not validate the resulting dynamics or prove
+historical implementation parity beyond the tested states.
 
 `flux.emitted_flux` independently evaluates Bohé Eq. (9) from supplied
 **pre-NQC** positive-`m` mode amplitudes through `ell=8`:
@@ -105,7 +111,10 @@ provide the independent Newtonian check `F_22=(32/5) nu² Omega^(10/3)`.
 The JAX positive-`m` sum agrees with this scalar normalization for supplied
 complex modes and recovers the Newtonian `(2,2)` flux. A separate JAX
 factorized engine now generates all 35 declared pre-NQC moduli; it is not
-wired into a complete JAX SEOBNRv4 waveform.
+wired into a complete JAX SEOBNRv4 waveform. Its same-state Hamiltonian
+adapter produces reduced-mass radiation-reaction forces that agree with the
+Torch adapter at tested scalar points and pass JAX batch, JIT, and gradient
+checks; this is a frontend check, not historical torque parity.
 `flux.factorized_22_amplitude` checks the published pre-NQC dominant-mode
 modulus, including the non-Keplerian Newtonian prefactor, rest-energy tail,
 and Bohé's 2.5PN/3.5PN spin replacements. It agrees with the standalone Torch

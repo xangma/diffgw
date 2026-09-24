@@ -68,8 +68,13 @@ three frozen mass-ratio/spin checks; three same-state Torch/JAX regression
 checks cover every metric field and effective Hamiltonian. This is frontend
 component parity, not a
 JAX whole-waveform qualification.
-Combining it with the fully native frequency warm start lowers that one-row
-fitted difference to `0.00131140`. A pinned public-start-state intervention
+The JAX 35-mode pre-NQC flux also has a same-state Hamiltonian adapter for
+reduced-mass radiation reaction. Scalar Torch/JAX torque checks and JAX batch,
+JIT, and gradient checks pass; the JAX waveform and historical torque parity
+are still open.
+Combining the historical derivative with the fully native frequency warm start
+lowers that one-row fitted difference to `0.00131140`. A pinned
+public-start-state intervention
 lowers it to `0.00116397`, so most of the residual remains. The same combined
 candidate passes nested-output-grid stability but fails the refined ODE
 tolerance budget (`3.53e-6` complex and `1.51e-6` amplitude, versus `1e-6`
@@ -119,13 +124,40 @@ On that same combined variant, changing the NQC phase-derivative window from
 `2 M` to `1 M` reduces refined ODE complex error from `3.26e-7` to `2.41e-7`;
 the fitted public difference remains about `0.00300`. This supports a numerical
 choice, not release qualification.
-The same source-backed choices pass the strong antialigned-spin numerical gate
-and give a fitted difference of `0.0002128`, slightly better than the prior
-`(3,2)`-only result but above an earlier variant. A three-grid public-dynamics
-check finds several-ppm differentiation sensitivity in the remaining aligned
-torque residual near `M Omega=0.12`; that sampled derivative is not direct
-compiled-flux parity. The pinned `(2,2)` coefficient assignments match the
-native formula, but the full mode, NQC attachment, and generator remain open.
+The same combined numerical and flux choice passes the frozen nonspinning and
+strong antialigned-spin ODE gates. The nonspinning waveform is unchanged;
+the antialigned fitted public difference increases from `0.000203842` to
+`0.000212727`. These samples do not establish a full-domain bound.
+At four early aligned-spin public states, the source-backed native torque
+differs from a sampled public angular-momentum derivative by at most
+`6.42e-7` relative on two output grids. This does not measure direct public
+flux parity or explain the remaining accumulated waveform difference.
+The pinned-source Hamiltonian coefficient initializer now feeds a verified
+compiled adapter to the installed wheel's exported Hamiltonian wrapper. At
+eight identical states, source and wheel Hamiltonians agree bitwise. The
+paper-derived native value differs by up to `7.18e-6` relative at the latest
+strong-spin state. A frozen two-factor diagnostic attributes that difference
+to the pinned source's historical logarithmic-derivative convention and its
+shorter calibration decimals: applying both in a development-only native
+variant matches the wheel within `8.9e-16` absolute across all eight states.
+This establishes the tested component path, not the wheel's private generator
+initialization or a qualified waveform.
+The aligned-spin trajectory replay finds a native-minus-public orbital phase
+span of at most `1.27e-4 rad` from `M Omega=0.0425` through `0.13`, compared
+with `3.36e-5 rad` maximum public-grid sensitivity. Over the later sampled
+frequencies, an initial epoch-based public mode mapping gave raw pre-NQC `(2,2)`
+amplitude and frequency gaps of `87 ppm` and `672 ppm`. The pinned-source
+output-length rule places the public high-rate mode one sample earlier and
+reduces those maxima to `0.923 ppm` and `92.0 ppm` on the same five frequencies.
+This correction removes that output-index ambiguity, but it does not explain
+the `0.0029975` fitted whole-waveform residual by itself.
+The pinned wheel exposes no callable raw `(2,2)` mode at an explicit state, so
+this is neither direct same-state parity nor an exact residual decomposition.
+A three-grid public-dynamics check finds several-ppm differentiation sensitivity
+in the remaining aligned torque residual near `M Omega=0.12`; that sampled
+derivative is not direct compiled-flux parity. The pinned `(2,2)` coefficient
+assignments match the native formula, but the full mode, NQC attachment, and
+generator remain open.
 A direct five-coefficient NQC diagnostic against the pinned public v4 binary
 also reproduces both frozen native waveforms but finds `0.16–0.34%` aligned
 and `0.36–1.55%` antialigned coefficient differences. Because the two fits
@@ -167,8 +199,8 @@ coefficient gap but not the aligned one; it is a sensitivity check with targets
 held fixed, not a model correction. Dividing the public pre-attachment `(2,2)`
 mode by its returned NQC factor gives raw amplitudes within `3.1 ppm` on the
 antialigned row. The aligned row's nominal `38–87 ppm` amplitude discrepancy
-falls below `1 ppm` under a one-sample mode-to-dynamics alignment bracket at
-three finer output steps. Those mode-grid calls requested `0.015625 M` or
+falls below `1 ppm` under the pinned-source high-rate index at the frozen
+`0.015625 M` step. Those mode-grid calls requested `0.015625 M` or
 smaller output steps, whereas the frozen whole-waveform and public coefficient
 comparison requested `0.125 M` and internally produced `0.015625 M` high-rate
 dynamics. The [matched-output reference check](evidence/2026-09-24/README.md)

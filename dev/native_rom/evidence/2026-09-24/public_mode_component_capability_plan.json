@@ -1,0 +1,33 @@
+{
+  "schema": "diffgw.seobnrv4.public-mode-component-capability-plan.v1",
+  "purpose": "Audit whether the pinned public wheel and source expose a callable pre-NQC (2,2) mode or factorized amplitude at an explicit EOB phase-space state, without private-structure guesses or a locally compiled substitute.",
+  "pinned_source": {
+    "tag": "lalsimulation-v6.2.1",
+    "tag_object": "5154f04e470d1cc48d6f61193af728b5692474ab",
+    "peeled_commit": "a3bc6b5eba1e9e1489616bc5d447a122e492a0d0",
+    "files_sha256": {
+      "lalsimulation/lib/LALSimIMRSpinEOBFactorizedWaveform.c": "2f38bd98af755cefc8554c4c31e20799833f49625a34797f52d1416bc4128a47",
+      "lalsimulation/lib/LALSimIMRSpinEOBFactorizedWaveform_PA.c": "69b30dc41844e8dfb97346e8c669c55b8a812008727b604a320a8530909459aa",
+      "lalsimulation/lib/LALSimIMRSpinEOBFactorizedWaveform.h": "0896b794390972f5ab9d1e4e0df04be8aada1086b7069692ece1d6a1f3bcfc1b",
+      "lalsimulation/lib/LALSimIMRSpinEOB.h": "700804fad22264c9ae669f4495c56efcc512f602a0d944d77bc8239d5bfb990c"
+    }
+  },
+  "pinned_wheel": {
+    "lal_version": "7.7.1",
+    "lalsimulation_version": "6.2.1",
+    "lalsuite_distribution": "7.26.15",
+    "liblalsimulation_sha256": "9046c4a673d2ba82b792f7b92d73203ba783b32fc604b5da1139c5c1bc8b3325",
+    "python_extension_sha256": "2de0af808b258bef03a3a13b15fa71038f48579f5f562e92ebd62c6b9769fd37"
+  },
+  "prior_diagnostic": "dev/native_rom/evidence/2026-09-24/source_flux_frequency_trace.json",
+  "prior_diagnostic_sha256": "b9bbc863876d8e986ad104cbb2a09ba95cbd2560fe9f4511df8be1696fde76a4",
+  "source_component_names": [
+    "XLALSimIMRSpinEOBGetSpinFactorizedWaveform",
+    "XLALSimIMRSpinEOBFluxGetSpinFactorizedWaveform",
+    "XLALSimIMRSpinEOBGetAmplitudeResidual",
+    "XLALSimIMRSpinEOBGetSpinFactorizedWaveform_PA"
+  ],
+  "available_waveform_api": "SimIMRSpinAlignedEOBModes",
+  "acceptance_rule": "A same-state comparison requires a symbol in the pinned wheel with a justified signature and public initialization for the exact v4 branch, accepting the supplied phase-space state. Full waveform generation, sampled ODE derivatives, private struct guesses, or a locally compiled generator alone do not satisfy this rule.",
+  "release_qualified": false
+}
