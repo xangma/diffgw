@@ -263,8 +263,15 @@ second-derivative error of `1.83e-8` for its GSL cubic, versus `4.20e-10` for
 a diagnostic degree-six `±0.5 M` fit. The DOP853 reference uses the same
 provisional equations, so this isolates native numerical differentiation on
 one row; it neither validates source physics nor establishes a replacement
-NQC rule. The installed LAL extension has drifted from the old wheel pin;
-only the GSL library hash was verified for this new check.
+NQC rule. The project Python 3.13 environment matches the frozen LAL and
+GSL binary hashes; the earlier system Python 3.12 wheel was a different build.
+The [pinned-source shared-grid control](evidence/2026-09-24/source_nqc_shared_grid.json)
+replays the two finest source grids exactly. Their amplitude samples differ by
+at most `3.0e-9` within `±2 M` of matching, but their natural-cubic fitted
+coefficients differ by `25.05` (L2). Decimating the finest run's own samples
+changes its fit by `42.44` (L2), while removing its unmatched endpoint samples
+changes nothing. This isolates a large grid-density sensitivity in the source
+fit, but does not establish a validated replacement or source physics accuracy.
 The aligned-spin trajectory replay finds a native-minus-public orbital phase
 span of at most `1.27e-4 rad` from `M Omega=0.0425` through `0.13`, compared
 with `3.36e-5 rad` maximum public-grid sensitivity. Over the later sampled

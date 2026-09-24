@@ -413,12 +413,30 @@ second-derivative errors are `1.83e-8` for the native GSL cubic, `8.27e-8`
 for a degree-four polynomial over `±2 M`, and `4.20e-10` for a degree-six
 polynomial over `±0.5 M`. This demonstrates smooth local native inputs on one
 row; it does not establish an accurate source derivative or validate the
-provisional physics. The standalone GSL library still matches its frozen
-SHA-256, while the currently installed LAL Python extension differs from the
-older source-wheel pin. This diagnostic uses only the pinned GSL library and
+provisional physics. The project Python 3.13 environment matches the frozen
+LAL extension and GSL binary hashes; the system Python 3.12 environment has
+a different wheel build. This diagnostic uses the pinned GSL library and
 does not refresh the source-wheel comparison. Reproduce with
-`PYTHONPATH=src:. python -m dev.native_rom.diagnose_source_placement_nqc_dense
+`PYTHONPATH=src:. /Users/xangma/repos/diffgw/.venv/bin/python -m dev.native_rom.diagnose_source_placement_nqc_dense
 --json-out /tmp/source-placement-nqc-dense.json`.
+
+The [source shared-grid plan](source_nqc_shared_grid_plan.json) and
+[result](source_nqc_shared_grid.json) replay the final two pinned-source
+high-rate captures exactly (factors 16 and 32) in the pinned Python 3.13
+environment. At the 512 shared timestamps within `±2 M` of matching, the
+maximum amplitude difference is `2.97e-9`. Their common-match natural-cubic
+NQC coefficients differ by `25.05` (L2). Fitting the factor-32 samples at
+every other timestamp, with the same time span as factor 16, changes its own
+coefficients by `42.44` (L2); dropping only the extra endpoint samples changes
+them by `0.0` at stored precision. Factor 16 versus decimated factor 32 still
+differs by `18.16` (L2). Thus both a small change in shared inputs and the
+cubic's grid-density response contribute to the observed nonconvergence;
+these counterfactual fits are not waveform validations or replacement rules.
+Reproduce with `PYTHONPATH=src:. /Users/xangma/repos/diffgw/.venv/bin/python
+-m dev.native_rom.diagnose_source_nqc_shared_grid --source-root
+/Users/xangma/repos/lalsuite-git --headers
+/tmp/diffgw-lalsuite-pinned-53acc0c/merged-include --gsl-include
+/usr/local/include --json-out /tmp/source-nqc-shared-grid.json`.
 
 The [public-mode boundary plan](public_nqc_mode_boundary_plan.json) and
 [result](public_nqc_mode_boundary.json) use both public v4 modes API paths at
