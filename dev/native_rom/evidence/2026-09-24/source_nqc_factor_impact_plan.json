@@ -1,0 +1,28 @@
+{
+  "schema": "diffgw.seobnrv4.source-nqc-factor-impact-plan.v1",
+  "purpose": "Measure the source-vs-dense-field NQC coefficient counterfactual on exactly the same pinned-source pre-NQC high-rate states, without interpreting the ratio as a validated whole waveform.",
+  "release_qualified": false,
+  "rows": [
+    "strong_aligned_spin",
+    "nonspinning",
+    "mild_mixed_spin"
+  ],
+  "factors": [
+    8,
+    32
+  ],
+  "output_step_M": 0.125,
+  "capacity": 50000,
+  "window_half_widths_M": [
+    2.0,
+    10.0
+  ],
+  "coefficient_field": "dev/native_rom/evidence/2026-09-24/source_nqc_coefficient_field.json",
+  "coefficient_field_sha256": "b95c16dd3759c0ae60df36093921797a1b0aa3437efad0cf0fffc1b2300893e6",
+  "source_wheel_mode": "dev/native_rom/evidence/2026-09-24/source_wheel_mode.json",
+  "source_wheel_mode_sha256": "c103f7d884073eb00029a231dd271d49c4a4571455030b11b93c22e298a479da",
+  "source_flux_plan": "dev/native_rom/evidence/2026-09-24/source_flux_initial_plan.json",
+  "source_flux_plan_sha256": "1167199c8f954f97a5905a1e3b2f67d1555e984e5f1da0a0fc42a77a925f96ea",
+  "adapter": "dev/native_rom/reference/full_v4_source_nqc_inputs_adapter.c",
+  "adapter_sha256": "0e2006c7a2898b09d56b5d464135b113f4546f43b607ddacbf327761a24a6451"
+}

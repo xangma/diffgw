@@ -290,6 +290,34 @@ rows. The regular generator resamples its adaptive orbit to a uniform grid
 with a cubic spline before the NQC inputs are splined again; these controls
 show a source trajectory/differentiation discrepancy, but cannot assign its
 share to either interpolation stage or validate a replacement prescription.
+The [frozen coefficient propagation](evidence/2026-09-24/source_nqc_coefficient_field.json)
+replays all nine source NQC fits within `2.5e-4` absolute coefficient error
+and then substitutes regular-field DOP853 derivatives at the same source
+match states. At factor 32, the largest individual coefficient changes by
+`2.03%` (strong aligned), `3.62%` (nonspinning), and `3.45%` (mild mixed).
+Strong-spin source coefficients move `25.05` in L2 from factor 16 to 32,
+whereas the dense-field counterfactual moves `0.0082` at the same match time.
+This diagnoses the coefficient sensitivity; waveform impact and a validated
+replacement still require independent checks.
+The [source-state factor impact](evidence/2026-09-24/source_nqc_factor_impact.json)
+then applies both coefficient sets to the same pinned-source pre-NQC arrays.
+Within `2 M` before matching, the maximum complex `(2,2)` correction ratio
+differs by `0.689%` (strong aligned), `0.252%` (nonspinning), and `0.558%`
+(mild mixed) at factor 32. These are controlled source-mode counterfactuals,
+not full-waveform residuals or evidence that the substituted fit is better.
+At the source's default factor 8, the dense-field coefficients also move the
+source-state NQC factor closer to the pinned wheel's public NQC coefficients:
+the strongest pre-match complex-factor gap falls from `0.931%` to `0.512%` on
+the aligned row, `0.0999%` to `0.00326%` on the nonspinning row, and `0.0973%`
+to `0.0816%` on the mild mixed row. This narrows one source/wheel numerical
+gap but does not identify the wheel's internal differentiation rule.
+The [complete source-generator override](evidence/2026-09-24/source_nqc_whole_mode_override.json)
+replays the frozen source and wheel `(2,2)` mode hashes, then substitutes only
+the dense-field NQC coefficients into the compiled source generator. The
+peak-fitted whole-mode complex L2 against the wheel drops from `6.48e-4` to
+`2.97e-5` (nonspinning), `6.54e-4` to `5.33e-4` (mild mixed), and `5.80e-3`
+to `3.19e-3` (strong aligned). The strong-spin discrepancy and small post-peak
+regressions remain; this is a numerical attribution, not release validation.
 The aligned-spin trajectory replay finds a native-minus-public orbital phase
 span of at most `1.27e-4 rad` from `M Omega=0.0425` through `0.13`, compared
 with `3.36e-5 rad` maximum public-grid sensitivity. Over the later sampled

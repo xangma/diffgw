@@ -1,0 +1,61 @@
+{
+  "schema": "diffgw.seobnrv4.source-nqc-coefficient-field-plan.v1",
+  "purpose": "Propagate pinned-source cubic versus independently integrated regular-field NQC derivatives through the exact v4 fit at three resampling factors in three rows. This is diagnostic only; it neither selects a replacement nor validates waveforms.",
+  "release_qualified": false,
+  "rows": [
+    "strong_aligned_spin",
+    "nonspinning",
+    "mild_mixed_spin"
+  ],
+  "factors": [
+    8,
+    16,
+    32
+  ],
+  "selected_stencil_M": "0.1",
+  "replay_absolute_tolerance": 0.0003,
+  "inputs": {
+    "strong_aligned_spin": {
+      "8": {
+        "path": "dev/native_rom/evidence/2026-09-24/source_nqc_dense_field_strong_aligned_spin_f8.json",
+        "sha256": "b3eddf1254102076424d14be6cd2d882e0ac32d5e32c895e2aacc6355640f9ff"
+      },
+      "16": {
+        "path": "dev/native_rom/evidence/2026-09-24/source_nqc_dense_field_strong_aligned_spin_f16.json",
+        "sha256": "c831821b7f4c1b588061261cb62220fd191cf0694d23ba7e33e643ab320e9366"
+      },
+      "32": {
+        "path": "dev/native_rom/evidence/2026-09-24/source_nqc_dense_field_strong_aligned_spin.json",
+        "sha256": "c8d642fd8b8f7e17672c1c6c2ec831a3ba4e49d4ebbf7992afaf87a9360eb780"
+      }
+    },
+    "nonspinning": {
+      "8": {
+        "path": "dev/native_rom/evidence/2026-09-24/source_nqc_dense_field_nonspinning_f8.json",
+        "sha256": "da1afb699c4b5f37749d392c8ca404e176ac0dc0276e3bdb50b17173261fa726"
+      },
+      "16": {
+        "path": "dev/native_rom/evidence/2026-09-24/source_nqc_dense_field_nonspinning_f16.json",
+        "sha256": "c214eb019307e278e2ce4fe9e162c057630622dbf84e12e984938649459b2a32"
+      },
+      "32": {
+        "path": "dev/native_rom/evidence/2026-09-24/source_nqc_dense_field_nonspinning.json",
+        "sha256": "efc9bef04252bf3e107df6fd97df63c3729e78ab7d80cfbd6a07b485b7e0d70a"
+      }
+    },
+    "mild_mixed_spin": {
+      "8": {
+        "path": "dev/native_rom/evidence/2026-09-24/source_nqc_dense_field_mild_mixed_spin_f8.json",
+        "sha256": "1079251720cfa8bcb9a9f4b43a9c79cd9173b13bad3b87bcaa01e2c7ffce0c96"
+      },
+      "16": {
+        "path": "dev/native_rom/evidence/2026-09-24/source_nqc_dense_field_mild_mixed_spin_f16.json",
+        "sha256": "9ab647965bae46543f858a66113dd3d184d225dbe43d9619ab7ecc89bfe881af"
+      },
+      "32": {
+        "path": "dev/native_rom/evidence/2026-09-24/source_nqc_dense_field_mild_mixed_spin.json",
+        "sha256": "7af6697d2d9d6493a31892b495cbe3bbcbe31b48853518480fd4329a38ff891e"
+      }
+    }
+  }
+}

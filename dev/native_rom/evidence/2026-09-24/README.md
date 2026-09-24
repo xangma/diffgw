@@ -469,6 +469,89 @@ dev.native_rom.diagnose_source_nqc_dense_field --source-root
 /tmp/ROW-source-nqc-dense.json`, where `ROW` is one of the three names above
 and `FACTOR` is `8`, `16`, or `32`.
 
+The [coefficient-field plan](source_nqc_coefficient_field_plan.json) and
+[result](source_nqc_coefficient_field.json) propagate each captured cubic
+derivative and each regular-field DOP853 derivative through the pinned v4 NQC
+linear systems. The replay of all nine source fits has maximum absolute
+coefficient error `2.5e-4`; the amplitude-system condition number reaches
+`5.6e4` on the strong-spin row. At factor 32, the largest relative change in
+an individual coefficient under this derivative substitution is `2.03%`
+(strong aligned), `3.62%` (nonspinning), and `3.45%` (mild mixed). From factors
+16 to 32 the strong-spin source coefficients move by `25.05` in L2, versus
+`0.0082` for the dense-field counterfactual on the **same matching time**.
+The other rows move their matching times by `0.0098 M` and `0.0045 M`, so
+their factor-to-factor changes do not isolate differentiation. These fitted
+counterfactuals are not source-generator outputs or waveform qualifications.
+Reproduce with `PYTHONPATH=src:. /Users/xangma/repos/diffgw/.venv/bin/python
+-m dev.native_rom.diagnose_source_nqc_coefficient_field --json-out
+/tmp/source-nqc-coefficient-field.json`.
+
+The [factor-impact plan](source_nqc_factor_impact_plan.json) and
+[result](source_nqc_factor_impact.json) recapture the pinned source's
+pre-NQC high-rate arrays at factors 8 and 32, checking their exact array
+hashes and original coefficients. Applying the source-cubic and dense-field
+counterfactual NQC coefficients to **the same** arrays gives the following
+maximum relative complex `(2,2)` correction difference within the `2 M`
+*before* matching:
+
+| Row | Factor 8 | Factor 32 |
+| --- | ---: | ---: |
+| Strong aligned spin | 0.419% | 0.689% |
+| Nonspinning | 0.103% | 0.252% |
+| Mild mixed spin | 0.0158% | 0.558% |
+
+The factor ratio is the ratio of corrected modes on identical pre-NQC
+samples, so it isolates the NQC coefficient choice. The larger differences
+after matching in the full captured high-rate arrays are not public-waveform
+errors: the source subsequently replaces the mode with attached ringdown.
+At the source's default factor 8, a separate comparison applies the pinned
+wheel's **public** NQC coefficients to those same source states. The maximum
+relative complex factor difference in the pre-match `2 M` window is:
+
+| Row | Source cubic versus wheel | Dense-field counterfactual versus wheel |
+| --- | ---: | ---: |
+| Strong aligned spin | 0.931% | 0.512% |
+| Nonspinning | 0.0999% | 0.00326% |
+| Mild mixed spin | 0.0973% | 0.0816% |
+
+The wheel uses its default factor-8 algorithm; this comparison does not
+identify the wheel's internal numerical choices or prove that the dense-field
+counterfactual is physically more accurate. It shows that a source-side
+derivative change explains part, but not all, of the source/wheel NQC gap.
+This is a controlled source-mode counterfactual, not a validation of the
+dense-field coefficients or the full native waveform. Reproduce with
+`PYTHONPATH=src:. /Users/xangma/repos/diffgw/.venv/bin/python -m
+dev.native_rom.diagnose_source_nqc_factor_impact --source-root
+/Users/xangma/repos/lalsuite-git --headers
+/tmp/diffgw-lalsuite-pinned-53acc0c/merged-include --gsl-include
+/usr/local/include --json-out /tmp/source-nqc-factor-impact.json`.
+
+The [whole-mode override plan](source_nqc_whole_mode_override_plan.json),
+[development-only adapter](../../reference/full_v4_source_nqc_override_adapter.c),
+and [result](source_nqc_whole_mode_override.json) run the **complete** pinned
+source generator with only its factor-8 `(2,2)` NQC coefficients overridden
+by the regular-field counterfactual. The unmodified source and wheel modes
+first reproduce their frozen byte hashes. Peak-fitted whole-mode complex
+relative L2 against the pinned wheel changes as follows:
+
+| Row | Source fit | Dense-field NQC override |
+| --- | ---: | ---: |
+| Nonspinning | `6.48e-4` | `2.97e-5` |
+| Mild mixed spin | `6.54e-4` | `5.33e-4` |
+| Strong aligned spin | `5.80e-3` | `3.19e-3` |
+
+The source and wheel trajectories, pre-NQC modes, and ringdown machinery
+remain fixed within each row. The override reduces the pre-attachment
+source/wheel gap and establishes that NQC differentiation is a substantial
+part of the complete-mode difference. It does not identify a unique or
+physically validated derivative rule; post-peak residuals increase slightly
+and the strong-spin whole-mode error remains `3.19e-3`. Reproduce with
+`PYTHONPATH=src:. /Users/xangma/repos/diffgw/.venv/bin/python -m
+dev.native_rom.diagnose_source_nqc_whole_mode_override --source-root
+/Users/xangma/repos/lalsuite-git --headers
+/tmp/diffgw-lalsuite-pinned-53acc0c/merged-include --gsl-include
+/usr/local/include --json-out /tmp/source-nqc-whole-mode-override.json`.
+
 The [public-mode boundary plan](public_nqc_mode_boundary_plan.json) and
 [result](public_nqc_mode_boundary.json) use both public v4 modes API paths at
 `0.015625 M`: the coefficient-only call and the call returning modes plus low-
