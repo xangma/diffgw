@@ -1,0 +1,27 @@
+{
+  "schema": "diffgw.seobnrv4.peak-condition-q8-grid-plan.v1",
+  "purpose": "Replay the current peak-preserving q8 ode_3 hash, then halve the requested output step with all other choices fixed; compare exact nested samples without alignment. Diagnostic only.",
+  "row": "q8_high_aligned",
+  "baseline_level": {
+    "name": "ode_3",
+    "atol": 3e-15,
+    "rtol": 3e-14,
+    "dt_geom": 0.5
+  },
+  "finer_level": {
+    "name": "grid_1",
+    "atol": 3e-15,
+    "rtol": 3e-14,
+    "dt_geom": 0.25
+  },
+  "relative_l2_limit": 1e-06,
+  "inputs": {
+    "campaign": "dev/native_rom/evidence/2026-09-24/source_candidate_new_rows.json",
+    "tighter_ode": "dev/native_rom/evidence/2026-09-24/peak_condition_q8_tighter_ode.json"
+  },
+  "input_sha256": {
+    "campaign": "d8efe4baa182ea39bf9a7d35b6de8621c6e054429ee180eb661e9fbb9f9d59d8",
+    "tighter_ode": "f5feeda27a468a911d973e06b6833aef87070df81b5fcc579c2baa0934d083f2"
+  },
+  "release_qualified": false
+}

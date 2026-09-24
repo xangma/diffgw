@@ -1503,6 +1503,18 @@ whole-waveform validation remain open. Reproduce with `PYTHONPATH=src:. python
 -m dev.native_rom.diagnose_peak_condition_q8_tighter_ode --json-out
 /tmp/peak-condition-q8-tighter-ode.json` in the pinned environment.
 
+The [current q8 output-grid plan](peak_condition_q8_grid_plan.json) and
+[result](peak_condition_q8_grid.json) replay the `ode_3` hash and halve its
+requested output step from `0.5 M` to `0.25 M`. Both solves retain the
+`0.015625 M` high-rate step. The finer waveform's samples decimated onto the
+coarse grid are bitwise identical, with zero complex and amplitude relative
+L2 and unchanged peak, match, and boundary times. The finer support extends
+`0.25 M` beyond the coarser support; the nested-sample comparison includes
+the shared samples. This checks one q8 output refinement with fixed restart
+and choices, not domain-wide convergence or physical fidelity. Reproduce with
+`PYTHONPATH=src:. python -m dev.native_rom.diagnose_peak_condition_q8_grid
+--json-out /tmp/peak-condition-q8-grid.json` in the pinned environment.
+
 The [frozen q4 attachment-input plan](q4_attachment_inputs_plan.json) and
 [result](q4_attachment_inputs.json) replay the unchanged mixed-spin `ode_2`
 waveform hash and capture its actual native ringdown boundary: `633.703125 M`,

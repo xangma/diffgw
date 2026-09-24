@@ -662,6 +662,10 @@ The [current peak-preserving q8 tolerance replay](../evidence/2026-09-24/peak_co
 matches its frozen baseline hash and passes one tighter ODE step at `0.5 M`
 with `3.4133e-7` direct complex relative L2 and unchanged event times.
 This is one-row numerical evidence, not domain or physical qualification.
+The [q8 output-grid replay](../evidence/2026-09-24/peak_condition_q8_grid.json)
+likewise preserves all nested mode samples when the requested step halves
+from `0.5 M` to `0.25 M` at that tighter tolerance. Both runs retain the same
+internal `0.015625 M` step; wider numerical and physical gates remain open.
 
 ### Promotion blockers
 

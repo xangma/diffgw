@@ -1,0 +1,293 @@
+{
+  "comparison": {
+    "amplitude_relative_l2": 0.0,
+    "boundary_time_M_abs_difference": 0.0,
+    "candidate_samples": 2652,
+    "common_samples": 2652,
+    "complex_relative_l2": 0.0,
+    "grid_step_M": 0.5,
+    "match_time_M_abs_difference": 0.0,
+    "peak_time_M_abs_difference": 0.0,
+    "phase_max_abs_rad": 5.2916043085531535e-17,
+    "phase_rms_rad": 1.766819402122273e-17,
+    "phase_samples": 2650,
+    "reference_samples": 2652,
+    "relative_norm_error": 0.0,
+    "samples": 2652,
+    "support_end_difference_M": -0.25,
+    "unmaximized_real_overlap": 1.0
+  },
+  "errors": [],
+  "gates": {
+    "amplitude_relative_l2": true,
+    "boundary_time_M": true,
+    "complex_relative_l2": true,
+    "match_time_M": true,
+    "peak_time_M": true
+  },
+  "grid_gate_passed": true,
+  "input_sha256": {
+    "campaign": "d8efe4baa182ea39bf9a7d35b6de8621c6e054429ee180eb661e9fbb9f9d59d8",
+    "tighter_ode": "f5feeda27a468a911d973e06b6833aef87070df81b5fcc579c2baa0934d083f2"
+  },
+  "levels": {
+    "baseline": {
+      "atol": 3e-15,
+      "dt_geom": 0.5,
+      "name": "ode_3",
+      "rtol": 3e-14
+    },
+    "finer": {
+      "atol": 3e-15,
+      "dt_geom": 0.25,
+      "name": "grid_1",
+      "rtol": 3e-14
+    }
+  },
+  "plan_sha256": "0bff159f8791f58b273cc7a74df7f9ded2f7abf09643e991c86b5b5977289d72",
+  "process": {
+    "argv": [
+      "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw/dev/native_rom/diagnose_peak_condition_q8_grid.py",
+      "--json-out",
+      "dev/native_rom/evidence/2026-09-24/peak_condition_q8_grid.json"
+    ],
+    "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+    "host": "client-3792.default.vpn.port.ac.uk",
+    "pid": 9136
+  },
+  "release_qualified": false,
+  "row": {
+    "chi1": 0.85,
+    "chi2": 0.85,
+    "mass1": 40.0,
+    "mass2": 5.0,
+    "omega_start": 0.04
+  },
+  "runs": {
+    "grid_1": {
+      "elapsed_seconds": 280.96213887498016,
+      "level": {
+        "atol": 3e-15,
+        "dt_geom": 0.25,
+        "name": "grid_1",
+        "rtol": 3e-14
+      },
+      "native": {
+        "array_dtype": {
+          "mode": "complex128",
+          "time": "float64"
+        },
+        "array_sha256": {
+          "mode": "111e44e8c05c9cb16b8880e3e9b31f785b7216db2c92ac0591d20d4847f43b35",
+          "time": "fc3ea061730d3a8e48bd51de167eab7f525340cca083c9df473c2f92da47f428"
+        },
+        "atol": 3e-15,
+        "boundary_time_M": 1175.859375,
+        "dt_geom": 0.25,
+        "final_mass_fraction": 0.9792636225854244,
+        "final_spin": 0.8941271984269911,
+        "internal_step_M": 0.015625,
+        "match_time_M": 1175.8741823451842,
+        "name": "grid_1",
+        "nqc_coefficients": {
+          "amplitude": [
+            495.7449936529589,
+            -4050.8225653936506,
+            4426.811895872634
+          ],
+          "phase": [
+            98.49505603426472,
+            -7297.203118341729
+          ]
+        },
+        "nqc_full_spline_phase_matrix": [
+          [
+            -0.0030100514626668997,
+            -1.9536324683183657e-05
+          ],
+          [
+            -0.00024401680848629934,
+            -2.833256882850311e-06
+          ]
+        ],
+        "nqc_matching_matrices": {
+          "amplitude": [
+            [
+              0.0013919390491241163,
+              0.0004426823808160077,
+              0.00024964808911487015
+            ],
+            [
+              9.596193237589997e-05,
+              3.4199308200935905e-05,
+              2.03242259276964e-05
+            ],
+            [
+              1.123267472129991e-05,
+              4.2382441597852175e-06,
+              2.5908340809654683e-06
+            ]
+          ],
+          "phase": [
+            [
+              -0.0030100514112559535,
+              -1.9536324411867602e-05
+            ],
+            [
+              -0.00024401207224492694,
+              -2.833228303034818e-06
+            ]
+          ]
+        },
+        "peak_time_M": 1197.2050552368164,
+        "restart_time_M": 100.0,
+        "rtol": 3e-14,
+        "samples": 5304,
+        "stages": {
+          "coarse": {
+            "accepted": 1632,
+            "evaluations": 9983,
+            "event_time_M": 1197.2534607290308,
+            "rejected": 38,
+            "termination": [
+              "event"
+            ]
+          },
+          "fine": {
+            "accepted": 1574,
+            "evaluations": 9625,
+            "event_time_M": 1097.376026815529,
+            "rejected": 36,
+            "termination": [
+              "event"
+            ]
+          }
+        },
+        "support_M": [
+          0.0,
+          1325.75
+        ]
+      }
+    },
+    "ode_3": {
+      "elapsed_seconds": 280.8533790409856,
+      "level": {
+        "atol": 3e-15,
+        "dt_geom": 0.5,
+        "name": "ode_3",
+        "rtol": 3e-14
+      },
+      "native": {
+        "array_dtype": {
+          "mode": "complex128",
+          "time": "float64"
+        },
+        "array_sha256": {
+          "mode": "cad3854efaa3ee97297fb152201cfd166b1937f461bdc0159771676e5193f7fe",
+          "time": "db563c40381301f4f08f2592d8daf3c2d5cd97c2f22780b90179c0df62e346e7"
+        },
+        "atol": 3e-15,
+        "boundary_time_M": 1175.859375,
+        "dt_geom": 0.5,
+        "final_mass_fraction": 0.9792636225854244,
+        "final_spin": 0.8941271984269911,
+        "internal_step_M": 0.015625,
+        "match_time_M": 1175.8741823451842,
+        "name": "ode_3",
+        "nqc_coefficients": {
+          "amplitude": [
+            495.7449936529589,
+            -4050.8225653936506,
+            4426.811895872634
+          ],
+          "phase": [
+            98.49505603426472,
+            -7297.203118341729
+          ]
+        },
+        "nqc_full_spline_phase_matrix": [
+          [
+            -0.0030100514626668997,
+            -1.9536324683183657e-05
+          ],
+          [
+            -0.00024401680848629934,
+            -2.833256882850311e-06
+          ]
+        ],
+        "nqc_matching_matrices": {
+          "amplitude": [
+            [
+              0.0013919390491241163,
+              0.0004426823808160077,
+              0.00024964808911487015
+            ],
+            [
+              9.596193237589997e-05,
+              3.4199308200935905e-05,
+              2.03242259276964e-05
+            ],
+            [
+              1.123267472129991e-05,
+              4.2382441597852175e-06,
+              2.5908340809654683e-06
+            ]
+          ],
+          "phase": [
+            [
+              -0.0030100514112559535,
+              -1.9536324411867602e-05
+            ],
+            [
+              -0.00024401207224492694,
+              -2.833228303034818e-06
+            ]
+          ]
+        },
+        "peak_time_M": 1197.2050552368164,
+        "restart_time_M": 100.0,
+        "rtol": 3e-14,
+        "samples": 2652,
+        "stages": {
+          "coarse": {
+            "accepted": 1632,
+            "evaluations": 9983,
+            "event_time_M": 1197.2534607290308,
+            "rejected": 38,
+            "termination": [
+              "event"
+            ]
+          },
+          "fine": {
+            "accepted": 1574,
+            "evaluations": 9625,
+            "event_time_M": 1097.376026815529,
+            "rejected": 36,
+            "termination": [
+              "event"
+            ]
+          }
+        },
+        "support_M": [
+          0.0,
+          1325.5
+        ]
+      }
+    }
+  },
+  "schema": "diffgw.seobnrv4.peak-condition-q8-grid.v1",
+  "scope": {
+    "description": "Requested output-grid sensitivity of current peak-preserving q8 waveform.",
+    "known_limitations": [
+      "Only one output-step refinement is tested; this does not establish asymptotic convergence.",
+      "The requested output step may also change the native internal high-rate step.",
+      "A one-row numerical check does not establish physical or domain-wide accuracy."
+    ],
+    "physics_validated": false,
+    "production_asset": false,
+    "production_promotion_allowed": false,
+    "training_generator_qualified": false
+  },
+  "script_sha256": "f4c66fd7ac28fb8926d50af3e756c8f2ab9dcedad59300f8c92cebb4ba8617a9",
+  "status": "diagnostic_complete"
+}

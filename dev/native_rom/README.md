@@ -502,8 +502,12 @@ transient. See the
 [frozen stress evidence](evidence/2026-09-24/README.md).
 The current peak-preserving q8 waveform also passes one additional frozen
 ODE-tolerance step at `0.5 M`: direct complex relative L2 is `3.4133e-7`,
-with unchanged event times. Its output-grid and domain-wide numerical checks,
+with unchanged event times. Further grid and domain-wide numerical checks,
 physical waveform agreement, and ROM qualification remain open.
+On the same q8 row, halving the requested output step from `0.5 M` to
+`0.25 M` at the tighter tolerance leaves all nested mode samples and event
+times unchanged. Both runs use the same `0.015625 M` internal step; this is
+one-row grid evidence, not a domain-wide numerical bound.
 Direct public-binary QNM calls now agree with the native fundamental frequency
 and damping to float64 precision on both stress rows. The q4 native boundary
 inputs are captured, but the public coarse-output mode does not expose its
