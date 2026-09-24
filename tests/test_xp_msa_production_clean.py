@@ -359,14 +359,47 @@ def test_nonzero_phi0_uses_established_rotation_path(monkeypatch):
     assert torch.max(torch.abs(hc_a - hc_b)).item() > 0.0
 
 
-def test_mixed_phi0_rows_are_rejected_on_clean_route():
+def test_mixed_phi0_rows_match_independent_scalar_routes():
     f = torch.linspace(20.0, 160.0, 9, dtype=DTYPE)
     params = _case()
-    with pytest.raises(ValueError, match="Mixed zero/nonzero phi0"):
-        IMRPhenomXP()(
-            f, **params, phi0=torch.tensor([0.0, 0.4], dtype=DTYPE),
+    model = IMRPhenomXP()
+    phi0 = torch.tensor([0.0, 0.4], dtype=DTYPE)
+    batched = model(
+        f, **params, phi0=phi0,
+        prec_version=223, convention=1, final_spin_mod=3,
+    )
+    for row in range(2):
+        scalar = model(
+            f, **params, phi0=phi0[row],
             prec_version=223, convention=1, final_spin_mod=3,
         )
+        for actual, expected in zip(batched, scalar):
+            torch.testing.assert_close(actual[row], expected, rtol=0.0, atol=0.0)
+
+
+def test_one_spin_physical_row_survives_generic_azimuth_batch():
+    f = torch.linspace(20.0, 160.0, 9, dtype=DTYPE)
+    params = {
+        **_case(),
+        "spin2x": torch.tensor([0.0, -0.2], dtype=DTYPE),
+        "spin2y": torch.tensor([0.0, 0.1], dtype=DTYPE),
+    }
+    model = IMRPhenomXP()
+    batched = model(
+        f, **params, phi0=0.4,
+        prec_version=223, convention=1, final_spin_mod=3,
+    )
+    for row in range(2):
+        scalar_params = {
+            **params, "spin2x": params["spin2x"][row],
+            "spin2y": params["spin2y"][row],
+        }
+        scalar = model(
+            f, **scalar_params, phi0=0.4,
+            prec_version=223, convention=1, final_spin_mod=3,
+        )
+        for actual, expected in zip(batched, scalar):
+            torch.testing.assert_close(actual[row], expected, rtol=0.0, atol=0.0)
 
 
 def test_aligned_nonzero_phi0_has_expected_m2_phase_rotation():

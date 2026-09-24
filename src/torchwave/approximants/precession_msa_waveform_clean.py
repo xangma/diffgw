@@ -871,7 +871,6 @@ def waveform(
     scalar_values = broadcast[8:]
     s1 = torch.stack(spin1_components, dim=-1)
     s2 = torch.stack(spin2_components, dim=-1)
-    batch_shape = m1.shape
     dist, inc, phi0, tc_t, fr = scalar_values
     for name, value in (("mass1", m1), ("mass2", m2), ("spin1", s1), ("spin2", s2),
                         ("distance", dist), ("inclination", inc), ("phic", phi0),
@@ -930,13 +929,13 @@ def waveform(
     )
     if boundary == "physical":
         # A separated auxiliary root has no physical spin amplitude.  Use
-        # the unsplit zero-nutation opening on the same rows whose MSA
-        # oscillatory term was suppressed.  The generic MSA Eq. (25) remains
-        # untouched off this limiting branch.
+        # the unsplit zero-nutation opening only where one spin is aligned.
+        # A nearly repeated auxiliary root alone does not prove constant S:
+        # it may also occur for a generic two-spin configuration. Keep its
+        # MSA Eq. (25) opening untouched.
         zero_nutation = (
             torch.all(s1[..., :2] == 0.0, dim=-1)
             | torch.all(s2[..., :2] == 0.0, dim=-1)
-            | angle_values["degenerate"]
         )
         physical_cos_beta = physical_zero_nutation_cos_beta(
             f_safe, m1, m2, s1, s2,

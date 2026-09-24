@@ -188,7 +188,6 @@ def test_xp_v223_convention6_mixed_opposed_j_batch_keeps_legacy_exception():
     {"phi0": .4},
     {"prec_version": 102},
     {"final_spin_mod": 0},
-    {"phi0": t([0.,.4])},
 ))
 def test_xp_convention6_other_tuples_keep_legacy_route(options):
     model = IMRPhenomXP()
@@ -200,6 +199,20 @@ def test_xp_convention6_other_tuples_keep_legacy_route(options):
     legacy = model(f,**p,_force_legacy=True)
     for actual,expected in zip(current,legacy):
         torch.testing.assert_close(actual,expected,atol=1e-34,rtol=2e-11)
+
+
+def test_xp_convention6_mixed_azimuth_rows_match_scalar_routes():
+    model = IMRPhenomXP()
+    f = t([25., 40., 80.])
+    phi0 = t([0., .4])
+    p = dict(mass1=40., mass2=20., spin1x=.3, spin1y=.2, spin1z=.4,
+             spin2x=-.2, spin2y=.1, spin2z=-.2, inclination=.7, phic=.3,
+             f_ref=40., convention=6)
+    batch = model(f, **p, phi0=phi0)
+    for row in range(2):
+        scalar = model(f, **p, phi0=phi0[row])
+        for actual, expected in zip(batch, scalar):
+            torch.testing.assert_close(actual[row], expected, atol=0., rtol=0.)
 
 
 @pytest.mark.parametrize('convention',[0,1,5,6,7])
@@ -232,34 +245,22 @@ def test_aligned_table_limits_and_endpoint_contracts(mode):
     f = t([25.,40.,80.])
     p = dict(mass1=40.,mass2=20.,spin1z=.4,spin2z=-.2,inclination=.7,phic=.3,f_ref=40.)
     default = model(f,**p)
-    # The native XP v223 auxiliary-root endpoint has a finite numerical jump
-    # at this tiny transverse spin.  Public LAL v223 shows the same jump for
-    # this fixture (plus/cross relative L2 at azimuth -2: 3.61e-5/4.89e-5).
-    # XPHM retains the strict waveform-continuity check.  The paper's beta=0
-    # aligned limit is checked independently below at equation level.
+    # Public XP now uses the physical zero-nutation opening here. Its explicit
+    # v223 compatibility helper retains the finite jump and is tested
+    # separately. XPHM retains its existing strict continuity contract.
     for azimuth in [-2.,.4,2.1]:
         near = model(f,**p,spin1x=1e-9*math.cos(azimuth),spin1y=1e-9*math.sin(azimuth))
-        for polarization,(h,h0) in enumerate(zip(near,default)):
+        for h,h0 in zip(near,default):
             relative = torch.linalg.vector_norm(h-h0)/torch.linalg.vector_norm(h0)
-            if mode is None:
-                assert relative < 6e-5
-                if azimuth == -2.:
-                    assert relative > (3e-5,4e-5)[polarization]
-            else:
-                assert relative < 2e-8
+            assert relative < 2e-8
     for convention in [0,5,6,7]:
         exact = model(f,**p,convention=convention)
         # The declared zero-spin azimuth is phi_JL=0. Approach that gauge.
         near = model(f,**p,spin1x=1e-9,convention=convention)
-        for polarization,(h,h0) in enumerate(zip(near,exact)):
+        for h,h0 in zip(near,exact):
             assert torch.isfinite(h0).all()
             relative = torch.linalg.vector_norm(h-h0)/torch.linalg.vector_norm(h0)
-            if mode is None and convention == 0:
-                # This clean chart keeps the auxiliary-root jump; public LAL
-                # also has a separate near-aligned convention-0 phase threshold.
-                assert (2e-5,3e-5)[polarization] < relative < 4e-5
-            else:
-                assert relative < 2e-8
+            assert relative < 2e-8
     order = 2 if mode is None else mode[1]
     for h,h0 in zip(model(f,**p,convention=6),default):
         torch.testing.assert_close(h,torch.exp(1j*t(order*.3))*h0,atol=1e-34,rtol=2e-11)

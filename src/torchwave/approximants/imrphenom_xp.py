@@ -5,21 +5,17 @@ Mathematical references for the inherited model and audited corrections:
 - Pratten et al. (2020), Phys. Rev. D 102, 064001 (arXiv:2001.11412)
 """
 
-from typing import Dict, Optional, Sequence, Tuple, Union
-import math
+from typing import Optional, Tuple, Union
 import torch
 import torch.nn as nn
 
 from torchwave.constants import (
-    C_SI,
     MSUN_SEC,
-    MPC_SI,
     PI,
 )
 from torchwave.conversions import (
     as_tensor,
     component_masses_to_eta,
-    component_masses_to_delta,
 )
 from torchwave.approximants.imrphenom_xas import IMRPhenomXAS, XASParameterFits
 from torchwave.approximants.precession_msa import (
@@ -87,8 +83,9 @@ class IMRPhenomXP(nn.Module):
         guard. MSA version labels share the published analytical prescription;
         undocumented implementation-specific differences are not reproduced.
         ``phi0`` is an additional source-frame observer azimuth. On the clean
-        route the Appendix-C observer coordinates use ``phic-phi0``; the
-        Table-IV convention-6 carrier phase retains the original ``phic``.
+        zero-nutation route the Appendix-C observer coordinates use
+        ``phic-phi0``; the Table-IV convention-6 carrier retains ``phic``.
+        Generic two-spin nonzero-azimuth rows keep the established rotation.
         The physical zero-nutation opening removes the auxiliary MSA root
         split from the aligned boundary; the explicit clean v223 helper
         retains its historical binary-compatibility opening by default.
@@ -129,7 +126,6 @@ class IMRPhenomXP(nn.Module):
 
         device = freqs.device if isinstance(freqs, torch.Tensor) else None
         dtype = freqs.dtype if isinstance(freqs, torch.Tensor) and freqs.is_floating_point() else torch.float64
-        complex_dtype = torch.complex128 if dtype == torch.float64 else torch.complex64
 
         m1 = as_tensor(mass1, device=device, dtype=dtype)
         m2 = as_tensor(mass2, device=device, dtype=dtype)
@@ -159,16 +155,19 @@ class IMRPhenomXP(nn.Module):
         if fref is not None:
             fref = fref_eval
 
-        # Appendix C puts the observer at source azimuth phic-phi0.  The
-        # clean helper already accepts that source-frame coordinate; Table IV
-        # keeps the convention-6 carrier phase as the original phic.
+        # Appendix C puts the observer at source azimuth phic-phi0.  For
+        # nonzero phi0 use the clean chart only on its zero-nutation branch;
+        # generic two-spin rows retain the established rotation until its
+        # independent source-frame adapter is validated.
         exact_aligned = (
             (s1x == 0) & (s1y == 0) & (s2x == 0) & (s2y == 0)
         )
+        one_spin_aligned = ((s1x == 0) & (s1y == 0)) | ((s2x == 0) & (s2y == 0))
         clean_candidate = (
             p_ver == 223 and convention in (0, 1, 6) and final_spin_mod == 3
             and not force_legacy
         )
+        legacy_azimuth_rows = (phi_0 != 0) & ~one_spin_aligned
         guard_unsupported = torch.zeros_like(exact_aligned, dtype=torch.bool)
         if clean_candidate:
             # The clean MSA helper deliberately surfaces the singular
@@ -234,7 +233,10 @@ class IMRPhenomXP(nn.Module):
             # clean v223 chart. Conventions 0/1 keep the L+S reference guard
             # row-local; convention 6 retains its legacy guard for the whole
             # request when either reference or evaluated frequency is opposed.
-            legacy_rows = guard_unsupported if clean_candidate else exact_aligned
+            legacy_rows = (
+                guard_unsupported | legacy_azimuth_rows
+                if clean_candidate else exact_aligned
+            )
         else:
             legacy_rows = exact_aligned
         if clean_candidate and legacy_rows.dim() > 0 and bool(torch.any(legacy_rows)):
