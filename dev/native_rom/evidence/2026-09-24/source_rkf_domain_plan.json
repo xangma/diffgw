@@ -1,0 +1,34 @@
+{
+  "schema": "diffgw.seobnrv4.source-rkf-domain-plan.v1",
+  "purpose": "Predeclare a selected-row numerical screen for the source-backed physical choices with the independently tested fine-stage RKF45 sampler. This is not a physical or full-domain release gate.",
+  "prior_source_candidate": "dev/native_rom/evidence/2026-09-24/source_candidate_new_rows.json",
+  "prior_source_candidate_sha256": "d8efe4baa182ea39bf9a7d35b6de8621c6e054429ee180eb661e9fbb9f9d59d8",
+  "candidate": {
+    "fine_sampler": "rkf45",
+    "coarse_sampler": "natural_cubic",
+    "local_nqc_phase_derivatives": true,
+    "matching_second_derivatives": true,
+    "nqc_phase_window_M": 1.0,
+    "coarse_initial_step_M": 0.125,
+    "warm_start_Momega": 0.03162277660168379,
+    "fixed_restart_time_M": 100.0
+  },
+  "settings": {
+    "atol_levels": [1e-12, 1e-13, 1e-14],
+    "rtol_levels": [1e-11, 1e-12, 1e-13],
+    "dt_levels_M": [0.5, 0.25, 0.125],
+    "ringdown_duration_M": 150.0,
+    "max_accepted_steps": 20000,
+    "max_rejected_steps": 10000,
+    "max_evaluations": 200000,
+    "max_run_seconds": 600.0,
+    "relative_l2_limit": 1e-6,
+    "event_time_limit_M": 0.05
+  },
+  "rows": {
+    "q1_strong_aligned": {"mass1": 30.0, "mass2": 30.0, "chi1": 0.8, "chi2": 0.8, "omega_start": 0.04},
+    "q6_mixed_antialigned": {"mass1": 36.0, "mass2": 6.0, "chi1": -0.7, "chi2": -0.2, "omega_start": 0.04},
+    "q12_mixed_spin": {"mass1": 36.0, "mass2": 3.0, "chi1": 0.6, "chi2": -0.5, "omega_start": 0.04}
+  },
+  "qualification_claim": false
+}
