@@ -126,10 +126,10 @@ frontends; the cutoff ID covers the threshold expression and hard-mask samples.
 
 The scalar functions `amplitude_ratio`, `spin_weighted_harmonic`, `projection`,
 `mode_phase`, `mode_expr`, `waveform_expr`, and `cutoff_frequency_expr` live in
-[`taylorf2_hm.py`](../../src/diffgw_reference/taylorf2_hm.py). Native mode
+[`taylorf2_hm.py`](https://github.com/xangma/diffgw/blob/main/src/diffgw_reference/taylorf2_hm.py). Native mode
 amplitudes, phases, and projections live in the separate
-[`torchwave`](../../src/torchwave/approximants/taylorf2_hm.py) and
-[`jaxwave`](../../src/jaxwave/approximants/taylorf2_hm.py) implementations.
+[`torchwave`](https://github.com/xangma/diffgw/blob/main/src/torchwave/approximants/taylorf2_hm.py) and
+[`jaxwave`](https://github.com/xangma/diffgw/blob/main/src/jaxwave/approximants/taylorf2_hm.py) implementations.
 `return_modes=True` exposes per-mode projected $(h_+,h_\times)$, which the
 reference checks before testing their sum. The scalar reference imports
 neither native implementation; the native implementations import no scalar

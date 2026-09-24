@@ -1,28 +1,30 @@
 # Higher-mode, eccentric, and tidal waveform family: research ledger
 
-This is a provisional family specification at foundation `5bc907d`. It follows
-the [six-section specification template](../../math/waveform-spec-template.md)
-so that each of the five rows can become its own canonical model page. The
-component IDs below are research identifiers, not registered catalog IDs.
+This family research ledger began at foundation `5bc907d`. It follows the
+[six-section specification template](../../math/waveform-spec-template.md).
+`TaylorF2_HM` now has a [versioned leading-carrier specification](../../math/taylorf2-hm.md);
+the other four rows remain provisional. The component IDs below are historical
+research identifiers, not registered catalog IDs.
 
 ## Scope and status
 
 | Native approximant | Implemented mathematical scope | Research status |
 | --- | --- | --- |
-| `TaylorF2_HM` | Frequency-domain, aligned-spin SPA inspiral, leading amplitudes for `(2,2), (2,1), (3,1), (3,2), (3,3), (4,2), (4,3), (4,4)` | Full eight-mode independent reference pending; existing LAL check covers `(2,2)` only. |
+| `TaylorF2_HM` | Frequency-domain, aligned-spin SPA inspiral, leading amplitudes for `(2,2), (2,1), (3,1), (3,2), (3,3), (4,2), (4,3), (4,4)` | [Independent leading-carrier reference](../../math/taylorf2-hm.md) covers all eight modes; exact external eight-mode waveform comparison remains unavailable. |
 | `TaylorF2_Eccentric` | Frequency-domain `(2,2)` quasi-circular TaylorF2 plus an order-`e0²` eccentric phase through relative 3PN; optional project amplitude factor | Paper-literal eccentric phase and full-model independent reference pending. |
 | `IMRPhenomD_NRTidal` | Frequency-domain aligned-spin `(2,2)` IMRPhenomD plus 2017 NRTidal phase and BNS merger taper | Component-level independent reference pending. |
 | `IMRPhenomD_NRTidalv2` | Same BBH carrier plus 2019 phase, tidal amplitude, EOS-dependent self-spin, and merger taper | Component-level independent reference pending. |
 | `IMRPhenomNSBH` | Frequency-domain aligned-spin `(2,2)` PhenomD-like phase with NRTidalv2 term and a disruption-dependent PhenomC-like amplitude | Source-fidelity and independent reference pending, especially inherited phase/remnant conventions. |
 
 Torch and JAX expose all five through their respective `get_fd_waveform`
-dispatchers. They are not present in
-`src/diffgw_core/waveform_definitions/catalog.py`, and this page does not make
-them public math-library definitions. The historical
+dispatchers. `TaylorF2_HM` is registered in
+`src/diffgw_core/waveform_definitions/catalog.py` for the leading-carrier
+scope; the other four are not. The historical
 [`model_manifest.json`](../../model_manifest.json) statuses describe *declared*
 CPU FP64 waveform comparisons, not independently executable scalar expressions
-for these five models or a parameter-domain certificate. The present work is
-documentation/source audit only; no comparison has been rerun here.
+for the remaining four models or a parameter-domain certificate. This ledger's
+foundation audit did not rerun comparisons; the HM specification links its
+subsequent maintained checks.
 
 ## Inputs, conventions, and options
 
@@ -82,9 +84,9 @@ work, not native availability or verification.
 
 | Research component ID/version | Pinned source and variant | Status | Independent scalar / native mapping and blocker |
 | --- | --- | --- | --- |
-| `hm.mode-phase/v0` | [García-Quirós et al. 2020](https://doi.org/10.1103/PhysRevD.102.064002), Eqs. (4.8)–(4.10), inspiral harmonic rescaling; [Mezzasoma & Yunes 2022](https://arxiv.org/abs/2203.15934), Eqs. (2.24)–(2.30), SPA phase and offset | conditional | Reuse scalar `diffgw_reference.taylorf2` carrier pieces after variant alignment; Torch/JAX `taylorf2_hm` evaluate. Full spin/tide/f_ref carrier and negative-`m` convention need an independent whole-mode reference. |
-| `hm.leading-amplitudes/v0` | [Kidder 2008](https://arxiv.org/abs/0710.0614), [García-Quirós 2020](https://arxiv.org/abs/2001.10914), [Mezzasoma & Yunes 2022](https://arxiv.org/abs/2203.15934), Eqs. (2.20)–(2.21i), especially `(4,2)` Eq. (2.21g); leading PN only | pending | Torch/JAX `taylorf2_hm` mode-ratio branches. Eight independently derived ratios, normalization, signs and numerical mode comparisons needed. |
-| `hm.projection-cutoff/v0` | García-Quirós Eqs. (2.1)–(2.12) for mode and polarization conventions; project harmonic ISCO adapter | pending | Torch/JAX `_swsh_projection_coefficients` and evaluate/forward. Verify negative-`m` storage, observer azimuth, exact projections, hard/smooth cutoff and per-mode gradients. |
+| `hm.mode-phase/v0` | [García-Quirós et al. 2020](https://doi.org/10.1103/PhysRevD.102.064002), Eqs. (4.8)–(4.10), inspiral harmonic rescaling; [Mezzasoma & Yunes 2022](https://arxiv.org/abs/2203.15934), Eqs. (2.24)–(2.30), SPA phase and offset | superseded in scope | The [v1 carrier](../../math/taylorf2-hm.md) checks aligned-spin phase and both phase origins for all eight modes. Tidal terms remain outside that HM slice. |
+| `hm.leading-amplitudes/v0` | [Kidder 2008](https://arxiv.org/abs/0710.0614), [García-Quirós 2020](https://arxiv.org/abs/2001.10914), [Mezzasoma & Yunes 2022](https://arxiv.org/abs/2203.15934), Eqs. (2.20)–(2.21i), especially `(4,2)` Eq. (2.21g); leading PN only | superseded in scope | The [v1 carrier](../../math/taylorf2-hm.md) derives all eight leading ratios and compares complex projected modes with Torch/JAX. Higher-PN and spin-amplitude terms remain outside scope. |
+| `hm.projection-cutoff/v0` | García-Quirós Eqs. (2.1)–(2.12) for mode and polarization conventions; project harmonic ISCO adapter | superseded in scope | The [v1 carrier](../../math/taylorf2-hm.md) checks negative-`m` projection, azimuth derivatives, and Schwarzschild hard-cutoff thresholds; Kerr and smooth cutoff options remain unchecked. |
 | `ecc.phase-3pn-e2/v0` | [Moore et al. 2016](https://arxiv.org/pdf/1605.00304v2), **Eq. (6.26)**, TaylorF2 SPA phase at order `e0²` | pending | Torch/JAX `eccentric_phase_correction`; derive scalar polynomial independently and inspect subtraction at `f_ref`. |
 | `ecc.amplitude-adapter/v0` | Moore et al. Sec. VI.E uses 0PN amplitude at order `e0⁰`; native `743/9216` factor is a project option | pending | Torch/JAX `eccentric_amplitude_factor`; identify a primary derivation or mark explicitly project-only; default is off. |
 | `nrt1.phase-pade/v0` | [Dietrich, Bernuzzi & Tichy 2017](https://arxiv.org/abs/1706.02969), Eq. (7), 2017 rational phase | pending | `diffgw_core.nrtidal_fits.NRTIDAL_V1_PADÉ_COEFFS`; Torch/JAX `imrphenomd_nrtidal` v1 branch. Need independent scalar and paper-decimal precision comparison. |
@@ -100,12 +102,14 @@ work, not native availability or verification.
 
 ## Implementation mapping
 
-The table names the native entry points; there is no independent scalar
-`diffgw_reference` module for any *complete* target model. Existing scalar
-TaylorF2 nonspinning, aligned-spin, tidal, spin-quadrupole and IMRPhenomD
-amplitude/phase/remnant/intrinsic modules can be reused as qualified carrier
-components, but they cannot be treated as references for the added terms.
-Native Torch/JAX evaluators do not call these scalar modules.
+The table names the native entry points. The independent
+`diffgw_reference.taylorf2_hm` module covers the declared leading HM carrier;
+no complete scalar reference exists yet for the other four models. Existing
+scalar TaylorF2 nonspinning, aligned-spin, tidal, spin-quadrupole and
+IMRPhenomD amplitude/phase/remnant/intrinsic modules can be reused as
+qualified carrier components, but they cannot be treated as references for
+the remaining added terms. Native Torch/JAX evaluators do not call these
+scalar modules.
 
 | Family | Torch location | JAX location | Carrier/reference reuse and specific divergence to resolve |
 | --- | --- | --- | --- |
@@ -124,28 +128,31 @@ coefficient-level or waveform-level equivalence.
 
 ## Evidence and limitations
 
-Source inspection here confirms the model composition and paper locations in
-the table; it does **not** confirm coefficient-by-coefficient equivalence.
+The foundation source inspection recorded model composition and paper
+locations; by itself it does **not** confirm coefficient-by-coefficient
+equivalence. The later [HM leading-carrier reference](../../math/taylorf2-hm.md)
+adds an executable eight-mode comparison within its declared scope.
 `docs/model_manifest.json` records one dominant-only HM LAL diagnostic; two
 eccentric catalog cases; and one catalog plus one holdout for each tidal/NSBH
 model. The latter declared cases passed their historical CPU FP64 gates, but
 the suite did not establish independent scalar reference behavior, full domain
-accuracy, or physical validity. In particular, the HM `(2,2)` result says
-nothing about the seven additional modes. The NSBH 22-case expansion cited by
+accuracy, or physical validity. The HM `(2,2)` external diagnostic says
+nothing about the seven additional modes; the scalar eight-mode checks are a
+different kind of evidence. The NSBH 22-case expansion cited by
 the manifest remains external-comparison evidence, and its inherited
 PhenomD/remnant calibration provenance remains open.
 
-The independent-reference blockers are concrete: (1) paper-literal mode
-projection and ratio reference, especially negative-`m` signs; (2) 3PN
-eccentric polynomial and reference-frequency gauge plus provenance for the
-optional amplitude factor; (3) v1/v2 phase, amplitude, self-spin, taper and
-paper-decimal checks; (4) NSBH disruption root, every amplitude branch,
-supplementary remnant coefficients and intrinsic/affine phase split. The
-published validity regions must be separated from permissive native input
-acceptance. No executable catalog record or whole-model verification claim
-should be made from this page.
+Remaining independent-reference blockers are concrete: (1) HM tidal terms,
+Kerr and smooth cutoff options, and an exact same-model external eight-mode
+waveform comparison; (2) the 3PN eccentric polynomial and reference-frequency
+gauge plus provenance for the optional amplitude factor; (3) v1/v2 tidal
+phase, amplitude, self-spin, taper and paper-decimal checks; (4) NSBH
+disruption root, every amplitude branch, supplementary remnant coefficients
+and intrinsic/affine phase split. The published validity regions must be
+separated from permissive native input acceptance. This ledger makes no
+whole-model verification claim.
 
-To promote the family, create five `docs/math/<model>.md` pages, each with
+To promote the remaining models, create four `docs/math/<model>.md` pages, each with
 these same six headings, exact option/front-end inventory, composition
 equation, links to versioned component pages, and distinct source,
 independent-reference, backend, external-comparison and physics evidence.
@@ -153,7 +160,7 @@ Implement paper-literal scalar components under `diffgw_reference`, then
 compose complete scalar polarizations with fixed conventions. Test those
 components separately from native Torch/JAX, add representative holdouts and
 branch-boundary/derivative cases, reconcile source pins and carrier precision,
-and only then consider catalog entries, generated tables and qualification.
+and only then consider their catalog entries, generated tables and qualification.
 
 ## Reproduce the checks
 
@@ -167,7 +174,8 @@ rg 'TaylorF2_HM|TaylorF2_Eccentric|IMRPhenomD_NRTidal|IMRPhenomNSBH' \
 ```
 
 Maintained native checks, when the relevant Torch/JAX dependencies are
-installed, include `pytest -q tests/test_taylorf2_hm.py
+installed, include `pytest -q tests/test_taylorf2_hm_math_reference.py
+tests/test_taylorf2_hm.py
 tests/test_taylorf2_hm_mode_inventory.py tests/test_eccentric.py
 tests/parity/test_eccentric_parity.py tests/test_nrtidal.py
 tests/test_nrtidal_reconstruction.py tests/test_clean_room_nsbh.py

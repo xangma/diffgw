@@ -26,7 +26,7 @@ class routes, as the [Pv2 ledger](research/phenom-precessing.md) explains.
 | Model or variant | Form | Spec status | Public dispatch |
 | --- | --- | --- | --- |
 | [TaylorF2](../math/taylorf2.md) | native FD | [versioned slice](index.md) | `taylorf2` |
-| [TaylorF2_HM](research/tidal-eccentric-higher-modes.md) | higher-mode extension | provisional | `taylorf2hm` |
+| [TaylorF2_HM](../math/taylorf2-hm.md) | higher-mode extension | [versioned slice](index.md) | `taylorf2hm` |
 | [TaylorF2_Eccentric](research/tidal-eccentric-higher-modes.md) | eccentric extension | provisional | `taylorf2eccentric`, `eccentrictaylorf2` |
 | [IMRPhenomD](../math/imrphenomd-intrinsic.md) | native FD | [versioned slice](index.md) | `imrphenomd` |
 | [IMRPhenomHM](research/phenom-higher-modes.md) | higher-mode extension | provisional | `imrphenomhm` |
