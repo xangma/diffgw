@@ -10,6 +10,7 @@ import jax.numpy as jnp
 from diffgw_core.constants import PI, MSUN_SEC
 import jaxwave
 from jaxwave import (
+    IMRPhenomXP as JaxPhenomXP,
     IMRPhenomXPHM as JaxPhenomXPHM,
     get_fd_waveform as jax_get_fd_waveform,
 )
@@ -17,6 +18,7 @@ from torchwave import get_fd_waveform as torch_get_fd_waveform
 from torchwave.approximants.imrphenom_xphm import IMRPhenomXPHM as TorchPhenomXPHM
 from torchwave.approximants.imrphenom_xhm import IMRPhenomXHM as TorchPhenomXHM
 from jaxwave.approximants.imrphenom_xhm import IMRPhenomXHM as JaxPhenomXHM
+from torchwave.approximants.imrphenom_xp import IMRPhenomXP as TorchPhenomXP
 import torchwave.approximants.precession_spintaylor as torch_st
 import jaxwave.approximants.precession_spintaylor as jax_st
 import torchwave.approximants.precession_pnr as torch_pnr
@@ -53,6 +55,51 @@ def test_xphm_aligned_mode_parity(mode):
     for actual, expected in zip(jax_output, torch_output):
         np.testing.assert_allclose(np.asarray(actual), expected.detach().numpy(),
                                    atol=1e-34, rtol=2e-11)
+@pytest.mark.parametrize('method,version,remnant',[
+    ('nnlo', 102, 0), ('msa', 223, 3),
+])
+@pytest.mark.parametrize('convention', [1, 5])
+def test_xp_xphm22_batched_azimuth_parity(method, version, remnant, convention):
+    # Pratten et al. (2021): XPHM restricted to the coprecessing 22 mode is XP.
+    # The two public defaults differ, so compare the same angle/remnant choice.
+    p = dict(mass1=40., mass2=20., spin1x=.3, spin1y=.2, spin1z=.4,
+             spin2x=-.2, spin2y=.1, spin2z=-.2, inclination=.7, phic=.3,
+             f_ref=40., convention=convention, precession_method=method,
+             prec_version=version, final_spin_mod=remnant)
+    f = np.array([25., 40., 80.])
+    phi = np.array([-.4, .3])
+    t_phi = torch.tensor(phi, dtype=torch.float64, requires_grad=True)
+    t_xp = TorchPhenomXP()(torch.tensor(f, dtype=torch.float64), phi0=t_phi, **p)
+    t_xphm = TorchPhenomXPHM(modes=[(2, 2)])(
+        torch.tensor(f, dtype=torch.float64), phi0=t_phi, **p)
+    previous_x64 = jax.config.x64_enabled
+    jax.config.update('jax_enable_x64', True)
+    try:
+        j_f, j_phi = jnp.asarray(f), jnp.asarray(phi)
+
+        def j_xp(angle):
+            return JaxPhenomXP.evaluate(j_f, phi0=angle, **p)
+
+        def j_xphm(angle):
+            return JaxPhenomXPHM.evaluate(j_f, phi0=angle, modes=[(2, 2)], **p)
+
+        for actual, expected, torch_expected in zip(j_xp(j_phi), j_xphm(j_phi), t_xp):
+            np.testing.assert_allclose(np.asarray(actual), np.asarray(expected),
+                                       atol=1e-34, rtol=2e-11)
+            np.testing.assert_allclose(np.asarray(actual), torch_expected.detach().numpy(),
+                                       atol=1e-34, rtol=2e-11)
+        for actual, expected in zip(j_xphm(j_phi), t_xphm):
+            np.testing.assert_allclose(np.asarray(actual), expected.detach().numpy(),
+                                       atol=1e-34, rtol=2e-11)
+        j_grad = jax.grad(lambda angle: 1e22*j_xp(angle)[0].real.sum())(j_phi)
+        j_grad_hm = jax.grad(lambda angle: 1e22*j_xphm(angle)[0].real.sum())(j_phi)
+        t_grad = torch.autograd.grad(1e22*t_xp[0].real.sum(), t_phi)[0]
+        np.testing.assert_allclose(np.asarray(j_grad), np.asarray(j_grad_hm),
+                                   atol=2e-11, rtol=2e-11)
+        np.testing.assert_allclose(np.asarray(j_grad), t_grad.detach().numpy(),
+                                   atol=2e-11, rtol=2e-11)
+    finally:
+        jax.config.update('jax_enable_x64', previous_x64)
 
 
 def test_chi_tot_perp_parity():

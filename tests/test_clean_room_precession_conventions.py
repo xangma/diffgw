@@ -261,11 +261,18 @@ def test_xhm_positive_frequency_observer_azimuth(mode):
 
 
 @pytest.mark.parametrize('convention',[0,1,5,6,7])
-def test_xp_xphm22_agree_for_batched_observer_azimuth(convention):
+@pytest.mark.parametrize('method,version,remnant',[
+    ('nnlo',102,0),('msa',223,3),
+])
+def test_xp_xphm22_agree_for_batched_observer_azimuth(convention,method,version,remnant):
     f = t([25.,40.,80.])
     phi0 = t([-.4,.3]).requires_grad_()
     p = dict(mass1=40.,mass2=20.,spin1x=.3,spin1y=.2,spin1z=.4,
-             spin2x=-.2,spin2y=.1,spin2z=-.2,inclination=.7,phic=.3,f_ref=40.,convention=convention)
+             spin2x=-.2,spin2y=.1,spin2z=-.2,inclination=.7,phic=.3,f_ref=40.,
+             convention=convention,precession_method=method,prec_version=version,
+             final_spin_mod=remnant)
+    # The published 22-only identity compares the same angle/remnant model.
+    # XP defaults to MSA v223/remnant 3; XPHM defaults to NNLO v102/remnant 0.
     for hp,hpm in zip(IMRPhenomXP()(f,**p,phi0=phi0),IMRPhenomXPHM(modes=[(2,2)])(f,**p,phi0=phi0)):
         torch.testing.assert_close(hp,hpm,atol=1e-34,rtol=2e-11)
         gp = torch.autograd.grad(1e22*hp.real.sum(),phi0,retain_graph=True)[0]
