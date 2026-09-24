@@ -387,7 +387,7 @@ def test_kerr_uses_independent_td_reference_contract():
 
 
 def test_kerr_convergence_failure_is_not_accepted(monkeypatch):
-    import kerr_public_oracle
+    from tests import kerr_public_oracle
     import tests.parity_harness as ph
     monkeypatch.setattr(kerr_public_oracle, "public_ringdown_fd_converged",
                         lambda *a, **k: (_ for _ in ()).throw(RuntimeError("forced convergence failure")))
