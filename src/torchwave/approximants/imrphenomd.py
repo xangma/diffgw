@@ -877,6 +877,8 @@ class IMRPhenomD(nn.Module):
             phasing_convention if phasing_convention is not None else ("reference_frequency" if f_ref is not None else "coalescence")
         )
         conv = conv.lower()
+        if conv not in ("coalescence", "reference_frequency", "reffreq", "ref"):
+            raise ValueError(f"unsupported IMRPhenomD phasing convention: {conv!r}")
 
         if conv in ("reference_frequency", "reffreq", "ref"):
             ref_f = f_ref if f_ref is not None else (f_eval.reshape(-1)[0] if f_eval.numel() > 0 else 20.0)

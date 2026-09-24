@@ -38,8 +38,14 @@ The public inputs are component masses in solar masses, aligned spins,
 distance in Mpc, inclination and orbital phase in radians, time shift in
 seconds, and a frequency grid in Hz. The default phase uses the coalescence
 convention; `reference_frequency` subtracts the intrinsic phase at a positive
-`f_ref`. This composition needs declared fit rows and QNM knot data. The
-[waveform composition](imrphenomd-waveform.md) specifies SI normalization,
+`f_ref`. Supplying `f_ref` without an explicit `phasing_convention` selects
+`reference_frequency` in both native dispatchers. An explicit convention takes
+precedence over this implicit selection; `reference_frame` overrides
+`phasing_convention` if both are supplied. An unsupported value raises an error.
+For `reference_frequency` with no `f_ref`, the carriers use the first evaluation
+frequency as the anchor. This composition needs declared fit rows and QNM knot
+data. The [waveform composition](imrphenomd-waveform.md) specifies SI
+normalization,
 polarization signs, and the peak time gauge; the
 [remnant and QNM specification](imrphenomd-remnant-qnm.md) specifies its
 interpolation and high-spin continuation. The generated option table above

@@ -91,7 +91,7 @@ $2\pi f t_c-2\phi_c$ when requested.
 
 | Component IDs | Paper evidence | Executable reference | Maintained frontend check |
 | --- | --- | --- | --- |
-| `phenomd.phase.fit.{sigma1–4,beta1–3,alpha1–5}.v1` | Eq. (31), Table 5 | `fit_expr`, printed rows | Row transcription and Torch/JAX `eval_table_v` algebra for used rows; printed $\beta_1$ is reference-only |
+| `phenomd.phase.fit.{sigma1–4,beta1–3,alpha1–5}.v1` | Eq. (31), Table 5 | `fit_expr`, printed rows | Row transcription and Torch/JAX `eval_table_v` algebra for used rows; printed $\beta_1$ has no native binding because continuity determines the value used by the waveform |
 | `phenomd.phase.pn.v1` | Eqs. (27), (46)–(53) | `pn_phase_coefficients`, `taylorf2_expr` | Torch/JAX TaylorF2 coefficients |
 | `phenomd.phase.inspiral.v1` | Eq. (28) | `inspiral_expr` | Unwrapped phase in inspiral |
 | `phenomd.phase.intermediate.v1` | Eqs. (15)–(16) | `intermediate_shape`, `phase_pieces` | Integrated derivative and unwrapped phase |

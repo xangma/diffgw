@@ -9,6 +9,7 @@ sp = pytest.importorskip("sympy")
 pytest.importorskip("mpmath")
 
 from diffgw_reference import imrphenomd_phase as ref
+from diffgw.waveforms import get_waveform
 
 
 CASES = ((30., 30., 0., 0.), (45., 15., .45, -.25))
@@ -17,9 +18,17 @@ CASES = ((30., 30., 0., 0.), (45., 15., .45, -.25))
 def test_phase_component_bindings_are_complete_and_resolve():
     assert set(ref.COMPONENT_IDS.values()) == set(ref.COMPONENT_SOURCES)
     assert set(ref.COMPONENT_BINDINGS) == set(ref.COMPONENT_SOURCES)
-    for binding in ref.COMPONENT_BINDINGS.values():
+    components = {component.id: component for component in get_waveform("IMRPhenomD").components}
+    for component_id, binding in ref.COMPONENT_BINDINGS.items():
         assert callable(getattr(ref, binding["reference"]))
+        if component_id == ref.COMPONENT_IDS["beta1"]:
+            assert components[component_id].implementation == "reference_only"
+            assert not {"torch", "jax"}.intersection(binding)
+        else:
+            assert components[component_id].implementation == "native_and_reference"
         for frontend in ("torch", "jax"):
+            if frontend not in binding:
+                continue
             module_name, name = binding[frontend]
             target = importlib.import_module(module_name)
             for part in name.split("."):
@@ -27,6 +36,18 @@ def test_phase_component_bindings_are_complete_and_resolve():
             assert callable(target)
         assert binding["tests"]
         assert all(callable(globals()[name]) for name in binding["tests"])
+
+
+@pytest.mark.parametrize("option", ("phasing_convention", "reference_frame"))
+def test_public_dispatch_rejects_unknown_phase_option(backend, option):
+    name, _, _, array = backend
+    waveform = importlib.import_module(f"{name}wave.waveforms")
+    with pytest.raises(ValueError, match="unsupported IMRPhenomD phasing convention"):
+        waveform.get_fd_waveform(
+            approximant="IMRPhenomD", sample_frequencies=array([20., 30.]),
+            mass1=array(30.), mass2=array(30.), chi1=array(0.), chi2=array(0.),
+            distance=array(400.), inclination=array(.7), **{option: "unknown"},
+        )
 
 
 @pytest.fixture(params=("torch", "jax"))

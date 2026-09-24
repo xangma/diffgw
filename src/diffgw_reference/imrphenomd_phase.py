@@ -64,8 +64,10 @@ _JAX_PHASE = ("jaxwave.approximants.imrphenomd", "IMRPhenomD.evaluate")
 COMPONENT_BINDINGS = {
     **{COMPONENT_IDS[name]: {
         "reference": "fit_expr",
-        "torch": ("torchwave.approximants.imrphenomd", "IMRPhenomD.eval_table_v"),
-        "jax": ("jaxwave.approximants.imrphenomd", "IMRPhenomD.eval_table_v"),
+        **({} if name == "beta1" else {
+            "torch": ("torchwave.approximants.imrphenomd", "IMRPhenomD.eval_table_v"),
+            "jax": ("jaxwave.approximants.imrphenomd", "IMRPhenomD.eval_table_v"),
+        }),
         "tests": (("test_published_phase_rows_are_pinned_to_table_5",)
                   if name == "beta1" else
                   ("test_published_phase_rows_are_pinned_to_table_5",

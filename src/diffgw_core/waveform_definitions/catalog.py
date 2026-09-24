@@ -82,7 +82,13 @@ _D_COMPONENTS = (
     )),
     *tuple(_d_component(
         "imrphenomd_phase", _D_PHASE, f"phenomd.phase.fit.{name}.v1",
-        "Eq. 31; Table 5", caveats=("Production retains inherited extra digits with unresolved publication provenance.",)
+        "Eq. 31; Table 5",
+        implementation="reference_only" if name == "beta1" else "native_and_reference",
+        caveats=(
+            "Printed beta1 is retained as source evidence; the waveform uses the continuity-determined value."
+            if name == "beta1" else
+            "Production retains inherited extra digits with unresolved publication provenance.",
+        )
     ) for name in ("sigma1", "sigma2", "sigma3", "sigma4", "beta1", "beta2", "beta3",
                    "alpha1", "alpha2", "alpha3", "alpha4", "alpha5")),
     *tuple(_d_component(
@@ -318,7 +324,7 @@ IMRPHENOMD = WaveformDefinition(
         ConventionDefinition("time_gauge", "Native carrier uses the raw fitted alpha1 at the amplitude peak."),
     ),
     options=(OptionDefinition("phasing_convention", ("coalescence", "reference_frequency"), "coalescence",
-                              "Finite-reference phase subtraction and amplitude-peak time gauge are project conventions."),),
+                              "Supplying f_ref without an explicit convention selects reference_frequency; finite-reference phase subtraction and amplitude-peak time gauge are project conventions."),),
     carrier_parameters=(), capabilities=("fd", "plus_cross", "torch", "jax", "scalar_reference"),
     evidence=("paper_precision_source_transcription", "conditional_sampled_torch_jax_comparison"),
     caveats=("Inherited extra production fit digits have unresolved publication provenance.",
