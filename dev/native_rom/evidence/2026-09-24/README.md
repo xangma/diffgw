@@ -2318,3 +2318,29 @@ the nested output-grid comparisons are identical to reported precision,
 and sampled orbital-peak, NQC-match, and attachment times agree. The
 source manifest is unchanged. This is numerical evidence on one selected
 row, not an independent physical holdout or a generator/ROM qualification.
+
+The [post-hoc 2569 resampling plan](sxs_2569_resampling_plan.json) freezes
+the already failed case at 22 solar masses, the original anchored arrays,
+PSD, taper, frequency band, and time-shift optimizer. The
+[result](sxs_2569_resampling.json) reproduces the original native/NR overlap
+`0.9891417104357128`; amplitude/continuous-phase interpolation changes it
+to `0.9891405174620355`. The low/high NR control changes by only
+`3.22e-9` from `0.9999363193` to `0.9999363161`. This excludes the tested
+resampling choice as an explanation of this case's `0.99` miss. Selection
+was post-hoc, and the original prospective physical gate remains failed.
+
+The [frozen q4/q8 interpolation plan](frequency_anchor_polar_plan.json) and
+[result](frequency_anchor_polar.json) replay the exact source-backed RKF45
+native-array hashes from the q4 and q8 numerical screens against the pinned
+public mode. Only comparison resampling changes: straight-line real/imaginary
+interpolation versus amplitude and continuous-phase interpolation at the same
+independently found frequency anchors. On q4, whole-waveform complex relative
+L2 drops from `0.003162` to `0.001406`, and post-peak complex/amplitude L2
+from `0.009976`/`0.009469` to `0.004427`/`0.000586`. On q8, whole-waveform
+complex L2 drops from `0.001865` to `0.000991`, and post-peak
+complex/amplitude L2 from `0.005837`/`0.005707` to `0.001023`/`0.000329`.
+The previous amplitude residuals were dominated by oscillatory complex-sample
+interpolation. Frequency-anchor to amplitude-peak lags still differ by
+`−0.05094 M` (q4) and `+0.03443 M` (q8), and the post-peak complex residual
+does not vanish. These selected, post-hoc comparisons do not qualify the
+generator or either ROM.

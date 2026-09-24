@@ -710,7 +710,12 @@ The [separately frozen q4 mixed-spin extension](evidence/2026-09-24/source_rkf_q
 also passes both numerical checks. Its finest adjacent ODE complex relative L2
 is `1.60e-9`, and sampled peak, matching, and attachment times are unchanged.
 This confirms numerical stability on that selected row; its earlier public-mode
-comparison is being reassessed for complex-interpolation attenuation.
+comparison has a large complex-interpolation artifact. The
+[phase-aware replay](evidence/2026-09-24/frequency_anchor_polar.json) on the
+source-backed RKF45 q4 and q8 rows lowers post-peak amplitude relative L2
+from `0.00947` to `0.000586` on q4 and from `0.00571` to `0.000329` on q8.
+Post-peak complex relative L2 remains `0.00443` and `0.00102`, respectively;
+the residual phase and timing differences still require physical validation.
 
 A separately frozen [five-case SXS plan](evidence/2026-09-24/sxs_five_case_physical_plan.json)
 selects low-eccentricity nonprecessing NR configurations across mass ratios
@@ -846,6 +851,12 @@ The separately fitted native/NR lag changes from `−16.25 M` at 40–70 Hz to
 22% of the globally fitted residual, respectively. The same low/high NR
 control gives `0.999936` full-band overlap. These band fits are descriptive;
 they neither identify a unique upstream equation nor relax the frozen gate.
+The [single-mass resampling sensitivity check](evidence/2026-09-24/sxs_2569_resampling.json)
+replays the original `0.989141710` score exactly at 22 M⊙. Interpolating
+amplitude and continuous phase onto the same FFT grid instead yields
+`0.989140517`; the low/high NR control changes from `0.999936319` to
+`0.999936316`. This interpolation choice does not explain the failed `0.99`
+proxy. It is post-hoc on one selected mass and leaves the prospective gate failed.
 
 The [five-case pinned-public parity check](evidence/2026-09-24/sxs_third_public_parity.json)
 passes its separately frozen post-hoc gates: native/public fixed-crossing
