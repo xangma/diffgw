@@ -62,6 +62,12 @@ the `(3,3)` flux choice reduces a frozen aligned-spin, peak-fitted whole-wavefor
 complex relative L2 difference from `0.00827564` to `0.00760014`. This
 source-motivated variant remains development-only; the residual and open
 reference-component gates prevent release qualification.
+The same historical internal derivative is now available as a dev-only JAX
+component. Its potential values, shifted derivative, and JIT evaluation pass
+three frozen mass-ratio/spin checks; three same-state Torch/JAX regression
+checks cover every metric field and effective Hamiltonian. This is frontend
+component parity, not a
+JAX whole-waveform qualification.
 Combining it with the fully native frequency warm start lowers that one-row
 fitted difference to `0.00131140`. A pinned public-start-state intervention
 lowers it to `0.00116397`, so most of the residual remains. The same combined
@@ -71,6 +77,20 @@ limits). An opt-in local NQC second-derivative rule reduces those refined
 differences to `1.05e-7` and `2.87e-9` on the same row while leaving the
 physical comparison near `0.00131`. These [frozen diagnostics](evidence/2026-09-24/README.md)
 remain on the feature branch; no model or ROM is release qualified.
+A [three-row boundary campaign](evidence/2026-09-24/README.md) finds that a
+mass-ratio-four nonspinning row passes its ODE gate, while strong aligned spin
+still fails the complex gate and the original strong antialigned run has a
+restart after its match time. A frozen antialigned rerun with an earlier
+restart passes its ODE gate. Both ODE-passing rows pass a nested-grid identity
+control. Exact-hash attribution traces the aligned-spin numerical failure
+chiefly to the local NQC phase-basis second-derivative estimate; the raw
+pre-NQC waveform is much more stable. None of these boundary checks qualifies
+the physical generator or the independent ROM.
+A [predeclared wider-window intervention](evidence/2026-09-24/README.md)
+passes the strong aligned-spin ODE numerical gates at `2.70e-7` complex
+relative L2, while its fitted public-binary difference remains about `0.01985`.
+This opt-in numerical choice needs independent derivative and domain checks;
+the historical-physics and ROM gates remain open.
 
 ## Numerical evidence
 

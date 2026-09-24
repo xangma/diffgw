@@ -1,0 +1,192 @@
+{
+  "campaign_sha256": "3c414c018917f7dad38644ad86ba58781bc53180b931cb8f869c34f5e83b3025",
+  "comparison": {
+    "closure_max_abs": 1.0255819631044272e-12,
+    "coefficient_delta_l2": 0.002558313511071173,
+    "delta_coefficients": [
+      4.4489226105781654e-05,
+      -0.0025579266466593253
+    ],
+    "delta_matrix": [
+      [
+        -2.2710779871287778e-10,
+        -4.072445668450858e-12
+      ],
+      [
+        -1.2689754620362481e-09,
+        -2.433811214629794e-11
+      ]
+    ],
+    "delta_rhs": [
+      9.172598236517615e-10,
+      4.0790802766782486e-10
+    ],
+    "matrix_contribution": [
+      4.4120376329674926e-05,
+      -0.0025298714611392257
+    ],
+    "matrix_contribution_l2": 0.0025302561564976367,
+    "matrix_row_contributions": [
+      [
+        -1.7428710924620845e-06,
+        5.627388498550612e-05
+      ],
+      [
+        4.5863247422137e-05,
+        -0.0025861453461247315
+      ]
+    ],
+    "rhs_contribution": [
+      3.688497600828544e-07,
+      -2.8055184494517613e-05
+    ],
+    "rhs_contribution_l2": 2.8057609077876445e-05,
+    "rhs_row_contributions": [
+      [
+        -3.0109420051424825e-07,
+        9.721740456206646e-06
+      ],
+      [
+        6.699439605971026e-07,
+        -3.777692495072426e-05
+      ]
+    ]
+  },
+  "errors": [],
+  "plan_sha256": "bbcde5d6ea96098963422813792d095eac140e9722b9f292c8f100d2a2010a22",
+  "release_qualified": false,
+  "row": {
+    "chi1": 0.8,
+    "chi2": 0.8,
+    "mass1": 30.0,
+    "mass2": 20.0,
+    "omega_start": 0.04
+  },
+  "runs": [
+    {
+      "array_sha256": {
+        "mode": "98502b8c319fcf91b44279e9d4cda50ead47937b848ff5bbcbec14c21765744f",
+        "time": "9096e0bbea30489c881f6a43d7f7e00b155b14d3397efa850785a419427d1517"
+      },
+      "elapsed_seconds": 64.91381683302461,
+      "level": {
+        "atol": 1e-13,
+        "dt_geom": 0.125,
+        "name": "ode_1",
+        "rtol": 1e-12
+      },
+      "local_fit_samples": 64,
+      "match_time_M": 332.14579396452547,
+      "name": "ode_1",
+      "phase": {
+        "base": [
+          0.2715562606269843,
+          0.0037980405194013795
+        ],
+        "coefficients": [
+          43.115611251740674,
+          -1100.6584465109347
+        ],
+        "condition": 7.491804598708733,
+        "matrix": [
+          [
+            -0.007127846607667605,
+            -0.00012640673615979244
+          ],
+          [
+            -0.0008157272735697525,
+            -2.526408700704302e-05
+          ]
+        ],
+        "reconstruction_max_abs_error": 1.1368683772161603e-12,
+        "rhs": [
+          -0.16819082154808024,
+          -0.0073634492569866926
+        ],
+        "singular_values": [
+          0.007175521593294933,
+          1.072606550197149e-05
+        ],
+        "target": [
+          0.43974708217506453,
+          0.011161489776388072
+        ]
+      }
+    },
+    {
+      "array_sha256": {
+        "mode": "7ac97be15779fb8f0d10d994f519da2080651291d1796d3a3d72e394222eb02c",
+        "time": "9096e0bbea30489c881f6a43d7f7e00b155b14d3397efa850785a419427d1517"
+      },
+      "elapsed_seconds": 95.03766916698078,
+      "level": {
+        "atol": 1e-14,
+        "dt_geom": 0.125,
+        "name": "ode_2",
+        "rtol": 1e-13
+      },
+      "local_fit_samples": 64,
+      "match_time_M": 332.14579396452547,
+      "name": "ode_2",
+      "phase": {
+        "base": [
+          0.2715562615442441,
+          0.0037980409273094067
+        ],
+        "coefficients": [
+          43.11565574096678,
+          -1100.6610044375814
+        ],
+        "condition": 7.4918119006717925,
+        "matrix": [
+          [
+            -0.0071278468347754035,
+            -0.0001264067402322381
+          ],
+          [
+            -0.0008157285425452145,
+            -2.5264111345155166e-05
+          ]
+        ],
+        "reconstruction_max_abs_error": 2.2737367544323206e-13,
+        "rhs": [
+          -0.16819082063082041,
+          -0.007363448849078665
+        ],
+        "singular_values": [
+          0.007175521963308544,
+          1.072606710717318e-05
+        ],
+        "target": [
+          0.43974708217506453,
+          0.011161489776388072
+        ]
+      }
+    }
+  ],
+  "schema": "diffgw.seobnrv4.combined-strong-spin-nqc-inputs.v1",
+  "scope": {
+    "description": "Scalar CPU float64 numerical stability evidence only; no training or promotion.",
+    "known_limitations": [
+      "Convergence cannot establish correctness of the equations or published model fidelity.",
+      "The adaptive prototype uses a diagnostic QNM spline with independently generated values and black-box-inferred knot metadata; this is not wholly literature-specified provenance.",
+      "Changing dt also changes the adaptive initial step and coarse/fine restart sampling; the grid check measures the complete generator's grid sensitivity.",
+      "No time, phase, amplitude, or coefficient fitting is performed.",
+      "No derivatives, batched execution, accelerators, or JAX are qualified here."
+    ],
+    "physics_validated": false,
+    "production_asset": false,
+    "production_promotion_allowed": false,
+    "training_generator_qualified": false
+  },
+  "script_sha256": "8d7a6e3f9aff95af94c8369ff63dcfaf00a1ababbb7cd60775e7ea4d16d3e131",
+  "source_sha256": {
+    "dev/native_rom/diagnose_boundary_strong_spin_nqc_inputs.py": "31e199604ad6bbce197073528904109f2e60a78e424f558b41d3d66d4f3831a7",
+    "dev/native_rom/diagnose_nqc_matching_inputs.py": "9a08c97f536be66e7479b71ee258e9503d8d987bd15c61b5f25d54243dc8828c",
+    "dev/native_rom/eob/torch/adaptive_driver_clean.py": "202996e24b51398af3354a13e584cae6d180fd11100976b3dbb2637b2728a14c",
+    "dev/native_rom/eob/torch/historical_hamiltonian.py": "f93beaa5172dd1fff43eb676848f60caa8d2795dfd7ed21c842827dd53141066",
+    "src/torchwave/approximants/eob/numerical_attachment.py": "137fd4498d58cdb4dc46c10594b2ed1a92ed20e9847107278376c2cf19c1de01"
+  },
+  "status": "diagnostic_complete",
+  "tolerance_trace_sha256": "123be4c5bbc40ae03062b55bc483c6dde2adbf0a70209c4f442e21b087770102"
+}

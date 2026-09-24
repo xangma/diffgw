@@ -87,13 +87,14 @@ def _diagnostic_rkf45_output(run, vector_field):
     return replace(run, output_state=sample)
 
 
-def _diagnostic_local_nqc_phase_matrix(time, state, orbital_frequency, match_time):
+def _diagnostic_local_nqc_phase_matrix(time, state, orbital_frequency, match_time,
+                                       window=0.5):
     """Degree-six local NQC derivative estimate for numerical diagnosis only.
 
-    The fixed 0.5 M window was selected after comparison with dense DOP853
-    differentiation on one nonspinning row. It is not a published v4 rule.
+    The default 0.5 M window was selected after comparison with dense DOP853
+    differentiation on one nonspinning row. It is not a published v4 rule;
+    other windows are numerical diagnostics only.
     """
-    window = 0.5
     selected = (time - match_time).detach().abs() <= window
     chart = (time[selected] - match_time) / window
     if chart.numel() < 9 or not bool((chart.min() < 0) & (chart.max() > 0)):
@@ -148,6 +149,7 @@ def reconstruct_seobnrv4_22_adaptive(
     diagnostic_hermite_resampling: bool = False,
     diagnostic_rkf45_resampling: bool = False,
     diagnostic_local_nqc_derivatives: bool = False,
+    diagnostic_nqc_phase_window_M: float = 0.5,
     diagnostic_matching_second_derivatives: bool = False,
     num_steps: int = 20000,
     ringdown_duration: float = 150.0,
@@ -203,6 +205,11 @@ def reconstruct_seobnrv4_22_adaptive(
         raise ValueError("choose one diagnostic output resampler")
     if not isinstance(diagnostic_local_nqc_derivatives, bool):
         raise TypeError("diagnostic_local_nqc_derivatives must be bool")
+    if (not math.isfinite(float(diagnostic_nqc_phase_window_M))
+            or diagnostic_nqc_phase_window_M <= 0):
+        raise ValueError("diagnostic_nqc_phase_window_M must be finite and positive")
+    if diagnostic_nqc_phase_window_M != 0.5 and not diagnostic_local_nqc_derivatives:
+        raise ValueError("diagnostic_nqc_phase_window_M requires local NQC derivatives")
     if not isinstance(diagnostic_matching_second_derivatives, bool):
         raise TypeError("diagnostic_matching_second_derivatives must be bool")
     if not isinstance(num_steps, int) or num_steps < 4:
@@ -395,7 +402,8 @@ def reconstruct_seobnrv4_22_adaptive(
         )
         match_local = provisional.match_time
         phase_matrix = (_diagnostic_local_nqc_phase_matrix(
-            row_fine_time, row_fine_state, fine_field[..., 1], match_local)
+            row_fine_time, row_fine_state, fine_field[..., 1], match_local,
+            diagnostic_nqc_phase_window_M)
             if diagnostic_local_nqc_derivatives else None)
         matching_second = (_diagnostic_local_matching_second(
             row_fine_time, provisional.nqc, match_local)

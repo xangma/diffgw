@@ -1,0 +1,494 @@
+{
+  "errors": [],
+  "plan_sha256": "1a810de3e6d0505d3d4940b4b01b35a0726a8a801da50ba7bcd99f57db1c3008",
+  "prior_sha256": {
+    "mass_ratio_four_nonspinning": "3c414c018917f7dad38644ad86ba58781bc53180b931cb8f869c34f5e83b3025",
+    "strong_antialigned_spin": "9f5eb29c9ffe2db96cda3a44b59d20f40c4e9fe4c750e81ea8e9b6253c844626"
+  },
+  "process": {
+    "argv": [
+      "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw/dev/native_rom/diagnose_boundary_grid.py",
+      "--json-out",
+      "dev/native_rom/evidence/2026-09-24/boundary_grid.json"
+    ],
+    "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+    "host": "client-3792.default.vpn.port.ac.uk",
+    "pid": 22790
+  },
+  "release_qualified": false,
+  "rows": {
+    "mass_ratio_four_nonspinning": {
+      "check": {
+        "coarse_to_medium": {
+          "amplitude_relative_l2": 0.0,
+          "boundary_time_M_abs_difference": 0.0,
+          "candidate_samples": 2117,
+          "common_samples": 2117,
+          "complex_relative_l2": 0.0,
+          "grid_step_M": 0.25,
+          "match_time_M_abs_difference": 0.0,
+          "peak_time_M_abs_difference": 0.0,
+          "phase_max_abs_rad": 5.3373297796676655e-17,
+          "phase_rms_rad": 1.5886973074075063e-17,
+          "phase_samples": 1971,
+          "reference_samples": 2117,
+          "relative_norm_error": 0.0,
+          "samples": 2117,
+          "support_end_difference_M": 0.0,
+          "unmaximized_real_overlap": 1.0
+        },
+        "gates": {
+          "amplitude_error_budget": true,
+          "boundary_time_M": true,
+          "complex_error_budget": true,
+          "error_decreased": true,
+          "match_time_M": true,
+          "peak_time_M": true
+        },
+        "medium_to_fine": {
+          "amplitude_relative_l2": 0.0,
+          "boundary_time_M_abs_difference": 0.0,
+          "candidate_samples": 4233,
+          "common_samples": 4233,
+          "complex_relative_l2": 0.0,
+          "grid_step_M": 0.125,
+          "match_time_M_abs_difference": 0.0,
+          "peak_time_M_abs_difference": 0.0,
+          "phase_max_abs_rad": 5.362810748386537e-17,
+          "phase_rms_rad": 1.612615561211258e-17,
+          "phase_samples": 3941,
+          "reference_samples": 4233,
+          "relative_norm_error": 0.0,
+          "samples": 4233,
+          "support_end_difference_M": -0.0625,
+          "unmaximized_real_overlap": 1.0000000000000002
+        },
+        "numerical_check_passed": true
+      },
+      "error": null,
+      "fixed_restart_time_M": 165.0,
+      "levels": {
+        "grid_0.0625": {
+          "elapsed_seconds": 66.93748429199331,
+          "level": {
+            "atol": 1e-14,
+            "dt_geom": 0.0625,
+            "name": "grid_0.0625",
+            "rtol": 1e-13
+          },
+          "native": {
+            "array_dtype": {
+              "mode": "complex128",
+              "time": "float64"
+            },
+            "array_sha256": {
+              "mode": "b783ffd58f8ae6d8ed6123e65e27614fb2d090fae247964e11d686d169fd82ba",
+              "time": "57845c4ed652fd3e68db0c7c11863661f2f4f1bcb174e5b21f9d7ddd66d12433"
+            },
+            "atol": 1e-14,
+            "boundary_time_M": 379.078125,
+            "dt_geom": 0.0625,
+            "final_mass_fraction": 0.9769572091927891,
+            "final_spin": 0.47238012198553475,
+            "internal_step_M": 0.015625,
+            "match_time_M": 379.07958535460546,
+            "name": "grid_0.0625",
+            "peak_time_M": 386.32811737060547,
+            "restart_time_M": 165.0,
+            "rtol": 1e-13,
+            "samples": 8466,
+            "stages": {
+              "coarse": {
+                "accepted": 577,
+                "evaluations": 3623,
+                "event_time_M": 386.3354523368081,
+                "rejected": 32,
+                "termination": [
+                  "event"
+                ]
+              },
+              "fine": {
+                "accepted": 474,
+                "evaluations": 2980,
+                "event_time_M": 221.48324332059914,
+                "rejected": 27,
+                "termination": [
+                  "event"
+                ]
+              }
+            },
+            "support_M": [
+              0.0,
+              529.0625
+            ]
+          }
+        },
+        "grid_0.125": {
+          "elapsed_seconds": 67.17732499999693,
+          "level": {
+            "atol": 1e-14,
+            "dt_geom": 0.125,
+            "name": "grid_0.125",
+            "rtol": 1e-13
+          },
+          "native": {
+            "array_dtype": {
+              "mode": "complex128",
+              "time": "float64"
+            },
+            "array_sha256": {
+              "mode": "ad8175cc9f16ab2c96ec2df28b4d47fb6b71ef770f50e954de3bbd8d92c5d3d7",
+              "time": "594886cce133bb19d05a69fc8f2b6c68d514cd65285dabf149a0419d231aabdc"
+            },
+            "atol": 1e-14,
+            "boundary_time_M": 379.078125,
+            "dt_geom": 0.125,
+            "final_mass_fraction": 0.9769572091927891,
+            "final_spin": 0.47238012198553475,
+            "internal_step_M": 0.015625,
+            "match_time_M": 379.07958535460546,
+            "name": "grid_0.125",
+            "peak_time_M": 386.32811737060547,
+            "restart_time_M": 165.0,
+            "rtol": 1e-13,
+            "samples": 4233,
+            "stages": {
+              "coarse": {
+                "accepted": 577,
+                "evaluations": 3623,
+                "event_time_M": 386.3354523368081,
+                "rejected": 32,
+                "termination": [
+                  "event"
+                ]
+              },
+              "fine": {
+                "accepted": 474,
+                "evaluations": 2980,
+                "event_time_M": 221.48324332059914,
+                "rejected": 27,
+                "termination": [
+                  "event"
+                ]
+              }
+            },
+            "support_M": [
+              0.0,
+              529.0
+            ]
+          }
+        },
+        "grid_0.25": {
+          "elapsed_seconds": 67.14988870901288,
+          "level": {
+            "atol": 1e-14,
+            "dt_geom": 0.25,
+            "name": "grid_0.25",
+            "rtol": 1e-13
+          },
+          "native": {
+            "array_dtype": {
+              "mode": "complex128",
+              "time": "float64"
+            },
+            "array_sha256": {
+              "mode": "f85004fbfc015cb516de16cfe8023211fc5a8f832a46a83405fac4ab1985f339",
+              "time": "1007f77f8ab4e605902073a7378178c946cbaba00aaeb8cb3a7637173f3eb74b"
+            },
+            "atol": 1e-14,
+            "boundary_time_M": 379.078125,
+            "dt_geom": 0.25,
+            "final_mass_fraction": 0.9769572091927891,
+            "final_spin": 0.47238012198553475,
+            "internal_step_M": 0.015625,
+            "match_time_M": 379.07958535460546,
+            "name": "grid_0.25",
+            "peak_time_M": 386.32811737060547,
+            "restart_time_M": 165.0,
+            "rtol": 1e-13,
+            "samples": 2117,
+            "stages": {
+              "coarse": {
+                "accepted": 577,
+                "evaluations": 3623,
+                "event_time_M": 386.3354523368081,
+                "rejected": 32,
+                "termination": [
+                  "event"
+                ]
+              },
+              "fine": {
+                "accepted": 474,
+                "evaluations": 2980,
+                "event_time_M": 221.48324332059914,
+                "rejected": 27,
+                "termination": [
+                  "event"
+                ]
+              }
+            },
+            "support_M": [
+              0.0,
+              529.0
+            ]
+          }
+        }
+      },
+      "row": {
+        "chi1": 0.0,
+        "chi2": 0.0,
+        "mass1": 40.0,
+        "mass2": 10.0,
+        "omega_start": 0.04
+      }
+    },
+    "strong_antialigned_spin": {
+      "check": {
+        "coarse_to_medium": {
+          "amplitude_relative_l2": 0.0,
+          "boundary_time_M_abs_difference": 0.0,
+          "candidate_samples": 1255,
+          "common_samples": 1255,
+          "complex_relative_l2": 0.0,
+          "grid_step_M": 0.25,
+          "match_time_M_abs_difference": 0.0,
+          "peak_time_M_abs_difference": 0.0,
+          "phase_max_abs_rad": 5.3928690777785856e-17,
+          "phase_rms_rad": 1.6727248056923577e-17,
+          "phase_samples": 1099,
+          "reference_samples": 1255,
+          "relative_norm_error": 0.0,
+          "samples": 1255,
+          "support_end_difference_M": 0.0,
+          "unmaximized_real_overlap": 1.0
+        },
+        "gates": {
+          "amplitude_error_budget": true,
+          "boundary_time_M": true,
+          "complex_error_budget": true,
+          "error_decreased": true,
+          "match_time_M": true,
+          "peak_time_M": true
+        },
+        "medium_to_fine": {
+          "amplitude_relative_l2": 0.0,
+          "boundary_time_M_abs_difference": 0.0,
+          "candidate_samples": 2509,
+          "common_samples": 2509,
+          "complex_relative_l2": 0.0,
+          "grid_step_M": 0.125,
+          "match_time_M_abs_difference": 0.0,
+          "peak_time_M_abs_difference": 0.0,
+          "phase_max_abs_rad": 5.43855814335492e-17,
+          "phase_rms_rad": 1.6800656413431625e-17,
+          "phase_samples": 2198,
+          "reference_samples": 2509,
+          "relative_norm_error": 0.0,
+          "samples": 2509,
+          "support_end_difference_M": 0.0,
+          "unmaximized_real_overlap": 1.0000000000000002
+        },
+        "numerical_check_passed": true
+      },
+      "error": null,
+      "fixed_restart_time_M": 100.0,
+      "levels": {
+        "grid_0.0625": {
+          "elapsed_seconds": 52.56125250001787,
+          "level": {
+            "atol": 1e-14,
+            "dt_geom": 0.0625,
+            "name": "grid_0.0625",
+            "rtol": 1e-13
+          },
+          "native": {
+            "array_dtype": {
+              "mode": "complex128",
+              "time": "float64"
+            },
+            "array_sha256": {
+              "mode": "69a8505ee7eb18456e760577b315706ec023f0960c302aa3a35abbba4c0adb58",
+              "time": "c68481d00fd8bf4564cdc7de9ddea10d02dd1ef6ac101e1721d92e234b69c68b"
+            },
+            "atol": 1e-14,
+            "boundary_time_M": 163.484375,
+            "dt_geom": 0.0625,
+            "final_mass_fraction": 0.9686080158522982,
+            "final_spin": 0.3834136856151619,
+            "internal_step_M": 0.015625,
+            "match_time_M": 163.49001520868546,
+            "name": "grid_0.0625",
+            "peak_time_M": 174.92186737060547,
+            "restart_time_M": 100.0,
+            "rtol": 1e-13,
+            "samples": 5017,
+            "stages": {
+              "coarse": {
+                "accepted": 460,
+                "evaluations": 2921,
+                "event_time_M": 174.9275263920746,
+                "rejected": 32,
+                "termination": [
+                  "event"
+                ]
+              },
+              "fine": {
+                "accepted": 372,
+                "evaluations": 2368,
+                "event_time_M": 75.02411985197911,
+                "rejected": 27,
+                "termination": [
+                  "event"
+                ]
+              }
+            },
+            "support_M": [
+              0.0,
+              313.5
+            ]
+          }
+        },
+        "grid_0.125": {
+          "elapsed_seconds": 52.13440662500216,
+          "level": {
+            "atol": 1e-14,
+            "dt_geom": 0.125,
+            "name": "grid_0.125",
+            "rtol": 1e-13
+          },
+          "native": {
+            "array_dtype": {
+              "mode": "complex128",
+              "time": "float64"
+            },
+            "array_sha256": {
+              "mode": "e14a871766be8f92913242e179b220e600ef9f6414b2606cfcb177d573f0fda8",
+              "time": "8b529ad5d1bfe6a8d6877270da3e14ded180cd46ccaf5df6c605a6a13c2f124e"
+            },
+            "atol": 1e-14,
+            "boundary_time_M": 163.484375,
+            "dt_geom": 0.125,
+            "final_mass_fraction": 0.9686080158522982,
+            "final_spin": 0.3834136856151619,
+            "internal_step_M": 0.015625,
+            "match_time_M": 163.49001520868546,
+            "name": "grid_0.125",
+            "peak_time_M": 174.92186737060547,
+            "restart_time_M": 100.0,
+            "rtol": 1e-13,
+            "samples": 2509,
+            "stages": {
+              "coarse": {
+                "accepted": 460,
+                "evaluations": 2921,
+                "event_time_M": 174.9275263920746,
+                "rejected": 32,
+                "termination": [
+                  "event"
+                ]
+              },
+              "fine": {
+                "accepted": 372,
+                "evaluations": 2368,
+                "event_time_M": 75.02411985197911,
+                "rejected": 27,
+                "termination": [
+                  "event"
+                ]
+              }
+            },
+            "support_M": [
+              0.0,
+              313.5
+            ]
+          }
+        },
+        "grid_0.25": {
+          "elapsed_seconds": 52.062017000018386,
+          "level": {
+            "atol": 1e-14,
+            "dt_geom": 0.25,
+            "name": "grid_0.25",
+            "rtol": 1e-13
+          },
+          "native": {
+            "array_dtype": {
+              "mode": "complex128",
+              "time": "float64"
+            },
+            "array_sha256": {
+              "mode": "847fea69c768c4e8a2884f15b478cd37617bd2e1328575b7624a9d933641a942",
+              "time": "37ddeb3e6ad87396d9fdf8bc317a3934aa686d9b7a0444cd787aa09adffc3f47"
+            },
+            "atol": 1e-14,
+            "boundary_time_M": 163.484375,
+            "dt_geom": 0.25,
+            "final_mass_fraction": 0.9686080158522982,
+            "final_spin": 0.3834136856151619,
+            "internal_step_M": 0.015625,
+            "match_time_M": 163.49001520868546,
+            "name": "grid_0.25",
+            "peak_time_M": 174.92186737060547,
+            "restart_time_M": 100.0,
+            "rtol": 1e-13,
+            "samples": 1255,
+            "stages": {
+              "coarse": {
+                "accepted": 460,
+                "evaluations": 2921,
+                "event_time_M": 174.9275263920746,
+                "rejected": 32,
+                "termination": [
+                  "event"
+                ]
+              },
+              "fine": {
+                "accepted": 372,
+                "evaluations": 2368,
+                "event_time_M": 75.02411985197911,
+                "rejected": 27,
+                "termination": [
+                  "event"
+                ]
+              }
+            },
+            "support_M": [
+              0.0,
+              313.5
+            ]
+          }
+        }
+      },
+      "row": {
+        "chi1": -0.8,
+        "chi2": -0.8,
+        "mass1": 30.0,
+        "mass2": 20.0,
+        "omega_start": 0.04
+      }
+    }
+  },
+  "schema": "diffgw.seobnrv4.boundary-grid.v1",
+  "scope": {
+    "description": "Scalar CPU float64 numerical stability evidence only; no training or promotion.",
+    "known_limitations": [
+      "Convergence cannot establish correctness of the equations or published model fidelity.",
+      "The adaptive prototype uses a diagnostic QNM spline with independently generated values and black-box-inferred knot metadata; this is not wholly literature-specified provenance.",
+      "Changing dt also changes the adaptive initial step and coarse/fine restart sampling; the grid check measures the complete generator's grid sensitivity.",
+      "No time, phase, amplitude, or coefficient fitting is performed.",
+      "No derivatives, batched execution, accelerators, or JAX are qualified here."
+    ],
+    "physics_validated": false,
+    "production_asset": false,
+    "production_promotion_allowed": false,
+    "training_generator_qualified": false
+  },
+  "script_sha256": "f3cd5ac050fe39819ddc58692893216a98c561698587ea10337aa1186e1ea6bb",
+  "source_sha256": {
+    "dev/native_rom/eob/torch/adaptive_driver_clean.py": "202996e24b51398af3354a13e584cae6d180fd11100976b3dbb2637b2728a14c",
+    "dev/native_rom/eob/torch/historical_hamiltonian.py": "f93beaa5172dd1fff43eb676848f60caa8d2795dfd7ed21c842827dd53141066",
+    "dev/native_rom/eob/torch/warm_start.py": "a9818350b18ed04ca645edbf6af4c22760fc51eae540c12f38d171d99a675a20",
+    "dev/native_rom/qualify_generator.py": "8afe29d1c8b8e6213f2c11a0228e7555e36d5a9fbb8346c84975941e2587ad4e"
+  },
+  "status": "diagnostic_complete"
+}

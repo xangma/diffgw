@@ -178,3 +178,61 @@ The independently fitted public-binary difference moves from `0.00131140`
 to `0.00131155`. This establishes one-row numerical stability for this
 diagnostic rule, not historical NQC parity, physical accuracy over the
 domain, or release qualification.
+
+# Combined-candidate boundary rows
+
+The [frozen three-row plan](combined_domain_numerics_plan.json) and
+[result](combined_domain_numerics.json) apply the native warm start, historical
+Hamiltonian derivative, historical `(3,3)` placement, and local NQC derivative
+choices to a mass-ratio-four nonspinning row and strong aligned/antialigned
+spin rows. The mass-ratio-four row passes the refined ODE check (`3.39e-8`
+complex relative L2); its peak-fitted public-binary difference is `0.0004103`.
+The strong aligned row fails the `1e-6` ODE complex budget at `2.74e-6`,
+despite an amplitude difference of `3.39e-9`; its fitted public difference is
+`0.01985`. The fixed `165 M` restart lies *after* the antialigned row's
+`163.49 M` match, so that row raises a match-grid error and the frozen
+three-row campaign fails.
+
+A separately frozen [earlier-restart plan](antialigned_restart_plan.json) and
+[result](antialigned_restart.json) move only that row's fixed restart to
+`100 M`. Its refined ODE check passes (`7.16e-7` complex, `2.39e-9`
+amplitude), with a fitted public difference of `0.0002039`. This is a
+diagnostic intervention, not a pass for the original campaign. The
+[nested-grid plan](boundary_grid_plan.json) and [result](boundary_grid.json)
+then hold the tight ODE tolerance, first step, warm start, and each passing
+row's restart fixed over `0.25`, `0.125`, and `0.0625 M` output grids. Both
+rows pass all listed grid gates with zero complex and amplitude differences
+and unchanged peak, match, and boundary times. These grids sample the same
+fine trajectory and establish an identity control; they do not supply an
+independent trajectory-error estimate.
+
+The [exact-hash aligned-spin trace](boundary_tolerance_trace.json) shows a
+`2.21e-10` raw pre-NQC mode difference between the two tight ODE solves,
+versus `2.74e-6` after NQC and attachment. Its
+[matching-system plan](combined_strong_spin_nqc_inputs_plan.json) and
+[result](combined_strong_spin_nqc_inputs.json) reconstruct both stored phase
+systems and close the coefficient-drift attribution to `1.03e-12`. The phase
+coefficient changes by `(4.45e-5, -0.002558)`; a matrix change contributes
+`(4.41e-5, -0.002530)`, mostly through its second-derivative row, while the
+right-hand-side contribution is `(3.69e-7, -2.81e-5)`. This identifies the
+numerically sensitive operation. It does not validate an alternative NQC
+rule or clear the physical residual.
+
+The [frozen window study](combined_nqc_windows_plan.json) and
+[exact-hash result](combined_nqc_windows.json) hold each matching
+right-hand side fixed and reconstruct the phase-basis matrix with local
+windows of `0.5`, `1`, and `2 M`. The two-solve phase-coefficient drift falls
+from `0.002558` to `0.000598` and `0.000182`, respectively. These are
+matrix-input sensitivities, not whole-waveform convergence results. Wider
+windows may also bias the true local derivative; the `0.5 M` default remains
+unchanged.
+
+The [predeclared whole-waveform intervention](strong_spin_nqc_window_plan.json)
+and [result](strong_spin_nqc_window.json) replay the `0.5 M` baseline waveform
+hash exactly, then change only the diagnostic phase-basis window to `2 M` on
+the strong aligned-spin row. The refined ODE complex difference falls from
+`2.74e-6` to `2.70e-7`, with `3.39e-9` amplitude difference, decreasing
+error, and unchanged event times; all frozen numerical gates pass. The
+peak-fitted public-binary complex difference changes only from `0.0198521`
+to `0.0198485`. The wider window is opt-in, has no independent derivative
+accuracy proof over the domain, and is not a physical-model correction.

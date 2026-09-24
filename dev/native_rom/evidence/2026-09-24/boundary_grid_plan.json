@@ -1,0 +1,19 @@
+{
+  "schema": "diffgw.seobnrv4.boundary-grid-plan.v1",
+  "grid_steps_M": [0.25, 0.125, 0.0625],
+  "fixed_coarse_first_step_M": 0.125,
+  "warm_start_Momega": 0.03162277660168379,
+  "rows": {
+    "mass_ratio_four_nonspinning": {
+      "prior": "dev/native_rom/evidence/2026-09-24/combined_domain_numerics.json",
+      "prior_sha256": "3c414c018917f7dad38644ad86ba58781bc53180b931cb8f869c34f5e83b3025",
+      "fixed_restart_time_M": 165.0
+    },
+    "strong_antialigned_spin": {
+      "prior": "dev/native_rom/evidence/2026-09-24/antialigned_restart.json",
+      "prior_sha256": "9f5eb29c9ffe2db96cda3a44b59d20f40c4e9fe4c750e81ea8e9b6253c844626",
+      "fixed_restart_time_M": 100.0
+    }
+  },
+  "reason": "Check nested output-grid stability for the two boundary rows that passed their ODE tolerance checks under their frozen restart choices."
+}
