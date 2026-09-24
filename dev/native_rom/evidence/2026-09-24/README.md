@@ -1545,3 +1545,37 @@ does not select a release QNM representation, bound its domain, or resolve the
 remaining whole-waveform and ROM gates. Reproduce with `PYTHONPATH=src:. python
 -m dev.native_rom.diagnose_q4_independent_qnm_route --json-out
 /tmp/seobnrv4-q4-independent-qnm-route.json` in the pinned environment.
+
+The [q8 independent-QNM plan](q8_independent_qnm_plan.json) and
+[result](q8_independent_qnm.json) repeat the explicit route on the frozen q8
+high-aligned-spin row. The time array is unchanged and the mode hash changes.
+Against the same public binary and predeclared `M omega22=0.1` anchor, the
+whole complex relative L2 changes from `0.001865185392` to `0.001864717996`;
+postpeak L2 changes from `0.005837399164` to `0.005834679175`. These small
+changes rule out the sampled QNM difference as the dominant q8 residual, but
+do not qualify the independent QNM throughout the parameter domain. Reproduce
+with `PYTHONPATH=src:. python -m dev.native_rom.diagnose_q8_independent_qnm
+--json-out /tmp/seobnrv4-q8-independent-qnm.json` in the pinned environment.
+
+The [q4](q4_public_ringdown_inverse_plan.json) and
+[q8](q8_public_ringdown_inverse_plan.json) public ringdown inverse plans,
+with their [q4](q4_public_ringdown_inverse.json) and
+[q8](q8_public_ringdown_inverse.json) results, fit the pinned public modes to
+the published peak-preserving ansatz on `0.5–30 M` after each independently
+fitted public amplitude peak. Amplitude and phase infer the same attachment
+time within `2e-9 M` on each row. The untouched `30–80 M` and `80–120 M`
+holdouts have log-amplitude RMS below `8e-11` and phase RMS below `3e-13 rad`.
+Thus the public postpeak waveform follows this ansatz to numerical precision
+on both rows. The inferred public q4 origin is `−0.120564697 M` relative to
+its fitted peak, compared with the captured native boundary at `−0.086402369
+M`; their attachment frequencies are `0.413207056/M` and `0.413176959/M`.
+For q8, the corresponding origins are `−0.248812355 M` and `−0.272271480 M`,
+and the frequencies are `0.447113164/M` and `0.447101551/M`. Their physical
+boundary amplitudes agree to a few parts in `10^7`. These are comparisons in
+each waveform's own fitted-peak coordinates; the public origins are inferred
+from an ansatz fit, not a direct capture of private LAL state. They localize
+the remaining postpeak investigation to attachment and prepeak alignment,
+without proving a unique root cause or release parity. Reproduce with
+`PYTHONPATH=src:. python -m dev.native_rom.diagnose_q4_public_ringdown_inverse
+--json-out /tmp/seobnrv4-q4-public-ringdown-inverse.json` and the analogous
+`diagnose_q8_public_ringdown_inverse` command in the pinned environment.

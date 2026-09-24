@@ -1,0 +1,29 @@
+{
+  "schema": "diffgw.seobnrv4.q8-public-ringdown-inverse-plan.v1",
+  "purpose": "Repeat the q4 held-out public ringdown ansatz inversion on q8 using the frozen independent-QNM native boundary, with the public binary QNM and no native fitting.",
+  "inputs": {
+    "campaign": "dev/native_rom/evidence/2026-09-24/source_candidate_new_rows.json",
+    "independent_qnm": "dev/native_rom/evidence/2026-09-24/q8_independent_qnm.json",
+    "qnm_parity": "dev/native_rom/evidence/2026-09-24/q4_q8_qnm_parity.json"
+  },
+  "input_sha256": {
+    "campaign": "d8efe4baa182ea39bf9a7d35b6de8621c6e054429ee180eb661e9fbb9f9d59d8",
+    "independent_qnm": "279ce1851bbab3ff6149b8383b2acbc472eb90237dcc0057de8499e145ecacea",
+    "qnm_parity": "8e25a67c56a588c1fa5c16c56b4d2114268d81298140bdb32a2dc0d02ecc4b3e"
+  },
+  "source_sha256": {
+    "dev/native_rom/diagnose_peak_anchor.py": "02a2974900b77e2e074f9d050006b5a973cd6e621c8d4c4c007e88482ef5ea6a",
+    "dev/native_rom/diagnose_q4_public_ringdown_inverse.py": "837dee01ab51e3f9c061e6d39323bb0c947ff82fcd41664bb1b0ffdaba543206",
+    "src/torchwave/approximants/eob/merger_ringdown.py": "098bb9e6f5328ceb291a5bed02a91d8fa95cc54bbcc7ff45d996e6985d995410",
+    "src/torchwave/approximants/eob/nqc.py": "c8683181f7cf911df1e1b85cd6999cdb03e7c594e867315359040e9eb03ca552"
+  },
+  "row_name": "q8_high_aligned",
+  "output_step_M": 0.5,
+  "fit_window_M": [0.5, 30],
+  "holdout_windows_M": [[30, 80], [80, 120]],
+  "time_origin_bounds_M": [-0.5, 0.0],
+  "fit_rms_limit": 1e-8,
+  "holdout_rms_limit": 1e-8,
+  "origin_agreement_limit_M": 1e-6,
+  "release_qualified": false
+}

@@ -1,0 +1,28 @@
+{
+  "schema": "diffgw.seobnrv4.q4-public-ringdown-inverse-plan.v1",
+  "purpose": "Fit the pinned public q4 postpeak mode to the published ringdown ansatz on 0.5-30M, separately using amplitude and phase. Test both fits on disjoint 30-80M and 80-120M windows, then compare inferred public attachment values with the frozen native boundary without fitting native data.",
+  "inputs": {
+    "campaign": "dev/native_rom/evidence/2026-09-24/source_candidate_new_rows.json",
+    "attachment": "dev/native_rom/evidence/2026-09-24/q4_attachment_inputs.json",
+    "qnm_parity": "dev/native_rom/evidence/2026-09-24/q4_q8_qnm_parity.json"
+  },
+  "input_sha256": {
+    "campaign": "d8efe4baa182ea39bf9a7d35b6de8621c6e054429ee180eb661e9fbb9f9d59d8",
+    "attachment": "2a22abcad0364322ac120c97e75fb4141c580d0d78a16d6341571e5e3735ef45",
+    "qnm_parity": "8e25a67c56a588c1fa5c16c56b4d2114268d81298140bdb32a2dc0d02ecc4b3e"
+  },
+  "source_sha256": {
+    "dev/native_rom/diagnose_peak_anchor.py": "02a2974900b77e2e074f9d050006b5a973cd6e621c8d4c4c007e88482ef5ea6a",
+    "src/torchwave/approximants/eob/merger_ringdown.py": "098bb9e6f5328ceb291a5bed02a91d8fa95cc54bbcc7ff45d996e6985d995410",
+    "src/torchwave/approximants/eob/nqc.py": "c8683181f7cf911df1e1b85cd6999cdb03e7c594e867315359040e9eb03ca552"
+  },
+  "row_name": "q4_mixed_spin",
+  "output_step_M": 0.5,
+  "fit_window_M": [0.5, 30],
+  "holdout_windows_M": [[30, 80], [80, 120]],
+  "time_origin_bounds_M": [-0.3, 0.0],
+  "fit_rms_limit": 1e-8,
+  "holdout_rms_limit": 1e-8,
+  "origin_agreement_limit_M": 1e-6,
+  "release_qualified": false
+}
