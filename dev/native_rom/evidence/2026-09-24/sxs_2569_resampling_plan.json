@@ -1,0 +1,25 @@
+{
+  "case": "SXS:BBH:2569",
+  "inputs": {
+    "anchored_array": {
+      "path": "/tmp/diffgw-sxs-third-holdout/decoded/SXS_BBH_2569_anchored.npz",
+      "sha256": "4180cbd3aaee9eb492d776d291ecd603c1ba19483777f0e326d18d525d7527c7"
+    },
+    "comparison": {
+      "path": "dev/native_rom/evidence/2026-09-24/sxs_third_holdout_comparison.json",
+      "sha256": "2caff7f537583d5016e171e451387decca04a634ccae39a5d155689175da8a21"
+    },
+    "weighted_plan": {
+      "path": "dev/native_rom/evidence/2026-09-24/sxs_third_holdout_weighted_plan.json",
+      "sha256": "ae97020ad656390686b593c63b1c918cef226e7bc87b6c88e8993f5add3d6c10"
+    },
+    "weighted_result": {
+      "path": "dev/native_rom/evidence/2026-09-24/sxs_third_holdout_weighted.json",
+      "sha256": "e55cd65399d937eae13d9d06c1425b6cb9dcf1c38aa2b7eb07bf29115bd83322"
+    }
+  },
+  "mass_msun": 22,
+  "purpose": "Post-hoc single-case sensitivity check for the failed 0.99 detector-weighted proxy at 22 solar masses. Keep the frozen taper, PSD, frequency band, time-shift optimization, and anchored modes; alter only complex-component versus amplitude/continuous-phase resampling onto the common 0.25 M FFT grid. Not a prospective holdout and cannot turn the original gate into a pass.",
+  "release_qualified": false,
+  "schema": "diffgw.seobnrv4.sxs-2569-resampling-plan.v1"
+}
