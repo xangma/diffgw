@@ -159,6 +159,17 @@ reduces circular radius and angular-momentum gaps while leaving roughly
 step accounts for less than 1% of that momentum gap in an idealized native
 check. These results prevent treating source-convention agreement as release
 qualification.
+A [pinned direct-source flux and initial-condition diagnostic](evidence/2026-09-24/source_flux_initial.json)
+compiles a private snapshot of `lalsimulation-v6.2.1` and links the installed
+`lalsimulation` 6.2.1 wheel. At two identical circular states, source and
+wheel flux per symmetric mass ratio differ by at most `2.27e-10` relative;
+the source-calibrated native flux differs from source by at most `2.0e-9`.
+The pinned-source legacy initial radial momentum nevertheless differs from
+the compiled public v4 initial state by `1.41e-7` to `2.53e-7` in absolute
+value. Both `-O0` and `-O2` source builds return the same initial states, and
+the compiled public first state is identical on three output grids. The
+source-versus-wheel initial-condition discrepancy still needs explanation;
+these two component rows are not a whole-waveform or domain validation.
 The aligned-spin trajectory replay finds a native-minus-public orbital phase
 span of at most `1.27e-4 rad` from `M Omega=0.0425` through `0.13`, compared
 with `3.36e-5 rad` maximum public-grid sensitivity. Over the later sampled
