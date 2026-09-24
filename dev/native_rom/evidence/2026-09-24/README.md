@@ -1765,6 +1765,30 @@ dev.native_rom.diagnose_source_q2_domain_probe --source-root
 /usr/local/include --json-out /tmp/source_q2_domain_probe.json` in the
 pinned development environment.
 
+The post-hoc [SXS:BBH:2508 long-start plan](sxs_2508_long_start_plan.json)
+freezes orbital `M Omega=0.02`, the earlier five-case result hashes, the same
+fine RKF45 numerical settings, and a `900 s` native cap. The
+[result](sxs_2508_long_start.json) completed in `164.9 s` with source hashes
+unchanged. Its native/NR overlap after one bounded time/phase adjustment on
+the `[-200,100] M` peak window is `0.99624528`, versus `0.99627019` from
+the `0.04` start; public/NR is `0.99364820`. The longer start changes the
+fixed-frequency direct native/NR complex L2 to `0.16040` on its wider common
+support, but does not improve the late optimized shape match. Anchored
+waveform arrays remain outside the repository at
+`/tmp/diffgw-sxs-five-case/decoded/sxs_2508_long_start_arrays.npz`
+(SHA-256 `3cba0b7664438e17b18b9f0c1c3205fad4f09a61e9b98d01b896dc02b93bb4fa`).
+This selected-row unweighted diagnostic cannot establish detector-weighted
+faithfulness or release qualification. Reproduce with `PYTHONPATH=src:.
+python -m dev.native_rom.diagnose_sxs_2508_long_start --plan
+dev/native_rom/evidence/2026-09-24/sxs_five_case_physical_plan.json --primary
+dev/native_rom/evidence/2026-09-24/sxs_five_case_physical.json --alignment
+dev/native_rom/evidence/2026-09-24/sxs_five_case_alignment.json --long-plan
+dev/native_rom/evidence/2026-09-24/sxs_2508_long_start_plan.json --decoded-dir
+/tmp/diffgw-sxs-five-case/decoded --array-out
+/tmp/diffgw-sxs-five-case/decoded/sxs_2508_long_start_arrays.npz --json-out
+dev/native_rom/evidence/2026-09-24/sxs_2508_long_start.json` in the pinned
+development environment.
+
 The [five-case SXS plan](sxs_five_case_physical_plan.json) was frozen at
 SHA-256 `397982e47b191acafb276f13d2b2bfb90f2f7d4f3d6d18fa3c86fbd5e609fb17`
 before retrieving waveform files. It names SXS:BBH:2496 (q≈1,

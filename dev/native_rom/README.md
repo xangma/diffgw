@@ -721,6 +721,15 @@ unweighted, uses short late-inspiral support, and was selected after the primary
 result. It cannot replace the published detector-weighted, mass-dependent
 validation or qualify either ROM.
 
+A frozen [q≈5 earlier-start diagnostic](evidence/2026-09-24/sxs_2508_long_start.json)
+begins the native and public models at orbital `M Omega=0.02`, below this
+simulation's catalog reference frequency `0.02308`. The native/NR optimized
+overlap on the same `[-200,100] M` peak window is `0.996245`, effectively
+unchanged from the later-start `0.996270`; public/NR is `0.993648`.
+Starting earlier therefore does not remove the remaining late-waveform shape
+residual. This is still an unweighted, post-hoc single-case diagnostic, not
+the detector-weighted 10–200 solar-mass physical release check.
+
 The independent ROM construction follows the published reduced-basis and
 parameter-interpolation methods of [Pürrer (2014)](https://doi.org/10.1088/0264-9381/31/19/195010)
 and [Pürrer (2016)](https://doi.org/10.1103/PhysRevD.93.064041).

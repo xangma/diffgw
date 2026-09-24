@@ -1,0 +1,246 @@
+{
+  "alignment_sha256": "24d433aa56f60c7f011dd5b2f160a026a0fe767e925c41c3b214978dbe2f8c87",
+  "anchors": {
+    "native": {
+      "anchor_phase_rad": -222.71361677679357,
+      "anchor_time_M": 4227.666564780256,
+      "frequency_at_grid_crossing": [
+        0.08998901001076133,
+        0.09000550507835879
+      ],
+      "peak_after_anchor_M": 470.0834352197444,
+      "peak_amplitude": 0.20948471244317227
+    },
+    "nr": {
+      "anchor_phase_rad": -207.55742505855983,
+      "anchor_time_M": 3702.0049844650666,
+      "frequency_at_grid_crossing": [
+        0.08999967596507988,
+        0.0900159282065837
+      ],
+      "peak_after_anchor_M": 468.634205920117,
+      "peak_amplitude": 0.20969081984873317
+    },
+    "public": {
+      "anchor_phase_rad": -222.8787075376078,
+      "anchor_time_M": -486.49287035346373,
+      "frequency_at_grid_crossing": [
+        0.08999953049361112,
+        0.0900159936656102
+      ],
+      "peak_after_anchor_M": 473.148822792355,
+      "peak_amplitude": 0.20948350076176578
+    }
+  },
+  "array_sha256": "3cba0b7664438e17b18b9f0c1c3205fad4f09a61e9b98d01b896dc02b93bb4fa",
+  "detector_noise_weighted": false,
+  "direct_native_vs_nr": {
+    "common_samples": 17844,
+    "common_support_M": [
+      -3860.75,
+      600.0
+    ],
+    "metrics": {
+      "amplitude_relative_l2": 0.13987013314664348,
+      "complex_relative_l2": 0.16039596464997885,
+      "phase_max_abs_rad": 3.1373449963726787,
+      "phase_rms_rad": 0.3539225829595287,
+      "phase_samples": 17810,
+      "relative_norm_error": 0.014367942870287642,
+      "samples": 17844,
+      "unmaximized_real_overlap": 0.9874205272982799
+    },
+    "peak_amplitude_ratio": 0.9990170890375192,
+    "peak_lag_difference_M": 1.4492292996274045,
+    "phase_residual_rad": {
+      "end": -12.566370614359172,
+      "range": 10.920360419620081,
+      "start": -1.6460101947390915
+    },
+    "windows": {
+      "inspiral": {
+        "metrics": {
+          "amplitude_relative_l2": 0.005620369042974714,
+          "complex_relative_l2": 0.02321918214053281,
+          "phase_max_abs_rad": 0.08033909897421936,
+          "phase_rms_rad": 0.017861261597164887,
+          "phase_samples": 3600,
+          "relative_norm_error": 0.004825132794479714,
+          "samples": 3600,
+          "unmaximized_real_overlap": 0.9997433142862598
+        },
+        "samples": 3600
+      },
+      "late_inspiral": {
+        "metrics": {
+          "amplitude_relative_l2": 0.010527761744992748,
+          "complex_relative_l2": 0.16655850161147273,
+          "phase_max_abs_rad": 0.21464047771318898,
+          "phase_rms_rad": 0.1578101293098073,
+          "phase_samples": 400,
+          "relative_norm_error": 0.007682493611301133,
+          "samples": 400,
+          "unmaximized_real_overlap": 0.9862641685617844
+        },
+        "samples": 400
+      },
+      "post_peak": {
+        "metrics": {
+          "amplitude_relative_l2": 0.05250486810045039,
+          "complex_relative_l2": 0.12258829476664908,
+          "phase_max_abs_rad": 0.4202378527370854,
+          "phase_rms_rad": 0.2542299208698833,
+          "phase_samples": 400,
+          "relative_norm_error": 0.03954440968310302,
+          "samples": 400,
+          "unmaximized_real_overlap": 0.9935240238169749
+        },
+        "samples": 400
+      }
+    }
+  },
+  "elapsed_seconds": 164.94046270800754,
+  "late_start_native_vs_nr_overlap": 0.9962701899301243,
+  "long_plan_sha256": "0740fac5bb4c5ddfbfd279800ac1f2aea262e90f50b976d9c4ddfe4a5f0061b5",
+  "native": {
+    "array_dtype": {
+      "mode": "complex128",
+      "time": "float64"
+    },
+    "array_sha256": {
+      "mode": "ca96d79ef92ba1bca2bb512d7880a4535ec6021414d09cc328228dc963c40c50",
+      "time": "02e37cfcdd943836f6fe4a6b8f4d5d7cb116b1fbd667898e73ce6db38565d976"
+    },
+    "atol": 1e-15,
+    "boundary_time_M": 4697.765625,
+    "dt_geom": 0.25,
+    "final_mass_fraction": 0.9747312162330224,
+    "final_spin": 0.7114674993377056,
+    "internal_step_M": 0.015625,
+    "match_time_M": 4697.779211073947,
+    "name": "native_long_start",
+    "peak_time_M": 4711.2499923706055,
+    "restart_time_M": 4561.5,
+    "rtol": 1e-14,
+    "samples": 19392,
+    "stages": {
+      "coarse": {
+        "accepted": 3104,
+        "evaluations": 18940,
+        "event_time_M": 4711.262778896734,
+        "rejected": 63,
+        "termination": [
+          "event"
+        ]
+      },
+      "fine": {
+        "accepted": 640,
+        "evaluations": 3961,
+        "event_time_M": 149.8655667717572,
+        "rejected": 24,
+        "termination": [
+          "event"
+        ]
+      }
+    },
+    "support_M": [
+      0.0,
+      4847.75
+    ]
+  },
+  "pairs": {
+    "native_vs_nr": {
+      "amplitude_optimized": false,
+      "best_lag_M": 0.23372418136330414,
+      "best_phase_rad": 0.15063299730683224,
+      "fixed_anchor_overlap": 0.9959153261570358,
+      "grid_search_max_overlap": 0.9962436666338025,
+      "optimized_overlap": 0.9962452766895188,
+      "samples": 1200,
+      "time_phase_adjusted_metrics": {
+        "amplitude_relative_l2": 0.019125453075248912,
+        "complex_relative_l2": 0.08810172360461718,
+        "phase_max_abs_rad": 0.44197615862474826,
+        "phase_rms_rad": 0.1698629556927519,
+        "phase_samples": 1200,
+        "relative_norm_error": 0.012572095984174636,
+        "samples": 1200,
+        "unmaximized_real_overlap": 0.9962452766895188
+      },
+      "time_phase_optimized": true,
+      "window_relative_to_reference_peak_M": [
+        -200,
+        100
+      ]
+    },
+    "native_vs_public": {
+      "amplitude_optimized": false,
+      "best_lag_M": -2.55681984465533,
+      "best_phase_rad": -0.3413848761340674,
+      "fixed_anchor_overlap": 0.9615187422704738,
+      "grid_search_max_overlap": 0.9996211783725483,
+      "optimized_overlap": 0.9996406166232485,
+      "samples": 1200,
+      "time_phase_adjusted_metrics": {
+        "amplitude_relative_l2": 0.005196081656138012,
+        "complex_relative_l2": 0.026855514540184096,
+        "phase_max_abs_rad": 0.05923126235937099,
+        "phase_rms_rad": 0.03789779567152635,
+        "phase_samples": 1200,
+        "relative_norm_error": 0.001965952431055129,
+        "samples": 1200,
+        "unmaximized_real_overlap": 0.9996406166232489
+      },
+      "time_phase_optimized": true,
+      "window_relative_to_reference_peak_M": [
+        -200,
+        100
+      ]
+    },
+    "public_vs_nr": {
+      "amplitude_optimized": false,
+      "best_lag_M": 2.790536726231474,
+      "best_phase_rad": 0.4917225672268222,
+      "fixed_anchor_overlap": 0.9494705194052139,
+      "grid_search_max_overlap": 0.9936382044346885,
+      "optimized_overlap": 0.9936481990897946,
+      "samples": 1200,
+      "time_phase_adjusted_metrics": {
+        "amplitude_relative_l2": 0.02399762354565463,
+        "complex_relative_l2": 0.11445425434547253,
+        "phase_max_abs_rad": 0.5009478106590459,
+        "phase_rms_rad": 0.20610105127494494,
+        "phase_samples": 1200,
+        "relative_norm_error": 0.014541257558324805,
+        "samples": 1200,
+        "unmaximized_real_overlap": 0.993648199089794
+      },
+      "time_phase_optimized": true,
+      "window_relative_to_reference_peak_M": [
+        -200,
+        100
+      ]
+    }
+  },
+  "plan_sha256": "397982e47b191acafb276f13d2b2bfb90f2f7d4f3d6d18fa3c86fbd5e609fb17",
+  "primary_sha256": "2e5edfcd53066a40f4e6b2f255c2c1868e357989e459aafd3233f43e5beba967",
+  "public_call": {
+    "delta_t_s": 1.2313466782950183e-06,
+    "distance_Mpc": 100.0,
+    "f_lower_Hz": 1292.5274895959349,
+    "inclination_rad": 0.8
+  },
+  "release_qualified": false,
+  "row": {
+    "chi1": 0.5000140947035503,
+    "chi2": 0.49992758820337246,
+    "mass1": 0.8333096932159255,
+    "mass2": 0.1666691445360262,
+    "omega_start": 0.02
+  },
+  "schema": "diffgw.seobnrv4.sxs-2508-long-start.v1",
+  "script_sha256": "97ec81c624fc6f7d84a31f81523da402cb1ba3cfefb727deef51e2f84629a0b4",
+  "source_manifest_sha256_after": "220b84cb36a664f8dc95b130fac7313c16b40d2510a4104b154128e4b5397917",
+  "source_manifest_sha256_before": "220b84cb36a664f8dc95b130fac7313c16b40d2510a4104b154128e4b5397917",
+  "sources_unchanged": true
+}
