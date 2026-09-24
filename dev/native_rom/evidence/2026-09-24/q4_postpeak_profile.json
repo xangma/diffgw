@@ -1,0 +1,149 @@
+{
+  "choice": {
+    "calibration": "lal_v4_rounded",
+    "flux": {
+      "mode_21_higher_spin": "rho_hybrid",
+      "mode_31_higher_spin": "lal_v4_rho",
+      "mode_32_spin_square": "lal_v4_zero"
+    },
+    "mode_43_higher_spin": "lal_v4_rho",
+    "nqc_phase_window_M": 1.0,
+    "numerical": {
+      "default_initial_step_rule": true,
+      "default_restart_rule": false,
+      "fixed_restart_time_M": 165.0,
+      "hermite_resampling": true,
+      "local_nqc_degree": 6,
+      "local_nqc_phase_derivatives": true,
+      "local_nqc_window_M": 0.5
+    },
+    "physical": {
+      "hamiltonian_log_derivative": "lal_v4",
+      "mode_33_higher_spin": "lal_v4_rho",
+      "name": "combined"
+    },
+    "spin_truncation": "tabulated"
+  },
+  "errors": [],
+  "frequency_anchor_sha256": "0474801cb834080d605cddd4d0993c02848b6f3809ea189c19f6afacb88c9b33",
+  "native": {
+    "array_sha256": {
+      "mode": "c8644d4e939835684cc96d100e3faa7a3b80d9728cc2dc9dd31ef6508e7cd96b",
+      "time": "5ad34b6326599a4b37370b9d68e36f2ef84bf957c4185ca86f42d5438e69400b"
+    },
+    "elapsed_seconds": 151.38628354101093
+  },
+  "plan_sha256": "ec1799542f0b5ed16594c1e6104394778a9363ac46d4c5952935c29e3fa30725",
+  "process": {
+    "argv": [
+      "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw/dev/native_rom/diagnose_q4_postpeak_profile.py",
+      "--json-out",
+      "/tmp/seobnrv4-q4-postpeak-profile.json"
+    ],
+    "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+    "host": "client-3792.default.vpn.port.ac.uk",
+    "pid": 76371
+  },
+  "release_qualified": false,
+  "row": {
+    "chi1": 0.8,
+    "chi2": -0.6,
+    "mass1": 40.0,
+    "mass2": 10.0,
+    "omega_start": 0.04
+  },
+  "samples": [
+    {
+      "native_minus_reference_phase_rad": -0.0025353897758171153,
+      "native_over_reference_amplitude": 0.9996177588794687,
+      "time_from_reference_peak_M": 0
+    },
+    {
+      "native_minus_reference_phase_rad": -0.0033835373941185185,
+      "native_over_reference_amplitude": 0.99937843597455,
+      "time_from_reference_peak_M": 5
+    },
+    {
+      "native_minus_reference_phase_rad": -0.0044140082733337095,
+      "native_over_reference_amplitude": 0.9989224647157091,
+      "time_from_reference_peak_M": 10
+    },
+    {
+      "native_minus_reference_phase_rad": -0.006027461463415088,
+      "native_over_reference_amplitude": 0.997998833362838,
+      "time_from_reference_peak_M": 20
+    },
+    {
+      "native_minus_reference_phase_rad": -0.006796523501685079,
+      "native_over_reference_amplitude": 0.9974440478061297,
+      "time_from_reference_peak_M": 40
+    },
+    {
+      "native_minus_reference_phase_rad": -0.006843860099925058,
+      "native_over_reference_amplitude": 0.9974021448403294,
+      "time_from_reference_peak_M": 80
+    },
+    {
+      "native_minus_reference_phase_rad": -0.006843979274175878,
+      "native_over_reference_amplitude": 0.9974019995205589,
+      "time_from_reference_peak_M": 120
+    }
+  ],
+  "schema": "diffgw.seobnrv4.q4-postpeak-profile.v1",
+  "scope": {
+    "description": "Scalar CPU float64 numerical stability evidence only; no training or promotion.",
+    "known_limitations": [
+      "Convergence cannot establish correctness of the equations or published model fidelity.",
+      "The adaptive prototype uses a diagnostic QNM spline with independently generated values and black-box-inferred knot metadata; this is not wholly literature-specified provenance.",
+      "Changing dt also changes the adaptive initial step and coarse/fine restart sampling; the grid check measures the complete generator's grid sensitivity.",
+      "No time, phase, amplitude, or coefficient fitting is performed.",
+      "No derivatives, batched execution, accelerators, or JAX are qualified here."
+    ],
+    "physics_validated": false,
+    "production_asset": false,
+    "production_promotion_allowed": false,
+    "training_generator_qualified": false
+  },
+  "script_sha256": "acbffbb01e92df994fcdb5631f70167f217ec2812ed1e65cfe9dc96f7d2754dd",
+  "slopes": [
+    {
+      "native": {
+        "log_amplitude_slope_per_M": -0.07141953529457962,
+        "phase_slope_rad_per_M": -0.662711455714443,
+        "samples": 80
+      },
+      "reference": {
+        "log_amplitude_slope_per_M": -0.07143690549486008,
+        "phase_slope_rad_per_M": -0.6627493962846832,
+        "samples": 80
+      },
+      "window_M": [
+        30,
+        70
+      ]
+    },
+    {
+      "native": {
+        "log_amplitude_slope_per_M": -0.07210192704530889,
+        "phase_slope_rad_per_M": -0.6641033112795608,
+        "samples": 100
+      },
+      "reference": {
+        "log_amplitude_slope_per_M": -0.07210197535957466,
+        "phase_slope_rad_per_M": -0.6641033840048811,
+        "samples": 100
+      },
+      "window_M": [
+        70,
+        120
+      ]
+    }
+  ],
+  "source_sha256": {
+    "dev/native_rom/diagnose_q8_frequency_anchor.py": "d4ce654705a6599340b9d5cdfeda303a748e62197c143c4fa6f995e03126526b",
+    "dev/native_rom/eob/torch/adaptive_driver_clean.py": "f97c150d107581045255696d216b6bdb78f2b361ad8aa785e89ddc76e1cd983d",
+    "dev/native_rom/qualify_generator.py": "a5b4105bd944335c4489006135b0154f520843979f083d716a74558f86204d7e",
+    "src/torchwave/approximants/eob/numerical_attachment.py": "eb28307fc9df974ad9ca4a39e533288b397bf9f290e45bb1a9c664c6ea68cb12"
+  },
+  "status": "diagnostic_complete"
+}

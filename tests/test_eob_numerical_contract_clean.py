@@ -13,6 +13,7 @@ from torchwave.approximants.eob.numerical_attachment import (
     natural_cubic_spline,
     seobnrv4_internal_step,
 )
+from torchwave.approximants.eob.merger_ringdown import seobnrv4_merger_shape
 
 
 def _dense_natural_second_derivatives(knots, values):
@@ -199,6 +200,20 @@ def _attach(series, match):
         series['time'], series['state'], series['orbital_frequency'], series['mode'],
         series['frequency'], series['nu'], series['chi'], series['sigma'],
         series['output_time'], match_time=match)
+
+
+def test_numerical_attachment_preserves_peak_with_slow_qnm_damping():
+    series = _synthetic_attachment_series()
+    series['sigma'] = torch.tensor(0.5 - 0.04j, dtype=torch.complex128)
+    series['output_time'] = torch.tensor(
+        [18.0, 18.02, 18.1, 18.5, 19.0], dtype=torch.float64)
+    shape = seobnrv4_merger_shape(series['nu'], series['chi'])
+    assert 0.04 + 2 * shape.amplitude_rate * torch.tanh(shape.amplitude_offset) < 0
+
+    attached = _attach(series, series['match'])
+    torch.testing.assert_close(attached.mode[0].abs(), attached.boundary_amplitude,
+                               rtol=2e-12, atol=2e-14)
+    assert bool((torch.diff(attached.mode.abs()) < 0).all())
 
 
 def test_attachment_uses_floor_sample_and_corrected_unwrapped_phase():

@@ -23,14 +23,16 @@ from dev.native_rom.reference.hamiltonian import (
 )
 from dev.native_rom.reference.initial_conditions import leading_adiabatic_state
 from dev.native_rom.reference.published import calibration, evaluate, mass_spin, peak_targets, ringdown_shape
-from dev.native_rom.reference.ringdown import h22
+from dev.native_rom.reference.ringdown import h22, peak_preserving_shape
 from dev.native_rom.reference.remnant import final_mass_fraction, final_spin_projection
 from dev.native_rom.reference.qnm import (
     BERTI_AUTHOR_220_SAMPLES, COOK_AUTHOR_220_NEAR_EXTREMAL,
     COOK_AUTHOR_220_SAMPLES, COOK_AUTHOR_COUNTERROTATING_SAMPLES,
 )
 from torchwave.approximants.kerr_qnm_generated import dimensionless_qnm
-from torchwave.approximants.eob.merger_ringdown import merger_ringdown_22, seobnrv4_merger_shape
+from torchwave.approximants.eob.merger_ringdown import (
+    merger_ringdown_22, seobnrv4_merger_shape, seobnrv4_peak_preserving_shape,
+)
 from torchwave.approximants.eob.remnant import eob_final_mass_fraction, hofmann_final_spin
 from torchwave.approximants.eob.nqc import seobnrv4_nqc_parameters, seobnrv4_nqc_targets, seobnrv4_nqc_time_offset
 from torchwave.approximants.eob.seobnrv4_hamiltonian import SEOBNRv4Hamiltonian
@@ -587,6 +589,23 @@ def test_ringdown_against_reference():
     for t, sample in zip(times.tolist(), actual.tolist()):
         expected = complex(h22(t, nu=n, chi=c, sigma=complex(.55, -.08),
                                amplitude=.35, frequency=.32, phase=.4))
+        assert sample == pytest.approx(expected, rel=3e-13, abs=3e-14)
+
+
+def test_peak_continuation_against_reference():
+    n, c, qnm = 8 / 81, .8, complex(.52, -.04)
+    sigma = torch.complex(scalar(qnm.real), scalar(qnm.imag))
+    shape = seobnrv4_peak_preserving_shape(
+        sigma, seobnrv4_merger_shape(scalar(n), scalar(c)))
+    expected_shape = peak_preserving_shape(nu=n, chi=c, sigma=qnm)
+    for actual, key in zip(shape, ("c1f", "c2f", "d1f", "d2f")):
+        assert float(actual) == pytest.approx(float(expected_shape[key]), rel=3e-13, abs=1e-14)
+    times = scalar([0., .01, .5, 2., 10.])
+    actual = merger_ringdown_22(times, sigma, scalar(.35), scalar(0.), scalar(.32), scalar(.4), shape)
+    for t, sample in zip(times.tolist(), actual.tolist()):
+        expected = complex(h22(t, nu=n, chi=c, sigma=qnm,
+                               amplitude=.35, frequency=.32, phase=.4,
+                               peak_preserving=True))
         assert sample == pytest.approx(expected, rel=3e-13, abs=3e-14)
 
 

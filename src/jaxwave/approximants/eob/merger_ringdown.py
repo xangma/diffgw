@@ -57,6 +57,22 @@ def seobnrv4_merger_shape(nu: jnp.ndarray, chi: jnp.ndarray) -> MergerRingdownSh
     return MergerRingdownShape(c1, c2, d1, d2)
 
 
+def seobnrv4_peak_preserving_shape(sigma: jnp.ndarray, shape: MergerRingdownShape) -> MergerRingdownShape:
+    """Project c1f to the Eq. (2.12) peak boundary when its fit rises there.
+
+    From Bohé et al. (1611.03703v3), Eqs. (2.10), (2.12)-(2.14),
+    A''(0)/A(0)=-gamma*[gamma+2*c1f*tanh(c2f)] for A'(0)=0.
+    This is an ansatz-derived continuation, not a printed fit.
+    """
+    c1, c2, d1, d2 = shape
+    damping = -jnp.imag(sigma)
+    offset = jnp.tanh(c2)
+    safe_offset = jnp.where(offset < 0, offset, jnp.ones_like(offset))
+    boundary_rate = -damping / (2 * safe_offset)
+    rate = jnp.where(damping + 2 * c1 * offset < 0, boundary_rate, c1)
+    return MergerRingdownShape(rate, c2, d1, d2)
+
+
 def _log1p_over_x(x: jnp.ndarray) -> jnp.ndarray:
     eps = jnp.finfo(x.dtype).eps
     small = jnp.abs(x) < (eps**0.2)
@@ -110,5 +126,6 @@ def merger_ringdown_22(
 __all__ = [
     "MergerRingdownShape",
     "seobnrv4_merger_shape",
+    "seobnrv4_peak_preserving_shape",
     "merger_ringdown_22",
 ]

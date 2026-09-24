@@ -10,7 +10,27 @@ import mpmath as mp
 from .published import evaluate, ringdown_shape
 
 
-def h22(t, *, nu, chi, sigma, amplitude, frequency, phase, digits=60):
+def peak_preserving_shape(*, nu, chi, sigma, digits=60):
+    """Paper-fit shape with the C1 peak condition imposed when necessary.
+
+    This is an ansatz-derived continuation of Bohé et al. Eq. (12), not an
+    additional printed calibration. It retains all other free coefficients.
+    """
+    with mp.workdps(digits):
+        n, spin = mp.mpf(str(nu)), mp.mpf(str(chi))
+        damping = -mp.mpc(sigma).imag
+        if not (0 < n <= mp.mpf("0.25") and abs(spin) <= 1 and damping > 0):
+            raise ValueError("peak continuation requires physical fit parameters and damping")
+        fit = evaluate(ringdown_shape(), n, spin, digits)
+        shape = {key: mp.mpf(str(fit[key])) for key in ("c1f", "c2f", "d1f", "d2f")}
+        offset = mp.tanh(shape["c2f"])
+        if damping + 2 * shape["c1f"] * offset < 0:
+            shape["c1f"] = -damping / (2 * offset)
+        return shape
+
+
+def h22(t, *, nu, chi, sigma, amplitude, frequency, phase, digits=60,
+        peak_preserving=False):
     """Peak-attached mode in initial-mass units, h=A exp(-i phase).
 
     ``sigma = omega_QNM - i gamma_QNM`` with gamma_QNM>0. ``amplitude`` is
@@ -26,7 +46,8 @@ def h22(t, *, nu, chi, sigma, amplitude, frequency, phase, digits=60):
             raise ValueError("published fit requires 0 < nu <= 1/4 and |chi| <= 1")
         if not (t >= 0 and a0 > 0 and w0 > 0 and w > 0 and gamma > 0):
             raise ValueError("t >= 0 and positive amplitude, frequencies, damping required")
-        shape = evaluate(ringdown_shape(), n, chi, digits)
+        shape = (peak_preserving_shape(nu=n, chi=chi, sigma=sigma, digits=digits)
+                 if peak_preserving else evaluate(ringdown_shape(), n, chi, digits))
         c1, c2, d1, d2 = (mp.mpf(str(shape[key])) for key in ("c1f", "c2f", "d1f", "d2f"))
         if not (c1 > 0 and d1 > 0 and d2 > -1):
             raise ValueError("ringdown ansatz requires c1f,d1f > 0 and d2f > -1")

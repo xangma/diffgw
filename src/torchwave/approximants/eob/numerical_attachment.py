@@ -23,7 +23,9 @@ the published convention::
 
     dt_internal = dt_output / 2**max(0, ceil(log2(50*dt_output/M))).
 
-The helper does not alter the default production EOB route.
+The free ringdown amplitude rate is projected to the ansatz's non-increasing
+peak boundary if the printed fit and supplied QNM damping would bend the
+attachment upward. The helper does not alter the default production EOB route.
 """
 
 from __future__ import annotations
@@ -35,7 +37,8 @@ import torch
 from torch import Tensor
 
 from .events import OrbitalFrequencyPeak
-from .merger_ringdown import merger_ringdown_22, seobnrv4_merger_shape
+from .merger_ringdown import (merger_ringdown_22, seobnrv4_merger_shape,
+                              seobnrv4_peak_preserving_shape)
 from .nqc import (
     NQCCalibration,
     NQCCoefficients,
@@ -875,7 +878,8 @@ def attach_seobnrv4_22_numerical_compatibility(
     ringdown_time = (query - boundary_time.unsqueeze(-1)).clamp_min(0)
     ringdown = merger_ringdown_22(
         ringdown_time, sigma, boundary_amplitude, torch.zeros_like(boundary_amplitude),
-        boundary_frequency, boundary_phase, seobnrv4_merger_shape(nu, chi),
+        boundary_frequency, boundary_phase,
+        seobnrv4_peak_preserving_shape(sigma, seobnrv4_merger_shape(nu, chi)),
     )
     # Determine support on the high-resolution grid before selecting output
     # queries.  Samples j=0,...,count-1 are retained; elapsed count*dt_high

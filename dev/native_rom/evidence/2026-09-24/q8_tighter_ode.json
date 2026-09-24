@@ -1,0 +1,202 @@
+{
+  "additional_gate_passed": true,
+  "campaign_sha256": "d8efe4baa182ea39bf9a7d35b6de8621c6e054429ee180eb661e9fbb9f9d59d8",
+  "choice": {
+    "calibration": "lal_v4_rounded",
+    "flux": {
+      "mode_21_higher_spin": "rho_hybrid",
+      "mode_31_higher_spin": "lal_v4_rho",
+      "mode_32_spin_square": "lal_v4_zero"
+    },
+    "mode_43_higher_spin": "lal_v4_rho",
+    "nqc_phase_window_M": 1.0,
+    "numerical": {
+      "default_initial_step_rule": true,
+      "default_restart_rule": false,
+      "fixed_restart_time_M": 165.0,
+      "hermite_resampling": true,
+      "local_nqc_degree": 6,
+      "local_nqc_phase_derivatives": true,
+      "local_nqc_window_M": 0.5
+    },
+    "physical": {
+      "hamiltonian_log_derivative": "lal_v4",
+      "mode_33_higher_spin": "lal_v4_rho",
+      "name": "combined"
+    },
+    "spin_truncation": "tabulated"
+  },
+  "comparison": {
+    "amplitude_relative_l2": 2.5957469621683464e-09,
+    "boundary_time_M_abs_difference": 0.0,
+    "candidate_samples": 2652,
+    "common_samples": 2652,
+    "complex_relative_l2": 3.412611973050033e-07,
+    "grid_step_M": 0.5,
+    "match_time_M_abs_difference": 0.0,
+    "peak_time_M_abs_difference": 0.0,
+    "phase_max_abs_rad": 8.096876058592895e-07,
+    "phase_rms_rad": 2.872895168227397e-07,
+    "phase_samples": 2650,
+    "reference_samples": 2652,
+    "relative_norm_error": 2.241211216613692e-09,
+    "samples": 2652,
+    "support_end_difference_M": 0.0,
+    "unmaximized_real_overlap": 0.9999999999999414
+  },
+  "errors": [],
+  "plan_sha256": "1cab9cf18fdfa810ce589615ea150b0b15fe29ec4092efbfe92331a9d7f17f5c",
+  "process": {
+    "argv": [
+      "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw/dev/native_rom/diagnose_q8_tighter_ode.py",
+      "--json-out",
+      "/tmp/seobnrv4-q8-tighter-ode.json"
+    ],
+    "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+    "host": "client-3792.default.vpn.port.ac.uk",
+    "pid": 74729
+  },
+  "release_qualified": false,
+  "row": {
+    "chi1": 0.85,
+    "chi2": 0.85,
+    "mass1": 40.0,
+    "mass2": 5.0,
+    "omega_start": 0.04
+  },
+  "runs": {
+    "ode_2": {
+      "elapsed_seconds": 237.52031333299237,
+      "level": {
+        "atol": 1e-14,
+        "dt_geom": 0.5,
+        "name": "ode_2",
+        "rtol": 1e-13
+      },
+      "native": {
+        "array_dtype": {
+          "mode": "complex128",
+          "time": "float64"
+        },
+        "array_sha256": {
+          "mode": "833c8ce3251143f336f4a76d2a4866d94a61c7d1211e9294aae587263e0ede53",
+          "time": "db563c40381301f4f08f2592d8daf3c2d5cd97c2f22780b90179c0df62e346e7"
+        },
+        "atol": 1e-14,
+        "boundary_time_M": 1175.859375,
+        "dt_geom": 0.5,
+        "final_mass_fraction": 0.9792636225854244,
+        "final_spin": 0.8941271984269911,
+        "internal_step_M": 0.015625,
+        "match_time_M": 1175.8741823451842,
+        "name": "ode_2",
+        "peak_time_M": 1197.2050552368164,
+        "restart_time_M": 100.0,
+        "rtol": 1e-13,
+        "samples": 2652,
+        "stages": {
+          "coarse": {
+            "accepted": 1286,
+            "evaluations": 7907,
+            "event_time_M": 1197.2451204639556,
+            "rejected": 38,
+            "termination": [
+              "event"
+            ]
+          },
+          "fine": {
+            "accepted": 1245,
+            "evaluations": 7651,
+            "event_time_M": 1097.4208806195463,
+            "rejected": 36,
+            "termination": [
+              "event"
+            ]
+          }
+        },
+        "support_M": [
+          0.0,
+          1325.5
+        ]
+      }
+    },
+    "ode_3": {
+      "elapsed_seconds": 291.0600000000268,
+      "level": {
+        "atol": 3e-15,
+        "dt_geom": 0.5,
+        "name": "ode_3",
+        "rtol": 3e-14
+      },
+      "native": {
+        "array_dtype": {
+          "mode": "complex128",
+          "time": "float64"
+        },
+        "array_sha256": {
+          "mode": "cd7056b90456f9c7132689d8c55d640b02e3296647bc314c3470e377b97019e3",
+          "time": "db563c40381301f4f08f2592d8daf3c2d5cd97c2f22780b90179c0df62e346e7"
+        },
+        "atol": 3e-15,
+        "boundary_time_M": 1175.859375,
+        "dt_geom": 0.5,
+        "final_mass_fraction": 0.9792636225854244,
+        "final_spin": 0.8941271984269911,
+        "internal_step_M": 0.015625,
+        "match_time_M": 1175.8741823451842,
+        "name": "ode_3",
+        "peak_time_M": 1197.2050552368164,
+        "restart_time_M": 100.0,
+        "rtol": 3e-14,
+        "samples": 2652,
+        "stages": {
+          "coarse": {
+            "accepted": 1632,
+            "evaluations": 9983,
+            "event_time_M": 1197.2534607290308,
+            "rejected": 38,
+            "termination": [
+              "event"
+            ]
+          },
+          "fine": {
+            "accepted": 1574,
+            "evaluations": 9625,
+            "event_time_M": 1097.376026815529,
+            "rejected": 36,
+            "termination": [
+              "event"
+            ]
+          }
+        },
+        "support_M": [
+          0.0,
+          1325.5
+        ]
+      }
+    }
+  },
+  "schema": "diffgw.seobnrv4.q8-tighter-ode.v1",
+  "scope": {
+    "description": "Scalar CPU float64 numerical stability evidence only; no training or promotion.",
+    "known_limitations": [
+      "Convergence cannot establish correctness of the equations or published model fidelity.",
+      "The adaptive prototype uses a diagnostic QNM spline with independently generated values and black-box-inferred knot metadata; this is not wholly literature-specified provenance.",
+      "Changing dt also changes the adaptive initial step and coarse/fine restart sampling; the grid check measures the complete generator's grid sensitivity.",
+      "No time, phase, amplitude, or coefficient fitting is performed.",
+      "No derivatives, batched execution, accelerators, or JAX are qualified here."
+    ],
+    "physics_validated": false,
+    "production_asset": false,
+    "production_promotion_allowed": false,
+    "training_generator_qualified": false
+  },
+  "script_sha256": "8df0832240f4d0e88771b6fbb519b76e1e1c032e8d686c40776200239ba26c4d",
+  "source_sha256": {
+    "dev/native_rom/diagnose_q8_mode_phase.py": "bdbd7ce05113585d9636b5b9946df25c216b771ea24b7e0317e410a38e2cf84c",
+    "dev/native_rom/eob/torch/adaptive_driver_clean.py": "f97c150d107581045255696d216b6bdb78f2b361ad8aa785e89ddc76e1cd983d",
+    "dev/native_rom/qualify_generator.py": "a5b4105bd944335c4489006135b0154f520843979f083d716a74558f86204d7e",
+    "src/torchwave/approximants/eob/numerical_attachment.py": "eb28307fc9df974ad9ca4a39e533288b397bf9f290e45bb1a9c664c6ea68cb12"
+  },
+  "status": "diagnostic_complete"
+}

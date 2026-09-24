@@ -42,6 +42,24 @@ def seobnrv4_merger_shape(nu, chi):
     return MergerRingdownShape(c1, c2, d1, d2)
 
 
+def seobnrv4_peak_preserving_shape(sigma, shape):
+    """Continue the printed amplitude fit to a non-increasing peak attachment.
+
+    Bohé et al. (1611.03703v3), Eqs. (2.10), (2.12)-(2.14), imply
+    A''(0)/A(0) = -gamma * [gamma + 2*c1f*tanh(c2f)] at A'(0)=0,
+    where gamma=-Im(sigma)>0.  If the printed free rate c1f makes the
+    bracket negative, project only c1f to its nearest admissible boundary.
+    This continuation is derived from the ansatz, not a printed fit.
+    """
+    c1, c2, d1, d2 = shape
+    damping = -sigma.imag
+    offset = torch.tanh(c2)
+    safe_offset = torch.where(offset < 0, offset, torch.ones_like(offset))
+    boundary_rate = -damping / (2 * safe_offset)
+    rate = torch.where(damping + 2*c1*offset < 0, boundary_rate, c1)
+    return MergerRingdownShape(rate, c2, d1, d2)
+
+
 def _log1p_over_x(x):
     # Analytic continuation at zero. This also keeps gradients finite when
     # the published d2f fit crosses zero inside the physical parameter domain.

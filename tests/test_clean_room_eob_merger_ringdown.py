@@ -7,6 +7,7 @@ from torchwave.approximants.eob.merger_ringdown import (
     MergerRingdownShape,
     merger_ringdown_22,
     seobnrv4_merger_shape,
+    seobnrv4_peak_preserving_shape,
 )
 
 
@@ -94,6 +95,45 @@ def test_gradients_include_qnm_matching_and_intrinsic_parameters():
                                    frequency, phase, seobnrv4_merger_shape(nu, chi))
 
     assert torch.autograd.gradcheck(evaluate, (parameters,), rtol=2e-4, atol=2e-6)
+
+
+def test_peak_preserving_continuation_fixes_only_rising_amplitude_rate():
+    # The q=8, chi=.8 state samples a printed-fit region where a sufficiently
+    # slow fundamental decay makes the C1 stationary join bend upward.
+    raw = seobnrv4_merger_shape(real(8/81), real(.8))
+    sigma = torch.tensor(.52-.04j, dtype=torch.complex128)
+    adjusted = seobnrv4_peak_preserving_shape(sigma, raw)
+    k = torch.tanh(raw.amplitude_offset)
+    assert bool((.04 + 2*raw.amplitude_rate*k < 0))
+    torch.testing.assert_close(adjusted.amplitude_rate, -.04/(2*k), rtol=2e-15, atol=0)
+    for actual, original in zip(adjusted[1:], raw[1:]):
+        torch.testing.assert_close(actual, original, rtol=0, atol=0)
+
+    t = real([0.]).requires_grad_()
+    def amplitude(shape):
+        return merger_ringdown_22(t, sigma, real(.36), real(0.), real(.31), real(.7), shape).abs()[0]
+    raw_second = torch.autograd.grad(
+        torch.autograd.grad(amplitude(raw), t, create_graph=True)[0], t)[0]
+    assert raw_second > 0
+    projected = amplitude(adjusted)
+    first = torch.autograd.grad(projected, t, create_graph=True)[0]
+    second = torch.autograd.grad(first, t, create_graph=True)[0]
+    third = torch.autograd.grad(second, t)[0]
+    torch.testing.assert_close(first, real([0.]), atol=2e-16, rtol=0)
+    torch.testing.assert_close(second, real([0.]), atol=2e-16, rtol=0)
+    assert third < 0
+
+    damping = real(.04).requires_grad_()
+    rate = seobnrv4_peak_preserving_shape(torch.complex(real(.52), -damping), raw).amplitude_rate
+    torch.testing.assert_close(torch.autograd.grad(rate, damping)[0], -1/(2*k),
+                               rtol=2e-15, atol=0)
+
+    # The printed fit is left exactly intact when the damping already bends
+    # the attachment downward.
+    safe = seobnrv4_peak_preserving_shape(
+        torch.tensor(.52-.12j, dtype=torch.complex128), raw)
+    for actual, original in zip(safe, raw):
+        torch.testing.assert_close(actual, original, rtol=0, atol=0)
 
 
 @pytest.mark.parametrize("failure", ["negative_time", "growing_qnm", "bad_shape", "nonfinite"])

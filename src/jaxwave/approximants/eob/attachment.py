@@ -1,4 +1,8 @@
-"""Trajectory-to-merger wiring for the published SEOBNRv4 matching equations in JAX."""
+"""Trajectory-to-merger wiring for the published SEOBNRv4 matching equations in JAX.
+
+The printed free amplitude rate is projected to the ansatz's non-increasing
+peak boundary when the supplied QNM damping would make the join rise.
+"""
 
 from typing import NamedTuple, Optional
 import jax.numpy as jnp
@@ -12,7 +16,9 @@ from jaxwave.approximants.eob.nqc import (
     seobnrv4_nqc_targets,
     seobnrv4_nqc_time_offset,
 )
-from jaxwave.approximants.eob.merger_ringdown import merger_ringdown_22, seobnrv4_merger_shape
+from jaxwave.approximants.eob.merger_ringdown import (
+    merger_ringdown_22, seobnrv4_merger_shape, seobnrv4_peak_preserving_shape,
+)
 from jaxwave.conversions import as_array
 
 
@@ -148,7 +154,8 @@ def attach_seobnrv4_22(
 
     offsets = jnp.arange(-3, 4)
     indices = jnp.expand_dims(index, -1) + offsets
-    stencil = lambda value: jnp.take_along_axis(value, indices, axis=-1)
+    def stencil(value):
+        return jnp.take_along_axis(value, indices, axis=-1)
 
     t = stencil(time)
     r = stencil(state[..., 0])
@@ -215,7 +222,7 @@ def attach_seobnrv4_22(
         targets.amplitude_derivative,
         targets.frequency,
         match_phase,
-        seobnrv4_merger_shape(nu, chi),
+        seobnrv4_peak_preserving_shape(sigma, seobnrv4_merger_shape(nu, chi)),
     )
     mode = jnp.where(query < jnp.expand_dims(match, -1), inspiral, ringdown)
 

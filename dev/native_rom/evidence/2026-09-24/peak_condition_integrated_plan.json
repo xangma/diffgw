@@ -1,0 +1,14 @@
+{
+  "schema": "diffgw.seobnrv4.peak-condition-integrated-plan.v1",
+  "purpose": "Verify the paper-derived peak-preserving continuation in the native adaptive generator against the frozen q8 counterfactual and unchanged q4 control, then compare both to the same pinned public binary at a predeclared GW-frequency anchor.",
+  "campaign": "dev/native_rom/evidence/2026-09-24/source_candidate_new_rows.json",
+  "campaign_sha256": "d8efe4baa182ea39bf9a7d35b6de8621c6e054429ee180eb661e9fbb9f9d59d8",
+  "q8_counterfactual": "dev/native_rom/evidence/2026-09-24/q8_ringdown_peak_bound.json",
+  "q4_control": "dev/native_rom/evidence/2026-09-24/q4_frequency_anchor.json",
+  "rows": [
+    {"name": "q8_high_aligned", "level": "ode_2", "anchor_angular_frequency_M": 0.1},
+    {"name": "q4_mixed_spin", "level": "ode_2", "anchor_angular_frequency_M": 0.1}
+  ],
+  "expected": "The integrated q8 mode matches the prior independent paper-derived counterfactual; q4 remains unchanged; both use the same public-binary identity and no fitted alignment.",
+  "release_qualified": false
+}

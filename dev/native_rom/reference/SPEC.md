@@ -1,4 +1,4 @@
-# SEOBNRv4 source specification: paper components 0.8.10
+# SEOBNRv4 source specification: paper components 0.8.11
 
 **Status: incomplete research specification.** This version establishes an
 independent executable source of truth for the components marked `executable`
@@ -66,7 +66,7 @@ terms are those of the [author release](https://zenodo.org/records/14999310).
 ## Mathematics and components
 
 The [component manifest](manifest.json) is the authoritative mapping of all
-41 stable component IDs to pinned equations, reference functions, native
+42 stable component IDs to pinned equations, reference functions, native
 frontends, tests, and current implementation status. In composition, the
 initial conditions feed the aligned-spin Hamiltonian and mode-summed flux
 into the orbital ODE; its pre-NQC `(2,2)` mode is corrected at the amplitude
@@ -75,12 +75,13 @@ trained basis, parameter interpolation, or holdout definition yet.
 
 | Component ID/version | Source | Status | Scalar reference | Torch/JAX | Main blocker |
 | --- | --- | --- | --- | --- | --- |
-| `V4-HAM-RADIAL` / 0.8.10 | Bohé Eqs. (2)–(3); Steinhoff Appendix A | executable | `hamiltonian.radial_potentials` | `SEOBNRv4Hamiltonian.deformed_kerr_potentials` | Historical derivative convention differs from paper form |
-| `V4-FLUX-NORM-9` / 0.8.10 | Bohé Eq. (9); Pan mode sum | conditional | `flux.emitted_flux` | `SEOBNRv4PublishedFlux.energy_flux` | Historical mode choices and full trajectory coupling |
-| `V4-NQC-7` / 0.8.10 | Bohé Eq. (7) and peak fits | conditional | `nqc.match_22` | Manifest-linked NQC modules | Historical fit differentiation and source/wheel inputs |
-| `V4-QNM-INTERPOLATION` / 0.8.10 | Bohé Sec. II.C; Berti numerical data; pinned LAL source | pending | pending | pending | Historical spline identified; native compatibility, physical domain, and waveform impact open |
-| `V4-ODE-IC` / 0.8.10 | Bohé evolution and historical carrier | pending | pending | Development integrators | Domain-wide converged initial conditions and events |
-| `V4-ROM-VII` / 0.8.10 | Bohé Sec. VII | pending | pending | pending | Qualified training generator, bases, and holdouts |
+| `V4-HAM-RADIAL` / 0.8.11 | Bohé Eqs. (2)–(3); Steinhoff Appendix A | executable | `hamiltonian.radial_potentials` | `SEOBNRv4Hamiltonian.deformed_kerr_potentials` | Historical derivative convention differs from paper form |
+| `V4-FLUX-NORM-9` / 0.8.11 | Bohé Eq. (9); Pan mode sum | conditional | `flux.emitted_flux` | `SEOBNRv4PublishedFlux.energy_flux` | Historical mode choices and full trajectory coupling |
+| `V4-NQC-7` / 0.8.11 | Bohé Eq. (7) and peak fits | conditional | `nqc.match_22` | Manifest-linked NQC modules | Historical fit differentiation and source/wheel inputs |
+| `V4-RD-PEAK-CONTINUATION` / 0.8.11 | Bohé Eqs. (10), (12)–(14), derived condition | conditional | `ringdown.peak_preserving_shape` | `seobnrv4_peak_preserving_shape` | Uncalibrated continuation needs domain-wide waveform validation |
+| `V4-QNM-INTERPOLATION` / 0.8.11 | Bohé Sec. II.C; Berti numerical data; pinned LAL source | pending | pending | pending | Historical spline identified; native compatibility, physical domain, and waveform impact open |
+| `V4-ODE-IC` / 0.8.11 | Bohé evolution and historical carrier | pending | pending | Development integrators | Domain-wide converged initial conditions and events |
+| `V4-ROM-VII` / 0.8.11 | Bohé Sec. VII | pending | pending | pending | Qualified training generator, bases, and holdouts |
 
 ### Canonical equations and derivation
 
@@ -407,6 +408,19 @@ and its first derivative match the supplied inspiral peak for this component.
 They do **not** establish that the current inspiral supplies the correct peak,
 remnant, or QNM. The paper explicitly says the amplitude is only `C¹` at
 attachment; no second-derivative continuity is claimed.
+
+`ringdown.peak_preserving_shape` records a separate continuation derived from
+the same ansatz, not an additional fit printed in Bohé et al. For a stationary
+attachment and `gamma=-Im(sigma)>0`, Eq. (12) implies
+`A''(0)/A(0)=-gamma[gamma+2*c1f*tanh(c2f)]`. If the printed shape gives a
+positive curvature, this continuation replaces only `c1f` by
+`-gamma/(2*tanh(c2f))`, the boundary at which the curvature vanishes. The
+resulting amplitude decreases for positive times under the physical ansatz
+parameters. The scalar reference keeps the raw printed fit as its default;
+`h22(..., peak_preserving=True)` selects the continuation. The Torch and JAX
+attachment paths apply it when needed. This repairs a local peak-shape defect
+for the tested strong-spin row but does not establish that the changed model
+matches the authors' calibrated waveform across the physical domain.
 
 `remnant.final_mass_fraction` independently evaluates the aligned-spin
 remnant-mass prescription named in Bohé et al. Sec. II.C. Bohé points to

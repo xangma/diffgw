@@ -462,6 +462,9 @@ Two additional frozen stress rows now expose a much larger domain gap. The
 source-convention candidate misses the q8 high-aligned-spin refined complex
 numerical budget (`1.27e-6` versus `1e-6`) and differs from the pinned public
 whole mode by `0.40226` complex relative L2 after amplitude-peak anchoring.
+A further frozen ODE-tolerance step on the same q8 output grid reduces the
+direct complex difference to `3.41e-7`, below that numerical budget; this
+does not establish physical fidelity or domain-wide convergence.
 A q4 mixed-spin row passes the numerical gate but differs by `0.01154`.
 At q8, the native and public initial states at the same orbital frequency
 agree to a few `1e-8`, and orbital phase spans through `M Omega=0.13` agree
@@ -473,9 +476,16 @@ peak-anchored discrepancy. The remaining postpeak difference is under
 attachment diagnosis. A development-only ringdown amplitude-peak bound derived
 from the published ansatz reduces the q8 peak-time gap to `0.034 M` and its
 peak-fitted whole-mode L2 to `0.01137`, but leaves a `0.00584` postpeak L2
-under frequency anchoring. The untouched q4 row has only `0.051 M` peak lag
+under frequency anchoring. The ansatz-derived condition is now wired into the
+feature-branch Torch and JAX attachment paths. A frozen integrated replay
+reproduces the q8 counterfactual and unchanged q4 mode hashes exactly, with
+the same public comparison metrics. This verifies the implementation route,
+not domain-wide calibration of the new condition. The untouched q4 row has
+only `0.051 M` peak lag
 but still `0.00316` whole-mode and `0.00998` postpeak L2 at the same frequency
-anchor. See the
+anchor. Its late QNM decay and phase slopes agree closely with the public
+waveform, while an amplitude and phase offset settles through the attachment
+transient. See the
 [frozen stress evidence](evidence/2026-09-24/README.md).
 Neither row supports generator or ROM release qualification.
 

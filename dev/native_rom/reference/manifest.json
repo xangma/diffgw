@@ -1,5 +1,5 @@
 {
-  "specification": "seobnrv4-paper-components/0.8.10",
+  "specification": "seobnrv4-paper-components/0.8.11",
   "model": "SEOBNRv4 dominant (2,2) mode, aligned-spin black-hole binaries",
   "source": {
     "id": "bohe-2017-v3",
@@ -44,6 +44,16 @@
       "jax": "src/jaxwave/approximants/eob/merger_ringdown.py:seobnrv4_merger_shape; src/jaxwave/approximants/eob/merger_ringdown.py:merger_ringdown_22",
       "test": "dev/native_rom/reference/tests/test_published.py:test_ringdown_continuity; dev/native_rom/reference/tests/test_torch.py:test_ringdown_against_reference; dev/native_rom/reference/tests/test_jax.py:test_ringdown_against_reference",
       "condition": "Requires independently validated peak data and remnant QNM inputs."
+    },
+    {
+      "id": "V4-RD-PEAK-CONTINUATION",
+      "source": "bohe-2017-v3, Eqs. (10), (12)-(14), derived peak-curvature condition",
+      "status": "conditional",
+      "reference": "ringdown.peak_preserving_shape; ringdown.h22(peak_preserving=True)",
+      "torch": "src/torchwave/approximants/eob/merger_ringdown.py:seobnrv4_peak_preserving_shape; src/torchwave/approximants/eob/numerical_attachment.py:attach_seobnrv4_22_numerical_compatibility",
+      "jax": "src/jaxwave/approximants/eob/merger_ringdown.py:seobnrv4_peak_preserving_shape; src/jaxwave/approximants/eob/attachment.py:attach_seobnrv4_22",
+      "test": "dev/native_rom/reference/tests/test_published.py:test_ringdown_peak_continuation_is_monotone_after_attachment; dev/native_rom/reference/tests/test_torch.py:test_peak_continuation_against_reference; dev/native_rom/reference/tests/test_jax.py:test_peak_continuation_against_reference",
+      "condition": "An ansatz-derived, uncalibrated continuation of c1f that enforces a non-increasing amplitude after a stationary attachment. It is not a printed SEOBNRv4 fit and requires domain-wide physical and waveform validation before release."
     },
     {
       "id": "V4-HAM-RADIAL",

@@ -15,7 +15,8 @@ import torch
 from .events import OrbitalFrequencyPeak, orbital_frequency_peak
 from .nqc import (NQCCalibration, calibrate_nqc_22, nqc_22_basis, nqc_22_factor,
                   seobnrv4_nqc_targets, seobnrv4_nqc_time_offset)
-from .merger_ringdown import merger_ringdown_22, seobnrv4_merger_shape
+from .merger_ringdown import (merger_ringdown_22, seobnrv4_merger_shape,
+                              seobnrv4_peak_preserving_shape)
 
 
 class AttachedMode22(NamedTuple):
@@ -66,8 +67,10 @@ def attach_seobnrv4_22(time, state, orbital_frequency, base_mode, base_frequency
     the same degree-six amplitude/basis/frequency polynomials define a continuous
     mode: integrating the positive frequency avoids phase unwrapping. Its
     phase is anchored to the first stencil sample. This gives an exact C1
-    join to Eqs. (2.10),(2.12)-(2.17) at the imposed peak targets. Earlier
-    corrected samples are locally interpolated on the source grid; times before input start
+    join to Eqs. (2.10),(2.12)-(2.17) at the imposed peak targets. The free
+    amplitude rate is projected to the ansatz's non-increasing peak boundary
+    when the printed fit and supplied QNM damping would bend the join upward.
+    Earlier corrected samples are locally interpolated on the source grid; times before input start
     are zero. Output samples occupy the last axis and may be batched.
 
     ``matching_method="continuous"`` locates the peak continuously using
@@ -147,7 +150,8 @@ def attach_seobnrv4_22(time, state, orbital_frequency, base_mode, base_frequency
     if bool(((index < 3) | (index+3 >= valid.sum(-1))).any()):
         raise ValueError("NQC matching needs three valid samples on both sides; extend trajectory history")
     indices = index.unsqueeze(-1)+torch.arange(-3, 4, device=time.device)
-    stencil = lambda value: torch.gather(value, -1, indices)
+    def stencil(value):
+        return torch.gather(value, -1, indices)
     t, r, pr, om, amplitude, freq = (stencil(value) for value in
         (time, state[..., 0], state[..., 2], omega, base.abs(), frequency))
     targets = seobnrv4_nqc_targets(nu, chi)
@@ -186,6 +190,6 @@ def attach_seobnrv4_22(time, state, orbital_frequency, base_mode, base_frequency
     inspiral = torch.where(query >= t[..., :1], near, _local_mode_interpolate(query, time, corrected))
     ringdown = merger_ringdown_22((query-match.unsqueeze(-1)).clamp_min(0), sigma,
         targets.amplitude, targets.amplitude_derivative, targets.frequency,
-        match_phase, seobnrv4_merger_shape(nu, chi))
+        match_phase, seobnrv4_peak_preserving_shape(sigma, seobnrv4_merger_shape(nu, chi)))
     mode = torch.where(query < match.unsqueeze(-1), inspiral, ringdown)
     return AttachedMode22(mode, corrected, peak, match, match_phase, calibration)

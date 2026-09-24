@@ -1441,3 +1441,49 @@ anchor is a fitted validation metric or a domain-wide qualification. Reproduce
 with `PYTHONPATH=src:. python -m
 dev.native_rom.diagnose_q4_frequency_anchor --json-out
 /tmp/q4-frequency-anchor.json` in the pinned environment.
+
+The [frozen q4 postpeak-profile plan](q4_postpeak_profile_plan.json) and
+[result](q4_postpeak_profile.json) sample the same waveform relative to the
+public amplitude peak, with no new alignment or fitted correction. The native
+amplitude divided by the public amplitude changes from `0.999618` at the peak
+to `0.997402` at `80 M`, then remains at `0.997402` at `120 M`. The phase
+residual similarly settles from `-0.002535` to `-0.006844 rad`. Over
+`70–120 M`, native/public log-amplitude slopes are `-0.0721019270` and
+`-0.0721019754` per `M`; phase slopes are `-0.6641033113` and
+`-0.6641033840 rad/M`. The asymptotic slopes agree closely, while the
+postpeak transient leaves a persistent normalization and phase offset. This
+localizes the residual; it does not establish which attachment ingredient
+causes it or qualify the waveform. Reproduce with `PYTHONPATH=src:. python -m
+dev.native_rom.diagnose_q4_postpeak_profile --json-out
+/tmp/q4-postpeak-profile.json` in the pinned environment.
+
+The [frozen q8 tighter-ODE plan](q8_tighter_ode_plan.json) and
+[result](q8_tighter_ode.json) replay the original fine q8 waveform hash, then
+hold the `0.5 M` output grid and all scientific choices fixed while tightening
+the ODE tolerances from `(atol, rtol)=(1e-14, 1e-13)` to
+`(3e-15, 3e-14)`. The direct complex relative L2 is `3.4126e-7` and the
+amplitude relative L2 is `2.5957e-9`; peak, match, and boundary time
+differences are zero at this grid. This additional step passes the frozen
+`1e-6` source-stability gate after the prior tolerance step missed it at
+`1.2687e-6`. It qualifies neither the q8 physical waveform nor the parameter
+domain; this is pre-peak-condition generator evidence. Reproduce with
+`PYTHONPATH=src:. python -m dev.native_rom.diagnose_q8_tighter_ode
+--json-out /tmp/q8-tighter-ode.json` in the pinned environment.
+
+The [frozen integrated peak-condition plan](peak_condition_integrated_plan.json)
+and [result](peak_condition_integrated.json) rerun the Torch q8 and q4 `ode_2`
+adaptive paths with the ansatz-derived continuation. The same continuation is
+wired into the JAX attachment path and checked against the independent scalar
+reference, but no full JAX adaptive waveform is qualified. The q8 mode hash matches the
+previous independent one-row counterfactual exactly; the q4 hash matches its
+unchanged control exactly. At the predeclared `M omega22=0.1` anchor, q8 has
+whole-mode complex relative L2 `0.00186519`, postpeak L2 `0.00583740`, and
+native-minus-public peak lag `0.0344231 M`. Q4 has whole-mode L2 `0.00316192`,
+postpeak L2 `0.00997582`, and peak lag `-0.0509413 M`; all are identical to
+their frozen comparators. The paper ansatz supplies the curvature condition,
+but the continuation is our uncalibrated choice, not a coefficient fit printed
+by Bohé et al. These two replays verify integration and preserve the prior
+physical residuals; they do not qualify the model or ROM. The evidence records
+the input, script, and source hashes. Reproduce with `PYTHONPATH=src:. python
+-m dev.native_rom.diagnose_peak_condition_integrated --json-out
+/tmp/seobnrv4-peak-condition-integrated.json` in the pinned environment.

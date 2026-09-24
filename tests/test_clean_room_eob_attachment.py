@@ -5,6 +5,9 @@ import torch
 
 from torchwave.approximants.eob.attachment import attach_seobnrv4_22
 from torchwave.approximants.eob.nqc import seobnrv4_nqc_targets, seobnrv4_nqc_time_offset
+from torchwave.approximants.eob.merger_ringdown import (
+    seobnrv4_merger_shape, seobnrv4_peak_preserving_shape,
+)
 
 
 def inputs(dt=.1):
@@ -58,6 +61,21 @@ def test_attachment_time_origin_and_phase_covariance():
     torch.testing.assert_close(shifted.mode, original.mode*torch.exp(-1j*phase), atol=3e-10, rtol=3e-10)
     derivative = torch.autograd.grad(shifted.mode.real.sum(), phase)[0]
     torch.testing.assert_close(derivative, shifted.mode.imag.sum(), atol=3e-10, rtol=3e-10)
+
+
+def test_attachment_keeps_a_slowly_damped_peak_from_rebounding():
+    args = list(inputs())
+    args[-1] = torch.tensor(.5-.04j, dtype=torch.complex128)
+    nu, chi, sigma = args[-3:]
+    raw = seobnrv4_merger_shape(nu, chi)
+    assert .04 + 2*raw.amplitude_rate*torch.tanh(raw.amplitude_offset) < 0
+    adjusted = seobnrv4_peak_preserving_shape(sigma, raw)
+    assert adjusted.amplitude_rate < raw.amplitude_rate
+
+    match = 25+seobnrv4_nqc_time_offset(nu, chi)
+    query = match+torch.tensor([0., .001, .01, .1, 1.], dtype=torch.float64)
+    amplitude = attach_seobnrv4_22(*args, query).mode.abs()
+    assert torch.all(amplitude[1:] < amplitude[0])
 
 
 def test_attachment_batch_and_inference_equal_independent_calls():

@@ -26,7 +26,7 @@ from dev.native_rom.reference.hamiltonian import (
     nonspinning_effective_hamiltonian, radial_potentials,
 )
 from dev.native_rom.reference.published import (
-    D, calibration, chi, mass_spin, nu, peak_targets, ringdown_shape,
+    D, calibration, chi, evaluate, mass_spin, nu, peak_targets, ringdown_shape,
 )
 from dev.native_rom.reference.qnm import berti_220_fit, sigma_initial_mass_units
 from dev.native_rom.reference.ringdown import h22
@@ -451,6 +451,27 @@ def test_ringdown_continuity():
         assert abs(lo-hi) < mp.mpf("1e-38")
 
 
+def test_ringdown_peak_continuation_is_monotone_after_attachment():
+    from dev.native_rom.reference.ringdown import peak_preserving_shape
+
+    with mp.workdps(60):
+        nu = mp.mpf(8) / 81
+        chi = mp.mpf("0.8")
+        sigma = mp.mpc("0.52", "-0.04")
+        raw = evaluate(ringdown_shape(), nu, chi, 60)
+        adjusted = peak_preserving_shape(nu=nu, chi=chi, sigma=sigma)
+        gamma = -sigma.imag
+        assert gamma + 2 * raw["c1f"] * mp.tanh(raw["c2f"]) < 0
+        assert abs(gamma + 2 * adjusted["c1f"] * mp.tanh(adjusted["c2f"])) < mp.mpf("1e-58")
+        for name in ("c2f", "d1f", "d2f"):
+            assert adjusted[name] == mp.mpf(str(raw[name]))
+        values = [abs(h22(t, nu=nu, chi=chi, sigma=sigma,
+                          amplitude="0.36", frequency="0.31", phase="0.7",
+                          peak_preserving=True))
+                  for t in ("0", "0.001", "0.01", "0.1", "1", "5", "20")]
+        assert all(a > b for a, b in zip(values, values[1:]))
+
+
 def test_ringdown_attachment_equations_symbolically():
     t = sp.symbols("t", real=True)
     n, a0, gamma, c1, c2, d1, d2, w, w0 = sp.symbols(
@@ -462,6 +483,11 @@ def test_ringdown_attachment_equations_symbolically():
     residual = -(w-w0)*(1+d2)/(d1*d2)*sp.log((1+d2*sp.exp(-d1*t))/(1+d2))
     assert sp.simplify(envelope.subs(t, 0)-a0) == 0
     assert sp.simplify(sp.diff(envelope, t).subs(t, 0)) == 0
+    y0 = sp.tanh(c2)
+    y = sp.tanh(c1*t+c2)
+    monotone_derivative = -gamma*a0*sp.exp(-gamma*t)*(y-y0)*(
+        y+y0+gamma/c1)/(1-y0**2)
+    assert sp.simplify(sp.diff(envelope, t)-monotone_derivative) == 0
     assert sp.simplify(sp.diff(residual-w*t, t).subs(t, 0)+w0) == 0
     assert sp.simplify(sp.limit(residual, d2, 0) -
                        (w-w0)*(1-sp.exp(-d1*t))/d1) == 0
