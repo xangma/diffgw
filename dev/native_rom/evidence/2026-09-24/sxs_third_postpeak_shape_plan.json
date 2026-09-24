@@ -1,0 +1,23 @@
+{
+  "schema": "diffgw.seobnrv4.sxs-third-postpeak-shape-plan.v1",
+  "purpose": "Post-hoc attribution of the two largest native/public postpeak residuals in the third holdout. This is not a release gate or a waveform fit.",
+  "qualification_claim": false,
+  "case_plan_sha256": "abd73c31f3a1cce82f0009ab134f93983595bdea6e62786c83052cbcfc796a73",
+  "comparison_sha256": "2caff7f537583d5016e171e451387decca04a634ccae39a5d155689175da8a21",
+  "parity_plan_sha256": "2273c4cf6266221fd7b572d8f2a76c42d25c04ef52e9c1d2399c4d9c54a371ec",
+  "parity_result_sha256": "d254e2cf59a644b0ecf47ffe3809fd1ac5c24baf6f623cc89da1385f395fadf6",
+  "simulations": ["SXS:BBH:2159", "SXS:BBH:2423"],
+  "selection": "These are the two rows with the largest public/native postpeak complex relative L2 in the already inspected parity result.",
+  "method": {
+    "peak_relative_interval_M": [-20, 100],
+    "postpeak_intervals_M": [[0, 10], [10, 40], [40, 100]],
+    "sample_offsets_M": [0, 10, 40, 80],
+    "grid_step_M": 0.25,
+    "peak_alignment": "For a separate shape diagnostic, shift each waveform by its own amplitude peak and divide its complex samples by its own complex peak value. No further time, phase, or amplitude optimization.",
+    "fixed_anchor_control": "Retain the original frequency-crossing comparison and record its postpeak complex relative L2 unchanged."
+  },
+  "qnm_control": {
+    "absolute_frequency_budget_M": 1e-12,
+    "method": "Compare the native historical-spline QNM at the recorded native remnant against the pinned public from-final and binary-parameter QNM routines, as in the prior q4/q8 diagnostic."
+  }
+}

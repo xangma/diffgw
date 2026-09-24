@@ -2284,3 +2284,27 @@ row. Fixed-crossing native/public errors are `3.47e-4`, `3.43e-4`,
 difference at the NR-minimum mass is `2.33e-5`. This is limited post-hoc
 implementation-fidelity evidence. The prospective NR proxy remains failed,
 and none of these rows bounds the full parameter domain or validates the ROM.
+
+The [post-hoc postpeak-shape plan](sxs_third_postpeak_shape_plan.json) selects
+SXS:BBH:2159 and 2423 because the previous public-parity result showed the
+largest postpeak residuals on those rows. The
+[diagnostic](sxs_third_postpeak_shape.json) regenerates the pinned public
+waves, verifies the stored native arrays, and removes each waveform's own
+discrete amplitude-peak time and complex value without a further fit. For
+2423, the original fixed-crossing postpeak complex relative L2 of `0.001947`
+falls to `9.99e-7`, `2.37e-6`, and `2.99e-6` over `[0,10)`, `[10,40)`, and
+`[40,100) M`; its `0.00786 M` fixed-anchor peak offset accounts for most of
+the apparent postpeak difference. For 2159, the corresponding original error
+is `0.001924` and the three peak-relative subwindow errors are `0.000976`,
+`0.002713`, and `0.003606`. Its amplitude ratio changes from `0.998758`
+at 40 M to `0.998748` at 80 M, while the phase difference changes from
+`-0.003374` to `-0.003398 rad`. This points to a difference acquired near
+the attachment rather than continuing fundamental-mode drift, but does not
+uniquely assign it to NQC or ringdown matching. Direct native/public QNM
+frequency and damping comparisons at the recorded native remnants agree to
+floating-point precision (`<=2.22e-16/M`) on both rows. The diagnostic does
+not change the failed 2569 physical proxy or qualify any generator or ROM.
+Reproduce with `PYTHONPATH=src:. /Users/xangma/repos/diffgw/.venv/bin/python
+-m dev.native_rom.diagnose_sxs_third_postpeak_shape` and the plan, case-plan,
+comparison, parity-plan, parity-result, and json-out arguments in that
+script's help; the decoded anchored arrays must remain at their pinned paths.

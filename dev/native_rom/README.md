@@ -822,6 +822,18 @@ complex relative L2 is at most `3.47e-4`, and the largest difference in
 NR overlap at each case's worst sampled mass is `2.33e-5`. This supports
 implementation fidelity on those five rows, not physical accuracy across the
 domain or a ROM qualification.
+The [post-hoc postpeak-shape diagnostic](evidence/2026-09-24/sxs_third_postpeak_shape.json)
+then isolates the two largest public/native postpeak residuals. After placing
+each waveform at its own amplitude peak and normalizing its complex peak
+value, SXS:BBH:2423 agrees to about `3e-6` complex relative L2 in each
+postpeak subwindow. SXS:BBH:2159 retains `0.00156` complex relative L2 over
+`[-20,100] M` and `0.00361` in `[40,100) M`, although its amplitude ratio
+and phase difference change little between 40 and 80 M. The native and pinned
+public fundamental QNM frequencies and damping rates agree within
+`2.3e-16/M` on both rows. The remaining 2159 residual is therefore
+localized to the peak/early-ringdown shape under this normalization; these
+measurements do not identify its unique upstream cause or establish release
+parity.
 
 An independent [low-frequency phase-aligned peak-timing diagnostic](evidence/2026-09-24/sxs_five_case_peak_timing.json)
 fits one time and phase shift in a 500 M early-inspiral window after NR
