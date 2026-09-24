@@ -1,0 +1,98 @@
+{
+  "comparison": {
+    "active_l2": {
+      "native_source": 2.7679243403879137,
+      "native_wheel": 5.454833738602477,
+      "source_wheel": 8.138763588332823
+    },
+    "elapsed_seconds": 96.34020516701275,
+    "native_active": [
+      172.2186090140567,
+      -1477.1466410150804,
+      1655.144157182674,
+      43.035207366005885,
+      -1094.970760447666
+    ],
+    "native_minus_source": [
+      -0.14611709906554893,
+      1.5732698688589153,
+      -1.9818344724537837,
+      -0.01221465474996819,
+      1.112231897230231
+    ],
+    "native_minus_wheel": [
+      0.2801403841263266,
+      -2.6519777015437285,
+      3.138407216202495,
+      0.0710606090050021,
+      -3.5761847388841943
+    ],
+    "native_waveform_sha256": {
+      "mode": "62f94580df802afb29b5bbf538f63393c9573eb0ef3b881f81b3a83e8d1064e9",
+      "time": "e3b5a38c8a5b5a8c739b67910fa255f29fb2569f2fa6ca2e81881876da562021"
+    },
+    "source_active": [
+      172.36472611312226,
+      -1478.7199108839393,
+      1657.1259916551278,
+      43.04742202075585,
+      -1096.0829923448962
+    ],
+    "source_minus_wheel": [
+      0.4262574831918755,
+      -4.225247570402644,
+      5.120241688656279,
+      0.0832752637549703,
+      -4.688416636114425
+    ],
+    "wheel_active": [
+      171.93846862993038,
+      -1474.4946633135366,
+      1652.0057499664715,
+      42.96414675700088,
+      -1091.3945757087818
+    ]
+  },
+  "errors": [],
+  "input_sha256": {
+    "native_waveform": "01c2895e1623751c679d2f419aede60f37d2d05390361e389574fee8e132aa54",
+    "prior_waveform": "8ac37b7cddcc5c15333ef4167af51ce0c37e3327a2f8b7b780510fbb1b044eda",
+    "source_wheel_mode": "c103f7d884073eb00029a231dd271d49c4a4571455030b11b93c22e298a479da"
+  },
+  "level": {
+    "atol": 1e-14,
+    "dt_geom": 0.125,
+    "name": "ode_2",
+    "rtol": 1e-13
+  },
+  "plan_sha256": "f10e80c78d9e19586906c9e7be9a7b4743146066b0539baa44e4cd662438c56f",
+  "process": {
+    "argv": [
+      "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw/dev/native_rom/diagnose_native_source_nqc.py",
+      "--json-out",
+      "dev/native_rom/evidence/2026-09-24/native_source_nqc.json"
+    ],
+    "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+    "host": "client-3792.default.vpn.port.ac.uk",
+    "pid": 58898
+  },
+  "release_qualified": false,
+  "row_name": "strong_aligned_spin",
+  "schema": "diffgw.seobnrv4.native-source-nqc.v1",
+  "scope": {
+    "description": "Scalar CPU float64 numerical stability evidence only; no training or promotion.",
+    "known_limitations": [
+      "Convergence cannot establish correctness of the equations or published model fidelity.",
+      "The adaptive prototype uses a diagnostic QNM spline with independently generated values and black-box-inferred knot metadata; this is not wholly literature-specified provenance.",
+      "Changing dt also changes the adaptive initial step and coarse/fine restart sampling; the grid check measures the complete generator's grid sensitivity.",
+      "No time, phase, amplitude, or coefficient fitting is performed.",
+      "No derivatives, batched execution, accelerators, or JAX are qualified here."
+    ],
+    "physics_validated": false,
+    "production_asset": false,
+    "production_promotion_allowed": false,
+    "training_generator_qualified": false
+  },
+  "script_sha256": "a128c03da337c1f8eb4406026387c3c9f0fd9857a61557e2740762ea4dce2a4c",
+  "status": "diagnostic_complete"
+}

@@ -1,0 +1,16 @@
+{
+  "schema": "diffgw.seobnrv4.source-placement-whole-waveform-plan.v1",
+  "purpose": "Hold the frozen source-backed waveform and one-M NQC choices fixed; change only the (4,3) Kerr placement and ell=8 spin truncation that independently close direct source flux at ten states. Replay the baseline, check three ODE levels, and compare with the same public wheel.",
+  "source_flux_result": "dev/native_rom/evidence/2026-09-24/source_flux_initial.json",
+  "source_flux_result_sha256": "7ba70d6ee28cc7795332943579c75c6938407737be69670a999099dd0191ed3d",
+  "prior_waveform": "dev/native_rom/evidence/2026-09-24/source_flux_one_M.json",
+  "prior_waveform_sha256": "8ac37b7cddcc5c15333ef4167af51ce0c37e3327a2f8b7b780510fbb1b044eda",
+  "row_name": "strong_aligned_spin",
+  "levels": ["ode_0", "ode_1", "ode_2"],
+  "source_flux_max_relative_difference": 1e-8,
+  "candidate_changes": {
+    "spin_truncation": "tabulated",
+    "mode_43_higher_spin": "lal_v4_rho"
+  },
+  "release_qualified": false
+}

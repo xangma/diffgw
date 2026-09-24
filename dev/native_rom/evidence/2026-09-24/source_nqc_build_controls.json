@@ -1,0 +1,555 @@
+{
+  "errors": [],
+  "input_sha256": {
+    "adapter": "59d8d7dd6547e84cc53b2ecb76005195bb54174c481146f88fc257a3abf7fcf4",
+    "source_flux_plan": "1167199c8f954f97a5905a1e3b2f67d1555e984e5f1da0a0fc42a77a925f96ea",
+    "source_wheel_mode": "c103f7d884073eb00029a231dd271d49c4a4571455030b11b93c22e298a479da"
+  },
+  "plan_sha256": "922c4da8d48d028bdec26579567f0f42a42312bd67ed5cb67cf7c54cf2cfc08c",
+  "process": {
+    "argv": [
+      "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw/dev/native_rom/diagnose_source_nqc_build_controls.py",
+      "--source-root",
+      "/Users/xangma/repos/lalsuite-git",
+      "--headers",
+      "/tmp/diffgw-lalsuite-pinned-53acc0c/merged-include",
+      "--gsl-include",
+      "/usr/local/include",
+      "--json-out",
+      "dev/native_rom/evidence/2026-09-24/source_nqc_build_controls.json"
+    ],
+    "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+    "host": "client-3792.default.vpn.port.ac.uk",
+    "pid": 52797
+  },
+  "release_qualified": false,
+  "schema": "diffgw.seobnrv4.source-nqc-build-controls.v1",
+  "scope": {
+    "description": "Scalar CPU float64 numerical stability evidence only; no training or promotion.",
+    "known_limitations": [
+      "Convergence cannot establish correctness of the equations or published model fidelity.",
+      "The adaptive prototype uses a diagnostic QNM spline with independently generated values and black-box-inferred knot metadata; this is not wholly literature-specified provenance.",
+      "Changing dt also changes the adaptive initial step and coarse/fine restart sampling; the grid check measures the complete generator's grid sensitivity.",
+      "No time, phase, amplitude, or coefficient fitting is performed.",
+      "No derivatives, batched execution, accelerators, or JAX are qualified here."
+    ],
+    "physics_validated": false,
+    "production_asset": false,
+    "production_promotion_allowed": false,
+    "training_generator_qualified": false
+  },
+  "script_sha256": "6b546e54ae418df946e06ea27687aba7321214ce37c8fab7ea0def2c0c101668",
+  "status": "diagnostic_complete",
+  "variants": [
+    {
+      "extra_flags": [],
+      "name": "O0",
+      "optimization": "-O0",
+      "rows": [
+        {
+          "active_l2_distance_from_wheel": 0.21954556456544083,
+          "coefficients": [
+            4.093123548629793,
+            -46.878868511491845,
+            56.65849615102684,
+            0.0,
+            0.0,
+            0.0,
+            4.123128844417303,
+            -21.87102227925578,
+            0.0,
+            0.0
+          ],
+          "minus_O2_baseline": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "minus_wheel": [
+            -0.016522020374813096,
+            0.14316797753765087,
+            -0.1622129558687675,
+            0.0,
+            0.0,
+            0.0,
+            -0.0034899114903783612,
+            0.03324132122791923,
+            0.0,
+            0.0
+          ],
+          "name": "nonspinning"
+        },
+        {
+          "active_l2_distance_from_wheel": 0.11261565877341012,
+          "coefficients": [
+            8.801528013961178,
+            -87.39945081748289,
+            102.43653307147702,
+            0.0,
+            0.0,
+            0.0,
+            5.56845857615409,
+            -35.09481005232721,
+            0.0,
+            0.0
+          ],
+          "minus_O2_baseline": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "minus_wheel": [
+            0.007456603418548369,
+            -0.06701682238876572,
+            0.07732780888383672,
+            0.0,
+            0.0,
+            0.0,
+            0.0038648205906852695,
+            -0.046269907265596544,
+            0.0,
+            0.0
+          ],
+          "name": "mild_mixed_spin"
+        },
+        {
+          "active_l2_distance_from_wheel": 8.138763588332823,
+          "coefficients": [
+            172.36472611312226,
+            -1478.7199108839393,
+            1657.1259916551278,
+            0.0,
+            0.0,
+            0.0,
+            43.04742202075585,
+            -1096.0829923448962,
+            0.0,
+            0.0
+          ],
+          "minus_O2_baseline": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "minus_wheel": [
+            0.4262574831918755,
+            -4.225247570402644,
+            5.120241688656279,
+            0.0,
+            0.0,
+            0.0,
+            0.0832752637549703,
+            -4.688416636114425,
+            0.0,
+            0.0
+          ],
+          "name": "strong_aligned_spin"
+        }
+      ]
+    },
+    {
+      "extra_flags": [],
+      "name": "O2",
+      "optimization": "-O2",
+      "rows": [
+        {
+          "active_l2_distance_from_wheel": 0.21954556456544083,
+          "coefficients": [
+            4.093123548629793,
+            -46.878868511491845,
+            56.65849615102684,
+            0.0,
+            0.0,
+            0.0,
+            4.123128844417303,
+            -21.87102227925578,
+            0.0,
+            0.0
+          ],
+          "minus_O2_baseline": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "minus_wheel": [
+            -0.016522020374813096,
+            0.14316797753765087,
+            -0.1622129558687675,
+            0.0,
+            0.0,
+            0.0,
+            -0.0034899114903783612,
+            0.03324132122791923,
+            0.0,
+            0.0
+          ],
+          "name": "nonspinning"
+        },
+        {
+          "active_l2_distance_from_wheel": 0.11261565877341012,
+          "coefficients": [
+            8.801528013961178,
+            -87.39945081748289,
+            102.43653307147702,
+            0.0,
+            0.0,
+            0.0,
+            5.56845857615409,
+            -35.09481005232721,
+            0.0,
+            0.0
+          ],
+          "minus_O2_baseline": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "minus_wheel": [
+            0.007456603418548369,
+            -0.06701682238876572,
+            0.07732780888383672,
+            0.0,
+            0.0,
+            0.0,
+            0.0038648205906852695,
+            -0.046269907265596544,
+            0.0,
+            0.0
+          ],
+          "name": "mild_mixed_spin"
+        },
+        {
+          "active_l2_distance_from_wheel": 8.138763588332823,
+          "coefficients": [
+            172.36472611312226,
+            -1478.7199108839393,
+            1657.1259916551278,
+            0.0,
+            0.0,
+            0.0,
+            43.04742202075585,
+            -1096.0829923448962,
+            0.0,
+            0.0
+          ],
+          "minus_O2_baseline": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "minus_wheel": [
+            0.4262574831918755,
+            -4.225247570402644,
+            5.120241688656279,
+            0.0,
+            0.0,
+            0.0,
+            0.0832752637549703,
+            -4.688416636114425,
+            0.0,
+            0.0
+          ],
+          "name": "strong_aligned_spin"
+        }
+      ]
+    },
+    {
+      "extra_flags": [],
+      "name": "O3",
+      "optimization": "-O3",
+      "rows": [
+        {
+          "active_l2_distance_from_wheel": 0.21954556456544083,
+          "coefficients": [
+            4.093123548629793,
+            -46.878868511491845,
+            56.65849615102684,
+            0.0,
+            0.0,
+            0.0,
+            4.123128844417303,
+            -21.87102227925578,
+            0.0,
+            0.0
+          ],
+          "minus_O2_baseline": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "minus_wheel": [
+            -0.016522020374813096,
+            0.14316797753765087,
+            -0.1622129558687675,
+            0.0,
+            0.0,
+            0.0,
+            -0.0034899114903783612,
+            0.03324132122791923,
+            0.0,
+            0.0
+          ],
+          "name": "nonspinning"
+        },
+        {
+          "active_l2_distance_from_wheel": 0.11261565877341012,
+          "coefficients": [
+            8.801528013961178,
+            -87.39945081748289,
+            102.43653307147702,
+            0.0,
+            0.0,
+            0.0,
+            5.56845857615409,
+            -35.09481005232721,
+            0.0,
+            0.0
+          ],
+          "minus_O2_baseline": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "minus_wheel": [
+            0.007456603418548369,
+            -0.06701682238876572,
+            0.07732780888383672,
+            0.0,
+            0.0,
+            0.0,
+            0.0038648205906852695,
+            -0.046269907265596544,
+            0.0,
+            0.0
+          ],
+          "name": "mild_mixed_spin"
+        },
+        {
+          "active_l2_distance_from_wheel": 8.138763588332823,
+          "coefficients": [
+            172.36472611312226,
+            -1478.7199108839393,
+            1657.1259916551278,
+            0.0,
+            0.0,
+            0.0,
+            43.04742202075585,
+            -1096.0829923448962,
+            0.0,
+            0.0
+          ],
+          "minus_O2_baseline": [
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0,
+            0.0
+          ],
+          "minus_wheel": [
+            0.4262574831918755,
+            -4.225247570402644,
+            5.120241688656279,
+            0.0,
+            0.0,
+            0.0,
+            0.0832752637549703,
+            -4.688416636114425,
+            0.0,
+            0.0
+          ],
+          "name": "strong_aligned_spin"
+        }
+      ]
+    },
+    {
+      "extra_flags": [
+        "-ffast-math"
+      ],
+      "name": "O2_fast_math",
+      "optimization": "-O2",
+      "rows": [
+        {
+          "active_l2_distance_from_wheel": 0.013274749852110171,
+          "coefficients": [
+            4.109244302066924,
+            -47.01694904758752,
+            56.814031381551835,
+            0.0,
+            0.0,
+            0.0,
+            4.1278659798587185,
+            -21.91446302814923,
+            0.0,
+            0.0
+          ],
+          "minus_O2_baseline": [
+            0.016120753437130375,
+            -0.1380805360956714,
+            0.15553523052499685,
+            0.0,
+            0.0,
+            0.0,
+            0.004737135441415852,
+            -0.043440748893448955,
+            0.0,
+            0.0
+          ],
+          "minus_wheel": [
+            -0.0004012669376827205,
+            0.005087441441979479,
+            -0.006677725343770646,
+            0.0,
+            0.0,
+            0.0,
+            0.0012472239510374905,
+            -0.010199427665529726,
+            0.0,
+            0.0
+          ],
+          "name": "nonspinning"
+        },
+        {
+          "active_l2_distance_from_wheel": 0.05867949050451951,
+          "coefficients": [
+            8.792060829909719,
+            -87.31471586569131,
+            102.3389623472666,
+            0.0,
+            0.0,
+            0.0,
+            5.5689416074980835,
+            -35.100469218079425,
+            0.0,
+            0.0
+          ],
+          "minus_O2_baseline": [
+            -0.009467184051459299,
+            0.08473495179157453,
+            -0.09757072421041357,
+            0.0,
+            0.0,
+            0.0,
+            0.0004830313439931899,
+            -0.005659165752213369,
+            0.0,
+            0.0
+          ],
+          "minus_wheel": [
+            -0.00201058063291093,
+            0.017718129402808813,
+            -0.02024291532657685,
+            0.0,
+            0.0,
+            0.0,
+            0.004347851934678459,
+            -0.05192907301780991,
+            0.0,
+            0.0
+          ],
+          "name": "mild_mixed_spin"
+        },
+        {
+          "active_l2_distance_from_wheel": 4.468374384577531,
+          "coefficients": [
+            172.16887702367396,
+            -1476.7795488284758,
+            1654.7752143791251,
+            0.0,
+            0.0,
+            0.0,
+            43.01050514209045,
+            -1094.0441978636634,
+            0.0,
+            0.0
+          ],
+          "minus_O2_baseline": [
+            -0.19584908944830204,
+            1.9403620554635381,
+            -2.3507772760026455,
+            0.0,
+            0.0,
+            0.0,
+            -0.0369168786654015,
+            2.0387944812327987,
+            0.0,
+            0.0
+          ],
+          "minus_wheel": [
+            0.23040839374357347,
+            -2.2848855149391056,
+            2.769464412653633,
+            0.0,
+            0.0,
+            0.0,
+            0.0463583850895688,
+            -2.6496221548816266,
+            0.0,
+            0.0
+          ],
+          "name": "strong_aligned_spin"
+        }
+      ]
+    }
+  ]
+}

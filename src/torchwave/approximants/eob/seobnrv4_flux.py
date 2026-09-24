@@ -141,7 +141,8 @@ class SEOBNRv4PublishedFlux(nn.Module):
                  mode_21_higher_spin: str = "taylor_f",
                  mode_31_higher_spin: str = "taylor_f",
                  mode_32_spin_square: str = "pan_f26",
-                 mode_33_higher_spin: str = "taylor_f"):
+                 mode_33_higher_spin: str = "taylor_f",
+                 mode_43_higher_spin: str = "taylor_f"):
         super().__init__()
         if type(lmax) is not int or not 2 <= lmax <= 8:
             raise ValueError("lmax must be an integer from 2 through 8")
@@ -157,6 +158,8 @@ class SEOBNRv4PublishedFlux(nn.Module):
             raise ValueError("mode_32_spin_square must be pan_f26 or lal_v4_zero")
         if mode_33_higher_spin not in {"taylor_f", "lal_v4_rho"}:
             raise ValueError("mode_33_higher_spin must be taylor_f or lal_v4_rho")
+        if mode_43_higher_spin not in {"taylor_f", "lal_v4_rho"}:
+            raise ValueError("mode_43_higher_spin must be taylor_f or lal_v4_rho")
         self.lmax = lmax
         self.spin_truncation = spin_truncation
         self.retain_pan_cubic_spin = retain_pan_cubic_spin
@@ -164,6 +167,7 @@ class SEOBNRv4PublishedFlux(nn.Module):
         self.mode_31_higher_spin = mode_31_higher_spin
         self.mode_32_spin_square = mode_32_spin_square
         self.mode_33_higher_spin = mode_33_higher_spin
+        self.mode_43_higher_spin = mode_43_higher_spin
         self.mode_indices = tuple((ell, m) for ell in range(2, lmax+1)
                                   for m in range(1, ell+1))
         self._constants = {mode: abs(_newtonian_constant(*mode)) for mode in self.mode_indices}
@@ -242,6 +246,10 @@ class SEOBNRv4PublishedFlux(nn.Module):
             rho[3, 1] = (rho[3, 1]-5*q.square()/6*v**4+4*q/9*v**5
                          -49*q.square()/108*v**6
                          +(-2579*q/5346+q**3/9)*v**7)
+        if self.mode_43_higher_spin == "lal_v4_rho":
+            # Non-HM v4 places these Kerr terms inside rho43^4.
+            q = kerr_spin
+            rho[4, 3] = rho[4, 3]+3*q.square()/8*v**4-12113*q/6160*v**5
         result = {}
         for ell, m in self.mode_indices:
             epsilon = (ell+m) % 2
@@ -251,7 +259,8 @@ class SEOBNRv4PublishedFlux(nn.Module):
             if ell <= 4 and m % 2:
                 if ((ell, m) != (2, 1) or self.mode_21_higher_spin == "taylor_f") and (
                         (ell, m) != (3, 1) or self.mode_31_higher_spin == "taylor_f") and (
-                        (ell, m) != (3, 3) or self.mode_33_higher_spin == "taylor_f"):
+                        (ell, m) != (3, 3) or self.mode_33_higher_spin == "taylor_f") and (
+                        (ell, m) != (4, 3) or self.mode_43_higher_spin == "taylor_f"):
                     mass_residual = mass_residual+c*higher_f[ell, m]
                 mass_residual = mass_residual+_mass_times_leading_spin_f(
                     ell, m, v, a, b, s1, s2)

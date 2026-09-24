@@ -1,0 +1,23 @@
+{
+  "schema": "diffgw.seobnrv4.optimized-source-field-plan.v1",
+  "purpose": "Call the optimized Hamiltonian derivative and flux actually selected by the pinned non-HM v4 generator at six fixed states; compare with the regular source flux and source-convention native vector field. The prior mode oracle used the regular source flux, so this check tests whether that represented the evolution routine.",
+  "source_flux_result": "dev/native_rom/evidence/2026-09-24/source_flux_initial.json",
+  "source_flux_result_sha256": "7ba70d6ee28cc7795332943579c75c6938407737be69670a999099dd0191ed3d",
+  "source_flux_plan": "dev/native_rom/evidence/2026-09-24/source_flux_initial_plan.json",
+  "source_flux_plan_sha256": "1167199c8f954f97a5905a1e3b2f67d1555e984e5f1da0a0fc42a77a925f96ea",
+  "source_wheel_dynamics": "dev/native_rom/evidence/2026-09-24/source_wheel_dynamics.json",
+  "source_wheel_dynamics_sha256": "06b6024dc344f0ce3f02fb136552445b8e6e3739d376cff1c5a5c2229ec8e51d",
+  "adapter": "dev/native_rom/reference/optimized_v4_source_field_adapter.c",
+  "adapter_sha256": "c972ce6d230c6e1306a5754ba1cc4b07a1925163383df2b5dffaa58387025934",
+  "state_selection": "two pinned source initial states and four strong aligned-spin frozen trajectory states",
+  "source_placement_flux_choice": {
+    "spin_truncation": "tabulated",
+    "retain_pan_cubic_spin": true,
+    "mode_21_higher_spin": "rho_hybrid",
+    "mode_31_higher_spin": "lal_v4_rho",
+    "mode_32_spin_square": "lal_v4_zero",
+    "mode_33_higher_spin": "lal_v4_rho",
+    "mode_43_higher_spin": "lal_v4_rho"
+  },
+  "release_qualified": false
+}

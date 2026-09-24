@@ -1,0 +1,318 @@
+{
+  "errors": [],
+  "input_sha256": {
+    "adapter": "47bca1ca11bcfc9a54b3d6956ca901826d4bef01729cc2e8f9b5e139f504478b",
+    "aligned_waveform": "01c2895e1623751c679d2f419aede60f37d2d05390361e389574fee8e132aa54",
+    "source_flux_plan": "1167199c8f954f97a5905a1e3b2f67d1555e984e5f1da0a0fc42a77a925f96ea",
+    "source_flux_result": "7ba70d6ee28cc7795332943579c75c6938407737be69670a999099dd0191ed3d"
+  },
+  "plan_sha256": "bfea7a02e9332987a16a08d2b0a0a5828adf7dbcc02f7bcc2f5abd874cd69039",
+  "process": {
+    "argv": [
+      "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw/dev/native_rom/diagnose_source_wheel_dynamics.py",
+      "--source-root",
+      "/Users/xangma/repos/lalsuite-git",
+      "--headers",
+      "/tmp/diffgw-lalsuite-pinned-53acc0c/merged-include",
+      "--gsl-include",
+      "/usr/local/include",
+      "--json-out",
+      "dev/native_rom/evidence/2026-09-24/source_wheel_dynamics.json"
+    ],
+    "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+    "host": "client-3792.default.vpn.port.ac.uk",
+    "pid": 23605
+  },
+  "release_qualified": false,
+  "rows": [
+    {
+      "common_samples": 5005,
+      "frequency_points": [
+        {
+          "index": 2520,
+          "source_minus_wheel": {
+            "phi": 2.7160066107256853e-06,
+            "pphi": -7.964780124325443e-08,
+            "pr_star": -1.3069396080211265e-07,
+            "r": -5.61195389536806e-06
+          },
+          "source_minus_wheel_Momega": 4.586105006865182e-08,
+          "source_minus_wheel_phase_span_rad": 2.7160066107256853e-06,
+          "target_Momega": 0.04,
+          "time_M": 315.0,
+          "wheel_Momega": 0.04000080680655316
+        },
+        {
+          "index": 4225,
+          "source_minus_wheel": {
+            "phi": 6.617767201788638e-06,
+            "pphi": -2.619537475823108e-07,
+            "pr_star": -1.41850238558755e-07,
+            "r": -3.0603334977286067e-06
+          },
+          "source_minus_wheel_Momega": 9.019873914439813e-08,
+          "source_minus_wheel_phase_span_rad": 6.617767201788638e-06,
+          "target_Momega": 0.06,
+          "time_M": 528.125,
+          "wheel_Momega": 0.05999044299315415
+        },
+        {
+          "index": 4742,
+          "source_minus_wheel": {
+            "phi": 1.404056839149348e-05,
+            "pphi": -1.1129549011279494e-06,
+            "pr_star": -3.097026224571642e-07,
+            "r": -9.899215775988068e-06
+          },
+          "source_minus_wheel_Momega": 2.953029252239503e-07,
+          "source_minus_wheel_phase_span_rad": 1.404056839149348e-05,
+          "target_Momega": 0.09,
+          "time_M": 592.75,
+          "wheel_Momega": 0.09001432917905561
+        },
+        {
+          "index": 4893,
+          "source_minus_wheel": {
+            "phi": 2.0703382297426742e-05,
+            "pphi": -2.3761550993484093e-06,
+            "pr_star": -1.0565494742847958e-06,
+            "r": -1.5860634005715468e-05
+          },
+          "source_minus_wheel_Momega": 5.185694220699588e-07,
+          "source_minus_wheel_phase_span_rad": 2.0703382297426742e-05,
+          "target_Momega": 0.12,
+          "time_M": 611.625,
+          "wheel_Momega": 0.1198488580429995
+        }
+      ],
+      "initial_source_minus_wheel": {
+        "phi": 0.0,
+        "pphi": 1.9394685857321292e-09,
+        "pr_star": -2.5297042205701253e-07,
+        "r": 4.680796195088988e-09
+      },
+      "max_shared_time_difference_M": 0.0,
+      "name": "nonspinning",
+      "row": {
+        "chi1": 0.0,
+        "chi2": 0.0,
+        "mass1": 30.0,
+        "mass2": 20.0,
+        "omega_start": 0.04
+      },
+      "source_array_sha256": "9a9413479f8f71ef49dae73981af7e0a5fae696fd99e2eb6db196a05393cd28d",
+      "source_first_minus_prior_source": {
+        "pphi": 0.0,
+        "pr_star": 0.0,
+        "r": 0.0
+      },
+      "source_shape": [
+        5,
+        5005
+      ],
+      "step_M": 0.125,
+      "wheel_array_sha256": "b7aa739496ee95dd6f7000f00c69f4805f508c2d9da425436fcf84a35393e747",
+      "wheel_shape": [
+        5,
+        5005
+      ]
+    },
+    {
+      "common_samples": 5274,
+      "frequency_points": [
+        {
+          "index": 2629,
+          "source_minus_wheel": {
+            "phi": -1.9219787752433604e-06,
+            "pphi": 6.418112219463978e-08,
+            "pr_star": 3.112263989319547e-08,
+            "r": 3.9382945811183845e-06
+          },
+          "source_minus_wheel_Momega": -3.0583116483740014e-08,
+          "source_minus_wheel_phase_span_rad": -1.9219787752433604e-06,
+          "target_Momega": 0.04,
+          "time_M": 328.625,
+          "wheel_Momega": 0.040000414097441706
+        },
+        {
+          "index": 4436,
+          "source_minus_wheel": {
+            "phi": -4.133010346407673e-06,
+            "pphi": 1.9661884964605747e-07,
+            "pr_star": 5.037429911397551e-08,
+            "r": 3.118697904369583e-06
+          },
+          "source_minus_wheel_Momega": -1.4363833145125682e-07,
+          "source_minus_wheel_phase_span_rad": -4.133010346407673e-06,
+          "target_Momega": 0.06,
+          "time_M": 554.5,
+          "wheel_Momega": 0.06000046559078953
+        },
+        {
+          "index": 4995,
+          "source_minus_wheel": {
+            "phi": -8.710044092197222e-06,
+            "pphi": 7.083420801023976e-07,
+            "pr_star": 1.5752809041230664e-07,
+            "r": 4.838161331122137e-06
+          },
+          "source_minus_wheel_Momega": 2.892603845339181e-08,
+          "source_minus_wheel_phase_span_rad": -8.710044092197222e-06,
+          "target_Momega": 0.09,
+          "time_M": 624.375,
+          "wheel_Momega": 0.09003401705763281
+        },
+        {
+          "index": 5159,
+          "source_minus_wheel": {
+            "phi": -1.2029078277464578e-05,
+            "pphi": 1.2929232684477654e-06,
+            "pr_star": 4.907909276069544e-07,
+            "r": 7.718818769930635e-06
+          },
+          "source_minus_wheel_Momega": -4.130822048864502e-07,
+          "source_minus_wheel_phase_span_rad": -1.2029078277464578e-05,
+          "target_Momega": 0.12,
+          "time_M": 644.875,
+          "wheel_Momega": 0.1201128904607458
+        }
+      ],
+      "initial_source_minus_wheel": {
+        "phi": 0.0,
+        "pphi": 1.6500933952556807e-10,
+        "pr_star": 1.4107330466826828e-07,
+        "r": 8.308269627832487e-10
+      },
+      "max_shared_time_difference_M": 0.0,
+      "name": "mild_mixed_spin",
+      "row": {
+        "chi1": 0.2,
+        "chi2": -0.1,
+        "mass1": 30.0,
+        "mass2": 20.0,
+        "omega_start": 0.04
+      },
+      "source_array_sha256": "4e5f36edf34a3d456ab43b14ab5f672a0397de5484c0f8942c660d8f3c9ee3be",
+      "source_first_minus_prior_source": {
+        "pphi": 0.0,
+        "pr_star": 0.0,
+        "r": 0.0
+      },
+      "source_shape": [
+        5,
+        5276
+      ],
+      "step_M": 0.125,
+      "wheel_array_sha256": "005be668d5fbaad69f8a482a1fe4e38edb8d664603420033bf888d84014c61b4",
+      "wheel_shape": [
+        5,
+        5274
+      ]
+    },
+    {
+      "common_samples": 7495,
+      "frequency_points": [
+        {
+          "index": 3422,
+          "source_minus_wheel": {
+            "phi": 1.3746920455304235e-06,
+            "pphi": -4.081719318094201e-08,
+            "pr_star": -2.3187496523552342e-08,
+            "r": 2.013876674311632e-06
+          },
+          "source_minus_wheel_Momega": -1.8244982413762045e-08,
+          "source_minus_wheel_phase_span_rad": 1.3746920455304235e-06,
+          "target_Momega": 0.04,
+          "time_M": 427.75,
+          "wheel_Momega": 0.040001096758246035
+        },
+        {
+          "index": 6062,
+          "source_minus_wheel": {
+            "phi": 3.2704120123128178e-06,
+            "pphi": -1.4826008731816387e-07,
+            "pr_star": 4.332419575869828e-08,
+            "r": -4.4509859531416396e-07
+          },
+          "source_minus_wheel_Momega": 5.266059588393546e-09,
+          "source_minus_wheel_phase_span_rad": 3.2704120123128178e-06,
+          "target_Momega": 0.06,
+          "time_M": 757.75,
+          "wheel_Momega": 0.060004921647248466
+        },
+        {
+          "index": 7015,
+          "source_minus_wheel": {
+            "phi": 5.074478259814441e-06,
+            "pphi": -3.3571137159071895e-07,
+            "pr_star": 1.2269408301845974e-09,
+            "r": -1.6769044410835932e-06
+          },
+          "source_minus_wheel_Momega": 5.269592406875745e-08,
+          "source_minus_wheel_phase_span_rad": 5.074478259814441e-06,
+          "target_Momega": 0.09,
+          "time_M": 876.875,
+          "wheel_Momega": 0.09002434842679463
+        },
+        {
+          "index": 7308,
+          "source_minus_wheel": {
+            "phi": 7.047605187437966e-06,
+            "pphi": -6.306515616394393e-07,
+            "pr_star": -8.731176915494077e-08,
+            "r": -2.192934075662123e-06
+          },
+          "source_minus_wheel_Momega": -8.436666121269809e-08,
+          "source_minus_wheel_phase_span_rad": 7.047605187437966e-06,
+          "target_Momega": 0.12,
+          "time_M": 913.5,
+          "wheel_Momega": 0.12007618924033636
+        }
+      ],
+      "initial_source_minus_wheel": {
+        "phi": 0.0,
+        "pphi": 6.14941431109628e-10,
+        "pr_star": -1.1110932963704495e-07,
+        "r": -6.764899751487974e-10
+      },
+      "max_shared_time_difference_M": 0.0,
+      "name": "strong_aligned_spin",
+      "row": {
+        "chi1": 0.8,
+        "chi2": 0.8,
+        "mass1": 30.0,
+        "mass2": 20.0,
+        "omega_start": 0.04
+      },
+      "source_array_sha256": "00efa5e9e01cbab7ace6cd1ac06eadd16f402d9e2cd34a155769c34af59bf006",
+      "source_first_minus_prior_source": null,
+      "source_shape": [
+        5,
+        7495
+      ],
+      "step_M": 0.125,
+      "wheel_array_sha256": "69c03e532574c9fa63933623b6762c1bc7550743a91f02a405270dcdfeea2119",
+      "wheel_shape": [
+        5,
+        7495
+      ]
+    }
+  ],
+  "schema": "diffgw.seobnrv4.source-wheel-dynamics.v1",
+  "scope": {
+    "description": "Scalar CPU float64 numerical stability evidence only; no training or promotion.",
+    "known_limitations": [
+      "Convergence cannot establish correctness of the equations or published model fidelity.",
+      "The adaptive prototype uses a diagnostic QNM spline with independently generated values and black-box-inferred knot metadata; this is not wholly literature-specified provenance.",
+      "Changing dt also changes the adaptive initial step and coarse/fine restart sampling; the grid check measures the complete generator's grid sensitivity.",
+      "No time, phase, amplitude, or coefficient fitting is performed.",
+      "No derivatives, batched execution, accelerators, or JAX are qualified here."
+    ],
+    "physics_validated": false,
+    "production_asset": false,
+    "production_promotion_allowed": false,
+    "training_generator_qualified": false
+  },
+  "script_sha256": "4733e82f7657be6c887ffd16802e696a14cf685adbb3288f3cbad5495584332b",
+  "status": "diagnostic_complete"
+}

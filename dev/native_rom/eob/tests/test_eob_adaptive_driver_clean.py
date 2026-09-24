@@ -19,7 +19,10 @@ def test_adaptive_compatibility_defaults_are_explicitly_reviewed_choices():
     omega = torch.tensor(0.05, dtype=DTYPE)
     with pytest.raises(ValueError, match="spin_truncation"):
         reconstruct_seobnrv4_22_adaptive(omega, 30.0, 30.0,
-                                          spin_truncation="tabulated")
+                                          spin_truncation="unknown")
+    with pytest.raises(ValueError, match="diagnostic_mode_43_higher_spin"):
+        reconstruct_seobnrv4_22_adaptive(omega, 30.0, 30.0,
+                                          diagnostic_mode_43_higher_spin="unknown")
     with pytest.raises(ValueError, match="final_spin_fit_order"):
         reconstruct_seobnrv4_22_adaptive(omega, 30.0, 30.0,
                                           final_spin_fit_order=(1, 2))

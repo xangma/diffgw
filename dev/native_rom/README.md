@@ -160,16 +160,67 @@ step accounts for less than 1% of that momentum gap in an idealized native
 check. These results prevent treating source-convention agreement as release
 qualification.
 A [pinned direct-source flux and initial-condition diagnostic](evidence/2026-09-24/source_flux_initial.json)
-compiles a private snapshot of `lalsimulation-v6.2.1` and links the installed
-`lalsimulation` 6.2.1 wheel. At two identical circular states, source and
+compiles a private snapshot of `lalsuite-v7.26.15`, the installed
+`lalsimulation` 6.2.1 wheel's own clean VCS commit. Its checked SEOBNRv4
+source and public-header files also have the same bytes at the older
+`lalsimulation-v6.2.1` tag. At two identical circular states, source and
 wheel flux per symmetric mass ratio differ by at most `2.27e-10` relative;
 the source-calibrated native flux differs from source by at most `2.0e-9`.
-The pinned-source legacy initial radial momentum nevertheless differs from
+The pinned-source full generator returns exactly the direct source legacy
+initial state. Its initial radial momentum nevertheless differs from
 the compiled public v4 initial state by `1.41e-7` to `2.53e-7` in absolute
 value. Both `-O0` and `-O2` source builds return the same initial states, and
-the compiled public first state is identical on three output grids. The
-source-versus-wheel initial-condition discrepancy still needs explanation;
-these two component rows are not a whole-waveform or domain validation.
+the compiled public first state is identical on three output grids. A
+`-ffast-math` source-build control moves the initial state by more than this
+gap but does not reproduce the wheel, so its exact numerical cause remains
+open. At eight frozen noncircular trajectory states, including strong aligned
+spin through `M Omega=0.12`, the source's raw pre-NQC `(2,2)` mode and native
+mode agree within `1.8e-10` complex relative error and near-roundoff phase;
+their supplied real energies agree within `1.2e-16`. This establishes the
+tested source-mode component, not private wheel-mode parity, whole-waveform
+accuracy, or domain validation.
+The direct source evolution flux is now checked mode by mode at those eight
+noncircular states and at the two circular starts. The previous native choice
+misses total source flux by up to `27.8 ppm`, almost entirely from `(4,3)` and
+`(8,8)`. The non-HM v4 source puts the higher `(4,3)` Kerr terms in `rho43^4`
+and has no generic leading spin term in even `ell=8` modes. With those two
+explicit diagnostic choices, all ten native/source flux comparisons agree
+within `3.6e-10` relative, below the frozen `1e-8` gate. This closes the
+tested source flux component; it does not establish compiled-wheel flux parity
+or a qualified waveform.
+The frozen three-level aligned-spin replay with precisely those two choices
+passes its numerical gate (`3.64e-7` refined complex relative L2) and lowers
+the fitted public-waveform difference from `0.0030000` to `0.0028067`. The
+inspiral improves while the post-peak window is effectively unchanged. The
+remaining waveform residual, untested domain, and open attachment and ROM
+gates keep the variant on this feature branch.
+The [pinned source/wheel dynamics comparison](evidence/2026-09-24/source_wheel_dynamics.json)
+finds initial `pr_star` differences of `1.1e-7` to `2.5e-7`, but only
+`7.0e-6` to `2.1e-5 rad` orbital-phase differences by `M Omega=0.12` across
+three rows. The exact optimized v4 C evolution field agrees with the native
+source-convention field at six fixed states to about `1.5e-11` relative in
+torque, and the regular/optimized C fluxes agree within `2.5e-10` relative;
+see the [optimized-field diagnostic](evidence/2026-09-24/optimized_source_field.json).
+The [full generated mode comparison](evidence/2026-09-24/source_wheel_mode.json)
+then isolates a larger source/wheel difference in their fitted NQC
+coefficients. Before attachment, multiplying the wheel mode by the ratio of
+the two NQC factors reduces source/wheel complex relative L2 from `0.00348`
+to `6.21e-6` on the strong-spin row. This identifies NQC fitting as the main
+source/wheel mode discrepancy on that window; it does not yet establish why
+the two builds return different coefficients or qualify the native attachment.
+In a [pinned-source compiler control](evidence/2026-09-24/source_nqc_build_controls.json),
+`-O0`, `-O2`, and `-O3` give identical NQC coefficients on all three rows.
+`-ffast-math` changes them substantially and moves the nonspinning fit closer
+to the wheel, but does not reproduce the wheel, especially at strong spin.
+The wheel's actual compilation settings and the coefficient gap's exact cause
+remain unidentified.
+The [native/source/wheel NQC replay](evidence/2026-09-24/native_source_nqc.json)
+reproduces the frozen strong-spin native waveform bitwise and places its five
+active coefficients between the locally compiled source and pinned wheel:
+their L2 distances are `2.77` (native/source), `5.45` (native/wheel), and
+`8.14` (source/wheel). Both the compiled source and wheel use the wheel's
+hash-pinned GSL libraries. The native match-input and source/wheel build
+differences still require direct isolation before this can be qualified.
 The aligned-spin trajectory replay finds a native-minus-public orbital phase
 span of at most `1.27e-4 rad` from `M Omega=0.0425` through `0.13`, compared
 with `3.36e-5 rad` maximum public-grid sensitivity. Over the later sampled

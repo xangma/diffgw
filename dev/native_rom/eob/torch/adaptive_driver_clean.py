@@ -138,6 +138,7 @@ def reconstruct_seobnrv4_22_adaptive(
     diagnostic_mode_31_higher_spin: str = "taylor_f",
     diagnostic_mode_32_spin_square: str = "pan_f26",
     diagnostic_mode_33_higher_spin: str = "taylor_f",
+    diagnostic_mode_43_higher_spin: str = "taylor_f",
     diagnostic_hamiltonian_log_derivative: str = "analytic",
     diagnostic_hamiltonian_calibration: str = "published",
     spin_v6: str = "bohe_total_energy",
@@ -219,10 +220,8 @@ def reconstruct_seobnrv4_22_adaptive(
         raise ValueError("num_steps must be an integer of at least four")
     if not math.isfinite(float(ringdown_duration)) or ringdown_duration <= 0:
         raise ValueError("ringdown_duration must be finite and positive")
-    if spin_truncation != "generic-leading-ell8":
-        raise ValueError(
-            "adaptive numerical compatibility requires spin_truncation='generic-leading-ell8'"
-        )
+    if spin_truncation not in {"generic-leading-ell8", "tabulated"}:
+        raise ValueError("spin_truncation must be generic-leading-ell8 or tabulated")
     if diagnostic_mode_21_higher_spin not in {"taylor_f", "rho_hybrid"}:
         raise ValueError("diagnostic_mode_21_higher_spin must be taylor_f or rho_hybrid")
     if diagnostic_mode_31_higher_spin not in {"taylor_f", "lal_v4_rho"}:
@@ -231,6 +230,8 @@ def reconstruct_seobnrv4_22_adaptive(
         raise ValueError("diagnostic_mode_32_spin_square must be pan_f26 or lal_v4_zero")
     if diagnostic_mode_33_higher_spin not in {"taylor_f", "lal_v4_rho"}:
         raise ValueError("diagnostic_mode_33_higher_spin must be taylor_f or lal_v4_rho")
+    if diagnostic_mode_43_higher_spin not in {"taylor_f", "lal_v4_rho"}:
+        raise ValueError("diagnostic_mode_43_higher_spin must be taylor_f or lal_v4_rho")
     if diagnostic_hamiltonian_log_derivative not in {"analytic", "lal_v4"}:
         raise ValueError("diagnostic_hamiltonian_log_derivative must be analytic or lal_v4")
     if diagnostic_hamiltonian_calibration not in {"published", "lal_v4_rounded"}:
@@ -280,7 +281,8 @@ def reconstruct_seobnrv4_22_adaptive(
                                mode_21_higher_spin=diagnostic_mode_21_higher_spin,
                                mode_31_higher_spin=diagnostic_mode_31_higher_spin,
                                mode_32_spin_square=diagnostic_mode_32_spin_square,
-                               mode_33_higher_spin=diagnostic_mode_33_higher_spin)
+                               mode_33_higher_spin=diagnostic_mode_33_higher_spin,
+                               mode_43_higher_spin=diagnostic_mode_43_higher_spin)
     # A scalar Hamiltonian is needed for each fine row.  Slicing its tensor
     # parameters preserves the graph while avoiding accidental broadcasting
     # of a row state back across the whole batch.

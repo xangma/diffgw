@@ -1,0 +1,17 @@
+{
+  "schema": "diffgw.seobnrv4.source-wheel-dynamics-plan.v1",
+  "purpose": "Compare the pinned source-compiled full generator with the pinned compiled wheel on the same low-rate grid, to determine whether their initial-state mismatch grows during evolution. This is a diagnostic, not generator qualification.",
+  "source_flux_result": "dev/native_rom/evidence/2026-09-24/source_flux_initial.json",
+  "source_flux_result_sha256": "7ba70d6ee28cc7795332943579c75c6938407737be69670a999099dd0191ed3d",
+  "source_flux_plan": "dev/native_rom/evidence/2026-09-24/source_flux_initial_plan.json",
+  "source_flux_plan_sha256": "1167199c8f954f97a5905a1e3b2f67d1555e984e5f1da0a0fc42a77a925f96ea",
+  "aligned_waveform": "dev/native_rom/evidence/2026-09-24/source_placement_whole_waveform.json",
+  "aligned_waveform_sha256": "01c2895e1623751c679d2f419aede60f37d2d05390361e389574fee8e132aa54",
+  "adapter": "dev/native_rom/reference/full_v4_source_dynamics_adapter.c",
+  "adapter_sha256": "47bca1ca11bcfc9a54b3d6956ca901826d4bef01729cc2e8f9b5e139f504478b",
+  "rows": ["nonspinning", "mild_mixed_spin", "strong_aligned_spin"],
+  "step_M": 0.125,
+  "frequency_targets_Momega": [0.04, 0.06, 0.09, 0.12],
+  "max_samples": 50000,
+  "release_qualified": false
+}

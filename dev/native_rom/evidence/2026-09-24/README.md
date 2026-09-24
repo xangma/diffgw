@@ -218,16 +218,91 @@ coefficients to `5.37e-11` absolute on the aligned row and `7.11e-13` on the
 antialigned row. Python argument marshalling therefore does not account for
 the observed coefficient gap. This public call still supplies the wheel's
 own upstream evolution and does not expose its pre-NQC matching arrays.
-The source-compiled *full generator* is not numerically identical to the
-wheel, even though the inspected generator, NQC, Hamiltonian, and flux source
-files match the official
-[`lalsimulation-v6.2.1` tag](https://git.ligo.org/lscsoft/lalsuite/-/tree/lalsimulation-v6.2.1/lalsimulation/lib);
-its independently built
-waveform is not a substitute for the pinned wheel oracle. Reproduce the
+The [direct source component check](source_flux_initial.json) now pins the
+wheel's own clean [`lalsuite-v7.26.15` source commit](https://git.ligo.org/lscsoft/lalsuite/-/tree/lalsuite-v7.26.15/lalsimulation/lib).
+The inspected SEOBNRv4 source and public-header files have the same bytes at
+the earlier `lalsimulation-v6.2.1` tag. The source-compiled *full generator*
+returns the direct-source legacy initial state exactly on two rows, but that
+state differs slightly from the wheel's public first state. A `-ffast-math`
+control demonstrates numerical sensitivity without reproducing the wheel or
+establishing its actual build flags. Direct source and native raw pre-NQC
+`(2,2)` modes agree within `1.8e-10` complex relative at eight fixed states,
+including strong aligned spin through `M Omega=0.12`; this is source-component
+parity, not a callable private wheel-mode check. The independently built
+source waveform is not a substitute for the pinned wheel oracle. The same
+adapter computes direct evolution flux and all 35 positive-m mode
+contributions at ten frozen states. The earlier native choice differs by up
+to `27.8 ppm` in total flux; `(4,3)` and `(8,8)` dominate. Moving the
+higher `(4,3)` Kerr terms into `rho43^4` and omitting the generic `ell=8`
+spin term, as in the pinned non-HM v4 source, reduces the largest native/source
+flux difference to `3.6e-10` relative; all ten states pass the predeclared
+`1e-8` source-component gate. The [waveform plan](source_placement_whole_waveform_plan.json)
+then applies precisely these placements to the frozen aligned-spin waveform
+for a separate [whole-waveform and numerical check](source_placement_whole_waveform.json).
+The frozen baseline reproduces exactly. The candidate passes all numerical
+gates, with `3.64e-7` refined complex relative L2 and `5.65e-9` refined
+amplitude relative L2. Peak-fitted public-waveform complex relative L2
+decreases from `0.00299999` to `0.00280674`; the inspiral window decreases
+from `0.00333358` to `0.00311712`, whereas the post-peak window stays near
+`0.0008139`. Direct source flux parity therefore does not close the whole
+waveform residual or qualify the generator. Reproduce the waveform result in
+the pinned environment with `PYTHONPATH=src:. python -m
+dev.native_rom.diagnose_source_placement_whole_waveform --json-out
+/tmp/source-placement-whole-waveform.json`. Reproduce the
 C-binding control on macOS with `PYTHONPATH=src:. python -m
 dev.native_rom.diagnose_nqc_public_c_binding --headers
 /tmp/diffgw-lalsuite-pinned-53acc0c/merged-include --json-out
 /tmp/nqc-public-c-binding.json`.
+
+The [source/wheel dynamics plan](source_wheel_dynamics_plan.json) and
+[result](source_wheel_dynamics.json) compare the exact pinned-source full v4
+generator with its pinned wheel on three `0.125 M` low-rate grids. Their
+initial `pr_star` differs by `1.1e-7` to `2.5e-7`; by `M Omega=0.12`, the
+source-minus-wheel orbital-phase span is only `7.0e-6` to `2.1e-5 rad`.
+The [optimized-source-field plan](optimized_source_field_plan.json) and
+[result](optimized_source_field.json) call the optimized RHS actually selected
+by the non-HM v4 generator at six fixed states. Native/source torque differs
+by at most `1.5e-11` relative; the source's regular and optimized flux paths
+differ by at most `2.5e-10` relative at these states.
+
+The [full-mode plan](source_wheel_mode_plan.json) and
+[result](source_wheel_mode.json) compare both complete generated `(2,2)`
+modes and all ten NQC coefficients. Their source/wheel peak-fitted complex
+relative L2 is `0.000648`, `0.000654`, and `0.005796` on the nonspinning,
+mild mixed-spin, and strong aligned-spin rows. On the strong-spin row, the
+same-index phase difference grows from `-0.00130 rad` to `-0.00728 rad` by
+20 M before peak, while the NQC phase-coefficient differences are `+0.0833`
+and `-4.6884`. A coefficient-only counterfactual multiplies the wheel mode
+by the ratio of source and wheel NQC factors on the *same wheel trajectory*.
+On the pre-attachment interval ending 20 M before peak, it reduces the
+source/wheel complex relative L2 from `0.00348` to `6.21e-6`; the analogous
+nonspinning and mild-spin residuals fall from `2.28e-4` to `1.77e-5` and
+`2.44e-4` to `1.04e-5`. This isolates the NQC-fit difference as the dominant
+source/wheel mode discrepancy on those windows. The coefficient difference's
+build/numerical origin, native matching parity, attachment, broader domain,
+and ROM training/holdouts remain open.
+The [compiler-control plan](source_nqc_build_controls_plan.json) and
+[result](source_nqc_build_controls.json) rebuild the same source adapter at
+`-O0`, `-O2`, `-O3`, and `-O2 -ffast-math`. The first three produce identical
+NQC coefficients at all three rows. Fast-math changes them and reduces the
+active-coefficient L2 distance to the wheel from `0.2195` to `0.0133`
+(nonspinning) and from `8.1388` to `4.4684` (strong aligned spin), without
+reproducing the wheel. This control establishes sensitivity to floating-point
+semantics; it does not reveal the wheel's compiler flags or justify adopting
+fast-math as a physical or native-model choice.
+
+The [native/source/wheel NQC plan](native_source_nqc_plan.json) and
+[result](native_source_nqc.json) replay the frozen strong-spin native
+source-placement waveform with coefficient capture. Both waveform array
+hashes reproduce exactly. The five active coefficients have L2 distances
+`2.77` native/source, `5.45` native/wheel, and `8.14` source/wheel. Thus the
+native fit lies between the two independently generated C references on this
+row, but neither matches it. The local source adapter and wheel link the
+same hash-pinned wheel GSL library; the precise upstream fit inputs, build
+floating-point behavior, and attachment remain unresolved. Reproduce with
+`PYTHONPATH=src:. /Users/xangma/repos/diffgw/.venv/bin/python -m
+dev.native_rom.diagnose_native_source_nqc --json-out
+/tmp/native-source-nqc.json`.
 
 The [public-mode boundary plan](public_nqc_mode_boundary_plan.json) and
 [result](public_nqc_mode_boundary.json) use both public v4 modes API paths at

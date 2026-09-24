@@ -202,10 +202,12 @@ def bounded_run(seconds):
 
 def native_run(row, level, settings, *, diagnostic_hermite_resampling=False,
                diagnostic_rkf45_resampling=False,
+               diagnostic_spin_truncation=None,
                diagnostic_mode_21_higher_spin="taylor_f",
                diagnostic_mode_31_higher_spin="taylor_f",
                diagnostic_mode_32_spin_square="pan_f26",
                diagnostic_mode_33_higher_spin="taylor_f",
+               diagnostic_mode_43_higher_spin="taylor_f",
                diagnostic_hamiltonian_log_derivative="analytic",
                diagnostic_hamiltonian_calibration="published",
                diagnostic_local_nqc_derivatives=False,
@@ -219,17 +221,21 @@ def native_run(row, level, settings, *, diagnostic_hermite_resampling=False,
                return_nqc_samples=False):
     import torch
     from dev.native_rom.eob.torch.adaptive_driver_clean import reconstruct_seobnrv4_22_adaptive
+    choices = dict(CHOICES)
+    if diagnostic_spin_truncation is not None:
+        choices["spin_truncation"] = diagnostic_spin_truncation
     with bounded_run(settings.max_run_seconds), torch.no_grad():
         result = reconstruct_seobnrv4_22_adaptive(
             torch.tensor(row["omega_start"], dtype=torch.float64),
             **{k: row[k] for k in ("mass1", "mass2", "chi1", "chi2")},
-            **CHOICES, **{k: level[k] for k in ("atol", "rtol", "dt_geom")},
+            **choices, **{k: level[k] for k in ("atol", "rtol", "dt_geom")},
             diagnostic_hermite_resampling=diagnostic_hermite_resampling,
             diagnostic_rkf45_resampling=diagnostic_rkf45_resampling,
             diagnostic_mode_21_higher_spin=diagnostic_mode_21_higher_spin,
             diagnostic_mode_31_higher_spin=diagnostic_mode_31_higher_spin,
             diagnostic_mode_32_spin_square=diagnostic_mode_32_spin_square,
             diagnostic_mode_33_higher_spin=diagnostic_mode_33_higher_spin,
+            diagnostic_mode_43_higher_spin=diagnostic_mode_43_higher_spin,
             diagnostic_hamiltonian_log_derivative=diagnostic_hamiltonian_log_derivative,
             diagnostic_hamiltonian_calibration=diagnostic_hamiltonian_calibration,
             diagnostic_local_nqc_derivatives=diagnostic_local_nqc_derivatives,
