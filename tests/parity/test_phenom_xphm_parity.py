@@ -15,10 +15,44 @@ from jaxwave import (
 )
 from torchwave import get_fd_waveform as torch_get_fd_waveform
 from torchwave.approximants.imrphenom_xphm import IMRPhenomXPHM as TorchPhenomXPHM
+from torchwave.approximants.imrphenom_xhm import IMRPhenomXHM as TorchPhenomXHM
+from jaxwave.approximants.imrphenom_xhm import IMRPhenomXHM as JaxPhenomXHM
 import torchwave.approximants.precession_spintaylor as torch_st
 import jaxwave.approximants.precession_spintaylor as jax_st
 import torchwave.approximants.precession_pnr as torch_pnr
 import jaxwave.approximants.precession_pnr as jax_pnr
+
+
+@pytest.mark.parametrize('mode', [(2, 2), (3, 2), (3, 3)])
+def test_xhm_observer_azimuth_parity(mode):
+    f = np.array([25., 40., 80.])
+    common = dict(mass1=40., mass2=20., inclination=.7,
+                  phic=.3, f_ref=40., phi0=.4)
+    torch_model = TorchPhenomXHM(modes=[mode])
+    jax_model = JaxPhenomXHM(modes=[mode])
+    spins = dict(chi1=.4, chi2=-.2)
+    torch_output = torch_model(torch.tensor(f, dtype=torch.float64),
+                               **common, **spins)
+    jax_output = jax_model(jnp.asarray(f, dtype=jnp.float64),
+                           **common, **spins)
+    for actual, expected in zip(jax_output, torch_output):
+        np.testing.assert_allclose(np.asarray(actual), expected.detach().numpy(),
+                                   atol=1e-34, rtol=2e-11)
+
+
+@pytest.mark.parametrize('mode', [(2, 2), (3, 2), (3, 3)])
+def test_xphm_aligned_mode_parity(mode):
+    f = np.array([25., 40., 80.])
+    common = dict(mass1=40., mass2=20., inclination=.7, phic=.3,
+                  f_ref=40., spin1x=0., spin1y=0., spin1z=.4,
+                  spin2x=0., spin2y=0., spin2z=-.2)
+    torch_output = TorchPhenomXPHM(modes=[mode])(
+        torch.tensor(f, dtype=torch.float64), **common)
+    jax_output = JaxPhenomXPHM(modes=[mode])(
+        jnp.asarray(f, dtype=jnp.float64), **common)
+    for actual, expected in zip(jax_output, torch_output):
+        np.testing.assert_allclose(np.asarray(actual), expected.detach().numpy(),
+                                   atol=1e-34, rtol=2e-11)
 
 
 def test_chi_tot_perp_parity():

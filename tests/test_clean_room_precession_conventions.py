@@ -6,6 +6,7 @@ import torch
 
 from torchwave.approximants.imrphenomp import IMRPhenomP
 from torchwave.approximants.imrphenom_xp import IMRPhenomXP
+from torchwave.approximants.imrphenom_xhm import IMRPhenomXHM
 from torchwave.approximants.imrphenom_xphm import IMRPhenomXPHM
 from torchwave.approximants.precession_msa import (
     compute_l_3pn, evaluate_msa_dynamics, evaluate_msa_precession,
@@ -237,6 +238,26 @@ def test_nonzero_observer_azimuth_has_physical_aligned_limit(mode):
                             spin1x=1e-9*math.cos(azimuth),spin1y=1e-9*math.sin(azimuth))
             for h,h0 in zip(near,exact):
                 assert torch.linalg.vector_norm(h-h0)/torch.linalg.vector_norm(h0) < 2e-8
+
+
+@pytest.mark.parametrize('mode', IMRPhenomXHM.SUPPORTED_MODES)
+def test_xhm_positive_frequency_observer_azimuth(mode):
+    # Appendix B, Eqs. B6-B7: positive frequency carries the -m harmonic.
+    # Its azimuthal factor is exp(-i*m*phi0) for each aligned carrier mode.
+    model = IMRPhenomXHM(modes=[mode])
+    f = t([25., 40., 80.])
+    p = dict(mass1=40., mass2=20., chi1=.4, chi2=-.2,
+             inclination=.7, phic=.3, f_ref=40.)
+    phi0 = t(.4).requires_grad_()
+    reference = model(f, **p)
+    rotated = model(f, **p, phi0=phi0)
+    for h, h0 in zip(rotated, reference):
+        torch.testing.assert_close(h, torch.exp(-1j*mode[1]*phi0)*h0,
+                                   atol=1e-34, rtol=2e-13)
+    derivative = torch.autograd.grad(1e22*rotated[0].real.sum(), phi0)[0]
+    torch.testing.assert_close(derivative,
+                               1e22*(-1j*mode[1]*rotated[0]).real.sum(),
+                               atol=2e-12, rtol=2e-12)
 
 
 @pytest.mark.parametrize('convention',[0,1,5,6,7])
