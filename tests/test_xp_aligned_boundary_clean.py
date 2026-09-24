@@ -7,6 +7,7 @@ import lalsimulation as ls
 import pytest
 import torch
 
+from torchwave.approximants.imrphenom_xp import IMRPhenomXP
 from torchwave.approximants.precession_msa_waveform_clean import waveform_v223
 from torchwave.approximants.precession_source_frame_clean import source_frame_geometry
 
@@ -128,6 +129,77 @@ def test_generic_table_iv_combined_rotation_matches_public_oracle(convention):
     assert _max_relative_l2(actual, target) < STRICT_GATE
 
 
+def test_v223_reference_closure_matches_public_lal_residual():
+    # Appendix C Eq. (79b) identifies beta_0 with the geometric J-L angle.
+    # The public v223 implementation uses distinct orbital-L coefficients for
+    # source-frame geometry and MSA opening beta. Compare the resulting
+    # composed-strain residual directly, not against an arbitrary loose bound.
+    f_ref = 40.0
+    frequency = torch.tensor([f_ref], dtype=DTYPE)
+    xp = IMRPhenomXP()
+    native_xp = xp(
+        frequency, mass1=40.0, mass2=20.0,
+        spin1x=0.3, spin1y=0.2, spin1z=0.4, spin2z=-0.2,
+        distance=100.0, inclination=0.7, phic=0.3, f_ref=f_ref,
+        prec_version=223, final_spin_mod=3, convention=1,
+    )
+    remnant_overrides = []
+
+    def recording_carrier(**kwargs):
+        remnant_overrides.append(kwargs["_final_spin_override"])
+        return xp.xas_model(**kwargs)
+
+    clean_xp = waveform_v223(
+        frequency, 40.0, 20.0,
+        spin1x=0.3, spin1y=0.2, spin1z=0.4, spin2z=-0.2,
+        distance=100.0, inclination=0.7, phic=0.3, f_ref=f_ref,
+        convention=1, final_spin_mod=3, xas_model=recording_carrier,
+    )
+    for actual, clean in zip(native_xp, clean_xp):
+        torch.testing.assert_close(actual, clean, rtol=2e-13, atol=0.0)
+    assert len(remnant_overrides) == 1
+    carrier_kwargs = dict(
+        f=frequency, mass1=40.0, mass2=20.0, chi1=0.4, chi2=-0.2,
+        distance=100.0, inclination=0.7, phi_c=0.3, f_ref=f_ref,
+    )
+    native_carrier = xp.xas_model(**carrier_kwargs)
+    remnant_carrier = xp.xas_model(
+        **carrier_kwargs, _final_spin_override=remnant_overrides[0]
+    )
+    for ordinary, matched in zip(native_carrier, remnant_carrier):
+        # At the reference frequency, the XAS carrier is insensitive to the
+        # remnant override. The remaining XP/XAS ratio isolates frame closure.
+        torch.testing.assert_close(ordinary, matched, rtol=2e-13, atol=0.0)
+
+    def public_waveform(approximant, spin1, spin2, options):
+        hp, hc = ls.SimInspiralChooseFDWaveform(
+            40.0 * lal.MSUN_SI, 20.0 * lal.MSUN_SI,
+            *spin1, *spin2, 100.0e6 * lal.PC_SI, 0.7, 0.3,
+            0.0, 0.0, 0.0, 1.0, 20.0, 64.0, f_ref,
+            options, approximant,
+        )
+        return hp.data.data[40], hc.data.data[40]
+
+    public_xp = public_waveform(
+        ls.IMRPhenomXP, (0.3, 0.2, 0.4), (0.0, 0.0, -0.2), _options(1)
+    )
+    public_carrier = public_waveform(
+        ls.IMRPhenomXAS, (0.0, 0.0, 0.4), (0.0, 0.0, -0.2),
+        lal.CreateDict(),
+    )
+    for wave, carrier, oracle_wave, oracle_carrier in zip(
+        native_xp, remnant_carrier, public_xp, public_carrier
+    ):
+        torch.testing.assert_close(
+            carrier[0], torch.as_tensor(oracle_carrier), rtol=2e-12, atol=0.0
+        )
+        native_ratio = wave[0] / carrier[0]
+        oracle_ratio = oracle_wave / oracle_carrier
+        torch.testing.assert_close(
+            native_ratio, torch.as_tensor(oracle_ratio), rtol=0.0, atol=2e-12
+        )
+
+
 @pytest.mark.parametrize("convention", (0, 1))
 def test_zero_spin_and_fresh_aligned_fixture_match_public_boundary(convention):
     zero = dict(spin1=(0.0, 0.0, 0.0), spin2=(0.0, 0.0, 0.0))
@@ -235,4 +307,3 @@ def test_tiny_nonzero_transverse_spin_is_not_endpoint_corrected():
         torch.max(torch.abs(left - right)).item() > 0.0
         for left, right in zip(tiny, exact)
     )
-

@@ -88,7 +88,10 @@ def test_quadrupole_reference_closure_label_exchange_and_dc_gradients(factory):
     assert torch.isfinite(hp).all() and torch.isfinite(hc).all()
     assert hp[0] == 0 and hc[0] == 0
     # Pv2 retains its inherited distinct frame mapping pending derivation.
-    if not isinstance(model, IMRPhenomP):
+    # XP v223 also uses distinct reference-frame and opening-beta orbital-L
+    # prescriptions. Its composed-strain residual is checked against public
+    # LAL separately; the strict Eq. (79) vector-rotation gate above remains.
+    if not isinstance(model, (IMRPhenomP, IMRPhenomXP)):
         hp0, hc0 = carrier_with_same_remnant(model, f, params)
         for h, h0 in ((hp,hp0),(hc,hc0)):
             torch.testing.assert_close(h[2], h0[2], rtol=3e-13, atol=1e-35)
