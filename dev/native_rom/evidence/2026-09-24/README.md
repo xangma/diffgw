@@ -532,6 +532,36 @@ whole-waveform parity. Reproduce the two-factor result with
 --source-root /path/to/pinned/lalsuite-git --json-out
 /tmp/hamiltonian-source-conventions.json`.
 
+The [source-calibration waveform plan](source_calibration_waveform_plan.json)
+and [result](source_calibration_waveform.json) replay the preceding
+source-backed flux waveform bitwise, then change only the Hamiltonian's
+calibration decimals to those in the pinned v4 header. The historical
+logarithmic derivative, 35-mode flux choices, native early start, and `2 M`
+NQC phase window stay fixed. All three ODE levels complete and the refined
+complex relative L2 is `2.96e-7`, below the frozen `1e-6` budget. Against
+the unchanged public binary, the peak-fitted full-waveform complex L2 falls
+from `0.00299749` to `0.00271301`; the inspiral part falls from `0.00333081`
+to `0.00301216`, while the post-peak value remains about `0.0008125`. The
+source decimals therefore explain part, not all, of the aligned inspiral gap.
+They are confined to a development-only diagnostic class, not promoted as
+independent production calibration. Reproduce with `PYTHONPATH=src:. python -m
+dev.native_rom.diagnose_source_calibration_waveform --source-root
+/path/to/pinned/lalsuite-git --json-out
+/tmp/source-calibration-waveform.json`.
+
+The [same-public-state early-field plan](source_calibration_early_field_plan.json)
+and [result](source_calibration_early_field.json) reuse eight frozen public
+states on two requested output grids. With the source decimals, the maximum
+native-versus-sampled-public radial-momentum derivative gap over four early
+frequencies falls from `4.70e-4` to `7.47e-5` relative on the `0.0625 M`
+grid, but the maximum torque gap changes from `6.42e-7` to `6.55e-7`.
+The torque oracle is a finite difference of public angular momentum, not a
+direct compiled-flux call; its output-grid sensitivity limits attribution.
+Reproduce with `PYTHONPATH=src:. python -m
+dev.native_rom.diagnose_source_calibration_early_field --source-root
+/path/to/pinned/lalsuite-git --json-out
+/tmp/source-calibration-early-field.json`.
+
 The [combined late-field result](combined_late_field.json) applies both the
 historical Hamiltonian convention and `(3,3)` flux placement at the same public
 states. At `M Omega≈0.15`, the orbital-frequency residual is below `0.4 ppm`,

@@ -1,0 +1,18 @@
+{
+  "schema": "diffgw.seobnrv4.source-calibration-waveform-plan.v1",
+  "purpose": "Change only the SEOBNRv4 Hamiltonian calibration decimals to the pinned source values; replay prior waveform, check three ODE tolerances, and compare unchanged public binary without fitting. Development-only.",
+  "prior_waveform": "dev/native_rom/evidence/2026-09-24/source_flux_whole_waveform.json",
+  "prior_waveform_sha256": "7493f5f3dbc6a425635103b0745fad78885d3df35f21678baf6fbc1fc7b3a2a7",
+  "same_state_conventions": "dev/native_rom/evidence/2026-09-24/hamiltonian_source_conventions.json",
+  "same_state_conventions_sha256": "f7836a8d4486232dc6f5383f5b8f57ddb2d85b8a41eaa4216c29a74a94b07d9a",
+  "source_convention_plan": "dev/native_rom/evidence/2026-09-24/hamiltonian_source_conventions_plan.json",
+  "source_convention_plan_sha256": "e66008ec2aa2311fccae963e796d9e71534ff615f03626c397684ce9efb477f8",
+  "levels": [
+    "ode_0",
+    "ode_1",
+    "ode_2"
+  ],
+  "baseline_calibration": "published",
+  "candidate_calibration": "lal_v4_rounded",
+  "release_qualified": false
+}

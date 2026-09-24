@@ -142,6 +142,15 @@ shorter calibration decimals: applying both in a development-only native
 variant matches the wheel within `8.9e-16` absolute across all eight states.
 This establishes the tested component path, not the wheel's private generator
 initialization or a qualified waveform.
+On the same aligned-spin waveform, applying only those shorter source
+calibration decimals to the existing historical-derivative diagnostic lowers
+peak-fitted complex relative L2 from `0.00299749` to `0.00271301`, with a
+passing three-tolerance ODE check (`2.96e-7` refined complex L2). A frozen
+early-state comparison reduces the maximum radial-momentum field gap on the
+finer public grid from `4.70e-4` to `7.47e-5` relative, while the sampled
+torque gap remains near `6.5e-7`. The remaining inspiral difference and open
+domain, attachment, and ROM gates keep this source-convention variant on the
+feature branch.
 The aligned-spin trajectory replay finds a native-minus-public orbital phase
 span of at most `1.27e-4 rad` from `M Omega=0.0425` through `0.13`, compared
 with `3.36e-5 rad` maximum public-grid sensitivity. Over the later sampled

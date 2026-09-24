@@ -85,6 +85,11 @@ and [two-factor convention result](../evidence/2026-09-24/hamiltonian_source_con
 show that the paper-derived native Hamiltonian differs from that source, while
 the development-only source-convention variant agrees to floating-point
 precision. This does not qualify full dynamics or waveform generation.
+Changing only the diagnostic Hamiltonian calibration decimals to the pinned
+source values lowers the aligned-spin peak-fitted full-waveform complex L2
+from `0.00299749` to `0.00271301` and passes the three-tolerance ODE check;
+the [frozen result](../evidence/2026-09-24/source_calibration_waveform.json)
+is a source-convention attribution, not a change to this paper reference.
 
 `hamiltonian.effective_spin_mapping` checks the aligned, zero-gauge
 3.5PN mapping in [Barausse and Buonanno (2011), Eqs. (50)–(52)](https://arxiv.org/html/1107.2904)
