@@ -317,6 +317,73 @@ TAYLORF2 = WaveformDefinition(
              "The analytic positive-frequency domain is broader than the physically reliable slow-inspiral regime."),
 )
 
+_TF2_HM_VERSION = "taylorf2-hm-leading-carrier/v1"
+_TF2_HM_MODES = ((2, 2), (2, 1), (3, 1), (3, 2), (3, 3), (4, 2), (4, 3), (4, 4))
+_TF2_HM_COMPONENTS = (
+    *tuple(ComponentDefinition(
+        id=f"tf2.hm.ratio_{l}{m}.v1", name=f"({l},{m}) carrier amplitude ratio",
+        spec_version=_TF2_HM_VERSION, scope="leading nonspinning mode amplitude",
+        variant="leading_spa_carrier", implementation="native_and_reference",
+        evidence=("source_transcription", "sampled_native_comparison"),
+        source_refs=_source("mezzasoma2022", "Eqs. 20–21, 30"),
+        reference_module="diffgw_reference.taylorf2_hm",
+    ) for l, m in _TF2_HM_MODES),
+    *tuple(ComponentDefinition(
+        id=f"tf2.hm.projection_{l}{m}.v1", name=f"({l},{m}) harmonic projection",
+        spec_version=_TF2_HM_VERSION, scope="spin-weighted angular projection",
+        variant="negative_m_positive_frequency", implementation="native_and_reference",
+        evidence=("wigner_d_construction", "sampled_native_comparison"),
+        source_refs=_source("garciaquiros2020", "Eqs. 2–3, 9"),
+        reference_module="diffgw_reference.taylorf2_hm",
+    ) for l, m in _TF2_HM_MODES),
+    *tuple(ComponentDefinition(
+        id=f"tf2.hm.{name}.v1", name=name.replace("_", " ").title(),
+        spec_version=_TF2_HM_VERSION, scope="leading-amplitude aligned-spin carrier",
+        variant="project_adapter", implementation="native_and_reference",
+        evidence=("source_transcription", "sampled_native_comparison"),
+        source_refs=_source(source, location),
+        reference_module="diffgw_reference.taylorf2_hm",
+    ) for name, source, location in (
+        ("mode_phase", "garciaquiros2020", "Eqs. 4–9; project phase origin"),
+        ("polarizations", "garciaquiros2020", "Eqs. 2–3; negative-m storage"),
+        ("cutoff_frequency", "project_hm", "Schwarzschild ISCO mode mask"),
+    )),
+)
+
+TAYLORF2_HM = WaveformDefinition(
+    id="TaylorF2_HM", name="TaylorF2_HM leading eight-mode carrier",
+    aliases=(), domain="frequency", modes=_TF2_HM_MODES,
+    scope="Eight leading nonspinning SPA mode amplitudes with inherited aligned-spin TaylorF2 phase and negative-m polarization projection.",
+    reference_version=_TF2_HM_VERSION, reference_module="diffgw_reference.taylorf2_hm",
+    spec_page="math/taylorf2-hm.md", components=_TF2_HM_COMPONENTS,
+    sources=(
+        SourceDefinition("mezzasoma2022", "Mezzasoma and Yunes, higher-harmonic SPA amplitudes", "https://arxiv.org/html/2203.15934", "2203.15934"),
+        SourceDefinition("mishra2016", "Mishra et al., multipolar frequency-domain inspiral", "https://arxiv.org/html/1601.05588", "1601.05588v1"),
+        SourceDefinition("garciaquiros2020", "García-Quirós et al., frequency-domain mode conventions", "https://arxiv.org/html/2001.10914", "2001.10914"),
+        SourceDefinition("project_hm", "DiffGW leading carrier and cutoff conventions", "docs/math/taylorf2-hm.md", _TF2_HM_VERSION, kind="project_convention"),
+    ),
+    parameters=(*_COMMON_PARAMETERS, *_SPINS,
+                ParameterDefinition("phi0", "Observer azimuth", "rad", "finite")),
+    units=_COMMON_UNITS,
+    conventions=(
+        ConventionDefinition("fourier", "Positive-frequency modes use exp(-i*Psi_lm) and store h_{l,-m}(f)."),
+        ConventionDefinition("mode_phase", "Psi_lm=(m/2)Psi_22(2f/m)+(3*pi/4)(1-m/2); reference frequency is scaled by 2/m."),
+        ConventionDefinition("polarizations", "d_plus=[Y_l,-m+(-1)^l conjugate(Y_l,m)]/2; d_cross=i[Y_l,-m-(-1)^l conjugate(Y_l,m)]/2."),
+    ),
+    options=(
+        OptionDefinition("spin_order", ("-1", "0", "1", "2", "3", "4", "5", "6", "7", "8"), "7", "Integer selectors use the inherited aligned-spin option map. Values below zero have the -1 recipe; values above eight have the 8 recipe. The sampled HM comparison uses the public default 7."),
+        OptionDefinition("f_isco_cutoff", ("false", "true"), "true", "The reference supplies the Schwarzschild mode threshold; direct complex comparison samples use false."),
+        OptionDefinition("smooth_cutoff", ("false", "true"), "false", "The current reference does not evaluate the native half-cosine taper."),
+    ),
+    carrier_parameters=(), capabilities=("fd", "higher_modes", "plus_cross", "torch", "jax", "scalar_reference"),
+    evidence=("leading_mode_source_transcription", "sampled_torch_jax_comparison"),
+    caveats=(
+        "The independent scalar comparison covers the unwindowed carrier and Schwarzschild hard-cutoff thresholds, not Kerr ISCO or taper derivatives.",
+        "Mode amplitudes omit higher PN and spin-amplitude terms; aligned-spin phase inherits the separately scoped TaylorF2 reference.",
+        "No exact external all-eight-mode TaylorF2 oracle or physical validation is claimed; historical LAL comparison covers only (2,2).",
+    ),
+)
+
 IMRPHENOMD = WaveformDefinition(
     id="IMRPhenomD", name="IMRPhenomD aligned-spin dominant harmonic", aliases=(),
     domain="frequency", modes=((2, 2),),
@@ -396,5 +463,5 @@ IMRPHENOMXAS = WaveformDefinition(
     fit_asset_ids=("author_fit_asset",),
 )
 
-WAVEFORMS = (TAYLORF2, IMRPHENOMD, IMRPHENOMXAS)
+WAVEFORMS = (TAYLORF2, TAYLORF2_HM, IMRPHENOMD, IMRPHENOMXAS)
 validate_catalog(WAVEFORMS)
