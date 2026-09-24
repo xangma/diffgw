@@ -1,0 +1,16 @@
+{
+  "schema": "diffgw.seobnrv4.sxs-native-public-diagnostic-plan.v1",
+  "purpose": "Post-hoc direct native-versus-public comparison of SXS:BBH:2139, selected after the five-case NR residuals showed a much smaller public-versus-NR error. This is not an independent holdout or release pass.",
+  "simulation": "SXS:BBH:2139",
+  "primary_sha256": "2e5edfcd53066a40f4e6b2f255c2c1868e357989e459aafd3233f43e5beba967",
+  "public_control_sha256": "f76aa9884a3bb328fa4367cba278143b41f54d19d5ff76320590fbc6ceb09638",
+  "public_call": {
+    "approximant": "SEOBNRv4",
+    "distance_Mpc": 100.0,
+    "inclination_rad": 0.8,
+    "f_ref_Hz": 0.0,
+    "phase_rad": 0.0
+  },
+  "comparison": "Recompute and hash-check native waveform; compare native, public, and highest NR on exactly the primary common native support with fixed M omega22=0.09 crossings; no fitted shifts or parameters.",
+  "qualification_claim": false
+}
