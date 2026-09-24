@@ -91,7 +91,8 @@ def main() -> int:
                 nr[lev] = c.anchor(c.load_mode(path), dt=dt)
             native = q.native_run(case["row"], dict(name="native",
                 atol=method["native_atol"], rtol=method["native_rtol"],
-                dt_geom=dt), q.Settings(max_run_seconds=600.),
+                dt_geom=dt), q.Settings(max_run_seconds=method.get(
+                    "max_run_seconds_per_case", 600.)),
                 diagnostic_fine_rkf45_resampling=
                     method["diagnostic_fine_rkf45_resampling"])
             anchored = c.anchor(native, dt=dt)
