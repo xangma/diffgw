@@ -265,6 +265,7 @@ def native_run(row, level, settings, *, diagnostic_hermite_resampling=False,
                   final_spin=float(array(result.final_spin)),
                   internal_step_M=float(array(result.attachment.internal_step)))
     if return_nqc_coefficients:
+        from torchwave.approximants.eob.numerical_attachment import _eval_batch_scalar
         fine_nqc = result.attachment.fine
         coefficients = fine_nqc.calibration.coefficients
         output["nqc_coefficients"] = dict(
@@ -275,6 +276,11 @@ def native_run(row, level, settings, *, diagnostic_hermite_resampling=False,
             amplitude=array(fine_nqc.nqc.amplitude_matching_matrix).tolist(),
             phase=array(fine_nqc.nqc.phase_matching_matrix).tolist(),
         )
+        spline = fine_nqc.nqc.phase_basis_spline
+        output["nqc_full_spline_phase_matrix"] = array(torch.stack((
+            _eval_batch_scalar(spline, fine_nqc.match_time, derivative=1),
+            _eval_batch_scalar(spline, fine_nqc.match_time, derivative=2),
+        ))).tolist()
     return output
 
 

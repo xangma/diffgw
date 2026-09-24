@@ -105,6 +105,18 @@ It does not establish coefficient parity or qualify attachment. Reproduce with
 `PYTHONPATH=src:. python -m dev.native_rom.diagnose_nqc_coefficients --json-out
 /tmp/nqc-coefficients.json` in the pinned development environment.
 
+The [frozen phase-matrix plan](nqc_phase_matrix_plan.json) and
+[result](nqc_phase_matrix.json) replay those same native waveform hashes and
+hold each native phase matching right-hand side fixed. Replacing only the
+local degree-six phase-basis derivative matrix with the full-series natural
+cubic-spline matrix changes the phase-coefficient distance from the public
+values from `3.7437` to `3.7995` on the aligned row, and from `0.06563` to
+`0.06621` on the antialigned row (absolute coefficient L2). Thus this matrix
+choice alone does not close either gap. The public routine sees different
+trajectory and pre-NQC samples; this is a native-input counterfactual, not a
+claim of compiled NQC parity. Reproduce with `PYTHONPATH=src:. python -m
+dev.native_rom.diagnose_nqc_phase_matrix --json-out /tmp/nqc-phase-matrix.json`.
+
 Reproduce the new waveform checks from the repository root with
 `PYTHONPATH=src:. python -m dev.native_rom.diagnose_mode_32_whole_waveform
 --json-out /tmp/mode32-waveform.json` and

@@ -118,6 +118,11 @@ LAL source's full-precision targets into the same native matching matrices
 changes the coefficients by at most `1.1%` and `6.0%` of those respective
 public gaps in absolute magnitude. Target rounding does not explain the main
 discrepancy; matching inputs and differentiation remain open.
+On exact-hash native replays, replacing only the local phase-basis derivative
+matrix with the full-series natural-cubic matrix slightly increases the
+phase-coefficient distance from the public values on both strong-spin rows.
+This rules out that matrix choice alone as the observed gap's explanation;
+same-input compiled NQC parity and the distinct upstream inputs remain open.
 
 ## Numerical evidence
 
