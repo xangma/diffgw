@@ -88,6 +88,11 @@ def main() -> None:
                                    dt=plan["sample_step_M"])
         relaxed_start = (metadata["relaxation_time"]
                          - long_result["anchors"]["nr"]["anchor_time_M"])
+        late_starts = {name: float(wave["time"][0]) for name, wave in waves.items()
+                       if float(wave["time"][0]) > relaxed_start + plan["sample_step_M"]}
+        if late_starts:
+            raise ValueError(f"waveform begins after settled NR reference: {simulation}, "
+                             f"{late_starts}")
         def sweep(width, selected_masses):
             f_geom, spectra, support, fft_length = weighted.tapered_spectra(
                 waves, lower=relaxed_start,
