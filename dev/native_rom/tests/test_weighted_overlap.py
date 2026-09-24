@@ -4,6 +4,7 @@ import numpy as np
 import pytest
 
 from dev.native_rom.measure_sxs_2508_weighted import optimized_overlap
+from dev.native_rom.diagnose_sxs_2569_weighted_bands import decompose
 
 
 def test_time_and_phase_are_recovered_without_amplitude_fit():
@@ -25,3 +26,22 @@ def test_shape_change_is_not_absorbed_by_time_and_phase():
     result = optimized_overlap(frequency, candidate, reference, np.ones_like(frequency),
                                bounds=(-10, 10), step=0.25)
     assert result["overlap"] < 0.99
+
+
+def test_band_decomposition_preserves_full_match_residual():
+    frequency = np.linspace(.01, .2, 1001)
+    reference = np.exp(-((frequency - .1) / .08) ** 2).astype(complex)
+    candidate = reference * np.exp(2j * np.pi * frequency
+                                    * np.where(frequency < .1, 3., -3.))
+    psd = np.ones_like(frequency)
+    full = optimized_overlap(frequency, candidate, reference, psd,
+                             bounds=(-20, 20), step=.25)
+    result = decompose(frequency, frequency * 1000, candidate, reference,
+                       psd, [10, 100, 201], full["best_lag_M"],
+                       bounds=(-20, 20), step=.25)
+    assert result["total_residual_over_reference_power"] == pytest.approx(
+        1 - full["overlap"] ** 2, abs=1e-12)
+    assert sum(row["reference_power_fraction"] for row in result["bands"]) == pytest.approx(1)
+    assert sum(row["global_fit_residual_fraction"] for row in result["bands"]) == pytest.approx(1)
+    assert all(row["band_refit"]["overlap"] > full["overlap"]
+               for row in result["bands"])

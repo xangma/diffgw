@@ -816,6 +816,16 @@ changes the waveform by `6.65e-8` complex relative L2 and the 22 M⊙ overlap
 by only `−2.87e-9`. The 2018 SXS run was not part of the NR catalog assessed
 in the 2017 SEOBNRv4 paper. The remaining generator, frontend, and
 independently trained ROM gates still need completion.
+The [post-hoc 22 M⊙ frequency decomposition](evidence/2026-09-24/sxs_2569_weighted_bands.json)
+attributes this miss to cross-band coherence rather than a single bad
+frequency band: every separately time/phase-fitted band from 40 to 800 Hz
+exceeds `0.9997` overlap, but the one full-band shift gives `0.989142`.
+The separately fitted native/NR lag changes from `−16.25 M` at 40–70 Hz to
+`+1.68 M` at 150–250 Hz. The 40–70 and 100–150 Hz bands contribute 42% and
+22% of the globally fitted residual, respectively. The same low/high NR
+control gives `0.999936` full-band overlap. These band fits are descriptive;
+they neither identify a unique upstream equation nor relax the frozen gate.
+
 The [five-case pinned-public parity check](evidence/2026-09-24/sxs_third_public_parity.json)
 passes its separately frozen post-hoc gates: native/public fixed-crossing
 complex relative L2 is at most `3.47e-4`, and the largest difference in
@@ -845,6 +855,14 @@ The exact early alignment window is not specified in
 lags are diagnostic and cannot be treated as a literal pass/fail of its
 `5 M` peak-time criterion. They do expose an unresolved timing question;
 neither the physical generator nor either ROM is release-qualified.
+
+The development-only JAX `SEOBNRv4Published` assembler is not a
+whole-waveform parity reference. It still uses a 1.5PN prototype radiation
+reaction and a Newtonian base `(2,2)` mode, and it accepts published-model
+flux switches without applying them. Its same-state Hamiltonian and 35-mode
+flux component checks do not qualify that complete JAX route. A faithful
+source-backed JAX trajectory and pre-NQC mode, followed by whole-waveform
+Torch/JAX checks, remain necessary before release.
 
 The independent ROM construction follows the published reduced-basis and
 parameter-interpolation methods of [Pürrer (2014)](https://doi.org/10.1088/0264-9381/31/19/195010)
