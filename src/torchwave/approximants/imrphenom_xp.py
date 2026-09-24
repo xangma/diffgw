@@ -81,18 +81,17 @@ class IMRPhenomXP(nn.Module):
         ``convention`` defaults to 1, and the MSA v223 route defaults to
         ``final_spin_mod=3``. Explicit NNLO choices, including
         ``final_spin_mod=0``, retain their existing behavior.
-        For v223 with the MSA remnant and zero observer azimuth, convention 6
+        For v223 with the MSA remnant, convention 6
         uses the clean convention-1 strain with the Table-IV orbital-phase
         factor exp(2j*phic). Opposed-J rows retain the established legacy
         guard. MSA version labels share the published analytical prescription;
         undocumented implementation-specific differences are not reproduced.
-        ``phi0`` is an additional source-frame observer azimuth. The clean
-        helper has no separate observer-azimuth argument, so nonzero ``phi0``
-        is evaluated through the established XP rotation path, where it is
-        applied to the source-frame geometry and aligned carrier.
-        A batch mixing zero and nonzero ``phi0`` rows is rejected on the clean
-        route; evaluate those rows separately until a per-row geometry adapter
-        is available.
+        ``phi0`` is an additional source-frame observer azimuth. On the clean
+        route the Appendix-C observer coordinates use ``phic-phi0``; the
+        Table-IV convention-6 carrier phase retains the original ``phic``.
+        The physical zero-nutation opening removes the auxiliary MSA root
+        split from the aligned boundary; the explicit clean v223 helper
+        retains its historical binary-compatibility opening by default.
         NNLO rotations with L+S_parallel<=0 are unsupported and use the
         established fallback row by row. Regular exact aligned and zero-spin
         rows remain on the clean v223 chart in either convention.
@@ -160,25 +159,15 @@ class IMRPhenomXP(nn.Module):
         if fref is not None:
             fref = fref_eval
 
-        # The clean native wrapper is the production MSA implementation for
-        # the v223/MSA-remnant tuple when the observer azimuth is zero. The
-        # helper has no separate observer-azimuth argument, so nonzero phi0
-        # stays on the established XP rotation path rather than being dropped.
+        # Appendix C puts the observer at source azimuth phic-phi0.  The
+        # clean helper already accepts that source-frame coordinate; Table IV
+        # keeps the convention-6 carrier phase as the original phic.
         exact_aligned = (
             (s1x == 0) & (s1y == 0) & (s2x == 0) & (s2y == 0)
         )
-        has_nonzero_phi0 = bool(torch.any(phi_0 != 0))
-        has_zero_phi0 = bool(torch.any(phi_0 == 0))
-        if (p_ver == 223 and convention in (0, 1) and final_spin_mod == 3
-                and has_nonzero_phi0 and has_zero_phi0):
-            raise ValueError(
-                "Mixed zero/nonzero phi0 rows are unsupported for clean MSA "
-                "v223; evaluate rows separately."
-            )
-        clean_phi0 = not has_nonzero_phi0
         clean_candidate = (
             p_ver == 223 and convention in (0, 1, 6) and final_spin_mod == 3
-            and clean_phi0 and not force_legacy
+            and not force_legacy
         )
         guard_unsupported = torch.zeros_like(exact_aligned, dtype=torch.bool)
         if clean_candidate:
@@ -307,12 +296,13 @@ class IMRPhenomXP(nn.Module):
                 spin2z=s2z,
                 distance=dist,
                 inclination=inc,
-                phic=phi_c,
+                phic=phi_c - phi_0,
                 tc=t_c,
                 f_ref=fref_eval,
                 convention=1 if convention == 6 else convention,
                 final_spin_mod=3,
                 xas_model=opaque_xas_carrier,
+                boundary="physical",
             )
             # The clean helper flattens its frequency input internally.  The
             # public XP adapter retains the caller's frequency shape, with

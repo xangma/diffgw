@@ -54,6 +54,7 @@ from .precession_msa_angles_clean import (
     assemble_precession_msa_angles, _compatibility_variant,
 )
 from .precession_msa_pn_clean import precession_averages
+from .precession_msa_reference_l_clean import orbital_angular_momentum_nonconserved_3pn
 from .precession_source_frame_clean import source_frame_geometry
 from .precession_twisting_clean import project_twisted_positive_modes
 
@@ -96,6 +97,30 @@ def _stable_acos(value):
     endpoint_value = torch.where(value < 0.0, torch.full_like(value, math.pi),
                                  torch.zeros_like(value))
     return torch.where(endpoint, endpoint_value, raw)
+
+
+def physical_zero_nutation_cos_beta(frequency, mass1, mass2, spin1, spin2):
+    """Opening angle from the unsplit spin vector (Pratten et al., Eq. 17).
+
+    The v223 MSA auxiliary root separation is needed in singular integrals,
+    but is not a physical transverse spin.  On a zero-nutation branch the
+    spin vector is constant, so Eq. (25) reduces to Eq. (17) with the same
+    3PN orbital angular momentum used by the MSA opening angle.  In
+    particular, its aligned limit is exactly zero for ``L+S_parallel>0``.
+    """
+    f = _as_f64(frequency)
+    m1, m2, s1, s2 = mass1, mass2, spin1, spin2
+    total = m1 + m2
+    n1, n2 = m1 / total, m2 / total
+    spin = n1[..., None].square() * s1 + n2[..., None].square() * s2
+    s_parallel = spin[..., 2, None]
+    s_perp = torch.linalg.vector_norm(spin[..., :2], dim=-1)[..., None]
+    l_orb = orbital_angular_momentum_nonconserved_3pn(
+        m1[..., None], m2[..., None], f,
+        s1[..., 2, None], s2[..., 2, None],
+    )
+    parallel = l_orb + s_parallel
+    return parallel / torch.hypot(parallel, s_perp)
 
 
 def _normalization_factor(normalization: str, remnant_mass_fraction: torch.Tensor):
@@ -775,6 +800,7 @@ def waveform(
     v223: bool = False,
     xas_model=None,
     final_spin_override=None,
+    boundary: str = "v223",
 ):
     """Native MSA composition with an explicit clean beta choice.
 
@@ -805,6 +831,10 @@ def waveform(
         compatibility=compatibility, variant=variant,
         version=version, v223=v223,
     )
+    if boundary not in ("v223", "physical"):
+        raise ValueError("boundary must be 'v223' or 'physical'")
+    if boundary == "physical" and selected != "v223":
+        raise ValueError("physical boundary requires the v223 MSA prescription")
     if int(final_spin_mod) != 3 and final_spin_override is None:
         raise ValueError("clean native MSA supports final_spin_mod=3 only unless final_spin_override is supplied")
     if int(convention) not in (0, 1):
@@ -898,6 +928,23 @@ def waveform(
          "cos_beta": angle_values["cos_beta"]},
         geom_zero, geom, convention=convention, aligned=legacy_aligned,
     )
+    if boundary == "physical":
+        # A separated auxiliary root has no physical spin amplitude.  Use
+        # the unsplit zero-nutation opening on the same rows whose MSA
+        # oscillatory term was suppressed.  The generic MSA Eq. (25) remains
+        # untouched off this limiting branch.
+        zero_nutation = (
+            torch.all(s1[..., :2] == 0.0, dim=-1)
+            | torch.all(s2[..., :2] == 0.0, dim=-1)
+            | angle_values["degenerate"]
+        )
+        physical_cos_beta = physical_zero_nutation_cos_beta(
+            f_safe, m1, m2, s1, s2,
+        )
+        transported_angles["cos_beta"] = torch.where(
+            zero_nutation[..., None], physical_cos_beta,
+            transported_angles["cos_beta"],
+        )
     if selected == "v223" and convention == 1 and torch.any(exact_transverse_zero):
         endpoint_phi_j = _as_f64(
             composition_geometry["phi_j"], device=f.device,
