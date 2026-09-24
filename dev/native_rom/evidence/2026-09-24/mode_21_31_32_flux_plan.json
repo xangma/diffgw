@@ -1,0 +1,14 @@
+{
+  "schema": "diffgw.seobnrv4.mode-21-31-32-flux-plan.v1",
+  "purpose": "With historical rho32 fixed, apply only the non-HM v4 rho21 and rho31 higher-spin placements at the same frozen public strong-spin states; record each contribution without selecting by fit.",
+  "prior": "dev/native_rom/evidence/2026-09-24/mode_32_flux_placement.json",
+  "prior_sha256": "e4ae191150adc9131c38b38ebbe415102a6c8ca82c80fa2730f954e7d238b762",
+  "historical_source": {
+    "local_git_revision": "53acc0c2cd7ea2d3c83fc71a7bd88035c2861d6c",
+    "path": "lalsimulation/lib/LALSimIMRSpinEOBFactorizedWaveform.c",
+    "rho21_lines": [1546, 1550, 1560, 1573, 1592],
+    "rho31_lines": [1744, 1745, 1746, 1747],
+    "rho32_lines": [1718, 1725]
+  },
+  "release_qualified": false
+}

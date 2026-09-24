@@ -139,6 +139,8 @@ class SEOBNRv4PublishedFlux(nn.Module):
     def __init__(self, lmax: int = 8, *, spin_truncation: str,
                  retain_pan_cubic_spin: bool = False,
                  mode_21_higher_spin: str = "taylor_f",
+                 mode_31_higher_spin: str = "taylor_f",
+                 mode_32_spin_square: str = "pan_f26",
                  mode_33_higher_spin: str = "taylor_f"):
         super().__init__()
         if type(lmax) is not int or not 2 <= lmax <= 8:
@@ -149,12 +151,18 @@ class SEOBNRv4PublishedFlux(nn.Module):
             raise TypeError("retain_pan_cubic_spin must be an explicit bool")
         if mode_21_higher_spin not in {"taylor_f", "rho_hybrid"}:
             raise ValueError("mode_21_higher_spin must be taylor_f or rho_hybrid")
+        if mode_31_higher_spin not in {"taylor_f", "lal_v4_rho"}:
+            raise ValueError("mode_31_higher_spin must be taylor_f or lal_v4_rho")
+        if mode_32_spin_square not in {"pan_f26", "lal_v4_zero"}:
+            raise ValueError("mode_32_spin_square must be pan_f26 or lal_v4_zero")
         if mode_33_higher_spin not in {"taylor_f", "lal_v4_rho"}:
             raise ValueError("mode_33_higher_spin must be taylor_f or lal_v4_rho")
         self.lmax = lmax
         self.spin_truncation = spin_truncation
         self.retain_pan_cubic_spin = retain_pan_cubic_spin
         self.mode_21_higher_spin = mode_21_higher_spin
+        self.mode_31_higher_spin = mode_31_higher_spin
+        self.mode_32_spin_square = mode_32_spin_square
         self.mode_33_higher_spin = mode_33_higher_spin
         self.mode_indices = tuple((ell, m) for ell in range(2, lmax+1)
                                   for m in range(1, ell+1))
@@ -211,6 +219,10 @@ class SEOBNRv4PublishedFlux(nn.Module):
         for mode, spin in _spin_rho(v, nu, delta, cs, ca,
                                     spin_truncation=self.spin_truncation).items():
             rho[mode] = rho[mode]+spin
+        if self.mode_32_spin_square == "lal_v4_zero":
+            # Historical v4 overwrites rho32v2 with its nonspinning value.
+            r32v1 = -4*nu*cs/(3*(3*nu-1))
+            rho[3, 2] = rho[3, 2]+r32v1.square()*v**2
         rho[2, 2] = _rho22(
             v, nu, delta, cs, ca,
             retain_pan_cubic_spin=self.retain_pan_cubic_spin,
@@ -224,6 +236,12 @@ class SEOBNRv4PublishedFlux(nn.Module):
             q = kerr_spin
             rho[3, 3] = (rho[3, 3]+q.square()/2*v**4-4*q/3*v**5
                          +5*q.square()/36*v**6+(5297*q/2970+q**3/3)*v**7)
+        if self.mode_31_higher_spin == "lal_v4_rho":
+            # Non-HM v4 assigns higher Kerr-spin coefficients to rho31^3.
+            q = kerr_spin
+            rho[3, 1] = (rho[3, 1]-5*q.square()/6*v**4+4*q/9*v**5
+                         -49*q.square()/108*v**6
+                         +(-2579*q/5346+q**3/9)*v**7)
         result = {}
         for ell, m in self.mode_indices:
             epsilon = (ell+m) % 2
@@ -232,6 +250,7 @@ class SEOBNRv4PublishedFlux(nn.Module):
             mass_residual = c*rho[ell, m]**ell
             if ell <= 4 and m % 2:
                 if ((ell, m) != (2, 1) or self.mode_21_higher_spin == "taylor_f") and (
+                        (ell, m) != (3, 1) or self.mode_31_higher_spin == "taylor_f") and (
                         (ell, m) != (3, 3) or self.mode_33_higher_spin == "taylor_f"):
                     mass_residual = mass_residual+c*higher_f[ell, m]
                 mass_residual = mass_residual+_mass_times_leading_spin_f(

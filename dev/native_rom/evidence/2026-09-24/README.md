@@ -1,3 +1,96 @@
+# Strong-spin flux source audit and waveform checks
+
+The later [strong-spin inspiral field](strong_spin_inspiral_field.json) freezes
+four public strong aligned-spin states on two output grids, then evaluates the
+native vector field at those same states. A separate
+[start-alignment check](strong_spin_start_alignment.json) corrects an invalid
+initial-state comparison in the field report: the earlier expression compares
+the native warm-start endpoint at `M Omega=0.04` with the public first state
+near `0.03162`. At the actual first frequency, native and public radius and
+angular momentum agree within about `6e-8` and `5e-8`, respectively. Neither
+comparison uses public state as a generator input.
+
+The [frozen flux-choice check](strong_spin_flux_choices.json) and
+[source-formula `(3,1)` check](mode_31_flux_placement.json) isolate mode
+placements without fitting the public derivative. The pinned non-HM v4 source
+puts the higher `(3,1)` Kerr-spin terms in `rho31`; changing that mode alone
+moves the total torque by less than `0.1 ppm` at the tested frequencies. A
+Taylor-`f33` counterfactual can close some error but disagrees with the pinned
+v4 source, so it is not selected by numerical fit.
+
+The same source explicitly overwrites the spin-square part of `rho32v2` for
+non-HM version 4. The [predeclared same-state plan](mode_32_flux_placement_plan.json)
+and [result](mode_32_flux_placement.json) change only that coefficient. At
+`M Omega=0.045, 0.06, 0.09, 0.12`, native torque differences from the sampled
+public derivative decrease from about `332, 721, 2256, 5208 ppm` to
+`2.9, 6.5, 26, 59 ppm`. These are finite-difference comparisons, not direct
+compiled-flux parity. The source revision and coefficient lines are pinned in
+the plan; the implementation remains an explicit diagnostic choice.
+
+The [frozen aligned-spin waveform plan](mode_32_whole_waveform_plan.json) and
+[result](mode_32_whole_waveform.json) replay the previous baseline hash, then
+apply only the `(3,2)` overwrite at three ODE tolerances. The independently
+peak-fitted public waveform complex relative L2 decreases from `0.0198485` to
+`0.0058721`; the refined native numerical difference is `3.15e-7` complex
+relative L2, below the frozen `1e-6` budget, with all event gates passing.
+The [antialigned boundary plan](mode_32_antialigned_plan.json) and
+[result](mode_32_antialigned.json) likewise replay the prior baseline and pass
+the numerical gate (`7.04e-7`), but its already small public comparison moves
+from `0.0002039` to `0.0002225`. This mixed parameter behavior, the remaining
+aligned-spin residual, and unresolved historical source and domain gates bar
+release qualification. No ROM training or registration follows from these
+diagnostics.
+
+With historical `(3,2)` fixed, the [frozen `(2,1)`/`(3,1)` source-placement
+plan](mode_21_31_32_flux_plan.json) and [same-state result](mode_21_31_32_flux.json)
+find that the non-HM v4 `(2,1)` `rho` terms reduce the sampled strong-spin torque
+gap to about `0.1–18.7 ppm` through `M Omega=0.12`; the `(3,1)` placement moves
+total torque by less than `0.1 ppm`. The
+[combined waveform plan](source_flux_whole_waveform_plan.json) and
+[result](source_flux_whole_waveform.json) replay the `(3,2)` baseline hash and
+improve the aligned-spin fitted complex relative L2 from `0.0058721` to
+`0.0029975`. The refined numerical complex difference is `3.26e-7`, with all
+gates passing. The inspiral and late-inspiral windows improve, but the
+post-peak window worsens from `0.0004693` to `0.0008127`. Source placement
+and one-row stability do not establish physical or domain qualification.
+
+The [antialigned source-flux plan](source_flux_antialigned_plan.json) and
+[result](source_flux_antialigned.json) replay the prior refined `(3,2)` waveform
+hash. The three-tolerance numerical gate passes (`7.15e-7` refined complex
+relative L2), and the fitted public difference moves from `0.0002225` to
+`0.0002128`. This remains above the earlier `0.0002039` variant on that row;
+the post-peak window is effectively unchanged. The source-faithful choices
+therefore have mixed physical comparisons across rows despite numerical
+stability at these boundaries.
+
+The pinned v4 source's `rho22v2` through `rho22v10` assignments in
+`LALSimIMRSpinEOBFactorizedWaveform.c` agree term by term with the native
+`_rho22` expression when the diagnostic retains the cubic Kerr-spin term.
+The source supplies `a = sigmaKerr_z = x1² chi1 + x2² chi2`, equal to native
+`(1-2 nu) chiS + delta chiA`. This coefficient inspection does not validate
+the full `(2,2)` mode or its NQC correction. In the tested aligned states,
+the native `(2,2)` term contributes about 97.8–99.1% of total flux, so even
+small amplitude or state-convention differences matter. The
+[frozen public-torque sampling plan](public_torque_sampling_plan.json) and
+[result](public_torque_sampling.json) exactly replay both earlier public
+dynamics grids and add a third. At a shared time near `M Omega=0.12`, the
+five-point public torque differs by up to `9.6 ppm` between adjacent output
+steps, while the source-aligned native torque differs from the finest sampled
+derivative by `-22.6 ppm`. The derivative estimate is grid-sensitive and is
+not direct compiled-flux parity; it cannot by itself identify a `(2,2)`
+coefficient error.
+
+Reproduce the new waveform checks from the repository root with
+`PYTHONPATH=src:. python -m dev.native_rom.diagnose_mode_32_whole_waveform
+--json-out /tmp/mode32-waveform.json` and
+`PYTHONPATH=src:. python -m dev.native_rom.diagnose_mode_32_antialigned
+--json-out /tmp/mode32-antialigned.json`; the combined source-placement check
+is `PYTHONPATH=src:. python -m dev.native_rom.diagnose_source_flux_whole_waveform
+--json-out /tmp/source-flux-waveform.json` in the pinned development environment.
+The additional antialigned and public-torque sampling checks use the same
+module form with `diagnose_source_flux_antialigned` and
+`diagnose_public_torque_sampling`, respectively.
+
 # Public SEOBNRv4 output-grid control
 
 The [predeclared plan](reference_ultrafine_plan.json) and

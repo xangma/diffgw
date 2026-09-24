@@ -1,0 +1,12 @@
+{
+  "schema": "diffgw.seobnrv4.source-flux-antialigned-plan.v1",
+  "purpose": "Apply the unchanged source-backed (2,1), (3,1), and (3,2) flux choices to the pre-existing antialigned boundary row; replay the refined rho32 baseline exactly, then check three tolerances and the pinned public waveform.",
+  "prior": "dev/native_rom/evidence/2026-09-24/mode_32_antialigned.json",
+  "prior_sha256": "dccacec4c0c5da15be972dbd17c09036555aba8f5639b9862eef5a592b4e8d98",
+  "aligned": "dev/native_rom/evidence/2026-09-24/source_flux_whole_waveform.json",
+  "aligned_sha256": "7493f5f3dbc6a425635103b0745fad78885d3df35f21678baf6fbc1fc7b3a2a7",
+  "levels": ["ode_0", "ode_1", "ode_2"],
+  "baseline": {"mode_21_higher_spin": "taylor_f", "mode_31_higher_spin": "taylor_f", "mode_32_spin_square": "lal_v4_zero"},
+  "candidate": {"mode_21_higher_spin": "rho_hybrid", "mode_31_higher_spin": "lal_v4_rho", "mode_32_spin_square": "lal_v4_zero"},
+  "release_qualified": false
+}

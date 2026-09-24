@@ -1,0 +1,23 @@
+{
+  "schema": "diffgw.seobnrv4.strong-spin-flux-choices-plan.v1",
+  "purpose": "Attribute the strong aligned-spin same-state torque residual to declared native flux choices and individual mode contributions, without selecting a choice by public fit.",
+  "inspiral_field": "dev/native_rom/evidence/2026-09-24/strong_spin_inspiral_field.json",
+  "inspiral_field_sha256": "4385081fde4f37c2a220cf4c716a3ae98c8d05e8427df78a7615e2dca98e9156",
+  "grid_step_M": 0.0625,
+  "frequency_targets_Momega": [0.045, 0.06, 0.09, 0.12],
+  "baseline": {
+    "spin_truncation": "generic-leading-ell8",
+    "retain_pan_cubic_spin": true,
+    "mode_21_higher_spin": "taylor_f",
+    "mode_33_higher_spin": "lal_v4_rho"
+  },
+  "choices": {
+    "spin_truncation": ["generic-leading-ell8", "tabulated"],
+    "retain_pan_cubic_spin": [true, false],
+    "mode_21_higher_spin": ["taylor_f", "rho_hybrid"],
+    "mode_33_higher_spin": ["lal_v4_rho", "taylor_f"]
+  },
+  "source_note": "Historical non-HM v4 uses zero early NQC coefficients before the first integration; its flux source applies the NQC factor to (2,2), but the factor is one for this path. Check exact source revision before using as parity evidence.",
+  "release_qualified": false,
+  "interpretation": "Finite-difference public torque is not a direct compiled flux oracle. These candidate sensitivities do not establish that a choice is historically correct."
+}

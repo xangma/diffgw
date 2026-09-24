@@ -1,0 +1,172 @@
+{
+  "errors": [],
+  "historical_source": {
+    "assembly_lines": [
+      1070,
+      1076
+    ],
+    "coefficient_lines": [
+      1718,
+      1720,
+      1724,
+      1725
+    ],
+    "local_git_revision": "53acc0c2cd7ea2d3c83fc71a7bd88035c2861d6c",
+    "path": "lalsimulation/lib/LALSimIMRSpinEOBFactorizedWaveform.c"
+  },
+  "plan_sha256": "c27577b911342580fc720bedf2284ae11a5fd0fb6c11f3e412cc1ae5e8bce985",
+  "points": [
+    {
+      "actual_Momega": 0.04499998323798593,
+      "baseline_relative_to_sampled": -0.00033237784417627925,
+      "historical_relative_to_baseline": 0.00032955614606855477,
+      "historical_relative_to_sampled": -2.931235269176824e-06,
+      "placements": {
+        "lal_v4_zero": {
+          "energy_flux": 9.832822691459092e-06,
+          "mode_32_flux": 7.597279642737024e-09,
+          "mode_32_flux_fraction": 0.0007726448326314388,
+          "torque": -0.0009104467598736287
+        },
+        "pan_f26": {
+          "energy_flux": 9.829583291871963e-06,
+          "mode_32_flux": 4.3578800556078344e-09,
+          "mode_32_flux_fraction": 0.00044334331641620505,
+          "torque": -0.00091014681539679
+        }
+      },
+      "sampled_public_torque": -0.0009104494286151047,
+      "state": {
+        "phi": 20.715530746832957,
+        "pphi": 3.1620451660293,
+        "pr_star": -0.006745303691085402,
+        "r": 7.766701808227653
+      },
+      "target_Momega": 0.045
+    },
+    {
+      "actual_Momega": 0.059996821063625326,
+      "baseline_relative_to_sampled": -0.000721330088208183,
+      "historical_relative_to_baseline": 0.0007153095867389325,
+      "historical_relative_to_sampled": -6.536475796514729e-06,
+      "placements": {
+        "lal_v4_zero": {
+          "energy_flux": 2.5452220845423928e-05,
+          "mode_32_flux": 3.702217368383145e-08,
+          "mode_32_flux_fraction": 0.0014545753751185012,
+          "torque": -0.0017676086904891881
+        },
+        "pan_f26": {
+          "energy_flux": 2.5434027641622492e-05,
+          "mode_32_flux": 1.8828969882394253e-08,
+          "mode_32_flux_fraction": 0.0007403062600899615,
+          "torque": -0.0017663452068292528
+        }
+      },
+      "sampled_public_torque": -0.0017676202444961338,
+      "state": {
+        "phi": 30.776905294124216,
+        "pphi": 2.9184016118662433,
+        "pr_star": -0.012398286580539916,
+        "r": 6.344314048737224
+      },
+      "target_Momega": 0.06
+    },
+    {
+      "actual_Momega": 0.08999208613909104,
+      "baseline_relative_to_sampled": -0.0022559756685488486,
+      "historical_relative_to_baseline": 0.00223484744936564,
+      "historical_relative_to_sampled": -2.616998065196885e-05,
+      "placements": {
+        "lal_v4_zero": {
+          "energy_flux": 9.892423801538251e-05,
+          "mode_32_flux": 3.72831739822695e-07,
+          "mode_32_flux_fraction": 0.0037688613761646607,
+          "torque": -0.004580230697051387
+        },
+        "pan_f26": {
+          "energy_flux": 9.870365041401168e-05,
+          "mode_32_flux": 1.5224413845187113e-07,
+          "mode_32_flux_fraction": 0.0015424367570326357,
+          "torque": -0.004570017405309575
+        }
+      },
+      "sampled_public_torque": -0.004580350564737046,
+      "state": {
+        "phi": 39.30770950571066,
+        "pphi": 2.593114263491734,
+        "pr_star": -0.028478207886037606,
+        "r": 4.70865754964796
+      },
+      "target_Momega": 0.09
+    },
+    {
+      "actual_Momega": 0.11999187781818439,
+      "baseline_relative_to_sampled": -0.005208461493554473,
+      "historical_relative_to_baseline": 0.005176296597175778,
+      "historical_relative_to_sampled": -5.912543788433311e-05,
+      "placements": {
+        "lal_v4_zero": {
+          "energy_flux": 0.00026446596207005987,
+          "mode_32_flux": 2.0446260254441334e-06,
+          "mode_32_flux_fraction": 0.007731150010535155,
+          "torque": -0.009183449782290791
+        },
+        "pan_f26": {
+          "energy_flux": 0.000263104057432867,
+          "mode_32_flux": 6.827213882512424e-07,
+          "mode_32_flux_fraction": 0.0025948721388511613,
+          "torque": -0.009136158317082817
+        }
+      },
+      "sampled_public_torque": -0.00918399278988602,
+      "state": {
+        "phi": 43.06643352044664,
+        "pphi": 2.3603001428255075,
+        "pr_star": -0.05259333483170162,
+        "r": 3.746590195031398
+      },
+      "target_Momega": 0.12
+    }
+  ],
+  "prior_sha256": "4385081fde4f37c2a220cf4c716a3ae98c8d05e8427df78a7615e2dca98e9156",
+  "process": {
+    "argv": [
+      "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw/dev/native_rom/diagnose_mode_32_flux_placement.py",
+      "--json-out",
+      "dev/native_rom/evidence/2026-09-24/mode_32_flux_placement.json"
+    ],
+    "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+    "host": "client-3792.default.vpn.port.ac.uk",
+    "pid": 74426
+  },
+  "release_qualified": false,
+  "row": {
+    "chi1": 0.8,
+    "chi2": 0.8,
+    "mass1": 30.0,
+    "mass2": 20.0,
+    "omega_start": 0.04
+  },
+  "schema": "diffgw.seobnrv4.mode-32-flux-placement.v1",
+  "scope": {
+    "description": "Scalar CPU float64 numerical stability evidence only; no training or promotion.",
+    "known_limitations": [
+      "Convergence cannot establish correctness of the equations or published model fidelity.",
+      "The adaptive prototype uses a diagnostic QNM spline with independently generated values and black-box-inferred knot metadata; this is not wholly literature-specified provenance.",
+      "Changing dt also changes the adaptive initial step and coarse/fine restart sampling; the grid check measures the complete generator's grid sensitivity.",
+      "No time, phase, amplitude, or coefficient fitting is performed.",
+      "No derivatives, batched execution, accelerators, or JAX are qualified here."
+    ],
+    "physics_validated": false,
+    "production_asset": false,
+    "production_promotion_allowed": false,
+    "training_generator_qualified": false
+  },
+  "script_sha256": "9a96f9082a02017069aaeb5a842c08ab1a850270b8eab461ef98883d0d32012a",
+  "source_sha256": {
+    "src/torchwave/approximants/eob/factorized_modes.py": "d4b10cbcbbecc4de84329a13cdca43d90d4fa5aa168248fc2e874211d29f8315",
+    "src/torchwave/approximants/eob/seobnrv4_flux.py": "feb93758786122dee4a52efaaed786d97b17be925150068c4d40005bbaaeae60"
+  },
+  "status": "diagnostic_complete"
+}

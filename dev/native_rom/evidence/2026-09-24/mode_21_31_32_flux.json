@@ -1,0 +1,158 @@
+{
+  "errors": [],
+  "historical_source": {
+    "local_git_revision": "53acc0c2cd7ea2d3c83fc71a7bd88035c2861d6c",
+    "path": "lalsimulation/lib/LALSimIMRSpinEOBFactorizedWaveform.c",
+    "rho21_lines": [
+      1546,
+      1550,
+      1560,
+      1573,
+      1592
+    ],
+    "rho31_lines": [
+      1744,
+      1745,
+      1746,
+      1747
+    ],
+    "rho32_lines": [
+      1718,
+      1725
+    ]
+  },
+  "plan_sha256": "e0e11d407d28c86b6f7871be1ed834b6aa65a24d6e03bb6307e3afc8408197fa",
+  "points": [
+    {
+      "actual_Momega": 0.04499998323798593,
+      "choices": {
+        "rho_hybrid,lal_v4_rho": {
+          "relative_to_sampled": 3.533468193595013e-07,
+          "torque": -0.0009104497503195146
+        },
+        "rho_hybrid,taylor_f": {
+          "relative_to_sampled": 3.6222315302758545e-07,
+          "torque": -0.0009104497584009674
+        },
+        "taylor_f,lal_v4_rho": {
+          "relative_to_sampled": -2.9401116029559304e-06,
+          "torque": -0.0009104467517921757
+        },
+        "taylor_f,taylor_f": {
+          "relative_to_sampled": -2.931235269176824e-06,
+          "torque": -0.0009104467598736287
+        }
+      },
+      "sampled_public_torque": -0.0009104494286151047,
+      "target_Momega": 0.045
+    },
+    {
+      "actual_Momega": 0.059996821063625326,
+      "choices": {
+        "rho_hybrid,lal_v4_rho": {
+          "relative_to_sampled": 8.994527234129635e-08,
+          "torque": -0.001767620403485218
+        },
+        "rho_hybrid,taylor_f": {
+          "relative_to_sampled": 1.0715711695752361e-07,
+          "torque": -0.001767620433909223
+        },
+        "taylor_f,lal_v4_rho": {
+          "relative_to_sampled": -6.553687641019934e-06,
+          "torque": -0.0017676086600651834
+        },
+        "taylor_f,taylor_f": {
+          "relative_to_sampled": -6.536475796514729e-06,
+          "torque": -0.0017676086904891881
+        }
+      },
+      "sampled_public_torque": -0.0017676202444961338,
+      "target_Momega": 0.06
+    },
+    {
+      "actual_Momega": 0.08999208613909104,
+      "choices": {
+        "rho_hybrid,lal_v4_rho": {
+          "relative_to_sampled": -7.502913270340805e-06,
+          "torque": -0.0045803161987640105
+        },
+        "rho_hybrid,taylor_f": {
+          "relative_to_sampled": -7.459710268276076e-06,
+          "torque": -0.004580316396648906
+        },
+        "taylor_f,lal_v4_rho": {
+          "relative_to_sampled": -2.621318365403358e-05,
+          "torque": -0.004580230499166492
+        },
+        "taylor_f,taylor_f": {
+          "relative_to_sampled": -2.616998065196885e-05,
+          "torque": -0.004580230697051387
+        }
+      },
+      "sampled_public_torque": -0.004580350564737046,
+      "target_Momega": 0.09
+    },
+    {
+      "actual_Momega": 0.11999187781818439,
+      "choices": {
+        "rho_hybrid,lal_v4_rho": {
+          "relative_to_sampled": -1.872702040073282e-05,
+          "torque": -0.009183820801065683
+        },
+        "rho_hybrid,taylor_f": {
+          "relative_to_sampled": -1.8645511312254115e-05,
+          "torque": -0.009183821549644564
+        },
+        "taylor_f,lal_v4_rho": {
+          "relative_to_sampled": -5.9206946972811814e-05,
+          "torque": -0.00918344903371191
+        },
+        "taylor_f,taylor_f": {
+          "relative_to_sampled": -5.912543788433311e-05,
+          "torque": -0.009183449782290791
+        }
+      },
+      "sampled_public_torque": -0.00918399278988602,
+      "target_Momega": 0.12
+    }
+  ],
+  "prior_sha256": "e4ae191150adc9131c38b38ebbe415102a6c8ca82c80fa2730f954e7d238b762",
+  "process": {
+    "argv": [
+      "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw/dev/native_rom/diagnose_mode_21_31_32_flux.py",
+      "--json-out",
+      "dev/native_rom/evidence/2026-09-24/mode_21_31_32_flux.json"
+    ],
+    "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+    "host": "client-3792.default.vpn.port.ac.uk",
+    "pid": 5733
+  },
+  "release_qualified": false,
+  "row": {
+    "chi1": 0.8,
+    "chi2": 0.8,
+    "mass1": 30.0,
+    "mass2": 20.0,
+    "omega_start": 0.04
+  },
+  "schema": "diffgw.seobnrv4.mode-21-31-32-flux.v1",
+  "scope": {
+    "description": "Scalar CPU float64 numerical stability evidence only; no training or promotion.",
+    "known_limitations": [
+      "Convergence cannot establish correctness of the equations or published model fidelity.",
+      "The adaptive prototype uses a diagnostic QNM spline with independently generated values and black-box-inferred knot metadata; this is not wholly literature-specified provenance.",
+      "Changing dt also changes the adaptive initial step and coarse/fine restart sampling; the grid check measures the complete generator's grid sensitivity.",
+      "No time, phase, amplitude, or coefficient fitting is performed.",
+      "No derivatives, batched execution, accelerators, or JAX are qualified here."
+    ],
+    "physics_validated": false,
+    "production_asset": false,
+    "production_promotion_allowed": false,
+    "training_generator_qualified": false
+  },
+  "script_sha256": "8727714ac017e96d33816d048c835fa2f5003770f947c8f362532be8619d5677",
+  "source_sha256": {
+    "src/torchwave/approximants/eob/seobnrv4_flux.py": "feb93758786122dee4a52efaaed786d97b17be925150068c4d40005bbaaeae60"
+  },
+  "status": "diagnostic_complete"
+}

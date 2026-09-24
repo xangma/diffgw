@@ -1,0 +1,12 @@
+{
+  "schema": "diffgw.seobnrv4.strong-spin-start-alignment-plan.v1",
+  "purpose": "Correct the frequency-mismatched initial-state comparison in strong_spin_inspiral_field.json without altering its frozen same-state results.",
+  "prior_field": "dev/native_rom/evidence/2026-09-24/strong_spin_inspiral_field.json",
+  "prior_field_sha256": "4385081fde4f37c2a220cf4c716a3ae98c8d05e8427df78a7615e2dca98e9156",
+  "reference_output_steps_M": [0.125, 0.0625],
+  "native_start_Momega": 0.03162277660168379,
+  "requested_Momega": 0.04,
+  "comparisons": ["native warm-start initial against public first state", "native warm-start crossing against public sampled requested-frequency state"],
+  "release_qualified": false,
+  "interpretation": "The prior native_minus_public_initial field compares different frequencies and must not be used as initial-condition evidence. Public sampled crossings have finite grid and frequency error."
+}

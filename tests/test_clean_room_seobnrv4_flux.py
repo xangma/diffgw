@@ -75,7 +75,8 @@ def test_all_tail_moduli_match_independent_complex_gamma_energy_ratio():
     b = m.amplitudes(state, **dict(args, hreal_over_M=1.1))
     for (ell, order), amp in a.items():
         khat = order*args["omega"].numpy()
-        tail = lambda k: np.abs(gamma(ell+1-2j*k)*np.exp(math.pi*k))
+        def tail(k):
+            return np.abs(gamma(ell+1-2j*k)*np.exp(math.pi*k))
         np.testing.assert_allclose((b[ell,order]/amp).numpy(),
                                    tail(1.1*khat)/tail(.995*khat), rtol=2e-14)
 
@@ -122,8 +123,13 @@ def test_pan_f26_removes_unphysical_1pn_spin_square_in_current32():
     assert abs(float(second/(zero_amp*v*v))) < 2e-7
 
 
-def test_equal_mass_regularization_exchange_continuity_and_test_mass_endpoint():
-    m = model()
+@pytest.mark.parametrize("flux_choices", [
+    {},
+    dict(mode_21_higher_spin="rho_hybrid", mode_31_higher_spin="lal_v4_rho",
+         mode_32_spin_square="lal_v4_zero", mode_33_higher_spin="lal_v4_rho"),
+])
+def test_equal_mass_regularization_exchange_continuity_and_test_mass_endpoint(flux_choices):
+    m = model(**flux_choices)
     for x1 in (.5, .5-1e-9, .5+1e-9, .8):
         state, args = inputs(x1=x1)
         a = m.amplitudes(state, **args)
@@ -144,13 +150,19 @@ def test_equal_mass_regularization_exchange_continuity_and_test_mass_endpoint():
 
 
 @pytest.mark.parametrize("x1", [.5,.8])
-def test_flux_gradients_include_mass_spins_frequencies_energies_and_momentum(x1):
+@pytest.mark.parametrize("flux_choices", [
+    {},
+    dict(mode_21_higher_spin="rho_hybrid", mode_31_higher_spin="lal_v4_rho",
+         mode_32_spin_square="lal_v4_zero", mode_33_higher_spin="lal_v4_rho"),
+])
+def test_flux_gradients_include_mass_spins_frequencies_energies_and_momentum(x1, flux_choices):
     p = t([.02,.021,.98,.995,x1,.6,-.25,4.], requires_grad=True)
+    flux = model(**flux_choices)
     def f(p):
         state = torch.stack((p[7]*0+12,p[7]*0,p[7]*0-.02,p[7]))
-        return model().energy_flux(state, omega=p[0], omega_zero_radial=p[1],
-                                   heff_over_mu=p[2], hreal_over_M=p[3],
-                                   x1=p[4], x2=1-p[4], chi1=p[5], chi2=p[6])
+        return flux.energy_flux(state, omega=p[0], omega_zero_radial=p[1],
+                                heff_over_mu=p[2], hreal_over_M=p[3],
+                                x1=p[4], x2=1-p[4], chi1=p[5], chi2=p[6])
     assert torch.autograd.gradcheck(f, (p,), atol=1e-9, rtol=3e-5)
     gradient = torch.autograd.grad(f(p), p)[0]
     assert torch.isfinite(gradient).all() and (gradient != 0).all()

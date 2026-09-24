@@ -91,6 +91,24 @@ passes the strong aligned-spin ODE numerical gates at `2.70e-7` complex
 relative L2, while its fitted public-binary difference remains about `0.01985`.
 This opt-in numerical choice needs independent derivative and domain checks;
 the historical-physics and ROM gates remain open.
+The pinned non-HM v4 source also overwrites a `(3,2)` flux spin-square term.
+An explicit source-faithful diagnostic choice reduces the same-state aligned
+torque gap by more than 98% through `M Omega=0.12` and the aligned whole-waveform
+fitted difference to `0.00587`; its refined numerical gate passes. The
+antialigned boundary numerical gate also passes, but its already small fitted
+public difference increases slightly. The remaining physical residual and
+unresolved generator/ROM gates keep this choice and the model unqualified.
+Adding the pinned non-HM v4 `(2,1)` and `(3,1)` source placements further lowers
+the strong aligned-spin fitted difference to `0.00300`, with its numerical gate
+passing. The post-peak comparison worsens, and domain/attachment checks remain
+open, so this combined variant also stays diagnostic.
+The same source-backed choices pass the strong antialigned-spin numerical gate
+and give a fitted difference of `0.0002128`, slightly better than the prior
+`(3,2)`-only result but above an earlier variant. A three-grid public-dynamics
+check finds several-ppm differentiation sensitivity in the remaining aligned
+torque residual near `M Omega=0.12`; that sampled derivative is not direct
+compiled-flux parity. The pinned `(2,2)` coefficient assignments match the
+native formula, but the full mode, NQC attachment, and generator remain open.
 
 ## Numerical evidence
 

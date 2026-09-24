@@ -1,0 +1,17 @@
+{
+  "schema": "diffgw.seobnrv4.public-torque-sampling-plan.v1",
+  "purpose": "Bound the same-state strong-spin torque comparison's public five-point differentiation sensitivity without fitting or modifying the native model.",
+  "prior": "dev/native_rom/evidence/2026-09-24/strong_spin_inspiral_field.json",
+  "prior_sha256": "4385081fde4f37c2a220cf4c716a3ae98c8d05e8427df78a7615e2dca98e9156",
+  "steps_M": [0.125, 0.0625, 0.03125],
+  "targets_Momega": [0.045, 0.06, 0.09, 0.12],
+  "native_choice": {
+    "spin_truncation": "generic-leading-ell8",
+    "retain_pan_cubic_spin": true,
+    "mode_21_higher_spin": "rho_hybrid",
+    "mode_31_higher_spin": "lal_v4_rho",
+    "mode_32_spin_square": "lal_v4_zero",
+    "mode_33_higher_spin": "lal_v4_rho"
+  },
+  "release_qualified": false
+}

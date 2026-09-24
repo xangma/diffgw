@@ -1,0 +1,16 @@
+{
+  "schema": "diffgw.seobnrv4.strong-spin-inspiral-field-plan.v1",
+  "purpose": "Separate initial-state and same-state vector-field errors in the strong aligned-spin inspiral before considering a physical-model change.",
+  "campaign": "dev/native_rom/evidence/2026-09-24/combined_domain_numerics.json",
+  "campaign_sha256": "3c414c018917f7dad38644ad86ba58781bc53180b931cb8f869c34f5e83b3025",
+  "waveform": "dev/native_rom/evidence/2026-09-24/strong_spin_nqc_window.json",
+  "waveform_sha256": "901c28cf3f15d8dff24e3a927664539c42e99e96751921aa65c26106025e3754",
+  "row_name": "strong_aligned_spin",
+  "reference_output_steps_M": [0.125, 0.0625],
+  "frequency_targets_Momega": [0.045, 0.06, 0.09, 0.12],
+  "derivative": "Five-point centered derivative of public low-sampling dynamics; compare the combined native vector field at identical public states on both output grids.",
+  "continuation": "From the first target to the second on each public grid: DOP853 native vector field initialized at the sampled public state, rtol=1e-12, atol=1e-13, first_step=0.125 M.",
+  "native_initial_state": "Native frequency warm start at 0.03162277660168379 Momega, as in the waveform campaign, compared with the first public dynamics state at 0.04 Momega. Public state remains diagnostic data only.",
+  "release_qualified": false,
+  "interpretation": "Sampling derivatives are uncertain, and the public binary is a diagnostic oracle. Same-state agreement does not establish independent source-formula parity or whole-waveform validity."
+}

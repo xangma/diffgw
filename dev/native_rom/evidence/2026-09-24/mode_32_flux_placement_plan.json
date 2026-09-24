@@ -1,0 +1,24 @@
+{
+  "schema": "diffgw.seobnrv4.mode-32-flux-placement-plan.v1",
+  "purpose": "Measure the pinned v4 rho32v2 overwrite against the current Pan F26 spin-square term at identical public strong-spin states.",
+  "prior_field": "dev/native_rom/evidence/2026-09-24/strong_spin_inspiral_field.json",
+  "prior_field_sha256": "4385081fde4f37c2a220cf4c716a3ae98c8d05e8427df78a7615e2dca98e9156",
+  "grid_step_M": 0.0625,
+  "frequency_targets_Momega": [0.045, 0.06, 0.09, 0.12],
+  "historical_source": {
+    "local_git_revision": "53acc0c2cd7ea2d3c83fc71a7bd88035c2861d6c",
+    "path": "lalsimulation/lib/LALSimIMRSpinEOBFactorizedWaveform.c",
+    "coefficient_lines": [1718, 1720, 1724, 1725],
+    "assembly_lines": [1070, 1076]
+  },
+  "baseline": {
+    "spin_truncation": "generic-leading-ell8",
+    "retain_pan_cubic_spin": true,
+    "mode_21_higher_spin": "taylor_f",
+    "mode_31_higher_spin": "taylor_f",
+    "mode_32_spin_square": "pan_f26",
+    "mode_33_higher_spin": "lal_v4_rho"
+  },
+  "release_qualified": false,
+  "interpretation": "A source-correct rho32 term is not by itself a validation of total flux or whole-waveform parity."
+}

@@ -1,0 +1,13 @@
+{
+  "schema": "diffgw.seobnrv4.source-flux-whole-waveform-plan.v1",
+  "purpose": "Starting from the frozen source-backed rho32 waveform, apply only the pinned non-HM v4 rho21 and rho31 placements; replay baseline, check three ODE tolerances, and compare the unchanged public binary with no parameter fitting.",
+  "prior_waveform": "dev/native_rom/evidence/2026-09-24/mode_32_whole_waveform.json",
+  "prior_waveform_sha256": "681b671f637e0c7282ff8a3770c4a12c5be53fb9b9472d4cec8ff752681c58e6",
+  "same_state_flux": "dev/native_rom/evidence/2026-09-24/mode_21_31_32_flux.json",
+  "same_state_flux_sha256": "3c41b59a189e9328dcf01e0c7f31d5d9cb1c6ce31d45cb8310f3c926cebb1d89",
+  "row_name": "strong_aligned_spin",
+  "levels": ["ode_0", "ode_1", "ode_2"],
+  "baseline": {"mode_21_higher_spin": "taylor_f", "mode_31_higher_spin": "taylor_f", "mode_32_spin_square": "lal_v4_zero"},
+  "candidate": {"mode_21_higher_spin": "rho_hybrid", "mode_31_higher_spin": "lal_v4_rho", "mode_32_spin_square": "lal_v4_zero"},
+  "release_qualified": false
+}
