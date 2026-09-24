@@ -1,0 +1,163 @@
+{
+  "array_asset": "dev/native_rom/evidence/2026-09-24/source_nqc_inputs.npz",
+  "array_asset_sha256": "2e833d066734a4b91bec5c71f267011bde5c6ffb2ace5a3b49f2f0b40b1f04d7",
+  "errors": [],
+  "input_sha256": {
+    "adapter": "0e2006c7a2898b09d56b5d464135b113f4546f43b607ddacbf327761a24a6451",
+    "source_flux_plan": "1167199c8f954f97a5905a1e3b2f67d1555e984e5f1da0a0fc42a77a925f96ea",
+    "source_wheel_mode": "c103f7d884073eb00029a231dd271d49c4a4571455030b11b93c22e298a479da"
+  },
+  "instrumentation_sha256": "401d3d514313ee8dcd8301a60b4f520e20a654756a4697f067ff2a3a69839837",
+  "instrumented_source_sha256": "d39690c4a8d97add788a4f21e8f801bb6582442751334e85880ba746c2ee78b6",
+  "plan_sha256": "b3661a4ff52e92a913824007905698cbf2d19e3bc4e44f5568808ad09624a2bb",
+  "process": {
+    "argv": [
+      "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw/dev/native_rom/diagnose_source_nqc_inputs.py",
+      "--source-root",
+      "/Users/xangma/repos/lalsuite-git",
+      "--headers",
+      "/tmp/diffgw-lalsuite-pinned-53acc0c/merged-include",
+      "--gsl-include",
+      "/usr/local/include",
+      "--json-out",
+      "dev/native_rom/evidence/2026-09-24/source_nqc_inputs.json"
+    ],
+    "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+    "host": "client-3792.default.vpn.port.ac.uk",
+    "pid": 87379
+  },
+  "release_qualified": false,
+  "rows": [
+    {
+      "amplitude_phase_r_pr_omega_sha256": "6bed65dab2afd2fbf4746ecc937d0c03551725a6a251789be715aeb1d66c2461",
+      "internal_step_M": 0.015625,
+      "match_time_M": 137.61454396452547,
+      "max_coefficient_replay_error": 0.0,
+      "name": "strong_aligned_spin",
+      "nqc_targets": [
+        0.3805863908938106,
+        0.0,
+        -0.0005396186331607708,
+        0.439747328207188,
+        0.01116108034847805
+      ],
+      "row": {
+        "chi1": 0.8,
+        "chi2": 0.8,
+        "mass1": 30.0,
+        "mass2": 20.0,
+        "omega_start": 0.04
+      },
+      "sample_rows": [
+        {
+          "amplitude_phase_r_pr_omega": [
+            0.21930180816626563,
+            0.41365947418674043,
+            6.039740967986572,
+            -0.014332425004086073,
+            0.06426487201115569
+          ],
+          "index": 0,
+          "time_from_peak_M": -149.70311737060547
+        },
+        {
+          "amplitude_phase_r_pr_omega": [
+            0.3714401480499015,
+            -23.21983679716267,
+            3.321754861933308,
+            -0.0747598594594889,
+            0.13797424820220233
+          ],
+          "index": 8781,
+          "time_from_peak_M": -12.499992370605469
+        },
+        {
+          "amplitude_phase_r_pr_omega": [
+            0.4156601081246774,
+            -26.13842373304844,
+            2.7416273105173747,
+            -0.1463901152106663,
+            0.16551001562124
+          ],
+          "index": 9421,
+          "time_from_peak_M": -2.4999923706054688
+        },
+        {
+          "amplitude_phase_r_pr_omega": [
+            0.4047146648968361,
+            -26.955334934476618,
+            2.541701584463229,
+            -0.20152216270725623,
+            0.17038479306205886
+          ],
+          "index": 9580,
+          "time_from_peak_M": -0.01561737060546875
+        },
+        {
+          "amplitude_phase_r_pr_omega": [
+            0.4044822757000378,
+            -26.960671432806052,
+            2.540351753349117,
+            -0.20200834315161725,
+            0.1703841688714483
+          ],
+          "index": 9581,
+          "time_from_peak_M": 7.62939453125e-06
+        },
+        {
+          "amplitude_phase_r_pr_omega": [
+            0.4042465705185203,
+            -26.966011061828393,
+            2.5390008354800933,
+            -0.20249693283280693,
+            0.17038285575780324
+          ],
+          "index": 9582,
+          "time_from_peak_M": 0.01563262939453125
+        },
+        {
+          "amplitude_phase_r_pr_omega": [
+            0.3735039207291103,
+            -27.38226778442291,
+            2.4334504245114177,
+            -0.248211587708717,
+            0.16746659458793017
+          ],
+          "index": 9658,
+          "time_from_peak_M": 1.2031326293945312
+        }
+      ],
+      "samples": 9659,
+      "source_nqc_coefficients": [
+        172.36472611312226,
+        -1478.7199108839393,
+        1657.1259916551278,
+        0.0,
+        0.0,
+        0.0,
+        43.04742202075585,
+        -1096.0829923448962,
+        0.0,
+        0.0
+      ],
+      "time_peak_M": 149.70311737060547
+    }
+  ],
+  "schema": "diffgw.seobnrv4.source-nqc-inputs.v1",
+  "scope": {
+    "description": "Scalar CPU float64 numerical stability evidence only; no training or promotion.",
+    "known_limitations": [
+      "Convergence cannot establish correctness of the equations or published model fidelity.",
+      "The adaptive prototype uses a diagnostic QNM spline with independently generated values and black-box-inferred knot metadata; this is not wholly literature-specified provenance.",
+      "Changing dt also changes the adaptive initial step and coarse/fine restart sampling; the grid check measures the complete generator's grid sensitivity.",
+      "No time, phase, amplitude, or coefficient fitting is performed.",
+      "No derivatives, batched execution, accelerators, or JAX are qualified here."
+    ],
+    "physics_validated": false,
+    "production_asset": false,
+    "production_promotion_allowed": false,
+    "training_generator_qualified": false
+  },
+  "script_sha256": "ca89eb0ffec99caa18a69a3f64d68ba0db95d832396571d10dfacaf7c7bf0fc2",
+  "status": "diagnostic_complete"
+}

@@ -304,6 +304,47 @@ floating-point behavior, and attachment remain unresolved. Reproduce with
 dev.native_rom.diagnose_native_source_nqc --json-out
 /tmp/native-source-nqc.json`.
 
+The [source-input capture plan](source_nqc_inputs_plan.json) and
+[result](source_nqc_inputs.json) intercept the pinned full generator's V4 NQC
+call in a private, hash-verified source snapshot. Its [array asset](source_nqc_inputs.npz)
+contains the exact pre-fit amplitude, phase, radius, radial momentum, and
+orbital-frequency samples on the strong aligned-spin row. Instrumentation
+leaves all ten coefficients bitwise unchanged from the uninstrumented source.
+The [native-input plan](native_source_nqc_inputs_plan.json) and
+[result](native_source_nqc_inputs.json) capture the same five fields from the
+bitwise-replayed native source-placement waveform in a separate
+[array asset](native_source_nqc_inputs.npz). At their respective NQC matches,
+native minus source relative amplitude, radius, radial momentum, and orbital
+frequency are `-54.1`, `+67.7`, `-229.7`, and `-75.2 ppm`. The pinned-GSL
+reconstruction on those inputs yields a five-coefficient source/native gap of
+`2.742` (L2), near the actual `2.768`; the reconstructed source coefficients
+are within `1.30e-5` absolute of its captured C fit. This establishes that
+small upstream input differences are materially amplified by this fit, but
+does not yet close every C/native matching-method difference.
+
+The [crossed-input plan](mixed_nqc_inputs_plan.json) and
+[result](mixed_nqc_inputs.json) index-align the two high-rate grids and fit
+mode samples against either trajectory's orbital scalars. It finds the
+amplitude-coefficient difference mainly in pre-NQC mode samples and the
+phase-coefficient difference mainly in orbital-state samples; the crossed
+fits are counterfactual, not self-consistent waveforms. Aligning the match
+by orbital frequency requires a `0.004768 M` shift and makes the amplitude
+and radius values agree within `0.4 ppm`, yet the five-coefficient gap grows
+from `2.742` to `3.481` (L2). A simple time offset does not explain the
+derivative and shape differences.
+
+The [source/wheel grid plan](source_wheel_nqc_grid_plan.json) and
+[result](source_wheel_nqc_grid.json) replay both five-coefficient fits at
+requested output steps `0.125`, `0.0625`, `0.03125`, and `0.015625 M`.
+Their L2 gaps are `8.139`, `1.800`, `3.284`, and `1.318`, respectively.
+The [finer-grid plan](source_wheel_nqc_fine_grid_plan.json) and
+[result](source_wheel_nqc_fine_grid.json) add `0.0078125` and `0.00390625 M`,
+where the gaps are `19.582` and `6.518`. Both builds' own coefficients also
+move strongly and non-monotonically with output step; these six grids show no
+converged NQC fit. Build flags alone cannot be inferred as the sole cause of
+the original `0.125 M` discrepancy. None of these diagnostics qualifies the
+physical NQC targets, complete waveform, model domain, or ROM holdouts.
+
 The [public-mode boundary plan](public_nqc_mode_boundary_plan.json) and
 [result](public_nqc_mode_boundary.json) use both public v4 modes API paths at
 `0.015625 M`: the coefficient-only call and the call returning modes plus low-

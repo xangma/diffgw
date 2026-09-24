@@ -221,6 +221,22 @@ their L2 distances are `2.77` (native/source), `5.45` (native/wheel), and
 `8.14` (source/wheel). Both the compiled source and wheel use the wheel's
 hash-pinned GSL libraries. The native match-input and source/wheel build
 differences still require direct isolation before this can be qualified.
+The [instrumented pinned-source input capture](evidence/2026-09-24/source_nqc_inputs.json)
+reproduces its uninstrumented coefficients bitwise. A
+[native/source input replay](evidence/2026-09-24/native_source_nqc_inputs.json)
+finds `54` to `230 ppm` differences among amplitude and orbital scalars at
+matching; a pinned-GSL fit on the captured inputs produces a five-coefficient
+gap of `2.742` (L2), close to the actual `2.768`. The
+[crossed-input diagnostic](evidence/2026-09-24/mixed_nqc_inputs.json)
+attributes most amplitude-coefficient drift to pre-NQC mode samples and most
+phase-coefficient drift to orbital-state samples on this row. A `0.004768 M`
+equal-frequency shift does not remove the curvature or coefficient gap.
+The [source/wheel output-grid controls](evidence/2026-09-24/source_wheel_nqc_grid.json)
+and [finer continuation](evidence/2026-09-24/source_wheel_nqc_fine_grid.json)
+find a non-monotonic five-coefficient gap across six steps from `0.125` to
+`0.00390625 M`: `8.139`, `1.800`, `3.284`, `1.318`, `19.582`, and `6.518`
+(L2). Neither build's NQC coefficients have converged on these grids, so
+the source/wheel build-numerics cause and the native attachment remain open.
 The aligned-spin trajectory replay finds a native-minus-public orbital phase
 span of at most `1.27e-4 rad` from `M Omega=0.0425` through `0.13`, compared
 with `3.36e-5 rad` maximum public-grid sensitivity. Over the later sampled
