@@ -1,0 +1,19 @@
+{
+  "schema": "diffgw.seobnrv4.source-nqc-high-rate-domain-plan.v1",
+  "purpose": "Repeat fixed-coarse source high-rate derivative sensitivity on two additional spin rows; diagnostic only.",
+  "release_qualified": false,
+  "rows": ["nonspinning", "mild_mixed_spin"],
+  "output_step_M": 0.125,
+  "resample_factors": [8, 16, 32],
+  "polynomial_degree": 4,
+  "polynomial_half_width_M": 2.0,
+  "capacity": 50000,
+  "source_flux_plan": "dev/native_rom/evidence/2026-09-24/source_flux_initial_plan.json",
+  "source_flux_plan_sha256": "1167199c8f954f97a5905a1e3b2f67d1555e984e5f1da0a0fc42a77a925f96ea",
+  "source_wheel_mode": "dev/native_rom/evidence/2026-09-24/source_wheel_mode.json",
+  "source_wheel_mode_sha256": "c103f7d884073eb00029a231dd271d49c4a4571455030b11b93c22e298a479da",
+  "high_rate_result": "dev/native_rom/evidence/2026-09-24/source_nqc_high_rate.json",
+  "high_rate_result_sha256": "82ab84eaac2b6edd28358796f42ebd0f555ae087274e7eaafffce8c1d7072f98",
+  "adapter": "dev/native_rom/reference/full_v4_source_nqc_inputs_adapter.c",
+  "adapter_sha256": "0e2006c7a2898b09d56b5d464135b113f4546f43b607ddacbf327761a24a6451"
+}

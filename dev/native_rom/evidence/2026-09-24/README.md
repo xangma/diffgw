@@ -389,6 +389,19 @@ identifies derivative sensitivity; it has neither an independent physical
 accuracy bound nor domain and whole-waveform validation, and cannot be
 promoted as the NQC prescription.
 
+The [additional-spin high-rate plan](source_nqc_high_rate_domain_plan.json)
+and [result](source_nqc_high_rate_domain.json) repeat factors 8, 16, and 32
+with the same fixed `0.125 M` coarse output on the nonspinning and mild
+mixed-spin source rows. Factor 8 reproduces the previously captured source
+coefficients on each row, and every compiled-source fit replays against pinned
+GSL to better than `2.4e-6` maximum absolute coefficient error. At each row's
+factor-32 match time, consecutive degree-four `±2 M` polynomial coefficient
+distances decrease from `0.023` to `0.011` (nonspinning) and from `0.026` to
+`0.012` (mild mixed spin). The corresponding natural-cubic distances increase
+from `0.040` to `2.225` and from `0.202` to `4.298`. This sampled-domain
+result supports a source derivative-instability hypothesis but is not an
+accuracy proof for a replacement estimator or a whole-waveform validation.
+
 The [public-mode boundary plan](public_nqc_mode_boundary_plan.json) and
 [result](public_nqc_mode_boundary.json) use both public v4 modes API paths at
 `0.015625 M`: the coefficient-only call and the call returning modes plus low-

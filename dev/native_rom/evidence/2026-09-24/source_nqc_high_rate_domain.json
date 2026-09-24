@@ -1,0 +1,389 @@
+{
+  "comparisons": {
+    "mild_mixed_spin": [
+      {
+        "common_match_gsl_coefficient_l2": 0.2018233146345361,
+        "common_match_polynomial_2M_coefficient_l2": 0.025886161725102257,
+        "first_factor": 8,
+        "peak_shift_M": -0.020172119140625,
+        "second_factor": 16,
+        "source_gsl_coefficient_l2": 1.181472882350149,
+        "source_polynomial_2M_coefficient_l2": 0.7973439480960266
+      },
+      {
+        "common_match_gsl_coefficient_l2": 4.298338424473292,
+        "common_match_polynomial_2M_coefficient_l2": 0.012345733219059966,
+        "first_factor": 16,
+        "peak_shift_M": 0.004547119140625,
+        "second_factor": 32,
+        "source_gsl_coefficient_l2": 4.634576746937718,
+        "source_polynomial_2M_coefficient_l2": 0.18138831695225194
+      }
+    ],
+    "nonspinning": [
+      {
+        "common_match_gsl_coefficient_l2": 0.04046145762813489,
+        "common_match_polynomial_2M_coefficient_l2": 0.022965450249636355,
+        "first_factor": 8,
+        "peak_shift_M": -0.0078125,
+        "second_factor": 16,
+        "source_gsl_coefficient_l2": 0.5300904005967456,
+        "source_polynomial_2M_coefficient_l2": 0.194535026784442
+      },
+      {
+        "common_match_gsl_coefficient_l2": 2.2251398816569723,
+        "common_match_polynomial_2M_coefficient_l2": 0.011309010719486088,
+        "first_factor": 16,
+        "peak_shift_M": -0.009796142578125,
+        "second_factor": 32,
+        "source_gsl_coefficient_l2": 2.199554432450971,
+        "source_polynomial_2M_coefficient_l2": 0.2733246211634294
+      }
+    ]
+  },
+  "errors": [],
+  "input_sha256": {
+    "adapter": "0e2006c7a2898b09d56b5d464135b113f4546f43b607ddacbf327761a24a6451",
+    "high_rate_result": "82ab84eaac2b6edd28358796f42ebd0f555ae087274e7eaafffce8c1d7072f98",
+    "source_flux_plan": "1167199c8f954f97a5905a1e3b2f67d1555e984e5f1da0a0fc42a77a925f96ea",
+    "source_wheel_mode": "c103f7d884073eb00029a231dd271d49c4a4571455030b11b93c22e298a479da"
+  },
+  "instrumentation_sha256": "401d3d514313ee8dcd8301a60b4f520e20a654756a4697f067ff2a3a69839837",
+  "plan_sha256": "ca5294564d25d9e53188fa60e4635359ebccce7160c26cee85786b5d8926558e",
+  "process": {
+    "argv": [
+      "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw/dev/native_rom/diagnose_source_nqc_high_rate_domain.py",
+      "--source-root",
+      "/Users/xangma/repos/lalsuite-git",
+      "--headers",
+      "/tmp/diffgw-lalsuite-pinned-53acc0c/merged-include",
+      "--gsl-include",
+      "/usr/local/include",
+      "--json-out",
+      "dev/native_rom/evidence/2026-09-24/source_nqc_high_rate_domain.json"
+    ],
+    "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+    "host": "client-3792.default.vpn.port.ac.uk",
+    "pid": 47432
+  },
+  "release_qualified": false,
+  "rows": [
+    {
+      "active_nqc_coefficients": [
+        4.093123548629793,
+        -46.878868511491845,
+        56.65849615102684,
+        4.123128844417303,
+        -21.87102227925578
+      ],
+      "common_match_counterfactual": {
+        "gsl_coefficients": [
+          4.132450774417453,
+          -47.18826715727763,
+          56.99121593946382,
+          4.141348676500281,
+          -21.996755888372366
+        ],
+        "match_time_M": 145.43813594402735,
+        "polynomial_2M_coefficients": [
+          4.168996978808586,
+          -47.523578967599775,
+          57.381673363763696,
+          4.1531973430546145,
+          -22.138738857937895
+        ]
+      },
+      "full_fit_replay_max_abs_error": 5.539984471170101e-08,
+      "gsl_amplitude_second_derivative": -0.0008453270114850426,
+      "input_array_sha256": "092b14e2cf8625206fffb86877aeb0bd252e756c6adfa679a97289eb3e35960a",
+      "internal_step_M": 0.015625,
+      "match_time_M": 145.45574458660548,
+      "name": "nonspinning",
+      "polynomial_2M_amplitude_second_derivative": -0.0008406875579475644,
+      "polynomial_2M_coefficients": [
+        4.127249125390144,
+        -47.19325362784079,
+        57.02526129774171,
+        4.135787418442489,
+        -22.020816282682787
+      ],
+      "resample_factor": 8,
+      "samples": 9657,
+      "targets": [
+        0.376166617119648,
+        0.0,
+        -0.0009690385028950313,
+        0.3548233340585997,
+        0.011022322399002799
+      ],
+      "time_peak_M": 149.82811737060547
+    },
+    {
+      "active_nqc_coefficients": [
+        8.801528013961178,
+        -87.39945081748289,
+        102.43653307147702,
+        5.56845857615409,
+        -35.09481005232721
+      ],
+      "common_match_counterfactual": {
+        "gsl_coefficients": [
+          8.852921889058775,
+          -87.81726549329098,
+          102.89342755106375,
+          5.587507118572468,
+          -35.253706188066275
+        ],
+        "match_time_M": 144.7658236506888,
+        "polynomial_2M_coefficients": [
+          8.869306655426941,
+          -87.98135256517509,
+          103.09235329346556,
+          5.595115982044064,
+          -35.37668599103788
+        ]
+      },
+      "full_fit_replay_max_abs_error": 8.455910460725136e-08,
+      "gsl_amplitude_second_derivative": -0.0005645580485108028,
+      "input_array_sha256": "7bf29ea2a48ff61090336b1648542f663e8557b54ba972e79182b829165da4b0",
+      "internal_step_M": 0.015625,
+      "match_time_M": 144.7814486506888,
+      "name": "mild_mixed_spin",
+      "polynomial_2M_amplitude_second_derivative": -0.0005613380958494655,
+      "polynomial_2M_coefficients": [
+        8.816900502655866,
+        -87.55458161584465,
+        102.62519692150644,
+        5.576299452597571,
+        -35.22051853791457
+      ],
+      "resample_factor": 8,
+      "samples": 9638,
+      "targets": [
+        0.3760743549621802,
+        0.0,
+        -0.0009118323685108474,
+        0.3627689022266932,
+        0.01106508598492054
+      ],
+      "time_peak_M": 149.64061737060547
+    },
+    {
+      "active_nqc_coefficients": [
+        4.134932134184864,
+        -47.22684504494489,
+        57.04463217681096,
+        4.135279998866574,
+        -21.96542315945243
+      ],
+      "common_match_counterfactual": {
+        "gsl_coefficients": [
+          4.135423295905624,
+          -47.213184855979996,
+          57.0189702599029,
+          4.1430099076303355,
+          -22.01206405511013
+        ],
+        "match_time_M": 145.43813594402735,
+        "polynomial_2M_coefficients": [
+          4.167328700672398,
+          -47.5090245947178,
+          57.36512952867433,
+          4.152560909272111,
+          -22.132518290775838
+        ]
+      },
+      "full_fit_replay_max_abs_error": 2.5555636540275373e-07,
+      "gsl_amplitude_second_derivative": -0.0008420710835021166,
+      "input_array_sha256": "36394352a49b9835963d0679fc32f4320655af19e8f35e3cc3dbd75efe7801e4",
+      "internal_step_M": 0.0078125,
+      "match_time_M": 145.44793208660548,
+      "name": "nonspinning",
+      "polynomial_2M_amplitude_second_derivative": -0.0008361116300308146,
+      "polynomial_2M_coefficients": [
+        4.1437183898868595,
+        -47.32189417925373,
+        57.16302683681167,
+        4.142730959158691,
+        -22.06550064227561
+      ],
+      "resample_factor": 16,
+      "samples": 19308,
+      "targets": [
+        0.376166617119648,
+        0.0,
+        -0.0009690385028950313,
+        0.3548233340585997,
+        0.011022322399002799
+      ],
+      "time_peak_M": 149.82030487060547
+    },
+    {
+      "active_nqc_coefficients": [
+        8.893538109832098,
+        -88.16793391283062,
+        103.28983528524758,
+        5.597745327447165,
+        -35.35531660565038
+      ],
+      "common_match_counterfactual": {
+        "gsl_coefficients": [
+          8.867502439381408,
+          -87.94730553966255,
+          103.04290425201758,
+          5.59052702827111,
+          -35.289163771731985
+        ],
+        "match_time_M": 144.7658236506888,
+        "polynomial_2M_coefficients": [
+          8.867504190213698,
+          -87.96519207723594,
+          103.07373047441865,
+          5.594476290668672,
+          -35.36903978130546
+        ]
+      },
+      "full_fit_replay_max_abs_error": 1.9924596017517615e-07,
+      "gsl_amplitude_second_derivative": -0.0005569407505316616,
+      "input_array_sha256": "55ed44037b649940d737b9e07d5c918d13f167d4d254d3c285c2def49b176f14",
+      "internal_step_M": 0.0078125,
+      "match_time_M": 144.76127653154816,
+      "name": "mild_mixed_spin",
+      "polynomial_2M_amplitude_second_derivative": -0.0005530449033874554,
+      "polynomial_2M_coefficients": [
+        8.881269870091618,
+        -88.07607159948992,
+        103.19433003184623,
+        5.599424154700337,
+        -35.40817488320178
+      ],
+      "resample_factor": 16,
+      "samples": 19280,
+      "targets": [
+        0.3760743549621802,
+        0.0,
+        -0.0009118323685108474,
+        0.3627689022266932,
+        0.01106508598492054
+      ],
+      "time_peak_M": 149.62044525146484
+    },
+    {
+      "active_nqc_coefficients": [
+        4.304165089126259,
+        -48.67900556213107,
+        58.68183900073188,
+        4.152744237164134,
+        -22.106414494964742
+      ],
+      "common_match_counterfactual": {
+        "gsl_coefficients": [
+          4.3041653305995595,
+          -48.6790076598383,
+          58.68184138047932,
+          4.152744237184381,
+          -22.106414495161037
+        ],
+        "match_time_M": 145.43813594402735,
+        "polynomial_2M_coefficients": [
+          4.166507936888179,
+          -47.50186286500703,
+          57.35698814431064,
+          4.152245028314675,
+          -22.129428342932073
+        ]
+      },
+      "full_fit_replay_max_abs_error": 2.3797474426601184e-06,
+      "gsl_amplitude_second_derivative": -0.0008614054588450804,
+      "input_array_sha256": "2a3e32d3b801a5dd83bb5fb35b851dedfdf4ca985e6aa981782f5437176fb61a",
+      "internal_step_M": 0.00390625,
+      "match_time_M": 145.43813594402735,
+      "name": "nonspinning",
+      "polynomial_2M_amplitude_second_derivative": -0.0008300876816790551,
+      "polynomial_2M_coefficients": [
+        4.166507936888179,
+        -47.50186286500703,
+        57.35698814431064,
+        4.152245028314675,
+        -22.129428342932073
+      ],
+      "resample_factor": 32,
+      "samples": 38614,
+      "targets": [
+        0.376166617119648,
+        0.0,
+        -0.0009690385028950313,
+        0.3548233340585997,
+        0.011022322399002799
+      ],
+      "time_peak_M": 149.81050872802734
+    },
+    {
+      "active_nqc_coefficients": [
+        8.55369044158272,
+        -85.1426007003567,
+        99.81557118282957,
+        5.564633394171066,
+        -34.981743740378015
+      ],
+      "common_match_counterfactual": {
+        "gsl_coefficients": [
+          8.5536903590653,
+          -85.14259996277968,
+          99.81557033406675,
+          5.564633388372342,
+          -34.98174367152658
+        ],
+        "match_time_M": 144.7658236506888,
+        "polynomial_2M_coefficients": [
+          8.866643998471769,
+          -87.95747109469173,
+          103.06482808523269,
+          5.5941791087663,
+          -35.365472881091854
+        ]
+      },
+      "full_fit_replay_max_abs_error": 8.487628235798184e-07,
+      "gsl_amplitude_second_derivative": -0.0005300550283109496,
+      "input_array_sha256": "11ffb39998d435a9f1cbb3491b7fa27773a35bddb8868574749aee323b1c0537",
+      "internal_step_M": 0.00390625,
+      "match_time_M": 144.7658236506888,
+      "name": "mild_mixed_spin",
+      "polynomial_2M_amplitude_second_derivative": -0.0005549182187965142,
+      "polynomial_2M_coefficients": [
+        8.866643998471769,
+        -87.95747109469173,
+        103.06482808523269,
+        5.5941791087663,
+        -35.365472881091854
+      ],
+      "resample_factor": 32,
+      "samples": 38590,
+      "targets": [
+        0.3760743549621802,
+        0.0,
+        -0.0009118323685108474,
+        0.3627689022266932,
+        0.01106508598492054
+      ],
+      "time_peak_M": 149.62499237060547
+    }
+  ],
+  "schema": "diffgw.seobnrv4.source-nqc-high-rate-domain.v1",
+  "scope": {
+    "description": "Scalar CPU float64 numerical stability evidence only; no training or promotion.",
+    "known_limitations": [
+      "Convergence cannot establish correctness of the equations or published model fidelity.",
+      "The adaptive prototype uses a diagnostic QNM spline with independently generated values and black-box-inferred knot metadata; this is not wholly literature-specified provenance.",
+      "Changing dt also changes the adaptive initial step and coarse/fine restart sampling; the grid check measures the complete generator's grid sensitivity.",
+      "No time, phase, amplitude, or coefficient fitting is performed.",
+      "No derivatives, batched execution, accelerators, or JAX are qualified here."
+    ],
+    "physics_validated": false,
+    "production_asset": false,
+    "production_promotion_allowed": false,
+    "training_generator_qualified": false
+  },
+  "script_sha256": "9742933acaa48f8ab1bca272162936296aaf8d81da01d5974d197e6ea30ab2ce",
+  "status": "diagnostic_complete"
+}

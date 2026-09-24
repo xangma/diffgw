@@ -252,6 +252,11 @@ nonphase values move by at most `0.30 ppm`. A diagnostic degree-four local
 polynomial fit over `±2 M` reduces that pair's difference to `0.078`; at a
 common match time, its three successive differences are `0.076`, `0.121`,
 and `0.078`. These counterfactual fits are not a qualified NQC prescription.
+The [additional-spin high-rate check](evidence/2026-09-24/source_nqc_high_rate_domain.json)
+finds the same sensitivity on nonspinning and mild mixed-spin rows: at a
+common match time, successive `±2 M` polynomial coefficient differences
+decrease from `0.023` to `0.011` and from `0.026` to `0.012` (L2), while the
+source cubic differences increase on the final refinement.
 The aligned-spin trajectory replay finds a native-minus-public orbital phase
 span of at most `1.27e-4 rad` from `M Omega=0.0425` through `0.13`, compared
 with `3.36e-5 rad` maximum public-grid sensitivity. Over the later sampled
