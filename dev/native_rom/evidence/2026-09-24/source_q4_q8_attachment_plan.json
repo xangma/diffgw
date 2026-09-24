@@ -1,0 +1,27 @@
+{
+  "schema": "diffgw.seobnrv4.source-q4-q8-attachment-plan.v1",
+  "purpose": "Capture orbital peak and continuous NQC match from a verified pinned LAL source build on frozen q4/q8 rows, compare peak-relative source/native timing across different absolute time origins, and separately report source/wheel NQC coefficient drift. Diagnostic only; source and wheel are not presumed identical.",
+  "rows": [
+    "q4_mixed_spin",
+    "q8_high_aligned"
+  ],
+  "output_step_M": 0.5,
+  "capacity": 50000,
+  "inputs": {
+    "campaign": "dev/native_rom/evidence/2026-09-24/source_candidate_new_rows.json",
+    "source_flux_plan": "dev/native_rom/evidence/2026-09-24/source_flux_initial_plan.json",
+    "adapter": "dev/native_rom/reference/full_v4_source_nqc_inputs_adapter.c",
+    "mode_adapter": "dev/native_rom/reference/full_v4_source_mode_adapter.c",
+    "q4_inverse": "dev/native_rom/evidence/2026-09-24/q4_public_ringdown_inverse.json",
+    "q8_inverse": "dev/native_rom/evidence/2026-09-24/q8_public_ringdown_inverse.json"
+  },
+  "input_sha256": {
+    "campaign": "d8efe4baa182ea39bf9a7d35b6de8621c6e054429ee180eb661e9fbb9f9d59d8",
+    "source_flux_plan": "1167199c8f954f97a5905a1e3b2f67d1555e984e5f1da0a0fc42a77a925f96ea",
+    "adapter": "0e2006c7a2898b09d56b5d464135b113f4546f43b607ddacbf327761a24a6451",
+    "mode_adapter": "59d8d7dd6547e84cc53b2ecb76005195bb54174c481146f88fc257a3abf7fcf4",
+    "q4_inverse": "207cccc19d93b2bc44da6182f318c2f3568b6db3dc0eb9652cc4ee3a3a8e1d51",
+    "q8_inverse": "f6a2f311976c4b4c6cffd8a83c719efe9c16d76c7e765aebcf732788eb1a4fdb"
+  },
+  "release_qualified": false
+}

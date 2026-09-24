@@ -1,0 +1,208 @@
+{
+  "errors": [],
+  "input_sha256": {
+    "campaign": "d8efe4baa182ea39bf9a7d35b6de8621c6e054429ee180eb661e9fbb9f9d59d8",
+    "mode_adapter": "59d8d7dd6547e84cc53b2ecb76005195bb54174c481146f88fc257a3abf7fcf4",
+    "source_attachment": "9c35dafffeacf58a127228bb9b601f5d322f8072adb26fb6ba4f5f0472bebd5d",
+    "source_flux_plan": "1167199c8f954f97a5905a1e3b2f67d1555e984e5f1da0a0fc42a77a925f96ea"
+  },
+  "plan_sha256": "2a5eda5e7a00aa9b8547fdc50600f14488cd5f48bb275551da466830e52f7cf0",
+  "process": {
+    "argv": [
+      "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw/dev/native_rom/diagnose_source_q4_q8_wheel_mode.py",
+      "--source-root",
+      "/Users/xangma/repos/lalsuite-git",
+      "--headers",
+      "/tmp/diffgw-lalsuite-pinned-53acc0c/merged-include",
+      "--gsl-include",
+      "/opt/homebrew/include",
+      "--json-out",
+      "dev/native_rom/evidence/2026-09-24/source_q4_q8_wheel_mode.json"
+    ],
+    "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+    "host": "client-3792.default.vpn.port.ac.uk",
+    "pid": 51889
+  },
+  "release_qualified": false,
+  "rows": {
+    "q4_mixed_spin": {
+      "comparison": {
+        "phase_rotation_rad": -0.0006740904755448132,
+        "windows": {
+          "attachment": {
+            "metrics": {
+              "amplitude_relative_l2": 2.8809653649198934e-11,
+              "complex_relative_l2": 0.0008254241050333407,
+              "phase_max_abs_rad": 0.0008257867896912292,
+              "phase_rms_rad": 0.0008255410561614121,
+              "phase_samples": 60,
+              "relative_norm_error": 2.8809843399812962e-11,
+              "samples": 60,
+              "unmaximized_real_overlap": 0.9999996593375234
+            },
+            "time_M": [
+              -16.296866335761948,
+              13.203133664238083
+            ]
+          },
+          "early": {
+            "metrics": {
+              "amplitude_relative_l2": 0.00010796264980031897,
+              "complex_relative_l2": 0.00016204063744629108,
+              "phase_max_abs_rad": 0.00025718826785891484,
+              "phase_rms_rad": 0.00011381745242014647,
+              "phase_samples": 120,
+              "relative_norm_error": 0.00010786307206500645,
+              "samples": 120,
+              "unmaximized_real_overlap": 0.9999999926894254
+            },
+            "time_M": [
+              -119.79686633576196,
+              -60.29686633576198
+            ]
+          },
+          "late_inspiral": {
+            "metrics": {
+              "amplitude_relative_l2": 7.672170583893451e-05,
+              "complex_relative_l2": 0.0005876227739891779,
+              "phase_max_abs_rad": 0.0008249296727234095,
+              "phase_rms_rad": 0.0005622203654190557,
+              "phase_samples": 87,
+              "relative_norm_error": 6.768947926749647e-05,
+              "samples": 87,
+              "unmaximized_real_overlap": 0.9999998296522011
+            },
+            "time_M": [
+              -59.79686633576196,
+              -16.796866335761973
+            ]
+          },
+          "ringdown": {
+            "metrics": {
+              "amplitude_relative_l2": 2.8810163594424136e-11,
+              "complex_relative_l2": 0.0008257987809443352,
+              "phase_max_abs_rad": 0.0008258095499710315,
+              "phase_rms_rad": 0.0008258078223692682,
+              "phase_samples": 173,
+              "relative_norm_error": 2.8810287489022812e-11,
+              "samples": 173,
+              "unmaximized_real_overlap": 0.999999659028187
+            },
+            "time_M": [
+              13.703133664237992,
+              99.70313366423808
+            ]
+          }
+        }
+      },
+      "row": {
+        "chi1": 0.8,
+        "chi2": -0.6,
+        "mass1": 40.0,
+        "mass2": 10.0,
+        "omega_start": 0.04
+      },
+      "source_minus_wheel_epoch_M": -1.1270176277116328e-13,
+      "source_mode_sha256": "b74de6a5adaf759567eb9aa24dd4343b1f36028caf977f0111ba6d95808ced78",
+      "wheel_mode_sha256": "6c34b03a11a0373a02247761081dc39e4b2abf8c7ab29246f7dfe795bd857cc1"
+    },
+    "q8_high_aligned": {
+      "comparison": {
+        "phase_rotation_rad": 0.0010600746441435632,
+        "windows": {
+          "attachment": {
+            "metrics": {
+              "amplitude_relative_l2": 4.703966619172726e-10,
+              "complex_relative_l2": 0.0009258879696328907,
+              "phase_max_abs_rad": 0.0009290456957492091,
+              "phase_rms_rad": 0.0009266461515361694,
+              "phase_samples": 60,
+              "relative_norm_error": 4.703967215746729e-10,
+              "samples": 60,
+              "unmaximized_real_overlap": 0.9999995713657335
+            },
+            "time_M": [
+              -21.28124268294218,
+              8.218757317057786
+            ]
+          },
+          "early": {
+            "metrics": {
+              "amplitude_relative_l2": 0.0003450412834068107,
+              "complex_relative_l2": 0.00037846112901659436,
+              "phase_max_abs_rad": 0.00033287842454416994,
+              "phase_rms_rad": 0.00014835261759680473,
+              "phase_samples": 120,
+              "relative_norm_error": 0.0003446169650161979,
+              "samples": 120,
+              "unmaximized_real_overlap": 0.9999999877597949
+            },
+            "time_M": [
+              -119.78124268294218,
+              -60.281242682942185
+            ]
+          },
+          "late_inspiral": {
+            "metrics": {
+              "amplitude_relative_l2": 0.00018815998927931529,
+              "complex_relative_l2": 0.0006900754562876331,
+              "phase_max_abs_rad": 0.0009204903696307811,
+              "phase_rms_rad": 0.0006521586892356591,
+              "phase_samples": 77,
+              "relative_norm_error": 0.00016305200824562327,
+              "samples": 77,
+              "unmaximized_real_overlap": 0.9999997751542495
+            },
+            "time_M": [
+              -59.78124268294225,
+              -21.781242682942118
+            ]
+          },
+          "ringdown": {
+            "metrics": {
+              "amplitude_relative_l2": 4.70396595498827e-10,
+              "complex_relative_l2": 0.0009291938255345329,
+              "phase_max_abs_rad": 0.0009293166052236426,
+              "phase_rms_rad": 0.0009292965590998376,
+              "phase_samples": 183,
+              "relative_norm_error": 4.703968325969754e-10,
+              "samples": 183,
+              "unmaximized_real_overlap": 0.9999995682994172
+            },
+            "time_M": [
+              8.718757317057973,
+              99.71875731705781
+            ]
+          }
+        }
+      },
+      "row": {
+        "chi1": 0.85,
+        "chi2": 0.85,
+        "mass1": 40.0,
+        "mass2": 5.0,
+        "omega_start": 0.04
+      },
+      "source_minus_wheel_epoch_M": 0.0,
+      "source_mode_sha256": "2ea3000cf338137d29eb756f3419d0991a851199f812885a032e41db76746c61",
+      "wheel_mode_sha256": "6d481a4b1f94b5703f9bdc0c10dbeeb4414f145d2a5e9a58df6de667f3737f32"
+    }
+  },
+  "schema": "diffgw.seobnrv4.source-q4-q8-wheel-mode.v1",
+  "scope": {
+    "description": "Pinned separately compiled source versus public wheel on a common orbital-peak chart and fixed phase gauge.",
+    "known_limitations": [
+      "Convergence cannot establish correctness of the equations or published model fidelity.",
+      "The adaptive prototype uses a diagnostic QNM spline with independently generated values and black-box-inferred knot metadata; this is not wholly literature-specified provenance.",
+      "Changing dt also changes the adaptive initial step and coarse/fine restart sampling; the grid check measures the complete generator's grid sensitivity.",
+      "No derivatives, batched execution, accelerators, or JAX are qualified here.",
+      "The fixed early-time phase anchor removes the arbitrary initial gauge; the wheel orbital-peak chart follows the pinned source epoch convention."
+    ],
+    "physics_validated": false,
+    "production_asset": false,
+    "production_promotion_allowed": false,
+    "training_generator_qualified": false
+  },
+  "script_sha256": "1b37a269d944f26a346c759aea64a90d63c2183d6b1656baf4b5c265f3a1f1fe",
+  "status": "diagnostic_complete"
+}

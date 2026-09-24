@@ -426,6 +426,30 @@ attachment paths apply it when needed. This repairs a local peak-shape defect
 for the tested strong-spin row but does not establish that the changed model
 matches the authors' calibrated waveform across the physical domain.
 
+For historical-implementation comparison, the pinned
+[SEOBNRv4 generator source](https://git.ligo.org/lscsoft/lalsuite/-/raw/53acc0c2cd7ea2d3c83fc71a7bd88035c2861d6c/lalsimulation/lib/LALSimIMRSpinAlignedEOB.c)
+has SHA-256 `6b7969bb7cbe714c4937a691838b0b82a7fcc2a199c03ee2bf5215738f1ce1b3`.
+It chooses a power-of-two high-rate factor so its step is at most `1/50 M`,
+then floors the continuous orbital-peak-minus-calibrated-lag match time to
+that grid. The ringdown helper named `XLALSimFindIndexMaxAmpli` looks up this
+already selected match time by exact equality; it does not independently
+search for a new amplitude maximum. The [frozen q4/q8 grid check](../evidence/2026-09-24/public_ringdown_grid.json)
+and [source capture](../evidence/2026-09-24/source_q4_q8_attachment.json)
+find public inferred attachment origins on high-rate knots and source/native
+continuous match offsets equal to floating-point precision on two rows. The
+source boundary lies within `0.00041 M` of the public origin in each waveform's
+own three-sample fitted-amplitude-peak chart. The frozen native baseline fit
+differs from source by `0.03777 M` on q4 and `1.32536 M` on q8 relative to
+orbital peak. The q8 baseline predates the peak-preserving ringdown variant;
+their boundary-to-fitted-peak intervals are `1.57570 M` and `0.27227 M`
+respectively. A later [source/native merger-neighborhood comparison](../evidence/2026-09-24/source_q4_q8_mode.json)
+finds that complex linear interpolation across the offset `0.5 M` output
+grids manufactured most of an apparent percent-level amplitude gap. Comparing
+interpolated amplitude and unwrapped phase instead leaves ringdown amplitude
+relative L2 of `1.06e-4` (q4) and `6.89e-5` (q8), while q8 retains a
+`0.00245 rad` phase RMS. This covers only `-120 M` to `100 M` around the
+orbital peak and cannot establish an NQC cause or release parity.
+
 `remnant.final_mass_fraction` independently evaluates the aligned-spin
 remnant-mass prescription named in Bohé et al. Sec. II.C. Bohé points to
 [Taracchini et al. (2014)](https://arxiv.org/html/1311.2544), whose

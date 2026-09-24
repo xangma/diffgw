@@ -1,0 +1,23 @@
+{
+  "schema": "diffgw.seobnrv4.public-ringdown-grid-plan.v1",
+  "purpose": "Retrospectively test whether independently inferred public ringdown origins occupy high-rate knots prescribed by the pinned historical SEOBNRv4 source. Do not fit native data or promote either model.",
+  "inputs": {
+    "q4": "dev/native_rom/evidence/2026-09-24/q4_public_ringdown_inverse.json",
+    "q8": "dev/native_rom/evidence/2026-09-24/q8_public_ringdown_inverse.json"
+  },
+  "input_sha256": {
+    "q4": "207cccc19d93b2bc44da6182f318c2f3568b6db3dc0eb9652cc4ee3a3a8e1d51",
+    "q8": "f6a2f311976c4b4c6cffd8a83c719efe9c16d76c7e765aebcf732788eb1a4fdb"
+  },
+  "historical_source": {
+    "commit": "53acc0c2cd7ea2d3c83fc71a7bd88035c2861d6c",
+    "path": "lalsimulation/lib/LALSimIMRSpinAlignedEOB.c",
+    "url": "https://git.ligo.org/lscsoft/lalsuite/-/raw/53acc0c2cd7ea2d3c83fc71a7bd88035c2861d6c/lalsimulation/lib/LALSimIMRSpinAlignedEOB.c",
+    "sha256": "6b7969bb7cbe714c4937a691838b0b82a7fcc2a199c03ee2bf5215738f1ce1b3",
+    "mechanics": "resampFac is the smallest power of two with output_step/resampFac <= 1/50 M; rdMatchPoint[1] is floored with fmod to this high-rate grid and the ringdown helper requires an exact time-vector match."
+  },
+  "output_step_M": 0.5,
+  "resampling_threshold": 0.02,
+  "grid_alignment_tolerance_M": 1e-06,
+  "release_qualified": false
+}

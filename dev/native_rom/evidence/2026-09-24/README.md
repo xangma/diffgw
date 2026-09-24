@@ -1579,3 +1579,63 @@ without proving a unique root cause or release parity. Reproduce with
 `PYTHONPATH=src:. python -m dev.native_rom.diagnose_q4_public_ringdown_inverse
 --json-out /tmp/seobnrv4-q4-public-ringdown-inverse.json` and the analogous
 `diagnose_q8_public_ringdown_inverse` command in the pinned environment.
+
+The [public high-rate grid plan](public_ringdown_grid_plan.json) and
+[result](public_ringdown_grid.json) check those independently inferred origins
+against the pinned historical source's factor-32 high-rate step of `0.015625 M`.
+The q4 and q8 origins lie within `2e-9 M` of integer grid knots, one step after
+and four steps before their respective largest output-grid peak samples. This supports
+the inferred attachment locations but does not expose private wheel state.
+The [pinned-source attachment plan](source_q4_q8_attachment_plan.json) and
+[result](source_q4_q8_attachment.json) compile the hash-checked historical
+generator and capture its orbital peak, continuous NQC match, high-rate
+boundary, complete `(2,2)` mode, and NQC coefficients on the same two rows.
+Source and native continuous match offsets from their own orbital peaks agree
+within `6e-14 M`; high-rate grid phase accounts for source/native boundary
+offsets of `0.003418 M` (q4) and `0.001938 M` (q8). The source boundary in its
+own fitted waveform-peak chart differs from the public inverse by only
+`-0.000185 M` and `+0.000410 M`. Combining each public inferred boundary with
+the public mode's independently fitted peak places it within `1.1e-6 M` of
+the source boundary in orbital-peak coordinates on both rows. Source/wheel NQC
+coefficient relative L2 is `0.00335` and `0.00725`; the source is an independent
+compilation, not the public wheel. The frozen baseline native *three-sample
+fitted* peak is `0.03777 M` earlier than source relative to orbital peak on q4
+and `1.32536 M` later on q8. Its largest coarse samples fall `0.296875 M`
+and `1.640625 M` after attachment; source/public samples lie within `0.0625 M`.
+The q8 baseline predates the peak-preserving ringdown variant, whose own
+boundary-to-fitted-peak interval is `0.27227 M`, compared with `1.57570 M`
+for the baseline. The previous report accidentally combined the baseline
+boundary with the later fit; the corrected result keeps them separate. The
+baseline q8 peak gap is consistent with its ringdown-shape defect, though
+these coarse fits alone do not prove a continuous-peak time or NQC cause.
+
+The [source/wheel mode control](source_q4_q8_wheel_mode.json) compares the
+separately compiled source with the installed public wheel on the same q4/q8
+orbital-peak charts, using one fixed phase gauge at `-100 M`. Post-attachment
+amplitude differs by only `2.9e-11` and `4.7e-10` relative L2, respectively;
+complex relative L2 is `8.26e-4` and `9.29e-4`, reflecting phase differences
+already present near the attachment. This validates the amplitude side of the
+source comparison on these rows without equating the two builds' NQC fits.
+
+The initial [native/source merger-neighborhood comparison](source_q4_q8_mode.json)
+interpolated real and imaginary parts from the native `0.5 M` grid to the
+source grid. That interpolation attenuates an oscillating mode. The native
+grid fractions at source sample times are `0.381838` and `0.847625`; using
+the common fundamental QNM frequencies, straight-line complex interpolation
+predicts amplitude losses of `1.2818%` and `0.7399%`. The observed ringdown
+amplitude relative L2 values before correcting this comparison are `1.2754%`
+and `0.7463%`. A synthetic shifted damped-sinusoid
+[regression](../../tests/test_source_mode_interpolation.py) reproduces the
+effect. The report also interpolates amplitude and unwrapped phase separately
+to expose the smaller underlying discrepancy. These metrics cover only the
+last `120 M` before the orbital peak through `100 M` afterward, not the full
+inspiral or the physical parameter domain.
+With amplitude/phase interpolation, q4 source/native complex relative L2 is
+`1.75e-4` over the first `30 M` after attachment and `1.10e-4` in the later
+ringdown window; its amplitude relative L2 there is `1.39e-4` and `1.06e-4`.
+The q8 amplitude figures fall to `6.37e-5` and `6.89e-5`, but its complex
+relative L2 remains `0.00240` and `0.00246`, with about `0.00245 rad`
+ringdown phase RMS. The tested native/source NQC coefficient relative L2 is
+`6.80e-4` on q4 and `0.00522` on q8. These results distinguish the earlier
+interpolation artifact from a real q8 phase residual, but do not assign that
+residual uniquely to NQC or qualify the native generator.

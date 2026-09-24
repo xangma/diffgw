@@ -351,6 +351,19 @@ aligned). This bounds the residual from dynamics, raw modes, and attachment
 on these three rows and isolates the source/wheel NQC fit as the dominant
 whole-mode mismatch. Wheel coefficients are black-box reference outputs,
 not native model data or a valid release prescription.
+The [q4/q8 attachment comparison](evidence/2026-09-24/source_q4_q8_attachment.json)
+finds that the source and native continuous NQC match offsets from orbital peak
+agree to floating-point precision. The compiled source's boundary also agrees
+with the independently inferred public ringdown origin within `0.00041 M`
+after each waveform's own amplitude peak is fitted. In the **frozen baseline**,
+the native three-sample fitted peak is `0.03777 M` earlier than source on q4
+and `1.32536 M` later on q8 relative to orbital peak. The baseline's largest
+coarse samples fall `0.296875 M` and `1.640625 M` after attachment, versus
+source/public samples within `0.0625 M`. The later peak-preserving ringdown
+variant has a different q8 fit and must not be mixed with that baseline.
+Coarse-grid fits alone do not establish continuous-peak timing or an NQC cause.
+Source and wheel have separate NQC coefficient drift, and neither is a
+qualified native ROM training generator.
 The [wheel-state NQC replay](evidence/2026-09-24/source_nqc_wheel_state_fit.json)
 shows that the pinned source's first-decline peak rule returns a time
 `0.0221 M` after the true cubic-spline maximum on the strong aligned-spin
@@ -562,6 +575,18 @@ independently computed QNM values at knot locations inferred from a public
 binary; that interpolation is not independent source material. An explicit
 independent-Kerr diagnostic uses our own equation-solved representation, but
 its broader parameter and waveform validation remains open.
+
+The [q4/q8 pinned-source merger comparison](evidence/2026-09-24/source_q4_q8_mode.json)
+now separates a grid-comparison artifact from the model residual. Interpolating
+complex samples onto the source grid had produced apparent post-attachment
+amplitude errors of `1.275%` and `0.746%`; interpolating amplitude and
+unwrapped phase lowers them to about `1e-4` and `7e-5`. The q8 phase remains
+about `0.00245 rad` RMS over the later ringdown window. The independent
+[source/wheel control](evidence/2026-09-24/source_q4_q8_wheel_mode.json)
+agrees in post-attachment amplitude to better than `5e-10` on these rows.
+The comparison covers the final `120 M` before orbital peak through `100 M`
+after it and remains audit-only. Earlier inspiral, wider parameter coverage,
+independent physics provenance, and ROM training still need qualification.
 
 ## Remaining promotion stages
 

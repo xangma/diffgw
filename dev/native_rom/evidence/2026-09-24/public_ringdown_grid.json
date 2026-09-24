@@ -1,0 +1,70 @@
+{
+  "high_step_M": 0.015625,
+  "historical_source": {
+    "commit": "53acc0c2cd7ea2d3c83fc71a7bd88035c2861d6c",
+    "mechanics": "resampFac is the smallest power of two with output_step/resampFac <= 1/50 M; rdMatchPoint[1] is floored with fmod to this high-rate grid and the ringdown helper requires an exact time-vector match.",
+    "path": "lalsimulation/lib/LALSimIMRSpinAlignedEOB.c",
+    "sha256": "6b7969bb7cbe714c4937a691838b0b82a7fcc2a199c03ee2bf5215738f1ce1b3",
+    "url": "https://git.ligo.org/lscsoft/lalsuite/-/raw/53acc0c2cd7ea2d3c83fc71a7bd88035c2861d6c/lalsimulation/lib/LALSimIMRSpinAlignedEOB.c"
+  },
+  "input_sha256": {
+    "q4": "207cccc19d93b2bc44da6182f318c2f3568b6db3dc0eb9652cc4ee3a3a8e1d51",
+    "q8": "f6a2f311976c4b4c6cffd8a83c719efe9c16d76c7e765aebcf732788eb1a4fdb"
+  },
+  "interpretation": "Integer public offsets support an actual high-rate attachment knot. Native/public differences in separately peak-anchored charts do not by themselves locate the underlying dynamics error or establish release parity.",
+  "output_step_M": 0.5,
+  "plan_sha256": "efea3743666397e8c5d78b1a09888345b0910cc2bb7a1016de272df96734b3f0",
+  "release_qualified": false,
+  "resample_factor": 32,
+  "rows": {
+    "q4": {
+      "native_boundary_from_own_fitted_peak_M": -0.08640236943907453,
+      "native_minus_public_boundary_in_high_steps": 2.1863889274598307,
+      "native_minus_public_own_peak_boundary_M": 0.034162326991559855,
+      "nearest_high_grid_offset_from_sampled_peak": 1,
+      "public_high_grid_residual_M": 2.569119639250772e-10,
+      "public_inferred_boundary_M": -0.12056469643063439,
+      "public_sampled_peak_M": -0.13618969668754635,
+      "row": {
+        "chi1": 0.8,
+        "chi2": -0.6,
+        "mass1": 40.0,
+        "mass2": 10.0,
+        "omega_start": 0.04
+      }
+    },
+    "q8": {
+      "native_boundary_from_own_fitted_peak_M": -0.2722714802534121,
+      "native_minus_public_boundary_in_high_steps": -1.5013840767443476,
+      "native_minus_public_own_peak_boundary_M": -0.02345912619913043,
+      "nearest_high_grid_offset_from_sampled_peak": -4,
+      "public_high_grid_residual_M": 1.8256463563126601e-09,
+      "public_inferred_boundary_M": -0.24881235405428165,
+      "public_sampled_peak_M": -0.186312355879928,
+      "row": {
+        "chi1": 0.85,
+        "chi2": 0.85,
+        "mass1": 40.0,
+        "mass2": 5.0,
+        "omega_start": 0.04
+      }
+    }
+  },
+  "schema": "diffgw.seobnrv4.public-ringdown-grid.v1",
+  "scope": {
+    "description": "Retrospective grid alignment of two independently inverted public ringdowns; each waveform uses its own fitted peak chart.",
+    "known_limitations": [
+      "Convergence cannot establish correctness of the equations or published model fidelity.",
+      "The adaptive prototype uses a diagnostic QNM spline with independently generated values and black-box-inferred knot metadata; this is not wholly literature-specified provenance.",
+      "Changing dt also changes the adaptive initial step and coarse/fine restart sampling; the grid check measures the complete generator's grid sensitivity.",
+      "No time, phase, amplitude, or coefficient fitting is performed.",
+      "No derivatives, batched execution, accelerators, or JAX are qualified here."
+    ],
+    "physics_validated": false,
+    "production_asset": false,
+    "production_promotion_allowed": false,
+    "training_generator_qualified": false
+  },
+  "script_sha256": "f5c450d0fd38b5a8e9e681b21f12dbfb023a103ad28d852d72c59a6ff34ee95b",
+  "status": "diagnostic_complete"
+}
