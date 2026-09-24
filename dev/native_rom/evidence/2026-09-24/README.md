@@ -2567,3 +2567,20 @@ dev.native_rom.diagnose_near_extreme_source_nqc_grid --source-root
 /Users/xangma/repos/lalsuite-git --headers
 /tmp/diffgw-lalsuite-pinned-53acc0c/merged-include --gsl-include
 /usr/local/include --json-out /tmp/near-extreme-source-nqc-grid-v2.json`.
+
+The frozen [crossed peak/field plan](near_extreme_source_nqc_peak_field_plan.json)
+and [result](near_extreme_source_nqc_peak_field.json) replay those same
+captured arrays through a separately compiled pinned C NQC fit. Both diagonal
+fits reproduce the source's recorded coefficients exactly. Starting from the
+`0.03125 M` capture, replacing only its peak time with the `0.015625 M` peak
+moves the five active coefficients by L2 `43.106`; replacing only its five
+sampled input fields while keeping the coarse peak moves them by `103.605`.
+The crossed interaction is `19.331` in L2 and the observed combined shift is
+`94.110`; vector directions partly cancel. This splits the source-grid effect
+between peak localization and input fields without establishing which source
+waveform is converged or changing any release gate. Reproduce with
+`PYTHONPATH=src:. /Users/xangma/repos/diffgw/.venv/bin/python -m
+dev.native_rom.diagnose_near_extreme_source_nqc_peak_field --source-root
+/Users/xangma/repos/lalsuite-git --headers
+/tmp/diffgw-lalsuite-pinned-53acc0c/merged-include --gsl-include
+/usr/local/include --json-out /tmp/near-extreme-source-nqc-peak-field.json`.

@@ -1,0 +1,23 @@
+{
+  "schema": "diffgw.seobnrv4.near-extreme-source-nqc-peak-field-plan.v1",
+  "purpose": "Post-hoc crossed replay of pinned-source q10 pre-fit NQC arrays and orbital-peak times at output steps 0.03125 and 0.015625 M. Reproduce both original source fits before attributing coefficient changes to peak localization, input fields, and their interaction. No release gate revision.",
+  "row": "q10_both_near_extreme_aligned",
+  "output_steps_M": [0.03125, 0.015625],
+  "capacity": 50000,
+  "expected_internal_step_M": 0.015625,
+  "release_qualified": false,
+  "inputs": {
+    "prior": {
+      "path": "dev/native_rom/evidence/2026-09-24/near_extreme_source_nqc_grid_v2.json",
+      "sha256": "af9ba60eda248d4c3bb9a17208f3c2c14a18aa9934e1a1493e27b26d5c498045"
+    },
+    "capture_plan": {
+      "path": "dev/native_rom/evidence/2026-09-24/near_extreme_source_nqc_grid_v2_plan.json",
+      "sha256": "7ae566b1b6ba52abfdc3edb1bb389af6d47eb1df9e591aaa78eaaee831a8a6fb"
+    },
+    "wrapper": {
+      "path": "dev/native_rom/reference/nqc_v4_source_wrapper.c",
+      "sha256": "2a78cc6750db4fe8da0cb8dbfcf35da06d356be67981be2b2a2cbe1f5bc70d36"
+    }
+  }
+}

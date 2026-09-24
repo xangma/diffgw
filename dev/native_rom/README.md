@@ -1026,6 +1026,14 @@ L2 while the public wheel shifts by `52.4`. The source orbital peak shifts
 orbital frequency around NQC matching differ by only a few parts in `10⁷`.
 This localizes the sampling sensitivity to the peak/matching and NQC fit;
 it does not establish a converged source result.
+A crossed replay of the pinned source's complete NQC input arrays and peak
+times reproduces both original coefficient sets exactly. Changing only the
+peak time on the coarse-grid inputs moves the five active coefficients by
+`43.1` in L2; changing only the inputs at the coarse-grid peak moves them by
+`103.6`. Their interaction has L2 `19.3`, and the observed combined change is
+`94.1`. The two effects partly cancel. This identifies both input-field and
+peak-localization sensitivity, but does not provide a converged near-extreme
+reference or change the frozen `0.5 M` parity failure.
 
 1. Qualify the physical generator against the published equations and independent
    references over the intended domain, resolve convention/provenance gaps, and
