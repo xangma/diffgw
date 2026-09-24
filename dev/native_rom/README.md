@@ -876,16 +876,19 @@ base-mode frequency, including JIT and state derivatives. The fixed-step JAX
 assembly above does not establish a qualified whole waveform. Wider
 Torch/JAX whole-waveform and derivative checks remain necessary.
 
-The independent ROM construction follows the published reduced-basis and
-parameter-interpolation methods of [Pürrer (2014)](https://doi.org/10.1088/0264-9381/31/19/195010)
-and [Pürrer (2016)](https://doi.org/10.1103/PhysRevD.93.064041).
-[Bohé et al. (2017), Section VII](https://arxiv.org/html/1611.03703#S7)
-describes the SEOBNRv4 ROM construction and its parameter patches. Independently
+The published construction uses SVD bases and tensor-product cubic splines for
+parameter coefficients, as described by
+[Pürrer (2014)](https://doi.org/10.1088/0264-9381/31/19/195010),
+[Pürrer (2016)](https://arxiv.org/html/1512.02248), and
+[Bohé et al. (2017), Section VII](https://arxiv.org/html/1611.03703#S7).
+The v4 ROM also uses overlapping parameter and frequency patches. Independently
 trained tables would define our own approximation to a qualified source model;
 they would not become the authors' official ROM tables.
 The [in-memory reduced interpolant](rom/reduced_interpolant.py) implements
-SVD compression and three-parameter Chebyshev-Lobatto interpolation of supplied
-log-amplitude and phase arrays, with analytic parameter derivatives. A
+SVD compression and **provisional global Chebyshev-Lobatto parameter
+interpolation**, an alternative to the published local tensor-product cubic
+splines. It accepts supplied log-amplitude and phase arrays and has analytic
+parameter derivatives. A
 [conditioning step](rom/conditioning.py) removes phase and time gauge at a fixed
 reference frequency; its gauge invariance and a withheld complex-waveform row
 pass analytic tests. [Torch/JAX evaluators](rom/backend_evaluation.py) agree
@@ -896,10 +899,9 @@ arbitrary in-domain frequencies. Analytic withheld-frequency waveforms and
 parameter/frequency derivatives pass NumPy, Torch, and JAX checks, including
 at a frequency knot. NumPy rejects out-of-domain queries; JIT-compatible
 backend evaluation returns `NaN`. This algebra accepts no physical generator
-and writes no asset. The
-frequency resolution needed for reliable phase unwrapping, parameter and
-frequency grids, patch boundaries, source-model fidelity, and ROM holdouts are
-still unqualified.
+and writes no asset. The frequency resolution needed for reliable phase
+unwrapping, parameter and frequency grids, parameter-interpolation choice,
+patch boundaries, source-model fidelity, and ROM holdouts are still unqualified.
 The archived trainer remains separate because its generator is unqualified.
 
 1. Qualify the physical generator against the published equations and independent
