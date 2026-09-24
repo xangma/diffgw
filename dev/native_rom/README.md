@@ -122,12 +122,18 @@ On exact-hash native replays, replacing only the local phase-basis derivative
 matrix with the full-series natural-cubic matrix slightly increases the
 phase-coefficient distance from the public values on both strong-spin rows.
 This rules out that matrix choice alone as the observed gap's explanation;
-same-input compiled NQC parity and the distinct upstream inputs remain open.
+the distinct upstream inputs remain open.
 The pinned wheel's GSL natural-cubic evaluator gives the same full-series
 phase-basis derivative matrix on the exact native NQC samples, and applying
 the source targets to those GSL matching systems also fails to close the
-public coefficient gap. The LAL routine itself remains private, so this is
-same-input spline and matching evidence rather than compiled-function parity.
+public coefficient gap. The wheel's V4 NQC routine remains private, so the
+GSL check alone is same-input spline and matching evidence. A separate
+pinned-source C harness now calls the V4 NQC routine on basis-equivalent
+native samples. Its five coefficients agree with the GSL replay to at most
+`1.4e-6` absolute on the aligned row and `1.0e-8` on the antialigned row.
+The C-to-public coefficient distances remain `5.6238` and `0.66555` (L2).
+This establishes source-compiled matching parity on native inputs, not
+identity with the private wheel build or parity of its upstream inputs.
 The [direct public-dynamics replay](evidence/2026-09-24/README.md) reconstructs
 native pre-NQC orbital scalars from the frozen NQC samples. A fixed-time
 comparison shows antialigned residuals near the inferred peak, but comparing

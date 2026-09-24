@@ -135,6 +135,25 @@ and the public fit has different upstream inputs. Reproduce with
 `PYTHONPATH=src:. python -m dev.native_rom.diagnose_nqc_gsl_same_input
 --json-out /tmp/nqc-gsl-same-input.json`.
 
+The [source-compiled C NQC plan](nqc_c_same_input_plan.json) and
+[result](nqc_c_same_input.json) replay those two native waveforms once more,
+check their frozen hashes, and call the exact pinned-source V4 C matching
+routine through a small [development wrapper](../../reference/nqc_v4_source_wrapper.c).
+The radius, radial momentum, and orbital frequency inputs are recovered
+algebraically from the native NQC basis samples; the defining basis identity
+holds to `5.6e-17` or better. The source-compiled C coefficients differ from
+the pinned-wheel GSL replay by at most `1.33e-6` absolute on the aligned row
+and `9.3e-9` on the antialigned row. Their distances from the public fitted
+coefficients remain `5.6238` and `0.66555` in five-coefficient L2. This
+validates the C matching operation on the native inputs but does not call
+the private wheel routine, establish its exact build flags, or equate the
+public and native pre-NQC inputs. Reproduce on macOS with the pinned source
+checkout and headers using `PYTHONPATH=src:. python -m
+dev.native_rom.diagnose_nqc_c_same_input --source-root
+/tmp/diffgw-lalsuite-pinned-53acc0c --headers
+/tmp/diffgw-lalsuite-pinned-53acc0c/merged-include --gsl-include
+/usr/local/include --json-out /tmp/nqc-c-same-input.json`.
+
 The [public-mode boundary plan](public_nqc_mode_boundary_plan.json) and
 [result](public_nqc_mode_boundary.json) use both public v4 modes API paths at
 `0.015625 M`: the coefficient-only call and the call returning modes plus low-

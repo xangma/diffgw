@@ -1,0 +1,15 @@
+{
+  "schema": "diffgw.seobnrv4.nqc-c-same-input-plan.v1",
+  "purpose": "Compile the pinned LALSuite SEOBNRv4 C NQC routine in a development harness and pass the frozen native waveform's exact NQC basis samples reconstructed to C orbital inputs. Compare its five coefficients with the pinned-wheel GSL replay, native matching, and public waveform fit. This is source-compiled C parity, not private wheel routine parity or a release validation.",
+  "source_revision": "53acc0c2cd7ea2d3c83fc71a7bd88035c2861d6c",
+  "source_path": "lalsimulation/lib/LALSimIMREOBNQCCorrection.c",
+  "source_sha256": "be34dbe154439439b6a7dc37494cdc963dd4c29ded42d887251efe16f974899e",
+  "table_path": "lalsimulation/lib/LALSimIMREOBNQCTables.c",
+  "table_sha256": "79c4f137b9d667ae2fa2811a9a1219e80018a509f85f1dc4e2dc3064bb7123cf",
+  "coefficient_evidence": "dev/native_rom/evidence/2026-09-24/nqc_coefficients.json",
+  "coefficient_evidence_sha256": "1c8c31aabc6d43d704af9b2a4b84d701c13262316fe102d07c86a3a2613f74b7",
+  "gsl_evidence": "dev/native_rom/evidence/2026-09-24/nqc_gsl_same_input.json",
+  "gsl_evidence_sha256": "29b8b0bd1d083803a78945c294a5a2a4dca55e57cd681cf463c7b9ccd2e832d2",
+  "waveform_plan": "dev/native_rom/evidence/2026-09-24/nqc_coefficients_plan.json",
+  "release_qualified": false
+}
