@@ -210,6 +210,7 @@ def native_run(row, level, settings, *, diagnostic_hermite_resampling=False,
                diagnostic_mode_43_higher_spin="taylor_f",
                diagnostic_hamiltonian_log_derivative="analytic",
                diagnostic_hamiltonian_calibration="published",
+               diagnostic_qnm_source="historical_spline",
                diagnostic_local_nqc_derivatives=False,
                diagnostic_nqc_phase_window_M=0.5,
                diagnostic_matching_second_derivatives=False,
@@ -239,6 +240,7 @@ def native_run(row, level, settings, *, diagnostic_hermite_resampling=False,
             diagnostic_mode_43_higher_spin=diagnostic_mode_43_higher_spin,
             diagnostic_hamiltonian_log_derivative=diagnostic_hamiltonian_log_derivative,
             diagnostic_hamiltonian_calibration=diagnostic_hamiltonian_calibration,
+            diagnostic_qnm_source=diagnostic_qnm_source,
             diagnostic_local_nqc_derivatives=diagnostic_local_nqc_derivatives,
             diagnostic_nqc_phase_window_M=diagnostic_nqc_phase_window_M,
             diagnostic_matching_second_derivatives=diagnostic_matching_second_derivatives,
@@ -275,8 +277,13 @@ def native_run(row, level, settings, *, diagnostic_hermite_resampling=False,
                   final_spin=float(array(result.final_spin)),
                   internal_step_M=float(array(result.attachment.internal_step)))
     if return_boundary_data:
-        from torchwave.approximants.kerr_qnm_table_convention import signed_qnm_220_table_convention
-        qnm_w, qnm_damp = signed_qnm_220_table_convention(result.final_spin)
+        if diagnostic_qnm_source == "historical_spline":
+            from torchwave.approximants.kerr_qnm_table_convention import signed_qnm_220_table_convention as qnm_220
+        elif diagnostic_qnm_source == "independent_kerr":
+            from torchwave.approximants.kerr_qnm_generated import signed_qnm_220 as qnm_220
+        else:
+            raise ValueError("unsupported diagnostic_qnm_source")
+        qnm_w, qnm_damp = qnm_220(result.final_spin)
         output["boundary_data"] = dict(
             index=int(array(result.attachment.boundary_index)),
             amplitude=float(array(result.attachment.boundary_amplitude)),

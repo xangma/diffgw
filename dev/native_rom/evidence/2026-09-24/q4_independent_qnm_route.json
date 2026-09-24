@@ -1,0 +1,95 @@
+{
+  "campaign_sha256": "d8efe4baa182ea39bf9a7d35b6de8621c6e054429ee180eb661e9fbb9f9d59d8",
+  "choice": {
+    "calibration": "lal_v4_rounded",
+    "flux": {
+      "mode_21_higher_spin": "rho_hybrid",
+      "mode_31_higher_spin": "lal_v4_rho",
+      "mode_32_spin_square": "lal_v4_zero"
+    },
+    "mode_43_higher_spin": "lal_v4_rho",
+    "nqc_phase_window_M": 1.0,
+    "numerical": {
+      "default_initial_step_rule": true,
+      "default_restart_rule": false,
+      "fixed_restart_time_M": 165.0,
+      "hermite_resampling": true,
+      "local_nqc_degree": 6,
+      "local_nqc_phase_derivatives": true,
+      "local_nqc_window_M": 0.5
+    },
+    "physical": {
+      "hamiltonian_log_derivative": "lal_v4",
+      "mode_33_higher_spin": "lal_v4_rho",
+      "name": "combined"
+    },
+    "spin_truncation": "tabulated"
+  },
+  "counterfactual_sha256": "e0b57fb49a0f6b93bedaab7285e287a688d41c1a66e2fda3f8fa525308807348",
+  "errors": [],
+  "exact_replay_checks": {
+    "array_sha256": true,
+    "boundary_inputs": true,
+    "boundary_time_M": true,
+    "final_mass_fraction": true,
+    "final_spin": true
+  },
+  "native": {
+    "array_sha256": {
+      "mode": "9ae77baa399dbe434706a5759f944d937def9a607372418ab4a533aa6f0b6406",
+      "time": "5ad34b6326599a4b37370b9d68e36f2ef84bf957c4185ca86f42d5438e69400b"
+    },
+    "boundary_inputs": {
+      "amplitude": 0.24385024490551965,
+      "frequency": 0.4131769588102543,
+      "index": 34157,
+      "phase": 70.5439405202431,
+      "qnm_damping": 0.07210367547570294,
+      "qnm_frequency": 0.6641064154047102
+    },
+    "elapsed_seconds": 153.4020549999841
+  },
+  "plan_sha256": "278976c53a18d6dc621217241efc8facd8980c60bed2925cc5bc36b262d178be",
+  "process": {
+    "argv": [
+      "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw/dev/native_rom/diagnose_q4_independent_qnm_route.py",
+      "--json-out",
+      "/tmp/seobnrv4-q4-independent-qnm-route.json"
+    ],
+    "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+    "host": "client-3792.default.vpn.port.ac.uk",
+    "pid": 6775
+  },
+  "qnm_source": "independent_kerr",
+  "release_qualified": false,
+  "row": {
+    "chi1": 0.8,
+    "chi2": -0.6,
+    "mass1": 40.0,
+    "mass2": 10.0,
+    "omega_start": 0.04
+  },
+  "schema": "diffgw.seobnrv4.q4-independent-qnm-route.v1",
+  "scope": {
+    "description": "Scalar CPU float64 numerical stability evidence only; no training or promotion.",
+    "known_limitations": [
+      "Convergence cannot establish correctness of the equations or published model fidelity.",
+      "The adaptive prototype uses a diagnostic QNM spline with independently generated values and black-box-inferred knot metadata; this is not wholly literature-specified provenance.",
+      "Changing dt also changes the adaptive initial step and coarse/fine restart sampling; the grid check measures the complete generator's grid sensitivity.",
+      "No time, phase, amplitude, or coefficient fitting is performed.",
+      "No derivatives, batched execution, accelerators, or JAX are qualified here."
+    ],
+    "physics_validated": false,
+    "production_asset": false,
+    "production_promotion_allowed": false,
+    "training_generator_qualified": false
+  },
+  "script_sha256": "af01787f850c1e945d567c3079958e098b1688e4b98d581494db0653fcfab805",
+  "source_sha256": {
+    "dev/native_rom/diagnose_q8_mode_phase.py": "8b2a5c0446d88e22822db01dac5d423931a173423d82ba4d66b63dcde5d5d7a6",
+    "dev/native_rom/eob/torch/adaptive_driver_clean.py": "ecc63234710890bc12663b17f3b0cb70d5d12ee8e6af8119c48cb5043ff07034",
+    "dev/native_rom/qualify_generator.py": "f900dfe3af264cdd11eb1c23122b84ab02ec7377ee15b426141298704b7a07f4",
+    "src/torchwave/approximants/kerr_qnm_generated.py": "82da71c19c50defeab4c32b6950141d845214909e9f52342e3f1cf3b46f08326"
+  },
+  "status": "diagnostic_complete"
+}

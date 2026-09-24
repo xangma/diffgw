@@ -26,6 +26,9 @@ def test_adaptive_compatibility_defaults_are_explicitly_reviewed_choices():
     with pytest.raises(ValueError, match="final_spin_fit_order"):
         reconstruct_seobnrv4_22_adaptive(omega, 30.0, 30.0,
                                           final_spin_fit_order=(1, 2))
+    with pytest.raises(ValueError, match="diagnostic_qnm_source"):
+        reconstruct_seobnrv4_22_adaptive(omega, 30.0, 30.0,
+                                          diagnostic_qnm_source="unknown")
 
 
 def test_diagnostic_grid_overrides_reject_invalid_values_before_solve():

@@ -497,6 +497,8 @@ L2 by only `5.66e-8` and postpeak L2 by `2.27e-7` against the same public
 waveform. That substitution cannot explain the residual on this row. The
 remaining postpeak offset therefore
 requires an exact coarse-call attachment or pre-attachment comparison.
+An explicit development-only independent-Kerr-QNM choice now reproduces that
+q4 counterfactual exactly, including the full mode hash and attachment inputs.
 Neither row supports generator or ROM release qualification.
 
 ## Numerical evidence
@@ -555,9 +557,11 @@ JSON records exact configuration, input and source hashes, versions, run costs,
 per-check errors and gates, and explicit false physics/training/production
 qualification flags. Nonfinite outputs, exceptions, changed sources and failed
 gates produce a nonzero exit. The runner exports no training arrays or ROM
-asset. Its adaptive prototype currently uses independently computed QNM values
-with black-box-inferred spline knots; resolving that provenance is still needed
-for a wholly literature-specified generator.
+asset. The adaptive prototype's historical-compatibility default uses
+independently computed QNM values at knot locations inferred from a public
+binary; that interpolation is not independent source material. An explicit
+independent-Kerr diagnostic uses our own equation-solved representation, but
+its broader parameter and waveform validation remains open.
 
 ## Remaining promotion stages
 

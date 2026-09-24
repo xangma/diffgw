@@ -141,6 +141,7 @@ def reconstruct_seobnrv4_22_adaptive(
     diagnostic_mode_43_higher_spin: str = "taylor_f",
     diagnostic_hamiltonian_log_derivative: str = "analytic",
     diagnostic_hamiltonian_calibration: str = "published",
+    diagnostic_qnm_source: str = "historical_spline",
     spin_v6: str = "bohe_total_energy",
     include_pan_v8: bool = False,
     include_positive_chi_540: bool = False,
@@ -236,6 +237,8 @@ def reconstruct_seobnrv4_22_adaptive(
         raise ValueError("diagnostic_hamiltonian_log_derivative must be analytic or lal_v4")
     if diagnostic_hamiltonian_calibration not in {"published", "lal_v4_rounded"}:
         raise ValueError("diagnostic_hamiltonian_calibration must be published or lal_v4_rounded")
+    if diagnostic_qnm_source not in {"historical_spline", "independent_kerr"}:
+        raise ValueError("diagnostic_qnm_source must be historical_spline or independent_kerr")
     if tuple(final_spin_fit_order) != (3, 4):
         raise ValueError(
             "adaptive numerical compatibility requires final_spin_fit_order=(3, 4)"
@@ -250,7 +253,10 @@ def reconstruct_seobnrv4_22_adaptive(
     from .historical_hamiltonian import HistoricalLogDerivative
     from .source_calibration_hamiltonian import (
         SourceCalibrationHamiltonian, SourceCalibratedHistoricalHamiltonian)
-    from torchwave.approximants.kerr_qnm_table_convention import signed_qnm_220_table_convention
+    if diagnostic_qnm_source == "historical_spline":
+        from torchwave.approximants.kerr_qnm_table_convention import signed_qnm_220_table_convention as qnm_220
+    else:
+        from torchwave.approximants.kerr_qnm_generated import signed_qnm_220 as qnm_220
     from torchwave.approximants.eob.nqc import seobnrv4_nqc_parameters
 
     values = [torch.as_tensor(value, dtype=omega_start.dtype, device=omega_start.device)
@@ -264,7 +270,7 @@ def reconstruct_seobnrv4_22_adaptive(
     maximum_steps = int(max_accepted_steps if max_accepted_steps is not None else num_steps)
     mass_fraction = eob_final_mass_fraction(m1, m2, s1, s2)
     final_spin = hofmann_final_spin(m1, m2, s1, s2, fit_order=final_spin_fit_order)
-    qnm_w, qnm_damp = signed_qnm_220_table_convention(final_spin)
+    qnm_w, qnm_damp = qnm_220(final_spin)
     sigma = torch.complex(qnm_w, -qnm_damp) / mass_fraction
     scaled1, scaled2 = m1 / torch.maximum(m1, m2), m2 / torch.maximum(m1, m2)
     x1, x2 = scaled1 / (scaled1 + scaled2), scaled2 / (scaled1 + scaled2)

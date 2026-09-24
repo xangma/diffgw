@@ -20,7 +20,8 @@ from .diagnose_peak_anchor import fitted_metrics, fitted_peak, public_mode
 PLAN = q.ROOT / "dev/native_rom/evidence/2026-09-24/q8_mode_phase_plan.json"
 
 
-def _replay(row, level, settings, choice, fixed_restart, *, return_boundary_data=False):
+def _replay(row, level, settings, choice, fixed_restart, *, return_boundary_data=False,
+            diagnostic_qnm_source="historical_spline"):
     numerical, flux, physical = choice["numerical"], choice["flux"], choice["physical"]
     return q.native_run(
         row, level, settings,
@@ -39,6 +40,7 @@ def _replay(row, level, settings, choice, fixed_restart, *, return_boundary_data
         diagnostic_spin_truncation=choice["spin_truncation"],
         diagnostic_hamiltonian_log_derivative=physical["hamiltonian_log_derivative"],
         diagnostic_hamiltonian_calibration=choice["calibration"],
+        diagnostic_qnm_source=diagnostic_qnm_source,
         return_boundary_data=return_boundary_data)
 
 

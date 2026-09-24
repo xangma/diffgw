@@ -1533,3 +1533,15 @@ for this substitution, not domain-wide parity or an independent-QNM production
 choice. The much larger q4 postpeak residual remains open. Reproduce with
 `PYTHONPATH=src:. python -m dev.native_rom.diagnose_q4_independent_qnm
 --json-out /tmp/seobnrv4-q4-independent-qnm.json` in the pinned environment.
+
+The [explicit-route plan](q4_independent_qnm_route_plan.json) and
+[result](q4_independent_qnm_route.json) add a development-only
+`diagnostic_qnm_source="independent_kerr"` choice to the Torch adaptive
+generator. On the frozen q4 row, the supported route reproduces the isolated
+counterfactual's complete mode and time hashes, remnant values, boundary time,
+and all captured boundary inputs exactly. The historical spline remains the
+default for existing replay evidence. This verifies the route on one row; it
+does not select a release QNM representation, bound its domain, or resolve the
+remaining whole-waveform and ROM gates. Reproduce with `PYTHONPATH=src:. python
+-m dev.native_rom.diagnose_q4_independent_qnm_route --json-out
+/tmp/seobnrv4-q4-independent-qnm-route.json` in the pinned environment.
