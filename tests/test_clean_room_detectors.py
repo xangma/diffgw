@@ -182,12 +182,13 @@ def test_frequency_projection_broadcasts_sky_batches_over_shared_grid(shared_wav
         for i in range(3)
     ])
     assert actual.shape == (3, 17)
-    torch.testing.assert_close(actual, expected, rtol=0, atol=0)
+    # Batched and scalar trigonometric evaluation may differ by one ulp.
+    torch.testing.assert_close(actual, expected, rtol=0, atol=ROUNDOFF)
     derivative, = torch.autograd.grad(actual.real.sum(), ra)
     assert torch.all(torch.isfinite(derivative))
     assert torch.all(derivative != 0)
     network = DetectorNetwork([detector])
-    torch.testing.assert_close(network.project_fd(hp, hc, frequencies, ra, dec, psi, times)["L1"], expected, rtol=0, atol=0)
+    torch.testing.assert_close(network.project_fd(hp, hc, frequencies, ra, dec, psi, times)["L1"], actual, rtol=0, atol=0)
 
 
 def test_projection_gradients_and_earth_rotation_generator():

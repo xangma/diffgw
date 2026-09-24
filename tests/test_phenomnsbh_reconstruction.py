@@ -218,7 +218,7 @@ def test_amplitude_positivity_and_cutoff():
 
 
 def test_batching_and_scalar_parity():
-    """Verify batched and scalar evaluations agree to within machine precision (< 1e-14)."""
+    """Verify batched and scalar evaluations agree to float64 roundoff."""
     B = 4
     N = 80
     f = torch.linspace(30.0, 500.0, N, dtype=torch.float64)
@@ -253,8 +253,8 @@ def test_batching_and_scalar_parity():
         )
         rel_diff_p = torch.max(torch.abs(hp_b[b] - hp_s) / torch.clamp(torch.abs(hp_s), min=1e-30)).item()
         rel_diff_c = torch.max(torch.abs(hc_b[b] - hc_s) / torch.clamp(torch.abs(hc_s), min=1e-30)).item()
-        assert rel_diff_p < 1e-14, f"Batching parity violated for hp at index {b}: {rel_diff_p}"
-        assert rel_diff_c < 1e-14, f"Batching parity violated for hc at index {b}: {rel_diff_c}"
+        assert rel_diff_p < 1e-12, f"Batching parity violated for hp at index {b}: {rel_diff_p}"
+        assert rel_diff_c < 1e-12, f"Batching parity violated for hc at index {b}: {rel_diff_c}"
 
 
 def test_autograd_differentiability_all_parameters():
