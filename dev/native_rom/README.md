@@ -272,6 +272,24 @@ coefficients differ by `25.05` (L2). Decimating the finest run's own samples
 changes its fit by `42.44` (L2), while removing its unmatched endpoint samples
 changes nothing. This isolates a large grid-density sensitivity in the source
 fit, but does not establish a validated replacement or source physics accuracy.
+The [regular-source dense-field controls](evidence/2026-09-24/source_nqc_dense_field_strong_aligned_spin.json)
+also compare the source's captured NQC cubic derivatives with explicit
+pre-NQC modes evaluated along DOP853 integrations of the pinned **regular v4**
+field, started from the source's interpolated state at matching. In the
+[nonspinning](evidence/2026-09-24/source_nqc_dense_field_nonspinning.json),
+[mild mixed-spin](evidence/2026-09-24/source_nqc_dense_field_mild_mixed_spin.json),
+and strong aligned-spin rows, source cubic amplitude curvature differs from
+the centered dense-field estimate by `3.23%`, `4.92%`, and `4.81%`, respectively.
+Those figures use the factor-32 high-rate grid; at the source's default
+factor-8 grid the respective absolute differences are `0.0011%`, `0.071%`, and
+`0.326%`, then generally grow or change sign as sampling is refined.
+The explicit source mode reproduces all 1,024 captured amplitudes within
+`1.0e-10` in each row's `±2 M` window. The captured orbit's first derivative
+also differs from its compiled vector field by up to `4.1e-7` among the three
+rows. The regular generator resamples its adaptive orbit to a uniform grid
+with a cubic spline before the NQC inputs are splined again; these controls
+show a source trajectory/differentiation discrepancy, but cannot assign its
+share to either interpolation stage or validate a replacement prescription.
 The aligned-spin trajectory replay finds a native-minus-public orbital phase
 span of at most `1.27e-4 rad` from `M Omega=0.0425` through `0.13`, compared
 with `3.36e-5 rad` maximum public-grid sensitivity. Over the later sampled

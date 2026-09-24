@@ -438,6 +438,37 @@ Reproduce with `PYTHONPATH=src:. /Users/xangma/repos/diffgw/.venv/bin/python
 /tmp/diffgw-lalsuite-pinned-53acc0c/merged-include --gsl-include
 /usr/local/include --json-out /tmp/source-nqc-shared-grid.json`.
 
+The [source dense-field plan](source_nqc_dense_field_plan.json) and nine
+results compile the pinned regular-v4 generator's explicit vector field and
+pre-NQC `(2,2)`
+mode. A private source capture adds the missing orbital phase and angular
+momentum arrays, while the original five-column input arrays and active NQC
+coefficients replay the frozen source runs. For each row, the explicit mode
+agrees with all 1,024 nearby captured amplitude samples within `1.0e-10`,
+and centered DOP853 runs from the source's interpolated matching state
+measure the continuous-field derivatives. The source cubic minus dense-field
+amplitude curvature, divided by dense-field curvature, varies as follows:
+
+| Row | Factor 8 (source default) | Factor 16 | Factor 32 |
+| --- | ---: | ---: | ---: |
+| Strong aligned spin | [-0.326%](source_nqc_dense_field_strong_aligned_spin_f8.json) | [-2.175%](source_nqc_dense_field_strong_aligned_spin_f16.json) | [-4.811%](source_nqc_dense_field_strong_aligned_spin.json) |
+| Nonspinning | [-0.0011%](source_nqc_dense_field_nonspinning_f8.json) | [+0.190%](source_nqc_dense_field_nonspinning_f16.json) | [+3.233%](source_nqc_dense_field_nonspinning.json) |
+| Mild mixed spin | [+0.071%](source_nqc_dense_field_mild_mixed_spin_f8.json) | [+0.248%](source_nqc_dense_field_mild_mixed_spin_f16.json) | [-4.922%](source_nqc_dense_field_mild_mixed_spin.json) |
+
+The factor-32 gaps are far above the tested DOP853 tolerance and stencil
+spreads. The source orbit's cubic first derivatives differ from its compiled regular vector
+field by up to `4.1e-7`; the generator's regular integration path already
+resamples adaptive states with GSL cubic before the NQC cubic fit. This is a
+diagnostic of the existing numerical path, not an accuracy proof for new NQC
+coefficients or a waveform qualification. Reproduce each row with
+`PYTHONPATH=src:. /Users/xangma/repos/diffgw/.venv/bin/python -m
+dev.native_rom.diagnose_source_nqc_dense_field --source-root
+/Users/xangma/repos/lalsuite-git --headers
+/tmp/diffgw-lalsuite-pinned-53acc0c/merged-include --gsl-include
+/usr/local/include --row-name ROW --resample-factor FACTOR --json-out
+/tmp/ROW-source-nqc-dense.json`, where `ROW` is one of the three names above
+and `FACTOR` is `8`, `16`, or `32`.
+
 The [public-mode boundary plan](public_nqc_mode_boundary_plan.json) and
 [result](public_nqc_mode_boundary.json) use both public v4 modes API paths at
 `0.015625 M`: the coefficient-only call and the call returning modes plus low-
