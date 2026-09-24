@@ -96,9 +96,17 @@ class FrequencyReducedInterpolant:
         if (not np.isfinite(f).all() or np.any(f < self.model.frequency[0])
                 or np.any(f > self.model.frequency[-1])):
             raise ValueError("frequency outside the finite ROM domain")
-        queries = np.broadcast_arrays(q, chi1, chi2)
+        q = np.asarray(q, dtype=np.float64)
+        physical = getattr(self.model, "first_coordinate", "q") == "nu"
+        if physical and np.any(q < 1):
+            raise ValueError("mass ratio q must be at least one")
+        queries = np.broadcast_arrays(q / (1 + q)**2 if physical else q,
+                                      chi1, chi2)
         if any(not np.isfinite(x).all() for x in queries):
             raise ValueError("ROM parameters must be finite")
+        if any(np.any((x < grid[0]) | (x > grid[-1]))
+               for x, grid in zip(queries, self.model.nodes)):
+            raise ValueError("ROM parameter outside its training domain")
         factors = _parameter_factors(self.model, queries)
         amp_spline = _spline_values(self.log_amplitude, self.model.frequency, f)
         phase_spline = _spline_values(self.phase, self.model.frequency, f)
@@ -115,7 +123,11 @@ class FrequencyReducedInterpolant:
         cardinal = [pair[0] for pair in factors]
         amp = field(self.model.log_amplitude, amp_spline, cardinal)
         phase = field(self.model.phase, phase_spline, cardinal)
-        waveform = np.exp(amp + 1j * phase)
+        linear = getattr(self.model, "amplitude_kind", "log") == "linear"
+        if linear and np.any(amp <= 0):
+            raise ValueError("interpolated ROM amplitude must be positive")
+        phase_factor = np.exp(1j * phase)
+        waveform = (amp if linear else np.exp(amp)) * phase_factor
         if not derivatives:
             return waveform
         jacobian = []
@@ -126,7 +138,12 @@ class FrequencyReducedInterpolant:
                          include_mean=False)
             dphase = field(self.model.phase, phase_spline, differentiated,
                            include_mean=False)
-            jacobian.append(waveform * (damp + 1j * dphase))
+            derivative = (phase_factor * (damp + 1j * amp * dphase)
+                          if linear else waveform * (damp + 1j * dphase))
+            if axis == 0 and physical:
+                derivative = derivative * ((1 - q) / (1 + q)**3).reshape(
+                    q.shape + (1,) * f.ndim)
+            jacobian.append(derivative)
         return waveform, np.stack(jacobian, axis=len(queries[0].shape))
 
 
@@ -151,9 +168,11 @@ def evaluate_torch_frequency(interpolant, frequency, q, chi1, chi2):
     device = next((x.device for x in inputs if isinstance(x, torch.Tensor)),
                   torch.device("cpu"))
     f = torch.as_tensor(frequency, dtype=torch.float64, device=device)
-    queries = torch.broadcast_tensors(*(
-        torch.as_tensor(x, dtype=torch.float64, device=device)
-        for x in (q, chi1, chi2)))
+    q, chi1, chi2 = (torch.as_tensor(x, dtype=torch.float64, device=device)
+                     for x in (q, chi1, chi2))
+    physical = getattr(interpolant.model, "first_coordinate", "q") == "nu"
+    queries = torch.broadcast_tensors(q / (1 + q)**2 if physical else q,
+                                      chi1, chi2)
     cardinal = _torch_parameter_factors(torch, interpolant.model, queries)
 
     def field(part, spline):
@@ -168,13 +187,18 @@ def evaluate_torch_frequency(interpolant, frequency, q, chi1, chi2):
 
     amp = field(interpolant.model.log_amplitude, interpolant.log_amplitude)
     phase = field(interpolant.model.phase, interpolant.phase)
-    waveform = torch.exp(amp + 1j * phase)
+    linear = getattr(interpolant.model, "amplitude_kind", "log") == "linear"
+    waveform = (amp if linear else torch.exp(amp)) * torch.exp(1j * phase)
     outside = ((~torch.isfinite(f)) | (f < interpolant.model.frequency[0]) | (
         f > interpolant.model.frequency[-1])).reshape(
             (1,) * queries[0].ndim + f.shape)
     for nodes, query in zip(interpolant.model.nodes, queries):
         outside = outside | ((~torch.isfinite(query)) | (query < nodes[0]) | (
             query > nodes[-1])).reshape(query.shape + (1,) * f.ndim)
+    if physical:
+        outside = outside | (q < 1).reshape(q.shape + (1,) * f.ndim)
+    if linear:
+        outside = outside | (amp <= 0)
     return torch.where(outside, torch.full_like(waveform, complex(float("nan"), 0)),
                        waveform)
 
@@ -200,8 +224,10 @@ def evaluate_jax_frequency(interpolant, frequency, q, chi1, chi2):
     if not jax.config.jax_enable_x64:
         raise RuntimeError("development ROM evaluation requires JAX float64 enabled")
     f = jnp.asarray(frequency, dtype=jnp.float64)
-    queries = jnp.broadcast_arrays(*(
-        jnp.asarray(x, dtype=jnp.float64) for x in (q, chi1, chi2)))
+    q, chi1, chi2 = (jnp.asarray(x, dtype=jnp.float64) for x in (q, chi1, chi2))
+    physical = getattr(interpolant.model, "first_coordinate", "q") == "nu"
+    queries = jnp.broadcast_arrays(q / (1 + q)**2 if physical else q,
+                                   chi1, chi2)
     cardinal = _jax_parameter_factors(jnp, interpolant.model, queries)
 
     def field(part, spline):
@@ -215,7 +241,8 @@ def evaluate_jax_frequency(interpolant, frequency, q, chi1, chi2):
 
     amp = field(interpolant.model.log_amplitude, interpolant.log_amplitude)
     phase = field(interpolant.model.phase, interpolant.phase)
-    waveform = jnp.exp(amp + 1j * phase)
+    linear = getattr(interpolant.model, "amplitude_kind", "log") == "linear"
+    waveform = (amp if linear else jnp.exp(amp)) * jnp.exp(1j * phase)
     outside = jnp.reshape(
         (~jnp.isfinite(f)) | (f < interpolant.model.frequency[0]) | (
             f > interpolant.model.frequency[-1]),
@@ -224,4 +251,8 @@ def evaluate_jax_frequency(interpolant, frequency, q, chi1, chi2):
         outside = outside | jnp.reshape(
             (~jnp.isfinite(query)) | (query < nodes[0]) | (query > nodes[-1]),
             query.shape + (1,) * f.ndim)
+    if physical:
+        outside = outside | jnp.reshape(q < 1, q.shape + (1,) * f.ndim)
+    if linear:
+        outside = outside | (amp <= 0)
     return jnp.where(outside, jnp.nan + 0j, waveform)

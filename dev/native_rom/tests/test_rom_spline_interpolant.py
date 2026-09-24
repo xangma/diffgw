@@ -177,3 +177,105 @@ def test_arbitrary_frequency_spline_and_cross_backend_derivatives():
                                rtol=3e-10, atol=3e-10)
     np.testing.assert_allclose(np.asarray(jax_q_grad), expected_q_grad,
                                rtol=3e-10, atol=3e-10)
+
+
+def test_symmetric_mass_ratio_and_linear_amplitude_contract():
+    """Published coordinate/field choices retain physical q derivatives."""
+    nu_nodes = np.array([.10, .14, .18, .22, .25])
+    spin_nodes = np.array([-.8, -.4, 0., .4, .8])
+    nodes = (nu_nodes, spin_nodes, spin_nodes)
+    frequency = np.linspace(.01, .3, 20)
+    nu, a, b, f = np.meshgrid(*nodes, frequency, indexing="ij")
+    amplitude = 1 + f*(2*nu + a*b) + f**2*(nu**2 + .2*a)
+    phase = f*(nu+a) + f**3*(b+nu*a)
+    model = SplineTensorInterpolant.fit(
+        nodes, frequency, amplitude, phase, ranks=(3, 2),
+        first_coordinate="nu", amplitude_kind="linear")
+    interpolant = FrequencyReducedInterpolant.from_model(model)
+    qs = np.array([1., 2.4, 6.])
+    spins1 = np.array([.2, -.3, .1])
+    spins2 = np.array([-.1, .4, -.2])
+    sample_f = np.array([.035, .147, .217])
+
+    def expected(q, a, b, f):
+        nu = q/(1+q)**2
+        amp = 1 + f*(2*nu+a*b) + f**2*(nu**2+.2*a)
+        phi = f*(nu+a) + f**3*(b+nu*a)
+        wave = amp*np.exp(1j*phi)
+        damp = 2*f + 2*f**2*nu
+        dphi = f + f**3*a
+        dq = np.exp(1j*phi)*(damp+1j*amp*dphi)*(1-q)/(1+q)**3
+        return wave, dq
+
+    for q, a, b in zip(qs, spins1, spins2):
+        wave, dq = expected(q, a, b, frequency)
+        actual, jac = model.evaluate(q, a, b, derivatives=True)
+        np.testing.assert_allclose(actual, wave, rtol=3e-12, atol=3e-12)
+        np.testing.assert_allclose(jac[0], dq, rtol=3e-11, atol=3e-11)
+
+    batched, batched_jac = interpolant.evaluate(
+        sample_f, qs, spins1, spins2, derivatives=True)
+    assert batched.shape == (3, 3) and batched_jac.shape == (3, 3, 3)
+    for index, (q, a, b) in enumerate(zip(qs, spins1, spins2)):
+        wave, dq = expected(q, a, b, sample_f)
+        np.testing.assert_allclose(batched[index], wave, rtol=3e-12, atol=3e-12)
+        np.testing.assert_allclose(batched_jac[index, 0], dq, rtol=3e-11, atol=3e-11)
+        wave, dq = expected(q, a, b, sample_f)
+        actual, jac = interpolant.evaluate(sample_f, q, a, b, derivatives=True)
+        np.testing.assert_allclose(actual, wave, rtol=3e-12, atol=3e-12)
+        np.testing.assert_allclose(jac[0], dq, rtol=3e-11, atol=3e-11)
+
+    q, a, b = 2.4, -.3, .4
+    wave, dq = expected(q, a, b, sample_f)
+    torch_q = torch.tensor(q, dtype=torch.float64, requires_grad=True)
+    torch_wave = evaluate_torch_frequency(interpolant, sample_f, torch_q, a, b)
+    torch_grad = torch.autograd.grad(torch_wave.real.sum(), torch_q)[0]
+    jax_wave = jax.jit(lambda x: evaluate_jax_frequency(
+        interpolant, sample_f, x, a, b))(jnp.asarray(q))
+    jax_grad = jax.grad(lambda x: jnp.real(evaluate_jax_frequency(
+        interpolant, sample_f, x, a, b)).sum())(jnp.asarray(q))
+    np.testing.assert_allclose(torch_wave.detach().numpy(), wave, rtol=3e-12, atol=3e-12)
+    np.testing.assert_allclose(np.asarray(jax_wave), wave, rtol=3e-12, atol=3e-12)
+    np.testing.assert_allclose(torch_grad.item(), dq.real.sum(), rtol=3e-10, atol=3e-10)
+    np.testing.assert_allclose(np.asarray(jax_grad), dq.real.sum(), rtol=3e-10, atol=3e-10)
+    nu = q/(1+q)**2
+    amp = 1 + sample_f*(2*nu+a*b) + sample_f**2*(nu**2+.2*a)
+    phi = sample_f*(nu+a) + sample_f**3*(b+nu*a)
+    df = np.exp(1j*phi)*(
+        2*nu+a*b+2*sample_f*(nu**2+.2*a)
+        + 1j*amp*(nu+a+3*sample_f**2*(b+nu*a)))
+    torch_f = torch.tensor(sample_f, dtype=torch.float64, requires_grad=True)
+    torch_freq_grad = torch.autograd.grad(
+        evaluate_torch_frequency(interpolant, torch_f, q, a, b).real.sum(),
+        torch_f)[0]
+    jax_freq_grad = jax.grad(lambda f: jnp.real(evaluate_jax_frequency(
+        interpolant, f, q, a, b)).sum())(jnp.asarray(sample_f))
+    np.testing.assert_allclose(torch_freq_grad.detach().numpy(), df.real,
+                               rtol=3e-10, atol=3e-10)
+    np.testing.assert_allclose(np.asarray(jax_freq_grad), df.real,
+                               rtol=3e-10, atol=3e-10)
+    torch_spline_q = torch.tensor(q, dtype=torch.float64, requires_grad=True)
+    torch_spline_grad = torch.autograd.grad(
+        evaluate_torch_spline(model, torch_spline_q, a, b).real.sum(),
+        torch_spline_q)[0]
+    _, full_dq = expected(q, a, b, frequency)
+    jax_spline_grad = jax.grad(lambda x: jnp.real(evaluate_jax_spline(
+        model, x, a, b)).sum())(jnp.asarray(q))
+    np.testing.assert_allclose(torch_spline_grad.item(), full_dq.real.sum(),
+                               rtol=3e-10, atol=3e-10)
+    np.testing.assert_allclose(np.asarray(jax_spline_grad), full_dq.real.sum(),
+                               rtol=3e-10, atol=3e-10)
+    with pytest.raises(ValueError, match="at least one"):
+        model.evaluate(.9, a, b)
+    with pytest.raises(ValueError, match="at least one"):
+        interpolant.evaluate(sample_f, .9, a, b)
+    assert torch.isnan(evaluate_torch_spline(model, .9, a, b)).all()
+    assert bool(jnp.isnan(evaluate_jax_spline(model, .9, a, b)).all())
+    with pytest.raises(ValueError, match="positive"):
+        SplineTensorInterpolant.fit(
+            nodes, frequency, -amplitude, phase, ranks=(3, 2),
+            first_coordinate="nu", amplitude_kind="linear")
+    with pytest.raises(ValueError, match="symmetric-mass-ratio"):
+        SplineTensorInterpolant.fit(
+            (nu_nodes + .01, *nodes[1:]), frequency, amplitude, phase,
+            ranks=(3, 2), first_coordinate="nu", amplitude_kind="linear")
