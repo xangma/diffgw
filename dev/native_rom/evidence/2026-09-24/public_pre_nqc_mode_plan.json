@@ -1,0 +1,20 @@
+{
+  "schema": "diffgw.seobnrv4.public-pre-nqc-mode-plan.v1",
+  "purpose": "Reconstruct the public inspiral (2,2) mode before NQC by dividing the pinned binary's pre-attachment output by its returned NQC factor, evaluated on returned high-rate dynamics. Compare its amplitude, amplitude slope, and gravitational-wave frequency with exact-hash native pre-NQC samples at fixed orbital frequency. Keep every sample at least 1 M before both the inferred match and output mode peak; this cannot reconstruct samples after ringdown attachment or prove centered matching parity.",
+  "rows": [
+    {"name": "strong_aligned_spin", "orbital_frequencies": [0.07, 0.08, 0.10, 0.12, 0.13]},
+    {"name": "strong_antialigned_spin", "orbital_frequencies": [0.07, 0.08, 0.09, 0.10, 0.105, 0.11]}
+  ],
+  "public_output_step_M": 0.015625,
+  "pre_attachment_margin_M": 1.0,
+  "waveform_level": "ode_2",
+  "release_qualified": false,
+  "coefficient_evidence": "dev/native_rom/evidence/2026-09-24/nqc_coefficients.json",
+  "coefficient_evidence_sha256": "1c8c31aabc6d43d704af9b2a4b84d701c13262316fe102d07c86a3a2613f74b7",
+  "waveform_plan": "dev/native_rom/evidence/2026-09-24/nqc_coefficients_plan.json",
+  "waveform_plan_sha256": "cae8343c023fef055fb9ffd1f0be01267748717f2849e15c4ddc2cf8587f9460",
+  "boundary_evidence": "dev/native_rom/evidence/2026-09-24/public_nqc_mode_boundary.json",
+  "boundary_evidence_sha256": "a86784cd6a58ec4a574686d6940953a3d1be836e2d44ac8cdcd25a5ba7d0dffd",
+  "dynamics_evidence": "dev/native_rom/evidence/2026-09-24/public_nqc_dynamics.json",
+  "dynamics_evidence_sha256": "d9f7452971f1befdec31c805eba4e90d3d75b34da740b73d8b1818782a7243f5"
+}

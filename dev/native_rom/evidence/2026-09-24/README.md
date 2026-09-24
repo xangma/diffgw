@@ -185,6 +185,39 @@ through the public API. Run
 `PYTHONPATH=src:. python -m dev.native_rom.diagnose_public_nqc_dynamics
 --json-out /tmp/public-nqc-dynamics.json` in the pinned development environment.
 
+The [pre-NQC mode plan](public_pre_nqc_mode_plan.json) and
+[result](public_pre_nqc_mode.json) divide the pinned public `(2,2)` inspiral
+mode by the NQC factor formed from its returned coefficients and high-rate
+dynamics. All selected fixed-frequency samples are at least `1 M` before both
+the inferred NQC match and the public mode peak, so ringdown replacement does
+not enter. With the nominal epoch-derived mode-to-dynamics grid mapping, the
+antialigned raw amplitude differs from native by at most `3.1 ppm`; the aligned
+raw amplitude differs by `38–87 ppm`. The reconstructed raw amplitude slopes
+and waveform frequencies are also recorded, with native and public phase-sign
+conventions reconciled. These nominal-grid residuals require an alignment
+control before they can be assigned to the mode formula.
+
+The [public grid-alignment plan](public_mode_grid_alignment_plan.json) and
+[result](public_mode_grid_alignment.json) hold the same frozen native mode
+values fixed, repeat the public reconstruction at output steps `0.015625`,
+`0.0078125`, and `0.00390625 M`, and bracket the epoch-derived mapping by one
+mode sample in each direction. On the aligned row, the `−1`, `0`, and `+1`
+sample mappings on the respective grids each reduce the maximum raw-amplitude
+residual to below `1 ppm`; the nominal coarse-grid `38–87 ppm` residual is
+therefore not evidence of a physical mode-amplitude error. The antialigned
+nominal mapping remains within `3.1 ppm` on all grids. Even with those
+amplitude-consistent mappings, raw amplitude-slope and waveform-frequency
+residuals reach roughly `85` and `92 ppm` on the aligned row, and `60` and
+`75 ppm` on the antialigned row. The one-sample choices are a sensitivity
+bracket, not fitted corrections. This public API does not expose unmodified
+pre-NQC samples on both sides of the matching time, so these pre-attachment
+checks do not establish equality of the centered NQC matching systems or
+release qualification. Reproduce with `PYTHONPATH=src:. python -m
+dev.native_rom.diagnose_public_pre_nqc_mode --json-out
+/tmp/public-pre-nqc-mode.json` and `PYTHONPATH=src:. python -m
+dev.native_rom.diagnose_public_mode_grid_alignment --json-out
+/tmp/public-mode-grid-alignment.json`.
+
 Reproduce the new waveform checks from the repository root with
 `PYTHONPATH=src:. python -m dev.native_rom.diagnose_mode_32_whole_waveform
 --json-out /tmp/mode32-waveform.json` and

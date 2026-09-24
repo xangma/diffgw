@@ -1,0 +1,15 @@
+{
+  "schema": "diffgw.seobnrv4.public-mode-grid-alignment-plan.v1",
+  "purpose": "Use the frozen native pre-NQC values and reproduce the pinned public (2,2) mode on three high-rate output grids. At every prespecified fixed orbital frequency, reconstruct the public raw mode using the nominal epoch-derived mode-to-dynamics mapping and both neighboring sample mappings. This brackets integer mapping uncertainty and output-grid effects; it is not a fit of an alignment shift or a post-attachment mode comparison.",
+  "rows": ["strong_aligned_spin", "strong_antialigned_spin"],
+  "public_output_steps_M": [0.015625, 0.0078125, 0.00390625],
+  "mode_start_shifts_samples": [-1, 0, 1],
+  "pre_attachment_margin_M": 1.0,
+  "release_qualified": false,
+  "coefficient_evidence": "dev/native_rom/evidence/2026-09-24/nqc_coefficients.json",
+  "coefficient_evidence_sha256": "1c8c31aabc6d43d704af9b2a4b84d701c13262316fe102d07c86a3a2613f74b7",
+  "boundary_evidence": "dev/native_rom/evidence/2026-09-24/public_nqc_mode_boundary.json",
+  "boundary_evidence_sha256": "a86784cd6a58ec4a574686d6940953a3d1be836e2d44ac8cdcd25a5ba7d0dffd",
+  "pre_nqc_evidence": "dev/native_rom/evidence/2026-09-24/public_pre_nqc_mode.json",
+  "pre_nqc_evidence_sha256": "a4ef5af52c25332e534f78532be7152d2af6009fe6c384d5d710abaccd876474"
+}

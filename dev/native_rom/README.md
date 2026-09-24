@@ -136,8 +136,13 @@ to at most `3.4 ppm` and `47 ppm` on the two strong-spin rows. Their nearly
 constant peak-relative time offsets explain most of the fixed-time signal.
 A prespecified NQC match-time scan substantially reduces the antialigned
 coefficient gap but not the aligned one; it is a sensitivity check with targets
-held fixed, not a model correction. Pre-NQC public mode input parity and the
-remaining attachment difference still require investigation.
+held fixed, not a model correction. Dividing the public pre-attachment `(2,2)`
+mode by its returned NQC factor gives raw amplitudes within `3.1 ppm` on the
+antialigned row. The aligned row's nominal `38–87 ppm` amplitude discrepancy
+falls below `1 ppm` under a one-sample mode-to-dynamics alignment bracket at
+three output steps. Raw mode slopes, phase evolution, and centered matching
+inputs still require source-level parity checks; neither the mode nor the
+remaining attachment difference is qualified.
 
 ## Numerical evidence
 
