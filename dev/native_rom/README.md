@@ -856,18 +856,21 @@ lags are diagnostic and cannot be treated as a literal pass/fail of its
 `5 M` peak-time criterion. They do expose an unresolved timing question;
 neither the physical generator nor either ROM is release-qualified.
 
-The development-only JAX `SEOBNRv4Published` assembler is not a
-whole-waveform parity reference. It still uses a 1.5PN prototype radiation
-reaction and a Newtonian base `(2,2)` mode, and it accepts published-model
-flux switches without applying them. Its same-state Hamiltonian and 35-mode
-flux component checks do not qualify that complete JAX route. A
+The development-only JAX `SEOBNRv4Published` assembler now uses the
+source-backed 35-mode flux and pre-NQC `(2,2)` mode/frequency. Two fixed-step
+end-to-end Torch/JAX comparisons (equal-mass nonspinning and q=4 mixed spin)
+agree through the complex attached mode within `2e-10` absolute/relative.
+This is cross-backend agreement on the same unqualified source choices,
+not physical or numerical release validation. The JAX assembler has no
+qualified adaptive historical route, domain-wide convergence, or gradient
+contract. A
 [JAX pre-NQC phase/mode component](../../src/jaxwave/approximants/eob/seobnrv4_mode22.py)
 now matches the Torch source choices and an independent Gamma-function
 reference, including a differentiable continuous phase. It is unregistered
-and its same-state adapter now matches the Torch pre-NQC mode and continuous
-base-mode frequency, including JIT and state derivatives. It has not been
-assembled with a source-backed JAX trajectory, NQC, or attachment into a
-qualified whole waveform. Torch/JAX whole-waveform checks remain necessary.
+and its same-state adapter matches the Torch pre-NQC mode and continuous
+base-mode frequency, including JIT and state derivatives. The fixed-step JAX
+assembly above does not establish a qualified whole waveform. Wider
+Torch/JAX whole-waveform and derivative checks remain necessary.
 
 The independent ROM construction follows the published reduced-basis and
 parameter-interpolation methods of [Pürrer (2014)](https://doi.org/10.1088/0264-9381/31/19/195010)

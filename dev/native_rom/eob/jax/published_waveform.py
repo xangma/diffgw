@@ -6,7 +6,7 @@ Published SEOBNRv4 waveform generator and utilities in JAX.
 import math
 from typing import Optional, Tuple, Union
 import jax.numpy as jnp
-from diffgw_core.constants import MSUN_SEC, PI
+from diffgw_core.constants import MSUN_SEC
 from jaxwave.approximants.eob.attachment import attach_seobnrv4_22
 from jaxwave.approximants.eob.initial_conditions import find_quasicircular_initial_conditions
 from jaxwave.approximants.eob.integrator import EOBTrajectoryIntegrator
@@ -17,11 +17,16 @@ from jaxwave.approximants.eob.nqc import (
 )
 from jaxwave.approximants.eob.remnant import eob_final_mass_fraction, hofmann_final_spin
 from jaxwave.approximants.eob.seobnrv4_hamiltonian import SEOBNRv4Hamiltonian
+from jaxwave.approximants.eob.seobnrv4_flux import SEOBNRv4PublishedFlux
 from jaxwave.approximants.kerr_qnm_interp import evaluate_kerr_qnm_220
 from jaxwave.approximants.kerr_qnm_table_convention import signed_qnm_220_table_convention
 from jaxwave.conversions import as_array
 
-from jaxwave.approximants.eob.published_waveform import PublishedEOB22, published_eob22_to_fd
+from jaxwave.approximants.eob.published_waveform import (
+    PublishedEOB22,
+    published_eob22_to_fd,
+    published_mode22_and_frequency,
+)
 
 def reconstruct_seobnrv4_22(
     omega_start: jnp.ndarray,
@@ -65,8 +70,10 @@ def reconstruct_seobnrv4_22(
     nu, chi = seobnrv4_nqc_parameters(x1, x2, s1, s2)
 
     ham = SEOBNRv4Hamiltonian(nu, s1, s2, delta=x1 - x2)
-    from .radiation_reaction import EOBRadiationReaction
-    rr = EOBRadiationReaction(nu, s1, s2)
+    rr = SEOBNRv4PublishedFlux(
+        spin_truncation=spin_truncation,
+        retain_pan_cubic_spin=numerical_compatibility,
+    )
 
     r, pr, j = find_quasicircular_initial_conditions(ham, rr, start)
     initial = jnp.stack([r, jnp.zeros_like(r), pr, j], axis=-1)
@@ -82,12 +89,13 @@ def reconstruct_seobnrv4_22(
         richardson_extrapolation=richardson_extrapolation
     )
     state = jnp.moveaxis(trajectory.state, 0, -2)
-    v = jnp.maximum(trajectory.frequency, 1e-8) ** (1.0 / 3.0)
-    h22_amp = -8.0 * math.sqrt(PI / 5.0) * nu * (v * v)
-    phi = state[..., 1]
-    phase_gw = 2.0 * phi
-    base_mode = jnp.moveaxis(h22_amp * jnp.cos(phase_gw) - 1j * (h22_amp * jnp.sin(phase_gw)), 0, -1)
-    base_frequency = jnp.moveaxis(2.0 * trajectory.frequency, 0, -1)
+    base_mode, base_frequency = published_mode22_and_frequency(
+        state, ham, rr,
+        spin_v6=spin_v6,
+        include_pan_v8=include_pan_v8,
+        include_positive_chi_540=include_positive_chi_540,
+        retain_pan_cubic_spin=numerical_compatibility,
+    )
 
     match = trajectory.peak.time + nqc_offset_fn(nu, chi)
     count = math.ceil(float(jnp.max(match) + ringdown_duration) / dt_geom) + 1
