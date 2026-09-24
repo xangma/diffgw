@@ -1,4 +1,4 @@
-"""Prospectively frozen five-case detector-weighted h22 holdout diagnostic."""
+"""Frozen five-case detector-weighted h22 comparison diagnostic."""
 
 from __future__ import annotations
 
@@ -11,6 +11,19 @@ import numpy as np
 
 from . import measure_sxs_2508_weighted as weighted
 from . import qualify_generator as q
+
+SCHEMAS = {
+    "diffgw.seobnrv4.sxs-third-holdout-plan.v1": (
+        "diffgw.seobnrv4.sxs-third-holdout-weighted-plan.v1",
+        "diffgw.seobnrv4.sxs-third-holdout-extraction.v1",
+        "diffgw.seobnrv4.sxs-third-holdout-comparison.v1",
+        "diffgw.seobnrv4.sxs-third-holdout-weighted.v1"),
+    "diffgw.seobnrv4.sxs-paper-catalog-plan.v1": (
+        "diffgw.seobnrv4.sxs-paper-catalog-weighted-plan.v1",
+        "diffgw.seobnrv4.sxs-paper-catalog-extraction.v1",
+        "diffgw.seobnrv4.sxs-paper-catalog-comparison.v1",
+        "diffgw.seobnrv4.sxs-paper-catalog-weighted.v1"),
+}
 
 
 def write(path: Path, result: dict) -> None:
@@ -34,14 +47,14 @@ def main() -> int:
     extraction_path = args.decoded_dir / "extraction.json"
     extraction = json.loads(extraction_path.read_text())
     mass_grid = plan["mass_grid_msun"]
-    if (case_plan["schema"] != "diffgw.seobnrv4.sxs-third-holdout-plan.v1"
-            or plan["schema"] != "diffgw.seobnrv4.sxs-third-holdout-weighted-plan.v1"
+    expected = SCHEMAS.get(case_plan["schema"])
+    if (expected is None or plan["schema"] != expected[0]
             or plan["qualification_claim"] is not False
             or plan["case_plan_sha256"] != q.sha256(args.case_plan)
             or plan["weighted_function_source_sha256"] != q.sha256(weighted.__file__)
-            or extraction["schema"] != "diffgw.seobnrv4.sxs-third-holdout-extraction.v1"
+            or extraction["schema"] != expected[1]
             or extraction["plan_sha256"] != q.sha256(args.case_plan)
-            or comparison["schema"] != "diffgw.seobnrv4.sxs-third-holdout-comparison.v1"
+            or comparison["schema"] != expected[2]
             or comparison["plan_sha256"] != q.sha256(args.case_plan)
             or comparison["extraction_sha256"] != q.sha256(extraction_path)
             or not comparison["all_cases_succeeded"]
@@ -59,7 +72,7 @@ def main() -> int:
                                    plan["binary_versions"]["lalsimulation"])
     masses = list(range(mass_grid["first"], mass_grid["last"] + 1,
                         mass_grid["step"]))
-    result = dict(schema="diffgw.seobnrv4.sxs-third-holdout-weighted.v1",
+    result = dict(schema=expected[3],
                   plan_sha256=q.sha256(args.weighted_plan),
                   case_plan_sha256=q.sha256(args.case_plan),
                   extraction_sha256=q.sha256(extraction_path),

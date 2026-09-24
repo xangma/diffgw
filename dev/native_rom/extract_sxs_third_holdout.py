@@ -18,6 +18,8 @@ from sxscatalog.utilities.downloads import download_file
 SCHEMAS = {
     "diffgw.seobnrv4.sxs-third-holdout-plan.v1":
         "diffgw.seobnrv4.sxs-third-holdout-extraction.v1",
+    "diffgw.seobnrv4.sxs-paper-catalog-plan.v1":
+        "diffgw.seobnrv4.sxs-paper-catalog-extraction.v1",
 }
 
 
