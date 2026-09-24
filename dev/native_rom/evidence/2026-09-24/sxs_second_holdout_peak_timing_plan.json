@@ -1,0 +1,34 @@
+{
+  "allowed_time_shift_M": [
+    -500.0,
+    500.0
+  ],
+  "case_plan_sha256": "8af92504ac37fcd66658530a51f99553d22425c9de5b8cdece6b505dd2f5865e",
+  "control_window_durations_M": [
+    300.0,
+    800.0
+  ],
+  "extraction_sha256": "6cd4cd85b759d5f68715afee6e698f42a82327f82d10c35829c0926a46bf2b7a",
+  "guard_after_relaxation_M": 50.0,
+  "interpretation": "This exact phase-fit window is a declared proxy; Boh\u00e9 et al. 2017 Sec. IV.A does not specify it. A selected-case pass is not paper-equivalent or domain-wide qualification.",
+  "nr_high_metadata_sha256": {
+    "SXS:BBH:2128": "69eaaad6ca125ab707a2de43d91a72eb8828645c77202952bfaac77a74df76e7",
+    "SXS:BBH:2707": "a1e2217b722f8ce544ec8d0f341a77e194d8d42e48b276ce8ab94632ddfcc451",
+    "SXS:BBH:2786": "e3416bb0a7ad79f6f9462dc55fbf800bde857f509d21d876ddbbf93a1a986d85",
+    "SXS:BBH:3122": "aae016adfb8e9eb91b41c30390374c2852f8afd880956c620104102d1a8e64c5",
+    "SXS:BBH:3897": "96c9ab9eb6d824e7fb5245e939bcb4d4b3bc85b59bc1ade9c01d3a60260a9dfb"
+  },
+  "pairs": [
+    "native_vs_nr",
+    "low_vs_high_nr"
+  ],
+  "phase_alignment": "Minimize RMS of unwrapped candidate-minus-NR phase over the early NR interval, after removing one constant phase. Evaluate candidate at NR time plus one time lag. No intrinsic-parameter or amplitude fit.",
+  "phase_timing_function_source_sha256": "e0554179b8c50cf43db77871d5edb31d91406929559c56274f5b61b96512967d",
+  "primary_window_duration_M": 500.0,
+  "purpose": "Secondary early-inspiral phase-aligned amplitude-peak timing diagnostic. Fixed while the five native comparisons were running, after the first unweighted row was available; not a fully blinded or paper-exact release gate.",
+  "qualification_claim": false,
+  "reference_start": "highest-resolution NR metadata relaxation_time on its raw clock, transformed by the fixed M omega_22=0.09 anchor",
+  "sample_step_M": 0.25,
+  "schema": "diffgw.seobnrv4.sxs-second-holdout-peak-timing-plan.v1",
+  "time_shift_grid_step_M": 1.0
+}
