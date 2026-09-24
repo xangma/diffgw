@@ -6,20 +6,15 @@ Published SEOBNRv4 waveform generator and utilities in JAX.
 import math
 from typing import Optional, Tuple, Union
 import jax.numpy as jnp
-from diffgw_core.constants import MSUN_SEC
+from diffgw_core.constants import MSUN_SEC, PI
 from jaxwave.approximants.eob.attachment import attach_seobnrv4_22
 from jaxwave.approximants.eob.initial_conditions import find_quasicircular_initial_conditions
 from jaxwave.approximants.eob.integrator import EOBTrajectoryIntegrator
-from jaxwave.approximants.eob.nqc import (
-    seobnrv4_nqc_parameters,
-    seobnrv4_nqc_time_offset,
-    seobnrv4_nqc_time_offset_numerical_compatibility,
-)
+from jaxwave.approximants.eob.nqc import seobnrv4_nqc_parameters, seobnrv4_nqc_time_offset
 from jaxwave.approximants.eob.remnant import eob_final_mass_fraction, hofmann_final_spin
 from jaxwave.approximants.eob.seobnrv4_hamiltonian import SEOBNRv4Hamiltonian
 from jaxwave.approximants.eob.seobnrv4_flux import SEOBNRv4PublishedFlux
 from jaxwave.approximants.kerr_qnm_interp import evaluate_kerr_qnm_220
-from jaxwave.approximants.kerr_qnm_table_convention import signed_qnm_220_table_convention
 from jaxwave.conversions import as_array
 
 from jaxwave.approximants.eob.published_waveform import (
@@ -47,6 +42,11 @@ def reconstruct_seobnrv4_22(
     numerical_compatibility: bool = False,
 ) -> PublishedEOB22:
     """Integrate, calibrate NQC, and attach the published (2,2) mode."""
+    if numerical_compatibility:
+        raise NotImplementedError(
+            "JAX numerical_compatibility requires the historical adaptive "
+            "integration and attachment path; use the Torch development route"
+        )
     start = as_array(omega_start, dtype=jnp.float64)
     m1 = as_array(mass1, dtype=jnp.float64)
     m2 = as_array(mass2, dtype=jnp.float64)
@@ -57,10 +57,7 @@ def reconstruct_seobnrv4_22(
     mass_fraction = eob_final_mass_fraction(m1, m2, s1, s2)
     final_spin = hofmann_final_spin(m1, m2, s1, s2, fit_order=final_spin_fit_order)
 
-    if numerical_compatibility:
-        qnm_w, qnm_damp = signed_qnm_220_table_convention(final_spin)
-    else:
-        qnm_w, qnm_damp = evaluate_kerr_qnm_220(final_spin)
+    qnm_w, qnm_damp = evaluate_kerr_qnm_220(final_spin)
     sigma = (qnm_w - 1j * qnm_damp) / mass_fraction
 
     scaled1 = m1 / jnp.maximum(m1, m2)
@@ -72,18 +69,13 @@ def reconstruct_seobnrv4_22(
     ham = SEOBNRv4Hamiltonian(nu, s1, s2, delta=x1 - x2)
     rr = SEOBNRv4PublishedFlux(
         spin_truncation=spin_truncation,
-        retain_pan_cubic_spin=numerical_compatibility,
+        retain_pan_cubic_spin=False,
     )
 
     r, pr, j = find_quasicircular_initial_conditions(ham, rr, start)
     initial = jnp.stack([r, jnp.zeros_like(r), pr, j], axis=-1)
 
-    nqc_offset_fn = (
-        seobnrv4_nqc_time_offset_numerical_compatibility
-        if numerical_compatibility
-        else seobnrv4_nqc_time_offset
-    )
-    after = jnp.maximum(nqc_offset_fn(nu, chi), 0.0) + dt_geom
+    after = jnp.maximum(seobnrv4_nqc_time_offset(nu, chi), 0.0) + dt_geom
     trajectory = EOBTrajectoryIntegrator(ham, rr).integrate_to_frequency_peak(
         initial, dt_geom, num_steps, post_peak_duration=after,
         richardson_extrapolation=richardson_extrapolation
@@ -94,10 +86,10 @@ def reconstruct_seobnrv4_22(
         spin_v6=spin_v6,
         include_pan_v8=include_pan_v8,
         include_positive_chi_540=include_positive_chi_540,
-        retain_pan_cubic_spin=numerical_compatibility,
+        retain_pan_cubic_spin=False,
     )
 
-    match = trajectory.peak.time + nqc_offset_fn(nu, chi)
+    match = trajectory.peak.time + seobnrv4_nqc_time_offset(nu, chi)
     count = math.ceil(float(jnp.max(match) + ringdown_duration) / dt_geom) + 1
     time = jnp.arange(count, dtype=start.dtype) * dt_geom
 

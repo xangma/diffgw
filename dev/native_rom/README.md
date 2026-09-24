@@ -859,12 +859,14 @@ neither the physical generator nor either ROM is release-qualified.
 The development-only JAX `SEOBNRv4Published` assembler now uses the
 source-backed 35-mode flux and pre-NQC `(2,2)` mode/frequency. Two fixed-step
 end-to-end Torch/JAX comparisons (equal-mass nonspinning and q=4 mixed spin)
-agree through the complex attached mode within `2e-10` absolute/relative.
+agree through the complex attached mode within `2e-10` absolute/relative;
+their finite-support frequency projections agree within `2e-9` relative.
 This is cross-backend agreement on the same unqualified source choices,
 not physical or numerical release validation. The JAX assembler has no
 qualified adaptive historical route, domain-wide convergence, or gradient
-contract. A
-[JAX pre-NQC phase/mode component](../../src/jaxwave/approximants/eob/seobnrv4_mode22.py)
+contract. The JAX `numerical_compatibility=True` option fails explicitly because
+the historical adaptive integration and attachment route has not been ported.
+A [JAX pre-NQC phase/mode component](../../src/jaxwave/approximants/eob/seobnrv4_mode22.py)
 now matches the Torch source choices and an independent Gamma-function
 reference, including a differentiable continuous phase. It is unregistered
 and its same-state adapter matches the Torch pre-NQC mode and continuous
