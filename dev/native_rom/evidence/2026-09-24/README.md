@@ -2275,3 +2275,12 @@ so its failure does not contradict the paper's stated catalog result. The
 is `6.65e-8`, below the predeclared `1e-5` gate. The 22 M⊙ native/NR overlap
 changes by `−2.87e-9` to `0.989141708`, leaving the frozen physical proxy
 failed. Numerical integration error does not account for the gap.
+The [post-hoc five-case public-parity plan](sxs_third_public_parity_plan.json)
+freezes `1e-3` fixed-crossing complex relative L2 and `1e-4` weighted
+native-minus-public overlap gates before running the five public waveforms.
+The [result](sxs_third_public_parity.json) passes both on every third-holdout
+row. Fixed-crossing native/public errors are `3.47e-4`, `3.43e-4`,
+`1.18e-5`, `1.65e-4`, and `1.17e-4`; the largest absolute weighted overlap
+difference at the NR-minimum mass is `2.33e-5`. This is limited post-hoc
+implementation-fidelity evidence. The prospective NR proxy remains failed,
+and none of these rows bounds the full parameter domain or validates the ROM.

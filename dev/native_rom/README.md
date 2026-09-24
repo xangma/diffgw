@@ -816,6 +816,12 @@ changes the waveform by `6.65e-8` complex relative L2 and the 22 M⊙ overlap
 by only `−2.87e-9`. The 2018 SXS run was not part of the NR catalog assessed
 in the 2017 SEOBNRv4 paper. The remaining generator, frontend, and
 independently trained ROM gates still need completion.
+The [five-case pinned-public parity check](evidence/2026-09-24/sxs_third_public_parity.json)
+passes its separately frozen post-hoc gates: native/public fixed-crossing
+complex relative L2 is at most `3.47e-4`, and the largest difference in
+NR overlap at each case's worst sampled mass is `2.33e-5`. This supports
+implementation fidelity on those five rows, not physical accuracy across the
+domain or a ROM qualification.
 
 An independent [low-frequency phase-aligned peak-timing diagnostic](evidence/2026-09-24/sxs_five_case_peak_timing.json)
 fits one time and phase shift in a 500 M early-inspiral window after NR
