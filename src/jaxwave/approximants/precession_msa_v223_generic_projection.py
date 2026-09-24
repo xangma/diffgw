@@ -1,7 +1,7 @@
 """Nonpublic generic two-spin v223 source frame and quadrupole diagnostic.
 
 Pratten et al., arXiv:2004.06503v2, Eqs. (67)--(81) fix the source,
-inertial-J and observer frames.  Their Eqs. (5)--(10) and Appendix A fix the
+inertial-J and observer frames.  Their Eqs. (5)--(13) and Appendix A fix the
 positive-frequency quadrupole rotation and polarization projection.  The
 native-v223 source-frame 259/75 coefficient and Table-IV convention transport
 are separately labelled compatibility prescriptions.  This module composes
