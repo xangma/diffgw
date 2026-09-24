@@ -1065,7 +1065,10 @@ def run_oracle_comparison(
     oracle_meta = None
     if oracle_type == "lal_ringdown_td":
         try:
-            from tests.kerr_public_oracle import public_ringdown_fd_converged
+            if __package__:
+                from .kerr_public_oracle import public_ringdown_fd_converged
+            else:
+                from kerr_public_oracle import public_ringdown_fd_converged
             f_np, hp_np, hc_np, oracle_meta = public_ringdown_fd_converged(
                 p["mass1"], p.get("spin1z", p.get("chi1", 0.0)), p.get("distance", 100.0),
                 inclination=p.get("inclination", 0.0), phase=p.get("phic", 0.0),
