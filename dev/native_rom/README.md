@@ -508,6 +508,12 @@ On the same q8 row, halving the requested output step from `0.5 M` to
 `0.25 M` at the tighter tolerance leaves all nested mode samples and event
 times unchanged. Both runs use the same `0.015625 M` internal step; this is
 one-row grid evidence, not a domain-wide numerical bound.
+The subsequently frozen [source-backed RKF45 q8 stress screen](evidence/2026-09-24/source_rkf_q8_screen.json)
+passes three ODE tolerances and three nested output grids with adjacent
+complex relative L2 values of `2.68e-9` and `1.55e-9`, identical common-grid
+samples, and unchanged sampled event times. Source hashes agree before and
+after the run. This selected, previously problematic row is numerically stable
+under these settings; its physical/public waveform difference remains open.
 
 The frozen q2 mixed-spin development row compares the native full `(2,2)`
 mode with hash-pinned compiled LALSuite source and the installed public wheel
