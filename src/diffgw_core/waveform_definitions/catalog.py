@@ -177,6 +177,18 @@ _XAS_COMPONENTS = (
         ("quartic", "Eq. 71"), ("newtonian_factor", "Eq. 67"),
         ("collocation", "Eqs. 68–69, 79–84; Table 2"),
     )),
+    ComponentDefinition(
+        id="phenomxas.amp.intermediate.constant_normalization.v1",
+        name="Constant normalization",
+        spec_version=_XAS_QUARTIC,
+        scope="Aligned-spin (2,2) carrier intermediate amplitude K/P with supplied calibration outputs",
+        variant="carrier",
+        implementation="native_and_reference",
+        evidence=("declared_carrier_convention", "sampled_binary_oracle_comparison"),
+        source_refs=_source("project", "Quartic intermediate amplitude: K/P carrier convention"),
+        reference_module="diffgw_reference.imrphenomxas_intermediate",
+        caveats=("This normalization is distinct from the printed Eq. 71; binary agreement does not establish source fidelity.",),
+    ),
     *tuple(_xas_component(
         "imrphenomxas_fifth_order", _XAS_FIFTH, component_id, location,
         variant="paper", implementation="reference_only",

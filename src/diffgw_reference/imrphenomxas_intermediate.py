@@ -20,12 +20,18 @@ SOURCES = {
         "url": SOURCE,
         "arxiv": "2001.11412v1",
         "equations": ("67", "68", "69", "71", "79", "80", "81", "82", "83", "84", "Table 2"),
-    }
+    },
+    "project": {
+        "url": "docs/math/imrphenomxas.md#quartic-intermediate-amplitude",
+        "version": SPEC_VERSION,
+        "equations": ("quartic-intermediate-amplitude",),
+    },
 }
 COMPONENT_IDS = {
     "quartic": "phenomxas.amp.intermediate.quartic.v1",
     "newtonian_factor": "phenomxas.amp.intermediate.newtonian_factor.v1",
     "collocation": "phenomxas.amp.intermediate.collocation.v1",
+    "constant_normalization": "phenomxas.amp.intermediate.constant_normalization.v1",
 }
 COMPONENT_SOURCES = {
     COMPONENT_IDS["quartic"]: ("pratten2020v1", "71"),
@@ -33,8 +39,9 @@ COMPONENT_SOURCES = {
     COMPONENT_IDS["collocation"]: (
         "pratten2020v1", "68", "69", "79", "80", "81", "82", "83", "84", "Table 2"
     ),
+    COMPONENT_IDS["constant_normalization"]: ("project", "quartic-intermediate-amplitude"),
 }
-OBSERVED_CONVENTION = "phenomxas.amp.intermediate.constant_normalization.v1"
+OBSERVED_CONVENTION = COMPONENT_IDS["constant_normalization"]
 OBSERVED_EVIDENCE = {
     OBSERVED_CONVENTION: {
         "kind": "binary_oracle",

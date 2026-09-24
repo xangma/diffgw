@@ -39,6 +39,12 @@ generated table above identifies the native quartic/sign choices and the
 paper alternatives that remain reference only. SI scaling, phase origin,
 polarization signs, and the `f<=0` mask are specified in
 [composed complex polarizations](#composed-complex-polarizations).
+For direct Torch/JAX model calls, `f_ref` defaults to absent. Both frontends
+accept `window_type`, `phasing_convention`, and `reference_frame` for API
+compatibility but do not use them to choose a window, phase prescription, or
+frame. Once an explicit frequency grid is supplied, direct calls also ignore
+`f_lower`, `f_final`, and `delta_f`; the public waveform wrapper can use
+frequency limits when constructing that grid.
 
 ## Mathematics and components
 
@@ -526,10 +532,14 @@ This is an identified model choice, not agreement with the published source
 fit. The check verifies the deposited surfaces and their local derivatives;
 it does not reproduce the original NR calibration or prove physical accuracy.
 
-| Component ID | Evidence | Native relationship | Maintained check |
+| Diagnostic evidence | Source | Native relationship | Maintained check |
 | --- | --- | --- | --- |
-| `phenomxas.calibration.author_fits.v1` | Pinned APS companion file, explicit function/version map | 24 matching surfaces and one declared midpoint spin-argument variant in both frontends | `verify_xas_author_fits.py` (opt-in external asset) |
-| `phenomxas.calibration.qnm_fits.v1` | Pinned APS companion file, `(2,2)` real/imaginary functions | Both carriers' QNM fit functions | `verify_xas_author_fits.py` (opt-in external asset) |
+| Parameter-fit surfaces | Pinned APS companion file, explicit function/version map | 24 matching surfaces and one declared midpoint spin-argument variant in both frontends | `verify_xas_author_fits.py` (opt-in external asset) |
+| QNM fit surfaces | Pinned APS companion file, `(2,2)` real/imaginary functions | Both carriers' QNM fit functions | `verify_xas_author_fits.py` (opt-in external asset) |
+
+These opt-in comparisons are diagnostic evidence for the supplied calibration
+outputs. They are outside the executable scalar composition and do not add
+calibration components or verification claims to the public catalog.
 
 ## Reproduce the checks
 

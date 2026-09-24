@@ -6,6 +6,7 @@ from importlib.util import find_spec
 import json
 import os
 from pathlib import Path
+import re
 import subprocess
 import sys
 
@@ -164,6 +165,17 @@ def test_reference_only_xas_choices_are_not_advertised_as_native():
     options = {item["name"]: item for item in describe_waveform("IMRPhenomXAS")["options"]}
     assert options["intermediate_amplitude"]["native_choices"] == ["carrier_quartic"]
     assert options["intermediate_phase"]["native_choices"] == ["carrier_sign"]
+
+
+def test_xas_spec_component_rows_match_catalog():
+    """Every XAS component row on the canonical page has a public binding."""
+    from diffgw.waveforms import get_waveform
+
+    model = get_waveform("IMRPhenomXAS")
+    page = Path(__file__).resolve().parents[1] / "docs" / model.spec_page
+    rows = re.findall(r"^\| `(phenomxas\.[^`]+\.v\d+)` \|", page.read_text(), re.MULTILINE)
+    assert len(rows) == len(set(rows))
+    assert set(rows) == {component.id for component in model.components}
 
 
 def test_optional_reference_facade_loads_declared_modules():
