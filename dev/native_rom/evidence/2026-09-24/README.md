@@ -117,6 +117,24 @@ trajectory and pre-NQC samples; this is a native-input counterfactual, not a
 claim of compiled NQC parity. Reproduce with `PYTHONPATH=src:. python -m
 dev.native_rom.diagnose_nqc_phase_matrix --json-out /tmp/nqc-phase-matrix.json`.
 
+The [same-input GSL plan](nqc_gsl_same_input_plan.json) and
+[result](nqc_gsl_same_input.json) replay the same hashes again and pass the
+native NQC amplitude, product, phase-basis, and unwrapped phase samples
+through the GSL natural-cubic library shipped with the pinned LAL wheel.
+They apply the source's full-precision targets and phase sign convention to
+the resulting matching systems. GSL and native full-series phase-basis
+derivative matrices agree at the recorded precision on both rows; the first
+two amplitude-product matrix rows also agree exactly, while the native
+diagnostic's local second-derivative row differs by at most `1.8e-5`
+relatively. The five-coefficient distance from the public fit is `5.6238`
+versus `5.5635` for native on the aligned row, and `0.66555` versus `0.66502`
+on the antialigned row. This shows that using the source's GSL interpolation
+operations on the **native** samples does not close the public coefficient
+gap. The private compiled LAL NQC function was not called on those samples,
+and the public fit has different upstream inputs. Reproduce with
+`PYTHONPATH=src:. python -m dev.native_rom.diagnose_nqc_gsl_same_input
+--json-out /tmp/nqc-gsl-same-input.json`.
+
 Reproduce the new waveform checks from the repository root with
 `PYTHONPATH=src:. python -m dev.native_rom.diagnose_mode_32_whole_waveform
 --json-out /tmp/mode32-waveform.json` and

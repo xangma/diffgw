@@ -123,6 +123,11 @@ matrix with the full-series natural-cubic matrix slightly increases the
 phase-coefficient distance from the public values on both strong-spin rows.
 This rules out that matrix choice alone as the observed gap's explanation;
 same-input compiled NQC parity and the distinct upstream inputs remain open.
+The pinned wheel's GSL natural-cubic evaluator gives the same full-series
+phase-basis derivative matrix on the exact native NQC samples, and applying
+the source targets to those GSL matching systems also fails to close the
+public coefficient gap. The LAL routine itself remains private, so this is
+same-input spline and matching evidence rather than compiled-function parity.
 
 ## Numerical evidence
 

@@ -214,7 +214,8 @@ def native_run(row, level, settings, *, diagnostic_hermite_resampling=False,
                diagnostic_fine_max_step_M=None,
                diagnostic_coarse_initial_step_M=None,
                diagnostic_warm_start_Momega=None,
-               return_nqc_coefficients=False):
+               return_nqc_coefficients=False,
+               return_nqc_samples=False):
     import torch
     from dev.native_rom.eob.torch.adaptive_driver_clean import reconstruct_seobnrv4_22_adaptive
     with bounded_run(settings.max_run_seconds), torch.no_grad():
@@ -281,6 +282,16 @@ def native_run(row, level, settings, *, diagnostic_hermite_resampling=False,
             _eval_batch_scalar(spline, fine_nqc.match_time, derivative=1),
             _eval_batch_scalar(spline, fine_nqc.match_time, derivative=2),
         ))).tolist()
+    if return_nqc_samples:
+        nqc = result.attachment.fine.nqc
+        output["nqc_samples"] = dict(
+            time=array(nqc.amplitude_spline.knots),
+            amplitude=array(nqc.sampled_amplitude),
+            products=array(nqc.sampled_products),
+            phase_basis=array(nqc.sampled_phase_basis),
+            waveform_phase=array(nqc.sampled_waveform_phase),
+            match_time=float(array(result.attachment.fine.match_time)),
+        )
     return output
 
 

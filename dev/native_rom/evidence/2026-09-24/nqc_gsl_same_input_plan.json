@@ -1,0 +1,9 @@
+{
+  "schema": "diffgw.seobnrv4.nqc-gsl-same-input-plan.v1",
+  "purpose": "Replay two frozen native waveforms, then evaluate the pinned LAL wheel's GSL natural-cubic spline operations on exactly their native NQC input samples. Apply the pinned source target values and matching-system signs. This isolates same-input interpolation and matching arithmetic; it does not replay the private compiled LAL NQC function or replace public waveform comparison.",
+  "coefficient_evidence": "dev/native_rom/evidence/2026-09-24/nqc_coefficients.json",
+  "coefficient_evidence_sha256": "1c8c31aabc6d43d704af9b2a4b84d701c13262316fe102d07c86a3a2613f74b7",
+  "waveform_plan": "dev/native_rom/evidence/2026-09-24/nqc_coefficients_plan.json",
+  "rows": ["strong_aligned_spin", "strong_antialigned_spin"],
+  "release_qualified": false
+}
