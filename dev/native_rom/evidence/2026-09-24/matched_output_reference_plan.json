@@ -1,0 +1,20 @@
+{
+  "schema": "diffgw.seobnrv4.matched-output-reference-plan.v1",
+  "purpose": "Compare public and native high-rate dynamics at fixed orbital frequency while requesting the same 0.125 M output step used by the frozen whole-waveform and NQC-coefficient checks. Verify the public coefficient-only call exactly reproduces the frozen public coefficients. Keep the earlier 0.015625 M-output comparison distinct; it has the same internal high-rate step but a different low-rate integration and NQC fit.",
+  "rows": ["strong_aligned_spin", "strong_antialigned_spin"],
+  "public_output_step_M": 0.125,
+  "expected_public_high_step_M": 0.015625,
+  "fixed_orbital_frequencies": [0.07, 0.08, 0.10, 0.12, 0.14, 0.16],
+  "near_peak_public_frequencies_by_row": {
+    "strong_aligned_spin": [0.165, 0.168, 0.169],
+    "strong_antialigned_spin": [0.165, 0.170, 0.172]
+  },
+  "near_peak_selection_note": "Exploratory follow-up frequencies were chosen after inspecting each row's public maximum orbital frequency; they are descriptive diagnostics, not a prospective acceptance gate.",
+  "release_qualified": false,
+  "coefficient_evidence": "dev/native_rom/evidence/2026-09-24/nqc_coefficients.json",
+  "coefficient_evidence_sha256": "1c8c31aabc6d43d704af9b2a4b84d701c13262316fe102d07c86a3a2613f74b7",
+  "different_output_evidence": "dev/native_rom/evidence/2026-09-24/public_nqc_dynamics.json",
+  "different_output_evidence_sha256": "d9f7452971f1befdec31c805eba4e90d3d75b34da740b73d8b1818782a7243f5",
+  "different_output_grid_evidence": "dev/native_rom/evidence/2026-09-24/public_mode_grid_alignment.json",
+  "different_output_grid_evidence_sha256": "cd51335690dfb1823b1f03d7752655eceebe41cdbf2bb1724a986f064e661718"
+}

@@ -218,6 +218,62 @@ dev.native_rom.diagnose_public_pre_nqc_mode --json-out
 dev.native_rom.diagnose_public_mode_grid_alignment --json-out
 /tmp/public-mode-grid-alignment.json`.
 
+**Output-step correction.** The frozen native whole-waveform and direct NQC
+coefficient checks request `0.125 M` output; the public run internally returns
+high dynamics at `0.015625 M`. The preceding mode and dynamics diagnostics
+instead request `0.015625 M` output (and finer steps for the mode bracket).
+Equal high-rate spacing does not make these the same public evolution. The
+[matched-output plan](matched_output_reference_plan.json) and
+[result](matched_output_reference.json) call the pinned public binary at
+`0.125 M`, exactly reproduce all five frozen public coefficients on both rows,
+and compare high dynamics with the same native frozen values at six fixed
+orbital frequencies. Radius differs by at most `4.0 ppm` and tortoise radial
+momentum by at most `49.6 ppm`. The change from `0.015625 M` to `0.125 M`
+public output changes these phase-space values by at most `2.6` and `6.5 ppm`
+at those frequencies; this supports the earlier small phase-space result,
+but does not validate the earlier fixed-time epoch inference or mode alignment
+as matching-input comparisons for the `0.125 M` waveform. An exploratory
+near-peak follow-up at three additional frequencies per row, selected after
+inspecting the public peak range, finds the two public high-rate trajectories
+within `2.1 ppm` in radius, `5.8 ppm` in radial momentum, and `0.6 ppm` in
+angular momentum at equal orbital frequency. This does not measure their
+pre-NQC mode or the differentiated matching matrices.
+
+The same pinned calls show a substantially larger **coefficient** output-step
+effect. Relative to the frozen `0.125 M` public coefficients, at least one of
+the `0.015625`, `0.0078125`, and `0.00390625 M` calls differs by up to
+`1.52%` across the aligned row's five coefficients and `2.98%` across the
+antialigned row's five. The original native-versus-public gaps at `0.125 M`
+reach `0.34%` and `1.55%`, respectively. The NQC coefficients do not converge
+monotonically over these output steps. This is a measured sensitivity, not an
+explanation of which integration, interpolation, peak, or matching operation
+causes it. No fine-output public mode result should be used as if it supplied
+the centered inputs of the frozen `0.125 M` coefficient fit. Reproduce with
+`PYTHONPATH=src:. python -m dev.native_rom.diagnose_matched_output_reference
+--json-out /tmp/matched-output-reference.json`.
+
+The [native output-grid plan](native_nqc_output_grid_plan.json) and
+[result](native_nqc_output_grid.json) replay the frozen `0.125 M` native
+waveform and public coefficients exactly, then request `0.0625`, `0.03125`,
+and `0.015625 M` output on both strong-spin rows. Every native run uses the
+same `0.015625 M` internal high-rate step, fixed coarse initial step, and
+fixed restart time; the native peak, match time, and all five NQC coefficients
+are bitwise identical across the four requested output steps. The pinned
+public coefficients vary by at most `0.27%` on the aligned row and `1.69%`
+on the antialigned row over those four steps. At the finest of those steps,
+the maximum native/public coefficient gaps are `0.22%` and `3.00%`;
+output-step sensitivity does not remove the discrepancy. The native control
+does not reproduce the public low-rate evolution rule: pinned source
+`LALSimIMRSpinAlignedEOB.c` at revision `53acc0c2cd7ea2d3c83fc71a7bd88035c2861d6c`
+(SHA-256 `936e95ee47422a3986f84f71b81c6917d6d164b73fd6421ee60ecfbe502595dd`)
+uses requested `deltaT` for the non-postadiabatic coarse ODE step and chooses
+the high-rate restart from that coarse trajectory. This supplies a plausible
+path for the measured public sensitivity, not a causal isolation of the NQC
+fit or a historical same-input parity result. Reproduce with
+`PYTHONPATH=src:. python -m dev.native_rom.diagnose_native_nqc_output_grid
+--json-out /tmp/native-nqc-output-grid.json` in the pinned development
+environment.
+
 Reproduce the new waveform checks from the repository root with
 `PYTHONPATH=src:. python -m dev.native_rom.diagnose_mode_32_whole_waveform
 --json-out /tmp/mode32-waveform.json` and

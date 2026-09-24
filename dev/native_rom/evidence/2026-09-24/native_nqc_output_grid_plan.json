@@ -1,0 +1,11 @@
+{
+  "schema": "diffgw.seobnrv4.native-nqc-output-grid-plan.v1",
+  "purpose": "Measure native and pinned public NQC coefficient sensitivity to requested output step while retaining a 0.015625 M internal high-rate grid. Replay the frozen 0.125 M native and public coefficients first. This is diagnostic evidence, not a release gate or a claim of same-input matching parity.",
+  "rows": ["strong_aligned_spin", "strong_antialigned_spin"],
+  "output_steps_M": [0.125, 0.0625, 0.03125, 0.015625],
+  "expected_native_internal_step_M": 0.015625,
+  "coefficient_evidence": "dev/native_rom/evidence/2026-09-24/nqc_coefficients.json",
+  "coefficient_evidence_sha256": "1c8c31aabc6d43d704af9b2a4b84d701c13262316fe102d07c86a3a2613f74b7",
+  "waveform_plan": "dev/native_rom/evidence/2026-09-24/nqc_coefficients_plan.json",
+  "release_qualified": false
+}

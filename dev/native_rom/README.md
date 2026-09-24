@@ -140,9 +140,21 @@ held fixed, not a model correction. Dividing the public pre-attachment `(2,2)`
 mode by its returned NQC factor gives raw amplitudes within `3.1 ppm` on the
 antialigned row. The aligned row's nominal `38–87 ppm` amplitude discrepancy
 falls below `1 ppm` under a one-sample mode-to-dynamics alignment bracket at
-three output steps. Raw mode slopes, phase evolution, and centered matching
-inputs still require source-level parity checks; neither the mode nor the
-remaining attachment difference is qualified.
+three finer output steps. Those mode-grid calls requested `0.015625 M` or
+smaller output steps, whereas the frozen whole-waveform and public coefficient
+comparison requested `0.125 M` and internally produced `0.015625 M` high-rate
+dynamics. The [matched-output reference check](evidence/2026-09-24/README.md)
+reproduces the latter coefficients exactly and finds fixed-frequency radius
+and radial-momentum differences of at most `4.0` and `49.6 ppm`; it also finds
+percent-level public coefficient changes when only the requested output step
+changes. A [controlled native output-grid replay](evidence/2026-09-24/README.md)
+keeps the native restart and `0.015625 M` high-rate step fixed: its five NQC
+coefficients are identical across four output steps, whereas the public fit
+changes by up to `0.27%` and `1.69%` on the two rows. The finer-grid mode
+result is therefore not a same-run NQC input parity check. Raw mode slopes,
+phase evolution, and centered matching inputs still require source-level
+parity checks; neither the mode nor the remaining attachment difference is
+qualified.
 
 ## Numerical evidence
 
