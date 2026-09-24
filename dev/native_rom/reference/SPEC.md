@@ -58,6 +58,15 @@ mpmath at high precision, differentiates `Delta_t` independently, and uses
 the continuous horizon-product limit at zero spin. The tortoise factor
 `xi=sqrt(Delta_t Delta_r)/(r²+a²)` follows
 [Pan et al. (2010), Eq. (28)](https://arxiv.org/html/0912.3466).
+The pinned [historical LAL Hamiltonian source](https://git.ligo.org/lscsoft/lalsuite/-/raw/5154f04e470d1cc48d6f61193af728b5692474ab/lalsimulation/lib/LALSimIMRSpinEOBHamiltonian.c)
+omits the `k5l u^4` contribution while forming an internal derivative of
+the logarithmic radial potential. The potential value itself is the same.
+The [frozen diagnostic](../evidence/2026-09-24/hamiltonian_log_derivative.json)
+isolates that historical convention at sampled public states; it does not
+alter this paper-derived scalar reference or establish compiled component
+parity. The development-only variant is documented in the
+[campaign evidence](../evidence/2026-09-24/README.md).
+
 `hamiltonian.energy_map` checks Bohé Eq. (1), including the distinction
 between the total real energy and reduced-mass-normalized binding energy.
 `hamiltonian.nonspinning_effective_hamiltonian` also checks the deformed-metric

@@ -1,0 +1,9 @@
+{
+  "schema": "diffgw.seobnrv4.hamiltonian-grid-convergence-plan.v1",
+  "purpose": "Check whether the combined source-motivated candidate converges as the native output grid is halved with ODE tolerances and choices held fixed.",
+  "prior_whole_waveform": "dev/native_rom/evidence/2026-09-24/hamiltonian_whole_waveform.json",
+  "prior_whole_waveform_sha256": "05b435342797ec9ab330cf3b3c310ed4756bdbbccffbdaec04dc7f92bfe1a02a",
+  "grid_steps_M": [0.25, 0.125, 0.0625],
+  "peak_fit": "quadratic_power",
+  "interpretation": "The numerical gate uses the pre-existing 1e-6 complex and amplitude L2 budgets and 0.05M event-time budget. Public waveform calls also change their requested output step and are not a single converged reference."
+}

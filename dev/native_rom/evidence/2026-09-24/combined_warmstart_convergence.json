@@ -1,0 +1,459 @@
+{
+  "candidate_choice": {
+    "hamiltonian_log_derivative": "lal_v4",
+    "mode_33_higher_spin": "lal_v4_rho",
+    "name": "combined"
+  },
+  "checks": {
+    "grid": {
+      "coarse_to_medium": {
+        "amplitude_relative_l2": 0.0,
+        "boundary_time_M_abs_difference": 0.0,
+        "candidate_samples": 1903,
+        "common_samples": 1903,
+        "complex_relative_l2": 0.0,
+        "grid_step_M": 0.25,
+        "match_time_M_abs_difference": 0.0,
+        "peak_time_M_abs_difference": 0.0,
+        "phase_max_abs_rad": 5.348514232830328e-17,
+        "phase_rms_rad": 1.6956821840301794e-17,
+        "phase_samples": 1775,
+        "reference_samples": 1903,
+        "relative_norm_error": 0.0,
+        "samples": 1903,
+        "support_end_difference_M": -0.125,
+        "unmaximized_real_overlap": 1.0
+      },
+      "gates": {
+        "amplitude_error_budget": true,
+        "boundary_time_M": true,
+        "complex_error_budget": true,
+        "error_decreased": true,
+        "match_time_M": true,
+        "peak_time_M": true
+      },
+      "medium_to_fine": {
+        "amplitude_relative_l2": 0.0,
+        "boundary_time_M_abs_difference": 0.0,
+        "candidate_samples": 3806,
+        "common_samples": 3806,
+        "complex_relative_l2": 0.0,
+        "grid_step_M": 0.125,
+        "match_time_M_abs_difference": 0.0,
+        "peak_time_M_abs_difference": 0.0,
+        "phase_max_abs_rad": 5.434840028524389e-17,
+        "phase_rms_rad": 1.6743682818485185e-17,
+        "phase_samples": 3550,
+        "reference_samples": 3806,
+        "relative_norm_error": 0.0,
+        "samples": 3806,
+        "support_end_difference_M": 0.0,
+        "unmaximized_real_overlap": 1.0000000000000002
+      },
+      "numerical_check_passed": true
+    },
+    "ode": {
+      "coarse_to_medium": {
+        "amplitude_relative_l2": 3.195292661240689e-06,
+        "boundary_time_M_abs_difference": 0.0,
+        "candidate_samples": 3806,
+        "common_samples": 3806,
+        "complex_relative_l2": 8.855192449863624e-06,
+        "grid_step_M": 0.125,
+        "match_time_M_abs_difference": 0.0,
+        "peak_time_M_abs_difference": 0.0,
+        "phase_max_abs_rad": 1.6185964327027046e-05,
+        "phase_rms_rad": 9.247914330210506e-06,
+        "phase_samples": 3550,
+        "reference_samples": 3806,
+        "relative_norm_error": 2.3830916680012137e-06,
+        "samples": 3806,
+        "support_end_difference_M": 0.0,
+        "unmaximized_real_overlap": 0.999999999963633
+      },
+      "gates": {
+        "amplitude_error_budget": false,
+        "boundary_time_M": true,
+        "complex_error_budget": false,
+        "error_decreased": true,
+        "match_time_M": true,
+        "peak_time_M": true
+      },
+      "medium_to_fine": {
+        "amplitude_relative_l2": 1.51273569283098e-06,
+        "boundary_time_M_abs_difference": 0.0,
+        "candidate_samples": 3806,
+        "common_samples": 3806,
+        "complex_relative_l2": 3.532608758589642e-06,
+        "grid_step_M": 0.125,
+        "match_time_M_abs_difference": 0.0,
+        "peak_time_M_abs_difference": 0.0,
+        "phase_max_abs_rad": 6.356500847504453e-06,
+        "phase_rms_rad": 3.6162508543916645e-06,
+        "phase_samples": 3550,
+        "reference_samples": 3806,
+        "relative_norm_error": 1.1281384847405818e-06,
+        "samples": 3806,
+        "support_end_difference_M": 0.0,
+        "unmaximized_real_overlap": 0.999999999994397
+      },
+      "numerical_check_passed": false
+    }
+  },
+  "errors": [],
+  "numerical_choice": {
+    "default_initial_step_rule": true,
+    "default_restart_rule": false,
+    "fixed_restart_time_M": 165.0,
+    "hermite_resampling": true,
+    "local_nqc_degree": 6,
+    "local_nqc_phase_derivatives": true,
+    "local_nqc_window_M": 0.5
+  },
+  "plan_sha256": "37342e975c4161bfc9128cdcf5b54964fe1ec01b14d8ab809fed31e43415c80c",
+  "prior_sha256": "8308a6865dccad3255cdccda65187d0edb464538d6b488715b630e6657ef5399",
+  "process": {
+    "argv": [
+      "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw/dev/native_rom/diagnose_combined_warmstart_convergence.py",
+      "--json-out",
+      "dev/native_rom/evidence/2026-09-24/combined_warmstart_convergence.json"
+    ],
+    "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+    "host": "client-3792.default.vpn.port.ac.uk",
+    "pid": 80196
+  },
+  "release_qualified": false,
+  "row": {
+    "chi1": 0.2,
+    "chi2": -0.1,
+    "mass1": 30.0,
+    "mass2": 20.0,
+    "omega_start": 0.04
+  },
+  "runs": {
+    "grid_coarse": {
+      "elapsed_seconds": 61.80945379199693,
+      "level": {
+        "atol": 1e-14,
+        "dt_geom": 0.25,
+        "name": "grid_coarse",
+        "rtol": 1e-13
+      },
+      "native": {
+        "array_dtype": {
+          "mode": "complex128",
+          "time": "float64"
+        },
+        "array_sha256": {
+          "mode": "92d5f306499c0c226845a79f81374a7e7a86962e5836277dab4d826486ca167d",
+          "time": "87e4f52ca1f6a65101fef8375252528682e6767d729be2c757b88ba0a5fb7159"
+        },
+        "atol": 1e-14,
+        "boundary_time_M": 325.640625,
+        "dt_geom": 0.25,
+        "final_mass_fraction": 0.9521433597755232,
+        "final_spin": 0.7029227215291914,
+        "internal_step_M": 0.015625,
+        "match_time_M": 325.6458743098685,
+        "name": "grid_coarse",
+        "peak_time_M": 330.50504302978516,
+        "restart_time_M": 165.0,
+        "rtol": 1e-13,
+        "samples": 1903,
+        "stages": {
+          "coarse": {
+            "accepted": 542,
+            "evaluations": 3398,
+            "event_time_M": 330.541590090302,
+            "rejected": 29,
+            "termination": [
+              "event"
+            ]
+          },
+          "fine": {
+            "accepted": 421,
+            "evaluations": 2657,
+            "event_time_M": 165.68788887753456,
+            "rejected": 26,
+            "termination": [
+              "event"
+            ]
+          }
+        },
+        "support_M": [
+          0.0,
+          475.5
+        ]
+      }
+    },
+    "grid_fine": {
+      "elapsed_seconds": 61.87805583301815,
+      "level": {
+        "atol": 1e-14,
+        "dt_geom": 0.0625,
+        "name": "grid_fine",
+        "rtol": 1e-13
+      },
+      "native": {
+        "array_dtype": {
+          "mode": "complex128",
+          "time": "float64"
+        },
+        "array_sha256": {
+          "mode": "1d5e6d7e1e4626397049944e9b7d3894e69019192245fb3799c895eed2f87aaa",
+          "time": "524e74c56593ddd70b2c026373c925060e9a90eac54b173aac8ba03f9b93e64f"
+        },
+        "atol": 1e-14,
+        "boundary_time_M": 325.640625,
+        "dt_geom": 0.0625,
+        "final_mass_fraction": 0.9521433597755232,
+        "final_spin": 0.7029227215291914,
+        "internal_step_M": 0.015625,
+        "match_time_M": 325.6458743098685,
+        "name": "grid_fine",
+        "peak_time_M": 330.50504302978516,
+        "restart_time_M": 165.0,
+        "rtol": 1e-13,
+        "samples": 7611,
+        "stages": {
+          "coarse": {
+            "accepted": 542,
+            "evaluations": 3398,
+            "event_time_M": 330.541590090302,
+            "rejected": 29,
+            "termination": [
+              "event"
+            ]
+          },
+          "fine": {
+            "accepted": 421,
+            "evaluations": 2657,
+            "event_time_M": 165.68788887753456,
+            "rejected": 26,
+            "termination": [
+              "event"
+            ]
+          }
+        },
+        "support_M": [
+          0.0,
+          475.625
+        ]
+      }
+    },
+    "middle": {
+      "elapsed_seconds": 61.90561087499373,
+      "level": {
+        "atol": 1e-14,
+        "dt_geom": 0.125,
+        "name": "middle",
+        "rtol": 1e-13
+      },
+      "native": {
+        "array_dtype": {
+          "mode": "complex128",
+          "time": "float64"
+        },
+        "array_sha256": {
+          "mode": "9d4cc997f09d8b4db30a0c9ab0d9e2175c4da23b5bb6477ffff2b8d70b4f0a0a",
+          "time": "bc82d8d07503af1551e2a658e2608386432c1505b99f1bbb94e12c6ad2c9437f"
+        },
+        "atol": 1e-14,
+        "boundary_time_M": 325.640625,
+        "dt_geom": 0.125,
+        "final_mass_fraction": 0.9521433597755232,
+        "final_spin": 0.7029227215291914,
+        "internal_step_M": 0.015625,
+        "match_time_M": 325.6458743098685,
+        "name": "middle",
+        "peak_time_M": 330.50504302978516,
+        "restart_time_M": 165.0,
+        "rtol": 1e-13,
+        "samples": 3806,
+        "stages": {
+          "coarse": {
+            "accepted": 542,
+            "evaluations": 3398,
+            "event_time_M": 330.541590090302,
+            "rejected": 29,
+            "termination": [
+              "event"
+            ]
+          },
+          "fine": {
+            "accepted": 421,
+            "evaluations": 2657,
+            "event_time_M": 165.68788887753456,
+            "rejected": 26,
+            "termination": [
+              "event"
+            ]
+          }
+        },
+        "support_M": [
+          0.0,
+          475.625
+        ]
+      }
+    },
+    "ode_coarse": {
+      "elapsed_seconds": 31.222481875011,
+      "level": {
+        "atol": 1e-12,
+        "dt_geom": 0.125,
+        "name": "ode_coarse",
+        "rtol": 1e-11
+      },
+      "native": {
+        "array_dtype": {
+          "mode": "complex128",
+          "time": "float64"
+        },
+        "array_sha256": {
+          "mode": "88851f0b9553e27f61dcd75a26521787841973f7c181ca0fee744004b06b6ae6",
+          "time": "bc82d8d07503af1551e2a658e2608386432c1505b99f1bbb94e12c6ad2c9437f"
+        },
+        "atol": 1e-12,
+        "boundary_time_M": 325.640625,
+        "dt_geom": 0.125,
+        "final_mass_fraction": 0.9521433597755232,
+        "final_spin": 0.7029227215291914,
+        "internal_step_M": 0.015625,
+        "match_time_M": 325.6458743098685,
+        "name": "ode_coarse",
+        "peak_time_M": 330.50504302978516,
+        "restart_time_M": 165.0,
+        "rtol": 1e-11,
+        "samples": 3806,
+        "stages": {
+          "coarse": {
+            "accepted": 217,
+            "evaluations": 1438,
+            "event_time_M": 330.55749753846897,
+            "rejected": 27,
+            "termination": [
+              "event"
+            ]
+          },
+          "fine": {
+            "accepted": 173,
+            "evaluations": 1159,
+            "event_time_M": 165.9089778405224,
+            "rejected": 24,
+            "termination": [
+              "event"
+            ]
+          }
+        },
+        "support_M": [
+          0.0,
+          475.625
+        ]
+      }
+    },
+    "ode_medium": {
+      "elapsed_seconds": 43.077458417013986,
+      "level": {
+        "atol": 1e-13,
+        "dt_geom": 0.125,
+        "name": "ode_medium",
+        "rtol": 1e-12
+      },
+      "native": {
+        "array_dtype": {
+          "mode": "complex128",
+          "time": "float64"
+        },
+        "array_sha256": {
+          "mode": "795dcda8279092398421cd1254705c94585d87b3aca6a5b1fc0fcd2ecf3b0447",
+          "time": "bc82d8d07503af1551e2a658e2608386432c1505b99f1bbb94e12c6ad2c9437f"
+        },
+        "atol": 1e-13,
+        "boundary_time_M": 325.640625,
+        "dt_geom": 0.125,
+        "final_mass_fraction": 0.9521433597755232,
+        "final_spin": 0.7029227215291914,
+        "internal_step_M": 0.015625,
+        "match_time_M": 325.6458743098685,
+        "name": "ode_medium",
+        "peak_time_M": 330.50504302978516,
+        "restart_time_M": 165.0,
+        "rtol": 1e-12,
+        "samples": 3806,
+        "stages": {
+          "coarse": {
+            "accepted": 342,
+            "evaluations": 2193,
+            "event_time_M": 330.56312223336766,
+            "rejected": 28,
+            "termination": [
+              "event"
+            ]
+          },
+          "fine": {
+            "accepted": 269,
+            "evaluations": 1745,
+            "event_time_M": 165.76705466748248,
+            "rejected": 26,
+            "termination": [
+              "event"
+            ]
+          }
+        },
+        "support_M": [
+          0.0,
+          475.625
+        ]
+      }
+    }
+  },
+  "schema": "diffgw.seobnrv4.combined-warmstart-convergence.v1",
+  "scope": {
+    "description": "Scalar CPU float64 numerical stability evidence only; no training or promotion.",
+    "known_limitations": [
+      "Convergence cannot establish correctness of the equations or published model fidelity.",
+      "The adaptive prototype uses a diagnostic QNM spline with independently generated values and black-box-inferred knot metadata; this is not wholly literature-specified provenance.",
+      "Changing dt also changes the adaptive initial step and coarse/fine restart sampling; the grid check measures the complete generator's grid sensitivity.",
+      "No time, phase, amplitude, or coefficient fitting is performed.",
+      "No derivatives, batched execution, accelerators, or JAX are qualified here."
+    ],
+    "physics_validated": false,
+    "production_asset": false,
+    "production_promotion_allowed": false,
+    "training_generator_qualified": false
+  },
+  "script_sha256": "62f36aad4cfbf5b26d8612e484916a34fc3d9256ccc2473e3e351d0b340d9f7f",
+  "settings": {
+    "atol_levels": [
+      1e-12,
+      1e-13,
+      1e-14
+    ],
+    "dt_levels_M": [
+      0.5,
+      0.25,
+      0.125
+    ],
+    "event_time_limit_M": 0.05,
+    "max_accepted_steps": 20000,
+    "max_evaluations": 200000,
+    "max_rejected_steps": 10000,
+    "max_run_seconds": 600.0,
+    "relative_l2_limit": 1e-06,
+    "ringdown_duration_M": 150.0,
+    "rtol_levels": [
+      1e-11,
+      1e-12,
+      1e-13
+    ]
+  },
+  "source_sha256": {
+    "dev/native_rom/eob/torch/adaptive_driver_clean.py": "202996e24b51398af3354a13e584cae6d180fd11100976b3dbb2637b2728a14c",
+    "dev/native_rom/eob/torch/historical_hamiltonian.py": "f93beaa5172dd1fff43eb676848f60caa8d2795dfd7ed21c842827dd53141066",
+    "dev/native_rom/eob/torch/warm_start.py": "a9818350b18ed04ca645edbf6af4c22760fc51eae540c12f38d171d99a675a20",
+    "dev/native_rom/qualify_generator.py": "8afe29d1c8b8e6213f2c11a0228e7555e36d5a9fbb8346c84975941e2587ad4e",
+    "src/torchwave/approximants/eob/seobnrv4_flux.py": "3d5b2133c0297430f5b1dedfff4077cb05ffc6dad0a3b57827c8cae06e8f4704",
+    "src/torchwave/approximants/eob/seobnrv4_hamiltonian.py": "40f063046e30b9fb5824b8d95980ff9deaa73f231dfe987e453094210b87cf3d"
+  },
+  "status": "diagnostic_complete"
+}

@@ -1,0 +1,14 @@
+{
+  "schema": "diffgw.seobnrv4.hamiltonian-whole-waveform-plan.v1",
+  "purpose": "Measure the historical radial-log derivative convention on a whole waveform after the historical (3,3) flux choice; no model parameters are fitted.",
+  "prior_mode_33_whole_waveform": "dev/native_rom/evidence/2026-09-24/mode_33_whole_waveform.json",
+  "prior_mode_33_whole_waveform_sha256": "cf04708603e2b19c86b9d494b5c244ed4437672dbfd139867fe83ea3a90be3ce",
+  "same_state_hamiltonian": "dev/native_rom/evidence/2026-09-24/hamiltonian_log_derivative.json",
+  "same_state_hamiltonian_sha256": "412a7264952138ed04a8fd63cf1e5d3341f114fe105ce87ac0cdf8962f5437cc",
+  "diagnostic_hamiltonian_sha256": "f93beaa5172dd1fff43eb676848f60caa8d2795dfd7ed21c842827dd53141066",
+  "baseline_hamiltonian": "analytic",
+  "candidate_hamiltonian": "lal_v4",
+  "mode_33_higher_spin": "lal_v4_rho",
+  "peak_fit": "quadratic_power",
+  "acceptance": "Exact baseline waveform replay; paired sampled- and fitted-peak metrics against the same pinned public waveform. This is diagnostic sensitivity, not qualification."
+}

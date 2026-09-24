@@ -1,0 +1,218 @@
+{
+  "candidate_choice": {
+    "hamiltonian_log_derivative": "lal_v4",
+    "mode_33_higher_spin": "lal_v4_rho",
+    "name": "combined"
+  },
+  "comparison": {
+    "pre_attachment": {
+      "frequency_max_abs": 5.965240801319993e-11,
+      "last_common_time_M": 325.625,
+      "raw_mode": {
+        "amplitude_relative_l2": 1.1042566416858785e-10,
+        "complex_relative_l2": 1.5677651503716226e-09,
+        "phase_max_abs_rad": 7.139842496444599e-09,
+        "phase_rms_rad": 1.2778498180206953e-09,
+        "phase_samples": 2606,
+        "relative_norm_error": 7.718847783166893e-11,
+        "samples": 2606,
+        "unmaximized_real_overlap": 0.9999999999999998
+      },
+      "samples": 2606,
+      "state_max_abs": {
+        "phi": 3.5471501291794993e-09,
+        "pphi": 6.664984120163808e-10,
+        "pr_star": 3.5245008994655436e-10,
+        "r": 3.46599371425782e-09
+      },
+      "state_rms": {
+        "phi": 6.377009831134718e-10,
+        "pphi": 1.0239918147486724e-10,
+        "pr_star": 5.661870191093049e-11,
+        "r": 5.766577489497967e-10
+      }
+    },
+    "regions": {
+      "attachment": {
+        "error_energy_fraction": 0.22634482019324634,
+        "local_relative_l2": 6.277093623273027e-06,
+        "reference_energy_fraction": 0.07168766429629839,
+        "samples": 80
+      },
+      "coarse_prefix": {
+        "error_energy_fraction": 0.015007298805215272,
+        "local_relative_l2": 7.914074001470928e-07,
+        "reference_energy_fraction": 0.29901529164440266,
+        "samples": 1320
+      },
+      "fine_early": {
+        "error_energy_fraction": 0.17193715870178328,
+        "local_relative_l2": 2.3321860240528858e-06,
+        "reference_energy_fraction": 0.39448859462138763,
+        "samples": 1046
+      },
+      "fine_late": {
+        "error_energy_fraction": 0.45147916963183066,
+        "local_relative_l2": 5.405935401216061e-06,
+        "reference_energy_fraction": 0.1927911513086618,
+        "samples": 240
+      },
+      "ringdown": {
+        "error_energy_fraction": 0.1352315526679245,
+        "local_relative_l2": 6.3375368487038655e-06,
+        "reference_energy_fraction": 0.04201729812924961,
+        "samples": 1120
+      }
+    },
+    "whole": {
+      "amplitude_relative_l2": 1.51273569283098e-06,
+      "boundary_time_M_abs_difference": 0.0,
+      "candidate_samples": 3806,
+      "common_samples": 3806,
+      "complex_relative_l2": 3.532608758589642e-06,
+      "grid_step_M": 0.125,
+      "match_time_M_abs_difference": 0.0,
+      "peak_time_M_abs_difference": 0.0,
+      "phase_max_abs_rad": 6.356500847504453e-06,
+      "phase_rms_rad": 3.6162508543916645e-06,
+      "phase_samples": 3550,
+      "reference_samples": 3806,
+      "relative_norm_error": 1.1281384847405818e-06,
+      "samples": 3806,
+      "support_end_difference_M": 0.0,
+      "unmaximized_real_overlap": 0.999999999994397
+    }
+  },
+  "errors": [],
+  "levels": [
+    {
+      "atol": 1e-13,
+      "boundary_time_M": 325.640625,
+      "dt_geom": 0.125,
+      "elapsed_seconds": 43.06174504198134,
+      "hashes": {
+        "mode": "795dcda8279092398421cd1254705c94585d87b3aca6a5b1fc0fcd2ecf3b0447",
+        "time": "bc82d8d07503af1551e2a658e2608386432c1505b99f1bbb94e12c6ad2c9437f"
+      },
+      "match_time_M": 325.6458743098685,
+      "name": "ode_medium",
+      "nqc_coefficients": {
+        "amplitude": [
+          8.862313627574318,
+          -87.88904650927684,
+          102.96887322130036
+        ],
+        "phase": [
+          5.592050034808152,
+          -35.28782620178058
+        ]
+      },
+      "peak_time_M": 330.50504302978516,
+      "restart_time_M": 165.0,
+      "rtol": 1e-12
+    },
+    {
+      "atol": 1e-14,
+      "boundary_time_M": 325.640625,
+      "dt_geom": 0.125,
+      "elapsed_seconds": 62.18420933399466,
+      "hashes": {
+        "mode": "9d4cc997f09d8b4db30a0c9ab0d9e2175c4da23b5bb6477ffff2b8d70b4f0a0a",
+        "time": "bc82d8d07503af1551e2a658e2608386432c1505b99f1bbb94e12c6ad2c9437f"
+      },
+      "match_time_M": 325.6458743098685,
+      "name": "middle",
+      "nqc_coefficients": {
+        "amplitude": [
+          8.86381077238677,
+          -87.90243205447686,
+          102.98427852578618
+        ],
+        "phase": [
+          5.592025382581203,
+          -35.28753322929806
+        ]
+      },
+      "peak_time_M": 330.50504302978516,
+      "restart_time_M": 165.0,
+      "rtol": 1e-13
+    }
+  ],
+  "numerical_choice": {
+    "default_initial_step_rule": true,
+    "default_restart_rule": false,
+    "fixed_restart_time_M": 165.0,
+    "hermite_resampling": true,
+    "local_nqc_degree": 6,
+    "local_nqc_phase_derivatives": true,
+    "local_nqc_window_M": 0.5
+  },
+  "plan_sha256": "c27ccd3cce0a92ae63ac1b216f691fe94d63993b0a05923abeaab9cdffbb032c",
+  "prior_sha256": "1abbdbfd3700cdeb3b6e57facc71eb47b82895e82bc91b4cff17720cdeceac80",
+  "process": {
+    "argv": [
+      "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw/dev/native_rom/diagnose_combined_tolerance_trace.py",
+      "--json-out",
+      "dev/native_rom/evidence/2026-09-24/combined_tolerance_trace.json"
+    ],
+    "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+    "host": "client-3792.default.vpn.port.ac.uk",
+    "pid": 89000
+  },
+  "release_qualified": false,
+  "row": {
+    "chi1": 0.2,
+    "chi2": -0.1,
+    "mass1": 30.0,
+    "mass2": 20.0,
+    "omega_start": 0.04
+  },
+  "schema": "diffgw.seobnrv4.combined-tolerance-trace.v1",
+  "scope": {
+    "description": "Scalar CPU float64 numerical stability evidence only; no training or promotion.",
+    "known_limitations": [
+      "Convergence cannot establish correctness of the equations or published model fidelity.",
+      "The adaptive prototype uses a diagnostic QNM spline with independently generated values and black-box-inferred knot metadata; this is not wholly literature-specified provenance.",
+      "Changing dt also changes the adaptive initial step and coarse/fine restart sampling; the grid check measures the complete generator's grid sensitivity.",
+      "No time, phase, amplitude, or coefficient fitting is performed.",
+      "No derivatives, batched execution, accelerators, or JAX are qualified here."
+    ],
+    "physics_validated": false,
+    "production_asset": false,
+    "production_promotion_allowed": false,
+    "training_generator_qualified": false
+  },
+  "script_sha256": "57727ef2c1c5186fba82e11eeb9ed495fa7cd7f758e74ccdde82458c5a810494",
+  "settings": {
+    "atol_levels": [
+      1e-12,
+      1e-13,
+      1e-14
+    ],
+    "dt_levels_M": [
+      0.5,
+      0.25,
+      0.125
+    ],
+    "event_time_limit_M": 0.05,
+    "max_accepted_steps": 20000,
+    "max_evaluations": 200000,
+    "max_rejected_steps": 10000,
+    "max_run_seconds": 600.0,
+    "relative_l2_limit": 1e-06,
+    "ringdown_duration_M": 150.0,
+    "rtol_levels": [
+      1e-11,
+      1e-12,
+      1e-13
+    ]
+  },
+  "source_sha256": {
+    "dev/native_rom/eob/torch/adaptive_driver_clean.py": "202996e24b51398af3354a13e584cae6d180fd11100976b3dbb2637b2728a14c",
+    "dev/native_rom/eob/torch/historical_hamiltonian.py": "f93beaa5172dd1fff43eb676848f60caa8d2795dfd7ed21c842827dd53141066",
+    "dev/native_rom/qualify_generator.py": "8afe29d1c8b8e6213f2c11a0228e7555e36d5a9fbb8346c84975941e2587ad4e",
+    "src/torchwave/approximants/eob/published_waveform.py": "7dde2eefb4d99b7fe5fc3570203222dc02c1cb05d59d8f7392e25fc946cb32dc",
+    "src/torchwave/approximants/eob/seobnrv4_flux.py": "3d5b2133c0297430f5b1dedfff4077cb05ffc6dad0a3b57827c8cae06e8f4704"
+  },
+  "status": "diagnostic_complete"
+}

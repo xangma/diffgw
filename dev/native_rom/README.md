@@ -55,6 +55,22 @@ finds a substantial same-state torque improvement through `M Omega=0.12`,
 but a residual near `245 ppm` at `0.15` and peak-anchor-sensitive mixed
 whole-waveform results. That explicit Torch/JAX option remains diagnostic;
 the physical and numerical release gates remain open.
+The subsequent [historical Hamiltonian derivative check](evidence/2026-09-24/README.md)
+finds that the pinned LAL source omits a term from an internal logarithmic
+potential derivative. Reproducing that historical convention together with
+the `(3,3)` flux choice reduces a frozen aligned-spin, peak-fitted whole-waveform
+complex relative L2 difference from `0.00827564` to `0.00760014`. This
+source-motivated variant remains development-only; the residual and open
+reference-component gates prevent release qualification.
+Combining it with the fully native frequency warm start lowers that one-row
+fitted difference to `0.00131140`. A pinned public-start-state intervention
+lowers it to `0.00116397`, so most of the residual remains. The same combined
+candidate passes nested-output-grid stability but fails the refined ODE
+tolerance budget (`3.53e-6` complex and `1.51e-6` amplitude, versus `1e-6`
+limits). An opt-in local NQC second-derivative rule reduces those refined
+differences to `1.05e-7` and `2.87e-9` on the same row while leaving the
+physical comparison near `0.00131`. These [frozen diagnostics](evidence/2026-09-24/README.md)
+remain on the feature branch; no model or ROM is release qualified.
 
 ## Numerical evidence
 

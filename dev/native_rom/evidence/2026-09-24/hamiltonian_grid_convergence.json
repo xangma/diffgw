@@ -1,0 +1,780 @@
+{
+  "convergence": {
+    "coarse_to_medium": {
+      "amplitude_relative_l2": 4.158404712408035e-10,
+      "boundary_time_M_abs_difference": 0.0,
+      "candidate_samples": 1921,
+      "common_samples": 1921,
+      "complex_relative_l2": 4.306755545065586e-09,
+      "grid_step_M": 0.25,
+      "match_time_M_abs_difference": 0.0,
+      "peak_time_M_abs_difference": 0.0,
+      "phase_max_abs_rad": 8.569060299986656e-09,
+      "phase_rms_rad": 4.8453376942114495e-09,
+      "phase_samples": 1793,
+      "reference_samples": 1921,
+      "relative_norm_error": 3.095567135957822e-10,
+      "samples": 1921,
+      "support_end_difference_M": 0.0,
+      "unmaximized_real_overlap": 1.0
+    },
+    "gates": {
+      "amplitude_error_budget": true,
+      "boundary_time_M": true,
+      "complex_error_budget": true,
+      "error_decreased": false,
+      "match_time_M": true,
+      "peak_time_M": true
+    },
+    "medium_to_fine": {
+      "amplitude_relative_l2": 2.0062553957612956e-09,
+      "boundary_time_M_abs_difference": 0.0,
+      "candidate_samples": 3841,
+      "common_samples": 3841,
+      "complex_relative_l2": 1.2643891935004921e-08,
+      "grid_step_M": 0.125,
+      "match_time_M_abs_difference": 0.0,
+      "peak_time_M_abs_difference": 0.0,
+      "phase_max_abs_rad": 2.4745588673236963e-08,
+      "phase_rms_rad": 1.3766209941601244e-08,
+      "phase_samples": 3585,
+      "reference_samples": 3841,
+      "relative_norm_error": 1.4936329950643312e-09,
+      "samples": 3841,
+      "support_end_difference_M": 0.0,
+      "unmaximized_real_overlap": 0.9999999999999996
+    },
+    "numerical_check_passed": false
+  },
+  "errors": [],
+  "levels": [
+    {
+      "elapsed_seconds": 58.06958191699232,
+      "fitted_peak": {
+        "common_support_M": [
+          -329.81150320228267,
+          149.93849679771728
+        ],
+        "metrics": {
+          "amplitude_relative_l2": 0.0015833216961049135,
+          "complex_relative_l2": 0.007589826618248484,
+          "phase_max_abs_rad": 0.014254688447916775,
+          "phase_rms_rad": 0.0069385854523122585,
+          "phase_samples": 1792,
+          "relative_norm_error": 0.00018858969612001175,
+          "samples": 1920,
+          "unmaximized_real_overlap": 0.9999712204765113
+        },
+        "native_peak": {
+          "offset_samples": 0.18994212314431325,
+          "phase_rad": 0.334701106879967,
+          "time_s": -0.0011888920619603353
+        },
+        "reference_peak": {
+          "offset_samples": 0.24601280913089152,
+          "phase_rad": 2.7414936978604993,
+          "time_s": -0.0011892880537688604
+        },
+        "windows": {
+          "inspiral": {
+            "metrics": {
+              "amplitude_relative_l2": 0.0018216998004793976,
+              "complex_relative_l2": 0.008762649335708972,
+              "phase_max_abs_rad": 0.014254688447916775,
+              "phase_rms_rad": 0.008337462908805975,
+              "phase_samples": 1240,
+              "relative_norm_error": 0.000329884010371817,
+              "samples": 1240,
+              "unmaximized_real_overlap": 0.9999616750428304
+            },
+            "time_M": [
+              -329.81150320228267,
+              -20.061503202282704
+            ]
+          },
+          "late_inspiral": {
+            "metrics": {
+              "amplitude_relative_l2": 0.0001108511264228123,
+              "complex_relative_l2": 0.0008349010255753736,
+              "phase_max_abs_rad": 0.001751786345973994,
+              "phase_rms_rad": 0.0008753465782101358,
+              "phase_samples": 80,
+              "relative_norm_error": 8.880513869558015e-05,
+              "samples": 80,
+              "unmaximized_real_overlap": 0.9999996553827112
+            },
+            "time_M": [
+              -19.811503202282694,
+              -0.061503202282725586
+            ]
+          },
+          "post_peak": {
+            "metrics": {
+              "amplitude_relative_l2": 0.0004284733933135897,
+              "complex_relative_l2": 0.0004500142560663417,
+              "phase_max_abs_rad": 0.00019287854914670487,
+              "phase_rms_rad": 0.00018535038962327644,
+              "phase_samples": 472,
+              "relative_norm_error": 0.0004094117725629287,
+              "samples": 600,
+              "unmaximized_real_overlap": 0.999999982545438
+            },
+            "time_M": [
+              0.18849679771728614,
+              149.93849679771728
+            ]
+          }
+        }
+      },
+      "level": {
+        "atol": 1e-14,
+        "dt_geom": 0.25,
+        "name": "grid_0.25",
+        "rtol": 1e-13
+      },
+      "native": {
+        "array_dtype": {
+          "mode": "complex128",
+          "time": "float64"
+        },
+        "array_sha256": {
+          "mode": "5f06ed61f0da9d98246d6f9456c738237b06a154f4b3a804b8d6e5c30510e5e8",
+          "time": "928135dff3d273b222d5c841f38270a7c1f4757fa6dead0e556fe2f0bc4efb0f"
+        },
+        "atol": 1e-14,
+        "boundary_time_M": 330.015625,
+        "dt_geom": 0.25,
+        "final_mass_fraction": 0.9521433597755232,
+        "final_spin": 0.7029227215291914,
+        "internal_step_M": 0.015625,
+        "match_time_M": 330.0158236506888,
+        "name": "grid_0.25",
+        "peak_time_M": 334.87499237060547,
+        "restart_time_M": 165.0,
+        "rtol": 1e-13,
+        "samples": 1921,
+        "stages": {
+          "coarse": {
+            "accepted": 597,
+            "evaluations": 3728,
+            "event_time_M": 334.90238010606413,
+            "rejected": 29,
+            "termination": [
+              "event"
+            ]
+          },
+          "fine": {
+            "accepted": 424,
+            "evaluations": 2690,
+            "event_time_M": 170.01358667444532,
+            "rejected": 29,
+            "termination": [
+              "event"
+            ]
+          }
+        },
+        "support_M": [
+          0.0,
+          480.0
+        ]
+      },
+      "sampled_peak": {
+        "active_phase_samples": 1793,
+        "anchor": {
+          "native_amplitude_peak_s": -0.0012005865395618737,
+          "native_peak_phase_rad": 0.35196858548802457,
+          "reference_amplitude_peak_s": -0.0012044347270735861,
+          "reference_peak_phase_rad": 2.7638520018101067
+        },
+        "common_samples": 1921,
+        "common_support_M": [
+          -330.0,
+          150.0
+        ],
+        "metrics": {
+          "amplitude_relative_l2": 0.001610239224668503,
+          "complex_relative_l2": 0.010244473044783535,
+          "phase_max_abs_rad": 0.017691621508945234,
+          "phase_rms_rad": 0.009699259888026522,
+          "phase_samples": 1793,
+          "relative_norm_error": 0.00025799347084509705,
+          "samples": 1921,
+          "unmaximized_real_overlap": 0.9999475721923646
+        },
+        "native_support_M": [
+          -330.00000000000006,
+          150.0
+        ],
+        "phase_drift_rad": {
+          "range": 0.020790710397564957,
+          "start_to_end": -0.01585627353413547
+        },
+        "reference_support_M": [
+          -330.25,
+          391.5
+        ],
+        "windows": {
+          "inspiral": {
+            "metrics": {
+              "amplitude_relative_l2": 0.0018422268657993116,
+              "complex_relative_l2": 0.01179441222653893,
+              "phase_max_abs_rad": 0.017691621508945234,
+              "phase_rms_rad": 0.011510907444815645,
+              "phase_samples": 1240,
+              "relative_norm_error": 0.0003983146569435103,
+              "samples": 1240,
+              "unmaximized_real_overlap": 0.9999305529091921
+            },
+            "time_M": [
+              -330.0,
+              -20.249999999999993
+            ]
+          },
+          "late_inspiral": {
+            "metrics": {
+              "amplitude_relative_l2": 0.0001707164322693937,
+              "complex_relative_l2": 0.0021022520675877334,
+              "phase_max_abs_rad": 0.003741133441969728,
+              "phase_rms_rad": 0.0021916657187098618,
+              "phase_samples": 80,
+              "relative_norm_error": 0.00016078348094050732,
+              "samples": 80,
+              "unmaximized_real_overlap": 0.9999978035469393
+            },
+            "time_M": [
+              -19.99999999999998,
+              -0.2500000000000117
+            ]
+          },
+          "post_peak": {
+            "metrics": {
+              "amplitude_relative_l2": 0.0006773229603392034,
+              "complex_relative_l2": 0.0018180172784011887,
+              "phase_max_abs_rad": 0.0030990888886197245,
+              "phase_rms_rad": 0.002905170369976016,
+              "phase_samples": 473,
+              "relative_norm_error": 0.0005407557677291619,
+              "samples": 601,
+              "unmaximized_real_overlap": 0.9999984927999609
+            },
+            "time_M": [
+              0.0,
+              150.0
+            ]
+          }
+        }
+      }
+    },
+    {
+      "elapsed_seconds": 57.708860125014326,
+      "fitted_peak": {
+        "common_support_M": [
+          -329.9196482399786,
+          149.95535176002136
+        ],
+        "metrics": {
+          "amplitude_relative_l2": 0.001579782910531086,
+          "complex_relative_l2": 0.007600136478006915,
+          "phase_max_abs_rad": 0.014265847359804625,
+          "phase_rms_rad": 0.00695192649819831,
+          "phase_samples": 3584,
+          "relative_norm_error": 0.00021877184476593037,
+          "samples": 3840,
+          "unmaximized_real_overlap": 0.9999711492050597
+        },
+        "native_peak": {
+          "offset_samples": 0.2525992256169677,
+          "phase_rad": 0.3405017639222478,
+          "time_s": -0.0011928104445671388
+        },
+        "reference_peak": {
+          "offset_samples": 0.35718591982904063,
+          "phase_rad": 2.7473648698649464,
+          "time_s": -0.0011934390019814403
+        },
+        "windows": {
+          "inspiral": {
+            "metrics": {
+              "amplitude_relative_l2": 0.0018231670272014838,
+              "complex_relative_l2": 0.008776613495741438,
+              "phase_max_abs_rad": 0.014265847359804625,
+              "phase_rms_rad": 0.008350067918788095,
+              "phase_samples": 2480,
+              "relative_norm_error": 0.000335201695088827,
+              "samples": 2480,
+              "unmaximized_real_overlap": 0.9999615545948263
+            },
+            "time_M": [
+              -329.9196482399786,
+              -20.04464823997862
+            ]
+          },
+          "late_inspiral": {
+            "metrics": {
+              "amplitude_relative_l2": 4.748410527572694e-05,
+              "complex_relative_l2": 0.0008631639703115254,
+              "phase_max_abs_rad": 0.001800852113086729,
+              "phase_rms_rad": 0.0009104289563698422,
+              "phase_samples": 160,
+              "relative_norm_error": 3.179552222132287e-05,
+              "samples": 160,
+              "unmaximized_real_overlap": 0.9999996279676289
+            },
+            "time_M": [
+              -19.919648239978645,
+              -0.04464823997864199
+            ]
+          },
+          "post_peak": {
+            "metrics": {
+              "amplitude_relative_l2": 0.00026567161189965604,
+              "complex_relative_l2": 0.0003682321092945241,
+              "phase_max_abs_rad": 0.00044387661017210317,
+              "phase_rms_rad": 0.000417966400377948,
+              "phase_samples": 944,
+              "relative_norm_error": 0.0002448486522321769,
+              "samples": 1200,
+              "unmaximized_real_overlap": 0.9999999621687253
+            },
+            "time_M": [
+              0.08035176002139204,
+              149.95535176002136
+            ]
+          }
+        }
+      },
+      "level": {
+        "atol": 1e-14,
+        "dt_geom": 0.125,
+        "name": "grid_0.125",
+        "rtol": 1e-13
+      },
+      "native": {
+        "array_dtype": {
+          "mode": "complex128",
+          "time": "float64"
+        },
+        "array_sha256": {
+          "mode": "b326156ea3e635e2ec3d0758b441880731b2e4b20a8986cd5a88932ae55599c8",
+          "time": "44e687351455e50a5a7feb1e765e28124741ef496b427c5629f88b32a2770714"
+        },
+        "atol": 1e-14,
+        "boundary_time_M": 330.015625,
+        "dt_geom": 0.125,
+        "final_mass_fraction": 0.9521433597755232,
+        "final_spin": 0.7029227215291914,
+        "internal_step_M": 0.015625,
+        "match_time_M": 330.0158236506888,
+        "name": "grid_0.125",
+        "peak_time_M": 334.87499237060547,
+        "restart_time_M": 165.0,
+        "rtol": 1e-13,
+        "samples": 3841,
+        "stages": {
+          "coarse": {
+            "accepted": 596,
+            "evaluations": 3727,
+            "event_time_M": 334.87457922133217,
+            "rejected": 30,
+            "termination": [
+              "event"
+            ]
+          },
+          "fine": {
+            "accepted": 424,
+            "evaluations": 2690,
+            "event_time_M": 170.0136059317666,
+            "rejected": 29,
+            "termination": [
+              "event"
+            ]
+          }
+        },
+        "support_M": [
+          0.0,
+          480.0
+        ]
+      },
+      "sampled_peak": {
+        "active_phase_samples": 3585,
+        "anchor": {
+          "native_amplitude_peak_s": -0.0012005865395618737,
+          "native_peak_phase_rad": 0.3519685770699513,
+          "reference_amplitude_peak_s": -0.0012044347270735861,
+          "reference_peak_phase_rad": 2.763573254076711
+        },
+        "common_samples": 3841,
+        "common_support_M": [
+          -330.0,
+          150.0
+        ],
+        "metrics": {
+          "amplitude_relative_l2": 0.0016061749476093583,
+          "complex_relative_l2": 0.01006588597063393,
+          "phase_max_abs_rad": 0.017463762745811393,
+          "phase_rms_rad": 0.009522413286871537,
+          "phase_samples": 3585,
+          "relative_norm_error": 0.00024422002360169337,
+          "samples": 3841,
+          "unmaximized_real_overlap": 0.9999493811536592
+        },
+        "native_support_M": [
+          -330.00000000000006,
+          150.0
+        ],
+        "phase_drift_rad": {
+          "range": 0.02056237798205609,
+          "start_to_end": -0.01559886445219363
+        },
+        "reference_support_M": [
+          -330.25,
+          391.875
+        ],
+        "windows": {
+          "inspiral": {
+            "metrics": {
+              "amplitude_relative_l2": 0.0018375321777374816,
+              "complex_relative_l2": 0.0115867858441992,
+              "phase_max_abs_rad": 0.017463762745811393,
+              "phase_rms_rad": 0.01129487034112078,
+              "phase_samples": 2480,
+              "relative_norm_error": 0.00038483422496593533,
+              "samples": 2480,
+              "unmaximized_real_overlap": 0.9999329730398596
+            },
+            "time_M": [
+              -330.0,
+              -20.125000000000014
+            ]
+          },
+          "late_inspiral": {
+            "metrics": {
+              "amplitude_relative_l2": 0.0001406393406396754,
+              "complex_relative_l2": 0.0020242352959744573,
+              "phase_max_abs_rad": 0.003628030052220304,
+              "phase_rms_rad": 0.002112446000958186,
+              "phase_samples": 160,
+              "relative_norm_error": 0.00013297634659803492,
+              "samples": 160,
+              "unmaximized_real_overlap": 0.9999979603483129
+            },
+            "time_M": [
+              -19.99999999999998,
+              -0.12499999999997768
+            ]
+          },
+          "post_peak": {
+            "metrics": {
+              "amplitude_relative_l2": 0.0006787931677230926,
+              "complex_relative_l2": 0.001821691234195468,
+              "phase_max_abs_rad": 0.0030986152362446956,
+              "phase_rms_rad": 0.0029053836810947658,
+              "phase_samples": 945,
+              "relative_norm_error": 0.0005431189144698978,
+              "samples": 1201,
+              "unmaximized_real_overlap": 0.9999984873880734
+            },
+            "time_M": [
+              0.0,
+              150.0
+            ]
+          }
+        }
+      }
+    },
+    {
+      "elapsed_seconds": 57.78742220799904,
+      "fitted_peak": {
+        "common_support_M": [
+          -329.97469703133055,
+          149.96280296866945
+        ],
+        "metrics": {
+          "amplitude_relative_l2": 0.0015767893267969592,
+          "complex_relative_l2": 0.00683810337809627,
+          "phase_max_abs_rad": 0.013189949641319195,
+          "phase_rms_rad": 0.006186667130335819,
+          "phase_samples": 7168,
+          "relative_norm_error": 0.000232391978725488,
+          "samples": 7680,
+          "unmaximized_real_overlap": 0.99997665259986
+        },
+        "native_peak": {
+          "offset_samples": 0.36048081943659144,
+          "phase_rad": 0.3437930931587794,
+          "time_s": -0.0011950379613964574
+        },
+        "reference_peak": {
+          "offset_samples": -0.40484749871198117,
+          "phase_rad": 2.7492280372405755,
+          "time_s": -0.0011952738858073222
+        },
+        "windows": {
+          "inspiral": {
+            "metrics": {
+              "amplitude_relative_l2": 0.0018223389428154914,
+              "complex_relative_l2": 0.007901852622581276,
+              "phase_max_abs_rad": 0.013189949641319195,
+              "phase_rms_rad": 0.007435238689901398,
+              "phase_samples": 4960,
+              "relative_norm_error": 0.0003314682649042666,
+              "samples": 4960,
+              "unmaximized_real_overlap": 0.9999688456248581
+            },
+            "time_M": [
+              -329.97469703133055,
+              -20.037197031330514
+            ]
+          },
+          "late_inspiral": {
+            "metrics": {
+              "amplitude_relative_l2": 3.187087714257606e-05,
+              "complex_relative_l2": 0.0005514456111319367,
+              "phase_max_abs_rad": 0.0012647987486919682,
+              "phase_rms_rad": 0.0005848301578833405,
+              "phase_samples": 320,
+              "relative_norm_error": 2.462319691631798e-05,
+              "samples": 320,
+              "unmaximized_real_overlap": 0.9999998482532833
+            },
+            "time_M": [
+              -19.974697031330557,
+              -0.03719703133053419
+            ]
+          },
+          "post_peak": {
+            "metrics": {
+              "amplitude_relative_l2": 0.00011577342775653644,
+              "complex_relative_l2": 0.0001478656951371132,
+              "phase_max_abs_rad": 0.00015848593800337022,
+              "phase_rms_rad": 0.0001493573401112074,
+              "phase_samples": 1888,
+              "relative_norm_error": 0.00010771574821466512,
+              "samples": 2400,
+              "unmaximized_real_overlap": 0.9999999948686571
+            },
+            "time_M": [
+              0.02530296866948283,
+              149.96280296866945
+            ]
+          }
+        }
+      },
+      "level": {
+        "atol": 1e-14,
+        "dt_geom": 0.0625,
+        "name": "grid_0.0625",
+        "rtol": 1e-13
+      },
+      "native": {
+        "array_dtype": {
+          "mode": "complex128",
+          "time": "float64"
+        },
+        "array_sha256": {
+          "mode": "08375859a243215c15bd1f2762a0e0ff3ea0c83daeb5155f9e236bbbc9beddc7",
+          "time": "1194b4037028f9e0d8113941c2824dad045985ca026be58d6260415b1531c493"
+        },
+        "atol": 1e-14,
+        "boundary_time_M": 330.015625,
+        "dt_geom": 0.0625,
+        "final_mass_fraction": 0.9521433597755232,
+        "final_spin": 0.7029227215291914,
+        "internal_step_M": 0.015625,
+        "match_time_M": 330.0158236506888,
+        "name": "grid_0.0625",
+        "peak_time_M": 334.87499237060547,
+        "restart_time_M": 165.0,
+        "rtol": 1e-13,
+        "samples": 7681,
+        "stages": {
+          "coarse": {
+            "accepted": 597,
+            "evaluations": 3733,
+            "event_time_M": 334.87369228543173,
+            "rejected": 30,
+            "termination": [
+              "event"
+            ]
+          },
+          "fine": {
+            "accepted": 424,
+            "evaluations": 2690,
+            "event_time_M": 170.01350803340483,
+            "rejected": 29,
+            "termination": [
+              "event"
+            ]
+          }
+        },
+        "support_M": [
+          0.0,
+          480.0
+        ]
+      },
+      "sampled_peak": {
+        "active_phase_samples": 7168,
+        "anchor": {
+          "native_amplitude_peak_s": -0.0012005865395618737,
+          "native_peak_phase_rad": 0.3519685523243626,
+          "reference_amplitude_peak_s": -0.0011890424086508228,
+          "reference_peak_phase_rad": 2.740050150263099
+        },
+        "common_samples": 7681,
+        "common_support_M": [
+          -330.00000000000006,
+          150.0
+        ],
+        "metrics": {
+          "amplitude_relative_l2": 0.0017066611472085589,
+          "complex_relative_l2": 0.006509295420955839,
+          "phase_max_abs_rad": 0.012697249688315239,
+          "phase_rms_rad": 0.0077968069637086,
+          "phase_samples": 7168,
+          "relative_norm_error": 0.0002863216448558692,
+          "samples": 7681,
+          "unmaximized_real_overlap": 0.9999788615789907
+        },
+        "native_support_M": [
+          -330.00000000000006,
+          150.0
+        ],
+        "phase_drift_rad": {
+          "range": 0.02197469391727975,
+          "start_to_end": 0.01522929142214029
+        },
+        "reference_support_M": [
+          -330.375,
+          391.8125
+        ],
+        "windows": {
+          "inspiral": {
+            "metrics": {
+              "amplitude_relative_l2": 0.0017973378683472957,
+              "complex_relative_l2": 0.007037762952131154,
+              "phase_max_abs_rad": 0.012697249688315239,
+              "phase_rms_rad": 0.007621614299675981,
+              "phase_samples": 4961,
+              "relative_norm_error": 0.0002031956768284715,
+              "samples": 4961,
+              "unmaximized_real_overlap": 0.9999752606174919
+            },
+            "time_M": [
+              -330.00000000000006,
+              -20.000000000000036
+            ]
+          },
+          "late_inspiral": {
+            "metrics": {
+              "amplitude_relative_l2": 0.0003919965463906949,
+              "complex_relative_l2": 0.003714297869397719,
+              "phase_max_abs_rad": 0.005329663505013527,
+              "phase_rms_rad": 0.0038184286702793915,
+              "phase_samples": 319,
+              "relative_norm_error": 0.0003740853335485461,
+              "samples": 319,
+              "unmaximized_real_overlap": 0.9999931694103638
+            },
+            "time_M": [
+              -19.937500000000018,
+              -0.06250000000001701
+            ]
+          },
+          "post_peak": {
+            "metrics": {
+              "amplitude_relative_l2": 0.0020439404125606126,
+              "complex_relative_l2": 0.005469803655110935,
+              "phase_max_abs_rad": 0.009277444228964512,
+              "phase_rms_rad": 0.008700326524247062,
+              "phase_samples": 1888,
+              "relative_norm_error": 0.00163938060490465,
+              "samples": 2401,
+              "unmaximized_real_overlap": 0.9999864066929749
+            },
+            "time_M": [
+              0.0,
+              150.0
+            ]
+          }
+        }
+      }
+    }
+  ],
+  "numerical_choice": {
+    "default_initial_step_rule": true,
+    "default_restart_rule": false,
+    "fixed_restart_time_M": 165.0,
+    "hermite_resampling": true,
+    "local_nqc_degree": 6,
+    "local_nqc_phase_derivatives": true,
+    "local_nqc_window_M": 0.5
+  },
+  "plan_sha256": "cb7ef0d8f3f4946e628679150dbb57fdaf0334245515bdf25960a1a00ebeacb8",
+  "prior_sha256": "05b435342797ec9ab330cf3b3c310ed4756bdbbccffbdaec04dc7f92bfe1a02a",
+  "process": {
+    "argv": [
+      "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw/dev/native_rom/diagnose_hamiltonian_grid_convergence.py",
+      "--json-out",
+      "dev/native_rom/evidence/2026-09-24/hamiltonian_grid_convergence.json"
+    ],
+    "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+    "host": "client-3792.default.vpn.port.ac.uk",
+    "pid": 59547
+  },
+  "release_qualified": false,
+  "row": {
+    "chi1": 0.2,
+    "chi2": -0.1,
+    "mass1": 30.0,
+    "mass2": 20.0,
+    "omega_start": 0.04
+  },
+  "schema": "diffgw.seobnrv4.hamiltonian-grid-convergence.v1",
+  "scope": {
+    "description": "Scalar CPU float64 numerical stability evidence only; no training or promotion.",
+    "known_limitations": [
+      "Convergence cannot establish correctness of the equations or published model fidelity.",
+      "The adaptive prototype uses a diagnostic QNM spline with independently generated values and black-box-inferred knot metadata; this is not wholly literature-specified provenance.",
+      "Changing dt also changes the adaptive initial step and coarse/fine restart sampling; the grid check measures the complete generator's grid sensitivity.",
+      "No time, phase, amplitude, or coefficient fitting is performed.",
+      "No derivatives, batched execution, accelerators, or JAX are qualified here."
+    ],
+    "physics_validated": false,
+    "production_asset": false,
+    "production_promotion_allowed": false,
+    "training_generator_qualified": false
+  },
+  "script_sha256": "3d5826a59dcea2a23452dc29934ed91035b400455f929e6f6f3678feeeb96f58",
+  "settings": {
+    "atol_levels": [
+      1e-12,
+      1e-13,
+      1e-14
+    ],
+    "dt_levels_M": [
+      0.5,
+      0.25,
+      0.125
+    ],
+    "event_time_limit_M": 0.05,
+    "max_accepted_steps": 20000,
+    "max_evaluations": 200000,
+    "max_rejected_steps": 10000,
+    "max_run_seconds": 600.0,
+    "relative_l2_limit": 1e-06,
+    "ringdown_duration_M": 150.0,
+    "rtol_levels": [
+      1e-11,
+      1e-12,
+      1e-13
+    ]
+  },
+  "source_sha256": {
+    "dev/native_rom/eob/torch/adaptive_driver_clean.py": "202996e24b51398af3354a13e584cae6d180fd11100976b3dbb2637b2728a14c",
+    "dev/native_rom/eob/torch/historical_hamiltonian.py": "f93beaa5172dd1fff43eb676848f60caa8d2795dfd7ed21c842827dd53141066",
+    "dev/native_rom/qualify_generator.py": "8afe29d1c8b8e6213f2c11a0228e7555e36d5a9fbb8346c84975941e2587ad4e",
+    "src/torchwave/approximants/eob/seobnrv4_flux.py": "3d5b2133c0297430f5b1dedfff4077cb05ffc6dad0a3b57827c8cae06e8f4704",
+    "src/torchwave/approximants/eob/seobnrv4_hamiltonian.py": "40f063046e30b9fb5824b8d95980ff9deaa73f231dfe987e453094210b87cf3d"
+  },
+  "status": "diagnostic_complete"
+}

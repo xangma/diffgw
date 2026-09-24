@@ -135,6 +135,7 @@ def reconstruct_seobnrv4_22_adaptive(
     spin_truncation: str = "generic-leading-ell8",
     diagnostic_mode_21_higher_spin: str = "taylor_f",
     diagnostic_mode_33_higher_spin: str = "taylor_f",
+    diagnostic_hamiltonian_log_derivative: str = "analytic",
     spin_v6: str = "bohe_total_energy",
     include_pan_v8: bool = False,
     include_positive_chi_540: bool = False,
@@ -216,6 +217,8 @@ def reconstruct_seobnrv4_22_adaptive(
         raise ValueError("diagnostic_mode_21_higher_spin must be taylor_f or rho_hybrid")
     if diagnostic_mode_33_higher_spin not in {"taylor_f", "lal_v4_rho"}:
         raise ValueError("diagnostic_mode_33_higher_spin must be taylor_f or lal_v4_rho")
+    if diagnostic_hamiltonian_log_derivative not in {"analytic", "lal_v4"}:
+        raise ValueError("diagnostic_hamiltonian_log_derivative must be analytic or lal_v4")
     if tuple(final_spin_fit_order) != (3, 4):
         raise ValueError(
             "adaptive numerical compatibility requires final_spin_fit_order=(3, 4)"
@@ -227,6 +230,7 @@ def reconstruct_seobnrv4_22_adaptive(
     from torchwave.approximants.eob.remnant import eob_final_mass_fraction, hofmann_final_spin
     from torchwave.approximants.eob.seobnrv4_flux import SEOBNRv4PublishedFlux
     from torchwave.approximants.eob.seobnrv4_hamiltonian import SEOBNRv4Hamiltonian
+    from .historical_hamiltonian import HistoricalLogDerivative
     from torchwave.approximants.kerr_qnm_table_convention import signed_qnm_220_table_convention
     from torchwave.approximants.eob.nqc import seobnrv4_nqc_parameters
 
@@ -246,7 +250,10 @@ def reconstruct_seobnrv4_22_adaptive(
     scaled1, scaled2 = m1 / torch.maximum(m1, m2), m2 / torch.maximum(m1, m2)
     x1, x2 = scaled1 / (scaled1 + scaled2), scaled2 / (scaled1 + scaled2)
     nu, chi = seobnrv4_nqc_parameters(x1, x2, s1, s2)
-    ham = SEOBNRv4Hamiltonian(nu, s1, s2, delta=x1 - x2)
+    hamiltonian_type = (HistoricalLogDerivative
+                        if diagnostic_hamiltonian_log_derivative == "lal_v4"
+                        else SEOBNRv4Hamiltonian)
+    ham = hamiltonian_type(nu, s1, s2, delta=x1 - x2)
     rr = SEOBNRv4PublishedFlux(spin_truncation=spin_truncation,
                                retain_pan_cubic_spin=True,
                                mode_21_higher_spin=diagnostic_mode_21_higher_spin,
@@ -256,7 +263,7 @@ def reconstruct_seobnrv4_22_adaptive(
     # of a row state back across the whole batch.
     flat_nu, flat_s1, flat_s2 = nu.reshape(-1), s1.reshape(-1), s2.reshape(-1)
     flat_delta = (x1 - x2).reshape(-1)
-    row_hamiltonians = [SEOBNRv4Hamiltonian(
+    row_hamiltonians = [hamiltonian_type(
         flat_nu[row], flat_s1[row], flat_s2[row], delta=flat_delta[row])
         for row in range(rows)]
     if diagnostic_warm_start_Momega is None:

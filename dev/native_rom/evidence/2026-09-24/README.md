@@ -79,3 +79,102 @@ dev.native_rom.diagnose_mode_33_whole_waveform --plan
 dev/native_rom/evidence/2026-09-24/mode_33_whole_waveform_plan.json
 --json-out /tmp/seobnrv4-mode33-whole-waveform.json`. The evidence records
 the source and public binary identities. Both commands are diagnostics only.
+
+# Historical Hamiltonian logarithmic derivative
+
+The pinned [historical LAL Hamiltonian source](https://git.ligo.org/lscsoft/lalsuite/-/raw/5154f04e470d1cc48d6f61193af728b5692474ab/lalsimulation/lib/LALSimIMRSpinEOBHamiltonian.c)
+omits the derivative of the logarithm in its internal `deltaU_u` expression.
+The native Hamiltonian differentiates the potential mathematically, including
+`k5l u^4`; its potential value is unchanged. The frozen
+[plan](hamiltonian_log_derivative_plan.json) pins the source revision and hash,
+and the [same-state result](hamiltonian_log_derivative.json) checks a
+development-only historical variant against sampled public dynamics at two
+output grids. At `M Omega≈0.15`, the orbital-frequency derivative discrepancy
+falls from about `75–76 ppm` to `0.19–0.37 ppm`, and the radial-momentum
+derivative discrepancy from about `1732–1734 ppm` to `193–203 ppm`.
+The [four-grid public sampling control](hamiltonian_public_grid.json) shows
+nonmonotonic sampled derivative residuals at the finest grid, so these are
+diagnostic sensitivities, not direct compiled-Hamiltonian parity.
+
+The [combined late-field result](combined_late_field.json) applies both the
+historical Hamiltonian convention and `(3,3)` flux placement at the same public
+states. At `M Omega≈0.15`, the orbital-frequency residual is below `0.4 ppm`,
+while radial-momentum and torque residuals remain roughly `25–35 ppm` and
+`22–23 ppm`, respectively, against finite-difference sampled dynamics.
+
+The [frozen full-waveform plan](hamiltonian_whole_waveform_plan.json) and
+[result](hamiltonian_whole_waveform.json) replay the earlier `(3,3)`-only
+candidate exactly, then change only the Hamiltonian convention on a 30+20
+solar-mass, aligned-spin row. The sampled-peak complex relative L2 improves
+from `0.01078696` to `0.01006589`; with independently fitted quadratic peaks,
+it improves from `0.00827564` to `0.00760014`. The fitted inspiral difference
+falls from `0.00955401` to `0.00877661`, but a substantial phase residual
+remains. Neither this comparison nor same-state derivatives qualify the
+physical generator or the ROM. The diagnostic convention is confined to the
+development driver; the production Hamiltonian still uses the mathematical
+derivative.
+
+The [predeclared three-grid check](hamiltonian_grid_convergence_plan.json) and
+[result](hamiltonian_grid_convergence.json) hold the combined candidate and ODE
+tolerances fixed at output steps `0.25`, `0.125`, and `0.0625 M`. Nested native
+complex differences are `4.31e-9` and `1.26e-8`, both far below the `1e-6`
+budget, with unchanged event times. The strict gate nevertheless **fails**
+its required decrease in error. The fitted-peak public comparison changes
+`0.00758983 → 0.00760014 → 0.00683810`; the public call changes its own
+integration behavior with output step, so this sequence is not a converged
+physical-reference study. We do not waive the failed numerical gate.
+
+The [frozen native-warm-start plan](combined_warmstart_waveform_plan.json) and
+[four-choice result](combined_warmstart_waveform.json) then combine that prior
+fully native frequency warm start with the two historical conventions, changing
+one choice at a time on the same aligned-spin row and output step. The baseline
+waveform exactly replays the earlier warm-start hash. Independently fitted-peak
+complex relative L2 is `0.00168589` at baseline, `0.00166839` with `(3,3)`
+alone, `0.00131487` with the Hamiltonian convention alone, and `0.00131140`
+with both. The combined inspiral, late-inspiral, and post-peak values are
+`0.00150094`, `0.00041128`, and `0.00035279`. This identifies a useful
+historical source sensitivity after native initial-state preparation, but
+does not close the residual, numerical gates, or parameter-domain validation.
+
+The [frozen initial-state ablation](combined_initial_state_ablation_plan.json)
+and [result](combined_initial_state_ablation.json) replay the combined native
+waveform exactly, then replace only the early warm-start state with the pinned
+public state at `M Omega≈0.03162`. The native and public states differ by
+`1.57e-8` in radius, `2.43e-7` in tortoise radial momentum, and `1.35e-8` in
+angular momentum. Fitted whole-waveform complex relative L2 decreases from
+`0.00131140` to `0.00116397`; the inspiral-window value decreases from
+`0.00150094` to `0.00133120`, while post-peak changes from `0.00035279` to
+`0.00035668`. The intervention diagnoses sensitivity to the initial state;
+the public state is never a native runtime input. Most of the tested
+whole-waveform residual remains after the substitution.
+
+The [combined-candidate numerical plan](combined_warmstart_convergence_plan.json)
+and [result](combined_warmstart_convergence.json) hold the native early-start
+frequency, coarse first ODE step, restart, NQC rule, and historical conventions
+fixed. The three nested output grids produce identical sampled waveforms and
+event times. The refined ODE tolerance pair decreases in error but **fails**
+both `1e-6` budgets: complex relative L2 is `3.53e-6` and amplitude relative
+L2 is `1.51e-6`. Event times agree. Thus neither the native warm start nor
+the two source-motivated conventions closes numerical qualification for this
+aligned-spin row. The exact-hash tolerance trace is recorded separately.
+
+The [frozen tolerance trace](combined_tolerance_trace_plan.json) and
+[result](combined_tolerance_trace.json) replay the medium/tight pair byte for
+byte. Their raw pre-attachment modes differ by only `1.57e-9` complex relative
+L2, and the largest orbital-state difference before attachment is
+`3.55e-9` in phase. The final `3.53e-6` error is therefore introduced by NQC
+calibration and attachment, not by a comparably large raw inspiral difference.
+The amplitude NQC coefficients shift by about `(0.00150, -0.01339, 0.01541)`
+between the two solves. These observations motivate the separate, predeclared
+local second-derivative intervention; they do not certify that rule as
+historically correct.
+
+The [predeclared local second-derivative plan](combined_matching_second_plan.json)
+and [result](combined_matching_second.json) change only the NQC matching
+second-derivative estimate. On the same aligned-spin row, the refined ODE
+complex and amplitude differences fall to `1.05e-7` and `2.87e-9`, passing
+the `1e-6` numerical budgets with decreasing error and unchanged event times.
+The independently fitted public-binary difference moves from `0.00131140`
+to `0.00131155`. This establishes one-row numerical stability for this
+diagnostic rule, not historical NQC parity, physical accuracy over the
+domain, or release qualification.

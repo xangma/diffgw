@@ -1,0 +1,18 @@
+{
+  "schema": "diffgw.seobnrv4.combined-warmstart-waveform-plan.v1",
+  "purpose": "Isolate the historical mode-33 flux and Hamiltonian conventions after the previously established fully native frequency warm start, with all numerical and public-binary settings fixed.",
+  "prior_warmstart": "dev/native_rom/evidence/2026-09-23/inline_warmstart_diagnostic.json",
+  "prior_warmstart_sha256": "08074d71e658b2266ff259f765abe74bdca23e584442c6bd3e69533523d91f6c",
+  "prior_hamiltonian_waveform": "dev/native_rom/evidence/2026-09-24/hamiltonian_whole_waveform.json",
+  "prior_hamiltonian_waveform_sha256": "05b435342797ec9ab330cf3b3c310ed4756bdbbccffbdaec04dc7f92bfe1a02a",
+  "row_index": 1,
+  "warm_start_Momega": 0.03162277660168379,
+  "choices": [
+    {"name": "baseline", "mode_33_higher_spin": "taylor_f", "hamiltonian_log_derivative": "analytic"},
+    {"name": "mode_33", "mode_33_higher_spin": "lal_v4_rho", "hamiltonian_log_derivative": "analytic"},
+    {"name": "hamiltonian", "mode_33_higher_spin": "taylor_f", "hamiltonian_log_derivative": "lal_v4"},
+    {"name": "combined", "mode_33_higher_spin": "lal_v4_rho", "hamiltonian_log_derivative": "lal_v4"}
+  ],
+  "peak_fit": "quadratic_power",
+  "interpretation": "This is a one-row causal sensitivity, not a parameter-domain or release qualification. The native runtime consumes no public state or data asset."
+}

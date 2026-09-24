@@ -1,0 +1,15 @@
+{
+  "schema": "diffgw.seobnrv4.hamiltonian-log-derivative-plan.v1",
+  "purpose": "Ablate the pinned historical Delta_t radial-derivative convention at identical public states; this is a diagnostic, not a production Hamiltonian change.",
+  "prior_late_field": "dev/native_rom/evidence/2026-09-24/mode_33_late_flux.json",
+  "prior_late_field_sha256": "286690b17a41d42e3085c901e5c19cf63769cd2d0199eab22a0c4e64f2b62e81",
+  "historical_source": {
+    "repository": "https://git.ligo.org/lscsoft/lalsuite",
+    "commit": "5154f04e470d1cc48d6f61193af728b5692474ab",
+    "path": "lalsimulation/lib/LALSimIMRSpinEOBHamiltonian.c",
+    "sha256": "629ea1690bb0c7fd913dd39f17299f8412aafd30519293af8d0526b42dab90dc",
+    "observation": "The active deltaU_u expression uses 5*(k5+k5l*log(u))*u^4, without the extra k5l*u^4 from differentiating log(u)."
+  },
+  "native_hamiltonian_sha256": "40f063046e30b9fb5824b8d95980ff9deaa73f231dfe987e453094210b87cf3d",
+  "comparison": "Retain every other native model choice and public state; compare all four vector-field components on both prior output grids."
+}

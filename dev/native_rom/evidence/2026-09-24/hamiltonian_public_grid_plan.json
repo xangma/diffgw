@@ -1,0 +1,11 @@
+{
+  "schema": "diffgw.seobnrv4.hamiltonian-public-grid-plan.v1",
+  "purpose": "Bound the sampled-public derivative error at fixed times and separate the radial effect of public versus native torque.",
+  "prior_late_field": "dev/native_rom/evidence/2026-09-24/mode_33_late_flux.json",
+  "prior_late_field_sha256": "286690b17a41d42e3085c901e5c19cf63769cd2d0199eab22a0c4e64f2b62e81",
+  "prior_hamiltonian_ablation": "dev/native_rom/evidence/2026-09-24/hamiltonian_log_derivative.json",
+  "prior_hamiltonian_ablation_sha256": "412a7264952138ed04a8fd63cf1e5d3341f114fe105ce87ac0cdf8962f5437cc",
+  "target_frequencies_Momega": [0.1, 0.12, 0.15],
+  "public_output_steps_M": [0.125, 0.0625, 0.03125, 0.015625],
+  "interpretation": "The public low-sampling trajectory is the same compiled binary at different output steps. Its five-point derivatives can vary due to ODE and interpolation error; grid spread is a diagnostic bound, not certified exact flux or Hamiltonian parity."
+}
