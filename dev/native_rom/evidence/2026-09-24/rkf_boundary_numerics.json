@@ -1,0 +1,857 @@
+{
+  "all_numerical_checks_passed": true,
+  "generator_source_manifest_sha256": "220b84cb36a664f8dc95b130fac7313c16b40d2510a4104b154128e4b5397917",
+  "generator_source_manifest_sha256_after": "220b84cb36a664f8dc95b130fac7313c16b40d2510a4104b154128e4b5397917",
+  "git_head": "a276a6463795400de6d044065a1deb3d1dd28618",
+  "plan_sha256": "4525abc4e2b3e504b38cc67a045e23a72fa7a6826da79b2efb784d219ac9e94f",
+  "prior_rows_sha256": "87662b086c1d13d0c718ff6552805c3646720a5c07f487aba06662d9b0daddc4",
+  "process": {
+    "argv": [
+      "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw/dev/native_rom/diagnose_rkf_boundary_numerics.py",
+      "--plan",
+      "dev/native_rom/evidence/2026-09-24/rkf_boundary_numerics_plan.json",
+      "--json-out",
+      "dev/native_rom/evidence/2026-09-24/rkf_boundary_numerics.json"
+    ],
+    "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+    "host": "RONI2",
+    "pid": 25422
+  },
+  "release_qualified": false,
+  "rows": {
+    "equal_mass_unequal_spin": {
+      "checks": {
+        "amplitude_error_budget": true,
+        "boundary_time_M": true,
+        "complex_error_budget": true,
+        "match_time_M": true,
+        "peak_time_M": true
+      },
+      "comparison": {
+        "amplitude_relative_l2": 7.120729032562414e-11,
+        "boundary_time_M_abs_difference": 0.0,
+        "candidate_samples": 1822,
+        "common_samples": 1822,
+        "complex_relative_l2": 6.257001787259587e-09,
+        "grid_step_M": 0.25,
+        "match_time_M_abs_difference": 0.0,
+        "peak_time_M_abs_difference": 0.0,
+        "phase_max_abs_rad": 1.2559374150039252e-07,
+        "phase_rms_rad": 7.197846488386474e-09,
+        "phase_samples": 1690,
+        "reference_samples": 1822,
+        "relative_norm_error": 4.814548759668469e-11,
+        "samples": 1822,
+        "support_end_difference_M": 0.0,
+        "unmaximized_real_overlap": 1.0000000000000004
+      },
+      "errors": [],
+      "numerical_check_passed": true,
+      "row": {
+        "chi1": 0.2,
+        "chi2": -0.2,
+        "mass1": 25.0,
+        "mass2": 25.0,
+        "omega_start": 0.04
+      },
+      "runs": {
+        "tighter": {
+          "elapsed_seconds": 45.87125412499881,
+          "native": {
+            "array_dtype": {
+              "mode": "complex128",
+              "time": "float64"
+            },
+            "array_sha256": {
+              "mode": "f5009645917f1f079bdb1796049cc1bd99ce553f23f6a0c061191183b4753867",
+              "time": "98fc91a8da0576b14bbce6b25ce2a007f07607b47bb42e1f3a6af90584b2e18a"
+            },
+            "atol": 1e-14,
+            "boundary_time_M": 305.375,
+            "dt_geom": 0.25,
+            "final_mass_fraction": 0.9517856650333549,
+            "final_spin": 0.6864600000000001,
+            "internal_step_M": 0.015625,
+            "match_time_M": 305.37862112060543,
+            "name": "tighter",
+            "peak_time_M": 308.98436737060547,
+            "restart_time_M": 159.0,
+            "rtol": 1e-13,
+            "samples": 1822,
+            "stages": {
+              "coarse": {
+                "accepted": 576,
+                "evaluations": 3607,
+                "event_time_M": 308.9905464164175,
+                "rejected": 30,
+                "termination": [
+                  "event"
+                ]
+              },
+              "fine": {
+                "accepted": 405,
+                "evaluations": 2576,
+                "event_time_M": 150.12999050318055,
+                "rejected": 29,
+                "termination": [
+                  "event"
+                ]
+              }
+            },
+            "support_M": [
+              0.0,
+              455.25
+            ]
+          }
+        },
+        "tightest": {
+          "elapsed_seconds": 69.29731258301763,
+          "native": {
+            "array_dtype": {
+              "mode": "complex128",
+              "time": "float64"
+            },
+            "array_sha256": {
+              "mode": "949f151ee36bd64e92f207174230252ce734d9a2e7883fc32b994abcedf51a75",
+              "time": "98fc91a8da0576b14bbce6b25ce2a007f07607b47bb42e1f3a6af90584b2e18a"
+            },
+            "atol": 1e-15,
+            "boundary_time_M": 305.375,
+            "dt_geom": 0.25,
+            "final_mass_fraction": 0.9517856650333549,
+            "final_spin": 0.6864600000000001,
+            "internal_step_M": 0.015625,
+            "match_time_M": 305.37862112060543,
+            "name": "tightest",
+            "peak_time_M": 308.98436737060547,
+            "restart_time_M": 159.0,
+            "rtol": 1e-14,
+            "samples": 1822,
+            "stages": {
+              "coarse": {
+                "accepted": 911,
+                "evaluations": 5617,
+                "event_time_M": 308.9792840769013,
+                "rejected": 30,
+                "termination": [
+                  "event"
+                ]
+              },
+              "fine": {
+                "accepted": 637,
+                "evaluations": 3968,
+                "event_time_M": 150.06669557408216,
+                "rejected": 29,
+                "termination": [
+                  "event"
+                ]
+              }
+            },
+            "support_M": [
+              0.0,
+              455.25
+            ]
+          }
+        }
+      }
+    },
+    "high_start_frequency": {
+      "checks": {
+        "amplitude_error_budget": true,
+        "boundary_time_M": true,
+        "complex_error_budget": true,
+        "match_time_M": true,
+        "peak_time_M": true
+      },
+      "comparison": {
+        "amplitude_relative_l2": 7.152158114832798e-11,
+        "boundary_time_M_abs_difference": 0.0,
+        "candidate_samples": 1305,
+        "common_samples": 1305,
+        "complex_relative_l2": 5.557763540793317e-09,
+        "grid_step_M": 0.25,
+        "match_time_M_abs_difference": 0.0,
+        "peak_time_M_abs_difference": 0.0,
+        "phase_max_abs_rad": 1.8337162999152124e-07,
+        "phase_rms_rad": 6.019037852092075e-09,
+        "phase_samples": 1177,
+        "reference_samples": 1305,
+        "relative_norm_error": 1.1088019391536363e-11,
+        "samples": 1305,
+        "support_end_difference_M": 0.0,
+        "unmaximized_real_overlap": 0.9999999999999998
+      },
+      "errors": [],
+      "numerical_check_passed": true,
+      "row": {
+        "chi1": 0.2,
+        "chi2": -0.1,
+        "mass1": 30.0,
+        "mass2": 20.0,
+        "omega_start": 0.05
+      },
+      "runs": {
+        "tighter": {
+          "elapsed_seconds": 42.37392408400774,
+          "native": {
+            "array_dtype": {
+              "mode": "complex128",
+              "time": "float64"
+            },
+            "array_sha256": {
+              "mode": "90615cea4abeb411f09f429325fe2c94e80f684de35c188f9002d99c0b0819ec",
+              "time": "8fa4e7aa5b4eeb5d98403923d9f5016238bbcc7fd17870b384c8dbabc637c7eb"
+            },
+            "atol": 1e-14,
+            "boundary_time_M": 176.15625,
+            "dt_geom": 0.25,
+            "final_mass_fraction": 0.9521433597755232,
+            "final_spin": 0.7029227215291914,
+            "internal_step_M": 0.015625,
+            "match_time_M": 176.1564486506888,
+            "name": "tighter",
+            "peak_time_M": 181.01561737060547,
+            "restart_time_M": 31.25,
+            "rtol": 1e-13,
+            "samples": 1305,
+            "stages": {
+              "coarse": {
+                "accepted": 487,
+                "evaluations": 3043,
+                "event_time_M": 181.0258205283967,
+                "rejected": 24,
+                "termination": [
+                  "event"
+                ]
+              },
+              "fine": {
+                "accepted": 436,
+                "evaluations": 2742,
+                "event_time_M": 149.90885309094554,
+                "rejected": 25,
+                "termination": [
+                  "event"
+                ]
+              }
+            },
+            "support_M": [
+              0.0,
+              326.0
+            ]
+          }
+        },
+        "tightest": {
+          "elapsed_seconds": 65.09412054199493,
+          "native": {
+            "array_dtype": {
+              "mode": "complex128",
+              "time": "float64"
+            },
+            "array_sha256": {
+              "mode": "76ae2bccab97243228b401eb85aeee8b1055d4c0c201ca59f94d0d239ad2397d",
+              "time": "8fa4e7aa5b4eeb5d98403923d9f5016238bbcc7fd17870b384c8dbabc637c7eb"
+            },
+            "atol": 1e-15,
+            "boundary_time_M": 176.15625,
+            "dt_geom": 0.25,
+            "final_mass_fraction": 0.9521433597755232,
+            "final_spin": 0.7029227215291914,
+            "internal_step_M": 0.015625,
+            "match_time_M": 176.1564486506888,
+            "name": "tightest",
+            "peak_time_M": 181.01561737060547,
+            "restart_time_M": 31.25,
+            "rtol": 1e-14,
+            "samples": 1305,
+            "stages": {
+              "coarse": {
+                "accepted": 770,
+                "evaluations": 4746,
+                "event_time_M": 181.01040444477752,
+                "rejected": 25,
+                "termination": [
+                  "event"
+                ]
+              },
+              "fine": {
+                "accepted": 687,
+                "evaluations": 4248,
+                "event_time_M": 149.86260228350136,
+                "rejected": 25,
+                "termination": [
+                  "event"
+                ]
+              }
+            },
+            "support_M": [
+              0.0,
+              326.0
+            ]
+          }
+        }
+      }
+    },
+    "low_start_frequency": {
+      "checks": {
+        "amplitude_error_budget": true,
+        "boundary_time_M": true,
+        "complex_error_budget": true,
+        "match_time_M": true,
+        "peak_time_M": true
+      },
+      "comparison": {
+        "amplitude_relative_l2": 3.847402771623966e-11,
+        "boundary_time_M_abs_difference": 0.0,
+        "candidate_samples": 3654,
+        "common_samples": 3654,
+        "complex_relative_l2": 1.9882829312934657e-09,
+        "grid_step_M": 0.25,
+        "match_time_M_abs_difference": 0.0,
+        "peak_time_M_abs_difference": 0.0,
+        "phase_max_abs_rad": 6.395367109701909e-08,
+        "phase_rms_rad": 2.208495131760152e-09,
+        "phase_samples": 3525,
+        "reference_samples": 3654,
+        "relative_norm_error": 2.5072388609714835e-11,
+        "samples": 3654,
+        "support_end_difference_M": 0.0,
+        "unmaximized_real_overlap": 1.0000000000000002
+      },
+      "errors": [],
+      "numerical_check_passed": true,
+      "row": {
+        "chi1": 0.2,
+        "chi2": -0.1,
+        "mass1": 30.0,
+        "mass2": 20.0,
+        "omega_start": 0.03
+      },
+      "runs": {
+        "tighter": {
+          "elapsed_seconds": 55.84397508300026,
+          "native": {
+            "array_dtype": {
+              "mode": "complex128",
+              "time": "float64"
+            },
+            "array_sha256": {
+              "mode": "595594fc029166910dab72ed9e0ad0f394ac7287e742f3844ffcd37ffd3ae74a",
+              "time": "5fcf6afb68db887dd84889840a9425ddfe82467ee25de1bd2b8a14e0c12cad06"
+            },
+            "atol": 1e-14,
+            "boundary_time_M": 763.234375,
+            "dt_geom": 0.25,
+            "final_mass_fraction": 0.9521433597755232,
+            "final_spin": 0.7029227215291914,
+            "internal_step_M": 0.015625,
+            "match_time_M": 763.2417452815482,
+            "name": "tighter",
+            "peak_time_M": 768.1009140014648,
+            "restart_time_M": 618.25,
+            "rtol": 1e-13,
+            "samples": 3654,
+            "stages": {
+              "coarse": {
+                "accepted": 828,
+                "evaluations": 5144,
+                "event_time_M": 768.1453957063542,
+                "rejected": 35,
+                "termination": [
+                  "event"
+                ]
+              },
+              "fine": {
+                "accepted": 404,
+                "evaluations": 2550,
+                "event_time_M": 150.0401383857431,
+                "rejected": 25,
+                "termination": [
+                  "event"
+                ]
+              }
+            },
+            "support_M": [
+              0.0,
+              913.25
+            ]
+          }
+        },
+        "tightest": {
+          "elapsed_seconds": 86.71326400001999,
+          "native": {
+            "array_dtype": {
+              "mode": "complex128",
+              "time": "float64"
+            },
+            "array_sha256": {
+              "mode": "f7315cf9ae67d4756c62546e5461307eb45bc2f9249a814d20deb0c0934ed063",
+              "time": "5fcf6afb68db887dd84889840a9425ddfe82467ee25de1bd2b8a14e0c12cad06"
+            },
+            "atol": 1e-15,
+            "boundary_time_M": 763.234375,
+            "dt_geom": 0.25,
+            "final_mass_fraction": 0.9521433597755232,
+            "final_spin": 0.7029227215291914,
+            "internal_step_M": 0.015625,
+            "match_time_M": 763.2417452815482,
+            "name": "tightest",
+            "peak_time_M": 768.1009140014648,
+            "restart_time_M": 618.25,
+            "rtol": 1e-14,
+            "samples": 3654,
+            "stages": {
+              "coarse": {
+                "accepted": 1310,
+                "evaluations": 8041,
+                "event_time_M": 768.125857588821,
+                "rejected": 36,
+                "termination": [
+                  "event"
+                ]
+              },
+              "fine": {
+                "accepted": 635,
+                "evaluations": 3941,
+                "event_time_M": 149.95948238206887,
+                "rejected": 26,
+                "termination": [
+                  "event"
+                ]
+              }
+            },
+            "support_M": [
+              0.0,
+              913.25
+            ]
+          }
+        }
+      }
+    },
+    "mass_ratio_four_nonspinning": {
+      "checks": {
+        "amplitude_error_budget": true,
+        "boundary_time_M": true,
+        "complex_error_budget": true,
+        "match_time_M": true,
+        "peak_time_M": true
+      },
+      "comparison": {
+        "amplitude_relative_l2": 2.8383563213123187e-11,
+        "boundary_time_M_abs_difference": 0.0,
+        "candidate_samples": 2139,
+        "common_samples": 2139,
+        "complex_relative_l2": 4.598551157059361e-09,
+        "grid_step_M": 0.25,
+        "match_time_M_abs_difference": 0.0,
+        "peak_time_M_abs_difference": 0.0,
+        "phase_max_abs_rad": 9.794240576160221e-08,
+        "phase_rms_rad": 5.2427432992641255e-09,
+        "phase_samples": 1993,
+        "reference_samples": 2139,
+        "relative_norm_error": 1.5963896871085126e-11,
+        "samples": 2139,
+        "support_end_difference_M": 0.0,
+        "unmaximized_real_overlap": 1.0000000000000004
+      },
+      "errors": [],
+      "numerical_check_passed": true,
+      "row": {
+        "chi1": 0.0,
+        "chi2": 0.0,
+        "mass1": 40.0,
+        "mass2": 10.0,
+        "omega_start": 0.04
+      },
+      "runs": {
+        "tighter": {
+          "elapsed_seconds": 48.44482087501092,
+          "native": {
+            "array_dtype": {
+              "mode": "complex128",
+              "time": "float64"
+            },
+            "array_sha256": {
+              "mode": "49dd955befe2efb37e86b3a41c0d659770393c1e9614acec301e295aebbfcd14",
+              "time": "4a9a0ef8d695c890bb347939c28634fc15604e820ca2624b9a1213b26549a9d2"
+            },
+            "atol": 1e-14,
+            "boundary_time_M": 384.65625,
+            "dt_geom": 0.25,
+            "final_mass_fraction": 0.9769572091927891,
+            "final_spin": 0.47238012198553475,
+            "internal_step_M": 0.015625,
+            "match_time_M": 384.66390542296483,
+            "name": "tighter",
+            "peak_time_M": 391.91243743896484,
+            "restart_time_M": 242.0,
+            "rtol": 1e-13,
+            "samples": 2139,
+            "stages": {
+              "coarse": {
+                "accepted": 626,
+                "evaluations": 3912,
+                "event_time_M": 391.9480329234368,
+                "rejected": 31,
+                "termination": [
+                  "event"
+                ]
+              },
+              "fine": {
+                "accepted": 416,
+                "evaluations": 2627,
+                "event_time_M": 150.10761433140905,
+                "rejected": 26,
+                "termination": [
+                  "event"
+                ]
+              }
+            },
+            "support_M": [
+              0.0,
+              534.5
+            ]
+          }
+        },
+        "tightest": {
+          "elapsed_seconds": 73.11810300001525,
+          "native": {
+            "array_dtype": {
+              "mode": "complex128",
+              "time": "float64"
+            },
+            "array_sha256": {
+              "mode": "6ce4c48a55fd731357a7f69f7943e39ead644451b0c9844baf94cbf88f1ee145",
+              "time": "4a9a0ef8d695c890bb347939c28634fc15604e820ca2624b9a1213b26549a9d2"
+            },
+            "atol": 1e-15,
+            "boundary_time_M": 384.65625,
+            "dt_geom": 0.25,
+            "final_mass_fraction": 0.9769572091927891,
+            "final_spin": 0.47238012198553475,
+            "internal_step_M": 0.015625,
+            "match_time_M": 384.66390542296483,
+            "name": "tightest",
+            "peak_time_M": 391.91243743896484,
+            "restart_time_M": 242.0,
+            "rtol": 1e-14,
+            "samples": 2139,
+            "stages": {
+              "coarse": {
+                "accepted": 988,
+                "evaluations": 6084,
+                "event_time_M": 391.9399067287397,
+                "rejected": 31,
+                "termination": [
+                  "event"
+                ]
+              },
+              "fine": {
+                "accepted": 651,
+                "evaluations": 4037,
+                "event_time_M": 150.02934736995434,
+                "rejected": 26,
+                "termination": [
+                  "event"
+                ]
+              }
+            },
+            "support_M": [
+              0.0,
+              534.5
+            ]
+          }
+        }
+      }
+    },
+    "strong_aligned_spin": {
+      "checks": {
+        "amplitude_error_budget": true,
+        "boundary_time_M": true,
+        "complex_error_budget": true,
+        "match_time_M": true,
+        "peak_time_M": true
+      },
+      "comparison": {
+        "amplitude_relative_l2": 3.811709965722754e-10,
+        "boundary_time_M_abs_difference": 0.0,
+        "candidate_samples": 2597,
+        "common_samples": 2597,
+        "complex_relative_l2": 1.0155665950441893e-08,
+        "grid_step_M": 0.25,
+        "match_time_M_abs_difference": 0.0,
+        "peak_time_M_abs_difference": 0.0,
+        "phase_max_abs_rad": 9.111196395347333e-08,
+        "phase_rms_rad": 1.0659760060049086e-08,
+        "phase_samples": 2573,
+        "reference_samples": 2597,
+        "relative_norm_error": 3.316563690347607e-10,
+        "samples": 2597,
+        "support_end_difference_M": 0.0,
+        "unmaximized_real_overlap": 1.0000000000000002
+      },
+      "errors": [],
+      "numerical_check_passed": true,
+      "row": {
+        "chi1": 0.8,
+        "chi2": 0.8,
+        "mass1": 30.0,
+        "mass2": 20.0,
+        "omega_start": 0.04
+      },
+      "runs": {
+        "tighter": {
+          "elapsed_seconds": 59.73333991598338,
+          "native": {
+            "array_dtype": {
+              "mode": "complex128",
+              "time": "float64"
+            },
+            "array_sha256": {
+              "mode": "1227167f01f0a2399f12db91bea43807218b6482c278f41440e185216f6d696b",
+              "time": "781edc5e548785efca74f1e64beaba57ac9019b5cbf243a0311265382e7375df"
+            },
+            "atol": 1e-14,
+            "boundary_time_M": 499.046875,
+            "dt_geom": 0.25,
+            "final_mass_fraction": 0.9171965419616238,
+            "final_spin": 0.906844676152642,
+            "internal_step_M": 0.015625,
+            "match_time_M": 499.05204396452547,
+            "name": "tighter",
+            "peak_time_M": 511.14061737060547,
+            "restart_time_M": 361.25,
+            "rtol": 1e-13,
+            "samples": 2597,
+            "stages": {
+              "coarse": {
+                "accepted": 853,
+                "evaluations": 5269,
+                "event_time_M": 511.16070453523076,
+                "rejected": 30,
+                "termination": [
+                  "event"
+                ]
+              },
+              "fine": {
+                "accepted": 472,
+                "evaluations": 2938,
+                "event_time_M": 150.058944577966,
+                "rejected": 21,
+                "termination": [
+                  "event"
+                ]
+              }
+            },
+            "support_M": [
+              0.0,
+              649.0
+            ]
+          }
+        },
+        "tightest": {
+          "elapsed_seconds": 92.48320808398421,
+          "native": {
+            "array_dtype": {
+              "mode": "complex128",
+              "time": "float64"
+            },
+            "array_sha256": {
+              "mode": "4fa3335f81bada877862ce54a716bdf5fbffd39f4102626ee19af4cc13b9d529",
+              "time": "781edc5e548785efca74f1e64beaba57ac9019b5cbf243a0311265382e7375df"
+            },
+            "atol": 1e-15,
+            "boundary_time_M": 499.046875,
+            "dt_geom": 0.25,
+            "final_mass_fraction": 0.9171965419616238,
+            "final_spin": 0.906844676152642,
+            "internal_step_M": 0.015625,
+            "match_time_M": 499.05204396452547,
+            "name": "tightest",
+            "peak_time_M": 511.14061737060547,
+            "restart_time_M": 361.25,
+            "rtol": 1e-14,
+            "samples": 2597,
+            "stages": {
+              "coarse": {
+                "accepted": 1352,
+                "evaluations": 8273,
+                "event_time_M": 511.1549270023731,
+                "rejected": 32,
+                "termination": [
+                  "event"
+                ]
+              },
+              "fine": {
+                "accepted": 744,
+                "evaluations": 4570,
+                "event_time_M": 150.0031143006297,
+                "rejected": 21,
+                "termination": [
+                  "event"
+                ]
+              }
+            },
+            "support_M": [
+              0.0,
+              649.0
+            ]
+          }
+        }
+      }
+    },
+    "strong_antialigned_spin": {
+      "checks": {
+        "amplitude_error_budget": true,
+        "boundary_time_M": true,
+        "complex_error_budget": true,
+        "match_time_M": true,
+        "peak_time_M": true
+      },
+      "comparison": {
+        "amplitude_relative_l2": 6.632195654616581e-11,
+        "boundary_time_M_abs_difference": 0.0,
+        "candidate_samples": 1310,
+        "common_samples": 1310,
+        "complex_relative_l2": 6.215402393695042e-09,
+        "grid_step_M": 0.25,
+        "match_time_M_abs_difference": 0.0,
+        "peak_time_M_abs_difference": 0.0,
+        "phase_max_abs_rad": 2.0981414423359233e-07,
+        "phase_rms_rad": 6.982237001107893e-09,
+        "phase_samples": 1155,
+        "reference_samples": 1310,
+        "relative_norm_error": 1.3219647598816664e-11,
+        "samples": 1310,
+        "support_end_difference_M": 0.0,
+        "unmaximized_real_overlap": 1.0
+      },
+      "errors": [],
+      "numerical_check_passed": true,
+      "row": {
+        "chi1": -0.8,
+        "chi2": -0.8,
+        "mass1": 30.0,
+        "mass2": 20.0,
+        "omega_start": 0.04
+      },
+      "runs": {
+        "tighter": {
+          "elapsed_seconds": 43.88761054200586,
+          "native": {
+            "array_dtype": {
+              "mode": "complex128",
+              "time": "float64"
+            },
+            "array_sha256": {
+              "mode": "a2f7d64c1ab12084503804471bac0274756c507c0cd1903ebe425b7dec2821d2",
+              "time": "b59f404d4aa61acaf177191241885679e12592cdd77c26a47835b69f6e478c31"
+            },
+            "atol": 1e-14,
+            "boundary_time_M": 177.46875,
+            "dt_geom": 0.25,
+            "final_mass_fraction": 0.9686080158522982,
+            "final_spin": 0.3834136856151619,
+            "internal_step_M": 0.015625,
+            "match_time_M": 177.47439020868546,
+            "name": "tighter",
+            "peak_time_M": 188.90624237060547,
+            "restart_time_M": 39.0,
+            "rtol": 1e-13,
+            "samples": 1310,
+            "stages": {
+              "coarse": {
+                "accepted": 502,
+                "evaluations": 3163,
+                "event_time_M": 188.900701275652,
+                "rejected": 30,
+                "termination": [
+                  "event"
+                ]
+              },
+              "fine": {
+                "accepted": 451,
+                "evaluations": 2862,
+                "event_time_M": 150.0017625226241,
+                "rejected": 31,
+                "termination": [
+                  "event"
+                ]
+              }
+            },
+            "support_M": [
+              0.0,
+              327.25
+            ]
+          }
+        },
+        "tightest": {
+          "elapsed_seconds": 67.53270058400813,
+          "native": {
+            "array_dtype": {
+              "mode": "complex128",
+              "time": "float64"
+            },
+            "array_sha256": {
+              "mode": "3dad1cfb9bdae76ac04decb5599e947a50cd4c2acd1152037f2305083918c7a0",
+              "time": "b59f404d4aa61acaf177191241885679e12592cdd77c26a47835b69f6e478c31"
+            },
+            "atol": 1e-15,
+            "boundary_time_M": 177.46875,
+            "dt_geom": 0.25,
+            "final_mass_fraction": 0.9686080158522982,
+            "final_spin": 0.3834136856151619,
+            "internal_step_M": 0.015625,
+            "match_time_M": 177.47439020868546,
+            "name": "tightest",
+            "peak_time_M": 188.90624237060547,
+            "restart_time_M": 39.0,
+            "rtol": 1e-14,
+            "samples": 1310,
+            "stages": {
+              "coarse": {
+                "accepted": 793,
+                "evaluations": 4914,
+                "event_time_M": 188.89642091223055,
+                "rejected": 31,
+                "termination": [
+                  "event"
+                ]
+              },
+              "fine": {
+                "accepted": 709,
+                "evaluations": 4410,
+                "event_time_M": 149.96471996479292,
+                "rejected": 31,
+                "termination": [
+                  "event"
+                ]
+              }
+            },
+            "support_M": [
+              0.0,
+              327.25
+            ]
+          }
+        }
+      }
+    }
+  },
+  "schema": "diffgw.seobnrv4.rkf-boundary-numerics.v1",
+  "scope": {
+    "description": "Scalar CPU float64 numerical stability evidence only; no training or promotion.",
+    "known_limitations": [
+      "Convergence cannot establish correctness of the equations or published model fidelity.",
+      "The adaptive prototype uses a diagnostic QNM spline with independently generated values and black-box-inferred knot metadata; this is not wholly literature-specified provenance.",
+      "Changing dt also changes the adaptive initial step and coarse/fine restart sampling; the grid check measures the complete generator's grid sensitivity.",
+      "No time, phase, amplitude, or coefficient fitting is performed.",
+      "No derivatives, batched execution, accelerators, or JAX are qualified here."
+    ],
+    "physics_validated": false,
+    "production_asset": false,
+    "production_promotion_allowed": false,
+    "training_generator_qualified": false
+  },
+  "script_sha256": "4affc40ac8ccf7c511e36e7ea612c85c6c95c8a0c907c7e36305e422bda21f66",
+  "sources_unchanged": true,
+  "status": "diagnostic_complete"
+}

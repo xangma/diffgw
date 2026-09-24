@@ -1,0 +1,19 @@
+{
+  "schema": "diffgw.seobnrv4.rkf-boundary-numerics-plan.v1",
+  "purpose": "Test the numerically selected fine-stage RKF45 sampler across six previously declared parameter-boundary rows. This is a selected-row ODE tolerance screen, not a domain or physical release qualification.",
+  "prior_rows_path": "dev/native_rom/evidence/2026-09-23/parameter_boundary_plan.json",
+  "prior_rows_sha256": "87662b086c1d13d0c718ff6552805c3646720a5c07f487aba06662d9b0daddc4",
+  "row_names": ["equal_mass_unequal_spin", "mass_ratio_four_nonspinning", "strong_aligned_spin", "strong_antialigned_spin", "low_start_frequency", "high_start_frequency"],
+  "levels": [
+    {"name": "tighter", "atol": 1e-14, "rtol": 1e-13, "dt_geom": 0.25},
+    {"name": "tightest", "atol": 1e-15, "rtol": 1e-14, "dt_geom": 0.25}
+  ],
+  "sampler": "diagnostic_fine_rkf45_resampling=True; coarse output remains natural cubic",
+  "stability_budget": {
+    "complex_relative_l2_max": 1e-6,
+    "amplitude_relative_l2_max": 1e-6,
+    "event_time_difference_M_max": 0.05
+  },
+  "checks": "Run every row at both frozen tolerance levels with the same physics, output grid, and fine-stage sampler. Compare complete modes directly without alignment, record failures and continue independent rows. A passing screen is selected-row numerical evidence only and does not change the production path or grant model or ROM release status.",
+  "qualification_claim": false
+}

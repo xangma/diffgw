@@ -678,7 +678,15 @@ identical accepted trajectories and event times. At the same tightest
 tolerance, its [fixed-anchor NR check](evidence/2026-09-24/sxs_2123_rkf_nr.json)
 changes the native/Lev4 complex relative L2 only from `0.324417` to
 `0.324419`. RKF45 remains an opt-in development diagnostic; this one-row
-result is not a domain bound or a physical release gate. See the
+result is not a domain bound or a physical release gate. A subsequent
+[frozen six-row boundary screen](evidence/2026-09-24/rkf_boundary_numerics.json)
+uses the same fine-stage RKF45 sampler at `(atol, rtol)=(1e-14, 1e-13)`
+and `(1e-15, 1e-14)` on previously declared mass-ratio, spin, and
+start-frequency rows. All six pass the `1e-6` complete-mode numerical
+budget; the worst complex relative L2 is `1.02e-8`, the worst amplitude
+relative L2 is `3.81e-10`, and sampled match, peak, and boundary times
+agree. This supports the numerical choice on those rows but does not
+bound the intended domain or establish physical fidelity. See the
 [evidence narrative](evidence/2026-09-24/README.md) for checksums,
 conventions, and replay commands. The default numerical, physical-domain,
 provenance, cross-backend, and independent-ROM gates below remain open.

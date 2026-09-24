@@ -1859,6 +1859,22 @@ domain. Reproduce in order with `diagnose_sxs_2123_fine_sampling`,
 `PYTHONPATH=src:. python -m dev.native_rom.<module>` and the pinned input
 plans listed in each script's CLI help.
 
+The separately frozen [boundary-screen plan](rkf_boundary_numerics_plan.json)
+reuses all six named rows from the hashed 2026-09-23 parameter-boundary plan.
+Its [result](rkf_boundary_numerics.json) compares the complete mode at
+`(atol, rtol)=(1e-14, 1e-13)` and `(1e-15, 1e-14)` with `0.25 M` output
+spacing and fine-stage RKF45 sampling. All six rows pass the predeclared
+`1e-6` complex/amplitude and `0.05 M` event-time budgets. The largest complex
+relative L2 is `1.02e-8` on strong aligned spin, and the largest amplitude
+relative L2 is `3.81e-10` on that row; all sampled event-time differences
+are zero. The run records no row errors and an unchanged generator-source
+manifest hash. Reproduce with `PYTHONPATH=src:. python -m
+dev.native_rom.diagnose_rkf_boundary_numerics --plan
+dev/native_rom/evidence/2026-09-24/rkf_boundary_numerics_plan.json --json-out
+/tmp/rkf_boundary_numerics.json` in the pinned development environment.
+This is a selected-row numerical screen, not a domain-wide bound, independent
+physical validation, or permission to train or release the ROM.
+
 To reproduce, download the six archive files and sidecars listed in the
 plan into `/tmp/diffgw-sxs-2123/Lev{3,4}/`, preserving each file's base
 name. Run `PYTHONPATH=src:. python -m dev.native_rom.extract_sxs_2123
