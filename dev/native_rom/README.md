@@ -994,6 +994,9 @@ prospective parity gate can be set. A
 finds its own `0.5 M`/`0.125 M` and `0.25 M`/`0.125 M` post-peak errors
 `0.00977654` and `0.00650649`, respectively. Public output sampling explains
 much of the sensitivity; convergence of the finer public output is still open.
+The [finer public-only check](evidence/2026-09-24/near_extreme_public_refinement.json)
+is nonmonotone (`0.000324` for `0.0625 M`/`0.03125 M` but `0.008627`
+for `0.03125 M`/`0.015625 M`), so no public-output cadence is yet qualified.
 
 1. Qualify the physical generator against the published equations and independent
    references over the intended domain, resolve convention/provenance gaps, and

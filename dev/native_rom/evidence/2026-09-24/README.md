@@ -2460,3 +2460,13 @@ close to the corresponding native-versus-public residuals (`0.0100677` and
 observed comparison sensitivity. This is a post-hoc attribution, not a proof
 that the native waveform or the `0.125 M` public output is converged. The
 original frozen failure remains recorded.
+
+A separately frozen [finer public-grid plan](near_extreme_public_refinement_plan.json)
+extends the same pinned LAL output to `0.0625 M`, `0.03125 M`, and
+`0.015625 M`. Its [result](near_extreme_public_refinement.json) is
+nonmonotone: the `0.0625 M`/`0.03125 M` post-peak complex L2 is only
+`0.00032422`, while `0.03125 M`/`0.015625 M` rises to `0.00862680`.
+The latter frequency-anchor times differ by about `0.032 M`; whether the
+jump is chiefly anchor localization or sampled waveform generation is open.
+These public-only self-comparisons do not make a finer public output an
+established physical reference or revise the original gate.
