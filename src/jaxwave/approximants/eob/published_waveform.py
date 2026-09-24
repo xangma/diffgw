@@ -4,11 +4,18 @@ Complete unvalidated SEOBNR waveform assemblers are development-only."""
 
 import math
 from typing import NamedTuple, Tuple, Union
+
+import jax
 import jax.numpy as jnp
 
 from diffgw_core.constants import C_SI, MPC_SI, MSUN_SEC
 from jaxwave.approximants.eob.attachment import AttachedMode22
-from jaxwave.approximants.eob.integrator import FrequencyPeakTrajectory
+from jaxwave.approximants.eob.integrator import EOBTrajectoryIntegrator, FrequencyPeakTrajectory
+from jaxwave.approximants.eob.seobnrv4_mode22 import (
+    seobnrv4_published_delta22,
+    seobnrv4_published_mode22,
+    seobnrv4_published_phase22,
+)
 from jaxwave.conversions import as_array
 
 _DIRECT_FREQUENCY_CHUNK = 32
@@ -102,7 +109,46 @@ def published_eob22_to_fd(
     )
 
 
+def published_mode22_and_frequency(
+    state, hamiltonian, radiation_reaction, *, spin_v6,
+    include_pan_v8, include_positive_chi_540, retain_pan_cubic_spin=False,
+):
+    """Pre-NQC mode and continuous GW frequency along the EOB vector field.
+
+    The directional derivative includes the orbital, tail, residual-phase,
+    and radiation-reaction terms. This same-state component is not a
+    qualified JAX trajectory or full waveform.
+    """
+    state = jnp.asarray(state)
+    if state.ndim == 0 or state.shape[-1] != 4:
+        raise ValueError("state must end in (r, phi, pr_star, pphi)")
+
+    def quantities_and_residual(value):
+        quantities = radiation_reaction.from_hamiltonian(value, hamiltonian)
+        residual = seobnrv4_published_delta22(
+            **{key: quantities[key] for key in
+               ("omega", "hreal_over_M", "x1", "x2", "chi1", "chi2")},
+            spin_v6=spin_v6, include_pan_v8=include_pan_v8,
+            include_positive_chi_540=include_positive_chi_540)
+        return quantities, residual
+
+    def phase(value):
+        quantities, residual = quantities_and_residual(value)
+        return seobnrv4_published_phase22(
+            quantities["omega"], value[..., 1],
+            hreal_over_M=quantities["hreal_over_M"], residual_phase=residual)
+
+    field = EOBTrajectoryIntegrator(hamiltonian, radiation_reaction).vector_field(state)
+    _, frequency = jax.jvp(phase, (state,), (field,))
+    quantities, residual = quantities_and_residual(state)
+    mode = seobnrv4_published_mode22(
+        phi=state[..., 1], residual_phase=residual, **quantities,
+        retain_pan_cubic_spin=retain_pan_cubic_spin)
+    return mode, frequency
+
+
 __all__ = [
     'PublishedEOB22',
     'published_eob22_to_fd',
+    'published_mode22_and_frequency',
 ]

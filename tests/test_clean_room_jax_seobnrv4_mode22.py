@@ -15,6 +15,16 @@ from jaxwave.approximants.eob.seobnrv4_mode22 import (
     seobnrv4_published_phase22 as jax_phase,
     tail22_phase as jax_tail,
 )
+from jaxwave.approximants.eob.published_waveform import (
+    published_mode22_and_frequency as jax_mode_frequency,
+)
+from jaxwave.approximants.eob.seobnrv4_flux import SEOBNRv4PublishedFlux as JaxFlux
+from jaxwave.approximants.eob.seobnrv4_hamiltonian import SEOBNRv4Hamiltonian as JaxHam
+from torchwave.approximants.eob.published_waveform import (
+    published_mode22_and_frequency as torch_mode_frequency,
+)
+from torchwave.approximants.eob.seobnrv4_flux import SEOBNRv4PublishedFlux as TorchFlux
+from torchwave.approximants.eob.seobnrv4_hamiltonian import SEOBNRv4Hamiltonian as TorchHam
 from torchwave.approximants.eob.seobnrv4_mode22 import (
     seobnrv4_published_delta22 as torch_delta,
     seobnrv4_published_mode22 as torch_mode,
@@ -117,3 +127,49 @@ def test_invalid_choices_and_domains_fail_closed():
     with pytest.raises(ValueError):
         jax_tail(jnp.asarray(0.), hreal_over_M=1.)
     assert np.isnan(jax.jit(jax_tail)(jnp.asarray(0.), hreal_over_M=1.))
+
+
+@pytest.mark.parametrize("delta,chi1,chi2,r,pr_star,pphi", [
+    (.2, 0., 0., 12., -.02, 3.8),
+    (.6, .7, -.3, 10., -.015, 3.4),
+])
+def test_full_vector_field_mode_and_frequency_match_torch(
+    delta, chi1, chi2, r, pr_star, pphi,
+):
+    nu = (1-delta**2)/4
+    jham = JaxHam(nu, chi1, chi2, delta=delta)
+    tham = TorchHam(t(nu), t(chi1), t(chi2), delta=t(delta))
+    jflux = JaxFlux(spin_truncation="tabulated")
+    tflux = TorchFlux(spin_truncation="tabulated")
+    state = [r, .3, pr_star, pphi]
+    choices = dict(spin_v6="bohe_total_energy", include_pan_v8=False,
+                   include_positive_chi_540=False)
+    jm, jf = jax_mode_frequency(jnp.asarray(state), jham, jflux, **choices)
+    tm, tf = torch_mode_frequency(t(state), tham, tflux, **choices)
+    np.testing.assert_allclose(jm, tm.detach().numpy(), rtol=3e-12, atol=3e-12)
+    np.testing.assert_allclose(jf, tf.detach().numpy(), rtol=3e-11, atol=3e-11)
+    assert float(jf) > 0
+    if delta == .2:
+        compiled = jax.jit(lambda value: jax_mode_frequency(value, jham, jflux, **choices))
+        cm, cf = compiled(jnp.asarray(state))
+        np.testing.assert_allclose(cm, jm, rtol=3e-13, atol=3e-13)
+        np.testing.assert_allclose(cf, jf, rtol=3e-13, atol=3e-13)
+
+
+def test_same_state_mode_and_frequency_keep_jax_derivatives():
+    ham = JaxHam(.24, .3, -.1, delta=.2)
+    flux = JaxFlux(spin_truncation="tabulated")
+    choices = dict(spin_v6="bohe_total_energy", include_pan_v8=False,
+                   include_positive_chi_540=False)
+
+    def outputs(radius):
+        state = jnp.stack((radius, radius*0+.3, radius*0-.02, radius*0+3.8))
+        mode, frequency = jax_mode_frequency(state, ham, flux, **choices)
+        return jnp.stack((mode.real, mode.imag, frequency))
+
+    radius = jnp.asarray(12.)
+    derivative = np.asarray(jax.jacfwd(outputs)(radius))
+    step = 1e-4
+    finite = np.asarray((outputs(radius+step)-outputs(radius-step))/(2*step))
+    assert np.all(np.isfinite(derivative))
+    np.testing.assert_allclose(derivative, finite, rtol=2e-7, atol=2e-9)
