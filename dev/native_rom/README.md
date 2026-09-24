@@ -500,6 +500,10 @@ anchor. Its late QNM decay and phase slopes agree closely with the public
 waveform, while an amplitude and phase offset settles through the attachment
 transient. See the
 [frozen stress evidence](evidence/2026-09-24/README.md).
+The current peak-preserving q8 waveform also passes one additional frozen
+ODE-tolerance step at `0.5 M`: direct complex relative L2 is `3.4133e-7`,
+with unchanged event times. Its output-grid and domain-wide numerical checks,
+physical waveform agreement, and ROM qualification remain open.
 Direct public-binary QNM calls now agree with the native fundamental frequency
 and damping to float64 precision on both stress rows. The q4 native boundary
 inputs are captured, but the public coarse-output mode does not expose its

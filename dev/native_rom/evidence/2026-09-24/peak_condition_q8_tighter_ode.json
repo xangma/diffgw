@@ -1,0 +1,294 @@
+{
+  "additional_gate_passed": true,
+  "comparison": {
+    "amplitude_relative_l2": 2.5952908220412737e-09,
+    "boundary_time_M_abs_difference": 0.0,
+    "candidate_samples": 2652,
+    "common_samples": 2652,
+    "complex_relative_l2": 3.4132764468194255e-07,
+    "grid_step_M": 0.5,
+    "match_time_M_abs_difference": 0.0,
+    "peak_time_M_abs_difference": 0.0,
+    "phase_max_abs_rad": 8.096876058592895e-07,
+    "phase_rms_rad": 2.8728951682195486e-07,
+    "phase_samples": 2650,
+    "reference_samples": 2652,
+    "relative_norm_error": 2.240423624400023e-09,
+    "samples": 2652,
+    "support_end_difference_M": 0.0,
+    "unmaximized_real_overlap": 0.9999999999999415
+  },
+  "errors": [],
+  "gates": {
+    "amplitude_relative_l2": true,
+    "boundary_time_M": true,
+    "complex_relative_l2": true,
+    "match_time_M": true,
+    "peak_time_M": true
+  },
+  "input_sha256": {
+    "campaign": "d8efe4baa182ea39bf9a7d35b6de8621c6e054429ee180eb661e9fbb9f9d59d8",
+    "integrated_candidate": "fa249eb72063f44a83ea41fa8cd3ece78427a5556b6f2e5b49a2aeecbab59967",
+    "prior_tighter_ode": "9e9a75e982068242aafcf8bc788d460aa047ceec06ad7a772491b4f892e7ab01"
+  },
+  "levels": {
+    "additional": {
+      "atol": 3e-15,
+      "dt_geom": 0.5,
+      "name": "ode_3",
+      "rtol": 3e-14
+    },
+    "baseline": {
+      "atol": 1e-14,
+      "dt_geom": 0.5,
+      "name": "ode_2",
+      "rtol": 1e-13
+    }
+  },
+  "plan_sha256": "83d0753f53edf7af61ed90917ef3dda5d8794a6391100d8c105c806122bff2fd",
+  "process": {
+    "argv": [
+      "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw/dev/native_rom/diagnose_peak_condition_q8_tighter_ode.py",
+      "--json-out",
+      "dev/native_rom/evidence/2026-09-24/peak_condition_q8_tighter_ode.json"
+    ],
+    "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+    "host": "client-3792.default.vpn.port.ac.uk",
+    "pid": 99542
+  },
+  "release_qualified": false,
+  "row": {
+    "chi1": 0.85,
+    "chi2": 0.85,
+    "mass1": 40.0,
+    "mass2": 5.0,
+    "omega_start": 0.04
+  },
+  "runs": {
+    "ode_2": {
+      "elapsed_seconds": 242.98516791700968,
+      "level": {
+        "atol": 1e-14,
+        "dt_geom": 0.5,
+        "name": "ode_2",
+        "rtol": 1e-13
+      },
+      "native": {
+        "array_dtype": {
+          "mode": "complex128",
+          "time": "float64"
+        },
+        "array_sha256": {
+          "mode": "e93d9d419ff87a7fb17883b6f8b0094f291956abf9ce4b2e1198698c85f9358b",
+          "time": "db563c40381301f4f08f2592d8daf3c2d5cd97c2f22780b90179c0df62e346e7"
+        },
+        "atol": 1e-14,
+        "boundary_time_M": 1175.859375,
+        "dt_geom": 0.5,
+        "final_mass_fraction": 0.9792636225854244,
+        "final_spin": 0.8941271984269911,
+        "internal_step_M": 0.015625,
+        "match_time_M": 1175.8741823451842,
+        "name": "ode_2",
+        "nqc_coefficients": {
+          "amplitude": [
+            495.74505035665436,
+            -4050.823098477977,
+            4426.812524993069
+          ],
+          "phase": [
+            98.49504372701605,
+            -7297.2012445832015
+          ]
+        },
+        "nqc_full_spline_phase_matrix": [
+          [
+            -0.0030100515587361504,
+            -1.9536325291761782e-05
+          ],
+          [
+            -0.00024400091182285815,
+            -2.833156691522776e-06
+          ]
+        ],
+        "nqc_matching_matrices": {
+          "amplitude": [
+            [
+              0.0013919390493046266,
+              0.0004426823808742109,
+              0.0002496480891479176
+            ],
+            [
+              9.596193518878797e-05,
+              3.4199309111195e-05,
+              2.032422644545128e-05
+            ],
+            [
+              1.1232668173705703e-05,
+              4.23824204041234e-06,
+              2.5908328752948227e-06
+            ]
+          ],
+          "phase": [
+            [
+              -0.003010051416376547,
+              -1.9536324440985532e-05
+            ],
+            [
+              -0.00024401203654672522,
+              -2.833228091879797e-06
+            ]
+          ]
+        },
+        "peak_time_M": 1197.2050552368164,
+        "restart_time_M": 100.0,
+        "rtol": 1e-13,
+        "samples": 2652,
+        "stages": {
+          "coarse": {
+            "accepted": 1286,
+            "evaluations": 7907,
+            "event_time_M": 1197.2451204639556,
+            "rejected": 38,
+            "termination": [
+              "event"
+            ]
+          },
+          "fine": {
+            "accepted": 1245,
+            "evaluations": 7651,
+            "event_time_M": 1097.4208806195463,
+            "rejected": 36,
+            "termination": [
+              "event"
+            ]
+          }
+        },
+        "support_M": [
+          0.0,
+          1325.5
+        ]
+      }
+    },
+    "ode_3": {
+      "elapsed_seconds": 297.90414658299414,
+      "level": {
+        "atol": 3e-15,
+        "dt_geom": 0.5,
+        "name": "ode_3",
+        "rtol": 3e-14
+      },
+      "native": {
+        "array_dtype": {
+          "mode": "complex128",
+          "time": "float64"
+        },
+        "array_sha256": {
+          "mode": "cad3854efaa3ee97297fb152201cfd166b1937f461bdc0159771676e5193f7fe",
+          "time": "db563c40381301f4f08f2592d8daf3c2d5cd97c2f22780b90179c0df62e346e7"
+        },
+        "atol": 3e-15,
+        "boundary_time_M": 1175.859375,
+        "dt_geom": 0.5,
+        "final_mass_fraction": 0.9792636225854244,
+        "final_spin": 0.8941271984269911,
+        "internal_step_M": 0.015625,
+        "match_time_M": 1175.8741823451842,
+        "name": "ode_3",
+        "nqc_coefficients": {
+          "amplitude": [
+            495.7449936529589,
+            -4050.8225653936506,
+            4426.811895872634
+          ],
+          "phase": [
+            98.49505603426472,
+            -7297.203118341729
+          ]
+        },
+        "nqc_full_spline_phase_matrix": [
+          [
+            -0.0030100514626668997,
+            -1.9536324683183657e-05
+          ],
+          [
+            -0.00024401680848629934,
+            -2.833256882850311e-06
+          ]
+        ],
+        "nqc_matching_matrices": {
+          "amplitude": [
+            [
+              0.0013919390491241163,
+              0.0004426823808160077,
+              0.00024964808911487015
+            ],
+            [
+              9.596193237589997e-05,
+              3.4199308200935905e-05,
+              2.03242259276964e-05
+            ],
+            [
+              1.123267472129991e-05,
+              4.2382441597852175e-06,
+              2.5908340809654683e-06
+            ]
+          ],
+          "phase": [
+            [
+              -0.0030100514112559535,
+              -1.9536324411867602e-05
+            ],
+            [
+              -0.00024401207224492694,
+              -2.833228303034818e-06
+            ]
+          ]
+        },
+        "peak_time_M": 1197.2050552368164,
+        "restart_time_M": 100.0,
+        "rtol": 3e-14,
+        "samples": 2652,
+        "stages": {
+          "coarse": {
+            "accepted": 1632,
+            "evaluations": 9983,
+            "event_time_M": 1197.2534607290308,
+            "rejected": 38,
+            "termination": [
+              "event"
+            ]
+          },
+          "fine": {
+            "accepted": 1574,
+            "evaluations": 9625,
+            "event_time_M": 1097.376026815529,
+            "rejected": 36,
+            "termination": [
+              "event"
+            ]
+          }
+        },
+        "support_M": [
+          0.0,
+          1325.5
+        ]
+      }
+    }
+  },
+  "schema": "diffgw.seobnrv4.peak-condition-q8-tighter-ode.v1",
+  "scope": {
+    "description": "Numerical tolerance extension on the current peak-preserving q8 waveform.",
+    "known_limitations": [
+      "The chosen tolerance passed on the earlier ringdown variant; this is not an independent choice.",
+      "A one-row ODE check cannot establish physical or domain-wide convergence.",
+      "No JAX or differentiability claim follows from this scalar Torch replay."
+    ],
+    "physics_validated": false,
+    "production_asset": false,
+    "production_promotion_allowed": false,
+    "training_generator_qualified": false
+  },
+  "script_sha256": "0c7bd0b9bac0ba96f964941d5900be81dc99a5c9c82e149f3218890375c078f7",
+  "status": "diagnostic_complete"
+}

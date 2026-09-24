@@ -1490,6 +1490,19 @@ the input, script, and source hashes. Reproduce with `PYTHONPATH=src:. python
 -m dev.native_rom.diagnose_peak_condition_integrated --json-out
 /tmp/seobnrv4-peak-condition-integrated.json` in the pinned environment.
 
+The [current q8 tighter-ODE plan](peak_condition_q8_tighter_ode_plan.json) and
+[result](peak_condition_q8_tighter_ode.json) first replay the integrated
+peak-preserving `ode_2` mode hash, then use the previously frozen `ode_3`
+tolerance on the same `0.5 M` output grid. Their direct complex and amplitude
+relative L2 differences are `3.4133e-7` and `2.5953e-9`; peak, match, and
+boundary times are unchanged. All five numerical and event-time gates pass.
+The older q8 tolerance result above used a different ringdown waveform, so it
+could not establish convergence of this implementation. This replay covers
+one row and one tolerance step; output-grid, domain-wide, and physical
+whole-waveform validation remain open. Reproduce with `PYTHONPATH=src:. python
+-m dev.native_rom.diagnose_peak_condition_q8_tighter_ode --json-out
+/tmp/peak-condition-q8-tighter-ode.json` in the pinned environment.
+
 The [frozen q4 attachment-input plan](q4_attachment_inputs_plan.json) and
 [result](q4_attachment_inputs.json) replay the unchanged mixed-spin `ode_2`
 waveform hash and capture its actual native ringdown boundary: `633.703125 M`,

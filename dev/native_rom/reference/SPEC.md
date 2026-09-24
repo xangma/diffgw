@@ -658,6 +658,10 @@ accounts for `+0.000323039 rad` of the native-side reconstruction by using
 the attachment's internal fine states. Together they reduce the pair
 remainder at that probe to `2.07e-7 rad`. The full-domain dynamics and
 physical NQC prescription remain open; neither control qualifies the model.
+The [current peak-preserving q8 tolerance replay](../evidence/2026-09-24/peak_condition_q8_tighter_ode.json)
+matches its frozen baseline hash and passes one tighter ODE step at `0.5 M`
+with `3.4133e-7` direct complex relative L2 and unchanged event times.
+This is one-row numerical evidence, not domain or physical qualification.
 
 ### Promotion blockers
 

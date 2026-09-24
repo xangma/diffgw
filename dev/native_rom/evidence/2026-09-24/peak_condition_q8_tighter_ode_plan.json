@@ -1,0 +1,24 @@
+{
+  "schema": "diffgw.seobnrv4.peak-condition-q8-tighter-ode-plan.v1",
+  "purpose": "Replay current peak-preserving q8 ode_2 hash and extend it by the previously frozen ode_3 tolerance on the same 0.5 M grid; require 1e-6 complex and amplitude L2 without alignment. Diagnostic only.",
+  "row": "q8_high_aligned",
+  "baseline_level": "ode_2",
+  "additional_level": {
+    "name": "ode_3",
+    "atol": 3e-15,
+    "rtol": 3e-14,
+    "dt_geom": 0.5
+  },
+  "relative_l2_limit": 1e-06,
+  "inputs": {
+    "campaign": "dev/native_rom/evidence/2026-09-24/source_candidate_new_rows.json",
+    "integrated_candidate": "dev/native_rom/evidence/2026-09-24/peak_condition_integrated.json",
+    "prior_tighter_ode": "dev/native_rom/evidence/2026-09-24/q8_tighter_ode.json"
+  },
+  "input_sha256": {
+    "campaign": "d8efe4baa182ea39bf9a7d35b6de8621c6e054429ee180eb661e9fbb9f9d59d8",
+    "integrated_candidate": "fa249eb72063f44a83ea41fa8cd3ece78427a5556b6f2e5b49a2aeecbab59967",
+    "prior_tighter_ode": "9e9a75e982068242aafcf8bc788d460aa047ceec06ad7a772491b4f892e7ab01"
+  },
+  "release_qualified": false
+}
