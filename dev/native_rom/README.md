@@ -989,7 +989,11 @@ A frozen [post-hoc grid check](evidence/2026-09-24/near_extreme_grid_parity.json
 finds `0.00640875` at `0.25 M` and `0.000542674` at `0.125 M` for that
 post-peak error, with the same `0.01` limit. The original `0.5 M` gate
 remains failed; the sampling sensitivity needs attribution before a new
-prospective parity gate can be set.
+prospective parity gate can be set. A
+[public-only replay](evidence/2026-09-24/near_extreme_public_grid.json)
+finds its own `0.5 M`/`0.125 M` and `0.25 M`/`0.125 M` post-peak errors
+`0.00977654` and `0.00650649`, respectively. Public output sampling explains
+much of the sensitivity; convergence of the finer public output is still open.
 
 1. Qualify the physical generator against the published equations and independent
    references over the intended domain, resolve convention/provenance gaps, and

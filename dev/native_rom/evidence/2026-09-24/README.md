@@ -2449,3 +2449,14 @@ but frequency-anchor and fitted-peak estimates change with sampling; this
 test alone does not assign the improvement to native interpolation, public
 sampling, or peak localization. It remains a post-hoc numerical diagnostic,
 not physical or ROM release qualification.
+
+The [public-only grid plan](near_extreme_public_grid_plan.json) then freezes
+an independent replay of the same pinned LAL SEOBNRv4 binary at all three
+spacings. In its [result](near_extreme_public_grid.json), the public waveform
+at `0.5 M` differs from its own `0.125 M` output by `0.00977654` post-peak
+complex relative L2; the `0.25 M` output differs by `0.00650649`. Both are
+close to the corresponding native-versus-public residuals (`0.0100677` and
+`0.00640875`). Thus the public output-grid dependence explains much of the
+observed comparison sensitivity. This is a post-hoc attribution, not a proof
+that the native waveform or the `0.125 M` public output is converged. The
+original frozen failure remains recorded.
