@@ -1,0 +1,14 @@
+{
+  "schema": "diffgw.seobnrv4.public-nqc-mode-boundary-plan.v1",
+  "purpose": "Determine whether the public v4 modes and high-rate dynamics retain unmodified waveform samples on both sides of the NQC matching time. Call the pinned public API at 0.015625 M with nqcFlag=1 for coefficients and nqcFlag=0 for modes/dynamics. Infer the integer mode cut from the returned epoch and orbital-phase frequency peak, then compare the 22-mode amplitude peak to the source NQC match time. Returned modes already include ringdown and are not a direct pre-NQC input oracle.",
+  "coefficient_evidence": "dev/native_rom/evidence/2026-09-24/nqc_coefficients.json",
+  "coefficient_evidence_sha256": "1c8c31aabc6d43d704af9b2a4b84d701c13262316fe102d07c86a3a2613f74b7",
+  "source_reference": {
+    "git_revision": "53acc0c2cd7ea2d3c83fc71a7bd88035c2861d6c",
+    "spin_aligned_eob_sha256": "6b7969bb7cbe714c4937a691838b0b82a7fcc2a199c03ee2bf5215738f1ce1b3",
+    "hybrid_ringdown_sha256": "a92db1fefece5fb3a4b5cca44f7406f2798649a4f096a059fe01c692182c2211"
+  },
+  "rows": ["strong_aligned_spin", "strong_antialigned_spin"],
+  "output_step_M": 0.015625,
+  "release_qualified": false
+}

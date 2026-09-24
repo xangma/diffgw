@@ -135,6 +135,26 @@ and the public fit has different upstream inputs. Reproduce with
 `PYTHONPATH=src:. python -m dev.native_rom.diagnose_nqc_gsl_same_input
 --json-out /tmp/nqc-gsl-same-input.json`.
 
+The [public-mode boundary plan](public_nqc_mode_boundary_plan.json) and
+[result](public_nqc_mode_boundary.json) use both public v4 modes API paths at
+`0.015625 M`: the coefficient-only call and the call returning modes plus low-
+and high-rate dynamics. The high-rate dynamics and returned 22 mode can be
+mapped to the same grid using the mode epoch and integer output cut. The mode
+amplitude peaks `0.00517 M` before the inferred NQC match on the aligned row
+and `0.00729 M` before it on the antialigned row, each within one output
+sample. The pinned source's ringdown routine overwrites the waveform starting
+at its amplitude-maximum index. Consequently the returned mode straddles the
+ringdown boundary at the NQC match: its amplitude value nearly equals the
+target, but its second-derivative residual is `2.91e-5` and `-1.46e-4`, and
+the frequency-slope residual is `-0.00618` and `-0.00479`. These are
+properties of the **post-attachment public output**, not evidence that the
+pre-attachment NQC fit missed its targets. The public API does not expose the
+unmodified mode samples on both sides of matching, so exact upstream NQC
+input comparison requires a separately instrumented pinned source build.
+Reproduce in the pinned development environment with `PYTHONPATH=src:.
+python -m dev.native_rom.diagnose_public_nqc_mode_boundary --json-out
+/tmp/public-nqc-mode-boundary.json`.
+
 Reproduce the new waveform checks from the repository root with
 `PYTHONPATH=src:. python -m dev.native_rom.diagnose_mode_32_whole_waveform
 --json-out /tmp/mode32-waveform.json` and
