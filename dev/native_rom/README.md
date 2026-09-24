@@ -599,7 +599,15 @@ The [fixed-trajectory NQC counterfactual](evidence/2026-09-24/source_q8_nqc_phas
 predicts source/wheel phase drift to `1.2e-5 rad` RMS, but the native/source
 coefficient-only prediction at `-25 M` is `-0.00664 rad` versus an observed
 `-0.00213 rad`. The residual is not explained by NQC coefficients alone;
-native raw-mode and trajectory contributions still need separation.
+the [pinned raw-phase decomposition](evidence/2026-09-24/source_q8_raw_phase.json)
+now separates them at six late-inspiral probes. At `-25 M`, the anchored
+trajectory phase contributes `+0.001882 rad` and NQC contributes
+`-0.004345 rad`; the same-state raw-mode phase agrees to `2.9e-14 rad` and
+the native orbital-frequency term is `+2.46e-6 rad`. The resulting
+`-0.002461 rad` prediction differs from the observed `-0.002133 rad` by
+`0.000327 rad`, which closes as separate native/source full-output
+reconstruction errors. Their sampling origins remain unresolved; one q8 row
+does not qualify the generator or ROM.
 
 ## Remaining promotion stages
 

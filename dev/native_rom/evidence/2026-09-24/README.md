@@ -1662,3 +1662,26 @@ native-source residual; at `-25 M`, observed native-source is `-0.00213 rad`
 versus `-0.00664 rad` predicted. The shared-state test validates its own
 wheel/source control and rules out a coefficient-only account of the native
 phase gap. It does not localize the remaining trajectory or raw-mode cause.
+
+The frozen [q8 raw-phase plan](source_q8_raw_phase_plan.json) and
+[result](source_q8_raw_phase.json) replay the exact native mode hash and a
+separately compiled source high-rate trajectory and pre-NQC mode at six
+predeclared `-120` to `-25 M` probes. All phase terms use the same `-100 M`
+gauge. On each native state, forcing the native pre-NQC mode to use the source
+orbital frequency makes its phase agree with the source mode to `2.9e-14 rad`
+after anchoring; the native-frequency contribution reaches only `2.46e-6 rad`.
+At `-25 M`, the trajectory term is `+0.001882 rad` and the NQC term is
+`-0.004345 rad`, predicting `-0.002461 rad` against the observed
+`-0.002133 rad`. The `+0.000327 rad` remainder closes exactly as native
+full-output reconstruction error (`+0.000136 rad`) minus source
+full-output reconstruction error (`-0.000192 rad`). Across all six probes,
+the reconstruction remainder has `0.000143 rad` RMS. Those per-output errors
+include the different waveform sampling and reconstruction paths and have
+not been assigned to a unique operation. Thus this is a bounded late-inspiral
+phase attribution on one row, not independent physical validation or release
+qualification. Reproduce with `PYTHONPATH=src:. python -m
+dev.native_rom.diagnose_source_q8_raw_phase --source-root
+/Users/xangma/repos/lalsuite-git --headers
+/tmp/diffgw-lalsuite-pinned-53acc0c/merged-include --gsl-include
+/usr/local/include --json-out /tmp/source_q8_raw_phase.json` in the pinned
+environment; the plan checks source-adapter and predecessor evidence hashes.

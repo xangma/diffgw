@@ -645,6 +645,14 @@ Hamiltonian-wrapper values agree with the source mode's Hamiltonian to
 `8.88e-16` in `H/nu` on the same matching-window states; the wheel generator's
 private argument was not captured. The residual numerical origin and an
 independent, validated NQC rule remain unresolved.
+The later [q8 raw-phase decomposition](../evidence/2026-09-24/source_q8_raw_phase.json)
+finds same-state pre-NQC phase parity to `2.9e-14 rad` when the native mode
+uses the pinned source frequency. At `-25 M` relative to a `-100 M` gauge,
+the native/source trajectory term (`+0.001882 rad`) offsets part of the NQC
+term (`-0.004345 rad`). The remaining `0.000327 rad` between reconstructed
+and full-output mode differences closes as separate native and source
+reconstruction errors. This one-row result leaves their sampling origin,
+the full-domain dynamics, and the physical NQC prescription open.
 
 ### Promotion blockers
 
