@@ -2470,3 +2470,12 @@ The latter frequency-anchor times differ by about `0.032 M`; whether the
 jump is chiefly anchor localization or sampled waveform generation is open.
 These public-only self-comparisons do not make a finer public output an
 established physical reference or revise the original gate.
+
+The frozen [public alignment plan](near_extreme_public_alignment_plan.json)
+replays the two finest adjacent pairs with independent quadratic amplitude
+peaks and phase-aware interpolation. Its
+[result](near_extreme_public_alignment.json) lowers the `0.03125 M`/
+`0.015625 M` post-peak complex L2 from frequency-anchored `0.00862680` to
+peak-anchored `0.00383432`, but raises the `0.0625 M`/`0.03125 M` control
+from `0.00032422` to `0.00254540`. Anchor placement accounts for some of
+the nonmonotonic behavior; it does not produce a stable public self-limit.

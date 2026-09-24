@@ -997,6 +997,9 @@ much of the sensitivity; convergence of the finer public output is still open.
 The [finer public-only check](evidence/2026-09-24/near_extreme_public_refinement.json)
 is nonmonotone (`0.000324` for `0.0625 M`/`0.03125 M` but `0.008627`
 for `0.03125 M`/`0.015625 M`), so no public-output cadence is yet qualified.
+Independent [peak alignment](evidence/2026-09-24/near_extreme_public_alignment.json)
+reduces the finer-pair discrepancy to `0.003834` but worsens its adjacent
+control, leaving the public reference's sampling behavior unresolved.
 
 1. Qualify the physical generator against the published equations and independent
    references over the intended domain, resolve convention/provenance gaps, and
