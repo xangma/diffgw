@@ -369,7 +369,7 @@ def transport_msa_angles_for_phi_ref(
 
     The theta and polarization-basis coordinates are taken from the current
     geometry.  Phase deltas use the principal representative through
-    ``atan2(sin(delta), cos(delta))``; this changes no Eq. (45) rotation and
+    ``atan2(sin(delta), cos(delta))``; this changes no Wigner-D rotation and
     avoids an artificial discontinuity at a branch cut.  No public angle or
     geometry provider is consulted here.
 
@@ -504,11 +504,11 @@ def compose_msa_waveform(
     carrier phase and leaves the source-frame polarization basis unchanged;
     convention 1 adds ``pi-phi_j`` to relative ``gamma``, shifts that basis by
     ``-pi/2``, and uses carrier phase zero, following the validated generic
-    Eq. (45) assembly and Table IV of arXiv:2004.06503.
+    Eqs. (11)--(13) assembly and Table IV of arXiv:2004.06503.
 
     The opaque carrier is called only at inclination zero with
     ``_final_spin_override=final_spin``.  Its positive-frequency ``h22`` is
-    reconstructed from ``h_plus`` and passed to the fresh Eq. (45) projector.
+    reconstructed from ``h_plus`` and passed to the fresh quadrupole projector.
     Output tensors have parameter axes preceding the final frequency axis.
     """
     if int(convention) not in (0, 1):
@@ -578,7 +578,7 @@ def compose_msa_waveform(
         carrier_phase = torch.zeros_like(phi)
     else:
         # ``source_frame_geometry`` returns the azimuth of J's transverse
-        # projection.  The generic clean-room Eq. (45) assembly uses the
+        # projection.  The generic clean-room Eqs. (11)--(13) assembly uses the
         # opposite carrier phase and the geometry's polarization basis as
         # returned.  Keep this choice shared by relative and absolute angle
         # injection so a supplied public angle triplet changes only the

@@ -1,7 +1,7 @@
 """Nonpublic aligned v223 observer geometry and finite-beta XP projection.
 
-Pratten et al., arXiv:2004.06503v2, Appendix C fixes the observer basis and
-Eq. (45) rotates the coprecessing quadrupole.  The reference orbital L,
+Pratten et al., arXiv:2004.06503v2, Appendix C fixes the observer basis;
+Eqs. (8)--(13) and Appendix A specify the quadrupole rotation.  The reference orbital L,
 aligned Euler chart, split-root beta, and convention-1 endpoint correction
 below are separately labelled v223 compatibility choices.  This diagnostic
 does not change public XP dispatch or assert a strict physical beta=0 limit.
@@ -69,8 +69,8 @@ def _d_l2_end(m: int, mp: int, c, s):
     raise ValueError("mprime must be +2 or -2")
 
 
-def project_l2_eq45(hneg, alpha, gamma, cos_beta, theta_jn, zeta):
-    """Project one positive-frequency coprecessing ``h_{2,-2}`` via Eq. (45).
+def project_l2_quadrupole(hneg, alpha, gamma, cos_beta, theta_jn, zeta):
+    """Project one positive-frequency ``h_{2,-2}`` via Eqs. (11)--(13).
 
     ``hneg`` has the carrier normalization before multiplying the spin-weighted
     harmonic.  Its final axis is frequency.  ``cos_beta`` retains the finite
@@ -146,7 +146,7 @@ def aligned_msa_v223_waveform(
         _final_spin_override=endpoint["final_spin"],
     )
     hneg = 2.0 * carrier_plus / jnp.sqrt(5.0 / (4.0 * jnp.pi))
-    hp, hc = project_l2_eq45(
+    hp, hc = project_l2_quadrupole(
         hneg, alpha, gamma, endpoint["cos_beta"], geometry["theta_jn"], zeta,
     )
     # Exact alignment has axial SO(2) symmetry.  Apply the independent
@@ -168,5 +168,5 @@ def aligned_msa_v223_waveform(
 __all__ = [
     "aligned_msa_v223_waveform",
     "aligned_source_frame_geometry_v223",
-    "project_l2_eq45",
+    "project_l2_quadrupole",
 ]

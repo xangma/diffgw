@@ -5,7 +5,7 @@ arXiv:1703.03967v3, Appendices D and F.  The remnant identity follows
 Pratten et al., arXiv:2004.06503v2, Sec. IV D.  The split spin roots and the
 total-mass-normalized remnant are explicitly *v223 compatibility* choices;
 they are not the strict physical beta=0 limit.  Observer-frame transport and
-the finite-beta Eq. (45) projection are deliberately outside this module.
+the finite-beta Eqs. (11)--(13) projection are deliberately outside this module.
 """
 
 from __future__ import annotations

@@ -1,7 +1,7 @@
-"""Nonpublic JAX aligned v223 geometry and Eq. (45) projection checks.
+"""Nonpublic JAX aligned v223 geometry and quadrupole projection checks.
 
 The observer basis and quadrupole rotation follow Pratten et al.,
-arXiv:2004.06503v2, Appendix C and Eq. (45).  The finite beta and aligned
+arXiv:2004.06503v2, Appendix C and Eqs. (8)--(13).  The finite beta and aligned
 chart are v223 compatibility prescriptions; these tests do not gate public
 dispatch or the near-aligned transverse-spin limit.
 """
@@ -17,7 +17,7 @@ import jax.numpy as jnp
 from jaxwave.approximants.precession_msa_v223_projection import (
     aligned_msa_v223_waveform,
     aligned_source_frame_geometry_v223,
-    project_l2_eq45,
+    project_l2_quadrupole,
 )
 from torchwave.approximants.precession_msa_angles_clean import (
     assemble_precession_msa_angles_v223,
@@ -62,13 +62,13 @@ def test_aligned_source_geometry_matches_appendix_c_basis(phi_ref):
     )
 
 
-def test_finite_beta_eq45_projection_matches_independent_torch_sum():
+def test_finite_beta_quadrupole_projection_matches_independent_torch_sum():
     hneg = np.array([2.0 + 1.0j, -0.3 + 0.8j, 1.2 - 0.2j])
     alpha = np.array([0.2, -0.5, 1.1])
     gamma = np.array([0.8, 0.3, -0.1])
     beta = np.array([0.0, 0.4, 1.1])
     theta, zeta = 0.7, -0.3
-    jhp, jhc = project_l2_eq45(
+    jhp, jhc = project_l2_quadrupole(
         jnp.asarray(hneg), jnp.asarray(alpha), jnp.asarray(gamma),
         jnp.cos(jnp.asarray(beta)), theta, zeta,
     )

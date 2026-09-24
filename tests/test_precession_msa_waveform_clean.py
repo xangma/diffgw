@@ -282,7 +282,7 @@ def test_published_rotation_identities_hold_independently_of_composition():
 
 @pytest.mark.parametrize("convention", (0, 1))
 def test_source_phase_transport_matches_current_geometry_for_both_conventions(convention):
-    """Appendix C transport preserves the Eq. (45) waveform at nonzero phiRef."""
+    """Appendix C transport preserves the quadrupole waveform at nonzero phiRef."""
     f = torch.tensor([20.0, 40.0, 100.0], dtype=torch.float64)
     angles = {
         "alpha": torch.tensor([0.1, 0.2, 0.3], dtype=torch.float64),
