@@ -273,8 +273,9 @@ The [maintained optional binary-oracle test](https://github.com/xangma/diffgw/bl
 now runs both frontends and passed **6/6** cases on `len` with LALSuite 7.21.
 Together with the tidal and IMRPhenomD derivative oracles, the three focused
 files passed **36/36** CPU tests. The maintained binary-oracle CI job installs
-current LALSuite and PyCBC releases and runs all three files within the full
-test suite. These counts refer to the dated campaign above, not future CI runs.
+current LALSuite and PyCBC releases and runs all three files alongside strict
+frozen catalog and holdout comparisons. These counts refer to the dated
+campaign above, not future CI runs.
 
 This LALSuite binary returns **zero** non-Kerr 3.5PN coefficient at its highest
 accepted spin selector and rejects selector 8. Consequently, this comparison
