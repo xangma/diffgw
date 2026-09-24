@@ -68,12 +68,15 @@ def main() -> int:
             nr = c.anchor(c.load_mode(nr_path), dt=dt)
             waveform = public.public_mode(case["row"], dt, control["public_call"])
             anchored = c.anchor(waveform, dt=dt)
+            native_support = tuple(primary["cases"][simulation]["comparisons"]
+                                   ["native_vs_high"]["common_support_M"])
             entry.update(public_call={key: waveform[key] for key in (
                 "f_lower_Hz", "delta_t_s", "distance_Mpc", "inclination_rad")},
                 anchors={name: {key: value for key, value in item.items()
                                  if key not in ("time", "mode")}
                          for name, item in (("public", anchored), (f"Lev{high}", nr))},
-                public_vs_high=c.compare(anchored, nr, windows, dt),
+                public_vs_high=c.compare(anchored, nr, windows, dt,
+                                         support=native_support),
                 native_vs_high_complex_l2_from_primary=primary["cases"][simulation]
                     ["comparisons"]["native_vs_high"]["metrics"]["complex_relative_l2"],
                 elapsed_seconds=time.monotonic()-started)
