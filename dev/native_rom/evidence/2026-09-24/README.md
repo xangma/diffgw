@@ -2182,3 +2182,12 @@ dev/native_rom/evidence/2026-09-24/sxs_2508_tolerance_plan.json
 --baseline-array /tmp/diffgw-sxs-five-case/decoded/sxs_2508_long_start_arrays.npz
 --array-out /tmp/diffgw-sxs-five-case/decoded/sxs_2508_tolerance_arrays.npz
 --json-out dev/native_rom/evidence/2026-09-24/sxs_2508_tolerance.json`.
+
+The [second five-case holdout plan](sxs_second_holdout_plan.json) was frozen
+from the SHA-pinned SXS catalog before opening any of its waveforms or
+evaluating the native model on its five IDs. It selects strong aligned,
+mixed-spin, strong anti-aligned, asymmetric aligned, and nonspinning
+configurations, all unused in the earlier comparison. The plan pins two
+catalog resolutions and a start below the catalog reference frequency for
+each case. Extraction and comparisons are pending; no result or release
+claim follows from selection alone.
