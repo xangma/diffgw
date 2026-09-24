@@ -23,11 +23,13 @@ PLAN = q.ROOT / "dev/native_rom/evidence/2026-09-24/combined_domain_numerics_pla
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--json-out", required=True, type=Path)
+    parser.add_argument("--plan", type=Path, default=PLAN)
     args = parser.parse_args(argv)
-    plan = json.loads(PLAN.read_text())
+    plan = json.loads(args.plan.read_text())
     prior_path = q.ROOT / plan["prior_combined_numerics"]
     rows_path = q.ROOT / plan["prior_boundary_rows"]
-    if (plan["schema"] != "diffgw.seobnrv4.combined-domain-numerics-plan.v1"
+    if (plan["schema"] not in {"diffgw.seobnrv4.combined-domain-numerics-plan.v1",
+                               "diffgw.seobnrv4.combined-domain-numerics-plan.v2"}
             or q.sha256(prior_path) != plan["prior_combined_numerics_sha256"]
             or q.sha256(rows_path) != plan["prior_boundary_rows_sha256"]
             or plan["row_names"] != ["mass_ratio_four_nonspinning",
@@ -39,6 +41,10 @@ def main(argv=None):
             or plan["fixed_coarse_first_step_M"] != 0.125
             or plan["warm_start_Momega"] != 0.03162277660168379):
         parser.error("frozen domain plan or prior evidence differs")
+    if plan["schema"].endswith("v2") and plan.get("fixed_restart_time_M") != 150.0:
+        parser.error("v2 domain plan requires the prespecified 150 M restart")
+    if plan["schema"].endswith("v1") and "fixed_restart_time_M" in plan:
+        parser.error("v1 domain plan cannot change its restart")
     prior = json.loads(prior_path.read_text())
     boundary = json.loads(rows_path.read_text())
     if (prior["status"] != "diagnostic_complete"
@@ -51,7 +57,10 @@ def main(argv=None):
     pin = prior["lal_binary"]
     if q.lal_binary_identity(pin["lal_version"], pin["lalsimulation_version"]) != pin:
         parser.error("public binary identity differs")
-    numerical, candidate = prior["numerical_choice"], prior["candidate_choice"]
+    numerical = dict(prior["numerical_choice"])
+    if plan["schema"].endswith("v2"):
+        numerical["fixed_restart_time_M"] = plan["fixed_restart_time_M"]
+    candidate = prior["candidate_choice"]
     torch.set_num_threads(1)
     sources = ["src/torchwave/approximants/eob/seobnrv4_hamiltonian.py",
                "src/torchwave/approximants/eob/seobnrv4_flux.py",
@@ -60,9 +69,10 @@ def main(argv=None):
                "dev/native_rom/eob/torch/adaptive_driver_clean.py",
                "dev/native_rom/qualify_generator.py"]
     report = dict(
-        schema="diffgw.seobnrv4.combined-domain-numerics.v1",
+        schema="diffgw.seobnrv4.combined-domain-numerics."
+               + ("v2" if plan["schema"].endswith("v2") else "v1"),
         scope=q.SCOPE, status="running", release_qualified=False,
-        plan_sha256=q.sha256(PLAN), prior_sha256=dict(
+        plan_sha256=q.sha256(args.plan), prior_sha256=dict(
             combined=q.sha256(prior_path), boundary=q.sha256(rows_path)),
         source_sha256={name: q.sha256(q.ROOT / name) for name in sources},
         script_sha256=q.sha256(__file__), settings=asdict(settings),

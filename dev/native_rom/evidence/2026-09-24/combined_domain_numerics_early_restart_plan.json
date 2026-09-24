@@ -1,0 +1,30 @@
+{
+  "fixed_coarse_first_step_M": 0.125,
+  "fixed_restart_time_M": 150.0,
+  "ode_tolerances": [
+    {
+      "atol": 1e-12,
+      "rtol": 1e-11
+    },
+    {
+      "atol": 1e-13,
+      "rtol": 1e-12
+    },
+    {
+      "atol": 1e-14,
+      "rtol": 1e-13
+    }
+  ],
+  "prior_boundary_rows": "dev/native_rom/evidence/2026-09-23/parameter_boundary_campaign.json",
+  "prior_boundary_rows_sha256": "090bd698a49818d8fdf34d122fcebcf14de021feaa81f4309d6723d1f3c607a2",
+  "prior_combined_numerics": "dev/native_rom/evidence/2026-09-24/combined_matching_second.json",
+  "prior_combined_numerics_sha256": "219270cc07568cddb0744992c061318eb8b3735e6b125f11c43f4fdf4decfcf5",
+  "row_names": [
+    "mass_ratio_four_nonspinning",
+    "strong_aligned_spin",
+    "strong_antialigned_spin"
+  ],
+  "schema": "diffgw.seobnrv4.combined-domain-numerics-plan.v2",
+  "scope": "Three prespecified boundary rows with a common 150 M restart that precedes the strong antialigned NQC match; ODE stability and diagnostic public comparison only. Grid/domain release gates remain open.",
+  "warm_start_Momega": 0.03162277660168379
+}

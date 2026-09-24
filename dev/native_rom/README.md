@@ -91,6 +91,9 @@ control. Exact-hash attribution traces the aligned-spin numerical failure
 chiefly to the local NQC phase-basis second-derivative estimate; the raw
 pre-NQC waveform is much more stable. None of these boundary checks qualifies
 the physical generator or the independent ROM.
+A post-hoc common `150 M` restart brings all three boundary rows inside the
+fine trajectory and under the refined ODE budget; strong aligned spin still
+differs from the pinned public waveform by `0.01985` complex relative L2.
 A [predeclared wider-window intervention](evidence/2026-09-24/README.md)
 passes the strong aligned-spin ODE numerical gates at `2.70e-7` complex
 relative L2, while its fitted public-binary difference remains about `0.01985`.

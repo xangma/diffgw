@@ -1091,6 +1091,23 @@ despite an amplitude difference of `3.39e-9`; its fitted public difference is
 `163.49 M` match, so that row raises a match-grid error and the frozen
 three-row campaign fails.
 
+A [follow-up common-restart plan](combined_domain_numerics_early_restart_plan.json)
+and [result](combined_domain_numerics_early_restart.json) repeat those three
+rows at `150 M`, chosen after the `165 M` failure so the antialigned row's
+`163.49 M` match is inside the fine trajectory. The refined ODE complex
+relative L2 values are `1.82e-7` (mass-ratio-four nonspinning), `8.76e-7`
+(strong aligned), and `9.82e-7` (strong antialigned); all three pass the
+existing `1e-6` budget, amplitude, decreasing-error, and event-time checks.
+The independently peak-fitted public differences remain `0.000410`, `0.01985`,
+and `0.000204`, respectively. This is a post-hoc restart diagnostic on three
+rows, with the antialigned numerical result close to the budget. It neither
+establishes a domain-wide numerical bound nor resolves the aligned-spin
+physical mismatch. Reproduce with `PYTHONPATH=src:. python -m
+dev.native_rom.diagnose_combined_domain_numerics --plan
+dev/native_rom/evidence/2026-09-24/combined_domain_numerics_early_restart_plan.json
+--json-out /tmp/combined-domain-early-restart.json` in the pinned development
+environment.
+
 A separately frozen [earlier-restart plan](antialigned_restart_plan.json) and
 [result](antialigned_restart.json) move only that row's fixed restart to
 `100 M`. Its refined ODE check passes (`7.16e-7` complex, `2.39e-9`
