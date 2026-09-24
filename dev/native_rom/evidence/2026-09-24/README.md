@@ -2499,3 +2499,12 @@ Those small trajectory differences coexist with the `0.00862680` direct-mode
 post-peak discrepancy. The large grid effect is downstream of the sampled
 pre-peak dynamics, though NQC coefficients, matching, and ringdown assembly
 have not yet been separated.
+
+The [NQC coefficient plan](near_extreme_public_nqc_grid_plan.json) freezes
+the same two grids and requests the pinned public coefficient-only output.
+Its [result](near_extreme_public_nqc_grid.json) finds nonzero coefficient
+relative differences from `0.00107` to `0.00219`; five other returned
+entries remain exactly zero. These changes could contribute to the
+post-peak mode difference despite nearly identical high-rate states, but a
+coefficient comparison alone does not establish causality or separate the
+NQC fit from ringdown matching.

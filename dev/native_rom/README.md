@@ -1007,6 +1007,9 @@ The [public high-rate state check](evidence/2026-09-24/near_extreme_public_dynam
 agrees at common pre-peak radii to `1.25e-6 rad` in orbital phase despite
 the `0.008627` direct-mode post-peak error, locating the large grid effect
 downstream of the sampled trajectory.
+The [public NQC coefficient check](evidence/2026-09-24/near_extreme_public_nqc_grid.json)
+finds `0.11–0.22%` differences between those grids, a candidate
+contributor that still needs a waveform-level attribution test.
 
 1. Qualify the physical generator against the published equations and independent
    references over the intended domain, resolve convention/provenance gaps, and
