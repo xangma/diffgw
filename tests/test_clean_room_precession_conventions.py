@@ -121,8 +121,12 @@ def test_wrappers_apply_table_iv_phase_to_each_mode(mode):
              spin2x=-.2,spin2y=.1,spin2z=-.2,inclination=.7,phic=.3,f_ref=40.)
     default = model(f,**p,convention=1)
     phi_j = torch.atan2(t(4*.2+.1),t(4*.3-.2))
-    # Table IV changes epsilon's constant and/or the carrier's m*phiRef.
-    for convention, phase in [(0,order*(2*phi_j-math.pi)),(6,t(order*.3))]:
+    # XP's convention-0 and convention-1 full strains differ by a constant
+    # sign at this generic point.  Appendix C Eq. (79) rotates alpha and
+    # gamma with the Table-IV carrier, and Eq. (81) fixes the output basis.
+    # The aligned-boundary suite also checks both strains against public XP.
+    phase_zero = t(math.pi) if mode is None else order*(2*phi_j-math.pi)
+    for convention, phase in [(0,phase_zero),(6,t(order*.3))]:
         for h,h0 in zip(model(f,**p,convention=convention),default):
             torch.testing.assert_close(h,torch.exp(1j*phase)*h0,atol=1e-34,rtol=2e-11)
     for h5,h7 in zip(model(f,**p,convention=5),model(f,**p,convention=7)):
@@ -159,7 +163,10 @@ def test_aligned_table_limits_and_default_continuity(mode):
     f = t([25.,40.,80.])
     p = dict(mass1=40.,mass2=20.,spin1z=.4,spin2z=-.2,inclination=.7,phic=.3,f_ref=40.)
     default = model(f,**p)
-    # The C16 anchored default is continuous from every spin azimuth.
+    # Appendix C Eqs. (67), (79), and (81) require a fixed-basis aligned
+    # limit as the transverse spin tends to zero from every azimuth.  The
+    # public LAL implementation has a separate numerical threshold in its
+    # convention-0 near-aligned branch; this checks the clean model itself.
     for azimuth in [-2.,.4,2.1]:
         near = model(f,**p,spin1x=1e-9*math.cos(azimuth),spin1y=1e-9*math.sin(azimuth))
         for h,h0 in zip(near,default):

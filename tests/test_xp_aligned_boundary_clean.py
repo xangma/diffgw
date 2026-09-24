@@ -8,6 +8,7 @@ import pytest
 import torch
 
 from torchwave.approximants.precession_msa_waveform_clean import waveform_v223
+from torchwave.approximants.precession_source_frame_clean import source_frame_geometry
 
 
 DTYPE = torch.float64
@@ -93,10 +94,37 @@ def _max_relative_l2(actual, target):
     )
 
 
+@pytest.mark.parametrize("phic", (0.0, 0.3, 0.7))
+@pytest.mark.parametrize("spin1x", (0.0, 1.0e-9))
+def test_endpoint_combined_angle_is_chart_independent(phic, spin1x):
+    # Appendix C Eqs. (67), (75), and (79) fix the beta->0 quadrupole
+    # projection through exp[2i(alpha0+gamma0)], even when phi_J is undefined
+    # at exact alignment.  The raw exact chart can differ by pi in alpha0.
+    alpha0, _theta, _zeta, phi_j = source_frame_geometry(
+        35.0, 25.0, spin1x, 0.0, 0.4, 0.0, 0.0, -0.2,
+        0.7, phic, 20.0, compatibility="v223",
+    )
+    combined = torch.exp(2j * (alpha0 + math.pi - phi_j))
+    expected = torch.exp(torch.tensor(2j * (1.5 * math.pi + phic), dtype=torch.complex128))
+    torch.testing.assert_close(combined, expected, rtol=2e-8, atol=2e-8)
+
+
 @pytest.mark.parametrize("convention", (0, 1))
 def test_audited_exact_aligned_matches_public_boundary(convention):
     actual = _clean_waveform(convention)
     target = _public_target(convention)
+    assert _max_relative_l2(actual, target) < STRICT_GATE
+
+
+@pytest.mark.parametrize("convention", (0, 1))
+def test_generic_table_iv_combined_rotation_matches_public_oracle(convention):
+    # Table IV's carrier phase is only one part of the final strain; the
+    # observable includes alpha, gamma, and the Appendix C output basis.
+    # Compare that combined result with the public binary well away from
+    # the singular J_perp=0 chart.
+    source = dict(spin1=(0.3, 0.2, 0.4), spin2=(-0.2, 0.1, -0.2))
+    actual = _clean_waveform(convention, **source)
+    target = _public_target(convention, **source)
     assert _max_relative_l2(actual, target) < STRICT_GATE
 
 
