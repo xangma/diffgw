@@ -1,0 +1,53 @@
+{
+  "schema": "diffgw.seobnrv4.source-placement-nqc-dense-plan.v1",
+  "purpose": "Compare the frozen current native strong-spin NQC inputs and derivatives against independent DOP853 dense integration of the same provisional source-placement vector field at one fixed match. Numerical diagnostic only.",
+  "row_name": "strong_aligned_spin",
+  "level": "ode_2",
+  "prerequisites": {
+    "waveform": {
+      "path": "dev/native_rom/evidence/2026-09-24/source_placement_whole_waveform.json",
+      "sha256": "01c2895e1623751c679d2f419aede60f37d2d05390361e389574fee8e132aa54"
+    },
+    "native_array": {
+      "path": "dev/native_rom/evidence/2026-09-24/native_source_nqc_inputs.npz",
+      "sha256": "4e704863023ad43976b67faf22073767a1dc8236ac9304fc8bc369f2a76c7b16"
+    },
+    "source_flux_plan": {
+      "path": "dev/native_rom/evidence/2026-09-24/source_flux_initial_plan.json",
+      "sha256": "1167199c8f954f97a5905a1e3b2f67d1555e984e5f1da0a0fc42a77a925f96ea"
+    },
+    "prior_waveform": {
+      "path": "dev/native_rom/evidence/2026-09-24/source_flux_one_M.json",
+      "sha256": "8ac37b7cddcc5c15333ef4167af51ce0c37e3327a2f8b7b780510fbb1b044eda"
+    }
+  },
+  "anchor_before_match_M": 4.0,
+  "end_after_match_M": 1.0,
+  "dop853_tolerances": [
+    [
+      1e-11,
+      1e-12
+    ],
+    [
+      1e-12,
+      1e-13
+    ]
+  ],
+  "five_point_steps_M": [
+    0.2,
+    0.1,
+    0.05,
+    0.025
+  ],
+  "polynomial_estimators": [
+    {
+      "degree": 4,
+      "half_width_M": 2.0
+    },
+    {
+      "degree": 6,
+      "half_width_M": 0.5
+    }
+  ],
+  "release_qualified": false
+}

@@ -402,6 +402,24 @@ from `0.040` to `2.225` and from `0.202` to `4.298`. This sampled-domain
 result supports a source derivative-instability hypothesis but is not an
 accuracy proof for a replacement estimator or a whole-waveform validation.
 
+The [current-native dense plan](source_placement_nqc_dense_plan.json) and
+[result](source_placement_nqc_dense.json) replay the frozen source-placement
+strong-spin waveform and NQC amplitude array, then independently integrate
+the same provisional vector field with DOP853 from a state about `4 M` before
+matching. Five-point derivatives at `0.025 M` are stable against DOP853
+tolerance and stencil changes: the largest nonphase second-derivative spreads
+are `1.3e-11` and `2.3e-13`. Against that reference, the largest nonphase
+second-derivative errors are `1.83e-8` for the native GSL cubic, `8.27e-8`
+for a degree-four polynomial over `±2 M`, and `4.20e-10` for a degree-six
+polynomial over `±0.5 M`. This demonstrates smooth local native inputs on one
+row; it does not establish an accurate source derivative or validate the
+provisional physics. The standalone GSL library still matches its frozen
+SHA-256, while the currently installed LAL Python extension differs from the
+older source-wheel pin. This diagnostic uses only the pinned GSL library and
+does not refresh the source-wheel comparison. Reproduce with
+`PYTHONPATH=src:. python -m dev.native_rom.diagnose_source_placement_nqc_dense
+--json-out /tmp/source-placement-nqc-dense.json`.
+
 The [public-mode boundary plan](public_nqc_mode_boundary_plan.json) and
 [result](public_nqc_mode_boundary.json) use both public v4 modes API paths at
 `0.015625 M`: the coefficient-only call and the call returning modes plus low-

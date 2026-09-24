@@ -257,6 +257,14 @@ finds the same sensitivity on nonspinning and mild mixed-spin rows: at a
 common match time, successive `±2 M` polynomial coefficient differences
 decrease from `0.023` to `0.011` and from `0.026` to `0.012` (L2), while the
 source cubic differences increase on the final refinement.
+An [independent-integration derivative check](evidence/2026-09-24/source_placement_nqc_dense.json)
+on the frozen current native strong-spin candidate finds a maximum nonphase
+second-derivative error of `1.83e-8` for its GSL cubic, versus `4.20e-10` for
+a diagnostic degree-six `±0.5 M` fit. The DOP853 reference uses the same
+provisional equations, so this isolates native numerical differentiation on
+one row; it neither validates source physics nor establishes a replacement
+NQC rule. The installed LAL extension has drifted from the old wheel pin;
+only the GSL library hash was verified for this new check.
 The aligned-spin trajectory replay finds a native-minus-public orbital phase
 span of at most `1.27e-4 rad` from `M Omega=0.0425` through `0.13`, compared
 with `3.36e-5 rad` maximum public-grid sensitivity. Over the later sampled
