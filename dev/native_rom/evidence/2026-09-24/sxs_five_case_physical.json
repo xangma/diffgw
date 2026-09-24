@@ -1,0 +1,1179 @@
+{
+  "all_cases_succeeded": true,
+  "cases": {
+    "SXS:BBH:2139": {
+      "anchor": {
+        "Lev3": {
+          "anchor_phase_rad": -276.8515467872918,
+          "anchor_time_M": 6847.593953851737,
+          "frequency_at_grid_crossing": [
+            0.08998306767332784,
+            0.0900281225762379
+          ],
+          "peak_after_anchor_M": 153.7503789879711,
+          "peak_amplitude": 0.28348906190902134
+        },
+        "Lev4": {
+          "anchor_phase_rad": -270.7404441271396,
+          "anchor_time_M": 6854.961008320964,
+          "frequency_at_grid_crossing": [
+            0.08996193407822703,
+            0.09000703410271799
+          ],
+          "peak_after_anchor_M": 153.67334631572976,
+          "peak_amplitude": 0.2835524904367788
+        },
+        "native": {
+          "anchor_phase_rad": -3.578159915720486,
+          "anchor_time_M": 74.81890063639422,
+          "frequency_at_grid_crossing": [
+            0.08998889388900934,
+            0.09002919145218101
+          ],
+          "peak_after_anchor_M": 157.93109936360577,
+          "peak_amplitude": 0.28352185961152515
+        }
+      },
+      "comparisons": {
+        "low_vs_high_on_native_support": {
+          "common_samples": 1531,
+          "common_support_M": [
+            -74.75,
+            307.75
+          ],
+          "metrics": {
+            "amplitude_relative_l2": 0.0009092216005301232,
+            "complex_relative_l2": 0.00677518053511158,
+            "phase_max_abs_rad": 0.07462568269254319,
+            "phase_rms_rad": 0.01029968936920295,
+            "phase_samples": 1531,
+            "relative_norm_error": 1.6103499804964727e-05,
+            "samples": 1531,
+            "unmaximized_real_overlap": 0.9999770482244156
+          },
+          "peak_amplitude_ratio": 0.9997763076329896,
+          "peak_lag_difference_M": 0.07703267224133015,
+          "phase_residual_rad": {
+            "end": -0.014262488684066458,
+            "range": 0.10135283950492473,
+            "start": 0.0005241936727510246
+          },
+          "windows": {
+            "inspiral": {
+              "metrics": {
+                "amplitude_relative_l2": 0.00013695947236735183,
+                "complex_relative_l2": 0.0003645078656862067,
+                "phase_max_abs_rad": 0.0008815300601105119,
+                "phase_rms_rad": 0.00032151700772812484,
+                "phase_samples": 514,
+                "relative_norm_error": 8.085678165881127e-05,
+                "samples": 514,
+                "unmaximized_real_overlap": 0.9999999368308098
+              },
+              "samples": 514
+            },
+            "late_inspiral": {
+              "metrics": {
+                "amplitude_relative_l2": 0.00048315896109499333,
+                "complex_relative_l2": 0.00541247085553739,
+                "phase_max_abs_rad": 0.011499164970864983,
+                "phase_rms_rad": 0.004404826635719495,
+                "phase_samples": 400,
+                "relative_norm_error": 0.0004495188102529024,
+                "samples": 400,
+                "unmaximized_real_overlap": 0.9999854470713844
+              },
+              "samples": 400
+            },
+            "post_peak": {
+              "metrics": {
+                "amplitude_relative_l2": 0.002280661036187313,
+                "complex_relative_l2": 0.015069951497730036,
+                "phase_max_abs_rad": 0.07462568269254319,
+                "phase_rms_rad": 0.016648849040428418,
+                "phase_samples": 400,
+                "relative_norm_error": 0.0018450419892521719,
+                "samples": 400,
+                "unmaximized_real_overlap": 0.9998883563581062
+              },
+              "samples": 400
+            }
+          }
+        },
+        "native_vs_high": {
+          "common_samples": 1531,
+          "common_support_M": [
+            -74.75,
+            307.75
+          ],
+          "metrics": {
+            "amplitude_relative_l2": 0.07595049104726997,
+            "complex_relative_l2": 0.5150046572353237,
+            "phase_max_abs_rad": 3.128663010947826,
+            "phase_rms_rad": 0.9041864223793554,
+            "phase_samples": 1377,
+            "relative_norm_error": 0.005610813865516651,
+            "samples": 1531,
+            "unmaximized_real_overlap": 0.8681406802287501
+          },
+          "peak_amplitude_ratio": 0.9998919747620397,
+          "peak_lag_difference_M": 4.257753047876008,
+          "phase_residual_rad": {
+            "end": -12.566370614359172,
+            "range": 15.720892910590933,
+            "start": 0.026926788438361184
+          },
+          "windows": {
+            "inspiral": {
+              "metrics": {
+                "amplitude_relative_l2": 0.006065541686956004,
+                "complex_relative_l2": 0.016350164512487716,
+                "phase_max_abs_rad": 0.03689716935999323,
+                "phase_rms_rad": 0.015022078340108663,
+                "phase_samples": 514,
+                "relative_norm_error": 0.002189800542179432,
+                "samples": 514,
+                "unmaximized_real_overlap": 0.9998690204924114
+              },
+              "samples": 514
+            },
+            "late_inspiral": {
+              "metrics": {
+                "amplitude_relative_l2": 0.034162686504991574,
+                "complex_relative_l2": 0.38188358646989795,
+                "phase_max_abs_rad": 0.8527344349053685,
+                "phase_rms_rad": 0.3189729763549792,
+                "phase_samples": 400,
+                "relative_norm_error": 0.031295469297156875,
+                "samples": 400,
+                "unmaximized_real_overlap": 0.9252322753608457
+              },
+              "samples": 400
+            },
+            "post_peak": {
+              "metrics": {
+                "amplitude_relative_l2": 0.19579826112841614,
+                "complex_relative_l2": 1.1854683899311302,
+                "phase_max_abs_rad": 3.128663010947826,
+                "phase_rms_rad": 1.4641409953912021,
+                "phase_samples": 400,
+                "relative_norm_error": 0.14643435085641854,
+                "samples": 400,
+                "unmaximized_real_overlap": 0.3964363143073306
+              },
+              "samples": 400
+            }
+          }
+        }
+      },
+      "elapsed_seconds": 69.5023236249981,
+      "errors": [],
+      "levels": [
+        3,
+        4
+      ],
+      "native": {
+        "array_dtype": {
+          "mode": "complex128",
+          "time": "float64"
+        },
+        "array_sha256": {
+          "mode": "d95a21ebc359649df22cf90a5ec8d64ec11188f249ffd166ebf09679749a845d",
+          "time": "24c0928e643ef3dc7f3c74705690b3fa9e4dd1385193400e95e745b090b49fda"
+        },
+        "atol": 1e-15,
+        "boundary_time_M": 232.734375,
+        "dt_geom": 0.25,
+        "final_mass_fraction": 0.9764360273265081,
+        "final_spin": 0.29865698843165633,
+        "internal_step_M": 0.015625,
+        "match_time_M": 232.74663204921126,
+        "name": "native",
+        "peak_time_M": 240.20311737060547,
+        "restart_time_M": 90.25,
+        "rtol": 1e-14,
+        "samples": 1532,
+        "stages": {
+          "coarse": {
+            "accepted": 833,
+            "evaluations": 5144,
+            "event_time_M": 240.20915166626358,
+            "rejected": 29,
+            "termination": [
+              "event"
+            ]
+          },
+          "fine": {
+            "accepted": 684,
+            "evaluations": 4255,
+            "event_time_M": 150.0266006848242,
+            "rejected": 30,
+            "termination": [
+              "event"
+            ]
+          }
+        },
+        "support_M": [
+          0.0,
+          382.75
+        ]
+      },
+      "physical_validation_passed": false,
+      "release_qualified": false,
+      "row": {
+        "chi1": -0.49999337948715356,
+        "chi2": -0.5000037713815986,
+        "mass1": 0.7499485786486145,
+        "mass2": 0.2500010625787595,
+        "omega_start": 0.04
+      }
+    },
+    "SXS:BBH:2496": {
+      "anchor": {
+        "Lev2": {
+          "anchor_phase_rad": -237.1108357269789,
+          "anchor_time_M": 5791.199871684399,
+          "frequency_at_grid_crossing": [
+            0.08997122888474138,
+            0.09000721586727105
+          ],
+          "peak_after_anchor_M": 218.27207979743525,
+          "peak_amplitude": 0.39350020063642843
+        },
+        "Lev3": {
+          "anchor_phase_rad": -237.25527140100428,
+          "anchor_time_M": 5795.834969107253,
+          "frequency_at_grid_crossing": [
+            0.08998776256347223,
+            0.09002376810985079
+          ],
+          "peak_after_anchor_M": 218.25845893424412,
+          "peak_amplitude": 0.39349889046986086
+        },
+        "native": {
+          "anchor_phase_rad": -4.834714133665785,
+          "anchor_time_M": 89.34006839291894,
+          "frequency_at_grid_crossing": [
+            0.0899875014678334,
+            0.09002219324971589
+          ],
+          "peak_after_anchor_M": 215.90993160708106,
+          "peak_amplitude": 0.394363863954914
+        }
+      },
+      "comparisons": {
+        "low_vs_high_on_native_support": {
+          "common_samples": 1820,
+          "common_support_M": [
+            -89.25,
+            365.5
+          ],
+          "metrics": {
+            "amplitude_relative_l2": 0.00033245359632697323,
+            "complex_relative_l2": 0.002729760530438333,
+            "phase_max_abs_rad": 0.06195071412649946,
+            "phase_rms_rad": 0.010472588540813144,
+            "phase_samples": 1820,
+            "relative_norm_error": 2.6757865809301506e-05,
+            "samples": 1820,
+            "unmaximized_real_overlap": 0.9999962744620274
+          },
+          "peak_amplitude_ratio": 1.0000033295305255,
+          "peak_lag_difference_M": 0.013620863191135868,
+          "phase_residual_rad": {
+            "end": 0.04296954184688881,
+            "range": 0.11623824999734961,
+            "start": 0.00010979796943316763
+          },
+          "windows": {
+            "inspiral": {
+              "metrics": {
+                "amplitude_relative_l2": 2.149174748681761e-05,
+                "complex_relative_l2": 7.242915779811355e-05,
+                "phase_max_abs_rad": 0.0002127477708666269,
+                "phase_rms_rad": 6.403648850412518e-05,
+                "phase_samples": 831,
+                "relative_norm_error": 1.781912840059796e-05,
+                "samples": 831,
+                "unmaximized_real_overlap": 0.999999997535813
+              },
+              "samples": 831
+            },
+            "late_inspiral": {
+              "metrics": {
+                "amplitude_relative_l2": 0.00013378609160369186,
+                "complex_relative_l2": 0.002129187666227667,
+                "phase_max_abs_rad": 0.004831245686601849,
+                "phase_rms_rad": 0.0017168663630266255,
+                "phase_samples": 400,
+                "relative_norm_error": 0.0001207659451123444,
+                "samples": 400,
+                "unmaximized_real_overlap": 0.999997740844977
+              },
+              "samples": 400
+            },
+            "post_peak": {
+              "metrics": {
+                "amplitude_relative_l2": 0.0009290115083712396,
+                "complex_relative_l2": 0.006747753061400655,
+                "phase_max_abs_rad": 0.013250262173905175,
+                "phase_rms_rad": 0.007995895512506752,
+                "phase_samples": 400,
+                "relative_norm_error": 0.0007542601920303982,
+                "samples": 400,
+                "unmaximized_real_overlap": 0.9999775013987304
+              },
+              "samples": 400
+            }
+          }
+        },
+        "native_vs_high": {
+          "common_samples": 1820,
+          "common_support_M": [
+            -89.25,
+            365.5
+          ],
+          "metrics": {
+            "amplitude_relative_l2": 0.041187046714997864,
+            "complex_relative_l2": 0.31737748664686827,
+            "phase_max_abs_rad": 3.114893814810112,
+            "phase_rms_rad": 0.5915160614251751,
+            "phase_samples": 1690,
+            "relative_norm_error": 0.001316408444283712,
+            "samples": 1820,
+            "unmaximized_real_overlap": 0.949570245796177
+          },
+          "peak_amplitude_ratio": 1.002198159908457,
+          "peak_lag_difference_M": -2.3485273271630547,
+          "phase_residual_rad": {
+            "end": -6.283185307179587,
+            "range": 6.348680965807568,
+            "start": 0.01647247501402647
+          },
+          "windows": {
+            "inspiral": {
+              "metrics": {
+                "amplitude_relative_l2": 0.0037223404679076716,
+                "complex_relative_l2": 0.0069202915958498255,
+                "phase_max_abs_rad": 0.01647247501402647,
+                "phase_rms_rad": 0.0061531396696266685,
+                "phase_samples": 831,
+                "relative_norm_error": 0.002777849669450161,
+                "samples": 831,
+                "unmaximized_real_overlap": 0.9999799686505844
+              },
+              "samples": 831
+            },
+            "late_inspiral": {
+              "metrics": {
+                "amplitude_relative_l2": 0.01898930258033349,
+                "complex_relative_l2": 0.2592061710996169,
+                "phase_max_abs_rad": 0.5966431814042834,
+                "phase_rms_rad": 0.2070602005710085,
+                "phase_samples": 400,
+                "relative_norm_error": 0.017607910084379785,
+                "samples": 400,
+                "unmaximized_real_overlap": 0.9671397008730803
+              },
+              "samples": 400
+            },
+            "post_peak": {
+              "metrics": {
+                "amplitude_relative_l2": 0.1135648634635916,
+                "complex_relative_l2": 0.7700079233008046,
+                "phase_max_abs_rad": 1.9138563142827059,
+                "phase_rms_rad": 1.051333449887005,
+                "phase_samples": 400,
+                "relative_norm_error": 0.09373305872345239,
+                "samples": 400,
+                "unmaximized_real_overlap": 0.6777294365247529
+              },
+              "samples": 400
+            }
+          }
+        }
+      },
+      "elapsed_seconds": 70.2203381669824,
+      "errors": [],
+      "levels": [
+        2,
+        3
+      ],
+      "native": {
+        "array_dtype": {
+          "mode": "complex128",
+          "time": "float64"
+        },
+        "array_sha256": {
+          "mode": "05212ca2b1762f384a533b9ab3667ba6d7894c7fb91e9abafa9f481828e4a8b6",
+          "time": "a5f34276ab3e06345a624ccb132278ebd1d82ef80f0aa9a57b6a0f18fe65a207"
+        },
+        "atol": 1e-15,
+        "boundary_time_M": 305.203125,
+        "dt_geom": 0.25,
+        "final_mass_fraction": 0.9517856333082483,
+        "final_spin": 0.6864603590259102,
+        "internal_step_M": 0.015625,
+        "match_time_M": 305.20674267395214,
+        "name": "native",
+        "peak_time_M": 308.81249237060547,
+        "restart_time_M": 159.0,
+        "rtol": 1e-14,
+        "samples": 1821,
+        "stages": {
+          "coarse": {
+            "accepted": 911,
+            "evaluations": 5617,
+            "event_time_M": 308.80898246689287,
+            "rejected": 30,
+            "termination": [
+              "event"
+            ]
+          },
+          "fine": {
+            "accepted": 637,
+            "evaluations": 3968,
+            "event_time_M": 149.89802441869185,
+            "rejected": 29,
+            "termination": [
+              "event"
+            ]
+          }
+        },
+        "support_M": [
+          0.0,
+          455.0
+        ]
+      },
+      "physical_validation_passed": false,
+      "release_qualified": false,
+      "row": {
+        "chi1": 1.1791940292143702e-06,
+        "chi2": 1.1760115801617648e-06,
+        "mass1": 0.49999881530318335,
+        "mass2": 0.4999988153600197,
+        "omega_start": 0.04
+      }
+    },
+    "SXS:BBH:2499": {
+      "anchor": {
+        "Lev2": {
+          "anchor_phase_rad": -223.84694109850898,
+          "anchor_time_M": 4607.949236515662,
+          "frequency_at_grid_crossing": [
+            0.08997894909304137,
+            0.09000536356190603
+          ],
+          "peak_after_anchor_M": 262.09844647346654,
+          "peak_amplitude": 0.24041572299467392
+        },
+        "Lev3": {
+          "anchor_phase_rad": -223.75057418453898,
+          "anchor_time_M": 4605.223436784573,
+          "frequency_at_grid_crossing": [
+            0.0899762372822616,
+            0.09000282502360392
+          ],
+          "peak_after_anchor_M": 261.93480315745273,
+          "peak_amplitude": 0.24043131775858495
+        },
+        "native": {
+          "anchor_phase_rad": -7.844720037981785,
+          "anchor_time_M": 125.69577592160141,
+          "frequency_at_grid_crossing": [
+            0.08997945826507227,
+            0.09000568944656755
+          ],
+          "peak_after_anchor_M": 259.0542240783986,
+          "peak_amplitude": 0.24030749555798356
+        }
+      },
+      "comparisons": {
+        "low_vs_high_on_native_support": {
+          "common_samples": 2138,
+          "common_support_M": [
+            -125.5,
+            408.75
+          ],
+          "metrics": {
+            "amplitude_relative_l2": 0.0018659671753229919,
+            "complex_relative_l2": 0.014154095676095343,
+            "phase_max_abs_rad": 0.1472414261843987,
+            "phase_rms_rad": 0.025531878342139137,
+            "phase_samples": 2138,
+            "relative_norm_error": 0.00018124064714353239,
+            "samples": 2138,
+            "unmaximized_real_overlap": 0.9998998653603483
+          },
+          "peak_amplitude_ratio": 0.9999351383835666,
+          "peak_lag_difference_M": 0.163643316013804,
+          "phase_residual_rad": {
+            "end": -0.03394992490570387,
+            "range": 0.2586491741137438,
+            "start": 0.000351876013381127
+          },
+          "windows": {
+            "inspiral": {
+              "metrics": {
+                "amplitude_relative_l2": 7.454630859065311e-05,
+                "complex_relative_l2": 0.001005110797912324,
+                "phase_max_abs_rad": 0.0025934971938139824,
+                "phase_rms_rad": 0.0008931037276678981,
+                "phase_samples": 1150,
+                "relative_norm_error": 2.209693013111025e-05,
+                "samples": 1150,
+                "unmaximized_real_overlap": 0.9999994951091224
+              },
+              "samples": 1150
+            },
+            "late_inspiral": {
+              "metrics": {
+                "amplitude_relative_l2": 0.0007396009173887742,
+                "complex_relative_l2": 0.012442813414169893,
+                "phase_max_abs_rad": 0.02745416136567333,
+                "phase_rms_rad": 0.010407270378262173,
+                "phase_samples": 400,
+                "relative_norm_error": 0.0006590436580844461,
+                "samples": 400,
+                "unmaximized_real_overlap": 0.9999227544582574
+              },
+              "samples": 400
+            },
+            "post_peak": {
+              "metrics": {
+                "amplitude_relative_l2": 0.005793509514331575,
+                "complex_relative_l2": 0.03792113821264861,
+                "phase_max_abs_rad": 0.1472414261843987,
+                "phase_rms_rad": 0.04656567249218749,
+                "phase_samples": 400,
+                "relative_norm_error": 0.004583922295146481,
+                "samples": 400,
+                "unmaximized_real_overlap": 0.9992947327006296
+              },
+              "samples": 400
+            }
+          }
+        },
+        "native_vs_high": {
+          "common_samples": 2138,
+          "common_support_M": [
+            -125.5,
+            408.75
+          ],
+          "metrics": {
+            "amplitude_relative_l2": 0.04342490921942236,
+            "complex_relative_l2": 0.34944518354533727,
+            "phase_max_abs_rad": 3.0596184238474056,
+            "phase_rms_rad": 0.588942670845951,
+            "phase_samples": 1993,
+            "relative_norm_error": 0.0004307213842122959,
+            "samples": 2138,
+            "unmaximized_real_overlap": 0.938917815205753
+          },
+          "peak_amplitude_ratio": 0.9994849997007224,
+          "peak_lag_difference_M": -2.8805790790541437,
+          "phase_residual_rad": {
+            "end": -9.42477796076938,
+            "range": 9.44900158194266,
+            "start": 0.024223621173280058
+          },
+          "windows": {
+            "inspiral": {
+              "metrics": {
+                "amplitude_relative_l2": 0.005126786597504873,
+                "complex_relative_l2": 0.027312660437465587,
+                "phase_max_abs_rad": 0.07825142067803632,
+                "phase_rms_rad": 0.0238481055464247,
+                "phase_samples": 1150,
+                "relative_norm_error": 0.004288407987102838,
+                "samples": 1150,
+                "unmaximized_real_overlap": 0.9996377579531329
+              },
+              "samples": 1150
+            },
+            "late_inspiral": {
+              "metrics": {
+                "amplitude_relative_l2": 0.020782618938941955,
+                "complex_relative_l2": 0.3504761474173967,
+                "phase_max_abs_rad": 0.7456817111427155,
+                "phase_rms_rad": 0.2960432461139375,
+                "phase_samples": 400,
+                "relative_norm_error": 0.01913141830329801,
+                "samples": 400,
+                "unmaximized_real_overlap": 0.9399157377827998
+              },
+              "samples": 400
+            },
+            "post_peak": {
+              "metrics": {
+                "amplitude_relative_l2": 0.1323487005665785,
+                "complex_relative_l2": 0.8733998901518136,
+                "phase_max_abs_rad": 1.7809344935335825,
+                "phase_rms_rad": 1.1437916285637173,
+                "phase_samples": 400,
+                "relative_norm_error": 0.10992596021447065,
+                "samples": 400,
+                "unmaximized_real_overlap": 0.5782689878422782
+              },
+              "samples": 400
+            }
+          }
+        }
+      },
+      "elapsed_seconds": 73.85484133401769,
+      "errors": [],
+      "levels": [
+        2,
+        3
+      ],
+      "native": {
+        "array_dtype": {
+          "mode": "complex128",
+          "time": "float64"
+        },
+        "array_sha256": {
+          "mode": "1f71eea202eb48194c3a6b04b21016bf84b8da9c7a2f6f35b3a73d3d24094b1b",
+          "time": "4a9a0ef8d695c890bb347939c28634fc15604e820ca2624b9a1213b26549a9d2"
+        },
+        "atol": 1e-15,
+        "boundary_time_M": 384.6875,
+        "dt_geom": 0.25,
+        "final_mass_fraction": 0.9769572304721724,
+        "final_spin": 0.47238300407896594,
+        "internal_step_M": 0.015625,
+        "match_time_M": 384.68890830666913,
+        "name": "native",
+        "peak_time_M": 391.93749237060547,
+        "restart_time_M": 242.0,
+        "rtol": 1e-14,
+        "samples": 2139,
+        "stages": {
+          "coarse": {
+            "accepted": 988,
+            "evaluations": 6084,
+            "event_time_M": 391.9432963361861,
+            "rejected": 31,
+            "termination": [
+              "event"
+            ]
+          },
+          "fine": {
+            "accepted": 651,
+            "evaluations": 4037,
+            "event_time_M": 150.03261033584965,
+            "rejected": 26,
+            "termination": [
+              "event"
+            ]
+          }
+        },
+        "support_M": [
+          0.0,
+          534.5
+        ]
+      },
+      "physical_validation_passed": false,
+      "release_qualified": false,
+      "row": {
+        "chi1": 7.726520778348432e-06,
+        "chi2": 5.029680083574253e-06,
+        "mass1": 0.7999976569410221,
+        "mass2": 0.19999838272610249,
+        "omega_start": 0.04
+      }
+    },
+    "SXS:BBH:2508": {
+      "anchor": {
+        "Lev2": {
+          "anchor_phase_rad": -207.7366478711676,
+          "anchor_time_M": 3705.313001417662,
+          "frequency_at_grid_crossing": [
+            0.08999599952510103,
+            0.09001187406827582
+          ],
+          "peak_after_anchor_M": 469.0007520835993,
+          "peak_amplitude": 0.20965890553484157
+        },
+        "Lev3": {
+          "anchor_phase_rad": -207.55742505855983,
+          "anchor_time_M": 3702.0049844650666,
+          "frequency_at_grid_crossing": [
+            0.08999967596507988,
+            0.0900159282065837
+          ],
+          "peak_after_anchor_M": 468.634205920117,
+          "peak_amplitude": 0.20969081984873317
+        },
+        "native": {
+          "anchor_phase_rad": -13.295222495849204,
+          "anchor_time_M": 187.80843159946025,
+          "frequency_at_grid_crossing": [
+            0.08999636836503655,
+            0.09001190634019465
+          ],
+          "peak_after_anchor_M": 468.9415684005397,
+          "peak_amplitude": 0.20948400997062278
+        }
+      },
+      "comparisons": {
+        "low_vs_high_on_native_support": {
+          "common_samples": 3152,
+          "common_support_M": [
+            -187.75,
+            600.0
+          ],
+          "metrics": {
+            "amplitude_relative_l2": 0.004534340136379187,
+            "complex_relative_l2": 0.04553289669541656,
+            "phase_max_abs_rad": 0.35867854368984187,
+            "phase_rms_rad": 0.07041374193176823,
+            "phase_samples": 3152,
+            "relative_norm_error": 0.0001705548294130832,
+            "samples": 3152,
+            "unmaximized_real_overlap": 0.9989635689720545
+          },
+          "peak_amplitude_ratio": 0.9998478029991269,
+          "peak_lag_difference_M": 0.36654616348232594,
+          "phase_residual_rad": {
+            "end": 0.18176114235505297,
+            "range": 0.6507062857792354,
+            "start": 0.0010524702084639744
+          },
+          "windows": {
+            "inspiral": {
+              "metrics": {
+                "amplitude_relative_l2": 0.00041206651545321884,
+                "complex_relative_l2": 0.0039368871541313934,
+                "phase_max_abs_rad": 0.012933301264418681,
+                "phase_rms_rad": 0.003228348913333673,
+                "phase_samples": 2226,
+                "relative_norm_error": 0.0003467797940297501,
+                "samples": 2226,
+                "unmaximized_real_overlap": 0.9999923079204228
+              },
+              "samples": 2226
+            },
+            "late_inspiral": {
+              "metrics": {
+                "amplitude_relative_l2": 0.0019744031877961285,
+                "complex_relative_l2": 0.048258550535089165,
+                "phase_max_abs_rad": 0.10007522866061985,
+                "phase_rms_rad": 0.04241179762993434,
+                "phase_samples": 400,
+                "relative_norm_error": 0.0018598184668506823,
+                "samples": 400,
+                "unmaximized_real_overlap": 0.9988351191455663
+              },
+              "samples": 400
+            },
+            "post_peak": {
+              "metrics": {
+                "amplitude_relative_l2": 0.016374021997103933,
+                "complex_relative_l2": 0.13990270040097108,
+                "phase_max_abs_rad": 0.18530761321898576,
+                "phase_rms_rad": 0.16757003135953358,
+                "phase_samples": 400,
+                "relative_norm_error": 0.01257486016413023,
+                "samples": 400,
+                "unmaximized_real_overlap": 0.99041323301855
+              },
+              "samples": 400
+            }
+          }
+        },
+        "native_vs_high": {
+          "common_samples": 3152,
+          "common_support_M": [
+            -187.75,
+            600.0
+          ],
+          "metrics": {
+            "amplitude_relative_l2": 0.010144751033858855,
+            "complex_relative_l2": 0.21788312075145488,
+            "phase_max_abs_rad": 0.692086688647682,
+            "phase_rms_rad": 0.1785882624807671,
+            "phase_samples": 3112,
+            "relative_norm_error": 0.008416991663566797,
+            "samples": 3152,
+            "unmaximized_real_overlap": 0.9764967226099939
+          },
+          "peak_amplitude_ratio": 0.9990137389979229,
+          "peak_lag_difference_M": 0.3073624804227393,
+          "phase_residual_rad": {
+            "end": 0.0,
+            "range": 3.833679342237475,
+            "start": 0.013499217343443788
+          },
+          "windows": {
+            "inspiral": {
+              "metrics": {
+                "amplitude_relative_l2": 0.007754972453042345,
+                "complex_relative_l2": 0.056272218649242346,
+                "phase_max_abs_rad": 0.15713790785101286,
+                "phase_rms_rad": 0.04666875669495745,
+                "phase_samples": 2226,
+                "relative_norm_error": 0.007016120700354067,
+                "samples": 2226,
+                "unmaximized_real_overlap": 0.9984521912917053
+              },
+              "samples": 2226
+            },
+            "late_inspiral": {
+              "metrics": {
+                "amplitude_relative_l2": 0.014793861071390649,
+                "complex_relative_l2": 0.34332866290077074,
+                "phase_max_abs_rad": 0.4663326038110738,
+                "phase_rms_rad": 0.3181924053661083,
+                "phase_samples": 400,
+                "relative_norm_error": 0.013206948958016218,
+                "samples": 400,
+                "unmaximized_real_overlap": 0.9419170252486453
+              },
+              "samples": 400
+            },
+            "post_peak": {
+              "metrics": {
+                "amplitude_relative_l2": 0.006273567340420415,
+                "complex_relative_l2": 0.4166421785474255,
+                "phase_max_abs_rad": 0.4625955703186755,
+                "phase_rms_rad": 0.3284229091582625,
+                "phase_samples": 400,
+                "relative_norm_error": 0.0024301888013402717,
+                "samples": 400,
+                "unmaximized_real_overlap": 0.9134180110164586
+              },
+              "samples": 400
+            }
+          }
+        }
+      },
+      "elapsed_seconds": 89.24672866699984,
+      "errors": [],
+      "levels": [
+        2,
+        3
+      ],
+      "native": {
+        "array_dtype": {
+          "mode": "complex128",
+          "time": "float64"
+        },
+        "array_sha256": {
+          "mode": "b570d8f4b4188e76d31b14cd714e8007b22031190c03e33a7c736030c1aed956",
+          "time": "088db56cc09c77bb868be6fca106b9e53ae18aaa362fb1160e164904fcb80e5e"
+        },
+        "atol": 1e-15,
+        "boundary_time_M": 656.640625,
+        "dt_geom": 0.25,
+        "final_mass_fraction": 0.9747312162330224,
+        "final_spin": 0.7114674993377056,
+        "internal_step_M": 0.015625,
+        "match_time_M": 656.6542110739479,
+        "name": "native",
+        "peak_time_M": 670.1249923706055,
+        "restart_time_M": 520.25,
+        "rtol": 1e-14,
+        "samples": 3227,
+        "stages": {
+          "coarse": {
+            "accepted": 1352,
+            "evaluations": 8268,
+            "event_time_M": 670.1479521777484,
+            "rejected": 31,
+            "termination": [
+              "event"
+            ]
+          },
+          "fine": {
+            "accepted": 638,
+            "evaluations": 3949,
+            "event_time_M": 149.99318576966593,
+            "rejected": 24,
+            "termination": [
+              "event"
+            ]
+          }
+        },
+        "support_M": [
+          0.0,
+          806.5
+        ]
+      },
+      "physical_validation_passed": false,
+      "release_qualified": false,
+      "row": {
+        "chi1": 0.5000140947035503,
+        "chi2": 0.49992758820337246,
+        "mass1": 0.8333096932159255,
+        "mass2": 0.1666691445360262,
+        "omega_start": 0.04
+      }
+    },
+    "SXS:BBH:2514": {
+      "anchor": {
+        "Lev3": {
+          "anchor_phase_rad": -332.84815600589775,
+          "anchor_time_M": 6356.900793842076,
+          "frequency_at_grid_crossing": [
+            0.0899932718253354,
+            0.09000442641655071
+          ],
+          "peak_after_anchor_M": 682.0879613246407,
+          "peak_amplitude": 0.14822191547745608
+        },
+        "Lev4": {
+          "anchor_phase_rad": -332.45431669686246,
+          "anchor_time_M": 6348.132767235853,
+          "frequency_at_grid_crossing": [
+            0.08999402104302694,
+            0.09000527938725371
+          ],
+          "peak_after_anchor_M": 682.0280749324229,
+          "peak_amplitude": 0.14821593416445483
+        },
+        "native": {
+          "anchor_phase_rad": -20.56633493803701,
+          "anchor_time_M": 274.18095047781014,
+          "frequency_at_grid_crossing": [
+            0.08999122685757985,
+            0.09000334777392989
+          ],
+          "peak_after_anchor_M": 678.8190495221899,
+          "peak_amplitude": 0.14916206022745554
+        }
+      },
+      "comparisons": {
+        "low_vs_high_on_native_support": {
+          "common_samples": 4381,
+          "common_support_M": [
+            -274.0,
+            821.0
+          ],
+          "metrics": {
+            "amplitude_relative_l2": 0.0007040821140464198,
+            "complex_relative_l2": 0.006369981189378408,
+            "phase_max_abs_rad": 1.0202345711597613,
+            "phase_rms_rad": 0.03886936320789565,
+            "phase_samples": 4381,
+            "relative_norm_error": 8.389633643823835e-05,
+            "samples": 4381,
+            "unmaximized_real_overlap": 0.9999797168907996
+          },
+          "peak_amplitude_ratio": 1.0000403553979198,
+          "peak_lag_difference_M": 0.05988639221777703,
+          "phase_residual_rad": {
+            "end": 0.3558059939842896,
+            "range": 1.3103811183645142,
+            "start": 0.0009187541411406794
+          },
+          "windows": {
+            "inspiral": {
+              "metrics": {
+                "amplitude_relative_l2": 6.068948337246301e-05,
+                "complex_relative_l2": 0.0005389717544385644,
+                "phase_max_abs_rad": 0.001722925669464211,
+                "phase_rms_rad": 0.0004899802189449209,
+                "phase_samples": 3425,
+                "relative_norm_error": 3.853694570121746e-06,
+                "samples": 3425,
+                "unmaximized_real_overlap": 0.9999998547627088
+              },
+              "samples": 3425
+            },
+            "late_inspiral": {
+              "metrics": {
+                "amplitude_relative_l2": 0.00023894527800652452,
+                "complex_relative_l2": 0.007577851788416606,
+                "phase_max_abs_rad": 0.016101150151816686,
+                "phase_rms_rad": 0.006747880170161621,
+                "phase_samples": 400,
+                "relative_norm_error": 0.0002170636426265249,
+                "samples": 400,
+                "unmaximized_real_overlap": 0.9999713054108971
+              },
+              "samples": 400
+            },
+            "post_peak": {
+              "metrics": {
+                "amplitude_relative_l2": 0.0029521406124161887,
+                "complex_relative_l2": 0.022561178490000222,
+                "phase_max_abs_rad": 0.03951433204284595,
+                "phase_rms_rad": 0.02625545305159634,
+                "phase_samples": 400,
+                "relative_norm_error": 0.002308608475806828,
+                "samples": 400,
+                "unmaximized_real_overlap": 0.9997487415066059
+              },
+              "samples": 400
+            }
+          }
+        },
+        "native_vs_high": {
+          "common_samples": 4384,
+          "common_support_M": [
+            -274.0,
+            821.75
+          ],
+          "metrics": {
+            "amplitude_relative_l2": 0.0305092721305422,
+            "complex_relative_l2": 0.3993532602878745,
+            "phase_max_abs_rad": 1.6579535563136347,
+            "phase_rms_rad": 0.5220527571614881,
+            "phase_samples": 4307,
+            "relative_norm_error": 0.00937650240891541,
+            "samples": 4384,
+            "unmaximized_real_overlap": 0.9210427886300468
+          },
+          "peak_amplitude_ratio": 1.0063834301509778,
+          "peak_lag_difference_M": -3.209025410233039,
+          "phase_residual_rad": {
+            "end": 3.141592653589793,
+            "range": 4.799546209903427,
+            "start": 0.0002995098422768757
+          },
+          "windows": {
+            "inspiral": {
+              "metrics": {
+                "amplitude_relative_l2": 0.011492618851700092,
+                "complex_relative_l2": 0.08105957346673069,
+                "phase_max_abs_rad": 0.24084332531506167,
+                "phase_rms_rad": 0.06452806345846986,
+                "phase_samples": 3425,
+                "relative_norm_error": 0.00978858841424013,
+                "samples": 3425,
+                "unmaximized_real_overlap": 0.9967939635772511
+              },
+              "samples": 3425
+            },
+            "late_inspiral": {
+              "metrics": {
+                "amplitude_relative_l2": 0.03152474639035227,
+                "complex_relative_l2": 0.6028701778950081,
+                "phase_max_abs_rad": 1.1095320412965952,
+                "phase_rms_rad": 0.5573398902538564,
+                "phase_samples": 400,
+                "relative_norm_error": 0.0305258307114451,
+                "samples": 400,
+                "unmaximized_real_overlap": 0.8241089091360956
+              },
+              "samples": 400
+            },
+            "post_peak": {
+              "metrics": {
+                "amplitude_relative_l2": 0.10615563436345396,
+                "complex_relative_l2": 1.1809194892162265,
+                "phase_max_abs_rad": 1.5381485853885786,
+                "phase_rms_rad": 1.4719277634836685,
+                "phase_samples": 400,
+                "relative_norm_error": 0.08319058702349968,
+                "samples": 400,
+                "unmaximized_real_overlap": 0.24321775791095207
+              },
+              "samples": 400
+            }
+          }
+        }
+      },
+      "elapsed_seconds": 105.31022495799698,
+      "errors": [],
+      "levels": [
+        3,
+        4
+      ],
+      "native": {
+        "array_dtype": {
+          "mode": "complex128",
+          "time": "float64"
+        },
+        "array_sha256": {
+          "mode": "1c89c7747a3647a129df14145d83e702fde3307e4a2affbe9c908c68c0a7146d",
+          "time": "95a9bde83956d79ceee7ee6ebb74936c30fa30bc48b2043dd50e6674ef9c2bc2"
+        },
+        "atol": 1e-15,
+        "boundary_time_M": 953.0,
+        "dt_geom": 0.25,
+        "final_mass_fraction": 0.9837511493675438,
+        "final_spin": 0.729155325518026,
+        "internal_step_M": 0.015625,
+        "match_time_M": 953.0051338408709,
+        "name": "native",
+        "peak_time_M": 968.6406173706055,
+        "restart_time_M": 818.75,
+        "rtol": 1e-14,
+        "samples": 4413,
+        "stages": {
+          "coarse": {
+            "accepted": 1653,
+            "evaluations": 10094,
+            "event_time_M": 968.6559207985663,
+            "rejected": 35,
+            "termination": [
+              "event"
+            ]
+          },
+          "fine": {
+            "accepted": 660,
+            "evaluations": 4081,
+            "event_time_M": 150.0153236032515,
+            "rejected": 24,
+            "termination": [
+              "event"
+            ]
+          }
+        },
+        "support_M": [
+          0.0,
+          1103.0
+        ]
+      },
+      "physical_validation_passed": false,
+      "release_qualified": false,
+      "row": {
+        "chi1": 0.5998446242650531,
+        "chi2": 0.5997997469876969,
+        "mass1": 0.8890657547606527,
+        "mass2": 0.11112684430575347,
+        "omega_start": 0.04
+      }
+    }
+  },
+  "extraction_sha256": "09f3401f6c1cee5c4199134cc3d428824c74c5fb8b8e6ae036977c93fd3f76a7",
+  "generator_source_manifest_sha256": "220b84cb36a664f8dc95b130fac7313c16b40d2510a4104b154128e4b5397917",
+  "generator_source_manifest_sha256_after": "220b84cb36a664f8dc95b130fac7313c16b40d2510a4104b154128e4b5397917",
+  "git_head": "efc45946b92169311f5be88a52afb699dfcb289b",
+  "physical_validation_passed": false,
+  "plan_sha256": "397982e47b191acafb276f13d2b2bfb90f2f7d4f3d6d18fa3c86fbd5e609fb17",
+  "process": {
+    "argv": [
+      "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw/dev/native_rom/compare_sxs_five_case.py",
+      "--plan",
+      "dev/native_rom/evidence/2026-09-24/sxs_five_case_physical_plan.json",
+      "--decoded-dir",
+      "/tmp/diffgw-sxs-five-case/decoded",
+      "--json-out",
+      "dev/native_rom/evidence/2026-09-24/sxs_five_case_physical.json"
+    ],
+    "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+    "host": "RONI2",
+    "pid": 67222
+  },
+  "release_qualified": false,
+  "schema": "diffgw.seobnrv4.sxs-five-case-comparison.v1",
+  "scope": {
+    "description": "Scalar CPU float64 numerical stability evidence only; no training or promotion.",
+    "known_limitations": [
+      "Convergence cannot establish correctness of the equations or published model fidelity.",
+      "The adaptive prototype uses a diagnostic QNM spline with independently generated values and black-box-inferred knot metadata; this is not wholly literature-specified provenance.",
+      "Changing dt also changes the adaptive initial step and coarse/fine restart sampling; the grid check measures the complete generator's grid sensitivity.",
+      "No time, phase, amplitude, or coefficient fitting is performed.",
+      "No derivatives, batched execution, accelerators, or JAX are qualified here."
+    ],
+    "physics_validated": false,
+    "production_asset": false,
+    "production_promotion_allowed": false,
+    "training_generator_qualified": false
+  },
+  "script_sha256": "1dbdac9440a8b3d26b9b594df8ffdbf71b71869b70febae3cd78f4e2ace9b60a",
+  "sources_unchanged": true,
+  "status": "diagnostic_complete"
+}
