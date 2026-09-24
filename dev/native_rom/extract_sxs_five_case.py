@@ -1,4 +1,4 @@
-"""Fetch and decode the five frozen SXS strain pairs for a dev-only comparison.
+"""Fetch and decode frozen five-case SXS strain pairs for dev-only comparisons.
 
 Run in the isolated environment containing sxs==2026.0.5. Archive files stay
 outside the repository; every download is checked against the pinned catalog.
@@ -14,6 +14,13 @@ from pathlib import Path
 import numpy as np
 import sxs
 from sxscatalog.utilities.downloads import download_file
+
+SCHEMAS = {
+    "diffgw.seobnrv4.sxs-five-case-physical-plan.v1":
+        "diffgw.seobnrv4.sxs-five-case-extraction.v1",
+    "diffgw.seobnrv4.sxs-second-holdout-plan.v1":
+        "diffgw.seobnrv4.sxs-second-holdout-extraction.v1",
+}
 
 
 def digest(path: Path, algorithm: str) -> str:
@@ -48,12 +55,13 @@ def main() -> None:
     parser.add_argument("--output-dir", type=Path, required=True)
     args = parser.parse_args()
     plan = json.loads(args.plan.read_text())
-    if plan["schema"] != "diffgw.seobnrv4.sxs-five-case-physical-plan.v1":
+    if (plan.get("schema") not in SCHEMAS or plan.get("qualification_claim") is not False
+            or len(plan.get("cases", {})) != 5):
         raise ValueError("unexpected SXS comparison plan")
     if sxs.__version__ != "2026.0.5":
         raise ValueError(f"expected sxs 2026.0.5, got {sxs.__version__}")
     args.output_dir.mkdir(parents=True, exist_ok=True)
-    result = dict(schema="diffgw.seobnrv4.sxs-five-case-extraction.v1",
+    result = dict(schema=SCHEMAS[plan["schema"]],
                   plan_sha256=digest(args.plan, "sha256"),
                   script_sha256=digest(Path(__file__), "sha256"),
                   sxs_version=sxs.__version__, cases={})

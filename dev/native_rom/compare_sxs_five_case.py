@@ -1,7 +1,7 @@
-"""Compare the frozen five independent SXS cases with the native (2,2) mode.
+"""Compare a frozen five-case SXS set with the native (2,2) mode.
 
 The fixed frequency crossing is diagnostic. This is not detector-weighted
-faithfulness, a release holdout, or validation of the physical model.
+faithfulness or sufficient validation of the physical model.
 """
 
 from __future__ import annotations
@@ -15,10 +15,20 @@ import subprocess
 import sys
 import time
 
+import numpy as np
 import torch
 
 from . import compare_sxs_2123 as c
 from . import qualify_generator as q
+
+SCHEMAS = {
+    "diffgw.seobnrv4.sxs-five-case-physical-plan.v1": (
+        "diffgw.seobnrv4.sxs-five-case-extraction.v1",
+        "diffgw.seobnrv4.sxs-five-case-comparison.v1"),
+    "diffgw.seobnrv4.sxs-second-holdout-plan.v1": (
+        "diffgw.seobnrv4.sxs-second-holdout-extraction.v1",
+        "diffgw.seobnrv4.sxs-second-holdout-comparison.v1"),
+}
 
 
 def write(path: Path, result: dict) -> None:
@@ -31,20 +41,22 @@ def main() -> int:
     parser.add_argument("--plan", type=Path, required=True)
     parser.add_argument("--decoded-dir", type=Path, required=True)
     parser.add_argument("--json-out", type=Path, required=True)
+    parser.add_argument("--array-dir", type=Path,
+                        help="Optional directory for anchored native and NR arrays")
     args = parser.parse_args()
     plan = json.loads(args.plan.read_text())
-    if (plan["schema"] != "diffgw.seobnrv4.sxs-five-case-physical-plan.v1"
-            or plan["qualification_claim"] is not False):
+    if (plan.get("schema") not in SCHEMAS or plan.get("qualification_claim") is not False
+            or len(plan.get("cases", {})) != 5):
         raise ValueError("unexpected five-case comparison plan")
     extraction_path = args.decoded_dir / "extraction.json"
     extraction = json.loads(extraction_path.read_text())
-    if (extraction["schema"] != "diffgw.seobnrv4.sxs-five-case-extraction.v1"
+    if (extraction["schema"] != SCHEMAS[plan["schema"]][0]
             or extraction["plan_sha256"] != q.sha256(args.plan)
             or set(extraction["cases"]) != set(plan["cases"])):
         raise ValueError("decoded NR does not match frozen plan")
     torch.set_num_threads(1)
     source = q.canonical_hash(q.source_snapshot())
-    result = dict(schema="diffgw.seobnrv4.sxs-five-case-comparison.v1",
+    result = dict(schema=SCHEMAS[plan["schema"]][1],
                   scope=q.SCOPE, status="running", physical_validation_passed=False,
                   release_qualified=False, plan_sha256=q.sha256(args.plan),
                   extraction_sha256=q.sha256(extraction_path),
@@ -84,6 +96,16 @@ def main() -> int:
                     method["diagnostic_fine_rkf45_resampling"])
             anchored = c.anchor(native, dt=dt)
             low, high = case["levels"]
+            if args.array_dir is not None:
+                args.array_dir.mkdir(parents=True, exist_ok=True)
+                array_path = args.array_dir / f"{simulation.replace(':', '_')}_anchored.npz"
+                np.savez(array_path, **{
+                    f"{name}_{key}": wave[key]
+                    for name, wave in (("native", anchored), ("nr_low", nr[low]),
+                                       ("nr_high", nr[high]))
+                    for key in ("time", "mode")})
+                entry["anchored_array"] = dict(path=str(array_path),
+                                               sha256=q.sha256(array_path))
             support = (float(anchored["time"][0]), float(anchored["time"][-1]))
             entry.update(native=q.summarize_run(native), anchor={
                 name: {key: value for key, value in waveform.items()
