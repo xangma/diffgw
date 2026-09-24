@@ -1,0 +1,156 @@
+{
+  "attachment_spline_phase_rad": [
+    4.222304809505019,
+    0.0,
+    -4.6052621114567955,
+    -9.757174660609493,
+    -15.801938368350449,
+    -21.427032014745976
+  ],
+  "coarse_reconstructed_phase_rad": [
+    4.222311744205647,
+    0.0,
+    -4.605274381880726,
+    -9.757213094808893,
+    -15.802054935165938,
+    -21.427355205983663
+  ],
+  "coarse_to_fine_state_max_abs": [
+    1.633940109257992e-05,
+    3.9064431049951054e-05,
+    2.3972893133522577e-06,
+    3.568563284872539e-06
+  ],
+  "elapsed_seconds": 227.84452770798816,
+  "errors": [],
+  "fine_minus_coarse_nqc_phase_rad": [
+    -3.305991424618071e-06,
+    0.0,
+    6.978315367334176e-06,
+    2.476817296770406e-05,
+    8.770825900139556e-05,
+    0.00027130937456920634
+  ],
+  "fine_minus_coarse_raw_phase_rad": [
+    -3.625387890338061e-06,
+    0.0,
+    5.286211916200045e-06,
+    1.364757463306887e-05,
+    2.8803014117784187e-05,
+    5.1729272996681175e-05
+  ],
+  "fine_minus_coarse_reconstruction_rad": [
+    -6.931379314956132e-06,
+    0.0,
+    1.2264527283534221e-05,
+    3.841574760166111e-05,
+    0.00011651127311829157,
+    0.00032303864756499934
+  ],
+  "fine_omega": [
+    0.0935472223449338,
+    0.09939731957450951,
+    0.10674195810045146,
+    0.1163890739848195,
+    0.13004577635600914,
+    0.1455418897497723
+  ],
+  "fine_reconstructed_phase_rad": [
+    4.222304812826332,
+    0.0,
+    -4.605262117353442,
+    -9.757174679061292,
+    -15.80193842389282,
+    -21.427032167336098
+  ],
+  "fine_samples": 70235,
+  "fine_step_M": 0.015625,
+  "fine_time_support_M": [
+    -1097.2050552368164,
+    0.20119476318359375
+  ],
+  "input_sha256": {
+    "campaign": "d8efe4baa182ea39bf9a7d35b6de8621c6e054429ee180eb661e9fbb9f9d59d8",
+    "output_interpolation": "d64abae2154baf7cce09739adb54ae601151397c4937f2e9bdbc6694a753dbd0",
+    "raw_phase": "edb5b5cbe2aa27fdcec57c24735a0fb2ac5886ca77ab3f7793aa826cd275800f",
+    "source_native_mode": "df3fc6e6340a6261c70f1e6d00f48bd2da51f9ca03323cc33e5a4193b8de62ff"
+  },
+  "native_array_sha256": {
+    "mode": "e93d9d419ff87a7fb17883b6f8b0094f291956abf9ce4b2e1198698c85f9358b",
+    "time": "db563c40381301f4f08f2592d8daf3c2d5cd97c2f22780b90179c0df62e346e7"
+  },
+  "output_cubic_minus_attachment_spline_rad": [
+    1.2358380985233453e-10,
+    0.0,
+    5.281464154904825e-11,
+    7.017284531229961e-10,
+    -5.285833992729749e-10,
+    -1.9037546650224613e-08
+  ],
+  "output_linear_minus_attachment_spline_rad": [
+    6.813739168443078e-06,
+    0.0,
+    -1.1826848755447372e-05,
+    -3.597046722703112e-05,
+    -9.956310810466107e-05,
+    -0.00018763696860801815
+  ],
+  "output_linear_minus_fine_reconstruction_rad": [
+    6.810417855440676e-06,
+    0.0,
+    -1.1820952108720917e-05,
+    -3.595201542871962e-05,
+    -9.950756573395836e-05,
+    -0.00018748437848614685
+  ],
+  "plan_sha256": "de90b0a04162068f9b6f0864f8ee99ff10ee8a56513cf2a0ae2cb2c60266f509",
+  "probe_times_M": [
+    -120.0,
+    -100.0,
+    -80.0,
+    -60.0,
+    -40.0,
+    -25.0
+  ],
+  "process": {
+    "argv": [
+      "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw/dev/native_rom/diagnose_source_q8_fine_phase.py",
+      "--json-out",
+      "dev/native_rom/evidence/2026-09-24/source_q8_fine_phase.json"
+    ],
+    "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+    "host": "client-3792.default.vpn.port.ac.uk",
+    "pid": 88422
+  },
+  "release_qualified": false,
+  "row": {
+    "chi1": 0.85,
+    "chi2": 0.85,
+    "mass1": 40.0,
+    "mass2": 5.0,
+    "omega_start": 0.04
+  },
+  "schema": "diffgw.seobnrv4.source-q8-fine-phase.v1",
+  "scope": {
+    "description": "Post-hoc fine-trajectory phase reconstruction on one q8 row.",
+    "known_limitations": [
+      "Selected after the coarse-state reconstruction residual was observed.",
+      "The native attachment spline is an internal consistency control, not an independent reference.",
+      "One q8 row cannot qualify generator or ROM physics."
+    ],
+    "physics_validated": false,
+    "production_asset": false,
+    "production_promotion_allowed": false,
+    "training_generator_qualified": false
+  },
+  "script_sha256": "c713609fdb048d915676800edc8b114259bdd8f4440d8413e45f3e1c43c642ac",
+  "spline_minus_fine_reconstruction_rad": [
+    -3.3213130024023485e-09,
+    0.0,
+    5.896646726455401e-09,
+    1.8451798311502898e-08,
+    5.5542370702710286e-08,
+    1.5259012187129883e-07
+  ],
+  "status": "diagnostic_complete"
+}

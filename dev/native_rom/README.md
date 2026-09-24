@@ -606,8 +606,13 @@ trajectory phase contributes `+0.001882 rad` and NQC contributes
 the native orbital-frequency term is `+2.46e-6 rad`. The resulting
 `-0.002461 rad` prediction differs from the observed `-0.002133 rad` by
 `0.000327 rad`, which closes as separate native/source full-output
-reconstruction errors. Their sampling origins remain unresolved; one q8 row
-does not qualify the generator or ROM.
+reconstruction errors. The post-hoc [output-interpolation control](evidence/2026-09-24/source_q8_output_interpolation.json)
+reduces the source-side error at `-25 M` from `-0.000192 rad` to `-7.31e-8 rad`
+under cubic interpolation. The [fine-trajectory control](evidence/2026-09-24/source_q8_fine_phase.json)
+attributes `+0.000323 rad` to using coarse returned states instead of the
+native attachment's fine states. Cubic output and fine states reduce the
+pair remainder to `2.07e-7 rad` there. These sampling controls establish
+internal consistency on one q8 row; they do not qualify the generator or ROM.
 
 ## Remaining promotion stages
 

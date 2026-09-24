@@ -1,0 +1,222 @@
+{
+  "elapsed_seconds": 236.20861925001373,
+  "errors": [],
+  "input_sha256": {
+    "campaign": "d8efe4baa182ea39bf9a7d35b6de8621c6e054429ee180eb661e9fbb9f9d59d8",
+    "mode_adapter": "59d8d7dd6547e84cc53b2ecb76005195bb54174c481146f88fc257a3abf7fcf4",
+    "raw_phase": "edb5b5cbe2aa27fdcec57c24735a0fb2ac5886ca77ab3f7793aa826cd275800f",
+    "source_flux_plan": "1167199c8f954f97a5905a1e3b2f67d1555e984e5f1da0a0fc42a77a925f96ea",
+    "source_native_mode": "df3fc6e6340a6261c70f1e6d00f48bd2da51f9ca03323cc33e5a4193b8de62ff"
+  },
+  "native_array_sha256": {
+    "mode": "e93d9d419ff87a7fb17883b6f8b0094f291956abf9ce4b2e1198698c85f9358b",
+    "time": "db563c40381301f4f08f2592d8daf3c2d5cd97c2f22780b90179c0df62e346e7"
+  },
+  "plan_sha256": "bf865c7f3a389aeb21e2fe7174a405adf6a74ee52ed7540f22e624f98053d959",
+  "probe_times_M": [
+    -120.0,
+    -100.0,
+    -80.0,
+    -60.0,
+    -40.0,
+    -25.0
+  ],
+  "process": {
+    "argv": [
+      "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw/dev/native_rom/diagnose_source_q8_output_interpolation.py",
+      "--source-root",
+      "/Users/xangma/repos/lalsuite-git",
+      "--headers",
+      "/tmp/diffgw-lalsuite-pinned-53acc0c/merged-include",
+      "--gsl-include",
+      "/usr/local/include",
+      "--json-out",
+      "dev/native_rom/evidence/2026-09-24/source_q8_output_interpolation.json"
+    ],
+    "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+    "host": "client-3792.default.vpn.port.ac.uk",
+    "pid": 74533
+  },
+  "release_qualified": false,
+  "results": {
+    "cubic": {
+      "native_linear_minus_method_rad": [
+        6.813615584633226e-06,
+        0.0,
+        -1.1826901570088921e-05,
+        -3.5971168955484245e-05,
+        -9.95625795212618e-05,
+        -0.00018761793106136793
+      ],
+      "native_reconstruction_error_rad": [
+        -6.934577044148682e-06,
+        0.0,
+        1.2270476744902226e-05,
+        3.8434901128425736e-05,
+        0.00011656628690559501,
+        0.0003231722001402204
+      ],
+      "observed_phase_rad": [
+        0.00036017011805711263,
+        0.0,
+        -0.0004558188390149098,
+        -0.0010399648717367427,
+        -0.0017597004585496734,
+        -0.0021374149693969002
+      ],
+      "residual_max_abs_rad": 0.0003232452873223046,
+      "residual_phase_rad": [
+        -6.940201367378052e-06,
+        0.0,
+        1.2277290803996976e-05,
+        3.845896319321085e-05,
+        0.00011660346944131206,
+        0.0003232452873223046
+      ],
+      "residual_rms_rad": 0.00014128097004210716,
+      "source_linear_minus_method_rad": [
+        6.9304463607977596e-06,
+        0.0,
+        -1.2005616355281745e-05,
+        -3.6454239648264775e-05,
+        -0.00010125748340783502,
+        -0.00019158802254537477
+      ],
+      "source_reconstruction_error_rad": [
+        5.624315235763788e-09,
+        0.0,
+        -6.814062203375215e-09,
+        -2.406206078831019e-08,
+        -3.7182545042924176e-08,
+        -7.308717897558381e-08
+      ]
+    },
+    "linear": {
+      "native_linear_minus_method_rad": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "native_reconstruction_error_rad": [
+        -1.2096145951545623e-07,
+        0.0,
+        4.4357517481330433e-07,
+        2.4637321729414907e-06,
+        1.700370738433321e-05,
+        0.00013555426907885249
+      ],
+      "observed_phase_rad": [
+        0.0003600532872809481,
+        0.0,
+        -0.000455640124229717,
+        -0.0010394818010439622,
+        -0.0017580055546631002,
+        -0.0021334448779128934
+      ],
+      "residual_max_abs_rad": 0.00032721537880631146,
+      "residual_phase_rad": [
+        -7.057032143542585e-06,
+        0.0,
+        1.24560055891898e-05,
+        3.894203388599138e-05,
+        0.00011829837332788529,
+        0.00032721537880631146
+      ],
+      "residual_rms_rad": 0.00014305351273822457,
+      "source_linear_minus_method_rad": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ],
+      "source_reconstruction_error_rad": [
+        6.936070676033523e-06,
+        0.0,
+        -1.201243041748512e-05,
+        -3.6478301709053085e-05,
+        -0.00010129466595287795,
+        -0.00019166110972435035
+      ]
+    },
+    "pchip": {
+      "native_linear_minus_method_rad": [
+        6.810753603758712e-06,
+        0.0,
+        -1.182084878337264e-05,
+        -3.594890843316989e-05,
+        -9.949007370835261e-05,
+        -0.000187660870224704
+      ],
+      "native_reconstruction_error_rad": [
+        -6.931715063274169e-06,
+        0.0,
+        1.2264423958185944e-05,
+        3.841264060611138e-05,
+        0.00011649378109268582,
+        0.0003232151393035565
+      ],
+      "observed_phase_rad": [
+        0.0003601734738651885,
+        0.0,
+        -0.00045582839497626537,
+        -0.0010400128589367341,
+        -0.0017597950336778467,
+        -0.0021368690118777067
+      ],
+      "residual_max_abs_rad": 0.0003237912448414981,
+      "residual_phase_rad": [
+        -6.936845559302185e-06,
+        0.0,
+        1.2267734842641431e-05,
+        3.841097599321941e-05,
+        0.00011650889431313871,
+        0.0003237912448414981
+      ],
+      "residual_rms_rad": 0.00014147385677885964,
+      "source_linear_minus_method_rad": [
+        6.930940187999113e-06,
+        0.0,
+        -1.2009119529921009e-05,
+        -3.647996632594186e-05,
+        -0.00010127955272309919,
+        -0.00019108500418951735
+      ],
+      "source_reconstruction_error_rad": [
+        5.130488034410519e-09,
+        0.0,
+        -3.3108875641119084e-09,
+        1.6646168887746171e-09,
+        -1.5113229778762616e-08,
+        -5.761055348330046e-07
+      ]
+    }
+  },
+  "row": {
+    "chi1": 0.85,
+    "chi2": 0.85,
+    "mass1": 40.0,
+    "mass2": 5.0,
+    "omega_start": 0.04
+  },
+  "schema": "diffgw.seobnrv4.source-q8-output-interpolation.v1",
+  "scope": {
+    "description": "Post-hoc interpolation-order control on one q8 row.",
+    "known_limitations": [
+      "Cubic and PCHIP controls were selected after the raw-phase residual was observed.",
+      "Smooth output interpolation is not an independent waveform reference.",
+      "This one-row diagnostic cannot qualify generator or ROM physics."
+    ],
+    "physics_validated": false,
+    "production_asset": false,
+    "production_promotion_allowed": false,
+    "training_generator_qualified": false
+  },
+  "script_sha256": "b3f6ab4c28aab4b61323fdba8bf23d4339e554076a3c863f6ccf00d4088993cb",
+  "source_mode_sha256": "2ea3000cf338137d29eb756f3419d0991a851199f812885a032e41db76746c61",
+  "status": "diagnostic_complete"
+}

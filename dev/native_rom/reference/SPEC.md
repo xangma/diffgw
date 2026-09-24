@@ -651,8 +651,13 @@ uses the pinned source frequency. At `-25 M` relative to a `-100 M` gauge,
 the native/source trajectory term (`+0.001882 rad`) offsets part of the NQC
 term (`-0.004345 rad`). The remaining `0.000327 rad` between reconstructed
 and full-output mode differences closes as separate native and source
-reconstruction errors. This one-row result leaves their sampling origin,
-the full-domain dynamics, and the physical NQC prescription open.
+reconstruction errors. A post-hoc [output-interpolation control](../evidence/2026-09-24/source_q8_output_interpolation.json)
+reduces the source-side error at `-25 M` to `-7.31e-8 rad` with cubic phase
+interpolation. The [fine-trajectory control](../evidence/2026-09-24/source_q8_fine_phase.json)
+accounts for `+0.000323039 rad` of the native-side reconstruction by using
+the attachment's internal fine states. Together they reduce the pair
+remainder at that probe to `2.07e-7 rad`. The full-domain dynamics and
+physical NQC prescription remain open; neither control qualifies the model.
 
 ### Promotion blockers
 

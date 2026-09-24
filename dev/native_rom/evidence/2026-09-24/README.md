@@ -1685,3 +1685,31 @@ dev.native_rom.diagnose_source_q8_raw_phase --source-root
 /tmp/diffgw-lalsuite-pinned-53acc0c/merged-include --gsl-include
 /usr/local/include --json-out /tmp/source_q8_raw_phase.json` in the pinned
 environment; the plan checks source-adapter and predecessor evidence hashes.
+
+The later, post-hoc [output-interpolation plan](source_q8_output_interpolation_plan.json)
+and [control](source_q8_output_interpolation.json) replay those hashes and
+compare linear, cubic, and PCHIP interpolation of the full output phase at the
+same probes. At `-25 M`, cubic reduces the source full-output versus
+state-based reconstruction error from `-0.000191661` to `-7.31e-8 rad`.
+The native error instead changes from `+0.000135554` to `+0.000323172 rad`;
+the native-source residual remains `+0.000323245 rad`. Smooth output
+interpolation therefore explains the source-side reconstruction error at this
+probe but does not close the native side. This control was chosen after the
+residual was seen and is not an independent reference or a release gate.
+
+The follow-up [fine-phase plan](source_q8_fine_phase_plan.json) and
+[result](source_q8_fine_phase.json) replay the same native waveform hash, then
+sample its internal `0.015625 M` trajectory rather than interpolating the
+returned `0.5 M` states. At `-25 M`, the anchored fine-minus-coarse
+reconstruction is `+0.000323039 rad`: `+0.000051729` from the raw mode and
+`+0.000271309` from the NQC phase. The fine-state reconstruction and native
+attachment spline differ by `1.53e-7 rad`; cubic interpolation of the native
+output and that spline differ by `-1.90e-8 rad`. With cubic interpolation
+of both outputs and the native fine states, the previous `+0.000327215 rad`
+pair residual falls to `+2.07e-7 rad` at this probe (`9.43e-8 rad` RMS over
+six probes). This identifies the two sampling effects on the one frozen q8
+row. It does not validate the underlying trajectory, NQC prescription,
+other parameters, or the ROM. Reproduce with
+`PYTHONPATH=src:. python -m dev.native_rom.diagnose_source_q8_fine_phase
+--json-out /tmp/source_q8_fine_phase.json` in the pinned development
+environment.

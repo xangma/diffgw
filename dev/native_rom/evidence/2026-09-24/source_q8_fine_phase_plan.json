@@ -1,0 +1,28 @@
+{
+  "schema": "diffgw.seobnrv4.source-q8-fine-phase-plan.v1",
+  "purpose": "Post-hoc fine-state and internal attachment-spline control for pinned q8 phase reconstruction; audit only.",
+  "row": "q8_high_aligned",
+  "level": "ode_2",
+  "phase_anchor_M": -100.0,
+  "probe_times_M": [
+    -120.0,
+    -100.0,
+    -80.0,
+    -60.0,
+    -40.0,
+    -25.0
+  ],
+  "inputs": {
+    "campaign": "dev/native_rom/evidence/2026-09-24/source_candidate_new_rows.json",
+    "raw_phase": "dev/native_rom/evidence/2026-09-24/source_q8_raw_phase.json",
+    "output_interpolation": "dev/native_rom/evidence/2026-09-24/source_q8_output_interpolation.json",
+    "source_native_mode": "dev/native_rom/evidence/2026-09-24/source_q4_q8_mode.json"
+  },
+  "input_sha256": {
+    "campaign": "d8efe4baa182ea39bf9a7d35b6de8621c6e054429ee180eb661e9fbb9f9d59d8",
+    "raw_phase": "edb5b5cbe2aa27fdcec57c24735a0fb2ac5886ca77ab3f7793aa826cd275800f",
+    "output_interpolation": "d64abae2154baf7cce09739adb54ae601151397c4937f2e9bdbc6694a753dbd0",
+    "source_native_mode": "df3fc6e6340a6261c70f1e6d00f48bd2da51f9ca03323cc33e5a4193b8de62ff"
+  },
+  "release_qualified": false
+}
