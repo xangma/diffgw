@@ -1798,6 +1798,41 @@ so it is not the published detector-noise-weighted faithfulness. Two NR
 resolutions also do not bound every extrapolation or finite-radius error.
 No physical or release gate passes from these data.
 
+The q≈3 antialigned [direct native/public control](sxs_2139_native_public.json)
+replays the same native mode hash. Its fixed-anchor native/public complex
+relative L2 is `0.52224`, versus public/NR `0.02133`. A separately frozen
+[pilot alignment](sxs_2139_alignment_plan.json) gives an unweighted
+native/public overlap of `0.999915` after a `4.56 M` shift and one phase
+rotation on `[-200,100] M` around the public peak. Its adjusted complex L2
+is `0.0130`. Thus the large fixed-anchor difference is predominantly a
+timing/phase offset; this control alone does not explain the early chirp-rate
+or residual waveform-shape difference.
+
+The [five-case post-hoc alignment plan](sxs_five_case_alignment_plan.json)
+was frozen after that pilot. Its [result](sxs_five_case_alignment.json)
+replays every primary native mode hash, keeps the same `0.25 M` grid, and
+fits only one lag in `[-10,10] M` and one phase on `[-200,100] M` around
+the reference amplitude peak. In plan order, unweighted optimized overlaps
+are native/highest NR `0.9998633`, `0.9999900`, `0.9962702`, `0.9997806`,
+`0.9993000`; public/highest NR `0.9999190`, `0.9999860`, `0.9936034`,
+`0.9998559`, `0.9956436`; native/public `0.9999863`, `0.9999755`,
+`0.9996255`, `0.9999154`, `0.9981829`; and next-highest/highest NR
+at least `0.9999994`. All five cases and unchanged-source checks succeed.
+The q≈5 and q≈8 aligned rows have the largest remaining optimized
+native/NR residuals; the q≈5 public control is worse than native in this
+specific unweighted window. This fitted diagnostic follows inspection of
+the primary outcome, is not an independent holdout, and covers only short
+late-inspiral/merger support. No detector PSD, mass sweep, early inspiral,
+full parameter-domain, or independent ROM validation is inferred.
+Replay with `PYTHONPATH=src:. python -m
+dev.native_rom.optimize_sxs_five_case_alignment --plan
+dev/native_rom/evidence/2026-09-24/sxs_five_case_physical_plan.json
+--primary dev/native_rom/evidence/2026-09-24/sxs_five_case_physical.json
+--public-control dev/native_rom/evidence/2026-09-24/sxs_five_case_public_control.json
+--alignment-plan dev/native_rom/evidence/2026-09-24/sxs_five_case_alignment_plan.json
+--decoded-dir /tmp/diffgw-sxs-five-case/decoded --json-out
+/tmp/sxs_five_case_alignment.json` after the extraction and primary controls.
+
 Replay in a clean pinned `sxs==2026.0.5` environment by running
 `python -m dev.native_rom.extract_sxs_five_case --plan
 dev/native_rom/evidence/2026-09-24/sxs_five_case_physical_plan.json

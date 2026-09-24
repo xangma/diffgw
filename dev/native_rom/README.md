@@ -708,6 +708,18 @@ antialigned q≈3 case. These fixed-crossing errors are not maximized,
 detector-noise-weighted faithfulness; NR resolution differences do not
 bound every NR systematic. The comparison does not pass a physical release
 gate or establish why the native and public models differ.
+An explicitly post-hoc, bounded
+[time/phase control](evidence/2026-09-24/sxs_five_case_alignment.json)
+on the `[-200,100] M` peak window finds unweighted native/NR overlaps
+`0.999863`, `0.999990`, `0.996270`, `0.999781`, and `0.999300` in the same
+five-case order. Public/NR controls are `0.999919`, `0.999986`, `0.993603`,
+`0.999856`, and `0.995644`. The q≈3 fixed-anchor `0.515` complex error,
+for example, falls to `0.0209` after a `4.41 M` shift and phase rotation;
+its native/public overlap is `0.999915`. This shows the earlier large
+fixed-anchor errors are largely alignment offsets, but the control is
+unweighted, uses short late-inspiral support, and was selected after the primary
+result. It cannot replace the published detector-weighted, mass-dependent
+validation or qualify either ROM.
 
 The independent ROM construction follows the published reduced-basis and
 parameter-interpolation methods of [Pürrer (2014)](https://doi.org/10.1088/0264-9381/31/19/195010)
