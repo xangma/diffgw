@@ -3,6 +3,7 @@
 The source and native orbital-frequency peaks define each time origin. A single
 predeclared early-time phase anchor removes the arbitrary initial phase gauge;
 no relative time, amplitude, parameter, or phase-slope fitting is performed.
+The entire common inspiral and three merger-neighborhood intervals are checked.
 """
 
 from __future__ import annotations
@@ -66,6 +67,9 @@ def _comparison(source_t, source_h, native_t, native_h, anchor, windows):
     native_amplitude = np.interp(time_M, native_t, np.abs(native_h))
     native_phase = np.interp(time_M, native_t, np.unwrap(np.angle(native_h)))
     polar_candidate = native_amplitude*np.exp(1j*native_phase)
+    log_amplitude = np.interp(
+        time_M, native_t, np.log(np.maximum(np.abs(native_h), np.finfo(float).tiny)))
+    log_candidate = np.exp(log_amplitude + 1j*native_phase)
     if time_M.size < 10 or not (time_M[0] <= anchor <= time_M[-1]):
         raise ValueError("insufficient common orbital-peak support")
     h_native = np.interp(anchor, native_t, native_h.real) + 1j*np.interp(
@@ -78,8 +82,11 @@ def _comparison(source_t, source_h, native_t, native_h, anchor, windows):
         1j*np.interp(anchor, native_t, np.unwrap(np.angle(native_h))))
     polar_rotation = float(np.angle(polar_anchor/h_source))
     polar_candidate *= np.exp(-1j*polar_rotation)
+    log_candidate *= np.exp(-1j*polar_rotation)
     output = {}
-    for window in windows:
+    all_common = dict(name="all_common", start_M=windows[0]["start_M"],
+                      end_M=windows[-1]["end_M"])
+    for window in [*windows, all_common]:
         mask = ((time_M >= window["start_M"]) & (time_M < window["end_M"]))
         if mask.sum() < 10:
             raise ValueError(f"too few samples in {window['name']}")
@@ -87,7 +94,9 @@ def _comparison(source_t, source_h, native_t, native_h, anchor, windows):
             time_M=[float(time_M[mask][0]), float(time_M[mask][-1])],
             metrics=q.mode_metrics(candidate[mask], reference[mask]),
             polar_interpolation_metrics=q.mode_metrics(
-                polar_candidate[mask], reference[mask]))
+                polar_candidate[mask], reference[mask]),
+            log_amplitude_interpolation_metrics=q.mode_metrics(
+                log_candidate[mask], reference[mask]))
     return dict(phase_rotation_rad=rotation,
                 polar_phase_rotation_rad=polar_rotation, windows=output)
 
@@ -101,7 +110,7 @@ def main(argv=None):
     args = parser.parse_args(argv)
     plan = json.loads(PLAN.read_text())
     paths = {name: q.ROOT / path for name, path in plan["inputs"].items()}
-    if (plan["schema"] != "diffgw.seobnrv4.source-q4-q8-mode-plan.v1"
+    if (plan["schema"] != "diffgw.seobnrv4.source-q4-q8-mode-plan.v2"
             or plan["rows"] != ["q4_mixed_spin", "q8_high_aligned"]
             or plan["level"] != "ode_2" or plan["output_step_M"] != 0.5
             or plan["phase_anchor_M"] != -100.0
@@ -131,9 +140,10 @@ def main(argv=None):
         if item != "No time, phase, amplitude, or coefficient fitting is performed."]
     scope["known_limitations"].append(
         "One fixed early-time phase anchor removes only the arbitrary initial "
-        "phase gauge; native values are interpolated to source samples both "
-        "componentwise and through amplitude plus unwrapped phase.")
-    report = dict(schema="diffgw.seobnrv4.source-q4-q8-mode.v1", scope=scope,
+        "phase gauge; native values are interpolated to source samples "
+        "componentwise, through amplitude plus unwrapped phase, and through "
+        "log-amplitude plus unwrapped phase.")
+    report = dict(schema="diffgw.seobnrv4.source-q4-q8-mode.v2", scope=scope,
                   status="running", release_qualified=False,
                   plan_sha256=q.sha256(PLAN), script_sha256=q.sha256(__file__),
                   input_sha256=plan["input_sha256"], lal_binary=campaign["lal_binary"],
@@ -183,7 +193,9 @@ def main(argv=None):
                     raise ValueError(f"{name} source mode peak differs from capture")
                 boundary = source["rows"][name]["peak_relative"][
                     "source_boundary_from_peak_M"]
-                windows = [dict(name="early", start_M=-120., end_M=-60.),
+                windows = [dict(name="full_inspiral",
+                                start_M=max(source_t[0], native_t[0]), end_M=-120.),
+                           dict(name="early", start_M=-120., end_M=-60.),
                            dict(name="late_inspiral", start_M=-60., end_M=boundary),
                            dict(name="attachment", start_M=boundary, end_M=boundary+30.),
                            dict(name="ringdown", start_M=boundary+30., end_M=100.)]

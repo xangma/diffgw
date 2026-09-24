@@ -1617,7 +1617,7 @@ complex relative L2 is `8.26e-4` and `9.29e-4`, reflecting phase differences
 already present near the attachment. This validates the amplitude side of the
 source comparison on these rows without equating the two builds' NQC fits.
 
-The initial [native/source merger-neighborhood comparison](source_q4_q8_mode.json)
+The [native/source whole-mode comparison](source_q4_q8_mode.json)
 interpolated real and imaginary parts from the native `0.5 M` grid to the
 source grid. That interpolation attenuates an oscillating mode. The native
 grid fractions at source sample times are `0.381838` and `0.847625`; using
@@ -1627,9 +1627,9 @@ amplitude relative L2 values before correcting this comparison are `1.2754%`
 and `0.7463%`. A synthetic shifted damped-sinusoid
 [regression](../../tests/test_source_mode_interpolation.py) reproduces the
 effect. The report also interpolates amplitude and unwrapped phase separately
-to expose the smaller underlying discrepancy. These metrics cover only the
-last `120 M` before the orbital peak through `100 M` afterward, not the full
-inspiral or the physical parameter domain.
+and adds a log-amplitude control. The common comparison spans about `-650 M`
+to `100 M` around the q4 orbital peak and `-1197 M` to `100 M` around q8;
+it is still only two parameter rows, not a domain validation.
 With amplitude/phase interpolation, q4 source/native complex relative L2 is
 `1.75e-4` over the first `30 M` after attachment and `1.10e-4` in the later
 ringdown window; its amplitude relative L2 there is `1.39e-4` and `1.06e-4`.
@@ -1639,3 +1639,26 @@ ringdown phase RMS. The tested native/source NQC coefficient relative L2 is
 `6.80e-4` on q4 and `0.00522` on q8. These results distinguish the earlier
 interpolation artifact from a real q8 phase residual, but do not assign that
 residual uniquely to NQC or qualify the native generator.
+Across the entire shared interval, amplitude/phase complex relative L2 is
+`1.65e-4` (q4) and `0.00190` (q8); the earlier inspiral window ending at
+`-120 M` has phase RMS `0.000201` and `0.00211 rad`, respectively. The
+log-amplitude control preserves a synthetic single damped sinusoid exactly,
+but the physical ringdown is a sum of modes and its log-amplitude metric can
+be worse than ordinary amplitude interpolation. The q8 phase discrepancy
+persists under both phase-aware interpolation choices.
+
+The hash-pinned [q8 phase profile](source_q8_phase_profile.json) samples the
+native, separately compiled source, and public wheel modes on their common
+orbital-peak clock, removes one phase gauge at `-100 M`, and verifies exact
+pairwise closure. The native-source phase difference relative to that anchor
+changes from `+0.002444 rad` at `-1100 M` to `-0.002412 rad` at `+90 M`;
+source/wheel differs too, from `-0.000853` to `+0.000929 rad`. The native/source
+amplitude ratio stays between `0.99978` and `0.99999` at the prespecified
+probes. The [NQC phase-coefficient counterfactual](source_q8_nqc_phase_counterfactual.json)
+applies all three coefficient sets to the *same* public-wheel radius, momentum,
+and orbital-frequency samples through `-25 M`. It predicts wheel-source phase
+drift with `1.22e-5 rad` RMS residual but leaves `0.00237 rad` RMS
+native-source residual; at `-25 M`, observed native-source is `-0.00213 rad`
+versus `-0.00664 rad` predicted. The shared-state test validates its own
+wheel/source control and rules out a coefficient-only account of the native
+phase gap. It does not localize the remaining trajectory or raw-mode cause.

@@ -18,5 +18,8 @@ def test_phase_aware_interpolation_preserves_shifted_ringdown_amplitude():
     )["windows"]["ringdown"]
     componentwise = comparison["metrics"]["amplitude_relative_l2"]
     phase_aware = comparison["polar_interpolation_metrics"]["amplitude_relative_l2"]
+    log_amplitude = comparison["log_amplitude_interpolation_metrics"][
+        "amplitude_relative_l2"]
     assert componentwise > 0.01
     assert phase_aware < 0.0002
+    assert log_amplitude < 1e-12

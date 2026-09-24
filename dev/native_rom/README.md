@@ -576,7 +576,7 @@ binary; that interpolation is not independent source material. An explicit
 independent-Kerr diagnostic uses our own equation-solved representation, but
 its broader parameter and waveform validation remains open.
 
-The [q4/q8 pinned-source merger comparison](evidence/2026-09-24/source_q4_q8_mode.json)
+The [q4/q8 pinned-source whole-mode comparison](evidence/2026-09-24/source_q4_q8_mode.json)
 now separates a grid-comparison artifact from the model residual. Interpolating
 complex samples onto the source grid had produced apparent post-attachment
 amplitude errors of `1.275%` and `0.746%`; interpolating amplitude and
@@ -584,9 +584,22 @@ unwrapped phase lowers them to about `1e-4` and `7e-5`. The q8 phase remains
 about `0.00245 rad` RMS over the later ringdown window. The independent
 [source/wheel control](evidence/2026-09-24/source_q4_q8_wheel_mode.json)
 agrees in post-attachment amplitude to better than `5e-10` on these rows.
-The comparison covers the final `120 M` before orbital peak through `100 M`
-after it and remains audit-only. Earlier inspiral, wider parameter coverage,
-independent physics provenance, and ROM training still need qualification.
+The extended comparison covers the shared interval from about `-650 M` (q4)
+or `-1197 M` (q8) before orbital peak through `100 M` afterward. With
+amplitude/phase interpolation, whole-interval complex relative L2 is
+`1.65e-4` (q4) and `0.00190` (q8); full-inspiral phase RMS before `-120 M`
+is `0.000201` and `0.00211 rad`. Log-amplitude interpolation is a further
+grid-bias control but does not improve every merger window. These two rows
+remain audit-only. Wider parameter coverage, independent physics provenance,
+and ROM training still need qualification.
+The [q8 phase profile](evidence/2026-09-24/source_q8_phase_profile.json)
+finds a smooth native-minus-source drift from `+0.00244 rad` at `-1100 M` to
+`-0.00241 rad` at `+90 M`, relative to the fixed `-100 M` phase anchor.
+The [fixed-trajectory NQC counterfactual](evidence/2026-09-24/source_q8_nqc_phase_counterfactual.json)
+predicts source/wheel phase drift to `1.2e-5 rad` RMS, but the native/source
+coefficient-only prediction at `-25 M` is `-0.00664 rad` versus an observed
+`-0.00213 rad`. The residual is not explained by NQC coefficients alone;
+native raw-mode and trajectory contributions still need separation.
 
 ## Remaining promotion stages
 

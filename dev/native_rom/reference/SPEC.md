@@ -442,13 +442,22 @@ own three-sample fitted-amplitude-peak chart. The frozen native baseline fit
 differs from source by `0.03777 M` on q4 and `1.32536 M` on q8 relative to
 orbital peak. The q8 baseline predates the peak-preserving ringdown variant;
 their boundary-to-fitted-peak intervals are `1.57570 M` and `0.27227 M`
-respectively. A later [source/native merger-neighborhood comparison](../evidence/2026-09-24/source_q4_q8_mode.json)
+respectively. A later [source/native whole-mode comparison](../evidence/2026-09-24/source_q4_q8_mode.json)
 finds that complex linear interpolation across the offset `0.5 M` output
 grids manufactured most of an apparent percent-level amplitude gap. Comparing
 interpolated amplitude and unwrapped phase instead leaves ringdown amplitude
 relative L2 of `1.06e-4` (q4) and `6.89e-5` (q8), while q8 retains a
-`0.00245 rad` phase RMS. This covers only `-120 M` to `100 M` around the
-orbital peak and cannot establish an NQC cause or release parity.
+`0.00245 rad` phase RMS. The extended common interval starts at about
+`-650 M` (q4) and `-1197 M` (q8) relative to orbital peak and ends at
+`100 M`; its complex relative L2 is `1.65e-4` and `0.00190`. This cannot
+establish an NQC cause or release parity.
+The [q8 source/wheel/native phase profile](../evidence/2026-09-24/source_q8_phase_profile.json)
+shows the native-source offset evolves across the shared inspiral and settles
+in ringdown. A [coefficient-only NQC counterfactual on the same public
+trajectory](../evidence/2026-09-24/source_q8_nqc_phase_counterfactual.json)
+reproduces wheel-source phase drift to `1.2e-5 rad` RMS but leaves
+`0.00451 rad` native-source residual at `-25 M`. Thus the native-source q8
+phase gap is not attributable to NQC coefficients alone.
 
 `remnant.final_mass_fraction` independently evaluates the aligned-spin
 remnant-mass prescription named in Bohé et al. Sec. II.C. Bohé points to

@@ -1,0 +1,45 @@
+{
+  "schema": "diffgw.seobnrv4.source-q8-phase-profile-plan.v1",
+  "purpose": "Locate residual q8 phase against separately compiled source and pinned public wheel with fixed orbital clock and one early phase gauge. Diagnostic only.",
+  "row": "q8_high_aligned",
+  "level": "ode_2",
+  "output_step_M": 0.5,
+  "phase_anchor_M": -100.0,
+  "probe_times_M": [
+    -1100.0,
+    -1000.0,
+    -800.0,
+    -600.0,
+    -400.0,
+    -200.0,
+    -120.0,
+    -100.0,
+    -80.0,
+    -60.0,
+    -40.0,
+    -25.0,
+    -15.0,
+    -5.0,
+    0.0,
+    10.0,
+    30.0,
+    60.0,
+    90.0
+  ],
+  "capacity": 50000,
+  "inputs": {
+    "campaign": "dev/native_rom/evidence/2026-09-24/source_candidate_new_rows.json",
+    "source_native_mode": "dev/native_rom/evidence/2026-09-24/source_q4_q8_mode.json",
+    "source_wheel_mode": "dev/native_rom/evidence/2026-09-24/source_q4_q8_wheel_mode.json",
+    "source_flux_plan": "dev/native_rom/evidence/2026-09-24/source_flux_initial_plan.json",
+    "mode_adapter": "dev/native_rom/reference/full_v4_source_mode_adapter.c"
+  },
+  "input_sha256": {
+    "campaign": "d8efe4baa182ea39bf9a7d35b6de8621c6e054429ee180eb661e9fbb9f9d59d8",
+    "source_native_mode": "df3fc6e6340a6261c70f1e6d00f48bd2da51f9ca03323cc33e5a4193b8de62ff",
+    "source_wheel_mode": "590b8fcb4de15531bbb43b0951de118028f9591e616fc9c7b07bace71e9d60f6",
+    "source_flux_plan": "1167199c8f954f97a5905a1e3b2f67d1555e984e5f1da0a0fc42a77a925f96ea",
+    "mode_adapter": "59d8d7dd6547e84cc53b2ecb76005195bb54174c481146f88fc257a3abf7fcf4"
+  },
+  "release_qualified": false
+}
