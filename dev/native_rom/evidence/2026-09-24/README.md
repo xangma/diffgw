@@ -1765,6 +1765,57 @@ dev.native_rom.diagnose_source_q2_domain_probe --source-root
 /usr/local/include --json-out /tmp/source_q2_domain_probe.json` in the
 pinned development environment.
 
+The [five-case SXS plan](sxs_five_case_physical_plan.json) was frozen at
+SHA-256 `397982e47b191acafb276f13d2b2bfb90f2f7d4f3d6d18fa3c86fbd5e609fb17`
+before retrieving waveform files. It names SXS:BBH:2496 (q≈1,
+nonspinning), 2499 (q≈4, nonspinning), 2508 (q≈5, aligned), 2139
+(q≈3, antialigned), and 2514 (q≈8, aligned); all postdate the published
+SEOBNRv4 calibration and were not used in this branch's source comparisons.
+The pinned SXS v3.0.0 catalog, per-file MD5/size, decoded-mode SHA-256,
+and extraction manifest are checked by
+[`extract_sxs_five_case.py`](../extract_sxs_five_case.py) and
+[`compare_sxs_five_case.py`](../compare_sxs_five_case.py). The large NR
+archives remain outside the repository. The [primary result](sxs_five_case_physical.json)
+records `diagnostic_complete`, all five successful rows, and unchanged
+generator sources. The common-support fixed-crossing native/NR complex
+relative L2 values in plan order are `0.317377`, `0.349445`, `0.217883`,
+`0.515005`, `0.399353`; next-highest/highest NR controls are `0.002730`,
+`0.014154`, `0.045533`, `0.006775`, `0.006370`. The native/NR peak-time
+differences are `-2.35`, `-2.88`, `+0.31`, `+4.26`, and `-3.21 M`.
+The single frequency crossing and phase rotation were fixed in advance;
+there is no pairwise time/phase, amplitude, or parameter fit.
+
+The [public control plan](sxs_five_case_public_control_plan.json), frozen
+after the primary comparison, pins LAL `7.7.1` and lalsimulation `6.2.1`
+and calls public `SEOBNRv4`. Its
+[result](sxs_five_case_public_control.json) uses the *same native support*
+and yields public/NR complex relative L2 values `0.316184`, `0.077471`,
+`0.282745`, `0.021329`, `0.223336`. In particular, the native and public
+fixed-anchor errors differ greatly for q≈3 antialigned and q≈4 nonspinning;
+the equal-mass nonspinning residual is shared. This control is post-hoc and
+does not isolate the cause. The raw L2 metric is unweighted and unmaximized,
+so it is not the published detector-noise-weighted faithfulness. Two NR
+resolutions also do not bound every extrapolation or finite-radius error.
+No physical or release gate passes from these data.
+
+Replay in a clean pinned `sxs==2026.0.5` environment by running
+`python -m dev.native_rom.extract_sxs_five_case --plan
+dev/native_rom/evidence/2026-09-24/sxs_five_case_physical_plan.json
+--archive-dir /tmp/diffgw-sxs-five-case/archive --output-dir
+/tmp/diffgw-sxs-five-case/decoded`; in the project environment run
+`PYTHONPATH=src:. python -m dev.native_rom.compare_sxs_five_case --plan
+dev/native_rom/evidence/2026-09-24/sxs_five_case_physical_plan.json
+--decoded-dir /tmp/diffgw-sxs-five-case/decoded --json-out
+/tmp/sxs_five_case_physical.json`, then run
+`PYTHONPATH=src:. python -m dev.native_rom.compare_sxs_five_case_public_control
+--plan dev/native_rom/evidence/2026-09-24/sxs_five_case_physical_plan.json
+--control-plan dev/native_rom/evidence/2026-09-24/sxs_five_case_public_control_plan.json
+--primary dev/native_rom/evidence/2026-09-24/sxs_five_case_physical.json
+--decoded-dir /tmp/diffgw-sxs-five-case/decoded --json-out
+/tmp/sxs_five_case_public_control.json`. This replay depends on the pinned
+external NR archives and uses them only for validation, never as a native
+ROM asset.
+
 The [SXS:BBH:2123 physical-comparison plan](sxs_2123_plan.json) pins the
 [SXS catalog v3.0.0](https://github.com/sxs-collaboration/sxscatalogdata/tree/v3.0.0),
 the late-2018 q≈2, spin `(+0.30006,-0.30005)` configuration, and the

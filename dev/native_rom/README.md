@@ -691,6 +691,24 @@ bound the intended domain or establish physical fidelity. See the
 conventions, and replay commands. The default numerical, physical-domain,
 provenance, cross-backend, and independent-ROM gates below remain open.
 
+A separately frozen [five-case SXS plan](evidence/2026-09-24/sxs_five_case_physical_plan.json)
+selects low-eccentricity nonprecessing NR configurations across mass ratios
+about 1–8 before retrieving their waveform files. Its
+[fixed-frequency comparison](evidence/2026-09-24/sxs_five_case_physical.json)
+finds native/highest-resolution complex relative L2 values of `0.317`,
+`0.349`, `0.218`, `0.515`, and `0.399`; the corresponding next-highest/highest
+resolution controls on native support are `0.00273`, `0.0142`, `0.0455`,
+`0.00678`, and `0.00637`. All five native runs replay unchanged and the
+earlier selected-row numerical controls are far smaller. A post-hoc
+[public SEOBNRv4 control](evidence/2026-09-24/sxs_five_case_public_control.json)
+on the same support finds complex errors `0.316`, `0.0775`, `0.283`,
+`0.0213`, and `0.223` against NR. The public control therefore shares
+some residuals but differs substantially on others, especially the
+antialigned q≈3 case. These fixed-crossing errors are not maximized,
+detector-noise-weighted faithfulness; NR resolution differences do not
+bound every NR systematic. The comparison does not pass a physical release
+gate or establish why the native and public models differ.
+
 The independent ROM construction follows the published reduced-basis and
 parameter-interpolation methods of [Pürrer (2014)](https://doi.org/10.1088/0264-9381/31/19/195010)
 and [Pürrer (2016)](https://doi.org/10.1103/PhysRevD.93.064041).
