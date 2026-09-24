@@ -110,23 +110,17 @@ Native Torch/JAX evaluators do not call these scalar modules.
 | Family | Torch location | JAX location | Carrier/reference reuse and specific divergence to resolve |
 | --- | --- | --- | --- |
 | HM | `src/torchwave/approximants/taylorf2_hm.py` (`_swsh_projection_coefficients`, `TaylorF2_HM.forward`) | `src/jaxwave/approximants/taylorf2_hm.py` (same projection, `evaluate`) | `TaylorF2.evaluate_phase/amplitude`; stored `h_{l,-m}` and harmonic-specific cutoff are project composition choices. `(4,1)` and `(5,5)` remain absent because TD amplitudes alone do not fix native SPA/projection conventions. |
-| Eccentric | `src/torchwave/approximants/taylorf2_eccentric.py` (`eccentric_phase_correction`, `eccentric_amplitude_factor`, `forward`) | `src/jaxwave/approximants/taylorf2_eccentric.py` (same components, `evaluate`) | TaylorF2 carrier and options reused. Native `f0` fallback samples the positive frequency grid and the eccentric correction is re-anchored at `f0`; the old provenance ledger's unconditional 20 Hz final fallback is incomplete. |
+| Eccentric | `src/torchwave/approximants/taylorf2_eccentric.py` (`eccentric_phase_correction`, `eccentric_amplitude_factor`, `forward`) | `src/jaxwave/approximants/taylorf2_eccentric.py` (same components, `evaluate`) | TaylorF2 carrier and options reused. Native `f0` fallback samples the positive frequency grid and the eccentric correction is re-anchored at `f0`; the provenance ledger records this grid-dependent fallback. |
 | NRTidal v1/v2 | `src/torchwave/approximants/imrphenomd_nrtidal.py` | `src/jaxwave/approximants/imrphenomd_nrtidal.py` | IMRPhenomD carrier reused. Shared published coefficient values in `src/diffgw_core/nrtidal_fits.py`; Torch reexports them through `nrtidal_published_fits.py`. V1 has phase only, v2 also amplitude and self-spin. |
 | NSBH | `src/torchwave/approximants/imrphenom_nsbh.py`, `nsbh_clean_phase.py`, `nsbh_clean_amplitude.py`, `nsbh_phase_baseline.py` | `src/jaxwave/approximants/imrphenom_nsbh.py`, `nsbh_phase_baseline.py` | Uses PhenomD phase structure but a distinct PhenomC-like amplitude; do not reuse PhenomD *amplitude*. JAX embeds the NRTidalv2 expression and local amplitude helpers; Torch separates them. Default affine gauge is an inherited compatibility adapter, not a published Thompson equation. |
 
-Two old source pins need correction when model-specific pages are promoted.
-`docs/model_manifest.json` and `docs/provenance_ledger.md` cite Moore
-Eqs. (4.17)–(4.18) as the eccentric FD phase, but the paper labels its
-TaylorF2 SPA result **Eq. (6.26)**; Eqs. (4.17)–(4.18) instead govern
-orbital-frequency/eccentricity evolution. The NSBH manifest names Pannarale
-2015 as PRD 92 **084041**, while the relevant aligned-spin amplitude model is
-PRD 92 **084050** ([APS record](https://doi.org/10.1103/PhysRevD.92.084050)).
-The HM manifest and both native module headers cite Mezzasoma & Yunes as
-arXiv **2203.08939**, which is an unrelated electronics paper; the correct
-record is [2203.15934](https://arxiv.org/abs/2203.15934). The eccentric
-native docstring also calls Eq. (4.18) an amplitude correction; that claim is
-unsupported by Moore Sec. VI.E as written. These are source-mapping findings,
-not a numerical verdict.
+The source audit corrected the manifest, provenance ledger, and native headers:
+the eccentric SPA phase points to Moore et al. Eq. (6.26), the NSBH amplitude
+model to [Pannarale et al., PRD 92, 084050](https://doi.org/10.1103/PhysRevD.92.084050),
+and the HM model to [Mezzasoma & Yunes, arXiv:2203.15934](https://arxiv.org/abs/2203.15934).
+The optional eccentric amplitude factor remains a project option without an
+established primary derivation. These source mappings do not establish
+coefficient-level or waveform-level equivalence.
 
 ## Evidence and limitations
 
