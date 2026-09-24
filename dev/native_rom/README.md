@@ -691,6 +691,16 @@ bound the intended domain or establish physical fidelity. See the
 conventions, and replay commands. The default numerical, physical-domain,
 provenance, cross-backend, and independent-ROM gates below remain open.
 
+The separately frozen [source-backed RKF45 screen](evidence/2026-09-24/source_rkf_domain_screen.json)
+combines the selected historical Hamiltonian/flux conventions with the fine-stage
+RKF45 sampler and checks three frozen rows: q=1 aligned, q=6
+antialigned, and q=12 mixed spin. All three pass both three-level ODE-tolerance
+and nested-output-grid checks. The largest adjacent ODE complex relative L2
+is `1.32e-8`; the finest-pair maximum is `4.76e-9`, with unchanged sampled
+peak, matching, and attachment times. Source hashes agree before and after
+the run. This is a selected-row numerical result, including one row outside
+the NR calibration range; it does not qualify the physical generator or ROM.
+
 A separately frozen [five-case SXS plan](evidence/2026-09-24/sxs_five_case_physical_plan.json)
 selects low-eccentricity nonprecessing NR configurations across mass ratios
 about 1–8 before retrieving their waveform files. Its
