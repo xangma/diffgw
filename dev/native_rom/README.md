@@ -860,9 +860,13 @@ The development-only JAX `SEOBNRv4Published` assembler is not a
 whole-waveform parity reference. It still uses a 1.5PN prototype radiation
 reaction and a Newtonian base `(2,2)` mode, and it accepts published-model
 flux switches without applying them. Its same-state Hamiltonian and 35-mode
-flux component checks do not qualify that complete JAX route. A faithful
-source-backed JAX trajectory and pre-NQC mode, followed by whole-waveform
-Torch/JAX checks, remain necessary before release.
+flux component checks do not qualify that complete JAX route. A
+[JAX pre-NQC phase/mode component](../../src/jaxwave/approximants/eob/seobnrv4_mode22.py)
+now matches the Torch source choices and an independent Gamma-function
+reference, including a differentiable continuous phase. It is unregistered
+and has not been assembled with a source-backed JAX trajectory, the
+corresponding continuous base-mode frequency, NQC, or attachment into a
+qualified whole waveform. Torch/JAX whole-waveform checks remain necessary.
 
 The independent ROM construction follows the published reduced-basis and
 parameter-interpolation methods of [Pürrer (2014)](https://doi.org/10.1088/0264-9381/31/19/195010)
