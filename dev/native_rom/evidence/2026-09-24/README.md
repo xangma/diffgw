@@ -2414,3 +2414,13 @@ yields `0.9856335`. The respective low/high NR controls remain at least
 `0.999882`. Neither tested difference explains the `0.99` miss. This is a
 dominant-mode sensitivity test, not a complete reproduction of the paper's
 validation protocol or a new physical gate.
+
+The [near-extreme numerical plan](source_rkf_near_extreme_plan.json) was frozen
+before running `q=10`, `chi1=chi2=+0.95` and `q=3`,
+`(chi1,chi2)=(+0.95,-0.95)`. Its
+[result](source_rkf_near_extreme_screen.json) passes every predeclared
+three-tolerance and nested-output-grid gate, with unchanged source hashes.
+Refined ODE complex relative L2 is `6.92e-10` and `1.75e-9`, respectively;
+sampled peak, matching, and boundary times agree. This extends selected
+numerical stability toward the high-spin boundary. It does not validate
+physical fidelity, gradients, the entire domain, or a ROM.

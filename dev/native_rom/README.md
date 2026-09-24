@@ -977,6 +977,11 @@ The [post-hoc 0260 cutoff check](evidence/2026-09-24/sxs_0260_initial_cutoff.jso
 finds that using the catalog's initial orbital frequency and earlier common
 NR support lowers the 22 M⊙ overlap to `0.985634`; those tested protocol
 choices do not resolve the miss.
+The separately frozen [near-extreme numerical screen](evidence/2026-09-24/source_rkf_near_extreme_screen.json)
+passes all predeclared tolerance and output-grid gates for `q=10` with both
+spins `+0.95` and `q=3` with spins `(+0.95,-0.95)`. Their refined ODE complex
+relative L2 values are `6.92e-10` and `1.75e-9`. These selected checks do not
+establish physical accuracy or domain-wide numerical convergence.
 
 1. Qualify the physical generator against the published equations and independent
    references over the intended domain, resolve convention/provenance gaps, and
