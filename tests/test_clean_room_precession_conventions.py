@@ -159,7 +159,7 @@ def test_batched_source_azimuth_and_gradient_match_scalar_calls(convention):
 
 
 @pytest.mark.parametrize('mode',[None,(2,1),(3,3)])
-def test_aligned_table_limits_and_default_continuity(mode):
+def test_aligned_table_limits_and_endpoint_contracts(mode):
     model = IMRPhenomXP() if mode is None else IMRPhenomXPHM(modes=[mode])
     f = t([25.,40.,80.])
     p = dict(mass1=40.,mass2=20.,spin1z=.4,spin2z=-.2,inclination=.7,phic=.3,f_ref=40.)
