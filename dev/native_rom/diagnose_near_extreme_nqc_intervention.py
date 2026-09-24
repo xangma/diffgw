@@ -17,25 +17,29 @@ import numpy as np
 
 from . import qualify_generator as q
 from .diagnose_peak_anchor import fitted_metrics
+from .diagnose_frequency_anchor_polar import _polar_metrics
+from .diagnose_q8_ringdown_peak_bound import _frequency_metrics
 from .diagnose_source_flux_initial import _compile, _libraries, _snapshot
 from .diagnose_source_nqc_inputs import INCLUDE
 from .diagnose_source_nqc_whole_mode_override import OVERRIDE, override_source
 from .diagnose_source_wheel_mode import _public, _source
 
 
-PLAN = q.ROOT / "dev/native_rom/evidence/2026-09-24/near_extreme_nqc_intervention_v2_plan.json"
+PLAN = q.ROOT / "dev/native_rom/evidence/2026-09-24/near_extreme_nqc_intervention_v3_plan.json"
 ACTIVE = (0, 1, 2, 6, 7)
 
 
-def postpeak_metrics(first: np.ndarray, second: np.ndarray) -> dict:
-    if first.shape != second.shape:
-        raise ValueError("intervention changed source output length")
-    peak = int(np.argmax(np.abs(second)))
-    return dict(
-        all=q.mode_metrics(first, second),
-        postpeak=q.mode_metrics(first[peak:], second[peak:]),
-        reference_peak_index=peak,
-    )
+def aligned_metrics(first: tuple, second: tuple, mass_seconds: float,
+                    frequency: float) -> dict:
+    ft = first[0] + np.arange(len(first[2])) * first[1]
+    st = second[0] + np.arange(len(second[2])) * second[1]
+    fitted = fitted_metrics(ft, first[2], st, second[2],
+                            mass_seconds, "quadratic_power")
+    anchored = _frequency_metrics(ft, first[2], st, second[2],
+                                  mass_seconds, frequency)
+    return dict(fitted_peak=fitted,
+                frequency_anchor_polar=_polar_metrics(
+                    ft, first[2], st, second[2], mass_seconds, anchored))
 
 
 def main(argv=None):
@@ -49,11 +53,12 @@ def main(argv=None):
         parser.error("evidence path already exists")
     plan = json.loads(PLAN.read_text())
     paths = {key: q.ROOT / value["path"] for key, value in plan["inputs"].items()}
-    if (plan["schema"] != "diffgw.seobnrv4.near-extreme-nqc-intervention-plan.v2"
+    if (plan["schema"] != "diffgw.seobnrv4.near-extreme-nqc-intervention-plan.v3"
             or plan["row"] != "q10_both_near_extreme_aligned"
             or plan["coefficient_steps_M"] != [0.03125, 0.015625]
             or plan["mode_step_M"] != 0.015625
             or plan["capacity"] != 150000
+            or plan["anchor_angular_frequency_M"] != 0.1
             or plan["release_qualified"] is not False
             or any(q.sha256(paths[key]) != value["sha256"]
                    for key, value in plan["inputs"].items())):
@@ -121,10 +126,9 @@ def main(argv=None):
             wheel = _public(row, step)
             modes = {"baseline_source": baseline, "coarse_coefficients": coarse,
                      "fine_coefficients": fine}
-            if any((mode[0] != baseline[0] or mode[1] != baseline[1]
-                    or len(mode[2]) != len(baseline[2]))
+            if any(abs(mode[1] - baseline[1]) > 1e-14
                    for mode in modes.values()):
-                raise ValueError("intervention changed source mode grid")
+                raise ValueError("intervention changed source output cadence")
             mass_seconds = (row["mass1"] + row["mass2"]) * lal.MTSUN_SI
             for name, (epoch, delta_t, mode) in modes.items():
                 report["modes"][name] = dict(
@@ -137,9 +141,12 @@ def main(argv=None):
                 )
                 q.write_evidence(args.json_out, report)
             report["comparisons"] = dict(
-                coarse_vs_fine=postpeak_metrics(coarse[2], fine[2]),
-                baseline_vs_fine=postpeak_metrics(baseline[2], fine[2]),
-                baseline_vs_coarse=postpeak_metrics(baseline[2], coarse[2]),
+                coarse_vs_fine=aligned_metrics(coarse, fine, mass_seconds,
+                                               plan["anchor_angular_frequency_M"]),
+                baseline_vs_fine=aligned_metrics(baseline, fine, mass_seconds,
+                                                 plan["anchor_angular_frequency_M"]),
+                baseline_vs_coarse=aligned_metrics(baseline, coarse, mass_seconds,
+                                                   plan["anchor_angular_frequency_M"]),
                 observed_public_grid_postpeak_complex_relative_l2=nqc[
                     "comparison"]["direct_postpeak_complex_relative_l2"],
             )

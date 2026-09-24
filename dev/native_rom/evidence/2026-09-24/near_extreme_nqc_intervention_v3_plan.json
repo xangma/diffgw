@@ -1,0 +1,35 @@
+{
+  "schema": "diffgw.seobnrv4.near-extreme-nqc-intervention-plan.v3",
+  "purpose": "Post-hoc controlled swap of public 0.03125/0.015625 M NQC coefficients in the pinned complete-source q10 0.015625 M mode. Compare same-grid whole and postpeak changes with observed public-grid mismatch. Diagnostic only; no gate revision. Replaces v1 after its 50000-sample adapter cap rejected a 150000-sample allocation before mode generation. Replaces v2 after changing NQC coefficients also shifted the source output grid; compare waveforms after fixed frequency and independent peak anchoring.",
+  "row": "q10_both_near_extreme_aligned",
+  "coefficient_steps_M": [
+    0.03125,
+    0.015625
+  ],
+  "mode_step_M": 0.015625,
+  "capacity": 150000,
+  "release_qualified": false,
+  "inputs": {
+    "nqc": {
+      "path": "dev/native_rom/evidence/2026-09-24/near_extreme_public_nqc_grid.json",
+      "sha256": "48a338b482e516e892e67ddf4d48ddbe00f22c7da06d130ee61b7175648bc981"
+    },
+    "parity": {
+      "path": "dev/native_rom/evidence/2026-09-24/near_extreme_public_polar.json",
+      "sha256": "4e5931d460cf03ebd49a77ef6531c59772c3087c0b3be0fc673dd632b374cdda"
+    },
+    "source_plan": {
+      "path": "dev/native_rom/evidence/2026-09-24/source_flux_initial_plan.json",
+      "sha256": "1167199c8f954f97a5905a1e3b2f67d1555e984e5f1da0a0fc42a77a925f96ea"
+    },
+    "adapter": {
+      "path": "dev/native_rom/reference/full_v4_source_large_nqc_override_adapter.c",
+      "sha256": "10cd447710ed7d1cedb30eaf829d39b0ab2a5428295379522d9fe241ab13bafb"
+    },
+    "base_adapter": {
+      "path": "dev/native_rom/reference/full_v4_source_mode_large_adapter.c",
+      "sha256": "c9d77e46cd5fbb38fb4afc256a7c3f067a0c6759c2a316f55c0e9a8821539011"
+    }
+  },
+  "anchor_angular_frequency_M": 0.1
+}
