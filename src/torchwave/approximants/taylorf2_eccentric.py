@@ -419,9 +419,15 @@ class TaylorF2_Eccentric(nn.Module):
             f0_min = f_inf.min()
             f0_ref = torch.where(torch.isinf(f0_min), torch.as_tensor(20.0, device=device, dtype=dtype), f0_min)
 
-        # Baseline quasi-circular phase and amplitude from TaylorF2
-        f_ref_circ = f0_ref
+        # Eccentricity is defined at f0_ref; the waveform phase is anchored at
+        # f_ref when supplied. These frequencies need not be the same.
+        if f_ref is None:
+            f_ref_circ = f0_ref
+        else:
+            f_ref_t = as_tensor(f_ref, device=device, dtype=dtype)
+            f_ref_circ = torch.where(f_ref_t > 0.0, f_ref_t, f0_ref)
 
+        # Baseline quasi-circular phase and amplitude from TaylorF2
         psi_circ = TaylorF2.evaluate_phase(
             f=f,
             mass1=m1,
