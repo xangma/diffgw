@@ -358,6 +358,37 @@ derivative sensitivity contribute; the identical peak in the latter pair
 excludes a peak-time-only explanation. This is a source-internal numerical
 diagnostic, not an alternate NQC prescription.
 
+The [source local-window plan](source_nqc_local_windows_plan.json) and
+[result](source_nqc_local_windows.json) replay the exact captured source arrays
+and targets with natural-cubic splines truncated symmetrically around the
+match. A `0.5 M` half-width (64 samples) and every wider tested window give
+bitwise-identical fitted coefficients and amplitude curvature to the
+full-series pinned-GSL replay on all three requested output grids. A `0.25 M`
+half-width differs by at most `3.9e-6` in any coefficient; `0.125 M` introduces
+up to `0.148` and `0.0625 M` up to `28.5`. Distant spline boundary conditions
+therefore do not explain the observed output-grid instability, while very
+short local windows introduce their own bias. This is an input-level replay
+on one row, not a production-window selection.
+
+The [fixed-coarse high-rate plan](source_nqc_high_rate_plan.json) and
+[result](source_nqc_high_rate.json) keep the source's requested output and
+coarse evolution step at `0.125 M`, overriding only the private snapshot's
+high-rate resampling factor to 4, 8, 16, and 32. The factor-8 control
+reproduces the unmodified captured input hash and source fit. The high-rate
+steps are `0.03125`, `0.015625`, `0.0078125`, and `0.00390625 M`. Consecutive
+active source coefficient distances are `8.390`, `18.929`, and `25.054` (L2),
+so finer high-rate sampling alone does not converge the source cubic fit on
+this row. Factors 16 and 32 have the same detected peak and match time, and
+their nonphase input values at matching differ by no more than `0.30 ppm`;
+their amplitude second derivatives differ by `2.69%`. A counterfactual
+degree-four polynomial derivative fit within `±2 M` reduces that coefficient
+distance to `0.078`. Replaying all captures at the factor-32 match time gives
+successive polynomial-fit distances `0.076`, `0.121`, and `0.078`, versus
+`4.523`, `21.144`, and `25.054` for GSL cubic fits. The polynomial result
+identifies derivative sensitivity; it has neither an independent physical
+accuracy bound nor domain and whole-waveform validation, and cannot be
+promoted as the NQC prescription.
+
 The [public-mode boundary plan](public_nqc_mode_boundary_plan.json) and
 [result](public_nqc_mode_boundary.json) use both public v4 modes API paths at
 `0.015625 M`: the coefficient-only call and the call returning modes plus low-

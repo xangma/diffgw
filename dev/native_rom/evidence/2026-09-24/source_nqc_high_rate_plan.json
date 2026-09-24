@@ -1,0 +1,20 @@
+{
+  "schema": "diffgw.seobnrv4.source-nqc-high-rate-plan.v1",
+  "purpose": "Hold requested output and coarse evolution at 0.125 M while varying only the private pinned-source high-rate resampling factor; numerical diagnostic only.",
+  "release_qualified": false,
+  "row_name": "strong_aligned_spin",
+  "output_step_M": 0.125,
+  "resample_factors": [4, 8, 16, 32],
+  "polynomial_degree": 4,
+  "polynomial_half_widths_M": [0.5, 1.0, 2.0],
+  "common_match_reference_factor": 32,
+  "capacity": 50000,
+  "source_flux_plan": "dev/native_rom/evidence/2026-09-24/source_flux_initial_plan.json",
+  "source_flux_plan_sha256": "1167199c8f954f97a5905a1e3b2f67d1555e984e5f1da0a0fc42a77a925f96ea",
+  "source_wheel_mode": "dev/native_rom/evidence/2026-09-24/source_wheel_mode.json",
+  "source_wheel_mode_sha256": "c103f7d884073eb00029a231dd271d49c4a4571455030b11b93c22e298a479da",
+  "source_peak_grid": "dev/native_rom/evidence/2026-09-24/source_nqc_peak_grid.json",
+  "source_peak_grid_sha256": "5eba821c00013e6849cbed9656a778281ddf73e37f73ad3263e48c401453d5ef",
+  "adapter": "dev/native_rom/reference/full_v4_source_nqc_inputs_adapter.c",
+  "adapter_sha256": "0e2006c7a2898b09d56b5d464135b113f4546f43b607ddacbf327761a24a6451"
+}

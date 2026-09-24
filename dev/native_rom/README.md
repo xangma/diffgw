@@ -241,6 +241,17 @@ The [source peak-grid capture](evidence/2026-09-24/source_nqc_peak_grid.json)
 shows that two runs with the same orbital peak and internal step still differ
 by `0.413%` in amplitude spline curvature at matching and `3.937` (L2) in
 active NQC coefficients, despite at most `0.15 ppm` nonphase value drift.
+The [fixed-window replay](evidence/2026-09-24/source_nqc_local_windows.json)
+reproduces each full-series GSL fit exactly with a `0.5 M` or wider local
+natural-cubic window; the output-grid drift is not a distant spline-boundary
+effect. A [fixed-coarse/high-rate study](evidence/2026-09-24/source_nqc_high_rate.json)
+varies only the pinned source's high-rate resampling factor. Its last two
+steps share the same peak and match time, but their source GSL coefficients
+differ by `25.05` (L2) as amplitude curvature changes by `2.69%` while the
+nonphase values move by at most `0.30 ppm`. A diagnostic degree-four local
+polynomial fit over `±2 M` reduces that pair's difference to `0.078`; at a
+common match time, its three successive differences are `0.076`, `0.121`,
+and `0.078`. These counterfactual fits are not a qualified NQC prescription.
 The aligned-spin trajectory replay finds a native-minus-public orbital phase
 span of at most `1.27e-4 rad` from `M Omega=0.0425` through `0.13`, compared
 with `3.36e-5 rad` maximum public-grid sensitivity. Over the later sampled
