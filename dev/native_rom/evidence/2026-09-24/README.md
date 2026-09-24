@@ -2399,3 +2399,15 @@ parity gates. On the failed 0260 row, official public SEOBNRv4/NR is
 complex relative L2 is `1.84e-5`. The shared miss does not change the frozen
 physical gate or establish full-domain fidelity, numerical convergence, or a
 qualified ROM.
+
+The [post-hoc 0260 cutoff plan](sxs_0260_initial_cutoff_plan.json) isolates
+the paper-described initial geometric NR frequency and use of earlier common
+NR support at the already failed 22 M⊙ mass. Its
+[result](sxs_0260_initial_cutoff.json) reproduces the frozen settled-frequency,
+relaxed-support overlap `0.9880256` exactly. Changing only the cutoff to the
+catalog's initial orbital frequency yields `0.9878554`; retaining the settled
+cutoff but using earlier common support yields `0.9857754`; changing both
+yields `0.9856335`. The respective low/high NR controls remain at least
+`0.999882`. Neither tested difference explains the `0.99` miss. This is a
+dominant-mode sensitivity test, not a complete reproduction of the paper's
+validation protocol or a new physical gate.

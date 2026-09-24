@@ -973,6 +973,10 @@ reaches `0.9880269` at the same mass, and all five selected native/public
 parity checks pass. These original-paper runs are regression cases, not an
 independent holdout. Their shared 0260 miss and the separate prospective 2569
 miss leave the absolute physical gate failed; the release target is unresolved.
+The [post-hoc 0260 cutoff check](evidence/2026-09-24/sxs_0260_initial_cutoff.json)
+finds that using the catalog's initial orbital frequency and earlier common
+NR support lowers the 22 M⊙ overlap to `0.985634`; those tested protocol
+choices do not resolve the miss.
 
 1. Qualify the physical generator against the published equations and independent
    references over the intended domain, resolve convention/provenance gaps, and
