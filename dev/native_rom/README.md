@@ -883,6 +883,13 @@ and [Pürrer (2016)](https://doi.org/10.1103/PhysRevD.93.064041).
 describes the SEOBNRv4 ROM construction and its parameter patches. Independently
 trained tables would define our own approximation to a qualified source model;
 they would not become the authors' official ROM tables.
+The [in-memory reduced interpolant](rom/reduced_interpolant.py) now implements
+SVD compression and three-parameter Chebyshev-Lobatto interpolation of supplied,
+preconditioned log-amplitude and phase arrays, with analytic parameter
+derivatives. Independent analytic off-grid and boundary holdouts check the
+algebra. It accepts no physical generator, writes no asset, and does not
+establish a parameter grid, phase gauge, waveform fidelity, or ROM qualification.
+The archived trainer remains separate because its generator is unqualified.
 
 1. Qualify the physical generator against the published equations and independent
    references over the intended domain, resolve convention/provenance gaps, and
