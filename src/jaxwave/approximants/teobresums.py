@@ -1,15 +1,15 @@
-"""Resummed Tidal Effective-One-Body (TEOBResumS) model in JAX.
+"""Published nonspinning TEOB point-mass and numerical components.
 
-The point-mass metric and nonspinning tortoise kinetic terms follow Damour
-and Nagar, arXiv:0704.3550v2 Eqs. (2)-(11). Tides enter A additively, as in
-Nagar et al., PRD 98, 104052 (2018), arXiv:1806.01772v2 Eq. (23).
-
-The aligned-spin centrifugal-radius map follows Nagar et al., arXiv:1806.01772v2,
-Eqs. (23)--(25).
+The orbital potential follows Nagar et al., arXiv:1506.08457v2 Eqs. (1)--(3).
+The tortoise kinetic terms follow Damour--Nagar, arXiv:0704.3550v2 Eqs. (2)--(11).
+The standalone centrifugal-radius map is Nagar et al., arXiv:1806.01772v2
+Eqs. (24)--(25), with explicit quadrupole coefficients (black-hole default 1).
+No complete TEOBResumS waveform, heuristic tides or spin dynamics are exposed.
 """
 
 from typing import Any, Dict, Optional, Tuple, Union
 import math
+import numpy as np
 import jax
 import jax.numpy as jnp
 
@@ -162,48 +162,6 @@ def _teobresums_orbital_potential(u: jnp.ndarray, nu: jnp.ndarray) -> jnp.ndarra
     return jnp.where(zero_mass, 1.0 - 2.0 * u, pade)
 
 
-def _pade_tidal_factor(u: jnp.ndarray, r_lr: float = 3.0) -> Tuple[jnp.ndarray, jnp.ndarray]:
-    """Return the heuristic tidal amplification factor hat{A}_2, hat{A}_3."""
-    den = jnp.maximum(1.0 - r_lr * u, 1e-3)
-    hat_a2 = 1.0 + (3.0 * u) / den
-    hat_a3 = jnp.ones_like(hat_a2)
-    return hat_a2, hat_a3
-
-
-def _tidal_metric_potential(
-    u: jnp.ndarray,
-    nu: jnp.ndarray,
-    lambda1: jnp.ndarray,
-    lambda2: jnp.ndarray,
-    lambda1_oct: Optional[jnp.ndarray] = None,
-    lambda2_oct: Optional[jnp.ndarray] = None,
-    delta: Optional[jnp.ndarray] = None,
-    r_lr: float = 3.0,
-) -> jnp.ndarray:
-    """Compute the tidal metric correction A_tidal(u)."""
-    if delta is None:
-        delta = jnp.sqrt(jnp.maximum(1.0 - 4.0 * nu, 0.0))
-    x1 = 0.5 * (1.0 + delta)
-    x2 = 0.5 * (1.0 - delta)
-    kappa2_1 = 3.0 * lambda1 * (x1 ** 4) * x2
-    kappa2_2 = 3.0 * lambda2 * (x2 ** 4) * x1
-    kappa3_1 = 7.5 * lambda1_oct * (x1 ** 6) * x2 if lambda1_oct is not None else jnp.zeros_like(kappa2_1)
-    kappa3_2 = 7.5 * lambda2_oct * (x2 ** 6) * x1 if lambda2_oct is not None else jnp.zeros_like(kappa2_2)
-
-    if u.ndim > kappa2_1.ndim:
-        kappa2_1 = jnp.expand_dims(kappa2_1, -1)
-        kappa2_2 = jnp.expand_dims(kappa2_2, -1)
-        kappa3_1 = jnp.expand_dims(kappa3_1, -1)
-        kappa3_2 = jnp.expand_dims(kappa3_2, -1)
-
-    u6 = u ** 6
-    u8 = u6 * (u * u)
-    hat_a2, hat_a3 = _pade_tidal_factor(u, r_lr=r_lr)
-    a_tidal_quad = -(kappa2_1 + kappa2_2) * u6 * hat_a2
-    a_tidal_oct = -(kappa3_1 + kappa3_2) * u8 * hat_a3
-    return a_tidal_quad + a_tidal_oct
-
-
 def _teobresums_centrifugal_radius(
     r: jnp.ndarray,
     nu: jnp.ndarray,
@@ -265,173 +223,41 @@ def _teobresums_effective_hamiltonian(
     return ham.effective_hamiltonian(r, pr_star, pphi)
 
 
-def compute_tidal_merger_frequency(
-    mass1: Union[float, jnp.ndarray],
-    mass2: Union[float, jnp.ndarray],
-    lambda1: Union[float, jnp.ndarray] = 0.0,
-    lambda2: Union[float, jnp.ndarray] = 0.0,
-    chi1: Union[float, jnp.ndarray] = 0.0,
-    chi2: Union[float, jnp.ndarray] = 0.0,
-) -> jnp.ndarray:
-    """Return the inherited tidal merger-frequency heuristic in Hz."""
-    m1 = as_array(mass1, dtype=jnp.float64)
-    m2 = as_array(mass2, dtype=jnp.float64)
-    l1 = as_array(lambda1, dtype=m1.dtype)
-    l2 = as_array(lambda2, dtype=m1.dtype)
-    s1 = as_array(chi1, dtype=m1.dtype)
-    s2 = as_array(chi2, dtype=m1.dtype)
-
-    total_mass = m1 + m2
-    m_sec = total_mass * MSUN_SEC
-    nu = component_masses_to_eta(m1, m2)
-    delta = component_masses_to_delta(m1, m2)
-    x1 = 0.5 * (1.0 + delta)
-    x2 = 0.5 * (1.0 - delta)
-
-    k2_1 = 3.0 * l1 * (x1 ** 4) * x2
-    k2_2 = 3.0 * l2 * (x2 ** 4) * x1
-    kappa2_t = k2_1 + k2_2
-
-    omega_pm = 0.36 * (nu ** 0.2) * (1.0 + 0.1 * (s1 * x1 + s2 * x2))
-    c1 = 0.0035
-    c2 = 1.5e-6
-    tidal_shift = 1.0 / (1.0 + c1 * kappa2_t + c2 * (kappa2_t ** 2))
-    m_omega_mrg = omega_pm * tidal_shift
-
-    f_mrg = m_omega_mrg / (PI * m_sec)
-    return f_mrg
-
-
 @jax.tree_util.register_pytree_node_class
 class TEOBResumSHamiltonian:
-    """Prototype tidal EOB Hamiltonian with aligned spins in JAX."""
+    """Nonspinning vacuum Hamiltonian with the published TEOB orbital potential."""
 
-    def __init__(
-        self,
-        nu: jnp.ndarray,
-        chi1: jnp.ndarray,
-        chi2: jnp.ndarray,
-        lambda1: jnp.ndarray,
-        lambda2: jnp.ndarray,
-        lambda1_oct: Optional[jnp.ndarray] = None,
-        lambda2_oct: Optional[jnp.ndarray] = None,
-        cq1: Optional[jnp.ndarray] = None,
-        cq2: Optional[jnp.ndarray] = None,
-        delta: Optional[jnp.ndarray] = None,
-        r_lr: float = 3.0,
-    ):
+    def __init__(self, nu, chi1=0.0, chi2=0.0, lambda1=0.0, lambda2=0.0,
+                 lambda1_oct=None, lambda2_oct=None, cq1=None, cq2=None,
+                 delta=None, r_lr=3.0):
         nu = as_array(nu, dtype=jnp.float64)
-        chi1 = as_array(chi1, dtype=jnp.float64)
-        chi2 = as_array(chi2, dtype=jnp.float64)
-        lambda1 = as_array(lambda1, dtype=jnp.float64)
-        lambda2 = as_array(lambda2, dtype=jnp.float64)
-
-        if delta is None:
-            delta = jnp.sqrt(jnp.maximum(1.0 - 4.0 * nu, 0.0))
-        else:
-            delta = as_array(delta, dtype=jnp.float64)
-
-        self.nu = nu
-        self.chi1 = chi1
-        self.chi2 = chi2
-        self.delta = delta
-        self.lambda1 = lambda1
-        self.lambda2 = lambda2
-        self.r_lr = float(r_lr)
-
-        self.x1 = 0.5 * (1.0 + delta)
-        self.x2 = 0.5 * (1.0 - delta)
-        self.m1 = self.x1
-        self.m2 = self.x2
-
-        self.a1 = chi1 * self.x1
-        self.a2 = chi2 * self.x2
-        self.a_plus = self.a1 + self.a2
-        self.a_minus = self.a1 - self.a2
-
-        self.kappa2_1 = 3.0 * self.lambda1 * (self.x1 ** 4) * self.x2
-        self.kappa2_2 = 3.0 * self.lambda2 * (self.x2 ** 4) * self.x1
-        self.kappa2_tot = self.kappa2_1 + self.kappa2_2
-
-        if lambda1_oct is not None:
-            self.kappa3_1 = 7.5 * as_array(lambda1_oct, dtype=jnp.float64) * (self.x1 ** 6) * self.x2
-        else:
-            self.kappa3_1 = jnp.zeros_like(self.kappa2_1)
-
-        if lambda2_oct is not None:
-            self.kappa3_2 = 7.5 * as_array(lambda2_oct, dtype=jnp.float64) * (self.x2 ** 6) * self.x1
-        else:
-            self.kappa3_2 = jnp.zeros_like(self.kappa2_2)
-
-        if cq1 is None:
-            self.cq1 = jnp.where(
-                self.lambda1 > 0,
-                1.0 + 0.05 * jnp.log(1.0 + self.lambda1),
-                jnp.ones_like(self.lambda1),
-            )
-        else:
-            self.cq1 = as_array(cq1, dtype=jnp.float64)
-
-        if cq2 is None:
-            self.cq2 = jnp.where(
-                self.lambda2 > 0,
-                1.0 + 0.05 * jnp.log(1.0 + self.lambda2),
-                jnp.ones_like(self.lambda2),
-            )
-        else:
-            self.cq2 = as_array(cq2, dtype=jnp.float64)
+        for value in (chi1, chi2, lambda1, lambda2, lambda1_oct, lambda2_oct):
+            if value is None:
+                continue
+            # Unsupported parameters are static; construct the model outside
+            # JIT or use their literal zero defaults when differentiating nu.
+            if isinstance(value, jax.core.Tracer):
+                raise ValueError("TEOB Hamiltonian requires static zero spin and tidal parameters.")
+            if bool(np.any(np.asarray(value) != 0)):
+                raise ValueError("TEOB Hamiltonian supports only nonspinning vacuum parameters; spin and tidal prototypes are unavailable.")
+        chi1 = chi2 = lambda1 = lambda2 = jnp.zeros_like(nu)
+        if r_lr != 3.0 or cq1 is not None or cq2 is not None:
+            raise ValueError("TEOB Hamiltonian supports only nonspinning vacuum parameters; tidal and quadrupole options are unavailable.")
+        self.nu, self.chi1, self.chi2 = nu, chi1, chi2
+        self.lambda1, self.lambda2 = lambda1, lambda2
+        self.delta = jnp.sqrt(jnp.maximum(1.0 - 4.0 * nu, 0.0)) if delta is None else delta
+        self.x1 = self.m1 = 0.5 * (1.0 + self.delta)
+        self.x2 = self.m2 = 0.5 * (1.0 - self.delta)
+        self.kappa3_1 = self.kappa3_2 = jnp.zeros_like(nu)
 
     def tree_flatten(self):
-        children = (
-            self.nu, self.chi1, self.chi2, self.delta,
-            self.lambda1, self.lambda2,
-            self.kappa2_1, self.kappa2_2, self.kappa2_tot,
-            self.kappa3_1, self.kappa3_2,
-            self.cq1, self.cq2,
-            self.x1, self.x2, self.m1, self.m2,
-            self.a1, self.a2, self.a_plus, self.a_minus,
-        )
-        aux_data = (self.r_lr,)
-        return children, aux_data
+        return (self.nu, self.delta), None
 
     @classmethod
     def tree_unflatten(cls, aux_data, children):
-        obj = cls.__new__(cls)
-        (
-            obj.nu, obj.chi1, obj.chi2, obj.delta,
-            obj.lambda1, obj.lambda2,
-            obj.kappa2_1, obj.kappa2_2, obj.kappa2_tot,
-            obj.kappa3_1, obj.kappa3_2,
-            obj.cq1, obj.cq2,
-            obj.x1, obj.x2, obj.m1, obj.m2,
-            obj.a1, obj.a2, obj.a_plus, obj.a_minus,
-        ) = children
-        obj.r_lr = aux_data[0]
-        return obj
+        nu, delta = children
+        return cls(nu, delta=delta)
 
-    def pade_tidal_factor(self, u: jnp.ndarray) -> Tuple[jnp.ndarray, jnp.ndarray]:
-        """Return the heuristic tidal amplification factor."""
-        return _pade_tidal_factor(u, r_lr=self.r_lr)
-
-    def tidal_metric_potential(self, u: jnp.ndarray) -> jnp.ndarray:
-        """Compute the tidal metric correction A_tidal(u)."""
-        k2_1 = self.kappa2_1
-        k2_2 = self.kappa2_2
-        k3_1 = self.kappa3_1
-        k3_2 = self.kappa3_2
-
-        if u.ndim > k2_1.ndim:
-            k2_1 = jnp.expand_dims(k2_1, -1)
-            k2_2 = jnp.expand_dims(k2_2, -1)
-            k3_1 = jnp.expand_dims(k3_1, -1)
-            k3_2 = jnp.expand_dims(k3_2, -1)
-
-        u6 = u ** 6
-        u8 = u6 * (u * u)
-        hat_a2, hat_a3 = self.pade_tidal_factor(u)
-        a_tidal_quad = -(k2_1 + k2_2) * u6 * hat_a2
-        a_tidal_oct = -(k3_1 + k3_2) * u8 * hat_a3
-        return a_tidal_quad + a_tidal_oct
 
     def point_mass_metric_potentials(self, r: jnp.ndarray) -> Tuple[jnp.ndarray, jnp.ndarray, jnp.ndarray]:
         """Return TEOBResumS point-mass (A, B, xi)."""
@@ -448,82 +274,24 @@ class TEOBResumSHamiltonian:
         xi = a_potential / jnp.sqrt(d_potential)
         return a_potential, b_potential, xi
 
-    def centrifugal_radius_squared(self, r: jnp.ndarray) -> jnp.ndarray:
-        """Return aligned-spin centrifugal radius squared."""
-        a1 = self.a1
-        a2 = self.a2
-        cq1 = self.cq1
-        cq2 = self.cq2
-        if r.ndim > a1.ndim:
-            a1 = jnp.expand_dims(a1, -1)
-            a2 = jnp.expand_dims(a2, -1)
-            cq1 = jnp.expand_dims(cq1, -1)
-            cq2 = jnp.expand_dims(cq2, -1)
-        a_q_sq = cq1 * (a1 ** 2) + 2.0 * a1 * a2 + cq2 * (a2 ** 2)
-        return (r ** 2) + a_q_sq * (1.0 + 2.0 / r)
+    def centrifugal_radius_squared(self, r):
+        """The nonspinning centrifugal radius equals the orbital radius."""
+        return r ** 2
 
-    def metric_potentials(self, r: jnp.ndarray) -> Tuple[jnp.ndarray, jnp.ndarray, jnp.ndarray]:
-        """Return equatorial metric potentials (A, B, xi)."""
-        u = 1.0 / r
-        rc = jnp.sqrt(self.centrifugal_radius_squared(r))
-        u_c = 1.0 / rc
-        a0_c, _, _ = self.point_mass_metric_potentials(rc)
-        a_tidal = self.tidal_metric_potential(u_c)
+    def metric_potentials(self, r):
+        """Return published vacuum point-mass (A, B, xi)."""
+        return self.point_mass_metric_potentials(r)
 
-        a_orb = a0_c + a_tidal
-        a_total = ((1.0 + 2.0 * u_c) / (1.0 + 2.0 * u)) * a_orb
-        a0, b0, _ = self.point_mass_metric_potentials(r)
-        d_pot = a0 * b0
-        b_total = d_pot / a_total
-        xi = a_total / jnp.sqrt(d_pot)
-        return a_total, b_total, xi
 
-    def gyro_factors(self, r: jnp.ndarray) -> Tuple[jnp.ndarray, jnp.ndarray]:
-        """Compute gyro-gravitomagnetic factors g_{a_+} and g_{a_-}."""
-        u = 1.0 / r
+    def effective_hamiltonian(self, r, pr_star, pphi):
+        """Nonspinning tortoise mass shell, Damour--Nagar Eq. (7)."""
         nu = self.nu
         if r.ndim > nu.ndim:
             nu = jnp.expand_dims(nu, -1)
-        g_plus = 2.0 - (9.0 / 8.0) * nu * u
-        g_minus = (5.0 / 4.0) * nu * u
-        return g_plus, g_minus
-
-    def effective_hamiltonian(
-        self,
-        r: jnp.ndarray,
-        pr_star: jnp.ndarray,
-        pphi: jnp.ndarray,
-    ) -> jnp.ndarray:
-        """Return H_eff / mu for equatorial aligned-spin orbits."""
-        a_plus = self.a_plus
-        a_minus = self.a_minus
-        delta = self.delta
-        nu = self.nu
-
-        if r.ndim > a_plus.ndim:
-            a_plus = jnp.expand_dims(a_plus, -1)
-            a_minus = jnp.expand_dims(a_minus, -1)
-            delta = jnp.expand_dims(delta, -1)
-        if r.ndim > nu.ndim:
-            nu = jnp.expand_dims(nu, -1)
-
-        r2 = r * r
-        r3 = r2 * r
-        a_plus2 = a_plus * a_plus
-        r_c2 = self.centrifugal_radius_squared(r)
-
-        a_pot, _, _ = self.metric_potentials(r)
-        g_plus, g_minus = self.gyro_factors(r)
-
-        so_num = pphi * (g_plus * a_plus + g_minus * delta * a_minus)
-        so_den = r3 + a_plus2 * (r + 2.0)
-        h_odd = so_num / so_den
-
+        a_pot = self.metric_potentials(r)[0]
         z3 = 2.0 * nu * (4.0 - 3.0 * nu)
-        angular_term = 1.0 + (pphi ** 2) / r_c2
-        h_even = jnp.sqrt(pr_star ** 2 + a_pot * (angular_term + z3 * (pr_star ** 4) / r_c2))
-
-        return h_odd + h_even
+        return jnp.sqrt(pr_star ** 2 + a_pot * (
+            1.0 + (pphi ** 2 + z3 * pr_star ** 4) / r ** 2))
 
     def real_hamiltonian_from_eff(self, h_eff: jnp.ndarray) -> jnp.ndarray:
         """Compute the real Hamiltonian H_real / M = sqrt(1 + 2*nu*(H_eff - 1))."""
@@ -596,375 +364,3 @@ class TEOBResumSHamiltonian:
         dpr_star_dt = dpr_star_cons + f_r_star
         dpphi_dt = f_phi
         return dr_dt, omega, dpr_star_dt, dpphi_dt
-
-
-@jax.tree_util.register_pytree_node_class
-class TEOBResumSRadiationReaction:
-    """TEOBResumS quasi-circular radiation-reaction forces in JAX."""
-
-    def __init__(
-        self,
-        nu: jnp.ndarray,
-        chi1: jnp.ndarray,
-        chi2: jnp.ndarray,
-        *,
-        include_horizon_absorption: bool = True,
-    ):
-        self.nu = as_array(nu, dtype=jnp.float64)
-        self.chi1 = as_array(chi1, dtype=jnp.float64)
-        self.chi2 = as_array(chi2, dtype=jnp.float64)
-        self.include_horizon_absorption = bool(include_horizon_absorption)
-
-    def tree_flatten(self):
-        children = (self.nu, self.chi1, self.chi2)
-        aux_data = (self.include_horizon_absorption,)
-        return children, aux_data
-
-    @classmethod
-    def tree_unflatten(cls, aux_data, children):
-        nu, chi1, chi2 = children
-        return cls(nu, chi1, chi2, include_horizon_absorption=aux_data[0])
-
-    def energy_flux(self, omega: jnp.ndarray) -> jnp.ndarray:
-        """Compute the total gravitational wave energy flux dE/dt."""
-        nu = self.nu
-        if omega.ndim > nu.ndim:
-            nu = jnp.expand_dims(nu, -1)
-
-        v = jnp.maximum(jnp.abs(omega), 1e-8) ** (1.0 / 3.0)
-        v2 = v * v
-        v3 = v2 * v
-        v10 = (v2 * v2) * (v2 * v2) * v2
-
-        f_1pn = -(1247.0 / 336.0) - (35.0 / 12.0) * nu
-        f_15pn = 4.0 * PI
-
-        flux_factor = 1.0 + f_1pn * v2 + f_15pn * v3
-        flux_factor = jnp.maximum(flux_factor, 0.1)
-
-        f_newtonian = (32.0 / 5.0) * (nu * nu) * v10
-        return f_newtonian * flux_factor
-
-    def radiation_reaction_forces(
-        self,
-        omega: jnp.ndarray,
-        pr_star: jnp.ndarray,
-        pphi: jnp.ndarray,
-        *,
-        r=None,
-        hamiltonian=None,
-        include_horizon_absorption: Optional[bool] = None,
-    ) -> Tuple[jnp.ndarray, jnp.ndarray]:
-        """Compute dissipative radiation-reaction force vector (F_r_star, F_phi)."""
-        flux = self.energy_flux(omega)
-        safe_omega = jnp.maximum(jnp.abs(omega), 1e-8)
-        nu = self.nu
-        if omega.ndim > nu.ndim:
-            nu = jnp.expand_dims(nu, -1)
-        torque = -(flux / (nu * safe_omega))
-        return jnp.zeros_like(torque), torque
-
-
-def find_quasicircular_initial_conditions(
-    hamiltonian: TEOBResumSHamiltonian,
-    radiation_reaction: TEOBResumSRadiationReaction,
-    omega_start: jnp.ndarray,
-    max_iter: int = 25,
-    tol: float = 1e-8,
-) -> Tuple[jnp.ndarray, jnp.ndarray, jnp.ndarray]:
-    """Solve for stable quasicircular initial conditions (r0, pr_star0, pphi0)."""
-    omega_start = as_array(omega_start, dtype=jnp.float64)
-
-    def _solve_single(omega_s):
-        r = omega_s ** (-2.0 / 3.0)
-        pphi = jnp.sqrt(r / jnp.maximum(1.0 - 3.0 / r, 0.1))
-
-        # Iterations with stop_gradient to prevent unrolling AD graph
-        for _ in range(4):
-            rx, px = jax.lax.stop_gradient(r), jax.lax.stop_gradient(pphi)
-
-            def res_fn(xy):
-                r_eval, p_eval = xy[0], xy[1]
-                heff = hamiltonian.effective_hamiltonian(r_eval, 0.0, p_eval)
-                hreal = hamiltonian.real_hamiltonian_from_eff(heff)
-                dhdr = jax.grad(hamiltonian.effective_hamiltonian, argnums=0)(r_eval, 0.0, p_eval)
-                dhdpphi = jax.grad(hamiltonian.effective_hamiltonian, argnums=2)(r_eval, 0.0, p_eval)
-                return jnp.array([dhdpphi / hreal - omega_s, dhdr])
-
-            res = res_fn(jnp.array([rx, px]))
-            jac = jax.jacobian(res_fn)(jnp.array([rx, px]))
-            step = - jnp.linalg.solve(jac, res)
-            r = rx + step[0]
-            pphi = px + step[1]
-
-        # One final Newton step retaining parameter gradients
-        r_root, pphi_root = jax.lax.stop_gradient(r), jax.lax.stop_gradient(pphi)
-
-        def res_fn_final(xy):
-            r_eval, p_eval = xy[0], xy[1]
-            heff = hamiltonian.effective_hamiltonian(r_eval, 0.0, p_eval)
-            hreal = hamiltonian.real_hamiltonian_from_eff(heff)
-            dhdr = jax.grad(hamiltonian.effective_hamiltonian, argnums=0)(r_eval, 0.0, p_eval)
-            dhdpphi = jax.grad(hamiltonian.effective_hamiltonian, argnums=2)(r_eval, 0.0, p_eval)
-            return jnp.array([dhdpphi / hreal - omega_s, dhdr])
-
-        res = res_fn_final(jnp.array([r_root, pphi_root]))
-        jac = jax.lax.stop_gradient(jax.jacobian(res_fn_final)(jnp.array([r_root, pphi_root])))
-        step = - jnp.linalg.solve(jac, res)
-        r = r_root + step[0]
-        pphi = pphi_root + step[1]
-
-        heff = hamiltonian.effective_hamiltonian(r, 0.0, pphi)
-        hreal = hamiltonian.real_hamiltonian_from_eff(heff)
-        d2h_dr2 = jax.grad(jax.grad(hamiltonian.effective_hamiltonian, argnums=0), argnums=0)(r, 0.0, pphi)
-        d2h_drdj = jax.grad(jax.grad(hamiltonian.effective_hamiltonian, argnums=0), argnums=2)(r, 0.0, pphi)
-        d2h_dpr2 = jax.grad(jax.grad(hamiltonian.effective_hamiltonian, argnums=1), argnums=1)(r, 0.0, pphi)
-        dp_phi_dr = -d2h_dr2 / d2h_drdj
-        _, f_phi = radiation_reaction.radiation_reaction_forces(omega_s, 0.0, pphi, r=r, hamiltonian=hamiltonian)
-        _, _, xi = hamiltonian.metric_potentials(r)
-        velocity_per_momentum = xi * d2h_dpr2 / hreal
-        pr_star_corr = f_phi / (velocity_per_momentum * dp_phi_dr)
-        return r, pr_star_corr, pphi
-
-    if omega_start.ndim > 0:
-        return jax.vmap(_solve_single)(omega_start)
-    return _solve_single(omega_start)
-
-
-@jax.tree_util.register_pytree_node_class
-class TEOBResumS:
-    """Prototype tidal waveform generator in JAX retaining its historical API name."""
-
-    def __new__(cls, *args, **kwargs):
-        if args and not isinstance(args[0], str) and (len(args) >= 3 or "f" in kwargs or "mass1" in kwargs):
-            return cls.evaluate(*args, **kwargs)
-        if "f" in kwargs or "mass1" in kwargs:
-            return cls.evaluate(*args, **kwargs)
-        return super().__new__(cls)
-
-    def __init__(self, matching_method: Optional[str] = None, **kwargs):
-        self.default_matching_method = matching_method
-        self.init_kwargs = kwargs
-
-    def tree_flatten(self):
-        return ((), (self.default_matching_method, tuple(sorted(self.init_kwargs.items()))))
-
-    @classmethod
-    def tree_unflatten(cls, aux_data, children):
-        matching_method, items = aux_data
-        return cls(matching_method=matching_method, **dict(items))
-
-    def __call__(self, *args, **kwargs) -> Tuple[jnp.ndarray, jnp.ndarray]:
-        if not isinstance(self, TEOBResumS):
-            return TEOBResumS.evaluate(self, *args, **kwargs)
-        call_kwargs = dict(self.init_kwargs)
-        if self.default_matching_method is not None and "matching_method" not in kwargs:
-            call_kwargs["matching_method"] = self.default_matching_method
-        call_kwargs.update(kwargs)
-        return self.evaluate(*args, **call_kwargs)
-
-    @staticmethod
-    def evaluate(
-        f: jnp.ndarray,
-        mass1: Union[float, jnp.ndarray],
-        mass2: Union[float, jnp.ndarray],
-        chi1: Union[float, jnp.ndarray] = 0.0,
-        chi2: Union[float, jnp.ndarray] = 0.0,
-        lambda1: Union[float, jnp.ndarray] = 0.0,
-        lambda2: Union[float, jnp.ndarray] = 0.0,
-        cq1: Optional[Union[float, jnp.ndarray]] = None,
-        cq2: Optional[Union[float, jnp.ndarray]] = None,
-        distance: Union[float, jnp.ndarray] = 100.0,
-        inclination: Union[float, jnp.ndarray] = 0.0,
-        phic: Union[float, jnp.ndarray] = 0.0,
-        tc: Union[float, jnp.ndarray] = 0.0,
-        dt_geom: float = 0.5,
-        num_steps: int = 1500,
-        taper_width_ratio: float = 0.1,
-        f_lower: Optional[Union[float, jnp.ndarray]] = None,
-        integration_mode: str = "diagnostic_fixed",
-        matching_method: Optional[str] = None,
-        **kwargs,
-    ) -> Tuple[jnp.ndarray, jnp.ndarray]:
-        """Generate prototype tidal polarizations with a heuristic merger taper."""
-        f = as_array(f, dtype=jnp.float64)
-        m1 = as_array(mass1, dtype=jnp.float64)
-        m2 = as_array(mass2, dtype=jnp.float64)
-        s1 = as_array(chi1, dtype=jnp.float64)
-        s2 = as_array(chi2, dtype=jnp.float64)
-        l1 = as_array(lambda1, dtype=jnp.float64)
-        l2 = as_array(lambda2, dtype=jnp.float64)
-        dist = as_array(distance, dtype=jnp.float64)
-        inc = as_array(inclination, dtype=jnp.float64)
-        phi_c = as_array(phic, dtype=jnp.float64)
-        t_c = as_array(tc, dtype=jnp.float64)
-
-        is_batched = m1.ndim > 0
-
-        def _single_waveform(m1_i, m2_i, s1_i, s2_i, l1_i, l2_i, dist_i, inc_i, phi_ci, t_ci, f_i, f_low_i):
-            total_mass = m1_i + m2_i
-            eta = component_masses_to_eta(m1_i, m2_i)
-            delta = component_masses_to_delta(m1_i, m2_i)
-
-            hamiltonian = TEOBResumSHamiltonian(
-                nu=eta,
-                chi1=s1_i,
-                chi2=s2_i,
-                lambda1=l1_i,
-                lambda2=l2_i,
-                cq1=as_array(cq1, dtype=jnp.float64) if cq1 is not None else None,
-                cq2=as_array(cq2, dtype=jnp.float64) if cq2 is not None else None,
-                delta=delta,
-            )
-            rr = TEOBResumSRadiationReaction(
-                nu=eta,
-                chi1=s1_i,
-                chi2=s2_i,
-                include_horizon_absorption=True,
-            )
-
-            m_sec = total_mass * MSUN_SEC
-            if f_low_i is None:
-                f_start_hz = jnp.min(jnp.where(f_i > 0, f_i, jnp.inf))
-            else:
-                f_start_hz = jnp.where(
-                    jnp.isnan(f_low_i),
-                    jnp.min(jnp.where(f_i > 0, f_i, jnp.inf)),
-                    as_array(f_low_i, dtype=jnp.float64),
-                )
-
-            omega_start = PI * m_sec * f_start_hz
-            r0, pr0, pphi0 = find_quasicircular_initial_conditions(hamiltonian, rr, omega_start)
-            init_state = jnp.array([r0, 0.0, pr0, pphi0])
-
-            dt = dt_geom
-            half_dt = 0.5 * dt
-            sixth_dt = dt / 6.0
-
-            def vector_field(s):
-                dr_dt, omega, dpr_star_dt, dpphi_dt = hamiltonian.equations_of_motion(s[0], s[2], s[3], rr)
-                return jnp.array([dr_dt, omega, dpr_star_dt, dpphi_dt])
-
-            def rk4_step(state, _):
-                k1 = vector_field(state)
-                k2 = vector_field(state + half_dt * k1)
-                k3 = vector_field(state + half_dt * k2)
-                k4 = vector_field(state + dt * k3)
-                candidate_state = state + sixth_dt * (k1 + 2.0 * k2 + 2.0 * k3 + k4)
-                return candidate_state, candidate_state
-
-            _, states_body = jax.lax.scan(rk4_step, init_state, None, length=num_steps)
-            states = jnp.concatenate([jnp.expand_dims(init_state, 0), states_body], axis=0)
-
-            r_traj = states[:, 0]
-            phi_traj = states[:, 1]
-
-            def get_omega(s):
-                return hamiltonian.equations_of_motion(s[0], s[2], s[3], rr)[1]
-
-            omega_traj = jax.vmap(get_omega)(states)
-            v_traj = jnp.maximum(omega_traj, 1e-8) ** (1.0 / 3.0)
-
-            h22_amp = 8.0 * math.sqrt(PI / 5.0) * eta * (v_traj * v_traj)
-            phase_gw = 2.0 * (phi_traj + phi_ci)
-
-            h22_real = h22_amp * jnp.cos(phase_gw)
-            h22_imag = -h22_amp * jnp.sin(phase_gw)
-
-            d_sec = (dist_i * MPC_SI) / C_SI
-            phys_scale = m_sec / d_sec
-            h22_phys_real = h22_real * phys_scale
-            h22_phys_imag = h22_imag * phys_scale
-            dt_sec = dt_geom * m_sec
-
-            cos_i = jnp.cos(inc_i)
-            plus_factor = math.sqrt(5.0 / (16.0 * PI)) * (1.0 + cos_i * cos_i)
-            cross_factor = -math.sqrt(5.0 / (4.0 * PI)) * cos_i
-            hp_time = plus_factor * h22_phys_real
-            hc_time = cross_factor * h22_phys_imag
-
-            if integration_mode == "physical_event":
-                # Find orbital frequency maximum from omega_traj
-                event_idx = jnp.argmax(omega_traj)
-                event_time = event_idx * dt
-                event_time_sec = event_time * m_sec
-                hp_interp = _piecewise_linear_fourier(hp_time, event_time_sec, dt_sec, f_i)
-                hc_interp = _piecewise_linear_fourier(hc_time, event_time_sec, dt_sec, f_i)
-                phase_shift = -2.0 * PI * f_i * t_ci
-                shift_factor = jnp.cos(phase_shift) + 1j * jnp.sin(phase_shift)
-                f_mrg = compute_tidal_merger_frequency(m1_i, m2_i, l1_i, l2_i, s1_i, s2_i)
-                delta_f = taper_width_ratio * f_mrg
-                is_tidal = (l1_i > 0) | (l2_i > 0)
-                taper = jnp.where(
-                    is_tidal,
-                    1.0 / (1.0 + jnp.exp(jnp.minimum((f_i - f_mrg) / delta_f, 50.0))),
-                    1.0,
-                )
-                return hp_interp * shift_factor * taper, hc_interp * shift_factor * taper
-
-            # Default diagnostic_fixed mode
-            fft_len = 2 ** math.ceil(math.log2(hp_time.shape[0] * 4))
-            hp_fd = jnp.fft.rfft(hp_time, n=fft_len, axis=0)
-            hc_fd = jnp.fft.rfft(hc_time, n=fft_len, axis=0)
-            num_pos = fft_len // 2 + 1
-            hp_fd_scaled = hp_fd * dt_sec
-            hc_fd_scaled = hc_fd * dt_sec
-            k_indices = jnp.arange(num_pos, dtype=jnp.float64)
-            fft_freqs = k_indices / (fft_len * dt_sec)
-
-            hp_interp = _interp1d(f_i, fft_freqs, hp_fd_scaled)
-            hc_interp = _interp1d(f_i, fft_freqs, hc_fd_scaled)
-
-            phase_shift = -2.0 * PI * f_i * t_ci
-            shift_factor = jnp.cos(phase_shift) + 1j * jnp.sin(phase_shift)
-            hp_shifted = hp_interp * shift_factor
-            hc_shifted = hc_interp * shift_factor
-
-            f_mrg = compute_tidal_merger_frequency(m1_i, m2_i, l1_i, l2_i, s1_i, s2_i)
-            delta_f = taper_width_ratio * f_mrg
-            is_tidal = (l1_i > 0) | (l2_i > 0)
-            taper = jnp.where(
-                is_tidal,
-                1.0 / (1.0 + jnp.exp(jnp.minimum((f_i - f_mrg) / delta_f, 50.0))),
-                1.0,
-            )
-            return hp_shifted * taper, hc_shifted * taper
-
-        if is_batched:
-            # Broadcast parameters across batch shape
-            b_shape = m1.shape
-            m2_b = jnp.broadcast_to(m2, b_shape)
-            s1_b = jnp.broadcast_to(s1, b_shape)
-            s2_b = jnp.broadcast_to(s2, b_shape)
-            l1_b = jnp.broadcast_to(l1, b_shape)
-            l2_b = jnp.broadcast_to(l2, b_shape)
-            dist_b = jnp.broadcast_to(dist, b_shape)
-            inc_b = jnp.broadcast_to(inc, b_shape)
-            phi_cb = jnp.broadcast_to(phi_c, b_shape)
-            t_cb = jnp.broadcast_to(t_c, b_shape)
-            f_low_b = jnp.broadcast_to(as_array(f_lower, dtype=jnp.float64), b_shape) if f_lower is not None else None
-
-            # Flatten to 1D batch if needed
-            flat_m1 = m1.reshape(-1)
-            flat_m2 = m2_b.reshape(-1)
-            flat_s1 = s1_b.reshape(-1)
-            flat_s2 = s2_b.reshape(-1)
-            flat_l1 = l1_b.reshape(-1)
-            flat_l2 = l2_b.reshape(-1)
-            flat_dist = dist_b.reshape(-1)
-            flat_inc = inc_b.reshape(-1)
-            flat_phic = phi_cb.reshape(-1)
-            flat_tc = t_cb.reshape(-1)
-            flat_flow = flat_m1 * 0.0 + f_lower if f_lower is not None else jnp.full(flat_m1.shape, jnp.nan)
-
-            def vmap_worker(m1_i, m2_i, s1_i, s2_i, l1_i, l2_i, dist_i, inc_i, phi_ci, t_ci, flow_i):
-                flow_val = None if f_lower is None else flow_i
-                return _single_waveform(m1_i, m2_i, s1_i, s2_i, l1_i, l2_i, dist_i, inc_i, phi_ci, t_ci, f, flow_val)
-
-            hp_out, hc_out = jax.vmap(vmap_worker)(
-                flat_m1, flat_m2, flat_s1, flat_s2, flat_l1, flat_l2,
-                flat_dist, flat_inc, flat_phic, flat_tc, flat_flow,
-            )
-            return hp_out.reshape(*b_shape, f.shape[-1]), hc_out.reshape(*b_shape, f.shape[-1])
-
-        return _single_waveform(m1, m2, s1, s2, l1, l2, dist, inc, phi_c, t_c, f, f_lower)

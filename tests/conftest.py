@@ -94,3 +94,15 @@ class MathReferenceGate:
             "=", f"math reference: {len(self.passed)}/{len(self.selected)} passed; "
             f"{len(self.disallowed)} skipped/xfail; {len(self.deselected)} deselected"
         )
+
+
+@pytest.fixture(scope="module")
+def official_rom_path():
+    """Use the supported explicit/environment/cache lookup for external tests."""
+    pytest.importorskip("h5py")
+    from torchwave.approximants.rom import resolve_official_rom_path
+
+    try:
+        return resolve_official_rom_path(os.environ.get("TORCHWAVE_EXTERNAL_ROM"))
+    except FileNotFoundError:
+        pytest.skip("official SEOBNRv4 ROM HDF5 is unavailable")

@@ -79,6 +79,13 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
+      - name: Keep development prototypes off main
+        run: |
+          if [ -n "$(git ls-files -- dev)" ]; then
+            echo "Keep dev/ research on feature branches; promote only validated code into src/."
+            exit 1
+          fi
+
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v5
         with:
@@ -104,4 +111,4 @@ jobs:
       - name: "Step 3: Verify core suite with all and dev"
         run: |
           pip install .[all,dev]
-          pytest tests/test_diffgw.py tests/test_waveform_definitions.py tests/test_mit_packaging.py tests/test_external_data.py tests/test_taylorf2_hm_external_api.py
+          pytest tests/test_diffgw.py tests/test_waveform_definitions.py tests/test_mit_packaging.py tests/test_external_data.py tests/test_taylorf2_hm_external_api.py tests/test_rom_release_contract.py tests/test_eob_release_contract.py tests/test_prototype_release_contract.py tests/test_release_distributions.py

@@ -122,24 +122,6 @@ APPROXIMANTS_AND_PARAMS = [
         {"f_lower": 20.0, "f_final": 400.0, "delta_f": 1.0},
         1e-10,
     ),
-    (
-        "seobnrv5rom",
-        {"mass1": 30.0, "mass2": 20.0, "chi1": 0.2, "chi2": -0.1},
-        {"f_lower": 20.0, "f_final": 300.0, "delta_f": 1.0},
-        1e-10,
-    ),
-    (
-        "SEOBNR_ODE",
-        {"mass1": 30.0, "mass2": 20.0, "chi1": 0.0, "chi2": 0.0, "num_steps": 10},
-        {"f_lower": 30.0, "f_final": 100.0, "delta_f": 5.0},
-        1e-10,
-    ),
-    (
-        "TEOBResumS",
-        {"mass1": 1.4, "mass2": 1.3, "chi1": 0.0, "chi2": 0.0, "lambda1": 300.0, "lambda2": 400.0},
-        {"f_lower": 30.0, "f_final": 400.0, "delta_f": 2.0},
-        1e-10,
-    ),
 ]
 
 

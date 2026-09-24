@@ -30,6 +30,11 @@ licensed; third-party data and adaptations retain their identified terms, and
 some inherited calibration provenance remains unresolved. Differentiability and
 batching depend on the selected model and numerical path.
 
+The [retired prototype record](waveforms/research/retired-release-surface.md)
+preserves the former complete-waveform routes and native pilot asset metadata.
+Historical comparisons below remain evidence about those former implementations,
+not validation of the retained official ROM or surviving equation components.
+
 [frozen-catalog]: https://github.com/xangma/diffgw/blob/0be15a5b80dd5383da054165f6834461798d70dc/docs/reviews/2026-09-13-parity-review/verification/reference-contracts-checkpoint3/catalog.json
 [frozen-holdout]: https://github.com/xangma/diffgw/blob/0be15a5b80dd5383da054165f6834461798d70dc/docs/reviews/2026-09-13-parity-review/verification/reference-contracts-checkpoint3/holdout.json
 [frozen-source]: https://github.com/xangma/diffgw/blob/0be15a5b80dd5383da054165f6834461798d70dc/docs/reviews/2026-09-13-parity-review/verification/reference-contracts-checkpoint3/source-record.json
@@ -126,13 +131,10 @@ batching depend on the selected model and numerical path.
   - Pürrer (2014), *Frequency domain reduced order models for gravitational waves from aligned-spin compact binaries*, Class. Quantum Grav. 31, 195010 ([DOI:10.1088/0264-9381/31/19/195010](https://doi.org/10.1088/0264-9381/31/19/195010))
   - Pürrer (2016), *Frequency domain reduced order model of aligned-spin effective-one-body waveforms with generic mass-ratios and spins*, Phys. Rev. D 93, 064041 ([DOI:10.1103/PhysRevD.93.064041](https://doi.org/10.1103/PhysRevD.93.064041))
   - Bohé et al. (2017), *An improved effective-one-body model of spinning, nonprecessing binary black holes for the era of gravitational-wave astrophysics with advanced detectors*, Phys. Rev. D 95, 044028 ([DOI:10.1103/PhysRevD.95.044028](https://doi.org/10.1103/PhysRevD.95.044028))
-- **Bundled Native Surrogate Prototype**:
-  - **Path**: `src/torchwave/data/seobnr_surrogate.pt`
-  - **SHA256**: `8316be966b297f474be810024a6add2d5e64559ee3c506302e8ea83372085414`
-  - **Generator**: `torchwave.approximants.eob.SEOBNR_ODE` (clean-room native PyTorch time-domain integrator)
-  - **Frequency Coordinate**: Dimensionless geometric $M f = G M f / c^3 \in [0.0002, 0.30]$ (256 nodes)
-  - **Architecture**: SVD basis projection with 12 amplitude basis vectors, 16 phase basis vectors, and degree-3 polynomial parameter mappings over $(\eta, \chi_1, \chi_2)$.
-  - **Scope**: This prototype is separate from the official-data wrapper. The LAL comparison below does not validate this bundled asset.
+- **Native development**: The unvalidated native surrogate and SEOBNR waveform
+  assemblers have been removed from the release package. They are retained on
+  `codex/native-seobnr-rom` for generator qualification before any new tables
+  are trained or promoted. The former `seobnrv5rom` alias is no longer accepted.
 - **Official ROM Wrapper**:
   - The canonical `SEOBNR_ROM` / `SEOBNRv4ROM` aliases use tensor reconstruction from the external official `SEOBNRv4ROM_v3.0.hdf5` data. The data are required for this path and are not bundled.
   - Registered in `torchwave.external_data` from Zenodo record 14999310 (SHA-256 `4ff5317967d757fcad9323a74b75f4f63894ed87f4b1852d46cbe47cde488b9c`); redistribution terms remain unresolved.
@@ -172,7 +174,7 @@ batching depend on the selected model and numerical path.
   - Two additional holdouts (`SXS:BBH:0030`, `0166`, with $q=3,6$) for the four modes: phase RMS $< 0.15$ rad and affine mismatch $< 0.010$. These tests do not impose the $(3,3)$ arrival-time gate on every mode.
   These are test thresholds, not a new measurement. The tests skip when their external data or archived manifest are unavailable. Complete waveform amplitude, inspiral and precession accuracy are outside these phase-only checks.
 
-### 2.11 Continuous NQC Spline Attachment (SEOBNR_ODE & TEOBResumS)
+### 2.11 Continuous NQC Spline Attachment (EOB components)
 - **Primary References**:
   - Bohé et al. (2017), *An improved effective-one-body model of spinning, nonprecessing binary black holes for the era of gravitational-wave astrophysics with advanced detectors*, Phys. Rev. D 95, 044028 ([DOI:10.1103/PhysRevD.95.044028](https://doi.org/10.1103/PhysRevD.95.044028))
   - Nagar et al. (2018), *Time-domain effective-one-body gravitational waveforms for coalescing compact binaries with nonprecessing spins, tides and self-spin effects*, Phys. Rev. D 98, 104052 ([DOI:10.1103/PhysRevD.98.104052](https://doi.org/10.1103/PhysRevD.98.104052))
@@ -222,8 +224,10 @@ batching depend on the selected model and numerical path.
 These counts describe the historical [catalog][frozen-catalog] and
 [holdout][frozen-holdout] artifacts. A passing row is scoped to its recorded
 parameters and modes. The complete strict suites did not pass; separate native
-component tests do not change those results. The [model manifest](model_manifest.json)
-retains case IDs and numerical errors.
+component tests do not change those results. The [current model manifest](model_manifest.json)
+retains case IDs and numerical errors for supported routes; the
+[retired snapshot](waveforms/research/retired-model-manifest.json) preserves
+the removed model entries.
 
 | Approximant | Catalog cases passed | Holdout cases passed | Scope |
 |---|---|---|---|
@@ -241,8 +245,8 @@ retains case IDs and numerical errors.
 | SEOBNR_ROM | 1/1 | — | Official external-data wrapper |
 | IMRPhenomXHM | 0/1 | 0/1 | Full-waveform reference gates not met; native phase tests have separate scope |
 | IMRPhenomXPHM | 0/1 | 0/1 | Full-waveform reference gates not met; native phase tests have separate scope |
-| SEOBNR_ODE | 0/1 | — | Experimental EOB waveform; continuous attachment is a component property |
-| TEOBResumS | 0/1 | — | Experimental EOB waveform; continuous attachment is a component property |
+| SEOBNR_ODE (retired prototype) | 0/1 | — | Historical result; model no longer shipped |
+| TEOBResumS (retired prototype) | 0/1 | — | Historical result; model no longer shipped |
 | TaylorF2_HM | 1/1 | — | Only $(2,2)$ compared; higher modes lack a full-waveform oracle in this suite |
 
 `IMRPhenomXPHM-SpinTaylor` and `IMRPhenomXPNR` are outside these frozen
@@ -255,7 +259,6 @@ catalog counts. Their optional comparison test gates are described in Sections
 
 | Asset | Path | SHA256 Checksum | Provenance / Origin | License |
 |---|---|---|---|---|
-| Native SEOBNR ROM Surrogate | `src/torchwave/data/seobnr_surrogate.pt` | `8316be966b297f474be810024a6add2d5e64559ee3c506302e8ea83372085414` | Clean-room trained via `torchwave.approximants.eob.SEOBNR_ODE` | MIT |
 | Independent Kerr QNM Splines | `src/torchwave/approximants/kerr_qnm_generated.py` | `82da71c19c50defeab4c32b6950141d845214909e9f52342e3f1cf3b46f08326` | Clean-room solved via `torchwave.qnm.generate` | MIT |
 | Independent London N=61 QNM Fits | `src/torchwave/approximants/imrphenom_hm_qnm_n61.py` | `350c958aef4e1554d5c2d6a6bc22f8b9bf3513c2a000f08dc3cb3de1cde05b06` | Clean-room solved via `torchwave.qnm.london` | MIT |
 | PNR Calibration Coefficients | `src/torchwave/approximants/pnr_coefficients.py` | `e15b3fef15512d48873fa1728ffb446068bb38245ac2378d0eb8cb20d4e27355` | Clean-room derived from Hamilton et al. (2021) | MIT |

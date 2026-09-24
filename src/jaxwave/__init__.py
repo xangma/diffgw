@@ -62,9 +62,7 @@ from .approximants.ppe import (
     modified_dispersion_phase_shift,
     PPE_PN_MAPPING,
 )
-from .approximants.precession_ode import SpinPrecessionODE
 from .approximants.rom import OfficialSEOBNRv4ROM, SEOBNR_ROM
-from .approximants.teobresums import TEOBResumS
 from . import detectors
 from .detectors import (
     Detector,
@@ -147,10 +145,8 @@ __all__ = [
     "ppe_phase_shift",
     "modified_dispersion_phase_shift",
     "PPE_PN_MAPPING",
-    "SpinPrecessionODE",
     "OfficialSEOBNRv4ROM",
     "SEOBNR_ROM",
-    "TEOBResumS",
     "detectors",
     "Detector",
     "DetectorNetwork",

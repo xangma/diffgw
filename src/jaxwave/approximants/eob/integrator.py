@@ -6,8 +6,7 @@ import jax
 import jax.numpy as jnp
 
 from jaxwave.approximants.eob.events import OrbitalFrequencyPeak, orbital_frequency_peak
-from jaxwave.approximants.eob.hamiltonian import EOBHamiltonian
-from jaxwave.approximants.eob.radiation_reaction import EOBRadiationReaction
+from jaxwave.approximants.eob.hamiltonian import _HamiltonianBase
 from jaxwave.conversions import as_array
 
 
@@ -24,8 +23,8 @@ class EOBTrajectoryIntegrator:
 
     def __init__(
         self,
-        hamiltonian: EOBHamiltonian,
-        radiation_reaction: EOBRadiationReaction,
+        hamiltonian: _HamiltonianBase,
+        radiation_reaction,
     ):
         self.hamiltonian = hamiltonian
         self.rr = radiation_reaction

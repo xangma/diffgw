@@ -303,6 +303,5 @@ print(f"Damping rate:               {root.omega.imag:.6f}")
 
 - **`EMRIKludge`**: Relativistic extreme-mass-ratio inspirals using Kerr geodesic orbital frequencies.
 - **`ParameterizedPostEinstein` (`PPE`)**: Testing general relativity with parameterized PN phase modifications.
-- **`SpinPrecessionODE`**: Orbit-averaged spin-precession trajectory integrator.
 
 ---

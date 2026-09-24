@@ -499,7 +499,8 @@ class IMRPhenomXHM:
             if lm not in self.SUPPORTED_MODES:
                 raise ValueError(f"Mode {lm} not supported. Supported: {self.SUPPORTED_MODES}")
         self.base_22 = base_22
-        self.experimental_phase_connections = experimental_phase_connections
+        if experimental_phase_connections:
+            raise ValueError("experimental_phase_connections=True is an unvalidated prototype and is not available in releases.")
 
     def tree_flatten(self):
         children = ()
@@ -507,19 +508,17 @@ class IMRPhenomXHM:
             self.modes,
             self.carrier,
             self.base_22,
-            self.experimental_phase_connections,
             self.calibration,
         )
         return children, aux_data
 
     @classmethod
     def tree_unflatten(cls, aux_data, children):
-        modes, carrier, base_22, exp_phase, calib = aux_data
+        modes, carrier, base_22, calib = aux_data
         return cls(
             modes=modes,
             carrier=carrier,
             base_22=base_22,
-            experimental_phase_connections=exp_phase,
             calibration=calib,
         )
 
@@ -527,7 +526,6 @@ class IMRPhenomXHM:
         kwargs.setdefault("modes", self.modes)
         kwargs.setdefault("carrier", self.carrier)
         kwargs.setdefault("base_22", self.base_22)
-        kwargs.setdefault("experimental_phase_connections", self.experimental_phase_connections)
         kwargs.setdefault("calibration", self.calibration)
         return self.evaluate(*args, **kwargs)
 
@@ -564,6 +562,8 @@ class IMRPhenomXHM:
         Tuple[jnp.ndarray, jnp.ndarray, Dict[Tuple[int, int], Union[Tuple[jnp.ndarray, jnp.ndarray], jnp.ndarray]]],
     ]:
         """Generate frequency-domain polarizations (h_plus, h_cross) including higher multipoles in JAX."""
+        if experimental_phase_connections:
+            raise ValueError("experimental_phase_connections=True is an unvalidated prototype and is not available in releases.")
         if f is None:
             if sample_frequencies is not None:
                 f = sample_frequencies
@@ -1329,13 +1329,6 @@ class IMRPhenomXHM:
                     carrier_p_at_ins, carrier_dp_at_ins = eval_carrier_phi_and_deriv((2.0 / m_flt) * f_ins_p)
                     phi_ins_grid = (m_flt / 2.0) * phi_22_scaled + delta_target_u
                     phi_ins_at_ins = (m_flt / 2.0) * carrier_p_at_ins + delta_target
-                    if experimental_phase_connections:
-                        lambda_at_ins, lambda_dp_at_ins = _value_and_derivative(
-                            lambda x: _pn_phase_lambda(l, m, x, eta, delta), f_ins_p,
-                        )
-                        dphi_ins = eval_dphi_int(f_ins_p) - carrier_dp_at_ins - lambda_dp_at_ins
-                        phi_ins_grid = phi_ins_grid + _pn_phase_lambda(l, m, mf_grid, eta, delta) + _unsqueeze_to(dphi_ins, mf_grid) * mf_grid
-                        phi_ins_at_ins = phi_ins_at_ins + lambda_at_ins + dphi_ins * f_ins_p
                     dphi_int_shift = phi_ins_at_ins - eval_phi_int(f_ins_p)
                     dphi_int_shift_u = _unsqueeze_to(dphi_int_shift, mf_grid)
 
@@ -1445,13 +1438,6 @@ class IMRPhenomXHM:
                     carrier_p_at_ins, carrier_dp_at_ins = eval_carrier_phi_and_deriv(f_ins_p)
                     phi_ins_32_grid = phi_22_carrier + delta_target_32
                     phi_ins_at_ins_32 = carrier_p_at_ins + delta_target_32
-                    if experimental_phase_connections:
-                        lambda_at_ins, lambda_dp_at_ins = _value_and_derivative(
-                            lambda x: _pn_phase_lambda(l, m, x, eta, delta), f_ins_p,
-                        )
-                        dphi_ins_32 = eval_dphi_int_32(f_ins_p) - carrier_dp_at_ins - lambda_dp_at_ins
-                        phi_ins_32_grid = phi_ins_32_grid + _pn_phase_lambda(l, m, mf_grid, eta, delta) + _unsqueeze_to(dphi_ins_32, mf_grid) * mf_grid
-                        phi_ins_at_ins_32 = phi_ins_at_ins_32 + lambda_at_ins + dphi_ins_32 * f_ins_p
                     dphi_int_shift_32 = phi_ins_at_ins_32 - (eval_phi_int_32(f_ins_p) + c_int_32)
                     dphi_int_shift_32_u = _unsqueeze_to(dphi_int_shift_32, mf_grid)
                     c_int_32_u = _unsqueeze_to(c_int_32, mf_grid)

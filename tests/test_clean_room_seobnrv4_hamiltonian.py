@@ -8,7 +8,6 @@ import torch
 from numpy.polynomial import polynomial as poly
 
 from torchwave.approximants.eob.seobnrv4_hamiltonian import SEOBNRv4Hamiltonian
-from torchwave.approximants.eob.hamiltonian import EOBHamiltonian
 from torchwave.constants import EULER_GAMMA
 
 
@@ -116,8 +115,8 @@ def test_batch_scalar_and_inference_mode_agree():
         torch.testing.assert_close(actual, expected, atol=1e-14, rtol=1e-13)
 
 
-@pytest.mark.parametrize("hamiltonian_class", [EOBHamiltonian, SEOBNRv4Hamiltonian])
-def test_shared_state_keeps_parameter_batch_forces_independent(hamiltonian_class):
+def test_shared_state_keeps_parameter_batch_forces_independent():
+    hamiltonian_class = SEOBNRv4Hamiltonian
     nu, c1, c2 = tensor([.16, .24]), tensor([.7, -.3]), tensor([-.2, .6])
     r, pr, j = tensor(9., requires_grad=True), tensor(-.03), tensor(3.6)
     batched = hamiltonian_class(nu, c1, c2).equations_of_motion_conservative(r, pr, j)

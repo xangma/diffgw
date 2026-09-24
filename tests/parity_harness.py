@@ -741,25 +741,6 @@ _FROZEN_CANONICAL_MODEL_JSON = json.dumps(
             "expected_gate": {"complex_relative_l2": 1.0e-6, "mismatch": 1.0e-8},
         },
         {
-            "id": "SEOBNR_ODE_diagnostic",
-            "torch_name": "SEOBNR_ODE",
-            "lal_name": "SEOBNRv4",
-            "oracle_api": "SimInspiralFD",
-            "oracle_fhigh": 1024.0,
-            "params": {
-                "mass1": 30.0,
-                "mass2": 20.0,
-                "chi1": 0.0,
-                "chi2": 0.0,
-                "distance": 100.0,
-                "inclination": 0.0,
-                "phic": 0.0,
-                "tc": 0.0,
-            },
-            "grid": {"flow": 20.0, "fhigh": 256.0, "df": 0.5},
-            "expected_gate": {"complex_relative_l2": 1.0e-6, "mismatch": 1.0e-8},
-        },
-        {
             "id": "SEOBNR_ROM_diagnostic",
             "torch_name": "SEOBNR_ROM",
             "lal_name": "SEOBNRv4_ROM",
@@ -774,26 +755,6 @@ _FROZEN_CANONICAL_MODEL_JSON = json.dumps(
                 "tc": 0.0,
             },
             "grid": {"flow": 20.0, "fhigh": 256.0, "df": 0.5},
-            "expected_gate": {"complex_relative_l2": 1.0e-6, "mismatch": 1.0e-8},
-        },
-        {
-            "id": "TEOBResumS_diagnostic",
-            "torch_name": "TEOBResumS",
-            "lal_name": "TEOBResumS",
-            "oracle_api": "SimInspiralFD",
-            "params": {
-                "mass1": 1.4,
-                "mass2": 1.4,
-                "chi1": 0.0,
-                "chi2": 0.0,
-                "lambda1": 0.0,
-                "lambda2": 0.0,
-                "distance": 100.0,
-                "inclination": 0.0,
-                "phic": 0.0,
-                "tc": 0.0,
-            },
-            "grid": {"flow": 30.0, "fhigh": 500.0, "df": 0.5},
             "expected_gate": {"complex_relative_l2": 1.0e-6, "mismatch": 1.0e-8},
         },
     ],
@@ -873,7 +834,7 @@ CANONICAL_MODEL_CASES = get_canonical_model_cases()
 CANONICAL_FULL_CATALOG_CASES = get_canonical_catalog_cases()
 DETERMINISTIC_HELD_OUT_CASES = get_canonical_holdout_cases()
 
-# Exact seventeen (17) manifest models from docs/model_manifest.json
+# Maintained catalog models from docs/model_manifest.json
 MANIFEST_MODELS = [
     "TaylorF2",
     "TaylorF2_HM",
@@ -884,16 +845,16 @@ MANIFEST_MODELS = [
     "IMRPhenomHM",
     "IMRPhenomXHM",
     "IMRPhenomXPHM",
+    "IMRPhenomXPHM-SpinTaylor",
+    "IMRPhenomXPNR",
     "IMRPhenomXAS",
     "IMRPhenomD_NRTidal",
     "IMRPhenomD_NRTidalv2",
     "IMRPhenomNSBH",
     "KerrRingdown",
-    "SEOBNR_ODE",
     "SEOBNR_ROM",
-    "TEOBResumS",
 ]
-assert len(MANIFEST_MODELS) == 17, f"Expected exactly 17 manifest models, found {len(MANIFEST_MODELS)}"
+assert len(MANIFEST_MODELS) == len(set(MANIFEST_MODELS)), "Duplicate manifest models"
 
 UNRESOLVED_ORACLE_REASONS: Dict[str, str] = {
     "TaylorF2_HM": "The public TaylorF2 API returns one carrier series; its mode-array metadata does not change that output, and SimInspiralChooseFDModes has no TaylorF2 mode generator. Higher-mode full-waveform parity therefore has no stable external reference.",
@@ -909,14 +870,6 @@ SOVEREIGN_MODELS: Dict[str, Dict[str, Any]] = {
         "status": "SOVEREIGN_NR_CALIBRATED",
         "description": "Multi-mode precessing waveform incorporating sovereign SXS NR higher harmonic calibrations.",
         "calibration": "sovereign",
-    },
-    "SEOBNR_ODE": {
-        "status": "SOVEREIGN_CONTINUOUS_MATCHING",
-        "description": "Clean-room continuous NQC attachment via cubic spline root-finding (continuous_matching.py).",
-    },
-    "TEOBResumS": {
-        "status": "SOVEREIGN_CONTINUOUS_MATCHING",
-        "description": "Clean-room continuous NQC attachment via cubic spline root-finding (continuous_matching.py).",
     },
 }
 
@@ -1493,7 +1446,7 @@ def run_full_parity_suite(
         if res.get("status") not in ("PASSED", *SOVEREIGN_STATUSES):
             all_passed = False
 
-    # Compile exact 17-model catalog coverage record
+    # Compile the maintained catalog coverage record
     coverage = {}
     passed_cases_by_torch_name = {}
     for r in results:
@@ -1546,9 +1499,9 @@ def run_full_parity_suite(
             "errors": manifest_drift_errors,
         }
 
-    assert len(MANIFEST_MODELS) == 17, f"Expected 17 catalog models, got {len(MANIFEST_MODELS)}"
-
-    failing_models = [k for k, v in coverage.items() if v.get("status") == "FAILED"]
+    accepted_statuses = {"PASSED", *SOVEREIGN_STATUSES}
+    failing_models = [k for k, v in coverage.items()
+                      if v.get("status") not in accepted_statuses]
     catalog_passed = (
         (scope == "catalog")
         and all_passed

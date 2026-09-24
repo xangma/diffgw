@@ -1,8 +1,8 @@
 """Effective-One-Body (EOB) approximants and dynamical components in JAX."""
 
-from jaxwave.approximants.eob.hamiltonian import EOBHamiltonian
+from jaxwave.approximants.eob.hamiltonian import Nonspinning3PNHamiltonian
 from jaxwave.approximants.eob.seobnrv4_hamiltonian import SEOBNRv4Hamiltonian, DeformedKerrPotentials
-from jaxwave.approximants.eob.radiation_reaction import EOBRadiationReaction, FactorizedRadiationReaction
+from jaxwave.approximants.eob.radiation_reaction import FactorizedRadiationReaction
 from jaxwave.approximants.eob.initial_conditions import find_quasicircular_initial_conditions
 from jaxwave.approximants.eob.events import OrbitalFrequencyPeak, orbital_frequency_peak
 from jaxwave.approximants.eob.integrator import EOBTrajectoryIntegrator, FrequencyPeakTrajectory
@@ -29,21 +29,14 @@ from jaxwave.approximants.eob.nqc import (
     calibrate_nqc_22,
 )
 from jaxwave.approximants.eob.attachment import AttachedMode22, attach_seobnrv4_22
-from jaxwave.approximants.eob.waveform import SEOBNR_ODE, _interp1d, _quadrupole_fd
-from jaxwave.approximants.eob.published_waveform import (
-    PublishedEOB22,
-    published_eob22_to_fd,
-    reconstruct_seobnrv4_22,
-    SEOBNRv4Published,
-    SEOBNRv4PublishedNonspinning,
-)
+from jaxwave.approximants.eob.waveform import _interp1d, _quadrupole_fd
+from jaxwave.approximants.eob.published_waveform import PublishedEOB22, published_eob22_to_fd
 from jaxwave.approximants.eob.remnant import eob_final_mass_fraction, hofmann_final_spin
 
 __all__ = [
-    "EOBHamiltonian",
+    "Nonspinning3PNHamiltonian",
     "SEOBNRv4Hamiltonian",
     "DeformedKerrPotentials",
-    "EOBRadiationReaction",
     "FactorizedRadiationReaction",
     "find_quasicircular_initial_conditions",
     "EOBTrajectoryIntegrator",
@@ -68,14 +61,14 @@ __all__ = [
     "calibrate_nqc_22",
     "AttachedMode22",
     "attach_seobnrv4_22",
-    "SEOBNR_ODE",
+
     "_interp1d",
     "_quadrupole_fd",
     "PublishedEOB22",
     "published_eob22_to_fd",
-    "reconstruct_seobnrv4_22",
-    "SEOBNRv4Published",
-    "SEOBNRv4PublishedNonspinning",
+
+
+
     "eob_final_mass_fraction",
     "hofmann_final_spin",
 ]

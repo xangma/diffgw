@@ -3,7 +3,7 @@
 import pytest
 import torch
 
-from torchwave.approximants.eob.hamiltonian import EOBHamiltonian
+from torchwave.approximants.eob.hamiltonian import Nonspinning3PNHamiltonian
 from torchwave.approximants.eob.numerical_derivative_clean import (
     NumericalDerivativeDomainError,
     adaptive_central_derivative,
@@ -25,7 +25,7 @@ def _tensor(value, *, requires_grad=False):
 
 
 def _nonspinning(nu):
-    return EOBHamiltonian(nu, torch.zeros_like(nu), torch.zeros_like(nu))
+    return Nonspinning3PNHamiltonian(nu)
 
 
 def test_independent_quadratic_and_quartic_stencil_weights():
@@ -119,7 +119,7 @@ def test_eob_field_keeps_state_and_parameter_gradients():
     radial = _tensor(-0.04, requires_grad=True)
     angular = _tensor(3.7, requires_grad=True)
     nu = _tensor(0.18, requires_grad=True)
-    ham = EOBHamiltonian(nu, _tensor(0.2), _tensor(-0.1))
+    ham = SEOBNRv4Hamiltonian(nu, _tensor(0.2), _tensor(-0.1))
 
     field = numerical_eob_conservative_derivatives(
         ham, radius, radial, angular, initial_step=1.0e-4,

@@ -18,9 +18,9 @@ versioned definitions and their component evidence.
 | **Native Time-Domain IMR** | `IMRPhenomT`, `IMRPhenomTHM`, `IMRPhenomTP`, `IMRPhenomTPHM` | Up to $(5,\pm 5)$ | Aligned or precessing black hole binaries; see the [T-family guide](imrphenomt.md) |
 | **Precessing IMR** | `IMRPhenomP` / `Pv2`<br>`IMRPhenomXP`<br>`IMRPhenomXPHM` | $(2,\pm 2)$ twisted<br>$(2,\pm 2)$ twisted<br>Multipolar twisted | Generic 3D spins with NNLO PN precession angles & Wigner $d$-matrices<br>4th-gen precessing carrier with MSA analytical precession<br>Multipolar precession supporting MSA (`v223`), SpinTaylor (`v320`), and PNR (`v330`) |
 | **Tidal & Matter** | `IMRPhenomD_NRTidal`<br>`IMRPhenomD_NRTidalv2`<br>`IMRPhenomNSBH` | $(2,2)$<br>$(2,2)$<br>$(2,2)$ | Dietrich et al. (2017) rational Padé BNS tidal phasing (NRTidal v1)<br>Dietrich et al. (2019) NRTidal v2 with self-spin & Planck windowing<br>Neutron star–black hole model with tidal disruption & remnant torus |
-| **Effective-One-Body** | `SEOBNR_ROM` / `SEOBNRv4_ROM`<br>`SEOBNR_ODE`<br>`TEOBResumS` | $(2,2)$<br>$(2,2)$<br>$(2,2)$ | External SEOBNRv4 ROM data with a native evaluation wrapper<br>Time-domain Hamiltonian ODE integrator with continuous QNM matching<br>Damour-Nagar EOB dynamics with spin-orbit coupling and tidal potentials |
+| **Effective-One-Body** | `SEOBNR_ROM` / `SEOBNRv4_ROM` | $(2,2)$ | External SEOBNRv4 ROM data with a native Torch/JAX evaluator |
 | **Ringdown & Bursts** | `KerrRingdown`<br>`SineGaussian`<br>`MemoryWaveform` | $(2,2,0), (l,m,n)$<br>Burst packet<br>$(2,0)$ | Damped sinusoids from Kerr quasinormal modes (time & frequency domain)<br>Standard unmodeled sine-Gaussian burst wavelet<br>Non-linear Christodoulou gravitational-wave memory effect $h_{20}^{\text{mem}}(t)$ |
-| **Specialized Models** | `ContinuousWave`<br>`EMRIKludge`<br>`ParameterizedPostEinstein`<br>`SpinPrecessionODE` | Monochromatic<br>Multi-harmonic<br>Modified phasing<br>Orbit-averaged | Continuous waves from triaxial rotating neutron stars with Doppler modulation<br>Extreme mass ratio inspirals (LISA) with Kerr geodesic orbital frequencies<br>Model-independent testing of General Relativity ($\beta_{\rm ppE}, b_{\rm ppE}$)<br>Orbit-averaged spin precession ODE integrator |
+| **Specialized Models** | `ContinuousWave`<br>`EMRIKludge`<br>`ParameterizedPostEinstein` | Monochromatic<br>Multi-harmonic<br>Modified phasing | Continuous waves from triaxial rotating neutron stars with Doppler modulation<br>Extreme mass ratio inspirals (LISA) with Kerr geodesic orbital frequencies<br>Model-independent testing of General Relativity ($\beta_{\rm ppE}, b_{\rm ppE}$) |
 | **Time-Domain Tools** | `get_td_waveform`<br>`HybridMECO` | Supported FD models<br>Diagnostic | FFT conditioning and time-domain waveform generation<br>Minimum Energy Circular Orbit hybrid velocity & frequency root solver |
 
 <a id="backend-support-and-evidence"></a>
@@ -88,9 +88,8 @@ models and settings; that is a measurement scope, not the full supported catalog
   checks are marked as diagnostic timings.
 - **Model-specific reference agreement:** [Differences from LAL](differences_from_lal.md#model-specific-differences)
   records configurations, deliberate differences and unresolved discrepancies,
-  including XP's precession, final-spin and reference-phase choices. `SEOBNR_ODE`
-  and `TEOBResumS` are not validated as LAL-equivalent; independent full-waveform
-  validation of `TaylorF2_HM` remains incomplete. ROM evidence applies to the
+  including XP's precession, final-spin and reference-phase choices. Independent
+  full-waveform validation of `TaylorF2_HM` remains incomplete. ROM evidence applies to the
   selected asset. The [T-family report](validation/phenomt.md) is a separate record.
 - **Derivatives:** [derivative support and evidence](validation.md#derivative-support-and-evidence)
   states the checked parameters, derivative orders and restrictions. Waveform-value
@@ -101,6 +100,17 @@ checks, frontend consistency, external-reference agreement and physical validati
 The [manifest](model_manifest.json) records selected configurations, not a complete
 support matrix; it does not yet include the T family. Treat a missing check as
 unestablished evidence, not as evidence that generation is unavailable.
+
+The unvalidated native SEOBNR surrogate, `SEOBNR_ODE` / `SEOBNRv4Published`
+assemblies, `TEOBResumS` waveform, `SpinPrecessionODE` and experimental XHM
+phase connections are development-branch work and are unavailable in releases.
+The [retired-route record](waveforms/research/retired-release-surface.md)
+preserves former names, manifest metadata, and research provenance.
+`SEOBNR_ROM`, including direct class construction, consistently selects the
+official external-data evaluator. Independently tested EOB equation components
+have a separate scope: the retained generic 3PN and TEOB Hamiltonians are
+nonspinning; the TEOB component supports vacuum parameters only. These
+components do not constitute validated complete EOB waveform models.
 
 ## Parameter domains and conventions
 

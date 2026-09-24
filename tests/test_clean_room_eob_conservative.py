@@ -3,7 +3,7 @@
 import pytest
 import torch
 
-from torchwave.approximants.eob.hamiltonian import EOBHamiltonian
+from torchwave.approximants.eob.hamiltonian import Nonspinning3PNHamiltonian
 from torchwave.approximants.eob.initial_conditions import find_quasicircular_initial_conditions
 from torchwave.approximants.eob.seobnrv4_hamiltonian import SEOBNRv4Hamiltonian
 
@@ -12,7 +12,7 @@ DTYPE = torch.float64
 
 
 def _nonspinning(nu):
-    return EOBHamiltonian(nu, torch.zeros_like(nu), torch.zeros_like(nu))
+    return Nonspinning3PNHamiltonian(nu)
 
 
 class _ConstantTorque:

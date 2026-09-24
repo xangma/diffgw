@@ -11,7 +11,7 @@ from typing import NamedTuple
 import jax.numpy as jnp
 
 from diffgw_core.constants import EULER_GAMMA
-from jaxwave.approximants.eob.hamiltonian import EOBHamiltonian
+from jaxwave.approximants.eob.hamiltonian import _HamiltonianBase
 
 
 class DeformedKerrPotentials(NamedTuple):
@@ -23,7 +23,7 @@ class DeformedKerrPotentials(NamedTuple):
     xi: jnp.ndarray
 
 
-class SEOBNRv4Hamiltonian(EOBHamiltonian):
+class SEOBNRv4Hamiltonian(_HamiltonianBase):
     """Aligned-spin Hamiltonian with the published v4 calibration coefficients."""
 
     def _parameter(self, value: jnp.ndarray, r: jnp.ndarray) -> jnp.ndarray:

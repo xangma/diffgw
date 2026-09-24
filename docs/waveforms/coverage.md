@@ -6,10 +6,12 @@ It also lists standalone waveform classes omitted from those dispatch registries
 reference cover only the stated slice in the [waveform library](index.md).
 `Provisional` means the waveform is implemented but does not yet have that
 complete, source-linked specification/reference contract. "Separate SEOBNR
-track" records the SEOBNR models without claiming that the current library work
-validates their external assets, ODE dynamics, or reconstruction.
+track" identifies the retained external-data ROM wrapper without claiming
+that this library work validates its external calibration asset.
 
-The model names link to the most relevant existing guide or evidence record;
+The [retired prototype record](research/retired-release-surface.md) preserves
+the former SEOBNR, TEOBResumS, and native-ROM routes outside this current-public
+surface. The model names below link to the most relevant existing guide or evidence record;
 those links are not substitutes for a six-section canonical specification.
 The [support catalog](../models.md), [model evidence manifest](../model_manifest.json),
 and [validation overview](../validation.md) remain the places to assess specific
@@ -45,11 +47,6 @@ class routes, as the [Pv2 ledger](research/phenom-precessing.md) explains.
 | [IMRPhenomNSBH](research/tidal-eccentric-higher-modes.md) | matter composition | provisional | `imrphenomnsbh`, `nsbh` |
 | [KerrRingdown](../math/standalone-family-research-ledger.md) | ringdown generator | provisional | `kerrringdown`, `ringdown` |
 | [OfficialSEOBNRv4ROM](../external-data.md) | external-data wrapper | separate SEOBNR track | `seobnrrom`, `seobnrv4rom`, `officialseobnrv4rom` |
-| [SEOBNR_ROM](../models.md) | native surrogate | separate SEOBNR track | `seobnrv5rom` |
-| [SEOBNR_ODE](../models.md) | numerical ODE generator | separate SEOBNR track | `seobnr`, `seobnrode`, `seobnrv5` |
-| [SEOBNRv4Published](../model_manifest.json) | published-model reconstruction | separate SEOBNR track | `seobnrv4published` |
-| [SEOBNRv4PublishedNonspinning](../model_manifest.json) | published-model restricted variant | separate SEOBNR track | `seobnrv4publishednonspinning` |
-| [TEOBResumS](../math/standalone-family-research-ledger.md) | numerical ODE generator | provisional | `teobresums`, `teobresum`, `teob` |
 | [ContinuousWave](../math/standalone-family-research-ledger.md) | direct waveform class | provisional | direct class only |
 | [MemoryWaveform](../math/standalone-family-research-ledger.md) | direct waveform class | provisional | direct class only |
 | [EMRIKludge](../math/standalone-family-research-ledger.md) | direct waveform class | provisional | direct class only |
@@ -62,6 +59,8 @@ IMRPhenomXPHM. `IMRPhenomPv2` is a distinct JAX class; Torch selects a Pv2
 path through its IMRPhenomP dispatch class. The T family is native time domain.
 Other FD models may be converted to time series by `get_td_waveform`; that
 conversion does not make them native TD approximants. The official v4 ROM uses
-external data, while `SEOBNR_ROM` under the `seobnrv5rom` alias is a separate
-native surrogate. Sine-Gaussian glitch wavelets, SpinPrecessionODE, and
-HybridMECO are supporting tools rather than standalone dispatched waveforms.
+external data; direct `SEOBNR_ROM` class construction selects this same
+evaluator. The former `seobnrv5rom` alias selected a different native
+surrogate and has been retired; it must not silently select the official ROM.
+Sine-Gaussian glitch wavelets and HybridMECO are supporting tools rather than
+standalone dispatched waveforms. SpinPrecessionODE is retired.

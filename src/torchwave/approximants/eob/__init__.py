@@ -1,18 +1,9 @@
 """Effective-One-Body (EOB) approximants and dynamical components."""
 
-from torchwave.approximants.eob.hamiltonian import EOBHamiltonian
-from torchwave.approximants.eob.radiation_reaction import EOBRadiationReaction
+from torchwave.approximants.eob.hamiltonian import Nonspinning3PNHamiltonian
 from torchwave.approximants.eob.initial_conditions import find_quasicircular_initial_conditions
 from torchwave.approximants.eob.integrator import EOBTrajectoryIntegrator
-from torchwave.approximants.eob.waveform import SEOBNR_ODE
-from torchwave.approximants.eob.published_waveform import (
-    SEOBNRv4Published, SEOBNRv4PublishedNonspinning, reconstruct_seobnrv4_22)
-from torchwave.approximants.eob.adaptive_driver_clean import (
-    AdaptiveIntegrationError, AdaptiveStatistics, AdaptiveTrajectory,
-    AlignedSpinV4Event, SplicedNumericalAttachment, TwoStageEOBTrajectory,
-    integrate_adaptive, resample_natural_cubic,
-    reconstruct_seobnrv4_22_adaptive,
-    reconstruct_seobnrv4_22_numerical_compatibility)
+from torchwave.approximants.eob.adaptive_driver_clean import AdaptiveIntegrationError, AdaptiveStatistics, AdaptiveTrajectory, AlignedSpinV4Event, SplicedNumericalAttachment, TwoStageEOBTrajectory, integrate_adaptive, resample_natural_cubic
 from torchwave.approximants.eob.numerical_attachment import (
     NaturalCubicSpline, FullSeriesNQC, NumericalAttachedMode22,
     natural_cubic_spline, calibrate_nqc_22_full_series,
@@ -44,14 +35,13 @@ from torchwave.approximants.eob.teob_published_driver import (
 )
 
 __all__ = [
-    "EOBHamiltonian",
-    "EOBRadiationReaction",
+    "Nonspinning3PNHamiltonian",
     "find_quasicircular_initial_conditions",
     "EOBTrajectoryIntegrator",
-    "SEOBNR_ODE",
-    "SEOBNRv4Published",
-    "SEOBNRv4PublishedNonspinning",
-    "reconstruct_seobnrv4_22",
+
+
+
+
     "AdaptiveIntegrationError",
     "AdaptiveStatistics",
     "AdaptiveTrajectory",
@@ -60,8 +50,8 @@ __all__ = [
     "TwoStageEOBTrajectory",
     "integrate_adaptive",
     "resample_natural_cubic",
-    "reconstruct_seobnrv4_22_adaptive",
-    "reconstruct_seobnrv4_22_numerical_compatibility",
+
+
     "NaturalCubicSpline",
     "FullSeriesNQC",
     "NumericalAttachedMode22",

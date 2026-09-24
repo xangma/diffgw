@@ -9,6 +9,9 @@ the broader [catalog and support guide](../models.md).
 Provisional entries in the coverage table link to source-backed research
 ledgers. They identify the equations, native components, and missing evidence
 needed before an executable reference can be trusted.
+Former complete-waveform prototypes have a separate
+[historical record](research/retired-release-surface.md); they do not appear
+in the current public dispatch inventory.
 
 <!-- BEGIN GENERATED WAVEFORM TABLE -->
 
