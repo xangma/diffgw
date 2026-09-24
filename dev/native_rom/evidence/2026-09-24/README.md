@@ -2105,3 +2105,50 @@ dev.native_rom.diagnose_source_q2_nqc_factor --source-root
 /tmp/diffgw-lalsuite-pinned-53acc0c/merged-include --gsl-include
 /usr/local/include --json-out /tmp/source_q2_nqc_factor.json` in the
 pinned development environment.
+
+The [four-case earlier-start plan](sxs_four_long_start_plan.json) and
+[2496](sxs_2496_long_start.json), [2499](sxs_2499_long_start.json),
+[2139](sxs_2139_long_start.json), and [2514](sxs_2514_long_start.json)
+results extend native evolution below each NR catalog reference frequency.
+Their late-window optimized native/NR overlaps are `0.999914`, `0.999991`,
+`0.999837`, and `0.999300`, respectively. Each result records unchanged
+source hashes, output-array hashes, a plan hash pinning integration settings,
+and elapsed time;
+the waveform arrays remain external under `/tmp/diffgw-sxs-five-case/decoded`.
+Together with the prior q≈5 earlier-start run, these are inputs to the
+[frozen five-case weighted plan](sxs_five_case_weighted_plan.json) and
+[result](sxs_five_case_weighted.json). At 11 sampled masses from 10 to 200
+solar masses, minimum native/NR overlaps in five-case plan order are
+`0.996651`, `0.998569`, `0.994862`, `0.998946`, and `0.996964`. The matching
+public/NR minima are `0.996650`, `0.998570`, `0.989373`, `0.998664`, and
+`0.988738`; lower/higher NR controls all exceed `0.99992`. No weighted
+optimizer reaches its time-shift boundary. The q≈5 output reproduces the
+earlier weighted diagnostic exactly, including taper controls. This is a
+post-hoc complex `(2,2)` proxy at five configurations and discrete masses,
+not the published whole-domain faithfulness test.
+
+The [peak-timing plan](sxs_five_case_peak_timing_plan.json) and
+[result](sxs_five_case_peak_timing.json) use a 500 M early-inspiral phase fit
+starting 50 M after NR relaxation. Native/NR peak lags are `-6.78`,
+`-9.94`, `-3.09`, `-7.08`, and `-6.79 M` in five-case order. Fits over 300
+and 800 M expose window sensitivity, and the q≈8 lower/higher NR control
+itself has a `7.09 M` lag. The published `5 M` criterion does not specify
+this exact alignment interval, so these results are diagnostic rather than
+an exact reproduction of that gate. The timing discrepancy and parameter,
+mass-continuum, provenance, numerical, and ROM gates remain open.
+
+The [frozen dense-mass follow-up](sxs_five_case_dense_mass_plan.json) and
+[result](sxs_five_case_dense_mass.json) recompute the primary weighted proxy
+at all 191 integer masses from 10 to 200 M⊙, using the same hash-pinned
+waveforms, PSD, frequency cutoff, taper, and time/phase optimizer. It checks
+all 11 original masses against the frozen result to `1e-10` absolute. In
+five-case plan order, minimum native/NR overlaps are `0.996610` at 24 M⊙,
+`0.998562` at 24 M⊙, `0.994858` at 145 M⊙, `0.998946` at 29 M⊙, and
+`0.996962` at 29 M⊙. All time-shift searches stay inside their bounds and
+the worst NR-resolution control is `0.999930`. The public q≈5 and q≈8
+minima are `0.989358` and `0.988714`. A one-solar-mass grid is still a
+post-hoc finite sampling, not a certified continuum minimum or an
+independent parameter-domain or ROM release qualification. Reproduce with
+`PYTHONPATH=src:. python -m dev.native_rom.measure_sxs_five_case_dense_mass`
+and the paths named in its `--help` output in the pinned development
+environment.

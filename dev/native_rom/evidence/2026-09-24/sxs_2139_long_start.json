@@ -1,0 +1,248 @@
+{
+  "anchors": {
+    "native": {
+      "anchor_phase_rad": -317.6860129433496,
+      "anchor_time_M": 8825.683437707212,
+      "frequency_at_grid_crossing": [
+        0.08996668158838304,
+        0.0900120899345233
+      ],
+      "peak_after_anchor_M": 152.56656229278815,
+      "peak_amplitude": 0.28352158600868216
+    },
+    "nr": {
+      "anchor_phase_rad": -270.7404441271396,
+      "anchor_time_M": 6854.961008320964,
+      "frequency_at_grid_crossing": [
+        0.08996193407822703,
+        0.09000703410271799
+      ],
+      "peak_after_anchor_M": 153.67334631572976,
+      "peak_amplitude": 0.2835524904367788
+    },
+    "public": {
+      "anchor_phase_rad": -317.6374076951487,
+      "anchor_time_M": -159.93187241686292,
+      "frequency_at_grid_crossing": [
+        0.08998760528939569,
+        0.09003308874130153
+      ],
+      "peak_after_anchor_M": 152.36911178043238,
+      "peak_amplitude": 0.2835171184228385
+    }
+  },
+  "array_sha256": "d75c78422e400cdcb4c38d6acfb057e8f2b4c10e15cd60b5d43dafe252fb7418",
+  "detector_noise_weighted": false,
+  "direct_native_vs_nr": {
+    "common_samples": 29568,
+    "common_support_M": [
+      -7089.25,
+      302.5
+    ],
+    "metrics": {
+      "amplitude_relative_l2": 0.1309511396849531,
+      "complex_relative_l2": 0.16070924107650278,
+      "phase_max_abs_rad": 3.141488868383032,
+      "phase_rms_rad": 0.34812709245357193,
+      "phase_samples": 29414,
+      "relative_norm_error": 0.009296448987374806,
+      "samples": 29568,
+      "unmaximized_real_overlap": 0.9872480299373706
+    },
+    "peak_amplitude_ratio": 0.9998910098513011,
+    "peak_lag_difference_M": -1.1067840229416106,
+    "phase_residual_rad": {
+      "end": -12.566370614359172,
+      "range": 13.906961181851718,
+      "start": -1.2272638337907031
+    },
+    "windows": {
+      "inspiral": {
+        "metrics": {
+          "amplitude_relative_l2": 0.0008014175344557078,
+          "complex_relative_l2": 0.016517858926979368,
+          "phase_max_abs_rad": 0.032838024982433905,
+          "phase_rms_rad": 0.018458268295997105,
+          "phase_samples": 3600,
+          "relative_norm_error": 0.0005940078928057257,
+          "samples": 3600,
+          "unmaximized_real_overlap": 0.999863837472538
+        },
+        "samples": 3600
+      },
+      "late_inspiral": {
+        "metrics": {
+          "amplitude_relative_l2": 0.006007660981390667,
+          "complex_relative_l2": 0.061543953691763964,
+          "phase_max_abs_rad": 0.16929552652407226,
+          "phase_rms_rad": 0.04674591121152615,
+          "phase_samples": 400,
+          "relative_norm_error": 0.005382434075316134,
+          "samples": 400,
+          "unmaximized_real_overlap": 0.998130717470265
+        },
+        "samples": 400
+      },
+      "post_peak": {
+        "metrics": {
+          "amplitude_relative_l2": 0.053000045186147905,
+          "complex_relative_l2": 0.25940747274209475,
+          "phase_max_abs_rad": 3.073209270761433,
+          "phase_rms_rad": 0.7658085749620606,
+          "phase_samples": 400,
+          "relative_norm_error": 0.042921081666219885,
+          "samples": 400,
+          "unmaximized_real_overlap": 0.9658074081409153
+        },
+        "samples": 400
+      }
+    }
+  },
+  "elapsed_seconds": 181.40401066598133,
+  "late_start_native_vs_nr_overlap": 0.9997805846787484,
+  "long_plan_sha256": "d84ef8c0866df624fb7d8bb87d2168bd268621833289182185d86cbef4367c18",
+  "native": {
+    "array_dtype": {
+      "mode": "complex128",
+      "time": "float64"
+    },
+    "array_sha256": {
+      "mode": "8878e298092b191eb5d8dc8c0e0da931e850dfb9fd08b770941f3b55462420ea",
+      "time": "38b61b8661139a29b941a21b09c5108599d24e3592db6993e1fe3213c0ff6656"
+    },
+    "atol": 1e-15,
+    "boundary_time_M": 8978.265625,
+    "dt_geom": 0.25,
+    "final_mass_fraction": 0.9764360273265081,
+    "final_spin": 0.29865698843165633,
+    "internal_step_M": 0.015625,
+    "match_time_M": 8978.280628631243,
+    "name": "native_long_start",
+    "peak_time_M": 8985.737113952637,
+    "restart_time_M": 8836.0,
+    "rtol": 1e-14,
+    "samples": 36514,
+    "stages": {
+      "coarse": {
+        "accepted": 3404,
+        "evaluations": 20745,
+        "event_time_M": 8985.75217259147,
+        "rejected": 64,
+        "termination": [
+          "event"
+        ]
+      },
+      "fine": {
+        "accepted": 681,
+        "evaluations": 4232,
+        "event_time_M": 149.8379504077596,
+        "rejected": 29,
+        "termination": [
+          "event"
+        ]
+      }
+    },
+    "support_M": [
+      0.0,
+      9128.25
+    ]
+  },
+  "nr_high_metadata_sha256": "5c847e2a784f1a5740b4f9e7ab0c1691d43bcef9b1a6274e4caf0e7e3aca8c97",
+  "nr_reference_orbital_MOmega": 0.01528225728275282,
+  "nr_relaxation_time_M": 1508.0,
+  "pairs": {
+    "native_vs_nr": {
+      "amplitude_optimized": false,
+      "best_lag_M": -0.9311605880379982,
+      "best_phase_rad": -0.10118562942569662,
+      "fixed_anchor_overlap": 0.9958116863852554,
+      "grid_search_max_overlap": 0.9998156632529053,
+      "optimized_overlap": 0.9998366037242996,
+      "samples": 1200,
+      "time_phase_adjusted_metrics": {
+        "amplitude_relative_l2": 0.003651610824992997,
+        "complex_relative_l2": 0.01810141315666262,
+        "phase_max_abs_rad": 3.0736967367871686,
+        "phase_rms_rad": 0.3988948508624121,
+        "phase_samples": 1200,
+        "relative_norm_error": 0.0011096019669680768,
+        "samples": 1200,
+        "unmaximized_real_overlap": 0.9998366037242994
+      },
+      "time_phase_optimized": true,
+      "window_relative_to_reference_peak_M": [
+        -200,
+        100
+      ]
+    },
+    "native_vs_public": {
+      "amplitude_optimized": false,
+      "best_lag_M": 0.09691735350914839,
+      "best_phase_rad": 0.010174489899310198,
+      "fixed_anchor_overlap": 0.9999552948360887,
+      "grid_search_max_overlap": 0.9999552948360887,
+      "optimized_overlap": 0.9999990513595074,
+      "samples": 1200,
+      "time_phase_adjusted_metrics": {
+        "amplitude_relative_l2": 0.000631299159311752,
+        "complex_relative_l2": 0.0014118281552956667,
+        "phase_max_abs_rad": 0.0022781796257215934,
+        "phase_rms_rad": 0.0016068563035618216,
+        "phase_samples": 1200,
+        "relative_norm_error": 0.0003088555788457459,
+        "samples": 1200,
+        "unmaximized_real_overlap": 0.9999990513595071
+      },
+      "time_phase_optimized": true,
+      "window_relative_to_reference_peak_M": [
+        -200,
+        100
+      ]
+    },
+    "public_vs_nr": {
+      "amplitude_optimized": false,
+      "best_lag_M": -1.0288105336373252,
+      "best_phase_rad": -0.11149678746702643,
+      "fixed_anchor_overlap": 0.9949129287332465,
+      "grid_search_max_overlap": 0.9998086911614343,
+      "optimized_overlap": 0.9998125820593423,
+      "samples": 1200,
+      "time_phase_adjusted_metrics": {
+        "amplitude_relative_l2": 0.004296425390114005,
+        "complex_relative_l2": 0.01940601357900968,
+        "phase_max_abs_rad": 3.0755577375647634,
+        "phase_rms_rad": 0.3990232567232392,
+        "phase_samples": 1200,
+        "relative_norm_error": 0.0015263007576529208,
+        "samples": 1200,
+        "unmaximized_real_overlap": 0.9998125820593423
+      },
+      "time_phase_optimized": true,
+      "window_relative_to_reference_peak_M": [
+        -200,
+        100
+      ]
+    }
+  },
+  "plan_sha256": "397982e47b191acafb276f13d2b2bfb90f2f7d4f3d6d18fa3c86fbd5e609fb17",
+  "public_call": {
+    "delta_t_s": 1.2313107264906408e-06,
+    "distance_Mpc": 100.0,
+    "f_lower_Hz": 840.1673987245842,
+    "inclination_rad": 0.8
+  },
+  "release_qualified": false,
+  "row": {
+    "chi1": -0.49999337948715356,
+    "chi2": -0.5000037713815986,
+    "mass1": 0.7499485786486145,
+    "mass2": 0.2500010625787595,
+    "omega_start": 0.013
+  },
+  "schema": "diffgw.seobnrv4.sxs-four-long-start.v1",
+  "script_sha256": "4ba5225da37eb58bd2dfe541f2d11df83a402f92231a3f942e3b0f0a60a593fc",
+  "simulation": "SXS:BBH:2139",
+  "source_manifest_sha256_after": "220b84cb36a664f8dc95b130fac7313c16b40d2510a4104b154128e4b5397917",
+  "source_manifest_sha256_before": "220b84cb36a664f8dc95b130fac7313c16b40d2510a4104b154128e4b5397917",
+  "sources_unchanged": true
+}

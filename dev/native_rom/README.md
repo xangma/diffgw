@@ -740,6 +740,41 @@ q≈5 rows, but it is a post-hoc single-case complex-mode proxy rather than
 the paper's complete mass/parameter-domain and peak-time validation. The
 physical generator and both ROM paths remain unqualified.
 
+The [four additional earlier-start runs](evidence/2026-09-24/sxs_four_long_start_plan.json)
+begin below their NR catalog reference frequencies and preserve the pinned
+source hashes. On the late `[-200,100] M` window, their native/NR optimized
+overlaps are `0.999914`, `0.999991`, `0.999837`, and `0.999300` for SXS
+2496, 2499, 2139, and 2514. The resulting
+[five-case weighted sweep](evidence/2026-09-24/sxs_five_case_weighted.json)
+has native/NR minimum sampled overlaps `0.996651`, `0.998569`, `0.994862`,
+`0.998946`, and `0.996964` in five-case plan order, with no time-shift
+optimizer boundary hits. The public-model controls reach `0.989373` on
+q≈5 and `0.988738` on q≈8; all lower/higher NR resolution controls exceed
+`0.99992`. Alternative taper widths on four sampled masses per case preserve
+native overlap above `0.99`. This is a post-hoc dominant-mode proxy over
+five configurations and 11 discrete masses, not a continuum or full-domain
+physical validation.
+
+The [1 M⊙ follow-up grid](evidence/2026-09-24/sxs_five_case_dense_mass.json)
+recomputes all five cases at every integer mass from 10 to 200 M⊙. Its
+minimum native/NR overlaps are `0.996610`, `0.998562`, `0.994858`,
+`0.998946`, and `0.996962` in plan order; the lowest occurs at 145 M⊙ for
+q≈5. The original 11 masses reproduce within `1e-10`, no optimizer hits a
+time-shift bound, and every NR resolution control remains above `0.99992`.
+This dense post-hoc grid still does not bound the mass continuum or other
+physical parameters.
+
+An independent [low-frequency phase-aligned peak-timing diagnostic](evidence/2026-09-24/sxs_five_case_peak_timing.json)
+fits one time and phase shift in a 500 M early-inspiral window after NR
+relaxation. Native/NR amplitude-peak lags are `-6.78`, `-9.94`, `-3.09`,
+`-7.08`, and `-6.79 M` in the same order. The 300/800 M window controls
+change some lags, and the q≈8 low/high NR control itself differs by `7.09 M`.
+The exact early alignment window is not specified in
+[Bohé et al., Section IV.A](https://arxiv.org/html/1611.03703), so these
+lags are diagnostic and cannot be treated as a literal pass/fail of its
+`5 M` peak-time criterion. They do expose an unresolved timing question;
+neither the physical generator nor either ROM is release-qualified.
+
 The independent ROM construction follows the published reduced-basis and
 parameter-interpolation methods of [Pürrer (2014)](https://doi.org/10.1088/0264-9381/31/19/195010)
 and [Pürrer (2016)](https://doi.org/10.1103/PhysRevD.93.064041).
