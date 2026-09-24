@@ -1017,6 +1017,15 @@ post-peak complex L2 of `0.008360`, close to the public self-difference
 fine-grid modes agree to `1.56e-5` whole-mode L2 after independent peak
 alignment. This strongly implicates the NQC fit in the public sampling jump;
 it does not establish why the coefficients change or a converged reference.
+The [pinned-source pre-fit capture](evidence/2026-09-24/near_extreme_source_nqc_grid_v2.json)
+shows the effect is present in the separately compiled source too: both
+output steps use a `0.015625 M` internal NQC grid and identical fitted
+targets, but the source coefficients shift by `94.1` in active-coefficient
+L2 while the public wheel shifts by `52.4`. The source orbital peak shifts
+`0.01558 M`, almost one internal sample, even though raw amplitude and
+orbital frequency around NQC matching differ by only a few parts in `10⁷`.
+This localizes the sampling sensitivity to the peak/matching and NQC fit;
+it does not establish a converged source result.
 
 1. Qualify the physical generator against the published equations and independent
    references over the intended domain, resolve convention/provenance gaps, and

@@ -2541,3 +2541,29 @@ dev.native_rom.diagnose_near_extreme_nqc_intervention --source-root
 /Users/xangma/repos/lalsuite-git --headers
 /tmp/diffgw-lalsuite-pinned-53acc0c/merged-include --gsl-include
 /usr/local/include --json-out /tmp/near-extreme-nqc-intervention-v3.json`.
+
+The frozen [source pre-fit grid plan](near_extreme_source_nqc_grid_plan.json)
+captured both private input arrays and their coefficients, but its
+[result](near_extreme_source_nqc_grid.json) failed after capture because the
+chosen symmetric comparison window extended past the orbital-peak data.
+The [v2 plan](near_extreme_source_nqc_grid_v2_plan.json) fixes that
+comparison at `±4 M` around NQC matching. Its
+[result](near_extreme_source_nqc_grid_v2.json) finds that both `0.03125 M`
+and `0.015625 M` output requests use the same `0.015625 M` *internal* NQC
+step and `9643` pre-fit samples, with identical five fitted targets. At the
+common match-centered window, maximal differences in raw amplitude,
+orbital frequency, and radial momentum relative to each quantity's scale
+are `3.09e-7`, `4.58e-7`, and `1.85e-6`; the source orbital-peak and NQC
+matching times shift together by `-0.0155792 M`, almost one internal step.
+The separately compiled source's active NQC coefficients differ by `94.11`
+in L2 between grids; the public wheel's differ by `52.37`. Thus output-grid
+dependence is not exclusive to the installed wheel, and small nearby input
+changes coexist with much larger coefficient changes. The exact contribution
+of peak localization versus raw-field differences remains unresolved. This
+diagnostic neither establishes convergence nor changes the frozen parity or
+physical NR gates. Reproduce with `PYTHONPATH=src:.
+/Users/xangma/repos/diffgw/.venv/bin/python -m
+dev.native_rom.diagnose_near_extreme_source_nqc_grid --source-root
+/Users/xangma/repos/lalsuite-git --headers
+/tmp/diffgw-lalsuite-pinned-53acc0c/merged-include --gsl-include
+/usr/local/include --json-out /tmp/near-extreme-source-nqc-grid-v2.json`.
