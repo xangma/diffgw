@@ -985,7 +985,11 @@ establish physical accuracy or domain-wide numerical convergence.
 The [pinned public-v4 replay](evidence/2026-09-24/near_extreme_public_polar.json)
 passes all selected parity gates for the q=3 row, while q=10 double-`+0.95`
 fails the frozen post-peak complex-L2 limit (`0.0100677` versus `0.01`).
-This boundary residual remains open.
+A frozen [post-hoc grid check](evidence/2026-09-24/near_extreme_grid_parity.json)
+finds `0.00640875` at `0.25 M` and `0.000542674` at `0.125 M` for that
+post-peak error, with the same `0.01` limit. The original `0.5 M` gate
+remains failed; the sampling sensitivity needs attribution before a new
+prospective parity gate can be set.
 
 1. Qualify the physical generator against the published equations and independent
    references over the intended domain, resolve convention/provenance gaps, and

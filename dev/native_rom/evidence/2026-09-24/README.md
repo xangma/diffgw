@@ -2437,3 +2437,15 @@ post-peak L2 gate (`0.0100677` versus `0.01`). Its post-peak amplitude L2 is
 `0.0006373`, so the complex residual is primarily phase-sensitive. The
 diagnostic completed, but its parity gates did not all pass; no gate is
 relaxed or converted into a release claim.
+
+The separately frozen [post-hoc grid plan](near_extreme_grid_parity_plan.json)
+replays the `q=10`, double-`+0.95` native hashes at `0.25 M` and `0.125 M`
+and compares each with public SEOBNRv4 sampled at the same spacing. The
+[result](near_extreme_grid_parity.json) completes with post-peak complex
+relative L2 `0.00640875` and `0.000542674`, respectively, under the
+unchanged `0.01` limit. The original `0.5 M` comparison remains a failed
+frozen gate. The native output-grid checks are identical on shared samples,
+but frequency-anchor and fitted-peak estimates change with sampling; this
+test alone does not assign the improvement to native interpolation, public
+sampling, or peak localization. It remains a post-hoc numerical diagnostic,
+not physical or ROM release qualification.
