@@ -528,8 +528,13 @@ early-phase alignment; the public wheel changes by `1.31e-4`, and their
 single `0.5 M` comparison from defining a physical release bound.
 The compiled source's five active q2 NQC coefficients change by `0.426%`
 between those steps, versus `0.018%` for the public wheel; native/source
-at `0.5 M` differs by `0.159%` in coefficient space. A shared-state
-NQC-factor test is still needed to quantify their effect on the mode.
+at `0.5 M` differs by `0.159%` in coefficient space. Applying the
+source/wheel NQC-factor ratio to the wheel mode on the same returned public
+states through `-25 M` before the wheel peak reduces its complex relative L2
+against source from `4.43e-4` to `2.36e-5` at `0.5 M`, and from `1.04e-3`
+to `2.34e-5` at `0.25 M`. This coefficient-only counterfactual explains most
+of the pre-attachment source/wheel difference on this row; it does not
+resolve the native/source residual or qualify the generator.
 
 Direct public-binary QNM calls now agree with the native fundamental frequency
 and damping to float64 precision on both stress rows. The q4 native boundary

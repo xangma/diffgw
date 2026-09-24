@@ -1,0 +1,22 @@
+{
+  "schema": "diffgw.seobnrv4.source-q2-nqc-factor-plan.v1",
+  "purpose": "Apply source and wheel full-generator q2 NQC coefficients to the same public pre-attachment state samples and compare coefficient-only mode prediction with compiled source; development diagnostic only.",
+  "row": {"mass1": 30.0, "mass2": 15.0, "chi1": 0.4, "chi2": -0.3, "omega_start": 0.04},
+  "output_steps_M": [0.5, 0.25],
+  "prepeak_cutoff_M": -25.0,
+  "active_indices": [0, 1, 2, 6, 7],
+  "capacity": 50000,
+  "inputs": {
+    "nqc_grid": "dev/native_rom/evidence/2026-09-24/source_q2_nqc_grid.json",
+    "reference_grid": "dev/native_rom/evidence/2026-09-24/source_q2_reference_grid.json",
+    "source_flux_plan": "dev/native_rom/evidence/2026-09-24/source_flux_initial_plan.json",
+    "mode_adapter": "dev/native_rom/reference/full_v4_source_mode_adapter.c"
+  },
+  "input_sha256": {
+    "nqc_grid": "60ba3951582d7a86fc7884f85b175b5b78e790046467b5893835059c50a1316a",
+    "reference_grid": "92c4976e5be3f025ea5e351a0b8a3cb22b0eb28626ca27c91bf4a256b04c300a",
+    "source_flux_plan": "1167199c8f954f97a5905a1e3b2f67d1555e984e5f1da0a0fc42a77a925f96ea",
+    "mode_adapter": "59d8d7dd6547e84cc53b2ecb76005195bb54174c481146f88fc257a3abf7fcf4"
+  },
+  "release_qualified": false
+}

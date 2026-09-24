@@ -1827,3 +1827,25 @@ to quantify their contribution to the mode residual. Reproduce with
 /tmp/diffgw-lalsuite-pinned-53acc0c/merged-include --gsl-include
 /usr/local/include --json-out /tmp/source_q2_nqc_grid.json` in the pinned
 development environment.
+
+The [q2 NQC-factor plan](source_q2_nqc_factor_plan.json) and
+[result](source_q2_nqc_factor.json) replay the exact source and wheel mode
+hashes at both output steps, then apply the source/wheel fitted NQC-factor
+ratio to the wheel mode on shared returned public states through `-25 M`
+before its peak. The wheel/source pre-attachment complex relative L2 falls
+from `4.4309e-4` to `2.3610e-5` at `0.5 M`, and from `1.0371e-3` to
+`2.3432e-5` at `0.25 M`. The factors change amplitude by at most about
+`9.1e-5` and phase by at most `0.00229 rad` over these windows. Their
+contribution is therefore large enough to explain most of the observed
+pre-attachment source/wheel complex difference on this selected row. The
+mode-to-public-state offset is rounded to the nearest sample, with a
+fractional remainder of `-0.375` or `+0.250` sample; these are returned
+low-rate states, not hidden high-rate fit inputs. The remaining `~2.35e-5`
+residual can also include trajectory, raw-mode, and sampling differences.
+This is a coefficient-only counterfactual, not a native/source or physical
+qualification claim. Reproduce with `PYTHONPATH=src:. python -m
+dev.native_rom.diagnose_source_q2_nqc_factor --source-root
+/Users/xangma/repos/lalsuite-git --headers
+/tmp/diffgw-lalsuite-pinned-53acc0c/merged-include --gsl-include
+/usr/local/include --json-out /tmp/source_q2_nqc_factor.json` in the
+pinned development environment.
