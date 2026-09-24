@@ -526,6 +526,10 @@ compiled source mode by `6.39e-4` complex relative L2 after peak-clock and
 early-phase alignment; the public wheel changes by `1.31e-4`, and their
 `0.25 M` difference is `1.33e-3`. These reference-grid effects prevent the
 single `0.5 M` comparison from defining a physical release bound.
+The compiled source's five active q2 NQC coefficients change by `0.426%`
+between those steps, versus `0.018%` for the public wheel; native/source
+at `0.5 M` differs by `0.159%` in coefficient space. A shared-state
+NQC-factor test is still needed to quantify their effect on the mode.
 
 Direct public-binary QNM calls now agree with the native fundamental frequency
 and damping to float64 precision on both stress rows. The q4 native boundary

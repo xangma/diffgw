@@ -1810,3 +1810,20 @@ dev.native_rom.diagnose_source_q2_reference_grid --source-root
 /tmp/diffgw-lalsuite-pinned-53acc0c/merged-include --gsl-include
 /usr/local/include --json-out /tmp/source_q2_reference_grid.json` in the
 pinned development environment.
+
+The [q2 NQC-grid plan](source_q2_nqc_grid_plan.json) and
+[result](source_q2_nqc_grid.json) extract the five active `(2,2)`
+full-generator NQC fit coefficients from the pinned compiled source and
+public wheel at both requested output steps, then compare the recorded
+native `0.5 M` coefficients. Source self-change from `0.5 M` to `0.25 M`
+is `0.004261` relative L2 in coefficient space; wheel self-change is
+`0.0001795`. At `0.5 M`, wheel/source is `0.0008703` and native/source is
+`0.001587`. The source fit is more output-step-sensitive than the wheel fit
+on this row, consistent with the full-mode control. Coefficients alone do
+not establish causation: a shared-state NQC-factor comparison is required
+to quantify their contribution to the mode residual. Reproduce with
+`PYTHONPATH=src:. python -m dev.native_rom.diagnose_source_q2_nqc_grid
+--source-root /Users/xangma/repos/lalsuite-git --headers
+/tmp/diffgw-lalsuite-pinned-53acc0c/merged-include --gsl-include
+/usr/local/include --json-out /tmp/source_q2_nqc_grid.json` in the pinned
+development environment.

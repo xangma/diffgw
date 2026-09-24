@@ -1,0 +1,20 @@
+{
+  "schema": "diffgw.seobnrv4.source-q2-nqc-grid-plan.v1",
+  "purpose": "Measure q2 full-generator NQC coefficient changes in pinned source and public wheel when requested output step halves; compare the 0.5 M source coefficients with the recorded native fit. Development diagnostic only.",
+  "row": {"mass1": 30.0, "mass2": 15.0, "chi1": 0.4, "chi2": -0.3, "omega_start": 0.04},
+  "output_steps_M": [0.5, 0.25],
+  "active_indices": [0, 1, 2, 6, 7],
+  "inputs": {
+    "reference_grid": "dev/native_rom/evidence/2026-09-24/source_q2_reference_grid.json",
+    "q2_probe": "dev/native_rom/evidence/2026-09-24/source_q2_domain_probe.json",
+    "source_flux_plan": "dev/native_rom/evidence/2026-09-24/source_flux_initial_plan.json",
+    "mode_adapter": "dev/native_rom/reference/full_v4_source_mode_adapter.c"
+  },
+  "input_sha256": {
+    "reference_grid": "92c4976e5be3f025ea5e351a0b8a3cb22b0eb28626ca27c91bf4a256b04c300a",
+    "q2_probe": "7e91201a2e0e746e14248bbe4577b52d0ea0359e4fcc35975c39794ec3dcb33d",
+    "source_flux_plan": "1167199c8f954f97a5905a1e3b2f67d1555e984e5f1da0a0fc42a77a925f96ea",
+    "mode_adapter": "59d8d7dd6547e84cc53b2ecb76005195bb54174c481146f88fc257a3abf7fcf4"
+  },
+  "release_qualified": false
+}
