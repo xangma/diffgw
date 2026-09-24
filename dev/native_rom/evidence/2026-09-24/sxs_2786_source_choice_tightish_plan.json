@@ -1,0 +1,35 @@
+{
+  "atol": 1e-13,
+  "case_plan_sha256": "8af92504ac37fcd66658530a51f99553d22425c9de5b8cdece6b505dd2f5865e",
+  "comparison_sha256": "9f743a6079cb42e3de160f2bb394a8884a5c42e75091cd8e4bf395826b6f8ce8",
+  "masses_msun": [
+    10,
+    50,
+    58,
+    100,
+    200
+  ],
+  "max_run_seconds": 900,
+  "numerical_changes": {
+    "coarse_initial_step_M": 0.125,
+    "fine_rkf45_resampling": true,
+    "local_nqc_derivatives": true,
+    "matching_second_derivatives": true,
+    "nqc_phase_window_M": 1.0,
+    "restart_time_M": null,
+    "warm_start_Momega": null
+  },
+  "prior_loose_result_sha256": "23d8ebb4b17b604e8bba917697fcf2e2e919368292dbd44c660d71c62ea89998",
+  "prior_near_peak_timeout_plan_sha256": "8243ec508ef7f2c015cd3d963da648c06922caf51268f6a9feb787665fe0cff6",
+  "prior_timeout_plan_sha256": "7201c5bf6417cbd937d17643f9684d17f591708a6f7c2cd93ddfaf41a6ed921b",
+  "purpose": "Post-hoc SXS:BBH:2786 source-choice numerical convergence probe at atol=1e-13, rtol=1e-12, compared with the prior loose 1e-11/1e-10 diagnostic. No independent physical or release claim.",
+  "qualification_claim": false,
+  "restart_reason": "The two-stage driver interprets fixed_restart_time_M from waveform start; normal policy restarts 150M before coarse termination.",
+  "rtol": 1e-12,
+  "schema": "diffgw.seobnrv4.sxs-2786-source-choice-loose-plan.v1",
+  "simulation": "SXS:BBH:2786",
+  "source_choice_path": "dev/native_rom/evidence/2026-09-24/source_candidate_new_rows.json",
+  "source_choice_sha256": "d8efe4baa182ea39bf9a7d35b6de8621c6e054429ee180eb661e9fbb9f9d59d8",
+  "trace_stages": true,
+  "weighted_plan_sha256": "b4aca1d9276618d652ecbbacbe996dea0ba31925c926fbd0ea32629f11789e54"
+}

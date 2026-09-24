@@ -1,0 +1,29 @@
+{
+  "alignment": "Same fixed first positive M omega_22=0.09 crossing and separate phase rotation as the holdout; no fitted intrinsic parameters. Weighted comparison permits the prospectively fixed global time and phase shift.",
+  "binary_versions": {
+    "lal": "7.7.1",
+    "lalsimulation": "6.2.1"
+  },
+  "case_plan_sha256": "abd73c31f3a1cce82f0009ab134f93983595bdea6e62786c83052cbcfc796a73",
+  "comparison_sha256": "2caff7f537583d5016e171e451387decca04a634ccae39a5d155689175da8a21",
+  "masses_msun": [
+    10,
+    22,
+    50,
+    100,
+    200
+  ],
+  "public_call": {
+    "approximant": "SEOBNRv4",
+    "distance_Mpc": 100.0,
+    "f_ref_Hz": 0.0,
+    "inclination_rad": 0.8,
+    "phase_rad": 0.0
+  },
+  "purpose": "Post-hoc attribution of the failing SXS:BBH:2569 source-backed/NR weighted overlap in the prospective third holdout. Compare pinned public SEOBNRv4 and the same NR using the frozen PSD/taper/time-phase protocol. Not an independent holdout or release gate.",
+  "qualification_claim": false,
+  "schema": "diffgw.seobnrv4.sxs-2569-public-control-plan.v1",
+  "simulation": "SXS:BBH:2569",
+  "weighted_plan_sha256": "ae97020ad656390686b593c63b1c918cef226e7bc87b6c88e8993f5add3d6c10",
+  "weighted_result_sha256": "e55cd65399d937eae13d9d06c1425b6cb9dcf1c38aa2b7eb07bf29115bd83322"
+}

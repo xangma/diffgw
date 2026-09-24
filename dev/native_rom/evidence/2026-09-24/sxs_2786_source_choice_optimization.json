@@ -1,0 +1,120 @@
+{
+  "baseline_result_sha256": "23d8ebb4b17b604e8bba917697fcf2e2e919368292dbd44c660d71c62ea89998",
+  "baseline_source_manifest_sha256": "220b84cb36a664f8dc95b130fac7313c16b40d2510a4104b154128e4b5397917",
+  "elapsed_seconds": {
+    "baseline": 153.63476750001428,
+    "optimized": 101.06642108300002
+  },
+  "fixed_crossing": {
+    "common_samples": 41356,
+    "common_support_M": [
+      -9388.0,
+      950.75
+    ],
+    "metrics": {
+      "amplitude_relative_l2": 1.380604965824541e-12,
+      "complex_relative_l2": 1.2356110463929887e-11,
+      "phase_max_abs_rad": 1.2353891390797e-10,
+      "phase_rms_rad": 1.3582888313941317e-11,
+      "phase_samples": 41356,
+      "relative_norm_error": 6.756817327868703e-13,
+      "samples": 41356,
+      "unmaximized_real_overlap": 1.0
+    },
+    "peak_amplitude_ratio": 1.0000000000000004,
+    "peak_lag_difference_M": -1.291482476517558e-10,
+    "phase_residual_rad": {
+      "end": 1.2353752984050105e-10,
+      "range": 1.2351465237835944e-10,
+      "start": 1.5281806617717618e-12
+    },
+    "windows": {
+      "inspiral": {
+        "metrics": {
+          "amplitude_relative_l2": 1.4933447030937058e-12,
+          "complex_relative_l2": 2.7473807326385287e-12,
+          "phase_max_abs_rad": 6.842631616882633e-12,
+          "phase_rms_rad": 1.816677921197249e-12,
+          "phase_samples": 3600,
+          "relative_norm_error": 1.3320455849452628e-12,
+          "samples": 3600,
+          "unmaximized_real_overlap": 1.0000000000000009
+        },
+        "samples": 3600
+      },
+      "late_inspiral": {
+        "metrics": {
+          "amplitude_relative_l2": 2.9869954356396513e-12,
+          "complex_relative_l2": 1.5110594129884217e-11,
+          "phase_max_abs_rad": 2.547907876375085e-11,
+          "phase_rms_rad": 1.3935626593630728e-11,
+          "phase_samples": 400,
+          "relative_norm_error": 2.9696245462673687e-12,
+          "samples": 400,
+          "unmaximized_real_overlap": 1.0
+        },
+        "samples": 400
+      },
+      "post_peak": {
+        "metrics": {
+          "amplitude_relative_l2": 7.295033793441053e-12,
+          "complex_relative_l2": 9.081715719717868e-11,
+          "phase_max_abs_rad": 1.2353891390797e-10,
+          "phase_rms_rad": 1.1631148662690258e-10,
+          "phase_samples": 400,
+          "relative_norm_error": 6.399769603149252e-12,
+          "samples": 400,
+          "unmaximized_real_overlap": 1.0
+        },
+        "samples": 400
+      }
+    }
+  },
+  "optimization_plan_sha256": "95ecb53df21cef1a656693f09c3e6d8d8cd6ae97c2182aef57cc7c6d1d918eda",
+  "optimized_result_sha256": "c77d3aa4ac460edab48e2ae0fb5fad9fec1f13acb0e710ad819ccded1d70222c",
+  "optimized_source_manifest_sha256": "8ca6d152b4b07bb89bbbd97734d29814023148b79f0af448fda67079957ca532",
+  "posthoc_selected_case": true,
+  "release_qualified": false,
+  "schema": "diffgw.seobnrv4.sxs-2786-calibration-optimization.v1",
+  "stage_trace": {
+    "baseline": [
+      {
+        "accepted": 1005,
+        "elapsed_seconds": 132.53749695900478,
+        "evaluations": 6456,
+        "rejected": 85,
+        "stage": "coarse"
+      },
+      {
+        "accepted": 126,
+        "elapsed_seconds": 17.812227083020844,
+        "evaluations": 857,
+        "rejected": 20,
+        "stage": "fine"
+      }
+    ],
+    "optimized": [
+      {
+        "accepted": 1005,
+        "elapsed_seconds": 86.22729391697794,
+        "evaluations": 6456,
+        "rejected": 85,
+        "stage": "coarse"
+      },
+      {
+        "accepted": 126,
+        "elapsed_seconds": 11.698859415948391,
+        "evaluations": 857,
+        "rejected": 20,
+        "stage": "fine"
+      }
+    ]
+  },
+  "weighted_overlap_differences": {
+    "10": -2.0650148258027912e-13,
+    "100": -4.476419235288631e-13,
+    "200": -5.040412531798211e-14,
+    "50": -5.129230373768223e-13,
+    "58": -5.234701561107613e-13
+  }
+}

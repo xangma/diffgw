@@ -1,0 +1,45 @@
+{
+  "allowed_time_shift_M": [
+    -20,
+    20
+  ],
+  "analytic_mode_convention": "FFT of conjugated h_22 complex mode; compare positive-frequency bins, optimize one global time and phase shift, no amplitude or intrinsic-parameter fit.",
+  "binary_versions": {
+    "lal": "7.7.1",
+    "lalsimulation": "6.2.1"
+  },
+  "case_plan_sha256": "abd73c31f3a1cce82f0009ab134f93983595bdea6e62786c83052cbcfc796a73",
+  "limitations": "Five metadata-selected previously unused configurations and a complex dominant-mode proxy, finite mass grid and FFT resolution, no whole-domain bound, no independent ROM; numerical tolerances need local convergence checks.",
+  "lower_cutoff": "max(10 Hz, 2*NR catalog reference orbital M Omega/(2*pi*M_seconds)); reference time equals the highest-resolution metadata relaxation time",
+  "mass_grid_msun": {
+    "first": 10,
+    "last": 200,
+    "step": 1
+  },
+  "maximum_frequency_Hz": 3000,
+  "minimum_frequency_Hz": 10,
+  "pairs": [
+    "source_candidate_vs_nr",
+    "low_vs_high_nr"
+  ],
+  "psd": "Pinned public lalsimulation SimNoisePSDaLIGOZeroDetHighPower; validation-only dependency",
+  "purpose": "Prospectively frozen detector-weighted h22 comparison for the third five-case SXS source-backed candidate holdout, before any selected waveform or model residual is inspected. This selected-case proxy cannot qualify the full domain or ROM.",
+  "qualification_claim": false,
+  "sample_step_M": 0.25,
+  "schema": "diffgw.seobnrv4.sxs-third-holdout-weighted-plan.v1",
+  "selected_case_99_percent_threshold": 0.99,
+  "taper_control_masses_msun": [
+    10,
+    50,
+    100,
+    200
+  ],
+  "taper_control_widths_M": [
+    25,
+    100
+  ],
+  "taper_width_M": 50,
+  "time_shift_grid_step_M": 0.25,
+  "time_taper": "At both common settled-support boundaries multiply by 0.5*(1+tanh((t-t0-w/2)/(w/10))) and its time-reversed end factor.",
+  "weighted_function_source_sha256": "91a8d99a89ded2ea5d42455318d1d80186df758d6cbc4dee2c41bdd254e8dd8d"
+}

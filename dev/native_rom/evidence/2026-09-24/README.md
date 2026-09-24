@@ -2225,3 +2225,53 @@ public/NR overlap is `0.995721`, native/NR is `0.950515`, and low/high NR is
 the native prototype at this parameter point, rather than a shared failure
 of the pinned public model. This control was chosen after opening the holdout
 and is attribution evidence, not a fresh validation case or release pass.
+
+The previously established source-backed physical choices were then applied
+post hoc to this failed long-start case. The [first intervention
+plan](sxs_2786_source_choice_plan.json) [timed out](sxs_2786_source_choice_timeout.json)
+after 900 seconds in fine integration: its fixed restart at 165 M was measured
+from waveform start, so the fine stage inherited nearly the full 15,901 M
+trajectory. The [near-peak restart plan](sxs_2786_source_choice_near_peak_plan.json)
+removed that configuration mistake, but [also timed out](sxs_2786_source_choice_near_peak_timeout.json)
+after 900 seconds in fine integration. The later
+[looser-tolerance stage-trace plan](sxs_2786_source_choice_loose_plan.json)
+and [result](sxs_2786_source_choice_loose.json) completed in 154 seconds:
+133 seconds for 1005 accepted coarse steps and 18 seconds for 126 accepted fine
+steps. Source-backed/high-NR weighted overlap is `0.995722` at 50 M⊙ and
+`0.995819` at 58 M⊙, versus `0.950515` and `0.950004` for the default
+prototype. The [pinned-public comparison](sxs_2786_source_public.json) gives
+`5.91e-5` anchored full complex relative L2 and `0.00199 M` absolute peak
+lag. The [middle and tighter runs](sxs_2786_source_choice_convergence.json)
+change the waveform by `8.38e-8` full complex relative L2 with unchanged
+event times. The [191-mass sweep](sxs_2786_source_dense_mass.json) reaches
+`0.995701` at 45 M⊙, with no time-shift optimizer at its bound. These are
+post-hoc checks on the failed case, not a release pass.
+
+The [pre-recorded calibration optimization plan](source_calibration_optimization_plan.json)
+replaces zero-term polynomial loops with grouped terms, retaining the rounded
+source coefficients. Its value and parameter-gradient test passes. The
+[replay](sxs_2786_source_choice_optimization.json) preserves the long waveform
+to `1.24e-11` full complex relative L2 and identical accepted-step counts;
+wall time fell from 154 to 101 seconds on this host. The newly
+[frozen third SXS holdout](sxs_third_holdout_plan.json) and
+[weighted protocol](sxs_third_holdout_weighted_plan.json) select five
+previously unused cases from pinned catalog metadata before any selected
+waveform or residual is inspected. The [comparison](sxs_third_holdout_comparison.json)
+and [weighted result](sxs_third_holdout_weighted.json) complete all five cases
+without a source change. Their minimum source-backed/high-NR overlaps across
+191 masses are `0.998785`, `0.996749`, `0.999345`, `0.994367`, and `0.989142`
+in plan order. Low/high NR controls stay above `0.999924`. The predeclared
+`0.99` selected-case proxy therefore **fails** for SXS:BBH:2569 at 22 M⊙;
+its time-shift optimizer is interior. The [post-hoc pinned-public control](sxs_2569_public_control.json)
+on exactly that NR case and mass gives public/NR `0.989141` versus native/NR
+`0.989142`, with `1.17e-4` fixed-crossing native/public complex relative L2.
+This is attribution, not a qualification pass or permission to alter the
+frozen threshold. The 2018 SXS case postdates the NR catalog in
+[Bohé et al. (2017), Sec. IV.4](https://arxiv.org/html/1611.03703#S4.SS4),
+so its failure does not contradict the paper's stated catalog result. The
+[frozen tighter-tolerance plan](sxs_2569_convergence_plan.json) and
+[result](sxs_2569_convergence.json) repeat exactly the source-backed choice at
+`atol=1e-12`, `rtol=1e-11`. The baseline/tighter waveform complex relative L2
+is `6.65e-8`, below the predeclared `1e-5` gate. The 22 M⊙ native/NR overlap
+changes by `−2.87e-9` to `0.989141708`, leaving the frozen physical proxy
+failed. Numerical integration error does not account for the gap.

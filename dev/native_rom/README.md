@@ -782,6 +782,41 @@ native prototype under the same settings. This exposes a native-specific
 problem in the default prototype. It remains outside production and cannot
 seed a release ROM.
 
+A post-hoc attempt to apply the previously source-backed physical choices to
+this long-start case first hit two runtime limits. The first
+[intervention plan](evidence/2026-09-24/sxs_2786_source_choice_plan.json)
+timed out after 900 seconds because its fixed restart was 165 M after the
+waveform began, leaving almost the entire 15,901 M inspiral to the fine
+integrator. The [corrected near-peak plan](evidence/2026-09-24/sxs_2786_source_choice_near_peak_plan.json)
+also [timed out](evidence/2026-09-24/sxs_2786_source_choice_near_peak_timeout.json)
+after 900 seconds at extremely tight tolerances. The subsequent
+[looser-tolerance replay](evidence/2026-09-24/sxs_2786_source_choice_loose.json)
+completed in 154 seconds. Its detector-weighted overlap with the high-resolution
+NR `(2,2)` mode is `0.995722` at 50 M⊙ and `0.995819` at 58 M⊙, compared with
+`0.950515` and `0.950004` for the default prototype. It agrees with the pinned
+public SEOBNRv4 waveform to `5.91e-5` anchored full complex relative L2 on
+the common support. A [three-tolerance study](evidence/2026-09-24/sxs_2786_source_choice_convergence.json)
+finds `8.38e-8` complex relative drift from middle to tighter tolerances.
+The [191-mass post-hoc sweep](evidence/2026-09-24/sxs_2786_source_dense_mass.json)
+has a `0.995701` minimum at 45 M⊙, with no time-shift optimizer at its bound.
+A frozen development-only [calibration evaluator simplification](evidence/2026-09-24/sxs_2786_source_choice_optimization.json)
+preserves that waveform to `1.24e-11` complex relative L2 and reduces the
+measured end-to-end runtime to 101 seconds. This was a post-hoc selected case;
+it is not independent validation or release qualification.
+
+The [third prospectively selected five-case SXS holdout](evidence/2026-09-24/sxs_third_holdout_weighted.json)
+uses the source-backed candidate. Four cases pass its frozen `0.99` dominant-mode
+proxy; SXS:BBH:2569 reaches `0.989142` at 22 M⊙ while the low/high NR control
+stays above `0.999924`. The [post-hoc pinned-public control](evidence/2026-09-24/sxs_2569_public_control.json)
+reaches `0.989141` at the same mass and agrees with the native waveform to
+`1.17e-4` anchored complex relative L2. This attributes the proxy failure to
+a discrepancy shared with the public model under this protocol; it does not
+turn the failed gate into a pass. A [10× tighter ODE replay](evidence/2026-09-24/sxs_2569_convergence.json)
+changes the waveform by `6.65e-8` complex relative L2 and the 22 M⊙ overlap
+by only `−2.87e-9`. The 2018 SXS run was not part of the NR catalog assessed
+in the 2017 SEOBNRv4 paper. The remaining generator, frontend, and
+independently trained ROM gates still need completion.
+
 An independent [low-frequency phase-aligned peak-timing diagnostic](evidence/2026-09-24/sxs_five_case_peak_timing.json)
 fits one time and phase shift in a 500 M early-inspiral window after NR
 relaxation. Native/NR amplitude-peak lags are `-6.78`, `-9.94`, `-3.09`,

@@ -1,0 +1,304 @@
+{
+  "anchor": {
+    "anchor_phase_rad": -635.3933126010152,
+    "anchor_time_M": 15093.783803940596,
+    "frequency_at_grid_crossing": [
+      0.08999862914934587,
+      0.09000876739528679
+    ],
+    "peak_after_anchor_M": 816.716196059404,
+    "peak_amplitude": 0.1505349663320724
+  },
+  "array": {
+    "path": "/tmp/diffgw-sxs-second-holdout/decoded/SXS_BBH_2786_source_choice_optimized.npz",
+    "sha256": "f94b80f0abd3c6ca9d6d2ee6c68c5643ba41cffcdc6b7ee96216b6c8094f2fdd"
+  },
+  "case_plan_sha256": "8af92504ac37fcd66658530a51f99553d22425c9de5b8cdece6b505dd2f5865e",
+  "common_time_support_M": [
+    -7958.75,
+    950.75
+  ],
+  "comparison_sha256": "9f743a6079cb42e3de160f2bb394a8884a5c42e75091cd8e4bf395826b6f8ce8",
+  "elapsed_seconds": 101.06642108300002,
+  "extraction_sha256": "6cd4cd85b759d5f68715afee6e698f42a82327f82d10c35829c0926a46bf2b7a",
+  "fft_length": 71280,
+  "fixed_crossing_vs_nr": {
+    "common_samples": 41356,
+    "common_support_M": [
+      -9388.0,
+      950.75
+    ],
+    "metrics": {
+      "amplitude_relative_l2": 0.09625917588009347,
+      "complex_relative_l2": 0.22261021815432033,
+      "phase_max_abs_rad": 3.1380692943419937,
+      "phase_rms_rad": 0.3340783497518464,
+      "phase_samples": 41356,
+      "relative_norm_error": 0.01354209332878753,
+      "samples": 41356,
+      "unmaximized_real_overlap": 0.9756438724844504
+    },
+    "peak_amplitude_ratio": 1.014722991849594,
+    "peak_lag_difference_M": 5.474005134912659,
+    "phase_residual_rad": {
+      "end": -16.32931233515527,
+      "range": 22.028113918898153,
+      "start": -0.7915017149842029
+    },
+    "windows": {
+      "inspiral": {
+        "metrics": {
+          "amplitude_relative_l2": 0.018817684559044357,
+          "complex_relative_l2": 0.04494588485969884,
+          "phase_max_abs_rad": 0.13294683486956263,
+          "phase_rms_rad": 0.03194283759747789,
+          "phase_samples": 3600,
+          "relative_norm_error": 0.017228681562059034,
+          "samples": 3600,
+          "unmaximized_real_overlap": 0.99915294115832
+        },
+        "samples": 3600
+      },
+      "late_inspiral": {
+        "metrics": {
+          "amplitude_relative_l2": 0.023087344736434177,
+          "complex_relative_l2": 0.44238319004509263,
+          "phase_max_abs_rad": 0.8712822010733248,
+          "phase_rms_rad": 0.40749737575201195,
+          "phase_samples": 400,
+          "relative_norm_error": 0.019808237607143786,
+          "samples": 400,
+          "unmaximized_real_overlap": 0.9042415459323787
+        },
+        "samples": 400
+      },
+      "post_peak": {
+        "metrics": {
+          "amplitude_relative_l2": 0.14326530395738163,
+          "complex_relative_l2": 1.231817685798873,
+          "phase_max_abs_rad": 1.8939108646998521,
+          "phase_rms_rad": 1.6407432247716431,
+          "phase_samples": 400,
+          "relative_norm_error": 0.1091895011352153,
+          "samples": 400,
+          "unmaximized_real_overlap": 0.3213727400286622
+        },
+        "samples": 400
+      }
+    }
+  },
+  "native": {
+    "array_dtype": {
+      "mode": "complex128",
+      "time": "float64"
+    },
+    "array_sha256": {
+      "mode": "046c2aec39d1161bf652a1b9bcccfefa9d3b3b020cd90f25e71ba91a009156d2",
+      "time": "d6dbd9667bac71fd9d802fbd1513521c020c8112990ef5e9e315deb6fba7919c"
+    },
+    "atol": 1e-11,
+    "boundary_time_M": 15910.46875,
+    "dt_geom": 0.25,
+    "final_mass_fraction": 0.9805109892023843,
+    "final_spin": 0.8613830407657724,
+    "internal_step_M": 0.015625,
+    "match_time_M": 15910.479748288586,
+    "name": "source_choice",
+    "peak_time_M": 15930.442695617676,
+    "restart_time_M": 15780.75,
+    "rtol": 1e-10,
+    "samples": 64242,
+    "stages": {
+      "coarse": {
+        "accepted": 1005,
+        "evaluations": 6456,
+        "event_time_M": 15930.561840710961,
+        "rejected": 85,
+        "termination": [
+          "event"
+        ]
+      },
+      "fine": {
+        "accepted": 126,
+        "evaluations": 857,
+        "event_time_M": 150.50089052846505,
+        "rejected": 20,
+        "termination": [
+          "event"
+        ]
+      }
+    },
+    "support_M": [
+      0.0,
+      16060.25
+    ]
+  },
+  "original_array_sha256": "caeb2b05455518eabe7be2213d42525ea1e31f60d590bab6b8c90b91ef60133a",
+  "plan_sha256": "0af7ccfb7fd1621465f22e82d21cb731b947e5035dd791b606cb9ad74b83b630",
+  "posthoc_selected_case": true,
+  "release_qualified": false,
+  "rows": [
+    {
+      "frequency_bins": 2528,
+      "lower_frequency_Hz": 120.02719663292079,
+      "results": {
+        "default_native_vs_nr": {
+          "best_lag_M": 3.512528016802644,
+          "bins": 2528,
+          "grid_max_overlap": 0.9795592056661468,
+          "overlap": 0.9795593253484376,
+          "time_shift_at_boundary": false
+        },
+        "low_vs_high_nr": {
+          "best_lag_M": 0.21917615769644097,
+          "bins": 2528,
+          "grid_max_overlap": 0.999692293184099,
+          "overlap": 0.9996938585744896,
+          "time_shift_at_boundary": false
+        },
+        "source_choice_vs_nr": {
+          "best_lag_M": -1.5758914220090727,
+          "bins": 2528,
+          "grid_max_overlap": 0.9974048246933337,
+          "overlap": 0.9974140098126846,
+          "time_shift_at_boundary": false
+        }
+      },
+      "total_mass_msun": 10
+    },
+    {
+      "frequency_bins": 13060,
+      "lower_frequency_Hz": 24.00543932658416,
+      "results": {
+        "default_native_vs_nr": {
+          "best_lag_M": 7.748785171950014,
+          "bins": 13060,
+          "grid_max_overlap": 0.9505152507715059,
+          "overlap": 0.9505152580836114,
+          "time_shift_at_boundary": false
+        },
+        "low_vs_high_nr": {
+          "best_lag_M": 0.036456103607679875,
+          "bins": 13060,
+          "grid_max_overlap": 0.9998746593668153,
+          "overlap": 0.999883018443939,
+          "time_shift_at_boundary": false
+        },
+        "source_choice_vs_nr": {
+          "best_lag_M": -2.5420635321897236,
+          "bins": 13060,
+          "grid_max_overlap": 0.9957112811351005,
+          "overlap": 0.9957223913272719,
+          "time_shift_at_boundary": false
+        }
+      },
+      "total_mass_msun": 50
+    },
+    {
+      "frequency_bins": 15167,
+      "lower_frequency_Hz": 20.69434424705531,
+      "results": {
+        "default_native_vs_nr": {
+          "best_lag_M": 8.137514798964196,
+          "bins": 15167,
+          "grid_max_overlap": 0.9499292979831544,
+          "overlap": 0.9500035421162834,
+          "time_shift_at_boundary": false
+        },
+        "low_vs_high_nr": {
+          "best_lag_M": 0.02314116036885626,
+          "bins": 15167,
+          "grid_max_overlap": 0.9999081100463832,
+          "overlap": 0.9999118846611736,
+          "time_shift_at_boundary": false
+        },
+        "source_choice_vs_nr": {
+          "best_lag_M": -2.6417407845464056,
+          "bins": 15167,
+          "grid_max_overlap": 0.9957365707466321,
+          "overlap": 0.9958192712830631,
+          "time_shift_at_boundary": false
+        }
+      },
+      "total_mass_msun": 58
+    },
+    {
+      "frequency_bins": 26226,
+      "lower_frequency_Hz": 12.00271966329208,
+      "results": {
+        "default_native_vs_nr": {
+          "best_lag_M": 9.514275610011067,
+          "bins": 26226,
+          "grid_max_overlap": 0.9578199374814981,
+          "overlap": 0.9578217835146905,
+          "time_shift_at_boundary": false
+        },
+        "low_vs_high_nr": {
+          "best_lag_M": -0.00972742275511746,
+          "bins": 26226,
+          "grid_max_overlap": 0.9999708236530932,
+          "overlap": 0.999971748258901,
+          "time_shift_at_boundary": false
+        },
+        "source_choice_vs_nr": {
+          "best_lag_M": -2.998994704960431,
+          "bins": 26226,
+          "grid_max_overlap": 0.9969134226081975,
+          "overlap": 0.9969134324897485,
+          "time_shift_at_boundary": false
+        }
+      },
+      "total_mass_msun": 100
+    },
+    {
+      "frequency_bins": 35464,
+      "lower_frequency_Hz": 10,
+      "results": {
+        "default_native_vs_nr": {
+          "best_lag_M": 10.975332559764297,
+          "bins": 35464,
+          "grid_max_overlap": 0.9822610943737955,
+          "overlap": 0.9822676536009061,
+          "time_shift_at_boundary": false
+        },
+        "low_vs_high_nr": {
+          "best_lag_M": -0.030438309317459694,
+          "bins": 35464,
+          "grid_max_overlap": 0.999986832191286,
+          "overlap": 0.9999969957554158,
+          "time_shift_at_boundary": false
+        },
+        "source_choice_vs_nr": {
+          "best_lag_M": -3.3223337816507685,
+          "bins": 35464,
+          "grid_max_overlap": 0.9990450277922999,
+          "overlap": 0.9991030110681439,
+          "time_shift_at_boundary": false
+        }
+      },
+      "total_mass_msun": 200
+    }
+  ],
+  "schema": "diffgw.seobnrv4.sxs-2786-source-choice.v1",
+  "script_sha256": "6fbdb1428aea1eadfc14ab706d2abb0addbdfe79c825a97c4c7ee3edd63d3fac",
+  "source_choice_sha256": "d8efe4baa182ea39bf9a7d35b6de8621c6e054429ee180eb661e9fbb9f9d59d8",
+  "source_manifest_sha256_after": "8ca6d152b4b07bb89bbbd97734d29814023148b79f0af448fda67079957ca532",
+  "source_manifest_sha256_before": "8ca6d152b4b07bb89bbbd97734d29814023148b79f0af448fda67079957ca532",
+  "stage_trace": [
+    {
+      "accepted": 1005,
+      "elapsed_seconds": 86.22729391697794,
+      "evaluations": 6456,
+      "rejected": 85,
+      "stage": "coarse"
+    },
+    {
+      "accepted": 126,
+      "elapsed_seconds": 11.698859415948391,
+      "evaluations": 857,
+      "rejected": 20,
+      "stage": "fine"
+    }
+  ],
+  "weighted_plan_sha256": "b4aca1d9276618d652ecbbacbe996dea0ba31925c926fbd0ea32629f11789e54"
+}

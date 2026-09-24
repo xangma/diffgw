@@ -1,0 +1,30 @@
+{
+  "baseline_microbenchmark": "500 scalar CPU no-grad evaluations at nu=0.0987654321, chi=0.6789012345: generic 0.11098s, manually grouped 0.02408s; this isolates the calibration evaluator and is not a whole-waveform speedup claim.",
+  "gradient_atol": 1e-10,
+  "gradient_rtol": 1e-11,
+  "purpose": "Replace the development-only generic 3x4 rounded-calibration polynomial evaluation with grouped nonzero terms. Keep every pinned source coefficient and parameter dependence; verify values and gradients before using it for a long-start waveform. This is a numerical/performance diagnostic, not release qualification.",
+  "qualification_claim": false,
+  "reference_test": "dev/native_rom/tests/test_source_calibration_values.py",
+  "schema": "diffgw.seobnrv4.source-calibration-optimization-plan.v1",
+  "source_before_sha256": "cb1cc2e355246e30bbde5af96c83939c8463c971d82ebbd7bb9d70de97dbfe81",
+  "source_path": "dev/native_rom/eob/torch/source_calibration_hamiltonian.py",
+  "test_points": [
+    {
+      "chi1": 0.8,
+      "chi2": 0.8,
+      "nu": 0.2499
+    },
+    {
+      "chi1": 0.8,
+      "chi2": 0.4,
+      "nu": 0.09876543209876543
+    },
+    {
+      "chi1": -0.8,
+      "chi2": -0.8,
+      "nu": 0.1487603305785124
+    }
+  ],
+  "value_atol": 1e-12,
+  "value_rtol": 1e-12
+}
