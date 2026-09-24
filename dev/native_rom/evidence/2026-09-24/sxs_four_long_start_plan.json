@@ -1,0 +1,27 @@
+{
+  "schema": "diffgw.seobnrv4.sxs-four-long-start-plan.v1",
+  "purpose": "Post-hoc earlier-start diagnostic for the four remaining frozen five-case SXS rows, using orbital starts below each NR settled reference orbital frequency. This is not a new holdout or release gate.",
+  "case_plan_sha256": "397982e47b191acafb276f13d2b2bfb90f2f7d4f3d6d18fa3c86fbd5e609fb17",
+  "primary_sha256": "2e5edfcd53066a40f4e6b2f255c2c1868e357989e459aafd3233f43e5beba967",
+  "alignment_sha256": "24d433aa56f60c7f011dd5b2f160a026a0fe767e925c41c3b214978dbe2f8c87",
+  "public_control_sha256": "f76aa9884a3bb328fa4367cba278143b41f54d19d5ff76320590fbc6ceb09638",
+  "extraction_sha256": "09f3401f6c1cee5c4199134cc3d428824c74c5fb8b8e6ae036977c93fd3f76a7",
+  "omega_starts": {
+    "SXS:BBH:2496": 0.012,
+    "SXS:BBH:2499": 0.015,
+    "SXS:BBH:2139": 0.013,
+    "SXS:BBH:2514": 0.018
+  },
+  "max_run_seconds_per_case": 900.0,
+  "grid_step_M": 0.25,
+  "public_call": {
+    "approximant": "SEOBNRv4",
+    "distance_Mpc": 100.0,
+    "inclination_rad": 0.8,
+    "f_ref_Hz": 0.0,
+    "phase_rad": 0.0
+  },
+  "window_relative_to_reference_peak_M": [-200, 100],
+  "allowed_time_shift_M": [-10, 10],
+  "qualification_claim": false
+}
