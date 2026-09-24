@@ -21,6 +21,19 @@ The [spin-induced quadrupole extension](math/taylorf2-spin-quadrupole.md)
 adds the non-Kerr 2PN, 3PN, and 3.5PN phase terms, with source-linked coefficient,
 waveform, derivative, batching, and compiled-path checks.
 
+On 24 September 2026, the `1315f6e` integration snapshot passed the strict
+CPU gate on `len`: **1,097/1,097** required mathematical-reference cases,
+zero skipped/xfail/deselected, and **1,109** tests passed overall. The fresh
+Python 3.12.3 environment used NumPy 2.5.3, SciPy 1.18.1, SymPy 1.14.0,
+Torch 2.14.0, JAX/JAXLIB 0.11.2, and pytest 9.1.1. After installing
+LALSuite 7.26.15 in that environment, the maintained IMRPhenomD and TaylorF2
+binary-oracle tests passed **36/36**. Reproduce from that snapshot with
+`PYTHONPATH=src JAX_ENABLE_X64=1 JAX_PLATFORMS=cpu OMP_NUM_THREADS=1` and
+`python -m pytest tests/test_waveform_definitions.py tests/test_*math_reference*.py --require-math-reference --reference-device=cpu -ra`, then
+`python -m pytest -q tests/test_imrphenomd_lal_gradients.py tests/test_taylorf2_lal_quadrupole.py tests/test_taylorf2_lal_tidal.py -ra`.
+These checks establish the stated implementation comparisons at tested points;
+they do not certify the provisional waveform families or physical accuracy.
+
 On 23 September 2026, the development tree was copied to `len` and the strict
 math-reference gate passed **618/618** tests on CPU and **618/618** on the RTX
 4090 CUDA device, with no skips, xfails, or deselections. The run used Python
