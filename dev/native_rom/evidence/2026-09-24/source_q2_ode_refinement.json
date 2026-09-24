@@ -1,0 +1,293 @@
+{
+  "additional_gate_passed": true,
+  "comparison": {
+    "amplitude_relative_l2": 8.694542250437022e-10,
+    "boundary_time_M_abs_difference": 0.0,
+    "candidate_samples": 1036,
+    "common_samples": 1036,
+    "complex_relative_l2": 4.32126870331546e-09,
+    "grid_step_M": 0.5,
+    "match_time_M_abs_difference": 0.0,
+    "peak_time_M_abs_difference": 0.0,
+    "phase_max_abs_rad": 1.0235204743711684e-08,
+    "phase_rms_rad": 3.036978965964625e-09,
+    "phase_samples": 976,
+    "reference_samples": 1036,
+    "relative_norm_error": 6.571272415101248e-10,
+    "samples": 1036,
+    "support_end_difference_M": 0.0,
+    "unmaximized_real_overlap": 1.0000000000000002
+  },
+  "errors": [],
+  "gates": {
+    "amplitude_relative_l2": true,
+    "boundary_time_M": true,
+    "complex_relative_l2": true,
+    "match_time_M": true,
+    "peak_time_M": true
+  },
+  "input_sha256": {
+    "campaign": "d8efe4baa182ea39bf9a7d35b6de8621c6e054429ee180eb661e9fbb9f9d59d8",
+    "q2_probe": "7e91201a2e0e746e14248bbe4577b52d0ea0359e4fcc35975c39794ec3dcb33d"
+  },
+  "levels": {
+    "baseline": {
+      "atol": 3e-15,
+      "dt_geom": 0.5,
+      "name": "ode_3",
+      "rtol": 3e-14
+    },
+    "refined": {
+      "atol": 1e-15,
+      "dt_geom": 0.5,
+      "name": "ode_4",
+      "rtol": 1e-14
+    }
+  },
+  "plan_sha256": "01314edaf5f421c084112a3aed1c31d36264ff6ae769451d1e73b75202126671",
+  "process": {
+    "argv": [
+      "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw/dev/native_rom/diagnose_source_q2_ode_refinement.py",
+      "--json-out",
+      "dev/native_rom/evidence/2026-09-24/source_q2_ode_refinement.json"
+    ],
+    "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+    "host": "client-3792.default.vpn.port.ac.uk",
+    "pid": 23733
+  },
+  "release_qualified": false,
+  "row": {
+    "chi1": 0.4,
+    "chi2": -0.3,
+    "mass1": 30.0,
+    "mass2": 15.0,
+    "omega_start": 0.04
+  },
+  "runs": {
+    "baseline": {
+      "elapsed_seconds": 117.9614448749926,
+      "level": {
+        "atol": 3e-15,
+        "dt_geom": 0.5,
+        "name": "ode_3",
+        "rtol": 3e-14
+      },
+      "native": {
+        "array_dtype": {
+          "mode": "complex128",
+          "time": "float64"
+        },
+        "array_sha256": {
+          "mode": "9328baab8d62f7d5bf1788fc702b99943100dfbc855d0f15095b1684c1fb6186",
+          "time": "b378a2655cc7adbf641022793c2308fb0749e842c1f1b93994dbb45f5b58485c"
+        },
+        "atol": 3e-15,
+        "boundary_time_M": 367.71875,
+        "dt_geom": 0.5,
+        "final_mass_fraction": 0.9538276439787159,
+        "final_spin": 0.7315409388875043,
+        "internal_step_M": 0.015625,
+        "match_time_M": 367.72060776196787,
+        "name": "ode_3",
+        "nqc_coefficients": {
+          "amplitude": [
+            23.153741261346546,
+            -211.1739547224082,
+            241.7486597469124
+          ],
+          "phase": [
+            9.520693496684173,
+            -79.8728991100547
+          ]
+        },
+        "nqc_full_spline_phase_matrix": [
+          [
+            -0.018686116602553697,
+            -0.0010378919226629454
+          ],
+          [
+            -0.0028357173657707103,
+            -0.00026971787961208536
+          ]
+        ],
+        "nqc_matching_matrices": {
+          "amplitude": [
+            [
+              0.03423902808770563,
+              0.01077641881615822,
+              0.00604576104772155
+            ],
+            [
+              0.004646905277296455,
+              0.001726998992578384,
+              0.0010430513815098976
+            ],
+            [
+              0.001000832811766827,
+              0.00041053822921489,
+              0.0002598477925138659
+            ]
+          ],
+          "phase": [
+            [
+              -0.018686116764278504,
+              -0.0010378920834255856
+            ],
+            [
+              -0.0028356755276264327,
+              -0.0002697158698821639
+            ]
+          ]
+        },
+        "peak_time_M": 374.96874237060547,
+        "restart_time_M": 100.0,
+        "rtol": 3e-14,
+        "samples": 1036,
+        "stages": {
+          "coarse": {
+            "accepted": 734,
+            "evaluations": 4560,
+            "event_time_M": 374.9884192142935,
+            "rejected": 31,
+            "termination": [
+              "event"
+            ]
+          },
+          "fine": {
+            "accepted": 640,
+            "evaluations": 3981,
+            "event_time_M": 275.08047142715543,
+            "rejected": 28,
+            "termination": [
+              "event"
+            ]
+          }
+        },
+        "support_M": [
+          0.0,
+          517.5
+        ]
+      }
+    },
+    "refined": {
+      "elapsed_seconds": 145.4535947080003,
+      "level": {
+        "atol": 1e-15,
+        "dt_geom": 0.5,
+        "name": "ode_4",
+        "rtol": 1e-14
+      },
+      "native": {
+        "array_dtype": {
+          "mode": "complex128",
+          "time": "float64"
+        },
+        "array_sha256": {
+          "mode": "d487b6c4229c976e45c6d04af35e7abe9ce74ede99ede42ec8a1c7b7982251ee",
+          "time": "b378a2655cc7adbf641022793c2308fb0749e842c1f1b93994dbb45f5b58485c"
+        },
+        "atol": 1e-15,
+        "boundary_time_M": 367.71875,
+        "dt_geom": 0.5,
+        "final_mass_fraction": 0.9538276439787159,
+        "final_spin": 0.7315409388875043,
+        "internal_step_M": 0.015625,
+        "match_time_M": 367.72060776196787,
+        "name": "ode_4",
+        "nqc_coefficients": {
+          "amplitude": [
+            23.153742358909337,
+            -211.17396439039604,
+            241.74867076450528
+          ],
+          "phase": [
+            9.520693446800687,
+            -79.87289823908472
+          ]
+        },
+        "nqc_full_spline_phase_matrix": [
+          [
+            -0.0186861159509096,
+            -0.0010378918862673833
+          ],
+          [
+            -0.0028356163126150363,
+            -0.00026971221529135383
+          ]
+        ],
+        "nqc_matching_matrices": {
+          "amplitude": [
+            [
+              0.03423902809112124,
+              0.01077641881721594,
+              0.006045761048310094
+            ],
+            [
+              0.0046469051324365745,
+              0.0017269989463346185,
+              0.0010430513553835398
+            ],
+            [
+              0.0010008328016004547,
+              0.00041053822592854394,
+              0.0002598477906456342
+            ]
+          ],
+          "phase": [
+            [
+              -0.018686116761852847,
+              -0.0010378920833092476
+            ],
+            [
+              -0.0028356755083372657,
+              -0.0002697158688147289
+            ]
+          ]
+        },
+        "peak_time_M": 374.96874237060547,
+        "restart_time_M": 100.0,
+        "rtol": 1e-14,
+        "samples": 1036,
+        "stages": {
+          "coarse": {
+            "accepted": 910,
+            "evaluations": 5616,
+            "event_time_M": 374.97433491246,
+            "rejected": 31,
+            "termination": [
+              "event"
+            ]
+          },
+          "fine": {
+            "accepted": 795,
+            "evaluations": 4911,
+            "event_time_M": 275.06822274452105,
+            "rejected": 28,
+            "termination": [
+              "event"
+            ]
+          }
+        },
+        "support_M": [
+          0.0,
+          517.5
+        ]
+      }
+    }
+  },
+  "schema": "diffgw.seobnrv4.source-q2-ode-refinement.v1",
+  "scope": {
+    "description": "One-row ODE tolerance refinement of the q2 development mode.",
+    "known_limitations": [
+      "The q2 row was examined before choosing this tighter level; this is not an untouched release holdout.",
+      "ODE tolerance convergence does not establish source parity or domain-wide convergence.",
+      "No independent JAX or differentiability validation follows from this Torch run."
+    ],
+    "physics_validated": false,
+    "production_asset": false,
+    "production_promotion_allowed": false,
+    "training_generator_qualified": false
+  },
+  "script_sha256": "b7a660c1c2645318dbea5d83183249f96c95536794d65d5ea2b93420e9e8ff6f",
+  "status": "diagnostic_complete"
+}

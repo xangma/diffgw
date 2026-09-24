@@ -1,0 +1,16 @@
+{
+  "schema": "diffgw.seobnrv4.source-q2-ode-refinement-plan.v1",
+  "purpose": "Numerical tolerance replay for the q2 development probe before interpreting its source residual; not an untouched release holdout.",
+  "baseline_level": {"name": "ode_3", "atol": 3e-15, "rtol": 3e-14, "dt_geom": 0.5},
+  "refined_level": {"name": "ode_4", "atol": 1e-15, "rtol": 1e-14, "dt_geom": 0.5},
+  "relative_l2_limit": 1e-6,
+  "inputs": {
+    "q2_probe": "dev/native_rom/evidence/2026-09-24/source_q2_domain_probe.json",
+    "campaign": "dev/native_rom/evidence/2026-09-24/source_candidate_new_rows.json"
+  },
+  "input_sha256": {
+    "q2_probe": "7e91201a2e0e746e14248bbe4577b52d0ea0359e4fcc35975c39794ec3dcb33d",
+    "campaign": "d8efe4baa182ea39bf9a7d35b6de8621c6e054429ee180eb661e9fbb9f9d59d8"
+  },
+  "release_qualified": false
+}

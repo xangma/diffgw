@@ -508,6 +508,18 @@ On the same q8 row, halving the requested output step from `0.5 M` to
 `0.25 M` at the tighter tolerance leaves all nested mode samples and event
 times unchanged. Both runs use the same `0.015625 M` internal step; this is
 one-row grid evidence, not a domain-wide numerical bound.
+
+The frozen q2 mixed-spin development row compares the native full `(2,2)`
+mode with hash-pinned compiled LALSuite source and the installed public wheel
+on their orbital-peak clocks. After one early phase alignment, the
+amplitude/phase-interpolated full-mode complex relative L2 is `4.81e-4`
+against source, while wheel/source is `5.72e-4`. A hash-matched native replay
+with tighter ODE tolerance changes the q2 mode by only `4.32e-9` complex
+relative L2, with unchanged sampled event times. Thus the q2 source residual
+is not explained by measured ODE error. The two reference binaries themselves
+differ, and this development row is not a release holdout or a domain bound;
+see the [frozen evidence](evidence/2026-09-24/README.md).
+
 Direct public-binary QNM calls now agree with the native fundamental frequency
 and damping to float64 precision on both stress rows. The q4 native boundary
 inputs are captured, but the public coarse-output mode does not expose its

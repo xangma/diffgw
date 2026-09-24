@@ -1,0 +1,38 @@
+{
+  "schema": "diffgw.seobnrv4.source-q2-domain-probe-plan.v1",
+  "purpose": "Predeclare a new moderate mixed-spin development row outside the q4/q8 selection set; compare source, wheel, and peak-preserving native full (2,2) modes on each orbital-peak clock with one early phase gauge. Diagnostic, not an untouched release holdout.",
+  "row": {
+    "mass1": 30.0,
+    "mass2": 15.0,
+    "chi1": 0.4,
+    "chi2": -0.3,
+    "omega_start": 0.04
+  },
+  "level": {
+    "name": "ode_3",
+    "atol": 3e-15,
+    "rtol": 3e-14,
+    "dt_geom": 0.5
+  },
+  "restart_time_M": 100.0,
+  "output_step_M": 0.5,
+  "phase_anchor_M": -100.0,
+  "windows_M": [
+    {"name": "full_inspiral", "start_M": -1000.0, "end_M": -120.0},
+    {"name": "late_inspiral", "start_M": -120.0, "end_M": -30.0},
+    {"name": "merger_neighborhood", "start_M": -30.0, "end_M": 20.0},
+    {"name": "ringdown", "start_M": 20.0, "end_M": 100.0}
+  ],
+  "capacity": 50000,
+  "inputs": {
+    "campaign": "dev/native_rom/evidence/2026-09-24/source_candidate_new_rows.json",
+    "source_flux_plan": "dev/native_rom/evidence/2026-09-24/source_flux_initial_plan.json",
+    "mode_adapter": "dev/native_rom/reference/full_v4_source_mode_adapter.c"
+  },
+  "input_sha256": {
+    "campaign": "d8efe4baa182ea39bf9a7d35b6de8621c6e054429ee180eb661e9fbb9f9d59d8",
+    "source_flux_plan": "1167199c8f954f97a5905a1e3b2f67d1555e984e5f1da0a0fc42a77a925f96ea",
+    "mode_adapter": "59d8d7dd6547e84cc53b2ecb76005195bb54174c481146f88fc257a3abf7fcf4"
+  },
+  "release_qualified": false
+}

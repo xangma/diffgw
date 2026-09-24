@@ -1738,3 +1738,42 @@ other parameters, or the ROM. Reproduce with
 `PYTHONPATH=src:. python -m dev.native_rom.diagnose_source_q8_fine_phase
 --json-out /tmp/source_q8_fine_phase.json` in the pinned development
 environment.
+
+The frozen [q2 mixed-spin development plan](source_q2_domain_probe_plan.json)
+and [result](source_q2_domain_probe.json) add a new `30+15 M_sun`,
+`chi1=+0.4`, `chi2=-0.3` row beyond the q4/q8 selection set. The full
+`(2,2)` modes come from a separately compiled, tag- and hash-pinned
+LALSuite source snapshot, the installed public wheel, and the native
+peak-preserving generator. All use the same requested `0.5 M` output step;
+each is placed on its own orbital-peak clock, and a single phase gauge is
+removed at `-100 M`. The common native/source support begins at
+`-374.69 M`, so the nominal `[-1000,-120] M` inspiral window is truncated.
+With amplitude/phase interpolation, full-common complex relative L2 is
+`4.8147e-4` for native/source and `5.7169e-4` for wheel/source; in the
+`[-30,20] M` merger window it is `9.2238e-4` and `1.0807e-3`.
+Native/source ringdown amplitude relative L2 is `1.9826e-4` under polar
+interpolation (`9.3744e-6` under log-amplitude interpolation), while
+wheel/source ringdown amplitude agrees to about `4.1e-13` in this metric
+despite an approximately `0.001225 rad` phase difference after the early
+phase anchor. This source/wheel difference prevents treating either binary
+as an exact interchangeable truth. The row was selected for development,
+has no independent parameter-domain bound, and is not a release holdout.
+Reproduce with `PYTHONPATH=src:. python -m
+dev.native_rom.diagnose_source_q2_domain_probe --source-root
+/Users/xangma/repos/lalsuite-git --headers
+/tmp/diffgw-lalsuite-pinned-53acc0c/merged-include --gsl-include
+/usr/local/include --json-out /tmp/source_q2_domain_probe.json` in the
+pinned development environment.
+
+The [q2 ODE-refinement plan](source_q2_ode_refinement_plan.json) and
+[result](source_q2_ode_refinement.json) replay that exact native mode hash,
+then tighten `atol,rtol` from `(3e-15,3e-14)` to `(1e-15,1e-14)` at the same
+`0.5 M` output step. The direct complex and amplitude relative L2 changes
+are `4.3213e-9` and `8.6945e-10`; match, peak, and boundary times agree
+exactly on the sampled grid. All predeclared numerical gates pass. This
+one-row tolerance check makes the observed q2 source residual much larger
+than the measured ODE change, but it cannot assign a unique physical or
+source-binary cause, establish a grid bound, or qualify the domain. Reproduce
+with `PYTHONPATH=src:. python -m
+dev.native_rom.diagnose_source_q2_ode_refinement --json-out
+/tmp/source_q2_ode_refinement.json` in the pinned development environment.
