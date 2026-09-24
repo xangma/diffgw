@@ -2479,3 +2479,12 @@ peaks and phase-aware interpolation. Its
 peak-anchored `0.00383432`, but raises the `0.0625 M`/`0.03125 M` control
 from `0.00032422` to `0.00254540`. Anchor placement accounts for some of
 the nonmonotonic behavior; it does not produce a stable public self-limit.
+
+The [direct-mode plan](near_extreme_direct_modes_plan.json) uses the pinned
+`SimIMRSpinAlignedEOBModes` `(2,2)` output on the same two pairs. Its
+[result](near_extreme_direct_modes.json) reproduces the polarization
+post-peak errors within `8e-10`: `0.000324221` for `0.0625 M`/`0.03125 M`
+and `0.008626799` for `0.03125 M`/`0.015625 M`. The nonmonotonic behavior
+is already in the public mode output; inversion of the two polarizations
+does not explain it. This does not identify whether its origin is in the
+sampled dynamics, NQC/matching, or ringdown assembly.

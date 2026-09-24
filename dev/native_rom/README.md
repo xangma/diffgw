@@ -1000,6 +1000,9 @@ for `0.03125 M`/`0.015625 M`), so no public-output cadence is yet qualified.
 Independent [peak alignment](evidence/2026-09-24/near_extreme_public_alignment.json)
 reduces the finer-pair discrepancy to `0.003834` but worsens its adjacent
 control, leaving the public reference's sampling behavior unresolved.
+The [direct `(2,2)` API check](evidence/2026-09-24/near_extreme_direct_modes.json)
+reproduces the same grid errors to `8e-10`, so polarization inversion is not
+the source of this behavior.
 
 1. Qualify the physical generator against the published equations and independent
    references over the intended domain, resolve convention/provenance gaps, and
