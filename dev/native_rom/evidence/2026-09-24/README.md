@@ -344,6 +344,19 @@ move strongly and non-monotonically with output step; these six grids show no
 converged NQC fit. Build flags alone cannot be inferred as the sole cause of
 the original `0.125 M` discrepancy. None of these diagnostics qualifies the
 physical NQC targets, complete waveform, model domain, or ROM holdouts.
+The [source peak-grid plan](source_nqc_peak_grid_plan.json) and
+[result](source_nqc_peak_grid.json) intercept three of those source runs to
+compare their actual pre-fit inputs. All three use the same `0.015625 M`
+internal step and the same match position within its grid cell. The peak
+moves by `0.0625 M` between requested steps `0.125` and `0.0625 M`, then
+stays fixed at `0.03125 M`. Even in the latter pair, the four nonphase input
+values at matching change by at most `0.15 ppm`, while amplitude spline
+curvature changes by `0.413%` and active NQC coefficients change by `3.937`
+(L2). The earlier pair has at most `0.031 ppm` value drift but `0.205%`
+curvature drift and `3.236` coefficient drift. Thus both peak placement and
+derivative sensitivity contribute; the identical peak in the latter pair
+excludes a peak-time-only explanation. This is a source-internal numerical
+diagnostic, not an alternate NQC prescription.
 
 The [public-mode boundary plan](public_nqc_mode_boundary_plan.json) and
 [result](public_nqc_mode_boundary.json) use both public v4 modes API paths at

@@ -237,6 +237,10 @@ find a non-monotonic five-coefficient gap across six steps from `0.125` to
 `0.00390625 M`: `8.139`, `1.800`, `3.284`, `1.318`, `19.582`, and `6.518`
 (L2). Neither build's NQC coefficients have converged on these grids, so
 the source/wheel build-numerics cause and the native attachment remain open.
+The [source peak-grid capture](evidence/2026-09-24/source_nqc_peak_grid.json)
+shows that two runs with the same orbital peak and internal step still differ
+by `0.413%` in amplitude spline curvature at matching and `3.937` (L2) in
+active NQC coefficients, despite at most `0.15 ppm` nonphase value drift.
 The aligned-spin trajectory replay finds a native-minus-public orbital phase
 span of at most `1.27e-4 rad` from `M Omega=0.0425` through `0.13`, compared
 with `3.36e-5 rad` maximum public-grid sensitivity. Over the later sampled
