@@ -99,6 +99,11 @@ _APPROXIMANTS = {
     "teob": TEOBResumS,
 }
 
+
+def list_approximants() -> list[str]:
+    """Return canonical JAX model names; aliases remain valid in dispatch."""
+    return sorted({model.__name__ for model in _APPROXIMANTS.values()})
+
 _UNSET = object()
 
 

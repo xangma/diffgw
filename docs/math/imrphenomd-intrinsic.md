@@ -1,6 +1,29 @@
 # IMRPhenomD full intrinsic composition
 
-Version: **`imrphenomd-intrinsic-composition/v1`**. The executable
+<!-- BEGIN GENERATED WAVEFORM DEFINITION -->
+
+| Definition field | Catalog value |
+| --- | --- |
+| Model ID | `IMRPhenomD` |
+| Reference composition | `imrphenomd-intrinsic-composition/v1` |
+| Scope | Aligned-spin (2,2) IMR composition with declared fit rows and QNM data. |
+| Domain and modes | `frequency`; `(2, 2)` |
+| Native backends | `torch`, `jax` |
+| Scoped verification claims | 0 |
+
+| Option | Default | Native choices | Reference-only choices |
+| --- | --- | --- | --- |
+| `phasing_convention` | `coalescence` | `coalescence`, `reference_frequency` | None |
+
+<!-- END GENERATED WAVEFORM DEFINITION -->
+
+## Scope and status
+
+Generate the dominant-mode aligned-spin `IMRPhenomD` waveform through the
+[frequency-domain API](../guides/waveform-generation.md) with either backend.
+The higher-mode and NRTidal variants add physics beyond this specification.
+
+The executable
 [`imrphenomd_intrinsic.py`](https://github.com/xangma/diffgw/blob/main/src/diffgw_reference/imrphenomd_intrinsic.py)
 connects the unchanged [remnant and QNM specification](imrphenomd-remnant-qnm.md)
 to the unchanged [complex-polarization specification](imrphenomd-waveform.md).
@@ -8,6 +31,21 @@ This extension tests how the default waveform responds to mass ratio and both
 aligned spins when the remnant, QNM frequencies, amplitude, phase, joins, and
 peak time gauge all move together. It imports no production waveform, fit, or
 QNM-data module.
+
+## Inputs, conventions, and options
+
+The public inputs are component masses in solar masses, aligned spins,
+distance in Mpc, inclination and orbital phase in radians, time shift in
+seconds, and a frequency grid in Hz. The default phase uses the coalescence
+convention; `reference_frequency` subtracts the intrinsic phase at a positive
+`f_ref`. This composition needs declared fit rows and QNM knot data. The
+[waveform composition](imrphenomd-waveform.md) specifies SI normalization,
+polarization signs, and the peak time gauge; the
+[remnant and QNM specification](imrphenomd-remnant-qnm.md) specifies its
+interpolation and high-spin continuation. The generated option table above
+describes which choices the native carriers accept.
+
+## Mathematics and components
 
 At fixed total mass $M$, define $q=m_1/m_2$, so
 $m_1=Mq/(1+q)$ and $m_2=M/(1+q)$. The component masses and spins determine
@@ -79,11 +117,15 @@ is rejected. Tests check the guard and stencil convergence. They compare
 derivatives on each side of moving joins without assigning a derivative at a
 join. Opt-in tapers remain outside this qualification.
 
+## Implementation mapping
+
 | Component ID | Evidence | Reference function | Torch/JAX check |
 | --- | --- | --- | --- |
 | `phenomd.intrinsic.remnant_qnm.v1` | Paper I Eqs. (17), (22)–(24); declared rounded and generated QNM data | `remnant_qnm`, `qnm_tangent` | Default and high-spin remnant/QNM values; interior analytic mass-ratio/spin tangents |
 | `phenomd.intrinsic.polarizations.v1` | Paper II waveform equations, prior composed spec, and declared high-spin QNM data | `compose` | Default-remnant and high-spin complex plus/cross through both joins and both phase conventions |
 | `phenomd.intrinsic.derivatives.v1` | Chain rule and fourth-order central stencil of the sourced composition | `polarization_derivative` | Full-chain $q$, $\chi_1$, $\chi_2$ complex Jacobians on rounded, signed generated, and active-cap branches against both frontends |
+
+## Evidence and limitations
 
 The default remnant coefficients use **only the printed Paper I digits** and
 the default waveform coefficients use **only the printed Paper II digits**.
@@ -126,6 +168,8 @@ independent fourth-order finite differences of public LAL waveform values.
 It tests the complete production coefficient and QNM path without supplying
 inherited fit rows to the scalar reference. This same-model comparison is
 separate from the paper-to-reference and reference-to-frontend checks above.
+
+## Reproduce the checks
 
 Run `python -m pytest -q tests/test_imrphenomd_waveform_math_reference.py` with
 the optional reference, Torch, and JAX dependencies installed. The maintained

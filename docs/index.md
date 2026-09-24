@@ -24,6 +24,7 @@ Use the unified `diffgw` interface or either frontend directly.
 | Try DiffGW on a binary system | [Installation](installation.md), then [quickstart](tutorials/01_quickstart_and_parity.md) |
 | Compare waveform coverage with other packages | [Dated package comparison](comparison.md) |
 | Choose and configure a DiffGW waveform | [Waveform catalog](models.md) and [parameter conventions](conventions.md) |
+| Inspect sourced equations and component evidence | [Waveform library](waveforms/index.md) and [mathematical reference](math/index.md) |
 | Understand a difference from LAL | [Differences from LAL](differences_from_lal.md) |
 | Assess accuracy or derivative evidence | [Validation](validation.md) |
 | Evaluate speed for my workload | [Performance](performance.md) |

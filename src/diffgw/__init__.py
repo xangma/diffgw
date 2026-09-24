@@ -9,7 +9,7 @@ from importlib import import_module
 import diffgw_core as core
 
 __version__ = "0.1.0"
-__all__ = ["core", "torch", "jax", "get_fd_waveform", "get_td_waveform", "WaveformGenerator", "list_approximants"]
+__all__ = ["core", "torch", "jax", "waveforms", "reference", "get_fd_waveform", "get_td_waveform", "WaveformGenerator", "list_approximants"]
 
 
 def _backend(name):
@@ -30,6 +30,10 @@ def _backend(name):
 def __getattr__(name):
     if name in ("torch", "jax"):
         module = _backend(name)
+        globals()[name] = module
+        return module
+    if name in ("waveforms", "reference"):
+        module = import_module(f"diffgw.{name}")
         globals()[name] = module
         return module
     raise AttributeError(f"module {__name__!r} has no attribute {name!r}")

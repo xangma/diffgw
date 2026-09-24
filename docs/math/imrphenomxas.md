@@ -1,4 +1,48 @@
-# IMRPhenomXAS intermediate amplitude
+# IMRPhenomXAS mathematical specification
+
+<!-- BEGIN GENERATED WAVEFORM DEFINITION -->
+
+| Definition field | Catalog value |
+| --- | --- |
+| Model ID | `IMRPhenomXAS` |
+| Reference composition | `imrphenomxas-composed-polarizations-carrier/v1` |
+| Scope | Aligned-spin (2,2) carrier composition with supplied fit and QNM outputs. |
+| Domain and modes | `frequency`; `(2, 2)` |
+| Native backends | `torch`, `jax` |
+| Scoped verification claims | 0 |
+
+| Option | Default | Native choices | Reference-only choices |
+| --- | --- | --- | --- |
+| `intermediate_amplitude` | `carrier_quartic` | `carrier_quartic` | `paper_quartic`, `paper_fifth_order` |
+| `intermediate_phase` | `carrier_sign` | `carrier_sign` | `printed_sign` |
+| `branch_joins` | `lower_branch_at_join` | `lower_branch_at_join` | None |
+
+<!-- END GENERATED WAVEFORM DEFINITION -->
+
+## Scope and status
+
+This page covers the aligned-spin dominant-mode amplitude, phase, and complex
+polarizations. Generate `IMRPhenomXAS` with either backend through the
+[frequency-domain API](../guides/waveform-generation.md). Higher-mode and
+precessing X-family models have different scope. The reference distinguishes
+paper-literal formulas, current Torch/JAX carrier conventions, and selected
+checks using a separately supplied author fit asset.
+
+## Inputs, conventions, and options
+
+The public carrier uses component masses in solar masses, aligned spins,
+distance in Mpc, inclination and orbital phase in radians, time shift in
+seconds, and an Hz frequency grid. Intrinsic formulas use the dimensionless
+frequency `u=M_seconds*f_Hz`. Calibrated fit outputs, QNM frequencies, and
+join locations are supplied to the independent scalar composition. The
+generated table above identifies the native quartic/sign choices and the
+paper alternatives that remain reference only. SI scaling, phase origin,
+polarization signs, and the `f<=0` mask are specified in
+[composed complex polarizations](#composed-complex-polarizations).
+
+## Mathematics and components
+
+### Quartic intermediate amplitude
 
 Specification `imrphenomxas-intermediate-amplitude-quartic/v1` covers one
 component of the nonprecessing dominant-mode model. Its source is
@@ -21,7 +65,7 @@ quartic family. Define `B(f)=A(f)/A0(f)=1/P(t)`. The Table-2 conditions are
 
 For `y_i=1/v_i`, `h=f3-f1`, and `s_i=-h*d_i/v_i²`, the five linear
 constraints on `P` are `P(0)=y1`, `P(1/2)=y2`, `P(1)=y3`,
-`P_t(0)=s1`, and `P_t(1)=s3`. The [SymPy kernel](../../src/diffgw_reference/imrphenomxas_intermediate.py)
+`P_t(0)=s1`, and `P_t(1)=s3`. The [SymPy kernel](https://github.com/xangma/diffgw/blob/main/src/diffgw_reference/imrphenomxas_intermediate.py)
 solves this matrix system with exact scalar inputs. For physical amplitude
 conditions from Eqs. (79)–(83), it first applies
 `B=A/A0` and `B'=(A'+7*A/(6*f))/A0`. The domain is `0<f1<f3`,
@@ -37,11 +81,11 @@ source or constants.
 | Component ID | Evidence | Torch/JAX relationship | Maintained check |
 | --- | --- | --- | --- |
 | `phenomxas.amp.intermediate.newtonian_factor.v1` | Eq. (67) | Waveform amplitude prefactor; full complex assembly is checked below | `test_paper_quartic_and_physical_slope_constraints` |
-| `phenomxas.amp.intermediate.quartic.v1` | Eq. (71) | `solve_intermediate_amplitude_quartic` in [Torch](../../src/torchwave/approximants/imrphenom_xas.py) and [JAX](../../src/jaxwave/approximants/imrphenom_xas.py), algebraic helper only | `test_frontend_quartic_against_scalar_matrix_solve` |
+| `phenomxas.amp.intermediate.quartic.v1` | Eq. (71) | `solve_intermediate_amplitude_quartic` in [Torch](https://github.com/xangma/diffgw/blob/main/src/torchwave/approximants/imrphenom_xas.py) and [JAX](https://github.com/xangma/diffgw/blob/main/src/jaxwave/approximants/imrphenom_xas.py), algebraic helper only | `test_frontend_quartic_against_scalar_matrix_solve` |
 | `phenomxas.amp.intermediate.collocation.v1` | Eqs. (68)–(69), (79)–(84), Table 2 | Full carrier boundary values and slopes from the independent inspiral/ringdown shapes, then the quartic solve; fitted parameters are supplied inputs | `test_full_frontend_intermediate_boundary_construction`, `test_midpoint_coefficient_derivative` |
 | `phenomxas.amp.intermediate.constant_normalization.v1` | Algebraic variant; pointwise LALSimulation binary check below, **not** the printed Eq. (71) | Full Torch/JAX carrier assembly | `test_observed_quartic_and_normalization_distinction`, `test_full_frontend_intermediate_amplitude_shape`, `test_external_binary_intermediate_amplitude_fixture` |
 
-The [maintained tests](../../tests/test_imrphenomxas_math_reference.py) check
+The [maintained tests](https://github.com/xangma/diffgw/blob/main/tests/test_imrphenomxas_math_reference.py) check
 the paper equation and five physical constraints with a known quartic, then
 compare each native *helper* against the independent scalar matrix solve and
 its midpoint derivative. Separate tests evaluate each full Torch/JAX carrier
@@ -97,7 +141,7 @@ author clarification or independent calibration evidence. Neither the
 published parameter-space fits nor any LAL source or constants have been
 copied into this component.
 
-## Fifth-order paper option
+### Fifth-order paper option
 
 Specification `imrphenomxas-intermediate-amplitude-fifth-order/v1` records
 the paper's Eq. (72), Eqs. (73)–(78), and Table 1 as a **reference-only**
@@ -109,11 +153,11 @@ For four supplied nodes `0<f1<f2<f3<f4`, define `t=(f-f1)/(f4-f1)` and
 `P5(t)=c0+c1*t+c2*t²+c3*t³+c4*t⁴+c5*t⁵`. The printed equation is
 `A(f)=K*f^(-7/6)/P5(t)`. Let `B=A/(K*f^(-7/6))=1/P5`.
 Given the four physical amplitudes `A(fi)=ai` and endpoint slopes
-`A'(f1)=d1`, `A'(f4)=d4`, the [scalar reference](../../src/diffgw_reference/imrphenomxas_fifth_order.py)
+`A'(f1)=d1`, `A'(f4)=d4`, the [scalar reference](https://github.com/xangma/diffgw/blob/main/src/diffgw_reference/imrphenomxas_fifth_order.py)
 converts them to `B(fi)` and
 `B'(fj)=(A'(fj)+7*A(fj)/(6*fj))/(K*fj^(-7/6))` for `j=1,4`.
 It solves the resulting six linear constraints on `P5` exactly in SymPy.
-The [maintained test](../../tests/test_imrphenomxas_math_reference.py)
+The [maintained test](https://github.com/xangma/diffgw/blob/main/tests/test_imrphenomxas_math_reference.py)
 recovers a known fifth-degree polynomial from all six physical constraints,
 including both derivatives.
 
@@ -129,11 +173,11 @@ notations or import parameter-space fits. As with the quartic paper equation,
 this is a literal literature specification, not evidence that the production
 carrier uses the same frequency prefactor. Physical validation remains pending.
 
-## Inspiral and merger-ringdown amplitude
+### Inspiral and merger-ringdown amplitude
 
 Specification `imrphenomxas-inspiral-ringdown-amplitude/v1` independently
 transcribes [Pratten et al., arXiv:2001.11412v1](https://arxiv.org/html/2001.11412v1)
-into the [SymPy reference](../../src/diffgw_reference/imrphenomxas_amplitude.py).
+into the [SymPy reference](https://github.com/xangma/diffgw/blob/main/src/diffgw_reference/imrphenomxas_amplitude.py).
 Frequency is dimensionless `f=Mf`. Eq. (67) gives
 `A0=sqrt(2 eta/(3 pi^(1/3))) f^(-7/6)`. Eqs. (68)–(69) give
 `A_Ins/A0=sum_{i=0}^6 A_i(pi f)^(i/3) + sum_{i=1}^3 rho_i(pi f)^((6+i)/3)`.
@@ -147,8 +191,8 @@ The physical domain used for the scalar comparisons has `f>0`,
 frequency. The simple stationary-peak expression assumes `0<lambda<1`.
 
 The printed Eq. (70) collocation nodes are `{1/2,3/4,1} f_MECO`.
-The [Torch](../../src/torchwave/approximants/imrphenom_xas.py) and
-[JAX](../../src/jaxwave/approximants/imrphenom_xas.py) carriers instead
+The [Torch](https://github.com/xangma/diffgw/blob/main/src/torchwave/approximants/imrphenom_xas.py) and
+[JAX](https://github.com/xangma/diffgw/blob/main/src/jaxwave/approximants/imrphenom_xas.py) carriers instead
 pass `f_T^A=f_MECO+(f_ISCO-f_MECO)/4` (Eq. (52)) to the same three-node
 helper. These endpoints are generally different. Tests check exact recovery
 at the paper's nodes and helper algebra for a supplied endpoint. They do
@@ -166,7 +210,7 @@ was intended in the paper's calibration.
 
 The carriers use Eq. (84) as a *scaled* ringdown shape, multiplying it by
 `f^(-7/6)` in full waveform assembly. That differs from printed Eq. (84)
-as a physical amplitude. The [maintained tests](../../tests/test_imrphenomxas_amplitude_math_reference.py)
+as a physical amplitude. The [maintained tests](https://github.com/xangma/diffgw/blob/main/tests/test_imrphenomxas_amplitude_math_reference.py)
 check the PN coefficients and `d/d(Mf)` against both native helpers, the
 collocation solve, the ringdown stationary point and one-node scale, and
 full carrier *shape* for inspiral and ringdown at four binary/spin points.
@@ -184,12 +228,12 @@ and full waveform composition remain outside this component.
 | `phenomxas.amp.ringdown.peak_printed.v1` | Eq. (59) | Paper-literal reference only | `test_ringdown_stationary_peak_and_scale` |
 | `phenomxas.amp.ringdown.peak_stationary.v1` | Derived from Eq. (84) | Carrier join frequencies within the guard-free domain | `test_ringdown_stationary_peak_and_scale` |
 
-## Inspiral phase
+### Inspiral phase
 
 Specification `imrphenomxas-inspiral-phase/v1` records
 [Pratten et al., arXiv:2001.11412v1](https://arxiv.org/html/2001.11412v1),
 Eqs. (85)–(88) and Appendix A.2 Eqs. (129)–(138), in an independent
-[SymPy reference](../../src/diffgw_reference/imrphenomxas_inspiral_phase.py).
+[SymPy reference](https://github.com/xangma/diffgw/blob/main/src/diffgw_reference/imrphenomxas_inspiral_phase.py).
 Its `f` is dimensionless `Mf`, with `f>0`, `eta>0`, aligned component spins,
 `chi_s=(chi1+chi2)/2`, and `chi_a=(chi1-chi2)/2`.
 The intrinsic phase uses `v=(pi f)^(1/3)` and
@@ -221,7 +265,7 @@ recorded as **carrier conventions**; they are not derived solely from the
 published Eq. (87) residual definition. `sigma1` is restated by the derivative
 join to the intermediate phase and `sigma0` enforces its value join.
 
-The [maintained tests](../../tests/test_imrphenomxas_inspiral_phase_math_reference.py)
+The [maintained tests](https://github.com/xangma/diffgw/blob/main/tests/test_imrphenomxas_inspiral_phase_math_reference.py)
 compare the Appendix phase and analytic derivative with both Torch and JAX at
 zero, equal, and unequal spins, recover collocation coefficients, check fitted
 carrier coefficients, and test the inspiral phase and C1 join at four binary
@@ -239,12 +283,12 @@ component.
 | `phenomxas.phase.inspiral.collocation.v1` | Eqs. (87)–(88) | Both carrier four-point solves with the shifted nodes and supplied fits | `test_printed_and_carrier_node_distinction_and_exact_solve`, `test_native_collocation_and_inspiral_join` |
 | `phenomxas.phase.inspiral.join.v1` | Eq. (85), Sec. VII.1 continuity statement | Both carriers' `sigma0`/`sigma1` and full inspiral branch | `test_native_collocation_and_inspiral_join` |
 
-## Intermediate and merger-ringdown phase
+### Intermediate and merger-ringdown phase
 
 Specification `imrphenomxas-intermediate-ringdown-phase/v1` transcribes
 [Pratten et al., arXiv:2001.11412v1](https://arxiv.org/html/2001.11412v1),
 Eqs. (90) and (92)–(97), into an independent
-[SymPy reference](../../src/diffgw_reference/imrphenomxas_phase_branches.py).
+[SymPy reference](https://github.com/xangma/diffgw/blob/main/src/diffgw_reference/imrphenomxas_phase_branches.py).
 Its frequency `f` means dimensionless `Mf`, with `f>0`, `eta>0`, and
 `f_damp>0`. All collocation values, ringdown frequencies, and fitted
 coefficients are supplied inputs. The reference gives both phase
@@ -265,15 +309,15 @@ lists `b5` among “five” coefficients; the displayed equation contains only
 
 There is a convention difference: **printed Eq. (90) has a minus sign**
 before the intermediate Lorentzian, whereas the
-[Torch](../../src/torchwave/approximants/imrphenom_xas.py) and
-[JAX](../../src/jaxwave/approximants/imrphenom_xas.py) carriers use a plus
+[Torch](https://github.com/xangma/diffgw/blob/main/src/torchwave/approximants/imrphenom_xas.py) and
+[JAX](https://github.com/xangma/diffgw/blob/main/src/jaxwave/approximants/imrphenom_xas.py) carriers use a plus
 sign. The reference retains the printed expression and a separately named
 carrier-sign branch. In the native code the factor `a_phi` is absorbed into
 the fitted `c0` supplied to both regions. The paper excerpt does not resolve
 the sign discrepancy; matching the carrier branch does not establish that
 it matches the printed equation.
 
-The [maintained tests](../../tests/test_imrphenomxas_phase_branches_math_reference.py)
+The [maintained tests](https://github.com/xangma/diffgw/blob/main/tests/test_imrphenomxas_phase_branches_math_reference.py)
 check both primitives by symbolic differentiation, the sign difference,
 five-node collocation recovery, all five carrier ringdown nodes and the four
 intermediate nodes beyond the inspiral boundary, phase values for four
@@ -298,11 +342,11 @@ remain supplied inputs from the existing author-code-derived fit functions.
 | `phenomxas.phase.intermediate.carrier_sign.v1` | Eq. (90), sign distinction recorded above | Both carrier intermediate phase branches | `test_printed_ansatze_primitives_and_sign_distinction`, `test_full_frontend_phase_branches_and_join` |
 | `phenomxas.phase.intermediate_ringdown.join.v1` | Antiderivatives of Eqs. (90), (96) | Both carriers' affine ringdown adjustment | `test_full_frontend_phase_branches_and_join` |
 
-## Composed complex polarizations
+### Composed complex polarizations
 
 Specification `imrphenomxas-composed-polarizations-carrier/v1` combines the
 independently recorded amplitude and phase branches in the
-[scalar reference](../../src/diffgw_reference/imrphenomxas_waveform.py).
+[scalar reference](https://github.com/xangma/diffgw/blob/main/src/diffgw_reference/imrphenomxas_waveform.py).
 It accepts the carrier's calibrated fit outputs, QNM frequencies, and join
 locations as **supplied inputs**. No fitted parameter-space rows or native
 waveform implementation are imported into the reference. The preceding
@@ -339,7 +383,7 @@ polarization phase. The arbitrary upper reconstruction cutoff discussed in
 XAS Sec. V is not an intrinsic cutoff in this carrier; public wrapper
 `f_lower`/`f_final` limits are outside this component.
 
-The [maintained test](../../tests/test_imrphenomxas_waveform_math_reference.py)
+The [maintained test](https://github.com/xangma/diffgw/blob/main/tests/test_imrphenomxas_waveform_math_reference.py)
 compares absolute complex plus/cross strain and unwrapped phase with both
 FP64 frontends at equal-mass zero-spin and unequal aligned-spin points. It
 samples both sides of every amplitude and phase transition, the ringdown,
@@ -364,7 +408,7 @@ checked below.
 | `phenomxas.waveform.extrinsic_derivatives.v1` | Product rule on the preceding equations | Closed partials at fixed intrinsic inputs | `test_polarization_and_extrinsic_algebra`, `test_native_extrinsic_gradients` |
 | `phenomxas.waveform.frequency_derivatives.v1` | Product rule and chain rule on the preceding equations | Smooth-branch complex `d(h+,hx)/df_Hz` at fixed fits and `f_ref` | `test_native_complex_frequency_gradient` |
 
-## Total-mass similarity and derivative
+### Total-mass similarity and derivative
 
 Specification `imrphenomxas-total-mass-scaling/v1` extends the unchanged
 composed-polarization specification. [Pratten et al., Secs. II.1 and V–VII,
@@ -395,7 +439,7 @@ where `Psi_M=u*phi'(u)-u_ref*phi'(u_ref)
 absent. At `f=f_ref`, `Psi_M=0` exactly. A prime here means differentiation
 with respect to dimensionless `u`. These formulas apply only to smooth
 positive-frequency branch interiors; neither `f` nor `f_ref` may lie on a
-moving join. The [maintained test](../../tests/test_imrphenomxas_waveform_math_reference.py)
+moving join. The [maintained test](https://github.com/xangma/diffgw/blob/main/tests/test_imrphenomxas_waveform_math_reference.py)
 checks the similarity for both frontends at equal and unequal masses, and
 compares the closed full-carrier mass tangent against Torch/JAX automatic
 derivatives through carrier construction at unequal mass, across amplitude
@@ -410,7 +454,7 @@ independent calibration or physical accuracy.
 
 The same scalar composition also checks selected intrinsic tangents through
 the entire carrier. At `q=5`, `chi1=0.5`, `chi2=-0.3`, fixed total mass and
-physical frequency, the [intrinsic derivative test](../../tests/test_imrphenomxas_waveform_math_reference.py)
+physical frequency, the [intrinsic derivative test](https://github.com/xangma/diffgw/blob/main/tests/test_imrphenomxas_waveform_math_reference.py)
 uses centered shifts in each of `q`, `chi1`, and `chi2` to rebuild the
 scalar waveform from the carrier's named fit/collocation outputs. It compares
 complex plus/cross and unwrapped-phase tangents with Torch and JAX automatic
@@ -426,9 +470,27 @@ intrinsic accuracy bound.
 | --- | --- | --- | --- |
 | `phenomxas.waveform.intrinsic_composition_derivatives.v1` | Chain rule on the composed amplitude and phase; APS fit-surface derivatives checked separately below | Full complex and unwrapped-phase tangents through both native constructors | `test_intrinsic_composition_derivatives` |
 
-## Author fit-surface cross-check
+## Implementation mapping
 
-The opt-in [external-fit verifier](../../scripts/verify_xas_author_fits.py)
+The component tables above map stable IDs and source locations to the
+independent scalar functions, both native carriers, and maintained checks.
+The full carrier selects the quartic `K/P` amplitude and carrier-sign phase;
+the printed quartic normalization, fifth-order amplitude, and printed phase
+sign have separate reference expressions. Torch and JAX use their own tensor
+implementations. The [composition](#composed-complex-polarizations) names the
+supplied calibration and QNM inputs; neither frontend evaluates through the
+scalar reference.
+
+## Evidence and limitations
+
+The component tables and their linked tests distinguish source transcription,
+sampled scalar-to-native comparison, and external binary agreement. They do
+not establish independent calibration or physical accuracy. The following
+asset check applies only when the pinned author file is supplied.
+
+### Author fit-surface cross-check
+
+The opt-in [external-fit verifier](https://github.com/xangma/diffgw/blob/main/scripts/verify_xas_author_fits.py)
 reads the [APS Mathematica companion file](https://journals.aps.org/prd/supplemental/10.1103/PhysRevD.102.064001/IMRPhenomXAS_Parameter_Space_Fits_Public_Release_Candidate.m)
 at run time, verifies its SHA-256
 `94b9334c19f3a7909864891ea278ab9a411e4f33b7b7e17cc01d927056d9ac52`,
@@ -468,3 +530,12 @@ it does not reproduce the original NR calibration or prove physical accuracy.
 | --- | --- | --- | --- |
 | `phenomxas.calibration.author_fits.v1` | Pinned APS companion file, explicit function/version map | 24 matching surfaces and one declared midpoint spin-argument variant in both frontends | `verify_xas_author_fits.py` (opt-in external asset) |
 | `phenomxas.calibration.qnm_fits.v1` | Pinned APS companion file, `(2,2)` real/imaginary functions | Both carriers' QNM fit functions | `verify_xas_author_fits.py` (opt-in external asset) |
+
+## Reproduce the checks
+
+From the repository root with the optional reference, Torch, and JAX
+dependencies installed, run
+`JAX_ENABLE_X64=1 JAX_PLATFORMS=cpu python -m pytest tests/test_imrphenomxas*math_reference.py --require-math-reference --reference-device=cpu -ra`.
+The opt-in author-asset verifier command and required hash are given in the
+[cross-check](#author-fit-surface-cross-check); the maintained CI gate runs
+without that external file.

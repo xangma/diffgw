@@ -1,5 +1,7 @@
 # IMRPhenomD remnant and QNM inputs
 
+## Scope and status
+
 `imrphenomd-remnant-qnm-paper-precision/v1` specifies the remnant fits from
 [Husa et al., Paper I, arXiv:1508.07250v2](https://arxiv.org/html/1508.07250v2)
 and the conversion of Kerr QNM frequencies to the binary's total-mass units.
@@ -10,11 +12,15 @@ previously took ringdown inputs as supplied values. The Kerr eigenfrequencies
 are **numerical inputs**: Paper I interpolates pre-existing QNM data, but does
 not publish an analytic function or the spline used by DiffGW.
 
+## Inputs, conventions, and options
+
 For aligned component spins $\chi_i$, $M=m_1+m_2$, and
 $\eta=m_1m_2/M^2$, Section III.1 defines
 
 $$S=\frac{m_1^2\chi_1+m_2^2\chi_2}{M^2},\qquad
 \hat S=\frac{S}{1-2\eta}.$$
+
+## Mathematics and components
 
 The printed Eq. (22) final-spin fit is
 
@@ -48,9 +54,13 @@ total mass**, as the amplitude branch requires.
 | `phenomd.qnm.total_mass_scaling.v1` | Eq. (17), angular-to-cyclic conversion | Both QNM channels and composite spin derivative |
 | `phenomd.qnm.natural_cubic_compatibility.v1` | DiffGW numerical policy, not a paper equation | Independent SciPy natural spline of supplied knots, plus stricter-solver holdouts |
 
+## Implementation mapping
+
 `COMPONENT_BINDINGS` in the executable specification maps each ID to its
 reference function, Torch and JAX entry points, and maintained test names. A
 structural test checks that every binding and source resolves.
+
+## Evidence and limitations
 
 The SymPy module imports no production waveform, coefficient, or QNM module.
 Its default coefficients contain **only printed digits**. Torch/JAX use
@@ -87,7 +97,7 @@ $|\Delta a_f|\leq(2/27)|\Delta b_2|<4.0\times10^{-5}$ over that full
 domain. This bound concerns the one coefficient only; differences from all
 other extra implementation digits are assessed separately.
 
-## Independent final-spin recalibration
+### Independent final-spin recalibration
 
 The maintained [refit script](https://github.com/xangma/diffgw/blob/main/scripts/refit_imrphenomd_final_spin.py)
 implements the four free $\eta S^k$ terms ($k=1,\ldots,4$) identified after
@@ -193,6 +203,8 @@ parameter space is not established here. The
 [full intrinsic composition](imrphenomd-intrinsic.md) now checks how these
 high-spin inputs propagate through the complete complex waveform; the
 [phase reference](imrphenomd-phase.md) covers the intrinsic phase separately.
+
+## Reproduce the checks
 
 Run `pytest -q tests/test_imrphenomd_remnant_math_reference.py`; the maintained
 `--require-math-reference` gate also collects this module.

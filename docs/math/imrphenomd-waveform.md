@@ -1,5 +1,7 @@
 # IMRPhenomD composed polarizations
 
+## Scope and status
+
 Version: **`imrphenomd-composed-polarizations/v1`**. The scalar
 [`imrphenomd_waveform.py`](https://github.com/xangma/diffgw/blob/main/src/diffgw_reference/imrphenomd_waveform.py)
 composes the unchanged [amplitude](imrphenomd-amplitude.md) and
@@ -13,10 +15,15 @@ publication provenance. The dimensionless QNM pair $(f_{\rm RD},f_{\rm damp})$
 is also an explicit input, so this slice does not certify the remnant or QNM
 pipeline.
 
+## Inputs, conventions, and options
+
 For positive physical frequency $f$ in hertz, component masses in nominal
 solar masses, and luminosity distance $d$ in megaparsecs, define
-$M_s=(m_1+m_2)T_\odot^{\rm N}$, $D_s=dL_{\rm Mpc}/c$, and $u=M_sf$. The
-composed amplitude is
+$M_s=(m_1+m_2)T_\odot^{\rm N}$, $D_s=dL_{\rm Mpc}/c$, and $u=M_sf$.
+
+## Mathematics and components
+
+The composed amplitude is
 
 $$
 \mathcal A(f)=\sqrt{\frac{5\eta}{24}}\,
@@ -62,7 +69,7 @@ a frontend choice, not a fitted paper coefficient. The present reference
 requires positive frequencies and covers the untapered default waveform.
 Additional Torch-only tapers are outside its scope.
 
-## Smooth-branch derivatives
+### Smooth-branch derivatives
 
 The reference derives complex-polarization slopes from the same sourced
 amplitude and phase, with fit rows and the dimensionless QNM pair held fixed.
@@ -103,7 +110,9 @@ hard cutoff are undefined; the tests avoid all branch boundaries. The fixed QNM
 pair excludes remnant and QNM response to changing mass ratio or spins from the
 mass-scaling check.
 
-## Component traceability and checks
+## Implementation mapping
+
+### Component traceability and checks
 
 | Component ID | Evidence | Reference function | Torch/JAX check |
 | --- | --- | --- | --- |
@@ -114,7 +123,11 @@ mass-scaling check.
 | `phenomd.waveform.polarization_derivatives.v1` | Product/chain rules applied to the sourced expressions and project conventions | `polarization_derivatives` | Frequency, common-mass and extrinsic complex Jacobians against both frontends |
 
 `COMPONENT_BINDINGS` resolves every ID to the scalar function, Torch and JAX
-entry points, and a maintained test. The FP64 cases include equal and unequal
+entry points, and a maintained test.
+
+## Evidence and limitations
+
+The FP64 cases include equal and unequal
 masses, aligned spins, both sides of the amplitude and phase joins, a supplied
 QNM pair, merger-ringdown, and a point beyond cutoff. Comparisons use direct
 complex error and unwrapped phase without optimizing time or phase. The test
@@ -125,6 +138,8 @@ uniform error bound or independent physical validation. A separate
 and spin derivatives with the remnant and QNM chain included. FP32, full-domain
 intrinsic derivatives, batch/JIT transforms, QNM endpoints and Torch's opt-in
 tapers remain further qualification work.
+
+## Reproduce the checks
 
 Run `python -m pytest -q tests/test_imrphenomd_waveform_math_reference.py` for
 this slice. The full strict mathematical-reference gate also collects it.

@@ -1,5 +1,7 @@
 # Aligned-spin TaylorF2 mathematical specification
 
+## Scope and status
+
 Specification: `taylorf2-aligned-bh-spin-3.5pn/v1`.
 
 This extension composes the unchanged
@@ -13,7 +15,9 @@ the baseline; a zero-spin reduction checks the composition without serving as an
 independent derivation of that baseline. Its bounded
 [direct source review](taylorf2.md#direct-source-review) is separate evidence.
 
-## Parameters and composition
+## Inputs, conventions, and options
+
+### Parameters and composition
 
 In addition to the baseline total mass $M$ and distance $D$ in seconds, frequency
 $f$ in Hz, inclination $\iota$, time $t_c$, and orbital phase parameter $\phi_c$,
@@ -33,6 +37,40 @@ $(-\delta,\chi_2,\chi_1)$. Spin-induced multipoles take their black-hole values;
 general compact-object quadrupoles, tides, precession, eccentricity, amplitude
 spin corrections, absorption, merger, cutoffs, and tapers are outside this scope.
 These analytic bounds do not establish physical accuracy at arbitrary frequency.
+
+### Frontend option contract
+
+`frontend_terms()` in the separate traceability module translates existing
+frontend options into explicit reference terms. `spin_order` is a legacy recipe,
+so its integer value is not a uniform PN cutoff. The coefficient and numerical
+tests check the option boundaries directly. No spin recipe is changed to make
+the names look like physical orders.
+
+<!-- BEGIN GENERATED ALIGNED SPIN PROFILES -->
+
+| `spin_order` | Terms | With `phenom_d_calibration=True` |
+| --- | --- | --- |
+| 0, 1, 2 | None | None |
+| 3 | `SO3` | `SO3` |
+| 4 | `SO3`, `SS4` | `SO3`, `SS4` |
+| 5 | `SO3`, `SS4`, `SO5`, `SO6`, `SO7` | `SO3`, `SS4`, `SO5`, `SO6`, `SO7` |
+| 6, 7 | `SO3`, `SS4`, `SO5`, `SO6`, `SS6`, `SO7` | `SO3`, `SS4`, `SO5`, `SO6`, `SO7` |
+| 8 or greater | `SO3`, `SS4`, `SO5`, `SO6`, `SS6`, `SO7`, `SS7`, `SSS7` | `SO3`, `SS4`, `SO5`, `SO6`, `SO7` |
+| negative | `SO3`, `SS4`, `SO5`, `SO6`, `SS6`, `SO7` | `SO3`, `SS4`, `SO5`, `SO6`, `SO7` |
+
+<!-- END GENERATED ALIGNED SPIN PROFILES -->
+
+The public waveform default is `spin_order=7`; the low-level phase default is
+`spin_order=5`. Negative values share the public default's listed terms and do
+not enable the final `SS7` and `SSS7` terms. An explicit `spin_order=8` selects all
+terms in this reference. `phenom_d_calibration=True` suppresses `SS6`, `SS7`, and
+`SSS7` at any selector; it is available for coefficients and low-level phase,
+but is not exposed by the public waveform call. This checks that compatibility
+recipe, not an IMRPhenomD calibration or complete IMRPhenomD waveform.
+
+## Mathematics and components
+
+### Spin phase composition
 
 Let $I_{\rm NS}(v,\eta)$ be the unchanged nonspinning intrinsic phase and
 $v=(\pi M f)^{1/3}$. The extension uses
@@ -59,7 +97,7 @@ The logarithm scale is the same $\ln v$ convention. Changing the 2.5PN scale
 changes a parameter-dependent phase constant; finite-reference subtraction
 cancels that constant. Comparisons hold the declared phase convention fixed.
 
-## Sources and transformations
+### Sources and transformations
 
 The spin equations are entered independently in
 [`taylorf2_aligned_spin.py`](https://github.com/xangma/diffgw/blob/main/src/diffgw_reference/taylorf2_aligned_spin.py).
@@ -134,37 +172,9 @@ $3/(128\eta v^5)$ prefactor.
 
 --8<-- "docs/math/taylorf2-aligned-spin-coefficients.md"
 
-## Frontend option contract
+## Implementation mapping
 
-`frontend_terms()` in the separate traceability module translates existing
-frontend options into explicit reference terms. `spin_order` is a legacy recipe,
-so its integer value is not a uniform PN cutoff. The coefficient and numerical
-tests check the option boundaries directly. No spin recipe is changed to make
-the names look like physical orders.
-
-<!-- BEGIN GENERATED ALIGNED SPIN PROFILES -->
-
-| `spin_order` | Terms | With `phenom_d_calibration=True` |
-| --- | --- | --- |
-| 0, 1, 2 | None | None |
-| 3 | `SO3` | `SO3` |
-| 4 | `SO3`, `SS4` | `SO3`, `SS4` |
-| 5 | `SO3`, `SS4`, `SO5`, `SO6`, `SO7` | `SO3`, `SS4`, `SO5`, `SO6`, `SO7` |
-| 6, 7 | `SO3`, `SS4`, `SO5`, `SO6`, `SS6`, `SO7` | `SO3`, `SS4`, `SO5`, `SO6`, `SO7` |
-| 8 or greater | `SO3`, `SS4`, `SO5`, `SO6`, `SS6`, `SO7`, `SS7`, `SSS7` | `SO3`, `SS4`, `SO5`, `SO6`, `SO7` |
-| negative | `SO3`, `SS4`, `SO5`, `SO6`, `SS6`, `SO7` | `SO3`, `SS4`, `SO5`, `SO6`, `SO7` |
-
-<!-- END GENERATED ALIGNED SPIN PROFILES -->
-
-The public waveform default is `spin_order=7`; the low-level phase default is
-`spin_order=5`. Negative values share the public default's listed terms and do
-not enable the final `SS7` and `SSS7` terms. An explicit `spin_order=8` selects all
-terms in this reference. `phenom_d_calibration=True` suppresses `SS6`, `SS7`, and
-`SSS7` at any selector; it is available for coefficients and low-level phase,
-but is not exposed by the public waveform call. This checks that compatibility
-recipe, not an IMRPhenomD calibration or complete IMRPhenomD waveform.
-
-## Component traceability
+### Component traceability
 
 The generated map records each new component and every unchanged inherited
 component version, with links to its evidence, reference expression, both
@@ -261,7 +271,9 @@ Check labels are local to this table; function names identify maintained tests.
 Metadata tests resolve the links and detect stale tables. They establish
 structural coverage, not transcription correctness or numerical agreement.
 
-## Numerical checks and limitations
+## Evidence and limitations
+
+### Numerical checks and limitations
 
 The maintained FP64 checks compare both frontends with scalar reference
 values at 80 decimal digits. They cover all coefficient tuple slots, selectors
@@ -323,7 +335,9 @@ comparison was skipped because LALSuite/PyCBC was unavailable. The strict docs
 build and Ruff checks passed. These results qualify the scope above, including
 the corrected optional SS7 term, without adding an external-reference claim.
 
-## Reproduce and review changes
+## Reproduce the checks
+
+### Reproduce and review changes
 
 Install the reference and both frontends, then run the complete qualification
 gate so inherited and new coverage execute together:

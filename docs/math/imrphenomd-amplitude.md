@@ -1,5 +1,7 @@
 # IMRPhenomD amplitude and joins, first reference slice
 
+## Scope and status
+
 `imrphenomd-amplitude-joins-paper-precision/v1` is an executable specification
 in [`src/diffgw_reference/imrphenomd_amplitude.py`](https://github.com/xangma/diffgw/blob/main/src/diffgw_reference/imrphenomd_amplitude.py).
 Its primary source is [Khan et al., Paper II, arXiv:1508.07253v2](https://arxiv.org/html/1508.07253v2).
@@ -13,11 +15,16 @@ fits and conditional QNM inputs used at this boundary. The
 [phase reference slice](imrphenomd-phase.md) specifies the intrinsic phase
 branches and their joins.
 
+## Inputs, conventions, and options
+
 The dimensionless frequency is $u=Mf$, with $M$ in seconds when $f$ is in Hz.
 The amplitude below is $A/A_0$; the common Newtonian factor $A_0\propto
 f^{-7/6}$ is restored by the frontends. For masses $m_1\geq m_2>0$,
 $\eta=m_1m_2/M^2$, $\delta=(m_1-m_2)/M$,
 $\chi_s=(\chi_1+\chi_2)/2$, and $\chi_a=(\chi_1-\chi_2)/2$.
+
+## Mathematics and components
+
 Paper II Eqs. (2)–(4) give
 
 $$\chi_{\rm PN}=\frac{m_1\chi_1+m_2\chi_2}{M}
@@ -61,15 +68,7 @@ $16[v_2-H(1/2)]t^2(1-t)^2$. This differs algebraically from the frontend
 Vandermonde solve but defines the same quartic. Both branches and their first
 derivatives therefore meet at each join.
 
-## Evidence and checks
-
-| Component IDs | Paper anchor | Comparison |
-| --- | --- | --- |
-| `phenomd.amp.fit.*.v1` | Eq. (31), Table 5 | Printed-row transcription and hierarchical evaluation on both frontends |
-| `phenomd.amp.spin_coordinates.v1` | Eqs. (2)–(4) | Exact spin coordinate construction in test cases |
-| `phenomd.amp.pn.v1`, `phenomd.amp.inspiral.v1` | Eqs. (29)–(30), (54)–(60) | All PN coefficients and inspiral waveform-amplitude ratios |
-| `phenomd.amp.merger_ringdown.v1`, `phenomd.amp.peak.v1` | Eqs. (19)–(20) | Peak formula and merger-ringdown amplitude ratios; continuation called out separately |
-| `phenomd.amp.intermediate.v1` | Eqs. (21)–(26), Table 2 | Exact five-condition identity, interior values and endpoint slopes against Torch/JAX |
+## Implementation mapping
 
 The backend bindings are [`torchwave/approximants/imrphenomd.py`](https://github.com/xangma/diffgw/blob/main/src/torchwave/approximants/imrphenomd.py)
 and [`jaxwave/approximants/imrphenomd.py`](https://github.com/xangma/diffgw/blob/main/src/jaxwave/approximants/imrphenomd.py):
@@ -82,6 +81,18 @@ three amplitude branches. The maintained
 checks every mapped component, including values on both sides of each join
 and frequency derivatives in all three open regions.
 
+## Evidence and limitations
+
+### Evidence and checks
+
+| Component IDs | Paper anchor | Comparison |
+| --- | --- | --- |
+| `phenomd.amp.fit.*.v1` | Eq. (31), Table 5 | Printed-row transcription and hierarchical evaluation on both frontends |
+| `phenomd.amp.spin_coordinates.v1` | Eqs. (2)–(4) | Exact spin coordinate construction in test cases |
+| `phenomd.amp.pn.v1`, `phenomd.amp.inspiral.v1` | Eqs. (29)–(30), (54)–(60) | All PN coefficients and inspiral waveform-amplitude ratios |
+| `phenomd.amp.merger_ringdown.v1`, `phenomd.amp.peak.v1` | Eqs. (19)–(20) | Peak formula and merger-ringdown amplitude ratios; continuation called out separately |
+| `phenomd.amp.intermediate.v1` | Eqs. (21)–(26), Table 2 | Exact five-condition identity, interior values and endpoint slopes against Torch/JAX |
+
 The production [`TABLE_V_UNROUNDED_COEFFS`](https://github.com/xangma/diffgw/blob/main/src/diffgw_core/fits.py)
 stores additional inherited digits whose publication provenance remains
 unresolved. Tests pass that table **explicitly** to the independent Eq. (31)
@@ -92,6 +103,8 @@ amplitude test compares ratios across all three regions, canceling the shared
 SI conversion and orientation factors. It qualifies the amplitude equations
 conditional on the supplied remnant frequencies and calibration data; it does
 not qualify the complete waveform or its physical accuracy.
+
+## Reproduce the checks
 
 Run `pytest -q tests/test_imrphenomd_math_reference.py`. The maintained strict
 `--require-math-reference` gate also collects this module automatically.

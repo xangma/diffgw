@@ -29,6 +29,8 @@ from jaxwave.conversions import (
 class TaylorF2:
     """Post-Newtonian Stationary Phase Approximation (SPA) frequency-domain model in JAX."""
 
+    definition_id = "TaylorF2"
+
     @staticmethod
     def phase_coefficients(
         mass1: jnp.ndarray,

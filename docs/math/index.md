@@ -1,8 +1,16 @@
-# Executable mathematical reference
+# Mathematical component specifications
 
 DiffGW's mathematical reference lays out each covered waveform as small, exact,
 literature-evidenced expressions. These expressions can be read, differentiated,
 and evaluated independently of the Torch and JAX implementations.
+For concise model summaries and public metadata, start with the
+[waveform library](../waveforms/index.md).
+Contributors can start from the [canonical model specification template](waveform-spec-template.md),
+which also records how to describe research components that are not yet
+qualified for the public catalog.
+Every handwritten waveform model, component, and extension page follows its
+six-section outline; the documentation generator checks this structure and
+fills the cataloged model pages' identity and option tables.
 
 | Model specification | Covered | Pending |
 | --- | --- | --- |

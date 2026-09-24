@@ -112,6 +112,8 @@ def evaluate_d_qnm_220(final_spin: jnp.ndarray) -> Tuple[jnp.ndarray, jnp.ndarra
 class IMRPhenomD:
     """IMRPhenomD Frequency-Domain Aligned-Spin Waveform Model in JAX."""
 
+    definition_id = "IMRPhenomD"
+
     @staticmethod
     def amplitude_peak_frequency(f_rd, f_damp, gamma2, gamma3):
         """Evaluate Khan et al. Eq. (20) with gradient-safe continuation."""

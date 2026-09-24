@@ -1,11 +1,35 @@
 # TaylorF2 mathematical specification
 
-Version: **`taylorf2-nonspinning-3.5pn/v1`**.
+<!-- BEGIN GENERATED WAVEFORM DEFINITION -->
+
+| Definition field | Catalog value |
+| --- | --- |
+| Model ID | `TaylorF2` |
+| Reference composition | `taylorf2-nonspinning-3.5pn/v1` |
+| Scope | Nonspinning 3.5PN inspiral with restricted quadrupole amplitude and positive frequencies. |
+| Domain and modes | `frequency`; `(2, 2)` |
+| Native backends | `torch`, `jax` |
+| Scoped verification claims | 0 |
+
+| Option | Default | Native choices | Reference-only choices |
+| --- | --- | --- | --- |
+| `phasing_convention` | `coalescence` | `coalescence`, `reference_frequency` | None |
+
+<!-- END GENERATED WAVEFORM DEFINITION -->
+
+## Scope and status
 
 This first specification covers quasi-circular, nonspinning point particles:
 3.5PN intrinsic phase and restricted (Newtonian) amplitude. It defines positive
 frequency polarizations and two explicit DiffGW phase conventions. It has no
 calibration tables or imported companion code.
+
+Generate `TaylorF2` with either backend through the
+[frequency-domain API](../guides/waveform-generation.md). For the additional
+physics available in the native model, read the separately versioned
+[aligned-spin](taylorf2-aligned-spin.md), [tidal](taylorf2-tidal.md), and
+[spin-induced quadrupole](taylorf2-spin-quadrupole.md) specifications. They
+extend this base; `TaylorF2_HM` and `TaylorF2_Eccentric` have different scope.
 
 Canonical implementation:
 [`src/diffgw_reference/taylorf2.py`](https://github.com/xangma/diffgw/blob/main/src/diffgw_reference/taylorf2.py).
@@ -13,7 +37,7 @@ Symbols, `COMPONENT_IDS`, and `COMPONENT_SOURCES` are machine-readable in that m
 The maintained [component map](#component-traceability) links each of those IDs
 to its expression, both frontend functions, and numerical or symbolic checks.
 
-## Evidence and scope
+### Source evidence and scope
 
 | Component | Primary source | Treatment |
 | --- | --- | --- |
@@ -25,7 +49,7 @@ Equation numbers refer to the pinned PDFs; arXiv's generated HTML can renumber
 them. Later paper revisions or errata must be reviewed before extending this
 scope. No spin or tidal terms are certified by this nonspinning transcription.
 
-### Direct source review
+#### Direct source review
 
 On 2026-09-22, a separate review compared the printed
 [Buonanno Eq. (3.18), p. 8](https://arxiv.org/pdf/0907.0700v1#page=8)
@@ -45,7 +69,7 @@ it was not a new derivation of the PN results or a formal proof.
 The [aligned-spin extension](taylorf2-aligned-spin.md) composes this unchanged
 version with separately sourced spin terms.
 
-## Inputs and domain
+## Inputs, conventions, and options
 
 | Symbol / argument | Meaning and units | Domain |
 | --- | --- | --- |
@@ -63,7 +87,9 @@ does not apply the frontends' low-frequency clamp. Its analytic domain is broade
 than the physical slow-inspiral regime of the PN approximation. Evaluation above
 an inspiral termination frequency tests algebra only.
 
-## Intrinsic phase and exact coefficients
+## Mathematics and components
+
+### Intrinsic phase and exact coefficients
 
 Let $v=(\pi M f)^{1/3}$. Component `tf2.ns35.intrinsic_phase.v1` is
 
@@ -93,7 +119,7 @@ $2\phi_{c,\log v}=\phi_{c,\rm paper}+\Delta(\eta)$.
 This offset depends on mass ratio: derivatives at fixed paper phase and fixed
 DiffGW `phic` are different. Finite-reference subtraction cancels it exactly.
 
-## Amplitude, polarization, and phase conventions
+### Amplitude, polarization, and phase conventions
 
 The Newtonian $k=2$ factor in Arun Eqs. (6.13), (D1) reduces to
 $M^2D^{-1}\sqrt{5\pi\eta/96}\,v^{-7/2}$ multiplying the angular factors.
@@ -127,7 +153,9 @@ phase parameter, not asserted to equal the instantaneous orbital phase there.
 Comparisons use these conventions directly, without fitting an extra phase or
 time shift to improve agreement.
 
-## Derivatives and frontend mapping
+## Implementation mapping
+
+### Derivatives and frontend mapping
 
 `derivative_expr(expression, symbol, order=1)` differentiates the canonical
 expression at fixed values of the other inputs. For example,
@@ -144,7 +172,7 @@ independent definitions through nearest FP64 rounding. It does not audit `G_SI`
 and `MSUN_SI` individually or other physical constants. Cutoffs are disabled in
 both frontends.
 
-## Component traceability
+### Component traceability
 
 The following map is generated from
 [`diffgw_reference.traceability`](https://github.com/xangma/diffgw/blob/main/src/diffgw_reference/traceability.py).
@@ -207,7 +235,9 @@ reference/frontend/test functions, and a current rendered map. These structural
 checks keep the evidence navigable; the linked numerical tests establish the
 declared comparisons, and source review establishes literature fidelity.
 
-## Checks and numerical acceptance
+## Evidence and limitations
+
+### Checks and numerical acceptance
 
 The maintained numerical suite is
 [`tests/test_taylorf2_math_reference.py`](https://github.com/xangma/diffgw/blob/main/tests/test_taylorf2_math_reference.py).

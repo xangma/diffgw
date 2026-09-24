@@ -36,6 +36,8 @@ from torchwave.conversions import (
 class TaylorF2:
     """Post-Newtonian Stationary Phase Approximation (SPA) frequency-domain model."""
 
+    definition_id = "TaylorF2"
+
     @staticmethod
     def phase_coefficients(
         mass1: torch.Tensor,

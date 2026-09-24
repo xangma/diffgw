@@ -36,9 +36,10 @@ jobs:
           python -m diffgw_reference.traceability --check
           python -m diffgw_reference.aligned_spin_traceability --check
           python -m diffgw_reference.tidal_traceability --check
+          python scripts/generate_waveform_library_table.py --check
       - name: Verify reference agreement without qualification skips
         run: >-
-          python -m pytest tests/test_*math_reference*.py
+          python -m pytest tests/test_waveform_definitions.py tests/test_*math_reference*.py
           --require-math-reference --reference-device=cpu -ra
 
   lal-oracles:
@@ -94,15 +95,15 @@ jobs:
       - name: "Step 1: Verify PyTorch without JAX"
         run: |
           pip install .[torch]
-          pytest tests/test_diffgw.py
+          pytest tests/test_diffgw.py tests/test_waveform_definitions.py
 
       - name: "Step 2: Verify JAX without PyTorch"
         run: |
           pip uninstall -y torch
           pip install .[jax]
-          pytest tests/test_diffgw.py
+          pytest tests/test_diffgw.py tests/test_waveform_definitions.py
 
       - name: "Step 3: Verify core suite with all and dev"
         run: |
           pip install .[all,dev]
-          pytest tests/test_diffgw.py tests/test_mit_packaging.py tests/test_external_data.py tests/test_taylorf2_hm_external_api.py
+          pytest tests/test_diffgw.py tests/test_waveform_definitions.py tests/test_mit_packaging.py tests/test_external_data.py tests/test_taylorf2_hm_external_api.py

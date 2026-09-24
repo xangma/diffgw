@@ -4,6 +4,8 @@ Choose a model by its physical content, then check the evidence and execution
 restrictions for the options you need. The catalog records implemented families;
 a familiar approximant name does not establish equivalence to an external model.
 For availability in other packages, use the [dated package comparison](comparison.md).
+For source-backed definitions, component relationships, and the evidence scope
+of the first three versioned entries, see the [waveform library](waveforms/index.md).
 
 ## Model catalog
 

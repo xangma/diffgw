@@ -1,5 +1,7 @@
 # TaylorF2 adiabatic quadrupolar tides
 
+## Scope and status
+
 Specification: **`taylorf2-adiabatic-quadrupolar-tides-6.5pn/v1`**.
 The independent [reference kernel](https://github.com/xangma/diffgw/blob/main/src/diffgw_reference/taylorf2_tidal.py)
 adds the 5PN and 6PN electric quadrupole tidal phase and its 6.5PN tail to the
@@ -17,7 +19,9 @@ black-hole spin-induced multipoles: adding these tidal terms does **not**
 produce a complete spinning neutron-star model. No equation-of-state relation
 between masses, spins, and deformabilities is imposed.
 
-## Coordinates, units, and phase
+## Inputs, conventions, and options
+
+### Coordinates, units, and phase
 
 Write \(M=m_1+m_2\), \(\delta=(m_1-m_2)/M\),
 \(X_{1,2}=(1\pm\delta)/2\), and \(\eta=(1-\delta^2)/4\).
@@ -32,6 +36,42 @@ phase angles are in radians; time shifts are in seconds. The frontend boundary
 converts solar masses and Mpc using the independently [audited unit constants](units.md).
 These domains define the expression and input checks; they do not establish
 physical accuracy throughout the domain.
+
+### Frontend option contract
+
+The mathematical API selects `tidal_terms=("T10", "T12", "T13")` and
+`spin_terms=` independently. Both default to their full reference term sets.
+The frontend adapter
+[`frontend_terms`](https://github.com/xangma/diffgw/blob/main/src/diffgw_reference/tidal_traceability.py)
+records integer `tidal_order` and the presence of each deformability:
+
+<!-- BEGIN GENERATED TIDAL PROFILES -->
+
+| `tidal_order` | Both deformabilities supplied | Either is `None` |
+| --- | --- | --- |
+| 0 through 9 | None | None |
+| 10, 11 | `T10` | None |
+| 12 (default) | `T10`, `T12` | None |
+| 13 or greater | `T10`, `T12`, `T13` | None |
+| negative | `T10`, `T12`, `T13` | None |
+
+<!-- END GENERATED TIDAL PROFILES -->
+
+Both frontends default to `tidal_order=12` in their coefficient, phase, and
+public waveform APIs. Neither argument may be omitted to retain a one-body
+tide: supply a numerical zero for the nondeformable body. `None` disables the
+entire tidal contribution even when the other body has nonzero deformability.
+The mathematical reference instead requires explicit numerical inputs.
+
+Spin selection keeps the [existing documented profiles](taylorf2-aligned-spin.md#frontend-option-contract):
+public waveforms default to `spin_order=7`, low-level phase to `spin_order=5`,
+and all reference spin terms require `spin_order=8`. The reference's default
+full composition therefore differs from the frontend defaults in two explicit
+selectors. Tests use the corresponding adapter for each sector.
+
+## Mathematics and components
+
+### Tidal phase and coefficients
 
 For \(v=(\pi M_{\rm sec} f)^{1/3}\), the added intrinsic phase is
 
@@ -76,7 +116,7 @@ The Newtonian amplitude and polarization prefactors are inherited unchanged.
 Canonical derivatives hold every other input fixed, including both individual
 deformabilities; they do not differentiate an unprovided equation of state.
 
-## Direct paper audit
+### Direct paper audit
 
 The audit read the pinned PDF equations directly, independently of frontend
 outputs and generated fixtures. Wade's Eq. (A26), with
@@ -100,107 +140,9 @@ different printed Fourier exponential signs (Wade A23, Damour–Nagar–Villain 
 this specification takes their phase polynomials and explicitly keeps the
 previously audited project carrier and phase gauges.
 
-## Frontend option contract
+## Implementation mapping
 
-The mathematical API selects `tidal_terms=("T10", "T12", "T13")` and
-`spin_terms=` independently. Both default to their full reference term sets.
-The frontend adapter
-[`frontend_terms`](https://github.com/xangma/diffgw/blob/main/src/diffgw_reference/tidal_traceability.py)
-records integer `tidal_order` and the presence of each deformability:
-
-<!-- BEGIN GENERATED TIDAL PROFILES -->
-
-| `tidal_order` | Both deformabilities supplied | Either is `None` |
-| --- | --- | --- |
-| 0 through 9 | None | None |
-| 10, 11 | `T10` | None |
-| 12 (default) | `T10`, `T12` | None |
-| 13 or greater | `T10`, `T12`, `T13` | None |
-| negative | `T10`, `T12`, `T13` | None |
-
-<!-- END GENERATED TIDAL PROFILES -->
-
-Both frontends default to `tidal_order=12` in their coefficient, phase, and
-public waveform APIs. Neither argument may be omitted to retain a one-body
-tide: supply a numerical zero for the nondeformable body. `None` disables the
-entire tidal contribution even when the other body has nonzero deformability.
-The mathematical reference instead requires explicit numerical inputs.
-
-The [maintained LAL binary check](../validation.md#taylorf2-electric-tides-against-lalsuite-23-september-2026)
-also compares both frontends with LAL at tidal orders 10, 12, and 13 for
-nonspinning equal- and unequal-mass binaries. It does not qualify spinning
-tidal LAL parity: the tested LAL call has an additional spin-dependent response
-to nonzero deformabilities even when its tidal PN selector is zero.
-
-Spin selection keeps the [existing documented profiles](taylorf2-aligned-spin.md#frontend-option-contract):
-public waveforms default to `spin_order=7`, low-level phase to `spin_order=5`,
-and all reference spin terms require `spin_order=8`. The reference's default
-full composition therefore differs from the frontend defaults in two explicit
-selectors. Tests use the corresponding adapter for each sector.
-
-## Numerical qualification
-
-On 22 September 2026, the complete required-reference gate passed **576/576
-tests**, with no skips, expected failures, or deselection. This includes 82
-tidal numerical/symbolic tests and 86 tidal traceability tests, alongside the
-408 existing reference checks. The run used CPU execution on macOS 26.6 ARM64,
-Python 3.13.7, SymPy 1.14.0, mpmath 1.3.0, Torch 2.14.0, and JAX 0.11.2
-with JAX x64 enabled. The tidal comparisons qualify FP64; GPU and FP32 tidal
-execution remain unqualified. All 17 pre-existing reference source, test,
-fixture, and coefficient-table files remained byte-for-byte unchanged.
-
-Maintained FP64 checks compare both frontends against high-precision scalar
-evaluation for effective parameters, individual tidal coefficients, unwrapped
-phase, polarizations, and derivatives with respect to mass, deformability,
-and frequency. They also exercise selector boundaries, missing inputs, zero and
-one-body tides, body exchange, equal mass, seeded systems, shared and per-binary
-frequency grids, and both phase conventions. Symbolic derivatives in canonical
-coordinates are transformed explicitly to frontend coordinates.
-
-The seed `20260924` supplies ten systems alternating component masses in
-\([1,2.2]M_\odot\) with one-body-tide systems whose first mass is
-\([3,12]M_\odot\) and second is \([1,2.2]M_\odot\). Sampled deformabilities
-lie in \([0,2000]\), with `lambda1=0` in the latter systems;
-\(\chi_1\in[-0.5,0.5]\), \(\chi_2\in[-0.1,0.1]\), and both \(v\) and
-\(v_{\rm ref}\) lie in \([0.12,0.30]\). These are engineering checks of
-the specified composition, not an astrophysical population or neutron-star
-equation of state. Fixed cases include \(f=f_{\rm ref}\) and adjacent FP64
-frequencies. A separate 100/160-digit convergence comparison uses
-\(f=f_{\rm ref}+10^{-22}\).
-
-| Compared quantity | FP64 budget |
-| --- | --- |
-| Tidal coefficients | Relative \(2\times10^{-14}\), absolute \(2\times10^{-13}\) |
-| Effective parameters | Relative \(2\times10^{-14}\), absolute \(2\times10^{-12}\) |
-| Amplitude | Relative \(5\times10^{-14}\) |
-| Unwrapped phase | Relative \(5\times10^{-14}\), absolute \(2\times10^{-10}\) rad |
-| Each complex polarization | \(\lvert h-h_{\rm ref}\rvert/A<3\times10^{-10}\) |
-| Frequency derivative of phase | Relative \(2\times10^{-13}\), absolute \(2\times10^{-12}\) |
-| Scaled parameter Jacobian | Relative and absolute \(2\times10^{-9}\) |
-
-For the parameter Jacobian, amplitude and polarization rows are divided by the
-reference amplitude; the phase row is unscaled. Columns for
-\((m_1,m_2,\Lambda_1,\Lambda_2)\) are multiplied by \((1,1,1000,1000)\),
-so the absolute budget per unit deformability is \(2\times10^{-12}\) in
-these normalized coordinates. This fixed scale remains defined at zero tide.
-All budgets are engineering tolerances, not interval bounds or physical error
-estimates.
-
-Compilation checks use JAX JIT and Torch full-graph `aot_eager`; the latter
-qualifies graph capture and AOT execution, not Inductor code generation.
-Cases include a shared one-dimensional grid, explicit per-binary `(B,1)` and
-`(B,Nf)` grids, vector reference frequencies, and compiled vectorized Jacobians.
-The exact cases and assertions remain in the maintained test module.
-The tests do not qualify spinning/tidal FP32 evaluation, GPU
-execution unless explicitly run there, or physical waveform error against
-numerical relativity.
-
-Frozen high-precision values and their precision-convergence check are generated
-from this kernel. They detect unintended changes but are not independent
-scientific evidence. Exact identities, source review, and frontend comparisons
-provide different checks; none makes this reference infallible.
-
-## Component traceability
+### Component traceability
 
 The generated map records every new and inherited component, paper location,
 reference function, both frontend functions, and maintained check names.
@@ -320,6 +262,76 @@ Check labels are local to this table; function names identify maintained tests.
 | <span id="tidal-trace-t44">T44</span> | [`test_tidal_reference_artifacts_are_current`](https://github.com/xangma/diffgw/blob/main/tests/test_taylorf2_tidal_math_reference.py) |
 
 <!-- END GENERATED TIDAL TRACEABILITY -->
+
+## Evidence and limitations
+
+The [maintained LAL binary check](../validation.md#taylorf2-electric-tides-against-lalsuite-23-september-2026)
+also compares both frontends with LAL at tidal orders 10, 12, and 13 for
+nonspinning equal- and unequal-mass binaries. It does not qualify spinning
+tidal LAL parity: the tested LAL call has an additional spin-dependent response
+to nonzero deformabilities even when its tidal PN selector is zero.
+
+### Numerical qualification
+
+On 22 September 2026, the complete required-reference gate passed **576/576
+tests**, with no skips, expected failures, or deselection. This includes 82
+tidal numerical/symbolic tests and 86 tidal traceability tests, alongside the
+408 existing reference checks. The run used CPU execution on macOS 26.6 ARM64,
+Python 3.13.7, SymPy 1.14.0, mpmath 1.3.0, Torch 2.14.0, and JAX 0.11.2
+with JAX x64 enabled. The tidal comparisons qualify FP64; GPU and FP32 tidal
+execution remain unqualified. All 17 pre-existing reference source, test,
+fixture, and coefficient-table files remained byte-for-byte unchanged.
+
+Maintained FP64 checks compare both frontends against high-precision scalar
+evaluation for effective parameters, individual tidal coefficients, unwrapped
+phase, polarizations, and derivatives with respect to mass, deformability,
+and frequency. They also exercise selector boundaries, missing inputs, zero and
+one-body tides, body exchange, equal mass, seeded systems, shared and per-binary
+frequency grids, and both phase conventions. Symbolic derivatives in canonical
+coordinates are transformed explicitly to frontend coordinates.
+
+The seed `20260924` supplies ten systems alternating component masses in
+\([1,2.2]M_\odot\) with one-body-tide systems whose first mass is
+\([3,12]M_\odot\) and second is \([1,2.2]M_\odot\). Sampled deformabilities
+lie in \([0,2000]\), with `lambda1=0` in the latter systems;
+\(\chi_1\in[-0.5,0.5]\), \(\chi_2\in[-0.1,0.1]\), and both \(v\) and
+\(v_{\rm ref}\) lie in \([0.12,0.30]\). These are engineering checks of
+the specified composition, not an astrophysical population or neutron-star
+equation of state. Fixed cases include \(f=f_{\rm ref}\) and adjacent FP64
+frequencies. A separate 100/160-digit convergence comparison uses
+\(f=f_{\rm ref}+10^{-22}\).
+
+| Compared quantity | FP64 budget |
+| --- | --- |
+| Tidal coefficients | Relative \(2\times10^{-14}\), absolute \(2\times10^{-13}\) |
+| Effective parameters | Relative \(2\times10^{-14}\), absolute \(2\times10^{-12}\) |
+| Amplitude | Relative \(5\times10^{-14}\) |
+| Unwrapped phase | Relative \(5\times10^{-14}\), absolute \(2\times10^{-10}\) rad |
+| Each complex polarization | \(\lvert h-h_{\rm ref}\rvert/A<3\times10^{-10}\) |
+| Frequency derivative of phase | Relative \(2\times10^{-13}\), absolute \(2\times10^{-12}\) |
+| Scaled parameter Jacobian | Relative and absolute \(2\times10^{-9}\) |
+
+For the parameter Jacobian, amplitude and polarization rows are divided by the
+reference amplitude; the phase row is unscaled. Columns for
+\((m_1,m_2,\Lambda_1,\Lambda_2)\) are multiplied by \((1,1,1000,1000)\),
+so the absolute budget per unit deformability is \(2\times10^{-12}\) in
+these normalized coordinates. This fixed scale remains defined at zero tide.
+All budgets are engineering tolerances, not interval bounds or physical error
+estimates.
+
+Compilation checks use JAX JIT and Torch full-graph `aot_eager`; the latter
+qualifies graph capture and AOT execution, not Inductor code generation.
+Cases include a shared one-dimensional grid, explicit per-binary `(B,1)` and
+`(B,Nf)` grids, vector reference frequencies, and compiled vectorized Jacobians.
+The exact cases and assertions remain in the maintained test module.
+The tests do not qualify spinning/tidal FP32 evaluation, GPU
+execution unless explicitly run there, or physical waveform error against
+numerical relativity.
+
+Frozen high-precision values and their precision-convergence check are generated
+from this kernel. They detect unintended changes but are not independent
+scientific evidence. Exact identities, source review, and frontend comparisons
+provide different checks; none makes this reference infallible.
 
 ## Reproduce the checks
 

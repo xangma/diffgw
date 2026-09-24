@@ -1,10 +1,14 @@
 # IMRPhenomD intrinsic phase and joins
 
+## Scope and status
+
 `imrphenomd-phase-joins-paper-precision/v1` is the executable phase
 specification in [`imrphenomd_phase.py`](https://github.com/xangma/diffgw/blob/main/src/diffgw_reference/imrphenomd_phase.py).
 Its primary source is [Khan et al., Paper II, arXiv:1508.07253v2](https://arxiv.org/html/1508.07253v2),
 Eqs. (13)–(16), (27)–(28), (31), (37), Appendix B and Table 5. The SymPy
 module imports no production waveform implementation or coefficients.
+
+## Inputs, conventions, and options
 
 Let $u=Mf$ be frequency in the initial total mass, $v=(\pi u)^{1/3}$,
 $\eta=m_1m_2/M^2$, $\delta=(m_1-m_2)/M$,
@@ -14,6 +18,8 @@ The [amplitude specification](imrphenomd-amplitude.md) defines the same
 spin coordinates and supplies the amplitude peak; the
 [remnant specification](imrphenomd-remnant-qnm.md) supplies the positive
 $f_{\rm RD}$ and $f_{\rm damp}$ in total-mass units.
+
+## Mathematics and components
 
 The aligned-spin TaylorF2 phase from Paper II Eq. (27) is
 
@@ -81,7 +87,7 @@ This global time gauge is a DiffGW frontend convention, recorded separately
 from the paper's intrinsic piecewise phase. Both conventions add
 $2\pi f t_c-2\phi_c$ when requested.
 
-## Component traceability
+### Component traceability
 
 | Component IDs | Paper evidence | Executable reference | Maintained frontend check |
 | --- | --- | --- | --- |
@@ -93,9 +99,15 @@ $2\pi f t_c-2\phi_c$ when requested.
 | `phenomd.phase.joins.v1` | Eq. (37) | `phase_pieces` | Symbolic $C^1$ joins and frontend values around both boundaries |
 | `phenomd.phase.frontend_gauge.v1` | DiffGW convention | `peak_gauge_slope` | Coalescence and reference-frequency phase and frequency gradients |
 
+## Implementation mapping
+
 `COMPONENT_BINDINGS` maps each ID to its source, reference function,
 Torch/JAX entry points and maintained test names. The structural test resolves
-those links. The numerical tests cover two selected equal/unequal-mass,
+those links.
+
+## Evidence and limitations
+
+The numerical tests cover two selected equal/unequal-mass,
 aligned-spin cases in FP64, using a declared supplied QNM pair rather than
 assuming QNM fit provenance. They compare the unwrapped phase on both sides
 of each join, the reference-frequency anchor, and selected frequency
@@ -103,6 +115,8 @@ gradients in each branch.
 These results verify implementation agreement on the stated inputs. They do
 not establish inherited fit provenance, QNM endpoint parity, complete
 waveform or polarization agreement, or physical accuracy over the model domain.
+
+## Reproduce the checks
 
 Run `python -m pytest -q tests/test_imrphenomd_phase_math_reference.py`
 for this slice. The maintained strict mathematical-reference CI gate also

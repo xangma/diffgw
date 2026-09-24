@@ -77,6 +77,8 @@ def _get_table_v_matrix(device: torch.device, dtype: torch.dtype) -> torch.Tenso
 class IMRPhenomD(nn.Module):
     """IMRPhenomD Frequency-Domain Aligned-Spin Phenomenological Waveform Model."""
 
+    definition_id = "IMRPhenomD"
+
     def __init__(self):
         super().__init__()
 

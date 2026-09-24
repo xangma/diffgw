@@ -5,7 +5,7 @@ import jax
 # Automatically enable float64 in JAX for gravitational-wave phase precision
 jax.config.update("jax_enable_x64", True)
 
-from .waveforms import get_fd_waveform, get_td_waveform, WaveformGenerator
+from .waveforms import get_fd_waveform, get_td_waveform, WaveformGenerator, list_approximants
 from .approximants.memory import (
     MemoryWaveform,
     compute_memory_h20,
@@ -101,6 +101,7 @@ __all__ = [
     "get_fd_waveform",
     "get_td_waveform",
     "WaveformGenerator",
+    "list_approximants",
     "MemoryWaveform",
     "compute_memory_h20",
     "memory_polarizations",
@@ -178,4 +179,3 @@ __all__ = [
     "compute_relative_binning_bins",
     "compute_relative_binning_summary",
 ]
-
