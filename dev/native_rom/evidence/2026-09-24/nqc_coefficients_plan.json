@@ -1,0 +1,26 @@
+{
+  "schema": "diffgw.seobnrv4.nqc-coefficients-plan.v1",
+  "purpose": "Compare the five fitted native 22 NQC coefficients with the pinned public SEOBNRv4 coefficients at the same parameters and output step. Replay each frozen native waveform, then change only the NQC target vector in the recorded native matching systems to isolate the effect of printed-fit rounding. Keep trajectory and interpolation differences explicit.",
+  "source_reference": {
+    "git_revision": "53acc0c2cd7ea2d3c83fc71a7bd88035c2861d6c",
+    "path": "lalsimulation/lib/LALSimIMREOBNQCCorrection.c",
+    "sha256": "be34dbe154439439b6a7dc37494cdc963dd4c29ded42d887251efe16f974899e",
+    "functions": ["CombineTPLEQMFits", "XLALSimIMREOBGetNRSpinPeakAmplitudeV4", "XLALSimIMREOBGetNRSpinPeakADDotV4", "XLALSimIMREOBGetNRSpinPeakOmegaV4", "XLALSimIMREOBGetNRSpinPeakOmegaDotV4"]
+  },
+  "rows": [
+    {
+      "name": "strong_aligned_spin",
+      "waveform": "dev/native_rom/evidence/2026-09-24/source_flux_whole_waveform.json",
+      "waveform_sha256": "7493f5f3dbc6a425635103b0745fad78885d3df35f21678baf6fbc1fc7b3a2a7",
+      "nqc_phase_window_M": 2.0
+    },
+    {
+      "name": "strong_antialigned_spin",
+      "waveform": "dev/native_rom/evidence/2026-09-24/source_flux_antialigned.json",
+      "waveform_sha256": "a9e7e4dc9fb14782ea5b3036cc3f1ef08a13d355481b6b6961f652211458c052",
+      "nqc_phase_window_M": 0.5
+    }
+  ],
+  "level": "ode_2",
+  "release_qualified": false
+}

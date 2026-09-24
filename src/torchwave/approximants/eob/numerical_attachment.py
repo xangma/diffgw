@@ -372,6 +372,8 @@ class FullSeriesNQC:
     sampled_waveform_phase: Tensor
     sampled_corrected_amplitude: Tensor
     sampled_corrected_phase: Tensor
+    amplitude_matching_matrix: Tensor
+    phase_matching_matrix: Tensor
 
     @property
     def coefficients(self):
@@ -493,6 +495,7 @@ def _full_series_nqc(
         calibration, amplitude_spline, product_spline, phase_basis_spline,
         frequency_spline, waveform_phase_spline, base_amplitude, products, p,
         waveform_phase, corrected_amplitude, sampled_corrected_phase,
+        amplitude_matrix, phase_matrix,
     )
 
 

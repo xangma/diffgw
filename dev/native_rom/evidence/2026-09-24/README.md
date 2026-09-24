@@ -80,6 +80,31 @@ derivative by `-22.6 ppm`. The derivative estimate is grid-sensitive and is
 not direct compiled-flux parity; it cannot by itself identify a `(2,2)`
 coefficient error.
 
+The [frozen NQC-coefficient plan](nqc_coefficients_plan.json) and
+[result](nqc_coefficients.json) use the public v4 entry point's coefficient
+output and replay the exact refined native waveform hashes before comparing
+the five active `(2,2)` NQC coefficients. On the aligned row, the native
+coefficient magnitudes differ from the public ones by `0.16–0.34%`; on the
+antialigned row, by `0.36–1.55%`. The other five slots in the public v4 NQC
+vector are zero, consistent with the three-amplitude/two-phase basis used
+natively. This is a direct comparison of fitted coefficients, but each fit
+uses its own trajectory and pre-NQC mode. The mismatch therefore cannot yet
+be assigned to the NQC targets, spline differentiation, or preceding dynamics.
+The same result transcribes the pinned source's full-precision `(2,2)` peak
+fits and substitutes their five targets into the **recorded native matching
+matrices**, holding the native trajectory, pre-NQC mode, match time, and
+derivatives fixed. The largest target-relative change is about `4.9e-5` (the
+frequency slope). The resulting coefficient shifts have at most `1.1%` of
+the original aligned public gap and `6.0%` of the antialigned gap in absolute
+magnitude; some shifts increase the gap. Thus printed-fit rounding cannot
+account for the main coefficient difference on these native inputs. This
+counterfactual does not isolate differences in the public matching matrices,
+which use full-series GSL cubic splines, versus the tested native diagnostic's
+local phase-basis polynomial, nor differences in trajectory and pre-NQC mode.
+It does not establish coefficient parity or qualify attachment. Reproduce with
+`PYTHONPATH=src:. python -m dev.native_rom.diagnose_nqc_coefficients --json-out
+/tmp/nqc-coefficients.json` in the pinned development environment.
+
 Reproduce the new waveform checks from the repository root with
 `PYTHONPATH=src:. python -m dev.native_rom.diagnose_mode_32_whole_waveform
 --json-out /tmp/mode32-waveform.json` and

@@ -109,6 +109,15 @@ check finds several-ppm differentiation sensitivity in the remaining aligned
 torque residual near `M Omega=0.12`; that sampled derivative is not direct
 compiled-flux parity. The pinned `(2,2)` coefficient assignments match the
 native formula, but the full mode, NQC attachment, and generator remain open.
+A direct five-coefficient NQC diagnostic against the pinned public v4 binary
+also reproduces both frozen native waveforms but finds `0.16–0.34%` aligned
+and `0.36–1.55%` antialigned coefficient differences. Because the two fits
+use different trajectories and pre-NQC modes, this remains an attachment
+diagnostic rather than a localized NQC-formula error. Substituting the pinned
+LAL source's full-precision targets into the same native matching matrices
+changes the coefficients by at most `1.1%` and `6.0%` of those respective
+public gaps in absolute magnitude. Target rounding does not explain the main
+discrepancy; matching inputs and differentiation remain open.
 
 ## Numerical evidence
 
