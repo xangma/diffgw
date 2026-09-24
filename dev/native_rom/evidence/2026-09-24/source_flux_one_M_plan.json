@@ -1,0 +1,15 @@
+{
+  "schema": "diffgw.seobnrv4.source-flux-one-M-plan.v1",
+  "purpose": "Apply the independently checked 1 M local NQC phase-derivative window to the already frozen source-backed flux variant, holding all physical choices, inputs, and ODE levels fixed. This is a numerical intervention, not a fit to the public waveform.",
+  "source_flux_result": "dev/native_rom/evidence/2026-09-24/source_flux_whole_waveform.json",
+  "source_flux_result_sha256": "7493f5f3dbc6a425635103b0745fad78885d3df35f21678baf6fbc1fc7b3a2a7",
+  "current_wrapper_sha256": "15306c2236ff5eee6f1a4a4aef4424c852ca81f869b4687f4b5b8f6a169ebf5c",
+  "wrapper_change": "Since the frozen source-flux result, qualify_generator.native_run gained only opt-in NQC sample/coefficients return flags; both default to false. The waveform arguments and returned fields used here are unchanged.",
+  "dense_reference": "dev/native_rom/evidence/2026-09-24/strong_spin_nqc_dense.json",
+  "dense_reference_sha256": "21291a6e0b13e69cac766ba5e9eec0f4bcab97d2c111d3111d60fe78ad401a0e",
+  "row_name": "strong_aligned_spin",
+  "candidate_window_M": 1.0,
+  "baseline_window_M": 2.0,
+  "levels": ["ode_0", "ode_1", "ode_2"],
+  "release_qualified": false
+}

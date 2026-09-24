@@ -1,0 +1,19 @@
+{
+  "schema": "diffgw.seobnrv4.strong-spin-nqc-dense-plan.v1",
+  "purpose": "Independently integrate the same provisional vector field with DOP853 around the frozen strong aligned-spin match, then differentiate the phase basis with centered five-point stencils. Compare the existing 0.5 M and 2 M local-polynomial estimates without using public-waveform residuals to choose a window.",
+  "campaign": "dev/native_rom/evidence/2026-09-24/combined_domain_numerics.json",
+  "campaign_sha256": "3c414c018917f7dad38644ad86ba58781bc53180b931cb8f869c34f5e83b3025",
+  "window_result": "dev/native_rom/evidence/2026-09-24/strong_spin_nqc_window.json",
+  "window_result_sha256": "901c28cf3f15d8dff24e3a927664539c42e99e96751921aa65c26106025e3754",
+  "window_sensitivity": "dev/native_rom/evidence/2026-09-24/combined_nqc_windows.json",
+  "window_sensitivity_sha256": "8bc1b3c32a3fd412640d5e657a43a2316bc0bb3dd72fabbc93507ab8acba4181",
+  "row_name": "strong_aligned_spin",
+  "level": "ode_2",
+  "native_window_M": 2.0,
+  "comparison_windows_M": [0.5, 1.0, 2.0],
+  "integration_start_before_match_M": 4.0,
+  "integration_end_after_match_M": 2.0,
+  "dop853_tolerances": [[1e-11, 1e-12], [1e-12, 1e-13]],
+  "five_point_steps_M": [0.2, 0.1, 0.05, 0.025],
+  "release_qualified": false
+}

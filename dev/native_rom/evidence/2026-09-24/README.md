@@ -63,6 +63,29 @@ the post-peak window is effectively unchanged. The source-faithful choices
 therefore have mixed physical comparisons across rows despite numerical
 stability at these boundaries.
 
+The [frozen source-flux 1 M plan](source_flux_one_M_plan.json) and
+[result](source_flux_one_M.json) change only the NQC phase-derivative window
+on the aligned combined variant. Its refined ODE complex difference decreases
+from `3.26e-7` at `2 M` to `2.41e-7` at `1 M`; all numerical gates pass.
+The fitted public-binary difference changes from `0.00299749` to `0.00299999`.
+The smaller window improves numerical convergence here but does not close the
+physical residual or qualify the generator. Reproduce with `PYTHONPATH=src:.
+python -m dev.native_rom.diagnose_source_flux_one_M --json-out
+/tmp/source-flux-one-M.json` in the pinned development environment.
+
+The [frozen early source-field plan](early_source_field_plan.json) and
+[result](early_source_field.json) compare the source-backed native Hamiltonian
+and flux at public strong aligned-spin states near `M Omega=0.032`, `0.035`,
+`0.04`, and `0.05`. On public output grids `0.125` and `0.0625 M`, the largest
+native torque difference from a five-point derivative of public angular
+momentum is `6.42e-7` relative. The sampled public torque itself changes by
+up to `2.11e-7` between grids. This bounds an early same-state vector-field
+discrepancy at four samples, not direct public-flux parity or accumulated
+trajectory and waveform error. The physical and ROM gates remain open.
+Reproduce with `PYTHONPATH=src:. python -m
+dev.native_rom.diagnose_early_source_field --json-out
+/tmp/early-source-field.json` in the pinned development environment.
+
 The pinned v4 source's `rho22v2` through `rho22v10` assignments in
 `LALSimIMRSpinEOBFactorizedWaveform.c` agree term by term with the native
 `_rho22` expression when the diagnostic retains the cubic Kerr-spin term.
@@ -153,6 +176,25 @@ dev.native_rom.diagnose_nqc_c_same_input --source-root
 /tmp/diffgw-lalsuite-pinned-53acc0c --headers
 /tmp/diffgw-lalsuite-pinned-53acc0c/merged-include --gsl-include
 /usr/local/include --json-out /tmp/nqc-c-same-input.json`.
+
+The [public C-binding plan](nqc_public_c_binding_plan.json) and
+[result](nqc_public_c_binding.json) compile a small
+[public-API probe](../../reference/seobnrv4_public_c_probe.c) against the
+same pinned wheel. Direct C calls reproduce the frozen Python-binding NQC
+coefficients to `5.37e-11` absolute on the aligned row and `7.11e-13` on the
+antialigned row. Python argument marshalling therefore does not account for
+the observed coefficient gap. This public call still supplies the wheel's
+own upstream evolution and does not expose its pre-NQC matching arrays.
+The source-compiled *full generator* is not numerically identical to the
+wheel, even though the inspected generator, NQC, Hamiltonian, and flux source
+files match the official
+[`lalsimulation-v6.2.1` tag](https://git.ligo.org/lscsoft/lalsuite/-/tree/lalsimulation-v6.2.1/lalsimulation/lib);
+its independently built
+waveform is not a substitute for the pinned wheel oracle. Reproduce the
+C-binding control on macOS with `PYTHONPATH=src:. python -m
+dev.native_rom.diagnose_nqc_public_c_binding --headers
+/tmp/diffgw-lalsuite-pinned-53acc0c/merged-include --json-out
+/tmp/nqc-public-c-binding.json`.
 
 The [public-mode boundary plan](public_nqc_mode_boundary_plan.json) and
 [result](public_nqc_mode_boundary.json) use both public v4 modes API paths at
@@ -540,5 +582,65 @@ the strong aligned-spin row. The refined ODE complex difference falls from
 `2.74e-6` to `2.70e-7`, with `3.39e-9` amplitude difference, decreasing
 error, and unchanged event times; all frozen numerical gates pass. The
 peak-fitted public-binary complex difference changes only from `0.0198521`
-to `0.0198485`. The wider window is opt-in, has no independent derivative
-accuracy proof over the domain, and is not a physical-model correction.
+to `0.0198485`. The wider window is opt-in and is not a physical-model
+correction.
+
+The [frozen dense-reference plan](strong_spin_nqc_dense_plan.json) and
+[result](strong_spin_nqc_dense.json) independently integrate the same
+provisional vector field with DOP853 from a native state about `4 M` before
+matching. Centered five-point differentiation of the dense trajectory gives
+stable phase-basis derivatives: changing DOP853 tolerance alters each matrix
+by at most `1.31e-11` at the finest `0.025 M` stencil. At that stencil, the
+native `0.5`, `1`, and `2 M` local windows differ from DOP853 by at most
+`4.59e-10`, `3.90e-11`, and `1.63e-9`, respectively. Thus the `2 M` window
+suppresses ODE-to-ODE waveform drift on this row but increases local derivative
+bias; the `1 M` window is closest to the dense estimate here. None is qualified
+across the physical domain. This check shares the provisional Hamiltonian and
+flux, so it does not validate their physics.
+
+Reproduce with `PYTHONPATH=src:. python -m
+dev.native_rom.diagnose_strong_spin_nqc_dense --json-out
+/tmp/strong-spin-nqc-dense.json`.
+
+The [predeclared 1 M waveform plan](strong_spin_nqc_one_M_plan.json) and
+[result](strong_spin_nqc_one_M.json) then test that middle window on the same
+aligned-spin row at the three frozen ODE tolerances. Its refined complex
+relative difference is `6.23e-7`, below the existing `1e-6` numerical limit,
+with unchanged event times and decreasing error. The peak-fitted difference
+from the pinned public waveform remains `0.0198508`, essentially unchanged.
+This is one-row numerical evidence only; the `1 M` window remains opt-in and
+is not a release choice. Reproduce with `PYTHONPATH=src:. python -m
+dev.native_rom.diagnose_strong_spin_nqc_one_M --json-out
+/tmp/strong-spin-nqc-one-M.json`.
+
+The [frozen two-row 1 M plan](nqc_one_M_domain_plan.json) and
+[result](nqc_one_M_domain.json) extend that numerical check to the
+mass-ratio-four nonspinning row and strong antialigned-spin row. The latter
+retains the separately frozen `100 M` restart; all other numerical and
+physical candidate choices match the prior boundary campaign. Refined ODE
+complex relative L2 changes from `3.39e-8` to `1.41e-8` for the nonspinning
+row and from `7.16e-7` to `5.85e-7` for the antialigned row when the phase
+derivative window changes from `0.5` to `1 M`. Both pass the existing `1e-6`
+complex and amplitude budgets, decreasing-error requirement, and event-time
+gates. Independently peak-fitted differences from the pinned public waveform
+change only from `0.000410279` to `0.000410287` and from `0.000203914` to
+`0.000203842`, respectively. Across these three sampled rows, the opt-in
+`1 M` window has numerical support; this is neither a physical-domain bound
+nor release qualification. Reproduce with `PYTHONPATH=src:. python -m
+dev.native_rom.diagnose_nqc_one_M_domain --json-out
+/tmp/nqc-one-M-domain.json` in the pinned development environment.
+
+The [frozen source-flux 1 M domain plan](source_flux_one_M_domain_plan.json)
+and [result](source_flux_one_M_domain.json) add the existing source-backed
+`(2,1)`, `(3,1)`, and `(3,2)` flux placements to those same two rows while
+holding the `1 M` NQC window, three ODE levels, and row-specific restarts
+fixed. All three nonspinning waveforms are bitwise unchanged. For the strong
+antialigned row, refined complex relative L2 changes only from `5.853e-7`
+to `5.849e-7`; the fitted difference from the pinned public waveform rises
+from `0.000203842` to `0.000212727`. Both rows pass the frozen `1e-6`
+complex and amplitude budgets, decreasing-error requirement, and event-time
+gates. These two samples test numerical stability of the combined diagnostic
+choices, not physical accuracy or domain-wide release qualification. Reproduce
+with `PYTHONPATH=src:. python -m
+dev.native_rom.diagnose_source_flux_one_M_domain --json-out
+/tmp/source-flux-one-M-domain.json` in the pinned development environment.

@@ -89,8 +89,21 @@ the physical generator or the independent ROM.
 A [predeclared wider-window intervention](evidence/2026-09-24/README.md)
 passes the strong aligned-spin ODE numerical gates at `2.70e-7` complex
 relative L2, while its fitted public-binary difference remains about `0.01985`.
-This opt-in numerical choice needs independent derivative and domain checks;
-the historical-physics and ROM gates remain open.
+This opt-in numerical choice still needs broader domain checks; the
+historical-physics and ROM gates remain open.
+A DOP853 dense-trajectory check on the frozen aligned-spin row finds the
+`1 M` phase-basis window closest to the local derivative (`3.90e-11` maximum
+matrix difference, versus `4.59e-10` at `0.5 M` and `1.63e-9` at `2 M`).
+The widest window reduces waveform convergence drift but increases local
+derivative bias here; the default remains unchanged and domain qualification
+is still open.
+The intermediate `1 M` window also passes the aligned-spin ODE gate at
+`6.23e-7` refined complex relative L2, while its fitted public difference
+remains about `0.01985`; it is still a development-only choice.
+The same window passes the frozen ODE gates on nonspinning mass ratio four and
+strong antialigned-spin rows (`1.41e-8` and `5.85e-7` refined complex relative
+L2). These three rows support the numerical choice but do not bound its full
+domain or establish physical accuracy.
 The pinned non-HM v4 source also overwrites a `(3,2)` flux spin-square term.
 An explicit source-faithful diagnostic choice reduces the same-state aligned
 torque gap by more than 98% through `M Omega=0.12` and the aligned whole-waveform
@@ -102,6 +115,10 @@ Adding the pinned non-HM v4 `(2,1)` and `(3,1)` source placements further lowers
 the strong aligned-spin fitted difference to `0.00300`, with its numerical gate
 passing. The post-peak comparison worsens, and domain/attachment checks remain
 open, so this combined variant also stays diagnostic.
+On that same combined variant, changing the NQC phase-derivative window from
+`2 M` to `1 M` reduces refined ODE complex error from `3.26e-7` to `2.41e-7`;
+the fitted public difference remains about `0.00300`. This supports a numerical
+choice, not release qualification.
 The same source-backed choices pass the strong antialigned-spin numerical gate
 and give a fitted difference of `0.0002128`, slightly better than the prior
 `(3,2)`-only result but above an earlier variant. A three-grid public-dynamics
@@ -134,6 +151,11 @@ native samples. Its five coefficients agree with the GSL replay to at most
 The C-to-public coefficient distances remain `5.6238` and `0.66555` (L2).
 This establishes source-compiled matching parity on native inputs, not
 identity with the private wheel build or parity of its upstream inputs.
+The pinned wheel's public C API also reproduces the same wheel's Python NQC
+coefficients to `5.4e-11` or better on both rows, ruling out binding
+marshalling as the observed gap. The locally compiled full generator does
+not reproduce the wheel's evolution, so only the wheel remains the pinned
+binary oracle for whole-waveform comparisons.
 The [direct public-dynamics replay](evidence/2026-09-24/README.md) reconstructs
 native pre-NQC orbital scalars from the frozen NQC samples. A fixed-time
 comparison shows antialigned residuals near the inferred peak, but comparing

@@ -1,0 +1,24 @@
+{
+  "schema": "diffgw.seobnrv4.source-flux-one-M-domain-plan.v1",
+  "purpose": "Apply the already frozen source-backed (2,1), (3,1), and (3,2) flux placements together with the opt-in 1 M NQC phase window to the mass-ratio-four nonspinning and strong antialigned-spin rows. Hold physical choices, ODE levels, and each row's restart fixed; test numerical stability and report the pinned public difference without fitting.",
+  "baseline_domain_result": "dev/native_rom/evidence/2026-09-24/nqc_one_M_domain.json",
+  "baseline_domain_result_sha256": "98d6b110d1f636eb221b7ee3410257bfdb0fec8d879568dd88b91d256d269ae2",
+  "aligned_source_flux_result": "dev/native_rom/evidence/2026-09-24/source_flux_one_M.json",
+  "aligned_source_flux_result_sha256": "8ac37b7cddcc5c15333ef4167af51ce0c37e3327a2f8b7b780510fbb1b044eda",
+  "antialigned_restart_plan": "dev/native_rom/evidence/2026-09-24/antialigned_restart_plan.json",
+  "antialigned_restart_plan_sha256": "65cf537dd281e7b7140b4d789e407d7c2524ec131002ba76388c1a6d954eb6a0",
+  "candidate_window_M": 1.0,
+  "fixed_coarse_first_step_M": 0.125,
+  "warm_start_Momega": 0.03162277660168379,
+  "rows": {
+    "mass_ratio_four_nonspinning": {"fixed_restart_time_M": 165.0},
+    "strong_antialigned_spin": {"fixed_restart_time_M": 100.0}
+  },
+  "flux_placements": {
+    "mode_21_higher_spin": "rho_hybrid",
+    "mode_31_higher_spin": "lal_v4_rho",
+    "mode_32_spin_square": "lal_v4_zero"
+  },
+  "levels": ["ode_0", "ode_1", "ode_2"],
+  "release_qualified": false
+}

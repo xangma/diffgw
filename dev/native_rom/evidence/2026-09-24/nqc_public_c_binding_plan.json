@@ -1,0 +1,10 @@
+{
+  "schema": "diffgw.seobnrv4.nqc-public-c-binding-plan.v1",
+  "purpose": "Call the pinned wheel's public SEOBNRv4 NQC-coefficient API from C and compare with the frozen Python-binding values for exactly matched parameters. This checks marshalling only, not native waveform parity.",
+  "coefficient_evidence": "dev/native_rom/evidence/2026-09-24/nqc_coefficients.json",
+  "coefficient_evidence_sha256": "1c8c31aabc6d43d704af9b2a4b84d701c13262316fe102d07c86a3a2613f74b7",
+  "rows": ["strong_aligned_spin", "strong_antialigned_spin"],
+  "output_step_M": 0.125,
+  "max_abs_coefficient_difference": 1e-9,
+  "release_qualified": false
+}

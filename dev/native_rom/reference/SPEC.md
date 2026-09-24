@@ -103,8 +103,9 @@ The factor of two relative to the full `m=-ell...ell` sum accounts for the
 negative-`m` partners. [Pan et al. (2011), Eqs. (3), (30)](https://arxiv.org/html/1006.0431)
 provide the independent Newtonian check `F_22=(32/5) nu² Omega^(10/3)`.
 The JAX positive-`m` sum agrees with this scalar normalization for supplied
-complex modes and recovers the Newtonian `(2,2)` flux; it does not yet
-generate the 35 SEOBNRv4 mode moduli.
+complex modes and recovers the Newtonian `(2,2)` flux. A separate JAX
+factorized engine now generates all 35 declared pre-NQC moduli; it is not
+wired into a complete JAX SEOBNRv4 waveform.
 `flux.factorized_22_amplitude` checks the published pre-NQC dominant-mode
 modulus, including the non-Keplerian Newtonian prefactor, rest-energy tail,
 and Bohé's 2.5PN/3.5PN spin replacements. It agrees with the standalone Torch
@@ -272,11 +273,14 @@ Its quadratic-peak complex relative L2 improves from `0.0080719610` to
 `0.0080611104`. This small effect does not establish compiled `(2,1)` parity
 or close the waveform discrepancy.
 
-All 35 Torch mode moduli now have conditional scalar references and frozen
-point checks. This establishes the declared factorized reconstruction only:
+All 35 Torch and JAX mode moduli now have conditional scalar references and
+frozen point checks. The [JAX 35-mode tests](../../../tests/test_clean_room_jax_seobnrv4_published_flux.py)
+cover two mass-ratio/spin points, both declared high-`ell` truncations, the
+`(2,1)` hybrid choice, the `(3,3)` source-placement choice, batching, JIT,
+and derivatives. This establishes the declared factorized reconstruction only:
 the complete historical `(2,1)` spin prescription, high-`ell` spin truncation,
-and full JAX factorized-flux path still need independent checks. The JAX
-development assembler currently uses a 1.5PN prototype flux and Newtonian `(2,2)` mode, so no
+and full generator torque remain unqualified. The JAX development assembler
+currently uses a 1.5PN prototype flux and Newtonian `(2,2)` mode, so no
 cross-backend whole-waveform SEOBNRv4 claim follows from these checks.
 
 `initial_conditions.leading_adiabatic_state` independently solves the

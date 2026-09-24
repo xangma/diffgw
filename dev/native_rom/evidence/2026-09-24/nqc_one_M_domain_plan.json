@@ -1,0 +1,21 @@
+{
+  "schema": "diffgw.seobnrv4.nqc-one-M-domain-plan.v1",
+  "purpose": "Test the existing opt-in 1 M NQC phase-basis derivative window on two additional frozen boundary rows. Compare the same three ODE tolerances with existing numerical gates and a pinned public binary. This is a numerical diagnostic, not a physical-model fit or production choice.",
+  "campaign": "dev/native_rom/evidence/2026-09-24/combined_domain_numerics.json",
+  "campaign_sha256": "3c414c018917f7dad38644ad86ba58781bc53180b931cb8f869c34f5e83b3025",
+  "antialigned_restart_plan": "dev/native_rom/evidence/2026-09-24/antialigned_restart_plan.json",
+  "antialigned_restart_plan_sha256": "65cf537dd281e7b7140b4d789e407d7c2524ec131002ba76388c1a6d954eb6a0",
+  "antialigned_restart_result": "dev/native_rom/evidence/2026-09-24/antialigned_restart.json",
+  "antialigned_restart_result_sha256": "9f5eb29c9ffe2db96cda3a44b59d20f40c4e9fe4c750e81ea8e9b6253c844626",
+  "aligned_one_M_result": "dev/native_rom/evidence/2026-09-24/strong_spin_nqc_one_M.json",
+  "aligned_one_M_result_sha256": "2a51ae511c62c7d0cbe6970506667833c95ca39fb23a5ea4b1822c080f8e185e",
+  "candidate_window_M": 1.0,
+  "fixed_coarse_first_step_M": 0.125,
+  "warm_start_Momega": 0.03162277660168379,
+  "rows": {
+    "mass_ratio_four_nonspinning": {"fixed_restart_time_M": 165.0},
+    "strong_antialigned_spin": {"fixed_restart_time_M": 100.0}
+  },
+  "levels": ["ode_0", "ode_1", "ode_2"],
+  "release_qualified": false
+}
