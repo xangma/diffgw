@@ -721,6 +721,11 @@ also passes its frozen checks, with `5.95e-9` finest-pair ODE complex relative
 L2. A [near-boundary equal-mass antialigned screen](evidence/2026-09-24/source_rkf_q1_extreme_antialigned_screen.json)
 at `chi1=chi2=-0.95` passes with `9.42e-9` finest-pair ODE complex relative
 L2. These expand the tested spin range but do not bound the physical domain.
+The separately frozen [public-binary comparison](evidence/2026-09-24/boundary_public_polar.json)
+passes its selected-row phase-aware parity limits on both antialigned rows.
+Whole-waveform complex relative L2 is `7.86e-5` at q8/`-0.85` and
+`5.10e-4` at q1/`-0.95`; neither result changes the failed independent NR
+gate or establishes full-domain parity.
 
 A separately frozen [five-case SXS plan](evidence/2026-09-24/sxs_five_case_physical_plan.json)
 selects low-eccentricity nonprecessing NR configurations across mass ratios

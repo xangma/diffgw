@@ -2361,3 +2361,19 @@ nested-output-grid gates: refined complex/amplitude relative L2 are
 `9.42e-9`/`6.32e-10`, the output grids agree on checked samples, and sampled
 event times agree. Source hashes are unchanged. This is another selected
 numerical stress row, not physical validation or a domain-wide guarantee.
+
+The [antialigned public-parity plan](boundary_public_polar_plan.json) freezes
+these two numerically stable rows, their waveform hashes, the active pinned
+public binary, independent `M Omega=0.1` frequency anchors, and phase-aware
+resampling before generating either public waveform. Its selected-row gates
+are whole/post-peak complex relative L2 `<=0.005`/`<=0.01` and absolute
+peak-lag difference `<=0.1 M`. The [result](boundary_public_polar.json)
+replays both native hashes and passes every gate. At q8/`-0.85`, whole and
+post-peak complex L2 are `7.86e-5` and `1.85e-4`, with peak lag
+`-0.00119 M`; at q1/`-0.95`, they are `5.10e-4` and `0.00118`, with peak
+lag `+0.01045 M`. The first attempted preflight used an older Python 3.12
+binary pin and stopped before waveform generation; the committed plan was
+corrected to an existing exact pin for the active Python 3.13 LAL binary,
+without changing rows or limits. These are selected implementation-fidelity
+checks. They neither resolve the frozen 2569 NR miss nor qualify the intended
+physical domain or a ROM.
