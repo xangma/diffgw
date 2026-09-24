@@ -23,11 +23,16 @@ PLAN = q.ROOT / "dev/native_rom/evidence/2026-09-24/source_rkf_domain_plan.json"
 def main(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--json-out", required=True, type=Path)
+    parser.add_argument("--plan", type=Path, default=PLAN,
+                        help="frozen numerical-screen plan; default is the three-row plan")
     parser.add_argument("--row", action="append", help="select a frozen row; default is all")
     args = parser.parse_args(argv)
     if args.json_out.exists():
         parser.error("output already exists; choose a new evidence path")
-    plan = json.loads(PLAN.read_text())
+    plan_path = args.plan.resolve()
+    if not plan_path.is_relative_to(q.ROOT / "dev/native_rom/evidence"):
+        parser.error("plan must be under development evidence")
+    plan = json.loads(plan_path.read_text())
     if (plan["schema"] != "diffgw.seobnrv4.source-rkf-domain-plan.v1"
             or plan["qualification_claim"] is not False):
         parser.error("unexpected qualification plan")
@@ -75,7 +80,9 @@ def main(argv=None):
         scope=dict(**q.SCOPE, selected_row_screen=True,
                    numerical_generator_qualified=False, independent_physics=False),
         status="running", release_qualified=False,
-        plan_sha256=q.sha256(PLAN), prior_source_candidate_sha256=q.sha256(prior_path),
+        plan_path=str(plan_path.relative_to(q.ROOT)),
+        plan_sha256=q.sha256(plan_path),
+        prior_source_candidate_sha256=q.sha256(prior_path),
         source_sha256_before=before, source_manifest_sha256=q.canonical_hash(before),
         git_head=subprocess.check_output(["git", "rev-parse", "HEAD"],
                                          cwd=q.ROOT, text=True).strip(),
