@@ -24,6 +24,7 @@ def main() -> None:
     parser.add_argument("--long-dir", type=Path, required=True)
     parser.add_argument("--decoded-dir", type=Path, required=True)
     parser.add_argument("--archive-dir", type=Path, required=True)
+    parser.add_argument("--only-simulation", help="Run one case as an unpublished smoke check")
     parser.add_argument("--json-out", type=Path, required=True)
     args = parser.parse_args()
     plan = json.loads(args.weighted_plan.read_text())
@@ -44,13 +45,18 @@ def main() -> None:
     from torchwave.constants import MSUN_SEC
     binary = q.lal_binary_identity(plan["binary_versions"]["lal"],
                                    plan["binary_versions"]["lalsimulation"])
+    if args.only_simulation and args.only_simulation not in case_plan["cases"]:
+        raise ValueError("unknown smoke-check simulation")
     output = dict(schema="diffgw.seobnrv4.sxs-five-case-weighted.v1",
                   plan_sha256=q.sha256(args.weighted_plan),
                   script_sha256=q.sha256(__file__), lal_binary=binary,
                   detector_noise_weighted=True, dominant_mode_proxy=True,
                   posthoc_selected_cases=True, release_qualified=False,
+                  complete_case_set=args.only_simulation is None,
                   cases={})
     for simulation, case in case_plan["cases"].items():
+        if args.only_simulation and simulation != args.only_simulation:
+            continue
         number = simulation.rsplit(":", 1)[-1]
         long_path = args.long_dir / f"sxs_{number}_long_start.json"
         long_result = json.loads(long_path.read_text())
