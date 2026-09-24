@@ -964,6 +964,16 @@ unwrapping, parameter and frequency grids, parameter-interpolation choice,
 patch boundaries, source-model fidelity, and ROM holdouts are still unqualified.
 The archived trainer remains separate because its generator is unqualified.
 
+An [original-paper five-case SXS regression](evidence/2026-09-24/sxs_paper_catalog_weighted.json)
+passes the frozen `0.99` dominant-mode NR-overlap proxy on four cases, but
+SXS:BBH:0260 reaches only `0.9880256` at 22 M⊙ while its low/high NR control
+stays above `0.999992`. The
+[post-hoc official SEOBNRv4 control](evidence/2026-09-24/sxs_paper_public_parity.json)
+reaches `0.9880269` at the same mass, and all five selected native/public
+parity checks pass. These original-paper runs are regression cases, not an
+independent holdout. Their shared 0260 miss and the separate prospective 2569
+miss leave the absolute physical gate failed; the release target is unresolved.
+
 1. Qualify the physical generator against the published equations and independent
    references over the intended domain, resolve convention/provenance gaps, and
    establish gradients and numerical convergence. This runner covers only scalar

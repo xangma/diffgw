@@ -2377,3 +2377,25 @@ corrected to an existing exact pin for the active Python 3.13 LAL binary,
 without changing rows or limits. These are selected implementation-fidelity
 checks. They neither resolve the frozen 2569 NR miss nor qualify the intended
 physical domain or a ROM.
+
+The [original-paper catalog plan](sxs_paper_catalog_plan.json) selected five
+pre-2017 SXS runs named in [Bohé et al., Appendix C](https://arxiv.org/pdf/1611.03703)
+using pinned catalog metadata before fetching their waveforms. These cases are
+an original-paper regression set, not independent validation. The frozen
+[weighted plan](sxs_paper_catalog_weighted_plan.json) applies the same
+10–200 M⊙ dominant-mode proxy and absolute `0.99` gate. The
+[result](sxs_paper_catalog_weighted.json) passes four cases, with minimum
+native/NR overlaps `0.995898` (0180), `0.999067` (0292), `0.995621` (0293),
+and `0.999664` (0299). SXS:BBH:0260 fails at `0.9880256` at 22 M⊙; its
+low/high-resolution NR control stays above `0.999992`. All five comparisons
+completed, but the frozen absolute gate remains failed, as does the earlier
+prospective 2569 gate.
+
+The separately frozen [public-control plan](sxs_paper_public_parity_plan.json)
+was written after that NR screen and is therefore a post-hoc fidelity check.
+Its [result](sxs_paper_public_parity.json) passes all five selected native/public
+parity gates. On the failed 0260 row, official public SEOBNRv4/NR is
+`0.9880269` at 22 M⊙ versus native/NR `0.9880256`; their fixed-crossing
+complex relative L2 is `1.84e-5`. The shared miss does not change the frozen
+physical gate or establish full-domain fidelity, numerical convergence, or a
+qualified ROM.
