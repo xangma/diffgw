@@ -1,0 +1,25 @@
+{
+  "schema": "diffgw.seobnrv4.qnm-binary-reachability-plan.v1",
+  "purpose": "Post-hoc binary witnesses for the high-spin QNM discrepancy found by the predeclared dense-spin scan; component diagnostic only.",
+  "release_qualified": false,
+  "lal_version": "7.7.1",
+  "lalsimulation_version": "6.2.1",
+  "final_spin_fit_order": [3, 4],
+  "rows": [
+    {"q": 8, "chi1": 0.85, "chi2": 0.85},
+    {"q": 8, "chi1": 1, "chi2": -1},
+    {"q": 20, "chi1": 1, "chi2": -1},
+    {"q": 50, "chi1": 1, "chi2": -1},
+    {"q": 68, "chi1": 1, "chi2": -1},
+    {"q": 70, "chi1": 1, "chi2": -1},
+    {"q": 75, "chi1": 1, "chi2": -1},
+    {"q": 76, "chi1": 1, "chi2": -1},
+    {"q": 79, "chi1": 1, "chi2": -1},
+    {"q": 80, "chi1": 1, "chi2": -1}
+  ],
+  "remnant_spin_absolute_tolerance": 1e-12,
+  "qnm_dimensionless_absolute_tolerance": 6e-7,
+  "posthoc_solver_control_row_indices": [0, 7],
+  "solver_control_absolute_tolerance": 1e-10,
+  "pinned_qnm_spin_upper_bound": 0.9996
+}

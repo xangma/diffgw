@@ -1211,3 +1211,110 @@ choices, not physical accuracy or domain-wide release qualification. Reproduce
 with `PYTHONPATH=src:. python -m
 dev.native_rom.diagnose_source_flux_one_M_domain --json-out
 /tmp/source-flux-one-M-domain.json` in the pinned development environment.
+
+**Dense signed-spin QNM.** The [predeclared grid](qnm_dense_spin_plan.json)
+and [result](qnm_dense_spin.json) compare both independently generated native
+frontends with the hash-pinned public `SEOBNRv4` QNM routine at 131 signed
+spins from `-0.9` to `0.9996`. Torch and JAX agree to `1.7e-16`, but both
+miss the previous `6e-7` historical-binary proximity gate: the worst
+frequency difference is `1.7154e-5` at `j=0.999540793009`. Four post-hoc
+strict runs of our original Kerr equation solver, including that point,
+match the native spline to at most `7.1e-16`. These solver controls verify
+native interpolation but are not independent author data. The sparse Berti
+and Cook author checks remain the external physical anchors; historical
+interpolation and the whole waveform remain unqualified. Reproduce with
+`PYTHONPATH=src:. python -m dev.native_rom.diagnose_qnm_dense_spin --json-out
+/tmp/diffgw-qnm-dense-spin.json`; exit status 1 records the failed wheel
+proximity gate in the JSON.
+
+**QNM reachability from binary inputs.** The [post-hoc witness plan](qnm_binary_reachability_plan.json)
+and [result](qnm_binary_reachability.json) feed ten binary configurations to
+both the published Hofmann `(3,4)` remnant fit and the pinned public
+`SEOBNRv4` remnant helper. The final spins agree to `2.3e-16`. The
+`(q,chi1,chi2)=(8,0.85,0.85)` row used for NR calibration in
+[Bohé et al. (2017), Sec. III](https://arxiv.org/html/1611.03703) gives
+`j=0.8941271984` and a native/wheel QNM frequency difference of `1.20e-6`,
+already above the previous `6e-7` proximity threshold. In extrapolated
+high-mass-ratio rows, `(76,1,-1)` gives `j=0.9995469946` and a frequency
+difference of `1.91e-5`; `(80,1,-1)` gives `j=0.9996053273`, beyond the
+pinned QNM helper's `0.9996` upper limit. Strict native Kerr equation solves
+at the `q=8` calibration and `q=76` witness spins match the native spline to
+at most `3.4e-16`. The high-`q` rows are not evidence of NR-calibrated model
+accuracy, and this finite witness set is not a domain-wide bound. The failed
+historical parity/domain gates remain in the JSON. Reproduce with
+`PYTHONPATH=src:. python -m dev.native_rom.diagnose_qnm_binary_reachability
+--json-out /tmp/diffgw-qnm-binary-reachability.json`; exit status 1 records
+the failed gates.
+
+**Historical QNM source interpolation.** The [frozen source-audit plan](qnm_source_interpolation_plan.json)
+and [result](qnm_source_interpolation.json) identify the 107 printed spin
+knots and `gsl_interp_cspline` rule in pinned LAL source revision
+`53acc0c2cd7ea2d3c83fc71a7bd88035c2861d6c`. The source file SHA-256 is
+`99430b73bd8f67aa72bfbe49b3a86051908d4bae83324dc5c5d6410b304cde95`.
+A development-only SciPy natural cubic replay matches the pinned public QNM
+outputs to `1.2e-16` at five witness spins. At `j=0.999540793009`, using
+native solved values at those same source knots still yields a `1.751e-5`
+frequency interpolation error; the source's printed values contribute only
+`-3.55e-7` to the interpolated frequency. The historical knot spacing and
+curvature explain most of the positive near-extremal wheel/native gap. The
+negative endpoint shows a separate discrepancy: at `j=-0.9996` its printed
+frequency differs from the native solved mode by `0.02135`. This audit
+establishes historical implementation provenance, not physical accuracy or
+waveform qualification. No third-party QNM table is copied into production
+code. Reproduce with `PYTHONPATH=src:. python -m
+dev.native_rom.diagnose_qnm_source_interpolation --source-root
+/Users/xangma/repos/lalsuite-git --json-out
+/tmp/diffgw-qnm-source-interpolation.json`.
+
+**Counterrotating Cook author check.** The [post-hoc sparse plan](qnm_negative_author_plan.json)
+and [result](qnm_negative_author.json) read five rows from Cook's hashed
+`KerrQNM_00.h5` dataset `/n00/m-02/{2,-2,0}` using `h5dump`; the archive
+SHA-256 is `d5853acabc1a07b66b4fae437c02e1435a9d2b3561bd7e4752b9721c9cd48923`.
+Native positive-frequency counterrotating roots agree with author values
+within `6.97e-13` at signed spins `-0.99` through `-0.999625`. The pinned
+wheel's source table differs from Cook by `0.015019` in frequency at
+`j=-0.9995`, inside its public `|j|<=0.9996` domain. Three sparse author
+rows also test Torch and JAX. These rows were chosen after inspecting the
+negative-spin discrepancy; they do not provide a domain-wide error bound or
+validate a waveform. The author dataset remains a development-only
+validation source. Reproduce with `PYTHONPATH=src:. python -m
+dev.native_rom.diagnose_qnm_negative_author --author-archive
+/tmp/diffgw-KerrQNM_00.h5 --json-out /tmp/diffgw-qnm-negative-author.json`.
+
+**Pinned-wheel private NQC inputs.** The [frozen capture plan](wheel_nqc_spline_capture_plan.json)
+and [three-row result](wheel_nqc_spline_capture.json) use a development-only
+macOS interposer to record the ten GSL spline input arrays passed by the
+unmodified, hash-pinned wheel. The interposer calls the original GSL function;
+the recorded arrays are diagnostic outputs, not native model data. The
+source C fit reproduces the wheel's five active coefficients to at most
+`1.01e-12` L2. Algebraic recovery from the wheel's Q3, Q4, and P3 spline
+inputs shows its private fit radius and radial momentum agree with its public
+high-rate dynamics to at most `1.78e-15` and `1.11e-16`, respectively.
+
+On those identical public states, the pinned source's explicit-state calls
+differ from the wheel's captured NQC input amplitudes by at most
+`1.61e-10`, orbital frequencies by `2.65e-11`, and phases by `1.21e-10`
+within `4 M` of matching. Replacing only the captured amplitude with the
+source-evaluated amplitude changes the fitted coefficient vector by `0.0603`,
+`0.206`, and `1.527` L2 on the nonspinning, mild mixed-spin, and strong
+aligned-spin rows. Replacing only frequency changes it by `0.00882`,
+`0.0152`, and `0.0312`; replacing only phase changes it by `0.00121`,
+`0.00207`, and `0.00207`. Replacing all three yields the earlier source
+reconstruction gaps of `0.0687`, `0.220`, and `1.524`. A separate source
+generator control confirms the explicit-state adapter exactly reproduces its
+own captured amplitude and frequency at all 512 strong-spin samples around
+matching. The residual therefore lies between the pinned source evaluation
+and wheel binary on the same states; this experiment does not isolate its
+compiler or source-code origin. Compiling the explicit-state source probe at
+`-O0`, `-O2`, and `-O3` leaves the checked amplitudes unchanged to
+`1.11e-16`. The `-O2 -ffast-math` control changes them by up to `1.99e-10`
+but raises the amplitude RMS error against the wheel on all three rows.
+These controls exclude a simple optimization-level fix; they do not reveal
+the wheel's build settings. Natural-cubic differentiation amplifies the
+small amplitude differences into much larger coefficient changes. This
+attribution does not establish a native NQC rule, physical accuracy, or
+release qualification. Reproduce on the pinned macOS environment with
+`PYTHONPATH=src:. python -m dev.native_rom.diagnose_wheel_nqc_spline_capture
+--source-root /Users/xangma/repos/lalsuite-git --headers
+/tmp/diffgw-lalsuite-pinned-53acc0c/merged-include --gsl-include
+/usr/local/include --json-out /tmp/diffgw-wheel-nqc-spline-capture.json`.

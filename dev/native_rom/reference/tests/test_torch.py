@@ -27,7 +27,7 @@ from dev.native_rom.reference.ringdown import h22
 from dev.native_rom.reference.remnant import final_mass_fraction, final_spin_projection
 from dev.native_rom.reference.qnm import (
     BERTI_AUTHOR_220_SAMPLES, COOK_AUTHOR_220_NEAR_EXTREMAL,
-    COOK_AUTHOR_220_SAMPLES,
+    COOK_AUTHOR_220_SAMPLES, COOK_AUTHOR_COUNTERROTATING_SAMPLES,
 )
 from torchwave.approximants.kerr_qnm_generated import dimensionless_qnm
 from torchwave.approximants.eob.merger_ringdown import merger_ringdown_22, seobnrv4_merger_shape
@@ -622,5 +622,12 @@ def test_qnm_against_berti_numerical_table(spin, frequency, damping):
 def test_qnm_against_cook_independent_author_data(spin, frequency, damping):
     # Cook KerrQNM_00.h5, n=0, (ell,m)=(2,2); the raw solver's full domain.
     actual_frequency, actual_damping = dimensionless_qnm(2, 2, 0, scalar(spin))
+    assert float(actual_frequency) == pytest.approx(frequency, rel=0, abs=1e-10)
+    assert float(actual_damping) == pytest.approx(damping, rel=0, abs=1e-10)
+
+
+@pytest.mark.parametrize("spin,frequency,damping", COOK_AUTHOR_COUNTERROTATING_SAMPLES)
+def test_counterrotating_qnm_against_cook_author_data(spin, frequency, damping):
+    actual_frequency, actual_damping = dimensionless_qnm(2, -2, 0, scalar(-spin))
     assert float(actual_frequency) == pytest.approx(frequency, rel=0, abs=1e-10)
     assert float(actual_damping) == pytest.approx(damping, rel=0, abs=1e-10)

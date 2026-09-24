@@ -1,0 +1,525 @@
+{
+  "errors": [],
+  "input_sha256": {
+    "exact_rows": "fd9fe03219bfba479b14d1e1efc2f83e77bcd0232b07a1e3099c6e96ddd772ce",
+    "exact_state_adapter": "d526a3ff6df8078428ba116e9bf09f3b8e69cc78a5cfc8873601290c527e97fa",
+    "interposer": "64bdb2fa9147c0ccaba9e33192c3d9139ee46a2b7b0490e84d9f8f530ba45b69",
+    "source_flux_plan": "1167199c8f954f97a5905a1e3b2f67d1555e984e5f1da0a0fc42a77a925f96ea",
+    "source_high_adapter": "cfec235c177f9593cd394ec81dcc0971a159eea7f81932852bcaae4cadd8bd0b",
+    "source_nqc_inputs": "2e833d066734a4b91bec5c71f267011bde5c6ffb2ace5a3b49f2f0b40b1f04d7",
+    "source_wheel_mode": "c103f7d884073eb00029a231dd271d49c4a4571455030b11b93c22e298a479da"
+  },
+  "pinned_libraries_sha256": {
+    "libgsl.28.dylib": "1eefe0dbead9551d47be3c09bbf786c727f84df1331130ee8a03127b7a95abe8",
+    "libgslcblas.0.dylib": "00a30ab2e9eb5cd36caab9ae9a9975a8280b9b4c2940b15e446c34a151818230",
+    "liblal.20.dylib": "e4c4ed42baed00d30668588e58444f974e3deeda56ba4e5978624640ddb5bde7",
+    "liblalsimulation.37.dylib": "9046c4a673d2ba82b792f7b92d73203ba783b32fc604b5da1139c5c1bc8b3325"
+  },
+  "plan_sha256": "877086782b2d6ff8a1817f4199dcbc45c3818e3abf86ae07f04102664007e09d",
+  "release_qualified": false,
+  "rows": {
+    "mild_mixed_spin": {
+      "compiler_controls": {
+        "-O0": {
+          "amplitude_minus_O2_max_abs": 1.1102230246251565e-16,
+          "amplitude_minus_wheel_max_abs": 1.606177413293608e-10,
+          "amplitude_minus_wheel_rms": 4.8291284885642294e-11,
+          "orbital_frequency_minus_wheel_max_abs": 2.3535867699209234e-11,
+          "orbital_frequency_minus_wheel_rms": 7.135609124422068e-12,
+          "sample_count": 512
+        },
+        "-O2": {
+          "amplitude_minus_O2_max_abs": 1.1102230246251565e-16,
+          "amplitude_minus_wheel_max_abs": 1.606177413293608e-10,
+          "amplitude_minus_wheel_rms": 4.8291284885642294e-11,
+          "orbital_frequency_minus_wheel_max_abs": 2.3535867699209234e-11,
+          "orbital_frequency_minus_wheel_rms": 7.135609124422068e-12,
+          "sample_count": 512
+        },
+        "-O2 -ffast-math": {
+          "amplitude_minus_O2_max_abs": 1.937390248230031e-10,
+          "amplitude_minus_wheel_max_abs": 1.9890417091161794e-10,
+          "amplitude_minus_wheel_rms": 6.252165527852784e-11,
+          "orbital_frequency_minus_wheel_max_abs": 2.373978791325726e-11,
+          "orbital_frequency_minus_wheel_rms": 8.635138685970746e-12,
+          "sample_count": 512
+        },
+        "-O3": {
+          "amplitude_minus_O2_max_abs": 1.1102230246251565e-16,
+          "amplitude_minus_wheel_max_abs": 1.606177413293608e-10,
+          "amplitude_minus_wheel_rms": 4.8291284885642294e-11,
+          "orbital_frequency_minus_wheel_max_abs": 2.3535867699209234e-11,
+          "orbital_frequency_minus_wheel_rms": 7.135609124422068e-12,
+          "sample_count": 512
+        }
+      },
+      "fit_ablations": {
+        "all_source_inputs": {
+          "coefficients": [
+            8.77797509891835,
+            -87.18864635926055,
+            102.19379318176897,
+            5.563850569179975,
+            -35.03973523301401
+          ],
+          "minus_wheel_reported": [
+            -0.01609631162427938,
+            0.14378763583357568,
+            -0.16541208082421122,
+            -0.0007431863834304053,
+            0.008804912047608582
+          ],
+          "minus_wheel_reported_l2": 0.21993910691661206
+        },
+        "amplitude": {
+          "coefficients": [
+            8.778972642851784,
+            -87.1975570334537,
+            102.20404374956736,
+            5.564593755563406,
+            -35.04854014506162
+          ],
+          "minus_wheel_reported": [
+            -0.01509876769084606,
+            0.13487696164041552,
+            -0.15516151302581704,
+            8.881784197001252e-16,
+            -7.105427357601002e-15
+          ],
+          "minus_wheel_reported_l2": 0.20614282110127688
+        },
+        "orbital_frequency": {
+          "coefficients": [
+            8.7930737978406,
+            -87.32352270657853,
+            102.34895398807448,
+            5.564024968888041,
+            -35.04180143617363
+          ],
+          "minus_wheel_reported": [
+            -0.0009976127020294712,
+            0.008911288515591309,
+            -0.010251274518694231,
+            -0.0005687866753643078,
+            0.006738708887986888
+          ],
+          "minus_wheel_reported_l2": 0.01520620396838393
+        },
+        "phase": {
+          "coefficients": [
+            8.79407141054263,
+            -87.33243399509412,
+            102.35920526259318,
+            5.5644193416814565,
+            -35.04647377397668
+          ],
+          "minus_wheel_reported": [
+            0.0,
+            0.0,
+            0.0,
+            -0.00017441388194860963,
+            0.002066371084936236
+          ],
+          "minus_wheel_reported_l2": 0.002073718800338402
+        },
+        "wheel": {
+          "coefficients": [
+            8.79407141054263,
+            -87.33243399509412,
+            102.35920526259318,
+            5.564593755563406,
+            -35.04854014506162
+          ],
+          "minus_wheel_reported": [
+            0.0,
+            0.0,
+            0.0,
+            8.881784197001252e-16,
+            -7.105427357601002e-15
+          ],
+          "minus_wheel_reported_l2": 7.160723346098895e-15
+        }
+      },
+      "private_gsl_capture_sha256": "f411cbeb16509df794621d05f6c929a73b79fbda28f918c39fb08aee5cb7ade0",
+      "private_gsl_spline_length": 9663,
+      "private_minus_public_radial_momentum_max_abs": 1.1102230246251565e-16,
+      "private_minus_public_radius_max_abs": 1.7763568394002505e-15,
+      "public_high_dynamics_sha256": "e326f1fbfbe55989162d693a3bbf90fb24dc9df78b4e941a18be31f6dd19fa70",
+      "row": {
+        "chi1": 0.2,
+        "chi2": -0.1,
+        "mass1": 30.0,
+        "mass2": 20.0,
+        "omega_start": 0.04
+      },
+      "same_state_source_minus_wheel_input_max_abs": {
+        "amp": 1.606177413293608e-10,
+        "omega": 2.3535867699209234e-11,
+        "phase": 9.766409903022577e-11
+      },
+      "source_internal_control": null,
+      "wheel_fit_replay_l2": 7.160723346098895e-15,
+      "wheel_match_time_M": 145.0314486506888,
+      "wheel_peak_rule": {
+        "first_decline_index": 256,
+        "first_decline_time_M": 149.890625,
+        "initial_derivatives_bracket_root": false,
+        "initial_left_derivative": -1.705669365625384e-05,
+        "initial_right_derivative": -7.529386995482386e-05,
+        "rule_minus_true_spline_peak_M": 0.020235869307526855,
+        "sampled_maximum_time_M": 149.875,
+        "time_M": 149.89061737060547,
+        "true_spline_peak_M": 149.87038150129794
+      },
+      "wheel_reported_coefficients": [
+        8.79407141054263,
+        -87.33243399509412,
+        102.35920526259318,
+        5.564593755563405,
+        -35.048540145061615
+      ]
+    },
+    "nonspinning": {
+      "compiler_controls": {
+        "-O0": {
+          "amplitude_minus_O2_max_abs": 1.1102230246251565e-16,
+          "amplitude_minus_wheel_max_abs": 1.6067414065901175e-10,
+          "amplitude_minus_wheel_rms": 5.1428561694720446e-11,
+          "orbital_frequency_minus_wheel_max_abs": 2.6484758830491728e-11,
+          "orbital_frequency_minus_wheel_rms": 6.87074597319955e-12,
+          "sample_count": 512
+        },
+        "-O2": {
+          "amplitude_minus_O2_max_abs": 1.1102230246251565e-16,
+          "amplitude_minus_wheel_max_abs": 1.6067414065901175e-10,
+          "amplitude_minus_wheel_rms": 5.1428561694720446e-11,
+          "orbital_frequency_minus_wheel_max_abs": 2.6484758830491728e-11,
+          "orbital_frequency_minus_wheel_rms": 6.87074597319955e-12,
+          "sample_count": 512
+        },
+        "-O2 -ffast-math": {
+          "amplitude_minus_O2_max_abs": 1.7218770853588694e-10,
+          "amplitude_minus_wheel_max_abs": 1.8707507765114428e-10,
+          "amplitude_minus_wheel_rms": 5.993926892732801e-11,
+          "orbital_frequency_minus_wheel_max_abs": 2.424771494702327e-11,
+          "orbital_frequency_minus_wheel_rms": 8.139902723409656e-12,
+          "sample_count": 512
+        },
+        "-O3": {
+          "amplitude_minus_O2_max_abs": 1.1102230246251565e-16,
+          "amplitude_minus_wheel_max_abs": 1.6067414065901175e-10,
+          "amplitude_minus_wheel_rms": 5.1428561694720446e-11,
+          "orbital_frequency_minus_wheel_max_abs": 2.6484758830491728e-11,
+          "orbital_frequency_minus_wheel_rms": 6.87074597319955e-12,
+          "sample_count": 512
+        }
+      },
+      "fit_ablations": {
+        "all_source_inputs": {
+          "coefficients": [
+            4.104435891570979,
+            -46.97680087159758,
+            56.769403663692394,
+            4.126176398949015,
+            -21.899983548026395
+          ],
+          "minus_wheel_reported": [
+            -0.005209677433627213,
+            0.04523561743191351,
+            -0.051305443203212064,
+            -0.0004423569586657905,
+            0.004280052457303896
+          ],
+          "minus_wheel_reported_l2": 0.0687325603655433
+        },
+        "amplitude": {
+          "coefficients": [
+            4.105063326225858,
+            -46.98224860923681,
+            56.775582235593,
+            4.126618755907685,
+            -21.904263600483723
+          ],
+          "minus_wheel_reported": [
+            -0.004582242778748302,
+            0.03978787979268361,
+            -0.04512687130260673,
+            3.552713678800501e-15,
+            -2.4868995751603507e-14
+          ],
+          "minus_wheel_reported_l2": 0.06033661277236619
+        },
+        "orbital_frequency": {
+          "coefficients": [
+            4.1090181381718835,
+            -47.01658878460533,
+            56.81453057268241,
+            4.126300740667488,
+            -21.90118662414061
+          ],
+          "minus_wheel_reported": [
+            -0.000627430832722986,
+            0.005447704424163646,
+            -0.006178534213198361,
+            -0.000318015240193148,
+            0.0030769763430882335
+          ],
+          "minus_wheel_reported_l2": 0.00882124453098802
+        },
+        "phase": {
+          "coefficients": [
+            4.1096455690046065,
+            -47.02203648902951,
+            56.82070910689562,
+            4.126494406561721,
+            -21.903060450569253
+          ],
+          "minus_wheel_reported": [
+            0.0,
+            -1.4210854715202004e-14,
+            1.4210854715202004e-14,
+            -0.0001243493459597289,
+            0.0012031499144455893
+          ],
+          "minus_wheel_reported_l2": 0.0012095587941357135
+        },
+        "wheel": {
+          "coefficients": [
+            4.1096455690046065,
+            -47.02203648902951,
+            56.82070910689562,
+            4.126618755907685,
+            -21.904263600483723
+          ],
+          "minus_wheel_reported": [
+            0.0,
+            -1.4210854715202004e-14,
+            1.4210854715202004e-14,
+            3.552713678800501e-15,
+            -2.4868995751603507e-14
+          ],
+          "minus_wheel_reported_l2": 3.2171190647067566e-14
+        }
+      },
+      "private_gsl_capture_sha256": "7b9507f06e2110a1066e49232536021c21ab56e7d1c6bc6e318fc41542975fe3",
+      "private_gsl_spline_length": 9659,
+      "private_minus_public_radial_momentum_max_abs": 1.1102230246251565e-16,
+      "private_minus_public_radius_max_abs": 1.7763568394002505e-15,
+      "public_high_dynamics_sha256": "149a815b6360ab0aaad3b65a2f262405057762eab7e214c85dd199f8cb39eb22",
+      "row": {
+        "chi1": 0.0,
+        "chi2": 0.0,
+        "mass1": 30.0,
+        "mass2": 20.0,
+        "omega_start": 0.04
+      },
+      "same_state_source_minus_wheel_input_max_abs": {
+        "amp": 1.6067414065901175e-10,
+        "omega": 2.6484758830491728e-11,
+        "phase": 1.2039080843351257e-10
+      },
+      "source_internal_control": null,
+      "wheel_fit_replay_l2": 3.2171190647067566e-14,
+      "wheel_match_time_M": 145.45574458660548,
+      "wheel_peak_rule": {
+        "first_decline_index": 256,
+        "first_decline_time_M": 149.828125,
+        "initial_derivatives_bracket_root": false,
+        "initial_left_derivative": -7.061645017915618e-06,
+        "initial_right_derivative": -7.080684183415501e-05,
+        "rule_minus_true_spline_peak_M": 0.017362037681522224,
+        "sampled_maximum_time_M": 149.8125,
+        "time_M": 149.82811737060547,
+        "true_spline_peak_M": 149.81075533292395
+      },
+      "wheel_reported_coefficients": [
+        4.1096455690046065,
+        -47.022036489029496,
+        56.820709106895606,
+        4.126618755907681,
+        -21.9042636004837
+      ]
+    },
+    "strong_aligned_spin": {
+      "compiler_controls": {
+        "-O0": {
+          "amplitude_minus_O2_max_abs": 1.1102230246251565e-16,
+          "amplitude_minus_wheel_max_abs": 1.38669242755185e-10,
+          "amplitude_minus_wheel_rms": 4.117707739329032e-11,
+          "orbital_frequency_minus_wheel_max_abs": 2.228783824165248e-11,
+          "orbital_frequency_minus_wheel_rms": 6.075476129721026e-12,
+          "sample_count": 512
+        },
+        "-O2": {
+          "amplitude_minus_O2_max_abs": 1.1102230246251565e-16,
+          "amplitude_minus_wheel_max_abs": 1.38669242755185e-10,
+          "amplitude_minus_wheel_rms": 4.117707739329032e-11,
+          "orbital_frequency_minus_wheel_max_abs": 2.228783824165248e-11,
+          "orbital_frequency_minus_wheel_rms": 6.075476129721026e-12,
+          "sample_count": 512
+        },
+        "-O2 -ffast-math": {
+          "amplitude_minus_O2_max_abs": 1.9903539927312863e-10,
+          "amplitude_minus_wheel_max_abs": 2.386536523957261e-10,
+          "amplitude_minus_wheel_rms": 5.927135553143685e-11,
+          "orbital_frequency_minus_wheel_max_abs": 3.190633868221937e-11,
+          "orbital_frequency_minus_wheel_rms": 8.018387236875109e-12,
+          "sample_count": 512
+        },
+        "-O3": {
+          "amplitude_minus_O2_max_abs": 1.1102230246251565e-16,
+          "amplitude_minus_wheel_max_abs": 1.38669242755185e-10,
+          "amplitude_minus_wheel_rms": 4.117707739329032e-11,
+          "orbital_frequency_minus_wheel_max_abs": 2.228783824165248e-11,
+          "orbital_frequency_minus_wheel_rms": 6.075476129721026e-12,
+          "sample_count": 512
+        }
+      },
+      "fit_ablations": {
+        "all_source_inputs": {
+          "coefficients": [
+            171.84079490120047,
+            -1473.527013224301,
+            1650.833455463463,
+            42.96355897586237,
+            -1091.3616454797996
+          ],
+          "minus_wheel_reported": [
+            -0.09767372872991587,
+            0.9676500892355762,
+            -1.1722945030085157,
+            -0.0005877811385133214,
+            0.03293022898219533
+          ],
+          "minus_wheel_reported_l2": 1.523563585720364
+        },
+        "amplitude": {
+          "coefficients": [
+            171.84052794703334,
+            -1473.5243697797105,
+            1650.8302537311488,
+            42.96414675700089,
+            -1091.394575708782
+          ],
+          "minus_wheel_reported": [
+            -0.09794068289704683,
+            0.9702935338261796,
+            -1.1754962353227256,
+            7.105427357601002e-15,
+            -2.2737367544323206e-13
+          ],
+          "minus_wheel_reported_l2": 1.527368101804256
+        },
+        "orbital_frequency": {
+          "coefficients": [
+            171.93873695261652,
+            -1474.4973203166544,
+            1652.0089681251504,
+            42.963595838072514,
+            -1091.3637106629346
+          ],
+          "minus_wheel_reported": [
+            0.00026832268613929955,
+            -0.002657003117747081,
+            0.0032181586789192806,
+            -0.00055091892836856,
+            0.03086504584712202
+          ],
+          "minus_wheel_reported_l2": 0.031151930513611786
+        },
+        "phase": {
+          "coefficients": [
+            171.93846862993024,
+            -1474.494663313536,
+            1652.0057499664708,
+            42.964109894416055,
+            -1091.392510504655
+          ],
+          "minus_wheel_reported": [
+            -1.4210854715202004e-13,
+            6.821210263296962e-13,
+            -6.821210263296962e-13,
+            -3.686258482815674e-05,
+            0.002065204126665776
+          ],
+          "minus_wheel_reported_l2": 0.002065533087354827
+        },
+        "wheel": {
+          "coefficients": [
+            171.93846862993024,
+            -1474.494663313536,
+            1652.0057499664708,
+            42.96414675700089,
+            -1091.394575708782
+          ],
+          "minus_wheel_reported": [
+            -1.4210854715202004e-13,
+            6.821210263296962e-13,
+            -6.821210263296962e-13,
+            7.105427357601002e-15,
+            -2.2737367544323206e-13
+          ],
+          "minus_wheel_reported_l2": 1.0012603575885306e-12
+        }
+      },
+      "private_gsl_capture_sha256": "b1bdc352e373082c4fa0fd816d1888581964b6da2030a090268efaa6684ade7a",
+      "private_gsl_spline_length": 9663,
+      "private_minus_public_radial_momentum_max_abs": 8.326672684688674e-17,
+      "private_minus_public_radius_max_abs": 8.881784197001252e-16,
+      "public_high_dynamics_sha256": "6380ff7fc3325d001f0dda9d7703b6b941e7dd8b661e378e5b4235da8a61a56c",
+      "row": {
+        "chi1": 0.8,
+        "chi2": 0.8,
+        "mass1": 30.0,
+        "mass2": 20.0,
+        "omega_start": 0.04
+      },
+      "same_state_source_minus_wheel_input_max_abs": {
+        "amp": 1.38669242755185e-10,
+        "omega": 2.228783824165248e-11,
+        "phase": 7.37152561214316e-11
+      },
+      "source_internal_control": {
+        "amplitude_max_abs": 0.0,
+        "orbital_frequency_max_abs": 0.0,
+        "sample_count": 512
+      },
+      "wheel_fit_replay_l2": 1.0012603575885306e-12,
+      "wheel_match_time_M": 137.61454396452547,
+      "wheel_peak_rule": {
+        "first_decline_index": 256,
+        "first_decline_time_M": 149.703125,
+        "initial_derivatives_bracket_root": false,
+        "initial_left_derivative": -1.77814153218661e-05,
+        "initial_right_derivative": -6.161214126589845e-05,
+        "rule_minus_true_spline_peak_M": 0.022010629106915758,
+        "sampled_maximum_time_M": 149.6875,
+        "time_M": 149.70311737060547,
+        "true_spline_peak_M": 149.68110674149855
+      },
+      "wheel_reported_coefficients": [
+        171.93846862993038,
+        -1474.4946633135366,
+        1652.0057499664715,
+        42.96414675700088,
+        -1091.3945757087818
+      ]
+    }
+  },
+  "schema": "diffgw.seobnrv4.wheel-nqc-spline-capture.v1",
+  "scope": {
+    "description": "Pinned-wheel private GSL NQC inputs, source-C replay, and source-mode input ablations.",
+    "development_only": true,
+    "known_limitations": [
+      "The captured wheel arrays are black-box reference outputs, not native model data.",
+      "The interposer is specific to the pinned macOS wheel and linked GSL binary.",
+      "Three diagnostic rows and source-wheel parity do not establish physical accuracy or release qualification."
+    ],
+    "physics_validated": false,
+    "production_asset": false,
+    "production_promotion_allowed": false,
+    "training_generator_qualified": false
+  },
+  "script_sha256": "5bd28bb361ea7d8e600a7b64234f8b2034967792e042b6ed881c63bf29d2dc94",
+  "status": "diagnostic_complete"
+}

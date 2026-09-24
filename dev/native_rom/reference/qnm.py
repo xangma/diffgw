@@ -1,7 +1,8 @@
 """Berti et al. (2006) printed 220 fit: a diagnostic, not SEOBNRv4's QNM.
 
-SEOBNRv4 instead interpolates the authors' numerical QNM results. Its exact
-historical interpolation grid and rule remain outside this paper reference.
+SEOBNRv4 instead interpolates numerical QNM results. The pinned LAL source
+identifies its historical grid/rule, which remain outside this scalar paper
+reference and the native model inputs.
 """
 
 import mpmath as mp
@@ -24,6 +25,14 @@ COOK_AUTHOR_220_SAMPLES = (
 )
 COOK_AUTHOR_220_NEAR_EXTREMAL = (
     0.99990625, 0.9861231248046504, 0.0033605524664073053,
+)
+
+# Cook (2019) /n00/m-02/{2,-2,0}; signed spin is negative for the positive-
+# frequency counterrotating 220 branch. Sparse validation only, not fit inputs.
+COOK_AUTHOR_COUNTERROTATING_SAMPLES = (
+    (-0.99, 0.29210669859710475, 0.08805227615867654),
+    (-0.999, 0.29160863510363183, 0.08802849032798563),
+    (-0.9995, 0.29158104550836406, 0.08802716407625095),
 )
 
 

@@ -43,6 +43,28 @@ extending the ROM work or promoting any model.
 A separate [pinned public-binary component check](evidence/2026-09-23/README.md)
 identifies the Hofmann `(3,4)` remnant-spin choice for the tested LAL version
 and bounds native fundamental QNM differences at nine signed-spin points.
+The [131-spin follow-up](evidence/2026-09-24/qnm_dense_spin.json) finds a
+`1.72e-5` near-extremal interior frequency difference from that wheel,
+exceeding the earlier nine-point `6e-7` diagnostic gate. Torch and JAX agree,
+and the native value matches our original Kerr equation solver at the worst
+spin to `2.3e-16`. A [pinned-source audit](evidence/2026-09-24/qnm_source_interpolation.json)
+reproduces the wheel's historical GSL spline to `1.2e-16` on five witness
+spins. Replacing its printed knots with native Kerr solutions leaves a
+`1.75e-5` interpolation error at the worst positive-spin point, so knot
+spacing and curvature dominate that discrepancy. The wheel tables are
+third-party numbers and stay outside the native package. A
+[Cook author-data check](evidence/2026-09-24/qnm_negative_author.json) finds
+native counterrotating roots within `7e-13` on five sparse high-spin rows,
+while the wheel differs by `0.0150` in frequency at `j=-0.9995`.
+Historical compatibility, domain-wide accuracy, and whole-waveform impact
+remain open.
+The [post-hoc binary-input witnesses](evidence/2026-09-24/qnm_binary_reachability.json)
+show that this is not confined to an unreachable final spin: at the paper's
+`(q, chi1, chi2)=(8,0.85,0.85)` calibration configuration, the native/wheel
+QNM frequency gap is `1.20e-6`, and it reaches `1.91e-5` for an extrapolated
+`(76,1,-1)` binary. At `(80,1,-1)` the fitted remnant exceeds the pinned QNM
+helper's `j=0.9996` limit. These are component findings, not full-waveform
+errors or physical validation of the historical wheel interpolation.
 The reference also checks sparse Berti and Cook author QNM values and the
 published hybrid `(4,2)`, `(4,3)`, and `(5,5)` flux amplitudes. These component
 results do not change the failed whole-waveform or release gates.
@@ -344,11 +366,24 @@ the NQC fit is sensitive to floating-point operation order. The compiled
 source-generator control shows that its public high-rate radius and radial
 momentum equal its captured private NQC inputs. Source and wheel public
 high-rate states differ by up to `8.89e-6` near matching.
-The private wheel fit inputs remain an unresolved release blocker.
 The [three-row exact-source replay](evidence/2026-09-24/source_nqc_exact_rows.json)
 confirms source C fit controls within `1.9e-6` L2 and leaves wheel-coefficient
 gaps of `0.0687`, `0.220`, and `1.524` L2 on nonspinning, mild mixed-spin,
 and strong aligned-spin wheel states, respectively.
+The [pinned-wheel spline capture](evidence/2026-09-24/wheel_nqc_spline_capture.json)
+now closes those gaps at the fit boundary: the pinned source C routine
+reproduces all three wheel coefficient vectors to `1.01e-12` L2 or better
+when given the wheel's actual private GSL arrays. The private NQC radius and
+radial momentum equal public high-rate states to machine precision. A
+single-factor replay attributes most of each earlier coefficient gap to
+pre-NQC amplitude samples that differ from source explicit-state evaluation
+on those same states by at most `1.61e-10` near matching. The explicit-state
+adapter reproduces its own source generator's captured amplitude and
+frequency exactly in the strong-spin control. The origin of the remaining
+source-versus-wheel sample difference is unresolved. `-O0`, `-O2`, and `-O3`
+source probes give the same amplitudes; `-ffast-math` worsens their RMS wheel
+match on all three rows. Captured wheel arrays
+remain black-box diagnostic outputs and do not supply a native prescription.
 The aligned-spin trajectory replay finds a native-minus-public orbital phase
 span of at most `1.27e-4 rad` from `M Omega=0.0425` through `0.13`, compared
 with `3.36e-5 rad` maximum public-grid sensitivity. Over the later sampled

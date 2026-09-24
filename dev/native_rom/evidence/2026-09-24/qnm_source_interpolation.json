@@ -1,0 +1,238 @@
+{
+  "gates": {
+    "source_spline_reproduces_pinned_binary": true
+  },
+  "historical_rule": "GSL gsl_interp_cspline (natural cubic) over printed spin/QNM tables",
+  "knot_count": 107,
+  "max_source_spline_minus_binary_abs": 1.1102230246251565e-16,
+  "plan_sha256": "c80cc0052c22e469fd81b6e663e288e54fb2362976c69640a09dabf0393edb5c",
+  "release_qualified": false,
+  "schema": "diffgw.seobnrv4.qnm-source-interpolation.v1",
+  "scope": {
+    "description": "Historical 220 fundamental QNM table/rule audit, not generator validation.",
+    "known_limitations": [
+      "Pinned LAL source table entries are third-party numerical data, not native model inputs.",
+      "Replaying the historical table establishes provenance of wheel output, not physical accuracy.",
+      "Only selected witness spins and the printed source knots are tested.",
+      "No full waveform or ROM is qualified by this component audit."
+    ],
+    "physics_validated": false,
+    "production_asset": false,
+    "production_promotion_allowed": false,
+    "training_generator_qualified": false
+  },
+  "script_sha256": "7c8e86feeb85bb107be2fcc1ac16f3da1ec5c7284112f44586e06c0f0db65c14",
+  "source_relative_path": "lalsimulation/lib/LALSimBlackHoleRingdown.c",
+  "source_revision": "53acc0c2cd7ea2d3c83fc71a7bd88035c2861d6c",
+  "source_sha256": "99430b73bd8f67aa72bfbe49b3a86051908d4bae83324dc5c5d6410b304cde95",
+  "spin_domain": [
+    -0.9996,
+    0.9996
+  ],
+  "status": "diagnostic_complete",
+  "witnesses": [
+    {
+      "binary": [
+        0.6649331062890222,
+        0.06581537350158094
+      ],
+      "historical_spline": [
+        0.6649331062890222,
+        0.06581537350158094
+      ],
+      "interpolation_error_signed": [
+        -9.528607384234888e-07,
+        2.1658168458671412e-07
+      ],
+      "native": [
+        0.6649343082308922,
+        0.06581520075131228
+      ],
+      "native_minus_historical_abs": [
+        1.2019418699216189e-06,
+        1.7275026865937182e-07
+      ],
+      "printed_knot_effect_signed": [
+        -2.4908113149813005e-07,
+        -4.38314159273423e-08
+      ],
+      "solved_knot_interpolation": [
+        0.6649333553701537,
+        0.06581541733299687
+      ],
+      "spin": 0.8941271984269911,
+      "spline_minus_binary_abs": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "binary": [
+        0.965514,
+        0.00826689
+      ],
+      "historical_spline": [
+        0.965514,
+        0.00826689
+      ],
+      "interpolation_error_signed": [
+        0.0,
+        0.0
+      ],
+      "native": [
+        0.9655138828433344,
+        0.008266878429428162
+      ],
+      "native_minus_historical_abs": [
+        1.1715666559108939e-07,
+        1.1570571839189525e-08
+      ],
+      "printed_knot_effect_signed": [
+        1.1715666559108939e-07,
+        1.1570571839189525e-08
+      ],
+      "solved_knot_interpolation": [
+        0.9655138828433344,
+        0.008266878429428162
+      ],
+      "spin": 0.9994,
+      "spline_minus_binary_abs": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "binary": [
+        0.9697365697526289,
+        0.007269893969569294
+      ],
+      "historical_spline": [
+        0.969736569752629,
+        0.007269893969569295
+      ],
+      "interpolation_error_signed": [
+        1.750926644139561e-05,
+        -4.2640583795021045e-06
+      ],
+      "native": [
+        0.9697194157450131,
+        0.007274125548093124
+      ],
+      "native_minus_historical_abs": [
+        1.7154007615927114e-05,
+        4.231578523829042e-06
+      ],
+      "printed_knot_effect_signed": [
+        -3.552588254684963e-07,
+        3.247985567306211e-08
+      ],
+      "solved_knot_interpolation": [
+        0.9697369250114545,
+        0.007269861489713622
+      ],
+      "spin": 0.999540793009,
+      "spline_minus_binary_abs": [
+        1.1102230246251565e-16,
+        8.673617379884035e-19
+      ]
+    },
+    {
+      "binary": [
+        0.9699384937806018,
+        0.007222103677004324
+      ],
+      "historical_spline": [
+        0.9699384937806018,
+        0.007222103677004324
+      ],
+      "interpolation_error_signed": [
+        1.95047560475059e-05,
+        -4.7500291935386255e-06
+      ],
+      "native": [
+        0.9699193541749184,
+        0.007226819983931644
+      ],
+      "native_minus_historical_abs": [
+        1.913960568344919e-05,
+        4.71630692732046e-06
+      ],
+      "printed_knot_effect_signed": [
+        -3.6515036405671e-07,
+        3.3722266218165486e-08
+      ],
+      "solved_knot_interpolation": [
+        0.9699388589309659,
+        0.007222069954738106
+      ],
+      "spin": 0.9995469946384197,
+      "spline_minus_binary_abs": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "binary": [
+        0.9716899999999999,
+        0.006807399999999999
+      ],
+      "historical_spline": [
+        0.97169,
+        0.0068074
+      ],
+      "interpolation_error_signed": [
+        0.0,
+        8.673617379884035e-19
+      ],
+      "native": [
+        0.9716904213488106,
+        0.00680735512222547
+      ],
+      "native_minus_historical_abs": [
+        4.2134881050870376e-07,
+        4.487777452953645e-08
+      ],
+      "printed_knot_effect_signed": [
+        -4.2134881050870376e-07,
+        4.487777452866909e-08
+      ],
+      "solved_knot_interpolation": [
+        0.9716904213488106,
+        0.006807355122225471
+      ],
+      "spin": 0.9996,
+      "spline_minus_binary_abs": [
+        1.1102230246251565e-16,
+        8.673617379884035e-19
+      ]
+    }
+  ],
+  "worst_nonnegative_printed_knot_minus_native": {
+    "damping": {
+      "absolute_error": 4.974420787784428e-08,
+      "native_solved": 0.08804765025579213,
+      "source_printed": 0.0880477,
+      "spin": 0.25
+    },
+    "frequency": {
+      "absolute_error": 4.77481720162487e-07,
+      "native_solved": 0.8254294774817201,
+      "source_printed": 0.825429,
+      "spin": 0.98
+    }
+  },
+  "worst_printed_knot_minus_native": {
+    "damping": {
+      "absolute_error": 0.009566198764681455,
+      "native_solved": 0.08802689876468145,
+      "source_printed": 0.0784607,
+      "spin": -0.9996
+    },
+    "frequency": {
+      "absolute_error": 0.021347528603375243,
+      "native_solved": 0.29157552860337527,
+      "source_printed": 0.270228,
+      "spin": -0.9996
+    }
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "schema": "diffgw.seobnrv4.wheel-nqc-spline-capture-plan.v1",
+  "purpose": "Capture the pinned wheel's ten private GSL spline inputs without modifying the wheel, replay its source C fit, and ablate same-state source-mode inputs. Diagnostic only.",
+  "release_qualified": false,
+  "rows": ["nonspinning", "mild_mixed_spin", "strong_aligned_spin"],
+  "step_M": 0.125,
+  "local_half_width_M": 4.0,
+  "expected_spline_calls": 10,
+  "compiler_controls": ["-O0", "-O2", "-O3", "-O2 -ffast-math"],
+  "inputs": {
+    "source_wheel_mode": {
+      "path": "dev/native_rom/evidence/2026-09-24/source_wheel_mode.json",
+      "sha256": "c103f7d884073eb00029a231dd271d49c4a4571455030b11b93c22e298a479da"
+    },
+    "source_flux_plan": {
+      "path": "dev/native_rom/evidence/2026-09-24/source_flux_initial_plan.json",
+      "sha256": "1167199c8f954f97a5905a1e3b2f67d1555e984e5f1da0a0fc42a77a925f96ea"
+    },
+    "exact_rows": {
+      "path": "dev/native_rom/evidence/2026-09-24/source_nqc_exact_rows.json",
+      "sha256": "fd9fe03219bfba479b14d1e1efc2f83e77bcd0232b07a1e3099c6e96ddd772ce"
+    },
+    "exact_state_adapter": {
+      "path": "dev/native_rom/reference/full_v4_source_nqc_state_adapter.c",
+      "sha256": "d526a3ff6df8078428ba116e9bf09f3b8e69cc78a5cfc8873601290c527e97fa"
+    },
+    "source_high_adapter": {
+      "path": "dev/native_rom/reference/full_v4_source_high_dynamics_adapter.c",
+      "sha256": "cfec235c177f9593cd394ec81dcc0971a159eea7f81932852bcaae4cadd8bd0b"
+    },
+    "source_nqc_inputs": {
+      "path": "dev/native_rom/evidence/2026-09-24/source_nqc_inputs.npz",
+      "sha256": "2e833d066734a4b91bec5c71f267011bde5c6ffb2ace5a3b49f2f0b40b1f04d7"
+    },
+    "interposer": {
+      "path": "dev/native_rom/reference/wheel_gsl_spline_capture.c",
+      "sha256": "64bdb2fa9147c0ccaba9e33192c3d9139ee46a2b7b0490e84d9f8f530ba45b69"
+    }
+  },
+  "public_high_sha256": {
+    "nonspinning": "149a815b6360ab0aaad3b65a2f262405057762eab7e214c85dd199f8cb39eb22",
+    "mild_mixed_spin": "e326f1fbfbe55989162d693a3bbf90fb24dc9df78b4e941a18be31f6dd19fa70",
+    "strong_aligned_spin": "6380ff7fc3325d001f0dda9d7703b6b941e7dd8b661e378e5b4235da8a61a56c"
+  }
+}
