@@ -1,4 +1,4 @@
-"""Post-hoc pinned-public waveform parity on the third SXS holdout."""
+"""Post-hoc pinned-public waveform parity on a frozen five-case SXS set."""
 
 from __future__ import annotations
 
@@ -13,6 +13,15 @@ from . import compare_sxs_2123 as compare
 from . import compare_sxs_2123_public_control as public
 from . import measure_sxs_2508_weighted as weighted
 from . import qualify_generator as q
+
+SCHEMAS = {
+    "diffgw.seobnrv4.sxs-third-holdout-plan.v1": (
+        "diffgw.seobnrv4.sxs-third-public-parity-plan.v1",
+        "diffgw.seobnrv4.sxs-third-public-parity.v1"),
+    "diffgw.seobnrv4.sxs-paper-catalog-plan.v1": (
+        "diffgw.seobnrv4.sxs-paper-public-parity-plan.v1",
+        "diffgw.seobnrv4.sxs-paper-public-parity.v1"),
+}
 
 
 def main() -> None:
@@ -31,7 +40,8 @@ def main() -> None:
     case_plan, weighted_plan, comparison, weighted_result, plan = (
         documents[key] for key in ("case_plan", "weighted_plan", "comparison",
                                    "weighted_result", "plan"))
-    if (plan["schema"] != "diffgw.seobnrv4.sxs-third-public-parity-plan.v1"
+    expected = SCHEMAS.get(case_plan["schema"])
+    if (expected is None or plan["schema"] != expected[0]
             or plan["qualification_claim"] is not False
             or any(plan[f"{key}_sha256"] != q.sha256(getattr(args, key)) for key in
                    ("case_plan", "weighted_plan", "comparison", "weighted_result"))
@@ -117,7 +127,7 @@ def main() -> None:
                               fixed_complex_relative_l2=fixed["metrics"][
                                   "complex_relative_l2"],
                               weighted_overlap_difference=delta)), flush=True)
-    result = dict(schema="diffgw.seobnrv4.sxs-third-public-parity.v1",
+    result = dict(schema=expected[1],
                   plan_sha256=q.sha256(args.plan),
                   case_plan_sha256=q.sha256(args.case_plan),
                   weighted_plan_sha256=q.sha256(args.weighted_plan),
