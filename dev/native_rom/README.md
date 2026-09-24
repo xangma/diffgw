@@ -1034,6 +1034,13 @@ peak time on the coarse-grid inputs moves the five active coefficients by
 `94.1`. The two effects partly cancel. This identifies both input-field and
 peak-localization sensitivity, but does not provide a converged near-extreme
 reference or change the frozen `0.5 M` parity failure.
+The next two pinned public output refinements do not settle that reference:
+postpeak complex relative L2 is `0.001785` for `0.015625` versus `0.0078125 M`,
+then rises to `0.020659` for `0.0078125` versus `0.00390625 M`. The latter
+pair's active NQC coefficient change has L2 `194.2`. The directly returned
+`(2,2)` modes reproduce its postpeak discrepancy within `9e-11`, ruling out
+polarization inversion as the cause. No ultrafine cadence is therefore
+designated a converged public parity reference.
 
 1. Qualify the physical generator against the published equations and independent
    references over the intended domain, resolve convention/provenance gaps, and

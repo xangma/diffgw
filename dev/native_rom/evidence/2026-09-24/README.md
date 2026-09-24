@@ -2584,3 +2584,24 @@ dev.native_rom.diagnose_near_extreme_source_nqc_peak_field --source-root
 /Users/xangma/repos/lalsuite-git --headers
 /tmp/diffgw-lalsuite-pinned-53acc0c/merged-include --gsl-include
 /usr/local/include --json-out /tmp/near-extreme-source-nqc-peak-field.json`.
+
+The frozen [ultrafine public-output plan](near_extreme_public_ultrafine_plan.json)
+and [result](near_extreme_public_ultrafine.json) extend the q10 double-`+0.95`
+cadence ladder to `0.0078125` and `0.00390625 M`. The original
+`0.03125`/`0.015625 M` postpeak complex relative L2 reproduces as `0.008627`;
+the next adjacent errors are `0.001785` and `0.020659`, respectively. The
+corresponding five-active-coefficient NQC changes have L2 `52.37`, `99.16`,
+and `194.18`. Finer output sampling is thus still nonmonotone. A separate
+[direct-mode plan](near_extreme_public_ultrafine_direct_plan.json) and
+[result](near_extreme_public_ultrafine_direct.json) replay the finest pair
+using the public generator's directly returned `(2,2)` mode; its postpeak
+error `0.020659310505` differs from polarization inversion by only
+`8.8e-11`. This confirms that inversion is not responsible and does not
+provide a converged public reference or alter the frozen native parity gate.
+Reproduce with `PYTHONPATH=src:. /Users/xangma/repos/diffgw/.venv/bin/python
+-m dev.native_rom.diagnose_near_extreme_public_ultrafine --json-out
+/tmp/near-extreme-public-ultrafine.json` followed by
+`PYTHONPATH=src:. /Users/xangma/repos/diffgw/.venv/bin/python -m
+dev.native_rom.diagnose_near_extreme_public_ultrafine_direct --json-out
+/tmp/near-extreme-public-ultrafine-direct.json`; the latter replays the
+committed ultrafine evidence named in its frozen plan.
