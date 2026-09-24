@@ -272,8 +272,9 @@ the same LAL-generated binary arrays in a separate Python 3.12.3 environment.
 The [maintained optional binary-oracle test](https://github.com/xangma/diffgw/blob/main/tests/test_taylorf2_lal_quadrupole.py)
 now runs both frontends and passed **6/6** cases on `len` with LALSuite 7.21.
 Together with the tidal and IMRPhenomD derivative oracles, the three focused
-files passed **36/36** CPU tests. A separate pinned-LAL CI job is configured
-to run all three maintained files.
+files passed **36/36** CPU tests. The maintained binary-oracle CI job installs
+current LALSuite and PyCBC releases and runs all three files within the full
+test suite. These counts refer to the dated campaign above, not future CI runs.
 
 This LALSuite binary returns **zero** non-Kerr 3.5PN coefficient at its highest
 accepted spin selector and rejects selector 8. Consequently, this comparison
@@ -295,7 +296,7 @@ practical implications. The reports below provide the underlying evidence.
 | Waveform performance and LAL agreement | [FP64 package benchmarks](package_benchmarks.md), with committed CPU/CUDA receipts | Forward evaluation of TaylorF2, IMRPhenomD and IMRPhenomXAS on declared grids and binary samples. Both polarizations are checked; failed configurations remain visible. |
 | PyTorch/JAX consistency | [Parity tests](https://github.com/xangma/diffgw/tree/main/tests/parity) | Agreement between two implementations for specified inputs and per-test tolerances. Shared coefficients or shared mistakes can produce agreement. |
 | Time-domain performance and PhenomXPy agreement | [T/THM CPU comparison](package_benchmarks.md#phenomxpy-time-domain-comparison-22-september-2026), with a pinned author reference and receipt | Both polarizations on a fixed time segment; every binary checked, with strict-gate failures retained as diagnostic timings. Shared author fits mean this is not independent physical validation. |
-| Broader model reference checks | [Differences from LAL](differences_from_lal.md#model-specific-differences), [manifest](model_manifest.json), and linked archived runs | Frozen cases and model-specific metrics. The archived catalog has 17/21 passing cases and the holdout set 11/13; this is partial validation, not a passing whole-catalog result. New model additions have separate evidence, including the [T-family report](validation/phenomt.md). |
+| Broader model reference checks | [Differences from LAL](differences_from_lal.md#model-specific-differences), [manifest](model_manifest.json), linked archived runs, and CI `parity-oracle-report` artifacts | The dated archive has 17/21 passing catalog cases and 11/13 holdouts. CI gates the maintained frozen cases separately from whole-catalog coverage, which remains false while higher-mode oracle and model coverage gaps are open. The reports distinguish exact LAL comparisons from sovereign-calibration cases. New models have separate evidence, including the [T-family report](validation/phenomt.md). |
 | Derivatives and Fisher matrices | [Inference parity tests](https://github.com/xangma/diffgw/blob/main/tests/parity/test_inference_parity.py), [Fisher example](../examples/02_fisher_analysis.py) | Selected parameters, models and derivative orders. Waveform-value agreement alone does not validate derivatives or posterior uncertainties. |
 | Relative-binning likelihood | [Numerical tests](https://github.com/xangma/diffgw/blob/main/tests/test_relative_binning.py) and inference parity tests | [Local approximation and gradient checks](validation/inference.md#relative-binning). There is no published DiffGW timing campaign establishing a general likelihood speedup. |
 | Physical calibration and provenance | [Provenance ledger](provenance_ledger.md) and [third-party notices](../THIRD_PARTY_NOTICES.md) | Literature, calibration sources, component checks, and unresolved asset provenance. A reference implementation check is distinct from independent physical validation. |

@@ -98,9 +98,10 @@ for local development but do not supply this complete qualification. The job
 also reports dependency versions and checks the maintained equation/fixture
 artifacts; the test set checks the generated component map.
 
-A separate CPU CI job pins LALSuite 7.21 and checks selected same-model
-IMRPhenomD intrinsic derivatives, TaylorF2 non-Kerr quadrupoles, and
-nonspinning TaylorF2 electric tides against the LAL binary. Its
+A separate CPU CI job installs current LALSuite and PyCBC releases, then runs
+the full test suite and frozen strict binary-oracle comparisons. This includes
+selected same-model IMRPhenomD intrinsic derivatives, TaylorF2 non-Kerr
+quadrupoles, and nonspinning TaylorF2 electric tides. Its
 [coverage and model boundaries](../validation.md) are distinct from the
 paper-based mathematical-reference gate.
 

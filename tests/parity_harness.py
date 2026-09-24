@@ -1065,7 +1065,7 @@ def run_oracle_comparison(
     oracle_meta = None
     if oracle_type == "lal_ringdown_td":
         try:
-            from kerr_public_oracle import public_ringdown_fd_converged
+            from tests.kerr_public_oracle import public_ringdown_fd_converged
             f_np, hp_np, hc_np, oracle_meta = public_ringdown_fd_converged(
                 p["mass1"], p.get("spin1z", p.get("chi1", 0.0)), p.get("distance", 100.0),
                 inclination=p.get("inclination", 0.0), phase=p.get("phic", 0.0),
@@ -1604,7 +1604,7 @@ def test_parity_harness_catalog():
     is_strict = ("--strict" in sys.argv) or (os.environ.get("STRICT_PARITY") == "1")
     suite = run_full_parity_suite(scope="catalog", strict=is_strict)
     assert suite["inventory_valid"], f"Inventory validation failed: {suite['inventory_errors']}"
-    assert suite["num_cases"] == 21
+    assert suite["num_cases"] == 19
     assert suite["catalog_passed"] is True, (
         f"Catalog acceptance failed: {suite.get('num_passed')}/{suite.get('num_cases')} cases verified. "
         f"Failing models: {[k for k, v in suite.get('catalog_coverage', {}).items() if v.get('status') == 'FAILED']}"

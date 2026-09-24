@@ -43,11 +43,13 @@ jobs:
           --require-math-reference --reference-device=cpu -ra
 
   lal-oracles:
-    name: LAL binary oracles (CPU)
+    name: Binary oracles and full suite (CPU)
     runs-on: ubuntu-latest
+    timeout-minutes: 60
     env:
       JAX_ENABLE_X64: "1"
       JAX_PLATFORMS: cpu
+      LAL_DATA_PATH: ${{ github.workspace }}/.lal-oracle-data
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -56,15 +58,36 @@ jobs:
         with:
           python-version: "3.11"
           cache: pip
-      - name: Install frontends and current binary oracle
+      - name: Install frontends and current binary oracles
         run: |
           python -m pip install --upgrade pip
           python -m pip install --index-url https://download.pytorch.org/whl/cpu torch
-          python -m pip install -e '.[reference,torch,jax,dev]' lalsuite
-      - name: Verify oracle dependencies and waveform checks
+          python -m pip install --upgrade -e '.[reference,all,dev]' lalsuite pycbc
+      - name: Verify oracle dependencies
         run: |
-          python -c "import lal, lalsimulation, torch, jax, sympy; import importlib.metadata as m; print({name: m.version(name) for name in ('lalsuite', 'numpy', 'scipy', 'sympy', 'torch', 'jax', 'jaxlib')})"
-          python -m pytest -q tests/test_imrphenomd_lal_gradients.py tests/test_taylorf2_lal_quadrupole.py tests/test_taylorf2_lal_tidal.py -ra
+          python -c "import lal, lalsimulation, pycbc, torch, jax, sympy; import importlib.metadata as m; print({name: m.version(name) for name in ('lalsuite', 'pycbc', 'numpy', 'scipy', 'sympy', 'torch', 'jax', 'jaxlib')})"
+      - name: Cache external oracle data
+        uses: actions/cache@v4
+        with:
+          path: .lal-oracle-data
+          key: lal-seobnrv4-rom-bb0eab9ae721af6abd06c4872b13e477
+      - name: Verify external oracle data
+        run: python scripts/fetch_lal_oracle_data.py "$LAL_DATA_PATH"
+      - name: Run full test suite with both frontends and binary oracles
+        run: python -m pytest -q tests/ -ra
+      - name: Gate strict frozen comparisons and report coverage gaps
+        if: always()
+        run: python -m scripts.run_oracle_ci
+      - name: Upload binary-oracle reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: parity-oracle-report
+          path: |
+            parity_results.json
+            parity_holdout_results.json
+            parity_ci_summary.json
+          if-no-files-found: error
 
   test:
     name: "test (${{ matrix.os }}, py${{ matrix.python-version }})"
