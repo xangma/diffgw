@@ -39,6 +39,7 @@ COMPONENT_IDS = {
     "frequency_derivatives": "phenomxas.waveform.frequency_derivatives.v1",
     "mass_scaling": "phenomxas.waveform.mass_scaling.v1",
     "mass_derivatives": "phenomxas.waveform.mass_derivatives.v1",
+    "intrinsic_composition_derivatives": "phenomxas.waveform.intrinsic_composition_derivatives.v1",
 }
 COMPONENT_SOURCES = {
     COMPONENT_IDS["branch_selection"]: ("pratten2020v1", "52", "71", "85", "90", "96", "carrier-convention"),
@@ -50,6 +51,7 @@ COMPONENT_SOURCES = {
     COMPONENT_IDS["frequency_derivatives"]: ("derived-product-rule", "branch_selection", "physical_scale", "phase_adapter"),
     COMPONENT_IDS["mass_scaling"]: ("pratten2020v1", "1", "14-16", "66-67", "dimensional-similarity", "carrier-convention"),
     COMPONENT_IDS["mass_derivatives"]: ("derived-chain-rule", "mass_scaling", "branch_selection", "phase_adapter"),
+    COMPONENT_IDS["intrinsic_composition_derivatives"]: ("derived-chain-rule", "branch_selection", "physical_scale", "phase_adapter", "external-author-fits"),
 }
 
 U = sp.symbols("u", positive=True)

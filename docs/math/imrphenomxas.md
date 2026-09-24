@@ -38,7 +38,7 @@ source or constants.
 | --- | --- | --- | --- |
 | `phenomxas.amp.intermediate.newtonian_factor.v1` | Eq. (67) | Waveform amplitude prefactor; full complex assembly is checked below | `test_paper_quartic_and_physical_slope_constraints` |
 | `phenomxas.amp.intermediate.quartic.v1` | Eq. (71) | `solve_intermediate_amplitude_quartic` in [Torch](../../src/torchwave/approximants/imrphenom_xas.py) and [JAX](../../src/jaxwave/approximants/imrphenom_xas.py), algebraic helper only | `test_frontend_quartic_against_scalar_matrix_solve` |
-| `phenomxas.amp.intermediate.collocation.v1` | Eqs. (79)–(83), Table 2 | The same two helpers; full boundary-value adapter is not yet qualified | `test_midpoint_coefficient_derivative`, `test_component_evidence_and_implementation_links` |
+| `phenomxas.amp.intermediate.collocation.v1` | Eqs. (68)–(69), (79)–(84), Table 2 | Full carrier boundary values and slopes from the independent inspiral/ringdown shapes, then the quartic solve; fitted parameters are supplied inputs | `test_full_frontend_intermediate_boundary_construction`, `test_midpoint_coefficient_derivative` |
 | `phenomxas.amp.intermediate.constant_normalization.v1` | Algebraic variant; pointwise LALSimulation binary check below, **not** the printed Eq. (71) | Full Torch/JAX carrier assembly | `test_observed_quartic_and_normalization_distinction`, `test_full_frontend_intermediate_amplitude_shape`, `test_external_binary_intermediate_amplitude_fixture` |
 
 The [maintained tests](../../tests/test_imrphenomxas_math_reference.py) check
@@ -48,6 +48,18 @@ its midpoint derivative. Separate tests evaluate each full Torch/JAX carrier
 at interior frequencies against the observed scalar convention and three
 pinned binary amplitude samples. These check assembly and sampled calibrated
 behavior, not whether the fits follow the printed paper equation.
+
+The complete carrier boundary adapter starts from the Eq. (68)–(69)
+inspiral shape `S_ins` and Eq. (84) ringdown shape `S_RD`, with native fitted
+parameters supplied. At `f1=f_T^A` and `f3=f_peak`, its constant-normalized
+physical endpoint values are `A1/K=f1^(-7/6) S_ins(f1)` and
+`A3/K=f3^(-7/6) S_RD(f3)`; their slopes are the derivatives of those full
+expressions. The independently supplied midpoint fit is `A2/K=v_A`.
+These five conditions determine `P` through the exact scalar solve. The
+maintained test checks the resulting coefficients against each carrier at
+four mass/spin points and checks all five reconstructed constraints. This
+closes the boundary-value algebra, conditional on the supplied calibration;
+it does not turn the carrier's `K/P` convention into the printed Eq. (71).
 
 **Normalization investigation.** The waveform assembly supplies the quartic
 helper with endpoint values of `scaled_amp/f^(7/6)` and reconstructs
@@ -339,7 +351,8 @@ reference for four extrinsic parameters and smooth-branch frequency at
 inspiral, intermediate, and ringdown points. It does not validate
 parameter-space calibration, physical agreement with NR/hybrid waveforms,
 the fifth-order paper amplitude option, the public wrapper's user masks, or
-full-domain intrinsic derivatives.
+full-domain intrinsic derivatives. Selected mass-ratio and spin tangents are
+checked below.
 
 | Component ID | Evidence | Native relationship | Maintained check |
 | --- | --- | --- | --- |
@@ -394,3 +407,64 @@ independent calibration or physical accuracy.
 | --- | --- | --- | --- |
 | `phenomxas.waveform.mass_scaling.v1` | XAS Eqs. (1), (14)–(16), (52)–(67); dimensional similarity and carrier time gauge | Both `XASCarrierState` constructors and `eval_waveform` | `test_total_mass_similarity` |
 | `phenomxas.waveform.mass_derivatives.v1` | Chain rule on the composed model and mass similarity | Full complex `d(h+,hx)/d ln M` through both native constructors | `test_native_log_total_mass_gradient`, `test_mass_phase_tangent_cancels_at_reference` |
+
+The same scalar composition also checks selected intrinsic tangents through
+the entire carrier. At `q=5`, `chi1=0.5`, `chi2=-0.3`, fixed total mass and
+physical frequency, the [intrinsic derivative test](../../tests/test_imrphenomxas_waveform_math_reference.py)
+uses centered shifts in each of `q`, `chi1`, and `chi2` to rebuild the
+scalar waveform from the carrier's named fit/collocation outputs. It compares
+complex plus/cross and unwrapped-phase tangents with Torch and JAX automatic
+derivatives in the inspiral, intermediate, and ringdown regions, with a fixed
+reference frequency in the intermediate phase. The separate author-asset check
+below independently verifies the underlying fit-surface derivatives. This
+composition check supplies carrier state outputs at each shifted point; it is
+therefore a check of waveform assembly and automatic differentiation, not an
+independent derivation of every state-construction derivative or a full-domain
+intrinsic accuracy bound.
+
+| Component ID | Evidence | Native relationship | Maintained check |
+| --- | --- | --- | --- |
+| `phenomxas.waveform.intrinsic_composition_derivatives.v1` | Chain rule on the composed amplitude and phase; APS fit-surface derivatives checked separately below | Full complex and unwrapped-phase tangents through both native constructors | `test_intrinsic_composition_derivatives` |
+
+## Author fit-surface cross-check
+
+The opt-in [external-fit verifier](../../scripts/verify_xas_author_fits.py)
+reads the [APS Mathematica companion file](https://journals.aps.org/prd/supplemental/10.1103/PhysRevD.102.064001/IMRPhenomXAS_Parameter_Space_Fits_Public_Release_Candidate.m)
+at run time, verifies its SHA-256
+`94b9334c19f3a7909864891ea278ab9a411e4f33b7b7e17cc01d927056d9ac52`,
+and evaluates the selected source versions independently of either frontend.
+The file and its formula rows are excluded from this repository and package;
+its redistribution terms remain unresolved. Run with
+`python scripts/verify_xas_author_fits.py --asset /path/to/IMRPhenomXAS_Parameter_Space_Fits_Public_Release_Candidate.m`
+in an environment with both FP64 frontends and the reference dependencies.
+
+The verifier maps all 25 non-precessing parameter-fit methods exposed by
+`XASParameterFits` to named source functions and explicit version selectors.
+The current quartic carrier calls 23 of them; `fit_int_amp_v2` and
+`fit_int_amp_v3` are available for the paper's fifth-order alternative but
+are not used by the current carrier. The deposited `InsPhased53Fit` surface
+is not used or implemented by the current inspiral phase. The verifier also
+checks the two `(2,2)` QNM rational fits. The separate `fit_final_spin_nnlo`
+method is a precession helper and is not called by this aligned-spin carrier.
+A structural check fails if either frontend adds a fit method without updating
+the map.
+Values are compared at nine mass-ratio/spin points, parameter derivatives
+`(d/d eta, d/d chi1, d/d chi2)` at two unequal-mass points, and QNM spin
+derivatives at five points. The scaled error divides by `max(1, |source|)`;
+the gates are `2e-10` for values and `2e-8` for derivatives. On the pinned
+asset, 24 parameter surfaces and both QNM functions agree with Torch and JAX;
+the largest derivative scaled error is `3.05e-12` for the QNM real fit.
+
+The remaining midpoint amplitude fit, `IntAmpvAFit["104"]`, uses
+`chiPNhat` in the deposited file, whereas both binary-compatible carriers
+use `sTotR`. The source/carrier value difference reaches `0.042` on the
+declared cases. Re-evaluating the *same deposited expression* with the
+carrier's declared `sTotR` argument agrees in value and all three derivatives.
+This is an identified model choice, not agreement with the published source
+fit. The check verifies the deposited surfaces and their local derivatives;
+it does not reproduce the original NR calibration or prove physical accuracy.
+
+| Component ID | Evidence | Native relationship | Maintained check |
+| --- | --- | --- | --- |
+| `phenomxas.calibration.author_fits.v1` | Pinned APS companion file, explicit function/version map | 24 matching surfaces and one declared midpoint spin-argument variant in both frontends | `verify_xas_author_fits.py` (opt-in external asset) |
+| `phenomxas.calibration.qnm_fits.v1` | Pinned APS companion file, `(2,2)` real/imaginary functions | Both carriers' QNM fit functions | `verify_xas_author_fits.py` (opt-in external asset) |

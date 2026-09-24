@@ -172,6 +172,55 @@ def test_full_frontend_intermediate_amplitude_shape(backend, m1, m2, chi1, chi2)
     assert np.max(np.abs(actual / actual[2] - printed / printed[2])) > 0.1
 
 
+@pytest.mark.parametrize("m1,m2,chi1,chi2", [
+    (30.0, 30.0, 0.0, 0.0),
+    (50.0, 10.0, 0.5, -0.3),
+    (45.0, 20.0, 0.35, 0.6),
+    (90.0, 30.0, -0.4, -0.6),
+])
+def test_full_frontend_intermediate_boundary_construction(
+    backend, m1, m2, chi1, chi2
+):
+    """Derive both endpoint values/slopes before the independent quartic solve."""
+    name, _, _ = backend
+    if name == "torch":
+        from torchwave.approximants.imrphenom_xas import XASCarrierState, XASParameterFits
+    else:
+        from jaxwave.approximants.imrphenom_xas import XASCarrierState, XASParameterFits
+    state = XASCarrierState(m1, m2, chi1=chi1, chi2=chi2)
+    midpoint = XASParameterFits.fit_int_amp_va(
+        state.eta, state.s1_eff, state.s2_eff
+    )
+    arguments = (
+        state.f1_col, state.f4_col, state.eta, state.s1_eff, state.s2_eff,
+        state.delta, (state.rho1, state.rho2, state.rho3), state.f_rd,
+        state.f_damp, state.width_rd / state.f_damp, state.lam, state.a_r,
+        midpoint,
+    )
+    scalar = lambda value: sp.Float(str(float(value)), 40)
+    scalars = tuple(
+        tuple(scalar(x) for x in value) if isinstance(value, tuple)
+        else scalar(value)
+        for value in arguments
+    )
+    f1, f3 = scalars[:2]
+    assert 0 < f1 < f3
+    expected = ref.carrier_boundary_coefficients(*scalars)
+    actual = [float(getattr(state, f"c{i}_amp")) for i in range(5)]
+    np.testing.assert_allclose(actual, [float(sp.N(x, 35)) for x in expected],
+                               rtol=3e-10, atol=3e-9)
+    boundary = ref.carrier_boundary_conditions(*scalars)
+    polynomial = ref.observed_amplitude(
+        f1=f1, f3=f3, k=1, coefficients=expected
+    )
+    derivative = sp.diff(polynomial, ref.F)
+    for frequency, value in ((f1, boundary[0]), ((f1 + f3) / 2, boundary[2]),
+                             (f3, boundary[3])):
+        assert abs(float(sp.N(polynomial.subs(ref.F, frequency) - value, 30))) < 1e-25
+    for frequency, slope in ((f1, boundary[1]), (f3, boundary[4])):
+        assert abs(float(sp.N(derivative.subs(ref.F, frequency) - slope, 30))) < 1e-23
+
+
 def test_external_binary_intermediate_amplitude_fixture(backend):
     """Pinned binary amplitudes check the scale and calibrated shape."""
     name, _, array = backend

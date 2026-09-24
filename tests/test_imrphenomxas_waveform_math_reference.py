@@ -331,6 +331,89 @@ def test_native_log_total_mass_gradient(backend, reference_region,
                                rtol=2e-7, atol=2e-6)
 
 
+@pytest.mark.parametrize("parameter", ("q", "chi1", "chi2"))
+@pytest.mark.parametrize("frequency_region", ("inspiral", "intermediate", "ringdown"))
+def test_intrinsic_composition_derivatives(backend, parameter, frequency_region):
+    """Check native intrinsic AD against scalar composition at shifted inputs.
+
+    Fit/collocation outputs are supplied through the explicit boundary adapter;
+    the separate opt-in author-fit check validates fit values and derivatives.
+    """
+    name, carrier, array = backend
+    q0, chi10, chi20 = 5., .5, -.3
+    total_mass = 60.
+
+    def build(q, chi1, chi2):
+        m1, m2 = total_mass*q/(1+q), total_mass/(1+q)
+        return (m1, m2, chi1, chi2), carrier(
+            m1, m2, chi1=chi1, chi2=chi2, f_ref=f_ref)
+
+    m1, m2 = total_mass*q0/(1+q0), total_mass/(1+q0)
+    probe = carrier(m1, m2, chi1=chi10, chi2=chi20)
+    m_sec = float(probe.m_sec)
+    a0, a1 = float(probe.f_trans_amp), float(probe.f_peak)
+    p0, p1 = float(probe.f_trans_phase), float(probe.f_join_rd)
+    f_ref = .5*(p0+p1)/m_sec
+    mf = {"inspiral": .7*min(a0, p0),
+          "intermediate": .5*(a0+a1),
+          "ringdown": 1.2*max(a1, p1)}[frequency_region]
+    frequency = mf/m_sec
+
+    def scalar_outputs(values):
+        case, state = build(*values)
+        spec = ref.compose(*case, 470., snapshot(state))
+        return spec.evaluate(frequency, inclination=.7, tc=.003,
+                             phic=.23, f_ref_hz=f_ref)
+
+    values = {"q": q0, "chi1": chi10, "chi2": chi20}
+    step = 2e-5
+    shifted = []
+    for sign in (1, -1):
+        point = dict(values)
+        point[parameter] += sign*step
+        shifted.append(scalar_outputs((point["q"], point["chi1"], point["chi2"])))
+    expected_hp = (shifted[0][0]-shifted[1][0])/(2*step)
+    expected_hc = (shifted[0][1]-shifted[1][1])/(2*step)
+    expected_phase = (shifted[0][2]-shifted[1][2])/(2*step)
+
+    def native_outputs(variable):
+        point = dict(values)
+        point[parameter] = variable
+        _, state = build(point["q"], point["chi1"], point["chi2"])
+        hp, hc, phase = state.eval_waveform(
+            array([frequency]), distance=array(470.),
+            inclination=array(.7), t_c=array(.003), phi_c=array(.23),
+            return_phase=True)
+        return hp[0], hc[0], phase[0]
+
+    if name == "torch":
+        import torch
+        variable = array(values[parameter]).detach().clone().requires_grad_(True)
+        hp, hc, phase = native_outputs(variable)
+        components = (hp.real, hp.imag, hc.real, hc.imag, phase)
+        derivative = np.array([
+            float(torch.autograd.grad(x, variable, retain_graph=i<4)[0])
+            for i, x in enumerate(components)])
+    else:
+        import jax
+        import jax.numpy as jnp
+        def real_outputs(variable):
+            hp, hc, phase = native_outputs(variable)
+            return jnp.stack((hp.real, hp.imag, hc.real, hc.imag, phase))
+        derivative = np.asarray(jax.jacfwd(real_outputs)(array(values[parameter])))
+
+    baseline = scalar_outputs((q0, chi10, chi20))
+    amplitude = abs(baseline[0])
+    actual_hp = complex(*derivative[:2])
+    actual_hc = complex(*derivative[2:4])
+    np.testing.assert_allclose(actual_hp/amplitude, expected_hp/amplitude,
+                               rtol=3e-5, atol=3e-5)
+    np.testing.assert_allclose(actual_hc/amplitude, expected_hc/amplitude,
+                               rtol=3e-5, atol=3e-5)
+    np.testing.assert_allclose(derivative[4], expected_phase,
+                               rtol=3e-5, atol=3e-5)
+
+
 def test_mass_phase_tangent_cancels_at_reference():
     """At f=f_ref the intrinsic/reference and time-shift tangents cancel."""
     branch = {name: ref.U**2 + ref.U for name in

@@ -1,6 +1,6 @@
 """Scalar references for the printed and observed XAS quartic conventions.
 
-Pratten et al., arXiv:2001.11412v1, Eqs. (67), (71), (79)-(83), Table 2.
+Pratten et al., arXiv:2001.11412v1, Eqs. (67)-(69), (71), (79)-(84), Table 2.
 The observed convention is separately identified: it agrees with the pinned
 LALSimulation binary but is not implied by the printed Eq. (71). The paper's
 fifth-order option, parameter-space fits, and transition frequencies are
@@ -11,13 +11,15 @@ from __future__ import annotations
 
 import sympy as sp
 
+from . import imrphenomxas_amplitude as amplitude
+
 SPEC_VERSION = "imrphenomxas-intermediate-amplitude-quartic/v1"
 SOURCE = "https://arxiv.org/html/2001.11412v1"
 SOURCES = {
     "pratten2020v1": {
         "url": SOURCE,
         "arxiv": "2001.11412v1",
-        "equations": ("67", "71", "79", "80", "81", "82", "83", "Table 2"),
+        "equations": ("67", "68", "69", "71", "79", "80", "81", "82", "83", "84", "Table 2"),
     }
 }
 COMPONENT_IDS = {
@@ -29,7 +31,7 @@ COMPONENT_SOURCES = {
     COMPONENT_IDS["quartic"]: ("pratten2020v1", "71"),
     COMPONENT_IDS["newtonian_factor"]: ("pratten2020v1", "67"),
     COMPONENT_IDS["collocation"]: (
-        "pratten2020v1", "79", "80", "81", "82", "83", "Table 2"
+        "pratten2020v1", "68", "69", "79", "80", "81", "82", "83", "84", "Table 2"
     ),
 }
 OBSERVED_CONVENTION = "phenomxas.amp.intermediate.constant_normalization.v1"
@@ -149,3 +151,49 @@ def observed_collocation_coefficients(f1, f3, a1, da1, a2, a3, da3, k):
     return collocation_coefficients(
         f1, f3, a1 / k, da1 / k, a2 / k, a3 / k, da3 / k
     )
+
+
+def carrier_boundary_conditions(
+    f1, f3, eta, chi1, chi2, delta, rho,
+    f_rd, f_damp, sigma, lam, a_r, midpoint,
+):
+    """Physical endpoint data divided by the carrier's constant amplitude K.
+
+    The inspiral and ringdown *shapes* are supplied by the independent
+    references for Eqs. (68)-(69) and (84). The carrier multiplies both by
+    f**(-7/6), whereas its intermediate physical amplitude is K/P. Thus the
+    five values below are A/K and (A/K)' at the two joins, plus the supplied
+    calibrated midpoint A/K. Fitted parameters are inputs, not re-fitted here.
+    """
+    f1, f3, midpoint = map(sp.sympify, (f1, f3, midpoint))
+    f = amplitude.F
+    inspiral = f**-sp.Rational(7, 6) * amplitude.inspiral_shape(
+        f, eta, chi1, chi2, delta, rho
+    )
+    ringdown = amplitude.carrier_ringdown_shape(
+        f, f_rd, f_damp, sigma, lam, a_r
+    )
+    return (
+        inspiral.subs(f, f1),
+        sp.diff(inspiral, f).subs(f, f1),
+        midpoint,
+        ringdown.subs(f, f3),
+        sp.diff(ringdown, f).subs(f, f3),
+    )
+
+
+def carrier_boundary_coefficients(
+    f1, f3, eta, chi1, chi2, delta, rho,
+    f_rd, f_damp, sigma, lam, a_r, midpoint,
+):
+    """Solve the carrier's complete quartic boundary-value construction."""
+    nodes = carrier_boundary_conditions(
+        f1, f3, eta, chi1, chi2, delta, rho,
+        f_rd, f_damp, sigma, lam, a_r, midpoint,
+    )
+    if all(node.is_number for node in nodes):
+        # Fit outputs are measured decimals. Evaluate the sourced endpoint
+        # expressions before the small linear solve rather than growing an
+        # enormous exact expression in those decimal inputs and pi.
+        nodes = tuple(sp.N(node, 40) for node in nodes)
+    return observed_collocation_coefficients(f1, f3, *nodes, 1)
