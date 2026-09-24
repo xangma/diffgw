@@ -2353,3 +2353,11 @@ nested-output-grid gate: refined ODE complex relative L2 is `5.95e-9`, the
 amplitude value is `3.39e-10`, and sampled event times agree. Source hashes
 are unchanged. This is boundary numerical stability on one selected row,
 not a physical-domain bound or release qualification.
+
+The separately frozen [equal-mass near-boundary plan](source_rkf_q1_extreme_antialigned_plan.json)
+tests `q=1`, `chi1=chi2=-0.95` with the same source-backed RKF45 choice. Its
+[result](source_rkf_q1_extreme_antialigned_screen.json) passes all ODE and
+nested-output-grid gates: refined complex/amplitude relative L2 are
+`9.42e-9`/`6.32e-10`, the output grids agree on checked samples, and sampled
+event times agree. Source hashes are unchanged. This is another selected
+numerical stress row, not physical validation or a domain-wide guarantee.
