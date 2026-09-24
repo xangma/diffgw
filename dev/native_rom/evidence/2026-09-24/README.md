@@ -2508,3 +2508,36 @@ entries remain exactly zero. These changes could contribute to the
 post-peak mode difference despite nearly identical high-rate states, but a
 coefficient comparison alone does not establish causality or separate the
 NQC fit from ringdown matching.
+
+The frozen [NQC intervention v1 plan](near_extreme_nqc_intervention_plan.json)
+could not generate a mode because the existing development adapter rejected
+the required `150000`-sample buffer; the [failure record](near_extreme_nqc_intervention.json)
+reports return code 1. The [v2 plan](near_extreme_nqc_intervention_v2_plan.json)
+uses a separate high-capacity development adapter, preserving the earlier
+source checks. Its [failure record](near_extreme_nqc_intervention_v2.json)
+shows that changing NQC coefficients also shifts the output epoch/length,
+making a same-index waveform comparison invalid.
+
+The frozen [v3 plan](near_extreme_nqc_intervention_v3_plan.json) compares
+complete pinned-source `(2,2)` modes after independent amplitude-peak and
+fixed-frequency anchoring. Its [result](near_extreme_nqc_intervention_v3.json)
+replays the q10, double-`+0.95` row at a fixed `0.015625 M` output step and
+replaces only the five active NQC coefficients with the public values from
+the `0.03125 M` and `0.015625 M` coefficient-only calls. The coarse/fine
+coefficient swap gives `0.00836047` post-peak complex relative L2 under the
+same fixed-frequency polar comparison used for public grid checks, near the
+public `0.00862680` self-difference. With fine coefficients, the pinned
+source agrees with the pinned public fine-grid mode to `1.56e-5` whole-mode
+and `2.28e-5` peak-aligned post-peak complex L2. With coarse coefficients,
+whole-mode error rises to `0.00781`; peak-aligned post-peak error remains
+`7.64e-6`, showing that the coefficient effect is mainly in the mode's
+time/phase relation to the earlier anchor rather than its peak-aligned
+post-peak shape. This controlled intervention strongly implicates the NQC
+fit in the public grid jump. It does not prove convergence of either grid,
+resolve the coefficient-fit sensitivity, revise the original `0.5 M` gate,
+or validate native physics/ROM training. Reproduce with
+`PYTHONPATH=src:. /Users/xangma/repos/diffgw/.venv/bin/python -m
+dev.native_rom.diagnose_near_extreme_nqc_intervention --source-root
+/Users/xangma/repos/lalsuite-git --headers
+/tmp/diffgw-lalsuite-pinned-53acc0c/merged-include --gsl-include
+/usr/local/include --json-out /tmp/near-extreme-nqc-intervention-v3.json`.

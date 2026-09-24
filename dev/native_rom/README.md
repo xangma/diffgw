@@ -1008,8 +1008,15 @@ agrees at common pre-peak radii to `1.25e-6 rad` in orbital phase despite
 the `0.008627` direct-mode post-peak error, locating the large grid effect
 downstream of the sampled trajectory.
 The [public NQC coefficient check](evidence/2026-09-24/near_extreme_public_nqc_grid.json)
-finds `0.11–0.22%` differences between those grids, a candidate
-contributor that still needs a waveform-level attribution test.
+finds `0.11–0.22%` differences between those grids. A controlled
+[source-mode intervention](evidence/2026-09-24/near_extreme_nqc_intervention_v3.json)
+at fixed `0.015625 M` changes only those five NQC coefficients: using the
+`0.03125 M` rather than `0.015625 M` coefficient set gives a fixed-frequency
+post-peak complex L2 of `0.008360`, close to the public self-difference
+`0.008627`. With fine-grid coefficients, the pinned source and public
+fine-grid modes agree to `1.56e-5` whole-mode L2 after independent peak
+alignment. This strongly implicates the NQC fit in the public sampling jump;
+it does not establish why the coefficients change or a converged reference.
 
 1. Qualify the physical generator against the published equations and independent
    references over the intended domain, resolve convention/provenance gaps, and
