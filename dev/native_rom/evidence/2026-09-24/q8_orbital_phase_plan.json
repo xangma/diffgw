@@ -1,0 +1,12 @@
+{
+  "schema": "diffgw.seobnrv4.q8-orbital-phase-plan.v1",
+  "purpose": "Test whether the q8 whole-mode phase gap is already present in the orbital trajectory, using the frozen native warm-start state and two pinned public dynamics grids. Compare phase and elapsed-time spans at equal orbital frequencies without fitting waveform phase or time.",
+  "campaign": "dev/native_rom/evidence/2026-09-24/source_candidate_new_rows.json",
+  "campaign_sha256": "d8efe4baa182ea39bf9a7d35b6de8621c6e054429ee180eb661e9fbb9f9d59d8",
+  "initial_alignment": "dev/native_rom/evidence/2026-09-24/q8_initial_alignment.json",
+  "initial_alignment_sha256": "c43999677b73fa49b8d1ccd379cda6bd91869dd889edf44456cbd4cbecf00c04",
+  "frequencies_Momega": [0.04, 0.05, 0.06, 0.07, 0.08, 0.09, 0.1, 0.11, 0.12, 0.13],
+  "reference_output_steps_M": [0.125, 0.0625],
+  "solver": {"method": "DOP853", "rtol": 1e-12, "atol": 1e-13, "first_step_M": 0.125, "max_step_M": 10.0},
+  "release_qualified": false
+}

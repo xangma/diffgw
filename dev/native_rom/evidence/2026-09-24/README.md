@@ -1340,3 +1340,104 @@ does not identify one. Compiling the wheel-frequency source-mode ablation with
 `-O2 -ffast-math` raises the amplitude RMS difference on every row (from
 `1.98e-11`–`2.53e-11` to `3.01e-11`–`3.12e-11`), so that simple build switch
 does not close the residual.
+
+**Untouched q8 and mixed-spin stress rows.** The [frozen plan](source_candidate_new_rows_plan.json)
+and [result](source_candidate_new_rows.json) apply the same source-convention
+candidate to `(q, chi1, chi2)=(8, 0.85, 0.85)` and `(4, 0.8, -0.6)`, both
+starting at `M Omega=0.04`. The q8 refined complex numerical relative L2 is
+`1.2687e-6`, just above the frozen `1e-6` gate; the mixed-spin row passes at
+`5.9242e-7`. Against the pinned public SEOBNRv4 mode, their peak-fitted
+whole-mode complex relative L2 differences are `0.40226` and `0.01154`.
+The q8 discrepancy is mostly phase (`0.42191` inspiral complex relative L2,
+versus `8.73e-4` inspiral amplitude relative L2). These failures preclude
+generator qualification or independent ROM training. Reproduce with
+`PYTHONPATH=src:. python -m dev.native_rom.diagnose_source_candidate_new_rows
+--json-out /tmp/source-candidate-new-rows.json` in the pinned environment.
+
+The [q8 same-state field plan](q8_inspiral_field_plan.json) and
+[result](q8_inspiral_field.json) compare the native source-convention vector
+field at exact public states through `M Omega=0.12`. Differences from sampled
+public derivatives are at most about `1.9e-6` relative in angular-momentum
+rate on the finest `0.0625 M` output grid; these are finite-difference
+estimates, not direct compiled right-hand sides. The
+[equal-frequency start plan](q8_initial_alignment_plan.json) and
+[result](q8_initial_alignment.json) find native-minus-public differences at
+`M Omega=0.04` of about `-3.7e-8` in radius, `-3.2e-8` in angular momentum,
+and `-3.6e-9` in radial momentum using the native-field frequency crossing.
+The two public output grids agree at this scale. The start state cannot by
+itself explain the large peak-anchored mode phase gap.
+
+The [q8 orbital-phase plan](q8_orbital_phase_plan.json) and
+[result](q8_orbital_phase.json) independently integrate the native field from
+that frozen warm-start state and compare orbital phase spans at equal orbital
+frequencies on both public grids. Through `M Omega=0.13`, the largest
+native-minus-public phase-span difference is `2.03e-5 rad` and the largest
+elapsed-time-span difference is `1.21e-4 M`. This localizes the large q8
+whole-mode gap downstream of the tested initial state and pre-peak orbital
+dynamics. The comparison does not establish raw-mode, NQC, merger, ringdown,
+or complete waveform parity. Reproduce with `PYTHONPATH=src:. python -m
+dev.native_rom.diagnose_q8_orbital_phase --json-out
+/tmp/q8-orbital-phase.json`.
+
+The [frozen q8 mode-phase plan](q8_mode_phase_plan.json) and
+[result](q8_mode_phase.json) replay the fine native waveform hash and the
+pinned public waveform, then fit each amplitude peak locally without fitting
+their relative time or phase. The peak-anchored native-minus-public phase
+residual is `0.494 rad` at `-1000 M`, `0.335 rad` at `-100 M`, and about zero at
+the peaks. Reanchoring phase at `-1000 M` is a diagnostic counterfactual: it
+reduces the inspiral complex relative L2 from `0.42191` to `0.11026`, but the
+whole-mode L2 remains `0.19976`. The residual varies in time, so a constant
+phase convention alone does not explain it. The next frozen comparison uses
+each mode's own early gravitational-wave frequency crossing as a physical time
+and phase origin; no fitted correction is accepted as release evidence.
+
+The [predeclared frequency-anchor plan](q8_frequency_anchor_plan.json) and
+[result](q8_frequency_anchor.json) use each mode's first prepeak
+`M omega22=0.1` crossing as its own time and phase origin. They do not optimize
+relative time, phase, amplitude, or model coefficients. The q8 whole-mode
+complex relative L2 falls from `0.40226` under independent amplitude-peak
+alignment to `0.0036573` under frequency anchoring. The corresponding inspiral
+and postpeak values are `0.0010316` and `0.0146391`; the independently located
+amplitude peaks occur `1.33785 M` apart relative to their frequency anchors.
+The large peak-aligned gap therefore principally reflects a different peak
+time, not a half-radian prepeak phase error at equal frequency. This is a
+diagnostic alignment, not a release fidelity gate or parameter fit. Reproduce
+with `PYTHONPATH=src:. python -m dev.native_rom.diagnose_q8_frequency_anchor
+--json-out /tmp/q8-frequency-anchor.json` in the pinned environment.
+
+For the same q8 inputs, the fitted merger-ringdown amplitude shape in
+[Bohé et al. Eq. (2.12)](https://arxiv.org/pdf/1611.03703v3) has positive
+curvature at its nominal zero-slope attachment: writing the QNM damping as
+`gamma`, the C1-matched ansatz gives
+`A''(0)/A(0)=-gamma*(gamma+2*c1f*tanh(c2f))`. A true local amplitude maximum
+requires the expression to be nonpositive. The published polynomial fit for
+`c1f` can violate this condition at q8, allowing the native ringdown amplitude
+to rise after attachment. The [frozen counterfactual
+plan](q8_ringdown_peak_bound_plan.json) tests a cap derived solely from this
+condition on the development branch; it does not change the production
+implementation or establish that the cap is the complete model prescription.
+The [counterfactual result](q8_ringdown_peak_bound.json) replays the frozen
+fine q8 time-grid hash, changes only this ringdown parameter, and retains the
+same physical frequency anchor. The unbounded value `c1f=0.0617872` has
+`A''(0)/A(0)=+2.93277e-4`; the bound `c1f=0.0580202` makes the curvature zero.
+The native-minus-public amplitude-peak lag falls from `1.33785 M` to
+`0.03442 M`. Peak-fitted whole-mode complex relative L2 falls from `0.40226`
+to `0.01137`; frequency-anchored whole-mode L2 falls from `0.003657` to
+`0.001865`, with postpeak L2 from `0.01464` to `0.005837`. The latter residual
+and the untested parameter domain prevent a physical parity claim. No
+production code changes or ROM training follow from this one-row ablation.
+Reproduce with `PYTHONPATH=src:. python -m
+dev.native_rom.diagnose_q8_ringdown_peak_bound --json-out
+/tmp/q8-ringdown-peak-bound.json` in the pinned environment.
+
+The separate [q4 frequency-anchor plan](q4_frequency_anchor_plan.json) and
+[result](q4_frequency_anchor.json) replay the untouched mixed-spin fine hash
+and apply the same prepeak `M omega22=0.1` anchor. The native-minus-public
+amplitude-peak lag is `-0.05094 M`. Whole-mode complex relative L2 is
+`0.003162` at this anchor, versus `0.01154` with independent peak fitting;
+the inspiral and postpeak frequency-anchored values are `0.000942` and
+`0.009976`. The mixed-spin postpeak discrepancy requires separate diagnosis. Neither
+anchor is a fitted validation metric or a domain-wide qualification. Reproduce
+with `PYTHONPATH=src:. python -m
+dev.native_rom.diagnose_q4_frequency_anchor --json-out
+/tmp/q4-frequency-anchor.json` in the pinned environment.

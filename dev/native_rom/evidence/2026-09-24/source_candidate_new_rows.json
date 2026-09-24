@@ -1,0 +1,747 @@
+{
+  "choice": {
+    "calibration": "lal_v4_rounded",
+    "flux": {
+      "mode_21_higher_spin": "rho_hybrid",
+      "mode_31_higher_spin": "lal_v4_rho",
+      "mode_32_spin_square": "lal_v4_zero"
+    },
+    "mode_43_higher_spin": "lal_v4_rho",
+    "nqc_phase_window_M": 1.0,
+    "numerical": {
+      "default_initial_step_rule": true,
+      "default_restart_rule": false,
+      "fixed_restart_time_M": 165.0,
+      "hermite_resampling": true,
+      "local_nqc_degree": 6,
+      "local_nqc_phase_derivatives": true,
+      "local_nqc_window_M": 0.5
+    },
+    "physical": {
+      "hamiltonian_log_derivative": "lal_v4",
+      "mode_33_higher_spin": "lal_v4_rho",
+      "name": "combined"
+    },
+    "spin_truncation": "tabulated"
+  },
+  "errors": [],
+  "input_sha256": {
+    "prior_calibration_domain": "0cd65ac1a57b10623cf9947ca42d9caeb47238b05587f8237ca52bf7ac9237c8",
+    "prior_source_placement": "01c2895e1623751c679d2f419aede60f37d2d05390361e389574fee8e132aa54"
+  },
+  "lal_binary": {
+    "binaries": {
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libaec.0.1.7.dylib": "5612e00c7f180b633c9b141844c5c60cf21df6b103b842391ae0274ff260b458",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libbrotlicommon.1.2.0.dylib": "e9cddb32ebba5a8f92b567a323459382fb203bc3d1304c5d00e2757bd2a58ec1",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libbrotlidec.1.2.0.dylib": "db7c5d79757eb9a652c17d859e63f0686b07d7b9a882329df602df2e539c1750",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libcfitsio.4.6.4.dylib": "bd8a9ef313118d3dc541ee438eec460e715e7af5253e4d16824bd3ef2da0b705",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libcrypto.3.dylib": "e2783fcdd6c517ba285a61ff4e1319f9b5388f374677f1bae1a3eeec4e581954",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libcurl.4.dylib": "c31527aa4180f74babd4dc4e5a05b3df3500fe21fe93f2bb62bafa6d2ca13612",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libfftw3.3.dylib": "25d39c1d343cd5c46df9e9db39939245ff08c7c4d9e0bbcdead1750c34d6337b",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libfftw3f.3.dylib": "67a00ffeecb5c8375f80fa17e65f340ce91446e6a8424673c72758c8599d50a7",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libframel.8.48.4.dylib": "67898b482a5065b4e4b1b0f0dd16321c2f1edcf1ac54b7b4eed3dac298486846",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libgsl.28.dylib": "1eefe0dbead9551d47be3c09bbf786c727f84df1331130ee8a03127b7a95abe8",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libgslcblas.0.dylib": "00a30ab2e9eb5cd36caab9ae9a9975a8280b9b4c2940b15e446c34a151818230",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libhdf5.320.1.1.dylib": "8196331cc47e67eb81473a1288ad8dfc607b37f587d5dd6c02bc88a71e1d9e7a",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libhdf5_hl.320.0.2.dylib": "ee95613ef6bde34945829e444fb9aeec0128cbddff7e1ea89a4c4d1e2dece6e6",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libiconv.2.dylib": "52d70b85978160b9b3ea3605b38522626b8642697db2de866d16f4967d67b675",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libidn2.0.dylib": "d6dce44c0ca426d8c403fe2b37bad30b4a46a6a7c920d13e597fdf446a8a946d",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libintl.8.dylib": "bca42b0bdd3709989aab17746a7317c6dc0285bb6d82aab4891dc9bf08b7c6cf",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/liblal.20.dylib": "e4c4ed42baed00d30668588e58444f974e3deeda56ba4e5978624640ddb5bde7",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/liblalburst.8.dylib": "592f4a6d392fd14fa926126c3b7e8c2f1a22891ec732b2b34c12cc9091e36277",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/liblalframe.14.dylib": "64c4684ede0c34f3e911d6d44c59811531b9366f72c12483a694b30cfd0fee78",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/liblalinference.23.dylib": "1c2ec90d081f31bc6e37b1b4f92755940c241b3915fb6a24107a7da31ba901ac",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/liblalinspiral.18.dylib": "900ab09865b3833abf01cead55344faa06167de5b361a1cbcb054e97f844cbfd",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/liblalmetaio.11.dylib": "3506634e0f760b5b1de7867978a7d5756dd38e4e2378e4cb007c0d33b28c61f9",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/liblalpulsar.30.dylib": "84a7e7475b64c72fbf83d2cc07ce40b8bd1dcc9928414fb73dae67a9ee369d92",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/liblalsimulation.37.dylib": "9046c4a673d2ba82b792f7b92d73203ba783b32fc604b5da1139c5c1bc8b3325",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/liblalsupport.14.dylib": "69e8be4f19fdb31cc6b7bf1bc78e996c71b11f90ccc9cb02b67af3462fce55b8",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libmetaio.1.dylib": "32335f399dd3629ed089772faad9cf83fb04c22823883eb513efbd3a8647dd63",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libnghttp2.14.dylib": "25c7f17e6288fbab82afe873a883ee197cb45fd2e9c4c05feaeb5b66e853004b",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libpsl.5.dylib": "971ced1f51baad72d5ef5932112209e78b1ce9aacc40f995a00dffc545de0717",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libssl.3.dylib": "2b7c20e43533e9463251923d7d285b01b1eaf302b420c0fa9516fa6f8466bda6",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libsz.2.0.1.dylib": "603290903eef2da05d00710387b8a62a1a5e66f89d2bd5b906f9bb1e818b000a",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libunistring.5.dylib": "be2d50d95d67ce80c7a8183e8d6b5ed06438f7c805f10efc279b1873be279637",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libz.1.3.2.dylib": "1c6165550fec45d0eb0867b062943e9c926bf9ee94e462faad6d257055d3968b",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libzstd.1.5.7.dylib": "918575fed77013d472c7f2e235afdac8ff4c26a5c2ab80196e103256ef8401ca",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/_lal.cpython-313-darwin.so": "d7220aaf8ba88508569a3a96b7f8b2fedd35bed7f17775ac414bd418701c17c3",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lalburst/_lalburst.cpython-313-darwin.so": "04c3bc36ff28c081896f74c16045ddb7c26582768c12ff88b0d550cfc6c388c4",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lalburst/cs_gamma.cpython-313-darwin.so": "58abb65a5e0da9a497d2db50cb0d5ef1f467a9e4c0f9b97fdeec300c2cdd443e",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lalframe/_lalframe.cpython-313-darwin.so": "fec91798a004bbf9ceff73e9a7a330490a2353cb60c962f3a6309a522eb5a400",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lalinference/_bayespputils.cpython-313-darwin.so": "d3a011d91df8fb10306d8b210c2334f2931b58a0994dfd1974d766712165276c",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lalinference/_lalinference.cpython-313-darwin.so": "42f66bf7bb4971996d3e29a89be274b673ac7fb55e0c35a3e472479dd1dceeb8",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lalinspiral/_lalinspiral.cpython-313-darwin.so": "aebb6b8b570018af89ebf4701fe33a232d965dcac5c026f34c75936d3c48f604",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lalinspiral/_thinca.cpython-313-darwin.so": "755ea8d7b90b68db5b95b800f1ee4550956ae752d441300ed43cd0862d4b2efd",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lalmetaio/_lalmetaio.cpython-313-darwin.so": "4429fb8189a806182661a7e6fbdb7ff9f975a445fde2da46b0e8b498aa4f313b",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lalpulsar/_lalpulsar.cpython-313-darwin.so": "ac2937b767c371c0638a431e645bdba43c21fbb721eb3223abd0900b9a047c8d",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lalsimulation/_lalsimulation.cpython-313-darwin.so": "2de0af808b258bef03a3a13b15fa71038f48579f5f562e92ebd62c6b9769fd37"
+    },
+    "lal_version": "7.7.1",
+    "lalsimulation_version": "6.2.1",
+    "lalsuite_distribution": "7.26.15"
+  },
+  "plan_sha256": "0eb0f4d0b503bdecfd30bc19e09f93f4918470fd73803881a6f98c08900f6024",
+  "process": {
+    "argv": [
+      "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw/dev/native_rom/diagnose_source_candidate_new_rows.py",
+      "--json-out",
+      "/tmp/seobnrv4-source-candidate-new-rows.json"
+    ],
+    "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+    "host": "client-3792.default.vpn.port.ac.uk",
+    "pid": 43163
+  },
+  "release_qualified": false,
+  "rows": {
+    "q4_mixed_spin": {
+      "check": {
+        "coarse_to_medium": {
+          "amplitude_relative_l2": 7.888403462452713e-08,
+          "boundary_time_M_abs_difference": 0.0,
+          "candidate_samples": 1568,
+          "common_samples": 1568,
+          "complex_relative_l2": 1.6538586840281918e-06,
+          "grid_step_M": 0.5,
+          "match_time_M_abs_difference": 0.0,
+          "peak_time_M_abs_difference": 0.0,
+          "phase_max_abs_rad": 6.068175054006127e-06,
+          "phase_rms_rad": 2.581630254352749e-06,
+          "phase_samples": 1545,
+          "reference_samples": 1568,
+          "relative_norm_error": 6.81206152597369e-08,
+          "samples": 1568,
+          "support_end_difference_M": 0.0,
+          "unmaximized_real_overlap": 0.9999999999986346
+        },
+        "gates": {
+          "amplitude_error_budget": true,
+          "boundary_time_M": true,
+          "complex_error_budget": true,
+          "error_decreased": true,
+          "match_time_M": true,
+          "peak_time_M": true
+        },
+        "medium_to_fine": {
+          "amplitude_relative_l2": 6.834098037150135e-08,
+          "boundary_time_M_abs_difference": 0.0,
+          "candidate_samples": 1568,
+          "common_samples": 1568,
+          "complex_relative_l2": 5.92424361206519e-07,
+          "grid_step_M": 0.5,
+          "match_time_M_abs_difference": 0.0,
+          "peak_time_M_abs_difference": 0.0,
+          "phase_max_abs_rad": 1.2498058907977922e-06,
+          "phase_rms_rad": 4.867691389688494e-07,
+          "phase_samples": 1545,
+          "reference_samples": 1568,
+          "relative_norm_error": 5.9009466202297745e-08,
+          "samples": 1568,
+          "support_end_difference_M": 0.0,
+          "unmaximized_real_overlap": 0.9999999999998263
+        },
+        "numerical_check_passed": true
+      },
+      "error": null,
+      "fitted_peak": {
+        "common_support_M": [
+          -633.6361896966876,
+          149.36381030331245
+        ],
+        "metrics": {
+          "amplitude_relative_l2": 0.002274735715183018,
+          "complex_relative_l2": 0.011540886872808197,
+          "phase_max_abs_rad": 0.11099130031835659,
+          "phase_rms_rad": 0.012745832875597028,
+          "phase_samples": 1545,
+          "relative_norm_error": 0.0013577277285291567,
+          "samples": 1567,
+          "unmaximized_real_overlap": 0.9999342363883079
+        },
+        "native_peak": {
+          "offset_samples": -0.4209452611218512,
+          "phase_rad": -1.4649546570575798,
+          "time_s": -0.004112355923610092
+        },
+        "reference_peak": {
+          "offset_samples": 0.2723793933750927,
+          "phase_rad": 1.082721229902678,
+          "time_s": -0.004103100598366941
+        },
+        "windows": {
+          "inspiral": {
+            "metrics": {
+              "amplitude_relative_l2": 0.0008459432186891093,
+              "complex_relative_l2": 0.012173947204750683,
+              "phase_max_abs_rad": 0.014414451023680589,
+              "phase_rms_rad": 0.012846256238589945,
+              "phase_samples": 1228,
+              "relative_norm_error": 0.0006694791047002768,
+              "samples": 1228,
+              "unmaximized_real_overlap": 0.9999260721126881
+            },
+            "time_M": [
+              -633.6361896966876,
+              -20.136189696687588
+            ]
+          },
+          "late_inspiral": {
+            "metrics": {
+              "amplitude_relative_l2": 0.003417268554643583,
+              "complex_relative_l2": 0.004782665828378995,
+              "phase_max_abs_rad": 0.0053814979815090345,
+              "phase_rms_rad": 0.0034197793286405297,
+              "phase_samples": 40,
+              "relative_norm_error": 0.0033573102081588813,
+              "samples": 40,
+              "unmaximized_real_overlap": 0.9999941792777335
+            },
+            "time_M": [
+              -19.636189696687566,
+              -0.13618969668755226
+            ]
+          },
+          "post_peak": {
+            "metrics": {
+              "amplitude_relative_l2": 0.006775722935383952,
+              "complex_relative_l2": 0.009259451417837105,
+              "phase_max_abs_rad": 0.11099130031835659,
+              "phase_rms_rad": 0.013146607889096837,
+              "phase_samples": 277,
+              "relative_norm_error": 0.006654015960521176,
+              "samples": 299,
+              "unmaximized_real_overlap": 0.9999791303771183
+            },
+            "time_M": [
+              0.3638103033124712,
+              149.36381030331245
+            ]
+          }
+        }
+      },
+      "fixed_restart_time_M": 100.0,
+      "row": {
+        "chi1": 0.8,
+        "chi2": -0.6,
+        "mass1": 40.0,
+        "mass2": 10.0,
+        "omega_start": 0.04
+      },
+      "runs": {
+        "ode_0": {
+          "elapsed_seconds": 74.87775033302023,
+          "level": {
+            "atol": 1e-12,
+            "dt_geom": 0.5,
+            "name": "ode_0",
+            "rtol": 1e-11
+          },
+          "native": {
+            "array_dtype": {
+              "mode": "complex128",
+              "time": "float64"
+            },
+            "array_sha256": {
+              "mode": "aedd7a9f44def22b2086ede481959cbf9acee275860defd946839ce557e3c536",
+              "time": "5ad34b6326599a4b37370b9d68e36f2ef84bf957c4185ca86f42d5438e69400b"
+            },
+            "atol": 1e-12,
+            "boundary_time_M": 633.703125,
+            "dt_geom": 0.5,
+            "final_mass_fraction": 0.9618350154595044,
+            "final_spin": 0.8683419866639572,
+            "internal_step_M": 0.015625,
+            "match_time_M": 633.7145794172839,
+            "name": "ode_0",
+            "peak_time_M": 650.4877853393555,
+            "restart_time_M": 100.0,
+            "rtol": 1e-11,
+            "samples": 1568,
+            "stages": {
+              "coarse": {
+                "accepted": 333,
+                "evaluations": 2159,
+                "event_time_M": 650.6195514887698,
+                "rejected": 32,
+                "termination": [
+                  "event"
+                ]
+              },
+              "fine": {
+                "accepted": 313,
+                "evaluations": 2029,
+                "event_time_M": 550.9945457282541,
+                "rejected": 30,
+                "termination": [
+                  "event"
+                ]
+              }
+            },
+            "support_M": [
+              0.0,
+              783.5
+            ]
+          }
+        },
+        "ode_1": {
+          "elapsed_seconds": 104.27187058300478,
+          "level": {
+            "atol": 1e-13,
+            "dt_geom": 0.5,
+            "name": "ode_1",
+            "rtol": 1e-12
+          },
+          "native": {
+            "array_dtype": {
+              "mode": "complex128",
+              "time": "float64"
+            },
+            "array_sha256": {
+              "mode": "36f83188fe9ae67a676c45cd6d7be0ea1cfb6bf3c672f5899823fa44b1f61653",
+              "time": "5ad34b6326599a4b37370b9d68e36f2ef84bf957c4185ca86f42d5438e69400b"
+            },
+            "atol": 1e-13,
+            "boundary_time_M": 633.703125,
+            "dt_geom": 0.5,
+            "final_mass_fraction": 0.9618350154595044,
+            "final_spin": 0.8683419866639572,
+            "internal_step_M": 0.015625,
+            "match_time_M": 633.7145794172839,
+            "name": "ode_1",
+            "peak_time_M": 650.4877853393555,
+            "restart_time_M": 100.0,
+            "rtol": 1e-12,
+            "samples": 1568,
+            "stages": {
+              "coarse": {
+                "accepted": 523,
+                "evaluations": 3304,
+                "event_time_M": 650.54105719496,
+                "rejected": 33,
+                "termination": [
+                  "event"
+                ]
+              },
+              "fine": {
+                "accepted": 484,
+                "evaluations": 3055,
+                "event_time_M": 550.7942443457804,
+                "rejected": 30,
+                "termination": [
+                  "event"
+                ]
+              }
+            },
+            "support_M": [
+              0.0,
+              783.5
+            ]
+          }
+        },
+        "ode_2": {
+          "elapsed_seconds": 148.78957433300093,
+          "level": {
+            "atol": 1e-14,
+            "dt_geom": 0.5,
+            "name": "ode_2",
+            "rtol": 1e-13
+          },
+          "native": {
+            "array_dtype": {
+              "mode": "complex128",
+              "time": "float64"
+            },
+            "array_sha256": {
+              "mode": "c8644d4e939835684cc96d100e3faa7a3b80d9728cc2dc9dd31ef6508e7cd96b",
+              "time": "5ad34b6326599a4b37370b9d68e36f2ef84bf957c4185ca86f42d5438e69400b"
+            },
+            "atol": 1e-14,
+            "boundary_time_M": 633.703125,
+            "dt_geom": 0.5,
+            "final_mass_fraction": 0.9618350154595044,
+            "final_spin": 0.8683419866639572,
+            "internal_step_M": 0.015625,
+            "match_time_M": 633.7145794172839,
+            "name": "ode_2",
+            "peak_time_M": 650.4877853393555,
+            "restart_time_M": 100.0,
+            "rtol": 1e-13,
+            "samples": 1568,
+            "stages": {
+              "coarse": {
+                "accepted": 823,
+                "evaluations": 5109,
+                "event_time_M": 650.5434851010895,
+                "rejected": 34,
+                "termination": [
+                  "event"
+                ]
+              },
+              "fine": {
+                "accepted": 767,
+                "evaluations": 4763,
+                "event_time_M": 550.6979624951789,
+                "rejected": 32,
+                "termination": [
+                  "event"
+                ]
+              }
+            },
+            "support_M": [
+              0.0,
+              783.5
+            ]
+          }
+        }
+      }
+    },
+    "q8_high_aligned": {
+      "check": {
+        "coarse_to_medium": {
+          "amplitude_relative_l2": 6.078452828747403e-07,
+          "boundary_time_M_abs_difference": 0.0,
+          "candidate_samples": 2652,
+          "common_samples": 2652,
+          "complex_relative_l2": 3.344863919812444e-05,
+          "grid_step_M": 0.5,
+          "match_time_M_abs_difference": 0.0,
+          "peak_time_M_abs_difference": 0.0,
+          "phase_max_abs_rad": 7.647467825231435e-05,
+          "phase_rms_rad": 3.242197576351199e-05,
+          "phase_samples": 2650,
+          "reference_samples": 2652,
+          "relative_norm_error": 5.252895658447443e-07,
+          "samples": 2652,
+          "support_end_difference_M": 0.0,
+          "unmaximized_real_overlap": 0.9999999994407336
+        },
+        "gates": {
+          "amplitude_error_budget": true,
+          "boundary_time_M": true,
+          "complex_error_budget": false,
+          "error_decreased": true,
+          "match_time_M": true,
+          "peak_time_M": true
+        },
+        "medium_to_fine": {
+          "amplitude_relative_l2": 1.6872884589358445e-08,
+          "boundary_time_M_abs_difference": 0.0,
+          "candidate_samples": 2652,
+          "common_samples": 2652,
+          "complex_relative_l2": 1.2687185014608354e-06,
+          "grid_step_M": 0.5,
+          "match_time_M_abs_difference": 0.0,
+          "peak_time_M_abs_difference": 0.0,
+          "phase_max_abs_rad": 3.3068516813416092e-06,
+          "phase_rms_rad": 1.3185665837808115e-06,
+          "phase_samples": 2650,
+          "reference_samples": 2652,
+          "relative_norm_error": 1.460009335652046e-08,
+          "samples": 2652,
+          "support_end_difference_M": 0.0,
+          "unmaximized_real_overlap": 0.9999999999991954
+        },
+        "numerical_check_passed": false
+      },
+      "error": null,
+      "fitted_peak": {
+        "common_support_M": [
+          -1177.1863123558796,
+          147.81368764412014
+        ],
+        "metrics": {
+          "amplitude_relative_l2": 0.013463067839067502,
+          "complex_relative_l2": 0.40226070812010195,
+          "phase_max_abs_rad": 0.5005108461104815,
+          "phase_rms_rad": 0.43157697353297414,
+          "phase_samples": 2650,
+          "relative_norm_error": 0.0018337904800057592,
+          "samples": 2651,
+          "unmaximized_real_overlap": 0.9189462070712784
+        },
+        "native_peak": {
+          "offset_samples": -0.12984592295037314,
+          "phase_rad": -0.7771956875001627,
+          "time_s": -0.00438195818928377
+        },
+        "reference_peak": {
+          "offset_samples": 0.372624711759856,
+          "phase_rad": 2.956876282131895,
+          "time_s": -0.004675629976518081
+        },
+        "windows": {
+          "inspiral": {
+            "metrics": {
+              "amplitude_relative_l2": 0.0008732099859611086,
+              "complex_relative_l2": 0.4219101144227049,
+              "phase_max_abs_rad": 0.5005108461104815,
+              "phase_rms_rad": 0.45088488114092223,
+              "phase_samples": 2315,
+              "relative_norm_error": 0.0006616823036200703,
+              "samples": 2315,
+              "unmaximized_real_overlap": 0.9110549999181946
+            },
+            "time_M": [
+              -1177.1863123558796,
+              -20.186312355879842
+            ]
+          },
+          "late_inspiral": {
+            "metrics": {
+              "amplitude_relative_l2": 0.002855800627490478,
+              "complex_relative_l2": 0.0963301544822729,
+              "phase_max_abs_rad": 0.1571962955879273,
+              "phase_rms_rad": 0.09758852695332079,
+              "phase_samples": 40,
+              "relative_norm_error": 0.001800231855255685,
+              "samples": 40,
+              "unmaximized_real_overlap": 0.995353506320139
+            },
+            "time_M": [
+              -19.686312355879906,
+              -0.18631235587990425
+            ]
+          },
+          "post_peak": {
+            "metrics": {
+              "amplitude_relative_l2": 0.05730188744298037,
+              "complex_relative_l2": 0.17332035761055165,
+              "phase_max_abs_rad": 0.2963375785270114,
+              "phase_rms_rad": 0.2766115152730096,
+              "phase_samples": 295,
+              "relative_norm_error": 0.04359197503898449,
+              "samples": 296,
+              "unmaximized_real_overlap": 0.9852888697396711
+            },
+            "time_M": [
+              0.3136876441200316,
+              147.81368764412014
+            ]
+          }
+        }
+      },
+      "fixed_restart_time_M": 100.0,
+      "row": {
+        "chi1": 0.85,
+        "chi2": 0.85,
+        "mass1": 40.0,
+        "mass2": 5.0,
+        "omega_start": 0.04
+      },
+      "runs": {
+        "ode_0": {
+          "elapsed_seconds": 116.65522824999061,
+          "level": {
+            "atol": 1e-12,
+            "dt_geom": 0.5,
+            "name": "ode_0",
+            "rtol": 1e-11
+          },
+          "native": {
+            "array_dtype": {
+              "mode": "complex128",
+              "time": "float64"
+            },
+            "array_sha256": {
+              "mode": "c33db76e5110409d19f5bd2a32dd70fc3f6f6e10567f1b3da80992f6659344cf",
+              "time": "db563c40381301f4f08f2592d8daf3c2d5cd97c2f22780b90179c0df62e346e7"
+            },
+            "atol": 1e-12,
+            "boundary_time_M": 1175.859375,
+            "dt_geom": 0.5,
+            "final_mass_fraction": 0.9792636225854244,
+            "final_spin": 0.8941271984269911,
+            "internal_step_M": 0.015625,
+            "match_time_M": 1175.8741823451842,
+            "name": "ode_0",
+            "peak_time_M": 1197.2050552368164,
+            "restart_time_M": 100.0,
+            "rtol": 1e-11,
+            "samples": 2652,
+            "stages": {
+              "coarse": {
+                "accepted": 518,
+                "evaluations": 3294,
+                "event_time_M": 1197.3499873246672,
+                "rejected": 37,
+                "termination": [
+                  "event"
+                ]
+              },
+              "fine": {
+                "accepted": 504,
+                "evaluations": 3205,
+                "event_time_M": 1097.7501163640713,
+                "rejected": 36,
+                "termination": [
+                  "event"
+                ]
+              }
+            },
+            "support_M": [
+              0.0,
+              1325.5
+            ]
+          }
+        },
+        "ode_1": {
+          "elapsed_seconds": 163.69128908400307,
+          "level": {
+            "atol": 1e-13,
+            "dt_geom": 0.5,
+            "name": "ode_1",
+            "rtol": 1e-12
+          },
+          "native": {
+            "array_dtype": {
+              "mode": "complex128",
+              "time": "float64"
+            },
+            "array_sha256": {
+              "mode": "a476a3c620bdfe143b9845e97f13e2648b6c98e88af3773d152d22700fbd9579",
+              "time": "db563c40381301f4f08f2592d8daf3c2d5cd97c2f22780b90179c0df62e346e7"
+            },
+            "atol": 1e-13,
+            "boundary_time_M": 1175.859375,
+            "dt_geom": 0.5,
+            "final_mass_fraction": 0.9792636225854244,
+            "final_spin": 0.8941271984269911,
+            "internal_step_M": 0.015625,
+            "match_time_M": 1175.8741823451842,
+            "name": "ode_1",
+            "peak_time_M": 1197.2050552368164,
+            "restart_time_M": 100.0,
+            "rtol": 1e-12,
+            "samples": 2652,
+            "stages": {
+              "coarse": {
+                "accepted": 815,
+                "evaluations": 5081,
+                "event_time_M": 1197.2627214283298,
+                "rejected": 38,
+                "termination": [
+                  "event"
+                ]
+              },
+              "fine": {
+                "accepted": 790,
+                "evaluations": 4921,
+                "event_time_M": 1097.5125637017588,
+                "rejected": 36,
+                "termination": [
+                  "event"
+                ]
+              }
+            },
+            "support_M": [
+              0.0,
+              1325.5
+            ]
+          }
+        },
+        "ode_2": {
+          "elapsed_seconds": 238.6188528329949,
+          "level": {
+            "atol": 1e-14,
+            "dt_geom": 0.5,
+            "name": "ode_2",
+            "rtol": 1e-13
+          },
+          "native": {
+            "array_dtype": {
+              "mode": "complex128",
+              "time": "float64"
+            },
+            "array_sha256": {
+              "mode": "833c8ce3251143f336f4a76d2a4866d94a61c7d1211e9294aae587263e0ede53",
+              "time": "db563c40381301f4f08f2592d8daf3c2d5cd97c2f22780b90179c0df62e346e7"
+            },
+            "atol": 1e-14,
+            "boundary_time_M": 1175.859375,
+            "dt_geom": 0.5,
+            "final_mass_fraction": 0.9792636225854244,
+            "final_spin": 0.8941271984269911,
+            "internal_step_M": 0.015625,
+            "match_time_M": 1175.8741823451842,
+            "name": "ode_2",
+            "peak_time_M": 1197.2050552368164,
+            "restart_time_M": 100.0,
+            "rtol": 1e-13,
+            "samples": 2652,
+            "stages": {
+              "coarse": {
+                "accepted": 1286,
+                "evaluations": 7907,
+                "event_time_M": 1197.2451204639556,
+                "rejected": 38,
+                "termination": [
+                  "event"
+                ]
+              },
+              "fine": {
+                "accepted": 1245,
+                "evaluations": 7651,
+                "event_time_M": 1097.4208806195463,
+                "rejected": 36,
+                "termination": [
+                  "event"
+                ]
+              }
+            },
+            "support_M": [
+              0.0,
+              1325.5
+            ]
+          }
+        }
+      }
+    }
+  },
+  "schema": "diffgw.seobnrv4.source-candidate-new-rows.v1",
+  "scope": {
+    "description": "Scalar CPU float64 numerical stability evidence only; no training or promotion.",
+    "known_limitations": [
+      "Convergence cannot establish correctness of the equations or published model fidelity.",
+      "The adaptive prototype uses a diagnostic QNM spline with independently generated values and black-box-inferred knot metadata; this is not wholly literature-specified provenance.",
+      "Changing dt also changes the adaptive initial step and coarse/fine restart sampling; the grid check measures the complete generator's grid sensitivity.",
+      "No time, phase, amplitude, or coefficient fitting is performed.",
+      "No derivatives, batched execution, accelerators, or JAX are qualified here."
+    ],
+    "physics_validated": false,
+    "production_asset": false,
+    "production_promotion_allowed": false,
+    "training_generator_qualified": false
+  },
+  "script_sha256": "21a0ee8fa08f58e634b9b5566dee329a24f8054a0506db64930b0097f4423479",
+  "settings": {
+    "atol_levels": [
+      1e-12,
+      1e-13,
+      1e-14
+    ],
+    "dt_levels_M": [
+      0.5,
+      0.25,
+      0.125
+    ],
+    "event_time_limit_M": 0.05,
+    "max_accepted_steps": 20000,
+    "max_evaluations": 200000,
+    "max_rejected_steps": 10000,
+    "max_run_seconds": 600.0,
+    "relative_l2_limit": 1e-06,
+    "ringdown_duration_M": 150.0,
+    "rtol_levels": [
+      1e-11,
+      1e-12,
+      1e-13
+    ]
+  },
+  "source_sha256": {
+    "dev/native_rom/eob/torch/adaptive_driver_clean.py": "f97c150d107581045255696d216b6bdb78f2b361ad8aa785e89ddc76e1cd983d",
+    "dev/native_rom/eob/torch/historical_hamiltonian.py": "f93beaa5172dd1fff43eb676848f60caa8d2795dfd7ed21c842827dd53141066",
+    "dev/native_rom/eob/torch/source_calibration_hamiltonian.py": "cb1cc2e355246e30bbde5af96c83939c8463c971d82ebbd7bb9d70de97dbfe81",
+    "dev/native_rom/qualify_generator.py": "a5b4105bd944335c4489006135b0154f520843979f083d716a74558f86204d7e",
+    "src/torchwave/approximants/eob/seobnrv4_flux.py": "3136bb016cce21cdd9d636008fee1fa5472757fed4446dc899e0d31e70124c83"
+  },
+  "status": "diagnostic_complete"
+}

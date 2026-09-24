@@ -1,0 +1,15 @@
+{
+  "schema": "diffgw.seobnrv4.q8-ringdown-peak-bound-plan.v1",
+  "purpose": "Test the necessary local-maximum condition derived from Bohé et al. 1611.03703v3 Eq. (2.12) and C1 matching, changing only the native q8 ringdown free amplitude rate in a development-only counterfactual. Compare at the frozen prepeak GW-frequency anchor without fitting to the public waveform.",
+  "campaign": "dev/native_rom/evidence/2026-09-24/source_candidate_new_rows.json",
+  "campaign_sha256": "d8efe4baa182ea39bf9a7d35b6de8621c6e054429ee180eb661e9fbb9f9d59d8",
+  "frequency_anchor": "dev/native_rom/evidence/2026-09-24/q8_frequency_anchor.json",
+  "frequency_anchor_sha256": "8f7d2faeeb8926fa34c7667b7857925512a6bcfee250c1916bd65d4061336bff",
+  "row_name": "q8_high_aligned",
+  "level_name": "ode_2",
+  "anchor_angular_frequency_M": 0.1,
+  "derived_condition": "For A'(0)=0, Eq. (2.12) gives A''(0)/A(0)=-gamma*(gamma+2*c1f*tanh(c2f)). A local maximum requires gamma+2*c1f*tanh(c2f)>=0. For c2f<0, cap c1f at -gamma/(2*tanh(c2f)); retain c2f and all other inputs.",
+  "derivation_source": "https://arxiv.org/pdf/1611.03703v3, Eqs. (2.10), (2.12)-(2.14)",
+  "production_change": false,
+  "release_qualified": false
+}

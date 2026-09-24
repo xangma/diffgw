@@ -1,0 +1,31 @@
+{
+  "schema": "diffgw.seobnrv4.source-candidate-new-rows-plan.v1",
+  "purpose": "Stress the combined source-convention candidate on two untouched mass-ratio/spin rows using frozen three-level ODE and whole-mode comparisons. These are diagnostics, not domain qualification.",
+  "prior_calibration_domain": "dev/native_rom/evidence/2026-09-24/source_calibration_domain.json",
+  "prior_calibration_domain_sha256": "0cd65ac1a57b10623cf9947ca42d9caeb47238b05587f8237ca52bf7ac9237c8",
+  "prior_source_placement": "dev/native_rom/evidence/2026-09-24/source_placement_whole_waveform.json",
+  "prior_source_placement_sha256": "01c2895e1623751c679d2f419aede60f37d2d05390361e389574fee8e132aa54",
+  "levels": ["ode_0", "ode_1", "ode_2"],
+  "fixed_coarse_first_step_M": 0.125,
+  "warm_start_Momega": 0.03162277660168379,
+  "candidate_window_M": 1.0,
+  "rows": {
+    "q8_high_aligned": {
+      "mass1": 40.0,
+      "mass2": 5.0,
+      "chi1": 0.85,
+      "chi2": 0.85,
+      "omega_start": 0.04,
+      "fixed_restart_time_M": 100.0
+    },
+    "q4_mixed_spin": {
+      "mass1": 40.0,
+      "mass2": 10.0,
+      "chi1": 0.8,
+      "chi2": -0.6,
+      "omega_start": 0.04,
+      "fixed_restart_time_M": 100.0
+    }
+  },
+  "release_qualified": false
+}
