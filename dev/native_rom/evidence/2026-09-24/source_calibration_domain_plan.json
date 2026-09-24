@@ -1,0 +1,21 @@
+{
+  "schema": "diffgw.seobnrv4.source-calibration-domain-plan.v1",
+  "purpose": "Test only source-rounded Hamiltonian calibration at three fixed ODE tolerances on the two previously frozen 1 M boundary rows; compare with unchanged pinned public binary, without selecting candidates by fit.",
+  "levels": [
+    "ode_0",
+    "ode_1",
+    "ode_2"
+  ],
+  "rows": [
+    "mass_ratio_four_nonspinning",
+    "strong_antialigned_spin"
+  ],
+  "calibration": "lal_v4_rounded",
+  "release_qualified": false,
+  "prior_domain": "dev/native_rom/evidence/2026-09-24/source_flux_one_M_domain.json",
+  "prior_domain_sha256": "12630f0526435bf21335e32702ca9e61cd0e1b9925371d26aaada56b4deadc9f",
+  "source_convention_plan": "dev/native_rom/evidence/2026-09-24/hamiltonian_source_conventions_plan.json",
+  "source_convention_plan_sha256": "e66008ec2aa2311fccae963e796d9e71534ff615f03626c397684ce9efb477f8",
+  "aligned_waveform": "dev/native_rom/evidence/2026-09-24/source_calibration_waveform.json",
+  "aligned_waveform_sha256": "133af8a4a766c331561bf1c648eb2f241e895306ec8aa004faad5f92a2ba585a"
+}

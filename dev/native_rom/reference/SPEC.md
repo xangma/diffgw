@@ -90,6 +90,12 @@ source values lowers the aligned-spin peak-fitted full-waveform complex L2
 from `0.00299749` to `0.00271301` and passes the three-tolerance ODE check;
 the [frozen result](../evidence/2026-09-24/source_calibration_waveform.json)
 is a source-convention attribution, not a change to this paper reference.
+The [two boundary-row result](../evidence/2026-09-24/source_calibration_domain.json)
+passes numerical convergence but slightly worsens both peak-fitted public
+waveform comparisons. The [initial-state result](../evidence/2026-09-24/source_calibration_initial.json)
+finds an unresolved inward-momentum discrepancy after aligning circular
+radius and angular momentum. Neither observation promotes the source decimals
+to an independently derived calibration.
 
 `hamiltonian.effective_spin_mapping` checks the aligned, zero-gauge
 3.5PN mapping in [Barausse and Buonanno (2011), Eqs. (50)–(52)](https://arxiv.org/html/1107.2904)

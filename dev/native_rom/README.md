@@ -151,6 +151,14 @@ finer public grid from `4.70e-4` to `7.47e-5` relative, while the sampled
 torque gap remains near `6.5e-7`. The remaining inspiral difference and open
 domain, attachment, and ROM gates keep this source-convention variant on the
 feature branch.
+On the two boundary rows tested with the same source-backed flux and a `1 M`
+NQC window, the rounded values also pass numerical convergence, but slightly
+increase peak-fitted public waveform error. A fixed-flux initial-state check
+reduces circular radius and angular-momentum gaps while leaving roughly
+`2e-7` in inward momentum unexplained. The historical finite radial-response
+step accounts for less than 1% of that momentum gap in an idealized native
+check. These results prevent treating source-convention agreement as release
+qualification.
 The aligned-spin trajectory replay finds a native-minus-public orbital phase
 span of at most `1.27e-4 rad` from `M Omega=0.0425` through `0.13`, compared
 with `3.36e-5 rad` maximum public-grid sensitivity. Over the later sampled

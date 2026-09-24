@@ -562,6 +562,35 @@ dev.native_rom.diagnose_source_calibration_early_field --source-root
 /path/to/pinned/lalsuite-git --json-out
 /tmp/source-calibration-early-field.json`.
 
+The [frozen initial-state plan](source_calibration_initial_plan.json) and
+[result](source_calibration_initial.json) compare the published and pinned-source
+calibration choices with the same source-backed 35-mode flux at two earlier
+public starting states. The rounded choice reduces the circular-radius and
+angular-momentum gaps to at most `6.36e-9` and `2.96e-9`, respectively, but the
+inward tortoise-momentum gap remains `2.09e-7` and `2.41e-7`. Replacing the
+analytic radial response by an idealized `0.001` ordinary-momentum finite-step
+response, as motivated by the pinned initial-data source, explains less than
+1% of that gap. This is not a direct replication of the compiled finite
+derivative or flux; the remaining initial-data prescription is unresolved.
+The public starting frequency here is inferred from sampled output and is
+slightly grid-dependent. Reproduce with `PYTHONPATH=src:. python -m
+dev.native_rom.diagnose_source_calibration_initial --source-root
+/path/to/pinned/lalsuite-git --json-out /tmp/source-calibration-initial.json`.
+
+The [frozen two-row domain plan](source_calibration_domain_plan.json) and
+[result](source_calibration_domain.json) extend the rounded calibration to the
+mass-ratio-four nonspinning and strong antialigned-spin boundary rows, holding
+the source-backed flux, `1 M` NQC window, and each row's restart fixed. Both
+pass all three-tolerance numerical gates: refined complex relative L2 is
+`1.42e-8` and `5.84e-7`. Their independently peak-fitted public waveform
+differences, however, rise from `0.000410287` to `0.000411544` and from
+`0.000212727` to `0.000212906`. The aligned-spin improvement therefore does
+not generalize across these samples. These source decimals remain a diagnostic
+for historical convention attribution, not an independently sourced release
+calibration. Reproduce with `PYTHONPATH=src:. python -m
+dev.native_rom.diagnose_source_calibration_domain --source-root
+/path/to/pinned/lalsuite-git --json-out /tmp/source-calibration-domain.json`.
+
 The [combined late-field result](combined_late_field.json) applies both the
 historical Hamiltonian convention and `(3,3)` flux placement at the same public
 states. At `M Omega≈0.15`, the orbital-frequency residual is below `0.4 ppm`,
