@@ -155,6 +155,36 @@ Reproduce in the pinned development environment with `PYTHONPATH=src:.
 python -m dev.native_rom.diagnose_public_nqc_mode_boundary --json-out
 /tmp/public-nqc-mode-boundary.json`.
 
+The [frozen pre-NQC dynamics plan](public_nqc_dynamics_plan.json) and
+[result](public_nqc_dynamics.json) replay both native waveform hashes, then
+recover native radius, tortoise radial momentum, and orbital frequency from
+the sampled NQC basis. At fixed times relative to the inferred orbital peaks,
+the antialigned radius, radial momentum, and frequency differ by `−0.0548%`,
+`+0.0893%`, and `+0.0581%` at `−12 M`; all three differences remain nonzero
+under a one-sample shift of the inferred public peak. This comparison alone
+does not establish different phase-space trajectories. At six fixed orbital
+frequencies from `M Omega=0.07` to `0.16`, the same rows agree in radius to
+within `3.4 ppm` and radial momentum to within `47 ppm`. Their peak-relative
+time differences stay near `−0.011 M` (aligned) and `−0.0195 M`
+(antialigned), varying across the frequency range by only `0.00113 M` and
+`0.00037 M`, respectively. The public peak inferred from the output epoch has
+one-sample (`0.015625 M`) uncertainty, so its absolute offset is not itself a
+measured evolution error. The fixed-frequency result points to alignment or
+timing convention as the dominant source of the fixed-time differences; the
+small residuals and their physical cause remain unresolved.
+
+The same plan scans native NQC match-time shifts from `−0.03` to `+0.03 M`
+while holding the source's full-precision targets fixed. On the antialigned
+row, a `−0.015 M` shift reduces the five-coefficient distance to the public
+fit from `0.66555` to `0.03438`. On the aligned row, that shift increases the
+distance from `5.62377` to `8.51492`; the smallest distance in the scan is
+still `2.59534` at `+0.025 M`. These are post hoc sensitivities of a
+counterfactual matching system, not an approved timing correction or compiled
+LAL input-parity result. The public pre-NQC mode samples remain unavailable
+through the public API. Run
+`PYTHONPATH=src:. python -m dev.native_rom.diagnose_public_nqc_dynamics
+--json-out /tmp/public-nqc-dynamics.json` in the pinned development environment.
+
 Reproduce the new waveform checks from the repository root with
 `PYTHONPATH=src:. python -m dev.native_rom.diagnose_mode_32_whole_waveform
 --json-out /tmp/mode32-waveform.json` and

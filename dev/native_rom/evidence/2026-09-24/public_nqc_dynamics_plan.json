@@ -1,0 +1,28 @@
+{
+  "schema": "diffgw.seobnrv4.public-nqc-dynamics-plan.v2",
+  "purpose": "Replay two exact-hash native NQC sample sets and pinned public high dynamics. Reconstruct native r, pr_star, and orbital frequency algebraically from pre-NQC basis samples. Compare at fixed peak-relative times and fixed orbital frequencies, then scan a prespecified NQC matching-time shift with source targets held fixed. The fixed-frequency comparison separates phase-space differences from time-origin differences; the shift scan is sensitivity analysis, not a model calibration.",
+  "rows": [
+    "strong_aligned_spin",
+    "strong_antialigned_spin"
+  ],
+  "waveform_level": "ode_2",
+  "public_output_step_M": 0.015625,
+  "peak_relative_offsets_M": [
+    -50,
+    -25,
+    -12,
+    -5,
+    0
+  ],
+  "fixed_orbital_frequencies": [0.07, 0.08, 0.10, 0.12, 0.14, 0.16],
+  "nqc_match_time_offsets_M": [-0.03, -0.025, -0.02, -0.015, -0.01, -0.005, 0, 0.005, 0.01, 0.015, 0.02, 0.025, 0.03],
+  "release_qualified": false,
+  "coefficient_evidence": "dev/native_rom/evidence/2026-09-24/nqc_coefficients.json",
+  "coefficient_evidence_sha256": "1c8c31aabc6d43d704af9b2a4b84d701c13262316fe102d07c86a3a2613f74b7",
+  "boundary_evidence": "dev/native_rom/evidence/2026-09-24/public_nqc_mode_boundary.json",
+  "boundary_evidence_sha256": "a86784cd6a58ec4a574686d6940953a3d1be836e2d44ac8cdcd25a5ba7d0dffd",
+  "waveform_plan": "dev/native_rom/evidence/2026-09-24/nqc_coefficients_plan.json",
+  "waveform_plan_sha256": "cae8343c023fef055fb9ffd1f0be01267748717f2849e15c4ddc2cf8587f9460",
+  "same_input_evidence": "dev/native_rom/evidence/2026-09-24/nqc_gsl_same_input.json",
+  "same_input_evidence_sha256": "29b8b0bd1d083803a78945c294a5a2a4dca55e57cd681cf463c7b9ccd2e832d2"
+}

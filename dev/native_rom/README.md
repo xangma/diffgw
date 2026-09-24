@@ -128,6 +128,16 @@ phase-basis derivative matrix on the exact native NQC samples, and applying
 the source targets to those GSL matching systems also fails to close the
 public coefficient gap. The LAL routine itself remains private, so this is
 same-input spline and matching evidence rather than compiled-function parity.
+The [direct public-dynamics replay](evidence/2026-09-24/README.md) reconstructs
+native pre-NQC orbital scalars from the frozen NQC samples. A fixed-time
+comparison shows antialigned residuals near the inferred peak, but comparing
+at equal orbital frequency reduces the radius and radial-momentum differences
+to at most `3.4 ppm` and `47 ppm` on the two strong-spin rows. Their nearly
+constant peak-relative time offsets explain most of the fixed-time signal.
+A prespecified NQC match-time scan substantially reduces the antialigned
+coefficient gap but not the aligned one; it is a sensitivity check with targets
+held fixed, not a model correction. Pre-NQC public mode input parity and the
+remaining attachment difference still require investigation.
 
 ## Numerical evidence
 
