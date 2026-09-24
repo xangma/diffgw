@@ -729,6 +729,16 @@ unchanged from the later-start `0.996270`; public/NR is `0.993648`.
 Starting earlier therefore does not remove the remaining late-waveform shape
 residual. This is still an unweighted, post-hoc single-case diagnostic, not
 the detector-weighted 10–200 solar-mass physical release check.
+The following [selected-case weighted sweep](evidence/2026-09-24/sxs_2508_weighted.json)
+uses the NR metadata's settled frequency, a pinned Advanced LIGO design PSD,
+time-domain tapering, and one global time/phase shift at 11 masses from 10 to
+200 solar masses. Native/NR dominant-mode overlap stays above `0.99486`;
+lower/higher NR resolution overlap stays above `0.99993`. The pinned public
+SEOBNRv4 control reaches `0.98937`. Two alternative taper widths leave the
+native minimum near `0.99486`. This passes a `0.99` threshold on the sampled
+q≈5 rows, but it is a post-hoc single-case complex-mode proxy rather than
+the paper's complete mass/parameter-domain and peak-time validation. The
+physical generator and both ROM paths remain unqualified.
 
 The independent ROM construction follows the published reduced-basis and
 parameter-interpolation methods of [Pürrer (2014)](https://doi.org/10.1088/0264-9381/31/19/195010)

@@ -1789,6 +1789,32 @@ dev/native_rom/evidence/2026-09-24/sxs_2508_long_start_plan.json --decoded-dir
 dev/native_rom/evidence/2026-09-24/sxs_2508_long_start.json` in the pinned
 development environment.
 
+The [SXS:BBH:2508 weighted plan](sxs_2508_weighted_plan.json) fixes 11 total
+masses from `10` to `200` solar masses, a lower frequency equal to the
+highest-resolution NR settled `(2,2)` frequency or `10 Hz`, a `3 kHz` upper
+frequency, the installed pinned Advanced LIGO design PSD, a `50 M` hyperbolic
+tangent time taper, and one bounded global time/phase fit. Its
+[result](sxs_2508_weighted.json) uses the same long-start source waveforms
+and trims all four modes to `[-2681.5,600] M` after the NR relaxation time.
+Native/highest-NR weighted overlap ranges from `0.994862` at `150` solar
+masses to `0.999115` at `10`; public/highest-NR reaches `0.989373` at
+`125`; lower/highest-NR stays above `0.999930`. Repeating four masses with
+`25 M` and `100 M` taper widths moves the native results by at most a few
+parts per million. The complex `(2,2)` positive-frequency proxy omits the
+paper's separate peak-time gate; the 11 masses are sparse, and this case was
+selected after inspecting the five-case residual. It is therefore evidence
+for this case only, not an independent domain-wide qualification or an
+official ROM comparison. Reproduce with `PYTHONPATH=src:. python -m
+dev.native_rom.measure_sxs_2508_weighted --case-plan
+dev/native_rom/evidence/2026-09-24/sxs_five_case_physical_plan.json --long-plan
+dev/native_rom/evidence/2026-09-24/sxs_2508_long_start_plan.json --long-result
+dev/native_rom/evidence/2026-09-24/sxs_2508_long_start.json --array
+/tmp/diffgw-sxs-five-case/decoded/sxs_2508_long_start_arrays.npz --decoded-dir
+/tmp/diffgw-sxs-five-case/decoded --archive-dir
+/tmp/diffgw-sxs-five-case/archive --weighted-plan
+dev/native_rom/evidence/2026-09-24/sxs_2508_weighted_plan.json --json-out
+dev/native_rom/evidence/2026-09-24/sxs_2508_weighted.json`.
+
 The [five-case SXS plan](sxs_five_case_physical_plan.json) was frozen at
 SHA-256 `397982e47b191acafb276f13d2b2bfb90f2f7d4f3d6d18fa3c86fbd5e609fb17`
 before retrieving waveform files. It names SXS:BBH:2496 (q≈1,
