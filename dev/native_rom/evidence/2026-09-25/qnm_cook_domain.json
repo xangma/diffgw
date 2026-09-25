@@ -1,0 +1,83 @@
+{
+  "author_archive_sha256": "d5853acabc1a07b66b4fae437c02e1435a9d2b3561bd7e4752b9721c9cd48923",
+  "author_datasets": {
+    "corotating": "/n00/m+02/{2,2,0}",
+    "counterrotating": "/n00/m-02/{2,-2,0}"
+  },
+  "branch_results": {
+    "corotating": {
+      "max_torch_jax_abs": 1.6653345369377348e-16,
+      "row_count": 1014,
+      "signed_spin_range": [
+        0.0,
+        0.999875
+      ],
+      "worst_jax_minus_author": {
+        "absolute_error": 9.57900425646585e-13,
+        "author": 0.9821460852379348,
+        "author_row_index": 1012,
+        "component": "frequency",
+        "native": 0.9821460852369769,
+        "signed_spin": 0.99984375
+      },
+      "worst_torch_minus_author": {
+        "absolute_error": 9.57900425646585e-13,
+        "author": 0.9821460852379348,
+        "author_row_index": 1012,
+        "component": "frequency",
+        "native": 0.9821460852369769,
+        "signed_spin": 0.99984375
+      }
+    },
+    "counterrotating": {
+      "max_torch_jax_abs": 1.1102230246251565e-16,
+      "row_count": 1012,
+      "signed_spin_range": [
+        -0.999875,
+        -0.0
+      ],
+      "worst_jax_minus_author": {
+        "absolute_error": 7.218114994600455e-13,
+        "author": 0.2920512220423372,
+        "author_row_index": 991,
+        "component": "frequency",
+        "native": 0.2920512220416154,
+        "signed_spin": -0.991
+      },
+      "worst_torch_minus_author": {
+        "absolute_error": 7.218114994600455e-13,
+        "author": 0.2920512220423372,
+        "author_row_index": 991,
+        "component": "frequency",
+        "native": 0.2920512220416154,
+        "signed_spin": -0.991
+      }
+    }
+  },
+  "gates": {
+    "jax_matches_cook_supported_rows": true,
+    "torch_jax_agree": true,
+    "torch_matches_cook_supported_rows": true
+  },
+  "max_jax_minus_author_abs": 9.57900425646585e-13,
+  "max_torch_jax_abs": 1.6653345369377348e-16,
+  "max_torch_minus_author_abs": 9.57900425646585e-13,
+  "plan_sha256": "55ba7ee791f3406ffe938f7f773ef636c0b5db72bda683fbf33db6cdaa2b5d5b",
+  "release_qualified": false,
+  "schema": "diffgw.seobnrv4.qnm-cook-domain.v1",
+  "scope": {
+    "description": "Independent QNM component validation across every Cook author row in the native signed-spin domain.",
+    "known_limitations": [
+      "Cook data are an external validation oracle, not native model inputs or an asset to distribute.",
+      "Table rows do not prove a continuous-domain bound between rows.",
+      "QNM validation alone does not qualify attachment, whole waveforms, or the ROM."
+    ],
+    "physics_validated": false,
+    "production_asset": false,
+    "production_promotion_allowed": false,
+    "training_generator_qualified": false
+  },
+  "script_sha256": "d80599d4b37c509ff61466862d20c70508a707ae66f144b74e8c49333339f4f2",
+  "status": "diagnostic_complete",
+  "total_row_count": 2026
+}

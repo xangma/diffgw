@@ -1,0 +1,16 @@
+{
+  "schema": "diffgw.seobnrv4.qnm-cook-domain-plan.v1",
+  "purpose": "Prospective full supported-domain comparison of native signed-spin fundamental 220 QNM interpolation against every applicable row of Cook's independent author archive. The archive is an external validation oracle and is never a runtime or training asset.",
+  "release_qualified": false,
+  "author_archive_url": "https://zenodo.org/records/2650358/files/KerrQNM_00.h5?download=1",
+  "author_archive_md5": "34c04f3b03bbb99935d1f91f7296bd02",
+  "author_archive_sha256": "d5853acabc1a07b66b4fae437c02e1435a9d2b3561bd7e4752b9721c9cd48923",
+  "author_datasets": {
+    "corotating": "/n00/m+02/{2,2,0}",
+    "counterrotating": "/n00/m-02/{2,-2,0}"
+  },
+  "comparison_rule": "Use every author row with 0 <= spin <= 0.9999 in both datasets; compare corotating to positive signed spin and counterrotating to negative signed spin. Columns 0, 1, -2 are spin, positive frequency and positive damping. No fitting or subsampling.",
+  "native_signed_spin_max": 0.9999,
+  "native_author_absolute_tolerance": 1e-9,
+  "torch_jax_absolute_tolerance": 1e-12
+}

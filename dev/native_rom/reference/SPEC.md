@@ -554,7 +554,12 @@ Torch spline at `j=0.99990625` to `2.7e-13` in frequency and `6.8e-13` in
 damping. Its archive MD5 is `34c04f3b03bbb99935d1f91f7296bd02` and
 SHA-256 is `d5853acabc1a07b66b4fae437c02e1435a9d2b3561bd7e4752b9721c9cd48923`.
 At `j=0.999`, both frontends also match a Cook author row within `3e-16`.
-These sparse author values validate the independent equation solve; they are
+The [prospective full-table check](../evidence/2026-09-25/qnm_cook_domain.json)
+uses every Cook author row within `|j| <= 0.9999`: 1,014 corotating and
+1,012 counterrotating rows. Maximum frequency/damping differences are
+`9.58e-13` for the positive-spin branch and `7.22e-13` for the negative-spin
+branch, for both Torch and JAX. This independently checks the sampled domain,
+not a continuous interpolation error bound. Author values are
 not generator inputs or packaged assets. The signed-spin Torch/JAX frontends
 intentionally clamp at `|j|=0.9999`, whereas the underlying generated Torch
 spline reaches `0.99999`.
@@ -589,9 +594,9 @@ negative knot `j=-0.9996` it is `0.02135`. The separate
 finds native counterrotating `(2,-2,0)` roots within `7.0e-13` of five
 independent author rows from `j=-0.99` through `-0.999625`; the wheel's
 frequency differs from the author value by `0.01502` at `j=-0.9995`.
-Three of those sparse author rows now check both Torch and JAX in the
+Three of those sparse author rows also check both Torch and JAX in the
 reference test suite. The wheel's extreme negative-spin entries are not a
-physical oracle. Neither sparse author agreement nor historical spline
+physical oracle. Neither dense author-row agreement nor historical spline
 reproduction qualifies the waveform or justifies importing third-party
 tables into the native generator.
 The [post-hoc binary-input witnesses](../evidence/2026-09-24/qnm_binary_reachability.json)

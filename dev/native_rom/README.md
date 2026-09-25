@@ -56,8 +56,13 @@ third-party numbers and stay outside the native package. A
 [Cook author-data check](evidence/2026-09-24/qnm_negative_author.json) finds
 native counterrotating roots within `7e-13` on five sparse high-spin rows,
 while the wheel differs by `0.0150` in frequency at `j=-0.9995`.
-Historical compatibility, domain-wide accuracy, and whole-waveform impact
-remain open.
+The [prospective full-table check](evidence/2026-09-25/qnm_cook_domain.json)
+compares every Cook author row within the native `|j| <= 0.9999` domain:
+1,014 corotating and 1,012 counterrotating rows. Both native backends agree
+with the external author data within `9.6e-13`, and Torch/JAX agree within
+`1.7e-16`. This is dense independent component validation; it does not bound
+the intervals between author rows. Historical compatibility, continuous-domain
+accuracy, and whole-waveform impact remain open.
 The [post-hoc binary-input witnesses](evidence/2026-09-24/qnm_binary_reachability.json)
 show that this is not confined to an unreachable final spin: at the paper's
 `(q, chi1, chi2)=(8,0.85,0.85)` calibration configuration, the native/wheel
