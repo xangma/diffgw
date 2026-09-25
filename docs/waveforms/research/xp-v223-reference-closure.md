@@ -102,11 +102,48 @@ opening with the scalar reference. These checks verify the scoped JAX
 implementation against its declared equations and Torch composition; they do
 not qualify generic two-spin dispatch or establish physical accuracy.
 
+The same endpoint must also satisfy the minimal-rotation relation
+\(d\gamma=-\cos\beta\,d\alpha\) in
+[Pratten et al., Eq. (7)](https://arxiv.org/html/2004.06503v2). At
+\(\beta=0\), \(\alpha+\gamma\) is constant. The auxiliary-root v223 angles
+instead accumulate a nonzero aligned \(\alpha+\gamma\) drift. The public
+physical route removes the aligned same-series drift, anchored at the angle
+reference frequency, and makes its final spin tend to the XAS aligned fit.
+The [scalar reference](https://github.com/xangma/diffgw/blob/main/src/diffgw_reference/xp_msa_regularized_beta.py)
+specifies the exact Eq. (7) endpoint, while the
+[Torch test](https://github.com/xangma/diffgw/blob/main/tests/test_xp_physical_beta_torch.py)
+checks the production angles against it. The XAS carrier preserves an omitted
+`f_ref` as `None`; the angle kernel still uses its 20 Hz default.
+
+To continue this correction into small one-spin transverse values, its weight
+is \(\Delta/(\Delta+T)\), where \(\Delta=10^{-9}\) is the existing v223
+auxiliary \(S^2\) root gap and
+\(T=\sum_i(m_i/M)^4(\chi_{ix}^2+\chi_{iy}^2)\). This is a numerical
+regularization of the auxiliary-root artifact, not an independent published
+waveform equation. It approaches one at alignment and zero as the physical
+transverse spin resolves the root gap. In the \((36,22)M_\odot\),
+\((\chi_{1z},\chi_{2z})=(0.35,-0.25)\) test, exact XP/XAS complex-strain
+maximum relative differences are below \(5\times10^{-15}\) for omitted,
+20 Hz, and 40 Hz `f_ref`. The one-spin \(\chi_{1x}=10^{-8}\) and
+\(10^{-10}\) relative L2 differences from exact alignment are about
+\(2.1\times10^{-9}\) and \(2.7\times10^{-11}\), respectively. A finite
+one-spin \(\chi_{1x}=0.3\) retains a \(1.13\times10^{-8}\) L2 difference
+from the pinned LAL diagnostic.
+
 In the [aligned convention-6 test](https://github.com/xangma/diffgw/blob/main/tests/test_xp_aligned_boundary_clean.py),
 the explicit v223 helper retains its strict same-option LAL gate, while the
-public physical route has a measured complex-polarization relative L2 between
-\(10^{-5}\) and \(5\times10^{-5}\) for that fixture. This residual is reported
-rather than fitted away: the two routes encode different opening-angle
-contracts. The older reference-frequency XP/XAS ratio above remains evidence
-for the explicit binary-compatibility helper, not a paper-derived prediction
-for the new physical boundary.
+public physical route differs from the pinned v223 LAL output by about
+\(0.117826\) relative complex-polarization L2 for that fixture. This is the
+intentional consequence of enforcing the paper's aligned minimal-rotation
+identity; the legacy binary oracle has a nonzero aligned angle drift. The
+older reference-frequency XP/XAS ratio above remains evidence for the
+explicit binary-compatibility helper, not a paper-derived prediction for the
+physical boundary.
+
+This endpoint correction covers zero-nutation rows with at least one exactly
+aligned spin. The generic two-spin cubic roots remain ill-conditioned when
+both transverse spins tend to zero: a \((\chi_{1x},\chi_{2x})=
+(10^{-10},-5\times10^{-11})\) row still differs from exact alignment by
+order \(0.1\) relative L2. The strict expected-failure
+`test_xp_two_spin_near_aligned_continuity_pending` records this open model
+domain limit; it is not evidence of generic near-aligned continuity.

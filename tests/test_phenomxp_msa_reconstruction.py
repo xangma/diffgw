@@ -80,6 +80,63 @@ def test_msa_aligned_spin_collapse():
     assert diff_c_xphm / max_amp_xhm < 1e-12, f"XPHM hx rel diff {diff_c_xphm / max_amp_xhm} exceeds 1e-12"
 
 
+@pytest.mark.parametrize("f_ref", (None, 20.0, 40.0))
+def test_xp_aligned_reference_phase_and_one_spin_continuity(f_ref):
+    """The Eq. (7) beta=0 limit keeps alpha+gamma fixed at every frequency."""
+    f = torch.linspace(25.0, 300.0, 128, dtype=torch.float64)
+    common = dict(f=f, mass1=36.0, mass2=22.0, distance=150.0,
+                  inclination=0.65, phic=0.3, f_ref=f_ref)
+    xp = IMRPhenomXP()
+    exact = xp(
+        **common, spin1x=0.0, spin1y=0.0, spin1z=0.35,
+        spin2x=0.0, spin2y=0.0, spin2z=-0.25,
+    )
+    carrier = IMRPhenomXAS()(
+        f=f, mass1=36.0, mass2=22.0, chi1=0.35, chi2=-0.25,
+        distance=150.0, inclination=0.65, phi_c=0.3, f_ref=f_ref,
+    )
+    scale = max(torch.max(torch.abs(pol)).item() for pol in carrier)
+    for actual, expected in zip(exact, carrier):
+        assert torch.max(torch.abs(actual - expected)).item() / scale < 1e-12
+
+    def near_distance(spin1x):
+        near = xp(
+            **common, spin1x=spin1x, spin1y=0.0, spin1z=0.35,
+            spin2x=0.0, spin2y=0.0, spin2z=-0.25,
+        )
+        return max(
+            (torch.linalg.vector_norm(left - right) /
+             torch.linalg.vector_norm(right)).item()
+            for left, right in zip(near, exact)
+        )
+
+    larger = near_distance(1e-9)
+    smaller = near_distance(1e-10)
+    assert larger < 1e-8
+    assert smaller < larger / 5.0
+
+
+@pytest.mark.xfail(
+    strict=True,
+    reason="generic two-spin MSA cubic roots remain ill-conditioned near alignment",
+)
+def test_xp_two_spin_near_aligned_continuity_pending():
+    """Track the unresolved generic two-spin limit separately from zero nutation."""
+    f = torch.linspace(25.0, 300.0, 128, dtype=torch.float64)
+    params = dict(f=f, mass1=36.0, mass2=22.0, distance=150.0,
+                  inclination=0.65, phic=0.3, f_ref=40.0,
+                  spin1y=0.0, spin1z=0.35, spin2y=0.0, spin2z=-0.25)
+    xp = IMRPhenomXP()
+    aligned = xp(**params, spin1x=0.0, spin2x=0.0)
+    tiny = xp(**params, spin1x=1e-10, spin2x=-5e-11)
+    difference = max(
+        (torch.linalg.vector_norm(left - right) /
+         torch.linalg.vector_norm(right)).item()
+        for left, right in zip(tiny, aligned)
+    )
+    assert difference < 1e-6
+
+
 def test_msa_two_spin_independence():
     """Acceptance Criterion 2: Waveforms with in-plane spin on body 1 vs body 2 are distinct."""
     f = torch.linspace(25.0, 250.0, 100, dtype=torch.float64)

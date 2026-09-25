@@ -305,6 +305,7 @@ class IMRPhenomXP(nn.Module):
                 final_spin_mod=3,
                 xas_model=opaque_xas_carrier,
                 boundary="physical",
+                carrier_f_ref=fref,
             )
             # The clean helper flattens its frequency input internally.  The
             # public XP adapter retains the caller's frequency shape, with
