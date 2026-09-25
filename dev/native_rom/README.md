@@ -2800,7 +2800,24 @@ the captured historical coefficients belong to `(30, 20, 0.8, 0.8, 0.04)`;
 the strong-aligned comparison is `(30, 20, 0.8, 0.6, 0.04)`. Thus every
 coefficient-swap residual is cross-parameter sensitivity, cannot attribute the
 `0.03916` native/public gap, and must not be used as release evidence. An
-exact-parameter historical coefficient capture remains necessary.
+exact-parameter historical coefficient capture was therefore required.
+
+The subsequent [same-row source capture](evidence/2026-09-25/source_nqc_same_row_strong_aligned_plan.json)
+uses the pinned historical implementation for exactly
+`(30, 20, 0.8, 0.6, 0.04)`. Its [result](evidence/2026-09-25/source_nqc_same_row_strong_aligned.json)
+records two bitwise-identical captures, all nine provenance/shape checks
+passing, and active `(a1,a2,a3,b1,b2)` coefficients
+`(143.4353, -1231.5734, 1380.8954, 35.5088, -794.7974)`.
+On the [frozen native-trajectory swap](evidence/2026-09-25/source_aligned_public_nqc_same_row_swap_plan.json),
+the [result](evidence/2026-09-25/source_aligned_public_nqc_same_row_swap.json)
+passes all ten replay/no-op checks. The sampled-peak whole-mode complex
+relative L2 against the pinned public mode is `0.0391588` for native
+coefficients, `0.0391594` with source amplitude coefficients only,
+`0.0377158` with source phase coefficients only, and `0.0377162` with both.
+The phase-only substitution removes `7.23%` of squared error on this fixed
+chart; it leaves most discrepancy. The source and native coefficient fits
+come from independently integrated trajectories, so this is a sensitivity
+test, not a causal decomposition or a validated calibration change.
 
 1. Qualify the physical generator against the published equations and independent
    references over the intended domain, resolve convention/provenance gaps, and

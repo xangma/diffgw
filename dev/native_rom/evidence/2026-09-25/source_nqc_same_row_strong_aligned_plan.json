@@ -1,0 +1,71 @@
+{
+  "capacity": 50000,
+  "gates": {
+    "capture_repeat_bitwise": true,
+    "finite_capture": true,
+    "valid_shapes_and_times": true
+  },
+  "inputs": {
+    "adapter": {
+      "path": "dev/native_rom/reference/full_v4_source_nqc_inputs_adapter.c",
+      "sha256": "0e2006c7a2898b09d56b5d464135b113f4546f43b607ddacbf327761a24a6451"
+    },
+    "capture_helper": {
+      "path": "dev/native_rom/diagnose_source_nqc_inputs.py",
+      "sha256": "ca89eb0ffec99caa18a69a3f64d68ba0db95d832396571d10dfacaf7c7bf0fc2"
+    },
+    "case_definition": {
+      "path": "dev/native_rom/diagnose_jax_adaptive_physical_event.py",
+      "sha256": "df4d12bf0158a7f533002635712c400c56d51b09492f6b86e19b20f96dd53cf2"
+    },
+    "compiler_helper": {
+      "path": "dev/native_rom/diagnose_source_flux_initial.py",
+      "sha256": "b1d040bedff3eb88ee644ede9098c7807ab8a3e2a9ca6b8bcfe9bd35fec4d7bb"
+    },
+    "source_plan": {
+      "path": "dev/native_rom/evidence/2026-09-24/source_flux_initial_plan.json",
+      "sha256": "1167199c8f954f97a5905a1e3b2f67d1555e984e5f1da0a0fc42a77a925f96ea"
+    }
+  },
+  "instrumentation_sha256": "401d3d514313ee8dcd8301a60b4f520e20a654756a4697f067ff2a3a69839837",
+  "limitations": "Diagnostic source coefficients only; no waveform parity or release qualification follows from this capture.",
+  "pinned_source": {
+    "aligned_source_sha256": "6b7969bb7cbe714c4937a691838b0b82a7fcc2a199c03ee2bf5215738f1ce1b3",
+    "peeled_commit": "2c00d8c200308422036d0a23b7c0394f7c73faad",
+    "tag": "lalsuite-v7.26.15",
+    "tag_object": "0a3a9674979bd62d8344d5552a10b5111fb1fc52"
+  },
+  "pinned_wheel_library_sha256": {
+    "libgsl.28.dylib": "1eefe0dbead9551d47be3c09bbf786c727f84df1331130ee8a03127b7a95abe8",
+    "libgslcblas.0.dylib": "00a30ab2e9eb5cd36caab9ae9a9975a8280b9b4c2940b15e446c34a151818230",
+    "liblal.20.dylib": "e4c4ed42baed00d30668588e58444f974e3deeda56ba4e5978624640ddb5bde7",
+    "liblalsimulation.37.dylib": "9046c4a673d2ba82b792f7b92d73203ba783b32fc604b5da1139c5c1bc8b3325"
+  },
+  "predeclared_outputs": [
+    "exact row tuple",
+    "pinned source tag and commit",
+    "pinned wheel library hashes",
+    "input array and coefficient array hashes",
+    "five active a1,a2,a3,b1,b2 coefficients",
+    "two bitwise-identical capture checks"
+  ],
+  "purpose": "Capture five active historical-source SEOBNRv4 NQC coefficients for the exact native/public strong_aligned row, without cross-parameter substitution.",
+  "release_qualified": false,
+  "row_order": [
+    "mass1",
+    "mass2",
+    "chi1",
+    "chi2",
+    "omega_start"
+  ],
+  "row_tuple": [
+    30.0,
+    20.0,
+    0.8,
+    0.6,
+    0.04
+  ],
+  "schema": "diffgw.seobnrv4.source-nqc-same-row-plan.v1",
+  "script_sha256": "476a17e50a657e6eb13b10ab4272b97f01c17375143e93339b4dcdca9f0a39b3",
+  "step_M": 0.125
+}
