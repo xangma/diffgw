@@ -1,0 +1,59 @@
+{
+  "base_frequency_max_abs": 1.4357404154452524e-12,
+  "base_mode_complex_relative_l2": 2.7909154493111974e-12,
+  "case_id": "strong_antialigned",
+  "checks": {
+    "all_matching_conditions_finite": true,
+    "corrected_mode_complex_relative_l2_at_most": true,
+    "matching_matrix_max_abs_at_most": true,
+    "same_input_coefficient_relative_l2_at_most": true
+  },
+  "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+  "diagnostic_checks_passed": true,
+  "elapsed_s": 55.658970916992985,
+  "end_to_end": {
+    "amplitude_coeff_relative_l2": 8.336630627632847e-09,
+    "amplitude_matrix_max_abs": 3.953296023873065e-13,
+    "corrected_amplitude_relative_l2": 1.0365408337291043e-09,
+    "corrected_mode_complex_relative_l2": 2.480363735823673e-08,
+    "phase_coeff_relative_l2": 2.787084283623351e-07,
+    "phase_matrix_max_abs": 9.212414902107224e-13
+  },
+  "host": "RONI2",
+  "input": {
+    "atol": 1e-10,
+    "case_parameters": [
+      30.0,
+      20.0,
+      -0.8,
+      -0.6,
+      0.025
+    ],
+    "fine_samples": 9629,
+    "fine_step_M": 0.015625,
+    "max_step_M": 2.0,
+    "rtol": 1e-09
+  },
+  "jax": {
+    "amplitude_condition": 504.05332636027117,
+    "phase_condition": 4.452318880342505
+  },
+  "match_time_abs_M": 0.0,
+  "pid": 54270,
+  "release_qualified": false,
+  "same_input": {
+    "amplitude_coeff_relative_l2": 2.1230881459325556e-14,
+    "amplitude_matrix_max_abs": 2.168404344971009e-19,
+    "corrected_amplitude_relative_l2": 1.7091093999366744e-15,
+    "corrected_mode_complex_relative_l2": 3.8125434726714416e-15,
+    "phase_coeff_relative_l2": 1.0177039056362674e-15,
+    "phase_matrix_max_abs": 5.421010862427522e-20
+  },
+  "schema": "diffgw.seobnrv4.jax-full-series-nqc-physical.v1",
+  "scope": "Physical fine-series frontend NQC parity; no ringdown, independent reference, or release qualification",
+  "status": "diagnostic_complete",
+  "torch": {
+    "amplitude_condition": 504.0533270365791,
+    "phase_condition": 4.452318876261207
+  }
+}

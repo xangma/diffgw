@@ -11,6 +11,14 @@ from jaxwave.approximants.eob.nqc import (
     NQCCoefficients,
     NQCMatchingTargets,
     nqc_22_basis,
+    nqc_22_factor,
+    seobnrv4_nqc_targets,
+    seobnrv4_nqc_time_offset_numerical_compatibility,
+)
+from jaxwave.approximants.eob.merger_ringdown import (
+    merger_ringdown_22,
+    seobnrv4_merger_shape,
+    seobnrv4_peak_preserving_shape,
 )
 
 
@@ -56,6 +64,25 @@ class FullSeriesNQC:
         corrected_amplitude = amplitude + jnp.sum(products * a, axis=-1)
         corrected_phase = phase - jnp.sum(phase_basis * b, axis=-1)
         return corrected_amplitude * jnp.exp(-1j * corrected_phase)
+
+
+@dataclass(frozen=True)
+class NumericalAttachedMode22:
+    """Development-only scalar numerical inspiral and ringdown result."""
+
+    mode: object
+    corrected_inspiral: object
+    peak: OrbitalFrequencyPeak
+    match_time: object
+    match_phase: object
+    calibration: NQCCalibration
+    boundary_time: object
+    boundary_index: object
+    boundary_phase: object
+    boundary_frequency: object
+    boundary_amplitude: object
+    internal_step: object
+    nqc: FullSeriesNQC
 
 
 def _solve_checked(matrix, rhs, max_condition, name):
@@ -205,5 +232,97 @@ def full_orbital_peak(time, frequency) -> OrbitalFrequencyPeak:
                                 jnp.asarray(index))
 
 
-__all__ = ["FullSeriesNQC", "calibrate_nqc_22_full_series", "full_orbital_peak",
-           "unwrap_mode_phase"]
+def attach_seobnrv4_22_numerical_compatibility(
+    time, state, orbital_frequency, base_mode, base_frequency,
+    nu, chi, sigma, output_time, *, match_time=None, mass_scale=1.0,
+    max_condition=1e10,
+) -> NumericalAttachedMode22:
+    """Apply the full-series NQC and discrete ringdown boundary to one row.
+
+    This scalar, eager development route mirrors the Torch numerical contract.
+    It is not a release-model entry point or a replacement for the paper's
+    independent physical and whole-waveform validation gates.
+    """
+    time, state, orbital_frequency, base_mode, base_frequency, output_time = (
+        jnp.asarray(value) for value in
+        (time, state, orbital_frequency, base_mode, base_frequency, output_time))
+    nu, chi, sigma, mass_scale = (jnp.asarray(value) for value in
+                                  (nu, chi, sigma, mass_scale))
+    if (time.ndim != 1 or len(time) < 4 or state.shape != (len(time), 4)
+            or any(value.shape != time.shape for value in
+                   (orbital_frequency, base_mode, base_frequency))
+            or output_time.ndim != 1 or len(output_time) < 2):
+        raise ValueError("attachment needs scalar input and output series")
+    if not all(bool(jnp.all(jnp.isfinite(value))) for value in
+               (time, state, orbital_frequency, base_mode, base_frequency,
+                output_time, nu, chi, sigma, mass_scale)):
+        raise ValueError("attachment inputs must be finite")
+    if not bool(jnp.all(jnp.diff(time) > 0) & jnp.all(jnp.diff(output_time) > 0)):
+        raise ValueError("attachment grids must be strictly increasing")
+    if any(value.ndim != 0 for value in (nu, chi, sigma, mass_scale)):
+        raise ValueError("attachment parameters must be scalar")
+    if not bool(mass_scale > 0) or not bool(-jnp.imag(sigma) > 0):
+        raise ValueError("mass_scale and QNM damping must be positive")
+
+    offset = seobnrv4_nqc_time_offset_numerical_compatibility(nu, chi)
+    if match_time is None:
+        peak = full_orbital_peak(time, orbital_frequency)
+        match = peak.time + offset
+    else:
+        match = jnp.asarray(match_time)
+        peak_time = match - offset
+        if not bool(time[0] <= peak_time <= time[-1]):
+            raise ValueError("implied peak lies outside the input grid")
+        peak_spline = natural_cubic_spline(time, orbital_frequency, scalar_output=True)
+        peak_index = jnp.clip(jnp.searchsorted(time, peak_time, side="right") - 1,
+                              0, len(time) - 1)
+        peak = OrbitalFrequencyPeak(
+            peak_time, peak_spline(peak_time), peak_spline.derivative(peak_time, 2),
+            peak_index)
+    if match.ndim != 0 or not bool(jnp.isfinite(match)) or not bool(time[0] < match < time[-1]):
+        raise ValueError("continuous match_time must lie inside the input grid")
+    boundary_index = jnp.searchsorted(time, match, side="right") - 1
+    if int(boundary_index) < 1:
+        raise ValueError("attachment floor sample has no preceding phase sample")
+    boundary_time = time[boundary_index]
+    step = boundary_time - time[boundary_index - 1]
+
+    nqc = calibrate_nqc_22_full_series(
+        time, state[:, 0], state[:, 2], orbital_frequency,
+        jnp.abs(base_mode), base_frequency, match, seobnrv4_nqc_targets(nu, chi),
+        base_mode=base_mode, max_condition=max_condition)
+    coefficients = nqc.coefficients
+    corrected = base_mode * nqc_22_factor(
+        state[:, 0], state[:, 2], orbital_frequency, coefficients)
+    boundary_amplitude = jnp.abs(corrected[boundary_index])
+    boundary_phase = nqc.sampled_corrected_phase[boundary_index]
+    boundary_frequency = (boundary_phase - nqc.sampled_corrected_phase[boundary_index - 1]) / step
+    if not bool((boundary_amplitude > 0) & (boundary_frequency > 0)):
+        raise ValueError("corrected boundary must have positive amplitude and frequency")
+    match_phase = (nqc.waveform_phase_spline(match)
+                   - jnp.sum(nqc.phase_basis_spline(match) * coefficients.phase))
+
+    dt_output = output_time[1] - output_time[0]
+    exponent = jnp.maximum(0, jnp.ceil(jnp.log2(50 * dt_output / mass_scale)))
+    internal_step = dt_output / (2**exponent)
+    ringdown_time = jnp.maximum(output_time - boundary_time, 0)
+    shape = seobnrv4_peak_preserving_shape(sigma, seobnrv4_merger_shape(nu, chi))
+    ringdown = merger_ringdown_22(
+        ringdown_time, sigma, boundary_amplitude,
+        jnp.zeros_like(boundary_amplitude), boundary_frequency, boundary_phase, shape)
+    support_count = jnp.floor(10 / (-jnp.imag(sigma) * internal_step))
+    ringdown = jnp.where(ringdown_time < support_count * internal_step,
+                         ringdown, jnp.zeros_like(ringdown))
+    spline_query = jnp.clip(output_time, time[0], boundary_time)
+    inspiral = nqc.evaluate(spline_query)
+    inspiral = jnp.where(output_time < time[0], jnp.zeros_like(inspiral), inspiral)
+    mode = jnp.where(output_time < boundary_time, inspiral, ringdown)
+    return NumericalAttachedMode22(
+        mode, corrected, peak, match, match_phase, nqc.calibration,
+        boundary_time, boundary_index, boundary_phase, boundary_frequency,
+        boundary_amplitude, internal_step, nqc)
+
+
+__all__ = ["FullSeriesNQC", "NumericalAttachedMode22",
+           "attach_seobnrv4_22_numerical_compatibility",
+           "calibrate_nqc_22_full_series", "full_orbital_peak", "unwrap_mode_phase"]

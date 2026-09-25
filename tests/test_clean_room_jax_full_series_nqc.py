@@ -6,12 +6,14 @@ import numpy as np
 import torch
 
 from dev.native_rom.eob.jax.numerical_attachment_clean import (
+    attach_seobnrv4_22_numerical_compatibility as jax_attach,
     calibrate_nqc_22_full_series as jax_calibrate,
 )
 from jaxwave.approximants.eob.nqc import seobnrv4_nqc_targets as jax_targets
 from jaxwave.approximants.eob.numerical_attachment import natural_cubic_spline as jax_spline
 from torchwave.approximants.eob.nqc import seobnrv4_nqc_targets as torch_targets
 from torchwave.approximants.eob.numerical_attachment import (
+    attach_seobnrv4_22_numerical_compatibility as torch_attach,
     calibrate_nqc_22_full_series as torch_calibrate,
     natural_cubic_spline as torch_spline,
 )
@@ -76,3 +78,44 @@ def test_full_series_nqc_matches_torch_for_nontrivial_wrapped_mode():
     query = jnp.array([17.31, 18.0, 18.37])
     close(actual.evaluate(query), expected.evaluate(t(np.array(query))))
     close(actual.evaluate(jnp.asarray(18.0)), expected.evaluate(t(18.0)))
+
+
+def test_numerical_attachment_matches_discrete_boundary_and_ringdown_support():
+    time = np.linspace(0, 30, 121)
+    match = 18.003
+    delta = time - 18
+    nu, chi = 0.22, 0.1
+    target = torch_targets(torch.tensor(nu, dtype=torch.float64),
+                           torch.tensor(chi, dtype=torch.float64))
+    amplitude = float(target.amplitude) + 1e-4 * delta**2 + 5e-6 * delta**4
+    frequency = float(target.frequency) + float(target.frequency_derivative) * delta + 1e-6 * delta**2
+    phase = 2.7 + float(target.frequency) * delta + 0.5 * float(target.frequency_derivative) * delta**2
+    mode = amplitude * np.exp(-1j * phase)
+    r = 8 - 0.025 * time + 0.00015 * time**2
+    pr = -0.02 - 0.0005 * time + 1e-5 * time**2 + 0.001 * np.sin(0.37 * time)
+    omega = 0.08 + 0.002 * time + 0.0002 * time**2 - 4e-6 * time**3
+    state = np.stack((r, 0.1 * time, pr, 3.3 + 0.01 * time), axis=-1)
+    output_time = np.arange(0, 160.5, 0.5)
+    sigma = 0.5 - 0.08j
+
+    expected = torch_attach(
+        torch.tensor(time), torch.tensor(state), torch.tensor(omega),
+        torch.tensor(mode), torch.tensor(frequency),
+        torch.tensor(nu, dtype=torch.float64), torch.tensor(chi, dtype=torch.float64),
+        torch.tensor(sigma, dtype=torch.complex128), torch.tensor(output_time),
+        match_time=torch.tensor(match, dtype=torch.float64))
+    actual = jax_attach(
+        time, state, omega, mode, frequency, nu, chi, sigma, output_time,
+        match_time=match)
+    assert int(actual.boundary_index) == int(expected.boundary_index) == 72
+    assert float(actual.boundary_time) == float(expected.boundary_time) == 18
+    assert float(actual.internal_step) == float(expected.internal_step) == 0.015625
+    for name in ("boundary_phase", "boundary_frequency", "boundary_amplitude",
+                 "match_phase", "match_time"):
+        np.testing.assert_allclose(np.asarray(getattr(actual, name)),
+                                   np.asarray(getattr(expected, name)), rtol=1e-10, atol=1e-10)
+    np.testing.assert_allclose(np.asarray(actual.corrected_inspiral),
+                               np.asarray(expected.corrected_inspiral), rtol=1e-8, atol=2e-9)
+    np.testing.assert_allclose(np.asarray(actual.mode), np.asarray(expected.mode),
+                               rtol=1e-8, atol=2e-9)
+    assert complex(actual.mode[-1]) == complex(expected.mode[-1]) == 0

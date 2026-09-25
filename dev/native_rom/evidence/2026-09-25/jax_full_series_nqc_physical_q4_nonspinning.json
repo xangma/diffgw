@@ -1,0 +1,59 @@
+{
+  "base_frequency_max_abs": 8.558154185323019e-13,
+  "base_mode_complex_relative_l2": 2.312800028307663e-13,
+  "case_id": "q4_nonspinning",
+  "checks": {
+    "all_matching_conditions_finite": true,
+    "corrected_mode_complex_relative_l2_at_most": true,
+    "matching_matrix_max_abs_at_most": true,
+    "same_input_coefficient_relative_l2_at_most": true
+  },
+  "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+  "diagnostic_checks_passed": true,
+  "elapsed_s": 36.47718495799927,
+  "end_to_end": {
+    "amplitude_coeff_relative_l2": 4.445721090670419e-08,
+    "amplitude_matrix_max_abs": 2.6616144184477e-13,
+    "corrected_amplitude_relative_l2": 5.072245884017523e-10,
+    "corrected_mode_complex_relative_l2": 2.111127651286961e-09,
+    "phase_coeff_relative_l2": 3.069022908025752e-08,
+    "phase_matrix_max_abs": 1.5198645293701407e-12
+  },
+  "host": "RONI2",
+  "input": {
+    "atol": 1e-10,
+    "case_parameters": [
+      40.0,
+      10.0,
+      0.0,
+      0.0,
+      0.04
+    ],
+    "fine_samples": 9627,
+    "fine_step_M": 0.015625,
+    "max_step_M": 2.0,
+    "rtol": 1e-09
+  },
+  "jax": {
+    "amplitude_condition": 591.2742086595528,
+    "phase_condition": 6.1252279187046526
+  },
+  "match_time_abs_M": 0.0,
+  "pid": 54270,
+  "release_qualified": false,
+  "same_input": {
+    "amplitude_coeff_relative_l2": 5.220600003882213e-15,
+    "amplitude_matrix_max_abs": 2.168404344971009e-19,
+    "corrected_amplitude_relative_l2": 9.838142557610411e-17,
+    "corrected_mode_complex_relative_l2": 7.520384712514551e-16,
+    "phase_coeff_relative_l2": 1.8896912475625317e-15,
+    "phase_matrix_max_abs": 0.0
+  },
+  "schema": "diffgw.seobnrv4.jax-full-series-nqc-physical.v1",
+  "scope": "Physical fine-series frontend NQC parity; no ringdown, independent reference, or release qualification",
+  "status": "diagnostic_complete",
+  "torch": {
+    "amplitude_condition": 591.2742075351933,
+    "phase_condition": 6.1252279150775015
+  }
+}

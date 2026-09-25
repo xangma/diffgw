@@ -1,0 +1,79 @@
+{
+  "case_id": "q4_nonspinning",
+  "checks": {
+    "end_to_end_boundary_index_equal": true,
+    "end_to_end_boundary_metadata_max_abs_at_most": true,
+    "end_to_end_full_mode_relative_l2_at_most": true,
+    "end_to_end_ringdown_relative_l2_at_most": true,
+    "end_to_end_support_zero_pattern_equal": true,
+    "same_input_boundary_index_equal": true,
+    "same_input_boundary_metadata_max_abs_at_most": true,
+    "same_input_full_mode_relative_l2_at_most": true,
+    "same_input_support_zero_pattern_equal": true
+  },
+  "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+  "diagnostic_checks_passed": true,
+  "elapsed_s": 37.637326499971095,
+  "end_to_end": {
+    "boundary_index": 9098,
+    "boundary_index_equal": true,
+    "boundary_metadata": {
+      "boundary_amplitude_abs": 2.7755575615628914e-17,
+      "boundary_frequency_abs": 1.8189894035458565e-12,
+      "boundary_phase_abs": 3.874944809467706e-09,
+      "boundary_time_abs": 0.0,
+      "internal_step_abs": 0.0,
+      "match_phase_abs": 3.874948362181385e-09,
+      "match_time_abs": 0.0
+    },
+    "boundary_metadata_max_abs": 3.874948362181385e-09,
+    "corrected_inspiral_relative_l2": 2.111127729435021e-09,
+    "full_mode_complex_relative_l2": 2.3313137402415673e-09,
+    "ringdown_complex_relative_l2": 3.865102427997467e-09,
+    "support_zero_pattern_equal": true
+  },
+  "host": "RONI2",
+  "input": {
+    "atol": 1e-10,
+    "case_parameters": [
+      40.0,
+      10.0,
+      0.0,
+      0.0,
+      0.04
+    ],
+    "final_spin_fit_order": [
+      3,
+      4
+    ],
+    "fine_step_M": 0.015625,
+    "max_step_M": 2.0,
+    "output_samples": 602,
+    "output_step_M": 0.5,
+    "rtol": 1e-09
+  },
+  "pid": 64507,
+  "qnm_sigma_complex_abs": 5.551115123125783e-17,
+  "release_qualified": false,
+  "same_input": {
+    "boundary_index": 9098,
+    "boundary_index_equal": true,
+    "boundary_metadata": {
+      "boundary_amplitude_abs": 2.7755575615628914e-17,
+      "boundary_frequency_abs": 0.0,
+      "boundary_phase_abs": 3.552713678800501e-15,
+      "boundary_time_abs": 0.0,
+      "internal_step_abs": 0.0,
+      "match_phase_abs": 3.552713678800501e-15,
+      "match_time_abs": 0.0
+    },
+    "boundary_metadata_max_abs": 3.552713678800501e-15,
+    "corrected_inspiral_relative_l2": 3.585348780556936e-12,
+    "full_mode_complex_relative_l2": 3.433815590555422e-13,
+    "ringdown_complex_relative_l2": 4.049210403010332e-15,
+    "support_zero_pattern_equal": true
+  },
+  "schema": "diffgw.seobnrv4.jax-numerical-attachment-physical.v1",
+  "scope": "Torch/JAX full numerical attachment parity; no independent physical reference or release qualification",
+  "status": "diagnostic_complete"
+}

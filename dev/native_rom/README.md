@@ -971,21 +971,37 @@ and [antialigned](evidence/2026-09-25/jax_numerical_peak_physical_strong_antiali
 cases. The peak time and sample index agree exactly at the frozen bisection
 tolerance, whether JAX evaluates the Torch fine series or its separately
 integrated fine series; the largest end-to-end peak-frequency difference is
-`2.84e-15`. This rule is used by the development NQC diagnostic below, but
-is not yet wired into a JAX numerical attachment or ringdown route.
+`2.84e-15`. This rule is used by the development NQC and numerical
+attachment diagnostics below.
 
 The [development-only JAX full-series NQC rule](eob/jax/numerical_attachment_clean.py)
 now uses separate natural splines for the sampled amplitude products and
 phase bases, and differentiates the unwrapped waveform phase at the continuous
 match time. Its spline solve uses a JAX scan so a full fine trajectory does
 not generate one Python operation per knot. A synthetic wrapped-mode test and
-the [frozen physical pilot](evidence/2026-09-25/jax_full_series_nqc_physical_plan.json)
+the [frozen physical plan](evidence/2026-09-25/jax_full_series_nqc_physical_plan.json)
 pass Torch/JAX matrix, coefficient, and corrected-mode comparisons on the
-[mixed-spin fine trajectory](evidence/2026-09-25/jax_full_series_nqc_physical_high_start_mixed_spin.json).
-The same-input coefficient differences are below `6e-14` relative; the
-separately integrated corrected inspirals differ by `3.94e-9` complex
-relative L2. The prospective cases, numerical convergence, independent
-physical reference, ringdown, and ROM validation remain open.
+[mixed-spin pilot](evidence/2026-09-25/jax_full_series_nqc_physical_high_start_mixed_spin.json)
+and prospective [q=4](evidence/2026-09-25/jax_full_series_nqc_physical_q4_nonspinning.json),
+[aligned](evidence/2026-09-25/jax_full_series_nqc_physical_strong_aligned.json),
+and [antialigned](evidence/2026-09-25/jax_full_series_nqc_physical_strong_antialigned.json)
+fine trajectories. The largest same-input coefficient difference is
+`9.18e-14` relative; the largest separately integrated corrected-inspiral
+difference is `2.49e-8` complex relative L2. A development-only JAX
+numerical attachment now applies that NQC correction to the full series and
+uses the Torch discrete boundary and ringdown conventions. Its synthetic
+floor-sample and support check passes. The
+[frozen physical attachment plan](evidence/2026-09-25/jax_numerical_attachment_physical_plan.json)
+passes on the [mixed-spin pilot](evidence/2026-09-25/jax_numerical_attachment_physical_high_start_mixed_spin.json)
+and prospective [q=4](evidence/2026-09-25/jax_numerical_attachment_physical_q4_nonspinning.json),
+[aligned](evidence/2026-09-25/jax_numerical_attachment_physical_strong_aligned.json),
+and [antialigned](evidence/2026-09-25/jax_numerical_attachment_physical_strong_antialigned.json)
+fine segments. All four select the same boundary index and ringdown support
+in Torch and JAX. The largest independently integrated complex-mode
+difference is `2.69e-8` relative L2, including the attached ringdown. These
+are fine-segment backend checks; coarse-prefix splicing, numerical
+convergence, independent physical reference, whole-waveform comparison, and
+ROM validation remain open.
 
 The published construction uses SVD bases and tensor-product cubic splines for
 parameter coefficients, as described by
