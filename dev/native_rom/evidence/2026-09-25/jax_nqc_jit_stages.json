@@ -1,0 +1,129 @@
+{
+  "case": "high_start_mixed_spin",
+  "checks": {
+    "base_mode": true,
+    "matching_residual": true,
+    "replay": true
+  },
+  "controlled": {
+    "amplitude_coefficients": {
+      "compiled_input_separate_jit_to_whole_jit_max_abs": 0.0,
+      "fixed_input_eager_to_whole_eager_max_abs": 0.0,
+      "fixed_input_jit_to_whole_eager_max_abs": 4.0662632727617165e-07,
+      "fixed_input_jit_to_whole_jit_max_abs": 1.1032784641429316e-07
+    },
+    "amplitude_matrix": {
+      "compiled_input_separate_jit_to_whole_jit_max_abs": 0.0,
+      "fixed_input_eager_to_whole_eager_max_abs": 0.0,
+      "fixed_input_jit_to_whole_eager_max_abs": 3.826019362440647e-14,
+      "fixed_input_jit_to_whole_jit_max_abs": 5.738040251279664e-13
+    },
+    "phase_coefficients": {
+      "compiled_input_separate_jit_to_whole_jit_max_abs": 0.0,
+      "fixed_input_eager_to_whole_eager_max_abs": 0.0,
+      "fixed_input_jit_to_whole_eager_max_abs": 0.0,
+      "fixed_input_jit_to_whole_jit_max_abs": 0.0
+    },
+    "phase_matrix": {
+      "compiled_input_separate_jit_to_whole_jit_max_abs": 0.0,
+      "fixed_input_eager_to_whole_eager_max_abs": 0.0,
+      "fixed_input_jit_to_whole_eager_max_abs": 0.0,
+      "fixed_input_jit_to_whole_jit_max_abs": 0.0
+    }
+  },
+  "cwd": "/home/xangma/repos/diffgw-worktrees/native-seobnr-rom-jax",
+  "diagnostic_checks_passed": true,
+  "differences": {
+    "amplitude_coefficients": {
+      "max_abs": 2.962984808618785e-07,
+      "relative_l2": 2.899556945669947e-09
+    },
+    "amplitude_matrix": {
+      "max_abs": 5.738040251279664e-13,
+      "relative_l2": 9.301185379804384e-12
+    },
+    "amplitude_rhs": {
+      "max_abs": 3.8920897754701755e-12,
+      "relative_l2": 9.779674878434608e-11
+    },
+    "base_mode": {
+      "max_abs": 2.8711932247682534e-15,
+      "relative_l2": 1.074877878142976e-15
+    },
+    "combined_spline_input": {
+      "max_abs": 1.1657341758564144e-15,
+      "relative_l2": 5.671276089460469e-16
+    },
+    "matching_first": {
+      "max_abs": 2.522548142591674e-14,
+      "relative_l2": 7.627423273252169e-13
+    },
+    "matching_second": {
+      "max_abs": 3.8920897754701755e-12,
+      "relative_l2": 5.468410293097172e-10
+    },
+    "matching_value": {
+      "max_abs": 1.6653345369377348e-16,
+      "relative_l2": 2.936570585234944e-16
+    },
+    "orbital_frequency": {
+      "max_abs": 9.71445146547012e-17,
+      "relative_l2": 1.8976898533559623e-17
+    },
+    "phase_coefficients": {
+      "max_abs": 0.0,
+      "relative_l2": 0.0
+    },
+    "phase_derivatives": {
+      "max_abs": 0.0,
+      "relative_l2": 0.0
+    },
+    "phase_matrix": {
+      "max_abs": 0.0,
+      "relative_l2": 0.0
+    },
+    "phase_rhs": {
+      "max_abs": 0.0,
+      "relative_l2": 0.0
+    },
+    "state": {
+      "max_abs": 1.7763568394002505e-15,
+      "relative_l2": 8.806594634621401e-18
+    },
+    "unwrapped_phase": {
+      "max_abs": 7.105427357601002e-15,
+      "relative_l2": 7.625533280516592e-17
+    }
+  },
+  "elapsed_s": 58.078566203825176,
+  "fine_samples": 9637,
+  "host": "len",
+  "match_time_M": 144.6564486506888,
+  "pid": 3252726,
+  "plan_sha256": "5e96d99acd09bd2492fbe0daea38ae5bfaefff74940b82c2c80c4ee06fbbd306",
+  "release_qualified": false,
+  "replay_state_max_abs": 5.1958437552457326e-14,
+  "schema": "diffgw.seobnrv4.jax-nqc-jit-stages.v1",
+  "script_sha256": "b2c01121ea1799aace03abf960470c8f2505d996fc981505693b5c0b46268caa",
+  "solves": {
+    "amplitude": {
+      "compiled_condition": 10545.77322379735,
+      "compiled_residual_relative_l2": 1.2694531457956521e-14,
+      "eager_condition": 10545.773215123607,
+      "eager_residual_relative_l2": 2.996973869006592e-15,
+      "matrix_only_coefficient_change_max_abs": 1.0611815071115416e-07,
+      "numpy_solver_eager_vs_compiled_coefficient_max_abs": 2.962993477240161e-07,
+      "rhs_only_coefficient_change_max_abs": 4.0241749843517027e-07
+    },
+    "phase": {
+      "compiled_condition": 97.5779708953299,
+      "compiled_residual_relative_l2": 3.4776844674978407e-16,
+      "eager_condition": 97.5779708953299,
+      "eager_residual_relative_l2": 3.4776844674978407e-16,
+      "matrix_only_coefficient_change_max_abs": 0.0,
+      "numpy_solver_eager_vs_compiled_coefficient_max_abs": 0.0,
+      "rhs_only_coefficient_change_max_abs": 0.0
+    }
+  },
+  "status": "diagnostic_complete"
+}

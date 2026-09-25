@@ -1834,6 +1834,22 @@ NQC solve. The check fixes accepted times, orbital peak and match time, and
 does not differentiate physical parameters, event decisions, or the historical
 discrete boundary. It is not a release gradient contract.
 
+The [follow-up NQC execution-stage probe](evidence/2026-09-25/jax_nqc_jit_stages.json)
+uses a [frozen diagnostic plan](evidence/2026-09-25/jax_nqc_jit_stage_plan.json)
+on the same mixed-spin accepted mesh and match time. Eager and JIT base modes
+agree to `1.07e-15` relative L2, and the phase matching matrix, right-hand
+side, and coefficients agree exactly. In the amplitude system, a maximum
+`3.89e-12` change in the spline's second-derivative matching value contributes
+to a `2.96e-7` coefficient change; the raw matrix condition is about `1.05e4`.
+Both solves have relative residuals below `1.3e-14`. Compiling NQC alone on
+the **identical eager fine state, frequency, and base mode** still changes an
+amplitude coefficient by `4.07e-7`, so upstream trajectory drift is not
+required for the eager/JIT mismatch. A separately compiled NQC fit on the
+whole-JIT inputs exactly reproduces the whole-JIT coefficients. This localizes
+the strict JIT-gate failure to compiled amplitude-spline/matching arithmetic,
+without establishing that either evaluation is more physically accurate or
+changing the failed whole-waveform gate.
+
 The [frozen Torch/JAX spliced-waveform diagnostic](evidence/2026-09-25/jax_spliced_waveform_plan.json)
 extends those four selected physical cases through the calibrated coarse
 prefix and complete numerical attachment. The [pilot](evidence/2026-09-25/jax_spliced_waveform_high_start_mixed_spin.json)
