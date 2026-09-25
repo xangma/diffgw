@@ -2849,6 +2849,31 @@ coefficient differences as the main source/wheel discrepancy in that window;
 it is a one-trajectory sensitivity test and does not explain the larger
 native/source waveform gap.
 
+The exact-row early raw-mode crossover was frozen in a [v3 plan](evidence/2026-09-25/source_aligned_early_raw_crossover_v3_plan.json)
+and [result](evidence/2026-09-25/source_aligned_early_raw_crossover_v3.json),
+following retained [v1](evidence/2026-09-25/source_aligned_early_raw_crossover.json)
+serialization and [v2](evidence/2026-09-25/source_aligned_early_raw_crossover_v2.json)
+time-origin gate failures. On 64 fixed `M Omega=0.041–0.050` points, pinned
+source and native pre-NQC `h22` agree to `1.39e-10` complex relative L2 on
+identical source states. Native raw modes on the separately integrated source
+and native trajectories differ by `0.156658` complex L2 after a deterministic
+first-frequency phase anchor, while their amplitudes differ by `5.85e-5`.
+The source full-mode reconstruction remains conditional: mapping its epoch to
+the low-dynamics endpoint gives `0.004486` complex and `3.17e-5` amplitude
+L2 on the first 256 samples. The separate [source-state restart plan](evidence/2026-09-25/source_aligned_early_raw_restart_v4_plan.json)
+and [result](evidence/2026-09-25/source_aligned_early_raw_restart_v4.json)
+phase-zero the source low state at its first upward `M Omega=0.04` crossing
+and evolve that state with the same native source-backed ODE. The restarted
+native raw mode reduces anchored source disagreement to `7.87e-6` complex and
+`2.65e-8` amplitude L2; the native direct-start state and mode replay v3
+exactly, and pinned/native vector fields at restart agree to `1.43e-10`
+relative L2. This isolates initial-state history as the dominant early raw
+discrepancy under that restart intervention. It does not directly decompose
+the `0.0359893` whole-mode residual or validate the full-mode crop. Both
+diagnostics are development-only (`release_qualified=false`) and run from the
+pinned `/Users/xangma/repos/lalsuite-git` source checkout with
+`PYTHONPATH=src:. /Users/xangma/repos/diffgw/.venv/bin/python -m dev.native_rom.diagnose_source_aligned_early_raw_restart_v4`.
+
 1. Qualify the physical generator against the published equations and independent
    references over the intended domain, resolve convention/provenance gaps, and
    establish gradients and numerical convergence. This runner covers only scalar
