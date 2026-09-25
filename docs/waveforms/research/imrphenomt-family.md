@@ -119,7 +119,7 @@ The native locations are implementation evidence, not independent sources.
 | `P-NUMERICAL-RHS-v0` | TPHM Eqs. (12)–(14), Sturani Eqs. (3),(21),(22),(24),(25): both spin derivatives, the nonspinning 3PN orbital-angular-momentum magnitude, and constrained `dLhat/d(t/M)`. The scalar exposes the `v5` through `v9` pieces separately. Production excludes only Sturani's N3LO quadratic-spin Eq. (24), while retaining the leading Kerr self-quadrupole coefficient 1 and N4LO spin-orbit. | TP, TPHM PV300 | checked | `diffgw_reference/phenomt_spin_evolution.py`; 80-digit scalar totals and independently recovered PN-power coefficients match Torch/JAX |
 | `P-NUMERICAL-v0` | Integrate `P-NUMERICAL-RHS-v0` against the **T carrier** frequency using TPHM Sec. II.4.1 and Eqs. (12)–(14), then construct Euler angles and event/ringdown continuation. | TP, TPHM PV300 | pending | `diffgw_reference/phenomt_numerical_trajectory.py`; the independent path matches native rotation within `4.81e-9` rad, but diverges from rotations reconstructed from the public Euler angles by `1e-4` rad after `1.465` ms and `0.39276` rad maximum; public carrier/time mapping, trajectory evolution, and angle construction remain unresolved alternatives |
 | `P-RD-REMNANT-v0` | TPHM Eqs. (21)–(26): Eq. (25) supplies the magnitude `sqrt(chi_f,AS²+S_perp²/M⁴)`; native code restores the aligned final-spin sign for the QNM input. Ringdown uses `dot alpha=omega_122-omega_121`, beta fixed at peak, gamma from minimal rotation. | TP, TPHM | conditional | `_phenomt_dispatch.py`, `_phenomt_angle_options.py`, `_phenomt_numerical.py`; characterize FS0/3/4 inputs and signs |
-| `P-ROTATION-v0` | TPHM Eqs. (4),(8),(9): Wigner-D rotation from coprecessing to `J`, fixed inverse reference rotation to `L0`, SWSH projection. | TP, TPHM | pending | `_phenomt_precession.py` `wigner_d`/`project_modes`; independent factorial/SWSH scalar and frame tests |
+| `P-ROTATION-v0` | TPHM Eqs. (4),(8),(9): Wigner-D rotation from coprecessing to `J`, fixed inverse reference rotation to `L0`, SWSH projection. | TP, TPHM | checked | `diffgw_reference/phenomt_rotation.py` constructs Wigner d by exponentiating the angular-momentum generator; strict Torch/JAX tests cover degrees 2–5, signed modes, observer phase and reference inverse. The separate public-binary supplied-mode/angle projection agrees below `8e-16`. This qualifies rotation only for supplied modes and angles. |
 | `T-SAMPLING-v0` | Native adapter: seconds↔mass units, reference-phase anchoring, frequency inversion, `f_lower` mask, peak placement and fixed sample grid. This is interface mathematics rather than a paper ansatz. | all | pending | `torchwave/_phenomt_td.py`, `jaxwave/_phenomt_td.py`; scalar adapter and boundary tests |
 
 The native `(2,2)` frequency join is `t_cut=-26.982976386771437/eta` and its
@@ -229,6 +229,7 @@ The existing maintained paths are `tests/test_phenomt_reference.py`,
 `tests/test_phenomthm_reference.py`, `tests/test_phenomt_precession.py`,
 `tests/test_phenomt_spin_evolution.py`, `tests/test_phenomt_angle_options.py`,
 `tests/test_phenomt_numerical.py`, `tests/test_phenomt_spin_math_reference.py`,
+`tests/test_phenomt_rotation_math_reference.py`,
 `tests/test_phenomt_independent_trajectory.py`,
 `tests/test_phenomt_family_lal.py`, and
 `tests/parity/test_phenomt_parity.py` plus the THM/precession parity modules.
@@ -251,11 +252,10 @@ The staged path to the canonical six-section executable reference is:
    `T-MERGER`, `T-RD`, and `T-REMNANT-QNM`; check collocation solves,
    primitives, boundary value/slope, signed amplitude and phase at all mode
    branches before composing T and THM.
-3. Complete scalar `P-ANGLES` NNLO/MSA raw expressions, remnant choices and
-   `P-ROTATION`; the independent suffix continuation is present. Verify
-   aligned limit, reference-frame identity, each Wigner/SWSH degree and
-   phase convention before composing TP/TPHM analytical versions. The
-   pre-MECO onset diagnostic now makes the raw MSA scalar transcription the
+3. Complete scalar `P-ANGLES` NNLO/MSA raw expressions and remnant choices;
+   the independent suffix continuation and `P-ROTATION` are present. Verify
+   angle origins and phase convention before composing TP/TPHM analytical
+   versions. The pre-MECO onset diagnostic makes raw MSA scalar transcription the
    next required equation-level gate.
 4. Extend the converged independent `P-NUMERICAL-RHS-v0` event/ODE/angle path
    through ringdown and waveform composition; resolve the pre-merger orientation

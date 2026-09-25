@@ -81,6 +81,14 @@ numerical precession. For MSA, TP and TPHM have relative L2 `0.0202` and
 MSA gates (`0.01` and `0.0001`); the failure is recorded as a strict expected
 failure rather than absorbed by a wider tolerance.
 
+A [fresh q=10 CPU receipt](../validation/phenomt_q10_rotation_reference_20260925.json)
+repeats all eight TP/TPHM, MSA/numerical, Torch/JAX strain gates after adding
+the independent rotation reference. No production waveform equation changed.
+Compared with the prior holdout receipts, the largest absolute change is
+`1.0e-11` in relative L2 and `1.4e-12` in mismatch. The MSA TP/TPHM L2
+remains `0.0202333/0.0225165`, while numerical remains
+`0.308418/0.307103`; all four q=10 whole-waveform gates are still red.
+
 The [CPU/Torch MSA component receipt](../validation/phenomt_msa_components_torch_20260925.json)
 and [CUDA/JAX rerun](../validation/phenomt_msa_components_jax_len_20260925.json)
 compare public co-precessing Euler-angle outputs with native angles for every
@@ -282,7 +290,19 @@ records both clock conventions and initial-triad checks.
 
 ## Rotation and initial-rate diagnostics
 
-Two further diagnostics isolate the rotation and the initial spin response:
+Independent tests and binary diagnostics isolate the rotation and initial
+spin response:
+
+`diffgw_reference/phenomt_rotation.py` now constructs each degree-2 through
+degree-5 Wigner small-d matrix by exponentiating the angular-momentum
+generator at 60-digit precision. The strict
+`tests/test_phenomt_rotation_math_reference.py` compares this independent
+construction with both native backends, then checks signed-mode completion,
+the spin-weighted-harmonic sum, observer polarization phase, and the fixed
+inverse reference-frame rotation of [TPHM Eqs. (4), (8), and (9)](https://arxiv.org/html/2105.05872).
+The generator calculation does not use the native factorial-sum algorithm.
+It qualifies the mode rotation for supplied modes and Euler angles, but does
+not establish the accuracy of the carrier or angle evolution.
 
 - The [rotation receipt](../validation/phenomt_rotation_20260922.json) supplies
   binary co-precessing modes and Euler angles to the native `project_modes`,

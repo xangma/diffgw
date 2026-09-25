@@ -1,0 +1,215 @@
+{
+  "generated_utc": "2026-09-25T17:53:45.792145+00:00",
+  "reproduction": "python scripts/validate_phenomt_precession.py --backend torch jax --case high_mass_ratio --method msa numerical --sample-rate 2048 --output receipt.json",
+  "versions": {
+    "python": "3.12.3",
+    "numpy": "2.5.3",
+    "lalsimulation": "6.2.1",
+    "torch": "2.14.0+cu130",
+    "jax": "0.11.2"
+  },
+  "dtype": "float64",
+  "devices": {
+    "torch": [
+      "cpu"
+    ],
+    "jax": [
+      "cpu:0"
+    ]
+  },
+  "parameters": {
+    "high_mass_ratio": {
+      "mass1": 60.0,
+      "mass2": 6.0,
+      "spin1": [
+        0.2,
+        0.1,
+        0.8
+      ],
+      "spin2": [
+        0.1,
+        0.0,
+        0.1
+      ],
+      "distance_mpc": 100.0,
+      "inclination": 1.2,
+      "phic": 0.1,
+      "f_lower_hz": 20.0,
+      "f_ref_hz": 20.0
+    }
+  },
+  "metrics": {
+    "relative_l2": "norm(actual-reference)/norm(reference); no alignment",
+    "mismatch": "1-abs(vdot(actual,reference))/(norm(actual)*norm(reference)); unweighted, constant-phase maximization only, no time shift"
+  },
+  "results": [
+    {
+      "approximant": "IMRPhenomTP",
+      "method": "msa",
+      "backend": "torch",
+      "case": "high_mass_ratio",
+      "sample_rate_hz": 2048,
+      "precession_version": 22310,
+      "final_spin_mod": 3,
+      "samples": 5718,
+      "epoch_seconds": -2.629817046,
+      "relative_l2": 0.020233315718053257,
+      "mismatch": 0.00020027477942707872,
+      "inspiral": {
+        "relative_l2": 0.009590404891091392,
+        "mismatch": 4.560981154222432e-05
+      },
+      "ringdown": {
+        "relative_l2": 0.11720203323514015,
+        "mismatch": 0.0006566871789612794
+      }
+    },
+    {
+      "approximant": "IMRPhenomTP",
+      "method": "msa",
+      "backend": "jax",
+      "case": "high_mass_ratio",
+      "sample_rate_hz": 2048,
+      "precession_version": 22310,
+      "final_spin_mod": 3,
+      "samples": 5718,
+      "epoch_seconds": -2.629817046,
+      "relative_l2": 0.020233315718850196,
+      "mismatch": 0.0002002747794463966,
+      "inspiral": {
+        "relative_l2": 0.009590404892808907,
+        "mismatch": 4.560981155921073e-05
+      },
+      "ringdown": {
+        "relative_l2": 0.11720203323515348,
+        "mismatch": 0.0006566871789613904
+      }
+    },
+    {
+      "approximant": "IMRPhenomTPHM",
+      "method": "msa",
+      "backend": "torch",
+      "case": "high_mass_ratio",
+      "sample_rate_hz": 2048,
+      "precession_version": 22310,
+      "final_spin_mod": 3,
+      "samples": 5718,
+      "epoch_seconds": -2.629817046,
+      "relative_l2": 0.02251649648572068,
+      "mismatch": 0.000248719660428276,
+      "inspiral": {
+        "relative_l2": 0.010398871191863647,
+        "mismatch": 5.3752291136244246e-05
+      },
+      "ringdown": {
+        "relative_l2": 0.13179925585079347,
+        "mismatch": 0.0015622771074753627
+      }
+    },
+    {
+      "approximant": "IMRPhenomTPHM",
+      "method": "msa",
+      "backend": "jax",
+      "case": "high_mass_ratio",
+      "sample_rate_hz": 2048,
+      "precession_version": 22310,
+      "final_spin_mod": 3,
+      "samples": 5718,
+      "epoch_seconds": -2.629817046,
+      "relative_l2": 0.022516496486715363,
+      "mismatch": 0.00024871966045303395,
+      "inspiral": {
+        "relative_l2": 0.010398871194063611,
+        "mismatch": 5.375229115944791e-05
+      },
+      "ringdown": {
+        "relative_l2": 0.13179925585080934,
+        "mismatch": 0.0015622771074759179
+      }
+    },
+    {
+      "approximant": "IMRPhenomTP",
+      "method": "numerical",
+      "backend": "torch",
+      "case": "high_mass_ratio",
+      "sample_rate_hz": 2048,
+      "precession_version": 300,
+      "final_spin_mod": 4,
+      "samples": 5718,
+      "epoch_seconds": -2.629817046,
+      "relative_l2": 0.3084178895191517,
+      "mismatch": 0.04753252559985055,
+      "inspiral": {
+        "relative_l2": 0.30237064372023026,
+        "mismatch": 0.04559413721887773
+      },
+      "ringdown": {
+        "relative_l2": 0.49998591272766535,
+        "mismatch": 0.09919198199890344
+      }
+    },
+    {
+      "approximant": "IMRPhenomTP",
+      "method": "numerical",
+      "backend": "jax",
+      "case": "high_mass_ratio",
+      "sample_rate_hz": 2048,
+      "precession_version": 300,
+      "final_spin_mod": 4,
+      "samples": 5718,
+      "epoch_seconds": -2.629817046,
+      "relative_l2": 0.30841788951912885,
+      "mismatch": 0.0475325255998319,
+      "inspiral": {
+        "relative_l2": 0.3023706437202064,
+        "mismatch": 0.045594137218863406
+      },
+      "ringdown": {
+        "relative_l2": 0.49998591272766624,
+        "mismatch": 0.099191981998902
+      }
+    },
+    {
+      "approximant": "IMRPhenomTPHM",
+      "method": "numerical",
+      "backend": "torch",
+      "case": "high_mass_ratio",
+      "sample_rate_hz": 2048,
+      "precession_version": 300,
+      "final_spin_mod": 4,
+      "samples": 5718,
+      "epoch_seconds": -2.629817046,
+      "relative_l2": 0.3071028174333844,
+      "mismatch": 0.04699545474679845,
+      "inspiral": {
+        "relative_l2": 0.29847426649704506,
+        "mismatch": 0.04441398304902899
+      },
+      "ringdown": {
+        "relative_l2": 0.51128060890323,
+        "mismatch": 0.08032959822860564
+      }
+    },
+    {
+      "approximant": "IMRPhenomTPHM",
+      "method": "numerical",
+      "backend": "jax",
+      "case": "high_mass_ratio",
+      "sample_rate_hz": 2048,
+      "precession_version": 300,
+      "final_spin_mod": 4,
+      "samples": 5718,
+      "epoch_seconds": -2.629817046,
+      "relative_l2": 0.3071028174333678,
+      "mismatch": 0.04699545474677602,
+      "inspiral": {
+        "relative_l2": 0.29847426649702746,
+        "mismatch": 0.04441398304901445
+      },
+      "ringdown": {
+        "relative_l2": 0.5112806089032309,
+        "mismatch": 0.08032959822860464
+      }
+    }
+  ]
+}
