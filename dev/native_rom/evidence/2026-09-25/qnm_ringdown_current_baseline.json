@@ -1,0 +1,129 @@
+{
+  "archive": "dev/native_rom/evidence/2026-09-25/qnm_ringdown_current_baseline.npz",
+  "archive_sha256": "b16dd3516f57d39a3963709d9529c0c83d02ad527f4ae9c3382669b57d1b428e",
+  "campaign_sha256": "d8efe4baa182ea39bf9a7d35b6de8621c6e054429ee180eb661e9fbb9f9d59d8",
+  "errors": [],
+  "plan_sha256": "cba0dfe947bced2b0dcd07588af3279cfa6f07dbebc47ab4ebeebae997eea837",
+  "process": {
+    "argv": [
+      "-"
+    ],
+    "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+    "host": "RONI2",
+    "pid": 81227
+  },
+  "production_change": false,
+  "release_qualified": false,
+  "rows": {
+    "q4_mixed_spin": {
+      "boundary_data": {
+        "amplitude": 0.24385024490554774,
+        "frequency": 0.4131769566411094,
+        "index": 34157,
+        "phase": 70.54394055423907,
+        "qnm_damping": 0.07210380239580444,
+        "qnm_frequency": 0.6641059545871342
+      },
+      "boundary_time_M": 633.703125,
+      "current_array_sha256": {
+        "mode": "4721d880cc1b321aa8cb231cacc356748df986adde5470b39a7c8cc9e2dbe8ff",
+        "time": "5ad34b6326599a4b37370b9d68e36f2ef84bf957c4185ca86f42d5438e69400b"
+      },
+      "elapsed_seconds": 168.1565278340131,
+      "final_mass_fraction": 0.9618350154595044,
+      "final_spin": 0.8683419866639572,
+      "fixed_restart_time_M": 100.0,
+      "historical_campaign_array_sha256": {
+        "mode": "c8644d4e939835684cc96d100e3faa7a3b80d9728cc2dc9dd31ef6508e7cd96b",
+        "time": "5ad34b6326599a4b37370b9d68e36f2ef84bf957c4185ca86f42d5438e69400b"
+      },
+      "historical_campaign_exact_replay": false,
+      "internal_step_M": 0.015625,
+      "level": {
+        "atol": 1e-14,
+        "dt_geom": 0.5,
+        "name": "ode_2",
+        "rtol": 1e-13
+      },
+      "match_time_M": 633.7145794172839,
+      "row": {
+        "chi1": 0.8,
+        "chi2": -0.6,
+        "mass1": 40.0,
+        "mass2": 10.0,
+        "omega_start": 0.04
+      },
+      "samples": 1568
+    },
+    "q8_high_aligned": {
+      "boundary_data": {
+        "amplitude": 0.15098625508086622,
+        "frequency": 0.44710155076973024,
+        "index": 68855,
+        "phase": 138.29415938804655,
+        "qnm_damping": 0.06720904563759555,
+        "qnm_frequency": 0.6790133840910831
+      },
+      "boundary_time_M": 1175.859375,
+      "current_array_sha256": {
+        "mode": "18a946f30210f2052d9884396eb8359c573b7194b7aae9d073d3e6d43c5fd76e",
+        "time": "db563c40381301f4f08f2592d8daf3c2d5cd97c2f22780b90179c0df62e346e7"
+      },
+      "elapsed_seconds": 263.53661220899085,
+      "final_mass_fraction": 0.9792636225854244,
+      "final_spin": 0.8941271984269911,
+      "fixed_restart_time_M": 100.0,
+      "historical_campaign_array_sha256": {
+        "mode": "833c8ce3251143f336f4a76d2a4866d94a61c7d1211e9294aae587263e0ede53",
+        "time": "db563c40381301f4f08f2592d8daf3c2d5cd97c2f22780b90179c0df62e346e7"
+      },
+      "historical_campaign_exact_replay": false,
+      "internal_step_M": 0.015625,
+      "level": {
+        "atol": 1e-14,
+        "dt_geom": 0.5,
+        "name": "ode_2",
+        "rtol": 1e-13
+      },
+      "match_time_M": 1175.8741823451842,
+      "row": {
+        "chi1": 0.85,
+        "chi2": 0.85,
+        "mass1": 40.0,
+        "mass2": 5.0,
+        "omega_start": 0.04
+      },
+      "samples": 2652
+    }
+  },
+  "schema": "diffgw.seobnrv4.qnm-ringdown-current-baseline.v1",
+  "scope": {
+    "description": "Scalar CPU float64 numerical stability evidence only; no training or promotion.",
+    "known_limitations": [
+      "Convergence cannot establish correctness of the equations or published model fidelity.",
+      "The adaptive prototype uses a diagnostic QNM spline with independently generated values and black-box-inferred knot metadata; this is not wholly literature-specified provenance.",
+      "Changing dt also changes the adaptive initial step and coarse/fine restart sampling; the grid check measures the complete generator's grid sensitivity.",
+      "No time, phase, amplitude, or coefficient fitting is performed.",
+      "No derivatives, batched execution, accelerators, or JAX are qualified here."
+    ],
+    "physics_validated": false,
+    "production_asset": false,
+    "production_promotion_allowed": false,
+    "training_generator_qualified": false
+  },
+  "script_sha256": "0079aadab8b253e5e002276d6163e59a854c83c6a7c5f8cd25476e08dfc8c860",
+  "source_sha256": {
+    "dev/native_rom/diagnose_q8_mode_phase.py": "8b2a5c0446d88e22822db01dac5d423931a173423d82ba4d66b63dcde5d5d7a6",
+    "dev/native_rom/eob/torch/adaptive_driver_clean.py": "d478f34d96e944ddbafcc308d07b3bd717b141c74bafd12fd1d23bc2a7583954",
+    "dev/native_rom/eob/torch/source_calibration_hamiltonian.py": "2b0ddccf6ba99d0157c0b624cf0c4e926713c96a736e22e1b6fe55bdbde1cdc2",
+    "dev/native_rom/qualify_generator.py": "df9bffb614b87e82b5a8da47212cb01312ad4d0cb9d687d929570df134954174",
+    "src/torchwave/approximants/eob/merger_ringdown.py": "098bb9e6f5328ceb291a5bed02a91d8fa95cc54bbcc7ff45d996e6985d995410",
+    "src/torchwave/approximants/eob/nqc.py": "c8683181f7cf911df1e1b85cd6999cdb03e7c594e867315359040e9eb03ca552",
+    "src/torchwave/approximants/eob/numerical_attachment.py": "8c7a149b76c529a255a4caa4b0ca76317b5306c8967db84047f299ccf51be7fc",
+    "src/torchwave/approximants/eob/seobnrv4_flux.py": "3136bb016cce21cdd9d636008fee1fa5472757fed4446dc899e0d31e70124c83",
+    "src/torchwave/approximants/kerr_qnm_generated.py": "82da71c19c50defeab4c32b6950141d845214909e9f52342e3f1cf3b46f08326",
+    "src/torchwave/approximants/kerr_qnm_table_convention.py": "c4c85d17b079306df73c74f4bb755b7f4256fbdf49fef6a85cd9810367d800f6"
+  },
+  "status": "diagnostic_complete",
+  "wheel_qnm_evidence_sha256": "8e25a67c56a588c1fa5c16c56b4d2114268d81298140bdb32a2dc0d02ecc4b3e"
+}

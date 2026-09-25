@@ -62,7 +62,7 @@ compares every Cook author row within the native `|j| <= 0.9999` domain:
 with the external author data within `9.6e-13`, and Torch/JAX agree within
 `1.7e-16`. This is dense independent component validation; it does not bound
 the intervals between author rows. Historical compatibility, continuous-domain
-accuracy, and whole-waveform impact remain open.
+accuracy, and domain-wide waveform impact remain open.
 A [predeclared 16-point interstitial check](evidence/2026-09-25/qnm_interstitial_solver.json)
 compares both signed-spin branches with strict direct Kerr solves between Cook
 rows and at the native domain edge. Torch and JAX agree with the solves within
@@ -70,6 +70,17 @@ rows and at the native domain edge. Torch and JAX agree with the solves within
 values seed the branch solve, so this checks equation consistency rather than
 independent author data; it does not establish a continuous error bound or
 decide whether historical table interpolation should be reproduced.
+The [current-source ringdown-only comparison](evidence/2026-09-25/qnm_ringdown_waveform_current.json)
+uses a [separately frozen two-row baseline](evidence/2026-09-25/qnm_ringdown_current_baseline.json)
+because the older campaign mode arrays no longer replay under the changed
+development source, although both time arrays do. Replacing only the QNM in
+the fixed-boundary ringdown changes whole-mode relative complex L2 by
+`1.02e-6` (q4 mixed spin) and `2.55e-6` (q8 high aligned spin), both below
+the predeclared `1e-5` numerical reference. Historical ringdown reconstruction
+is exact over the fixed 100 M window. The [first attempt](evidence/2026-09-25/qnm_ringdown_waveform_impact.json)
+is retained as a failed exact-replay check; its older parity residuals are
+scale references only, not current-source parity. This two-row substitution
+does not bound the full parameter domain or qualify historical compatibility.
 The [post-hoc binary-input witnesses](evidence/2026-09-24/qnm_binary_reachability.json)
 show that this is not confined to an unreachable final spin: at the paper's
 `(q, chi1, chi2)=(8,0.85,0.85)` calibration configuration, the native/wheel

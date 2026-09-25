@@ -1,0 +1,67 @@
+{
+  "archive": "dev/native_rom/evidence/2026-09-25/qnm_ringdown_current_baseline.npz",
+  "archive_sha256": "b16dd3516f57d39a3963709d9529c0c83d02ad527f4ae9c3382669b57d1b428e",
+  "baseline_evidence": "dev/native_rom/evidence/2026-09-25/qnm_ringdown_current_baseline.json",
+  "baseline_evidence_sha256": "dc787281f85de486c5e2249af92dfd076fc97da2dc7e6dc8bbb6341183439ec6",
+  "baseline_plan": "dev/native_rom/evidence/2026-09-25/qnm_ringdown_current_baseline_plan.json",
+  "baseline_plan_sha256": "cba0dfe947bced2b0dcd07588af3279cfa6f07dbebc47ab4ebeebae997eea837",
+  "baseline_reconstruction_complex_relative_l2_max": 1e-12,
+  "campaign": "dev/native_rom/evidence/2026-09-24/source_candidate_new_rows.json",
+  "campaign_sha256": "d8efe4baa182ea39bf9a7d35b6de8621c6e054429ee180eb661e9fbb9f9d59d8",
+  "failed_attempt_evidence": "dev/native_rom/evidence/2026-09-25/qnm_ringdown_waveform_impact.json",
+  "failed_attempt_evidence_sha256": "d1c749c0042782aa668962c01b6b173ced0b394fff75cf428a5d4d3a58725259",
+  "failed_attempt_plan": "dev/native_rom/evidence/2026-09-25/qnm_ringdown_waveform_impact_plan.json",
+  "failed_attempt_plan_sha256": "36339b6c7ce55ebc31f193109737f76bb05b36279339bdad66582211877c012f",
+  "historical_parity_scale": {
+    "q4_mixed_spin": {
+      "complex_relative_l2": 0.0031619231200550654,
+      "path": "dev/native_rom/evidence/2026-09-24/q4_independent_qnm.json",
+      "sha256": "e0b57fb49a0f6b93bedaab7285e287a688d41c1a66e2fda3f8fa525308807348"
+    },
+    "q8_high_aligned": {
+      "complex_relative_l2": 0.0018651853924605579,
+      "path": "dev/native_rom/evidence/2026-09-24/q8_independent_qnm.json",
+      "sha256": "279ce1851bbab3ff6149b8383b2acbc472eb90237dcc0057de8499e145ecacea"
+    }
+  },
+  "historical_scale_materiality_fraction": 0.01,
+  "level": "ode_2",
+  "limitations": [
+    "Two development rows only; no domain-wide bound.",
+    "Historical spline knot metadata were inferred from a black box, though these remnant-spin values match the pinned wheel witness.",
+    "Current-source baseline differs from the historical campaign waveform, so old whole-waveform residuals are not a current-source parity metric.",
+    "Counterfactual directly replaces the ringdown formula on the same output chart and does not rerun inspiral dynamics."
+  ],
+  "metric_definitions": "Reconstruct historical and direct ringdowns from identical frozen boundary data; require historical reconstruction relative complex L2 <= 1e-12 over [boundary,boundary+100] M. Postattachment complex and amplitude relative L2 use historical waveform norm; phase is unwrap(angle(direct * conj(historical))) for historical amplitude >= 0.001 of the window peak, with RMS and max absolute. Whole-mode relative complex L2 uses all original output samples after replacing only postboundary samples. No alignment or refitting. Historical 2026-09-24 parity residuals are scale references only, never current-source parity.",
+  "phase_amplitude_floor_relative_to_window_peak": 0.001,
+  "postattachment_window_M": [
+    0.0,
+    100.0
+  ],
+  "production_change": false,
+  "purpose": "Quantify only direct-solved versus historical-wheel-compatible 220 QNM ringdown on the frozen current-source historical-QNM waveforms. Fixed preattachment mode, remnant, attachment boundary, output times, and 100 M window. No release qualification.",
+  "release_qualified": false,
+  "ringdown_duration_M": 150.0,
+  "rows": [
+    "q4_mixed_spin",
+    "q8_high_aligned"
+  ],
+  "schema": "diffgw.seobnrv4.qnm-ringdown-waveform-current-plan.v1",
+  "source_sha256": {
+    "dev/native_rom/diagnose_q8_mode_phase.py": "8b2a5c0446d88e22822db01dac5d423931a173423d82ba4d66b63dcde5d5d7a6",
+    "dev/native_rom/diagnose_qnm_ringdown_waveform_impact.py": "1e50bd624292048f03bd11aa2dff40190ce4b512ddc30fc816145ae2e12c4807",
+    "dev/native_rom/eob/torch/adaptive_driver_clean.py": "d478f34d96e944ddbafcc308d07b3bd717b141c74bafd12fd1d23bc2a7583954",
+    "dev/native_rom/eob/torch/source_calibration_hamiltonian.py": "2b0ddccf6ba99d0157c0b624cf0c4e926713c96a736e22e1b6fe55bdbde1cdc2",
+    "dev/native_rom/qualify_generator.py": "df9bffb614b87e82b5a8da47212cb01312ad4d0cb9d687d929570df134954174",
+    "src/torchwave/approximants/eob/merger_ringdown.py": "098bb9e6f5328ceb291a5bed02a91d8fa95cc54bbcc7ff45d996e6985d995410",
+    "src/torchwave/approximants/eob/nqc.py": "c8683181f7cf911df1e1b85cd6999cdb03e7c594e867315359040e9eb03ca552",
+    "src/torchwave/approximants/eob/numerical_attachment.py": "8c7a149b76c529a255a4caa4b0ca76317b5306c8967db84047f299ccf51be7fc",
+    "src/torchwave/approximants/eob/seobnrv4_flux.py": "3136bb016cce21cdd9d636008fee1fa5472757fed4446dc899e0d31e70124c83",
+    "src/torchwave/approximants/kerr_qnm_generated.py": "82da71c19c50defeab4c32b6950141d845214909e9f52342e3f1cf3b46f08326",
+    "src/torchwave/approximants/kerr_qnm_table_convention.py": "c4c85d17b079306df73c74f4bb755b7f4256fbdf49fef6a85cd9810367d800f6"
+  },
+  "supersedes": "The first attempted impact replay failed its exact historical campaign waveform hash invariant because current development-source behavior changed; retain the failed report and use a separately frozen current-source baseline.",
+  "wheel_qnm_evidence": "dev/native_rom/evidence/2026-09-24/q4_q8_qnm_parity.json",
+  "wheel_qnm_evidence_sha256": "8e25a67c56a588c1fa5c16c56b4d2114268d81298140bdb32a2dc0d02ecc4b3e",
+  "whole_mode_numerical_reference": 1e-05
+}

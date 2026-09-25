@@ -1,0 +1,36 @@
+{
+  "schema": "diffgw.seobnrv4.qnm-ringdown-waveform-impact-plan.v1",
+  "purpose": "Isolate only the 220 QNM substitution in an already-used native waveform's post-attachment ringdown, then size it against existing whole-mode parity residuals.",
+  "release_qualified": false,
+  "production_change": false,
+  "rows": ["q4_mixed_spin", "q8_high_aligned"],
+  "level": "ode_2",
+  "campaign": "dev/native_rom/evidence/2026-09-24/source_candidate_new_rows.json",
+  "campaign_sha256": "d8efe4baa182ea39bf9a7d35b6de8621c6e054429ee180eb661e9fbb9f9d59d8",
+  "wheel_qnm_evidence": "dev/native_rom/evidence/2026-09-24/q4_q8_qnm_parity.json",
+  "wheel_qnm_evidence_sha256": "8e25a67c56a588c1fa5c16c56b4d2114268d81298140bdb32a2dc0d02ecc4b3e",
+  "parity_baselines": {
+    "q4_mixed_spin": {"path": "dev/native_rom/evidence/2026-09-24/q4_independent_qnm.json", "sha256": "e0b57fb49a0f6b93bedaab7285e287a688d41c1a66e2fda3f8fa525308807348", "complex_relative_l2": 0.0031619231200550654},
+    "q8_high_aligned": {"path": "dev/native_rom/evidence/2026-09-24/q8_independent_qnm.json", "sha256": "279ce1851bbab3ff6149b8383b2acbc472eb90237dcc0057de8499e145ecacea", "complex_relative_l2": 0.0018651853924605579}
+  },
+  "source_sha256": {
+    "dev/native_rom/diagnose_q8_mode_phase.py": "8b2a5c0446d88e22822db01dac5d423931a173423d82ba4d66b63dcde5d5d7a6",
+    "dev/native_rom/qualify_generator.py": "df9bffb614b87e82b5a8da47212cb01312ad4d0cb9d687d929570df134954174",
+    "dev/native_rom/eob/torch/adaptive_driver_clean.py": "d478f34d96e944ddbafcc308d07b3bd717b141c74bafd12fd1d23bc2a7583954",
+    "src/torchwave/approximants/eob/numerical_attachment.py": "8c7a149b76c529a255a4caa4b0ca76317b5306c8967db84047f299ccf51be7fc",
+    "src/torchwave/approximants/eob/merger_ringdown.py": "098bb9e6f5328ceb291a5bed02a91d8fa95cc54bbcc7ff45d996e6985d995410",
+    "src/torchwave/approximants/eob/nqc.py": "c8683181f7cf911df1e1b85cd6999cdb03e7c594e867315359040e9eb03ca552",
+    "src/torchwave/approximants/kerr_qnm_generated.py": "82da71c19c50defeab4c32b6950141d845214909e9f52342e3f1cf3b46f08326",
+    "src/torchwave/approximants/kerr_qnm_table_convention.py": "c4c85d17b079306df73c74f4bb755b7f4256fbdf49fef6a85cd9810367d800f6"
+  },
+  "source_revision": "53acc0c2cd7ea2d3c83fc71a7bd88035c2861d6c",
+  "source_qnm_file_sha256": "99430b73bd8f67aa72bfbe49b3a86051908d4bae83324dc5c5d6410b304cde95",
+  "method": "Run the frozen historical-spline native 22 mode once per row and verify its exact array hashes against the campaign. On the same output chart reconstruct its ringdown from the returned remnant, boundary amplitude/phase/frequency/time, and published peak-preserving shape. Require historical reconstruction relative complex L2 <= 1e-12 over [boundary,boundary+100] M. Change only sigma to directly solved native 220 QNM divided by that same remnant mass fraction, preserving all preboundary samples and the original ringdown support rule.",
+  "postattachment_window_M": [0.0, 100.0],
+  "phase_amplitude_floor_relative_to_window_peak": 0.001,
+  "baseline_reconstruction_complex_relative_l2_max": 1e-12,
+  "whole_mode_materiality_fraction_of_existing_parity_residual": 0.01,
+  "whole_mode_numerical_budget_reference": 1e-5,
+  "metric_definitions": "Postattachment complex and amplitude relative L2 use historical waveform norm in the denominator; phase is unwrap(angle(native * conj(historical))) over samples with historical amplitude >= 0.001 of the window peak, with RMS and maximum absolute. Full-mode complex relative L2 uses the original entire native chart. No realignment or refitting.",
+  "limitations": ["Two development rows only, not a domain-wide bound.", "Comparison uses the native preattachment waveform and its fixed remnant/attachment, not an independently generated historical whole waveform.", "The historical compatibility spline has black-box-inferred knot locations but was previously checked against the pinned LAL wheel at these remnant spins."]
+}

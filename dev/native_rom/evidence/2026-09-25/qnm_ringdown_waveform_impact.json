@@ -1,0 +1,56 @@
+{
+  "campaign_sha256": "d8efe4baa182ea39bf9a7d35b6de8621c6e054429ee180eb661e9fbb9f9d59d8",
+  "errors": [
+    {
+      "message": "q4_mixed_spin: baseline waveform differs from frozen campaign",
+      "type": "ValueError"
+    }
+  ],
+  "plan_sha256": "36339b6c7ce55ebc31f193109737f76bb05b36279339bdad66582211877c012f",
+  "process": {
+    "argv": [
+      "-"
+    ],
+    "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+    "host": "RONI2",
+    "pid": 73980
+  },
+  "production_change": false,
+  "release_qualified": false,
+  "rows": {},
+  "schema": "diffgw.seobnrv4.qnm-ringdown-waveform-impact.v1",
+  "scope": {
+    "description": "Scalar CPU float64 numerical stability evidence only; no training or promotion.",
+    "known_limitations": [
+      "Convergence cannot establish correctness of the equations or published model fidelity.",
+      "The adaptive prototype uses a diagnostic QNM spline with independently generated values and black-box-inferred knot metadata; this is not wholly literature-specified provenance.",
+      "Changing dt also changes the adaptive initial step and coarse/fine restart sampling; the grid check measures the complete generator's grid sensitivity.",
+      "No time, phase, amplitude, or coefficient fitting is performed.",
+      "No derivatives, batched execution, accelerators, or JAX are qualified here."
+    ],
+    "physics_validated": false,
+    "production_asset": false,
+    "production_promotion_allowed": false,
+    "training_generator_qualified": false
+  },
+  "script_sha256": "1e50bd624292048f03bd11aa2dff40190ce4b512ddc30fc816145ae2e12c4807",
+  "source_qnm_file_sha256": "99430b73bd8f67aa72bfbe49b3a86051908d4bae83324dc5c5d6410b304cde95",
+  "source_revision": "53acc0c2cd7ea2d3c83fc71a7bd88035c2861d6c",
+  "source_sha256": {
+    "dev/native_rom/diagnose_q8_mode_phase.py": "8b2a5c0446d88e22822db01dac5d423931a173423d82ba4d66b63dcde5d5d7a6",
+    "dev/native_rom/eob/torch/adaptive_driver_clean.py": "d478f34d96e944ddbafcc308d07b3bd717b141c74bafd12fd1d23bc2a7583954",
+    "dev/native_rom/qualify_generator.py": "df9bffb614b87e82b5a8da47212cb01312ad4d0cb9d687d929570df134954174",
+    "src/torchwave/approximants/eob/merger_ringdown.py": "098bb9e6f5328ceb291a5bed02a91d8fa95cc54bbcc7ff45d996e6985d995410",
+    "src/torchwave/approximants/eob/nqc.py": "c8683181f7cf911df1e1b85cd6999cdb03e7c594e867315359040e9eb03ca552",
+    "src/torchwave/approximants/eob/numerical_attachment.py": "8c7a149b76c529a255a4caa4b0ca76317b5306c8967db84047f299ccf51be7fc",
+    "src/torchwave/approximants/kerr_qnm_generated.py": "82da71c19c50defeab4c32b6950141d845214909e9f52342e3f1cf3b46f08326",
+    "src/torchwave/approximants/kerr_qnm_table_convention.py": "c4c85d17b079306df73c74f4bb755b7f4256fbdf49fef6a85cd9810367d800f6"
+  },
+  "status": "failed",
+  "wheel_binary": {
+    "lal_version": "7.7.1",
+    "lalsimulation_extension_sha256": "2de0af808b258bef03a3a13b15fa71038f48579f5f562e92ebd62c6b9769fd37",
+    "lalsimulation_version": "6.2.1"
+  },
+  "wheel_qnm_evidence_sha256": "8e25a67c56a588c1fa5c16c56b4d2114268d81298140bdb32a2dc0d02ecc4b3e"
+}

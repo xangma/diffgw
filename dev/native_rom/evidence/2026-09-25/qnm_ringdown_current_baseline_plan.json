@@ -1,0 +1,29 @@
+{
+  "schema": "diffgw.seobnrv4.qnm-ringdown-current-baseline-plan.v1",
+  "purpose": "Freeze a replacement historical-QNM waveform baseline for two pre-existing development rows under the current pinned checkout. The earlier 2026-09-24 campaign waveform hashes cannot replay because the development driver and Hamiltonian changed in later commits. No direct-QNM impact is computed in this stage.",
+  "supersedes_attempt_plan": "dev/native_rom/evidence/2026-09-25/qnm_ringdown_waveform_impact_plan.json",
+  "supersedes_attempt_plan_sha256": "36339b6c7ce55ebc31f193109737f76bb05b36279339bdad66582211877c012f",
+  "campaign": "dev/native_rom/evidence/2026-09-24/source_candidate_new_rows.json",
+  "campaign_sha256": "d8efe4baa182ea39bf9a7d35b6de8621c6e054429ee180eb661e9fbb9f9d59d8",
+  "wheel_qnm_evidence": "dev/native_rom/evidence/2026-09-24/q4_q8_qnm_parity.json",
+  "wheel_qnm_evidence_sha256": "8e25a67c56a588c1fa5c16c56b4d2114268d81298140bdb32a2dc0d02ecc4b3e",
+  "rows": ["q4_mixed_spin", "q8_high_aligned"],
+  "level": "ode_2",
+  "qnm_source": "historical_spline",
+  "archive": "dev/native_rom/evidence/2026-09-25/qnm_ringdown_current_baseline.npz",
+  "source_sha256": {
+    "dev/native_rom/diagnose_q8_mode_phase.py": "8b2a5c0446d88e22822db01dac5d423931a173423d82ba4d66b63dcde5d5d7a6",
+    "dev/native_rom/qualify_generator.py": "df9bffb614b87e82b5a8da47212cb01312ad4d0cb9d687d929570df134954174",
+    "dev/native_rom/eob/torch/adaptive_driver_clean.py": "d478f34d96e944ddbafcc308d07b3bd717b141c74bafd12fd1d23bc2a7583954",
+    "dev/native_rom/eob/torch/source_calibration_hamiltonian.py": "2b0ddccf6ba99d0157c0b624cf0c4e926713c96a736e22e1b6fe55bdbde1cdc2",
+    "src/torchwave/approximants/eob/seobnrv4_flux.py": "3136bb016cce21cdd9d636008fee1fa5472757fed4446dc899e0d31e70124c83",
+    "src/torchwave/approximants/eob/numerical_attachment.py": "8c7a149b76c529a255a4caa4b0ca76317b5306c8967db84047f299ccf51be7fc",
+    "src/torchwave/approximants/eob/merger_ringdown.py": "098bb9e6f5328ceb291a5bed02a91d8fa95cc54bbcc7ff45d996e6985d995410",
+    "src/torchwave/approximants/eob/nqc.py": "c8683181f7cf911df1e1b85cd6999cdb03e7c594e867315359040e9eb03ca552",
+    "src/torchwave/approximants/kerr_qnm_generated.py": "82da71c19c50defeab4c32b6950141d845214909e9f52342e3f1cf3b46f08326",
+    "src/torchwave/approximants/kerr_qnm_table_convention.py": "c4c85d17b079306df73c74f4bb755b7f4256fbdf49fef6a85cd9810367d800f6"
+  },
+  "release_qualified": false,
+  "production_change": false,
+  "next_stage": "After both replays complete, pin the archive SHA256 and baseline-evidence SHA256 in a new impact plan before computing any direct-QNM waveform metrics. Preserve the original 100 M window and metric gates. Historical 2026-09-24 whole-waveform residuals may appear only as historical context, not as current-source parity."
+}
