@@ -232,12 +232,29 @@ corrections, so neither is a binwise same-model oracle. Higher-PN mode
 amplitudes, spin-amplitude corrections, generic tidal matter, merger, Kerr
 cutoffs, taper derivatives, FP32, and full-domain accuracy remain unqualified.
 
+The dated [composed-oracle audit](../validation/taylorf2_hm_composed_oracle_20260925.json)
+also checked the public `WF4Py` and `gwfast` TaylorF2 implementations and exact
+code-search matches. Both external implementations are restricted dominant-mode
+models. The audit did not inspect or translate LAL implementation source.
+Extending the author supplement locally would not create the missing
+independence: its unmodified $v^7$ spin content matches neither native selector,
+it has no arbitrary $f_{\rm ref}$ input, and its harmonic `Theta` factors belong
+to a different full-PN polarization expansion. Selecting the native spin terms,
+adding reference-frequency subtraction, projecting the leading modes, and
+applying the native hard mask would reproduce the project-authored composition
+already checked by the scalar reference; freezing that recomposition would not
+turn it into an external numerical oracle.
+
 The exact next external-parity gate is an author-supplied numerical table or
-an independently maintained executable that exposes all eight complex
-$h_{\ell,-m}(f)$ values for a fully specified binary and option set. Closure
-would require direct, unaligned binwise comparison after applying only the
-published Fourier/tetrad adapter above; a dominant-mode series or angular
-basis alone cannot satisfy that gate.
+an independently maintained, checksum-pinned executable under suitable terms
+that exposes all eight complex $h_{\ell,-m}(f)$ values (or both complex
+polarizations for every mode contribution and their sum) for a fully specified
+binary. The release must state its Fourier, tetrad, mode-label, spin-term,
+$f_{\rm ref}$, and cutoff conventions and provide bins below, exactly at,
+and above each mode cutoff. Direct comparison must use no time, phase, amplitude,
+or frequency alignment, normalized complex FP64 error at most $4\times10^{-10}$
+for every unmasked mode and sum in both frontends, and exact zeros in masked
+bins. A dominant-mode series or angular basis alone cannot satisfy that gate.
 
 ## Reproduce the checks
 
