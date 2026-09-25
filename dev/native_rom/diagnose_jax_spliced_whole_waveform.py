@@ -181,6 +181,23 @@ def _polynomial_amplitude_derivatives(time_grid, state, orbital_frequency,
                         2*coefficients[2]/half_width_M**2))
 
 
+def _polynomial_rhs_derivatives(time_grid, base_mode, match_time,
+                                *, half_width_M, degree):
+    """Diagnostic local derivatives of base amplitude and unwrapped phase."""
+    if half_width_M <= 0 or degree < 2:
+        raise ValueError("invalid diagnostic RHS polynomial")
+    selected = (time_grid >= match_time-half_width_M) & (
+        time_grid <= match_time+half_width_M)
+    if int(selected.sum()) < degree + 3:
+        raise ValueError("insufficient NQC RHS polynomial samples")
+    values = torch.stack((base_mode.abs(), _unwrap_mode_phase(base_mode)), dim=-1)
+    x = (time_grid[selected]-match_time)/half_width_M
+    matrix = torch.stack(tuple(x**power for power in range(degree+1)), dim=-1)
+    coefficients = torch.linalg.lstsq(matrix, values[selected], driver="gels").solution
+    return torch.stack((coefficients[1]/half_width_M,
+                        2*coefficients[2]/half_width_M**2), dim=-1)
+
+
 def _prepare_public(plan):
     pin = plan["public_binary"]
     identity_plan = json.loads((ROOT / pin["identity_source"]).read_text())
@@ -194,6 +211,7 @@ def run(case_id, plan, public_identity, *, variant="published", anchor_control=F
         independent_init=False, numerical_settings=None, write_result=True,
         return_series=False, return_stages=False, diagnostic_nqc_second=None,
         diagnostic_nqc_phase_matrix=None, diagnostic_nqc_amplitude_derivatives=None,
+        diagnostic_nqc_rhs_derivatives=None,
         diagnostic_peak_policy=None):
     started = time.monotonic()
     if diagnostic_peak_policy not in (None, "stationary"):
@@ -306,6 +324,7 @@ def run(case_id, plan, public_identity, *, variant="published", anchor_control=F
     matching_second = None
     phase_matrix = None
     amplitude_derivatives = None
+    rhs_derivatives = None
     if diagnostic_nqc_second is not None:
         if variant != "source":
             raise ValueError("diagnostic NQC curvature is source-backed only")
@@ -324,6 +343,12 @@ def run(case_id, plan, public_identity, *, variant="published", anchor_control=F
         amplitude_derivatives = _polynomial_amplitude_derivatives(
             fine.output_time, fine.output_state, torch_fine_omega,
             torch_fine_mode, tmatch, **diagnostic_nqc_amplitude_derivatives)
+    if diagnostic_nqc_rhs_derivatives is not None:
+        if variant != "source":
+            raise ValueError("diagnostic NQC RHS derivatives are source-backed only")
+        rhs_derivatives = _polynomial_rhs_derivatives(
+            fine.output_time, torch_fine_mode, tmatch,
+            **diagnostic_nqc_rhs_derivatives)
     tref = torch_attach(
         fine.output_time, fine.output_state, torch_fine_omega,
         torch_fine_mode, torch_fine_frequency, tnu, tchi, tsigma,
@@ -331,7 +356,8 @@ def run(case_id, plan, public_identity, *, variant="published", anchor_control=F
         match_time=tmatch if diagnostic_peak_policy else None,
         diagnostic_amplitude_derivatives=amplitude_derivatives,
         diagnostic_phase_matrix=phase_matrix,
-        diagnostic_matching_second=matching_second)
+        diagnostic_matching_second=matching_second,
+        diagnostic_matching_rhs_derivatives=rhs_derivatives)
     jref = jax_attach(
         jrun.fine_time, jrun.fine_state, jax_fine_omega,
         jax_fine_mode, jax_fine_frequency, jnu, jchi, jsigma,
@@ -400,6 +426,9 @@ def run(case_id, plan, public_identity, *, variant="published", anchor_control=F
         "diagnostic_nqc_amplitude_derivative_values": (
             _array(amplitude_derivatives).tolist()
             if amplitude_derivatives is not None else None),
+        "diagnostic_nqc_rhs_derivatives": diagnostic_nqc_rhs_derivatives,
+        "diagnostic_nqc_rhs_derivative_values": (
+            _array(rhs_derivatives).tolist() if rhs_derivatives is not None else None),
         "independent_initial_solve": independent_init,
         "initial_state_max_abs": initial_state_max_abs,
         "torch_initial_state": initial_torch.tolist(),
@@ -447,13 +476,17 @@ def run(case_id, plan, public_identity, *, variant="published", anchor_control=F
             targets = torch_targets(tnu, tchi)
             amplitude_rhs = torch.stack(targets[:3]) - torch.stack((
                 _eval_batch_scalar(tref.nqc.amplitude_spline, tmatch),
+                rhs_derivatives[0, 0] if rhs_derivatives is not None else
                 _eval_batch_scalar(tref.nqc.amplitude_spline, tmatch, derivative=1),
+                rhs_derivatives[0, 1] if rhs_derivatives is not None else
                 matching_second[0] if matching_second is not None else
                 _eval_batch_scalar(tref.nqc.amplitude_spline, tmatch, derivative=2)))
             phase_rhs = torch.stack((
-                _eval_batch_scalar(tref.nqc.waveform_phase_spline, tmatch, derivative=1)
+                (rhs_derivatives[1, 0] if rhs_derivatives is not None else
+                 _eval_batch_scalar(tref.nqc.waveform_phase_spline, tmatch, derivative=1))
                 - targets.frequency,
-                (matching_second[4] if matching_second is not None else
+                (rhs_derivatives[1, 1] if rhs_derivatives is not None else
+                 matching_second[4] if matching_second is not None else
                  _eval_batch_scalar(tref.nqc.waveform_phase_spline, tmatch, derivative=2))
                 - targets.frequency_derivative))
             stage = {

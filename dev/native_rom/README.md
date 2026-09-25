@@ -1329,8 +1329,17 @@ factor-128 to factor-256 Torch drifts fall to `2.76e-5` and `2.42e-5`, but
 both still fail the frozen `1e-5` gate. The unchanged JAX route retains its
 `5.05e-5` and `1.07e-4` drifts. At this point the remaining coefficient
 changes include right-hand-side derivative sensitivity, so a consistent
-local-derivative system is the next numerical control. No local-polynomial
-choice has yet passed historical-source or physical validation.
+local-derivative system was the next numerical control. The
+[frozen full-system control](evidence/2026-09-25/jax_source_local_system_control_plan.json)
+uses the same local polynomial for both NQC matrices and right-hand-side
+derivatives. Its [q4](evidence/2026-09-25/jax_source_local_system_control_q4_nonspinning.json)
+and [aligned-spin](evidence/2026-09-25/jax_source_local_system_control_strong_aligned.json)
+Torch drifts are `2.73e-5` and `2.46e-5`, so both still fail `1e-5`; the
+aligned result is slightly worse than the matrix-only control. The linear
+systems and stationary peak checks pass, while Torch/JAX parity is broken by
+construction. This rules out the tested local derivative prescription as a
+complete numerical fix. No local-polynomial choice has passed historical-source
+or physical validation.
 
 The [frozen anchor diagnostic](evidence/2026-09-25/source_spliced_anchor_plan.json)
 replays all four cases and fits each mode's own amplitude peak between output

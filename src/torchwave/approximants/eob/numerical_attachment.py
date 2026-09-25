@@ -423,6 +423,7 @@ def _full_series_nqc(
     diagnostic_amplitude_derivatives: Optional[Tensor] = None,
     diagnostic_phase_matrix: Optional[Tensor] = None,
     diagnostic_matching_second: Optional[Tensor] = None,
+    diagnostic_matching_rhs_derivatives: Optional[Tensor] = None,
 ) -> FullSeriesNQC:
     q, p = nqc_22_basis(r, pr_star, orbital_frequency)
     products = base_amplitude.unsqueeze(-1) * q
@@ -458,6 +459,18 @@ def _full_series_nqc(
                                       diagnostic_amplitude_derivatives), dim=-2)
     amplitude_rhs = torch.stack(targets[:3], dim=-1) - torch.stack(
         (value[..., 0], first[..., 0], second[..., 0]), dim=-1)
+    if diagnostic_matching_rhs_derivatives is not None:
+        if diagnostic_matching_second is not None:
+            raise ValueError("diagnostic RHS derivatives conflict with matching-second control")
+        if (not isinstance(diagnostic_matching_rhs_derivatives, Tensor)
+                or diagnostic_matching_rhs_derivatives.shape != amplitude_matrix.shape[:-2] + (2, 2)
+                or diagnostic_matching_rhs_derivatives.dtype != amplitude_matrix.dtype
+                or diagnostic_matching_rhs_derivatives.device != amplitude_matrix.device
+                or not bool(torch.isfinite(diagnostic_matching_rhs_derivatives).all())):
+            raise ValueError("diagnostic_matching_rhs_derivatives must contain four finite derivatives")
+        amplitude_rhs = torch.stack(targets[:3], dim=-1) - torch.stack((
+            value[..., 0], diagnostic_matching_rhs_derivatives[..., 0, 0],
+            diagnostic_matching_rhs_derivatives[..., 0, 1]), dim=-1)
     phase_matrix = torch.stack((first[..., 4:6], second[..., 4:6]), dim=-2)
     if diagnostic_phase_matrix is not None:
         if (not isinstance(diagnostic_phase_matrix, Tensor)
@@ -479,6 +492,11 @@ def _full_series_nqc(
         phase_second = diagnostic_matching_second[..., 4]
     phase_rhs = torch.stack((phase_first - targets.frequency,
                              phase_second - targets.frequency_derivative), dim=-1)
+    if diagnostic_matching_rhs_derivatives is not None:
+        phase_rhs = torch.stack((
+            diagnostic_matching_rhs_derivatives[..., 1, 0] - targets.frequency,
+            diagnostic_matching_rhs_derivatives[..., 1, 1]
+            - targets.frequency_derivative), dim=-1)
     a, amplitude_condition, amplitude_residual = _matching_solve(
         amplitude_matrix, amplitude_rhs, max_condition, "full-series amplitude matching system")
     b, phase_condition, phase_residual = _matching_solve(
@@ -748,6 +766,7 @@ def attach_seobnrv4_22_numerical_compatibility(
     diagnostic_amplitude_derivatives: Optional[Tensor] = None,
     diagnostic_phase_matrix: Optional[Tensor] = None,
     diagnostic_matching_second: Optional[Tensor] = None,
+    diagnostic_matching_rhs_derivatives: Optional[Tensor] = None,
 ) -> NumericalAttachedMode22:
     """Attach the full-series NQC and discrete-boundary v4 ringdown.
 
@@ -863,6 +882,7 @@ def attach_seobnrv4_22_numerical_compatibility(
         diagnostic_amplitude_derivatives=diagnostic_amplitude_derivatives,
         diagnostic_phase_matrix=diagnostic_phase_matrix,
         diagnostic_matching_second=diagnostic_matching_second,
+        diagnostic_matching_rhs_derivatives=diagnostic_matching_rhs_derivatives,
     )
     coefficients = nqc.calibration.coefficients
     corrected = base_mode * nqc_22_factor(
