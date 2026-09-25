@@ -1,0 +1,58 @@
+{
+  "schema": "diffgw.seobnrv4.source-cap-full-epoch-suffix-plan.v1",
+  "release_qualified": false,
+  "row_tuple": [30.0, 20.0, 0.8, 0.6, 0.04],
+  "cap_Momega": 0.03162277660168379,
+  "step_M": 0.5,
+  "capacity": 50000,
+  "source_root": "/Users/xangma/repos/lalsuite-git",
+  "headers": "/tmp/diffgw-lalsuite-pinned-53acc0c/merged-include",
+  "gsl_include": "/usr/local/include",
+  "script_sha256": "a8e746b34a07e3b5ef8d9c5de1c8de219b807ef270550591914b6386988bd481",
+  "inputs": {
+    "source_plan": {
+      "path": "dev/native_rom/evidence/2026-09-24/source_flux_initial_plan.json",
+      "sha256": "1167199c8f954f97a5905a1e3b2f67d1555e984e5f1da0a0fc42a77a925f96ea"
+    },
+    "v5_result": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_native_cap_full_crop_v5.json",
+      "sha256": "2c167f1a06faff7734c3a45896d829447969b99a326c9515852b0b7b4d7c9ef3"
+    },
+    "mode_adapter": {
+      "path": "dev/native_rom/reference/full_v4_source_mode_adapter.c",
+      "sha256": "59d8d7dd6547e84cc53b2ecb76005195bb54174c481146f88fc257a3abf7fcf4"
+    },
+    "dynamics_adapter": {
+      "path": "dev/native_rom/reference/full_v4_source_dynamics_adapter.c",
+      "sha256": "47bca1ca11bcfc9a54b3d6956ca901826d4bef01729cc2e8f9b5e139f504478b"
+    },
+    "source_compile": {
+      "path": "dev/native_rom/diagnose_source_flux_initial.py",
+      "sha256": "b1d040bedff3eb88ee644ede9098c7807ab8a3e2a9ca6b8bcfe9bd35fec4d7bb"
+    },
+    "source_mode_helper": {
+      "path": "dev/native_rom/diagnose_source_wheel_mode.py",
+      "sha256": "97fa1d42f7c893fa342d4561bf6092c6a12babc6d4c3a0fadf9bd2e8707b7c99"
+    },
+    "source_dynamics_helper": {
+      "path": "dev/native_rom/diagnose_source_wheel_dynamics.py",
+      "sha256": "4733e82f7657be6c887ffd16802e696a14cf685adbb3288f3cbad5495584332b"
+    },
+    "qualifier": {
+      "path": "dev/native_rom/qualify_generator.py",
+      "sha256": "df9bffb614b87e82b5a8da47212cb01312ad4d0cb9d687d929570df134954174"
+    }
+  },
+  "gates": {
+    "delta_t_max_abs_s": 0.0,
+    "cadence_max_abs_M": 1e-10,
+    "epoch_residual_max_abs_s": 2e-9,
+    "time_origin_max_abs_M": 1e-12
+  },
+  "protocol": {
+    "source_only": "Compile existing development-only full source mode and low-dynamics adapters against the separately pinned LAL source and wheel. Generate the same exact row at the requested Momega=0.04 and cap Momega=10^-3/2. Verify identical low arrays/NQC coefficients, unique exact h22 suffix, discrete epoch offset, and requested-frequency replay against the frozen v5 source control. No native waveform is run in this stage.",
+    "epoch_definition": "Pinned non-PA v4 C sets tc=-Msec*(low restart time+high relative orbital-frequency peak time) before crop, then adds kMin*deltaT. The cap-frequency call takes fStart=fMin and kMin=0, exposing the uncut corrected mode. Its GPS epoch yields the source orbital peak time up to nanosecond rounding. Compare that time to the low-array endpoint, and map cropped sample i to cap time (kMin+i)*0.5 M only when the suffix and epoch gates pass.",
+    "failure_policy": "Write a failed_validity result with numerical controls if any finite/suffix/epoch/dynamics/NQC/replay check fails. Do not use a failed source stage for native cross-model phase attribution.",
+    "resource_bound": "One serial local source-only run: two full-mode calls, two low-dynamics calls, two NQC coefficient calls and two adapter compiles; expected 30-90 seconds, budget 3 minutes and under 1 GiB. No production or pinned-source edits."
+  }
+}

@@ -2957,6 +2957,18 @@ attribute the much larger corrected full-mode phase residual. A separately
 reported peak-epoch projection assumes a source low/full time mapping whose
 prior full-mode reconstruction differs by `0.004486` L2; its milliradian
 phase differences are conditional and cannot establish a cause.
+The [source-only full-mode epoch check](evidence/2026-09-25/source_aligned_cap_full_epoch_suffix_v2.json)
+fixes that chart directly from the pinned implementation. Its uncropped
+cap-start corrected `h22` has 2685 samples; the requested-frequency mode is
+the unique bitwise-exact suffix beginning at sample 805. The two calls have
+identical low-stage dynamics and NQC coefficients, and their GPS epochs agree
+with an 805-sample crop to `3.22e-10 s`. Requested sample zero is therefore
+at `402.5 M` on the cap-time grid. The earlier low-endpoint mapping missed it
+by `0.05312408 M` because the source high-stage peak lies slightly beyond the
+low endpoint. This verifies a source time convention; the native corrected
+mode and its phase residual still need comparison on that exact chart. The
+[first runner attempt](evidence/2026-09-25/source_aligned_cap_full_epoch_suffix.json)
+records a JSON-serialization error and provides no numerical conclusion.
 
 Three frozen warm-gradient attempts
 ([Torch](evidence/2026-09-25/native_warm_start_gradient.json),

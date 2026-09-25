@@ -1,0 +1,77 @@
+{
+  "cap_Momega": 0.03162277660168379,
+  "capacity": 50000,
+  "gates": {
+    "cadence_max_abs_M": 1e-10,
+    "delta_t_max_abs_s": 0.0,
+    "epoch_residual_max_abs_s": 2e-09,
+    "time_origin_max_abs_M": 1e-12
+  },
+  "gsl_include": "/usr/local/include",
+  "headers": "/tmp/diffgw-lalsuite-pinned-53acc0c/merged-include",
+  "inputs": {
+    "dynamics_adapter": {
+      "path": "dev/native_rom/reference/full_v4_source_dynamics_adapter.c",
+      "sha256": "47bca1ca11bcfc9a54b3d6956ca901826d4bef01729cc2e8f9b5e139f504478b"
+    },
+    "mode_adapter": {
+      "path": "dev/native_rom/reference/full_v4_source_mode_adapter.c",
+      "sha256": "59d8d7dd6547e84cc53b2ecb76005195bb54174c481146f88fc257a3abf7fcf4"
+    },
+    "qualifier": {
+      "path": "dev/native_rom/qualify_generator.py",
+      "sha256": "df9bffb614b87e82b5a8da47212cb01312ad4d0cb9d687d929570df134954174"
+    },
+    "source_compile": {
+      "path": "dev/native_rom/diagnose_source_flux_initial.py",
+      "sha256": "b1d040bedff3eb88ee644ede9098c7807ab8a3e2a9ca6b8bcfe9bd35fec4d7bb"
+    },
+    "source_dynamics_helper": {
+      "path": "dev/native_rom/diagnose_source_wheel_dynamics.py",
+      "sha256": "4733e82f7657be6c887ffd16802e696a14cf685adbb3288f3cbad5495584332b"
+    },
+    "source_mode_helper": {
+      "path": "dev/native_rom/diagnose_source_wheel_mode.py",
+      "sha256": "97fa1d42f7c893fa342d4561bf6092c6a12babc6d4c3a0fadf9bd2e8707b7c99"
+    },
+    "source_plan": {
+      "path": "dev/native_rom/evidence/2026-09-24/source_flux_initial_plan.json",
+      "sha256": "1167199c8f954f97a5905a1e3b2f67d1555e984e5f1da0a0fc42a77a925f96ea"
+    },
+    "v1_failed_result": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_cap_full_epoch_suffix.json",
+      "sha256": "71cb27691cb5213eaeac150dcb679ac858f6298f3d841a71dfb5aca9d219fdae"
+    },
+    "v1_plan": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_cap_full_epoch_suffix_plan.json",
+      "sha256": "0ff1a908941afec522b0ee850784f6716b0719fe6756e5e1d467506716122a56"
+    },
+    "v1_runner": {
+      "path": "dev/native_rom/diagnose_source_aligned_cap_full_epoch_suffix.py",
+      "sha256": "a8e746b34a07e3b5ef8d9c5de1c8de219b807ef270550591914b6386988bd481"
+    },
+    "v5_result": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_native_cap_full_crop_v5.json",
+      "sha256": "2c167f1a06faff7734c3a45896d829447969b99a326c9515852b0b7b4d7c9ef3"
+    }
+  },
+  "protocol": {
+    "epoch_definition": "Pinned non-PA v4 C sets tc=-Msec*(low restart time+high relative orbital-frequency peak time) before crop, then adds kMin*deltaT. The cap-frequency call takes fStart=fMin and kMin=0, exposing the uncut corrected mode. Its GPS epoch yields the source orbital peak time up to nanosecond rounding. Compare that time to the low-array endpoint, and map cropped sample i to cap time (kMin+i)*0.5 M only when the suffix and epoch gates pass.",
+    "failure_policy": "Write a failed_validity result with numerical controls if any finite/suffix/epoch/dynamics/NQC/replay check fails. Do not use a failed source stage for native cross-model phase attribution.",
+    "resource_bound": "One serial local source-only run: two full-mode calls, two low-dynamics calls, two NQC coefficient calls and two adapter compiles; expected 30-90 seconds, budget 3 minutes and under 1 GiB. No production or pinned-source edits.",
+    "source_only": "Compile existing development-only full source mode and low-dynamics adapters against the separately pinned LAL source and wheel. Generate the same exact row at the requested Momega=0.04 and cap Momega=10^-3/2. Verify identical low arrays/NQC coefficients, unique exact h22 suffix, discrete epoch offset, and requested-frequency replay against the frozen v5 source control. No native waveform is run in this stage.",
+    "v2_change": "Only convert NumPy scalar check values to Python bool before JSON serialization; record runner_error on an exception after initial output. All numerical calls and gates are unchanged from v1."
+  },
+  "release_qualified": false,
+  "row_tuple": [
+    30.0,
+    20.0,
+    0.8,
+    0.6,
+    0.04
+  ],
+  "schema": "diffgw.seobnrv4.source-cap-full-epoch-suffix-plan.v2",
+  "script_sha256": "d5bd7869f193858b487b5113a645141076074d30d84a5c7cf854a6f7501a8fb7",
+  "source_root": "/Users/xangma/repos/lalsuite-git",
+  "step_M": 0.5
+}
