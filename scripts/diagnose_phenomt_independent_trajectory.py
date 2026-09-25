@@ -4,14 +4,17 @@ The carrier is the only production input to the reference path.  Its scalar
 ``v(t/M)`` values drive the paper-derived mpmath RHS, a SciPy Brent event root,
 adaptive DOP853 evolution, tangent transport, and independent Euler-angle
 reconstruction.  Public LAL binaries supply only unmodified initial-rate and
-relative-trajectory observations; no implementation source is inspected and
-no binary output is fitted or translated into production equations.
+relative-orientation observations reconstructed from their Euler-angle series;
+their internal trajectory state is not observable.  No implementation source
+is inspected and no binary output is fitted or translated into production
+equations.
 """
 
 from __future__ import annotations
 
 import argparse
 import datetime
+import importlib.metadata
 import json
 import math
 from pathlib import Path
@@ -111,7 +114,7 @@ def _public_numerical_rotations(case, rate):
     return times, rotations
 
 
-def _public_trajectory_comparison(case, rate, trajectory, total_seconds, basis):
+def _public_orientation_comparison(case, rate, trajectory, total_seconds, basis):
     public_times, public_rotations = _public_numerical_rotations(case, rate)
     reference_seconds = trajectory.reference_time * total_seconds
     clock_shift = reference_seconds - public_times[0]
@@ -137,6 +140,16 @@ def _public_trajectory_comparison(case, rate, trajectory, total_seconds, basis):
     selected_public_times = public_times[use]
     return dict(
         public_model_options=dict(precession_version=300, final_spin_mod=4),
+        measurement_scope=(
+            "Rotations reconstructed from public alpha, cos(beta), and gamma are compared "
+            "with the independent paper-derived trajectory rotation; the public internal "
+            "orbital-axis and ODE state are not exposed."
+        ),
+        localization=(
+            "Pre-merger orientation/rotation residual after the reference event; public "
+            "trajectory evolution, Euler-angle construction, and carrier/time mapping "
+            "remain unresolved alternatives."
+        ),
         alignment=(
             "The first public sample and the independently solved carrier event are both "
             "the supplied f_ref event; R(first)^T R(t) removes their fixed initial frames. "
@@ -336,7 +349,7 @@ def diagnose(case, samples, sample_rate):
                 _relative_rotations(native_rotation_from_reference),
             ))),
         ),
-        public_binary_minus_independent_trajectory=_public_trajectory_comparison(
+        public_binary_minus_independent_orientation=_public_orientation_comparison(
             case, sample_rate, tight, total_seconds, basis
         ),
         initial_spin_even_rate=_initial_even_rate(m1, m2, spin1, fref, sample_rate),
@@ -353,17 +366,27 @@ def main():
     if args.samples < 3 or args.sample_rate <= 0:
         parser.error("samples must be at least three and sample rate must be positive")
     result = diagnose(args.case, args.samples, args.sample_rate)
+    command = (
+        f"PYTHONPATH=src {sys.executable} scripts/diagnose_phenomt_independent_trajectory.py "
+        f"--case {args.case} --samples {args.samples} --sample-rate {args.sample_rate}"
+    )
+    if args.output:
+        command += f" --output {args.output}"
     receipt = dict(
         generated_utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),
-        reproduction=(
-            "PYTHONPATH=src python scripts/diagnose_phenomt_independent_trajectory.py "
-            f"--case {args.case} --samples {args.samples} --sample-rate {args.sample_rate} --output receipt.json"
+        reproduction=command,
+        execution=dict(
+            host=platform.node(),
+            working_directory=str(Path.cwd().resolve()),
+            command=command,
         ),
         versions=dict(
             python=platform.python_version(),
             numpy=np.__version__,
             scipy=scipy.__version__,
             torch=torch.__version__,
+            lalsuite=importlib.metadata.version("lalsuite"),
+            lal=lal.__version__,
             lalsimulation=ls.__version__,
         ),
         dtype="float64 with 50-decimal mpmath scalar RHS",
@@ -371,7 +394,12 @@ def main():
         conventions=dict(
             reference=(
                 "Published equations only; public binary used as an unmodified initial-rate and "
-                "relative-trajectory observation."
+                "relative-orientation observation reconstructed from public Euler angles."
+            ),
+            evidence_boundary=(
+                "The public binary does not expose its internal orbital-axis or ODE state, so "
+                "this diagnostic cannot distinguish public trajectory evolution from public "
+                "angle construction or carrier/time mapping."
             ),
             production="No production equation or coefficient is modified by this diagnostic.",
             source_restriction="No LAL implementation source is inspected or translated; no binary output is fitted.",

@@ -117,3 +117,24 @@ def test_scalar_meco_and_ringdown_continuations_are_continuous():
     assert abs(beta[1] - beta[0]) < 1e-8
     assert abs(alpha[-1] - alpha[-2] - 1.7 * epsilon) < 1e-13
     assert gamma[-1] == pytest.approx(gamma[-2] - np.cos(beta[-2]) * 1.7 * epsilon, abs=2e-13)
+
+
+def test_msa_analytical_onset_is_strictly_pre_meco_and_reports_first_crossing():
+    pytest.importorskip("lal")
+    pytest.importorskip("lalsimulation")
+    from scripts.diagnose_phenomt_msa_scalar_angles import _analytical_onset
+
+    times = np.asarray([-0.3, -0.2, -0.1, 0.0])
+    native = np.zeros((3, len(times)))
+    observed = np.zeros_like(native)
+    observed[0] = (0.0, 2e-4, 0.5, 1.0)
+
+    result = _analytical_onset(times, -0.15, native, observed)
+
+    assert result["samples"] == 2
+    assert result["last_time_seconds"] == pytest.approx(-0.2)
+    assert result["relative_rotation_max_radians"] == pytest.approx(2e-4)
+    crossing = result["first_relative_rotation_crossings"]["0.0001"]
+    assert crossing["sample_index"] == 1
+    assert crossing["time_seconds"] == pytest.approx(-0.2)
+    assert result["first_relative_rotation_crossings"]["0.001"] is None

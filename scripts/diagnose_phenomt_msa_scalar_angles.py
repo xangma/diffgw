@@ -11,6 +11,7 @@ from __future__ import annotations
 
 import argparse
 import datetime
+import importlib.metadata
 import json
 import math
 from pathlib import Path
@@ -418,16 +419,24 @@ def main():
     if args.sample_rate <= 0 or args.table_nodes < 257 or args.table_nodes % 2 == 0:
         parser.error("sample rate must be positive; table nodes must be odd and at least 257")
     result = diagnose(args.case, args.sample_rate, args.table_nodes)
+    command = (
+        f"PYTHONPATH=src {sys.executable} scripts/diagnose_phenomt_msa_scalar_angles.py "
+        f"--case {args.case} --sample-rate {args.sample_rate} --table-nodes {args.table_nodes}"
+    )
+    if args.output:
+        command += f" --output {args.output}"
     receipt = dict(
         generated_utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),
-        reproduction=(
-            "PYTHONPATH=src python scripts/diagnose_phenomt_msa_scalar_angles.py "
-            f"--case {args.case} --sample-rate {args.sample_rate} --table-nodes {args.table_nodes} "
-            "--output receipt.json"
+        reproduction=command,
+        execution=dict(
+            host=platform.node(),
+            working_directory=str(Path.cwd().resolve()),
+            command=command,
         ),
         versions=dict(
             python=platform.python_version(), numpy=np.__version__, scipy=scipy.__version__,
-            torch=torch.__version__, lalsimulation=ls.__version__,
+            torch=torch.__version__, lalsuite=importlib.metadata.version("lalsuite"),
+            lal=lal.__version__, lalsimulation=ls.__version__,
         ),
         dtype="float64",
         parameters=parameters(args.case),
