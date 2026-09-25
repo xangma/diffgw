@@ -1,4 +1,4 @@
-"""Differentiable XPNR angle joins from Hamilton et al. (2025), Eqs. (17)--(20).
+"""Differentiable XPNR angle joins from Hamilton et al. (2025), Eqs. (17)--(21).
 
 These component kernels do not choose SpinTaylor stop events or change public
 XPNR dispatch. Their boundary data must come from a separately qualified PN
@@ -53,3 +53,15 @@ def beta_exterior_continuation(
     curvature = (r0 - r1 - derivative_u1 * delta) / delta**2
     r = r1 + derivative_u1 * (u - u1) + curvature * (u - u1) ** 2
     return beta_ringdown_value + torch.exp(-kappa * (mf - end)) * r / mf**2
+
+
+def beta_final_rescaling(
+    mf, connection, beta_value, beta_at_connection, beta_slope_at_connection,
+    target_value, target_slope,
+):
+    """Eq. (21): quadratic low-frequency-unity beta rescaling with a C1 join."""
+    k_connection = target_value / beta_at_connection
+    dk_connection = (target_slope - k_connection * beta_slope_at_connection) / beta_at_connection
+    k2 = (dk_connection * connection - (k_connection - 1)) / connection**2
+    k1 = dk_connection - 2 * k2 * connection
+    return beta_value * (1 + k1 * mf + k2 * mf**2)

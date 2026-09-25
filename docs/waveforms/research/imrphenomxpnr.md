@@ -10,9 +10,10 @@ merger-ringdown ansatzes and higher-mode frequency map have an independent
 stdlib scalar reference and agree with both Torch and JAX.  During this audit,
 the implemented `B3` transform was corrected from `B2 * Lambda_B3` to the
 published `chi sin(theta) [exp(Lambda_B3) - 200]` relation.
-The printed alpha/beta connection and exterior-continuation forms now also
-have isolated scalar/Torch/JAX kernels. They are not wired into the public
-waveform, and the beta rescaling in Eq. (21) remains open.
+The printed alpha/beta connection, exterior-continuation, and final quadratic
+beta-rescaling forms now also have isolated scalar/Torch/JAX kernels. They are
+not wired into the public waveform; the preceding beta taper and
+emission-direction rescaling still require their own source-qualified path.
 
 Full-waveform qualification remains failed.  The public route uses
 reference-frequency rather than transition-frequency spins in the effective
@@ -44,7 +45,7 @@ composition.
 | `XPNR-MAP` | XPNR Eqs. (3)–(6), evaluated with spins evolved to the SpinTaylor stopping/transition frequency and projected relative to instantaneous `Lhat` | Scalar terminal-state map is rotation-invariant; Torch/JAX component algebra agrees when supplied the same aligned-frame spins | Geometry pass; public caller supplies the wrong epoch and no terminal state |
 | `XPNR-FIT` | XO4a Eq. (35), `Lambda = sum lambda_pqr eta^p chi^q cos(theta)^r`, plus XPNR Eq. (22) freezing | Scalar/Torch/JAX values agree; tensor duplication is not independent provenance | Equation pass; assets unresolved |
 | `XPNR-ANGLES-MR` | XO4a Eqs. (25)–(34), XPNR Eqs. (15)–(16), including stated guards | Scalar values and frequency derivatives agree in Torch/JAX | Component pass after `B3` correction |
-| `XPNR-ATTACH` | XPNR Eq. (19) for alpha and Eqs. (20)–(21) for beta, matching inspiral/merger-ringdown values and derivatives | Standalone Eq. (19) and Eq. (20) kernels reproduce synthetic published-form polynomials and their derivatives; Eq. (21) and the public connection remain absent | Partial component pass; full route fail |
+| `XPNR-ATTACH` | XPNR Eq. (19) for alpha and Eqs. (20)–(21) for beta, matching inspiral/merger-ringdown values and derivatives | Standalone Eq. (19)–(21) kernels reproduce synthetic published-form polynomials, rescaling, and derivatives; the preceding beta taper/emission-direction map and public connection remain absent | Component forms pass; full route fail |
 | `XPNR-CONT` | XPNR Eqs. (17)–(18) analytic exterior continuations and Eq. (22) fit-coordinate freeze | Standalone Eq. (17)–(18) kernels reproduce synthetic published-form functions and derivatives; current public route still window-blends the angle tracks | Component pass; public route fail |
 | `XPNR-CARRIER` | XPNR Eqs. (7)–(8): tuned XHM-CP deviations and effective ringdown frequencies | Independent scalar equations exist; neither is wired into the waveform | Fail |
 | `XPNR-ASYM22` | XPNR Eqs. (10)–(13), unequal `m=+2` and `m=-2` coprecessing modes | Native XHM carrier generates negative-m content by symmetry | Fail |
@@ -157,10 +158,18 @@ derivative at the latter. The implementation centers the exponential at the
 latter frequency to reduce overflow/underflow risk; this only rescales the
 three coefficients and leaves the paper's function unchanged.
 
+For Eq. (21), `k(f)=1+k1 f+k2 f²` multiplies the already-tapered,
+emission-direction beta. Given that base beta and its derivative at the
+merger-ringdown connection, two linear conditions fix `k1,k2` so the final
+value and derivative match the target there. The constant `1` gives the
+stated low-frequency unity limit. The scalar reference rejects a zero base
+beta at the join, for which the coefficients are not uniquely determined by
+this construction; the frontend kernels assume a qualified nonzero input.
+
 The tests use synthetic coefficients rather than inherited calibration
 tables. They establish form and differentiable alignment, not that the public
-waveform chooses the correct boundary data, applies Eq. (21)'s beta rescaling,
-or reproduces a calibrated XPNR waveform.
+waveform chooses the correct boundary data, performs the preceding beta taper
+and emission-direction mapping, or reproduces a calibrated XPNR waveform.
 
 ## Carrier and reduction relationships
 
@@ -275,8 +284,8 @@ history from which to establish their origin or terms.
 
 | Evidence class | Result | What it establishes |
 | --- | --- | --- |
-| Paper fidelity | Partial pass | Map, polynomial, guarded transforms, MR ansatzes, standalone Eq. (17)–(20) forms, carrier-deformation equation, effective ringdown equation, and HM map have scalar encodings; Eq. (21), public angle composition, beta bound, and carrier/asymmetry composition remain open |
-| Scalar-reference agreement | Pass for scoped components | Existing 47 component cases plus four published-form scalar join cases cover fit values, transforms, ansatz values/derivatives, terminal-state geometry, map, window interpretation, HM joins and reductions |
+| Paper fidelity | Partial pass | Map, polynomial, guarded transforms, MR ansatzes, standalone Eq. (17)–(21) forms, carrier-deformation equation, effective ringdown equation, and HM map have scalar encodings; public angle composition, preceding beta taper/emission-direction map, beta bound, and carrier/asymmetry composition remain open |
+| Scalar-reference agreement | Pass for scoped components | Existing 47 component cases plus five published-form scalar join/rescaling cases cover fit values, transforms, ansatz values/derivatives, terminal-state geometry, map, window interpretation, HM joins and reductions |
 | Torch/JAX parity | Pass for scoped components | Both backends agree with scalar values and derivatives; a dense JAX grid is recorded in the qualification JSON |
 | Calibration asset provenance | Provisional gate retained | Published equations, a partial historical procedure, raw CC BY inputs, and an MIT fitting tool are distinguished from the unsupported inherited tensors; a two-case manifest test pins that classification and the unchanged payload |
 | External parity | Not qualified | The four optional LAL/PyCBC cases are black-box acceptance gates only; their `0.99` threshold is not an observed lower bound or domain claim |

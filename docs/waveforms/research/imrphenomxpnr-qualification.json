@@ -11,13 +11,13 @@
       "XO4a Eq. 35 calibration polynomial",
       "XO4a Eqs. 25-34 guarded alpha/beta parameter transforms",
       "XPNR Eqs. 15-16 merger-ringdown angle ansatzes",
-      "XPNR Eqs. 17-20 standalone analytic continuation and angle-connection forms with supplied boundary data",
+      "XPNR Eqs. 17-21 standalone analytic continuation, angle-connection, and quadratic beta-rescaling forms with supplied boundary data",
       "XPNR Eqs. 7-8 standalone carrier deformation and effective-ringdown relations",
       "XO4a Eqs. 50-52 higher-mode frequency map"
     ],
     "failed_or_missing_components": [
       "exact terminal-state evolution and spin-sampling procedure; public route instead supplies reference-frequency spins",
-      "XPNR Eq. 21 beta rescaling and composition of Eqs. 17-20 into the public angle route",
+      "preceding beta taper and optimal-emission-direction map, plus composition of Eqs. 17-21 into the public angle route",
       "published arctangent beta bounding prescription",
       "XHM-CP carrier deviations and their unprinted u_k assets",
       "effective-ringdown relation in waveform composition",
@@ -79,16 +79,16 @@
     "promotion_gate": "Supply an independently specified and licensed terminal-state evolution and explicit sampling event, return terminal S1, S2, and Lhat, demonstrate convergence and stop-event stability, convert each spin to chi_i = S_i/m_i^2, then feed chi1, chi2, and Lhat to the scalar map. The AST canary and scalar invariants are component-boundary checks, not physical terminal-state validation."
   },
   "angle_join_components": {
-    "status": "standalone_equations_17_to_20_pass_public_composition_and_equation_21_open",
+    "status": "standalone_equations_17_to_21_pass_public_composition_open",
     "source": "Hamilton et al., arXiv:2507.02604v1, Eqs. 17-21",
     "scope": "Caller-supplied PN/MR boundary values and derivatives; synthetic coefficients in the published forms, independent of inherited calibration tensors and LAL source.",
     "reference": "src/diffgw_reference/xpnr_angles.py",
     "torch": "src/torchwave/approximants/pnr_attachment.py",
     "jax": "src/jaxwave/approximants/pnr_attachment.py",
     "test": "tests/test_xpnr_attachment_math_reference.py",
-    "result": "12 passed on len with Python 3.12.3, Torch 2.14.0, JAX 0.11.2, NumPy 2.5.3, SciPy 1.18.1, and pytest 9.1.1; printed-form values plus Torch/JAX derivatives and JAX JIT.",
+    "result": "15 passed on len with Python 3.12.3, Torch 2.14.0, JAX 0.11.2, NumPy 2.5.3, SciPy 1.18.1, and pytest 9.1.1; printed-form values plus Torch/JAX derivatives and JAX JIT.",
     "open": [
-      "Eq. 21 beta rescaling",
+      "preceding beta taper and optimal-emission-direction map",
       "paper-specified PN/MR boundary selection and SpinTaylor terminal state",
       "wiring into public Torch/JAX XPNR routes",
       "external complex-waveform and physical validation"
@@ -99,7 +99,7 @@
     "command": "JAX_ENABLE_X64=1 JAX_PLATFORMS=cpu OMP_NUM_THREADS=1 pytest -q tests/test_xpnr_component_evidence.py",
     "result": "46 passed",
     "reference_module": "src/diffgw_reference/xpnr_angles.py",
-    "reference_module_sha256": "0184f5730c125afd19713d2a5dafb83a65cf2bbc7ee83ba6b1559232ecc3ecc4",
+    "reference_module_sha256": "d16448046a63708475ed3862e4de2bb1931acfe21c3621653ba93f680f184f12",
     "result_note": "The recorded two-frontend result predates the added pure-stdlib terminal-state geometry case; the current len result is recorded under spin_at_attachment."
   },
   "torch_jax_parity": {

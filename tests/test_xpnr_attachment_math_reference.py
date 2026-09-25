@@ -1,8 +1,8 @@
 """Paper-form checks for the separately scoped XPNR angle joins.
 
-Hamilton et al., arXiv:2507.02604v1, Eqs. (17)--(20). These tests use
+Hamilton et al., arXiv:2507.02604v1, Eqs. (17)--(21). These tests use
 synthetic coefficients in the printed ansatzes, not inherited fit tensors or
-LAL source. Eq. (21)'s beta rescaling and the public waveform are out of scope.
+LAL source. The preceding beta taper and the public waveform are out of scope.
 """
 
 import math
@@ -114,3 +114,60 @@ def test_xpnr_attachment_jax_jit_value_and_join_derivative(name):
         f_array = jnp.asarray(f, dtype=jnp.float64)
         assert math.isclose(float(compiled(f_array)), source(f), rel_tol=2e-12, abs_tol=2e-12)
         assert math.isclose(float(compiled_slope(f_array)), derivative(f), rel_tol=2e-10, abs_tol=2e-10)
+
+
+def _base_beta(f):
+    return 0.4 + 2.0 * f + 0.5 * f**2
+
+
+def _base_beta_prime(f):
+    return 2.0 + f
+
+
+def _rescaled_beta(f):
+    return _base_beta(f) * (1.0 - 0.7 * f + 2.4 * f**2)
+
+
+def _rescaled_beta_prime(f):
+    return _base_beta_prime(f) * (1.0 - 0.7 * f + 2.4 * f**2) + _base_beta(f) * (-0.7 + 4.8 * f)
+
+
+def _rescale_boundary():
+    return END, _base_beta(END), _base_beta_prime(END), _rescaled_beta(END), _rescaled_beta_prime(END)
+
+
+def test_xpnr_beta_final_rescaling_scalar_matches_printed_quadratic():
+    for f in (0.0, 0.02, 0.05, END):
+        actual = scalar.beta_final_rescaling(f, END, _base_beta(f), *_rescale_boundary()[1:])
+        assert math.isclose(actual, _rescaled_beta(f), rel_tol=2e-12, abs_tol=2e-12)
+    with pytest.raises(ValueError, match="nonzero base beta"):
+        scalar.beta_final_rescaling(0.05, END, _base_beta(0.05), 0.0, 1.0, 0.5, 1.0)
+
+
+def test_xpnr_beta_final_rescaling_torch_value_and_join_derivative():
+    import torch
+
+    from torchwave.approximants.pnr_attachment import beta_final_rescaling
+
+    boundary = tuple(torch.tensor(value, dtype=torch.float64) for value in _rescale_boundary())
+    for f in (0.0, 0.02, 0.05, END):
+        mf = torch.tensor(f, dtype=torch.float64, requires_grad=True)
+        actual = beta_final_rescaling(mf, boundary[0], _base_beta(mf), *boundary[1:])
+        slope = torch.autograd.grad(actual, mf)[0]
+        assert math.isclose(actual.item(), _rescaled_beta(f), rel_tol=2e-12, abs_tol=2e-12)
+        assert math.isclose(slope.item(), _rescaled_beta_prime(f), rel_tol=2e-10, abs_tol=2e-10)
+
+
+def test_xpnr_beta_final_rescaling_jax_jit_value_and_join_derivative():
+    import jax
+    import jax.numpy as jnp
+
+    from jaxwave.approximants.pnr_attachment import beta_final_rescaling
+
+    boundary = tuple(jnp.asarray(value, dtype=jnp.float64) for value in _rescale_boundary())
+    compiled = jax.jit(lambda f: beta_final_rescaling(f, boundary[0], _base_beta(f), *boundary[1:]))
+    compiled_slope = jax.jit(jax.grad(lambda f: beta_final_rescaling(f, boundary[0], _base_beta(f), *boundary[1:])))
+    for f in (0.0, 0.02, 0.05, END):
+        mf = jnp.asarray(f, dtype=jnp.float64)
+        assert math.isclose(float(compiled(mf)), _rescaled_beta(f), rel_tol=2e-12, abs_tol=2e-12)
+        assert math.isclose(float(compiled_slope(mf)), _rescaled_beta_prime(f), rel_tol=2e-10, abs_tol=2e-10)

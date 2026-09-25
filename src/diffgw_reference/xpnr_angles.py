@@ -343,6 +343,29 @@ def beta_exterior_continuation(
     return beta_ringdown_value + math.exp(-kappa * (mf - end)) * r / mf**2
 
 
+def beta_final_rescaling(
+    mf: float, connection: float, beta_value: float,
+    beta_at_connection: float, beta_slope_at_connection: float,
+    target_value: float, target_slope: float,
+) -> float:
+    """XPNR Eq. (21), ``k(f) beta(f)`` with a C1 connection.
+
+    The quadratic ``k(f) = 1 + k1*f + k2*f²`` is determined by the value
+    and derivative of the already-tapered, emission-direction beta at the
+    merger-ringdown connection. The caller supplies that base beta and its
+    connection data; this does not specify the preceding taper or rescaling.
+    """
+    _finite(mf, connection, beta_value, beta_at_connection,
+            beta_slope_at_connection, target_value, target_slope)
+    if mf < 0.0 or connection <= 0.0 or beta_at_connection == 0.0:
+        raise ValueError("require mf >= 0, connection > 0, and nonzero base beta at connection")
+    k_connection = target_value / beta_at_connection
+    dk_connection = (target_slope - k_connection * beta_slope_at_connection) / beta_at_connection
+    k2 = (dk_connection * connection - (k_connection - 1.0)) / connection**2
+    k1 = dk_connection - 2.0 * k2 * connection
+    return beta_value * (1.0 + k1 * mf + k2 * mf**2)
+
+
 def angle_calibration_window(q: float, chi: float) -> float:
     """Evaluate the backend's endpoint-completing interpretation of Eqs. (38)--(40).
 
@@ -422,6 +445,7 @@ __all__ = [
     "beta_merger_ringdown",
     "beta_connection",
     "beta_exterior_continuation",
+    "beta_final_rescaling",
     "beta_parameters",
     "beta_ringdown",
     "deformed_carrier_coefficient",
