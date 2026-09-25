@@ -1,0 +1,420 @@
+{
+  "comparisons": {
+    "dense_row_replaced_coefficient_shift_by_stencil": {
+      "0.025": [
+        0.0010432136734621622,
+        -0.05638211802533988
+      ],
+      "0.05": [
+        -0.000573150518704324,
+        0.034658989736271906
+      ],
+      "0.1": [
+        2.1204089200921317e-05,
+        0.0011820580177754891
+      ],
+      "0.2": [
+        0.0001639697250794825,
+        -0.006859188579255715
+      ]
+    },
+    "dense_row_shift_by_stencil": {
+      "0.025": [
+        6.601859799614494e-09,
+        -2.5268210556222905e-10
+      ],
+      "0.05": [
+        -1.831264954488352e-08,
+        -3.3425631331196535e-10
+      ],
+      "0.1": [
+        -7.144203978404207e-09,
+        -2.254345491375508e-10
+      ],
+      "0.2": [
+        -4.575821839492011e-09,
+        -2.037829382405779e-10
+      ]
+    },
+    "local_row_shift": [
+      3.457408961069549e-08,
+      3.341733340409957e-10
+    ]
+  },
+  "errors": [],
+  "grids": {
+    "0.001953125": {
+      "centered_dop853": [
+        {
+          "atol": 1e-12,
+          "center_state": [
+            3.303551456937595,
+            44.48529841714533,
+            -0.0760499105336267,
+            2.239688224291074
+          ],
+          "dense_row_replaced_coefficients": {
+            "0.025": [
+              43.112730006848196,
+              -1097.9488086174358
+            ],
+            "0.05": [
+              43.11617620406025,
+              -1098.1429152723344
+            ],
+            "0.1": [
+              43.116984167949866,
+              -1098.1884237439165
+            ],
+            "0.2": [
+              43.117187470377694,
+              -1098.199874729386
+            ]
+          },
+          "nfev": 214,
+          "phase_second_rows": {
+            "0.025": [
+              0.000814530551003963,
+              2.5276906568085067e-05
+            ],
+            "0.05": [
+              0.0008145841015411158,
+              2.5277097355210027e-05
+            ],
+            "0.1": [
+              0.000814596663738463,
+              2.527714240807663e-05
+            ],
+            "0.2": [
+              0.0008145998742909465,
+              2.5277155694621887e-05
+            ]
+          },
+          "rtol": 1e-11
+        },
+        {
+          "atol": 1e-13,
+          "center_state": [
+            3.303551456937596,
+            44.48529841714533,
+            -0.07604991053362516,
+            2.2396882242910734
+          ],
+          "dense_row_replaced_coefficients": {
+            "0.025": [
+              43.11525870031516,
+              -1098.091236981204
+            ],
+            "0.05": [
+              43.11670501152327,
+              -1098.1727002908392
+            ],
+            "0.1": [
+              43.11713711460021,
+              -1098.1970384461085
+            ],
+            "0.2": [
+              43.117197883949196,
+              -1098.200461272582
+            ]
+          },
+          "nfev": 574,
+          "phase_second_rows": {
+            "0.025": [
+              0.0008145685696329488,
+              2.5276996481072425e-05
+            ],
+            "0.05": [
+              0.0008145915999134092,
+              2.5277098433770733e-05
+            ],
+            "0.1": [
+              0.00081459899244606,
+              2.5277149002505045e-05
+            ],
+            "0.2": [
+              0.0008145998451208196,
+              2.5277148773313742e-05
+            ]
+          },
+          "rtol": 1e-12
+        }
+      ],
+      "dense_tolerance_spread_by_stencil": {
+        "0.025": [
+          -3.801862898578003e-08,
+          -8.991298735755503e-11
+        ],
+        "0.05": [
+          -7.498372293413859e-09,
+          -1.078560706051961e-12
+        ],
+        "0.1": [
+          -2.3287075970887874e-09,
+          -6.59442841655024e-12
+        ],
+        "0.2": [
+          2.9170126925916195e-11,
+          6.9213081446695135e-12
+        ]
+      },
+      "input_sha256": "d994aa3ee85b1d4b4b9596f3c57378534eadd4934a2fae9b3fb24e31292697ba",
+      "local_minus_dense_phase_second_row_by_stencil": {
+        "0.025": [
+          -1.61469780411011e-08,
+          -7.23767747206575e-09
+        ],
+        "0.05": [
+          -3.9177258501568724e-08,
+          -7.339630170373788e-09
+        ],
+        "0.1": [
+          -4.6569791152376895e-08,
+          -7.390198904686608e-09
+        ],
+        "0.2": [
+          -4.742246591195234e-08,
+          -7.389969713383492e-09
+        ]
+      },
+      "local_phase_matrix": [
+        [
+          0.007130575457369524,
+          0.00012659725280619668
+        ],
+        [
+          0.0008145524226549077,
+          2.526975880360036e-05
+        ]
+      ],
+      "local_phase_rhs": [
+        0.16842127159422637,
+        0.007363886275799908
+      ],
+      "match_time_M": 137.65295033659578,
+      "nearest_omega_difference": 0.0,
+      "nearest_state": [
+        3.303580015081697,
+        44.48521421272769,
+        -0.07604785726806802,
+        2.2396962022816433
+      ],
+      "nearest_time_M": 137.65234375,
+      "samples": 77252
+    },
+    "0.00390625": {
+      "centered_dop853": [
+        {
+          "atol": 1e-12,
+          "center_state": [
+            3.303550032143891,
+            44.48530264024243,
+            -0.07605000739504528,
+            2.239687824847703
+          ],
+          "dense_row_replaced_coefficients": {
+            "0.025": [
+              43.114607535916676,
+              -1098.0569369394461
+            ],
+            "0.05": [
+              43.11697002755549,
+              -1098.1900036835489
+            ],
+            "0.1": [
+              43.116987344490795,
+              -1098.1909790555503
+            ],
+            "0.2": [
+              43.11707998185745,
+              -1098.1961968318003
+            ]
+          },
+          "nfev": 199,
+          "phase_second_rows": {
+            "0.025": [
+              0.0008145606576026586,
+              2.5276980221567106e-05
+            ],
+            "0.05": [
+              0.0008146025158408304,
+              2.5277313194625954e-05
+            ],
+            "0.1": [
+              0.0008146036401974568,
+              2.5277347733705812e-05
+            ],
+            "0.2": [
+              0.000814605273685015,
+              2.5277360484073343e-05
+            ]
+          },
+          "rtol": 1e-11
+        },
+        {
+          "atol": 1e-13,
+          "center_state": [
+            3.3035500321439053,
+            44.48530264024242,
+            -0.07605000739504586,
+            2.2396878248477052
+          ],
+          "dense_row_replaced_coefficients": {
+            "0.025": [
+              43.1142154866417,
+              -1098.0348548631787
+            ],
+            "0.05": [
+              43.11727816204198,
+              -1098.2073592805755
+            ],
+            "0.1": [
+              43.11711591051101,
+              -1098.1982205041263
+            ],
+            "0.2": [
+              43.117033914224116,
+              -1098.1936020840028
+            ]
+          },
+          "nfev": 580,
+          "phase_second_rows": {
+            "0.025": [
+              0.0008145619677731492,
+              2.5277249163177987e-05
+            ],
+            "0.05": [
+              0.0008146099125629541,
+              2.5277432690084045e-05
+            ],
+            "0.1": [
+              0.0008146061366500385,
+              2.5277374437054183e-05
+            ],
+            "0.2": [
+              0.0008146044209426591,
+              2.5277352556251983e-05
+            ]
+          },
+          "rtol": 1e-12
+        }
+      ],
+      "dense_tolerance_spread_by_stencil": {
+        "0.025": [
+          -1.3101704905444517e-09,
+          -2.6894161088070255e-10
+        ],
+        "0.05": [
+          -7.396722123687027e-09,
+          -1.1949545809098036e-10
+        ],
+        "0.1": [
+          -2.496452581658183e-09,
+          -2.670334837108425e-11
+        ],
+        "0.2": [
+          8.52742355894609e-10,
+          7.927821359864041e-12
+        ]
+      },
+      "input_sha256": "3b0b479db74f34223db201c9a47292b9b4df08e5ea9a4dabf30a32fd0ed7843b",
+      "local_minus_dense_phase_second_row_by_stencil": {
+        "0.025": [
+          -4.4119207852182096e-08,
+          -7.824532911668975e-09
+        ],
+        "0.05": [
+          -9.206399765714773e-08,
+          -8.008059817726749e-09
+        ],
+        "0.1": [
+          -8.828808474147659e-08,
+          -7.949806787865154e-09
+        ],
+        "0.2": [
+          -8.657237736213984e-08,
+          -7.927925985665065e-09
+        ]
+      },
+      "local_phase_matrix": [
+        [
+          0.007130597431431831,
+          0.00012659794845906123
+        ],
+        [
+          0.000814517848565297,
+          2.5269424630266318e-05
+        ]
+      ],
+      "local_phase_rhs": [
+        0.16842115424502424,
+        0.007363899589563891
+      ],
+      "match_time_M": 137.6744652291739,
+      "nearest_omega_difference": 0.0,
+      "nearest_state": [
+        3.3034880716229518,
+        44.4854853289139,
+        -0.07605446254788205,
+        2.239670515520408
+      ],
+      "nearest_time_M": 137.67578125,
+      "samples": 38656
+    }
+  },
+  "input_sha256": {
+    "capture_adapter": "5031905ab4803e23211590de414d962ab00e813daa5ad99d23b795c30f62e376",
+    "capture_base_adapter": "75da340954fd38c6fa4881a8d8a8bad53e9ed2f58d8d5e9839e15b77636276ac",
+    "dense_impl": "5900916a17f3d433016bd8d4a41e9c04cdd6b45b900da8368b0832bf61374cb1",
+    "field_adapter": "d674aecdc602024c539ff8a2040a842adceab3ca546c08e307724c2fccdd3113",
+    "peak_impl": "3badaf3696d4f8dfa5bb63f18682d91c5fad15e444f1c5e109a3210b5a73f778",
+    "prior_evidence": "9483c99ea1fcdf9e26f536623caf04b3406a0343649d3c22e83d40364f29d119",
+    "prior_script": "7914c4cbe196c48c605ced7e0438cca5062803c2173411c6936aba8ec5c004cb",
+    "source_flux_plan": "1167199c8f954f97a5905a1e3b2f67d1555e984e5f1da0a0fc42a77a925f96ea"
+  },
+  "instrumentation_sha256": "6e2478b785b70809019f4e0f425ec8c89d130f05e13d04d7b9386257a89cdc12",
+  "plan_sha256": "9db81e7fcbdd52efca9f0faa086e19f4974f948ffd65438e996613a5f6f06528",
+  "process": {
+    "argv": [
+      "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw/dev/native_rom/diagnose_source_aligned_fine_dense_phase.py",
+      "--source-root",
+      "/Users/xangma/repos/lalsuite-git",
+      "--headers",
+      "/tmp/diffgw-lalsuite-pinned-53acc0c/merged-include",
+      "--gsl-include",
+      "/usr/local/include",
+      "--json-out",
+      "dev/native_rom/evidence/2026-09-25/source_aligned_fine_dense_phase.json"
+    ],
+    "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+    "host": "RONI2",
+    "pid": 52685
+  },
+  "release_qualified": false,
+  "row": {
+    "chi1": 0.8,
+    "chi2": 0.8,
+    "mass1": 30.0,
+    "mass2": 20.0,
+    "omega_start": 0.04
+  },
+  "schema": "diffgw.seobnrv4.source-aligned-fine-dense-phase.v1",
+  "scope": {
+    "description": "Scalar CPU float64 numerical stability evidence only; no training or promotion.",
+    "development_only": true,
+    "independent_source_field": true,
+    "known_limitations": [
+      "Convergence cannot establish correctness of the equations or published model fidelity.",
+      "The adaptive prototype uses a diagnostic QNM spline with independently generated values and black-box-inferred knot metadata; this is not wholly literature-specified provenance.",
+      "Changing dt also changes the adaptive initial step and coarse/fine restart sampling; the grid check measures the complete generator's grid sensitivity.",
+      "No time, phase, amplitude, or coefficient fitting is performed.",
+      "No derivatives, batched execution, accelerators, or JAX are qualified here."
+    ],
+    "physics_validated": false,
+    "production_asset": false,
+    "production_promotion_allowed": false,
+    "training_generator_qualified": false
+  },
+  "script_sha256": "9ec3a3f6eacfb0979d24b9c69f1f095118276624aada75c4c8ef9fe1566af901",
+  "status": "diagnostic_complete"
+}

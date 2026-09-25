@@ -1871,6 +1871,20 @@ dominates this local coefficient drift. This algebraic attribution does not
 determine which derivative estimate approaches the continuum value or cure
 the historical source's more severe refitting sensitivity.
 
+The [independent fine-grid source-field check](evidence/2026-09-25/source_aligned_fine_dense_phase.json)
+replays both corrected-source NQC arrays by hash, captures their orbital states,
+and differentiates the phase basis along centered DOP853 integrations of the
+pinned source vector field. With `0.1` and `0.2 M` five-point stencils, the
+local fit's first phase-curvature entry lies about `8.7–8.8e-8` below the
+dense estimate at `0.00390625 M` and `4.7e-8` below it at `0.001953125 M`.
+The local entry shifts `+3.46e-8` between grids, whereas those two dense
+stencils shift `−7.14e-9` and `−4.58e-9`. Substituting the dense second-derivative
+row alone into each saved local phase solve reduces the adjacent `b2` change
+from `−0.1084` to `+0.00118` or `−0.00686`, respectively. The `0.025` and
+`0.05 M` stencils vary appreciably, so this is a bounded numerical attribution,
+not a certified continuum derivative or a validated NQC prescription. The
+historical full-waveform and absolute NR gates remain open.
+
 The [prospective q4 local-fit control](evidence/2026-09-25/source_q4_ultrafine_local_nqc_plan.json)
 recomputes those five coefficients with the same degree-four, `±2 M` local
 polynomial used in the earlier combined numerical control, then injects each
