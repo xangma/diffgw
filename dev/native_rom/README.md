@@ -2680,6 +2680,20 @@ controls. Whole-waveform complex relative L2 improves from `1.07509e-5` to
 single-row counterfactual; it establishes neither a complete numerical
 prescription nor source fidelity, domain convergence, or release qualification.
 
+The first [frozen residual-attribution attempt](evidence/2026-09-25/source_aligned_ode_chain_residual_attribution_plan.json)
+replayed both corrected waveforms but stopped before attribution because it
+required equal lengths for the internal fine pre-NQC arrays; its
+[partial result](evidence/2026-09-25/source_aligned_ode_chain_residual_attribution.json)
+is retained. The [corrected attribution](evidence/2026-09-25/source_aligned_ode_chain_residual_attribution_v2_plan.json)
+replays the `1.00805e-5` whole-mode error on the identical 1,169-sample chart.
+Its [result](evidence/2026-09-25/source_aligned_ode_chain_residual_attribution_v2.json)
+locates `99.847%` of the squared error in ringdown, including `99.209%` in
+ringdown's first `50 M`; the raw pre-NQC modes differ by only `4.44e-8`
+relative L2 before the attachment boundary on their exact common time prefix.
+The discrete ringdown boundary precedes the continuous NQC match, leaving no
+post-match inspiral output samples on this chart. These window shares locate
+the residual but do not identify its source or qualify the waveform.
+
 1. Qualify the physical generator against the published equations and independent
    references over the intended domain, resolve convention/provenance gaps, and
    establish gradients and numerical convergence. This runner covers only scalar

@@ -1,0 +1,69 @@
+{
+  "case": "strong_aligned",
+  "checks": {
+    "whole_replay_l2_at_most": 1e-15,
+    "window_error_square_reconstruction_at_most": 1e-12
+  },
+  "edge_window_M": 50.0,
+  "inputs": {
+    "amplitude_v2_plan": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_ode_chain_amplitude_v2_plan.json",
+      "sha256": "69ce431f507dc80f68fa888878521c6f52ca3b10e54e266123ea92522f298ce0"
+    },
+    "amplitude_v2_result": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_ode_chain_amplitude_v2.json",
+      "sha256": "f22689b0993b22f111392a3a0dcda31e2a47ab8a14d8d41ef636af479ec16de1"
+    },
+    "amplitude_v2_script": {
+      "path": "dev/native_rom/diagnose_source_aligned_ode_chain_amplitude_v2.py",
+      "sha256": "c3460f910c186f3fdf2e2c51084990198d314ba6d6eeacfd3592663b9e1cecef"
+    },
+    "ladder_plan": {
+      "path": "dev/native_rom/evidence/2026-09-25/jax_source_tolerance_ladder_plan.json",
+      "sha256": "101f756e6d90e07cb02084c04788bed43c4cdbc2773b948af8ff3262fda7352f"
+    },
+    "phase_matrix_script": {
+      "path": "dev/native_rom/diagnose_source_aligned_ode_chain_phase_matrix.py",
+      "sha256": "654ce386c98094f17c8b14bfdf2fdb9db2e70d112c1c4524943cd3745d41ad1a"
+    },
+    "phase_rhs_script": {
+      "path": "dev/native_rom/diagnose_source_aligned_ode_chain_phase_rhs.py",
+      "sha256": "b789eedb4eacf29500253999d1d0bb68e8e8591f661b8025592c50ae1d1114ff"
+    },
+    "runner": {
+      "path": "dev/native_rom/diagnose_jax_spliced_whole_waveform.py",
+      "sha256": "158c243e6909d26529cf5e976521793cd07821cd48662036a3c34182391f9d1c"
+    },
+    "source_plan": {
+      "path": "dev/native_rom/evidence/2026-09-25/jax_source_spliced_whole_waveform_plan.json",
+      "sha256": "eb79f7db87e23d83a8437334eec90f6872dcf3b76f65b5cbe55882f7d62b9944"
+    },
+    "torch_mode": {
+      "path": "src/torchwave/approximants/eob/published_waveform.py",
+      "sha256": "7dde2eefb4d99b7fe5fc3570203222dc02c1cb05d59d8f7392e25fc946cb32dc"
+    },
+    "torch_nqc": {
+      "path": "src/torchwave/approximants/eob/nqc.py",
+      "sha256": "c8683181f7cf911df1e1b85cd6999cdb03e7c594e867315359040e9eb03ca552"
+    },
+    "torch_numerical_attachment": {
+      "path": "src/torchwave/approximants/eob/numerical_attachment.py",
+      "sha256": "8c7a149b76c529a255a4caa4b0ca76317b5306c8967db84047f299ccf51be7fc"
+    }
+  },
+  "interpretation": "Diagnostic attribution only. Window shares describe where baseline/refined difference lies; they do not identify a physical or implementation cause. No release qualification or change to existing gates.",
+  "levels": [
+    "baseline",
+    "refined"
+  ],
+  "nqc_window_M": 50.0,
+  "purpose": "Attribute the remaining frozen v2 continuous-NQC baseline/refined whole-mode difference on identical 0.5 M, 1169-sample support, including raw fine pre-NQC mode comparison.",
+  "release_qualified": false,
+  "runner_sentinel": {
+    "degree": 0,
+    "half_width_M": 0.0
+  },
+  "schema": "diffgw.seobnrv4.source-aligned-ode-chain-residual-attribution-plan.v1",
+  "script_sha256": "26cc79b647b442801c2791072c3060e9a6df3666a8783f89b165e22579a1461c",
+  "window_policy": "Early pre-match t<match-50; NQC inspiral match-50<=t<boundary; post-match inspiral match<=t<boundary; ringdown t>=boundary. The ringdown owns the boundary sample. First 50 M t<start+50; last 50 M t>end-50."
+}
