@@ -125,7 +125,7 @@ def _solve_traceable(matrix, rhs):
 
 def traceable_nqc_22_full_series_coefficients(
     time, r, pr_star, orbital_frequency, base_mode, match_time, targets,
-    *, barrier_combined=False,
+    *, barrier_combined=False, amplitude_rows=None,
 ):
     """Differentiate a fixed-grid full-series NQC solve on validated inputs.
 
@@ -149,6 +149,10 @@ def traceable_nqc_22_full_series_coefficients(
     second = spline.derivative(match_time, 2)
     amplitude_matrix = jnp.stack((value[1:4], first[1:4], second[1:4]))
     amplitude_rhs = jnp.stack(targets[:3]) - jnp.stack((value[0], first[0], second[0]))
+    if amplitude_rows is not None:
+        amplitude_rows = jnp.asarray(amplitude_rows)
+        amplitude_matrix = amplitude_rows[:, 1:4]
+        amplitude_rhs = jnp.stack(targets[:3]) - amplitude_rows[:, 0]
     phase_matrix = jnp.stack((first[4:6], second[4:6]))
     phase_spline = natural_cubic_spline(time, phase, scalar_output=True)
     phase_rhs = jnp.stack((phase_spline.derivative(match_time) - targets.frequency,
@@ -164,7 +168,7 @@ def traceable_nqc_22_full_series_coefficients(
 def traceable_fixed_chart_attached_mode22(
     time, r, pr_star, orbital_frequency, base_mode, match_time, targets,
     nu, chi, sigma, output_time, *, mass_scale=1.0,
-    barrier_combined=False,
+    barrier_combined=False, amplitude_rows=None,
 ):
     """Replay NQC and continuous-boundary attachment on a validated fixed chart.
 
@@ -174,7 +178,7 @@ def traceable_fixed_chart_attached_mode22(
     """
     a, b, *_ = traceable_nqc_22_full_series_coefficients(
         time, r, pr_star, orbital_frequency, base_mode, match_time, targets,
-        barrier_combined=barrier_combined)
+        barrier_combined=barrier_combined, amplitude_rows=amplitude_rows)
     amplitude = jnp.abs(base_mode)
     phase = _unwrap_mode_phase_unchecked(base_mode)
     q, p = nqc_22_basis(r, pr_star, orbital_frequency)

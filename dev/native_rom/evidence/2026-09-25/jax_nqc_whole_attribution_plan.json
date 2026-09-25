@@ -1,0 +1,25 @@
+{
+  "schema": "diffgw.seobnrv4.jax-nqc-whole-attribution-plan.v1",
+  "release_qualified": false,
+  "case": "high_start_mixed_spin",
+  "varied_initial_component": "radius",
+  "output_step_M": 0.5,
+  "fine_refinement_factor": 32,
+  "adaptive_atol": 1e-10,
+  "adaptive_rtol": 1e-9,
+  "operational_limits": {
+    "max_wall_time_s": 300,
+    "max_rss_gib": 32
+  },
+  "measurements": [
+    "Eager/JIT replay state, base mode, orbital frequency, match center and Lie rows",
+    "Eager/JIT amplitude coefficients and phase coefficients separately",
+    "Eager/JIT corrected coarse and fine modes, attachment inspiral, ringdown and whole mode",
+    "Eager continuous-Lie mode and coefficient drift versus original full-series spline"
+  ],
+  "gates": {
+    "max_replay_state_absolute_error": 1e-7,
+    "max_whole_eager_jit_relative_l2": 1e-10
+  },
+  "interpretation": "Fixed-chart whole replay attribution only. No automatic differentiation or finite differences are run; the original AD/FD and release gates remain unchanged."
+}

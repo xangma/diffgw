@@ -1,0 +1,28 @@
+{
+  "schema": "diffgw.seobnrv4.jax-nqc-ode-lie-plan.v1",
+  "release_qualified": false,
+  "case": "high_start_mixed_spin",
+  "varied_initial_component": "radius",
+  "output_step_M": 0.5,
+  "fine_refinement_factor": 32,
+  "adaptive_atol": 1e-10,
+  "adaptive_rtol": 1e-9,
+  "finite_difference_steps": [0.0001, 0.00001],
+  "method": "Interpolate the fixed-chart match state from the fine trajectory, then form amplitude and three NQC amplitude-product value, first Lie derivative, and second Lie derivative along the same EOB vector field. Replace only the three amplitude matching rows; keep the frozen full-series phase solve, sampled correction, and attachment unchanged.",
+  "gates": {
+    "max_replay_state_absolute_error": 1e-7,
+    "max_fixed_amplitude_coefficients_eager_jit_absolute_error": 1e-8,
+    "max_fixed_corrected_fine_eager_jit_relative_l2": 1e-10,
+    "max_fixed_amplitude_solve_residual_relative_l2": 1e-8,
+    "max_whole_eager_jit_relative_l2": 1e-10,
+    "max_ad_fd_relative_l2": 0.002,
+    "min_gradient_l2": 1e-9
+  },
+  "controls": [
+    "Preserve all twelve raw amplitude match-row components for eager and JIT.",
+    "Report eager continuous-derivative coefficient and corrected-mode drift versus the original full-series spline method.",
+    "Use identical fixed state, sampled fine trajectory, base mode, orbital frequency, match time, and targets in fixed-input eager/JIT comparison.",
+    "Keep the original spline result and all existing release gates unchanged."
+  ],
+  "interpretation": "This is a one-chart development diagnostic. A pass does not qualify a production waveform or establish agreement with numerical relativity."
+}

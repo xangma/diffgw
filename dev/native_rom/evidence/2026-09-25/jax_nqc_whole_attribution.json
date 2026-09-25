@@ -1,0 +1,109 @@
+{
+  "checks": {
+    "replay": true,
+    "whole_eager_jit": false
+  },
+  "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+  "diagnostic_checks_passed": false,
+  "elapsed_s": 143.21197904099245,
+  "fused": {
+    "fused_vs_eager": {
+      "amplitude_coefficients_max_abs": 3.410605131648481e-12,
+      "attachment_inspiral_relative_l2": 1.3217934839968042e-09,
+      "corrected_coarse_relative_l2": 1.3206438943271824e-09,
+      "corrected_fine_relative_l2": 1.4059289338757803e-09,
+      "phase_coefficients_max_abs": 1.212474813883091e-07,
+      "prefix_relative_l2": 3.7579815505726203e-10,
+      "ringdown_relative_l2": 2.605727400116967e-09,
+      "whole_max_abs": 9.798661449124658e-10,
+      "whole_relative_l2": 1.539901295302599e-09
+    },
+    "fused_vs_separate_jit": {
+      "amplitude_coefficients_max_abs": 0.0,
+      "attachment_inspiral_relative_l2": 1.880686442909426e-15,
+      "corrected_coarse_relative_l2": 2.201647813587677e-16,
+      "corrected_fine_relative_l2": 2.993659195487239e-16,
+      "phase_coefficients_max_abs": 0.0,
+      "prefix_relative_l2": 1.331198899767861e-16,
+      "ringdown_relative_l2": 0.0,
+      "whole_max_abs": 2.152131251401007e-15,
+      "whole_relative_l2": 1.6296251171567985e-15
+    }
+  },
+  "host": "RONI2",
+  "pid": 40048,
+  "plan_sha256": "6ebc2d7aa5ea14c2d666c0a299ea76098dbefb0e7c6426950a0b543ef830438c",
+  "release_qualified": false,
+  "schema": "diffgw.seobnrv4.jax-nqc-whole-attribution.v1",
+  "script_sha256": "2d57542f7a02094be04c530a568148530ad0367cb0a612a0eed203309c3a494f",
+  "source_drift": {
+    "amplitude_coefficients_max_abs": 0.06984886684037406,
+    "attachment_inspiral_relative_l2": 9.602780039383021e-06,
+    "corrected_coarse_relative_l2": 1.5156541690978421e-05,
+    "corrected_fine_relative_l2": 3.126634271365216e-05,
+    "phase_coefficients_max_abs": 0.0,
+    "prefix_relative_l2": 2.6787446607442244e-06,
+    "ringdown_relative_l2": 2.9971325376565907e-15,
+    "whole_max_abs": 5.1404759281723925e-06,
+    "whole_relative_l2": 8.359301928983916e-06
+  },
+  "status": "diagnostic_complete",
+  "trajectory": {
+    "coarse_accepted_steps": 116,
+    "eager_jit_base_mode_relative_l2": 1.0427570979372442e-15,
+    "eager_jit_coarse_state_max_abs": 1.7763568394002505e-15,
+    "eager_jit_fine_state_max_abs": 1.7763568394002505e-15,
+    "eager_jit_lie_rows_max_abs": 1.6653345369377348e-16,
+    "eager_jit_match_center_max_abs": 0.0,
+    "eager_jit_orbital_frequency_max_abs": 8.326672684688674e-17,
+    "fine_accepted_steps": 106,
+    "frozen_match_time_M": 144.6564486506888,
+    "replay_state_absolute_error": 2.9753977059954195e-14
+  },
+  "two_by_two": {
+    "compiler_on_identical_eager_arrays": {
+      "amplitude_coefficients_max_abs": 0.0,
+      "attachment_inspiral_relative_l2": 1.6455027072711433e-16,
+      "corrected_coarse_relative_l2": 2.7269516865012627e-16,
+      "corrected_fine_relative_l2": 4.036280567378219e-16,
+      "phase_coefficients_max_abs": 0.0,
+      "prefix_relative_l2": 7.810085408015714e-17,
+      "ringdown_relative_l2": 2.3414741207117586e-15,
+      "whole_max_abs": 1.3935952625924388e-15,
+      "whole_relative_l2": 9.306892551880744e-16
+    },
+    "compiler_on_identical_jit_arrays": {
+      "amplitude_coefficients_max_abs": 0.0,
+      "attachment_inspiral_relative_l2": 1.167929788255884e-16,
+      "corrected_coarse_relative_l2": 1.944758135880171e-16,
+      "corrected_fine_relative_l2": 3.5650876621371785e-16,
+      "phase_coefficients_max_abs": 0.0,
+      "prefix_relative_l2": 9.438596235450387e-17,
+      "ringdown_relative_l2": 2.643194143815292e-15,
+      "whole_max_abs": 1.6860227157175434e-15,
+      "whole_relative_l2": 1.043191754106226e-15
+    },
+    "trajectory_input_effect_eager_assembly": {
+      "amplitude_coefficients_max_abs": 3.410605131648481e-12,
+      "attachment_inspiral_relative_l2": 1.3217924603620731e-09,
+      "corrected_coarse_relative_l2": 1.3206438818204128e-09,
+      "corrected_fine_relative_l2": 1.4059289383068305e-09,
+      "phase_coefficients_max_abs": 1.212474813883091e-07,
+      "prefix_relative_l2": 3.757981549494773e-10,
+      "ringdown_relative_l2": 2.6057272248173252e-09,
+      "whole_max_abs": 9.79864802443302e-10,
+      "whole_relative_l2": 1.5399005902682606e-09
+    },
+    "trajectory_input_effect_jit_assembly": {
+      "amplitude_coefficients_max_abs": 3.410605131648481e-12,
+      "attachment_inspiral_relative_l2": 1.3217924711307084e-09,
+      "corrected_coarse_relative_l2": 1.320643883896414e-09,
+      "corrected_fine_relative_l2": 1.4059289383149776e-09,
+      "phase_coefficients_max_abs": 1.212474813883091e-07,
+      "prefix_relative_l2": 3.7579814612279567e-10,
+      "ringdown_relative_l2": 2.6057271622721523e-09,
+      "whole_max_abs": 9.79864827665477e-10,
+      "whole_relative_l2": 1.5399005806809309e-09
+    }
+  }
+}

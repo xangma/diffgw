@@ -99,6 +99,43 @@ against `1e-8`, and `1.295776e-10` corrected-mode relative L2 against
 This algebraic normalization does not repair the compiled-gradient contract;
 the failed result remains part of the release evidence.
 
+The [frozen continuous Lie-derivative amplitude experiment](jax_nqc_ode_lie_plan.json)
+was a development-only attempt to replace the three spline amplitude-matching
+rows. Its [partial result](jax_nqc_ode_lie.json) passes the fixed-input
+eager/JIT amplitude coefficient and corrected-mode checks, but the whole-mode
+gap is still `1.539901e-9`, above `1e-10`. The experiment was stopped after
+the automatic-differentiation compilation reached about 64 GiB RSS; its AD/FD
+check is **incomplete**, not a pass. The intervention also changes the eager
+waveform relative to the original spline method. The
+[fixed-row readout](jax_nqc_fixed_rows.json) shows exact eager/JIT agreement
+for phase matching on identical inputs, while the
+[frozen two-by-two whole attribution](jax_nqc_whole_attribution_plan.json) and
+[result](jax_nqc_whole_attribution.json) isolate the remaining discrepancy:
+attachment assembly on identical replay arrays agrees within `1.1e-15`
+relative L2, but replay states differing by at most `1.78e-15` shift phase
+NQC coefficients by `1.21e-7` and the whole mode by `1.54e-9`. The Lie
+amplitude coefficients shift by only `3.41e-12`. The Lie intervention changes
+the eager whole mode by `8.36e-6` relative L2 compared with the source spline
+method, so it is not source preserving and cannot be promoted. The original
+whole-waveform JAX gate remains failed. The completed no-AD attribution ran
+on RONI2 in this worktree as PID `40048`, with log
+`/tmp/diffgw-jax-nqc-whole-attribution.log`; it finished in 143 seconds,
+requires no next check, and has no running process. Its command was
+`env PYTHONPATH=src:. /Users/xangma/repos/diffgw/.venv/bin/python -m dev.native_rom.diagnose_jax_nqc_whole_attribution > /tmp/diffgw-jax-nqc-whole-attribution.log 2>&1`.
+
+The [current-source replay of the earlier JAX stage diagnostic](jax_nqc_jit_stages_current_replay.json)
+locates the phase sensitivity more narrowly. Eager/JIT unwrapped phase differs
+by at most `7.11e-15`; its spline-derived phase right-hand side differs by
+`3.99e-11`, while the phase matching matrix is identical. Solving that same
+matrix (condition number about 98) yields the observed `1.21e-7` coefficient
+gap. This is a measured replay-to-phase-spline derivative amplification, not
+evidence that the matrix solve itself changes under JIT. The replay used the
+unchanged frozen stage plan and current script hash on RONI2 in this worktree,
+PID `47462`, and completed in 17 seconds. Its log is
+`/tmp/diffgw-jax-nqc-jit-stages-current.log`; no process remains or next check
+is needed. It was invoked with `DIFFGW_DIAGNOSTIC_OUTPUT=/tmp/diffgw-jax-nqc-jit-stages-current.json`
+and `python -m dev.native_rom.diagnose_jax_nqc_jit_stages`.
+
 Two different release claims must stay separate:
 
 - **Historical SEOBNRv4 fidelity:** a port may be described as faithful only

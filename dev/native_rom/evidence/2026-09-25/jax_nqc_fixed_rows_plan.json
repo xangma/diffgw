@@ -1,0 +1,20 @@
+{
+  "schema": "diffgw.seobnrv4.jax-nqc-fixed-rows-plan.v1",
+  "release_qualified": false,
+  "case": "high_start_mixed_spin",
+  "match_time_M": 144.6564486506888,
+  "input_result": "dev/native_rom/evidence/2026-09-25/jax_nqc_ode_lie.json",
+  "input_sha256": "015498aa67995cb8a360073aa32ece749cd400a0ef62c850208b8a6abc06b04a",
+  "scope": "Fixed-input reconstruction only: record original full-series spline amplitude and phase matching rows, phase right-hand side, and eager/JIT phase coefficients on one frozen match chart. Compare spline amplitude rows with saved Lie rows. No new whole replay or AD compilation.",
+  "expected": {
+    "output_step_M": 0.5,
+    "fine_refinement_factor": 32,
+    "adaptive_atol": 1e-10,
+    "adaptive_rtol": 1e-9
+  },
+  "gates": {
+    "max_replayed_center_absolute_error": 1e-10,
+    "max_replayed_spline_coefficient_absolute_error": 1e-6
+  },
+  "interpretation": "Explanatory readout only. The original release and JAX whole-waveform gates are unchanged."
+}

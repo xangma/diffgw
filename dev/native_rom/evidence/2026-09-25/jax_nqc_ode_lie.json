@@ -1,0 +1,154 @@
+{
+  "case": "high_start_mixed_spin",
+  "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+  "diagnostic_checks_passed": false,
+  "fixed_input": {
+    "eager_amplitude_coefficients": [
+      8.869123827776681,
+      -87.91165201905757,
+      102.97478534270978
+    ],
+    "eager_amplitude_solve_residual_relative_l2": 7.089149882224388e-15,
+    "eager_jit_amplitude_coefficients_max_abs": 1.2235545909788925e-11,
+    "eager_jit_corrected_fine_relative_l2": 4.591828913475339e-15,
+    "eager_jit_raw_amplitude_match_rows_max_abs": 3.885780586188048e-16,
+    "eager_raw_amplitude_match_rows": [
+      [
+        0.4154841519441119,
+        0.06423130959358526,
+        0.021575385135571078,
+        0.012504445757027855
+      ],
+      [
+        0.005539307056084921,
+        0.010848906299182568,
+        0.0043380399293806585,
+        0.0027152730191809314
+      ],
+      [
+        -0.0005672343782129469,
+        0.0030075817583766454,
+        0.001321972858706639,
+        0.0008662082118774106
+      ]
+    ],
+    "eager_vs_spline_amplitude_coefficients_max_abs": 0.06985033824939535,
+    "eager_vs_spline_corrected_fine_relative_l2": 3.126702841355842e-05,
+    "fixed_center": [
+      2.977064334656436,
+      12.482319770813548,
+      -0.17340736218591832,
+      2.7884259468381805
+    ],
+    "jit_amplitude_coefficients": [
+      8.869123827775406,
+      -87.9116520190467,
+      102.97478534269754
+    ],
+    "jit_amplitude_solve_residual_relative_l2": 2.885769345647575e-15,
+    "jit_raw_amplitude_match_rows": [
+      [
+        0.4154841519441123,
+        0.06423130959358532,
+        0.021575385135571095,
+        0.012504445757027869
+      ],
+      [
+        0.005539307056084935,
+        0.010848906299182554,
+        0.004338039929380655,
+        0.0027152730191809292
+      ],
+      [
+        -0.0005672343782129399,
+        0.0030075817583766684,
+        0.001321972858706643,
+        0.0008662082118774128
+      ]
+    ],
+    "spline_amplitude_coefficients": [
+      8.875979838675375,
+      -87.97254596445438,
+      103.04463568095917
+    ]
+  },
+  "host": "RONI2",
+  "pid": 25629,
+  "plan_sha256": "0fdafea37ed5d7c8d4e0e6e1c41e30fe7c9482cbda3cbd808d0cc8eec920363e",
+  "release_qualified": false,
+  "schema": "diffgw.seobnrv4.jax-nqc-ode-lie.v1",
+  "script_sha256": "281d4b7824880926b1a765afa1518c7efc60aac5f6a92009b42a0f0e9d089d5b",
+  "status": "stopped_memory_bound_after_whole_comparison",
+  "termination": {
+    "ad_fd_status": "incomplete",
+    "command": "PYTHONPATH=src:. /Users/xangma/repos/diffgw/.venv/bin/python -m dev.native_rom.diagnose_jax_nqc_ode_lie > /tmp/diffgw-jax-nqc-ode-lie.log 2>&1",
+    "exit_code": 143,
+    "log_path": "/tmp/diffgw-jax-nqc-ode-lie.log",
+    "observed_elapsed_s": 329,
+    "observed_rss_bytes": 68654202880,
+    "pid": 25629,
+    "reason": "JAX AD compilation exceeded the operational memory bound of about 64 GiB RSS after fixed-input and whole-mode gates were already decisively evaluated; AD/FD comparison not completed",
+    "signal": "SIGTERM"
+  },
+  "whole_pre_gradient": {
+    "eager_center": [
+      2.9770643346564456,
+      12.48231977081354,
+      -0.1734073621859169,
+      2.788425946838182
+    ],
+    "eager_jit_amplitude_coefficients_max_abs": 3.410605131648481e-12,
+    "eager_jit_center_max_abs": 0.0,
+    "eager_jit_raw_amplitude_match_rows_max_abs": 1.6653345369377348e-16,
+    "eager_jit_relative_l2": 1.5399006357477678e-09,
+    "eager_raw_amplitude_match_rows": [
+      [
+        0.4154841519441116,
+        0.06423130959358408,
+        0.02157538513557061,
+        0.012504445757027563
+      ],
+      [
+        0.005539307056084954,
+        0.010848906299182266,
+        0.004338039929380524,
+        0.0027152730191808434
+      ],
+      [
+        -0.0005672343782129122,
+        0.0030075817583765335,
+        0.001321972858706586,
+        0.0008662082118773748
+      ]
+    ],
+    "eager_vs_spline_amplitude_coefficients_max_abs": 0.06984886684037406,
+    "eager_vs_spline_corrected_fine_relative_l2": 3.126634271365216e-05,
+    "eager_vs_spline_full_mode_relative_l2": 8.359301928983916e-06,
+    "jit_center": [
+      2.9770643346564456,
+      12.48231977081354,
+      -0.1734073621859169,
+      2.788425946838182
+    ],
+    "jit_raw_amplitude_match_rows": [
+      [
+        0.4154841519441114,
+        0.06423130959358406,
+        0.0215753851355706,
+        0.01250444575702756
+      ],
+      [
+        0.005539307056084959,
+        0.010848906299182262,
+        0.004338039929380522,
+        0.0027152730191808425
+      ],
+      [
+        -0.0005672343782129191,
+        0.003007581758376531,
+        0.001321972858706585,
+        0.0008662082118773742
+      ]
+    ]
+  }
+}
