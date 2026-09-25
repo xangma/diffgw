@@ -481,6 +481,53 @@ The current PhenomD fundamental Kerr-mode representation uses eigenvalues from t
     pages = "063012",
     year = "2024"
 }
+
+@article{Hamilton:2021pnr,
+    author = "Hamilton, Eleanor and London, Lionel and Thompson, Jonathan E. and Fauchon-Jones, Edward and Hannam, Mark and Kalaghatgi, Chinmay and Khan, Sebastian and Pannarale, Francesco and Vano-Vinuales, Alex",
+    title = "{The final twist: A model of gravitational waves from precessing black-hole binaries through merger and ringdown}",
+    eprint = "2107.08876",
+    archivePrefix = "arXiv",
+    primaryClass = "gr-qc",
+    doi = "10.1103/PhysRevD.104.124027",
+    journal = "Phys. Rev. D",
+    volume = "104",
+    pages = "124027",
+    year = "2021"
+}
+
+@article{Hamilton:2024bam,
+    author = "Hamilton, Eleanor and others",
+    title = "{A catalogue of precessing black-hole-binary numerical-relativity simulations}",
+    eprint = "2303.05419",
+    archivePrefix = "arXiv",
+    primaryClass = "gr-qc",
+    doi = "10.1103/PhysRevD.109.044032",
+    journal = "Phys. Rev. D",
+    volume = "109",
+    pages = "044032",
+    year = "2024"
+}
+
+@article{London:2018nxs,
+    author = "London, Lionel and Fauchon-Jones, Edward",
+    title = "{On modeling for Kerr black holes: Basis learning, QNM frequencies, and spherical-spheroidal mixing coefficients}",
+    eprint = "1810.03550",
+    archivePrefix = "arXiv",
+    primaryClass = "gr-qc",
+    doi = "10.1088/1361-6382/ab2f11",
+    journal = "Class. Quant. Grav.",
+    volume = "36",
+    pages = "235015",
+    year = "2019"
+}
+
+@software{London:2020positive,
+    author = "London, Lionel and Fauchon, Edward and Hamilton, Eleanor",
+    title = "{positive v1.0}",
+    version = "1.0",
+    doi = "10.5281/zenodo.3901856",
+    year = "2020"
+}
 ```
 
 ---

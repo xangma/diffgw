@@ -132,6 +132,95 @@
     "canonical_numeric_payload_sha256": "c7794b653f781bbba45b97170fdac9fb6c89de6cc9c404e4942908ce1f820d68",
     "torch_source_sha256": "9d5d77749d187f64447f1ed0501311370b5c97a3e8a471de71ced315ce0394fd",
     "jax_source_sha256": "5801aa497b7ba10d389d8da5ca21dc27dc072c953a71706157211ca5fe2a6ea3",
-    "provenance": "unresolved_independent_source_and_redistribution_terms"
+    "provenance": "unresolved_independent_source_and_redistribution_terms",
+    "manifest_check": {
+      "command": "pytest -q tests/test_xpnr_coefficient_provenance.py",
+      "result": "2 passed",
+      "scope": "Checks source-to-component evidence classes, the retained provisional gate, tensor names and shapes, frontend literal equality, and pinned source-file hashes without importing Torch or JAX."
+    },
+    "tensor_inventory": {
+      "names": ["A1", "A2", "A3", "A4", "B0", "B1", "B2", "B3", "B4", "B5", "Bf"],
+      "shape_by_name": [4, 4, 5],
+      "first_seen_repository_commit": "ceb6ae15c00bbbd3eaca2bdc12bb3307b38e9beb",
+      "first_seen_repository_commit_subject": "feat: initial commit of diffgw (torchwave & jaxwave)",
+      "earlier_repository_history": false,
+      "redistribution_terms": null
+    },
+    "source_to_component": [
+      {
+        "id": "xo4a_angle_equations",
+        "evidence_class": "published_equations",
+        "components": ["XPNR-FIT", "XPNR-ANGLES-MR"],
+        "source": "arXiv:2312.10025v1",
+        "license": "CC-BY-4.0",
+        "establishes": "The polynomial basis, angle transforms, ansatzes, guards, and the LALSuite location of the final values.",
+        "does_not_establish": "The numeric lambda tensors or independent redistribution terms for the inherited DiffGW copies."
+      },
+      {
+        "id": "phenompnr_historical_fit_method",
+        "evidence_class": "published_partial_generation_procedure",
+        "components": ["XPNR-FIT", "XPNR-ANGLES-MR"],
+        "source": "arXiv:2107.08876v1",
+        "license": "CC-BY-4.0",
+        "establishes": "For the 40-waveform predecessor: per-waveform scipy curve_fit using Levenberg-Marquardt, fit intervals, sequential coefficient order, and mvpolyfit polynomial fitting in a (4,2,5) ambient basis.",
+        "does_not_establish": "An exact reproduction recipe or output for the later 80-waveform XO4a retune in its (4,4,5) basis."
+      },
+      {
+        "id": "bam_80_waveform_inputs",
+        "evidence_class": "third_party_calibration_input",
+        "components": ["XPNR-FIT", "XPNR-ANGLES-MR", "XPNR-CARRIER"],
+        "source": "Zenodo records 7673796 and 7677297",
+        "license": "CC-BY-4.0",
+        "establishes": "The public minimal and complete waveform inputs for the 80 single-spin BAM configurations.",
+        "does_not_establish": "The per-simulation fitted angle targets, final tensors, fit-run configuration, or terms for the inherited arrays."
+      },
+      {
+        "id": "positive_fit_tool",
+        "evidence_class": "third_party_fitting_tool",
+        "components": ["XPNR-FIT"],
+        "source": "doi:10.5281/zenodo.3901856 (positive v1.0)",
+        "archive_sha256": "48ef090a5bcae72a3530647f6d6f81d56aa9d372362f552fa28e390b723a36c3",
+        "license": "MIT in the archived LICENSE; Zenodo metadata says other-open",
+        "establishes": "A published implementation of the historical mvpolyfit/gmvpfit basis-learning tool.",
+        "does_not_establish": "The inputs, complete configuration, sparse basis choices, or output of the final 80-waveform fit."
+      },
+      {
+        "id": "phenomxcp_partial_carrier_workflow",
+        "evidence_class": "author_release_partial_carrier_workflow",
+        "components": ["XPNR-CARRIER"],
+        "source": "github:llondon6/PhenomXCP@a411e5966a73445efad0db9dc7806d2195374ab1",
+        "license": "mixed notices: root MIT; generated parameter_space_fits.c GPL-2.0-or-later; data artifacts have no separate notice",
+        "establishes": "An author-controlled historical workflow and partial carrier-fit artifacts for PhenomXCP.",
+        "does_not_establish": "The current XO4a/XPNR carrier u_k release or mapping, any A/B/Bf tensor, or blanket MIT terms for generated outputs."
+      },
+      {
+        "id": "diffgw_inherited_angle_tensors",
+        "evidence_class": "unsupported_inherited_tensors",
+        "components": ["XPNR-FIT", "XPNR-ANGLES-MR"],
+        "source": "DiffGW repository history beginning at ceb6ae15c00bbbd3eaca2bdc12bb3307b38e9beb",
+        "license": "unresolved",
+        "establishes": "Only the first appearance and identity of the current DiffGW payload.",
+        "does_not_establish": "Independent origin, author release identity, regeneration, or permission to redistribute."
+      }
+    ],
+    "regeneration_assessment": {
+      "status": "not_independently_reproducible_from_published_assets",
+      "available": [
+        "published equations and polynomial basis",
+        "CC-BY-4.0 BAM waveform inputs",
+        "historical 40-waveform fitting procedure",
+        "MIT-licensed historical polynomial fitting tool",
+        "author-controlled partial PhenomXCP carrier workflow with mixed file-level notices"
+      ],
+      "missing": [
+        "authoritative derived QA Euler-angle series and machine-readable per-simulation angle-fit targets for the 80-waveform retune",
+        "the retuning code and full configuration for sampling, weights, initial values, constraints, sequential refits, and sparse basis selection",
+        "a version-pinned output manifest for the final tensors",
+        "independent redistribution permission or a licensed coefficient release",
+        "an authoritative version and mapping from the partial PhenomXCP outputs to the final XO4a/XPNR carrier u_k values, with file-level terms"
+      ],
+      "fresh_refit_scope": "The public inputs could support a separate independently specified recalibration project, but that would not establish the origin or terms of the inherited values.",
+      "prohibited_methods_used": false
+    }
   }
 }
