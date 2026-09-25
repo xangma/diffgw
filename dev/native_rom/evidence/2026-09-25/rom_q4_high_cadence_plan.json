@@ -1,0 +1,82 @@
+{
+  "schema": "diffgw.seobnrv4.rom-q4-high-cadence-plan.v1",
+  "purpose": "Prospective development-only continuation of the original q4 mixed-spin ROM FD input sampling failure at three high cadences; replay the original 16384 Hz raw spectrum and test corrected shared-gauge convergence.",
+  "release_qualified": false,
+  "runner_sha256": "3cdd899312585f97e7b766b1d391d9fdf9fdc66b4326373bd2e47e2de874d0b4",
+  "shared_runner_sha256": "b8a6c27150d022a827c90ddf32a72dcc54db2c35c6a5b043cae3d745e9a05042",
+  "conditioner_sha256": "fc0ab96e16e7243ff5b82021cac9c2edcb8535b9fbd34a8a073dd42f6736197a",
+  "fd_adapter_sha256": "45023e71cf23589b14c1e8cc65f0290b15b909eb3fe4be84a60961d361ba9a88",
+  "td_fd_conditioner_sha256": "d8a9ad936a0e6fb8e0c59a35428a7e2c70e372dca0b8d87f6d890d38dcd30a8a",
+  "source_snapshot_sha256": "2062f70072d9953a7f9b968336c80512b8034497eb2e4cb0fea7ad2633b7d2cf",
+  "prior_report_sha256": "dacbb97fe53d986f97b7f0f38c0f74fd4da353d1d7808d03a36947bdff530cc4",
+  "prior_spectra_sha256": "3ec6e18d989134b8ed68f86faaaab9247a8ebac065d8b1d0b447c398f4a6ef05",
+  "row": {
+    "name": "q4_mixed_spin",
+    "mass1": 40.0,
+    "mass2": 10.0,
+    "chi1": 0.5,
+    "chi2": -0.4,
+    "f_low": 30.0
+  },
+  "reserved_holdouts_remain_unevaluated": [
+    "off_grid_mixed_spin",
+    "high_q_antialigned"
+  ],
+  "f_max_levels_hz": [
+    16384.0,
+    32768.0,
+    65536.0
+  ],
+  "per_run_timeout_seconds": 360.0,
+  "atol": 1e-11,
+  "rtol": 1e-10,
+  "delta_f_hz": 0.03125,
+  "comparison_band_hz": [
+    40.0,
+    300.0
+  ],
+  "subbands_hz": [
+    [
+      40.0,
+      100.0
+    ],
+    [
+      100.0,
+      200.0
+    ],
+    [
+      200.0,
+      300.0
+    ]
+  ],
+  "reference_frequency_hz": 100.0,
+  "gauge_half_width_hz": 2.0,
+  "distance_mpc": 100.0,
+  "inclination_rad": 0.7,
+  "ringdown_duration_M": 150.0,
+  "synthetic_control": {
+    "dt_seconds": 0.00048828125,
+    "retained_samples": 20,
+    "impulse_index": 10,
+    "fft_samples": [
+      16,
+      64,
+      128
+    ],
+    "extra_leading_zeros": 3,
+    "maximum_normalized_complex_error": 1e-12,
+    "maximum_affine_gauge_error": 1e-10
+  },
+  "gates": {
+    "maximum_adjacent_shared_gauge_complex_relative_l2": 0.0001,
+    "maximum_adjacent_shared_gauge_amplitude_relative_l2": 0.0001,
+    "maximum_adjacent_shared_gauge_phase_rms_rad": 0.001,
+    "maximum_adjacent_polarization_ratio_relative_l2": 0.0001,
+    "maximum_subband_shared_gauge_complex_relative_l2": 0.0001,
+    "fine_to_coarse_shared_gauge_complex_error_ratio": 1.0,
+    "minimum_relative_amplitude_in_band": 1e-08,
+    "maximum_unwrapped_adjacent_phase_step_rad": 1.5707963267948966,
+    "maximum_decimated_phase_unwrap_difference_rad": 1e-06
+  },
+  "interpretation": "All adjacent pair budgets, polarization ratio, three subbands, support/unwrapping, exact original 16384 Hz raw-spectrum replay, and nonincreasing last-pair shared-gauge complex error for both polarizations must pass. A failure is retained without retuning. A pass supports only this q4 development row at 40-300 Hz; it cannot qualify the physical generator, a ROM, the broader domain, gradients, or release. Original frozen five-bin-gauge failure remains failed and reserved ROM holdouts remain untouched."
+}

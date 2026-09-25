@@ -1,0 +1,29 @@
+{
+  "schema": "diffgw.seobnrv4.source-aligned-nqc-solve-condition-plan.v1",
+  "purpose": "Falsify the hypothesis that binary64 solution of the captured NQC matching systems accounts for the frozen 0.02649 coefficient-stencil failure or the later nonmonotonic fine-grid coefficient drift.",
+  "release_qualified": false,
+  "row_name": "strong_aligned_spin",
+  "inputs": {
+    "field_pilot": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_derivative_only_pilot.json",
+      "sha256": "f54fdfbfacdc85ba37d2cae05091b33be297f7fb0e2f3e57018649dd940e10eb"
+    },
+    "local_ladder": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_local_nqc_ladder.json",
+      "sha256": "36ed12e9c7c5d796fbc02fa9e7dac8df55ab5ec30ea1cc44eacbd419bc85b84e"
+    },
+    "very_fine": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_very_fine_local_nqc.json",
+      "sha256": "9483c99ea1fcdf9e26f536623caf04b3406a0343649d3c22e83d40364f29d119"
+    }
+  },
+  "pilot_stencils_M": [0.1, 0.2],
+  "fine_steps_M": [0.03125, 0.015625, 0.0078125, 0.00390625, 0.001953125],
+  "mpmath_decimal_digits": 100,
+  "gates": {
+    "saved_fit_reconstruction_abs_linf": 1e-8,
+    "binary64_vs_high_precision_abs_linf": 1e-5,
+    "first_order_pair_delta_relative_error": 0.05
+  },
+  "interpretation": "A pass excludes the binary64 linear solve as a sufficient explanation for the recorded coefficient differences, given the saved decimal matrix/RHS entries. It does not certify those entries, the ODE derivative or event, waveform convergence, an alternative NQC rule, or release readiness. Preserve the prior 0.01 coefficient-stencil gate and its failure."
+}

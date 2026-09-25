@@ -2442,6 +2442,19 @@ are documented in plans and results retained beside the final result. This
 single-row diagnostic does not change the generator matching event, pass the
 earlier `0.01` stencil-stability gate, or qualify NQC for release.
 
+A [frozen NQC solve-conditioning check](evidence/2026-09-25/source_aligned_nqc_solve_condition_plan.json)
+replays the saved strong aligned-spin matching systems at 100-digit precision.
+Its [result](evidence/2026-09-25/source_aligned_nqc_solve_condition.json)
+finds at most `6.78e-11` absolute coefficient difference from binary64 solves,
+while the original `0.1`–`0.2 M` stencil difference remains `0.026491`, above
+the frozen `0.01` gate. First-order propagation of the saved matrix and
+right-hand-side changes explains the coefficient differences to at most
+`1.04e-4` relative. On the original stencil pair, almost all amplitude
+coefficient drift comes from the right-hand side (`0.026665` contribution
+versus `0.000212` from the matrix), especially the raw-mode amplitude
+curvature input. This isolates a derivative-input problem on saved systems;
+it does not validate a new curvature estimator or release NQC.
+
 The [prospective native ROM-input pilot](evidence/2026-09-25/rom_input_stability.json)
 uses a [frozen two-row plan](evidence/2026-09-25/rom_input_stability_plan.json),
 three ODE tolerances, three nested TD sampling rates, and a common positive
@@ -2508,6 +2521,20 @@ subband complex L2 `9.54e-5`, and polarization-ratio L2 `8.15e-7`.
 The saved spectra and hashes support only this bounded two-row diagnostic;
 the two reserved ROM holdouts remain untouched. This does not qualify domain
 convergence, the native physical generator, or a release ROM.
+
+A [frozen high-cadence continuation](evidence/2026-09-25/rom_q4_high_cadence_plan.json)
+replays the original q4 mixed-spin `16384 Hz` raw spectra by hash, then
+compares `16384`, `32768`, and `65536 Hz` caps with the same plus-derived
+shared gauge. Its [result](evidence/2026-09-25/rom_q4_high_cadence.json)
+passes the predeclared whole-band, subband, polarization-ratio, support,
+unwrapping, and nonincreasing-error checks. The largest adjacent plus/cross
+shared-gauge complex L2 falls from `7.25e-6` to `4.35e-6`; the largest
+subband error falls from `2.46e-5` to `1.44e-5`. Ungauged raw errors of
+`0.00942` and `0.00471` fall to `2.88e-5` and `1.47e-5` after pad/crop
+epoch correction. The [saved spectra](evidence/2026-09-25/rom_q4_high_cadence_spectra.npz)
+and hashes retain the exact inputs. This is a single development row, and
+neither the generator nor ROM is release qualified; both reserved ROM
+holdouts remain untouched.
 
 1. Qualify the physical generator against the published equations and independent
    references over the intended domain, resolve convention/provenance gaps, and
