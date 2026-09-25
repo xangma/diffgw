@@ -97,7 +97,7 @@ specify the exact historical numerical implementation. In particular:
 | `V4-HAM-1-3` | [Bohé Sec. II.1](https://arxiv.org/html/1611.03703), [Barausse–Buonanno Hamiltonian](https://arxiv.org/abs/1107.2904), and [Steinhoff Appendix A](https://arxiv.org/html/1608.01907) | Printed fits and equations do not provide shortened source decimals or the historical logarithmic derivative convention. |
 | `V4-FLUX-4-9` | [Bohé Eqs. (4)–(6), (9)](https://arxiv.org/html/1611.03703) and [factorized multipoles](https://arxiv.org/abs/1006.0431) | Constructing the 35 pre-NQC modes and full torque remains pending: the exact historical higher-mode spin hybrid, high-`ell` truncation, and JAX waveform coupling are not independently qualified. Supplied-mode normalization and tail modulus are covered separately by `V4-FLUX-NORM-9` and `V4-FLUX-TAIL-MODULUS`. |
 | `V4-QNM-INTERPOLATION` | [Berti et al. Kerr data and fits](https://arxiv.org/html/gr-qc/0512160) and [Cook author data](https://zenodo.org/records/2650358) | The independent native signed-spin rule has a conditional scalar leaf. Continuous-domain accuracy, historical spline compatibility, and whole-waveform impact remain open; the published fit is approximate and does not define historical knots. |
-| `V4-ODE-IC` | [Bohé Sec. II.2](https://arxiv.org/html/1611.03703) and [Buonanno–Damour initial-data prescription](https://arxiv.org/html/gr-qc/0001013) | Exact v4 root coordinates, tortoise mapping, numerical tolerances, and event/output interpolation need independent checks. |
+| `V4-ODE-IC` | [Bohé Sec. II.2](https://arxiv.org/html/1611.03703) cites [Buonanno–Chen–Damour, Sec. IV.1](https://arxiv.org/html/gr-qc/0508067) for quasicircular initial data | Exact v4 root coordinates, tortoise mapping, numerical tolerances, and event/output interpolation need independent checks. |
 | `V4-TD-FD-CONVENTIONS` | [Pürrer Sec. 4](https://arxiv.org/html/1402.4146) gives a time-domain conditioning template for **SEOBNRv1** | The v4 window, epoch, padding, crop, normalization, and polarization choices are not specified there. |
 | `V4-ROM-VII` | [Bohé Sec. VII](https://arxiv.org/html/1611.03703) gives patch dimensions, frequency counts, SVD, and tensor-spline architecture | No independently generated v4 basis, spline tensors, full frequency knots, qualified training generator, or held-out validation exists. |
 
@@ -463,7 +463,11 @@ cross-backend whole-waveform SEOBNRv4 claim follows from these checks.
 published circular conditions and converts a **supplied** torque to the
 leading inward tortoise momentum using the scalar Hamiltonian. Its circular
 root and radial momentum agree with the Torch and JAX initializers at the
-tested nonspinning and aligned-spin points. The scalar calculation takes the
+tested nonspinning and aligned-spin points. A separate circular-sequence
+finite-difference check verifies the [Buonanno–Chen–Damour Eqs. (70)–(77)](https://arxiv.org/html/gr-qc/0508067)
+energy-balance relation at two stable points, including the tortoise
+velocity conversion; this is a leading-adiabatic check, not a replay of the
+historical root solver. The scalar calculation takes the
 torque as an input; this establishes neither the 35-mode flux nor the
 historical SEOBNRv4 initial-data prescription. The latter uses a particular
 Cartesian root solve and finite-step radial response in the

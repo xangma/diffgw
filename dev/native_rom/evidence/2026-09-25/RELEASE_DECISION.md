@@ -83,6 +83,13 @@ Hamilton equations, but not the physical flux or an integrated trajectory.
 The newly executable tail-modulus leaf independently checks the scalar, Torch,
 and JAX supplied-input factor against the published complex-gamma expression;
 it does not construct the modes or close the pending full-flux aggregate.
+The initial-data source audit corrects the paper trail: [Bohé et al. Sec. II.2](https://arxiv.org/html/1611.03703)
+cites [Buonanno, Chen, and Damour (2006), Sec. IV.1](https://arxiv.org/html/gr-qc/0508067) for the quasicircular
+prescription. A separate two-point scalar check recomputes neighboring
+circular-orbit energies and verifies the leading-adiabatic energy balance and
+tortoise radial velocity within `2e-9` relative using supplied torque. The
+existing Torch/JAX initial-state checks remain conditional; the historical
+Cartesian root solve, physical torque, and integrated waveform are unqualified.
 The existing [public/NR chirp diagnostic](sxs_public_chirp.json) locates a
 waveform-phase discrepancy on the already inspected 2569 case: at mode
 frequency `0.05/M`, relative to a `0.09/M` anchor and smoothing window 20,

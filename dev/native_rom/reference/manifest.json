@@ -397,13 +397,13 @@
     },
     {
       "id": "V4-IC-LEADING-ADIABATIC",
-      "source": "Buonanno--Damour gr-qc/0001013v2, arXiv HTML Eqs. (68), (69), (77), (83); Damour--Nagar 0704.3550v2, Eqs. (7)-(11)",
+      "source": "Buonanno--Damour gr-qc/0001013v2, arXiv HTML Eqs. (68), (69), (77), (83); Buonanno--Chen--Damour gr-qc/0508067, Eqs. (70)--(77); Damour--Nagar 0704.3550v2, Eqs. (7)-(11)",
       "status": "conditional",
       "reference": "initial_conditions.leading_adiabatic_state",
       "torch": "src/torchwave/approximants/eob/initial_conditions.py:find_quasicircular_initial_conditions",
       "jax": "src/jaxwave/approximants/eob/initial_conditions.py:find_quasicircular_initial_conditions",
-      "test": "dev/native_rom/reference/tests/test_torch.py:test_leading_adiabatic_initial_state_against_scalar_reference; dev/native_rom/reference/tests/test_jax.py:test_leading_adiabatic_initial_state_against_scalar_reference",
-      "condition": "Uses a supplied torque; neither the full 35-mode torque nor the historical SEOBNRv4 initial-data procedure is established by this check."
+      "test": "dev/native_rom/reference/tests/test_torch.py:test_leading_adiabatic_initial_state_against_scalar_reference; dev/native_rom/reference/tests/test_jax.py:test_leading_adiabatic_initial_state_against_scalar_reference; dev/native_rom/reference/tests/test_initial_conditions.py:test_leading_adiabatic_energy_balance_against_circular_sequence",
+      "condition": "Uses a supplied torque. A two-point circular-sequence finite-difference check validates the leading-adiabatic energy-balance and tortoise velocity conversion against Buonanno--Chen--Damour Eqs. (70)--(77); neither the full 35-mode torque nor the historical SEOBNRv4 initial-data procedure is established."
     },
     {
       "id": "V4-ODE-RHS-SUPPLIED-FORCE",
@@ -427,7 +427,7 @@
     },
     {
       "id": "V4-ODE-IC",
-      "source": "bohe-2017-v3, Sec. II, cited initial-condition prescription",
+      "source": "bohe-2017-v3, Sec. II.2, citing Buonanno--Chen--Damour gr-qc/0508067, Sec. IV.1",
       "status": "pending",
       "blocker": "The optimized source/native four-component vector field passes a predeclared 12-state boundary check within 5.48e-11 relative, but this does not validate integration. Specify initial conditions, tortoise momentum, solver, event/matching semantics, and demonstrate numerical convergence across the domain."
     },
