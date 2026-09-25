@@ -1,0 +1,24 @@
+{
+  "schema": "diffgw.seobnrv4.td-fd-public-stages-plan.v1",
+  "purpose": "Compare native conditioning and real FFT against the pinned public LAL binary on identical, fixed time-domain polarizations; isolate this adapter from generator differences.",
+  "release_qualified": false,
+  "binary_evidence": "dev/native_rom/evidence/2026-09-24/public_nqc_mode_boundary.json",
+  "binary_evidence_sha256": "a86784cd6a58ec4a574686d6940953a3d1be836e2d44ac8cdcd25a5ba7d0dffd",
+  "sample_rate_hz": 4096,
+  "rows": [
+    {"name": "synthetic_chirp_with_padding", "kind": "analytic", "mass1": 30.0, "mass2": 20.0, "chi1z": 0.0, "chi2z": 0.0, "f_low": 20.0, "samples": 8192, "trailing_zeros": 97},
+    {"name": "public_v4_mixed_spin", "kind": "public_seobnrv4", "mass1": 30.0, "mass2": 20.0, "chi1z": 0.3, "chi2z": -0.2, "f_low": 20.0},
+    {"name": "public_v4_safe_frequency_cap", "kind": "public_seobnrv4", "mass1": 50.0, "mass2": 30.0, "chi1z": 0.8, "chi2z": 0.5, "f_low": 60.0}
+  ],
+  "public_distance_mpc": 1.0,
+  "public_inclination_rad": 0.7,
+  "public_reference_phase_rad": 0.0,
+  "public_reference_frequency_hz": 0.0,
+  "public_fd_fmax_hz": 2048.0,
+  "public_fd_delta_f_hz": 0.25,
+  "full_series_rms_relative_tolerance": 1e-10,
+  "full_series_max_absolute_over_peak_tolerance": 1e-10,
+  "fft_rms_relative_tolerance": 1e-10,
+  "fft_max_absolute_over_peak_tolerance": 1e-10,
+  "public_fd_epoch_tolerance_seconds": 1e-9
+}

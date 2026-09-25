@@ -1904,6 +1904,24 @@ selected Torch/JAX numerical compatibility on the actual fine-grid path;
 source fidelity, broad parameter coverage, physical NR accuracy, full
 parameter gradients, and both ROMs remain unqualified.
 
+The [pinned public-binary TD→FD diagnostic](evidence/2026-09-25/td_fd_public_stages.json)
+uses a [predeclared plan](evidence/2026-09-25/td_fd_public_stages_plan.json)
+and [replay script](diagnose_td_fd_public_stages.py) to feed identical samples
+through LAL's public two-stage conditioner and the native Torch conditioner.
+The samples include a padded analytic chirp, a mixed-spin public SEOBNRv4
+waveform, and a public waveform whose requested low frequency activates the
+safe-frequency cap. All three pass `1e-10` whole-series and Fourier gates;
+the worst TD and complete-FD relative L2 is `1.04e-12`, and LAL/Torch real
+FFTs on identical conditioned samples differ by at most `3.6e-16`. For the
+two physical rows, the conditioned public TD input also reproduces the
+public `SimInspiralFD` complex values to `1.04e-12` relative L2 at `f_ref=0`;
+the expected leading-pad epoch differs by only `0.25 ns` from its reported
+GPS epoch. This checks conditioning, leading padding, transform scaling, and
+the selected public-binary Fourier convention on these inputs.
+It does not compare native-generated TD values with LAL, establish the
+general physical epoch or reference phase convention, or qualify the full frequency
+support and ROM training waveforms. The `V4-TD-FD-CONVENTIONS` gate stays open.
+
 1. Qualify the physical generator against the published equations and independent
    references over the intended domain, resolve convention/provenance gaps, and
    establish gradients and numerical convergence. This runner covers only scalar

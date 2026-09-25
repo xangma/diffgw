@@ -388,7 +388,7 @@
       "id": "V4-TD-FD-CONVENTIONS",
       "source": "bohe-2017-v3, Secs. II and VII",
       "status": "pending",
-      "blocker": "Resolve mode/polarization signs, mass/distance scaling, reference phase/time, TD conditioning, FFT convention, and sample support against the named public-binary oracle."
+      "blocker": "A pinned public-binary replay on identical TD inputs passes the two LAL conditioning stages and real FFT for one analytic chirp and two public SEOBNRv4 polarizations, with at most 1.04e-12 TD/FD relative L2 and 3.6e-16 FFT-only relative L2. The native-conditioned public TD inputs also reproduce the public SimInspiralFD complex values to 1.04e-12 relative L2 and its leading-pad epoch to 0.25 ns at f_ref=0. This isolates and validates selected adapter operations only. Complete native-generated waveform comparison, general mode/polarization and mass/distance conventions, reference phase/time, frequency support, and domain coverage remain open."
     },
     {
       "id": "V4-ROM-VII",

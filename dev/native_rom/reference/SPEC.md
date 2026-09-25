@@ -81,6 +81,7 @@ trained basis, parameter interpolation, or holdout definition yet.
 | `V4-RD-PEAK-CONTINUATION` / 0.8.11 | Bohé Eqs. (10), (12)–(14); pinned historical LAL ringdown source, Eqs. (57)–(58) of T1600383 | conditional | `ringdown.peak_preserving_shape` | `seobnrv4_peak_preserving_shape` | Historical rule integrated; domain-wide waveform validation remains open |
 | `V4-QNM-INTERPOLATION` / 0.8.11 | Bohé Sec. II.C; Berti numerical data; pinned LAL source | pending | pending | Development-only independent Kerr route | q4 impact measured; domain-wide physical and waveform validation open |
 | `V4-ODE-IC` / 0.8.11 | Bohé evolution and historical carrier | pending | pending | Development integrators | Domain-wide converged initial conditions and events |
+| `V4-TD-FD-CONVENTIONS` / 0.8.11 | Pinned public LAL conditioning/FFT binary | pending | pending | Development Torch adapter | Identical-input conditioning/FFT passed on three rows; native-generated waveform and phase/time conventions remain open |
 | `V4-ROM-VII` / 0.8.11 | Bohé Sec. VII | pending | pending | pending | Qualified training generator, bases, and holdouts |
 
 ### Canonical equations and derivation
