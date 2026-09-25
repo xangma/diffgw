@@ -11,6 +11,7 @@ import math
 import torch
 import torch.nn as nn
 
+from diffgw_core.xphm_options import resolve_xphm_options
 from torchwave.constants import (
     MSUN_SEC,
     PI,
@@ -25,7 +26,6 @@ from torchwave.approximants.precession_msa import (
     compute_effective_chip,
     compute_msa_final_spin,
     evaluate_msa_precession,
-    resolve_precession_version,
 )
 
 
@@ -60,6 +60,57 @@ def wigner_small_d_matrix(l: int, beta: torch.Tensor) -> torch.Tensor:
     return d
 
 
+def twist_up_mode(
+    l: int,
+    mp: int,
+    h_coprec: torch.Tensor,
+    alpha: torch.Tensor,
+    beta: torch.Tensor,
+    gamma: torch.Tensor,
+    theta_jn: torch.Tensor,
+    zeta: torch.Tensor,
+    d_jn_l: Optional[torch.Tensor] = None,
+) -> Tuple[torch.Tensor, torch.Tensor]:
+    """Twist one XHM carrier mode into positive-frequency polarizations.
+
+    This is the tensor form of Pratten et al. (2021), Eqs. (110)--(113),
+    plus the Appendix-D observer-basis rotation.  The ``i**mp`` and scale
+    factors are solely the adapter from DiffGW's XHM mode convention.
+    """
+    if l not in (2, 3, 4) or mp <= 0 or mp > l:
+        raise ValueError("XPHM rotation supports l in {2,3,4} and 0 < mp <= l.")
+    h_mode = (1j ** mp) * h_coprec
+    sign_l = 1.0 if (l % 2 == 0) else -1.0
+    scale_l = sign_l * math.sqrt((2 * l + 1) / (16.0 * PI))
+    d_beta_l = wigner_small_d_matrix(l, beta)
+    if d_jn_l is None:
+        d_jn_l = wigner_small_d_matrix(l, theta_jn)
+
+    term_plus = torch.zeros_like(h_mode)
+    term_cross = torch.zeros_like(h_mode)
+    for m_val in range(-l, l + 1):
+        m_idx = m_val + l
+        dm_minus = d_beta_l[..., m_idx, -mp + l]
+        dm_plus = d_beta_l[..., m_idx, mp + l]
+        y_lm = d_jn_l[..., m_idx, 2 + l]
+        exp_minus_ima = torch.exp(-1j * float(m_val) * alpha)
+        exp_plus_ima = torch.exp(1j * float(m_val) * alpha)
+        a_m_minus = exp_minus_ima * dm_minus * y_lm
+        a_m_plus_star = exp_plus_ima * dm_plus * y_lm
+        term_plus = term_plus + a_m_minus + sign_l * a_m_plus_star
+        term_cross = term_cross + a_m_minus - sign_l * a_m_plus_star
+
+    phase = torch.exp(1j * float(mp) * gamma)
+    hp_raw = scale_l * phase * h_mode * term_plus
+    hc_raw = 1j * scale_l * phase * h_mode * term_cross
+    cos_2z = torch.cos(2.0 * zeta)
+    sin_2z = torch.sin(2.0 * zeta)
+    return (
+        cos_2z * hp_raw + sin_2z * hc_raw,
+        -sin_2z * hp_raw + cos_2z * hc_raw,
+    )
+
+
 class IMRPhenomXPHM(nn.Module):
     """IMRPhenomXPHM Precessing Multipolar Higher-Harmonic Waveform Approximant.
 
@@ -74,7 +125,7 @@ class IMRPhenomXPHM(nn.Module):
         self,
         modes: Optional[Sequence[Tuple[int, int]]] = None,
         calibration: str = "sovereign",
-        precession_method: str = "nnlo",
+        precession_method: str = "msa",
         prec_version: Optional[int] = None,
         convention: int = 1,
         final_spin_mod: Optional[int] = None,
@@ -139,7 +190,7 @@ class IMRPhenomXPHM(nn.Module):
             f_ref: Reference frequency in Hz
             phi0: Additional source-frame observer azimuth angle in radians
             modes: Optional sequence of harmonic modes (l, m) to evaluate
-            precession_method: 'nnlo', 'msa', 'spintaylor', or 'pnr'
+            precession_method: 'nnlo', 'msa', 'spintaylor', or 'pnr' (default 'msa')
             prec_version: An explicit version takes precedence over method.
                 When omitted, 'nnlo' selects 102 and 'msa' selects 223.
                 MSA labels 220--224 share the published analytical equations;
@@ -151,10 +202,8 @@ class IMRPhenomXPHM(nn.Module):
 
         ``final_spin_mod=0`` explicitly selects the NNLO remnant estimate;
         ``final_spin_mod=3`` selects the published MSA averaged remnant
-        (Eq. 42), independently of the Euler-angle prescription. ``None`` retains the
-        existing behavior: NNLO remnant for versions 101--104 and the aligned
-        carrier remnant otherwise. MSA remnant mode 3 is explicit until its
-        default policy is selected.
+        (Eq. 42), independently of the Euler-angle prescription. ``None``
+        selects the published family default: 0 for NNLO and 3 for MSA.
         """
         if precession_method is None:
             precession_method = self.default_precession_method
@@ -165,11 +214,9 @@ class IMRPhenomXPHM(nn.Module):
         if final_spin_mod is None:
             final_spin_mod = self.default_final_spin_mod
 
-        if precession_method.lower() == "ode":
-            raise ValueError("precession_method='ode' is an unvalidated prototype and is not available in releases.")
-        p_ver = resolve_precession_version(precession_method, prec_version)
-        if isinstance(final_spin_mod, bool) or final_spin_mod not in (None, 0, 2, 3):
-            raise ValueError("final_spin_mod must be None, 0 (NNLO), 2 (Vectorial), or 3 (MSA).")
+        precession_family, p_ver, final_spin_mod = resolve_xphm_options(
+            precession_method, prec_version, final_spin_mod
+        )
         if isinstance(convention, bool) or convention not in (0, 1, 5, 6, 7):
             raise ValueError(f"Unsupported precession convention: {convention}.")
         freqs = f if f is not None else sample_frequencies
@@ -178,8 +225,6 @@ class IMRPhenomXPHM(nn.Module):
 
         device = freqs.device if isinstance(freqs, torch.Tensor) else None
         dtype = freqs.dtype if isinstance(freqs, torch.Tensor) and freqs.is_floating_point() else torch.float64
-        complex_dtype = torch.complex128 if dtype == torch.float64 else torch.complex64
-
         m1 = as_tensor(mass1, device=device, dtype=dtype)
         m2 = as_tensor(mass2, device=device, dtype=dtype)
         s1x = as_tensor(spin1x, device=device, dtype=dtype)
@@ -262,18 +307,12 @@ class IMRPhenomXPHM(nn.Module):
             final_spin_override = compute_msa_final_spin(
                 v0_remnant, m1, m2, s1x, s1y, s1z, s2x, s2y, s2z
             )
-        elif final_spin_mod == 2 or (
-            final_spin_mod is None
-            and (
-                precession_method.lower() in ("spintaylor", "st", "spintaylort4", "pnr", "xpnr", "imrphenomxpnr")
-                or p_ver in (300, 310, 311, 320, 321, 330)
-            )
-        ):
+        elif final_spin_mod == 2:
             from torchwave.approximants.precession_spintaylor import compute_chi_tot_perp
 
             chi_tot_perp = compute_chi_tot_perp(m1, m2, s1x, s1y, s2x, s2y)
             final_spin_override = XASParameterFits.fit_final_spin_nnlo(eta, s1z, s2z, chi_tot_perp)
-        elif final_spin_mod == 0 or p_ver in (101, 102, 103, 104):
+        elif final_spin_mod == 0:
             chip = compute_effective_chip(m1, m2, s1x, s1y, s2x, s2y)
             final_spin_override = XASParameterFits.fit_final_spin_nnlo(eta, s1z, s2z, chip)
         is_batched = total_mass.dim() >= 1
@@ -286,7 +325,7 @@ class IMRPhenomXPHM(nn.Module):
             return t
 
         # Precession angles evaluation
-        if precession_method.lower() in ("pnr", "xpnr", "imrphenomxpnr") or p_ver in (300, 330):
+        if precession_family == "pnr":
             from torchwave.approximants.precession_pnr import evaluate_pnr_precession
 
             alpha, beta, gamma, theta_jn, zeta, carrier_phase = evaluate_pnr_precession(
@@ -305,7 +344,7 @@ class IMRPhenomXPHM(nn.Module):
                 convention=convention,
                 observer_azimuth=phi_0,
             )
-        elif precession_method.lower() in ("spintaylor", "st", "spintaylort4") or p_ver in (310, 311, 320, 321):
+        elif precession_family == "spintaylor":
             from torchwave.approximants.precession_spintaylor import evaluate_spintaylor_precession
 
             alpha, beta, gamma, theta_jn, zeta, carrier_phase = evaluate_spintaylor_precession(
@@ -378,7 +417,7 @@ class IMRPhenomXPHM(nn.Module):
         # E18/E19: the SPA orbital frequency is 2*pi*f/mp. Reference spin
         # data still refer to the common dominant-harmonic f_ref.
         angles_by_mp = {2: (alpha, beta, gamma)}
-        if precession_method.lower() in ("pnr", "xpnr", "imrphenomxpnr") or p_ver in (300, 330):
+        if precession_family == "pnr":
             from torchwave.approximants.precession_pnr import evaluate_pnr_precession
 
             for mp in {mp for _, mp in active_modes} - {2}:
@@ -400,7 +439,7 @@ class IMRPhenomXPHM(nn.Module):
                     observer_azimuth=phi_0,
                 )
                 angles_by_mp[mp] = (a_mp, b_mp, g_mp)
-        elif precession_method.lower() in ("spintaylor", "st", "spintaylort4") or p_ver in (310, 311, 320, 321):
+        elif precession_family == "spintaylor":
             from torchwave.approximants.precession_spintaylor import evaluate_spintaylor_precession
 
             for mp in {mp for _, mp in active_modes} - {2}:
@@ -436,98 +475,27 @@ class IMRPhenomXPHM(nn.Module):
                 angles_by_mp[mp] = (a_mp, b_mp, g_mp)
         d_mat_jn = {l: wigner_small_d_matrix(l, unsqueeze_param(theta_jn)) for l in unique_l}
 
-        norm_mode = math.sqrt(16.0 * PI / 5.0)
-        two_zeta = 2.0 * unsqueeze_param(zeta)
-        cos_2z = torch.cos(two_zeta)
-        sin_2z = torch.sin(two_zeta)
-
         for l, mp in active_modes:
-            # C4 uses source azimuth pi/2-phi_ref, while the carrier modes use
-            # zero azimuth. The mode-dependent conversion is exp(i*mp*pi/2).
-            # Compute h_mode = (1j ** mp) * coprec_dict[(l, mp)] in Cartesian arithmetic
             h_coprec = coprec_dict[(l, mp)]
-            h_coprec_re = h_coprec.real
-            h_coprec_im = h_coprec.imag
-            mp_mod4 = mp % 4
-            if mp_mod4 == 0:
-                h_mode_re, h_mode_im = h_coprec_re, h_coprec_im
-            elif mp_mod4 == 1:
-                h_mode_re, h_mode_im = -h_coprec_im, h_coprec_re
-            elif mp_mod4 == 2:
-                h_mode_re, h_mode_im = -h_coprec_re, -h_coprec_im
-            else:
-                h_mode_re, h_mode_im = h_coprec_im, -h_coprec_re
-
             alpha, beta, gamma = angles_by_mp.get(mp, angles_by_mp[2])
-
-            # At beta=0 the positive-frequency carrier must project as
-            # (Y_lm + (-1)^l Y_l,-m*)/2.  The sum below selects the -mp
-            # Wigner column first, so its aligned value has an extra
-            # (-1)^l relative to the XHM spherical-harmonic projection.
-            sign_l = 1.0 if (l % 2 == 0) else -1.0
-            scale_l = sign_l * math.sqrt((2 * l + 1) / 5.0) / norm_mode
-
-            d_beta_l = wigner_small_d_matrix(l, beta)
-            d_jn_l = d_mat_jn[l]
-
-            term_plus_re = torch.zeros_like(f_eval)
-            term_plus_im = torch.zeros_like(f_eval)
-            term_cross_re = torch.zeros_like(f_eval)
-            term_cross_im = torch.zeros_like(f_eval)
-
-            for m_val in range(-l, l + 1):
-                m_idx = m_val + l
-                dm_minus = d_beta_l[..., m_idx, -mp + l]
-                dm_plus = d_beta_l[..., m_idx, mp + l]
-
-                y_lm = d_jn_l[..., m_idx, 2 + l]
-
-                m_phase = float(m_val) * (-alpha)
-                cos_m = torch.cos(m_phase)
-                sin_m = torch.sin(m_phase)
-
-                dm_sum = dm_minus + sign_l * dm_plus
-                dm_diff = dm_minus - sign_l * dm_plus
-
-                term_plus_re = term_plus_re + y_lm * dm_sum * cos_m
-                term_plus_im = term_plus_im + y_lm * dm_diff * sin_m
-
-                term_cross_re = term_cross_re + y_lm * dm_diff * cos_m
-                term_cross_im = term_cross_im + y_lm * dm_sum * sin_m
-
-            # Phase factor exp(-i * mp' * gamma) for mp' = mp
-            mp_gamma = float(mp) * gamma
-            cos_g = torch.cos(mp_gamma)
-            sin_g = torch.sin(mp_gamma)
-
-            # K = scale_l * (cos_g + i sin_g) * (h_mode_re + i h_mode_im)
-            k_re = scale_l * (cos_g * h_mode_re - sin_g * h_mode_im)
-            k_im = scale_l * (cos_g * h_mode_im + sin_g * h_mode_re)
-
-            # hp_raw = K * term_plus
-            hp_raw_re = k_re * term_plus_re - k_im * term_plus_im
-            hp_raw_im = k_re * term_plus_im + k_im * term_plus_re
-
-            # hc_raw = 1j * K * term_cross
-            hc_raw_re = -(k_re * term_cross_im + k_im * term_cross_re)
-            hc_raw_im = k_re * term_cross_re - k_im * term_cross_im
-
-            # Rotate from the spherical projection basis to the observer basis.
-            hp_lm_re = cos_2z * hp_raw_re + sin_2z * hc_raw_re
-            hp_lm_im = cos_2z * hp_raw_im + sin_2z * hc_raw_im
-            hc_lm_re = -sin_2z * hp_raw_re + cos_2z * hc_raw_re
-            hc_lm_im = -sin_2z * hp_raw_im + cos_2z * hc_raw_im
-
-            h_plus_re = h_plus_re + hp_lm_re
-            h_plus_im = h_plus_im + hp_lm_im
-            h_cross_re = h_cross_re + hc_lm_re
-            h_cross_im = h_cross_im + hc_lm_im
+            hp_lm, hc_lm = twist_up_mode(
+                l,
+                mp,
+                h_coprec,
+                alpha,
+                beta,
+                gamma,
+                unsqueeze_param(theta_jn),
+                unsqueeze_param(zeta),
+                d_jn_l=d_mat_jn[l],
+            )
+            h_plus_re = h_plus_re + hp_lm.real
+            h_plus_im = h_plus_im + hp_lm.imag
+            h_cross_re = h_cross_re + hc_lm.real
+            h_cross_im = h_cross_im + hc_lm.imag
 
             if return_modes:
-                mode_dict[(l, mp)] = (
-                    torch.view_as_complex(torch.stack([hp_lm_re, hp_lm_im], dim=-1)),
-                    torch.view_as_complex(torch.stack([hc_lm_re, hc_lm_im], dim=-1)),
-                )
+                mode_dict[(l, mp)] = (hp_lm, hc_lm)
 
         # If aligned-spin limit, blend with exact IMRPhenomXHM
         should_blend_aligned = (convention == 1) and (

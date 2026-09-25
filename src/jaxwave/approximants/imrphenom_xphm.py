@@ -13,6 +13,7 @@ import math
 import jax
 import jax.numpy as jnp
 
+from diffgw_core.xphm_options import resolve_xphm_options
 from diffgw_core.constants import (
     MSUN_SEC,
     PI,
@@ -28,8 +29,58 @@ from jaxwave.approximants.precession_msa import (
     compute_effective_chip,
     compute_msa_final_spin,
     evaluate_msa_precession,
-    resolve_precession_version,
 )
+
+
+def twist_up_mode(
+    l: int,
+    mp: int,
+    h_coprec: jnp.ndarray,
+    alpha: jnp.ndarray,
+    beta: jnp.ndarray,
+    gamma: jnp.ndarray,
+    theta_jn: jnp.ndarray,
+    zeta: jnp.ndarray,
+    d_jn_l: Optional[jnp.ndarray] = None,
+) -> Tuple[jnp.ndarray, jnp.ndarray]:
+    """Twist one XHM carrier mode into positive-frequency polarizations.
+
+    This is the tensor form of Pratten et al. (2021), Eqs. (110)--(113),
+    plus the Appendix-D observer-basis rotation. The ``i**mp`` and scale
+    factors are solely the adapter from DiffGW's XHM mode convention.
+    """
+    if l not in (2, 3, 4) or mp <= 0 or mp > l:
+        raise ValueError("XPHM rotation supports l in {2,3,4} and 0 < mp <= l.")
+    h_mode = (1j ** mp) * h_coprec
+    sign_l = 1.0 if (l % 2 == 0) else -1.0
+    scale_l = sign_l * math.sqrt((2 * l + 1) / (16.0 * PI))
+    d_beta_l = wigner_small_d_matrix(l, beta)
+    if d_jn_l is None:
+        d_jn_l = wigner_small_d_matrix(l, theta_jn)
+
+    term_plus = jnp.zeros_like(h_mode)
+    term_cross = jnp.zeros_like(h_mode)
+    for m_val in range(-l, l + 1):
+        m_idx = m_val + l
+        dm_minus = d_beta_l[..., m_idx, -mp + l]
+        dm_plus = d_beta_l[..., m_idx, mp + l]
+        y_lm = d_jn_l[..., m_idx, 2 + l]
+        exp_minus_ima = jnp.exp(-1j * float(m_val) * alpha)
+        exp_plus_ima = jnp.exp(1j * float(m_val) * alpha)
+        a_m_minus = exp_minus_ima * dm_minus * y_lm
+        a_m_plus_star = exp_plus_ima * dm_plus * y_lm
+        term_plus = term_plus + a_m_minus + sign_l * a_m_plus_star
+        term_cross = term_cross + a_m_minus - sign_l * a_m_plus_star
+
+    phase = jnp.exp(1j * float(mp) * gamma)
+    hp_raw = scale_l * phase * h_mode * term_plus
+    hc_raw = 1j * scale_l * phase * h_mode * term_cross
+    cos_2z = jnp.cos(2.0 * zeta)
+    sin_2z = jnp.sin(2.0 * zeta)
+    return (
+        cos_2z * hp_raw + sin_2z * hc_raw,
+        -sin_2z * hp_raw + cos_2z * hc_raw,
+    )
 
 
 @jax.tree_util.register_pytree_node_class
@@ -151,11 +202,9 @@ class IMRPhenomXPHM:
         if convention is None:
             convention = 1
 
-        if precession_method.lower() == "ode":
-            raise ValueError("precession_method='ode' is an unvalidated prototype and is not available in releases.")
-        p_ver = resolve_precession_version(precession_method, prec_version)
-        if isinstance(final_spin_mod, bool) or final_spin_mod not in (None, 0, 2, 3):
-            raise ValueError("final_spin_mod must be None, 0 (NNLO), 2 (Vectorial), or 3 (MSA).")
+        precession_family, p_ver, final_spin_mod = resolve_xphm_options(
+            precession_method, prec_version, final_spin_mod
+        )
         if isinstance(convention, bool) or convention not in (0, 1, 5, 6, 7):
             raise ValueError(f"Unsupported precession convention: {convention}.")
 
@@ -254,18 +303,12 @@ class IMRPhenomXPHM:
             final_spin_override = compute_msa_final_spin(
                 v0_remnant, m1, m2, s1x, s1y, s1z, s2x, s2y, s2z
             )
-        elif final_spin_mod == 2 or (
-            final_spin_mod is None
-            and (
-                precession_method.lower() in ("spintaylor", "st", "spintaylort4", "pnr", "xpnr", "imrphenomxpnr")
-                or p_ver in (300, 310, 311, 320, 321, 330)
-            )
-        ):
+        elif final_spin_mod == 2:
             from jaxwave.approximants.precession_spintaylor import compute_chi_tot_perp
 
             chi_tot_perp = compute_chi_tot_perp(m1, m2, s1x, s1y, s2x, s2y)
             final_spin_override = XASParameterFits.fit_final_spin_nnlo(eta, s1z, s2z, chi_tot_perp)
-        elif final_spin_mod == 0 or p_ver in (101, 102, 103, 104):
+        elif final_spin_mod == 0:
             chip = compute_effective_chip(m1, m2, s1x, s1y, s2x, s2y)
             final_spin_override = XASParameterFits.fit_final_spin_nnlo(eta, s1z, s2z, chip)
 
@@ -278,7 +321,7 @@ class IMRPhenomXPHM:
             return t
 
         # Precession angles evaluation
-        if precession_method.lower() in ("pnr", "xpnr", "imrphenomxpnr") or p_ver in (300, 330):
+        if precession_family == "pnr":
             from jaxwave.approximants.precession_pnr import evaluate_pnr_precession
 
             alpha, beta, gamma, theta_jn, zeta, carrier_phase = evaluate_pnr_precession(
@@ -297,7 +340,7 @@ class IMRPhenomXPHM:
                 convention=convention,
                 observer_azimuth=phi_0,
             )
-        elif precession_method.lower() in ("spintaylor", "st", "spintaylort4") or p_ver in (310, 311, 320, 321):
+        elif precession_family == "spintaylor":
             from jaxwave.approximants.precession_spintaylor import evaluate_spintaylor_precession
 
             alpha, beta, gamma, theta_jn, zeta, carrier_phase = evaluate_spintaylor_precession(
@@ -370,7 +413,7 @@ class IMRPhenomXPHM:
         angles_by_mp = {2: (alpha, beta, gamma)}
         other_mps = {mp for _, mp in active_modes} - {2}
 
-        if precession_method.lower() in ("pnr", "xpnr", "imrphenomxpnr") or p_ver in (300, 330):
+        if precession_family == "pnr":
             from jaxwave.approximants.precession_pnr import evaluate_pnr_precession
 
             for mp in other_mps:
@@ -392,7 +435,7 @@ class IMRPhenomXPHM:
                     observer_azimuth=phi_0,
                 )
                 angles_by_mp[mp] = (a_mp, b_mp, g_mp)
-        elif precession_method.lower() in ("spintaylor", "st", "spintaylort4") or p_ver in (310, 311, 320, 321):
+        elif precession_family == "spintaylor":
             from jaxwave.approximants.precession_spintaylor import evaluate_spintaylor_precession
 
             for mp in other_mps:
@@ -437,59 +480,19 @@ class IMRPhenomXPHM:
 
         d_mat_jn = {l: wigner_small_d_matrix(l, unsqueeze_param(theta_jn)) for l in unique_l}
 
-        norm_mode = math.sqrt(16.0 * PI / 5.0)
-        two_zeta = 2.0 * unsqueeze_param(zeta)
-        cos_2z = jnp.cos(two_zeta)
-        sin_2z = jnp.sin(two_zeta)
-
         for l, mp in active_modes:
-            # C4 uses source azimuth pi/2-phi_ref, while the carrier modes use
-            # zero azimuth. The mode-dependent conversion is exp(i*mp*pi/2).
-            # A blanket minus accounts only for mp=2.
-            h_mode = (1j ** mp) * coprec_dict[(l, mp)]
             alpha, beta, gamma = angles_by_mp.get(mp, angles_by_mp[2])
-
-            # The -mp Wigner column enters first below. Its aligned
-            # projection differs from the XHM harmonic convention by
-            # (-1)^l, which must also multiply the precessing mode.
-            scale_l = ((-1) ** l) * math.sqrt((2 * l + 1) / 5.0) / norm_mode
-
-            d_beta_l = wigner_small_d_matrix(l, beta)
-            d_jn_l = d_mat_jn[l]
-
-            term_plus = jnp.zeros(f_eval.shape, dtype=complex_dtype)
-            term_cross = jnp.zeros(f_eval.shape, dtype=complex_dtype)
-
-            for m_val in range(-l, l + 1):
-                m_idx = m_val + l
-                dm_minus = d_beta_l[..., m_idx, -mp + l]
-                dm_plus = d_beta_l[..., m_idx, mp + l]
-
-                y_lm = d_jn_l[..., m_idx, 2 + l]
-
-                m_phase = float(m_val) * (-alpha)
-                cos_m = jnp.cos(m_phase)
-                sin_m = jnp.sin(m_phase)
-
-                exp_minus_ima = cos_m + 1j * sin_m
-                exp_plus_ima = cos_m - 1j * sin_m
-
-                a_m_minus = exp_minus_ima * dm_minus * y_lm
-                a_m_plus_star = exp_plus_ima * dm_plus * y_lm
-
-                term_plus = term_plus + (a_m_minus + ((-1) ** l) * a_m_plus_star)
-                term_cross = term_cross + (a_m_minus - ((-1) ** l) * a_m_plus_star)
-
-            # Phase factor exp(-i * mp' * gamma) for mp' = mp
-            mp_gamma = float(mp) * gamma
-            exp_neg_im_gamma = jnp.cos(mp_gamma) + 1j * jnp.sin(mp_gamma)
-
-            hp_raw = scale_l * exp_neg_im_gamma * h_mode * term_plus
-            hc_raw = 1j * scale_l * exp_neg_im_gamma * h_mode * term_cross
-
-            # Rotate from the spherical projection basis to the observer basis.
-            hp_lm = cos_2z * hp_raw + sin_2z * hc_raw
-            hc_lm = -sin_2z * hp_raw + cos_2z * hc_raw
+            hp_lm, hc_lm = twist_up_mode(
+                l,
+                mp,
+                coprec_dict[(l, mp)],
+                alpha,
+                beta,
+                gamma,
+                unsqueeze_param(theta_jn),
+                unsqueeze_param(zeta),
+                d_jn_l=d_mat_jn[l],
+            )
 
             h_plus_total = h_plus_total + hp_lm
             h_cross_total = h_cross_total + hc_lm
@@ -553,4 +556,5 @@ class IMRPhenomXPHM:
 
 __all__ = [
     "IMRPhenomXPHM",
+    "twist_up_mode",
 ]
