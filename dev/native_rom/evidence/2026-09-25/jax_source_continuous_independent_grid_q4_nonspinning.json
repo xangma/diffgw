@@ -1,0 +1,102 @@
+{
+  "case_id": "q4_nonspinning",
+  "checks": {
+    "shared_time_max_abs_at_most_M": true,
+    "stationary_peak_slope_max_abs_at_most": true,
+    "torch_shared_sample_complex_relative_l2_at_most": false
+  },
+  "comparisons": {
+    "jax_unchanged": {
+      "complex_relative_l2": 2.652118634340433e-05,
+      "shared_end_M": 484.5,
+      "shared_samples": 970,
+      "shared_time_max_abs_M": 0.0
+    },
+    "torch": {
+      "complex_relative_l2": 2.4739358639072732e-05,
+      "shared_end_M": 484.5,
+      "shared_samples": 970,
+      "shared_time_max_abs_M": 0.0
+    }
+  },
+  "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+  "diagnostic_checks_passed": false,
+  "elapsed_s": 131.58518716704566,
+  "host": "RONI2",
+  "levels": {
+    "baseline": {
+      "boundary_time_M": 384.6638549235156,
+      "expected_backend_parity_broken": true,
+      "jax": {
+        "end_M": 484.5,
+        "mode_sha256": "6340516a68053bdad300051242cc4a2ed42c11f9560f8113babc12d1a11b9553",
+        "samples": 970,
+        "start_M": 0.0,
+        "time_sha256": "6db2117b58c64613f6c556861870ceaa8bc6026319b18624a2991df48e6cec1b"
+      },
+      "match_time_M": 384.6638549235156,
+      "orbital_peak_spline_slope": 1.6175364677241746e-17,
+      "settings": {
+        "atol": 1e-13,
+        "coarse_output_step_M": 0.5,
+        "fine_refinement_factor": 256,
+        "max_step_M": 2.0,
+        "rtol": 1e-12
+      },
+      "torch": {
+        "end_M": 484.5,
+        "mode_sha256": "92208b779724e2fdeb67aae311f3a084802947cd8b291dfcb0885cc55e1e4f8a",
+        "samples": 970,
+        "start_M": 0.0,
+        "time_sha256": "6db2117b58c64613f6c556861870ceaa8bc6026319b18624a2991df48e6cec1b"
+      },
+      "torch_jax": {
+        "common_samples": 970,
+        "complex_relative_l2": 2.4426965327402455e-05,
+        "support_sample_difference": 0,
+        "time_max_abs_M": 0.0
+      },
+      "torch_public_complex_l2": 0.0650419985744651
+    },
+    "refined": {
+      "boundary_time_M": 384.6638605273616,
+      "expected_backend_parity_broken": true,
+      "jax": {
+        "end_M": 484.5,
+        "mode_sha256": "7b8e509423e5c2cfc7c49cc8bb3df66495c523174f30f7700757fe201026cb96",
+        "samples": 970,
+        "start_M": 0.0,
+        "time_sha256": "6db2117b58c64613f6c556861870ceaa8bc6026319b18624a2991df48e6cec1b"
+      },
+      "match_time_M": 384.6638605273616,
+      "orbital_peak_spline_slope": 3.439398458149768e-17,
+      "settings": {
+        "atol": 1e-13,
+        "coarse_output_step_M": 0.5,
+        "fine_refinement_factor": 512,
+        "max_step_M": 2.0,
+        "rtol": 1e-12
+      },
+      "torch": {
+        "end_M": 484.5,
+        "mode_sha256": "f6fbe738cb4561659f7c05c3177bcae08fe44a4a10d09b2d91f065bf6638fb3b",
+        "samples": 970,
+        "start_M": 0.0,
+        "time_sha256": "6db2117b58c64613f6c556861870ceaa8bc6026319b18624a2991df48e6cec1b"
+      },
+      "torch_jax": {
+        "common_samples": 970,
+        "complex_relative_l2": 1.0867359157146358e-05,
+        "support_sample_difference": 0,
+        "time_max_abs_M": 0.0
+      },
+      "torch_public_complex_l2": 0.06508083847053157
+    }
+  },
+  "pid": 25473,
+  "plan_sha256": "d54304c299f5f538ff5040e31ad56a2b5cbafb25edd86f6fb199af1c322515f4",
+  "prior_fixed_trajectory_complex_relative_l2": 1.0334654017764663e-06,
+  "release_qualified": false,
+  "schema": "diffgw.seobnrv4.jax-source-continuous-independent-grid.v1",
+  "status": "diagnostic_complete"
+}

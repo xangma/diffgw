@@ -212,12 +212,15 @@ def run(case_id, plan, public_identity, *, variant="published", anchor_control=F
         return_series=False, return_stages=False, diagnostic_nqc_second=None,
         diagnostic_nqc_phase_matrix=None, diagnostic_nqc_amplitude_derivatives=None,
         diagnostic_nqc_rhs_derivatives=None,
+        diagnostic_continuous_boundary=False,
         diagnostic_peak_policy=None):
     started = time.monotonic()
     if diagnostic_peak_policy not in (None, "stationary"):
         raise ValueError("unknown diagnostic orbital-peak policy")
     if diagnostic_peak_policy and variant != "source":
         raise ValueError("diagnostic orbital-peak policy is source-backed only")
+    if diagnostic_continuous_boundary and variant != "source":
+        raise ValueError("diagnostic continuous boundary is source-backed only")
     m1, m2, chi1, chi2, omega_start = CASES[case_id]
     nu = m1 * m2 / (m1 + m2)**2
     delta = (m1 - m2) / (m1 + m2)
@@ -357,7 +360,8 @@ def run(case_id, plan, public_identity, *, variant="published", anchor_control=F
         diagnostic_amplitude_derivatives=amplitude_derivatives,
         diagnostic_phase_matrix=phase_matrix,
         diagnostic_matching_second=matching_second,
-        diagnostic_matching_rhs_derivatives=rhs_derivatives)
+        diagnostic_matching_rhs_derivatives=rhs_derivatives,
+        diagnostic_continuous_boundary=diagnostic_continuous_boundary)
     jref = jax_attach(
         jrun.fine_time, jrun.fine_state, jax_fine_omega,
         jax_fine_mode, jax_fine_frequency, jnu, jchi, jsigma,
@@ -416,6 +420,7 @@ def run(case_id, plan, public_identity, *, variant="published", anchor_control=F
         "public_binary": public_identity,
         "source_choices": SOURCE_FLUX_OPTIONS if variant == "source" else None,
         "diagnostic_peak_policy": diagnostic_peak_policy,
+        "diagnostic_continuous_boundary": diagnostic_continuous_boundary,
         "diagnostic_nqc_second": diagnostic_nqc_second,
         "diagnostic_nqc_second_values": (_array(matching_second).tolist()
                                          if matching_second is not None else None),

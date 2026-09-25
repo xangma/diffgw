@@ -1388,7 +1388,19 @@ waveforms differ from the discrete source-compatible waveforms by `1.10e-5`
 and `9.73e-6`. This isolates the boundary-jump mechanism, but the continuous
 boundary is not the pinned historical convention, deliberately lacks JAX
 parity, and has no independent physical validation. It remains a feature-branch
-prototype; independently integrated convergence is still untested for it.
+prototype; the independently integrated result below tests that question.
+
+The [independent-grid continuous-boundary check](evidence/2026-09-25/jax_source_continuous_independent_grid_plan.json)
+reintegrates the q4 and aligned-spin trajectories separately at factors 256
+and 512, keeping the `0.5 M` whole-waveform output chart fixed. Its
+[q4](evidence/2026-09-25/jax_source_continuous_independent_grid_q4_nonspinning.json)
+and [aligned-spin](evidence/2026-09-25/jax_source_continuous_independent_grid_strong_aligned.json)
+Torch drifts are `2.47e-5` and `1.10e-5`, respectively, so both miss the
+predeclared `1e-5` gate. The corresponding fixed-trajectory drifts were
+`1.03e-6` and `2.82e-6`. A continuous boundary removes most attachment-grid
+sensitivity but does not yet make separately integrated source-backed
+waveforms converge. The JAX source-compatible route remains unchanged and
+does not match this Torch-only counterfactual.
 
 The [frozen anchor diagnostic](evidence/2026-09-25/source_spliced_anchor_plan.json)
 replays all four cases and fits each mode's own amplitude peak between output
