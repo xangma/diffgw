@@ -1,0 +1,23 @@
+{
+  "schema": "diffgw.seobnrv4.jax-source-peak-spacing-plan.v1",
+  "purpose": "Extend the fixed-0.5-M-output fine-input ladder from factors 128 to 256 and record the full-spline orbital-peak derivative at the returned match anchor.",
+  "pilot_case": "q4_nonspinning",
+  "prospective_case": "strong_aligned",
+  "source_plan_sha256": "eb79f7db87e23d83a8437334eec90f6872dcf3b76f65b5cbe55882f7d62b9944",
+  "fine_input_result_sha256": {
+    "q4_nonspinning": "cb62fd08bf15fa2510f130f2c304d65d1ed79271a86f984cf9482b05d95928ad",
+    "strong_aligned": "19882cd19d8e9cb922bc5ef033ace4a937cbe927eca4efe76d0b7431c6a4f52e"
+  },
+  "atol": 1e-13,
+  "rtol": 1e-12,
+  "max_step_M": 2.0,
+  "output_step_M": 0.5,
+  "fine_refinement_factors": [128, 256],
+  "checks": {
+    "shared_sample_complex_relative_l2_at_most": 1e-5,
+    "each_level_backend_checks_passed": true,
+    "shared_time_max_abs_at_most_M": 1e-8
+  },
+  "interpretation": "This measures one further fine-input refinement and whether the source-compatibility peak is an actual spline stationary point. A pass would still not establish physical accuracy, full-domain numerical convergence, or ROM qualification.",
+  "release_qualified": false
+}

@@ -29,6 +29,9 @@ from dev.native_rom.eob.jax.numerical_attachment_clean import (
     full_orbital_peak as jax_peak,
 )
 from dev.native_rom.eob.jax.two_stage_trajectory import integrate_two_stage_trajectory
+from jaxwave.approximants.eob.numerical_attachment import (
+    natural_cubic_spline as jax_natural_cubic_spline,
+)
 from jaxwave.approximants.eob.nqc import (
     nqc_22_factor as jax_factor,
     seobnrv4_nqc_parameters as jax_parameters,
@@ -61,6 +64,7 @@ from torchwave.approximants.eob.numerical_attachment import (
     _eval_batch_scalar,
     _unwrap_mode_phase,
     attach_seobnrv4_22_numerical_compatibility as torch_attach,
+    natural_cubic_spline as torch_natural_cubic_spline,
 )
 from torchwave.approximants.eob.published_waveform import published_mode22_and_frequency as torch_mode
 from torchwave.approximants.eob.remnant import (
@@ -355,6 +359,10 @@ def run(case_id, plan, public_identity, *, variant="published", anchor_control=F
                              sort_keys=True), flush=True)
     if return_series:
         if return_stages:
+            torch_peak_spline = torch_natural_cubic_spline(
+                fine.output_time, torch_fine_omega)
+            jax_peak_spline = jax_natural_cubic_spline(
+                jrun.fine_time, jax_fine_omega, scalar_output=True)
             targets = torch_targets(tnu, tchi)
             amplitude_rhs = torch.stack(targets[:3]) - torch.stack((
                 _eval_batch_scalar(tref.nqc.amplitude_spline, tmatch),
@@ -388,6 +396,14 @@ def run(case_id, plan, public_identity, *, variant="published", anchor_control=F
                 "nqc_amplitude_condition": float(tref.calibration.amplitude_condition),
                 "nqc_phase_condition": float(tref.calibration.phase_condition),
                 "orbital_peak_time_M": float(coarse.output_time[restart] + tref.peak.time),
+                "orbital_peak_sample_index": int(tref.peak.sample_index),
+                "orbital_peak_spline_slope": float(_eval_batch_scalar(
+                    torch_peak_spline, tref.peak.time, derivative=1)),
+                "orbital_peak_spline_curvature": float(tref.peak.curvature),
+                "jax_orbital_peak_time_M": float(jrun.coarse_time[jrun.restart_index] + jref.peak.time),
+                "jax_orbital_peak_sample_index": int(jref.peak.sample_index),
+                "jax_orbital_peak_spline_slope": float(jax_peak_spline.derivative(jref.peak.time)),
+                "jax_orbital_peak_spline_curvature": float(jref.peak.curvature),
                 "match_time_M": float(coarse.output_time[restart] + tref.match_time),
                 "boundary_time_M": float(coarse.output_time[restart] + tref.boundary_time),
                 "jax_match_time_M": float(jrun.coarse_time[jrun.restart_index] + jref.match_time),

@@ -1270,6 +1270,22 @@ for most of the observed cadence sensitivity on these two rows. The
 experiment still combines fine trajectory resampling with NQC spline input
 density and does not establish a converged source-faithful prescription.
 
+The [frozen peak-spacing extension](evidence/2026-09-25/jax_source_peak_spacing_plan.json)
+tests factors 128 and 256 at the same `0.5 M` output cadence and audits the
+spline derivative at the compatibility orbital-peak time. It fails the
+`1e-5` gate on both [q4](evidence/2026-09-25/jax_source_peak_spacing_q4_nonspinning.json)
+and [aligned spin](evidence/2026-09-25/jax_source_peak_spacing_strong_aligned.json):
+the Torch whole-waveform differences are `5.50e-4` and `8.73e-4`, with
+matching JAX results and passing backend parity. For q4, the factor-128
+returned peak has spline slope `−1.94e-5` and curvature `−0.00349`, while
+factor 256 returns a nearly stationary peak (slope `−1.64e-8`). For aligned
+spin, factor 128 is nearly stationary (slope `8.24e-10`) but factor 256 has
+slope `−6.50e-6`. The source-compatibility sign-product peak contraction
+can therefore return a nonstationary point on these grids, contributing to
+nonmonotone NQC matching and waveform drift. A safeguarded stationary-root
+control is needed before claiming numerical convergence; changing that rule
+would require a separate source-fidelity and physical-validation decision.
+
 The [frozen anchor diagnostic](evidence/2026-09-25/source_spliced_anchor_plan.json)
 replays all four cases and fits each mode's own amplitude peak between output
 samples without optimizing a relative shift. The [results](evidence/2026-09-25/source_spliced_anchor.json)
