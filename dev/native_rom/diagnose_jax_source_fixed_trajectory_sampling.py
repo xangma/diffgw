@@ -40,6 +40,7 @@ EVIDENCE = ROOT / "dev/native_rom/evidence/2026-09-25"
 PLAN = EVIDENCE / "jax_source_fixed_trajectory_sampling_plan.json"
 REFINEMENT_PLAN = EVIDENCE / "jax_source_fixed_trajectory_refinement_plan.json"
 STAGE_PLAN = EVIDENCE / "jax_source_fixed_attachment_stage_plan.json"
+CONTINUOUS_PLAN = EVIDENCE / "jax_source_continuous_boundary_control_plan.json"
 
 
 def _tensor(value):
@@ -47,10 +48,11 @@ def _tensor(value):
 
 
 def _attach(time_grid, state, orbital_frequency, base_mode, base_frequency,
-            output_time, match_time, nu, chi, sigma):
+            output_time, match_time, nu, chi, sigma, *, continuous_boundary=False):
     result = torch_attach(
         time_grid, state, orbital_frequency, base_mode, base_frequency,
-        nu, chi, sigma, _tensor(output_time), match_time=_tensor(match_time))
+        nu, chi, sigma, _tensor(output_time), match_time=_tensor(match_time),
+        diagnostic_continuous_boundary=continuous_boundary)
     return result, _array(result.mode)
 
 
@@ -58,21 +60,25 @@ def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--case", choices=("pilot", "prospective"), required=True)
     parser.add_argument("--sampling", choices=("128_vs_256", "256_vs_512",
-                                               "stage_256_vs_512"),
+                                               "stage_256_vs_512", "continuous_256_vs_512"),
                         default="128_vs_256")
     args = parser.parse_args()
-    stage_audit = args.sampling == "stage_256_vs_512"
+    continuous = args.sampling == "continuous_256_vs_512"
+    stage_audit = args.sampling in ("stage_256_vs_512", "continuous_256_vs_512")
     refinement = args.sampling != "128_vs_256"
-    plan_path = STAGE_PLAN if stage_audit else REFINEMENT_PLAN if refinement else PLAN
+    plan_path = (CONTINUOUS_PLAN if continuous else STAGE_PLAN if stage_audit
+                 else REFINEMENT_PLAN if refinement else PLAN)
     plan = json.loads(plan_path.read_text())
     case = plan[f"{args.case}_case"]
     prior_path = EVIDENCE / (
+        f"jax_source_fixed_attachment_stage_{case}.json" if continuous else
         f"jax_source_fixed_trajectory_refinement_{case}.json" if stage_audit else
         f"jax_source_fixed_trajectory_sampling_{case}.json" if refinement else
         f"jax_source_stationary_peak_control_{case}.json")
     prior_key = ("prior_fixed_trajectory_sha256" if refinement
                  else "stationary_control_sha256")
     expected_schema = (
+        "diffgw.seobnrv4.jax-source-continuous-boundary-control-plan.v1" if continuous else
         "diffgw.seobnrv4.jax-source-fixed-attachment-stage-plan.v1" if stage_audit else
         "diffgw.seobnrv4.jax-source-fixed-trajectory-refinement-plan.v1" if refinement
         else "diffgw.seobnrv4.jax-source-fixed-trajectory-sampling-plan.v1")
@@ -87,13 +93,15 @@ def main():
     prior = json.loads(prior_path.read_text())
     source_plan = json.loads(SOURCE_PLAN.read_text())
     identity = _prepare_public(source_plan)
-    output_stem = ("jax_source_fixed_attachment_stage" if stage_audit else
+    output_stem = ("jax_source_continuous_boundary_control" if continuous else
+                   "jax_source_fixed_attachment_stage" if stage_audit else
                    "jax_source_fixed_trajectory_refinement" if refinement
                    else "jax_source_fixed_trajectory_sampling")
     output = EVIDENCE / f"{output_stem}_{case}.json"
     started = time.monotonic()
     result = {
-        "schema": ("diffgw.seobnrv4.jax-source-fixed-attachment-stage.v1" if stage_audit
+        "schema": ("diffgw.seobnrv4.jax-source-continuous-boundary-control.v1"
+                   if continuous else "diffgw.seobnrv4.jax-source-fixed-attachment-stage.v1" if stage_audit
                    else "diffgw.seobnrv4.jax-source-fixed-trajectory-refinement.v1"
                    if refinement else "diffgw.seobnrv4.jax-source-fixed-trajectory-sampling.v1"),
         "status": "running", "case_id": case, "plan_sha256": q.sha256(plan_path),
@@ -146,9 +154,11 @@ def main():
         high_output = np.arange((post_count-1)*high_factor+1)*plan["output_step_M"]/high_factor
         high_attach, high_post = _attach(
             time_grid, state, orbital_frequency, base_mode, base_frequency,
-            high_output, match_high, nu, chi, sigma)
+            high_output, match_high, nu, chi, sigma,
+            continuous_boundary=continuous)
         high_reconstructed = np.concatenate((high_series[1][:restart], high_post[::high_factor]))
         high_reproduction_l2 = _relative_l2(high_reconstructed, high_series[1])
+        high_comparison_series = (high_series[0], high_reconstructed) if continuous else high_series
         decimation = plan["decimation"]
         low_factor = high_factor//decimation
         low_time = time_grid[::decimation]
@@ -168,11 +178,12 @@ def main():
                              ("recomputed_stationary_peak", match_low)):
             attached, post = _attach(
                 low_time, low_state, low_omega, low_mode, low_frequency,
-                low_output, match, nu, chi, sigma)
+                low_output, match, nu, chi, sigma,
+                continuous_boundary=continuous)
             series = (high_series[0], np.concatenate((high_series[1][:restart],
                                                       post[::low_factor])))
             controls[label] = {
-                "comparison_to_full_sampling": _shared_compare(high_series, series),
+                "comparison_to_full_sampling": _shared_compare(high_comparison_series, series),
                 "match_time_M": t0 + match,
                 "nqc_coefficients": [_array(x).tolist()
                                      for x in attached.calibration.coefficients],
@@ -225,8 +236,6 @@ def main():
         })
         limits = plan["checks"]
         result["checks"] = {
-            "reconstructed_high_complex_relative_l2_at_most": (
-                high_reproduction_l2 <= limits["reconstructed_high_complex_relative_l2_at_most"]),
             "shared_time_max_abs_at_most_M": all(
                 item["comparison_to_full_sampling"]["shared_time_max_abs_M"]
                 <= limits["shared_time_max_abs_at_most_M"]
@@ -235,7 +244,10 @@ def main():
                 abs(result["recomputed_low_peak_slope"])
                 <= limits["stationary_peak_slope_max_abs_at_most"]),
         }
-        if refinement and not stage_audit:
+        if not continuous:
+            result["checks"]["reconstructed_high_complex_relative_l2_at_most"] = (
+                high_reproduction_l2 <= limits["reconstructed_high_complex_relative_l2_at_most"])
+        if continuous or (refinement and not stage_audit):
             result["checks"]["recomputed_peak_fixed_trajectory_complex_relative_l2_at_most"] = (
                 controls["recomputed_stationary_peak"]["comparison_to_full_sampling"][
                     "complex_relative_l2"]

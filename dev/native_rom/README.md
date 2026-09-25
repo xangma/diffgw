@@ -1377,6 +1377,19 @@ checks are chiefly a discrete ringdown-boundary effect, with a smaller NQC
 component. Changing this boundary requires a separate historical-fidelity
 and physical-accuracy assessment; this experiment does not authorize it.
 
+The [frozen continuous-boundary counterfactual](evidence/2026-09-25/jax_source_continuous_boundary_control_plan.json)
+keeps the same source-backed trajectory and NQC solve but starts the Torch
+ringdown at the continuous match, using the matched NQC amplitude and
+frequency. On [q4](evidence/2026-09-25/jax_source_continuous_boundary_control_q4_nonspinning.json)
+and [aligned spin](evidence/2026-09-25/jax_source_continuous_boundary_control_strong_aligned.json),
+fixed-trajectory factor-256 to factor-512 drift falls to `1.03e-6` and
+`2.82e-6`, passing the `1e-5` sampling gate. The factor-512 continuous
+waveforms differ from the discrete source-compatible waveforms by `1.10e-5`
+and `9.73e-6`. This isolates the boundary-jump mechanism, but the continuous
+boundary is not the pinned historical convention, deliberately lacks JAX
+parity, and has no independent physical validation. It remains a feature-branch
+prototype; independently integrated convergence is still untested for it.
+
 The [frozen anchor diagnostic](evidence/2026-09-25/source_spliced_anchor_plan.json)
 replays all four cases and fits each mode's own amplitude peak between output
 samples without optimizing a relative shift. The [results](evidence/2026-09-25/source_spliced_anchor.json)

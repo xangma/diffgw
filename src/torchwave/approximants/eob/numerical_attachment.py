@@ -767,6 +767,7 @@ def attach_seobnrv4_22_numerical_compatibility(
     diagnostic_phase_matrix: Optional[Tensor] = None,
     diagnostic_matching_second: Optional[Tensor] = None,
     diagnostic_matching_rhs_derivatives: Optional[Tensor] = None,
+    diagnostic_continuous_boundary: bool = False,
 ) -> NumericalAttachedMode22:
     """Attach the full-series NQC and discrete-boundary v4 ringdown.
 
@@ -787,6 +788,9 @@ def attach_seobnrv4_22_numerical_compatibility(
     geometric step required for the internal ringdown grid; the analytic
     ansatz is evaluated at output samples here.  Ringdown support is counted
     on that high-resolution grid before values are selected at output queries.
+    ``diagnostic_continuous_boundary`` is a development-only counterfactual
+    that uses the continuous NQC match and its constrained boundary values.
+    It does not reproduce the historical discrete-boundary convention.
     """
     if not isinstance(state, Tensor) or state.ndim < 2 or state.shape[-1] != 4:
         raise ValueError("state must end in (r, phi, p_r*, p_phi)")
@@ -806,6 +810,8 @@ def attach_seobnrv4_22_numerical_compatibility(
         raise ValueError("state and base_mode must be finite")
     if not bool(torch.isfinite(sigma).all()):
         raise ValueError("sigma must be finite")
+    if not isinstance(diagnostic_continuous_boundary, bool):
+        raise TypeError("diagnostic_continuous_boundary must be a bool")
     if time.ndim < 1 or time.shape[-1] < 4 or output_time.ndim < 1 or output_time.shape[-1] < 2:
         raise ValueError("attachment grids need at least four input and two output samples")
     n = time.shape[-1]
@@ -887,27 +893,35 @@ def attach_seobnrv4_22_numerical_compatibility(
     coefficients = nqc.calibration.coefficients
     corrected = base_mode * nqc_22_factor(
         state[..., 0], state[..., 2], orbital_frequency, coefficients, sample_dims=1)
-    boundary_mode = torch.gather(corrected, -1, boundary_index.unsqueeze(-1)).squeeze(-1)
-    boundary_amplitude = boundary_mode.abs()
-    # Keep the phase origin on the continuously unwrapped corrected series.
-    # Taking ``angle`` of one complex sample would reset the ringdown phase at
-    # every branch cut.  The one-step backward difference below is the
-    # positive-frequency h=A*exp(-i*phi) convention in the same unwrapped chart.
-    corrected_phase = nqc.sampled_corrected_phase
-    boundary_phase = torch.gather(
-        corrected_phase, -1, boundary_index.unsqueeze(-1)
-    ).squeeze(-1)
-    previous_phase = torch.gather(
-        corrected_phase, -1, (boundary_index - 1).unsqueeze(-1)
-    ).squeeze(-1)
-    boundary_frequency = (boundary_phase - previous_phase) / step
-    if bool((boundary_amplitude <= 0).any()) or bool((boundary_frequency <= 0).any()):
-        raise ValueError("corrected boundary must have positive amplitude and backward frequency")
     match_phase = _eval_batch_scalar(
         nqc.waveform_phase_spline, match) - (
             _eval_batch_scalar(nqc.phase_basis_spline, match)
             * coefficients.phase
         ).sum(-1)
+    if diagnostic_continuous_boundary:
+        # Dev-only counterfactual: the NQC solve constrains A'=0 and omega at
+        # match, so use those continuous values as ringdown boundary data.
+        boundary_time = match
+        boundary_amplitude = nqc.evaluate(match).abs()
+        boundary_phase = match_phase
+        boundary_frequency = targets.frequency
+    else:
+        boundary_mode = torch.gather(corrected, -1, boundary_index.unsqueeze(-1)).squeeze(-1)
+        boundary_amplitude = boundary_mode.abs()
+        # Keep the phase origin on the continuously unwrapped corrected series.
+        # Taking ``angle`` of one complex sample would reset the ringdown phase at
+        # every branch cut.  The one-step backward difference below is the
+        # positive-frequency h=A*exp(-i*phi) convention in the same unwrapped chart.
+        corrected_phase = nqc.sampled_corrected_phase
+        boundary_phase = torch.gather(
+            corrected_phase, -1, boundary_index.unsqueeze(-1)
+        ).squeeze(-1)
+        previous_phase = torch.gather(
+            corrected_phase, -1, (boundary_index - 1).unsqueeze(-1)
+        ).squeeze(-1)
+        boundary_frequency = (boundary_phase - previous_phase) / step
+    if bool((boundary_amplitude <= 0).any()) or bool((boundary_frequency <= 0).any()):
+        raise ValueError("corrected boundary must have positive amplitude and frequency")
     ringdown_time = (query - boundary_time.unsqueeze(-1)).clamp_min(0)
     ringdown = merger_ringdown_22(
         ringdown_time, sigma, boundary_amplitude, torch.zeros_like(boundary_amplitude),
