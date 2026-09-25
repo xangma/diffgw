@@ -2969,6 +2969,16 @@ low endpoint. This verifies a source time convention; the native corrected
 mode and its phase residual still need comparison on that exact chart. The
 [first runner attempt](evidence/2026-09-25/source_aligned_cap_full_epoch_suffix.json)
 records a JSON-serialization error and provides no numerical conclusion.
+The [exact cap-time corrected-mode comparison](evidence/2026-09-25/source_aligned_exact_cap_corrected.json)
+replays the refined native full series and compares unshifted physical `h22`
+at identical `0.5 M` sample times. All 16 validity checks pass. On the
+predeclared 869 samples at `416.5–850.5 M`, native/source corrected relative
+L2 is `9.95e-4`, while their raw modes differ by `4.61e-6`. Source raw mode
+times its frozen NQC factor reconstructs the source corrected mode to
+`4.92e-8` L2. Applying the obsolete `0.05312408 M` mapping worsens the
+corrected comparison to `5.68e-3` L2, so that chart error does not explain
+the residual. NQC coefficients and later mode synthesis remain to be
+isolated; this check does not qualify the waveform against NR.
 
 Three frozen warm-gradient attempts
 ([Torch](evidence/2026-09-25/native_warm_start_gradient.json),

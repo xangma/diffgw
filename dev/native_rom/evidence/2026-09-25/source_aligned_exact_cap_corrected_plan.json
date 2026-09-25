@@ -1,0 +1,83 @@
+{
+  "common_samples": 2002,
+  "expected_window_samples": {
+    "native_nqc_local_50M": 100,
+    "post_native_boundary": 200,
+    "pre_native_match_minus_50M": 1702,
+    "whole_common_cap_support": 2002
+  },
+  "gates": {
+    "cap_state_max_abs": 1e-12,
+    "legacy_shift_replay_max_abs_M": 1e-12,
+    "stage_time_max_abs_M": 1e-10
+  },
+  "inputs": {
+    "cap_full_v5_plan": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_native_cap_full_crop_v5_plan.json",
+      "sha256": "10bf7884a18d5ae19b6a2b69863918efdc1f859497162d67c82207cd8047d268"
+    },
+    "cap_full_v5_result": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_native_cap_full_crop_v5.json",
+      "sha256": "2c167f1a06faff7734c3a45896d829447969b99a326c9515852b0b7b4d7c9ef3"
+    },
+    "cap_full_v5_runner": {
+      "path": "dev/native_rom/diagnose_source_aligned_native_cap_full_crop_v5.py",
+      "sha256": "fef27b40d0e3cfb714b5fb772da971368fa3f9d61adc14acee6d0bea7870c0f8"
+    },
+    "cap_raw_plan": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_cap_epoch_trajectory_phase_plan.json",
+      "sha256": "26602b60a475873fd3f7034d1f86b21d6744e135be2e77a844430b4b9f2ac10d"
+    },
+    "cap_raw_result": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_cap_epoch_trajectory_phase.json",
+      "sha256": "f3ffcad24066c070a5138439b19dc914d4a7022196edf353e272469c6c872de8"
+    },
+    "cap_raw_runner": {
+      "path": "dev/native_rom/diagnose_source_aligned_cap_epoch_trajectory_phase.py",
+      "sha256": "edd06ae92f2b2513b6985da4606face506ecf618f239417415b0c2054efd568e"
+    },
+    "nqc_factor": {
+      "path": "src/torchwave/approximants/eob/nqc.py",
+      "sha256": "c8683181f7cf911df1e1b85cd6999cdb03e7c594e867315359040e9eb03ca552"
+    },
+    "source_epoch_plan": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_cap_full_epoch_suffix_v2_plan.json",
+      "sha256": "4f9d2145bec622ad739d12310b30ec3445ebd76574d734c12420ad03c8297c65"
+    },
+    "source_epoch_result": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_cap_full_epoch_suffix_v2.json",
+      "sha256": "e38e63546dfe7533fbe4cbd45e827e3618046e40aa6987136e111a99ea3529f8"
+    },
+    "source_epoch_runner": {
+      "path": "dev/native_rom/diagnose_source_aligned_cap_full_epoch_suffix_v2.py",
+      "sha256": "d5bd7869f193858b487b5113a645141076074d30d84a5c7cf854a6f7501a8fb7"
+    },
+    "warm_start": {
+      "path": "dev/native_rom/eob/torch/warm_start.py",
+      "sha256": "a9818350b18ed04ca645edbf6af4c22760fc51eae540c12f38d171d99a675a20"
+    }
+  },
+  "legacy_shift_M": 0.0531240803315427,
+  "level": "refined",
+  "primary_end_M": 850.5,
+  "primary_samples": 869,
+  "primary_start_M": 416.5,
+  "protocol": {
+    "component_controls": "On the exact primary chart, reconstruct pinned-source corrected pre-attachment h22 from previously captured source raw h22, source state/frequency and source NQC coefficients. Also report frozen source/native raw same-state and own-state metrics, with no refit. Report corrected residual in entire common cap support, pre-native-match-minus-50M, native NQC-local 50M and post-native-boundary windows. Source attachment time is not captured, so these windows are descriptive and do not independently identify source NQC/attachment.",
+    "old_map_control": "The obsolete low-endpoint+cropped-epoch formula assigned source index i the time exact t_i minus delta=0.0531240803315427 M. Hold native samples fixed and query the source corrected Re/Im natural-cubic interpolant at native t+delta. Report exact-versus-old-map phase/amplitude/complex metrics; this is a deliberately wrong chart, not a physical correction or a refit. The frozen 1169-sample sampled-peak anchor was derived from modes independently and did not use that obsolete formula.",
+    "primary": "Replay the refined wholly native cap-start, source-backed flux/Hamiltonian, continuous NQC and boundary-frequency candidate used in full-crop v5. Its uncut h22 must exactly replay v5 full-series SHA/time/count. Compare physical h22 to stored pinned-source uncut corrected h22 on identical cap-time samples t=i*0.5 M, especially the predeclared 869 samples t=416.5..850.5 M. Initial orbital phase is zero in both cap states; apply only the established physical amplitude scale. No time shift, phase anchor, interpolation, or pairwise fit in this primary comparison.",
+    "resource_bound": "One serial local refined native full-mode replay, reading frozen source/raw arrays and no source compile; expected 1-2 minutes, upper bound 4 minutes and under 4 GiB. Stop by SIGINT to the recorded PID. No production/pinned-source/README edits.",
+    "validity": "Gate all direct and nested source/input SHA values; source-only v2, cap-raw and native full-v5 status; exact source cap mode hash/suffix; native cap initial state, full series hash/time/count, match/boundary times and exact 0.5 M chart; finite mode/factor/shifted controls; expected window counts. Preserve any failed-validity or runner-error artifact. Source raw*NQC reconstruction error and Torch/JAX legacy parity flags are findings, not qualification gates."
+  },
+  "release_qualified": false,
+  "row_tuple": [
+    30.0,
+    20.0,
+    0.8,
+    0.6,
+    0.04
+  ],
+  "schema": "diffgw.seobnrv4.source-aligned-exact-cap-corrected-plan.v1",
+  "script_sha256": "dd8a1e27490e50646035ae180d10cbd7cdbb71e34b6a2f99681a54c034e8845a",
+  "step_M": 0.5
+}
