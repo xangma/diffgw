@@ -201,6 +201,10 @@ regular-source/native gap is `1.46e-7` in radial-momentum acceleration, and
 the regular/optimized source gap has the same size. The other field
 components stay within `2.55e-9` relative. This historical derivative
 rounding difference remains outside the optimized same-state parity claim.
+The [q10 same-initial-state trajectory replay](../evidence/2026-09-25/regular_optimized_trajectory.json)
+finds at most `4.60e-9 M` regular/optimized radius separation over `500 M`,
+below the regular route's own `9.36e-9 M` adjacent-grid change. This does
+not resolve a trajectory-level effect of the regular derivative path.
 The [eight-point initial-condition boundary check](../evidence/2026-09-25/initial_boundary.json)
 finds a failed `1e-8` relative legacy-source gate: native inward momentum
 differs by up to `1.35e-7` absolute (`1.18e-4` relative with the frozen

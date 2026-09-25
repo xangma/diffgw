@@ -1,0 +1,25 @@
+{
+  "schema": "diffgw.seobnrv4.regular-optimized-trajectory-plan.v1",
+  "purpose": "Quantify pinned-source regular-vs-optimized derivative-route trajectory drift from identical q10 aligned-spin legacy initial data; fixed-step RK4 refinement separates route effects from integration error.",
+  "source_flux_plan": "dev/native_rom/evidence/2026-09-24/source_flux_initial_plan.json",
+  "source_flux_plan_sha256": "1167199c8f954f97a5905a1e3b2f67d1555e984e5f1da0a0fc42a77a925f96ea",
+  "initial_boundary_result": "dev/native_rom/evidence/2026-09-25/initial_boundary.json",
+  "initial_boundary_result_sha256": "9e19e6e2be64ba9d81942c2e4bb4fee290e8074cb2ada450e62309534e723566",
+  "regular_field_result": "dev/native_rom/evidence/2026-09-25/regular_field_boundary.json",
+  "regular_field_result_sha256": "3730c14fbcd54b685b09a8e967151c861edc8bc949718a4e4d7ade827e2466f7",
+  "regular_adapter": "dev/native_rom/reference/full_v4_source_field_adapter.c",
+  "regular_adapter_sha256": "d674aecdc602024c539ff8a2040a842adceab3ca546c08e307724c2fccdd3113",
+  "optimized_adapter": "dev/native_rom/reference/optimized_v4_source_field_adapter.c",
+  "optimized_adapter_sha256": "c972ce6d230c6e1306a5754ba1cc4b07a1925163383df2b5dffaa58387025934",
+  "row_name": "q10_near_extreme_aligned",
+  "initial_Momega": 0.02,
+  "duration_M": 500.0,
+  "sample_spacing_M": 50.0,
+  "release_qualified": false,
+  "solver": "fixed_rk4",
+  "steps_M": [
+    2.0,
+    1.0,
+    0.5
+  ]
+}

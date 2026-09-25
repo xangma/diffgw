@@ -2057,6 +2057,16 @@ gap is also `1.46e-7` there, while the other components differ by at most
 historical numerical derivative route, not the optimized physical field or
 flux formula. Its trajectory-level impact is unmeasured.
 
+The [controlled q10 trajectory replay](evidence/2026-09-25/regular_optimized_trajectory.json)
+starts both pinned-source derivative routes from the same legacy initial
+state at `M Omega=0.02` and integrates for `500 M` with fixed RK4 steps of
+`2`, `1`, and `0.5 M`. On the finest grid, the regular/optimized radius
+difference is at most `4.60e-9 M`, while the regular route changes by
+`9.36e-9 M` between its two finest steps. The optimized route's corresponding
+change is `6.11e-13 M`. The regular-source field's numerical variability
+therefore exceeds this selected trajectory-route difference; neither a
+converged trajectory effect nor a whole-waveform correction is established.
+
 The [prospective initial-condition boundary check](evidence/2026-09-25/initial_boundary.json)
 uses the same four physical rows at `M Omega=0.01` and `0.02`, both below the
 historical start cap. The native source-convention circular radius and angular
