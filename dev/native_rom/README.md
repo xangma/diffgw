@@ -1765,6 +1765,21 @@ their cadence-sensitive NQC fits on this row; it does not establish that the
 wheel coefficients are converged, physically preferable, or suitable as
 native model data. Neither generator is release qualified by this control.
 
+The [q4 orbital-peak bracket control](evidence/2026-09-25/source_q4_peak_bracket_correction.json)
+uses a [frozen plan](evidence/2026-09-25/source_q4_peak_bracket_correction_plan.json)
+and a private, development-only patch to the pinned source. Its replay of the
+historical peak finder reproduces all three saved peak times. At `0.015625`
+and `0.0078125 M`, the chosen bisection interval has a negative orbital-frequency
+derivative at both ends; the reported peak sits at the interval edge rather
+than a stationary point. Requiring a sign-changing derivative bracket moves
+those peaks earlier by `0.018448` and `0.010590 M`, while leaving the
+`0.00390625 M` peak unchanged. The adjacent NQC coefficient differences fall
+from `0.695`, `1.459` to `0.149`, `0.334`, but still grow under refinement.
+Source/wheel peak-fitted whole-mode L2 slightly worsens from `0.001425`,
+`0.001710`, `0.002038` to `0.001463`, `0.001798`, `0.002038`. This identifies
+a historical source bracketing failure on this row, not a converged or
+release-ready source correction.
+
 The [prospective q4 local-fit control](evidence/2026-09-25/source_q4_ultrafine_local_nqc_plan.json)
 recomputes those five coefficients with the same degree-four, `±2 M` local
 polynomial used in the earlier combined numerical control, then injects each

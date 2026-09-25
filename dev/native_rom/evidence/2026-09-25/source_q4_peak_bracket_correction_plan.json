@@ -1,0 +1,19 @@
+{
+  "schema": "diffgw.seobnrv4.source-q4-peak-bracket-correction-plan.v1",
+  "purpose": "Test a private pinned-source correction that requires opposite derivative signs before orbital-peak bisection, holding all other source code and q4 inputs fixed.",
+  "source_nqc_ladder": "dev/native_rom/evidence/2026-09-25/source_q4_nqc_cadence_ladder.json",
+  "source_nqc_ladder_sha256": "4e69681f1d6a1579a4120bf80eadf3a04fe3982de816f74c972bd9961c0f4d1f",
+  "whole_ladder": "dev/native_rom/evidence/2026-09-25/source_q4_fine_whole_mode_ladder.json",
+  "whole_ladder_sha256": "16324db29ec3440a0699fae952a852a2e8a97edf1359224f5b412b2e22c15911",
+  "source_flux_plan": "dev/native_rom/evidence/2026-09-24/source_flux_initial_plan.json",
+  "source_flux_plan_sha256": "1167199c8f954f97a5905a1e3b2f67d1555e984e5f1da0a0fc42a77a925f96ea",
+  "capture_adapter": "dev/native_rom/reference/full_v4_source_nqc_inputs_adapter.c",
+  "capture_adapter_sha256": "0e2006c7a2898b09d56b5d464135b113f4546f43b607ddacbf327761a24a6451",
+  "mode_adapter": "dev/native_rom/reference/full_v4_source_mode_large_adapter.c",
+  "mode_adapter_sha256": "c9d77e46cd5fbb38fb4afc256a7c3f067a0c6759c2a316f55c0e9a8821539011",
+  "steps_M": [0.015625, 0.0078125, 0.00390625],
+  "capture_capacity": 50000,
+  "mode_capacity": 200000,
+  "peak_fit": "quadratic_power",
+  "release_qualified": false
+}
