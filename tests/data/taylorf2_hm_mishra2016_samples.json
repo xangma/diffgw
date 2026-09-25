@@ -1,20 +1,39 @@
 {
   "format": "taylorf2-hm-mishra2016-leading-amplitude-v1",
-  "description": "All-eight leading SPA amplitude ratios independently evaluated from the author-published Mathematica supplement; no native imports.",
+  "description": "All-eight leading SPA amplitude ratios and normalized nonspinning phase metadata independently derived from the author-published Mathematica supplement; no native imports.",
   "source": {
     "paper": "https://arxiv.org/abs/1601.05588v1",
     "bundle_url": "https://export.arxiv.org/e-print/1601.05588v1",
     "bundle_sha256": "f0b6c6810da95f45141dbb9f0c5cccec0ba0742f60b836dba7698c90a25d5154",
     "member": "supl-mkaf16.m",
     "member_sha256": "501ea53c29b77e061585540b9ccfd69a4cd0283e805ea1e9c24c38800e627a70",
-    "scope": "lowest nonspinning PN term of each H[l,m]"
+    "scope": "lowest nonspinning PN term of each H[l,m] and the nonspinning part of TF28Phasing"
   },
   "adapter": "V_m=(2/m)^(1/3)*v22 and |h_lm/h_22|=|H_lm^LO(V_m)|*(V_m/v22)^(-7/2)",
   "constants": {
     "G_SI": "66743/1000000000000000",
     "MSUN_SI": "1988409870698050700000000000000",
     "C_SI": "299792458",
+    "MPC_SI": "30856775814913670000000",
     "MSUN_SEC": "0.000004925490947641266899148097635794818308705"
+  },
+  "complex_component": {
+    "format": "mishra2016-leading-nonspinning-complex-modes-v1",
+    "scope": "unwindowed leading nonspinning raw modes with coalescence-phase origin; excludes f_ref subtraction, polarization projection, cutoffs, and spin-amplitude corrections",
+    "paper_equations": [
+      "4",
+      "11",
+      "12a--12h"
+    ],
+    "tf28_phasing": "-(462992376000*eta**3*v**6 + 459766137600*pi*eta**2*v**7 - 206607970800*eta**2*v**6 - 201134102400*eta**2*v**4 - 1175152809600*pi*eta*v**7 - 882121363200*pi**2*eta*v**6 + 24236159077900*eta*v**6 + 101708006400*pi*eta*v**5*log(v) + 33902668800*pi*eta*v**5 - 252826358400*eta*v**4 - 28686873600*eta*v**2 - 1424746554000*pi*v**7 + 1530761379840*v**6*log(v) - 11583231236531*v**6 + 1530761379840*EulerGamma*v**6 + 3061522759680*v**6*log(2) + 1001432678400*pi**2*v**6 - 719872876800*pi*v**5*log(v) - 239957625600*pi*v**5 - 141310692600*v**4 + 75107450880*pi*v**3 - 23067475200*v**2 - 4694215680)/(400573071360*eta*v**5)",
+    "inputs": {
+      "distance_mpc": "410",
+      "phic": "0.23",
+      "tc_seconds": "0.0041"
+    },
+    "author_mode": "M_sec^2/D_sec*pi*sqrt(2*eta/3)*V_m^(-7/2)*H_lm_LO(V_m)*exp(-I*(m*(2*pi*(f/m)*tc-phic+TF28)+pi/4))",
+    "native_over_author_adapter": "exp(I*pi*(m-3)/2)",
+    "evidence_class": "symbolic author-source component gate, not external numerical parity"
   },
   "leading_terms": {
     "22": {
