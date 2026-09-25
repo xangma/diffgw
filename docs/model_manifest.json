@@ -482,7 +482,7 @@
       ],
       "frame_convention": "Garc\u00eda-Quir\u00f3s et al. (2020) spherical harmonic decomposition and collocation reconstruction",
       "status": "sovereign_nr_calibrated",
-      "notes": "Native SXS NR fits supply ringdown amplitude and phase components for (2,1), (3,3), (4,4) and (3,2). Phase-component tests use reference amplitudes, restricted ringdown bands and affine phase/time alignment. These checks do not validate a complete multimode waveform. The frozen catalog and holdout full-waveform LAL comparisons did not pass the strict gates.",
+      "notes": "Native SXS NR fits supply ringdown amplitude and phase components for (2,1), (3,3), (4,4) and (3,2). The paper's analytic inspiral carrier-rescaling slice has an independent scalar reference and Torch/JAX checks; all phase corrections and attachment terms remain conditional. Mode/regime diagnostics localize the largest frozen-case residuals to higher-mode intermediate amplitude and phase, but do not fit calibration data. Restricted ringdown and affine phase checks do not validate a complete multimode waveform. The frozen catalog and holdout full-waveform LAL comparisons did not pass the strict gates.",
       "primary_references": [
         {
           "citation": "Garc\u00eda-Quir\u00f3s et al. (2020), Phys. Rev. D 102, 064002",

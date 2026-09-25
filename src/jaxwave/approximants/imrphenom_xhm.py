@@ -36,6 +36,7 @@ from jaxwave.approximants.xhm_native_fits import (
 )
 from jaxwave.approximants.imrphenom_hm import _swsh_projection_coefficients
 from jaxwave.approximants.polynomial_interval import polynomial_has_nonpositive
+from jaxwave.approximants.xhm_inspiral_phase_clean import rescale_carrier_phase
 
 
 # Pre-inverted 3x3 matrix for inspiral collocation points
@@ -1327,8 +1328,8 @@ class IMRPhenomXHM:
                         )
                     delta_target_u = _unsqueeze_to(delta_target, mf_grid)
                     carrier_p_at_ins, carrier_dp_at_ins = eval_carrier_phi_and_deriv((2.0 / m_flt) * f_ins_p)
-                    phi_ins_grid = (m_flt / 2.0) * phi_22_scaled + delta_target_u
-                    phi_ins_at_ins = (m_flt / 2.0) * carrier_p_at_ins + delta_target
+                    phi_ins_grid = rescale_carrier_phase(phi_22_scaled, m) + delta_target_u
+                    phi_ins_at_ins = rescale_carrier_phase(carrier_p_at_ins, m) + delta_target
                     dphi_int_shift = phi_ins_at_ins - eval_phi_int(f_ins_p)
                     dphi_int_shift_u = _unsqueeze_to(dphi_int_shift, mf_grid)
 
@@ -1436,8 +1437,8 @@ class IMRPhenomXHM:
 
                     delta_target_32 = PI
                     carrier_p_at_ins, carrier_dp_at_ins = eval_carrier_phi_and_deriv(f_ins_p)
-                    phi_ins_32_grid = phi_22_carrier + delta_target_32
-                    phi_ins_at_ins_32 = carrier_p_at_ins + delta_target_32
+                    phi_ins_32_grid = rescale_carrier_phase(phi_22_carrier, m) + delta_target_32
+                    phi_ins_at_ins_32 = rescale_carrier_phase(carrier_p_at_ins, m) + delta_target_32
                     dphi_int_shift_32 = phi_ins_at_ins_32 - (eval_phi_int_32(f_ins_p) + c_int_32)
                     dphi_int_shift_32_u = _unsqueeze_to(dphi_int_shift_32, mf_grid)
                     c_int_32_u = _unsqueeze_to(c_int_32, mf_grid)
