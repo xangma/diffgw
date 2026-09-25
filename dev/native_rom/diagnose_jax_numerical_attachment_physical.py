@@ -21,6 +21,7 @@ from dev.native_rom.eob.jax.numerical_attachment_clean import (
 )
 from dev.native_rom.eob.jax.two_stage_trajectory import integrate_two_stage_trajectory
 from jaxwave.approximants.eob.nqc import seobnrv4_nqc_parameters as jax_parameters
+from jaxwave.approximants.eob.nqc import nqc_22_factor as jax_nqc_factor
 from jaxwave.approximants.eob.published_waveform import published_mode22_and_frequency as jax_mode
 from jaxwave.approximants.eob.remnant import (
     eob_final_mass_fraction as jax_final_mass,
@@ -31,6 +32,7 @@ from jaxwave.approximants.eob.seobnrv4_hamiltonian import SEOBNRv4Hamiltonian as
 from jaxwave.approximants.kerr_qnm_interp import evaluate_kerr_qnm_220 as jax_qnm
 from torchwave.approximants.eob.adaptive_driver_clean import AlignedSpinV4Event, integrate_adaptive
 from torchwave.approximants.eob.nqc import seobnrv4_nqc_parameters as torch_parameters
+from torchwave.approximants.eob.nqc import nqc_22_factor as torch_nqc_factor
 from torchwave.approximants.eob.numerical_attachment import (
     attach_seobnrv4_22_numerical_compatibility as torch_attach,
 )
@@ -75,7 +77,55 @@ def _compare(left, right, output_time):
     }
 
 
-def run(case_id):
+def _spliced_comparison(plan, coarse, jrun, torch_field, jax_field,
+                        th, tf, jh, jf, tref, independent, output_time):
+    """Apply each fine calibration to its own coarse prefix before splicing."""
+    restart = jrun.restart_index
+    n_coarse = len(coarse.output_time)
+    torch_restart = (n_coarse - math.ceil(150 / 0.5)
+                     if (n_coarse - 1) * 0.5 >= 150 else n_coarse - math.ceil(n_coarse / 2))
+    if restart != torch_restart:
+        raise ValueError("Torch/JAX restart indices differ")
+    tcoarse, _ = torch_mode(coarse.output_state, th, tf, **MODE_OPTIONS)
+    jcoarse = jax.jit(lambda state: jax_mode(state, jh, jf, **MODE_OPTIONS)[0])(
+        jrun.coarse_state)
+    tomega = torch_field(coarse.output_state)[:, 1]
+    jomega = jax.vmap(jax_field)(jrun.coarse_state)[:, 1]
+    tcorrected = tcoarse * torch_nqc_factor(
+        coarse.output_state[:, 0], coarse.output_state[:, 2], tomega,
+        tref.calibration.coefficients)
+    jcorrected = jcoarse * jax_nqc_factor(
+        jrun.coarse_state[:, 0], jrun.coarse_state[:, 2], jomega,
+        independent.calibration.coefficients)
+    tmode = np.concatenate((_array(tcorrected[:restart]), _array(tref.mode)))
+    jmode = np.concatenate((_array(jcorrected[:restart]), _array(independent.mode)))
+    ttime = np.concatenate((_array(coarse.output_time[:restart]),
+                            float(coarse.output_time[restart]) + output_time))
+    jtime = np.concatenate((_array(jrun.coarse_time[:restart]),
+                            float(jrun.coarse_time[restart]) + output_time))
+    tmismatch = abs(complex(tcorrected[restart]) - complex(tref.corrected_inspiral[0]))
+    jmismatch = abs(complex(jcorrected[restart]) - complex(independent.corrected_inspiral[0]))
+    metrics = dict(
+        restart_index=restart, prefix_samples=restart, full_samples=len(tmode),
+        global_time_max_abs_M=float(np.max(abs(ttime-jtime))),
+        prefix_complex_relative_l2=_relative_l2(jcorrected[:restart], tcorrected[:restart]),
+        full_complex_relative_l2=_relative_l2(jmode, tmode),
+        torch_restart_continuity_relative=float(tmismatch/abs(complex(tref.corrected_inspiral[0]))),
+        jax_restart_continuity_relative=float(jmismatch/abs(complex(independent.corrected_inspiral[0]))),
+        zero_pattern_equal=bool(np.array_equal(tmode == 0, jmode == 0)),
+    )
+    checks = dict(
+        global_time_max_abs_M=metrics["global_time_max_abs_M"] <= plan["gates"]["max_global_time_difference_M"],
+        prefix_complex_relative_l2=metrics["prefix_complex_relative_l2"] <= plan["gates"]["max_prefix_complex_relative_l2"],
+        full_complex_relative_l2=metrics["full_complex_relative_l2"] <= plan["gates"]["max_full_complex_relative_l2"],
+        torch_restart_continuity_relative=metrics["torch_restart_continuity_relative"] <= plan["gates"]["max_restart_continuity_relative"],
+        jax_restart_continuity_relative=metrics["jax_restart_continuity_relative"] <= plan["gates"]["max_restart_continuity_relative"],
+        zero_pattern_equal=metrics["zero_pattern_equal"],
+    )
+    return metrics, checks
+
+
+def run(case_id, *, splice=False):
     started = time.monotonic()
     m1, m2, chi1, chi2, _ = CASES[case_id]
     initial_torch, initial_jax, torch_field, jax_field = construct_case(case_id)
@@ -174,16 +224,41 @@ def run(case_id):
         "end_to_end_support_zero_pattern_equal": end_to_end["support_zero_pattern_equal"],
     }
     result["diagnostic_checks_passed"] = all(result["checks"].values())
-    output = Path(f"dev/native_rom/evidence/2026-09-25/jax_numerical_attachment_physical_{case_id}.json")
-    output.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n")
-    print(case_id, json.dumps(result["checks"], sort_keys=True), flush=True)
+    if splice:
+        from dev.native_rom.qualify_generator import sha256
+        plan_path = Path("dev/native_rom/evidence/2026-09-25/jax_spliced_waveform_plan.json")
+        plan = json.loads(plan_path.read_text())
+        if (plan["schema"] != "diffgw.seobnrv4.jax-spliced-waveform-plan.v1"
+                or case_id not in plan["cases"] or plan["release_qualified"] is not False):
+            raise ValueError("frozen splice protocol changed")
+        metrics, checks = _spliced_comparison(
+            plan, coarse, jrun, torch_field, jax_field,
+            th, tf, jh, jf, tref, independent, output_time)
+        spliced = dict(schema="diffgw.seobnrv4.jax-spliced-waveform.v1",
+                       case_id=case_id, status="diagnostic_complete",
+                       release_qualified=False, plan_sha256=sha256(plan_path),
+                       script_sha256=sha256(__file__),
+                       scope="Torch/JAX coarse-prefix NQC and complete spliced waveform parity on a fixed output chart",
+                       host=platform.node(), cwd=os.getcwd(), pid=os.getpid(),
+                       input=result["input"], metrics=metrics, checks=checks,
+                       diagnostic_checks_passed=all(checks.values()),
+                       elapsed_s=time.monotonic()-started)
+        output = Path(f"dev/native_rom/evidence/2026-09-25/jax_spliced_waveform_{case_id}.json")
+        output.write_text(json.dumps(spliced, indent=2, sort_keys=True) + "\n")
+        print(case_id, json.dumps(spliced["checks"], sort_keys=True), flush=True)
+    else:
+        output = Path(f"dev/native_rom/evidence/2026-09-25/jax_numerical_attachment_physical_{case_id}.json")
+        output.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n")
+        print(case_id, json.dumps(result["checks"], sort_keys=True), flush=True)
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--case", choices=(*CASES, "prospective"), required=True)
-    selected = parser.parse_args().case
+    parser.add_argument("--splice", action="store_true")
+    args = parser.parse_args()
+    selected = args.case
     names = (("q4_nonspinning", "strong_aligned", "strong_antialigned")
              if selected == "prospective" else (selected,))
     for name in names:
-        run(name)
+        run(name, splice=args.splice)

@@ -1,0 +1,52 @@
+{
+  "case_id": "q4_nonspinning",
+  "checks": {
+    "full_complex_relative_l2": true,
+    "global_time_max_abs_M": true,
+    "jax_restart_continuity_relative": true,
+    "prefix_complex_relative_l2": true,
+    "torch_restart_continuity_relative": true,
+    "zero_pattern_equal": true
+  },
+  "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+  "diagnostic_checks_passed": true,
+  "elapsed_s": 27.1699382920051,
+  "host": "RONI2",
+  "input": {
+    "atol": 1e-10,
+    "case_parameters": [
+      40.0,
+      10.0,
+      0.0,
+      0.0,
+      0.04
+    ],
+    "final_spin_fit_order": [
+      3,
+      4
+    ],
+    "fine_step_M": 0.015625,
+    "max_step_M": 2.0,
+    "output_samples": 602,
+    "output_step_M": 0.5,
+    "rtol": 1e-09
+  },
+  "metrics": {
+    "full_complex_relative_l2": 1.7971676931941089e-09,
+    "full_samples": 1087,
+    "global_time_max_abs_M": 0.0,
+    "jax_restart_continuity_relative": 0.0,
+    "prefix_complex_relative_l2": 3.375011181346132e-10,
+    "prefix_samples": 485,
+    "restart_index": 485,
+    "torch_restart_continuity_relative": 0.0,
+    "zero_pattern_equal": true
+  },
+  "pid": 11563,
+  "plan_sha256": "3d67b65d1011bcfdf2bd75c957eafb2feceed5d488e8e74e20aeb18e9b477f6a",
+  "release_qualified": false,
+  "schema": "diffgw.seobnrv4.jax-spliced-waveform.v1",
+  "scope": "Torch/JAX coarse-prefix NQC and complete spliced waveform parity on a fixed output chart",
+  "script_sha256": "ad7452e2c0f2f5db33cf1b27a1ea1be579e399885742f6106a177a36a6773f75",
+  "status": "diagnostic_complete"
+}

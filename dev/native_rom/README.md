@@ -1820,6 +1820,20 @@ backends hold the adaptive trajectory, orbital peak, QNM/remnant, output
 chart, and boundary policy fixed. It is not a full waveform-parameter or ROM
 gradient qualification.
 
+The [frozen Torch/JAX spliced-waveform diagnostic](evidence/2026-09-25/jax_spliced_waveform_plan.json)
+extends those four selected physical cases through the calibrated coarse
+prefix and complete numerical attachment. The [pilot](evidence/2026-09-25/jax_spliced_waveform_high_start_mixed_spin.json)
+and prospective [q=4](evidence/2026-09-25/jax_spliced_waveform_q4_nonspinning.json),
+[aligned](evidence/2026-09-25/jax_spliced_waveform_strong_aligned.json), and
+[antialigned](evidence/2026-09-25/jax_spliced_waveform_strong_antialigned.json)
+cases pass every predeclared diagnostic check. The largest coarse-prefix
+complex relative L2 is `3.35e-9`, and the largest complete spliced value is
+`1.72e-8`; both backends have matching global times, restart correction
+values, and zero-support patterns. This uses a `0.5 M` diagnostic attachment
+chart; the production fine-grid attachment and downsampling, independent
+physical reference, domain convergence, and full parameter gradients remain
+unqualified.
+
 1. Qualify the physical generator against the published equations and independent
    references over the intended domain, resolve convention/provenance gaps, and
    establish gradients and numerical convergence. This runner covers only scalar
