@@ -1,0 +1,4327 @@
+{
+  "author_archive_sha256": "d5853acabc1a07b66b4fae437c02e1435a9d2b3561bd7e4752b9721c9cd48923",
+  "author_datasets": {
+    "negative": "/n00/m-02/{2,-2,0}",
+    "positive": "/n00/m+02/{2,2,0}"
+  },
+  "branch_seed_source": "Cook author archive linear frequency interpolation; native values are not solver seeds",
+  "errors": [],
+  "gates": {
+    "all_strict_solver_converged": true,
+    "native_matches_direct_solver_at_declared_points": true,
+    "solver_estimate_below_predeclared_limit": true,
+    "torch_jax_agree_at_declared_points": true
+  },
+  "plan_sha256": "6c966f927793890e6409b448e04e187b7277014d0d1f9f1872c9ffe0b96dd051",
+  "prior_evidence_sha256": {
+    "dev/native_rom/evidence/2026-09-25/qnm_cook_domain.json": "851c78a73e97b4ea7cd25f998a239d68efc781b9a225a2fe7795138d88ff9b40",
+    "dev/native_rom/evidence/2026-09-25/qnm_interstitial_solver.json": "3f3d284635780edbe0901271cccb0fc875bc9ccac94e96f7aac37d5133199804"
+  },
+  "process": {
+    "argv": [
+      "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw/dev/native_rom/diagnose_qnm_finite_domain_solver.py",
+      "--author-archive",
+      "/tmp/diffgw-KerrQNM_00.h5",
+      "--json-out",
+      "dev/native_rom/evidence/2026-09-25/qnm_finite_domain_solver.json"
+    ],
+    "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+    "host": "RONI2",
+    "pid": 48875
+  },
+  "production_change": false,
+  "release_qualified": false,
+  "rows": [
+    {
+      "categories": [
+        {
+          "detail": 0,
+          "kind": "log_grid"
+        },
+        {
+          "kind": "edge_or_near_edge"
+        }
+      ],
+      "direct_solver": [
+        0.3736716844180418,
+        0.0889623156889357
+      ],
+      "jax": [
+        0.3736716844180418,
+        0.0889623156889357
+      ],
+      "jax_minus_solver_abs": [
+        0.0,
+        0.0
+      ],
+      "signed_spin": 0.0,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 1024,
+      "solver_estimated_frequency_error": 4.868660327676844e-17,
+      "torch": [
+        0.3736716844180418,
+        0.0889623156889357
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "categories": [
+        {
+          "kind": "edge_or_near_edge"
+        }
+      ],
+      "direct_solver": [
+        0.37367168441816767,
+        0.0889623156889337
+      ],
+      "jax": [
+        0.37367168441816784,
+        0.08896231568893369
+      ],
+      "jax_minus_solver_abs": [
+        1.6653345369377348e-16,
+        1.3877787807814457e-17
+      ],
+      "signed_spin": 1e-12,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 1024,
+      "solver_estimated_frequency_error": 5.92298092244393e-17,
+      "torch": [
+        0.37367168441816784,
+        0.08896231568893369
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        1.6653345369377348e-16,
+        1.3877787807814457e-17
+      ]
+    },
+    {
+      "categories": [
+        {
+          "kind": "edge_or_near_edge"
+        }
+      ],
+      "direct_solver": [
+        0.37367168567570347,
+        0.08896231566897696
+      ],
+      "jax": [
+        0.3736716856757034,
+        0.08896231566897694
+      ],
+      "jax_minus_solver_abs": [
+        5.551115123125783e-17,
+        1.3877787807814457e-17
+      ],
+      "signed_spin": 1e-08,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 1024,
+      "solver_estimated_frequency_error": 2.1773310917463308e-17,
+      "torch": [
+        0.3736716856757034,
+        0.08896231566897694
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        5.551115123125783e-17,
+        1.3877787807814457e-17
+      ]
+    },
+    {
+      "categories": [
+        {
+          "kind": "edge_or_near_edge"
+        }
+      ],
+      "direct_solver": [
+        0.3736842617513948,
+        0.08896211604979151
+      ],
+      "jax": [
+        0.37368426175138075,
+        0.08896211604978359
+      ],
+      "jax_minus_solver_abs": [
+        1.404432126150823e-14,
+        7.924216838262055e-15
+      ],
+      "signed_spin": 0.0001,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 1024,
+      "solver_estimated_frequency_error": 1.947477009547991e-17,
+      "torch": [
+        0.37368426175138075,
+        0.08896211604978359
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        1.404432126150823e-14,
+        7.924216838262055e-15
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": {
+            "knot_log": 0.08634694098731086,
+            "side": -1,
+            "target_log": 0.05
+          },
+          "kind": "native_knot_probe"
+        }
+      ],
+      "direct_solver": [
+        0.3845953291831084,
+        0.08875880736242794
+      ],
+      "jax": [
+        0.3845953291831082,
+        0.0887588073624279
+      ],
+      "jax_minus_solver_abs": [
+        2.220446049250313e-16,
+        4.163336342344337e-17
+      ],
+      "signed_spin": 0.0827231473338577,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 1024,
+      "solver_estimated_frequency_error": 9.831411142721356e-17,
+      "torch": [
+        0.3845953291831082,
+        0.0887588073624279
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        2.220446049250313e-16,
+        4.163336342344337e-17
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": {
+            "knot_log": 0.08634694098731086,
+            "side": 0,
+            "target_log": 0.05
+          },
+          "kind": "native_knot_probe"
+        }
+      ],
+      "direct_solver": [
+        0.3845954564165154,
+        0.08875880464750645
+      ],
+      "jax": [
+        0.38459545641651594,
+        0.08875880464750639
+      ],
+      "jax_minus_solver_abs": [
+        5.551115123125783e-16,
+        5.551115123125783e-17
+      ],
+      "signed_spin": 0.08272406461025174,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 1024,
+      "solver_estimated_frequency_error": 5.533885627488261e-17,
+      "torch": [
+        0.38459545641651594,
+        0.08875880464750639
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        5.551115123125783e-16,
+        5.551115123125783e-17
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": {
+            "knot_log": 0.08634694098731086,
+            "side": 1,
+            "target_log": 0.05
+          },
+          "kind": "native_knot_probe"
+        }
+      ],
+      "direct_solver": [
+        0.3845955836499401,
+        0.08875880193257674
+      ],
+      "jax": [
+        0.38459558364993995,
+        0.08875880193257668
+      ],
+      "jax_minus_solver_abs": [
+        1.6653345369377348e-16,
+        5.551115123125783e-17
+      ],
+      "signed_spin": 0.08272498188572848,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 1024,
+      "solver_estimated_frequency_error": 3.093536239485927e-17,
+      "torch": [
+        0.38459558364993995,
+        0.08875880193257668
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        1.6653345369377348e-16,
+        5.551115123125783e-17
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": {
+            "knot_log": 0.25904082296193254,
+            "side": -1,
+            "target_log": 0.25
+          },
+          "kind": "native_knot_probe"
+        }
+      ],
+      "direct_solver": [
+        0.4067953340345559,
+        0.08816870533558238
+      ],
+      "jax": [
+        0.40679533403455576,
+        0.08816870533558234
+      ],
+      "jax_minus_solver_abs": [
+        1.6653345369377348e-16,
+        4.163336342344337e-17
+      ],
+      "signed_spin": 0.22820771262316517,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 1024,
+      "solver_estimated_frequency_error": 2.946212561700988e-17,
+      "torch": [
+        0.40679533403455576,
+        0.08816870533558234
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        1.6653345369377348e-16,
+        4.163336342344337e-17
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": {
+            "knot_log": 0.25904082296193254,
+            "side": 0,
+            "target_log": 0.25
+          },
+          "kind": "native_knot_probe"
+        }
+      ],
+      "direct_solver": [
+        0.4067954638158111,
+        0.0881687012233688
+      ],
+      "jax": [
+        0.4067954638158112,
+        0.0881687012233688
+      ],
+      "jax_minus_solver_abs": [
+        1.1102230246251565e-16,
+        0.0
+      ],
+      "signed_spin": 0.2282084844150666,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 1024,
+      "solver_estimated_frequency_error": 1.737460713529313e-16,
+      "torch": [
+        0.4067954638158112,
+        0.0881687012233688
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        1.1102230246251565e-16,
+        0.0
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": {
+            "knot_log": 0.25904082296193254,
+            "side": 1,
+            "target_log": 0.25
+          },
+          "kind": "native_knot_probe"
+        }
+      ],
+      "direct_solver": [
+        0.4067955935970797,
+        0.08816869711114728
+      ],
+      "jax": [
+        0.4067955935970797,
+        0.08816869711114725
+      ],
+      "jax_minus_solver_abs": [
+        0.0,
+        2.7755575615628914e-17
+      ],
+      "signed_spin": 0.22820925620619628,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 1024,
+      "solver_estimated_frequency_error": 7.299766481970962e-17,
+      "torch": [
+        0.4067955935970797,
+        0.08816869711114725
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        0.0,
+        2.7755575615628914e-17
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": 1,
+          "kind": "log_grid"
+        }
+      ],
+      "direct_solver": [
+        0.42307905865083184,
+        0.08759395077533404
+      ],
+      "jax": [
+        0.4230790586508324,
+        0.08759395077533352
+      ],
+      "jax_minus_solver_abs": [
+        5.551115123125783e-16,
+        5.134781488891349e-16
+      ],
+      "signed_spin": 0.31870793094204186,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 1024,
+      "solver_estimated_frequency_error": 9.256666417643875e-17,
+      "torch": [
+        0.4230790586508324,
+        0.08759395077533352
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        5.551115123125783e-16,
+        5.134781488891349e-16
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": 2,
+          "kind": "log_grid"
+        }
+      ],
+      "direct_solver": [
+        0.4740816878495563,
+        0.08505710812906654
+      ],
+      "jax": [
+        0.47408168784955673,
+        0.08505710812906597
+      ],
+      "jax_minus_solver_abs": [
+        4.440892098500626e-16,
+        5.689893001203927e-16
+      ],
+      "signed_spin": 0.5358411166387265,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 1024,
+      "solver_estimated_frequency_error": 2.056371838839523e-17,
+      "torch": [
+        0.47408168784955673,
+        0.08505710812906597
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        4.440892098500626e-16,
+        5.689893001203927e-16
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": {
+            "knot_log": 1.0073809781852932,
+            "side": -1,
+            "target_log": 1.0
+          },
+          "kind": "native_knot_probe"
+        }
+      ],
+      "direct_solver": [
+        0.5062747552900546,
+        0.08289064025676784
+      ],
+      "jax": [
+        0.5062747552900543,
+        0.08289064025676783
+      ],
+      "jax_minus_solver_abs": [
+        3.3306690738754696e-16,
+        1.3877787807814457e-17
+      ],
+      "signed_spin": 0.6348255075709979,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 1024,
+      "solver_estimated_frequency_error": 7.053426061433998e-18,
+      "torch": [
+        0.5062747552900543,
+        0.08289064025676783
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        3.3306690738754696e-16,
+        1.3877787807814457e-17
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": {
+            "knot_log": 1.0073809781852932,
+            "side": 0,
+            "target_log": 1.0
+          },
+          "kind": "native_knot_probe"
+        }
+      ],
+      "direct_solver": [
+        0.5062748895037213,
+        0.08289063031184764
+      ],
+      "jax": [
+        0.5062748895037212,
+        0.08289063031184771
+      ],
+      "jax_minus_solver_abs": [
+        1.1102230246251565e-16,
+        6.938893903907228e-17
+      ],
+      "signed_spin": 0.6348258727453077,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 1024,
+      "solver_estimated_frequency_error": 1.0640052953397187e-16,
+      "torch": [
+        0.5062748895037212,
+        0.08289063031184771
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        1.1102230246251565e-16,
+        6.938893903907228e-17
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": {
+            "knot_log": 1.0073809781852932,
+            "side": 1,
+            "target_log": 1.0
+          },
+          "kind": "native_knot_probe"
+        }
+      ],
+      "direct_solver": [
+        0.5062750237173868,
+        0.08289062036692006
+      ],
+      "jax": [
+        0.5062750237173864,
+        0.08289062036692008
+      ],
+      "jax_minus_solver_abs": [
+        3.3306690738754696e-16,
+        1.3877787807814457e-17
+      ],
+      "signed_spin": 0.6348262379192523,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 1024,
+      "solver_estimated_frequency_error": 5.647635636387317e-17,
+      "torch": [
+        0.5062750237173864,
+        0.08289062036692008
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        3.3306690738754696e-16,
+        1.3877787807814457e-17
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": 3,
+          "kind": "log_grid"
+        }
+      ],
+      "direct_solver": [
+        0.5255614480789152,
+        0.08138262279776316
+      ],
+      "jax": [
+        0.5255614480789145,
+        0.08138262279776323
+      ],
+      "jax_minus_solver_abs": [
+        7.771561172376096e-16,
+        6.938893903907228e-17
+      ],
+      "signed_spin": 0.6837722339831664,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 1024,
+      "solver_estimated_frequency_error": 2.426205777552876e-16,
+      "torch": [
+        0.5255614480789145,
+        0.08138262279776323
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        7.771561172376096e-16,
+        6.938893903907228e-17
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": 4,
+          "kind": "log_grid"
+        }
+      ],
+      "direct_solver": [
+        0.5763492726818916,
+        0.07665396548709927
+      ],
+      "jax": [
+        0.5763492726818904,
+        0.07665396548709891
+      ],
+      "jax_minus_solver_abs": [
+        1.2212453270876722e-15,
+        3.608224830031759e-16
+      ],
+      "signed_spin": 0.7845565309968157,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 1024,
+      "solver_estimated_frequency_error": 6.736115139012882e-17,
+      "torch": [
+        0.5763492726818904,
+        0.07665396548709891
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        1.2212453270876722e-15,
+        3.608224830031759e-16
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": 5,
+          "kind": "log_grid"
+        }
+      ],
+      "direct_solver": [
+        0.6253407575054744,
+        0.07105822630659327
+      ],
+      "jax": [
+        0.6253407575054744,
+        0.07105822630659327
+      ],
+      "jax_minus_solver_abs": [
+        0.0,
+        0.0
+      ],
+      "signed_spin": 0.8532200732377965,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 1024,
+      "solver_estimated_frequency_error": 3.579491812986357e-17,
+      "torch": [
+        0.6253407575054744,
+        0.07105822630659327
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": 6,
+          "kind": "log_grid"
+        }
+      ],
+      "direct_solver": [
+        0.6716142721321658,
+        0.06486923587579549
+      ],
+      "jax": [
+        0.6716142721321661,
+        0.06486923587579546
+      ],
+      "jax_minus_solver_abs": [
+        2.220446049250313e-16,
+        2.7755575615628914e-17
+      ],
+      "signed_spin": 0.9000000000000028,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 1024,
+      "solver_estimated_frequency_error": 3.661226837992694e-17,
+      "torch": [
+        0.6716142721321661,
+        0.06486923587579546
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        2.220446049250313e-16,
+        2.7755575615628914e-17
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": 7,
+          "kind": "log_grid"
+        }
+      ],
+      "direct_solver": [
+        0.7144998406405085,
+        0.058390817658496234
+      ],
+      "jax": [
+        0.714499840640508,
+        0.05839081765849646
+      ],
+      "jax_minus_solver_abs": [
+        5.551115123125783e-16,
+        2.2898349882893854e-16
+      ],
+      "signed_spin": 0.9318707930942061,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 1024,
+      "solver_estimated_frequency_error": 5.2296651045618915e-17,
+      "torch": [
+        0.714499840640508,
+        0.05839081765849646
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        5.551115123125783e-16,
+        2.2898349882893854e-16
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": {
+            "knot_log": 2.993360620893444,
+            "side": -1,
+            "target_log": 3.0
+          },
+          "kind": "native_knot_probe"
+        }
+      ],
+      "direct_solver": [
+        0.7460856957296271,
+        0.05318890797786649
+      ],
+      "jax": [
+        0.7460856957296271,
+        0.053188907977866455
+      ],
+      "jax_minus_solver_abs": [
+        0.0,
+        3.469446951953614e-17
+      ],
+      "signed_spin": 0.9498812265185838,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 1024,
+      "solver_estimated_frequency_error": 1.878013555387836e-17,
+      "torch": [
+        0.7460856957296271,
+        0.053188907977866455
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        0.0,
+        3.469446951953614e-17
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": {
+            "knot_log": 2.993360620893444,
+            "side": 0,
+            "target_log": 3.0
+          },
+          "kind": "native_knot_probe"
+        }
+      ],
+      "direct_solver": [
+        0.7460857945131091,
+        0.05318889115983304
+      ],
+      "jax": [
+        0.7460857945131092,
+        0.05318889115983306
+      ],
+      "jax_minus_solver_abs": [
+        1.1102230246251565e-16,
+        2.0816681711721685e-17
+      ],
+      "signed_spin": 0.9498812766373321,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 1024,
+      "solver_estimated_frequency_error": 4.66418188387357e-17,
+      "torch": [
+        0.7460857945131092,
+        0.05318889115983306
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        1.1102230246251565e-16,
+        2.0816681711721685e-17
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": {
+            "knot_log": 2.993360620893444,
+            "side": 1,
+            "target_log": 3.0
+          },
+          "kind": "native_knot_probe"
+        }
+      ],
+      "direct_solver": [
+        0.7460858932965643,
+        0.053188874341800904
+      ],
+      "jax": [
+        0.7460858932965644,
+        0.05318887434180086
+      ],
+      "jax_minus_solver_abs": [
+        1.1102230246251565e-16,
+        4.163336342344337e-17
+      ],
+      "signed_spin": 0.9498813267560304,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 1024,
+      "solver_estimated_frequency_error": 4.596990813973543e-17,
+      "torch": [
+        0.7460858932965644,
+        0.05318887434180086
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        1.1102230246251565e-16,
+        4.163336342344337e-17
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": 8,
+          "kind": "log_grid"
+        }
+      ],
+      "direct_solver": [
+        0.7535881097065958,
+        0.05190189923749887
+      ],
+      "jax": [
+        0.7535881097065957,
+        0.051901899237498994
+      ],
+      "jax_minus_solver_abs": [
+        1.1102230246251565e-16,
+        1.249000902703301e-16
+      ],
+      "signed_spin": 0.9535841116638739,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 1024,
+      "solver_estimated_frequency_error": 6.376659162326118e-17,
+      "torch": [
+        0.7535881097065957,
+        0.051901899237498994
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        1.1102230246251565e-16,
+        1.249000902703301e-16
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": 9,
+          "kind": "log_grid"
+        }
+      ],
+      "direct_solver": [
+        0.7887002100762412,
+        0.04562568351098771
+      ],
+      "jax": [
+        0.7887002100762414,
+        0.04562568351098768
+      ],
+      "jax_minus_solver_abs": [
+        1.1102230246251565e-16,
+        2.7755575615628914e-17
+      ],
+      "signed_spin": 0.9683772233983176,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 1024,
+      "solver_estimated_frequency_error": 5.497570134510812e-17,
+      "torch": [
+        0.7887002100762414,
+        0.04562568351098768
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        1.1102230246251565e-16,
+        2.7755575615628914e-17
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": 10,
+          "kind": "log_grid"
+        }
+      ],
+      "direct_solver": [
+        0.8198424145514065,
+        0.03972189710610063
+      ],
+      "jax": [
+        0.8198424145514067,
+        0.039721897106100676
+      ],
+      "jax_minus_solver_abs": [
+        2.220446049250313e-16,
+        4.85722573273506e-17
+      ],
+      "signed_spin": 0.9784556530996822,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 1024,
+      "solver_estimated_frequency_error": 5.3269725194609386e-17,
+      "torch": [
+        0.8198424145514067,
+        0.039721897106100676
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        2.220446049250313e-16,
+        4.85722573273506e-17
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": 11,
+          "kind": "log_grid"
+        }
+      ],
+      "direct_solver": [
+        0.8471595478703461,
+        0.03429220275760327
+      ],
+      "jax": [
+        0.8471595478703464,
+        0.03429220275760329
+      ],
+      "jax_minus_solver_abs": [
+        3.3306690738754696e-16,
+        2.0816681711721685e-17
+      ],
+      "signed_spin": 0.9853220073237801,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 1024,
+      "solver_estimated_frequency_error": 1.9745361860922155e-17,
+      "torch": [
+        0.8471595478703464,
+        0.03429220275760329
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        3.3306690738754696e-16,
+        2.0816681711721685e-17
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": 12,
+          "kind": "log_grid"
+        }
+      ],
+      "direct_solver": [
+        0.8708926587357864,
+        0.029390424219231208
+      ],
+      "jax": [
+        0.8708926587357861,
+        0.029390424219231194
+      ],
+      "jax_minus_solver_abs": [
+        2.220446049250313e-16,
+        1.3877787807814457e-17
+      ],
+      "signed_spin": 0.9900000000000005,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 1024,
+      "solver_estimated_frequency_error": 1.9860691201164397e-17,
+      "torch": [
+        0.8708926587357861,
+        0.029390424219231194
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        2.220446049250313e-16,
+        1.3877787807814457e-17
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": 13,
+          "kind": "log_grid"
+        }
+      ],
+      "direct_solver": [
+        0.8913426470740207,
+        0.025033298568696436
+      ],
+      "jax": [
+        0.8913426470740208,
+        0.02503329856869636
+      ],
+      "jax_minus_solver_abs": [
+        1.1102230246251565e-16,
+        7.632783294297951e-17
+      ],
+      "signed_spin": 0.9931870793094209,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 1024,
+      "solver_estimated_frequency_error": 5.57170564709825e-17,
+      "torch": [
+        0.8913426470740208,
+        0.02503329856869636
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        1.1102230246251565e-16,
+        7.632783294297951e-17
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": 14,
+          "kind": "log_grid"
+        }
+      ],
+      "direct_solver": [
+        0.9088404063191998,
+        0.021210269857238038
+      ],
+      "jax": [
+        0.9088404063192,
+        0.02121026985723802
+      ],
+      "jax_minus_solver_abs": [
+        2.220446049250313e-16,
+        1.734723475976807e-17
+      ],
+      "signed_spin": 0.9953584111663876,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 1024,
+      "solver_estimated_frequency_error": 2.4032679543020027e-17,
+      "torch": [
+        0.9088404063192,
+        0.02121026985723802
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        2.220446049250313e-16,
+        1.734723475976807e-17
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": 15,
+          "kind": "log_grid"
+        }
+      ],
+      "direct_solver": [
+        0.9237236574704101,
+        0.0178919948938411
+      ],
+      "jax": [
+        0.9237236574704102,
+        0.01789199489384113
+      ],
+      "jax_minus_solver_abs": [
+        1.1102230246251565e-16,
+        3.122502256758253e-17
+      ],
+      "signed_spin": 0.9968377223398318,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 1024,
+      "solver_estimated_frequency_error": 8.3685904789766e-18,
+      "torch": [
+        0.9237236574704102,
+        0.01789199489384113
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        1.1102230246251565e-16,
+        3.122502256758253e-17
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": {
+            "knot_log": 5.986721241786865,
+            "side": -1,
+            "target_log": 6.0
+          },
+          "kind": "native_knot_probe"
+        }
+      ],
+      "direct_solver": [
+        0.9315357686761914,
+        0.016126572289234045
+      ],
+      "jax": [
+        0.9315357686761915,
+        0.016126572289234045
+      ],
+      "jax_minus_solver_abs": [
+        1.1102230246251565e-16,
+        0.0
+      ],
+      "signed_spin": 0.9974881110566086,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 1024,
+      "solver_estimated_frequency_error": 8.06180239401477e-18,
+      "torch": [
+        0.9315357686761915,
+        0.016126572289234045
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        1.1102230246251565e-16,
+        0.0
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": {
+            "knot_log": 5.986721241786865,
+            "side": 0,
+            "target_log": 6.0
+          },
+          "kind": "native_knot_probe"
+        }
+      ],
+      "direct_solver": [
+        0.9315358009160492,
+        0.016126564970507448
+      ],
+      "jax": [
+        0.9315358009160493,
+        0.016126564970507427
+      ],
+      "jax_minus_solver_abs": [
+        1.1102230246251565e-16,
+        2.0816681711721685e-17
+      ],
+      "signed_spin": 0.9974881135684963,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 1024,
+      "solver_estimated_frequency_error": 3.6280074645108975e-17,
+      "torch": [
+        0.9315358009160493,
+        0.016126564970507427
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        1.1102230246251565e-16,
+        2.0816681711721685e-17
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": {
+            "knot_log": 5.986721241786865,
+            "side": 1,
+            "target_log": 6.0
+          },
+          "kind": "native_knot_probe"
+        }
+      ],
+      "direct_solver": [
+        0.9315358331558923,
+        0.016126557651783915
+      ],
+      "jax": [
+        0.9315358331558922,
+        0.016126557651783884
+      ],
+      "jax_minus_solver_abs": [
+        1.1102230246251565e-16,
+        3.122502256758253e-17
+      ],
+      "signed_spin": 0.9974881160803815,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 1024,
+      "solver_estimated_frequency_error": 4.684399213951465e-17,
+      "torch": [
+        0.9315358331558922,
+        0.016126557651783884
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        1.1102230246251565e-16,
+        3.122502256758253e-17
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": 16,
+          "kind": "log_grid"
+        }
+      ],
+      "direct_solver": [
+        0.9363202419282123,
+        0.015037489717576511
+      ],
+      "jax": [
+        0.9363202419282126,
+        0.0150374897175765
+      ],
+      "jax_minus_solver_abs": [
+        3.3306690738754696e-16,
+        1.214306433183765e-17
+      ],
+      "signed_spin": 0.9978455653099683,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 1024,
+      "solver_estimated_frequency_error": 2.2494533644431303e-17,
+      "torch": [
+        0.9363202419282126,
+        0.0150374897175765
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        3.3306690738754696e-16,
+        1.214306433183765e-17
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": 17,
+          "kind": "log_grid"
+        }
+      ],
+      "direct_solver": [
+        0.946937175349264,
+        0.012599857970656757
+      ],
+      "jax": [
+        0.9469371753492639,
+        0.012599857970656742
+      ],
+      "jax_minus_solver_abs": [
+        1.1102230246251565e-16,
+        1.5612511283791264e-17
+      ],
+      "signed_spin": 0.998532200732378,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 1024,
+      "solver_estimated_frequency_error": 3.2194204386480897e-17,
+      "torch": [
+        0.9469371753492639,
+        0.012599857970656742
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        1.1102230246251565e-16,
+        1.5612511283791264e-17
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": 18,
+          "kind": "log_grid"
+        }
+      ],
+      "direct_solver": [
+        0.9558544196291557,
+        0.010530589035568097
+      ],
+      "jax": [
+        0.9558544196291556,
+        0.010530589035568111
+      ],
+      "jax_minus_solver_abs": [
+        1.1102230246251565e-16,
+        1.3877787807814457e-17
+      ],
+      "signed_spin": 0.9990000000000001,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 1024,
+      "solver_estimated_frequency_error": 6.023599868258949e-17,
+      "torch": [
+        0.9558544196291556,
+        0.010530589035568111
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        1.1102230246251565e-16,
+        1.3877787807814457e-17
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": 19,
+          "kind": "log_grid"
+        }
+      ],
+      "direct_solver": [
+        0.963322202523539,
+        0.008782518648858439
+      ],
+      "jax": [
+        0.9633222025235393,
+        0.008782518648858196
+      ],
+      "jax_minus_solver_abs": [
+        3.3306690738754696e-16,
+        2.42861286636753e-16
+      ],
+      "signed_spin": 0.9993187079309421,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 1024,
+      "solver_estimated_frequency_error": 1.1636171718688355e-17,
+      "torch": [
+        0.9633222025235393,
+        0.008782518648858196
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        3.3306690738754696e-16,
+        2.42861286636753e-16
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": 20,
+          "kind": "log_grid"
+        }
+      ],
+      "direct_solver": [
+        0.9695607854785782,
+        0.007311650578588478
+      ],
+      "jax": [
+        0.9695607854785782,
+        0.0073116505785884595
+      ],
+      "jax_minus_solver_abs": [
+        0.0,
+        1.8214596497756474e-17
+      ],
+      "signed_spin": 0.9995358411166387,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 1024,
+      "solver_estimated_frequency_error": 5.73122616769813e-17,
+      "torch": [
+        0.9695607854785782,
+        0.0073116505785884595
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        0.0,
+        1.8214596497756474e-17
+      ]
+    },
+    {
+      "categories": [
+        {
+          "kind": "edge_or_near_edge"
+        }
+      ],
+      "direct_solver": [
+        0.9716904213488107,
+        0.0068073551222254764
+      ],
+      "jax": [
+        0.9716904213488106,
+        0.00680735512222547
+      ],
+      "jax_minus_solver_abs": [
+        1.1102230246251565e-16,
+        6.071532165918825e-18
+      ],
+      "signed_spin": 0.9996,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 1024,
+      "solver_estimated_frequency_error": 2.959740059074538e-17,
+      "torch": [
+        0.9716904213488106,
+        0.00680735512222547
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        1.1102230246251565e-16,
+        6.071532165918825e-18
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": {
+            "knot_log": 8.001483198157416,
+            "side": -1,
+            "target_log": 8.0
+          },
+          "kind": "native_knot_probe"
+        }
+      ],
+      "direct_solver": [
+        0.9740409838044296,
+        0.006249450474423647
+      ],
+      "jax": [
+        0.9740409838044297,
+        0.006249450474423648
+      ],
+      "jax_minus_solver_abs": [
+        1.1102230246251565e-16,
+        8.673617379884035e-19
+      ],
+      "signed_spin": 0.9996650342258776,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 1024,
+      "solver_estimated_frequency_error": 1.3927641737387968e-17,
+      "torch": [
+        0.9740409838044297,
+        0.006249450474423648
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        1.1102230246251565e-16,
+        8.673617379884035e-19
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": {
+            "knot_log": 8.001483198157416,
+            "side": 0,
+            "target_log": 8.0
+          },
+          "kind": "native_knot_probe"
+        }
+      ],
+      "direct_solver": [
+        0.9740409964987173,
+        0.006249447457778874
+      ],
+      "jax": [
+        0.9740409964987176,
+        0.006249447457778874
+      ],
+      "jax_minus_solver_abs": [
+        2.220446049250313e-16,
+        0.0
+      ],
+      "signed_spin": 0.9996650345608432,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 1024,
+      "solver_estimated_frequency_error": 5.3492574196792913e-17,
+      "torch": [
+        0.9740409964987176,
+        0.006249447457778874
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        2.220446049250313e-16,
+        0.0
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": {
+            "knot_log": 8.001483198157416,
+            "side": 1,
+            "target_log": 8.0
+          },
+          "kind": "native_knot_probe"
+        }
+      ],
+      "direct_solver": [
+        0.9740410091929993,
+        0.00624944444113549
+      ],
+      "jax": [
+        0.9740410091929993,
+        0.006249444441135493
+      ],
+      "jax_minus_solver_abs": [
+        0.0,
+        3.469446951953614e-18
+      ],
+      "signed_spin": 0.9996650348958085,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 1024,
+      "solver_estimated_frequency_error": 1.567539189626155e-17,
+      "torch": [
+        0.9740410091929993,
+        0.006249444441135493
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        0.0,
+        3.469446951953614e-18
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": 21,
+          "kind": "log_grid"
+        }
+      ],
+      "direct_solver": [
+        0.9747617722547002,
+        0.006078100063343507
+      ],
+      "jax": [
+        0.9747617722547002,
+        0.006078100063343513
+      ],
+      "jax_minus_solver_abs": [
+        0.0,
+        6.071532165918825e-18
+      ],
+      "signed_spin": 0.9996837722339832,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 1024,
+      "solver_estimated_frequency_error": 4.1588791178727376e-17,
+      "torch": [
+        0.9747617722547002,
+        0.006078100063343513
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        0.0,
+        6.071532165918825e-18
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": 22,
+          "kind": "log_grid"
+        }
+      ],
+      "direct_solver": [
+        0.979090283377327,
+        0.005046426429367036
+      ],
+      "jax": [
+        0.979090283377327,
+        0.005046426429367039
+      ],
+      "jax_minus_solver_abs": [
+        0.0,
+        2.6020852139652106e-18
+      ],
+      "signed_spin": 0.9997845565309968,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 1024,
+      "solver_estimated_frequency_error": 4.794017785980823e-17,
+      "torch": [
+        0.979090283377327,
+        0.005046426429367039
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        0.0,
+        2.6020852139652106e-18
+      ]
+    },
+    {
+      "categories": [
+        {
+          "kind": "edge_or_near_edge"
+        }
+      ],
+      "direct_solver": [
+        0.9798406217887996,
+        0.004867124139021619
+      ],
+      "jax": [
+        0.9798406217887996,
+        0.004867124139021623
+      ],
+      "jax_minus_solver_abs": [
+        0.0,
+        3.469446951953614e-18
+      ],
+      "signed_spin": 0.9998,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 1024,
+      "solver_estimated_frequency_error": 4.4151038803424573e-17,
+      "torch": [
+        0.9798406217887996,
+        0.004867124139021623
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        0.0,
+        3.469446951953614e-18
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": 23,
+          "kind": "log_grid"
+        }
+      ],
+      "direct_solver": [
+        0.9826875372126185,
+        0.0041855854577120795
+      ],
+      "jax": [
+        0.9826875372126186,
+        0.004185585457712086
+      ],
+      "jax_minus_solver_abs": [
+        1.1102230246251565e-16,
+        6.071532165918825e-18
+      ],
+      "signed_spin": 0.9998532200732378,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 1024,
+      "solver_estimated_frequency_error": 1.8681459262611348e-16,
+      "torch": [
+        0.9826875372126186,
+        0.004185585457712086
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        1.1102230246251565e-16,
+        6.071532165918825e-18
+      ]
+    },
+    {
+      "categories": [
+        {
+          "kind": "edge_or_near_edge"
+        }
+      ],
+      "direct_solver": [
+        0.9840054480897219,
+        0.0038694275188308116
+      ],
+      "jax": [
+        0.9840054480897222,
+        0.0038694275188304343
+      ],
+      "jax_minus_solver_abs": [
+        3.3306690738754696e-16,
+        3.7730235602495554e-16
+      ],
+      "signed_spin": 0.999875,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 2048,
+      "solver_estimated_frequency_error": 7.64193160964094e-18,
+      "torch": [
+        0.9840054480897222,
+        0.0038694275188304343
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        3.3306690738754696e-16,
+        3.7730235602495554e-16
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": {
+            "knot_log": 9.008864176342872,
+            "side": -1,
+            "target_log": 9.0
+          },
+          "kind": "native_knot_probe"
+        }
+      ],
+      "direct_solver": [
+        0.984175475316955,
+        0.0038286091504501564
+      ],
+      "jax": [
+        0.9841754753169554,
+        0.0038286091504497414
+      ],
+      "jax_minus_solver_abs": [
+        3.3306690738754696e-16,
+        4.150325916274511e-16
+      ],
+      "signed_spin": 0.9998776791657746,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 2048,
+      "solver_estimated_frequency_error": 1.6655470592751953e-17,
+      "torch": [
+        0.9841754753169554,
+        0.0038286091504497414
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        3.3306690738754696e-16,
+        4.150325916274511e-16
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": {
+            "knot_log": 9.008864176342872,
+            "side": 0,
+            "target_log": 9.0
+          },
+          "kind": "native_knot_probe"
+        }
+      ],
+      "direct_solver": [
+        0.9841754831231866,
+        0.003828607276254481
+      ],
+      "jax": [
+        0.9841754831231868,
+        0.0038286072762540634
+      ],
+      "jax_minus_solver_abs": [
+        2.220446049250313e-16,
+        4.176346768414163e-16
+      ],
+      "signed_spin": 0.9998776792880955,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 2048,
+      "solver_estimated_frequency_error": 5.687738610199197e-17,
+      "torch": [
+        0.9841754831231868,
+        0.0038286072762540634
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        2.220446049250313e-16,
+        4.176346768414163e-16
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": {
+            "knot_log": 9.008864176342872,
+            "side": 1,
+            "target_log": 9.0
+          },
+          "kind": "native_knot_probe"
+        }
+      ],
+      "direct_solver": [
+        0.9841754909294078,
+        0.003828605402061231
+      ],
+      "jax": [
+        0.9841754909294081,
+        0.003828605402060811
+      ],
+      "jax_minus_solver_abs": [
+        3.3306690738754696e-16,
+        4.202367620553815e-16
+      ],
+      "signed_spin": 0.999877679410416,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 2048,
+      "solver_estimated_frequency_error": 3.4537803868009497e-17,
+      "torch": [
+        0.9841754909294081,
+        0.003828605402060811
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        3.3306690738754696e-16,
+        4.202367620553815e-16
+      ]
+    },
+    {
+      "categories": [
+        {
+          "kind": "edge_or_near_edge"
+        }
+      ],
+      "direct_solver": [
+        0.9849831854403771,
+        0.003634609366765069
+      ],
+      "jax": [
+        0.9849831854403783,
+        0.003634609366764506
+      ],
+      "jax_minus_solver_abs": [
+        1.2212453270876722e-15,
+        5.629177679544739e-16
+      ],
+      "signed_spin": 0.99989,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 2048,
+      "solver_estimated_frequency_error": 4.835197312183735e-17,
+      "torch": [
+        0.9849831854403783,
+        0.003634609366764506
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        1.2212453270876722e-15,
+        5.629177679544739e-16
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": {
+            "knot_log": 9.1815580583175,
+            "side": -1,
+            "target_log": 9.2
+          },
+          "kind": "native_knot_probe"
+        }
+      ],
+      "direct_solver": [
+        0.9854684326109218,
+        0.0035179865560206877
+      ],
+      "jax": [
+        0.9854684326109218,
+        0.00351798655602069
+      ],
+      "jax_minus_solver_abs": [
+        0.0,
+        2.168404344971009e-18
+      ],
+      "signed_spin": 0.9998970798443608,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 2048,
+      "solver_estimated_frequency_error": 9.219773094105408e-18,
+      "torch": [
+        0.9854684326109218,
+        0.00351798655602069
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        0.0,
+        2.168404344971009e-18
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": {
+            "knot_log": 9.1815580583175,
+            "side": 0,
+            "target_log": 9.2
+          },
+          "kind": "native_knot_probe"
+        }
+      ],
+      "direct_solver": [
+        0.9854684397872666,
+        0.0035179848308717985
+      ],
+      "jax": [
+        0.9854684397872664,
+        0.003517984830871795
+      ],
+      "jax_minus_solver_abs": [
+        2.220446049250313e-16,
+        3.469446951953614e-18
+      ],
+      "signed_spin": 0.9998970799472809,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 2048,
+      "solver_estimated_frequency_error": 3.8713452966817043e-17,
+      "torch": [
+        0.9854684397872664,
+        0.003517984830871795
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        2.220446049250313e-16,
+        3.469446951953614e-18
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": {
+            "knot_log": 9.1815580583175,
+            "side": 1,
+            "target_log": 9.2
+          },
+          "kind": "native_knot_probe"
+        }
+      ],
+      "direct_solver": [
+        0.9854684469636074,
+        0.003517983105723866
+      ],
+      "jax": [
+        0.9854684469636071,
+        0.0035179831057238634
+      ],
+      "jax_minus_solver_abs": [
+        2.220446049250313e-16,
+        2.6020852139652106e-18
+      ],
+      "signed_spin": 0.999897080050201,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 2048,
+      "solver_estimated_frequency_error": 4.022574268570954e-17,
+      "torch": [
+        0.9854684469636071,
+        0.0035179831057238634
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        2.220446049250313e-16,
+        2.6020852139652106e-18
+      ]
+    },
+    {
+      "categories": [
+        {
+          "kind": "edge_or_near_edge"
+        }
+      ],
+      "direct_solver": [
+        0.9856029657661561,
+        0.003485643498461409
+      ],
+      "jax": [
+        0.9856029657661561,
+        0.0034856434984613994
+      ],
+      "jax_minus_solver_abs": [
+        0.0,
+        9.540979117872439e-18
+      ],
+      "signed_spin": 0.999899,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 2048,
+      "solver_estimated_frequency_error": 2.0098689123836023e-17,
+      "torch": [
+        0.9856029657661561,
+        0.0034856434984613994
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        0.0,
+        9.540979117872439e-18
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": 24,
+          "kind": "log_grid"
+        },
+        {
+          "kind": "edge_or_near_edge"
+        }
+      ],
+      "direct_solver": [
+        0.9856735483827013,
+        0.0034686730676789838
+      ],
+      "jax": [
+        0.9856735483827013,
+        0.0034686730676789903
+      ],
+      "jax_minus_solver_abs": [
+        0.0,
+        6.5052130349130266e-18
+      ],
+      "signed_spin": 0.9999,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 2048,
+      "solver_estimated_frequency_error": 1.2041739293737192e-17,
+      "torch": [
+        0.9856735483827013,
+        0.0034686730676789903
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        0.0,
+        6.5052130349130266e-18
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": 24,
+          "kind": "log_grid"
+        },
+        {
+          "kind": "edge_or_near_edge"
+        }
+      ],
+      "direct_solver": [
+        0.291558979918241,
+        0.08802610271085072
+      ],
+      "jax": [
+        0.29155897991824103,
+        0.08802610271085075
+      ],
+      "jax_minus_solver_abs": [
+        5.551115123125783e-17,
+        2.7755575615628914e-17
+      ],
+      "signed_spin": -0.9999,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 16384,
+      "solver_estimated_frequency_error": 2.1546175838496266e-17,
+      "torch": [
+        0.29155897991824103,
+        0.08802610271085075
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        5.551115123125783e-17,
+        2.7755575615628914e-17
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": {
+            "knot_log": 9.203144793564334,
+            "side": 1,
+            "target_log": 9.2
+          },
+          "kind": "native_knot_probe"
+        }
+      ],
+      "direct_solver": [
+        0.2915590197446348,
+        0.08802610462704333
+      ],
+      "jax": [
+        0.2915590197446348,
+        0.08802610462704333
+      ],
+      "jax_minus_solver_abs": [
+        0.0,
+        0.0
+      ],
+      "signed_spin": -0.999899277947843,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 16384,
+      "solver_estimated_frequency_error": 1.3682847936213175e-17,
+      "torch": [
+        0.2915590197446348,
+        0.08802610462704333
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": {
+            "knot_log": 9.203144793564334,
+            "side": 0,
+            "target_log": 9.2
+          },
+          "kind": "native_knot_probe"
+        }
+      ],
+      "direct_solver": [
+        0.29155901975019033,
+        0.08802610462731063
+      ],
+      "jax": [
+        0.29155901975019033,
+        0.08802610462731063
+      ],
+      "jax_minus_solver_abs": [
+        0.0,
+        0.0
+      ],
+      "signed_spin": -0.9998992778471208,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 16384,
+      "solver_estimated_frequency_error": 1.7455113657930777e-17,
+      "torch": [
+        0.29155901975019033,
+        0.08802610462731063
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": {
+            "knot_log": 9.203144793564334,
+            "side": -1,
+            "target_log": 9.2
+          },
+          "kind": "native_knot_probe"
+        }
+      ],
+      "direct_solver": [
+        0.2915590197557459,
+        0.08802610462757793
+      ],
+      "jax": [
+        0.29155901975574594,
+        0.08802610462757794
+      ],
+      "jax_minus_solver_abs": [
+        5.551115123125783e-17,
+        1.3877787807814457e-17
+      ],
+      "signed_spin": -0.9998992777463986,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 16384,
+      "solver_estimated_frequency_error": 1.5563266523062955e-17,
+      "torch": [
+        0.29155901975574594,
+        0.08802610462757794
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        5.551115123125783e-17,
+        1.3877787807814457e-17
+      ]
+    },
+    {
+      "categories": [
+        {
+          "kind": "edge_or_near_edge"
+        }
+      ],
+      "direct_solver": [
+        0.2915590350754714,
+        0.08802610536466511
+      ],
+      "jax": [
+        0.29155903507547143,
+        0.08802610536466514
+      ],
+      "jax_minus_solver_abs": [
+        5.551115123125783e-17,
+        2.7755575615628914e-17
+      ],
+      "signed_spin": -0.999899,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 16384,
+      "solver_estimated_frequency_error": 6.899140865336304e-18,
+      "torch": [
+        0.29155903507547143,
+        0.08802610536466514
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        5.551115123125783e-17,
+        2.7755575615628914e-17
+      ]
+    },
+    {
+      "categories": [
+        {
+          "kind": "edge_or_near_edge"
+        }
+      ],
+      "direct_solver": [
+        0.2915595314920659,
+        0.08802612924890388
+      ],
+      "jax": [
+        0.2915595314920659,
+        0.08802612924890388
+      ],
+      "jax_minus_solver_abs": [
+        0.0,
+        0.0
+      ],
+      "signed_spin": -0.99989,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 16384,
+      "solver_estimated_frequency_error": 2.492429116572246e-17,
+      "torch": [
+        0.2915595314920659,
+        0.08802612924890388
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        0.0,
+        0.0
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": {
+            "knot_log": 9.001668597926827,
+            "side": 1,
+            "target_log": 9.0
+          },
+          "kind": "native_knot_probe"
+        }
+      ],
+      "direct_solver": [
+        0.2915602597915297,
+        0.08802616428925777
+      ],
+      "jax": [
+        0.2915602597915298,
+        0.08802616428925782
+      ],
+      "jax_minus_solver_abs": [
+        5.551115123125783e-17,
+        4.163336342344337e-17
+      ],
+      "signed_spin": -0.9998767960687561,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 16384,
+      "solver_estimated_frequency_error": 1.2242309065006359e-17,
+      "torch": [
+        0.2915602597915298,
+        0.08802616428925782
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        5.551115123125783e-17,
+        4.163336342344337e-17
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": {
+            "knot_log": 9.001668597926827,
+            "side": 0,
+            "target_log": 9.0
+          },
+          "kind": "native_knot_probe"
+        }
+      ],
+      "direct_solver": [
+        0.2915602597983254,
+        0.08802616428958474
+      ],
+      "jax": [
+        0.29156025979832545,
+        0.08802616428958476
+      ],
+      "jax_minus_solver_abs": [
+        5.551115123125783e-17,
+        2.7755575615628914e-17
+      ],
+      "signed_spin": -0.9998767959455521,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 16384,
+      "solver_estimated_frequency_error": 1.1288048324677354e-18,
+      "torch": [
+        0.29156025979832545,
+        0.08802616428958476
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        5.551115123125783e-17,
+        2.7755575615628914e-17
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": {
+            "knot_log": 9.001668597926827,
+            "side": -1,
+            "target_log": 9.0
+          },
+          "kind": "native_knot_probe"
+        }
+      ],
+      "direct_solver": [
+        0.29156025980512107,
+        0.0880261642899117
+      ],
+      "jax": [
+        0.29156025980512107,
+        0.08802616428991171
+      ],
+      "jax_minus_solver_abs": [
+        0.0,
+        1.3877787807814457e-17
+      ],
+      "signed_spin": -0.999876795822348,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 16384,
+      "solver_estimated_frequency_error": 1.7980716312262775e-17,
+      "torch": [
+        0.29156025980512107,
+        0.08802616428991171
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        0.0,
+        1.3877787807814457e-17
+      ]
+    },
+    {
+      "categories": [
+        {
+          "kind": "edge_or_near_edge"
+        }
+      ],
+      "direct_solver": [
+        0.29156035885914067,
+        0.08802616905560538
+      ],
+      "jax": [
+        0.29156035885914067,
+        0.08802616905560542
+      ],
+      "jax_minus_solver_abs": [
+        0.0,
+        4.163336342344337e-17
+      ],
+      "signed_spin": -0.999875,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 16384,
+      "solver_estimated_frequency_error": 1.706869756631406e-18,
+      "torch": [
+        0.29156035885914067,
+        0.08802616905560542
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        0.0,
+        4.163336342344337e-17
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": 23,
+          "kind": "log_grid"
+        }
+      ],
+      "direct_solver": [
+        0.2915615602056311,
+        0.08802622685393359
+      ],
+      "jax": [
+        0.29156156020563107,
+        0.08802622685393359
+      ],
+      "jax_minus_solver_abs": [
+        5.551115123125783e-17,
+        0.0
+      ],
+      "signed_spin": -0.9998532200732378,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 16384,
+      "solver_estimated_frequency_error": 2.7793061911690865e-17,
+      "torch": [
+        0.29156156020563107,
+        0.08802622685393359
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        5.551115123125783e-17,
+        0.0
+      ]
+    },
+    {
+      "categories": [
+        {
+          "kind": "edge_or_near_edge"
+        }
+      ],
+      "direct_solver": [
+        0.2915644958085885,
+        0.08802636808230417
+      ],
+      "jax": [
+        0.2915644958085885,
+        0.08802636808230414
+      ],
+      "jax_minus_solver_abs": [
+        0.0,
+        2.7755575615628914e-17
+      ],
+      "signed_spin": -0.9998,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 8192,
+      "solver_estimated_frequency_error": 2.542530007037833e-17,
+      "torch": [
+        0.2915644958085885,
+        0.08802636808230414
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        0.0,
+        2.7755575615628914e-17
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": 22,
+          "kind": "log_grid"
+        }
+      ],
+      "direct_solver": [
+        0.2915653476835354,
+        0.0880264090630639
+      ],
+      "jax": [
+        0.2915653476835355,
+        0.08802640906306389
+      ],
+      "jax_minus_solver_abs": [
+        5.551115123125783e-17,
+        1.3877787807814457e-17
+      ],
+      "signed_spin": -0.9997845565309968,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 8192,
+      "solver_estimated_frequency_error": 7.784519752645987e-18,
+      "torch": [
+        0.2915653476835355,
+        0.08802640906306389
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        5.551115123125783e-17,
+        1.3877787807814457e-17
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": 21,
+          "kind": "log_grid"
+        }
+      ],
+      "direct_solver": [
+        0.29157090722946605,
+        0.08802667649226367
+      ],
+      "jax": [
+        0.2915709072294661,
+        0.08802667649226369
+      ],
+      "jax_minus_solver_abs": [
+        5.551115123125783e-17,
+        1.3877787807814457e-17
+      ],
+      "signed_spin": -0.9996837722339832,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 8192,
+      "solver_estimated_frequency_error": 2.4141881019786543e-17,
+      "torch": [
+        0.2915709072294661,
+        0.08802667649226369
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        5.551115123125783e-17,
+        1.3877787807814457e-17
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": {
+            "knot_log": 8.001483198157416,
+            "side": 1,
+            "target_log": 8.0
+          },
+          "kind": "native_knot_probe"
+        }
+      ],
+      "direct_solver": [
+        0.29157194087171323,
+        0.0880267262091718
+      ],
+      "jax": [
+        0.2915719408717134,
+        0.08802672620917183
+      ],
+      "jax_minus_solver_abs": [
+        1.6653345369377348e-16,
+        2.7755575615628914e-17
+      ],
+      "signed_spin": -0.9996650348958085,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 8192,
+      "solver_estimated_frequency_error": 2.5413097710410985e-18,
+      "torch": [
+        0.2915719408717134,
+        0.08802672620917183
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        1.6653345369377348e-16,
+        2.7755575615628914e-17
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": {
+            "knot_log": 8.001483198157416,
+            "side": 0,
+            "target_log": 8.0
+          },
+          "kind": "native_knot_probe"
+        }
+      ],
+      "direct_solver": [
+        0.29157194089019167,
+        0.08802672621006058
+      ],
+      "jax": [
+        0.2915719408901918,
+        0.08802672621006058
+      ],
+      "jax_minus_solver_abs": [
+        1.1102230246251565e-16,
+        0.0
+      ],
+      "signed_spin": -0.9996650345608432,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 8192,
+      "solver_estimated_frequency_error": 2.7085597617876087e-17,
+      "torch": [
+        0.2915719408901918,
+        0.08802672621006058
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        1.1102230246251565e-16,
+        0.0
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": {
+            "knot_log": 8.001483198157416,
+            "side": -1,
+            "target_log": 8.0
+          },
+          "kind": "native_knot_probe"
+        }
+      ],
+      "direct_solver": [
+        0.29157194090867006,
+        0.08802672621094935
+      ],
+      "jax": [
+        0.2915719409086702,
+        0.08802672621094935
+      ],
+      "jax_minus_solver_abs": [
+        1.6653345369377348e-16,
+        0.0
+      ],
+      "signed_spin": -0.9996650342258776,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 8192,
+      "solver_estimated_frequency_error": 1.7964314702943628e-17,
+      "torch": [
+        0.2915719409086702,
+        0.08802672621094935
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        1.6653345369377348e-16,
+        0.0
+      ]
+    },
+    {
+      "categories": [
+        {
+          "kind": "edge_or_near_edge"
+        }
+      ],
+      "direct_solver": [
+        0.2915755286033752,
+        0.08802689876468146
+      ],
+      "jax": [
+        0.29157552860337527,
+        0.08802689876468145
+      ],
+      "jax_minus_solver_abs": [
+        5.551115123125783e-17,
+        1.3877787807814457e-17
+      ],
+      "signed_spin": -0.9996,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 8192,
+      "solver_estimated_frequency_error": 1.886763746075335e-17,
+      "torch": [
+        0.29157552860337527,
+        0.08802689876468145
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        5.551115123125783e-17,
+        1.3877787807814457e-17
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": 20,
+          "kind": "log_grid"
+        }
+      ],
+      "direct_solver": [
+        0.29157906814880064,
+        0.08802706898752832
+      ],
+      "jax": [
+        0.29157906814882595,
+        0.08802706898752541
+      ],
+      "jax_minus_solver_abs": [
+        2.531308496145357e-14,
+        2.914335439641036e-15
+      ],
+      "signed_spin": -0.9995358411166387,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 8192,
+      "solver_estimated_frequency_error": 9.122097159743015e-15,
+      "torch": [
+        0.29157906814882595,
+        0.08802706898752541
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        2.531308496145357e-14,
+        2.914335439641036e-15
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": 19,
+          "kind": "log_grid"
+        }
+      ],
+      "direct_solver": [
+        0.2915910480804153,
+        0.08802764501177471
+      ],
+      "jax": [
+        0.29159104808044534,
+        0.08802764501177185
+      ],
+      "jax_minus_solver_abs": [
+        3.0031532816110484e-14,
+        2.858824288409778e-15
+      ],
+      "signed_spin": -0.9993187079309421,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 4096,
+      "solver_estimated_frequency_error": 2.7396435813318405e-14,
+      "torch": [
+        0.29159104808044534,
+        0.08802764501177185
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        3.0031532816110484e-14,
+        2.858824288409778e-15
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": 18,
+          "kind": "log_grid"
+        }
+      ],
+      "direct_solver": [
+        0.2916086351031127,
+        0.08802849032736997
+      ],
+      "jax": [
+        0.2916086351031109,
+        0.08802849032737603
+      ],
+      "jax_minus_solver_abs": [
+        1.7763568394002505e-15,
+        6.0645932720149176e-15
+      ],
+      "signed_spin": -0.9990000000000001,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 4096,
+      "solver_estimated_frequency_error": 1.1007637694716839e-14,
+      "torch": [
+        0.2916086351031109,
+        0.08802849032737603
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        1.7763568394002505e-15,
+        6.0645932720149176e-15
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": 17,
+          "kind": "log_grid"
+        }
+      ],
+      "direct_solver": [
+        0.2916344555462634,
+        0.08802973070935317
+      ],
+      "jax": [
+        0.29163445554625905,
+        0.08802973070935557
+      ],
+      "jax_minus_solver_abs": [
+        4.3298697960381105e-15,
+        2.400857290751901e-15
+      ],
+      "signed_spin": -0.998532200732378,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 4096,
+      "solver_estimated_frequency_error": 2.4905908465563543e-15,
+      "torch": [
+        0.29163445554625905,
+        0.08802973070935557
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        4.3298697960381105e-15,
+        2.400857290751901e-15
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": 16,
+          "kind": "log_grid"
+        }
+      ],
+      "direct_solver": [
+        0.2916723681903402,
+        0.0880315505399469
+      ],
+      "jax": [
+        0.2916723681903392,
+        0.08803155053994963
+      ],
+      "jax_minus_solver_abs": [
+        9.992007221626409e-16,
+        2.7200464103316335e-15
+      ],
+      "signed_spin": -0.9978455653099683,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 4096,
+      "solver_estimated_frequency_error": 6.469623607210558e-15,
+      "torch": [
+        0.2916723681903392,
+        0.08803155053994963
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        9.992007221626409e-16,
+        2.7200464103316335e-15
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": {
+            "knot_log": 6.001112398618107,
+            "side": 1,
+            "target_log": 6.0
+          },
+          "kind": "native_knot_probe"
+        }
+      ],
+      "direct_solver": [
+        0.2916901286032086,
+        0.08803240245943274
+      ],
+      "jax": [
+        0.29169012860321236,
+        0.08803240245943127
+      ],
+      "jax_minus_solver_abs": [
+        3.774758283725532e-15,
+        1.4710455076283324e-15
+      ],
+      "signed_spin": -0.9975240061267512,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 2048,
+      "solver_estimated_frequency_error": 9.346466730520471e-15,
+      "torch": [
+        0.29169012860321236,
+        0.08803240245943127
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        3.774758283725532e-15,
+        1.4710455076283324e-15
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": {
+            "knot_log": 6.001112398618107,
+            "side": 0,
+            "target_log": 6.0
+          },
+          "kind": "native_knot_probe"
+        }
+      ],
+      "direct_solver": [
+        0.29169012873998534,
+        0.08803240246598303
+      ],
+      "jax": [
+        0.29169012873998046,
+        0.0880324024659902
+      ],
+      "jax_minus_solver_abs": [
+        4.884981308350689e-15,
+        7.174816296640074e-15
+      ],
+      "signed_spin": -0.9975240036507561,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 2048,
+      "solver_estimated_frequency_error": 1.3591544687343178e-14,
+      "torch": [
+        0.29169012873998046,
+        0.0880324024659902
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        4.884981308350689e-15,
+        7.174816296640074e-15
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": {
+            "knot_log": 6.001112398618107,
+            "side": -1,
+            "target_log": 6.0
+          },
+          "kind": "native_knot_probe"
+        }
+      ],
+      "direct_solver": [
+        0.2916901288767529,
+        0.08803240247254483
+      ],
+      "jax": [
+        0.29169012887674867,
+        0.08803240247254916
+      ],
+      "jax_minus_solver_abs": [
+        4.218847493575595e-15,
+        4.3298697960381105e-15
+      ],
+      "signed_spin": -0.9975240011747585,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 2048,
+      "solver_estimated_frequency_error": 3.921209085797562e-15,
+      "torch": [
+        0.29169012887674867,
+        0.08803240247254916
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        4.218847493575595e-15,
+        4.3298697960381105e-15
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": 15,
+          "kind": "log_grid"
+        }
+      ],
+      "direct_solver": [
+        0.2917280452694299,
+        0.08803421995810634
+      ],
+      "jax": [
+        0.29172804526942503,
+        0.08803421995810883
+      ],
+      "jax_minus_solver_abs": [
+        4.884981308350689e-15,
+        2.4841240175987878e-15
+      ],
+      "signed_spin": -0.9968377223398318,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 2048,
+      "solver_estimated_frequency_error": 3.6386056413533194e-15,
+      "torch": [
+        0.29172804526942503,
+        0.08803421995810883
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        4.884981308350689e-15,
+        2.4841240175987878e-15
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": 14,
+          "kind": "log_grid"
+        }
+      ],
+      "direct_solver": [
+        0.29180983044062553,
+        0.08803813439992894
+      ],
+      "jax": [
+        0.2918098304406239,
+        0.08803813439993222
+      ],
+      "jax_minus_solver_abs": [
+        1.609823385706477e-15,
+        3.2751579226442118e-15
+      ],
+      "signed_spin": -0.9953584111663876,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 2048,
+      "solver_estimated_frequency_error": 2.3335571710439124e-15,
+      "torch": [
+        0.2918098304406239,
+        0.08803813439993222
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        1.609823385706477e-15,
+        3.2751579226442118e-15
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": 13,
+          "kind": "log_grid"
+        }
+      ],
+      "direct_solver": [
+        0.2919300093100099,
+        0.088043871964738
+      ],
+      "jax": [
+        0.2919300093100118,
+        0.08804387196473791
+      ],
+      "jax_minus_solver_abs": [
+        1.887379141862766e-15,
+        8.326672684688674e-17
+      ],
+      "signed_spin": -0.9931870793094209,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 2048,
+      "solver_estimated_frequency_error": 1.5996234451588854e-15,
+      "torch": [
+        0.2919300093100118,
+        0.08804387196473791
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        1.887379141862766e-15,
+        8.326672684688674e-17
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": 12,
+          "kind": "log_grid"
+        }
+      ],
+      "direct_solver": [
+        0.2921066985964073,
+        0.08805227615825399
+      ],
+      "jax": [
+        0.2921066985964077,
+        0.0880522761582529
+      ],
+      "jax_minus_solver_abs": [
+        3.885780586188048e-16,
+        1.096345236817342e-15
+      ],
+      "signed_spin": -0.9900000000000005,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 1024,
+      "solver_estimated_frequency_error": 2.2605625234674205e-15,
+      "torch": [
+        0.2921066985964077,
+        0.0880522761582529
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        3.885780586188048e-16,
+        1.096345236817342e-15
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": 11,
+          "kind": "log_grid"
+        }
+      ],
+      "direct_solver": [
+        0.29236667187712473,
+        0.08806457416072022
+      ],
+      "jax": [
+        0.2923666718771234,
+        0.08806457416072025
+      ],
+      "jax_minus_solver_abs": [
+        1.3322676295501878e-15,
+        2.7755575615628914e-17
+      ],
+      "signed_spin": -0.9853220073237801,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 1024,
+      "solver_estimated_frequency_error": 5.859407310348672e-16,
+      "torch": [
+        0.2923666718771234,
+        0.08806457416072025
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        1.3322676295501878e-15,
+        2.7755575615628914e-17
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": 10,
+          "kind": "log_grid"
+        }
+      ],
+      "direct_solver": [
+        0.29274962266543225,
+        0.08808254343881053
+      ],
+      "jax": [
+        0.2927496226654303,
+        0.0880825434388098
+      ],
+      "jax_minus_solver_abs": [
+        1.942890293094024e-15,
+        7.355227538141662e-16
+      ],
+      "signed_spin": -0.9784556530996822,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 1024,
+      "solver_estimated_frequency_error": 9.825734707747763e-16,
+      "torch": [
+        0.2927496226654303,
+        0.0880825434388098
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        1.942890293094024e-15,
+        7.355227538141662e-16
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": 9,
+          "kind": "log_grid"
+        }
+      ],
+      "direct_solver": [
+        0.29331467570965647,
+        0.08810874085318691
+      ],
+      "jax": [
+        0.29331467570965664,
+        0.08810874085318704
+      ],
+      "jax_minus_solver_abs": [
+        1.6653345369377348e-16,
+        1.249000902703301e-16
+      ],
+      "signed_spin": -0.9683772233983176,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 1024,
+      "solver_estimated_frequency_error": 8.103586254735415e-17,
+      "torch": [
+        0.29331467570965664,
+        0.08810874085318704
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        1.6653345369377348e-16,
+        1.249000902703301e-16
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": 8,
+          "kind": "log_grid"
+        }
+      ],
+      "direct_solver": [
+        0.2941505083495407,
+        0.08814680437115806
+      ],
+      "jax": [
+        0.2941505083495415,
+        0.08814680437115793
+      ],
+      "jax_minus_solver_abs": [
+        7.771561172376096e-16,
+        1.249000902703301e-16
+      ],
+      "signed_spin": -0.9535841116638739,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 1024,
+      "solver_estimated_frequency_error": 2.2064826161353567e-16,
+      "torch": [
+        0.2941505083495415,
+        0.08814680437115793
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        7.771561172376096e-16,
+        1.249000902703301e-16
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": {
+            "knot_log": 3.0005561993090524,
+            "side": 1,
+            "target_log": 3.0
+          },
+          "kind": "native_knot_probe"
+        }
+      ],
+      "direct_solver": [
+        0.2943404918889713,
+        0.08815534227535578
+      ],
+      "jax": [
+        0.2943404918889706,
+        0.08815534227535596
+      ],
+      "jax_minus_solver_abs": [
+        7.216449660063518e-16,
+        1.8041124150158794e-16
+      ],
+      "signed_spin": -0.9502406652249434,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 1024,
+      "solver_estimated_frequency_error": 5.0992553713678046e-17,
+      "torch": [
+        0.2943404918889706,
+        0.08815534227535596
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        7.216449660063518e-16,
+        1.8041124150158794e-16
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": {
+            "knot_log": 3.0005561993090524,
+            "side": 0,
+            "target_log": 3.0
+          },
+          "kind": "native_knot_probe"
+        }
+      ],
+      "direct_solver": [
+        0.294340494719396,
+        0.08815534240224272
+      ],
+      "jax": [
+        0.2943404947193963,
+        0.08815534240224288
+      ],
+      "jax_minus_solver_abs": [
+        2.7755575615628914e-16,
+        1.5265566588595902e-16
+      ],
+      "signed_spin": -0.9502406154655838,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 1024,
+      "solver_estimated_frequency_error": 1.2280636301049818e-16,
+      "torch": [
+        0.2943404947193963,
+        0.08815534240224288
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        2.7755575615628914e-16,
+        1.5265566588595902e-16
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": {
+            "knot_log": 3.0005561993090524,
+            "side": -1,
+            "target_log": 3.0
+          },
+          "kind": "native_knot_probe"
+        }
+      ],
+      "direct_solver": [
+        0.29434049754982455,
+        0.08815534252912971
+      ],
+      "jax": [
+        0.2943404975498249,
+        0.08815534252912988
+      ],
+      "jax_minus_solver_abs": [
+        3.3306690738754696e-16,
+        1.6653345369377348e-16
+      ],
+      "signed_spin": -0.9502405657061744,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 1024,
+      "solver_estimated_frequency_error": 1.6444612830871054e-16,
+      "torch": [
+        0.2943404975498249,
+        0.08815534252912988
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        3.3306690738754696e-16,
+        1.6653345369377348e-16
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": 7,
+          "kind": "log_grid"
+        }
+      ],
+      "direct_solver": [
+        0.29539147744706024,
+        0.08820181724374651
+      ],
+      "jax": [
+        0.2953914774470596,
+        0.08820181724374646
+      ],
+      "jax_minus_solver_abs": [
+        6.106226635438361e-16,
+        5.551115123125783e-17
+      ],
+      "signed_spin": -0.9318707930942061,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 1024,
+      "solver_estimated_frequency_error": 1.2328083423720659e-16,
+      "torch": [
+        0.2953914774470596,
+        0.08820181724374646
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        6.106226635438361e-16,
+        5.551115123125783e-17
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": 6,
+          "kind": "log_grid"
+        }
+      ],
+      "direct_solver": [
+        0.2972442135905837,
+        0.0882806593150116
+      ],
+      "jax": [
+        0.2972442135905838,
+        0.08828065931501163
+      ],
+      "jax_minus_solver_abs": [
+        1.1102230246251565e-16,
+        2.7755575615628914e-17
+      ],
+      "signed_spin": -0.9000000000000028,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 1024,
+      "solver_estimated_frequency_error": 4.259821278434985e-16,
+      "torch": [
+        0.2972442135905838,
+        0.08828065931501163
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        1.1102230246251565e-16,
+        2.7755575615628914e-17
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": 5,
+          "kind": "log_grid"
+        }
+      ],
+      "direct_solver": [
+        0.3000335870256178,
+        0.08839208233003233
+      ],
+      "jax": [
+        0.3000335870256171,
+        0.08839208233003211
+      ],
+      "jax_minus_solver_abs": [
+        6.661338147750939e-16,
+        2.220446049250313e-16
+      ],
+      "signed_spin": -0.8532200732377965,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 1024,
+      "solver_estimated_frequency_error": 1.4666189748433242e-17,
+      "torch": [
+        0.3000335870256171,
+        0.08839208233003211
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        6.661338147750939e-16,
+        2.220446049250313e-16
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": 4,
+          "kind": "log_grid"
+        }
+      ],
+      "direct_solver": [
+        0.30428735586464184,
+        0.08854571695830055
+      ],
+      "jax": [
+        0.30428735586464223,
+        0.08854571695830063
+      ],
+      "jax_minus_solver_abs": [
+        3.885780586188048e-16,
+        8.326672684688674e-17
+      ],
+      "signed_spin": -0.7845565309968157,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 1024,
+      "solver_estimated_frequency_error": 5.705032106141714e-17,
+      "torch": [
+        0.30428735586464223,
+        0.08854571695830063
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        3.885780586188048e-16,
+        8.326672684688674e-17
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": 3,
+          "kind": "log_grid"
+        }
+      ],
+      "direct_solver": [
+        0.3109058476893487,
+        0.08874769002690862
+      ],
+      "jax": [
+        0.3109058476893486,
+        0.08874769002690858
+      ],
+      "jax_minus_solver_abs": [
+        1.1102230246251565e-16,
+        4.163336342344337e-17
+      ],
+      "signed_spin": -0.6837722339831664,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 1024,
+      "solver_estimated_frequency_error": 0.0,
+      "torch": [
+        0.3109058476893486,
+        0.08874769002690858
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        1.1102230246251565e-16,
+        4.163336342344337e-17
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": {
+            "knot_log": 1.000185399769684,
+            "side": 1,
+            "target_log": 1.0
+          },
+          "kind": "native_knot_probe"
+        }
+      ],
+      "direct_solver": [
+        0.31448220524437487,
+        0.08883912665481662
+      ],
+      "jax": [
+        0.31448220524437487,
+        0.08883912665481668
+      ],
+      "jax_minus_solver_abs": [
+        0.0,
+        5.551115123125783e-17
+      ],
+      "signed_spin": -0.632189125081098,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 1024,
+      "solver_estimated_frequency_error": 3.4671915425917865e-17,
+      "torch": [
+        0.31448220524437487,
+        0.08883912665481668
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        0.0,
+        5.551115123125783e-17
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": {
+            "knot_log": 1.000185399769684,
+            "side": 0,
+            "target_log": 1.0
+          },
+          "kind": "native_knot_probe"
+        }
+      ],
+      "direct_solver": [
+        0.3144822312314494,
+        0.08883912727600628
+      ],
+      "jax": [
+        0.3144822312314487,
+        0.08883912727600629
+      ],
+      "jax_minus_solver_abs": [
+        7.216449660063518e-16,
+        1.3877787807814457e-17
+      ],
+      "signed_spin": -0.6321887572700393,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 1024,
+      "solver_estimated_frequency_error": 1.1789727675132244e-16,
+      "torch": [
+        0.3144822312314487,
+        0.08883912727600629
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        7.216449660063518e-16,
+        1.3877787807814457e-17
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": {
+            "knot_log": 1.000185399769684,
+            "side": -1,
+            "target_log": 1.0
+          },
+          "kind": "native_knot_probe"
+        }
+      ],
+      "direct_solver": [
+        0.31448225721855677,
+        0.08883912789719621
+      ],
+      "jax": [
+        0.3144822572185555,
+        0.08883912789719611
+      ],
+      "jax_minus_solver_abs": [
+        1.27675647831893e-15,
+        9.71445146547012e-17
+      ],
+      "signed_spin": -0.6321883894586127,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 1024,
+      "solver_estimated_frequency_error": 3.5739003287778074e-17,
+      "torch": [
+        0.3144822572185555,
+        0.08883912789719611
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        1.27675647831893e-15,
+        9.71445146547012e-17
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": 2,
+          "kind": "log_grid"
+        }
+      ],
+      "direct_solver": [
+        0.32154323335195706,
+        0.08898574130127086
+      ],
+      "jax": [
+        0.3215432333519568,
+        0.08898574130127092
+      ],
+      "jax_minus_solver_abs": [
+        2.7755575615628914e-16,
+        5.551115123125783e-17
+      ],
+      "signed_spin": -0.5358411166387265,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 1024,
+      "solver_estimated_frequency_error": 3.2332113838145414e-17,
+      "torch": [
+        0.3215432333519568,
+        0.08898574130127092
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        2.7755575615628914e-16,
+        5.551115123125783e-17
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": 1,
+          "kind": "log_grid"
+        }
+      ],
+      "direct_solver": [
+        0.3396123467563819,
+        0.08917850249262825
+      ],
+      "jax": [
+        0.3396123467563826,
+        0.08917850249262825
+      ],
+      "jax_minus_solver_abs": [
+        6.661338147750939e-16,
+        0.0
+      ],
+      "signed_spin": -0.31870793094204186,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 1024,
+      "solver_estimated_frequency_error": 1.0640304135819825e-16,
+      "torch": [
+        0.3396123467563826,
+        0.08917850249262825
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        6.661338147750939e-16,
+        0.0
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": {
+            "knot_log": 0.2518452445463233,
+            "side": 1,
+            "target_log": 0.25
+          },
+          "kind": "native_knot_probe"
+        }
+      ],
+      "direct_solver": [
+        0.3487712505227502,
+        0.08918837181031936
+      ],
+      "jax": [
+        0.348771250522751,
+        0.08918837181031945
+      ],
+      "jax_minus_solver_abs": [
+        7.771561172376096e-16,
+        9.71445146547012e-17
+      ],
+      "signed_spin": -0.2226357471259431,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 1024,
+      "solver_estimated_frequency_error": 2.696749081900461e-17,
+      "torch": [
+        0.348771250522751,
+        0.08918837181031945
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        7.771561172376096e-16,
+        9.71445146547012e-17
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": {
+            "knot_log": 0.2518452445463233,
+            "side": 0,
+            "target_log": 0.25
+          },
+          "kind": "native_knot_probe"
+        }
+      ],
+      "direct_solver": [
+        0.34877132801707694,
+        0.08918837166681774
+      ],
+      "jax": [
+        0.34877132801707666,
+        0.08918837166681781
+      ],
+      "jax_minus_solver_abs": [
+        2.7755575615628914e-16,
+        6.938893903907228e-17
+      ],
+      "signed_spin": -0.22263496976130157,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 1024,
+      "solver_estimated_frequency_error": 8.146236564780739e-17,
+      "torch": [
+        0.34877132801707666,
+        0.08918837166681781
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        2.7755575615628914e-16,
+        6.938893903907228e-17
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": {
+            "knot_log": 0.2518452445463233,
+            "side": -1,
+            "target_log": 0.25
+          },
+          "kind": "native_knot_probe"
+        }
+      ],
+      "direct_solver": [
+        0.34877140551153774,
+        0.08918837152331205
+      ],
+      "jax": [
+        0.3487714055115376,
+        0.08918837152331224
+      ],
+      "jax_minus_solver_abs": [
+        1.1102230246251565e-16,
+        1.942890293094024e-16
+      ],
+      "signed_spin": -0.22263419239588267,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 1024,
+      "solver_estimated_frequency_error": 8.790328253942616e-17,
+      "torch": [
+        0.3487714055115376,
+        0.08918837152331224
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        1.1102230246251565e-16,
+        1.942890293094024e-16
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": {
+            "knot_log": 0.05036904890926466,
+            "side": 1,
+            "target_log": 0.05
+          },
+          "kind": "native_knot_probe"
+        }
+      ],
+      "direct_solver": [
+        0.3676613499454926,
+        0.08904826913407762
+      ],
+      "jax": [
+        0.3676613499454919,
+        0.08904826913407765
+      ],
+      "jax_minus_solver_abs": [
+        7.216449660063518e-16,
+        2.7755575615628914e-17
+      ],
+      "signed_spin": -0.04912251178944672,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 1024,
+      "solver_estimated_frequency_error": 3.911360577754284e-17,
+      "torch": [
+        0.36766134994549193,
+        0.08904826913407768
+      ],
+      "torch_minus_jax_abs": [
+        5.551115123125783e-17,
+        2.7755575615628914e-17
+      ],
+      "torch_minus_solver_abs": [
+        6.661338147750939e-16,
+        5.551115123125783e-17
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": {
+            "knot_log": 0.05036904890926466,
+            "side": 0,
+            "target_log": 0.05
+          },
+          "kind": "native_knot_probe"
+        }
+      ],
+      "direct_solver": [
+        0.3676614631473816,
+        0.08904826769500149
+      ],
+      "jax": [
+        0.36766146314738113,
+        0.08904826769500143
+      ],
+      "jax_minus_solver_abs": [
+        4.440892098500626e-16,
+        5.551115123125783e-17
+      ],
+      "signed_spin": -0.049121560911483064,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 1024,
+      "solver_estimated_frequency_error": 1.0640051907752212e-16,
+      "torch": [
+        0.36766146314738113,
+        0.08904826769500143
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        4.440892098500626e-16,
+        5.551115123125783e-17
+      ]
+    },
+    {
+      "categories": [
+        {
+          "detail": {
+            "knot_log": 0.05036904890926466,
+            "side": -1,
+            "target_log": 0.05
+          },
+          "kind": "native_knot_probe"
+        }
+      ],
+      "direct_solver": [
+        0.36766157634950186,
+        0.08904826625591539
+      ],
+      "jax": [
+        0.36766157634950125,
+        0.08904826625591541
+      ],
+      "jax_minus_solver_abs": [
+        6.106226635438361e-16,
+        2.7755575615628914e-17
+      ],
+      "signed_spin": -0.04912061003256853,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 1024,
+      "solver_estimated_frequency_error": 7.956963769500531e-17,
+      "torch": [
+        0.36766157634950125,
+        0.08904826625591541
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        6.106226635438361e-16,
+        2.7755575615628914e-17
+      ]
+    },
+    {
+      "categories": [
+        {
+          "kind": "edge_or_near_edge"
+        }
+      ],
+      "direct_solver": [
+        0.3736591085194954,
+        0.08896251522374178
+      ],
+      "jax": [
+        0.37365910851952056,
+        0.08896251522373871
+      ],
+      "jax_minus_solver_abs": [
+        2.5146551507759796e-14,
+        3.066991105526995e-15
+      ],
+      "signed_spin": -0.0001,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 1024,
+      "solver_estimated_frequency_error": 3.1174430717020175e-17,
+      "torch": [
+        0.37365910851952056,
+        0.08896251522373871
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        2.5146551507759796e-14,
+        3.066991105526995e-15
+      ]
+    },
+    {
+      "categories": [
+        {
+          "kind": "edge_or_near_edge"
+        }
+      ],
+      "direct_solver": [
+        0.3736716831603803,
+        0.0889623157088944
+      ],
+      "jax": [
+        0.37367168316038024,
+        0.08896231570889439
+      ],
+      "jax_minus_solver_abs": [
+        5.551115123125783e-17,
+        1.3877787807814457e-17
+      ],
+      "signed_spin": -1e-08,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 1024,
+      "solver_estimated_frequency_error": 3.079211155913529e-17,
+      "torch": [
+        0.37367168316038024,
+        0.08896231570889439
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        5.551115123125783e-17,
+        1.3877787807814457e-17
+      ]
+    },
+    {
+      "categories": [
+        {
+          "kind": "edge_or_near_edge"
+        }
+      ],
+      "direct_solver": [
+        0.37367168441791615,
+        0.08896231568893768
+      ],
+      "jax": [
+        0.3736716844179161,
+        0.08896231568893771
+      ],
+      "jax_minus_solver_abs": [
+        5.551115123125783e-17,
+        2.7755575615628914e-17
+      ],
+      "signed_spin": -1e-12,
+      "solver_branch_origin": "provided seed; overtone identity requires continuation",
+      "solver_depth": 1024,
+      "solver_estimated_frequency_error": 7.415722476654256e-17,
+      "torch": [
+        0.3736716844179161,
+        0.08896231568893771
+      ],
+      "torch_minus_jax_abs": [
+        0.0,
+        0.0
+      ],
+      "torch_minus_solver_abs": [
+        5.551115123125783e-17,
+        2.7755575615628914e-17
+      ]
+    }
+  ],
+  "schema": "diffgw.seobnrv4.qnm-finite-domain-solver.v1",
+  "scope": {
+    "description": "Finite signed-spin Kerr-equation consistency check with author-seeded direct roots.",
+    "known_limitations": [
+      "The strict direct solver belongs to the same native Kerr implementation family used to generate the spline; this is an equation-consistency check, not a fully independent physical oracle.",
+      "Cook author data only seed the branch solve and are not generator inputs, copied assets, or comparison answers.",
+      "The finite declared points cannot prove a continuous-domain maximum or qualify historical SEOBNRv4 table compatibility, attached waveforms, or the ROM."
+    ],
+    "physics_validated": false,
+    "production_asset": false,
+    "production_promotion_allowed": false,
+    "training_generator_qualified": false
+  },
+  "script_sha256": "3cf85917e5b190201e1fa7a32b6dcf2ad60b88605e5dd51854deaaa164fb85ab",
+  "source_sha256": {
+    "dev/native_rom/qualify_generator.py": "df9bffb614b87e82b5a8da47212cb01312ad4d0cb9d687d929570df134954174",
+    "src/diffgw_core/kerr_qnm_220_data.py": "51b13ae3649ec332b45d4c538a669334ec31f4244105e3b4c2b0c24197f4c5e4",
+    "src/jaxwave/approximants/kerr_qnm_interp.py": "1de5fbab1757b90ea0a37927c3432cf72ceafd5faeaef024b2baeb5b445fabe4",
+    "src/torchwave/approximants/kerr_qnm_generated.py": "82da71c19c50defeab4c32b6950141d845214909e9f52342e3f1cf3b46f08326",
+    "src/torchwave/qnm/solver.py": "36792fc5ad7201cfd5e4cac5221d48ca0db70f38b9d6fec4c3232caf60f84717"
+  },
+  "status": "diagnostic_complete",
+  "summary": {
+    "elapsed_seconds": 11.441043792001437,
+    "max_native_minus_solver_abs": 3.0031532816110484e-14,
+    "max_native_minus_solver_location": {
+      "backend": "torch",
+      "component": "frequency",
+      "signed_spin": -0.9993187079309421
+    },
+    "max_solver_estimated_frequency_error": 2.7396435813318405e-14,
+    "max_torch_minus_jax_abs": 5.551115123125783e-17,
+    "max_torch_minus_jax_location": {
+      "component": "frequency",
+      "signed_spin": -0.04912251178944672
+    },
+    "row_count": 113
+  }
+}

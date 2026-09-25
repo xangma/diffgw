@@ -1,0 +1,130 @@
+{
+  "schema": "diffgw.seobnrv4.source-aligned-exact-node-circ-nqc-ladder-plan.v1",
+  "purpose": "Prospectively test whether the post-hoc exact-circular-frequency Newtonian (2,2) amplitude-factor substitution converges across four recovered historical source NQC stencil widths and two centered-DOP853 integration tolerances.",
+  "release_qualified": false,
+  "row": {
+    "mass1": 30.0,
+    "mass2": 20.0,
+    "chi1": 0.8,
+    "chi2": 0.8,
+    "omega_start": 0.04
+  },
+  "match_time_M": 137.59240346159578,
+  "initial_state_source": "saved captured_state_at_match in pinned source NQC evidence",
+  "integrator": "SciPy solve_ivp DOP853, independent backward and forward dense solutions from the saved center state",
+  "tolerances": [
+    {
+      "rtol": 1e-11,
+      "atol": 1e-12
+    },
+    {
+      "rtol": 1e-12,
+      "atol": 1e-13
+    }
+  ],
+  "half_extent_M": 0.4,
+  "stencil_steps_M": [
+    0.2,
+    0.1,
+    0.05,
+    0.025
+  ],
+  "python_executable": "/Users/xangma/repos/diffgw/.venv/bin/python",
+  "numpy_version": "2.5.3",
+  "scipy_version": "1.18.1",
+  "runner_sha256": "eace8465bdf14af803e117fe28932da2448ec7047d33ffb070e8a7fd8ec000c1",
+  "replay": {
+    "require_exact_nfev": true,
+    "source_stencil_derivative_linf": 1e-10,
+    "source_stencil_center_linf": 1e-12,
+    "pilot_coefficient_replay_linf": 1e-09,
+    "prior_corrected_coefficient_replay_linf": 1e-09
+  },
+  "historical_coefficient_stencil_l2_limit": 0.01,
+  "counterfactual": "At every exactly replayed historical centered-DOP853 node, use the pinned source field for orbital omega and pinned pre-NQC mode for raw amplitude; change only the Newtonian amplitude factor by (omega_circ_gsl/omega_circ_exact)^(4/3). Apply additive changes in A, A*q1, A*q2, A*q3 to the original saved derivative matrix, preserving source target values and phase rows. Resolve the original NQC linear system at each stencil/tolerance pair. Keep the original failed 0.01 historical coefficient gate failed.",
+  "counterfactual_gates": {
+    "coarse_l2": 0.01,
+    "max_refinement_ratio": 0.5,
+    "finest_l2": 0.001,
+    "max_tolerance_shift_l2": 0.001,
+    "max_fine_tolerance_fraction": 0.25
+  },
+  "gate_interpretation": "For both tolerance runs, corrected adjacent coefficient L2 distances from 0.2->0.1, 0.1->0.05, and 0.05->0.025 M must start <=0.01, contract by at least 2x at each refinement, and end <=0.001. At every stencil, the loose-to-tight coefficient L2 shift must be <=0.001; at 0.025 M it must also be <=25% of the tight-run 0.05->0.025 M difference. Failure of any prospective gate means the counterfactual has not demonstrated coefficient convergence. These diagnostic gates do not change the historical 0.01 gate or constitute release qualification.",
+  "limitations": "One pinned source event and a post-hoc algebraic substitution. Exact historical nodes are operationally recovered by nfev and derivative replay, not serialized original node states. Passing two integration tolerances would not prove asymptotic convergence, waveform agreement, or a native prescription. No source or production model is modified.",
+  "prior_artifacts": {
+    "v1_plan": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_exact_node_circ_nqc_plan.json",
+      "sha256": "398ec02171f438d7ea01dc73bf01d328ecde3db40ab06a5cddd82d8c924b1cbc"
+    },
+    "v1_report": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_exact_node_circ_nqc.json",
+      "sha256": "091972d20afd418d836be1bd5e0672396782a8b3cec2e818e171035d0d14393d"
+    },
+    "v1_runner": {
+      "path": "dev/native_rom/diagnose_source_aligned_exact_node_circ_nqc.py",
+      "sha256": "40ae0c684f8d7a3e71c79220a9e86bd58f191e1fbabaef6a7a90f2ae7da88127"
+    },
+    "v2_plan": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_exact_node_circ_nqc_plan_v2.json",
+      "sha256": "0d5b288618b8d0c928181e2076f4f50f3e1f738991c0cd52c6fab36308805cdf"
+    },
+    "v2_report": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_exact_node_circ_nqc_v2.json",
+      "sha256": "abeb440b388ce455b82aa1009cb01ca74a7004ae2b669a9da252c1364ca40eaf"
+    },
+    "v2_runner": {
+      "path": "dev/native_rom/diagnose_source_aligned_exact_node_circ_nqc_v2.py",
+      "sha256": "540c979e7a19286c85a2cb1008ff512438d6817d180404a90a481461cc9a6394"
+    }
+  },
+  "inputs": {
+    "source_nqc_evidence": {
+      "path": "dev/native_rom/evidence/2026-09-24/source_nqc_dense_field_strong_aligned_spin.json",
+      "sha256": "c8d642fd8b8f7e17672c1c6c2ec831a3ba4e49d4ebbf7992afaf87a9360eb780"
+    },
+    "pilot_evidence": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_derivative_only_pilot.json",
+      "sha256": "f54fdfbfacdc85ba37d2cae05091b33be297f7fb0e2f3e57018649dd940e10eb"
+    },
+    "source_flux_plan": {
+      "path": "dev/native_rom/evidence/2026-09-24/source_flux_initial_plan.json",
+      "sha256": "1167199c8f954f97a5905a1e3b2f67d1555e984e5f1da0a0fc42a77a925f96ea"
+    },
+    "prior_v2_report": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_exact_node_circ_nqc_v2.json",
+      "sha256": "abeb440b388ce455b82aa1009cb01ca74a7004ae2b669a9da252c1364ca40eaf"
+    },
+    "original_runner": {
+      "path": "dev/native_rom/diagnose_source_nqc_dense_field.py",
+      "sha256": "5900916a17f3d433016bd8d4a41e9c04cdd6b45b900da8368b0832bf61374cb1"
+    },
+    "field_adapter": {
+      "path": "dev/native_rom/reference/full_v4_source_field_adapter.c",
+      "sha256": "d674aecdc602024c539ff8a2040a842adceab3ca546c08e307724c2fccdd3113"
+    },
+    "mode_adapter": {
+      "path": "dev/native_rom/reference/flux_v4_source_wheel_adapter.c",
+      "sha256": "91833ee4a2a8fae8efa3a2fef9234ed4f222a73198102ceafab361809c9a0660"
+    },
+    "probe_include": {
+      "path": "dev/native_rom/reference/raw_amplitude_operation_probe.inc",
+      "sha256": "2ed97f12cfe2228a2890239345c4ee7fc6bb03a28fdce25e8e15e1e39cc6474d"
+    },
+    "qualify_generator_helper": {
+      "path": "dev/native_rom/qualify_generator.py",
+      "sha256": "df9bffb614b87e82b5a8da47212cb01312ad4d0cb9d687d929570df134954174"
+    },
+    "source_flux_helper": {
+      "path": "dev/native_rom/diagnose_source_flux_initial.py",
+      "sha256": "b1d040bedff3eb88ee644ede9098c7807ab8a3e2a9ca6b8bcfe9bd35fec4d7bb"
+    },
+    "pilot_helper": {
+      "path": "dev/native_rom/diagnose_source_aligned_derivative_only_pilot.py",
+      "sha256": "32691792627c55fe1990a462cd6669bad5e6f301bc4ca02debdd3f1af0c9e03b"
+    },
+    "counterfactual_helper": {
+      "path": "dev/native_rom/diagnose_source_aligned_exact_circ_nqc_counterfactual.py",
+      "sha256": "f7fe57e3818d36f2b70bde4c2776d9e3e1ebfc56697ae2ed54bd926333b3b6ad"
+    }
+  }
+}

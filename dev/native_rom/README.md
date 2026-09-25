@@ -70,6 +70,14 @@ rows and at the native domain edge. Torch and JAX agree with the solves within
 values seed the branch solve, so this checks equation consistency rather than
 independent author data; it does not establish a continuous error bound or
 decide whether historical table interpolation should be reproduced.
+The [prospective 113-point signed-spin check](evidence/2026-09-25/qnm_finite_domain_solver.json)
+uses Cook author data only to seed strict direct Kerr roots at interior points,
+native-knot neighborhoods, and both domain edges. Every solve converges;
+native-to-direct differences are at most `3.01e-14` and Torch/JAX differences
+at most `5.56e-17`, below the frozen `1e-9` and `1e-12` gates. The direct
+solver shares the native Kerr implementation family. These finite points do
+not prove a continuous error bound, historical table compatibility, or
+whole-waveform accuracy.
 The [current-source ringdown-only comparison](evidence/2026-09-25/qnm_ringdown_waveform_current.json)
 uses a [separately frozen two-row baseline](evidence/2026-09-25/qnm_ringdown_current_baseline.json)
 because the older campaign mode arrays no longer replay under the changed
@@ -2531,6 +2539,16 @@ from `0.026491` to [`0.005269`](evidence/2026-09-25/source_aligned_exact_node_ci
 The earlier node states were not serialized, so their bitwise identity cannot
 be proven. This is a post-hoc source-only diagnostic; the original gate remains
 failed and no native waveform or replacement prescription is qualified.
+
+The [prospective exact-node stencil ladder](evidence/2026-09-25/source_aligned_exact_node_circ_nqc_ladder.json)
+replays the original source stencils at two integration tolerances, then tests
+that correction at `0.2`, `0.1`, `0.05`, and `0.025 M`. At the tighter
+tolerance, adjacent corrected-coefficient L2 distances grow from `0.005269`
+to `0.08969` and `1.03445`; at the looser tolerance they are `0.01433`,
+`0.13204`, and `0.22894`. The finest loose-to-tight shift is `0.83935`.
+All five frozen convergence gates fail, and the original historical `0.01`
+gate remains failed. The earlier two-stencil improvement therefore does not
+support a stable derivative or release NQC prescription.
 
 A separate [clean-room circular-frequency check](evidence/2026-09-25/published_circular_frequency_plan.json)
 derives the zero-radial angular Hamiltonian derivative and compares it with
