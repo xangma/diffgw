@@ -299,6 +299,25 @@ with exit code 1. No process or next check remains. The next numerical
 attribution should hold resampled states identical and compare eager/JIT
 published-mode evaluation before revisiting the NQC spline.
 
+The [frozen fixed-state mode/NQC control](jax_fixed_state_mode_plan.json)
+and [failed result](jax_fixed_state_mode.json) complete that attribution on
+the same chart. Holding state arrays identical, separate eager/JIT pre-NQC
+mode evaluations differ by only `1.02e-15` relative L2 on the fine grid;
+orbital and continuous frequencies also meet their `1e-12` diagnostic
+gates. Nevertheless the NQC fit on identical state, frequency, and mode
+inputs changes the amplitude coefficients by `1.39e-7`, missing its frozen
+`1e-9` gate. Substituting the separately computed JIT mode adds `1.15e-6`
+of amplitude coefficient difference and `1.21e-7` of phase coefficient
+difference; substituting the JIT resampled state after that adds zero at
+reported precision. This isolates both an intrinsic eager/JIT NQC solve/
+spline sensitivity and amplification of pre-NQC mode roundoff. It does not
+identify a source-preserving repair; any new numerical formulation still
+needs independently frozen whole-waveform, source, AD/FD, and multi-case
+checks. The diagnostic ran on RONI2 in this worktree as PID `62961`, command
+`PYTHONPATH=src:. /Users/xangma/repos/diffgw/.venv/bin/python -m dev.native_rom.diagnose_jax_fixed_state_mode`,
+log `/tmp/diffgw-jax-fixed-state-mode.log`, and completed in 23 seconds with
+exit code 1 for the frozen NQC gate. No process or next check remains.
+
 Two different release claims must stay separate:
 
 - **Historical SEOBNRv4 fidelity:** a port may be described as faithful only

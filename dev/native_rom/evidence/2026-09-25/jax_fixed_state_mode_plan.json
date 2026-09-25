@@ -1,0 +1,22 @@
+{
+  "schema": "diffgw.seobnrv4.jax-fixed-state-mode-plan.v1",
+  "release_qualified": false,
+  "source_head": "f72f188",
+  "case": "high_start_mixed_spin",
+  "output_step_M": 0.5,
+  "fine_refinement_factor": 32,
+  "adaptive_atol": 1e-10,
+  "adaptive_rtol": 1e-9,
+  "method": "Replay accepted knots with the development-only stable resampler. Hold the eager coarse and fine state arrays bit-identical as inputs to separate eager and JIT evaluations of orbital frequency and published pre-NQC mode. Then hold eager frequency and mode arrays fixed as inputs to separate eager and JIT NQC fits. Report absolute and relative differences without altering waveform equations or thresholds.",
+  "gates": {
+    "max_replay_state_absolute_error": 1e-7,
+    "max_fixed_input_mode_relative_l2": 1e-12,
+    "max_fixed_input_frequency_relative_l2": 1e-12,
+    "max_fixed_input_nqc_coefficient_absolute_error": 1e-9
+  },
+  "operational_limits": {
+    "max_wall_time_s": 300,
+    "max_rss_gib": 32
+  },
+  "interpretation": "One fixed-chart attribution only. Failure localizes numerical sensitivity and cannot qualify a release or justify changing the physical gate."
+}
