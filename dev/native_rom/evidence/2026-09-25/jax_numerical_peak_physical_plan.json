@@ -1,0 +1,20 @@
+{
+  "schema": "diffgw.seobnrv4.jax-numerical-peak-physical-plan.v1",
+  "purpose": "Separate the full-series orbital-peak algorithm from trajectory differences on physical fine EOB series before NQC calibration.",
+  "pilot_case": "high_start_mixed_spin",
+  "prospective_cases": ["q4_nonspinning", "strong_aligned", "strong_antialigned"],
+  "case_input_source": "jax_adaptive_physical_event_plan.json",
+  "trajectory_settings_source": "jax_two_stage_physical_plan.json",
+  "comparisons": ["JAX peak on Torch fine samples versus Torch peak", "JAX peak on independently integrated JAX fine samples versus Torch peak"],
+  "diagnostic_checks": {
+    "all_sample_indices_equal": true,
+    "same_input_peak_time_abs_M_at_most": 1e-5,
+    "same_input_frequency_abs_at_most": 1e-8,
+    "same_input_curvature_abs_at_most": 1e-7,
+    "end_to_end_peak_time_abs_M_at_most": 0.0001,
+    "end_to_end_frequency_abs_at_most": 1e-8,
+    "end_to_end_curvature_abs_at_most": 1e-7,
+    "fine_frequency_max_abs_at_most": 1e-8
+  },
+  "interpretation": "Numerical orbital-peak parity on physical fine series only; it does not qualify NQC calibration, ringdown attachment, independently sourced physics, full waveforms, convergence, or ROM training."
+}

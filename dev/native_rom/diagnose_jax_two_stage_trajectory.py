@@ -29,8 +29,8 @@ from torchwave.approximants.eob.seobnrv4_hamiltonian import SEOBNRv4Hamiltonian 
 jax.config.update("jax_enable_x64", True)
 
 
-def run(case_id):
-    started = time.monotonic()
+def construct_case(case_id):
+    """Build both physical vector fields from one Torch circular initial state."""
     m1, m2, chi1, chi2, omega_start = CASES[case_id]
     delta = (m1 - m2) / (m1 + m2)
     nu = m1 * m2 / (m1 + m2) ** 2
@@ -50,6 +50,13 @@ def run(case_id):
     initial_jax = jnp.asarray(initial_torch.numpy())
     torch_field = TorchIntegrator(th, tf).vector_field
     jax_field = jax.jit(JaxIntegrator(jh, jf).vector_field)
+    return initial_torch, initial_jax, torch_field, jax_field
+
+
+def run(case_id):
+    started = time.monotonic()
+    m1, m2, chi1, chi2, omega_start = CASES[case_id]
+    initial_torch, initial_jax, torch_field, jax_field = construct_case(case_id)
     print(case_id, "initial", initial_torch.tolist(), flush=True)
 
     dt, max_duration, max_step = 0.5, 1000.0, 2.0
