@@ -1,20 +1,16 @@
 """Cross-framework parity test: torchwave vs jaxwave for IMRPhenomXPHM and Precession Engines."""
 
-import math
 import numpy as np
 import pytest
 import torch
 import jax
 import jax.numpy as jnp
 
-from diffgw_core.constants import PI, MSUN_SEC
-import jaxwave
 from jaxwave import (
     IMRPhenomXP as JaxPhenomXP,
     IMRPhenomXPHM as JaxPhenomXPHM,
     get_fd_waveform as jax_get_fd_waveform,
 )
-from torchwave import get_fd_waveform as torch_get_fd_waveform
 from torchwave.approximants.imrphenom_xphm import IMRPhenomXPHM as TorchPhenomXPHM
 from torchwave.approximants.imrphenom_xhm import IMRPhenomXHM as TorchPhenomXHM
 from jaxwave.approximants.imrphenom_xhm import IMRPhenomXHM as JaxPhenomXHM
@@ -61,7 +57,7 @@ def test_xphm_aligned_mode_parity(mode):
 @pytest.mark.parametrize('convention', [1, 5])
 def test_xp_xphm22_batched_azimuth_parity(method, version, remnant, convention):
     # Pratten et al. (2021): XPHM restricted to the coprecessing 22 mode is XP.
-    # The two public defaults differ, so compare the same angle/remnant choice.
+    # Compare the same nondefault angle/remnant choices explicitly.
     p = dict(mass1=40., mass2=20., spin1x=.3, spin1y=.2, spin1z=.4,
              spin2x=-.2, spin2y=.1, spin2z=-.2, inclination=.7, phic=.3,
              f_ref=40., convention=convention, precession_method=method,

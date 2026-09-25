@@ -546,7 +546,7 @@
       ],
       "frame_convention": "XPHM precession dynamics evaluated cleanly in native PyTorch with batch broadcasting.",
       "status": "sovereign_nr_calibrated",
-      "notes": "Precessing multimode waveform incorporating native SXS NR ringdown fits for (2,1), (3,3), (4,4) and (3,2). The phase-component checks described for IMRPhenomXHM do not validate precession or the complete waveform. The frozen catalog and holdout LAL comparisons did not pass the strict gates.",
+      "notes": "Precessing multimode waveform incorporating native SXS NR ringdown fits for (2,1), (3,3), (4,4) and (3,2). Torch and JAX default to MSA version 223, convention 1, and final-spin option 3. Independent scalar checks cover the rotation layer only. The historical frozen metrics below remain tied to their pinned artifacts and failed gates; the current-default rerun is recorded separately in the XPHM closure ledger.",
       "primary_references": [
         {
           "citation": "Pratten et al. (2021), Phys. Rev. D 103, 104056",
@@ -586,7 +586,7 @@
         }
       },
       "precession_domain": "Tensor precession and multimode evaluation; gradient and batching support must be checked for the selected path. Passing component tests does not establish complete precession-domain accuracy.",
-      "convention_evidence": "docs/provenance_ledger.md"
+      "convention_evidence": "docs/waveforms/research/xphm-precession-reference-closure.md"
     },
     "IMRPhenomXPHM-SpinTaylor": {
       "name": "IMRPhenomXPHM-SpinTaylor",

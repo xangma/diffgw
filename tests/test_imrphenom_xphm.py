@@ -2,7 +2,6 @@
 
 import pytest
 import torch
-import numpy as np
 
 from torchwave.approximants.imrphenom_xphm import IMRPhenomXPHM
 from torchwave.approximants.imrphenom_hm import IMRPhenomXHM
@@ -113,11 +112,14 @@ def test_imrphenom_xphm_autograd():
     f = torch.linspace(25.0, 200.0, 32, dtype=torch.float64)
 
     m1 = torch.tensor(35.0, dtype=torch.float64, requires_grad=True)
-    m2 = torch.tensor(20.0, dtype=torch.float64, requires_grad=True)
-    s1x = torch.tensor(0.25, dtype=torch.float64, requires_grad=True)
-    s1y = torch.tensor(0.15, dtype=torch.float64, requires_grad=True)
-    s1z = torch.tensor(0.10, dtype=torch.float64, requires_grad=True)
-    inc = torch.tensor(0.6, dtype=torch.float64, requires_grad=True)
+    m2 = torch.tensor(25.0, dtype=torch.float64, requires_grad=True)
+    s1x = torch.tensor(0.20, dtype=torch.float64, requires_grad=True)
+    s1y = torch.tensor(0.10, dtype=torch.float64, requires_grad=True)
+    s1z = torch.tensor(0.20, dtype=torch.float64, requires_grad=True)
+    s2x = torch.tensor(-0.10, dtype=torch.float64, requires_grad=True)
+    s2y = torch.tensor(0.15, dtype=torch.float64, requires_grad=True)
+    s2z = torch.tensor(-0.10, dtype=torch.float64, requires_grad=True)
+    inc = torch.tensor(0.7, dtype=torch.float64, requires_grad=True)
 
     hp, hc = IMRPhenomXPHM()(
         f=f,
@@ -126,13 +128,21 @@ def test_imrphenom_xphm_autograd():
         spin1x=s1x,
         spin1y=s1y,
         spin1z=s1z,
+        spin2x=s2x,
+        spin2y=s2y,
+        spin2z=s2z,
         inclination=inc,
+        f_ref=20.0,
     )
 
     loss = (hp.abs() ** 2 + hc.abs() ** 2).sum()
     loss.backward()
 
-    for name, param in [("m1", m1), ("m2", m2), ("s1x", s1x), ("s1y", s1y), ("s1z", s1z), ("inc", inc)]:
+    for name, param in [
+        ("m1", m1), ("m2", m2), ("s1x", s1x), ("s1y", s1y),
+        ("s1z", s1z), ("s2x", s2x), ("s2y", s2y), ("s2z", s2z),
+        ("inc", inc),
+    ]:
         assert param.grad is not None, f"Gradient for {name} is None"
         assert not torch.isnan(param.grad), f"Gradient for {name} is NaN"
         assert param.grad.abs().item() > 0.0, f"Gradient for {name} is zero"
