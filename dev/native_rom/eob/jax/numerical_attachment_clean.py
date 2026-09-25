@@ -157,6 +157,53 @@ def traceable_nqc_22_full_series_coefficients(
             phase_condition, amplitude_residual, phase_residual)
 
 
+def traceable_fixed_chart_attached_mode22(
+    time, r, pr_star, orbital_frequency, base_mode, match_time, targets,
+    nu, chi, sigma, output_time, *, mass_scale=1.0,
+):
+    """Replay NQC and continuous-boundary attachment on a validated fixed chart.
+
+    The caller owns input and conditioning checks. Adaptive steps, the peak
+    event, the sample chart, and the attachment policy are held fixed here.
+    This is a development-only derivative diagnostic, not a release model.
+    """
+    a, b, *_ = traceable_nqc_22_full_series_coefficients(
+        time, r, pr_star, orbital_frequency, base_mode, match_time, targets)
+    amplitude = jnp.abs(base_mode)
+    phase = _unwrap_mode_phase_unchecked(base_mode)
+    q, p = nqc_22_basis(r, pr_star, orbital_frequency)
+    products = amplitude[:, None] * q
+    combined = jnp.concatenate((amplitude[:, None], products, p, phase[:, None]),
+                               axis=-1)
+    spline = natural_cubic_spline(time, combined, scalar_output=False)
+
+    def corrected_at(query):
+        values = spline(query)
+        corrected_amplitude = values[..., 0] + jnp.sum(values[..., 1:4] * a, axis=-1)
+        corrected_phase = values[..., 6] - jnp.sum(values[..., 4:6] * b, axis=-1)
+        return corrected_amplitude * jnp.exp(-1j * corrected_phase), corrected_phase
+
+    boundary_mode, boundary_phase = corrected_at(match_time)
+    boundary_amplitude = jnp.abs(boundary_mode)
+    ringdown_time = jnp.maximum(output_time - match_time, 0)
+    shape = seobnrv4_peak_preserving_shape(sigma, seobnrv4_merger_shape(nu, chi))
+    ringdown = merger_ringdown_22(
+        ringdown_time, sigma, boundary_amplitude,
+        jnp.zeros_like(boundary_amplitude), targets.frequency, boundary_phase, shape)
+    dt_output = output_time[1] - output_time[0]
+    exponent = jnp.maximum(0, jnp.ceil(jnp.log2(50 * dt_output / mass_scale)))
+    internal_step = dt_output / (2**exponent)
+    support_count = jnp.floor(10 / (-jnp.imag(sigma) * internal_step))
+    ringdown = jnp.where(ringdown_time < support_count * internal_step,
+                         ringdown, jnp.zeros_like(ringdown))
+    inspiral, _ = corrected_at(jnp.clip(output_time, time[0], match_time))
+    inspiral = jnp.where(output_time < time[0], jnp.zeros_like(inspiral), inspiral)
+    mode = jnp.where(output_time < match_time, inspiral, ringdown)
+    corrected = base_mode * nqc_22_factor(
+        r, pr_star, orbital_frequency, NQCCoefficients(a, b))
+    return mode, corrected, a, b
+
+
 def calibrate_nqc_22_full_series(
     time, r, pr_star, orbital_frequency, base_amplitude, base_frequency,
     match_time, targets: NQCMatchingTargets, *, waveform_phase=None,
@@ -411,4 +458,5 @@ def attach_seobnrv4_22_numerical_compatibility(
 __all__ = ["FullSeriesNQC", "NumericalAttachedMode22",
            "attach_seobnrv4_22_numerical_compatibility",
            "calibrate_nqc_22_full_series", "full_orbital_peak",
-           "traceable_nqc_22_full_series_coefficients", "unwrap_mode_phase"]
+           "traceable_nqc_22_full_series_coefficients",
+           "traceable_fixed_chart_attached_mode22", "unwrap_mode_phase"]

@@ -1,0 +1,58 @@
+{
+  "case": "q4_nonspinning",
+  "checked_compiled_corrected_relative_l2": 4.09919766850448e-11,
+  "checked_compiled_mode_relative_l2": 1.0651369171917287e-12,
+  "checks": {
+    "checked_compiled_corrected_relative_l2_at_most": true,
+    "checked_compiled_mode_relative_l2_at_most": true,
+    "derivative_finite_difference_relative_l2_at_most": true,
+    "finite_derivative": true,
+    "maximum_matching_condition": true
+  },
+  "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+  "derivative_fd_relative_l2": {
+    "0.0001": [
+      4.669172582597555e-08,
+      2.004452656297911e-06
+    ],
+    "0.001": [
+      4.669179310092895e-06,
+      4.234804596273366e-07
+    ]
+  },
+  "derivative_l2": [
+    7.746869999949447,
+    0.5871203582787873
+  ],
+  "diagnostic_checks_passed": true,
+  "eager_compiled_relative_l2": [
+    1.0651369171917287e-12,
+    4.09919766850448e-11,
+    1.6420302886780279e-09,
+    1.5948913609837114e-15
+  ],
+  "elapsed_s": 11.606234166014474,
+  "host": "RONI2",
+  "input_array_sha256": {
+    "base_mode": "9941b533cb31e0b0be176a30f21e029ec024d25a8ccc38a2733031de4abdd965",
+    "orbital_frequency": "2f9f3a5ecb431a6dc81dd23b3170db9f4b25dec3030a46de3c176aa74a7516a1",
+    "state": "b339261e28ab1e1be3b2fa6a2d42c0707174f2d17a087fb190e03e4f863a1b51",
+    "time": "1bed3a8d9e60c49720b574b6f8c5d7ea020800a4b83e613261b629817c7566b1"
+  },
+  "match_time_M": 142.16384438780858,
+  "matching_condition": [
+    591.2742086595528,
+    6.1252279187046526
+  ],
+  "output_samples": 112,
+  "pid": 44498,
+  "plan_sha256": "44e88bea7c4fb684f21d3967ef068a1038f01ab6fcc8b0e1112d2cded25bad13",
+  "release_qualified": false,
+  "schema": "diffgw.seobnrv4.jax-fixed-chart-attachment-gradient.v1",
+  "source_sha256": {
+    "dev/native_rom/diagnose_jax_fixed_chart_attachment_gradient.py": "87bf93802740afdae5ac6c15852b848de2f9da780a7412cdfa988d6f415bada9",
+    "dev/native_rom/eob/jax/numerical_attachment_clean.py": "4b74f667792fff4d8a5266bbe198550d014c17f30449c9c2f9e56480c950ccc1"
+  },
+  "status": "diagnostic_complete",
+  "window_samples": 1168
+}

@@ -1,0 +1,20 @@
+{
+  "schema": "diffgw.seobnrv4.jax-fixed-chart-attachment-gradient-plan.v1",
+  "case": "q4_nonspinning",
+  "prior_physical_sha256": "2423f55255b17a7d49211e2502662ea6eef3cb362f39133d129d20c701726cff",
+  "fine_output_step_M": 0.015625,
+  "matching_window_half_width_M": 10.0,
+  "attachment_output_step_M": 0.25,
+  "attachment_output_start_relative_M": -7.875,
+  "attachment_output_stop_relative_M": 19.875,
+  "finite_difference_steps": [0.001, 0.0001],
+  "checks": {
+    "matching_window_min_samples": 500,
+    "checked_compiled_mode_relative_l2_at_most": 0.0000001,
+    "checked_compiled_corrected_relative_l2_at_most": 0.0000001,
+    "derivative_finite_difference_relative_l2_at_most": 0.001,
+    "maximum_matching_condition": 10000000000.0
+  },
+  "interpretation": "Physical q4 NQC and continuous-boundary attached-mode derivative on one frozen fine-output chart. Vary published NQC target spin, its match-time offset, and merger shape together; separately vary the physical state samples and base mode through a smooth scalar probe. Orbital peak, adaptive trajectory decisions, QNM/remnant, output chart, and boundary policy remain frozen. This is not a release qualification claim.",
+  "release_qualified": false
+}

@@ -1747,6 +1747,20 @@ relative. Neither check differentiates the trajectory, base mode, peak event,
 or attachment boundary, and neither establishes a whole-waveform gradient,
 domain bound, or release qualification.
 
+The [fixed-chart physical q4 attachment-gradient check](evidence/2026-09-25/jax_fixed_chart_attachment_gradient.json)
+uses a [frozen plan](evidence/2026-09-25/jax_fixed_chart_attachment_gradient_plan.json)
+and a development-only traceable continuous-boundary replay. On 1,168
+near-match fine samples and 112 inspiral/ringdown output samples, the compiled
+mode agrees with the checked attachment path to `1.07e-12` relative L2, and
+the corrected inspiral to `4.10e-11`. The complete attached-mode derivative
+with respect to the published NQC spin variable (targets, matching-time offset,
+and merger shape together) and a smooth perturbation of the fixed state/mode
+samples agrees with centered finite differences to at most `4.67e-6` relative
+L2 at steps `1e-3` and `1e-4`. This closes one physical, fixed-chart derivative
+through NQC and ringdown. It holds the orbital peak, adaptive trajectory,
+QNM/remnant, and attachment policy fixed; it does not establish a full
+parameter-to-waveform gradient or release qualification.
+
 1. Qualify the physical generator against the published equations and independent
    references over the intended domain, resolve convention/provenance gaps, and
    establish gradients and numerical convergence. This runner covers only scalar
