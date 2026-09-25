@@ -1,0 +1,36 @@
+{
+  "schema": "diffgw.seobnrv4.jax-spliced-whole-waveform-plan.v1",
+  "purpose": "Check the complete coarse-prefix, fine NQC, and ringdown waveform across Torch and JAX and measure its peak-anchored difference from a pinned public SEOBNRv4 binary.",
+  "pilot_case": "q4_nonspinning",
+  "prospective_cases": ["high_start_mixed_spin", "strong_aligned", "strong_antialigned"],
+  "case_input_source": "jax_adaptive_physical_event_plan.json",
+  "trajectory_settings_source": "jax_two_stage_physical_plan.json",
+  "attachment_settings_source": "jax_numerical_attachment_physical_plan.json",
+  "numerical_settings": {
+    "coarse_output_step_M": 0.5,
+    "fine_output_step_M": 0.015625,
+    "ringdown_duration_after_match_M": 100,
+    "atol": 1e-10,
+    "rtol": 1e-9,
+    "max_step_M": 2,
+    "final_spin_fit_order": [3, 4]
+  },
+  "public_binary": {
+    "lal_version": "7.7.1",
+    "lalsimulation_version": "6.2.1",
+    "approximant": "SEOBNRv4",
+    "identity_source": "dev/native_rom/evidence/2026-09-24/near_extreme_public_polar_plan.json"
+  },
+  "comparisons": [
+    "Torch/JAX complete complex mode on the same initial state, nominal equation choices, and full output chart",
+    "Each complete mode against the pinned public binary on common peak-anchored support, without fitting time, phase or amplitude"
+  ],
+  "diagnostic_checks": {
+    "restart_index_equal": true,
+    "whole_mode_relative_l2_at_most": 1e-5,
+    "coarse_prefix_relative_l2_at_most": 1e-5,
+    "post_restart_relative_l2_at_most": 1e-5,
+    "full_time_max_abs_at_most_M": 1e-8
+  },
+  "interpretation": "The public comparison is descriptive; no new physical-accuracy threshold is inferred from these four cases. This does not settle published-source conventions, numerical convergence, NR accuracy, or independent ROM training."
+}
