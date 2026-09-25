@@ -83,6 +83,7 @@ trained basis, parameter interpolation, or holdout definition yet.
 | `V4-QNM-NATIVE-220-SPLINE` / 0.8.11 | Bohé Sec. II.C; independent Berti and Cook author data | conditional | `qnm.native_signed_220_spline` with supplied native controls | Torch/JAX `evaluate_kerr_qnm_220` | Sampled QNM checks pass; continuous error, historical compatibility, and waveform impact remain open |
 | `V4-QNM-INTERPOLATION` / 0.8.11 | Bohé Sec. II.C; Berti numerical data; pinned LAL source | pending | pending | Development-only independent Kerr route | q4 impact measured; domain-wide physical and waveform validation open |
 | `V4-ODE-RHS-PR0` / 0.8.11 | Bohé Sec. II.2; Buonanno--Damour Eqs. (24)--(27); Pan Eq. (28) | conditional | `orbital_ode.zero_radial_vector_field` with supplied torque | Torch/JAX `EOBTrajectoryIntegrator.vector_field` | Four supplied zero-radial states only; full torque, initial conditions, integration, and events remain open |
+| `V4-ODE-RHS-SUPPLIED-FORCE` / 0.8.11 | Bohé Sec. II.2; Buonanno--Damour Eqs. (24)--(27); Pan Eq. (28) | conditional | `orbital_ode.supplied_force_vector_field` with supplied forces | Torch/JAX `EOBTrajectoryIntegrator.vector_field` | Four supplied nonzero-radial states only; physical forces, initial conditions, integration, and events remain open |
 | `V4-ODE-IC` / 0.8.11 | Bohé evolution and historical carrier | pending | pending | Development integrators | Domain-wide converged initial conditions and events |
 | `V4-TD-FD-CONVENTIONS` / 0.8.11 | Pinned public LAL conditioning/FFT binary | pending | pending | Development Torch adapter | Identical-input conditioning/FFT passed on three rows; native/public full FD retains up to 0.004031 relative L2 after physical time/phase fitting on four rows, and conventions remain open |
 | `V4-ROM-VII` / 0.8.11 | Bohé Sec. VII | pending | pending | pending | Qualified training generator, bases, and holdouts |
@@ -153,6 +154,13 @@ with Torch and JAX within `2e-10` relative and `2e-12` absolute. This leaf
 does not establish nonzero-radial evolution, physical flux, initial-data
 root finding, numerical convergence, or the historical derivative rule;
 `V4-ODE-IC` remains pending.
+`V4-ODE-RHS-SUPPLIED-FORCE` extends this scalar differentiation to four
+supplied nonzero-`p_r*` states. It holds `p_r*` fixed when differentiating in
+radius and checks the tortoise factors in both radial equations, using caller
+supplied radial and angular dissipative forces. Torch and JAX agree with all
+four independent scalar components within `2e-10` relative and `2e-12`
+absolute. This establishes only a local vector-field leaf, not the physical
+force prescription or integrated inspiral.
 `hamiltonian.nonspinning_effective_hamiltonian` also checks the deformed-metric
 orbital Hamiltonian and 3PN tortoise-momentum quartic term at zero spin,
 including the exact Schwarzschild test-mass limit. Its finite-mass-ratio

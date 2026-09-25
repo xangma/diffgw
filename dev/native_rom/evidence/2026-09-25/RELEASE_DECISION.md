@@ -63,18 +63,32 @@ frozen before intake; this reservation does not turn the failing current
 candidate into a qualified one.
 
 The [source specification](../../reference/SPEC.md) remains incomplete: six
-of 45 manifest components are `pending`, including flux, QNM interpolation,
+of 46 manifest components are `pending`, including flux, QNM interpolation,
 ODE initial conditions, TD/FD conventions, and the ROM construction. The
 published model does not supply independently derived ROM bases and spline
 tables, and no qualified generator/training set or independent ROM holdout
 exists. Full-waveform gradients and domain-wide convergence remain open.
-The new conditional native-QNM spline and zero-radial ODE vector-field leaves
-make their arithmetic and paper-derived equations independently executable.
+The new conditional native-QNM spline, zero-radial ODE, and nonzero-radial ODE
+vector-field leaves make their arithmetic and paper-derived equations
+independently executable.
 The former checks selected Berti/Cook author rows and the native coefficient
 rule, but has no continuous bound or historical-spline claim. The latter
 checks four supplied states with an external torque and zero radial force,
 not the physical flux, initial-data root, or integrated trajectory. Neither
 leaf closes its pending aggregate component.
+The nonzero-radial leaf checks four supplied states in each frontend with
+caller-supplied radial and angular forces. It verifies the local tortoise
+Hamilton equations, but not the physical flux or an integrated trajectory.
+The existing [public/NR chirp diagnostic](sxs_public_chirp.json) locates a
+waveform-phase discrepancy on the already inspected 2569 case: at mode
+frequency `0.05/M`, relative to a `0.09/M` anchor and smoothing window 20,
+public versus high-resolution NR differs by `0.5733` rad, while public versus
+native differs by `0.0001914` rad. The
+[cross-resolution control](sxs_cross_run_chirp.json) has low/high NR phase
+difference `0.002706` rad at that frequency. These post-hoc measurements
+support a shared historical-model discrepancy over a porting or NR-resolution
+explanation on this chart; they do not identify which internal physical term
+causes it or qualify a changed model.
 The [frozen JAX pathwise whole-mode gradient diagnostic](jax_pathwise_whole_gradient.json)
 passes its finite-difference and accepted-mesh replay checks, but fails its
 eager/JIT waveform gate: relative L2 is `1.547138e-9` against `1e-10`.

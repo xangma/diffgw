@@ -397,6 +397,16 @@
       "condition": "Uses a supplied torque; neither the full 35-mode torque nor the historical SEOBNRv4 initial-data procedure is established by this check."
     },
     {
+      "id": "V4-ODE-RHS-SUPPLIED-FORCE",
+      "source": "bohe-2017-v3, Sec. II.2; Buonanno--Damour gr-qc/0001013v2, Eqs. (24)--(27); Pan et al. 0912.3466v2, Eq. (28)",
+      "status": "conditional",
+      "reference": "orbital_ode.supplied_force_vector_field at supplied r, phi, p_r_star, p_phi, radial force, and angular torque",
+      "torch": "src/torchwave/approximants/eob/integrator.py:EOBTrajectoryIntegrator.vector_field with SEOBNRv4Hamiltonian and supplied forces",
+      "jax": "src/jaxwave/approximants/eob/integrator.py:EOBTrajectoryIntegrator.vector_field with SEOBNRv4Hamiltonian and supplied forces",
+      "test": "dev/native_rom/reference/tests/test_orbital_ode.py:test_nonzero_radial_vector_field_against_paper_reference",
+      "condition": "Four supplied nonzero-radial-momentum states compare all four vector-field components with an independently differentiated high-precision scalar Hamiltonian at 2e-10 relative / 2e-12 absolute. Dissipative forces are supplied. This does not test the physical 35-mode torque, initial-data root, integration, events, numerical convergence, or historical radial-log derivative convention. The aggregate V4-ODE-IC remains pending."
+    },
+    {
       "id": "V4-ODE-RHS-PR0",
       "source": "bohe-2017-v3, Sec. II.2; Buonanno--Damour gr-qc/0001013v2, Eqs. (24)--(27); Pan et al. 0912.3466v2, Eq. (28)",
       "status": "conditional",
