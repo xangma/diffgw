@@ -376,12 +376,17 @@
       ],
       "frame_convention": "Default MSA version 223, convention 1, final_spin_mod=3; supported convention-0/1/6 requests use the clean MSA route. One-spin-aligned rows use the continuous physical opening, including nonzero phi0. Generic two-spin nonzero-phi0 rows retain the inherited rotation, and unsupported guard rows use explicit fallback. Convention 6 applies its quadrupole output phase to clean convention-1 strain.",
       "status": "verified_declared_cases",
-      "notes": "Frozen checkpoint-3 public catalog and holdout generic rows pass for convention 1 (maximum polarization complex relative L2 7.36e-14 catalog and 3.52e-14 holdout; detector projection errors are 3.02e-7 and 3.40e-7). The production default is MSA version 223 with convention=1 and final_spin_mod=3; convention 6 applies the sourced quadrupole output phase after projection. The physical zero-nutation opening is a later scoped change: explicit v223 diagnostics preserve the strict LAL gate, while the public aligned convention-6 fixture differs by 1e-5 to 5e-5 complex relative L2. Historical tiny-spin and exact-aligned measurements in earlier artifacts describe their recorded implementation, not a newly qualified parameter domain. Unsupported guard rows use explicit fallback, and generic two-spin nonzero phi0 retains inherited geometry.",
+      "notes": "Frozen checkpoint-3 public catalog and holdout generic rows pass for convention 1 (maximum polarization complex relative L2 7.36e-14 catalog and 3.52e-14 holdout; detector projection errors are 3.02e-7 and 3.40e-7). The production default is MSA version 223 with convention=1 and final_spin_mod=3; convention 6 applies the sourced quadrupole output phase after projection. The physical zero-nutation opening is a later scoped change: explicit v223 diagnostics preserve the strict LAL gate, while the public aligned convention-6 fixture differs by 1e-5 to 5e-5 complex relative L2. An independent arbitrary-precision generic-boundary diagnostic resolves the published cubic and chart singularity, but does not supply a sourced float64 small-misalignment continuation; its two strict near-aligned xfails remain active. Historical tiny-spin and exact-aligned measurements in earlier artifacts describe their recorded implementation, not a newly qualified parameter domain. Unsupported guard rows use explicit fallback, and generic two-spin nonzero phi0 retains inherited geometry.",
       "primary_references": [
         {
           "citation": "Pratten et al. (2021), Phys. Rev. D 103, 104056",
           "doi": "10.1103/PhysRevD.103.104056",
           "equations": "Appendix B, Eqs. (B1)-(B2); Appendix C, Eqs. (67), (79), (81); Appendix F, Table IV"
+        },
+        {
+          "citation": "Chatziioannou et al. (2017), Phys. Rev. D 95, 104004",
+          "doi": "10.1103/PhysRevD.95.104004",
+          "equations": "Eqs. (21)-(25), Eq. (51), and Appendices B and E"
         }
       ],
       "validation": {
