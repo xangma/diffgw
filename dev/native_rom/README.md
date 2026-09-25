@@ -1841,6 +1841,23 @@ from the corrected source by `0.004098`. This selected spin row strengthens
 the attribution of cadence sensitivity to historical NQC refitting, while
 leaving source fidelity and the release gates open.
 
+The [fifth-grid aligned-spin control](evidence/2026-09-25/source_aligned_very_fine_local_nqc.json)
+uses a [frozen extension plan](evidence/2026-09-25/source_aligned_very_fine_local_nqc_plan.json)
+and a development-only larger mode buffer at `0.001953125 M`. It reproduces
+the saved `0.00390625 M` NQC inputs and source, local-fit, and wheel mode
+hashes, and both source-own-coefficient controls are bitwise no-ops. The
+local-fit adjacent whole-mode L2 falls again from `0.000749` to `0.000467`,
+or `0.000331` with the finest local coefficients fixed on both grids. Its
+coefficient difference grows from `0.0690` to `0.1094`, so coefficient
+convergence is not demonstrated. The corrected source's adjacent whole-mode
+L2 jumps to `0.015969`, versus `0.000341` with its finest coefficients fixed;
+the public wheel's adjacent difference is `0.039640`. At this cadence the
+local fit differs from the corrected source by `0.011416` and the public
+wheel by `0.033542`. Refinement therefore exposes severe historical NQC
+cadence sensitivity on this selected spin row. Neither the stable local-fit
+waveform trend nor fixed-coefficient controls validate a replacement physical
+prescription, public fidelity, or release qualification.
+
 The [prospective q4 local-fit control](evidence/2026-09-25/source_q4_ultrafine_local_nqc_plan.json)
 recomputes those five coefficients with the same degree-four, `±2 M` local
 polynomial used in the earlier combined numerical control, then injects each
