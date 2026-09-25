@@ -2492,6 +2492,16 @@ the local numerical sensitivity but is not a validated physical or NQC
 replacement; continuum curvature and the failed `0.01` coefficient gate
 remain unresolved.
 
+A [frozen coefficient-level counterfactual](evidence/2026-09-25/source_aligned_exact_circ_nqc_counterfactual_plan.json)
+replays the saved strong aligned-spin source amplitudes and changes only the
+Newtonian amplitude factor through the source's exact circular-frequency
+derivative. Its [post-hoc result](evidence/2026-09-25/source_aligned_exact_circ_nqc_counterfactual.json)
+reduces the `0.1`-versus-`0.2 M` NQC coefficient distance from `0.026491` to
+`0.003145` while retaining the original failed `0.01` gate. The historical
+stencil node states were not saved, so this applies an additive correction
+from nearby bounded-dense states; it is neither a new NQC prescription nor
+release validation.
+
 The [prospective native ROM-input pilot](evidence/2026-09-25/rom_input_stability.json)
 uses a [frozen two-row plan](evidence/2026-09-25/rom_input_stability_plan.json),
 three ODE tolerances, three nested TD sampling rates, and a common positive
