@@ -1155,6 +1155,17 @@ Torch/JAX complex relative L2. Their sampled-peak public differences are
 `0.06460`, `0.08014`, `0.04235`, and `4.64e-5`. A [same-input q4 replay](evidence/2026-09-25/source_q4_route_attribution.json)
 through the older Torch adaptive assembler returns `0.06459857` versus
 `0.06459860` for the new spliced route, so the q4 residual is common to both.
+A [follow-up independent-initial-state plan](evidence/2026-09-25/jax_source_independent_init_plan.json)
+also solves the circular starting state separately in JAX instead of copying
+Torch's solution. Its [q4](evidence/2026-09-25/jax_source_independent_init_q4_nonspinning.json),
+[mixed-spin](evidence/2026-09-25/jax_source_independent_init_high_start_mixed_spin.json),
+[aligned](evidence/2026-09-25/jax_source_independent_init_strong_aligned.json), and
+[antialigned](evidence/2026-09-25/jax_source_independent_init_strong_antialigned.json)
+full-waveform replays pass all backend checks: initial states differ by at
+most `1.78e-14`, output time grids agree, and whole complex relative L2 is
+at most `8.24e-9`. This closes the shared-initial-state qualification gap for
+these four development cases, but not source fidelity, numerical convergence,
+gradient/domain coverage, independent NR accuracy, or ROM training.
 
 The [frozen anchor diagnostic](evidence/2026-09-25/source_spliced_anchor_plan.json)
 replays all four cases and fits each mode's own amplitude peak between output

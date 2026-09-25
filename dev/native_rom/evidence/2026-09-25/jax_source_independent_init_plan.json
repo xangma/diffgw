@@ -1,0 +1,18 @@
+{
+  "schema": "diffgw.seobnrv4.jax-source-independent-init-plan.v1",
+  "purpose": "Follow-up control: solve the source-backed circular initial state independently in Torch and JAX, then compare complete independently integrated coarse/fine/ringdown waveforms with the earlier same-input result. The four-row initial-state pilot preceded this frozen whole-waveform replay.",
+  "pilot_case": "q4_nonspinning",
+  "prospective_cases": ["high_start_mixed_spin", "strong_aligned", "strong_antialigned"],
+  "source_plan_sha256": "eb79f7db87e23d83a8437334eec90f6872dcf3b76f65b5cbe55882f7d62b9944",
+  "source_results_sha256": {
+    "q4_nonspinning": "5378a283075e44fbebac40e45c3f17aed4431a5bed1235e78263af5a8b5473f5",
+    "high_start_mixed_spin": "c292c84e338db2cd3ed514b50cf443b44e8695f1317c4d7a27bae598d783d1bd",
+    "strong_aligned": "de22142a2255212ebfcee35bad4639968a063412e2961739c1da39dbee18b545",
+    "strong_antialigned": "278fd480d91130b68f1a47eeeec08e0f8fadb8b295f689f494d4b3050eed1210"
+  },
+  "initial_state_max_abs_at_most": 1e-11,
+  "whole_mode_relative_l2_at_most": 1e-5,
+  "full_time_max_abs_at_most_M": 1e-8,
+  "interpretation": "Backend parity for this development-only source-backed choice. It is neither source fidelity nor numerical convergence nor independent NR validation.",
+  "release_qualified": false
+}

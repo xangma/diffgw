@@ -36,6 +36,9 @@ from jaxwave.approximants.eob.nqc import (
 )
 from jaxwave.approximants.eob.published_waveform import published_mode22_and_frequency as jax_mode
 from jaxwave.approximants.eob.integrator import EOBTrajectoryIntegrator as JaxIntegrator
+from jaxwave.approximants.eob.initial_conditions import (
+    find_quasicircular_initial_conditions as jax_initial_conditions,
+)
 from jaxwave.approximants.eob.remnant import (
     eob_final_mass_fraction as jax_final_mass,
     hofmann_final_spin as jax_final_spin,
@@ -69,6 +72,7 @@ jax.config.update("jax_enable_x64", True)
 ROOT = Path(__file__).resolve().parents[2]
 PLAN = ROOT / "dev/native_rom/evidence/2026-09-25/jax_spliced_whole_waveform_plan.json"
 SOURCE_PLAN = ROOT / "dev/native_rom/evidence/2026-09-25/jax_source_spliced_whole_waveform_plan.json"
+INDEPENDENT_INIT_PLAN = ROOT / "dev/native_rom/evidence/2026-09-25/jax_source_independent_init_plan.json"
 
 SOURCE_FLUX_OPTIONS = dict(
     spin_truncation="tabulated", retain_pan_cubic_spin=True,
@@ -95,7 +99,8 @@ def _prepare_public(plan):
     return identity
 
 
-def run(case_id, plan, public_identity, *, variant="published", anchor_control=False):
+def run(case_id, plan, public_identity, *, variant="published", anchor_control=False,
+        independent_init=False):
     started = time.monotonic()
     m1, m2, chi1, chi2, omega_start = CASES[case_id]
     nu = m1 * m2 / (m1 + m2)**2
@@ -113,7 +118,13 @@ def run(case_id, plan, public_identity, *, variant="published", anchor_control=F
             th, tf, tensor(omega_start))
         initial_torch = torch.stack((radius, torch.zeros_like(radius), momentum,
                                      angular_momentum)).detach()
-        initial_jax = jnp.asarray(initial_torch.numpy())
+        if independent_init:
+            jradius, jmomentum, jangular_momentum = jax_initial_conditions(
+                jh, jf, jnp.asarray(omega_start))
+            initial_jax = jnp.stack((jradius, jnp.zeros_like(jradius),
+                                     jmomentum, jangular_momentum))
+        else:
+            initial_jax = jnp.asarray(initial_torch.numpy())
         torch_field = TorchIntegrator(th, tf).vector_field
         jax_field = jax.jit(JaxIntegrator(jh, jf).vector_field)
         mode_options = MODE_OPTIONS | {"retain_pan_cubic_spin": True}
@@ -203,6 +214,12 @@ def run(case_id, plan, public_identity, *, variant="published", anchor_control=F
         "post_restart_relative_l2_at_most": _relative_l2(jmode[restart:], tmode[restart:]) <= 1e-5,
         "full_time_max_abs_at_most_M": float(np.max(np.abs(jtime - ttime))) <= 1e-8,
     }
+    initial_state_max_abs = float(np.max(np.abs(np.asarray(initial_jax)
+                                              - initial_torch.numpy())))
+    if independent_init:
+        control = json.loads(INDEPENDENT_INIT_PLAN.read_text())
+        checks["independent_initial_state_max_abs_at_most"] = (
+            initial_state_max_abs <= control["initial_state_max_abs_at_most"])
     row = dict(mass1=m1, mass2=m2, chi1=chi1, chi2=chi2, omega_start=omega_start)
     torch_run = dict(time=ttime, mode=tmode, peak_time_M=float(tref.peak.time + coarse.output_time[restart]),
                      dt_geom=dt)
@@ -212,7 +229,8 @@ def run(case_id, plan, public_identity, *, variant="published", anchor_control=F
     jax_public = compare_public_binary(row, jax_run)
     print(case_id, "public comparisons", flush=True)
     result = {
-        "schema": "diffgw.seobnrv4.jax-spliced-whole-waveform.v1",
+        "schema": ("diffgw.seobnrv4.jax-source-independent-init.v1" if independent_init
+                   else "diffgw.seobnrv4.jax-spliced-whole-waveform.v1"),
         "case_id": case_id, "variant": variant, "status": "diagnostic_complete",
         "scope": "Development-only full Torch/JAX waveform parity and descriptive public-binary comparison",
         "host": platform.node(), "cwd": os.getcwd(), "pid": os.getpid(),
@@ -221,6 +239,10 @@ def run(case_id, plan, public_identity, *, variant="published", anchor_control=F
                   "max_step_M": max_step, "atol": 1e-10, "rtol": 1e-9},
         "public_binary": public_identity,
         "source_choices": SOURCE_FLUX_OPTIONS if variant == "source" else None,
+        "independent_initial_solve": independent_init,
+        "initial_state_max_abs": initial_state_max_abs,
+        "torch_initial_state": initial_torch.tolist(),
+        "jax_initial_state": np.asarray(initial_jax).tolist(),
         "torch_restart_index": restart, "jax_restart_index": jrun.restart_index,
         "whole_output_samples": len(ttime),
         "whole_time_max_abs_M": float(np.max(np.abs(jtime - ttime))),
@@ -242,7 +264,10 @@ def run(case_id, plan, public_identity, *, variant="published", anchor_control=F
         }
         result["anchor_control_plan_sha256"] = qualification.sha256(
             ROOT / "dev/native_rom/evidence/2026-09-25/jax_published_anchor_control_plan.json")
-    name = ("jax_published_anchor_control" if anchor_control else
+    if independent_init:
+        result["independent_init_plan_sha256"] = qualification.sha256(INDEPENDENT_INIT_PLAN)
+    name = ("jax_source_independent_init" if independent_init else
+            "jax_published_anchor_control" if anchor_control else
             "jax_source_spliced_whole_waveform" if variant == "source" else
             "jax_spliced_whole_waveform")
     output = Path(f"dev/native_rom/evidence/2026-09-25/{name}_{case_id}.json")
@@ -258,6 +283,7 @@ if __name__ == "__main__":
     parser.add_argument("--case", choices=(*CASES, "prospective"), required=True)
     parser.add_argument("--variant", choices=("published", "source"), default="published")
     parser.add_argument("--anchor-control", action="store_true")
+    parser.add_argument("--independent-init", action="store_true")
     args = parser.parse_args()
     selected, variant = args.case, args.variant
     plan = json.loads((SOURCE_PLAN if variant == "source" else PLAN).read_text())
@@ -265,6 +291,20 @@ if __name__ == "__main__":
                        else "diffgw.seobnrv4.jax-spliced-whole-waveform-plan.v1")
     if plan["schema"] != expected_schema:
         raise ValueError("wrong frozen plan schema")
+    if args.independent_init:
+        control = json.loads(INDEPENDENT_INIT_PLAN.read_text())
+        baseline_paths = {
+            name: ROOT / f"dev/native_rom/evidence/2026-09-25/"
+                         f"jax_source_spliced_whole_waveform_{name}.json"
+            for name in (control["pilot_case"], *control["prospective_cases"])
+        }
+        if (variant != "source" or args.anchor_control
+                or control["schema"] != "diffgw.seobnrv4.jax-source-independent-init-plan.v1"
+                or control["release_qualified"] is not False
+                or qualification.sha256(SOURCE_PLAN) != control["source_plan_sha256"]
+                or any(qualification.sha256(path) != control["source_results_sha256"][name]
+                       for name, path in baseline_paths.items())):
+            raise ValueError("independent-initial-state control differs from frozen inputs")
     if args.anchor_control:
         control = json.loads((ROOT / "dev/native_rom/evidence/2026-09-25/"
                               "jax_published_anchor_control_plan.json").read_text())
@@ -281,4 +321,5 @@ if __name__ == "__main__":
     identity = _prepare_public(plan)
     names = (tuple(plan["prospective_cases"]) if selected == "prospective" else (selected,))
     for name in names:
-        run(name, plan, identity, variant=variant, anchor_control=args.anchor_control)
+        run(name, plan, identity, variant=variant, anchor_control=args.anchor_control,
+            independent_init=args.independent_init)
