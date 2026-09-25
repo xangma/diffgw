@@ -182,6 +182,15 @@ wired into a complete JAX SEOBNRv4 waveform. Its same-state Hamiltonian
 adapter produces reduced-mass radiation-reaction forces that agree with the
 Torch adapter at tested scalar points and pass JAX batch, JIT, and gradient
 checks; this is a frontend check, not historical torque parity.
+The [predeclared 12-state source/wheel/native flux grid](../evidence/2026-09-25/flux_boundary_grid.json)
+compares the zero-radial-momentum mode-summed flux at four mass-ratio/spin
+boundaries and radii `20`, `10`, and `6 M` with supplied
+`M Omega=r^(-3/2)`. Its largest source/wheel and source/native relative gaps
+are `4.76e-10`, below the frozen `1e-8` gates; native/wheel differs by at most
+`5.86e-11` relative to source. These are explicit-state component checks, not
+evolved or NQC-corrected waveform validation. A [separate 35-mode check](../evidence/2026-09-25/flux_boundary_modes.json)
+finds all 420 source/native mode contributions within `4.43e-10` of source
+total flux, excluding a large cancellation on these states.
 `flux.factorized_22_amplitude` checks the published pre-NQC dominant-mode
 modulus, including the non-Keplerian Newtonian prefactor, rest-energy tail,
 and Bohé's 2.5PN/3.5PN spin replacements. It agrees with the standalone Torch

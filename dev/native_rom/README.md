@@ -216,8 +216,22 @@ misses total source flux by up to `27.8 ppm`, almost entirely from `(4,3)` and
 and has no generic leading spin term in even `ell=8` modes. With those two
 explicit diagnostic choices, all ten native/source flux comparisons agree
 within `3.6e-10` relative, below the frozen `1e-8` gate. This closes the
-tested source flux component; it does not establish compiled-wheel flux parity
-or a qualified waveform.
+tested source flux component; those ten points alone do not establish
+compiled-wheel flux parity or a qualified waveform.
+The [predeclared flux boundary grid](evidence/2026-09-25/flux_boundary_grid.json)
+extends the same-state check to 12 zero-radial-momentum inputs: four mass-ratio
+and spin rows at radii `20`, `10`, and `6 M`, each supplied the independent
+comparison frequency `M Omega=r^(-3/2)`. The pinned source and wheel fluxes
+differ by at most `4.76e-10` relative; source and source-convention native
+fluxes differ by at most `4.76e-10`, and native and wheel by at most
+`5.86e-11` relative to source. Both frozen `1e-8` comparison gates pass.
+The [separately frozen 35-mode check](evidence/2026-09-25/flux_boundary_modes.json)
+passes at the same 12 states: its 420 source/native contributions differ by
+at most `4.43e-10` of the source total, and source components sum to total
+within `7.8e-16`. Total-flux agreement is not hiding a large mode cancellation
+on this grid.
+These supplied states are not an evolution or circular-orbit solution; the
+result does not close the initial-data, NQC, whole-waveform, or domain gates.
 The frozen three-level aligned-spin replay with precisely those two choices
 passes its numerical gate (`3.64e-7` refined complex relative L2) and lowers
 the fitted public-waveform difference from `0.0030000` to `0.0028067`. The
