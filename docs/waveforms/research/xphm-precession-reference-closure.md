@@ -155,7 +155,9 @@ diagnostics:
 
 These failures do not invalidate the scalar Wigner algebra; they leave the
 higher-mode carrier and its convention as a declared, unqualified XHM
-dependency.
+dependency. The [regional XHM carrier audit](../../math/imrphenomxhm-inspiral-amplitude.md)
+locates the earliest discrepancy in higher-mode inspiral amplitude and leaves
+the missing current-release calibration data explicit.
 
 ## 6. Reproduction, status, and remaining gates
 
