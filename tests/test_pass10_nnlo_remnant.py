@@ -160,6 +160,6 @@ def test_nnlo_version_dispatch_keeps_msa_explicit_versions_distinct(model):
             torch.testing.assert_close(actual, reference, atol=0.0, rtol=0.0)
     for actual, reference in zip(method_msa, explicit_msa):
         torch.testing.assert_close(actual, reference, atol=0.0, rtol=0.0)
-    default_version = explicit_msa if model is IMRPhenomXP else explicit_nnlo
+    default_version = explicit_msa
     for actual, reference in zip(default, default_version):
         torch.testing.assert_close(actual, reference, atol=0.0, rtol=0.0)

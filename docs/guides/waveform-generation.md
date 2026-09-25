@@ -137,6 +137,10 @@ To simulate binary systems with orbital precession, supply 3D spin vectors (`spi
    )
    ```
 
+   This resolves to `prec_version=223`, `convention=1`, and
+   `final_spin_mod=3` when those options are omitted. An explicit
+   `prec_version` takes precedence over the convenience method label.
+
 2. **Numerical SpinTaylor Precession Integration (`spintaylor`)**:
    ```python
    hp_st, hc_st = torchwave.get_fd_waveform(
