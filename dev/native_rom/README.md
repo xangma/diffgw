@@ -1428,6 +1428,19 @@ historical-source route by `9.52e-5` and `2.50e-4`; the change has not passed
 historical fidelity or independent NR validation. This two-case numerical pass
 does not qualify a release model or establish domain-wide convergence.
 
+The [prospective combined-backend replay](evidence/2026-09-25/jax_source_combined_backend_parity_plan.json)
+fits the same local polynomial independently on JAX samples and uses the same
+continuous boundary in the development-only JAX attachment. Its
+[q4](evidence/2026-09-25/jax_source_combined_backend_parity_q4_nonspinning.json)
+and [aligned-spin](evidence/2026-09-25/jax_source_combined_backend_parity_strong_aligned.json)
+factor-512 Torch/JAX whole-waveform differences are `9.13e-12` and `7.45e-10`.
+JAX factor-256 to factor-512 drifts are `2.07e-6` and `3.69e-6`, matching
+Torch and passing the predeclared backend and numerical gates on these rows.
+The JAX fit currently uses an eager NumPy least-squares diagnostic; this
+establishes value parity, not JAX differentiability or JIT compatibility.
+Neither backend's counterfactual has been validated against independent NR
+or accepted as a faithful historical-source implementation.
+
 The [frozen anchor diagnostic](evidence/2026-09-25/source_spliced_anchor_plan.json)
 replays all four cases and fits each mode's own amplitude peak between output
 samples without optimizing a relative shift. The [results](evidence/2026-09-25/source_spliced_anchor.json)

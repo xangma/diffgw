@@ -1,0 +1,74 @@
+{
+  "case_id": "q4_nonspinning",
+  "checks": {
+    "each_grid_torch_jax_complex_relative_l2_at_most": true,
+    "jax_shared_sample_complex_relative_l2_at_most": true,
+    "shared_time_max_abs_at_most_M": true,
+    "torch_result_reproduced_abs_at_most": true
+  },
+  "comparisons": {
+    "jax": {
+      "complex_relative_l2": 2.0677110125727144e-06,
+      "shared_end_M": 484.5,
+      "shared_samples": 970,
+      "shared_time_max_abs_M": 0.0
+    },
+    "torch": {
+      "complex_relative_l2": 2.0678163512888603e-06,
+      "shared_end_M": 484.5,
+      "shared_samples": 970,
+      "shared_time_max_abs_M": 0.0
+    }
+  },
+  "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+  "diagnostic_checks_passed": true,
+  "elapsed_s": 124.94303587498143,
+  "host": "RONI2",
+  "levels": {
+    "baseline": {
+      "amplitude_coefficient_max_abs": 7.557234837918259e-09,
+      "boundary_time_difference_M": 1.1974066183029208e-09,
+      "match_time_difference_M": 1.1974066183029208e-09,
+      "native_backend_checks_passed": true,
+      "phase_coefficient_max_abs": 4.305533707338327e-10,
+      "settings": {
+        "atol": 1e-13,
+        "coarse_output_step_M": 0.5,
+        "fine_refinement_factor": 256,
+        "max_step_M": 2.0,
+        "rtol": 1e-12
+      },
+      "torch_jax": {
+        "common_samples": 970,
+        "complex_relative_l2": 1.0113518687743204e-10,
+        "support_sample_difference": 0,
+        "time_max_abs_M": 0.0
+      }
+    },
+    "refined": {
+      "amplitude_coefficient_max_abs": 7.965663684217361e-10,
+      "boundary_time_difference_M": -9.509903975413181e-11,
+      "match_time_difference_M": -9.509903975413181e-11,
+      "native_backend_checks_passed": true,
+      "phase_coefficient_max_abs": 1.6925039147963616e-10,
+      "settings": {
+        "atol": 1e-13,
+        "coarse_output_step_M": 0.5,
+        "fine_refinement_factor": 512,
+        "max_step_M": 2.0,
+        "rtol": 1e-12
+      },
+      "torch_jax": {
+        "common_samples": 970,
+        "complex_relative_l2": 9.130091728279518e-12,
+        "support_sample_difference": 0,
+        "time_max_abs_M": 0.0
+      }
+    }
+  },
+  "pid": 63717,
+  "plan_sha256": "632ffe4882c3bb5824ba0e711c932cd158ff14077b93dc51f252f210e5db6003",
+  "release_qualified": false,
+  "schema": "diffgw.seobnrv4.jax-source-combined-backend-parity.v1",
+  "status": "diagnostic_complete"
+}

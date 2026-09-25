@@ -27,12 +27,14 @@ from dev.native_rom.eob.torch.source_calibration_hamiltonian import (
 from dev.native_rom.eob.jax.numerical_attachment_clean import (
     attach_seobnrv4_22_numerical_compatibility as jax_attach,
     full_orbital_peak as jax_peak,
+    unwrap_mode_phase as jax_unwrap_mode_phase,
 )
 from dev.native_rom.eob.jax.two_stage_trajectory import integrate_two_stage_trajectory
 from jaxwave.approximants.eob.numerical_attachment import (
     natural_cubic_spline as jax_natural_cubic_spline,
 )
 from jaxwave.approximants.eob.nqc import (
+    nqc_22_basis as jax_basis,
     nqc_22_factor as jax_factor,
     seobnrv4_nqc_parameters as jax_parameters,
     seobnrv4_nqc_time_offset_numerical_compatibility as jax_offset,
@@ -198,6 +200,32 @@ def _polynomial_rhs_derivatives(time_grid, base_mode, match_time,
                         2*coefficients[2]/half_width_M**2), dim=-1)
 
 
+def _jax_polynomial_nqc_controls(time_grid, state, orbital_frequency,
+                                 base_mode, match_time, *, half_width_M, degree):
+    """Independent NumPy fit on JAX samples for the dev-only parity control."""
+    if half_width_M <= 0 or degree < 2:
+        raise ValueError("invalid diagnostic JAX matching polynomial")
+    time_grid = _array(time_grid)
+    match_time = float(match_time)
+    selected = (time_grid >= match_time-half_width_M) & (
+        time_grid <= match_time+half_width_M)
+    if int(selected.sum()) < degree + 3:
+        raise ValueError("insufficient JAX NQC polynomial samples")
+    q, p = jax_basis(state[:, 0], state[:, 2], orbital_frequency)
+    amplitude = np.abs(_array(base_mode))
+    values = np.column_stack((amplitude, amplitude[:, None]*_array(q),
+                              _array(p), _array(jax_unwrap_mode_phase(base_mode))))
+    x = (time_grid[selected]-match_time)/half_width_M
+    matrix = np.stack([x**power for power in range(degree+1)], axis=-1)
+    coefficients = np.linalg.lstsq(matrix, values[selected], rcond=None)[0]
+    first = coefficients[1]/half_width_M
+    second = 2*coefficients[2]/half_width_M**2
+    return (jnp.asarray(np.stack((first[1:4], second[1:4]))),
+            jnp.asarray(np.stack((first[4:6], second[4:6]))),
+            jnp.asarray(np.stack(((first[0], second[0]),
+                                  (first[6], second[6])))))
+
+
 def _prepare_public(plan):
     pin = plan["public_binary"]
     identity_plan = json.loads((ROOT / pin["identity_source"]).read_text())
@@ -213,6 +241,7 @@ def run(case_id, plan, public_identity, *, variant="published", anchor_control=F
         diagnostic_nqc_phase_matrix=None, diagnostic_nqc_amplitude_derivatives=None,
         diagnostic_nqc_rhs_derivatives=None,
         diagnostic_continuous_boundary=False,
+        diagnostic_jax_local=False,
         diagnostic_peak_policy=None):
     started = time.monotonic()
     if diagnostic_peak_policy not in (None, "stationary"):
@@ -221,6 +250,14 @@ def run(case_id, plan, public_identity, *, variant="published", anchor_control=F
         raise ValueError("diagnostic orbital-peak policy is source-backed only")
     if diagnostic_continuous_boundary and variant != "source":
         raise ValueError("diagnostic continuous boundary is source-backed only")
+    if diagnostic_jax_local and (variant != "source" or not diagnostic_continuous_boundary
+                                 or diagnostic_nqc_amplitude_derivatives is None
+                                 or diagnostic_nqc_phase_matrix is None
+                                 or diagnostic_nqc_rhs_derivatives is None
+                                 or not (diagnostic_nqc_amplitude_derivatives
+                                         == diagnostic_nqc_phase_matrix
+                                         == diagnostic_nqc_rhs_derivatives)):
+        raise ValueError("JAX local-NQC parity requires the matched combined control")
     m1, m2, chi1, chi2, omega_start = CASES[case_id]
     nu = m1 * m2 / (m1 + m2)**2
     delta = (m1 - m2) / (m1 + m2)
@@ -362,10 +399,18 @@ def run(case_id, plan, public_identity, *, variant="published", anchor_control=F
         diagnostic_matching_second=matching_second,
         diagnostic_matching_rhs_derivatives=rhs_derivatives,
         diagnostic_continuous_boundary=diagnostic_continuous_boundary)
+    jax_local_controls = (_jax_polynomial_nqc_controls(
+        jrun.fine_time, jrun.fine_state, jax_fine_omega, jax_fine_mode,
+        jmatch, **diagnostic_nqc_amplitude_derivatives)
+        if diagnostic_jax_local else (None, None, None))
     jref = jax_attach(
         jrun.fine_time, jrun.fine_state, jax_fine_omega,
         jax_fine_mode, jax_fine_frequency, jnu, jchi, jsigma,
-        jnp.asarray(output_time), match_time=jmatch if diagnostic_peak_policy else None)
+        jnp.asarray(output_time), match_time=jmatch if diagnostic_peak_policy else None,
+        diagnostic_amplitude_derivatives=jax_local_controls[0],
+        diagnostic_phase_matrix=jax_local_controls[1],
+        diagnostic_matching_rhs_derivatives=jax_local_controls[2],
+        diagnostic_continuous_boundary=diagnostic_jax_local)
     print(case_id, "fine attachments", flush=True)
 
     tcoarse = torch_coarse_mode * torch_factor(
@@ -421,6 +466,7 @@ def run(case_id, plan, public_identity, *, variant="published", anchor_control=F
         "source_choices": SOURCE_FLUX_OPTIONS if variant == "source" else None,
         "diagnostic_peak_policy": diagnostic_peak_policy,
         "diagnostic_continuous_boundary": diagnostic_continuous_boundary,
+        "diagnostic_jax_local": diagnostic_jax_local,
         "diagnostic_nqc_second": diagnostic_nqc_second,
         "diagnostic_nqc_second_values": (_array(matching_second).tolist()
                                          if matching_second is not None else None),

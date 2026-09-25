@@ -111,6 +111,8 @@ def calibrate_nqc_22_full_series(
     time, r, pr_star, orbital_frequency, base_amplitude, base_frequency,
     match_time, targets: NQCMatchingTargets, *, waveform_phase=None,
     base_mode=None, max_condition=1e10,
+    diagnostic_amplitude_derivatives=None, diagnostic_phase_matrix=None,
+    diagnostic_matching_rhs_derivatives=None,
 ) -> FullSeriesNQC:
     """Match NQC on scalar full-series natural splines; development only.
 
@@ -165,6 +167,26 @@ def calibrate_nqc_22_full_series(
     waveform_phase_spline = natural_cubic_spline(time, waveform_phase, scalar_output=True)
     phase_rhs = jnp.stack((waveform_phase_spline.derivative(match_time) - targets.frequency,
                            waveform_phase_spline.derivative(match_time, 2) - targets.frequency_derivative))
+    for name, candidate, shape in (
+        ("diagnostic_amplitude_derivatives", diagnostic_amplitude_derivatives, (2, 3)),
+        ("diagnostic_phase_matrix", diagnostic_phase_matrix, (2, 2)),
+        ("diagnostic_matching_rhs_derivatives", diagnostic_matching_rhs_derivatives, (2, 2)),
+    ):
+        if candidate is not None:
+            candidate = jnp.asarray(candidate)
+            if candidate.shape != shape or not bool(jnp.all(jnp.isfinite(candidate))):
+                raise ValueError(f"{name} must have finite shape {shape}")
+    if diagnostic_amplitude_derivatives is not None:
+        amplitude_matrix = jnp.concatenate((
+            amplitude_matrix[:1], jnp.asarray(diagnostic_amplitude_derivatives)))
+    if diagnostic_phase_matrix is not None:
+        phase_matrix = jnp.asarray(diagnostic_phase_matrix)
+    if diagnostic_matching_rhs_derivatives is not None:
+        rhs_derivatives = jnp.asarray(diagnostic_matching_rhs_derivatives)
+        amplitude_rhs = jnp.stack(targets[:3]) - jnp.stack((
+            value[0], rhs_derivatives[0, 0], rhs_derivatives[0, 1]))
+        phase_rhs = jnp.stack((rhs_derivatives[1, 0] - targets.frequency,
+                               rhs_derivatives[1, 1] - targets.frequency_derivative))
     a, amplitude_condition, amplitude_residual = _solve_checked(
         amplitude_matrix, amplitude_rhs, max_condition, "full-series amplitude matching system")
     b, phase_condition, phase_residual = _solve_checked(
@@ -235,7 +257,9 @@ def full_orbital_peak(time, frequency) -> OrbitalFrequencyPeak:
 def attach_seobnrv4_22_numerical_compatibility(
     time, state, orbital_frequency, base_mode, base_frequency,
     nu, chi, sigma, output_time, *, match_time=None, mass_scale=1.0,
-    max_condition=1e10,
+    max_condition=1e10, diagnostic_amplitude_derivatives=None,
+    diagnostic_phase_matrix=None, diagnostic_matching_rhs_derivatives=None,
+    diagnostic_continuous_boundary=False,
 ) -> NumericalAttachedMode22:
     """Apply the full-series NQC and discrete ringdown boundary to one row.
 
@@ -263,6 +287,8 @@ def attach_seobnrv4_22_numerical_compatibility(
         raise ValueError("attachment parameters must be scalar")
     if not bool(mass_scale > 0) or not bool(-jnp.imag(sigma) > 0):
         raise ValueError("mass_scale and QNM damping must be positive")
+    if not isinstance(diagnostic_continuous_boundary, bool):
+        raise TypeError("diagnostic_continuous_boundary must be a bool")
 
     offset = seobnrv4_nqc_time_offset_numerical_compatibility(nu, chi)
     if match_time is None:
@@ -290,17 +316,26 @@ def attach_seobnrv4_22_numerical_compatibility(
     nqc = calibrate_nqc_22_full_series(
         time, state[:, 0], state[:, 2], orbital_frequency,
         jnp.abs(base_mode), base_frequency, match, seobnrv4_nqc_targets(nu, chi),
-        base_mode=base_mode, max_condition=max_condition)
+        base_mode=base_mode, max_condition=max_condition,
+        diagnostic_amplitude_derivatives=diagnostic_amplitude_derivatives,
+        diagnostic_phase_matrix=diagnostic_phase_matrix,
+        diagnostic_matching_rhs_derivatives=diagnostic_matching_rhs_derivatives)
     coefficients = nqc.coefficients
     corrected = base_mode * nqc_22_factor(
         state[:, 0], state[:, 2], orbital_frequency, coefficients)
-    boundary_amplitude = jnp.abs(corrected[boundary_index])
-    boundary_phase = nqc.sampled_corrected_phase[boundary_index]
-    boundary_frequency = (boundary_phase - nqc.sampled_corrected_phase[boundary_index - 1]) / step
-    if not bool((boundary_amplitude > 0) & (boundary_frequency > 0)):
-        raise ValueError("corrected boundary must have positive amplitude and frequency")
     match_phase = (nqc.waveform_phase_spline(match)
                    - jnp.sum(nqc.phase_basis_spline(match) * coefficients.phase))
+    if diagnostic_continuous_boundary:
+        boundary_time = match
+        boundary_amplitude = jnp.abs(nqc.evaluate(match))
+        boundary_phase = match_phase
+        boundary_frequency = seobnrv4_nqc_targets(nu, chi).frequency
+    else:
+        boundary_amplitude = jnp.abs(corrected[boundary_index])
+        boundary_phase = nqc.sampled_corrected_phase[boundary_index]
+        boundary_frequency = (boundary_phase - nqc.sampled_corrected_phase[boundary_index - 1]) / step
+    if not bool((boundary_amplitude > 0) & (boundary_frequency > 0)):
+        raise ValueError("corrected boundary must have positive amplitude and frequency")
 
     dt_output = output_time[1] - output_time[0]
     exponent = jnp.maximum(0, jnp.ceil(jnp.log2(50 * dt_output / mass_scale)))
