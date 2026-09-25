@@ -3093,6 +3093,12 @@ continues through attachment with unchanged comparison gates. These checks
 establish backend parity on these rows under matched controls, not source or
 NR fidelity across the domain.
 
+The [2026-09-25 release decision](evidence/2026-09-25/RELEASE_DECISION.md)
+records an **unqualified** verdict. The predeclared five-case complex-mode NR
+proxy fails one case for an older generator revision, and a stored-array replay
+confirms that result. The current generator has a different source hash, so it
+needs a newly frozen, untouched physical holdout before any release claim.
+
 1. Qualify the physical generator against the published equations and independent
    references over the intended domain, resolve convention/provenance gaps, and
    establish gradients and numerical convergence. This runner covers only scalar
