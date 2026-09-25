@@ -1,0 +1,137 @@
+{
+  "checks": {
+    "continuous_low_grid_mapping": true,
+    "factors_finite_nonzero": true,
+    "low_peak_at_final_sample": true,
+    "no_op_relative_l2_at_most_1e_minus_14": true,
+    "physical_fields_finite": true,
+    "source_coefficients_replay": true,
+    "source_mode_hash_replays": true,
+    "source_wheel_epoch_agreement": true,
+    "strict_preattachment": true,
+    "time_cadences": true,
+    "wheel_mode_hash_replays": true
+  },
+  "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+  "diagnostic_checks_passed": true,
+  "elapsed_s": 3.281773249967955,
+  "host": "RONI2",
+  "mapping": {
+    "low_dt_max_error_M": 0.0,
+    "low_peak_index": 1824,
+    "low_peak_time_M": 912.0,
+    "low_time_end_M": 912.0,
+    "low_time_start_M": 0.0,
+    "max_nearest_sample_offset": 0.10621567659177344,
+    "orbital_frequency_sha256": "9c0e72ac0ccc929cbff14784ca9147699710cd01124edb479a62e8c017fe137a",
+    "pr_star_sha256": "f0e2168e3a8fc44fafda3d0e4cbd57fcc86664b90b8259072dbf4f38580ee290",
+    "query_end_M": 880.4468921617042,
+    "query_start_M": 402.44689216170417,
+    "query_time_sha256": "a68f468e7355decf00736dbeb9121d3802d115ea0741404f12ec9c36c6cd7c47",
+    "radius_sha256": "60b4df410bb63f6e8edba98ce5f036fc522c0c7f33f15514e2294c39c8028229",
+    "rule": "Place low-grid orbital-frequency peak at mode time 0, require that peak to be the final low-grid sample, then interpolate the wheel low dynamics at continuous wheel mode times. No rounded index is used."
+  },
+  "metrics": {
+    "baseline_wheel_vs_source": {
+      "complex_relative_l2": 0.0020027042604705177,
+      "error_squared": 9.831651489979768e-44,
+      "reference_squared": 2.4512794926937946e-38,
+      "samples": 957
+    },
+    "source_factor_over_wheel_factor_vs_source": {
+      "complex_relative_l2": 3.940773581156873e-06,
+      "error_squared": 3.8067626357066326e-49,
+      "reference_squared": 2.4512794926937946e-38,
+      "samples": 957
+    },
+    "wheel_factor_over_itself_noop": {
+      "complex_relative_l2": 4.546619381401904e-17,
+      "error_squared": 5.066677083592433e-71,
+      "reference_squared": 2.4510153339594917e-38,
+      "samples": 957
+    }
+  },
+  "pid": 57023,
+  "plan_sha256": "d419ba105d93a666edf30658e786de191e35b882226df382df40135c2bce9e0e",
+  "pre_peak_margin_M": 20.0,
+  "release_qualified": false,
+  "row_tuple": [
+    30.0,
+    20.0,
+    0.8,
+    0.6,
+    0.04
+  ],
+  "schema": "diffgw.seobnrv4.source-wheel-nqc-same-row-factor.v2",
+  "script_sha256": "133572416125456cbf0c146c901ee6302dc3a7c28489f5d03eb581caaabb7563",
+  "source_coefficients": [
+    143.51693278914632,
+    -1232.3771489178434,
+    1381.8663704215173,
+    0.0,
+    0.0,
+    0.0,
+    35.52300771300018,
+    -795.5179763341529,
+    0.0,
+    0.0
+  ],
+  "source_delta_t_s": 0.00012313727369103167,
+  "source_epoch_s": -0.125489965,
+  "source_identity": {
+    "aligned_source_sha256": "6b7969bb7cbe714c4937a691838b0b82a7fcc2a199c03ee2bf5215738f1ce1b3",
+    "peeled_commit": "2c00d8c200308422036d0a23b7c0394f7c73faad",
+    "tag": "lalsuite-v7.26.15",
+    "tag_object": "0a3a9674979bd62d8344d5552a10b5111fb1fc52"
+  },
+  "source_minus_wheel_coefficients": [
+    0.2637832409359362,
+    -2.5981260343107806,
+    3.1384452029080876,
+    0.0,
+    0.0,
+    0.0,
+    -0.04619981110116811,
+    2.268515647284289,
+    0.0,
+    0.0
+  ],
+  "source_mode_sha256": "0a202889ac0e88ab89a85df1b2e76845ced07328fcfdea6a4b89c08be88045ef",
+  "source_samples": 1880,
+  "squared_error_ratio_adjusted_over_baseline": 3.871946274322694e-06,
+  "status": "diagnostic_complete",
+  "step_M": 0.5,
+  "wheel_coefficients": [
+    143.2531495482104,
+    -1229.7790228835327,
+    1378.7279252186092,
+    0.0,
+    0.0,
+    0.0,
+    35.56920752410135,
+    -797.7864919814372,
+    0.0,
+    0.0
+  ],
+  "wheel_delta_t_s": 0.00012313727369103167,
+  "wheel_epoch_s": -0.125489961,
+  "wheel_library_sha256": {
+    "libgsl.28.dylib": "1eefe0dbead9551d47be3c09bbf786c727f84df1331130ee8a03127b7a95abe8",
+    "libgslcblas.0.dylib": "00a30ab2e9eb5cd36caab9ae9a9975a8280b9b4c2940b15e446c34a151818230",
+    "liblal.20.dylib": "e4c4ed42baed00d30668588e58444f974e3deeda56ba4e5978624640ddb5bde7",
+    "liblalsimulation.37.dylib": "9046c4a673d2ba82b792f7b92d73203ba783b32fc604b5da1139c5c1bc8b3325"
+  },
+  "wheel_mode_sha256": "dca613ce7730ec00b049497b132e27c2a5350ac94797b3f35fd2ce6e188a03b0",
+  "wheel_peak_index": 997,
+  "wheel_peak_time_M": -11.053107838295828,
+  "wheel_samples": 1881,
+  "window": {
+    "adjusted_mode_sha256": "86e559c0f48ea9c6338aa8d78e2a6c7a8e811300bc4d44fd2943f4bce9e63696",
+    "first_wheel_time_M": -509.55310783829583,
+    "last_wheel_time_M": -31.55310783829583,
+    "rule": "Shared source/wheel support, strictly earlier than sampled wheel amplitude peak minus 20M, and within low-dynamics support; no time, phase, or amplitude fitting.",
+    "samples": 957,
+    "source_interpolated_sha256": "78bcfce4f4899580850a6ddccf29f62000c676da9686335ea17dfd12df9ab905",
+    "wheel_mode_sha256": "7a7f7fa53c6b67ecbc339c1af3cfe15d30442fa481e9130efab05c433bf8db20"
+  }
+}

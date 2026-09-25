@@ -1,0 +1,87 @@
+{
+  "capacity": 50000,
+  "index_mapping": "Determine the low-grid orbital-frequency peak by argmax of gradient(low phase, low time); prospectively require it to be the final low-grid sample, then interpolate wheel dynamics at continuous wheel mode times referenced to that peak. No rounded index.",
+  "inputs": {
+    "gap_hash_helper": {
+      "path": "dev/native_rom/diagnose_source_aligned_public_gap.py",
+      "sha256": "43b07a4bf4b86b483fb30bb9610e4fecdce49679f7a8e6da218e9595a3c2b22b"
+    },
+    "qualifier": {
+      "path": "dev/native_rom/qualify_generator.py",
+      "sha256": "df9bffb614b87e82b5a8da47212cb01312ad4d0cb9d687d929570df134954174"
+    },
+    "same_row_nqc_capture": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_nqc_same_row_strong_aligned.json",
+      "sha256": "646b20549d4a687aa3ec334626473de0155271833003089abfad3ce5fd46fae8"
+    },
+    "source_adapter": {
+      "path": "dev/native_rom/reference/full_v4_source_mode_adapter.c",
+      "sha256": "59d8d7dd6547e84cc53b2ecb76005195bb54174c481146f88fc257a3abf7fcf4"
+    },
+    "source_compile": {
+      "path": "dev/native_rom/diagnose_source_flux_initial.py",
+      "sha256": "b1d040bedff3eb88ee644ede9098c7807ab8a3e2a9ca6b8bcfe9bd35fec4d7bb"
+    },
+    "source_plan": {
+      "path": "dev/native_rom/evidence/2026-09-24/source_flux_initial_plan.json",
+      "sha256": "1167199c8f954f97a5905a1e3b2f67d1555e984e5f1da0a0fc42a77a925f96ea"
+    },
+    "source_wheel_runner": {
+      "path": "dev/native_rom/diagnose_source_wheel_mode.py",
+      "sha256": "97fa1d42f7c893fa342d4561bf6092c6a12babc6d4c3a0fadf9bd2e8707b7c99"
+    },
+    "three_way": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_three_way_waveform.json",
+      "sha256": "3cbe0ff66ff50a8ee988867176144d2d0bb8aa3b5169a7f858a7513397048381"
+    },
+    "v1_plan": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_wheel_nqc_same_row_factor_plan.json",
+      "sha256": "17439961685843ea79c6de375427426def11cfeb651823707ed2c03af8a0cd2e"
+    },
+    "v1_result": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_wheel_nqc_same_row_factor.json",
+      "sha256": "c307e4b9bbccb1463e2c315eb3505b52d8131ff4135543eb8db0e92d30fea903"
+    },
+    "v1_runner": {
+      "path": "dev/native_rom/diagnose_source_wheel_nqc_same_row_factor.py",
+      "sha256": "02369f785e72ece96c260a9d77908248d6ccae53890247f9bf18fdc20e24d213"
+    }
+  },
+  "interpretation_limit": "A same-wheel-trajectory coefficient-factor sensitivity measures how much of the source/wheel mode difference is explained by substituting NQC coefficients under one approximated low-grid evaluation. It cannot prove source/wheel build or dynamics causality.",
+  "intervention": "On the fixed installed-wheel trajectory and mode, replace only the evaluated NQC factor by multiplying the wheel mode by source_factor/wheel_factor. Source mode remains the reference. No phase/time/amplitude fitting.",
+  "pre_peak_margin_M": 20.0,
+  "prospective_gates": [
+    "Exact tuple, source tag/commit/files/headers, wheel versions/libraries, and hashed inputs",
+    "Source and wheel raw mode hashes and source coefficients replay three-way result",
+    "Both mode cadences and low-grid cadence equal 0.5M",
+    "Source and wheel epochs agree within 1e-4M and continuous low mapping is within 0.25 sample of low grid",
+    "Low-grid orbital-frequency peak equals final low sample",
+    "Fields/factors finite and physically signed; correction window before low orbital peak",
+    "NQC factor self-ratio complex relative L2 <=1e-14"
+  ],
+  "release_qualified": false,
+  "row_tuple": [
+    30.0,
+    20.0,
+    0.8,
+    0.6,
+    0.04
+  ],
+  "schema": "diffgw.seobnrv4.source-wheel-nqc-same-row-factor-plan.v2",
+  "script_sha256": "133572416125456cbf0c146c901ee6302dc3a7c28489f5d03eb581caaabb7563",
+  "source_identity": {
+    "aligned_source_sha256": "6b7969bb7cbe714c4937a691838b0b82a7fcc2a199c03ee2bf5215738f1ce1b3",
+    "peeled_commit": "2c00d8c200308422036d0a23b7c0394f7c73faad",
+    "tag": "lalsuite-v7.26.15",
+    "tag_object": "0a3a9674979bd62d8344d5552a10b5111fb1fc52"
+  },
+  "step_M": 0.5,
+  "v1_audit": "Version 1 remains immutable and failed only exact-bitwise no-op gates: complex self-division produced L2 4.55e-17.",
+  "wheel_library_sha256": {
+    "libgsl.28.dylib": "1eefe0dbead9551d47be3c09bbf786c727f84df1331130ee8a03127b7a95abe8",
+    "libgslcblas.0.dylib": "00a30ab2e9eb5cd36caab9ae9a9975a8280b9b4c2940b15e446c34a151818230",
+    "liblal.20.dylib": "e4c4ed42baed00d30668588e58444f974e3deeda56ba4e5978624640ddb5bde7",
+    "liblalsimulation.37.dylib": "9046c4a673d2ba82b792f7b92d73203ba783b32fc604b5da1139c5c1bc8b3325"
+  },
+  "window": "Within shared source/wheel mode and low-dynamics support; strictly earlier than sampled wheel amplitude peak minus 20M."
+}

@@ -2835,6 +2835,20 @@ their exact-row NQC coefficients differ. These pairwise residuals describe
 output disagreement on one chart; they do not assign physical causes or
 qualify the generator.
 
+An [initial exact-row source/wheel NQC factor plan](evidence/2026-09-25/source_wheel_nqc_same_row_factor_plan.json)
+and [run](evidence/2026-09-25/source_wheel_nqc_same_row_factor.json)
+are retained as a failed-gate audit record: the frozen bitwise self-ratio
+no-op check was too strict for complex floating-point division (`4.55e-17`
+relative L2). A separately [frozen v2 plan](evidence/2026-09-25/source_wheel_nqc_same_row_factor_v2_plan.json)
+uses a `1e-14` no-op tolerance and explicitly verifies the low-grid orbital
+peak used for continuous time mapping. Its [result](evidence/2026-09-25/source_wheel_nqc_same_row_factor_v2.json)
+passes all 11 checks. On 957 shared preattachment samples, source versus
+wheel L2 falls from `0.00200270` to `3.94e-6` when only the evaluated NQC
+factor ratio is substituted on the fixed wheel trajectory. This supports NQC
+coefficient differences as the main source/wheel discrepancy in that window;
+it is a one-trajectory sensitivity test and does not explain the larger
+native/source waveform gap.
+
 1. Qualify the physical generator against the published equations and independent
    references over the intended domain, resolve convention/provenance gaps, and
    establish gradients and numerical convergence. This runner covers only scalar
