@@ -1,0 +1,267 @@
+{
+  "case_id": "strong_antialigned",
+  "checks": {},
+  "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+  "elapsed_s": 53.153589666995686,
+  "error": "ValueError('nonpositive matched corrected amplitude')",
+  "execution_sha256": "130f6fd1ec7c771b7e5153386ca065ee87ab42df6c3e00b870985235c20b1653",
+  "host": "RONI2",
+  "pid": 96894,
+  "protocol_sha256": "8fcb5c23b2cea5c503669fbfedd40d1e4eb4706975a6fd600d28f340cff93c0e",
+  "release_qualified": false,
+  "row_tuple": [
+    30.0,
+    20.0,
+    -0.8,
+    -0.6,
+    0.025
+  ],
+  "schema": "diffgw.seobnrv4.warm-jax-two-row-domain.v1",
+  "script_sha256": "199411ea930cec3b44e2b85707e84a184e0d1a02c0773a2db3489af17d8c6a21",
+  "settings": {
+    "atol": 1e-11,
+    "coarse_output_step_M": 0.5,
+    "final_spin_fit_order": [
+      3,
+      4
+    ],
+    "fine_refinement_factor": 32,
+    "max_duration_M": 1000.0,
+    "max_step_M": 2.0,
+    "rtol": 1e-10
+  },
+  "stages": {
+    "controls": {
+      "amplitude_matrix": [
+        [
+          0.06826729589208431,
+          0.01890709574776941,
+          0.009950178803234627
+        ],
+        [
+          0.008071230501249397,
+          0.0028388019561603733,
+          0.0016527473351158326
+        ],
+        [
+          0.0010649361788949358,
+          0.0004963274660359732,
+          0.0003217933157999236
+        ]
+      ],
+      "amplitude_raw": {
+        "amplitude_columns_value_first_second": [
+          [
+            0.43556863645013416,
+            0.06826729589208431,
+            0.01890709574776941,
+            0.009950178803234627
+          ],
+          [
+            0.012297461912377171,
+            0.008071230501249397,
+            0.0028388019561603733,
+            0.0016527473351158326
+          ],
+          [
+            0.0010154149702514942,
+            0.0010649361788949358,
+            0.0004963274660359732,
+            0.0003217933157999236
+          ]
+        ],
+        "direct_amplitude_first_difference": 0.0,
+        "raw_mode": [
+          0.030300251040993518,
+          -0.4345134426526778
+        ]
+      },
+      "amplitude_rhs": [
+        -0.05847512610129857,
+        -0.012297461912377171,
+        -0.002366326790545405
+      ],
+      "amplitude_rows": [
+        [
+          0.43556863645013416,
+          0.06826729589208431,
+          0.01890709574776941,
+          0.009950178803234627
+        ],
+        [
+          0.012297461912377171,
+          0.008071230501249397,
+          0.0028388019561603733,
+          0.0016527473351158326
+        ],
+        [
+          0.0010154149702514942,
+          0.0010649361788949358,
+          0.0004963274660359732,
+          0.0003217933157999236
+        ]
+      ],
+      "match_time_M": 139.611855025171,
+      "phase_capture": {
+        "bracket_fraction": 0.1587216109437577,
+        "bracket_index": 8935,
+        "bracket_time_M": [
+          139.609375,
+          139.625
+        ],
+        "field_at_match": [
+          -0.11523443166242542,
+          0.12192468906140637,
+          -0.00793355455839539,
+          -0.015938735207856297
+        ],
+        "first": [
+          -0.017814542095633955,
+          -0.0016359119273797987
+        ],
+        "interpolated_state": [
+          3.6106706605184584,
+          30.419103539492653,
+          -0.17428402603757495,
+          3.441876410412953
+        ],
+        "match_time_local_M": 139.611855025171,
+        "orbital_frequency_minus_bracket_linear": 5.530108440621184e-09,
+        "phase_basis": [
+          -0.3958932071468166,
+          -0.01202522518126201
+        ],
+        "second": [
+          -0.0008188631868321435,
+          -0.0002156834364022242
+        ]
+      },
+      "phase_matrix": [
+        [
+          -0.017814542095633955,
+          -0.0016359119273797987
+        ],
+        [
+          -0.0008188631868321435,
+          -0.0002156834364022242
+        ]
+      ],
+      "phase_rhs": [
+        -0.07743602278861683,
+        -0.0044637912064835125
+      ],
+      "rhs_capture": {
+        "amplitude_natural_cubic_first_second": [
+          0.012297428443189928,
+          0.0010152627471748097
+        ],
+        "direct_mode_phase_first_minus_frequency": 0.0,
+        "raw_mode": [
+          0.030300251040993518,
+          -0.4345134426526778
+        ],
+        "raw_mode_phase_first": 0.23463367954780168,
+        "raw_mode_phase_second": 0.00618939246342182
+      },
+      "target_values": [
+        0.3770935103488356,
+        0.0,
+        -0.0013509118202939107,
+        0.3120697023364185,
+        0.010653183669905333
+      ],
+      "torch_control_sha256_before_frequency": "6f22e3b074e3e29d8bd23f1ba4ac1f0be317ab28818820fe6a6bb80a42d15073",
+      "torch_peak_time_M": 149.65715789794922
+    },
+    "initial": {
+      "first_rk4_state_max_abs": 1.7763568394002505e-14,
+      "first_rk4_step_M": 0.5,
+      "jax_state": [
+        11.852626716832456,
+        0.0,
+        -0.003140416420443558,
+        4.165133276522053
+      ],
+      "same_state_field_max_abs": 6.367580768896043e-17,
+      "state_max_abs": 1.7763568394002505e-14,
+      "torch_state": [
+        11.852626716832473,
+        0.0,
+        -0.0031404164204435507,
+        4.1651332765220666
+      ]
+    },
+    "raw": {
+      "coarse_own_states": {
+        "common_samples": 1736,
+        "left_samples": 1736,
+        "max_abs": 6.239453590509372e-12,
+        "relative_l2": 3.4928722328069806e-12,
+        "right_samples": 1736
+      },
+      "fine_frequency_own": {
+        "common_samples": 9610,
+        "left_samples": 9610,
+        "max_abs": 4.052813640242903e-12,
+        "relative_l2": 1.3323832499208864e-12,
+        "right_samples": 9610
+      },
+      "fine_own_states": {
+        "common_samples": 9610,
+        "left_samples": 9610,
+        "max_abs": 1.6812070893701922e-11,
+        "relative_l2": 5.273166482909401e-12,
+        "right_samples": 9610
+      },
+      "fine_same_states": {
+        "common_samples": 9610,
+        "left_samples": 9610,
+        "max_abs": 8.159383942282527e-15,
+        "relative_l2": 1.934113789728839e-15,
+        "right_samples": 9610
+      }
+    },
+    "trajectory": {
+      "coarse_state": {
+        "common_samples": 1736,
+        "left_samples": 1736,
+        "max_abs": 5.74473801862041e-12,
+        "relative_l2": 6.262290213820873e-14,
+        "right_samples": 1736
+      },
+      "coarse_time": {
+        "common_samples": 1736,
+        "left_samples": 1736,
+        "max_abs": 0.0,
+        "relative_l2": 0.0,
+        "right_samples": 1736
+      },
+      "fine_state": {
+        "common_samples": 9610,
+        "left_samples": 9610,
+        "max_abs": 3.0509039739001764e-11,
+        "relative_l2": 9.885153721510168e-14,
+        "right_samples": 9610
+      },
+      "fine_time": {
+        "common_samples": 9610,
+        "left_samples": 9610,
+        "max_abs": 0.0,
+        "relative_l2": 0.0,
+        "right_samples": 9610
+      },
+      "jax_coarse_event_time_M": 867.7870171950741,
+      "jax_coarse_samples": 1736,
+      "jax_fine_event_time_M": 150.1494558666012,
+      "jax_fine_samples": 9610,
+      "jax_restart_index": 1436,
+      "torch_coarse_event_time_M": 867.7870171756367,
+      "torch_coarse_samples": 1736,
+      "torch_fine_event_time_M": 150.1494558407792,
+      "torch_fine_samples": 9610,
+      "torch_restart_index": 1436
+    }
+  },
+  "status": "failed_execution",
+  "traceback": "Traceback (most recent call last):\n  File \"/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw/dev/native_rom/diagnose_warm_jax_two_row_domain_v1.py\", line 341, in run\n    jref = driver.jax_attach(jft,jfs,jfo,jraw,jrf,jnu,jchi,jsigma,\n        jnp.asarray(array(output_time)),match_time=jcontrols[\"match_time\"],\n    ...<2 lines>...\n        diagnostic_matching_rhs_derivatives=jnp.asarray(array(rhs)),\n        diagnostic_continuous_boundary=True)\n  File \"/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw/dev/native_rom/eob/jax/numerical_attachment_clean.py\", line 413, in attach_seobnrv4_22_numerical_compatibility\n    nqc = calibrate_nqc_22_full_series(\n        time, state[:, 0], state[:, 2], orbital_frequency,\n    ...<3 lines>...\n        diagnostic_phase_matrix=diagnostic_phase_matrix,\n        diagnostic_matching_rhs_derivatives=diagnostic_matching_rhs_derivatives)\n  File \"/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw/dev/native_rom/diagnose_warm_jax_two_row_domain_v1.py\", line 304, in jcal\n    raise ValueError(\"nonpositive matched corrected amplitude\")\nValueError: nonpositive matched corrected amplitude\n"
+}

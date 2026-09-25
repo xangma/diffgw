@@ -1,0 +1,26 @@
+{
+  "schema": "diffgw.seobnrv4.warm-jax-two-row-domain-execution.v1",
+  "status": "frozen_prelaunch_execution_plan",
+  "purpose": "Execute the immutable two-row independent backend-domain protocol in separate bounded processes, preserving row-specific partial evidence and failures.",
+  "release_qualified": false,
+  "protocol_sha256": "8fcb5c23b2cea5c503669fbfedd40d1e4eb4706975a6fd600d28f340cff93c0e",
+  "script_sha256": "199411ea930cec3b44e2b85707e84a184e0d1a02c0773a2db3489af17d8c6a21",
+  "case_order": ["q4_nonspinning", "strong_antialigned"],
+  "outputs": {
+    "q4_nonspinning": "warm_jax_two_row_domain_q4_nonspinning_v1.json",
+    "strong_antialigned": "warm_jax_two_row_domain_strong_antialigned_v1.json"
+  },
+  "commands": {
+    "q4_nonspinning": "env PYTHONPATH=src:. JAX_ENABLE_X64=1 /Users/xangma/repos/diffgw/.venv/bin/python -m dev.native_rom.diagnose_warm_jax_two_row_domain_v1 --case q4_nonspinning",
+    "strong_antialigned": "env PYTHONPATH=src:. JAX_ENABLE_X64=1 /Users/xangma/repos/diffgw/.venv/bin/python -m dev.native_rom.diagnose_warm_jax_two_row_domain_v1 --case strong_antialigned"
+  },
+  "watchdog": {
+    "wall_seconds_per_row": 180,
+    "rss_gib_stop_threshold": 8,
+    "term_to_kill_grace_seconds": 10,
+    "sequential_rows_only": true,
+    "partial_results_on_failure": true
+  },
+  "launch_authorized": false,
+  "interpretation": "The execution plan does not authorize a release claim. Each row is independently scored against the protocol gates; failures and partial outputs remain evidence."
+}

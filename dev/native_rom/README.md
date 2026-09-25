@@ -2965,8 +2965,7 @@ identical low-stage dynamics and NQC coefficients, and their GPS epochs agree
 with an 805-sample crop to `3.22e-10 s`. Requested sample zero is therefore
 at `402.5 M` on the cap-time grid. The earlier low-endpoint mapping missed it
 by `0.05312408 M` because the source high-stage peak lies slightly beyond the
-low endpoint. This verifies a source time convention; the native corrected
-mode and its phase residual still need comparison on that exact chart. The
+low endpoint. This verifies the source time convention used below. The
 [first runner attempt](evidence/2026-09-25/source_aligned_cap_full_epoch_suffix.json)
 records a JSON-serialization error and provides no numerical conclusion.
 The [exact cap-time corrected-mode comparison](evidence/2026-09-25/source_aligned_exact_cap_corrected.json)
@@ -3081,6 +3080,18 @@ L2 is `6.31e-13`, the 2002-sample assembled whole-waveform L2 is
 at `402.5 M`. This establishes backend parity for one refined cap row under
 matched controls; it does not resolve the native-versus-source phase residual,
 validate an independent domain, or qualify the model against NR.
+The [two-row backend continuation](evidence/2026-09-25/warm_jax_two_row_domain_protocol_v2.json)
+independently evolves q4 nonspinning and strong antialigned trajectories in
+Torch and JAX, then applies identical source-derived attachment controls.
+All 25 frozen gates pass on each row; assembled whole-waveform relative L2 is
+`6.06e-12` and `3.55e-12`, respectively. The antialigned row has 18 signed
+negative corrected-amplitude samples. Its preserved
+[v1 result](evidence/2026-09-25/warm_jax_two_row_domain_strong_antialigned_v1.json)
+stopped at an extra diagnostic positivity assertion; the separately frozen
+[v2 result](evidence/2026-09-25/warm_jax_two_row_domain_strong_antialigned_v2.json)
+continues through attachment with unchanged comparison gates. These checks
+establish backend parity on these rows under matched controls, not source or
+NR fidelity across the domain.
 
 1. Qualify the physical generator against the published equations and independent
    references over the intended domain, resolve convention/provenance gaps, and

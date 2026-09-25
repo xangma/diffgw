@@ -1,0 +1,29 @@
+{
+  "case_order": [
+    "q4_nonspinning",
+    "strong_antialigned"
+  ],
+  "commands": {
+    "q4_nonspinning": "env PYTHONPATH=src:. JAX_ENABLE_X64=1 /Users/xangma/repos/diffgw/.venv/bin/python -m dev.native_rom.diagnose_warm_jax_two_row_domain_v2 --case q4_nonspinning",
+    "strong_antialigned": "env PYTHONPATH=src:. JAX_ENABLE_X64=1 /Users/xangma/repos/diffgw/.venv/bin/python -m dev.native_rom.diagnose_warm_jax_two_row_domain_v2 --case strong_antialigned"
+  },
+  "interpretation": "Distinct v2 only removes the extra dev-hook positive-amplitude assertion and records signed-amplitude diagnostics. All v1 row and gate choices stay fixed; the v1 antialigned failure remains evidence.",
+  "launch_authorized": false,
+  "outputs": {
+    "q4_nonspinning": "warm_jax_two_row_domain_q4_nonspinning_v2.json",
+    "strong_antialigned": "warm_jax_two_row_domain_strong_antialigned_v2.json"
+  },
+  "protocol_sha256": "4a2053c65d865a9c5e3e31ded92288d5aaabcd008c6e0933912224ad113c2ee2",
+  "purpose": "Run the distinct signed-amplitude v2 continuation under the unchanged two-row frozen gates and watchdog, preserving v1 results.",
+  "release_qualified": false,
+  "schema": "diffgw.seobnrv4.warm-jax-two-row-domain-execution.v2",
+  "script_sha256": "9b563ce3660031290fb6bbaefb3469bbef1312a0ef8b18524ef5fccde7e3d63e",
+  "status": "frozen_prelaunch_execution_plan",
+  "watchdog": {
+    "partial_results_on_failure": true,
+    "rss_gib_stop_threshold": 8,
+    "sequential_rows_only": true,
+    "term_to_kill_grace_seconds": 10,
+    "wall_seconds_per_row": 180
+  }
+}

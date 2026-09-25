@@ -1,0 +1,172 @@
+{
+  "execution_bounds": {
+    "partial_results_on_failure": true,
+    "rss_gib_stop_threshold": 8,
+    "sequential_rows_only": true,
+    "term_to_kill_grace_seconds": 10,
+    "wall_seconds_per_row": 180
+  },
+  "gates": {
+    "attachment_boundary_time_max_abs_M": 1e-12,
+    "both_rows_must_pass_individually": true,
+    "coarse_fine_time_max_abs_M": 1e-12,
+    "coarse_prefix_l2": 1e-08,
+    "corrected_inspiral_l2": 1e-08,
+    "cropped_whole_mode_l2": 1e-08,
+    "finite_nonzero_comparison_series": true,
+    "first_fixed_step_state_max_abs": 1e-10,
+    "identical_control_float64_sha256": true,
+    "independent_crop_index_difference": 0,
+    "initial_field_same_state_max_abs": 1e-12,
+    "initial_state_max_abs": 1e-11,
+    "injected_ode_boundary_frequency_max_abs": 0.0,
+    "input_sha_replay": true,
+    "nqc_amplitude_coefficient_max_abs": 1e-08,
+    "nqc_phase_coefficient_max_abs": 1e-08,
+    "own_state_raw_l2": 1e-08,
+    "post_boundary_mode_l2": 1e-08,
+    "pre_boundary_mode_l2": 1e-08,
+    "restart_index_difference": 0,
+    "same_state_raw_l2": 1e-10,
+    "strict_first_interior_crop_each": true,
+    "whole_mode_l2": 1e-08
+  },
+  "inputs": {
+    "cap_crop_reference": {
+      "path": "dev/native_rom/diagnose_source_aligned_native_cap_full_crop_v5.py",
+      "sha256": "fef27b40d0e3cfb714b5fb772da971368fa3f9d61adc14acee6d0bea7870c0f8"
+    },
+    "cases": {
+      "path": "dev/native_rom/diagnose_jax_adaptive_physical_event.py",
+      "sha256": "df4d12bf0158a7f533002635712c400c56d51b09492f6b86e19b20f96dd53cf2"
+    },
+    "driver": {
+      "path": "dev/native_rom/diagnose_jax_spliced_whole_waveform.py",
+      "sha256": "158c243e6909d26529cf5e976521793cd07821cd48662036a3c34182391f9d1c"
+    },
+    "independent_init_plan": {
+      "path": "dev/native_rom/evidence/2026-09-25/jax_source_independent_init_plan.json",
+      "sha256": "4abffe3ea380d4134d7ff765035ad66438b411eb77715f6b7e099be286ffcf64"
+    },
+    "jax_attachment": {
+      "path": "dev/native_rom/eob/jax/numerical_attachment_clean.py",
+      "sha256": "4b74f667792fff4d8a5266bbe198550d014c17f30449c9c2f9e56480c950ccc1"
+    },
+    "jax_two_stage": {
+      "path": "dev/native_rom/eob/jax/two_stage_trajectory.py",
+      "sha256": "5671c29f62fb4e5f3177afe6b8048a9464884565e2a99a8b26848a1ec66f347e"
+    },
+    "matched_cap_plan": {
+      "path": "dev/native_rom/evidence/2026-09-25/warm_jax_independent_cap_plan.json",
+      "sha256": "728b420f55485db38ff11c30a0ab8405aaa4893dbc57fa601f91c98d9f0e5574"
+    },
+    "matched_cap_result": {
+      "path": "dev/native_rom/evidence/2026-09-25/warm_jax_independent_cap.json",
+      "sha256": "2e9aec917ec076f7e30ef7328b337b0b054360ebfab2fc12d542ea716d4f8439"
+    },
+    "ode_amplitude_helper": {
+      "path": "dev/native_rom/diagnose_source_aligned_ode_chain_amplitude_v2.py",
+      "sha256": "c3460f910c186f3fdf2e2c51084990198d314ba6d6eeacfd3592663b9e1cecef"
+    },
+    "ode_phase_matrix_helper": {
+      "path": "dev/native_rom/diagnose_source_aligned_ode_chain_phase_matrix.py",
+      "sha256": "654ce386c98094f17c8b14bfdf2fdb9db2e70d112c1c4524943cd3745d41ad1a"
+    },
+    "ode_phase_rhs_helper": {
+      "path": "dev/native_rom/diagnose_source_aligned_ode_chain_phase_rhs.py",
+      "sha256": "b789eedb4eacf29500253999d1d0bb68e8e8591f661b8025592c50ae1d1114ff"
+    },
+    "q4_nonspinning_independent_init": {
+      "path": "dev/native_rom/evidence/2026-09-25/jax_source_independent_init_q4_nonspinning.json",
+      "sha256": "182eb897539fdf8d8cccfe871edc73c9ef222ab1a273c97bd7bd2384408c017c"
+    },
+    "q4_nonspinning_source_spliced": {
+      "path": "dev/native_rom/evidence/2026-09-25/jax_source_spliced_whole_waveform_q4_nonspinning.json",
+      "sha256": "5378a283075e44fbebac40e45c3f17aed4431a5bed1235e78263af5a8b5473f5"
+    },
+    "source_spliced_plan": {
+      "path": "dev/native_rom/evidence/2026-09-25/jax_source_spliced_whole_waveform_plan.json",
+      "sha256": "eb79f7db87e23d83a8437334eec90f6872dcf3b76f65b5cbe55882f7d62b9944"
+    },
+    "strong_antialigned_independent_init": {
+      "path": "dev/native_rom/evidence/2026-09-25/jax_source_independent_init_strong_antialigned.json",
+      "sha256": "dcebd6a02f32d213e67b21533965162f15e612ec591d589f4060ce01f814492d"
+    },
+    "strong_antialigned_source_spliced": {
+      "path": "dev/native_rom/evidence/2026-09-25/jax_source_spliced_whole_waveform_strong_antialigned.json",
+      "sha256": "278fd480d91130b68f1a47eeeec08e0f8fadb8b295f689f494d4b3050eed1210"
+    },
+    "torch_attachment": {
+      "path": "src/torchwave/approximants/eob/numerical_attachment.py",
+      "sha256": "8c7a149b76c529a255a4caa4b0ca76317b5306c8967db84047f299ccf51be7fc"
+    }
+  },
+  "interpretation_limits": [
+    "This is backend parity on two predeclared domain rows, not NR agreement, source fidelity, a waveform-model acceptance gate, or full parameter-domain certification.",
+    "The ODE controls are derived per row from the Torch trajectory and transferred identically; this does not validate an independently computed JAX NQC-control generator.",
+    "Prior q4 and antialigned generic source-backed comparisons are context, not new holdouts or acceptance thresholds.",
+    "Any row failure remains a failure; no gate or row substitution after results are known."
+  ],
+  "launch_authorized": false,
+  "method": [
+    "For each row, compute circular initial conditions independently in Torch and JAX with identical source-backed Hamiltonian/flux options; do not inject a common state.",
+    "Integrate each backend independently on the same coarse and fine adaptive settings, preserving accepted event diagnostics and common output charts.",
+    "Compute each backend raw h22 on its own trajectory, plus JAX raw h22 on Torch states as a same-state formula control.",
+    "Choose the Torch full-spline orbital peak and source numerical NQC offset; freeze its match time for both attachments. Derive the Torch endpoint-Hermite state, ODE amplitude value/first/second rows, ODE phase matrix and raw-mode phase RHS on its own fine trajectory.",
+    "Inject the identical per-row amplitude matrix/RHS, phase matrix/RHS, match time, and ODE boundary frequency into dev-only Torch and JAX attachment hooks. Record natural spline/target values and patched values separately; hash exact float64 controls on both sides.",
+    "Assemble each whole coarse-prefix plus fine/ringdown h22 on the same 0.5 M chart; compare complex mode without phase/time re-alignment. Apply each backend strict first-interior final-h22 frequency crop; compare the Torch-crop common chart and report each crop index."
+  ],
+  "purpose": "Prospective independent Torch/JAX backend parity across nonspinning unequal-mass and strongly antialigned-spin source-backed rows, using per-row matched Hermite/ODE attachment controls.",
+  "release_qualified": false,
+  "rows": [
+    {
+      "case_id": "q4_nonspinning",
+      "parameters": [
+        40.0,
+        10.0,
+        0.0,
+        0.0,
+        0.04
+      ],
+      "prior_independent_init_state_max_abs": 1.0658141036401503e-14,
+      "prior_unmatched_control_whole_l2": 7.704444913615586e-10
+    },
+    {
+      "case_id": "strong_antialigned",
+      "parameters": [
+        30.0,
+        20.0,
+        -0.8,
+        -0.6,
+        0.025
+      ],
+      "prior_independent_init_state_max_abs": 1.7763568394002505e-14,
+      "prior_unmatched_control_whole_l2": 6.792346976472079e-09
+    }
+  ],
+  "schema": "diffgw.seobnrv4.warm-jax-two-row-domain-protocol.v1",
+  "settings": {
+    "atol": 1e-11,
+    "coarse_output_step_M": 0.5,
+    "final_spin_fit_order": [
+      3,
+      4
+    ],
+    "fine_refinement_factor": 32,
+    "max_duration_M": 1000.0,
+    "max_step_M": 2.0,
+    "rtol": 1e-10
+  },
+  "source_options": {
+    "hamiltonian_calibration": "lal_v4_rounded",
+    "hamiltonian_log_derivative": "lal_v4",
+    "mode_21_higher_spin": "rho_hybrid",
+    "mode_31_higher_spin": "lal_v4_rho",
+    "mode_32_spin_square": "lal_v4_zero",
+    "mode_33_higher_spin": "lal_v4_rho",
+    "mode_43_higher_spin": "lal_v4_rho",
+    "retain_pan_cubic_spin": true,
+    "spin_truncation": "tabulated"
+  },
+  "status": "frozen_prelaunch_protocol"
+}
