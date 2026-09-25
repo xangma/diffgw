@@ -1,0 +1,23 @@
+{
+  "cause": "V1 reused matched local-polynomial phase NQC controls; historical source-aligned run used Hermite/ODE phase matrix and matching RHS. Raw boundary frequency and ODE phase-basis first derivatives replay exactly, but phase NQC coefficients and resulting ODE boundary frequency do not.",
+  "checks": {
+    "corrected_inspiral_parity": true,
+    "historical_frequency_replayed": false,
+    "ode_pre_boundary_unchanged": true,
+    "ode_same_boundary": true,
+    "ode_whole_attached_mode_parity": true,
+    "pre_boundary_mode_parity": true,
+    "same_boundary": true,
+    "same_injected_frequency": true,
+    "whole_attached_mode_parity": true
+  },
+  "injected_frequency_abs_from_historical": 1.795490211442541e-05,
+  "note": "V1 proves same-frequency Torch/JAX attachment parity only for its own inputs; it is not a historical full-run replay.",
+  "phase_coefficient_max_abs_from_historical": 0.28166356468295817,
+  "release_qualified": false,
+  "schema": "diffgw.seobnrv4.warm-jax-ode-boundary-v1-assessment.v1",
+  "status": "incomplete_historical_replay",
+  "v1_plan_sha256": "bdef85b2694a0291148b56a6a273312e3ef41a9b52702071d052fc47ac27dd45",
+  "v1_result_sha256": "1a07417916290f459ae3f726ea6e53c8fc55e6593ab21093f7d627948ba3e69f",
+  "v1_script_sha256": "f22b538e11cc2d4104277ca4ae358f23ddce338608488f3b3699223a57ba3944"
+}

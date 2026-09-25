@@ -1,0 +1,101 @@
+{
+  "control": {
+    "degree": 0,
+    "half_width_M": 0.0,
+    "method": "Hermite/ODE source-aligned controls"
+  },
+  "gates": {
+    "boundary_time_abs_M_at_most": 1e-12,
+    "historical_frequency_abs_at_most": 1e-09,
+    "historical_phase_coefficients_max_abs_at_most": 1e-09,
+    "ode_pre_boundary_unchanged_relative_l2_at_most": 1e-12,
+    "ode_whole_mode_relative_l2_at_most": 1e-08
+  },
+  "inputs": {
+    "attachment_v2": {
+      "path": "dev/native_rom/evidence/2026-09-25/warm_jax_attachment_divergence.json",
+      "sha256": "e767394caf9764b24c034cf2eb41c84bd5469a14e025a0feb424ecb0f92b47e4"
+    },
+    "default_control": {
+      "path": "dev/native_rom/evidence/2026-09-25/warm_jax_default_attachment_control.json",
+      "sha256": "9443a826d9e5dc406018e5edb44d1aa8fd3dd898d6fea469031d7ae8bdbca77e"
+    },
+    "driver": {
+      "path": "dev/native_rom/diagnose_jax_spliced_whole_waveform.py",
+      "sha256": "158c243e6909d26529cf5e976521793cd07821cd48662036a3c34182391f9d1c"
+    },
+    "historical_boundary_runner": {
+      "path": "dev/native_rom/diagnose_source_aligned_ode_chain_boundary_frequency.py",
+      "sha256": "f4c434d1d050ffad7550364292cc202c639e79323e731db797afd6a2b10e21e6"
+    },
+    "jax_attachment": {
+      "path": "dev/native_rom/eob/jax/numerical_attachment_clean.py",
+      "sha256": "4b74f667792fff4d8a5266bbe198550d014c17f30449c9c2f9e56480c950ccc1"
+    },
+    "matched_source_control": {
+      "path": "dev/native_rom/evidence/2026-09-25/warm_jax_source_attachment_control_v2.json",
+      "sha256": "b3d9589c968a6d79a6e9d5dff6f698176d89b631a076d08129fc6b6f876fd1e9"
+    },
+    "ode_amplitude_helper": {
+      "path": "dev/native_rom/diagnose_source_aligned_ode_chain_amplitude_v2.py",
+      "sha256": "c3460f910c186f3fdf2e2c51084990198d314ba6d6eeacfd3592663b9e1cecef"
+    },
+    "ode_phase_matrix_helper": {
+      "path": "dev/native_rom/diagnose_source_aligned_ode_chain_phase_matrix.py",
+      "sha256": "654ce386c98094f17c8b14bfdf2fdb9db2e70d112c1c4524943cd3745d41ad1a"
+    },
+    "ode_phase_rhs_helper": {
+      "path": "dev/native_rom/diagnose_source_aligned_ode_chain_phase_rhs.py",
+      "sha256": "b789eedb4eacf29500253999d1d0bb68e8e8591f661b8025592c50ae1d1114ff"
+    },
+    "ode_v1": {
+      "path": "dev/native_rom/evidence/2026-09-25/warm_jax_ode_boundary_control.json",
+      "sha256": "1a07417916290f459ae3f726ea6e53c8fc55e6593ab21093f7d627948ba3e69f"
+    },
+    "ode_v1_assessment": {
+      "path": "dev/native_rom/evidence/2026-09-25/warm_jax_ode_boundary_control_v1_assessment.json",
+      "sha256": "97636cb434c33457fb7b3a52d54bc1807678b7e0d1dadb8d17f248afe06a480e"
+    },
+    "source_local_controls": {
+      "path": "dev/native_rom/eob/torch/local_nqc_control.py",
+      "sha256": "1a613e1cf2e8414cc5ba3cd031aed9f5e5c49d3d2bbfc0c01fbdaf1e7a290b26"
+    },
+    "torch_attachment": {
+      "path": "src/torchwave/approximants/eob/numerical_attachment.py",
+      "sha256": "8c7a149b76c529a255a4caa4b0ca76317b5306c8967db84047f299ccf51be7fc"
+    },
+    "trajectory_v1": {
+      "path": "dev/native_rom/evidence/2026-09-25/warm_jax_trajectory_divergence.json",
+      "sha256": "8fd151199d61cc6bf4bd6fee92ddace9b7b3645326a546fae76977965ba25883"
+    },
+    "warm_whole_v3": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_native_warm_whole_waveform_v3.json",
+      "sha256": "e0eb35487787588f2bb758de1becab96a1f4025d10a021ca96a72edd09205440"
+    }
+  },
+  "limitations": [
+    "Fixed fine trajectory backend comparison, not independently evolved JAX whole waveform or physical validation.",
+    "The historical Torch amplitude-value matching hook is not represented by the attachment diagnostic APIs; ODE amplitude derivatives are supplied to both backends, and any amplitude-coefficient difference from historical is reported.",
+    "Development monkeypatch intercepts ringdown calls without changing production attachment APIs."
+  ],
+  "output_samples": 15269,
+  "purpose": "Replay historical refined warm-row Hermite/ODE NQC phase matrix and RHS plus amplitude derivative controls on the same fine chart; calculate the historical ODE boundary frequency from the resulting phase coefficients and inject that identical value into Torch and JAX ringdown calls.",
+  "release_qualified": false,
+  "row_tuple": [
+    30.0,
+    20.0,
+    0.8,
+    0.6,
+    0.04
+  ],
+  "schema": "diffgw.seobnrv4.warm-jax-ode-boundary-plan.v2",
+  "script_sha256": "c803490624c1d829b8b9c38f9dcaa8c0487b4ab6f71c430cc24d69ea21542744",
+  "settings": {
+    "atol": 1e-11,
+    "coarse_output_step_M": 0.5,
+    "fine_refinement_factor": 32,
+    "max_duration_M": 1000.0,
+    "max_step_M": 2.0,
+    "rtol": 1e-10
+  }
+}

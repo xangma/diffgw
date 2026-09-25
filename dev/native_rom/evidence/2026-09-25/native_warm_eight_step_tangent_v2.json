@@ -1,0 +1,159 @@
+{
+  "case": {
+    "cap_Momega": 0.03162277660168379,
+    "chi1": 0.8,
+    "chi1_tangent": 1.0,
+    "chi2": 0.6,
+    "device": "cpu",
+    "dtype": "float64",
+    "frozen_state": [
+      9.911372368439267,
+      0.0,
+      -0.003306729129318275,
+      3.513326682456663
+    ],
+    "mass1": 30.0,
+    "mass2": 20.0,
+    "near_cap_target_Momega": 0.03182277660168379,
+    "state_tangent_per_chi1": [
+      -0.09172725754528695,
+      0.0,
+      0.0006217988833867728,
+      -0.19013615595890498
+    ]
+  },
+  "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+  "diagnostic_checks_passed": true,
+  "elapsed_s": 10.132606374972966,
+  "finite_differences": {
+    "0.0001": {
+      "jax": [
+        -0.0836897447609175,
+        -0.00029707629106701106,
+        0.0006211381743453578,
+        -0.18989999358565157
+      ],
+      "jax_tangent_scaled_error": 6.219993964329262e-11,
+      "torch": [
+        -0.08368974477868107,
+        -0.0002970762918996783,
+        0.0006211381727450754,
+        -0.18989999358787202
+      ],
+      "torch_autodiff_scaled_error": 4.443642676044135e-11
+    },
+    "1e-05": {
+      "jax": [
+        -0.08368974491190784,
+        -0.000297076277466779,
+        0.0006211381551029377,
+        -0.18989999359675377
+      ],
+      "jax_tangent_scaled_error": 8.879039170572867e-11,
+      "torch": [
+        -0.08368974482309,
+        -0.0002970762996712395,
+        0.0006211381543223121,
+        -0.18989999361895823
+      ],
+      "torch_autodiff_scaled_error": 2.9254570987902184e-11
+    }
+  },
+  "gates": {
+    "final_state_torch_jax_max_abs_at_most": true,
+    "final_tangent_jax_fd_scaled_error_at_most_each": true,
+    "final_tangent_torch_fd_scaled_error_at_most_each": true,
+    "final_tangent_torch_jax_scaled_error_at_most": true,
+    "finite": true
+  },
+  "host": "RONI2",
+  "input_sha256": {
+    "dev/native_rom/diagnose_jax_spliced_whole_waveform.py": "158c243e6909d26529cf5e976521793cd07821cd48662036a3c34182391f9d1c",
+    "dev/native_rom/eob/jax/adaptive_driver_clean.py": "41691a243f3b1bf248443f679f8fd405eaeeb3de2d3e8d6800b03ba4b4c64ecf",
+    "dev/native_rom/eob/jax/source_calibration_hamiltonian.py": "8b5584002625479e667337076df59cb6a820e1cffc88a282071843e6d4e4c8a9",
+    "dev/native_rom/eob/torch/source_calibration_hamiltonian.py": "2b0ddccf6ba99d0157c0b624cf0c4e926713c96a736e22e1b6fe55bdbde1cdc2",
+    "dev/native_rom/eob/torch/warm_start.py": "a9818350b18ed04ca645edbf6af4c22760fc51eae540c12f38d171d99a675a20",
+    "src/jaxwave/approximants/eob/hamiltonian.py": "5bdcb51b0dccb5b91352d7e8697d1533e6f49ae2dba09526731cd9e4747a2118",
+    "src/jaxwave/approximants/eob/integrator.py": "f0e842e518cd05c94361038602a993c0ee9025b218490945fdb4021da9b64e46",
+    "src/jaxwave/approximants/eob/seobnrv4_flux.py": "47f9be36e6494708643afcdeb487a425c3e607a4c2f1ba730cbcf71ccba64287",
+    "src/torchwave/approximants/eob/adaptive_driver_clean.py": "2f5e1c3b8766b92340a6aafcdfbdc5fe6856a3e4390551abefda1e22b90dda7b",
+    "src/torchwave/approximants/eob/hamiltonian.py": "96febd6b3e0722802425f0e7490079d62869f2e63ac92c8db32e9063b5bc4b5b",
+    "src/torchwave/approximants/eob/integrator.py": "4c643493086a06accfe7f8f5ff679e77a1015aeb03659b395b48cac09de91c65",
+    "src/torchwave/approximants/eob/seobnrv4_flux.py": "3136bb016cce21cdd9d636008fee1fa5472757fed4446dc899e0d31e70124c83"
+  },
+  "jax": {
+    "directional_derivative": [
+      -0.08368974482311745,
+      -0.0002970762872233525,
+      0.0006211381658205061,
+      -0.18989999358970366
+    ],
+    "value": [
+      9.867523672331357,
+      0.48947458480018374,
+      -0.0033019401444379206,
+      3.5069893507796484
+    ]
+  },
+  "jax_progress": {
+    "completed_steps": 8
+  },
+  "mesh": {
+    "accepted_steps": 8,
+    "accepted_time_M": [
+      0.0,
+      0.125,
+      0.75,
+      2.5184396555571418,
+      4.7559864074503455,
+      7.214873099576161,
+      9.828198368912801,
+      12.570630988009016,
+      15.428443334384987
+    ],
+    "evaluations": 49,
+    "last_left_frequency": 0.03179032720559838,
+    "last_right_frequency": 0.03182857133998686
+  },
+  "metrics": {
+    "final_state_torch_jax_max_abs": 1.7763568394002505e-15,
+    "final_tangent_jax_fd_scaled_error_max": 8.879039170572867e-11,
+    "final_tangent_torch_fd_scaled_error_max": 4.443642676044135e-11,
+    "final_tangent_torch_jax_scaled_error": 5.551115123125783e-17
+  },
+  "pid": 53675,
+  "plan_sha256": "fc989d7861b125ea80fd586f3c762b150376a58ae85ad8ef237e945eae081e67",
+  "prior_failed_evidence": {
+    "path": "dev/native_rom/evidence/2026-09-25/native_warm_eight_step_tangent.json",
+    "sha256": "269465e34c6dca1b6eef15f86d90096e61e70f9f9fe0856c10223643fd957d3c"
+  },
+  "prior_mesh_evidence": {
+    "path": "dev/native_rom/evidence/2026-09-25/native_warm_start_jax_pathwise.json",
+    "sha256": "6a4985a7a8147a60f6558329f169481707d1e639cad149d16de39174db09976d"
+  },
+  "prior_one_step_evidence": {
+    "path": "dev/native_rom/evidence/2026-09-25/native_warm_one_step_tangent.json",
+    "sha256": "3133652fe864c6ea8e18a26c6455a177f33b643dfc2480bc498a396e570d0043"
+  },
+  "release_qualified": false,
+  "schema": "diffgw.seobnrv4.native-warm-eight-step-tangent.v2",
+  "script_sha256": "24ad443001137bf505de670da4d93996ac12375602c26d6db94fb655b987d349",
+  "status": "diagnostic_complete",
+  "torch": {
+    "directional_derivative": [
+      -0.0836897448231175,
+      -0.00029707628722336864,
+      0.0006211381658204932,
+      -0.18989999358970366
+    ],
+    "value": [
+      9.867523672331359,
+      0.48947458480018324,
+      -0.0033019401444380593,
+      3.5069893507796484
+    ]
+  },
+  "torch_progress": {
+    "completed_steps": 8
+  }
+}

@@ -1,0 +1,200 @@
+{
+  "checks": {
+    "corrected_inspiral_parity": true,
+    "historical_frequency_replayed": false,
+    "ode_pre_boundary_unchanged": true,
+    "ode_same_boundary": true,
+    "ode_whole_attached_mode_parity": true,
+    "pre_boundary_mode_parity": true,
+    "same_boundary": true,
+    "same_injected_frequency": true,
+    "whole_attached_mode_parity": true
+  },
+  "controls": {
+    "amplitude_derivatives": [
+      [
+        0.0012113573119520063,
+        0.00042326288659303547,
+        0.00024857821330881636
+      ],
+      [
+        0.0002085724551986328,
+        7.830075049963746e-05,
+        4.7629392344485704e-05
+      ]
+    ],
+    "continuous_boundary": true,
+    "match_time_M": 138.55437115467365,
+    "matching_rhs_derivatives": [
+      [
+        0.004257045287039873,
+        0.00017038629490376286
+      ],
+      [
+        0.27241832811856764,
+        0.003946084302308673
+      ]
+    ],
+    "phase_matrix": [
+      [
+        -0.008102726227106788,
+        -0.00016385146345771658
+      ],
+      [
+        -0.0009745158011938169,
+        -3.44126867915245e-05
+      ]
+    ]
+  },
+  "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+  "elapsed_s": 28.56977437500609,
+  "historical_refined_boundary_controls": {
+    "backward_secant": 0.42951156875187735,
+    "boundary_index": 8867,
+    "boundary_time_local_M": 138.546875,
+    "central_secant_control": 0.429598958982524,
+    "continuous_frequency": 0.42959992304155104,
+    "direct_raw_phase_first": 0.27238878985248555,
+    "high_step_M": 0.015625,
+    "match_time_local_M": 138.55437115467365,
+    "ode_phase_basis": [
+      -0.17747790155800722,
+      -0.0011739003318655225
+    ],
+    "ode_phase_basis_first": [
+      -0.008095894360868881,
+      -0.00016363731782133523
+    ],
+    "original_frequency": 0.42951156875187735,
+    "phase_coefficients": [
+      35.4707392521371,
+      -794.172297788774
+    ],
+    "raw_frequency": 0.2723887898524855,
+    "sampled_phase_basis": [
+      -0.17747790155800722,
+      -0.0011739003318655225
+    ],
+    "sampled_raw_frequency": 0.2723887898524855,
+    "spline_derivative_control": 0.42959899015823916
+  },
+  "host": "RONI2",
+  "ode_boundary_control": {
+    "boundary_index": 8867,
+    "continuous_attachment_boundary_time_M": 138.55437115467365,
+    "injected_frequency": 0.4295819681394366,
+    "input_boundary_time_M": 138.546875,
+    "jax_ringdown_call": {
+      "injected_frequency": 0.4295819681394366,
+      "original_frequency": 0.4296837326451939
+    },
+    "ode_phase_basis_first": [
+      -0.008095894360868881,
+      -0.00016363731782133523
+    ],
+    "phase_basis_at_boundary": [
+      -0.17747790155800722,
+      -0.0011739003318655225
+    ],
+    "phase_coefficients": [
+      35.47421456528772,
+      -794.453961353457
+    ],
+    "raw_frequency_at_boundary": 0.2723887898524855,
+    "torch_ringdown_call": {
+      "injected_frequency": 0.4295819681394366,
+      "original_frequency": 0.4296837326451939
+    }
+  },
+  "pid": 52840,
+  "plan_sha256": "bdef85b2694a0291148b56a6a273312e3ef41a9b52702071d052fc47ac27dd45",
+  "release_qualified": false,
+  "row_tuple": [
+    30.0,
+    20.0,
+    0.8,
+    0.6,
+    0.04
+  ],
+  "schema": "diffgw.seobnrv4.warm-jax-ode-boundary-control.v1",
+  "script_sha256": "f22b538e11cc2d4104277ca4ae358f23ddce338608488f3b3699223a57ba3944",
+  "settings": {
+    "atol": 1e-11,
+    "coarse_output_step_M": 0.5,
+    "fine_refinement_factor": 32,
+    "max_duration_M": 1000.0,
+    "max_step_M": 2.0,
+    "rtol": 1e-10
+  },
+  "stages": {
+    "boundary_frequency_abs": 0.0,
+    "boundary_index_abs": 0,
+    "boundary_time_abs_M": 0.0,
+    "coefficient_amplitude_max_abs": 7.207745511550456e-11,
+    "coefficient_phase_max_abs": 2.2737367544323206e-13,
+    "corrected_inspiral": {
+      "max_abs": 2.253446792619708e-14,
+      "relative_l2": 5.37548767078935e-15,
+      "samples": 9643
+    },
+    "jax_boundary_frequency": 0.4296837326451939,
+    "match_time_abs_M": 0.0,
+    "matched_source_vs_asymmetric_v2_ratio": 6.64232856621572e-12,
+    "matched_source_vs_default_control_ratio": 9.42749227989633e-06,
+    "ode_backend_boundary_amplitude_abs": 4.440892098500626e-16,
+    "ode_backend_boundary_index_abs": 0,
+    "ode_backend_boundary_phase_abs": 0.0,
+    "ode_backend_boundary_time_abs_M": 0.0,
+    "ode_corrected_inspiral": {
+      "max_abs": 2.253446792619708e-14,
+      "relative_l2": 5.37548767078935e-15,
+      "samples": 9643
+    },
+    "ode_post_boundary_mode": {
+      "max_abs": 2.607399605677454e-15,
+      "relative_l2": 1.3829946286104187e-15,
+      "samples": 6401
+    },
+    "ode_pre_boundary_mode": {
+      "max_abs": 2.276126435504334e-15,
+      "relative_l2": 2.4510630830791228e-15,
+      "samples": 8868
+    },
+    "ode_vs_baseline_torch_post_boundary": {
+      "max_abs": 0.0002984281447426642,
+      "relative_l2": 0.0008314776707043735,
+      "samples": 6401
+    },
+    "ode_vs_baseline_torch_pre_boundary": {
+      "max_abs": 0.0,
+      "relative_l2": 0.0,
+      "samples": 8868
+    },
+    "ode_vs_historical_basis_first_max_abs": 0.0,
+    "ode_vs_historical_frequency_abs": 1.795490211442541e-05,
+    "ode_vs_historical_phase_coefficients_max_abs": 0.28166356468295817,
+    "ode_vs_historical_raw_frequency_abs": 0.0,
+    "ode_whole_attached_mode": {
+      "max_abs": 2.607399605677454e-15,
+      "relative_l2": 2.2925706449834753e-15,
+      "samples": 15269
+    },
+    "post_boundary_mode": {
+      "max_abs": 2.5324586304240975e-15,
+      "relative_l2": 1.3769747020926317e-15,
+      "samples": 6401
+    },
+    "pre_boundary_mode": {
+      "max_abs": 2.276126435504334e-15,
+      "relative_l2": 2.4510630830791228e-15,
+      "samples": 8868
+    },
+    "torch_boundary_frequency": 0.4296837326451939,
+    "whole_attached_mode": {
+      "max_abs": 2.5324586304240975e-15,
+      "relative_l2": 2.291905268095621e-15,
+      "samples": 15269
+    }
+  },
+  "status": "diagnostic_complete"
+}
