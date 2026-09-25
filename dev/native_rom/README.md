@@ -2397,6 +2397,18 @@ convergence gate. The amplitude matrix condition number is about `5.63e4`.
 This coefficient-level result does not replay a waveform or ringdown, establish
 a converged derivative prescription, or qualify the model for release.
 
+The [retrospective finer-stencil continuation](evidence/2026-09-25/source_aligned_finer_stencils_plan.json)
+uses the already captured source field at the same fixed event and targets.
+Its [result](evidence/2026-09-25/source_aligned_finer_stencils.json) retains
+the failed `0.2→0.1 M` coefficient difference of `0.02649`; the `0.1→0.05 M`
+difference is `0.02394`, and the `0.05→0.025 M` difference grows to `0.57692`.
+The finest-step coefficient difference between the two field-integration
+tolerances is `0.23541`, although the NQC linear residual stays below
+`5.6e-16`. The matching matrix condition number is about `5.63e4`, so these
+small derivative perturbations are strongly amplified. This sequence does not
+converge and cannot select a reliable derivative stencil. It is neither a
+new holdout nor a full-waveform test.
+
 A [frozen captured-input event and derivative attribution](evidence/2026-09-25/captured_nqc_event_derivative_plan.json)
 replays the strong aligned-spin pinned-source and native pre-NQC arrays at
 `0.015625 M` without regenerating either waveform. Its [four-way result](evidence/2026-09-25/captured_nqc_event_derivative.json)

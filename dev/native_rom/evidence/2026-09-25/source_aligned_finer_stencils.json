@@ -1,0 +1,563 @@
+{
+  "adjacent": {
+    "0.05_to_0.025": {
+      "coefficient_l2": 0.5769210549988458,
+      "coefficient_linf": 0.4312255462950816,
+      "derivative_linf": 1.1240175457061241e-07
+    },
+    "0.1_to_0.05": {
+      "coefficient_l2": 0.023938723148583006,
+      "coefficient_linf": 0.014708945990378197,
+      "derivative_linf": 6.372874450377708e-09
+    },
+    "0.2_to_0.1": {
+      "coefficient_l2": 0.026491007550343552,
+      "coefficient_linf": 0.020371435859487974,
+      "derivative_linf": 5.54820599185657e-09
+    }
+  },
+  "baseline": {
+    "historical_active": [
+      175.20783851089345,
+      -1506.356532634962,
+      1690.2862315062634,
+      43.18435354735594,
+      -1101.8903560516756
+    ],
+    "historical_gsl_fit": {
+      "amplitude_matrix": [
+        [
+          0.010259502939499785,
+          0.003105597981706213,
+          0.0017086562267089641
+        ],
+        [
+          0.0009978084039764016,
+          0.0003463006770186727,
+          0.0002027052422979668
+        ],
+        [
+          0.0001635268425665173,
+          6.092932817033178e-05,
+          3.692677755922483e-05
+        ]
+      ],
+      "amplitude_matrix_condition": 56283.87264989935,
+      "amplitude_residual_linf": 1.1102230246251565e-16,
+      "amplitude_rhs": [
+        0.007525621128414595,
+        -0.004198553263797129,
+        -0.000713283275887999
+      ],
+      "coefficients": [
+        175.20781793399215,
+        -1506.3563287083075,
+        1690.2859844083275,
+        43.18435354735593,
+        -1101.8903560516758
+      ],
+      "phase_matrix": [
+        [
+          0.007131078449552507,
+          0.00012662770368253602
+        ],
+        [
+          0.0008158635733601506,
+          2.5293226279405925e-05
+        ]
+      ],
+      "phase_matrix_condition": 668.7833534794555,
+      "phase_residual_linf": 8.326672684688674e-17,
+      "phase_rhs": [
+        0.16842116744265062,
+        0.007362178887683716
+      ]
+    },
+    "replay_linf": 0.0002470979359259218
+  },
+  "checks": {
+    "historical_replay_linf": 0.0002470979359259218,
+    "historical_replay_passed": true,
+    "linear_residual_passed": true,
+    "max_linear_residual_linf": 5.551115123125783e-16,
+    "new_pairs_monotone_decreasing_coefficient_l2": false,
+    "new_pairs_monotone_decreasing_derivative_linf": false,
+    "prior_pair_replay_abs": 7.867116680326802e-11,
+    "prior_replay_passed": true,
+    "prior_step_coefficient_replay_linf": 7.048583938740194e-11
+  },
+  "errors": [],
+  "fixed": {
+    "internal_step_M": 0.00390625,
+    "match_time_M": 137.59240346159578,
+    "raw_values": "captured at historical match",
+    "ringdown": "not evaluated or modified",
+    "targets": [
+      0.3805863908938106,
+      0.0,
+      -0.0005396186331607708,
+      0.439747328207188,
+      0.01116108034847805
+    ],
+    "trajectory_sha256": "e0cf1e1da802db11e3e1548a86818343360aae9fb40a51a83c95aebf020be293"
+  },
+  "input_sha256": {
+    "dense_field_evidence": "c8d642fd8b8f7e17672c1c6c2ec831a3ba4e49d4ebbf7992afaf87a9360eb780",
+    "prior_pilot": "f54fdfbfacdc85ba37d2cae05091b33be297f7fb0e2f3e57018649dd940e10eb",
+    "prior_solver": "32691792627c55fe1990a462cd6669bad5e6f301bc4ca02debdd3f1af0c9e03b"
+  },
+  "order_ratios": {
+    "0.1_to_0.05__0.05_to_0.025": {
+      "coefficient_l2_coarse_over_fine": 0.04149393221336132,
+      "coefficient_l2_observed_order_log2": -4.590955807669895,
+      "derivative_linf_coarse_over_fine": 0.056697286218732254,
+      "derivative_linf_observed_order_log2": -4.1405765066790705
+    },
+    "0.2_to_0.1__0.1_to_0.05": {
+      "coefficient_l2_coarse_over_fine": 1.106617399178687,
+      "coefficient_l2_observed_order_log2": 0.14615651234852675,
+      "derivative_linf_coarse_over_fine": 0.8705970963428815,
+      "derivative_linf_observed_order_log2": -0.19992288649909884
+    }
+  },
+  "plan_sha256": "f9a23b6bf7ce42d1a01918d900619b263b7518c4fc62716692bbae440a12730a",
+  "prior_failed_gate": {
+    "coefficient_l2": 0.02649100762901472,
+    "limit": 0.01,
+    "pair_M": [
+      0.2,
+      0.1
+    ],
+    "passed": false
+  },
+  "process": {
+    "argv": [
+      "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw/dev/native_rom/diagnose_source_aligned_finer_stencils.py",
+      "--json-out",
+      "dev/native_rom/evidence/2026-09-25/source_aligned_finer_stencils.json"
+    ],
+    "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+    "host": "RONI2",
+    "pid": 72138
+  },
+  "release_qualified": false,
+  "resample_factor": 32,
+  "row": {
+    "chi1": 0.8,
+    "chi2": 0.8,
+    "mass1": 30.0,
+    "mass2": 20.0,
+    "omega_start": 0.04
+  },
+  "schema": "diffgw.seobnrv4.source-aligned-finer-stencils.v1",
+  "scope": {
+    "description": "Scalar CPU float64 numerical stability evidence only; no training or promotion.",
+    "known_limitations": [
+      "Convergence cannot establish correctness of the equations or published model fidelity.",
+      "The adaptive prototype uses a diagnostic QNM spline with independently generated values and black-box-inferred knot metadata; this is not wholly literature-specified provenance.",
+      "Changing dt also changes the adaptive initial step and coarse/fine restart sampling; the grid check measures the complete generator's grid sensitivity.",
+      "No time, phase, amplitude, or coefficient fitting is performed.",
+      "No derivatives, batched execution, accelerators, or JAX are qualified here."
+    ],
+    "physics_validated": false,
+    "production_asset": false,
+    "production_promotion_allowed": false,
+    "training_generator_qualified": false
+  },
+  "script_sha256": "0756b30a46ab073f0911e799464b455c248b41af5dbcc0b98945bdd8a1edb4ca",
+  "status": "diagnostic_complete",
+  "steps": {
+    "0.025": {
+      "loose_fit_coefficients": [
+        172.33293950695503,
+        -1477.8657492861096,
+        1655.7644338727125,
+        43.122028002682114,
+        -1098.3471055469324
+      ],
+      "tight_derivatives_value_first_second": [
+        [
+          0.373060769765396,
+          0.004198526693695766,
+          0.0001825510402989986
+        ],
+        [
+          0.010259502939499785,
+          0.0009977862678976766,
+          0.00016360868045535895
+        ],
+        [
+          0.003105597981706213,
+          0.00034629385318084435,
+          6.0953414396438616e-05
+        ],
+        [
+          0.0017086562267089641,
+          0.00020270145404151357,
+          3.6939839092129986e-05
+        ],
+        [
+          -23.325172079643192,
+          -0.27132608124740937,
+          -0.003797085792900389
+        ],
+        [
+          -0.1658339209012059,
+          -0.007130905451973867,
+          -0.0008145686484476813
+        ],
+        [
+          -0.0009591146973213119,
+          -0.00012662468143729094,
+          -2.5277022465553193e-05
+        ]
+      ],
+      "tight_fit": {
+        "amplitude_matrix": [
+          [
+            0.010259502939499785,
+            0.003105597981706213,
+            0.0017086562267089641
+          ],
+          [
+            0.0009977862678976766,
+            0.00034629385318084435,
+            0.00020270145404151357
+          ],
+          [
+            0.00016360868045535895,
+            6.0953414396438616e-05,
+            3.6939839092129986e-05
+          ]
+        ],
+        "amplitude_matrix_condition": 56283.989133577445,
+        "amplitude_residual_linf": 3.3306690738754696e-16,
+        "amplitude_rhs": [
+          0.007525621128414595,
+          -0.004198526693695766,
+          -0.0007221696734597694
+        ],
+        "coefficients": [
+          172.3193027160747,
+          -1477.7305666793463,
+          1655.60061148982,
+          43.120241211504386,
+          -1098.246523562914
+        ],
+        "phase_matrix": [
+          [
+            0.007130905451973867,
+            0.00012662468143729094
+          ],
+          [
+            0.0008145686484476813,
+            2.5277022465553193e-05
+          ]
+        ],
+        "phase_matrix_condition": 668.3205144705731,
+        "phase_residual_linf": 8.673617379884035e-19,
+        "phase_rhs": [
+          0.16842124695977861,
+          0.007363994555577662
+        ]
+      },
+      "tight_minus_historical_coefficient_l2": 45.21242558692105,
+      "tight_minus_loose_coefficient_l2": 0.235410281222328,
+      "tight_minus_loose_derivative_linf": 8.34895708123895e-08
+    },
+    "0.05": {
+      "loose_fit_coefficients": [
+        172.36149924641717,
+        -1478.1486967955177,
+        1656.1072251691876,
+        43.12266551964368,
+        -1098.3828953701945
+      ],
+      "tight_derivatives_value_first_second": [
+        [
+          0.373060769765396,
+          0.00419852806491483,
+          0.000182438638544428
+        ],
+        [
+          0.010259502939499785,
+          0.000997786257960183,
+          0.00016361006573469233
+        ],
+        [
+          0.003105597981706213,
+          0.00034629385011268084,
+          6.095383821552029e-05
+        ],
+        [
+          0.0017086562267089641,
+          0.00020270145233211524,
+          3.694007350566746e-05
+        ],
+        [
+          -23.325172079643192,
+          -0.27132608056527246,
+          -0.0037971890791022025
+        ],
+        [
+          -0.1658339209012059,
+          -0.007130905070645426,
+          -0.0008146048161193167
+        ],
+        [
+          -0.0009591146973213119,
+          -0.00012662467857841678,
+          -2.527718410127536e-05
+        ]
+      ],
+      "tight_fit": {
+        "amplitude_matrix": [
+          [
+            0.010259502939499785,
+            0.003105597981706213,
+            0.0017086562267089641
+          ],
+          [
+            0.000997786257960183,
+            0.00034629385011268084,
+            0.00020270145233211524
+          ],
+          [
+            0.00016361006573469233,
+            6.095383821552029e-05,
+            3.694007350566746e-05
+          ]
+        ],
+        "amplitude_matrix_condition": 56283.99044105878,
+        "amplitude_residual_linf": 5.551115123125783e-16,
+        "amplitude_rhs": [
+          0.007525621128414595,
+          -0.00419852806491483,
+          -0.0007220572717051988
+        ],
+        "coefficients": [
+          172.35522099816507,
+          -1478.0864787909563,
+          1656.0318370361151,
+          43.122685212982255,
+          -1098.384047759335
+        ],
+        "phase_matrix": [
+          [
+            0.007130905070645426,
+            0.00012662467857841678
+          ],
+          [
+            0.0008146048161193167,
+            2.527718410127536e-05
+          ]
+        ],
+        "phase_matrix_condition": 668.3509787103835,
+        "phase_residual_linf": 2.6020852139652106e-18,
+        "phase_rhs": [
+          0.16842124764191552,
+          0.007363891269375848
+        ]
+      },
+      "tight_minus_historical_coefficient_l2": 44.642971589689544,
+      "tight_minus_loose_coefficient_l2": 0.0979550687275785,
+      "tight_minus_loose_derivative_linf": 1.9187127812486876e-08
+    },
+    "0.1": {
+      "loose_fit_coefficients": [
+        172.35508685614195,
+        -1478.0851837680468,
+        1656.0302886906886,
+        43.1223932026855,
+        -1098.3676537990461
+      ],
+      "tight_derivatives_value_first_second": [
+        [
+          0.373060769765396,
+          0.00419852692502202,
+          0.0001824424085158001
+        ],
+        [
+          0.010259502939499785,
+          0.0009977862327538863,
+          0.00016360962784031012
+        ],
+        [
+          0.003105597981706213,
+          0.00034629384108968256,
+          6.095370467553495e-05
+        ],
+        [
+          0.0017086562267089641,
+          0.00020270144690730588,
+          3.693999974868207e-05
+        ],
+        [
+          -23.325172079643192,
+          -0.27132608083176984,
+          -0.003797182706227752
+        ],
+        [
+          -0.1658339209012059,
+          -0.007130905182764282,
+          -0.0008146004761545865
+        ],
+        [
+          -0.0009591146973213119,
+          -0.00012662467728323445,
+          -2.527714890995032e-05
+        ]
+      ],
+      "tight_fit": {
+        "amplitude_matrix": [
+          [
+            0.010259502939499785,
+            0.003105597981706213,
+            0.0017086562267089641
+          ],
+          [
+            0.0009977862327538863,
+            0.00034629384108968256,
+            0.00020270144690730588
+          ],
+          [
+            0.00016360962784031012,
+            6.095370467553495e-05,
+            3.693999974868207e-05
+          ]
+        ],
+        "amplitude_matrix_condition": 56283.98877990517,
+        "amplitude_residual_linf": 5.551115123125783e-16,
+        "amplitude_rhs": [
+          0.007525621128414595,
+          -0.00419852692502202,
+          -0.0007220610416765709
+        ],
+        "coefficients": [
+          172.35398841982135,
+          -1478.0743142501763,
+          1656.0171280901247,
+          43.12242872545375,
+          -1098.3696551123853
+        ],
+        "phase_matrix": [
+          [
+            0.007130905182764282,
+            0.00012662467728323445
+          ],
+          [
+            0.0008146004761545865,
+            2.527714890995032e-05
+          ]
+        ],
+        "phase_matrix_condition": 668.3482855475063,
+        "phase_residual_linf": 8.326672684688674e-17,
+        "phase_rhs": [
+          0.16842124737541814,
+          0.007363897642250298
+        ]
+      },
+      "tight_minus_historical_coefficient_l2": 44.66317225456021,
+      "tight_minus_loose_coefficient_l2": 0.017220943796419846,
+      "tight_minus_loose_derivative_linf": 3.2469846256155677e-09
+    },
+    "0.2": {
+      "loose_fit_coefficients": [
+        172.35356200608913,
+        -1478.0700518313315,
+        1656.0119412267386,
+        43.12244119529965,
+        -1098.3705211153524
+      ],
+      "tight_derivatives_value_first_second": [
+        [
+          0.373060769765396,
+          0.004198527715324774,
+          0.00018244795672179196
+        ],
+        [
+          0.010259502939499785,
+          0.00099778605899954,
+          0.00016360968663773235
+        ],
+        [
+          0.003105597981706213,
+          0.0003462937672425134,
+          6.095371973635086e-05
+        ],
+        [
+          0.0017086562267089641,
+          0.00020270139919383967,
+          3.6940007076021215e-05
+        ],
+        [
+          -23.325172079643192,
+          -0.2713260805312405,
+          -0.0037971825802364054
+        ],
+        [
+          -0.1658339209012059,
+          -0.007130904593879183,
+          -0.000814599840110013
+        ],
+        [
+          -0.0009591146973213119,
+          -0.00012662463493127657,
+          -2.527713564680621e-05
+        ]
+      ],
+      "tight_fit": {
+        "amplitude_matrix": [
+          [
+            0.010259502939499785,
+            0.003105597981706213,
+            0.0017086562267089641
+          ],
+          [
+            0.00099778605899954,
+            0.0003462937672425134,
+            0.00020270139919383967
+          ],
+          [
+            0.00016360968663773235,
+            6.095371973635086e-05,
+            3.6940007076021215e-05
+          ]
+        ],
+        "amplitude_matrix_condition": 56283.96418480183,
+        "amplitude_residual_linf": 1.1102230246251565e-16,
+        "amplitude_rhs": [
+          0.007525621128414595,
+          -0.004198527715324774,
+          -0.0007220665898825628
+        ],
+        "coefficients": [
+          172.35229875704098,
+          -1478.0575242853138,
+          1655.9967566542653,
+          43.12240057131015,
+          -1098.3682340532716
+        ],
+        "phase_matrix": [
+          [
+            0.007130904593879183,
+            0.00012662463493127657
+          ],
+          [
+            0.000814599840110013,
+            2.527713564680621e-05
+          ]
+        ],
+        "phase_matrix_condition": 668.3481146992146,
+        "phase_residual_linf": 2.7755575615628914e-17,
+        "phase_rhs": [
+          0.16842124767594746,
+          0.007363897768241645
+        ]
+      },
+      "tight_minus_historical_coefficient_l2": 44.689654821087906,
+      "tight_minus_loose_coefficient_l2": 0.019857964443825194,
+      "tight_minus_loose_derivative_linf": 3.97264108181793e-09
+    }
+  }
+}
