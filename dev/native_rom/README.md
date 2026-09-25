@@ -959,6 +959,11 @@ The maximum fine-event difference is `8.71e-9 M`; the maximum spliced-state
 difference is `1.12e-11`. This establishes same-input trajectory parity
 for these settings, not NQC calibration, merger attachment, independent
 source fidelity, numerical convergence, or waveform release qualification.
+The [development-only JAX full-series orbital-peak rule](eob/jax/numerical_attachment_clean.py)
+now follows the Torch numerical route's first non-increasing sample and
+derivative-sign-product contraction. Synthetic curved and plateau series
+match Torch in value, curvature, and sample index. The rule is not yet wired
+into a JAX numerical attachment or checked on physical fine trajectories.
 
 The published construction uses SVD bases and tensor-product cubic splines for
 parameter coefficients, as described by
