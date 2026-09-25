@@ -1,0 +1,22 @@
+{
+  "schema": "diffgw.seobnrv4.jax-nqc-basis-barrier-plan.v1",
+  "release_qualified": false,
+  "source_head": "80538b5",
+  "case": "high_start_mixed_spin",
+  "output_step_M": 0.5,
+  "fine_refinement_factor": 32,
+  "adaptive_atol": 1e-10,
+  "adaptive_rtol": 1e-9,
+  "method": "Evaluate the published NQC basis and its amplitude products with explicit rounding barriers at each scalar arithmetic operation on one fixed fine chart. Compare candidate eager to original eager combined arrays and coefficients, candidate eager/JIT combined arrays, and candidate eager/JIT coefficients using the unchanged barrier-spline and equilibrated solve.",
+  "gates": {
+    "max_candidate_source_combined_absolute_error": 1e-15,
+    "max_candidate_source_coefficient_absolute_error": 1e-8,
+    "max_candidate_eager_jit_combined_absolute_error": 0.0,
+    "max_candidate_eager_jit_coefficient_absolute_error": 1e-9
+  },
+  "operational_limits": {
+    "max_wall_time_s": 300,
+    "max_rss_gib": 32
+  },
+  "interpretation": "A fixed-chart basis arithmetic control only. A pass would require a prospective whole-waveform/source/gradient/multi-case experiment before release."
+}

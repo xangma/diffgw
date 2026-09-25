@@ -354,6 +354,22 @@ worktree as PID `70178`, command
 log `/tmp/diffgw-jax-nqc-fixed-combined.log`, and completed in 8.3 seconds
 with exit code 0. No process or next check remains.
 
+The [frozen basis-arithmetic control](jax_nqc_basis_barrier_plan.json)
+and [passing fixed-chart result](jax_nqc_basis_barrier.json) place explicit
+rounding barriers in the development-only NQC basis and amplitude-product
+construction. It reproduces the unchanged eager combined array and amplitude
+coefficients exactly. The separately evaluated eager/JIT combined arrays are
+bit-identical, and the amplitude coefficient gap falls from `2.78e-7` to
+`4.26e-14`, inside the prospective `1e-9` gate. This result only covers one
+fixed NQC chart; it has not passed the complete eager/JIT waveform, source,
+AD/FD, multi-case, or NR gates. It ran on RONI2 in this worktree as PID
+`72796`, command
+`PYTHONPATH=src:. /Users/xangma/repos/diffgw/.venv/bin/python -m dev.native_rom.diagnose_jax_nqc_basis_barrier`,
+log `/tmp/diffgw-jax-nqc-basis-barrier.log`, and completed in 8.8 seconds
+with exit code 0. No process or next check remains. The next prospective
+control should thread the stable amplitude rows through the unchanged whole-
+waveform attachment while measuring any remaining phase and pre-NQC drift.
+
 Two different release claims must stay separate:
 
 - **Historical SEOBNRv4 fidelity:** a port may be described as faithful only
