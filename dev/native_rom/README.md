@@ -2357,6 +2357,21 @@ source-matching NQC solve. These single-row fit counterfactuals neither
 establish a faithful replacement matching event nor qualify a complete
 waveform.
 
+The [pinned-source/public-wheel antialigned cadence probe](evidence/2026-09-25/source_antialigned_cadence.json)
+uses a [frozen plan](evidence/2026-09-25/source_antialigned_cadence_plan.json)
+at mass ratio 3, both spins `-0.85`, and starting orbital frequency `0.04`.
+At output spacings `0.125`, `0.0625`, and `0.03125 M`, the source/wheel
+peak-anchored complex-mode L2 differences are `0.001467`, `0.000274`, and
+`0.000144`, with respective real overlaps `0.999998924`, `0.999999962`,
+and `0.999999990`. The active NQC-coefficient L2 differences between
+source and wheel are `0.899`, `0.345`, and `0.202`. The source's active
+coefficient change across adjacent grids falls from `1.096` to `0.086`,
+while the wheel's rises from `0.148` to `0.462`.
+The waveform agreement is therefore much tighter than the NQC-coefficient
+agreement on this row, but no converged coefficient limit has been shown.
+This short-start probe shares the historical model and does not replace the
+separate NR overlap tests or demonstrate the behavior at their start frequency.
+
 1. Qualify the physical generator against the published equations and independent
    references over the intended domain, resolve convention/provenance gaps, and
    establish gradients and numerical convergence. This runner covers only scalar
