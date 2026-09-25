@@ -139,7 +139,7 @@ class IMRPhenomXPHM(nn.Module):
             f_ref: Reference frequency in Hz
             phi0: Additional source-frame observer azimuth angle in radians
             modes: Optional sequence of harmonic modes (l, m) to evaluate
-            precession_method: 'nnlo' (default), 'msa', or experimental 'ode'
+            precession_method: 'nnlo', 'msa', 'spintaylor', or 'pnr'
             prec_version: An explicit version takes precedence over method.
                 When omitted, 'nnlo' selects 102 and 'msa' selects 223.
                 MSA labels 220--224 share the published analytical equations;
@@ -165,15 +165,13 @@ class IMRPhenomXPHM(nn.Module):
         if final_spin_mod is None:
             final_spin_mod = self.default_final_spin_mod
 
-        p_ver = None if precession_method.lower() == "ode" else resolve_precession_version(precession_method, prec_version)
+        if precession_method.lower() == "ode":
+            raise ValueError("precession_method='ode' is an unvalidated prototype and is not available in releases.")
+        p_ver = resolve_precession_version(precession_method, prec_version)
         if isinstance(final_spin_mod, bool) or final_spin_mod not in (None, 0, 2, 3):
             raise ValueError("final_spin_mod must be None, 0 (NNLO), 2 (Vectorial), or 3 (MSA).")
-        if precession_method.lower() == "ode" and prec_version is not None:
-            raise ValueError("prec_version does not apply to precession_method='ode'.")
         if isinstance(convention, bool) or convention not in (0, 1, 5, 6, 7):
             raise ValueError(f"Unsupported precession convention: {convention}.")
-        if precession_method.lower() == "ode" and convention != 1:
-            raise ValueError("Table IV conventions apply to NNLO/MSA analytical angles.")
         freqs = f if f is not None else sample_frequencies
         if freqs is None:
             raise ValueError("Must provide frequency grid via 'f' or 'sample_frequencies'")
@@ -229,9 +227,6 @@ class IMRPhenomXPHM(nn.Module):
         # In-plane spin check
         in_plane_sq = s1x * s1x + s1y * s1y + s2x * s2x + s2y * s2y
         is_aligned = in_plane_sq == 0
-        if not (hasattr(torch.compiler, "is_compiling") and torch.compiler.is_compiling()):
-            if precession_method.lower() == "ode" and bool(torch.any((~is_aligned) & (phi_0 != 0))):
-                raise ValueError("Nonzero observer azimuth requires NNLO/MSA analytical frame geometry.")
 
         # Fast path: if purely aligned scalar, directly return IMRPhenomXHM
         if not (hasattr(torch.compiler, "is_compiling") and torch.compiler.is_compiling()):
@@ -291,26 +286,7 @@ class IMRPhenomXPHM(nn.Module):
             return t
 
         # Precession angles evaluation
-        if precession_method.lower() == "ode":
-            from torchwave.approximants.precession_ode import SpinPrecessionODE
-
-            alpha, beta, epsilon = SpinPrecessionODE.compute_angles_frequency(
-                f=torch.where(f_eval > 0, f_eval, unsqueeze_param(fref_eval)),
-                mass1=m1,
-                mass2=m2,
-                spin1x=s1x,
-                spin1y=s1y,
-                spin1z=s1z,
-                spin2x=s2x,
-                spin2y=s2y,
-                spin2z=s2z,
-                f_ref=fref_eval,
-            )
-            gamma = -epsilon
-            theta_jn = inc
-            zeta = torch.zeros_like(theta_jn)
-            carrier_phase = unsqueeze_param(torch.zeros_like(phi_c))
-        elif precession_method.lower() in ("pnr", "xpnr", "imrphenomxpnr") or p_ver in (300, 330):
+        if precession_method.lower() in ("pnr", "xpnr", "imrphenomxpnr") or p_ver in (300, 330):
             from torchwave.approximants.precession_pnr import evaluate_pnr_precession
 
             alpha, beta, gamma, theta_jn, zeta, carrier_phase = evaluate_pnr_precession(
@@ -446,7 +422,7 @@ class IMRPhenomXPHM(nn.Module):
                     observer_azimuth=phi_0,
                 )
                 angles_by_mp[mp] = (a_mp, b_mp, g_mp)
-        elif precession_method.lower() != "ode":
+        else:
             for mp in {mp for _, mp in active_modes} - {2}:
                 a_mp, b_mp, g_mp, _, _ = evaluate_msa_precession(
                     v=v * (2.0 / mp) ** (1.0 / 3.0), v0=v0,

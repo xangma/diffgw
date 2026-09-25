@@ -154,6 +154,22 @@ def test_eccentric_waveform_parity(m1, m2, e0, chi1, chi2):
     np.testing.assert_allclose(hc_t.numpy(), np.asarray(hc_j), rtol=1e-11, atol=1e-15)
 
 
+def test_distinct_eccentricity_and_phase_reference_frequencies():
+    """Both backends must anchor phase at f_ref while defining e0 at f0_ecc."""
+    f_np = np.linspace(30.0, 200.0, 128, dtype=np.float64)
+    params = dict(
+        mass1=1.7, mass2=1.2, chi1=0.15, chi2=-0.08,
+        e0=0.03, f0_ecc=30.0, f_ref=50.0, phic=0.2,
+        f_isco_cutoff=False,
+    )
+    hp_t, hc_t = TorchTaylorF2_Eccentric()(f=torch.tensor(f_np), **params)
+    hp_j, hc_j = JaxTaylorF2_Eccentric.evaluate(f=jnp.asarray(f_np), **params)
+    for torch_waveform, jax_waveform in ((hp_t, hp_j), (hc_t, hc_j)):
+        reference = np.asarray(jax_waveform)
+        relative_l2 = np.linalg.norm(torch_waveform.numpy() - reference) / np.linalg.norm(reference)
+        assert relative_l2 < 1e-10
+
+
 @pytest.mark.parametrize("e0", [0.0, 0.05, 0.15])
 def test_eccentric_amplitude_correction_parity(e0):
     """Verify amplitude correction factor and waveform with include_amplitude_correction=True."""

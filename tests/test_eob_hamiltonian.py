@@ -9,15 +9,13 @@ Clean-room literature benchmarks:
 import math
 import pytest
 import torch
-from torchwave.approximants.eob.hamiltonian import EOBHamiltonian
+from torchwave.approximants.eob.hamiltonian import Nonspinning3PNHamiltonian
 
 
 def test_schwarzschild_limit_potentials():
     """In test-particle non-spinning limit (nu -> 0, chi -> 0), A(r) -> 1 - 2/r and B(r) -> 1/(1 - 2/r)."""
-    ham = EOBHamiltonian(
+    ham = Nonspinning3PNHamiltonian(
         nu=torch.tensor(1e-9, dtype=torch.float64),
-        chi1=torch.tensor(0.0, dtype=torch.float64),
-        chi2=torch.tensor(0.0, dtype=torch.float64),
     )
 
     r = torch.tensor([4.0, 6.0, 10.0, 20.0], dtype=torch.float64)
@@ -30,10 +28,8 @@ def test_schwarzschild_limit_potentials():
 def test_real_energy_map():
     """Verify Damour energy map: H_real = sqrt(1 + 2*nu*(H_eff - 1))."""
     nu = torch.tensor(0.25, dtype=torch.float64)  # Equal mass
-    ham = EOBHamiltonian(
+    ham = Nonspinning3PNHamiltonian(
         nu=nu,
-        chi1=torch.tensor(0.0, dtype=torch.float64),
-        chi2=torch.tensor(0.0, dtype=torch.float64),
     )
 
     # Rest state: H_eff = 1.0 -> H_real = 1.0
@@ -50,10 +46,8 @@ def test_real_energy_map():
 
 def test_circular_orbit_derivatives():
     """At large separation, dH/dr = 0 for exact circular momentum pphi = sqrt(r / (1 - 3/r)) in Schwarzschild."""
-    ham = EOBHamiltonian(
+    ham = Nonspinning3PNHamiltonian(
         nu=torch.tensor(1e-6, dtype=torch.float64),
-        chi1=torch.tensor(0.0, dtype=torch.float64),
-        chi2=torch.tensor(0.0, dtype=torch.float64),
     )
 
     r_val = 20.0

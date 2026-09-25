@@ -30,16 +30,29 @@ licensed; third-party data and adaptations retain their identified terms, and
 some inherited calibration provenance remains unresolved. Differentiability and
 batching depend on the selected model and numerical path.
 
+The [retired prototype record](waveforms/research/retired-release-surface.md)
+preserves the former complete-waveform routes and native pilot asset metadata.
+Historical comparisons below remain evidence about those former implementations,
+not validation of the retained official ROM or surviving equation components.
+
 [frozen-catalog]: https://github.com/xangma/diffgw/blob/0be15a5b80dd5383da054165f6834461798d70dc/docs/reviews/2026-09-13-parity-review/verification/reference-contracts-checkpoint3/catalog.json
 [frozen-holdout]: https://github.com/xangma/diffgw/blob/0be15a5b80dd5383da054165f6834461798d70dc/docs/reviews/2026-09-13-parity-review/verification/reference-contracts-checkpoint3/holdout.json
 [frozen-source]: https://github.com/xangma/diffgw/blob/0be15a5b80dd5383da054165f6834461798d70dc/docs/reviews/2026-09-13-parity-review/verification/reference-contracts-checkpoint3/source-record.json
 
 ### 2.1 TaylorF2 (Inspiral Aligned-Spin with Tides)
+- **Executable mathematical reference**: The [nonspinning 3.5PN specification](math/taylorf2.md), [aligned-spin black-hole extension](math/taylorf2-aligned-spin.md), [adiabatic quadrupolar tidal extension](math/taylorf2-tidal.md), and [spin-induced quadrupole extension](math/taylorf2-spin-quadrupole.md) connect equation-level sources, explicit conventions, independent SymPy/mpmath expressions, and Torch/JAX coefficient, waveform, and derivative checks. Each extension reuses unchanged baseline components and restricted amplitude. The last two add 5PN/6PN/6.5PN electric tidal and non-Kerr 2PN/3PN/3.5PN spin-quadrupole phase terms. Independent spin-induced octupoles, spin-tidal couplings, magnetic/dynamical tides, absorption, amplitude corrections, and termination remain outside these specifications.
 - **Primary References**:
   - Buonanno, Iyer, Ochsner, Pan, Sathyaprakash (2009), *Comparison of post-Newtonian templates for compact binary inspiral signals in gravitational-wave detectors*, Phys. Rev. D 80, 084043 ([DOI:10.1103/PhysRevD.80.084043](https://doi.org/10.1103/PhysRevD.80.084043))
   - Mishra, Kela, Arun, Faye (2016), *Ready-to-use post-Newtonian gravitational waveforms for binary black holes with non-precessing spins: An update*, Phys. Rev. D 93, 084054 ([DOI:10.1103/PhysRevD.93.084054](https://doi.org/10.1103/PhysRevD.93.084054))
+  - Wade et al. (2013), [arXiv:1306.3901v2](https://arxiv.org/abs/1306.3901v2), Eq. (4) and spin-parameter definitions; lower-order aligned-spin terms with black-hole quadrupoles.
+  - Bohé et al. (2015), [arXiv:1501.01529v1](https://arxiv.org/abs/1501.01529v1), Eqs. (3.33), (4.14), and Messina–Nagar (2017), [arXiv:1703.08107v4](https://arxiv.org/abs/1703.08107v4), corrected Eq. (26); energy-balance derivation of the complete 3.5PN quadratic-spin phase term.
+  - Pratten et al. (2020), [arXiv:2001.11412v1](https://arxiv.org/abs/2001.11412v1), Eqs. (A19), (A23), (A24); the baseline phase and its explicit spin-spin tail addition, independently checked through energy balance. The aligned-spin specification records the correction of the previously omitted (A24) term.
   - Vines, Hinderer, Flanagan (2011), *Post-1-Newtonian tidal effects in the gravitational waveform from binary inspirals*, Phys. Rev. D 83, 084051 ([DOI:10.1103/PhysRevD.83.084051](https://doi.org/10.1103/PhysRevD.83.084051))
+  - Wade et al. (2014), [arXiv:1402.5156v1](https://arxiv.org/abs/1402.5156v1), Eqs. (4)–(6), (A26); equivalent effective-parameter and component-mass expressions for the 5PN/6PN tidal phase.
   - Damour, Nagar, Villain (2012), *Measurability of the tidal polarizability of neutron stars in late-inspiral gravitational-wave signals*, Phys. Rev. D 85, 123007 ([DOI:10.1103/PhysRevD.85.123007](https://doi.org/10.1103/PhysRevD.85.123007))
+    The tidal reference pins [arXiv:1203.4352v1](https://arxiv.org/abs/1203.4352v1), Eqs. (B8)–(B12), (B14), including the 6.5PN tail and tidal-coupling conversion.
+  - Nagar et al. (2019), [arXiv:1812.07923v1](https://arxiv.org/pdf/1812.07923v1), Eqs. (44), (46), (47), (50)–(52); spin-induced quadrupole corrections at 2PN, 3PN, and the 3.5PN tail.
+  - Dietrich et al. (2019), [arXiv:1905.06011v2](https://arxiv.org/pdf/1905.06011v2), Eqs. (26)–(27); quadrupole-dependent cubic-spin correction. Marsat, [arXiv:1411.4118v2](https://arxiv.org/pdf/1411.4118v2), Eqs. (6.20)–(6.21), supplies an independent cubic-spin cross-check.
 - **Mathematical Form**:
   $$\tilde{h}(f) = \mathcal{A}(f) e^{-i \Psi(f)}$$
   $$\Psi_{\rm coal}(f) = 2\pi f t_c - 2\phi_c - \frac{\pi}{4} + \frac{3}{128\eta v^5} \sum_{k=0}^{7} \left(\psi_k + \psi_{k,\ln} \ln v\right) v^k + \Psi_{\rm tidal}(f)$$
@@ -57,9 +70,9 @@ batching depend on the selected model and numerical path.
   - Huerta et al. (2014), *Accurate and efficient waveforms for compact binaries on eccentric orbits*, Phys. Rev. D 90, 084016 ([DOI:10.1103/PhysRevD.90.084016](https://doi.org/10.1103/PhysRevD.90.084016))
 - **Mathematical Form**:
   $$\Psi_{\rm ecc}(f) = \Psi_{\rm circ}(f) - \frac{3}{128\eta v^5} e_0^2 \left(\frac{v_0}{v}\right)^{19/3} \sum_{j=0}^{6} \Delta\psi_j v^j$$
-  Equations (4.17)–(4.18) of Moore et al. (2016).
+  Equation (6.26) of Moore et al. (2016) gives the eccentric SPA phase. The optional native amplitude factor is a project option whose primary derivation remains pending.
 - **Reference Frequency Priority**:
-  $f_{0,\rm ecc}$ resolves hierarchically from: explicit $f_{0,\rm ecc} \to f_{\rm lower} \to f_{\rm ref} \to 20.0\text{ Hz}$, ensuring complete independence from numerical grid padding and DC sampling density.
+  $f_{0,\rm ecc}$ resolves from an explicit value, then $f_{\rm lower}$, then a positive $f_{\rm ref}$, then the lowest positive frequency-grid sample (20 Hz if none exists). The final grid fallback makes the result dependent on the supplied positive grid.
 - **Verification Result**:
   The two [frozen catalog cases][frozen-catalog] passed, with a maximum polarization complex relative $L_2$ error of approximately $1.64 \times 10^{-12}$.
 
@@ -69,8 +82,13 @@ batching depend on the selected model and numerical path.
   - Khan, Husa, Hannam, Ohme, Pürrer, Forteza, Bohé (2016), *Frequency-domain gravitational waves from non-precessing black-hole binaries. II. A phenomenological model for the advanced detector era*, Phys. Rev. D 93, 044007 ([DOI:10.1103/PhysRevD.93.044007](https://doi.org/10.1103/PhysRevD.93.044007)) [Paper II]
   - Berti, Cardoso, Will (2006), *On gravitational-wave spectroscopy of massive black holes with the space interferometer LISA*, Phys. Rev. D 73, 064030 ([DOI:10.1103/PhysRevD.73.064030](https://doi.org/10.1103/PhysRevD.73.064030))
 - **Coefficients & Calibration**:
-  - Table V of Khan et al. (2016) Paper II defines all 17 phenomenological parameters $\Lambda^i$ as polynomials in $(\eta, \chi_{\rm PN} - 1)$ where $\chi_{\rm PN} = \chi_{\rm eff} - \frac{38\eta}{113}(\chi_1 + \chi_2)$.
-  - Final remnant mass $M_f$ and spin $a_f$ fits from Husa et al. (2016) Eqs. (16)–(17).
+  - Table V of Khan et al. (2016) Paper II prints 19 phenomenological parameter rows $\Lambda^i$ as polynomials in $(\eta, \chi_{\rm PN} - 1)$ where $\chi_{\rm PN} = \chi_{\rm eff} - \frac{38\eta}{113}(\chi_1 + \chi_2)$. The waveform implementation uses 18 fitted rows and obtains $\beta_1$ from its phase-join condition.
+  - The [first executable amplitude specification](math/imrphenomd-amplitude.md) uses the seven amplitude rows at the digits printed in Table V. The production table retains additional inherited digits whose precise publication provenance remains unresolved. Algebra checks using those digits are conditional and do not establish their source.
+  - The [executable phase specification](math/imrphenomd-phase.md) transcribes the 12 printed phase rows, Appendix B aligned-spin PN terms, three phase branches and two continuity joins from Paper II. The backend checks explicitly supply inherited extra fit digits, so their algebraic agreement does not establish those digits' provenance. The frontend's amplitude-peak time gauge is recorded as a separate implementation convention.
+  - The [composed polarization specification](math/imrphenomd-waveform.md) combines those unchanged slices with the independently audited SI/IAU conversions, the physical stationary-phase normalization of [Cutler and Flanagan, Eqs. (62)–(63)](https://arxiv.org/pdf/gr-qc/9402014v1), and explicit DiffGW phase/polarization conventions. Direct complex-strain and selected smooth-branch derivative checks against both frontends use a declared QNM pair and explicitly supplied inherited fit rows; they do not establish fit provenance or physical accuracy.
+  - The [full intrinsic composition](math/imrphenomd-intrinsic.md) supplies the QNM pair from the independent remnant expressions and declared numerical spline data. At fixed total mass, it checks selected full-chain mass-ratio and aligned-spin complex-strain derivatives against both frontends, including the moving remnant, QNM inputs, joins, and phase gauge. This now includes both signed high-spin Kerr spline branches and an interior-spin point on the active remnant cap, with guarded smooth-region scalar stencils. It also compares complete high-spin complex waveforms with an independently evaluated generated Kerr spline. Its conditional inherited-coefficient comparisons do not recover publication provenance for the extra digits or establish physical accuracy.
+  - The [executable remnant and QNM-input specification](math/imrphenomd-remnant-qnm.md) transcribes Husa et al. arXiv:1508.07250v2 Eqs. (22)–(24) for final spin, radiated energy and mass, and Eq. (17) for QNM mass scaling. The implementation retains additional inherited fit digits; one spin coefficient does not round to the paper's printed digit.
+  - An [independent four-term final-spin refit](math/imrphenomd-remnant-qnm.md#independent-final-spin-recalibration) uses the later, author-published 427-case NR table with pinned input and script hashes. Weight and fitting choices move the disputed coefficient substantially; this experiment does not reconstruct the original 106-case calibration or change the production coefficient.
   - The current QNM frequency and damping representation uses independently generated Kerr eigenvalues, rounded to six significant digits and interpolated with a natural cubic spline in `kerr_qnm_d_sampling_clean.py`; outside its compatibility interval, it uses the generated eigenvalue evaluator. Berti et al. (2006) provides background and the optional legacy fit representation.
 - **Verification Result**:
   The declared [catalog][frozen-catalog] and [holdout][frozen-holdout] cases passed the complex relative $L_2 \le 10^{-6}$ and mismatch $\le 10^{-8}$ gates. This result applies to those configurations.
@@ -101,6 +119,7 @@ batching depend on the selected model and numerical path.
     - **URL**: `https://journals.aps.org/prd/supplemental/10.1103/PhysRevD.102.064001/IMRPhenomXAS_Parameter_Space_Fits_Public_Release_Candidate.m`
     - **SHA256**: `94b9334c19f3a7909864891ea278ab9a411e4f33b7b7e17cc01d927056d9ac52`
     - **Access Status**: Freely downloadable public supplemental deposit.
+    - **Executable fit check**: The opt-in [XAS author-fit verifier](https://github.com/xangma/diffgw/blob/main/scripts/verify_xas_author_fits.py) checks the pinned file without redistributing it. Across nine mass-ratio/spin cases, 24 parameter surfaces and the two `(2,2)` QNM surfaces agree in value with both native frontends; selected parameter and QNM spin derivatives agree with independent complex-step derivatives. Two of these parameter surfaces are available for the fifth-order amplitude alternative but are not called by the quartic carrier. The intermediate-amplitude midpoint fit is an explicit carrier variant: the deposit uses `chiPNhat` and the native carrier uses `sTotR`, which the verifier checks separately. This establishes source-fit transcription on sampled inputs, not independent NR calibration or physical accuracy; see [the mathematical specification](math/imrphenomxas.md#author-fit-surface-cross-check).
   - **Reference Result**: The single [frozen catalog case][frozen-catalog] had maximum polarization complex relative $L_2$ error approximately $4.21 \times 10^{-14}$. The two [holdout cases][frozen-holdout] reached approximately $9.49 \times 10^{-9}$; these figures describe the recorded configurations, not a uniform accuracy bound.
 - **IMRPhenomXHM Native NR Calibration**:
   - Fits ringdown surfaces to SXS numerical-relativity data across $(\ell, m) \in \{(2,1), (3,3), (4,4), (3,2)\}$, providing smooth amplitude profiles and continuous phase matching.
@@ -112,13 +131,10 @@ batching depend on the selected model and numerical path.
   - Pürrer (2014), *Frequency domain reduced order models for gravitational waves from aligned-spin compact binaries*, Class. Quantum Grav. 31, 195010 ([DOI:10.1088/0264-9381/31/19/195010](https://doi.org/10.1088/0264-9381/31/19/195010))
   - Pürrer (2016), *Frequency domain reduced order model of aligned-spin effective-one-body waveforms with generic mass-ratios and spins*, Phys. Rev. D 93, 064041 ([DOI:10.1103/PhysRevD.93.064041](https://doi.org/10.1103/PhysRevD.93.064041))
   - Bohé et al. (2017), *An improved effective-one-body model of spinning, nonprecessing binary black holes for the era of gravitational-wave astrophysics with advanced detectors*, Phys. Rev. D 95, 044028 ([DOI:10.1103/PhysRevD.95.044028](https://doi.org/10.1103/PhysRevD.95.044028))
-- **Bundled Native Surrogate Prototype**:
-  - **Path**: `src/torchwave/data/seobnr_surrogate.pt`
-  - **SHA256**: `8316be966b297f474be810024a6add2d5e64559ee3c506302e8ea83372085414`
-  - **Generator**: `torchwave.approximants.eob.SEOBNR_ODE` (clean-room native PyTorch time-domain integrator)
-  - **Frequency Coordinate**: Dimensionless geometric $M f = G M f / c^3 \in [0.0002, 0.30]$ (256 nodes)
-  - **Architecture**: SVD basis projection with 12 amplitude basis vectors, 16 phase basis vectors, and degree-3 polynomial parameter mappings over $(\eta, \chi_1, \chi_2)$.
-  - **Scope**: This prototype is separate from the official-data wrapper. The LAL comparison below does not validate this bundled asset.
+- **Native development**: The unvalidated native surrogate and SEOBNR waveform
+  assemblers have been removed from the release package. They are retained on
+  `codex/native-seobnr-rom` for generator qualification before any new tables
+  are trained or promoted. The former `seobnrv5rom` alias is no longer accepted.
 - **Official ROM Wrapper**:
   - The canonical `SEOBNR_ROM` / `SEOBNRv4ROM` aliases use tensor reconstruction from the external official `SEOBNRv4ROM_v3.0.hdf5` data. The data are required for this path and are not bundled.
   - Registered in `torchwave.external_data` from Zenodo record 14999310 (SHA-256 `4ff5317967d757fcad9323a74b75f4f63894ed87f4b1852d46cbe47cde488b9c`); redistribution terms remain unresolved.
@@ -158,7 +174,7 @@ batching depend on the selected model and numerical path.
   - Two additional holdouts (`SXS:BBH:0030`, `0166`, with $q=3,6$) for the four modes: phase RMS $< 0.15$ rad and affine mismatch $< 0.010$. These tests do not impose the $(3,3)$ arrival-time gate on every mode.
   These are test thresholds, not a new measurement. The tests skip when their external data or archived manifest are unavailable. Complete waveform amplitude, inspiral and precession accuracy are outside these phase-only checks.
 
-### 2.11 Continuous NQC Spline Attachment (SEOBNR_ODE & TEOBResumS)
+### 2.11 Continuous NQC Spline Attachment (EOB components)
 - **Primary References**:
   - Bohé et al. (2017), *An improved effective-one-body model of spinning, nonprecessing binary black holes for the era of gravitational-wave astrophysics with advanced detectors*, Phys. Rev. D 95, 044028 ([DOI:10.1103/PhysRevD.95.044028](https://doi.org/10.1103/PhysRevD.95.044028))
   - Nagar et al. (2018), *Time-domain effective-one-body gravitational waveforms for coalescing compact binaries with nonprecessing spins, tides and self-spin effects*, Phys. Rev. D 98, 104052 ([DOI:10.1103/PhysRevD.98.104052](https://doi.org/10.1103/PhysRevD.98.104052))
@@ -208,8 +224,10 @@ batching depend on the selected model and numerical path.
 These counts describe the historical [catalog][frozen-catalog] and
 [holdout][frozen-holdout] artifacts. A passing row is scoped to its recorded
 parameters and modes. The complete strict suites did not pass; separate native
-component tests do not change those results. The [model manifest](model_manifest.json)
-retains case IDs and numerical errors.
+component tests do not change those results. The [current model manifest](model_manifest.json)
+retains case IDs and numerical errors for supported routes; the
+[retired snapshot](waveforms/research/retired-model-manifest.json) preserves
+the removed model entries.
 
 | Approximant | Catalog cases passed | Holdout cases passed | Scope |
 |---|---|---|---|
@@ -227,8 +245,8 @@ retains case IDs and numerical errors.
 | SEOBNR_ROM | 1/1 | — | Official external-data wrapper |
 | IMRPhenomXHM | 0/1 | 0/1 | Full-waveform reference gates not met; native phase tests have separate scope |
 | IMRPhenomXPHM | 0/1 | 0/1 | Full-waveform reference gates not met; native phase tests have separate scope |
-| SEOBNR_ODE | 0/1 | — | Experimental EOB waveform; continuous attachment is a component property |
-| TEOBResumS | 0/1 | — | Experimental EOB waveform; continuous attachment is a component property |
+| SEOBNR_ODE (retired prototype) | 0/1 | — | Historical result; model no longer shipped |
+| TEOBResumS (retired prototype) | 0/1 | — | Historical result; model no longer shipped |
 | TaylorF2_HM | 1/1 | — | Only $(2,2)$ compared; higher modes lack a full-waveform oracle in this suite |
 
 `IMRPhenomXPHM-SpinTaylor` and `IMRPhenomXPNR` are outside these frozen
@@ -241,7 +259,6 @@ catalog counts. Their optional comparison test gates are described in Sections
 
 | Asset | Path | SHA256 Checksum | Provenance / Origin | License |
 |---|---|---|---|---|
-| Native SEOBNR ROM Surrogate | `src/torchwave/data/seobnr_surrogate.pt` | `8316be966b297f474be810024a6add2d5e64559ee3c506302e8ea83372085414` | Clean-room trained via `torchwave.approximants.eob.SEOBNR_ODE` | MIT |
 | Independent Kerr QNM Splines | `src/torchwave/approximants/kerr_qnm_generated.py` | `82da71c19c50defeab4c32b6950141d845214909e9f52342e3f1cf3b46f08326` | Clean-room solved via `torchwave.qnm.generate` | MIT |
 | Independent London N=61 QNM Fits | `src/torchwave/approximants/imrphenom_hm_qnm_n61.py` | `350c958aef4e1554d5c2d6a6bc22f8b9bf3513c2a000f08dc3cb3de1cde05b06` | Clean-room solved via `torchwave.qnm.london` | MIT |
 | PNR Calibration Coefficients | `src/torchwave/approximants/pnr_coefficients.py` | `e15b3fef15512d48873fa1728ffb446068bb38245ac2378d0eb8cb20d4e27355` | Clean-room derived from Hamilton et al. (2021) | MIT |

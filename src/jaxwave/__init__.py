@@ -5,7 +5,7 @@ import jax
 # Automatically enable float64 in JAX for gravitational-wave phase precision
 jax.config.update("jax_enable_x64", True)
 
-from .waveforms import get_fd_waveform, get_td_waveform, WaveformGenerator
+from .waveforms import get_fd_waveform, get_td_waveform, WaveformGenerator, list_approximants
 from .approximants.memory import (
     MemoryWaveform,
     compute_memory_h20,
@@ -62,9 +62,7 @@ from .approximants.ppe import (
     modified_dispersion_phase_shift,
     PPE_PN_MAPPING,
 )
-from .approximants.precession_ode import SpinPrecessionODE
 from .approximants.rom import OfficialSEOBNRv4ROM, SEOBNR_ROM
-from .approximants.teobresums import TEOBResumS
 from . import detectors
 from .detectors import (
     Detector,
@@ -101,6 +99,7 @@ __all__ = [
     "get_fd_waveform",
     "get_td_waveform",
     "WaveformGenerator",
+    "list_approximants",
     "MemoryWaveform",
     "compute_memory_h20",
     "memory_polarizations",
@@ -146,10 +145,8 @@ __all__ = [
     "ppe_phase_shift",
     "modified_dispersion_phase_shift",
     "PPE_PN_MAPPING",
-    "SpinPrecessionODE",
     "OfficialSEOBNRv4ROM",
     "SEOBNR_ROM",
-    "TEOBResumS",
     "detectors",
     "Detector",
     "DetectorNetwork",
@@ -178,4 +175,3 @@ __all__ = [
     "compute_relative_binning_bins",
     "compute_relative_binning_summary",
 ]
-

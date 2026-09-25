@@ -36,7 +36,7 @@ class TaylorF2_Eccentric(nn.Module):
     """EccentricTaylorF2 Post-Newtonian Stationary Phase Approximation model.
 
     Implements full 3PN eccentric phase corrections from Moore et al. (2016)
-    Eqs. (1438)-(1484) / Eq. (4.17).
+    Eq. (6.26) of arXiv:1605.00304v2.
     """
 
     def __init__(self):
@@ -55,7 +55,7 @@ class TaylorF2_Eccentric(nn.Module):
         """Compute the eccentric phase correction under SPA up to 3PN order.
 
         Reference: Moore, Favata, Arun, Mishra (2016), Phys. Rev. D 93, 124061,
-        Eqs. (1438)-(1484) [arXiv:1605.00304].
+        Eq. (6.26) [arXiv:1605.00304v2].
 
         Delta Psi_ecc(f, f0) = - (2355 / 1462) * (3 / (128 * eta * v^5)) * e0^2 * (v0 / v)^(19/3)
                                * { 1 + [1PN] + [1.5PN] + [2PN] + [2.5PN] + [3PN] }
@@ -248,7 +248,7 @@ class TaylorF2_Eccentric(nn.Module):
     ) -> torch.Tensor:
         """Compute the leading-order Newtonian eccentric amplitude correction.
 
-        Reference: Moore et al. (2016) Eq. (4.18)
+        Project option; independent primary derivation pending (not Moore et al. Eq. (4.18)).
         A_ecc(f) = A_circ(f) * [ 1 - (743 / 9216) * e0^2 * (f / f0)^(-19/9) ]
         """
         for param in [e0, f0, f]:
@@ -419,9 +419,15 @@ class TaylorF2_Eccentric(nn.Module):
             f0_min = f_inf.min()
             f0_ref = torch.where(torch.isinf(f0_min), torch.as_tensor(20.0, device=device, dtype=dtype), f0_min)
 
-        # Baseline quasi-circular phase and amplitude from TaylorF2
-        f_ref_circ = f0_ref
+        # Eccentricity is defined at f0_ref; the waveform phase is anchored at
+        # f_ref when supplied. These frequencies need not be the same.
+        if f_ref is None:
+            f_ref_circ = f0_ref
+        else:
+            f_ref_t = as_tensor(f_ref, device=device, dtype=dtype)
+            f_ref_circ = torch.where(f_ref_t > 0.0, f_ref_t, f0_ref)
 
+        # Baseline quasi-circular phase and amplitude from TaylorF2
         psi_circ = TaylorF2.evaluate_phase(
             f=f,
             mass1=m1,

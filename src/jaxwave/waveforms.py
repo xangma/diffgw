@@ -38,21 +38,10 @@ from jaxwave.approximants.imrphenom_nsbh import IMRPhenomNSBH
 from jaxwave.approximants.kerr_ringdown import KerrRingdown, get_ringdown_waveform
 from jaxwave.approximants.imrphenom_xp import IMRPhenomXP
 from jaxwave.approximants.imrphenom_xphm import IMRPhenomXPHM
-from jaxwave.approximants.rom import OfficialSEOBNRv4ROM, SEOBNR_ROM
-from jaxwave.approximants.eob.waveform import SEOBNR_ODE
-from jaxwave.approximants.eob.published_waveform import (
-    SEOBNRv4Published,
-    SEOBNRv4PublishedNonspinning,
-)
-from jaxwave.approximants.teobresums import TEOBResumS
+from jaxwave.approximants.rom import OfficialSEOBNRv4ROM
 
 
 _APPROXIMANTS = {
-    "seobnr": SEOBNR_ODE,
-    "seobnrode": SEOBNR_ODE,
-    "seobnrv5": SEOBNR_ODE,
-    "seobnrv4published": SEOBNRv4Published,
-    "seobnrv4publishednonspinning": SEOBNRv4PublishedNonspinning,
     "imrphenomxp": IMRPhenomXP,
     "phenomxp": IMRPhenomXP,
     "xp": IMRPhenomXP,
@@ -93,11 +82,12 @@ _APPROXIMANTS = {
     "seobnrrom": OfficialSEOBNRv4ROM,
     "seobnrv4rom": OfficialSEOBNRv4ROM,
     "officialseobnrv4rom": OfficialSEOBNRv4ROM,
-    "seobnrv5rom": SEOBNR_ROM,
-    "teobresums": TEOBResumS,
-    "teobresum": TEOBResumS,
-    "teob": TEOBResumS,
 }
+
+
+def list_approximants() -> list[str]:
+    """Return canonical JAX model names; aliases remain valid in dispatch."""
+    return sorted({model.__name__ for model in _APPROXIMANTS.values()})
 
 _UNSET = object()
 
@@ -429,63 +419,6 @@ def _get_fd_waveform_raw(
             distance=distance, inclination=inclination, phic=phic, tc=tc,
             f_ref=(0.0 if f_ref is None else f_ref),
             flow=f_lower, fhigh=f_final,
-        )
-    elif key == "seobnrv5rom":
-        model = model_cls()
-        return model(
-            f=f,
-            mass1=mass1,
-            mass2=mass2,
-            chi1=s1z,
-            chi2=s2z,
-            distance=distance,
-            inclination=inclination,
-            phic=phic,
-            tc=tc,
-            f_ref=f_ref,
-            phasing_convention=phasing_convention,
-            reference_frame=reference_frame,
-            **model_kwargs,
-        )
-    elif key in (
-        "seobnr",
-        "seobnrode",
-        "seobnrv5",
-        "seobnrv4published",
-        "seobnrv4publishednonspinning",
-    ):
-        model = model_cls()
-        return model(
-            f=f,
-            f_lower=f_lower,
-            mass1=mass1,
-            mass2=mass2,
-            chi1=s1z,
-            chi2=s2z,
-            distance=distance,
-            inclination=inclination,
-            phic=phic,
-            tc=tc,
-            **model_kwargs,
-        )
-    elif key in ("teobresums", "teobresum", "teob"):
-        model = model_cls()
-        lam1 = lambda1 if lambda1 is not None else 0.0
-        lam2 = lambda2 if lambda2 is not None else 0.0
-        return model(
-            f=f,
-            mass1=mass1,
-            mass2=mass2,
-            chi1=s1z,
-            chi2=s2z,
-            lambda1=lam1,
-            lambda2=lam2,
-            distance=distance,
-            inclination=inclination,
-            phic=phic,
-            tc=tc,
-            f_lower=f_lower,
-            **model_kwargs,
         )
     else:
         raise NotImplementedError(f"Approximant {approximant} not yet wired.")
@@ -825,7 +758,7 @@ class WaveformGenerator:
 
         if self.use_jit:
             # Check if parameters match standard order for cached JIT execution
-            std_order = ("mass1", "mass2", "chi1", "chi2", "spin1z", "spin2z", "distance", "inclination", "phic", "tc", "lambda1", "lambda2")
+            std_order = ("mass1", "mass2", "chi1", "chi2", "spin1z", "spin2z", "distance", "inclination", "phic", "tc", "lambda1", "lambda2", "quad_monopole1", "quad_monopole2")
             if all(k in normalized_params for k in ("mass1", "mass2")):
                 order = tuple(k for k in std_order if k in normalized_params)
                 compiled_fn = self.get_compiled_fd_waveform(parameter_order=order)

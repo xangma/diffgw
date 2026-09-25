@@ -1,37 +1,14 @@
-import inspect
 
 import torch
 import pytest
 
 import torchwave.approximants.eob.adaptive_driver_clean as adaptive_driver
-from torchwave.approximants.eob.adaptive_driver_clean import (
-    AdaptiveIntegrationError,
-    AlignedSpinV4Event,
-    GSL_STATE_SCALED_CONTROLLER,
-    _apply_calibrated_nqc,
-    integrate_adaptive,
-    reconstruct_seobnrv4_22_adaptive,
-    resample_natural_cubic,
-    state_scaled_controller_adjustment,
-)
+from torchwave.approximants.eob.adaptive_driver_clean import AdaptiveIntegrationError, AlignedSpinV4Event, GSL_STATE_SCALED_CONTROLLER, _apply_calibrated_nqc, integrate_adaptive, resample_natural_cubic, state_scaled_controller_adjustment
 from torchwave.approximants.eob.nqc import nqc_22_factor
 from torchwave.approximants.eob.numerical_attachment import natural_cubic_spline
 
 
 DTYPE = torch.float64
-
-
-def test_adaptive_compatibility_defaults_are_explicitly_reviewed_choices():
-    signature = inspect.signature(reconstruct_seobnrv4_22_adaptive)
-    assert signature.parameters["spin_truncation"].default == "generic-leading-ell8"
-    assert signature.parameters["final_spin_fit_order"].default == (3, 4)
-    omega = torch.tensor(0.05, dtype=DTYPE)
-    with pytest.raises(ValueError, match="spin_truncation"):
-        reconstruct_seobnrv4_22_adaptive(omega, 30.0, 30.0,
-                                          spin_truncation="tabulated")
-    with pytest.raises(ValueError, match="final_spin_fit_order"):
-        reconstruct_seobnrv4_22_adaptive(omega, 30.0, 30.0,
-                                          final_spin_fit_order=(1, 2))
 
 
 def test_rkf45_keeps_accepted_nodes_separate_from_uniform_output():

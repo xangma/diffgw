@@ -185,8 +185,23 @@ def test_whittle_likelihood_parity():
 
     # 2. Standard Whittle likelihood at perturbed template
     ln_l_test_t = lik_t({"H1": hp_test_t, "L1": hp_test_t})
-    ln_l_test_j = lik_j({"H1": hp_test_j, "L1": hp_test_j})
-    np.testing.assert_allclose(ln_l_test_t.numpy(), np.asarray(ln_l_test_j), rtol=5e-11)
+    # The native waveforms differ at about 1e-12 relative L2 on current
+    # backends. Subtraction into a small residual amplifies that difference;
+    # compare the likelihood algorithms on identical strains and PSD instead.
+    for torch_strain, jax_strain in ((hp_inj_t, hp_inj_j), (hp_test_t, hp_test_j)):
+        reference = np.asarray(jax_strain)
+        relative_l2 = np.linalg.norm(torch_strain.numpy() - reference) / np.linalg.norm(reference)
+        assert relative_l2 < 1e-12
+    shared_data_j = jnp.asarray(hp_inj_t.numpy())
+    shared_template_j = jnp.asarray(hp_test_t.numpy())
+    shared_psd_j = jnp.asarray(psd_t.numpy())
+    lik_j_shared = jax_inf.WhittleLikelihood(
+        data={"H1": shared_data_j, "L1": shared_data_j},
+        psds={"H1": shared_psd_j, "L1": shared_psd_j},
+        df=df, frequencies=f_j,
+    )
+    ln_l_shared_j = lik_j_shared({"H1": shared_template_j, "L1": shared_template_j})
+    np.testing.assert_allclose(ln_l_test_t.numpy(), np.asarray(ln_l_shared_j), rtol=5e-11)
 
     # 3. Phase-marginalized log-likelihood
     pm_t = lik_t.phase_marginalized_log_likelihood({"H1": hp_test_t, "L1": hp_test_t})

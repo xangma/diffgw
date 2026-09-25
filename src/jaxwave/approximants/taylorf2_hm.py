@@ -5,7 +5,7 @@ Clean-room implementation based on published literature:
 - Arun, Buonanno, Faye, Ochsner (2009), Phys. Rev. D 79, 104023 (arXiv:0810.5336)
 - Blanchet (2014), Living Rev. Relativity 17, 2 (arXiv:1310.1528)
 - García-Quirós et al. (2020), Phys. Rev. D 102, 064002 (arXiv:2001.10914)
-- Mezzasoma & Yunes (2022), Phys. Rev. D 106, 024026 (arXiv:2203.08939)
+- Mezzasoma & Yunes (2022), Phys. Rev. D 106, 024026 (arXiv:2203.15934)
 - Bardeen, Press, Teukolsky (1972), Astrophys. J. 178, 347
 """
 
@@ -118,6 +118,7 @@ class TaylorF2_HM:
     (4, 2), (4, 3), (4, 4)}.
     """
 
+    definition_id = "TaylorF2_HM"
     DEFAULT_MODES = ((2, 2), (2, 1), (3, 1), (3, 2), (3, 3), (4, 2), (4, 3), (4, 4))
 
     def __init__(self, modes: Optional[Sequence[Tuple[int, int]]] = None):

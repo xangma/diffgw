@@ -4,7 +4,6 @@ Validates exact mathematical parity, @jax.jit compilation, jax.vmap, and jax.gra
 1. ContinuousWave (characteristic amplitude, Roemer delay, Doppler phase, quadrupolar amplitudes and basis, full strain)
 2. EMRIKludge (Kerr geodesic frequencies, Peters-Mathews radiation reaction, orbital trajectory, multipolar polarizations, LISA TDI projection)
 3. ParameterizedPostEinstein (ppE phase shift, modified dispersion phase shift, wrapper across TaylorF2, IMRPhenomD, IMRPhenomXAS)
-4. SpinPrecessionODE (precession frequency vectors, state derivatives, RK4 step, trajectory integration, Euler angles, frequency grid angles)
 """
 
 import math
@@ -21,7 +20,6 @@ jax.config.update("jax_enable_x64", True)
 import torchwave.approximants.continuous_wave as t_cw
 import torchwave.approximants.emri_kludge as t_emri
 import torchwave.approximants.ppe as t_ppe
-import torchwave.approximants.precession_ode as t_ode
 from torchwave.approximants.taylorf2 import TaylorF2 as TorchTaylorF2
 from torchwave.approximants.imrphenomd import IMRPhenomD as TorchIMRPhenomD
 from torchwave.approximants.imrphenom_xas import IMRPhenomXAS as TorchIMRPhenomXAS
@@ -30,7 +28,6 @@ from torchwave.approximants.imrphenom_xas import IMRPhenomXAS as TorchIMRPhenomX
 import jaxwave.approximants.continuous_wave as j_cw
 import jaxwave.approximants.emri_kludge as j_emri
 import jaxwave.approximants.ppe as j_ppe
-import jaxwave.approximants.precession_ode as j_ode
 from jaxwave.approximants.taylorf2 import TaylorF2 as JaxTaylorF2
 from jaxwave.approximants.imrphenomd import IMRPhenomD as JaxIMRPhenomD
 from jaxwave.approximants.imrphenom_xas import IMRPhenomXAS as JaxIMRPhenomXAS
@@ -364,164 +361,3 @@ def test_ppe_jit_vmap_grad():
     grad_m1, grad_beta = jax.grad(loss_ppe, argnums=(0, 1))(30.0, 0.05)
     assert jnp.isfinite(grad_m1) and abs(float(grad_m1)) > 0.0
     assert jnp.isfinite(grad_beta) and abs(float(grad_beta)) > 0.0
-
-
-# ==============================================================================
-# 4. SpinPrecessionODE Parity Tests
-# ==============================================================================
-
-def test_spin_precession_vectors_and_derivatives_parity():
-    """Verify spin precession frequency vectors and time derivatives parity."""
-    s1 = np.array([0.2, -0.1, 0.3])
-    s2 = np.array([-0.1, 0.2, -0.2])
-    l_vec = np.array([0.0, 0.0, 1.2])
-    m1, m2 = 35.0, 25.0
-
-    # Vectors
-    om1_t, om2_t = t_ode.SpinPrecessionODE.precession_vectors(
-        torch.tensor(s1, dtype=torch.float64), torch.tensor(s2, dtype=torch.float64),
-        torch.tensor(l_vec, dtype=torch.float64), torch.tensor(m1, dtype=torch.float64), torch.tensor(m2, dtype=torch.float64),
-    )
-    om1_j, om2_j = j_ode.SpinPrecessionODE.precession_vectors(
-        jnp.array(s1), jnp.array(s2), jnp.array(l_vec), m1, m2
-    )
-    np.testing.assert_allclose(om1_t.numpy(), np.asarray(om1_j), rtol=1e-14, atol=1e-15)
-    np.testing.assert_allclose(om2_t.numpy(), np.asarray(om2_j), rtol=1e-14, atol=1e-15)
-
-    # Derivatives with and without radiation reaction
-    for rr in [True, False]:
-        ds1_t, ds2_t, dl_t = t_ode.SpinPrecessionODE.state_derivatives(
-            torch.tensor(s1, dtype=torch.float64), torch.tensor(s2, dtype=torch.float64),
-            torch.tensor(l_vec, dtype=torch.float64),
-            torch.tensor(m1, dtype=torch.float64), torch.tensor(m2, dtype=torch.float64),
-            radiation_reaction=rr,
-        )
-        ds1_j, ds2_j, dl_j = j_ode.SpinPrecessionODE.state_derivatives(
-            jnp.array(s1), jnp.array(s2), jnp.array(l_vec),
-            m1, m2, radiation_reaction=rr,
-        )
-        np.testing.assert_allclose(ds1_t.numpy(), np.asarray(ds1_j), rtol=1e-14, atol=1e-15)
-        np.testing.assert_allclose(ds2_t.numpy(), np.asarray(ds2_j), rtol=1e-14, atol=1e-15)
-        np.testing.assert_allclose(dl_t.numpy(), np.asarray(dl_j), rtol=1e-14, atol=1e-15)
-
-
-def test_spin_precession_rk4_step_and_integration_parity():
-    """Verify single RK4 step and multi-step time integration parity and |J| conservation."""
-    m1, m2 = 36.0, 24.0
-    total_m = m1 + m2
-    eta = (m1 * m2) / (total_m * total_m)
-
-    chi1 = np.array([0.3, -0.2, 0.4])
-    chi2 = np.array([-0.1, 0.4, -0.3])
-    s1_0 = (m1 / total_m) ** 2 * chi1
-    s2_0 = (m2 / total_m) ** 2 * chi2
-
-    r_val = 18.0
-    v_val = 1.0 / math.sqrt(r_val)
-    l_0 = (eta / v_val) * np.array([0.0, 0.0, 1.0])
-
-    # Single RK4 step
-    dt = 1.5
-    s1_next_t, s2_next_t, l_next_t = t_ode.SpinPrecessionODE.rk4_step(
-        torch.tensor(s1_0, dtype=torch.float64), torch.tensor(s2_0, dtype=torch.float64),
-        torch.tensor(l_0, dtype=torch.float64),
-        dt, torch.tensor(m1, dtype=torch.float64), torch.tensor(m2, dtype=torch.float64),
-        radiation_reaction=False,
-    )
-    s1_next_j, s2_next_j, l_next_j = j_ode.SpinPrecessionODE.rk4_step(
-        jnp.array(s1_0), jnp.array(s2_0), jnp.array(l_0),
-        dt, m1, m2, radiation_reaction=False,
-    )
-    np.testing.assert_allclose(s1_next_t.numpy(), np.asarray(s1_next_j), rtol=1e-14, atol=1e-15)
-    np.testing.assert_allclose(s2_next_t.numpy(), np.asarray(s2_next_j), rtol=1e-14, atol=1e-15)
-    np.testing.assert_allclose(l_next_t.numpy(), np.asarray(l_next_j), rtol=1e-14, atol=1e-15)
-
-    # Multi-step integration over 500 steps
-    sol_t = t_ode.SpinPrecessionODE.integrate_time(
-        torch.tensor(s1_0, dtype=torch.float64), torch.tensor(s2_0, dtype=torch.float64),
-        torch.tensor(l_0, dtype=torch.float64),
-        torch.tensor(m1, dtype=torch.float64), torch.tensor(m2, dtype=torch.float64),
-        total_time=800.0, n_steps=500, radiation_reaction=False,
-    )
-    sol_j = j_ode.SpinPrecessionODE.integrate_time(
-        jnp.array(s1_0), jnp.array(s2_0), jnp.array(l_0),
-        m1, m2, total_time=800.0, n_steps=500, radiation_reaction=False,
-    )
-
-    for key in ("times", "s1", "s2", "l", "j"):
-        np.testing.assert_allclose(sol_t[key].numpy(), np.asarray(sol_j[key]), rtol=1e-7, atol=1e-8)
-
-    # Verify conservative limit |J| conservation to < 1e-6
-    j0_mag = np.linalg.norm(s1_0 + s2_0 + l_0)
-    j_mags = jnp.linalg.norm(sol_j["j"], axis=-1)
-    max_rel_err = float(jnp.max(jnp.abs(j_mags - j0_mag) / j0_mag))
-    assert max_rel_err < 1e-6, f"Max relative error in |J| {max_rel_err:.2e} exceeds 1e-6"
-
-
-def test_extract_euler_angles_parity():
-    """Verify extraction of Euler precession angles (alpha, beta, epsilon) parity."""
-    alpha_np = np.linspace(-2.0, 5.0, 80)
-    beta_val = 0.37
-    l_np = np.stack(
-        (np.sin(beta_val) * np.cos(alpha_np), np.sin(beta_val) * np.sin(alpha_np), np.full_like(alpha_np, np.cos(beta_val))),
-        axis=-1,
-    )
-    j0_np = np.array([0.1, 0.2, 1.0])
-
-    a_t, b_t, e_t = t_ode.SpinPrecessionODE.extract_euler_angles(torch.from_numpy(l_np), torch.from_numpy(j0_np))
-    a_j, b_j, e_j = j_ode.SpinPrecessionODE.extract_euler_angles(jnp.array(l_np), jnp.array(j0_np))
-
-    np.testing.assert_allclose(a_t.numpy(), np.asarray(a_j), rtol=1e-14, atol=1e-15)
-    np.testing.assert_allclose(b_t.numpy(), np.asarray(b_j), rtol=1e-14, atol=1e-15)
-    np.testing.assert_allclose(e_t.numpy(), np.asarray(e_j), rtol=1e-13, atol=1e-14)
-
-
-def test_compute_angles_frequency_parity():
-    """Verify frequency grid ODE angle evolution parity."""
-    f_np = np.array([25.0, 40.0, 55.0, 80.0])
-    params = dict(
-        mass1=40.0, mass2=20.0,
-        spin1x=0.3, spin1y=0.2, spin1z=0.1,
-        spin2x=-0.2, spin2y=0.1, spin2z=-0.1,
-        f_ref=40.0,
-    )
-
-    a_t, b_t, e_t = t_ode.SpinPrecessionODE.compute_angles_frequency(torch.from_numpy(f_np), **params)
-    a_j, b_j, e_j = j_ode.SpinPrecessionODE.compute_angles_frequency(jnp.array(f_np), **params)
-
-    np.testing.assert_allclose(a_t.numpy(), np.asarray(a_j), rtol=1e-13, atol=1e-14)
-    np.testing.assert_allclose(b_t.numpy(), np.asarray(b_j), rtol=1e-13, atol=1e-14)
-    np.testing.assert_allclose(e_t.numpy(), np.asarray(e_j), rtol=1e-13, atol=1e-14)
-
-
-def test_spin_precession_ode_jit_vmap_grad():
-    """Verify SpinPrecessionODE under JAX JIT compilation, vmap, and gradient autodiff."""
-    f_grid = jnp.array([25.0, 40.0, 55.0, 80.0])
-    params = dict(mass1=40.0, mass2=20.0, spin1y=0.2, spin1z=0.1, spin2x=-0.2, spin2y=0.1, spin2z=-0.1, f_ref=40.0)
-
-    # JIT
-    jit_angles = jax.jit(j_ode.SpinPrecessionODE.compute_angles_frequency, static_argnames=["max_steps"])
-    a_jit, b_jit, e_jit = jit_angles(f_grid, spin1x=0.3, max_steps=100, **params)
-    a_eager, b_eager, e_eager = j_ode.SpinPrecessionODE.compute_angles_frequency(f_grid, spin1x=0.3, max_steps=100, **params)
-    np.testing.assert_allclose(np.asarray(a_jit), np.asarray(a_eager), rtol=1e-14, atol=1e-15)
-    np.testing.assert_allclose(np.asarray(b_jit), np.asarray(b_eager), rtol=1e-14, atol=1e-15)
-    np.testing.assert_allclose(np.asarray(e_jit), np.asarray(e_eager), rtol=1e-14, atol=1e-15)
-
-    # VMAP over frequency
-    vmap_angles = jax.vmap(
-        lambda f: j_ode.SpinPrecessionODE.compute_angles_frequency(jnp.array([f]), spin1x=0.3, max_steps=100, **params)[0][0]
-    )
-    alphas_vmap = vmap_angles(f_grid)
-    np.testing.assert_allclose(np.asarray(alphas_vmap), np.asarray(a_jit), rtol=1e-14, atol=1e-15)
-
-    # GRAD autodiff with respect to spin1x and mass1
-    def loss_ode(s1x, m1):
-        a, b, e = j_ode.SpinPrecessionODE.compute_angles_frequency(
-            f_grid, mass1=m1, mass2=20.0, spin1x=s1x, spin1y=0.2, spin1z=0.1,
-            spin2x=-0.2, spin2y=0.1, spin2z=-0.1, f_ref=40.0, max_steps=100,
-        )
-        return jnp.sum(a ** 2 + b ** 2 + e ** 2)
-
-    grad_s1x, grad_m1 = jax.grad(loss_ode, argnums=(0, 1))(0.3, 40.0)
-    assert jnp.isfinite(grad_s1x) and abs(float(grad_s1x)) > 0.0
-    assert jnp.isfinite(grad_m1) and abs(float(grad_m1)) > 0.0

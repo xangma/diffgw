@@ -1,5 +1,3 @@
-import os
-from pathlib import Path
 import pytest
 import torch
 from torchwave.constants import MSUN_SEC
@@ -107,10 +105,8 @@ def test_physical_polarization_scaling_and_projection():
     assert torch.isfinite(hp).all() and torch.isfinite(hx).all()
 
 
-def test_external_official_reconstruction_when_available():
-    path = os.environ.get("TORCHWAVE_EXTERNAL_ROM")
-    if not path or not Path(path).is_file():
-        pytest.skip("set TORCHWAVE_EXTERNAL_ROM to an external published ROM file")
+def test_external_official_reconstruction_when_available(official_rom_path):
+    path = official_rom_path
     from torchwave.approximants.rom.official import inspect_official_rom
     schema = inspect_official_rom(path, verify_hash=True)
     for item in schema.groups:

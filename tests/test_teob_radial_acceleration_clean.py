@@ -157,7 +157,7 @@ def test_invalid_domain_and_spin_fail_explicitly():
         radial_acceleration_approximations(ham, torch.tensor(float("nan"), dtype=DTYPE),
                                            torch.tensor(0.0, dtype=DTYPE),
                                            torch.tensor(3.4, dtype=DTYPE))
-    with pytest.raises(NotImplementedError, match="zero-spin"):
+    with pytest.raises(ValueError, match="nonspinning vacuum"):
         radial_acceleration_approximations(_ham(chi1=0.1), torch.tensor(8.0, dtype=DTYPE),
                                            torch.tensor(0.0, dtype=DTYPE),
                                            torch.tensor(3.4, dtype=DTYPE))

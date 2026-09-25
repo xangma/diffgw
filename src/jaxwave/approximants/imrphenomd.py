@@ -23,6 +23,7 @@ from diffgw_core.fits import (
     ERAD_S_DENOMINATOR,
 )
 from diffgw_core.qnm_data import KNOT_SPINS, ROUNDED_CYCLIC_ORDINATES
+from jaxwave.approximants.kerr_qnm_interp import _evaluate_kerr_qnm_220_at_spin
 from jaxwave.conversions import (
     as_array,
     component_masses_to_eta,
@@ -53,7 +54,7 @@ def _compute_natural_cubic_coeffs(x_knots, y_knots):
         ]
         # Thomas algorithm
         for i in range(1, len(diagonal)):
-            factor = lower[i - 1] / diagonal[i - 1]
+            factor = lower[i] / diagonal[i - 1]
             diagonal[i] -= factor * upper[i - 1]
             rhs[i] -= factor * rhs[i - 1]
         m = [0.0] * len(diagonal)
@@ -90,7 +91,7 @@ _QNM_COEFFS = jnp.array(_compute_natural_cubic_coeffs(KNOT_SPINS, ROUNDED_CYCLIC
 
 
 def evaluate_d_qnm_220(final_spin: jnp.ndarray) -> Tuple[jnp.ndarray, jnp.ndarray]:
-    """Evaluate Kerr (2,2,0) QNM cyclic frequencies (M f_RD, M f_damp) using cubic spline in JAX."""
+    """Evaluate cyclic 220 QNMs with the D rounded/interior and generated/endpoint policy."""
     spin = jnp.asarray(final_spin, dtype=jnp.float64)
     interval = jnp.clip(jnp.searchsorted(_QNM_KNOTS, spin, side="right") - 1, 0, len(_QNM_KNOTS) - 2)
     dx = spin - _QNM_KNOTS[interval]
@@ -98,11 +99,20 @@ def evaluate_d_qnm_220(final_spin: jnp.ndarray) -> Tuple[jnp.ndarray, jnp.ndarra
     val = selected[..., 3, :] * jnp.expand_dims(dx, -1) + selected[..., 2, :]
     val = val * jnp.expand_dims(dx, -1) + selected[..., 1, :]
     val = val * jnp.expand_dims(dx, -1) + selected[..., 0, :]
-    return val[..., 0], val[..., 1]
+    compatibility = jnp.abs(spin) <= 0.994
+    # The generated splines are defined through |a|=.99999; the remnant fit
+    # itself is capped at |a|=.999.  Clip before evaluating both JAX branches.
+    generated_spin = jnp.clip(spin, -0.99999, 0.99999)
+    generated = _evaluate_kerr_qnm_220_at_spin(generated_spin)
+    scale = 1.0 / (2.0 * PI)
+    return tuple(jnp.where(compatibility, rounded, value * scale)
+                 for rounded, value in zip((val[..., 0], val[..., 1]), generated))
 
 
 class IMRPhenomD:
     """IMRPhenomD Frequency-Domain Aligned-Spin Waveform Model in JAX."""
+
+    definition_id = "IMRPhenomD"
 
     @staticmethod
     def amplitude_peak_frequency(f_rd, f_damp, gamma2, gamma3):
@@ -650,6 +660,8 @@ class IMRPhenomD:
             phasing_convention if phasing_convention is not None else ("reference_frequency" if f_ref is not None else "coalescence")
         )
         conv = conv.lower()
+        if conv not in ("coalescence", "reference_frequency", "reffreq", "ref"):
+            raise ValueError(f"unsupported IMRPhenomD phasing convention: {conv!r}")
 
         if conv in ("reference_frequency", "reffreq", "ref"):
             ref_f = f_ref if f_ref is not None else (f_eval.reshape(-1)[0] if f_eval.size > 0 else 20.0)

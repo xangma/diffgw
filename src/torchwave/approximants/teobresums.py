@@ -1,15 +1,10 @@
-"""Prototype tidal extension of the TEOBResumS EOB Hamiltonian.
+"""Published nonspinning TEOB point-mass and numerical components.
 
-The point-mass metric and nonspinning tortoise kinetic terms follow Damour
-and Nagar, arXiv:0704.3550v2 Eqs. (2)-(11). Tides enter A additively, as in
-Nagar et al., PRD 98, 104052 (2018), arXiv:1806.01772v2 Eq. (23).
-
-The inherited tidal amplification, default quadrupole coefficients,
-merger-frequency heuristic and waveform taper are prototypes.  The aligned
-spin centrifugal-radius map follows Nagar et al., arXiv:1806.01772v2,
-Eqs. (23)--(25).
-They have not been established as the published calibrated TEOBResumS model.
-The historical class names are retained for API compatibility.
+The orbital potential follows Nagar et al., arXiv:1506.08457v2 Eqs. (1)--(3).
+The tortoise kinetic terms follow Damour--Nagar, arXiv:0704.3550v2 Eqs. (2)--(11).
+The standalone centrifugal-radius map is Nagar et al., arXiv:1806.01772v2
+Eqs. (24)--(25), with explicit quadrupole coefficients (black-hole default 1).
+No complete TEOBResumS waveform, heuristic tides or spin dynamics are exposed.
 """
 
 from typing import Optional, Tuple, Union
@@ -145,24 +140,16 @@ from torchwave.conversions import (
     component_masses_to_eta,
     component_masses_to_delta,
 )
-from torchwave.approximants.eob.radiation_reaction import (
-    EOBRadiationReaction,
-    FactorizedRadiationReaction,
-)
-from torchwave.approximants.eob.hamiltonian import EOBHamiltonian
+from torchwave.approximants.eob.hamiltonian import _HamiltonianBase
 from torchwave.approximants.eob.initial_conditions import find_quasicircular_initial_conditions
 from torchwave.approximants.eob.waveform import _interp1d
 from torchwave.approximants.eob.teob_radiation_clean import TEOBRadiationClean
 
 
-class TEOBResumSRadiationReaction(EOBRadiationReaction):
-    """TEOBResumS quasi-circular radiation-reaction prescription.
+class TEOBResumSRadiationReaction:
+    """Clean nonspinning vacuum mode-sum torque, with zero radial force.
 
-    The published TEOBResumS equations set the radial force to zero and put
-    the dissipative flux only in ``d p_phi / d t`` (Nagar et al.,
-    arXiv:1806.01772v2, Eqs. (dprdt) and the paragraph immediately below).
-    The generic EOB prototype retains a commonly used ``p_r/p_phi`` radial
-    force, so TEOBResumS uses this small model-specific specialization.
+    Requires a supported Hamiltonian and the complete current orbital state.
     """
 
     def __init__(
@@ -173,15 +160,12 @@ class TEOBResumSRadiationReaction(EOBRadiationReaction):
         *,
         include_horizon_absorption: bool = True,
     ):
-        super().__init__(nu, chi1, chi2)
+        if bool(torch.any(chi1 != 0)) or bool(torch.any(chi2 != 0)):
+            raise ValueError("TEOB radiation supports only nonspinning vacuum parameters.")
+        self.nu, self.chi1, self.chi2 = nu, chi1, chi2
         if not isinstance(include_horizon_absorption, bool):
             raise TypeError("include_horizon_absorption must be a bool")
         self.include_horizon_absorption = include_horizon_absorption
-        # Nagar et al. 1806.01772, Sec. II: F_phi is built from the
-        # factorized multipolar waveform.  The clean component owns the
-        # bounded nonspinning vacuum route; the existing prototype remains
-        # the fallback for spin/tidal extensions.
-        self._factorized = FactorizedRadiationReaction("din2009_nonspinning")
         self._clean_radiation = TEOBRadiationClean(8, residual_phase="zero-unpublished")
 
     @staticmethod
@@ -244,170 +228,31 @@ class TEOBResumSRadiationReaction(EOBRadiationReaction):
             torque = -flux / nu
             # TEOBResumS sets the radial dissipative force to zero.
             return torch.zeros_like(torque), torque
-        if r is not None and hamiltonian is not None:
-            # Keep the pre-existing factorized TEOB path for zero-spin
-            # tidal systems.  FactorizedModes has no spin model on this
-            # object, so a spinning caller continues through the generic
-            # prototype below instead of silently receiving a nonspinning
-            # source prescription.
-            if (self._is_zero_tensor(getattr(hamiltonian, "chi1", None))
-                    and self._is_zero_tensor(getattr(hamiltonian, "chi2", None))):
-                flux = self._factorized.energy_flux(
-                    omega, pr_star, pphi, r=r, hamiltonian=hamiltonian,
-                )
-                nu = hamiltonian.nu
-                if omega.dim() > nu.dim():
-                    nu = nu.unsqueeze(-1)
-                safe_omega = torch.clamp(torch.abs(omega), min=1e-8)
-                f_phi = -flux / (nu * safe_omega)
-                return torch.zeros_like(f_phi), f_phi
-
-        # Calls without the state context retain the generic TEOB fallback
-        # contract (azimuthal force only) used by initial legacy callers.
-        _, f_phi = super().radiation_reaction_forces(
-            omega, pr_star, pphi, r=r, hamiltonian=hamiltonian)
-        return torch.zeros_like(f_phi), f_phi
+        raise ValueError("TEOB radiation requires r and a nonspinning vacuum Hamiltonian; prototype fallbacks are unavailable.")
 
 
-class TEOBResumSHamiltonian(EOBHamiltonian):
-    """Prototype tidal EOB Hamiltonian with inherited self-spin terms.
+class TEOBResumSHamiltonian(_HamiltonianBase):
+    """Nonspinning vacuum Hamiltonian with the published TEOB orbital potential."""
 
-    Implements:
-        A(u) = A_0(u) + A_tidal(u)
-        A_tidal(u) = - sum_{i=1}^2 kappa_2^(i) u^6 hat{A}_2^(i)(u) - sum_{i=1}^2 kappa_3^(i) u^8 hat{A}_3^(i)(u)
-    with the inherited heuristic tidal function:
-        hat{A}_2(u) = 1 + 3*u / (1 - r_LR * u)
-    This is not the full calibrated TEOBResumS conservative model.
-    """
+    def __init__(self, nu, chi1=0.0, chi2=0.0, lambda1=0.0, lambda2=0.0,
+                 lambda1_oct=None, lambda2_oct=None, cq1=None, cq2=None,
+                 delta=None, r_lr=3.0):
+        nu = torch.as_tensor(nu)
+        values = [torch.as_tensor(value, dtype=nu.dtype, device=nu.device)
+                  for value in (chi1, chi2, lambda1, lambda2)]
+        for value in (*values, lambda1_oct, lambda2_oct):
+            if value is not None and bool(torch.any(torch.as_tensor(value) != 0)):
+                raise ValueError("TEOB Hamiltonian supports only nonspinning vacuum parameters; spin and tidal prototypes are unavailable.")
+        nu, chi1, chi2, lambda1, lambda2 = torch.broadcast_tensors(nu, *values)
+        if r_lr != 3.0 or cq1 is not None or cq2 is not None:
+            raise ValueError("TEOB Hamiltonian supports only nonspinning vacuum parameters; tidal and quadrupole options are unavailable.")
+        self.nu, self.chi1, self.chi2 = nu, chi1, chi2
+        self.lambda1, self.lambda2 = lambda1, lambda2
+        self.delta = torch.sqrt(torch.clamp(1.0 - 4.0 * nu, min=0.0)) if delta is None else delta
+        self.x1 = self.m1 = 0.5 * (1.0 + self.delta)
+        self.x2 = self.m2 = 0.5 * (1.0 - self.delta)
+        self.kappa3_1 = self.kappa3_2 = torch.zeros_like(nu)
 
-    def __init__(
-        self,
-        nu: torch.Tensor,
-        chi1: torch.Tensor,
-        chi2: torch.Tensor,
-        lambda1: torch.Tensor,
-        lambda2: torch.Tensor,
-        lambda1_oct: Optional[torch.Tensor] = None,
-        lambda2_oct: Optional[torch.Tensor] = None,
-        cq1: Optional[torch.Tensor] = None,
-        cq2: Optional[torch.Tensor] = None,
-        delta: Optional[torch.Tensor] = None,
-        r_lr: float = 3.0,
-    ):
-        """Initialize TEOBResumS parameters.
-
-        Args:
-            nu: Symmetric mass ratio eta = m1*m2/(m1+m2)^2, shape (B,) or ()
-            chi1, chi2: Aligned dimensionless spins, shape (B,) or ()
-            lambda1, lambda2: Dimensionless quadrupolar tidal deformabilities (Lambda = (2/3) k_2 (R/m)^5)
-            lambda1_oct, lambda2_oct: Optional octupolar tidal deformabilities
-            cq1, cq2: Spin-induced quadrupole moment coefficients (C_Q = 1 for BH, C_Q ~ 2-10 for NS)
-            delta: Mass difference parameter (m1 - m2)/M
-            r_lr: Light ring radius of background potential (default: 3.0 for Schwarzschild)
-        """
-        # Every intrinsic parameter uses the same batch shape, including a
-        # batch introduced only by tides or a supplied quadrupole coefficient.
-        optional = {name: value for name, value in (
-            ("lambda1_oct", lambda1_oct), ("lambda2_oct", lambda2_oct),
-            ("cq1", cq1), ("cq2", cq2), ("delta", delta),
-        ) if value is not None}
-        parameters = torch.broadcast_tensors(nu, chi1, chi2, lambda1, lambda2,
-                                             *optional.values())
-        nu, chi1, chi2, lambda1, lambda2 = parameters[:5]
-        optional = dict(zip(optional, parameters[5:]))
-        lambda1_oct, lambda2_oct = optional.get("lambda1_oct"), optional.get("lambda2_oct")
-        cq1, cq2, delta = optional.get("cq1"), optional.get("cq2"), optional.get("delta")
-        if delta is None:
-            delta = torch.sqrt(torch.clamp(1.0 - 4.0 * nu, min=0.0))
-        self.nu = nu
-        self.chi1 = chi1
-        self.chi2 = chi2
-        self.delta = delta
-        self.lambda1 = lambda1
-        self.lambda2 = lambda2
-        self.r_lr = r_lr
-
-        # Mass fractions: X_1 = m1/M, X_2 = m2/M (X1 + X2 = 1, X1*X2 = nu)
-        self.x1 = 0.5 * (1.0 + delta)
-        self.x2 = 0.5 * (1.0 - delta)
-        # FactorizedModes uses normalized component masses X_1 and X_2 under
-        # these public aliases; M=1 in the dimensionless EOB dynamics.
-        self.m1 = self.x1
-        self.m2 = self.x2
-
-        # Spin variables
-        self.a1 = chi1 * self.x1
-        self.a2 = chi2 * self.x2
-        self.a_plus = self.a1 + self.a2
-        self.a_minus = self.a1 - self.a2
-
-        # Quadrupolar tidal coupling constants: kappa_2^(1) = 3 * Lambda1 * X1^4 * X2
-        # Damour & Nagar (2010) Eq. (25)-(26), Bernuzzi et al. (2015) Eq. (2)
-        self.kappa2_1 = 3.0 * self.lambda1 * (self.x1 ** 4) * self.x2
-        self.kappa2_2 = 3.0 * self.lambda2 * (self.x2 ** 4) * self.x1
-        self.kappa2_tot = self.kappa2_1 + self.kappa2_2
-
-        # Octupolar tidal coupling constants: kappa_3^(1) = (15/2) * Lambda3 * X1^6 * X2
-        if lambda1_oct is not None:
-            self.kappa3_1 = 7.5 * lambda1_oct * (self.x1 ** 6) * self.x2
-        else:
-            self.kappa3_1 = torch.zeros_like(self.kappa2_1)
-
-        if lambda2_oct is not None:
-            self.kappa3_2 = 7.5 * lambda2_oct * (self.x2 ** 6) * self.x1
-        else:
-            self.kappa3_2 = torch.zeros_like(self.kappa2_2)
-
-        # Spin-induced quadrupole coefficients C_Q (default: 1.0 for BH)
-        # The NS default is an inherited heuristic, not a Yagi--Yunes fit.
-        if cq1 is None:
-            self.cq1 = torch.where(self.lambda1 > 0, 1.0 + 0.05 * torch.log(1.0 + self.lambda1), torch.ones_like(self.lambda1))
-        else:
-            self.cq1 = cq1
-
-        if cq2 is None:
-            self.cq2 = torch.where(self.lambda2 > 0, 1.0 + 0.05 * torch.log(1.0 + self.lambda2), torch.ones_like(self.lambda2))
-        else:
-            self.cq2 = cq2
-
-    def pade_tidal_factor(self, u: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:
-        """Return the inherited heuristic tidal amplification factor.
-
-        Formula:
-            hat{A}_2(u) = 1 + 3 * u / (1 - r_LR * u)
-        This simple factor is not the published TEOBResumS tidal resummation.
-        """
-        # Regularize denominator past light ring to maintain numerical stability
-        den = torch.clamp(1.0 - self.r_lr * u, min=1e-3)
-        hat_a2 = 1.0 + (3.0 * u) / den
-        hat_a3 = torch.ones_like(hat_a2)
-        return hat_a2, hat_a3
-
-    def tidal_metric_potential(self, u: torch.Tensor) -> torch.Tensor:
-        """Compute the tidal metric correction A_tidal(u).
-
-        A_tidal(u) = - sum_{i=1}^2 kappa_2^(i) u^6 hat{A}_2^(i)(u) - sum_{i=1}^2 kappa_3^(i) u^8 hat{A}_3^(i)(u)
-        """
-        k2_1 = self.kappa2_1
-        k2_2 = self.kappa2_2
-        k3_1 = self.kappa3_1
-        k3_2 = self.kappa3_2
-
-        if u.dim() > k2_1.dim():
-            k2_1 = k2_1.unsqueeze(-1)
-            k2_2 = k2_2.unsqueeze(-1)
-            k3_1 = k3_1.unsqueeze(-1)
-            k3_2 = k3_2.unsqueeze(-1)
-
-        u6 = u ** 6
-        u8 = u6 * (u * u)
-
-        hat_a2, hat_a3 = self.pade_tidal_factor(u)
-
-        a_tidal_quad = -(k2_1 + k2_2) * u6 * hat_a2
-        a_tidal_oct = -(k3_1 + k3_2) * u8 * hat_a3
-
-        return a_tidal_quad + a_tidal_oct
 
     def point_mass_metric_potentials(self, r: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
         """Return TEOBResumS point-mass ``(A, B, xi)``.
@@ -430,109 +275,24 @@ class TEOBResumSHamiltonian(EOBHamiltonian):
         xi = a_potential / torch.sqrt(d_potential)
         return a_potential, b_potential, xi
 
-    def metric_potentials(self, r: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
-        """Return the aligned-spin/tidal TEOB metric potentials.
+    def metric_potentials(self, r):
+        """Return published vacuum point-mass (A, B, xi)."""
+        return self.point_mass_metric_potentials(r)
 
-        The complete equatorial ``A`` is evaluated at ``u_c = 1/r_c`` and
-        multiplied by ``(1+2*u_c)/(1+2*u)`` (Nagar et al. 2018, Eq. (25)).
-        ``D=A_0 B_0`` remains the common point-mass 3PN potential in the
-        prototype.  The dynamical domain is outside the effective horizon,
-        where A is positive; no potential floor replaces that boundary.
-        """
-        u = 1.0 / r
-        rc = torch.sqrt(self.centrifugal_radius_squared(r))
-        u_c = 1.0 / rc
-        a0_c, _, _ = self.point_mass_metric_potentials(rc)
-        a_tidal = self.tidal_metric_potential(u_c)
+    def centrifugal_radius_squared(self, r):
+        """The nonspinning centrifugal radius equals the orbital radius."""
+        return r ** 2
 
-        a_orb = a0_c + a_tidal
-        a_total = ((1.0 + 2.0 * u_c) / (1.0 + 2.0 * u)) * a_orb
-        a0, b0, _ = self.point_mass_metric_potentials(r)
-        d_pot = a0 * b0
-        b_total = d_pot / a_total
-        xi = a_total / torch.sqrt(d_pot)
-        return a_total, b_total, xi
 
-    def centrifugal_radius_squared(self, r: torch.Tensor) -> torch.Tensor:
-        """Return the published leading-order aligned-spin centrifugal radius.
-
-        Nagar et al. (arXiv:1806.01772v2, Eqs. (24)--(25)) define
-
-        ``r_c^2 = r^2 + a_Q^2 (1 + 2/r)`` and
-        ``a_Q^2 = C_Q1 a1^2 + 2 a1 a2 + C_Q2 a2^2``,
-
-        with ``a_i = X_i chi_i``.  ``C_Q=1`` recovers the BBH expression;
-        the same quadratic form is the stated leading-order BNS extension.
-        """
-        a1 = self.a1
-        a2 = self.a2
-        cq1 = self.cq1
-        cq2 = self.cq2
-        if r.dim() > a1.dim():
-            a1 = a1.unsqueeze(-1)
-            a2 = a2.unsqueeze(-1)
-            cq1 = cq1.unsqueeze(-1)
-            cq2 = cq2.unsqueeze(-1)
-        a_q_sq = cq1 * a1.square() + 2.0 * a1 * a2 + cq2 * a2.square()
-        return r.square() + a_q_sq * (1.0 + 2.0 / r)
-
-    def gyro_factors(self, r: torch.Tensor) -> Tuple[torch.Tensor, torch.Tensor]:
-        """Compute gyro-gravitomagnetic factors g_{a_+} and g_{a_-}."""
-        u = 1.0 / r
+    def effective_hamiltonian(self, r, pr_star, pphi):
+        """Nonspinning tortoise mass shell, Damour--Nagar Eq. (7)."""
         nu = self.nu
         if r.dim() > nu.dim():
             nu = nu.unsqueeze(-1)
-
-        g_plus = 2.0 - (9.0 / 8.0) * nu * u
-        g_minus = (5.0 / 4.0) * nu * u
-        return g_plus, g_minus
-
-    def effective_hamiltonian(
-        self,
-        r: torch.Tensor,
-        pr_star: torch.Tensor,
-        pphi: torch.Tensor,
-    ) -> torch.Tensor:
-        """Return H_eff/mu using the TEOB centrifugal-radius structure.
-
-        The orbital sector uses ``r_c`` in both the angular and quartic
-        momentum terms, as in Nagar et al. 2018 Eq. (23).  The inherited
-        gyro factors remain a prototype spin-orbit prescription.
-        """
-        a_plus = self.a_plus
-        a_minus = self.a_minus
-        delta = self.delta
-        nu = self.nu
-
-        if r.dim() > a_plus.dim():
-            a_plus = a_plus.unsqueeze(-1)
-            a_minus = a_minus.unsqueeze(-1)
-            delta = delta.unsqueeze(-1)
-        if r.dim() > nu.dim():
-            nu = nu.unsqueeze(-1)
-
-        r2 = r * r
-        r3 = r2 * r
-        a_plus2 = a_plus * a_plus
-        r_c2 = self.centrifugal_radius_squared(r)
-
-        a_pot, _, _ = self.metric_potentials(r)
-        g_plus, g_minus = self.gyro_factors(r)
-
-        # 1. Spin-orbit interaction
-        so_num = pphi * (g_plus * a_plus + g_minus * delta * a_minus)
-        so_den = r3 + a_plus2 * (r + 2.0)
-        h_odd = so_num / so_den
-
-        # Nagar et al. 1806.01772v2 Eq. (23): the quadratic tortoise
-        # momentum lies outside A, while both angular and quartic terms use
-        # the centrifugal radius of Eq. (24).
+        a_pot = self.metric_potentials(r)[0]
         z3 = 2.0 * nu * (4.0 - 3.0 * nu)
-        angular_term = 1.0 + pphi.square() / r_c2
-        h_even = torch.sqrt(pr_star.square() + a_pot * (
-            angular_term + z3 * pr_star.pow(4) / r_c2))
-
-        return h_odd + h_even
+        return torch.sqrt(pr_star ** 2 + a_pot * (
+            1.0 + (pphi ** 2 + z3 * pr_star ** 4) / r ** 2))
 
     def real_hamiltonian_from_eff(self, h_eff: torch.Tensor) -> torch.Tensor:
         """Compute the real Hamiltonian H_real / M = sqrt(1 + 2*nu*(H_eff - 1))."""
@@ -663,7 +423,7 @@ class TEOBResumSHamiltonian(EOBHamiltonian):
         r: torch.Tensor,
         pr_star: torch.Tensor,
         pphi: torch.Tensor,
-        rr: EOBRadiationReaction,
+        rr: TEOBResumSRadiationReaction,
     ) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]:
         """Compute full conservative and dissipative time derivatives.
 
@@ -683,431 +443,35 @@ class TEOBResumSHamiltonian(EOBHamiltonian):
         return dr_dt, omega, dpr_star_dt, dpphi_dt
 
 
-def compute_tidal_merger_frequency(
-    mass1: Union[float, torch.Tensor],
-    mass2: Union[float, torch.Tensor],
-    lambda1: Union[float, torch.Tensor] = 0.0,
-    lambda2: Union[float, torch.Tensor] = 0.0,
-    chi1: Union[float, torch.Tensor] = 0.0,
-    chi2: Union[float, torch.Tensor] = 0.0,
+def _teobresums_centrifugal_radius(
+    r: torch.Tensor,
+    nu: torch.Tensor,
+    chi1: torch.Tensor,
+    chi2: torch.Tensor,
+    cq1: Optional[torch.Tensor] = None,
+    cq2: Optional[torch.Tensor] = None,
+    delta: Optional[torch.Tensor] = None,
 ) -> torch.Tensor:
-    """Return the inherited tidal merger-frequency heuristic in Hz.
-
-    These coefficients have not been verified as a published TEOBResumS fit.
-
-    Shows that increasing tidal deformability Lambda accelerates merger and
-    shifts merger frequency to lower values (d f_mrg / d Lambda < 0).
-
-    Args:
-        mass1, mass2: Component masses in solar masses
-        lambda1, lambda2: Dimensionless quadrupolar tidal deformabilities
-        chi1, chi2: Dimensionless aligned spins
-
-    Returns:
-        f_mrg: Merger frequency in Hz
-    """
-    m1 = as_tensor(mass1)
-    m2 = as_tensor(mass2)
-    l1 = as_tensor(lambda1, device=m1.device, dtype=m1.dtype)
-    l2 = as_tensor(lambda2, device=m1.device, dtype=m1.dtype)
-    s1 = as_tensor(chi1, device=m1.device, dtype=m1.dtype)
-    s2 = as_tensor(chi2, device=m1.device, dtype=m1.dtype)
-
-    total_mass = m1 + m2
-    m_sec = total_mass * MSUN_SEC
-    nu = component_masses_to_eta(m1, m2)
-    delta = component_masses_to_delta(m1, m2)
+    """Return the aligned-spin centrifugal radius r_c = sqrt(r_c^2)."""
+    r_arr = as_tensor(r, dtype=torch.float64)
+    nu_arr = as_tensor(nu, dtype=torch.float64)
+    s1_arr = as_tensor(chi1, dtype=torch.float64)
+    s2_arr = as_tensor(chi2, dtype=torch.float64)
+    if delta is None:
+        delta = torch.sqrt(torch.clamp(1.0 - 4.0 * nu_arr, min=0.0))
+    else:
+        delta = as_tensor(delta, dtype=torch.float64)
     x1 = 0.5 * (1.0 + delta)
     x2 = 0.5 * (1.0 - delta)
-
-    # Tidal coupling kappa_2^T = 3 * Lambda1 * X1^4 * X2 + 3 * Lambda2 * X2^4 * X1
-    k2_1 = 3.0 * l1 * (x1 ** 4) * x2
-    k2_2 = 3.0 * l2 * (x2 ** 4) * x1
-    kappa2_t = k2_1 + k2_2
-
-    # Baseline point-mass merger orbital frequency M * omega_0
-    # Equal mass BBH has M * omega_mrg ~ 0.28 to 0.35
-    omega_pm = 0.36 * (nu ** 0.2) * (1.0 + 0.1 * (s1 * x1 + s2 * x2))
-
-    # Relativistic tidal shift factor (Bernuzzi et al. 2015, Nagar et al. 2018):
-    # d(M*omega_mrg)/d(kappa2_t) < 0
-    c1 = 0.0035
-    c2 = 1.5e-6
-    tidal_shift = 1.0 / (1.0 + c1 * kappa2_t + c2 * (kappa2_t ** 2))
-
-    m_omega_mrg = omega_pm * tidal_shift
-
-    # GW frequency f_gw = omega_orb / pi = (M * omega_mrg) / (pi * M_sec)
-    f_mrg = m_omega_mrg / (PI * m_sec)
-    return f_mrg
-
-
-class TEOBResumS:
-    """Prototype tidal waveform generator retaining its historical API name."""
-
-    def __init__(self, matching_method: Optional[str] = None, **kwargs):
-        self.default_matching_method = matching_method
-        self.init_kwargs = kwargs
-
-    def __call__(
-        self,
-        f: torch.Tensor = None,
-        mass1: Union[float, torch.Tensor] = None,
-        mass2: Union[float, torch.Tensor] = None,
-        chi1: Union[float, torch.Tensor] = 0.0,
-        chi2: Union[float, torch.Tensor] = 0.0,
-        lambda1: Union[float, torch.Tensor] = 0.0,
-        lambda2: Union[float, torch.Tensor] = 0.0,
-        cq1: Optional[Union[float, torch.Tensor]] = None,
-        cq2: Optional[Union[float, torch.Tensor]] = None,
-        distance: Union[float, torch.Tensor] = 100.0,
-        inclination: Union[float, torch.Tensor] = 0.0,
-        phic: Union[float, torch.Tensor] = 0.0,
-        tc: Union[float, torch.Tensor] = 0.0,
-        dt_geom: float = 0.5,
-        num_steps: int = 1500,
-        taper_width_ratio: float = 0.1,
-        f_lower: Optional[Union[float, torch.Tensor]] = None,
-        integration_mode: str = "diagnostic_fixed",
-        matching_method: Optional[str] = None,
-        **kwargs,
-    ) -> Tuple[torch.Tensor, torch.Tensor]:
-        """Generate prototype tidal polarizations with a heuristic merger taper.
-
-        Args:
-            f: Frequency evaluation tensor in Hz
-            mass1, mass2: Component masses in solar masses
-            chi1, chi2: Dimensionless aligned spins
-            lambda1, lambda2: Dimensionless quadrupolar tidal deformabilities
-            cq1, cq2: Spin-induced quadrupole coefficients (default: 1.0 for BH or computed for NS)
-            distance: Luminosity distance in Mpc
-            inclination: Inclination angle in radians
-            phic: Coalescence phase in radians
-            tc: Coalescence time in seconds
-            dt_geom: Time step in geometric units (M)
-            num_steps: Trajectory integration steps
-            taper_width_ratio: Fractional width for smooth post-merger tapering
-            f_lower: Requested starting gravitational-wave frequency in Hz. If
-                omitted, the lowest positive sample in ``f`` is used.
-            integration_mode: ``diagnostic_fixed``, ``physical_event``, or ``clean``.
-            matching_method: ``continuous`` for continuous NQC attachment, or
-                ``diagnostic_fixed``.
-
-        Returns:
-            (h_plus, h_cross) frequency-domain complex tensors
-        """
-        if not isinstance(self, TEOBResumS):
-            # Invoked as static/class call: shift arguments
-            f, mass1, mass2 = self, f, mass1
-            self = None
-
-        if matching_method is None:
-            matching_method = getattr(self, "default_matching_method", None) or "diagnostic_fixed"
-
-        device = f.device
-        dtype = f.dtype if f.is_floating_point() else torch.float64
-
-        m1 = as_tensor(mass1, device=device, dtype=dtype)
-        m2 = as_tensor(mass2, device=device, dtype=dtype)
-        s1 = as_tensor(chi1, device=device, dtype=dtype)
-        s2 = as_tensor(chi2, device=device, dtype=dtype)
-        l1 = as_tensor(lambda1, device=device, dtype=dtype)
-        l2 = as_tensor(lambda2, device=device, dtype=dtype)
-        dist = as_tensor(distance, device=device, dtype=dtype)
-        inc = as_tensor(inclination, device=device, dtype=dtype)
-        phi_c = as_tensor(phic, device=device, dtype=dtype)
-        t_c = as_tensor(tc, device=device, dtype=dtype)
-
-        is_batched = m1.dim() > 0
-
-        total_mass = m1 + m2
-        eta = component_masses_to_eta(m1, m2)
-        delta = component_masses_to_delta(m1, m2)
-
-        hamiltonian = TEOBResumSHamiltonian(
-            nu=eta,
-            chi1=s1,
-            chi2=s2,
-            lambda1=l1,
-            lambda2=l2,
-            cq1=as_tensor(cq1, device=device, dtype=dtype) if cq1 is not None else None,
-            cq2=as_tensor(cq2, device=device, dtype=dtype) if cq2 is not None else None,
-            delta=delta,
-        )
-        # The compatibility vacuum route opts into the clean 35-mode torque
-        # with horizon absorption.  Spin/tidal inputs are still dispatched to
-        # the existing fallback inside ``TEOBResumSRadiationReaction``.
-        rr = TEOBResumSRadiationReaction(
-            nu=eta,
-            chi1=s1,
-            chi2=s2,
-            include_horizon_absorption=True,
-        )
-
-        m_sec = total_mass * MSUN_SEC
-        if f_lower is None:
-            positive_frequencies = f[f > 0]
-            if not positive_frequencies.numel():
-                raise ValueError(
-                    "f_lower is required when the frequency grid has no positive samples"
-                )
-            f_start_hz = positive_frequencies.min()
-        else:
-            f_start_hz = as_tensor(f_lower, device=device, dtype=dtype)
-            if (not bool(torch.isfinite(f_start_hz).all())
-                    or bool((f_start_hz <= 0).any())):
-                raise ValueError("f_lower must be finite and positive")
-
-        if (
-            (matching_method == "continuous" or integration_mode == "clean")
-            and not is_batched
-            and bool((s1 == 0).all())
-            and bool((s2 == 0).all())
-            and bool((l1 == 0).all())
-            and bool((l2 == 0).all())
-        ):
-            from torchwave.approximants.eob.teob_conditioned_waveform_clean import conditioned_teob_fd
-            positive_f = f[f > 0]
-            f_min = f_start_hz if f_lower is not None else (positive_f.min() if positive_f.numel() > 0 else torch.as_tensor(20.0, dtype=dtype, device=device))
-            f_max = f.max() if f.numel() > 0 else torch.as_tensor(256.0, dtype=dtype, device=device)
-            delta_f = f[1] - f[0] if f.numel() > 1 else torch.as_tensor(0.5, dtype=dtype, device=device)
-            res = conditioned_teob_fd(
-                mass1=m1,
-                mass2=m2,
-                f_low=f_min,
-                f_max=f_max,
-                delta_f=delta_f,
-                distance=dist,
-                inclination=inc,
-                phic=phi_c,
-                tc=t_c,
-                radial_acceleration_policy=kwargs.get("radial_acceleration_policy", "conservative"),
-                horizon_policy=kwargs.get("horizon_policy", "current"),
-                remnant_policy=kwargs.get("remnant_policy", "uib2016"),
-                matching_method="continuous",
-                pa_kwargs=kwargs.get("pa_kwargs"),
-                continuation_kwargs=kwargs.get("continuation_kwargs"),
-                dtype=dtype,
-                device=device,
-            )
-            hp = _interp1d(f, res.frequencies, res.h_plus)
-            hc = _interp1d(f, res.frequencies, res.h_cross)
-            return hp, hc
-
-        # For the dominant quadrupole, f_gw = Omega_orb / pi, so the
-        # dimensionless circular frequency is M Omega = pi M_sec f_lower.
-        # Keep the published frequency choice instead of replacing it with a
-        # DC-grid sample and an unrelated empirical clamp.
-        omega_start = PI * m_sec * f_start_hz
-
-        # Quasicircular initial conditions
-        r0, pr0, pphi0 = find_quasicircular_initial_conditions(hamiltonian, rr, omega_start)
-        init_state = torch.stack([r0, torch.zeros_like(r0), pr0, pphi0], dim=-1)
-
-        if integration_mode not in {"diagnostic_fixed", "physical_event"}:
-            raise ValueError("integration_mode must be 'diagnostic_fixed' or 'physical_event'")
-
-        # Integrate trajectory with RK4.  The fixed horizon is deliberately
-        # diagnostic: it must not be presented as a physical merger time.
-        state = init_state.clone()
-        states = [state]
-        dt = dt_geom
-        half_dt = 0.5 * dt
-        sixth_dt = dt / 6.0
-
-        def vector_field(s: torch.Tensor) -> torch.Tensor:
-            r = s[..., 0]
-            phi = s[..., 1]
-            pr_star = s[..., 2]
-            pphi = s[..., 3]
-            dr_dt, omega, dpr_star_dt, dpphi_dt = hamiltonian.equations_of_motion(r, pr_star, pphi, rr)
-            return torch.stack([dr_dt, omega, dpr_star_dt, dpphi_dt], dim=-1)
-
-        omega_samples = [vector_field(state)[..., 1]] if integration_mode == "physical_event" else None
-        resolved = None
-        event_index = None
-        event_time = None
-        if integration_mode == "physical_event":
-            resolved = torch.zeros_like(omega_samples[0], dtype=torch.bool)
-            event_index = torch.full_like(omega_samples[0], num_steps, dtype=torch.long)
-            event_time = torch.full_like(omega_samples[0], float("nan"))
-
-        for _ in range(num_steps):
-            if integration_mode == "physical_event":
-                active = ~resolved
-                k1 = vector_field(state)
-                stage2 = torch.where(active.unsqueeze(-1), state + half_dt * k1, state)
-                k2 = vector_field(stage2)
-                stage3 = torch.where(active.unsqueeze(-1), state + half_dt * k2, state)
-                k3 = vector_field(stage3)
-                stage4 = torch.where(active.unsqueeze(-1), state + dt * k3, state)
-                k4 = vector_field(stage4)
-            else:
-                k1 = vector_field(state)
-                k2 = vector_field(state + half_dt * k1)
-                k3 = vector_field(state + half_dt * k2)
-                k4 = vector_field(state + dt * k3)
-            prior_state = state
-            candidate_state = state + sixth_dt * (k1 + 2.0 * k2 + 2.0 * k3 + k4)
-            if integration_mode == "physical_event":
-                candidate_state = torch.where(active.unsqueeze(-1), candidate_state, state)
-            state = candidate_state
-            states.append(state)
-            if integration_mode == "physical_event":
-                omega_now = vector_field(state)[..., 1]
-                omega_samples.append(omega_now)
-                if not bool(torch.isfinite(omega_now).all()):
-                    bad = int((~torch.isfinite(omega_now)).sum().item())
-                    raise RuntimeError(f"physical_event trajectory became nonfinite ({bad} members)")
-                if len(omega_samples) >= 3:
-                    was_resolved = resolved
-                    older, previous = omega_samples[-3], omega_samples[-2]
-                    bracketed = (previous > older) & (omega_now <= previous) & (previous > 0)
-                    newly_resolved = bracketed & ~resolved
-                    if bool(newly_resolved.any()):
-                        # Quadratic vertex through three equally spaced
-                        # accepted samples localizes the maximum without a
-                        # calibration fit.  It is used only as an event-time
-                        # diagnostic; the accepted state remains the causal
-                        # post-bracket sample.
-                        denom = older - 2.0 * previous + omega_now
-                        frac = 0.5 * (older - omega_now) / torch.where(
-                            denom.abs() > 1e-30, denom, torch.ones_like(denom))
-                        frac = torch.clamp(frac, -0.5, 0.5)
-                        event_time = torch.where(
-                            newly_resolved,
-                            (len(omega_samples) - 2 + frac) * dt,
-                            event_time)
-                        event_index = torch.where(
-                            newly_resolved,
-                            torch.floor(event_time / dt).to(torch.long) + 1,
-                            event_index)
-                    resolved = resolved | newly_resolved
-                    # Once an event is found, hold that row at its accepted
-                    # endpoint while other batch members continue.
-                    state = torch.where(
-                        was_resolved.unsqueeze(-1), prior_state, candidate_state)
-                    if len(states) > 0:
-                        states[-1] = state
-                    if bool(resolved.all()):
-                        break
-
-        if integration_mode == "physical_event" and not bool(resolved.all()):
-            unresolved_count = int((~resolved).sum().item())
-            raise RuntimeError(
-                "physical_event integration exhausted its budget without a "
-                f"resolved orbital-frequency maximum ({unresolved_count} unresolved members)"
-            )
-
-        traj = torch.stack(states, dim=0)  # (N_steps, ..., 4)
-
-        r_traj = traj[..., 0]
-        phi_traj = traj[..., 1]
-        # The emitted frequency is the Hamiltonian angular velocity returned
-        # by the same equations of motion used by the integrator.  In
-        # particular, p_phi/r^2 is not valid once the centrifugal-radius and
-        # spin terms are active.
-        omega_traj = torch.stack([
-            hamiltonian.equations_of_motion(
-                traj[k, ..., 0], traj[k, ..., 2], traj[k, ..., 3], rr)[1]
-            for k in range(traj.shape[0])
-        ], dim=0)
-        v_traj = torch.clamp(omega_traj, min=1e-8) ** (1.0 / 3.0)
-
-        # Leading quadrupolar strain amplitude in geometric units
-        h22_amp = 8.0 * math.sqrt(PI / 5.0) * eta * (v_traj * v_traj)
-        phase_gw = 2.0 * (phi_traj + phi_c)
-
-        h22_real = h22_amp * torch.cos(phase_gw)
-        h22_imag = -h22_amp * torch.sin(phase_gw)
-
-        # Scale to physical units: h_phys = (M_sec / D_sec) * h_geom
-        d_sec = (dist * MPC_SI) / C_SI
-        phys_scale = m_sec / d_sec
-        if is_batched:
-            phys_scale = phys_scale.unsqueeze(0)
-
-        h22_phys_real = h22_real * phys_scale
-        h22_phys_imag = h22_imag * phys_scale
-        dt_sec = dt_geom * m_sec
-
-        # Project the real polarizations before transforming.  torch.fft.rfft
-        # implements the required exp(-2 pi i f t) convention and includes
-        # the sample interval below.
-        cos_i = torch.cos(inc)
-        plus_factor = torch.as_tensor(math.sqrt(5.0 / (16.0 * PI)), dtype=dtype, device=device) * (1.0 + cos_i * cos_i)
-        cross_factor = -torch.as_tensor(math.sqrt(5.0 / (4.0 * PI)), dtype=dtype, device=device) * cos_i
-        if is_batched:
-            plus_factor = plus_factor.unsqueeze(0)
-            cross_factor = cross_factor.unsqueeze(0)
-        hp_time = plus_factor * h22_phys_real
-        hc_time = cross_factor * h22_phys_imag
-        if integration_mode == "physical_event":
-            # event_time is geometric M units; convert it before all physical
-            # time operations.  The event can lie before the center sample,
-            # so floor it to its actual containing accepted interval.
-            event_time_sec = event_time * m_sec
-            hp_out, hc_out = [], []
-            for start in range(0, f.numel(), 256):
-                fq = f[start:start + 256]
-                hp_out.append(_piecewise_linear_fourier(hp_time, event_time_sec,
-                                                        dt_sec, fq))
-                hc_out.append(_piecewise_linear_fourier(hc_time, event_time_sec,
-                                                        dt_sec, fq))
-            hp_interp = torch.cat(hp_out, dim=-1)
-            hc_interp = torch.cat(hc_out, dim=-1)
-            phase_shift = -2.0 * PI * f.unsqueeze(0) * t_c.unsqueeze(-1) if is_batched else -2.0 * PI * f * t_c
-            shift_factor = torch.complex(torch.cos(phase_shift), torch.sin(phase_shift))
-            f_mrg = compute_tidal_merger_frequency(m1, m2, l1, l2, s1, s2)
-            if is_batched:
-                delta_f_b = (taper_width_ratio * f_mrg).unsqueeze(-1)
-                taper = 1.0 / (1.0 + torch.exp(torch.clamp((f.unsqueeze(0) - f_mrg.unsqueeze(-1)) / delta_f_b, max=50.0)))
-                taper = torch.where(((l1 > 0) | (l2 > 0)).unsqueeze(-1), taper, torch.ones_like(taper))
-            else:
-                delta_f = taper_width_ratio * f_mrg
-                taper = 1.0 / (1.0 + torch.exp(torch.clamp((f - f_mrg) / delta_f, max=50.0))) if bool((l1 > 0) | (l2 > 0)) else 1.0
-            return hp_interp * shift_factor * taper, hc_interp * shift_factor * taper
-        fft_len = 2 ** math.ceil(math.log2(hp_time.shape[0] * 4))
-        hp_fd = torch.fft.rfft(hp_time, n=fft_len, dim=0)
-        hc_fd = torch.fft.rfft(hc_time, n=fft_len, dim=0)
-        num_pos = fft_len // 2 + 1
-
-        if is_batched:
-            dt_last = dt_sec.unsqueeze(-1)
-            hp_fd_scaled = (hp_fd * dt_sec.unsqueeze(0)).transpose(0, 1)
-            hc_fd_scaled = (hc_fd * dt_sec.unsqueeze(0)).transpose(0, 1)
-            k_indices = torch.arange(num_pos, device=device, dtype=dtype)
-            fft_freqs = k_indices.unsqueeze(0) / (fft_len * dt_last)
-        else:
-            hp_fd_scaled = hp_fd * dt_sec
-            hc_fd_scaled = hc_fd * dt_sec
-            k_indices = torch.arange(num_pos, device=device, dtype=dtype)
-            fft_freqs = k_indices / (fft_len * dt_sec)
-
-        # Interpolate onto user grid f
-        hp_interp = _interp1d(f, fft_freqs, hp_fd_scaled)
-        hc_interp = _interp1d(f, fft_freqs, hc_fd_scaled)
-
-        # Coalescence time and phase shift
-        if is_batched:
-            phase_shift = -2.0 * PI * f.unsqueeze(0) * t_c.unsqueeze(-1)
-        else:
-            phase_shift = -2.0 * PI * f * t_c
-        shift_factor = torch.complex(torch.cos(phase_shift), torch.sin(phase_shift))
-        hp_shifted = hp_interp * shift_factor
-        hc_shifted = hc_interp * shift_factor
-
-        # Inherited phenomenological taper, not a calibrated postmerger signal.
-        f_mrg = compute_tidal_merger_frequency(m1, m2, l1, l2, s1, s2)
-        if is_batched:
-            f_mrg_b = f_mrg.unsqueeze(-1)
-            delta_f_b = (taper_width_ratio * f_mrg).unsqueeze(-1)
-            is_tidal = ((l1 > 0) | (l2 > 0)).unsqueeze(-1)
-            taper = 1.0 / (1.0 + torch.exp(torch.clamp((f.unsqueeze(0) - f_mrg_b) / delta_f_b, max=50.0)))
-            taper = torch.where(is_tidal, taper, torch.ones_like(taper))
-        else:
-            delta_f = taper_width_ratio * f_mrg
-            is_tidal = (l1 > 0) or (l2 > 0)
-            taper = 1.0 / (1.0 + torch.exp(torch.clamp((f - f_mrg) / delta_f, max=50.0))) if is_tidal else 1.0
-
-        return hp_shifted * taper, hc_shifted * taper
+    a1 = s1_arr * x1
+    a2 = s2_arr * x2
+    cq1_val = 1.0 if cq1 is None else as_tensor(cq1, dtype=torch.float64)
+    cq2_val = 1.0 if cq2 is None else as_tensor(cq2, dtype=torch.float64)
+    if r_arr.dim() > a1.dim():
+        a1 = a1.unsqueeze(-1)
+        a2 = a2.unsqueeze(-1)
+        cq1_val = torch.as_tensor(cq1_val, dtype=r_arr.dtype, device=r_arr.device).unsqueeze(-1)
+        cq2_val = torch.as_tensor(cq2_val, dtype=r_arr.dtype, device=r_arr.device).unsqueeze(-1)
+    a_q_sq = cq1_val * (a1 ** 2) + 2.0 * a1 * a2 + cq2_val * (a2 ** 2)
+    rc2 = (r_arr ** 2) + a_q_sq * (1.0 + 2.0 / r_arr)
+    return torch.sqrt(rc2)

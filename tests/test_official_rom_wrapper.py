@@ -1,17 +1,12 @@
-from pathlib import Path
 import pytest
 import torch
 from torchwave.waveforms import get_fd_waveform
 
 from torchwave.approximants.rom import OfficialSEOBNRv4ROM
 
-ROM = Path('/private/tmp/torchwave-oracle-data/SEOBNRv4ROM_v3.0.hdf5')
-
 @pytest.fixture()
-def wrapper():
-    if not ROM.is_file():
-        pytest.skip('external public ROM unavailable')
-    return OfficialSEOBNRv4ROM(ROM, flow=20., fhigh=256.)
+def wrapper(official_rom_path):
+    return OfficialSEOBNRv4ROM(official_rom_path, flow=20., fhigh=256.)
 
 def test_external_path_and_aliases(wrapper):
     f = torch.tensor([0., 20., 30., 256.], dtype=torch.float64)
@@ -42,7 +37,7 @@ def test_public_waveform_dispatch_and_alias(wrapper):
     routed = get_fd_waveform(
         "SEOBNRv4_ROM", 30., 20., chi1=.2, chi2=-.1, distance=100.,
         inclination=.6, phic=.17, tc=1.2e-3, f_lower=20., f_final=100.,
-        delta_f=10., sample_frequencies=f, model_path=str(ROM), f_ref=None,
+        delta_f=10., sample_frequencies=f, model_path=str(wrapper.model_path), f_ref=None,
     )
     assert torch.allclose(direct[0], routed[0], rtol=1e-12, atol=0.)
     assert torch.allclose(direct[1], routed[1], rtol=1e-12, atol=0.)
@@ -57,7 +52,7 @@ def test_canonical_and_official_aliases_match(wrapper):
     f = torch.tensor([20., 30., 80.], dtype=torch.float64)
     kwargs = dict(mass1=30., mass2=20., chi1=.2, chi2=-.1,
                   sample_frequencies=f, f_lower=20., f_final=100.,
-                  model_path=str(ROM), distance=100.)
+                  model_path=str(wrapper.model_path), distance=100.)
     official = get_fd_waveform("official_seobnr_v4_rom", **kwargs)
     canonical = get_fd_waveform("SEOBNR_ROM", **kwargs)
     assert torch.allclose(official[0], canonical[0], rtol=1e-12, atol=0.)
@@ -79,15 +74,13 @@ def test_batched_support_bounds(wrapper):
     assert torch.equal(hp[1, 1], torch.zeros((), dtype=hp.dtype))
     assert torch.equal(hp[1, 4:], torch.zeros(2, dtype=hp.dtype))
 
-def test_scalar_intrinsics_vector_bounds_and_constructor_bounds():
-    if not ROM.is_file():
-        pytest.skip('external public ROM unavailable')
-    w = OfficialSEOBNRv4ROM(ROM)
+def test_scalar_intrinsics_vector_bounds_and_constructor_bounds(official_rom_path):
+    w = OfficialSEOBNRv4ROM(official_rom_path)
     f = torch.tensor([0., 20., 30., 80., 100.], dtype=torch.float64)
     hp, _ = w(f, 30., 20., .2, -.1, distance=100.,
               flow=torch.tensor([20., 30.]), fhigh=torch.tensor([90., 100.]))
     assert hp.shape == (2, f.numel())
-    w2 = OfficialSEOBNRv4ROM(ROM, flow=torch.tensor([20., 30.]),
+    w2 = OfficialSEOBNRv4ROM(official_rom_path, flow=torch.tensor([20., 30.]),
                              fhigh=torch.tensor([90., 100.]))
     hp2, _ = w2(f, 30., 20., .2, -.1, distance=100.)
     assert torch.allclose(hp, hp2, rtol=1e-12, atol=0.)
@@ -113,6 +106,6 @@ def test_finite_intrinsic_gradients_and_ringdown_validation(wrapper):
     (hp.real.square().sum() + hc.imag.square().sum()).backward()
     assert torch.isfinite(mass.grad) and torch.isfinite(f.grad).all()
     for value in (float("nan"), 0., -1.):
-        bad = OfficialSEOBNRv4ROM(ROM, ringdown_mf=lambda *args, v=value: torch.tensor(v))
+        bad = OfficialSEOBNRv4ROM(wrapper.model_path, ringdown_mf=lambda *args, v=value: torch.tensor(v))
         with pytest.raises(ValueError):
             bad(torch.tensor([20., 30.]), 30., 20., distance=100.)

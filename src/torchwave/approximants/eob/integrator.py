@@ -7,8 +7,7 @@ from typing import NamedTuple, Tuple
 import math
 import torch
 
-from torchwave.approximants.eob.hamiltonian import EOBHamiltonian
-from torchwave.approximants.eob.radiation_reaction import EOBRadiationReaction
+from torchwave.approximants.eob.hamiltonian import _HamiltonianBase
 from .events import OrbitalFrequencyPeak, orbital_frequency_peak
 
 
@@ -25,8 +24,8 @@ class EOBTrajectoryIntegrator:
 
     def __init__(
         self,
-        hamiltonian: EOBHamiltonian,
-        radiation_reaction: EOBRadiationReaction,
+        hamiltonian: _HamiltonianBase,
+        radiation_reaction,
     ):
         self.hamiltonian = hamiltonian
         self.rr = radiation_reaction

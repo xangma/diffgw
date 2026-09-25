@@ -4,7 +4,6 @@ import torch
 import pytest
 
 from torchwave.approximants.eob.teob_radiation_clean import TEOBRadiationClean
-from torchwave.approximants.eob.radiation_reaction import EOBRadiationReaction
 from torchwave.approximants.eob.teob_vacuum_driver_clean import (
     TEOBVacuumRadiationDriver,
 )
@@ -83,60 +82,6 @@ def test_horizon_policy_and_zero_spin_zero_tide_dispatch():
     )
     assert torch.isfinite(with_horizon) and torch.isfinite(infinity_only)
     assert torch.abs(with_horizon - infinity_only) > 0
-
-    spin_ham = TEOBResumSHamiltonian(
-        ham.nu, torch.tensor(0.1, dtype=ham.nu.dtype), ham.chi2,
-        ham.lambda1, ham.lambda2,
-    )
-    tide_ham = TEOBResumSHamiltonian(
-        ham.nu, ham.chi1, ham.chi2,
-        torch.tensor(10.0, dtype=ham.nu.dtype), ham.lambda2,
-    )
-    assert not rr._is_nonspinning_vacuum(spin_ham)
-    assert not rr._is_nonspinning_vacuum(tide_ham)
-
-
-def test_nonvacuum_routes_keep_their_existing_force_sources():
-    """The clean source is isolated from tidal and spinning fallbacks."""
-    base = _hamiltonian()
-    r, pr_star, pphi = _state(base)
-
-    tide_ham = TEOBResumSHamiltonian(
-        base.nu, base.chi1, base.chi2,
-        torch.tensor(10.0, dtype=base.nu.dtype), base.lambda2,
-    )
-    tide_rr = TEOBResumSRadiationReaction(
-        tide_ham.nu, tide_ham.chi1, tide_ham.chi2,
-    )
-    tide_omega = tide_ham.equations_of_motion_conservative(r, pr_star, pphi)[1]
-    tide_radial, tide_torque = tide_rr.radiation_reaction_forces(
-        tide_omega, pr_star, pphi, r=r, hamiltonian=tide_ham,
-    )
-    tide_flux = tide_rr._factorized.energy_flux(
-        tide_omega, pr_star, pphi, r=r, hamiltonian=tide_ham,
-    )
-    assert torch.equal(tide_radial, torch.zeros_like(tide_radial))
-    assert torch.allclose(
-        tide_torque, -tide_flux / (tide_ham.nu * tide_omega),
-        rtol=1e-13, atol=0,
-    )
-
-    spin_ham = TEOBResumSHamiltonian(
-        base.nu, torch.tensor(0.1, dtype=base.nu.dtype), base.chi2,
-        base.lambda1, base.lambda2,
-    )
-    spin_rr = TEOBResumSRadiationReaction(
-        spin_ham.nu, spin_ham.chi1, spin_ham.chi2,
-    )
-    spin_omega = spin_ham.equations_of_motion_conservative(r, pr_star, pphi)[1]
-    spin_radial, spin_torque = spin_rr.radiation_reaction_forces(
-        spin_omega, pr_star, pphi, r=r, hamiltonian=spin_ham,
-    )
-    generic_torque = EOBRadiationReaction(
-        spin_ham.nu, spin_ham.chi1, spin_ham.chi2,
-    ).radiation_reaction_forces(spin_omega, pr_star, pphi)[1]
-    assert torch.equal(spin_radial, torch.zeros_like(spin_radial))
-    assert torch.allclose(spin_torque, generic_torque, rtol=1e-13, atol=0)
 
 
 def test_scalar_batch_gradients_and_inference_are_finite():

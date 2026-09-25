@@ -531,10 +531,8 @@ class IMRPhenomXHM(nn.Module):
     - García-Quirós et al. (2020), Phys. Rev. D 102, 064002 (arXiv:2001.10914)
     - Pratten et al. (2020), Phys. Rev. D 101, 024029 (arXiv:2001.10911)
 
-    ``experimental_phase_connections=True`` assembles Eq. (4.11) with C1
-    inspiral joins. This imports the intermediate fits' unverified time gauge
-    into the inspiral and is not a certified calibration. The default retains
-    the existing carrier-based inspiral and value-only phase connection.
+    Uses the carrier-based inspiral and value-only phase connection.
+    The unvalidated experimental phase-connection option is unavailable.
     """
 
     SUPPORTED_MODES = ((2, 2), (2, 1), (3, 3), (3, 2), (4, 4))
@@ -567,7 +565,8 @@ class IMRPhenomXHM(nn.Module):
             if lm not in self.SUPPORTED_MODES:
                 raise ValueError(f"Mode {lm} not supported. Supported: {self.SUPPORTED_MODES}")
         self.base_22 = base_22 if base_22 is not None else IMRPhenomXAS()
-        self.experimental_phase_connections = experimental_phase_connections
+        if experimental_phase_connections:
+            raise ValueError("experimental_phase_connections=True is an unvalidated prototype and is not available in releases.")
 
     @_allow_internal_frequency_derivatives
     def forward(
@@ -610,6 +609,8 @@ class IMRPhenomXHM(nn.Module):
             return_modes: If True, return projected mode polarizations (hp, hc)
             return_unprojected_modes: If True, return unprojected complex mode strains h_lm
         """
+        if kwargs.pop("experimental_phase_connections", False):
+            raise ValueError("experimental_phase_connections=True is an unvalidated prototype and is not available in releases.")
         if f is None:
             if sample_frequencies is not None:
                 f = sample_frequencies
@@ -1418,16 +1419,6 @@ class IMRPhenomXHM(nn.Module):
                     carrier_p_at_ins, carrier_dp_at_ins = eval_carrier_phi_and_deriv((2.0 / m_flt) * f_ins_p)
                     phi_ins_grid = (m_flt / 2.0) * phi_22_scaled + delta_target_u
                     phi_ins_at_ins = (m_flt / 2.0) * carrier_p_at_ins + delta_target
-                    if self.experimental_phase_connections:
-                        # Eq. (4.11) fixes the linear shift from the calibrated
-                        # intermediate derivative. Its fit-target/time-gauge
-                        # convention must be established before enabling this
-                        # reconstruction by default (see the pass-2 audit).
-                        lambda_dp_at_ins = _pn_phase_lambda_coeff(l, m, eta, delta)
-                        lambda_at_ins = lambda_dp_at_ins * f_ins_p
-                        dphi_ins = eval_dphi_int(f_ins_p) - carrier_dp_at_ins - lambda_dp_at_ins
-                        phi_ins_grid = phi_ins_grid + _pn_phase_lambda(l, m, mf_grid, eta, delta) + _unsqueeze_to(dphi_ins, mf_grid) * mf_grid
-                        phi_ins_at_ins = phi_ins_at_ins + lambda_at_ins + dphi_ins * f_ins_p
                     dphi_int_shift = phi_ins_at_ins - eval_phi_int(f_ins_p)
                     dphi_int_shift_u = _unsqueeze_to(dphi_int_shift, mf_grid)
 
@@ -1540,12 +1531,6 @@ class IMRPhenomXHM(nn.Module):
                     carrier_p_at_ins, carrier_dp_at_ins = eval_carrier_phi_and_deriv(f_ins_p)
                     phi_ins_32_grid = phi_22_carrier + delta_target_32
                     phi_ins_at_ins_32 = carrier_p_at_ins + delta_target_32
-                    if self.experimental_phase_connections:
-                        lambda_dp_at_ins = _pn_phase_lambda_coeff(l, m, eta, delta)
-                        lambda_at_ins = lambda_dp_at_ins * f_ins_p
-                        dphi_ins_32 = eval_dphi_int_32(f_ins_p) - carrier_dp_at_ins - lambda_dp_at_ins
-                        phi_ins_32_grid = phi_ins_32_grid + _pn_phase_lambda(l, m, mf_grid, eta, delta) + _unsqueeze_to(dphi_ins_32, mf_grid) * mf_grid
-                        phi_ins_at_ins_32 = phi_ins_at_ins_32 + lambda_at_ins + dphi_ins_32 * f_ins_p
                     dphi_int_shift_32 = phi_ins_at_ins_32 - (eval_phi_int_32(f_ins_p) + c_int_32)
                     dphi_int_shift_32_u = _unsqueeze_to(dphi_int_shift_32, mf_grid)
                     c_int_32_u = _unsqueeze_to(c_int_32, mf_grid)

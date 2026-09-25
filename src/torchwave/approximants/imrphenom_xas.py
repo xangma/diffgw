@@ -1430,6 +1430,8 @@ class XASCarrierState:
 class IMRPhenomXAS(nn.Module):
     """Clean-Room 4th-generation aligned-spin frequency-domain IMRPhenomXAS waveform model."""
 
+    definition_id = "IMRPhenomXAS"
+
     def __init__(self):
         super().__init__()
 

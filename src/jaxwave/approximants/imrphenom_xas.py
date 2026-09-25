@@ -1291,6 +1291,8 @@ class XASCarrierState:
 class IMRPhenomXAS:
     """Clean-Room 4th-generation aligned-spin frequency-domain IMRPhenomXAS waveform model in JAX."""
 
+    definition_id = "IMRPhenomXAS"
+
     def __new__(cls, *args, **kwargs):
         if args or kwargs:
             return cls.evaluate(*args, **kwargs)

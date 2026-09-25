@@ -5,7 +5,6 @@ from fractions import Fraction
 import pytest
 import torch
 
-from torchwave.approximants.eob import teob_conditioned_waveform_clean as adapter
 from torchwave.approximants.eob.teob_postadiabatic_clean import (
     PA_INITIALIZER_POLICIES,
     TEOBPostAdiabaticError,
@@ -109,13 +108,8 @@ def test_direct_value_clamps_negative_discriminant_and_checks_guards():
         )
 
 
-def test_direct_policy_is_opt_in_and_value_only_in_pa_and_adapter():
+def test_direct_policy_is_opt_in_and_value_only_in_pa():
     assert "direct-quadratic-value" in PA_INITIALIZER_POLICIES
-    assert adapter._policy(
-        "direct-quadratic-value",
-        name="pa_initializer_policy",
-        choices=adapter.PA_INITIALIZER_POLICIES,
-    ) == "direct-quadratic-value"
 
     zeros = [torch.tensor(0.0, dtype=torch.float64)] * 4
     ham = TEOBResumSHamiltonian(torch.tensor(0.24, dtype=torch.float64), *zeros)

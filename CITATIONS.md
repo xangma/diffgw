@@ -8,6 +8,33 @@ If you use `torchwave` in scientific work, please cite the underlying models and
 
 ## 1. Post-Newtonian Theory & TaylorF2
 
+The [aligned-spin mathematical reference](docs/math/taylorf2-aligned-spin.md)
+uses [Wade et al., arXiv:1306.3901v2](https://arxiv.org/abs/1306.3901v2),
+Eq. (4) and spin definitions (Phys. Rev. D 88, 083002), and
+[Mishra, Kela, Arun and Faye, arXiv:1601.05588v1](https://arxiv.org/abs/1601.05588v1),
+Eqs. (5)–(7) (Phys. Rev. D 93, 084054). The 3.5PN quadratic-spin phase uses
+energy balance with [Bohé et al., arXiv:1501.01529v1](https://arxiv.org/abs/1501.01529v1),
+Eqs. (3.33), (4.14), and the corrected spin-spin tail flux in
+[Messina–Nagar, arXiv:1703.08107v4](https://arxiv.org/abs/1703.08107v4), Eq. (26).
+The resulting correction is also printed directly in
+[Pratten et al., arXiv:2001.11412v1](https://arxiv.org/abs/2001.11412v1),
+Eq. (A24), supplementing that paper's baseline Eq. (A19).
+
+The [quadrupolar tidal reference](docs/math/taylorf2-tidal.md) uses
+[Wade et al., arXiv:1402.5156v1](https://arxiv.org/abs/1402.5156v1),
+Eqs. (4)–(6) and (A26), for the 5PN/6PN phase and tidal parameters, and
+[Damour, Nagar and Villain, arXiv:1203.4352v1](https://arxiv.org/abs/1203.4352v1),
+Eqs. (B8)–(B12), (B14), for the 6.5PN tail and an independent component-mass
+expression. The specification derives the conversion between their conventions.
+
+The [spin-induced quadrupole reference](docs/math/taylorf2-spin-quadrupole.md)
+uses [Nagar et al., arXiv:1812.07923v1](https://arxiv.org/pdf/1812.07923v1),
+Eqs. (44), (46), (47), (50)–(52), for quadratic-spin terms and their tail;
+[Dietrich et al., arXiv:1905.06011v2](https://arxiv.org/pdf/1905.06011v2),
+Eqs. (26)–(27), for the quadrupole-dependent cubic-spin term; and
+[Marsat, arXiv:1411.4118v2](https://arxiv.org/pdf/1411.4118v2),
+Eqs. (6.20)–(6.21), as an independent cubic-spin cross-check.
+
 ```bibtex
 @article{Blanchet:2013haa,
     author = "Blanchet, Luc",

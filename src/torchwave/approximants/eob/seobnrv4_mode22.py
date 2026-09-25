@@ -1,7 +1,7 @@
 """Published factorized (2,2) phase building blocks, before NQC.
 
-This experimental reconstruction does not select the unresolved SEOBNRv4
-phase inheritance rules. The mode assembler requires a supplied residual
+These equation components have independent special-function and PN-limit
+checks; they do not select the unresolved SEOBNRv4 phase inheritance rules. The mode assembler requires a supplied residual
 phase; the optional composer requires each spin choice explicitly.
 
 Sources: Taracchini 1202.0790v2, (A1)--(A6), (A16); Pan 1006.0431v2,

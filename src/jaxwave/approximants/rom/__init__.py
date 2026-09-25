@@ -1,6 +1,5 @@
 """Reduced-Order Model (ROM / Surrogate) waveform engines in JAX."""
 
-from jaxwave.approximants.rom.surrogate import SEOBNR_ROM
 from jaxwave.approximants.rom.official import (
     OFFICIAL_ROM_FILENAME,
     OFFICIAL_ROM_SHA256,
@@ -26,6 +25,9 @@ from jaxwave.approximants.rom.official_wrapper import (
     independent_ringdown_mf,
     table_convention_ringdown_mf,
 )
+
+# Match the canonical dispatcher: this alias requires the official external tables.
+SEOBNR_ROM = OfficialSEOBNRv4ROM
 
 __all__ = [
     "SEOBNR_ROM",

@@ -1,9 +1,10 @@
-"""Opt-in clean-room composition for the MSA XP prescription.
+"""Clean-room composition for the MSA XP prescription.
 
 The module deliberately stops at the composition boundary.  The MSA angle
 assembler and source-frame geometry are imported from their separate clean
 modules, while the non-precessing carrier is an opaque :class:`IMRPhenomXAS`
-callable.  Nothing in this file changes the production XP dispatch.
+callable. The explicit v223 wrapper supplies the supported production XP
+route; alternative equation-level choices remain composition helpers.
 
 The low-level :func:`compose_msa_waveform` function takes already evaluated
 angles, geometry, and a signed final-spin scalar.  This makes it possible to
@@ -775,7 +776,7 @@ def waveform(
     xas_model=None,
     final_spin_override=None,
 ):
-    """Experimental native MSA wrapper with an explicit clean beta choice.
+    """Native MSA composition with an explicit clean beta choice.
 
     This wrapper calls the fresh equation-level MSA angle assembler with
     ``order=5`` and ``beta_pn=False`` by default, so its twist uses the clean

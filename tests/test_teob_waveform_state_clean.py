@@ -125,6 +125,5 @@ def test_negative_m_uses_clean_conjugate_symmetry():
     ],
 )
 def test_unsupported_spin_and_tide_sectors_are_explicitly_rejected(kwargs):
-    ham = _hamiltonian(**kwargs)
-    with pytest.raises(NotImplementedError, match="zero spins and zero tides"):
-        teob_waveform_state_mode(_state(), ham, 2, 2)
+    with pytest.raises(ValueError, match="nonspinning vacuum"):
+        _hamiltonian(**kwargs)

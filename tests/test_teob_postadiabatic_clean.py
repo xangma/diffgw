@@ -208,9 +208,9 @@ def test_skipped_pa_has_no_endpoint_and_complete_pa_inherits_endpoint_offsets():
 
 
 def test_invalid_intrinsic_and_order_inputs_are_rejected():
-    with pytest.raises(TEOBPostAdiabaticError, match="zero spins"):
+    with pytest.raises(ValueError, match="nonspinning vacuum"):
         alternating8pa(_ham(chi1=0.1), r0=20.0)
-    with pytest.raises(TEOBPostAdiabaticError, match="zero spins"):
+    with pytest.raises(ValueError, match="nonspinning vacuum"):
         alternating8pa(_ham(lambda1=10.0), r0=20.0)
     batched = TEOBResumSHamiltonian(
         torch.tensor([0.22, 0.24], dtype=torch.float64),

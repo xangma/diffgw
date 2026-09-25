@@ -1,0 +1,188 @@
+{
+  "catalog_cv": {
+    "paper_rmse": 0.0071957497583806,
+    "refit_rmse": 0.007113746449765511
+  },
+  "catalog_holdouts": {
+    "BAM": {
+      "holdout": {
+        "max_abs": 0.023555050136251643,
+        "mean": -0.00018925068308299148,
+        "n": 45,
+        "rmse": 0.01028739490273777
+      },
+      "paper_holdout": {
+        "max_abs": 0.02570553309175344,
+        "mean": -0.0001355172300712594,
+        "n": 45,
+        "rmse": 0.01095060280948153
+      },
+      "train_b": [
+        -0.04258582748950798,
+        0.08510737217275266,
+        -1.500869757591719,
+        -0.796094918300787
+      ],
+      "train_n": 382
+    },
+    "GaTech": {
+      "holdout": {
+        "max_abs": 0.02016464275537133,
+        "mean": 0.00039109355674021693,
+        "n": 114,
+        "rmse": 0.007164983029506076
+      },
+      "paper_holdout": {
+        "max_abs": 0.021569130894240396,
+        "mean": 0.00010382330021907441,
+        "n": 114,
+        "rmse": 0.007054425484777994
+      },
+      "train_b": [
+        -0.0103027580315387,
+        0.07061391252008486,
+        -1.6971051423214298,
+        -0.6902945393730511
+      ],
+      "train_n": 313
+    },
+    "RIT": {
+      "holdout": {
+        "max_abs": 0.01718111660806143,
+        "mean": 0.00028865320466866737,
+        "n": 107,
+        "rmse": 0.004627949395244542
+      },
+      "paper_holdout": {
+        "max_abs": 0.01718112476397282,
+        "mean": 0.00012250518278840919,
+        "n": 107,
+        "rmse": 0.00402392953165912
+      },
+      "train_b": [
+        -0.0024591572760651347,
+        0.07307567942234217,
+        -1.645044809544615,
+        -0.7619136224516914
+      ],
+      "train_n": 320
+    },
+    "SXS": {
+      "holdout": {
+        "max_abs": 0.022999148691073945,
+        "mean": 0.0001546399305406514,
+        "n": 161,
+        "rmse": 0.007351847610879819
+      },
+      "paper_holdout": {
+        "max_abs": 0.02537155432553667,
+        "mean": 4.1961246214240375e-05,
+        "n": 161,
+        "rmse": 0.007603366995332816
+      },
+      "train_b": [
+        -0.03351910478913915,
+        0.09502441170160258,
+        -1.5199171277502888,
+        -0.8671752298106391
+      ],
+      "train_n": 266
+    }
+  },
+  "comparison_b2": {
+    "all_cases": {
+      "max_abs": 0.025695370889586178,
+      "mean": 5.357037850589367e-05,
+      "n": 427,
+      "rmse": 0.007195823224463045
+    },
+    "max_prediction_difference_from_printed": 3.2959676832478024e-05,
+    "value": 0.1014665242971878
+  },
+  "data_paper": "https://arxiv.org/html/1611.00332v2, Section II.1 and ancillary table",
+  "data_sha256": "3a20968a77b2292754404c9cefcaab373f14fc3a47adc1546df1ec442fbea0a3",
+  "data_url": "https://arxiv.org/src/1611.00332v2/anc/FinalStateUIB2016_suppl_NRdata.txt",
+  "experiment": "PhenomD Eq. (22) four-free-coefficient refit on later 2017 NR data",
+  "fixed_coefficients": {
+    "eta2_spin_1_to_4": [
+      -5.837,
+      -2.097,
+      4.109,
+      2.064
+    ],
+    "eta_2_to_4": [
+      -4.399,
+      9.397,
+      -13.181
+    ]
+  },
+  "method": "linear least squares for eta*S^1..4; other Eq. (22) coefficients fixed at printed precision",
+  "paper": "https://arxiv.org/html/1508.07250v2, Section III.1, Eq. (22)",
+  "paper_b": [
+    -0.085,
+    0.102,
+    -1.355,
+    -0.868
+  ],
+  "protocol_version": "phenomd-final-spin-four-term-2017/v1",
+  "sample_counts": {
+    "BAM": 45,
+    "GaTech": 114,
+    "RIT": 107,
+    "SXS": 161
+  },
+  "script_sha256": "8cd77c21c3ad4b6aa052d184ad0e95e543eb7e6d399c88d9e734c6f85b988076",
+  "variants": {
+    "ancillary_weights": {
+      "all_cases": {
+        "max_abs": 0.023343910782524457,
+        "mean": 0.0002562386046686693,
+        "n": 427,
+        "rmse": 0.006999466513815032
+      },
+      "b": [
+        -0.021859931249935596,
+        0.11895280029543986,
+        -1.6372517131622717,
+        -0.9602080083124268
+      ],
+      "b2_only_with_other_b_fixed": 0.10741888390641204,
+      "condition_number": 33.61380306835155,
+      "paper_all_cases": {
+        "max_abs": 0.02570553309175344,
+        "mean": 5.995643107873606e-05,
+        "n": 427,
+        "rmse": 0.0071957497583806
+      },
+      "rank": 4
+    },
+    "uniform": {
+      "all_cases": {
+        "max_abs": 0.02280102894406677,
+        "mean": 0.00012183051786269917,
+        "n": 427,
+        "rmse": 0.006982535225893122
+      },
+      "b": [
+        -0.02308249486391277,
+        0.0805459687594503,
+        -1.5818987643731641,
+        -0.7895247435029619
+      ],
+      "b2_only_with_other_b_fixed": 0.10455758251932643,
+      "condition_number": 29.172156513503204,
+      "paper_all_cases": {
+        "max_abs": 0.02570553309175344,
+        "mean": 5.995643107873606e-05,
+        "n": 427,
+        "rmse": 0.0071957497583806
+      },
+      "rank": 4
+    }
+  },
+  "versions": {
+    "numpy": "2.1.1",
+    "python": "3.12.7"
+  },
+  "weight_convention": "ancillary_weights uses sqrt(weight) times each residual; uniform uses unit weights"
+}

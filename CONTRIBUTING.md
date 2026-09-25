@@ -39,6 +39,20 @@ diffgw is released under the permissive **MIT License**. To ensure diffgw remain
 
 ## 3. Cross-Framework FP64 Parity Requirement
 
+### Prototype and release boundary
+
+Unvalidated waveform models, physics components, surrogate tables, and training experiments
+belong on a development or feature branch until their declared scientific gates
+pass. Keep research under `dev/` on that branch; do not merge it into `main`,
+register public aliases, export it from `src/`, or include it in distributions.
+Tested mathematical components may land separately with their bounded claims.
+
+Before promoting a native ROM, qualify its source generator, held-out compression
+and interpolation errors, both runtime frontends, and parameter derivatives over
+a declared domain. Record source and data hashes, numerical settings, independent
+references, thresholds and failures. Finite output and backend agreement alone
+do not validate the physics. Packaging tests enforce the development boundary.
+
 Contributions should maintain numerical consistency between PyTorch (`torchwave`) and JAX (`jaxwave`). The standards below are development targets; current coverage and model-specific exceptions are recorded in the [validation guide](docs/validation.md).
 
 ### Parity Standards

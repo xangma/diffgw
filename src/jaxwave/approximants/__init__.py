@@ -43,7 +43,6 @@ from .ppe import (
     modified_dispersion_phase_shift,
     PPE_PN_MAPPING,
 )
-from .precession_ode import SpinPrecessionODE
 from .imrphenom_xp import IMRPhenomXP, wigner_small_d_matrix
 from .precession_msa import (
     elliptic_f,
@@ -71,16 +70,8 @@ from .precession_pnr import (
     eval_pnr_linear_frequency_map,
     evaluate_pnr_precession,
 )
-from .eob.waveform import SEOBNR_ODE
-from .eob.published_waveform import (
-    SEOBNRv4Published,
-    SEOBNRv4PublishedNonspinning,
-)
 from .teobresums import (
-    TEOBResumS,
     TEOBResumSHamiltonian,
-    TEOBResumSRadiationReaction,
-    compute_tidal_merger_frequency,
     _piecewise_linear_fourier,
     _teobresums_orbital_potential,
     _teobresums_centrifugal_radius,
@@ -99,9 +90,9 @@ from .phenom_meco import (
 )
 
 __all__ = [
-    "SEOBNR_ODE",
-    "SEOBNRv4Published",
-    "SEOBNRv4PublishedNonspinning",
+
+
+
     "TaylorF2",
     "IMRPhenomD",
     "IMRPhenomT",
@@ -138,7 +129,6 @@ __all__ = [
     "ppe_phase_shift",
     "modified_dispersion_phase_shift",
     "PPE_PN_MAPPING",
-    "SpinPrecessionODE",
     "IMRPhenomXP",
     "IMRPhenomXPHM",
     "wigner_small_d_matrix",
@@ -161,10 +151,7 @@ __all__ = [
     "pnr_angles_window",
     "eval_pnr_linear_frequency_map",
     "evaluate_pnr_precession",
-    "TEOBResumS",
     "TEOBResumSHamiltonian",
-    "TEOBResumSRadiationReaction",
-    "compute_tidal_merger_frequency",
     "_piecewise_linear_fourier",
     "_teobresums_orbital_potential",
     "_teobresums_centrifugal_radius",

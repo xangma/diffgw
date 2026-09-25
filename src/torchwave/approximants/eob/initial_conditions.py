@@ -8,15 +8,14 @@ supplied Hamiltonian/torque and is not a calibrated SEOBNRv4 initial-data fit.
 from typing import Tuple
 import torch
 
-from torchwave.approximants.eob.hamiltonian import EOBHamiltonian, _ordinary_tensor_attributes
-from torchwave.approximants.eob.radiation_reaction import EOBRadiationReaction
+from torchwave.approximants.eob.hamiltonian import _HamiltonianBase, _ordinary_tensor_attributes
 
 
 @torch.inference_mode(False)
 @torch.enable_grad()
 def _solve_quasicircular_initial_conditions(
-    hamiltonian: EOBHamiltonian,
-    radiation_reaction: EOBRadiationReaction,
+    hamiltonian: _HamiltonianBase,
+    radiation_reaction,
     omega_start: torch.Tensor,
     max_iter: int = 25,
     tol: float = 1e-8,
@@ -24,8 +23,8 @@ def _solve_quasicircular_initial_conditions(
     """Solve a stable circular orbit and its leading adiabatic inward momentum.
 
     Args:
-        hamiltonian: Initialized EOBHamiltonian
-        radiation_reaction: Initialized EOBRadiationReaction
+        hamiltonian: Initialized _HamiltonianBase
+        radiation_reaction: Supplied normalized radiation-reaction model
         omega_start: Target starting dimensionless orbital frequency M * Omega_0
 
     Returns:
@@ -127,8 +126,8 @@ def _solve_quasicircular_initial_conditions(
 
 
 def find_quasicircular_initial_conditions(
-    hamiltonian: EOBHamiltonian,
-    radiation_reaction: EOBRadiationReaction,
+    hamiltonian: _HamiltonianBase,
+    radiation_reaction,
     omega_start: torch.Tensor,
     max_iter: int = 25,
     tol: float = 1e-8,

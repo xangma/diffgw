@@ -3,10 +3,118 @@ name: CI
 on:
   push:
     branches: [ main ]
-  pull_request:
-    branches: [ main ]
+  pull_request: {}
 
 jobs:
+  docs:
+    name: Documentation (strict)
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+      - name: Install documentation dependencies
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install '.[docs]'
+      - name: Check site and links
+        run: python -m mkdocs build --strict
+
+  math-reference:
+    name: Mathematical reference (CPU)
+    runs-on: ubuntu-latest
+    env:
+      JAX_ENABLE_X64: "1"
+      JAX_PLATFORMS: cpu
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Install reference and both frontends
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install --index-url https://download.pytorch.org/whl/cpu torch
+          python -m pip install -e '.[reference,torch,jax,dev]'
+      - name: Check generated reference artifacts
+        run: |
+          python -c "import importlib.metadata as m; print({name: m.version(name) for name in ('numpy', 'scipy', 'sympy', 'torch', 'jax', 'jaxlib')})"
+          python -m diffgw_reference.artifacts --check
+          python -m diffgw_reference.aligned_spin_artifacts --check
+          python -m diffgw_reference.tidal_artifacts --check
+          python -m diffgw_reference.spin_quadrupole_artifacts --check
+          python -m diffgw_reference.traceability --check
+          python -m diffgw_reference.aligned_spin_traceability --check
+          python -m diffgw_reference.tidal_traceability --check
+          python scripts/generate_waveform_library_table.py --check
+          python scripts/generate_waveform_coverage.py --check
+      - name: Verify reference agreement without qualification skips
+        run: >-
+          python -m pytest tests/test_waveform_definitions.py tests/test_*math_reference*.py
+          --require-math-reference --reference-device=cpu -ra
+
+  lal-oracles:
+    name: Binary oracle verification (CPU)
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    env:
+      JAX_ENABLE_X64: "1"
+      JAX_PLATFORMS: cpu
+      LAL_DATA_PATH: ${{ github.workspace }}/.lal-oracle-data
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+      - name: Install frontends and current binary oracles
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install --index-url https://download.pytorch.org/whl/cpu torch
+          python -m pip install --upgrade -e '.[reference,all,dev]' lalsuite pycbc
+      - name: Verify oracle dependencies
+        run: |
+          python -c "import lal, lalsimulation, pycbc, torch, jax, sympy; import importlib.metadata as m; print({name: m.version(name) for name in ('lalsuite', 'pycbc', 'numpy', 'scipy', 'sympy', 'torch', 'jax', 'jaxlib')})"
+      - name: Cache external oracle data
+        uses: actions/cache@v4
+        with:
+          path: .lal-oracle-data
+          key: lal-seobnrv4-rom-bb0eab9ae721af6abd06c4872b13e477
+      - name: Verify external oracle data
+        run: python scripts/fetch_lal_oracle_data.py "$LAL_DATA_PATH"
+      - name: Gate strict frozen comparisons and report coverage gaps
+        run: python -m scripts.run_oracle_ci
+      - name: Check maintained binary oracles and gate semantics
+        if: always()
+        run: >-
+          python -m pytest -q
+          tests/test_imrphenomd_lal_gradients.py
+          tests/test_taylorf2_lal_quadrupole.py
+          tests/test_taylorf2_lal_tidal.py
+          tests/test_oracle_ci.py
+          tests/test_parity_harness_controls.py::test_kerr_convergence_failure_is_not_accepted
+          tests/parity/test_inference_parity.py::test_whittle_likelihood_parity
+          -ra
+      - name: Upload binary-oracle reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: parity-oracle-report
+          path: |
+            parity_results.json
+            parity_holdout_results.json
+            parity_ci_summary.json
+          if-no-files-found: error
+
   test:
     name: "test (${{ matrix.os }}, py${{ matrix.python-version }})"
     runs-on: ${{ matrix.os }}
@@ -19,6 +127,13 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+
+      - name: Keep development prototypes off main
+        run: |
+          if [ -n "$(git ls-files -- dev)" ]; then
+            echo "Keep dev/ research on feature branches; promote only validated code into src/."
+            exit 1
+          fi
 
       - name: Set up Python ${{ matrix.python-version }}
         uses: actions/setup-python@v5
@@ -34,15 +149,15 @@ jobs:
       - name: "Step 1: Verify PyTorch without JAX"
         run: |
           pip install .[torch]
-          pytest tests/test_diffgw.py
+          pytest tests/test_diffgw.py tests/test_waveform_definitions.py
 
       - name: "Step 2: Verify JAX without PyTorch"
         run: |
           pip uninstall -y torch
           pip install .[jax]
-          pytest tests/test_diffgw.py
+          pytest tests/test_diffgw.py tests/test_waveform_definitions.py
 
       - name: "Step 3: Verify core suite with all and dev"
         run: |
           pip install .[all,dev]
-          pytest tests/test_diffgw.py tests/test_mit_packaging.py tests/test_external_data.py tests/test_taylorf2_hm_external_api.py
+          pytest tests/test_diffgw.py tests/test_waveform_definitions.py tests/test_mit_packaging.py tests/test_external_data.py tests/test_taylorf2_hm_external_api.py tests/test_rom_release_contract.py tests/test_eob_release_contract.py tests/test_prototype_release_contract.py tests/test_release_distributions.py

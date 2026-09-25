@@ -304,6 +304,6 @@ def test_opposed_j_guard_does_not_reject_valid_msa_rows():
         torch.testing.assert_close(strict_value,fallback_value,atol=0,rtol=0)
 
 
-def test_experimental_ode_rejects_unimplemented_observer_azimuth():
-    with pytest.raises(ValueError,match='observer azimuth'):
+def test_experimental_ode_is_unavailable():
+    with pytest.raises(ValueError,match='unvalidated prototype'):
         IMRPhenomXPHM()(t([25.,40.]),spin1x=.3,phi0=.4,precession_method='ode')

@@ -314,9 +314,8 @@ def test_xhm_spherical_basis_elimination_and_gradients():
 
 
 @pytest.mark.parametrize('dtype', [torch.float32, torch.float64])
-@pytest.mark.parametrize('experimental', [False, True])
-def test_xhm_derivative_connections_work_in_inference_mode(dtype, experimental):
-    model = IMRPhenomXHM(experimental_phase_connections=experimental)
+def test_xhm_derivative_connections_work_in_inference_mode(dtype):
+    model = IMRPhenomXHM()
     parameters = dict(mass1=torch.tensor([35., 30.], dtype=dtype),
                       mass2=torch.tensor([20., 30.], dtype=dtype),
                       chi1=torch.tensor([.4, .6], dtype=dtype),
@@ -334,8 +333,7 @@ def test_xhm_derivative_connections_work_in_inference_mode(dtype, experimental):
 
 
 @pytest.mark.parametrize('lm', [(2, 1), (3, 3), (3, 2), (4, 4)])
-@pytest.mark.parametrize('experimental', [False, True])
-def test_xhm_exact_phase_joins_and_mixed_amplitude_boundaries(lm, experimental, monkeypatch):
+def test_xhm_exact_phase_joins_and_mixed_amplitude_boundaries(lm, monkeypatch):
     """Check one-sided derivatives of complete complex modes at paper cuts."""
     from torchwave.approximants.imrphenom_xas import XASParameterFits
     from torchwave.approximants.imrphenom_xhm import _eval_f_isco
@@ -353,7 +351,7 @@ def test_xhm_exact_phase_joins_and_mixed_amplitude_boundaries(lm, experimental, 
     if lm == (3, 2):
         eff = (m1*s1+m2*s2)/(m1+m2)
         cuts.update(amplitude_inspiral=(meco+(_eval_f_isco(spin)-meco)*(.75-.235*abs(eff)))*ring['32']/ring['22'], amplitude_ringdown=ring['22'])
-    model = IMRPhenomXHM(modes=(lm,), experimental_phase_connections=experimental)
+    model = IMRPhenomXHM(modes=(lm,))
     pole_fallback = False
     if lm == (3, 2):
         # Prove the default native case takes the Table VI pole branch. The
@@ -397,7 +395,7 @@ def test_xhm_exact_phase_joins_and_mixed_amplitude_boundaries(lm, experimental, 
         # O(step) change; a C1 phase may have different one-sided curvatures.
         value_error = abs((h[0]+step*deriv[0]-h[1]+step*deriv[1])/h[0])
         assert value_error < 1e-8, (lm, name)
-        if experimental or name != 'phase_inspiral':
+        if name != 'phase_inspiral':
             torch.testing.assert_close(phase_slope[0]+step*phase_curvature[0],
                                        phase_slope[1]-step*phase_curvature[1], rtol=1e-9, atol=5e-6)
         if lm == (3, 2) and (name not in ('amplitude_inspiral', 'amplitude_ringdown') or not pole_fallback):
@@ -463,7 +461,7 @@ def test_xhm_default_inspiral_does_not_import_unverified_intermediate_fit_gauge(
     frequency = torch.tensor([15.0, 18.0, 21.0], dtype=torch.float64)
     parameters = dict(mass1=35.0, mass2=20.0, chi1=0.4, chi2=-0.3,
                       f_ref=20.0, return_unprojected_modes=True)
-    models = [IMRPhenomXHM(), IMRPhenomXHM(experimental_phase_connections=True)]
+    models = [IMRPhenomXHM()]
     reference = [model(frequency, **parameters)[2] for model in models]
     for name in ('21', '33', '32', '44'):
         attribute = f'phase_p1_{name}'
@@ -473,5 +471,3 @@ def test_xhm_default_inspiral_does_not_import_unverified_intermediate_fit_gauge(
     changed = [model(frequency, **parameters)[2] for model in models]
     for mode in ((2, 1), (3, 3), (3, 2), (4, 4)):
         torch.testing.assert_close(changed[0][mode], reference[0][mode], rtol=0.0, atol=0.0)
-        scale = reference[1][mode].abs().max()
-        assert ((changed[1][mode] - reference[1][mode]) / scale).abs().max() > 1e-3

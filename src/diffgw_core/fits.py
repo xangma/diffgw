@@ -305,7 +305,7 @@ FINAL_SPIN_ETA_POLY: Tuple[float, float, float, float] = (
     9.397292189321194,
     -13.180949901606242,
 )
-"""Polynomial coefficients in eta for final spin at zero effective spin (Husa et al. Eq. 3.6)."""
+"""Inherited eta coefficients for Husa et al., arXiv:1508.07250v2, Eq. (22)."""
 
 FINAL_SPIN_S_COEFFS: Tuple[Tuple[float, ...], ...] = (
     # s^1: 1/eta - 0.0850917821418767 - 5.837029316602263*eta
@@ -317,7 +317,11 @@ FINAL_SPIN_S_COEFFS: Tuple[Tuple[float, ...], ...] = (
     # s^4: -0.8676969352555539 + 2.064046835273906*eta
     (-0.8676969352555539, 2.064046835273906),
 )
-"""Spin-dependent coefficients for final spin formula (Husa et al. Eq. 3.6)."""
+"""Historical implementation coefficients for Husa et al.'s Eq. (22) fit.
+
+The eta*S**2 value is 0.1014665242971878 in the 2015 author LALSuite update,
+but the paper prints 0.102; see docs/math/imrphenomd-remnant-qnm.md.
+"""
 
 ERAD_ETA_NUMERATOR: Tuple[float, float, float, float] = (
     0.055974469826360077,
@@ -325,21 +329,21 @@ ERAD_ETA_NUMERATOR: Tuple[float, float, float, float] = (
     -0.9606726679372312,
     3.352411249771192,
 )
-"""Radiated energy non-spinning eta polynomial coefficients (Husa et al. Eq. 3.7)."""
+"""Inherited nonspinning energy coefficients; Husa et al. Eq. (23)."""
 
 ERAD_S_NUMERATOR: Tuple[float, float, float] = (
     -0.0030302335878845507,
     -2.0066110851351073,
     7.7050567802399215,
 )
-"""Radiated energy spin numerator polynomial in eta (Husa et al. Eq. 3.8)."""
+"""Inherited energy numerator coefficients; Husa et al. Eq. (24)."""
 
 ERAD_S_DENOMINATOR: Tuple[float, float, float] = (
     -0.6714403054720589,
     -1.4756929437702908,
     7.304676214885011,
 )
-"""Radiated energy spin denominator polynomial in eta (Husa et al. Eq. 3.8)."""
+"""Inherited energy denominator coefficients; Husa et al. Eq. (24)."""
 
 
 

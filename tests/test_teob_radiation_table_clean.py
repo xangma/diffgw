@@ -111,4 +111,3 @@ def test_table_completion_keeps_gradients_through_new_terms():
     loss = values[(3, 3)] + values[(4, 3)] + values[(5, 5)] + values[(8, 8)]
     dx, dnu = torch.autograd.grad(loss, (x, nu))
     assert torch.isfinite(dx) and torch.isfinite(dnu)
-

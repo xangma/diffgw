@@ -77,6 +77,8 @@ def _get_table_v_matrix(device: torch.device, dtype: torch.dtype) -> torch.Tenso
 class IMRPhenomD(nn.Module):
     """IMRPhenomD Frequency-Domain Aligned-Spin Phenomenological Waveform Model."""
 
+    definition_id = "IMRPhenomD"
+
     def __init__(self):
         super().__init__()
 
@@ -141,7 +143,7 @@ class IMRPhenomD(nn.Module):
         """Compute final mass M_f, final spin a_f, QNM frequency f_RD, and damping width f_damp.
 
         References:
-        - Husa et al. (2016) PRD 93, 044006 (arXiv:1508.07250, Eqs. 16, 17)
+        - Husa et al. (2016) PRD 93, 044006 (arXiv:1508.07250v2, Eqs. 17, 22-24)
         - Stein (2019), JOSS 4(42), 1683, independent Kerr eigenproblem solves
 
         Returns:
@@ -161,7 +163,7 @@ class IMRPhenomD(nn.Module):
         s3 = s2 * s
         s4 = s3 * s
 
-        # Final spin fit (Eq. 16 of Husa et al. 2016) with unrounded fits
+        # Final spin fit (Husa et al. arXiv:1508.07250v2, Eq. 22) with inherited extra digits
         p_eta = FINAL_SPIN_ETA_POLY
         s_c = FINAL_SPIN_S_COEFFS
         a_final = (
@@ -176,7 +178,7 @@ class IMRPhenomD(nn.Module):
         e_eta = ERAD_ETA_NUMERATOR
         erad_ns = e_eta[0] * eta + e_eta[1] * eta2 + e_eta[2] * eta3 + e_eta[3] * eta4
 
-        # Radiated energy full fit (Eq. 17 of Husa et al. 2016)
+        # Radiated energy full fit (Husa et al. arXiv:1508.07250v2, Eqs. 23-24)
         e_num = ERAD_S_NUMERATOR
         e_den = ERAD_S_DENOMINATOR
         num = 1.0 + s_hat * (e_num[0] + e_num[1] * eta + e_num[2] * eta2)
@@ -875,6 +877,8 @@ class IMRPhenomD(nn.Module):
             phasing_convention if phasing_convention is not None else ("reference_frequency" if f_ref is not None else "coalescence")
         )
         conv = conv.lower()
+        if conv not in ("coalescence", "reference_frequency", "reffreq", "ref"):
+            raise ValueError(f"unsupported IMRPhenomD phasing convention: {conv!r}")
 
         if conv in ("reference_frequency", "reffreq", "ref"):
             ref_f = f_ref if f_ref is not None else (f_eval.reshape(-1)[0] if f_eval.numel() > 0 else 20.0)
@@ -1005,4 +1009,3 @@ class IMRPhenomD(nn.Module):
         return inst(*args, **kwargs)
 
     evaluate = __call__
-
