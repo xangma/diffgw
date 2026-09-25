@@ -1,0 +1,254 @@
+{
+  "case": {
+    "cap_Momega": 0.03162277660168379,
+    "chi1": 0.8,
+    "chi2": 0.6,
+    "device": "cpu",
+    "dtype": "float64",
+    "frozen_state": [
+      9.911372368439267,
+      0.0,
+      -0.003306729129318275,
+      3.513326682456663
+    ],
+    "mass1": 30.0,
+    "mass2": 20.0,
+    "state_tangent_per_chi1": [
+      -0.09172725754528695,
+      0.0,
+      0.0006217988833867728,
+      -0.19013615595890498
+    ],
+    "target_Momega": 0.04
+  },
+  "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+  "diagnostic_checks_passed": true,
+  "elapsed_s": 33.433927792008035,
+  "finite_differences": {
+    "chi1:0.0001": {
+      "jax": [
+        -0.0947264748241139,
+        0.001364753990074595,
+        -0.2256359339991576,
+        84.11724953987232
+      ],
+      "jax_scaled_error": 9.071407838109382e-09,
+      "max_abs_frequency_residual": 2.0816681711721685e-17,
+      "root_offsets_M": [
+        1.029977325353303,
+        1.013153875471163,
+        1.0299773253704625,
+        1.0131538754624745
+      ],
+      "torch": [
+        -0.09472647483299568,
+        0.0013647539973170655,
+        -0.22563593398361448,
+        84.11724941055354
+      ],
+      "torch_scaled_error": 7.5339600129744e-09
+    },
+    "chi1:1e-05": {
+      "jax": [
+        -0.09472647422015255,
+        0.0013647539825242109,
+        -0.22563593360391818,
+        84.11724756172134
+      ],
+      "jax_scaled_error": 1.4445183773617204e-08,
+      "max_abs_frequency_residual": 3.469446951953614e-17,
+      "root_offsets_M": [
+        1.0224066949896855,
+        1.020724350015655,
+        1.0224066949857757,
+        1.0207243500345524
+      ],
+      "torch": [
+        -0.09472647439778824,
+        0.001364753953641065,
+        -0.22563593382596278,
+        84.11724870143189
+      ],
+      "torch_scaled_error": 8.961973672682907e-10
+    },
+    "target_Momega:1e-06": {
+      "jax": [
+        -144.771929532439,
+        -0.2934486709152591,
+        -21.84872792154735,
+        31303.14062977391
+      ],
+      "jax_scaled_error": 4.910430920623561e-09,
+      "max_abs_frequency_residual": 2.0816681711721685e-17,
+      "root_offsets_M": [
+        1.0528672438296143,
+        0.9902609625696432,
+        1.0528672438526392,
+        0.9902609625931014
+      ],
+      "torch": [
+        -144.77192953421536,
+        -0.2934486709473515,
+        -21.84872792154735,
+        31303.14062997286
+      ],
+      "torch_scaled_error": 4.916801742121238e-09
+    },
+    "target_Momega:1e-07": {
+      "jax": [
+        -144.77192937789596,
+        -0.29344866778278217,
+        -21.848727840279025,
+        31303.14047353977
+      ],
+      "jax_scaled_error": 2.140256567628088e-10,
+      "max_abs_frequency_residual": 2.7755575615628914e-17,
+      "root_offsets_M": [
+        1.0246958215785726,
+        1.0184351934833977,
+        1.0246958216013797,
+        1.018435193506639
+      ],
+      "torch": [
+        -144.77192938677774,
+        -0.29344866782615026,
+        -21.848727844719917,
+        31303.140475813507
+      ],
+      "torch_scaled_error": 1.4994727681738595e-11
+    }
+  },
+  "gates": {
+    "crossing_state_torch_jax_max_abs_at_most": true,
+    "event_time_torch_jax_abs_M_at_most": true,
+    "finite": true,
+    "finite_difference_roots_inside_last_interval": true,
+    "frequency_residual_abs_at_most": true,
+    "jacobian_jax_fd_scaled_at_most_each": true,
+    "jacobian_torch_fd_scaled_at_most_each": true,
+    "jacobian_torch_jax_scaled_at_most": true,
+    "left_state_torch_jax_max_abs_at_most": true,
+    "left_tangent_torch_jax_scaled_at_most": true,
+    "positive_frequency_time_slope": true,
+    "root_inside_last_interval": true,
+    "target_bracket": true
+  },
+  "host": "RONI2",
+  "input_sha256": {
+    "dev/native_rom/diagnose_jax_spliced_whole_waveform.py": "158c243e6909d26529cf5e976521793cd07821cd48662036a3c34182391f9d1c",
+    "dev/native_rom/diagnose_native_warm_full_mesh.py": "1d077b3cd3d8e49ca8bdee14d3957bdb62d2398c8aeb5ccb154226746dd26f46",
+    "dev/native_rom/diagnose_native_warm_full_tangent_segment.py": "74133398b2917d515f6a2884ef0fb9b2595c09921f4e6f9376f5d3e9abac714e",
+    "dev/native_rom/eob/jax/adaptive_driver_clean.py": "41691a243f3b1bf248443f679f8fd405eaeeb3de2d3e8d6800b03ba4b4c64ecf",
+    "dev/native_rom/eob/jax/source_calibration_hamiltonian.py": "8b5584002625479e667337076df59cb6a820e1cffc88a282071843e6d4e4c8a9",
+    "dev/native_rom/eob/torch/source_calibration_hamiltonian.py": "2b0ddccf6ba99d0157c0b624cf0c4e926713c96a736e22e1b6fe55bdbde1cdc2",
+    "dev/native_rom/eob/torch/warm_start.py": "a9818350b18ed04ca645edbf6af4c22760fc51eae540c12f38d171d99a675a20",
+    "src/jaxwave/approximants/eob/hamiltonian.py": "5bdcb51b0dccb5b91352d7e8697d1533e6f49ae2dba09526731cd9e4747a2118",
+    "src/jaxwave/approximants/eob/integrator.py": "f0e842e518cd05c94361038602a993c0ee9025b218490945fdb4021da9b64e46",
+    "src/jaxwave/approximants/eob/seobnrv4_flux.py": "47f9be36e6494708643afcdeb487a425c3e607a4c2f1ba730cbcf71ccba64287",
+    "src/torchwave/approximants/eob/adaptive_driver_clean.py": "2f5e1c3b8766b92340a6aafcdfbdc5fe6856a3e4390551abefda1e22b90dda7b",
+    "src/torchwave/approximants/eob/hamiltonian.py": "96febd6b3e0722802425f0e7490079d62869f2e63ac92c8db32e9063b5bc4b5b",
+    "src/torchwave/approximants/eob/integrator.py": "4c643493086a06accfe7f8f5ff679e77a1015aeb03659b395b48cac09de91c65",
+    "src/torchwave/approximants/eob/seobnrv4_flux.py": "3136bb016cce21cdd9d636008fee1fa5472757fed4446dc899e0d31e70124c83"
+  },
+  "jax": {
+    "event_time_derivative": [
+      84.11724877681044,
+      31303.140476062
+    ],
+    "frequency_residual": -7.91033905045424e-16,
+    "frequency_time_slope": 3.1945676529315506e-05,
+    "jacobian": [
+      [
+        -0.09472647442666365,
+        -144.77192938780766
+      ],
+      [
+        0.001364754004914994,
+        -0.2934486678137788
+      ],
+      [
+        -0.22563593367916424,
+        -21.848727844955214
+      ],
+      [
+        84.11724877681044,
+        31303.140476062
+      ]
+    ],
+    "two_direction_primal_max_abs": 0.0,
+    "value": [
+      8.436030723171802,
+      -0.005525838910574676,
+      3.2934625531906505,
+      419.2276963271908
+    ]
+  },
+  "last_checkpoint": {
+    "path": "dev/native_rom/evidence/2026-09-25/native_warm_full_tangent_segment_08.json",
+    "sha256": "b0b92d1f7e17a4ddccaba9b1f2488b8112a2dfc0dfa1001df604466abe5225fc"
+  },
+  "left_time_M": 418.2061308054766,
+  "mesh_source": {
+    "path": "dev/native_rom/evidence/2026-09-25/native_warm_full_mesh.json",
+    "sha256": "2401e0258d09d0cc69207d91eea15e7fc0e0c42cd2c15520675b980be8ea8139"
+  },
+  "metrics": {
+    "crossing_state_torch_jax_max_abs": 9.414691248821327e-14,
+    "event_time_torch_jax_abs_M": 0.0,
+    "frequency_residual_abs_max": 7.91033905045424e-16,
+    "jacobian_jax_fd_scaled_max": 1.4445183773617204e-08,
+    "jacobian_torch_fd_scaled_max": 7.5339600129744e-09,
+    "jacobian_torch_jax_scaled": 2.623290473735551e-12,
+    "left_state_torch_jax_max_abs": 9.414691248821327e-14,
+    "left_tangent_torch_jax_scaled": 2.6201263381153694e-14
+  },
+  "phase_b_plan": {
+    "path": "dev/native_rom/evidence/2026-09-25/native_warm_full_tangent_segments_plan.json",
+    "sha256": "7f4cba595c5c42c73dcc14c65adab993d634a01ddb6f224683ced3a9dfba97cf"
+  },
+  "pid": 86209,
+  "plan_sha256": "bc1522347d7cc14e8ce2162bb9b5175ace1bcfcc8c80831f91749c3935e602e9",
+  "release_qualified": false,
+  "right_time_M": 422.13450597993597,
+  "root": {
+    "bisection_residual": -6.245004513516506e-17,
+    "frequency_left": 0.0399674136878373,
+    "frequency_right": 0.04009325010853528,
+    "offset_M": 1.021565521714201
+  },
+  "schema": "diffgw.seobnrv4.native-warm-full-crossing.v1",
+  "script_sha256": "db8c3a90431fc89c882bbdffb997ecf905e01df0e4df738b6c48fcb7496322e6",
+  "status": "diagnostic_complete",
+  "torch": {
+    "event_time_derivative": [
+      84.11724877681755,
+      31303.140476061522
+    ],
+    "frequency_residual": -6.245004513516506e-17,
+    "frequency_time_slope": 3.1945676529315994e-05,
+    "jacobian": [
+      [
+        -0.09472647442666732,
+        -144.77192938780468
+      ],
+      [
+        0.0013647540049231666,
+        -0.29344866781115553
+      ],
+      [
+        -0.22563593367917045,
+        -21.84872784495584
+      ],
+      [
+        84.11724877681755,
+        31303.140476061522
+      ]
+    ],
+    "value": [
+      8.436030723171708,
+      -0.005525838910574667,
+      3.293462553190644,
+      419.2276963271908
+    ]
+  }
+}

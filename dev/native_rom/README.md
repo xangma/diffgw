@@ -3004,6 +3004,17 @@ records the state and tangent for a separate event-crossing check. This
 validates one fixed-mesh continuation; adaptive-controller decisions, the
 final crossing derivative, nonlinear cap-map finite differences, and waveform
 gradients remain open.
+The [full-target crossing check](evidence/2026-09-25/native_warm_full_crossing.json)
+continues those hash-linked states through the final fixed interval and
+locates `MΩ=0.04` at `419.2276963271908 M`. All 13 gates pass. The largest
+Torch/JAX scaled crossing-Jacobian discrepancy is `2.63e-12`; the worst
+centered finite-difference discrepancy is `1.45e-8`, and the largest
+frequency residual is `7.92e-16`. The run stayed below its 4 GiB and 120 s
+bounds. This validates one cap-to-target spin and target-frequency derivative
+on the frozen accepted mesh. Its spin finite differences use an affine cap
+state perturbation, so the nonlinear circular cap solve and adaptive
+controller decisions remain untested; no waveform-gradient or release claim
+follows.
 
 The [warm trajectory comparison](evidence/2026-09-25/warm_jax_trajectory_divergence.json)
 finds Torch/JAX raw-mode relative L2 of `1.89e-12` on their separately
