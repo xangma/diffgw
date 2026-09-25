@@ -10,12 +10,14 @@ from dev.native_rom.eob.jax.adaptive_driver_clean import (
     fixed_fehlberg45_step,
     integrate_adaptive_to_time,
     replay_accepted_steps,
+    resample_accepted_trajectory,
     state_scaled_controller_adjustment,
 )
 from torchwave.approximants.eob.adaptive_driver_clean import (
     AlignedSpinV4Event as TorchEvent,
     fixed_fehlberg45_step as torch_fixed_step,
     integrate_adaptive as torch_integrate_adaptive,
+    resample_natural_cubic as torch_resample_natural_cubic,
     state_scaled_controller_adjustment as torch_controller,
 )
 from jaxwave.approximants.eob.integrator import EOBTrajectoryIntegrator as JaxEOBIntegrator
@@ -89,6 +91,11 @@ def test_accepted_history_matches_torch_and_retains_gradients():
     assert run.rejected_steps > 0
     assert run.evaluations == int(reference.statistics.evaluations)
     assert run.termination == "duration"
+    grid, sampled = resample_accepted_trajectory(run, 0.07)
+    expected_grid, expected_sampled = torch_resample_natural_cubic(
+        reference.time, reference.state, 0.07)
+    np.testing.assert_allclose(np.asarray(grid), expected_grid.detach().numpy(), rtol=0, atol=1e-15)
+    np.testing.assert_allclose(np.asarray(sampled), expected_sampled.detach().numpy(), rtol=2e-10, atol=2e-11)
     replay = jax.jit(lambda state: replay_accepted_steps(field_jax, state, run.time))(initial)
     np.testing.assert_allclose(np.asarray(replay), np.asarray(run.state), rtol=2e-12, atol=2e-12)
     derivative = jax.grad(lambda first: replay_accepted_steps(
@@ -124,6 +131,11 @@ def test_one_physical_eob_fehlberg_trial_matches_torch():
     assert run.rejected_steps == int(reference.statistics.rejected_steps)
     np.testing.assert_allclose(np.asarray(run.time), reference.time.detach().numpy(), rtol=0, atol=2e-10)
     np.testing.assert_allclose(np.asarray(run.state), reference.state.detach().numpy(), rtol=2e-9, atol=2e-11)
+    grid, sampled = resample_accepted_trajectory(run, 0.05)
+    expected_grid, expected_sampled = torch_resample_natural_cubic(
+        reference.time, reference.state, 0.05)
+    np.testing.assert_allclose(np.asarray(grid), expected_grid.detach().numpy(), rtol=0, atol=1e-15)
+    np.testing.assert_allclose(np.asarray(sampled), expected_sampled.detach().numpy(), rtol=2e-9, atol=2e-11)
 
 
 def test_accepted_knot_fine_event_matches_torch():

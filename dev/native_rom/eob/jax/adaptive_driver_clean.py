@@ -13,6 +13,7 @@ from typing import Callable, NamedTuple
 
 import jax
 import jax.numpy as jnp
+from jaxwave.approximants.eob.numerical_attachment import natural_cubic_spline
 
 
 _C = (0.0, 1 / 4, 3 / 8, 12 / 13, 1.0, 1 / 2)
@@ -218,6 +219,18 @@ def replay_accepted_steps(vector_field: Callable, initial_state, accepted_time):
     return jnp.concatenate((state[None, :], subsequent), axis=0)
 
 
+def resample_accepted_trajectory(run: AcceptedTrajectory, output_step: float):
+    """Sample scalar accepted states on the uniform output grid with natural splines."""
+    if not math.isfinite(float(output_step)) or output_step <= 0:
+        raise ValueError("output_step must be positive and finite")
+    if run.time.ndim != 1 or run.state.ndim != 2 or run.time.shape[0] < 2:
+        raise ValueError("resampling requires at least two scalar accepted states")
+    count = math.floor(float(run.time[-1]) / output_step) + 1
+    query = jnp.arange(count, dtype=run.time.dtype) * output_step
+    spline = natural_cubic_spline(run.time, run.state, scalar_output=False)
+    return query, spline.evaluate(query)
+
+
 __all__ = ["FixedTrial", "AcceptedTrajectory", "AlignedSpinV4Event", "fixed_fehlberg45_step",
            "state_scaled_controller_adjustment", "integrate_adaptive_to_time",
-           "replay_accepted_steps"]
+           "replay_accepted_steps", "resample_accepted_trajectory"]

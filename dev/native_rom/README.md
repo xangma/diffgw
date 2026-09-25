@@ -922,11 +922,12 @@ The dev-only [JAX RKF45 core](eob/jax/adaptive_driver_clean.py) now implements
 the same direct embedded-error weights and state-scaled controller as the
 Torch adaptive driver. Frozen tests compare a large-phase cancellation probe,
 controller thresholds, analytic accepted knots, a scalar accepted-state
-plunge event, and a short physical v4 EOB trajectory against Torch. A frozen
-accepted mesh can be replayed under JIT and differentiated pathwise. The
-Python-loop adaptive controller itself is not JIT-compatible or
-differentiable; physical plunge-event validation, coarse/fine restarts,
-resampling, NQC, and merger attachment are still absent from this JAX route.
+plunge event, and a short physical v4 EOB trajectory against Torch. Natural
+cubic resampling of those accepted knots agrees with Torch on both analytic
+and physical rows. A frozen accepted mesh can be replayed under JIT and
+differentiated pathwise. The Python-loop adaptive controller itself is not
+JIT-compatible or differentiable; physical plunge-event validation, coarse/fine restarts,
+NQC, and merger attachment are still absent from this JAX route.
 This component does not change the release status or enable the JAX
 `numerical_compatibility` option.
 
