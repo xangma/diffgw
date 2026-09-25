@@ -235,6 +235,32 @@ to the candidate `phic-phi0` coordinate for `phic=0.3`, `phi0=0.4`. That
 cross-frontend result validates the diagnostic source coordinate; it does not
 by itself validate replacing the public generic nonzero-`phi0` route.
 
+The published near-alignment literature does not close this gap by supplying
+a limiting form of the generic MSA solution. [Klein, Cornish and Yunes
+(2013)](https://arxiv.org/abs/1305.1932) construct a separate waveform by
+expanding every angular-momentum component in a misalignment parameter
+$\epsilon$ (their Eqs. (32), (43)--(45)) and retaining the transverse solution
+through $O(\epsilon)$ as two harmonic precession modes. That construction is a
+different perturbative model: it does not derive a replacement for the
+Chatziioannou $S^2$ turning roots, elliptic initial phase, or the Pratten
+Appendix-C source chart. Importing it only at the v223 boundary would therefore
+define a new hybrid waveform and matching prescription, not implement a
+published continuation of the v223 equations.
+
+The newer $\delta\chi$ formulations resolve a different singular limit.
+[Klein (2021), Eqs. (11), (37)--(39)](https://arxiv.org/abs/2106.10291)
+reparameterizes the conservative solution so the turning roots remain regular
+at equal mass, but its inertial-frame azimuth still contains
+$1/\sin^2\theta_L$ and is undefined at exact alignment. [Gerosa et al.
+(2023), Eqs. (29)--(34)](https://arxiv.org/abs/2304.04801) likewise identifies
+the two smaller $\delta\chi$ roots as the physical turning points and the
+largest as spurious, giving a robust root-solving strategy. It also states
+that the relative spin azimuth is ill-defined when either spin is aligned and
+that a formal Taylor expansion of the zero-amplitude resonance limit remains
+future work. These results support a separately implemented precession solver;
+they do not provide the missing scalar v223 root/phase/chart continuation or
+the generic nonzero-`phi0` transport.
+
 No production correction is adopted here. The papers specify the cubic,
 elliptic phase and chart, but do not specify a float64 small-misalignment
 expansion that preserves the generic branch through the root reordering.
