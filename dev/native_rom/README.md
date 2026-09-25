@@ -2170,10 +2170,14 @@ to `1.35e-8`. Yet the historical GSL cubic coefficient gap falls only from
 amplitude matrix accounts for `0.1157` of the remaining `0.1158` amplitude
 gap; the right-hand-side contribution is below `0.0001`. A degree-four local
 polynomial derivative control reduces the full gap from `0.0522` to `0.0105`.
-Thus the near-identical shifted raw mode does not guarantee identical
-historical spline derivatives or a stable, source-matching NQC solve. This
-single-row fit counterfactual neither establishes a faithful replacement
-matching event nor qualifies a complete waveform.
+Resampling the shifted source fields onto the same 9,595-sample time grid as
+the native fit reduces the historical GSL gap further to `0.0967`, but its
+amplitude matrix still dominates the residual. Thus knot placement accounts
+for part, but not all, of the coefficient difference: the near-identical
+shifted raw mode does not guarantee identical spline derivatives or a stable,
+source-matching NQC solve. These single-row fit counterfactuals neither
+establish a faithful replacement matching event nor qualify a complete
+waveform.
 
 1. Qualify the physical generator against the published equations and independent
    references over the intended domain, resolve convention/provenance gaps, and

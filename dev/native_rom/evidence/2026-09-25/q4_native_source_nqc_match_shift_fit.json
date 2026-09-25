@@ -1,6 +1,119 @@
 {
   "comparison": {
-    "elapsed_seconds": 70.57226608297788,
+    "common_grid_native_fit": {
+      "amplitude_condition": 9983.777081335847,
+      "amplitude_derivatives": [
+        0.2848865038483299,
+        0.004740809754795188,
+        -2.0118428370528248e-05
+      ],
+      "amplitude_matrix": [
+        [
+          0.0550789429972136,
+          0.018390303315711554,
+          0.010626507172839998
+        ],
+        [
+          0.007673281680608122,
+          0.0031620655101211783,
+          0.002000502381920725
+        ],
+        [
+          0.0012449105118552022,
+          0.0006391408002209321,
+          0.0004423668261923489
+        ]
+      ],
+      "amplitude_rhs": [
+        -0.04457773751981553,
+        -0.004740809754795188,
+        -0.0005194887176573614
+      ],
+      "coefficients": [
+        -2.300528124235397,
+        8.50022895556458,
+        -6.9814914384108615,
+        2.1257397747024394,
+        -3.895322258432973
+      ],
+      "frequency_derivatives": [
+        0.2753432570028878,
+        0.005857048215854335
+      ],
+      "phase_condition": 110.79128537626211,
+      "phase_matrix": [
+        [
+          0.026969728368987075,
+          0.0027451301543656497
+        ],
+        [
+          0.002432805713234888,
+          0.0004956176111343149
+        ]
+      ],
+      "phase_rhs": [
+        0.04663745771428052,
+        0.0032409215564238635
+      ]
+    },
+    "common_grid_samples": 9595,
+    "common_grid_source_fit": {
+      "amplitude_condition": 9991.195726001295,
+      "amplitude_derivatives": [
+        0.28486375937525205,
+        0.004740919884265296,
+        -1.963117763905807e-05
+      ],
+      "amplitude_matrix": [
+        [
+          0.05504208997044989,
+          0.018375121662841092,
+          0.010616903671005406
+        ],
+        [
+          0.007667253211801007,
+          0.0031589809752582154,
+          0.0019983697626029424
+        ],
+        [
+          0.0012446421498672911,
+          0.0006387065306635671,
+          0.0004419885390989426
+        ]
+      ],
+      "amplitude_rhs": [
+        -0.044554993046737656,
+        -0.004740919884265296,
+        -0.0005199759683888316
+      ],
+      "coefficients": [
+        -2.2884585953774295,
+        8.40058194675784,
+        -6.871604633270336,
+        2.1298790147394935,
+        -3.9199611057331825
+      ],
+      "frequency_derivatives": [
+        0.2753151745166847,
+        0.005855193598503162
+      ],
+      "phase_condition": 110.81816299932218,
+      "phase_matrix": [
+        [
+          0.026957832462968123,
+          0.0027427265616311084
+        ],
+        [
+          0.002434491914004893,
+          0.0004955143719605008
+        ]
+      ],
+      "phase_rhs": [
+        0.046665540200483635,
+        0.003242776173775037
+      ]
+    },
+    "elapsed_seconds": 70.41678774997126,
     "native_gsl_fit": {
       "amplitude_condition": 9983.777081335847,
       "amplitude_derivatives": [
@@ -118,6 +231,79 @@
       "high_grid_peak_difference": {
         "coefficient_gap_ratio_to_unshifted": 0.7834647859677982,
         "coefficient_gap_to_native_l2": 0.1182344563312649,
+        "common_grid_resampled_gap_attribution": {
+          "amplitude": {
+            "gap_l2": 0.0949591297023563,
+            "matrix_max_abs_difference": 8.71452023145855e-07,
+            "matrix_second_effect_l2": 0.11666699722136696,
+            "rhs_first_effect_l2": 0.021708055385521636,
+            "rhs_max_abs_difference": 2.7442210509542875e-07
+          },
+          "phase": {
+            "gap_l2": 0.0209786127118009,
+            "matrix_max_abs_difference": 3.4297448911063677e-06,
+            "matrix_second_effect_l2": 0.023826551695183943,
+            "rhs_first_effect_l2": 0.002847980822008038,
+            "rhs_max_abs_difference": 7.32660976272663e-07
+          }
+        },
+        "common_grid_resampled_gap_to_native_l2": 0.09724884834865995,
+        "common_grid_resampled_source_fit": {
+          "amplitude_condition": 9983.821889331117,
+          "amplitude_derivatives": [
+            0.2848862294262248,
+            0.004740825530366945,
+            -1.996532290640922e-05
+          ],
+          "amplitude_matrix": [
+            [
+              0.05507844400720516,
+              0.018390101285539952,
+              0.010626380199229174
+            ],
+            [
+              0.007673155011674781,
+              0.00316200989176418,
+              0.0020004658932092664
+            ],
+            [
+              0.001245781963878348,
+              0.0006394216406669017,
+              0.0004425258397978334
+            ]
+          ],
+          "amplitude_rhs": [
+            -0.044577463097710435,
+            -0.004740825530366945,
+            -0.0005196418231214804
+          ],
+          "coefficients": [
+            -2.2935856708281666,
+            8.438121307366591,
+            -6.909995433698485,
+            2.127895978008919,
+            -3.916189768553082
+          ],
+          "frequency_derivatives": [
+            0.2753429289259986,
+            0.005856315554878063
+          ],
+          "phase_condition": 110.7800741803703,
+          "phase_matrix": [
+            [
+              0.026969375363866004,
+              0.002745076262988518
+            ],
+            [
+              0.0024362354581259943,
+              0.0004959926689524403
+            ]
+          ],
+          "phase_rhs": [
+            0.04663778579116973,
+            0.003241654217400136
+          ]
+        },
         "gsl_fit": {
           "amplitude_condition": 9983.759660412168,
           "amplitude_derivatives": [
@@ -275,6 +461,79 @@
       "orbital_field_median": {
         "coefficient_gap_ratio_to_unshifted": 0.7807620746026211,
         "coefficient_gap_to_native_l2": 0.11782658399978889,
+        "common_grid_resampled_gap_attribution": {
+          "amplitude": {
+            "gap_l2": 0.094445668346324,
+            "matrix_max_abs_difference": 8.856215581885471e-07,
+            "matrix_second_effect_l2": 0.1167312732384164,
+            "rhs_first_effect_l2": 0.022285626639663936,
+            "rhs_max_abs_difference": 1.4784903101024843e-07
+          },
+          "phase": {
+            "gap_l2": 0.02093622810839232,
+            "matrix_max_abs_difference": 3.45205427074299e-06,
+            "matrix_second_effect_l2": 0.023852703735313712,
+            "rhs_first_effect_l2": 0.002916475777878045,
+            "rhs_max_abs_difference": 7.179244650556277e-07
+          }
+        },
+        "common_grid_resampled_gap_to_native_l2": 0.09673835804266301,
+        "common_grid_resampled_source_fit": {
+          "amplitude_condition": 9983.729814836248,
+          "amplitude_derivatives": [
+            0.2848865101804338,
+            0.004740824341042187,
+            -1.997057933951798e-05
+          ],
+          "amplitude_matrix": [
+            [
+              0.05507889841774957,
+              0.018390288542584683,
+              0.010626498668669384
+            ],
+            [
+              0.007673228787248487,
+              0.0031620477586930935,
+              0.0020004920998993986
+            ],
+            [
+              0.0012457961334133908,
+              0.0006394305549496734,
+              0.0004425325425264237
+            ]
+          ],
+          "amplitude_rhs": [
+            -0.04457774385191943,
+            -0.004740824341042187,
+            -0.0005196365666883717
+          ],
+          "coefficients": [
+            -2.293638159449231,
+            8.43848638315322,
+            -6.910355178974079,
+            2.1278719150595453,
+            -3.916149635245818
+          ],
+          "frequency_derivatives": [
+            0.2753432757443435,
+            0.00585633029138928
+          ],
+          "phase_condition": 110.77961368816764,
+          "phase_matrix": [
+            [
+              0.026969519641970745,
+              0.002745105636214196
+            ],
+            [
+              0.002436257767505631,
+              0.0004959986674028238
+            ]
+          ],
+          "phase_rhs": [
+            0.04663743897282485,
+            0.003241639480888919
+          ]
+        },
         "gsl_fit": {
           "amplitude_condition": 9983.667253173146,
           "amplitude_derivatives": [
@@ -563,7 +822,7 @@
     "source_inputs": "e657ce7301fa3903297cdf0f5c07632c62561eda7e7f4c3994c169e45f4a95ae"
   },
   "output_step_M": 0.015625,
-  "plan_sha256": "495f2d8e649701c164169fa95e4904e76027ec07a53cbe9d47f3b01cf765f4e2",
+  "plan_sha256": "3e2f53328368eae781c540ba5a6cc7448f35f100f846a72d1c6d0faaba5d5009",
   "process": {
     "argv": [
       "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw/dev/native_rom/diagnose_q4_native_source_nqc_match_shift_fit.py",
@@ -578,7 +837,7 @@
     ],
     "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
     "host": "RONI2",
-    "pid": 73543
+    "pid": 76944
   },
   "release_qualified": false,
   "row": {
@@ -603,6 +862,6 @@
     "production_promotion_allowed": false,
     "training_generator_qualified": false
   },
-  "script_sha256": "d4cade2a960ea392dcb7fe27c0b5d0af733b5c0bd1dc92da9f022516a5fd47d8",
+  "script_sha256": "c37190d596193a53a56e3876c8b31d3ba4e4e05d5b20466f95ddfca7bbb51516",
   "status": "diagnostic_complete"
 }

@@ -92,6 +92,7 @@ def main() -> int:
             or plan["row_name"] != "q4_nonspinning"
             or plan["output_step_M"] != 0.015625
             or plan["capacity"] != 50000
+            or plan["common_grid_resampling"] != "scipy_cubic_spline"
             or plan["local_polynomial_degree"] != 4
             or plan["local_polynomial_half_width_M"] != 2.0
             or any(q.sha256(path) != plan[key + "_sha256"]
@@ -191,7 +192,8 @@ def main() -> int:
             raise ValueError("Unshifted source/native GSL fits do not replay prior controls")
         translation = native_match-meta[2]
         native_indices = np.rint((source_time+translation-native_time[0])/meta[1]).astype(int)
-        valid = (native_indices >= 0) & (native_indices < len(native_time))
+        valid = ((native_indices >= 0) & (native_indices < len(native_time))
+                 & (source_time+max(orbital_shift, peak_shift) <= source_time[-1]))
         source_axis = source_time[valid]
         native_indices = native_indices[valid]
         if len(source_axis) < 1000 or not np.all(np.diff(native_indices) == 1):
@@ -200,6 +202,15 @@ def main() -> int:
             raise ValueError("Source/native grid alignment changed")
         common_native = native_columns.T[native_indices]
         common_source = source_values[valid]
+        common_native_fit = _fit_values(gsl, source_axis, common_native,
+                                         meta[2], source_targets)
+        common_source_fit = _fit_values(gsl, source_axis, common_source,
+                                         meta[2], source_targets)
+        if max(np.linalg.norm(np.asarray(common_native_fit["coefficients"])-native_coeff),
+               np.linalg.norm(np.asarray(common_source_fit["coefficients"])-source_coeff)) > 1e-5:
+            raise ValueError("Common-grid unshifted GSL controls changed")
+        source_interpolant = CubicSpline(source_time, source_values, axis=0,
+                                         extrapolate=False)
         baseline_gap = float(np.linalg.norm(source_coeff-native_coeff))
         native_local_coeff = np.asarray(native_local_fit["coefficients"])
         source_local_coeff = np.asarray(source_local_fit["coefficients"])
@@ -212,6 +223,10 @@ def main() -> int:
                                             meta[2]+shift, source_targets)
             shifted_coeff = np.asarray(shifted_fit["coefficients"])
             shifted_local_coeff = np.asarray(shifted_local_fit["coefficients"])
+            shifted_common = source_interpolant(source_axis+shift)
+            shifted_common_fit = _fit_values(gsl, source_axis, shifted_common,
+                                              meta[2], source_targets)
+            shifted_common_coeff = np.asarray(shifted_common_fit["coefficients"])
             shifts[name] = {
                 "shift_M": shift,
                 "gsl_fit": shifted_fit,
@@ -225,6 +240,11 @@ def main() -> int:
                     shifted_local_coeff-native_local_coeff)),
                 "local_polynomial_gap_attribution": _fit_gap_attribution(
                     native_local_fit, shifted_local_fit),
+                "common_grid_resampled_source_fit": shifted_common_fit,
+                "common_grid_resampled_gap_to_native_l2": float(np.linalg.norm(
+                    shifted_common_coeff-np.asarray(common_native_fit["coefficients"]))),
+                "common_grid_resampled_gap_attribution": _fit_gap_attribution(
+                    common_native_fit, shifted_common_fit),
                 "raw_mode_profile": _raw_mode_profile(
                     source_axis, common_native, common_source, meta[2], shift,
                     plan["near_match_half_width_M"]),
@@ -238,6 +258,9 @@ def main() -> int:
             "source_gsl_fit": source_fit,
             "native_local_polynomial_fit": native_local_fit,
             "source_local_polynomial_fit": source_local_fit,
+            "common_grid_samples": len(source_axis),
+            "common_grid_native_fit": common_native_fit,
+            "common_grid_source_fit": common_source_fit,
             "unshifted_local_polynomial_gap_l2": float(np.linalg.norm(
                 source_local_coeff-native_local_coeff)),
             "unshifted_raw_mode_profile": _raw_mode_profile(
