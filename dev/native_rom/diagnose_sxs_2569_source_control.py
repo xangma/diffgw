@@ -28,6 +28,19 @@ from .diagnose_source_wheel_mode import _source
 
 PLAN = q.ROOT / "dev/native_rom/evidence/2026-09-25/sxs_2569_source_control_plan.json"
 SIMULATION = "SXS:BBH:2569"
+SCOPE = {
+    "physics_validated": False,
+    "production_asset": False,
+    "production_promotion_allowed": False,
+    "training_generator_qualified": False,
+    "description": "Post-hoc pinned-source attribution on one failed NR holdout case.",
+    "known_limitations": [
+        "This selected case is not an independent validation holdout.",
+        "The detector-weighted comparison uses only the dominant (2,2) mode.",
+        "Agreement with this source does not validate the historical model against NR.",
+        "No domain-wide source fidelity, numerical convergence, or ROM is established.",
+    ],
+}
 
 
 def main(argv=None) -> int:
@@ -100,10 +113,16 @@ def main(argv=None) -> int:
     if q.sha256(nr_path) != nr_record["sha256"]:
         parser.error("NR mode changed")
     report = dict(schema="diffgw.seobnrv4.sxs-2569-source-control.v1",
-                  scope=q.SCOPE, status="running", release_qualified=False,
+                  scope=SCOPE, status="running", release_qualified=False,
                   posthoc_selected_case=True, dominant_mode_proxy=True,
                   detector_noise_weighted=True, plan_sha256=q.sha256(PLAN),
                   script_sha256=q.sha256(__file__),
+                  pinned_source=dict(tag=source_plan["pinned_source"]["tag"],
+                                     commit=source_plan["pinned_source"]["peeled_commit"]),
+                  pinned_wheel=dict(
+                      lalsuite=source_plan["pinned_wheel"]["lalsuite_distribution"],
+                      lal=source_plan["pinned_wheel"]["lal_version"],
+                      lalsimulation=source_plan["pinned_wheel"]["lalsimulation_version"]),
                   input_sha256={name: q.sha256(path) for name, path in paths.items()},
                   extraction_sha256=q.sha256(extraction_path),
                   nr_mode_sha256=q.sha256(nr_path),

@@ -174,6 +174,15 @@
   },
   "nr_metadata_sha256": "a4529c1a98a55cfa42af7872e2e3620ea10385c116ecc1600d4e4b153707be54",
   "nr_mode_sha256": "ec98a8fea780d16302f5f83e8f25c87b0decd0b907cc06e9438b81149c1e2381",
+  "pinned_source": {
+    "commit": "2c00d8c200308422036d0a23b7c0394f7c73faad",
+    "tag": "lalsuite-v7.26.15"
+  },
+  "pinned_wheel": {
+    "lal": "7.7.1",
+    "lalsimulation": "6.2.1",
+    "lalsuite": "7.26.15"
+  },
   "plan_sha256": "ef3fad484b0d6e279f32874bd103c7007bb921d582c43508514c44fceab1694f",
   "posthoc_selected_case": true,
   "prior_public_support_M": [
@@ -198,7 +207,7 @@
     ],
     "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
     "host": "RONI2",
-    "pid": 82451
+    "pid": 88931
   },
   "release_qualified": false,
   "rows": [
@@ -415,20 +424,19 @@
   ],
   "schema": "diffgw.seobnrv4.sxs-2569-source-control.v1",
   "scope": {
-    "description": "Scalar CPU float64 numerical stability evidence only; no training or promotion.",
+    "description": "Post-hoc pinned-source attribution on one failed NR holdout case.",
     "known_limitations": [
-      "Convergence cannot establish correctness of the equations or published model fidelity.",
-      "The adaptive prototype uses a diagnostic QNM spline with independently generated values and black-box-inferred knot metadata; this is not wholly literature-specified provenance.",
-      "Changing dt also changes the adaptive initial step and coarse/fine restart sampling; the grid check measures the complete generator's grid sensitivity.",
-      "No time, phase, amplitude, or coefficient fitting is performed.",
-      "No derivatives, batched execution, accelerators, or JAX are qualified here."
+      "This selected case is not an independent validation holdout.",
+      "The detector-weighted comparison uses only the dominant (2,2) mode.",
+      "Agreement with this source does not validate the historical model against NR.",
+      "No domain-wide source fidelity, numerical convergence, or ROM is established."
     ],
     "physics_validated": false,
     "production_asset": false,
     "production_promotion_allowed": false,
     "training_generator_qualified": false
   },
-  "script_sha256": "a85c692574ff807ba1f28ae93e42f1bb6c668306e0a3fa3275163e733d0c1623",
+  "script_sha256": "a718d378d6ae3ed5066902aa66ac3aee8ab8e334ae920ae3418dea9b2c746edf",
   "source_delta_t_s": 1.2314539319619536e-06,
   "source_epoch_s": -0.070853337,
   "source_mode_sha256": "261c8d44e0a917379f0756991fbce38003dbc33ff848315fe6c8ca760dc09ec3",
