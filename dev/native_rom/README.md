@@ -2140,6 +2140,25 @@ the selected q4 row: they identify radial momentum as the largest immediate
 input to the NQC coefficient difference, but do not establish where its
 trajectory discrepancy originates or a physically consistent replacement.
 
+The [equal-radius q4 orbit comparison](evidence/2026-09-25/q4_native_source_nqc_orbit_alignment.json)
+uses a [frozen plan](evidence/2026-09-25/q4_native_source_nqc_orbit_alignment_plan.json)
+on those same captured inputs. Radius, radial momentum, and orbital frequency
+independently prefer source time shifts of `0.0047989`, `0.0048018`, and
+`0.0047987 M` over the `±2 M` NQC neighborhood. At equal radius, the
+radial-momentum RMS difference falls from `4.99e-5` to `3.73e-8` and the
+orbital-frequency RMS difference from `1.75e-5` to `1.12e-9`. The high-grid
+frequency maxima occur `7.23009 M` (source) and `7.22535 M` (native) after
+their respective match times, yet both implementations report an orbital
+peak at `7.248532 M`. The frequency slope at each reported peak is negative,
+and those reported times are `0.01845` and `0.02319 M` after the independent
+high-grid maxima. This is consistent with the historical derivative-sign
+contraction returning an interval edge when its selected endpoint slopes do
+not bracket a root. The selected q4 orbital states are nearly the same curve
+under a small time translation, but the recorded matching times sample
+different states. A shifted-match NQC fit is needed to test whether this
+fully explains the coefficient gap; the independent maxima do not by
+themselves justify changing the historical event prescription.
+
 1. Qualify the physical generator against the published equations and independent
    references over the intended domain, resolve convention/provenance gaps, and
    establish gradients and numerical convergence. This runner covers only scalar

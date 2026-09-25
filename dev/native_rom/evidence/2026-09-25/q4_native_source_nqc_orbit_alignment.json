@@ -1,0 +1,150 @@
+{
+  "comparison": {
+    "elapsed_seconds": 69.96937179204542,
+    "equal_radius": {
+      "orbital_frequency": {
+        "error": {
+          "max_abs": 2.8958948850021926e-09,
+          "mean": -6.725421047978561e-10,
+          "rms": 1.1189428703829565e-09
+        },
+        "rms_ratio_to_equal_time": 6.390005521849694e-05
+      },
+      "radial_momentum": {
+        "error": {
+          "max_abs": 8.27328509866998e-08,
+          "mean": -3.039938072622872e-08,
+          "rms": 3.734804484119404e-08
+        },
+        "rms_ratio_to_equal_time": 0.0007482072421253185
+      }
+    },
+    "fields": {
+      "orbital_frequency": {
+        "best_source_time_shift_M": 0.004798682469374184,
+        "match_relative_time": {
+          "max_abs": 1.8648054167125228e-05,
+          "mean": 1.7494697378103892e-05,
+          "rms": 1.7510827910193415e-05
+        },
+        "shift_at_bound": false,
+        "time_shift_rms_ratio": 8.3682981731578e-05,
+        "time_shifted": {
+          "max_abs": 3.2973738184338686e-09,
+          "mean": -2.523867963580284e-11,
+          "rms": 1.4653582921135218e-09
+        }
+      },
+      "radial_momentum": {
+        "best_source_time_shift_M": 0.004801825910519579,
+        "match_relative_time": {
+          "max_abs": 5.6106927058929834e-05,
+          "mean": -4.980514239353163e-05,
+          "rms": 4.991671122442644e-05
+        },
+        "shift_at_bound": false,
+        "time_shift_rms_ratio": 0.0004207105878571355,
+        "time_shifted": {
+          "max_abs": 5.250065088224787e-08,
+          "mean": 3.1701666812489204e-10,
+          "rms": 2.1000488923123323e-08
+        }
+      },
+      "radius": {
+        "best_source_time_shift_M": 0.00479886478965632,
+        "match_relative_time": {
+          "max_abs": 0.0004943730548570002,
+          "mean": -0.00046860713988358844,
+          "rms": 0.0004688606694130049
+        },
+        "shift_at_bound": false,
+        "time_shift_rms_ratio": 5.981804921290074e-05,
+        "time_shifted": {
+          "max_abs": 7.836125970328567e-08,
+          "mean": 6.818806578406944e-10,
+          "rms": 2.804633059694071e-08
+        }
+      }
+    },
+    "match_time_translation_M": 71.5625,
+    "native_input_sha256": "3a974e6b2545551f5f36c31d9f24937630267c396769f2c6fb42a1e185bf3e9c",
+    "near_samples": 256,
+    "orbital_peaks": {
+      "native_high_grid": {
+        "frequency": 0.1701951792457925,
+        "sample_index": 9584,
+        "sample_time_relative_to_match_M": 7.232914645394544,
+        "spline_curvature_at_reported_peak": -0.0035369141812632513,
+        "spline_derivative_at_reported_peak": -8.123771667156622e-05,
+        "spline_minus_reported_time_M": -0.023186234621192625,
+        "spline_time_relative_to_match_M": 7.22534578137882
+      },
+      "native_minus_source_high_grid_M": -0.004739644252993003,
+      "native_reported_relative_to_match_M": 7.248532016000013,
+      "source_high_grid": {
+        "frequency": 0.17019517444925955,
+        "sample_index": 9584,
+        "sample_time_relative_to_match_M": 7.232914645394544,
+        "spline_curvature_at_reported_peak": -0.003523246164637076,
+        "spline_derivative_at_reported_peak": -6.450841549803127e-05,
+        "spline_minus_reported_time_M": -0.018446590368199622,
+        "spline_time_relative_to_match_M": 7.230085425631813
+      },
+      "source_reported_relative_to_match_M": 7.248532016000013
+    },
+    "reference_samples": 512,
+    "source_input_sha256": "64d33d2b1a3caef48bd4a06202e6006c69455198abac9cc94f82eb0da0c2a8aa"
+  },
+  "errors": [],
+  "input_sha256": {
+    "capture_adapter": "0e2006c7a2898b09d56b5d464135b113f4546f43b607ddacbf327761a24a6451",
+    "prior_field_swap": "b976e241404571a6554407f2e212bb399d97df59903bd11b9bb857c6056d791f",
+    "prior_fit": "38443b9f7e60eaf6f59726669150d5afaa1f694a14a86f84ce0dd5896adf75f4",
+    "settings": "3c414c018917f7dad38644ad86ba58781bc53180b931cb8f869c34f5e83b3025",
+    "source_flux_plan": "1167199c8f954f97a5905a1e3b2f67d1555e984e5f1da0a0fc42a77a925f96ea",
+    "source_inputs": "e657ce7301fa3903297cdf0f5c07632c62561eda7e7f4c3994c169e45f4a95ae"
+  },
+  "output_step_M": 0.015625,
+  "plan_sha256": "e092f2c160666709ff96de56232e6e85f90bf06a36567770e3ab36b3b076973a",
+  "process": {
+    "argv": [
+      "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw/dev/native_rom/diagnose_q4_native_source_nqc_orbit_alignment.py",
+      "--source-root",
+      "/Users/xangma/repos/lalsuite-git",
+      "--headers",
+      "/tmp/diffgw-lalsuite-pinned-53acc0c/merged-include",
+      "--gsl-include",
+      "/usr/local/include",
+      "--json-out",
+      "dev/native_rom/evidence/2026-09-25/q4_native_source_nqc_orbit_alignment.json"
+    ],
+    "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+    "host": "RONI2",
+    "pid": 59329
+  },
+  "release_qualified": false,
+  "row": {
+    "chi1": 0.0,
+    "chi2": 0.0,
+    "mass1": 40.0,
+    "mass2": 10.0,
+    "omega_start": 0.04
+  },
+  "schema": "diffgw.seobnrv4.q4-native-source-nqc-orbit-alignment.v1",
+  "scope": {
+    "description": "Scalar CPU float64 numerical stability evidence only; no training or promotion.",
+    "known_limitations": [
+      "Convergence cannot establish correctness of the equations or published model fidelity.",
+      "The adaptive prototype uses a diagnostic QNM spline with independently generated values and black-box-inferred knot metadata; this is not wholly literature-specified provenance.",
+      "Changing dt also changes the adaptive initial step and coarse/fine restart sampling; the grid check measures the complete generator's grid sensitivity.",
+      "No time, phase, amplitude, or coefficient fitting is performed.",
+      "No derivatives, batched execution, accelerators, or JAX are qualified here."
+    ],
+    "physics_validated": false,
+    "production_asset": false,
+    "production_promotion_allowed": false,
+    "training_generator_qualified": false
+  },
+  "script_sha256": "63d05eb87a433863f3f1436048dd9835a87c235ab995107f9d8bbc8b72c33b06",
+  "status": "diagnostic_complete"
+}
