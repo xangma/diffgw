@@ -1467,6 +1467,17 @@ and `6.62446e-6`, with factor-1024 backend difference `1.02e-9`. This supports
 refinement of that local case, but the earlier 256-to-512 failure remains in
 the record and no common four-case factor-512 to factor-1024 sweep exists.
 
+The [opt-in combined-control driver replay](evidence/2026-09-25/source_combined_driver_parity_plan.json)
+connects the earlier degree-four, ±2 M local NQC derivative fit and continuous
+matching boundary to the long-waveform Torch development driver. On the pinned
+q=4, factor-256 case, [its evidence](evidence/2026-09-25/source_combined_driver_parity_q4_nonspinning.json)
+passes all predeclared route checks: the full complex mode differs from the
+independently exercised Torch route by `6.815e-10` relative L2, with identical
+output support and chart, match/boundary times within `5.37e-9 M`, and NQC
+coefficients within `5.50e-9`. This only validates numerical plumbing for
+that case; it does not establish physical accuracy, source fidelity, JIT or
+autodiff support for the complete waveform, or ROM training.
+
 The [frozen anchor diagnostic](evidence/2026-09-25/source_spliced_anchor_plan.json)
 replays all four cases and fits each mode's own amplitude peak between output
 samples without optimizing a relative shift. The [results](evidence/2026-09-25/source_spliced_anchor.json)

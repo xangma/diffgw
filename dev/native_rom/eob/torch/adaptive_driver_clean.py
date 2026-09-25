@@ -26,7 +26,10 @@ from torchwave.approximants.eob.integrator import EOBTrajectoryIntegrator
 from torchwave.approximants.eob.numerical_attachment import (
     attach_seobnrv4_22_numerical_compatibility,
 )
-from torchwave.approximants.eob.nqc import nqc_22_basis
+from torchwave.approximants.eob.nqc import (
+    nqc_22_basis,
+    seobnrv4_nqc_time_offset_numerical_compatibility,
+)
 
 from torchwave.approximants.eob.adaptive_driver_clean import (
     GSL_STATE_SCALED_CONTROLLER,
@@ -151,12 +154,14 @@ def reconstruct_seobnrv4_22_adaptive(
     diagnostic_warm_start_Momega: Optional[float] = None,
     diagnostic_restart_time_M: Optional[float] = None,
     diagnostic_fine_max_step_M: Optional[float] = None,
+    diagnostic_fine_refinement_factor: Optional[int] = None,
     diagnostic_hermite_resampling: bool = False,
     diagnostic_rkf45_resampling: bool = False,
     diagnostic_fine_rkf45_resampling: bool = False,
     diagnostic_local_nqc_derivatives: bool = False,
     diagnostic_nqc_phase_window_M: float = 0.5,
     diagnostic_matching_second_derivatives: bool = False,
+    diagnostic_combined_local_fit: Optional[dict] = None,
     num_steps: int = 20000,
     ringdown_duration: float = 150.0,
     atol: float = 1.0e-10,
@@ -198,6 +203,12 @@ def reconstruct_seobnrv4_22_adaptive(
             and (not math.isfinite(float(diagnostic_fine_max_step_M))
                  or diagnostic_fine_max_step_M <= 0)):
         raise ValueError("diagnostic_fine_max_step_M must be finite and positive")
+    if (diagnostic_fine_refinement_factor is not None
+            and (not isinstance(diagnostic_fine_refinement_factor, int)
+                 or diagnostic_fine_refinement_factor < 1
+                 or diagnostic_fine_refinement_factor
+                 & (diagnostic_fine_refinement_factor - 1))):
+        raise ValueError("diagnostic_fine_refinement_factor must be a power of two")
     if (diagnostic_restart_time_M is not None
             and not math.isclose(round(diagnostic_restart_time_M / dt_geom) * dt_geom,
                                  diagnostic_restart_time_M,
@@ -221,6 +232,11 @@ def reconstruct_seobnrv4_22_adaptive(
         raise ValueError("diagnostic_nqc_phase_window_M requires local NQC derivatives")
     if not isinstance(diagnostic_matching_second_derivatives, bool):
         raise TypeError("diagnostic_matching_second_derivatives must be bool")
+    if diagnostic_combined_local_fit is not None:
+        if (diagnostic_combined_local_fit != {"half_width_M": 2.0, "degree": 4}
+                or diagnostic_local_nqc_derivatives
+                or diagnostic_matching_second_derivatives):
+            raise ValueError("combined local fit requires its frozen degree-4 recipe alone")
     if not isinstance(num_steps, int) or num_steps < 4:
         raise ValueError("num_steps must be an integer of at least four")
     if not math.isfinite(float(ringdown_duration)) or ringdown_duration <= 0:
@@ -366,6 +382,8 @@ def reconstruct_seobnrv4_22_adaptive(
     restart_state = _preserve_output_phase(coarse_state_flat[:, restart_index])
     restart_time = coarse_time_flat[:, restart_index]
     fine_step = float(dt_geom) / 2.0 ** max(0, math.ceil(math.log2(50.0 * float(dt_geom))))
+    if diagnostic_fine_refinement_factor is not None:
+        fine_step = float(dt_geom) / diagnostic_fine_refinement_factor
     fine_events = [AlignedSpinV4Event("fine") for _ in range(rows)]
     fine_runs = []
     for row in range(rows):
@@ -423,19 +441,30 @@ def reconstruct_seobnrv4_22_adaptive(
         # First obtain the continuous peak/match from the actual fine
         # trajectory.  A second attachment evaluation then includes the full
         # finite-support ringdown on its local fine grid before downsampling.
-        provisional = attach_seobnrv4_22_numerical_compatibility(
-            row_fine_time, row_fine_state, fine_field[..., 1], row_fine_mode,
-            row_fine_frequency, nu.reshape(-1)[row], chi.reshape(-1)[row],
-            sigma.reshape(-1)[row], row_fine_time,
-        )
-        match_local = provisional.match_time
-        phase_matrix = (_diagnostic_local_nqc_phase_matrix(
-            row_fine_time, row_fine_state, fine_field[..., 1], match_local,
-            diagnostic_nqc_phase_window_M)
-            if diagnostic_local_nqc_derivatives else None)
-        matching_second = (_diagnostic_local_matching_second(
-            row_fine_time, provisional.nqc, match_local)
-            if diagnostic_matching_second_derivatives else None)
+        if diagnostic_combined_local_fit is None:
+            provisional = attach_seobnrv4_22_numerical_compatibility(
+                row_fine_time, row_fine_state, fine_field[..., 1], row_fine_mode,
+                row_fine_frequency, nu.reshape(-1)[row], chi.reshape(-1)[row],
+                sigma.reshape(-1)[row], row_fine_time,
+            )
+            match_local = provisional.match_time
+            phase_matrix = (_diagnostic_local_nqc_phase_matrix(
+                row_fine_time, row_fine_state, fine_field[..., 1], match_local,
+                diagnostic_nqc_phase_window_M)
+                if diagnostic_local_nqc_derivatives else None)
+            matching_second = (_diagnostic_local_matching_second(
+                row_fine_time, provisional.nqc, match_local)
+                if diagnostic_matching_second_derivatives else None)
+            amplitude_derivatives = rhs_derivatives = None
+        else:
+            from .local_nqc_control import local_nqc_controls, stationary_peak_time
+            match_local = (stationary_peak_time(row_fine_time, fine_field[..., 1])
+                           + seobnrv4_nqc_time_offset_numerical_compatibility(
+                               nu.reshape(-1)[row], chi.reshape(-1)[row]))
+            amplitude_derivatives, phase_matrix, rhs_derivatives = local_nqc_controls(
+                row_fine_time, row_fine_state, fine_field[..., 1], row_fine_mode,
+                match_local, **diagnostic_combined_local_fit)
+            matching_second = None
         output_count = max(
             2,
             int(torch.ceil((match_local + ringdown_duration).detach() / fine_step).item()) + 1,
@@ -445,8 +474,12 @@ def reconstruct_seobnrv4_22_adaptive(
             row_fine_time, row_fine_state, fine_field[..., 1], row_fine_mode,
             row_fine_frequency, nu.reshape(-1)[row], chi.reshape(-1)[row],
             sigma.reshape(-1)[row], row_output_time,
+            match_time=match_local if diagnostic_combined_local_fit is not None else None,
+            diagnostic_amplitude_derivatives=amplitude_derivatives,
             diagnostic_phase_matrix=phase_matrix,
             diagnostic_matching_second=matching_second,
+            diagnostic_matching_rhs_derivatives=rhs_derivatives,
+            diagnostic_continuous_boundary=diagnostic_combined_local_fit is not None,
         )
         coarse_coefficients = attachment.calibration.coefficients
         row_coarse_mode = _apply_calibrated_nqc(
