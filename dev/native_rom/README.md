@@ -2055,7 +2055,7 @@ gap is also `1.46e-7` there, while the other components differ by at most
 `2.55e-9` relative and regular flux agrees with torque-implied flux within
 `2.34e-15`. Thus this selected same-state discrepancy belongs to the
 historical numerical derivative route, not the optimized physical field or
-flux formula. Its trajectory-level impact is unmeasured.
+flux formula. The following replay tests its effect on an evolved trajectory.
 
 The [controlled q10 trajectory replay](evidence/2026-09-25/regular_optimized_trajectory.json)
 starts both pinned-source derivative routes from the same legacy initial
