@@ -217,6 +217,23 @@ PID `80116`, command
 with log `/tmp/diffgw-jax-nqc-phase-centering.log`. It finished in 29 seconds
 with exit code 1 for the frozen gate failure; no process or next check remains.
 
+The [frozen continuous-phase-derivative control](jax_nqc_continuous_phase_plan.json)
+then replaced only the phase NQC matching right-hand side with the published
+frequency and its Lie derivative at the same fixed-chart EOB state. Its
+[result](jax_nqc_continuous_phase.json) reduces the replay-induced phase
+coefficient gap from `1.21e-7` to `2.13e-14`, but the eager waveform changes
+by `1.907405e-5` relative L2 against the original spline match. The remaining
+amplitude-coefficient gap is `1.291122e-6`; whole eager/JIT relative L2 is
+`1.494895e-10`, still above the unchanged `1e-10` gate. This is a failed,
+no-AD development control, not source-preserving or release-qualified. It
+ran on RONI2 in this worktree as PID `43085`, command
+`PYTHONPATH=src:. /Users/xangma/repos/diffgw/.venv/bin/python -m dev.native_rom.diagnose_jax_nqc_continuous_phase`,
+with log `/tmp/diffgw-jax-nqc-continuous-phase.log`. It finished in 35
+seconds with exit code 1 for the frozen gate failures; no process or next
+check remains. The next numerical investigation should isolate accepted-knot
+versus spline-resampling eager/JIT drift, since replacing matching semantics
+has not preserved the historical waveform.
+
 Two different release claims must stay separate:
 
 - **Historical SEOBNRv4 fidelity:** a port may be described as faithful only

@@ -1,0 +1,21 @@
+{
+  "schema": "diffgw.seobnrv4.jax-nqc-continuous-phase-plan.v1",
+  "release_qualified": false,
+  "source_head": "7c99d95",
+  "case": "high_start_mixed_spin",
+  "output_step_M": 0.5,
+  "fine_refinement_factor": 32,
+  "adaptive_atol": 1e-10,
+  "adaptive_rtol": 1e-9,
+  "method": "On the frozen fixed chart, replace only the sampled pre-NQC phase spline's two matching derivatives with the continuous published phase frequency and its Lie derivative at the same interpolated EOB state. Retain the existing amplitude rows, phase basis matrix, sampled waveform interpolation, and ringdown attachment. Compare against the original spline matching on identical input and against eager/JIT replay.",
+  "gates": {
+    "max_replay_state_absolute_error": 1e-7,
+    "max_candidate_baseline_whole_relative_l2": 1e-10,
+    "max_candidate_whole_eager_jit_relative_l2": 1e-10
+  },
+  "operational_limits": {
+    "max_wall_time_s": 300,
+    "max_rss_gib": 32
+  },
+  "interpretation": "Development-only no-AD diagnostic. Passing these gates alone does not qualify gradients, source parity across cases, or a release waveform. Do not change frozen limits in response to the result."
+}

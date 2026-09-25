@@ -126,6 +126,7 @@ def _solve_traceable(matrix, rhs):
 def traceable_nqc_22_full_series_coefficients(
     time, r, pr_star, orbital_frequency, base_mode, match_time, targets,
     *, barrier_combined=False, amplitude_rows=None, phase_series=None,
+    phase_derivative_rows=None,
     center_phase=False,
 ):
     """Differentiate a fixed-grid full-series NQC solve on validated inputs.
@@ -163,6 +164,9 @@ def traceable_nqc_22_full_series_coefficients(
     phase_spline = natural_cubic_spline(time, phase, scalar_output=True)
     phase_rhs = jnp.stack((phase_spline.derivative(match_time) - targets.frequency,
                            phase_spline.derivative(match_time, 2) - targets.frequency_derivative))
+    if phase_derivative_rows is not None:
+        phase_rhs = jnp.asarray(phase_derivative_rows) - jnp.stack(
+            (targets.frequency, targets.frequency_derivative))
     a, amplitude_condition, amplitude_residual = _solve_traceable(
         amplitude_matrix, amplitude_rhs)
     b, phase_condition, phase_residual = _solve_traceable(
@@ -175,6 +179,7 @@ def traceable_fixed_chart_attached_mode22(
     time, r, pr_star, orbital_frequency, base_mode, match_time, targets,
     nu, chi, sigma, output_time, *, mass_scale=1.0,
     barrier_combined=False, amplitude_rows=None, phase_series=None,
+    phase_derivative_rows=None,
     center_phase=False,
 ):
     """Replay NQC and continuous-boundary attachment on a validated fixed chart.
@@ -186,7 +191,8 @@ def traceable_fixed_chart_attached_mode22(
     a, b, *_ = traceable_nqc_22_full_series_coefficients(
         time, r, pr_star, orbital_frequency, base_mode, match_time, targets,
         barrier_combined=barrier_combined, amplitude_rows=amplitude_rows,
-        phase_series=phase_series, center_phase=center_phase)
+        phase_series=phase_series, center_phase=center_phase,
+        phase_derivative_rows=phase_derivative_rows)
     amplitude = jnp.abs(base_mode)
     phase = (_unwrap_mode_phase_unchecked(base_mode) if phase_series is None
              else jnp.asarray(phase_series))
