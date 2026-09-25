@@ -136,6 +136,21 @@ that reporting error. The corrected run completed on RONI2 in this worktree
 as PID `2410`, command `PYTHONPATH=src:. /Users/xangma/repos/diffgw/.venv/bin/python -m dev.native_rom.diagnose_initial_finite_probe_domain --source-root /Users/xangma/repos/lalsuite-git --headers /tmp/diffgw-lalsuite-pinned-53acc0c/merged-include --gsl-include /usr/local/include --json-out dev/native_rom/evidence/2026-09-25/initial_finite_probe_domain.json`,
 log `/tmp/diffgw-initial-finite-domain-rerun.log`, exit code 0. No process or
 next check remains.
+The [frozen same-point source term trace](initial_legacy_terms_plan.json)
+and [result](initial_legacy_terms.json) reproduce all eight source initial
+states exactly. Across the legacy and optimized branches, flux differs by at
+most `2.67e-15` fractionally and the finite radial response by `1.29e-8`;
+the radial second derivative differs by up to `2.16e-4`, the mixed radial
+and angular derivative by `3.68e-5`, and the resulting energy derivative
+and inward momentum by about `2.16e-4`. This isolates the branch-level
+momentum gap to the historical nested numerical second derivatives without
+qualifying their use in the native generator. The first invocation stopped
+before point evaluation because it omitted mandatory nonqualification
+metadata; the plan records that report-only correction. The successful
+trace ran on RONI2 in this worktree as PID `12351`, command
+`PYTHONPATH=src:. /Users/xangma/repos/diffgw/.venv/bin/python -m dev.native_rom.diagnose_initial_legacy_terms --source-root /Users/xangma/repos/lalsuite-git --headers /tmp/diffgw-lalsuite-pinned-53acc0c/merged-include --gsl-include /usr/local/include --json-out dev/native_rom/evidence/2026-09-25/initial_legacy_terms.json`,
+log `/tmp/diffgw-initial-legacy-terms.log`, exit code 0. No process or next
+check remains.
 The existing [public/NR chirp diagnostic](sxs_public_chirp.json) locates a
 waveform-phase discrepancy on the already inspected 2569 case: at mode
 frequency `0.05/M`, relative to a `0.09/M` anchor and smoothing window 20,

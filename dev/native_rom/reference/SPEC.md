@@ -300,6 +300,16 @@ source branch selected by the historical generator, the maximum gap is
 residual by less than `6e-10` absolute on these points. Thus the optimized
 branch agreement does not remove the legacy derivative-path mismatch or
 validate a complete historical initial-data solve.
+The [pinned-source term trace](../evidence/2026-09-25/initial_legacy_terms.json)
+replays those same eight points exactly after development-only instrumentation.
+Legacy and optimized flux differ by at most `2.67e-15` fractionally and the
+finite radial Hamiltonian response by at most `1.29e-8`; the legacy radial
+second derivative differs by up to `2.16e-4`, the mixed radial/angular
+second derivative by `3.68e-5`, and the resulting energy derivative and
+inward momentum by about `2.16e-4`. This locates the branch-level momentum
+gap in the source's nested numerical second derivatives. It does not show
+that copying their numerical noise into a native model improves waveform
+fidelity or meets a physical release gate.
 The [q4 legacy-momentum intervention](../evidence/2026-09-25/q4_legacy_initial_intervention.json)
 uses the source value at the native warm start and worsens the selected
 peak-fitted native/source whole-mode relative L2 from `3.51e-4` to `3.62e-4`;
