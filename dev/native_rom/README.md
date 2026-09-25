@@ -2422,6 +2422,19 @@ conditioner or a revised release gate. The next step is to separate discrete
 TD/FFT time-origin changes from local-gauge sensitivity and intrinsic FD
 shape error on new prospective rows before generating training data.
 
+The [fourth-cadence continuation](evidence/2026-09-25/rom_input_refined_cadence.json)
+uses a separate [frozen diagnostic plan](evidence/2026-09-25/rom_input_refined_cadence_plan.json)
+on the same two rows. At 32768 Hz requested output cap, the equal-mass
+conditioned complex L2 only falls from `2.14e-4` to `1.89e-4`, while the q4
+value rises from `1.12e-4` to `1.39e-4`; both fail the predeclared factor-two
+refinement check. Support and unwrapping still pass. A separate
+[post-hoc phase diagnostic](evidence/2026-09-25/rom_input_refined_phase_locality.json)
+finds broad-line-equivalent shifts of `15.25` and `15.31` microseconds,
+approximately one new time sample; broad-line-detrended residual phase RMS
+is `1.91e-6` and `6.72e-6` rad, compared with `3.14e-4` and `2.52e-4`
+rad under the required local gauge. This does not erase either failed
+cadence gate or establish that an alternative gauge would converge.
+
 1. Qualify the physical generator against the published equations and independent
    references over the intended domain, resolve convention/provenance gaps, and
    establish gradients and numerical convergence. This runner covers only scalar

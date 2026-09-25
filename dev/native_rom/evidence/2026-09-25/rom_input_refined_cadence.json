@@ -1,0 +1,96 @@
+{
+  "all_checks_passed": false,
+  "errors": [],
+  "plan_sha256": "4cadcb627ca36d7ea2466f20c52d4ff799bf1036231e8af4d0f12f06874175e9",
+  "prior_report_sha256": "dacbb97fe53d986f97b7f0f38c0f74fd4da353d1d7808d03a36947bdff530cc4",
+  "prior_spectra_sha256": "3ec6e18d989134b8ed68f86faaaab9247a8ebac065d8b1d0b447c398f4a6ef05",
+  "process": {
+    "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+    "host": "RONI2",
+    "pid": 37598
+  },
+  "release_qualified": false,
+  "rows": [
+    {
+      "checks": {
+        "amplitude_budget": true,
+        "complex_refinement": false,
+        "frequency_support_and_unwrap": true,
+        "phase_refinement": false
+      },
+      "cross_sha256": "85acbc31b0ff78458cd19d8104f04e1fe8f54ce3f6f2fb9cb5775335752d809a",
+      "dt_geom": 0.05163204109906097,
+      "elapsed_seconds": 26.188586958975065,
+      "fft_samples": 2097152,
+      "name": "equal_mass_nonspinning",
+      "new_pair": {
+        "amplitude_relative_l2": 2.667413540067185e-06,
+        "complex_relative_l2": 0.00018936511842909649,
+        "phase_max_abs_rad": 0.0006142794983645672,
+        "phase_rms_rad": 0.0003143013185426911
+      },
+      "passed": false,
+      "plus_sha256": "87ee0a0b61efee16658c82edc7312b5c3ebe4294e8a8523390f910966fc90299",
+      "plus_support": {
+        "checks": {
+          "adjacent_phase_step": true,
+          "amplitude_support": true,
+          "decimated_unwrap": true
+        },
+        "maximum_adjacent_phase_step_rad": 0.029069102546562586,
+        "maximum_decimated_unwrap_difference_rad": 0.0,
+        "minimum_relative_amplitude": 0.10296025314803531
+      },
+      "prior_pair": {
+        "amplitude_relative_l2": 1.7824552451751648e-06,
+        "complex_relative_l2": 0.0002135240963616219,
+        "phase_max_abs_rad": 0.0006973433280137442,
+        "phase_rms_rad": 0.0003565338826182531
+      },
+      "td_samples": 42623
+    },
+    {
+      "checks": {
+        "amplitude_budget": true,
+        "complex_refinement": false,
+        "frequency_support_and_unwrap": true,
+        "phase_refinement": false
+      },
+      "cross_sha256": "ee4a6213e22204dc5d9d070a83c95bffbb6099523d2d0c65254567cb17b143f5",
+      "dt_geom": 0.06195844931887317,
+      "elapsed_seconds": 38.00442687503528,
+      "fft_samples": 2097152,
+      "name": "q4_mixed_spin",
+      "new_pair": {
+        "amplitude_relative_l2": 1.7227058785149022e-06,
+        "complex_relative_l2": 0.00013947510864010854,
+        "phase_max_abs_rad": 0.00047436811639300913,
+        "phase_rms_rad": 0.0002516484951563182
+      },
+      "passed": false,
+      "plus_sha256": "303e8bd2a1640d9c81ab5bcd1d4c92cba6dac84f7796a5300605c85fcd3c9e03",
+      "plus_support": {
+        "checks": {
+          "adjacent_phase_step": true,
+          "amplitude_support": true,
+          "decimated_unwrap": true
+        },
+        "maximum_adjacent_phase_step_rad": 0.060897608489381305,
+        "maximum_decimated_unwrap_difference_rad": 0.0,
+        "minimum_relative_amplitude": 0.1009848731498782
+      },
+      "prior_pair": {
+        "amplitude_relative_l2": 3.2397375148067824e-06,
+        "complex_relative_l2": 0.00011168406841946834,
+        "phase_max_abs_rad": 0.0004460196688000906,
+        "phase_rms_rad": 0.00021361758921657268
+      },
+      "td_samples": 85405
+    }
+  ],
+  "schema": "diffgw.seobnrv4.rom-input-refined-cadence.v1",
+  "scope": "Fourth-cadence numerical diagnostic on two reused rows; prior failed gate remains failed.",
+  "script_sha256": "52962b1327ffbeacb1dd5614b66f8598883987ac955a5567d2e985a239269eb1",
+  "spectra_sha256": "df75b46672f43a277219c8959ad37fa8016ddef722fdc8f6c9524ba385b7f364",
+  "status": "measured"
+}

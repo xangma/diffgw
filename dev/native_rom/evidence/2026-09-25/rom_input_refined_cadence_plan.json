@@ -1,0 +1,16 @@
+{
+  "schema": "diffgw.seobnrv4.rom-input-refined-cadence-plan.v1",
+  "purpose": "Diagnostic fourth sampling level after the frozen three-level ROM-input cadence gate failed on both diagnostic rows.",
+  "release_qualified": false,
+  "prior_report_sha256": "dacbb97fe53d986f97b7f0f38c0f74fd4da353d1d7808d03a36947bdff530cc4",
+  "prior_spectra_sha256": "3ec6e18d989134b8ed68f86faaaab9247a8ebac065d8b1d0b447c398f4a6ef05",
+  "f_max_hz": 32768.0,
+  "per_run_timeout_seconds": 240.0,
+  "checks": {
+    "new_complex_relative_l2_at_most_previous_times": 0.5,
+    "new_phase_rms_at_most_previous_times": 0.5,
+    "new_amplitude_relative_l2_at_most": 0.001,
+    "frequency_support_and_unwrap_passed": true
+  },
+  "interpretation": "Only an exploratory continuation on previously used diagnostic rows. It cannot erase the failed original gate, establish domain convergence, qualify a phase conditioner, or create ROM training data. The original reserved holdouts remain untouched."
+}
