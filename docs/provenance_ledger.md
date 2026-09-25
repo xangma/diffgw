@@ -329,9 +329,11 @@ Model-specific formulations, reference configurations and limitations are descri
   helpers. `diffgw_reference/phenomt_angle_continuation.py` independently
   implements the minimal-rotation, MECO, and ringdown scalar rules. The q=10
   receipts retain the failed whole-waveform gates. Full-grid onset checks
-  localize PV223 before MECO to the raw analytical angles and PV300/FS4 after
-  the reference event to trajectory evolution, while excluding continuation,
-  ringdown, event placement, and angle reconstruction as the earliest causes.
+  localize PV223 before MECO to the raw analytical angles. For PV300/FS4 they
+  establish a pre-merger orientation/rotation residual after the reference
+  event and exclude projection and ringdown, but the public Euler-angle output
+  does not expose internal trajectory state: carrier/time mapping, trajectory
+  evolution, and angle construction remain unresolved alternatives.
   They introduce no production equation change or coefficient fitted to public
   binary output.
 - Verification: LALSimulation is used only through its installed binary

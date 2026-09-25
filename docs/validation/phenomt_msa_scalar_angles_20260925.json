@@ -1,11 +1,18 @@
 {
-  "generated_utc": "2026-09-25T14:58:40.839056+00:00",
-  "reproduction": "PYTHONPATH=src python scripts/diagnose_phenomt_msa_scalar_angles.py --case high_mass_ratio --sample-rate 2048 --table-nodes 4097 --output receipt.json",
+  "generated_utc": "2026-09-25T15:36:28.873839+00:00",
+  "reproduction": "PYTHONPATH=src /tmp/diffgw-phenomt-latest-20260925/bin/python scripts/diagnose_phenomt_msa_scalar_angles.py --case high_mass_ratio --sample-rate 2048 --table-nodes 4097 --output docs/validation/phenomt_msa_scalar_angles_20260925.json",
+  "execution": {
+    "host": "len",
+    "working_directory": "/tmp/diffgw-pr44-20260925/repo",
+    "command": "PYTHONPATH=src /tmp/diffgw-phenomt-latest-20260925/bin/python scripts/diagnose_phenomt_msa_scalar_angles.py --case high_mass_ratio --sample-rate 2048 --table-nodes 4097 --output docs/validation/phenomt_msa_scalar_angles_20260925.json"
+  },
   "versions": {
-    "python": "3.12.7",
-    "numpy": "2.4.3",
+    "python": "3.12.3",
+    "numpy": "2.5.3",
     "scipy": "1.18.1",
-    "torch": "2.14.0",
+    "torch": "2.14.0+cu130",
+    "lalsuite": "7.26.15",
+    "lal": "7.7.1",
     "lalsimulation": "6.2.1"
   },
   "dtype": "float64",
@@ -37,10 +44,10 @@
   "result": {
     "case": "high_mass_ratio",
     "sample_rate_hz": 2048,
-    "reference_time_seconds": -2.6298159284410474,
-    "meco_time_seconds": -0.02940747596915795,
+    "reference_time_seconds": -2.6298159284410594,
+    "meco_time_seconds": -0.029407475969157958,
     "peak_time_seconds": 0.0,
-    "ringdown_alpha_slope_radians_per_second": 435.7930304869314,
+    "ringdown_alpha_slope_radians_per_second": 435.7930304869112,
     "selected_samples": 9,
     "raw_scalar_table": {
       "start_time_seconds": -2.629817046,
@@ -55,36 +62,36 @@
       "samples": 5326,
       "first_time_seconds": -2.629817046,
       "last_time_seconds": -0.02971938974999988,
-      "initial_absolute_rotation_radians": 1.5422580610181325,
-      "relative_rotation_max_radians": 0.016225773146821276,
-      "relative_rotation_final_radians": 0.016225773146821276,
+      "initial_absolute_rotation_radians": 1.542258061017859,
+      "relative_rotation_max_radians": 0.016225773147368748,
+      "relative_rotation_final_radians": 0.016225773147368748,
       "first_relative_rotation_crossings": {
         "0.0001": {
           "sample_index": 65,
           "time_seconds": -2.59807876475,
           "elapsed_from_first_sample_seconds": 0.03173828125,
-          "relative_rotation_radians": 0.0001015728756882755,
-          "alpha_anchored_residual_radians": 0.00016981101021684708,
-          "beta_residual_radians": 0.000946704183627578,
-          "gamma_anchored_residual_radians": -0.00015188343031535823
+          "relative_rotation_radians": 0.0001015728752882557,
+          "alpha_anchored_residual_radians": 0.00016981100786317427,
+          "beta_residual_radians": 0.0009467041827845579,
+          "gamma_anchored_residual_radians": -0.00015188342806604638
         },
         "0.001": {
           "sample_index": 1494,
           "time_seconds": -1.9003248584999999,
           "elapsed_from_first_sample_seconds": 0.7294921875,
-          "relative_rotation_radians": 0.0010021190559491048,
-          "alpha_anchored_residual_radians": -0.00498738256166309,
-          "beta_residual_radians": 0.0006919547325224817,
-          "gamma_anchored_residual_radians": 0.004781242417744913
+          "relative_rotation_radians": 0.0010021190547627812,
+          "alpha_anchored_residual_radians": -0.004987382534186402,
+          "beta_residual_radians": 0.0006919547328671505,
+          "gamma_anchored_residual_radians": 0.0047812423912536595
         },
         "0.01": {
           "sample_index": 5241,
           "time_seconds": -0.07073501474999988,
           "elapsed_from_first_sample_seconds": 2.55908203125,
-          "relative_rotation_radians": 0.010041286837382557,
-          "alpha_anchored_residual_radians": -0.03414451601173951,
-          "beta_residual_radians": -0.006073373892626882,
-          "gamma_anchored_residual_radians": 0.03045376330203675
+          "relative_rotation_radians": 0.01004128682603691,
+          "alpha_anchored_residual_radians": -0.034144516014571025,
+          "beta_residual_radians": -0.0060733738774496615,
+          "gamma_anchored_residual_radians": 0.030453763305895
         }
       }
     },
@@ -97,17 +104,17 @@
       "22310": {
         "coarse_nodes": 2065,
         "fine_nodes": 4120,
-        "max_rotation_radians": 0.0
+        "max_rotation_radians": 1.4178647907874755e-14
       },
       "22311": {
         "coarse_nodes": 2065,
         "fine_nodes": 4120,
-        "max_rotation_radians": 8.23216055893758e-08
+        "max_rotation_radians": 8.232184368275813e-08
       },
       "22321": {
         "coarse_nodes": 2065,
         "fine_nodes": 4120,
-        "max_rotation_radians": 1.6463337925682827e-07
+        "max_rotation_radians": 8.940959498165795e-07
       }
     },
     "summaries": {
@@ -123,61 +130,61 @@
           },
           "meco_to_peak": {
             "samples": 3,
-            "absolute_rotation_max_radians": 0.0,
-            "relative_rotation_max_radians": 0.0,
+            "absolute_rotation_max_radians": 2.7755575615628914e-17,
+            "relative_rotation_max_radians": 4.807406715958909e-17,
             "alpha_anchored_max_abs_radians": 0.0,
-            "beta_max_abs_radians": 0.0,
+            "beta_max_abs_radians": 2.7755575615628914e-17,
             "gamma_anchored_max_abs_radians": 0.0
           },
           "ringdown": {
             "samples": 3,
-            "absolute_rotation_max_radians": 0.0,
-            "relative_rotation_max_radians": 0.0,
+            "absolute_rotation_max_radians": 3.5381555418772973e-17,
+            "relative_rotation_max_radians": 9.007208163871439e-17,
             "alpha_anchored_max_abs_radians": 0.0,
-            "beta_max_abs_radians": 0.0,
+            "beta_max_abs_radians": 2.7755575615628914e-17,
             "gamma_anchored_max_abs_radians": 0.0
           },
           "all": {
             "samples": 9,
-            "absolute_rotation_max_radians": 0.0,
-            "relative_rotation_max_radians": 0.0,
+            "absolute_rotation_max_radians": 3.5381555418772973e-17,
+            "relative_rotation_max_radians": 3.925231146709437e-17,
             "alpha_anchored_max_abs_radians": 0.0,
-            "beta_max_abs_radians": 0.0,
+            "beta_max_abs_radians": 2.7755575615628914e-17,
             "gamma_anchored_max_abs_radians": 0.0
           }
         },
         "independent_vs_public": {
           "analytical_inspiral": {
             "samples": 3,
-            "absolute_rotation_max_radians": 1.5476068145371342,
-            "relative_rotation_max_radians": 0.016225773146821276,
-            "alpha_anchored_max_abs_radians": 0.029674706345591773,
-            "beta_max_abs_radians": 0.014855285795051715,
-            "gamma_anchored_max_abs_radians": 0.02489509538034662
+            "absolute_rotation_max_radians": 1.54760681453406,
+            "relative_rotation_max_radians": 0.016225773147368748,
+            "alpha_anchored_max_abs_radians": 0.02967470632590974,
+            "beta_max_abs_radians": 0.014855285798082485,
+            "gamma_anchored_max_abs_radians": 0.024895095363117736
           },
           "meco_to_peak": {
             "samples": 3,
-            "absolute_rotation_max_radians": 1.5474256044586285,
-            "relative_rotation_max_radians": 0.028053919547882455,
-            "alpha_anchored_max_abs_radians": 0.09012864246488839,
-            "beta_max_abs_radians": 0.015098683218815162,
-            "gamma_anchored_max_abs_radians": 0.08349781161008352
+            "absolute_rotation_max_radians": 1.547425604451232,
+            "relative_rotation_max_radians": 0.028053919555509673,
+            "alpha_anchored_max_abs_radians": 0.09012864247471342,
+            "beta_max_abs_radians": 0.015098683221707598,
+            "gamma_anchored_max_abs_radians": 0.08349781161739678
           },
           "ringdown": {
             "samples": 3,
-            "absolute_rotation_max_radians": 1.5708308968500977,
-            "relative_rotation_max_radians": 0.03774432530608534,
-            "alpha_anchored_max_abs_radians": 0.13458070850341386,
-            "beta_max_abs_radians": 0.010636891037540258,
-            "gamma_anchored_max_abs_radians": 0.11371145906065294
+            "absolute_rotation_max_radians": 1.5708308968335232,
+            "relative_rotation_max_radians": 0.037744325276213124,
+            "alpha_anchored_max_abs_radians": 0.13458070841172898,
+            "beta_max_abs_radians": 0.01063689101488216,
+            "gamma_anchored_max_abs_radians": 0.11371145898404222
           },
           "all": {
             "samples": 9,
-            "absolute_rotation_max_radians": 1.5708308968500977,
-            "relative_rotation_max_radians": 0.03725628599276215,
-            "alpha_anchored_max_abs_radians": 0.14104547562565273,
-            "beta_max_abs_radians": 0.015098683218815162,
-            "gamma_anchored_max_abs_radians": 0.11501207390599122
+            "absolute_rotation_max_radians": 1.5708308968335232,
+            "relative_rotation_max_radians": 0.03725628597323422,
+            "alpha_anchored_max_abs_radians": 0.1410454755679087,
+            "beta_max_abs_radians": 0.015098683221707598,
+            "gamma_anchored_max_abs_radians": 0.11501207386360024
           }
         }
       },
@@ -193,61 +200,61 @@
           },
           "meco_to_peak": {
             "samples": 3,
-            "absolute_rotation_max_radians": 0.0,
-            "relative_rotation_max_radians": 0.0,
+            "absolute_rotation_max_radians": 2.7755575615628914e-17,
+            "relative_rotation_max_radians": 4.807406715958909e-17,
             "alpha_anchored_max_abs_radians": 0.0,
-            "beta_max_abs_radians": 0.0,
+            "beta_max_abs_radians": 2.7755575615628914e-17,
             "gamma_anchored_max_abs_radians": 0.0
           },
           "ringdown": {
             "samples": 3,
-            "absolute_rotation_max_radians": 1.4251702247918583e-15,
-            "relative_rotation_max_radians": 1.4386454096599836e-15,
-            "alpha_anchored_max_abs_radians": 7.105427357601002e-15,
-            "beta_max_abs_radians": 2.7755575615628914e-17,
-            "gamma_anchored_max_abs_radians": 7.105427357601002e-15
+            "absolute_rotation_max_radians": 2.8486504742032495e-15,
+            "relative_rotation_max_radians": 2.8470485473674073e-15,
+            "alpha_anchored_max_abs_radians": 1.4210854715202004e-14,
+            "beta_max_abs_radians": 0.0,
+            "gamma_anchored_max_abs_radians": 1.4210854715202004e-14
           },
           "all": {
             "samples": 9,
-            "absolute_rotation_max_radians": 1.4251702247918583e-15,
-            "relative_rotation_max_radians": 1.4147518138191005e-15,
-            "alpha_anchored_max_abs_radians": 7.105427357601002e-15,
+            "absolute_rotation_max_radians": 2.8486504742032495e-15,
+            "relative_rotation_max_radians": 2.857157499562814e-15,
+            "alpha_anchored_max_abs_radians": 1.4210854715202004e-14,
             "beta_max_abs_radians": 2.7755575615628914e-17,
-            "gamma_anchored_max_abs_radians": 7.105427357601002e-15
+            "gamma_anchored_max_abs_radians": 1.4210854715202004e-14
           }
         },
         "independent_vs_public": {
           "analytical_inspiral": {
             "samples": 3,
-            "absolute_rotation_max_radians": 1.5476068145371342,
-            "relative_rotation_max_radians": 0.016225773146821276,
-            "alpha_anchored_max_abs_radians": 0.029674706345591773,
-            "beta_max_abs_radians": 0.014855285795051715,
-            "gamma_anchored_max_abs_radians": 0.02489509538034662
+            "absolute_rotation_max_radians": 1.54760681453406,
+            "relative_rotation_max_radians": 0.016225773147368748,
+            "alpha_anchored_max_abs_radians": 0.02967470632590974,
+            "beta_max_abs_radians": 0.014855285798082485,
+            "gamma_anchored_max_abs_radians": 0.024895095363117736
           },
           "meco_to_peak": {
             "samples": 3,
-            "absolute_rotation_max_radians": 1.5474256044586285,
-            "relative_rotation_max_radians": 0.03777813002414465,
-            "alpha_anchored_max_abs_radians": 0.09012864246488839,
-            "beta_max_abs_radians": 0.015098683218815162,
-            "gamma_anchored_max_abs_radians": 0.08349781161008352
+            "absolute_rotation_max_radians": 1.547425604451232,
+            "relative_rotation_max_radians": 0.03777813001795187,
+            "alpha_anchored_max_abs_radians": 0.09012864247471342,
+            "beta_max_abs_radians": 0.015098683221707598,
+            "gamma_anchored_max_abs_radians": 0.08349781161739678
           },
           "ringdown": {
             "samples": 3,
-            "absolute_rotation_max_radians": 1.631217535489087,
-            "relative_rotation_max_radians": 0.1456513529502398,
-            "alpha_anchored_max_abs_radians": 0.2414206476839702,
-            "beta_max_abs_radians": 0.010343560837753396,
-            "gamma_anchored_max_abs_radians": 6.0901974648066695
+            "absolute_rotation_max_radians": 1.6312175357372949,
+            "relative_rotation_max_radians": 0.1456513531876871,
+            "alpha_anchored_max_abs_radians": 0.24142064768072302,
+            "beta_max_abs_radians": 0.010343560855570755,
+            "gamma_anchored_max_abs_radians": 6.090197464682307
           },
           "all": {
             "samples": 9,
-            "absolute_rotation_max_radians": 1.631217535489087,
-            "relative_rotation_max_radians": 0.10014163930798668,
-            "alpha_anchored_max_abs_radians": 0.1366443448794108,
-            "beta_max_abs_radians": 0.015098683218815162,
-            "gamma_anchored_max_abs_radians": 6.245150487277014
+            "absolute_rotation_max_radians": 1.6312175357372949,
+            "relative_rotation_max_radians": 0.10014163954834357,
+            "alpha_anchored_max_abs_radians": 0.13664434483823662,
+            "beta_max_abs_radians": 0.015098683221707598,
+            "gamma_anchored_max_abs_radians": 6.2451504871901875
           }
         }
       },
@@ -255,69 +262,69 @@
         "native_vs_independent": {
           "analytical_inspiral": {
             "samples": 3,
-            "absolute_rotation_max_radians": 5.240834948085655e-07,
-            "relative_rotation_max_radians": 5.240868088225127e-07,
+            "absolute_rotation_max_radians": 5.240850260258509e-07,
+            "relative_rotation_max_radians": 5.240866309504495e-07,
             "alpha_anchored_max_abs_radians": 0.0,
             "beta_max_abs_radians": 0.0,
-            "gamma_anchored_max_abs_radians": 5.240869307421292e-07
+            "gamma_anchored_max_abs_radians": 5.240866900457775e-07
           },
           "meco_to_peak": {
             "samples": 3,
-            "absolute_rotation_max_radians": 7.255490599473922e-06,
-            "relative_rotation_max_radians": 7.694927552454934e-06,
+            "absolute_rotation_max_radians": 7.255488432321489e-06,
+            "relative_rotation_max_radians": 7.694927576992908e-06,
             "alpha_anchored_max_abs_radians": 0.0,
-            "beta_max_abs_radians": 0.0,
-            "gamma_anchored_max_abs_radians": 7.718631815478716e-06
+            "beta_max_abs_radians": 2.7755575615628914e-17,
+            "gamma_anchored_max_abs_radians": 7.718631950481836e-06
           },
           "ringdown": {
             "samples": 3,
-            "absolute_rotation_max_radians": 6.429210387205542e-06,
-            "relative_rotation_max_radians": 2.374759133554435e-06,
-            "alpha_anchored_max_abs_radians": 7.105427357601002e-15,
-            "beta_max_abs_radians": 2.7755575615628914e-17,
-            "gamma_anchored_max_abs_radians": 8.881784197001252e-15
+            "absolute_rotation_max_radians": 6.429209491668519e-06,
+            "relative_rotation_max_radians": 2.374758803598111e-06,
+            "alpha_anchored_max_abs_radians": 1.4210854715202004e-14,
+            "beta_max_abs_radians": 0.0,
+            "gamma_anchored_max_abs_radians": 1.0658141036401503e-14
           },
           "all": {
             "samples": 9,
-            "absolute_rotation_max_radians": 7.255490599473922e-06,
-            "relative_rotation_max_radians": 7.255487412513475e-06,
-            "alpha_anchored_max_abs_radians": 7.105427357601002e-15,
+            "absolute_rotation_max_radians": 7.255488432321489e-06,
+            "relative_rotation_max_radians": 7.255486888915238e-06,
+            "alpha_anchored_max_abs_radians": 1.4210854715202004e-14,
             "beta_max_abs_radians": 2.7755575615628914e-17,
-            "gamma_anchored_max_abs_radians": 7.255487163515539e-06
+            "gamma_anchored_max_abs_radians": 7.255486768276143e-06
           }
         },
         "independent_vs_public": {
           "analytical_inspiral": {
             "samples": 3,
-            "absolute_rotation_max_radians": 1.542258015097119,
-            "relative_rotation_max_radians": 0.016070653530569332,
-            "alpha_anchored_max_abs_radians": 0.029674706345591773,
-            "beta_max_abs_radians": 0.014855285795051715,
-            "gamma_anchored_max_abs_radians": 0.033001899950967584
+            "absolute_rotation_max_radians": 1.5422580150968435,
+            "relative_rotation_max_radians": 0.016070653531960605,
+            "alpha_anchored_max_abs_radians": 0.02967470632590974,
+            "beta_max_abs_radians": 0.014855285798082485,
+            "gamma_anchored_max_abs_radians": 0.033001899932453505
           },
           "meco_to_peak": {
             "samples": 3,
-            "absolute_rotation_max_radians": 1.5395194815488948,
-            "relative_rotation_max_radians": 0.02774860258285122,
-            "alpha_anchored_max_abs_radians": 0.09012864246488839,
-            "beta_max_abs_radians": 0.015098683218815162,
-            "gamma_anchored_max_abs_radians": 0.08577940553383101
+            "absolute_rotation_max_radians": 1.5395194815452504,
+            "relative_rotation_max_radians": 0.027748602590206766,
+            "alpha_anchored_max_abs_radians": 0.09012864247471342,
+            "beta_max_abs_radians": 0.015098683221707598,
+            "gamma_anchored_max_abs_radians": 0.0857794055439065
           },
           "ringdown": {
             "samples": 3,
-            "absolute_rotation_max_radians": 1.676192563127817,
-            "relative_rotation_max_radians": 0.14663880915535527,
-            "alpha_anchored_max_abs_radians": 0.2414206476839702,
-            "beta_max_abs_radians": 0.010343560837753396,
-            "gamma_anchored_max_abs_radians": 6.090197464806675
+            "absolute_rotation_max_radians": 1.6761925633779033,
+            "relative_rotation_max_radians": 0.14663880939267296,
+            "alpha_anchored_max_abs_radians": 0.24142064768072302,
+            "beta_max_abs_radians": 0.010343560855570755,
+            "gamma_anchored_max_abs_radians": 6.0901974646823085
           },
           "all": {
             "samples": 9,
-            "absolute_rotation_max_radians": 1.676192563127817,
-            "relative_rotation_max_radians": 0.1445185033019904,
-            "alpha_anchored_max_abs_radians": 0.1366443448794108,
-            "beta_max_abs_radians": 0.015098683218815162,
-            "gamma_anchored_max_abs_radians": 6.199433411711574
+            "absolute_rotation_max_radians": 1.6761925633779033,
+            "relative_rotation_max_radians": 0.14451850354964899,
+            "alpha_anchored_max_abs_radians": 0.13664434483823662,
+            "beta_max_abs_radians": 0.015098683221707598,
+            "gamma_anchored_max_abs_radians": 6.199433411623025
           }
         }
       },
@@ -325,69 +332,69 @@
         "native_vs_independent": {
           "analytical_inspiral": {
             "samples": 3,
-            "absolute_rotation_max_radians": 5.240834948085655e-07,
-            "relative_rotation_max_radians": 5.240868088225127e-07,
+            "absolute_rotation_max_radians": 5.240850260258509e-07,
+            "relative_rotation_max_radians": 5.240866309504495e-07,
             "alpha_anchored_max_abs_radians": 0.0,
             "beta_max_abs_radians": 0.0,
-            "gamma_anchored_max_abs_radians": 5.240869307421292e-07
+            "gamma_anchored_max_abs_radians": 5.240866900457775e-07
           },
           "meco_to_peak": {
             "samples": 3,
-            "absolute_rotation_max_radians": 4.782575097651926e-07,
-            "relative_rotation_max_radians": 2.0617179070052122e-07,
-            "alpha_anchored_max_abs_radians": 2.645338561535482e-07,
-            "beta_max_abs_radians": 4.7436109512632996e-08,
-            "gamma_anchored_max_abs_radians": 1.7307265842703146e-07
+            "absolute_rotation_max_radians": 4.744234836040866e-07,
+            "relative_rotation_max_radians": 1.1719460437870465e-07,
+            "alpha_anchored_max_abs_radians": 1.2182522723946931e-07,
+            "beta_max_abs_radians": 2.1495122071168993e-08,
+            "gamma_anchored_max_abs_radians": 2.1388015802870086e-07
           },
           "ringdown": {
             "samples": 3,
-            "absolute_rotation_max_radians": 1.1578880511553828e-06,
-            "relative_rotation_max_radians": 7.927914019493827e-07,
-            "alpha_anchored_max_abs_radians": 1.4210854715202004e-14,
-            "beta_max_abs_radians": 4.812758727656963e-08,
-            "gamma_anchored_max_abs_radians": 7.554064218595613e-07
+            "absolute_rotation_max_radians": 3.904574037699478e-07,
+            "relative_rotation_max_radians": 3.3641442437813307e-07,
+            "alpha_anchored_max_abs_radians": 7.105427357601002e-15,
+            "beta_max_abs_radians": 2.1808457179028906e-08,
+            "gamma_anchored_max_abs_radians": 3.42303689393475e-07
           },
           "all": {
             "samples": 9,
-            "absolute_rotation_max_radians": 1.1578880511553828e-06,
-            "relative_rotation_max_radians": 1.1578912277073661e-06,
-            "alpha_anchored_max_abs_radians": 2.700330838933951e-07,
-            "beta_max_abs_radians": 4.812758727656963e-08,
-            "gamma_anchored_max_abs_radians": 1.418567361799461e-06
+            "absolute_rotation_max_radians": 5.240850260258509e-07,
+            "relative_rotation_max_radians": 5.240866309504495e-07,
+            "alpha_anchored_max_abs_radians": 1.2435776852726121e-07,
+            "beta_max_abs_radians": 2.1808457179028906e-08,
+            "gamma_anchored_max_abs_radians": 5.240866900457775e-07
           }
         },
         "independent_vs_public": {
           "analytical_inspiral": {
             "samples": 3,
-            "absolute_rotation_max_radians": 1.542258015097119,
-            "relative_rotation_max_radians": 0.016070653520774993,
-            "alpha_anchored_max_abs_radians": 0.029674706345591773,
-            "beta_max_abs_radians": 0.014855285795051715,
-            "gamma_anchored_max_abs_radians": 0.0330018999089301
+            "absolute_rotation_max_radians": 1.5422580150968435,
+            "relative_rotation_max_radians": 0.016070653522165863,
+            "alpha_anchored_max_abs_radians": 0.02967470632590974,
+            "beta_max_abs_radians": 0.014855285798082485,
+            "gamma_anchored_max_abs_radians": 0.033001899890414244
           },
           "meco_to_peak": {
             "samples": 3,
-            "absolute_rotation_max_radians": 1.5395201506235245,
-            "relative_rotation_max_radians": 0.05202217177477545,
-            "alpha_anchored_max_abs_radians": 0.15975504699141396,
-            "beta_max_abs_radians": 0.028910184964453772,
-            "gamma_anchored_max_abs_radians": 0.15094047049972126
+            "absolute_rotation_max_radians": 1.539520150717232,
+            "relative_rotation_max_radians": 0.052022148258459446,
+            "alpha_anchored_max_abs_radians": 0.1597546919038937,
+            "beta_max_abs_radians": 0.028910247509011666,
+            "gamma_anchored_max_abs_radians": 0.15094011495368953
           },
           "ringdown": {
             "samples": 3,
-            "absolute_rotation_max_radians": 1.5340121332892014,
-            "relative_rotation_max_radians": 0.429515792505665,
-            "alpha_anchored_max_abs_radians": 0.24142064768397375,
-            "beta_max_abs_radians": 0.029124806697432365,
-            "gamma_anchored_max_abs_radians": 0.19113972678181312
+            "absolute_rotation_max_radians": 1.5340121418824817,
+            "relative_rotation_max_radians": 0.4295167796117526,
+            "alpha_anchored_max_abs_radians": 0.2414206476807177,
+            "beta_max_abs_radians": 0.029124870165838646,
+            "gamma_anchored_max_abs_radians": 0.19114072468805432
           },
           "all": {
             "samples": 9,
-            "absolute_rotation_max_radians": 1.542258015097119,
-            "relative_rotation_max_radians": 0.4405976482186027,
-            "alpha_anchored_max_abs_radians": 0.20913369727696463,
-            "beta_max_abs_radians": 0.029124806697432365,
-            "gamma_anchored_max_abs_radians": 0.23282460401556904
+            "absolute_rotation_max_radians": 1.5422580150968435,
+            "relative_rotation_max_radians": 0.4405986440151552,
+            "alpha_anchored_max_abs_radians": 0.20913333483796315,
+            "beta_max_abs_radians": 0.029124870165838646,
+            "gamma_anchored_max_abs_radians": 0.23282596528281285
           }
         }
       }
@@ -399,22 +406,22 @@
         "time_seconds": -2.629817046,
         "segment": "analytical_inspiral",
         "native_angles_radians": [
-          2.0609877639720797,
-          0.18551579066533158,
-          2.6799396139998835
+          2.0609877639737992,
+          0.1855157906646884,
+          2.6799396139982443
         ],
         "independent_angles_radians": [
-          2.0609877639720797,
-          0.18551579066533158,
-          2.6799396139998835
+          2.0609877639737992,
+          0.1855157906646884,
+          2.6799396139982443
         ],
         "public_binary_angles_radians": [
-          -2.6799397002652112,
-          0.18458469995887375,
-          2.679939608982413
+          -2.6799397002681866,
+          0.18458469995998797,
+          2.6799396089852734
         ],
         "native_minus_independent_rotation_radians": 0.0,
-        "independent_minus_public_relative_rotation_radians": 4.4027209355074273e-16
+        "independent_minus_public_relative_rotation_radians": 2.4045118818295936e-16
       },
       {
         "precession_version": 22300,
@@ -422,22 +429,22 @@
         "time_seconds": -1.3295240772499999,
         "segment": "analytical_inspiral",
         "native_angles_radians": [
-          5.744931938635068,
-          0.1904597923278526,
-          -0.8611800003196257
+          5.744931938635165,
+          0.190459792328283,
+          -0.8611800003197252
         ],
         "independent_angles_radians": [
-          5.744931938635068,
-          0.1904597923278526,
-          -0.8611800003196257
+          5.744931938635165,
+          0.190459792328283,
+          -0.8611800003197252
         ],
         "public_binary_angles_radians": [
-          0.993962519180013,
-          0.1888922494647967,
-          -0.8513346301797675
+          0.9939625191803723,
+          0.1888922494660709,
+          -0.8513346301802125
         ],
         "native_minus_independent_rotation_radians": 0.0,
-        "independent_minus_public_relative_rotation_radians": 0.0027653807969667088
+        "independent_minus_public_relative_rotation_radians": 0.0027653807960631603
       },
       {
         "precession_version": 22300,
@@ -445,22 +452,22 @@
         "time_seconds": -0.02971938974999988,
         "segment": "analytical_inspiral",
         "native_angles_radians": [
-          16.115006267062533,
-          0.20963771431968406,
-          -10.300171572985283
+          16.115006267047946,
+          0.20963771432215786,
+          -10.30017157297194
         ],
         "independent_angles_radians": [
-          16.115006267062533,
-          0.20963771431968406,
-          -10.300171572985283
+          16.115006267047946,
+          0.20963771432215786,
+          -10.30017157297194
         ],
         "public_binary_angles_radians": [
-          11.403753509170834,
-          0.19478242852463235,
-          -10.3250666733831
+          11.40375350913187,
+          0.19478242852407537,
+          -10.32506667334803
         ],
         "native_minus_independent_rotation_radians": 0.0,
-        "independent_minus_public_relative_rotation_radians": 0.016225773146821276
+        "independent_minus_public_relative_rotation_radians": 0.016225773147368748
       },
       {
         "precession_version": 22300,
@@ -468,22 +475,22 @@
         "time_seconds": -0.02923110849999988,
         "segment": "meco_to_peak",
         "native_angles_radians": [
-          16.136677889566553,
-          0.2098861639465477,
-          -10.316945871424041
+          16.136677889593315,
+          0.20988616394168466,
+          -10.316945871448514
         ],
         "independent_angles_radians": [
-          16.136677889566553,
-          0.2098861639465477,
-          -10.316945871424041
+          16.136677889593315,
+          0.20988616394168466,
+          -10.316945871448514
         ],
         "public_binary_angles_radians": [
-          11.423158416563748,
-          0.19478748072773253,
-          -10.339713588898245
+          11.423158416525432,
+          0.19478748071997706,
+          -10.339713588863802
         ],
         "native_minus_independent_rotation_radians": 0.0,
-        "independent_minus_public_relative_rotation_radians": 0.01630765736850681
+        "independent_minus_public_relative_rotation_radians": 0.016307657365986182
       },
       {
         "precession_version": 22300,
@@ -491,22 +498,22 @@
         "time_seconds": -0.01458267099999988,
         "segment": "meco_to_peak",
         "native_angles_radians": [
-          16.925533482544168,
-          0.2133710896101251,
-          -10.897006488499278
+          16.925533482598247,
+          0.21337108962426463,
+          -10.897006488548131
         ],
         "independent_angles_radians": [
-          16.925533482544168,
-          0.2133710896101251,
-          -10.897006488499278
+          16.925533482598247,
+          0.21337108962426463,
+          -10.897006488548131
         ],
         "public_binary_angles_radians": [
-          12.121885367076475,
-          0.19905454727128338,
-          -10.836276394363399
+          12.12188536705565,
+          0.1990545472759468,
+          -10.836276394346022
         ],
         "native_minus_independent_rotation_radians": 0.0,
-        "independent_minus_public_relative_rotation_radians": 0.0201445329550389
+        "independent_minus_public_relative_rotation_radians": 0.02014453297102576
       },
       {
         "precession_version": 22300,
@@ -514,22 +521,22 @@
         "time_seconds": -0.0004225147499998805,
         "segment": "meco_to_peak",
         "native_angles_radians": [
-          18.02083156549764,
-          0.20063766194271196,
-          -11.444654457893883
+          18.02083156549914,
+          0.2006376619390533,
+          -11.444654457895224
         ],
         "independent_angles_radians": [
-          18.02083156549764,
-          0.20063766194271196,
-          -11.444654457893883
+          18.02083156549914,
+          0.20063766193905333,
+          -11.444654457895224
         ],
         "public_binary_angles_radians": [
-          13.276412275224622,
-          0.21093715918715364,
-          -11.437133610054985
+          13.27641227524615,
+          0.21093715920969733,
+          -11.437133610077655
         ],
-        "native_minus_independent_rotation_radians": 0.0,
-        "independent_minus_public_relative_rotation_radians": 0.010246759591276924
+        "native_minus_independent_rotation_radians": 2.7755575615628914e-17,
+        "independent_minus_public_relative_rotation_radians": 0.01024675961606936
       },
       {
         "precession_version": 22300,
@@ -537,22 +544,22 @@
         "time_seconds": 6.576650000011952e-05,
         "segment": "ringdown",
         "native_angles_radians": [
-          18.054650049242987,
-          0.20040531657341595,
-          -11.44783543303006
+          18.05465004924535,
+          0.20040531658551233,
+          -11.447835433032171
         ],
         "independent_angles_radians": [
-          18.054650049242987,
-          0.20040531657341595,
-          -11.44783543303006
+          18.05465004924535,
+          0.20040531658551236,
+          -11.447835433032171
         ],
         "public_binary_angles_radians": [
-          13.320187352127935,
-          0.2110422076109562,
-          -11.449136052892868
+          13.320187352159543,
+          0.21104220760039452,
+          -11.4491360529247
         ],
-        "native_minus_independent_rotation_radians": 0.0,
-        "independent_minus_public_relative_rotation_radians": 0.011053829806327754
+        "native_minus_independent_rotation_radians": 3.5381555418772973e-17,
+        "independent_minus_public_relative_rotation_radians": 0.011053829788064552
       },
       {
         "precession_version": 22300,
@@ -560,22 +567,22 @@
         "time_seconds": 0.08112045400000012,
         "segment": "ringdown",
         "native_angles_radians": [
-          18.507251131865644,
-          0.20462464318603338,
-          -11.250376819482039
+          18.50725113193969,
+          0.2046246431961224,
+          -11.250376819544199
         ],
         "independent_angles_radians": [
-          18.507251131865644,
-          0.20462464318603338,
-          -11.250376819482039
+          18.50725113193969,
+          0.2046246431961224,
+          -11.250376819544199
         ],
         "public_binary_angles_radians": [
-          13.907369143254005,
-          0.20533784837321006,
-          -11.3653888984055
+          13.907369143265612,
+          0.20533784836823607,
+          -11.36538889842077
         ],
         "native_minus_independent_rotation_radians": 0.0,
-        "independent_minus_public_relative_rotation_radians": 0.03725628599276215
+        "independent_minus_public_relative_rotation_radians": 0.03725628597323422
       },
       {
         "precession_version": 22300,
@@ -583,22 +590,22 @@
         "time_seconds": 0.16168686025000012,
         "segment": "ringdown",
         "native_angles_radians": [
-          18.50725113205879,
-          0.20462464321216953,
-          -11.25037681964415
+          18.507251132173316,
+          0.20462464322771595,
+          -11.250376819740286
         ],
         "independent_angles_radians": [
-          18.50725113205879,
-          0.20462464321216953,
-          -11.25037681964415
+          18.507251132173316,
+          0.20462464322771595,
+          -11.250376819740286
         ],
         "public_binary_angles_radians": [
-          13.907369143039258,
-          0.20533784834691346,
-          -11.365388898214908
+          13.907369143050868,
+          0.20533784834194002,
+          -11.365388898230178
         ],
         "native_minus_independent_rotation_radians": 0.0,
-        "independent_minus_public_relative_rotation_radians": 0.03725628589862175
+        "independent_minus_public_relative_rotation_radians": 0.037256285869378084
       },
       {
         "precession_version": 22310,
@@ -606,22 +613,22 @@
         "time_seconds": -2.629817046,
         "segment": "analytical_inspiral",
         "native_angles_radians": [
-          2.0609877639720797,
-          0.18551579066533158,
-          2.6799396139998835
+          2.0609877639737992,
+          0.1855157906646884,
+          2.6799396139982443
         ],
         "independent_angles_radians": [
-          2.0609877639720797,
-          0.18551579066533158,
-          2.6799396139998835
+          2.0609877639737992,
+          0.1855157906646884,
+          2.6799396139982443
         ],
         "public_binary_angles_radians": [
-          -2.6799397002652112,
-          0.18458469995887375,
-          2.679939608982413
+          -2.6799397002681866,
+          0.18458469995998797,
+          2.6799396089852734
         ],
         "native_minus_independent_rotation_radians": 0.0,
-        "independent_minus_public_relative_rotation_radians": 4.4027209355074273e-16
+        "independent_minus_public_relative_rotation_radians": 2.4045118818295936e-16
       },
       {
         "precession_version": 22310,
@@ -629,22 +636,22 @@
         "time_seconds": -1.3295240772499999,
         "segment": "analytical_inspiral",
         "native_angles_radians": [
-          5.744931938635068,
-          0.1904597923278526,
-          -0.8611800003196257
+          5.744931938635165,
+          0.190459792328283,
+          -0.8611800003197252
         ],
         "independent_angles_radians": [
-          5.744931938635068,
-          0.1904597923278526,
-          -0.8611800003196257
+          5.744931938635165,
+          0.190459792328283,
+          -0.8611800003197252
         ],
         "public_binary_angles_radians": [
-          0.993962519180013,
-          0.1888922494647967,
-          -0.8513346301797675
+          0.9939625191803723,
+          0.1888922494660709,
+          -0.8513346301802125
         ],
         "native_minus_independent_rotation_radians": 0.0,
-        "independent_minus_public_relative_rotation_radians": 0.0027653807969667088
+        "independent_minus_public_relative_rotation_radians": 0.0027653807960631603
       },
       {
         "precession_version": 22310,
@@ -652,22 +659,22 @@
         "time_seconds": -0.02971938974999988,
         "segment": "analytical_inspiral",
         "native_angles_radians": [
-          16.115006267062533,
-          0.20963771431968406,
-          -10.300171572985283
+          16.115006267047946,
+          0.20963771432215786,
+          -10.30017157297194
         ],
         "independent_angles_radians": [
-          16.115006267062533,
-          0.20963771431968406,
-          -10.300171572985283
+          16.115006267047946,
+          0.20963771432215786,
+          -10.30017157297194
         ],
         "public_binary_angles_radians": [
-          11.403753509170834,
-          0.19478242852463235,
-          -10.3250666733831
+          11.40375350913187,
+          0.19478242852407537,
+          -10.32506667334803
         ],
         "native_minus_independent_rotation_radians": 0.0,
-        "independent_minus_public_relative_rotation_radians": 0.016225773146821276
+        "independent_minus_public_relative_rotation_radians": 0.016225773147368748
       },
       {
         "precession_version": 22310,
@@ -675,22 +682,22 @@
         "time_seconds": -0.02923110849999988,
         "segment": "meco_to_peak",
         "native_angles_radians": [
-          16.136677889566553,
-          0.2098861639465477,
-          -10.316945871424041
+          16.136677889593315,
+          0.20988616394168466,
+          -10.316945871448514
         ],
         "independent_angles_radians": [
-          16.136677889566553,
-          0.2098861639465477,
-          -10.316945871424041
+          16.136677889593315,
+          0.20988616394168466,
+          -10.316945871448514
         ],
         "public_binary_angles_radians": [
-          11.423158416563748,
-          0.19478748072773253,
-          -10.339713588898245
+          11.423158416525432,
+          0.19478748071997706,
+          -10.339713588863802
         ],
         "native_minus_independent_rotation_radians": 0.0,
-        "independent_minus_public_relative_rotation_radians": 0.01630765736850681
+        "independent_minus_public_relative_rotation_radians": 0.016307657365986182
       },
       {
         "precession_version": 22310,
@@ -698,22 +705,22 @@
         "time_seconds": -0.01458267099999988,
         "segment": "meco_to_peak",
         "native_angles_radians": [
-          16.925533482544168,
-          0.2133710896101251,
-          -10.897006488499278
+          16.925533482598247,
+          0.21337108962426463,
+          -10.897006488548131
         ],
         "independent_angles_radians": [
-          16.925533482544168,
-          0.2133710896101251,
-          -10.897006488499278
+          16.925533482598247,
+          0.21337108962426463,
+          -10.897006488548131
         ],
         "public_binary_angles_radians": [
-          12.121885367076475,
-          0.19905454727128338,
-          -10.836276394363399
+          12.12188536705565,
+          0.1990545472759468,
+          -10.836276394346022
         ],
         "native_minus_independent_rotation_radians": 0.0,
-        "independent_minus_public_relative_rotation_radians": 0.0201445329550389
+        "independent_minus_public_relative_rotation_radians": 0.02014453297102576
       },
       {
         "precession_version": 22310,
@@ -721,22 +728,22 @@
         "time_seconds": -0.0004225147499998805,
         "segment": "meco_to_peak",
         "native_angles_radians": [
-          18.02083156549764,
-          0.20063766194271196,
-          -11.444654457893883
+          18.02083156549914,
+          0.2006376619390533,
+          -11.444654457895224
         ],
         "independent_angles_radians": [
-          18.02083156549764,
-          0.20063766194271196,
-          -11.444654457893883
+          18.02083156549914,
+          0.20063766193905333,
+          -11.444654457895224
         ],
         "public_binary_angles_radians": [
-          13.230640917495169,
-          0.2107759700934062,
-          -11.423184757040039
+          13.23064091752622,
+          0.2107759700953468,
+          -11.4231847570713
         ],
-        "native_minus_independent_rotation_radians": 0.0,
-        "independent_minus_public_relative_rotation_radians": 0.030007606990259207
+        "native_minus_independent_rotation_radians": 2.7755575615628914e-17,
+        "independent_minus_public_relative_rotation_radians": 0.030007606991259043
       },
       {
         "precession_version": 22310,
@@ -744,22 +751,22 @@
         "time_seconds": 6.576650000011952e-05,
         "segment": "ringdown",
         "native_angles_radians": [
-          18.078852277079687,
-          0.20043240925565284,
-          -11.475598794118437
+          18.078852277077505,
+          0.20043240923977604,
+          -11.475598794116577
         ],
         "independent_angles_radians": [
-          18.078852277079687,
-          0.2004324092556528,
-          -11.475598794118437
+          18.078852277077505,
+          0.20043240923977604,
+          -11.475598794116577
         ],
         "public_binary_angles_radians": [
-          13.442701115646955,
-          0.2107759700934062,
-          -11.630551821606252
+          13.442701115678005,
+          0.2107759700953468,
+          -11.630551821637429
         ],
-        "native_minus_independent_rotation_radians": 1.9626155733547187e-17,
-        "independent_minus_public_relative_rotation_radians": 0.057541275442844375
+        "native_minus_independent_rotation_radians": 0.0,
+        "independent_minus_public_relative_rotation_radians": 0.057541275447599995
       },
       {
         "precession_version": 22310,
@@ -767,22 +774,22 @@
         "time_seconds": 0.08112045400000012,
         "segment": "ringdown",
         "native_angles_radians": [
-          53.40192017787587,
-          0.20043240925565284,
-          -46.09151935448284
+          53.40192017787206,
+          0.20043240923977604,
+          -46.09151935459104
         ],
         "independent_angles_radians": [
-          53.40192017787588,
-          0.2004324092556528,
-          -46.09151935448285
+          53.40192017787207,
+          0.20043240923977604,
+          -46.09151935459106
         ],
         "public_binary_angles_radians": [
-          48.64469400884333,
-          0.2107759700934062,
-          -46.05348453959775
+          48.64469400887438,
+          0.2107759700953468,
+          -46.05348453961463
         ],
-        "native_minus_independent_rotation_radians": 1.4251702247918583e-15,
-        "independent_minus_public_relative_rotation_radians": 0.025067183629938216
+        "native_minus_independent_rotation_radians": 2.8462834572825765e-15,
+        "independent_minus_public_relative_rotation_radians": 0.025067183747231644
       },
       {
         "precession_version": 22310,
@@ -790,22 +797,22 @@
         "time_seconds": 0.16168686025000012,
         "segment": "ringdown",
         "native_angles_radians": [
-          88.51219851300462,
-          0.20043240925565284,
-          -80.49891027291734
+          88.51219851299918,
+          0.20043240923977604,
+          -80.49891027313492
         ],
         "independent_angles_radians": [
-          88.51219851300462,
-          0.2004324092556528,
-          -80.49891027291734
+          88.51219851299919,
+          0.20043240923977604,
+          -80.49891027313494
         ],
         "public_binary_angles_radians": [
-          83.63462670388792,
-          0.2107759700934062,
-          -80.26905019302302
+          83.63462670391897,
+          0.2107759700953468,
+          -80.26905019302569
         ],
-        "native_minus_independent_rotation_radians": 3.1031676915590914e-17,
-        "independent_minus_public_relative_rotation_radians": 0.10014163930798668
+        "native_minus_independent_rotation_radians": 2.8486504742032495e-15,
+        "independent_minus_public_relative_rotation_radians": 0.10014163954834357
       },
       {
         "precession_version": 22311,
@@ -813,22 +820,22 @@
         "time_seconds": -2.629817046,
         "segment": "analytical_inspiral",
         "native_angles_radians": [
-          2.0609877639720797,
-          0.18551579066533158,
-          2.679939660715093
+          2.0609877639737992,
+          0.1855157906646884,
+          2.6799396607152284
         ],
         "independent_angles_radians": [
-          2.0609877639720797,
-          0.18551579066533158,
-          2.679939660718529
+          2.0609877639737992,
+          0.1855157906646884,
+          2.6799396607168924
         ],
         "public_binary_angles_radians": [
-          -2.6799397002652112,
-          0.18458469995887375,
-          2.679939608982413
+          -2.6799397002681866,
+          0.18458469995998797,
+          2.6799396089852734
         ],
-        "native_minus_independent_rotation_radians": 3.4359478348761343e-12,
-        "independent_minus_public_relative_rotation_radians": 4.805297953755009e-16
+        "native_minus_independent_rotation_radians": 1.6640157333838145e-12,
+        "independent_minus_public_relative_rotation_radians": 1.906950598772223e-16
       },
       {
         "precession_version": 22311,
@@ -836,22 +843,22 @@
         "time_seconds": -1.3295240772499999,
         "segment": "analytical_inspiral",
         "native_angles_radians": [
-          5.744931938635068,
-          0.1904597923278526,
-          -0.9413595415452831
+          5.744931938635165,
+          0.190459792328283,
+          -0.9413595415436107
         ],
         "independent_angles_radians": [
-          5.744931938635068,
-          0.1904597923278526,
-          -0.9413595403992395
+          5.744931938635165,
+          0.190459792328283,
+          -0.9413595403993748
         ],
         "public_binary_angles_radians": [
-          0.993962519180013,
-          0.1888922494647967,
-          -0.932354796658935
+          0.9939625191803723,
+          0.1888922494660709,
+          -0.9323547966593119
         ],
-        "native_minus_independent_rotation_radians": 1.1460435769770582e-09,
-        "independent_minus_public_relative_rotation_radians": 0.002921065568088536
+        "native_minus_independent_rotation_radians": 1.1442359603968283e-09,
+        "independent_minus_public_relative_rotation_radians": 0.002921065567058864
       },
       {
         "precession_version": 22311,
@@ -859,22 +866,22 @@
         "time_seconds": -0.02971938974999988,
         "segment": "analytical_inspiral",
         "native_angles_radians": [
-          16.115006267062533,
-          0.20963771431968406,
-          -11.115924338637605
+          16.115006267047946,
+          0.20963771432215786,
+          -11.115924338621848
         ],
         "independent_angles_radians": [
-          16.115006267062533,
-          0.20963771431968406,
-          -11.1159248627211
+          16.115006267047946,
+          0.20963771432215786,
+          -11.115924862706875
         ],
         "public_binary_angles_radians": [
-          11.403753509170834,
-          0.19478242852463235,
-          -11.148926814408183
+          11.40375350913187,
+          0.19478242852407537,
+          -11.148926814370947
         ],
-        "native_minus_independent_rotation_radians": 5.240834948085655e-07,
-        "independent_minus_public_relative_rotation_radians": 0.016070653530569332
+        "native_minus_independent_rotation_radians": 5.240850260258509e-07,
+        "independent_minus_public_relative_rotation_radians": 0.016070653531960605
       },
       {
         "precession_version": 22311,
@@ -882,22 +889,22 @@
         "time_seconds": -0.02923110849999988,
         "segment": "meco_to_peak",
         "native_angles_radians": [
-          16.136677889566553,
-          0.2098861639465477,
-          -11.137120988958845
+          16.136677889593315,
+          0.20988616394168466,
+          -11.137120988982728
         ],
         "independent_angles_radians": [
-          16.136677889566553,
-          0.2098861639465477,
-          -11.137121452100061
+          16.136677889593315,
+          0.20988616394168466,
+          -11.137121452126246
         ],
         "public_binary_angles_radians": [
-          11.423158416563748,
-          0.19478748072773253,
-          -11.167964763635858
+          11.423158416525432,
+          0.19478748071997706,
+          -11.167964763599274
         ],
-        "native_minus_independent_rotation_radians": 4.631412160335184e-07,
-        "independent_minus_public_relative_rotation_radians": 0.016192831965333422
+        "native_minus_independent_rotation_radians": 4.631435182153801e-07,
+        "independent_minus_public_relative_rotation_radians": 0.01619283196433361
       },
       {
         "precession_version": 22311,
@@ -905,22 +912,22 @@
         "time_seconds": -0.01458267099999988,
         "segment": "meco_to_peak",
         "native_angles_radians": [
-          16.925533482544168,
-          0.2133710896101251,
-          -11.908214724842736
+          16.925533482598247,
+          0.21337108962426463,
+          -11.90821472489416
         ],
         "independent_angles_radians": [
-          16.925533482544168,
-          0.2133710896101251,
-          -11.908209802893497
+          16.925533482598247,
+          0.21337108962426463,
+          -11.908209802946653
         ],
         "public_binary_angles_radians": [
-          12.121885367076475,
-          0.19905454727128338,
-          -11.853273708895463
+          12.12188536705565,
+          0.1990545472759468,
+          -11.853273708875774
         ],
-        "native_minus_independent_rotation_radians": 4.92194923933181e-06,
-        "independent_minus_public_relative_rotation_radians": 0.021103871056446028
+        "native_minus_independent_rotation_radians": 4.921947507382889e-06,
+        "independent_minus_public_relative_rotation_radians": 0.02110387107161258
       },
       {
         "precession_version": 22311,
@@ -928,22 +935,22 @@
         "time_seconds": -0.0004225147499998805,
         "segment": "meco_to_peak",
         "native_angles_radians": [
-          18.02083156549764,
-          0.20063766194271196,
-          -12.979962187197454
+          18.02083156549914,
+          0.2006376619390533,
+          -12.979962187197394
         ],
         "independent_angles_radians": [
-          18.02083156549764,
-          0.20063766194271196,
-          -12.979954931706855
+          18.02083156549914,
+          0.20063766193905333,
+          -12.979954931708962
         ],
         "public_binary_angles_radians": [
-          13.230640917495169,
-          0.2107759700934062,
-          -12.93868245606029
+          13.23064091752622,
+          0.2107759700953468,
+          -12.938682456090337
         ],
-        "native_minus_independent_rotation_radians": 7.255490599473922e-06,
-        "independent_minus_public_relative_rotation_radians": 0.015206644787423994
+        "native_minus_independent_rotation_radians": 7.255488432321489e-06,
+        "independent_minus_public_relative_rotation_radians": 0.015206644787843797
       },
       {
         "precession_version": 22311,
@@ -951,22 +958,22 @@
         "time_seconds": 6.576650000011952e-05,
         "segment": "ringdown",
         "native_angles_radians": [
-          18.078852277079687,
-          0.20043240925565284,
-          -13.036819951195866
+          18.078852277077505,
+          0.20043240923977604,
+          -13.036819951193618
         ],
         "independent_angles_radians": [
-          18.078852277079687,
-          0.2004324092556528,
-          -13.036813521985488
+          18.078852277077505,
+          0.20043240923977604,
+          -13.03681352198413
         ],
         "public_binary_angles_radians": [
-          13.442701115646955,
-          0.2107759700934062,
-          -13.146049520626503
+          13.442701115678005,
+          0.2107759700953468,
+          -13.146049520656465
         ],
-        "native_minus_independent_rotation_radians": 6.4292103782717345e-06,
-        "independent_minus_public_relative_rotation_radians": 0.02461384695971228
+        "native_minus_independent_rotation_radians": 6.429209488498921e-06,
+        "independent_minus_public_relative_rotation_radians": 0.02461384697074255
       },
       {
         "precession_version": 22311,
@@ -974,22 +981,22 @@
         "time_seconds": 0.08112045400000012,
         "segment": "ringdown",
         "native_angles_radians": [
-          53.40192017787587,
-          0.20043240925565284,
-          -47.65274051156027
+          53.40192017787206,
+          0.20043240923977604,
+          -47.652740511668085
         ],
         "independent_angles_radians": [
-          53.40192017787588,
-          0.2004324092556528,
-          -47.652734082349895
+          53.40192017787207,
+          0.20043240923977604,
+          -47.65273408245861
         ],
         "public_binary_angles_radians": [
-          48.64469400884333,
-          0.2107759700934062,
-          -47.568982238618
+          48.64469400887438,
+          0.2107759700953468,
+          -47.568982238633666
         ],
-        "native_minus_independent_rotation_radians": 6.42921037990831e-06,
-        "independent_minus_public_relative_rotation_radians": 0.06893751395844992
+        "native_minus_independent_rotation_radians": 6.42920949155654e-06,
+        "independent_minus_public_relative_rotation_radians": 0.06893751408588722
       },
       {
         "precession_version": 22311,
@@ -997,22 +1004,22 @@
         "time_seconds": 0.16168686025000012,
         "segment": "ringdown",
         "native_angles_radians": [
-          88.51219851300462,
-          0.20043240925565284,
-          -82.06013142999478
+          88.51219851299918,
+          0.20043240923977604,
+          -82.06013143021197
         ],
         "independent_angles_radians": [
-          88.51219851300462,
-          0.2004324092556528,
-          -82.0601250007844
+          88.51219851299919,
+          0.20043240923977604,
+          -82.06012500100249
         ],
         "public_binary_angles_radians": [
-          83.63462670388792,
-          0.2107759700934062,
-          -81.78454789204328
+          83.63462670391897,
+          0.2107759700953468,
+          -81.78454789204473
         ],
-        "native_minus_independent_rotation_radians": 6.429210387205542e-06,
-        "independent_minus_public_relative_rotation_radians": 0.1445185033019904
+        "native_minus_independent_rotation_radians": 6.429209491668519e-06,
+        "independent_minus_public_relative_rotation_radians": 0.14451850354964899
       },
       {
         "precession_version": 22321,
@@ -1020,22 +1027,22 @@
         "time_seconds": -2.629817046,
         "segment": "analytical_inspiral",
         "native_angles_radians": [
-          2.0609877639720797,
-          0.18551579066533158,
-          2.679939660715093
+          2.0609877639737992,
+          0.1855157906646884,
+          2.6799396607152284
         ],
         "independent_angles_radians": [
-          2.0609877639720797,
-          0.18551579066533158,
-          2.679939660718529
+          2.0609877639737992,
+          0.1855157906646884,
+          2.6799396607168924
         ],
         "public_binary_angles_radians": [
-          -2.6799397002652112,
-          0.18458469995887375,
-          2.679939608982413
+          -2.6799397002681866,
+          0.18458469995998797,
+          2.6799396089852734
         ],
-        "native_minus_independent_rotation_radians": 3.4359478348761343e-12,
-        "independent_minus_public_relative_rotation_radians": 4.805297953755009e-16
+        "native_minus_independent_rotation_radians": 1.6640157333838145e-12,
+        "independent_minus_public_relative_rotation_radians": 1.906950598772223e-16
       },
       {
         "precession_version": 22321,
@@ -1043,22 +1050,22 @@
         "time_seconds": -1.3295240772499999,
         "segment": "analytical_inspiral",
         "native_angles_radians": [
-          5.744931938635068,
-          0.1904597923278526,
-          -0.9413595415452831
+          5.744931938635165,
+          0.190459792328283,
+          -0.9413595415436107
         ],
         "independent_angles_radians": [
-          5.744931938635068,
-          0.1904597923278526,
-          -0.9413595403992395
+          5.744931938635165,
+          0.190459792328283,
+          -0.9413595403993748
         ],
         "public_binary_angles_radians": [
-          0.993962519180013,
-          0.1888922494647967,
-          -0.932354796658935
+          0.9939625191803723,
+          0.1888922494660709,
+          -0.9323547966593119
         ],
-        "native_minus_independent_rotation_radians": 1.1460435769770582e-09,
-        "independent_minus_public_relative_rotation_radians": 0.002921065568088536
+        "native_minus_independent_rotation_radians": 1.1442359603968283e-09,
+        "independent_minus_public_relative_rotation_radians": 0.002921065567058864
       },
       {
         "precession_version": 22321,
@@ -1066,22 +1073,22 @@
         "time_seconds": -0.02971938974999988,
         "segment": "analytical_inspiral",
         "native_angles_radians": [
-          16.115006267062533,
-          0.20963771431968406,
-          -11.115924338637605
+          16.115006267047946,
+          0.20963771432215786,
+          -11.115924338621848
         ],
         "independent_angles_radians": [
-          16.115006267062533,
-          0.20963771431968406,
-          -11.1159248627211
+          16.115006267047946,
+          0.20963771432215786,
+          -11.115924862706875
         ],
         "public_binary_angles_radians": [
-          11.403753509170834,
-          0.19478242852463235,
-          -11.148926814366146
+          11.40375350913187,
+          0.19478242852407537,
+          -11.148926814328908
         ],
-        "native_minus_independent_rotation_radians": 5.240834948085655e-07,
-        "independent_minus_public_relative_rotation_radians": 0.016070653520774993
+        "native_minus_independent_rotation_radians": 5.240850260258509e-07,
+        "independent_minus_public_relative_rotation_radians": 0.016070653522165863
       },
       {
         "precession_version": 22321,
@@ -1089,22 +1096,22 @@
         "time_seconds": -0.02923110849999988,
         "segment": "meco_to_peak",
         "native_angles_radians": [
-          16.13666218502082,
-          0.20988637420234266,
-          -11.13710562448895
+          16.136662185213382,
+          0.20988637416827105,
+          -11.137105624675348
         ],
         "independent_angles_radians": [
-          16.136662186640308,
-          0.20988637391370377,
-          -11.137106093571889
+          16.136662184467564,
+          0.2098863742990644,
+          -11.13710609144651
         ],
         "public_binary_angles_radians": [
-          11.423158416563748,
-          0.19478748072773253,
-          -11.167964763792774
+          11.423158416525432,
+          0.19478748071997706,
+          -11.16796476375619
         ],
-        "native_minus_independent_rotation_radians": 4.6749920397253257e-07,
-        "independent_minus_public_relative_rotation_radians": 0.016193910138140193
+        "native_minus_independent_rotation_radians": 4.6750065665995754e-07,
+        "independent_minus_public_relative_rotation_radians": 0.016193910625196064
       },
       {
         "precession_version": 22321,
@@ -1112,22 +1119,22 @@
         "time_seconds": -0.01458267099999988,
         "segment": "meco_to_peak",
         "native_angles_radians": [
-          16.78780353945632,
-          0.2173272580312462,
-          -11.773446804371886
+          16.787803555505178,
+          0.21732725519016433,
+          -11.773446820255412
         ],
         "independent_angles_radians": [
-          16.78780367558455,
-          0.21732723376931717,
-          -11.77344741403699
+          16.78780349281433,
+          0.21732726618417564,
+          -11.773447233142646
         ],
         "public_binary_angles_radians": [
-          11.99335920399027,
-          0.19520435013351684,
-          -11.7273595301902
+          11.993359203907792,
+          0.19520435054946852,
+          -11.727359530088165
         ],
-        "native_minus_independent_rotation_radians": 4.782575097651926e-07,
-        "independent_minus_public_relative_rotation_radians": 0.026202411479255925
+        "native_minus_independent_rotation_radians": 4.744234836040866e-07,
+        "independent_minus_public_relative_rotation_radians": 0.02620242313863071
       },
       {
         "precession_version": 22321,
@@ -1135,22 +1142,22 @@
         "time_seconds": -0.0004225147499998805,
         "segment": "meco_to_peak",
         "native_angles_radians": [
-          17.4172401820773,
-          0.2245201123991863,
-          -12.387584052824703
+          17.417240213453915,
+          0.22452010684466112,
+          -12.387584084243183
         ],
         "independent_angles_radians": [
-          17.417240448230643,
-          0.22452006496307678,
-          -12.387584694980301
+          17.41724009088287,
+          0.2245201283397832,
+          -12.387584337134188
         ],
         "public_binary_angles_radians": [
-          12.54398163116267,
-          0.195609879998623,
-          -12.267502894701465
+          12.543981631036845,
+          0.19560988083077152,
+          -12.267502894490178
         ],
-        "native_minus_independent_rotation_radians": 3.901375286275087e-07,
-        "independent_minus_public_relative_rotation_radians": 0.041822985350379996
+        "native_minus_independent_rotation_radians": 3.740024078141729e-07,
+        "independent_minus_public_relative_rotation_radians": 0.04182298468144796
       },
       {
         "precession_version": 22321,
@@ -1158,22 +1165,22 @@
         "time_seconds": 6.576650000011952e-05,
         "segment": "ringdown",
         "native_angles_radians": [
-          17.464682073111668,
-          0.22473473482364265,
-          -12.433833367013143
+          17.46468210494563,
+          0.224734729188153,
+          -12.433833398937495
         ],
         "independent_angles_radians": [
-          17.464682343144737,
-          0.22473468669605537,
-          -12.433834030170647
+          17.464681980587862,
+          0.22473475099661017,
+          -12.433833666568557
         ],
         "public_binary_angles_radians": [
-          12.756041829314455,
-          0.195609879998623,
-          -12.47551895914052
+          12.75604182918863,
+          0.19560988083077152,
+          -12.475518958894934
         ],
-        "native_minus_independent_rotation_radians": 4.0727062618325136e-07,
-        "independent_minus_public_relative_rotation_radians": 0.032307369589051824
+        "native_minus_independent_rotation_radians": 3.904574037699478e-07,
+        "independent_minus_public_relative_rotation_radians": 0.03230744655742239
       },
       {
         "precession_version": 22321,
@@ -1181,22 +1188,22 @@
         "time_seconds": 0.08112045400000012,
         "segment": "ringdown",
         "native_angles_radians": [
-          52.78774997390785,
-          0.22473473482364265,
-          -46.86864109095572
+          52.787750005740186,
+          0.224734729188153,
+          -46.868641167239176
         ],
         "independent_angles_radians": [
-          52.787750243940934,
-          0.22473468669605537,
-          -46.86864213295755
+          52.787749881382425,
+          0.22473475099661017,
+          -46.86864126320133
         ],
         "public_binary_angles_radians": [
-          47.95803472251083,
-          0.195609879998623,
-          -47.00618565602342
+          47.958034722385,
+          0.19560988083077152,
+          -47.00618565008425
         ],
-        "native_minus_independent_rotation_radians": 7.825620301317811e-07,
-        "independent_minus_public_relative_rotation_radians": 0.22685850587490525
+        "native_minus_independent_rotation_radians": 2.200370218657715e-07,
+        "independent_minus_public_relative_rotation_radians": 0.22685901070214737
       },
       {
         "precession_version": 22321,
@@ -1204,22 +1211,22 @@
         "time_seconds": 0.16168686025000012,
         "segment": "ringdown",
         "native_angles_radians": [
-          87.89802830903659,
-          0.22473473482364265,
-          -81.09601021415166
+          87.89802834086731,
+          0.224734729188153,
+          -81.09601033452701
         ],
         "independent_angles_radians": [
-          87.89802857906967,
-          0.22473468669605537,
-          -81.09601163271559
+          87.89802821650954,
+          0.22473475099661017,
+          -81.09601025985438
         ],
         "public_binary_angles_radians": [
-          82.94796741755542,
-          0.195609879998623,
-          -81.32883628846727
+          82.9479674174296,
+          0.19560988083077152,
+          -81.32883627686881
         ],
-        "native_minus_independent_rotation_radians": 1.1578880511553828e-06,
-        "independent_minus_public_relative_rotation_radians": 0.4405976482186027
+        "native_minus_independent_rotation_radians": 5.840593755639195e-08,
+        "independent_minus_public_relative_rotation_radians": 0.4405986440151552
       }
     ]
   }
