@@ -1564,6 +1564,18 @@ residual is smaller than this anchor/reference variability, so the sweep
 does not establish a stable whole-waveform source agreement or a release
 gate.
 
+The [fixed-anchor q4 control](evidence/2026-09-25/source_q4_fixed_anchor.json)
+uses each model's own `0.03125 M` fitted peak as one time/phase chart for
+all three output grids. Native/public complex relative L2 is `0.000719`,
+`0.000824`, and `0.000405` at `0.125`, `0.0625`, and `0.03125 M`; the
+separately refitted values were `0.000412`, `0.000304`, and `0.000405`.
+On shared coarse samples the native adjacent-grid differences are exactly
+zero, while the pinned public waveform differs by `0.000131` and `0.000595`.
+Thus independent re-anchoring contributes to the apparently smaller coarse
+cross-model residual, and the public reference itself varies with cadence.
+The fixed-chart residual still lacks a stable convergence trend and does not
+qualify source fidelity or the model for release.
+
 The [direct pinned-source fine-grid control](evidence/2026-09-25/source_q4_fine_mode_control.json)
 compiles the pinned source separately and compares its complete `(2,2)` mode
 with the same native and public q4 runs. At `0.125` and `0.0625 M`, fitted
