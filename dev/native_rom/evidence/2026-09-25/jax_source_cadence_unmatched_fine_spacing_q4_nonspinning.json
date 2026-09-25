@@ -1,0 +1,176 @@
+{
+  "case_id": "q4_nonspinning",
+  "checks": {
+    "each_cadence_backend_checks_passed": false,
+    "medium_to_fine_shared_sample_complex_relative_l2_at_most": false,
+    "shared_time_max_abs_at_most_M": true
+  },
+  "comparisons": {
+    "jax_coarse_to_medium": {
+      "complex_relative_l2": 1.5199330907807745e-08,
+      "shared_end_M": 484.5,
+      "shared_samples": 970,
+      "shared_time_max_abs_M": 0.0
+    },
+    "jax_medium_to_fine": {
+      "complex_relative_l2": 7.893501646531678e-09,
+      "shared_end_M": 484.5,
+      "shared_samples": 1939,
+      "shared_time_max_abs_M": 0.0
+    },
+    "nqc_coarse_to_medium_coefficient_l2": 0.08491334352410843,
+    "nqc_medium_to_fine_coefficient_l2": 0.02156957200847678,
+    "torch_coarse_to_medium": {
+      "complex_relative_l2": 0.0008023511712139297,
+      "shared_end_M": 484.5,
+      "shared_samples": 970,
+      "shared_time_max_abs_M": 0.0
+    },
+    "torch_medium_to_fine": {
+      "complex_relative_l2": 0.0003310629992011708,
+      "shared_end_M": 484.5,
+      "shared_samples": 1939,
+      "shared_time_max_abs_M": 0.0
+    }
+  },
+  "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+  "diagnostic_checks_passed": false,
+  "elapsed_s": 155.69760100002168,
+  "host": "RONI2",
+  "levels": {
+    "coarse": {
+      "boundary_time_M": 384.65625,
+      "diagnostic_checks_passed": true,
+      "fine_input_samples": 9614,
+      "jax": {
+        "end_M": 484.5,
+        "mode_sha256": "d898fa28ebae967300402d2418afff6e34be836d8c0d7dc116180da99df23601",
+        "samples": 970,
+        "start_M": 0.0,
+        "time_sha256": "6db2117b58c64613f6c556861870ceaa8bc6026319b18624a2991df48e6cec1b"
+      },
+      "match_time_M": 384.66385964659764,
+      "nqc_coefficients": [
+        [
+          -2.246576134925783,
+          8.103400552912035,
+          -6.567078306951377
+        ],
+        [
+          2.1376167786245674,
+          -3.9226166166909646
+        ]
+      ],
+      "settings": {
+        "atol": 1e-13,
+        "coarse_output_step_M": 0.5,
+        "max_step_M": 2.0,
+        "rtol": 1e-12
+      },
+      "torch": {
+        "end_M": 484.5,
+        "mode_sha256": "bbc2b3f4fb7005bfd58dd587ae660fd5d5df7f9e02bf364171b008ab49cc105b",
+        "samples": 970,
+        "start_M": 0.0,
+        "time_sha256": "6db2117b58c64613f6c556861870ceaa8bc6026319b18624a2991df48e6cec1b"
+      },
+      "torch_jax": {
+        "common_samples": 970,
+        "complex_relative_l2": 2.68493929019344e-09,
+        "support_sample_difference": 0,
+        "time_max_abs_M": 0.0
+      }
+    },
+    "fine": {
+      "boundary_time_M": 384.66796875,
+      "diagnostic_checks_passed": false,
+      "fine_input_samples": 38455,
+      "jax": {
+        "end_M": 484.625,
+        "mode_sha256": "8835c6a1300f880d81b9e2c394addceb32bae7c89fba8ac33b03c3481efdd398",
+        "samples": 3878,
+        "start_M": 0.0,
+        "time_sha256": "23dc8b8bd719997ac85ece2cbae801067892a0bbcb439d79a6d0db3c1378582b"
+      },
+      "match_time_M": 384.66942910460546,
+      "nqc_coefficients": [
+        [
+          -2.252596120548942,
+          8.147473042901916,
+          -6.612141298494896
+        ],
+        [
+          2.135344128348167,
+          -3.9187731730964726
+        ]
+      ],
+      "settings": {
+        "atol": 1e-13,
+        "coarse_output_step_M": 0.125,
+        "max_step_M": 2.0,
+        "rtol": 1e-12
+      },
+      "torch": {
+        "end_M": 484.625,
+        "mode_sha256": "b8a74283609183b5f9cbeb204e91f553a0b1650a8eb29723edf3f289bed179b7",
+        "samples": 3878,
+        "start_M": 0.0,
+        "time_sha256": "23dc8b8bd719997ac85ece2cbae801067892a0bbcb439d79a6d0db3c1378582b"
+      },
+      "torch_jax": {
+        "common_samples": 3878,
+        "complex_relative_l2": 0.000477053873744483,
+        "support_sample_difference": 0,
+        "time_max_abs_M": 0.0
+      }
+    },
+    "medium": {
+      "boundary_time_M": 384.671875,
+      "diagnostic_checks_passed": false,
+      "fine_input_samples": 19224,
+      "jax": {
+        "end_M": 484.5,
+        "mode_sha256": "771d2463619851aa70d1ea32e5833cb00398857f940952786d17f79a99b4086d",
+        "samples": 1939,
+        "start_M": 0.0,
+        "time_sha256": "13f33c634924efb58a9930f5f845ff05d5a734e48da331910fb24739a04b7999"
+      },
+      "match_time_M": 384.67333535460546,
+      "nqc_coefficients": [
+        [
+          -2.2551476411876474,
+          8.163364552987966,
+          -6.626414642525357
+        ],
+        [
+          2.1341255406409316,
+          -3.9197645259256797
+        ]
+      ],
+      "settings": {
+        "atol": 1e-13,
+        "coarse_output_step_M": 0.25,
+        "max_step_M": 2.0,
+        "rtol": 1e-12
+      },
+      "torch": {
+        "end_M": 484.5,
+        "mode_sha256": "f9b1b3e1ddb9583b6612552ccc7d823541856fdac69255c2a3c8c26519048214",
+        "samples": 1939,
+        "start_M": 0.0,
+        "time_sha256": "13f33c634924efb58a9930f5f845ff05d5a734e48da331910fb24739a04b7999"
+      },
+      "torch_jax": {
+        "common_samples": 1939,
+        "complex_relative_l2": 0.000802459647599509,
+        "support_sample_difference": 0,
+        "time_max_abs_M": 0.0
+      }
+    }
+  },
+  "pid": 78469,
+  "plan_sha256": "f096ff2bcaf5263c9bcca3e5f3ab586e6ffe589132fdb717c3703a32025a15e8",
+  "release_qualified": false,
+  "schema": "diffgw.seobnrv4.jax-source-cadence.v1",
+  "status": "diagnostic_complete"
+}

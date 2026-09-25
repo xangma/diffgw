@@ -42,6 +42,7 @@ def integrate_two_stage_trajectory(
     coarse_initial_step: float | None = None,
     coarse_max_step: float | None = None,
     fine_max_step: float | None = None,
+    fine_refinement_factor: int | None = None,
     atol: float = 1e-10,
     rtol: float = 1e-9,
     max_evaluations: int = 200000,
@@ -51,12 +52,20 @@ def integrate_two_stage_trajectory(
     ``vector_field(state)`` must be autonomous. Both stages must reach their
     accepted-state plunge event before ``max_duration``. The returned splice
     stops at the fine event; it does not invent ringdown samples.
+    ``fine_refinement_factor`` fixes the fine input grid relative to the
+    output grid for controlled numerical studies; by default the historical
+    adaptive refinement rule is retained.
     """
     if not math.isfinite(float(output_step)) or output_step <= 0:
         raise ValueError("output_step must be positive and finite")
     if not math.isfinite(float(max_duration)) or max_duration <= 0:
         raise ValueError("max_duration must be positive and finite")
     dt = float(output_step)
+    if fine_refinement_factor is not None and (
+            type(fine_refinement_factor) is not int
+            or fine_refinement_factor < 1
+            or fine_refinement_factor & (fine_refinement_factor - 1)):
+        raise ValueError("fine_refinement_factor must be a positive power of two")
 
     def field(_time, state):
         return vector_field(state)
@@ -81,7 +90,8 @@ def integrate_two_stage_trajectory(
     if not 1 <= restart_index < n_coarse:
         raise RuntimeError("restart index is outside the coarse trajectory")
     restart_state = coarse_state[restart_index]
-    refinement = 2 ** max(0, math.ceil(math.log2(50.0 * dt)))
+    refinement = (fine_refinement_factor if fine_refinement_factor is not None
+                  else 2 ** max(0, math.ceil(math.log2(50.0 * dt))))
     fine_step = dt / refinement
     fine = integrate_adaptive_to_time(
         field, restart_state, max_duration,

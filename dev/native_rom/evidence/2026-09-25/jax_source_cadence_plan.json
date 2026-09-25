@@ -1,0 +1,22 @@
+{
+  "schema": "diffgw.seobnrv4.jax-source-cadence-plan.v1",
+  "purpose": "Measure source-backed whole-waveform cadence sensitivity at fixed ODE tolerance, comparing exact shared samples on successively finer output charts. The fine NQC input spacing follows output_step/32, as in the current runner.",
+  "pilot_case": "strong_aligned",
+  "prospective_case": "q4_nonspinning",
+  "source_plan_sha256": "eb79f7db87e23d83a8437334eec90f6872dcf3b76f65b5cbe55882f7d62b9944",
+  "extended_tolerance_result_sha256": {
+    "strong_aligned": "bdef05aad333042a4c9e6a522f80de30d64c344595b5d829edec915fa97703a0",
+    "q4_nonspinning": "64252c973897bfc3e99d94d67b2cb0ef8148f3ae57150f3df8833068fdbef8cf"
+  },
+  "atol": 1e-13,
+  "rtol": 1e-12,
+  "max_step_M": 2.0,
+  "output_steps_M": [0.5, 0.25, 0.125],
+  "checks": {
+    "medium_to_fine_shared_sample_complex_relative_l2_at_most": 1e-5,
+    "each_cadence_backend_checks_passed": true,
+    "shared_time_max_abs_at_most_M": 1e-8
+  },
+  "interpretation": "A combined output-cadence and fine NQC input-spacing self-convergence test; it does not isolate one from the other. Passing would not establish independent reference fidelity, NR accuracy, full-domain behavior, gradients, or ROM qualification.",
+  "release_qualified": false
+}

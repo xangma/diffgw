@@ -200,6 +200,7 @@ def run(case_id, plan, public_identity, *, variant="published", anchor_control=F
         jax_field, initial_jax, output_step=dt,
         max_duration=max_duration, coarse_initial_step=dt,
         coarse_max_step=max_step, fine_max_step=max_step,
+        fine_refinement_factor=numerical_settings.get("jax_fine_refinement_factor"),
         atol=atol, rtol=rtol)
     print(case_id, "trajectories", len(fine.output_time), flush=True)
 
@@ -299,6 +300,8 @@ def run(case_id, plan, public_identity, *, variant="published", anchor_control=F
         "host": platform.node(), "cwd": os.getcwd(), "pid": os.getpid(),
         "input": {"case_parameters": CASES[case_id], "coarse_output_step_M": dt,
                   "fine_output_step_M": fine_step, "fine_output_samples": fine_count,
+                  "jax_fine_output_step_M": dt / jrun.refinement_factor,
+                  "jax_fine_refinement_factor": jrun.refinement_factor,
                   "max_step_M": max_step, "atol": atol, "rtol": rtol},
         "public_binary": public_identity,
         "source_choices": SOURCE_FLUX_OPTIONS if variant == "source" else None,
@@ -367,8 +370,13 @@ def run(case_id, plan, public_identity, *, variant="published", anchor_control=F
                 "fine_state": _array(fine.output_state),
                 "fine_base_mode": _array(torch_fine_mode),
                 "fine_corrected_inspiral": _array(tref.corrected_inspiral),
+                "jax_fine_time": float(jrun.coarse_time[jrun.restart_index]) + _array(jrun.fine_time),
+                "jax_fine_state": _array(jrun.fine_state),
+                "jax_fine_base_mode": _array(jax_fine_mode),
+                "jax_fine_corrected_inspiral": _array(jref.corrected_inspiral),
                 "fine_orbital_frequency": _array(torch_fine_omega),
                 "nqc_coefficients": [_array(x) for x in tref.calibration.coefficients],
+                "jax_nqc_coefficients": [_array(x) for x in jref.calibration.coefficients],
                 "nqc_amplitude_matrix": _array(tref.nqc.amplitude_matching_matrix),
                 "nqc_phase_matrix": _array(tref.nqc.phase_matching_matrix),
                 "nqc_amplitude_rhs": _array(amplitude_rhs),
@@ -378,6 +386,8 @@ def run(case_id, plan, public_identity, *, variant="published", anchor_control=F
                 "orbital_peak_time_M": float(coarse.output_time[restart] + tref.peak.time),
                 "match_time_M": float(coarse.output_time[restart] + tref.match_time),
                 "boundary_time_M": float(coarse.output_time[restart] + tref.boundary_time),
+                "jax_match_time_M": float(jrun.coarse_time[jrun.restart_index] + jref.match_time),
+                "jax_boundary_time_M": float(jrun.coarse_time[jrun.restart_index] + jref.boundary_time),
                 "boundary_index": int(tref.boundary_index),
                 "restart_index": restart,
             }

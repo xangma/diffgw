@@ -1,0 +1,221 @@
+{
+  "case_id": "strong_aligned",
+  "checks": {
+    "each_cadence_backend_checks_passed": true,
+    "medium_to_fine_shared_sample_complex_relative_l2_at_most": false,
+    "shared_time_max_abs_at_most_M": true
+  },
+  "comparisons": {
+    "jax_coarse_to_medium": {
+      "complex_relative_l2": 0.00768009405236673,
+      "shared_end_M": 584.0,
+      "shared_samples": 1169,
+      "shared_time_max_abs_M": 0.0
+    },
+    "jax_medium_to_fine": {
+      "complex_relative_l2": 9.719859836454128e-05,
+      "shared_end_M": 584.25,
+      "shared_samples": 2338,
+      "shared_time_max_abs_M": 0.0
+    },
+    "nqc_coarse_to_medium_coefficient_l2": 3.98649768401115,
+    "nqc_medium_to_fine_coefficient_l2": 0.08805568658483681,
+    "torch_coarse_to_medium": {
+      "complex_relative_l2": 0.007680658588466717,
+      "shared_end_M": 584.0,
+      "shared_samples": 1169,
+      "shared_time_max_abs_M": 0.0
+    },
+    "torch_medium_to_fine": {
+      "complex_relative_l2": 9.755199515774286e-05,
+      "shared_end_M": 584.25,
+      "shared_samples": 2338,
+      "shared_time_max_abs_M": 0.0
+    }
+  },
+  "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+  "diagnostic_checks_passed": false,
+  "elapsed_s": 186.6342911249958,
+  "host": "RONI2",
+  "levels": {
+    "coarse": {
+      "boundary_time_M": 484.40625,
+      "diagnostic_checks_passed": true,
+      "fine_input_samples": 9601,
+      "jax": {
+        "end_M": 584.0,
+        "mode_sha256": "b6a2db7a9d3cb9633bc57dc7b58fd27932e4f79a8263805a274d1497931b0ea4",
+        "samples": 1169,
+        "start_M": 0.0,
+        "time_sha256": "0ac91155dc977bca73e17f8cf1a8295bff77b9e603e39a39a616cc1f185b5a22"
+      },
+      "jax_boundary_time_M": 484.40625,
+      "jax_fine_input_samples": 9601,
+      "jax_match_time_M": 484.4137461546736,
+      "jax_nqc_coefficients": [
+        [
+          142.78741496153893,
+          -1225.7944856219244,
+          1374.2672901340509
+        ],
+        [
+          35.54985467964441,
+          -797.3069741664734
+        ]
+      ],
+      "match_time_M": 484.4137461546736,
+      "nqc_coefficients": [
+        [
+          142.78741752791814,
+          -1225.794510865308,
+          1374.267320606602
+        ],
+        [
+          35.549846636409114,
+          -797.3065806205716
+        ]
+      ],
+      "settings": {
+        "atol": 1e-13,
+        "coarse_output_step_M": 0.5,
+        "jax_fine_refinement_factor": 32,
+        "max_step_M": 2.0,
+        "rtol": 1e-12
+      },
+      "torch": {
+        "end_M": 584.0,
+        "mode_sha256": "3beae28b842b35dfca82a2dcec0f856dd3b302f404afeeba0e06821aa7c06667",
+        "samples": 1169,
+        "start_M": 0.0,
+        "time_sha256": "0ac91155dc977bca73e17f8cf1a8295bff77b9e603e39a39a616cc1f185b5a22"
+      },
+      "torch_jax": {
+        "common_samples": 1169,
+        "complex_relative_l2": 5.154671308451041e-07,
+        "support_sample_difference": 0,
+        "time_max_abs_M": 0.0
+      }
+    },
+    "fine": {
+      "boundary_time_M": 484.390625,
+      "diagnostic_checks_passed": true,
+      "fine_input_samples": 38436,
+      "jax": {
+        "end_M": 584.375,
+        "mode_sha256": "9dfac9b8a5772cda56d62636f72f8bb45624c2953a20d0bbc5341a75a6694028",
+        "samples": 4676,
+        "start_M": 0.0,
+        "time_sha256": "62cbdc32eef124582e29bf2e787a03e400c3cc23efa96c2a046cf6f04fc0d553"
+      },
+      "jax_boundary_time_M": 484.390625,
+      "jax_fine_input_samples": 38436,
+      "jax_match_time_M": 484.391865051158,
+      "jax_nqc_coefficients": [
+        [
+          142.95788312400808,
+          -1227.011715562044,
+          1375.458709948619
+        ],
+        [
+          35.65117008356803,
+          -800.823209502999
+        ]
+      ],
+      "match_time_M": 484.391865051158,
+      "nqc_coefficients": [
+        [
+          142.95789113687988,
+          -1227.0117945085653,
+          1375.458805327777
+        ],
+        [
+          35.65116461522173,
+          -800.8229386708139
+        ]
+      ],
+      "settings": {
+        "atol": 1e-13,
+        "coarse_output_step_M": 0.125,
+        "jax_fine_refinement_factor": 32,
+        "max_step_M": 2.0,
+        "rtol": 1e-12
+      },
+      "torch": {
+        "end_M": 584.375,
+        "mode_sha256": "6d6fdfa8a99ca3984a09c34614cea516e1f6c0df196520240ec0020ff2804ac8",
+        "samples": 4676,
+        "start_M": 0.0,
+        "time_sha256": "62cbdc32eef124582e29bf2e787a03e400c3cc23efa96c2a046cf6f04fc0d553"
+      },
+      "torch_jax": {
+        "common_samples": 4676,
+        "complex_relative_l2": 3.4918023829362257e-07,
+        "support_sample_difference": 0,
+        "time_max_abs_M": 0.0
+      }
+    },
+    "medium": {
+      "boundary_time_M": 484.390625,
+      "diagnostic_checks_passed": true,
+      "fine_input_samples": 19199,
+      "jax": {
+        "end_M": 584.25,
+        "mode_sha256": "d2ba713cc8dbf9e23477f4f72cd9e72898448350bd8dcb7351472be95c7f97ee",
+        "samples": 2338,
+        "start_M": 0.0,
+        "time_sha256": "7002f4d04376986f0945f534c333e33fa21b042f2e37d60996463ddcb9a4ba48"
+      },
+      "jax_boundary_time_M": 484.390625,
+      "jax_fine_input_samples": 19199,
+      "jax_match_time_M": 484.391865051158,
+      "jax_nqc_coefficients": [
+        [
+          142.95720303105216,
+          -1227.0050232254555,
+          1375.4506295957895
+        ],
+        [
+          35.65294726326956,
+          -800.9102913784951
+        ]
+      ],
+      "match_time_M": 484.391865051158,
+      "nqc_coefficients": [
+        [
+          142.95720497310455,
+          -1227.0050423632038,
+          1375.4506527193073
+        ],
+        [
+          35.6529481397587,
+          -800.9103348702025
+        ]
+      ],
+      "settings": {
+        "atol": 1e-13,
+        "coarse_output_step_M": 0.25,
+        "jax_fine_refinement_factor": 32,
+        "max_step_M": 2.0,
+        "rtol": 1e-12
+      },
+      "torch": {
+        "end_M": 584.25,
+        "mode_sha256": "9bee803e6c1bcad771de3cbc0bcc8bb85f663d518d17c092e83160ba942cc002",
+        "samples": 2338,
+        "start_M": 0.0,
+        "time_sha256": "7002f4d04376986f0945f534c333e33fa21b042f2e37d60996463ddcb9a4ba48"
+      },
+      "torch_jax": {
+        "common_samples": 2338,
+        "complex_relative_l2": 5.5942906600733756e-08,
+        "support_sample_difference": 0,
+        "time_max_abs_M": 0.0
+      }
+    }
+  },
+  "pid": 84582,
+  "plan_sha256": "f096ff2bcaf5263c9bcca3e5f3ab586e6ffe589132fdb717c3703a32025a15e8",
+  "release_qualified": false,
+  "schema": "diffgw.seobnrv4.jax-source-cadence.v1",
+  "status": "diagnostic_complete"
+}

@@ -1235,6 +1235,26 @@ This rules out a simple tolerance tightening as a release fix on this chart;
 NQC input sampling and derivative construction still need a source-faithful
 convergence study.
 
+A [frozen source-backed cadence ladder](evidence/2026-09-25/jax_source_cadence_plan.json)
+holds ODE tolerances at `1e-13/1e-12` and compares exact shared samples at
+`0.5`, `0.25`, and `0.125 M`, with the fine NQC input spacing set to the
+output step divided by 32. Its first implementation accidentally retained
+the JAX helper's automatic fine refinement, which uses 32, 16, and 8
+subdivisions at those output cadences. The resulting [aligned](evidence/2026-09-25/jax_source_cadence_unmatched_fine_spacing_strong_aligned.json)
+and [q4](evidence/2026-09-25/jax_source_cadence_unmatched_fine_spacing_q4_nonspinning.json)
+controls showed `7.68e-3` and `8.02e-4` Torch/JAX differences at `0.25 M`;
+these are mismatched-input diagnostics, not backend-fidelity measurements.
+After explicitly matching the 32-fold fine refinement, the
+[aligned](evidence/2026-09-25/jax_source_cadence_strong_aligned.json) and
+[q4](evidence/2026-09-25/jax_source_cadence_q4_nonspinning.json) replays pass
+every per-cadence backend check (maximum Torch/JAX complex relative L2
+`5.15e-7`). They still **fail** the frozen `1e-5` cadence-convergence gate:
+the `0.25→0.125 M` shared-sample differences are `9.76e-5` and `3.31e-4`
+in Torch, with closely matching JAX values. Since both output cadence and
+fine NQC input spacing change together, this experiment does not yet assign
+their individual contributions or establish release-grade numerical
+convergence.
+
 The [frozen anchor diagnostic](evidence/2026-09-25/source_spliced_anchor_plan.json)
 replays all four cases and fits each mode's own amplitude peak between output
 samples without optimizing a relative shift. The [results](evidence/2026-09-25/source_spliced_anchor.json)
