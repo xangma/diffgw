@@ -1820,6 +1820,20 @@ backends hold the adaptive trajectory, orbital peak, QNM/remnant, output
 chart, and boundary policy fixed. It is not a full waveform-parameter or ROM
 gradient qualification.
 
+The [fixed-mesh pathwise whole-mode result](evidence/2026-09-25/jax_pathwise_whole_gradient.json)
+uses a [frozen plan](evidence/2026-09-25/jax_pathwise_whole_gradient_plan.json)
+for the mixed-spin physical case. It replays both accepted ODE meshes from a
+perturbed initial radius, resamples the fine trajectory, recalibrates NQC,
+attaches at a continuous boundary, and splices the corrected coarse prefix.
+The compiled 654-sample waveform derivative agrees with centered finite
+differences to `4.13e-4` relative L2. The strict predeclared `1e-10`
+eager-versus-JIT whole-mode gate **fails** at `1.55e-9`: states differ by at
+most `1.8e-15` and base modes by `1.04e-15` relative, while NQC coefficients
+differ by up to `1.29e-6`. This isolates the compiled-value sensitivity to the
+NQC solve. The check fixes accepted times, orbital peak and match time, and
+does not differentiate physical parameters, event decisions, or the historical
+discrete boundary. It is not a release gradient contract.
+
 The [frozen Torch/JAX spliced-waveform diagnostic](evidence/2026-09-25/jax_spliced_waveform_plan.json)
 extends those four selected physical cases through the calibrated coarse
 prefix and complete numerical attachment. The [pilot](evidence/2026-09-25/jax_spliced_waveform_high_start_mixed_spin.json)

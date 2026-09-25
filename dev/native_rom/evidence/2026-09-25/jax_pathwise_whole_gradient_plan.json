@@ -1,0 +1,18 @@
+{
+  "schema": "diffgw.seobnrv4.jax-pathwise-whole-gradient-plan.v1",
+  "release_qualified": false,
+  "case": "high_start_mixed_spin",
+  "varied_initial_component": "radius",
+  "output_step_M": 0.5,
+  "fine_refinement_factor": 32,
+  "adaptive_atol": 1e-10,
+  "adaptive_rtol": 1e-9,
+  "finite_difference_steps": [0.0001, 0.00001],
+  "gates": {
+    "max_replay_state_absolute_error": 1e-7,
+    "max_eager_jit_relative_l2": 1e-10,
+    "max_ad_fd_relative_l2": 0.002,
+    "min_gradient_l2": 1e-9
+  },
+  "interpretation": "A pass checks only the initial-radius-to-spliced-whole-mode pathwise derivative on one frozen accepted mesh, fixed orbital peak and match time, and a continuous attachment boundary. It does not differentiate adaptive controller decisions, event times, the initial-condition solve, physical parameters, or production waveform registration."
+}
