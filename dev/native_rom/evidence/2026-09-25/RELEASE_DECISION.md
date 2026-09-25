@@ -263,6 +263,18 @@ log `/tmp/diffgw-jax-resample-barrier.log`, and completed in 24 seconds with
 exit code 1 for the frozen bitwise-equality gates. No process or next check
 remains.
 
+The [frozen fixed-coefficient Horner control](jax_fixed_spline_horner_plan.json)
+and [result](jax_fixed_spline_horner.json) isolate one repairable part of the
+resampler: with identical precomputed coefficients, optimization barriers
+between each polynomial multiply and add make coarse and fine eager/JIT
+samples bit-identical while reproducing the original eager samples exactly.
+This is a positive fixed-coefficient control only. Coefficient construction
+itself still shows eager/JIT roundoff, so the full resampler and whole waveform
+remain unqualified. It ran on RONI2 in this worktree as PID `53995`, command
+`PYTHONPATH=src:. /Users/xangma/repos/diffgw/.venv/bin/python -m dev.native_rom.diagnose_jax_fixed_spline_horner`,
+log `/tmp/diffgw-jax-fixed-spline-horner.log`, and completed in 3.3 seconds
+with exit code 0. No process or next check remains.
+
 Two different release claims must stay separate:
 
 - **Historical SEOBNRv4 fidelity:** a port may be described as faithful only

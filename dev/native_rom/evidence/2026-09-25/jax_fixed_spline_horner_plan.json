@@ -1,0 +1,16 @@
+{
+  "schema": "diffgw.seobnrv4.jax-fixed-spline-horner-plan.v1",
+  "release_qualified": false,
+  "source_head": "0621293",
+  "case": "high_start_mixed_spin",
+  "output_step_M": 0.5,
+  "fine_refinement_factor": 32,
+  "adaptive_atol": 1e-10,
+  "adaptive_rtol": 1e-9,
+  "method": "Construct natural cubic spline coefficients once from the frozen accepted states, then evaluate the same coefficients with the original Horner expression and with optimization barriers between each multiply and add. Compare eager/JIT output and eager source drift on coarse and fine uniform grids.",
+  "gates": {
+    "max_barrier_eager_jit_absolute_error": 0.0,
+    "max_barrier_source_absolute_error": 1e-14
+  },
+  "interpretation": "Fixed coefficients only. A pass does not establish stability of coefficient construction, whole-waveform replay, or automatic differentiation."
+}
