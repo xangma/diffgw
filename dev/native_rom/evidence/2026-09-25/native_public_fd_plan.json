@@ -1,0 +1,23 @@
+{
+  "schema": "diffgw.seobnrv4.native-public-fd-plan.v1",
+  "purpose": "Measure native-generator plus conditioned-FD disagreement against the same pinned public binary whose identical-input conditioning and FFT already passed.",
+  "release_qualified": false,
+  "binary_evidence": "dev/native_rom/evidence/2026-09-24/public_nqc_mode_boundary.json",
+  "binary_evidence_sha256": "a86784cd6a58ec4a574686d6940953a3d1be836e2d44ac8cdcd25a5ba7d0dffd",
+  "rows": [
+    {"name": "mixed_spin", "mass1": 30.0, "mass2": 20.0, "chi1z": 0.3, "chi2z": -0.2, "f_low": 20.0},
+    {"name": "safe_frequency_cap", "mass1": 50.0, "mass2": 30.0, "chi1z": 0.8, "chi2z": 0.5, "f_low": 60.0},
+    {"name": "q4_nonspinning", "mass1": 40.0, "mass2": 10.0, "chi1z": 0.0, "chi2z": 0.0, "f_low": 20.0},
+    {"name": "strong_antialigned", "mass1": 30.0, "mass2": 20.0, "chi1z": -0.8, "chi2z": -0.6, "f_low": 20.0}
+  ],
+  "distance_mpc": 1.0,
+  "inclination_rad": 0.7,
+  "reference_phase_rad": 0.0,
+  "reference_frequency_hz": 0.0,
+  "f_max_hz": 2048.0,
+  "delta_f_hz": 0.25,
+  "fit_lag_bound_seconds": 0.05,
+  "fit_lag_grid_samples": 501,
+  "physical_fit": "common lag and quadrupole polarization rotation at fixed distance and inclination; bounded Nelder-Mead local refinement from the free-complex-fit seed",
+  "bands_hz": [[20.0, 100.0], [100.0, 300.0], [300.0, 700.0], [700.0, 2048.0]]
+}

@@ -1,0 +1,328 @@
+{
+  "errors": [],
+  "known_limitations": [
+    "The free complex phase is not a physical polarization rotation or detector-weighted overlap.",
+    "Four selected cases cannot qualify the parameter and frequency domain.",
+    "Native source fidelity, physical NR validation, full gradients, and ROM training remain open."
+  ],
+  "lal_binary": {
+    "binaries": {
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libaec.0.1.7.dylib": "5612e00c7f180b633c9b141844c5c60cf21df6b103b842391ae0274ff260b458",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libbrotlicommon.1.2.0.dylib": "e9cddb32ebba5a8f92b567a323459382fb203bc3d1304c5d00e2757bd2a58ec1",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libbrotlidec.1.2.0.dylib": "db7c5d79757eb9a652c17d859e63f0686b07d7b9a882329df602df2e539c1750",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libcfitsio.4.6.4.dylib": "bd8a9ef313118d3dc541ee438eec460e715e7af5253e4d16824bd3ef2da0b705",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libcrypto.3.dylib": "e2783fcdd6c517ba285a61ff4e1319f9b5388f374677f1bae1a3eeec4e581954",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libcurl.4.dylib": "c31527aa4180f74babd4dc4e5a05b3df3500fe21fe93f2bb62bafa6d2ca13612",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libfftw3.3.dylib": "25d39c1d343cd5c46df9e9db39939245ff08c7c4d9e0bbcdead1750c34d6337b",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libfftw3f.3.dylib": "67a00ffeecb5c8375f80fa17e65f340ce91446e6a8424673c72758c8599d50a7",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libframel.8.48.4.dylib": "67898b482a5065b4e4b1b0f0dd16321c2f1edcf1ac54b7b4eed3dac298486846",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libgsl.28.dylib": "1eefe0dbead9551d47be3c09bbf786c727f84df1331130ee8a03127b7a95abe8",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libgslcblas.0.dylib": "00a30ab2e9eb5cd36caab9ae9a9975a8280b9b4c2940b15e446c34a151818230",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libhdf5.320.1.1.dylib": "8196331cc47e67eb81473a1288ad8dfc607b37f587d5dd6c02bc88a71e1d9e7a",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libhdf5_hl.320.0.2.dylib": "ee95613ef6bde34945829e444fb9aeec0128cbddff7e1ea89a4c4d1e2dece6e6",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libiconv.2.dylib": "52d70b85978160b9b3ea3605b38522626b8642697db2de866d16f4967d67b675",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libidn2.0.dylib": "d6dce44c0ca426d8c403fe2b37bad30b4a46a6a7c920d13e597fdf446a8a946d",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libintl.8.dylib": "bca42b0bdd3709989aab17746a7317c6dc0285bb6d82aab4891dc9bf08b7c6cf",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/liblal.20.dylib": "e4c4ed42baed00d30668588e58444f974e3deeda56ba4e5978624640ddb5bde7",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/liblalburst.8.dylib": "592f4a6d392fd14fa926126c3b7e8c2f1a22891ec732b2b34c12cc9091e36277",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/liblalframe.14.dylib": "64c4684ede0c34f3e911d6d44c59811531b9366f72c12483a694b30cfd0fee78",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/liblalinference.23.dylib": "1c2ec90d081f31bc6e37b1b4f92755940c241b3915fb6a24107a7da31ba901ac",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/liblalinspiral.18.dylib": "900ab09865b3833abf01cead55344faa06167de5b361a1cbcb054e97f844cbfd",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/liblalmetaio.11.dylib": "3506634e0f760b5b1de7867978a7d5756dd38e4e2378e4cb007c0d33b28c61f9",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/liblalpulsar.30.dylib": "84a7e7475b64c72fbf83d2cc07ce40b8bd1dcc9928414fb73dae67a9ee369d92",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/liblalsimulation.37.dylib": "9046c4a673d2ba82b792f7b92d73203ba783b32fc604b5da1139c5c1bc8b3325",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/liblalsupport.14.dylib": "69e8be4f19fdb31cc6b7bf1bc78e996c71b11f90ccc9cb02b67af3462fce55b8",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libmetaio.1.dylib": "32335f399dd3629ed089772faad9cf83fb04c22823883eb513efbd3a8647dd63",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libnghttp2.14.dylib": "25c7f17e6288fbab82afe873a883ee197cb45fd2e9c4c05feaeb5b66e853004b",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libpsl.5.dylib": "971ced1f51baad72d5ef5932112209e78b1ce9aacc40f995a00dffc545de0717",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libssl.3.dylib": "2b7c20e43533e9463251923d7d285b01b1eaf302b420c0fa9516fa6f8466bda6",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libsz.2.0.1.dylib": "603290903eef2da05d00710387b8a62a1a5e66f89d2bd5b906f9bb1e818b000a",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libunistring.5.dylib": "be2d50d95d67ce80c7a8183e8d6b5ed06438f7c805f10efc279b1873be279637",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libz.1.3.2.dylib": "1c6165550fec45d0eb0867b062943e9c926bf9ee94e462faad6d257055d3968b",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libzstd.1.5.7.dylib": "918575fed77013d472c7f2e235afdac8ff4c26a5c2ab80196e103256ef8401ca",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/_lal.cpython-313-darwin.so": "d7220aaf8ba88508569a3a96b7f8b2fedd35bed7f17775ac414bd418701c17c3",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lalburst/_lalburst.cpython-313-darwin.so": "04c3bc36ff28c081896f74c16045ddb7c26582768c12ff88b0d550cfc6c388c4",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lalburst/cs_gamma.cpython-313-darwin.so": "58abb65a5e0da9a497d2db50cb0d5ef1f467a9e4c0f9b97fdeec300c2cdd443e",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lalframe/_lalframe.cpython-313-darwin.so": "fec91798a004bbf9ceff73e9a7a330490a2353cb60c962f3a6309a522eb5a400",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lalinference/_bayespputils.cpython-313-darwin.so": "d3a011d91df8fb10306d8b210c2334f2931b58a0994dfd1974d766712165276c",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lalinference/_lalinference.cpython-313-darwin.so": "42f66bf7bb4971996d3e29a89be274b673ac7fb55e0c35a3e472479dd1dceeb8",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lalinspiral/_lalinspiral.cpython-313-darwin.so": "aebb6b8b570018af89ebf4701fe33a232d965dcac5c026f34c75936d3c48f604",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lalinspiral/_thinca.cpython-313-darwin.so": "755ea8d7b90b68db5b95b800f1ee4550956ae752d441300ed43cd0862d4b2efd",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lalmetaio/_lalmetaio.cpython-313-darwin.so": "4429fb8189a806182661a7e6fbdb7ff9f975a445fde2da46b0e8b498aa4f313b",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lalpulsar/_lalpulsar.cpython-313-darwin.so": "ac2937b767c371c0638a431e645bdba43c21fbb721eb3223abd0900b9a047c8d",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lalsimulation/_lalsimulation.cpython-313-darwin.so": "2de0af808b258bef03a3a13b15fa71038f48579f5f562e92ebd62c6b9769fd37"
+    },
+    "lal_version": "7.7.1",
+    "lalsimulation_version": "6.2.1",
+    "lalsuite_distribution": "7.26.15"
+  },
+  "plan_sha256": "58384395cdfdcbccc073c369fb27036c15e2e8cf58ee76c22efa3ac73d63217b",
+  "process": {
+    "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+    "host": "RONI2",
+    "pid": 18907
+  },
+  "release_qualified": false,
+  "rows": [
+    {
+      "amplitude_relative_l2": 3.538485361279516e-05,
+      "fitted_complex_coherence": 0.9999998440516551,
+      "fitted_free_complex_phase_rad": 0.0025091918623963874,
+      "fitted_lag_seconds": 1.4350492020872251e-05,
+      "fitted_relative_l2_with_free_complex_scale": 0.0005584770948702311,
+      "fitted_residual_by_frequency_band": [
+        {
+          "amplitude_relative_l2": 2.319166799931418e-05,
+          "band_hz": [
+            20.0,
+            100.0
+          ],
+          "fitted_complex_relative_l2": 0.0005272594835441399,
+          "public_norm_fraction": 0.9505757751924624
+        },
+        {
+          "amplitude_relative_l2": 9.370218222775852e-05,
+          "band_hz": [
+            100.0,
+            300.0
+          ],
+          "fitted_complex_relative_l2": 0.0006372581064314396,
+          "public_norm_fraction": 0.29055523847850223
+        },
+        {
+          "amplitude_relative_l2": 4.537662871974253e-05,
+          "band_hz": [
+            300.0,
+            700.0
+          ],
+          "fitted_complex_relative_l2": 0.0014845822312939544,
+          "public_norm_fraction": 0.10946848037660308
+        },
+        {
+          "amplitude_relative_l2": 0.014696312553610601,
+          "band_hz": [
+            700.0,
+            2048.0
+          ],
+          "fitted_complex_relative_l2": 0.01882113823044777,
+          "public_norm_fraction": 2.8530467227480344e-05
+        }
+      ],
+      "lag_fit_at_bound": false,
+      "name": "mixed_spin",
+      "native_conditioned_samples": 8870,
+      "native_fd_sha256": "479ae364999c74bef1b21a4d75959b196da5fa04261ca5bfac2ee5b7331fc1e3",
+      "native_padded_epoch_seconds": -3.9719703625887632,
+      "native_seconds": 23.68908999999985,
+      "native_td_samples": 8902,
+      "native_to_public_norm_ratio": 0.9999888515021703,
+      "physical_fixed_distance_fit": {
+        "lag_at_bound": false,
+        "lag_seconds": 1.4350479226085994e-05,
+        "orbital_phase_rotation_rad": 0.0012545949311481147,
+        "relative_l2": 0.0005585817194646138
+      },
+      "public_epoch_seconds": -3.971986016,
+      "public_fd_samples": 8193,
+      "public_fd_sha256": "dc54672624458db1fe331152f300da35f9d452e12cc0c40fbc49ecbf96a3bf6f",
+      "public_seconds": 0.12521595798898488,
+      "raw_complex_relative_l2": 0.005322055281051911
+    },
+    {
+      "amplitude_relative_l2": 0.0010960915580751898,
+      "fitted_complex_coherence": 0.999992324790464,
+      "fitted_free_complex_phase_rad": 0.07565016946913429,
+      "fitted_lag_seconds": -2.834296520226267e-05,
+      "fitted_relative_l2_with_free_complex_scale": 0.003917953568280529,
+      "fitted_residual_by_frequency_band": [
+        {
+          "amplitude_relative_l2": 0.0012567647426801312,
+          "band_hz": [
+            20.0,
+            100.0
+          ],
+          "fitted_complex_relative_l2": 0.0039082953378064625,
+          "public_norm_fraction": 0.7105180740065201
+        },
+        {
+          "amplitude_relative_l2": 0.000905505221963686,
+          "band_hz": [
+            100.0,
+            300.0
+          ],
+          "fitted_complex_relative_l2": 0.0038856400410997665,
+          "public_norm_fraction": 0.70194276185159
+        },
+        {
+          "amplitude_relative_l2": 0.00013636821140650503,
+          "band_hz": [
+            300.0,
+            700.0
+          ],
+          "fitted_complex_relative_l2": 0.009049733269061689,
+          "public_norm_fraction": 0.049400660377390736
+        },
+        {
+          "amplitude_relative_l2": 0.044232184651736096,
+          "band_hz": [
+            700.0,
+            2048.0
+          ],
+          "fitted_complex_relative_l2": 0.06914385743338392,
+          "public_norm_fraction": 1.866834351140631e-05
+        }
+      ],
+      "lag_fit_at_bound": false,
+      "name": "safe_frequency_cap",
+      "native_conditioned_samples": 3349,
+      "native_fd_sha256": "9f2e8575aa891a268a2e17da47a87b8c1836256e1b64a3b5909c4f4f25d767ef",
+      "native_padded_epoch_seconds": -3.949745174497366,
+      "native_seconds": 17.09435237501748,
+      "native_td_samples": 3367,
+      "native_to_public_norm_ratio": 0.9990445074509736,
+      "physical_fixed_distance_fit": {
+        "lag_at_bound": false,
+        "lag_seconds": -2.8342633642013947e-05,
+        "orbital_phase_rotation_rad": 0.037825158411437965,
+        "relative_l2": 0.004030723154353966
+      },
+      "public_epoch_seconds": -3.949729915,
+      "public_fd_samples": 8193,
+      "public_fd_sha256": "cd7f89f106196dbf8b37e43b1fdf46069619ed9d3916380bc5a3779c02923edd",
+      "public_seconds": 0.08629058400401846,
+      "raw_complex_relative_l2": 0.0980005927531047
+    },
+    {
+      "amplitude_relative_l2": 1.6803136176442892e-05,
+      "fitted_complex_coherence": 0.9999999990178968,
+      "fitted_free_complex_phase_rad": -0.00010346333980544162,
+      "fitted_lag_seconds": -6.259256291431252e-07,
+      "fitted_relative_l2_with_free_complex_scale": 4.431936769768068e-05,
+      "fitted_residual_by_frequency_band": [
+        {
+          "amplitude_relative_l2": 6.327907942651255e-06,
+          "band_hz": [
+            20.0,
+            100.0
+          ],
+          "fitted_complex_relative_l2": 3.076158088451403e-05,
+          "public_norm_fraction": 0.9673977363609603
+        },
+        {
+          "amplitude_relative_l2": 6.235239755201144e-05,
+          "band_hz": [
+            100.0,
+            300.0
+          ],
+          "fitted_complex_relative_l2": 0.00011845003975491699,
+          "public_norm_fraction": 0.24877768736376676
+        },
+        {
+          "amplitude_relative_l2": 4.3431886882947126e-05,
+          "band_hz": [
+            300.0,
+            700.0
+          ],
+          "fitted_complex_relative_l2": 0.0003056117437050163,
+          "public_norm_fraction": 0.047447672801616936
+        },
+        {
+          "amplitude_relative_l2": 0.004517973202878586,
+          "band_hz": [
+            700.0,
+            2048.0
+          ],
+          "fitted_complex_relative_l2": 0.007048260935938498,
+          "public_norm_fraction": 1.7301456868346664e-05
+        }
+      ],
+      "lag_fit_at_bound": false,
+      "name": "q4_nonspinning",
+      "native_conditioned_samples": 11248,
+      "native_fd_sha256": "76b02edc678c0c2506da87b6712e1ab5abc68fe15860c95fff9e11374f9b036e",
+      "native_padded_epoch_seconds": -3.9737091045826674,
+      "native_seconds": 26.012369000003673,
+      "native_td_samples": 11285,
+      "native_to_public_norm_ratio": 0.9999984082732984,
+      "physical_fixed_distance_fit": {
+        "lag_at_bound": false,
+        "lag_seconds": -6.259403878665358e-07,
+        "orbital_phase_rotation_rad": -5.173363379706766e-05,
+        "relative_l2": 4.434825611816787e-05
+      },
+      "public_epoch_seconds": -3.973709105,
+      "public_fd_samples": 8193,
+      "public_fd_sha256": "2ec93ef2ef1761e302141e00b8d9db8f0e3009e72ce81bf5a408743c5ce8d336",
+      "public_seconds": 0.13670950004598126,
+      "raw_complex_relative_l2": 0.0001782558955486361
+    },
+    {
+      "amplitude_relative_l2": 0.0005477565848300502,
+      "fitted_complex_coherence": 0.9999964926719522,
+      "fitted_free_complex_phase_rad": -0.005373006411160566,
+      "fitted_lag_seconds": -2.8203997283207744e-05,
+      "fitted_relative_l2_with_free_complex_scale": 0.0026485172822083877,
+      "fitted_residual_by_frequency_band": [
+        {
+          "amplitude_relative_l2": 0.00020700037329978333,
+          "band_hz": [
+            20.0,
+            100.0
+          ],
+          "fitted_complex_relative_l2": 0.0014528525615841135,
+          "public_norm_fraction": 0.9568177311929714
+        },
+        {
+          "amplitude_relative_l2": 0.001784207368548707,
+          "band_hz": [
+            100.0,
+            300.0
+          ],
+          "fitted_complex_relative_l2": 0.006898509471260415,
+          "public_norm_fraction": 0.285965255081692
+        },
+        {
+          "amplitude_relative_l2": 0.0004192866715739099,
+          "band_hz": [
+            300.0,
+            700.0
+          ],
+          "fitted_complex_relative_l2": 0.020906941702682667,
+          "public_norm_fraction": 0.05218909564413497
+        },
+        {
+          "amplitude_relative_l2": 0.09643921222839814,
+          "band_hz": [
+            700.0,
+            2048.0
+          ],
+          "fitted_complex_relative_l2": 0.17334864757477386,
+          "public_norm_fraction": 2.136924938225168e-05
+        }
+      ],
+      "lag_fit_at_bound": false,
+      "name": "strong_antialigned",
+      "native_conditioned_samples": 7891,
+      "native_fd_sha256": "6459e0042c5a9b64a169ba111755a207863b6cfd9ee04b448f4b18573b91c5e7",
+      "native_padded_epoch_seconds": -3.9749183636158705,
+      "native_seconds": 21.767630374990404,
+      "native_td_samples": 7930,
+      "native_to_public_norm_ratio": 1.000078185636565,
+      "physical_fixed_distance_fit": {
+        "lag_at_bound": false,
+        "lag_seconds": -2.8204086826169037e-05,
+        "orbital_phase_rotation_rad": -0.0026865134230104953,
+        "relative_l2": 0.0026497724852826724
+      },
+      "public_epoch_seconds": -3.974862801,
+      "public_fd_samples": 8193,
+      "public_fd_sha256": "630bf3dd5b74082054a70f6ad9700793429101e19eab5df97fb2f7e80b47d289",
+      "public_seconds": 0.11599237500922754,
+      "raw_complex_relative_l2": 0.009084644781865093
+    }
+  ],
+  "schema": "diffgw.seobnrv4.native-public-fd.v1",
+  "scope": "Selected native generator plus conditioning versus pinned public complex FD; free complex phase/lag fit is diagnostic only.",
+  "script_sha256": "8ef5e5e38e49d174da2ed065f345e578551e67c224af98b3e02dc4a699e21055",
+  "status": "measured"
+}

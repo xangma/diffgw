@@ -1922,6 +1922,33 @@ It does not compare native-generated TD values with LAL, establish the
 general physical epoch or reference phase convention, or qualify the full frequency
 support and ROM training waveforms. The `V4-TD-FD-CONVENTIONS` gate stays open.
 
+The [frozen native/public FD replay](evidence/2026-09-25/native_public_fd_plan.json)
+then compares the complete native generator plus conditioner against that same
+pinned public `SimInspiralFD` binary on four selected rows, including the two
+physical conditioning rows above. Its
+[complex-series evidence](evidence/2026-09-25/native_public_fd.json) gives raw
+two-polarization relative L2 of `0.005322` for the 30+20 mixed-spin case and
+`0.098001` for the 50+30 aligned-spin safe-frequency-cap case. A descriptive
+fit of one common lag and **free complex scale** over the complete requested
+band reduces the residuals to `0.0005585` and `0.003918`, respectively; the
+amplitude-only errors are `3.54e-5` and `0.001096`. The first fitted lag is
+`14.35 µs`, close to its `15.65 µs` native/public padded-epoch difference.
+The second fitted lag is `-28.34 µs`, versus an epoch difference of
+`-15.26 µs`. On the second case, the globally fitted residual is already
+`0.00391` below 100 Hz and `0.00389` at 100–300 Hz, so the shape difference
+is not confined to the ringdown or negligible high-frequency tail. The free
+complex scale is a diagnostic mathematical fit, not a physical polarization
+rotation or detector-weighted match. A separate fit using only a common time
+shift and the exact quadrupole polarization rotation at **fixed distance**
+returns `0.000559` and `0.004031` relative L2; neither fit reaches a lag
+bound. The same fixed-distance fit gives `4.43e-5` for q=4 nonspinning and
+`0.002650` for strong antialigned spin, also without a bound hit. All four
+use unweighted complex series at one mass scale, distance, inclination, and
+frequency grid; they are selected-case diagnostics, not a release gate.
+The identical-input result above isolates conditioning/FFT, so this remaining
+selected-case discrepancy belongs to the native-generated waveform and its
+time/phase chart, whose source fidelity and physical accuracy remain open.
+
 1. Qualify the physical generator against the published equations and independent
    references over the intended domain, resolve convention/provenance gaps, and
    establish gradients and numerical convergence. This runner covers only scalar
