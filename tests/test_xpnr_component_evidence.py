@@ -24,6 +24,7 @@ from diffgw_reference.xpnr_angles import (
     freeze_fit_coordinates,
     higher_mode_frequency_map,
     single_spin_map_at_transition,
+    single_spin_map_from_transition_vectors,
 )
 
 POINTS = ((0.25, 0.2, -0.8), (0.16, 0.6, 0.3), (0.09, 0.79, 0.95))
@@ -160,6 +161,39 @@ def test_transition_single_spin_map_matches_backend_algebra_when_given_same_spin
         assert float(values[0]) == pytest.approx(scalar.chi, rel=2e-14)
         assert float(values[1]) == pytest.approx(scalar.cos_theta_ls, rel=2e-14)
         assert float(values[3]) == pytest.approx(scalar.chi_effective, rel=2e-14)
+
+
+def test_transition_vector_map_uses_instantaneous_orbital_plane_and_is_rotation_invariant():
+    masses = (36.0, 24.0)
+    spin1 = (0.2, -0.1, 0.3)
+    spin2 = (-0.15, 0.05, -0.2)
+
+    z_aligned = single_spin_map_from_transition_vectors(*masses, spin1, spin2, (0.0, 0.0, 2.0))
+    component_map = single_spin_map_at_transition(*masses, spin1, spin2)
+    assert z_aligned == component_map
+
+    orbital_direction = (1.0, 2.0, 2.0)
+    mapped = single_spin_map_from_transition_vectors(*masses, spin1, spin2, orbital_direction)
+    rotated = single_spin_map_from_transition_vectors(
+        *masses,
+        (spin1[2], spin1[0], spin1[1]),
+        (spin2[2], spin2[0], spin2[1]),
+        (orbital_direction[2], orbital_direction[0], orbital_direction[1]),
+    )
+    np.testing.assert_allclose(
+        tuple(rotated.__dict__.values()),
+        tuple(mapped.__dict__.values()),
+        rtol=2e-15,
+        atol=2e-15,
+    )
+
+    lhat = np.asarray(orbital_direction) / np.linalg.norm(orbital_direction)
+    parallel1 = float(np.dot(spin1, lhat))
+    parallel2 = float(np.dot(spin2, lhat))
+    transverse_sum = masses[0] ** 2 * (np.asarray(spin1) - parallel1 * lhat) + masses[1] ** 2 * (
+        np.asarray(spin2) - parallel2 * lhat
+    )
+    assert mapped.chi_perpendicular == pytest.approx(np.linalg.norm(transverse_sum) / masses[0] ** 2)
 
 
 def test_published_fit_transforms_match_scalar_reference_and_correct_b3_relation(backends):

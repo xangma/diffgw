@@ -15,7 +15,7 @@
       "XO4a Eqs. 50-52 higher-mode frequency map"
     ],
     "failed_or_missing_components": [
-      "public route supplies reference-frequency rather than transition-frequency spins",
+      "exact terminal-state evolution and spin-sampling procedure; public route instead supplies reference-frequency spins",
       "XPNR Eqs. 17-21 analytic continuation and angle attachment",
       "published arctangent beta bounding prescription",
       "XHM-CP carrier deviations and their unprinted u_k assets",
@@ -25,12 +25,65 @@
     ],
     "documented_ambiguity": "XO4a Eq. 38 omits the pi factor required for an endpoint-completing shifted-cosine window; tests cover the explicit Torch/JAX interpretation rather than claiming exact transcription."
   },
+  "spin_at_attachment": {
+    "status": "terminal_state_geometry_pass_stopping_procedure_unresolved",
+    "paper_contract": [
+      "evaluate the XPNR single-spin map at the merger-ringdown transition using spins projected relative to the instantaneous Newtonian orbital direction",
+      "place the effective spin on the larger black hole, leave the smaller black hole nonspinning, and discard the effective spin azimuth"
+    ],
+    "source_terms": [
+      {
+        "source": "Hamilton et al., arXiv:2507.02604v1",
+        "license": "CC-BY-4.0",
+        "use": "independently encoded terminal-state algebra"
+      },
+      {
+        "source": "Colleoni et al., arXiv:2412.16721v1 / Phys. Rev. D 111, 104019",
+        "license": "arXiv non-exclusive distribution license",
+        "use": "specification evidence only; no text, code, or assets copied"
+      }
+    ],
+    "scalar_reference": {
+      "function": "diffgw_reference.xpnr_angles.single_spin_map_from_transition_vectors",
+      "tests": [
+        "instantaneous orbital-plane projection",
+        "common-frame rotation invariance",
+        "equivalence to the z-aligned component map"
+      ],
+      "latest_evidence_run": {
+        "host": "len",
+        "command": "JAX_ENABLE_X64=1 JAX_PLATFORMS=cpu OMP_NUM_THREADS=1 .venv/bin/pytest -q tests/test_xpnr_component_evidence.py tests/test_xpnr_coefficient_provenance.py tests/test_xpnr_attachment_gate.py",
+        "result": "50 passed, 1 skipped in 3.60s",
+        "skip": "The pre-existing Torch/JAX tensor-duplication check requires both frontends; this isolated environment has JAX but not Torch."
+      }
+    },
+    "unresolved": [
+      "complete independently usable PN evolution equations and coefficients",
+      "exhaustive stop conditions and numerical thresholds",
+      "Runge-Kutta-Fehlberg pair, tolerances, controller, and interpolation",
+      "the exact terminal sample when the several published continuation and attachment frequencies differ",
+      "integration direction around the reference frequency",
+      "terminal state and frame extraction, branches, and fallback behavior"
+    ],
+    "current_diffgw_boundary": {
+      "map_input_epoch": "reference_frequency",
+      "terminal_state_returned": false,
+      "project_specific_choices": [
+        "transition set to 0.98 times the reference-spin MECO estimate",
+        "MECO frequency clamped above the reference by 15 Hz and below 800 Hz",
+        "fixed 200-node fourth-order Runge-Kutta evolution"
+      ],
+      "status": "not_paper_fidelity"
+    },
+    "promotion_gate": "Supply an independently specified and licensed terminal-state evolution and explicit sampling event, return terminal S1, S2, and Lhat, demonstrate convergence and stop-event stability, then feed that state to the scalar map."
+  },
   "scalar_reference_agreement": {
     "status": "pass_for_scoped_components",
     "command": "JAX_ENABLE_X64=1 JAX_PLATFORMS=cpu OMP_NUM_THREADS=1 pytest -q tests/test_xpnr_component_evidence.py",
     "result": "46 passed",
     "reference_module": "src/diffgw_reference/xpnr_angles.py",
-    "reference_module_sha256": "1b45da358aa84b226c3ea8d7d9738b5ef686d39a225d646800ae37ba8ada845d"
+    "reference_module_sha256": "ab105751b57a79bebdd1378e27bf76d40dfeceed5183d64e6634fb896d403739",
+    "result_note": "The recorded two-frontend result predates the added pure-stdlib terminal-state geometry case; the current len result is recorded under spin_at_attachment."
   },
   "torch_jax_parity": {
     "status": "pass_for_scoped_components",
@@ -126,7 +179,7 @@
       "holdout": "0/1"
     },
     "thresholds_changed": false,
-    "next_gate": "Implement and source the transition-spin state, exact attachments/continuations, XHM-CP deformation/effective-ringdown/asymmetry, and independently traceable coefficient assets; then pass Torch/JAX complex modes and both polarizations at the unchanged strict catalog/holdout thresholds before NR validation."
+    "next_gate": "Independently specify and license the terminal-spin evolution plus exact sampling event; return S1, S2, and Lhat to the passed scalar geometry map. Then implement exact attachments/continuations, XHM-CP deformation/effective-ringdown/asymmetry, and independently traceable coefficient assets before passing Torch/JAX complex modes and both polarizations at the unchanged strict catalog/holdout thresholds and proceeding to NR validation."
   },
   "calibration_assets": {
     "canonical_numeric_payload_sha256": "c7794b653f781bbba45b97170fdac9fb6c89de6cc9c404e4942908ce1f820d68",

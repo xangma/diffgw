@@ -9,9 +9,9 @@ and Thompson et al., arXiv:2312.10025v1, Eqs. (25)--(35), (44), and
 endpoint-completing shifted-cosine interpretation used by both backends; the
 printed Eq. (38) omits the factor of pi needed to reach zero at its endpoint.
 
-The single-spin map must receive spins evolved to the SpinTaylor stopping /
-merger-ringdown transition frequency. Supplying reference-frequency spins is a
-different numerical prescription.
+The single-spin map must receive spins and the Newtonian orbital direction
+evolved to the SpinTaylor stopping / merger-ringdown transition frequency.
+Supplying reference-frequency spins is a different numerical prescription.
 """
 
 from __future__ import annotations
@@ -59,9 +59,11 @@ def single_spin_map_at_transition(
     """Evaluate Hamilton et al. (2025), Eqs. (3)--(6).
 
     ``mass1`` is the larger mass and both spin vectors are dimensionless spins
-    at the SpinTaylor stopping / merger-ringdown transition frequency. At the
-    exactly zero-spin coordinate the paper's angle is undefined; the scalar
-    reference uses ``cos_theta_ls=0`` as an explicit numerical extension.
+    at the SpinTaylor stopping / merger-ringdown transition frequency, in a
+    frame whose z axis is the instantaneous Newtonian orbital direction. At
+    the exactly zero-spin coordinate the paper's angle is undefined; the
+    scalar reference uses ``cos_theta_ls=0`` as an explicit numerical
+    extension.
     """
     if len(spin1) != 3 or len(spin2) != 3:
         raise ValueError("each spin must have three components")
@@ -77,6 +79,56 @@ def single_spin_map_at_transition(
     sx = mass1**2 * spin1[0] + mass2**2 * spin2[0]
     sy = mass1**2 * spin1[1] + mass2**2 * spin2[1]
     chi_perpendicular = math.hypot(sx, sy) / mass1**2
+    chi = math.hypot(chi_parallel, chi_perpendicular)
+    cos_theta_ls = chi_parallel / chi if chi != 0.0 else 0.0
+    return SingleSpinMap(
+        chi=chi,
+        cos_theta_ls=max(-1.0, min(1.0, cos_theta_ls)),
+        chi_parallel=chi_parallel,
+        chi_perpendicular=chi_perpendicular,
+        chi_effective=chi_effective,
+    )
+
+
+def single_spin_map_from_transition_vectors(
+    mass1: float,
+    mass2: float,
+    spin1: tuple[float, float, float],
+    spin2: tuple[float, float, float],
+    orbital_direction: tuple[float, float, float],
+) -> SingleSpinMap:
+    """Evaluate XPNR Eqs. (3)--(6) from a terminal SpinTaylor state.
+
+    The dimensionless spins and ``orbital_direction`` may be expressed in any
+    common Cartesian frame.  The function applies the paper's definition
+    ``S_i_perp = m_i^2 [chi_i - (chi_i . Lhat) Lhat]`` before constructing
+    the instantaneous vector sum.  It intentionally does not choose the
+    SpinTaylor stopping event: that numerical prescription is a separate,
+    unresolved full-model gate.
+    """
+    if len(spin1) != 3 or len(spin2) != 3 or len(orbital_direction) != 3:
+        raise ValueError("each spin and the orbital direction must have three components")
+    _finite(mass1, mass2, *spin1, *spin2, *orbital_direction)
+    if mass1 <= 0.0 or mass2 <= 0.0:
+        raise ValueError("masses must be positive")
+    if mass1 < mass2:
+        raise ValueError("mass1 must identify the larger black hole")
+
+    orbital_norm = math.sqrt(sum(component * component for component in orbital_direction))
+    if orbital_norm == 0.0:
+        raise ValueError("orbital direction must be nonzero")
+    lhat = tuple(component / orbital_norm for component in orbital_direction)
+    parallel1 = sum(component * axis for component, axis in zip(spin1, lhat))
+    parallel2 = sum(component * axis for component, axis in zip(spin2, lhat))
+
+    total_mass = mass1 + mass2
+    chi_effective = (mass1 * parallel1 + mass2 * parallel2) / total_mass
+    chi_parallel = total_mass * chi_effective / mass1
+    transverse_sum = tuple(
+        mass1**2 * (component1 - parallel1 * axis) + mass2**2 * (component2 - parallel2 * axis)
+        for component1, component2, axis in zip(spin1, spin2, lhat)
+    )
+    chi_perpendicular = math.sqrt(sum(component * component for component in transverse_sum)) / mass1**2
     chi = math.hypot(chi_parallel, chi_perpendicular)
     cos_theta_ls = chi_parallel / chi if chi != 0.0 else 0.0
     return SingleSpinMap(
@@ -289,4 +341,5 @@ __all__ = [
     "freeze_fit_coordinates",
     "higher_mode_frequency_map",
     "single_spin_map_at_transition",
+    "single_spin_map_from_transition_vectors",
 ]
