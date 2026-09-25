@@ -1,0 +1,24 @@
+{
+  "schema": "diffgw.seobnrv4.regular-field-boundary-plan.v1",
+  "purpose": "Compare the pinned full-generator regular derivative vector field with the source-convention native field at the same predeclared 12 boundary states and quantify the regular-versus-optimized source gap. This is same-state attribution, not a trajectory or release test.",
+  "source_flux_plan": "dev/native_rom/evidence/2026-09-24/source_flux_initial_plan.json",
+  "source_flux_plan_sha256": "1167199c8f954f97a5905a1e3b2f67d1555e984e5f1da0a0fc42a77a925f96ea",
+  "hamiltonian_grid_plan": "dev/native_rom/evidence/2026-09-25/hamiltonian_boundary_grid_plan.json",
+  "hamiltonian_grid_plan_sha256": "a6ae607dd6ae99f6bbe85aeeb06e6a1548d8649b6699afc9049bfc2f1adc697f",
+  "optimized_field_result": "dev/native_rom/evidence/2026-09-25/optimized_field_boundary.json",
+  "optimized_field_result_sha256": "027faf13d347596d100d2aa6b883bbe858d08492fb66c3222c9e2b8f20335628",
+  "adapter": "dev/native_rom/reference/full_v4_source_field_adapter.c",
+  "adapter_sha256": "d674aecdc602024c539ff8a2040a842adceab3ca546c08e307724c2fccdd3113",
+  "phi_rule": "zero; aligned-spin field is axisymmetric",
+  "rows": [
+    "q4_nonspinning",
+    "q3_strong_antialigned",
+    "q10_near_extreme_aligned",
+    "q3_near_extreme_mixed"
+  ],
+  "max_native_regular_field_relative_difference": 1e-08,
+  "relative_denominator_floor": 1e-12,
+  "release_qualified": false,
+  "optimized_field_plan": "dev/native_rom/evidence/2026-09-24/optimized_source_field_plan.json",
+  "optimized_field_plan_sha256": "1baa3ad81d1201aa3dae1fbc00e9fecccb702679df4fedb33f24803894fd02b1"
+}

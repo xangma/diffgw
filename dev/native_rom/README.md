@@ -2046,6 +2046,17 @@ flux routes differ by at most `4.75e-10` relative. This establishes the
 tested same-state vector field, not initial-condition, integration, NQC,
 whole-waveform, or domain-wide convergence.
 
+The [regular-field boundary check](evidence/2026-09-25/regular_field_boundary.json)
+replays those same 12 states through the derivative path used by the pinned
+full generator. The native/source-convention field misses the frozen `1e-8`
+relative gate: the largest component gap is `1.46e-7` in radial-momentum
+acceleration on the near-extreme aligned row. The source regular/optimized
+gap is also `1.46e-7` there, while the other components differ by at most
+`2.55e-9` relative and regular flux agrees with torque-implied flux within
+`2.34e-15`. Thus this selected same-state discrepancy belongs to the
+historical numerical derivative route, not the optimized physical field or
+flux formula. Its trajectory-level impact is unmeasured.
+
 The [prospective initial-condition boundary check](evidence/2026-09-25/initial_boundary.json)
 uses the same four physical rows at `M Omega=0.01` and `0.02`, both below the
 historical start cap. The native source-convention circular radius and angular

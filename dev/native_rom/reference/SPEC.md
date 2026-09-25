@@ -195,6 +195,12 @@ The [optimized evolution-field boundary check](../evidence/2026-09-25/optimized_
 uses the corresponding 12 nonzero-radial-momentum states and finds all four
 source/native vector-field components within `5.48e-11` relative. This is
 same-state parity, not numerical trajectory convergence or initial-data parity.
+The [regular derivative boundary check](../evidence/2026-09-25/regular_field_boundary.json)
+on those 12 states fails the same `1e-8` relative gate: the largest
+regular-source/native gap is `1.46e-7` in radial-momentum acceleration, and
+the regular/optimized source gap has the same size. The other field
+components stay within `2.55e-9` relative. This historical derivative
+rounding difference remains outside the optimized same-state parity claim.
 The [eight-point initial-condition boundary check](../evidence/2026-09-25/initial_boundary.json)
 finds a failed `1e-8` relative legacy-source gate: native inward momentum
 differs by up to `1.35e-7` absolute (`1.18e-4` relative with the frozen
