@@ -1,0 +1,30 @@
+{
+  "schema": "diffgw.seobnrv4.jax-numerical-attachment-physical-plan.v1",
+  "purpose": "Compare the complete development-only numerical attachment on physical fine EOB trajectories, including full-series NQC and the discrete ringdown boundary.",
+  "pilot_case": "high_start_mixed_spin",
+  "prospective_cases": ["q4_nonspinning", "strong_aligned", "strong_antialigned"],
+  "case_input_source": "jax_adaptive_physical_event_plan.json",
+  "trajectory_settings_source": "jax_two_stage_physical_plan.json",
+  "attachment_settings": {
+    "final_spin_fit_order": [3, 4],
+    "output_step_M": 0.5,
+    "post_boundary_duration_M": 150,
+    "match_time": "fine-series orbital peak plus published numerical NQC offset"
+  },
+  "comparisons": [
+    "JAX attachment on identical Torch fine samples, base mode, QNM sigma and output times versus Torch attachment",
+    "JAX attachment on independently integrated JAX fine samples, base mode and QNM sigma versus Torch attachment"
+  ],
+  "diagnostic_checks": {
+    "same_input_boundary_index_equal": true,
+    "end_to_end_boundary_index_equal": true,
+    "same_input_boundary_metadata_max_abs_at_most": 1e-7,
+    "end_to_end_boundary_metadata_max_abs_at_most": 1e-5,
+    "same_input_full_mode_relative_l2_at_most": 1e-6,
+    "end_to_end_full_mode_relative_l2_at_most": 1e-5,
+    "end_to_end_ringdown_relative_l2_at_most": 1e-5,
+    "same_input_support_zero_pattern_equal": true,
+    "end_to_end_support_zero_pattern_equal": true
+  },
+  "interpretation": "These are Torch/JAX numerical compatibility diagnostics, not independent source-model fidelity, numerical convergence, or ROM release qualification. A failed case must remain visible."
+}
