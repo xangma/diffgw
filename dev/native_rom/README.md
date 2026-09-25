@@ -1415,6 +1415,19 @@ are order-dependent diagnostics, not additive budgets. Pre-boundary output
 drift already reaches `2.58e-5` and `1.23e-5`, so the remaining independent-grid
 failure originates mainly in the NQC solve, not the continuous ringdown join.
 
+The [frozen combined numerical control](evidence/2026-09-25/jax_source_combined_numerical_control_plan.json)
+uses degree-four, `±2 M` local polynomial derivatives throughout the Torch
+NQC linear system and the continuous ringdown boundary on separately
+integrated factor-256 and factor-512 trajectories. Its
+[q4](evidence/2026-09-25/jax_source_combined_numerical_control_q4_nonspinning.json)
+and [aligned-spin](evidence/2026-09-25/jax_source_combined_numerical_control_strong_aligned.json)
+whole-waveform drifts are `2.07e-6` and `3.69e-6`, both below the predeclared
+`1e-5` numerical gate. The stationary peak and NQC solve residual checks also
+pass. At factor 512, this Torch counterfactual differs from the unchanged JAX
+historical-source route by `9.52e-5` and `2.50e-4`; the change has not passed
+historical fidelity or independent NR validation. This two-case numerical pass
+does not qualify a release model or establish domain-wide convergence.
+
 The [frozen anchor diagnostic](evidence/2026-09-25/source_spliced_anchor_plan.json)
 replays all four cases and fits each mode's own amplitude peak between output
 samples without optimizing a relative shift. The [results](evidence/2026-09-25/source_spliced_anchor.json)

@@ -1,0 +1,205 @@
+{
+  "case_id": "q4_nonspinning",
+  "checks": {
+    "nqc_linear_system_max_abs_residual_at_most": true,
+    "shared_time_max_abs_at_most_M": true,
+    "stationary_peak_slope_max_abs_at_most": true,
+    "torch_shared_sample_complex_relative_l2_at_most": true
+  },
+  "comparisons": {
+    "jax_unchanged": {
+      "complex_relative_l2": 2.652118634340433e-05,
+      "shared_end_M": 484.5,
+      "shared_samples": 970,
+      "shared_time_max_abs_M": 0.0
+    },
+    "torch": {
+      "complex_relative_l2": 2.0678163512888603e-06,
+      "shared_end_M": 484.5,
+      "shared_samples": 970,
+      "shared_time_max_abs_M": 0.0
+    }
+  },
+  "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+  "diagnostic_checks_passed": true,
+  "elapsed_s": 123.85160720802378,
+  "host": "RONI2",
+  "levels": {
+    "baseline": {
+      "amplitude_system": {
+        "coefficients": [
+          -2.2475088878186593,
+          8.11786926276436,
+          -6.5872878094456
+        ],
+        "matrix": [
+          [
+            0.05493403981961926,
+            0.018326389503760587,
+            0.010585091098835424
+          ],
+          [
+            0.007647177308631981,
+            0.003148141211997384,
+            0.0019906881994578426
+          ],
+          [
+            0.0012389763375974504,
+            0.0006355508426130347,
+            0.00043968005143855775
+          ]
+        ],
+        "max_abs_residual": 2.7755575615628914e-17,
+        "rhs": [
+          -0.04442055024558267,
+          -0.004744136296856104,
+          -0.0005215907232725632
+        ]
+      },
+      "boundary_time_M": 384.6638549235156,
+      "expected_backend_parity_broken": true,
+      "jax": {
+        "end_M": 484.5,
+        "mode_sha256": "6340516a68053bdad300051242cc4a2ed42c11f9560f8113babc12d1a11b9553",
+        "samples": 970,
+        "start_M": 0.0,
+        "time_sha256": "6db2117b58c64613f6c556861870ceaa8bc6026319b18624a2991df48e6cec1b"
+      },
+      "match_time_M": 384.6638549235156,
+      "orbital_peak_spline_slope": 1.6175364677241746e-17,
+      "phase_system": {
+        "coefficients": [
+          2.13691843315165,
+          -3.912547752548728
+        ],
+        "matrix": [
+          [
+            -0.026916403678958003,
+            -0.0027354497614186985
+          ],
+          [
+            -0.0024219009277684223,
+            -0.0004931647087268288
+          ]
+        ],
+        "max_abs_residual": 4.336808689942018e-19,
+        "rhs": [
+          -0.04681558135946756,
+          -0.0032458742630499223
+        ]
+      },
+      "settings": {
+        "atol": 1e-13,
+        "coarse_output_step_M": 0.5,
+        "fine_refinement_factor": 256,
+        "max_step_M": 2.0,
+        "rtol": 1e-12
+      },
+      "torch": {
+        "end_M": 484.5,
+        "mode_sha256": "dcf604efe5e4e53688a8edf14191cd906b2868f09429a9472916fc5f7b8162a4",
+        "samples": 970,
+        "start_M": 0.0,
+        "time_sha256": "6db2117b58c64613f6c556861870ceaa8bc6026319b18624a2991df48e6cec1b"
+      },
+      "torch_jax": {
+        "common_samples": 970,
+        "complex_relative_l2": 0.00011771348213249124,
+        "support_sample_difference": 0,
+        "time_max_abs_M": 0.0
+      },
+      "torch_public_complex_l2": 0.06520343538214568
+    },
+    "refined": {
+      "amplitude_system": {
+        "coefficients": [
+          -2.247585996855607,
+          8.118553595236833,
+          -6.588072437670732
+        ],
+        "matrix": [
+          [
+            0.054934082742394086,
+            0.018326407169985705,
+            0.010585102269181775
+          ],
+          [
+            0.00764718395064317,
+            0.0031481446308519196,
+            0.001990690564153725
+          ],
+          [
+            0.0012389706511504502,
+            0.0006355482249007274,
+            0.0004396782085196563
+          ]
+        ],
+        "max_abs_residual": 2.7755575615628914e-17,
+        "rhs": [
+          -0.04442057681377304,
+          -0.004744136289348497,
+          -0.0005215926468194287
+        ]
+      },
+      "boundary_time_M": 384.6638605273616,
+      "expected_backend_parity_broken": true,
+      "jax": {
+        "end_M": 484.5,
+        "mode_sha256": "7b8e509423e5c2cfc7c49cc8bb3df66495c523174f30f7700757fe201026cb96",
+        "samples": 970,
+        "start_M": 0.0,
+        "time_sha256": "6db2117b58c64613f6c556861870ceaa8bc6026319b18624a2991df48e6cec1b"
+      },
+      "match_time_M": 384.6638605273616,
+      "orbital_peak_spline_slope": 3.439398458149768e-17,
+      "phase_system": {
+        "coefficients": [
+          2.1369038628340693,
+          -3.9124226307238623
+        ],
+        "matrix": [
+          [
+            -0.026916416513012843,
+            -0.002735452365601787
+          ],
+          [
+            -0.0024218837426856973,
+            -0.0004931618123872766
+          ]
+        ],
+        "max_abs_residual": 8.673617379884035e-19,
+        "rhs": [
+          -0.04681554867986032,
+          -0.003245875289687324
+        ]
+      },
+      "settings": {
+        "atol": 1e-13,
+        "coarse_output_step_M": 0.5,
+        "fine_refinement_factor": 512,
+        "max_step_M": 2.0,
+        "rtol": 1e-12
+      },
+      "torch": {
+        "end_M": 484.5,
+        "mode_sha256": "2fd98d3c1acea66b85a9d5a32fa8d2273420bbbba0e88bc6998f485eb48316de",
+        "samples": 970,
+        "start_M": 0.0,
+        "time_sha256": "6db2117b58c64613f6c556861870ceaa8bc6026319b18624a2991df48e6cec1b"
+      },
+      "torch_jax": {
+        "common_samples": 970,
+        "complex_relative_l2": 9.519312997501829e-05,
+        "support_sample_difference": 0,
+        "time_max_abs_M": 0.0
+      },
+      "torch_public_complex_l2": 0.06520668300145556
+    }
+  },
+  "pid": 49604,
+  "plan_sha256": "773a2bcef2312e120e687137cce92691781f87b100b6b7d65b675456364dcd77",
+  "prior_continuous_only_complex_relative_l2": 2.4739358639072732e-05,
+  "release_qualified": false,
+  "schema": "diffgw.seobnrv4.jax-source-combined-numerical-control.v1",
+  "status": "diagnostic_complete"
+}

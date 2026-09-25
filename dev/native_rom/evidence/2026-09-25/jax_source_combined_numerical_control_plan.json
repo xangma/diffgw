@@ -1,0 +1,32 @@
+{
+  "schema": "diffgw.seobnrv4.jax-source-combined-numerical-control-plan.v1",
+  "purpose": "Prospectively test whether local-polynomial Torch NQC matching derivatives and a continuous ringdown boundary together resolve the independent factor-256-to-512 grid drift on a fixed 0.5 M whole output chart.",
+  "pilot_case": "q4_nonspinning",
+  "prospective_case": "strong_aligned",
+  "source_plan_sha256": "eb79f7db87e23d83a8437334eec90f6872dcf3b76f65b5cbe55882f7d62b9944",
+  "prior_continuous_stage_sha256": {
+    "q4_nonspinning": "3e542dacc017531e4d5bbe39472f95dc5aad4fc464fe47176456db67394fc388",
+    "strong_aligned": "ffdf1174283fec4075768138d9fbdca1f1464df9728ae1117fe2150be54faade"
+  },
+  "prior_local_system_sha256": {
+    "q4_nonspinning": "a961dfeb530207aae97b65a9c513d139f86b17945e67db6d477d19389eb11083",
+    "strong_aligned": "e4a5b7437ba27071ea64d8cf7bc98512543bc2625c1503095a56d7053c92c9fe"
+  },
+  "atol": 1e-13,
+  "rtol": 1e-12,
+  "max_step_M": 2.0,
+  "output_step_M": 0.5,
+  "fine_refinement_factors": [256, 512],
+  "polynomial": {
+    "half_width_M": 2.0,
+    "degree": 4
+  },
+  "checks": {
+    "torch_shared_sample_complex_relative_l2_at_most": 1e-5,
+    "shared_time_max_abs_at_most_M": 1e-8,
+    "stationary_peak_slope_max_abs_at_most": 1e-8,
+    "nqc_linear_system_max_abs_residual_at_most": 1e-8
+  },
+  "interpretation": "Torch-only numerical counterfactual. Even a pass needs pinned historical-source fidelity, independent physical accuracy, broader domain and cadence convergence, Torch/JAX parity, and ROM training/holdout checks.",
+  "release_qualified": false
+}
