@@ -1480,7 +1480,10 @@ class IMRPhenomXAS(nn.Module):
         Exact frequency derivative w.r.t. dimensionless M*f is:
         d(A_PN)/d(Mf) = pi * d(A_PN)/dx = pi * ((2/3)*t2 + t3 + (4/3)*t4 + (5/3)*t5 + 2*t6) / x.
         """
-        v_x = torch.pow(torch.clamp(pi_mf, min=1e-12), 1.0 / 3.0)
+        # The floor guards real waveform evaluation at zero frequency. Complex
+        # steps around physical x > 0 need the analytic continuation instead.
+        x_safe = pi_mf if pi_mf.is_complex() else torch.clamp(pi_mf, min=1e-12)
+        v_x = torch.pow(x_safe, 1.0 / 3.0)
         v_x2 = v_x * v_x
         x_4_3 = pi_mf * v_x
         x_5_3 = pi_mf * v_x2
@@ -1508,7 +1511,6 @@ class IMRPhenomXAS(nn.Module):
         )
         amp = t1 + t2 + t3 + t4 + t5 + t6
         if derivative or return_both:
-            x_safe = torch.clamp(pi_mf, min=1e-12)
             dpn_dx = ((2.0 / 3.0) * t2 + t3 + (4.0 / 3.0) * t4 + (5.0 / 3.0) * t5 + 2.0 * t6) / x_safe
             dpn_d_mf = PI * dpn_dx
             if return_both:
