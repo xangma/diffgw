@@ -3,7 +3,9 @@
 ## Scope and status
 
 This research component specifies only the analytic rescaling of the
-IMRPhenomXAS (22) phase used by the IMRPhenomXHM higher-mode inspiral. Its
+IMRPhenomXAS (22) phase used by the IMRPhenomXHM higher-mode inspiral. The
+separate [amplitude closure](imrphenomxhm-inspiral-amplitude.md) records the
+earliest remaining carrier mismatch. Its
 stable component IDs are
 `xhm.phase.inspiral.carrier-rescaling.v1` and
 `xhm.phase.inspiral.carrier-coefficients.v1`; both are executable in the
@@ -83,7 +85,7 @@ broadcasting, invalid inputs, a Torch gradient, and JAX JIT.
 The maintained black-box diagnostic
 `scripts/diagnose_xhm_frozen_components.py` separately evaluates the exact
 frozen catalog and holdout parameters mode by mode. With lal 7.7.1,
-lalsimulation 6.2.1, Torch 2.8.0+cu128, and NumPy 2.2.6, the (22) mode agrees
+lalsimulation 6.2.1, Torch 2.14.0+cu130, and NumPy 2.3.5, the (22) mode agrees
 to numerical precision after a constant phase convention. Higher-mode
 inspiral phase residuals after a diagnostic affine gauge removal are between
 (4.5\times10^{-5}) and (1.33\times10^{-4}) rad in those two cases. This is
@@ -97,6 +99,10 @@ as 0.48 in the catalog (32) mode. Consequently this component carries no
 claim for `XHM-INS-PHASE`, `XHM-INS-AMP`, intermediate, mixing, ringdown,
 projection, or complete-waveform parity. The frozen full-polarization gates
 remain failed.
+
+The exact regional values, environment inventory, and earliest `(3,2)`
+amplitude finding are frozen in the
+[component receipt](../validation/xhm_carrier_components_20260925.json).
 
 In the same latest-package environment, the broader XHM regression selection
 passes 106 tests and skips 5, but its two existing Torch

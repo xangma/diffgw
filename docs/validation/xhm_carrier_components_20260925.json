@@ -1,0 +1,125 @@
+{
+  "schema": "diffgw.xhm.carrier-component-summary/v1",
+  "evidence_category": "external-binary-numerical-oracle",
+  "source_script": "scripts/diagnose_xhm_frozen_components.py",
+  "source_result_sha256": "a4196c77adf010ca4933e9b76a389e21884e243650d147f76f5480397386fa5d",
+  "production_fit_policy": "public binary outputs are diagnostic only; no coefficient is fitted, inferred, or transcribed",
+  "author_supplement_boundary": "checksum-pinned arXiv-v2 AmpFits fixtures cover selected paper-era surfaces; they do not identify a complete release-122022 collocation provider",
+  "assembly_diagnostic": {
+    "source_script": "scripts/diagnose_xhm_inspiral_assembly_clean.py",
+    "rows": 20,
+    "result_sha256": "57230acde6d751077017dc19a55a2084a40a2d0743fb335c154b532c592bd826",
+    "raw_npz_sha256": "a43797740a71a0e377a26e067cee74b3f6d24bc24a26620b2b603a3f75ab0f32",
+    "paper_source_tar_sha256": "cc05e7dbff7bf0c42a10b7da1f4840eefc55b252168d6bfb085155a7bdc5318e",
+    "paper_tex_sha256": "5c7132720db24d9caaa804f53d6961b075996cacee00b3ce0a51865a6dbf107e",
+    "installed_default_release_observed": 122022,
+    "installed_default_inspiral_amp_fits_version_observed": 122018,
+    "author_release_control": 122019,
+    "author_inspiral_amp_fits_version": 122018,
+    "strict_current_release_parity_claim": false,
+    "production_policy": "paper-era clean math and collocations are diagnostic only and are not routed into production"
+  },
+  "versions": {
+    "diffgw_git_revision": "576f325f8da292ecb550ffc7ebde90e71399bc07",
+    "python_lal": "7.7.1",
+    "python_lalsimulation": "6.2.1",
+    "torch": "2.14.0+cu130",
+    "jax": "0.11.2",
+    "jaxlib": "0.11.2",
+    "numpy": "2.3.5",
+    "scipy": "1.16.3"
+  },
+  "frequency_grid_hz": {
+    "start": 20.0,
+    "stop": 512.0,
+    "delta": 0.25
+  },
+  "metrics": {
+    "amplitude": "relative L2 of magnitudes on each native region",
+    "phase": "oracle-amplitude-weighted RMS after an independent affine phase/time gauge removal on each native region",
+    "missing_region": "null means the native transition lies beyond the finite diagnostic grid"
+  },
+  "cases": {
+    "IMRPhenomXHM_diagnostic": {
+      "parameters": {
+        "mass1": 40.0,
+        "mass2": 20.0,
+        "chi1": 0.3,
+        "chi2": -0.1,
+        "distance": 500.0,
+        "inclination": 1.0,
+        "phic": 0.5,
+        "f_ref": 20.0
+      },
+      "modes": {
+        "21": {
+          "amplitude_relative_l2": {"inspiral": 0.21600698268127866, "intermediate": 3.497219480294695, "ringdown": 0.7743128640758468},
+          "phase_rms_after_affine_rad": {"inspiral": 0.00004543457257150608, "intermediate": 10.070455970906913, "ringdown": 0.21389845895704282}
+        },
+        "22": {
+          "amplitude_relative_l2": {"all": 2.0475284915761502e-14},
+          "phase_rms_after_affine_rad": {"all": 2.4683760942294162e-14}
+        },
+        "32": {
+          "amplitude_relative_l2": {"inspiral": 0.47847072820479275, "intermediate": 0.771969363061005, "ringdown": 0.14665508234844324},
+          "phase_rms_after_affine_rad": {"inspiral": 0.00008566425448752381, "intermediate": 8.83037106447901, "ringdown": 0.13397890118039746}
+        },
+        "33": {
+          "amplitude_relative_l2": {"inspiral": 0.17293838468670195, "intermediate": 7.040213634861881, "ringdown": 0.05032105759810283},
+          "phase_rms_after_affine_rad": {"inspiral": 0.00006636415554453029, "intermediate": 28.804180727366607, "ringdown": 0.08400513953787289}
+        },
+        "44": {
+          "amplitude_relative_l2": {"inspiral": 0.3996967255278532, "intermediate": 3.6573743266718886, "ringdown": null},
+          "phase_rms_after_affine_rad": {"inspiral": 0.00011750467954431025, "intermediate": 22.619869780824196, "ringdown": null}
+        }
+      }
+    },
+    "IMRPhenomXHM_holdout_6": {
+      "parameters": {
+        "mass1": 55.0,
+        "mass2": 11.0,
+        "chi1": -0.4,
+        "chi2": 0.2,
+        "distance": 680.0,
+        "inclination": 1.1,
+        "phic": 0.71,
+        "f_ref": 27.0
+      },
+      "modes": {
+        "21": {
+          "amplitude_relative_l2": {"inspiral": 0.023178512301481238, "intermediate": 2.8082146915344537, "ringdown": 0.2796205998676815},
+          "phase_rms_after_affine_rad": {"inspiral": 0.00011401239914348226, "intermediate": 7.7166839674238785, "ringdown": 0.16003075772365094}
+        },
+        "22": {
+          "amplitude_relative_l2": {"all": 4.8269678464752196e-15},
+          "phase_rms_after_affine_rad": {"all": 6.582249342132678e-14}
+        },
+        "32": {
+          "amplitude_relative_l2": {"inspiral": 0.10594593969797324, "intermediate": 0.8351880969395766, "ringdown": 0.29991269391596087},
+          "phase_rms_after_affine_rad": {"inspiral": 0.0001070569678767684, "intermediate": 6.23518617415308, "ringdown": 0.8813345919874277}
+        },
+        "33": {
+          "amplitude_relative_l2": {"inspiral": 0.08986127208269522, "intermediate": 3.2258232338117194, "ringdown": 0.14142499890576668},
+          "phase_rms_after_affine_rad": {"inspiral": 0.00008951846298829585, "intermediate": 16.06454789339464, "ringdown": 0.10085576301742961}
+        },
+        "44": {
+          "amplitude_relative_l2": {"inspiral": 0.0853408609946092, "intermediate": 5.437877502127183, "ringdown": 0.10461525530185029},
+          "phase_rms_after_affine_rad": {"inspiral": 0.000132761104432218, "intermediate": 26.650424721221842, "ringdown": 0.1603395292684211}
+        }
+      }
+    }
+  },
+  "finding": {
+    "earliest_mismatching_component": "higher-mode inspiral amplitude",
+    "earliest_worst_mode": "32",
+    "catalog_amplitude_relative_l2": 0.47847072820479275,
+    "holdout_amplitude_relative_l2": 0.10594593969797324,
+    "interpretation": "the printed Appendix-E baseline is independently checked; current-release fitted collocation surfaces, normalization, cuts, and veto behavior are not fixed by the paper"
+  },
+  "strict_full_waveform_gates": {
+    "source": "docs/validation/xhm_xphm_binary_oracle_20260925.json",
+    "XHM": {"catalog": "0/1", "holdout": "0/1"},
+    "XPHM": {"catalog": "0/1", "holdout": "0/1"},
+    "status": "red"
+  }
+}

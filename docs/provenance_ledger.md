@@ -148,6 +148,7 @@ not validation of the retained official ROM or surviving equation components.
   - Uses native Kerr Leaver quasinormal mode frequencies and damping rates from `torchwave.qnm`.
   - Phase-component test gates and their restricted scope are described in Section 2.10. The historical full-waveform LAL comparisons did not pass the strict gates.
   - The [2026-09-25 binary-oracle receipt](validation/xhm_xphm_binary_oracle_20260925.json) uses only public installed LAL binary APIs and records the four frozen XHM/XPHM full-waveform diagnostics. It contains no source-derived formulas, translated implementation details, or fitted values. Executable paper-derived NNLO-102 math/reference gates live separately in `tests/test_xphm_nnlo_clean_room.py` and `tests/test_xphm_rotation_reference.py`. The catalog and holdout strict counts remain `0/1` for both XHM and XPHM.
+  - The [regional carrier audit](math/imrphenomxhm-inspiral-amplitude.md) identifies higher-mode inspiral amplitude as the earliest mismatch and `(3,2)` as the worst frozen mode. A stdlib scalar reference and phase-sensitive checkpoints independently verify the printed Appendix-E PN polynomials against Torch and JAX. The missing current-release collocation surfaces prevent a paper-derived production repair; the [component receipt](validation/xhm_carrier_components_20260925.json) leaves all strict full-waveform gates red.
 
 ### 2.7 SEOBNR Reduced-Order Model (ROM Surrogate)
 - **Primary References**:
