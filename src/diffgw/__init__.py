@@ -46,7 +46,11 @@ def get_td_waveform(*args, backend="torch", **kwargs):
 
 
 def list_approximants(*args, backend="torch", **kwargs):
-    """List available approximants using the selected frontend's public API."""
+    """List historically reference-passed models by default.
+
+    Pass ``inventory="callable"`` to include research implementations. This
+    filters discovery only; explicit dispatch and direct imports still work.
+    """
     return _backend(backend).list_approximants(*args, **kwargs)
 
 

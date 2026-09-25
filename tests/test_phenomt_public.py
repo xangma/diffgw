@@ -109,8 +109,8 @@ def test_reject_frequency_domain_and_unknown_options(backend):
 
 
 def test_torch_catalogue_and_aliases():
-    assert "IMRPhenomT" in torchwave.list_approximants("time_domain")
-    assert "IMRPhenomT" not in torchwave.list_approximants("frequency_domain")
+    assert "IMRPhenomT" in torchwave.list_approximants("time_domain", inventory="callable")
+    assert "IMRPhenomT" not in torchwave.list_approximants("frequency_domain", inventory="callable")
     hp, hc = torchwave.get_td_waveform("IMRPhenomT", m1=30.0, m2=25.0, duration=0.25)
     assert hp.shape == hc.shape == (512,)
 

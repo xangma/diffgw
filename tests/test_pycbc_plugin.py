@@ -5,12 +5,7 @@ import pytest
 import torch
 
 from torchwave.interfaces.pycbc import (
-    imrphenomd_fd,
-    imrphenomxas_fd,
-    imrphenomxhm_fd,
     imrphenomxp_fd,
-    imrphenomxphm_fd,
-    taylorf2_fd,
     torchwave_fd_plugin,
 )
 
@@ -52,8 +47,6 @@ def test_pycbc_entrypoints_end_to_end():
         "torch_IMRPhenomD",
         "torch_IMRPhenomXAS",
         "torch_IMRPhenomXP",
-        "torch_IMRPhenomXHM",
-        "torch_IMRPhenomXPHM",
     ):
         is_prec = ("XP" in approx) or ("Pv2" in approx) or approx.endswith("PhenomP")
         hp, hc = pycbc.waveform.get_fd_waveform(
@@ -75,3 +68,16 @@ def test_pycbc_entrypoints_end_to_end():
         assert len(hp) == int(256.0 / 0.5) + 1
         assert not np.isnan(hp.numpy()).any()
         assert np.abs(hp.numpy()).max() > 0.0
+
+
+@pytest.mark.parametrize("approximant", [
+    "IMRPhenomXHM", "IMRPhenomXPHM", "IMRPhenomT", "IMRPhenomP",
+])
+def test_plugin_rejects_unchecked_models(approximant):
+    with pytest.raises(ValueError, match="not reference-checked"):
+        torchwave_fd_plugin(approximant=approximant)
+
+
+def test_plugin_rejects_unchecked_xp_precession_option():
+    with pytest.raises(ValueError, match="prec_version=223"):
+        imrphenomxp_fd(prec_version=102)

@@ -1,7 +1,7 @@
-"""Framework-independent inventory of implemented waveform approximants.
+"""Framework-independent waveform inventories with explicit evidence scope.
 
-An entry means the frontend can evaluate the model; it is not a validation or
-release-qualification claim. See docs/model_manifest.json for evidence scope.
+The default inventory filters the historical frozen reference snapshot, not
+current release readiness or accuracy across a model's parameter domain.
 """
 
 from typing import Dict, List, Optional, Union
@@ -22,6 +22,7 @@ CANONICAL_APPROXIMANTS: List[str] = [
     "IMRPhenomXAS",
     "IMRPhenomXHM",
     "IMRPhenomP",
+    "IMRPhenomPv2",
     "IMRPhenomXP",
     "IMRPhenomXPHM",
     "IMRPhenomNSBH",
@@ -29,10 +30,20 @@ CANONICAL_APPROXIMANTS: List[str] = [
     "SEOBNRv4_ROM",
 ]
 
+# Frozen full-polarization reference cases in docs/model_manifest.json passed for
+# these public names. This is scoped to the declared cases, not a domain-wide
+# accuracy or derivative certificate. Pv2 is distinct from the legacy P route;
+# the ROM name denotes only the official external-data evaluator.
+HISTORICAL_REFERENCE_APPROXIMANTS: List[str] = [
+    "TaylorF2", "TaylorF2_Eccentric", "IMRPhenomD", "IMRPhenomD_NRTidal",
+    "IMRPhenomD_NRTidalv2", "IMRPhenomHM", "IMRPhenomXAS", "IMRPhenomPv2",
+    "IMRPhenomXP", "IMRPhenomNSBH", "KerrRingdown", "SEOBNRv4_ROM",
+]
+
 APPROXIMANT_CATEGORIES: Dict[str, List[str]] = {
     "aligned_spin": ["IMRPhenomT", "IMRPhenomTHM", "TaylorF2", "IMRPhenomD", "IMRPhenomXAS", "SEOBNRv4_ROM"],
     "higher_modes": ["IMRPhenomTHM", "IMRPhenomTPHM", "TaylorF2_HM", "IMRPhenomHM", "IMRPhenomXHM", "IMRPhenomXPHM"],
-    "precessing": ["IMRPhenomTP", "IMRPhenomTPHM", "IMRPhenomP", "IMRPhenomXP", "IMRPhenomXPHM"],
+    "precessing": ["IMRPhenomTP", "IMRPhenomTPHM", "IMRPhenomP", "IMRPhenomPv2", "IMRPhenomXP", "IMRPhenomXPHM"],
     "tidal": ["IMRPhenomD_NRTidal", "IMRPhenomD_NRTidalv2", "IMRPhenomNSBH"],
     "eccentric": ["TaylorF2_Eccentric"],
     "ringdown": ["KerrRingdown"],
@@ -40,7 +51,7 @@ APPROXIMANT_CATEGORIES: Dict[str, List[str]] = {
     "frequency_domain": [
         "TaylorF2", "TaylorF2_HM", "TaylorF2_Eccentric", "IMRPhenomD",
         "IMRPhenomD_NRTidal", "IMRPhenomD_NRTidalv2", "IMRPhenomHM",
-        "IMRPhenomXAS", "IMRPhenomXHM", "IMRPhenomP", "IMRPhenomXP",
+        "IMRPhenomXAS", "IMRPhenomXHM", "IMRPhenomP", "IMRPhenomPv2", "IMRPhenomXP",
         "IMRPhenomXPHM", "IMRPhenomNSBH", "KerrRingdown", "SEOBNRv4_ROM",
     ],
     "time_domain": ["IMRPhenomT", "IMRPhenomTHM", "IMRPhenomTP", "IMRPhenomTPHM"],
@@ -50,18 +61,28 @@ APPROXIMANT_CATEGORIES: Dict[str, List[str]] = {
 def list_approximants(
     category: Optional[str] = None,
     by_category: bool = False,
+    inventory: str = "historical_reference",
 ) -> Union[List[str], Dict[str, List[str]]]:
-    """List implemented models by canonical name or physical category.
+    """List models by canonical name or physical category.
 
-    This is a capability inventory, not a release-qualification certificate.
+    The default includes models whose declared full-polarization cases passed
+    in a historical frozen reference snapshot. ``inventory="callable"`` also
+    lists research implementations. Neither view certifies current release
+    readiness, full parameter domains, or optional methods.
     """
+    if inventory not in ("historical_reference", "callable"):
+        raise ValueError("inventory must be 'historical_reference' or 'callable'")
+    allowed = set(HISTORICAL_REFERENCE_APPROXIMANTS) if inventory == "historical_reference" else None
     if by_category:
-        return {name: list(models) for name, models in APPROXIMANT_CATEGORIES.items()}
+        return {
+            name: [model for model in models if allowed is None or model in allowed]
+            for name, models in APPROXIMANT_CATEGORIES.items()
+        }
     if category is not None:
         key = category.lower().replace("-", "_").replace(" ", "_")
         if key not in APPROXIMANT_CATEGORIES:
             raise ValueError(
                 f"Unknown category '{category}'. Available: {sorted(APPROXIMANT_CATEGORIES)}"
             )
-        return list(APPROXIMANT_CATEGORIES[key])
-    return list(CANONICAL_APPROXIMANTS)
+        return [model for model in APPROXIMANT_CATEGORIES[key] if allowed is None or model in allowed]
+    return [model for model in CANONICAL_APPROXIMANTS if allowed is None or model in allowed]

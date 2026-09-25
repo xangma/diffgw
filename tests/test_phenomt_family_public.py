@@ -62,11 +62,11 @@ def test_family_catalogue():
     import torchwave
 
     for name in FAMILY:
-        assert name in torchwave.list_approximants("time_domain")
-        assert name not in torchwave.list_approximants("frequency_domain")
-    assert "IMRPhenomTHM" in torchwave.list_approximants("higher_modes")
-    assert "IMRPhenomTPHM" in torchwave.list_approximants("higher_modes")
-    assert "IMRPhenomTP" in torchwave.list_approximants("precessing")
+        assert name in torchwave.list_approximants("time_domain", inventory="callable")
+        assert name not in torchwave.list_approximants("frequency_domain", inventory="callable")
+    assert "IMRPhenomTHM" in torchwave.list_approximants("higher_modes", inventory="callable")
+    assert "IMRPhenomTPHM" in torchwave.list_approximants("higher_modes", inventory="callable")
+    assert "IMRPhenomTP" in torchwave.list_approximants("precessing", inventory="callable")
 
 
 @pytest.mark.parametrize("backend", ["torchwave", "jaxwave"])

@@ -1,6 +1,7 @@
-"""Inspect actual release artifacts, including a wheel rebuilt from the sdist."""
+"""Inspect selected package boundaries in a wheel and rebuilt sdist."""
 
 import ast
+import configparser
 from pathlib import Path
 import subprocess
 import sys
@@ -33,7 +34,7 @@ def _inspect_member(name, content):
         assert not definitions.intersection(PROTOTYPE_SYMBOLS), name
 
 
-def test_release_archives_exclude_unvalidated_models(tmp_path):
+def test_release_archives_exclude_retired_prototypes_and_unchecked_pycbc_entries(tmp_path):
     # build is a required dev dependency: this gate must fail rather than skip
     # when the release validation environment is incomplete.
     output = tmp_path / "dist"
@@ -48,6 +49,17 @@ def test_release_archives_exclude_unvalidated_models(tmp_path):
     with zipfile.ZipFile(wheels[0]) as wheel:
         for name in wheel.namelist():
             _inspect_member(name, wheel.read(name))
+        entry_point_files = [
+            name for name in wheel.namelist()
+            if name.endswith(".dist-info/entry_points.txt")
+        ]
+        assert len(entry_point_files) == 1
+        entry_points = configparser.ConfigParser()
+        entry_points.read_string(wheel.read(entry_point_files[0]).decode())
+        assert set(entry_points["pycbc.waveform.fd"]) == {
+            "torch_taylorf2", "torch_imrphenomd", "torch_imrphenomxas",
+            "torch_imrphenomxp",
+        }
         assert "torchwave/approximants/rom/official_wrapper.py" in wheel.namelist()
         assert "jaxwave/approximants/rom/official_wrapper.py" in wheel.namelist()
     with tarfile.open(sdists[0]) as sdist:

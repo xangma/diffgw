@@ -13,6 +13,13 @@ import torch
 
 from torchwave.waveforms import get_fd_waveform
 
+
+# The plugin surface is restricted to its independently checked entry points.
+# Other dispatcher implementations remain available through their own APIs.
+_PYCBC_REFERENCE_APPROXIMANTS = frozenset({
+    "taylorf2", "imrphenomd", "imrphenomxas", "imrphenomxp",
+})
+
 try:
     from pycbc.types import FrequencySeries
     _HAVE_PYCBC_TYPES = True
@@ -46,6 +53,12 @@ def torchwave_fd_plugin(**params: Any) -> Tuple[Any, Any]:
         if approximant.startswith(pfx):
             approximant = approximant[len(pfx) :]
             break
+    if approximant.lower().replace("_", "") not in _PYCBC_REFERENCE_APPROXIMANTS:
+        raise ValueError(f"PyCBC plugin approximant {approximant!r} is not reference-checked")
+    if approximant.lower().replace("_", "") == "imrphenomxp":
+        version = params.get("prec_version")
+        if version is not None and int(version) != 223:
+            raise ValueError("PyCBC plugin IMRPhenomXP is checked only for prec_version=223")
     m1 = float(params.get("mass1", 1.4))
     m2 = float(params.get("mass2", 1.4))
     df = float(params.get("delta_f", 0.25))
@@ -157,20 +170,8 @@ def imrphenomxp_fd(**params: Any) -> Tuple[Any, Any]:
     return torchwave_fd_plugin(**params)
 
 
-def imrphenomxhm_fd(**params: Any) -> Tuple[Any, Any]:
-    """PyCBC FD entry point for IMRPhenomXHM."""
-    params["approximant"] = "IMRPhenomXHM"
-    return torchwave_fd_plugin(**params)
-
-
-def imrphenomxphm_fd(**params: Any) -> Tuple[Any, Any]:
-    """PyCBC FD entry point for IMRPhenomXPHM."""
-    params["approximant"] = "IMRPhenomXPHM"
-    return torchwave_fd_plugin(**params)
-
-
 def register_with_pycbc(prefix_list: Sequence[str] = ("torch_", "diffgw_")) -> bool:
-    """Dynamically register all TorchWave FD models into an active PyCBC environment.
+    """Register the four reference-checked FD plugin models with PyCBC.
 
     Returns True if registration succeeded, False otherwise.
     """
@@ -182,8 +183,6 @@ def register_with_pycbc(prefix_list: Sequence[str] = ("torch_", "diffgw_")) -> b
             ("IMRPhenomD", imrphenomd_fd),
             ("IMRPhenomXAS", imrphenomxas_fd),
             ("IMRPhenomXP", imrphenomxp_fd),
-            ("IMRPhenomXHM", imrphenomxhm_fd),
-            ("IMRPhenomXPHM", imrphenomxphm_fd),
         ]
 
         for model_name, fn in supported_models:
@@ -202,7 +201,5 @@ __all__ = [
     "imrphenomd_fd",
     "imrphenomxas_fd",
     "imrphenomxp_fd",
-    "imrphenomxhm_fd",
-    "imrphenomxphm_fd",
     "register_with_pycbc",
 ]

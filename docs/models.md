@@ -5,14 +5,65 @@ restrictions for the options you need. The catalog records implemented families;
 a familiar approximant name does not establish equivalence to an external model.
 For availability in other packages, use the [dated package comparison](comparison.md).
 
-## Model catalog
+## Release-facing inventory: historical reference evidence
+
+`diffgw.list_approximants()` defaults to public dispatcher names whose
+**declared full-polarization reference cases** passed historical frozen gates in the
+[model manifest](model_manifest.json) and [provenance ledger](provenance_ledger.md#3-reference-evidence-by-model).
+This is a configuration-specific historical evidence filter, **not a current
+release certificate** or a claim of accuracy across each model's parameter
+domain, modes, options, derivatives or devices. The
+strict catalog and holdout suites failed overall; the passing rows remain
+individually scoped. The official `SEOBNRv4_ROM` evaluator needs the selected
+external data asset. This listing changes discovery only: names outside it
+remain directly callable or importable where implemented. The PyCBC plugin
+registers only `TaylorF2`, `IMRPhenomD`, `IMRPhenomXAS` and the checked
+`IMRPhenomXP` MSA v223 path; generic package dispatch still routes the research
+models. A release that must exclude prototype code also needs separate
+dispatcher/export or packaging gates.
+
+| Family | Historical reference-passed public names |
+| :--- | :--- |
+| Post-Newtonian | `TaylorF2`, `TaylorF2_Eccentric` |
+| Aligned-spin and higher-mode IMR | `IMRPhenomD`, `IMRPhenomHM`, `IMRPhenomXAS` |
+| Precessing IMR | `IMRPhenomPv2`, `IMRPhenomXP` |
+| Tidal and matter | `IMRPhenomD_NRTidal`, `IMRPhenomD_NRTidalv2`, `IMRPhenomNSBH` |
+| Ringdown | `KerrRingdown` |
+| Official external-data ROM | `SEOBNRv4_ROM` (also accepts `SEOBNR_ROM`) |
+
+`IMRPhenomPv2` has its own tested dispatch path; the legacy `IMRPhenomP`
+name is a separate callable implementation. The XP entry applies to
+the manifest's tested MSA configuration, not every precession choice.
+
+## Callable and research inventory
+
+`diffgw.list_approximants(inventory="callable")` retains all callable dispatcher names for
+compatibility, including models and options without current release qualification. The
+table describes physical content and availability, not reference agreement.
+It also includes separately exported model classes and tools that are not
+dispatcher names. Those entries are outside the filtered listing.
+The callable names excluded from the default inventory have these evidence gaps:
+
+| Callable name(s) | Why excluded from the historical reference-passed list |
+| :--- | :--- |
+| `IMRPhenomXHM`, `IMRPhenomXPHM` | Failed full-waveform catalog and holdout gates; restricted component results do not replace them. |
+| `TaylorF2_HM` | Only its dominant mode was compared; independent higher-mode reference remains unresolved. |
+| `IMRPhenomT`, `IMRPhenomTHM` | Outside the frozen manifest; separate author and optional LAL checks do not establish the frozen full-catalog gate. |
+| `IMRPhenomTP`, `IMRPhenomTPHM` | Outside the frozen manifest; numerical precession has a documented large-error case in the [T-family report](validation/phenomt.md#msa-and-numerical-precession). |
+| `IMRPhenomP` | Legacy route distinct from the historically checked `IMRPhenomPv2` route. |
+
+SpinTaylor and PNR XPHM aliases also remain research options outside the
+historical reference-passed list; optional test thresholds are not observed
+whole-waveform qualification. Separately exported burst, memory, continuous-wave,
+EMRI, modified-phasing and diagnostic classes have no entry in this dispatcher
+inventory and are not qualified by the filtered list.
 
 | Family | Approximant(s) | Harmonics / Multipoles | Physical Features & Regimes |
 | :--- | :--- | :---: | :--- |
 | **Post-Newtonian** | `TaylorF2`<br>`TaylorF2_HM`<br>`TaylorF2_Eccentric` | $(2,2)$<br>Eight modes through $\ell=4$<br>$(2,2)$ | 3.5PN point-particle & spin phasing, BNS tidal deformability<br>Leading-order higher-mode amplitudes<br>Moore et al. (2016) 3PN stationary-phase eccentric corrections |
 | **Aligned-Spin IMR** | `IMRPhenomD`<br>`IMRPhenomHM`<br>`IMRPhenomXAS`<br>`IMRPhenomXHM` | $(2,2)$<br>$(2,\pm 2), (2,\pm 1), (3,\pm 3), (3,\pm 2), (4,\pm 4)$<br>$(2,\pm 2)$<br>$(2,\pm 2), (2,\pm 1), (3,\pm 3), (3,\pm 2), (4,\pm 4)$ | Aligned-spin dominant mode, 5-collocation intermediate<br>Multi-harmonic PhenomD calibration with mode mixing<br>4th-generation aligned-spin dominant mode (Pratten et al. 2020)<br>4th-generation higher multipoles (García-Quirós et al. 2020) |
 | **Native Time-Domain IMR** | `IMRPhenomT`, `IMRPhenomTHM`, `IMRPhenomTP`, `IMRPhenomTPHM` | Up to $(5,\pm 5)$ | Aligned or precessing black hole binaries; see the [T-family guide](imrphenomt.md) |
-| **Precessing IMR** | `IMRPhenomP` / `Pv2`<br>`IMRPhenomXP`<br>`IMRPhenomXPHM` | $(2,\pm 2)$ twisted<br>$(2,\pm 2)$ twisted<br>Multipolar twisted | Generic 3D spins with NNLO PN precession angles & Wigner $d$-matrices<br>4th-gen precessing carrier with MSA analytical precession<br>Multipolar precession supporting MSA (`v223`), SpinTaylor (`v320`), and PNR (`v330`) |
+| **Precessing IMR** | `IMRPhenomP` / `IMRPhenomPv2`<br>`IMRPhenomXP`<br>`IMRPhenomXPHM` | $(2,\pm 2)$ twisted<br>$(2,\pm 2)$ twisted<br>Multipolar twisted | Generic 3D spins with NNLO PN precession angles & Wigner $d$-matrices<br>4th-gen precessing carrier with MSA analytical precession<br>Multipolar precession supporting MSA (`v223`), SpinTaylor (`v320`), and PNR (`v330`) |
 | **Tidal & Matter** | `IMRPhenomD_NRTidal`<br>`IMRPhenomD_NRTidalv2`<br>`IMRPhenomNSBH` | $(2,2)$<br>$(2,2)$<br>$(2,2)$ | Dietrich et al. (2017) rational Padé BNS tidal phasing (NRTidal v1)<br>Dietrich et al. (2019) NRTidal v2 with self-spin & Planck windowing<br>Neutron star–black hole model with tidal disruption & remnant torus |
 | **Effective-One-Body** | `SEOBNR_ROM` / `SEOBNRv4_ROM` | $(2,2)$ | External SEOBNRv4 ROM data with a native Torch/JAX evaluator |
 | **Ringdown & Bursts** | `KerrRingdown`<br>`SineGaussian`<br>`MemoryWaveform` | $(2,2,0), (l,m,n)$<br>Burst packet<br>$(2,0)$ | Damped sinusoids from Kerr quasinormal modes (time & frequency domain)<br>Standard unmodeled sine-Gaussian burst wavelet<br>Non-linear Christodoulou gravitational-wave memory effect $h_{20}^{\text{mem}}(t)$ |
@@ -96,8 +147,9 @@ checks, frontend consistency, external-reference agreement and physical validati
 The [manifest](model_manifest.json) records selected configurations, not a complete
 support matrix; it does not yet include the T family. Treat a missing check as
 unestablished evidence, not as evidence that generation is unavailable.
-`list_approximants()` is likewise an inventory of callable implementations, not a
-list of release-qualified waveforms. In particular, the manifest records failed
+`list_approximants()` defaults to the historical reference-passed subset; use
+`list_approximants(inventory="callable")` for the complete dispatcher inventory.
+In particular, the manifest records failed
 full-waveform catalog and holdout gates for `IMRPhenomXHM` and `IMRPhenomXPHM`;
 their restricted ringdown-component checks do not qualify the complete models.
 `TaylorF2_HM` lacks an independent higher-mode full-waveform reference, and the
