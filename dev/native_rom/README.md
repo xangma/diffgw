@@ -1608,6 +1608,19 @@ behavior and the larger native/source residual still preclude a converged
 whole-waveform source-fidelity or release claim. This adapter continues to
 link pinned wheel support libraries.
 
+The [ultrafine q4 chart](evidence/2026-09-25/source_q4_ultrafine_chart.json)
+tests that apparent approach against a further factor-of-two refinement under
+a [separate frozen plan](evidence/2026-09-25/source_q4_ultrafine_chart_plan.json).
+It reproduces the `0.03125 M` source, wheel, and native array hashes. At
+`0.015625 M`, fitted source/wheel complex relative L2 rises to `0.001425`,
+while native/source falls to `0.000259`. With the ultrafine peaks held fixed,
+source and public-wheel self-differences between those grids are `0.000520`
+and `0.000338`; native shared samples are identical. Direct wheel and public
+polarization outputs still agree to `4.23e-13`. The `0.03125 M` source/wheel
+minimum was not a stable convergence trend. This selected historical source
+route does not establish whole-waveform cadence convergence and cannot anchor
+a release fidelity claim without resolving its output-step sensitivity.
+
 The [JAX initial-state-to-base-mode gradient check](evidence/2026-09-25/jax_initial_to_base_mode_gradient.json)
 uses a [frozen q4 plan](evidence/2026-09-25/jax_initial_to_base_mode_gradient_plan.json)
 and the development-only traceable quasicircular solve. The solve reproduces
