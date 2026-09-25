@@ -2513,6 +2513,17 @@ stencil node states were not saved, so this applies an additive correction
 from nearby bounded-dense states; it is neither a new NQC prescription nor
 release validation.
 
+A [source exact-node follow-up](evidence/2026-09-25/source_aligned_exact_node_circ_nqc_plan_v2.json)
+recovers the stencil nodes by deterministic centered DOP853 reintegration from
+the captured matching state. It replays both original derivative stencils
+exactly, including the original 302/428 field-evaluation counts. Applying the
+same source exact-circular-frequency Newtonian-factor substitution at these
+recovered nodes reduces the saved `0.1`-versus-`0.2 M` coefficient distance
+from `0.026491` to [`0.005269`](evidence/2026-09-25/source_aligned_exact_node_circ_nqc_v2.json).
+The earlier node states were not serialized, so their bitwise identity cannot
+be proven. This is a post-hoc source-only diagnostic; the original gate remains
+failed and no native waveform or replacement prescription is qualified.
+
 A separate [clean-room circular-frequency check](evidence/2026-09-25/published_circular_frequency_plan.json)
 derives the zero-radial angular Hamiltonian derivative and compares it with
 the current native Torch and JAX autodiff paths. At four fixed development

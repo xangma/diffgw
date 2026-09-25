@@ -1,0 +1,480 @@
+{
+  "counterfactual": {
+    "below_historical_limit": true,
+    "coefficient_stencil_l2": 0.005268736587081712,
+    "distance_change_from_historical": -0.021222271041933007,
+    "historical_gate_still_failed": true
+  },
+  "errors": [],
+  "historical": {
+    "coefficient_stencil_gate": false,
+    "coefficient_stencil_l2": 0.02649100762901472
+  },
+  "input_sha256": {
+    "field_adapter": "d674aecdc602024c539ff8a2040a842adceab3ca546c08e307724c2fccdd3113",
+    "mode_adapter": "91833ee4a2a8fae8efa3a2fef9234ed4f222a73198102ceafab361809c9a0660",
+    "original_runner": "5900916a17f3d433016bd8d4a41e9c04cdd6b45b900da8368b0832bf61374cb1",
+    "pilot_evidence": "f54fdfbfacdc85ba37d2cae05091b33be297f7fb0e2f3e57018649dd940e10eb",
+    "probe_include": "2ed97f12cfe2228a2890239345c4ee7fc6bb03a28fdce25e8e15e1e39cc6474d",
+    "source_flux_plan": "1167199c8f954f97a5905a1e3b2f67d1555e984e5f1da0a0fc42a77a925f96ea",
+    "source_nqc_evidence": "c8d642fd8b8f7e17672c1c6c2ec831a3ba4e49d4ebbf7992afaf87a9360eb780"
+  },
+  "limitations": "A deterministic reintegration that replays the original derivative stencils and evaluation counts recovers the original numerical nodes operationally, but those node states were not serialized in the earlier evidence. This is a post-hoc one-event source audit, not a source-code modification, native prescription, waveform convergence result, or release qualification.",
+  "match_time_M": 137.59240346159578,
+  "plan_sha256": "398ec02171f438d7ea01dc73bf01d328ecde3db40ab06a5cddd82d8c924b1cbc",
+  "process": {
+    "argv": [
+      "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw/dev/native_rom/diagnose_source_aligned_exact_node_circ_nqc.py",
+      "--source-root",
+      "/Users/xangma/repos/lalsuite-git",
+      "--headers",
+      "/tmp/diffgw-lalsuite-pinned-53acc0c/merged-include",
+      "--gsl-include",
+      "/usr/local/include",
+      "--json-out",
+      "dev/native_rom/evidence/2026-09-25/source_aligned_exact_node_circ_nqc.json"
+    ],
+    "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+    "host": "RONI2",
+    "pid": 12525
+  },
+  "release_qualified": false,
+  "replay": {
+    "expected_nfev": {
+      "backward": 302,
+      "forward": 428
+    },
+    "max_historical_coefficient_replay_linf": 7.048583938740194e-11,
+    "max_source_center_amplitude_absolute": 0.0,
+    "max_source_stencil_derivative_linf": 0.0,
+    "nfev": {
+      "backward": 302,
+      "forward": 428
+    }
+  },
+  "row": {
+    "chi1": 0.8,
+    "chi2": 0.8,
+    "mass1": 30.0,
+    "mass2": 20.0,
+    "omega_start": 0.04
+  },
+  "schema": "diffgw.seobnrv4.source-aligned-exact-node-circ-nqc.v1",
+  "scope": {
+    "description": "Scalar CPU float64 numerical stability evidence only; no training or promotion.",
+    "development_only": true,
+    "known_limitations": [
+      "Convergence cannot establish correctness of the equations or published model fidelity.",
+      "The adaptive prototype uses a diagnostic QNM spline with independently generated values and black-box-inferred knot metadata; this is not wholly literature-specified provenance.",
+      "Changing dt also changes the adaptive initial step and coarse/fine restart sampling; the grid check measures the complete generator's grid sensitivity.",
+      "No time, phase, amplitude, or coefficient fitting is performed.",
+      "No derivatives, batched execution, accelerators, or JAX are qualified here."
+    ],
+    "physics_validated": false,
+    "post_hoc_algebraic_counterfactual": true,
+    "production_asset": false,
+    "production_promotion_allowed": false,
+    "training_generator_qualified": false
+  },
+  "script_sha256": "40ae0c684f8d7a3e71c79220a9e86bd58f191e1fbabaef6a7a90f2ae7da88127",
+  "source_pin": {
+    "files_sha256": {
+      "lal/lib/factories/AVFactories.h": "f2b6a232bf56578c4ad8d93f9849c91973df3b867f2f2d4790b5ffb549ccda00",
+      "lalsimulation/lib/LALSimBlackHoleRingdown.h": "3f4fb4f40356503096bda7b718b2063a3bf453a2e0a0f1aa61b784c788ec7ad3",
+      "lalsimulation/lib/LALSimIMREOBFactorizedWaveform.c": "3c2f3f4bd9567e4b46af79d5d180089f90b1f3c3356e34d84debedb6643e93f9",
+      "lalsimulation/lib/LALSimIMREOBHybridRingdown.c": "a92db1fefece5fb3a4b5cca44f7406f2798649a4f096a059fe01c692182c2211",
+      "lalsimulation/lib/LALSimIMREOBNQCCorrection.c": "be34dbe154439439b6a7dc37494cdc963dd4c29ded42d887251efe16f974899e",
+      "lalsimulation/lib/LALSimIMREOBNQCTables.c": "79c4f137b9d667ae2fa2811a9a1219e80018a509f85f1dc4e2dc3064bb7123cf",
+      "lalsimulation/lib/LALSimIMREOBNRv2.h": "a32e632cc999d7cf9e6784f824ead606b408362ef96741a86a7e27c6bb8592f1",
+      "lalsimulation/lib/LALSimIMREOBNewtonianMultipole.c": "87364966ce0cce6e5ac8a0d84c4836a9f41aa93156b5ed0abb44965bcd34996c",
+      "lalsimulation/lib/LALSimIMRSpinAlignedEOB.c": "6b7969bb7cbe714c4937a691838b0b82a7fcc2a199c03ee2bf5215738f1ce1b3",
+      "lalsimulation/lib/LALSimIMRSpinAlignedEOBGSLOptimizedInterpolation.c": "568e7863ebb999ebe8497a615fa423da126f1440396dea2984e2a16498be9bc3",
+      "lalsimulation/lib/LALSimIMRSpinAlignedEOBHcapDerivative.c": "be61f86a3fda4383f031f2c86af23d542baf429f2656095844a92921d1642dfa",
+      "lalsimulation/lib/LALSimIMRSpinAlignedEOBHcapDerivativeOptimized.c": "66f88f2e7dc7cecaedcd21e9c8fabd3526e8cb1583264b644efdbf11b55ee163",
+      "lalsimulation/lib/LALSimIMRSpinAlignedEOBOptimizedInterpolatorGeneral.c": "97c001b6d0776959eecf16defc37094d366b7ab4d6dcb3b3a1e7e328e3ea2d59",
+      "lalsimulation/lib/LALSimIMRSpinEOB.h": "700804fad22264c9ae669f4495c56efcc512f602a0d944d77bc8239d5bfb990c",
+      "lalsimulation/lib/LALSimIMRSpinEOBAuxFuncs.c": "02653c8336e7a4c7abb4c6a7320412b529c94c126afe395e168486770322334a",
+      "lalsimulation/lib/LALSimIMRSpinEOBComputeAmpPhasefromEOMSoln.c": "756218614224eb70d27f31a4ff62b94c6245eb76bb8f729731946e36bf14a7a0",
+      "lalsimulation/lib/LALSimIMRSpinEOBFactorizedFlux.c": "c9d33fd8499c3caacdc35431540a78052f2c06a3afb610fbcde374bd87644759",
+      "lalsimulation/lib/LALSimIMRSpinEOBFactorizedFluxOptimized.c": "57a66e1a0795b64ed37e371f1e5ec65e6fb30647ba46d4deb36ec52b1e2ac239",
+      "lalsimulation/lib/LALSimIMRSpinEOBFactorizedWaveform.c": "2f38bd98af755cefc8554c4c31e20799833f49625a34797f52d1416bc4128a47",
+      "lalsimulation/lib/LALSimIMRSpinEOBFactorizedWaveform_PA.c": "69b30dc41844e8dfb97346e8c669c55b8a812008727b604a320a8530909459aa",
+      "lalsimulation/lib/LALSimIMRSpinEOBHamiltonian.c": "629ea1690bb0c7fd913dd39f17299f8412aafd30519293af8d0526b42dab90dc",
+      "lalsimulation/lib/LALSimIMRSpinEOBHamiltonian.h": "7e1002abcec95453bc930c4530c4fae4917c040c855d77c5cf73a0013a34058a",
+      "lalsimulation/lib/LALSimIMRSpinEOBHamiltonianOptimized.c": "23ececa5d2f1eda29e5bb8d83f9a7affe90ee55def3ec3afa6375559df6e1213",
+      "lalsimulation/lib/LALSimIMRSpinEOBHcapExactDerivative.c": "55615eb6b86e22334f8d23555d21de11a19df7bb9282b416b94dbb18557ab041",
+      "lalsimulation/lib/LALSimIMRSpinEOBHcapNumericalDerivative.c": "d529e8810ab3415ea7b40c3fe8b57544317ebd399af93a272521f1d19aa063a5",
+      "lalsimulation/lib/LALSimIMRSpinEOBInitialConditions.c": "f7156afc408ad512dbc1a4d1fcb54bf0978a580181bc1243d650e37be1a8fa5b",
+      "lalsimulation/lib/LALSimInspiralEOBPostAdiabatic.h": "55aaf7495b952fc34072ae575ab9ba295fc28a8cf62291ae1230c83b04ae7737",
+      "lalsimulation/lib/LALSimInspiralPrecess.h": "9298121a74fedbef59b38514db62301b8a53a59b6bf6dd5e288f9d42fed065eb",
+      "lalsimulation/lib/LALSimInspiralWaveformFlags.h": "509663185b3cf62f642ac1415c6edfef42551b66c84eb0b596016bb2ca8325a4",
+      "lalsimulation/lib/LALSimInspiraldEnergyFlux.c": "c72da5d7e4290f205cfb6c2370178d9a4d49fc4b6d5e333237ebe74b94984bb9",
+      "lalsimulation/lib/mathematica_codes/SEOBNRv2_opt_.h": "1e9e5aed65193038a16e7d6457cbf7654ae44481c5c67695b1dde3b6a40aa4b3",
+      "lalsimulation/lib/mathematica_codes/SEOBNRv2_opt_3derivs.h": "d31cea69e9cbb3e6464d67367d7912724bdcd1312cb47badb8f1d4ade9088a3c",
+      "lalsimulation/lib/mathematica_codes/SEOBNRv2_opt_3derivstortoise.h": "ea6a215745d7b594ca37fcb13eaadc1437abfc7be62707f2be4fa24c2b119a0d",
+      "lalsimulation/lib/mathematica_codes/SEOBNRv2_opt_dp0.h": "1a307940eb0fff4434e31b50c0dc9f46a8370b0c922be8aca982d4794d4ef1ab",
+      "lalsimulation/lib/mathematica_codes/SEOBNRv2_opt_dp0tortoise.h": "436c30c1da177239bcaea67f6f83db4051a706ba25361f941404247a1e08dbba",
+      "lalsimulation/lib/mathematica_codes/SEOBNRv2_opt_dp1.h": "25ecb86345be17a03fbb0867bdd24f36a114df16619a0f40012fcf89de564169",
+      "lalsimulation/lib/mathematica_codes/SEOBNRv2_opt_dp1tortoise.h": "693943dd0c9527b8f884c90e0ac446fdd1d2ad3715e74069dfc85760daedabdb",
+      "lalsimulation/lib/mathematica_codes/SEOBNRv2_opt_dp2.h": "9f3dfeb009ab6d6b843dd94622a7331996af87aaf9c770fd63bfac704e871b50",
+      "lalsimulation/lib/mathematica_codes/SEOBNRv2_opt_dp2tortoise.h": "727854f2e94d97c42c923446da2ca2a97d2c286cdfae416faecc6bdb533e18e3",
+      "lalsimulation/lib/mathematica_codes/SEOBNRv2_opt_dx0.h": "aa3687d884a1818aead4613124fe6c33d29560a6e40c97ecad411b37ecf770ca",
+      "lalsimulation/lib/mathematica_codes/SEOBNRv2_opt_dx0tortoise.h": "2c0e54b3d7a89ef2cd1f84514e3f42799664ed90f90d141355093048f360b6a3",
+      "lalsimulation/lib/mathematica_codes/SEOBNRv2_opt_pdata1.h": "7fdc6512e1088aa69aa3c3982cb16dec7bb31eb102cf6defe05d856284dbea5f",
+      "lalsimulation/lib/mathematica_codes/SEOBNRv2_opt_pdata1tortoise.h": "b990a2d3daaca7fff619bca95b217bdcc7bdfa7059373751538a451480796d84",
+      "lalsimulation/lib/mathematica_codes/SEOBNRv2_opt_tortoise.h": "126140d86be568c0aef5b3e1865b83c2aadcece60ab938e377649c895d7975a1"
+    },
+    "generated_headers_sha256": {
+      "lal/LALConfig.h": "f0f660e111b5a2d044d68cc76e78366c5fae6dc390878631caa050ab6579de3a"
+    },
+    "peeled_commit": "2c00d8c200308422036d0a23b7c0394f7c73faad",
+    "public_headers_sha256": {
+      "lal/lib/date/Date.h": "aec79d793de46d470233ed083facd00efc898a4976f5b83ba662d84d4be5ab9e",
+      "lal/lib/factories/AVFactories.h": "f2b6a232bf56578c4ad8d93f9849c91973df3b867f2f2d4790b5ffb549ccda00",
+      "lal/lib/factories/SeqFactories.h": "2b6570fd31749430b3881cd9ac9b251d7f8f3566e62f9716a14b0a594d8708d8",
+      "lal/lib/std/LALAtomicDatatypes.h": "b95ed06ba0d59423b15a6e63099d20b1bc1356624bf00846c7dede253b1370ec",
+      "lal/lib/std/LALConstants.h": "6605e33a8c5d4272dfb4efa58ee3826d0e7adfe98a7a24f98eb826c35d01805e",
+      "lal/lib/std/LALDatatypes.h": "34c3cbd9c692f524ab806d586398341a9c3af0cc7b453446914a1e89118f843b",
+      "lal/lib/std/LALDebugLevel.h": "63c5f31b7708e2c62789429c4c97265402dc26a5769c89e2683c93ccb8d98b8d",
+      "lal/lib/std/LALError.h": "094c6fa644eb6e1a097e9457666fab722c3b57946b7372ba91955d5a0233316e",
+      "lal/lib/std/LALGSL.h": "6fc1268ead51f83b4f4c02561735a92c81aca2d388d89de4cdde7052014cca9b",
+      "lal/lib/std/LALMalloc.h": "919caa40afe1361056db1071e1b07928a406821d4005e0ff77de3a91eee1532b",
+      "lal/lib/std/LALStatusMacros.h": "5ecb2a264dc2530e0a29b877312c34c9f62d2dbf91661a3fb464e3b52a20ea8f",
+      "lal/lib/std/LALStddef.h": "fb9ba83bfab3d3d0357a85c7f8809de61424759fc550cfe81ebe23cc8d029054",
+      "lal/lib/std/LALStdio.h": "492256d2e437e26b248196687ed2652e6f0c177afcbc541fbb84d8260c9d3cff",
+      "lal/lib/std/LALStdlib.h": "9d16d2b1cfea0199d00d2d8347129462f3f5f0306c1955f7c042a37046576f92",
+      "lal/lib/std/LALString.h": "427dae3aeff2b317cdda5ab4551076d32b4c58d0ae6b6868500cf9141454562d",
+      "lal/lib/std/XLALError.h": "fcbbb02e15b76703cfdd2eca4823f3da352dbacbe91e0cb0f61b4c8831bbb01e",
+      "lal/lib/std/XLALGSL.h": "eddcbe9c4a034cdccc60415f1d3f74660c24cd4a50a93290fbb035942d542801",
+      "lal/lib/tools/DetectorSite.h": "6273811c8864078b9dd5ff77fe2050c44e151e418e03451eba466323fb9e71db",
+      "lal/lib/tools/LALDetectors.h": "fb31b5eac5433667364a195ab2ed30d1ef2b426006003046cfc6b1f146212880",
+      "lal/lib/tools/LALDict.h": "cdbbf7a66655133e5df414ed519459172706421219316b5a3a01e0e59e2a0679",
+      "lal/lib/tools/LALList.h": "a43de0b0ca4fd484f91ab3f4911a156076995b51474159d9bed1ab99e672226b",
+      "lal/lib/tools/LALValue.h": "c664238c0db9e430b91b6624a846cf90c6f9ed24c502c4dc7fa36a99f189d42a",
+      "lal/lib/tools/Sequence.h": "293f028d8d5e4304297b1d353e8ee8e1a5a2fc8728b68d0c8d5a1a21656e8d9b",
+      "lal/lib/tools/TimeSeries.h": "e470be5e0d52888c6fa8229311987777801a4af9731ab3c56c39eb56036c115e",
+      "lal/lib/tools/Units.h": "d43a5df0f6f8f6d66f38bd6ff05d6d98e256a41707383f9e9ac7828c9c132a35",
+      "lal/lib/utilities/Factorial.h": "ba5a335130cd5677da197f07482e092436d89377332909e0a71c62c897219278",
+      "lal/lib/utilities/LALAdaptiveRungeKuttaIntegrator.h": "a57edf2b3ccc063317356406d40f9c73a3d760522db8a4d85db0d77b3b50ff25",
+      "lal/lib/utilities/SphericalHarmonics.h": "550557fe9f1e45a4c593d7d8102d6fcffb75868f10ecbc1aa8175cd603dad8ab",
+      "lal/lib/vectorops/VectorOps.h": "78b1e6e6ef8400ccd5752059eb57bc1121d0bf4cfcbbf84c5996d69be11b82b3",
+      "lalsimulation/lib/LALSimIMR.h": "d5ec4070729f6f058d5435de3b5bcfd379f3471f27bf213fd7f9b380fe640315",
+      "lalsimulation/lib/LALSimInspiral.h": "d287a5c9a8eb7dc23ad1247d14513fe613527b17a71b4ace8c36c6a71c7b3603",
+      "lalsimulation/lib/LALSimInspiralTestGRParams.h": "3bfb6118717cc18e1723927b8b3601e60d3d339b74a0db28e42542b17bb5c426",
+      "lalsimulation/lib/LALSimInspiralWaveformFlags.h": "509663185b3cf62f642ac1415c6edfef42551b66c84eb0b596016bb2ca8325a4",
+      "lalsimulation/lib/LALSimInspiralWaveformParams.h": "a0288bb4cb5bcd697079c92679f47c0dde8ea1210d4c1dc7124089cb9932849e",
+      "lalsimulation/lib/LALSimSphHarmMode.h": "36f1e7be298cca71ac7357159a25e99fa8ec894401f4e60c3be043cef4ffeacd",
+      "lalsimulation/lib/LALSimSphHarmSeries.h": "ebce3187fecbc4033f95932150c4d8f245ad1ad1890417b926b83f258e6da093"
+    },
+    "tag": "lalsuite-v7.26.15",
+    "tag_object": "0a3a9674979bd62d8344d5552a10b5111fb1fc52"
+  },
+  "status": "diagnostic_complete",
+  "systems": {
+    "0.1": {
+      "counterfactual": {
+        "amplitude_matrix_condition": 56283.98879804343,
+        "amplitude_residual_linf": 2.7755575615628914e-16,
+        "amplitude_series_center_delta": [
+          -4.216043070167804e-12,
+          -1.1594493384722664e-13,
+          -3.5097056326060525e-14,
+          -1.930990559110672e-14
+        ],
+        "amplitude_series_first_delta": [
+          1.9283183833261693e-10,
+          5.34084336873882e-12,
+          1.618601031332361e-12,
+          8.910556992329574e-13
+        ],
+        "amplitude_series_second_delta": [
+          3.5275467386931897e-09,
+          9.792874311203095e-11,
+          2.9689675919096214e-11,
+          1.6347562220140758e-11
+        ],
+        "coefficients": [
+          172.35285609069857,
+          -1478.0630832230747,
+          1656.0035139315419,
+          43.12242872545375,
+          -1098.3696551123853
+        ],
+        "phase_system_unchanged": true
+      },
+      "historical_coefficient_replay_linf": 7.048583938740194e-11,
+      "historical_stencil_derivative_linf": 0.0,
+      "nodes": [
+        {
+          "amplitude": 0.3722247066608462,
+          "delta_amplitude": -2.0537274833132562e-11,
+          "mode_phase": 1.8617586407201137,
+          "offset_M": -0.2,
+          "omega": 0.1383821238124479,
+          "omega_circ_exact": 0.13916690487322697,
+          "omega_circ_gsl": 0.13916690486746813,
+          "state": [
+            3.312934692881692,
+            44.45757845045049,
+            -0.07538026316019643,
+            2.2423085617318095
+          ],
+          "time_M": 137.3924034615958
+        },
+        {
+          "amplitude": 0.37264182847234806,
+          "delta_amplitude": -6.882337959548095e-12,
+          "mode_phase": 1.8346827986962517,
+          "offset_M": -0.1,
+          "omega": 0.13859923311421823,
+          "omega_circ_exact": 0.13939320852512743,
+          "omega_circ_gsl": 0.1393932085231966,
+          "state": [
+            3.308251318109939,
+            44.47142750890919,
+            -0.0757132404687135,
+            2.2410009346889685
+          ],
+          "time_M": 137.49240346159579
+        },
+        {
+          "amplitude": 0.3730607697635001,
+          "delta_amplitude": -4.2160430701463784e-12,
+          "mode_phase": 1.807569149090889,
+          "offset_M": 0.0,
+          "omega": 0.13881747319267168,
+          "omega_circ_exact": 0.13962081145382654,
+          "omega_circ_gsl": 0.13962081145264313,
+          "state": [
+            3.303551522101145,
+            44.485298334765936,
+            -0.07604988969780438,
+            2.2396882389895514
+          ],
+          "time_M": 137.59240346159578
+        },
+        {
+          "amplitude": 0.37348153545866736,
+          "delta_amplitude": 2.3690958987817535e-11,
+          "mode_phase": 1.7804175275662792,
+          "offset_M": 0.1,
+          "omega": 0.1390368528118201,
+          "omega_circ_exact": 0.1398497266055151,
+          "omega_circ_gsl": 0.13984972661216838,
+          "state": [
+            3.298835153728893,
+            44.49919104153229,
+            -0.07639027465358181,
+            2.238370437422661
+          ],
+          "time_M": 137.69240346159577
+        },
+        {
+          "amplitude": 0.37390413024137437,
+          "delta_amplitude": -7.349105253347861e-12,
+          "mode_phase": 1.7532277686784574,
+          "offset_M": 0.2,
+          "omega": 0.13925738077157399,
+          "omega_circ_exact": 0.14007996709077705,
+          "omega_circ_gsl": 0.1400799670887121,
+          "state": [
+            3.2941020597307693,
+            44.5131057436052,
+            -0.07673446060352085,
+            2.2370474924503405
+          ],
+          "time_M": 137.79240346159577
+        }
+      ],
+      "original_stencil": {
+        "center": [
+          0.3730607697635001,
+          0.01025950293865408,
+          0.0031055979814502083,
+          0.0017086562265681124,
+          1.807569149090889,
+          -0.16583392089479387,
+          -0.0009591146972842366
+        ],
+        "first": [
+          0.00419852692502202,
+          0.0009977862327538863,
+          0.00034629384108968256,
+          0.00020270144690730588,
+          -0.27132608083176984,
+          -0.007130905182764282,
+          -0.00012662467728323445
+        ],
+        "second": [
+          0.0001824424085158001,
+          0.00016360962784031012,
+          6.095370467553495e-05,
+          3.693999974868207e-05,
+          -0.003797182706227752,
+          -0.0008146004761545865,
+          -2.527714890995032e-05
+        ]
+      }
+    },
+    "0.2": {
+      "counterfactual": {
+        "amplitude_matrix_condition": 56283.96419023887,
+        "amplitude_residual_linf": 1.6653345369377348e-16,
+        "amplitude_series_center_delta": [
+          -4.216043070167804e-12,
+          -1.1594493384722664e-13,
+          -3.5097056326060525e-14,
+          -1.930990559110672e-14
+        ],
+        "amplitude_series_first_delta": [
+          3.9047756870479835e-11,
+          1.0209076065514096e-12,
+          3.0638147273990886e-13,
+          1.6783752199255139e-13
+        ],
+        "amplitude_series_second_delta": [
+          -7.143130276173586e-10,
+          -1.9467865655976925e-11,
+          -5.884371570773544e-12,
+          -3.235137197045914e-12
+        ],
+        "coefficients": [
+          172.35253577742571,
+          -1478.0598714778826,
+          1655.9995996658647,
+          43.12240057131015,
+          -1098.3682340532716
+        ],
+        "phase_system_unchanged": true
+      },
+      "historical_coefficient_replay_linf": 1.0231815394945443e-11,
+      "historical_stencil_derivative_linf": 0.0,
+      "nodes": [
+        {
+          "amplitude": 0.37139590019192664,
+          "delta_amplitude": 5.68936191395537e-12,
+          "mode_phase": 1.9157975541736267,
+          "offset_M": -0.4,
+          "omega": 0.13795126272834934,
+          "omega_circ_exact": 0.13871814442221944,
+          "omega_circ_gsl": 0.1387181444238132,
+          "state": [
+            3.3222527728384152,
+            44.42994518602004,
+            -0.07472507620127745,
+            2.244908757080969
+          ],
+          "time_M": 137.19240346159577
+        },
+        {
+          "amplitude": 0.3722247066608462,
+          "delta_amplitude": -2.0537274833132562e-11,
+          "mode_phase": 1.8617586407201137,
+          "offset_M": -0.2,
+          "omega": 0.1383821238124479,
+          "omega_circ_exact": 0.13916690487322697,
+          "omega_circ_gsl": 0.13916690486746813,
+          "state": [
+            3.312934692881692,
+            44.45757845045049,
+            -0.07538026316019643,
+            2.2423085617318095
+          ],
+          "time_M": 137.3924034615958
+        },
+        {
+          "amplitude": 0.3730607697635001,
+          "delta_amplitude": -4.2160430701463784e-12,
+          "mode_phase": 1.807569149090889,
+          "offset_M": 0.0,
+          "omega": 0.13881747319267168,
+          "omega_circ_exact": 0.13962081145382654,
+          "omega_circ_gsl": 0.13962081145264313,
+          "state": [
+            3.303551522101145,
+            44.485298334765936,
+            -0.07604988969780438,
+            2.2396882389895514
+          ],
+          "time_M": 137.59240346159578
+        },
+        {
+          "amplitude": 0.37390413024137437,
+          "delta_amplitude": -7.349105253347861e-12,
+          "mode_phase": 1.7532277686784574,
+          "offset_M": 0.2,
+          "omega": 0.13925738077157399,
+          "omega_circ_exact": 0.14007996709077705,
+          "omega_circ_gsl": 0.1400799670887121,
+          "state": [
+            3.2941020597307693,
+            44.5131057436052,
+            -0.07673446060352085,
+            2.2370474924503405
+          ],
+          "time_M": 137.79240346159577
+        },
+        {
+          "amplitude": 0.3747548223193721,
+          "delta_amplitude": 1.7480102063081367e-11,
+          "mode_phase": 1.6987331711153548,
+          "offset_M": 0.4,
+          "omega": 0.13970191691695896,
+          "omega_circ_exact": 0.1405444773338148,
+          "omega_circ_gsl": 0.1405444773387315,
+          "state": [
+            3.2845850709681477,
+            44.5410015956384,
+            -0.07743450412901945,
+            2.2343860205135164
+          ],
+          "time_M": 137.99240346159579
+        }
+      ],
+      "original_stencil": {
+        "center": [
+          0.3730607697635001,
+          0.01025950293865408,
+          0.0031055979814502083,
+          0.0017086562265681124,
+          1.807569149090889,
+          -0.16583392089479387,
+          -0.0009591146972842366
+        ],
+        "first": [
+          0.004198527715324774,
+          0.00099778605899954,
+          0.0003462937672425134,
+          0.00020270139919383967,
+          -0.2713260805312405,
+          -0.007130904593879183,
+          -0.00012662463493127657
+        ],
+        "second": [
+          0.00018244795672179196,
+          0.00016360968663773235,
+          6.095371973635086e-05,
+          3.6940007076021215e-05,
+          -0.0037971825802364054,
+          -0.000814599840110013,
+          -2.527713564680621e-05
+        ]
+      }
+    }
+  },
+  "wheel_pin": {
+    "lal_version": "7.7.1",
+    "lalsimulation_version": "6.2.1",
+    "lalsuite_distribution": "7.26.15",
+    "liblalsimulation_sha256": "9046c4a673d2ba82b792f7b92d73203ba783b32fc604b5da1139c5c1bc8b3325",
+    "libraries_sha256": {
+      "libgsl.28.dylib": "1eefe0dbead9551d47be3c09bbf786c727f84df1331130ee8a03127b7a95abe8",
+      "libgslcblas.0.dylib": "00a30ab2e9eb5cd36caab9ae9a9975a8280b9b4c2940b15e446c34a151818230",
+      "liblal.20.dylib": "e4c4ed42baed00d30668588e58444f974e3deeda56ba4e5978624640ddb5bde7",
+      "liblalsimulation.37.dylib": "9046c4a673d2ba82b792f7b92d73203ba783b32fc604b5da1139c5c1bc8b3325"
+    },
+    "python_extension_sha256": "2de0af808b258bef03a3a13b15fa71038f48579f5f562e92ebd62c6b9769fd37",
+    "vcs_id": "2c00d8c200308422036d0a23b7c0394f7c73faad",
+    "vcs_tag": "lalsuite-v7.26.15"
+  }
+}
