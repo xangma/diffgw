@@ -1,0 +1,298 @@
+{
+  "baseline_cap": {
+    "jax": [
+      9.911372368439267,
+      0.0,
+      -0.0033067291293182753,
+      3.513326682456663
+    ],
+    "torch": [
+      9.911372368439267,
+      0.0,
+      -0.003306729129318471,
+      3.513326682456661
+    ]
+  },
+  "case": {
+    "cap_Momega": 0.03162277660168379,
+    "chi1": 0.8,
+    "chi2": 0.6,
+    "device": "cpu",
+    "dtype": "float64",
+    "frozen_state": [
+      9.911372368439267,
+      0.0,
+      -0.003306729129318275,
+      3.513326682456663
+    ],
+    "mass1": 30.0,
+    "mass2": 20.0,
+    "state_tangent_per_chi1": [
+      -0.09172725754528695,
+      0.0,
+      0.0006217988833867728,
+      -0.19013615595890498
+    ],
+    "target_Momega": 0.04
+  },
+  "crossing_source": {
+    "path": "dev/native_rom/evidence/2026-09-25/native_warm_full_crossing.json",
+    "sha256": "ac837a1a1be70ff18b753befeb1625534656fcf1cd901b370e0b6a24b9754ef4"
+  },
+  "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+  "diagnostic_checks_passed": true,
+  "elapsed_s": 31.986621292016935,
+  "gates": {
+    "all_roots_inside_frozen_last_interval": true,
+    "baseline_cap_to_frozen_abs_at_most": true,
+    "baseline_cap_torch_jax_abs_at_most": true,
+    "cap_fd_step_consistency_scaled_error_at_most": true,
+    "cap_fd_torch_jax_scaled_error_at_most_each": true,
+    "cap_tangent_fd_scaled_error_at_most_each": true,
+    "event_fd_step_consistency_scaled_error_at_most": true,
+    "event_fd_torch_jax_scaled_error_at_most_each": true,
+    "event_tangent_fd_scaled_error_at_most_each": true,
+    "finite": true,
+    "frequency_residual_abs_at_most": true,
+    "perturbed_cap_torch_jax_abs_at_most": true,
+    "perturbed_event_torch_jax_abs_at_most": true,
+    "positive_cap_radius": true
+  },
+  "host": "RONI2",
+  "input_sha256": {
+    "dev/native_rom/diagnose_jax_spliced_whole_waveform.py": "158c243e6909d26529cf5e976521793cd07821cd48662036a3c34182391f9d1c",
+    "dev/native_rom/diagnose_native_warm_full_crossing.py": "db8c3a90431fc89c882bbdffb997ecf905e01df0e4df738b6c48fcb7496322e6",
+    "dev/native_rom/diagnose_native_warm_full_mesh.py": "1d077b3cd3d8e49ca8bdee14d3957bdb62d2398c8aeb5ccb154226746dd26f46",
+    "dev/native_rom/diagnose_native_warm_full_tangent_segment.py": "74133398b2917d515f6a2884ef0fb9b2595c09921f4e6f9376f5d3e9abac714e",
+    "dev/native_rom/eob/jax/adaptive_driver_clean.py": "41691a243f3b1bf248443f679f8fd405eaeeb3de2d3e8d6800b03ba4b4c64ecf",
+    "dev/native_rom/eob/jax/initial_conditions_clean.py": "0ccc2251f72e6af696a8c35e08a0cc872dcac74b8904774dafdf8e416f21f382",
+    "dev/native_rom/eob/jax/source_calibration_hamiltonian.py": "8b5584002625479e667337076df59cb6a820e1cffc88a282071843e6d4e4c8a9",
+    "dev/native_rom/eob/torch/source_calibration_hamiltonian.py": "2b0ddccf6ba99d0157c0b624cf0c4e926713c96a736e22e1b6fe55bdbde1cdc2",
+    "dev/native_rom/eob/torch/warm_start.py": "a9818350b18ed04ca645edbf6af4c22760fc51eae540c12f38d171d99a675a20",
+    "src/jaxwave/approximants/eob/hamiltonian.py": "5bdcb51b0dccb5b91352d7e8697d1533e6f49ae2dba09526731cd9e4747a2118",
+    "src/jaxwave/approximants/eob/integrator.py": "f0e842e518cd05c94361038602a993c0ee9025b218490945fdb4021da9b64e46",
+    "src/jaxwave/approximants/eob/seobnrv4_flux.py": "47f9be36e6494708643afcdeb487a425c3e607a4c2f1ba730cbcf71ccba64287",
+    "src/torchwave/approximants/eob/adaptive_driver_clean.py": "2f5e1c3b8766b92340a6aafcdfbdc5fe6856a3e4390551abefda1e22b90dda7b",
+    "src/torchwave/approximants/eob/hamiltonian.py": "96febd6b3e0722802425f0e7490079d62869f2e63ac92c8db32e9063b5bc4b5b",
+    "src/torchwave/approximants/eob/initial_conditions.py": "520641e8c3037ea1aa6e947c7d9dd92c759333396103cb1d1fffc8aa5019137b",
+    "src/torchwave/approximants/eob/integrator.py": "4c643493086a06accfe7f8f5ff679e77a1015aeb03659b395b48cac09de91c65",
+    "src/torchwave/approximants/eob/seobnrv4_flux.py": "3136bb016cce21cdd9d636008fee1fa5472757fed4446dc899e0d31e70124c83"
+  },
+  "mesh_source": {
+    "path": "dev/native_rom/evidence/2026-09-25/native_warm_full_mesh.json",
+    "sha256": "2401e0258d09d0cc69207d91eea15e7fc0e0c42cd2c15520675b980be8ea8139"
+  },
+  "metrics": {
+    "baseline_cap_to_frozen_abs": 1.7763568394002505e-15,
+    "baseline_cap_torch_jax_abs": 1.7763568394002505e-15,
+    "cap_fd_step_consistency_scaled_error_max": 2.220445910472435e-10,
+    "cap_fd_torch_jax_scaled_error_max": 1.7763568394002505e-10,
+    "cap_tangent_fd_scaled_error_max": 4.217355631386255e-10,
+    "event_fd_step_consistency_scaled_error_max": 1.2407029436936558e-08,
+    "event_fd_torch_jax_scaled_error_max": 1.4562716801325034e-08,
+    "event_tangent_fd_scaled_error_max": 1.096508280128525e-08,
+    "frequency_residual_abs_max": 6.245004513516506e-17,
+    "perturbed_cap_torch_jax_abs_max": 1.2434497875801753e-14,
+    "perturbed_event_torch_jax_abs_max": 2.3021584638627246e-11
+  },
+  "perturbations": {
+    "0.0001": {
+      "finite_difference": {
+        "cap_fd_torch_jax_scaled_error": 6.217248937900877e-11,
+        "event_fd_torch_jax_scaled_error": 2.375310883777978e-09,
+        "jax_cap": [
+          -0.09172725774497792,
+          0.0,
+          0.0006217988845580273,
+          -0.1901361560840975
+        ],
+        "jax_cap_tangent_scaled_error": 1.9969097209138198e-10,
+        "jax_event": [
+          -0.09472647481523211,
+          0.0013647539989824,
+          -0.22563593397251225,
+          84.11724909791474
+        ],
+        "jax_event_tangent_scaled_error": 3.8173418629680704e-09,
+        "torch_cap": [
+          -0.09172725780715041,
+          0.0,
+          0.0006217988844149126,
+          -0.19013615614404955
+        ],
+        "torch_cap_tangent_scaled_error": 2.6186346147039075e-10,
+        "torch_event": [
+          -0.09472647480635032,
+          0.0013647540139140324,
+          -0.2256359339702918,
+          84.11724889811012
+        ],
+        "torch_event_tangent_scaled_error": 1.441946499607204e-09
+      },
+      "minus": {
+        "jax_cap": [
+          9.911381541024099,
+          0.0,
+          -0.0033067913102262213,
+          3.5133456960541354
+        ],
+        "jax_event": [
+          8.436040195605829,
+          -0.005525975382840397,
+          3.293485116737061,
+          419.21928464192007
+        ],
+        "jax_frequency_residual": 6.938893903907228e-18,
+        "jax_root_offset_M": 1.0131538364434538,
+        "spin": 0.7999,
+        "torch_cap": [
+          9.911381541024111,
+          0.0,
+          -0.003306791310226368,
+          3.513345696054145
+        ],
+        "torch_event": [
+          8.436040195605832,
+          -0.005525975382840832,
+          3.293485116737065,
+          419.2192846419431
+        ],
+        "torch_frequency_residual": 6.938893903907228e-18,
+        "torch_root_offset_M": 1.013153836466478
+      },
+      "plus": {
+        "jax_cap": [
+          9.91136319557255,
+          0.0,
+          -0.0033066669504493097,
+          3.5133076688229186
+        ],
+        "jax_event": [
+          8.436021250310866,
+          -0.005525702432040601,
+          3.2934399895502664,
+          419.23610809173965
+        ],
+        "jax_frequency_residual": 1.3877787807814457e-17,
+        "jax_root_offset_M": 1.0299772862630376,
+        "spin": 0.8001,
+        "torch_cap": [
+          9.91136319557255,
+          0.0,
+          -0.003306666950449485,
+          3.5133076688229163
+        ],
+        "torch_event": [
+          8.436021250310871,
+          -0.005525702432038049,
+          3.293439989550271,
+          419.2361080917227
+        ],
+        "torch_frequency_residual": 6.938893903907228e-18,
+        "torch_root_offset_M": 1.029977286246095
+      }
+    },
+    "1e-05": {
+      "finite_difference": {
+        "cap_fd_torch_jax_scaled_error": 1.7763568394002505e-10,
+        "event_fd_torch_jax_scaled_error": 1.4562716801325034e-08,
+        "jax_cap": [
+          -0.09172725796702251,
+          0.0,
+          0.0006217988765370996,
+          -0.1901361562639536
+        ],
+        "jax_cap_tangent_scaled_error": 4.217355631386255e-10,
+        "jax_event": [
+          -0.09472647528596666,
+          0.0013647539420184177,
+          -0.22563593404800739,
+          84.11724907944063
+        ],
+        "jax_event_tangent_scaled_error": 3.5977185229468072e-09,
+        "torch_cap": [
+          -0.09172725787820467,
+          0.0,
+          0.0006217988789440285,
+          -0.19013615608631793
+        ],
+        "torch_cap_tangent_scaled_error": 3.3291772116861296e-10,
+        "torch_event": [
+          -0.09472647439778824,
+          0.001364754018476355,
+          -0.22563593349289587,
+          84.11724785446495
+        ],
+        "torch_event_tangent_scaled_error": 1.096508280128525e-08
+      },
+      "minus": {
+        "jax_cap": [
+          9.911373285710434,
+          0.0,
+          -0.003306735347317344,
+          3.5133285838180406
+        ],
+        "jax_event": [
+          8.436031670434318,
+          -0.0055258525580827705,
+          3.2934648095495103,
+          419.22685515509914
+        ],
+        "jax_frequency_residual": -6.245004513516506e-17,
+        "jax_root_offset_M": 1.0207243496225067,
+        "spin": 0.7999900000000001,
+        "torch_cap": [
+          9.911373285710436,
+          0.0,
+          -0.0033067353473174134,
+          3.51332858381804
+        ],
+        "torch_event": [
+          8.436031670434303,
+          -0.005525852558082969,
+          3.293464809549504,
+          419.2268551551089
+        ],
+        "torch_frequency_residual": -6.938893903907228e-18,
+        "torch_root_offset_M": 1.020724349632281
+      },
+      "plus": {
+        "jax_cap": [
+          9.911371451165275,
+          0.0,
+          -0.0033067229113398133,
+          3.5133247810949153
+        ],
+        "jax_event": [
+          8.436029775904812,
+          -0.00552582526300393,
+          3.2934602968308293,
+          419.22853750008073
+        ],
+        "jax_frequency_residual": 0.0,
+        "jax_root_offset_M": 1.022406694604139,
+        "spin": 0.80001,
+        "torch_cap": [
+          9.911371451165278,
+          0.0,
+          -0.0033067229113398345,
+          3.5133247810949184
+        ],
+        "torch_event": [
+          8.436029775904816,
+          -0.0055258252630026,
+          3.293460296830834,
+          419.228537500066
+        ],
+        "torch_frequency_residual": 1.3877787807814457e-17,
+        "torch_root_offset_M": 1.022406694589369
+      }
+    }
+  },
+  "pid": 99465,
+  "plan_sha256": "c84999dd7bf66591a3a645d66e2fdf131e63643e1acd22d6dce4fd3155058356",
+  "release_qualified": false,
+  "schema": "diffgw.seobnrv4.native-warm-full-nonlinear-cap-fd.v1",
+  "script_sha256": "adfa943effe9aa1aac9299ee85894a1aa4f7c6a06dd188955dfde9d894761071",
+  "status": "diagnostic_complete"
+}

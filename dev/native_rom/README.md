@@ -3028,6 +3028,14 @@ state perturbation, so the nonlinear circular cap solve and adaptive
 controller decisions remain untested; no waveform-gradient or release claim
 follows.
 
+The [nonlinear cap finite-difference check](evidence/2026-09-25/native_warm_full_nonlinear_cap_fd.json)
+re-solves the circular cap state at both spin perturbations before following
+the same frozen mesh to `MΩ=0.04`. All 14 gates pass; the cap-state tangent
+agrees with centered finite differences to `4.22e-10` scaled error, and the
+event derivative agrees to `1.10e-8`. This covers one spin direction and
+one event branch. Adaptive-controller choices and full-waveform derivatives
+remain untested.
+
 The [warm trajectory comparison](evidence/2026-09-25/warm_jax_trajectory_divergence.json)
 finds Torch/JAX raw-mode relative L2 of `1.89e-12` on their separately
 integrated warm trajectories. The earlier attached-mode gap arose under
