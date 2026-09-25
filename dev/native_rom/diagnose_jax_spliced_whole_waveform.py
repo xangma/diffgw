@@ -190,7 +190,8 @@ def run(case_id, plan, public_identity, *, variant="published", anchor_control=F
     n_coarse = len(coarse.output_time)
     restart = (n_coarse - math.ceil(150 / dt) if (n_coarse - 1) * dt >= 150
                else n_coarse - math.ceil(n_coarse / 2))
-    fine_step = dt / 32
+    fine_refinement = numerical_settings.get("fine_refinement_factor", 32)
+    fine_step = dt / fine_refinement
     fine = integrate_adaptive(
         torch_field, coarse.output_state[restart], fine_step,
         t_end=max_duration, event=AlignedSpinV4Event("fine"),
@@ -200,7 +201,9 @@ def run(case_id, plan, public_identity, *, variant="published", anchor_control=F
         jax_field, initial_jax, output_step=dt,
         max_duration=max_duration, coarse_initial_step=dt,
         coarse_max_step=max_step, fine_max_step=max_step,
-        fine_refinement_factor=numerical_settings.get("jax_fine_refinement_factor"),
+        fine_refinement_factor=numerical_settings.get(
+            "jax_fine_refinement_factor",
+            numerical_settings.get("fine_refinement_factor")),
         atol=atol, rtol=rtol)
     print(case_id, "trajectories", len(fine.output_time), flush=True)
 
@@ -261,14 +264,14 @@ def run(case_id, plan, public_identity, *, variant="published", anchor_control=F
     jcoarse = jax_coarse_mode * jax_factor(
         jrun.coarse_state[:, 0], jrun.coarse_state[:, 2],
         jax_coarse_omega, jref.calibration.coefficients)
-    tsamples = _array(tref.mode)[::32]
-    jsamples = _array(jref.mode)[::32]
+    tsamples = _array(tref.mode)[::fine_refinement]
+    jsamples = _array(jref.mode)[::fine_refinement]
     tmode = np.concatenate((_array(tcoarse[:restart]), tsamples))
     jmode = np.concatenate((_array(jcoarse[:jrun.restart_index]), jsamples))
     ttime = np.concatenate((_array(coarse.output_time[:restart]),
-                            float(coarse.output_time[restart]) + output_time[::32]))
+                            float(coarse.output_time[restart]) + output_time[::fine_refinement]))
     jtime = np.concatenate((_array(jrun.coarse_time[:jrun.restart_index]),
-                            float(jrun.coarse_time[jrun.restart_index]) + output_time[::32]))
+                            float(jrun.coarse_time[jrun.restart_index]) + output_time[::fine_refinement]))
     if tmode.shape != jmode.shape or ttime.shape != jtime.shape:
         raise ValueError("Torch and JAX whole-waveform output charts differ")
     checks = {
@@ -300,6 +303,7 @@ def run(case_id, plan, public_identity, *, variant="published", anchor_control=F
         "host": platform.node(), "cwd": os.getcwd(), "pid": os.getpid(),
         "input": {"case_parameters": CASES[case_id], "coarse_output_step_M": dt,
                   "fine_output_step_M": fine_step, "fine_output_samples": fine_count,
+                  "fine_refinement_factor": fine_refinement,
                   "jax_fine_output_step_M": dt / jrun.refinement_factor,
                   "jax_fine_refinement_factor": jrun.refinement_factor,
                   "max_step_M": max_step, "atol": atol, "rtol": rtol},

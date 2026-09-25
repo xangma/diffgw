@@ -1255,6 +1255,21 @@ fine NQC input spacing change together, this experiment does not yet assign
 their individual contributions or establish release-grade numerical
 convergence.
 
+The [frozen fine-input isolation ladder](evidence/2026-09-25/jax_source_fine_input_plan.json)
+then fixes the whole output chart at `0.5 M` and refines only the fine
+pre-attachment trajectory/NQC input by factors 32, 64, and 128. Its
+[aligned-spin](evidence/2026-09-25/jax_source_fine_input_strong_aligned.json)
+and [q4](evidence/2026-09-25/jax_source_fine_input_q4_nonspinning.json)
+results pass per-level backend checks but **fail** the frozen `1e-5`
+self-convergence gate. From factors 64 to 128, Torch shared-sample complex
+relative L2 is `4.78e-5` and `3.31e-4`; JAX gives `4.90e-5` and
+`3.31e-4`. The factor 32-to-64 changes, `7.68e-3` and `8.02e-4`, nearly
+reproduce the corresponding cadence-ladder changes while the whole output
+chart and coarse restart are fixed. Fine input density therefore accounts
+for most of the observed cadence sensitivity on these two rows. The
+experiment still combines fine trajectory resampling with NQC spline input
+density and does not establish a converged source-faithful prescription.
+
 The [frozen anchor diagnostic](evidence/2026-09-25/source_spliced_anchor_plan.json)
 replays all four cases and fits each mode's own amplitude peak between output
 samples without optimizing a relative shift. The [results](evidence/2026-09-25/source_spliced_anchor.json)
