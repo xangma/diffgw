@@ -483,6 +483,22 @@ def test_aligned_effective_hamiltonian_against_reference(m1, m2, s1, s2, r, pr_s
     assert float(actual) == pytest.approx(float(expected), rel=2e-12, abs=2e-13)
 
 
+@pytest.mark.parametrize("m1,m2,s1,s2,r,pphi", [
+    (30., 20., 0., 0., 8., 3.2),
+    (30., 20., .6, -.2, 9., 3.),
+    (45., 5., -.8, .3, 7., 2.6),
+    (20., 20., -.9, .7, 12., 3.5),
+    (40., 10., .9, .85, 10., 3.8),
+])
+def test_zero_radial_aligned_hamiltonian_against_reference(m1, m2, s1, s2, r, pphi):
+    """Check the published equatorial value without the tortoise quartic."""
+    n, _, _ = body_parameters(m1, m2, s1, s2)
+    ham = SEOBNRv4Hamiltonian(scalar(n), scalar(s1), scalar(s2))
+    expected = aligned_effective_hamiltonian(m1, m2, s1, s2, r, 0., pphi)
+    actual = ham.effective_hamiltonian(scalar(r), scalar(0.), scalar(pphi))
+    assert float(actual) == pytest.approx(float(expected), rel=2e-12, abs=2e-13)
+
+
 @pytest.mark.parametrize("m1,m2,s1,s2,omega", [
     (30., 20., 0., 0., .04),
     (30., 20., .2, -.1, .04),

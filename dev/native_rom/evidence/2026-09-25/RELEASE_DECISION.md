@@ -63,7 +63,7 @@ frozen before intake; this reservation does not turn the failing current
 candidate into a qualified one.
 
 The [source specification](../../reference/SPEC.md) remains incomplete: six
-of 42 manifest components are `pending`, including flux, QNM interpolation,
+of 43 manifest components are `pending`, including flux, QNM interpolation,
 ODE initial conditions, TD/FD conventions, and the ROM construction. The
 published model does not supply independently derived ROM bases and spline
 tables, and no qualified generator/training set or independent ROM holdout

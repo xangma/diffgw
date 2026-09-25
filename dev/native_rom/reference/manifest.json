@@ -93,6 +93,15 @@
       "test": "dev/native_rom/reference/tests/test_published.py:test_effective_spin_mapping_limits_and_exchange; dev/native_rom/reference/tests/test_torch.py:test_effective_spin_mapping_against_reference; dev/native_rom/reference/tests/test_jax.py:test_effective_spin_mapping_against_reference"
     },
     {
+      "id": "V4-HAM-EQUATORIAL-PR0",
+      "source": "bohe-2017-v3, Eqs. (2)-(3), (25), (29)-(31); Barausse and Buonanno 0912.3517v2, Eqs. (161)-(164); Pan et al. 1202.0790v2, Eqs. (14)-(15)",
+      "status": "executable",
+      "reference": "hamiltonian.aligned_effective_hamiltonian with p_r_star=0 at supplied r,p_phi",
+      "torch": "src/torchwave/approximants/eob/seobnrv4_hamiltonian.py:SEOBNRv4Hamiltonian.effective_hamiltonian",
+      "jax": "src/jaxwave/approximants/eob/seobnrv4_hamiltonian.py:SEOBNRv4Hamiltonian.effective_hamiltonian",
+      "test": "dev/native_rom/reference/tests/test_published.py:test_aligned_effective_hamiltonian_symmetries_and_nonspin_limit; dev/native_rom/reference/tests/test_torch.py:test_zero_radial_aligned_hamiltonian_against_reference; dev/native_rom/reference/tests/test_jax.py:test_zero_radial_aligned_hamiltonian_against_reference"
+    },
+    {
       "id": "V4-HAM-ALIGNED",
       "source": "bohe-2017-v3, Sec. II A; Barausse and Buonanno 0912.3517v2, Eqs. (161)-(164); Taracchini et al. 1311.2544v1, effective-one-body model paragraph",
       "status": "conditional",

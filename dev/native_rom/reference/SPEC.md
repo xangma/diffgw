@@ -66,7 +66,7 @@ terms are those of the [author release](https://zenodo.org/records/14999310).
 ## Mathematics and components
 
 The [component manifest](manifest.json) is the authoritative mapping of all
-42 stable component IDs to pinned equations, reference functions, native
+43 stable component IDs to pinned equations, reference functions, native
 frontends, tests, and current implementation status. In composition, the
 initial conditions feed the aligned-spin Hamiltonian and mode-summed flux
 into the orbital ODE; its pre-NQC `(2,2)` mode is corrected at the amplitude
@@ -76,6 +76,7 @@ trained basis, parameter interpolation, or holdout definition yet.
 | Component ID/version | Source | Status | Scalar reference | Torch/JAX | Main blocker |
 | --- | --- | --- | --- | --- | --- |
 | `V4-HAM-RADIAL` / 0.8.11 | Bohé Eqs. (2)–(3); Steinhoff Appendix A | executable | `hamiltonian.radial_potentials` | `SEOBNRv4Hamiltonian.deformed_kerr_potentials` | Historical derivative convention differs from paper form |
+| `V4-HAM-EQUATORIAL-PR0` / 0.8.11 | Bohé Eqs. (2)–(3), (25), (29)–(31); Barausse–Buonanno Eqs. (161)–(164) | executable | `hamiltonian.aligned_effective_hamiltonian` at supplied `r,p_phi`, `p_r*=0` | `SEOBNRv4Hamiltonian.effective_hamiltonian` | Paper-value check only; historical derivative convention and orbit dynamics remain open |
 | `V4-FLUX-NORM-9` / 0.8.11 | Bohé Eq. (9); Pan mode sum | executable | `flux.emitted_flux` | `energy_flux_from_modes`; `emitted_flux_from_modes` | Supplied pre-NQC positive-`m` modes only; full torque is `V4-FLUX-4-9` |
 | `V4-NQC-7` / 0.8.11 | Bohé Eq. (7) and peak fits | conditional | `nqc.match_22` | Manifest-linked NQC modules | Historical fit differentiation and source/wheel inputs |
 | `V4-RD-PEAK-CONTINUATION` / 0.8.11 | Bohé Eqs. (10), (12)–(14); pinned historical LAL ringdown source, Eqs. (57)–(58) of T1600383 | conditional | `ringdown.peak_preserving_shape` | `seobnrv4_peak_preserving_shape` | Historical rule integrated; domain-wide waveform validation remains open |
@@ -130,6 +131,14 @@ eight identical states is documented in the
 
 `hamiltonian.energy_map` checks Bohé Eq. (1), including the distinction
 between the total real energy and reduced-mass-normalized binding energy.
+`V4-HAM-EQUATORIAL-PR0` composes the paper-derived aligned-spin metric and
+spin terms at supplied `r,p_phi` with `p_r*=0`. The disputed tortoise quartic
+vanishes there. Five zero-radial-momentum rows per frontend compare against
+the independent scalar reference across unequal and equal masses, zero and
+mixed spins, and varying radius and angular momentum. This is a value check
+on supplied states, not a circular-orbit solution or a test of derivatives,
+evolution, or historical-source fidelity; the source's radial-log derivative
+choice remains different even at zero radial momentum.
 `hamiltonian.nonspinning_effective_hamiltonian` also checks the deformed-metric
 orbital Hamiltonian and 3PN tortoise-momentum quartic term at zero spin,
 including the exact Schwarzschild test-mass limit. Its finite-mass-ratio
