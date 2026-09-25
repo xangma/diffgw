@@ -1,0 +1,20 @@
+{
+  "schema": "diffgw.seobnrv4.jax-nqc-fixed-combined-plan.v1",
+  "release_qualified": false,
+  "source_head": "19a4e44",
+  "case": "high_start_mixed_spin",
+  "output_step_M": 0.5,
+  "fine_refinement_factor": 32,
+  "adaptive_atol": 1e-10,
+  "adaptive_rtol": 1e-9,
+  "method": "On one fixed fine state and published base mode, compare eager/JIT construction of the combined NQC amplitude/basis product array. Then pass the exact eager combined array to separately eager and JIT barrier-spline row evaluations and the unchanged equilibrated amplitude solve. Compare coefficient changes with fixed combined input versus changed combined input.",
+  "gates": {
+    "max_fixed_combined_amplitude_coefficient_absolute_error": 1e-9,
+    "max_fixed_rows_amplitude_coefficient_absolute_error": 1e-9
+  },
+  "operational_limits": {
+    "max_wall_time_s": 300,
+    "max_rss_gib": 32
+  },
+  "interpretation": "This is attribution, not a source-preserving whole-waveform candidate. Any pass remains development-only until source, whole-waveform, AD/FD, multi-case and physical gates pass."
+}

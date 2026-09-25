@@ -332,10 +332,27 @@ worktree as PID `66594`, command
 `PYTHONPATH=src:. /Users/xangma/repos/diffgw/.venv/bin/python -m dev.native_rom.diagnose_jax_nqc_stable_spline`,
 log `/tmp/diffgw-jax-nqc-stable-spline.log`, and completed in 8.8 seconds
 with exit code 1 for the frozen fixed-input gate. No process or next check
-remains. The next narrow attribution is to supply an identical precomputed
-NQC basis/product array directly to both spline executions, then inspect the
-matching rows and solve separately; no whole-path claim follows from this
-negative control.
+remains. The follow-on control below supplied an identical precomputed NQC
+basis/product array directly to both spline executions; no whole-path claim
+follows from this negative control.
+
+The [frozen fixed-combined attribution](jax_nqc_fixed_combined_plan.json)
+and [result](jax_nqc_fixed_combined.json) now isolate the input to that
+spline. Passing the exact same precomputed combined amplitude/basis-product
+array into eager and JIT spline calls gives bit-identical matching value,
+first-derivative, and second-derivative rows; the unchanged amplitude solve
+also returns bit-identical coefficients. Separately constructing the combined
+array from identical state, frequency, and base-mode inputs changes it by at
+most `1.39e-17` absolute (`2.73e-18` relative L2), and this produces the
+`2.78e-7` amplitude-coefficient change. Therefore the fixed-input NQC failure
+enters during the basis/product-array construction and is amplified by the
+matching problem; the data do not yet isolate which individual basis
+operation differs. This control is an attribution pass, not a source-
+preserving whole-waveform repair or release pass. It ran on RONI2 in this
+worktree as PID `70178`, command
+`PYTHONPATH=src:. /Users/xangma/repos/diffgw/.venv/bin/python -m dev.native_rom.diagnose_jax_nqc_fixed_combined`,
+log `/tmp/diffgw-jax-nqc-fixed-combined.log`, and completed in 8.3 seconds
+with exit code 0. No process or next check remains.
 
 Two different release claims must stay separate:
 
