@@ -1,0 +1,75 @@
+{
+  "case_id": "q4_nonspinning",
+  "checks": {
+    "both_stages_terminate_at_event": true,
+    "coarse_event_time_abs_M_at_most": true,
+    "fine_event_time_abs_M_at_most": true,
+    "restart_index_equal": true,
+    "restart_state_max_abs_at_most": true,
+    "spliced_state_max_abs_at_most": true,
+    "step_counts_equal": true
+  },
+  "comparison": {
+    "coarse_event_time_abs_M": 2.930335085693514e-09,
+    "fine_event_time_abs_M": 8.705484333404456e-09,
+    "restart_state_max_abs": 1.509903313490213e-14,
+    "spliced_samples": 786,
+    "spliced_state_max_abs": 1.1960987755799124e-12
+  },
+  "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+  "diagnostic_checks_passed": true,
+  "elapsed_s": 28.73460291599622,
+  "host": "RONI2",
+  "input": {
+    "atol": 1e-10,
+    "chi1": 0.0,
+    "chi2": 0.0,
+    "initial_state": [
+      8.549904874005977,
+      0.0,
+      -0.005709858759949426,
+      3.5920610434697293
+    ],
+    "mass1": 40.0,
+    "mass2": 10.0,
+    "max_step_M": 2.0,
+    "omega_start": 0.04,
+    "output_step_M": 0.5,
+    "rtol": 1e-09
+  },
+  "jax": {
+    "coarse": {
+      "accepted": 220,
+      "rejected": 14,
+      "termination": "event",
+      "time_M": 392.1658305357163
+    },
+    "fine": {
+      "accepted": 104,
+      "rejected": 13,
+      "termination": "event",
+      "time_M": 150.42175067579203
+    },
+    "restart_index": 485
+  },
+  "pid": 28442,
+  "release_qualified": false,
+  "schema": "diffgw.seobnrv4.jax-two-stage-physical-trajectory.v1",
+  "scope": "Same initial state and published equations; coarse/fine adaptive trajectory before NQC and attachment",
+  "status": "diagnostic_complete",
+  "torch": {
+    "coarse": {
+      "accepted": 220,
+      "rejected": 14,
+      "termination": "event",
+      "time_M": 392.16583053278595
+    },
+    "fine": {
+      "accepted": 104,
+      "rejected": 13,
+      "termination": "event",
+      "time_M": 150.42175066708654
+    },
+    "restart_index": 485
+  }
+}

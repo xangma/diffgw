@@ -1,0 +1,75 @@
+{
+  "case_id": "strong_antialigned",
+  "checks": {
+    "both_stages_terminate_at_event": true,
+    "coarse_event_time_abs_M_at_most": true,
+    "fine_event_time_abs_M_at_most": true,
+    "restart_index_equal": true,
+    "restart_state_max_abs_at_most": true,
+    "spliced_state_max_abs_at_most": true,
+    "step_counts_equal": true
+  },
+  "comparison": {
+    "coarse_event_time_abs_M": 9.752056939760223e-10,
+    "fine_event_time_abs_M": 1.1022507351299282e-09,
+    "restart_state_max_abs": 3.410605131648481e-13,
+    "spliced_samples": 1737,
+    "spliced_state_max_abs": 2.7320368189975852e-12
+  },
+  "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+  "diagnostic_checks_passed": true,
+  "elapsed_s": 48.981502083013766,
+  "host": "RONI2",
+  "input": {
+    "atol": 1e-10,
+    "chi1": -0.8,
+    "chi2": -0.6,
+    "initial_state": [
+      11.852621250368069,
+      0.0,
+      -0.0031402450182692844,
+      4.1651283097294804
+    ],
+    "mass1": 30.0,
+    "mass2": 20.0,
+    "max_step_M": 2.0,
+    "omega_start": 0.025,
+    "output_step_M": 0.5,
+    "rtol": 1e-09
+  },
+  "jax": {
+    "coarse": {
+      "accepted": 463,
+      "rejected": 16,
+      "termination": "event",
+      "time_M": 867.881286461151
+    },
+    "fine": {
+      "accepted": 110,
+      "rejected": 17,
+      "termination": "event",
+      "time_M": 150.4399249390303
+    },
+    "restart_index": 1436
+  },
+  "pid": 28442,
+  "release_qualified": false,
+  "schema": "diffgw.seobnrv4.jax-two-stage-physical-trajectory.v1",
+  "scope": "Same initial state and published equations; coarse/fine adaptive trajectory before NQC and attachment",
+  "status": "diagnostic_complete",
+  "torch": {
+    "coarse": {
+      "accepted": 463,
+      "rejected": 16,
+      "termination": "event",
+      "time_M": 867.8812864601758
+    },
+    "fine": {
+      "accepted": 110,
+      "rejected": 17,
+      "termination": "event",
+      "time_M": 150.43992493792805
+    },
+    "restart_index": 1436
+  }
+}

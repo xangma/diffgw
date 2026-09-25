@@ -926,8 +926,8 @@ plunge event, and a short physical v4 EOB trajectory against Torch. Natural
 cubic resampling of those accepted knots agrees with Torch on both analytic
 and physical rows. A frozen accepted mesh can be replayed under JIT and
 differentiated pathwise. The Python-loop adaptive controller itself is not
-JIT-compatible or differentiable; coarse/fine restarts, NQC, and merger
-attachment are still absent from this JAX route.
+JIT-compatible or differentiable; NQC and merger attachment are still absent
+from the JAX adaptive route.
 This component does not change the release status or enable the JAX
 `numerical_compatibility` option.
 
@@ -944,6 +944,21 @@ and [prospective results](evidence/2026-09-25/jax_adaptive_physical_event_q4_non
 establish same-input solver/event parity over these cases. Fine restarts,
 NQC, merger attachment, independently sourced physical accuracy, and
 domain-wide numerical convergence remain open.
+
+A separate [frozen coarse/fine campaign](evidence/2026-09-25/jax_two_stage_physical_plan.json)
+uses the [development-only two-stage trajectory](eob/jax/two_stage_trajectory.py)
+on the same four physical cases. It retains the orbital phase from the coarse
+restart state, integrates the fine accepted-state event on a local clock,
+and splices the natural-cubic fine output to the coarse grid. All four
+[pilot](evidence/2026-09-25/jax_two_stage_physical_high_start_mixed_spin.json)
+and prospective results ([q=4](evidence/2026-09-25/jax_two_stage_physical_q4_nonspinning.json),
+[aligned](evidence/2026-09-25/jax_two_stage_physical_strong_aligned.json),
+[antialigned](evidence/2026-09-25/jax_two_stage_physical_strong_antialigned.json))
+have matching restart indices and accepted/rejected step counts in both stages.
+The maximum fine-event difference is `8.71e-9 M`; the maximum spliced-state
+difference is `1.12e-11`. This establishes same-input trajectory parity
+for these settings, not NQC calibration, merger attachment, independent
+source fidelity, numerical convergence, or waveform release qualification.
 
 The published construction uses SVD bases and tensor-product cubic splines for
 parameter coefficients, as described by
