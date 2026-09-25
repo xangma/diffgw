@@ -2973,6 +2973,13 @@ retains a zero-substep API failure. The passing probe validates one local
 fixed-mesh event derivative and excludes adaptive-controller decisions,
 nonlinear cap-solver perturbations, the full `MΩ=0.04` start, and waveform
 gradients.
+The [detached full-target mesh](evidence/2026-09-25/native_warm_full_mesh.json)
+reaches `MΩ=0.04` from the frozen cap state in 123 accepted steps (four
+rejected), brackets the event at `418.2061–422.1345 M`, and passes all ten
+mesh validity gates. Its 122 pre-crossing intervals fit eight bounded
+checkpoint segments. This freezes one baseline adaptive mesh for subsequent
+derivative checks; it does not validate the full-target tangent or the
+adaptive-controller derivative.
 
 The [warm trajectory comparison](evidence/2026-09-25/warm_jax_trajectory_divergence.json)
 finds Torch/JAX raw-mode relative L2 of `1.89e-12` on their separately
@@ -2983,7 +2990,8 @@ reduces it to `2.43e-10`, and a
 reduces it to `2.29e-15` over 15269 attached samples, with identical boundary
 time and index. The latter retains its [failed preflight predecessor](evidence/2026-09-25/warm_jax_source_attachment_control_failure.json)
 for audit. These isolate attachment-backend agreement under matched inputs;
-they do not yet validate independent whole-waveform evolution or gradients.
+they do not by themselves validate independent whole-waveform evolution or
+gradients.
 The [historical ODE boundary replay](evidence/2026-09-25/warm_jax_ode_boundary_control_v2.json)
 reproduces the historical phase coefficients and injected ringdown frequency
 exactly on matched warm arrays. Torch/JAX whole attached-mode L2 is
@@ -2999,6 +3007,15 @@ boundary frequency then replay exactly; Torch/JAX whole attached-mode L2 is
 `3.38e-15` on the same 15269 samples. The hooks are instrumented in the
 result and do not alter production attachment. This validates matched-input
 backend parity, not independently evolved whole waveforms.
+The [independently evolved cap-row replay](evidence/2026-09-25/warm_jax_independent_cap.json)
+uses separate Torch and JAX coarse/fine trajectories and raw modes, then
+applies identical historical ODE NQC and boundary-frequency controls through
+development-only hooks. All 22 checks pass: fine own-state raw-mode relative
+L2 is `6.31e-13`, the 2002-sample assembled whole-waveform L2 is
+`6.00e-13`, and the 1197-sample cropped L2 is `6.85e-13`. Both backends crop
+at `402.5 M`. This establishes backend parity for one refined cap row under
+matched controls; it does not resolve the native-versus-source phase residual,
+validate an independent domain, or qualify the model against NR.
 
 1. Qualify the physical generator against the published equations and independent
    references over the intended domain, resolve convention/provenance gaps, and

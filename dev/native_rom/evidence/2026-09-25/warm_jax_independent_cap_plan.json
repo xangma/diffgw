@@ -1,0 +1,104 @@
+{
+  "cap_state": [
+    9.911372368439267,
+    0.0,
+    -0.003306729129318471,
+    3.513326682456661
+  ],
+  "gates": {
+    "historical_control_max_abs": 1e-09,
+    "initial_field_max_abs": 1e-12,
+    "initial_state_max_abs": 1e-12,
+    "nqc_coefficient_max_abs": 1e-08,
+    "own_state_raw_l2": 1e-08,
+    "same_state_raw_l2": 1e-10,
+    "time_max_abs_M": 1e-12,
+    "whole_mode_l2": 1e-08
+  },
+  "historical": {
+    "boundary_index": 8848,
+    "frequency": 0.4295289163751951,
+    "match_time_local_M": 138.26384381092365,
+    "phase_coefficients": [
+      35.55173885729564,
+      -796.9351089427249
+    ],
+    "whole_end_M": 1000.5,
+    "whole_samples": 2002
+  },
+  "inputs": {
+    "amplitude_helper": {
+      "path": "dev/native_rom/diagnose_source_aligned_ode_chain_amplitude_v2.py",
+      "sha256": "c3460f910c186f3fdf2e2c51084990198d314ba6d6eeacfd3592663b9e1cecef"
+    },
+    "cap_crop_runner": {
+      "path": "dev/native_rom/diagnose_source_aligned_native_cap_full_crop_v5.py",
+      "sha256": "fef27b40d0e3cfb714b5fb772da971368fa3f9d61adc14acee6d0bea7870c0f8"
+    },
+    "cap_v5": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_native_cap_full_crop_v5.json",
+      "sha256": "2c167f1a06faff7734c3a45896d829447969b99a326c9515852b0b7b4d7c9ef3"
+    },
+    "cap_v5_plan": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_native_cap_full_crop_v5_plan.json",
+      "sha256": "10bf7884a18d5ae19b6a2b69863918efdc1f859497162d67c82207cd8047d268"
+    },
+    "driver": {
+      "path": "dev/native_rom/diagnose_jax_spliced_whole_waveform.py",
+      "sha256": "158c243e6909d26529cf5e976521793cd07821cd48662036a3c34182391f9d1c"
+    },
+    "jax_attachment": {
+      "path": "dev/native_rom/eob/jax/numerical_attachment_clean.py",
+      "sha256": "4b74f667792fff4d8a5266bbe198550d014c17f30449c9c2f9e56480c950ccc1"
+    },
+    "jax_two_stage": {
+      "path": "dev/native_rom/eob/jax/two_stage_trajectory.py",
+      "sha256": "5671c29f62fb4e5f3177afe6b8048a9464884565e2a99a8b26848a1ec66f347e"
+    },
+    "matched_v3": {
+      "path": "dev/native_rom/evidence/2026-09-25/warm_jax_ode_boundary_control_v3.json",
+      "sha256": "3272496e65526c2e145f581553373e1543ebae925edd1ddd0b8ab80ec3faaa83"
+    },
+    "phase_matrix_helper": {
+      "path": "dev/native_rom/diagnose_source_aligned_ode_chain_phase_matrix.py",
+      "sha256": "654ce386c98094f17c8b14bfdf2fdb9db2e70d112c1c4524943cd3745d41ad1a"
+    },
+    "phase_rhs_helper": {
+      "path": "dev/native_rom/diagnose_source_aligned_ode_chain_phase_rhs.py",
+      "sha256": "b789eedb4eacf29500253999d1d0bb68e8e8591f661b8025592c50ae1d1114ff"
+    },
+    "torch_attachment": {
+      "path": "src/torchwave/approximants/eob/numerical_attachment.py",
+      "sha256": "8c7a149b76c529a255a4caa4b0ca76317b5306c8967db84047f299ccf51be7fc"
+    }
+  },
+  "limitations": [
+    "One strong-aligned cap row and one refined tolerance level; no independent holdout or NR qualification.",
+    "Identical source-aligned ODE NQC controls and boundary frequency are injected by dev-only hooks; this isolates independently evolved dynamics/raw modes from calibration-control differences.",
+    "Torch discrete final-h22 crop index defines the common post-crop comparison chart; independent JAX crop index is reported and gated separately."
+  ],
+  "purpose": "Independent Torch/JAX refined cap-row dynamics/raw modes and whole assembled h22 under identical historical Torch Hermite/ODE NQC controls and boundary frequency.",
+  "release_qualified": false,
+  "row_tuple": [
+    30.0,
+    20.0,
+    0.8,
+    0.6,
+    0.04
+  ],
+  "schema": "diffgw.seobnrv4.warm-jax-independent-cap-plan.v1",
+  "script_sha256": "35892326f1b72cb6a62e95a5e0618c89cf586336ba65b20377118ccd50816ea0",
+  "settings": {
+    "atol": 1e-11,
+    "coarse_output_step_M": 0.5,
+    "fine_refinement_factor": 32,
+    "max_duration_M": 1000.0,
+    "max_step_M": 2.0,
+    "rtol": 1e-10
+  },
+  "watchdog": {
+    "kill_grace_seconds": 10,
+    "rss_gib_stop_threshold": 8,
+    "wall_seconds": 240
+  }
+}
