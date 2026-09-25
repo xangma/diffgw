@@ -20,7 +20,10 @@ from dev.native_rom.reference.ringdown import h22, peak_preserving_shape
 from dev.native_rom.reference.remnant import final_mass_fraction, final_spin_projection
 from dev.native_rom.reference.qnm import (
     BERTI_AUTHOR_220_SAMPLES, COOK_AUTHOR_220_SAMPLES,
-    COOK_AUTHOR_COUNTERROTATING_SAMPLES,
+    COOK_AUTHOR_COUNTERROTATING_SAMPLES, native_signed_220_spline,
+)
+from diffgw_core.kerr_qnm_220_data import (
+    KNOTS_220, COEFFS_220, KNOTS_2M20, COEFFS_2M20,
 )
 from jaxwave.approximants.kerr_qnm_interp import evaluate_kerr_qnm_220
 from jaxwave.approximants.eob.merger_ringdown import (
@@ -401,3 +404,13 @@ def test_counterrotating_qnm_against_cook_author_data(spin, frequency, damping):
     actual_frequency, actual_damping = evaluate_kerr_qnm_220(scalar(spin))
     assert float(actual_frequency) == pytest.approx(frequency, rel=0, abs=1e-10)
     assert float(actual_damping) == pytest.approx(damping, rel=0, abs=1e-10)
+
+
+@pytest.mark.parametrize("spin", [-1.0, -0.9995, -0.6, -0.2, 0.0,
+                                  0.34, 0.8, 0.999540793009, 1.0])
+def test_signed_qnm_native_spline_against_scalar_reference(spin):
+    expected = native_signed_220_spline(
+        spin, KNOTS_220, COEFFS_220, KNOTS_2M20, COEFFS_2M20)
+    actual = evaluate_kerr_qnm_220(scalar(spin))
+    for value, reference in zip(actual, expected):
+        assert float(value) == pytest.approx(float(reference), rel=0, abs=2e-12)

@@ -361,6 +361,16 @@
       "condition": "The printed analytic fit only diagnoses scale and convention. Three moderate-spin Berti archive values check native equation solves to 1e-9. A prospective full-table check of independent Cook author data covers all 2,026 rows within the native |j| <= 0.9999 signed-spin domain: Torch and JAX agree with those rows within 9.6e-13. This checks sampled-domain physical QNM values, not a continuous interpolation bound or waveform accuracy. Berti's older j=0.9999 value differs from the later Cook-validated root. The pinned LAL source identifies the historical 107-knot GSL spline; neither author source alone reproduces it."
     },
     {
+      "id": "V4-QNM-NATIVE-220-SPLINE",
+      "source": "bohe-2017-v3, Sec. II.C and Appendix B; Berti et al. (2006), Appendix E and author archive l2.tar.gz/n1l2m2.dat; Cook (2019) author archive KerrQNM_00.h5",
+      "status": "conditional",
+      "reference": "qnm.native_signed_220_spline with caller-supplied native knots and control pairs",
+      "torch": "src/torchwave/approximants/kerr_qnm_interp.py:evaluate_kerr_qnm_220",
+      "jax": "src/jaxwave/approximants/kerr_qnm_interp.py:evaluate_kerr_qnm_220",
+      "test": "dev/native_rom/reference/tests/test_qnm.py:test_native_signed_spline_uses_degree_five_and_both_branches; dev/native_rom/reference/tests/test_qnm.py:test_native_signed_spline_against_berti_author_rows; dev/native_rom/reference/tests/test_qnm.py:test_native_signed_spline_against_cook_author_rows; dev/native_rom/reference/tests/test_qnm.py:test_native_signed_spline_clamps_to_signed_frontend_domain; dev/native_rom/reference/tests/test_torch.py:test_signed_qnm_native_spline_against_scalar_reference; dev/native_rom/reference/tests/test_jax.py:test_signed_qnm_native_spline_against_scalar_reference",
+      "condition": "This specifies diffGW's signed-spin degree-five spline in -log(1-|j|), with a frontend clamp at |j|=0.9999 and caller-supplied native control points. It is not the historical SEOBNRv4 107-knot GSL natural cubic. The scalar test checks sparse pinned Berti/Cook author rows, both branches, interpolation arithmetic, and Torch/JAX at selected spins. The separately frozen 2026-row Cook gate in evidence/2026-09-25/qnm_cook_domain.json measures native-vs-author error below 9.6e-13 on sampled supported rows; it establishes neither a continuous error bound nor historical or whole-waveform compatibility. The reference module imports no third-party or production coefficient table."
+    },
+    {
       "id": "V4-REMNANT-SPIN-CHOICE",
       "source": "bohe-2017-v3, Sec. II.C; Hofmann et al. (2016), Table 1",
       "status": "conditional",
@@ -385,6 +395,16 @@
       "jax": "src/jaxwave/approximants/eob/initial_conditions.py:find_quasicircular_initial_conditions",
       "test": "dev/native_rom/reference/tests/test_torch.py:test_leading_adiabatic_initial_state_against_scalar_reference; dev/native_rom/reference/tests/test_jax.py:test_leading_adiabatic_initial_state_against_scalar_reference",
       "condition": "Uses a supplied torque; neither the full 35-mode torque nor the historical SEOBNRv4 initial-data procedure is established by this check."
+    },
+    {
+      "id": "V4-ODE-RHS-PR0",
+      "source": "bohe-2017-v3, Sec. II.2; Buonanno--Damour gr-qc/0001013v2, Eqs. (24)--(27); Pan et al. 0912.3466v2, Eq. (28)",
+      "status": "conditional",
+      "reference": "orbital_ode.zero_radial_vector_field at supplied p_r_star=0, r, phi, p_phi, and angular torque",
+      "torch": "src/torchwave/approximants/eob/integrator.py:EOBTrajectoryIntegrator.vector_field with SEOBNRv4Hamiltonian and supplied torque",
+      "jax": "src/jaxwave/approximants/eob/integrator.py:EOBTrajectoryIntegrator.vector_field with SEOBNRv4Hamiltonian and supplied torque",
+      "test": "dev/native_rom/reference/tests/test_orbital_ode.py:test_zero_radial_vector_field_against_paper_reference",
+      "condition": "Four supplied zero-radial-momentum states, including varied masses, spins, radii, angular momentum, and irrelevant orbital phase, compare all four vector-field components with an independently differentiated high-precision scalar Hamiltonian at 2e-10 relative / 2e-12 absolute. The angular torque is supplied and the radial dissipative force is zero. This does not test the 35-mode physical torque, nonzero-radial dynamics, initial-data root, integration, events, numerical convergence, or the historical radial-log derivative convention. The aggregate V4-ODE-IC remains pending."
     },
     {
       "id": "V4-ODE-IC",

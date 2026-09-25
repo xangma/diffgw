@@ -66,7 +66,7 @@ terms are those of the [author release](https://zenodo.org/records/14999310).
 ## Mathematics and components
 
 The [component manifest](manifest.json) is the authoritative mapping of all
-43 stable component IDs to pinned equations, reference functions, native
+45 stable component IDs to pinned equations, reference functions, native
 frontends, tests, and current implementation status. In composition, the
 initial conditions feed the aligned-spin Hamiltonian and mode-summed flux
 into the orbital ODE; its pre-NQC `(2,2)` mode is corrected at the amplitude
@@ -80,7 +80,9 @@ trained basis, parameter interpolation, or holdout definition yet.
 | `V4-FLUX-NORM-9` / 0.8.11 | Bohé Eq. (9); Pan mode sum | executable | `flux.emitted_flux` | `energy_flux_from_modes`; `emitted_flux_from_modes` | Supplied pre-NQC positive-`m` modes only; full torque is `V4-FLUX-4-9` |
 | `V4-NQC-7` / 0.8.11 | Bohé Eq. (7) and peak fits | conditional | `nqc.match_22` | Manifest-linked NQC modules | Historical fit differentiation and source/wheel inputs |
 | `V4-RD-PEAK-CONTINUATION` / 0.8.11 | Bohé Eqs. (10), (12)–(14); pinned historical LAL ringdown source, Eqs. (57)–(58) of T1600383 | conditional | `ringdown.peak_preserving_shape` | `seobnrv4_peak_preserving_shape` | Historical rule integrated; domain-wide waveform validation remains open |
+| `V4-QNM-NATIVE-220-SPLINE` / 0.8.11 | Bohé Sec. II.C; independent Berti and Cook author data | conditional | `qnm.native_signed_220_spline` with supplied native controls | Torch/JAX `evaluate_kerr_qnm_220` | Sampled QNM checks pass; continuous error, historical compatibility, and waveform impact remain open |
 | `V4-QNM-INTERPOLATION` / 0.8.11 | Bohé Sec. II.C; Berti numerical data; pinned LAL source | pending | pending | Development-only independent Kerr route | q4 impact measured; domain-wide physical and waveform validation open |
+| `V4-ODE-RHS-PR0` / 0.8.11 | Bohé Sec. II.2; Buonanno--Damour Eqs. (24)--(27); Pan Eq. (28) | conditional | `orbital_ode.zero_radial_vector_field` with supplied torque | Torch/JAX `EOBTrajectoryIntegrator.vector_field` | Four supplied zero-radial states only; full torque, initial conditions, integration, and events remain open |
 | `V4-ODE-IC` / 0.8.11 | Bohé evolution and historical carrier | pending | pending | Development integrators | Domain-wide converged initial conditions and events |
 | `V4-TD-FD-CONVENTIONS` / 0.8.11 | Pinned public LAL conditioning/FFT binary | pending | pending | Development Torch adapter | Identical-input conditioning/FFT passed on three rows; native/public full FD retains up to 0.004031 relative L2 after physical time/phase fitting on four rows, and conventions remain open |
 | `V4-ROM-VII` / 0.8.11 | Bohé Sec. VII | pending | pending | pending | Qualified training generator, bases, and holdouts |
@@ -92,13 +94,13 @@ specify the exact historical numerical implementation. In particular:
 | --- | --- | --- |
 | `V4-HAM-1-3` | [Bohé Sec. II.1](https://arxiv.org/html/1611.03703), [Barausse–Buonanno Hamiltonian](https://arxiv.org/abs/1107.2904), and [Steinhoff Appendix A](https://arxiv.org/html/1608.01907) | Printed fits and equations do not provide shortened source decimals or the historical logarithmic derivative convention. |
 | `V4-FLUX-4-9` | [Bohé Eqs. (4)–(6), (9)](https://arxiv.org/html/1611.03703) and [factorized multipoles](https://arxiv.org/abs/1006.0431) | Constructing the 35 pre-NQC modes and full torque remains pending: the exact historical higher-mode spin hybrid, high-`ell` truncation, and JAX waveform coupling are not independently qualified. The supplied-mode normalization is covered by `V4-FLUX-NORM-9`. |
-| `V4-QNM-INTERPOLATION` | [Berti et al. Kerr data and fits](https://arxiv.org/html/gr-qc/0512160) and [Cook author data](https://zenodo.org/records/2650358) | Declare and validate an independent interpolant, including signed spin; the published fit is approximate and does not define historical spline knots. |
+| `V4-QNM-INTERPOLATION` | [Berti et al. Kerr data and fits](https://arxiv.org/html/gr-qc/0512160) and [Cook author data](https://zenodo.org/records/2650358) | The independent native signed-spin rule has a conditional scalar leaf. Continuous-domain accuracy, historical spline compatibility, and whole-waveform impact remain open; the published fit is approximate and does not define historical knots. |
 | `V4-ODE-IC` | [Bohé Sec. II.2](https://arxiv.org/html/1611.03703) and [Buonanno–Damour initial-data prescription](https://arxiv.org/html/gr-qc/0001013) | Exact v4 root coordinates, tortoise mapping, numerical tolerances, and event/output interpolation need independent checks. |
 | `V4-TD-FD-CONVENTIONS` | [Pürrer Sec. 4](https://arxiv.org/html/1402.4146) gives a time-domain conditioning template for **SEOBNRv1** | The v4 window, epoch, padding, crop, normalization, and polarization choices are not specified there. |
 | `V4-ROM-VII` | [Bohé Sec. VII](https://arxiv.org/html/1611.03703) gives patch dimensions, frequency counts, SVD, and tensor-spline architecture | No independently generated v4 basis, spline tensors, full frequency knots, qualified training generator, or held-out validation exists. |
 
 An independent QNM interpolant is a bounded native development path. Its
-author-data error bound would validate that physical route, but would not
+measured author-row error validates sampled values of that physical route, but does not
 turn it into an exact claim about the historical implementation.
 
 ### Canonical equations and derivation
@@ -139,6 +141,18 @@ mixed spins, and varying radius and angular momentum. This is a value check
 on supplied states, not a circular-orbit solution or a test of derivatives,
 evolution, or historical-source fidelity; the source's radial-log derivative
 choice remains different even at zero radial momentum.
+`V4-ODE-RHS-PR0` applies the polar Hamilton equations of
+[Buonanno--Damour (2000), Eqs. (24)--(27)](https://arxiv.org/html/gr-qc/0001013)
+to that same high-precision scalar Hamiltonian. The tortoise conversion is
+the one in [Pan et al. (2010), Eq. (28)](https://arxiv.org/html/0912.3466).
+At supplied `p_r*=0`, the aligned Hamiltonian is even in radial momentum,
+so `r_dot=0`; five-point scalar differentiation supplies the radius and
+angular-momentum partials. A caller supplies the angular torque, and radial
+dissipation is set to zero. Four rows compare all vector-field components
+with Torch and JAX within `2e-10` relative and `2e-12` absolute. This leaf
+does not establish nonzero-radial evolution, physical flux, initial-data
+root finding, numerical convergence, or the historical derivative rule;
+`V4-ODE-IC` remains pending.
 `hamiltonian.nonspinning_effective_hamiltonian` also checks the deformed-metric
 orbital Hamiltonian and 3PN tortoise-momentum quartic term at zero spin,
 including the exact Schwarzschild test-mass limit. Its finite-mass-ratio
@@ -641,6 +655,21 @@ not a continuous interpolation error bound. Author values are
 not generator inputs or packaged assets. The signed-spin Torch/JAX frontends
 intentionally clamp at `|j|=0.9999`, whereas the underlying generated Torch
 spline reaches `0.99999`.
+
+The conditional `V4-QNM-NATIVE-220-SPLINE` leaf now specifies the *diffGW*
+interpolation rule independently in `qnm.native_signed_220_spline`: select the
+positive-frequency `(2,2,0)` or `(2,-2,0)` branch by signed spin, clamp to
+`|j|=0.9999`, transform `x=-log(1-|j|)`, and evaluate supplied degree-five
+B-spline knots and control pairs by scalar de Boor recursion. It returns
+positive frequency and damping in remnant-mass units. The scalar module
+contains no generated coefficients; tests supply native coefficient arrays
+and check an analytic degree-five example, sparse pinned Berti/Cook author
+rows, and Torch/JAX at selected spins including both clamps and an
+interstitial high-spin point. The full Cook check above remains the measured
+source gate for the production coefficients. This rule differs from the
+historical 107-knot natural cubic and does not promote the separate
+`V4-QNM-INTERPOLATION` historical-compatibility entry.
+
 An explicit pinned-binary check at nine signed-spin values from `-0.9` to
 `0.9996` finds both native backends within `4.8e-7` absolute in dimensionless
 frequency and damping of the `SEOBNRv4` public QNM call. The binary values at

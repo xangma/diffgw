@@ -1,0 +1,36 @@
+{
+  "schema": "diffgw.seobnrv4.jax-nqc-direct-phase-plan.v1",
+  "release_qualified": false,
+  "case": "high_start_mixed_spin",
+  "source_head": "1943fff",
+  "output_step_M": 0.5,
+  "fine_refinement_factor": 32,
+  "adaptive_atol": 1e-10,
+  "adaptive_rtol": 1e-9,
+  "method": "Compute the pre-NQC continuous phase from the published orbital quantities and residual phase at every trajectory state. Fix only its integer-2pi initial gauge against the first complex-mode sample. Feed that phase to the development-only full-series NQC phase spline and attachment while retaining the original amplitude matching rows, phase basis, targets, trajectory, and event chart.",
+  "stop_rule": "If any fixed-input source-preservation gate fails, record attribution and stop before whole replay. If fixed-input gates pass, run eager/JIT whole replay and original eager control. Run AD/FD only if all whole gates pass and predicted resources stay within operational limits.",
+  "operational_limits": {
+    "max_wall_time_s": 300,
+    "max_rss_gib": 32
+  },
+  "gates": {
+    "max_fixed_direct_phase_mode_absolute_error": 1e-12,
+    "max_fixed_source_phase_rhs_absolute_error": 1e-10,
+    "max_fixed_source_phase_coefficients_absolute_error": 1e-8,
+    "max_fixed_source_corrected_fine_relative_l2": 1e-10,
+    "max_fixed_source_attachment_relative_l2": 1e-10,
+    "max_fixed_eager_jit_phase_rhs_absolute_error": 1e-10,
+    "max_fixed_eager_jit_phase_coefficients_absolute_error": 1e-8,
+    "max_fixed_eager_jit_corrected_fine_relative_l2": 1e-10,
+    "max_replay_state_absolute_error": 1e-7,
+    "max_whole_source_phase_rhs_absolute_error": 1e-10,
+    "max_whole_source_phase_coefficients_absolute_error": 1e-8,
+    "max_whole_source_relative_l2": 1e-10,
+    "max_whole_eager_jit_phase_rhs_absolute_error": 1e-10,
+    "max_whole_eager_jit_phase_coefficients_absolute_error": 1e-8,
+    "max_whole_eager_jit_relative_l2": 1e-10,
+    "max_ad_fd_relative_l2": 0.002,
+    "min_gradient_l2": 1e-9
+  },
+  "interpretation": "One frozen development chart. Existing release gates and production physics remain unchanged; passing this diagnostic alone would not release qualify the model."
+}

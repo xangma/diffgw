@@ -63,11 +63,18 @@ frozen before intake; this reservation does not turn the failing current
 candidate into a qualified one.
 
 The [source specification](../../reference/SPEC.md) remains incomplete: six
-of 43 manifest components are `pending`, including flux, QNM interpolation,
+of 45 manifest components are `pending`, including flux, QNM interpolation,
 ODE initial conditions, TD/FD conventions, and the ROM construction. The
 published model does not supply independently derived ROM bases and spline
 tables, and no qualified generator/training set or independent ROM holdout
 exists. Full-waveform gradients and domain-wide convergence remain open.
+The new conditional native-QNM spline and zero-radial ODE vector-field leaves
+make their arithmetic and paper-derived equations independently executable.
+The former checks selected Berti/Cook author rows and the native coefficient
+rule, but has no continuous bound or historical-spline claim. The latter
+checks four supplied states with an external torque and zero radial force,
+not the physical flux, initial-data root, or integrated trajectory. Neither
+leaf closes its pending aggregate component.
 The [frozen JAX pathwise whole-mode gradient diagnostic](jax_pathwise_whole_gradient.json)
 passes its finite-difference and accepted-mesh replay checks, but fails its
 eager/JIT waveform gate: relative L2 is `1.547138e-9` against `1e-10`.
@@ -135,6 +142,21 @@ PID `47462`, and completed in 17 seconds. Its log is
 `/tmp/diffgw-jax-nqc-jit-stages-current.log`; no process remains or next check
 is needed. It was invoked with `DIFFGW_DIAGNOSTIC_OUTPUT=/tmp/diffgw-jax-nqc-jit-stages-current.json`
 and `python -m dev.native_rom.diagnose_jax_nqc_jit_stages`.
+
+The subsequent [frozen direct-phase experiment](jax_nqc_direct_phase_plan.json)
+replaced the development NQC phase-unwrapping input with the continuous
+published phase computed directly from orbital state. Its
+[failed result](jax_nqc_direct_phase.json) preserves the eager source whole
+mode to `4.49e-16` relative L2, but whole eager/JIT L2 is `1.547e-9`
+against `1e-10` and the phase-coefficient gap is `1.212e-7` against `1e-8`.
+Thus cumulative phase unwrapping is not the cause on this chart. Fixed-input
+corrected-mode eager/JIT L2 is `1.296e-10`, also above its `1e-10` gate.
+AD/FD was not rerun after the failed whole-mode gates; this experiment is a
+negative diagnostic, not release evidence. It ran on RONI2 in this worktree
+as PID `56543` with log `/tmp/diffgw-jax-nqc-direct-phase.log`, completed in
+30 seconds with exit code 1 for frozen gate failure, and has no remaining
+process or next check. The command was
+`PYTHONPATH=src:. /Users/xangma/repos/diffgw/.venv/bin/python -m dev.native_rom.diagnose_jax_nqc_direct_phase`.
 
 Two different release claims must stay separate:
 

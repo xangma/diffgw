@@ -125,7 +125,7 @@ def _solve_traceable(matrix, rhs):
 
 def traceable_nqc_22_full_series_coefficients(
     time, r, pr_star, orbital_frequency, base_mode, match_time, targets,
-    *, barrier_combined=False, amplitude_rows=None,
+    *, barrier_combined=False, amplitude_rows=None, phase_series=None,
 ):
     """Differentiate a fixed-grid full-series NQC solve on validated inputs.
 
@@ -137,7 +137,8 @@ def traceable_nqc_22_full_series_coefficients(
         jnp.asarray(value) for value in
         (time, r, pr_star, orbital_frequency, base_mode, match_time))
     amplitude = jnp.abs(base_mode)
-    phase = _unwrap_mode_phase_unchecked(base_mode)
+    phase = (_unwrap_mode_phase_unchecked(base_mode) if phase_series is None
+             else jnp.asarray(phase_series))
     q, p = nqc_22_basis(r, pr_star, orbital_frequency)
     products = amplitude[:, None] * q
     combined = jnp.concatenate((amplitude[:, None], products, p), axis=-1)
@@ -168,7 +169,7 @@ def traceable_nqc_22_full_series_coefficients(
 def traceable_fixed_chart_attached_mode22(
     time, r, pr_star, orbital_frequency, base_mode, match_time, targets,
     nu, chi, sigma, output_time, *, mass_scale=1.0,
-    barrier_combined=False, amplitude_rows=None,
+    barrier_combined=False, amplitude_rows=None, phase_series=None,
 ):
     """Replay NQC and continuous-boundary attachment on a validated fixed chart.
 
@@ -178,9 +179,11 @@ def traceable_fixed_chart_attached_mode22(
     """
     a, b, *_ = traceable_nqc_22_full_series_coefficients(
         time, r, pr_star, orbital_frequency, base_mode, match_time, targets,
-        barrier_combined=barrier_combined, amplitude_rows=amplitude_rows)
+        barrier_combined=barrier_combined, amplitude_rows=amplitude_rows,
+        phase_series=phase_series)
     amplitude = jnp.abs(base_mode)
-    phase = _unwrap_mode_phase_unchecked(base_mode)
+    phase = (_unwrap_mode_phase_unchecked(base_mode) if phase_series is None
+             else jnp.asarray(phase_series))
     q, p = nqc_22_basis(r, pr_star, orbital_frequency)
     products = amplitude[:, None] * q
     combined = jnp.concatenate((amplitude[:, None], products, p, phase[:, None]),
