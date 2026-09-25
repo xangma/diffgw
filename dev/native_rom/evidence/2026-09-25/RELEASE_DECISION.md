@@ -108,6 +108,20 @@ circular-orbit energies and verifies the leading-adiabatic energy balance and
 tortoise radial velocity within `2e-9` relative using supplied torque. The
 existing Torch/JAX initial-state checks remain conditional; the historical
 Cartesian root solve, physical torque, and integrated waveform are unqualified.
+The [fresh frozen optimized-source initial-state plan](initial_finite_probe_plan.json)
+and [result](initial_finite_probe.json) check two previously unused physical
+rows at two starting frequencies each. The pinned source uses a finite
+`p_r=0.001` Hamiltonian radial-response probe, whereas the native analytic
+initial state uses the derivative at zero. Replaying that finite probe in the
+native calculation reduces the radial-momentum difference by at least 17.6x;
+all three initial-state components agree within `1.60e-8` on the plan's
+normalized scale, below its `2e-8` gate. This supports the convention
+attribution on four points. It does not close the previously failed legacy
+source comparison or qualify the historical Cartesian root and evolved
+waveform. The run completed on RONI2 in this worktree as PID `93477`, command
+`PYTHONPATH=src:. /Users/xangma/repos/diffgw/.venv/bin/python -m dev.native_rom.diagnose_initial_finite_probe --source-root /Users/xangma/repos/lalsuite-git --headers /tmp/diffgw-lalsuite-pinned-53acc0c/merged-include --gsl-include /usr/local/include --json-out dev/native_rom/evidence/2026-09-25/initial_finite_probe.json`,
+log `/tmp/diffgw-initial-finite-probe.log`, with exit code 0. No process or
+next check remains.
 The existing [public/NR chirp diagnostic](sxs_public_chirp.json) locates a
 waveform-phase discrepancy on the already inspected 2569 case: at mode
 frequency `0.05/M`, relative to a `0.09/M` anchor and smoothing window 20,

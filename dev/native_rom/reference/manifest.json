@@ -439,7 +439,7 @@
       "id": "V4-ODE-IC",
       "source": "bohe-2017-v3, Sec. II.2, citing Buonanno--Chen--Damour gr-qc/0508067, Sec. IV.1",
       "status": "pending",
-      "blocker": "The optimized source/native four-component vector field passes a predeclared 12-state boundary check within 5.48e-11 relative, but this does not validate integration. Specify initial conditions, tortoise momentum, solver, event/matching semantics, and demonstrate numerical convergence across the domain."
+      "blocker": "The optimized source/native four-component vector field passes a predeclared 12-state boundary check within 5.48e-11 relative, but this does not validate integration. On four fresh predeclared initial-condition points, matching the optimized source's finite 0.001 radial-momentum response reduces the native/source p_r* difference by at least 17.6x and puts r, p_phi, and p_r* within 1.60e-8 on the frozen normalized scale. The older analytic-zero-derivative comparison to the legacy source remains a failed separate check. This finite-probe diagnostic supports one source-convention explanation but does not validate the complete initial-data root, integration, event/matching semantics, or numerical convergence across the domain."
     },
     {
       "id": "V4-TD-FD-CONVENTIONS",
