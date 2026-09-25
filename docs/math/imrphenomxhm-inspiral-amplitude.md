@@ -14,7 +14,15 @@ collocation surfaces, collocation vetoes, release-dependent transition cuts,
 intermediate and ringdown calibration, and `(3,2)` mode mixing. It therefore
 does not promote XHM or XPHM.
 
-## Published equations
+## Inputs, conventions, and options
+
+The scalar reference accepts a positive dimensionless frequency `Mf`,
+`eta`, positive-mass-ordering `delta`, and the aligned-spin combinations
+`chi_s` and `chi_a`. It supports only the four displayed positive-`m` modes
+listed below. It intentionally exposes no release, fit-provider, cutoff, veto,
+or mode-mixing option.
+
+## Mathematics and components
 
 The source is García-Quirós et al.,
 [arXiv:2001.10914v2](https://arxiv.org/html/2001.10914v2), Sec. IV A and
@@ -50,6 +58,8 @@ whose coefficients are fixed from fitted values at
 values are supplied; they do not publish a complete current-release
 parameter-space calibration.
 
+## Implementation mapping
+
 | Component | Scalar | Torch | JAX | Claim |
 | --- | --- | --- | --- | --- |
 | complex Appendix-E polynomial | `printed_hhat` | `hhat_lm_printed` | magnitude only | printed equations |
@@ -62,7 +72,9 @@ dependency. Frozen complex checkpoints retain phase-sensitive information
 before either production implementation takes the magnitude. The frontend
 test also covers Torch frequency gradients and JAX JIT.
 
-## Earliest mismatch
+## Evidence and limitations
+
+### Earliest mismatch
 
 The binary-only regional diagnostic evaluates public installed LAL mode
 outputs without inspecting source or using their values as fit targets. On the
@@ -86,7 +98,7 @@ grid does not reach the catalog `(4,4)` ringdown region. Exact values and
 environment versions are in the
 [component receipt](../validation/xhm_carrier_components_20260925.json).
 
-## Why production is unchanged
+### Why production is unchanged
 
 The new scalar checks show that both production frontends already implement
 the printed Appendix-E baseline. Changing those coefficients would contradict
@@ -111,7 +123,7 @@ pinned current-release fit asset or an independently reproducible calibration
 dataset and procedure. Neither is available here, so this change makes no
 production waveform modification.
 
-## Intermediate, ringdown, and native calibration boundary
+### Intermediate, ringdown, and native calibration boundary
 
 The paper supplies analytic ansätze for intermediate and ringdown regions,
 but their mode-dependent coefficients are calibrated to hybrid/NR data. The
@@ -125,7 +137,7 @@ The component receipt is descriptive evidence, not a new acceptance gate.
 The strict frozen full-waveform catalog/holdout results remain `0/1` for XHM
 and `0/1` for XPHM in both sets, hence red.
 
-## Reproduce
+## Reproduce the checks
 
 Run the paper/scalar/frontend checks with:
 
