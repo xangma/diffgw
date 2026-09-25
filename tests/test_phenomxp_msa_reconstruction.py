@@ -116,13 +116,46 @@ def test_xp_aligned_reference_phase_and_one_spin_continuity(f_ref):
     assert smaller < larger / 5.0
 
 
-@pytest.mark.xfail(
-    strict=True,
-    reason="generic two-spin MSA cubic roots remain ill-conditioned near alignment",
+def test_up_down_fixture_instability_band():
+    """Gerosa et al.'s up-down threshold places 55 Hz before the unstable band."""
+    q = 22.0 / 36.0
+    r_plus_over_m = (math.sqrt(0.35) + math.sqrt(q * 0.25)) ** 4 / (1.0 - q) ** 2
+    crossing_hz = 1.0 / (math.pi * 58.0 * MSUN_SEC * r_plus_over_m ** 1.5)
+    assert crossing_hz == pytest.approx(72.8648, abs=1e-3)
+    assert (math.pi * 58.0 * MSUN_SEC * 55.0) ** (-2.0 / 3.0) > r_plus_over_m
+    assert (math.pi * 58.0 * MSUN_SEC * 300.0) ** (-2.0 / 3.0) < r_plus_over_m
+
+
+def test_xp_two_spin_aligned_reference_frequency_control():
+    """Two small transverse spins converge at their stable aligned reference point."""
+    f = torch.tensor([40.0], dtype=torch.float64)
+    params = dict(f=f, mass1=36.0, mass2=22.0, distance=150.0,
+                  inclination=0.65, phic=0.3, f_ref=40.0,
+                  spin1y=0.0, spin1z=0.35, spin2y=0.0, spin2z=0.25)
+    xp = IMRPhenomXP()
+    exact = xp(**params, spin1x=0.0, spin2x=0.0)
+
+    def relative_error(x):
+        near = xp(**params, spin1x=x, spin2x=-x / 2.0)
+        return max(
+            (torch.linalg.vector_norm(left - right) /
+             torch.linalg.vector_norm(right)).item()
+            for left, right in zip(near, exact)
+        )
+
+    larger = relative_error(1e-10)
+    smaller = relative_error(1e-11)
+    assert larger < 1e-10
+    assert smaller < larger / 5.0
+
+
+@pytest.mark.parametrize(
+    "f_max", (55.0, 300.0), ids=("before-instability", "crosses-instability"),
 )
-def test_xp_two_spin_near_aligned_continuity_pending():
-    """Track the unresolved generic two-spin limit separately from zero nutation."""
-    f = torch.linspace(25.0, 300.0, 128, dtype=torch.float64)
+@pytest.mark.xfail(strict=True, reason="generic two-spin near-aligned continuation is unresolved")
+def test_xp_two_spin_near_aligned_continuity_pending(f_max):
+    """Track pre-band phase error separately from the in-band root crossing."""
+    f = torch.linspace(25.0, f_max, 128, dtype=torch.float64)
     params = dict(f=f, mass1=36.0, mass2=22.0, distance=150.0,
                   inclination=0.65, phic=0.3, f_ref=40.0,
                   spin1y=0.0, spin1z=0.35, spin2y=0.0, spin2z=-0.25)
