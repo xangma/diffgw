@@ -76,6 +76,13 @@ source or wheel distributions. Their URLs and pinned hashes are retained by
 the verification tests and metadata; no MIT grant has been established for
 these supplementary assets, so this notice makes no licensing assurance.
 
+This includes Mishra et al.'s `supl-mkaf16.m` from the pinned
+arXiv:1601.05588v1 source bundle. The repository does not redistribute that
+file: the opt-in fixture generator reads a user-supplied archive, verifies its
+bundle and member hashes, and writes independently evaluated numerical ratios
+plus provenance metadata. The frozen numerical fixture contains no copy of the
+Mathematica source.
+
 ## PhenomXPNR calibration sources and unresolved inherited tensors
 
 The equation text used by the independent XPNR scalar component reference is
@@ -119,7 +126,6 @@ did not inspect, copy, translate, or fit coefficients from LAL source and does
 not infer a licence for the inherited arrays. Pinned LAL binaries are used only
 as black-box comparison oracles. See
 `docs/waveforms/research/imrphenomxpnr.md` for hashes and qualification scope.
-
 ## IMRPhenomT author formulas and calibration expressions — MIT
 
 `src/diffgw_core/phenomt_fits.py` transcribes the aligned dominant- and higher-mode fit branches from

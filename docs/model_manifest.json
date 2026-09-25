@@ -143,7 +143,7 @@
         "(4,4)"
       ],
       "status": "scoped_math_reference",
-      "notes": "The versioned independent scalar reference checks the leading-amplitude eight-mode carrier, negative-m polarization projection, inherited aligned-spin phase, and Schwarzschild hard-cutoff thresholds against Torch and JAX. Paper-level output identities separately check the published native negative-m storage, polarization projection, 2f/m phase map, SPA offset, and phase/time signs for all eight modes. Public LAL spin-weighted harmonics independently check the angular basis only. The historical external TaylorF2 waveform case checks only (2,2); exact external all-eight-mode same-model waveform parity remains unprovable from the available public sources, and physical validation remains unavailable. Higher-PN and spin-amplitude completeness remains unresolved. See docs/math/taylorf2-hm.md.",
+      "notes": "The versioned independent scalar reference checks the leading-amplitude eight-mode carrier, negative-m polarization projection, inherited aligned-spin phase, and Schwarzschild hard-cutoff thresholds against Torch and JAX. A checksum-pinned author Mathematica supplement independently checks all eight leading amplitude ratios, and paper-level output identities separately check the published native negative-m storage, polarization projection, 2f/m phase map, SPA offset, and phase/time signs. Public LAL spin-weighted harmonics independently check the angular basis only. The supplement is symbolic amplitude input, not a generator for the complete native complex-waveform contract; the historical external TaylorF2 waveform case checks only (2,2). Exact external all-eight-mode same-model complex-waveform parity and physical validation remain unavailable. Higher-PN and spin-amplitude completeness remains unresolved. See docs/math/taylorf2-hm.md.",
       "primary_references": [
         {
           "citation": "Kidder (2008), Phys. Rev. D 77, 044016",
@@ -170,13 +170,13 @@
         {
           "citation": "Mishra et al. (2016), Phys. Rev. D 93, 084054",
           "arxiv": "1601.05588",
-          "equations": "Eqs. (9)-(12h); opposite Fourier convention"
+          "equations": "Eqs. (9)-(12h) and arXiv v1 supplement supl-mkaf16.m; opposite Fourier convention"
         }
       ],
       "math_reference": {
         "version": "taylorf2-hm-leading-carrier/v1",
         "scope": "eight leading-amplitude modes; unwindowed complex polarizations and selected derivatives; Schwarzschild hard-cutoff thresholds",
-        "evidence": "tests/test_taylorf2_hm_math_reference.py; tests/test_taylorf2_hm_paper_math_reference.py; tests/test_taylorf2_hm_external_api.py (public angular basis and API boundary only)",
+        "evidence": "tests/test_taylorf2_hm_author_supplement_math_reference.py (all-eight leading amplitude ratios); tests/test_taylorf2_hm_math_reference.py; tests/test_taylorf2_hm_paper_math_reference.py; tests/test_taylorf2_hm_external_api.py (public angular basis and API boundary only)",
         "external_eight_mode_oracle": "unavailable"
       },
       "validation": {
