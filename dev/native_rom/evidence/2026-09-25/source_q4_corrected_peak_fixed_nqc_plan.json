@@ -1,0 +1,17 @@
+{
+  "schema": "diffgw.seobnrv4.source-q4-corrected-peak-fixed-nqc-plan.v1",
+  "purpose": "Separate corrected-source q4 whole-mode cadence drift caused by changing NQC coefficients from drift remaining with finest-grid coefficients fixed.",
+  "peak_correction": "dev/native_rom/evidence/2026-09-25/source_q4_peak_bracket_correction.json",
+  "peak_correction_sha256": "6c2d79d5d0bb4f13080600367b491f1b049eeb5a525d871b13326b3034e9fff6",
+  "peak_script": "dev/native_rom/diagnose_source_q4_peak_bracket_correction.py",
+  "peak_script_sha256": "3badaf3696d4f8dfa5bb63f18682d91c5fad15e444f1c5e109a3210b5a73f778",
+  "source_flux_plan": "dev/native_rom/evidence/2026-09-24/source_flux_initial_plan.json",
+  "source_flux_plan_sha256": "1167199c8f954f97a5905a1e3b2f67d1555e984e5f1da0a0fc42a77a925f96ea",
+  "adapter": "dev/native_rom/reference/full_v4_source_large_nqc_override_adapter.c",
+  "adapter_sha256": "10cd447710ed7d1cedb30eaf829d39b0ab2a5428295379522d9fe241ab13bafb",
+  "steps_M": [0.015625, 0.0078125, 0.00390625],
+  "fixed_coefficient_step_M": 0.00390625,
+  "capacity": 200000,
+  "peak_fit": "quadratic_power",
+  "release_qualified": false
+}

@@ -1780,6 +1780,18 @@ Source/wheel peak-fitted whole-mode L2 slightly worsens from `0.001425`,
 a historical source bracketing failure on this row, not a converged or
 release-ready source correction.
 
+The [corrected-peak fixed-NQC control](evidence/2026-09-25/source_q4_corrected_peak_fixed_nqc.json)
+uses a [frozen plan](evidence/2026-09-25/source_q4_corrected_peak_fixed_nqc_plan.json)
+and replays the three corrected source modes bit for bit with their own NQC
+coefficients. It then holds the `0.00390625 M` source coefficients fixed on
+all three cadences. The adjacent peak-fitted whole-mode L2 differences become
+`0.000932` then `0.000464`, compared with `0.000361` then `0.001122` when
+each corrected source mode refits its own coefficients. The fixed-coefficient
+trend falls on refinement, so the NQC refit causes the corrected-source
+nonconvergent trend on these grids. Two adjacent differences do not establish
+an asymptotic order or validate the finest-grid coefficient set; this remains
+a development-only causal control.
+
 The [prospective q4 local-fit control](evidence/2026-09-25/source_q4_ultrafine_local_nqc_plan.json)
 recomputes those five coefficients with the same degree-four, `±2 M` local
 polynomial used in the earlier combined numerical control, then injects each
