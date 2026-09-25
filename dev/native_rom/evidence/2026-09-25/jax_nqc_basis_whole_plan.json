@@ -1,0 +1,22 @@
+{
+  "schema": "diffgw.seobnrv4.jax-nqc-basis-whole-plan.v1",
+  "release_qualified": false,
+  "source_head": "eac7994",
+  "case": "high_start_mixed_spin",
+  "output_step_M": 0.5,
+  "fine_refinement_factor": 32,
+  "adaptive_atol": 1e-10,
+  "adaptive_rtol": 1e-9,
+  "method": "On the fixed two-stage accepted-step trajectory, use stable state resampling and source-equivalent rounding-barrier NQC basis/product arithmetic to supply only the three amplitude matching rows to the unchanged physical full-series attachment. Keep the published pre-NQC modes, phase rows, targets, QNM, ringdown, and output grid. Compare candidate eager to unmodified eager, and candidate eager to JIT full complex mode and NQC coefficients.",
+  "gates": {
+    "max_replay_state_absolute_error": 1e-7,
+    "max_candidate_source_whole_relative_l2": 1e-10,
+    "max_candidate_eager_jit_whole_relative_l2": 1e-10,
+    "max_candidate_eager_jit_amplitude_coefficient_absolute_error": 1e-9
+  },
+  "operational_limits": {
+    "max_wall_time_s": 300,
+    "max_rss_gib": 32
+  },
+  "interpretation": "One fixed-chart no-AD whole-waveform control. A pass would still require multi-case, independent source/NR and AD/FD qualification. A failure stays development-only."
+}
