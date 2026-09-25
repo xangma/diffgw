@@ -4,9 +4,9 @@ The frozen values are generated from the checksum-pinned Mathematica file
 published with arXiv:1601.05588v1.  The original leading-amplitude magnitude
 gate is retained.  A second SymPy gate combines the supplement's signed
 leading H[l,m] terms and nonspinning TF28Phasing with the absolute mode
-normalization in the accompanying paper.  That gate covers only the raw,
-unwindowed, coalescence-phase complex component after an explicit convention
-adapter; it is not external numerical parity for diffGW's composed waveform.
+normalization in the accompanying paper.  The paper's polarization map then
+checks both projected polarizations and their eight-mode sum.  This is a
+symbolic author-source composition gate, not an external numerical series.
 """
 
 import json
@@ -69,10 +69,10 @@ def backend(request, reference_device):
 
 
 @lru_cache(maxsize=None)
-def _paper_projection(mode):
+def _paper_projection(mode, inclination=INCLINATION, phi0=PHI0):
     values = {
-        ref.IOTA: sp.Rational(str(INCLINATION)),
-        ref.PHI0: sp.Rational(str(PHI0)),
+        ref.IOTA: sp.Rational(str(inclination)),
+        ref.PHI0: sp.Rational(str(phi0)),
     }
     return tuple(complex(ref.evaluate(expression, values)) for expression in ref.projection(*mode))
 
@@ -91,7 +91,8 @@ def _to_numpy(value):
     return np.asarray(value)
 
 
-def _native_modes(backend, sample, *, f_ref=43.0):
+def _native_waveform(backend, sample, *, f_ref=43.0,
+                     inclination=INCLINATION, phi0=PHI0):
     name, model, array = backend
     options = dict(
         f=array([float(value) for value in sample["frequencies_hz"]]),
@@ -100,16 +101,20 @@ def _native_modes(backend, sample, *, f_ref=43.0):
         chi1=array(0.0),
         chi2=array(0.0),
         distance=array(410.0),
-        inclination=array(INCLINATION),
+        inclination=array(inclination),
         phic=array(0.23),
         tc=array(0.0041),
         f_ref=None if f_ref is None else array(f_ref),
-        phi0=array(PHI0),
+        phi0=array(phi0),
         modes=MODES,
         f_isco_cutoff=False,
         return_modes=True,
     )
-    return (model()(**options) if name == "torch" else model.evaluate(**options))[2]
+    return model()(**options) if name == "torch" else model.evaluate(**options)
+
+
+def _native_modes(backend, sample, *, f_ref=43.0):
+    return _native_waveform(backend, sample, f_ref=f_ref)[2]
 
 
 @lru_cache(maxsize=None)
@@ -192,3 +197,43 @@ def test_all_modes_match_author_supplement_complex_component(backend, fixture):
             expected = expected_cases[sample["name"]][mode]
             relative_error = np.abs(actual - expected) / np.abs(expected)
             assert np.max(relative_error) < 8e-10, (sample["name"], mode, relative_error)
+
+
+@pytest.mark.parametrize("inclination,phi0", ((0.91, 0.37), (1.32, -0.44)))
+def test_author_modes_compose_to_complex_polarizations(
+    backend, fixture, inclination, phi0
+):
+    """Author Eq. (11) modes through García-Quirós Eqs. (8)--(9), nonspinning.
+
+    Compare the complex projected modes and final sum directly: recovering
+    the raw modes by inverting the native polarizations would miss an error
+    common to the mode and its projection.
+    """
+    fixture_text = json.dumps(fixture)
+    for sample in fixture["samples"]:
+        author_modes = _author_complex_modes(fixture_text, sample["name"])
+        plus, cross, native_modes = _native_waveform(
+            backend, sample, f_ref=None, inclination=inclination, phi0=phi0
+        )
+        expected_plus = np.zeros(len(sample["frequencies_hz"]), dtype=np.complex128)
+        expected_cross = np.zeros_like(expected_plus)
+        plus_budget = np.zeros(len(expected_plus))
+        cross_budget = np.zeros_like(plus_budget)
+        for mode in MODES:
+            d_plus, d_cross = _paper_projection(mode, inclination, phi0)
+            carrier = author_modes[mode]
+            for native, projection, total, budget, label in (
+                (native_modes[mode][0], d_plus, expected_plus, plus_budget, "plus"),
+                (native_modes[mode][1], d_cross, expected_cross, cross_budget, "cross"),
+            ):
+                expected = projection * carrier
+                error = np.abs(_to_numpy(native) - expected) / np.abs(carrier)
+                assert np.max(error) < 8e-10, (sample["name"], mode, label, error)
+                total += expected
+                budget += np.abs(expected)
+        for native, expected, budget, label in (
+            (plus, expected_plus, plus_budget, "plus"),
+            (cross, expected_cross, cross_budget, "cross"),
+        ):
+            error = np.abs(_to_numpy(native) - expected) / budget
+            assert np.max(error) < 8e-10, (sample["name"], label, error)

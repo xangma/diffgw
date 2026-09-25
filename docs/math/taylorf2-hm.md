@@ -165,7 +165,7 @@ The evidence is intentionally separated:
 
 | Evidence layer | Maintained check | Establishes | Does not establish |
 | --- | --- | --- | --- |
-| Author-supplement components | `test_taylorf2_hm_author_supplement_math_reference.py` | Checksum-pinned leading $|h_{\ell m}/h_{22}|$ plus signed, absolutely normalized nonspinning complex raw modes for all eight modes in Torch and JAX | External numerical parity, aligned-spin composition, `f_ref` subtraction, projection, cutoffs, or the complete waveform |
+| Author-supplement composition | `test_taylorf2_hm_author_supplement_math_reference.py` | Checksum-pinned leading $|h_{\ell m}/h_{22}|$, signed absolute raw modes, and direct complex per-mode and eight-mode-summed polarizations at two orientations in Torch and JAX, for the nonspinning unwindowed `f_ref=None` slice | An independently published numerical series, aligned-spin composition, `f_ref` subtraction, cutoffs, or physical accuracy |
 | Paper fidelity | `test_taylorf2_hm_paper_math_reference.py` | All-eight native $h_{\ell,-m}$ reconstruction, Eqs. (8)–(9), the $2f/m$ map, SPA constant, and $t_c/\phi_c$ signs | An independent executable waveform |
 | Scalar-reference agreement | `test_taylorf2_hm_math_reference.py` | All-eight leading amplitudes, composed aligned-spin phase, complex polarizations, selected derivatives and hard cutoffs | External parity or physical accuracy |
 | Torch/JAX parity | `tests/parity/test_hm_parity.py` | Cross-backend values, individual modes, JIT and autodiff at sampled points | Independence from shared equations |
@@ -204,18 +204,27 @@ The generator retains the normalized SymPy expression, and the test combines
 it with the signed leading $H_{\ell m}$ term and Eq. (11) normalization. The
 fixed raw-mode convention adapter is
 $h^{\rm native}_{\ell,-m}=e^{i\pi(m-3)/2}h^{\rm Mishra}_{\ell,m}$.
-This gate is restricted to positive-frequency, leading nonspinning,
-unwindowed raw modes with `f_ref=None`. Projection is used only to recover the
-native raw carrier and is not attributed to the supplement.
+The composition gate multiplies those author-derived modes by the independent
+Wigner-$d$ evaluation of García-Quirós et al. Eqs. (8)–(9), then sums all
+eight complex $h_+$ and $h_\times$ contributions. It checks native per-mode
+polarizations and both final polarizations directly, without using the native
+projection to construct its expectation or inverting native modes. Its
+per-mode errors divided by the raw mode magnitude and summed errors divided
+by the sum of projected-mode magnitudes are below $8\times10^{-10}$ at the
+three binaries, three frequencies each, and two orientations in FP64.
+This is a source-composed symbolic check restricted to positive-frequency,
+leading nonspinning, unwindowed modes with `f_ref=None`. The projection comes
+from García-Quirós et al., not from the author supplement.
 
-Exact all-mode external complex parity remains unprovable from the available
+Exact all-mode external numerical parity remains unprovable from the available
 public sources. The supplement is symbolic author input parsed by this
 project, not an independently maintained executable or numerical series. It
 supplies full 2PN amplitudes and a phase expression while the maintained gate
-selects the leading nonspinning amplitudes; it does not emit the native
-negative-$m$ series with aligned-spin composition, `f_ref` subtraction,
-paired polarization projection, and per-mode cutoff. No author-published
-numerical complex arrays fix that complete option set.
+selects the leading nonspinning amplitudes and composes the projection from a
+second published source. Neither source fixes the native aligned-spin
+composition, `f_ref` subtraction, or per-mode cutoff as one independently
+evaluated series. No author-published numerical complex arrays fix that
+complete option set.
 Public LAL TaylorF2 returns one frequency series and its public FD-mode
 dispatcher has no TaylorF2 generator. IMRPhenomXHM is a different full-IMR
 model and `gwfast`'s TEOBResumSPA uses different EOB dynamics and amplitude
