@@ -1632,6 +1632,28 @@ does not show a comparable cadence drift; NQC matching or subsequent mode
 assembly is the next attribution target. Coefficient differences alone do not
 quantify their effect on the complete mode.
 
+The [q4 NQC projection](evidence/2026-09-25/source_q4_ultrafine_nqc_projection.json)
+substitutes the source coefficients into the wheel's reported low-rate orbit
+after generation. Once the predicted peak-phase shift is included, its
+pre-attachment source/wheel complex L2 changes from `6.23e-5` to `4.01e-5`
+at `0.03125 M`, but from `0.001601` to `0.001725` at `0.015625 M`. This
+pointwise, post-hoc projection is not a reliable measure of full-generator
+coefficient impact at the ultrafine cadence.
+
+The [causal q4 NQC override](evidence/2026-09-25/source_q4_ultrafine_nqc_override.json)
+instead injects only the wheel's five reported active `(2,2)` coefficients
+into the separately compiled pinned source generator. A same-coefficient
+override reproduces each original source mode bit for bit. At `0.03125 M`,
+the peak-fitted whole-mode complex L2 against the wheel drops from `5.55e-5`
+to `1.04e-5`; at `0.015625 M`, it drops from `0.001425` to `1.51e-5`.
+The respective pre-attachment errors fall from `6.23e-5` to `1.16e-5` and
+from `0.001601` to `1.69e-5`. This assigns the selected source/wheel
+ultrafine discrepancy primarily to their NQC fits. It does not establish
+which fit is numerically correct or converged. The wheel coefficients are
+black-box diagnostic controls, not native data or a release prescription;
+the remaining approximately `1e-5` residual and the separate native/source
+error still require validation.
+
 The [JAX initial-state-to-base-mode gradient check](evidence/2026-09-25/jax_initial_to_base_mode_gradient.json)
 uses a [frozen q4 plan](evidence/2026-09-25/jax_initial_to_base_mode_gradient_plan.json)
 and the development-only traceable quasicircular solve. The solve reproduces
