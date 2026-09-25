@@ -75,7 +75,7 @@
       ],
       "status": "not_paper_fidelity"
     },
-    "promotion_gate": "Supply an independently specified and licensed terminal-state evolution and explicit sampling event, return terminal S1, S2, and Lhat, demonstrate convergence and stop-event stability, then feed that state to the scalar map."
+    "promotion_gate": "Supply an independently specified and licensed terminal-state evolution and explicit sampling event, return terminal S1, S2, and Lhat, demonstrate convergence and stop-event stability, convert each spin to chi_i = S_i/m_i^2, then feed chi1, chi2, and Lhat to the scalar map. The AST canary and scalar invariants are component-boundary checks, not physical terminal-state validation."
   },
   "scalar_reference_agreement": {
     "status": "pass_for_scoped_components",
@@ -179,7 +179,7 @@
       "holdout": "0/1"
     },
     "thresholds_changed": false,
-    "next_gate": "Independently specify and license the terminal-spin evolution plus exact sampling event; return S1, S2, and Lhat to the passed scalar geometry map. Then implement exact attachments/continuations, XHM-CP deformation/effective-ringdown/asymmetry, and independently traceable coefficient assets before passing Torch/JAX complex modes and both polarizations at the unchanged strict catalog/holdout thresholds and proceeding to NR validation."
+    "next_gate": "Independently specify and license the terminal-spin evolution plus exact sampling event; return S1, S2, and Lhat, convert chi_i = S_i/m_i^2, and supply chi1, chi2, and Lhat to the passed scalar geometry map. Then implement exact attachments/continuations, XHM-CP deformation/effective-ringdown/asymmetry, and independently traceable coefficient assets before passing Torch/JAX complex modes and both polarizations at the unchanged strict catalog/holdout thresholds and proceeding to NR validation."
   },
   "calibration_assets": {
     "canonical_numeric_payload_sha256": "c7794b653f781bbba45b97170fdac9fb6c89de6cc9c404e4942908ce1f820d68",
