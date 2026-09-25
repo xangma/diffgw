@@ -28,7 +28,7 @@ PLAN = EVIDENCE / "source_q4_ultrafine_chart_plan.json"
 OUTPUT = EVIDENCE / "source_q4_ultrafine_chart.json"
 
 
-def _native(row, step, plan, settings):
+def _native(row, step, plan, settings, **diagnostic_outputs):
     level = dict(name=f"source_ultrafine_{step:g}", dt_geom=step,
                  atol=plan["atol"], rtol=plan["rtol"])
     return q.native_run(
@@ -48,6 +48,7 @@ def _native(row, step, plan, settings):
         diagnostic_restart_time_M=165.0,
         diagnostic_coarse_initial_step_M=0.125,
         diagnostic_warm_start_Momega=0.03162277660168379,
+        **diagnostic_outputs,
     )
 
 
