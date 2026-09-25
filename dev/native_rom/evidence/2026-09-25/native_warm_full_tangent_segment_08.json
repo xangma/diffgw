@@ -1,0 +1,109 @@
+{
+  "completed_intervals": 10,
+  "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+  "diagnostic_checks_passed": true,
+  "elapsed_s": 7.2559002499911,
+  "end_knot": 122,
+  "gates": {
+    "finite_final_states_and_tangents": true,
+    "jax_mesh_state_abs_at_most": true,
+    "segment_interval_count_within_bound": true,
+    "strictly_increasing_segment_times": true,
+    "torch_jax_spin_tangent_scaled_at_most": true,
+    "torch_jax_state_abs_at_most": true,
+    "torch_mesh_state_abs_at_most": true
+  },
+  "host": "RONI2",
+  "initial": {
+    "jax_spin_tangent": [
+      0.235299051899689,
+      -0.30468562535185684,
+      0.0017609616672219267,
+      -0.1716368875472681
+    ],
+    "jax_state": [
+      8.604499307210311,
+      13.273495420158135,
+      -0.0051426221160601245,
+      3.3188695721428183
+    ],
+    "torch_spin_tangent": [
+      0.23529905189968575,
+      -0.3046856253518729,
+      0.0017609616672225447,
+      -0.1716368875472672
+    ],
+    "torch_state": [
+      8.604499307210245,
+      13.273495420158198,
+      -0.0051426221160610994,
+      3.3188695721428134
+    ]
+  },
+  "input_sha256": {
+    "dev/native_rom/diagnose_jax_spliced_whole_waveform.py": "158c243e6909d26529cf5e976521793cd07821cd48662036a3c34182391f9d1c",
+    "dev/native_rom/diagnose_native_warm_full_mesh.py": "1d077b3cd3d8e49ca8bdee14d3957bdb62d2398c8aeb5ccb154226746dd26f46",
+    "dev/native_rom/eob/jax/adaptive_driver_clean.py": "41691a243f3b1bf248443f679f8fd405eaeeb3de2d3e8d6800b03ba4b4c64ecf",
+    "dev/native_rom/eob/jax/source_calibration_hamiltonian.py": "8b5584002625479e667337076df59cb6a820e1cffc88a282071843e6d4e4c8a9",
+    "dev/native_rom/eob/torch/source_calibration_hamiltonian.py": "2b0ddccf6ba99d0157c0b624cf0c4e926713c96a736e22e1b6fe55bdbde1cdc2",
+    "dev/native_rom/eob/torch/warm_start.py": "a9818350b18ed04ca645edbf6af4c22760fc51eae540c12f38d171d99a675a20",
+    "src/jaxwave/approximants/eob/hamiltonian.py": "5bdcb51b0dccb5b91352d7e8697d1533e6f49ae2dba09526731cd9e4747a2118",
+    "src/jaxwave/approximants/eob/integrator.py": "f0e842e518cd05c94361038602a993c0ee9025b218490945fdb4021da9b64e46",
+    "src/jaxwave/approximants/eob/seobnrv4_flux.py": "47f9be36e6494708643afcdeb487a425c3e607a4c2f1ba730cbcf71ccba64287",
+    "src/torchwave/approximants/eob/adaptive_driver_clean.py": "2f5e1c3b8766b92340a6aafcdfbdc5fe6856a3e4390551abefda1e22b90dda7b",
+    "src/torchwave/approximants/eob/hamiltonian.py": "96febd6b3e0722802425f0e7490079d62869f2e63ac92c8db32e9063b5bc4b5b",
+    "src/torchwave/approximants/eob/integrator.py": "4c643493086a06accfe7f8f5ff679e77a1015aeb03659b395b48cac09de91c65",
+    "src/torchwave/approximants/eob/seobnrv4_flux.py": "3136bb016cce21cdd9d636008fee1fa5472757fed4446dc899e0d31e70124c83"
+  },
+  "interval_count": 10,
+  "jax": {
+    "spin_tangent": [
+      0.29254075149372094,
+      -0.39298979833789877,
+      0.0021415712523187545,
+      -0.16706619224883507
+    ],
+    "state": [
+      8.440751444592795,
+      14.716275624970486,
+      -0.005516235003374588,
+      3.294174911223255
+    ]
+  },
+  "mesh_source": {
+    "path": "dev/native_rom/evidence/2026-09-25/native_warm_full_mesh.json",
+    "sha256": "2401e0258d09d0cc69207d91eea15e7fc0e0c42cd2c15520675b980be8ea8139"
+  },
+  "metrics": {
+    "max_jax_mesh_state_abs": 9.237055564881302e-14,
+    "max_torch_jax_spin_tangent_scaled": 2.6201263381153694e-14,
+    "max_torch_jax_state_abs": 9.414691248821327e-14,
+    "max_torch_mesh_state_abs": 2.1316282072803006e-14
+  },
+  "pid": 78955,
+  "plan_sha256": "7f4cba595c5c42c73dcc14c65adab993d634a01ddb6f224683ced3a9dfba97cf",
+  "prior_checkpoint": {
+    "path": "dev/native_rom/evidence/2026-09-25/native_warm_full_tangent_segment_07.json",
+    "sha256": "071c698c270779fb3999c0440e564ebf5e8aec0642797465619861ed1e48036a"
+  },
+  "release_qualified": false,
+  "schema": "diffgw.seobnrv4.native-warm-full-tangent-segment.v1",
+  "script_sha256": "74133398b2917d515f6a2884ef0fb9b2595c09921f4e6f9376f5d3e9abac714e",
+  "segment": 8,
+  "start_knot": 112,
+  "status": "diagnostic_complete",
+  "torch": {
+    "spin_tangent": [
+      0.29254075149374714,
+      -0.39298979833791897,
+      0.0021415712523199532,
+      -0.16706619224883382
+    ],
+    "state": [
+      8.440751444592701,
+      14.716275624970576,
+      -0.005516235003374664,
+      3.294174911223248
+    ]
+  }
+}

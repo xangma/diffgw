@@ -2992,6 +2992,18 @@ mesh validity gates. Its 122 pre-crossing intervals fit eight bounded
 checkpoint segments. This freezes one baseline adaptive mesh for subsequent
 derivative checks; it does not validate the full-target tangent or the
 adaptive-controller derivative.
+Eight [hash-linked fixed-mesh tangent checkpoints](evidence/2026-09-25/native_warm_full_tangent_segments_plan.json)
+propagate the frozen cap-state `chi1` tangent across all 122 pre-crossing
+intervals to the last knot before `MΩ=0.04`. All 56 segment gates pass.
+Across every knot, the worst Torch/JAX state discrepancy is `9.41e-14`, the
+worst scaled spin-tangent discrepancy is `2.62e-14`, and each backend stays
+within `9.24e-14` of the detached adaptive mesh. Each segment stayed below
+the declared 4 GiB and 60 s bounds. The final
+[checkpoint](evidence/2026-09-25/native_warm_full_tangent_segment_08.json)
+records the state and tangent for a separate event-crossing check. This
+validates one fixed-mesh continuation; adaptive-controller decisions, the
+final crossing derivative, nonlinear cap-map finite differences, and waveform
+gradients remain open.
 
 The [warm trajectory comparison](evidence/2026-09-25/warm_jax_trajectory_divergence.json)
 finds Torch/JAX raw-mode relative L2 of `1.89e-12` on their separately
