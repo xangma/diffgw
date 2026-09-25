@@ -1,0 +1,245 @@
+{
+  "chart": "Original 1169-sample public peak-aligned v4 chart. Reproduce v4 corrected-native sampled peak anchor and physical-scale operation order exactly; use the same anchor on raw native mode. Compare only pre-attachment samples; no pairwise fit or extrapolation.",
+  "gates": {
+    "cap_state_max_abs": 1e-12,
+    "error_identity_relative_max": 1e-12,
+    "nqc_knot_reconstruction_relative_l2": 1e-08,
+    "public_grid_max_abs_s": 1e-12,
+    "sample_time_max_abs_M": 1e-10,
+    "warm_residual_max_abs": 1e-12
+  },
+  "inputs": {
+    "adaptive_driver": {
+      "path": "src/torchwave/approximants/eob/adaptive_driver_clean.py",
+      "sha256": "2f5e1c3b8766b92340a6aafcdfbdc5fe6856a3e4390551abefda1e22b90dda7b"
+    },
+    "attachment": {
+      "path": "src/torchwave/approximants/eob/numerical_attachment.py",
+      "sha256": "8c7a149b76c529a255a4caa4b0ca76317b5306c8967db84047f299ccf51be7fc"
+    },
+    "boundary_plan": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_ode_chain_boundary_frequency_plan.json",
+      "sha256": "e85982de0ea04ddbd14c46d0f2752af2eb0e7d288deb1db6f904827dba149c76"
+    },
+    "boundary_result": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_ode_chain_boundary_frequency.json",
+      "sha256": "da62437767c4cfd908344bf06986f388a27aa9c57b53c1481af92d74ba220414"
+    },
+    "boundary_runner": {
+      "path": "dev/native_rom/diagnose_source_aligned_ode_chain_boundary_frequency.py",
+      "sha256": "f4c434d1d050ffad7550364292cc202c639e79323e731db797afd6a2b10e21e6"
+    },
+    "cap_audit_plan": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_native_cap_frequency_v4_audit_plan.json",
+      "sha256": "109e6607fbf1e326530b8816a1d3040419312f242d118493615dd75951d61f33"
+    },
+    "cap_audit_result": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_native_cap_frequency_v4_audit.json",
+      "sha256": "c6898fb22073fc8e7e026ce15ed52d71137a59d210bfd3d1ad6667b2093e9c9d"
+    },
+    "cap_audit_runner": {
+      "path": "dev/native_rom/audit_source_aligned_native_cap_frequency_v4.py",
+      "sha256": "b4667d57c134542718d1a3a199265c12b2e809e72c4b55aa3efcb06a17dc3f27"
+    },
+    "early_warm_plan": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_early_raw_warm_start_v5_plan.json",
+      "sha256": "2ebffbc522054286e242ea244b3e2380da98c4e57f9307446160383d844c293a"
+    },
+    "early_warm_result": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_early_raw_warm_start_v5.json",
+      "sha256": "71d4ef86cfab87cf85adea3ee3177bb511f0ffad759c3ceb4c3e8618b2953193"
+    },
+    "failed_v1_plan": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_native_warm_whole_waveform_plan.json",
+      "sha256": "fac773ef306cda8d01ce0af3d4b7fbd81898cd5093e178324d9d2836b2049ee6"
+    },
+    "failed_v1_result": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_native_warm_whole_waveform.json",
+      "sha256": "15927c9944db59807481e76034c048c8fe3a2238b016b98632f6d031f9abdb55"
+    },
+    "failed_v1_runner": {
+      "path": "dev/native_rom/diagnose_source_aligned_native_warm_whole_waveform.py",
+      "sha256": "8e5405d12cd2f88849d2fd702e47cf4df6987a4443b736f02c71e43e0088197b"
+    },
+    "failed_v2_plan": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_native_warm_whole_waveform_v2_plan.json",
+      "sha256": "2cbf5c65e8c7d9f612e4b4f19ff9390bf63a22331d67c0a0f2fa4a7354a39d41"
+    },
+    "failed_v2_result": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_native_warm_whole_waveform_v2.json",
+      "sha256": "81f45019d07be0a9fd956441f42727e6238080807e6dfd85ea172c296d6bffe6"
+    },
+    "failed_v2_runner": {
+      "path": "dev/native_rom/diagnose_source_aligned_native_warm_whole_waveform_v2.py",
+      "sha256": "9deab92c5dc714895afd4f8e0a89fbc76372c15d6b0ad4e2d0de744db54507f6"
+    },
+    "initial_conditions": {
+      "path": "src/torchwave/approximants/eob/initial_conditions.py",
+      "sha256": "520641e8c3037ea1aa6e947c7d9dd92c759333396103cb1d1fffc8aa5019137b"
+    },
+    "ladder_plan": {
+      "path": "dev/native_rom/evidence/2026-09-25/jax_source_tolerance_ladder_plan.json",
+      "sha256": "101f756e6d90e07cb02084c04788bed43c4cdbc2773b948af8ff3262fda7352f"
+    },
+    "native_driver": {
+      "path": "dev/native_rom/diagnose_jax_spliced_whole_waveform.py",
+      "sha256": "158c243e6909d26529cf5e976521793cd07821cd48662036a3c34182391f9d1c"
+    },
+    "native_flux": {
+      "path": "src/torchwave/approximants/eob/seobnrv4_flux.py",
+      "sha256": "3136bb016cce21cdd9d636008fee1fa5472757fed4446dc899e0d31e70124c83"
+    },
+    "native_hamiltonian": {
+      "path": "dev/native_rom/eob/torch/source_calibration_hamiltonian.py",
+      "sha256": "2b0ddccf6ba99d0157c0b624cf0c4e926713c96a736e22e1b6fe55bdbde1cdc2"
+    },
+    "native_mode": {
+      "path": "src/torchwave/approximants/eob/seobnrv4_mode22.py",
+      "sha256": "3e2b97c175d2c6d3720f04529b400d455104e963b54f0b885e4a1fda59f90e4b"
+    },
+    "native_public_gap": {
+      "path": "dev/native_rom/diagnose_source_aligned_public_gap.py",
+      "sha256": "43b07a4bf4b86b483fb30bb9610e4fecdce49679f7a8e6da218e9595a3c2b22b"
+    },
+    "nqc_basis": {
+      "path": "src/torchwave/approximants/eob/nqc.py",
+      "sha256": "c8683181f7cf911df1e1b85cd6999cdb03e7c594e867315359040e9eb03ca552"
+    },
+    "overlap_v3_plan": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_native_warm_whole_waveform_v3_plan.json",
+      "sha256": "e922fdd47e5675aa2d016a67e3f5d7bbbeb3f6d5c4184887251d0456a423c2dc"
+    },
+    "overlap_v3_result": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_native_warm_whole_waveform_v3.json",
+      "sha256": "e0eb35487787588f2bb758de1becab96a1f4025d10a021ca96a72edd09205440"
+    },
+    "overlap_v3_runner": {
+      "path": "dev/native_rom/diagnose_source_aligned_native_warm_whole_waveform_v3.py",
+      "sha256": "ca9c2386b4cd3e57d3050c1c6dde177c161083db434fe504336d5249f1bf3de2"
+    },
+    "peak_anchor": {
+      "path": "dev/native_rom/diagnose_peak_anchor.py",
+      "sha256": "02a2974900b77e2e074f9d050006b5a973cd6e621c8d4c4c007e88482ef5ea6a"
+    },
+    "prior_gap": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_public_gap.json",
+      "sha256": "a2d9498c630afe966ca826ebb342ad7f1c28c99211a935493c666f1cd4e1a08a"
+    },
+    "public_gap_result": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_public_gap.json",
+      "sha256": "a2d9498c630afe966ca826ebb342ad7f1c28c99211a935493c666f1cd4e1a08a"
+    },
+    "qualifier": {
+      "path": "dev/native_rom/qualify_generator.py",
+      "sha256": "df9bffb614b87e82b5a8da47212cb01312ad4d0cb9d687d929570df134954174"
+    },
+    "raw_nqc_v1_plan": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_cap_raw_nqc_attribution_plan.json",
+      "sha256": "0cb4ff910f4e7ea3a8fc57db9c2e8bf8d257139c3de47323179aa3c8f1c8739b"
+    },
+    "raw_nqc_v1_result": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_cap_raw_nqc_attribution.json",
+      "sha256": "b679ab19fe6c586e7fe1c6cc7c3437d3a5db8a6a8f52e6ef07169fbff5400c19"
+    },
+    "raw_nqc_v1_runner": {
+      "path": "dev/native_rom/diagnose_source_aligned_cap_raw_nqc_attribution.py",
+      "sha256": "8e3aedc069117b696a9324ebcdce8329674a09fedb8cd25c52abd2f807df6162"
+    },
+    "same_row_nqc_capture": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_nqc_same_row_strong_aligned.json",
+      "sha256": "646b20549d4a687aa3ec334626473de0155271833003089abfad3ce5fd46fae8"
+    },
+    "source_adapter": {
+      "path": "dev/native_rom/reference/full_v4_source_mode_adapter.c",
+      "sha256": "59d8d7dd6547e84cc53b2ecb76005195bb54174c481146f88fc257a3abf7fcf4"
+    },
+    "source_amplitude_runner": {
+      "path": "dev/native_rom/diagnose_source_aligned_ode_chain_amplitude_v2.py",
+      "sha256": "c3460f910c186f3fdf2e2c51084990198d314ba6d6eeacfd3592663b9e1cecef"
+    },
+    "source_attribution_runner": {
+      "path": "dev/native_rom/diagnose_source_aligned_ode_chain_residual_attribution_v2.py",
+      "sha256": "00fd90accfbde484815f2c409d7ec985c4ad27d97e2a434fabb2632885c20513"
+    },
+    "source_compile": {
+      "path": "dev/native_rom/diagnose_source_flux_initial.py",
+      "sha256": "b1d040bedff3eb88ee644ede9098c7807ab8a3e2a9ca6b8bcfe9bd35fec4d7bb"
+    },
+    "source_field": {
+      "path": "dev/native_rom/diagnose_source_aligned_ode_chain_phase_matrix.py",
+      "sha256": "654ce386c98094f17c8b14bfdf2fdb9db2e70d112c1c4524943cd3745d41ad1a"
+    },
+    "source_phase_runner": {
+      "path": "dev/native_rom/diagnose_source_aligned_ode_chain_phase_matrix.py",
+      "sha256": "654ce386c98094f17c8b14bfdf2fdb9db2e70d112c1c4524943cd3745d41ad1a"
+    },
+    "source_plan": {
+      "path": "dev/native_rom/evidence/2026-09-24/source_flux_initial_plan.json",
+      "sha256": "1167199c8f954f97a5905a1e3b2f67d1555e984e5f1da0a0fc42a77a925f96ea"
+    },
+    "source_rhs_runner": {
+      "path": "dev/native_rom/diagnose_source_aligned_ode_chain_phase_rhs.py",
+      "sha256": "b789eedb4eacf29500253999d1d0bb68e8e8591f661b8025592c50ae1d1114ff"
+    },
+    "source_wheel_adapter": {
+      "path": "dev/native_rom/diagnose_source_wheel_mode.py",
+      "sha256": "97fa1d42f7c893fa342d4561bf6092c6a12babc6d4c3a0fadf9bd2e8707b7c99"
+    },
+    "summary": {
+      "path": "dev/native_rom/diagnose_jax_source_tolerance_ladder.py",
+      "sha256": "1d9c70218f8000115d74fef577521289a1bf265d251629678f5065e4420928a9"
+    },
+    "three_way_plan": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_three_way_waveform_plan.json",
+      "sha256": "ed721879ba2a7577e289dc9958eff272e12966e82794093e6cf355ae55c778a3"
+    },
+    "three_way_result": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_three_way_waveform.json",
+      "sha256": "3cbe0ff66ff50a8ee988867176144d2d0bb8aa3b5169a7f858a7513397048381"
+    },
+    "three_way_runner": {
+      "path": "dev/native_rom/diagnose_source_aligned_three_way_waveform.py",
+      "sha256": "a8045a050f44baeb2b8901f7807f4f7a75540c1381b102cb267a09ca1c64c8e6"
+    },
+    "v4_plan": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_native_cap_full_crop_v4_plan.json",
+      "sha256": "c4c07b9a536fcb49087bd127d605e5645e8637118afaef157e89aee010c83247"
+    },
+    "v4_result": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_native_cap_full_crop_v4.json",
+      "sha256": "8ce830aaed62a156d8bbd0b0780a6838d17ea94a74ae6f36dab418b2a147f8aa"
+    },
+    "v4_runner": {
+      "path": "dev/native_rom/diagnose_source_aligned_native_cap_full_crop_v4.py",
+      "sha256": "ebb2777d51f3116082195333c02e71ee023412f1a5cf89169ad085e8659b7cba"
+    },
+    "warm_start_helper": {
+      "path": "dev/native_rom/eob/torch/warm_start.py",
+      "sha256": "a9818350b18ed04ca645edbf6af4c22760fc51eae540c12f38d171d99a675a20"
+    }
+  },
+  "level": "finest",
+  "limitations": [
+    "The pinned full source adapter exposes final assembled h22, not a source raw pre-NQC series on the identical full-waveform chart.",
+    "Raw/native and corrected/native modes share native dynamics and raw-mode equations; this comparison measures the native NQC increment in the source residual but cannot isolate source NQC from source dynamics or raw-mode differences.",
+    "The v4 cap-frequency validity gate remains failed. This result may only be interpreted with the separate audit; no release gates are changed.",
+    "The v1 attempt failed only native_aligned_replay because it precomputed a physical scale and changed floating-point operation order. This v2 must reproduce the v4 hash exactly.",
+    "Raw-versus-corrected contrast includes the native NQC global phase under the fixed corrected-mode anchor; large raw complex L2 is not evidence that native NQC causes the remaining corrected-source residual. Amplitude and phase controls are descriptive, with no new alignment."
+  ],
+  "measurements": [
+    "Raw, corrected, and pinned source complex relative L2 over frozen early, NQC-local, full pre-boundary, and 1M boundary-margin windows.",
+    "Fixed-anchor amplitude relative L2 and raw-versus-corrected phase-difference summaries; no fit.",
+    "Error-energy identity for adding the native NQC correction on the same trajectory, with exact v4 corrected-series/chart hashes."
+  ],
+  "purpose": "Separate prospectively frozen v2: exact v4 floating-point physical-scale replay, then same-chart raw versus NQC-corrected pre-attachment comparison against final source mode. Preserve v1 failed hash result; no physical qualification or source-fidelity threshold.",
+  "release_qualified": false,
+  "row_tuple": [
+    30.0,
+    20.0,
+    0.8,
+    0.6,
+    0.04
+  ],
+  "schema": "diffgw.seobnrv4.cap-raw-nqc-attribution-plan.v2",
+  "script_sha256": "ac7b7e4c5cdaeaf7274197447078d84280c05aadd970c2af789b8e2ecacc057c"
+}
