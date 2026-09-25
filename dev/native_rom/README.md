@@ -1748,6 +1748,23 @@ Neither reference has a stable whole-mode cadence trend here. These
 comparisons do not isolate the NQC fit as the sole cause of the inspiral
 drift or designate a fine grid as the release reference.
 
+The [fine-grid causal NQC override](evidence/2026-09-25/source_q4_fine_nqc_override_ladder.json)
+uses a [frozen plan](evidence/2026-09-25/source_q4_fine_nqc_override_ladder_plan.json)
+and replays the prior `0.015625 M` intervention exactly. At `0.015625`,
+`0.0078125`, and `0.00390625 M`, replacing only the source's five active
+`(2,2)` NQC coefficients with the same-cadence public-wheel values reduces
+source/wheel peak-fitted whole-mode complex relative L2 from `0.001425` to
+`1.51e-5`, `0.001710` to `6.40e-6`, and `0.002038` to `2.52e-5`.
+Same-coefficient controls reproduce the baseline source mode bit for bit at
+all three cadences. The intervention shifts the mode epoch and sample count
+by one output sample in opposite directions on the two finer grids, which the
+peak-fitted comparison includes. The modified source's adjacent-grid self
+differences (`0.000698`, `0.002731`) closely follow the wheel's (`0.000689`,
+`0.002712`). Thus the source/wheel cross-model drift is chiefly caused by
+their cadence-sensitive NQC fits on this row; it does not establish that the
+wheel coefficients are converged, physically preferable, or suitable as
+native model data. Neither generator is release qualified by this control.
+
 The [prospective q4 local-fit control](evidence/2026-09-25/source_q4_ultrafine_local_nqc_plan.json)
 recomputes those five coefficients with the same degree-four, `±2 M` local
 polynomial used in the earlier combined numerical control, then injects each
