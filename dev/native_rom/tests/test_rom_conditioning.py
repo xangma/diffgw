@@ -3,7 +3,7 @@
 import numpy as np
 import pytest
 
-from dev.native_rom.rom.conditioning import condition_modes
+from dev.native_rom.rom.conditioning import condition_modes, condition_modes_windowed
 from dev.native_rom.rom.reduced_interpolant import ReducedTensorInterpolant
 
 
@@ -62,3 +62,22 @@ def test_conditioning_rejects_unresolved_input_shape_and_zero_amplitude():
         condition_modes(frequency, invalid, .08)
     with pytest.raises(ValueError, match="reference frequency"):
         condition_modes(frequency, np.ones(65, dtype=complex), .21)
+
+
+def test_windowed_gauge_removes_independent_phase_and_time_shifts():
+    frequency = np.linspace(90., 110., 641)
+    x = frequency - 100.
+    phase = np.stack((.3*x**2 + .001*x**3, -.2*x**2 + .002*x**3))
+    modes = np.exp(.001*x + 1j*phase)
+    shifted = modes * np.exp(1j*np.stack((.7 + .03*x, -.4 - .02*x)))
+    baseline = condition_modes_windowed(frequency, modes, 100., half_width_hz=2.)
+    candidate = condition_modes_windowed(frequency, shifted, 100., half_width_hz=2.)
+    np.testing.assert_allclose(candidate.log_amplitude, baseline.log_amplitude, atol=1e-15)
+    np.testing.assert_allclose(candidate.phase, baseline.phase, atol=3e-12)
+
+
+def test_windowed_gauge_requires_resolved_two_sided_window():
+    frequency = np.linspace(99., 101., 65)
+    with pytest.raises(ValueError, match="eight nodes on each side"):
+        condition_modes_windowed(frequency, np.ones(65, dtype=complex),
+                                 100., half_width_hz=.1)
