@@ -49,6 +49,8 @@ def test_n61_runtime_payload_has_fixed_expected_hash():
 
 def test_fit_inputs_use_main_full_precision_coefficients():
     module = _module()
+    if not module.EXACT_REPORT_PATH.exists() or not module.N257_REPORT_PATH.exists():
+        pytest.skip("optional London fit diagnostic reports are not present")
     exact, exact_meta = module._load_exact_coefficients(module.EXACT_REPORT_PATH)
     n257, n257_meta = module._load_n257_coefficients(module.N257_REPORT_PATH)
     assert len(exact) == len(n257) == 6

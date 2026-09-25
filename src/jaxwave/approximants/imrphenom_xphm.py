@@ -449,7 +449,10 @@ class IMRPhenomXPHM:
             h_mode = (1j ** mp) * coprec_dict[(l, mp)]
             alpha, beta, gamma = angles_by_mp.get(mp, angles_by_mp[2])
 
-            scale_l = math.sqrt((2 * l + 1) / 5.0) / norm_mode
+            # The -mp Wigner column enters first below. Its aligned
+            # projection differs from the XHM harmonic convention by
+            # (-1)^l, which must also multiply the precessing mode.
+            scale_l = ((-1) ** l) * math.sqrt((2 * l + 1) / 5.0) / norm_mode
 
             d_beta_l = wigner_small_d_matrix(l, beta)
             d_jn_l = d_mat_jn[l]

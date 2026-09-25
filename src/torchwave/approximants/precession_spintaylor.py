@@ -450,7 +450,7 @@ def evaluate_spintaylor_precession(
     # Transition frequency f_meco and f_trans
     mf_meco = XASParameterFits.fit_f_meco(eta, s1z_t, s2z_t)
     f_meco = mf_meco / torch.clamp(m_sec, min=1e-24)
-    f_meco = torch.clamp(f_meco, min=f_ref_t + 15.0, max=800.0)
+    f_meco = torch.clamp(torch.maximum(f_meco, f_ref_t + 15.0), max=800.0)
     f_trans = 0.98 * f_meco
     v_trans = (PI * m_sec * f_trans).pow(1.0 / 3.0)
 

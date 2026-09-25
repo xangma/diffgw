@@ -10,7 +10,10 @@ Validates:
 7. PyTree registration and methods tracer safety.
 """
 
+import json
 import math
+from pathlib import Path
+
 import numpy as np
 import pytest
 import torch
@@ -41,6 +44,21 @@ from jaxwave.approximants.kerr_ringdown import (
     evaluate_qnm as jax_eval_qnm,
     get_ringdown_waveform as jax_get_waveform,
 )
+
+
+def test_jax_qnm_zero_spin_gradient_matches_independent_roots():
+    from jaxwave.approximants.kerr_qnm_interp import evaluate_kerr_qnm_220
+
+    data = Path(__file__).resolve().parents[1] / "data/kerr_qnm_220_leaver.json"
+    rows = {row["a"]: row for row in json.loads(data.read_text())["holdouts"]}
+    expected = np.array([
+        (rows[1e-7][name] - rows[-1e-7][name]) / 2e-7
+        for name in ("wr", "damping")
+    ])
+    gradient = jax.jacfwd(lambda spin: jnp.stack(evaluate_kerr_qnm_220(spin)))(
+        jnp.array(0.0, dtype=jnp.float64)
+    )
+    np.testing.assert_allclose(np.asarray(gradient), expected, rtol=0.0, atol=5e-8)
 
 
 @pytest.mark.parametrize("mass", [40.0, 65.0, 100.0])
@@ -131,6 +149,20 @@ def test_kerr_ringdown_spheroidal_basis_parity():
 
     np.testing.assert_allclose(hp_t.numpy(), np.asarray(hp_j), rtol=1e-12, atol=1e-14)
     np.testing.assert_allclose(hc_t.numpy(), np.asarray(hc_j), rtol=1e-12, atol=1e-14)
+
+
+def test_kerr_ringdown_spheroidal_zero_spin_limit_jax():
+    """The JAX angular projection must reduce to its spherical convention."""
+    times = jnp.linspace(0.0, 0.02, 31)
+    parameters = dict(final_mass=60.0, final_spin=0.0, inclination=0.93,
+                      phi=0.27, amplitudes={(2, 2, 0): 0.8,
+                                              (3, 3, 0): 0.1})
+    spherical = JaxRingdown.time_domain(times, **parameters)
+    spheroidal = JaxRingdown.time_domain(times, **parameters,
+                                        angular_basis="spheroidal")
+    for sphere, spheroid in zip(spherical, spheroidal):
+        np.testing.assert_allclose(np.asarray(sphere), np.asarray(spheroid),
+                                   rtol=2e-13, atol=1e-15)
 
 
 @pytest.mark.parametrize("backend", ["independent", "berti"])

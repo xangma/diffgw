@@ -128,16 +128,21 @@ class EOBTrajectoryIntegrator:
 
         Fixed-step RK4 retains at least two samples beyond each observed maximum and
         then freezes that row. ``valid`` distinguishes frozen padding from
-        evolved samples. A quartic local root refines the peak; it never uses
-        a fixed radius as a substitute. This event defines the first maximum
-        followed by two decreasing samples, appropriate for a smooth inspiral
-        and plunge. Oscillatory/eccentric trajectories need another event rule.
+        evolved samples. ``continuous`` locates the maximum of a natural cubic
+        spline through each row's accepted samples; ``grid`` uses a local
+        seven-sample interpolant. Neither uses a fixed radius as a substitute.
+        This event defines the first maximum followed by two decreasing
+        samples, appropriate for a smooth inspiral and plunge.
+        Oscillatory/eccentric trajectories need another event rule.
 
         Exhausted steps and invalid Hamiltonian/RK stages raise. Choose a
         smaller dt if a stage crosses the Hamiltonian's domain and establish
         time-step convergence before using the result for merger matching.
         ``post_peak_duration`` adds nonnegative time beyond those two samples,
-        independently per parameter row, for matching after the maximum.
+        independently per parameter row, for matching after the maximum. Since
+        the continuous spline has natural endpoint conditions, a short
+        post-peak history can affect its peak location and sensitivity; verify
+        convergence with respect to both dt and post-peak duration.
         """
         if (not isinstance(initial_state, torch.Tensor) or initial_state.ndim < 1
                 or initial_state.shape[-1] != 4

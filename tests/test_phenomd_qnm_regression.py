@@ -9,6 +9,7 @@ import torch
 
 from torchwave import get_fd_waveform
 from torchwave.approximants.kerr_qnm_interp import evaluate_kerr_qnm_220
+from torchwave.approximants.kerr_qnm_generated import signed_qnm_220
 
 
 def _validation():
@@ -53,10 +54,11 @@ def test_qnm_inference_then_autograd_without_data_reads(monkeypatch):
     assert torch.autograd.grad(damping, spin)[0] < 0
 
 
-def test_qnm_zero_spin_derivative_matches_independent_roots():
+@pytest.mark.parametrize("evaluate", [evaluate_kerr_qnm_220, signed_qnm_220])
+def test_qnm_zero_spin_derivative_matches_independent_roots(evaluate):
     rows = {r["a"]: r for r in _validation()["holdouts"]}
     spin = torch.tensor(0.0, dtype=torch.float64, requires_grad=True)
-    for name, value in zip(("wr", "damping"), evaluate_kerr_qnm_220(spin)):
+    for name, value in zip(("wr", "damping"), evaluate(spin)):
         slope = (rows[1e-7][name] - rows[-1e-7][name]) / 2e-7
         gradient = torch.autograd.grad(value, spin, retain_graph=True)[0]
         assert abs(gradient.item() - slope) < 5e-8

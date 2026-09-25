@@ -2,6 +2,7 @@
 
 import pytest
 import torch
+from scipy.interpolate import CubicSpline
 
 from torchwave.approximants.eob.events import orbital_frequency_peak
 from torchwave.approximants.eob.integrator import EOBTrajectoryIntegrator
@@ -100,20 +101,38 @@ class NoRadiation:
         return torch.zeros_like(omega), torch.zeros_like(omega)
 
 
+def _assert_continuous_peak_matches_accepted_spline(result, row=None):
+    """Check the full accepted-history natural spline with an independent solver."""
+    valid = result.valid if row is None else result.valid[:, row]
+    frequency = result.frequency if row is None else result.frequency[:, row]
+    time = result.time[valid].detach().cpu().numpy()
+    values = frequency[valid].detach().cpu().numpy()
+    spline = CubicSpline(time, values, bc_type="natural")
+    candidates = spline.derivative().roots(extrapolate=False)
+    maxima = [t for t in candidates if time[0] < t < time[-1] and spline.derivative(2)(t) < 0]
+    assert len(maxima) == 1
+    peak = result.peak if row is None else tuple(value[row] for value in result.peak)
+    torch.testing.assert_close(peak[0], torch.as_tensor(maxima[0], dtype=result.time.dtype), rtol=0, atol=2e-12)
+    torch.testing.assert_close(peak[1], torch.as_tensor(spline(maxima[0]), dtype=result.time.dtype), rtol=0, atol=2e-12)
+    torch.testing.assert_close(peak[2], torch.as_tensor(spline.derivative(2)(maxima[0]), dtype=result.time.dtype), rtol=0, atol=2e-10)
+
+
 def test_batched_events_stop_independently_and_match_scalar_inference():
     center = torch.tensor([2.37, 4.28], dtype=torch.float64)
     initial = torch.tensor([1., 0., 0., 1.], dtype=torch.float64).expand(2, 4)
     solver = EOBTrajectoryIntegrator(AnalyticFlow(center), NoRadiation())
     result = solver.integrate_to_frequency_peak(initial, .1, 50)
-    torch.testing.assert_close(result.peak.time, center-1, atol=2e-6, rtol=0)
     counts = result.valid.sum(0)
     assert counts[0] < counts[1]
     for row in range(2):
+        _assert_continuous_peak_matches_accepted_spline(result, row)
         single = EOBTrajectoryIntegrator(AnalyticFlow(center[row]), NoRadiation())
         with torch.inference_mode():
             other = single.integrate_to_frequency_peak(initial[row], .1, 50)
         torch.testing.assert_close(result.state[:counts[row], row], other.state)
         torch.testing.assert_close(result.peak.time[row], other.peak.time)
+    grid = solver.integrate_to_frequency_peak(initial, .1, 50, matching_method="grid")
+    torch.testing.assert_close(grid.peak.time, center-1, atol=2e-6, rtol=0)
     with pytest.raises(ValueError, match="not reached"):
         solver.integrate_to_frequency_peak(initial, .1, 5)
 
@@ -122,8 +141,18 @@ def test_event_integration_preserves_location_parameter_gradient():
     center = torch.tensor(2.37, dtype=torch.float64, requires_grad=True)
     initial = torch.tensor([1., 0., 0., 1.], dtype=torch.float64)
     result = EOBTrajectoryIntegrator(AnalyticFlow(center), NoRadiation()).integrate_to_frequency_peak(initial, .05, 50)
+    _assert_continuous_peak_matches_accepted_spline(result)
     derivative = torch.autograd.grad(result.peak.time, center)[0]
-    torch.testing.assert_close(derivative, torch.ones_like(derivative), atol=2e-6, rtol=0)
+    # The nearby natural right endpoint changes the spline's sensitivity;
+    # compare autodiff with the derivative of the same finite-history event.
+    def locate(value):
+        flow = AnalyticFlow(value)
+        return EOBTrajectoryIntegrator(flow, NoRadiation()).integrate_to_frequency_peak(initial, .05, 50).peak.time
+    epsilon = 1e-5
+    with torch.no_grad():
+        difference = (locate(center+epsilon)-locate(center-epsilon))/(2*epsilon)
+    torch.testing.assert_close(derivative, difference, atol=2e-7, rtol=0)
+    assert derivative > 0
 
 
 def test_post_peak_duration_retains_requested_independent_history():
@@ -131,8 +160,11 @@ def test_post_peak_duration_retains_requested_independent_history():
     initial = torch.tensor([1., 0., 0., 1.], dtype=torch.float64).expand(2, 4)
     result = EOBTrajectoryIntegrator(AnalyticFlow(center), NoRadiation()).integrate_to_frequency_peak(
         initial, .05, 50, post_peak_duration=torch.tensor([0., .2], dtype=torch.float64))
-    torch.testing.assert_close(result.peak.time, center-1, atol=2e-6, rtol=0)
     assert result.valid.sum(0).tolist() == [30, 34]
+    for row in range(2):
+        _assert_continuous_peak_matches_accepted_spline(result, row)
+    assert abs(result.peak.time[1] - (center[1]-1)) < 1e-5
+    assert abs(result.peak.time[1] - (center[1]-1)) < abs(result.peak.time[0] - (center[0]-1))
     with pytest.raises(ValueError, match='nonnegative'):
         EOBTrajectoryIntegrator(AnalyticFlow(center), NoRadiation()).integrate_to_frequency_peak(
             initial, .05, 50, post_peak_duration=-1.)

@@ -18225,6 +18225,6 @@ def dimensionless_qnm(l, m, n, final_spin):
 
 def signed_qnm_220(spin):
     """Positive-frequency 220 root across signed spin, without clamping."""
-    positive = dimensionless_qnm(2, 2, 0, spin.clamp_min(0))
-    negative = dimensionless_qnm(2, -2, 0, (-spin).clamp_min(0))
+    positive = dimensionless_qnm(2, 2, 0, torch.where(spin >= 0, spin, torch.zeros_like(spin)))
+    negative = dimensionless_qnm(2, -2, 0, torch.where(spin < 0, -spin, torch.zeros_like(spin)))
     return tuple(torch.where(spin >= 0, p, n) for p, n in zip(positive, negative))

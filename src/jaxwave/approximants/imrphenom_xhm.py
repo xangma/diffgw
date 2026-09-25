@@ -1465,7 +1465,9 @@ class IMRPhenomXHM:
             if m % 2 != 0:
                 h_mode = jnp.where(_unsqueeze_to(swap_mask, h_mode), -h_mode, h_mode)
 
-            d_plus, d_cross = _swsh_projection_coefficients(l, m, inc_eval, phi0_eval)
+            # Positive frequency carries the -m mode (Pratten et al., B6-B7).
+            # The shared SWSH helper takes the positive-m azimuth convention.
+            d_plus, d_cross = _swsh_projection_coefficients(l, m, inc_eval, -phi0_eval)
             hp_lm = d_plus * h_mode
             hc_lm = d_cross * h_mode
 

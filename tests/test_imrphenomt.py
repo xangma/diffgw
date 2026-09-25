@@ -219,7 +219,7 @@ def test_native_amplitude_join_value_and_slope_continuity():
         torch.tensor(0.4, dtype=dtype),
         torch.tensor(-0.2, dtype=dtype),
     )
-    pn, pseudo, merger, alpha, c1, c2, c3, c4 = state[8]
+    pn, pseudo, merger, alpha, c1, c2, c3, c4, rd_alpha = state[8]
 
     def omega(u):
         return model._omega_insp(u, state[1], state[2], state[5], state[6], state[7])
@@ -232,7 +232,7 @@ def test_native_amplitude_join_value_and_slope_continuity():
         return torch.sum(_merger_basis(u, alpha) * merger, dim=-1)
 
     def ringdown(u):
-        return torch.exp(-alpha * u) * (c1 * torch.tanh(c2 * u + c3) + c4)
+        return torch.exp(-rd_alpha * u) * (c1 * torch.tanh(c2 * u + c3) + c4)
 
     torch.testing.assert_close(
         inspiral(torch.tensor([-150.0], dtype=dtype)),
