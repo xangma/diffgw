@@ -1,0 +1,71 @@
+{
+  "case_id": "strong_antialigned",
+  "checks": {
+    "each_grid_torch_jax_complex_relative_l2_at_most": true,
+    "jax_shared_sample_complex_relative_l2_at_most": true,
+    "native_backend_checks_passed": true,
+    "shared_time_max_abs_at_most_M": true,
+    "torch_shared_sample_complex_relative_l2_at_most": true
+  },
+  "comparisons": {
+    "jax": {
+      "complex_relative_l2": 1.4846426199588755e-06,
+      "shared_end_M": 957.5,
+      "shared_samples": 1916,
+      "shared_time_max_abs_M": 0.0
+    },
+    "torch": {
+      "complex_relative_l2": 1.485363182032566e-06,
+      "shared_end_M": 957.5,
+      "shared_samples": 1916,
+      "shared_time_max_abs_M": 0.0
+    }
+  },
+  "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+  "diagnostic_checks_passed": true,
+  "elapsed_s": 151.03396941703977,
+  "host": "RONI2",
+  "levels": {
+    "baseline": {
+      "boundary_time_difference_M": -2.251454134238884e-09,
+      "match_time_difference_M": -2.251454134238884e-09,
+      "native_backend_checks_passed": true,
+      "settings": {
+        "atol": 1e-13,
+        "coarse_output_step_M": 0.5,
+        "fine_refinement_factor": 256,
+        "max_step_M": 2.0,
+        "rtol": 1e-12
+      },
+      "torch_jax": {
+        "common_samples": 1916,
+        "complex_relative_l2": 2.8257141668181926e-10,
+        "support_sample_difference": 0,
+        "time_max_abs_M": 0.0
+      }
+    },
+    "refined": {
+      "boundary_time_difference_M": 4.072603587701451e-09,
+      "match_time_difference_M": 4.072603587701451e-09,
+      "native_backend_checks_passed": true,
+      "settings": {
+        "atol": 1e-13,
+        "coarse_output_step_M": 0.5,
+        "fine_refinement_factor": 512,
+        "max_step_M": 2.0,
+        "rtol": 1e-12
+      },
+      "torch_jax": {
+        "common_samples": 1916,
+        "complex_relative_l2": 4.4332303077610834e-10,
+        "support_sample_difference": 0,
+        "time_max_abs_M": 0.0
+      }
+    }
+  },
+  "pid": 96617,
+  "plan_sha256": "51d54011772566b69406f0b0c7ef5c3e379bcac8585d73bdf2e8d55902bac93a",
+  "release_qualified": false,
+  "schema": "diffgw.seobnrv4.jax-source-jit-domain.v1",
+  "status": "diagnostic_complete"
+}

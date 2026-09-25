@@ -1450,6 +1450,16 @@ for the complete waveform. Neither backend's counterfactual has been
 validated against independent NR or accepted as a faithful historical-source
 implementation.
 
+The [prospective domain extension](evidence/2026-09-25/jax_source_jit_domain_plan.json)
+checks the same factor-256 to factor-512 settings on the two remaining pinned
+full-waveform cases. [High-start mixed spin](evidence/2026-09-25/jax_source_jit_domain_high_start_mixed_spin.json)
+**fails** the predeclared `1e-5` independent-grid criterion: Torch and JAX
+whole-mode drifts are `1.22633e-5` and `1.22626e-5`, although backend
+disagreement at factor 512 is only `7.53e-10`. [Strong antialigned spin](evidence/2026-09-25/jax_source_jit_domain_strong_antialigned.json)
+passes with Torch/JAX drifts `1.48536e-6` and `1.48464e-6`, and factor-512
+backend disagreement `4.43e-10`. Thus the combined control passes three of
+four pinned cases at this refinement; domain numerical qualification is open.
+
 The [frozen anchor diagnostic](evidence/2026-09-25/source_spliced_anchor_plan.json)
 replays all four cases and fits each mode's own amplitude peak between output
 samples without optimizing a relative shift. The [results](evidence/2026-09-25/source_spliced_anchor.json)
