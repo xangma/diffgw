@@ -1702,6 +1702,15 @@ though it is `1.51e-5` with independently fitted peaks; the crossing-time
 chart is itself sensitive at the target precision. These residuals therefore
 cannot establish either an absolute historical-fidelity bound or release
 qualification. Independent NR failures and the ROM training gate remain open.
+The [separate source/wheel anchor sensitivity control](evidence/2026-09-25/q4_source_anchor_sensitivity.json)
+freezes frequency crossings at `Mω₂₂ = 0.10`, `0.11`, and `0.12` on both
+ultrafine cadences. At `0.015625 M`, source/wheel error ranges from `1.93e-4`
+to `3.32e-4` across those anchors, while replacing source NQC coefficients
+with the wheel's lowers it to `3.18e-5`–`1.16e-4` at every anchor. At
+`0.03125 M`, the corresponding ranges are `1.06e-5`–`2.36e-5` and
+`7.77e-6`–`1.15e-5`. The intervention's direction survives the chart
+choice, but its absolute ultrafine error does not. No one crossing is selected
+as a release alignment rule from this post-hoc sensitivity check.
 
 The [JAX initial-state-to-base-mode gradient check](evidence/2026-09-25/jax_initial_to_base_mode_gradient.json)
 uses a [frozen q4 plan](evidence/2026-09-25/jax_initial_to_base_mode_gradient_plan.json)
