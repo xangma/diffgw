@@ -48,3 +48,6 @@ no dataset is downloaded during installation or normal waveform evaluation.
 No complete standalone XHM 122022 supplementary dataset is registered, so this
 workflow cannot yet supply its missing calibration data. Download support does
 not change the numerical parity results or replace missing waveform drivers.
+The paper-era arXiv v2 archive inventory and the absence of an authoritative
+`122022` release mapping are recorded in the
+[XHM/XPHM release-qualification receipt](validation/xhm_xphm_release_qualification_20260925.json).

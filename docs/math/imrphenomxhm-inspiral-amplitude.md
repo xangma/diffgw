@@ -109,12 +109,15 @@ outputs are not interchangeable. A 20-row clean-assembly run records result
 SHA-256 `57230acd...1826` and raw-array SHA-256 `a4379774...0f32` in the
 [component receipt](../validation/xhm_carrier_components_20260925.json).
 Existing checksum-pinned author-archive fixtures verify selected paper-era
-amplitude surfaces from the arXiv v2 `AmpFits` supplement, but neither that
-selection nor the archive inventory identifies a complete current-release
-node provider. In particular, the `(3,3)` provider calibration and the
-current-default all-new amplitude calibration remain unresolved. No complete
-standalone XHM 122022 calibration asset is registered in
-[external data](../external-data.md).
+amplitude surfaces from the arXiv v2 `AmpFits` supplement. A fresh inventory
+of the complete v2 source archive found 37 amplitude-fit files, 33 phase-fit
+files, eight mixing-coefficient files, both fit notebooks, and the fit README.
+Thus paper-era assets are present; the blocker is narrower: neither the
+archive nor the publication identifies an authoritative mapping to the
+installed default `122022` release. In particular, the `(3,3)` provider
+calibration and the current-default all-new amplitude calibration remain
+unresolved. No complete standalone XHM 122022 calibration asset is registered
+in [external data](../external-data.md).
 
 Consequently, routing the existing earlier-provider nodes, compatibility sign
 branch, or older transition prescription into production would create an
@@ -136,6 +139,16 @@ binary parity. Mode `(3,2)` additionally requires spherical-spheroidal mixing.
 The component receipt is descriptive evidence, not a new acceptance gate.
 The strict frozen full-waveform catalog/holdout results remain `0/1` for XHM
 and `0/1` for XPHM in both sets, hence red.
+
+The exact PR-base qualification rerun at
+`4814835f7744fe00a5863ed70eb590d41a7e3ac3` is recorded in the
+[release-qualification receipt](../validation/xhm_xphm_release_qualification_20260925.json).
+It reproduced the `(3,2)` inspiral-amplitude relative L2 values
+`0.47847072820479275` (catalog) and `0.10594593969797324` (holdout). The
+strict whole-complex-mode holdout also fails: direct complex relative L2 is
+`1.5613045346149474` and flat mismatch is `0.617904191209656`, against
+`1e-6` and `1e-8` limits. The qualification verdict is therefore no-release,
+with no production waveform, transition, or gate change.
 
 ## Reproduce the checks
 
