@@ -98,6 +98,31 @@ def test_additional_precession_binary_reference(name, method, version, spin_mode
     assert 1-overlap < mismatch_limit
 
 
+@pytest.mark.xfail(
+    strict=True,
+    reason="measured q=10 MSA/PV300 discrepancy; keep the qualification gate visible",
+)
+@pytest.mark.parametrize("name", ["IMRPhenomTP", "IMRPhenomTPHM"])
+@pytest.mark.parametrize("method,l2_limit,mismatch_limit", [
+    ("msa", 0.01, 1e-4),
+    ("numerical", 0.03, 5e-4),
+])
+def test_high_mass_ratio_precession_unresolved_gate(
+    name, method, l2_limit, mismatch_limit,
+):
+    """Retain unresolved matched-option binary gates without relaxing them."""
+    pytest.importorskip("lal")
+    pytest.importorskip("lalsimulation")
+    pytest.importorskip("torch")
+    from scripts.validate_phenomt_precession import measure
+
+    result = measure(name, method, "torch", "high_mass_ratio", 2048)
+    assert (
+        result["relative_l2"] < l2_limit
+        and result["mismatch"] < mismatch_limit
+    ), result
+
+
 @pytest.mark.parametrize("backend", ["torch", "jax"])
 @pytest.mark.parametrize("only22", [1, 0])
 def test_project_modes_rotation_against_public_lal(backend, only22):

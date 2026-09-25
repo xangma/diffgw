@@ -59,8 +59,10 @@ their negative partners for polarization projection.
 
 TP/TPHM accept Cartesian spin vectors in the reference `L0` source frame;
 aligned variants reject nonzero transverse spin. The frame axes follow TPHM
-Eq. (3): reference `z=L_N`, `x` points from the smaller to larger black hole,
-and `y` completes a right-handed triad. TPHM Eqs. (4)–(9) rotate from the
+Eq. (3): reference `z=L_N` and `x=(r1-r2)/|r1-r2|`. In the paper's labeling,
+`q=m2/m1>=1`, so `x` points from the larger body 2 toward the smaller body 1;
+DiffGW's public mass labels are canonicalized with `m1>=m2`. `y` completes a
+right-handed triad. TPHM Eqs. (4)–(9) rotate from the
 coprecessing frame through a `J` frame into `L0` and project spin-weight `-2`
 harmonics. Native `project_modes` evaluates the equivalent `J`-frame sum at
 azimuth zero, followed by a polarization-basis factor `exp(2i zeta)`; compare
@@ -98,7 +100,9 @@ merger; the selected precessing final spin changes **ringdown QNM inputs**
 
 Stable IDs below are proposed `v0` research identifiers. `conditional` means
 that published equations need pinned calibrated fits/QNM inputs;
-`pending` means the independent scalar expression and checks are absent.
+`checked` means an independent executable scalar component is present and
+matches both native backends, without qualifying its composed model;
+`pending` means the independent scalar expression or a downstream gate is absent.
 The native locations are implementation evidence, not independent sources.
 
 | Component ID | Exact source equation/algorithm and dependency | Variants | Status | Native locations and next gate |
@@ -111,7 +115,8 @@ The native locations are implementation evidence, not independent sources.
 | `T-MERGER-v0` | THM Eqs. (28)–(33): `omega=omega_RD[1-sum_{k=0}^4 a_k asinh(alpha1 t)^k]`; `H=b0+b1 tau²+b2 sech(2 alpha1 tau)^(1/7)+b3 sech(alpha1 tau)`; values/slopes and fitted interior collocation determine coefficients. | all | conditional | `imrphenomt.py` `_coeff`/`_phase_inter_raw`, `_phenomt_amplitude.py`, THM `_positive`; specify distinct frequency and amplitude joins |
 | `T-FITS-v0` | THM Sec. III Eqs. (34)–(40): six `(2,2)` frequency, three per-mode amplitude, two per-mode merger, peak, and three ringdown calibrated values (16 dominant/10 additional per paper), plus final-state/QNM fits. Hierarchical NR/Teukolsky/EOB calibration is **not** recreated here. | all | conditional | `diffgw_core/phenomt_fits.py`; pin author asset hash, fit function mapping and licenses |
 | `P-ANGLES-v0` | TPHM Eqs. (4)–(7), (15)–(20), App. A: `alpha=atan2(Ly,Lx)`, `cos beta=Lz`, `dot gamma=-dot alpha cos beta`; NNLO effective single spin, double-spin MSA with `alpha=alpha_-1+alpha_0`, selected suffix continuation. | TP, TPHM | pending | `_phenomt_precession.py`, `_phenomt_msa.py`, `_phenomt_angle_options.py`; independent scalar angle tables and aligned-limit checks |
-| `P-NUMERICAL-v0` | TPHM Eqs. (12)–(14), Sturani Eqs. (3),(21),(22),(24),(25): evolve both spins and orbital direction against the **T carrier** frequency, with nonspinning 3PN angular-momentum magnitude and spin-dependent L terms disabled (TPHM Sec. II.4.1). Production excludes Sturani's N3LO quadratic-spin Eq. (24), retains leading Kerr self-quadrupole coefficient 1 and N4LO spin-orbit. | TP, TPHM PV300 | pending | `_phenomt_spin_evolution.py`, `_phenomt_numerical.py`; resolve black-box initial spin-even rate difference before qualification |
+| `P-NUMERICAL-RHS-v0` | TPHM Eqs. (12)–(14), Sturani Eqs. (3),(21),(22),(24),(25): both spin derivatives, the nonspinning 3PN orbital-angular-momentum magnitude, and constrained `dLhat/d(t/M)`. The scalar exposes the `v5` through `v9` pieces separately. Production excludes only Sturani's N3LO quadratic-spin Eq. (24), while retaining the leading Kerr self-quadrupole coefficient 1 and N4LO spin-orbit. | TP, TPHM PV300 | checked | `diffgw_reference/phenomt_spin_evolution.py`; 80-digit scalar totals and independently recovered PN-power coefficients match Torch/JAX |
+| `P-NUMERICAL-v0` | Integrate `P-NUMERICAL-RHS-v0` against the **T carrier** frequency using TPHM Sec. II.4.1 and Eqs. (12)–(14), then construct Euler angles and event/ringdown continuation. | TP, TPHM PV300 | pending | `_phenomt_numerical.py`; add an independent converged integrator and resolve the black-box initial spin-even rate difference before qualification |
 | `P-RD-REMNANT-v0` | TPHM Eqs. (21)–(26): Eq. (25) supplies the magnitude `sqrt(chi_f,AS²+S_perp²/M⁴)`; native code restores the aligned final-spin sign for the QNM input. Ringdown uses `dot alpha=omega_122-omega_121`, beta fixed at peak, gamma from minimal rotation. | TP, TPHM | conditional | `_phenomt_dispatch.py`, `_phenomt_angle_options.py`, `_phenomt_numerical.py`; characterize FS0/3/4 inputs and signs |
 | `P-ROTATION-v0` | TPHM Eqs. (4),(8),(9): Wigner-D rotation from coprecessing to `J`, fixed inverse reference rotation to `L0`, SWSH projection. | TP, TPHM | pending | `_phenomt_precession.py` `wigner_d`/`project_modes`; independent factorial/SWSH scalar and frame tests |
 | `T-SAMPLING-v0` | Native adapter: seconds↔mass units, reference-phase anchoring, frequency inversion, `f_lower` mask, peak placement and fixed sample grid. This is interface mathematics rather than a paper ansatz. | all | pending | `torchwave/_phenomt_td.py`, `jaxwave/_phenomt_td.py`; scalar adapter and boundary tests |
@@ -138,7 +143,9 @@ modules. `src/diffgw_core/phenomt_options.py` validates method/version for
 both; `src/diffgw_core/phenomt_fits.py` supplies algebraic calibration fits.
 The wrapper routes through `src/torchwave/_phenomt_td.py` or
 `src/jaxwave/_phenomt_td.py`; neither backend calls a scalar reference. No
-independent scalar T-family module exists yet.
+independent scalar carrier or analytical-angle module exists yet. The isolated
+`diffgw_reference/phenomt_spin_evolution.py` covers only the numerical RHS; it
+does not import production code or compose the ODE, frame rotation, or waveform.
 
 The calibration/reconstruction adaptation is attributed to the authors'
 MIT-licensed [`phenomxpy` revision
@@ -177,7 +184,8 @@ implementation. No held-out NR comparison of the native family is established.
 
 The reference report's T/THM and NNLO LAL criteria are **thresholds**, not
 measured global worst cases. For MSA `(40,15)`, TP/TPHM relative L2 is
-`0.00379/0.00388`. Numerical PV300/FS4 gives `0.0234/0.0236` there and
+`0.00379/0.00388`; for the strongly spinning `(60,6)` holdout it is
+`0.0202/0.0225`, above the retained `0.01` gate. Numerical PV300/FS4 gives `0.0234/0.0236` there and
 `0.308/0.307` for a strongly spinning `(60,6)` case, with mismatch `0.0475`.
 The high-mass-ratio residual survives 16384 Hz output sampling and doubled
 intrinsic integration steps. Its initial-phase-anchored coprecessing `(2,2)`
@@ -200,11 +208,13 @@ distinct from whole-family validation.
 The existing maintained paths are `tests/test_phenomt_reference.py`,
 `tests/test_phenomthm_reference.py`, `tests/test_phenomt_precession.py`,
 `tests/test_phenomt_spin_evolution.py`, `tests/test_phenomt_angle_options.py`,
-`tests/test_phenomt_numerical.py`, `tests/test_phenomt_family_lal.py`, and
+`tests/test_phenomt_numerical.py`, `tests/test_phenomt_spin_math_reference.py`,
+`tests/test_phenomt_family_lal.py`, and
 `tests/parity/test_phenomt_parity.py` plus the THM/precession parity modules.
 The LAL tests require optional binary bindings and skip otherwise. Receipts
 and exact diagnostic commands are linked in the [validation report](../../validation/phenomt.md);
-`python scripts/validate_phenomt_precession.py` and
+`python scripts/validate_phenomt_precession.py`,
+`python scripts/diagnose_phenomt_msa.py --output receipt.json`, and
 `python scripts/diagnose_phenomt_precession.py --output receipt.json` are
 the targeted external checks.
 
@@ -220,7 +230,8 @@ The staged path to the canonical six-section executable reference is:
 3. Add scalar `P-ANGLES` NNLO/MSA, remnant choices and `P-ROTATION`; verify
    aligned limit, reference-frame identity, each Wigner/SWSH degree and
    phase convention before composing TP/TPHM analytical versions.
-4. Add `P-NUMERICAL` RHS and a converged ODE/event/integration-range rule;
+4. Compose the checked `P-NUMERICAL-RHS-v0` with an independent converged
+   ODE/event/integration-range rule;
    resolve the self-quadrupole/orbital-axis discrepancy with equation-level
    and binary-output evidence. Keep PV300 conditional until then.
 5. Add scalar `T-SAMPLING`, independent Torch/JAX component and waveform
