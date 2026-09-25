@@ -1,9 +1,11 @@
-"""Regenerate the TaylorF2_HM leading-amplitude fixture from author source.
+"""Regenerate TaylorF2_HM component fixtures from Mishra author source.
 
 The input is the pinned arXiv v1 source bundle.  This script reads the
 author-published Mathematica supplement directly from the archive, extracts
-the lowest-PN term of each requested H[l,m], and evaluates the corresponding
-SPA amplitude ratio.  It imports no diffGW implementation code.
+the lowest-PN term of each requested H[l,m], and retains the supplement's
+nonspinning ``TF28Phasing`` expression.  It imports no diffGW implementation
+code.  The accompanying paper's Eq. (11) supplies the absolute SPA
+normalization and complex-mode composition used by the maintained test.
 """
 
 import argparse
@@ -33,6 +35,7 @@ CASES = (
 G_SI = sp.Rational("6.67430e-11")
 MSUN_SI = sp.Rational("1.9884098706980507e30")
 C_SI = sp.Integer(299792458)
+MPC_SI = sp.Rational("3.085677581491367e22")
 MSUN_SEC = G_SI * MSUN_SI / C_SI**3
 
 
@@ -92,6 +95,32 @@ def _leading_terms(expressions):
     return terms
 
 
+def _nonspinning_orbital_phasing(source):
+    """Extract the author's first-harmonic orbital SPA phase correction."""
+    match = re.search(
+        r"^TF28Phasing\s*=\s*(.*)\Z",
+        source,
+        flags=re.MULTILINE | re.DOTALL,
+    )
+    if match is None:
+        raise RuntimeError("author supplement is missing TF28Phasing")
+    text = (
+        match.group(1)
+        .strip()
+        .replace(r"\[Eta]", "eta")
+        .replace(r"\[Delta]", "delta")
+        .replace(r"\[Chi]adl", "chia")
+        .replace(r"\[Chi]sdl", "chis")
+        .replace(r"\[Gamma]E", "EulerGamma")
+    )
+    expression = parse_mathematica(text).xreplace({sp.Symbol("EulerGamma"): sp.EulerGamma})
+    expression = expression.subs({sp.Symbol("chia"): 0, sp.Symbol("chis"): 0})
+    unexpected = expression.free_symbols - {sp.Symbol("eta"), sp.Symbol("v")}
+    if unexpected:
+        raise RuntimeError(f"unexpected symbols in nonspinning TF28Phasing: {sorted(map(str, unexpected))}")
+    return sp.factor(expression)
+
+
 def _decimal(value):
     return str(sp.N(value, 40))
 
@@ -99,6 +128,7 @@ def _decimal(value):
 def _build_fixture(source):
     eta_symbol, delta_symbol = sp.symbols("eta delta")
     leading = _leading_terms(_mode_expressions(source))
+    orbital_phasing = _nonspinning_orbital_phasing(source)
     power22, coefficient22 = leading[(2, 2)]
     rows = []
     for name, mass1_text, mass2_text, frequencies in CASES:
@@ -116,10 +146,7 @@ def _build_fixture(source):
                 power, coefficient = leading[mode]
                 vm = (sp.Rational(2, m)) ** sp.Rational(1, 3) * v22
                 h_lm = coefficient.subs({eta_symbol: eta, delta_symbol: delta}) * vm**power
-                ratio = (
-                    abs(h_lm / h22)
-                    * (vm / v22) ** sp.Rational(-7, 2)
-                )
+                ratio = abs(h_lm / h22) * (vm / v22) ** sp.Rational(-7, 2)
                 expected[f"{mode[0]}{mode[1]}"].append(_decimal(ratio))
         rows.append(
             {
@@ -141,8 +168,9 @@ def _build_fixture(source):
     return {
         "format": "taylorf2-hm-mishra2016-leading-amplitude-v1",
         "description": (
-            "All-eight leading SPA amplitude ratios independently evaluated from "
-            "the author-published Mathematica supplement; no native imports."
+            "All-eight leading SPA amplitude ratios and normalized nonspinning "
+            "phase metadata independently derived from the author-published "
+            "Mathematica supplement; no native imports."
         ),
         "source": {
             "paper": "https://arxiv.org/abs/1601.05588v1",
@@ -150,17 +178,35 @@ def _build_fixture(source):
             "bundle_sha256": ARCHIVE_SHA256,
             "member": MEMBER,
             "member_sha256": MEMBER_SHA256,
-            "scope": "lowest nonspinning PN term of each H[l,m]",
+            "scope": ("lowest nonspinning PN term of each H[l,m] and the nonspinning part of TF28Phasing"),
         },
-        "adapter": (
-            "V_m=(2/m)^(1/3)*v22 and |h_lm/h_22|="
-            "|H_lm^LO(V_m)|*(V_m/v22)^(-7/2)"
-        ),
+        "adapter": ("V_m=(2/m)^(1/3)*v22 and |h_lm/h_22|=|H_lm^LO(V_m)|*(V_m/v22)^(-7/2)"),
         "constants": {
             "G_SI": str(G_SI),
             "MSUN_SI": str(MSUN_SI),
             "C_SI": str(C_SI),
+            "MPC_SI": str(MPC_SI),
             "MSUN_SEC": _decimal(MSUN_SEC),
+        },
+        "complex_component": {
+            "format": "mishra2016-leading-nonspinning-complex-modes-v1",
+            "scope": (
+                "unwindowed leading nonspinning raw modes with coalescence-phase "
+                "origin; excludes f_ref subtraction, polarization projection, "
+                "cutoffs, and spin-amplitude corrections"
+            ),
+            "paper_equations": ["4", "11", "12a--12h"],
+            "tf28_phasing": str(orbital_phasing),
+            "inputs": {
+                "distance_mpc": "410",
+                "phic": "0.23",
+                "tc_seconds": "0.0041",
+            },
+            "author_mode": (
+                "M_sec^2/D_sec*pi*sqrt(2*eta/3)*V_m^(-7/2)*H_lm_LO(V_m)*exp(-I*(m*(2*pi*(f/m)*tc-phic+TF28)+pi/4))"
+            ),
+            "native_over_author_adapter": "exp(I*pi*(m-3)/2)",
+            "evidence_class": "symbolic author-source component gate, not external numerical parity",
         },
         "leading_terms": source_terms,
         "samples": rows,

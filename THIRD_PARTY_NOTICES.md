@@ -79,9 +79,9 @@ these supplementary assets, so this notice makes no licensing assurance.
 This includes Mishra et al.'s `supl-mkaf16.m` from the pinned
 arXiv:1601.05588v1 source bundle. The repository does not redistribute that
 file: the opt-in fixture generator reads a user-supplied archive, verifies its
-bundle and member hashes, and writes independently evaluated numerical ratios
-plus provenance metadata. The frozen numerical fixture contains no copy of the
-Mathematica source.
+bundle and member hashes, and writes independently evaluated numerical ratios,
+a normalized nonspinning phase expression, and provenance metadata. The frozen
+fixture contains no copy of the Mathematica source file.
 
 ## IMRPhenomT author formulas and calibration expressions — MIT
 

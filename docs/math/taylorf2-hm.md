@@ -165,7 +165,7 @@ The evidence is intentionally separated:
 
 | Evidence layer | Maintained check | Establishes | Does not establish |
 | --- | --- | --- | --- |
-| Author-supplement amplitudes | `test_taylorf2_hm_author_supplement_math_reference.py` | Checksum-pinned, independently evaluated leading $|h_{\ell m}/h_{22}|$ for all eight modes in Torch and JAX | Complex phase, storage/projection conventions, cutoffs, or the composed waveform |
+| Author-supplement components | `test_taylorf2_hm_author_supplement_math_reference.py` | Checksum-pinned leading $|h_{\ell m}/h_{22}|$ plus signed, absolutely normalized nonspinning complex raw modes for all eight modes in Torch and JAX | External numerical parity, aligned-spin composition, `f_ref` subtraction, projection, cutoffs, or the complete waveform |
 | Paper fidelity | `test_taylorf2_hm_paper_math_reference.py` | All-eight native $h_{\ell,-m}$ reconstruction, Eqs. (8)–(9), the $2f/m$ map, SPA constant, and $t_c/\phi_c$ signs | An independent executable waveform |
 | Scalar-reference agreement | `test_taylorf2_hm_math_reference.py` | All-eight leading amplitudes, composed aligned-spin phase, complex polarizations, selected derivatives and hard cutoffs | External parity or physical accuracy |
 | Torch/JAX parity | `tests/parity/test_hm_parity.py` | Cross-backend values, individual modes, JIT and autodiff at sampled points | Independence from shared equations |
@@ -191,16 +191,31 @@ The source bundle SHA256 is
 `f0b6c6810da95f45141dbb9f0c5cccec0ba0742f60b836dba7698c90a25d5154`;
 the supplement SHA256 is
 `501ea53c29b77e061585540b9ccfd69a4cd0283e805ea1e9c24c38800e627a70`.
-The project stores only the generated numerical fixture and provenance, not
-the author source asset.
+The project stores only the generated fixture and provenance, not the author
+source asset.
+
+The same pinned supplement contains `TF28Phasing`. Its nonspinning part is an
+orbital SPA phase with prefactor $3/(256\eta v^5)$; the factor of $m$ in
+Mishra et al. Eq. (11) makes it identical to the native $(m/2)I(V_m)$ phase.
+This also resolves the factor-of-two ambiguity introduced by the
+$3/(128\eta v^5)$ prefactor printed in the paper's Eq. (4): the maintained
+component gate follows the checksum-pinned author expression used in Eq. (11).
+The generator retains the normalized SymPy expression, and the test combines
+it with the signed leading $H_{\ell m}$ term and Eq. (11) normalization. The
+fixed raw-mode convention adapter is
+$h^{\rm native}_{\ell,-m}=e^{i\pi(m-3)/2}h^{\rm Mishra}_{\ell,m}$.
+This gate is restricted to positive-frequency, leading nonspinning,
+unwindowed raw modes with `f_ref=None`. Projection is used only to recover the
+native raw carrier and is not attributed to the supplement.
 
 Exact all-mode external complex parity remains unprovable from the available
-public sources. The supplement is symbolic amplitude input, not a standalone
-waveform generator: it supplies full 2PN amplitudes while the native scope
-selects only their leading nonspinning terms, and it does not emit the native
-negative-$m$ frequency series with the inherited aligned-spin phase,
-`f_ref` subtraction, paired polarization projection, and per-mode cutoff.
-No author-published numerical complex arrays fix that complete option set.
+public sources. The supplement is symbolic author input parsed by this
+project, not an independently maintained executable or numerical series. It
+supplies full 2PN amplitudes and a phase expression while the maintained gate
+selects the leading nonspinning amplitudes; it does not emit the native
+negative-$m$ series with aligned-spin composition, `f_ref` subtraction,
+paired polarization projection, and per-mode cutoff. No author-published
+numerical complex arrays fix that complete option set.
 Public LAL TaylorF2 returns one frequency series and its public FD-mode
 dispatcher has no TaylorF2 generator. IMRPhenomXHM is a different full-IMR
 model and `gwfast`'s TEOBResumSPA uses different EOB dynamics and amplitude
