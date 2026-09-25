@@ -65,6 +65,41 @@ def test_scalar_twist_up_matches_torch_and_jax(mode):
     np.testing.assert_allclose(complex(hc_j), hc_ref, atol=3e-15, rtol=3e-14)
 
 
+def test_nnlo_convention_one_sign_does_not_repeat_xhm_mode_adapter():
+    # Pratten et al. Eqs. (110)--(113) fix the twist-up sum, while Appendix F
+    # Table IV supplies the convention-1 offsets. After the shared XHM
+    # adapter i**mp, the remaining convention-1 carrier correction is only a
+    # common -1. Choosing odd mp makes a second i**mp detectably non-real.
+    l, mp = 3, 3
+    carrier = complex(-0.37, 0.29)
+    angles = dict(alpha=0.43, beta=1.07, gamma=-0.31, theta_jn=0.82, zeta=0.19)
+    base = scalar_twist_up_mode(l, mp, carrier, **angles)
+    expected = tuple(-value for value in base)
+    scalar_signed = scalar_twist_up_mode(l, mp, carrier, **angles, carrier_sign=-1.0)
+
+    def tt(value):
+        return torch.tensor(value, dtype=torch.float64)
+
+    torch_signed = torch_twist_up_mode(
+        l,
+        mp,
+        torch.tensor(carrier, dtype=torch.complex128),
+        **{key: tt(value) for key, value in angles.items()},
+        carrier_sign=-1.0,
+    )
+    jax_signed = jax_twist_up_mode(
+        l,
+        mp,
+        jnp.asarray(carrier, dtype=jnp.complex128),
+        **{key: jnp.asarray(value, dtype=jnp.float64) for key, value in angles.items()},
+        carrier_sign=-1.0,
+    )
+    for actual in (scalar_signed, tuple(complex(x) for x in torch_signed), tuple(complex(x) for x in jax_signed)):
+        np.testing.assert_allclose(actual, expected, atol=3e-15, rtol=3e-14)
+        wrong_double_adapter = tuple((1j**mp) * value for value in expected)
+        assert not np.allclose(actual, wrong_double_adapter, atol=1e-12, rtol=1e-12)
+
+
 def test_polarization_rotation_is_norm_preserving_and_composes():
     hp, hc = complex(0.2, -0.7), complex(-0.4, 0.3)
     zeta1, zeta2 = 0.23, -0.61

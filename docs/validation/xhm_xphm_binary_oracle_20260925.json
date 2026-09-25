@@ -1,0 +1,54 @@
+{
+  "schema_version": 1,
+  "date": "2026-09-25",
+  "stack_base_revision": "7b0c9c95a43d768d2fdf49ad8d2bd708f3e9d09b",
+  "scope": "IMRPhenomXHM and IMRPhenomXPHM frozen full-waveform binary diagnostics",
+  "oracle_policy": {
+    "distribution": "lalsuite==7.26.15",
+    "interface": "public installed LALSimulation binary APIs and waveform outputs only",
+    "lal_implementation_source_inspected": false,
+    "implementation_details_translated": false,
+    "binary_outputs_fitted": false,
+    "paper_or_scalar_reference_material_included": false
+  },
+  "environment": {
+    "host": "len",
+    "python": "3.12.3",
+    "torch": "2.5.0.dev20240619",
+    "jax": "0.4.29",
+    "jaxlib": "0.4.29",
+    "numpy": "1.26.4",
+    "scipy": "1.13.1",
+    "lal": "7.7.1",
+    "lalsimulation": "6.2.1",
+    "lalsuite_distribution": "7.26.15"
+  },
+  "strict_gate": {
+    "complex_relative_l2_max": 1e-6,
+    "flat_mismatch_max": 1e-8,
+    "result": "failed",
+    "catalog_passed": 0,
+    "catalog_total": 2,
+    "holdout_passed": 0,
+    "holdout_total": 2,
+    "cases": {
+      "IMRPhenomXHM_diagnostic": {
+        "plus": {"complex_relative_l2": 0.4555338521046169, "flat_mismatch": 0.09119459041887013},
+        "cross": {"complex_relative_l2": 0.4467706177640559, "flat_mismatch": 0.09096641821336526}
+      },
+      "IMRPhenomXPHM_diagnostic": {
+        "plus": {"complex_relative_l2": 0.22881790989825165, "flat_mismatch": 0.025734053861110495},
+        "cross": {"complex_relative_l2": 0.22641701214165394, "flat_mismatch": 0.025321404477889775}
+      },
+      "IMRPhenomXHM_holdout_6": {
+        "plus": {"complex_relative_l2": 0.7187377266646952, "flat_mismatch": 0.22367661976358144},
+        "cross": {"complex_relative_l2": 0.658125738933648, "flat_mismatch": 0.19923519532709966}
+      },
+      "IMRPhenomXPHM_holdout": {
+        "plus": {"complex_relative_l2": 0.5041124658586125, "flat_mismatch": 0.1121090759386123},
+        "cross": {"complex_relative_l2": 0.5560211538599411, "flat_mismatch": 0.13413353052973198}
+      }
+    }
+  },
+  "conclusion": "All four frozen full-waveform cases fail the strict gate on the rebuilt stack. This receipt contains binary-output measurements only; executable paper-derived and scalar-reference checks are maintained separately in the test suite."
+}

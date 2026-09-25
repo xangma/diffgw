@@ -24,6 +24,7 @@ from jaxwave.conversions import (
 )
 from jaxwave.approximants.imrphenom_xhm import IMRPhenomXHM
 from jaxwave.approximants.imrphenom_xas import XASParameterFits
+from jaxwave.approximants._phenomt_precession import frequency_domain_nnlo_geometry
 from jaxwave.approximants.imrphenom_xp import wigner_small_d_matrix
 from jaxwave.approximants.precession_msa import (
     compute_effective_chip,
@@ -42,16 +43,20 @@ def twist_up_mode(
     theta_jn: jnp.ndarray,
     zeta: jnp.ndarray,
     d_jn_l: Optional[jnp.ndarray] = None,
+    carrier_sign: float = 1.0,
 ) -> Tuple[jnp.ndarray, jnp.ndarray]:
     """Twist one XHM carrier mode into positive-frequency polarizations.
 
     This is the tensor form of Pratten et al. (2021), Eqs. (110)--(113),
     plus the Appendix-D observer-basis rotation. The ``i**mp`` and scale
     factors are solely the adapter from DiffGW's XHM mode convention.
+    ``carrier_sign`` carries a separate convention-specific real sign.
     """
     if l not in (2, 3, 4) or mp <= 0 or mp > l:
         raise ValueError("XPHM rotation supports l in {2,3,4} and 0 < mp <= l.")
-    h_mode = (1j ** mp) * h_coprec
+    if carrier_sign not in (-1.0, 1.0):
+        raise ValueError("carrier_sign must be +1 or -1.")
+    h_mode = carrier_sign * (1j ** mp) * h_coprec
     sign_l = 1.0 if (l % 2 == 0) else -1.0
     scale_l = sign_l * math.sqrt((2 * l + 1) / (16.0 * PI))
     d_beta_l = wigner_small_d_matrix(l, beta)
@@ -236,10 +241,21 @@ class IMRPhenomXPHM:
         fref = as_array(f_ref, dtype=dtype) if f_ref is not None else None
         fref_eval = fref if fref is not None else jnp.asarray(20.0, dtype=dtype)
 
-        (m1, m2, s1x, s1y, s1z, s2x, s2y, s2z,
-         dist, inc, phi_c, t_c, phi_0, fref_eval) = jnp.broadcast_arrays(
-            m1, m2, s1x, s1y, s1z, s2x, s2y, s2z,
-            dist, inc, phi_c, t_c, phi_0, fref_eval,
+        (m1, m2, s1x, s1y, s1z, s2x, s2y, s2z, dist, inc, phi_c, t_c, phi_0, fref_eval) = jnp.broadcast_arrays(
+            m1,
+            m2,
+            s1x,
+            s1y,
+            s1z,
+            s2x,
+            s2y,
+            s2z,
+            dist,
+            inc,
+            phi_c,
+            t_c,
+            phi_0,
+            fref_eval,
         )
         if fref is not None:
             fref = fref_eval
@@ -265,7 +281,7 @@ class IMRPhenomXPHM:
 
         # In-plane spin check
         in_plane_sq = s1x * s1x + s1y * s1y + s2x * s2x + s2y * s2y
-        is_aligned = (in_plane_sq == 0.0)
+        is_aligned = in_plane_sq == 0.0
 
         # Fast path: if purely aligned scalar concrete, directly return IMRPhenomXHM
         if (
@@ -364,24 +380,45 @@ class IMRPhenomXPHM:
             v = (PI * unsqueeze_param(m_sec) * f_angles) ** (1.0 / 3.0)
             v0 = (PI * unsqueeze_param(m_sec) * unsqueeze_param(fref_eval)) ** (1.0 / 3.0)
 
-            alpha, beta, gamma, theta_jn, zeta, carrier_phase = evaluate_msa_precession(
-                v=v,
-                v0=v0,
-                m1=unsqueeze_param(m1),
-                m2=unsqueeze_param(m2),
-                s1x=unsqueeze_param(s1x),
-                s1y=unsqueeze_param(s1y),
-                s1z=unsqueeze_param(s1z),
-                s2x=unsqueeze_param(s2x),
-                s2y=unsqueeze_param(s2y),
-                s2z=unsqueeze_param(s2z),
-                iota=unsqueeze_param(inc),
-                phi_ref=unsqueeze_param(phi_c),
-                prec_version=p_ver,
-                convention=convention,
-                return_carrier_phase=True,
-                observer_azimuth=unsqueeze_param(phi_0),
+            angle_args = (
+                v,
+                v0,
+                unsqueeze_param(m1),
+                unsqueeze_param(m2),
+                unsqueeze_param(s1x),
+                unsqueeze_param(s1y),
+                unsqueeze_param(s1z),
+                unsqueeze_param(s2x),
+                unsqueeze_param(s2y),
+                unsqueeze_param(s2z),
+                unsqueeze_param(inc),
+                unsqueeze_param(phi_c),
             )
+            if p_ver == 102 and convention in (0, 1, 5, 6, 7):
+                alpha, beta, gamma, theta_jn, zeta, carrier_phase = frequency_domain_nnlo_geometry(
+                    *angle_args,
+                    convention=convention,
+                    observer_azimuth=unsqueeze_param(phi_0),
+                )
+            else:
+                alpha, beta, gamma, theta_jn, zeta, carrier_phase = evaluate_msa_precession(
+                    v=angle_args[0],
+                    v0=angle_args[1],
+                    m1=angle_args[2],
+                    m2=angle_args[3],
+                    s1x=angle_args[4],
+                    s1y=angle_args[5],
+                    s1z=angle_args[6],
+                    s2x=angle_args[7],
+                    s2y=angle_args[8],
+                    s2z=angle_args[9],
+                    iota=angle_args[10],
+                    phi_ref=angle_args[11],
+                    prec_version=p_ver,
+                    convention=convention,
+                    return_carrier_phase=True,
+                    observer_azimuth=unsqueeze_param(phi_0),
+                )
 
         # Coprecessing modes receive precisely the Table IV phiRef argument.
         carrier_phi_c = carrier_phase.squeeze(-1) if is_batched else carrier_phase
@@ -459,23 +496,33 @@ class IMRPhenomXPHM:
                 angles_by_mp[mp] = (a_mp, b_mp, g_mp)
         else:
             for mp in other_mps:
-                a_mp, b_mp, g_mp, _, _ = evaluate_msa_precession(
-                    v=v * (2.0 / mp) ** (1.0 / 3.0),
-                    v0=v0,
-                    m1=unsqueeze_param(m1),
-                    m2=unsqueeze_param(m2),
-                    s1x=unsqueeze_param(s1x),
-                    s1y=unsqueeze_param(s1y),
-                    s1z=unsqueeze_param(s1z),
-                    s2x=unsqueeze_param(s2x),
-                    s2y=unsqueeze_param(s2y),
-                    s2z=unsqueeze_param(s2z),
-                    iota=unsqueeze_param(inc),
-                    phi_ref=unsqueeze_param(phi_c),
-                    prec_version=p_ver,
-                    convention=convention,
-                    observer_azimuth=unsqueeze_param(phi_0),
-                )
+                v_mp = v * (2.0 / mp) ** (1.0 / 3.0)
+                if p_ver == 102 and convention in (0, 1, 5, 6, 7):
+                    a_mp, b_mp, g_mp, _, _, _ = frequency_domain_nnlo_geometry(
+                        v_mp,
+                        v0,
+                        *angle_args[2:],
+                        convention=convention,
+                        observer_azimuth=unsqueeze_param(phi_0),
+                    )
+                else:
+                    a_mp, b_mp, g_mp, _, _ = evaluate_msa_precession(
+                        v=v_mp,
+                        v0=v0,
+                        m1=unsqueeze_param(m1),
+                        m2=unsqueeze_param(m2),
+                        s1x=unsqueeze_param(s1x),
+                        s1y=unsqueeze_param(s1y),
+                        s1z=unsqueeze_param(s1z),
+                        s2x=unsqueeze_param(s2x),
+                        s2y=unsqueeze_param(s2y),
+                        s2z=unsqueeze_param(s2z),
+                        iota=unsqueeze_param(inc),
+                        phi_ref=unsqueeze_param(phi_c),
+                        prec_version=p_ver,
+                        convention=convention,
+                        observer_azimuth=unsqueeze_param(phi_0),
+                    )
                 angles_by_mp[mp] = (a_mp, b_mp, g_mp)
 
         d_mat_jn = {l: wigner_small_d_matrix(l, unsqueeze_param(theta_jn)) for l in unique_l}
@@ -492,6 +539,7 @@ class IMRPhenomXPHM:
                 unsqueeze_param(theta_jn),
                 unsqueeze_param(zeta),
                 d_jn_l=d_mat_jn[l],
+                carrier_sign=-1.0 if p_ver == 102 and convention == 1 else 1.0,
             )
 
             h_plus_total = h_plus_total + hp_lm

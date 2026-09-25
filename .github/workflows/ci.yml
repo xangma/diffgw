@@ -58,6 +58,7 @@ jobs:
       - name: Verify reference agreement without qualification skips
         run: >-
           python -m pytest tests/test_waveform_definitions.py tests/test_*math_reference*.py
+          tests/test_xphm_rotation_reference.py tests/test_xphm_nnlo_clean_room.py
           --require-math-reference --reference-device=cpu -ra
 
   lal-oracles:

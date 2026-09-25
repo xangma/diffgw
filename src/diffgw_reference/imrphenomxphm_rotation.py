@@ -89,12 +89,15 @@ def twist_up_mode(
     gamma: float,
     theta_jn: float,
     zeta: float,
+    carrier_sign: float = 1.0,
 ) -> Tuple[complex, complex]:
     """Project one positive-m coprecessing carrier into ``(h_plus,h_cross)``.
 
     The sum is Pratten et al. Eqs. (110)--(113), with ``gamma=-epsilon``.
     ``i**mp`` and the normalization factor adapt DiffGW's declared XHM
     unprojected-mode convention to the paper's ``h^L_{l,-mp}`` convention.
+    ``carrier_sign`` is separate so convention-specific offsets cannot apply
+    that complex adapter a second time.
     """
     if l not in (2, 3, 4) or mp <= 0 or mp > l:
         raise ValueError("XPHM rotation supports l in {2,3,4} and 0 < mp <= l.")
@@ -117,7 +120,9 @@ def twist_up_mode(
         plus_transfer += a_minus + sign_l * a_plus_star
         cross_transfer += a_minus - sign_l * a_plus_star
 
-    adapted_carrier = (1j ** mp) * carrier
+    if carrier_sign not in (-1.0, 1.0):
+        raise ValueError("carrier_sign must be +1 or -1.")
+    adapted_carrier = carrier_sign * (1j ** mp) * carrier
     phase = cmath.exp(1j * mp * gamma)
     hp_raw = scale * phase * adapted_carrier * plus_transfer
     hc_raw = 1j * scale * phase * adapted_carrier * cross_transfer

@@ -51,13 +51,11 @@ def test_xphm_aligned_mode_parity(mode):
     for actual, expected in zip(jax_output, torch_output):
         np.testing.assert_allclose(np.asarray(actual), expected.detach().numpy(),
                                    atol=1e-34, rtol=2e-11)
-@pytest.mark.parametrize('method,version,remnant',[
-    ('nnlo', 102, 0), ('msa', 223, 3),
-])
+@pytest.mark.parametrize('method,version,remnant',[('msa', 223, 3)])
 @pytest.mark.parametrize('convention', [1, 5])
 def test_xp_xphm22_batched_azimuth_parity(method, version, remnant, convention):
-    # Pratten et al. (2021): XPHM restricted to the coprecessing 22 mode is XP.
-    # Compare the same nondefault angle/remnant choices explicitly.
+    # The shared MSA angle/remnant route preserves the published 22-only
+    # reduction. XPHM NNLO-102 has a separate scalar/Torch/JAX reference gate.
     p = dict(mass1=40., mass2=20., spin1x=.3, spin1y=.2, spin1z=.4,
              spin2x=-.2, spin2y=.1, spin2z=-.2, inclination=.7, phic=.3,
              f_ref=40., convention=convention, precession_method=method,

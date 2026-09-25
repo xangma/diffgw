@@ -147,6 +147,7 @@ not validation of the retained official ROM or surviving equation components.
   - Fits ringdown surfaces to SXS numerical-relativity data across $(\ell, m) \in \{(2,1), (3,3), (4,4), (3,2)\}$, providing smooth amplitude profiles and continuous phase matching.
   - Uses native Kerr Leaver quasinormal mode frequencies and damping rates from `torchwave.qnm`.
   - Phase-component test gates and their restricted scope are described in Section 2.10. The historical full-waveform LAL comparisons did not pass the strict gates.
+  - The [2026-09-25 binary-oracle receipt](validation/xhm_xphm_binary_oracle_20260925.json) uses only public installed LAL binary APIs and records the four frozen XHM/XPHM full-waveform diagnostics. It contains no source-derived formulas, translated implementation details, or fitted values. Executable paper-derived NNLO-102 math/reference gates live separately in `tests/test_xphm_nnlo_clean_room.py` and `tests/test_xphm_rotation_reference.py`. The catalog and holdout strict counts remain `0/1` for both XHM and XPHM.
 
 ### 2.7 SEOBNR Reduced-Order Model (ROM Surrogate)
 - **Primary References**:
