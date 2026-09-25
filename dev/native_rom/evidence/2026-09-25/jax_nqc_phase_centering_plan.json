@@ -1,0 +1,36 @@
+{
+  "schema": "diffgw.seobnrv4.jax-nqc-phase-centering-plan.v1",
+  "release_qualified": false,
+  "case": "high_start_mixed_spin",
+  "source_head": "55caaa4",
+  "output_step_M": 0.5,
+  "fine_refinement_factor": 32,
+  "adaptive_atol": 1e-10,
+  "adaptive_rtol": 1e-9,
+  "method": "On the frozen accepted-mesh replay, subtract the unwrapped base-mode phase at the left NQC match knot before building the full-series natural cubic phase spline. Restore the constant phase only when evaluating the corrected waveform. Retain the source amplitude rows, phase basis, targets, trajectory and event chart. This translation is mathematically equivalent to the source spline but may change floating-point cancellation.",
+  "stop_rule": "If any fixed-input source-preservation gate fails, record attribution and stop before whole replay. If fixed-input gates pass, run eager/JIT whole replay and original eager control. Run AD/FD only if all whole gates pass and predicted resources stay within operational limits.",
+  "operational_limits": {
+    "max_wall_time_s": 300,
+    "max_rss_gib": 32
+  },
+  "gates": {
+    "max_fixed_centered_phase_mode_absolute_error": 1e-12,
+    "max_fixed_source_phase_rhs_absolute_error": 1e-10,
+    "max_fixed_source_phase_coefficients_absolute_error": 1e-8,
+    "max_fixed_source_corrected_fine_relative_l2": 1e-10,
+    "max_fixed_source_attachment_relative_l2": 1e-10,
+    "max_fixed_eager_jit_phase_rhs_absolute_error": 1e-10,
+    "max_fixed_eager_jit_phase_coefficients_absolute_error": 1e-8,
+    "max_fixed_eager_jit_corrected_fine_relative_l2": 1e-10,
+    "max_replay_state_absolute_error": 1e-7,
+    "max_whole_source_phase_rhs_absolute_error": 1e-10,
+    "max_whole_source_phase_coefficients_absolute_error": 1e-8,
+    "max_whole_source_relative_l2": 1e-10,
+    "max_whole_eager_jit_phase_rhs_absolute_error": 1e-10,
+    "max_whole_eager_jit_phase_coefficients_absolute_error": 1e-8,
+    "max_whole_eager_jit_relative_l2": 1e-10,
+    "max_ad_fd_relative_l2": 0.002,
+    "min_gradient_l2": 1e-9
+  },
+  "interpretation": "A frozen one-chart numerical experiment. Eager source preservation and eager/JIT whole-waveform agreement must both pass; otherwise keep the failed result. A pass alone does not qualify physical accuracy or ROM release."
+}

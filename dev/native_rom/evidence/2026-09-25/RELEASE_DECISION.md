@@ -63,8 +63,9 @@ frozen before intake; this reservation does not turn the failing current
 candidate into a qualified one.
 
 The [source specification](../../reference/SPEC.md) remains incomplete: six
-of 46 manifest components are `pending`, including flux, QNM interpolation,
-ODE initial conditions, TD/FD conventions, and the ROM construction. The
+of 47 manifest components are `pending`, including the full flux aggregate,
+QNM interpolation, ODE initial conditions, TD/FD conventions, and the ROM
+construction. The
 published model does not supply independently derived ROM bases and spline
 tables, and no qualified generator/training set or independent ROM holdout
 exists. Full-waveform gradients and domain-wide convergence remain open.
@@ -79,6 +80,9 @@ leaf closes its pending aggregate component.
 The nonzero-radial leaf checks four supplied states in each frontend with
 caller-supplied radial and angular forces. It verifies the local tortoise
 Hamilton equations, but not the physical flux or an integrated trajectory.
+The newly executable tail-modulus leaf independently checks the scalar, Torch,
+and JAX supplied-input factor against the published complex-gamma expression;
+it does not construct the modes or close the pending full-flux aggregate.
 The existing [public/NR chirp diagnostic](sxs_public_chirp.json) locates a
 waveform-phase discrepancy on the already inspected 2569 case: at mode
 frequency `0.05/M`, relative to a `0.09/M` anchor and smoothing window 20,
@@ -89,6 +93,20 @@ difference `0.002706` rad at that frequency. These post-hoc measurements
 support a shared historical-model discrepancy over a porting or NR-resolution
 explanation on this chart; they do not identify which internal physical term
 causes it or qualify a changed model.
+The [frozen post-hoc pre-peak PSD plan](sxs_2569_prepeak_psd_plan.json) and
+[result](sxs_2569_prepeak_psd.json) reproduce the original 22-solar-mass
+full-waveform overlaps before truncation. Cutting all waves at the high-NR
+`Mω22=0.09` crossing, before their amplitude peaks, gives native/high-NR
+overlap `0.9976975`, public/high-NR `0.9976966`, and low/high-NR `0.9999546`
+with a 50M end taper. The native/high-NR value spans `0.9972783` to
+`0.9982056` across predeclared 25–100M end tapers; the 0.08/0.10 frequency
+brackets give `0.9979298`/`0.9974554`. Thus the mismatch is already present
+before peak, while including the later waveform worsens the globally aligned
+overlap to `0.9891417`. The optimized time shift also changes substantially
+between truncated and full waveforms, so the pre-peak comparison does not
+isolate one physical term. Its Fourier-bin residual split is algebraic, not a
+unique time-domain amplitude/phase or NQC attribution. These inspected-case
+results do not replace the frozen release gate or qualify a new model.
 The [frozen JAX pathwise whole-mode gradient diagnostic](jax_pathwise_whole_gradient.json)
 passes its finite-difference and accepted-mesh replay checks, but fails its
 eager/JIT waveform gate: relative L2 is `1.547138e-9` against `1e-10`.
@@ -171,6 +189,21 @@ as PID `56543` with log `/tmp/diffgw-jax-nqc-direct-phase.log`, completed in
 30 seconds with exit code 1 for frozen gate failure, and has no remaining
 process or next check. The command was
 `PYTHONPATH=src:. /Users/xangma/repos/diffgw/.venv/bin/python -m dev.native_rom.diagnose_jax_nqc_direct_phase`.
+
+The [frozen phase-centering experiment](jax_nqc_phase_centering_plan.json)
+subtracted the phase at the left NQC match knot before constructing the
+development spline and restored it in the final mode. The
+[failed result](jax_nqc_phase_centering.json) preserves the eager source mode
+to `4.84e-16` relative L2, but whole eager/JIT L2 remains `1.547138e-9`
+against `1e-10`, and the phase-coefficient gap remains `1.212475e-7`
+against `1e-8`. Its fixed-input corrected mode is `1.296e-10` against
+`1e-10`. Thus a constant phase offset does not explain the derivative
+amplification. AD/FD was not rerun after the failed whole-mode gates and the
+previous AD resource limit. The diagnostic ran on RONI2 in this worktree as
+PID `80116`, command
+`PYTHONPATH=src:. /Users/xangma/repos/diffgw/.venv/bin/python -m dev.native_rom.diagnose_jax_nqc_phase_centering`,
+with log `/tmp/diffgw-jax-nqc-phase-centering.log`. It finished in 29 seconds
+with exit code 1 for the frozen gate failure; no process or next check remains.
 
 Two different release claims must stay separate:
 

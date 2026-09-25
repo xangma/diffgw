@@ -11,7 +11,7 @@ import mpmath as mp
 
 
 def _tail_modulus(ell, m, omega, h_real):
-    """Damour--Iyer--Nagar factorized tail modulus, Eqs. (19)--(20)."""
+    """Damour--Iyer--Nagar tail modulus, Eqs. (19) and (59)."""
     khat = m*omega*h_real
     squared = 4*mp.pi*khat/(-mp.expm1(-4*mp.pi*khat))
     for degree in range(1, ell+1):

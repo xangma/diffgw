@@ -121,6 +121,15 @@
       "test": "dev/native_rom/reference/tests/test_published.py:test_flux_paper_normalization_and_mode_partner; dev/native_rom/reference/tests/test_torch.py:test_mode_flux_normalization_against_reference; dev/native_rom/reference/tests/test_jax.py:test_pre_nqc_emitted_flux_normalization_against_reference; tests/test_clean_room_jax_seobnrv4_flux.py:test_batched_complex_modes_match_analytic_sum_under_jit; tests/test_clean_room_jax_seobnrv4_flux.py:test_newtonian_22_flux_and_gradient"
     },
     {
+      "id": "V4-FLUX-TAIL-MODULUS",
+      "source": "bohe-2017-v3, Sec. II B; Damour, Iyer and Nagar 0811.2069v2, Eqs. (19), (59); Pan et al. 1006.0431v2, Eq. (26)",
+      "status": "executable",
+      "reference": "flux._tail_modulus with supplied ell, m, M*Omega, H_real/M",
+      "torch": "src/torchwave/approximants/eob/factorized_modes.py:_tail_abs_squared",
+      "jax": "src/jaxwave/approximants/eob/seobnrv4_amplitudes33_44.py:_tail_modulus",
+      "test": "dev/native_rom/reference/tests/test_flux_tail.py:test_published_tail_modulus_against_scalar_torch_jax; dev/native_rom/reference/tests/test_flux_tail.py:test_jax_tail_modulus_jit_and_gradient; tests/test_clean_room_factorized_modes.py:test_tail_matches_independent_complex_gamma_mathematics"
+    },
+    {
       "id": "V4-FLUX-22-AMPLITUDE",
       "source": "bohe-2017-v3, Sec. II B and Eqs. (4)-(5); Taracchini et al. 1311.2544v1, Eq. (4); Pan et al. 1006.0431v2, Eqs. (28)-(30); Buonanno et al. 1209.6349v2, Eq. (4.27b)",
       "status": "conditional",

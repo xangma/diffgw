@@ -1,0 +1,74 @@
+{
+  "alignment": "For each truncated pair separately, optimize one global lag in [-20,20] M on 0.25 M grid with bounded local refinement and one complex phase, no intrinsic fit. Full-waveform replay must equal frozen published evidence within 1e-10.",
+  "anchored_array": {
+    "path": "/tmp/diffgw-sxs-third-holdout/decoded/SXS_BBH_2569_anchored.npz",
+    "sha256": "4180cbd3aaee9eb492d776d291ecd603c1ba19483777f0e326d18d525d7527c7"
+  },
+  "bracket_cutoff_mode_Momega": [
+    0.08,
+    0.1
+  ],
+  "bracket_end_taper_width_M": 50,
+  "cutoff_definition": "Time where the high-resolution anchored NR h22 chirp crosses the named M omega22, from the prior fixed-frequency chart: sample 0.25 M, Savitzky-Golay degree 3, 20 M width, unique crossing in [-2000,100] M. Use this same cutoff time for all four waves.",
+  "expected_stop_policy": "Stop on input hash/version drift, non-unique cutoff, cutoff after peak, full-waveform replay mismatch, overlap optimization boundary, residual nonclosure, or nonfinite PSD. Do not update the frozen release gate from this post-hoc result.",
+  "inputs": {
+    "case_plan": {
+      "path": "dev/native_rom/evidence/2026-09-24/sxs_third_holdout_plan.json",
+      "sha256": "abd73c31f3a1cce82f0009ab134f93983595bdea6e62786c83052cbcfc796a73"
+    },
+    "chirp_plan": {
+      "path": "dev/native_rom/evidence/2026-09-25/sxs_cross_run_chirp_plan.json",
+      "sha256": "e7a14ab0114b2d03880d8edf3aa992b0c6f86138996e616249d8ddd0a83d2081"
+    },
+    "chirp_result": {
+      "path": "dev/native_rom/evidence/2026-09-25/sxs_cross_run_chirp.json",
+      "sha256": "1e88e66bbbd894f3f79a9a3f7264899bac032a72938b077b390ef05aa187ca94"
+    },
+    "comparison": {
+      "path": "dev/native_rom/evidence/2026-09-24/sxs_third_holdout_comparison.json",
+      "sha256": "2caff7f537583d5016e171e451387decca04a634ccae39a5d155689175da8a21"
+    },
+    "public_plan": {
+      "path": "dev/native_rom/evidence/2026-09-24/sxs_2569_public_control_plan.json",
+      "sha256": "0e00a347213ae8a954dcdf64ba317178da43902332ce7699bbf4879614c52ca6"
+    },
+    "public_result": {
+      "path": "dev/native_rom/evidence/2026-09-24/sxs_2569_public_control.json",
+      "sha256": "cc826a29f83876118678dc8996ffc03467120058ebe0ff7c36318626ac809025"
+    },
+    "weighted_plan": {
+      "path": "dev/native_rom/evidence/2026-09-24/sxs_third_holdout_weighted_plan.json",
+      "sha256": "ae97020ad656390686b593c63b1c918cef226e7bc87b6c88e8993f5add3d6c10"
+    },
+    "weighted_result": {
+      "path": "dev/native_rom/evidence/2026-09-24/sxs_third_holdout_weighted.json",
+      "sha256": "e55cd65399d937eae13d9d06c1425b6cb9dcf1c38aa2b7eb07bf29115bd83322"
+    }
+  },
+  "interpretation": "Diagnostic only; selected after observing the 0.99 gate miss. A pre-peak mismatch does not isolate one physical term, and an apparent radial/quadrature Fourier residual is not uniquely a time-domain amplitude/phase or NQC attribution.",
+  "nr_high_metadata": {
+    "path": "/tmp/diffgw-sxs-third-holdout/archive/SXS_BBH_2569/Lev4/metadata.json",
+    "sha256": "a4529c1a98a55cfa42af7872e2e3620ea10385c116ecc1600d4e4b153707be54"
+  },
+  "pairs": [
+    "native_vs_high_nr",
+    "public_vs_high_nr",
+    "low_vs_high_nr"
+  ],
+  "posthoc": true,
+  "primary_cutoff_mode_Momega": 0.09,
+  "primary_end_taper_widths_M": [
+    25,
+    50,
+    100
+  ],
+  "psd_protocol": "Replay original 22-Msun lalsimulation SimNoisePSDaLIGOZeroDetHighPower PSD and mass-scaled geometric FFT frequencies, 10-3000 Hz band with lower bound max(10 Hz, NR relaxed reference orbital Omega/(pi*M_seconds)); original 0.25 M sampling, settled common start, conjugated h22 positive-frequency carrier, original tanh start/end time taper and next_fast_len(2*N) FFT.",
+  "purpose": "Frozen post-hoc diagnostic of the already-failed SXS:BBH:2569 22-Msun detector-weighted h22 overlap, separating residual present before amplitude peak/attachment from a residual created only by the peak and ringdown.",
+  "qualification_claim": false,
+  "release_qualified": false,
+  "residual_decomposition": "At the optimized lag, complex least-squares scale candidate to NR. Rotate remaining Fourier-bin residual by the unit NR phasor, split real (radial) and imaginary (quadrature) weighted squared powers; their sum must equal 1-overlap^2 within 1e-10. This is algebraic, not a unique physical amplitude/phase decomposition.",
+  "schema": "diffgw.seobnrv4.sxs-2569-prepeak-psd-plan.v1",
+  "simulation": "SXS:BBH:2569",
+  "start_taper_width_M": 50,
+  "total_mass_msun": 22
+}
