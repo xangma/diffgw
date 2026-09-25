@@ -1127,6 +1127,23 @@ pair's active NQC coefficient change has L2 `194.2`. The directly returned
 polarization inversion as the cause. No ultrafine cadence is therefore
 designated a converged public parity reference.
 
+The [frozen JAX full-waveform plan](evidence/2026-09-25/jax_spliced_whole_waveform_plan.json)
+and its [q=4 nonspinning](evidence/2026-09-25/jax_spliced_whole_waveform_q4_nonspinning.json),
+[high-start mixed-spin](evidence/2026-09-25/jax_spliced_whole_waveform_high_start_mixed_spin.json),
+[strong aligned](evidence/2026-09-25/jax_spliced_whole_waveform_strong_aligned.json), and
+[strong antialigned](evidence/2026-09-25/jax_spliced_whole_waveform_strong_antialigned.json)
+results cover the entire coarse prefix, fine NQC waveform, and ringdown on a
+common output chart. All four predeclared Torch/JAX checks pass; full complex
+relative L2 ranges from `1.80e-9` to `1.72e-8`. Peak-anchored differences
+from the pinned public SEOBNRv4 binary are `0.06461`, `0.08017`, `0.01346`,
+and `0.01402`, respectively, for both backends. This is backend agreement
+for the paper-derived diagnostic choices, not the earlier source-backed
+candidate: this route uses published Hamiltonian calibration, its analytic
+logarithmic derivative, and fewer historical flux options. The shared public
+residual must be attributed before this JAX route can claim physical parity.
+These four runs do not establish numerical convergence, physical accuracy,
+or ROM readiness.
+
 1. Qualify the physical generator against the published equations and independent
    references over the intended domain, resolve convention/provenance gaps, and
    establish gradients and numerical convergence. This runner covers only scalar
