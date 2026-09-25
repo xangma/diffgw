@@ -101,7 +101,7 @@ def _prepare_public(plan):
 
 def run(case_id, plan, public_identity, *, variant="published", anchor_control=False,
         independent_init=False, numerical_settings=None, write_result=True,
-        return_series=False):
+        return_series=False, return_stages=False):
     started = time.monotonic()
     m1, m2, chi1, chi2, omega_start = CASES[case_id]
     nu = m1 * m2 / (m1 + m2)**2
@@ -284,6 +284,23 @@ def run(case_id, plan, public_identity, *, variant="published", anchor_control=F
                               "jax_public_complex_l2": jax_public["amplitude_peak_anchored"]["metrics"]["complex_relative_l2"]},
                              sort_keys=True), flush=True)
     if return_series:
+        if return_stages:
+            stage = {
+                "coarse_time": _array(coarse.output_time),
+                "coarse_state": _array(coarse.output_state),
+                "fine_time": float(coarse.output_time[restart]) + _array(fine.output_time),
+                "fine_state": _array(fine.output_state),
+                "fine_base_mode": _array(torch_fine_mode),
+                "fine_corrected_inspiral": _array(tref.corrected_inspiral),
+                "fine_orbital_frequency": _array(torch_fine_omega),
+                "nqc_coefficients": [_array(x) for x in tref.calibration.coefficients],
+                "orbital_peak_time_M": float(coarse.output_time[restart] + tref.peak.time),
+                "match_time_M": float(coarse.output_time[restart] + tref.match_time),
+                "boundary_time_M": float(coarse.output_time[restart] + tref.boundary_time),
+                "boundary_index": int(tref.boundary_index),
+                "restart_index": restart,
+            }
+            return result, (ttime, tmode), (jtime, jmode), stage
         return result, (ttime, tmode), (jtime, jmode)
 
 

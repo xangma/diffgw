@@ -1,0 +1,126 @@
+{
+  "case_id": "strong_aligned",
+  "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+  "elapsed_s": 75.71613054198679,
+  "host": "RONI2",
+  "landmark_differences_M": {
+    "boundary_time_M": 0.0,
+    "match_time_M": 0.0,
+    "orbital_peak_time_M": 0.0
+  },
+  "levels": {
+    "baseline": {
+      "boundary_index": 8858,
+      "boundary_time_M": 484.40625,
+      "coarse_samples": 992,
+      "fine_samples": 9652,
+      "match_time_M": 484.4137461546736,
+      "nqc_coefficients": [
+        [
+          142.80152258000518,
+          -1225.9332878300406,
+          1374.4348676257293
+        ],
+        [
+          35.50815744063604,
+          -795.2619844623079
+        ]
+      ],
+      "orbital_peak_time_M": 495.70311737060547,
+      "restart_index": 692,
+      "settings": {
+        "atol": 1e-10,
+        "coarse_output_step_M": 0.5,
+        "max_step_M": 2.0,
+        "rtol": 1e-09
+      },
+      "whole_mode_relative_l2_torch_jax": 8.242398842359125e-09,
+      "whole_samples": 1169
+    },
+    "refined": {
+      "boundary_index": 8858,
+      "boundary_time_M": 484.40625,
+      "coarse_samples": 992,
+      "fine_samples": 9633,
+      "match_time_M": 484.4137461546736,
+      "nqc_coefficients": [
+        [
+          142.78352922348063,
+          -1225.7562477446963,
+          1374.2211210588791
+        ],
+        [
+          35.56064390258037,
+          -797.8350962776865
+        ]
+      ],
+      "orbital_peak_time_M": 495.70311737060547,
+      "restart_index": 692,
+      "settings": {
+        "atol": 1e-11,
+        "coarse_output_step_M": 0.5,
+        "max_step_M": 2.0,
+        "rtol": 1e-10
+      },
+      "whole_mode_relative_l2_torch_jax": 1.2170489612317577e-06,
+      "whole_samples": 1169
+    }
+  },
+  "nqc_coefficient_l2_difference": 2.5886316444536033,
+  "nqc_coefficient_relative_l2": 0.0012864356777073011,
+  "pid": 21460,
+  "plan_sha256": "1dd70fe630e30018ffdd341dd1c2c7c0a346e0a2dfe41d4e3c04ac818549730a",
+  "release_qualified": false,
+  "schema": "diffgw.seobnrv4.jax-source-tolerance-stages.v1",
+  "stage_comparisons": {
+    "coarse_state": {
+      "chart_max_abs_M": 0.0,
+      "common_samples": 992,
+      "complex_relative_l2": 2.2671862038652918e-08,
+      "early_80_percent_relative_l2": 5.07961952163848e-10,
+      "max_abs": 1.0625515630358073e-05,
+      "sample_count_difference": 0
+    },
+    "fine_base_mode": {
+      "chart_max_abs_M": 0.0,
+      "common_samples": 9633,
+      "complex_relative_l2": 9.9027699916083e-07,
+      "early_80_percent_relative_l2": 2.2308085755690566e-08,
+      "max_abs": 1.1749526832853378e-05,
+      "sample_count_difference": 19
+    },
+    "fine_corrected_inspiral": {
+      "chart_max_abs_M": 0.0,
+      "common_samples": 9633,
+      "complex_relative_l2": 0.006077940511977755,
+      "early_80_percent_relative_l2": 0.0032444040625976512,
+      "max_abs": 0.025131733696117393,
+      "sample_count_difference": 19
+    },
+    "fine_orbital_frequency": {
+      "chart_max_abs_M": 0.0,
+      "common_samples": 9633,
+      "complex_relative_l2": 6.731638035114473e-07,
+      "early_80_percent_relative_l2": 2.7917091642563505e-09,
+      "max_abs": 2.7056631992372626e-06,
+      "sample_count_difference": 19
+    },
+    "fine_state": {
+      "chart_max_abs_M": 0.0,
+      "common_samples": 9633,
+      "complex_relative_l2": 2.7597865984296013e-08,
+      "early_80_percent_relative_l2": 5.731234774174577e-10,
+      "max_abs": 2.5176884086069995e-05,
+      "sample_count_difference": 19
+    },
+    "whole_mode": {
+      "chart_max_abs_M": 0.0,
+      "common_samples": 1169,
+      "complex_relative_l2": 0.0033603085041226687,
+      "early_80_percent_relative_l2": 0.0023534802232198383,
+      "max_abs": 0.0023897632191642796,
+      "sample_count_difference": 0
+    }
+  },
+  "status": "diagnostic_complete"
+}

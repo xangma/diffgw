@@ -1,0 +1,16 @@
+{
+  "schema": "diffgw.seobnrv4.jax-source-tolerance-stage-plan.v1",
+  "purpose": "Localize the failed whole-waveform ODE-tolerance gate by comparing same-chart trajectory, pre-NQC mode, corrected inspiral, NQC coefficients, and attachment landmarks. This is an attribution follow-up, not a replacement gate.",
+  "pilot_case": "q4_nonspinning",
+  "prospective_case": "strong_aligned",
+  "ladder_plan_sha256": "101f756e6d90e07cb02084c04788bed43c4cdbc2773b948af8ff3262fda7352f",
+  "ladder_result_sha256": {
+    "q4_nonspinning": "81ad3af51e798af44594c8d34e3b359048f30b6c69f96821683747146fddf580",
+    "strong_aligned": "033007e807023f7ad519eee91b15248e33c2feb60f66a25fdeadf9d621ebbdd8"
+  },
+  "levels": ["baseline", "refined"],
+  "same_chart_tolerance_M": 1e-8,
+  "ladder_replay_relative_l2_tolerance": 1e-10,
+  "interpretation": "Stage attribution on two selected cases only. The failed numerical gate remains failed; no change to frozen thresholds or physical reference criteria.",
+  "release_qualified": false
+}

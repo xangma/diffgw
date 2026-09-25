@@ -1177,7 +1177,18 @@ baseline-to-refined complex relative L2 ranges from `2.24e-4` to `3.36e-3`;
 refined-to-finest ranges from `1.25e-4` to `2.67e-4`. Torch/JAX remain within
 `1.22e-6` at each level. This is shared sensitivity in the full waveform,
 not an independently converged numerical route. The fixed output cadence
-and the trajectory/NQC/attachment contributions still need separation.
+remains untested by this ladder.
+A [frozen stage attribution](evidence/2026-09-25/jax_source_tolerance_stage_plan.json)
+replays baseline and refined solves for [q4](evidence/2026-09-25/jax_source_tolerance_stages_q4_nonspinning.json)
+and prospectively [strong aligned spin](evidence/2026-09-25/jax_source_tolerance_stages_strong_aligned.json).
+Their same-chart pre-NQC fine modes change by only `7.35e-7` and `9.90e-7`
+relative L2, whereas corrected inspirals change by `2.71e-4` and `6.08e-3`.
+The five NQC coefficients move by `0.107` and `2.589` in absolute L2.
+For aligned spin, orbital peak, match, and attachment times are identical
+across the two tolerances. The failed whole-waveform tolerance gate is thus
+localized to NQC fitting/correction on these rows, not a large upstream
+trajectory or raw-mode change. A stable NQC derivative prescription still
+needs independent validation.
 
 The [frozen anchor diagnostic](evidence/2026-09-25/source_spliced_anchor_plan.json)
 replays all four cases and fits each mode's own amplitude peak between output
