@@ -971,7 +971,21 @@ and [antialigned](evidence/2026-09-25/jax_numerical_peak_physical_strong_antiali
 cases. The peak time and sample index agree exactly at the frozen bisection
 tolerance, whether JAX evaluates the Torch fine series or its separately
 integrated fine series; the largest end-to-end peak-frequency difference is
-`2.84e-15`. This rule is not yet wired into JAX numerical NQC or ringdown.
+`2.84e-15`. This rule is used by the development NQC diagnostic below, but
+is not yet wired into a JAX numerical attachment or ringdown route.
+
+The [development-only JAX full-series NQC rule](eob/jax/numerical_attachment_clean.py)
+now uses separate natural splines for the sampled amplitude products and
+phase bases, and differentiates the unwrapped waveform phase at the continuous
+match time. Its spline solve uses a JAX scan so a full fine trajectory does
+not generate one Python operation per knot. A synthetic wrapped-mode test and
+the [frozen physical pilot](evidence/2026-09-25/jax_full_series_nqc_physical_plan.json)
+pass Torch/JAX matrix, coefficient, and corrected-mode comparisons on the
+[mixed-spin fine trajectory](evidence/2026-09-25/jax_full_series_nqc_physical_high_start_mixed_spin.json).
+The same-input coefficient differences are below `6e-14` relative; the
+separately integrated corrected inspirals differ by `3.94e-9` complex
+relative L2. The prospective cases, numerical convergence, independent
+physical reference, ringdown, and ROM validation remain open.
 
 The published construction uses SVD bases and tensor-product cubic splines for
 parameter coefficients, as described by

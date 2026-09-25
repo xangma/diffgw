@@ -1,0 +1,16 @@
+{
+  "schema": "diffgw.seobnrv4.jax-full-series-nqc-physical-plan.v1",
+  "purpose": "Compare full-series NQC spline inputs, matching systems, coefficients, and corrected inspiral on physical fine EOB trajectories.",
+  "pilot_case": "high_start_mixed_spin",
+  "prospective_cases": ["q4_nonspinning", "strong_aligned", "strong_antialigned"],
+  "case_input_source": "jax_adaptive_physical_event_plan.json",
+  "trajectory_settings_source": "jax_two_stage_physical_plan.json",
+  "comparisons": ["JAX NQC on identical Torch fine samples and base mode versus Torch NQC", "JAX NQC on independently integrated JAX fine samples and base mode versus Torch NQC"],
+  "diagnostic_checks": {
+    "matching_matrix_max_abs_at_most": 1e-8,
+    "corrected_mode_complex_relative_l2_at_most": 1e-5,
+    "all_matching_conditions_finite": true,
+    "same_input_coefficient_relative_l2_at_most": 1e-5
+  },
+  "interpretation": "These are frontend numerical diagnostic limits, not independent physical accuracy, convergence, ringdown, or ROM qualification. A failed case must remain visible."
+}

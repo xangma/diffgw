@@ -5,6 +5,7 @@ Provides NaturalCubicSpline, natural_cubic_spline, and Thomas-algorithm tridiago
 
 from dataclasses import dataclass
 from typing import Optional
+from jax import lax
 import jax.numpy as jnp
 
 from jaxwave.conversions import as_array
@@ -25,27 +26,41 @@ def _natural_second_derivatives(x: jnp.ndarray, values: jnp.ndarray) -> jnp.ndar
     upper = h[..., 1:-1]
     rhs = 6.0 * (slopes[..., 1:, :] - slopes[..., :-1, :])
 
-    cprime = []
-    dprime = []
     denominator = diagonal[..., 0]
+    first_c = upper[..., 0] / denominator if m > 1 else jnp.zeros_like(denominator)
+    first_d = rhs[..., 0, :] / denominator[..., None]
+
     if m > 1:
-        cprime.append(upper[..., 0] / denominator)
-    dprime.append(rhs[..., 0, :] / jnp.expand_dims(denominator, -1))
-    for j in range(1, m):
-        denominator = diagonal[..., j] - lower[..., j - 1] * cprime[j - 1]
-        if m > j + 1:
-            cprime.append(upper[..., j] / denominator)
-        dprime.append(
-            (rhs[..., j, :] - jnp.expand_dims(lower[..., j - 1], -1) * dprime[-1])
-            / jnp.expand_dims(denominator, -1)
-        )
+        # A scan bounds Python tracing work independently of the full fine
+        # trajectory length. The last upper coefficient is zero by design.
+        upper_rest = jnp.concatenate((upper[..., 1:], jnp.zeros_like(upper[..., :1])), axis=-1)
+        forward_inputs = tuple(jnp.moveaxis(x, -1, 0) for x in
+                               (lower, diagonal[..., 1:], upper_rest)) + (
+                                   jnp.moveaxis(rhs[..., 1:, :], -2, 0),)
 
-    interior = [None] * m
-    interior[-1] = dprime[-1]
-    for j in range(m - 2, -1, -1):
-        interior[j] = dprime[j] - jnp.expand_dims(cprime[j], -1) * interior[j + 1]
+        def forward(carry, row):
+            c_prev, d_prev = carry
+            lo, diag, up, right = row
+            pivot = diag - lo * c_prev
+            c_next = up / pivot
+            d_next = (right - lo[..., None] * d_prev) / pivot[..., None]
+            return (c_next, d_next), (c_next, d_next)
 
-    interior_stacked = jnp.stack(interior, axis=-2)
+        _, (c_tail, d_tail) = lax.scan(forward, (first_c, first_d), forward_inputs)
+        cprime = jnp.concatenate((first_c[None, ...], c_tail), axis=0)
+        dprime = jnp.concatenate((first_d[None, ...], d_tail), axis=0)
+
+        def backward(next_solution, row):
+            c_value, d_value = row
+            solution = d_value - c_value[..., None] * next_solution
+            return solution, solution
+
+        _, reversed_solution = lax.scan(
+            backward, dprime[-1], (cprime[:-1][::-1], dprime[:-1][::-1]))
+        interior_stacked = jnp.moveaxis(
+            jnp.concatenate((reversed_solution[::-1], dprime[-1:]), axis=0), 0, -2)
+    else:
+        interior_stacked = jnp.expand_dims(first_d, -2)
     result = result.at[..., 1:-1, :].set(interior_stacked)
     return result
 
