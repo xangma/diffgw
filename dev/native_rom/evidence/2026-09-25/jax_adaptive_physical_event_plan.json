@@ -1,0 +1,36 @@
+{
+  "schema": "diffgw.seobnrv4.jax-adaptive-physical-event-plan.v1",
+  "purpose": "Test the JAX adaptive RKF45 coarse plunge event against the Torch implementation on the same physical EOB equations, initial state and controller settings.",
+  "pilot_case": "high_start_mixed_spin",
+  "prospective_cases": [
+    "q4_nonspinning",
+    "strong_aligned",
+    "strong_antialigned"
+  ],
+  "case_inputs": {
+    "high_start_mixed_spin": [30.0, 20.0, 0.2, -0.1, 0.05],
+    "q4_nonspinning": [40.0, 10.0, 0.0, 0.0, 0.04],
+    "strong_aligned": [30.0, 20.0, 0.8, 0.6, 0.04],
+    "strong_antialigned": [30.0, 20.0, -0.8, -0.6, 0.025]
+  },
+  "case_input_order": ["mass1_Msun", "mass2_Msun", "chi1", "chi2", "initial_Momega"],
+  "fixed_settings": {
+    "flux_spin_truncation": "tabulated",
+    "retain_pan_cubic_spin": false,
+    "atol": 1e-10,
+    "rtol": 1e-9,
+    "controller": "gsl_state_scaled",
+    "initial_step_M": 0.5,
+    "max_step_M": 2.0,
+    "output_step_M": 0.5,
+    "maximum_duration_M": 1000.0,
+    "event": "coarse accepted-state plunge event"
+  },
+  "diagnostic_checks": {
+    "both_terminate_at_event": true,
+    "accepted_and_rejected_counts_equal": true,
+    "event_time_abs_M_at_most": 0.0001,
+    "max_abs_uniform_state_at_most": 1e-8
+  },
+  "interpretation": "Solver and event cross-backend parity only. It does not establish historical source parity, complete waveform attachment, physical NR agreement, domain-wide convergence or ROM training quality."
+}
