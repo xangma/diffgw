@@ -275,6 +275,30 @@ remain unqualified. It ran on RONI2 in this worktree as PID `53995`, command
 log `/tmp/diffgw-jax-fixed-spline-horner.log`, and completed in 3.3 seconds
 with exit code 0. No process or next check remains.
 
+The [frozen full-spline arithmetic control](jax_full_spline_arithmetic_plan.json)
+and [result](jax_full_spline_arithmetic.json) applied barriers through the
+Thomas solve, cubic coefficient construction, and evaluation. It preserved
+the eager resampled state to `2.78e-17` maximum absolute error and reduced
+fine-grid eager/JIT state drift to `1.39e-17`, but missed the prospectively
+frozen bitwise-equality gate. It ran on RONI2 in this worktree as PID `56108`,
+command `PYTHONPATH=src:. /Users/xangma/repos/diffgw/.venv/bin/python -m dev.native_rom.diagnose_jax_full_spline_arithmetic`,
+log `/tmp/diffgw-jax-full-spline-arithmetic.log`, and completed in 14 seconds
+with exit code 1. No process or next check remains.
+
+The follow-on [frozen whole-waveform control](jax_stable_resample_whole_plan.json)
+and [failed result](jax_stable_resample_whole.json) used that resampler only
+for accepted-knot state sampling. The eager whole mode matches the unchanged
+baseline exactly, but eager/JIT whole relative L2 is `1.547139e-9` against
+`1e-10`; phase and amplitude NQC coefficient gaps remain `1.21e-7` and
+`1.29e-6`. Thus eliminating almost all state-resampling drift does not
+stabilize the model's mode/NQC path. This diagnostic had no AD/FD check and
+must not be promoted. It ran on RONI2 in this worktree as PID `58118`, command
+`PYTHONPATH=src:. /Users/xangma/repos/diffgw/.venv/bin/python -m dev.native_rom.diagnose_jax_stable_resample_whole`,
+log `/tmp/diffgw-jax-stable-resample-whole.log`, and completed in 28 seconds
+with exit code 1. No process or next check remains. The next numerical
+attribution should hold resampled states identical and compare eager/JIT
+published-mode evaluation before revisiting the NQC spline.
+
 Two different release claims must stay separate:
 
 - **Historical SEOBNRv4 fidelity:** a port may be described as faithful only

@@ -1,0 +1,21 @@
+{
+  "schema": "diffgw.seobnrv4.jax-stable-resample-whole-plan.v1",
+  "release_qualified": false,
+  "source_head": "421b979",
+  "case": "high_start_mixed_spin",
+  "output_step_M": 0.5,
+  "fine_refinement_factor": 32,
+  "adaptive_atol": 1e-10,
+  "adaptive_rtol": 1e-9,
+  "method": "Use the development-only rounding-barrier cubic spline solely for coarse and fine accepted-knot state resampling. Retain the original published mode, full-series NQC matching, ringdown attachment, and output grid. Compare stable eager/JIT whole mode and stable eager versus unmodified eager whole mode.",
+  "gates": {
+    "max_replay_state_absolute_error": 1e-7,
+    "max_candidate_baseline_whole_relative_l2": 1e-10,
+    "max_candidate_whole_eager_jit_relative_l2": 1e-10
+  },
+  "operational_limits": {
+    "max_wall_time_s": 300,
+    "max_rss_gib": 32
+  },
+  "interpretation": "One fixed-chart no-AD control. A pass would require independent source/NR, AD/FD and multi-case checks before release. The separate bitwise resampler gate remains failed."
+}

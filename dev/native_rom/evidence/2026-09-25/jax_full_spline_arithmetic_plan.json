@@ -1,0 +1,17 @@
+{
+  "schema": "diffgw.seobnrv4.jax-full-spline-arithmetic-plan.v1",
+  "release_qualified": false,
+  "source_head": "421b979",
+  "case": "high_start_mixed_spin",
+  "output_step_M": 0.5,
+  "fine_refinement_factor": 32,
+  "adaptive_atol": 1e-10,
+  "adaptive_rtol": 1e-9,
+  "method": "Replay the frozen accepted mesh and resample it with a development-only natural cubic spline using optimization barriers at scalar arithmetic steps in the Thomas solve, coefficient construction, and Horner evaluation. Compare full eager/JIT coarse and fine states with the unchanged resampler and reference trajectory.",
+  "gates": {
+    "max_candidate_eager_jit_state_absolute_error": 0.0,
+    "max_candidate_baseline_state_absolute_error": 1e-14,
+    "max_replay_reference_state_absolute_error": 1e-7
+  },
+  "interpretation": "One-chart state-resampling control only. A pass does not establish whole-waveform, AD/FD, source-fidelity across cases, or release qualification."
+}
