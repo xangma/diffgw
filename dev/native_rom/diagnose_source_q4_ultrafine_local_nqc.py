@@ -14,7 +14,7 @@ import numpy as np
 
 from dev.native_rom import qualify_generator as q
 from dev.native_rom.diagnose_native_source_nqc_inputs import _fit
-from dev.native_rom.diagnose_peak_anchor import fitted_metrics
+from dev.native_rom.diagnose_peak_anchor import fitted_metrics, fitted_peak
 from dev.native_rom.diagnose_source_flux_initial import _compile, _libraries, _snapshot
 from dev.native_rom.diagnose_source_nqc_high_rate import LocalPolynomial
 from dev.native_rom.diagnose_source_nqc_inputs import CAPTURE, INCLUDE, _capture
@@ -60,6 +60,57 @@ def _fit_drift(coarse, fine, prefix):
                 new_matrix_singular_values=np.linalg.svd(new_matrix).S.tolist())
 
 
+def _frequency_anchor(chart, mass_seconds, target):
+    time, mode = chart
+    phase = np.unwrap(np.angle(mode))
+    frequency = -np.gradient(phase, time / mass_seconds)
+    peak = fitted_peak(time, mode, "quadratic_power")
+    crossing = np.flatnonzero((frequency[:-1] < target)
+        & (frequency[1:] >= target)
+        & (time[:-1] < peak["time_s"] - 20 * mass_seconds))
+    if len(crossing) != 1:
+        raise ValueError("expected one early inspiral frequency crossing")
+    index = int(crossing[0])
+    fraction = (target-frequency[index]) / (frequency[index+1]-frequency[index])
+    anchor_time = time[index] + fraction * (time[index+1]-time[index])
+    anchor_phase = phase[index] + fraction * (phase[index+1]-phase[index])
+    return dict(time_s=float(anchor_time), phase_rad=float(anchor_phase),
+                time_before_peak_M=float((peak["time_s"]-anchor_time)/mass_seconds),
+                bracket_M=[float(time[index]/mass_seconds),
+                           float(time[index+1]/mass_seconds)])
+
+
+def _anchored_metrics(candidate_chart, reference_chart, mass_seconds,
+                      candidate_anchor, reference_anchor):
+    candidate_time, candidate_mode = candidate_chart
+    reference_time, reference_mode = reference_chart
+    ct = candidate_time - candidate_anchor["time_s"]
+    rt = reference_time - reference_anchor["time_s"]
+    cm = candidate_mode * np.exp(-1j*candidate_anchor["phase_rad"])
+    rm = reference_mode * np.exp(-1j*reference_anchor["phase_rad"])
+    common = (rt >= ct[0]) & (rt <= ct[-1])
+    time = rt[common]
+    if len(time) < 100:
+        raise ValueError("too few common frequency-anchored mode samples")
+    candidate = np.interp(time, ct, cm.real) + 1j*np.interp(time, ct, cm.imag)
+    reference = rm[common]
+    peak = fitted_peak(*reference_chart, "quadratic_power")
+    peak_time = peak["time_s"] - reference_anchor["time_s"]
+    windows = {}
+    for name, mask in (
+        ("pre_attachment", time < peak_time-20*mass_seconds),
+        ("peak_neighborhood", (time >= peak_time-20*mass_seconds)
+                              & (time < peak_time+20*mass_seconds)),
+        ("post_peak_20M", time >= peak_time+20*mass_seconds),
+    ):
+        if mask.sum() >= 3:
+            windows[name] = q.mode_metrics(candidate[mask], reference[mask])
+    return dict(metrics=q.mode_metrics(candidate, reference), windows=windows,
+                reference_peak_from_anchor_M=float(peak_time/mass_seconds),
+                common_support_from_anchor_M=[float(time[0]/mass_seconds),
+                                              float(time[-1]/mass_seconds)])
+
+
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--source-root", required=True, type=Path)
@@ -79,6 +130,7 @@ def main():
             or plan["output_steps_M"] != [0.03125, 0.015625]
             or plan["polynomial"] != {"degree": 4, "half_width_M": 2.0}
             or plan["capacity"] != 50000 or plan["pre_peak_cut_M"] != 20.0
+            or plan["inspiral_anchor_frequency_M_inv"] != 0.1
             or plan["peak_fit"] != "quadratic_power"
             or any(q.sha256(path) != plan[name + "_sha256"] for name, path in paths.items())):
         raise ValueError("frozen local NQC control changed")
@@ -172,6 +224,12 @@ def main():
                 raise ValueError("pinned source/wheel chart changed")
             local_pre = _pre_peak(_chart(local), wheel_chart, mass_seconds,
                                   plan["pre_peak_cut_M"], plan["peak_fit"])
+            local_anchor = _frequency_anchor(_chart(local), mass_seconds,
+                plan["inspiral_anchor_frequency_M_inv"])
+            wheel_anchor = _frequency_anchor(wheel_chart, mass_seconds,
+                plan["inspiral_anchor_frequency_M_inv"])
+            anchored_wheel = _anchored_metrics(_chart(local), wheel_chart,
+                                               mass_seconds, local_anchor, wheel_anchor)
             result["grids"][str(step)] = dict(
                 input_sha256=hashlib.sha256(values.tobytes()).hexdigest(),
                 source_mode_sha256=hashlib.sha256(source[2].tobytes()).hexdigest(),
@@ -182,6 +240,9 @@ def main():
                 baseline_wheel_fitted_l2=baseline_error,
                 local_wheel_fitted_l2=local_metrics["metrics"]["complex_relative_l2"],
                 local_wheel_pre_attachment_l2=local_pre["metrics"]["complex_relative_l2"],
+                local_wheel_inspiral_anchored=anchored_wheel,
+                local_inspiral_frequency_anchor=local_anchor,
+                wheel_inspiral_frequency_anchor=wheel_anchor,
                 local_source_same_grid=q.mode_metrics(local[2], source[2]),
                 fixed_minus_local_same_grid=q.mode_metrics(fixed[2], local[2]))
             charts[step] = _chart(local)
@@ -199,6 +260,13 @@ def main():
                               plan["pre_peak_cut_M"], plan["peak_fit"])
         fixed_pre = _pre_peak(fixed_charts[coarse], fixed_charts[fine], mass_seconds,
                               plan["pre_peak_cut_M"], plan["peak_fit"])
+        fixed_anchors = {
+            str(step): _frequency_anchor(fixed_charts[step], mass_seconds,
+                                         plan["inspiral_anchor_frequency_M_inv"])
+            for step in (coarse, fine)}
+        inspiral_anchored = _anchored_metrics(
+            fixed_charts[coarse], fixed_charts[fine], mass_seconds,
+            fixed_anchors[str(coarse)], fixed_anchors[str(fine)])
         result["adjacent"] = dict(
             source_coefficient_l2=inputs["adjacent"]["shared_input_fit_coefficient_difference_l2"],
             local_coefficient_l2=float(np.linalg.norm(fine_coeff-coarse_coeff)),
@@ -209,7 +277,9 @@ def main():
                 fixed_adjacent["metrics"]["complex_relative_l2"],
             fixed_fine_coefficient_fitted_windows=fixed_adjacent["windows"],
             fixed_fine_coefficient_pre_attachment_complex_relative_l2=
-                fixed_pre["metrics"]["complex_relative_l2"])
+                fixed_pre["metrics"]["complex_relative_l2"],
+            fixed_fine_coefficient_inspiral_frequency_anchors=fixed_anchors,
+            fixed_fine_coefficient_inspiral_anchored=inspiral_anchored)
     result["status"] = "diagnostic_complete"
     OUTPUT.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n")
 

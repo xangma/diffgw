@@ -1677,11 +1677,16 @@ The local-fit adjacent coefficient difference is `0.000365`, down from
 falls from `0.001425` to `0.000495`; at `0.03125 M`, it rises slightly from
 `5.55e-5` to `6.58e-5`. The two locally fitted source modes still differ by
 `0.000505` across output cadences. Holding the fine-grid coefficients fixed
-on both runs gives `0.000508`, with the remaining difference present before
-attachment (`0.000562`). Thus coefficient-fit sensitivity explains much of
-the source/wheel ultrafine discrepancy on one grid, but no longer explains
-the source's full-mode cadence drift after this numerical control. This
-counterfactual is not a historical-source prescription or a release pass.
+on both runs gives `0.000508` on the peak-fitted chart, with `0.000562`
+before attachment. On a separately frozen inspiral-frequency chart at
+`Mω₂₂ = 0.1`, the fixed-coefficient cross-grid full-mode error is only
+`7.40e-5`: `2.44e-5` before attachment, `1.47e-4` within `±20 M` of the
+peak, and `2.41e-4` later. The same frequency chart gives local-source/wheel
+full-mode errors of `7.03e-5` and `2.45e-4` on the coarse and fine grids.
+Peak anchoring therefore accounts for most of the apparent source self-drift
+after the local fit, while the remaining pre-attachment and late errors still
+exceed a release fidelity claim. The counterfactual is not a historical-source
+prescription or a release pass.
 
 The [JAX initial-state-to-base-mode gradient check](evidence/2026-09-25/jax_initial_to_base_mode_gradient.json)
 uses a [frozen q4 plan](evidence/2026-09-25/jax_initial_to_base_mode_gradient_plan.json)
