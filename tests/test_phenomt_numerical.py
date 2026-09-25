@@ -100,11 +100,13 @@ def test_jax_trajectory_invariants_and_jit(resolution):
         return numerical_geometry(tt, None, *x, 0.7, 0.2, 20.0, prepared=p)[0]
 
     compiled_solve = jax.jit(solve)
-    # FP64 eager/XLA operation ordering differs by 2.2e-13 here (5e-14
-    # relative); this is far below the separately tested grid-convergence
-    # error, so retain a small roundoff allowance.
+    # FP64 eager/XLA ordering changes the accumulated RK4 angle by 2.2e-13
+    # (JAX 0.11.1) to 4.2e-13 rad (JAX 0.11.2) on this fixture. The 1e-12 rad
+    # envelope remains over nine orders below the 8/4-to-16/8 grid change
+    # (at least 7e-3 rad); it tests compiled preparation without requiring
+    # identical floating-point operation order.
     np.testing.assert_allclose(compiled_solve(times, jnp.asarray(PARAMS)),
-                               solve(times, jnp.asarray(PARAMS)), atol=3e-13, rtol=0)
+                               solve(times, jnp.asarray(PARAMS)), atol=1e-12, rtol=0)
 
 
 def test_jax_generic_gradient_is_finite():

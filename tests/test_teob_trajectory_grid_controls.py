@@ -6,6 +6,14 @@ import torch
 from scripts import teob_trajectory_grid_controls as replay
 
 
+@pytest.fixture
+def convergence_cache():
+    cache = replay.old.DEFAULT_CACHE
+    if not cache.is_file():
+        pytest.skip(f"archived TEOB convergence cache is unavailable: {cache}")
+    return dict(np.load(cache, allow_pickle=False))
+
+
 def test_prefix_keeps_exact_knots_and_uses_cubic_between_them():
     t = torch.tensor([0., 1., 2., 3., 4.], dtype=torch.float64)
     y = t**3 - 2*t
@@ -19,8 +27,8 @@ def test_prefix_keeps_exact_knots_and_uses_cubic_between_them():
         replay.resample_prefix(t, y, t - .01)
 
 
-def test_explicit_step_clone_matches_native_on_its_own_auxiliary_grid():
-    data = dict(np.load(replay.old.DEFAULT_CACHE, allow_pickle=False))
+def test_explicit_step_clone_matches_native_on_its_own_auxiliary_grid(convergence_cache):
+    data = convergence_cache
     with torch.no_grad():
         t, state, kwargs = replay.trajectory_inputs(data, 'tight_0p1')
         native = replay.nqc_module.assemble_teob_merger_nqc(t, state, **kwargs)
@@ -36,8 +44,8 @@ def test_explicit_step_clone_matches_native_on_its_own_auxiliary_grid():
             replay.explicit_spacing_nqc(t, state, **kwargs, auxiliary_time_override=bad)
 
 
-def test_resampling_own_prefix_does_not_change_native_assembly():
-    data = dict(np.load(replay.old.DEFAULT_CACHE, allow_pickle=False))
+def test_resampling_own_prefix_does_not_change_native_assembly(convergence_cache):
+    data = convergence_cache
     with torch.no_grad():
         t, state, kwargs = replay.trajectory_inputs(data, 'tight_0p1')
         nqc = replay.nqc_module.assemble_teob_merger_nqc(t, state, **kwargs)
