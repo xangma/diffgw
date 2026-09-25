@@ -1792,6 +1792,19 @@ nonconvergent trend on these grids. Two adjacent differences do not establish
 an asymptotic order or validate the finest-grid coefficient set; this remains
 a development-only causal control.
 
+The [corrected-peak local-NQC control](evidence/2026-09-25/source_q4_corrected_peak_local_nqc.json)
+uses a [frozen plan](evidence/2026-09-25/source_q4_corrected_peak_local_nqc_plan.json)
+to fit a degree-four polynomial within `±2 M` of each corrected source match
+time and inject its coefficients into the pinned full generator. Own-coefficient
+controls reproduce the corrected source modes bit for bit. Adjacent local-fit
+coefficient differences shrink from `0.00847` to `0.00354`, and adjacent
+peak-fitted whole-mode L2 falls from `0.000881` to `0.000331`. Against the
+public wheel, the local-fit modes have whole-mode L2 `0.002179`, `0.001983`,
+and `0.001058` as the grid is refined. These remain above `1e-3`, and the
+local fit changes the historical coefficients by L2 `0.213`, `0.365`, and
+`0.703`. The falling cadence trend makes it a numerical candidate, not a
+source-faithful SEOBNRv4 prescription or release qualification.
+
 The [prospective q4 local-fit control](evidence/2026-09-25/source_q4_ultrafine_local_nqc_plan.json)
 recomputes those five coefficients with the same degree-four, `±2 M` local
 polynomial used in the earlier combined numerical control, then injects each
