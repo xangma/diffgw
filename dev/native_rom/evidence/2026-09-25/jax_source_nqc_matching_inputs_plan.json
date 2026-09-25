@@ -1,0 +1,22 @@
+{
+  "schema": "diffgw.seobnrv4.jax-source-nqc-matching-inputs-plan.v1",
+  "purpose": "Attribute the failed natural-cubic NQC coefficient tolerance drift to matching-matrix and right-hand-side changes. Replay baseline and refined source-backed whole waveforms, reconstruct each linear-system RHS from its frozen fit, then substitute the matrix and RHS across levels in both orders.",
+  "cases": ["q4_nonspinning", "strong_aligned"],
+  "levels": ["baseline", "refined"],
+  "source_plan_sha256": "eb79f7db87e23d83a8437334eec90f6872dcf3b76f65b5cbe55882f7d62b9944",
+  "ladder_plan_sha256": "101f756e6d90e07cb02084c04788bed43c4cdbc2773b948af8ff3262fda7352f",
+  "stage_result_sha256": {
+    "q4_nonspinning": "c278777a2d1cf3f080d30e00674a0ccb073d1f61bfa6c38767b09b4171de1f14",
+    "strong_aligned": "ea604be29c27813f81d658c6f5b9b502fda36176017d9166cd7b0cf618883de7"
+  },
+  "curvature_result_sha256": {
+    "q4_nonspinning": "fcba6c48e54fa015bedd8b2792e33b2e81e0484eb77813c8819d56b45ed00f26",
+    "strong_aligned": "69acf8eb32071b62011969dadb2bbc7609f7109fa41b793e7d8c173bd42db6f2"
+  },
+  "checks": {
+    "linear_system_reconstruction_max_abs_at_most": 1e-8,
+    "coefficient_replay_max_abs_at_most": 1e-8
+  },
+  "interpretation": "Diagnostic attribution only. Mixed matrix/RHS counterfactuals do not define a physical NQC prescription, and passing reconstruction checks does not imply numerical convergence or release qualification.",
+  "release_qualified": false
+}

@@ -1,0 +1,109 @@
+{
+  "case_id": "strong_aligned",
+  "checks": {
+    "candidate_baseline_to_refined_complex_relative_l2_at_most": false,
+    "candidate_drift_at_most_one_tenth_of_natural_cubic": false
+  },
+  "comparisons": {
+    "candidate_to_natural_cubic_drift_ratio": 0.9829208922512114,
+    "candidate_torch_baseline_to_refined": {
+      "common_samples": 1169,
+      "complex_relative_l2": 0.003302917433111587,
+      "support_sample_difference": 0,
+      "time_max_abs_M": 0.0
+    },
+    "natural_cubic_torch_baseline_to_refined": {
+      "common_samples": 1169,
+      "complex_relative_l2": 0.0033603085041226687,
+      "support_sample_difference": 0,
+      "time_max_abs_M": 0.0
+    }
+  },
+  "counterfactual_checks_passed": false,
+  "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+  "elapsed_s": 76.60245870897779,
+  "host": "RONI2",
+  "levels": {
+    "baseline": {
+      "jax_natural_cubic": {
+        "end_M": 584.0,
+        "mode_sha256": "47c9c601eb4377e3b3e9fce645595aeae69aab32271891798ca497202972f025",
+        "samples": 1169,
+        "start_M": 0.0,
+        "time_sha256": "0ac91155dc977bca73e17f8cf1a8295bff77b9e603e39a39a616cc1f185b5a22"
+      },
+      "matching_second": [
+        0.00017003887175132904,
+        0.00020870692072429454,
+        7.83485818127141e-05,
+        4.765858662611861e-05,
+        0.003947202742543703
+      ],
+      "runner_backend_parity_checks_passed": false,
+      "settings": {
+        "atol": 1e-10,
+        "coarse_output_step_M": 0.5,
+        "max_step_M": 2.0,
+        "rtol": 1e-09
+      },
+      "torch": {
+        "end_M": 584.0,
+        "mode_sha256": "1bf0d39e53bb96c645c125d46ce1c62f50b69718e0eba18b8979a1f2c2ee1e0d",
+        "samples": 1169,
+        "start_M": 0.0,
+        "time_sha256": "0ac91155dc977bca73e17f8cf1a8295bff77b9e603e39a39a616cc1f185b5a22"
+      },
+      "torch_public_complex_relative_l2": 0.04229358580104478,
+      "torch_to_jax_natural_cubic": {
+        "common_samples": 1169,
+        "complex_relative_l2": 4.9480836533289356e-05,
+        "support_sample_difference": 0,
+        "time_max_abs_M": 0.0
+      }
+    },
+    "refined": {
+      "jax_natural_cubic": {
+        "end_M": 584.0,
+        "mode_sha256": "c13ac90eedb99055b6aca7801b738a985b36471a4e06eff733e9d325d3c83005",
+        "samples": 1169,
+        "start_M": 0.0,
+        "time_sha256": "0ac91155dc977bca73e17f8cf1a8295bff77b9e603e39a39a616cc1f185b5a22"
+      },
+      "matching_second": [
+        0.0001700376590024365,
+        0.00020870083208884352,
+        7.834669682605642e-05,
+        4.765753775904809e-05,
+        0.0039471862110072925
+      ],
+      "runner_backend_parity_checks_passed": true,
+      "settings": {
+        "atol": 1e-11,
+        "coarse_output_step_M": 0.5,
+        "max_step_M": 2.0,
+        "rtol": 1e-10
+      },
+      "torch": {
+        "end_M": 584.0,
+        "mode_sha256": "7ff39f6f1381e4d0c3bf4fbcafba0a168850909b80188a8bdbafd40f558c4442",
+        "samples": 1169,
+        "start_M": 0.0,
+        "time_sha256": "0ac91155dc977bca73e17f8cf1a8295bff77b9e603e39a39a616cc1f185b5a22"
+      },
+      "torch_public_complex_relative_l2": 0.038714430156848535,
+      "torch_to_jax_natural_cubic": {
+        "common_samples": 1169,
+        "complex_relative_l2": 6.840931769445489e-06,
+        "support_sample_difference": 0,
+        "time_max_abs_M": 0.0
+      }
+    }
+  },
+  "natural_cubic_result_sha256": "033007e807023f7ad519eee91b15248e33c2feb60f66a25fdeadf9d621ebbdd8",
+  "pid": 34147,
+  "plan_sha256": "591cb7f7adf1f02672e4d4dbca73f8a4ca6005d26c50d83346e1214ff9a83a1e",
+  "release_qualified": false,
+  "schema": "diffgw.seobnrv4.jax-source-nqc-curvature.v1",
+  "scope": "Torch-only local-polynomial NQC curvature counterfactual; JAX retains natural-cubic curvature",
+  "status": "diagnostic_complete"
+}

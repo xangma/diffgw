@@ -1190,6 +1190,28 @@ localized to NQC fitting/correction on these rows, not a large upstream
 trajectory or raw-mode change. A stable NQC derivative prescription still
 needs independent validation.
 
+A [frozen NQC-curvature counterfactual](evidence/2026-09-25/jax_source_nqc_curvature_plan.json)
+replaces only the five Torch matching second derivatives with degree-four
+local-polynomial derivatives over `±2 M`. The [q4](evidence/2026-09-25/jax_source_nqc_curvature_q4_nonspinning.json)
+and [aligned-spin](evidence/2026-09-25/jax_source_nqc_curvature_strong_aligned.json)
+baseline-to-refined drifts are `2.38e-4` and `3.30e-3`, versus natural-cubic
+`2.24e-4` and `3.36e-3`. Both predeclared stability gates fail. This is a
+Torch-only numerical control; its JAX comparisons retain the natural-cubic
+rule and do not test parity for the intervention.
+
+A second [frozen matching-input audit](evidence/2026-09-25/jax_source_nqc_matching_inputs_plan.json)
+reconstructs the NQC linear systems at both tolerances on the same two rows.
+The [q4 result](evidence/2026-09-25/jax_source_nqc_matching_inputs_q4_nonspinning.json)
+attributes `0.079` of its `0.106` amplitude-coefficient shift to changing the
+matching matrix first, versus `0.027` from the right-hand side first. The
+[aligned result](evidence/2026-09-25/jax_source_nqc_matching_inputs_strong_aligned.json)
+attributes `2.530` of its `2.574` phase-coefficient shift to the phase-basis
+matching matrix first, versus `0.044` from its right-hand side first. The
+matrix/RHS substitution order has only small effects on these norms; both
+linear-system reconstructions pass. This narrows the tolerance failure to
+sampled matching-matrix derivatives for the tested rows, but does not identify
+a source-faithful stable replacement or qualify a waveform.
+
 The [frozen anchor diagnostic](evidence/2026-09-25/source_spliced_anchor_plan.json)
 replays all four cases and fits each mode's own amplitude peak between output
 samples without optimizing a relative shift. The [results](evidence/2026-09-25/source_spliced_anchor.json)

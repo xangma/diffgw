@@ -51,11 +51,15 @@ from torchwave.approximants.eob.initial_conditions import find_quasicircular_ini
 from torchwave.approximants.eob.integrator import EOBTrajectoryIntegrator as TorchIntegrator
 from torchwave.approximants.eob.nqc import (
     nqc_22_factor as torch_factor,
+    nqc_22_basis as torch_basis,
     seobnrv4_nqc_parameters as torch_parameters,
+    seobnrv4_nqc_targets as torch_targets,
     seobnrv4_nqc_time_offset_numerical_compatibility as torch_offset,
 )
 from torchwave.approximants.eob.numerical_attachment import (
     _full_orbital_peak as torch_peak,
+    _eval_batch_scalar,
+    _unwrap_mode_phase,
     attach_seobnrv4_22_numerical_compatibility as torch_attach,
 )
 from torchwave.approximants.eob.published_waveform import published_mode22_and_frequency as torch_mode
@@ -90,6 +94,25 @@ def _relative_l2(left, right):
     return float(np.linalg.norm(left - right) / np.linalg.norm(right))
 
 
+def _polynomial_matching_second(time_grid, state, orbital_frequency, base_mode,
+                                match_time, *, half_width_M, degree):
+    """Diagnostic local curvature for A, three A*q products, and mode phase."""
+    if half_width_M <= 0 or degree < 2:
+        raise ValueError("invalid diagnostic matching polynomial")
+    selected = (time_grid >= match_time-half_width_M) & (
+        time_grid <= match_time+half_width_M)
+    if int(selected.sum()) < degree + 3:
+        raise ValueError("insufficient NQC polynomial samples")
+    q, _ = torch_basis(state[:, 0], state[:, 2], orbital_frequency)
+    amplitude = base_mode.abs()
+    values = torch.cat((amplitude[:, None], amplitude[:, None]*q,
+                        _unwrap_mode_phase(base_mode)[:, None]), dim=-1)
+    x = (time_grid[selected]-match_time)/half_width_M
+    matrix = torch.stack(tuple(x**power for power in range(degree+1)), dim=-1)
+    coefficients = torch.linalg.lstsq(matrix, values[selected], driver="gels").solution
+    return 2*coefficients[2]/half_width_M**2
+
+
 def _prepare_public(plan):
     pin = plan["public_binary"]
     identity_plan = json.loads((ROOT / pin["identity_source"]).read_text())
@@ -101,7 +124,7 @@ def _prepare_public(plan):
 
 def run(case_id, plan, public_identity, *, variant="published", anchor_control=False,
         independent_init=False, numerical_settings=None, write_result=True,
-        return_series=False, return_stages=False):
+        return_series=False, return_stages=False, diagnostic_nqc_second=None):
     started = time.monotonic()
     m1, m2, chi1, chi2, omega_start = CASES[case_id]
     nu = m1 * m2 / (m1 + m2)**2
@@ -187,10 +210,18 @@ def run(case_id, plan, public_identity, *, variant="published", anchor_control=F
     jmatch = jax_peak(jrun.fine_time, jax_fine_omega).time + jax_offset(jnu, jchi)
     fine_count = math.ceil((max(float(tmatch), float(jmatch)) + 100) / fine_step) + 1
     output_time = np.arange(fine_count, dtype=np.float64) * fine_step
+    matching_second = None
+    if diagnostic_nqc_second is not None:
+        if variant != "source":
+            raise ValueError("diagnostic NQC curvature is source-backed only")
+        matching_second = _polynomial_matching_second(
+            fine.output_time, fine.output_state, torch_fine_omega,
+            torch_fine_mode, tmatch, **diagnostic_nqc_second)
     tref = torch_attach(
         fine.output_time, fine.output_state, torch_fine_omega,
         torch_fine_mode, torch_fine_frequency, tnu, tchi, tsigma,
-        torch.tensor(output_time, dtype=torch.float64))
+        torch.tensor(output_time, dtype=torch.float64),
+        diagnostic_matching_second=matching_second)
     jref = jax_attach(
         jrun.fine_time, jrun.fine_state, jax_fine_omega,
         jax_fine_mode, jax_fine_frequency, jnu, jchi, jsigma,
@@ -245,6 +276,9 @@ def run(case_id, plan, public_identity, *, variant="published", anchor_control=F
                   "max_step_M": max_step, "atol": atol, "rtol": rtol},
         "public_binary": public_identity,
         "source_choices": SOURCE_FLUX_OPTIONS if variant == "source" else None,
+        "diagnostic_nqc_second": diagnostic_nqc_second,
+        "diagnostic_nqc_second_values": (_array(matching_second).tolist()
+                                         if matching_second is not None else None),
         "independent_initial_solve": independent_init,
         "initial_state_max_abs": initial_state_max_abs,
         "torch_initial_state": initial_torch.tolist(),
@@ -285,6 +319,18 @@ def run(case_id, plan, public_identity, *, variant="published", anchor_control=F
                              sort_keys=True), flush=True)
     if return_series:
         if return_stages:
+            targets = torch_targets(tnu, tchi)
+            amplitude_rhs = torch.stack(targets[:3]) - torch.stack((
+                _eval_batch_scalar(tref.nqc.amplitude_spline, tmatch),
+                _eval_batch_scalar(tref.nqc.amplitude_spline, tmatch, derivative=1),
+                matching_second[0] if matching_second is not None else
+                _eval_batch_scalar(tref.nqc.amplitude_spline, tmatch, derivative=2)))
+            phase_rhs = torch.stack((
+                _eval_batch_scalar(tref.nqc.waveform_phase_spline, tmatch, derivative=1)
+                - targets.frequency,
+                (matching_second[4] if matching_second is not None else
+                 _eval_batch_scalar(tref.nqc.waveform_phase_spline, tmatch, derivative=2))
+                - targets.frequency_derivative))
             stage = {
                 "coarse_time": _array(coarse.output_time),
                 "coarse_state": _array(coarse.output_state),
@@ -294,6 +340,12 @@ def run(case_id, plan, public_identity, *, variant="published", anchor_control=F
                 "fine_corrected_inspiral": _array(tref.corrected_inspiral),
                 "fine_orbital_frequency": _array(torch_fine_omega),
                 "nqc_coefficients": [_array(x) for x in tref.calibration.coefficients],
+                "nqc_amplitude_matrix": _array(tref.nqc.amplitude_matching_matrix),
+                "nqc_phase_matrix": _array(tref.nqc.phase_matching_matrix),
+                "nqc_amplitude_rhs": _array(amplitude_rhs),
+                "nqc_phase_rhs": _array(phase_rhs),
+                "nqc_amplitude_condition": float(tref.calibration.amplitude_condition),
+                "nqc_phase_condition": float(tref.calibration.phase_condition),
                 "orbital_peak_time_M": float(coarse.output_time[restart] + tref.peak.time),
                 "match_time_M": float(coarse.output_time[restart] + tref.match_time),
                 "boundary_time_M": float(coarse.output_time[restart] + tref.boundary_time),

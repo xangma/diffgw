@@ -1,0 +1,208 @@
+{
+  "attribution": {
+    "amplitude": {
+      "base_to_refined_matrix_first_coefficient_shift": 0.07912618910422262,
+      "base_to_refined_matrix_second_coefficient_shift": 0.07912613928690052,
+      "base_to_refined_rhs_first_coefficient_shift": 0.026862503381716883,
+      "base_to_refined_rhs_second_coefficient_shift": 0.026862453582358174,
+      "coefficient_l2_difference": 0.10598860941464928,
+      "matrix_first_coefficients": [
+        -2.241256434813897,
+        8.055692107261464,
+        -6.512067354212278
+      ],
+      "matrix_frobenius_difference": 7.88456379497426e-07,
+      "matrix_row_l2_differences": [
+        4.2700002912536484e-07,
+        1.4689427199273183e-08,
+        6.626602887043133e-07
+      ],
+      "rhs_first_coefficients": [
+        -2.237503909744055,
+        8.02162778911969,
+        -6.472607999421725
+      ],
+      "rhs_l2_difference": 2.6833086952514576e-07,
+      "rhs_row_abs_differences": [
+        2.0727311350610123e-07,
+        1.4066715178090439e-08,
+        1.698276758414427e-07
+      ]
+    },
+    "phase": {
+      "base_to_refined_matrix_first_coefficient_shift": 0.018062192998030586,
+      "base_to_refined_matrix_second_coefficient_shift": 0.018061998676091436,
+      "base_to_refined_rhs_first_coefficient_shift": 0.0010196719362519755,
+      "base_to_refined_rhs_second_coefficient_shift": 0.0010198662432083945,
+      "coefficient_l2_difference": 0.017042382356555284,
+      "matrix_first_coefficients": [
+        2.1382946650023995,
+        -3.9291146010812916
+      ],
+      "matrix_frobenius_difference": 2.6299288695435995e-06,
+      "matrix_row_l2_differences": [
+        1.3865831040538204e-07,
+        2.6262710697516356e-06
+      ],
+      "rhs_first_coefficients": [
+        2.1402028267037774,
+        -3.94810076953576
+      ],
+      "rhs_l2_difference": 4.0604911395080536e-07,
+      "rhs_row_abs_differences": [
+        2.9611248120176015e-07,
+        2.778367891708572e-07
+      ]
+    }
+  },
+  "case_id": "q4_nonspinning",
+  "checks": {
+    "coefficient_replay_max_abs_at_most": true,
+    "linear_system_reconstruction_max_abs_at_most": true
+  },
+  "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+  "diagnostic_checks_passed": true,
+  "elapsed_s": 70.54964183404809,
+  "host": "RONI2",
+  "levels": {
+    "baseline": {
+      "match_time_M": 384.6637986114414,
+      "settings": {
+        "atol": 1e-10,
+        "coarse_output_step_M": 0.5,
+        "max_step_M": 2.0,
+        "rtol": 1e-09
+      },
+      "systems": {
+        "amplitude": {
+          "coefficient_replay_max_abs": 8.526512829121202e-14,
+          "coefficients": [
+            -2.2355422582153426,
+            8.004070854823095,
+            -6.4523718913641535
+          ],
+          "condition": 591.277079158189,
+          "linear_system_reconstruction_max_abs": 4.163336342344337e-17,
+          "matrix": [
+            [
+              0.05493357206986717,
+              0.01832620018557222,
+              0.010584972141871919
+            ],
+            [
+              0.007649162601715666,
+              0.0031491074584175634,
+              0.001991378373245364
+            ],
+            [
+              0.0012408292146915696,
+              0.0006362975451683216,
+              0.00044016306486575505
+            ]
+          ],
+          "rhs": [
+            -0.04442029369100087,
+            -0.004743460850068595,
+            -0.0005210512957504118
+          ]
+        },
+        "phase": {
+          "coefficient_replay_max_abs": 2.6645352591003757e-15,
+          "coefficients": [
+            2.140110608296143,
+            -3.9470852762453474
+          ],
+          "condition": 6.125241496368253,
+          "linear_system_reconstruction_max_abs": 6.938893903907228e-18,
+          "matrix": [
+            [
+              -0.026922034442846687,
+              -0.00273642342498921
+            ],
+            [
+              -0.002427931878715813,
+              -0.000494081847322911
+            ]
+          ],
+          "rhs": [
+            -0.04681523489770256,
+            -0.0032458595850317325
+          ]
+        }
+      },
+      "whole_mode_relative_l2_torch_jax": 7.704444913615586e-10
+    },
+    "refined": {
+      "match_time_M": 384.6638443878086,
+      "settings": {
+        "atol": 1e-11,
+        "coarse_output_step_M": 0.5,
+        "max_step_M": 2.0,
+        "rtol": 1e-10
+      },
+      "systems": {
+        "amplitude": {
+          "coefficient_replay_max_abs": 6.217248937900877e-14,
+          "coefficients": [
+            -2.243218086205731,
+            8.07324901588253,
+            -6.532303418452956
+          ],
+          "condition": 591.326828549945,
+          "linear_system_reconstruction_max_abs": 2.7755575615628914e-17,
+          "matrix": [
+            [
+              0.05493395752195086,
+              0.018326355794598948,
+              0.01058506982271369
+            ],
+            [
+              0.007649162470267987,
+              0.0031491183628365137,
+              0.001991388214771684
+            ],
+            [
+              0.0012402075041354377,
+              0.0006360978755386464,
+              0.0004400502522706901
+            ]
+          ],
+          "rhs": [
+            -0.04442050096411437,
+            -0.004743474916783773,
+            -0.0005212211234262533
+          ]
+        },
+        "phase": {
+          "coefficient_replay_max_abs": 5.773159728050814e-15,
+          "coefficients": [
+            2.13838690343571,
+            -3.9301302876596496
+          ],
+          "condition": 6.121336585183247,
+          "linear_system_reconstruction_max_abs": 1.3877787807814457e-17,
+          "matrix": [
+            [
+              -0.026921895807682925,
+              -0.0027364208915304803
+            ],
+            [
+              -0.002425320928629885,
+              -0.0004937985817573953
+            ]
+          ],
+          "rhs": [
+            -0.04681493878522136,
+            -0.0032455817482425616
+          ]
+        }
+      },
+      "whole_mode_relative_l2_torch_jax": 3.7004405453049277e-09
+    }
+  },
+  "pid": 40781,
+  "plan_sha256": "8a1c84bc9552861c41393ada36328c716abaca1f36057cba045cf252d41edf08",
+  "release_qualified": false,
+  "schema": "diffgw.seobnrv4.jax-source-nqc-matching-inputs.v1",
+  "status": "diagnostic_complete"
+}

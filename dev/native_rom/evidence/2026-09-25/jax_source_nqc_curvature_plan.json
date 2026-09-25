@@ -1,0 +1,20 @@
+{
+  "schema": "diffgw.seobnrv4.jax-source-nqc-curvature-plan.v1",
+  "purpose": "Counterfactual numerical control: replace only the five second derivatives at NQC matching by degree-four local polynomial derivatives over plus/minus 2 M. Keep first derivatives, matching targets, dynamics, raw mode, and ringdown construction fixed. Test whether the frozen whole-waveform tolerance drift shrinks.",
+  "pilot_case": "q4_nonspinning",
+  "prospective_case": "strong_aligned",
+  "source_plan_sha256": "eb79f7db87e23d83a8437334eec90f6872dcf3b76f65b5cbe55882f7d62b9944",
+  "ladder_plan_sha256": "101f756e6d90e07cb02084c04788bed43c4cdbc2773b948af8ff3262fda7352f",
+  "ladder_result_sha256": {
+    "q4_nonspinning": "81ad3af51e798af44594c8d34e3b359048f30b6c69f96821683747146fddf580",
+    "strong_aligned": "033007e807023f7ad519eee91b15248e33c2feb60f66a25fdeadf9d621ebbdd8"
+  },
+  "candidate": {"half_width_M": 2.0, "degree": 4},
+  "levels": ["baseline", "refined"],
+  "checks": {
+    "candidate_baseline_to_refined_complex_relative_l2_at_most": 0.00001,
+    "candidate_drift_at_most_one_tenth_of_natural_cubic": true
+  },
+  "interpretation": "Development-only counterfactual, not a validated NQC rule. Passing stability would not establish source fidelity, NR accuracy, JAX parity for this intervention, or ROM readiness.",
+  "release_qualified": false
+}

@@ -1,0 +1,109 @@
+{
+  "case_id": "q4_nonspinning",
+  "checks": {
+    "candidate_baseline_to_refined_complex_relative_l2_at_most": false,
+    "candidate_drift_at_most_one_tenth_of_natural_cubic": false
+  },
+  "comparisons": {
+    "candidate_to_natural_cubic_drift_ratio": 1.0610569657621274,
+    "candidate_torch_baseline_to_refined": {
+      "common_samples": 970,
+      "complex_relative_l2": 0.00023790923236397598,
+      "support_sample_difference": 0,
+      "time_max_abs_M": 0.0
+    },
+    "natural_cubic_torch_baseline_to_refined": {
+      "common_samples": 970,
+      "complex_relative_l2": 0.00022421909477130897,
+      "support_sample_difference": 0,
+      "time_max_abs_M": 0.0
+    }
+  },
+  "counterfactual_checks_passed": false,
+  "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+  "elapsed_s": 70.01094812498195,
+  "host": "RONI2",
+  "levels": {
+    "baseline": {
+      "jax_natural_cubic": {
+        "end_M": 484.5,
+        "mode_sha256": "0c58275063289365bce0d15dd2c60e93033ff1a7bc174188b72056b85369ed62",
+        "samples": 970,
+        "start_M": 0.0,
+        "time_sha256": "6db2117b58c64613f6c556861870ceaa8bc6026319b18624a2991df48e6cec1b"
+      },
+      "matching_second": [
+        -1.8009532947723316e-05,
+        0.00123895471479584,
+        0.0006355368724602986,
+        0.0004396693758219223,
+        0.005852620741048541
+      ],
+      "runner_backend_parity_checks_passed": false,
+      "settings": {
+        "atol": 1e-10,
+        "coarse_output_step_M": 0.5,
+        "max_step_M": 2.0,
+        "rtol": 1e-09
+      },
+      "torch": {
+        "end_M": 484.5,
+        "mode_sha256": "89698c15cf700786c83344dd039a39e135f0b504fd4c402fb36ab580cf13acb3",
+        "samples": 970,
+        "start_M": 0.0,
+        "time_sha256": "6db2117b58c64613f6c556861870ceaa8bc6026319b18624a2991df48e6cec1b"
+      },
+      "torch_public_complex_relative_l2": 0.06460219075907238,
+      "torch_to_jax_natural_cubic": {
+        "common_samples": 970,
+        "complex_relative_l2": 2.3335638470066146e-05,
+        "support_sample_difference": 0,
+        "time_max_abs_M": 0.0
+      }
+    },
+    "refined": {
+      "jax_natural_cubic": {
+        "end_M": 484.5,
+        "mode_sha256": "9afbc65b24a3f00982b4c6acf75547a98f05c6bb613f688b835faf1550fa0f82",
+        "samples": 970,
+        "start_M": 0.0,
+        "time_sha256": "6db2117b58c64613f6c556861870ceaa8bc6026319b18624a2991df48e6cec1b"
+      },
+      "matching_second": [
+        -1.8010590803905173e-05,
+        0.0012389607852985839,
+        0.0006355427601033295,
+        0.0004396741742110391,
+        0.0058526389995172306
+      ],
+      "runner_backend_parity_checks_passed": false,
+      "settings": {
+        "atol": 1e-11,
+        "coarse_output_step_M": 0.5,
+        "max_step_M": 2.0,
+        "rtol": 1e-10
+      },
+      "torch": {
+        "end_M": 484.5,
+        "mode_sha256": "f6bbed66afb2bbb06ac2256656d0f7015229b1449aa3ce70fec51e40cc5514b3",
+        "samples": 970,
+        "start_M": 0.0,
+        "time_sha256": "6db2117b58c64613f6c556861870ceaa8bc6026319b18624a2991df48e6cec1b"
+      },
+      "torch_public_complex_relative_l2": 0.06497463639996903,
+      "torch_to_jax_natural_cubic": {
+        "common_samples": 970,
+        "complex_relative_l2": 2.1647859131206746e-05,
+        "support_sample_difference": 0,
+        "time_max_abs_M": 0.0
+      }
+    }
+  },
+  "natural_cubic_result_sha256": "81ad3af51e798af44594c8d34e3b359048f30b6c69f96821683747146fddf580",
+  "pid": 31884,
+  "plan_sha256": "591cb7f7adf1f02672e4d4dbca73f8a4ca6005d26c50d83346e1214ff9a83a1e",
+  "release_qualified": false,
+  "schema": "diffgw.seobnrv4.jax-source-nqc-curvature.v1",
+  "scope": "Torch-only local-polynomial NQC curvature counterfactual; JAX retains natural-cubic curvature",
+  "status": "diagnostic_complete"
+}
