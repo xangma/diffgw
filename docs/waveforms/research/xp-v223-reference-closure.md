@@ -184,3 +184,98 @@ The two strict expected-failure cases in
 `test_xp_two_spin_near_aligned_continuity_pending` record both frequency
 regimes. They are not evidence of a generic continuity theorem or a sourced
 root-branch repair.
+
+## Executable generic-boundary diagnosis (2026-09-25)
+
+The independent
+[`xp_msa_generic_boundary.py`](https://github.com/xangma/diffgw/blob/main/src/diffgw_reference/xp_msa_generic_boundary.py)
+now evaluates the Appendix-B cubic with a private arbitrary-precision context.
+It returns the raw depressed-cubic inverse-cosine argument, all three roots,
+the unclipped Eq. (23) phase fraction, elliptic parameter, branch-signed
+initial phase, and polynomial residuals. It imports neither Torch nor JAX and
+does not insert an auxiliary separation. For a coplanar state, Eq. (24)'s
+vanishing triple product makes the state an exact turning point; the scalar
+uses that identity only to evaluate the endpoint elliptic integral and still
+reports the raw quotient. This distinction prevents a working-precision
+overshoot from being mistaken for a physical clamp.
+
+For the up-down fixture at 40 Hz, the scalar gives the following derived
+conditioning laws as the common transverse scale $x$ tends to zero:
+
+| $x$ | $S_+^2-S_-^2$ | $1+a_{\mathrm{acos}}$ |
+|---:|---:|---:|
+| $10^{-4}$ | $6.89448368434\times10^{-9}$ | $3.29691982458\times10^{-13}$ |
+| $10^{-6}$ | $6.89448597569\times10^{-13}$ | $3.29692523779\times10^{-21}$ |
+| $10^{-8}$ | $6.89448597591\times10^{-17}$ | $3.29692523833\times10^{-29}$ |
+| $10^{-10}$ | $6.89448597591\times10^{-21}$ | $3.29692523833\times10^{-37}$ |
+
+Thus the physical split is approximately
+$0.689448597591491x^2$, while the cubic endpoint distance is approximately
+$3296.92523832641x^4$. This is a fixture-specific derivation, not a new MSA
+equation. It explains why the endpoint argument becomes unresolvable in
+float64 before the turning-root split vanishes. The paired
+[`Torch`](https://github.com/xangma/diffgw/blob/main/src/torchwave/approximants/precession_msa_v223_generic_boundary.py)
+and
+[`JAX`](https://github.com/xangma/diffgw/blob/main/src/jaxwave/approximants/precession_msa_v223_generic_boundary.py)
+diagnostics expose the raw argument and separately label the clipped
+compatibility roots. Their tests require parity where float64 resolves the
+cubic and require the unresolved $10^{-10}$ discrepancy to remain visible.
+They do not alter waveform dispatch.
+
+The same scalar evaluates Pratten Appendix C Eqs. (67)--(85) with the orbital
+angular momentum supplied by the caller. It deliberately reports
+$\phi_J$ as undefined when $J_x=J_y=0$. For the tiny generic perturbation,
+the chart instead has the finite directional limit
+$\alpha_0\to\pi/2+\phi_\mathrm{ref}$, $\phi_J\to0$, while the spin-2
+polarization basis remains continuous. A fallback such as
+$\phi_J=\pi/2-\phi_\mathrm{ref}$ at exact alignment is therefore a chart
+compatibility choice, not an equation supplied by Appendix C. The generic
+Torch/JAX projection tests now include source phase $-0.1$, corresponding
+to the candidate `phic-phi0` coordinate for `phic=0.3`, `phi0=0.4`. That
+cross-frontend result validates the diagnostic source coordinate; it does not
+by itself validate replacing the public generic nonzero-`phi0` route.
+
+The published near-alignment literature does not close this gap by supplying
+a limiting form of the generic MSA solution. [Klein, Cornish and Yunes
+(2013)](https://arxiv.org/abs/1305.1932) construct a separate waveform by
+expanding every angular-momentum component in a misalignment parameter
+$\epsilon$ (their Eqs. (32), (43)--(45)) and retaining the transverse solution
+through $O(\epsilon)$ as two harmonic precession modes. That construction is a
+different perturbative model: it does not derive a replacement for the
+Chatziioannou $S^2$ turning roots, elliptic initial phase, or the Pratten
+Appendix-C source chart. Importing it only at the v223 boundary would therefore
+define a new hybrid waveform and matching prescription, not implement a
+published continuation of the v223 equations.
+
+The newer $\delta\chi$ formulations resolve a different singular limit.
+[Klein (2021), Eqs. (11), (37)--(39)](https://arxiv.org/abs/2106.10291)
+reparameterizes the conservative solution so the turning roots remain regular
+at equal mass, but its inertial-frame azimuth still contains
+$1/\sin^2\theta_L$ and is undefined at exact alignment. [Gerosa et al.
+(2023), Eqs. (29)--(34)](https://arxiv.org/abs/2304.04801) likewise identifies
+the two smaller $\delta\chi$ roots as the physical turning points and the
+largest as spurious, giving a robust root-solving strategy. It also states
+that the relative spin azimuth is ill-defined when either spin is aligned and
+that a formal Taylor expansion of the zero-amplitude resonance limit remains
+future work. These results support a separately implemented precession solver;
+they do not provide the missing scalar v223 root/phase/chart continuation or
+the generic nonzero-`phi0` transport.
+
+No production correction is adopted here. The papers specify the cubic,
+elliptic phase and chart, but do not specify a float64 small-misalignment
+expansion that preserves the generic branch through the root reordering.
+Pratten's minimal-rotation Eq. (7) fixes the exact aligned endpoint, while
+Chatziioannou Appendix E explicitly identifies the near-aligned PN expansion
+as ill-conditioned and suggests a dedicated expansion. Substituting Eq. (51),
+clipping the cubic argument, or forcing the aligned chart is not a sourced
+generic continuation. Consequently the merged one-spin/aligned route and the
+generic inherited nonzero-`phi0` dispatch remain unchanged, and both strict
+xfails retain their $10^{-6}$ threshold.
+
+The executable gates are in
+[`test_xp_v223_generic_boundary_math_reference.py`](https://github.com/xangma/diffgw/blob/main/tests/test_xp_v223_generic_boundary_math_reference.py).
+They were run on host `len` under Python 3.12.3 with NumPy 2.5.3, mpmath
+1.3.0, SciPy 1.18.1, Torch 2.14.0+cpu, JAX/JAXLIB 0.11.2, pytest 9.1.1,
+LALSuite 7.26.15 (LAL 7.7.1, LALSimulation 6.2.1). The LAL packages were
+used only as pinned black-box waveform oracles in existing tests; no LAL
+source was consulted for this derivation.

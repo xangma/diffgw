@@ -46,7 +46,7 @@ def _torch_waveform(case, *, phic, convention, spins=None):
 
 
 @pytest.mark.parametrize("case", CASES)
-@pytest.mark.parametrize("phic", (0.0, 0.3))
+@pytest.mark.parametrize("phic", (0.0, 0.3, -0.1))
 def test_generic_source_geometry_matches_torch_clean(case, phic):
     m1, m2, s1, s2, inc, fr, _ = case
     actual = generic_source_frame_geometry_v223(m1, m2, s1, s2, inc, phic, fr)
@@ -60,14 +60,15 @@ def test_generic_source_geometry_matches_torch_clean(case, phic):
 
 @pytest.mark.parametrize("case", CASES)
 @pytest.mark.parametrize("convention", (0, 1))
-def test_generic_waveform_matches_torch_clean(case, convention):
+@pytest.mark.parametrize("phic", (0.3, -0.1))
+def test_generic_waveform_matches_torch_clean(case, convention, phic):
     m1, m2, s1, s2, inc, fr, frequencies = case
     hp, hc, state = generic_msa_v223_waveform(
         frequencies, m1, m2, jnp.asarray(s1), jnp.asarray(s2),
-        distance=500.0, inclination=inc, phic=0.3, f_ref=fr,
+        distance=500.0, inclination=inc, phic=phic, f_ref=fr,
         convention=convention, return_state=True,
     )
-    thp, thc = _torch_waveform(case, phic=0.3, convention=convention)
+    thp, thc = _torch_waveform(case, phic=phic, convention=convention)
     assert _relative_l2(hp, thp.detach().numpy()) < 5e-12
     assert _relative_l2(hc, thc.detach().numpy()) < 5e-12
     assert hp.shape == hc.shape == (3,)
