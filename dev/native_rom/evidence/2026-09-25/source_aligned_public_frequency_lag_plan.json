@@ -1,0 +1,60 @@
+{
+  "case": "strong_aligned",
+  "inputs": {
+    "boundary_plan": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_ode_chain_boundary_frequency_plan.json",
+      "sha256": "e85982de0ea04ddbd14c46d0f2752af2eb0e7d288deb1db6f904827dba149c76"
+    },
+    "boundary_result": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_ode_chain_boundary_frequency.json",
+      "sha256": "da62437767c4cfd908344bf06986f388a27aa9c57b53c1481af92d74ba220414"
+    },
+    "boundary_runner": {
+      "path": "dev/native_rom/diagnose_source_aligned_ode_chain_boundary_frequency.py",
+      "sha256": "f4c434d1d050ffad7550364292cc202c639e79323e731db797afd6a2b10e21e6"
+    },
+    "driver": {
+      "path": "dev/native_rom/diagnose_jax_spliced_whole_waveform.py",
+      "sha256": "158c243e6909d26529cf5e976521793cd07821cd48662036a3c34182391f9d1c"
+    },
+    "frequency_anchor_helper": {
+      "path": "dev/native_rom/diagnose_q8_frequency_anchor.py",
+      "sha256": "d4ce654705a6599340b9d5cdfeda303a748e62197c143c4fa6f995e03126526b"
+    },
+    "gap_plan": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_public_gap_plan.json",
+      "sha256": "94671e199916158f9119f3e1c4d909c662e55f9990926f653ba591c765f908ff"
+    },
+    "gap_result": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_public_gap.json",
+      "sha256": "a2d9498c630afe966ca826ebb342ad7f1c28c99211a935493c666f1cd4e1a08a"
+    },
+    "public_helper": {
+      "path": "dev/native_rom/diagnose_peak_anchor.py",
+      "sha256": "02a2974900b77e2e074f9d050006b5a973cd6e621c8d4c4c007e88482ef5ea6a"
+    },
+    "qualifier": {
+      "path": "dev/native_rom/qualify_generator.py",
+      "sha256": "df9bffb614b87e82b5a8da47212cb01312ad4d0cb9d687d929570df134954174"
+    },
+    "source_field": {
+      "path": "dev/native_rom/diagnose_source_aligned_ode_chain_phase_matrix.py",
+      "sha256": "654ce386c98094f17c8b14bfdf2fdb9db2e70d112c1c4524943cd3745d41ad1a"
+    }
+  },
+  "interpretation": "Each waveform uses its own first pre-peak Momega22 crossing and phase at that crossing. The peak lag difference and local residual diagnose time-dependent mismatch; this scan cannot by itself identify a causal term or establish release qualification.",
+  "level": "refined",
+  "local_half_width_M": 20.0,
+  "purpose": "Development-only six-point frequency-chart scan of strong-aligned native/public timing and local complex residual; quantify chirp-timing variation without refitting either waveform.",
+  "release_qualified": false,
+  "schema": "diffgw.seobnrv4.source-aligned-public-frequency-lag-plan.v1",
+  "script_sha256": "145755c476b340f9208acb1036dd057d3aa41268751e8823d1b531ebd4ae5cb3",
+  "targets_Momega22": [
+    0.09,
+    0.1,
+    0.11,
+    0.12,
+    0.14,
+    0.16
+  ]
+}

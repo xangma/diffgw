@@ -1,0 +1,113 @@
+{
+  "cases": [
+    "q4_nonspinning",
+    "high_start_mixed_spin",
+    "strong_antialigned"
+  ],
+  "checks": {
+    "backward_secant_replay_at_most": 1e-12,
+    "candidate_refined_to_finest_at_most": 1e-05,
+    "direct_raw_phase_derivative_at_most": 1e-10,
+    "phase_basis_sample_replay_at_most": 1e-12,
+    "raw_frequency_sample_replay_at_most": 1e-12,
+    "ringdown_reconstruction_max_absolute_at_most": 1e-12
+  },
+  "comparison_protocol": "Use frozen baseline/refined whole-mode comparisons; rerun refined and require exact candidate/no-op series hashes; compare refined to finest on identical support. No-op reinstates the captured original backward-secant ringdown frequency, with all other candidate inputs unchanged. Report monotonicity for candidate and no-op without post-hoc gate changes.",
+  "fine_refinement_factor": 32,
+  "fixed": {
+    "JAX": "unchanged natural-cubic comparison route",
+    "output_step_M": 0.5,
+    "public_binary": "pinned LAL 7.7.1 / lalsimulation 6.2.1",
+    "ringdown": "same boundary, QNM, amplitude, phase, projected shape, elapsed chart, and support"
+  },
+  "inputs": {
+    "boundary_frequency_runner": {
+      "path": "dev/native_rom/diagnose_source_aligned_ode_chain_boundary_frequency.py",
+      "sha256": "f4c434d1d050ffad7550364292cc202c639e79323e731db797afd6a2b10e21e6"
+    },
+    "ladder_plan": {
+      "path": "dev/native_rom/evidence/2026-09-25/jax_source_tolerance_ladder_plan.json",
+      "sha256": "101f756e6d90e07cb02084c04788bed43c4cdbc2773b948af8ff3262fda7352f"
+    },
+    "prior_plan": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_ode_chain_boundary_frequency_domain_plan.json",
+      "sha256": "59a14708ba7b48cbc7ba432f27227a6f8868cb9a5f64c2c73aec9d30a0df73fe"
+    },
+    "prior_result": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_ode_chain_boundary_frequency_domain.json",
+      "sha256": "dac8f72ffdb11059b42085d9433aef9e1925c99b16e7d9e123ac07a928f6c161"
+    },
+    "prior_runner": {
+      "path": "dev/native_rom/diagnose_source_ode_chain_boundary_frequency_domain.py",
+      "sha256": "262b743d6f7cb19554bad43637dae3c94d7ff2f675bff9b887d8cfc0e970697f"
+    },
+    "ringdown_reconstruction": {
+      "path": "dev/native_rom/diagnose_source_aligned_ode_chain_ringdown_inputs.py",
+      "sha256": "f54f2264fba48986eea2d2048d84ddfeab8405ebb32c0b9f7a755f2520439f7f"
+    },
+    "runner": {
+      "path": "dev/native_rom/diagnose_jax_spliced_whole_waveform.py",
+      "sha256": "158c243e6909d26529cf5e976521793cd07821cd48662036a3c34182391f9d1c"
+    },
+    "source_amplitude_v2": {
+      "path": "dev/native_rom/diagnose_source_aligned_ode_chain_amplitude_v2.py",
+      "sha256": "c3460f910c186f3fdf2e2c51084990198d314ba6d6eeacfd3592663b9e1cecef"
+    },
+    "source_attribution_v2": {
+      "path": "dev/native_rom/diagnose_source_aligned_ode_chain_residual_attribution_v2.py",
+      "sha256": "00fd90accfbde484815f2c409d7ec985c4ad27d97e2a434fabb2632885c20513"
+    },
+    "source_phase_matrix": {
+      "path": "dev/native_rom/diagnose_source_aligned_ode_chain_phase_matrix.py",
+      "sha256": "654ce386c98094f17c8b14bfdf2fdb9db2e70d112c1c4524943cd3745d41ad1a"
+    },
+    "source_phase_rhs": {
+      "path": "dev/native_rom/diagnose_source_aligned_ode_chain_phase_rhs.py",
+      "sha256": "b789eedb4eacf29500253999d1d0bb68e8e8591f661b8025592c50ae1d1114ff"
+    },
+    "source_plan": {
+      "path": "dev/native_rom/evidence/2026-09-25/jax_source_spliced_whole_waveform_plan.json",
+      "sha256": "eb79f7db87e23d83a8437334eec90f6872dcf3b76f65b5cbe55882f7d62b9944"
+    },
+    "torch_attachment": {
+      "path": "src/torchwave/approximants/eob/numerical_attachment.py",
+      "sha256": "8c7a149b76c529a255a4caa4b0ca76317b5306c8967db84047f299ccf51be7fc"
+    },
+    "torch_nqc": {
+      "path": "src/torchwave/approximants/eob/nqc.py",
+      "sha256": "c8683181f7cf911df1e1b85cd6999cdb03e7c594e867315359040e9eb03ca552"
+    },
+    "torch_ringdown": {
+      "path": "src/torchwave/approximants/eob/merger_ringdown.py",
+      "sha256": "098bb9e6f5328ceb291a5bed02a91d8fa95cc54bbcc7ff45d996e6985d995410"
+    }
+  },
+  "interpretation": "Development-only selected-case ODE tolerance progression. A failed check or nonmonotone row remains reported. No public fidelity, full-domain bound, gradient, native ROM, or release qualification follows.",
+  "intervention": "For each row and ODE tolerance, use continuous ODE NQC phase/amplitude matching and replace only the ringdown frequency argument at the same sampled boundary with omega_raw minus the NQC phase coefficients times Lie derivatives of the phase bases.",
+  "levels": [
+    "refined",
+    "finest"
+  ],
+  "purpose": "Prospective third-tolerance continuation of the frozen three-row continuous boundary-frequency campaign, with original-frequency no-op control on the same 0.5 M output chart.",
+  "release_qualified": false,
+  "runner_sentinel": {
+    "degree": 0,
+    "half_width_M": 0.0
+  },
+  "schema": "diffgw.seobnrv4.source-ode-chain-boundary-frequency-domain-finer-plan.v1",
+  "script_sha256": "c20203ba7e7b5b40ceebc01c24849570e601a9f09c51686b9437d3ff97887281",
+  "tolerances": {
+    "baseline": {
+      "atol": 1e-10,
+      "rtol": 1e-09
+    },
+    "finest": {
+      "atol": 1e-12,
+      "rtol": 1e-11
+    },
+    "refined": {
+      "atol": 1e-11,
+      "rtol": 1e-10
+    }
+  }
+}

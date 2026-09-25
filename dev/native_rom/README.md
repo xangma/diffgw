@@ -2732,9 +2732,32 @@ candidate ringdowns are exact, and sampled boundaries and supports agree
 between tolerances. The antialigned control without the frequency replacement
 is slightly more stable (`7.07e-6`); a numerical gate pass does not imply that
 the intervention improves every row. Public-model residuals remain about
-`0.06505`, `0.08036`, and `0.000224` on the three rows. This is a Torch-only,
-two-tolerance, selected-case check; JAX matching, a finer tolerance, domain
-coverage, source fidelity, and release qualification remain open.
+`0.06505`, `0.08036`, and `0.000224` on the three rows. This first campaign is
+a Torch-only, two-tolerance, selected-case check; domain coverage, source
+fidelity, and release qualification remain open.
+
+The [frozen third-tolerance replay](evidence/2026-09-25/source_ode_chain_boundary_frequency_domain_finer_plan.json)
+adds a finer ODE tolerance on those same three rows. Its
+[result](evidence/2026-09-25/source_ode_chain_boundary_frequency_domain_finer.json)
+replays each refined waveform hash exactly and passes all prospective checks.
+Refined-to-finest whole-mode drift falls to `4.61e-8` for q4 nonspinning,
+`1.13e-7` for mixed spin, and `1.79e-6` for strong antialigned spin; each is
+below `1e-5` and below its baseline-to-refined drift. The original-frequency
+control also converges monotonically, so this establishes selected-case
+numerical stability, not universal superiority of the intervention. The
+public-model residuals and wider domain/physics gates remain open.
+
+The [frozen fixed-input Torch/JAX parity check](evidence/2026-09-25/jax_source_ode_boundary_frequency_parity_plan_v2.json)
+replays the strong-aligned Torch trajectory, then evaluates the same ODE NQC
+matching and discrete-boundary frequency in JAX. Its
+[result](evidence/2026-09-25/jax_source_ode_boundary_frequency_parity.json)
+passes all nine prospective checks: corrected fine-mode complex relative L2
+is `9.47e-13`, boundary-frequency difference is `1.22e-15`, and 200-sample
+ringdown relative L2 is `2.04e-13`. This checks backend arithmetic on fixed
+inputs; an independently integrated JAX trajectory, its gradients, and
+whole-domain parity are still unqualified. The original v1 plan stopped at
+an import error before numerical evaluation; v2 records that setup correction
+without changing the case or thresholds.
 
 A [frozen aligned-row public-gap diagnostic](evidence/2026-09-25/source_aligned_public_gap_plan.json)
 exactly replays the refined candidate and original-ringdown control, then
@@ -2749,6 +2772,16 @@ the solved NQC correction applies across the early interval, and peak anchoring
 affects the whole waveform. The alternate `Mω₂₂=0.1` frequency anchor is
 ill-conditioned on this row and is only a sensitivity control. A substantial
 public-source discrepancy remains; neither diagnostic qualifies the generator.
+
+A [frozen six-frequency timing scan](evidence/2026-09-25/source_aligned_public_frequency_lag_plan.json)
+replays that same strong-aligned candidate and pinned public mode. Its
+[result](evidence/2026-09-25/source_aligned_public_frequency_lag.json)
+passes all replay checks, but the peak-lag difference varies by `13.74 M`
+across `Mω₂₂=0.09–0.16`; the whole-mode frequency-anchored L2 varies from
+`0.0178` to `0.9198`, while the local `±20 M` L2 stays between `0.00277`
+and `0.00687`. This confirms that a single frequency anchor is not a stable
+whole-waveform fidelity measure here. The unsmoothed crossings and large
+early-chart dephasing do not identify a causal model term.
 
 1. Qualify the physical generator against the published equations and independent
    references over the intended domain, resolve convention/provenance gaps, and
