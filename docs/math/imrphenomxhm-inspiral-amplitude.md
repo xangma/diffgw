@@ -143,7 +143,7 @@ Run the paper/scalar/frontend checks with:
 
 ```bash
 JAX_ENABLE_X64=1 JAX_PLATFORMS=cpu PYTHONPATH=src \
-  pytest -q tests/test_xhm_inspiral_amplitude_reference.py
+  pytest -q tests/test_xhm_inspiral_amplitude_math_reference.py
 ```
 
 With the pinned optional LAL Python bindings installed, reproduce the
