@@ -1,0 +1,70 @@
+{
+  "allowed_time_shift_M": [
+    -20,
+    20
+  ],
+  "cases": {
+    "paper": "SXS:BBH:0260",
+    "third": "SXS:BBH:2569"
+  },
+  "common_support": "start at later settled-reference time after each 0.09/M anchor; end at earliest available native or low/high NR sample across both runs",
+  "inputs": {
+    "paper_array": {
+      "path": "/tmp/diffgw-sxs-paper-catalog/decoded/SXS_BBH_0260_anchored.npz",
+      "sha256": "4ff7e4b352d9f5d0b245409bfa2ebca153e04b552df7eb3865c32df042109591"
+    },
+    "paper_comparison": {
+      "path": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw/dev/native_rom/evidence/2026-09-24/sxs_paper_catalog_comparison.json",
+      "sha256": "235e0d0fbaf2a6b63d3c1e5fc06db5f46d8cf9ff30949cb46bd75e4dbbc7fab7"
+    },
+    "paper_plan": {
+      "path": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw/dev/native_rom/evidence/2026-09-24/sxs_paper_catalog_plan.json",
+      "sha256": "f9c52d91b86bd895b3d2ce43e8c7d5b3d80eb28cda02d18dac27fb2602b6bb69"
+    },
+    "paper_weighted": {
+      "path": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw/dev/native_rom/evidence/2026-09-24/sxs_paper_catalog_weighted.json",
+      "sha256": "d2d9723ab1d33713f3a1301c8470f7013ca275ebd5550723731f4f74dc70ce61"
+    },
+    "scoring": {
+      "path": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw/dev/native_rom/measure_sxs_2508_weighted.py",
+      "sha256": "91a8d99a89ded2ea5d42455318d1d80186df758d6cbc4dee2c41bdd254e8dd8d"
+    },
+    "third_array": {
+      "path": "/tmp/diffgw-sxs-third-holdout/decoded/SXS_BBH_2569_anchored.npz",
+      "sha256": "4180cbd3aaee9eb492d776d291ecd603c1ba19483777f0e326d18d525d7527c7"
+    },
+    "third_comparison": {
+      "path": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw/dev/native_rom/evidence/2026-09-24/sxs_third_holdout_comparison.json",
+      "sha256": "2caff7f537583d5016e171e451387decca04a634ccae39a5d155689175da8a21"
+    },
+    "third_plan": {
+      "path": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw/dev/native_rom/evidence/2026-09-24/sxs_third_holdout_plan.json",
+      "sha256": "abd73c31f3a1cce82f0009ab134f93983595bdea6e62786c83052cbcfc796a73"
+    },
+    "third_weighted": {
+      "path": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw/dev/native_rom/evidence/2026-09-24/sxs_third_holdout_weighted.json",
+      "sha256": "e55cd65399d937eae13d9d06c1425b6cb9dcf1c38aa2b7eb07bf29115bd83322"
+    }
+  },
+  "interpretation": "Retrospectively selected near-identical intrinsic parameters and common-support control refined after initial diagnostic; positive cross-run overlap is a consistency control, not independent domain validation or a replacement for the failed NR gate.",
+  "lower_cutoff": "max(10 Hz, both runs settled-reference orbital frequency converted to Hz at each mass)",
+  "masses_msun": [
+    22,
+    50,
+    100,
+    200
+  ],
+  "maximum_frequency_Hz": 3000,
+  "minimum_frequency_Hz": 10,
+  "primary_mass_msun": 22,
+  "primary_taper_width_M": 50,
+  "purpose": "Post-hoc direct comparison of two independently evolved SXS runs near q=3 and chi1=chi2=-0.85; distinguish a one-run NR artifact from a shared historical-model residual, without changing either frozen physical gate.",
+  "release_qualified": false,
+  "sample_step_M": 0.25,
+  "schema": "diffgw.seobnrv4.sxs-cross-run-nr-plan.v1",
+  "taper_control_widths_M": [
+    25,
+    100
+  ],
+  "time_shift_grid_step_M": 0.25
+}

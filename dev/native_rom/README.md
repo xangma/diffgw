@@ -1062,6 +1062,20 @@ The [post-hoc 0260 cutoff check](evidence/2026-09-24/sxs_0260_initial_cutoff.jso
 finds that using the catalog's initial orbital frequency and earlier common
 NR support lowers the 22 M⊙ overlap to `0.985634`; those tested protocol
 choices do not resolve the miss.
+The [post-hoc cross-run NR control](evidence/2026-09-25/sxs_cross_run_nr.json)
+uses a [hashed common-support plan](evidence/2026-09-25/sxs_cross_run_nr_plan.json)
+for SXS:BBH:2569 and SXS:BBH:0260, two runs with nearly the
+same `q≈3`, `χ₁≈χ₂≈−0.85` configuration. On the identical settled time support,
+39.56–3000 Hz detector band at `22 M⊙`, and one globally optimized time/phase
+shift, their high-resolution NR modes overlap at `0.999999319`; the two native
+models overlap at `0.999999595`. Native/NR overlap is still `0.989142` for
+2569 and `0.989079` for 0260 on that very same support. Taper widths of 25,
+50, and `100 M` preserve this contrast, and each within-run low/high NR control
+exceeds `0.999935`. This is strong evidence that the failed `0.99` proxy is a
+shared model/NR discrepancy under this protocol rather than an artifact of one
+NR run or unequal comparison support. The runs were selected after the misses;
+this control neither repairs the historical model nor converts the prospective
+holdout into a pass.
 The separately frozen [near-extreme numerical screen](evidence/2026-09-24/source_rkf_near_extreme_screen.json)
 passes all predeclared tolerance and output-grid gates for `q=10` with both
 spins `+0.95` and `q=3` with spins `(+0.95,-0.95)`. Their refined ODE complex
