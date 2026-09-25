@@ -21,6 +21,20 @@ The [spin-induced quadrupole extension](math/taylorf2-spin-quadrupole.md)
 adds the non-Kerr 2PN, 3PN, and 3.5PN phase terms, with source-linked coefficient,
 waveform, derivative, batching, and compiled-path checks.
 
+On 25 September 2026, the [TaylorF2_HM eight-mode specification](math/taylorf2-hm.md)
+passed the strict CPU gate on `len`: **1,121/1,121** required
+mathematical-reference cases, zero skipped/xfail/deselected, and **1,133** tests
+passed overall in 771.31 seconds. The focused paper, scalar-reference, external
+API, and Torch/JAX parity slice passed **204/204**. The Python 3.12.3 environment
+used NumPy 2.5.3, SciPy 1.18.1, SymPy 1.14.0, mpmath 1.3.0, Torch
+2.14.0+cpu, JAX/JAXLIB 0.11.2, pytest 9.1.1, and LALSuite 7.26.15; JAX ran
+on the CPU with x64 enabled. These checks separately establish published
+negative-$m$/SPA identities for all eight modes, scalar-reference agreement,
+frontend parity, and the public LAL angular/API boundary. LAL's public TaylorF2
+waveform API still exposes only the dominant carrier, so exact all-eight
+same-model external waveform parity remains unprovable from the available
+public sources; no physical-accuracy claim follows from this run.
+
 On 24 September 2026, the `1315f6e` integration snapshot passed the strict
 CPU gate on `len`: **1,097/1,097** required mathematical-reference cases,
 zero skipped/xfail/deselected, and **1,109** tests passed overall. The fresh

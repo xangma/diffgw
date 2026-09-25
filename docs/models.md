@@ -89,8 +89,10 @@ models and settings; that is a measurement scope, not the full supported catalog
 - **Model-specific reference agreement:** [Differences from LAL](differences_from_lal.md#model-specific-differences)
   records configurations, deliberate differences and unresolved discrepancies,
   including XP's precession, final-spin and reference-phase choices. Independent
-  full-waveform validation of `TaylorF2_HM` remains incomplete. ROM evidence applies to the
-  selected asset. The [T-family report](validation/phenomt.md) is a separate record.
+  exact external all-eight waveform parity for `TaylorF2_HM` remains unprovable
+  from the available public sources, and physical validation remains unavailable.
+  ROM evidence applies to the selected asset. The [T-family report](validation/phenomt.md)
+  is a separate record.
 - **Derivatives:** [derivative support and evidence](validation.md#derivative-support-and-evidence)
   states the checked parameters, derivative orders and restrictions. Waveform-value
   agreement and framework autodiff do not establish derivative accuracy.

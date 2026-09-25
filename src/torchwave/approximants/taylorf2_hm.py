@@ -9,17 +9,12 @@ Strict Clean-Room Implementation based exclusively on published literature:
 - Bardeen, Press, Teukolsky (1972), Astrophys. J. 178, 347
 """
 
-from typing import Dict, List, Optional, Sequence, Tuple, Union
+from typing import Dict, Optional, Sequence, Tuple, Union
 import math
 import torch
 import torch.nn as nn
 
-from torchwave.constants import (
-    C_SI,
-    MSUN_SEC,
-    MPC_SI,
-    PI,
-)
+from torchwave.constants import MSUN_SEC, PI
 from torchwave.conversions import (
     as_tensor,
     component_masses_to_eta,
@@ -38,7 +33,8 @@ def _swsh_projection_coefficients(
     """Compute the polarization projection coefficients d_plus and d_cross.
 
     For positive frequencies, the contribution of modes (l, m) and (l, -m)
-    to h_+ and h_x is given by (García-Quirós et al. (2020), Phys. Rev. D 102, 064002, Eq. 3):
+    to h_+ and h_x is given by García-Quirós et al. (2020),
+    Phys. Rev. D 102, 064002, Eqs. (8)--(9):
         d_plus  = 0.5 * (Y_{l,-m} + (-1)^l * conj(Y_{l,m}))
         d_cross = 0.5i * (Y_{l,-m} - (-1)^l * conj(Y_{l,m}))
     where Y_{l,m} = {}_{-2}Y_{lm}(\\iota, \\phi_0).
@@ -298,13 +294,16 @@ class TaylorF2_HM(nn.Module):
                 spin_order=spin_order,
             )
 
-            # Phase connection: Phi_lm(f) = (m / 2) * Phi_22(2f/m) + Delta_Phi_lm
-            # Delta_Phi_lm = (3 * pi / 4) * (1 - m / 2) (García-Quirós et al. 2020 Eq. 771)
+            # Phase connection: Phi_lm(f) = (m / 2) * Phi_22(2f/m) + Delta_Phi_lm.
+            # García-Quirós et al. (2020), Eqs. (29), (34), give the
+            # 2f/m scaling and Delta_Phi_lm = 3*pi/4*(1-m/2).
             delta_phi = (3.0 * PI / 4.0) * (1.0 - float(m) / 2.0)
             psi_lm = (float(m) / 2.0) * psi_base + delta_phi
 
             # Mode amplitude ratio R_lm = A_lm / (sqrt(16*pi/5) * A0)
-            # Formulas from Kidder (2008) & García-Quirós et al. (2020) Eqs. 1838-1960:
+            # Leading ratios are derived in docs/math/taylorf2-hm.md from
+            # Mezzasoma--Yunes (2022), Eqs. (20)--(21i), (23)--(30), with
+            # Mishra et al. (2016), Eqs. (9)--(12h), as a leading-PN check.
             if (l, m) == (2, 2):
                 r_lm = torch.ones_like(v22)
             elif (l, m) == (2, 1):
