@@ -1,0 +1,784 @@
+{
+  "generated_utc": "2026-09-25T08:43:08.600205+00:00",
+  "reproduction": "PYTHONPATH=src python scripts/diagnose_phenomt_msa.py --backend jax --case baseline high_mass_ratio --version 22300 22310 22311 22321 --sample-rate 2048 --output receipt.json",
+  "versions": {
+    "python": "3.12.3",
+    "numpy": "2.5.3",
+    "lalsimulation": "6.2.1",
+    "jax": "0.11.2"
+  },
+  "dtype": "float64",
+  "devices": {
+    "jax": [
+      "cuda:0"
+    ]
+  },
+  "parameters": {
+    "baseline": {
+      "mass1": 40.0,
+      "mass2": 15.0,
+      "spin1": [
+        0.2,
+        0.1,
+        0.3
+      ],
+      "spin2": [
+        0.0,
+        0.1,
+        -0.2
+      ],
+      "distance_mpc": 100.0,
+      "inclination": 0.8,
+      "phic": 0.3,
+      "f_lower_hz": 20.0,
+      "f_ref_hz": 20.0
+    },
+    "high_mass_ratio": {
+      "mass1": 60.0,
+      "mass2": 6.0,
+      "spin1": [
+        0.2,
+        0.1,
+        0.8
+      ],
+      "spin2": [
+        0.1,
+        0.0,
+        0.1
+      ],
+      "distance_mpc": 100.0,
+      "inclination": 1.2,
+      "phic": 0.1,
+      "f_lower_hz": 20.0,
+      "f_ref_hz": 20.0
+    }
+  },
+  "conventions": {
+    "reference": "Public SimIMRPhenomTPHM_CoprecModes binary output with explicitly matched PhenomXPrecVersion and PhenomXPFinalSpinMod=3; no source inspection.",
+    "components": "Alpha and gamma residuals are unwrapped and anchored only by subtracting their first residual; beta is compared directly. No fitted alignment.",
+    "relative_rotation": "Geodesic angle between R(first)^T R(t) triads. Each fixed first-sample frame is removed by definition, with no optimized rotation or time shift.",
+    "segmentation": "Physical time zero is the aligned-carrier amplitude peak; inspiral t<0 and ringdown t>=0 are reported separately."
+  },
+  "results": [
+    {
+      "backend": "jax",
+      "case": "baseline",
+      "sample_rate_hz": 2048,
+      "precession_version": 22300,
+      "final_spin_mod": 3,
+      "samples": 2935,
+      "epoch_seconds": -1.297896538,
+      "native_final_spin": 0.6914133809469057,
+      "components": {
+        "all": {
+          "samples": 2935,
+          "alpha": {
+            "initial_offset_radians": -1.363148618063181,
+            "rms_anchored_radians": 0.0018928319433328096,
+            "max_abs_anchored_radians": 0.005520254310554584,
+            "final_anchored_radians": 0.005520254310537709
+          },
+          "beta": {
+            "initial_radians": 0.0002756815096703197,
+            "rms_radians": 0.001615933829396826,
+            "max_abs_radians": 0.0050347753819299235,
+            "final_radians": 0.00503477538192823
+          },
+          "gamma": {
+            "initial_offset_radians": -8.777258919678843e-10,
+            "rms_anchored_radians": 0.0022504488872152188,
+            "max_abs_anchored_radians": 0.006745961973189107,
+            "final_anchored_radians": -0.006745961973180226
+          },
+          "relative_rotation": {
+            "rms_radians": 0.0017827470189078919,
+            "max_radians": 0.005351076550373546,
+            "final_radians": 0.0053510765503320505
+          }
+        },
+        "inspiral": {
+          "samples": 2659,
+          "alpha": {
+            "initial_offset_radians": -1.363148618063181,
+            "rms_anchored_radians": 0.0009109207945842266,
+            "max_abs_anchored_radians": 0.004252681944411307,
+            "final_anchored_radians": 0.0030514289192025146
+          },
+          "beta": {
+            "initial_radians": 0.0002756815096703197,
+            "rms_radians": 0.0005196047643561725,
+            "max_abs_radians": 0.0039105177507861855,
+            "final_radians": 0.0039105177507861855
+          },
+          "gamma": {
+            "initial_offset_radians": -8.777258919678843e-10,
+            "rms_anchored_radians": 0.000940902272809164,
+            "max_abs_anchored_radians": 0.005317823760259355,
+            "final_anchored_radians": -0.005317823760259355
+          },
+          "relative_rotation": {
+            "rms_radians": 0.000740684374239264,
+            "max_radians": 0.004607814738879262,
+            "final_radians": 0.004607814738879262
+          }
+        },
+        "ringdown": {
+          "samples": 276,
+          "alpha": {
+            "initial_offset_radians": -1.3597348563222014,
+            "rms_anchored_radians": 0.002079953330166313,
+            "max_abs_anchored_radians": 0.002106492569574847,
+            "final_anchored_radians": 0.0021064925695579717
+          },
+          "beta": {
+            "initial_radians": 0.00404707332730056,
+            "rms_radians": 0.005016673156121774,
+            "max_abs_radians": 0.0050347753819299235,
+            "final_radians": 0.00503477538192823
+          },
+          "gamma": {
+            "initial_offset_radians": -0.005622585446648287,
+            "rms_anchored_radians": 0.0011136033768384412,
+            "max_abs_anchored_radians": 0.0011233774042667122,
+            "final_anchored_radians": -0.0011233774042578304
+          },
+          "relative_rotation": {
+            "rms_radians": 0.0014400966612640351,
+            "max_radians": 0.0014610729423441776,
+            "final_radians": 0.0014610729421922037
+          }
+        }
+      }
+    },
+    {
+      "backend": "jax",
+      "case": "baseline",
+      "sample_rate_hz": 2048,
+      "precession_version": 22310,
+      "final_spin_mod": 3,
+      "samples": 2935,
+      "epoch_seconds": -1.297896538,
+      "native_final_spin": 0.6914133809469057,
+      "components": {
+        "all": {
+          "samples": 2935,
+          "alpha": {
+            "initial_offset_radians": -1.363148618063181,
+            "rms_anchored_radians": 0.03238755646484715,
+            "max_abs_anchored_radians": 0.17444525588846727,
+            "final_anchored_radians": 0.17444525588846727
+          },
+          "beta": {
+            "initial_radians": 0.0002756815096703197,
+            "rms_radians": 0.001554232352187126,
+            "max_abs_radians": 0.0048022422275004195,
+            "final_radians": 0.0048022422275004195
+          },
+          "gamma": {
+            "initial_offset_radians": -8.777258919678843e-10,
+            "rms_anchored_radians": 0.02432690068036172,
+            "max_abs_anchored_radians": 0.13305017546702702,
+            "final_anchored_radians": -0.13305017546702702
+          },
+          "relative_rotation": {
+            "rms_radians": 0.009529328894665406,
+            "max_radians": 0.04910119351184902,
+            "final_radians": 0.04910119351184902
+          }
+        },
+        "inspiral": {
+          "samples": 2659,
+          "alpha": {
+            "initial_offset_radians": -1.363148618063181,
+            "rms_anchored_radians": 0.0010393433605005505,
+            "max_abs_anchored_radians": 0.02598612796032107,
+            "final_anchored_radians": 0.02598612796032107
+          },
+          "beta": {
+            "initial_radians": 0.0002756815096703197,
+            "rms_radians": 0.0005221371510773442,
+            "max_abs_radians": 0.00472301168880776,
+            "final_radians": 0.00472301168880776
+          },
+          "gamma": {
+            "initial_offset_radians": -8.777258919678843e-10,
+            "rms_anchored_radians": 0.0010063034236745287,
+            "max_abs_anchored_radians": 0.019154674437828145,
+            "final_anchored_radians": -0.019154674437828145
+          },
+          "relative_rotation": {
+            "rms_radians": 0.0007566559824437116,
+            "max_radians": 0.009209873229992484,
+            "final_radians": 0.009209873229992484
+          }
+        },
+        "ringdown": {
+          "samples": 276,
+          "alpha": {
+            "initial_offset_radians": -1.3475927274432193,
+            "rms_anchored_radians": 0.0918181752255299,
+            "max_abs_anchored_radians": 0.1588893652685055,
+            "final_anchored_radians": 0.1588893652685055
+          },
+          "beta": {
+            "initial_radians": 0.0048022422275004195,
+            "rms_radians": 0.0048022422275004195,
+            "max_abs_radians": 0.0048022422275004195,
+            "final_radians": 0.0048022422275004195
+          },
+          "gamma": {
+            "initial_offset_radians": -0.007940726499498396,
+            "rms_anchored_radians": 0.07229761015690889,
+            "max_abs_anchored_radians": 0.12510944984525452,
+            "final_anchored_radians": -0.12510944984525452
+          },
+          "relative_rotation": {
+            "rms_radians": 0.025404353682925977,
+            "max_radians": 0.04417337198005929,
+            "final_radians": 0.04417337198005929
+          }
+        }
+      }
+    },
+    {
+      "backend": "jax",
+      "case": "baseline",
+      "sample_rate_hz": 2048,
+      "precession_version": 22311,
+      "final_spin_mod": 3,
+      "samples": 2935,
+      "epoch_seconds": -1.297896538,
+      "native_final_spin": 0.6914133809469057,
+      "components": {
+        "all": {
+          "samples": 2935,
+          "alpha": {
+            "initial_offset_radians": -1.363148618063181,
+            "rms_anchored_radians": 0.03238755646484715,
+            "max_abs_anchored_radians": 0.17444525588846727,
+            "final_anchored_radians": 0.17444525588846727
+          },
+          "beta": {
+            "initial_radians": 0.0002756815096703197,
+            "rms_radians": 0.001554232352187126,
+            "max_abs_radians": 0.0048022422275004195,
+            "final_radians": 0.0048022422275004195
+          },
+          "gamma": {
+            "initial_offset_radians": -8.825224995234748e-10,
+            "rms_anchored_radians": 0.02611877469282234,
+            "max_abs_anchored_radians": 0.13956183980288017,
+            "final_anchored_radians": -0.13956183980288017
+          },
+          "relative_rotation": {
+            "rms_radians": 0.00814161674398056,
+            "max_radians": 0.04412531521239983,
+            "final_radians": 0.04412531521239983
+          }
+        },
+        "inspiral": {
+          "samples": 2659,
+          "alpha": {
+            "initial_offset_radians": -1.363148618063181,
+            "rms_anchored_radians": 0.0010393433605005505,
+            "max_abs_anchored_radians": 0.02598612796032107,
+            "final_anchored_radians": 0.02598612796032107
+          },
+          "beta": {
+            "initial_radians": 0.0002756815096703197,
+            "rms_radians": 0.0005221371510773442,
+            "max_abs_radians": 0.00472301168880776,
+            "final_radians": 0.00472301168880776
+          },
+          "gamma": {
+            "initial_offset_radians": -8.825224995234748e-10,
+            "rms_anchored_radians": 0.0010442533483230277,
+            "max_abs_anchored_radians": 0.0248425660109568,
+            "final_anchored_radians": -0.0248425660109568
+          },
+          "relative_rotation": {
+            "rms_radians": 0.0006201323620682621,
+            "max_radians": 0.006651065001777455,
+            "final_radians": 0.006651065001777455
+          }
+        },
+        "ringdown": {
+          "samples": 276,
+          "alpha": {
+            "initial_offset_radians": -1.3475927274432193,
+            "rms_anchored_radians": 0.0918181752255299,
+            "max_abs_anchored_radians": 0.1588893652685055,
+            "final_anchored_radians": 0.1588893652685055
+          },
+          "beta": {
+            "initial_radians": 0.0048022422275004195,
+            "rms_radians": 0.0048022422275004195,
+            "max_abs_radians": 0.0048022422275004195,
+            "final_radians": 0.0048022422275004195
+          },
+          "gamma": {
+            "initial_offset_radians": -0.014452390840151708,
+            "rms_anchored_radians": 0.07229761015690664,
+            "max_abs_anchored_radians": 0.12510944984525096,
+            "final_anchored_radians": -0.12510944984525096
+          },
+          "relative_rotation": {
+            "rms_radians": 0.025992745365710626,
+            "max_radians": 0.04451029509364339,
+            "final_radians": 0.04451029509364339
+          }
+        }
+      }
+    },
+    {
+      "backend": "jax",
+      "case": "baseline",
+      "sample_rate_hz": 2048,
+      "precession_version": 22321,
+      "final_spin_mod": 3,
+      "samples": 2935,
+      "epoch_seconds": -1.297896538,
+      "native_final_spin": 0.6914133809469057,
+      "components": {
+        "all": {
+          "samples": 2935,
+          "alpha": {
+            "initial_offset_radians": -1.363148618063181,
+            "rms_anchored_radians": 0.03559498787643967,
+            "max_abs_anchored_radians": 0.1857445841362262,
+            "final_anchored_radians": 0.1857445841362262
+          },
+          "beta": {
+            "initial_radians": 0.0002756815096703197,
+            "rms_radians": 0.0012181037506600503,
+            "max_abs_radians": 0.003614659458449826,
+            "final_radians": 0.003614659458449826
+          },
+          "gamma": {
+            "initial_offset_radians": -8.825224995234748e-10,
+            "rms_anchored_radians": 0.03131333556414147,
+            "max_abs_anchored_radians": 0.16198816911787617,
+            "final_anchored_radians": -0.16198816911787617
+          },
+          "relative_rotation": {
+            "rms_radians": 0.006716216750640998,
+            "max_radians": 0.03552487947391237,
+            "final_radians": 0.03552487947391237
+          }
+        },
+        "inspiral": {
+          "samples": 2659,
+          "alpha": {
+            "initial_offset_radians": -1.363148618063181,
+            "rms_anchored_radians": 0.002380548436637196,
+            "max_abs_anchored_radians": 0.03794813946124176,
+            "final_anchored_radians": 0.03794813946124176
+          },
+          "beta": {
+            "initial_radians": 0.0002756815096703197,
+            "rms_radians": 0.000530645709033191,
+            "max_abs_radians": 0.003592595540854282,
+            "final_radians": 0.003592595540854282
+          },
+          "gamma": {
+            "initial_offset_radians": -8.825224995234748e-10,
+            "rms_anchored_radians": 0.002296853265555892,
+            "max_abs_anchored_radians": 0.03688633142401976,
+            "final_anchored_radians": -0.03688633142401976
+          },
+          "relative_rotation": {
+            "rms_radians": 0.0007098720189642651,
+            "max_radians": 0.006896423593551207,
+            "final_radians": 0.006896423593551207
+          }
+        },
+        "ringdown": {
+          "samples": 276,
+          "alpha": {
+            "initial_offset_radians": -1.336293399195463,
+            "rms_anchored_radians": 0.09181817522552967,
+            "max_abs_anchored_radians": 0.15888936526850816,
+            "final_anchored_radians": 0.15888936526850816
+          },
+          "beta": {
+            "initial_radians": 0.003614659458449826,
+            "rms_radians": 0.0036146594584498255,
+            "max_abs_radians": 0.003614659458449826,
+            "final_radians": 0.003614659458449826
+          },
+          "gamma": {
+            "initial_offset_radians": -0.02584494938146964,
+            "rms_anchored_radians": 0.07867374928103248,
+            "max_abs_anchored_radians": 0.13614322061892903,
+            "final_anchored_radians": -0.13614322061892903
+          },
+          "relative_rotation": {
+            "rms_radians": 0.02151062752908744,
+            "max_radians": 0.03535037203372413,
+            "final_radians": 0.03535037203372413
+          }
+        }
+      }
+    },
+    {
+      "backend": "jax",
+      "case": "high_mass_ratio",
+      "sample_rate_hz": 2048,
+      "precession_version": 22300,
+      "final_spin_mod": 3,
+      "samples": 5718,
+      "epoch_seconds": -2.629817046,
+      "native_final_spin": 0.8744986615277064,
+      "components": {
+        "all": {
+          "samples": 5718,
+          "alpha": {
+            "initial_offset_radians": -1.542257842940643,
+            "rms_anchored_radians": 0.036860990009308744,
+            "max_abs_anchored_radians": 0.14104547582550353,
+            "final_anchored_radians": -0.14104547523101374
+          },
+          "beta": {
+            "initial_radians": 0.0009310907058451556,
+            "rms_radians": 0.0030788014274404077,
+            "max_abs_radians": 0.01719614535802294,
+            "final_radians": -0.000713205129755895
+          },
+          "gamma": {
+            "initial_offset_radians": 5.015875270686365e-09,
+            "rms_anchored_radians": 0.030950841812370452,
+            "max_abs_anchored_radians": 0.11501207407665648,
+            "final_anchored_radians": 0.11501207357015142
+          },
+          "relative_rotation": {
+            "rms_radians": 0.009904269371834633,
+            "max_radians": 0.037256286037438996,
+            "final_radians": 0.03725628589749146
+          }
+        },
+        "inspiral": {
+          "samples": 5386,
+          "alpha": {
+            "initial_offset_radians": -1.542257842940643,
+            "rms_anchored_radians": 0.015911870014713936,
+            "max_abs_anchored_radians": 0.08706918246412698,
+            "final_anchored_radians": 0.0034918260052858585
+          },
+          "beta": {
+            "initial_radians": 0.0009310907058451556,
+            "rms_radians": 0.003132449163136377,
+            "max_abs_radians": 0.01719614535802294,
+            "final_radians": -0.010299497251606587
+          },
+          "gamma": {
+            "initial_offset_radians": 5.015875270686365e-09,
+            "rms_anchored_radians": 0.01503126334625786,
+            "max_abs_anchored_radians": 0.08277832141471242,
+            "final_anchored_radians": -0.007520852825615432
+          },
+          "relative_rotation": {
+            "rms_radians": 0.004584305553193504,
+            "max_radians": 0.020450187831265832,
+            "final_radians": 0.010246759597750753
+          }
+        },
+        "ringdown": {
+          "samples": 332,
+          "alpha": {
+            "initial_offset_radians": -1.5487226100962206,
+            "rms_anchored_radians": 0.1324806057715614,
+            "max_abs_anchored_radians": 0.134580708669926,
+            "final_anchored_radians": -0.1345807080754362
+          },
+          "beta": {
+            "initial_radians": -0.010636891026981204,
+            "rms_radians": 0.0020182254398992626,
+            "max_abs_radians": 0.010953450871827836,
+            "final_radians": -0.000713205129755895
+          },
+          "gamma": {
+            "initial_offset_radians": 0.0013006198947085323,
+            "rms_anchored_radians": 0.11199253194047952,
+            "max_abs_anchored_radians": 0.11371145919782322,
+            "final_anchored_radians": 0.11371145869131816
+          },
+          "relative_rotation": {
+            "rms_radians": 0.037107976063604914,
+            "max_radians": 0.03774432533418068,
+            "final_radians": 0.03774432521674267
+          }
+        }
+      }
+    },
+    {
+      "backend": "jax",
+      "case": "high_mass_ratio",
+      "sample_rate_hz": 2048,
+      "precession_version": 22310,
+      "final_spin_mod": 3,
+      "samples": 5718,
+      "epoch_seconds": -2.629817046,
+      "native_final_spin": 0.8744986615277064,
+      "components": {
+        "all": {
+          "samples": 5718,
+          "alpha": {
+            "initial_offset_radians": -1.542257842940643,
+            "rms_anchored_radians": 0.02318108896858279,
+            "max_abs_anchored_radians": 0.13664434484129373,
+            "final_anchored_radians": 0.13664434484129373
+          },
+          "beta": {
+            "initial_radians": 0.0009310907058451556,
+            "rms_radians": 0.003931154867954831,
+            "max_abs_radians": 0.01719614535802294,
+            "final_radians": -0.010343560855571116
+          },
+          "gamma": {
+            "initial_offset_radians": 5.015875270686365e-09,
+            "rms_anchored_radians": 0.03186160552017134,
+            "max_abs_anchored_radians": 0.22986008512513711,
+            "final_anchored_radians": -0.22986008512513711
+          },
+          "relative_rotation": {
+            "rms_radians": 0.013178304679866382,
+            "max_radians": 0.10014163954770551,
+            "final_radians": 0.10014163954770551
+          }
+        },
+        "inspiral": {
+          "samples": 5386,
+          "alpha": {
+            "initial_offset_radians": -1.542257842940643,
+            "rms_anchored_radians": 0.015925951478742758,
+            "max_abs_anchored_radians": 0.08706918246412698,
+            "final_anchored_radians": 0.04926318372521621
+          },
+          "beta": {
+            "initial_radians": 0.0009310907058451556,
+            "rms_radians": 0.003132351530197932,
+            "max_abs_radians": 0.01719614535802294,
+            "final_radians": -0.010138308137256052
+          },
+          "gamma": {
+            "initial_offset_radians": 5.015875270686365e-09,
+            "rms_anchored_radians": 0.015033760625910164,
+            "max_abs_anchored_radians": 0.08277832141471242,
+            "final_anchored_radians": -0.021469705831969943
+          },
+          "relative_rotation": {
+            "rms_radians": 0.004600385612806898,
+            "max_radians": 0.030007606983976948,
+            "final_radians": 0.030007606983976948
+          }
+        },
+        "ringdown": {
+          "samples": 332,
+          "alpha": {
+            "initial_offset_radians": -1.6470341457800652,
+            "rms_anchored_radians": 0.13948951133280188,
+            "max_abs_anchored_radians": 0.24142064768071592,
+            "final_anchored_radians": 0.24142064768071592
+          },
+          "beta": {
+            "initial_radians": -0.010343560855571116,
+            "rms_radians": 0.010343560855571116,
+            "max_abs_radians": 0.010343560855571116,
+            "final_radians": -0.010343560855571116
+          },
+          "gamma": {
+            "initial_offset_radians": 0.1549530275208326,
+            "rms_anchored_radians": 0.22233969154439473,
+            "max_abs_anchored_radians": 0.38481310763009446,
+            "final_anchored_radians": -0.38481310763009446
+          },
+          "relative_rotation": {
+            "rms_radians": 0.08909857246981438,
+            "max_radians": 0.15422584589135688,
+            "final_radians": 0.14565135318768976
+          }
+        }
+      }
+    },
+    {
+      "backend": "jax",
+      "case": "high_mass_ratio",
+      "sample_rate_hz": 2048,
+      "precession_version": 22311,
+      "final_spin_mod": 3,
+      "samples": 5718,
+      "epoch_seconds": -2.629817046,
+      "native_final_spin": 0.8744986615277064,
+      "components": {
+        "all": {
+          "samples": 5718,
+          "alpha": {
+            "initial_offset_radians": -1.542257842940643,
+            "rms_anchored_radians": 0.02318108896858279,
+            "max_abs_anchored_radians": 0.13664434484129373,
+            "final_anchored_radians": 0.13664434484129373
+          },
+          "beta": {
+            "initial_radians": 0.0009310907058451556,
+            "rms_radians": 0.003931154867954831,
+            "max_abs_radians": 0.01719614535802294,
+            "final_radians": -0.010343560855571116
+          },
+          "gamma": {
+            "initial_offset_radians": 5.173298101013302e-08,
+            "rms_anchored_radians": 0.036660449836879515,
+            "max_abs_anchored_radians": 0.2755835898996666,
+            "final_anchored_radians": -0.2755835898996666
+          },
+          "relative_rotation": {
+            "rms_radians": 0.020303399117866335,
+            "max_radians": 0.14452480296562661,
+            "final_radians": 0.14452480296562661
+          }
+        },
+        "inspiral": {
+          "samples": 5386,
+          "alpha": {
+            "initial_offset_radians": -1.542257842940643,
+            "rms_anchored_radians": 0.015925951478742758,
+            "max_abs_anchored_radians": 0.08706918246412698,
+            "final_anchored_radians": 0.04926318372521621
+          },
+          "beta": {
+            "initial_radians": 0.0009310907058451556,
+            "rms_radians": 0.003132351530197932,
+            "max_abs_radians": 0.01719614535802294,
+            "final_radians": -0.010138308137256052
+          },
+          "gamma": {
+            "initial_offset_radians": 5.173298101013302e-08,
+            "rms_anchored_radians": 0.015333557933361766,
+            "max_abs_anchored_radians": 0.07785470593380639,
+            "final_anchored_radians": -0.04127978283103717
+          },
+          "relative_rotation": {
+            "rms_radians": 0.004732276443126386,
+            "max_radians": 0.02149323317592588,
+            "final_radians": 0.015203308316915725
+          }
+        },
+        "ringdown": {
+          "samples": 332,
+          "alpha": {
+            "initial_offset_radians": -1.6470341457800652,
+            "rms_anchored_radians": 0.13948951133280188,
+            "max_abs_anchored_radians": 0.24142064768071592,
+            "final_anchored_radians": 0.24142064768071592
+          },
+          "beta": {
+            "initial_radians": -0.010343560855571116,
+            "rms_radians": 0.010343560855571116,
+            "max_abs_radians": 0.010343560855571116,
+            "final_radians": -0.010343560855571116
+          },
+          "gamma": {
+            "initial_offset_radians": 0.1092295694634089,
+            "rms_anchored_radians": 0.22233969154439312,
+            "max_abs_anchored_radians": 0.38481310763009446,
+            "final_anchored_radians": -0.38481310763009446
+          },
+          "relative_rotation": {
+            "rms_radians": 0.08752619301113282,
+            "max_radians": 0.15427393030876918,
+            "final_radians": 0.14663900016600298
+          }
+        }
+      }
+    },
+    {
+      "backend": "jax",
+      "case": "high_mass_ratio",
+      "sample_rate_hz": 2048,
+      "precession_version": 22321,
+      "final_spin_mod": 3,
+      "samples": 5718,
+      "epoch_seconds": -2.629817046,
+      "native_final_spin": 0.8744986615277064,
+      "components": {
+        "all": {
+          "samples": 5718,
+          "alpha": {
+            "initial_offset_radians": -1.542257842940643,
+            "rms_anchored_radians": 0.031436831945391645,
+            "max_abs_anchored_radians": 0.2091333078515234,
+            "final_anchored_radians": 0.2091333078515234
+          },
+          "beta": {
+            "initial_radians": 0.0009310907058451556,
+            "rms_radians": 0.007871341041655268,
+            "max_abs_radians": 0.0291248750786455,
+            "final_radians": 0.0291248750786455
+          },
+          "gamma": {
+            "initial_offset_radians": 5.173298101013302e-08,
+            "rms_anchored_radians": 0.0387592335340151,
+            "max_abs_anchored_radians": 0.2328264617955127,
+            "final_anchored_radians": 0.2328264617955127
+          },
+          "relative_rotation": {
+            "rms_radians": 0.062462661893799225,
+            "max_radians": 0.44059911051753503,
+            "final_radians": 0.44059911051753503
+          }
+        },
+        "inspiral": {
+          "samples": 5386,
+          "alpha": {
+            "initial_offset_radians": -1.542257842940643,
+            "rms_anchored_radians": 0.01631080675847443,
+            "max_abs_anchored_radians": 0.1323309690053538,
+            "final_anchored_radians": 0.1323309690053538
+          },
+          "beta": {
+            "initial_radians": 0.0009310907058451556,
+            "rms_radians": 0.0036727974130883714,
+            "max_abs_radians": 0.028910252351237287,
+            "final_radians": 0.028910252351237287
+          },
+          "gamma": {
+            "initial_offset_radians": 5.173298101013302e-08,
+            "rms_anchored_radians": 0.015646126760279665,
+            "max_abs_anchored_radians": 0.1200810921166533,
+            "final_anchored_radians": -0.1200810921166533
+          },
+          "relative_rotation": {
+            "rms_radians": 0.005188431503101061,
+            "max_radians": 0.04182306814302309,
+            "final_radians": 0.04182306814302309
+          }
+        },
+        "ringdown": {
+          "samples": 332,
+          "alpha": {
+            "initial_offset_radians": -1.5745451827698302,
+            "rms_anchored_radians": 0.1394895113328011,
+            "max_abs_anchored_radians": 0.2414206476807106,
+            "final_anchored_radians": 0.2414206476807106
+          },
+          "beta": {
+            "initial_radians": 0.0291248750786455,
+            "rms_radians": 0.029124875078645505,
+            "max_abs_radians": 0.0291248750786455,
+            "final_radians": 0.0291248750786455
+          },
+          "gamma": {
+            "initial_offset_radians": 0.041685711729428476,
+            "rms_anchored_radians": 0.11043851176296371,
+            "max_abs_anchored_radians": 0.19114080179906523,
+            "final_anchored_radians": 0.19114080179906523
+          },
+          "relative_rotation": {
+            "rms_radians": 0.25286626412868596,
+            "max_radians": 0.4295168627256703,
+            "final_radians": 0.4295168627256703
+          }
+        }
+      }
+    }
+  ]
+}

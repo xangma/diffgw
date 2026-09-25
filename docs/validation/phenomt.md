@@ -73,6 +73,48 @@ leading self-spin terms and N4LO spin-orbit terms. This reduces the baseline
 error from about 2.8% to 2.4%; it does not eliminate the reference differences.
 The full published spin equations remain available in the internal helper.
 
+The matched-option [CPU/Torch holdout receipt](../validation/phenomt_holdouts_torch_20260925.json)
+and [CUDA/JAX holdout receipt](../validation/phenomt_holdouts_jax_len_20260925.json)
+repeat the baseline and strongly spinning `(60, 6)` cases for both MSA and
+numerical precession. For MSA, TP and TPHM have relative L2 `0.0202` and
+`0.0225`, with mismatch `0.000200` and `0.000249`. Both exceed the retained
+MSA gates (`0.01` and `0.0001`); the failure is recorded as a strict expected
+failure rather than absorbed by a wider tolerance.
+
+The [CPU/Torch MSA component receipt](../validation/phenomt_msa_components_torch_20260925.json)
+and [CUDA/JAX rerun](../validation/phenomt_msa_components_jax_len_20260925.json)
+compare public co-precessing Euler-angle outputs with native angles for every
+supported PV223 suffix. Alpha and gamma are unwrapped and anchored only by
+subtracting their first residual; beta is direct. The invariant result below
+is the geodesic angle between `R(first)^T R(t)` triads. Each reported segment
+is separately anchored at its own first sample, with no optimized frame or
+time shift.
+
+| Case | Version | Inspiral max rotation (rad) | Ringdown max rotation (rad) |
+| --- | ---: | ---: | ---: |
+| `(40, 15)` | 22300 | 0.00461 | 0.00146 |
+| `(40, 15)` | 22310 | 0.00921 | 0.0442 |
+| `(40, 15)` | 22311 | 0.00665 | 0.0445 |
+| `(40, 15)` | 22321 | 0.00690 | 0.0354 |
+| `(60, 6)` | 22300 | 0.0205 | 0.0377 |
+| `(60, 6)` | 22310 | 0.0300 | 0.154 |
+| `(60, 6)` | 22311 | 0.0215 | 0.154 |
+| `(60, 6)` | 22321 | 0.0418 | 0.430 |
+
+The JAX receipts were generated on host `len` with Python 3.12.3, JAX 0.11.2,
+LALSimulation 6.2.1, FP64, and `cuda:0`. Across the table's component rotation
+maxima, the largest absolute Torch/JAX difference is `3.2e-7` rad. Across all
+eight baseline/holdout strain measurements, the largest absolute backend
+difference is `4.4e-11` in relative L2 and `1.4e-12` in mismatch.
+
+PV22300 uses analytical angles throughout, so its `(60, 6)` inspiral residual
+shows that suffix continuation alone cannot explain the MSA holdout failure.
+The suffix-dependent ringdown growth separately localizes continuation and
+minimal-rotation gamma as follow-up components. These are black-box component
+measurements, not equation provenance or physical-accuracy claims. Direct
+rotation tests described below already exonerate the shared Wigner/SWSH
+projection for binary-supplied modes and angles.
+
 Additional numerical cases at 2048 Hz give the following errors. Both native
 backends are included in the receipt; their reported errors agree to the
 displayed precision. The spins, viewing geometry, reference frequency, and
@@ -87,6 +129,24 @@ separate inspiral/ringdown metrics are recorded there.
 The large 10:1 residual persists at 16384 Hz (TP relative L2 `0.308`, TPHM
 `0.307`); see the [higher-rate receipt](../validation/phenomt_numerical_highrate_20260922.json).
 This rules out output sampling as its main cause for this case.
+
+## Independent numerical-RHS reference
+
+`diffgw_reference/phenomt_spin_evolution.py` is an 80-digit `mpmath` scalar
+translation of [TPHM Eqs. (12)–(14)](https://arxiv.org/abs/2105.05872v2) and
+[Sturani Eqs. (3), (21), (22), (24), and (25)](https://dcc.ligo.org/public/0122/T1500554/023/dLdS.pdf).
+It imports neither native backend and exposes the `v5` through `v9` spin
+pieces, the nonspinning 3PN orbital angular momentum, and constrained orbital-
+axis derivative separately. Tests match the total RHS to Torch and JAX within
+`3e-14` relative error. A five-velocity Vandermonde solve recovers every PN
+power independently and matches within `3e-10`; the production selection is
+also checked to remove only the published `v8` N3LO quadratic-spin piece.
+
+This closes an equation-transcription gate, but not the numerical-precession
+model gate: the scalar reference has no ODE/event solver, angle construction,
+or ringdown continuation. It supports retaining the source-prescribed Kerr
+self-quadrupole coefficient while the black-box trajectory discrepancy remains
+unresolved. No LAL source or binary-derived coefficient enters the scalar.
 
 ## Carrier and integration-resolution diagnostics
 
@@ -246,8 +306,9 @@ is read or incorporated.
 The MSA and numerical regression checks are retained in
 `tests/test_phenomt_family_lal.py`. Numerical checks cover the baseline,
 single-spin, and equal-mass cases with relative L2 below `0.03` and mismatch
-below `0.0005`. The 10:1 case does **not** meet those bounds and is recorded
-as a limitation, rather than widening the regression tolerance. These checks
+below `0.0005`. The 10:1 MSA case also exceeds its `0.01`/`0.0001` gates.
+Both high-mass-ratio failures remain strict expected-failure tests, rather
+than widening either regression tolerance. These checks
 do not establish reference agreement throughout parameter space or physical
 accuracy against numerical relativity. NNLO remains the default. See the
 [precession options and numerical domain](../imrphenomt.md#higher-modes-and-precession).
