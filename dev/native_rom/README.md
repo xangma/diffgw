@@ -2435,6 +2435,19 @@ is `1.91e-6` and `6.72e-6` rad, compared with `3.14e-4` and `2.52e-4`
 rad under the required local gauge. This does not erase either failed
 cadence gate or establish that an alternative gauge would converge.
 
+A [separately frozen windowed-gauge pilot](evidence/2026-09-25/rom_input_windowed_gauge_plan.json)
+then used a quadratic phase fit over ±2 Hz at 100 Hz, with two previously
+unevaluated development rows and three cadences. Its [result](evidence/2026-09-25/rom_input_windowed_gauge.json)
+passes the declared `1e-4` adjacent complex and amplitude L2 budgets and
+`1e-3` rad phase-RMS budget for both plus and cross; the largest complex
+relative L2 is `2.26e-5`. The original five-bin gauge produces up to
+`3.58e-4` complex L2 on these same saved spectra. All raw spectra and hashes
+are retained. Cadence errors under the new gauge still are not monotonic, and
+the old failed gates remain failed. This validates only a bounded sampling
+budget on these rows. It does not qualify the native physical generator or
+ROM, set a production conditioning protocol, or consume the two reserved ROM
+holdouts.
+
 1. Qualify the physical generator against the published equations and independent
    references over the intended domain, resolve convention/provenance gaps, and
    establish gradients and numerical convergence. This runner covers only scalar

@@ -1,0 +1,279 @@
+{
+  "all_checks_passed": true,
+  "conditioner_sha256": "fc0ab96e16e7243ff5b82021cac9c2edcb8535b9fbd34a8a073dd42f6736197a",
+  "errors": [],
+  "plan_sha256": "f40b7316354d9c25f8614d6d0d36d72fb13872dac5ada166f212ac14214a9237",
+  "process": {
+    "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+    "host": "RONI2",
+    "pid": 46988
+  },
+  "release_qualified": false,
+  "rows": [
+    {
+      "levels": [
+        {
+          "cross_sha256": "33b096d99ea0ef302b8b97532c004f307fad5322182d2e2818b63306652e0a11",
+          "cross_support": {
+            "checks": {
+              "adjacent_phase_step": true,
+              "amplitude_support": true,
+              "decimated_unwrap": true
+            },
+            "maximum_adjacent_phase_step_rad": 0.04901468818083443,
+            "maximum_decimated_unwrap_difference_rad": 0.0,
+            "minimum_relative_amplitude": 0.1098469313091664
+          },
+          "dt_geom": 0.2528916298729517,
+          "elapsed_seconds": 28.780286208027974,
+          "fft_samples": 524288,
+          "level": "grid_0",
+          "omega_start": 0.01783114054099554,
+          "plus_sha256": "ce1b76a930c240265fbae170b0153441e1e624a9f76333cff195b46ff24a8e82",
+          "plus_support": {
+            "checks": {
+              "adjacent_phase_step": true,
+              "amplitude_support": true,
+              "decimated_unwrap": true
+            },
+            "maximum_adjacent_phase_step_rad": 0.049054349616398873,
+            "maximum_decimated_unwrap_difference_rad": 0.0,
+            "minimum_relative_amplitude": 0.10984095117358006
+          },
+          "td_samples": 17083
+        },
+        {
+          "cross_sha256": "92868818f7587cea1856ecada05de8f0d0a5e4f15e9abbbe29523c57125077f6",
+          "cross_support": {
+            "checks": {
+              "adjacent_phase_step": true,
+              "amplitude_support": true,
+              "decimated_unwrap": true
+            },
+            "maximum_adjacent_phase_step_rad": 0.049008678339302225,
+            "maximum_decimated_unwrap_difference_rad": 0.0,
+            "minimum_relative_amplitude": 0.10984697893771515
+          },
+          "dt_geom": 0.12644581493647586,
+          "elapsed_seconds": 30.73093095899094,
+          "fft_samples": 1048576,
+          "level": "grid_1",
+          "omega_start": 0.01783114054099554,
+          "plus_sha256": "1e5ba9bb614d9f2625827ae9f78b62456aa5e20366e1b958654dea67fa41dc96",
+          "plus_support": {
+            "checks": {
+              "adjacent_phase_step": true,
+              "amplitude_support": true,
+              "decimated_unwrap": true
+            },
+            "maximum_adjacent_phase_step_rad": 0.04904861864774457,
+            "maximum_decimated_unwrap_difference_rad": 0.0,
+            "minimum_relative_amplitude": 0.10984079168955932
+          },
+          "td_samples": 34165
+        },
+        {
+          "cross_sha256": "8f4bdad2a913e7a825a73c24a2725297924eb40b91b4e852810e005755278a38",
+          "cross_support": {
+            "checks": {
+              "adjacent_phase_step": true,
+              "amplitude_support": true,
+              "decimated_unwrap": true
+            },
+            "maximum_adjacent_phase_step_rad": 0.049005410087586077,
+            "maximum_decimated_unwrap_difference_rad": 0.0,
+            "minimum_relative_amplitude": 0.10984732734393672
+          },
+          "dt_geom": 0.06322290746823793,
+          "elapsed_seconds": 33.51220104197273,
+          "fft_samples": 2097152,
+          "level": "grid_2",
+          "omega_start": 0.01783114054099554,
+          "plus_sha256": "d741812f286f4afd8f2c0613daa49f31bc3b258c15a66dc74ec8876480d026ec",
+          "plus_support": {
+            "checks": {
+              "adjacent_phase_step": true,
+              "amplitude_support": true,
+              "decimated_unwrap": true
+            },
+            "maximum_adjacent_phase_step_rad": 0.049045457274043525,
+            "maximum_decimated_unwrap_difference_rad": 0.0,
+            "minimum_relative_amplitude": 0.10984105578392722
+          },
+          "td_samples": 68329
+        }
+      ],
+      "name": "q2p5_mild_aligned",
+      "pairs": [
+        {
+          "cross": {
+            "amplitude_relative_l2": 1.5300035964257271e-06,
+            "complex_relative_l2": 9.868604932245543e-06,
+            "phase_rms_rad": 2.029774246954635e-05
+          },
+          "cross_passed": true,
+          "from": "grid_0",
+          "plus": {
+            "amplitude_relative_l2": 1.6439869425097844e-06,
+            "complex_relative_l2": 9.743337820796986e-06,
+            "phase_rms_rad": 1.9891537189786872e-05
+          },
+          "plus_passed": true,
+          "to": "grid_1"
+        },
+        {
+          "cross": {
+            "amplitude_relative_l2": 3.8624050406896755e-06,
+            "complex_relative_l2": 2.2607145754102115e-05,
+            "phase_rms_rad": 4.596626102708889e-05
+          },
+          "cross_passed": true,
+          "from": "grid_1",
+          "plus": {
+            "amplitude_relative_l2": 3.6815552824865504e-06,
+            "complex_relative_l2": 2.060232986069166e-05,
+            "phase_rms_rad": 4.221660169327727e-05
+          },
+          "plus_passed": true,
+          "to": "grid_2"
+        }
+      ],
+      "passed": true
+    },
+    {
+      "levels": [
+        {
+          "cross_sha256": "701bc73fa6d05e9f0462c88b2315b7b31448a87838fc9a0cc6a81980fc1b1977",
+          "cross_support": {
+            "checks": {
+              "adjacent_phase_step": true,
+              "amplitude_support": true,
+              "decimated_unwrap": true
+            },
+            "maximum_adjacent_phase_step_rad": 0.03540899412789966,
+            "maximum_decimated_unwrap_difference_rad": 0.0,
+            "minimum_relative_amplitude": 0.07793656217787036
+          },
+          "dt_geom": 0.2581602054953049,
+          "elapsed_seconds": 27.021797249966767,
+          "fft_samples": 524288,
+          "level": "grid_0",
+          "omega_start": 0.017408455992253973,
+          "plus_sha256": "662721940d7f250499188e3a5e09097d0dbc72666c72a9df949e89002ca5269c",
+          "plus_support": {
+            "checks": {
+              "adjacent_phase_step": true,
+              "amplitude_support": true,
+              "decimated_unwrap": true
+            },
+            "maximum_adjacent_phase_step_rad": 0.035407499390941566,
+            "maximum_decimated_unwrap_difference_rad": 0.0,
+            "minimum_relative_amplitude": 0.07792713920438225
+          },
+          "td_samples": 15155
+        },
+        {
+          "cross_sha256": "5c65aed539e78c7dd381e76b9a26200d2ff2fa34cfd1ca35e046d9b6de250b01",
+          "cross_support": {
+            "checks": {
+              "adjacent_phase_step": true,
+              "amplitude_support": true,
+              "decimated_unwrap": true
+            },
+            "maximum_adjacent_phase_step_rad": 0.0354030998681748,
+            "maximum_decimated_unwrap_difference_rad": 0.0,
+            "minimum_relative_amplitude": 0.07793651597180953
+          },
+          "dt_geom": 0.12908010274765244,
+          "elapsed_seconds": 28.399329249979928,
+          "fft_samples": 1048576,
+          "level": "grid_1",
+          "omega_start": 0.017408455992253973,
+          "plus_sha256": "e2592d8b36de11840a5a107c140729f32e5ef8ad3614e5e9eb274bcc32e7f3a8",
+          "plus_support": {
+            "checks": {
+              "adjacent_phase_step": true,
+              "amplitude_support": true,
+              "decimated_unwrap": true
+            },
+            "maximum_adjacent_phase_step_rad": 0.035401388716566395,
+            "maximum_decimated_unwrap_difference_rad": 0.0,
+            "minimum_relative_amplitude": 0.07792725612641313
+          },
+          "td_samples": 30309
+        },
+        {
+          "cross_sha256": "adf4d0c2d422f42cffcffbd9c8dea66e01f2842402232079884b84aa8e7fbad0",
+          "cross_support": {
+            "checks": {
+              "adjacent_phase_step": true,
+              "amplitude_support": true,
+              "decimated_unwrap": true
+            },
+            "maximum_adjacent_phase_step_rad": 0.035403574100336566,
+            "maximum_decimated_unwrap_difference_rad": 0.0,
+            "minimum_relative_amplitude": 0.07793628407928134
+          },
+          "dt_geom": 0.06454005137382622,
+          "elapsed_seconds": 31.54031491704518,
+          "fft_samples": 2097152,
+          "level": "grid_2",
+          "omega_start": 0.017408455992253973,
+          "plus_sha256": "f1061c79dd6cf1c5e2fdb57dd8330710f7ffdc9f1c916ec1374443fd11c55e47",
+          "plus_support": {
+            "checks": {
+              "adjacent_phase_step": true,
+              "amplitude_support": true,
+              "decimated_unwrap": true
+            },
+            "maximum_adjacent_phase_step_rad": 0.03540179492664086,
+            "maximum_decimated_unwrap_difference_rad": 0.0,
+            "minimum_relative_amplitude": 0.07792706803531116
+          },
+          "td_samples": 60618
+        }
+      ],
+      "name": "q3_antialigned",
+      "pairs": [
+        {
+          "cross": {
+            "amplitude_relative_l2": 1.314700929748764e-06,
+            "complex_relative_l2": 2.4293557369684165e-06,
+            "phase_rms_rad": 4.790120309542043e-06
+          },
+          "cross_passed": true,
+          "from": "grid_0",
+          "plus": {
+            "amplitude_relative_l2": 1.460002584493205e-06,
+            "complex_relative_l2": 2.851808071924085e-06,
+            "phase_rms_rad": 5.1595556802574945e-06
+          },
+          "plus_passed": true,
+          "to": "grid_1"
+        },
+        {
+          "cross": {
+            "amplitude_relative_l2": 2.28367003339279e-06,
+            "complex_relative_l2": 8.751085752778591e-06,
+            "phase_rms_rad": 1.7991684606059316e-05
+          },
+          "cross_passed": true,
+          "from": "grid_1",
+          "plus": {
+            "amplitude_relative_l2": 1.985549334832905e-06,
+            "complex_relative_l2": 6.863192295798196e-06,
+            "phase_rms_rad": 1.4637425848353985e-05
+          },
+          "plus_passed": true,
+          "to": "grid_2"
+        }
+      ],
+      "passed": true
+    }
+  ],
+  "schema": "diffgw.seobnrv4.rom-input-windowed-gauge.v1",
+  "script_sha256": "b9af741c9bfe62568937ad985dcb225417d9e8264beb819a03b71b33ca3cee38",
+  "source_snapshot_sha256": "2062f70072d9953a7f9b968336c80512b8034497eb2e4cb0fea7ad2633b7d2cf",
+  "spectra_sha256": "d6b8268c08059bae41c3304d471e001d7b5f584f5f4672253813ec3b0920ac78",
+  "status": "measured"
+}
