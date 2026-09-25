@@ -1,0 +1,51 @@
+{
+  "future_rerun_criteria": [
+    "Require exact frozen source/public identity, hashes, original 1169-sample chart, and full-mode discrete h22 crop replay as in v4.",
+    "For cap initialization, gate the zero-radial-momentum circular frequency against nominal 10^-3/2 to 1e-8 and gate dissipative initial-state frequency against independently frozen v5 native/source values to 1e-9; do not compare dissipative frequency directly to the circular target.",
+    "Keep v4 as failed_validity. A rerun must have separately frozen script/plan/result and preserve all prior numerical and hypothesis gates without relaxation."
+  ],
+  "gates": {
+    "circular_target_max_abs": 1e-08,
+    "dissipative_frequency_parity_max_abs": 1e-09,
+    "field_replay_max_abs": 1e-12,
+    "initial_state_replay_max_abs": 1e-12
+  },
+  "inputs": {
+    "initial_conditions": {
+      "path": "src/torchwave/approximants/eob/initial_conditions.py",
+      "sha256": "520641e8c3037ea1aa6e947c7d9dd92c759333396103cb1d1fffc8aa5019137b"
+    },
+    "source_field_adapter": {
+      "path": "dev/native_rom/diagnose_source_aligned_ode_chain_phase_matrix.py",
+      "sha256": "654ce386c98094f17c8b14bfdf2fdb9db2e70d112c1c4524943cd3745d41ad1a"
+    },
+    "v4_plan": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_native_cap_full_crop_v4_plan.json",
+      "sha256": "c4c07b9a536fcb49087bd127d605e5645e8637118afaef157e89aee010c83247"
+    },
+    "v4_result": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_native_cap_full_crop_v4.json",
+      "sha256": "8ce830aaed62a156d8bbd0b0780a6838d17ea94a74ae6f36dab418b2a147f8aa"
+    },
+    "v4_script": {
+      "path": "dev/native_rom/diagnose_source_aligned_native_cap_full_crop_v4.py",
+      "sha256": "ebb2777d51f3116082195333c02e71ee023412f1a5cf89169ad085e8659b7cba"
+    },
+    "v5_plan": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_early_raw_warm_start_v5_plan.json",
+      "sha256": "2ebffbc522054286e242ea244b3e2380da98c4e57f9307446160383d844c293a"
+    },
+    "v5_result": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_early_raw_warm_start_v5.json",
+      "sha256": "71d4ef86cfab87cf85adea3ee3177bb511f0ffad759c3ceb4c3e8618b2953193"
+    },
+    "warm_start": {
+      "path": "dev/native_rom/eob/torch/warm_start.py",
+      "sha256": "a9818350b18ed04ca645edbf6af4c22760fc51eae540c12f38d171d99a675a20"
+    }
+  },
+  "purpose": "Read-only, prospective reinterpretation of the already frozen failed v4 cap-frequency validity gate; do not alter v4 plan, runner, or result.",
+  "release_qualified": false,
+  "schema": "diffgw.seobnrv4.native-cap-frequency-v4-audit-plan.v1",
+  "script_sha256": "b4667d57c134542718d1a3a199265c12b2e809e72c4b55aa3efcb06a17dc3f27"
+}

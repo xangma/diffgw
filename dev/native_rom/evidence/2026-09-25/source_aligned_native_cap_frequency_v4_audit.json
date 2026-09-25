@@ -1,0 +1,45 @@
+{
+  "checks": {
+    "circular_target_replay": true,
+    "v4_field_replay": true,
+    "v4_full_fixed_chart_replay": true,
+    "v4_hypothesis_replay": true,
+    "v4_only_cap_frequency_failed": true,
+    "v4_target_gate_failure_replays": true,
+    "v4_v5_initial_state_replay": true,
+    "v4_v5_native_frequency_parity": true,
+    "v4_v5_source_frequency_parity": true,
+    "v5_native_source_frequency_parity": true
+  },
+  "future_rerun_criteria": [
+    "Require exact frozen source/public identity, hashes, original 1169-sample chart, and full-mode discrete h22 crop replay as in v4.",
+    "For cap initialization, gate the zero-radial-momentum circular frequency against nominal 10^-3/2 to 1e-8 and gate dissipative initial-state frequency against independently frozen v5 native/source values to 1e-9; do not compare dissipative frequency directly to the circular target.",
+    "Keep v4 as failed_validity. A rerun must have separately frozen script/plan/result and preserve all prior numerical and hypothesis gates without relaxation."
+  ],
+  "interpretation": "The nominal cap frequency is solved at zero radial momentum before the quasicircular initializer adds dissipative radial momentum. The original v4 validity gate therefore fails on an expected frequency shift; this audit does not revise or qualify v4.",
+  "observed": {
+    "circular_minus_nominal_Momega": -6.938893903907228e-18,
+    "dissipative_minus_nominal_Momega": -2.391476569135742e-07,
+    "nominal_circular_target_Momega": 0.03162277660168379,
+    "reevaluated_v4_dissipative_cap_Momega": 0.03162253745402688,
+    "v4_dissipative_cap_Momega": 0.03162253745402688,
+    "v4_failed_validity_checks": [
+      "cap_frequency"
+    ],
+    "v4_fixed_chart_samples": 1169,
+    "v4_hypothesis_passed": true,
+    "v4_minus_v5_native_Momega": 3.364461487187498e-12,
+    "v4_minus_v5_source_Momega": 8.517443694788795e-12,
+    "v4_v5_native_state_max_abs": 0.0,
+    "v4_v5_source_state_max_abs": 8.574873322031787e-08,
+    "v5_native_dissipative_cap_Momega": 0.031622537450662416,
+    "v5_native_minus_source_Momega": 5.152982207601298e-12,
+    "v5_source_dissipative_cap_Momega": 0.031622537445509434,
+    "zero_radial_momentum_circular_Momega": 0.031622776601683784
+  },
+  "plan_sha256": "109e6607fbf1e326530b8816a1d3040419312f242d118493615dd75951d61f33",
+  "release_qualified": false,
+  "schema": "diffgw.seobnrv4.native-cap-frequency-v4-audit.v1",
+  "script_sha256": "b4667d57c134542718d1a3a199265c12b2e809e72c4b55aa3efcb06a17dc3f27",
+  "status": "audit_complete"
+}
