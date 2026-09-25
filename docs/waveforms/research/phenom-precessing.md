@@ -88,8 +88,14 @@ now gives the paper equation, independent scalar/JAX opening-angle kernels,
 Torch public dispatch conditions, and measured difference from the explicit
 v223/LAL diagnostic. The scalar Eq. (7) minimal-rotation check and exact
 XP/XAS waveform collapse now cover the zero-nutation endpoint, including an
-omitted carrier `f_ref`. The generic two-spin near-aligned cubic-root limit
-remains an explicit expected failure, alongside nonzero-`phi0` transport;
+omitted carrier `f_ref`. The generic two-spin near-aligned limit remains an
+explicit expected failure both below and across the up-down instability band
+in the test fixture: its pre-band waveform-phase discrepancy is distinct from
+the physical instability and from the algebraic-root ordering change at
+higher frequency. The [reference-closure page](xp-v223-reference-closure.md)
+gives the [Chatziioannou cubic and alignment caveat](https://arxiv.org/pdf/1703.03967v3)
+and the [Gerosa instability threshold](https://arxiv.org/abs/1506.09116).
+Nonzero-`phi0` transport also remains open;
 these component tests do not make the public JAX waveform use this physical
 continuation. The aligned convention-6 LAL residual is about 0.118 relative
 L2, while the separate binary-compatibility helper retains its strict gate.

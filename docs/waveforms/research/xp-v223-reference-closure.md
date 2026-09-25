@@ -141,9 +141,46 @@ explicit binary-compatibility helper, not a paper-derived prediction for the
 physical boundary.
 
 This endpoint correction covers zero-nutation rows with at least one exactly
-aligned spin. The generic two-spin cubic roots remain ill-conditioned when
-both transverse spins tend to zero: a \((\chi_{1x},\chi_{2x})=
-(10^{-10},-5\times10^{-11})\) row still differs from exact alignment by
-order \(0.1\) relative L2. The strict expected-failure
-`test_xp_two_spin_near_aligned_continuity_pending` records this open model
-domain limit; it is not evidence of generic near-aligned continuity.
+aligned spin. It does not establish a generic two-spin near-aligned limit.
+[Chatziioannou et al., Eqs. (21)--(25) and Appendix B](https://arxiv.org/pdf/1703.03967v3)
+derive the cubic in \(S^2\), distinguish the two physical turning roots from
+the third algebraic root, and order the roots in the elliptic solution.
+Their [Appendix E](https://arxiv.org/pdf/1703.03967v3) explains that a PN
+expansion can become ill-behaved near spin-orbit alignment even when the
+underlying precession frequency is finite, and suggests a small-misalignment
+expansion as a possible improvement. Thus a generic small-spin fix requires
+more than forcing the aligned waveform when the cubic roots nearly coincide.
+
+The \((36,22)M_\odot\), \((\chi_{1z},\chi_{2z})=(0.35,-0.25)\) fixture is also
+an **up-down** system. [Gerosa et al.](https://arxiv.org/abs/1506.09116)
+give its physical instability band as
+\(r_{\mathrm{ud}\pm}/M=(\sqrt{\chi_1}\pm\sqrt{q\chi_2})^4/(1-q)^2\),
+with \(q=m_2/m_1\). The upper edge is \(r/M=6.16079\), or approximately
+\(72.865\) Hz using the Newtonian relation
+\(r/M=(\pi M f_{22})^{-2/3}\). This estimate is a physical context, not an
+XP numerical validity cutoff. On `len`, the generic two-spin
+\((\chi_{1x},\chi_{2x})=(10^{-10},-5\times10^{-11})\) waveform differs from
+the exact-aligned waveform by about 0.0245 relative L2 over 25--55 Hz,
+entirely before that edge. The pre-band discrepancy shows a phase/chart
+conditioning problem independently of the physical instability; shrinking
+the transverse spins to \(10^{-11}\) does not remove it. Even for both spins
+aligned with the orbit, a generic two-spin row has a nonvanishing small-spin
+waveform difference over 25--60 Hz, so this is not solely an up-down effect.
+As a narrower stable control, with both aligned spin components positive the
+two-spin waveform at its 40 Hz reference point approaches its aligned value:
+the relative difference is \(2.36\times10^{-11}\) at transverse scale
+\(10^{-10}\) and ten times smaller at \(10^{-11}\). Anchoring the phase at
+one frequency does not establish broadband continuity.
+
+Across 25--300 Hz the up-down difference rises to about 0.13. An independent
+90-digit evaluation of the published cubic for this fixture finds two roots
+near \(S^2=0.00977535\) separated by about \(6.89\times10^{-21}\) at
+\(\chi_{1x}=10^{-10}\), \(f_{22}=40\) Hz; they are the upper pair there. At
+300 Hz the near-coincident pair is the lower pair and the third root is
+approximately 0.0282781. This ordering change is inside the predicted
+up-down instability region; physical growth of a perturbation and numerical
+root/angle-chart effects cannot be separated by an XP/XAS comparison alone.
+The two strict expected-failure cases in
+`test_xp_two_spin_near_aligned_continuity_pending` record both frequency
+regimes. They are not evidence of a generic continuity theorem or a sourced
+root-branch repair.
