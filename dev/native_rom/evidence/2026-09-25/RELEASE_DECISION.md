@@ -385,6 +385,23 @@ log `/tmp/diffgw-jax-nqc-basis-whole.log`, and completed in 27.6 seconds
 with exit code 1 for the frozen whole-waveform and amplitude gates. No
 process or next check remains.
 
+The [frozen pre-NQC stage attribution](jax_mode_stage_plan.json) and
+[result](jax_mode_stages.json) reproduce the published eager waveform mode
+exactly through an instrumented decomposition, in both eager and JIT paths.
+On an identical fine state, the published mode changes by `1.0184e-15`
+relative L2 between eager and JIT. Hamiltonian-derived frequencies and
+energies already differ at about `1e-16` relative L2, residual phase by
+`5.08e-16`, and amplitude by `6.11e-16`. Even when the compiled amplitude,
+phase, and mode receive the identical eager quantities and residual phase,
+the mode still differs by `3.97e-16` relative L2. This is distributed
+floating-point arithmetic drift, not a single bad pre-NQC component; the
+subsequent NQC fitting magnifies it. The attribution passes its reproduction
+checks, but proposes no waveform repair and does not qualify a release.
+It ran on RONI2 in this worktree as PID `78894`, command
+`PYTHONPATH=src:. /Users/xangma/repos/diffgw/.venv/bin/python -m dev.native_rom.diagnose_jax_mode_stages`,
+log `/tmp/diffgw-jax-mode-stages.log`, and completed in 7.7 seconds with
+exit code 0. No process or next check remains.
+
 Two different release claims must stay separate:
 
 - **Historical SEOBNRv4 fidelity:** a port may be described as faithful only

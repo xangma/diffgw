@@ -1,0 +1,19 @@
+{
+  "schema": "diffgw.seobnrv4.jax-mode-stage-plan.v1",
+  "release_qualified": false,
+  "source_head": "6ea3ff1",
+  "case": "high_start_mixed_spin",
+  "output_step_M": 0.5,
+  "fine_refinement_factor": 32,
+  "adaptive_atol": 1e-10,
+  "adaptive_rtol": 1e-9,
+  "method": "On the same fixed fine state, compare eager and JIT Hamiltonian-derived quantities, residual phase, amplitude, phase and complex mode; also evaluate amplitude and phase on fixed eager quantities. Confirm the instrumented mode reproduces the published eager path before attributing drift. This is an attribution diagnostic only.",
+  "gates": {
+    "max_instrumented_eager_source_mode_relative_l2": 1e-12,
+    "min_published_eager_jit_mode_relative_l2": 1e-16
+  },
+  "operational_limits": {
+    "max_wall_time_s": 300,
+    "max_rss_gib": 32
+  }
+}
