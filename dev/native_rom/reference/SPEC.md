@@ -76,7 +76,7 @@ trained basis, parameter interpolation, or holdout definition yet.
 | Component ID/version | Source | Status | Scalar reference | Torch/JAX | Main blocker |
 | --- | --- | --- | --- | --- | --- |
 | `V4-HAM-RADIAL` / 0.8.11 | Bohé Eqs. (2)–(3); Steinhoff Appendix A | executable | `hamiltonian.radial_potentials` | `SEOBNRv4Hamiltonian.deformed_kerr_potentials` | Historical derivative convention differs from paper form |
-| `V4-FLUX-NORM-9` / 0.8.11 | Bohé Eq. (9); Pan mode sum | conditional | `flux.emitted_flux` | `SEOBNRv4PublishedFlux.energy_flux` | Historical mode choices and full trajectory coupling |
+| `V4-FLUX-NORM-9` / 0.8.11 | Bohé Eq. (9); Pan mode sum | executable | `flux.emitted_flux` | `energy_flux_from_modes`; `emitted_flux_from_modes` | Supplied pre-NQC positive-`m` modes only; full torque is `V4-FLUX-4-9` |
 | `V4-NQC-7` / 0.8.11 | Bohé Eq. (7) and peak fits | conditional | `nqc.match_22` | Manifest-linked NQC modules | Historical fit differentiation and source/wheel inputs |
 | `V4-RD-PEAK-CONTINUATION` / 0.8.11 | Bohé Eqs. (10), (12)–(14); pinned historical LAL ringdown source, Eqs. (57)–(58) of T1600383 | conditional | `ringdown.peak_preserving_shape` | `seobnrv4_peak_preserving_shape` | Historical rule integrated; domain-wide waveform validation remains open |
 | `V4-QNM-INTERPOLATION` / 0.8.11 | Bohé Sec. II.C; Berti numerical data; pinned LAL source | pending | pending | Development-only independent Kerr route | q4 impact measured; domain-wide physical and waveform validation open |
@@ -90,7 +90,7 @@ specify the exact historical numerical implementation. In particular:
 | Pending block | Public derivation or data | Remaining independent closure |
 | --- | --- | --- |
 | `V4-HAM-1-3` | [Bohé Sec. II.1](https://arxiv.org/html/1611.03703), [Barausse–Buonanno Hamiltonian](https://arxiv.org/abs/1107.2904), and [Steinhoff Appendix A](https://arxiv.org/html/1608.01907) | Printed fits and equations do not provide shortened source decimals or the historical logarithmic derivative convention. |
-| `V4-FLUX-4-9` | [Bohé Eqs. (4)–(6), (9)](https://arxiv.org/html/1611.03703) and [factorized multipoles](https://arxiv.org/abs/1006.0431) | The exact historical higher-mode spin hybrid and truncation choices are not uniquely specified. |
+| `V4-FLUX-4-9` | [Bohé Eqs. (4)–(6), (9)](https://arxiv.org/html/1611.03703) and [factorized multipoles](https://arxiv.org/abs/1006.0431) | Constructing the 35 pre-NQC modes and full torque remains pending: the exact historical higher-mode spin hybrid, high-`ell` truncation, and JAX waveform coupling are not independently qualified. The supplied-mode normalization is covered by `V4-FLUX-NORM-9`. |
 | `V4-QNM-INTERPOLATION` | [Berti et al. Kerr data and fits](https://arxiv.org/html/gr-qc/0512160) and [Cook author data](https://zenodo.org/records/2650358) | Declare and validate an independent interpolant, including signed spin; the published fit is approximate and does not define historical spline knots. |
 | `V4-ODE-IC` | [Bohé Sec. II.2](https://arxiv.org/html/1611.03703) and [Buonanno–Damour initial-data prescription](https://arxiv.org/html/gr-qc/0001013) | Exact v4 root coordinates, tortoise mapping, numerical tolerances, and event/output interpolation need independent checks. |
 | `V4-TD-FD-CONVENTIONS` | [Pürrer Sec. 4](https://arxiv.org/html/1402.4146) gives a time-domain conditioning template for **SEOBNRv1** | The v4 window, epoch, padding, crop, normalization, and polarization choices are not specified there. |
@@ -183,21 +183,27 @@ check inherits the paper's finite-mass-ratio tortoise-quartic ambiguity above, a
 component agreement does not validate the resulting dynamics or prove
 historical implementation parity beyond the tested states.
 
-`flux.emitted_flux` independently evaluates Bohé Eq. (9) from supplied
-**pre-NQC** positive-`m` mode amplitudes through `ell=8`:
+`flux.emitted_flux` independently evaluates [Bohé Eq. (9)](https://arxiv.org/html/1611.03703)
+from supplied **pre-NQC** positive-`m` mode amplitudes through `ell=8`:
 
 `F = sum[(m Omega)² |D_L h_lm|²] / (8 pi)`.
 
-The factor of two relative to the full `m=-ell...ell` sum accounts for the
-negative-`m` partners. [Pan et al. (2011), Eqs. (3), (30)](https://arxiv.org/html/1006.0431)
+Eq. (9) gives the angular-momentum radiation reaction; circular balance
+converts its flux magnitude to emitted energy flux by a factor of `Omega`.
+Equal squared amplitudes for the positive- and negative-`m` partners give
+the factor of two relative to its full `m=-ell...ell` sum.
+[Pan et al. (2011), Eqs. (3), (30)](https://arxiv.org/html/1006.0431)
 provide the independent Newtonian check `F_22=(32/5) nu² Omega^(10/3)`.
-The JAX positive-`m` sum agrees with this scalar normalization for supplied
-complex modes and recovers the Newtonian `(2,2)` flux. A separate JAX
-factorized engine now generates all 35 declared pre-NQC moduli; it is not
-wired into a complete JAX SEOBNRv4 waveform. Its same-state Hamiltonian
-adapter produces reduced-mass radiation-reaction forces that agree with the
-Torch adapter at tested scalar points and pass JAX batch, JIT, and gradient
-checks; this is a frontend check, not historical torque parity.
+The Torch and JAX positive-`m` sums agree with the scalar normalization for
+supplied complex modes; JAX also passes batch, JIT, and Newtonian `(2,2)`
+gradient checks. This executable component does not generate the modes.
+
+For the still-pending `V4-FLUX-4-9` aggregate, a separate JAX factorized
+engine generates all 35 declared pre-NQC moduli but is not wired into a
+complete JAX SEOBNRv4 waveform. Its same-state Hamiltonian adapter produces
+reduced-mass radiation-reaction forces that agree with the Torch adapter at
+tested scalar points and pass JAX batch, JIT, and gradient checks; this is a
+frontend check, not historical torque parity.
 The [predeclared 12-state source/wheel/native flux grid](../evidence/2026-09-25/flux_boundary_grid.json)
 compares the zero-radial-momentum mode-summed flux at four mass-ratio/spin
 boundaries and radii `20`, `10`, and `6 M` with supplied
