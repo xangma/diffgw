@@ -1,0 +1,13 @@
+{
+  "schema": "diffgw.seobnrv4.jax-torch-fixed-chart-attachment-gradient-plan.v1",
+  "case": "q4_nonspinning",
+  "prior_jax_evidence_sha256": "bf92a0abdf7853cbdc0310d7fc137a2203b7e0e640c4fd57e1cb8bced5e2d8ba",
+  "checks": {
+    "same_physical_input_hashes": true,
+    "baseline_mode_relative_l2_at_most": 0.0000001,
+    "tangent_relative_l2_at_most": 0.001,
+    "finite_tangents": true
+  },
+  "interpretation": "Cross-backend JAX forward AD versus Torch autograd JVP on the same physical q4 fixed fine chart, continuous boundary, and frozen sigma. Spin-target/match/merger-shape and smooth input perturbations are checked separately. No adaptive-event, remnant, ROM, or release claim.",
+  "release_qualified": false
+}

@@ -1761,6 +1761,18 @@ through NQC and ringdown. It holds the orbital peak, adaptive trajectory,
 QNM/remnant, and attachment policy fixed; it does not establish a full
 parameter-to-waveform gradient or release qualification.
 
+The [cross-backend fixed-chart attachment-gradient check](evidence/2026-09-25/jax_torch_fixed_chart_attachment_gradient.json)
+uses a [frozen plan](evidence/2026-09-25/jax_torch_fixed_chart_attachment_gradient_plan.json)
+and the same hashed physical q4 inputs. Torch's checked continuous-boundary
+attachment and the traceable JAX replay agree in the baseline mode to
+`2.30e-12` relative L2. Their full attached-mode directional derivatives
+agree to `1.94e-9` for the spin-controlled NQC/match/merger perturbation and
+`2.71e-11` for the smooth fixed-input perturbation. This cross-backend result
+checks the differentiable attachment arithmetic on one physical chart; both
+backends hold the adaptive trajectory, orbital peak, QNM/remnant, output
+chart, and boundary policy fixed. It is not a full waveform-parameter or ROM
+gradient qualification.
+
 1. Qualify the physical generator against the published equations and independent
    references over the intended domain, resolve convention/provenance gaps, and
    establish gradients and numerical convergence. This runner covers only scalar
