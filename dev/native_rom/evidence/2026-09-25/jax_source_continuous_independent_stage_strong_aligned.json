@@ -1,0 +1,223 @@
+{
+  "case_id": "strong_aligned",
+  "checks": {
+    "nqc_linear_system_max_abs_residual_at_most": true,
+    "shared_fine_time_max_abs_at_most_M": true,
+    "whole_result_reproduced_abs_at_most": true
+  },
+  "comparisons": {
+    "amplitude_system": {
+      "coefficient_l2": 0.0009592894940906891,
+      "matrix_first_coefficient_l2": 0.00012899953742494458,
+      "matrix_relative_l2": 5.722425071885523e-07,
+      "rhs_first_coefficient_l2": 0.0008317143844797237,
+      "rhs_relative_l2": 3.2596239583512052e-06
+    },
+    "fine_base_mode": {
+      "max_abs": 7.51628394381355e-07,
+      "relative_l2": 2.8888359675689705e-08,
+      "samples": 76799,
+      "time_max_abs_M": 0.0
+    },
+    "fine_corrected_inspiral": {
+      "max_abs": 0.00010506963523865938,
+      "relative_l2": 1.4958733244364596e-05,
+      "samples": 76799,
+      "time_max_abs_M": 0.0
+    },
+    "fine_orbital_frequency": {
+      "max_abs": 1.579670124152166e-07,
+      "relative_l2": 1.792012738223789e-08,
+      "samples": 76799,
+      "time_max_abs_M": 0.0
+    },
+    "fine_state": {
+      "max_abs": 1.7944493482524582e-06,
+      "relative_l2": 9.087572681899201e-10,
+      "samples": 76799,
+      "time_max_abs_M": 0.0
+    },
+    "match_time_difference_M": 5.214368457018281e-06,
+    "phase_system": {
+      "coefficient_l2": 0.006718132140353249,
+      "matrix_first_coefficient_l2": 0.004468608630512246,
+      "matrix_relative_l2": 1.5985823287371555e-06,
+      "rhs_first_coefficient_l2": 0.002249544200413714,
+      "rhs_relative_l2": 2.4163040080490343e-07
+    },
+    "waveform_partitions": {
+      "coarse_prefix": {
+        "complex_max_abs": 1.3801238100584003e-06,
+        "complex_relative_l2": 4.031224373133301e-06,
+        "end_M": 345.5,
+        "samples": 692,
+        "start_M": 0.0
+      },
+      "post_boundary": {
+        "complex_max_abs": 7.994936345536029e-06,
+        "complex_relative_l2": 2.1645737756030316e-05,
+        "end_M": 584.0,
+        "samples": 200,
+        "start_M": 484.5
+      },
+      "post_restart_pre_boundary": {
+        "complex_max_abs": 7.930401824611417e-06,
+        "complex_relative_l2": 1.2315533716569012e-05,
+        "end_M": 484.0,
+        "samples": 277,
+        "start_M": 346.0
+      }
+    },
+    "whole_waveform": {
+      "complex_relative_l2": 1.0955458701101929e-05,
+      "shared_end_M": 584.0,
+      "shared_samples": 1169,
+      "shared_time_max_abs_M": 0.0
+    }
+  },
+  "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+  "diagnostic_checks_passed": true,
+  "elapsed_s": 140.84736104198964,
+  "host": "RONI2",
+  "levels": {
+    "baseline": {
+      "amplitude_system": {
+        "coefficients": [
+          142.95778183809506,
+          -1227.0105640728946,
+          1375.4572260145142
+        ],
+        "condition": 49989.25117007305,
+        "matrix": [
+          [
+            0.011781497789536912,
+            0.003587546520593718,
+            0.001979684847565047
+          ],
+          [
+            0.0012066661459562383,
+            0.00042160757196354055,
+            0.00024759801090808777
+          ],
+          [
+            0.00020765606445568527,
+            7.793766269372181e-05,
+            4.74034377286795e-05
+          ]
+        ],
+        "max_abs_residual": 8.881784197001252e-16,
+        "rhs": [
+          0.005271139665955715,
+          -0.004254155797010646,
+          -0.0007428841426920374
+        ]
+      },
+      "boundary_time_M": 484.391857365795,
+      "fine_input_samples": 76799,
+      "match_time_M": 484.391857365795,
+      "orbital_peak_spline_slope": -4.2465149777647093e-17,
+      "phase_system": {
+        "coefficients": [
+          35.65069100729305,
+          -800.7979630314056
+        ],
+        "condition": 561.2354542397535,
+        "matrix": [
+          [
+            -0.008076487597258895,
+            -0.00016310383226087518
+          ],
+          [
+            -0.0009717919552775556,
+            -3.423021350644494e-05
+          ]
+        ],
+        "max_abs_residual": 8.326672684688674e-17,
+        "rhs": [
+          -0.1573191471169867,
+          -0.00723356947088206
+        ]
+      },
+      "settings": {
+        "atol": 1e-13,
+        "coarse_output_step_M": 0.5,
+        "fine_refinement_factor": 256,
+        "max_step_M": 2.0,
+        "rtol": 1e-12
+      },
+      "whole_mode_complex_relative_l2_vs_jax": 1.6500352888529597e-05
+    },
+    "refined": {
+      "amplitude_system": {
+        "coefficients": [
+          142.95770662877584,
+          -1227.0099246594198,
+          1375.4565148673423
+        ],
+        "condition": 49989.12439289956,
+        "matrix": [
+          [
+            0.011781504081899794,
+            0.003587548719120361,
+            0.00197968613869255
+          ],
+          [
+            0.0012066682892708876,
+            0.0004216083064637329,
+            0.0002475984405685337
+          ],
+          [
+            0.0002076563617549478,
+            7.793778788679847e-05,
+            4.7403517933961534e-05
+          ]
+        ],
+        "max_abs_residual": 8.326672684688674e-16,
+        "rhs": [
+          0.0052711174833248164,
+          -0.004254156903031819,
+          -0.00074288442984135
+        ]
+      },
+      "boundary_time_M": 484.39186258016343,
+      "fine_input_samples": 153613,
+      "match_time_M": 484.39186258016343,
+      "orbital_peak_spline_slope": 6.453861662485735e-17,
+      "phase_system": {
+        "coefficients": [
+          35.650528329237055,
+          -800.7912468691603
+        ],
+        "condition": 561.2344032623255,
+        "matrix": [
+          [
+            -0.00807650059648175,
+            -0.000163104167377417
+          ],
+          [
+            -0.000971792238361606,
+            -3.423027827102109e-05
+          ]
+        ],
+        "max_abs_residual": 8.326672684688674e-17,
+        "rhs": [
+          -0.15731912375225454,
+          -0.007233599506513817
+        ]
+      },
+      "settings": {
+        "atol": 1e-13,
+        "coarse_output_step_M": 0.5,
+        "fine_refinement_factor": 512,
+        "max_step_M": 2.0,
+        "rtol": 1e-12
+      },
+      "whole_mode_complex_relative_l2_vs_jax": 8.68651922104547e-06
+    }
+  },
+  "pid": 42911,
+  "plan_sha256": "187b092dcb596db8220c685056bf645adb0f2717c254ce5131a84d79e004a639",
+  "release_qualified": false,
+  "schema": "diffgw.seobnrv4.jax-source-continuous-independent-stage.v1",
+  "status": "diagnostic_complete"
+}

@@ -1402,6 +1402,19 @@ sensitivity but does not yet make separately integrated source-backed
 waveforms converge. The JAX source-compatible route remains unchanged and
 does not match this Torch-only counterfactual.
 
+The [independent-grid stage audit](evidence/2026-09-25/jax_source_continuous_independent_stage_plan.json)
+replays those runs and isolates the residual drift. On
+[q4](evidence/2026-09-25/jax_source_continuous_independent_stage_q4_nonspinning.json)
+and [aligned spin](evidence/2026-09-25/jax_source_continuous_independent_stage_strong_aligned.json),
+the raw fine modes differ by only `4.39e-8` and `2.89e-8` on shared samples,
+while NQC-corrected inspiral differs by `2.89e-5` and `1.50e-5`. Both NQC
+linear solves have roundoff-scale residuals. Q4's amplitude coefficient shift
+is `0.0110` (matrix-first substitution `0.00845`); aligned spin's phase
+coefficient shift is `0.00672` (matrix-first `0.00447`). The decompositions
+are order-dependent diagnostics, not additive budgets. Pre-boundary output
+drift already reaches `2.58e-5` and `1.23e-5`, so the remaining independent-grid
+failure originates mainly in the NQC solve, not the continuous ringdown join.
+
 The [frozen anchor diagnostic](evidence/2026-09-25/source_spliced_anchor_plan.json)
 replays all four cases and fits each mode's own amplitude peak between output
 samples without optimizing a relative shift. The [results](evidence/2026-09-25/source_spliced_anchor.json)

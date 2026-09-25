@@ -1,0 +1,23 @@
+{
+  "schema": "diffgw.seobnrv4.jax-source-continuous-independent-stage-plan.v1",
+  "purpose": "Attribute the residual independent-grid waveform drift with a continuous ringdown boundary to trajectory, raw mode, NQC linear systems, corrected inspiral, and pre/post-match output on the same 0.5 M chart.",
+  "pilot_case": "q4_nonspinning",
+  "prospective_case": "strong_aligned",
+  "source_plan_sha256": "eb79f7db87e23d83a8437334eec90f6872dcf3b76f65b5cbe55882f7d62b9944",
+  "prior_independent_grid_sha256": {
+    "q4_nonspinning": "44268ca525ab634deeeec7fa51f77f3f942fca43c3317f30b5e1f8453d881b65",
+    "strong_aligned": "df40c64e963d7741c874c6a2491ea8ee23f155533176fca18202a70c8d3c5b08"
+  },
+  "atol": 1e-13,
+  "rtol": 1e-12,
+  "max_step_M": 2.0,
+  "output_step_M": 0.5,
+  "fine_refinement_factors": [256, 512],
+  "checks": {
+    "shared_fine_time_max_abs_at_most_M": 1e-8,
+    "nqc_linear_system_max_abs_residual_at_most": 1e-8,
+    "whole_result_reproduced_abs_at_most": 1e-10
+  },
+  "interpretation": "Stage attribution only; observational checks do not release-qualify the source model or the continuous-boundary counterfactual.",
+  "release_qualified": false
+}
