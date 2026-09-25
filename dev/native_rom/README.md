@@ -2874,6 +2874,18 @@ diagnostics are development-only (`release_qualified=false`) and run from the
 pinned `/Users/xangma/repos/lalsuite-git` source checkout with
 `PYTHONPATH=src:. /Users/xangma/repos/diffgw/.venv/bin/python -m dev.native_rom.diagnose_source_aligned_early_raw_restart_v4`.
 
+The separate [native cap warm-start plan](evidence/2026-09-25/source_aligned_early_raw_warm_start_v5_plan.json)
+and [result](evidence/2026-09-25/source_aligned_early_raw_warm_start_v5.json)
+start the same native ODE at `M Omega=10^-3/2`, then phase-zero its continued
+low-dynamics trajectory at the first upward orbital `M Omega=0.04` crossing.
+On the unchanged early chart, anchored raw-mode disagreement with pinned
+source is `3.24e-5` complex and `9.99e-9` amplitude L2, versus `0.156658`
+and `5.85e-5` for direct start. The source chart and v4 controls replay
+exactly. This supports a wholly native initial-state history remedy for the
+early raw-mode discrepancy, but the compiled full-mode crop uses a separate
+instantaneous `h22` frequency rule, and no whole-waveform or release claim
+follows. Reproduce with `PYTHONPATH=src:. /Users/xangma/repos/diffgw/.venv/bin/python -m dev.native_rom.diagnose_source_aligned_early_raw_warm_start_v5`.
+
 1. Qualify the physical generator against the published equations and independent
    references over the intended domain, resolve convention/provenance gaps, and
    establish gradients and numerical convergence. This runner covers only scalar
