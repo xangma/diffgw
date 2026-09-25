@@ -1,0 +1,182 @@
+{
+  "generated_utc": "2026-09-25T11:23:58.669916+00:00",
+  "reproduction": "PYTHONPATH=src python scripts/diagnose_phenomt_independent_trajectory.py --case high_mass_ratio --samples 65 --sample-rate 16384 --output receipt.json",
+  "versions": {
+    "python": "3.12.7",
+    "numpy": "2.5.2",
+    "scipy": "1.16.3",
+    "torch": "2.13.0",
+    "lalsimulation": "6.2.1"
+  },
+  "dtype": "float64 with 50-decimal mpmath scalar RHS",
+  "parameters": {
+    "mass1": 60.0,
+    "mass2": 6.0,
+    "spin1": [
+      0.2,
+      0.1,
+      0.8
+    ],
+    "spin2": [
+      0.1,
+      0.0,
+      0.1
+    ],
+    "distance_mpc": 100.0,
+    "inclination": 1.2,
+    "phic": 0.1,
+    "f_lower_hz": 20.0,
+    "f_ref_hz": 20.0
+  },
+  "conventions": {
+    "reference": "Published equations only; public binary used solely as an unmodified initial-rate observation.",
+    "production": "No production equation or coefficient is modified by this diagnostic.",
+    "source_restriction": "No LAL implementation source is inspected or translated; no binary output is fitted."
+  },
+  "result": {
+    "case": "high_mass_ratio",
+    "samples": 65,
+    "carrier_scope": "native scalar PhenomT v(t/M); all event/ODE/transport/angle operations independent",
+    "reference_event": {
+      "target_velocity": 0.2733533766992865,
+      "bracket_t_over_m": [
+        -8898.659228072893,
+        -7280.721186605095
+      ],
+      "independent_t_over_m": -8089.690207339008,
+      "native_t_over_m": -8089.690207338994,
+      "absolute_difference_t_over_m": 1.4551915228366852e-11,
+      "absolute_difference_seconds": 4.7305715640588254e-15
+    },
+    "solver": {
+      "method": "SciPy DOP853 with dense output",
+      "tight": {
+        "rtol": 2e-11,
+        "atol": 2e-13,
+        "nfev": 1724,
+        "njev": 0,
+        "nlu": 0
+      },
+      "loose": {
+        "rtol": 2e-09,
+        "atol": 2e-11,
+        "nfev": 1067,
+        "njev": 0,
+        "nlu": 0
+      },
+      "convergence_state_max_vector_norm": 2.2472894464227497e-09,
+      "convergence_rotation_max_radians": 1.6423464350948267e-09
+    },
+    "independent_invariants": {
+      "lhat_norm_max_abs": 5.165867733580853e-13,
+      "spin1_norm_max_abs": 6.672440377997191e-14,
+      "spin2_norm_max_abs": 1.0618038566445609e-12,
+      "tangent_norm_max_abs": 1.9939605522267811e-13,
+      "lhat_dot_tangent_max_abs": 1.8346435481930712e-13
+    },
+    "native_minus_independent_states": {
+      "lhat": {
+        "max_vector_norm": 4.744644115089863e-09,
+        "relative_l2": 1.2248932107358098e-09
+      },
+      "spin1": {
+        "max_vector_norm": 7.79286404233878e-10,
+        "relative_l2": 3.2076117192779594e-10
+      },
+      "spin2": {
+        "max_vector_norm": 6.748656029282424e-10,
+        "relative_l2": 1.967999878393018e-07
+      },
+      "tangent": {
+        "max_vector_norm": 3.2884001037068875e-09,
+        "relative_l2": 8.379037549830301e-10
+      }
+    },
+    "native_minus_independent_rotation": {
+      "max_radians": 4.807622196714534e-09,
+      "final_radians": 8.473362779949116e-10
+    },
+    "production_angle_reconstruction_minus_independent": {
+      "fixed_initial_frame_radians": 0.0030660667931199006,
+      "absolute_max_radians": 0.0030660667931199427,
+      "relative_evolution_max_radians": 7.887938530811465e-16
+    },
+    "initial_spin_even_rate": {
+      "construction": "average of +chi1 and -chi1 with chi2=0; odd-in-spin terms cancel",
+      "independent_published_rate_per_second": [
+        -0.030698834125987604,
+        0.06139766825197515,
+        0.0
+      ],
+      "native_rate_per_second": [
+        -0.030698834125987617,
+        0.061397668251975235,
+        -0.0
+      ],
+      "public_binary_rate_per_second": [
+        -1.4493378733271278e-08,
+        2.9394355560707908e-08,
+        4.006271982987983e-12
+      ],
+      "independent_norm_per_second": 0.06864467993569857,
+      "native_norm_per_second": 0.06864467993569866,
+      "public_binary_norm_per_second": 3.277325406464203e-08,
+      "native_minus_independent_max_abs_per_second": 8.326672684688674e-17,
+      "public_minus_independent_norm_per_second": 0.06864464716295168,
+      "spin_taylor_kappa1": {
+        "kappa1": 1.0,
+        "kappa2": 1.0,
+        "signed_rates": [
+          {
+            "chi1_rate_per_second": [
+              -0.07937916843916243,
+              0.15875833669128608,
+              2.6938366813643918e-11
+            ],
+            "stencil_difference_per_second": 9.328971457860502e-11
+          },
+          {
+            "chi1_rate_per_second": [
+              0.10483451811253358,
+              -0.2096690362685526,
+              4.0981398037197216e-11
+            ],
+            "stencil_difference_per_second": 4.091823689817322e-11
+          }
+        ],
+        "chi1_even_rate_per_second": [
+          0.012727674836685576,
+          -0.025455349788633258,
+          3.395988242542057e-11
+        ]
+      },
+      "spin_taylor_kappa0": {
+        "kappa1": 0.0,
+        "kappa2": 0.0,
+        "signed_rates": [
+          {
+            "chi1_rate_per_second": [
+              -0.09210684339487263,
+              0.1842136864269029,
+              3.95846741446475e-11
+            ],
+            "stencil_difference_per_second": 1.6696035284763235e-10
+          },
+          {
+            "chi1_rate_per_second": [
+              0.0921068432386539,
+              -0.18421368648174202,
+              8.569605543237778e-11
+            ],
+            "stencil_difference_per_second": 7.989856034726936e-11
+          }
+        ],
+        "chi1_even_rate_per_second": [
+          -7.810936619723208e-11,
+          -2.741956661722611e-11,
+          6.264036478851264e-11
+        ]
+      }
+    }
+  }
+}

@@ -115,6 +115,23 @@ measurements, not equation provenance or physical-accuracy claims. Direct
 rotation tests described below already exonerate the shared Wigner/SWSH
 projection for binary-supplied modes and angles.
 
+The [independent scalar-angle receipt](../validation/phenomt_msa_scalar_angles_20260925.json)
+then tabulates the raw PV223 branch and implements the suffix rules from
+PhenomTP Eqs. (5), (20), and (24) with independent scalar PCHIP derivatives
+and adaptive quadrature. A 4,120-node table and its 2,065-node refinement
+agree within `1.65e-7` rad. At nine reference/MECO/peak/ringdown probes, the
+native versus independent maximum rotation is `0`, `1.43e-15`, `7.26e-6`,
+and `1.16e-6` rad for suffixes `22300`, `22310`, `22311`, and `22321`.
+The relative-rotation residual against the public binary is already `0.01623`
+rad in the analytical inspiral for `22300`; its sampled ringdown residual is
+`0.03774` rad. The `22311` and `22321` continuations amplify the sampled
+ringdown residual to `0.14664` and `0.42952` rad. Thus the q=10 discrepancy begins in
+the analytical branch, while continuation/minimal-rotation gamma explains
+additional suffix-dependent growth. These sparse boundary probes supplement,
+and do not replace, the full-grid maxima above. Raw PV223 values come from the
+audited native evaluator; the public `22300` branch is the independent
+observation of that analytical path. No binary output is fitted.
+
 Additional numerical cases at 2048 Hz give the following errors. Both native
 backends are included in the receipt; their reported errors agree to the
 displayed precision. The spins, viewing geometry, reference frequency, and
@@ -142,11 +159,27 @@ axis derivative separately. Tests match the total RHS to Torch and JAX within
 power independently and matches within `3e-10`; the production selection is
 also checked to remove only the published `v8` N3LO quadratic-spin piece.
 
-This closes an equation-transcription gate, but not the numerical-precession
-model gate: the scalar reference has no ODE/event solver, angle construction,
-or ringdown continuation. It supports retaining the source-prescribed Kerr
-self-quadrupole coefficient while the black-box trajectory discrepancy remains
-unresolved. No LAL source or binary-derived coefficient enters the scalar.
+The [independent trajectory receipt](../validation/phenomt_independent_trajectory_20260925.json)
+composes this RHS with a SciPy Brent event solve, adaptive DOP853 evolution,
+minimal-rotation tangent transport, dense output, and independent Euler-angle
+reconstruction. For the `(60, 6)` case, the reference event differs from the
+native event by `1.46e-11 M` (`4.73e-15 s`). Tight/loose solves differ by at
+most `2.25e-9` in state-vector norm and `1.64e-9` rad in rotation; the largest
+constraint drift is `1.06e-12`. Native and independent trajectories differ by
+at most `4.74e-9` in orbital-axis norm and `4.81e-9` rad in rotation. The
+production angle reconstruction has a fixed `0.003066` rad J-frame chart
+offset, but its relative evolution agrees with the independent reconstruction
+within `7.89e-16` rad.
+
+This closes the event/ODE/transport/angle implementation check through the
+carrier peak, but not the numerical-precession model gate. In particular, the
+independent published spin-even initial axis rate is `0.0686446799357 1/s` and
+matches native to `8.33e-17 1/s`; the observed public-binary rate is
+`3.27732540646e-8 1/s`. The positive SpinTaylor quadrupole control remains
+present in the receipt. Published math therefore supports retaining the Kerr
+self-quadrupole coefficient, while the black-box trajectory discrepancy and
+whole-waveform gate remain unresolved. No LAL source or binary-derived
+coefficient enters the reference path.
 
 ## Carrier and integration-resolution diagnostics
 
@@ -300,6 +333,11 @@ sweep. The latter uses 16384 Hz and the selected frontends independently of the
 main diagnostic's sampling-rate selection. Each receipt records its exact command.
 All reference calls use public binaries; no reference implementation source
 is read or incorporated.
+
+Reproduce the new independent paths with
+`python scripts/diagnose_phenomt_msa_scalar_angles.py --output msa-scalar.json`
+and `python scripts/diagnose_phenomt_independent_trajectory.py --output trajectory.json`.
+Their receipts record exact options, versions, tables, and residuals.
 
 ## Regression scope and unresolved cases
 
