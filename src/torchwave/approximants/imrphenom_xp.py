@@ -5,21 +5,17 @@ Mathematical references for the inherited model and audited corrections:
 - Pratten et al. (2020), Phys. Rev. D 102, 064001 (arXiv:2001.11412)
 """
 
-from typing import Dict, Optional, Sequence, Tuple, Union
-import math
+from typing import Optional, Tuple, Union
 import torch
 import torch.nn as nn
 
 from torchwave.constants import (
-    C_SI,
     MSUN_SEC,
-    MPC_SI,
     PI,
 )
 from torchwave.conversions import (
     as_tensor,
     component_masses_to_eta,
-    component_masses_to_delta,
 )
 from torchwave.approximants.imrphenom_xas import IMRPhenomXAS, XASParameterFits
 from torchwave.approximants.precession_msa import (
@@ -81,15 +77,18 @@ class IMRPhenomXP(nn.Module):
         ``convention`` defaults to 1, and the MSA v223 route defaults to
         ``final_spin_mod=3``. Explicit NNLO choices, including
         ``final_spin_mod=0``, retain their existing behavior.
-        MSA version labels share the published analytical prescription;
+        For v223 with the MSA remnant, convention 6
+        uses the clean convention-1 strain with the Table-IV orbital-phase
+        factor exp(2j*phic). Opposed-J rows retain the established legacy
+        guard. MSA version labels share the published analytical prescription;
         undocumented implementation-specific differences are not reproduced.
-        ``phi0`` is an additional source-frame observer azimuth. The clean
-        helper has no separate observer-azimuth argument, so nonzero ``phi0``
-        is evaluated through the established XP rotation path, where it is
-        applied to the source-frame geometry and aligned carrier.
-        A batch mixing zero and nonzero ``phi0`` rows is rejected on the clean
-        route; evaluate those rows separately until a per-row geometry adapter
-        is available.
+        ``phi0`` is an additional source-frame observer azimuth. On the clean
+        zero-nutation route the Appendix-C observer coordinates use
+        ``phic-phi0``; the Table-IV convention-6 carrier retains ``phic``.
+        Generic two-spin nonzero-azimuth rows keep the established rotation.
+        The physical zero-nutation opening removes the auxiliary MSA root
+        split from the aligned boundary; the explicit clean v223 helper
+        retains its historical binary-compatibility opening by default.
         NNLO rotations with L+S_parallel<=0 are unsupported and use the
         established fallback row by row. Regular exact aligned and zero-spin
         rows remain on the clean v223 chart in either convention.
@@ -127,7 +126,6 @@ class IMRPhenomXP(nn.Module):
 
         device = freqs.device if isinstance(freqs, torch.Tensor) else None
         dtype = freqs.dtype if isinstance(freqs, torch.Tensor) and freqs.is_floating_point() else torch.float64
-        complex_dtype = torch.complex128 if dtype == torch.float64 else torch.complex64
 
         m1 = as_tensor(mass1, device=device, dtype=dtype)
         m2 = as_tensor(mass2, device=device, dtype=dtype)
@@ -157,26 +155,19 @@ class IMRPhenomXP(nn.Module):
         if fref is not None:
             fref = fref_eval
 
-        # The clean native wrapper is the production MSA implementation for
-        # the v223/MSA-remnant tuple when the observer azimuth is zero. The
-        # helper has no separate observer-azimuth argument, so nonzero phi0
-        # stays on the established XP rotation path rather than being dropped.
+        # Appendix C puts the observer at source azimuth phic-phi0.  For
+        # nonzero phi0 use the clean chart only on its zero-nutation branch;
+        # generic two-spin rows retain the established rotation until its
+        # independent source-frame adapter is validated.
         exact_aligned = (
             (s1x == 0) & (s1y == 0) & (s2x == 0) & (s2y == 0)
         )
-        has_nonzero_phi0 = bool(torch.any(phi_0 != 0))
-        has_zero_phi0 = bool(torch.any(phi_0 == 0))
-        if (p_ver == 223 and convention in (0, 1) and final_spin_mod == 3
-                and has_nonzero_phi0 and has_zero_phi0):
-            raise ValueError(
-                "Mixed zero/nonzero phi0 rows are unsupported for clean MSA "
-                "v223; evaluate rows separately."
-            )
-        clean_phi0 = not has_nonzero_phi0
+        one_spin_aligned = ((s1x == 0) & (s1y == 0)) | ((s2x == 0) & (s2y == 0))
         clean_candidate = (
-            p_ver == 223 and convention in (0, 1) and final_spin_mod == 3
-            and clean_phi0 and not force_legacy
+            p_ver == 223 and convention in (0, 1, 6) and final_spin_mod == 3
+            and not force_legacy
         )
+        legacy_azimuth_rows = (phi_0 != 0) & ~one_spin_aligned
         guard_unsupported = torch.zeros_like(exact_aligned, dtype=torch.bool)
         if clean_candidate:
             # The clean MSA helper deliberately surfaces the singular
@@ -208,12 +199,44 @@ class IMRPhenomXP(nn.Module):
                     guard_s_ell, guard_sigma_ell,
                 )
                 guard_unsupported = guard_l0 + guard_s_ell <= 0
+                if convention == 6:
+                    # Convention 6 has no exact-aligned carrier bypass: its
+                    # established NNLO fallback rejects L+S_parallel <= 0 at
+                    # the reference or any evaluated frequency. Preserve
+                    # that domain when adapting the clean convention-1 strain.
+                    guard_freqs = as_tensor(freqs, device=device, dtype=dtype)
+                    grid_shape = (1,) * m1.ndim + tuple(guard_freqs.shape)
+                    guard_source_shape = (
+                        tuple(m1.shape) + (1,) * guard_freqs.ndim
+                    )
+                    def expand_source(value):
+                        return value.reshape(guard_source_shape)
+                    guard_grid = guard_freqs.reshape(grid_shape)
+                    guard_f_angles = torch.where(
+                        guard_grid > 0, guard_grid, expand_source(fref_eval)
+                    )
+                    guard_v = (
+                        PI * expand_source(guard_total) * MSUN_SEC
+                        * guard_f_angles
+                    ).pow(1.0 / 3.0)
+                    guard_l = compute_l_3pn(
+                        guard_v, expand_source(guard_eta),
+                        expand_source(guard_delta),
+                        expand_source(guard_s_ell),
+                        expand_source(guard_sigma_ell),
+                    )
+                    if bool(torch.any(guard_unsupported)) or bool(torch.any(
+                        guard_l + expand_source(guard_s_ell) <= 0
+                    )):
+                        clean_candidate = False
             # Ordinary exact aligned/zero-spin rows are nonsingular for the
-            # clean v223 chart and must use the same helper as their
-            # neighboring rows.  Only the physical L+S guard selects the
-            # established fallback; keeping this mask row-local avoids a
-            # singular row changing a valid neighbor's model.
-            legacy_rows = guard_unsupported
+            # clean v223 chart. Conventions 0/1 keep the L+S reference guard
+            # row-local; convention 6 retains its legacy guard for the whole
+            # request when either reference or evaluated frequency is opposed.
+            legacy_rows = (
+                guard_unsupported | legacy_azimuth_rows
+                if clean_candidate else exact_aligned
+            )
         else:
             legacy_rows = exact_aligned
         if clean_candidate and legacy_rows.dim() > 0 and bool(torch.any(legacy_rows)):
@@ -275,18 +298,30 @@ class IMRPhenomXP(nn.Module):
                 spin2z=s2z,
                 distance=dist,
                 inclination=inc,
-                phic=phi_c,
+                phic=phi_c - phi_0,
                 tc=t_c,
                 f_ref=fref_eval,
-                convention=convention,
+                convention=1 if convention == 6 else convention,
                 final_spin_mod=3,
                 xas_model=opaque_xas_carrier,
+                boundary="physical",
+                carrier_f_ref=fref,
             )
             # The clean helper flattens its frequency input internally.  The
             # public XP adapter retains the caller's frequency shape, with
             # broadcast source axes preceding it (including scalar grids).
             target_shape = tuple(m1.shape) + tuple(clean_freqs.shape)
-            return clean_hp.reshape(target_shape), clean_hc.reshape(target_shape)
+            clean_hp = clean_hp.reshape(target_shape)
+            clean_hc = clean_hc.reshape(target_shape)
+            if convention == 6:
+                # Table IV changes the quadrupole carrier by phic. Applied
+                # after the complete clean projection, this is the v223
+                # convention-6 output-basis compatibility phase.
+                phase = torch.exp(2j * phi_c).reshape(
+                    tuple(m1.shape) + (1,) * clean_freqs.ndim
+                )
+                return phase * clean_hp, phase * clean_hc
+            return clean_hp, clean_hc
 
         # Canonical body ordering: primary mass m1 >= m2
         swap_mask = m1 < m2

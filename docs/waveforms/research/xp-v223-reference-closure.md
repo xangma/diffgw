@@ -1,0 +1,160 @@
+# XP v223 reference closure
+
+[Pratten et al., Appendix C Eq. (79b)](https://arxiv.org/html/2004.06503v2)
+sets the initial Euler opening angle equal to the geometric angle between
+\(J\) and \(L_0\). The strict equation-level reference-rotation check in
+`tests/test_clean_room_precession_equations.py` retains that identity for the
+published 101/102 prescriptions.
+
+The explicit `waveform_v223(..., boundary="v223")` diagnostic follows a
+public-LAL compatibility path. Its MSA opening angle uses the nonconserved-spin \(259/72\) coefficient
+printed in [Blanchet, Buonanno and Faye, Eq. (6.9)](https://arxiv.org/pdf/gr-qc/0605140v4).
+Pratten's [Appendix G Eq. (123g)](https://arxiv.org/html/2004.06503v2)
+instead prints \(427/72\) in a different conserved-spin orbital-momentum
+series. The \(259/75\) coefficient used for v223 source-frame geometry is a
+compatibility value inferred from the public implementation; it is not stated
+by either paper. These expressions must not be conflated as one published
+equation.
+
+For the test binary \((m_1,m_2)=(40,20)\,M_\odot\),
+\(\boldsymbol\chi_1=(0.3,0.2,0.4)\),
+\(\boldsymbol\chi_2=(0,0,-0.2)\), \(f_\mathrm{ref}=40\) Hz,
+\(\iota=0.7\), and \(\phi_\mathrm{ref}=0.3\), public LAL XP/XAS has a
+reference-frequency complex strain ratio differing from unity by
+\(1.4757043\times10^{-6}\) in plus and \(1.9991717\times10^{-6}\) in cross.
+The explicit v223 Torch helper reproduces the public ratio to about \(3\times10^{-15}\).
+At the reference frequency, its XAS carrier with the same v223 MSA remnant
+override used by the clean XP composition agrees with the ordinary XAS
+carrier and public LAL XAS to within \(2\times10^{-12}\); remnant choice does
+not explain the ratio.
+`tests/test_xp_aligned_boundary_clean.py` compares the two complex ratios
+directly, with absolute tolerance \(2\times10^{-12}\), while the independent
+equation-level rotation check remains strict. This distinguishes the
+published frame identity from the v223 compatibility behavior without
+silently broadening the former's tolerance.
+
+## Physical zero-nutation continuation (2026-09-24)
+
+The public Torch XP v223 route now selects a continuous opening angle when at
+least one spin has zero transverse components. For
+\(\mathbf S=(m_1/M)^2\boldsymbol\chi_1+(m_2/M)^2\boldsymbol\chi_2\),
+\(S_\parallel=\mathbf S\cdot\hat{\mathbf L}\), and
+\(S_\perp=|\mathbf S-S_\parallel\hat{\mathbf L}|\), it evaluates
+\(\cos\beta=(L_\beta+S_\parallel)/
+\sqrt{(L_\beta+S_\parallel)^2+S_\perp^2}\).
+This is [Pratten et al., Eq. (17)](https://arxiv.org/html/2004.06503v2)
+with the native nonconserved-spin 3PN \(L_\beta\); its strict aligned limit
+is \(\beta=0\) if \(L_\beta+S_\parallel>0\), or \(\pi\) if the sum is
+negative. At vanishing total \(J\), the geometric opening angle is undefined.
+The v223 auxiliary-root separation is retained for its compatibility
+diagnostic but is not inserted into this physical transverse spin.
+
+The independent [scalar reference](https://github.com/xangma/diffgw/blob/main/src/diffgw_reference/xp_msa_regularized_beta.py)
+specializes the [Chatziioannou et al. MSA invariants, Eqs. (41), (45),
+and (171)](https://arxiv.org/abs/1703.03967v3) to the constant-spin,
+one-spin-aligned branch. With \(L_0=\eta/v_\mathrm{ref}\), it obtains
+\(S_\mathrm{av}=|\mathbf S|^2\) and \(c_1=\eta S_\parallel\), then evaluates
+\(\beta=\operatorname{atan2}(S_\perp,L_\beta+S_\parallel)\) without
+small-angle cancellation. The caller supplies \(L_\beta\), so the reference
+does not silently equate Newtonian and 3PN orbital angular momentum. The
+[nonpublic JAX kernel](https://github.com/xangma/diffgw/blob/main/src/jaxwave/approximants/precession_msa_physical_beta.py)
+implements these invariants separately; its frequency-grid convenience
+adapter explicitly uses Newtonian \(L=\eta/v\). The
+[scalar tests](https://github.com/xangma/diffgw/blob/main/tests/test_xp_msa_regularized_beta_reference.py) and
+[JAX tests](https://github.com/xangma/diffgw/blob/main/tests/test_jax_msa_physical_beta.py) check exact and tiny
+transverse spins, reversed \(J\), zero-\(J\) handling, JIT, batching, and
+selected derivatives. They establish this opening-angle component, not a
+whole-waveform JAX implementation or physical validation.
+
+The [Torch XP adapter](https://github.com/xangma/diffgw/blob/main/src/torchwave/approximants/imrphenom_xp.py)
+uses `boundary="physical"` for its supported v223/convention 0, 1, or 6,
+`final_spin_mod=3` clean route. It passes the Appendix C observer azimuth as
+`phic-phi0`; convention 6 applies its output phase after projection.
+Generic two-spin inputs at nonzero `phi0` still use the inherited rotation:
+their clean angle transport is not yet validated for that azimuth. The public
+JAX XP dispatcher also remains on its inherited route. Opposed-\(J\) rows
+retain the existing guard. Thus the physical limit is a scoped Torch XP
+behavior, not a claim of complete Torch/JAX or LAL parity.
+
+The same endpoint must also satisfy the minimal-rotation relation
+\(d\gamma=-\cos\beta\,d\alpha\) in
+[Pratten et al., Eq. (7)](https://arxiv.org/html/2004.06503v2). At
+\(\beta=0\), \(\alpha+\gamma\) is constant. The auxiliary-root v223 angles
+instead accumulate a nonzero aligned \(\alpha+\gamma\) drift. The public
+physical route removes the aligned same-series drift, anchored at the angle
+reference frequency, and makes its final spin tend to the XAS aligned fit.
+The [scalar reference](https://github.com/xangma/diffgw/blob/main/src/diffgw_reference/xp_msa_regularized_beta.py)
+specifies the exact Eq. (7) endpoint, while the
+[Torch test](https://github.com/xangma/diffgw/blob/main/tests/test_xp_physical_beta_torch.py)
+checks the production angles against it. The XAS carrier preserves an omitted
+`f_ref` as `None`; the angle kernel still uses its 20 Hz default.
+
+To continue this correction into small one-spin transverse values, its weight
+is \(\Delta/(\Delta+T)\), where \(\Delta=10^{-9}\) is the existing v223
+auxiliary \(S^2\) root gap and
+\(T=\sum_i(m_i/M)^4(\chi_{ix}^2+\chi_{iy}^2)\). This is a numerical
+regularization of the auxiliary-root artifact, not an independent published
+waveform equation. It approaches one at alignment and zero as the physical
+transverse spin resolves the root gap. In the \((36,22)M_\odot\),
+\((\chi_{1z},\chi_{2z})=(0.35,-0.25)\) test, exact XP/XAS complex-strain
+maximum relative differences are below \(5\times10^{-15}\) for omitted,
+20 Hz, and 40 Hz `f_ref`. The one-spin \(\chi_{1x}=10^{-8}\) and
+\(10^{-10}\) relative L2 differences from exact alignment are about
+\(2.1\times10^{-9}\) and \(2.7\times10^{-11}\), respectively. A finite
+one-spin \(\chi_{1x}=0.3\) retains a \(1.13\times10^{-8}\) L2 difference
+from the pinned LAL diagnostic.
+
+In the [aligned convention-6 test](https://github.com/xangma/diffgw/blob/main/tests/test_xp_aligned_boundary_clean.py),
+the explicit v223 helper retains its strict same-option LAL gate, while the
+public physical route differs from the pinned v223 LAL output by about
+\(0.117826\) relative complex-polarization L2 for that fixture. This is the
+intentional consequence of enforcing the paper's aligned minimal-rotation
+identity; the legacy binary oracle has a nonzero aligned angle drift. The
+older reference-frequency XP/XAS ratio above remains evidence for the
+explicit binary-compatibility helper, not a paper-derived prediction for the
+physical boundary.
+
+This endpoint correction covers zero-nutation rows with at least one exactly
+aligned spin. It does not establish a generic two-spin near-aligned limit.
+[Chatziioannou et al., Eqs. (21)--(25) and Appendix B](https://arxiv.org/pdf/1703.03967v3)
+derive the cubic in \(S^2\), distinguish the two physical turning roots from
+the third algebraic root, and order the roots in the elliptic solution.
+Their [Appendix E](https://arxiv.org/pdf/1703.03967v3) explains that a PN
+expansion can become ill-behaved near spin-orbit alignment even when the
+underlying precession frequency is finite, and suggests a small-misalignment
+expansion as a possible improvement. Thus a generic small-spin fix requires
+more than forcing the aligned waveform when the cubic roots nearly coincide.
+
+The \((36,22)M_\odot\), \((\chi_{1z},\chi_{2z})=(0.35,-0.25)\) fixture is also
+an **up-down** system. [Gerosa et al.](https://arxiv.org/abs/1506.09116)
+give its physical instability band as
+\(r_{\mathrm{ud}\pm}/M=(\sqrt{\chi_1}\pm\sqrt{q\chi_2})^4/(1-q)^2\),
+with \(q=m_2/m_1\). The upper edge is \(r/M=6.16079\), or approximately
+\(72.865\) Hz using the Newtonian relation
+\(r/M=(\pi M f_{22})^{-2/3}\). This estimate is a physical context, not an
+XP numerical validity cutoff. On `len`, the generic two-spin
+\((\chi_{1x},\chi_{2x})=(10^{-10},-5\times10^{-11})\) waveform differs from
+the exact-aligned waveform by about 0.0245 relative L2 over 25--55 Hz,
+entirely before that edge. The pre-band discrepancy shows a phase/chart
+conditioning problem independently of the physical instability; shrinking
+the transverse spins to \(10^{-11}\) does not remove it. Even for both spins
+aligned with the orbit, a generic two-spin row has a nonvanishing small-spin
+waveform difference over 25--60 Hz, so this is not solely an up-down effect.
+As a narrower stable control, with both aligned spin components positive the
+two-spin waveform at its 40 Hz reference point approaches its aligned value:
+the relative difference is \(2.36\times10^{-11}\) at transverse scale
+\(10^{-10}\) and ten times smaller at \(10^{-11}\). Anchoring the phase at
+one frequency does not establish broadband continuity.
+
+Across 25--300 Hz the up-down difference rises to about 0.13. An independent
+90-digit evaluation of the published cubic for this fixture finds two roots
+near \(S^2=0.00977535\) separated by about \(6.89\times10^{-21}\) at
+\(\chi_{1x}=10^{-10}\), \(f_{22}=40\) Hz; they are the upper pair there. At
+300 Hz the near-coincident pair is the lower pair and the third root is
+approximately 0.0282781. This ordering change is inside the predicted
+up-down instability region; physical growth of a perturbation and numerical
+root/angle-chart effects cannot be separated by an XP/XAS comparison alone.
+The two strict expected-failure cases in
+`test_xp_two_spin_near_aligned_continuity_pending` record both frequency
+regimes. They are not evidence of a generic continuity theorem or a sourced
+root-branch repair.

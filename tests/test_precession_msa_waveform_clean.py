@@ -19,7 +19,7 @@ from torchwave.approximants.precession_twisting_clean import (
 
 
 class _AnalyticCarrier:
-    """Small carrier double that records the composition boundary inputs."""
+    """Batch-capable carrier double that records composition boundary inputs."""
 
     def __init__(self):
         self.calls = []
@@ -30,6 +30,10 @@ class _AnalyticCarrier:
         a_fin = kwargs["_final_spin_override"]
         scale = 1.0 + 0.07 * a_fin
         carrier_phase = torch.exp(1j * 0.31 * kwargs["phi_c"])
+        if scale.ndim:
+            scale = scale.unsqueeze(-1)
+        if carrier_phase.ndim:
+            carrier_phase = carrier_phase.unsqueeze(-1)
         hp = carrier_phase * scale * (1.0 + 0.2j) * torch.pow(f, -0.5)
         return hp, torch.zeros_like(hp)
 
@@ -220,7 +224,22 @@ def test_composition_and_native_wrapper_broadcast_parameter_rows():
         torch.tensor([0.7, 0.65]), xas_model=carrier,
     )
     assert hp.shape == (2, 3) and hc.shape == (2, 3)
-    assert len(carrier.calls) == 2
+    assert len(carrier.calls) == 1
+    assert carrier.calls[0]["_final_spin_override"].shape == (2,)
+    assert carrier.calls[0]["f"].shape == f.shape
+    for row, (m1, m2, chi1, chi2, theta, final_spin) in enumerate((
+        (35.0, 25.0, 0.2, -0.1, 0.6, 0.7),
+        (45.0, 15.0, 0.3, 0.2, 0.7, 0.65),
+    )):
+        # Match the original float32 fixture inputs before broadcasting to f.
+        row_hp, row_hc = compose_msa_waveform(
+            f, *(torch.tensor(value) for value in (m1, m2, chi1, chi2)),
+            {"alpha": torch.tensor([0.1, 0.2, 0.3]), "beta": 0.2, "gamma": 0.0},
+            {"alpha0": 0.4, "theta_jn": torch.tensor(theta), "zeta": 0.5, "phi_j": 0.2},
+            torch.tensor(final_spin), xas_model=_AnalyticCarrier(),
+        )
+        torch.testing.assert_close(hp[row], row_hp, rtol=1e-12, atol=1e-12)
+        torch.testing.assert_close(hc[row], row_hc, rtol=1e-12, atol=1e-12)
 
     native = waveform(
         f, 35.0, 25.0, 0.2, 0.1, 0.2, -0.1, 0.15, -0.1,
@@ -255,7 +274,17 @@ def test_angle_frequency_rows_broadcast_against_scalar_physical_parameters():
         xas_model=carrier, angles_are_absolute=True,
     )
     assert hp.shape == (2, f.numel()) and hc.shape == (2, f.numel())
-    assert len(carrier.calls) == 2
+    assert len(carrier.calls) == 1
+    assert carrier.calls[0]["_final_spin_override"].shape == (2,)
+    for row in range(2):
+        row_hp, row_hc = compose_msa_waveform(
+            f, 35.0, 25.0, 0.2, -0.1,
+            {name: value[row] for name, value in angles.items()},
+            (0.4, 0.65, 0.7, 0.25), 0.71,
+            xas_model=_AnalyticCarrier(), angles_are_absolute=True,
+        )
+        torch.testing.assert_close(hp[row], row_hp, rtol=1e-12, atol=1e-12)
+        torch.testing.assert_close(hc[row], row_hc, rtol=1e-12, atol=1e-12)
     assert torch.isfinite(hp).all() and torch.isfinite(hc).all()
 
 
@@ -282,7 +311,7 @@ def test_published_rotation_identities_hold_independently_of_composition():
 
 @pytest.mark.parametrize("convention", (0, 1))
 def test_source_phase_transport_matches_current_geometry_for_both_conventions(convention):
-    """Appendix C transport preserves the Eq. (45) waveform at nonzero phiRef."""
+    """Appendix C transport preserves the quadrupole waveform at nonzero phiRef."""
     f = torch.tensor([20.0, 40.0, 100.0], dtype=torch.float64)
     angles = {
         "alpha": torch.tensor([0.1, 0.2, 0.3], dtype=torch.float64),

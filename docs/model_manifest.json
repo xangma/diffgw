@@ -374,14 +374,14 @@
       "modes": [
         "(2,2) coprecessing"
       ],
-      "frame_convention": "Default MSA version 223, convention 1, final_spin_mod=3; supported phi0=0 requests use the clean MSA helper. Legacy geometry remains for nonzero phi0; unsupported guard rows use explicit fallback.",
+      "frame_convention": "Default MSA version 223, convention 1, final_spin_mod=3; supported convention-0/1/6 requests use the clean MSA route. One-spin-aligned rows use the continuous physical opening, including nonzero phi0. Generic two-spin nonzero-phi0 rows retain the inherited rotation, and unsupported guard rows use explicit fallback. Convention 6 applies its quadrupole output phase to clean convention-1 strain.",
       "status": "verified_declared_cases",
-      "notes": "Frozen checkpoint-3 public catalog and holdout rows pass for the clean supported path (maximum polarization complex relative L2 7.36e-14 catalog and 3.52e-14 holdout; detector projection errors are 3.02e-7 and 3.40e-7). The production default is MSA version 223 with convention=1 and final_spin_mod=3; supported phi0=0 requests use the clean helper. This is frozen-case evidence, not a parameter-domain certificate: convention-1 exact-aligned and zero-spin probes remain ~3e-5, tiny in-plane probes ~0.0073, unsupported guard rows use explicit fallback, and nonzero phi0 retains legacy geometry.",
+      "notes": "Frozen checkpoint-3 public catalog and holdout generic rows pass for convention 1 (maximum polarization complex relative L2 7.36e-14 catalog and 3.52e-14 holdout; detector projection errors are 3.02e-7 and 3.40e-7). The production default is MSA version 223 with convention=1 and final_spin_mod=3; convention 6 applies the sourced quadrupole output phase after projection. The physical zero-nutation opening is a later scoped change: explicit v223 diagnostics preserve the strict LAL gate, while the public aligned convention-6 fixture differs by 1e-5 to 5e-5 complex relative L2. Historical tiny-spin and exact-aligned measurements in earlier artifacts describe their recorded implementation, not a newly qualified parameter domain. Unsupported guard rows use explicit fallback, and generic two-spin nonzero phi0 retains inherited geometry.",
       "primary_references": [
         {
           "citation": "Pratten et al. (2021), Phys. Rev. D 103, 104056",
           "doi": "10.1103/PhysRevD.103.104056",
-          "equations": "Appendix B, Eqs. (B1)-(B2)"
+          "equations": "Appendix B, Eqs. (B1)-(B2); Appendix C, Eqs. (67), (79), (81); Appendix F, Table IV"
         }
       ],
       "validation": {
@@ -410,8 +410,8 @@
           ]
         }
       },
-      "precession_domain": "The clean MSA v223 helper supports declared phi0=0 requests with convention=1 and final_spin_mod=3. Unsupported guard rows use explicit fallback; nonzero phi0 retains legacy geometry. Passing frozen rows do not certify the full precession parameter domain.",
-      "convention_evidence": "docs/provenance_ledger.md (Section 2.4)"
+      "precession_domain": "The clean MSA v223 helper supports declared convention-0/1 requests with final_spin_mod=3; its explicit binary-compatibility opening remains available. Public Torch XP selects a physical zero-nutation opening for one-spin-aligned rows, including nonzero phi0. Generic two-spin nonzero-phi0 rows and unsupported guard rows use inherited behavior. The XP convention-6 quadrupole output uses a phase adapter to clean convention 1 on the same tuple. Passing frozen rows do not certify the full precession parameter domain or public JAX parity for the new physical branch.",
+      "convention_evidence": "docs/provenance_ledger.md (Sections 2.4 and 2.4a)"
     },
     "IMRPhenomHM": {
       "name": "IMRPhenomHM",

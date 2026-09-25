@@ -11,6 +11,7 @@ from torchwave.approximants.imrphenom_xphm import IMRPhenomXPHM
 from torchwave.approximants.precession_msa import (
     compute_l_3pn, evaluate_msa_dynamics, evaluate_msa_precession,
 )
+from torchwave.approximants.precession_beta_clean import cos_beta
 from torchwave.constants import MSUN_SEC
 
 DTYPE = torch.float64
@@ -122,12 +123,97 @@ def test_wrappers_apply_table_iv_phase_to_each_mode(mode):
              spin2x=-.2,spin2y=.1,spin2z=-.2,inclination=.7,phic=.3,f_ref=40.)
     default = model(f,**p,convention=1)
     phi_j = torch.atan2(t(4*.2+.1),t(4*.3-.2))
-    # Table IV changes epsilon's constant and/or the carrier's m*phiRef.
-    for convention, phase in [(0,order*(2*phi_j-math.pi)),(6,t(order*.3))]:
+    # XP's convention-0 and convention-1 full strains differ by a constant
+    # sign at this generic point.  Appendix C Eq. (79) rotates alpha and
+    # gamma with the Table-IV carrier, and Eq. (81) fixes the output basis.
+    # The aligned-boundary suite also checks both strains against public XP.
+    phase_zero = t(math.pi) if mode is None else order*(2*phi_j-math.pi)
+    for convention, phase in [(0,phase_zero),(6,t(order*.3))]:
         for h,h0 in zip(model(f,**p,convention=convention),default):
             torch.testing.assert_close(h,torch.exp(1j*phase)*h0,atol=1e-34,rtol=2e-11)
     for h5,h7 in zip(model(f,**p,convention=5),model(f,**p,convention=7)):
         torch.testing.assert_close(h5,h7,atol=1e-34,rtol=2e-11)
+
+
+def test_xp_v223_convention6_batched_phase_and_gradient():
+    model = IMRPhenomXP()
+    f = t([25.,40.,80.])
+    phi = t([-.4,.3]).requires_grad_()
+    p = dict(mass1=40.,mass2=20.,spin1x=.3,spin1y=.2,spin1z=.4,
+             spin2x=-.2,spin2y=.1,spin2z=-.2,inclination=.7,f_ref=40.,
+             convention=6)
+    batch = model(f,phic=phi,**p)
+    for row in range(2):
+        scalar = model(f,phic=phi[row],**p)
+        for actual,expected in zip(batch,scalar):
+            torch.testing.assert_close(actual[row],expected,atol=1e-34,rtol=2e-11)
+
+    def loss(angle):
+        hp,hc = model(f,phic=angle,**p)
+        return 1e22*(hp.real+.3*hc.imag).sum()
+
+    gradient = torch.autograd.grad(loss(phi),phi)[0]
+    for row in range(2):
+        shift = torch.zeros_like(phi)
+        shift[row] = 1e-5
+        finite_diff = (loss(phi.detach()+shift)-loss(phi.detach()-shift))/2e-5
+        torch.testing.assert_close(gradient[row],finite_diff,atol=2e-8,rtol=2e-7)
+
+
+@pytest.mark.parametrize("f_ref,spin1z",((40.,-.95),(25.,-.18)))
+@pytest.mark.parametrize("spin1x",(0.,1e-9))
+def test_xp_v223_convention6_keeps_opposed_j_guard(f_ref,spin1z,spin1x):
+    # For the second row L+S_parallel is positive at f_ref=25 Hz but
+    # negative at an evaluated frequency (40 Hz). The first is already
+    # opposed at f_ref. Convention 6 has no aligned-carrier exemption.
+    f = t([25.,40.,80.])
+    with pytest.raises(ValueError,match='L \\+ S_parallel <= 0'):
+        IMRPhenomXP()(f,mass1=100.,mass2=5.,spin1x=spin1x,spin1z=spin1z,
+                      inclination=.7,phic=.3,f_ref=f_ref,convention=6)
+
+
+def test_xp_v223_convention6_mixed_opposed_j_batch_keeps_legacy_exception():
+    f = t([25.,40.,80.])
+    p = dict(mass1=t([40.,100.]),mass2=t([20.,5.]),spin1x=t([.3,0.]),
+             spin1z=t([.4,-.95]),spin2z=-.2,inclination=.7,phic=.3,
+             f_ref=40.,convention=6)
+    model = IMRPhenomXP()
+    with pytest.raises(ValueError,match='L \\+ S_parallel <= 0') as current:
+        model(f,**p)
+    with pytest.raises(ValueError,match='L \\+ S_parallel <= 0') as legacy:
+        model(f,**p,_force_legacy=True)
+    assert str(current.value) == str(legacy.value)
+
+
+@pytest.mark.parametrize("options",(
+    {"phi0": .4},
+    {"prec_version": 102},
+    {"final_spin_mod": 0},
+))
+def test_xp_convention6_other_tuples_keep_legacy_route(options):
+    model = IMRPhenomXP()
+    f = t([25.,40.,80.])
+    p = dict(mass1=40.,mass2=20.,spin1x=.3,spin1y=.2,spin1z=.4,
+             spin2x=-.2,spin2y=.1,spin2z=-.2,inclination=.7,phic=.3,
+             f_ref=40.,convention=6,**options)
+    current = model(f,**p)
+    legacy = model(f,**p,_force_legacy=True)
+    for actual,expected in zip(current,legacy):
+        torch.testing.assert_close(actual,expected,atol=1e-34,rtol=2e-11)
+
+
+def test_xp_convention6_mixed_azimuth_rows_match_scalar_routes():
+    model = IMRPhenomXP()
+    f = t([25., 40., 80.])
+    phi0 = t([0., .4])
+    p = dict(mass1=40., mass2=20., spin1x=.3, spin1y=.2, spin1z=.4,
+             spin2x=-.2, spin2y=.1, spin2z=-.2, inclination=.7, phic=.3,
+             f_ref=40., convention=6)
+    batch = model(f, **p, phi0=phi0)
+    for row in range(2):
+        scalar = model(f, **p, phi0=phi0[row])
+        for actual, expected in zip(batch, scalar):
+            torch.testing.assert_close(actual[row], expected, atol=0., rtol=0.)
 
 
 @pytest.mark.parametrize('convention',[0,1,5,6,7])
@@ -155,26 +241,40 @@ def test_batched_source_azimuth_and_gradient_match_scalar_calls(convention):
 
 
 @pytest.mark.parametrize('mode',[None,(2,1),(3,3)])
-def test_aligned_table_limits_and_default_continuity(mode):
+def test_aligned_table_limits_and_endpoint_contracts(mode):
     model = IMRPhenomXP() if mode is None else IMRPhenomXPHM(modes=[mode])
     f = t([25.,40.,80.])
     p = dict(mass1=40.,mass2=20.,spin1z=.4,spin2z=-.2,inclination=.7,phic=.3,f_ref=40.)
     default = model(f,**p)
-    # The C16 anchored default is continuous from every spin azimuth.
+    # Public XP now uses the physical zero-nutation opening here. Its explicit
+    # v223 compatibility helper retains the finite jump and is tested
+    # separately. XPHM retains its existing strict continuity contract.
     for azimuth in [-2.,.4,2.1]:
         near = model(f,**p,spin1x=1e-9*math.cos(azimuth),spin1y=1e-9*math.sin(azimuth))
         for h,h0 in zip(near,default):
-            assert torch.linalg.vector_norm(h-h0)/torch.linalg.vector_norm(h0) < 2e-8
+            relative = torch.linalg.vector_norm(h-h0)/torch.linalg.vector_norm(h0)
+            assert relative < 2e-8
     for convention in [0,5,6,7]:
         exact = model(f,**p,convention=convention)
         # The declared zero-spin azimuth is phi_JL=0. Approach that gauge.
         near = model(f,**p,spin1x=1e-9,convention=convention)
         for h,h0 in zip(near,exact):
             assert torch.isfinite(h0).all()
-            assert torch.linalg.vector_norm(h-h0)/torch.linalg.vector_norm(h0) < 2e-8
+            relative = torch.linalg.vector_norm(h-h0)/torch.linalg.vector_norm(h0)
+            assert relative < 2e-8
     order = 2 if mode is None else mode[1]
     for h,h0 in zip(model(f,**p,convention=6),default):
         torch.testing.assert_close(h,torch.exp(1j*t(order*.3))*h0,atol=1e-34,rtol=2e-11)
+
+
+def test_paper_beta_has_strict_aligned_limit():
+    """Pratten et al. Eq. (17): no transverse spin gives cos(beta)=1."""
+    f = t([25.,40.,80.])
+    aligned = cos_beta(40.,20.,f,0.,0.,.4,0.,0.,-.2)
+    torch.testing.assert_close(aligned,torch.ones_like(aligned),atol=0.,rtol=0.)
+    near = cos_beta(40.,20.,f,1e-3,0.,.4,0.,0.,-.2)
+    assert torch.all(near < aligned)
+    assert torch.all((aligned-near) < 1e-6)
 
 
 @pytest.mark.parametrize('model',[IMRPhenomXP,IMRPhenomXPHM])

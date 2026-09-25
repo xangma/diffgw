@@ -27,8 +27,9 @@ normalization for the carrier's Kerr input together with the separate
 ``l_fin_normalization='initial'`` mode.  The explicit native v223 wrapper
 uses total normalization for the carrier's Kerr input and the same
 initial-total-M² ``L_fin`` compatibility mode.  The named
-``finalspin_3`` helper defaults to the printed paper denominator.  No fitted
-correction is applied to bridge the two conventions.
+``finalspin_3`` helper defaults to the printed paper denominator.  The
+physical zero-nutation endpoint separately removes the auxiliary-root
+residual so its final spin tends to the aligned XAS fit.
 
 The optional ``initial_s1_l`` and ``initial_s2_l`` arguments are an explicit
 compatibility path for the reference MSA final-spin assembly.  When supplied,
@@ -52,14 +53,17 @@ from torchwave.constants import MSUN_SEC
 from .imrphenom_xas import IMRPhenomXAS, XASParameterFits
 from .precession_msa_angles_clean import (
     assemble_precession_msa_angles, _compatibility_variant,
+    V223_AUXILIARY_ROOT_GAP,
 )
 from .precession_msa_pn_clean import precession_averages
+from .precession_msa_reference_l_clean import orbital_angular_momentum_nonconserved_3pn
 from .precession_source_frame_clean import source_frame_geometry
 from .precession_twisting_clean import project_twisted_positive_modes
 
 
 _DTYPE = torch.float64
 _SQRT_H22 = math.sqrt(5.0 / (4.0 * math.pi))
+_UNSET = object()
 
 
 def _device_of(values):
@@ -96,6 +100,30 @@ def _stable_acos(value):
     endpoint_value = torch.where(value < 0.0, torch.full_like(value, math.pi),
                                  torch.zeros_like(value))
     return torch.where(endpoint, endpoint_value, raw)
+
+
+def physical_zero_nutation_cos_beta(frequency, mass1, mass2, spin1, spin2):
+    """Opening angle from the unsplit spin vector (Pratten et al., Eq. 17).
+
+    The v223 MSA auxiliary root separation is needed in singular integrals,
+    but is not a physical transverse spin.  On a zero-nutation branch the
+    spin vector is constant, so Eq. (25) reduces to Eq. (17) with the same
+    3PN orbital angular momentum used by the MSA opening angle.  In
+    particular, its aligned limit is exactly zero for ``L+S_parallel>0``.
+    """
+    f = _as_f64(frequency)
+    m1, m2, s1, s2 = mass1, mass2, spin1, spin2
+    total = m1 + m2
+    n1, n2 = m1 / total, m2 / total
+    spin = n1[..., None].square() * s1 + n2[..., None].square() * s2
+    s_parallel = spin[..., 2, None]
+    s_perp = torch.linalg.vector_norm(spin[..., :2], dim=-1)[..., None]
+    l_orb = orbital_angular_momentum_nonconserved_3pn(
+        m1[..., None], m2[..., None], f,
+        s1[..., 2, None], s2[..., 2, None],
+    )
+    parallel = l_orb + s_parallel
+    return parallel / torch.hypot(parallel, s_perp)
 
 
 def _normalization_factor(normalization: str, remnant_mass_fraction: torch.Tensor):
@@ -369,7 +397,7 @@ def transport_msa_angles_for_phi_ref(
 
     The theta and polarization-basis coordinates are taken from the current
     geometry.  Phase deltas use the principal representative through
-    ``atan2(sin(delta), cos(delta))``; this changes no Eq. (45) rotation and
+    ``atan2(sin(delta), cos(delta))``; this changes no Wigner-D rotation and
     avoids an artificial discontinuity at a branch cut.  No public angle or
     geometry provider is consulted here.
 
@@ -491,6 +519,7 @@ def compose_msa_waveform(
     angle_order: str = "alpha_beta_gamma",
     angles_are_absolute: bool = False,
     xas_model=None,
+    carrier_f_ref=_UNSET,
 ):
     """Compose an XP waveform from supplied MSA angles and geometry.
 
@@ -504,11 +533,11 @@ def compose_msa_waveform(
     carrier phase and leaves the source-frame polarization basis unchanged;
     convention 1 adds ``pi-phi_j`` to relative ``gamma``, shifts that basis by
     ``-pi/2``, and uses carrier phase zero, following the validated generic
-    Eq. (45) assembly and Table IV of arXiv:2004.06503.
+    Eqs. (11)--(13) assembly and Table IV of arXiv:2004.06503.
 
     The opaque carrier is called only at inclination zero with
     ``_final_spin_override=final_spin``.  Its positive-frequency ``h22`` is
-    reconstructed from ``h_plus`` and passed to the fresh Eq. (45) projector.
+    reconstructed from ``h_plus`` and passed to the fresh quadrupole projector.
     Output tensors have parameter axes preceding the final frequency axis.
     """
     if int(convention) not in (0, 1):
@@ -547,6 +576,15 @@ def compose_msa_waveform(
     if batch_shape != physical_batch_shape:
         params = tuple(value.expand(batch_shape) for value in params)
     m1, m2, c1, c2, dist, tc_t, fr, fs, a0, theta, zeta_t, phi = params
+    # The MSA angles always need a reference frequency, while the XAS
+    # carrier's omitted reference has distinct phase semantics.  Preserve
+    # that omission when a public XP caller did not supply f_ref.
+    carrier_ref = fr if carrier_f_ref is _UNSET else carrier_f_ref
+    if carrier_ref is not None:
+        carrier_ref = _as_f64(carrier_ref, device=f.device).expand(batch_shape)
+        _require_finite("carrier_f_ref", carrier_ref)
+        if bool(torch.any(carrier_ref <= 0.0)):
+            raise ValueError("carrier_f_ref must be positive")
     for name, value in (("mass1", m1), ("mass2", m2), ("chi1", c1), ("chi2", c2),
                         ("distance", dist), ("tc", tc_t), ("f_ref", fr),
                         ("final_spin", fs), ("alpha0", a0), ("theta_jn", theta),
@@ -578,7 +616,7 @@ def compose_msa_waveform(
         carrier_phase = torch.zeros_like(phi)
     else:
         # ``source_frame_geometry`` returns the azimuth of J's transverse
-        # projection.  The generic clean-room Eq. (45) assembly uses the
+        # projection.  The generic clean-room Eqs. (11)--(13) assembly uses the
         # opposite carrier phase and the geometry's polarization basis as
         # returned.  Keep this choice shared by relative and absolute angle
         # injection so a supplied public angle triplet changes only the
@@ -607,7 +645,7 @@ def compose_msa_waveform(
                 inclination=torch.zeros(batch_shape, dtype=_DTYPE, device=f.device),
                 phi_c=geom_rows[2].reshape(batch_shape),
                 t_c=flat[5].reshape(batch_shape),
-                f_ref=flat[6].reshape(batch_shape),
+                f_ref=carrier_ref,
                 _final_spin_override=flat[7].reshape(batch_shape),
             )
             if isinstance(h_carrier, (tuple, list)) and len(h_carrier) >= 1:
@@ -642,7 +680,7 @@ def compose_msa_waveform(
             inclination=torch.zeros((), dtype=_DTYPE, device=f.device),
             phi_c=geom_rows[2][index],
             t_c=flat[5][index],
-            f_ref=flat[6][index],
+            f_ref=None if carrier_ref is None else carrier_ref.reshape(-1)[index],
             _final_spin_override=flat[7][index],
         )
         if not isinstance(h_carrier, (tuple, list)) or len(h_carrier) < 1:
@@ -775,6 +813,8 @@ def waveform(
     v223: bool = False,
     xas_model=None,
     final_spin_override=None,
+    boundary: str = "v223",
+    carrier_f_ref=_UNSET,
 ):
     """Native MSA composition with an explicit clean beta choice.
 
@@ -805,6 +845,10 @@ def waveform(
         compatibility=compatibility, variant=variant,
         version=version, v223=v223,
     )
+    if boundary not in ("v223", "physical"):
+        raise ValueError("boundary must be 'v223' or 'physical'")
+    if boundary == "physical" and selected != "v223":
+        raise ValueError("physical boundary requires the v223 MSA prescription")
     if int(final_spin_mod) != 3 and final_spin_override is None:
         raise ValueError("clean native MSA supports final_spin_mod=3 only unless final_spin_override is supplied")
     if int(convention) not in (0, 1):
@@ -841,7 +885,6 @@ def waveform(
     scalar_values = broadcast[8:]
     s1 = torch.stack(spin1_components, dim=-1)
     s2 = torch.stack(spin2_components, dim=-1)
-    batch_shape = m1.shape
     dist, inc, phi0, tc_t, fr = scalar_values
     for name, value in (("mass1", m1), ("mass2", m2), ("spin1", s1), ("spin2", s2),
                         ("distance", dist), ("inclination", inc), ("phic", phi0),
@@ -898,6 +941,63 @@ def waveform(
          "cos_beta": angle_values["cos_beta"]},
         geom_zero, geom, convention=convention, aligned=legacy_aligned,
     )
+    aligned_angles = None
+    endpoint_weight = None
+    if boundary == "physical":
+        # A separated auxiliary root has no physical spin amplitude.  Use
+        # the unsplit zero-nutation opening only where one spin is aligned.
+        # A nearly repeated auxiliary root alone does not prove constant S:
+        # it may also occur for a generic two-spin configuration. Keep its
+        # MSA Eq. (25) opening untouched.
+        zero_nutation = (
+            torch.all(s1[..., :2] == 0.0, dim=-1)
+            | torch.all(s2[..., :2] == 0.0, dim=-1)
+        )
+        physical_cos_beta = physical_zero_nutation_cos_beta(
+            f_safe, m1, m2, s1, s2,
+        )
+        transported_angles["cos_beta"] = torch.where(
+            zero_nutation[..., None], physical_cos_beta,
+            transported_angles["cos_beta"],
+        )
+        if bool(torch.any(zero_nutation)):
+            # Eq. (7) of Pratten et al. requires d(alpha+gamma)=0 when
+            # beta=0.  The auxiliary-root MSA series retains a finite
+            # aligned alpha+gamma drift despite the physical beta opening.
+            # Subtract that same-series aligned baseline, anchored at f_ref,
+            # so the correction has the required exact limit and approaches
+            # it continuously as transverse spin vanishes.
+            aligned_s1 = torch.stack((
+                torch.zeros_like(s1[..., 0]), torch.zeros_like(s1[..., 1]),
+                s1[..., 2],
+            ), dim=-1)
+            aligned_s2 = torch.stack((
+                torch.zeros_like(s2[..., 0]), torch.zeros_like(s2[..., 1]),
+                s2[..., 2],
+            ), dim=-1)
+            aligned_angles = assemble_precession_msa_angles(
+                f_safe, m1, m2, aligned_s1, aligned_s2, **angle_kwargs,
+            )
+            # The v223 split-root continuation is an auxiliary S² gap. Its
+            # effect should dominate only when that gap is comparable with
+            # the physical transverse spin squared, and vanish for resolved
+            # precession. The ratio gives a continuous endpoint correction
+            # without adding an independent empirical spin threshold.
+            total = m1 + m2
+            transverse_spin_sq = (
+                (m1 / total).pow(4) * s1[..., :2].square().sum(dim=-1)
+                + (m2 / total).pow(4) * s2[..., :2].square().sum(dim=-1)
+            )
+            endpoint_weight = (
+                V223_AUXILIARY_ROOT_GAP
+                / (V223_AUXILIARY_ROOT_GAP + transverse_spin_sq)
+            )
+            aligned_drift = aligned_angles["alpha"] + aligned_angles["gamma"]
+            transported_angles["gamma"] = torch.where(
+                zero_nutation[..., None],
+                transported_angles["gamma"] - endpoint_weight[..., None] * aligned_drift,
+                transported_angles["gamma"],
+            )
     if selected == "v223" and convention == 1 and torch.any(exact_transverse_zero):
         endpoint_phi_j = _as_f64(
             composition_geometry["phi_j"], device=f.device,
@@ -915,6 +1015,23 @@ def waveform(
             m1, m2, s1, s2, fr, angle_values,
             compatibility=selected,
         )
+        if aligned_angles is not None:
+            aligned_final, _ = _native_msa_final_spin(
+                m1, m2, aligned_s1, aligned_s2, fr, aligned_angles,
+                compatibility=selected,
+            )
+            eta = m1 * m2 / (m1 + m2).square()
+            aligned_fit = XASParameterFits.fit_final_spin(
+                eta, s1[..., 2], s2[..., 2],
+            )
+            # The carrier's aligned limit is its own calibrated final-spin
+            # fit; remove only the auxiliary-root residual at that limit.
+            endpoint_final = torch.where(
+                transverse_spin_sq == 0.0,
+                aligned_fit + (rfinal - aligned_final),
+                rfinal + endpoint_weight * (aligned_fit - aligned_final),
+            )
+            rfinal = torch.where(zero_nutation, endpoint_final, rfinal)
     else:
         rfinal = _as_f64(final_spin_override, device=f.device).expand(m1.shape)
 
@@ -923,6 +1040,7 @@ def waveform(
         transported_angles, composition_geometry, rfinal,
         distance=dist, tc=tc_t, f_ref=fr, convention=convention,
         angle_order="alpha_beta_gamma", angles_are_absolute=False, xas_model=xas_model,
+        carrier_f_ref=carrier_f_ref,
     )
     out_dtype = torch.complex64 if fi.dtype == torch.float32 else torch.complex128
     return hp.to(out_dtype), hc.to(out_dtype)

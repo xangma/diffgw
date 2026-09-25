@@ -1,4 +1,4 @@
-"""Opt-in clean NNLO/convention-0 Eq.45 XP waveform driver."""
+"""Opt-in clean NNLO/convention-0 XP waveform driver."""
 import math
 import torch
 from torchwave.constants import MSUN_SEC
