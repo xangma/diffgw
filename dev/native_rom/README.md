@@ -2159,6 +2159,22 @@ different states. A shifted-match NQC fit is needed to test whether this
 fully explains the coefficient gap; the independent maxima do not by
 themselves justify changing the historical event prescription.
 
+The [shifted-match q4 NQC fit](evidence/2026-09-25/q4_native_source_nqc_match_shift_fit.json)
+uses a [frozen plan](evidence/2026-09-25/q4_native_source_nqc_match_shift_fit_plan.json)
+to move only the captured source fit coordinate by the independently inferred
+orbital-field shift (`0.0047989 M`), leaving its arrays and targets fixed.
+Within `2 M` of matching, raw amplitude RMS falls from `2.25e-5` to
+`2.99e-9`, and phase RMS after a constant alignment falls from `3.26e-5`
+to `1.35e-8`. Yet the historical GSL cubic coefficient gap falls only from
+`0.1509` to `0.1178` in L2. In a crossed-system decomposition, the shifted
+amplitude matrix accounts for `0.1157` of the remaining `0.1158` amplitude
+gap; the right-hand-side contribution is below `0.0001`. A degree-four local
+polynomial derivative control reduces the full gap from `0.0522` to `0.0105`.
+Thus the near-identical shifted raw mode does not guarantee identical
+historical spline derivatives or a stable, source-matching NQC solve. This
+single-row fit counterfactual neither establishes a faithful replacement
+matching event nor qualifies a complete waveform.
+
 1. Qualify the physical generator against the published equations and independent
    references over the intended domain, resolve convention/provenance gaps, and
    establish gradients and numerical convergence. This runner covers only scalar
