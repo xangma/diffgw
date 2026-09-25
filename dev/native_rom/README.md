@@ -2046,6 +2046,34 @@ flux routes differ by at most `4.75e-10` relative. This establishes the
 tested same-state vector field, not initial-condition, integration, NQC,
 whole-waveform, or domain-wide convergence.
 
+The [prospective initial-condition boundary check](evidence/2026-09-25/initial_boundary.json)
+uses the same four physical rows at `M Omega=0.01` and `0.02`, both below the
+historical start cap. The native source-convention circular radius and angular
+momentum differ from the pinned source's legacy initial state by at most
+`1.06e-7` and `4.85e-8` absolute; their relative differences remain below
+the frozen `1e-8` gate. Initial inward momentum **fails** that gate: its
+largest native/legacy gap is `1.35e-7` absolute and `1.18e-4` relative under
+the predeclared `1e-3` denominator floor. The same native momentum differs
+from the source's optimized initial branch by at most `6.83e-10`. Source
+legacy and optimized branches differ by up to `1.34e-7` in that component;
+the pinned SEOBNRv4 full generator selects legacy. In the pinned source,
+legacy computes the radial response through nested GSL numerical derivatives,
+whereas optimized uses hybrid/exact derivatives. This isolates a concrete
+initialization convention to test against the whole waveform, without
+validating a native legacy derivative prescription or explaining NQC drift.
+
+The [frozen q4 single-component intervention](evidence/2026-09-25/q4_legacy_initial_intervention.json)
+substitutes the pinned source's legacy inward momentum at the native
+`M Omega=0.0316228` warm start, leaving native radius, angular momentum, and
+all later calculations unchanged. The baseline reproduces the prior
+`0.03125 M` source and native mode hashes. The substitution changes the
+initial momentum by `-1.76e-7` and raises peak-fitted native/source
+whole-mode complex relative L2 from `0.00035058` to `0.00036249`; the
+post-peak value remains `0.00010966`. On this one row, merely adopting the
+legacy momentum does not close the whole-waveform gap. This counterfactual
+does not establish a source-faithful native initial-condition algorithm or
+explain source/wheel NQC cadence sensitivity.
+
 1. Qualify the physical generator against the published equations and independent
    references over the intended domain, resolve convention/provenance gaps, and
    establish gradients and numerical convergence. This runner covers only scalar

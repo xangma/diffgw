@@ -195,6 +195,18 @@ The [optimized evolution-field boundary check](../evidence/2026-09-25/optimized_
 uses the corresponding 12 nonzero-radial-momentum states and finds all four
 source/native vector-field components within `5.48e-11` relative. This is
 same-state parity, not numerical trajectory convergence or initial-data parity.
+The [eight-point initial-condition boundary check](../evidence/2026-09-25/initial_boundary.json)
+finds a failed `1e-8` relative legacy-source gate: native inward momentum
+differs by up to `1.35e-7` absolute (`1.18e-4` relative with the frozen
+denominator floor), while native and source optimized momentum differ by at
+most `6.83e-10`. The historical SEOBNRv4 generator selects the legacy
+initialization branch. The source's nested numerical radial derivatives and
+the native analytic radial response therefore remain a source-fidelity gap.
+The [q4 legacy-momentum intervention](../evidence/2026-09-25/q4_legacy_initial_intervention.json)
+uses the source value at the native warm start and worsens the selected
+peak-fitted native/source whole-mode relative L2 from `3.51e-4` to `3.62e-4`;
+post-peak L2 is essentially unchanged. This rules out that single initial
+component as a complete explanation of the selected whole-mode residual.
 `flux.factorized_22_amplitude` checks the published pre-NQC dominant-mode
 modulus, including the non-Keplerian Newtonian prefactor, rest-energy tail,
 and Bohé's 2.5PN/3.5PN spin replacements. It agrees with the standalone Torch

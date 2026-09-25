@@ -1,0 +1,19 @@
+{
+  "schema": "diffgw.seobnrv4.initial-boundary-plan.v1",
+  "purpose": "Prospective pinned-source versus native circular initial-state comparison over the predeclared physical boundary rows at two frequencies below the historical start cap. This tests initialization, not trajectories or waveform fidelity.",
+  "source_flux_plan": "dev/native_rom/evidence/2026-09-24/source_flux_initial_plan.json",
+  "source_flux_plan_sha256": "1167199c8f954f97a5905a1e3b2f67d1555e984e5f1da0a0fc42a77a925f96ea",
+  "hamiltonian_grid_plan": "dev/native_rom/evidence/2026-09-25/hamiltonian_boundary_grid_plan.json",
+  "hamiltonian_grid_plan_sha256": "a6ae607dd6ae99f6bbe85aeeb06e6a1548d8649b6699afc9049bfc2f1adc697f",
+  "source_calibration_initial_plan": "dev/native_rom/evidence/2026-09-24/source_calibration_initial_plan.json",
+  "source_calibration_initial_plan_sha256": "fa5623e5c63bfb03e215368a47b8f0a8cc97745ef064c59f76849d4ec9a4f977",
+  "adapter": "dev/native_rom/reference/flux_v4_source_wheel_adapter.c",
+  "adapter_sha256": "91833ee4a2a8fae8efa3a2fef9234ed4f222a73198102ceafab361809c9a0660",
+  "rows": ["q4_nonspinning", "q3_strong_antialigned", "q10_near_extreme_aligned", "q3_near_extreme_mixed"],
+  "frequencies_Momega": [0.01, 0.02],
+  "native_choices": ["published", "source_convention"],
+  "source_choices": ["legacy", "optimized"],
+  "relative_initial_state_gate": 1e-8,
+  "relative_denominator_floor": 1e-3,
+  "release_qualified": false
+}
