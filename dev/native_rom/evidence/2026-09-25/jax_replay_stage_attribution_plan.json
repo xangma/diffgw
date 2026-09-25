@@ -1,0 +1,15 @@
+{
+  "schema": "diffgw.seobnrv4.jax-replay-stage-attribution-plan.v1",
+  "release_qualified": false,
+  "source_head": "a083f04",
+  "case": "high_start_mixed_spin",
+  "output_step_M": 0.5,
+  "fine_refinement_factor": 32,
+  "adaptive_atol": 1e-10,
+  "adaptive_rtol": 1e-9,
+  "method": "On the frozen accepted time arrays, compare eager/JIT coarse accepted knots, coarse uniform resampling, fine accepted knots, and fine uniform resampling. Also compile each resampling stage on identical eager inputs to distinguish replay from interpolation arithmetic.",
+  "gates": {
+    "max_replay_state_absolute_error": 1e-7
+  },
+  "interpretation": "Read-only numerical attribution of the existing frozen chart. No waveform or derivative gate is changed."
+}

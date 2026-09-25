@@ -1,0 +1,17 @@
+{
+  "schema": "diffgw.seobnrv4.jax-resample-barrier-plan.v1",
+  "release_qualified": false,
+  "source_head": "a083f04",
+  "case": "high_start_mixed_spin",
+  "output_step_M": 0.5,
+  "fine_refinement_factor": 32,
+  "adaptive_atol": 1e-10,
+  "adaptive_rtol": 1e-9,
+  "method": "On the identical frozen accepted mesh, insert JAX optimization barriers at the natural-spline input and, separately, at its four polynomial coefficient arrays before evaluation. Compare eager/JIT coarse and fine uniform states and drift from the unmodified eager replay.",
+  "gates": {
+    "max_candidate_eager_jit_sample_absolute_error": 0.0,
+    "max_candidate_baseline_sample_absolute_error": 1e-14,
+    "max_replay_reference_state_absolute_error": 1e-7
+  },
+  "interpretation": "This is a development-only arithmetic diagnostic, not an AD/FD or whole-waveform qualification. Preserve the original replay and release gates."
+}

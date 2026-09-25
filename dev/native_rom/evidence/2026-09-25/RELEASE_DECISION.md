@@ -234,6 +234,35 @@ check remains. The next numerical investigation should isolate accepted-knot
 versus spline-resampling eager/JIT drift, since replacing matching semantics
 has not preserved the historical waveform.
 
+The [frozen replay-stage attribution](jax_replay_stage_attribution_plan.json)
+and [result](jax_replay_stage_attribution.json) now locate the first eager/JIT
+discrepancy in natural-spline resampling. Both coarse and fine accepted RKF45
+knots are bit-identical between eager and JIT; each uniform state series
+differs by at most `1.776357e-15`. Compiling only the resampler on identical
+eager knots reproduces that difference. This excludes accepted-step replay
+as the initiating cause on this chart. It ran on RONI2 in this worktree as
+PID `47674`, command
+`PYTHONPATH=src:. /Users/xangma/repos/diffgw/.venv/bin/python -m dev.native_rom.diagnose_jax_replay_stage_attribution`,
+log `/tmp/diffgw-jax-replay-stage-attribution.log`, and completed in 10
+seconds with exit code 0. No process or next check remains.
+
+The [frozen resampler-barrier control](jax_resample_barrier_plan.json) and
+[failed result](jax_resample_barrier.json) insert optimization barriers at
+either the accepted-knot input or the four cubic-polynomial coefficient
+arrays. Both preserve the eager state exactly but leave the same
+`1.776357e-15` eager/JIT state gap, so neither is a repair. An exploratory
+fixed-input decomposition found eager/JIT differences in second-derivative
+construction (about `1.1e-16`), coefficient construction from identical
+second derivatives (up to `2.8e-17`), and spline evaluation from identical
+coefficients (up to `1.8e-15`). A stable implementation must therefore
+address the arithmetic throughout the resampler, then recheck source parity,
+whole-waveform and AD/FD gates. The barrier control ran on RONI2 in this
+worktree as PID `49258`, command
+`PYTHONPATH=src:. /Users/xangma/repos/diffgw/.venv/bin/python -m dev.native_rom.diagnose_jax_resample_barrier`,
+log `/tmp/diffgw-jax-resample-barrier.log`, and completed in 24 seconds with
+exit code 1 for the frozen bitwise-equality gates. No process or next check
+remains.
+
 Two different release claims must stay separate:
 
 - **Historical SEOBNRv4 fidelity:** a port may be described as faithful only
