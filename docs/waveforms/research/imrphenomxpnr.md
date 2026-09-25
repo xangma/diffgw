@@ -22,6 +22,7 @@ lack an independently established source and redistribution record.
 The sources pinned for this ledger are:
 
 - [Hamilton et al., *PhenomXPNR*, arXiv:2507.02604v1](https://arxiv.org/html/2507.02604v1), 3 July 2025, CC BY 4.0;
+- [Colleoni et al., *SpinTaylor precession*, arXiv:2412.16721v1](https://arxiv.org/abs/2412.16721v1), 22 December 2024, and [Phys. Rev. D 111, 104019](https://journals.aps.org/prd/abstract/10.1103/PhysRevD.111.104019); the arXiv deposit has a non-exclusive distribution license and is used as specification evidence only;
 - [Thompson et al., *IMRPhenomXO4a*, arXiv:2312.10025v1](https://arxiv.org/html/2312.10025v1), 15 December 2023, CC BY 4.0;
 - [Hamilton et al., *The final twist*, arXiv:2107.08876v1](https://arxiv.org/abs/2107.08876v1), 19 July 2021, CC BY 4.0; and
 - the public [BAM precessing-waveform catalogue](https://data.cardiffgravity.org/bam-catalogue/).
@@ -37,7 +38,7 @@ composition.
 
 | Component | Published prescription | DiffGW evidence | Status |
 | --- | --- | --- | --- |
-| `XPNR-MAP` | XPNR Eqs. (3)–(6), evaluated with spins evolved to the SpinTaylor stopping/transition frequency | Scalar/Torch/JAX algebra agrees when supplied the same spins | Component pass; public caller supplies the wrong epoch |
+| `XPNR-MAP` | XPNR Eqs. (3)–(6), evaluated with spins evolved to the SpinTaylor stopping/transition frequency and projected relative to instantaneous `Lhat` | Scalar terminal-state map is rotation-invariant; Torch/JAX component algebra agrees when supplied the same aligned-frame spins | Geometry pass; public caller supplies the wrong epoch and no terminal state |
 | `XPNR-FIT` | XO4a Eq. (35), `Lambda = sum lambda_pqr eta^p chi^q cos(theta)^r`, plus XPNR Eq. (22) freezing | Scalar/Torch/JAX values agree; tensor duplication is not independent provenance | Equation pass; assets unresolved |
 | `XPNR-ANGLES-MR` | XO4a Eqs. (25)–(34), XPNR Eqs. (15)–(16), including stated guards | Scalar values and frequency derivatives agree in Torch/JAX | Component pass after `B3` correction |
 | `XPNR-ATTACH` | XPNR Eq. (19) for alpha and Eqs. (20)–(21) for beta, matching inspiral/merger-ringdown values and derivatives | Current alpha is a value-only Hermite-style blend; current beta sequence is not the published construction | Fail |
@@ -52,9 +53,11 @@ composition.
 For `m1 >= m2`, XPNR Eqs. (3)–(6) map the two transition-frequency spins to
 
 ```text
-chi_eff       = (m1 chi1z + m2 chi2z) / (m1 + m2)
+chi_eff       = (m1 chi1_parallel + m2 chi2_parallel) / (m1 + m2)
 chi_parallel  = (m1 + m2) chi_eff / m1
-chi_perp      = |m1^2 chi1_perp + m2^2 chi2_perp| / m1^2
+chi_i_parallel = chi_i . Lhat
+S_i_perp      = m_i^2 (chi_i - chi_i_parallel Lhat)
+chi_perp      = |S_1_perp + S_2_perp| / m1^2
 chi           = sqrt(chi_parallel^2 + chi_perp^2)
 cos(theta_LS) = chi_parallel / chi .
 ```
@@ -63,6 +66,36 @@ The zero-spin angle is undefined by the equation; the scalar test oracle uses
 `cos(theta_LS)=0` only as a documented numerical extension.  The fit-coordinate
 continuation freezes `eta` at `0.09` and `chi` at
 `0.80 - 0.20 exp(-((q-6)/1.5)^8)` when those boundaries are crossed.
+
+## Spin-at-attachment evidence boundary
+
+The papers determine the terminal-state geometry, but not a complete
+independently reproducible route from reference spins to that state.  XPNR
+requires Eqs. (3)–(6) at the frequency where the merger-ringdown angles are
+computed and says this frequency is related to the PN spin-precession stopping
+frequency, for which it gives no closed form.  The SpinTaylor paper specifies
+3.5PN TaylorT4 phasing, 3PN spin effects and fourth-order Runge--Kutta--Fehlberg
+integration until a stepping condition is reached.  It does not publish the
+complete coefficient system, RKF pair/controller/tolerances/interpolation,
+exhaustive stop conditions, or an exact selection rule for the terminal sample.
+
+XPNR also uses several nearby but distinct frequencies: `0.97 f_max^PN` and
+`0.99 f_max^PN` in the alpha continuation, `0.97 f_max^PN` and
+`0.98 f_max^PN` in the beta continuation, plus a separately constructed beta
+attachment frequency.  None is unambiguously identified as the spin-sampling
+epoch.  Equating one of them with that epoch would be an implementation choice,
+not a paper transcription.
+
+The scalar reference therefore accepts caller-supplied terminal
+`(chi1, chi2, Lhat)` vectors in any common Cartesian frame, performs the
+instantaneous projection, and is tested for rotation invariance and agreement
+with the z-aligned component formula.  It deliberately does not evolve the
+state or choose the stop event.  The current Torch/JAX route instead passes
+reference-frequency spin components into the map; its SpinTaylor helper returns
+only six angle/frame quantities.  Its `0.98 f_MECO` transition, frequency
+clamps, and fixed 200-node RK4 evolution are recorded as project-specific
+choices, not paper fidelity.  A source-level regression test keeps this boundary
+visible until the caller is replaced deliberately.
 
 Writing `s = chi sin(theta_LS)`, the printed XO4a transforms are
 
@@ -207,7 +240,7 @@ history from which to establish their origin or terms.
 | Evidence class | Result | What it establishes |
 | --- | --- | --- |
 | Paper fidelity | Partial pass | Map, polynomial, guarded transforms, MR ansatzes, carrier-deformation equation, effective ringdown equation, and HM map have scalar encodings; attachment, continuation, beta bound, carrier/asymmetry composition remain open |
-| Scalar-reference agreement | Pass for scoped components | 46 local cases cover fit values, transforms, ansatz values/derivatives, map, window interpretation, HM joins and reductions |
+| Scalar-reference agreement | Pass for scoped components | 47 local cases cover fit values, transforms, ansatz values/derivatives, terminal-state geometry, map, window interpretation, HM joins and reductions |
 | Torch/JAX parity | Pass for scoped components | Both backends agree with scalar values and derivatives; a dense JAX grid is recorded in the qualification JSON |
 | Calibration asset provenance | Provisional gate retained | Published equations, a partial historical procedure, raw CC BY inputs, and an MIT fitting tool are distinguished from the unsupported inherited tensors; a two-case manifest test pins that classification and the unchanged payload |
 | External parity | Not qualified | The four optional LAL/PyCBC cases are black-box acceptance gates only; their `0.99` threshold is not an observed lower bound or domain claim |
@@ -227,8 +260,10 @@ Promotion requires all of the following without relaxing existing thresholds:
    sampling/weighting/initialization and sparse-basis choices, uncertainties,
    and holdouts.  Public availability of papers, NR inputs, fitting software,
    or a third-party implementation does not satisfy this gate.
-2. Evolve both spins to the stated transition and feed that state into Eqs.
-   (3)–(6); test integration convergence and transition placement.
+2. Establish an independently specified and licensed PN evolution and explicit
+   terminal sampling rule; return terminal `S1`, `S2`, and `Lhat`, demonstrate
+   integration convergence and stop-event stability, then feed that state into
+   Eqs. (3)–(6).
 3. Implement the exact alpha/beta attachments, beta bound, exterior
    continuations, and minimal-rotation convention with value and derivative
    checks at every join.
