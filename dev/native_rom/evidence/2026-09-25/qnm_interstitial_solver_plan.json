@@ -1,0 +1,21 @@
+{
+  "schema": "diffgw.seobnrv4.qnm-interstitial-solver-plan.v1",
+  "purpose": "Predeclared strict direct Kerr-equation checks between Cook author rows on both signed-spin branches, plus the supported-domain edge. These are numerical interpolation controls, not independent author values or a continuous-domain bound.",
+  "release_qualified": false,
+  "author_archive_sha256": "d5853acabc1a07b66b4fae437c02e1435a9d2b3561bd7e4752b9721c9cd48923",
+  "author_datasets": {
+    "positive": "/n00/m+02/{2,2,0}",
+    "negative": "/n00/m-02/{2,-2,0}"
+  },
+  "source_sha256": {
+    "src/torchwave/approximants/kerr_qnm_generated.py": "82da71c19c50defeab4c32b6950141d845214909e9f52342e3f1cf3b46f08326",
+    "src/jaxwave/approximants/kerr_qnm_interp.py": "1de5fbab1757b90ea0a37927c3432cf72ceafd5faeaef024b2baeb5b445fabe4",
+    "src/torchwave/qnm/solver.py": "36792fc5ad7201cfd5e4cac5221d48ca0db70f38b9d6fec4c3232caf60f84717",
+    "src/diffgw_core/kerr_qnm_220_data.py": "51b13ae3649ec332b45d4c538a669334ec31f4244105e3b4c2b0c24197f4c5e4"
+  },
+  "positive_spin_magnitudes": [0.0005, 0.5005, 0.9005, 0.9905, 0.99971875, 0.999859375, 0.9998875, 0.9999],
+  "selection_rule": "Evaluate each declared magnitude on both signed branches. The first six lie strictly between Cook rows; 0.9998875 lies between the final supported Cook row 0.999875 and the native domain edge 0.9999; 0.9999 is the supported-domain endpoint. Use native values only as strict solver seeds, never as the comparison answer.",
+  "strict_solver": true,
+  "native_minus_solver_absolute_tolerance": 1e-9,
+  "torch_minus_jax_absolute_tolerance": 1e-12
+}

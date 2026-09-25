@@ -63,6 +63,13 @@ with the external author data within `9.6e-13`, and Torch/JAX agree within
 `1.7e-16`. This is dense independent component validation; it does not bound
 the intervals between author rows. Historical compatibility, continuous-domain
 accuracy, and whole-waveform impact remain open.
+A [predeclared 16-point interstitial check](evidence/2026-09-25/qnm_interstitial_solver.json)
+compares both signed-spin branches with strict direct Kerr solves between Cook
+rows and at the native domain edge. Torch and JAX agree with the solves within
+`1.11e-13` absolute and with each other exactly on these points. The native
+values seed the branch solve, so this checks equation consistency rather than
+independent author data; it does not establish a continuous error bound or
+decide whether historical table interpolation should be reproduced.
 The [post-hoc binary-input witnesses](evidence/2026-09-24/qnm_binary_reachability.json)
 show that this is not confined to an unreachable final spin: at the paper's
 `(q, chi1, chi2)=(8,0.85,0.85)` calibration configuration, the native/wheel
@@ -2470,9 +2477,20 @@ show that the `9.756e-9` bounded-dense to independent-endpoint curvature
 shift comprises `+1.077e-8` from changed states evaluated at fixed orbital
 frequency and `-1.017e-9` from the frequency change. This locates numerical
 sensitivity in the state-to-raw-mode amplitude path, including its internal
-Hamiltonian evaluation; the exact operation, continuum curvature, and a
-validated replacement derivative rule remain unresolved. The failed `0.01`
-NQC coefficient gate is unchanged.
+Hamiltonian evaluation. A [pinned-source operation probe](evidence/2026-09-25/source_aligned_raw_amplitude_operation.json)
+replays all ten saved raw amplitudes exactly and attributes nearly all of the
+fixed-frequency change to the Newtonian `(2,2)` amplitude factor. Its
+non-Kepler calculation obtains circular frequency from a GSL finite
+difference of the Hamiltonian with a fixed `1e-4` Cartesian-momentum step.
+At the `-0.1 M` sample, a tiny state change moves that frequency by
+`-1.24e-11`, versus `-1.34e-14` from the pinned source's exact-derivative
+routine; the resulting Newtonian contribution is `4.43e-11` of the
+`4.43e-11` raw-amplitude change. Algebraically substituting the exact
+circular frequency only in that factor reduces the bounded-dense versus
+endpoint curvature shift from `+9.756e-9` to `-0.993e-9`. This identifies
+the local numerical sensitivity but is not a validated physical or NQC
+replacement; continuum curvature and the failed `0.01` coefficient gate
+remain unresolved.
 
 The [prospective native ROM-input pilot](evidence/2026-09-25/rom_input_stability.json)
 uses a [frozen two-row plan](evidence/2026-09-25/rom_input_stability_plan.json),
