@@ -130,6 +130,12 @@ and [two-factor convention result](../evidence/2026-09-24/hamiltonian_source_con
 show that the paper-derived native Hamiltonian differs from that source, while
 the development-only source-convention variant agrees to floating-point
 precision. This does not qualify full dynamics or waveform generation.
+The [expanded same-state result](../evidence/2026-09-25/hamiltonian_domain_states.json)
+and [factorial replay](../evidence/2026-09-25/hamiltonian_domain_conventions.json)
+extend that attribution to four mixed-spin late and four high-spin q=8 states.
+The pinned source and wheel differ by at most `8.9e-16` in `H_real/nu`;
+the published native value differs by at most `1.14e-5` absolute, and the
+development variant with both source conventions agrees within `8.9e-16`.
 Changing only the diagnostic Hamiltonian calibration decimals to the pinned
 source values lowers the aligned-spin peak-fitted full-waveform complex L2
 from `0.00299749` to `0.00271301` and passes the three-tolerance ODE check;

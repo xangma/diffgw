@@ -87,8 +87,9 @@ def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--source-root", type=Path, required=True)
     parser.add_argument("--json-out", type=Path, required=True)
+    parser.add_argument("--plan", type=Path, default=PLAN)
     args = parser.parse_args()
-    plan = json.loads(PLAN.read_text())
+    plan = json.loads(args.plan.read_text())
     if plan["schema"] != "diffgw.seobnrv4.hamiltonian-source-conventions-plan.v1":
         raise ValueError("Unexpected plan schema")
     prior = json.loads(checked(ROOT / plan["same_state_evidence"],
@@ -143,14 +144,17 @@ def main() -> None:
     result = {
         "schema": "diffgw.seobnrv4.hamiltonian-source-conventions.v1",
         "status": "diagnostic_complete", "release_qualified": False,
-        "plan_sha256": sha256(PLAN.read_bytes()),
+        "plan_sha256": sha256(args.plan.read_bytes()),
         "script_sha256": sha256(Path(__file__).read_bytes()),
         "same_state_evidence_sha256": plan["same_state_evidence_sha256"],
         "source_coefficient_header_sha256": plan["source_coefficient_header_sha256"],
         "source_coefficients": {f"{name}_{i}_{j}": value
                                 for (name, i, j), value in coefficients.items()},
         "max_abs_native_minus_wheel": maxima, "rows": rows,
-        "scope_limit": "Eight aligned-spin states only; both source conventions are development-only and do not qualify dynamics, flux, attachment, or ROM."
+        "scope_limit": (
+            f"{plan['expected_states']} frozen states only; both source conventions "
+            "are development-only and do not qualify dynamics, flux, attachment, or ROM."
+        )
     }
     args.json_out.parent.mkdir(parents=True, exist_ok=True)
     args.json_out.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n")

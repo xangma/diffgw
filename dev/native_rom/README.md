@@ -1995,6 +1995,21 @@ unchanged. Public FD hashes and lag bounds pass on both rows. Across these
 four cases, choosing the historical derivative is source-motivated, but it
 is not an across-the-board fit improvement or a release-accuracy claim.
 
+The [expanded same-state Hamiltonian comparison](evidence/2026-09-25/hamiltonian_domain_states.json)
+uses [a frozen plan](evidence/2026-09-25/hamiltonian_domain_states_plan.json)
+to check four mixed-spin late-inspiral states and four high-spin q=8 states
+against the pinned compiled source and installed wheel. Source and wheel
+agree within `8.9e-16` in `H_real/nu`; the published native Hamiltonian differs
+by at most `1.14e-5` absolute. The [two-factor follow-up](evidence/2026-09-25/hamiltonian_domain_conventions.json)
+separates the historical logarithmic derivative and shorter source
+calibration decimals: the former reduces the largest gap to `5.33e-7`, and
+both together agree within `8.9e-16`. This extends source-convention
+attribution beyond the earlier aligned-spin rows. It neither validates the
+historical conventions as independent physics nor qualifies trajectories or
+waveforms. Reproduce with `dev.native_rom.diagnose_hamiltonian_same_state`
+and `dev.native_rom.diagnose_hamiltonian_source_conventions`, passing each
+script its corresponding frozen plan via `--plan`.
+
 1. Qualify the physical generator against the published equations and independent
    references over the intended domain, resolve convention/provenance gaps, and
    establish gradients and numerical convergence. This runner covers only scalar

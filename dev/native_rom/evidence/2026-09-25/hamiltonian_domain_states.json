@@ -1,0 +1,315 @@
+{
+  "adapter_sha256": "18c115fa438a44a8b236290aab5b8f46376016adf459aa354944033c0c3dd465",
+  "compile_command": [
+    "clang",
+    "-dynamiclib",
+    "-O2",
+    "-H",
+    "-Wno-gnu-folding-constant",
+    "-Wl,-headerpad_max_install_names",
+    "-I",
+    "/var/folders/l0/3dr1pyw15ln58b6xh74j_41w0000gn/T/diffgw-v4-hamiltonian-7spvs9ic/private",
+    "-I",
+    "/tmp/diffgw-lalsuite-pinned-53acc0c/merged-include",
+    "-I",
+    "/usr/local/include",
+    "-o",
+    "/var/folders/l0/3dr1pyw15ln58b6xh74j_41w0000gn/T/diffgw-v4-hamiltonian-7spvs9ic/v4_hamiltonian_adapter.dylib",
+    "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw/dev/native_rom/reference/hamiltonian_v4_source_wheel_adapter.c",
+    "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/liblalsimulation.37.dylib",
+    "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/liblal.20.dylib",
+    "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libgsl.28.dylib",
+    "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libgslcblas.0.dylib"
+  ],
+  "compiler": "Apple clang version 21.0.0 (clang-2100.1.1.101)",
+  "gsl_include": "/usr/local/include",
+  "header_root": "/tmp/diffgw-lalsuite-pinned-53acc0c/merged-include",
+  "pinned_source_peeled_commit": "a3bc6b5eba1e9e1489616bc5d447a122e492a0d0",
+  "pinned_source_tag_object": "5154f04e470d1cc48d6f61193af728b5692474ab",
+  "plan_sha256": "87337c94bbd875aad0f283dc9bd7a3ed55107c4693f3a21cf45a672a2b36f514",
+  "public_headers_sha256": {
+    "lal/lib/std/XLALGSL.h": "eddcbe9c4a034cdccc60415f1d3f74660c24cd4a50a93290fbb035942d542801",
+    "lal/lib/tools/LALDict.h": "cdbbf7a66655133e5df414ed519459172706421219316b5a3a01e0e59e2a0679",
+    "lalsimulation/lib/LALSimIMR.h": "d5ec4070729f6f058d5435de3b5bcfd379f3471f27bf213fd7f9b380fe640315",
+    "lalsimulation/lib/LALSimInspiral.h": "d287a5c9a8eb7dc23ad1247d14513fe613527b17a71b4ace8c36c6a71c7b3603"
+  },
+  "release_qualified": false,
+  "rows": [
+    {
+      "frozen_evidence": "dev/native_rom/evidence/2026-09-24/mode_33_late_flux.json",
+      "frozen_evidence_sha256": "286690b17a41d42e3085c901e5c19cf63769cd2d0199eab22a0c4e64f2b62e81",
+      "max_abs_native_minus_wheel": 1.1376575170807257e-05,
+      "max_abs_relative_native_minus_wheel": 2.808299707948855e-06,
+      "max_abs_wheel_minus_source": 8.881784197001252e-16,
+      "name": "mixed_spin_late",
+      "physical": {
+        "chi1": 0.2,
+        "chi2": -0.1,
+        "mass1": 30.0,
+        "mass2": 20.0,
+        "omega_start": 0.03162277660168379
+      },
+      "points": [
+        {
+          "frequency_Momega": 0.06000045889337439,
+          "index": 4436,
+          "native_H_real_over_nu": 4.102823285761181,
+          "native_calibration": {
+            "K": 0.5447572187848351,
+            "dSO": -30.08662948043097,
+            "dSS": 8.149919671641662
+          },
+          "native_minus_wheel": -9.128248823486729e-08,
+          "native_minus_wheel_relative": -2.2248700430444025e-08,
+          "source_H_real_over_nu": 4.102823377043668,
+          "source_calibration": {
+            "K": 0.5447450035923838,
+            "dSO": -30.086677578513246,
+            "dSS": 8.149915217150658
+          },
+          "state": {
+            "phi": 22.23959640523425,
+            "pphi": 3.281561022417185,
+            "pr_star": -0.02028090050116193,
+            "r": 6.446453611493094
+          },
+          "time_M": 554.5,
+          "wheel_H_real_over_nu": 4.102823377043669,
+          "wheel_minus_source": 8.881784197001252e-16
+        },
+        {
+          "frequency_Momega": 0.07997822634289092,
+          "index": 4889,
+          "native_H_real_over_nu": 4.092242555192915,
+          "native_calibration": {
+            "K": 0.5447572187848351,
+            "dSO": -30.08662948043097,
+            "dSS": 8.149919671641662
+          },
+          "native_minus_wheel": -3.001227906196391e-07,
+          "native_minus_wheel_relative": -7.333943786590969e-08,
+          "source_H_real_over_nu": 4.092242855315705,
+          "source_calibration": {
+            "K": 0.5447450035923838,
+            "dSO": -30.086677578513246,
+            "dSS": 8.149915217150658
+          },
+          "state": {
+            "phi": 26.10094313577177,
+            "pphi": 3.1296696292637125,
+            "pr_star": -0.04185447775355018,
+            "r": 5.225980477873469
+          },
+          "time_M": 611.125,
+          "wheel_H_real_over_nu": 4.092242855315706,
+          "wheel_minus_source": 8.881784197001252e-16
+        },
+        {
+          "frequency_Momega": 0.10004234957006723,
+          "index": 5067,
+          "native_H_real_over_nu": 4.081927409045032,
+          "native_calibration": {
+            "K": 0.5447572187848351,
+            "dSO": -30.08662948043097,
+            "dSS": 8.149919671641662
+          },
+          "native_minus_wheel": -6.475766820557283e-07,
+          "native_minus_wheel_relative": -1.5864480536476575e-07,
+          "source_H_real_over_nu": 4.081928056621714,
+          "source_calibration": {
+            "K": 0.5447450035923838,
+            "dSO": -30.086677578513246,
+            "dSS": 8.149915217150658
+          },
+          "state": {
+            "phi": 28.075414126992644,
+            "pphi": 3.01605975568716,
+            "pr_star": -0.07065935041645192,
+            "r": 4.377598755537543
+          },
+          "time_M": 633.375,
+          "wheel_H_real_over_nu": 4.081928056621714,
+          "wheel_minus_source": 0.0
+        },
+        {
+          "frequency_Momega": 0.1498586573821755,
+          "index": 5238,
+          "native_H_real_over_nu": 4.051065877135069,
+          "native_calibration": {
+            "K": 0.5447572187848351,
+            "dSO": -30.08662948043097,
+            "dSS": 8.149919671641662
+          },
+          "native_minus_wheel": 1.1376575170807257e-05,
+          "native_minus_wheel_relative": 2.808299707948855e-06,
+          "source_H_real_over_nu": 4.051054500559897,
+          "source_calibration": {
+            "K": 0.5447450035923838,
+            "dSO": -30.086677578513246,
+            "dSS": 8.149915217150658
+          },
+          "state": {
+            "phi": 30.651299333987758,
+            "pphi": 2.779477667105353,
+            "pr_star": -0.17908710704802566,
+            "r": 2.9323782999142236
+          },
+          "time_M": 654.75,
+          "wheel_H_real_over_nu": 4.051054500559898,
+          "wheel_minus_source": 8.881784197001252e-16
+        }
+      ]
+    },
+    {
+      "frozen_evidence": "dev/native_rom/evidence/2026-09-24/q8_inspiral_field.json",
+      "frozen_evidence_sha256": "e041b1287470c08d8dedab2e0c3c7c1565cf3f12954867bc27d50f60cd55167f",
+      "max_abs_native_minus_wheel": 3.2882013840662694e-06,
+      "max_abs_relative_native_minus_wheel": 3.285792372438605e-07,
+      "max_abs_wheel_minus_source": 0.0,
+      "name": "q8_high_aligned_spin",
+      "physical": {
+        "chi1": 0.85,
+        "chi2": 0.85,
+        "mass1": 40.0,
+        "mass2": 5.0,
+        "omega_start": 0.04
+      },
+      "points": [
+        {
+          "frequency_Momega": 0.04499900797606907,
+          "index": 10761,
+          "native_H_real_over_nu": 10.064166233637838,
+          "native_calibration": {
+            "K": 0.5922496318510357,
+            "dSO": -41.29436511328748,
+            "dSS": 5.501653930443831
+          },
+          "native_minus_wheel": -8.033310017196982e-08,
+          "native_minus_wheel_relative": -7.982091875851902e-09,
+          "source_H_real_over_nu": 10.064166313970938,
+          "source_calibration": {
+            "K": 0.5922531914662024,
+            "dSO": -41.294413946100065,
+            "dSS": 5.501648589770264
+          },
+          "state": {
+            "phi": 49.63893578835148,
+            "pphi": 3.1272854958471674,
+            "pr_star": -0.0028555409508126493,
+            "r": 7.726547081518947
+          },
+          "time_M": 1345.125,
+          "wheel_H_real_over_nu": 10.064166313970938,
+          "wheel_minus_source": 0.0
+        },
+        {
+          "frequency_Momega": 0.05999758170335667,
+          "index": 14506,
+          "native_H_real_over_nu": 10.051545868565828,
+          "native_calibration": {
+            "K": 0.5922496318510357,
+            "dSO": -41.29436511328748,
+            "dSS": 5.501653930443831
+          },
+          "native_minus_wheel": -2.741217581814226e-07,
+          "native_minus_wheel_relative": -2.7271601233293232e-08,
+          "source_H_real_over_nu": 10.051546142687586,
+          "source_calibration": {
+            "K": 0.5922531914662024,
+            "dSO": -41.294413946100065,
+            "dSS": 5.501648589770264
+          },
+          "state": {
+            "phi": 73.61334050540843,
+            "pphi": 2.8847277129432767,
+            "pr_star": -0.00527742059175978,
+            "r": 6.316347216560632
+          },
+          "time_M": 1813.25,
+          "wheel_H_real_over_nu": 10.051546142687586,
+          "wheel_minus_source": 0.0
+        },
+        {
+          "frequency_Momega": 0.09000344292952416,
+          "index": 16711,
+          "native_H_real_over_nu": 10.028708526262067,
+          "native_calibration": {
+            "K": 0.5922496318510357,
+            "dSO": -41.29436511328748,
+            "dSS": 5.501653930443831
+          },
+          "native_minus_wheel": -1.398024345178328e-06,
+          "native_minus_wheel_relative": -1.394022118231527e-07,
+          "source_H_real_over_nu": 10.028709924286412,
+          "source_calibration": {
+            "K": 0.5922531914662024,
+            "dSO": -41.294413946100065,
+            "dSS": 5.501648589770264
+          },
+          "state": {
+            "phi": 93.31608145220649,
+            "pphi": 2.575194912052929,
+            "pr_star": -0.012711229789660319,
+            "r": 4.710601245672068
+          },
+          "time_M": 2088.875,
+          "wheel_H_real_over_nu": 10.028709924286412,
+          "wheel_minus_source": 0.0
+        },
+        {
+          "frequency_Momega": 0.12001629879613536,
+          "index": 17355,
+          "native_H_real_over_nu": 10.007328312078267,
+          "native_calibration": {
+            "K": 0.5922496318510357,
+            "dSO": -41.29436511328748,
+            "dSS": 5.501653930443831
+          },
+          "native_minus_wheel": -3.2882013840662694e-06,
+          "native_minus_wheel_relative": -3.285792372438605e-07,
+          "source_H_real_over_nu": 10.00733160027965,
+          "source_calibration": {
+            "K": 0.5922531914662024,
+            "dSO": -41.294413946100065,
+            "dSS": 5.501648589770264
+          },
+          "state": {
+            "phi": 101.57059837892845,
+            "pphi": 2.3702829692577163,
+            "pr_star": -0.02428037877065455,
+            "r": 3.781525492922588
+          },
+          "time_M": 2169.375,
+          "wheel_H_real_over_nu": 10.00733160027965,
+          "wheel_minus_source": 0.0
+        }
+      ]
+    }
+  ],
+  "schema": "diffgw.seobnrv4.hamiltonian-same-state.v1",
+  "scope_limit": "The wheel wrapper is called with coefficients initialized by the exact pinned source v4 initializer. The wheel's private initializer is not exported; the source/wheel agreement validates this adapter at the tested states, not all Hamiltonian branches or the full waveform.",
+  "script_sha256": "b0e81e5fb7bbb3aad0b25adc75c9691a63245dd94af1ee32d8cb0ab0b74acd3e",
+  "source_files_sha256": {
+    "lalsimulation/lib/LALSimIMREOBNRv2.h": "a32e632cc999d7cf9e6784f824ead606b408362ef96741a86a7e27c6bb8592f1",
+    "lalsimulation/lib/LALSimIMRSpinEOB.h": "700804fad22264c9ae669f4495c56efcc512f602a0d944d77bc8239d5bfb990c",
+    "lalsimulation/lib/LALSimIMRSpinEOBHamiltonian.c": "629ea1690bb0c7fd913dd39f17299f8412aafd30519293af8d0526b42dab90dc",
+    "lalsimulation/lib/LALSimIMRSpinEOBHamiltonian.h": "7e1002abcec95453bc930c4530c4fae4917c040c855d77c5cf73a0013a34058a"
+  },
+  "source_initializer": "XLALSimIMRCalculateSpinEOBHCoeffs(..., 4)",
+  "status": "diagnostic_complete",
+  "wheel": {
+    "lal_version": "7.7.1",
+    "lalsimulation_version": "6.2.1",
+    "lalsuite_distribution": "7.26.15",
+    "liblalsimulation_sha256": "9046c4a673d2ba82b792f7b92d73203ba783b32fc604b5da1139c5c1bc8b3325",
+    "libraries_sha256": {
+      "libgsl.28.dylib": "1eefe0dbead9551d47be3c09bbf786c727f84df1331130ee8a03127b7a95abe8",
+      "libgslcblas.0.dylib": "00a30ab2e9eb5cd36caab9ae9a9975a8280b9b4c2940b15e446c34a151818230",
+      "liblal.20.dylib": "e4c4ed42baed00d30668588e58444f974e3deeda56ba4e5978624640ddb5bde7",
+      "liblalsimulation.37.dylib": "9046c4a673d2ba82b792f7b92d73203ba783b32fc604b5da1139c5c1bc8b3325"
+    },
+    "python_extension_sha256": "2de0af808b258bef03a3a13b15fa71038f48579f5f562e92ebd62c6b9769fd37"
+  },
+  "wheel_exported_symbol": "XLALSimInspiralEOBPAHamiltonianWrapper",
+  "wheel_symbol_binding": "liblalsimulation.37"
+}

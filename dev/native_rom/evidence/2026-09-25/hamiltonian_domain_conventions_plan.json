@@ -1,0 +1,24 @@
+{
+  "schema": "diffgw.seobnrv4.hamiltonian-source-conventions-plan.v1",
+  "purpose": "Isolate rounded calibration and historical logarithmic-derivative conventions at eight additional frozen unequal-spin late and high-mass-ratio high-spin states; diagnostic only.",
+  "source_repo_tag": "lalsimulation-v6.2.1",
+  "tag_object": "5154f04e470d1cc48d6f61193af728b5692474ab",
+  "peeled_commit": "a3bc6b5eba1e9e1489616bc5d447a122e492a0d0",
+  "source_coefficient_header": "lalsimulation/lib/LALSimIMRSpinEOBHamiltonian.h",
+  "source_coefficient_header_sha256": "7e1002abcec95453bc930c4530c4fae4917c040c855d77c5cf73a0013a34058a",
+  "expected_coefficient_count": 48,
+  "same_state_evidence": "dev/native_rom/evidence/2026-09-25/hamiltonian_domain_states.json",
+  "same_state_evidence_sha256": "cd205f595460a1bb9f80455f1c6e40366d5eda6d659b5e6d015802f5e745c109",
+  "native_hamiltonian": "src/torchwave/approximants/eob/seobnrv4_hamiltonian.py",
+  "native_hamiltonian_sha256": "40f063046e30b9fb5824b8d95980ff9deaa73f231dfe987e453094210b87cf3d",
+  "historical_derivative_variant": "dev/native_rom/eob/torch/historical_hamiltonian.py",
+  "historical_derivative_variant_sha256": "f93beaa5172dd1fff43eb676848f60caa8d2795dfd7ed21c842827dd53141066",
+  "factors": [
+    "source_rounded_calibration",
+    "historical_log_derivative"
+  ],
+  "expected_states": 8,
+  "rounding_replay_absolute_tolerance": 1e-12,
+  "source_convention_absolute_tolerance": 1e-12,
+  "release_qualified": false
+}

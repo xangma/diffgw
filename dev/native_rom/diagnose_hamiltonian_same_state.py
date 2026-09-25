@@ -125,13 +125,16 @@ def frozen_points(spec: dict) -> tuple[dict, list[dict]]:
     if isinstance(evidence["grids"], list):
         grid = next(g for g in evidence["grids"]
                     if g["step_M"] == spec["grid_step_M"])
-        points = grid["points"]
     else:
         grid = evidence["grids"][str(spec["grid_step_M"])]
-        points = grid["targets"]
-    if [point["index"] for point in points] != spec["indices"]:
+    points = grid[spec.get("point_collection", "points" if isinstance(
+        evidence["grids"], list) else "targets")]
+    by_index = {point["index"]: point for point in points}
+    if len(by_index) != len(points) or any(index not in by_index
+                                            for index in spec["indices"]):
         raise ValueError(f"Frozen indices changed for {spec['name']}")
-    return evidence["row"], points
+    selected = [by_index[index] for index in spec["indices"]]
+    return evidence["row"], selected
 
 
 def main() -> None:
@@ -142,10 +145,11 @@ def main() -> None:
                         help="Merged LAL headers from the pinned source snapshot")
     parser.add_argument("--gsl-include", type=Path, required=True)
     parser.add_argument("--json-out", type=Path, required=True)
+    parser.add_argument("--plan", type=Path, default=PLAN)
     args = parser.parse_args()
     if sys.platform != "darwin":
         raise RuntimeError("This pinned-wheel C-link recipe is macOS-only")
-    plan = json.loads(PLAN.read_text())
+    plan = json.loads(args.plan.read_text())
     if plan["schema"] != "diffgw.seobnrv4.hamiltonian-same-state-plan.v1":
         raise ValueError("Unexpected same-state plan")
     checked_file(ROOT / plan["native_hamiltonian"]["path"],
@@ -215,7 +219,8 @@ def main() -> None:
                     nk, nso, nss = native.calibration_parameters(radius)
                     records.append({
                         "index": point["index"], "time_M": point["time_M"],
-                        "frequency_Momega": point["frequency_Momega"],
+                        "frequency_Momega": point.get("frequency_Momega",
+                                                       point.get("native_state_Momega")),
                         "state": state,
                         "source_H_real_over_nu": source_h,
                         "wheel_H_real_over_nu": wheel_h,
@@ -243,7 +248,7 @@ def main() -> None:
     result = {
         "schema": "diffgw.seobnrv4.hamiltonian-same-state.v1",
         "status": "diagnostic_complete", "release_qualified": False,
-        "plan_sha256": file_hash(PLAN), "script_sha256": file_hash(Path(__file__)),
+        "plan_sha256": file_hash(args.plan), "script_sha256": file_hash(Path(__file__)),
         "adapter_sha256": file_hash(ADAPTER),
         "pinned_source_tag_object": plan["pinned_source"]["tag_object"],
         "pinned_source_peeled_commit": plan["pinned_source"]["peeled_commit"],

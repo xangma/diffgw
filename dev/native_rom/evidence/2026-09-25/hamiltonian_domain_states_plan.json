@@ -1,0 +1,68 @@
+{
+  "schema": "diffgw.seobnrv4.hamiltonian-same-state-plan.v1",
+  "purpose": "Extend pinned-source, pinned-wheel and native explicit-state Hamiltonian comparison to unequal-spin late inspiral and high-mass-ratio high-spin rows. Development diagnostic only.",
+  "pinned_source": {
+    "tag": "lalsimulation-v6.2.1",
+    "tag_object": "5154f04e470d1cc48d6f61193af728b5692474ab",
+    "peeled_commit": "a3bc6b5eba1e9e1489616bc5d447a122e492a0d0",
+    "files_sha256": {
+      "lalsimulation/lib/LALSimIMRSpinEOBHamiltonian.c": "629ea1690bb0c7fd913dd39f17299f8412aafd30519293af8d0526b42dab90dc",
+      "lalsimulation/lib/LALSimIMRSpinEOBHamiltonian.h": "7e1002abcec95453bc930c4530c4fae4917c040c855d77c5cf73a0013a34058a",
+      "lalsimulation/lib/LALSimIMRSpinEOB.h": "700804fad22264c9ae669f4495c56efcc512f602a0d944d77bc8239d5bfb990c",
+      "lalsimulation/lib/LALSimIMREOBNRv2.h": "a32e632cc999d7cf9e6784f824ead606b408362ef96741a86a7e27c6bb8592f1"
+    },
+    "public_headers_sha256": {
+      "lal/lib/tools/LALDict.h": "cdbbf7a66655133e5df414ed519459172706421219316b5a3a01e0e59e2a0679",
+      "lal/lib/std/XLALGSL.h": "eddcbe9c4a034cdccc60415f1d3f74660c24cd4a50a93290fbb035942d542801",
+      "lalsimulation/lib/LALSimInspiral.h": "d287a5c9a8eb7dc23ad1247d14513fe613527b17a71b4ace8c36c6a71c7b3603",
+      "lalsimulation/lib/LALSimIMR.h": "d5ec4070729f6f058d5435de3b5bcfd379f3471f27bf213fd7f9b380fe640315"
+    }
+  },
+  "pinned_wheel": {
+    "lalsuite_distribution": "7.26.15",
+    "lal_version": "7.7.1",
+    "lalsimulation_version": "6.2.1",
+    "liblalsimulation_sha256": "9046c4a673d2ba82b792f7b92d73203ba783b32fc604b5da1139c5c1bc8b3325",
+    "python_extension_sha256": "2de0af808b258bef03a3a13b15fa71038f48579f5f562e92ebd62c6b9769fd37",
+    "libraries_sha256": {
+      "liblalsimulation.37.dylib": "9046c4a673d2ba82b792f7b92d73203ba783b32fc604b5da1139c5c1bc8b3325",
+      "liblal.20.dylib": "e4c4ed42baed00d30668588e58444f974e3deeda56ba4e5978624640ddb5bde7",
+      "libgsl.28.dylib": "1eefe0dbead9551d47be3c09bbf786c727f84df1331130ee8a03127b7a95abe8",
+      "libgslcblas.0.dylib": "00a30ab2e9eb5cd36caab9ae9a9975a8280b9b4c2940b15e446c34a151818230"
+    }
+  },
+  "frozen_states": [
+    {
+      "name": "mixed_spin_late",
+      "evidence": "dev/native_rom/evidence/2026-09-24/mode_33_late_flux.json",
+      "sha256": "286690b17a41d42e3085c901e5c19cf63769cd2d0199eab22a0c4e64f2b62e81",
+      "grid_step_M": 0.125,
+      "point_collection": "points",
+      "indices": [
+        4436,
+        4889,
+        5067,
+        5238
+      ]
+    },
+    {
+      "name": "q8_high_aligned_spin",
+      "evidence": "dev/native_rom/evidence/2026-09-24/q8_inspiral_field.json",
+      "sha256": "e041b1287470c08d8dedab2e0c3c7c1565cf3f12954867bc27d50f60cd55167f",
+      "grid_step_M": 0.125,
+      "point_collection": "frequency_targets",
+      "indices": [
+        10761,
+        14506,
+        16711,
+        17355
+      ]
+    }
+  ],
+  "native_hamiltonian": {
+    "path": "src/torchwave/approximants/eob/seobnrv4_hamiltonian.py",
+    "sha256": "40f063046e30b9fb5824b8d95980ff9deaa73f231dfe987e453094210b87cf3d"
+  },
+  "source_wheel_max_absolute_H_over_nu_difference": 1e-12,
+  "release_qualified": false
+}
