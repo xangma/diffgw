@@ -110,7 +110,10 @@ def run(case_id):
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument("--case", choices=(*CASES, "all"), default="all")
+    parser.add_argument("--case", choices=(*CASES, "all", "prospective"), default="all")
     selected = parser.parse_args().case
-    for name in (CASES if selected == "all" else (selected,)):
+    names = (tuple(CASES) if selected == "all" else
+             ("q4_nonspinning", "strong_aligned", "strong_antialigned")
+             if selected == "prospective" else (selected,))
+    for name in names:
         run(name)
