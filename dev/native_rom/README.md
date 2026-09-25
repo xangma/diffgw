@@ -1621,6 +1621,17 @@ minimum was not a stable convergence trend. This selected historical source
 route does not establish whole-waveform cadence convergence and cannot anchor
 a release fidelity claim without resolving its output-step sensitivity.
 
+The [q4 low-dynamics and NQC check](evidence/2026-09-25/source_q4_ultrafine_dynamics.json)
+uses the same frozen source and wheel, with a larger development-only dynamics
+buffer. At `0.03125` and `0.015625 M`, source/wheel low-rate orbital-phase
+differences stay below `2.11e-5 rad`; the source's own adjacent-grid maximum
+is `2.21e-6 rad`. In contrast, source-minus-wheel leading NQC amplitude
+coefficient differences grow from `0.00328` to `0.0413`, and leading phase
+coefficient differences from `0.000336` to `0.00693`. The low-rate trajectory
+does not show a comparable cadence drift; NQC matching or subsequent mode
+assembly is the next attribution target. Coefficient differences alone do not
+quantify their effect on the complete mode.
+
 The [JAX initial-state-to-base-mode gradient check](evidence/2026-09-25/jax_initial_to_base_mode_gradient.json)
 uses a [frozen q4 plan](evidence/2026-09-25/jax_initial_to_base_mode_gradient_plan.json)
 and the development-only traceable quasicircular solve. The solve reproduces
