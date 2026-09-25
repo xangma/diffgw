@@ -12,6 +12,7 @@ import ctypes
 import hashlib
 import importlib.metadata
 import json
+import math
 from pathlib import Path
 import subprocess
 import sys
@@ -119,6 +120,12 @@ def compile_adapter(headers: Path, gsl_include: Path, private: Path,
 
 
 def frozen_points(spec: dict) -> tuple[dict, list[dict]]:
+    if "explicit_states" in spec:
+        points = spec["explicit_states"]
+        if [point["index"] for point in points] != spec["indices"]:
+            raise ValueError(f"Explicit-state indices changed for {spec['name']}")
+        physical = spec["physical"]
+        return physical, points
     evidence_path = ROOT / spec["evidence"]
     checked_file(evidence_path, spec["sha256"])
     evidence = json.loads(evidence_path.read_text())
@@ -210,6 +217,9 @@ def main() -> None:
                     if rc != 0:
                         raise RuntimeError(f"{spec['name']} index {point['index']}: C rc={rc}")
                     source_h, wheel_h, k, d_so, d_ss = out
+                    if not all(math.isfinite(value) for value in (
+                            source_h, wheel_h, k, d_so, d_ss)):
+                        raise ValueError(f"Nonfinite source/wheel value at {spec['name']} {point['index']}")
                     difference = wheel_h - source_h
                     if abs(difference) > plan["source_wheel_max_absolute_H_over_nu_difference"]:
                         raise ValueError(f"Source/wheel mismatch at {spec['name']} {point['index']}")
@@ -217,6 +227,9 @@ def main() -> None:
                     native_h = native.real_hamiltonian(
                         radius, scalar(state["pr_star"]), scalar(state["pphi"])).item()/nu
                     nk, nso, nss = native.calibration_parameters(radius)
+                    if not all(math.isfinite(value) for value in (
+                            native_h, nk.item(), nso.item(), nss.item())):
+                        raise ValueError(f"Nonfinite native value at {spec['name']} {point['index']}")
                     records.append({
                         "index": point["index"], "time_M": point["time_M"],
                         "frequency_Momega": point.get("frequency_Momega",
@@ -234,8 +247,8 @@ def main() -> None:
                     })
                 rows.append({
                     "name": spec["name"], "physical": physical,
-                    "frozen_evidence": spec["evidence"],
-                    "frozen_evidence_sha256": spec["sha256"],
+                    "frozen_evidence": spec.get("evidence"),
+                    "frozen_evidence_sha256": spec.get("sha256"),
                     "max_abs_wheel_minus_source": max(abs(p["wheel_minus_source"])
                                                        for p in records),
                     "max_abs_native_minus_wheel": max(abs(p["native_minus_wheel"])

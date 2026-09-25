@@ -1062,7 +1062,10 @@ stays above `0.999992`. The
 reaches `0.9880269` at the same mass, and all five selected native/public
 parity checks pass. These original-paper runs are regression cases, not an
 independent holdout. Their shared 0260 miss and the separate prospective 2569
-miss leave the absolute physical gate failed; the release target is unresolved.
+miss leave the absolute physical gate failed. The provisional development
+target is faithful historical public-SEOBNRv4 behavior, with the `0.99` NR
+overlap tracked as a separate failed accuracy gate. This distinction does
+not authorize release or weaken the requirement to report the NR misses.
 The [post-hoc 0260 cutoff check](evidence/2026-09-24/sxs_0260_initial_cutoff.json)
 finds that using the catalog's initial orbital frequency and earlier common
 NR support lowers the 22 M⊙ overlap to `0.985634`; those tested protocol
@@ -2009,6 +2012,17 @@ historical conventions as independent physics nor qualifies trajectories or
 waveforms. Reproduce with `dev.native_rom.diagnose_hamiltonian_same_state`
 and `dev.native_rom.diagnose_hamiltonian_source_conventions`, passing each
 script its corresponding frozen plan via `--plan`.
+
+A separate [predeclared explicit-state grid](evidence/2026-09-25/hamiltonian_boundary_grid_plan.json)
+checks `r=20, 10, 6 M` at q=4 nonspinning, q=3 strong antialigned,
+q=10 near-extreme aligned, and q=3 near-extreme mixed spin. Its
+[pinned-source/wheel result](evidence/2026-09-25/hamiltonian_boundary_grid.json)
+agrees bitwise at all 12 states. The published native value differs by at
+most `1.18e-6` absolute; the [two-factor replay](evidence/2026-09-25/hamiltonian_boundary_conventions.json)
+closes all gaps to `1.8e-15`. Nonspinning changes only with the shorter
+source calibration decimals, while spin-row gaps are dominated by the
+historical logarithmic derivative. These are explicit Hamiltonian inputs,
+not physical trajectories or a waveform validation set.
 
 1. Qualify the physical generator against the published equations and independent
    references over the intended domain, resolve convention/provenance gaps, and

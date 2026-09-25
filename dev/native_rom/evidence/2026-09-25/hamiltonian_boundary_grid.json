@@ -1,0 +1,441 @@
+{
+  "adapter_sha256": "18c115fa438a44a8b236290aab5b8f46376016adf459aa354944033c0c3dd465",
+  "compile_command": [
+    "clang",
+    "-dynamiclib",
+    "-O2",
+    "-H",
+    "-Wno-gnu-folding-constant",
+    "-Wl,-headerpad_max_install_names",
+    "-I",
+    "/var/folders/l0/3dr1pyw15ln58b6xh74j_41w0000gn/T/diffgw-v4-hamiltonian-3sq86o9l/private",
+    "-I",
+    "/tmp/diffgw-lalsuite-pinned-53acc0c/merged-include",
+    "-I",
+    "/usr/local/include",
+    "-o",
+    "/var/folders/l0/3dr1pyw15ln58b6xh74j_41w0000gn/T/diffgw-v4-hamiltonian-3sq86o9l/v4_hamiltonian_adapter.dylib",
+    "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw/dev/native_rom/reference/hamiltonian_v4_source_wheel_adapter.c",
+    "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/liblalsimulation.37.dylib",
+    "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/liblal.20.dylib",
+    "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libgsl.28.dylib",
+    "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libgslcblas.0.dylib"
+  ],
+  "compiler": "Apple clang version 21.0.0 (clang-2100.1.1.101)",
+  "gsl_include": "/usr/local/include",
+  "header_root": "/tmp/diffgw-lalsuite-pinned-53acc0c/merged-include",
+  "pinned_source_peeled_commit": "a3bc6b5eba1e9e1489616bc5d447a122e492a0d0",
+  "pinned_source_tag_object": "5154f04e470d1cc48d6f61193af728b5692474ab",
+  "plan_sha256": "a6ae607dd6ae99f6bbe85aeeb06e6a1548d8649b6699afc9049bfc2f1adc697f",
+  "public_headers_sha256": {
+    "lal/lib/std/XLALGSL.h": "eddcbe9c4a034cdccc60415f1d3f74660c24cd4a50a93290fbb035942d542801",
+    "lal/lib/tools/LALDict.h": "cdbbf7a66655133e5df414ed519459172706421219316b5a3a01e0e59e2a0679",
+    "lalsimulation/lib/LALSimIMR.h": "d5ec4070729f6f058d5435de3b5bcfd379f3471f27bf213fd7f9b380fe640315",
+    "lalsimulation/lib/LALSimInspiral.h": "d287a5c9a8eb7dc23ad1247d14513fe613527b17a71b4ace8c36c6a71c7b3603"
+  },
+  "release_qualified": false,
+  "rows": [
+    {
+      "frozen_evidence": null,
+      "frozen_evidence_sha256": null,
+      "max_abs_native_minus_wheel": 1.2951417716067226e-10,
+      "max_abs_relative_native_minus_wheel": 2.1001567626507302e-11,
+      "max_abs_wheel_minus_source": 0.0,
+      "name": "q4_nonspinning",
+      "physical": {
+        "chi1": 0.0,
+        "chi2": 0.0,
+        "mass1": 40.0,
+        "mass2": 10.0
+      },
+      "points": [
+        {
+          "frequency_Momega": null,
+          "index": 0,
+          "native_H_real_over_nu": 6.222383449816438,
+          "native_calibration": {
+            "K": 1.2284432293119996,
+            "dSO": -44.532373,
+            "dSS": 3.1994197659520003
+          },
+          "native_minus_wheel": -5.329070518200751e-15,
+          "native_minus_wheel_relative": -8.564355702569175e-16,
+          "source_H_real_over_nu": 6.222383449816443,
+          "source_calibration": {
+            "K": 1.2284404479999997,
+            "dSO": -44.5324,
+            "dSS": 3.199417968
+          },
+          "state": {
+            "pphi": 4.5,
+            "pr_star": -0.005,
+            "r": 20.0
+          },
+          "time_M": null,
+          "wheel_H_real_over_nu": 6.222383449816443,
+          "wheel_minus_source": 0.0
+        },
+        {
+          "frequency_Momega": null,
+          "index": 1,
+          "native_H_real_over_nu": 6.200999585981347,
+          "native_calibration": {
+            "K": 1.2284432293119996,
+            "dSO": -44.532373,
+            "dSS": 3.1994197659520003
+          },
+          "native_minus_wheel": 2.41051623106614e-12,
+          "native_minus_wheel_relative": 3.887302680226832e-13,
+          "source_H_real_over_nu": 6.200999585978937,
+          "source_calibration": {
+            "K": 1.2284404479999997,
+            "dSO": -44.5324,
+            "dSS": 3.199417968
+          },
+          "state": {
+            "pphi": 3.6,
+            "pr_star": -0.02,
+            "r": 10.0
+          },
+          "time_M": null,
+          "wheel_H_real_over_nu": 6.200999585978937,
+          "wheel_minus_source": 0.0
+        },
+        {
+          "frequency_Momega": null,
+          "index": 2,
+          "native_H_real_over_nu": 6.166881418886316,
+          "native_calibration": {
+            "K": 1.2284432293119996,
+            "dSO": -44.532373,
+            "dSS": 3.1994197659520003
+          },
+          "native_minus_wheel": 1.2951417716067226e-10,
+          "native_minus_wheel_relative": 2.1001567626507302e-11,
+          "source_H_real_over_nu": 6.166881418756802,
+          "source_calibration": {
+            "K": 1.2284404479999997,
+            "dSO": -44.5324,
+            "dSS": 3.199417968
+          },
+          "state": {
+            "pphi": 3.0,
+            "pr_star": -0.06,
+            "r": 6.0
+          },
+          "time_M": null,
+          "wheel_H_real_over_nu": 6.166881418756802,
+          "wheel_minus_source": 0.0
+        }
+      ]
+    },
+    {
+      "frozen_evidence": null,
+      "frozen_evidence_sha256": null,
+      "max_abs_native_minus_wheel": 1.1848747512033242e-06,
+      "max_abs_relative_native_minus_wheel": 2.2653685650298473e-07,
+      "max_abs_wheel_minus_source": 0.0,
+      "name": "q3_strong_antialigned",
+      "physical": {
+        "chi1": -0.85,
+        "chi2": -0.85,
+        "mass1": 45.0,
+        "mass2": 15.0
+      },
+      "points": [
+        {
+          "frequency_Momega": null,
+          "index": 0,
+          "native_H_real_over_nu": 5.304814684196326,
+          "native_calibration": {
+            "K": 0.3329225736885384,
+            "dSO": -143.96611399481299,
+            "dSS": -11.400412412864991
+          },
+          "native_minus_wheel": 6.259766038851922e-10,
+          "native_minus_wheel_relative": 1.1800159689346306e-10,
+          "source_H_real_over_nu": 5.304814683570349,
+          "source_calibration": {
+            "K": 0.3329191313522949,
+            "dSO": -143.96603243486328,
+            "dSS": -11.400410334375
+          },
+          "state": {
+            "pphi": 4.5,
+            "pr_star": -0.005,
+            "r": 20.0
+          },
+          "time_M": null,
+          "wheel_H_real_over_nu": 5.304814683570349,
+          "wheel_minus_source": 0.0
+        },
+        {
+          "frequency_Momega": null,
+          "index": 1,
+          "native_H_real_over_nu": 5.278729639573053,
+          "native_calibration": {
+            "K": 0.3329225736885384,
+            "dSO": -143.96611399481299,
+            "dSS": -11.400412412864991
+          },
+          "native_minus_wheel": 5.663808888556332e-08,
+          "native_minus_wheel_relative": 1.072949238935491e-08,
+          "source_H_real_over_nu": 5.2787295829349645,
+          "source_calibration": {
+            "K": 0.3329191313522949,
+            "dSO": -143.96603243486328,
+            "dSS": -11.400410334375
+          },
+          "state": {
+            "pphi": 3.6,
+            "pr_star": -0.02,
+            "r": 10.0
+          },
+          "time_M": null,
+          "wheel_H_real_over_nu": 5.2787295829349645,
+          "wheel_minus_source": 0.0
+        },
+        {
+          "frequency_Momega": null,
+          "index": 2,
+          "native_H_real_over_nu": 5.230385191671954,
+          "native_calibration": {
+            "K": 0.3329225736885384,
+            "dSO": -143.96611399481299,
+            "dSS": -11.400412412864991
+          },
+          "native_minus_wheel": 1.1848747512033242e-06,
+          "native_minus_wheel_relative": 2.2653685650298473e-07,
+          "source_H_real_over_nu": 5.230384006797203,
+          "source_calibration": {
+            "K": 0.3329191313522949,
+            "dSO": -143.96603243486328,
+            "dSS": -11.400410334375
+          },
+          "state": {
+            "pphi": 3.0,
+            "pr_star": -0.06,
+            "r": 6.0
+          },
+          "time_M": null,
+          "wheel_H_real_over_nu": 5.230384006797203,
+          "wheel_minus_source": 0.0
+        }
+      ]
+    },
+    {
+      "frozen_evidence": null,
+      "frozen_evidence_sha256": null,
+      "max_abs_native_minus_wheel": 2.968232166722373e-07,
+      "max_abs_relative_native_minus_wheel": 2.4655859454069932e-08,
+      "max_abs_wheel_minus_source": 0.0,
+      "name": "q10_near_extreme_aligned",
+      "physical": {
+        "chi1": 0.95,
+        "chi2": 0.95,
+        "mass1": 50.0,
+        "mass2": 5.0
+      },
+      "points": [
+        {
+          "frequency_Momega": null,
+          "index": 0,
+          "native_H_real_over_nu": 12.073369141211217,
+          "native_calibration": {
+            "K": 0.5842765394755691,
+            "dSO": -36.62035584412945,
+            "dSS": 5.180159198762572
+          },
+          "native_minus_wheel": -1.3532464038235048e-10,
+          "native_minus_wheel_relative": -1.1208523387139453e-11,
+          "source_H_real_over_nu": 12.073369141346541,
+          "source_calibration": {
+            "K": 0.5842814690549177,
+            "dSO": -36.62039780748156,
+            "dSS": 5.180153607440202
+          },
+          "state": {
+            "pphi": 4.5,
+            "pr_star": -0.005,
+            "r": 20.0
+          },
+          "time_M": null,
+          "wheel_H_real_over_nu": 12.073369141346541,
+          "wheel_minus_source": 0.0
+        },
+        {
+          "frequency_Momega": null,
+          "index": 1,
+          "native_H_real_over_nu": 12.056972940238156,
+          "native_calibration": {
+            "K": 0.5842765394755691,
+            "dSO": -36.62035584412945,
+            "dSS": 5.180159198762572
+          },
+          "native_minus_wheel": -1.2711643293528141e-08,
+          "native_minus_wheel_relative": -1.054298068274108e-09,
+          "source_H_real_over_nu": 12.056972952949799,
+          "source_calibration": {
+            "K": 0.5842814690549177,
+            "dSO": -36.62039780748156,
+            "dSS": 5.180153607440202
+          },
+          "state": {
+            "pphi": 3.6,
+            "pr_star": -0.02,
+            "r": 10.0
+          },
+          "time_M": null,
+          "wheel_H_real_over_nu": 12.056972952949799,
+          "wheel_minus_source": 0.0
+        },
+        {
+          "frequency_Momega": null,
+          "index": 2,
+          "native_H_real_over_nu": 12.038647847857087,
+          "native_calibration": {
+            "K": 0.5842765394755691,
+            "dSO": -36.62035584412945,
+            "dSS": 5.180159198762572
+          },
+          "native_minus_wheel": -2.968232166722373e-07,
+          "native_minus_wheel_relative": -2.4655859454069932e-08,
+          "source_H_real_over_nu": 12.038648144680304,
+          "source_calibration": {
+            "K": 0.5842814690549177,
+            "dSO": -36.62039780748156,
+            "dSS": 5.180153607440202
+          },
+          "state": {
+            "pphi": 3.0,
+            "pr_star": -0.06,
+            "r": 6.0
+          },
+          "time_M": null,
+          "wheel_H_real_over_nu": 12.038648144680304,
+          "wheel_minus_source": 0.0
+        }
+      ]
+    },
+    {
+      "frozen_evidence": null,
+      "frozen_evidence_sha256": null,
+      "max_abs_native_minus_wheel": 2.2697320289921663e-07,
+      "max_abs_relative_native_minus_wheel": 4.312460832978986e-08,
+      "max_abs_wheel_minus_source": 0.0,
+      "name": "q3_near_extreme_mixed",
+      "physical": {
+        "chi1": 0.95,
+        "chi2": -0.95,
+        "mass1": 45.0,
+        "mass2": 15.0
+      },
+      "points": [
+        {
+          "frequency_Momega": null,
+          "index": 0,
+          "native_H_real_over_nu": 5.306237621622039,
+          "native_calibration": {
+            "K": 0.25680863733386006,
+            "dSO": -30.510905721981004,
+            "dSS": 11.85226731285578
+          },
+          "native_minus_wheel": 1.404565352913778e-11,
+          "native_minus_wheel_relative": 2.647008017873389e-12,
+          "source_H_real_over_nu": 5.306237621607993,
+          "source_calibration": {
+            "K": 0.25680496223068794,
+            "dSO": -30.511016786549995,
+            "dSS": 11.852255532693748
+          },
+          "state": {
+            "pphi": 4.5,
+            "pr_star": -0.005,
+            "r": 20.0
+          },
+          "time_M": null,
+          "wheel_H_real_over_nu": 5.306237621607993,
+          "wheel_minus_source": 0.0
+        },
+        {
+          "frequency_Momega": null,
+          "index": 1,
+          "native_H_real_over_nu": 5.28770100567658,
+          "native_calibration": {
+            "K": 0.25680863733386006,
+            "dSO": -30.510905721981004,
+            "dSS": 11.85226731285578
+          },
+          "native_minus_wheel": 2.9936657597318117e-09,
+          "native_minus_wheel_relative": 5.661563992012526e-10,
+          "source_H_real_over_nu": 5.2877010026829145,
+          "source_calibration": {
+            "K": 0.25680496223068794,
+            "dSO": -30.511016786549995,
+            "dSS": 11.852255532693748
+          },
+          "state": {
+            "pphi": 3.6,
+            "pr_star": -0.02,
+            "r": 10.0
+          },
+          "time_M": null,
+          "wheel_H_real_over_nu": 5.2877010026829145,
+          "wheel_minus_source": 0.0
+        },
+        {
+          "frequency_Momega": null,
+          "index": 2,
+          "native_H_real_over_nu": 5.263194762294392,
+          "native_calibration": {
+            "K": 0.25680863733386006,
+            "dSO": -30.510905721981004,
+            "dSS": 11.85226731285578
+          },
+          "native_minus_wheel": 2.2697320289921663e-07,
+          "native_minus_wheel_relative": 4.312460832978986e-08,
+          "source_H_real_over_nu": 5.2631945353211895,
+          "source_calibration": {
+            "K": 0.25680496223068794,
+            "dSO": -30.511016786549995,
+            "dSS": 11.852255532693748
+          },
+          "state": {
+            "pphi": 3.0,
+            "pr_star": -0.06,
+            "r": 6.0
+          },
+          "time_M": null,
+          "wheel_H_real_over_nu": 5.2631945353211895,
+          "wheel_minus_source": 0.0
+        }
+      ]
+    }
+  ],
+  "schema": "diffgw.seobnrv4.hamiltonian-same-state.v1",
+  "scope_limit": "The wheel wrapper is called with coefficients initialized by the exact pinned source v4 initializer. The wheel's private initializer is not exported; the source/wheel agreement validates this adapter at the tested states, not all Hamiltonian branches or the full waveform.",
+  "script_sha256": "63aa53bd34a481ef371f6c1579211ab77a08eba6585b10f7cfc34bb8b40f778a",
+  "source_files_sha256": {
+    "lalsimulation/lib/LALSimIMREOBNRv2.h": "a32e632cc999d7cf9e6784f824ead606b408362ef96741a86a7e27c6bb8592f1",
+    "lalsimulation/lib/LALSimIMRSpinEOB.h": "700804fad22264c9ae669f4495c56efcc512f602a0d944d77bc8239d5bfb990c",
+    "lalsimulation/lib/LALSimIMRSpinEOBHamiltonian.c": "629ea1690bb0c7fd913dd39f17299f8412aafd30519293af8d0526b42dab90dc",
+    "lalsimulation/lib/LALSimIMRSpinEOBHamiltonian.h": "7e1002abcec95453bc930c4530c4fae4917c040c855d77c5cf73a0013a34058a"
+  },
+  "source_initializer": "XLALSimIMRCalculateSpinEOBHCoeffs(..., 4)",
+  "status": "diagnostic_complete",
+  "wheel": {
+    "lal_version": "7.7.1",
+    "lalsimulation_version": "6.2.1",
+    "lalsuite_distribution": "7.26.15",
+    "liblalsimulation_sha256": "9046c4a673d2ba82b792f7b92d73203ba783b32fc604b5da1139c5c1bc8b3325",
+    "libraries_sha256": {
+      "libgsl.28.dylib": "1eefe0dbead9551d47be3c09bbf786c727f84df1331130ee8a03127b7a95abe8",
+      "libgslcblas.0.dylib": "00a30ab2e9eb5cd36caab9ae9a9975a8280b9b4c2940b15e446c34a151818230",
+      "liblal.20.dylib": "e4c4ed42baed00d30668588e58444f974e3deeda56ba4e5978624640ddb5bde7",
+      "liblalsimulation.37.dylib": "9046c4a673d2ba82b792f7b92d73203ba783b32fc604b5da1139c5c1bc8b3325"
+    },
+    "python_extension_sha256": "2de0af808b258bef03a3a13b15fa71038f48579f5f562e92ebd62c6b9769fd37"
+  },
+  "wheel_exported_symbol": "XLALSimInspiralEOBPAHamiltonianWrapper",
+  "wheel_symbol_binding": "liblalsimulation.37"
+}

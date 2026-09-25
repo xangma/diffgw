@@ -136,6 +136,11 @@ extend that attribution to four mixed-spin late and four high-spin q=8 states.
 The pinned source and wheel differ by at most `8.9e-16` in `H_real/nu`;
 the published native value differs by at most `1.14e-5` absolute, and the
 development variant with both source conventions agrees within `8.9e-16`.
+The [predeclared boundary grid](../evidence/2026-09-25/hamiltonian_boundary_grid.json)
+adds 12 explicit nonspinning, antialigned, and near-extreme-spin inputs;
+source and wheel agree bitwise, and the [two-factor replay](../evidence/2026-09-25/hamiltonian_boundary_conventions.json)
+closes the native gap to `1.8e-15` absolute. These states do not establish
+orbit or waveform parity.
 Changing only the diagnostic Hamiltonian calibration decimals to the pinned
 source values lowers the aligned-spin peak-fitted full-waveform complex L2
 from `0.00299749` to `0.00271301` and passes the three-tolerance ODE check;

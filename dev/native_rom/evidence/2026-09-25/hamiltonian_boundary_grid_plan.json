@@ -1,0 +1,227 @@
+{
+  "schema": "diffgw.seobnrv4.hamiltonian-same-state-plan.v1",
+  "purpose": "Predeclared explicit-state Hamiltonian parity grid at nonspinning, antialigned, near-extreme aligned and near-extreme mixed-spin boundaries; not trajectory or waveform validation.",
+  "pinned_source": {
+    "tag": "lalsimulation-v6.2.1",
+    "tag_object": "5154f04e470d1cc48d6f61193af728b5692474ab",
+    "peeled_commit": "a3bc6b5eba1e9e1489616bc5d447a122e492a0d0",
+    "files_sha256": {
+      "lalsimulation/lib/LALSimIMRSpinEOBHamiltonian.c": "629ea1690bb0c7fd913dd39f17299f8412aafd30519293af8d0526b42dab90dc",
+      "lalsimulation/lib/LALSimIMRSpinEOBHamiltonian.h": "7e1002abcec95453bc930c4530c4fae4917c040c855d77c5cf73a0013a34058a",
+      "lalsimulation/lib/LALSimIMRSpinEOB.h": "700804fad22264c9ae669f4495c56efcc512f602a0d944d77bc8239d5bfb990c",
+      "lalsimulation/lib/LALSimIMREOBNRv2.h": "a32e632cc999d7cf9e6784f824ead606b408362ef96741a86a7e27c6bb8592f1"
+    },
+    "public_headers_sha256": {
+      "lal/lib/tools/LALDict.h": "cdbbf7a66655133e5df414ed519459172706421219316b5a3a01e0e59e2a0679",
+      "lal/lib/std/XLALGSL.h": "eddcbe9c4a034cdccc60415f1d3f74660c24cd4a50a93290fbb035942d542801",
+      "lalsimulation/lib/LALSimInspiral.h": "d287a5c9a8eb7dc23ad1247d14513fe613527b17a71b4ace8c36c6a71c7b3603",
+      "lalsimulation/lib/LALSimIMR.h": "d5ec4070729f6f058d5435de3b5bcfd379f3471f27bf213fd7f9b380fe640315"
+    }
+  },
+  "pinned_wheel": {
+    "lalsuite_distribution": "7.26.15",
+    "lal_version": "7.7.1",
+    "lalsimulation_version": "6.2.1",
+    "liblalsimulation_sha256": "9046c4a673d2ba82b792f7b92d73203ba783b32fc604b5da1139c5c1bc8b3325",
+    "python_extension_sha256": "2de0af808b258bef03a3a13b15fa71038f48579f5f562e92ebd62c6b9769fd37",
+    "libraries_sha256": {
+      "liblalsimulation.37.dylib": "9046c4a673d2ba82b792f7b92d73203ba783b32fc604b5da1139c5c1bc8b3325",
+      "liblal.20.dylib": "e4c4ed42baed00d30668588e58444f974e3deeda56ba4e5978624640ddb5bde7",
+      "libgsl.28.dylib": "1eefe0dbead9551d47be3c09bbf786c727f84df1331130ee8a03127b7a95abe8",
+      "libgslcblas.0.dylib": "00a30ab2e9eb5cd36caab9ae9a9975a8280b9b4c2940b15e446c34a151818230"
+    }
+  },
+  "frozen_states": [
+    {
+      "name": "q4_nonspinning",
+      "physical": {
+        "mass1": 40.0,
+        "mass2": 10.0,
+        "chi1": 0.0,
+        "chi2": 0.0
+      },
+      "indices": [
+        0,
+        1,
+        2
+      ],
+      "explicit_states": [
+        {
+          "index": 0,
+          "time_M": null,
+          "frequency_Momega": null,
+          "state": {
+            "r": 20.0,
+            "pr_star": -0.005,
+            "pphi": 4.5
+          }
+        },
+        {
+          "index": 1,
+          "time_M": null,
+          "frequency_Momega": null,
+          "state": {
+            "r": 10.0,
+            "pr_star": -0.02,
+            "pphi": 3.6
+          }
+        },
+        {
+          "index": 2,
+          "time_M": null,
+          "frequency_Momega": null,
+          "state": {
+            "r": 6.0,
+            "pr_star": -0.06,
+            "pphi": 3.0
+          }
+        }
+      ]
+    },
+    {
+      "name": "q3_strong_antialigned",
+      "physical": {
+        "mass1": 45.0,
+        "mass2": 15.0,
+        "chi1": -0.85,
+        "chi2": -0.85
+      },
+      "indices": [
+        0,
+        1,
+        2
+      ],
+      "explicit_states": [
+        {
+          "index": 0,
+          "time_M": null,
+          "frequency_Momega": null,
+          "state": {
+            "r": 20.0,
+            "pr_star": -0.005,
+            "pphi": 4.5
+          }
+        },
+        {
+          "index": 1,
+          "time_M": null,
+          "frequency_Momega": null,
+          "state": {
+            "r": 10.0,
+            "pr_star": -0.02,
+            "pphi": 3.6
+          }
+        },
+        {
+          "index": 2,
+          "time_M": null,
+          "frequency_Momega": null,
+          "state": {
+            "r": 6.0,
+            "pr_star": -0.06,
+            "pphi": 3.0
+          }
+        }
+      ]
+    },
+    {
+      "name": "q10_near_extreme_aligned",
+      "physical": {
+        "mass1": 50.0,
+        "mass2": 5.0,
+        "chi1": 0.95,
+        "chi2": 0.95
+      },
+      "indices": [
+        0,
+        1,
+        2
+      ],
+      "explicit_states": [
+        {
+          "index": 0,
+          "time_M": null,
+          "frequency_Momega": null,
+          "state": {
+            "r": 20.0,
+            "pr_star": -0.005,
+            "pphi": 4.5
+          }
+        },
+        {
+          "index": 1,
+          "time_M": null,
+          "frequency_Momega": null,
+          "state": {
+            "r": 10.0,
+            "pr_star": -0.02,
+            "pphi": 3.6
+          }
+        },
+        {
+          "index": 2,
+          "time_M": null,
+          "frequency_Momega": null,
+          "state": {
+            "r": 6.0,
+            "pr_star": -0.06,
+            "pphi": 3.0
+          }
+        }
+      ]
+    },
+    {
+      "name": "q3_near_extreme_mixed",
+      "physical": {
+        "mass1": 45.0,
+        "mass2": 15.0,
+        "chi1": 0.95,
+        "chi2": -0.95
+      },
+      "indices": [
+        0,
+        1,
+        2
+      ],
+      "explicit_states": [
+        {
+          "index": 0,
+          "time_M": null,
+          "frequency_Momega": null,
+          "state": {
+            "r": 20.0,
+            "pr_star": -0.005,
+            "pphi": 4.5
+          }
+        },
+        {
+          "index": 1,
+          "time_M": null,
+          "frequency_Momega": null,
+          "state": {
+            "r": 10.0,
+            "pr_star": -0.02,
+            "pphi": 3.6
+          }
+        },
+        {
+          "index": 2,
+          "time_M": null,
+          "frequency_Momega": null,
+          "state": {
+            "r": 6.0,
+            "pr_star": -0.06,
+            "pphi": 3.0
+          }
+        }
+      ]
+    }
+  ],
+  "native_hamiltonian": {
+    "path": "src/torchwave/approximants/eob/seobnrv4_hamiltonian.py",
+    "sha256": "40f063046e30b9fb5824b8d95980ff9deaa73f231dfe987e453094210b87cf3d"
+  },
+  "source_wheel_max_absolute_H_over_nu_difference": 1e-12,
+  "release_qualified": false,
+  "state_selection": "Three shared finite radial-momentum states at r=20, 10, 6 M, chosen before evaluating the Hamiltonians. The values span weak to strong field without using fitted trajectory states."
+}
