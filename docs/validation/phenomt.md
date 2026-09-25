@@ -115,6 +115,27 @@ measurements, not equation provenance or physical-accuracy claims. Direct
 rotation tests described below already exonerate the shared Wigner/SWSH
 projection for binary-supplied modes and angles.
 
+The [independent scalar-angle receipt](../validation/phenomt_msa_scalar_angles_20260925.json)
+then tabulates the raw PV223 branch and implements the suffix rules from
+PhenomTP Eqs. (5), (20), and (24) with independent scalar PCHIP derivatives
+and adaptive quadrature. A 4,120-node table and its 2,065-node refinement
+agree within `1.65e-7` rad. At nine reference/MECO/peak/ringdown probes, the
+native versus independent maximum rotation is `0`, `1.43e-15`, `7.26e-6`,
+and `1.16e-6` rad for suffixes `22300`, `22310`, `22311`, and `22321`.
+The relative-rotation residual against the public binary is already `0.01623`
+rad in the analytical inspiral for `22300`; its sampled ringdown residual is
+`0.03774` rad. A full-grid check restricted to 5,326 samples strictly before
+MECO first exceeds `1e-4` rad after `31.738` ms, `1e-3` rad after `0.72949` s,
+and `1e-2` rad after `2.55908` s. No continuation, ringdown, or numerical-gamma
+rule applies on this interval. The `22311` and `22321` continuations amplify
+the sampled ringdown residual to `0.14664` and `0.42952` rad. Thus the earliest
+localized q=10 MSA discrepancy is the raw analytical-angle branch, while
+continuation/minimal-rotation gamma explains only additional suffix-dependent
+growth. Raw PV223 values come from the audited native evaluator; an independent
+paper-derived scalar transcription of those raw MSA formulas is not yet
+available, so attribution to a particular raw term remains blocked. The public
+`22300` branch is an unmodified observation, and no binary output is fitted.
+
 Additional numerical cases at 2048 Hz give the following errors. Both native
 backends are included in the receipt; their reported errors agree to the
 displayed precision. The spins, viewing geometry, reference frequency, and
@@ -142,11 +163,56 @@ axis derivative separately. Tests match the total RHS to Torch and JAX within
 power independently and matches within `3e-10`; the production selection is
 also checked to remove only the published `v8` N3LO quadratic-spin piece.
 
-This closes an equation-transcription gate, but not the numerical-precession
-model gate: the scalar reference has no ODE/event solver, angle construction,
-or ringdown continuation. It supports retaining the source-prescribed Kerr
-self-quadrupole coefficient while the black-box trajectory discrepancy remains
-unresolved. No LAL source or binary-derived coefficient enters the scalar.
+The [independent trajectory receipt](../validation/phenomt_independent_trajectory_20260925.json)
+composes this RHS with a SciPy Brent event solve, adaptive DOP853 evolution,
+minimal-rotation tangent transport, dense output, and independent Euler-angle
+reconstruction. For the `(60, 6)` case, the reference event differs from the
+native event by `1.46e-11 M` (`4.73e-15 s`). Tight/loose solves differ by at
+most `2.25e-9` in state-vector norm and `1.64e-9` rad in rotation; the largest
+constraint drift is `1.06e-12`. Native and independent trajectories differ by
+at most `4.74e-9` in orbital-axis norm and `4.81e-9` rad in rotation. The
+production angle reconstruction has a fixed `0.003066` rad J-frame chart
+offset, but its relative evolution agrees with the independent reconstruction
+within `7.89e-16` rad.
+
+The same receipt compares the independent relative triad with rotations
+reconstructed from the public PV300/FS4 binary's Euler-angle series for all
+43,087 inspiral samples at 16384 Hz. The public binary does not expose its
+internal orbital-axis or ODE state.
+The initial relative-triad error is `7.98e-17` rad. It then exceeds `1e-4` rad
+after `1.465` ms, `1e-3` rad after `14.282` ms, `1e-2` rad after `0.13934` s,
+and `1e-1` rad after `1.16638` s, reaching maximum orbital-axis and triad
+errors of `0.38911` and `0.39276` rad. The independent carrier event and public
+epoch differ by only `1.12`
+microseconds; the comparison anchors both rotation series at that defined
+reference event, with no fitted time, phase, or rotation adjustment. This localizes the
+numerical discrepancy to the pre-merger orientation/rotation path before
+projection or ringdown. It does not distinguish public trajectory evolution
+from public Euler-angle construction or carrier/time mapping; the small
+reference-event offset does not exclude subsequent time-mapping drift.
+
+This closes the native-versus-independent event/ODE/transport/angle
+implementation check through the carrier peak, but not the public numerical-
+precession model gate. In particular, the
+independent published spin-even initial axis rate is `0.0686446799357 1/s` and
+matches native to `8.33e-17 1/s`; the public angle-derived axis rate is
+`3.27732540646e-8 1/s`. The positive SpinTaylor quadrupole control remains
+present in the receipt. Published math therefore supports retaining the Kerr
+self-quadrupole coefficient, while the black-box orientation discrepancy and
+whole-waveform gate remain unresolved. No LAL source or binary-derived
+coefficient enters the reference path.
+
+The component localization is therefore:
+
+| Failed q=10 path | Earliest paper-defined component | Evidence excluding later components | Remaining blocker |
+| --- | --- | --- | --- |
+| MSA PV223 | Raw analytical angles | Residual begins before MECO; continuation and ringdown are inactive | No independent clean-room scalar transcription of the raw MSA formulas |
+| Numerical PV300/FS4 | Pre-merger orientation/rotation path: carrier/time mapping, trajectory, or public angle construction unresolved | Relative-triad error reaches `1e-4` rad after `1.465` ms; projection closes below `8e-16`; ringdown is not sampled | Public Euler angles do not expose the internal trajectory, so the earliest of these three components cannot yet be selected |
+
+The primary sources support the retained Kerr self-quadrupole term and the
+implemented evolution equations. They do not support a narrow production
+correction inferred from the public binary, so this slice changes diagnostics
+and receipts only.
 
 ## Carrier and integration-resolution diagnostics
 
@@ -300,6 +366,15 @@ sweep. The latter uses 16384 Hz and the selected frontends independently of the
 main diagnostic's sampling-rate selection. Each receipt records its exact command.
 All reference calls use public binaries; no reference implementation source
 is read or incorporated.
+
+Reproduce the new independent paths with
+`python scripts/diagnose_phenomt_msa_scalar_angles.py --output msa-scalar.json`
+and `python scripts/diagnose_phenomt_independent_trajectory.py --output trajectory.json`.
+Their receipts record exact options, versions, tables, and residuals.
+The committed receipts record their execution host, working directory, exact
+command, and package versions. They were regenerated on `len` with Python 3.12.3, NumPy 2.5.3,
+SciPy 1.18.1, Torch 2.14.0+cu130, LALSuite 7.26.15 / LALSimulation 6.2.1; the JAX
+verification environment is recorded separately above.
 
 ## Regression scope and unresolved cases
 

@@ -323,6 +323,19 @@ Model-specific formulations, reference configurations and limitations are descri
   angular-momentum denominator are retained; binary-oracle residuals alone
   do not justify altering those equations. The upstream phenomxpy numerical
   and MSA modules identify GPL-derived code and were excluded from adaptation.
+- Independent qualification references: `diffgw_reference/phenomt_numerical_trajectory.py`
+  composes the paper-derived scalar RHS with a Brent event, DOP853 solve,
+  tangent transport, and Euler reconstruction without native trajectory
+  helpers. `diffgw_reference/phenomt_angle_continuation.py` independently
+  implements the minimal-rotation, MECO, and ringdown scalar rules. The q=10
+  receipts retain the failed whole-waveform gates. Full-grid onset checks
+  localize PV223 before MECO to the raw analytical angles. For PV300/FS4 they
+  establish a pre-merger orientation/rotation residual after the reference
+  event and exclude projection and ringdown, but the public Euler-angle output
+  does not expose internal trajectory state: carrier/time mapping, trajectory
+  evolution, and angle construction remain unresolved alternatives.
+  They introduce no production equation change or coefficient fitted to public
+  binary output.
 - Verification: LALSimulation is used only through its installed binary
   Python bindings as an optional black-box oracle. No coefficients or
   residuals are fitted to those outputs, and no GPL implementation source
