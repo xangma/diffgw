@@ -57,8 +57,14 @@ def test_energy_path_has_inverse_distance_scaling_and_is_wired_publicly():
     )
     near = get_fd_waveform(**kwargs)
     far = get_fd_waveform(**{**kwargs, "distance": 800.0})
+    implicit_basis = get_fd_waveform(**{key: value for key, value in kwargs.items()
+                                      if key != "angular_basis"})
     for near_pol, far_pol in zip(near, far):
         torch.testing.assert_close(near_pol, 2.0 * far_pol, rtol=2e-14, atol=1e-30)
+    for explicit, implicit in zip(near, implicit_basis):
+        torch.testing.assert_close(explicit, implicit, rtol=0.0, atol=0.0)
+    with pytest.raises(ValueError, match="angular_basis='spheroidal'"):
+        get_fd_waveform(**{**kwargs, "angular_basis": "spherical"})
 
 
 def test_energy_path_rejects_underdetermined_conventions():

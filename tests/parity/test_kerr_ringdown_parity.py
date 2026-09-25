@@ -133,6 +133,20 @@ def test_kerr_ringdown_spheroidal_basis_parity():
     np.testing.assert_allclose(hc_t.numpy(), np.asarray(hc_j), rtol=1e-12, atol=1e-14)
 
 
+def test_kerr_ringdown_spheroidal_zero_spin_limit_jax():
+    """The JAX angular projection must reduce to its spherical convention."""
+    times = jnp.linspace(0.0, 0.02, 31)
+    parameters = dict(final_mass=60.0, final_spin=0.0, inclination=0.93,
+                      phi=0.27, amplitudes={(2, 2, 0): 0.8,
+                                              (3, 3, 0): 0.1})
+    spherical = JaxRingdown.time_domain(times, **parameters)
+    spheroidal = JaxRingdown.time_domain(times, **parameters,
+                                        angular_basis="spheroidal")
+    for sphere, spheroid in zip(spherical, spheroidal):
+        np.testing.assert_allclose(np.asarray(sphere), np.asarray(spheroid),
+                                   rtol=2e-13, atol=1e-15)
+
+
 @pytest.mark.parametrize("backend", ["independent", "berti"])
 def test_kerr_ringdown_frequency_domain_parity(backend):
     """Verify frequency-domain analytic Fourier transform parity."""

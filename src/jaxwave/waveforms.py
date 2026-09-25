@@ -380,6 +380,9 @@ def _get_fd_waveform_raw(
             final_mass = model_kwargs.pop("final_mass", mass1)
             final_spin = model_kwargs.pop("final_spin", s1z)
             energy_fraction = model_kwargs.pop("energy_fraction", 0.01)
+            angular_basis = model_kwargs.pop("angular_basis", "spheroidal")
+            if angular_basis != "spheroidal":
+                raise ValueError("clean KerrRingdown requires angular_basis='spheroidal'")
             if model_kwargs:
                 raise TypeError(f"unsupported clean KerrRingdown options: {sorted(model_kwargs)}")
             return kerr220_fd(f, final_mass, final_spin, distance, energy_fraction,
