@@ -248,6 +248,14 @@ passes at the same 12 states: its 420 source/native contributions differ by
 at most `4.43e-10` of the source total, and source components sum to total
 within `7.8e-16`. Total-flux agreement is not hiding a large mode cancellation
 on this grid.
+A [prospective JAX replay](evidence/2026-09-25/jax_flux_boundary_modes_plan.json)
+of those saved 12 states and 420 pinned-source contributions also passes its
+[frozen gates](evidence/2026-09-25/jax_flux_boundary_modes.json): the largest
+JAX/source component difference is `4.43e-10` of source total flux, while
+JAX/Torch differs by at most `9.71e-16` on the same scale. The largest
+JAX/source total-flux difference is `4.76e-10`. All JAX component values are
+saved in the result for audit. This is same-state source-convention parity;
+evolved JAX dynamics, independent physics, and domain coverage remain open.
 These supplied states are not an evolution or circular-orbit solution; the
 result does not close the initial-data, NQC, whole-waveform, or domain gates.
 The frozen three-level aligned-spin replay with precisely those two choices

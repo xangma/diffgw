@@ -1,0 +1,38 @@
+{
+  "description": "Prospective same-state JAX 35-mode source-convention flux comparison against 12 already frozen pinned-source boundary states; no re-fitting or generator change.",
+  "expected_modes": 35,
+  "expected_points": 12,
+  "expected_rows": 4,
+  "inputs": {
+    "jax_flux": {
+      "path": "src/jaxwave/approximants/eob/seobnrv4_flux.py",
+      "sha256": "47f9be36e6494708643afcdeb487a425c3e607a4c2f1ba730cbcf71ccba64287"
+    },
+    "jax_hamiltonian": {
+      "path": "src/jaxwave/approximants/eob/seobnrv4_hamiltonian.py",
+      "sha256": "83aa25f002ea5c3132524574043615ac5522d7e7c27a7bc19d975ca6bc2faa8a"
+    },
+    "jax_historical_derivative": {
+      "path": "dev/native_rom/eob/jax/historical_hamiltonian.py",
+      "sha256": "cd287c911161200deadd3af34cf17bc04331f96e8054031f0b1e2111e2bc64a7"
+    },
+    "jax_source_calibration": {
+      "path": "dev/native_rom/eob/jax/source_calibration_hamiltonian.py",
+      "sha256": "8b5584002625479e667337076df59cb6a820e1cffc88a282071843e6d4e4c8a9"
+    },
+    "source_modes": {
+      "path": "dev/native_rom/evidence/2026-09-25/flux_boundary_modes.json",
+      "sha256": "37e802f66782f7dae532a4f05d4b5eb762e55275ad5f98418f49106831c4eff6"
+    }
+  },
+  "limitations": "Fixed supplied zero-radial-momentum states and frequencies only. Reuses a pinned-source diagnostic, not a fresh physical holdout. Passing is component parity, not evolved dynamics, waveform, derivative-domain, or release qualification.",
+  "limits": {
+    "component_source_relative_to_total": 1e-08,
+    "component_torch_relative_to_total": 1e-10,
+    "mode_sum_relative": 1e-12,
+    "total_source_relative": 1e-08,
+    "total_torch_relative_to_source": 1e-10
+  },
+  "release_qualified": false,
+  "schema": "diffgw.seobnrv4.jax-flux-boundary-modes-plan.v1"
+}
