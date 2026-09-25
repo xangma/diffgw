@@ -1,0 +1,33 @@
+{
+  "schema": "diffgw.seobnrv4.rom-input-stability-plan.v1",
+  "purpose": "Prospective numerical pilot of complete native TD-to-FD inputs before any ROM fit.",
+  "release_qualified": false,
+  "diagnostic_rows": [
+    {"name": "equal_mass_nonspinning", "mass1": 30.0, "mass2": 30.0, "chi1": 0.0, "chi2": 0.0, "f_low": 30.0},
+    {"name": "q4_mixed_spin", "mass1": 40.0, "mass2": 10.0, "chi1": 0.5, "chi2": -0.4, "f_low": 30.0}
+  ],
+  "reserved_unevaluated_holdouts": [
+    {"name": "off_grid_mixed_spin", "mass1": 35.0, "mass2": 25.0, "chi1": 0.2, "chi2": -0.3, "f_low": 30.0},
+    {"name": "high_q_antialigned", "mass1": 45.0, "mass2": 9.0, "chi1": -0.7, "chi2": -0.6, "f_low": 30.0}
+  ],
+  "delta_f_hz": 0.03125,
+  "f_max_levels_hz": [4096.0, 8192.0, 16384.0],
+  "atol_levels": [1e-9, 1e-10, 1e-11],
+  "rtol_levels": [1e-8, 1e-9, 1e-10],
+  "comparison_band_hz": [40.0, 300.0],
+  "reference_frequency_hz": 100.0,
+  "distance_mpc": 100.0,
+  "inclination_rad": 0.7,
+  "ringdown_duration_M": 150.0,
+  "per_run_timeout_seconds": 180.0,
+  "gates": {
+    "minimum_relative_amplitude_in_band": 1e-8,
+    "maximum_unwrapped_adjacent_phase_step_rad": 1.5707963267948966,
+    "maximum_decimated_phase_unwrap_difference_rad": 1e-6,
+    "medium_to_fine_complex_relative_l2": 0.001,
+    "medium_to_fine_amplitude_relative_l2": 0.001,
+    "medium_to_fine_phase_rms_rad": 0.01,
+    "refinement_must_reduce_complex_error": true
+  },
+  "interpretation": "Fixed-band, gauge-conditioned plus-polarization pilot. Failure is retained. Passing cannot qualify the physical model, full parameter/frequency domain, gradients, or ROM interpolation. Holdouts remain untouched; a later frozen ROM domain and patch design must specify patch-interface holdouts."
+}

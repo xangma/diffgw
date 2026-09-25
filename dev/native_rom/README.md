@@ -2397,6 +2397,31 @@ convergence gate. The amplitude matrix condition number is about `5.63e4`.
 This coefficient-level result does not replay a waveform or ringdown, establish
 a converged derivative prescription, or qualify the model for release.
 
+The [prospective native ROM-input pilot](evidence/2026-09-25/rom_input_stability.json)
+uses a [frozen two-row plan](evidence/2026-09-25/rom_input_stability_plan.json),
+three ODE tolerances, three nested TD sampling rates, and a common positive
+40–300 Hz band with 0.03125 Hz spacing. Both rows have finite plus/cross spectra,
+nonzero plus support, and resolved plus-phase unwrapping on that band. The
+medium-to-fine ODE complex relative L2 values are `8.92e-5` (equal-mass
+nonspinning) and `4.63e-5`
+(q4 mixed spin), and both pass the predeclared ODE checks. Both **fail** the
+predeclared sampling-refinement check: conditioned medium-to-fine complex L2
+grows from `3.16e-5` to `2.14e-4` and from `2.79e-5` to `1.12e-4`,
+respectively. Raw plus/cross spectra and their hashes are retained in the
+development evidence; no ROM fit was made, and two reserved holdout rows were
+not evaluated.
+
+The [post-hoc phase-locality diagnostic](evidence/2026-09-25/rom_input_phase_locality.json)
+finds that the raw medium-to-fine phase differences are largely linear in
+frequency, with equivalent shifts near one finest-grid time sample. On the
+equal-mass row, subtracting a broad descriptive line leaves `1.04e-6` rad
+phase RMS, while the required five-node local reference gauge leaves
+`3.57e-4` rad RMS. The q4 row gives `1.46e-5` and `2.14e-4` rad. The broad
+fit was selected after observing the failure and is **not** a replacement
+conditioner or a revised release gate. The next step is to separate discrete
+TD/FFT time-origin changes from local-gauge sensitivity and intrinsic FD
+shape error on new prospective rows before generating training data.
+
 1. Qualify the physical generator against the published equations and independent
    references over the intended domain, resolve convention/provenance gaps, and
    establish gradients and numerical convergence. This runner covers only scalar

@@ -1,0 +1,327 @@
+{
+  "all_numerical_checks_passed": false,
+  "errors": [],
+  "frequency_samples": 8321,
+  "numpy": "2.5.3",
+  "plan_sha256": "377145bd5192c58439b8b01426c3c6ade776673b7535f66300770f815c88cb29",
+  "process": {
+    "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+    "host": "RONI2",
+    "pid": 10718
+  },
+  "python": "3.13.7",
+  "release_qualified": false,
+  "rows": [
+    {
+      "checks": {
+        "fd_support": true,
+        "grid_convergence": false,
+        "ode_convergence": true
+      },
+      "grid_convergence": {
+        "checks": {
+          "amplitude_budget": true,
+          "complex_budget": true,
+          "complex_refinement": false,
+          "phase_budget": true
+        },
+        "coarse_to_medium": {
+          "amplitude_relative_l2": 7.701230695771008e-06,
+          "complex_relative_l2": 3.1640738467943766e-05,
+          "phase_max_abs_rad": 6.34892732591652e-05,
+          "phase_rms_rad": 3.849827150104115e-05
+        },
+        "medium_to_fine": {
+          "amplitude_relative_l2": 1.7824552451751648e-06,
+          "complex_relative_l2": 0.0002135240963616219,
+          "phase_max_abs_rad": 0.0006973433280137442,
+          "phase_rms_rad": 0.0003565338826182531
+        },
+        "passed": false
+      },
+      "levels": [
+        {
+          "cross_sha256": "02dd0c241d25be45ad4597115ec8cf1da7529da475200a3cb7955c153f8af1fe",
+          "dt_geom": 0.10326408219812194,
+          "elapsed_seconds": 12.740384125034325,
+          "fft_samples": 1048576,
+          "level": "ode_0",
+          "omega_start": 0.02085720224645268,
+          "plus_sha256": "35fce7449a3c4d0da137bf0873787905b95d583c83818a9c7fec6ab4fa5ef16e",
+          "plus_support": {
+            "checks": {
+              "adjacent_phase_step": true,
+              "amplitude_support": true,
+              "decimated_unwrap": true
+            },
+            "maximum_adjacent_phase_step_rad": 0.029071718028997662,
+            "maximum_decimated_unwrap_difference_rad": 0.0,
+            "minimum_relative_amplitude": 0.10297112622351964
+          },
+          "td_samples": 21312
+        },
+        {
+          "cross_sha256": "7d4a230823a2b51a4928b9f1ac3ee2ceb1f3e93b7bbbf56f75288e1749c9f66d",
+          "dt_geom": 0.10326408219812194,
+          "elapsed_seconds": 17.005592624947894,
+          "fft_samples": 1048576,
+          "level": "ode_1",
+          "omega_start": 0.02085720224645268,
+          "plus_sha256": "0427c68cb635caed9bf664e72baa32bd061776b9c196dd3a5299d2466bc6a56b",
+          "plus_support": {
+            "checks": {
+              "adjacent_phase_step": true,
+              "amplitude_support": true,
+              "decimated_unwrap": true
+            },
+            "maximum_adjacent_phase_step_rad": 0.029072193852059502,
+            "maximum_decimated_unwrap_difference_rad": 0.0,
+            "minimum_relative_amplitude": 0.10295885909841418
+          },
+          "td_samples": 21312
+        },
+        {
+          "cross_sha256": "0513fe19f478393f3f51c81639bdf8e5196a0c5e8c2f5b2be394db449d17e243",
+          "dt_geom": 0.10326408219812194,
+          "elapsed_seconds": 23.328744250000454,
+          "fft_samples": 1048576,
+          "level": "ode_2",
+          "omega_start": 0.02085720224645268,
+          "plus_sha256": "8e8c0280d20c386c98554f0612ca933b824af90d95246e717350d26a38386d8b",
+          "plus_support": {
+            "checks": {
+              "adjacent_phase_step": true,
+              "amplitude_support": true,
+              "decimated_unwrap": true
+            },
+            "maximum_adjacent_phase_step_rad": 0.029072128968209654,
+            "maximum_decimated_unwrap_difference_rad": 0.0,
+            "minimum_relative_amplitude": 0.10296047132071977
+          },
+          "td_samples": 21312
+        },
+        {
+          "cross_sha256": "b040c0708f3cfa76723b6055851c5e990abd1998f8bf51bdcfc7989ce485b302",
+          "dt_geom": 0.41305632879248777,
+          "elapsed_seconds": 21.89374820899684,
+          "fft_samples": 262144,
+          "level": "grid_0",
+          "omega_start": 0.02085720224645268,
+          "plus_sha256": "ca24f4ab53e11a99e1a6038de6d2d71794c9b18a16d2c64de6e2336a1a0ddf37",
+          "plus_support": {
+            "checks": {
+              "adjacent_phase_step": true,
+              "amplitude_support": true,
+              "decimated_unwrap": true
+            },
+            "maximum_adjacent_phase_step_rad": 0.029091646975015095,
+            "maximum_decimated_unwrap_difference_rad": 0.0,
+            "minimum_relative_amplitude": 0.10296024630611286
+          },
+          "td_samples": 5328
+        },
+        {
+          "cross_sha256": "76dcaff9c92dd5901b7e13a139124198da482ef3b2638fd5148e4179e0e0bac0",
+          "dt_geom": 0.20652816439624389,
+          "elapsed_seconds": 22.73181312502129,
+          "fft_samples": 524288,
+          "level": "grid_1",
+          "omega_start": 0.02085720224645268,
+          "plus_sha256": "1764ca439ef8d4b43aa9337b1d147d09b93a1e8da25d86cbac560f32fd87ceae",
+          "plus_support": {
+            "checks": {
+              "adjacent_phase_step": true,
+              "amplitude_support": true,
+              "decimated_unwrap": true
+            },
+            "maximum_adjacent_phase_step_rad": 0.029078362957448256,
+            "maximum_decimated_unwrap_difference_rad": 0.0,
+            "minimum_relative_amplitude": 0.10296038543966601
+          },
+          "td_samples": 10656
+        }
+      ],
+      "name": "equal_mass_nonspinning",
+      "ode_convergence": {
+        "checks": {
+          "amplitude_budget": true,
+          "complex_budget": true,
+          "complex_refinement": true,
+          "phase_budget": true
+        },
+        "coarse_to_medium": {
+          "amplitude_relative_l2": 0.00012975452463861892,
+          "complex_relative_l2": 0.0006646103782594368,
+          "phase_max_abs_rad": 0.003401034790620372,
+          "phase_rms_rad": 0.001398499319229702
+        },
+        "medium_to_fine": {
+          "amplitude_relative_l2": 1.7533286082001238e-05,
+          "complex_relative_l2": 8.915049323111479e-05,
+          "phase_max_abs_rad": 0.00045627002330661526,
+          "phase_rms_rad": 0.00018764249970845774
+        },
+        "passed": true
+      }
+    },
+    {
+      "checks": {
+        "fd_support": true,
+        "grid_convergence": false,
+        "ode_convergence": true
+      },
+      "grid_convergence": {
+        "checks": {
+          "amplitude_budget": true,
+          "complex_budget": true,
+          "complex_refinement": false,
+          "phase_budget": true
+        },
+        "coarse_to_medium": {
+          "amplitude_relative_l2": 2.1632895458453327e-06,
+          "complex_relative_l2": 2.7850467393231753e-05,
+          "phase_max_abs_rad": 0.00010106157282052664,
+          "phase_rms_rad": 5.2085764591531026e-05
+        },
+        "medium_to_fine": {
+          "amplitude_relative_l2": 3.2397375148067824e-06,
+          "complex_relative_l2": 0.00011168406841946834,
+          "phase_max_abs_rad": 0.0004460196688000906,
+          "phase_rms_rad": 0.00021361758921657268
+        },
+        "passed": false
+      },
+      "levels": [
+        {
+          "cross_sha256": "bcd2d114d781b7e0b45edc794459637f8c4ea92e217a35373424c7cdb7644572",
+          "dt_geom": 0.12391689863774634,
+          "elapsed_seconds": 18.64836962503614,
+          "fft_samples": 1048576,
+          "level": "ode_0",
+          "omega_start": 0.018166777706301228,
+          "plus_sha256": "0a4a9e08113454bc93ce17ab1a5fb1b645b0c4eaf51616d096df18366446a65e",
+          "plus_support": {
+            "checks": {
+              "adjacent_phase_step": true,
+              "amplitude_support": true,
+              "decimated_unwrap": true
+            },
+            "maximum_adjacent_phase_step_rad": 0.060901432707926695,
+            "maximum_decimated_unwrap_difference_rad": 0.0,
+            "minimum_relative_amplitude": 0.10099696244701536
+          },
+          "td_samples": 42703
+        },
+        {
+          "cross_sha256": "ea01f000340fb98a370a0764041ae5ce3b48e87964653a42d389fa178555bb36",
+          "dt_geom": 0.12391689863774634,
+          "elapsed_seconds": 25.019047582987696,
+          "fft_samples": 1048576,
+          "level": "ode_1",
+          "omega_start": 0.018166777706301228,
+          "plus_sha256": "daab6a23aab7569e881ae3f842d2661f13f78a6af32c664ae3fbe8c08588d426",
+          "plus_support": {
+            "checks": {
+              "adjacent_phase_step": true,
+              "amplitude_support": true,
+              "decimated_unwrap": true
+            },
+            "maximum_adjacent_phase_step_rad": 0.06090074449954441,
+            "maximum_decimated_unwrap_difference_rad": 0.0,
+            "minimum_relative_amplitude": 0.1009863243004297
+          },
+          "td_samples": 42703
+        },
+        {
+          "cross_sha256": "28f72972f80206a3e09223c1b2e0e74e3db1d87105af6580c5f3d728c72e6af8",
+          "dt_geom": 0.12391689863774634,
+          "elapsed_seconds": 34.34285000001546,
+          "fft_samples": 1048576,
+          "level": "ode_2",
+          "omega_start": 0.018166777706301228,
+          "plus_sha256": "d74f766f38f5e614b638b1dd1e67a2ad3976bbae4065f9b839db8dfd78404e1c",
+          "plus_support": {
+            "checks": {
+              "adjacent_phase_step": true,
+              "amplitude_support": true,
+              "decimated_unwrap": true
+            },
+            "maximum_adjacent_phase_step_rad": 0.060900692002536116,
+            "maximum_decimated_unwrap_difference_rad": 0.0,
+            "minimum_relative_amplitude": 0.10098502883638939
+          },
+          "td_samples": 42703
+        },
+        {
+          "cross_sha256": "fa90ce1ef94d081db6050f09ceaaf5dd3a78e17641e272c42aee2680d3c73521",
+          "dt_geom": 0.49566759455098536,
+          "elapsed_seconds": 31.297026416985318,
+          "fft_samples": 262144,
+          "level": "grid_0",
+          "omega_start": 0.018166777706301228,
+          "plus_sha256": "da5a46a578ee098b5bfcc2df87a191ac0ba3ec5bece00f08e7018d3273e41d7a",
+          "plus_support": {
+            "checks": {
+              "adjacent_phase_step": true,
+              "amplitude_support": true,
+              "decimated_unwrap": true
+            },
+            "maximum_adjacent_phase_step_rad": 0.060907508774529884,
+            "maximum_decimated_unwrap_difference_rad": 0.0,
+            "minimum_relative_amplitude": 0.10098507747611897
+          },
+          "td_samples": 10676
+        },
+        {
+          "cross_sha256": "d5a7d806164767a59f8fcc86412d44c81f1945f92cbf57241ea4fa2549f6dde0",
+          "dt_geom": 0.24783379727549268,
+          "elapsed_seconds": 32.17310629104031,
+          "fft_samples": 524288,
+          "level": "grid_1",
+          "omega_start": 0.018166777706301228,
+          "plus_sha256": "8f47af6e4e9f5af65efcea722345c3607732e24373bde76dc2ab604bad6859b8",
+          "plus_support": {
+            "checks": {
+              "adjacent_phase_step": true,
+              "amplitude_support": true,
+              "decimated_unwrap": true
+            },
+            "maximum_adjacent_phase_step_rad": 0.06090667236786329,
+            "maximum_decimated_unwrap_difference_rad": 0.0,
+            "minimum_relative_amplitude": 0.10098557015577984
+          },
+          "td_samples": 21352
+        }
+      ],
+      "name": "q4_mixed_spin",
+      "ode_convergence": {
+        "checks": {
+          "amplitude_budget": true,
+          "complex_budget": true,
+          "complex_refinement": true,
+          "phase_budget": true
+        },
+        "coarse_to_medium": {
+          "amplitude_relative_l2": 0.00010512946960440875,
+          "complex_relative_l2": 0.0006442351227415188,
+          "phase_max_abs_rad": 0.0037126172286860992,
+          "phase_rms_rad": 0.001422620049929279
+        },
+        "medium_to_fine": {
+          "amplitude_relative_l2": 9.444199367549658e-06,
+          "complex_relative_l2": 4.631004635714844e-05,
+          "phase_max_abs_rad": 0.0002727329657901123,
+          "phase_rms_rad": 0.00010046440653261773
+        },
+        "passed": true
+      }
+    }
+  ],
+  "schema": "diffgw.seobnrv4.rom-input-stability.v1",
+  "scope": "Selected native FD numerical stability only; no ROM fit, independent source fidelity, or NR validation.",
+  "script_sha256": "257a4343371851cdeb59dcca1e654c9d32973554bc2fb52c695e59bc6b529359",
+  "source_snapshot_sha256": "2062f70072d9953a7f9b968336c80512b8034497eb2e4cb0fea7ad2633b7d2cf",
+  "spectra_sha256": "3ec6e18d989134b8ed68f86faaaab9247a8ebac065d8b1d0b447c398f4a6ef05",
+  "status": "measured",
+  "torch": "2.14.0"
+}

@@ -1,0 +1,93 @@
+{
+  "interpretation": "Broad-line detrending is descriptive and was chosen after the frozen local-gauge cadence gate failed; it does not supersede that failure or qualify a new conditioner.",
+  "pilot_sha256": "dacbb97fe53d986f97b7f0f38c0f74fd4da353d1d7808d03a36947bdff530cc4",
+  "release_qualified": false,
+  "rows": [
+    {
+      "name": "equal_mass_nonspinning",
+      "pairs": {
+        "grid_0_to_grid_1": {
+          "broad_line_detrended_phase_rms_rad": 1.1367972987069959e-05,
+          "broad_line_equivalent_time_shift_seconds": 6.097752865892304e-05,
+          "broad_line_intercept_difference_rad": 0.038307552104994265,
+          "broad_line_slope_difference_rad_per_hz": 0.00038313311213786737,
+          "local_quartic_slope_difference_rad_per_hz": 0.0003834842687145401,
+          "raw_phase_difference_range_rad": 0.09962872754457264,
+          "required_local_gauge_phase_rms_rad": 3.849827150104115e-05
+        },
+        "grid_1_to_ode_2": {
+          "broad_line_detrended_phase_rms_rad": 1.0410493571571389e-06,
+          "broad_line_equivalent_time_shift_seconds": 3.0517663946754915e-05,
+          "broad_line_intercept_difference_rad": 0.019174749535618235,
+          "broad_line_slope_difference_rad_per_hz": 0.00019174813771969467,
+          "local_quartic_slope_difference_rad_per_hz": 0.0001952232452235303,
+          "raw_phase_difference_range_rad": 0.0498553736379157,
+          "required_local_gauge_phase_rms_rad": 0.0003565338826182531
+        },
+        "ode_0_to_ode_1": {
+          "broad_line_detrended_phase_rms_rad": 0.00032939331680621525,
+          "broad_line_equivalent_time_shift_seconds": -1.9111142014884864e-06,
+          "broad_line_intercept_difference_rad": -0.0013835118298956605,
+          "broad_line_slope_difference_rad_per_hz": -1.2007884671134704e-05,
+          "local_quartic_slope_difference_rad_per_hz": -2.5288614239116214e-05,
+          "raw_phase_difference_range_rad": 0.00294239801386853,
+          "required_local_gauge_phase_rms_rad": 0.001398499319229702
+        },
+        "ode_1_to_ode_2": {
+          "broad_line_detrended_phase_rms_rad": 4.454495395017955e-05,
+          "broad_line_equivalent_time_shift_seconds": 2.5445672320759204e-07,
+          "broad_line_intercept_difference_rad": 0.00018547279950023658,
+          "broad_line_slope_difference_rad_per_hz": 1.5987987445710052e-06,
+          "local_quartic_slope_difference_rad_per_hz": 3.3813989072650763e-06,
+          "raw_phase_difference_range_rad": 0.00039282271230511867,
+          "required_local_gauge_phase_rms_rad": 0.00018764249970845774
+        }
+      }
+    },
+    {
+      "name": "q4_mixed_spin",
+      "pairs": {
+        "grid_0_to_grid_1": {
+          "broad_line_detrended_phase_rms_rad": 8.920908924488162e-07,
+          "broad_line_equivalent_time_shift_seconds": 1.0574587377054708e-10,
+          "broad_line_intercept_difference_rad": 3.91830378132882e-08,
+          "broad_line_slope_difference_rad_per_hz": 6.644209203699687e-10,
+          "local_quartic_slope_difference_rad_per_hz": -4.993989174972846e-07,
+          "raw_phase_difference_range_rad": 1.4820726114916916e-05,
+          "required_local_gauge_phase_rms_rad": 5.2085764591531026e-05
+        },
+        "grid_1_to_ode_2": {
+          "broad_line_detrended_phase_rms_rad": 1.4633050326162673e-05,
+          "broad_line_equivalent_time_shift_seconds": 3.0410729614721527e-05,
+          "broad_line_intercept_difference_rad": 0.019112452406938065,
+          "broad_line_slope_difference_rad_per_hz": 0.00019107624949582942,
+          "local_quartic_slope_difference_rad_per_hz": 0.00018895874776114763,
+          "raw_phase_difference_range_rad": 0.0496966817023472,
+          "required_local_gauge_phase_rms_rad": 0.00021361758921657268
+        },
+        "ode_0_to_ode_1": {
+          "broad_line_detrended_phase_rms_rad": 0.0004667000941567847,
+          "broad_line_equivalent_time_shift_seconds": 3.670531081908438e-06,
+          "broad_line_intercept_difference_rad": 0.0020946817814975504,
+          "broad_line_slope_difference_rad_per_hz": 2.3062626963393088e-05,
+          "local_quartic_slope_difference_rad_per_hz": 3.756546228339541e-05,
+          "raw_phase_difference_range_rad": 0.005374767537949854,
+          "required_local_gauge_phase_rms_rad": 0.001422620049929279
+        },
+        "ode_1_to_ode_2": {
+          "broad_line_detrended_phase_rms_rad": 3.885079319600079e-05,
+          "broad_line_equivalent_time_shift_seconds": 3.2992814696716513e-07,
+          "broad_line_intercept_difference_rad": 0.00018053925663448736,
+          "broad_line_slope_difference_rad_per_hz": 2.072999685449079e-06,
+          "local_quartic_slope_difference_rad_per_hz": 3.099898663094791e-06,
+          "raw_phase_difference_range_rad": 0.000482218034033588,
+          "required_local_gauge_phase_rms_rad": 0.00010046440653261773
+        }
+      }
+    }
+  ],
+  "schema": "diffgw.seobnrv4.rom-input-phase-locality.v1",
+  "script_sha256": "39d21674434512810bc2a037684827e05812ec123056acb003ccf1f972f0bf82",
+  "spectra_sha256": "3ec6e18d989134b8ed68f86faaaab9247a8ebac065d8b1d0b447c398f4a6ef05",
+  "status": "post-hoc diagnostic"
+}
