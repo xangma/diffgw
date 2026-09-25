@@ -1,0 +1,48 @@
+{
+  "inputs": {
+    "adapter": {
+      "path": "dev/native_rom/reference/full_v4_source_mode_large_adapter.c",
+      "sha256": "c9d77e46cd5fbb38fb4afc256a7c3f067a0c6759c2a316f55c0e9a8821539011"
+    },
+    "case_plan": {
+      "path": "dev/native_rom/evidence/2026-09-24/sxs_third_holdout_plan.json",
+      "sha256": "abd73c31f3a1cce82f0009ab134f93983595bdea6e62786c83052cbcfc796a73"
+    },
+    "comparison": {
+      "path": "dev/native_rom/evidence/2026-09-24/sxs_third_holdout_comparison.json",
+      "sha256": "2caff7f537583d5016e171e451387decca04a634ccae39a5d155689175da8a21"
+    },
+    "public_control": {
+      "path": "dev/native_rom/evidence/2026-09-24/sxs_2569_public_control.json",
+      "sha256": "cc826a29f83876118678dc8996ffc03467120058ebe0ff7c36318626ac809025"
+    },
+    "public_plan": {
+      "path": "dev/native_rom/evidence/2026-09-24/sxs_2569_public_control_plan.json",
+      "sha256": "0e00a347213ae8a954dcdf64ba317178da43902332ce7699bbf4879614c52ca6"
+    },
+    "source_plan": {
+      "path": "dev/native_rom/evidence/2026-09-24/source_flux_initial_plan.json",
+      "sha256": "1167199c8f954f97a5905a1e3b2f67d1555e984e5f1da0a0fc42a77a925f96ea"
+    },
+    "weighted_plan": {
+      "path": "dev/native_rom/evidence/2026-09-24/sxs_third_holdout_weighted_plan.json",
+      "sha256": "ae97020ad656390686b593c63b1c918cef226e7bc87b6c88e8993f5add3d6c10"
+    }
+  },
+  "masses_msun": [
+    10,
+    22,
+    50,
+    100,
+    200
+  ],
+  "method": "Recompute all weighted overlaps with the frozen holdout PSD, settled lower bound, taper, frequency bands, time-shift bounds and phase maximization; include pinned source in the intersection support. Report any support change from the wheel control. No parameter refit.",
+  "posthoc_selected_case": true,
+  "purpose": "Post-hoc exact-row pinned-source attribution of the frozen 0.99 NR proxy failure; compare source, wheel, and native against identical NR spectra on common support.",
+  "qualification_claim": false,
+  "release_qualified": false,
+  "schema": "diffgw.seobnrv4.sxs-2569-source-control-plan.v1",
+  "simulation": "SXS:BBH:2569",
+  "source_capacity": 200000,
+  "step_M": 0.25
+}

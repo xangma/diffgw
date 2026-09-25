@@ -871,6 +871,17 @@ changes the waveform by `6.65e-8` complex relative L2 and the 22 M⊙ overlap
 by only `−2.87e-9`. The 2018 SXS run was not part of the NR catalog assessed
 in the 2017 SEOBNRv4 paper. The remaining generator, frontend, and
 independently trained ROM gates still need completion.
+An [exact-row pinned-source control](evidence/2026-09-25/sxs_2569_source_control.json)
+compiles the frozen historical SEOBNRv4 generator and replays the same settled
+SXS:BBH:2569 support, PSD, taper, and five masses. At 22 M⊙ its source/NR
+overlap is `0.989140763`, versus `0.989140950` for the pinned public wheel and
+`0.989141710` for native; the low/high NR control is `0.999936319`. The
+source/public weighted overlap is above `0.9999999999`, and their fixed-crossing
+complex relative L2 is `1.39e-5`. The support is exactly the prior
+`[-7123.5, 261.25] M`. Thus this frozen proxy failure is present in the
+historical source itself, not solely in the wheel or native port. This
+post-hoc control is attribution evidence, not an independent validation case
+or a pass of the prospective `0.99` gate.
 The [post-hoc 22 M⊙ frequency decomposition](evidence/2026-09-24/sxs_2569_weighted_bands.json)
 attributes this miss to cross-band coherence rather than a single bad
 frequency band: every separately time/phase-fitted band from 40 to 800 Hz
