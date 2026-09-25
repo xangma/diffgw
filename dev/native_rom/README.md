@@ -2945,6 +2945,18 @@ pre-attachment samples. The early 869 samples contribute `95.7%` of that
 error energy, spread across the window rather than concentrated in its first
 or last 50 M. This algebra does not identify whether the phase difference
 comes from dynamics, raw-mode phasing, NQC, or alignment convention.
+The [exact cap-epoch trajectory comparison](evidence/2026-09-25/source_aligned_cap_epoch_trajectory_phase.json)
+uses 869 shared `0.5 M` samples at `416.5–850.5 M` without fitting a time or
+phase shift. The native/source orbital phase differs by at most `3.82e-6`
+rad, and the raw-mode relative L2 is `4.61e-6`; evaluating both raw modes on
+the source states reduces that to `1.52e-10`. The raw phase difference follows
+`-2 Δφ` to within `6.03e-8` rad. All 14 validity checks and the prior v5
+initial, frequency-chart, mode, and crop replays pass. This rules out a large
+raw-mode evaluation mismatch on this exact cap-time chart, but does not
+attribute the much larger corrected full-mode phase residual. A separately
+reported peak-epoch projection assumes a source low/full time mapping whose
+prior full-mode reconstruction differs by `0.004486` L2; its milliradian
+phase differences are conditional and cannot establish a cause.
 
 Three frozen warm-gradient attempts
 ([Torch](evidence/2026-09-25/native_warm_start_gradient.json),

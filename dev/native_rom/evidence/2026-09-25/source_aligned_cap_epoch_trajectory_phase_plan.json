@@ -1,0 +1,147 @@
+{
+  "cap_Momega": 0.03162277660168379,
+  "chart_end_M": 850.5,
+  "chart_samples": 869,
+  "chart_start_M": 416.5,
+  "comparison_protocol": {
+    "conditional_projection": "Map source low time to the already-cropped source full-mode epoch and native low time to its independent full h22 sampled peak; report projected phi/Omega on the historical fixed tau chart but make no direct whole-mode attribution because source full-mode reconstruction control is not exact.",
+    "orbital_phase_relation": "Report raw-mode phase difference and its residual after the expected -2 times orbital phase difference, without subtracting a measured offset.",
+    "primary": "Replay pinned source low dynamics and native refined cap-start coarse states; use existing 0.5 M output samples at cap-epoch t=416.5..850.5 M without interpolation, shift, normalization, or pairwise fit. Compare orbital phi, source-adapter Omega on each state, and source/source, native/source, native/native raw h22.",
+    "resource_bound": "One local serial replay. Prior identical source/native v5 capture took 32.4 s on RONI2; expect 45-90 s, budget 2 min and <1 GB. No production changes.",
+    "validity": "Hash-gate every input, full source and wheel pin through source plan; require complete prior controls, 0.5 M cadence, exact 869 cap-time samples, finite states/frequencies/modes, cap phi zero, v5 initial/64-point chart replay, same-source-state raw mode parity, unchanged historical full h22 peak anchors/chart hash, and conditional projection inside low-dynamics support. Preserve failed result if any check fails."
+  },
+  "full_chart_sha256": "86febff2628468bce70e291ab313cc3c27c62c42a222024eb6a35ed340812d2a",
+  "gates": {
+    "cadence_max_abs_M": 1e-10,
+    "initial_replay_max_abs": 1e-12,
+    "same_state_raw_l2_max": 2e-08,
+    "time_max_abs_M": 1e-10,
+    "v5_replay_max_abs": 1e-10
+  },
+  "inputs": {
+    "dynamics_adapter": {
+      "path": "dev/native_rom/reference/full_v4_source_dynamics_adapter.c",
+      "sha256": "47bca1ca11bcfc9a54b3d6956ca901826d4bef01729cc2e8f9b5e139f504478b"
+    },
+    "early_result": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_early_raw_crossover_v3.json",
+      "sha256": "86a393515d4c61329bc25358168225d560891761c65de8b1ed4e2db7aff9dbc1"
+    },
+    "exact_adapter": {
+      "path": "dev/native_rom/reference/full_v4_source_nqc_state_adapter.c",
+      "sha256": "d526a3ff6df8078428ba116e9bf09f3b8e69cc78a5cfc8873601290c527e97fa"
+    },
+    "full_plan": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_native_cap_full_crop_v5_plan.json",
+      "sha256": "10bf7884a18d5ae19b6a2b69863918efdc1f859497162d67c82207cd8047d268"
+    },
+    "full_result": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_native_cap_full_crop_v5.json",
+      "sha256": "2c167f1a06faff7734c3a45896d829447969b99a326c9515852b0b7b4d7c9ef3"
+    },
+    "ladder_plan": {
+      "path": "dev/native_rom/evidence/2026-09-25/jax_source_tolerance_ladder_plan.json",
+      "sha256": "101f756e6d90e07cb02084c04788bed43c4cdbc2773b948af8ff3262fda7352f"
+    },
+    "native_adaptive_driver": {
+      "path": "src/torchwave/approximants/eob/adaptive_driver_clean.py",
+      "sha256": "2f5e1c3b8766b92340a6aafcdfbdc5fe6856a3e4390551abefda1e22b90dda7b"
+    },
+    "native_driver": {
+      "path": "dev/native_rom/diagnose_jax_spliced_whole_waveform.py",
+      "sha256": "158c243e6909d26529cf5e976521793cd07821cd48662036a3c34182391f9d1c"
+    },
+    "native_flux": {
+      "path": "src/torchwave/approximants/eob/seobnrv4_flux.py",
+      "sha256": "3136bb016cce21cdd9d636008fee1fa5472757fed4446dc899e0d31e70124c83"
+    },
+    "native_hamiltonian": {
+      "path": "dev/native_rom/eob/torch/source_calibration_hamiltonian.py",
+      "sha256": "2b0ddccf6ba99d0157c0b624cf0c4e926713c96a736e22e1b6fe55bdbde1cdc2"
+    },
+    "native_initial_conditions": {
+      "path": "src/torchwave/approximants/eob/initial_conditions.py",
+      "sha256": "520641e8c3037ea1aa6e947c7d9dd92c759333396103cb1d1fffc8aa5019137b"
+    },
+    "native_integrator": {
+      "path": "src/torchwave/approximants/eob/integrator.py",
+      "sha256": "4c643493086a06accfe7f8f5ff679e77a1015aeb03659b395b48cac09de91c65"
+    },
+    "native_mode": {
+      "path": "src/torchwave/approximants/eob/seobnrv4_mode22.py",
+      "sha256": "3e2b97c175d2c6d3720f04529b400d455104e963b54f0b885e4a1fda59f90e4b"
+    },
+    "native_published_waveform": {
+      "path": "src/torchwave/approximants/eob/published_waveform.py",
+      "sha256": "7dde2eefb4d99b7fe5fc3570203222dc02c1cb05d59d8f7392e25fc946cb32dc"
+    },
+    "phase_plan": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_cap_phase_amplitude_attribution_plan.json",
+      "sha256": "d116995b1603f3b7f0246def3ca1b23f1d1fc1f395f50e57bf1506b4ff5004c2"
+    },
+    "phase_result": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_cap_phase_amplitude_attribution.json",
+      "sha256": "e7e591f4db4f3140426687f5fcf05bb81da564a46b91d99b3c8d6f698f0db57e"
+    },
+    "prior_runner": {
+      "path": "dev/native_rom/diagnose_source_aligned_early_raw_crossover_v3.py",
+      "sha256": "85fed51f0be09f369b2caa872d6837284167e14338b82ff07ca60a86d9564b14"
+    },
+    "qualifier": {
+      "path": "dev/native_rom/qualify_generator.py",
+      "sha256": "df9bffb614b87e82b5a8da47212cb01312ad4d0cb9d687d929570df134954174"
+    },
+    "restart_result": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_early_raw_restart_v4.json",
+      "sha256": "8c8ba4b0767cf587a5eb3baf0e426c8100d0533f885741332d6b7075da818bbb"
+    },
+    "restart_runner": {
+      "path": "dev/native_rom/diagnose_source_aligned_early_raw_restart_v4.py",
+      "sha256": "b539693878ff1334ffb6c1f721dd32be57eecc0de9351e4d1b16b0d345f504de"
+    },
+    "source_compile": {
+      "path": "dev/native_rom/diagnose_source_flux_initial.py",
+      "sha256": "b1d040bedff3eb88ee644ede9098c7807ab8a3e2a9ca6b8bcfe9bd35fec4d7bb"
+    },
+    "source_dynamics_helper": {
+      "path": "dev/native_rom/diagnose_source_wheel_dynamics.py",
+      "sha256": "4733e82f7657be6c887ffd16802e696a14cf685adbb3288f3cbad5495584332b"
+    },
+    "source_plan": {
+      "path": "dev/native_rom/evidence/2026-09-24/source_flux_initial_plan.json",
+      "sha256": "1167199c8f954f97a5905a1e3b2f67d1555e984e5f1da0a0fc42a77a925f96ea"
+    },
+    "warm_plan": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_early_raw_warm_start_v5_plan.json",
+      "sha256": "2ebffbc522054286e242ea244b3e2380da98c4e57f9307446160383d844c293a"
+    },
+    "warm_result": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_early_raw_warm_start_v5.json",
+      "sha256": "71d4ef86cfab87cf85adea3ee3177bb511f0ffad759c3ceb4c3e8618b2953193"
+    }
+  },
+  "native_peak_anchor": {
+    "index": 997,
+    "phase_rad": -1.243780069502022,
+    "time_s": 0.22189336719123906
+  },
+  "prior_full_reconstruction_l2": 0.004486384458856822,
+  "release_qualified": false,
+  "row_tuple": [
+    30.0,
+    20.0,
+    0.8,
+    0.6,
+    0.04
+  ],
+  "schema": "diffgw.seobnrv4.cap-epoch-trajectory-phase-plan.v1",
+  "script_sha256": "edd06ae92f2b2513b6985da4606face506ecf618f239417415b0c2054efd568e",
+  "source_low_to_full_mapping": "Conditional only: source low endpoint + full already-cropped mode epoch; no fitted index shift. Prior source raw+NQC/full reconstruction differs by 0.00449 L2.",
+  "source_peak_anchor": {
+    "index": 997,
+    "phase_rad": -1.240345377469338,
+    "time_s": -0.0027221031300414394
+  },
+  "source_root": "/Users/xangma/repos/lalsuite-git",
+  "step_M": 0.5
+}
