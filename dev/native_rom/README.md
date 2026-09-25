@@ -2819,6 +2819,22 @@ chart; it leaves most discrepancy. The source and native coefficient fits
 come from independently integrated trajectories, so this is a sensitivity
 test, not a causal decomposition or a validated calibration change.
 
+A [frozen three-way whole-mode plan](evidence/2026-09-25/source_aligned_three_way_waveform_plan.json)
+compares that exact row's refined native candidate, separately compiled
+historical source, and installed public wheel at `0.5 M` cadence. The
+[result](evidence/2026-09-25/source_aligned_three_way_waveform.json)
+passes all 13 replay/provenance checks on one 1,169-sample chart, anchored once
+at each waveform's sampled amplitude peak without pairwise fitting or amplitude
+rescaling. Whole-mode complex relative L2 is `0.0359893` for source versus
+native, `0.00348194` for source versus public, and `0.0391588` for native
+versus public. In the early 869-sample interval the corresponding values are
+`0.0401953`, `0.00411339`, and `0.0440094`; after the native boundary they
+are `0.0227649`, `1.25e-6`, and `0.0228653`. The smaller source/public gap
+still matters: the adapter and wheel have different build provenance and
+their exact-row NQC coefficients differ. These pairwise residuals describe
+output disagreement on one chart; they do not assign physical causes or
+qualify the generator.
+
 1. Qualify the physical generator against the published equations and independent
    references over the intended domain, resolve convention/provenance gaps, and
    establish gradients and numerical convergence. This runner covers only scalar

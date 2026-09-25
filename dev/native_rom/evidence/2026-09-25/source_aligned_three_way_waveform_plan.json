@@ -1,0 +1,121 @@
+{
+  "boundary_margin_M": 1.0,
+  "capacity": 50000,
+  "case": "strong_aligned",
+  "chart_rule": "Independently subtract each waveform sampled maximum-amplitude time and phase exactly once; interpolate source and native to public samples within three-way support; no pairwise fitting or amplitude rescaling.",
+  "inputs": {
+    "attachment": {
+      "path": "src/torchwave/approximants/eob/numerical_attachment.py",
+      "sha256": "8c7a149b76c529a255a4caa4b0ca76317b5306c8967db84047f299ccf51be7fc"
+    },
+    "boundary_plan": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_ode_chain_boundary_frequency_plan.json",
+      "sha256": "e85982de0ea04ddbd14c46d0f2752af2eb0e7d288deb1db6f904827dba149c76"
+    },
+    "boundary_result": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_ode_chain_boundary_frequency.json",
+      "sha256": "da62437767c4cfd908344bf06986f388a27aa9c57b53c1481af92d74ba220414"
+    },
+    "boundary_runner": {
+      "path": "dev/native_rom/diagnose_source_aligned_ode_chain_boundary_frequency.py",
+      "sha256": "f4c434d1d050ffad7550364292cc202c639e79323e731db797afd6a2b10e21e6"
+    },
+    "native_driver": {
+      "path": "dev/native_rom/diagnose_jax_spliced_whole_waveform.py",
+      "sha256": "158c243e6909d26529cf5e976521793cd07821cd48662036a3c34182391f9d1c"
+    },
+    "native_flux": {
+      "path": "src/torchwave/approximants/eob/seobnrv4_flux.py",
+      "sha256": "3136bb016cce21cdd9d636008fee1fa5472757fed4446dc899e0d31e70124c83"
+    },
+    "native_hamiltonian": {
+      "path": "dev/native_rom/eob/torch/source_calibration_hamiltonian.py",
+      "sha256": "2b0ddccf6ba99d0157c0b624cf0c4e926713c96a736e22e1b6fe55bdbde1cdc2"
+    },
+    "native_mode": {
+      "path": "src/torchwave/approximants/eob/seobnrv4_mode22.py",
+      "sha256": "3e2b97c175d2c6d3720f04529b400d455104e963b54f0b885e4a1fda59f90e4b"
+    },
+    "native_public_gap": {
+      "path": "dev/native_rom/diagnose_source_aligned_public_gap.py",
+      "sha256": "43b07a4bf4b86b483fb30bb9610e4fecdce49679f7a8e6da218e9595a3c2b22b"
+    },
+    "peak_anchor": {
+      "path": "dev/native_rom/diagnose_peak_anchor.py",
+      "sha256": "02a2974900b77e2e074f9d050006b5a973cd6e621c8d4c4c007e88482ef5ea6a"
+    },
+    "prior_gap": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_public_gap.json",
+      "sha256": "a2d9498c630afe966ca826ebb342ad7f1c28c99211a935493c666f1cd4e1a08a"
+    },
+    "qualifier": {
+      "path": "dev/native_rom/qualify_generator.py",
+      "sha256": "df9bffb614b87e82b5a8da47212cb01312ad4d0cb9d687d929570df134954174"
+    },
+    "same_row_nqc_capture": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_nqc_same_row_strong_aligned.json",
+      "sha256": "646b20549d4a687aa3ec334626473de0155271833003089abfad3ce5fd46fae8"
+    },
+    "source_adapter": {
+      "path": "dev/native_rom/reference/full_v4_source_mode_adapter.c",
+      "sha256": "59d8d7dd6547e84cc53b2ecb76005195bb54174c481146f88fc257a3abf7fcf4"
+    },
+    "source_compile": {
+      "path": "dev/native_rom/diagnose_source_flux_initial.py",
+      "sha256": "b1d040bedff3eb88ee644ede9098c7807ab8a3e2a9ca6b8bcfe9bd35fec4d7bb"
+    },
+    "source_field": {
+      "path": "dev/native_rom/diagnose_source_aligned_ode_chain_phase_matrix.py",
+      "sha256": "654ce386c98094f17c8b14bfdf2fdb9db2e70d112c1c4524943cd3745d41ad1a"
+    },
+    "source_plan": {
+      "path": "dev/native_rom/evidence/2026-09-24/source_flux_initial_plan.json",
+      "sha256": "1167199c8f954f97a5905a1e3b2f67d1555e984e5f1da0a0fc42a77a925f96ea"
+    },
+    "source_wheel_adapter": {
+      "path": "dev/native_rom/diagnose_source_wheel_mode.py",
+      "sha256": "97fa1d42f7c893fa342d4561bf6092c6a12babc6d4c3a0fadf9bd2e8707b7c99"
+    },
+    "summary": {
+      "path": "dev/native_rom/diagnose_jax_source_tolerance_ladder.py",
+      "sha256": "1d9c70218f8000115d74fef577521289a1bf265d251629678f5065e4420928a9"
+    }
+  },
+  "interpretation_limit": "Fixed chart compares independently anchored output modes. Pairwise residuals and windows are descriptive; they do not isolate underlying Hamiltonian, flux, NQC, merger, or ringdown causally.",
+  "level": "refined",
+  "pair_rule": "Compute complex L2 source/native, source/public, native/public; denominator is each named reference mode on that window.",
+  "pre_match_width_M": 50.0,
+  "prospective_gates": [
+    "Exact tuple, source tag/commit/files/headers and wheel distribution/libraries match pinned inputs",
+    "Native refined mode summary and public identity/mode hash replay prior frozen evidence",
+    "Source mode repeated bitwise",
+    "Direct public mode and polarization inverse share units and time grid to 1e-12",
+    "Source cadence 0.5M and all aligned samples finite",
+    "Three-way common support reproduces 1169 samples; native/public whole L2 reproduces prior to 1e-12",
+    "Early window 869 samples and NQC-local window 98 samples"
+  ],
+  "release_qualified": false,
+  "row_tuple": [
+    30.0,
+    20.0,
+    0.8,
+    0.6,
+    0.04
+  ],
+  "schema": "diffgw.seobnrv4.source-aligned-three-way-waveform-plan.v1",
+  "script_sha256": "a8045a050f44baeb2b8901f7807f4f7a75540c1381b102cb267a09ca1c64c8e6",
+  "source_identity": {
+    "aligned_source_sha256": "6b7969bb7cbe714c4937a691838b0b82a7fcc2a199c03ee2bf5215738f1ce1b3",
+    "peeled_commit": "2c00d8c200308422036d0a23b7c0394f7c73faad",
+    "tag": "lalsuite-v7.26.15",
+    "tag_object": "0a3a9674979bd62d8344d5552a10b5111fb1fc52"
+  },
+  "step_M": 0.5,
+  "wheel_library_sha256": {
+    "libgsl.28.dylib": "1eefe0dbead9551d47be3c09bbf786c727f84df1331130ee8a03127b7a95abe8",
+    "libgslcblas.0.dylib": "00a30ab2e9eb5cd36caab9ae9a9975a8280b9b4c2940b15e446c34a151818230",
+    "liblal.20.dylib": "e4c4ed42baed00d30668588e58444f974e3deeda56ba4e5978624640ddb5bde7",
+    "liblalsimulation.37.dylib": "9046c4a673d2ba82b792f7b92d73203ba783b32fc604b5da1139c5c1bc8b3325"
+  },
+  "window_rule": "On that one public-sample chart: whole common support, early below native match-50M, NQC-local from native match-50M to native boundary-1M, full preboundary below boundary-1M, 1M boundary margin, and postboundary. Match and boundary are relative to native sampled peak."
+}
