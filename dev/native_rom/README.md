@@ -1721,6 +1721,19 @@ matrix has condition number about `9,991`, so small input differences are
 strongly amplified. This is a source-cadence attribution, not proof of a
 converged NQC method or an explanation for the wheel's own coefficient drift.
 
+The [finer pinned-source q4 NQC ladder](evidence/2026-09-25/source_q4_nqc_cadence_ladder.json)
+uses a [frozen plan](evidence/2026-09-25/source_q4_nqc_cadence_ladder_plan.json)
+and extends the private capture to `0.0078125` and `0.00390625 M` output
+steps, where the internal NQC grids also halve. Each active coefficient set
+replays the source's GSL fit within `3.2e-7` in L2. Successive five-coefficient
+changes grow from `0.695` to `1.459` in L2 rather than settling. The reported
+orbital peak approaches the high-grid frequency maximum (`0.01845`,
+`0.01059`, then `0.00000205 M` late), so peak-localization error alone does
+not explain the growing coefficient drift. A fixed degree-four, `±2 M` local
+polynomial derivative control reduces successive changes to `0.0925` and
+`0.1225`, still without a decreasing trend. This ladder does not establish a
+converged historical NQC reference or validate the polynomial as a replacement.
+
 The [prospective q4 local-fit control](evidence/2026-09-25/source_q4_ultrafine_local_nqc_plan.json)
 recomputes those five coefficients with the same degree-four, `±2 M` local
 polynomial used in the earlier combined numerical control, then injects each

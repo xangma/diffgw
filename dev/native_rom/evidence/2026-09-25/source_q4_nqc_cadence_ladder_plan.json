@@ -1,0 +1,22 @@
+{
+  "schema": "diffgw.seobnrv4.source-q4-nqc-cadence-ladder-plan.v1",
+  "purpose": "Continue the pinned-source q4 private NQC capture to two finer output cadences, replay each historical GSL fit, and measure coefficient trends without selecting a converged reference.",
+  "prior_inputs": "dev/native_rom/evidence/2026-09-25/source_q4_ultrafine_nqc_inputs.json",
+  "prior_inputs_sha256": "e657ce7301fa3903297cdf0f5c07632c62561eda7e7f4c3994c169e45f4a95ae",
+  "capture_adapter": "dev/native_rom/reference/full_v4_source_nqc_inputs_adapter.c",
+  "capture_adapter_sha256": "0e2006c7a2898b09d56b5d464135b113f4546f43b607ddacbf327761a24a6451",
+  "source_flux_plan": "dev/native_rom/evidence/2026-09-24/source_flux_initial_plan.json",
+  "source_flux_plan_sha256": "1167199c8f954f97a5905a1e3b2f67d1555e984e5f1da0a0fc42a77a925f96ea",
+  "row": {
+    "mass1": 40.0,
+    "mass2": 10.0,
+    "chi1": 0.0,
+    "chi2": 0.0,
+    "omega_start": 0.04
+  },
+  "steps_M": [0.015625, 0.0078125, 0.00390625],
+  "local_polynomial_degree": 4,
+  "local_polynomial_half_width_M": 2.0,
+  "capacity": 50000,
+  "release_qualified": false
+}
