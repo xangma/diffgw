@@ -1593,6 +1593,21 @@ The compiled source still links pinned wheel libraries for supporting symbols;
 this control does not isolate an independent source-only binary. It does not
 pass a numerical or release gate.
 
+The [finest pinned-source chart](evidence/2026-09-25/source_q4_finest_source_chart.json)
+extends that exact compiled-source and direct-wheel comparison to `0.03125 M`
+using the [frozen plan](evidence/2026-09-25/source_q4_finest_source_chart_plan.json).
+It reproduces the prior `0.0625 M` source and wheel array hashes. On the
+finest grid, source/wheel fitted whole-waveform complex relative L2 is
+`5.55e-5`, versus `7.65e-4` at `0.0625 M`; the direct wheel and public
+polarization routes agree to `4.68e-13`. Native/source at `0.03125 M` is
+`3.51e-4`, with `3.94e-4` in the inspiral and `1.10e-4` after the peak.
+Under one chart fixed at the finest-grid peak, adjacent-grid self-differences
+are `8.25e-5` for the source and `5.95e-4` for the public wheel. The source
+and wheel approach each other on this selected q4 row, but their cadence
+behavior and the larger native/source residual still preclude a converged
+whole-waveform source-fidelity or release claim. This adapter continues to
+link pinned wheel support libraries.
+
 The [JAX initial-state-to-base-mode gradient check](evidence/2026-09-25/jax_initial_to_base_mode_gradient.json)
 uses a [frozen q4 plan](evidence/2026-09-25/jax_initial_to_base_mode_gradient_plan.json)
 and the development-only traceable quasicircular solve. The solve reproduces
