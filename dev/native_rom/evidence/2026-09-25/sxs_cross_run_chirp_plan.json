@@ -1,0 +1,31 @@
+{
+  "arrays": {
+    "paper": {
+      "path": "/tmp/diffgw-sxs-paper-catalog/decoded/SXS_BBH_0260_anchored.npz",
+      "sha256": "4ff7e4b352d9f5d0b245409bfa2ebca153e04b552df7eb3865c32df042109591"
+    },
+    "third": {
+      "path": "/tmp/diffgw-sxs-third-holdout/decoded/SXS_BBH_2569_anchored.npz",
+      "sha256": "4180cbd3aaee9eb492d776d291ecd603c1ba19483777f0e326d18d525d7527c7"
+    }
+  },
+  "cases": {
+    "paper": "SXS:BBH:0260",
+    "third": "SXS:BBH:2569"
+  },
+  "crossing_time_window_M": [-2000, 100],
+  "interpretation": "Post-hoc diagnostic selected after both NR misses. Fixed-frequency time and accumulated-phase differences remove one global time/phase choice, but do not define an independent release threshold or identify a unique physical correction.",
+  "mode_angular_frequencies_M_inv": [0.05, 0.06, 0.07, 0.08, 0.09, 0.1, 0.12],
+  "phase_anchor_mode_frequency_M_inv": 0.09,
+  "polynomial_degree": 3,
+  "posthoc": true,
+  "prior_cross_run": {
+    "path": "dev/native_rom/evidence/2026-09-25/sxs_cross_run_nr.json",
+    "sha256": "6a4167d81066772c905b30b790c46d1bb6d886a3b8b94528f1051c9ac398e5d8"
+  },
+  "purpose": "Locate the shared q=3 antialigned native/NR inspiral dephasing on a fixed mode-frequency chart and measure low/high NR and smoothing controls.",
+  "release_qualified": false,
+  "sample_step_M": 0.25,
+  "schema": "diffgw.seobnrv4.sxs-cross-run-chirp-plan.v1",
+  "smoothing_widths_M": [10, 20, 40]
+}

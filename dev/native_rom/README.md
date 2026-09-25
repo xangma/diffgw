@@ -1076,6 +1076,16 @@ shared model/NR discrepancy under this protocol rather than an artifact of one
 NR run or unequal comparison support. The runs were selected after the misses;
 this control neither repairs the historical model nor converts the prospective
 holdout into a pass.
+The [post-hoc fixed-frequency chirp check](evidence/2026-09-25/sxs_cross_run_chirp.json)
+uses a [hashed plan](evidence/2026-09-25/sxs_cross_run_chirp_plan.json)
+to locate the discrepancy before merger. After removing each waveform's time
+and phase at `Mω₂₂=0.09`, native SEOBNRv4 reaches `Mω₂₂=0.05` `8.55 M` later
+than high-resolution NR for 2569 and `9.48 M` later for 0260; its accumulated
+phase difference is `0.573` and `0.616 rad`, respectively. Across the same
+seven frequency points, each run's low/high NR control stays below `0.35 M`
+and `0.014 rad`. Cubic derivative smoothing widths of 10, 20, and `40 M`
+preserve the result. The check locates shared inspiral dephasing, but does not
+identify a unique historical-model correction or alter the failed physical gate.
 The separately frozen [near-extreme numerical screen](evidence/2026-09-24/source_rkf_near_extreme_screen.json)
 passes all predeclared tolerance and output-grid gates for `q=10` with both
 spins `+0.95` and `q=3` with spins `(+0.95,-0.95)`. Their refined ODE complex
