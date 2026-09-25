@@ -8,6 +8,8 @@ import torch
 
 from diffgw_core.xphm_options import resolve_xphm_options
 from diffgw_reference.imrphenomxphm_rotation import (
+    polarizations_from_primed,
+    polarizations_to_primed,
     rotate_polarizations,
     spa_twist_frequency,
     twist_up_mode as scalar_twist_up_mode,
@@ -70,6 +72,25 @@ def test_polarization_rotation_is_norm_preserving_and_composes():
     twice = rotate_polarizations(*rotate_polarizations(hp, hc, zeta1), zeta2)
     np.testing.assert_allclose(twice, once, atol=3e-16, rtol=3e-15)
     assert abs(sum(abs(x) ** 2 for x in once) - (abs(hp) ** 2 + abs(hc) ** 2)) < 3e-16
+
+
+def test_paper_polarization_forward_and_inverse_signs():
+    hp, hc = complex(0.2, -0.7), complex(-0.4, 0.3)
+    zeta = np.pi / 4.0
+
+    # At 2*zeta=pi/2, Eqs. (93)--(94) require (hp', hc')=(-hc, hp).
+    primed = polarizations_to_primed(hp, hc, zeta)
+    np.testing.assert_allclose(primed, (-hc, hp), atol=2e-16, rtol=2e-15)
+
+    # The XPHM output step is the inverse map: (hp, hc)=(hc', -hp').
+    inverse_at_same_inputs = polarizations_from_primed(hp, hc, zeta)
+    np.testing.assert_allclose(inverse_at_same_inputs, (hc, -hp), atol=2e-16, rtol=2e-15)
+    np.testing.assert_allclose(
+        polarizations_from_primed(*primed, zeta),
+        (hp, hc),
+        atol=2e-16,
+        rtol=2e-15,
+    )
 
 
 @pytest.mark.parametrize("mp, expected", ((1, 160.0), (2, 80.0), (3, 160.0 / 3.0), (4, 40.0)))

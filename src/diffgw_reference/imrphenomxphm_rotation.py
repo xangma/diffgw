@@ -48,11 +48,36 @@ def spa_twist_frequency(f_mode: float, mp: int) -> float:
     return 2.0 * f_mode / mp
 
 
-def rotate_polarizations(hp: complex, hc: complex, zeta: float) -> Tuple[complex, complex]:
-    """Rotate plus/cross into the observer basis (Appendix D, Eqs. 93--94)."""
+def polarizations_to_primed(hp: complex, hc: complex, zeta: float) -> Tuple[complex, complex]:
+    """Map the unprimed N-frame components to the primed spherical basis.
+
+    This is the forward map printed in Pratten et al. Appendix D,
+    Eqs. (93)--(94).
+    """
     c = math.cos(2.0 * zeta)
     s = math.sin(2.0 * zeta)
-    return c * hp + s * hc, -s * hp + c * hc
+    return c * hp - s * hc, s * hp + c * hc
+
+
+def polarizations_from_primed(
+    hp_prime: complex,
+    hc_prime: complex,
+    zeta: float,
+) -> Tuple[complex, complex]:
+    """Map primed spherical-basis components into the unprimed N-frame.
+
+    The twist-up sum produces ``(hp_prime, hc_prime)`` in the spherical basis
+    used by the harmonics.  XPHM returns the LAL observer basis, so this is the
+    inverse of the paper's forward map in Eqs. (93)--(94).
+    """
+    c = math.cos(2.0 * zeta)
+    s = math.sin(2.0 * zeta)
+    return c * hp_prime + s * hc_prime, -s * hp_prime + c * hc_prime
+
+
+def rotate_polarizations(hp: complex, hc: complex, zeta: float) -> Tuple[complex, complex]:
+    """Compatibility name for the primed-to-observer inverse basis map."""
+    return polarizations_from_primed(hp, hc, zeta)
 
 
 def twist_up_mode(
@@ -96,7 +121,14 @@ def twist_up_mode(
     phase = cmath.exp(1j * mp * gamma)
     hp_raw = scale * phase * adapted_carrier * plus_transfer
     hc_raw = 1j * scale * phase * adapted_carrier * cross_transfer
-    return rotate_polarizations(hp_raw, hc_raw, zeta)
+    return polarizations_from_primed(hp_raw, hc_raw, zeta)
 
 
-__all__ = ["rotate_polarizations", "spa_twist_frequency", "twist_up_mode", "wigner_small_d"]
+__all__ = [
+    "polarizations_from_primed",
+    "polarizations_to_primed",
+    "rotate_polarizations",
+    "spa_twist_frequency",
+    "twist_up_mode",
+    "wigner_small_d",
+]
