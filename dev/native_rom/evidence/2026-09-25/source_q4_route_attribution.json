@@ -1,0 +1,320 @@
+{
+  "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+  "elapsed_s": 13.583712209016085,
+  "host": "RONI2",
+  "new_spliced_route_evidence_sha256": "5378a283075e44fbebac40e45c3f17aed4431a5bed1235e78263af5a8b5473f5",
+  "new_spliced_route_public": {
+    "alignment": "Each mode's measured amplitude peak is t=0 and its phase at that peak is zero. No optimized shift, phase, amplitude scale, or coefficients. Common support only; raw full-reference-support metric retained.",
+    "amplitude_peak_anchored": {
+      "active_phase_samples": 964,
+      "anchor": {
+        "native_amplitude_peak_s": -0.001825468370319338,
+        "native_peak_phase_rad": 2.697290327002091,
+        "reference_amplitude_peak_s": -0.0017316159000518028,
+        "reference_peak_phase_rad": -2.7213458042737058
+      },
+      "common_samples": 964,
+      "common_support_M": [
+        -382.0,
+        99.49999999999999
+      ],
+      "metrics": {
+        "amplitude_relative_l2": 0.005530525556852556,
+        "complex_relative_l2": 0.06459860314190545,
+        "phase_max_abs_rad": 0.0911759144629793,
+        "phase_rms_rad": 0.06859154637812476,
+        "phase_samples": 964,
+        "relative_norm_error": 0.0004960269232123782,
+        "samples": 964,
+        "unmaximized_real_overlap": 0.997914667638407
+      },
+      "native_support_M": [
+        -384.5,
+        100.0
+      ],
+      "phase_drift_rad": {
+        "range": 0.14625949488737405,
+        "start_to_end": 0.1347656402726978
+      },
+      "reference_support_M": [
+        -382.0,
+        384.5
+      ],
+      "windows": {
+        "inspiral": {
+          "metrics": {
+            "amplitude_relative_l2": 0.0018861548868273036,
+            "complex_relative_l2": 0.07114635486162246,
+            "phase_max_abs_rad": 0.0911759144629793,
+            "phase_rms_rad": 0.07412768021386265,
+            "phase_samples": 724,
+            "relative_norm_error": 0.0005524590035923538,
+            "samples": 724,
+            "unmaximized_real_overlap": 0.9974678517923518
+          },
+          "time_M": [
+            -382.0,
+            -20.500000000000004
+          ]
+        },
+        "late_inspiral": {
+          "metrics": {
+            "amplitude_relative_l2": 0.003058493285075836,
+            "complex_relative_l2": 0.02778656724985716,
+            "phase_max_abs_rad": 0.04339722847255355,
+            "phase_rms_rad": 0.02866262803359504,
+            "phase_samples": 40,
+            "relative_norm_error": 0.00292277938293406,
+            "samples": 40,
+            "unmaximized_real_overlap": 0.9996171055438731
+          },
+          "time_M": [
+            -19.99999999999998,
+            -0.4999999999999671
+          ]
+        },
+        "post_peak": {
+          "metrics": {
+            "amplitude_relative_l2": 0.01654885029564255,
+            "complex_relative_l2": 0.035123490430922916,
+            "phase_max_abs_rad": 0.055083580424394735,
+            "phase_rms_rad": 0.05119807531401032,
+            "phase_samples": 200,
+            "relative_norm_error": 0.013046594789169585,
+            "samples": 200,
+            "unmaximized_real_overlap": 0.999475124861024
+          },
+          "time_M": [
+            0.0,
+            99.49999999999999
+          ]
+        }
+      }
+    },
+    "api": "SimInspiralChooseTDWaveform",
+    "approximant": "SEOBNRv4",
+    "delta_t_s": 0.00012313727369103167,
+    "distance_Mpc": 100.0,
+    "f_lower_Hz": 51.70000547234364,
+    "inclination_rad": 0.8,
+    "raw_full_support": {
+      "amplitude_relative_l2": 0.001989105285253421,
+      "complex_relative_l2": 0.9419461832444764,
+      "phase_max_abs_rad": 0.9882449339356869,
+      "phase_rms_rad": 0.9805926075790992,
+      "phase_samples": 964,
+      "relative_norm_error": 0.0005723718179845294,
+      "samples": 1534,
+      "unmaximized_real_overlap": 0.5561147903559098
+    },
+    "whole_waveform_parity_validated": false
+  },
+  "pid": 89208,
+  "plan_sha256": "f31222453d8a5fe2cfd93a98cd7463f45ccefaaf735aebcc3cd06b1b0ec51399",
+  "previous_route": {
+    "array_dtype": {
+      "mode": "complex128",
+      "time": "float64"
+    },
+    "array_sha256": {
+      "mode": "10af46db6ffa27a172f8952ea0f86a582700300b4629277b19ef1fee0dfb7dbc",
+      "time": "6db2117b58c64613f6c556861870ceaa8bc6026319b18624a2991df48e6cec1b"
+    },
+    "atol": 1e-10,
+    "boundary_time_M": 384.65625,
+    "dt_geom": 0.5,
+    "final_mass_fraction": 0.9769572091927891,
+    "final_spin": 0.47238012198553475,
+    "internal_step_M": 0.015625,
+    "match_time_M": 384.6637986114414,
+    "name": "source_q4_route",
+    "peak_time_M": 391.9123306274414,
+    "restart_time_M": 242.5,
+    "rtol": 1e-09,
+    "samples": 970,
+    "stages": {
+      "coarse": {
+        "accepted": 102,
+        "evaluations": 733,
+        "event_time_M": 392.0309312758217,
+        "rejected": 24,
+        "termination": [
+          "event"
+        ]
+      },
+      "fine": {
+        "accepted": 104,
+        "evaluations": 690,
+        "event_time_M": 150.42172697399945,
+        "rejected": 13,
+        "termination": [
+          "event"
+        ]
+      }
+    },
+    "support_M": [
+      0.0,
+      484.5
+    ]
+  },
+  "previous_route_public": {
+    "alignment": "Each mode's measured amplitude peak is t=0 and its phase at that peak is zero. No optimized shift, phase, amplitude scale, or coefficients. Common support only; raw full-reference-support metric retained.",
+    "amplitude_peak_anchored": {
+      "active_phase_samples": 964,
+      "anchor": {
+        "native_amplitude_peak_s": -0.001825468370319338,
+        "native_peak_phase_rad": 2.697290309664994,
+        "reference_amplitude_peak_s": -0.0017316159000518028,
+        "reference_peak_phase_rad": -2.7213458042737058
+      },
+      "common_samples": 964,
+      "common_support_M": [
+        -382.0,
+        99.49999999999999
+      ],
+      "metrics": {
+        "amplitude_relative_l2": 0.005530525501320959,
+        "complex_relative_l2": 0.0645985695214697,
+        "phase_max_abs_rad": 0.09117589904984431,
+        "phase_rms_rad": 0.06859151240051463,
+        "phase_samples": 964,
+        "relative_norm_error": 0.0004960254489698723,
+        "samples": 964,
+        "unmaximized_real_overlap": 0.997914669805359
+      },
+      "native_support_M": [
+        -384.5,
+        100.0
+      ],
+      "phase_drift_rad": {
+        "range": 0.14625947947581996,
+        "start_to_end": 0.13476479845985037
+      },
+      "reference_support_M": [
+        -382.0,
+        384.5
+      ],
+      "windows": {
+        "inspiral": {
+          "metrics": {
+            "amplitude_relative_l2": 0.0018861546684812317,
+            "complex_relative_l2": 0.07114631591487973,
+            "phase_max_abs_rad": 0.09117589904984431,
+            "phase_rms_rad": 0.07412763837907749,
+            "phase_samples": 724,
+            "relative_norm_error": 0.0005524608846594337,
+            "samples": 724,
+            "unmaximized_real_overlap": 0.9974678545610753
+          },
+          "time_M": [
+            -382.0,
+            -20.500000000000004
+          ]
+        },
+        "late_inspiral": {
+          "metrics": {
+            "amplitude_relative_l2": 0.0030584933260386724,
+            "complex_relative_l2": 0.02778656602507006,
+            "phase_max_abs_rad": 0.04339722633499592,
+            "phase_rms_rad": 0.028662626739698764,
+            "phase_samples": 40,
+            "relative_norm_error": 0.0029227794178935396,
+            "samples": 40,
+            "unmaximized_real_overlap": 0.9996171055780945
+          },
+          "time_M": [
+            -19.99999999999998,
+            -0.4999999999999671
+          ]
+        },
+        "post_peak": {
+          "metrics": {
+            "amplitude_relative_l2": 0.016548850295642337,
+            "complex_relative_l2": 0.03512349043167519,
+            "phase_max_abs_rad": 0.05508358042597564,
+            "phase_rms_rad": 0.05119807531547553,
+            "phase_samples": 200,
+            "relative_norm_error": 0.013046594789170696,
+            "samples": 200,
+            "unmaximized_real_overlap": 0.9994751248609978
+          },
+          "time_M": [
+            0.0,
+            99.49999999999999
+          ]
+        }
+      }
+    },
+    "api": "SimInspiralChooseTDWaveform",
+    "approximant": "SEOBNRv4",
+    "delta_t_s": 0.00012313727369103167,
+    "distance_Mpc": 100.0,
+    "f_lower_Hz": 51.70000547234364,
+    "inclination_rad": 0.8,
+    "raw_full_support": {
+      "amplitude_relative_l2": 0.001989104949546786,
+      "complex_relative_l2": 0.9419461700350266,
+      "phase_max_abs_rad": 0.9882448972408293,
+      "phase_rms_rad": 0.9805925918684728,
+      "phase_samples": 964,
+      "relative_norm_error": 0.0005723733010040144,
+      "samples": 1534,
+      "unmaximized_real_overlap": 0.5561148021478085
+    },
+    "whole_waveform_parity_validated": false
+  },
+  "public_binary": {
+    "binaries": {
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libaec.0.1.7.dylib": "5612e00c7f180b633c9b141844c5c60cf21df6b103b842391ae0274ff260b458",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libbrotlicommon.1.2.0.dylib": "e9cddb32ebba5a8f92b567a323459382fb203bc3d1304c5d00e2757bd2a58ec1",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libbrotlidec.1.2.0.dylib": "db7c5d79757eb9a652c17d859e63f0686b07d7b9a882329df602df2e539c1750",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libcfitsio.4.6.4.dylib": "bd8a9ef313118d3dc541ee438eec460e715e7af5253e4d16824bd3ef2da0b705",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libcrypto.3.dylib": "e2783fcdd6c517ba285a61ff4e1319f9b5388f374677f1bae1a3eeec4e581954",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libcurl.4.dylib": "c31527aa4180f74babd4dc4e5a05b3df3500fe21fe93f2bb62bafa6d2ca13612",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libfftw3.3.dylib": "25d39c1d343cd5c46df9e9db39939245ff08c7c4d9e0bbcdead1750c34d6337b",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libfftw3f.3.dylib": "67a00ffeecb5c8375f80fa17e65f340ce91446e6a8424673c72758c8599d50a7",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libframel.8.48.4.dylib": "67898b482a5065b4e4b1b0f0dd16321c2f1edcf1ac54b7b4eed3dac298486846",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libgsl.28.dylib": "1eefe0dbead9551d47be3c09bbf786c727f84df1331130ee8a03127b7a95abe8",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libgslcblas.0.dylib": "00a30ab2e9eb5cd36caab9ae9a9975a8280b9b4c2940b15e446c34a151818230",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libhdf5.320.1.1.dylib": "8196331cc47e67eb81473a1288ad8dfc607b37f587d5dd6c02bc88a71e1d9e7a",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libhdf5_hl.320.0.2.dylib": "ee95613ef6bde34945829e444fb9aeec0128cbddff7e1ea89a4c4d1e2dece6e6",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libiconv.2.dylib": "52d70b85978160b9b3ea3605b38522626b8642697db2de866d16f4967d67b675",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libidn2.0.dylib": "d6dce44c0ca426d8c403fe2b37bad30b4a46a6a7c920d13e597fdf446a8a946d",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libintl.8.dylib": "bca42b0bdd3709989aab17746a7317c6dc0285bb6d82aab4891dc9bf08b7c6cf",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/liblal.20.dylib": "e4c4ed42baed00d30668588e58444f974e3deeda56ba4e5978624640ddb5bde7",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/liblalburst.8.dylib": "592f4a6d392fd14fa926126c3b7e8c2f1a22891ec732b2b34c12cc9091e36277",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/liblalframe.14.dylib": "64c4684ede0c34f3e911d6d44c59811531b9366f72c12483a694b30cfd0fee78",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/liblalinference.23.dylib": "1c2ec90d081f31bc6e37b1b4f92755940c241b3915fb6a24107a7da31ba901ac",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/liblalinspiral.18.dylib": "900ab09865b3833abf01cead55344faa06167de5b361a1cbcb054e97f844cbfd",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/liblalmetaio.11.dylib": "3506634e0f760b5b1de7867978a7d5756dd38e4e2378e4cb007c0d33b28c61f9",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/liblalpulsar.30.dylib": "84a7e7475b64c72fbf83d2cc07ce40b8bd1dcc9928414fb73dae67a9ee369d92",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/liblalsimulation.37.dylib": "9046c4a673d2ba82b792f7b92d73203ba783b32fc604b5da1139c5c1bc8b3325",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/liblalsupport.14.dylib": "69e8be4f19fdb31cc6b7bf1bc78e996c71b11f90ccc9cb02b67af3462fce55b8",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libmetaio.1.dylib": "32335f399dd3629ed089772faad9cf83fb04c22823883eb513efbd3a8647dd63",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libnghttp2.14.dylib": "25c7f17e6288fbab82afe873a883ee197cb45fd2e9c4c05feaeb5b66e853004b",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libpsl.5.dylib": "971ced1f51baad72d5ef5932112209e78b1ce9aacc40f995a00dffc545de0717",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libssl.3.dylib": "2b7c20e43533e9463251923d7d285b01b1eaf302b420c0fa9516fa6f8466bda6",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libsz.2.0.1.dylib": "603290903eef2da05d00710387b8a62a1a5e66f89d2bd5b906f9bb1e818b000a",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libunistring.5.dylib": "be2d50d95d67ce80c7a8183e8d6b5ed06438f7c805f10efc279b1873be279637",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libz.1.3.2.dylib": "1c6165550fec45d0eb0867b062943e9c926bf9ee94e462faad6d257055d3968b",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libzstd.1.5.7.dylib": "918575fed77013d472c7f2e235afdac8ff4c26a5c2ab80196e103256ef8401ca",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/_lal.cpython-313-darwin.so": "d7220aaf8ba88508569a3a96b7f8b2fedd35bed7f17775ac414bd418701c17c3",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lalburst/_lalburst.cpython-313-darwin.so": "04c3bc36ff28c081896f74c16045ddb7c26582768c12ff88b0d550cfc6c388c4",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lalburst/cs_gamma.cpython-313-darwin.so": "58abb65a5e0da9a497d2db50cb0d5ef1f467a9e4c0f9b97fdeec300c2cdd443e",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lalframe/_lalframe.cpython-313-darwin.so": "fec91798a004bbf9ceff73e9a7a330490a2353cb60c962f3a6309a522eb5a400",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lalinference/_bayespputils.cpython-313-darwin.so": "d3a011d91df8fb10306d8b210c2334f2931b58a0994dfd1974d766712165276c",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lalinference/_lalinference.cpython-313-darwin.so": "42f66bf7bb4971996d3e29a89be274b673ac7fb55e0c35a3e472479dd1dceeb8",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lalinspiral/_lalinspiral.cpython-313-darwin.so": "aebb6b8b570018af89ebf4701fe33a232d965dcac5c026f34c75936d3c48f604",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lalinspiral/_thinca.cpython-313-darwin.so": "755ea8d7b90b68db5b95b800f1ee4550956ae752d441300ed43cd0862d4b2efd",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lalmetaio/_lalmetaio.cpython-313-darwin.so": "4429fb8189a806182661a7e6fbdb7ff9f975a445fde2da46b0e8b498aa4f313b",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lalpulsar/_lalpulsar.cpython-313-darwin.so": "ac2937b767c371c0638a431e645bdba43c21fbb721eb3223abd0900b9a047c8d",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lalsimulation/_lalsimulation.cpython-313-darwin.so": "2de0af808b258bef03a3a13b15fa71038f48579f5f562e92ebd62c6b9769fd37"
+    },
+    "lal_version": "7.7.1",
+    "lalsimulation_version": "6.2.1",
+    "lalsuite_distribution": "7.26.15"
+  },
+  "release_qualified": false,
+  "schema": "diffgw.seobnrv4.source-q4-route-attribution.v1",
+  "status": "diagnostic_complete"
+}

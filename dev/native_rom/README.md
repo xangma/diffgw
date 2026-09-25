@@ -1144,6 +1144,30 @@ residual must be attributed before this JAX route can claim physical parity.
 These four runs do not establish numerical convergence, physical accuracy,
 or ROM readiness.
 
+The [separately frozen source-backed plan](evidence/2026-09-25/jax_source_spliced_whole_waveform_plan.json)
+uses the historical calibration and flux choices in the development-only
+Torch/JAX route. Its [q4 nonspin](evidence/2026-09-25/jax_source_spliced_whole_waveform_q4_nonspinning.json),
+[high-start mixed-spin](evidence/2026-09-25/jax_source_spliced_whole_waveform_high_start_mixed_spin.json),
+[strong aligned](evidence/2026-09-25/jax_source_spliced_whole_waveform_strong_aligned.json), and
+[strong antialigned](evidence/2026-09-25/jax_source_spliced_whole_waveform_strong_antialigned.json)
+waveforms pass all frozen full-series backend checks, with at most `7.46e-9`
+Torch/JAX complex relative L2. Their sampled-peak public differences are
+`0.06460`, `0.08014`, `0.04235`, and `4.64e-5`. A [same-input q4 replay](evidence/2026-09-25/source_q4_route_attribution.json)
+through the older Torch adaptive assembler returns `0.06459857` versus
+`0.06459860` for the new spliced route, so the q4 residual is common to both.
+
+The [frozen anchor diagnostic](evidence/2026-09-25/source_spliced_anchor_plan.json)
+replays all four cases and fits each mode's own amplitude peak between output
+samples without optimizing a relative shift. The [results](evidence/2026-09-25/source_spliced_anchor.json)
+lower the corresponding public differences to `0.00967`, `0.01591`,
+`0.01488`, and `4.28e-5` using quadratic power peaks; two other local peak
+fits give similar values. Discrete peak anchoring therefore accounts for most
+of the apparent q4, mixed, and aligned discrepancies. A `0.1/M` frequency
+anchor gives `0.0522` on q4, has no pre-peak crossing on the mixed-spin row,
+and gives `0.7566` on aligned spin. These are comparison-convention
+diagnostics, not physical passes; residual source fidelity, numerical
+convergence, independent NR validation, and ROM training remain open.
+
 1. Qualify the physical generator against the published equations and independent
    references over the intended domain, resolve convention/provenance gaps, and
    establish gradients and numerical convergence. This runner covers only scalar

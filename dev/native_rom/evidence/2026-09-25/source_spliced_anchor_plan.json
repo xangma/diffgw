@@ -1,0 +1,16 @@
+{
+  "schema": "diffgw.seobnrv4.source-spliced-anchor-plan.v1",
+  "purpose": "Attribute the four source-backed whole-waveform public residuals to sampled peak anchoring versus independently fitted sub-sample peaks and a fixed orbital-frequency anchor. This is descriptive, with no optimized relative fit.",
+  "cases": {
+    "q4_nonspinning": "5378a283075e44fbebac40e45c3f17aed4431a5bed1235e78263af5a8b5473f5",
+    "high_start_mixed_spin": "c292c84e338db2cd3ed514b50cf443b44e8695f1317c4d7a27bae598d783d1bd",
+    "strong_aligned": "de22142a2255212ebfcee35bad4639968a063412e2961739c1da39dbee18b545",
+    "strong_antialigned": "278fd480d91130b68f1a47eeeec08e0f8fadb8b295f689f494d4b3050eed1210"
+  },
+  "source_q4_route_sha256": "5a9c5c1843328164c60a5695641af46e78c23f911152901386411e8653b125f0",
+  "source_choices": "source_q4_route_attribution_plan.json",
+  "peak_fit_methods": ["quadratic_power", "quadratic_amplitude", "quartic_power"],
+  "frequency_anchor_angular_M": 0.1,
+  "interpretation": "Compare each waveform against the same pinned public binary after fitting each own peak or crossing independently. A smaller residual shows an anchoring artifact; it is not a physical fidelity pass, and no gate is changed.",
+  "release_qualified": false
+}
