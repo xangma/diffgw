@@ -1,0 +1,261 @@
+{
+  "checks": {
+    "direct_phase_first_agreement_at_most": true,
+    "drift_below_matrix_only": true,
+    "phase_linear_residual_at_most": true,
+    "phase_matrix_replay_linf_at_most": true,
+    "whole_mode_drift_at_most": false
+  },
+  "comparisons": {
+    "candidate_to_matrix_only_drift_ratio": 0.20201509057231792,
+    "candidate_to_natural_drift_ratio": 0.0031993704898192477,
+    "candidate_torch_baseline_to_refined": {
+      "common_samples": 1169,
+      "complex_relative_l2": 1.0750871864778726e-05,
+      "support_sample_difference": 0,
+      "time_max_abs_M": 0.0
+    },
+    "matrix_first_coefficient_shift_l2": 1.7262670210792e-05,
+    "matrix_only_torch_baseline_to_refined": {
+      "common_samples": 1169,
+      "complex_relative_l2": 5.3218162238875415e-05,
+      "support_sample_difference": 0,
+      "time_max_abs_M": 0.0
+    },
+    "natural_cubic_torch_baseline_to_refined": {
+      "common_samples": 1169,
+      "complex_relative_l2": 0.0033603085041226687,
+      "support_sample_difference": 0,
+      "time_max_abs_M": 0.0
+    },
+    "phase_coefficient_adjacent_l2": 1.608712827554231e-05,
+    "phase_matrix_adjacent_frobenius": 1.6936023830059347e-11,
+    "phase_rhs_adjacent_l2": 2.453338330769268e-10,
+    "rhs_first_coefficient_shift_l2": 1.175766686639914e-06
+  },
+  "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+  "elapsed_s": 78.62813149997965,
+  "host": "RONI2",
+  "levels": {
+    "baseline": {
+      "amplitude_coefficients": [
+        142.80152258000518,
+        -1225.9332878300406,
+        1374.4348676257293
+      ],
+      "chain_matrix": {
+        "bracket_fraction": 0.47975389911334787,
+        "bracket_index": 8858,
+        "bracket_time_M": [
+          138.40625,
+          138.421875
+        ],
+        "field_at_match": [
+          -0.04962570114984957,
+          0.13959227428188814,
+          -0.0038143627872263453,
+          -0.013339372156549663
+        ],
+        "first": [
+          -0.008097807661946765,
+          -0.00016385545765019847
+        ],
+        "interpolated_state": [
+          3.2829127982594732,
+          28.634263883706936,
+          -0.08137481254395267,
+          2.2903901280547876
+        ],
+        "match_time_local_M": 138.41374615467365,
+        "orbital_frequency_minus_bracket_linear": 3.6573504225145825e-09,
+        "phase_basis": [
+          -0.17756986770848598,
+          -0.001175842824882269
+        ],
+        "second": [
+          -0.00097585900204501,
+          -3.444002923314874e-05
+        ]
+      },
+      "jax_natural_cubic": {
+        "end_M": 584.0,
+        "mode_sha256": "47c9c601eb4377e3b3e9fce645595aeae69aab32271891798ca497202972f025",
+        "samples": 1169,
+        "start_M": 0.0,
+        "time_sha256": "0ac91155dc977bca73e17f8cf1a8295bff77b9e603e39a39a616cc1f185b5a22"
+      },
+      "match_time_M": 484.4137461546736,
+      "phase_coefficients": [
+        35.553428355402005,
+        -797.4835801685452
+      ],
+      "phase_linear_residual_linf": 3.469446951953614e-18,
+      "phase_matrix": [
+        [
+          -0.008097807661946765,
+          -0.00016385545765019847
+        ],
+        [
+          -0.00097585900204501,
+          -3.444002923314874e-05
+        ]
+      ],
+      "phase_matrix_minus_prior_linf": 0.0,
+      "phase_rhs": [
+        -0.157232787547814,
+        -0.007229775300220544
+      ],
+      "phase_rhs_minus_prior": [
+        -5.7782371609693683e-08,
+        5.551997775757322e-07
+      ],
+      "raw_mode_rhs": {
+        "amplitude_natural_cubic_first_second": [
+          0.004257881468005054,
+          0.00016995492621009836
+        ],
+        "direct_mode_phase_first_minus_frequency": 5.551115123125783e-17,
+        "raw_mode": [
+          -0.1880569132367948,
+          0.3238438329604144
+        ],
+        "raw_mode_phase_first": 0.2724509450973799,
+        "raw_mode_phase_second": 0.003947196288558429
+      },
+      "settings": {
+        "atol": 1e-10,
+        "coarse_output_step_M": 0.5,
+        "max_step_M": 2.0,
+        "rtol": 1e-09
+      },
+      "torch": {
+        "end_M": 584.0,
+        "mode_sha256": "00367a15692b887e2f6e044a23813c0c5efb0726ee423af81cd4f873bc53fc43",
+        "samples": 1169,
+        "start_M": 0.0,
+        "time_sha256": "0ac91155dc977bca73e17f8cf1a8295bff77b9e603e39a39a616cc1f185b5a22"
+      },
+      "torch_public_complex_relative_l2": 0.03920350807237133,
+      "torch_to_jax_natural_cubic": {
+        "common_samples": 1169,
+        "complex_relative_l2": 0.0029015197686523895,
+        "support_sample_difference": 0,
+        "time_max_abs_M": 0.0
+      }
+    },
+    "refined": {
+      "amplitude_coefficients": [
+        142.78352922348063,
+        -1225.7562477446963,
+        1374.2211210588791
+      ],
+      "chain_matrix": {
+        "bracket_fraction": 0.47975389911334787,
+        "bracket_index": 8858,
+        "bracket_time_M": [
+          138.40625,
+          138.421875
+        ],
+        "field_at_match": [
+          -0.04962570105328271,
+          0.13959227414072783,
+          -0.0038143627930578117,
+          -0.013339372117941301
+        ],
+        "first": [
+          -0.008097807675344196,
+          -0.00016385545704441267
+        ],
+        "interpolated_state": [
+          3.282912800800963,
+          28.634263885102673,
+          -0.08137481232316253,
+          2.2903901277298746
+        ],
+        "match_time_local_M": 138.41374615467365,
+        "orbital_frequency_minus_bracket_linear": 3.6566742411814346e-09,
+        "phase_basis": [
+          -0.17756986726879226,
+          -0.0011758428155899696
+        ],
+        "second": [
+          -0.0009758589917063513,
+          -3.444002894520474e-05
+        ]
+      },
+      "jax_natural_cubic": {
+        "end_M": 584.0,
+        "mode_sha256": "c13ac90eedb99055b6aca7801b738a985b36471a4e06eff733e9d325d3c83005",
+        "samples": 1169,
+        "start_M": 0.0,
+        "time_sha256": "0ac91155dc977bca73e17f8cf1a8295bff77b9e603e39a39a616cc1f185b5a22"
+      },
+      "match_time_M": 484.4137461546736,
+      "phase_coefficients": [
+        35.553427941772235,
+        -797.4835640867354
+      ],
+      "phase_linear_residual_linf": 5.551115123125783e-17,
+      "phase_matrix": [
+        [
+          -0.008097807675344196,
+          -0.00016385545704441267
+        ],
+        [
+          -0.0009758589917063513,
+          -3.444002894520474e-05
+        ]
+      ],
+      "phase_matrix_minus_prior_linf": 0.0,
+      "phase_rhs": [
+        -0.15723278779284083,
+        -0.007229775312490066
+      ],
+      "phase_rhs_minus_prior": [
+        1.4582798468776303e-08,
+        -8.042142221435788e-08
+      ],
+      "raw_mode_rhs": {
+        "amplitude_natural_cubic_first_second": [
+          0.004257876168098369,
+          0.00017000558495972628
+        ],
+        "direct_mode_phase_first_minus_frequency": -5.551115123125783e-17,
+        "raw_mode": [
+          -0.1880569120220881,
+          0.32384383326738114
+        ],
+        "raw_mode_phase_first": 0.27245094485235305,
+        "raw_mode_phase_second": 0.003947196276288907
+      },
+      "settings": {
+        "atol": 1e-11,
+        "coarse_output_step_M": 0.5,
+        "max_step_M": 2.0,
+        "rtol": 1e-10
+      },
+      "torch": {
+        "end_M": 584.0,
+        "mode_sha256": "37f7d42203d3726074f1d76f8cedd4cf7cf0d88aba013433260a758775631377",
+        "samples": 1169,
+        "start_M": 0.0,
+        "time_sha256": "0ac91155dc977bca73e17f8cf1a8295bff77b9e603e39a39a616cc1f185b5a22"
+      },
+      "torch_public_complex_relative_l2": 0.039205666852398936,
+      "torch_to_jax_natural_cubic": {
+        "common_samples": 1169,
+        "complex_relative_l2": 0.00046267984906923194,
+        "support_sample_difference": 0,
+        "time_max_abs_M": 0.0
+      }
+    }
+  },
+  "pid": 57756,
+  "plan_sha256": "dfaca479ff537a5a69eea627196aa6a76e0f9a27c5e3ebaf4862ed354279d6b7",
+  "prospective_gate_passed": false,
+  "release_qualified": false,
+  "schema": "diffgw.seobnrv4.source-aligned-ode-chain-phase-rhs.v1",
+  "scope": "Torch-only dev counterfactual: continuous phase matrix and raw-mode phase RHS; natural-cubic amplitude inputs",
+  "script_sha256": "b789eedb4eacf29500253999d1d0bb68e8e8591f661b8025592c50ae1d1114ff",
+  "status": "diagnostic_complete"
+}

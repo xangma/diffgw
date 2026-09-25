@@ -2563,6 +2563,16 @@ coefficients move by `0.04384`; a fixed-matrix decomposition attributes
 `1.73e-5` to the matrix change. This Torch-only control motivates a separate
 right-hand-side test, not a release matching prescription.
 
+The [frozen phase-right-hand-side follow-up](evidence/2026-09-25/source_aligned_ode_chain_phase_rhs.json)
+keeps that continuous phase matrix and replaces only raw-mode phase RHS
+derivatives with the orbital frequency and its Lie derivative at the same
+interpolated match state. The direct raw-mode phase derivative agrees with the
+frequency to `5.56e-17`. The phase-coefficient tolerance shift falls from
+`0.04384` to `1.61e-5`, and whole-mode drift falls to `1.075e-5`, just above
+the frozen `1e-5` gate. Amplitude coefficients still shift by `0.278` L2;
+this single-row Torch control leaves amplitude derivatives and complete
+waveform qualification open.
+
 A separate [clean-room circular-frequency check](evidence/2026-09-25/published_circular_frequency_plan.json)
 derives the zero-radial angular Hamiltonian derivative and compares it with
 the current native Torch and JAX autodiff paths. At four fixed development
