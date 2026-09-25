@@ -1,4 +1,4 @@
-"""Pure PyTorch PNR (PhenomX Precession Numerical Relativity) angle engine.
+"""Pure PyTorch PNR angle engine used by the native XPNR-labelled route.
 
 Provides a native, autograd-differentiable PyTorch implementation of the NR-tuned
 precession angles (alpha, beta, gamma), two-spin to single-spin mapping,
@@ -6,8 +6,8 @@ multi-harmonic linear frequency mapping, and minimal-rotation coprecessing phase
 quadrature for IMRPhenomXPNR (prec_version=330).
 
 References:
-- Hamilton et al. (2021), Phys. Rev. D 104, 124027 (arXiv:2107.08876)
-- Pratten et al. (2021), Phys. Rev. D 103, 104056 (arXiv:2004.06503)
+- Hamilton et al. (2025), arXiv:2507.02604v1
+- Thompson et al. (2024), Phys. Rev. D 109, 063012 (arXiv:2312.10025v1)
 
 DiffGW combines these angles with its native symmetric IMRPhenomXHM
 coprecessing carrier. The carrier, integration grid, angle attachment, and
@@ -18,8 +18,7 @@ accuracy bound throughout parameter space. Autodiff gives derivatives of the
 implemented numerical scheme, which require separate validation.
 """
 
-from typing import Dict, Optional, Sequence, Tuple, Union
-import math
+from typing import Tuple, Union
 import torch
 
 from torchwave.constants import (
@@ -31,7 +30,6 @@ from torchwave.approximants.pnr_coefficients import COEFF_ARRAYS
 from torchwave.approximants.imrphenom_xas import XASParameterFits
 from torchwave.approximants.precession_spintaylor import (
     evaluate_spintaylor_precession,
-    compute_chi_tot_perp,
 )
 
 
@@ -59,7 +57,11 @@ def compute_pnr_single_spin(
     s2y: torch.Tensor,
     s2z: torch.Tensor,
 ) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]:
-    """Compute effective single-spin parameters from Eq. 17-19 of Hamilton et al. (2021)."""
+    """Compute the algebra of Hamilton et al. (2025), Eqs. (3)--(6).
+
+    Full paper fidelity requires spins at the SpinTaylor stopping frequency;
+    the current caller still supplies reference-frequency spins.
+    """
     total_m = m1 + m2
     q = m1 / m2
     eta = (m1 * m2) / (total_m * total_m)
@@ -167,7 +169,7 @@ def compute_pnr_beta_coefficients(
     b2 = -chi_eff * sintheta * torch.exp(poly_b2)
 
     poly_b3 = _eval_coeff_poly(c_b3, eta_eff, chi_eff, costheta)
-    b3 = b2 * poly_b3
+    b3 = chi_eff * sintheta * (torch.exp(poly_b3) - 200.0)
 
     poly_b5 = _eval_coeff_poly(c_b5, eta_eff, chi_eff, costheta)
     b5 = -(poly_b5 ** 2)
@@ -182,7 +184,7 @@ def eval_pnr_alpha_mr(
     a3: torch.Tensor,
     a4: torch.Tensor,
 ) -> torch.Tensor:
-    """Merger-ringdown Lorentzian resonance expression for alpha (Eq. 48 of Hamilton et al. 2021)."""
+    """Merger-ringdown alpha Ansatz, Hamilton et al. (2025), Eq. (15)."""
     return -(a1 / torch.clamp(mf, min=1e-8) + (a2 * torch.sqrt(a3)) / (a3 + (mf - a4) ** 2))
 
 
@@ -195,7 +197,7 @@ def eval_pnr_beta_mr(
     b4: torch.Tensor,
     b5: torch.Tensor,
 ) -> torch.Tensor:
-    """Merger-ringdown rational Ansatz expression for beta (Eq. 49 of Hamilton et al. 2021)."""
+    """Merger-ringdown beta Ansatz, Hamilton et al. (2025), Eq. (16)."""
     return b0 + (b1 + b2 * mf + b3 * (mf ** 2)) / (1.0 + b4 * ((mf + b5) ** 2))
 
 
@@ -234,7 +236,7 @@ def eval_pnr_linear_frequency_map(
     mf_rd_22: torch.Tensor,
     mf_rd_lm: torch.Tensor,
 ) -> torch.Tensor:
-    """Multi-harmonic linear frequency map for higher modes (Hamilton et al. Eq. 57)."""
+    """Higher-mode frequency map, Thompson et al. (2024), Eqs. (50)--(52)."""
     if ell == 2 and emm == 2:
         return mf
 
@@ -272,7 +274,7 @@ def evaluate_pnr_precession(
     convention: int = 1,
     observer_azimuth: Union[float, torch.Tensor] = 0.0,
 ) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor, torch.Tensor]:
-    """Evaluate sovereign PNR precession angles and J-frame orientations in pure PyTorch.
+    """Evaluate the provisional native PNR angle route in pure PyTorch.
 
     Returns:
         alpha: J-frame precession azimuth angle

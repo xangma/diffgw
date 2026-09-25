@@ -76,6 +76,50 @@ source or wheel distributions. Their URLs and pinned hashes are retained by
 the verification tests and metadata; no MIT grant has been established for
 these supplementary assets, so this notice makes no licensing assurance.
 
+## PhenomXPNR calibration sources and unresolved inherited tensors
+
+The equation text used by the independent XPNR scalar component reference is
+from Hamilton et al., arXiv:2507.02604v1, and Thompson et al.,
+arXiv:2312.10025v1; both arXiv HTML records state CC BY 4.0. Hamilton et al.,
+arXiv:2107.08876v1, also documents the partial 40-waveform predecessor fitting
+procedure under CC BY 4.0. The 80 single-spin BAM configurations described as
+the later angle calibration set are publicly listed by the BAM catalogue. Its
+minimal and complete Zenodo releases, records 7673796 and 7677297, contain 80
+waveform HDF5 files apiece and state CC BY 4.0. DiffGW does not bundle those
+waveform archives in source or wheel distributions.
+
+The 2021 paper cites `positive` v1.0, Zenodo record 3901856, for its polynomial
+fitting algorithm. The archived software carries an MIT license (Zenodo's
+metadata labels it `other-open`). DiffGW does not bundle that tool. Its terms
+apply to the tool, not automatically to fit inputs, outputs, or the inherited
+coefficient arrays.
+
+An author-controlled PhenomXCP repository pinned at
+`a411e5966a73445efad0db9dc7806d2195374ab1` contains a historical carrier-fit
+workflow and partial fit artifacts. Its root license is MIT, but its generated
+`xcp/parameter_space_fits.c` carries a GPL-2.0-or-later notice and the inspected
+data artifacts carry no separate notice. DiffGW does not bundle these files.
+The repository does not contain the angle tensors and does not document an
+authoritative mapping from its partial carrier outputs to the final XO4a/XPNR
+carrier coefficients. Its root license is not evidence of blanket MIT terms
+for generated outputs or for DiffGW's inherited tensors.
+
+The numerical `A1..A4`, `B0..B5`, and `Bf` arrays already present in
+`src/torchwave/approximants/pnr_coefficients.py` and
+`src/jaxwave/approximants/pnr_coefficients.py` are not printed in the cited
+model papers.
+Their independent origin and redistribution terms have not been established.
+They first appear in DiffGW's initial repository commit,
+`ceb6ae15c00bbbd3eaca2bdc12bb3307b38e9beb`, so repository history supplies no
+earlier source or permission record. The public papers and deposits do not
+provide the 80-case per-simulation fit targets, complete run configuration,
+sparse basis selection, final tensor manifest, or a licensed tensor release.
+The papers point to files in LALSuite, which is GPL-2.0-or-later, but this audit
+did not inspect, copy, translate, or fit coefficients from LAL source and does
+not infer a licence for the inherited arrays. Pinned LAL binaries are used only
+as black-box comparison oracles. See
+`docs/waveforms/research/imrphenomxpnr.md` for hashes and qualification scope.
+
 ## IMRPhenomT author formulas and calibration expressions — MIT
 
 `src/diffgw_core/phenomt_fits.py` transcribes the aligned dominant- and higher-mode fit branches from

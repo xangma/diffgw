@@ -1,0 +1,279 @@
+{
+  "schema_version": 1,
+  "model": "IMRPhenomXPNR",
+  "recorded_at": "2026-09-25",
+  "verdict": "provisional_component_evidence_full_waveform_failed",
+  "qualified_full_waveform": false,
+  "paper_fidelity": {
+    "status": "partial_pass",
+    "passed_components": [
+      "XPNR Eqs. 3-6 transition-spin map algebra when supplied transition spins",
+      "XO4a Eq. 35 calibration polynomial",
+      "XO4a Eqs. 25-34 guarded alpha/beta parameter transforms",
+      "XPNR Eqs. 15-16 merger-ringdown angle ansatzes",
+      "XPNR Eqs. 7-8 standalone carrier deformation and effective-ringdown relations",
+      "XO4a Eqs. 50-52 higher-mode frequency map"
+    ],
+    "failed_or_missing_components": [
+      "exact terminal-state evolution and spin-sampling procedure; public route instead supplies reference-frequency spins",
+      "XPNR Eqs. 17-21 analytic continuation and angle attachment",
+      "published arctangent beta bounding prescription",
+      "XHM-CP carrier deviations and their unprinted u_k assets",
+      "effective-ringdown relation in waveform composition",
+      "XPNR Eqs. 10-13 dominant-mode asymmetry",
+      "independently sourced numeric angle-fit tensors"
+    ],
+    "documented_ambiguity": "XO4a Eq. 38 omits the pi factor required for an endpoint-completing shifted-cosine window; tests cover the explicit Torch/JAX interpretation rather than claiming exact transcription."
+  },
+  "spin_at_attachment": {
+    "status": "terminal_state_geometry_pass_stopping_procedure_unresolved",
+    "paper_contract": [
+      "evaluate the XPNR single-spin map at the merger-ringdown transition using spins projected relative to the instantaneous Newtonian orbital direction",
+      "place the effective spin on the larger black hole, leave the smaller black hole nonspinning, and discard the effective spin azimuth"
+    ],
+    "source_terms": [
+      {
+        "source": "Hamilton et al., arXiv:2507.02604v1",
+        "license": "CC-BY-4.0",
+        "use": "independently encoded terminal-state algebra"
+      },
+      {
+        "source": "Colleoni et al., arXiv:2412.16721v1 / Phys. Rev. D 111, 104019",
+        "license": "arXiv non-exclusive distribution license",
+        "use": "specification evidence only; no text, code, or assets copied"
+      }
+    ],
+    "scalar_reference": {
+      "function": "diffgw_reference.xpnr_angles.single_spin_map_from_transition_vectors",
+      "tests": [
+        "instantaneous orbital-plane projection",
+        "common-frame rotation invariance",
+        "equivalence to the z-aligned component map"
+      ],
+      "latest_evidence_run": {
+        "host": "len",
+        "command": "JAX_ENABLE_X64=1 JAX_PLATFORMS=cpu OMP_NUM_THREADS=1 .venv/bin/pytest -q tests/test_xpnr_component_evidence.py tests/test_xpnr_coefficient_provenance.py tests/test_xpnr_attachment_gate.py",
+        "result": "50 passed, 1 skipped in 3.60s",
+        "skip": "The pre-existing Torch/JAX tensor-duplication check requires both frontends; this isolated environment has JAX but not Torch."
+      }
+    },
+    "unresolved": [
+      "complete independently usable PN evolution equations and coefficients",
+      "exhaustive stop conditions and numerical thresholds",
+      "Runge-Kutta-Fehlberg pair, tolerances, controller, and interpolation",
+      "the exact terminal sample when the several published continuation and attachment frequencies differ",
+      "integration direction around the reference frequency",
+      "terminal state and frame extraction, branches, and fallback behavior"
+    ],
+    "current_diffgw_boundary": {
+      "map_input_epoch": "reference_frequency",
+      "terminal_state_returned": false,
+      "project_specific_choices": [
+        "transition set to 0.98 times the reference-spin MECO estimate",
+        "MECO frequency clamped above the reference by 15 Hz and below 800 Hz",
+        "fixed 200-node fourth-order Runge-Kutta evolution"
+      ],
+      "status": "not_paper_fidelity"
+    },
+    "promotion_gate": "Supply an independently specified and licensed terminal-state evolution and explicit sampling event, return terminal S1, S2, and Lhat, demonstrate convergence and stop-event stability, convert each spin to chi_i = S_i/m_i^2, then feed chi1, chi2, and Lhat to the scalar map. The AST canary and scalar invariants are component-boundary checks, not physical terminal-state validation."
+  },
+  "scalar_reference_agreement": {
+    "status": "pass_for_scoped_components",
+    "command": "JAX_ENABLE_X64=1 JAX_PLATFORMS=cpu OMP_NUM_THREADS=1 pytest -q tests/test_xpnr_component_evidence.py",
+    "result": "46 passed",
+    "reference_module": "src/diffgw_reference/xpnr_angles.py",
+    "reference_module_sha256": "ab105751b57a79bebdd1378e27bf76d40dfeceed5183d64e6634fb896d403739",
+    "result_note": "The recorded two-frontend result predates the added pure-stdlib terminal-state geometry case; the current len result is recorded under spin_at_attachment."
+  },
+  "torch_jax_parity": {
+    "status": "pass_for_scoped_components",
+    "local_environment": {
+      "host": "RONI2",
+      "python": "3.12.7",
+      "torch": "2.13.0",
+      "jax": "0.11.1",
+      "jaxlib": "0.11.1",
+      "numpy": "2.5.2",
+      "pytest": "9.1.1"
+    },
+    "combined_command": "JAX_ENABLE_X64=1 JAX_PLATFORMS=cpu OMP_NUM_THREADS=1 pytest -q tests/test_xpnr_component_evidence.py tests/test_imrphenom_xpnr.py",
+    "combined_result": "56 passed, 18 warnings",
+    "remote_jax_grid": {
+      "host": "len",
+      "device": "cuda:0 (NVIDIA RTX 4090)",
+      "cwd": "/tmp/diffgw-xpnr-0172",
+      "command": "PYTHONPATH=src .venv/bin/python scripts/validate_xpnr_jax_grid.py --points 262144 --scalar-samples 128 --output len-xpnr-result.json",
+      "log": "/tmp/diffgw-xpnr-0172/len-xpnr.log",
+      "python": "3.12.3",
+      "jax": "0.11.2",
+      "jaxlib": "0.11.2",
+      "numpy": "2.5.3",
+      "points": 262144,
+      "scalar_samples": 128,
+      "all_dense_values_finite": true,
+      "scalar_comparison_failures": 0,
+      "max_scalar_absolute_error": 1.91898834600579e-08,
+      "max_scalar_scaled_error": 7.504357362852957e-12,
+      "max_alpha_derivative_absolute_error": 2.842170943040401e-14,
+      "max_beta_derivative_absolute_error": 1.6653345369377348e-16,
+      "elapsed_seconds": 1.9555840771645308,
+      "install_note": "pip retried an unreachable configured pypi.ngc.nvidia.com index, then resolved the latest requested packages from PyPI; the isolated install and run completed successfully."
+    }
+  },
+  "external_parity": {
+    "status": "four_diagnostic_acceptance_cases_passed_not_full_waveform_qualification",
+    "oracle_policy": "Pinned installed LAL binaries used as black-box comparisons; no LAL source inspected or ingested.",
+    "environment": {
+      "lalsuite_distribution": "7.26.15",
+      "lal": "7.7.1",
+      "lalsimulation": "6.2.1",
+      "lalsimulation_extension_sha256": "7024d54b1d3f2c0c01976c8730f564bece28828ffab4619ccba2bdc92a0ca96c",
+      "pycbc": "0.0a9304"
+    },
+    "command": "OMP_NUM_THREADS=1 pytest -q tests/test_imrphenom_xpnr.py -k lal_parity --junitxml=/tmp/xpnr-lal.xml",
+    "metric": "PyCBC time/phase-optimized plus-polarization match, 20-400 Hz",
+    "cases": [
+      {
+        "id": "q1p5",
+        "masses_msun": [30.0, 20.0],
+        "observed_match": 0.995136069452,
+        "acceptance_threshold": 0.99,
+        "passed": true
+      },
+      {
+        "id": "q1p4",
+        "masses_msun": [35.0, 25.0],
+        "observed_match": 0.991092679051,
+        "acceptance_threshold": 0.99,
+        "passed": true
+      },
+      {
+        "id": "q1p33",
+        "masses_msun": [40.0, 30.0],
+        "observed_match": 0.994351007028,
+        "acceptance_threshold": 0.99,
+        "passed": true
+      },
+      {
+        "id": "q1p67",
+        "masses_msun": [50.0, 30.0],
+        "observed_match": 0.991789177998,
+        "acceptance_threshold": 0.99,
+        "passed": true
+      }
+    ],
+    "limitation": "These selected, optimized, plus-only observations do not establish complex-mode agreement, both-polarization agreement, a full-model proof, a lower bound over parameter space, or a calibration-domain boundary."
+  },
+  "physical_validation": {
+    "status": "not_reproduced",
+    "paper_evidence_only": "The XPNR/XO4a papers report BAM and NRSur validation. DiffGW was not compared with those NR data in this change."
+  },
+  "full_waveform_qualification": {
+    "status": "fail",
+    "strict_thresholds": {
+      "complex_relative_l2_max": 1e-06,
+      "mismatch_max": 1e-08
+    },
+    "inherited_xhm_results": {
+      "catalog": "0/1",
+      "holdout": "0/1"
+    },
+    "thresholds_changed": false,
+    "next_gate": "Independently specify and license the terminal-spin evolution plus exact sampling event; return S1, S2, and Lhat, convert chi_i = S_i/m_i^2, and supply chi1, chi2, and Lhat to the passed scalar geometry map. Then implement exact attachments/continuations, XHM-CP deformation/effective-ringdown/asymmetry, and independently traceable coefficient assets before passing Torch/JAX complex modes and both polarizations at the unchanged strict catalog/holdout thresholds and proceeding to NR validation."
+  },
+  "calibration_assets": {
+    "canonical_numeric_payload_sha256": "c7794b653f781bbba45b97170fdac9fb6c89de6cc9c404e4942908ce1f820d68",
+    "torch_source_sha256": "9d5d77749d187f64447f1ed0501311370b5c97a3e8a471de71ced315ce0394fd",
+    "jax_source_sha256": "5801aa497b7ba10d389d8da5ca21dc27dc072c953a71706157211ca5fe2a6ea3",
+    "provenance": "unresolved_independent_source_and_redistribution_terms",
+    "manifest_check": {
+      "command": "pytest -q tests/test_xpnr_coefficient_provenance.py",
+      "result": "2 passed",
+      "scope": "Checks source-to-component evidence classes, the retained provisional gate, tensor names and shapes, frontend literal equality, and pinned source-file hashes without importing Torch or JAX."
+    },
+    "tensor_inventory": {
+      "names": ["A1", "A2", "A3", "A4", "B0", "B1", "B2", "B3", "B4", "B5", "Bf"],
+      "shape_by_name": [4, 4, 5],
+      "first_seen_repository_commit": "ceb6ae15c00bbbd3eaca2bdc12bb3307b38e9beb",
+      "first_seen_repository_commit_subject": "feat: initial commit of diffgw (torchwave & jaxwave)",
+      "earlier_repository_history": false,
+      "redistribution_terms": null
+    },
+    "source_to_component": [
+      {
+        "id": "xo4a_angle_equations",
+        "evidence_class": "published_equations",
+        "components": ["XPNR-FIT", "XPNR-ANGLES-MR"],
+        "source": "arXiv:2312.10025v1",
+        "license": "CC-BY-4.0",
+        "establishes": "The polynomial basis, angle transforms, ansatzes, guards, and the LALSuite location of the final values.",
+        "does_not_establish": "The numeric lambda tensors or independent redistribution terms for the inherited DiffGW copies."
+      },
+      {
+        "id": "phenompnr_historical_fit_method",
+        "evidence_class": "published_partial_generation_procedure",
+        "components": ["XPNR-FIT", "XPNR-ANGLES-MR"],
+        "source": "arXiv:2107.08876v1",
+        "license": "CC-BY-4.0",
+        "establishes": "For the 40-waveform predecessor: per-waveform scipy curve_fit using Levenberg-Marquardt, fit intervals, sequential coefficient order, and mvpolyfit polynomial fitting in a (4,2,5) ambient basis.",
+        "does_not_establish": "An exact reproduction recipe or output for the later 80-waveform XO4a retune in its (4,4,5) basis."
+      },
+      {
+        "id": "bam_80_waveform_inputs",
+        "evidence_class": "third_party_calibration_input",
+        "components": ["XPNR-FIT", "XPNR-ANGLES-MR", "XPNR-CARRIER"],
+        "source": "Zenodo records 7673796 and 7677297",
+        "license": "CC-BY-4.0",
+        "establishes": "The public minimal and complete waveform inputs for the 80 single-spin BAM configurations.",
+        "does_not_establish": "The per-simulation fitted angle targets, final tensors, fit-run configuration, or terms for the inherited arrays."
+      },
+      {
+        "id": "positive_fit_tool",
+        "evidence_class": "third_party_fitting_tool",
+        "components": ["XPNR-FIT"],
+        "source": "doi:10.5281/zenodo.3901856 (positive v1.0)",
+        "archive_sha256": "48ef090a5bcae72a3530647f6d6f81d56aa9d372362f552fa28e390b723a36c3",
+        "license": "MIT in the archived LICENSE; Zenodo metadata says other-open",
+        "establishes": "A published implementation of the historical mvpolyfit/gmvpfit basis-learning tool.",
+        "does_not_establish": "The inputs, complete configuration, sparse basis choices, or output of the final 80-waveform fit."
+      },
+      {
+        "id": "phenomxcp_partial_carrier_workflow",
+        "evidence_class": "author_release_partial_carrier_workflow",
+        "components": ["XPNR-CARRIER"],
+        "source": "github:llondon6/PhenomXCP@a411e5966a73445efad0db9dc7806d2195374ab1",
+        "license": "mixed notices: root MIT; generated parameter_space_fits.c GPL-2.0-or-later; data artifacts have no separate notice",
+        "establishes": "An author-controlled historical workflow and partial carrier-fit artifacts for PhenomXCP.",
+        "does_not_establish": "The current XO4a/XPNR carrier u_k release or mapping, any A/B/Bf tensor, or blanket MIT terms for generated outputs."
+      },
+      {
+        "id": "diffgw_inherited_angle_tensors",
+        "evidence_class": "unsupported_inherited_tensors",
+        "components": ["XPNR-FIT", "XPNR-ANGLES-MR"],
+        "source": "DiffGW repository history beginning at ceb6ae15c00bbbd3eaca2bdc12bb3307b38e9beb",
+        "license": "unresolved",
+        "establishes": "Only the first appearance and identity of the current DiffGW payload.",
+        "does_not_establish": "Independent origin, author release identity, regeneration, or permission to redistribute."
+      }
+    ],
+    "regeneration_assessment": {
+      "status": "not_independently_reproducible_from_published_assets",
+      "available": [
+        "published equations and polynomial basis",
+        "CC-BY-4.0 BAM waveform inputs",
+        "historical 40-waveform fitting procedure",
+        "MIT-licensed historical polynomial fitting tool",
+        "author-controlled partial PhenomXCP carrier workflow with mixed file-level notices"
+      ],
+      "missing": [
+        "authoritative derived QA Euler-angle series and machine-readable per-simulation angle-fit targets for the 80-waveform retune",
+        "the retuning code and full configuration for sampling, weights, initial values, constraints, sequential refits, and sparse basis selection",
+        "a version-pinned output manifest for the final tensors",
+        "independent redistribution permission or a licensed coefficient release",
+        "an authoritative version and mapping from the partial PhenomXCP outputs to the final XO4a/XPNR carrier u_k values, with file-level terms"
+      ],
+      "fresh_refit_scope": "The public inputs could support a separate independently specified recalibration project, but that would not establish the origin or terms of the inherited values.",
+      "prohibited_methods_used": false
+    }
+  }
+}

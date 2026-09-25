@@ -37,7 +37,7 @@ class routes, as the [Pv2 ledger](research/phenom-precessing.md) explains.
 | [IMRPhenomXP](research/phenom-precessing.md) | precessing composition | provisional | `imrphenomxp`, `phenomxp`, `xp` |
 | [IMRPhenomXPHM](research/phenom-precessing.md) | precessing higher-mode composition | provisional | `imrphenomxphm`, `phenomxphm`, `xphm` |
 | [IMRPhenomXPHM_SpinTaylor](research/phenom-precessing.md) | XPHM precession variant | provisional | `imrphenomxphmspintaylor`, `phenomxphmspintaylor`, `xphmspintaylor` |
-| [IMRPhenomXPNR](research/phenom-precessing.md) | XPHM PNR variant | provisional | `imrphenomxpnr`, `phenomxpnr`, `xpnr`, `pnr`; Torch only: `imrphenomxnpr`, `phenomxnpr`, `xnpr` |
+| [IMRPhenomXPNR](research/imrphenomxpnr.md) | XPHM PNR variant | provisional component evidence; full waveform unqualified | `imrphenomxpnr`, `phenomxpnr`, `xpnr`, `pnr`; Torch only: `imrphenomxnpr`, `phenomxnpr`, `xnpr` |
 | [IMRPhenomT](research/imrphenomt-family.md) | native TD | provisional | `imrphenomt` |
 | [IMRPhenomTHM](research/imrphenomt-family.md) | T higher-mode extension | provisional | `imrphenomthm` |
 | [IMRPhenomTP](research/imrphenomt-family.md) | T precessing extension | provisional | `imrphenomtp` |
