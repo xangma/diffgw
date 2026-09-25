@@ -1885,6 +1885,20 @@ from `−0.1084` to `+0.00118` or `−0.00686`, respectively. The `0.025` and
 not a certified continuum derivative or a validated NQC prescription. The
 historical full-waveform and absolute NR gates remain open.
 
+The [frozen whole-mode dense-row counterfactual](evidence/2026-09-25/source_aligned_dense_row_whole_mode.json)
+inserts each `0.1` or `0.2 M` dense phase-curvature row into the same saved
+local matching system, changes no other NQC input, and replays the corrected
+full source generator at both fine cadences. Own-coefficient overrides are
+bitwise no-ops and the saved source, local, and public modes replay by hash.
+The two dense stencils differ by only `5.71e-6` and `4.23e-6` in peak-fitted
+whole-mode L2 at `0.00390625` and `0.001953125 M`. Their adjacent-grid L2s
+are `0.000344` and `0.000334`, versus `0.000467` for the original local fit;
+fixing the finest coefficients gives `0.000331` for either stencil. At the
+finest cadence, however, their public-wheel differences are `0.03423` and
+`0.03424`, slightly worse than the local fit's `0.03354`. This isolates a
+numerical improvement on one selected row, not historical-source fidelity,
+NR accuracy, domain-wide convergence, or a release-ready NQC rule.
+
 The [prospective q4 local-fit control](evidence/2026-09-25/source_q4_ultrafine_local_nqc_plan.json)
 recomputes those five coefficients with the same degree-four, `±2 M` local
 polynomial used in the earlier combined numerical control, then injects each
