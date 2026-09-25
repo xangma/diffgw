@@ -98,6 +98,35 @@ def _relative_l2(left, right):
     return float(np.linalg.norm(left - right) / np.linalg.norm(right))
 
 
+def _stationary_orbital_peak_time(time_grid, frequency, slope, curvature):
+    """Dev-only negative-curvature root near the sampled frequency maximum."""
+    time = np.asarray(time_grid, dtype=np.float64)
+    values = np.asarray(frequency, dtype=np.float64)
+    sampled_maximum = int(np.argmax(values))
+    roots = []
+    for index in range(max(0, sampled_maximum - 16),
+                       min(len(time) - 1, sampled_maximum + 16)):
+        left, right = float(time[index]), float(time[index + 1])
+        left_slope, right_slope = float(slope(left)), float(slope(right))
+        if left_slope < 0 or right_slope > 0:
+            continue
+        for _ in range(48):
+            middle = (left + right) / 2
+            if float(slope(middle)) > 0:
+                left = middle
+            else:
+                right = middle
+        root = (left + right) / 2
+        if float(curvature(root)) < 0:
+            roots.append(root)
+    if not roots:
+        raise ValueError("no negative-curvature stationary orbital peak near sampled maximum")
+    root = min(roots, key=lambda coordinate: abs(coordinate - time[sampled_maximum]))
+    if abs(float(slope(root))) > 1e-8:
+        raise ValueError("orbital peak root residual exceeds diagnostic tolerance")
+    return root
+
+
 def _polynomial_matching_second(time_grid, state, orbital_frequency, base_mode,
                                 match_time, *, half_width_M, degree):
     """Diagnostic local curvature for A, three A*q products, and mode phase."""
@@ -146,8 +175,12 @@ def _prepare_public(plan):
 def run(case_id, plan, public_identity, *, variant="published", anchor_control=False,
         independent_init=False, numerical_settings=None, write_result=True,
         return_series=False, return_stages=False, diagnostic_nqc_second=None,
-        diagnostic_nqc_phase_matrix=None):
+        diagnostic_nqc_phase_matrix=None, diagnostic_peak_policy=None):
     started = time.monotonic()
+    if diagnostic_peak_policy not in (None, "stationary"):
+        raise ValueError("unknown diagnostic orbital-peak policy")
+    if diagnostic_peak_policy and variant != "source":
+        raise ValueError("diagnostic orbital-peak policy is source-backed only")
     m1, m2, chi1, chi2, omega_start = CASES[case_id]
     nu = m1 * m2 / (m1 + m2)**2
     delta = (m1 - m2) / (m1 + m2)
@@ -232,8 +265,23 @@ def run(case_id, plan, public_identity, *, variant="published", anchor_control=F
     jw, jdamp = jax_qnm(jspin)
     tsigma = torch.complex(tw, -tdamp) / tmass
     jsigma = (jw - 1j * jdamp) / jmass
-    tmatch = torch_peak(fine.output_time, torch_fine_omega).time + torch_offset(tnu, tchi)
-    jmatch = jax_peak(jrun.fine_time, jax_fine_omega).time + jax_offset(jnu, jchi)
+    if diagnostic_peak_policy == "stationary":
+        torch_peak_spline = torch_natural_cubic_spline(fine.output_time, torch_fine_omega)
+        jax_peak_spline = jax_natural_cubic_spline(
+            jrun.fine_time, jax_fine_omega, scalar_output=True)
+        tpeak = _stationary_orbital_peak_time(
+            _array(fine.output_time), _array(torch_fine_omega),
+            lambda value: _eval_batch_scalar(torch_peak_spline, tensor(value), derivative=1),
+            lambda value: _eval_batch_scalar(torch_peak_spline, tensor(value), derivative=2))
+        jpeak = _stationary_orbital_peak_time(
+            _array(jrun.fine_time), _array(jax_fine_omega),
+            lambda value: jax_peak_spline.derivative(jnp.asarray(value)),
+            lambda value: jax_peak_spline.derivative(jnp.asarray(value), 2))
+        tmatch = tensor(tpeak) + torch_offset(tnu, tchi)
+        jmatch = jnp.asarray(jpeak) + jax_offset(jnu, jchi)
+    else:
+        tmatch = torch_peak(fine.output_time, torch_fine_omega).time + torch_offset(tnu, tchi)
+        jmatch = jax_peak(jrun.fine_time, jax_fine_omega).time + jax_offset(jnu, jchi)
     fine_count = math.ceil((max(float(tmatch), float(jmatch)) + 100) / fine_step) + 1
     output_time = np.arange(fine_count, dtype=np.float64) * fine_step
     matching_second = None
@@ -254,12 +302,13 @@ def run(case_id, plan, public_identity, *, variant="published", anchor_control=F
         fine.output_time, fine.output_state, torch_fine_omega,
         torch_fine_mode, torch_fine_frequency, tnu, tchi, tsigma,
         torch.tensor(output_time, dtype=torch.float64),
+        match_time=tmatch if diagnostic_peak_policy else None,
         diagnostic_phase_matrix=phase_matrix,
         diagnostic_matching_second=matching_second)
     jref = jax_attach(
         jrun.fine_time, jrun.fine_state, jax_fine_omega,
         jax_fine_mode, jax_fine_frequency, jnu, jchi, jsigma,
-        jnp.asarray(output_time))
+        jnp.asarray(output_time), match_time=jmatch if diagnostic_peak_policy else None)
     print(case_id, "fine attachments", flush=True)
 
     tcoarse = torch_coarse_mode * torch_factor(
@@ -313,6 +362,7 @@ def run(case_id, plan, public_identity, *, variant="published", anchor_control=F
                   "max_step_M": max_step, "atol": atol, "rtol": rtol},
         "public_binary": public_identity,
         "source_choices": SOURCE_FLUX_OPTIONS if variant == "source" else None,
+        "diagnostic_peak_policy": diagnostic_peak_policy,
         "diagnostic_nqc_second": diagnostic_nqc_second,
         "diagnostic_nqc_second_values": (_array(matching_second).tolist()
                                          if matching_second is not None else None),

@@ -1,0 +1,189 @@
+{
+  "case_id": "q4_nonspinning",
+  "checks": {
+    "each_level_backend_checks_passed": true,
+    "shared_sample_complex_relative_l2_at_most": false,
+    "shared_time_max_abs_at_most_M": true,
+    "stationary_peak_slope_max_abs_at_most": true
+  },
+  "comparisons": {
+    "jax": {
+      "complex_relative_l2": 5.046650093872297e-05,
+      "shared_end_M": 484.5,
+      "shared_samples": 970,
+      "shared_time_max_abs_M": 0.0
+    },
+    "jax_nqc_coefficient_l2": 0.019389607096013683,
+    "torch": {
+      "complex_relative_l2": 4.987203955666721e-05,
+      "shared_end_M": 484.5,
+      "shared_samples": 970,
+      "shared_time_max_abs_M": 0.0
+    },
+    "torch_nqc_coefficient_l2": 0.019397772161127234
+  },
+  "compatibility_shared_sample_complex_relative_l2": {
+    "jax": 0.0005499949192952129,
+    "torch": 0.0005497427398599673
+  },
+  "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+  "diagnostic_checks_passed": false,
+  "elapsed_s": 114.75823458301602,
+  "host": "RONI2",
+  "levels": {
+    "baseline": {
+      "boundary_time_M": 384.66015625,
+      "compatibility_match_time_M": {
+        "jax": 384.66942910460546,
+        "torch": 384.66942910460546
+      },
+      "diagnostic_checks_passed": true,
+      "fine_input_samples": 38455,
+      "jax": {
+        "end_M": 484.5,
+        "mode_sha256": "f9c030844bd820269ff9da2965f9c10894680c95d338aade25254242b72a343a",
+        "samples": 970,
+        "start_M": 0.0,
+        "time_sha256": "6db2117b58c64613f6c556861870ceaa8bc6026319b18624a2991df48e6cec1b"
+      },
+      "jax_boundary_time_M": 384.66015625,
+      "jax_fine_input_samples": 38455,
+      "jax_match_time_M": 384.66385821391646,
+      "jax_nqc_coefficients": [
+        [
+          -2.246575408074432,
+          8.103395004718694,
+          -6.567072473683889
+        ],
+        [
+          2.1376155702303135,
+          -3.922601059672232
+        ]
+      ],
+      "jax_peak": {
+        "jax_orbital_peak_sample_index": 38377,
+        "jax_orbital_peak_spline_curvature": -0.003473442408979359,
+        "jax_orbital_peak_spline_slope": 5.843002676749615e-17,
+        "jax_orbital_peak_time_M": 391.91239022991647
+      },
+      "match_time_M": 384.6638582128357,
+      "nqc_coefficients": [
+        [
+          -2.2465753182105352,
+          8.103394201959913,
+          -6.567071550206231
+        ],
+        [
+          2.137617925657296,
+          -3.922624227256271
+        ]
+      ],
+      "settings": {
+        "atol": 1e-13,
+        "coarse_output_step_M": 0.5,
+        "fine_refinement_factor": 128,
+        "max_step_M": 2.0,
+        "rtol": 1e-12
+      },
+      "torch": {
+        "end_M": 484.5,
+        "mode_sha256": "cded99be3d317af2025c4f401b912ccbe0967c6b6166a35366a1ad88c0d645c4",
+        "samples": 970,
+        "start_M": 0.0,
+        "time_sha256": "6db2117b58c64613f6c556861870ceaa8bc6026319b18624a2991df48e6cec1b"
+      },
+      "torch_jax": {
+        "common_samples": 970,
+        "complex_relative_l2": 3.05713879833959e-07,
+        "support_sample_difference": 0,
+        "time_max_abs_M": 0.0
+      },
+      "torch_peak": {
+        "orbital_peak_sample_index": 38377,
+        "orbital_peak_spline_curvature": -0.0034734425205980722,
+        "orbital_peak_spline_slope": -8.606532370461495e-17,
+        "orbital_peak_time_M": 391.9123902288357
+      }
+    },
+    "refined": {
+      "boundary_time_M": 384.662109375,
+      "compatibility_match_time_M": {
+        "jax": 384.66385964659764,
+        "torch": 384.66385964659764
+      },
+      "diagnostic_checks_passed": true,
+      "fine_input_samples": 76899,
+      "jax": {
+        "end_M": 484.5,
+        "mode_sha256": "6340516a68053bdad300051242cc4a2ed42c11f9560f8113babc12d1a11b9553",
+        "samples": 970,
+        "start_M": 0.0,
+        "time_sha256": "6db2117b58c64613f6c556861870ceaa8bc6026319b18624a2991df48e6cec1b"
+      },
+      "jax_boundary_time_M": 384.662109375,
+      "jax_fine_input_samples": 76899,
+      "jax_match_time_M": 384.663854924713,
+      "jax_nqc_coefficients": [
+        [
+          -2.2451841862113926,
+          8.090894487956607,
+          -6.552649942296207
+        ],
+        [
+          2.1379326961174687,
+          -3.9257072575554
+        ]
+      ],
+      "jax_peak": {
+        "jax_orbital_peak_sample_index": 76755,
+        "jax_orbital_peak_spline_curvature": -0.003473826209014906,
+        "jax_orbital_peak_spline_slope": -2.4421653935235987e-17,
+        "jax_orbital_peak_time_M": 391.912386940713
+      },
+      "match_time_M": 384.6638549235156,
+      "nqc_coefficients": [
+        [
+          -2.2451828623599055,
+          8.0908825832965,
+          -6.552636201750992
+        ],
+        [
+          2.1379295909695437,
+          -3.9256767032429614
+        ]
+      ],
+      "settings": {
+        "atol": 1e-13,
+        "coarse_output_step_M": 0.5,
+        "fine_refinement_factor": 256,
+        "max_step_M": 2.0,
+        "rtol": 1e-12
+      },
+      "torch": {
+        "end_M": 484.5,
+        "mode_sha256": "906b6b7512d29253bf4721a4011584a1723a1df478caa790439ee7c26b311e52",
+        "samples": 970,
+        "start_M": 0.0,
+        "time_sha256": "6db2117b58c64613f6c556861870ceaa8bc6026319b18624a2991df48e6cec1b"
+      },
+      "torch_jax": {
+        "common_samples": 970,
+        "complex_relative_l2": 4.0289799745140797e-07,
+        "support_sample_difference": 0,
+        "time_max_abs_M": 0.0
+      },
+      "torch_peak": {
+        "orbital_peak_sample_index": 76755,
+        "orbital_peak_spline_curvature": -0.0034738263452769405,
+        "orbital_peak_spline_slope": 1.6175364677241746e-17,
+        "orbital_peak_time_M": 391.9123869395156
+      }
+    }
+  },
+  "peak_policy": "nearest negative-curvature derivative root to sampled maximum",
+  "pid": 35133,
+  "plan_sha256": "23bb742703084655c2766b4523e18a5fa13d69a2bba95f6ff62be7cceec29213",
+  "release_qualified": false,
+  "schema": "diffgw.seobnrv4.jax-source-stationary-peak-control.v1",
+  "status": "diagnostic_complete"
+}

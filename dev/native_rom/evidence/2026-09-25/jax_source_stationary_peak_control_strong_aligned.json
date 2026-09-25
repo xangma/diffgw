@@ -1,0 +1,189 @@
+{
+  "case_id": "strong_aligned",
+  "checks": {
+    "each_level_backend_checks_passed": true,
+    "shared_sample_complex_relative_l2_at_most": false,
+    "shared_time_max_abs_at_most_M": true,
+    "stationary_peak_slope_max_abs_at_most": true
+  },
+  "comparisons": {
+    "jax": {
+      "complex_relative_l2": 0.00010677477911684736,
+      "shared_end_M": 584.0,
+      "shared_samples": 1169,
+      "shared_time_max_abs_M": 0.0
+    },
+    "jax_nqc_coefficient_l2": 0.09408334337075158,
+    "torch": {
+      "complex_relative_l2": 0.00010559553041631513,
+      "shared_end_M": 584.0,
+      "shared_samples": 1169,
+      "shared_time_max_abs_M": 0.0
+    },
+    "torch_nqc_coefficient_l2": 0.09300504462313398
+  },
+  "compatibility_shared_sample_complex_relative_l2": {
+    "jax": 0.0008744108226420875,
+    "torch": 0.0008733957661362473
+  },
+  "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+  "diagnostic_checks_passed": false,
+  "elapsed_s": 141.46113687497564,
+  "host": "RONI2",
+  "levels": {
+    "baseline": {
+      "boundary_time_M": 484.390625,
+      "compatibility_match_time_M": {
+        "jax": 484.391865051158,
+        "torch": 484.391865051158
+      },
+      "diagnostic_checks_passed": true,
+      "fine_input_samples": 38406,
+      "jax": {
+        "end_M": 584.0,
+        "mode_sha256": "e291c2d56552a321b432fae1548719d9a736177f8eacd97fc748617555dd0389",
+        "samples": 1169,
+        "start_M": 0.0,
+        "time_sha256": "0ac91155dc977bca73e17f8cf1a8295bff77b9e603e39a39a616cc1f185b5a22"
+      },
+      "jax_boundary_time_M": 484.390625,
+      "jax_fine_input_samples": 38406,
+      "jax_match_time_M": 484.3918653706352,
+      "jax_nqc_coefficients": [
+        [
+          142.95752362328108,
+          -1227.0081808004084,
+          1375.4544437835518
+        ],
+        [
+          35.652551645267,
+          -800.8915913948246
+        ]
+      ],
+      "jax_peak": {
+        "jax_orbital_peak_sample_index": 38318,
+        "jax_orbital_peak_spline_curvature": -0.002755869913654472,
+        "jax_orbital_peak_spline_slope": 7.700376523488844e-18,
+        "jax_orbital_peak_time_M": 495.68123658656697
+      },
+      "match_time_M": 484.39186535007445,
+      "nqc_coefficients": [
+        [
+          142.9575067628412,
+          -1227.0080142391632,
+          1375.4542422843056
+        ],
+        [
+          35.65253701133637,
+          -800.8908664792965
+        ]
+      ],
+      "settings": {
+        "atol": 1e-13,
+        "coarse_output_step_M": 0.5,
+        "fine_refinement_factor": 128,
+        "max_step_M": 2.0,
+        "rtol": 1e-12
+      },
+      "torch": {
+        "end_M": 584.0,
+        "mode_sha256": "695ea06f0cd2d201a28fa39f7059a8d6c904f1be7c8d191a83653c15bee4d0f9",
+        "samples": 1169,
+        "start_M": 0.0,
+        "time_sha256": "0ac91155dc977bca73e17f8cf1a8295bff77b9e603e39a39a616cc1f185b5a22"
+      },
+      "torch_jax": {
+        "common_samples": 1169,
+        "complex_relative_l2": 9.339991841486537e-07,
+        "support_sample_difference": 0,
+        "time_max_abs_M": 0.0
+      },
+      "torch_peak": {
+        "orbital_peak_sample_index": 38318,
+        "orbital_peak_spline_curvature": -0.0027558710330145295,
+        "orbital_peak_spline_slope": 7.004623660614162e-17,
+        "orbital_peak_time_M": 495.68123656600625
+      }
+    },
+    "refined": {
+      "boundary_time_M": 484.390625,
+      "compatibility_match_time_M": {
+        "jax": 484.3942149046736,
+        "torch": 484.3942149046736
+      },
+      "diagnostic_checks_passed": true,
+      "fine_input_samples": 76799,
+      "jax": {
+        "end_M": 584.0,
+        "mode_sha256": "44b61732ae9305d19964434987473f69406efff3908d5557678de47a3a195cfe",
+        "samples": 1169,
+        "start_M": 0.0,
+        "time_sha256": "0ac91155dc977bca73e17f8cf1a8295bff77b9e603e39a39a616cc1f185b5a22"
+      },
+      "jax_boundary_time_M": 484.390625,
+      "jax_fine_input_samples": 76799,
+      "jax_match_time_M": 484.3918573655085,
+      "jax_nqc_coefficients": [
+        [
+          142.95796129842034,
+          -1227.012332079785,
+          1375.4593619582956
+        ],
+        [
+          35.65068666297613,
+          -800.7977479921898
+        ]
+      ],
+      "jax_peak": {
+        "jax_orbital_peak_sample_index": 76636,
+        "jax_orbital_peak_spline_curvature": -0.0027549549275710946,
+        "jax_orbital_peak_spline_slope": -4.6597823527300825e-17,
+        "jax_orbital_peak_time_M": 495.6812285814403
+      },
+      "match_time_M": 484.391857365795,
+      "nqc_coefficients": [
+        [
+          142.95778183809506,
+          -1227.0105640728946,
+          1375.4572260145142
+        ],
+        [
+          35.65069100729305,
+          -800.7979630314056
+        ]
+      ],
+      "settings": {
+        "atol": 1e-13,
+        "coarse_output_step_M": 0.5,
+        "fine_refinement_factor": 256,
+        "max_step_M": 2.0,
+        "rtol": 1e-12
+      },
+      "torch": {
+        "end_M": 584.0,
+        "mode_sha256": "e072f3c43462fc0466bbfc37867f7b3eaf48344288a2518d85faf8d0edc2867e",
+        "samples": 1169,
+        "start_M": 0.0,
+        "time_sha256": "0ac91155dc977bca73e17f8cf1a8295bff77b9e603e39a39a616cc1f185b5a22"
+      },
+      "torch_jax": {
+        "common_samples": 1169,
+        "complex_relative_l2": 2.798719686216137e-07,
+        "support_sample_difference": 0,
+        "time_max_abs_M": 0.0
+      },
+      "torch_peak": {
+        "orbital_peak_sample_index": 76636,
+        "orbital_peak_spline_curvature": -0.002754954039493892,
+        "orbital_peak_spline_slope": -4.2465149777647093e-17,
+        "orbital_peak_time_M": 495.68122858172677
+      }
+    }
+  },
+  "peak_policy": "nearest negative-curvature derivative root to sampled maximum",
+  "pid": 38539,
+  "plan_sha256": "23bb742703084655c2766b4523e18a5fa13d69a2bba95f6ff62be7cceec29213",
+  "release_qualified": false,
+  "schema": "diffgw.seobnrv4.jax-source-stationary-peak-control.v1",
+  "status": "diagnostic_complete"
+}

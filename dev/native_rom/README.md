@@ -1286,6 +1286,20 @@ nonmonotone NQC matching and waveform drift. A safeguarded stationary-root
 control is needed before claiming numerical convergence; changing that rule
 would require a separate source-fidelity and physical-validation decision.
 
+The [frozen stationary-peak counterfactual](evidence/2026-09-25/jax_source_stationary_peak_control_plan.json)
+holds the source-backed dynamics, NQC system, and `0.5 M` output chart fixed
+while replacing only the orbital-peak coordinate with the nearest safeguarded
+negative-curvature spline stationary root. Both the [q4](evidence/2026-09-25/jax_source_stationary_peak_control_q4_nonspinning.json)
+and [aligned-spin](evidence/2026-09-25/jax_source_stationary_peak_control_strong_aligned.json)
+rows have peak-slope residuals below `1e-8` and pass per-level Torch/JAX
+parity. Factor-128 to factor-256 Torch waveform drift falls from `5.50e-4`
+to `4.99e-5` for q4 and from `8.73e-4` to `1.06e-4` for aligned spin; JAX
+agrees closely. Both still fail the frozen `1e-5` convergence gate. The
+compatibility peak rule explains most, but not all, of this grid sensitivity.
+The stationary rule is a development-only diagnostic; adopting it would still
+require independent historical-source and physical validation. Residual
+fine-grid trajectory and NQC matching contributions remain to be separated.
+
 The [frozen anchor diagnostic](evidence/2026-09-25/source_spliced_anchor_plan.json)
 replays all four cases and fits each mode's own amplitude peak between output
 samples without optimizing a relative shift. The [results](evidence/2026-09-25/source_spliced_anchor.json)
