@@ -1,0 +1,40 @@
+{
+  "schema": "diffgw.seobnrv4.source-aligned-local-nqc-ladder-plan.v1",
+  "purpose": "Prospectively test corrected-source local NQC coefficient and whole-mode grid behavior on the pinned strong aligned-spin row.",
+  "row_name": "strong_aligned_spin",
+  "release_qualified": false,
+  "row_source": "dev/native_rom/evidence/2026-09-24/source_wheel_mode.json",
+  "row_source_sha256": "c103f7d884073eb00029a231dd271d49c4a4571455030b11b93c22e298a479da",
+  "peak_script": "dev/native_rom/diagnose_source_q4_peak_bracket_correction.py",
+  "peak_script_sha256": "3badaf3696d4f8dfa5bb63f18682d91c5fad15e444f1c5e109a3210b5a73f778",
+  "source_flux_plan": "dev/native_rom/evidence/2026-09-24/source_flux_initial_plan.json",
+  "source_flux_plan_sha256": "1167199c8f954f97a5905a1e3b2f67d1555e984e5f1da0a0fc42a77a925f96ea",
+  "capture_adapter": "dev/native_rom/reference/full_v4_source_nqc_inputs_very_fine_adapter.c",
+  "capture_adapter_sha256": "75da340954fd38c6fa4881a8d8a8bad53e9ed2f58d8d5e9839e15b77636276ac",
+  "override_adapter": "dev/native_rom/reference/full_v4_source_very_fine_nqc_override_adapter.c",
+  "override_adapter_sha256": "7e41a50185824277e929d583bda65f8a8ab2e884635c6d028fa2b2fa6d4c55a7",
+  "mode_adapter": "dev/native_rom/reference/full_v4_source_mode_very_fine_adapter.c",
+  "mode_adapter_sha256": "230b3bd412582fa14d644cf28aacac16d0b9f963df5a4a2d6bca3c5299070e2d",
+  "polynomial_impl": "dev/native_rom/diagnose_source_nqc_high_rate.py",
+  "polynomial_impl_sha256": "8451aebb1256f9fe5be0cf86d75bb8b6083db4952857ffc562944ea38cd23cb2",
+  "fit_impl": "dev/native_rom/diagnose_native_source_nqc_inputs.py",
+  "fit_impl_sha256": "23c6507a972b192bf50af1df76616f13f2431c419cb6db66d07245bc88f612c0",
+  "steps_M": [
+    0.03125,
+    0.015625,
+    0.0078125,
+    0.00390625
+  ],
+  "internal_steps_M": [
+    0.015625,
+    0.015625,
+    0.0078125,
+    0.00390625
+  ],
+  "fixed_coefficient_reference_step_M": 0.00390625,
+  "polynomial_degree": 4,
+  "polynomial_half_width_M": 2.0,
+  "capture_capacity": 100000,
+  "mode_capacity": 450000,
+  "peak_fit": "quadratic_power"
+}

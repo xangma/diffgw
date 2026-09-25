@@ -1823,6 +1823,24 @@ trend on one row while exposing larger historical-source and public-wheel
 cadence sensitivity. It does not establish source fidelity, a domain-wide
 numerical bound, physical accuracy, or release qualification.
 
+The [prospective strong aligned-spin local-NQC ladder](evidence/2026-09-25/source_aligned_local_nqc_ladder.json)
+uses a [frozen plan](evidence/2026-09-25/source_aligned_local_nqc_ladder_plan.json)
+on the pinned `30+20 M⊙`, `χ₁=χ₂=0.8` row. Requested output cadences
+`0.03125`, `0.015625`, `0.0078125`, and `0.00390625 M` produce internal
+fine cadences `0.015625`, `0.015625`, `0.0078125`, and `0.00390625 M` under
+the pinned source's power-of-two resampling rule. Own-coefficient overrides
+reproduce each corrected source mode bit for bit. The local-fit adjacent
+peak-fitted whole-mode L2 decreases `0.001797 → 0.001413 → 0.000749`, but
+the local coefficient differences grow `0.0224 → 0.0396 → 0.0690` and do
+not establish coefficient convergence. Holding the finest local coefficients
+on the final pair gives `0.000681`. The corrected source and public wheel
+adjacent differences on that pair are `0.004240` and `0.007368`; holding the
+finest source coefficients reduces its difference to `0.000683`. At the
+finest cadence the local fit differs from the public wheel by `0.005659` and
+from the corrected source by `0.004098`. This selected spin row strengthens
+the attribution of cadence sensitivity to historical NQC refitting, while
+leaving source fidelity and the release gates open.
+
 The [prospective q4 local-fit control](evidence/2026-09-25/source_q4_ultrafine_local_nqc_plan.json)
 recomputes those five coefficients with the same degree-four, `±2 M` local
 polynomial used in the earlier combined numerical control, then injects each
