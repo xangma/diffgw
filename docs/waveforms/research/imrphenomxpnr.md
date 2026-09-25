@@ -134,12 +134,12 @@ interpretation, not exact transcription of the printed line.
 
 ## Isolated angle joins and continuations
 
-The [scalar reference](../../../src/diffgw_reference/xpnr_angles.py) and the
-[Torch](../../../src/torchwave/approximants/pnr_attachment.py) and
-[JAX](../../../src/jaxwave/approximants/pnr_attachment.py) component kernels
+The [scalar reference](https://github.com/xangma/diffgw/blob/main/src/diffgw_reference/xpnr_angles.py) and the
+[Torch](https://github.com/xangma/diffgw/blob/main/src/torchwave/approximants/pnr_attachment.py) and
+[JAX](https://github.com/xangma/diffgw/blob/main/src/jaxwave/approximants/pnr_attachment.py) component kernels
 take caller-supplied PN/MR boundary values and frequency derivatives. They do
 not infer a SpinTaylor stopping event, fit coefficients, or a public dispatch.
-The [equation test](../../../tests/test_xpnr_attachment_math_reference.py)
+The [equation test](https://github.com/xangma/diffgw/blob/main/tests/test_xpnr_attachment_math_reference.py)
 compares their outputs against independently chosen coefficients in each of
 the paper's printed forms and checks both frontend derivatives.
 
