@@ -86,10 +86,13 @@ The [nonpublic JAX generic projection](https://github.com/xangma/diffgw/blob/mai
 The [reference-closure page](xp-v223-reference-closure.md#physical-zero-nutation-continuation-2026-09-24)
 now gives the paper equation, independent scalar/JAX opening-angle kernels,
 Torch public dispatch conditions, and measured difference from the explicit
-v223/LAL diagnostic. The component tests do not close the generic two-spin
-nonzero-`phi0` transport or make the public JAX waveform use this physical
-continuation. The aligned convention-6 LAL residual remains visible rather
-than becoming an implicit relaxation of the binary-compatibility gate.
+v223/LAL diagnostic. The scalar Eq. (7) minimal-rotation check and exact
+XP/XAS waveform collapse now cover the zero-nutation endpoint, including an
+omitted carrier `f_ref`. The generic two-spin near-aligned cubic-root limit
+remains an explicit expected failure, alongside nonzero-`phi0` transport;
+these component tests do not make the public JAX waveform use this physical
+continuation. The aligned convention-6 LAL residual is about 0.118 relative
+L2, while the separate binary-compatibility helper retains its strict gate.
 
 ## Reproduce the checks
 

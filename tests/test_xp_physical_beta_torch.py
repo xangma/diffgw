@@ -5,7 +5,10 @@ import math
 import pytest
 import torch
 
-from diffgw_reference.xp_msa_regularized_beta import one_spin_aligned_beta
+from diffgw_reference.xp_msa_regularized_beta import (
+    aligned_minimal_rotation_gamma, one_spin_aligned_beta,
+)
+import torchwave.approximants.precession_msa_waveform_clean as waveform_clean
 from torchwave.approximants.precession_msa_reference_l_clean import (
     orbital_angular_momentum_nonconserved_3pn,
 )
@@ -54,3 +57,26 @@ def test_torch_opening_has_finite_endpoint_and_interior_gradients():
         assert all(torch.isfinite(value) for value in gradients)
         if transverse:
             assert gradients[0] < 0
+
+
+def test_torch_aligned_transport_obeys_scalar_minimal_rotation(monkeypatch):
+    frequency = torch.tensor([25.0, 40.0, 80.0, 300.0], dtype=torch.float64)
+    captured = {}
+    original = waveform_clean.compose_msa_waveform
+
+    def record(*args, **kwargs):
+        captured.update(args[5])
+        return original(*args, **kwargs)
+
+    monkeypatch.setattr(waveform_clean, "compose_msa_waveform", record)
+    waveform_clean.waveform_v223(
+        frequency, 36.0, 22.0, spin1z=0.35, spin2z=-0.25,
+        distance=150.0, inclination=0.65, phic=0.0, f_ref=40.0,
+        convention=0, boundary="physical",
+    )
+    expected = torch.tensor([
+        aligned_minimal_rotation_gamma(float(value))
+        for value in captured["alpha"]
+    ], dtype=torch.float64)
+    torch.testing.assert_close(captured["gamma"], expected, rtol=0.0, atol=1e-14)
+    torch.testing.assert_close(captured["cos_beta"], torch.ones_like(frequency))

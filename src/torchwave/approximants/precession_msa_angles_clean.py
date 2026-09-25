@@ -27,6 +27,7 @@ from .precession_beta_clean import orbital_angular_momentum
 from .precession_msa_reference_l_clean import orbital_angular_momentum_nonconserved_3pn
 
 MTSUN_SI = 4.925490947641267e-6
+V223_AUXILIARY_ROOT_GAP = 1.0e-9
 
 
 def _compatibility_value(value):
@@ -220,7 +221,7 @@ def assemble_precession_msa_angles(
             spin1_aligned | spin2_aligned
         )
         fallback0 = torch.stack(
-            (torch.zeros_like(Ssum2), Ssum2, Ssum2 + 1.0e-9), dim=-1
+            (torch.zeros_like(Ssum2), Ssum2, Ssum2 + V223_AUXILIARY_ROOT_GAP), dim=-1
         )
         roots0 = torch.where(root_regularized[..., None], fallback0,
                              roots_candidate)
@@ -383,7 +384,7 @@ def assemble_precession_msa_angles(
         level_current = Ssum2[..., None].expand_as(L)
         fallback_current = torch.stack(
             (torch.zeros_like(level_current), level_current,
-             level_current + 1.0e-9), dim=-1
+             level_current + V223_AUXILIARY_ROOT_GAP), dim=-1
         )
         # The singular/aligned initial prescription is a zero-nutation
         # limiting state at every current frequency.  Keep its separated

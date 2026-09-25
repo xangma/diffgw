@@ -239,9 +239,10 @@ def test_public_convention6_uses_clean_quadrupole_phase(spin1, spin2, phic):
                                  spin1=spin1, spin2=spin2, phic=phic)
         binary6 = tuple(phase * h for h in binary)
         assert _max_relative_l2(binary6, target) < STRICT_GATE
-        # The public physical boundary removes the auxiliary 1e-9 root split.
-        # Record, rather than silently absorb, its measured LAL difference.
-        assert 1e-5 < _max_relative_l2(convention6, target) < 5e-5
+        # The public physical endpoint also enforces the paper's beta=0
+        # minimal-rotation law. The v223 compatibility chart retains an
+        # aligned alpha+gamma drift, so its LAL waveform remains distinct.
+        assert _max_relative_l2(convention6, target) > 0.05
     else:
         assert _max_relative_l2(convention6, target) < STRICT_GATE
 

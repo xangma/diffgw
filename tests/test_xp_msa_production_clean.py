@@ -234,7 +234,7 @@ def test_tiny_nonzero_in_plane_spin_does_not_use_exact_aligned_carrier(monkeypat
     assert not calls
 
 
-def test_frequency_shape_and_none_reference_default_are_preserved():
+def test_frequency_shape_and_omitted_carrier_reference_are_preserved():
     f = torch.tensor([[20.0, 40.0], [80.0, 160.0]], dtype=DTYPE)
     params = _case()
     model = IMRPhenomXP()
@@ -248,8 +248,11 @@ def test_frequency_shape_and_none_reference_default_are_preserved():
     )
     assert hp.shape == f.shape
     assert hc.shape == f.shape
-    torch.testing.assert_close(hp, hp_ref, rtol=0.0, atol=0.0)
-    torch.testing.assert_close(hc, hc_ref, rtol=0.0, atol=0.0)
+    # The angle chart uses 20 Hz when the public reference is omitted, but
+    # XAS has a distinct no-reference carrier phase. Preserve that semantic
+    # distinction through the XP composition.
+    assert torch.linalg.vector_norm(hp - hp_ref) / torch.linalg.vector_norm(hp_ref) > 0.01
+    assert torch.linalg.vector_norm(hc - hc_ref) / torch.linalg.vector_norm(hc_ref) > 0.01
 
 
 def test_distance_and_time_shift_contracts():

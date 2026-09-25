@@ -25,6 +25,20 @@ SOURCE_PRATTEN = "https://arxiv.org/html/2004.06503v2"
 SOURCE_CHATZIIOANNOU = "https://arxiv.org/abs/1703.03967v3"
 
 
+def aligned_minimal_rotation_gamma(alpha: float, *,
+                                   alpha_ref: float = 0.0,
+                                   gamma_ref: float = 0.0) -> float:
+    """Pratten et al. Eq. (7) integrated at the physical ``beta=0`` limit.
+
+    ``d gamma=-cos(beta) d alpha`` then gives
+    ``gamma=gamma_ref-(alpha-alpha_ref)``. This is the exact aligned
+    invariant, independent of a version-specific MSA root separation.
+    """
+    if not all(math.isfinite(value) for value in (alpha, alpha_ref, gamma_ref)):
+        raise ValueError("Euler angles must be finite")
+    return gamma_ref - (alpha - alpha_ref)
+
+
 @dataclass(frozen=True)
 class RegularizedBeta:
     eta: float
