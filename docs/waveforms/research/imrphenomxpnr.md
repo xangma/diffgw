@@ -23,10 +23,12 @@ The sources pinned for this ledger are:
 
 - [Hamilton et al., *PhenomXPNR*, arXiv:2507.02604v1](https://arxiv.org/html/2507.02604v1), 3 July 2025, CC BY 4.0;
 - [Thompson et al., *IMRPhenomXO4a*, arXiv:2312.10025v1](https://arxiv.org/html/2312.10025v1), 15 December 2023, CC BY 4.0;
+- [Hamilton et al., *The final twist*, arXiv:2107.08876v1](https://arxiv.org/abs/2107.08876v1), 19 July 2021, CC BY 4.0; and
 - the public [BAM precessing-waveform catalogue](https://data.cardiffgravity.org/bam-catalogue/).
 
-The earlier Hamilton et al. 2021 “final twist” paper is useful model history,
-but it is not the specification of the 2025 XPNR composition audited here.
+The 2021 paper supplies a partial generation procedure for the 40-waveform
+predecessor fit.  It is not the specification or output of the later
+80-waveform XO4a retune used by the 2025 XPNR composition.
 
 ## Published component scope
 
@@ -134,13 +136,57 @@ the endpoint values in the intermediate interval, and
 `f_22=f-(f_RD,lm-f_RD,22)` above the merger-ringdown join.  This frequency map
 does not supply the absent carrier deformation or asymmetry.
 
+## Published generation procedure and reproducibility boundary
+
+The 2021 paper documents how the predecessor angle surfaces were constructed.
+It fits each waveform's angle ansatz with SciPy `curve_fit` using the
+Levenberg--Marquardt algorithm, then fits those per-waveform coefficients over
+`(eta, chi, cos(theta_LS))` with `mvpolyfit`.  It gives the alpha fit interval
+`[f_dip-0.0225, f_dip+0.0075]`, the beta interval `f_inf +/- 0.03`, the
+sequential fit orders `A4,A1,A2,A3` and `B1,B2,B3,B5,B4`, and a 39-term ceiling
+for the 40 calibration cases.  The cited `positive` v1.0 archive contains the
+`mvpolyfit`/`gmvpfit` tooling under an MIT license (the Zenodo record labels its
+license only as `other-open`).
+That predecessor uses a `(4,2,5)` ambient polynomial box.  XO4a Eq. (35)
+expands the spin order to the `(4,4,5)` shape of the current arrays, so the
+historical procedure cannot by itself generate or identify the later tensors.
+
+XO4a separately states that its carrier-deviation variables used a
+“significantly refined” `gmvpfit` with `estatol=0.001`.  That statement occurs
+in the carrier section, not the angle-retuning section, so it is not evidence
+that the same fitter or setting generated `A1..A4`, `B0..B5`, or `Bf`.
+
+XO4a expands the spin order of the polynomial, retunes the angles to all 80
+BAM waveforms, and prints the transforms and basis, but does not deposit the
+per-simulation fitted angle targets, derived QA Euler-angle series, fit
+script/run configuration, selected sparse terms, or output tensors.  In
+particular, the papers do not pin the sampling, weighting, initial values,
+constraints, sequential-refit state, or software environment needed to
+reproduce the final decimals.  Appendix A instead directs readers to final
+values in a named LALSuite file and commit.  This audit did not inspect that
+source.
+
+The arXiv source packages were also inspected: PNR has 51 files, XO4a has 22,
+and XPNR has 22.  They contain manuscripts and figure assets (plus an XPNR
+manifest), but no machine-readable calibration targets, fit configuration, or
+coefficient tensors.
+
+The published assets therefore support the equations, the raw NR inputs, a
+historical method, and a fitting tool.  They do not independently reproduce or
+license the inherited DiffGW tensor values.  A new fit from the BAM data would
+be a separate calibration project with its own declared choices, uncertainty
+analysis, and holdouts—not evidence for the provenance of the current arrays.
+
 ## Calibration assets and terms
 
 | Asset | Published availability and terms | Repository treatment |
 | --- | --- | --- |
 | XPNR/XO4a equation text | arXiv HTML is CC BY 4.0 | Equations independently encoded in `diffgw_reference.xpnr_angles`; attribution retained |
-| BAM 80-waveform single-spin calibration set | Public catalogue: `q={1,2,4,8}`, `chi={0.2,0.4,0.6,0.8}`, tilts `30,60,90,120,150` degrees; [minimal Zenodo record 7673796](https://doi.org/10.5281/zenodo.7673796) and [complete record 7677297](https://doi.org/10.5281/zenodo.7677297), CC BY 4.0 | Not bundled and not re-fit in this change; the discrete training design is not an accuracy bound |
-| Numeric angle-fit and carrier-deviation tables | Not printed in either paper. XO4a Appendix A points to LALSuite commit `08b90494b3a4a7dc966ca108e6c98eaa3f6e18a7`; LALSuite is GPL-2.0-or-later | No LAL source was inspected, copied, translated, or fitted. Pinned binaries are comparison oracles only |
+| 2021 predecessor fit procedure | `curve_fit`, sequential refits, fit intervals, and the 40-case polynomial construction are published under CC BY 4.0 | Documents a historical method, not the complete 80-case retune or its outputs |
+| BAM 80-waveform single-spin calibration set | Public catalogue: `q={1,2,4,8}`, `chi={0.2,0.4,0.6,0.8}`, tilts `30,60,90,120,150` degrees; [minimal Zenodo record 7673796](https://doi.org/10.5281/zenodo.7673796) and [complete record 7677297](https://doi.org/10.5281/zenodo.7677297), CC BY 4.0. Each record lists 80 `CF21_*.h5` waveform files and no separate fit-target, script, or tensor artifact | Not bundled and not re-fit in this change; the discrete training design is not an accuracy bound |
+| `positive` v1.0 fit tool | [Zenodo record 3901856](https://doi.org/10.5281/zenodo.3901856); archived `LICENSE` is MIT while record metadata says `other-open` | Not bundled. Tool availability does not reconstruct the unpublished fit run or license its output |
+| Author-controlled PhenomXCP workflow | [Pinned repository](https://github.com/llondon6/PhenomXCP/tree/a411e5966a73445efad0db9dc7806d2195374ab1) includes a historical carrier-tuning workflow and partial artifacts. The root is MIT, while generated `parameter_space_fits.c` says GPL-2.0-or-later and data artifacts have no separate notice | Not bundled. It contains no current angle tensors and no authoritative mapping/version from its partial carrier outputs to final XO4a/XPNR `u_k`; the root license is not treated as blanket output permission |
+| Numeric angle-fit and carrier-deviation tables | Not printed in the cited model papers. XO4a Appendix A points to LALSuite commit `08b90494b3a4a7dc966ca108e6c98eaa3f6e18a7`; LALSuite is GPL-2.0-or-later | No LAL source was inspected, copied, translated, or fitted. Pinned binaries are comparison oracles only |
 | Existing DiffGW `A1..A4`, `B0..B5`, `Bf` tensors | Independent origin and redistribution terms are unresolved | Retained but not promoted. Torch/JAX equality proves duplication only; `Bf` is currently not wired into the public route |
 
 The canonical little-endian float64 hash of the existing tensors, with names
@@ -152,6 +198,9 @@ and
 `5801aa497b7ba10d389d8da5ca21dc27dc072c953a71706157211ca5fe2a6ea3`.
 Different source hashes are expected because the modules use different tensor
 constructors; exact numeric-array equality is checked separately.
+The arrays first appear in DiffGW's initial repository commit,
+`ceb6ae15c00bbbd3eaca2bdc12bb3307b38e9beb`; there is no earlier repository
+history from which to establish their origin or terms.
 
 ## Evidence matrix
 
@@ -160,6 +209,7 @@ constructors; exact numeric-array equality is checked separately.
 | Paper fidelity | Partial pass | Map, polynomial, guarded transforms, MR ansatzes, carrier-deformation equation, effective ringdown equation, and HM map have scalar encodings; attachment, continuation, beta bound, carrier/asymmetry composition remain open |
 | Scalar-reference agreement | Pass for scoped components | 46 local cases cover fit values, transforms, ansatz values/derivatives, map, window interpretation, HM joins and reductions |
 | Torch/JAX parity | Pass for scoped components | Both backends agree with scalar values and derivatives; a dense JAX grid is recorded in the qualification JSON |
+| Calibration asset provenance | Provisional gate retained | Published equations, a partial historical procedure, raw CC BY inputs, and an MIT fitting tool are distinguished from the unsupported inherited tensors; a two-case manifest test pins that classification and the unchanged payload |
 | External parity | Not qualified | The four optional LAL/PyCBC cases are black-box acceptance gates only; their `0.99` threshold is not an observed lower bound or domain claim |
 | Physical validation | Not reproduced | The papers report BAM/NRSur comparisons; this change does not compare DiffGW waveforms with those NR data |
 | Full waveform | Fail | Missing published components plus inherited XHM's recorded strict catalog `0/1` and holdout `0/1` failures prevent promotion |
@@ -171,9 +221,12 @@ Machine-readable outcomes, versions, commands, and still-failed gates are in
 
 Promotion requires all of the following without relaxing existing thresholds:
 
-1. Establish a redistributable, independently traceable numeric calibration
-   asset, or reproduce the fit from cited CC BY data with a documented method,
-   uncertainties, and holdouts.
+1. Obtain an independently licensed coefficient release or written
+   redistribution permission; alternatively, perform a new fit from the cited
+   CC BY data with a fully versioned pipeline, published per-simulation targets,
+   sampling/weighting/initialization and sparse-basis choices, uncertainties,
+   and holdouts.  Public availability of papers, NR inputs, fitting software,
+   or a third-party implementation does not satisfy this gate.
 2. Evolve both spins to the stated transition and feed that state into Eqs.
    (3)–(6); test integration convergence and transition placement.
 3. Implement the exact alpha/beta attachments, beta bound, exterior
