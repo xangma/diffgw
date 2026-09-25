@@ -1,0 +1,87 @@
+{
+  "case": "strong_aligned",
+  "checks": {
+    "amplitude_coefficient_drift_at_most": 0.001,
+    "amplitude_linear_residual_at_most": 1e-10,
+    "amplitude_matrix_replay_linf_at_most": 1e-12,
+    "amplitude_rhs_derivative_replay_linf_at_most": 1e-12,
+    "direct_amplitude_first_agreement_at_most": 1e-10,
+    "drift_below_phase_rhs_only": true,
+    "phase_replay_linf_at_most": 1e-10,
+    "whole_mode_drift_at_most": 1e-05
+  },
+  "fixed": {
+    "JAX_and_public": "unchanged natural-cubic comparison routes",
+    "chart_M": 0.5,
+    "event_and_targets": "unchanged runner",
+    "phase_matrix_and_rhs": "replay prior ODE-chain phase controls",
+    "sampled_inspiral_and_ringdown": "unchanged numerical attachment"
+  },
+  "inputs": {
+    "ladder_plan": {
+      "path": "dev/native_rom/evidence/2026-09-25/jax_source_tolerance_ladder_plan.json",
+      "sha256": "101f756e6d90e07cb02084c04788bed43c4cdbc2773b948af8ff3262fda7352f"
+    },
+    "partial_amplitude_plan": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_ode_chain_amplitude_plan.json",
+      "sha256": "5a7fae2fd26c1ef1c082b4e5ba6b520e5eb8735e7664c398d7bf2a31efea4e44"
+    },
+    "partial_amplitude_result": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_ode_chain_amplitude.json",
+      "sha256": "5420dbf576663129f16d664af787933d56bc3c8f37516d11bd2138558fd8f279"
+    },
+    "partial_amplitude_script": {
+      "path": "dev/native_rom/diagnose_source_aligned_ode_chain_amplitude.py",
+      "sha256": "e0edbdcdb54ee9b61c1210cc1bf349113abadc7d9845b8258ce4f1fde14d2d0c"
+    },
+    "phase_matrix_script": {
+      "path": "dev/native_rom/diagnose_source_aligned_ode_chain_phase_matrix.py",
+      "sha256": "654ce386c98094f17c8b14bfdf2fdb9db2e70d112c1c4524943cd3745d41ad1a"
+    },
+    "phase_rhs_plan": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_ode_chain_phase_rhs_plan.json",
+      "sha256": "dfaca479ff537a5a69eea627196aa6a76e0f9a27c5e3ebaf4862ed354279d6b7"
+    },
+    "phase_rhs_result": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_ode_chain_phase_rhs.json",
+      "sha256": "096f96ca3cb3c51551d0ba2a3e0140c1cecce74dc6f029ce75e2c6aea042761c"
+    },
+    "phase_rhs_script": {
+      "path": "dev/native_rom/diagnose_source_aligned_ode_chain_phase_rhs.py",
+      "sha256": "b789eedb4eacf29500253999d1d0bb68e8e8591f661b8025592c50ae1d1114ff"
+    },
+    "runner": {
+      "path": "dev/native_rom/diagnose_jax_spliced_whole_waveform.py",
+      "sha256": "158c243e6909d26529cf5e976521793cd07821cd48662036a3c34182391f9d1c"
+    },
+    "source_plan": {
+      "path": "dev/native_rom/evidence/2026-09-25/jax_source_spliced_whole_waveform_plan.json",
+      "sha256": "eb79f7db87e23d83a8437334eec90f6872dcf3b76f65b5cbe55882f7d62b9944"
+    },
+    "torch_mode": {
+      "path": "src/torchwave/approximants/eob/published_waveform.py",
+      "sha256": "7dde2eefb4d99b7fe5fc3570203222dc02c1cb05d59d8f7392e25fc946cb32dc"
+    },
+    "torch_nqc": {
+      "path": "src/torchwave/approximants/eob/nqc.py",
+      "sha256": "c8683181f7cf911df1e1b85cd6999cdb03e7c594e867315359040e9eb03ca552"
+    },
+    "torch_numerical_attachment": {
+      "path": "src/torchwave/approximants/eob/numerical_attachment.py",
+      "sha256": "8c7a149b76c529a255a4caa4b0ca76317b5306c8967db84047f299ccf51be7fc"
+    }
+  },
+  "interpretation": "Torch-only development counterfactual. Passing does not establish source/public fidelity, JAX parity for this intervention, independent NR accuracy, broad-domain stability, or release qualification. Earlier gates and evidence remain unchanged.",
+  "levels": [
+    "baseline",
+    "refined"
+  ],
+  "purpose": "At the frozen strong-aligned baseline/refined levels, retain the continuous ODE phase matrix and raw-mode phase RHS; replace all raw A and A*q matching value/first/second rows with continuous ODE Lie derivatives at the same endpoint-Hermite match state. Unlike the preserved partial v1 attempt, also place continuous raw A first/second derivatives in the diagnostic matching RHS tensor that the attachment actually uses.",
+  "release_qualified": false,
+  "runner_sentinel": {
+    "degree": 0,
+    "half_width_M": 0.0
+  },
+  "schema": "diffgw.seobnrv4.source-aligned-ode-chain-amplitude-plan.v2",
+  "script_sha256": "c3460f910c186f3fdf2e2c51084990198d314ba6d6eeacfd3592663b9e1cecef"
+}

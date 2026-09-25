@@ -2664,6 +2664,22 @@ and hashes retain the exact inputs. This is a single development row, and
 neither the generator nor ROM is release qualified; both reserved ROM
 holdouts remain untouched.
 
+A [frozen continuous-ODE amplitude-matching probe](evidence/2026-09-25/source_aligned_ode_chain_amplitude_plan.json)
+on the strong aligned-spin row first replaced the combined spline's amplitude
+value and derivative rows, but left the attachment's separate diagnostic
+right-hand-side derivatives unchanged. Its [partial result](evidence/2026-09-25/source_aligned_ode_chain_amplitude.json)
+therefore has an inconsistent reconstructed amplitude solve and fails the
+prospective residual and convergence gates; it is retained as a failed attempt.
+The [corrected, separately frozen probe](evidence/2026-09-25/source_aligned_ode_chain_amplitude_v2_plan.json)
+also passes the continuous raw-amplitude derivatives into the actual matching
+right-hand side. Its [result](evidence/2026-09-25/source_aligned_ode_chain_amplitude_v2.json)
+reduces baseline-to-refined amplitude-coefficient L2 drift from `0.27813` to
+`3.47e-5`, with amplitude solve residual at most `1.7e-16` and unchanged phase
+controls. Whole-waveform complex relative L2 improves from `1.07509e-5` to
+`1.00805e-5`, still above the frozen `1e-5` gate. This is a Torch-only,
+single-row counterfactual; it establishes neither a complete numerical
+prescription nor source fidelity, domain convergence, or release qualification.
+
 1. Qualify the physical generator against the published equations and independent
    references over the intended domain, resolve convention/provenance gaps, and
    establish gradients and numerical convergence. This runner covers only scalar
