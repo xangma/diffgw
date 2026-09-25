@@ -1,0 +1,66 @@
+{
+  "case_id": "q4_nonspinning",
+  "checks": {
+    "accepted_and_rejected_counts_equal": true,
+    "both_terminate_at_event": true,
+    "event_time_abs_M_at_most": true,
+    "max_abs_uniform_state_at_most": true
+  },
+  "comparison": {
+    "common_samples": 785,
+    "event_time_abs_M": 2.930335085693514e-09,
+    "max_abs_by_state_component": [
+      4.982680934517703e-13,
+      1.0302869668521453e-13,
+      1.233457780358549e-12,
+      1.1013412404281553e-13
+    ],
+    "rms_by_state_component": [
+      3.560496162499669e-14,
+      1.9780069975769e-14,
+      4.43700926704059e-14,
+      5.454480860565595e-15
+    ]
+  },
+  "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+  "diagnostic_checks_passed": true,
+  "elapsed_s": 18.90692462498555,
+  "host": "RONI2",
+  "input": {
+    "atol": 1e-10,
+    "chi1": 0.0,
+    "chi2": 0.0,
+    "initial_state": [
+      8.549904874005977,
+      0.0,
+      -0.005709858759949426,
+      3.5920610434697293
+    ],
+    "initial_step": 0.5,
+    "mass1": 40.0,
+    "mass2": 10.0,
+    "max_step": 2.0,
+    "omega_start": 0.04,
+    "output_step": 0.5,
+    "rtol": 1e-09
+  },
+  "jax": {
+    "accepted": 220,
+    "evaluations": 1391,
+    "rejected": 14,
+    "termination": "event",
+    "time_M": 392.1658305357163
+  },
+  "pid": 19188,
+  "release_qualified": false,
+  "schema": "diffgw.seobnrv4.jax-adaptive-physical-event.v1",
+  "scope": "Same initial state, published Hamiltonian and 35-mode flux, adaptive RKF45 coarse event only",
+  "status": "diagnostic_complete",
+  "torch": {
+    "accepted": 220,
+    "evaluations": 1391,
+    "rejected": 14,
+    "termination": "event",
+    "time_M": 392.16583053278595
+  }
+}

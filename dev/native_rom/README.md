@@ -926,10 +926,24 @@ plunge event, and a short physical v4 EOB trajectory against Torch. Natural
 cubic resampling of those accepted knots agrees with Torch on both analytic
 and physical rows. A frozen accepted mesh can be replayed under JIT and
 differentiated pathwise. The Python-loop adaptive controller itself is not
-JIT-compatible or differentiable; physical plunge-event validation, coarse/fine restarts,
-NQC, and merger attachment are still absent from this JAX route.
+JIT-compatible or differentiable; coarse/fine restarts, NQC, and merger
+attachment are still absent from this JAX route.
 This component does not change the release status or enable the JAX
 `numerical_compatibility` option.
+
+The [frozen JAX physical-event campaign](evidence/2026-09-25/jax_adaptive_physical_event_plan.json)
+now compares the same initial states, Hamiltonian and 35-mode flux against
+Torch in four coarse plunge cases: high-start mixed spin, q=4 nonspinning,
+strongly aligned spin, and strongly antialigned spin. All four terminate at
+the event with identical accepted/rejected step counts. Event times differ
+by at most `4.82e-7 M`, and resampled state components by at most `1.74e-11`.
+The [pilot](evidence/2026-09-25/jax_adaptive_physical_event_high_start_mixed_spin.json)
+and [prospective results](evidence/2026-09-25/jax_adaptive_physical_event_q4_nonspinning.json)
+([aligned](evidence/2026-09-25/jax_adaptive_physical_event_strong_aligned.json),
+[antialigned](evidence/2026-09-25/jax_adaptive_physical_event_strong_antialigned.json))
+establish same-input solver/event parity over these cases. Fine restarts,
+NQC, merger attachment, independently sourced physical accuracy, and
+domain-wide numerical convergence remain open.
 
 The published construction uses SVD bases and tensor-product cubic splines for
 parameter coefficients, as described by
