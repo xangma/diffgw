@@ -1589,7 +1589,10 @@ accepted steps spanning `4 M`, the compiled derivative with respect to the
 first spin of the uncorrected `(2,2)` mode's real part, imaginary part, and
 orbital frequency is `[0.005481510690, -0.003948012910, -0.000239746262]`.
 Centered finite differences at `1e-4` and `1e-5` agree within `4.49e-12`
-absolute. This establishes one pathwise derivative on a fixed accepted mesh;
+absolute. A [maintained Torch replay regression](tests/test_initial_to_base_mode_gradient_parity.py)
+on the same 21-step mesh matches the JAX final values and spin derivatives
+to better than `1e-15` absolute. This establishes one selected cross-backend
+pathwise derivative on a fixed accepted mesh;
 it does not differentiate adaptive step or event decisions, NQC, ringdown,
 the full waveform, or a ROM. The diagnostic took `148 s` on RONI2 and its
 combined derivative compile reached approximately `22 GB` resident memory,
