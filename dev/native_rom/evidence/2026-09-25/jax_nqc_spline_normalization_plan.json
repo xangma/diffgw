@@ -1,0 +1,43 @@
+{
+  "schema": "diffgw.seobnrv4.jax-nqc-spline-normalization-plan.v1",
+  "release_qualified": false,
+  "case": "high_start_mixed_spin",
+  "output_step_M": 0.5,
+  "fine_refinement_factor": 32,
+  "adaptive_atol": 1e-10,
+  "adaptive_rtol": 1e-9,
+  "baseline_result": "dev/native_rom/evidence/2026-09-25/jax_nqc_amplitude_solve.json",
+  "baseline_sha256": "0f3d35c52a1258e2fc6a3459d9bc041fe7a7ca5ed439824204a0c67ce6782eed",
+  "variants": [
+    "baseline_original",
+    "match_knot_unit_step",
+    "match_knot_ordinate_center",
+    "match_knot_unit_step_and_ordinate_center"
+  ],
+  "interventions": {
+    "match_knot_unit_step": "Set u=(t-t_left)/h at the frozen match cell, build the same natural cubic spline in u, and convert its first and second derivatives to physical time by 1/h and 1/h squared.",
+    "match_knot_ordinate_center": "Subtract the combined-ordinate vector at the frozen left match knot before constructing the natural cubic spline; restore it only to the interpolated value. First and second derivatives are unchanged mathematically.",
+    "match_knot_unit_step_and_ordinate_center": "Apply both mathematically equivalent transformations."
+  },
+  "measures": [
+    "eager_jit_matching_value_max_abs",
+    "eager_jit_matching_first_max_abs",
+    "eager_jit_matching_second_max_abs",
+    "eager_jit_amplitude_matrix_max_abs",
+    "eager_jit_amplitude_rhs_max_abs",
+    "eager_jit_amplitude_coefficients_max_abs",
+    "eager_jit_corrected_mode_relative_l2",
+    "eager_vs_baseline_corrected_mode_relative_l2",
+    "eager_solve_residual_relative_l2",
+    "jit_solve_residual_relative_l2"
+  ],
+  "checks": {
+    "max_base_mode_eager_jit_relative_l2": 1e-12,
+    "max_baseline_fit_coefficients_absolute_error": 1e-10,
+    "max_eager_vs_baseline_corrected_mode_relative_l2": 1e-12,
+    "max_eager_jit_amplitude_coefficients_absolute_error": 1e-8,
+    "max_eager_jit_corrected_mode_relative_l2": 1e-10,
+    "max_solve_residual_relative_l2": 1e-8
+  },
+  "interpretation": "This tests algebraically equivalent changes in the amplitude full-series natural spline on one frozen NQC chart, with unchanged phase fit, NQC targets, and 3x3 solve. A pass requires eager preservation and both original eager/JIT gates. Failure stays visible; this does not establish source fidelity or release qualification."
+}

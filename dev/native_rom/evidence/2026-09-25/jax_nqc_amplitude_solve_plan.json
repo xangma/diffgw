@@ -1,0 +1,39 @@
+{
+  "schema": "diffgw.seobnrv4.jax-nqc-amplitude-solve-plan.v1",
+  "release_qualified": false,
+  "case": "high_start_mixed_spin",
+  "output_step_M": 0.5,
+  "fine_refinement_factor": 32,
+  "adaptive_atol": 1e-10,
+  "adaptive_rtol": 1e-9,
+  "baseline_result": "dev/native_rom/evidence/2026-09-25/jax_nqc_spline_barrier.json",
+  "baseline_sha256": "11ddc69c6e8f89ff46c62e55251c108bf99e2ee1071096b295744d7975719991",
+  "variants": [
+    "baseline_equilibrated",
+    "local_time_derivative_row_scale",
+    "residual_centered_refinement",
+    "row_scale_then_residual_refinement"
+  ],
+  "interventions": {
+    "local_time_derivative_row_scale": "Multiply the value, first-derivative, and second-derivative matching equations by 1, h, and h squared, where h is the frozen match-cell width, before the existing row/column-equilibrated solve.",
+    "residual_centered_refinement": "Solve once with the existing equilibrated method, then solve A delta = b - A a0 with the same method and return a0 + delta.",
+    "row_scale_then_residual_refinement": "Apply both algebraically equivalent changes in that order."
+  },
+  "measures": [
+    "eager_jit_amplitude_coefficients_max_abs",
+    "eager_jit_corrected_mode_relative_l2",
+    "eager_vs_baseline_amplitude_coefficients_max_abs",
+    "eager_vs_baseline_corrected_mode_relative_l2",
+    "eager_solve_residual_relative_l2",
+    "jit_solve_residual_relative_l2"
+  ],
+  "checks": {
+    "max_base_mode_eager_jit_relative_l2": 1e-12,
+    "max_baseline_fit_coefficients_absolute_error": 1e-10,
+    "max_eager_vs_baseline_corrected_mode_relative_l2": 1e-12,
+    "max_eager_jit_amplitude_coefficients_absolute_error": 1e-8,
+    "max_eager_jit_corrected_mode_relative_l2": 1e-10,
+    "max_solve_residual_relative_l2": 1e-8
+  },
+  "interpretation": "This tests three algebraically equivalent amplitude-solve interventions on one fixed-input high-spin NQC chart. A passing candidate preserves the eager corrected inspiral and improves fixed-input eager/JIT parity under the stated gates. The original whole-path gradient failure remains separate. No result qualifies the waveform for release."
+}

@@ -1,8 +1,9 @@
 # Native SEOBNRv4 and proposed ROM: release decision (2026-09-25)
 
 **Verdict: unqualified.** Keep the native generator and proposed independent ROM
-on the development branch and outside the release catalog. Backend parity on
-two rows is established, but it is not a physical-validity result.
+on the development branch and outside the release catalog. Selected Torch/JAX
+backend comparisons pass, but they do not establish physical validity or the
+whole-waveform compiled-gradient contract.
 
 The smallest existing prospectively fixed physical pass/fail check is the
 [third five-case SXS plan](../2026-09-24/sxs_third_holdout_plan.json) with its
@@ -29,10 +30,10 @@ The replay ran on RONI2 using the local Python 3.13 environment rather than
 the original Python 3.12 environment, so its binary fingerprints and runner
 hash differ; it is a reproducibility check of stored data, not a new holdout.
 
-**Current-candidate limitation:** the original anchored waveforms identify
+**Source-revision limitation:** the original anchored waveforms identify
 generator source-manifest hash
 `8ca6d152b4b07bb89bbbd97734d29814023148b79f0af448fda67079957ca532`,
-whereas the current source snapshot hashes to
+whereas the source snapshot at the current-candidate replay hashed to
 `2062f70072d9953a7f9b968336c80512b8034497eb2e4cb0fea7ad2633b7d2cf`.
 Generator files changed between those snapshots. A fresh
 [current-source execution of the known 2569 case](sxs_2569_current_regression.json)
@@ -43,6 +44,10 @@ solar masses, below the frozen 0.99 gate. This is a current-source failure on
 an already inspected case, not an untouched release holdout. The other four
 cases have not been rerun on the current source; this one failure is sufficient
 to keep the candidate unqualified under the selected-case gate.
+The subsequent catalog/API-only commit `a2fd3fe` changed the broad source
+snapshot hash without changing the generator physics. The replay's exact
+array hash and its recorded source snapshot remain the evidence for this case;
+the broad hash is not a claim about later repository revisions.
 The [pinned public SEOBNRv4 control](../2026-09-24/sxs_third_public_parity.json)
 scores `0.9891409499192219` at the same mass, while native and public complex
 waveforms differ by only `0.0001174` relative L2 on their shared chart. Thus
@@ -63,6 +68,36 @@ ODE initial conditions, TD/FD conventions, and the ROM construction. The
 published model does not supply independently derived ROM bases and spline
 tables, and no qualified generator/training set or independent ROM holdout
 exists. Full-waveform gradients and domain-wide convergence remain open.
+The [frozen JAX pathwise whole-mode gradient diagnostic](jax_pathwise_whole_gradient.json)
+passes its finite-difference and accepted-mesh replay checks, but fails its
+eager/JIT waveform gate: relative L2 is `1.547138e-9` against `1e-10`.
+Trajectories and the pre-NQC mode agree to roundoff; matching-derivative
+roundoff is amplified by the NQC solve. This one-row derivative path is itself
+narrower than a production physical-parameter gradient claim. The separately
+[frozen spline-barrier experiment](jax_nqc_spline_barrier_plan.json) applied a
+JAX compiler barrier immediately before that dev-only NQC spline. Its
+[result](jax_nqc_spline_barrier.json) changed none of the measured eager or JIT
+stages: the fixed-input amplitude coefficients still differ by `2.78e-7`,
+above the experiment's `1e-8` gate. The fixed-chart attached waveform differs
+by `3.37e-11` relative L2, below its `1e-10` gate, but that narrower pass does
+not resolve the original whole-path `1.547138e-9` failure. Keep both failures
+and investigate numerical conditioning without weakening their frozen gates.
+The subsequent [frozen amplitude-solve experiment](jax_nqc_amplitude_solve_plan.json)
+tested local match-cell derivative-row scaling and residual-centered iterative
+refinement. Its [result](jax_nqc_amplitude_solve.json) also fails: the
+coefficient gap remains about `2.78e-7` and the fixed-input corrected-mode
+eager/JIT relative L2 remains about `1.30e-10`. The existing solve's row
+equilibration cancels the extra scale; refinement barely changes the eager
+answer. The next numerical target was upstream spline derivative formation.
+The [frozen spline-normalization experiment](jax_nqc_spline_normalization_plan.json)
+then shifted and scaled time around the match cell, centered spline ordinates,
+and combined both changes. Its [result](jax_nqc_spline_normalization.json)
+preserves the eager corrected mode exactly, but all three variants reproduce
+the baseline eager/JIT differences: `2.783505e-7` in amplitude coefficients
+against `1e-8`, and `1.295776e-10` corrected-mode relative L2 against
+`1e-10`. The matching second derivative still differs by `2.613556e-14`.
+This algebraic normalization does not repair the compiled-gradient contract;
+the failed result remains part of the release evidence.
 
 Two different release claims must stay separate:
 

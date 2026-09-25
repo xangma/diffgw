@@ -1,0 +1,63 @@
+{
+  "base_mode_relative_l2": 1.0201914466900152e-15,
+  "baseline_sha256": "e8ae0e6eb7d7842efaa5f6ce7ea79771c6b0591c2d25833cdebcecb0295e2366",
+  "case": "high_start_mixed_spin",
+  "checks": {
+    "barrier_attachment": true,
+    "barrier_coefficients": false,
+    "base_mode": true,
+    "eager_preserved_coefficients": true,
+    "eager_preserved_mode": true
+  },
+  "comparisons": {
+    "barrier_eager_jit": {
+      "amplitude_coefficients_max_abs": 2.783505124170915e-07,
+      "amplitude_matrix_max_abs": 2.6135560729501073e-14,
+      "amplitude_rhs_max_abs": 0.0,
+      "attachment_relative_l2": 3.3742619853081425e-11,
+      "combined_spline_input_max_abs": 1.3877787807814457e-17,
+      "matching_second_max_abs": 2.6135560729501073e-14
+    },
+    "barrier_vs_baseline_eager": {
+      "amplitude_coefficients_max_abs": 0.0,
+      "amplitude_matrix_max_abs": 0.0,
+      "amplitude_rhs_max_abs": 0.0,
+      "attachment_relative_l2": 0.0,
+      "combined_spline_input_max_abs": 0.0,
+      "matching_second_max_abs": 0.0
+    },
+    "barrier_vs_baseline_jit": {
+      "amplitude_coefficients_max_abs": 0.0,
+      "amplitude_matrix_max_abs": 0.0,
+      "amplitude_rhs_max_abs": 0.0,
+      "attachment_relative_l2": 0.0,
+      "combined_spline_input_max_abs": 0.0,
+      "matching_second_max_abs": 0.0
+    },
+    "baseline_eager_jit": {
+      "amplitude_coefficients_max_abs": 2.783505124170915e-07,
+      "amplitude_matrix_max_abs": 2.6135560729501073e-14,
+      "amplitude_rhs_max_abs": 0.0,
+      "attachment_relative_l2": 3.3742619853081425e-11,
+      "combined_spline_input_max_abs": 1.3877787807814457e-17,
+      "matching_second_max_abs": 2.6135560729501073e-14
+    }
+  },
+  "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+  "diagnostic_checks_passed": false,
+  "elapsed_s": 11.496999915980268,
+  "fine_samples": 9637,
+  "host": "RONI2",
+  "intervention_source_sha256": "41de29fc5ba263efa5af7646d2d30b030e515667628ad91f90699b6b34376db8",
+  "jax_backend": "cpu",
+  "jax_version": "0.11.2",
+  "match_time_M": 144.6564486506888,
+  "output_samples": 591,
+  "pid": 88378,
+  "plan_sha256": "e3ce8de69c9d5712eac284c059927595ac45c088c7ee0bc4ec4b2edb27833b96",
+  "platform": "macOS-26.6-arm64-arm-64bit-Mach-O",
+  "release_qualified": false,
+  "schema": "diffgw.seobnrv4.jax-nqc-spline-barrier.v1",
+  "script_sha256": "419e09070142a7fb7876e19fa9af258d04fd51315fd38259ca64d82dafdd2cce",
+  "status": "diagnostic_complete"
+}

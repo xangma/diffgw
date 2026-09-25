@@ -1,0 +1,29 @@
+{
+  "schema": "diffgw.seobnrv4.jax-nqc-spline-barrier-plan.v1",
+  "release_qualified": false,
+  "case": "high_start_mixed_spin",
+  "output_step_M": 0.5,
+  "fine_refinement_factor": 32,
+  "adaptive_atol": 1e-10,
+  "adaptive_rtol": 1e-9,
+  "baseline_result": "dev/native_rom/evidence/2026-09-25/jax_nqc_jit_stages_local_mac.json",
+  "baseline_sha256": "e8ae0e6eb7d7842efaa5f6ce7ea79771c6b0591c2d25833cdebcecb0295e2366",
+  "intervention": "Apply jax.lax.optimization_barrier to the combined full-series amplitude and basis ordinates immediately before the natural-cubic-spline construction in the development-only traceable NQC coefficient fit. Keep trajectory, sample chart, match time, targets, phase fit, and attachment unchanged.",
+  "contexts": ["fixed_input_eager", "fixed_input_jit"],
+  "stage_metrics": [
+    "combined_spline_input_max_abs",
+    "matching_second_max_abs",
+    "amplitude_matrix_max_abs",
+    "amplitude_rhs_max_abs",
+    "amplitude_coefficients_max_abs",
+    "attachment_relative_l2"
+  ],
+  "checks": {
+    "max_baseline_base_mode_relative_l2": 1e-12,
+    "max_intervention_eager_attachment_relative_l2": 1e-12,
+    "max_intervention_eager_coefficients_absolute_error": 1e-10,
+    "max_intervention_eager_jit_coefficients_absolute_error": 1e-8,
+    "max_intervention_eager_jit_attachment_relative_l2": 1e-10
+  },
+  "interpretation": "A pass would show compiler-context parity for this one fixed-input NQC and attachment chart only. Failure is retained as evidence. This does not establish source fidelity, physical accuracy, initial-condition derivatives, adaptive-controller derivatives, or release qualification."
+}

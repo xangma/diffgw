@@ -2,6 +2,7 @@
 
 from dataclasses import dataclass
 
+from jax import lax
 import jax.numpy as jnp
 
 from jaxwave.approximants.eob.events import OrbitalFrequencyPeak
@@ -124,6 +125,7 @@ def _solve_traceable(matrix, rhs):
 
 def traceable_nqc_22_full_series_coefficients(
     time, r, pr_star, orbital_frequency, base_mode, match_time, targets,
+    *, barrier_combined=False,
 ):
     """Differentiate a fixed-grid full-series NQC solve on validated inputs.
 
@@ -139,6 +141,8 @@ def traceable_nqc_22_full_series_coefficients(
     q, p = nqc_22_basis(r, pr_star, orbital_frequency)
     products = amplitude[:, None] * q
     combined = jnp.concatenate((amplitude[:, None], products, p), axis=-1)
+    if barrier_combined:
+        combined = lax.optimization_barrier(combined)
     spline = natural_cubic_spline(time, combined, scalar_output=False)
     value = spline(match_time)
     first = spline.derivative(match_time)
@@ -160,6 +164,7 @@ def traceable_nqc_22_full_series_coefficients(
 def traceable_fixed_chart_attached_mode22(
     time, r, pr_star, orbital_frequency, base_mode, match_time, targets,
     nu, chi, sigma, output_time, *, mass_scale=1.0,
+    barrier_combined=False,
 ):
     """Replay NQC and continuous-boundary attachment on a validated fixed chart.
 
@@ -168,7 +173,8 @@ def traceable_fixed_chart_attached_mode22(
     This is a development-only derivative diagnostic, not a release model.
     """
     a, b, *_ = traceable_nqc_22_full_series_coefficients(
-        time, r, pr_star, orbital_frequency, base_mode, match_time, targets)
+        time, r, pr_star, orbital_frequency, base_mode, match_time, targets,
+        barrier_combined=barrier_combined)
     amplitude = jnp.abs(base_mode)
     phase = _unwrap_mode_phase_unchecked(base_mode)
     q, p = nqc_22_basis(r, pr_star, orbital_frequency)
