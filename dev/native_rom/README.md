@@ -1858,6 +1858,19 @@ cadence sensitivity on this selected spin row. Neither the stable local-fit
 waveform trend nor fixed-coefficient controls validate a replacement physical
 prescription, public fidelity, or release qualification.
 
+The [frozen five-grid local-fit matrix attribution](evidence/2026-09-25/source_aligned_local_nqc_matrix_attribution.json)
+reconstructs every saved aligned-spin coefficient solve and separates changes
+in each matching matrix from changes in its target right-hand side. Across the
+four adjacent pairs, the local phase coefficient `b2` shifts by `−0.02155`,
+`−0.02088`, `−0.05872`, and `−0.10839`; the corresponding symmetric
+matrix contributions are `−0.02186`, `−0.02053`, `−0.05833`, and `−0.10592`.
+On the final pair, replacing only the coarse fit's phase second-derivative
+matrix row with the fine one moves `b2` by `−0.10398`, while the entire target
+change contributes `−0.00247`. The phase second-derivative basis row thus
+dominates this local coefficient drift. This algebraic attribution does not
+determine which derivative estimate approaches the continuum value or cure
+the historical source's more severe refitting sensitivity.
+
 The [prospective q4 local-fit control](evidence/2026-09-25/source_q4_ultrafine_local_nqc_plan.json)
 recomputes those five coefficients with the same degree-four, `±2 M` local
 polynomial used in the earlier combined numerical control, then injects each
