@@ -1086,6 +1086,15 @@ seven frequency points, each run's low/high NR control stays below `0.35 M`
 and `0.014 rad`. Cubic derivative smoothing widths of 10, 20, and `40 M`
 preserve the result. The check locates shared inspiral dephasing, but does not
 identify a unique historical-model correction or alter the failed physical gate.
+The [pinned-public fixed-frequency replay](evidence/2026-09-25/sxs_public_chirp.json)
+uses a separate [hashed plan](evidence/2026-09-25/sxs_public_chirp_plan.json)
+and the same seven frequencies and smoothing controls. At `Mω₂₂=0.05`, the
+official SEOBNRv4 waveform differs from high-resolution NR by `0.573302 rad`
+for 2569 and `0.616032 rad` for 0260 after the `0.09` phase anchor; native
+differs from official by at most `0.000195 rad` and `0.00279 M` across all
+frequency points and smoothing widths. Thus this inspiral discrepancy is
+shared with the pinned public implementation on both rows. This post-hoc
+comparison does not repair the failed physical gate or qualify the generator.
 The separately frozen [near-extreme numerical screen](evidence/2026-09-24/source_rkf_near_extreme_screen.json)
 passes all predeclared tolerance and output-grid gates for `q=10` with both
 spins `+0.95` and `q=3` with spins `(+0.95,-0.95)`. Their refined ODE complex

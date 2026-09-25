@@ -1,0 +1,49 @@
+{
+  "schema": "diffgw.seobnrv4.sxs-public-chirp-plan.v1",
+  "purpose": "Post-hoc fixed-frequency chirp control: determine whether pinned public SEOBNRv4 shares the native inspiral dephasing against two close antialigned NR simulations.",
+  "interpretation": "A public/NR residual matching native/NR localizes the failed physical gate to the common model prediction, but neither changes that gate nor establishes a new release threshold.",
+  "release_qualified": false,
+  "posthoc": true,
+  "cases": {
+    "paper": "SXS:BBH:0260",
+    "third": "SXS:BBH:2569"
+  },
+  "prior_chirp_plan": {
+    "path": "dev/native_rom/evidence/2026-09-25/sxs_cross_run_chirp_plan.json",
+    "sha256": "e7a14ab0114b2d03880d8edf3aa992b0c6f86138996e616249d8ddd0a83d2081"
+  },
+  "prior_chirp_result": {
+    "path": "dev/native_rom/evidence/2026-09-25/sxs_cross_run_chirp.json",
+    "sha256": "1e88e66bbbd894f3f79a9a3f7264899bac032a72938b077b390ef05aa187ca94"
+  },
+  "inputs": {
+    "paper": {
+      "case_plan": {
+        "path": "dev/native_rom/evidence/2026-09-24/sxs_paper_catalog_plan.json",
+        "sha256": "f9c52d91b86bd895b3d2ce43e8c7d5b3d80eb28cda02d18dac27fb2602b6bb69"
+      },
+      "parity_plan": {
+        "path": "dev/native_rom/evidence/2026-09-24/sxs_paper_public_parity_plan.json",
+        "sha256": "7f52b12be7f9fc9f60d6347b8d3945aacf9c4d111755f0f6e6a34d92792bf12e"
+      },
+      "parity_result": {
+        "path": "dev/native_rom/evidence/2026-09-24/sxs_paper_public_parity.json",
+        "sha256": "0d8257774436a8252ac955d7d773aa5533eb84ca5105df41f9ebbfde161faf8e"
+      }
+    },
+    "third": {
+      "case_plan": {
+        "path": "dev/native_rom/evidence/2026-09-24/sxs_third_holdout_plan.json",
+        "sha256": "abd73c31f3a1cce82f0009ab134f93983595bdea6e62786c83052cbcfc796a73"
+      },
+      "parity_plan": {
+        "path": "dev/native_rom/evidence/2026-09-24/sxs_third_public_parity_plan.json",
+        "sha256": "2273c4cf6266221fd7b572d8f2a76c42d25c04ef52e9c1d2399c4d9c54a371ec"
+      },
+      "parity_result": {
+        "path": "dev/native_rom/evidence/2026-09-24/sxs_third_public_parity.json",
+        "sha256": "d254e2cf59a644b0ecf47ffe3809fd1ac5c24baf6f623cc89da1385f395fadf6"
+      }
+    }
+  }
+}
