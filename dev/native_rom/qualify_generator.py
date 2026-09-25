@@ -222,7 +222,8 @@ def native_run(row, level, settings, *, diagnostic_hermite_resampling=False,
                return_nqc_coefficients=False,
                return_nqc_samples=False,
                return_boundary_data=False,
-               return_accepted_hashes=False):
+               return_accepted_hashes=False,
+               return_dynamics=False):
     import torch
     from dev.native_rom.eob.torch.adaptive_driver_clean import reconstruct_seobnrv4_22_adaptive
     choices = dict(CHOICES)
@@ -279,6 +280,11 @@ def native_run(row, level, settings, *, diagnostic_hermite_resampling=False,
                   final_mass_fraction=float(array(result.final_mass_fraction)),
                   final_spin=float(array(result.final_spin)),
                   internal_step_M=float(array(result.attachment.internal_step)))
+    if return_dynamics:
+        output["coarse_dynamics"] = dict(
+            time=array(result.trajectory.coarse.output_time),
+            state=array(result.trajectory.coarse.output_state),
+        )
     if return_accepted_hashes:
         output["accepted_array_sha256"] = {
             name: {key: hashlib.sha256(np.ascontiguousarray(

@@ -20,7 +20,7 @@ PLAN = EVIDENCE / "source_spliced_anchor_plan.json"
 OUTPUT = EVIDENCE / "source_spliced_anchor.json"
 
 
-def replay(row, settings):
+def replay(row, settings, *, return_dynamics=False):
     level = dict(name="anchor_replay", dt_geom=settings["dt_geom_M"],
                  atol=settings["atol"], rtol=settings["rtol"])
     return q.native_run(
@@ -36,6 +36,7 @@ def replay(row, settings):
         diagnostic_qnm_source="independent_kerr",
         diagnostic_fine_max_step_M=settings["fine_max_step_M"],
         diagnostic_coarse_initial_step_M=settings["coarse_initial_step_M"],
+        return_dynamics=return_dynamics,
     )
 
 

@@ -1,0 +1,11 @@
+{
+  "schema": "diffgw.seobnrv4.source-q4-peak-grid-refinement-plan.v1",
+  "purpose": "Measure the q4 source-backed/public fitted-peak comparison and each generator's self-difference on successive 0.125, 0.0625, and 0.03125 M output grids, with all high-accuracy physical and numerical choices fixed.",
+  "grid_self_control_sha256": "3015fcda06ea775a314938842c10d061be855dde41abbf86b96d222949f47d2c",
+  "output_steps_M": [0.125, 0.0625, 0.03125],
+  "atol": 1e-14,
+  "rtol": 1e-13,
+  "peak_fit": "quadratic_power",
+  "interpretation": "A selected-row peak-grid refinement check only; no physical gate, full-domain numerical gate, or ROM release conclusion follows.",
+  "release_qualified": false
+}

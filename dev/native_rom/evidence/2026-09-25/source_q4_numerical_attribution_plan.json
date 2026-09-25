@@ -1,0 +1,15 @@
+{
+  "schema": "diffgw.seobnrv4.source-q4-numerical-attribution-plan.v1",
+  "purpose": "On the already selected q4 nonspinning source-backed row, separate residual changes from local NQC phase derivatives and fine-stage RKF45 output sampling using one fixed fitted-peak comparison to the pinned public binary.",
+  "baseline_evidence_sha256": "5a9c5c1843328164c60a5695641af46e78c23f911152901386411e8653b125f0",
+  "anchor_evidence_sha256": "ee5fc7ab4d2b0b42d7b56fb51040dbfa628909ecafe07226442bd0ec61a61bd3",
+  "interventions": [
+    {"name": "baseline", "local_nqc_phase_derivatives": false, "fine_rkf45_resampling": false},
+    {"name": "local_nqc", "local_nqc_phase_derivatives": true, "fine_rkf45_resampling": false},
+    {"name": "fine_rkf45", "local_nqc_phase_derivatives": false, "fine_rkf45_resampling": true},
+    {"name": "combined", "local_nqc_phase_derivatives": true, "fine_rkf45_resampling": true}
+  ],
+  "peak_fit": "quadratic_power",
+  "interpretation": "Post-hoc attribution only. No intervention is selected as a release prescription by this same-row comparison.",
+  "release_qualified": false
+}

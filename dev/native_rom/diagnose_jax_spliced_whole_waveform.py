@@ -95,7 +95,7 @@ def _prepare_public(plan):
     return identity
 
 
-def run(case_id, plan, public_identity, *, variant="published"):
+def run(case_id, plan, public_identity, *, variant="published", anchor_control=False):
     started = time.monotonic()
     m1, m2, chi1, chi2, omega_start = CASES[case_id]
     nu = m1 * m2 / (m1 + m2)**2
@@ -232,7 +232,19 @@ def run(case_id, plan, public_identity, *, variant="published"):
         "elapsed_s": time.monotonic() - started,
         "release_qualified": False,
     }
-    name = "jax_source_spliced_whole_waveform" if variant == "source" else "jax_spliced_whole_waveform"
+    if anchor_control:
+        from dev.native_rom.diagnose_peak_anchor import METHODS, fitted_metrics, public_mode
+
+        nt, nm, rt, rm, mass_seconds = public_mode(row, torch_run)
+        result["fitted_peak_public"] = {
+            method: fitted_metrics(nt, nm, rt, rm, mass_seconds, method)
+            for method in METHODS
+        }
+        result["anchor_control_plan_sha256"] = qualification.sha256(
+            ROOT / "dev/native_rom/evidence/2026-09-25/jax_published_anchor_control_plan.json")
+    name = ("jax_published_anchor_control" if anchor_control else
+            "jax_source_spliced_whole_waveform" if variant == "source" else
+            "jax_spliced_whole_waveform")
     output = Path(f"dev/native_rom/evidence/2026-09-25/{name}_{case_id}.json")
     output.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n")
     print(case_id, json.dumps({"checks": checks,
@@ -245,6 +257,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--case", choices=(*CASES, "prospective"), required=True)
     parser.add_argument("--variant", choices=("published", "source"), default="published")
+    parser.add_argument("--anchor-control", action="store_true")
     args = parser.parse_args()
     selected, variant = args.case, args.variant
     plan = json.loads((SOURCE_PLAN if variant == "source" else PLAN).read_text())
@@ -252,7 +265,20 @@ if __name__ == "__main__":
                        else "diffgw.seobnrv4.jax-spliced-whole-waveform-plan.v1")
     if plan["schema"] != expected_schema:
         raise ValueError("wrong frozen plan schema")
+    if args.anchor_control:
+        control = json.loads((ROOT / "dev/native_rom/evidence/2026-09-25/"
+                              "jax_published_anchor_control_plan.json").read_text())
+        if (variant != "published" or selected != control["case"]
+                or control["schema"] != "diffgw.seobnrv4.jax-published-anchor-control-plan.v1"
+                or control["release_qualified"] is not False
+                or qualification.sha256(ROOT / "dev/native_rom/evidence/2026-09-25/"
+                                        "jax_spliced_whole_waveform_strong_aligned.json")
+                != control["published_prior_sha256"]
+                or qualification.sha256(ROOT / "dev/native_rom/evidence/2026-09-25/"
+                                        "source_spliced_anchor.json")
+                != control["source_anchor_sha256"]):
+            raise ValueError("frozen published anchor control differs")
     identity = _prepare_public(plan)
     names = (tuple(plan["prospective_cases"]) if selected == "prospective" else (selected,))
     for name in names:
-        run(name, plan, identity, variant=variant)
+        run(name, plan, identity, variant=variant, anchor_control=args.anchor_control)

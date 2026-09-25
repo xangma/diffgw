@@ -1,0 +1,15 @@
+{
+  "schema": "diffgw.seobnrv4.source-q4-warm-start-plan.v1",
+  "purpose": "Test whether evolving the native q4 initial state from the historically selected lower orbital frequency explains the pinned source/public inspiral mismatch, holding the source-backed model choices and output grid fixed.",
+  "numerical_attribution_sha256": "05b5a25269279d35fa5cf09c7d7eb69e4d76c8058e24666db758ad37ac8a1bb1",
+  "source_full_mode_control_sha256": "4a1f364986fd0a9809c6d402023e5d8a605ef7ceb0ccfbf4532c8dacfbacf575",
+  "historical_warm_start_plan_sha256": "827a3ba8a0cc294c916fd185ad10dea5b5af1151a22ab2623d7f88a66072004a",
+  "warm_start_Momega": 0.03162277660168379,
+  "peak_fit": "quadratic_power",
+  "interventions": [
+    {"name": "warm_start", "fine_rkf45_resampling": false},
+    {"name": "warm_start_fine_rkf45", "fine_rkf45_resampling": true}
+  ],
+  "interpretation": "Development attribution only; a smaller difference to a pinned historical binary is neither independent physical accuracy nor a release pass.",
+  "release_qualified": false
+}

@@ -1168,6 +1168,47 @@ and gives `0.7566` on aligned spin. These are comparison-convention
 diagnostics, not physical passes; residual source fidelity, numerical
 convergence, independent NR validation, and ROM training remain open.
 
+A [published-choice anchor control](evidence/2026-09-25/jax_published_anchor_control_strong_aligned.json)
+on strong aligned spin gives `0.01440` with the same quadratic-power fit,
+versus `0.01488` for the source-backed choice. The two physical-choice routes
+therefore have similar fitted residuals on that row; the difference between
+their earlier sampled-peak results was largely an anchoring effect.
+
+The [q4 numerical ablations](evidence/2026-09-25/source_q4_numerical_attribution.json)
+change the source-backed fitted public error from `0.009674` to `0.009358`
+when fine RKF integration and local NQC derivatives are combined. A
+[separate pinned source-mode control](evidence/2026-09-25/source_q4_full_mode_control.json)
+finds native/source `0.009328` and source/public `0.000514` on the same
+`0.5 M` grid. The source dynamics begin at radius `10.0121`, whereas the
+native run begins at `8.5499`; the former reaches the latter radius after
+`438.95 M`. This exposed an initial-frequency convention difference.
+The [historical warm-start replay](evidence/2026-09-25/source_q4_warm_start.json)
+reduces the q4 fitted public error to `0.003324`, or `0.002947` with fine RKF.
+
+Replaying the earlier high-accuracy settings at `0.125 M` gives
+[`0.000412`](evidence/2026-09-25/source_q4_historical_numerics.json).
+A [grid/attachment crosscheck](evidence/2026-09-25/source_q4_numerical_crosscheck.json)
+gives `0.002948` with the full settings at `0.5 M` and `0.000417` with
+basic attachment settings at `0.125 M`. The output grid thus dominates this
+change, rather than the attachment refinements. However, the
+[grid self-control](evidence/2026-09-25/source_q4_grid_self_control.json)
+shows exactly identical native values at all shared `0.5 M` samples while
+independent peak fits of the `0.5 M` and `0.125 M` native outputs yield
+`0.008053` complex relative L2. The corresponding public self-comparison is
+`0.006116`. The small `0.125 M` cross-model residual is therefore not yet a
+converged source-parity claim; peak localization and public cadence must be
+controlled independently. All these runs remain development diagnostics.
+
+The [frozen finer-grid check](evidence/2026-09-25/source_q4_peak_grid_refinement.json)
+returns fitted q4 native/public complex relative L2 of `0.000412`,
+`0.000304`, and `0.000405` at `0.125`, `0.0625`, and `0.03125 M`.
+Adjacent native waveforms are again identical at shared samples, yet their
+independent peak fits differ by `0.001938` and `0.000692`; corresponding
+public self-differences are `0.001253` and `0.001388`. The cross-model
+residual is smaller than this anchor/reference variability, so the sweep
+does not establish a stable whole-waveform source agreement or a release
+gate.
+
 1. Qualify the physical generator against the published equations and independent
    references over the intended domain, resolve convention/provenance gaps, and
    establish gradients and numerical convergence. This runner covers only scalar

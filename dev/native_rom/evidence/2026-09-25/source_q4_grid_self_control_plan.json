@@ -1,0 +1,11 @@
+{
+  "schema": "diffgw.seobnrv4.source-q4-grid-self-control-plan.v1",
+  "purpose": "Compare each generator to itself at 0.5 and 0.125 M with otherwise identical high-accuracy source-backed numerical settings, separating native and pinned-public grid sensitivity.",
+  "numerical_crosscheck_sha256": "09380f80b7bbda8f620ed16c4c03c90ca4fdb7b2615b9015a159073409fe2564",
+  "output_steps_M": [0.5, 0.125],
+  "atol": 1e-14,
+  "rtol": 1e-13,
+  "peak_fit": "quadratic_power",
+  "interpretation": "Development self-comparison only; a change in fitted-peak comparison across grids does not by itself establish a converged physical reference.",
+  "release_qualified": false
+}

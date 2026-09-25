@@ -1,0 +1,26 @@
+{
+  "schema": "diffgw.seobnrv4.source-q4-numerical-crosscheck-plan.v1",
+  "purpose": "Separate output-grid refinement from the historical Hermite/NQC/restart refinements for the source-backed q4 waveform, starting from the pinned high-accuracy result.",
+  "historical_numerics_sha256": "8567f6b48540021650cab72bdd5704e974bd336b8ae010f8c4b0b74ccade6b2a",
+  "peak_fit": "quadratic_power",
+  "interventions": [
+    {
+      "name": "coarse_grid_full_numerics",
+      "dt_geom_M": 0.5,
+      "hermite_resampling": true,
+      "local_nqc_phase_derivatives": true,
+      "matching_second_derivatives": true,
+      "restart_time_M": 165.0
+    },
+    {
+      "name": "fine_grid_basic_attachment",
+      "dt_geom_M": 0.125,
+      "hermite_resampling": false,
+      "local_nqc_phase_derivatives": false,
+      "matching_second_derivatives": false,
+      "restart_time_M": null
+    }
+  ],
+  "interpretation": "Diagnostic crosschecks with the model choices and tight ODE tolerances fixed; not a release pass or a numerical-domain bound.",
+  "release_qualified": false
+}

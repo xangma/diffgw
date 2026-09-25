@@ -1,0 +1,20 @@
+{
+  "schema": "diffgw.seobnrv4.source-q4-historical-numerics-plan.v1",
+  "purpose": "Replay the source-backed q4 model choices with the previously frozen high-accuracy q4 numerical configuration, before attributing the remaining warm-start waveform difference.",
+  "warm_start_result_sha256": "c627cae9939e39dbe86bed585cf18dda447cb4102cf9d99cffccd27c5ad202c6",
+  "historical_numerics_result_sha256": "3c414c018917f7dad38644ad86ba58781bc53180b931cb8f869c34f5e83b3025",
+  "historical_run": "ode_2",
+  "output_step_M": 0.125,
+  "atol": 1e-14,
+  "rtol": 1e-13,
+  "initial_step_M": 0.125,
+  "warm_start_Momega": 0.03162277660168379,
+  "restart_time_M": 165.0,
+  "ringdown_duration_M": 150.0,
+  "hermite_resampling": true,
+  "local_nqc_phase_derivatives": true,
+  "matching_second_derivatives": true,
+  "peak_fit": "quadratic_power",
+  "interpretation": "Same historical numerics with source-backed model choices is an attribution check only; the previously recorded public agreement is not independent physical validation.",
+  "release_qualified": false
+}
