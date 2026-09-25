@@ -39,6 +39,7 @@ ROOT = Path(__file__).resolve().parents[2]
 EVIDENCE = ROOT / "dev/native_rom/evidence/2026-09-25"
 PLAN = EVIDENCE / "jax_source_fixed_trajectory_sampling_plan.json"
 REFINEMENT_PLAN = EVIDENCE / "jax_source_fixed_trajectory_refinement_plan.json"
+STAGE_PLAN = EVIDENCE / "jax_source_fixed_attachment_stage_plan.json"
 
 
 def _tensor(value):
@@ -56,19 +57,23 @@ def _attach(time_grid, state, orbital_frequency, base_mode, base_frequency,
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--case", choices=("pilot", "prospective"), required=True)
-    parser.add_argument("--sampling", choices=("128_vs_256", "256_vs_512"),
+    parser.add_argument("--sampling", choices=("128_vs_256", "256_vs_512",
+                                               "stage_256_vs_512"),
                         default="128_vs_256")
     args = parser.parse_args()
-    refinement = args.sampling == "256_vs_512"
-    plan_path = REFINEMENT_PLAN if refinement else PLAN
+    stage_audit = args.sampling == "stage_256_vs_512"
+    refinement = args.sampling != "128_vs_256"
+    plan_path = STAGE_PLAN if stage_audit else REFINEMENT_PLAN if refinement else PLAN
     plan = json.loads(plan_path.read_text())
     case = plan[f"{args.case}_case"]
     prior_path = EVIDENCE / (
+        f"jax_source_fixed_trajectory_refinement_{case}.json" if stage_audit else
         f"jax_source_fixed_trajectory_sampling_{case}.json" if refinement else
         f"jax_source_stationary_peak_control_{case}.json")
     prior_key = ("prior_fixed_trajectory_sha256" if refinement
                  else "stationary_control_sha256")
     expected_schema = (
+        "diffgw.seobnrv4.jax-source-fixed-attachment-stage-plan.v1" if stage_audit else
         "diffgw.seobnrv4.jax-source-fixed-trajectory-refinement-plan.v1" if refinement
         else "diffgw.seobnrv4.jax-source-fixed-trajectory-sampling-plan.v1")
     expected_factor = 512 if refinement else 256
@@ -82,12 +87,14 @@ def main():
     prior = json.loads(prior_path.read_text())
     source_plan = json.loads(SOURCE_PLAN.read_text())
     identity = _prepare_public(source_plan)
-    output_stem = ("jax_source_fixed_trajectory_refinement" if refinement
+    output_stem = ("jax_source_fixed_attachment_stage" if stage_audit else
+                   "jax_source_fixed_trajectory_refinement" if refinement
                    else "jax_source_fixed_trajectory_sampling")
     output = EVIDENCE / f"{output_stem}_{case}.json"
     started = time.monotonic()
     result = {
-        "schema": ("diffgw.seobnrv4.jax-source-fixed-trajectory-refinement.v1"
+        "schema": ("diffgw.seobnrv4.jax-source-fixed-attachment-stage.v1" if stage_audit
+                   else "diffgw.seobnrv4.jax-source-fixed-trajectory-refinement.v1"
                    if refinement else "diffgw.seobnrv4.jax-source-fixed-trajectory-sampling.v1"),
         "status": "running", "case_id": case, "plan_sha256": q.sha256(plan_path),
         "host": platform.node(), "cwd": os.getcwd(), "pid": os.getpid(),
@@ -172,6 +179,38 @@ def main():
                 "amplitude_condition": float(attached.calibration.amplitude_condition),
                 "phase_condition": float(attached.calibration.phase_condition),
             }
+            if stage_audit:
+                high_corrected = _array(high_attach.corrected_inspiral)[::decimation]
+                low_corrected = _array(attached.corrected_inspiral)
+                high_output_samples = high_post[::high_factor]
+                low_output_samples = post[::low_factor]
+                high_boundary = float(high_attach.boundary_time)
+                low_boundary = float(attached.boundary_time)
+                input_times = _array(low_time)
+                local_window = ((input_times >= match_high-20)
+                                & (input_times <= min(high_boundary, low_boundary)))
+                coarse_output_times = low_output[::low_factor]
+                before_boundary = coarse_output_times < min(high_boundary, low_boundary)
+                after_boundary = coarse_output_times >= max(high_boundary, low_boundary)
+                controls[label]["stage_attribution"] = {
+                    "corrected_inspiral_shared_input_l2": _relative_l2(
+                        low_corrected, high_corrected),
+                    "corrected_inspiral_local_window_l2": _relative_l2(
+                        low_corrected[local_window], high_corrected[local_window]),
+                    "pre_boundary_output_l2": _relative_l2(
+                        low_output_samples[before_boundary],
+                        high_output_samples[before_boundary]),
+                    "post_boundary_output_l2": _relative_l2(
+                        low_output_samples[after_boundary],
+                        high_output_samples[after_boundary]),
+                    "high_boundary_time_M": t0+high_boundary,
+                    "low_boundary_time_M": t0+low_boundary,
+                    "boundary_shift_M": low_boundary-high_boundary,
+                    "nqc_coefficient_max_abs_shift": max(
+                        float(np.max(np.abs(_array(a)-_array(b))))
+                        for a, b in zip(attached.calibration.coefficients,
+                                        high_attach.calibration.coefficients)),
+                }
         result.update({
             "status": "diagnostic_complete", "settings": settings,
             "base_mode_reconstruction_l2": base_mode_error,
@@ -196,7 +235,7 @@ def main():
                 abs(result["recomputed_low_peak_slope"])
                 <= limits["stationary_peak_slope_max_abs_at_most"]),
         }
-        if refinement:
+        if refinement and not stage_audit:
             result["checks"]["recomputed_peak_fixed_trajectory_complex_relative_l2_at_most"] = (
                 controls["recomputed_stationary_peak"]["comparison_to_full_sampling"][
                     "complex_relative_l2"]

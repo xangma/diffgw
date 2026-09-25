@@ -1,0 +1,107 @@
+{
+  "base_mode_reconstruction_l2": 0.0,
+  "case_id": "strong_aligned",
+  "checks": {
+    "reconstructed_high_complex_relative_l2_at_most": true,
+    "shared_time_max_abs_at_most_M": true,
+    "stationary_peak_slope_max_abs_at_most": true
+  },
+  "controls": {
+    "fixed_match": {
+      "amplitude_condition": 1318.7654124643618,
+      "comparison_to_full_sampling": {
+        "complex_relative_l2": 1.3504529458782545e-05,
+        "shared_end_M": 584.0,
+        "shared_samples": 1169,
+        "shared_time_max_abs_M": 0.0
+      },
+      "match_time_M": 484.39186258016343,
+      "nqc_coefficients": [
+        [
+          142.95818400217564,
+          -1227.0146277547103,
+          1375.4621967815647
+        ],
+        [
+          35.65057410555057,
+          -800.7935136578319
+        ]
+      ],
+      "phase_condition": 7.507303283410353,
+      "stage_attribution": {
+        "boundary_shift_M": -0.0009765625,
+        "corrected_inspiral_local_window_l2": 4.900711800621338e-06,
+        "corrected_inspiral_shared_input_l2": 4.339605467844721e-06,
+        "high_boundary_time_M": 484.3916015625,
+        "low_boundary_time_M": 484.390625,
+        "nqc_coefficient_max_abs_shift": 0.005681914262822829,
+        "post_boundary_output_l2": 4.2337805034462715e-05,
+        "pre_boundary_output_l2": 3.3871329541169736e-06
+      }
+    },
+    "recomputed_stationary_peak": {
+      "amplitude_condition": 1318.7654124620842,
+      "comparison_to_full_sampling": {
+        "complex_relative_l2": 1.3504534280391569e-05,
+        "shared_end_M": 584.0,
+        "shared_samples": 1169,
+        "shared_time_max_abs_M": 0.0
+      },
+      "match_time_M": 484.39186258010807,
+      "nqc_coefficients": [
+        [
+          142.95818400260256,
+          -1227.0146277577524,
+          1375.462196784536
+        ],
+        [
+          35.65057410580388,
+          -800.7935136665826
+        ]
+      ],
+      "phase_condition": 7.507303283410826,
+      "stage_attribution": {
+        "boundary_shift_M": -0.0009765625,
+        "corrected_inspiral_local_window_l2": 4.9007409039477775e-06,
+        "corrected_inspiral_shared_input_l2": 4.339624683315765e-06,
+        "high_boundary_time_M": 484.3916015625,
+        "low_boundary_time_M": 484.390625,
+        "nqc_coefficient_max_abs_shift": 0.00568191723414202,
+        "post_boundary_output_l2": 4.233781369474375e-05,
+        "pre_boundary_output_l2": 3.387152486496756e-06
+      }
+    }
+  },
+  "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+  "diagnostic_checks_passed": true,
+  "elapsed_s": 96.42817874997854,
+  "high_attachment_reconstruction_l2": 9.320287982349735e-12,
+  "high_match_time_M": 484.39186258016343,
+  "high_nqc_coefficients": [
+    [
+      142.9577066287716,
+      -1227.0099246593836,
+      1375.4565148673018
+    ],
+    [
+      35.65052832923694,
+      -800.7912468691565
+    ]
+  ],
+  "host": "RONI2",
+  "pid": 10522,
+  "plan_sha256": "0de4fd839e0415a18c2341fbc58489c841f773e64f4139c23ccb42b179c3a019",
+  "prior_fixed_trajectory_grid_l2": 1.3504534280391569e-05,
+  "recomputed_low_peak_slope": -7.274996577377735e-17,
+  "recomputed_match_time_shift_M": -5.53370682609966e-11,
+  "release_qualified": false,
+  "schema": "diffgw.seobnrv4.jax-source-fixed-attachment-stage.v1",
+  "settings": {
+    "atol": 1e-13,
+    "coarse_output_step_M": 0.5,
+    "fine_refinement_factor": 512,
+    "max_step_M": 2.0,
+    "rtol": 1e-12
+  },
+  "status": "diagnostic_complete"
+}

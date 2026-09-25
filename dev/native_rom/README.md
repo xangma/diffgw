@@ -1364,6 +1364,19 @@ halved, rather than eliminated, by this refinement. Neither this same-trajectory
 control nor the earlier independently integrated pair establishes numerical
 convergence at a usable release cadence.
 
+The [frozen stage attribution](evidence/2026-09-25/jax_source_fixed_attachment_stage_plan.json)
+separates corrected inspiral from the boundary and ringdown on that same
+factor-512 trajectory. On [q4](evidence/2026-09-25/jax_source_fixed_attachment_stage_q4_nonspinning.json)
+and [aligned spin](evidence/2026-09-25/jax_source_fixed_attachment_stage_strong_aligned.json),
+the decimated grid moves the discrete ringdown boundary earlier by
+`0.0009765625 M`. Corrected-inspiral differences on shared input samples are
+only `1.18e-6` and `4.34e-6`; pre-boundary output differences are `1.09e-6`
+and `3.39e-6`. Post-boundary differences rise to `4.39e-5` and `4.23e-5`.
+Thus the failed `1.36e-5` and `1.35e-5` whole-waveform fixed-trajectory
+checks are chiefly a discrete ringdown-boundary effect, with a smaller NQC
+component. Changing this boundary requires a separate historical-fidelity
+and physical-accuracy assessment; this experiment does not authorize it.
+
 The [frozen anchor diagnostic](evidence/2026-09-25/source_spliced_anchor_plan.json)
 replays all four cases and fits each mode's own amplitude peak between output
 samples without optimizing a relative shift. The [results](evidence/2026-09-25/source_spliced_anchor.json)
