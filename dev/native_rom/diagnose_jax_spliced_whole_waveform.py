@@ -100,7 +100,8 @@ def _prepare_public(plan):
 
 
 def run(case_id, plan, public_identity, *, variant="published", anchor_control=False,
-        independent_init=False):
+        independent_init=False, numerical_settings=None, write_result=True,
+        return_series=False):
     started = time.monotonic()
     m1, m2, chi1, chi2, omega_start = CASES[case_id]
     nu = m1 * m2 / (m1 + m2)**2
@@ -135,11 +136,16 @@ def run(case_id, plan, public_identity, *, variant="published", anchor_control=F
         jh = JaxHam(nu, chi1, chi2, delta=delta)
         jf = JaxFlux(spin_truncation="tabulated", retain_pan_cubic_spin=False)
         mode_options = MODE_OPTIONS
-    dt, max_duration, max_step = 0.5, 1000.0, 2.0
+    numerical_settings = numerical_settings or {}
+    dt = numerical_settings.get("coarse_output_step_M", 0.5)
+    max_duration = numerical_settings.get("max_duration_M", 1000.0)
+    max_step = numerical_settings.get("max_step_M", 2.0)
+    atol = numerical_settings.get("atol", 1e-10)
+    rtol = numerical_settings.get("rtol", 1e-9)
     coarse = integrate_adaptive(
         torch_field, initial_torch, dt, t_end=max_duration,
         event=AlignedSpinV4Event("coarse"), initial_step=dt,
-        max_step=max_step, controller="gsl_state_scaled", atol=1e-10, rtol=1e-9)
+        max_step=max_step, controller="gsl_state_scaled", atol=atol, rtol=rtol)
     n_coarse = len(coarse.output_time)
     restart = (n_coarse - math.ceil(150 / dt) if (n_coarse - 1) * dt >= 150
                else n_coarse - math.ceil(n_coarse / 2))
@@ -148,12 +154,12 @@ def run(case_id, plan, public_identity, *, variant="published", anchor_control=F
         torch_field, coarse.output_state[restart], fine_step,
         t_end=max_duration, event=AlignedSpinV4Event("fine"),
         initial_step=fine_step, max_step=max_step,
-        controller="gsl_state_scaled", atol=1e-10, rtol=1e-9)
+        controller="gsl_state_scaled", atol=atol, rtol=rtol)
     jrun = integrate_two_stage_trajectory(
         jax_field, initial_jax, output_step=dt,
         max_duration=max_duration, coarse_initial_step=dt,
         coarse_max_step=max_step, fine_max_step=max_step,
-        atol=1e-10, rtol=1e-9)
+        atol=atol, rtol=rtol)
     print(case_id, "trajectories", len(fine.output_time), flush=True)
 
     torch_fine_omega = torch_field(fine.output_state)[:, 1]
@@ -236,7 +242,7 @@ def run(case_id, plan, public_identity, *, variant="published", anchor_control=F
         "host": platform.node(), "cwd": os.getcwd(), "pid": os.getpid(),
         "input": {"case_parameters": CASES[case_id], "coarse_output_step_M": dt,
                   "fine_output_step_M": fine_step, "fine_output_samples": fine_count,
-                  "max_step_M": max_step, "atol": 1e-10, "rtol": 1e-9},
+                  "max_step_M": max_step, "atol": atol, "rtol": rtol},
         "public_binary": public_identity,
         "source_choices": SOURCE_FLUX_OPTIONS if variant == "source" else None,
         "independent_initial_solve": independent_init,
@@ -271,11 +277,14 @@ def run(case_id, plan, public_identity, *, variant="published", anchor_control=F
             "jax_source_spliced_whole_waveform" if variant == "source" else
             "jax_spliced_whole_waveform")
     output = Path(f"dev/native_rom/evidence/2026-09-25/{name}_{case_id}.json")
-    output.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n")
+    if write_result:
+        output.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n")
     print(case_id, json.dumps({"checks": checks,
                               "torch_public_complex_l2": torch_public["amplitude_peak_anchored"]["metrics"]["complex_relative_l2"],
                               "jax_public_complex_l2": jax_public["amplitude_peak_anchored"]["metrics"]["complex_relative_l2"]},
                              sort_keys=True), flush=True)
+    if return_series:
+        return result, (ttime, tmode), (jtime, jmode)
 
 
 if __name__ == "__main__":

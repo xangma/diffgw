@@ -1167,6 +1167,18 @@ at most `8.24e-9`. This closes the shared-initial-state qualification gap for
 these four development cases, but not source fidelity, numerical convergence,
 gradient/domain coverage, independent NR accuracy, or ROM training.
 
+A [frozen source-backed tolerance ladder](evidence/2026-09-25/jax_source_tolerance_ladder_plan.json)
+then reruns the whole independently initialized Torch/JAX waveform at three
+ODE tolerances on the same `0.5 M` output chart. Its [q4](evidence/2026-09-25/jax_source_tolerance_ladder_q4_nonspinning.json),
+[mixed-spin](evidence/2026-09-25/jax_source_tolerance_ladder_high_start_mixed_spin.json),
+and [aligned-spin](evidence/2026-09-25/jax_source_tolerance_ladder_strong_aligned.json)
+results **fail** the predeclared within-backend convergence gates. The
+baseline-to-refined complex relative L2 ranges from `2.24e-4` to `3.36e-3`;
+refined-to-finest ranges from `1.25e-4` to `2.67e-4`. Torch/JAX remain within
+`1.22e-6` at each level. This is shared sensitivity in the full waveform,
+not an independently converged numerical route. The fixed output cadence
+and the trajectory/NQC/attachment contributions still need separation.
+
 The [frozen anchor diagnostic](evidence/2026-09-25/source_spliced_anchor_plan.json)
 replays all four cases and fits each mode's own amplitude peak between output
 samples without optimizing a relative shift. The [results](evidence/2026-09-25/source_spliced_anchor.json)

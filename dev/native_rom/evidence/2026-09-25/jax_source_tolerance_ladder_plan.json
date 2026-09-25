@@ -1,0 +1,26 @@
+{
+  "schema": "diffgw.seobnrv4.jax-source-tolerance-ladder-plan.v1",
+  "purpose": "Test whole-waveform numerical stability of independently initialized source-backed Torch and JAX routes on a fixed 0.5 M output chart. Compare separately solved waveforms at identical physical initial parameters, without peak/time/phase optimization.",
+  "pilot_case": "q4_nonspinning",
+  "prospective_cases": ["high_start_mixed_spin", "strong_aligned"],
+  "source_plan_sha256": "eb79f7db87e23d83a8437334eec90f6872dcf3b76f65b5cbe55882f7d62b9944",
+  "baseline_result_sha256": {
+    "q4_nonspinning": "182eb897539fdf8d8cccfe871edc73c9ef222ab1a273c97bd7bd2384408c017c",
+    "high_start_mixed_spin": "fec4fdab139297fec71c693965f806bab464c87aa0fd50248f799cbfe27e202c",
+    "strong_aligned": "c9c214b4ea86c9a3c0609a37f1dc5bbb0344d493b2ff3093fb009ee9c63cc6ad"
+  },
+  "levels": [
+    {"name": "baseline", "atol": 1e-10, "rtol": 1e-9},
+    {"name": "refined", "atol": 1e-11, "rtol": 1e-10},
+    {"name": "finest", "atol": 1e-12, "rtol": 1e-11}
+  ],
+  "coarse_output_step_M": 0.5,
+  "max_step_M": 2.0,
+  "checks": {
+    "baseline_to_refined_complex_relative_l2_at_most": 0.0001,
+    "refined_to_finest_complex_relative_l2_at_most": 0.00001,
+    "torch_jax_finest_complex_relative_l2_at_most": 0.00001
+  },
+  "interpretation": "Selected-case ODE tolerance stability only. Fixed output cadence, NQC/attachment discretization, independent reference fidelity, full domain, and ROM training remain outside this gate.",
+  "release_qualified": false
+}

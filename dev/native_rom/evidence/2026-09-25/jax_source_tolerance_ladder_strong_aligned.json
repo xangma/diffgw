@@ -1,0 +1,133 @@
+{
+  "case_id": "strong_aligned",
+  "checks": {
+    "baseline_to_refined_complex_relative_l2_at_most": false,
+    "each_level_backend_checks_passed": true,
+    "refined_to_finest_complex_relative_l2_at_most": false,
+    "torch_jax_finest_complex_relative_l2_at_most": true
+  },
+  "comparisons": {
+    "jax_baseline_to_refined": {
+      "common_samples": 1169,
+      "complex_relative_l2": 0.0033590832184352743,
+      "support_sample_difference": 0,
+      "time_max_abs_M": 0.0
+    },
+    "jax_refined_to_finest": {
+      "common_samples": 1169,
+      "complex_relative_l2": 0.0002650291985648059,
+      "support_sample_difference": 0,
+      "time_max_abs_M": 0.0
+    },
+    "torch_baseline_to_refined": {
+      "common_samples": 1169,
+      "complex_relative_l2": 0.0033603085041226687,
+      "support_sample_difference": 0,
+      "time_max_abs_M": 0.0
+    },
+    "torch_refined_to_finest": {
+      "common_samples": 1169,
+      "complex_relative_l2": 0.000267184271821196,
+      "support_sample_difference": 0,
+      "time_max_abs_M": 0.0
+    }
+  },
+  "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+  "diagnostic_checks_passed": false,
+  "elapsed_s": 118.92554912494961,
+  "host": "RONI2",
+  "levels": {
+    "baseline": {
+      "diagnostic_checks_passed": true,
+      "jax": {
+        "end_M": 584.0,
+        "mode_sha256": "47c9c601eb4377e3b3e9fce645595aeae69aab32271891798ca497202972f025",
+        "samples": 1169,
+        "start_M": 0.0,
+        "time_sha256": "0ac91155dc977bca73e17f8cf1a8295bff77b9e603e39a39a616cc1f185b5a22"
+      },
+      "settings": {
+        "atol": 1e-10,
+        "coarse_output_step_M": 0.5,
+        "max_step_M": 2.0,
+        "rtol": 1e-09
+      },
+      "torch": {
+        "end_M": 584.0,
+        "mode_sha256": "330ea3ffc4c8161e67cc4a81bb3d51864d74a7447485c946a297ed369503c7d5",
+        "samples": 1169,
+        "start_M": 0.0,
+        "time_sha256": "0ac91155dc977bca73e17f8cf1a8295bff77b9e603e39a39a616cc1f185b5a22"
+      },
+      "torch_jax": {
+        "common_samples": 1169,
+        "complex_relative_l2": 8.242398842457838e-09,
+        "support_sample_difference": 0,
+        "time_max_abs_M": 0.0
+      }
+    },
+    "finest": {
+      "diagnostic_checks_passed": true,
+      "jax": {
+        "end_M": 584.0,
+        "mode_sha256": "9a0f733e4df145352fc7d61e2b5542698c54ea5bde5e7ae7d4082eff0a3da577",
+        "samples": 1169,
+        "start_M": 0.0,
+        "time_sha256": "0ac91155dc977bca73e17f8cf1a8295bff77b9e603e39a39a616cc1f185b5a22"
+      },
+      "settings": {
+        "atol": 1e-12,
+        "coarse_output_step_M": 0.5,
+        "max_step_M": 2.0,
+        "rtol": 1e-11
+      },
+      "torch": {
+        "end_M": 584.0,
+        "mode_sha256": "a0f2b983ebf2860a974b34da495f57acdec2c0d059117c0c56a9c4552c8c56c1",
+        "samples": 1169,
+        "start_M": 0.0,
+        "time_sha256": "0ac91155dc977bca73e17f8cf1a8295bff77b9e603e39a39a616cc1f185b5a22"
+      },
+      "torch_jax": {
+        "common_samples": 1169,
+        "complex_relative_l2": 9.380486397858283e-07,
+        "support_sample_difference": 0,
+        "time_max_abs_M": 0.0
+      }
+    },
+    "refined": {
+      "diagnostic_checks_passed": true,
+      "jax": {
+        "end_M": 584.0,
+        "mode_sha256": "c13ac90eedb99055b6aca7801b738a985b36471a4e06eff733e9d325d3c83005",
+        "samples": 1169,
+        "start_M": 0.0,
+        "time_sha256": "0ac91155dc977bca73e17f8cf1a8295bff77b9e603e39a39a616cc1f185b5a22"
+      },
+      "settings": {
+        "atol": 1e-11,
+        "coarse_output_step_M": 0.5,
+        "max_step_M": 2.0,
+        "rtol": 1e-10
+      },
+      "torch": {
+        "end_M": 584.0,
+        "mode_sha256": "fbbd9076173840c358b9f1989b1c2cb7515793d154bb6e091ec8e2357b34c328",
+        "samples": 1169,
+        "start_M": 0.0,
+        "time_sha256": "0ac91155dc977bca73e17f8cf1a8295bff77b9e603e39a39a616cc1f185b5a22"
+      },
+      "torch_jax": {
+        "common_samples": 1169,
+        "complex_relative_l2": 1.2170489604507216e-06,
+        "support_sample_difference": 0,
+        "time_max_abs_M": 0.0
+      }
+    }
+  },
+  "pid": 8305,
+  "plan_sha256": "101f756e6d90e07cb02084c04788bed43c4cdbc2773b948af8ff3262fda7352f",
+  "release_qualified": false,
+  "schema": "diffgw.seobnrv4.jax-source-tolerance-ladder.v1",
+  "status": "diagnostic_complete"
+}
