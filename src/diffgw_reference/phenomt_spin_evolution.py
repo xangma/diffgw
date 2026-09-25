@@ -102,10 +102,14 @@ def evaluate_spin_derivatives(
     spin2 = _vector(ctx, spin2)
     if v <= 0 or m1 <= 0 or m2 <= 0:
         raise ValueError("v and mass fractions must be positive")
-    tolerance = ctx.mpf(10) ** (-(dps - 5))
+    # This reference also accepts ordinary binary64 inputs from independent
+    # ODE drivers.  Requiring those decimal strings to satisfy an 80-digit
+    # normalization check would reject every evolved unit vector after its
+    # first floating-point step, without adding mathematical protection.
+    tolerance = max(ctx.mpf(10) ** (-(dps - 5)), ctx.mpf("1e-12"))
     if abs(m1 + m2 - 1) > tolerance:
         raise ValueError("mass fractions must sum to one")
-    if abs(_dot(lhat, lhat) - 1) > ctx.mpf("1e-24"):
+    if abs(_dot(lhat, lhat) - 1) > tolerance:
         raise ValueError("lhat must be a unit vector")
 
     l_cross_s1 = _cross(lhat, spin1)
