@@ -9,6 +9,10 @@ jax.config.update("jax_enable_x64", True)
 import jax.numpy as jnp
 
 from jaxwave.approximants.imrphenom_xp import IMRPhenomXP as JAXXP
+from jaxwave.approximants.imrphenom_xas import IMRPhenomXAS as JAXXAS
+from jaxwave.approximants.precession_msa_v223_one_spin_projection import (
+    one_spin_msa_v223_waveform,
+)
 from torchwave.approximants.imrphenom_xp import IMRPhenomXP as TorchXP
 
 
@@ -31,6 +35,65 @@ def _relative_l2(actual, expected):
     actual = np.asarray(actual)
     expected = np.asarray(expected)
     return np.linalg.norm(actual-expected) / np.linalg.norm(expected)
+
+
+@pytest.mark.parametrize("f_ref", (None, 20., 25., 40.))
+def test_exact_aligned_xp_collapses_to_xas_on_carrier_phase_branch(f_ref):
+    # Pratten et al. (arXiv:2004.06503v2), Eqs. (7), (17): beta=0 makes
+    # alpha+gamma frequency-independent.  An omitted public f_ref leaves the
+    # XAS carrier phase unanchored even though MSA angles use 20 Hz internally.
+    f = jnp.linspace(25., 300., 24)
+    params = dict(mass1=40., mass2=20., spin1z=.4, spin2z=-.2,
+                  distance=100., inclination=.7, phic=.3, tc=0.,
+                  f_ref=f_ref)
+    hp, hc = JAXXP.evaluate(
+        f, **params, prec_version=223, convention=1, final_spin_mod=3,
+    )
+    expected = JAXXAS.evaluate(
+        f=f, mass1=40., mass2=20., chi1=.4, chi2=-.2,
+        distance=100., inclination=.7, phi_c=.3, t_c=0., f_ref=f_ref,
+    )
+    for actual, target in zip((hp, hc), expected):
+        # The unanchored XAS phase amplifies compiler-staging roundoff: on the
+        # 24-bin grid, eager XP/XAS differed by 1.15e-11, whereas matched JIT
+        # XP/XAS differed by 5.4e-15 at the same exact beta=0 endpoint.
+        assert _relative_l2(actual, target) < (1e-10 if f_ref is None else 1e-12)
+    if f_ref is None:
+        compiled_xp = jax.jit(lambda: JAXXP.evaluate(
+            f, **params, prec_version=223, convention=1, final_spin_mod=3,
+        ))()
+        compiled_xas = jax.jit(lambda: JAXXAS.evaluate(
+            f=f, mass1=40., mass2=20., chi1=.4, chi2=-.2,
+            distance=100., inclination=.7, phi_c=.3, t_c=0., f_ref=None,
+        ))()
+        for actual, target in zip(compiled_xp, compiled_xas):
+            assert _relative_l2(actual, target) < 1e-12
+
+    _, _, state = one_spin_msa_v223_waveform(
+        f, 40., 20., jnp.array([0., 0., .4]), jnp.array([0., 0., -.2]),
+        distance=100., inclination=.7, phic=.3, f_ref=f_ref,
+        convention=1, return_state=True,
+    )
+    assert np.ptp(np.asarray(state["alpha"] + state["gamma"])) < 1e-11
+    np.testing.assert_equal(np.asarray(state["endpoint_weight"]), 1.0)
+
+
+def test_near_aligned_xp_converges_to_xas_with_jit():
+    f = jnp.linspace(25., 300., 24)
+    params = dict(mass1=40., mass2=20., spin1z=.4, spin2z=-.2,
+                  distance=100., inclination=.7, phic=.3, tc=0.,
+                  f_ref=None, prec_version=223, convention=1,
+                  final_spin_mod=3)
+    target = JAXXAS.evaluate(
+        f=f, mass1=40., mass2=20., chi1=.4, chi2=-.2,
+        distance=100., inclination=.7, phi_c=.3, t_c=0., f_ref=None,
+    )
+    evaluate = jax.jit(lambda spinx: JAXXP.evaluate(f, **dict(params, spin1x=spinx)))
+    tiny = evaluate(jnp.asarray(1e-8))
+    exact = evaluate(jnp.asarray(0.))
+    for near, aligned, expected in zip(tiny, exact, target):
+        assert _relative_l2(aligned, expected) < 1e-10
+        assert _relative_l2(near, expected) < 1e-7
 
 
 @pytest.mark.parametrize("case", CASES)

@@ -21,6 +21,8 @@ from .precession_msa_physical_beta import one_spin_aligned_beta
 from .precession_msa_v223_endpoint import _opening_l_3pn, _secular_coefficients
 from .precession_msa_v223_generic import _flux
 
+V223_AUX_ROOT_SQ_SPLIT = 1.0e-9
+
 
 def one_spin_msa_v223_angles(frequency, mass1, mass2, spin1, spin2, f_ref):
     """Return zero-nutation intrinsic angles, physical beta and MSA remnant.
@@ -74,7 +76,7 @@ def one_spin_msa_v223_angles(frequency, mass1, mass2, spin1, spin2, f_ref):
     # secular/remnant continuation uses separated auxiliary roots.  Their
     # 1e-9 separation is never interpreted as a physical spin amplitude.
     sm = spin_sq
-    sp = sm + 1.0e-9
+    sp = sm + V223_AUX_ROOT_SQ_SPLIT
     sav = 0.5 * (sm + sp)
     c1 = 0.5 * v0 * (j0sq - l0**2 - sav)
     flux = _flux(eta, q, s1, s2)
