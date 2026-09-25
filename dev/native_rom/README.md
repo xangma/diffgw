@@ -2502,6 +2502,16 @@ stencil node states were not saved, so this applies an additive correction
 from nearby bounded-dense states; it is neither a new NQC prescription nor
 release validation.
 
+A separate [clean-room circular-frequency check](evidence/2026-09-25/published_circular_frequency_plan.json)
+derives the zero-radial angular Hamiltonian derivative and compares it with
+the current native Torch and JAX autodiff paths. At four fixed development
+states, the [result](evidence/2026-09-25/published_circular_frequency.json)
+agrees within `2.1e-17` in frequency and tested gradients; the pre-NQC
+`(2,2)` amplitude and radius gradient agree within `8.4e-17`. A centered
+finite difference instead incurs up to `7.4e-9` frequency error at step
+`1e-8`. These states are neither evolved trajectories nor independent
+historical-model checks, so this does not resolve the NQC or release gates.
+
 The [prospective native ROM-input pilot](evidence/2026-09-25/rom_input_stability.json)
 uses a [frozen two-row plan](evidence/2026-09-25/rom_input_stability_plan.json),
 three ODE tolerances, three nested TD sampling rates, and a common positive

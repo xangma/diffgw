@@ -1,0 +1,21 @@
+{
+  "schema": "diffgw.seobnrv4.published-circular-frequency-plan.v1",
+  "scope": "Development-only clean-room diagnostic of the circular-frequency factor in the published pre-NQC (2,2) amplitude. No production, catalog, historical-fidelity, or release claim.",
+  "sources": [
+    "Bohé et al., arXiv:1611.03703v3, Eqs. (1)-(3), (9)",
+    "Barausse and Buonanno, arXiv:0912.3517, equatorial Eqs. (161)-(164)",
+    "Barausse and Buonanno, arXiv:1107.2904, Eqs. (50)-(52); Taracchini et al., arXiv:1311.2544, aligned-spin calibration",
+    "Pan et al., arXiv:1006.0431v2, Eqs. (29a), (42a)",
+    "Native primary-equation Hamiltonians: src/{torchwave,jaxwave}/approximants/eob/seobnrv4_hamiltonian.py"
+  ],
+  "method": "At fixed radius and angular momentum set p_r*=0, evaluate the Hamiltonian's metric and spin-map scalars, and derive d(H_eff/mu)/d(p_phi/mu) analytically by the chain rule. Divide by H_real/M. Compare with Torch and JAX native autodiff paths. Use centered differences of the native effective Hamiltonian only as a step-size diagnostic, not as the proposed evaluator.",
+  "frozen_native_states": [
+    {"name": "equal_mass", "nu": 0.25, "chi1": 0.0, "chi2": 0.0, "r": 9.0, "phi": 0.0, "pr_star": -0.03, "pphi": 3.6},
+    {"name": "mixed_spin", "nu": 0.16, "chi1": 0.7, "chi2": -0.3, "r": 9.0, "phi": 0.0, "pr_star": -0.03, "pphi": 3.6},
+    {"name": "small_nu_mixed_spin", "nu": 0.02, "chi1": -0.8, "chi2": 0.5, "r": 12.0, "phi": 0.0, "pr_star": -0.02, "pphi": 4.1},
+    {"name": "strong_aligned", "nu": 0.16, "chi1": 0.85, "chi2": 0.85, "r": 7.0, "phi": 0.0, "pr_star": -0.04, "pphi": 3.1}
+  ],
+  "centered_difference_steps": [0.01, 0.001, 0.0001, 0.00001, 0.000001, 0.0000001, 0.00000001],
+  "gradient_checks": ["analytic circular frequency and current Torch/JAX circular frequency at fixed states", "autodiff radius and angular-momentum gradients of analytic circular frequency against JAX's current path", "published (2,2) amplitude and its radius derivative when fed either circular frequency"],
+  "limitations": "States are fixed diagnostic inputs, not circular solutions or evolved trajectories. Shared native potential and spin-map expressions are not an independent paper transcription. This does not test historical implementation conventions or release suitability."
+}

@@ -1,0 +1,357 @@
+{
+  "schema": "diffgw.seobnrv4.published-circular-frequency-diagnostic.v1",
+  "plan": "dev/native_rom/evidence/2026-09-25/published_circular_frequency_plan.json",
+  "plan_sha256": "754601e276b6b295eb28d12888446b6040771cbe469a3d72353ca80e98fc9ef8",
+  "release_qualified": false,
+  "interpretation": "Analytic angular partial of the published native Hamiltonian at p_r*=0; fixed-state numerical and gradient comparison only.",
+  "rows": [
+    {
+      "name": "equal_mass",
+      "state": {
+        "name": "equal_mass",
+        "nu": 0.25,
+        "chi1": 0.0,
+        "chi2": 0.0,
+        "r": 9.0,
+        "phi": 0.0,
+        "pr_star": -0.03,
+        "pphi": 3.6
+      },
+      "omega_analytic": 0.03688210322366959,
+      "omega_torch_current": 0.03688210322366958,
+      "omega_jax_current": 0.03688210322366958,
+      "omega_torch_absolute_error": 6.938893903907228e-18,
+      "omega_jax_absolute_error": 6.938893903907228e-18,
+      "analytic_gradient_r_pphi": [
+        -0.007060441090961535,
+        0.008487576573706839
+      ],
+      "jax_current_gradient_r_pphi": [
+        -0.0070604410909615445,
+        0.00848757657370684
+      ],
+      "gradient_absolute_errors": [
+        9.540979117872439e-18,
+        1.734723475976807e-18
+      ],
+      "amplitude_analytic": 0.16458453466809997,
+      "amplitude_torch_current": 0.16458453466809997,
+      "amplitude_absolute_error": 0.0,
+      "amplitude_radius_gradient_analytic": -0.022178072312536837,
+      "amplitude_radius_gradient_torch_current": -0.022178072312536865,
+      "amplitude_radius_gradient_absolute_error": 2.7755575615628914e-17,
+      "centered_difference_ladder": [
+        {
+          "step": 0.01,
+          "omega": 0.03688208630428585,
+          "omega_absolute_error": 1.6919383741265115e-08,
+          "radius_gradient": -0.007060435129379816,
+          "radius_gradient_absolute_error": 5.9615817187344544e-09
+        },
+        {
+          "step": 0.001,
+          "omega": 0.036882103054423646,
+          "omega_absolute_error": 1.6924594364864376e-10,
+          "radius_gradient": -0.0070604410313519494,
+          "radius_gradient_absolute_error": 5.96095854968337e-11
+        },
+        {
+          "step": 0.0001,
+          "omega": 0.03688210322248716,
+          "omega_absolute_error": 1.1824291545892152e-12,
+          "radius_gradient": -0.00706044109037407,
+          "radius_gradient_absolute_error": 5.874649725012837e-13
+        },
+        {
+          "step": 1e-05,
+          "omega": 0.03688210322923219,
+          "omega_absolute_error": 5.562598992536749e-12,
+          "radius_gradient": -0.007060441090743552,
+          "radius_gradient_absolute_error": 2.1798274990603161e-13
+        },
+        {
+          "step": 1e-06,
+          "omega": 0.036882103352890966,
+          "omega_absolute_error": 1.292213766546091e-10,
+          "radius_gradient": -0.007060441071189416,
+          "radius_gradient_absolute_error": 1.977211883802399e-11
+        },
+        {
+          "step": 1e-07,
+          "omega": 0.03688210481431287,
+          "omega_absolute_error": 1.5906432837553552e-09,
+          "radius_gradient": -0.007060441217618063,
+          "radius_gradient_absolute_error": 1.2665652814741746e-10
+        },
+        {
+          "step": 1e-08,
+          "omega": 0.03688209582094728,
+          "omega_absolute_error": 7.402722310145826e-09,
+          "radius_gradient": -0.007060440257191658,
+          "radius_gradient_absolute_error": 8.337698769247948e-10
+        }
+      ]
+    },
+    {
+      "name": "mixed_spin",
+      "state": {
+        "name": "mixed_spin",
+        "nu": 0.16,
+        "chi1": 0.7,
+        "chi2": -0.3,
+        "r": 9.0,
+        "phi": 0.0,
+        "pr_star": -0.03,
+        "pphi": 3.6
+      },
+      "omega_analytic": 0.03785664271202901,
+      "omega_torch_current": 0.03785664271202901,
+      "omega_jax_current": 0.03785664271202901,
+      "omega_torch_absolute_error": 0.0,
+      "omega_jax_absolute_error": 0.0,
+      "analytic_gradient_r_pphi": [
+        -0.007379300047480692,
+        0.0085180394812249
+      ],
+      "jax_current_gradient_r_pphi": [
+        -0.007379300047480692,
+        0.008518039481224902
+      ],
+      "gradient_absolute_errors": [
+        0.0,
+        1.734723475976807e-18
+      ],
+      "amplitude_analytic": 0.1037885082828597,
+      "amplitude_torch_current": 0.1037885082828597,
+      "amplitude_absolute_error": 0.0,
+      "amplitude_radius_gradient_analytic": -0.013716946392851448,
+      "amplitude_radius_gradient_torch_current": -0.013716946392851436,
+      "amplitude_radius_gradient_absolute_error": 1.214306433183765e-17,
+      "centered_difference_ladder": [
+        {
+          "step": 0.01,
+          "omega": 0.03785662588016817,
+          "omega_absolute_error": 1.683186083567545e-08,
+          "radius_gradient": -0.007379294113459722,
+          "radius_gradient_absolute_error": 5.9340209699124125e-09
+        },
+        {
+          "step": 0.001,
+          "omega": 0.037856642543794936,
+          "omega_absolute_error": 1.6823407250621258e-10,
+          "radius_gradient": -0.007379299988162558,
+          "radius_gradient_absolute_error": 5.931813460563484e-11
+        },
+        {
+          "step": 0.0001,
+          "omega": 0.037856642711040236,
+          "omega_absolute_error": 9.887715646250683e-13,
+          "radius_gradient": -0.007379300046878257,
+          "radius_gradient_absolute_error": 6.024356360989636e-13
+        },
+        {
+          "step": 1e-05,
+          "omega": 0.03785664270656695,
+          "omega_absolute_error": 5.462061358763037e-12,
+          "radius_gradient": -0.007379300049024096,
+          "radius_gradient_absolute_error": 1.543403425896539e-12
+        },
+        {
+          "step": 1e-06,
+          "omega": 0.03785664264505914,
+          "omega_absolute_error": 6.696986715182263e-11,
+          "radius_gradient": -0.007379300051070459,
+          "radius_gradient_absolute_error": 3.5897665048856275e-12
+        },
+        {
+          "step": 1e-07,
+          "omega": 0.037856643371969534,
+          "omega_absolute_error": 6.599405258378432e-10,
+          "radius_gradient": -0.007379299713647924,
+          "radius_gradient_absolute_error": 3.3383276785287075e-10
+        },
+        {
+          "step": 1e-08,
+          "omega": 0.03785663778035112,
+          "omega_absolute_error": 4.931677885511299e-09,
+          "radius_gradient": -0.007379299378953874,
+          "radius_gradient_absolute_error": 6.685268181053083e-10
+        }
+      ]
+    },
+    {
+      "name": "small_nu_mixed_spin",
+      "state": {
+        "name": "small_nu_mixed_spin",
+        "nu": 0.02,
+        "chi1": -0.8,
+        "chi2": 0.5,
+        "r": 12.0,
+        "phi": 0.0,
+        "pr_star": -0.02,
+        "pphi": 4.1
+      },
+      "omega_analytic": 0.02361884458937796,
+      "omega_torch_current": 0.023618844589377942,
+      "omega_jax_current": 0.02361884458937795,
+      "omega_torch_absolute_error": 1.734723475976807e-17,
+      "omega_jax_absolute_error": 1.0408340855860843e-17,
+      "analytic_gradient_r_pphi": [
+        -0.003428341498024176,
+        0.00534422296832877
+      ],
+      "jax_current_gradient_r_pphi": [
+        -0.003428341498024176,
+        0.005344222968328769
+      ],
+      "gradient_absolute_errors": [
+        0.0,
+        8.673617379884035e-19
+      ],
+      "amplitude_analytic": 0.009943435582111457,
+      "amplitude_torch_current": 0.009943435582111464,
+      "amplitude_absolute_error": 6.938893903907228e-18,
+      "amplitude_radius_gradient_analytic": -0.0010259817556096814,
+      "amplitude_radius_gradient_torch_current": -0.0010259817556096736,
+      "amplitude_radius_gradient_absolute_error": 7.806255641895632e-18,
+      "centered_difference_ladder": [
+        {
+          "step": 0.01,
+          "omega": 0.02361883779540383,
+          "omega_absolute_error": 6.7939741298095324e-09,
+          "radius_gradient": -0.0034283395953038087,
+          "radius_gradient_absolute_error": 1.902720367114724e-09
+        },
+        {
+          "step": 0.001,
+          "omega": 0.023618844521495534,
+          "omega_absolute_error": 6.788242537525413e-11,
+          "radius_gradient": -0.0034283414790210465,
+          "radius_gradient_absolute_error": 1.900312936523041e-11
+        },
+        {
+          "step": 0.0001,
+          "omega": 0.02361884458871662,
+          "omega_absolute_error": 6.61339039087494e-13,
+          "radius_gradient": -0.003428341498015186,
+          "radius_gradient_absolute_error": 8.989770733380809e-15
+        },
+        {
+          "step": 1e-05,
+          "omega": 0.023618844585938888,
+          "omega_absolute_error": 3.4390719438892603e-12,
+          "radius_gradient": -0.0034283415005802453,
+          "radius_gradient_absolute_error": 2.556069505360581e-12
+        },
+        {
+          "step": 1e-06,
+          "omega": 0.023618844497051504,
+          "omega_absolute_error": 9.232645550860674e-11,
+          "radius_gradient": -0.003428341512062616,
+          "radius_gradient_absolute_error": 1.40384401152438e-11
+        },
+        {
+          "step": 1e-07,
+          "omega": 0.0236188441081692,
+          "omega_absolute_error": 4.812087603389692e-10,
+          "radius_gradient": -0.0034283415370737202,
+          "radius_gradient_absolute_error": 3.9049544413999326e-11
+        },
+        {
+          "step": 1e-08,
+          "omega": 0.02361884466371535,
+          "omega_absolute_error": 7.433739040996201e-11,
+          "radius_gradient": -0.00342834135517478,
+          "radius_gradient_absolute_error": 1.4284939594058632e-10
+        }
+      ]
+    },
+    {
+      "name": "strong_aligned",
+      "state": {
+        "name": "strong_aligned",
+        "nu": 0.16,
+        "chi1": 0.85,
+        "chi2": 0.85,
+        "r": 7.0,
+        "phi": 0.0,
+        "pr_star": -0.04,
+        "pphi": 3.1
+      },
+      "omega_analytic": 0.053133056978103,
+      "omega_torch_current": 0.05313305697810302,
+      "omega_jax_current": 0.05313305697810302,
+      "omega_torch_absolute_error": 2.0816681711721685e-17,
+      "omega_jax_absolute_error": 2.0816681711721685e-17,
+      "analytic_gradient_r_pphi": [
+        -0.013002962544646363,
+        0.012645750883833264
+      ],
+      "jax_current_gradient_r_pphi": [
+        -0.013002962544646383,
+        0.012645750883833268
+      ],
+      "gradient_absolute_errors": [
+        2.0816681711721685e-17,
+        3.469446951953614e-18
+      ],
+      "amplitude_analytic": 0.1268703182201875,
+      "amplitude_torch_current": 0.12687031822018743,
+      "amplitude_absolute_error": 5.551115123125783e-17,
+      "amplitude_radius_gradient_analytic": -0.021297337050341147,
+      "amplitude_radius_gradient_torch_current": -0.02129733705034123,
+      "amplitude_radius_gradient_absolute_error": 8.326672684688674e-17,
+      "centered_difference_ladder": [
+        {
+          "step": 0.01,
+          "omega": 0.05313302165298025,
+          "omega_absolute_error": 3.532512275056243e-08,
+          "radius_gradient": -0.013002947472469772,
+          "radius_gradient_absolute_error": 1.5072176590136266e-08
+        },
+        {
+          "step": 0.001,
+          "omega": 0.05313305662486482,
+          "omega_absolute_error": 3.532381817605845e-10,
+          "radius_gradient": -0.013002962393924733,
+          "radius_gradient_absolute_error": 1.5072162962148639e-10
+        },
+        {
+          "step": 0.0001,
+          "omega": 0.05313305697540326,
+          "omega_absolute_error": 2.699736267874897e-12,
+          "radius_gradient": -0.013002962543666285,
+          "radius_gradient_absolute_error": 9.800771305634726e-13
+        },
+        {
+          "step": 1e-05,
+          "omega": 0.0531330569804494,
+          "omega_absolute_error": 2.346400851394037e-12,
+          "radius_gradient": -0.013002962545442642,
+          "radius_gradient_absolute_error": 7.962797088367779e-13
+        },
+        {
+          "step": 1e-06,
+          "omega": 0.05313305698044941,
+          "omega_absolute_error": 2.346407790287941e-12,
+          "radius_gradient": -0.013002962559767184,
+          "radius_gradient_absolute_error": 1.5120821261760398e-11
+        },
+        {
+          "step": 1e-07,
+          "omega": 0.053133056307630884,
+          "omega_absolute_error": 6.704721153272253e-10,
+          "radius_gradient": -0.013002962456084788,
+          "radius_gradient_absolute_error": 8.856157474035342e-11
+        },
+        {
+          "step": 1e-08,
+          "omega": 0.05313305070080985,
+          "omega_absolute_error": 6.277293150558361e-09,
+          "radius_gradient": -0.01300296583212912,
+          "radius_gradient_absolute_error": 3.287482758240756e-09
+        }
+      ]
+    }
+  ]
+}
