@@ -2550,6 +2550,19 @@ All five frozen convergence gates fail, and the original historical `0.01`
 gate remains failed. The earlier two-stencil improvement therefore does not
 support a stable derivative or release NQC prescription.
 
+A [frozen continuous-ODE phase-matrix probe](evidence/2026-09-25/source_aligned_ode_chain_phase_matrix.json)
+replaces only the strong aligned-spin NQC phase-basis derivative matrix with
+autograd derivatives along the native source-backed vector field. It holds
+the amplitude fit, phase right-hand side, matching event, and output chart on
+their prior routes. Baseline-to-refined whole-mode L2 drops from `3.36e-3`
+with the natural-cubic matrix to `5.32e-5`, but misses its prospective
+`1e-5` gate and is above the prior local-polynomial result `2.54e-5`.
+The phase matrix moves by only `1.69e-11` in Frobenius norm, yet the phase
+coefficients move by `0.04384`; a fixed-matrix decomposition attributes
+`0.04386` L2 to the unchanged spline-derived right-hand side and only
+`1.73e-5` to the matrix change. This Torch-only control motivates a separate
+right-hand-side test, not a release matching prescription.
+
 A separate [clean-room circular-frequency check](evidence/2026-09-25/published_circular_frequency_plan.json)
 derives the zero-radial angular Hamiltonian derivative and compares it with
 the current native Torch and JAX autodiff paths. At four fixed development

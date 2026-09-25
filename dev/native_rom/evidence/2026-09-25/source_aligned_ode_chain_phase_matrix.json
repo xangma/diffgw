@@ -1,0 +1,222 @@
+{
+  "checks": {
+    "drift_at_most_one_tenth_natural": true,
+    "finite_derivatives": true,
+    "phase_linear_residual_at_most": true,
+    "whole_mode_drift_at_most": false
+  },
+  "comparisons": {
+    "candidate_to_natural_drift_ratio": 0.015837284634307693,
+    "candidate_to_prior_polynomial_drift_ratio": 2.0912091894390943,
+    "candidate_torch_baseline_to_refined": {
+      "common_samples": 1169,
+      "complex_relative_l2": 5.3218162238875415e-05,
+      "support_sample_difference": 0,
+      "time_max_abs_M": 0.0
+    },
+    "natural_cubic_torch_baseline_to_refined": {
+      "common_samples": 1169,
+      "complex_relative_l2": 0.0033603085041226687,
+      "support_sample_difference": 0,
+      "time_max_abs_M": 0.0
+    },
+    "phase_coefficient_adjacent_l2": 0.043843850452074416,
+    "phase_matrix_adjacent_frobenius": 1.6936023830059347e-11,
+    "prior_polynomial_torch_baseline_to_refined": {
+      "common_samples": 1169,
+      "complex_relative_l2": 2.5448512041566548e-05,
+      "support_sample_difference": 0,
+      "time_max_abs_M": 0.0
+    }
+  },
+  "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+  "elapsed_s": 78.77992245898349,
+  "host": "RONI2",
+  "levels": {
+    "baseline": {
+      "chain": {
+        "bracket_fraction": 0.47975389911334787,
+        "bracket_index": 8858,
+        "bracket_time_M": [
+          138.40625,
+          138.421875
+        ],
+        "field_at_match": [
+          -0.04962570114984957,
+          0.13959227428188814,
+          -0.0038143627872263453,
+          -0.013339372156549663
+        ],
+        "first": [
+          -0.008097807661946765,
+          -0.00016385545765019847
+        ],
+        "interpolated_state": [
+          3.2829127982594732,
+          28.634263883706936,
+          -0.08137481254395267,
+          2.2903901280547876
+        ],
+        "match_time_local_M": 138.41374615467365,
+        "orbital_frequency_minus_bracket_linear": 3.6573504225145825e-09,
+        "phase_basis": [
+          -0.17756986770848598,
+          -0.001175842824882269
+        ],
+        "second": [
+          -0.00097585900204501,
+          -3.444002923314874e-05
+        ]
+      },
+      "jax_natural_cubic": {
+        "end_M": 584.0,
+        "mode_sha256": "47c9c601eb4377e3b3e9fce645595aeae69aab32271891798ca497202972f025",
+        "samples": 1169,
+        "start_M": 0.0,
+        "time_sha256": "0ac91155dc977bca73e17f8cf1a8295bff77b9e603e39a39a616cc1f185b5a22"
+      },
+      "match_time_M": 484.4137461546736,
+      "phase_coefficients": [
+        35.55264708477082,
+        -797.4453220780211
+      ],
+      "phase_condition": 7.5076477125930445,
+      "phase_linear_residual_linf": 3.469446951953614e-18,
+      "phase_matrix": [
+        [
+          -0.008097807661946765,
+          -0.00016385545765019847
+        ],
+        [
+          -0.00097585900204501,
+          -3.444002923314874e-05
+        ]
+      ],
+      "phase_rhs": [
+        -0.1572327297654424,
+        -0.007230330499998119
+      ],
+      "settings": {
+        "atol": 1e-10,
+        "coarse_output_step_M": 0.5,
+        "max_step_M": 2.0,
+        "rtol": 1e-09
+      },
+      "torch": {
+        "end_M": 584.0,
+        "mode_sha256": "a3d67336fc036a6c95f01b989ab33da2dd57b49898962e7dc77a9c8d1e8f2624",
+        "samples": 1169,
+        "start_M": 0.0,
+        "time_sha256": "0ac91155dc977bca73e17f8cf1a8295bff77b9e603e39a39a616cc1f185b5a22"
+      },
+      "torch_public_complex_relative_l2": 0.039257482871446016,
+      "torch_to_jax_natural_cubic": {
+        "common_samples": 1169,
+        "complex_relative_l2": 0.002851401856353425,
+        "support_sample_difference": 0,
+        "time_max_abs_M": 0.0
+      }
+    },
+    "refined": {
+      "chain": {
+        "bracket_fraction": 0.47975389911334787,
+        "bracket_index": 8858,
+        "bracket_time_M": [
+          138.40625,
+          138.421875
+        ],
+        "field_at_match": [
+          -0.04962570105328271,
+          0.13959227414072783,
+          -0.0038143627930578117,
+          -0.013339372117941301
+        ],
+        "first": [
+          -0.008097807675344196,
+          -0.00016385545704441267
+        ],
+        "interpolated_state": [
+          3.282912800800963,
+          28.634263885102673,
+          -0.08137481232316253,
+          2.2903901277298746
+        ],
+        "match_time_local_M": 138.41374615467365,
+        "orbital_frequency_minus_bracket_linear": 3.6566742411814346e-09,
+        "phase_basis": [
+          -0.17756986726879226,
+          -0.0011758428155899696
+        ],
+        "second": [
+          -0.0009758589917063513,
+          -3.444002894520474e-05
+        ]
+      },
+      "jax_natural_cubic": {
+        "end_M": 584.0,
+        "mode_sha256": "c13ac90eedb99055b6aca7801b738a985b36471a4e06eff733e9d325d3c83005",
+        "samples": 1169,
+        "start_M": 0.0,
+        "time_sha256": "0ac91155dc977bca73e17f8cf1a8295bff77b9e603e39a39a616cc1f185b5a22"
+      },
+      "match_time_M": 484.4137461546736,
+      "phase_coefficients": [
+        35.553542908124456,
+        -797.4891567757272
+      ],
+      "phase_condition": 7.507647618685375,
+      "phase_linear_residual_linf": 2.7755575615628914e-17,
+      "phase_matrix": [
+        [
+          -0.008097807675344196,
+          -0.00016385545704441267
+        ],
+        [
+          -0.0009758589917063513,
+          -3.444002894520474e-05
+        ]
+      ],
+      "phase_rhs": [
+        -0.1572328023756393,
+        -0.0072296948910678515
+      ],
+      "settings": {
+        "atol": 1e-11,
+        "coarse_output_step_M": 0.5,
+        "max_step_M": 2.0,
+        "rtol": 1e-10
+      },
+      "torch": {
+        "end_M": 584.0,
+        "mode_sha256": "5a478d81662c7299e0988eb0f1015853902c4223c122eef7533f9755e985c276",
+        "samples": 1169,
+        "start_M": 0.0,
+        "time_sha256": "0ac91155dc977bca73e17f8cf1a8295bff77b9e603e39a39a616cc1f185b5a22"
+      },
+      "torch_public_complex_relative_l2": 0.03919768646772738,
+      "torch_to_jax_natural_cubic": {
+        "common_samples": 1169,
+        "complex_relative_l2": 0.00045528456503397845,
+        "support_sample_difference": 0,
+        "time_max_abs_M": 0.0
+      }
+    }
+  },
+  "pid": 52801,
+  "plan_sha256": "980897aab6a97d396f7960143146ab3e224be0841d36b3c13f3ec472034fdcef",
+  "prospective_gate_passed": false,
+  "release_qualified": false,
+  "schema": "diffgw.seobnrv4.source-aligned-ode-chain-phase-matrix.v1",
+  "scope": "Torch-only dev counterfactual; JAX and public wheel retain their baseline NQC route",
+  "script_sha256": "654ce386c98094f17c8b14bfdf2fdb9db2e70d112c1c4524943cd3745d41ad1a",
+  "source_flux_options": {
+    "mode_21_higher_spin": "rho_hybrid",
+    "mode_31_higher_spin": "lal_v4_rho",
+    "mode_32_spin_square": "lal_v4_zero",
+    "mode_33_higher_spin": "lal_v4_rho",
+    "mode_43_higher_spin": "lal_v4_rho",
+    "retain_pan_cubic_spin": true,
+    "spin_truncation": "tabulated"
+  },
+  "status": "diagnostic_complete"
+}
