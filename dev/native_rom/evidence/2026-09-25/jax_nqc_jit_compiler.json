@@ -1,0 +1,86 @@
+{
+  "baseline_amplitude_coefficients_max_abs": 2.962984808618785e-07,
+  "baseline_sha256": "ab676a0be66b3d171a43ed0500dbcfcf634c5bc55f97e5c1e6f3ead8d257d344",
+  "case": "high_start_mixed_spin",
+  "checks": {
+    "amplitude_coefficients": false,
+    "base_mode": true,
+    "phase_coefficients": true,
+    "stage_checks": true
+  },
+  "cwd": "/home/xangma/repos/diffgw-worktrees/native-seobnr-rom-jax",
+  "diagnostic_checks_passed": false,
+  "differences": {
+    "amplitude_coefficients": {
+      "max_abs": 2.962984808618785e-07,
+      "relative_l2": 2.899556945669947e-09
+    },
+    "amplitude_matrix": {
+      "max_abs": 5.738040251279664e-13,
+      "relative_l2": 9.301185379804384e-12
+    },
+    "amplitude_rhs": {
+      "max_abs": 3.8920897754701755e-12,
+      "relative_l2": 9.779674878434608e-11
+    },
+    "base_mode": {
+      "max_abs": 2.8711932247682534e-15,
+      "relative_l2": 1.074877878142976e-15
+    },
+    "combined_spline_input": {
+      "max_abs": 1.1657341758564144e-15,
+      "relative_l2": 5.671276089460469e-16
+    },
+    "matching_first": {
+      "max_abs": 2.522548142591674e-14,
+      "relative_l2": 7.627423273252169e-13
+    },
+    "matching_second": {
+      "max_abs": 3.8920897754701755e-12,
+      "relative_l2": 5.468410293097172e-10
+    },
+    "matching_value": {
+      "max_abs": 1.6653345369377348e-16,
+      "relative_l2": 2.936570585234944e-16
+    },
+    "orbital_frequency": {
+      "max_abs": 9.71445146547012e-17,
+      "relative_l2": 1.8976898533559623e-17
+    },
+    "phase_coefficients": {
+      "max_abs": 0.0,
+      "relative_l2": 0.0
+    },
+    "phase_derivatives": {
+      "max_abs": 0.0,
+      "relative_l2": 0.0
+    },
+    "phase_matrix": {
+      "max_abs": 0.0,
+      "relative_l2": 0.0
+    },
+    "phase_rhs": {
+      "max_abs": 0.0,
+      "relative_l2": 0.0
+    },
+    "state": {
+      "max_abs": 1.7763568394002505e-15,
+      "relative_l2": 8.806594634621401e-18
+    },
+    "unwrapped_phase": {
+      "max_abs": 7.105427357601002e-15,
+      "relative_l2": 7.625533280516592e-17
+    }
+  },
+  "elapsed_s": 58.30305026844144,
+  "host": "len",
+  "pid": 3542911,
+  "plan_sha256": "dd54efd68da297bd3225ff77c88184ff4dd91ac18d2f13195eb278c553803da7",
+  "release_qualified": false,
+  "schema": "diffgw.seobnrv4.jax-nqc-jit-compiler.v1",
+  "script_sha256": "3d53ac0f82c13d1f199dbca351f7c765265c7d0316f7982fc753bab1513aef63",
+  "stage_result_sha256": "893bec1ad028ed32031807233d93142306fef2512d05a967548a67e8fe9402f1",
+  "stage_script_sha256": "b2c01121ea1799aace03abf960470c8f2505d996fc981505693b5c0b46268caa",
+  "status": "diagnostic_complete",
+  "xla_flags": "--xla_cpu_enable_fast_math=false"
+}

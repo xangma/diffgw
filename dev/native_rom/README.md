@@ -1850,6 +1850,28 @@ the strict JIT-gate failure to compiled amplitude-spline/matching arithmetic,
 without establishing that either evaluation is more physically accurate or
 changing the failed whole-waveform gate.
 
+A [fixed-input local-polynomial JIT control](evidence/2026-09-25/jax_nqc_local_fit_jit.json)
+uses a [predeclared degree-four, ±2 M plan](evidence/2026-09-25/jax_nqc_local_fit_jit_plan.json)
+on that same mixed-spin fine trajectory. Eager and compiled local fits differ
+by at most `3.87e-9` in amplitude coefficients and `4.20e-10` in phase
+coefficients; their NQC-corrected modes differ by `5.20e-12` relative L2.
+All frozen JIT and solve-residual checks pass. On the identical physical
+inputs, however, the local coefficients differ from the historical
+full-series natural-cubic fit by `0.176` in amplitude and `0.114` in phase.
+This is a stability diagnostic, not a source-faithful or physically validated
+replacement for the release waveform. It does not change the historical
+full-spline whole-waveform JIT failure.
+
+A separate [CPU compiler control](evidence/2026-09-25/jax_nqc_jit_compiler.json)
+under a [frozen plan](evidence/2026-09-25/jax_nqc_jit_compiler_plan.json)
+disables XLA CPU fast math while preserving the historical spline. Its
+[full stage output](evidence/2026-09-25/jax_nqc_jit_compiler_stages.json)
+reproduces the original `2.96e-7` eager/JIT amplitude-coefficient difference
+and fails the predeclared `1e-8` control gate. Merely changing this compiler
+setting does not resolve the NQC sensitivity on this case. Source fidelity,
+independent physical comparisons, broader numerical convergence, and native
+ROM training remain open.
+
 The [frozen Torch/JAX spliced-waveform diagnostic](evidence/2026-09-25/jax_spliced_waveform_plan.json)
 extends those four selected physical cases through the calibrated coarse
 prefix and complete numerical attachment. The [pilot](evidence/2026-09-25/jax_spliced_waveform_high_start_mixed_spin.json)

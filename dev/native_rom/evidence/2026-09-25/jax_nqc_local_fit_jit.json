@@ -1,0 +1,65 @@
+{
+  "case": "high_start_mixed_spin",
+  "checks": {
+    "amplitude_coefficients": true,
+    "corrected_mode": true,
+    "matching_residual": true,
+    "phase_coefficients": true
+  },
+  "cwd": "/home/xangma/repos/diffgw-worktrees/native-seobnr-rom-jax",
+  "diagnostic_checks_passed": true,
+  "differences": {
+    "amplitude_coefficients": {
+      "max_abs": 3.872202114507672e-09,
+      "relative_l2": 3.778176606955481e-11
+    },
+    "amplitude_matrix": {
+      "max_abs": 3.8272336688738307e-16,
+      "relative_l2": 6.52435148617565e-15
+    },
+    "amplitude_rhs": {
+      "max_abs": 2.914335439641036e-15,
+      "relative_l2": 7.347051778468791e-14
+    },
+    "corrected_mode": {
+      "max_abs": 1.0194015124103563e-11,
+      "relative_l2": 5.2047882935043464e-12
+    },
+    "phase_coefficients": {
+      "max_abs": 4.1956127461162396e-10,
+      "relative_l2": 1.172108322906818e-11
+    },
+    "phase_matrix": {
+      "max_abs": 1.902124291408569e-15,
+      "relative_l2": 6.094976163167887e-14
+    },
+    "phase_rhs": {
+      "max_abs": 1.3118499342379408e-13,
+      "relative_l2": 1.6404708271432832e-12
+    }
+  },
+  "elapsed_s": 29.6848655231297,
+  "fine_samples": 9637,
+  "host": "len",
+  "local_vs_full_spline": {
+    "amplitude_coefficients_max_abs": 0.17561743605969582,
+    "phase_coefficients_max_abs": 0.11394615825248877
+  },
+  "match_time_M": 144.6564486506888,
+  "pid": 3483651,
+  "plan_sha256": "3eef1a27f5caaef269c8ebd0219722c5334b83c5498de921f51013e719a596dd",
+  "release_qualified": false,
+  "residuals": {
+    "amplitude": {
+      "eager": 6.1880565538357474e-15,
+      "jit": 6.867238138000315e-15
+    },
+    "phase": {
+      "eager": 7.592309534159322e-17,
+      "jit": 3.531252709047078e-16
+    }
+  },
+  "schema": "diffgw.seobnrv4.jax-nqc-local-fit-jit.v1",
+  "script_sha256": "b53f21f0a7f9279aa0caef35aabee0acf4b30fa949805d663d154c69accef61f",
+  "status": "diagnostic_complete"
+}

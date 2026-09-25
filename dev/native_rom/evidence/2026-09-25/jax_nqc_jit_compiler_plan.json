@@ -1,0 +1,14 @@
+{
+  "schema": "diffgw.seobnrv4.jax-nqc-jit-compiler-plan.v1",
+  "release_qualified": false,
+  "case": "high_start_mixed_spin",
+  "xla_flags": "--xla_cpu_enable_fast_math=false",
+  "baseline_result": "dev/native_rom/evidence/2026-09-25/jax_nqc_jit_stages.json",
+  "baseline_sha256": "ab676a0be66b3d171a43ed0500dbcfcf634c5bc55f97e5c1e6f3ead8d257d344",
+  "checks": {
+    "max_eager_jit_amplitude_coefficients_absolute_error": 1e-8,
+    "max_eager_jit_phase_coefficients_absolute_error": 1e-8,
+    "max_eager_jit_base_mode_relative_l2": 1e-12
+  },
+  "interpretation": "Test whether disabling CPU fast-math removes the JIT mismatch while retaining the historical full-series spline prescription. A compiler-specific pass would not establish source fidelity, physical accuracy, or release qualification."
+}

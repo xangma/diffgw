@@ -1,0 +1,20 @@
+{
+  "schema": "diffgw.seobnrv4.jax-nqc-local-fit-jit-plan.v1",
+  "release_qualified": false,
+  "case": "high_start_mixed_spin",
+  "output_step_M": 0.5,
+  "fine_refinement_factor": 32,
+  "adaptive_atol": 1e-10,
+  "adaptive_rtol": 1e-9,
+  "local_polynomial": {
+    "degree": 4,
+    "half_width_M": 2.0
+  },
+  "checks": {
+    "max_eager_jit_amplitude_coefficients_absolute_error": 1e-8,
+    "max_eager_jit_phase_coefficients_absolute_error": 1e-8,
+    "max_eager_jit_corrected_mode_relative_l2": 1e-10,
+    "max_matching_residual_relative_l2": 1e-8
+  },
+  "interpretation": "Compare eager and compiled local-polynomial NQC solves on identical physical fine inputs. This is a numerical/JIT control only; the local fit has not passed historical-source or independent physical validation and cannot qualify a release model."
+}
