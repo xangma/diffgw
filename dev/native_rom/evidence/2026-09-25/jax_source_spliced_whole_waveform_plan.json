@@ -1,0 +1,41 @@
+{
+  "schema": "diffgw.seobnrv4.jax-source-spliced-whole-waveform-plan.v1",
+  "purpose": "Replay the full Torch/JAX waveform after switching the paper-derived diagnostic to the earlier pinned-source Hamiltonian and 35-mode flux choices. Attribute the shared public residual without fitting or release promotion.",
+  "pilot_case": "q4_nonspinning",
+  "prospective_cases": ["high_start_mixed_spin", "strong_aligned", "strong_antialigned"],
+  "source_choice_source": "dev/native_rom/evidence/2026-09-24/source_candidate_new_rows.json",
+  "source_choices": {
+    "hamiltonian_calibration": "lal_v4_rounded",
+    "hamiltonian_log_derivative": "lal_v4",
+    "spin_truncation": "tabulated",
+    "retain_pan_cubic_spin": true,
+    "mode_21_higher_spin": "rho_hybrid",
+    "mode_31_higher_spin": "lal_v4_rho",
+    "mode_32_spin_square": "lal_v4_zero",
+    "mode_33_higher_spin": "lal_v4_rho",
+    "mode_43_higher_spin": "lal_v4_rho"
+  },
+  "numerical_settings": {
+    "coarse_output_step_M": 0.5,
+    "fine_output_step_M": 0.015625,
+    "ringdown_duration_after_match_M": 100,
+    "atol": 1e-10,
+    "rtol": 1e-9,
+    "max_step_M": 2,
+    "final_spin_fit_order": [3, 4]
+  },
+  "public_binary": {
+    "lal_version": "7.7.1",
+    "lalsimulation_version": "6.2.1",
+    "approximant": "SEOBNRv4",
+    "identity_source": "dev/native_rom/evidence/2026-09-24/near_extreme_public_polar_plan.json"
+  },
+  "diagnostic_checks": {
+    "restart_index_equal": true,
+    "whole_mode_relative_l2_at_most": 1e-5,
+    "coarse_prefix_relative_l2_at_most": 1e-5,
+    "post_restart_relative_l2_at_most": 1e-5,
+    "full_time_max_abs_at_most_M": 1e-8
+  },
+  "interpretation": "Torch/JAX parity is predeclared. Public comparisons remain descriptive. This variant does not yet replay the earlier source-backed candidate's local NQC derivative, output-resampling, or historical QNM choices, and cannot by itself qualify the physical generator."
+}
