@@ -38,6 +38,7 @@ from dev.native_rom.diagnose_jax_spliced_whole_waveform import (
 ROOT = Path(__file__).resolve().parents[2]
 EVIDENCE = ROOT / "dev/native_rom/evidence/2026-09-25"
 PLAN = EVIDENCE / "jax_source_fixed_trajectory_sampling_plan.json"
+REFINEMENT_PLAN = EVIDENCE / "jax_source_fixed_trajectory_refinement_plan.json"
 
 
 def _tensor(value):
@@ -55,29 +56,49 @@ def _attach(time_grid, state, orbital_frequency, base_mode, base_frequency,
 def main():
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--case", choices=("pilot", "prospective"), required=True)
+    parser.add_argument("--sampling", choices=("128_vs_256", "256_vs_512"),
+                        default="128_vs_256")
     args = parser.parse_args()
-    plan = json.loads(PLAN.read_text())
+    refinement = args.sampling == "256_vs_512"
+    plan_path = REFINEMENT_PLAN if refinement else PLAN
+    plan = json.loads(plan_path.read_text())
     case = plan[f"{args.case}_case"]
-    stationary_path = EVIDENCE / f"jax_source_stationary_peak_control_{case}.json"
-    if (plan["schema"] != "diffgw.seobnrv4.jax-source-fixed-trajectory-sampling-plan.v1"
+    prior_path = EVIDENCE / (
+        f"jax_source_fixed_trajectory_sampling_{case}.json" if refinement else
+        f"jax_source_stationary_peak_control_{case}.json")
+    prior_key = ("prior_fixed_trajectory_sha256" if refinement
+                 else "stationary_control_sha256")
+    expected_schema = (
+        "diffgw.seobnrv4.jax-source-fixed-trajectory-refinement-plan.v1" if refinement
+        else "diffgw.seobnrv4.jax-source-fixed-trajectory-sampling-plan.v1")
+    expected_factor = 512 if refinement else 256
+    if (plan["schema"] != expected_schema
             or plan["release_qualified"] is not False
-            or plan["integration_fine_refinement_factor"] != 256
+            or plan["integration_fine_refinement_factor"] != expected_factor
             or plan["decimation"] != 2
             or q.sha256(SOURCE_PLAN) != plan["source_plan_sha256"]
-            or q.sha256(stationary_path) != plan["stationary_control_sha256"][case]):
+            or q.sha256(prior_path) != plan[prior_key][case]):
         raise ValueError("frozen fixed-trajectory plan or prerequisites changed")
-    prior = json.loads(stationary_path.read_text())
+    prior = json.loads(prior_path.read_text())
     source_plan = json.loads(SOURCE_PLAN.read_text())
     identity = _prepare_public(source_plan)
-    output = EVIDENCE / f"jax_source_fixed_trajectory_sampling_{case}.json"
+    output_stem = ("jax_source_fixed_trajectory_refinement" if refinement
+                   else "jax_source_fixed_trajectory_sampling")
+    output = EVIDENCE / f"{output_stem}_{case}.json"
     started = time.monotonic()
     result = {
-        "schema": "diffgw.seobnrv4.jax-source-fixed-trajectory-sampling.v1",
-        "status": "running", "case_id": case, "plan_sha256": q.sha256(PLAN),
+        "schema": ("diffgw.seobnrv4.jax-source-fixed-trajectory-refinement.v1"
+                   if refinement else "diffgw.seobnrv4.jax-source-fixed-trajectory-sampling.v1"),
+        "status": "running", "case_id": case, "plan_sha256": q.sha256(plan_path),
         "host": platform.node(), "cwd": os.getcwd(), "pid": os.getpid(),
         "release_qualified": False,
-        "prior_independently_integrated_grid_l2": prior["comparisons"]["torch"]["complex_relative_l2"],
     }
+    if refinement:
+        result["prior_fixed_trajectory_grid_l2"] = prior["controls"]["recomputed_stationary_peak"][
+            "comparison_to_full_sampling"]["complex_relative_l2"]
+    else:
+        result["prior_independently_integrated_grid_l2"] = prior["comparisons"]["torch"][
+            "complex_relative_l2"]
     output.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n")
     try:
         settings = {
@@ -175,6 +196,11 @@ def main():
                 abs(result["recomputed_low_peak_slope"])
                 <= limits["stationary_peak_slope_max_abs_at_most"]),
         }
+        if refinement:
+            result["checks"]["recomputed_peak_fixed_trajectory_complex_relative_l2_at_most"] = (
+                controls["recomputed_stationary_peak"]["comparison_to_full_sampling"][
+                    "complex_relative_l2"]
+                <= limits["recomputed_peak_fixed_trajectory_complex_relative_l2_at_most"])
         result["diagnostic_checks_passed"] = all(result["checks"].values())
     except Exception as exc:
         result["status"] = "failed"

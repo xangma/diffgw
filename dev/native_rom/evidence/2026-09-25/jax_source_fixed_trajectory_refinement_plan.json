@@ -1,0 +1,25 @@
+{
+  "schema": "diffgw.seobnrv4.jax-source-fixed-trajectory-refinement-plan.v1",
+  "purpose": "Prospectively test whether source-compatible NQC attachment sampling converges from factor 256 to factor 512 on one fixed factor-512 fine trajectory, with the stationary peak held or recomputed.",
+  "pilot_case": "q4_nonspinning",
+  "prospective_case": "strong_aligned",
+  "source_plan_sha256": "eb79f7db87e23d83a8437334eec90f6872dcf3b76f65b5cbe55882f7d62b9944",
+  "prior_fixed_trajectory_sha256": {
+    "q4_nonspinning": "958a8ebc3352ce24d899f7944d7496eceb8d2d70cd452edebab53a0a24e4585c",
+    "strong_aligned": "39bda139c528b8b45ad6fe098efc39de26264888163c2ee8826f3544f7ccca17"
+  },
+  "atol": 1e-13,
+  "rtol": 1e-12,
+  "max_step_M": 2.0,
+  "output_step_M": 0.5,
+  "integration_fine_refinement_factor": 512,
+  "decimation": 2,
+  "checks": {
+    "reconstructed_high_complex_relative_l2_at_most": 1e-11,
+    "shared_time_max_abs_at_most_M": 1e-8,
+    "stationary_peak_slope_max_abs_at_most": 1e-8,
+    "recomputed_peak_fixed_trajectory_complex_relative_l2_at_most": 1e-5
+  },
+  "interpretation": "This controls only attachment sampling with the trajectory held fixed. Independently integrated waveform convergence, historical fidelity, wider parameter domain, NR accuracy, Torch/JAX parity, and ROM qualification remain separate gates.",
+  "release_qualified": false
+}

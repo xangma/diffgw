@@ -1355,6 +1355,15 @@ Thus attachment sampling alone exceeds the `1e-5` gate on both rows; different
 fine integrations add further error. This is a numerical attribution, not a
 convergence or physical-accuracy pass.
 
+The predeclared [factor-256 to factor-512 fixed-trajectory refinement](evidence/2026-09-25/jax_source_fixed_trajectory_refinement_plan.json)
+repeats the sampling control on a finer trajectory. [Q4](evidence/2026-09-25/jax_source_fixed_trajectory_refinement_q4_nonspinning.json)
+and [aligned spin](evidence/2026-09-25/jax_source_fixed_trajectory_refinement_strong_aligned.json)
+fall to `1.36e-5` and `1.35e-5`, respectively, but both still fail the
+predeclared `1e-5` attachment-sampling gate. The drift is approximately
+halved, rather than eliminated, by this refinement. Neither this same-trajectory
+control nor the earlier independently integrated pair establishes numerical
+convergence at a usable release cadence.
+
 The [frozen anchor diagnostic](evidence/2026-09-25/source_spliced_anchor_plan.json)
 replays all four cases and fits each mode's own amplitude peak between output
 samples without optimizing a relative shift. The [results](evidence/2026-09-25/source_spliced_anchor.json)

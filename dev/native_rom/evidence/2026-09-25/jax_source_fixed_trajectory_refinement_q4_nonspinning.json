@@ -1,0 +1,88 @@
+{
+  "base_mode_reconstruction_l2": 0.0,
+  "case_id": "q4_nonspinning",
+  "checks": {
+    "recomputed_peak_fixed_trajectory_complex_relative_l2_at_most": false,
+    "reconstructed_high_complex_relative_l2_at_most": true,
+    "shared_time_max_abs_at_most_M": true,
+    "stationary_peak_slope_max_abs_at_most": true
+  },
+  "controls": {
+    "fixed_match": {
+      "amplitude_condition": 591.3478749642954,
+      "comparison_to_full_sampling": {
+        "complex_relative_l2": 1.3633001636605383e-05,
+        "shared_end_M": 484.5,
+        "shared_samples": 970,
+        "shared_time_max_abs_M": 0.0
+      },
+      "match_time_M": 384.6638605273616,
+      "nqc_coefficients": [
+        [
+          -2.2459879272256424,
+          8.098104424840987,
+          -6.5609615674699135
+        ],
+        [
+          2.137748587929432,
+          -3.92391977203621
+        ]
+      ],
+      "phase_condition": 6.1198869275101035
+    },
+    "recomputed_stationary_peak": {
+      "amplitude_condition": 591.3478749632352,
+      "comparison_to_full_sampling": {
+        "complex_relative_l2": 1.363300159254695e-05,
+        "shared_end_M": 484.5,
+        "shared_samples": 970,
+        "shared_time_max_abs_M": 0.0
+      },
+      "match_time_M": 384.66386052738704,
+      "nqc_coefficients": [
+        [
+          -2.245987927253299,
+          8.098104425043676,
+          -6.560961567677309
+        ],
+        [
+          2.1377485879190394,
+          -3.923919772018636
+        ]
+      ],
+      "phase_condition": 6.119886927517862
+    }
+  },
+  "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+  "diagnostic_checks_passed": false,
+  "elapsed_s": 87.76804075000109,
+  "high_attachment_reconstruction_l2": 0.0,
+  "high_match_time_M": 384.6638605273616,
+  "high_nqc_coefficients": [
+    [
+      -2.245985954211483,
+      8.098086681645245,
+      -6.560941087430983
+    ],
+    [
+      2.137740565443402,
+      -3.923840844879532
+    ]
+  ],
+  "host": "RONI2",
+  "pid": 96460,
+  "plan_sha256": "b064b451108d37cf72614985b1cba501d9b60c993e08a0dcc5ca43f9a6d75127",
+  "prior_fixed_trajectory_grid_l2": 2.7276209021118686e-05,
+  "recomputed_low_peak_slope": -9.46080744941482e-17,
+  "recomputed_match_time_shift_M": 2.546585164964199e-11,
+  "release_qualified": false,
+  "schema": "diffgw.seobnrv4.jax-source-fixed-trajectory-refinement.v1",
+  "settings": {
+    "atol": 1e-13,
+    "coarse_output_step_M": 0.5,
+    "fine_refinement_factor": 512,
+    "max_step_M": 2.0,
+    "rtol": 1e-12
+  },
+  "status": "diagnostic_complete"
+}
