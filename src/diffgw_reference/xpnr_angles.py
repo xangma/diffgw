@@ -3,7 +3,7 @@
 This module is independent of Torch, JAX, LALSuite, and the repository's
 inherited calibration arrays. The caller supplies polynomial coefficients or
 already-evaluated calibration polynomials. It implements only relations printed
-in Hamilton et al., arXiv:2507.02604v1, Eqs. (3)--(8), (15)--(16), (22)--(24),
+in Hamilton et al., arXiv:2507.02604v1, Eqs. (3)--(8), (15)--(24),
 and Thompson et al., arXiv:2312.10025v1, Eqs. (25)--(35), (44), and
 (50)--(52), including the stated fit guards.  The window helper records the
 endpoint-completing shifted-cosine interpretation used by both backends; the
@@ -258,6 +258,91 @@ def beta_ringdown(theta_final: float, chi: float, cos_theta_ls: float, lambda_bf
     return theta_final - transverse_spin * lambda_bf
 
 
+def _ordered_positive_frequencies(mf: float, start: float, end: float) -> None:
+    _finite(mf, start, end)
+    if mf <= 0.0 or start <= 0.0 or end <= start:
+        raise ValueError("require mf > 0 and 0 < start < end")
+
+
+def _hermite(t: float) -> tuple[float, float, float, float]:
+    return (2 * t**3 - 3 * t**2 + 1, t**3 - 2 * t**2 + t, -2 * t**3 + 3 * t**2, t**3 - t**2)
+
+
+def alpha_attachment(
+    mf: float, start: float, end: float,
+    value_start: float, slope_start: float, value_end: float, slope_end: float,
+) -> float:
+    """XPNR Eq. (19), fixed by values and d(alpha)/d(Mf) at both joins.
+
+    Multiplication by ``mf`` turns the published quadratic-plus-inverse
+    expression into an ordinary cubic. Hermite interpolation of that cubic
+    is algebraically identical to solving for its four published coefficients.
+    Evaluate only on the connection interval.
+    """
+    _ordered_positive_frequencies(mf, start, end)
+    _finite(value_start, slope_start, value_end, slope_end)
+    width = end - start
+    h00, h10, h01, h11 = _hermite((mf - start) / width)
+    q0, q1 = start * value_start, end * value_end
+    dq0, dq1 = value_start + start * slope_start, value_end + end * slope_end
+    return (h00 * q0 + h10 * width * dq0 + h01 * q1 + h11 * width * dq1) / mf
+
+
+def beta_connection(
+    mf: float, start: float, end: float,
+    value_start: float, slope_start: float, value_end: float, slope_end: float,
+) -> float:
+    """XPNR Eq. (20), the cubic joining PN beta to merger-ringdown beta."""
+    _ordered_positive_frequencies(mf, start, end)
+    _finite(value_start, slope_start, value_end, slope_end)
+    width = end - start
+    h00, h10, h01, h11 = _hermite((mf - start) / width)
+    return h00 * value_start + h10 * width * slope_start + h01 * value_end + h11 * width * slope_end
+
+
+def alpha_exterior_continuation(
+    mf: float, start: float, end: float,
+    value_start: float, value_end: float, slope_end: float,
+) -> float:
+    """XPNR Eq. (17), matched at two PN values and the latter derivative.
+
+    The published expression is quadratic in ``u = (Mf)**-2``. Its three
+    coefficients follow from two values and ``d(alpha)/d(Mf)`` at ``end``.
+    """
+    _ordered_positive_frequencies(mf, start, end)
+    _finite(value_start, value_end, slope_end)
+    u, u0, u1 = mf**-2, start**-2, end**-2
+    derivative_u1 = -0.5 * end**3 * slope_end
+    delta = u0 - u1
+    curvature = (value_start - value_end - derivative_u1 * delta) / delta**2
+    return value_end + derivative_u1 * (u - u1) + curvature * (u - u1) ** 2
+
+
+def beta_exterior_continuation(
+    mf: float, start: float, end: float,
+    value_start: float, value_end: float, slope_end: float,
+    beta_ringdown_value: float, kappa: float,
+) -> float:
+    """XPNR Eq. (18), matched at two PN values and the latter derivative.
+
+    ``kappa = 2*pi*Delta f_damp`` in consistent inverse-Mf units. Multiplying
+    ``beta-beta_RD`` by ``exp(kappa*(Mf-end))*(Mf)**2`` gives a quadratic in
+    ``u = 1/Mf``. The exponential is centred at ``end`` for conditioning.
+    """
+    _ordered_positive_frequencies(mf, start, end)
+    _finite(value_start, value_end, slope_end, beta_ringdown_value, kappa)
+    u, u0, u1 = 1 / mf, 1 / start, 1 / end
+    r0 = (value_start - beta_ringdown_value) * math.exp(kappa * (start - end)) * start**2
+    r1 = (value_end - beta_ringdown_value) * end**2
+    derivative_u1 = -end**4 * (
+        slope_end + (value_end - beta_ringdown_value) * (kappa + 2 / end)
+    )
+    delta = u0 - u1
+    curvature = (r0 - r1 - derivative_u1 * delta) / delta**2
+    r = r1 + derivative_u1 * (u - u1) + curvature * (u - u1) ** 2
+    return beta_ringdown_value + math.exp(-kappa * (mf - end)) * r / mf**2
+
+
 def angle_calibration_window(q: float, chi: float) -> float:
     """Evaluate the backend's endpoint-completing interpretation of Eqs. (38)--(40).
 
@@ -329,10 +414,14 @@ __all__ = [
     "SOURCE_XO4A",
     "SOURCE_XPNR",
     "SingleSpinMap",
+    "alpha_attachment",
+    "alpha_exterior_continuation",
     "alpha_merger_ringdown",
     "alpha_parameters",
     "angle_calibration_window",
     "beta_merger_ringdown",
+    "beta_connection",
+    "beta_exterior_continuation",
     "beta_parameters",
     "beta_ringdown",
     "deformed_carrier_coefficient",

@@ -10,6 +10,9 @@ merger-ringdown ansatzes and higher-mode frequency map have an independent
 stdlib scalar reference and agree with both Torch and JAX.  During this audit,
 the implemented `B3` transform was corrected from `B2 * Lambda_B3` to the
 published `chi sin(theta) [exp(Lambda_B3) - 200]` relation.
+The printed alpha/beta connection and exterior-continuation forms now also
+have isolated scalar/Torch/JAX kernels. They are not wired into the public
+waveform, and the beta rescaling in Eq. (21) remains open.
 
 Full-waveform qualification remains failed.  The public route uses
 reference-frequency rather than transition-frequency spins in the effective
@@ -41,8 +44,8 @@ composition.
 | `XPNR-MAP` | XPNR Eqs. (3)–(6), evaluated with spins evolved to the SpinTaylor stopping/transition frequency and projected relative to instantaneous `Lhat` | Scalar terminal-state map is rotation-invariant; Torch/JAX component algebra agrees when supplied the same aligned-frame spins | Geometry pass; public caller supplies the wrong epoch and no terminal state |
 | `XPNR-FIT` | XO4a Eq. (35), `Lambda = sum lambda_pqr eta^p chi^q cos(theta)^r`, plus XPNR Eq. (22) freezing | Scalar/Torch/JAX values agree; tensor duplication is not independent provenance | Equation pass; assets unresolved |
 | `XPNR-ANGLES-MR` | XO4a Eqs. (25)–(34), XPNR Eqs. (15)–(16), including stated guards | Scalar values and frequency derivatives agree in Torch/JAX | Component pass after `B3` correction |
-| `XPNR-ATTACH` | XPNR Eq. (19) for alpha and Eqs. (20)–(21) for beta, matching inspiral/merger-ringdown values and derivatives | Current alpha is a value-only Hermite-style blend; current beta sequence is not the published construction | Fail |
-| `XPNR-CONT` | XPNR Eqs. (17)–(18) analytic exterior continuations and Eq. (22) fit-coordinate freeze | Current public route window-blends the angle tracks | Fail |
+| `XPNR-ATTACH` | XPNR Eq. (19) for alpha and Eqs. (20)–(21) for beta, matching inspiral/merger-ringdown values and derivatives | Standalone Eq. (19) and Eq. (20) kernels reproduce synthetic published-form polynomials and their derivatives; Eq. (21) and the public connection remain absent | Partial component pass; full route fail |
+| `XPNR-CONT` | XPNR Eqs. (17)–(18) analytic exterior continuations and Eq. (22) fit-coordinate freeze | Standalone Eq. (17)–(18) kernels reproduce synthetic published-form functions and derivatives; current public route still window-blends the angle tracks | Component pass; public route fail |
 | `XPNR-CARRIER` | XPNR Eqs. (7)–(8): tuned XHM-CP deviations and effective ringdown frequencies | Independent scalar equations exist; neither is wired into the waveform | Fail |
 | `XPNR-ASYM22` | XPNR Eqs. (10)–(13), unequal `m=+2` and `m=-2` coprecessing modes | Native XHM carrier generates negative-m content by symmetry | Fail |
 | `XPNR-HMMAP` | XO4a Eqs. (50)–(52), used by XPNR Eqs. (23)–(24) | Scalar/Torch/JAX piecewise values and joins agree | Component pass; not a complete carrier pass |
@@ -127,6 +130,37 @@ endpoint.  Both native backends use the endpoint-completing shifted cosine,
 equivalent to `cos(pi (x-x_b)/(2 x_w))^2`, for `q: 8.5 -> 12` and
 `chi: 0.85 -> 1.2`.  Tests label this as backend agreement on an explicit
 interpretation, not exact transcription of the printed line.
+
+## Isolated angle joins and continuations
+
+The [scalar reference](../../../src/diffgw_reference/xpnr_angles.py) and the
+[Torch](../../../src/torchwave/approximants/pnr_attachment.py) and
+[JAX](../../../src/jaxwave/approximants/pnr_attachment.py) component kernels
+take caller-supplied PN/MR boundary values and frequency derivatives. They do
+not infer a SpinTaylor stopping event, fit coefficients, or a public dispatch.
+The [equation test](../../../tests/test_xpnr_attachment_math_reference.py)
+compares their outputs against independently chosen coefficients in each of
+the paper's printed forms and checks both frontend derivatives.
+
+For Eq. (19), multiply the printed `alpha = a0 f² + a1 f + a2 + a3/f`
+by `f`; the resulting cubic is fixed by `f alpha` and
+`d(f alpha)/df = alpha + f alpha'` at both joins. Eq. (20) is a cubic fixed
+directly by beta values and derivatives at both joins. These are Hermite
+interpolants of the published polynomial spaces, rather than new blends.
+
+For Eq. (17), use `u = 1/f²`: alpha is quadratic in `u`, fixed by values at
+`0.97 f_max^PN` and `0.99 f_max^PN` and the derivative at the latter.
+For Eq. (18), subtract `beta_RD`, multiply by `exp(kappa f) f²` with
+`kappa = 2 pi Delta f_damp`, and use `u = 1/f`: the result is quadratic in
+`u`, fixed by values at `0.97 f_max^PN` and `0.98 f_max^PN` and the
+derivative at the latter. The implementation centers the exponential at the
+latter frequency to reduce overflow/underflow risk; this only rescales the
+three coefficients and leaves the paper's function unchanged.
+
+The tests use synthetic coefficients rather than inherited calibration
+tables. They establish form and differentiable alignment, not that the public
+waveform chooses the correct boundary data, applies Eq. (21)'s beta rescaling,
+or reproduces a calibrated XPNR waveform.
 
 ## Carrier and reduction relationships
 
@@ -241,8 +275,8 @@ history from which to establish their origin or terms.
 
 | Evidence class | Result | What it establishes |
 | --- | --- | --- |
-| Paper fidelity | Partial pass | Map, polynomial, guarded transforms, MR ansatzes, carrier-deformation equation, effective ringdown equation, and HM map have scalar encodings; attachment, continuation, beta bound, carrier/asymmetry composition remain open |
-| Scalar-reference agreement | Pass for scoped components | 47 local cases cover fit values, transforms, ansatz values/derivatives, terminal-state geometry, map, window interpretation, HM joins and reductions |
+| Paper fidelity | Partial pass | Map, polynomial, guarded transforms, MR ansatzes, standalone Eq. (17)–(20) forms, carrier-deformation equation, effective ringdown equation, and HM map have scalar encodings; Eq. (21), public angle composition, beta bound, and carrier/asymmetry composition remain open |
+| Scalar-reference agreement | Pass for scoped components | Existing 47 component cases plus four published-form scalar join cases cover fit values, transforms, ansatz values/derivatives, terminal-state geometry, map, window interpretation, HM joins and reductions |
 | Torch/JAX parity | Pass for scoped components | Both backends agree with scalar values and derivatives; a dense JAX grid is recorded in the qualification JSON |
 | Calibration asset provenance | Provisional gate retained | Published equations, a partial historical procedure, raw CC BY inputs, and an MIT fitting tool are distinguished from the unsupported inherited tensors; a two-case manifest test pins that classification and the unchanged payload |
 | External parity | Not qualified | The four optional LAL/PyCBC cases are black-box acceptance gates only; their `0.99` threshold is not an observed lower bound or domain claim |
