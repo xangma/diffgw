@@ -1,0 +1,35 @@
+{
+  "schema": "diffgw.seobnrv4.jax-source-finer-domain-plan.v1",
+  "purpose": "Extend the already pinned combined local-fit and continuous-boundary numerical control to a common independent factor-512 to factor-1024 refinement on the three cases not covered by the mixed-spin finer-grid replay.",
+  "cases": {
+    "q4_nonspinning": {
+      "prior_result": "jax_source_jit_local_fit_q4_nonspinning.json",
+      "prior_sha256": "58903fdfe57b0b2fddef1c11c392aefe4ae40f32033b5b801f329e952b2d9e40"
+    },
+    "strong_aligned": {
+      "prior_result": "jax_source_jit_local_fit_strong_aligned.json",
+      "prior_sha256": "04538cdd43d76e6ea6fcbb158d2c82a7f82533ee1e073bd2dc7d7ab7d62945f7"
+    },
+    "strong_antialigned": {
+      "prior_result": "jax_source_jit_domain_strong_antialigned.json",
+      "prior_sha256": "22c89e84e24a98e2a6a27442e311452d3d18b1b7ac80ecc57d732cfbea2cdae1"
+    }
+  },
+  "source_plan_sha256": "eb79f7db87e23d83a8437334eec90f6872dcf3b76f65b5cbe55882f7d62b9944",
+  "run_source_sha256": "158c243e6909d26529cf5e976521793cd07821cd48662036a3c34182391f9d1c",
+  "atol": 1e-13,
+  "rtol": 1e-12,
+  "max_step_M": 2.0,
+  "output_step_M": 0.5,
+  "fine_refinement_factors": [512, 1024],
+  "polynomial": {"half_width_M": 2.0, "degree": 4},
+  "checks": {
+    "each_grid_torch_jax_complex_relative_l2_at_most": 1e-5,
+    "baseline_torch_jax_reproduced_abs_at_most": 1e-10,
+    "torch_shared_sample_complex_relative_l2_at_most": 1e-5,
+    "jax_shared_sample_complex_relative_l2_at_most": 1e-5,
+    "shared_time_max_abs_at_most_M": 1e-8
+  },
+  "interpretation": "A four-case common 512-to-1024 pass is selected numerical evidence, not a domain-wide bound or physical/source/gradient/ROM release qualification. The mixed-spin 256-to-512 failure remains recorded.",
+  "release_qualified": false
+}

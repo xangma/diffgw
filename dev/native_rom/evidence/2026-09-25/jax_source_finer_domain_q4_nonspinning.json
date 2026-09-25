@@ -1,0 +1,76 @@
+{
+  "case_id": "q4_nonspinning",
+  "checks": {
+    "baseline_torch_jax_reproduced_abs_at_most": true,
+    "each_grid_torch_jax_complex_relative_l2_at_most": true,
+    "jax_shared_sample_complex_relative_l2_at_most": true,
+    "native_backend_checks_passed": true,
+    "shared_time_max_abs_at_most_M": true,
+    "torch_shared_sample_complex_relative_l2_at_most": true
+  },
+  "comparisons": {
+    "jax": {
+      "complex_relative_l2": 4.096762899885076e-07,
+      "shared_end_M": 484.5,
+      "shared_samples": 970,
+      "shared_time_max_abs_M": 0.0
+    },
+    "torch": {
+      "complex_relative_l2": 4.0968914036959236e-07,
+      "shared_end_M": 484.5,
+      "shared_samples": 970,
+      "shared_time_max_abs_M": 0.0
+    }
+  },
+  "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+  "diagnostic_checks_passed": true,
+  "elapsed_s": 143.52735037502134,
+  "host": "RONI2",
+  "levels": {
+    "baseline": {
+      "jax_boundary_time_M": 384.6638605272665,
+      "jax_match_time_M": 384.6638605272665,
+      "native_backend_checks_passed": true,
+      "settings": {
+        "atol": 1e-13,
+        "coarse_output_step_M": 0.5,
+        "fine_refinement_factor": 512,
+        "max_step_M": 2.0,
+        "rtol": 1e-12
+      },
+      "torch_boundary_time_M": 384.6638605273616,
+      "torch_jax": {
+        "common_samples": 970,
+        "complex_relative_l2": 6.366192560529857e-12,
+        "support_sample_difference": 0,
+        "time_max_abs_M": 0.0
+      },
+      "torch_match_time_M": 384.6638605273616
+    },
+    "refined": {
+      "jax_boundary_time_M": 384.66385494288824,
+      "jax_match_time_M": 384.66385494288824,
+      "native_backend_checks_passed": true,
+      "settings": {
+        "atol": 1e-13,
+        "coarse_output_step_M": 0.5,
+        "fine_refinement_factor": 1024,
+        "max_step_M": 2.0,
+        "rtol": 1e-12
+      },
+      "torch_boundary_time_M": 384.66385494394973,
+      "torch_jax": {
+        "common_samples": 970,
+        "complex_relative_l2": 3.971477159486389e-11,
+        "support_sample_difference": 0,
+        "time_max_abs_M": 0.0
+      },
+      "torch_match_time_M": 384.66385494394973
+    }
+  },
+  "pid": 44097,
+  "plan_sha256": "921d189416824b0b387a7452b60792c556920a92b5c330283d081578ee767e41",
+  "release_qualified": false,
+  "schema": "diffgw.seobnrv4.jax-source-finer-domain.v1",
+  "status": "diagnostic_complete"
+}

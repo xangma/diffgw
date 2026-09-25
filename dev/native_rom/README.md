@@ -1465,7 +1465,21 @@ factor-1024 integration. [Its result](evidence/2026-09-25/jax_source_jit_mixed_r
 passes the unchanged `1e-5` test: Torch/JAX whole-mode drifts are `6.62472e-6`
 and `6.62446e-6`, with factor-1024 backend difference `1.02e-9`. This supports
 refinement of that local case, but the earlier 256-to-512 failure remains in
-the record and no common four-case factor-512 to factor-1024 sweep exists.
+the record.
+
+The [frozen common finer-domain plan](evidence/2026-09-25/jax_source_finer_domain_plan.json)
+extends the same independent factor-512 to factor-1024 check to
+[q4 nonspinning](evidence/2026-09-25/jax_source_finer_domain_q4_nonspinning.json),
+[strong aligned spin](evidence/2026-09-25/jax_source_finer_domain_strong_aligned.json),
+and [strong antialigned spin](evidence/2026-09-25/jax_source_finer_domain_strong_antialigned.json).
+Together with the prior mixed-spin replay, all four selected cases pass the
+unchanged `1e-5` whole-waveform numerical threshold on this common refinement:
+Torch/JAX drifts are `4.10e-7`/`4.10e-7`, `1.39e-6`/`1.39e-6`,
+`6.62e-6`/`6.62e-6`, and `1.46e-7`/`1.45e-7`, respectively. Per-grid
+backend parity and the frozen baseline-reproduction checks also pass. These
+four cases are selected numerical evidence, not a domain-wide bound; the
+mixed-spin 256-to-512 failure, source-fidelity gap, independent NR failures,
+and full-waveform gradient/ROM gates remain open.
 
 The [opt-in combined-control driver replay](evidence/2026-09-25/source_combined_driver_parity_plan.json)
 connects the earlier degree-four, ±2 M local NQC derivative fit and continuous
@@ -1490,6 +1504,10 @@ After the fixed inspiral-frequency anchor, its amplitude peak is
 `816.71649 M`, versus the highest-resolution NR peak at `811.24219 M`, a
 `5.47430 M` difference. The numerical intervention therefore preserves the
 earlier weighted-match behavior but does not close the `5 M` timing criterion.
+The [pinned public-v4 control](evidence/2026-09-24/sxs_2786_public_control.json)
+peaks at `816.71819 M` on the same anchor, `5.47600 M` after NR. The native
+combined-control peak is within `0.00171 M` of that historical reference;
+changing only the matching numerics does not resolve the shared timing miss.
 This already selected case cannot serve as a fresh holdout; the separate
 prospective SXS failures and source/ROM gates remain open.
 
