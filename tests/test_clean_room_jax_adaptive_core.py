@@ -13,6 +13,7 @@ from dev.native_rom.eob.jax.adaptive_driver_clean import (
     resample_accepted_trajectory,
     state_scaled_controller_adjustment,
 )
+from dev.native_rom.eob.jax.two_stage_trajectory import integrate_two_stage_trajectory
 from torchwave.approximants.eob.adaptive_driver_clean import (
     AlignedSpinV4Event as TorchEvent,
     fixed_fehlberg45_step as torch_fixed_step,
@@ -161,3 +162,53 @@ def test_accepted_knot_fine_event_matches_torch():
     assert run.termination == reference.statistics.termination[0] == "event"
     np.testing.assert_allclose(np.asarray(run.time), reference.time.detach().numpy(), rtol=0, atol=2e-12)
     np.testing.assert_allclose(np.asarray(run.state), reference.state.detach().numpy(), rtol=1e-12, atol=1e-12)
+
+
+def test_two_stage_restart_preserves_phase_and_matches_torch_grid():
+    def field_jax(state):
+        return jnp.stack((-0.2 * jnp.ones_like(state[0]),
+                          0.01 * state[0], -0.01 * jnp.ones_like(state[0]),
+                          jnp.zeros_like(state[0])))
+
+    def field_torch(state):
+        radius = state[..., 0]
+        return torch.stack((-0.2 * torch.ones_like(radius),
+                            0.01 * radius, -0.01 * torch.ones_like(radius),
+                            torch.zeros_like(radius)), dim=-1)
+
+    initial = [10.0, 10.0, -0.02, 3.8]
+    actual = integrate_two_stage_trajectory(
+        field_jax, jnp.asarray(initial), output_step=0.5,
+        max_duration=100.0, coarse_max_step=0.5, fine_max_step=0.5,
+    )
+    coarse = torch_integrate_adaptive(
+        field_torch, torch.tensor(initial, dtype=torch.float64), 0.5,
+        t_end=100.0, event=TorchEvent("coarse"), initial_step=0.5,
+        max_step=0.5, atol=1e-10, rtol=1e-9,
+        controller="gsl_state_scaled",
+    )
+    n_coarse = len(coarse.output_time)
+    restart_index = n_coarse - (n_coarse + 1) // 2
+    fine_step = 0.5 / 32
+    fine = torch_integrate_adaptive(
+        field_torch, coarse.output_state[restart_index], fine_step,
+        t_end=100.0, event=TorchEvent("fine"), initial_step=fine_step,
+        max_step=0.5, atol=1e-10, rtol=1e-9,
+        controller="gsl_state_scaled",
+    )
+    assert actual.coarse.termination == actual.fine.termination == "event"
+    assert actual.restart_index == restart_index
+    assert actual.refinement_factor == 32
+    assert actual.coarse.accepted_steps == int(coarse.statistics.accepted_steps)
+    assert actual.fine.accepted_steps == int(fine.statistics.accepted_steps)
+    np.testing.assert_allclose(np.asarray(actual.fine.state[0]),
+                               coarse.output_state[restart_index].detach().numpy(),
+                               rtol=0, atol=2e-12)
+    expected_time = torch.cat((coarse.output_time[:restart_index],
+                               coarse.output_time[restart_index] + fine.output_time[::32]))
+    expected_state = torch.cat((coarse.output_state[:restart_index],
+                                fine.output_state[::32]))
+    np.testing.assert_allclose(np.asarray(actual.time), expected_time.detach().numpy(),
+                               rtol=0, atol=2e-11)
+    np.testing.assert_allclose(np.asarray(actual.state), expected_state.detach().numpy(),
+                               rtol=2e-10, atol=2e-11)

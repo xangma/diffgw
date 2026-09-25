@@ -1,0 +1,29 @@
+{
+  "schema": "diffgw.seobnrv4.jax-two-stage-physical-plan.v1",
+  "purpose": "Compare the pre-attachment coarse/fine restart and spliced EOB state trajectory on identical initial states and equations across Torch and JAX.",
+  "pilot_case": "high_start_mixed_spin",
+  "prospective_cases": ["q4_nonspinning", "strong_aligned", "strong_antialigned"],
+  "input_source": "jax_adaptive_physical_event_plan.json case_inputs",
+  "fixed_settings": {
+    "controller": "gsl_state_scaled",
+    "atol": 1e-10,
+    "rtol": 1e-9,
+    "coarse_output_step_M": 0.5,
+    "coarse_initial_step_M": 0.5,
+    "coarse_max_step_M": 2.0,
+    "fine_initial_step_M": 0.015625,
+    "fine_max_step_M": 2.0,
+    "maximum_duration_M": 1000.0,
+    "restart_rule": "150 M before coarse end, or half the coarse samples for shorter trajectories; retain orbital phase"
+  },
+  "diagnostic_checks": {
+    "both_stages_terminate_at_event": true,
+    "restart_index_equal": true,
+    "step_counts_equal": true,
+    "coarse_event_time_abs_M_at_most": 0.0001,
+    "fine_event_time_abs_M_at_most": 0.0001,
+    "restart_state_max_abs_at_most": 1e-8,
+    "spliced_state_max_abs_at_most": 1e-8
+  },
+  "interpretation": "Same-input adaptive trajectory parity only. NQC calibration, merger attachment, independent physical reference, convergence and ROM holdouts remain open."
+}
