@@ -1,0 +1,101 @@
+{
+  "case": "strong_aligned",
+  "checks": {
+    "level_reconstruction_max_absolute_at_most": 1e-12,
+    "no_op_max_absolute_at_most": 1e-14,
+    "prior_ringdown_error_square_replay_at_most": 1e-15,
+    "reconstructed_ringdown_error_square_replay_at_most": 1e-15
+  },
+  "fine_refinement_factor": 32,
+  "inputs": {
+    "amplitude_v2_plan": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_ode_chain_amplitude_v2_plan.json",
+      "sha256": "69ce431f507dc80f68fa888878521c6f52ca3b10e54e266123ea92522f298ce0"
+    },
+    "amplitude_v2_result": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_ode_chain_amplitude_v2.json",
+      "sha256": "f22689b0993b22f111392a3a0dcda31e2a47ab8a14d8d41ef636af479ec16de1"
+    },
+    "amplitude_v2_script": {
+      "path": "dev/native_rom/diagnose_source_aligned_ode_chain_amplitude_v2.py",
+      "sha256": "c3460f910c186f3fdf2e2c51084990198d314ba6d6eeacfd3592663b9e1cecef"
+    },
+    "attribution_v2_plan": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_ode_chain_residual_attribution_v2_plan.json",
+      "sha256": "9fdbcea05e2721ee5152d8d618e54186aa2fbf9c10b43342fe493910a142fa4b"
+    },
+    "attribution_v2_result": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_ode_chain_residual_attribution_v2.json",
+      "sha256": "c717e3472db23aa4a1a251a0f68592758cda7d58a50dae9572fd97d40068f47c"
+    },
+    "attribution_v2_script": {
+      "path": "dev/native_rom/diagnose_source_aligned_ode_chain_residual_attribution_v2.py",
+      "sha256": "00fd90accfbde484815f2c409d7ec985c4ad27d97e2a434fabb2632885c20513"
+    },
+    "ladder_plan": {
+      "path": "dev/native_rom/evidence/2026-09-25/jax_source_tolerance_ladder_plan.json",
+      "sha256": "101f756e6d90e07cb02084c04788bed43c4cdbc2773b948af8ff3262fda7352f"
+    },
+    "phase_matrix_script": {
+      "path": "dev/native_rom/diagnose_source_aligned_ode_chain_phase_matrix.py",
+      "sha256": "654ce386c98094f17c8b14bfdf2fdb9db2e70d112c1c4524943cd3745d41ad1a"
+    },
+    "phase_rhs_script": {
+      "path": "dev/native_rom/diagnose_source_aligned_ode_chain_phase_rhs.py",
+      "sha256": "b789eedb4eacf29500253999d1d0bb68e8e8591f661b8025592c50ae1d1114ff"
+    },
+    "qualifier": {
+      "path": "dev/native_rom/qualify_generator.py",
+      "sha256": "df9bffb614b87e82b5a8da47212cb01312ad4d0cb9d687d929570df134954174"
+    },
+    "runner": {
+      "path": "dev/native_rom/diagnose_jax_spliced_whole_waveform.py",
+      "sha256": "158c243e6909d26529cf5e976521793cd07821cd48662036a3c34182391f9d1c"
+    },
+    "source_plan": {
+      "path": "dev/native_rom/evidence/2026-09-25/jax_source_spliced_whole_waveform_plan.json",
+      "sha256": "eb79f7db87e23d83a8437334eec90f6872dcf3b76f65b5cbe55882f7d62b9944"
+    },
+    "torch_merger_ringdown": {
+      "path": "src/torchwave/approximants/eob/merger_ringdown.py",
+      "sha256": "098bb9e6f5328ceb291a5bed02a91d8fa95cc54bbcc7ff45d996e6985d995410"
+    },
+    "torch_numerical_attachment": {
+      "path": "src/torchwave/approximants/eob/numerical_attachment.py",
+      "sha256": "8c7a149b76c529a255a4caa4b0ca76317b5306c8967db84047f299ccf51be7fc"
+    }
+  },
+  "interpretation": "Numerical sensitivity on one frozen strong-aligned row only. Single-parameter swaps are counterfactual and may interact. This does not establish source/public fidelity, broad-domain stability, or release qualification.",
+  "levels": [
+    "baseline",
+    "refined"
+  ],
+  "parameters": [
+    "amplitude",
+    "amplitude_derivative",
+    "frequency",
+    "phase",
+    "sigma",
+    "shape_amplitude_rate",
+    "shape_amplitude_offset",
+    "shape_phase_rate",
+    "shape_phase_offset",
+    "elapsed",
+    "support_end"
+  ],
+  "protocol": [
+    "At each tolerance level capture the exact merger_ringdown_22 arguments and discrete ringdown support inside the Torch numerical attachment; replay the corrected-v2 diagnostic without changing its phase or amplitude controls.",
+    "Reconstruct each emitted ringdown at whole-waveform times t>=the attachment boundary from the captured fine-query elapsed times sampled with the frozen factor 32, with the same strict elapsed<support_end cutoff. Compare complex samples and require a no-op re-evaluation.",
+    "On identical ringdown output times, start with baseline inputs and swap exactly one named input to refined; also reverse each single swap. Each other input stays at its starting level. For elapsed swap, use the other level\u2019s captured elapsed samples and matching fine-query indices.",
+    "Quantify each single swap by its effect L2 divided by the full reconstructed baseline/refined difference L2 and by the fraction of error squared removed relative to refined. Report the vector residual after summing all baseline-origin single-swap effects as a nonadditivity measure. These fractions need not sum to one and may be negative.",
+    "Cross-check the emitted ringdown error square against the frozen v2 time-window attribution. Reproduce whole-mode SHA256 at both levels. No output here changes production or release gates."
+  ],
+  "purpose": "Development-only attribution of the corrected v2 baseline/refined ringdown difference to the exact numerical-attachment boundary inputs using reconstruction and one-at-a-time swaps.",
+  "release_qualified": false,
+  "runner_sentinel": {
+    "degree": 0,
+    "half_width_M": 0.0
+  },
+  "schema": "diffgw.seobnrv4.source-aligned-ode-chain-ringdown-inputs-plan.v1",
+  "script_sha256": "f54f2264fba48986eea2d2048d84ddfeab8405ebb32c0b9f7a755f2520439f7f"
+}

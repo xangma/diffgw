@@ -2694,6 +2694,18 @@ The discrete ringdown boundary precedes the continuous NQC match, leaving no
 post-match inspiral output samples on this chart. These window shares locate
 the residual but do not identify its source or qualify the waveform.
 
+A [frozen boundary-input attribution](evidence/2026-09-25/source_aligned_ode_chain_ringdown_inputs_plan.json)
+reconstructs both corrected-v2 200-sample ringdowns exactly from the captured
+attachment inputs. Its [result](evidence/2026-09-25/source_aligned_ode_chain_ringdown_inputs.json)
+finds that the baseline/refined backward-secant boundary frequency changes by
+`3.93e-6`; swapping that input alone removes `99.999883%` of ringdown squared
+error. The boundary amplitude and phase effects are much smaller, while QNM,
+ringdown shape, elapsed chart, and support are identical. The single-swap
+nonadditivity is only `3.46e-8` of the full ringdown L2. This isolates the
+remaining one-row cadence sensitivity to the discrete boundary-frequency
+estimate; it does not establish a converged replacement, historical fidelity,
+or release qualification.
+
 1. Qualify the physical generator against the published equations and independent
    references over the intended domain, resolve convention/provenance gaps, and
    establish gradients and numerical convergence. This runner covers only scalar
