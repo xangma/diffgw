@@ -1688,6 +1688,21 @@ after the local fit, while the remaining pre-attachment and late errors still
 exceed a release fidelity claim. The counterfactual is not a historical-source
 prescription or a release pass.
 
+The [ultrafine native/source fixed-frequency replay](evidence/2026-09-25/q4_ultrafine_fixed_frequency.json)
+uses a [frozen diagnostic plan](evidence/2026-09-25/q4_ultrafine_fixed_frequency_plan.json)
+and reproduces the saved native, source, source-local-fit, source-with-wheel-NQC,
+and public-wheel mode hashes at `0.015625 M`. On the `Mω₂₂ = 0.1` chart,
+native/source full-mode complex relative L2 is `3.73e-4`; replacing only the
+source NQC coefficients with the wheel's reduces it to `2.74e-4` and the
+pre-attachment error from `9.38e-5` to `1.89e-5`. The post-peak error remains
+about `1.40e-3` on that chart. This is a causal NQC intervention on one
+historical-source row, not a native-coefficient prescription. The
+source-with-wheel-NQC/wheel control is `1.16e-4` on the frequency chart even
+though it is `1.51e-5` with independently fitted peaks; the crossing-time
+chart is itself sensitive at the target precision. These residuals therefore
+cannot establish either an absolute historical-fidelity bound or release
+qualification. Independent NR failures and the ROM training gate remain open.
+
 The [JAX initial-state-to-base-mode gradient check](evidence/2026-09-25/jax_initial_to_base_mode_gradient.json)
 uses a [frozen q4 plan](evidence/2026-09-25/jax_initial_to_base_mode_gradient_plan.json)
 and the development-only traceable quasicircular solve. The solve reproduces
