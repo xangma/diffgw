@@ -1581,6 +1581,21 @@ The compiled source still links pinned wheel libraries for supporting symbols;
 this control does not isolate an independent source-only binary. It does not
 pass a numerical or release gate.
 
+The [JAX initial-state-to-base-mode gradient check](evidence/2026-09-25/jax_initial_to_base_mode_gradient.json)
+uses a [frozen q4 plan](evidence/2026-09-25/jax_initial_to_base_mode_gradient_plan.json)
+and the development-only traceable quasicircular solve. The solve reproduces
+the existing eager initial state to floating-point precision. Across 21
+accepted steps spanning `4 M`, the compiled derivative with respect to the
+first spin of the uncorrected `(2,2)` mode's real part, imaginary part, and
+orbital frequency is `[0.005481510690, -0.003948012910, -0.000239746262]`.
+Centered finite differences at `1e-4` and `1e-5` agree within `4.49e-12`
+absolute. This establishes one pathwise derivative on a fixed accepted mesh;
+it does not differentiate adaptive step or event decisions, NQC, ringdown,
+the full waveform, or a ROM. The diagnostic took `148 s` on RONI2 and its
+combined derivative compile reached approximately `22 GB` resident memory,
+so compilation cost is itself an open engineering issue. The result is not a
+release qualification claim.
+
 1. Qualify the physical generator against the published equations and independent
    references over the intended domain, resolve convention/provenance gaps, and
    establish gradients and numerical convergence. This runner covers only scalar

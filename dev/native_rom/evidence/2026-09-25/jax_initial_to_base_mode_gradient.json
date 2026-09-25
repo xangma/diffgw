@@ -1,0 +1,71 @@
+{
+  "accepted_steps": 21,
+  "base_mode_real_imag_frequency": [
+    -0.08939993894712825,
+    0.0653614599894306,
+    0.08037388323460629
+  ],
+  "case": {
+    "chi1": 0.0,
+    "chi2": 0.0,
+    "mass1": 40.0,
+    "mass2": 10.0,
+    "omega_start": 0.04,
+    "varied_parameter": "chi1"
+  },
+  "checks": {
+    "compiled_value_max_abs_at_most": true,
+    "frozen_replay_final_state_max_abs_at_most": true,
+    "gradient_finite_difference_max_abs_at_most": true,
+    "initial_value_max_abs_at_most": true
+  },
+  "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+  "diagnostic_checks_passed": true,
+  "elapsed_s": 148.30781804100843,
+  "finite_differences": {
+    "0.0001": {
+      "derivative": [
+        0.005481510690630298,
+        -0.003948012911175747,
+        -0.00023974626367495588
+      ],
+      "max_abs_error": 1.3381604580930268e-12
+    },
+    "1e-05": {
+      "derivative": [
+        0.0054815106946548555,
+        -0.003948012912424748,
+        -0.00023974626242595495
+      ],
+      "max_abs_error": 4.489960486742106e-12
+    }
+  },
+  "host": "RONI2",
+  "initial_eager": [
+    8.549904875259065,
+    -0.005709858798686637,
+    3.5920610445844834
+  ],
+  "initial_traceable": [
+    8.549904875259067,
+    0.0,
+    -0.005709858798686364,
+    3.5920610445844843
+  ],
+  "pid": 84395,
+  "plan_sha256": "d71a23a05c11286c5855120e54a753ad491da008633e75aa051b72747004521e",
+  "rejected_steps": 0,
+  "release_qualified": false,
+  "schema": "diffgw.seobnrv4.jax-initial-to-base-mode-gradient.v1",
+  "source_sha256": {
+    "dev/native_rom/diagnose_jax_initial_to_base_mode_gradient.py": "3f368e1c224d87214c9d99d6cf2c6357346eaaeb64f228f0967e3153cc06604d",
+    "dev/native_rom/eob/jax/initial_conditions_clean.py": "0ccc2251f72e6af696a8c35e08a0cc872dcac74b8904774dafdf8e416f21f382"
+  },
+  "spin_derivative": [
+    0.005481510690164895,
+    -0.003948012910054575,
+    -0.00023974626233679543
+  ],
+  "status": "diagnostic_complete",
+  "termination": "duration"
+}

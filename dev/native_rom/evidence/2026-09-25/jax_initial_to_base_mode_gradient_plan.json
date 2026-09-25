@@ -1,0 +1,32 @@
+{
+  "schema": "diffgw.seobnrv4.jax-initial-to-base-mode-gradient-plan.v1",
+  "purpose": "Check a development-only JAX spin derivative from quasicircular initial conditions through a frozen accepted RKF mesh and the uncorrected (2,2) mode.",
+  "case": {
+    "mass1": 40.0,
+    "mass2": 10.0,
+    "chi1": 0.0,
+    "chi2": 0.0,
+    "omega_start": 0.04,
+    "varied_parameter": "chi1"
+  },
+  "initial_solver": {
+    "fixed_iterations": 8,
+    "tolerance": 1e-8
+  },
+  "mesh": {
+    "duration_M": 4.0,
+    "initial_step_M": 0.1,
+    "max_step_M": 0.2,
+    "atol": 1e-13,
+    "rtol": 1e-12
+  },
+  "finite_difference_steps": [0.0001, 0.00001],
+  "checks": {
+    "initial_value_max_abs_at_most": 3e-8,
+    "frozen_replay_final_state_max_abs_at_most": 1e-8,
+    "compiled_value_max_abs_at_most": 1e-10,
+    "gradient_finite_difference_max_abs_at_most": 1e-6
+  },
+  "interpretation": "This is a selected four-M pathwise derivative at fixed accepted times. It excludes adaptive event-time, NQC, ringdown, full waveform and ROM derivatives, and does not qualify release.",
+  "release_qualified": false
+}
