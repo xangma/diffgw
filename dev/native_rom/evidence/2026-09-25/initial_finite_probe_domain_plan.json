@@ -1,0 +1,24 @@
+{
+  "schema": "diffgw.seobnrv4.initial-finite-probe-domain-plan.v1",
+  "purpose": "Prospective four-row, two-frequency comparison of native analytic and historical finite-probe initial data against both pinned source initialization branches. The optimized parity gate is inherited from the preceding fresh-row probe; legacy residuals remain separately reported.",
+  "source_flux_plan": "dev/native_rom/evidence/2026-09-24/source_flux_initial_plan.json",
+  "source_flux_plan_sha256": "1167199c8f954f97a5905a1e3b2f67d1555e984e5f1da0a0fc42a77a925f96ea",
+  "source_calibration_initial_plan": "dev/native_rom/evidence/2026-09-24/source_calibration_initial_plan.json",
+  "source_calibration_initial_plan_sha256": "fa5623e5c63bfb03e215368a47b8f0a8cc97745ef064c59f76849d4ec9a4f977",
+  "adapter": "dev/native_rom/reference/flux_v4_source_wheel_adapter.c",
+  "adapter_sha256": "91833ee4a2a8fae8efa3a2fef9234ed4f222a73198102ceafab361809c9a0660",
+  "script_sha256": "9b9d0f27d382daccd03ac37c582312623e5bf6ed4905cb966f1573332e7cc11a",
+  "runner_correction": "The first run completed all source evaluations but failed while aggregating dict_values. The same points and unchanged threshold are rerun with a flattened maximum; the failed-run JSON is retained separately.",
+  "rows": [
+    {"name": "q1_nonspinning", "mass1": 30.0, "mass2": 30.0, "chi1": 0.0, "chi2": 0.0},
+    {"name": "q5_antialigned", "mass1": 40.0, "mass2": 8.0, "chi1": -0.65, "chi2": -0.25},
+    {"name": "q8_high_aligned", "mass1": 48.0, "mass2": 6.0, "chi1": 0.9, "chi2": 0.8},
+    {"name": "q8_mixed", "mass1": 48.0, "mass2": 6.0, "chi1": -0.2, "chi2": 0.8}
+  ],
+  "frequencies_Momega": [0.012, 0.018],
+  "source_choices": ["legacy", "optimized"],
+  "radial_probe": 0.001,
+  "relative_denominator_floor": 0.001,
+  "optimized_relative_gate": 2e-8,
+  "release_qualified": false
+}

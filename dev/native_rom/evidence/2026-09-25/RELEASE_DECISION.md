@@ -122,6 +122,20 @@ waveform. The run completed on RONI2 in this worktree as PID `93477`, command
 `PYTHONPATH=src:. /Users/xangma/repos/diffgw/.venv/bin/python -m dev.native_rom.diagnose_initial_finite_probe --source-root /Users/xangma/repos/lalsuite-git --headers /tmp/diffgw-lalsuite-pinned-53acc0c/merged-include --gsl-include /usr/local/include --json-out dev/native_rom/evidence/2026-09-25/initial_finite_probe.json`,
 log `/tmp/diffgw-initial-finite-probe.log`, with exit code 0. No process or
 next check remains.
+The [frozen four-row source-branch extension](initial_finite_probe_domain_plan.json)
+and [result](initial_finite_probe_domain.json) compare eight further points
+with both pinned initialization branches. The native finite probe passes the
+inherited `2e-8` optimized-source gate with maximum normalized difference
+`1.4106e-8`, but differs from the historical generator's legacy branch by up
+to `8.4565e-5`. On these rows the finite probe changes the legacy inward-
+momentum discrepancy by at most `5.90e-10` absolute, so it does not repair
+historical initial-data fidelity. The first execution completed all point
+evaluations but failed in result aggregation; its [failed-run evidence](initial_finite_probe_domain_failed_runner.json)
+is retained. The unchanged cases and threshold were rerun after correcting
+that reporting error. The corrected run completed on RONI2 in this worktree
+as PID `2410`, command `PYTHONPATH=src:. /Users/xangma/repos/diffgw/.venv/bin/python -m dev.native_rom.diagnose_initial_finite_probe_domain --source-root /Users/xangma/repos/lalsuite-git --headers /tmp/diffgw-lalsuite-pinned-53acc0c/merged-include --gsl-include /usr/local/include --json-out dev/native_rom/evidence/2026-09-25/initial_finite_probe_domain.json`,
+log `/tmp/diffgw-initial-finite-domain-rerun.log`, exit code 0. No process or
+next check remains.
 The existing [public/NR chirp diagnostic](sxs_public_chirp.json) locates a
 waveform-phase discrepancy on the already inspected 2569 case: at mode
 frequency `0.05/M`, relative to a `0.09/M` anchor and smoothing window 20,

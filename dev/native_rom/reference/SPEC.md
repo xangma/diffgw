@@ -290,6 +290,16 @@ denominator floor), while native and source optimized momentum differ by at
 most `6.83e-10`. The historical SEOBNRv4 generator selects the legacy
 initialization branch. The source's nested numerical radial derivatives and
 the native analytic radial response therefore remain a source-fidelity gap.
+The [separately frozen finite-probe boundary check](../evidence/2026-09-25/initial_finite_probe_domain.json)
+extends that comparison to eight new points spanning equal-mass nonspinning,
+antialigned, high aligned, and mixed-spin configurations. The native finite
+probe remains within `1.42e-8` of the optimized source on the frozen
+normalized scale, passing the inherited `2e-8` gate. Against the legacy
+source branch selected by the historical generator, the maximum gap is
+`8.46e-5`; substituting the finite probe changes the legacy radial-momentum
+residual by less than `6e-10` absolute on these points. Thus the optimized
+branch agreement does not remove the legacy derivative-path mismatch or
+validate a complete historical initial-data solve.
 The [q4 legacy-momentum intervention](../evidence/2026-09-25/q4_legacy_initial_intervention.json)
 uses the source value at the native warm start and worsens the selected
 peak-fitted native/source whole-mode relative L2 from `3.51e-4` to `3.62e-4`;
