@@ -15,6 +15,10 @@ from pathlib import Path
 import platform
 import sys
 
+ROOT = Path(__file__).resolve().parents[1]
+sys.path.insert(0, str(ROOT))
+sys.path.insert(0, str(ROOT / "src"))
+
 import lal
 import lalsimulation as ls
 import numpy as np
@@ -95,8 +99,11 @@ def main():
     if any(rate <= 0 for rate in args.sample_rate):
         parser.error("sample rates must be positive")
     versions = dict(python=platform.python_version(), numpy=np.__version__, lalsimulation=ls.__version__)
+    devices = {}
     for backend in args.backend:
-        versions[backend] = importlib.import_module(backend).__version__
+        module = importlib.import_module(backend)
+        versions[backend] = module.__version__
+        devices[backend] = ["cpu"] if backend == "torch" else [str(device) for device in module.devices()]
     results = []
     for case in args.case:
         for rate in args.sample_rate:
@@ -113,7 +120,7 @@ def main():
                     + " --sample-rate " + " ".join(map(str, args.sample_rate)) + " --output receipt.json")
     receipt = dict(
         generated_utc=datetime.datetime.now(datetime.timezone.utc).isoformat(),
-        reproduction=reproduction, versions=versions, dtype="float64", device="cpu",
+        reproduction=reproduction, versions=versions, dtype="float64", devices=devices,
         parameters={case: parameters(case) for case in args.case},
         metrics=dict(
             relative_l2="norm(actual-reference)/norm(reference); no alignment",
