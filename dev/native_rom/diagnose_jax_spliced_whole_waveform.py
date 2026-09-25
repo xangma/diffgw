@@ -163,6 +163,24 @@ def _polynomial_phase_matrix(time_grid, state, orbital_frequency, match_time,
                         2*coefficients[2]/half_width_M**2))
 
 
+def _polynomial_amplitude_derivatives(time_grid, state, orbital_frequency,
+                                      base_mode, match_time, *, half_width_M, degree):
+    """Diagnostic local first/second derivatives of the three A*q columns."""
+    if half_width_M <= 0 or degree < 2:
+        raise ValueError("invalid diagnostic amplitude-basis polynomial")
+    selected = (time_grid >= match_time-half_width_M) & (
+        time_grid <= match_time+half_width_M)
+    if int(selected.sum()) < degree + 3:
+        raise ValueError("insufficient NQC amplitude-basis polynomial samples")
+    q, _ = torch_basis(state[:, 0], state[:, 2], orbital_frequency)
+    products = base_mode.abs()[:, None] * q
+    x = (time_grid[selected]-match_time)/half_width_M
+    matrix = torch.stack(tuple(x**power for power in range(degree+1)), dim=-1)
+    coefficients = torch.linalg.lstsq(matrix, products[selected], driver="gels").solution
+    return torch.stack((coefficients[1]/half_width_M,
+                        2*coefficients[2]/half_width_M**2))
+
+
 def _prepare_public(plan):
     pin = plan["public_binary"]
     identity_plan = json.loads((ROOT / pin["identity_source"]).read_text())
@@ -175,7 +193,8 @@ def _prepare_public(plan):
 def run(case_id, plan, public_identity, *, variant="published", anchor_control=False,
         independent_init=False, numerical_settings=None, write_result=True,
         return_series=False, return_stages=False, diagnostic_nqc_second=None,
-        diagnostic_nqc_phase_matrix=None, diagnostic_peak_policy=None):
+        diagnostic_nqc_phase_matrix=None, diagnostic_nqc_amplitude_derivatives=None,
+        diagnostic_peak_policy=None):
     started = time.monotonic()
     if diagnostic_peak_policy not in (None, "stationary"):
         raise ValueError("unknown diagnostic orbital-peak policy")
@@ -286,6 +305,7 @@ def run(case_id, plan, public_identity, *, variant="published", anchor_control=F
     output_time = np.arange(fine_count, dtype=np.float64) * fine_step
     matching_second = None
     phase_matrix = None
+    amplitude_derivatives = None
     if diagnostic_nqc_second is not None:
         if variant != "source":
             raise ValueError("diagnostic NQC curvature is source-backed only")
@@ -298,11 +318,18 @@ def run(case_id, plan, public_identity, *, variant="published", anchor_control=F
         phase_matrix = _polynomial_phase_matrix(
             fine.output_time, fine.output_state, torch_fine_omega,
             tmatch, **diagnostic_nqc_phase_matrix)
+    if diagnostic_nqc_amplitude_derivatives is not None:
+        if variant != "source":
+            raise ValueError("diagnostic NQC amplitude derivatives are source-backed only")
+        amplitude_derivatives = _polynomial_amplitude_derivatives(
+            fine.output_time, fine.output_state, torch_fine_omega,
+            torch_fine_mode, tmatch, **diagnostic_nqc_amplitude_derivatives)
     tref = torch_attach(
         fine.output_time, fine.output_state, torch_fine_omega,
         torch_fine_mode, torch_fine_frequency, tnu, tchi, tsigma,
         torch.tensor(output_time, dtype=torch.float64),
         match_time=tmatch if diagnostic_peak_policy else None,
+        diagnostic_amplitude_derivatives=amplitude_derivatives,
         diagnostic_phase_matrix=phase_matrix,
         diagnostic_matching_second=matching_second)
     jref = jax_attach(
@@ -369,6 +396,10 @@ def run(case_id, plan, public_identity, *, variant="published", anchor_control=F
         "diagnostic_nqc_phase_matrix": diagnostic_nqc_phase_matrix,
         "diagnostic_nqc_phase_matrix_values": (_array(phase_matrix).tolist()
                                                if phase_matrix is not None else None),
+        "diagnostic_nqc_amplitude_derivatives": diagnostic_nqc_amplitude_derivatives,
+        "diagnostic_nqc_amplitude_derivative_values": (
+            _array(amplitude_derivatives).tolist()
+            if amplitude_derivatives is not None else None),
         "independent_initial_solve": independent_init,
         "initial_state_max_abs": initial_state_max_abs,
         "torch_initial_state": initial_torch.tolist(),

@@ -1,0 +1,176 @@
+{
+  "baseline_stationary_torch_grid_l2": 4.987203955666721e-05,
+  "case_id": "q4_nonspinning",
+  "checks": {
+    "shared_time_max_abs_at_most_M": true,
+    "stationary_peak_slope_max_abs_at_most": true,
+    "torch_shared_sample_complex_relative_l2_at_most": false
+  },
+  "comparisons": {
+    "jax_unchanged": {
+      "complex_relative_l2": 5.046650093872297e-05,
+      "shared_end_M": 484.5,
+      "shared_samples": 970,
+      "shared_time_max_abs_M": 0.0
+    },
+    "torch": {
+      "complex_relative_l2": 2.7637957618096467e-05,
+      "shared_end_M": 484.5,
+      "shared_samples": 970,
+      "shared_time_max_abs_M": 0.0
+    }
+  },
+  "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+  "diagnostic_checks_passed": false,
+  "elapsed_s": 113.34989695897093,
+  "host": "RONI2",
+  "levels": {
+    "baseline": {
+      "amplitude_matrix": [
+        [
+          0.05493406506764049,
+          0.01832639989084106,
+          0.01058509766551884
+        ],
+        [
+          0.007647182026235873,
+          0.003148143604605216,
+          0.0019906898552252716
+        ],
+        [
+          0.0012389914036437509,
+          0.0006355583609667651,
+          0.0004396854472675639
+        ]
+      ],
+      "expected_backend_parity_broken": true,
+      "jax": {
+        "end_M": 484.5,
+        "mode_sha256": "f9c030844bd820269ff9da2965f9c10894680c95d338aade25254242b72a343a",
+        "samples": 970,
+        "start_M": 0.0,
+        "time_sha256": "6db2117b58c64613f6c556861870ceaa8bc6026319b18624a2991df48e6cec1b"
+      },
+      "match_time_M": 384.6638582128357,
+      "nqc_coefficients": [
+        [
+          -2.247111874722814,
+          8.112068382154561,
+          -6.579304905882878
+        ],
+        [
+          2.137061414437424,
+          -3.9142228966974164
+        ]
+      ],
+      "orbital_peak_spline_slope": -8.606532370461495e-17,
+      "phase_matrix": [
+        [
+          -0.026916413254949013,
+          -0.0027354517219834924
+        ],
+        [
+          -0.002421941275071794,
+          -0.0004931720501738664
+        ]
+      ],
+      "settings": {
+        "atol": 1e-13,
+        "coarse_output_step_M": 0.5,
+        "fine_refinement_factor": 128,
+        "max_step_M": 2.0,
+        "rtol": 1e-12
+      },
+      "torch": {
+        "end_M": 484.5,
+        "mode_sha256": "a81cd34217afb8ed1ddfc928647d9db51f26f9fa26a5f7fad10f60ce052158aa",
+        "samples": 970,
+        "start_M": 0.0,
+        "time_sha256": "6db2117b58c64613f6c556861870ceaa8bc6026319b18624a2991df48e6cec1b"
+      },
+      "torch_jax": {
+        "common_samples": 970,
+        "complex_relative_l2": 5.28953794817615e-05,
+        "support_sample_difference": 0,
+        "time_max_abs_M": 0.0
+      },
+      "torch_public_complex_l2": 0.06517188384481003
+    },
+    "refined": {
+      "amplitude_matrix": [
+        [
+          0.05493403981961926,
+          0.018326389503760587,
+          0.010585091098835424
+        ],
+        [
+          0.007647177308631981,
+          0.003148141211997384,
+          0.0019906881994578426
+        ],
+        [
+          0.0012389763375974504,
+          0.0006355508426130347,
+          0.00043968005143855775
+        ]
+      ],
+      "expected_backend_parity_broken": true,
+      "jax": {
+        "end_M": 484.5,
+        "mode_sha256": "6340516a68053bdad300051242cc4a2ed42c11f9560f8113babc12d1a11b9553",
+        "samples": 970,
+        "start_M": 0.0,
+        "time_sha256": "6db2117b58c64613f6c556861870ceaa8bc6026319b18624a2991df48e6cec1b"
+      },
+      "match_time_M": 384.6638549235156,
+      "nqc_coefficients": [
+        [
+          -2.2468772208536816,
+          8.109966089355767,
+          -6.576882928187003
+        ],
+        [
+          2.1370161397133036,
+          -3.913765868485023
+        ]
+      ],
+      "orbital_peak_spline_slope": 1.6175364677241746e-17,
+      "phase_matrix": [
+        [
+          -0.026916403678958003,
+          -0.0027354497614186985
+        ],
+        [
+          -0.0024219009277684223,
+          -0.0004931647087268288
+        ]
+      ],
+      "settings": {
+        "atol": 1e-13,
+        "coarse_output_step_M": 0.5,
+        "fine_refinement_factor": 256,
+        "max_step_M": 2.0,
+        "rtol": 1e-12
+      },
+      "torch": {
+        "end_M": 484.5,
+        "mode_sha256": "7ee5690ccbd08a827b4cef316620d300f665e165c6b2693c55909d7e2870d12c",
+        "samples": 970,
+        "start_M": 0.0,
+        "time_sha256": "6db2117b58c64613f6c556861870ceaa8bc6026319b18624a2991df48e6cec1b"
+      },
+      "torch_jax": {
+        "common_samples": 970,
+        "complex_relative_l2": 9.817891021312909e-05,
+        "support_sample_difference": 0,
+        "time_max_abs_M": 0.0
+      },
+      "torch_public_complex_l2": 0.06518319481236584
+    }
+  },
+  "pid": 60402,
+  "plan_sha256": "3787b9854411851f14316974a56828745c33ccbe385a8c3754148b52db0daaca",
+  "release_qualified": false,
+  "schema": "diffgw.seobnrv4.jax-source-local-matrix-control.v1",
+  "status": "diagnostic_complete"
+}

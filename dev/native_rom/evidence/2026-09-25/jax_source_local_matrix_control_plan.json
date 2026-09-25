@@ -1,0 +1,27 @@
+{
+  "schema": "diffgw.seobnrv4.jax-source-local-matrix-control-plan.v1",
+  "purpose": "Test a Torch-only NQC matching-matrix derivative counterfactual after the stationary orbital-peak control, using degree-four local polynomials over plus/minus 2 M for all three amplitude-product columns and both phase-basis columns while retaining the natural-cubic right-hand side and output interpolation.",
+  "pilot_case": "q4_nonspinning",
+  "prospective_case": "strong_aligned",
+  "source_plan_sha256": "eb79f7db87e23d83a8437334eec90f6872dcf3b76f65b5cbe55882f7d62b9944",
+  "stationary_result_sha256": {
+    "q4_nonspinning": "16bfef0003d27e4050029d6f4e6711bbbf78b692278da238bb701e080cde70a9",
+    "strong_aligned": "c24fa56cd78f42e75c72bbe3bc0400976bd93795785ccb749e3228fd4d6c46a5"
+  },
+  "atol": 1e-13,
+  "rtol": 1e-12,
+  "max_step_M": 2.0,
+  "output_step_M": 0.5,
+  "fine_refinement_factors": [128, 256],
+  "polynomial": {
+    "half_width_M": 2.0,
+    "degree": 4
+  },
+  "checks": {
+    "torch_shared_sample_complex_relative_l2_at_most": 1e-5,
+    "shared_time_max_abs_at_most_M": 1e-8,
+    "stationary_peak_slope_max_abs_at_most": 1e-8
+  },
+  "interpretation": "This is a Torch-only numerical counterfactual and deliberately breaks Torch/JAX source-path parity. A convergence pass would make this derivative policy a candidate for separate source-fidelity, backend parity, physical accuracy, and domain validation; it would not qualify a release.",
+  "release_qualified": false
+}

@@ -420,6 +420,7 @@ def _full_series_nqc(
     targets: NQCMatchingTargets,
     *,
     max_condition: float,
+    diagnostic_amplitude_derivatives: Optional[Tensor] = None,
     diagnostic_phase_matrix: Optional[Tensor] = None,
     diagnostic_matching_second: Optional[Tensor] = None,
 ) -> FullSeriesNQC:
@@ -446,6 +447,15 @@ def _full_series_nqc(
         raise ValueError("full-series base amplitude is nonpositive at match_time")
     amplitude_matrix = torch.stack((value[..., 1:4], first[..., 1:4],
                                     second[..., 1:4]), dim=-2)
+    if diagnostic_amplitude_derivatives is not None:
+        if (not isinstance(diagnostic_amplitude_derivatives, Tensor)
+                or diagnostic_amplitude_derivatives.shape != amplitude_matrix[..., 1:, :].shape
+                or diagnostic_amplitude_derivatives.dtype != amplitude_matrix.dtype
+                or diagnostic_amplitude_derivatives.device != amplitude_matrix.device
+                or not bool(torch.isfinite(diagnostic_amplitude_derivatives).all())):
+            raise ValueError("diagnostic_amplitude_derivatives must contain two finite matching rows")
+        amplitude_matrix = torch.cat((amplitude_matrix[..., :1, :],
+                                      diagnostic_amplitude_derivatives), dim=-2)
     amplitude_rhs = torch.stack(targets[:3], dim=-1) - torch.stack(
         (value[..., 0], first[..., 0], second[..., 0]), dim=-1)
     phase_matrix = torch.stack((first[..., 4:6], second[..., 4:6]), dim=-2)
@@ -735,6 +745,7 @@ def attach_seobnrv4_22_numerical_compatibility(
     match_time: Optional[Tensor] = None,
     mass_scale: Tensor | float = 1.0,
     max_condition: float = 1.0e10,
+    diagnostic_amplitude_derivatives: Optional[Tensor] = None,
     diagnostic_phase_matrix: Optional[Tensor] = None,
     diagnostic_matching_second: Optional[Tensor] = None,
 ) -> NumericalAttachedMode22:
@@ -848,7 +859,9 @@ def attach_seobnrv4_22_numerical_compatibility(
     nqc = _full_series_nqc(
         time, state[..., 0], state[..., 2], orbital_frequency, amplitude,
         frequency, _unwrap_mode_phase(base_mode), match, targets,
-        max_condition=max_condition, diagnostic_phase_matrix=diagnostic_phase_matrix,
+        max_condition=max_condition,
+        diagnostic_amplitude_derivatives=diagnostic_amplitude_derivatives,
+        diagnostic_phase_matrix=diagnostic_phase_matrix,
         diagnostic_matching_second=diagnostic_matching_second,
     )
     coefficients = nqc.calibration.coefficients

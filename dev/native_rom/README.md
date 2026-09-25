@@ -1318,6 +1318,20 @@ the fine trajectory or raw mode. A stable derivative prescription must be
 checked against the pinned historical source before it can replace the
 compatibility rule or support release qualification.
 
+The [frozen local-matrix counterfactual](evidence/2026-09-25/jax_source_local_matrix_control_plan.json)
+keeps the stationary peak but uses degree-four `±2 M` local polynomial first
+and second derivatives for the five NQC matching-matrix columns; it leaves
+the right-hand sides and output interpolation on natural cubics. This is a
+Torch-only control, so Torch/JAX parity is deliberately broken. The
+[q4](evidence/2026-09-25/jax_source_local_matrix_control_q4_nonspinning.json)
+and [aligned-spin](evidence/2026-09-25/jax_source_local_matrix_control_strong_aligned.json)
+factor-128 to factor-256 Torch drifts fall to `2.76e-5` and `2.42e-5`, but
+both still fail the frozen `1e-5` gate. The unchanged JAX route retains its
+`5.05e-5` and `1.07e-4` drifts. At this point the remaining coefficient
+changes include right-hand-side derivative sensitivity, so a consistent
+local-derivative system is the next numerical control. No local-polynomial
+choice has yet passed historical-source or physical validation.
+
 The [frozen anchor diagnostic](evidence/2026-09-25/source_spliced_anchor_plan.json)
 replays all four cases and fits each mode's own amplitude peak between output
 samples without optimizing a relative shift. The [results](evidence/2026-09-25/source_spliced_anchor.json)
