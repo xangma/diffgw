@@ -1478,6 +1478,21 @@ coefficients within `5.50e-9`. This only validates numerical plumbing for
 that case; it does not establish physical accuracy, source fidelity, JIT or
 autodiff support for the complete waveform, or ROM training.
 
+The [post-hoc SXS:BBH:2786 combined-control plan](evidence/2026-09-25/sxs_2786_combined_control_plan.json)
+replays that opt-in driver with the previously selected source-backed physical
+choices and compares it against the original native result, the earlier
+source-choice intervention, and both NR resolutions on one common settled
+support. The [result](evidence/2026-09-25/sxs_2786_combined_control.json)
+exceeds the unchanged `0.99` detector-weighted overlap threshold at all five
+predeclared masses; its minimum is `0.99571937` at `50 M⊙`. It differs from
+the earlier source-choice overlap by at most `3.58e-6` across those masses.
+After the fixed inspiral-frequency anchor, its amplitude peak is
+`816.71649 M`, versus the highest-resolution NR peak at `811.24219 M`, a
+`5.47430 M` difference. The numerical intervention therefore preserves the
+earlier weighted-match behavior but does not close the `5 M` timing criterion.
+This already selected case cannot serve as a fresh holdout; the separate
+prospective SXS failures and source/ROM gates remain open.
+
 The [frozen anchor diagnostic](evidence/2026-09-25/source_spliced_anchor_plan.json)
 replays all four cases and fits each mode's own amplitude peak between output
 samples without optimizing a relative shift. The [results](evidence/2026-09-25/source_spliced_anchor.json)

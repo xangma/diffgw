@@ -1,0 +1,28 @@
+{
+  "schema": "diffgw.seobnrv4.sxs-2786-combined-control-plan.v1",
+  "purpose": "Post-hoc physical diagnostic of the combined local-NQC and continuous-boundary route on the previously failed SXS:BBH:2786 case. Compare on one common support against the original native run, the earlier source-choice intervention, and both NR resolutions.",
+  "simulation": "SXS:BBH:2786",
+  "case_plan_sha256": "8af92504ac37fcd66658530a51f99553d22425c9de5b8cdece6b505dd2f5865e",
+  "weighted_plan_sha256": "b4aca1d9276618d652ecbbacbe996dea0ba31925c926fbd0ea32629f11789e54",
+  "comparison_sha256": "9f743a6079cb42e3de160f2bb394a8884a5c42e75091cd8e4bf395826b6f8ce8",
+  "prior_intervention_sha256": "c77d3aa4ac460edab48e2ae0fb5fad9fec1f13acb0e710ad819ccded1d70222c",
+  "source_choice_sha256": "d8efe4baa182ea39bf9a7d35b6de8621c6e054429ee180eb661e9fbb9f9d59d8",
+  "original_array_sha256": "caeb2b05455518eabe7be2213d42525ea1e31f60d590bab6b8c90b91ef60133a",
+  "prior_intervention_array_sha256": "f94b80f0abd3c6ca9d6d2ee6c68c5643ba41cffcdc6b7ee96216b6c8094f2fdd",
+  "extraction_sha256": "6cd4cd85b759d5f68715afee6e698f42a82327f82d10c35829c0926a46bf2b7a",
+  "numerical": {
+    "output_step_M": 0.25,
+    "atol": 1e-13,
+    "rtol": 1e-12,
+    "coarse_initial_step_M": 0.125,
+    "fine_max_step_M": 2.0,
+    "fine_refinement_factor": 256,
+    "combined_local_fit": {"half_width_M": 2.0, "degree": 4},
+    "qnm_source": "independent_kerr",
+    "max_run_seconds": 900
+  },
+  "masses_msun": [10, 50, 58, 100, 200],
+  "selected_case_overlap_threshold": 0.99,
+  "interpretation": "Selected post-hoc case only. A passing value does not restore independence of the SXS holdout or qualify the model or ROM.",
+  "release_qualified": false
+}

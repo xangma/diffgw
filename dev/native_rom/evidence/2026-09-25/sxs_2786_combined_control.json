@@ -1,0 +1,309 @@
+{
+  "anchor": {
+    "anchor_phase_rad": -635.3933001797741,
+    "anchor_time_M": 15093.783509964655,
+    "frequency_at_grid_crossing": [
+      0.08999864106852641,
+      0.09000877933252935
+    ],
+    "peak_after_anchor_M": 816.7164900353455,
+    "peak_amplitude": 0.15053497300537408
+  },
+  "array": {
+    "path": "/tmp/diffgw-sxs-second-holdout/decoded/SXS_BBH_2786_combined_control.npz",
+    "sha256": "7833c617249391ef2762c92ba8dbbf30dd932269ef2a1c5bebbf74a2ed12d204"
+  },
+  "common_time_support_M": [
+    -7958.75,
+    950.75
+  ],
+  "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+  "elapsed_s": 160.6096799999941,
+  "fft_length": 71280,
+  "host": "RONI2",
+  "minimum_overlap": 0.9957193710553369,
+  "native": {
+    "array_dtype": {
+      "mode": "complex128",
+      "time": "float64"
+    },
+    "array_sha256": {
+      "mode": "a64cf537ca17bf8590c2729dada260eb3a27602414a9a6bbb3bc6a8d877a0220",
+      "time": "d6dbd9667bac71fd9d802fbd1513521c020c8112990ef5e9e315deb6fba7919c"
+    },
+    "atol": 1e-13,
+    "boundary_time_M": 15910.479750151819,
+    "dt_geom": 0.25,
+    "final_mass_fraction": 0.9805109892023843,
+    "final_spin": 0.8613830407657724,
+    "internal_step_M": 0.0009765625,
+    "match_time_M": 15910.479750151819,
+    "name": "combined_control",
+    "nqc_coefficients": {
+      "amplitude": [
+        377.977903265782,
+        -3125.6428265421205,
+        3435.6010199166285
+      ],
+      "phase": [
+        70.46506413863077,
+        -3943.013269675152
+      ]
+    },
+    "nqc_full_spline_phase_matrix": [
+      [
+        -0.003583161745492194,
+        -2.9191021625417e-05
+      ],
+      [
+        -0.00029872129488402594,
+        -4.408883994612796e-06
+      ]
+    ],
+    "nqc_matching_matrices": {
+      "amplitude": [
+        [
+          0.0017453559811803,
+          0.0005477855871031116,
+          0.0003068837501001154
+        ],
+        [
+          0.0001277648680775132,
+          4.5069395764795886e-05,
+          2.6641181994603427e-05
+        ],
+        [
+          1.55311793024866e-05,
+          5.829034279079308e-06,
+          3.5518955149693054e-06
+        ]
+      ],
+      "phase": [
+        [
+          -0.0035831191138914306,
+          -2.9189109467153e-05
+        ],
+        [
+          -0.0002986877551234376,
+          -4.408274103941434e-06
+        ]
+      ]
+    },
+    "peak_time_M": 15930.44269748091,
+    "restart_time_M": 15780.5,
+    "rtol": 1e-12,
+    "samples": 64242,
+    "stages": {
+      "coarse": {
+        "accepted": 2498,
+        "evaluations": 15484,
+        "event_time_M": 15930.488246564792,
+        "rejected": 99,
+        "termination": [
+          "event"
+        ]
+      },
+      "fine": {
+        "accepted": 305,
+        "evaluations": 1936,
+        "event_time_M": 150.29510400910118,
+        "rejected": 21,
+        "termination": [
+          "event"
+        ]
+      }
+    },
+    "support_M": [
+      0.0,
+      16060.25
+    ]
+  },
+  "pid": 32744,
+  "plan_sha256": "9d114e2a34101b4b49138b2ebece0276887afff01ed6c337415a01a6f485d468",
+  "posthoc_selected_case": true,
+  "release_qualified": false,
+  "rows": [
+    {
+      "frequency_bins": 2528,
+      "lower_frequency_Hz": 120.02719663292079,
+      "scores": {
+        "combined_control": {
+          "best_lag_M": -1.5760422432647347,
+          "bins": 2528,
+          "grid_max_overlap": 0.9974041700824676,
+          "overlap": 0.9974133919228788,
+          "time_shift_at_boundary": false
+        },
+        "earlier_choice": {
+          "best_lag_M": -1.5758918716443173,
+          "bins": 2528,
+          "grid_max_overlap": 0.9974048246933337,
+          "overlap": 0.9974140098126846,
+          "time_shift_at_boundary": false
+        },
+        "native": {
+          "best_lag_M": 3.5125281057657567,
+          "bins": 2528,
+          "grid_max_overlap": 0.9795592056661468,
+          "overlap": 0.9795593253484376,
+          "time_shift_at_boundary": false
+        },
+        "nr_low": {
+          "best_lag_M": 0.21917569955857233,
+          "bins": 2528,
+          "grid_max_overlap": 0.9996922931840988,
+          "overlap": 0.9996938585744893,
+          "time_shift_at_boundary": false
+        }
+      },
+      "total_mass_msun": 10
+    },
+    {
+      "frequency_bins": 13060,
+      "lower_frequency_Hz": 24.00543932658416,
+      "scores": {
+        "combined_control": {
+          "best_lag_M": -2.5424614073815377,
+          "bins": 13060,
+          "grid_max_overlap": 0.995708048593714,
+          "overlap": 0.9957193710553369,
+          "time_shift_at_boundary": false
+        },
+        "earlier_choice": {
+          "best_lag_M": -2.542063532301925,
+          "bins": 13060,
+          "grid_max_overlap": 0.9957112811351005,
+          "overlap": 0.9957223913272717,
+          "time_shift_at_boundary": false
+        },
+        "native": {
+          "best_lag_M": 7.7487853229628705,
+          "bins": 13060,
+          "grid_max_overlap": 0.9505152507715059,
+          "overlap": 0.9505152580836111,
+          "time_shift_at_boundary": false
+        },
+        "nr_low": {
+          "best_lag_M": 0.036456039305214044,
+          "bins": 13060,
+          "grid_max_overlap": 0.9998746593668154,
+          "overlap": 0.9998830184439392,
+          "time_shift_at_boundary": false
+        }
+      },
+      "total_mass_msun": 50
+    },
+    {
+      "frequency_bins": 15167,
+      "lower_frequency_Hz": 20.69434424705531,
+      "scores": {
+        "combined_control": {
+          "best_lag_M": -2.6421680288741443,
+          "bins": 15167,
+          "grid_max_overlap": 0.9957339401829208,
+          "overlap": 0.9958159980981125,
+          "time_shift_at_boundary": false
+        },
+        "earlier_choice": {
+          "best_lag_M": -2.6417407842027876,
+          "bins": 15167,
+          "grid_max_overlap": 0.9957365707466321,
+          "overlap": 0.9958192712830631,
+          "time_shift_at_boundary": false
+        },
+        "native": {
+          "best_lag_M": 8.137514798794038,
+          "bins": 15167,
+          "grid_max_overlap": 0.9499292979831544,
+          "overlap": 0.9500035421162835,
+          "time_shift_at_boundary": false
+        },
+        "nr_low": {
+          "best_lag_M": 0.023141352148305757,
+          "bins": 15167,
+          "grid_max_overlap": 0.9999081100463835,
+          "overlap": 0.9999118846611739,
+          "time_shift_at_boundary": false
+        }
+      },
+      "total_mass_msun": 58
+    },
+    {
+      "frequency_bins": 26226,
+      "lower_frequency_Hz": 12.00271966329208,
+      "scores": {
+        "combined_control": {
+          "best_lag_M": -2.999569028551072,
+          "bins": 26226,
+          "grid_max_overlap": 0.9969098560226257,
+          "overlap": 0.9969098578385269,
+          "time_shift_at_boundary": false
+        },
+        "earlier_choice": {
+          "best_lag_M": -2.9989946515448116,
+          "bins": 26226,
+          "grid_max_overlap": 0.9969134226081973,
+          "overlap": 0.9969134324897482,
+          "time_shift_at_boundary": false
+        },
+        "native": {
+          "best_lag_M": 9.514275785044376,
+          "bins": 26226,
+          "grid_max_overlap": 0.9578199374814981,
+          "overlap": 0.9578217835146903,
+          "time_shift_at_boundary": false
+        },
+        "nr_low": {
+          "best_lag_M": -0.009727389277703597,
+          "bins": 26226,
+          "grid_max_overlap": 0.9999708236530934,
+          "overlap": 0.999971748258901,
+          "time_shift_at_boundary": false
+        }
+      },
+      "total_mass_msun": 100
+    },
+    {
+      "frequency_bins": 35464,
+      "lower_frequency_Hz": 10,
+      "scores": {
+        "combined_control": {
+          "best_lag_M": -3.3233199719502498,
+          "bins": 35464,
+          "grid_max_overlap": 0.9990411429201552,
+          "overlap": 0.9991007221020729,
+          "time_shift_at_boundary": false
+        },
+        "earlier_choice": {
+          "best_lag_M": -3.3223338642624176,
+          "bins": 35464,
+          "grid_max_overlap": 0.9990450277922999,
+          "overlap": 0.9991030110681444,
+          "time_shift_at_boundary": false
+        },
+        "native": {
+          "best_lag_M": 10.97533255976451,
+          "bins": 35464,
+          "grid_max_overlap": 0.9822610943737953,
+          "overlap": 0.9822676536009061,
+          "time_shift_at_boundary": false
+        },
+        "nr_low": {
+          "best_lag_M": -0.030438170053837435,
+          "bins": 35464,
+          "grid_max_overlap": 0.9999868321912863,
+          "overlap": 0.9999969957554159,
+          "time_shift_at_boundary": false
+        }
+      },
+      "total_mass_msun": 200
+    }
+  ],
+  "schema": "diffgw.seobnrv4.sxs-2786-combined-control.v1",
+  "script_sha256": "8d103d846db4c96e2f18fd3c6ca40d9dba7056638815cfd2c765eae06370a879",
+  "selected_case_99_percent_passed": true,
+  "source_sha256_after": "98033d690d5ba9b1683987e471d2f2e1a1ecd4533ff8042f39be99c861296068",
+  "source_sha256_before": "98033d690d5ba9b1683987e471d2f2e1a1ecd4533ff8042f39be99c861296068",
+  "sources_unchanged": true,
+  "status": "diagnostic_complete"
+}
