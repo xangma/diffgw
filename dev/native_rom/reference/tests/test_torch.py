@@ -539,33 +539,8 @@ def test_35_mode_flux_from_independent_scalar_amplitudes():
     """Compose all declared paper mode oracles, including the weak modes."""
     m1, m2, s1, s2 = 30., 20., .2, -.1
     w, w0, j, he, hr = .06, .057, 3.2, .93, .981
-    base = (m1, m2, s1, s2, w, w0)
-    h_args, j_args = (*base, he, hr), (*base, j, hr)
-    ref = {
-        (2, 2): scalar_flux.factorized_22_amplitude(*h_args),
-        (2, 1): scalar_flux.factorized_21_spin_amplitude(*j_args),
-        (3, 1): scalar_flux.factorized_31_amplitude(*h_args),
-        (3, 2): scalar_flux.factorized_32_amplitude(*j_args),
-        (4, 1): scalar_flux.factorized_41_amplitude(*j_args),
-        (4, 2): scalar_flux.factorized_42_amplitude(*h_args),
-        (4, 3): scalar_flux.factorized_43_amplitude(*j_args),
-        (5, 5): scalar_flux.factorized_55_amplitude(*h_args),
-        (6, 2): scalar_flux.factorized_62_amplitude(*h_args),
-    }
-    grouped = (
-        (((3, 3), (4, 4)), scalar_flux.factorized_33_44_amplitudes(*h_args)),
-        (((5, 4), (5, 2)), scalar_flux.factorized_54_52_amplitudes(*j_args)),
-        (((5, 3), (5, 1)), scalar_flux.factorized_53_51_amplitudes(*h_args)),
-        (((6, 6), (6, 4)), scalar_flux.factorized_66_64_amplitudes(*h_args)),
-        (((6, 5), (6, 3), (6, 1)), scalar_flux.factorized_6_odd_amplitudes(*j_args)),
-        (((7, 7), (7, 5), (7, 3), (7, 1)), scalar_flux.factorized_7_odd_amplitudes(*h_args)),
-        (((7, 6), (7, 4), (7, 2)), scalar_flux.factorized_7_even_amplitudes(*j_args)),
-        (((8, 8), (8, 6), (8, 4), (8, 2)),
-         scalar_flux.factorized_8_even_amplitudes(*h_args, spin_truncation="tabulated")),
-        (((8, 7), (8, 5), (8, 3), (8, 1)), scalar_flux.factorized_8_odd_amplitudes(*j_args)),
-    )
-    for keys, values in grouped:
-        ref.update(zip(keys, values))
+    ref = scalar_flux.factorized_mode_amplitudes(
+        m1, m2, s1, s2, w, w0, j, he, hr, spin_truncation="tabulated")
     assert len(ref) == 35
     flux = SEOBNRv4PublishedFlux(spin_truncation="tabulated")
     state = scalar([9., 0., -.01, j])

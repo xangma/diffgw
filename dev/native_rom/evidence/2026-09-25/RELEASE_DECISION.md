@@ -63,7 +63,7 @@ frozen before intake; this reservation does not turn the failing current
 candidate into a qualified one.
 
 The [source specification](../../reference/SPEC.md) remains incomplete: six
-of 47 manifest components are `pending`, including the full flux aggregate,
+of 48 manifest components are `pending`, including the full flux aggregate,
 QNM interpolation, ODE initial conditions, TD/FD conventions, and the ROM
 construction. The
 published model does not supply independently derived ROM bases and spline
@@ -83,6 +83,11 @@ Hamilton equations, but not the physical flux or an integrated trajectory.
 The newly executable tail-modulus leaf independently checks the scalar, Torch,
 and JAX supplied-input factor against the published complex-gamma expression;
 it does not construct the modes or close the pending full-flux aggregate.
+The conditional paper-flux ODE leaf joins all 35 independently computed
+pre-NQC amplitudes to a scalar-differentiated Hamiltonian at two supplied
+nonzero-radial states per frontend. Its four-component Torch/JAX comparisons
+pass at `3e-10` relative / `2e-12` absolute. Historical mode selection,
+initial data, integration, convergence, and physical overlap gates remain open.
 The initial-data source audit corrects the paper trail: [Bohé et al. Sec. II.2](https://arxiv.org/html/1611.03703)
 cites [Buonanno, Chen, and Damour (2006), Sec. IV.1](https://arxiv.org/html/gr-qc/0508067) for the quasicircular
 prescription. A separate two-point scalar check recomputes neighboring

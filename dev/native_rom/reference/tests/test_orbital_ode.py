@@ -6,11 +6,13 @@ import pytest
 import torch
 
 from dev.native_rom.reference.orbital_ode import (
-    supplied_force_vector_field, zero_radial_vector_field,
+    paper_flux_vector_field, supplied_force_vector_field, zero_radial_vector_field,
 )
 from jaxwave.approximants.eob.integrator import EOBTrajectoryIntegrator as JaxIntegrator
+from jaxwave.approximants.eob.seobnrv4_flux import SEOBNRv4PublishedFlux as JaxFlux
 from jaxwave.approximants.eob.seobnrv4_hamiltonian import SEOBNRv4Hamiltonian as JaxHamiltonian
 from torchwave.approximants.eob.integrator import EOBTrajectoryIntegrator as TorchIntegrator
+from torchwave.approximants.eob.seobnrv4_flux import SEOBNRv4PublishedFlux as TorchFlux
 from torchwave.approximants.eob.seobnrv4_hamiltonian import SEOBNRv4Hamiltonian as TorchHamiltonian
 
 jax.config.update("jax_enable_x64", True)
@@ -95,3 +97,33 @@ def test_nonzero_radial_vector_field_against_paper_reference(
             jax_scalar([r, phi, pr, j]))
     for value, reference in zip(actual, expected):
         assert float(value) == pytest.approx(float(reference), rel=2e-10, abs=2e-12)
+
+
+@pytest.mark.parametrize("m1,m2,s1,s2,r,phi,pr,j", [
+    (30., 20., 0., 0., 10., .1, -.02, 3.6),
+    (45., 5., -.8, .3, 8., -.7, -.03, 2.9),
+])
+@pytest.mark.parametrize("frontend", ["torch", "jax"])
+def test_full_pre_nqc_flux_vector_field_against_scalar_paper_reference(
+    frontend, m1, m2, s1, s2, r, phi, pr, j,
+):
+    """Cross the independently differentiated Hamiltonian with all 35 modes."""
+    expected = paper_flux_vector_field(
+        m1, m2, s1, s2, r, phi, pr, j, spin_truncation="tabulated")
+    nu = m1*m2/(m1+m2)**2
+    delta = (m1-m2)/(m1+m2)
+    if frontend == "torch":
+        hamiltonian = TorchHamiltonian(torch_scalar(nu), torch_scalar(s1), torch_scalar(s2),
+                                       delta=torch_scalar(delta))
+        flux = TorchFlux(spin_truncation="tabulated")
+        actual = TorchIntegrator(hamiltonian, flux).vector_field(
+            torch_scalar([r, phi, pr, j]))
+    else:
+        hamiltonian = JaxHamiltonian(jax_scalar(nu), jax_scalar(s1), jax_scalar(s2),
+                                     delta=jax_scalar(delta))
+        flux = JaxFlux(spin_truncation="tabulated")
+        actual = JaxIntegrator(hamiltonian, flux).vector_field(
+            jax_scalar([r, phi, pr, j]))
+    for value, reference in zip(actual, expected):
+        assert float(value) == pytest.approx(float(reference), rel=3e-10, abs=2e-12)
+    assert float(actual[3]) < 0

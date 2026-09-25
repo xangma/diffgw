@@ -1,5 +1,5 @@
 {
-  "specification": "seobnrv4-paper-components/0.8.11",
+  "specification": "seobnrv4-paper-components/0.8.12",
   "model": "SEOBNRv4 dominant (2,2) mode, aligned-spin black-hole binaries",
   "source": {
     "id": "bohe-2017-v3",
@@ -424,6 +424,16 @@
       "jax": "src/jaxwave/approximants/eob/integrator.py:EOBTrajectoryIntegrator.vector_field with SEOBNRv4Hamiltonian and supplied torque",
       "test": "dev/native_rom/reference/tests/test_orbital_ode.py:test_zero_radial_vector_field_against_paper_reference",
       "condition": "Four supplied zero-radial-momentum states, including varied masses, spins, radii, angular momentum, and irrelevant orbital phase, compare all four vector-field components with an independently differentiated high-precision scalar Hamiltonian at 2e-10 relative / 2e-12 absolute. The angular torque is supplied and the radial dissipative force is zero. This does not test the 35-mode physical torque, nonzero-radial dynamics, initial-data root, integration, events, numerical convergence, or the historical radial-log derivative convention. The aggregate V4-ODE-IC remains pending."
+    },
+    {
+      "id": "V4-ODE-RHS-PAPER-FLUX",
+      "source": "bohe-2017-v3, Eqs. (4)--(6), (9); Buonanno--Damour gr-qc/0001013v2, Eqs. (24)--(27); Pan et al. 0912.3466v2, Eq. (28)",
+      "status": "conditional",
+      "reference": "orbital_ode.paper_flux_vector_field; flux.factorized_mode_amplitudes",
+      "torch": "src/torchwave/approximants/eob/integrator.py:EOBTrajectoryIntegrator.vector_field with SEOBNRv4PublishedFlux",
+      "jax": "src/jaxwave/approximants/eob/integrator.py:EOBTrajectoryIntegrator.vector_field with SEOBNRv4PublishedFlux",
+      "test": "dev/native_rom/reference/tests/test_orbital_ode.py:test_full_pre_nqc_flux_vector_field_against_scalar_paper_reference",
+      "condition": "Two supplied nonzero-radial states per frontend compare all four components against an independently differentiated scalar Hamiltonian and 35 independently calculated positive-m pre-NQC mode amplitudes, using tabulated high-mode spin truncation and Taylor-f higher-spin choices. Agreement is 3e-10 relative / 2e-12 absolute. This local paper-derived force composition does not establish historical mode choices, the full flux aggregate over the physical domain, initial conditions, integrated trajectories, numerical convergence, or whole-waveform agreement."
     },
     {
       "id": "V4-ODE-IC",

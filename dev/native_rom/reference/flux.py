@@ -34,6 +34,52 @@ def emitted_flux(omega, positive_m_modes, *, digits=60):
         return total/(8*mp.pi)
 
 
+def factorized_mode_amplitudes(m1, m2, chi1, chi2, omega, omega_zero_radial,
+                               pphi, h_eff, h_real, *, spin_truncation,
+                               mode_21_higher_spin="taylor_f",
+                               mode_33_higher_spin="taylor_f", digits=60):
+    """Compose the 35 scalar paper-mode moduli for a supplied orbital state.
+
+    The spin choices remain explicit, so this is a conditional pre-NQC flux
+    reference rather than a claim of historical SEOBNRv4 mode selection.
+    """
+    if mode_21_higher_spin not in {"taylor_f", "rho_hybrid"}:
+        raise ValueError("mode_21_higher_spin must be taylor_f or rho_hybrid")
+    h_args = (m1, m2, chi1, chi2, omega, omega_zero_radial, h_eff, h_real)
+    j_args = (m1, m2, chi1, chi2, omega, omega_zero_radial, pphi, h_real)
+    mode21 = (factorized_21_spin_amplitude if mode_21_higher_spin == "taylor_f"
+              else factorized_21_rho_hybrid_amplitude)
+    modes = {
+        (2, 2): factorized_22_amplitude(*h_args, digits=digits),
+        (2, 1): mode21(*j_args, digits=digits),
+        (3, 1): factorized_31_amplitude(*h_args, digits=digits),
+        (3, 2): factorized_32_amplitude(*j_args, digits=digits),
+        (4, 1): factorized_41_amplitude(*j_args, digits=digits),
+        (4, 2): factorized_42_amplitude(*h_args, digits=digits),
+        (4, 3): factorized_43_amplitude(*j_args, digits=digits),
+        (5, 5): factorized_55_amplitude(*h_args, digits=digits),
+        (6, 2): factorized_62_amplitude(*h_args, digits=digits),
+    }
+    grouped = (
+        (((3, 3), (4, 4)), factorized_33_44_amplitudes(
+            *h_args, digits=digits, mode_33_higher_spin=mode_33_higher_spin)),
+        (((5, 4), (5, 2)), factorized_54_52_amplitudes(*j_args, digits=digits)),
+        (((5, 3), (5, 1)), factorized_53_51_amplitudes(*h_args, digits=digits)),
+        (((6, 6), (6, 4)), factorized_66_64_amplitudes(*h_args, digits=digits)),
+        (((6, 5), (6, 3), (6, 1)), factorized_6_odd_amplitudes(*j_args, digits=digits)),
+        (((7, 7), (7, 5), (7, 3), (7, 1)), factorized_7_odd_amplitudes(*h_args, digits=digits)),
+        (((7, 6), (7, 4), (7, 2)), factorized_7_even_amplitudes(*j_args, digits=digits)),
+        (((8, 8), (8, 6), (8, 4), (8, 2)), factorized_8_even_amplitudes(
+            *h_args, spin_truncation=spin_truncation, digits=digits)),
+        (((8, 7), (8, 5), (8, 3), (8, 1)), factorized_8_odd_amplitudes(*j_args, digits=digits)),
+    )
+    for keys, amplitudes in grouped:
+        modes.update(zip(keys, amplitudes, strict=True))
+    if len(modes) != 35:
+        raise AssertionError("The complete pre-NQC sum must contain 35 positive-m modes")
+    return modes
+
+
 def newtonian_22_mode(n, omega, phase=0):
     """Pan et al. 1006.0431 Eqs. (3), (30), dominant Newtonian mode."""
     n, w, phase = map(lambda x: mp.mpf(str(x)), (n, omega, phase))

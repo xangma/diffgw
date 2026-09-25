@@ -1,4 +1,4 @@
-# SEOBNRv4 source specification: paper components 0.8.11
+# SEOBNRv4 source specification: paper components 0.8.12
 
 **Status: incomplete research specification.** This version establishes an
 independent executable source of truth for the components marked `executable`
@@ -66,7 +66,7 @@ terms are those of the [author release](https://zenodo.org/records/14999310).
 ## Mathematics and components
 
 The [component manifest](manifest.json) is the authoritative mapping of all
-45 stable component IDs to pinned equations, reference functions, native
+48 stable component IDs to pinned equations, reference functions, native
 frontends, tests, and current implementation status. In composition, the
 initial conditions feed the aligned-spin Hamiltonian and mode-summed flux
 into the orbital ODE; its pre-NQC `(2,2)` mode is corrected at the amplitude
@@ -85,6 +85,7 @@ trained basis, parameter interpolation, or holdout definition yet.
 | `V4-QNM-INTERPOLATION` / 0.8.11 | Bohé Sec. II.C; Berti numerical data; pinned LAL source | pending | pending | Development-only independent Kerr route | q4 impact measured; domain-wide physical and waveform validation open |
 | `V4-ODE-RHS-PR0` / 0.8.11 | Bohé Sec. II.2; Buonanno--Damour Eqs. (24)--(27); Pan Eq. (28) | conditional | `orbital_ode.zero_radial_vector_field` with supplied torque | Torch/JAX `EOBTrajectoryIntegrator.vector_field` | Four supplied zero-radial states only; full torque, initial conditions, integration, and events remain open |
 | `V4-ODE-RHS-SUPPLIED-FORCE` / 0.8.11 | Bohé Sec. II.2; Buonanno--Damour Eqs. (24)--(27); Pan Eq. (28) | conditional | `orbital_ode.supplied_force_vector_field` with supplied forces | Torch/JAX `EOBTrajectoryIntegrator.vector_field` | Four supplied nonzero-radial states only; physical forces, initial conditions, integration, and events remain open |
+| `V4-ODE-RHS-PAPER-FLUX` / 0.8.12 | Bohé Eqs. (4)–(6), (9); Buonanno--Damour Eqs. (24)--(27); Pan Eq. (28) | conditional | `orbital_ode.paper_flux_vector_field` and 35 scalar modes | Torch/JAX `EOBTrajectoryIntegrator.vector_field` with published flux | Two supplied nonzero-radial states only; historical choices, initial conditions, integration, and convergence remain open |
 | `V4-ODE-IC` / 0.8.11 | Bohé evolution and historical carrier | pending | pending | Development integrators | Domain-wide converged initial conditions and events |
 | `V4-TD-FD-CONVENTIONS` / 0.8.11 | Pinned public LAL conditioning/FFT binary | pending | pending | Development Torch adapter | Identical-input conditioning/FFT passed on three rows; native/public full FD retains up to 0.004031 relative L2 after physical time/phase fitting on four rows, and conventions remain open |
 | `V4-ROM-VII` / 0.8.11 | Bohé Sec. VII | pending | pending | pending | Qualified training generator, bases, and holdouts |
@@ -162,6 +163,15 @@ supplied radial and angular dissipative forces. Torch and JAX agree with all
 four independent scalar components within `2e-10` relative and `2e-12`
 absolute. This establishes only a local vector-field leaf, not the physical
 force prescription or integrated inspiral.
+`V4-ODE-RHS-PAPER-FLUX` composes the independently differentiated scalar
+Hamiltonian with all 35 positive-`m`, pre-NQC mode amplitudes in
+[Bohé et al., Eq. (9)](https://arxiv.org/html/1611.03703), then applies its
+angular torque and the specified radial-force gauge to the polar equations.
+At two supplied nonzero-`p_r*` states, each Torch and JAX vector-field
+component agrees with the scalar composition within `3e-10` relative and
+`2e-12` absolute. This is conditional on the stated mode-spin options and
+supplied states; it does not settle historical mode choices, initial-data
+root finding, integrated inspiral, or domain-wide convergence.
 `hamiltonian.nonspinning_effective_hamiltonian` also checks the deformed-metric
 orbital Hamiltonian and 3PN tortoise-momentum quartic term at zero spin,
 including the exact Schwarzschild test-mass limit. Its finite-mass-ratio

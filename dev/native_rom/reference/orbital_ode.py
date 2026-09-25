@@ -13,6 +13,7 @@ from .hamiltonian import (
     aligned_effective_hamiltonian, body_parameters, energy_map,
     radial_potentials,
 )
+from .flux import emitted_flux, factorized_mode_amplitudes
 
 
 def _five_point_derivative(function, point):
@@ -62,3 +63,37 @@ def zero_radial_vector_field(m1, m2, chi1, chi2, r, phi, p_phi, torque,
     """Return the supplied-force vector field at p_r*=0 and zero radial force."""
     return supplied_force_vector_field(
         m1, m2, chi1, chi2, r, phi, 0, p_phi, 0, torque, digits=digits)
+
+
+def paper_flux_vector_field(m1, m2, chi1, chi2, r, phi, p_r_star, p_phi,
+                            *, spin_truncation, digits=60):
+    """Compose the independent scalar Hamiltonian and all pre-NQC modes.
+
+    The angular force follows Bohé Eq. (9) in reduced-mass units. Its radial
+    component follows the specified p_r*/p_phi radiation-reaction gauge.
+    Mode spin/truncation choices are conditional, not historical-v4 claims.
+    """
+    with mp.workdps(digits):
+        r, phi, p_r_star, p_phi = map(
+            lambda value: mp.mpf(str(value)), (r, phi, p_r_star, p_phi))
+        if p_phi <= 0:
+            raise ValueError("positive p_phi is required")
+        nu, _, _ = body_parameters(m1, m2, chi1, chi2)
+        omega = supplied_force_vector_field(
+            m1, m2, chi1, chi2, r, phi, p_r_star, p_phi, 0, 0,
+            digits=digits)[1]
+        omega_zero_radial = supplied_force_vector_field(
+            m1, m2, chi1, chi2, r, phi, 0, p_phi, 0, 0,
+            digits=digits)[1]
+        heff = aligned_effective_hamiltonian(
+            m1, m2, chi1, chi2, r, p_r_star, p_phi, digits=digits)
+        hreal = energy_map(nu, heff, digits=digits)[0]
+        modes = factorized_mode_amplitudes(
+            m1, m2, chi1, chi2, omega, omega_zero_radial,
+            p_phi, heff, hreal, spin_truncation=spin_truncation, digits=digits)
+        flux = emitted_flux(omega, modes, digits=digits)
+        torque = -flux/(nu*omega)
+        radial_force = p_r_star/p_phi*torque
+        return supplied_force_vector_field(
+            m1, m2, chi1, chi2, r, phi, p_r_star, p_phi,
+            radial_force, torque, digits=digits)
