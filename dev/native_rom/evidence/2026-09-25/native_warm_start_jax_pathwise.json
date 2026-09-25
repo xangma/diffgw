@@ -1,0 +1,84 @@
+{
+  "case": {
+    "cap_Momega": 0.03162277660168379,
+    "chi1": 0.8,
+    "chi2": 0.6,
+    "device": "cpu",
+    "dtype": "float64",
+    "mass1": 30.0,
+    "mass2": 20.0,
+    "target_Momega": 0.03182277660168379
+  },
+  "command": "env PYTHONPATH=src:. JAX_ENABLE_X64=1 /Users/xangma/repos/diffgw/.venv/bin/python dev/native_rom/diagnose_native_warm_start_jax_pathwise.py",
+  "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+  "diagnostic_checks_passed": false,
+  "host": "RONI2",
+  "input_sha256": {
+    "dev/native_rom/eob/jax/adaptive_driver_clean.py": "41691a243f3b1bf248443f679f8fd405eaeeb3de2d3e8d6800b03ba4b4c64ecf",
+    "dev/native_rom/eob/jax/initial_conditions_clean.py": "0ccc2251f72e6af696a8c35e08a0cc872dcac74b8904774dafdf8e416f21f382",
+    "dev/native_rom/eob/jax/source_calibration_hamiltonian.py": "8b5584002625479e667337076df59cb6a820e1cffc88a282071843e6d4e4c8a9",
+    "dev/native_rom/eob/torch/source_calibration_hamiltonian.py": "2b0ddccf6ba99d0157c0b624cf0c4e926713c96a736e22e1b6fe55bdbde1cdc2",
+    "dev/native_rom/eob/torch/warm_start.py": "a9818350b18ed04ca645edbf6af4c22760fc51eae540c12f38d171d99a675a20",
+    "src/jaxwave/approximants/eob/integrator.py": "f0e842e518cd05c94361038602a993c0ee9025b218490945fdb4021da9b64e46",
+    "src/jaxwave/approximants/eob/seobnrv4_flux.py": "47f9be36e6494708643afcdeb487a425c3e607a4c2f1ba730cbcf71ccba64287",
+    "src/torchwave/approximants/eob/adaptive_driver_clean.py": "2f5e1c3b8766b92340a6aafcdfbdc5fe6856a3e4390551abefda1e22b90dda7b",
+    "src/torchwave/approximants/eob/initial_conditions.py": "520641e8c3037ea1aa6e947c7d9dd92c759333396103cb1d1fffc8aa5019137b",
+    "src/torchwave/approximants/eob/integrator.py": "4c643493086a06accfe7f8f5ff679e77a1015aeb03659b395b48cac09de91c65",
+    "src/torchwave/approximants/eob/seobnrv4_flux.py": "3136bb016cce21cdd9d636008fee1fa5472757fed4446dc899e0d31e70124c83"
+  },
+  "mesh": {
+    "accepted_steps": 8,
+    "evaluations": 49,
+    "last_left_frequency": 0.031790326618033805,
+    "last_left_time_M": 12.57058705911114,
+    "last_right_frequency": 0.031828570714473134,
+    "last_right_time_M": 15.428396617459915
+  },
+  "pid": 26095,
+  "plan_sha256": "894da36570e20ef8a0eca4a80e538f6fbcb495a96a47665e564590879e48e55b",
+  "release_qualified": false,
+  "schema": "diffgw.seobnrv4.native-warm-start-jax-pathwise.v1",
+  "script_sha256": "b018264a0a7af9f2fc68540bd441c78b96534bbcaa59212621b3e0d4297023a9",
+  "status": "partial_performance_bound",
+  "termination": {
+    "elapsed_observed_s": 113,
+    "last_completed_stage": "Torch near-cap warm value and Jacobian; JAX fixed-mesh replay/value/Jacobian not completed.",
+    "reason": "Operator bounded stop after 1m53s with RSS 13,364,432 KiB and no JAX output after Torch mesh/value/Jacobian.",
+    "rss_last_observed_kib": 13364432,
+    "signal": "SIGTERM",
+    "unmeasured": [
+      "JAX pathwise value",
+      "JAX pathwise Jacobian",
+      "Torch/JAX event parity",
+      "finite-difference gates"
+    ]
+  },
+  "torch": {
+    "frequency_residual": -2.0816681711721685e-17,
+    "jacobian": [
+      [
+        -0.09188726976548689,
+        -212.0957640022855
+      ],
+      [
+        0.0006216287316402411,
+        0.013004827512724961
+      ],
+      [
+        -0.1910683268818768,
+        -30.897839404420306
+      ],
+      [
+        2.8077722799568376,
+        74697.98841559618
+      ]
+    ],
+    "root_offset_M": 2.4250365402487013,
+    "value": [
+      9.86875258503105,
+      -0.0033020128326577505,
+      3.5071684181816627,
+      14.995623599359842
+    ]
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "schema": "diffgw.seobnrv4.native-warm-start-gradient-plan.v1",
+  "case": {
+    "mass1": 30.0,
+    "mass2": 20.0,
+    "chi1": 0.8,
+    "chi2": 0.6,
+    "cap_Momega": 0.03162277660168379,
+    "target_Momega": 0.04,
+    "dtype": "float64",
+    "device": "cpu"
+  },
+  "model": "development-only source-calibrated historical Hamiltonian and frozen source flux choices; no reference state is an input",
+  "checks": {
+    "cap_initial_state_torch_jax_max_abs_at_most": 3e-8,
+    "cap_initial_jacobian_torch_jax_max_abs_at_most": 2e-5,
+    "cap_initial_jacobian_jax_fd_scaled_error_at_most": 2e-4,
+    "warm_frequency_residual_abs_at_most": 1e-11,
+    "warm_target_jacobian_torch_fd_scaled_error_at_most": 5e-4,
+    "warm_chi1_jacobian_torch_fd_scaled_error_at_most": 2e-3
+  },
+  "finite_difference_steps": {
+    "cap_chi1": 1e-5,
+    "cap_Momega": 1e-6,
+    "warm_chi1": 1e-4,
+    "target_Momega": 1e-6
+  },
+  "jacobian_outputs": {
+    "cap": ["r", "pr_star", "pphi"],
+    "warm": ["r", "pr_star", "pphi", "crossing_time_M"]
+  },
+  "interpretation": "One exact-row FP64 CPU component check. Torch adaptive decisions are piecewise discrete; finite differences verify a local branch only. JAX has no native cap-to-target-frequency crossing map here, so this does not establish Torch/JAX warm-map parity, full-waveform gradients, domain coverage, or release qualification.",
+  "release_qualified": false
+}

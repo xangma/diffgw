@@ -1,0 +1,69 @@
+{
+  "case": {
+    "cap_Momega": 0.03162277660168379,
+    "chi1": 0.8,
+    "chi2": 0.6,
+    "device": "cpu",
+    "dtype": "float64",
+    "mass1": 30.0,
+    "mass2": 20.0,
+    "step_M": 0.125
+  },
+  "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+  "diagnostic_checks_passed": false,
+  "host": "RONI2",
+  "input_sha256": {
+    "dev/native_rom/eob/jax/adaptive_driver_clean.py": "41691a243f3b1bf248443f679f8fd405eaeeb3de2d3e8d6800b03ba4b4c64ecf",
+    "dev/native_rom/eob/jax/initial_conditions_clean.py": "0ccc2251f72e6af696a8c35e08a0cc872dcac74b8904774dafdf8e416f21f382",
+    "dev/native_rom/eob/jax/source_calibration_hamiltonian.py": "8b5584002625479e667337076df59cb6a820e1cffc88a282071843e6d4e4c8a9",
+    "dev/native_rom/eob/torch/source_calibration_hamiltonian.py": "2b0ddccf6ba99d0157c0b624cf0c4e926713c96a736e22e1b6fe55bdbde1cdc2",
+    "src/jaxwave/approximants/eob/integrator.py": "f0e842e518cd05c94361038602a993c0ee9025b218490945fdb4021da9b64e46",
+    "src/jaxwave/approximants/eob/seobnrv4_flux.py": "47f9be36e6494708643afcdeb487a425c3e607a4c2f1ba730cbcf71ccba64287",
+    "src/torchwave/approximants/eob/adaptive_driver_clean.py": "2f5e1c3b8766b92340a6aafcdfbdc5fe6856a3e4390551abefda1e22b90dda7b",
+    "src/torchwave/approximants/eob/initial_conditions.py": "520641e8c3037ea1aa6e947c7d9dd92c759333396103cb1d1fffc8aa5019137b",
+    "src/torchwave/approximants/eob/integrator.py": "4c643493086a06accfe7f8f5ff679e77a1015aeb03659b395b48cac09de91c65",
+    "src/torchwave/approximants/eob/seobnrv4_flux.py": "3136bb016cce21cdd9d636008fee1fa5472757fed4446dc899e0d31e70124c83"
+  },
+  "jax": {
+    "value": [
+      9.911016700779353,
+      0.0039529212583190605,
+      -0.003306681212119831,
+      3.513275714759928
+    ]
+  },
+  "pid": 32295,
+  "plan_sha256": "cb8c4422ddfe324ad1a9b2ac3d5a3e99355d07d37f5d5ade236de224c4c3c9c3",
+  "release_qualified": false,
+  "schema": "diffgw.seobnrv4.native-warm-start-one-step-gradient.v1",
+  "script_sha256": "88d573d402db7c606f504f0632ca72f2f7434abae3cd8f58d6162ae65fb94bf4",
+  "status": "partial_performance_bound",
+  "termination": {
+    "elapsed_observed_s_approx": 51,
+    "exit_code": 143,
+    "last_completed_stage": "Torch one-step value/Jacobian and JAX one-step value",
+    "reason": "Stopped when JAX one-step JVP exceeded frozen 8,388,608 KiB RSS bound; JAX tangent and finite-difference gates were not measured.",
+    "rss_later_observed_kib": 11731264,
+    "rss_trigger_observed_kib": 9172720,
+    "signal": "SIGTERM",
+    "unmeasured": [
+      "JAX one-step spin tangent",
+      "Torch/JAX tangent parity",
+      "finite-difference gates"
+    ]
+  },
+  "torch": {
+    "spin_gradient": [
+      -0.09166204070304788,
+      -8.849279065397045e-09,
+      0.0006217910846394235,
+      -0.19013433318757128
+    ],
+    "value": [
+      9.911016700779353,
+      0.00395292125831906,
+      -0.0033066812121200252,
+      3.513275714759926
+    ]
+  }
+}

@@ -1,0 +1,97 @@
+{
+  "cap": {
+    "jacobian_max_abs": 1.9326762412674725e-12,
+    "jax_fd_scaled_error": 8.599211704953368e-10,
+    "jax_finite_difference_jacobian": [
+      [
+        -0.09172725796702251,
+        -213.5902289577274
+      ],
+      [
+        0.000621798876688888,
+        -0.22118270219897465
+      ],
+      [
+        -0.1901361562639536,
+        -30.60620328443342
+      ]
+    ],
+    "jax_jacobian": [
+      [
+        -0.09172725754528695,
+        -213.59022878826232
+      ],
+      [
+        0.0006217988833867728,
+        -0.22118270224885012
+      ],
+      [
+        -0.19013615595890498,
+        -30.606203258114498
+      ]
+    ],
+    "jax_state": [
+      9.911372368439267,
+      -0.003306729129318275,
+      3.513326682456663
+    ],
+    "state_max_abs": 1.7763568394002505e-15,
+    "torch_jacobian": [
+      [
+        -0.0917272575452862,
+        -213.5902287882604
+      ],
+      [
+        0.0006217988833868663,
+        -0.2211827022488199
+      ],
+      [
+        -0.19013615595890532,
+        -30.606203258114313
+      ]
+    ],
+    "torch_state": [
+      9.911372368439267,
+      -0.003306729129318471,
+      3.513326682456661
+    ]
+  },
+  "case": {
+    "cap_Momega": 0.03162277660168379,
+    "chi1": 0.8,
+    "chi2": 0.6,
+    "device": "cpu",
+    "dtype": "float64",
+    "mass1": 30.0,
+    "mass2": 20.0,
+    "target_Momega": 0.04
+  },
+  "command": "PYTHONPATH=src:. JAX_ENABLE_X64=1 /Users/xangma/repos/diffgw/.venv/bin/python dev/native_rom/diagnose_native_warm_start_gradient.py",
+  "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+  "diagnostic_checks_passed": false,
+  "host": "RONI2",
+  "input_sha256": {
+    "dev/native_rom/eob/jax/initial_conditions_clean.py": "0ccc2251f72e6af696a8c35e08a0cc872dcac74b8904774dafdf8e416f21f382",
+    "dev/native_rom/eob/jax/source_calibration_hamiltonian.py": "8b5584002625479e667337076df59cb6a820e1cffc88a282071843e6d4e4c8a9",
+    "dev/native_rom/eob/torch/source_calibration_hamiltonian.py": "2b0ddccf6ba99d0157c0b624cf0c4e926713c96a736e22e1b6fe55bdbde1cdc2",
+    "dev/native_rom/eob/torch/warm_start.py": "a9818350b18ed04ca645edbf6af4c22760fc51eae540c12f38d171d99a675a20",
+    "src/jaxwave/approximants/eob/seobnrv4_flux.py": "47f9be36e6494708643afcdeb487a425c3e607a4c2f1ba730cbcf71ccba64287",
+    "src/torchwave/approximants/eob/initial_conditions.py": "520641e8c3037ea1aa6e947c7d9dd92c759333396103cb1d1fffc8aa5019137b",
+    "src/torchwave/approximants/eob/seobnrv4_flux.py": "3136bb016cce21cdd9d636008fee1fa5472757fed4446dc899e0d31e70124c83"
+  },
+  "pid": 9833,
+  "plan_sha256": "3cdbf828c8c7271b9381365e2b02766449f22f4f356aaa1038f39109fce05b64",
+  "release_qualified": false,
+  "schema": "diffgw.seobnrv4.native-warm-start-gradient.v1",
+  "scope": "Cap initial-state values/Jacobians were measured; warm crossing values and gradients were not measured. Do not interpret this as warm-map parity or release qualification.",
+  "script_sha256": "9b2a3ea8c052cafe71e2208b7b583c2e69d4473db5f5d0da3737106508cca4d5",
+  "status": "partial_performance_bound",
+  "termination": {
+    "elapsed_wall_seconds_approx": 606,
+    "exit_code": 143,
+    "last_completed_stage": "cap_state_and_jacobian",
+    "last_rss_kib": 12020304,
+    "reason": "Prospectively bounded stop after approximately ten minutes with no cap-to-target warm-stage output and a growing full adaptive autodiff graph.",
+    "signal": "SIGTERM"
+  }
+}

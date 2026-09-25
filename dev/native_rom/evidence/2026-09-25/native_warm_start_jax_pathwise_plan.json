@@ -1,0 +1,37 @@
+{
+  "schema": "diffgw.seobnrv4.native-warm-start-jax-pathwise-plan.v1",
+  "case": {
+    "mass1": 30.0,
+    "mass2": 20.0,
+    "chi1": 0.8,
+    "chi2": 0.6,
+    "cap_Momega": 0.03162277660168379,
+    "target_Momega": 0.03182277660168379,
+    "dtype": "float64",
+    "device": "cpu"
+  },
+  "model": "development-only source-calibrated historical Hamiltonian and frozen source flux choices; no reference state is an input",
+  "protocol": "Discover the accepted Torch cap-to-near-cap mesh at baseline parameters; replay the same accepted times with the JAX Fehlberg method and JAX quasicircular state; refine the final crossing by one implicit correction. Compare phase-zero state, event time, and local Jacobians with Torch warm_start. Adaptive accept/reject and event-knot selection are fixed, not differentiated.",
+  "adaptive": {
+    "atol": 1e-12,
+    "rtol": 1e-11,
+    "initial_step_M": 0.125,
+    "max_duration_M": 100.0,
+    "max_accepted_steps": 1000
+  },
+  "finite_difference_steps": {
+    "chi1": 1e-4,
+    "target_Momega": 1e-6
+  },
+  "checks": {
+    "mesh_left_state_torch_jax_max_abs_at_most": 1e-6,
+    "crossing_frequency_residual_abs_at_most": 1e-11,
+    "event_time_torch_jax_abs_at_most_M": 1e-2,
+    "phase_zero_state_torch_jax_max_abs_at_most": 1e-6,
+    "jacobian_torch_jax_scaled_error_at_most": 2e-3,
+    "jacobian_jax_fd_scaled_error_at_most": 2e-3,
+    "jacobian_torch_fd_scaled_error_at_most": 2e-3
+  },
+  "interpretation": "One short near-cap FP64 CPU pathwise crossing check. It excludes the historical 0.04 requested-frequency map, derivatives of adaptive controller/event decisions, whole-waveform gradients, domain coverage, and release qualification.",
+  "release_qualified": false
+}
