@@ -10,10 +10,11 @@ merger-ringdown ansatzes and higher-mode frequency map have an independent
 stdlib scalar reference and agree with both Torch and JAX.  During this audit,
 the implemented `B3` transform was corrected from `B2 * Lambda_B3` to the
 published `chi sin(theta) [exp(Lambda_B3) - 200]` relation.
-The printed alpha/beta connection, exterior-continuation, and final quadratic
-beta-rescaling forms now also have isolated scalar/Torch/JAX kernels. They are
-not wired into the public waveform; the preceding beta taper and
-emission-direction rescaling still require their own source-qualified path.
+The printed alpha/beta connection, exterior-continuation, final quadratic
+beta-rescaling, two-spin beta taper, and optimal-emission-direction map now
+also have isolated scalar/Torch/JAX kernels. They are not wired into the
+public waveform because their input tracks, connection frequency, and terminal
+state are not independently fixed by the available sources.
 
 Full-waveform qualification remains failed.  The public route uses
 reference-frequency rather than transition-frequency spins in the effective
@@ -45,7 +46,7 @@ composition.
 | `XPNR-MAP` | XPNR Eqs. (3)–(6), evaluated with spins evolved to the SpinTaylor stopping/transition frequency and projected relative to instantaneous `Lhat` | Scalar terminal-state map is rotation-invariant; Torch/JAX component algebra agrees when supplied the same aligned-frame spins | Geometry pass; public caller supplies the wrong epoch and no terminal state |
 | `XPNR-FIT` | XO4a Eq. (35), `Lambda = sum lambda_pqr eta^p chi^q cos(theta)^r`, plus XPNR Eq. (22) freezing | Scalar/Torch/JAX values agree; tensor duplication is not independent provenance | Equation pass; assets unresolved |
 | `XPNR-ANGLES-MR` | XO4a Eqs. (25)–(34), XPNR Eqs. (15)–(16), including stated guards | Scalar values and frequency derivatives agree in Torch/JAX | Component pass after `B3` correction |
-| `XPNR-ATTACH` | XPNR Eq. (19) for alpha and Eqs. (20)–(21) for beta, matching inspiral/merger-ringdown values and derivatives | Standalone Eq. (19)–(21) kernels reproduce synthetic published-form polynomials, rescaling, and derivatives; the preceding beta taper/emission-direction map and public connection remain absent | Component forms pass; full route fail |
+| `XPNR-ATTACH` | Final Twist Eqs. (41)–(45) for the beta taper/emission direction and XPNR Eq. (19) for alpha and Eqs. (20)–(21) for beta, matching inspiral/merger-ringdown values and derivatives | Standalone kernels reproduce the published forms, the XO4a denominator correction, and frontend derivatives; input-track construction and public connection remain absent | Component forms pass; full route fail |
 | `XPNR-CONT` | XPNR Eqs. (17)–(18) analytic exterior continuations and Eq. (22) fit-coordinate freeze | Standalone Eq. (17)–(18) kernels reproduce synthetic published-form functions and derivatives; current public route still window-blends the angle tracks | Component pass; public route fail |
 | `XPNR-CARRIER` | XPNR Eqs. (7)–(8): tuned XHM-CP deviations and effective ringdown frequencies | Independent scalar equations exist; neither is wired into the waveform | Fail |
 | `XPNR-ASYM22` | XPNR Eqs. (10)–(13), unequal `m=+2` and `m=-2` coprecessing modes | Native XHM carrier generates negative-m content by symmetry | Fail |
@@ -143,6 +144,23 @@ The [equation test](https://github.com/xangma/diffgw/blob/main/tests/test_xpnr_a
 compares their outputs against independently chosen coefficients in each of
 the paper's printed forms and checks both frontend derivatives.
 
+Before the final quadratic rescaling, Final Twist Eqs. (44)–(45) define
+`iota_osc = iota_2spin - iota_single` and
+
+```text
+iota(f) = iota_single(f) + cos^2(pi f / (2 f_c)) iota_osc(f),  f <= f_c
+        = iota_single(f),                                      f > f_c .
+```
+
+The isolated kernel is exactly two-spin at zero frequency, exactly
+single-spin at `f_c`, and has zero taper derivative at that join. Final Twist
+Eqs. (41)–(43) then map the opening angle to the optimal emission direction
+using its printed `c_0,c_2,c_3,d_0,d_2,d_3` polynomials. XO4a explicitly
+corrects the 2021 expression by inserting a factor of two in the denominator;
+the scalar/Torch/JAX implementations and a frozen checkpoint exercise that
+corrected form. These kernels accept the already-constructed angle tracks and
+`f_c`; they do not infer those missing model inputs.
+
 For Eq. (19), multiply the printed `alpha = a0 f² + a1 f + a2 + a3/f`
 by `f`; the resulting cubic is fixed by `f alpha` and
 `d(f alpha)/df = alpha + f alpha'` at both joins. Eq. (20) is a cubic fixed
@@ -168,8 +186,8 @@ this construction; the frontend kernels assume a qualified nonzero input.
 
 The tests use synthetic coefficients rather than inherited calibration
 tables. They establish form and differentiable alignment, not that the public
-waveform chooses the correct boundary data, performs the preceding beta taper
-and emission-direction mapping, or reproduces a calibrated XPNR waveform.
+waveform chooses the correct boundary data, composes the preprocessing, or
+reproduces a calibrated XPNR waveform.
 
 ## Carrier and reduction relationships
 
@@ -244,10 +262,12 @@ reproduce the final decimals.  Appendix A instead directs readers to final
 values in a named LALSuite file and commit.  This audit did not inspect that
 source.
 
-The arXiv source packages were also inspected: PNR has 51 files, XO4a has 22,
-and XPNR has 22.  They contain manuscripts and figure assets (plus an XPNR
-manifest), but no machine-readable calibration targets, fit configuration, or
-coefficient tensors.
+The arXiv source packages were also inspected. Final Twist v1 has 51 files,
+SpinTaylor v1 has 39, and XPNR v1 has 22; the respective archives contain
+manuscripts/figures and, for XPNR, only a build manifest beyond the paper.
+They contain no machine-readable terminal prescription, calibration targets,
+fit configuration, or coefficient tensors. The XPNR archive SHA-256 is
+`558b71b710e7e1e0eaa69efcdbc43e4a79de24ce7b02a5df7ed9173ac1cfba36`.
 
 The published assets therefore support the equations, the raw NR inputs, a
 historical method, and a fitting tool.  They do not independently reproduce or
@@ -264,6 +284,7 @@ analysis, and holdouts—not evidence for the provenance of the current arrays.
 | BAM 80-waveform single-spin calibration set | Public catalogue: `q={1,2,4,8}`, `chi={0.2,0.4,0.6,0.8}`, tilts `30,60,90,120,150` degrees; [minimal Zenodo record 7673796](https://doi.org/10.5281/zenodo.7673796) and [complete record 7677297](https://doi.org/10.5281/zenodo.7677297), CC BY 4.0. Each record lists 80 `CF21_*.h5` waveform files and no separate fit-target, script, or tensor artifact | Not bundled and not re-fit in this change; the discrete training design is not an accuracy bound |
 | `positive` v1.0 fit tool | [Zenodo record 3901856](https://doi.org/10.5281/zenodo.3901856); archived `LICENSE` is MIT while record metadata says `other-open` | Not bundled. Tool availability does not reconstruct the unpublished fit run or license its output |
 | Author-controlled PhenomXCP workflow | [Pinned repository](https://github.com/llondon6/PhenomXCP/tree/a411e5966a73445efad0db9dc7806d2195374ab1) includes a historical carrier-tuning workflow and partial artifacts. The root is MIT, while generated `parameter_space_fits.c` says GPL-2.0-or-later and data artifacts have no separate notice | Not bundled. It contains no current angle tensors and no authoritative mapping/version from its partial carrier outputs to final XO4a/XPNR `u_k`; the root license is not treated as blanket output permission |
+| XHM v2 author supplement | arXiv:2001.10914v2 source SHA-256 `cc05e7dbff7bf0c42a10b7da1f4840eefc55b252168d6bfb085155a7bdc5318e` contains paper-era amplitude and phase notebooks plus 37 amplitude and 33 phase `.m` tables for modes 21/32/33/44 | Establishes the paper-era fit assets only. No archive manifest maps them to default release `122022`, its all-new amplitude option, or a complete current-release node provider, so no production XHM/XPHM carrier change is made |
 | Numeric angle-fit and carrier-deviation tables | Not printed in the cited model papers. XO4a Appendix A points to LALSuite commit `08b90494b3a4a7dc966ca108e6c98eaa3f6e18a7`; LALSuite is GPL-2.0-or-later | No LAL source was inspected, copied, translated, or fitted. Pinned binaries are comparison oracles only |
 | Existing DiffGW `A1..A4`, `B0..B5`, `Bf` tensors | Independent origin and redistribution terms are unresolved | Retained but not promoted. Torch/JAX equality proves duplication only; `Bf` is currently not wired into the public route |
 
@@ -284,8 +305,8 @@ history from which to establish their origin or terms.
 
 | Evidence class | Result | What it establishes |
 | --- | --- | --- |
-| Paper fidelity | Partial pass | Map, polynomial, guarded transforms, MR ansatzes, standalone Eq. (17)–(21) forms, carrier-deformation equation, effective ringdown equation, and HM map have scalar encodings; public angle composition, preceding beta taper/emission-direction map, beta bound, and carrier/asymmetry composition remain open |
-| Scalar-reference agreement | Pass for scoped components | Existing 47 component cases plus five published-form scalar join/rescaling cases cover fit values, transforms, ansatz values/derivatives, terminal-state geometry, map, window interpretation, HM joins and reductions |
+| Paper fidelity | Partial pass | Map, polynomial, guarded transforms, MR ansatzes, standalone Final Twist Eqs. (41)–(45) and XPNR Eqs. (17)–(21), carrier-deformation equation, effective ringdown equation, and HM map have scalar encodings; public angle composition, beta bound, and carrier/asymmetry composition remain open |
+| Scalar-reference agreement | Pass for scoped components | Focused published-form cases cover fit values, transforms, ansatz values/derivatives, terminal-state geometry, beta preprocessing, map, window interpretation, HM joins and reductions |
 | Torch/JAX parity | Pass for scoped components | Both backends agree with scalar values and derivatives; a dense JAX grid is recorded in the qualification JSON |
 | Calibration asset provenance | Provisional gate retained | Published equations, a partial historical procedure, raw CC BY inputs, and an MIT fitting tool are distinguished from the unsupported inherited tensors; a two-case manifest test pins that classification and the unchanged payload |
 | External parity | Not qualified | The four optional LAL/PyCBC cases are black-box acceptance gates only; their `0.99` threshold is not an observed lower bound or domain claim |
@@ -309,9 +330,10 @@ Promotion requires all of the following without relaxing existing thresholds:
    terminal sampling rule; return terminal `S1`, `S2`, and `Lhat`, demonstrate
    integration convergence and stop-event stability, convert the spins to
    `chi_i = S_i/m_i^2`, then feed that state into Eqs. (3)–(6).
-3. Implement the exact alpha/beta attachments, beta bound, exterior
-   continuations, and minimal-rotation convention with value and derivative
-   checks at every join.
+3. Source the taper inputs and connection frequency, compose the checked
+   alpha/beta attachments and exterior continuations, then implement the beta
+   bound and minimal-rotation convention with value and derivative checks at
+   every join.
 4. Implement and separately test XHM-CP deformation coefficients, effective
    ringdown frequencies, dominant-mode asymmetry, and their nonprecessing and
    exterior reductions.

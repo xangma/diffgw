@@ -1,4 +1,4 @@
-"""JAX XPNR angle joins from Hamilton et al. (2025), Eqs. (17)--(21).
+"""JAX published XPNR attachment preprocessing and angle joins.
 
 These component kernels do not choose SpinTaylor stop events or change public
 XPNR dispatch. Their boundary data must come from a separately qualified PN
@@ -28,6 +28,36 @@ def beta_connection(mf, start, end, value_start, slope_start, value_end, slope_e
     width = end - start
     h00, h10, h01, h11 = _hermite((mf - start) / width)
     return h00 * value_start + h10 * width * slope_start + h01 * value_end + h11 * width * slope_end
+
+
+def tapered_opening_angle(mf, connection, two_spin_angle, single_spin_angle):
+    """Final Twist Eqs. (44)--(45): taper two-spin opening-angle oscillations."""
+    taper = jnp.cos(jnp.pi * mf / (2 * connection)) ** 2
+    return jnp.where(
+        mf <= connection,
+        single_spin_angle + taper * (two_spin_angle - single_spin_angle),
+        single_spin_angle,
+    )
+
+
+def optimal_emission_direction_beta(v, iota, eta, delta, chi, cos_theta_ls):
+    """Final Twist Eqs. (41)--(43), including XO4a's denominator correction."""
+    sin_iota = jnp.sin(iota)
+    cos_iota = jnp.cos(iota)
+    sin_half_iota = jnp.sin(iota / 2)
+    cos_half_iota = jnp.cos(iota / 2)
+    sin_theta_ls = jnp.sqrt(jnp.maximum(0, 1 - cos_theta_ls**2))
+    mass_spin = (6 + 6 * delta + 5 * eta) * chi * sin_theta_ls
+    aligned_spin = (1 + delta - eta) * chi * cos_theta_ls
+    c0 = 84 * sin_iota
+    c2 = (110 * eta - 214) * sin_iota
+    c3 = -7 * mass_spin * (2 * cos_iota - 1) + 56 * (3 * jnp.pi - aligned_spin) * sin_iota
+    d0 = 84 * cos_half_iota
+    d2 = (110 * eta - 214) * cos_half_iota
+    d3 = 14 * mass_spin * sin_half_iota + 56 * cos_half_iota * (3 * jnp.pi - aligned_spin)
+    numerator = (c0 + c2 * v**2 + c3 * v**3) / cos_half_iota
+    denominator = 2 * (d0 + d2 * v**2 + d3 * v**3)
+    return 2 * jnp.arctan(numerator / denominator)
 
 
 def alpha_exterior_continuation(mf, start, end, value_start, value_end, slope_end):

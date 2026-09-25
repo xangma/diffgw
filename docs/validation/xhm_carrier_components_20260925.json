@@ -5,6 +5,16 @@
   "source_result_sha256": "a4196c77adf010ca4933e9b76a389e21884e243650d147f76f5480397386fa5d",
   "production_fit_policy": "public binary outputs are diagnostic only; no coefficient is fitted, inferred, or transcribed",
   "author_supplement_boundary": "checksum-pinned arXiv-v2 AmpFits fixtures cover selected paper-era surfaces; they do not identify a complete release-122022 collocation provider",
+  "author_asset_inventory": {
+    "source": "arXiv:2001.10914v2 source archive",
+    "archive_sha256": "cc05e7dbff7bf0c42a10b7da1f4840eefc55b252168d6bfb085155a7bdc5318e",
+    "amplitude_mathematica_tables": {"21": 10, "32": 9, "33": 9, "44": 9},
+    "phase_mathematica_tables": {"21": 7, "32": 12, "33": 7, "44": 7},
+    "notebooks": ["IMRPhenomXHM_AmplitudeFits.nb", "IMRPhenomXHM_PhaseFits.nb"],
+    "readme_claim": "all parameter-space fits for the paper-era amplitude and equivalent phase fits",
+    "missing_for_production": "a versioned manifest and authoritative mapping to installed default release 122022, its all-new amplitude option, and a complete current-release collocation provider",
+    "decision": "no production carrier or coefficient change"
+  },
   "assembly_diagnostic": {
     "source_script": "scripts/diagnose_xhm_inspiral_assembly_clean.py",
     "rows": 20,

@@ -11,13 +11,14 @@
       "XO4a Eq. 35 calibration polynomial",
       "XO4a Eqs. 25-34 guarded alpha/beta parameter transforms",
       "XPNR Eqs. 15-16 merger-ringdown angle ansatzes",
+      "Final Twist Eqs. 41-45 two-spin beta taper and optimal-emission-direction map with the XO4a denominator correction",
       "XPNR Eqs. 17-21 standalone analytic continuation, angle-connection, and quadratic beta-rescaling forms with supplied boundary data",
       "XPNR Eqs. 7-8 standalone carrier deformation and effective-ringdown relations",
       "XO4a Eqs. 50-52 higher-mode frequency map"
     ],
     "failed_or_missing_components": [
       "exact terminal-state evolution and spin-sampling procedure; public route instead supplies reference-frequency spins",
-      "preceding beta taper and optimal-emission-direction map, plus composition of Eqs. 17-21 into the public angle route",
+      "source-qualified taper input tracks, connection-frequency selection, and composition of the standalone preprocessing and Eqs. 17-21 into the public angle route",
       "published arctangent beta bounding prescription",
       "XHM-CP carrier deviations and their unprinted u_k assets",
       "effective-ringdown relation in waveform composition",
@@ -79,27 +80,36 @@
     "promotion_gate": "Supply an independently specified and licensed terminal-state evolution and explicit sampling event, return terminal S1, S2, and Lhat, demonstrate convergence and stop-event stability, convert each spin to chi_i = S_i/m_i^2, then feed chi1, chi2, and Lhat to the scalar map. The AST canary and scalar invariants are component-boundary checks, not physical terminal-state validation."
   },
   "angle_join_components": {
-    "status": "standalone_equations_17_to_21_pass_public_composition_open",
-    "source": "Hamilton et al., arXiv:2507.02604v1, Eqs. 17-21",
+    "status": "standalone_beta_preprocessing_and_equations_17_to_21_pass_public_composition_open",
+    "source": "Hamilton et al., arXiv:2107.08876v1, Eqs. 41-45; Thompson et al., arXiv:2312.10025v1 correction; Hamilton et al., arXiv:2507.02604v1, Eqs. 17-21",
     "scope": "Caller-supplied PN/MR boundary values and derivatives; synthetic coefficients in the published forms, independent of inherited calibration tensors and LAL source.",
     "reference": "src/diffgw_reference/xpnr_angles.py",
     "torch": "src/torchwave/approximants/pnr_attachment.py",
     "jax": "src/jaxwave/approximants/pnr_attachment.py",
     "test": "tests/test_xpnr_attachment_math_reference.py",
-    "result": "15 passed on len with Python 3.12.3, Torch 2.14.0, JAX 0.11.2, NumPy 2.5.3, SciPy 1.18.1, and pytest 9.1.1; printed-form values plus Torch/JAX derivatives and JAX JIT.",
+    "result": "25 passed in 7.26s on len CUDA with Python 3.12.3, Torch 2.14.0+cu130, JAX/JAXlib 0.11.2, NumPy 2.5.3, SciPy 1.18.1, and pytest 9.1.1; published-form values, Torch/JAX gradients, JAX JIT, and terminal/provenance canaries.",
     "open": [
-      "preceding beta taper and optimal-emission-direction map",
+      "source-qualified two-spin and mapped-single-spin beta tracks plus connection-frequency selection",
       "paper-specified PN/MR boundary selection and SpinTaylor terminal state",
       "wiring into public Torch/JAX XPNR routes",
       "external complex-waveform and physical validation"
     ]
+  },
+  "beta_preprocessing_components": {
+    "status": "standalone_equations_pass_not_routed",
+    "scope": "Caller-supplied two-spin and mapped-single-spin opening angles, connection frequency, and effective-single-spin variables; no terminal event, fit, or boundary selection is inferred.",
+    "correction": "The optimal-emission-direction map includes the factor of two in the denominator identified by XO4a.",
+    "reference": "src/diffgw_reference/xpnr_angles.py",
+    "torch": "src/torchwave/approximants/pnr_attachment.py",
+    "jax": "src/jaxwave/approximants/pnr_attachment.py",
+    "test": "tests/test_xpnr_attachment_math_reference.py"
   },
   "scalar_reference_agreement": {
     "status": "pass_for_scoped_components",
     "command": "JAX_ENABLE_X64=1 JAX_PLATFORMS=cpu OMP_NUM_THREADS=1 pytest -q tests/test_xpnr_component_evidence.py",
     "result": "46 passed",
     "reference_module": "src/diffgw_reference/xpnr_angles.py",
-    "reference_module_sha256": "d16448046a63708475ed3862e4de2bb1931acfe21c3621653ba93f680f184f12",
+    "reference_module_sha256": "3bc3f54e752cb7c619522ca27286a7dc3ea89cbbb999bad786de9bdab3b0ad00",
     "result_note": "The recorded two-frontend result predates the added pure-stdlib terminal-state geometry case; the current len result is recorded under spin_at_attachment."
   },
   "torch_jax_parity": {
@@ -193,10 +203,32 @@
     },
     "inherited_xhm_results": {
       "catalog": "0/1",
-      "holdout": "0/1"
+      "holdout": "0/1",
+      "xphm_catalog": "0/1",
+      "xphm_holdout": "0/1",
+      "receipt": "docs/validation/xhm_xphm_binary_oracle_20260925.json",
+      "environment": "len; Python 3.12.3; Torch 2.14.0+cu130; LALSuite 7.26.15; PyCBC 2.11.0"
     },
     "thresholds_changed": false,
-    "next_gate": "Independently specify and license the terminal-spin evolution plus exact sampling event; return S1, S2, and Lhat, convert chi_i = S_i/m_i^2, and supply chi1, chi2, and Lhat to the passed scalar geometry map. Then implement exact attachments/continuations, XHM-CP deformation/effective-ringdown/asymmetry, and independently traceable coefficient assets before passing Torch/JAX complex modes and both polarizations at the unchanged strict catalog/holdout thresholds and proceeding to NR validation."
+    "next_gate": "Independently specify and license the terminal-spin evolution plus exact sampling event; return S1, S2, and Lhat, convert chi_i = S_i/m_i^2, and supply chi1, chi2, and Lhat to the passed scalar geometry map. Then source the beta input tracks/connection selection, compose the checked preprocessing and attachments, and obtain XHM-CP/current-XHM carrier coefficients with independent provenance before passing Torch/JAX complex modes and both polarizations at the unchanged strict catalog/holdout thresholds and proceeding to NR validation."
+  },
+  "xhm_carrier_provenance_gate": {
+    "status": "blocked_no_current_release_author_asset",
+    "paper_archive": {
+      "source": "arXiv:2001.10914v2",
+      "sha256": "cc05e7dbff7bf0c42a10b7da1f4840eefc55b252168d6bfb085155a7bdc5318e",
+      "amplitude_tables_by_mode": {"21": 10, "32": 9, "33": 9, "44": 9},
+      "phase_tables_by_mode": {"21": 7, "32": 12, "33": 7, "44": 7},
+      "establishes": "paper-era XHM parameter-space fit assets",
+      "does_not_establish": "a manifest/mapping to installed default release 122022, its all-new amplitude option, or a complete current-release collocation provider"
+    },
+    "phenomxcp_author_repository": {
+      "source": "github:llondon6/PhenomXCP@a411e5966a73445efad0db9dc7806d2195374ab1",
+      "establishes": "historical partial carrier workflow and artifacts",
+      "does_not_establish": "final XO4a/XPNR u_k mapping, angle tensors, release identity, or uniform output terms"
+    },
+    "production_change": false,
+    "lal_binary_policy": "independent numerical oracle only; no source inspection and no coefficient inference"
   },
   "calibration_assets": {
     "canonical_numeric_payload_sha256": "c7794b653f781bbba45b97170fdac9fb6c89de6cc9c404e4942908ce1f820d68",

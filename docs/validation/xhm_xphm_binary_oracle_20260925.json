@@ -1,7 +1,7 @@
 {
   "schema_version": 1,
   "date": "2026-09-25",
-  "stack_base_revision": "7b0c9c95a43d768d2fdf49ad8d2bd708f3e9d09b",
+  "stack_base_revision": "4814835f7744fe00a5863ed70eb590d41a7e3ac3",
   "scope": "IMRPhenomXHM and IMRPhenomXPHM frozen full-waveform binary diagnostics",
   "oracle_policy": {
     "scope": "This receipt-generation run only; it does not supersede the historical implementation-worker exposure disclosed in the XPHM research note",
@@ -15,18 +15,21 @@
   "environment": {
     "host": "len",
     "python": "3.12.3",
-    "torch": "2.5.0.dev20240619",
-    "jax": "0.4.29",
-    "jaxlib": "0.4.29",
-    "numpy": "1.26.4",
-    "scipy": "1.13.1",
+    "torch": "2.14.0+cu130",
+    "jax": "0.11.2",
+    "jaxlib": "0.11.2",
+    "numpy": "2.3.5",
+    "scipy": "1.16.3",
     "lal": "7.7.1",
     "lalsimulation": "6.2.1",
-    "lalsuite_distribution": "7.26.15"
+    "lalsuite_distribution": "7.26.15",
+    "pycbc": "2.11.0"
   },
   "strict_gate": {
+    "command": "OMP_NUM_THREADS=1 PYTHONPATH=src python: run_oracle_comparison(case, strict=True) for the frozen IMRPhenomXHM/IMRPhenomXPHM catalog and holdout IDs",
     "complex_relative_l2_max": 1e-6,
     "flat_mismatch_max": 1e-8,
+    "optimized_mismatch_max": 1e-8,
     "result": "failed",
     "catalog_passed": 0,
     "catalog_total": 2,
@@ -34,20 +37,20 @@
     "holdout_total": 2,
     "cases": {
       "IMRPhenomXHM_diagnostic": {
-        "plus": {"complex_relative_l2": 0.4555338521046169, "flat_mismatch": 0.09119459041887013},
-        "cross": {"complex_relative_l2": 0.4467706177640559, "flat_mismatch": 0.09096641821336526}
+        "plus": {"complex_relative_l2": 0.45553385792615614, "flat_mismatch": 0.09119459296684473, "optimized_match": 0.9098430221708892},
+        "cross": {"complex_relative_l2": 0.446770618340011, "flat_mismatch": 0.0909664184632546, "optimized_match": 0.9100967342411164}
       },
       "IMRPhenomXPHM_diagnostic": {
-        "plus": {"complex_relative_l2": 0.22881790989825165, "flat_mismatch": 0.025734053861110495},
-        "cross": {"complex_relative_l2": 0.22641701214165394, "flat_mismatch": 0.025321404477889775}
+        "plus": {"complex_relative_l2": 0.22881790727328782, "flat_mismatch": 0.025734053284783842, "optimized_match": 0.9742668755417837},
+        "cross": {"complex_relative_l2": 0.22641701045075546, "flat_mismatch": 0.025321404029660988, "optimized_match": 0.9746792519673564}
       },
       "IMRPhenomXHM_holdout_6": {
-        "plus": {"complex_relative_l2": 0.7187377266646952, "flat_mismatch": 0.22367661976358144},
-        "cross": {"complex_relative_l2": 0.658125738933648, "flat_mismatch": 0.19923519532709966}
+        "plus": {"complex_relative_l2": 0.718737542409653, "flat_mismatch": 0.2236765435330178, "optimized_match": 0.7767518178477077},
+        "cross": {"complex_relative_l2": 0.6581257007125263, "flat_mismatch": 0.19923517754706077, "optimized_match": 0.8019037398403543}
       },
       "IMRPhenomXPHM_holdout": {
-        "plus": {"complex_relative_l2": 0.5041124658586125, "flat_mismatch": 0.1121090759386123},
-        "cross": {"complex_relative_l2": 0.5560211538599411, "flat_mismatch": 0.13413353052973198}
+        "plus": {"complex_relative_l2": 0.5041125739427325, "flat_mismatch": 0.11210914391477245, "optimized_match": 0.8886838393074851},
+        "cross": {"complex_relative_l2": 0.5560212744607049, "flat_mismatch": 0.1341335900553805, "optimized_match": 0.866226405749667}
       }
     }
   },

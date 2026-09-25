@@ -1,8 +1,10 @@
 """Paper-form checks for the separately scoped XPNR angle joins.
 
-Hamilton et al., arXiv:2507.02604v1, Eqs. (17)--(21). These tests use
+Hamilton et al., arXiv:2507.02604v1, Eqs. (17)--(21), Hamilton et al.,
+arXiv:2107.08876v1, Eqs. (41)--(45), and the correction stated in Thompson
+et al., arXiv:2312.10025v1. These tests use
 synthetic coefficients in the printed ansatzes, not inherited fit tensors or
-LAL source. The preceding beta taper and the public waveform are out of scope.
+LAL source. The public waveform is out of scope.
 """
 
 import math
@@ -14,6 +16,7 @@ from diffgw_reference import xpnr_angles as scalar
 
 START, END = 0.04, 0.08
 KAPPA, BETA_RD = 15.0, 0.3
+EMISSION_ARGS = (0.27, 0.8, 0.22, 0.35, 0.67, -0.28)
 
 
 def _alpha_attach(f):
@@ -171,3 +174,104 @@ def test_xpnr_beta_final_rescaling_jax_jit_value_and_join_derivative():
         mf = jnp.asarray(f, dtype=jnp.float64)
         assert math.isclose(float(compiled(mf)), _rescaled_beta(f), rel_tol=2e-12, abs_tol=2e-12)
         assert math.isclose(float(compiled_slope(mf)), _rescaled_beta_prime(f), rel_tol=2e-10, abs_tol=2e-10)
+
+
+def _tapered_opening_angle(f, connection, two_spin, single_spin):
+    if f > connection:
+        return single_spin
+    return single_spin + math.cos(math.pi * f / (2 * connection)) ** 2 * (two_spin - single_spin)
+
+
+def _optimal_emission_direction_beta(v, iota, eta, delta, chi, cos_theta_ls):
+    sin_iota, cos_iota = math.sin(iota), math.cos(iota)
+    sin_half_iota, cos_half_iota = math.sin(iota / 2), math.cos(iota / 2)
+    sin_theta_ls = math.sqrt(1 - cos_theta_ls**2)
+    mass_spin = (6 + 6 * delta + 5 * eta) * chi * sin_theta_ls
+    aligned_spin = (1 + delta - eta) * chi * cos_theta_ls
+    c0 = 84 * sin_iota
+    c2 = (110 * eta - 214) * sin_iota
+    c3 = -7 * mass_spin * (2 * cos_iota - 1) + 56 * (3 * math.pi - aligned_spin) * sin_iota
+    d0 = 84 * cos_half_iota
+    d2 = (110 * eta - 214) * cos_half_iota
+    d3 = 14 * mass_spin * sin_half_iota + 56 * cos_half_iota * (3 * math.pi - aligned_spin)
+    return 2 * math.atan(
+        ((c0 + c2 * v**2 + c3 * v**3) / cos_half_iota)
+        / (2 * (d0 + d2 * v**2 + d3 * v**3))
+    )
+
+
+def test_beta_taper_scalar_matches_published_piecewise_equation():
+    connection, two_spin, single_spin = 0.08, 1.1, 0.7
+    for f in (0.0, 0.03, connection, 0.1):
+        assert math.isclose(
+            scalar.tapered_opening_angle(f, connection, two_spin, single_spin),
+            _tapered_opening_angle(f, connection, two_spin, single_spin),
+            rel_tol=2e-12,
+            abs_tol=2e-12,
+        )
+    assert scalar.tapered_opening_angle(0.0, connection, two_spin, single_spin) == two_spin
+    assert scalar.tapered_opening_angle(connection, connection, two_spin, single_spin) == single_spin
+
+
+def test_beta_taper_torch_gradients_and_connection():
+    import torch
+
+    from torchwave.approximants.pnr_attachment import tapered_opening_angle
+
+    inputs = [torch.tensor(value, dtype=torch.float64, requires_grad=True) for value in (0.03, 0.08, 1.1, 0.7)]
+    actual = tapered_opening_angle(*inputs)
+    gradients = torch.autograd.grad(actual, inputs)
+    assert math.isclose(actual.item(), _tapered_opening_angle(0.03, 0.08, 1.1, 0.7), rel_tol=2e-12)
+    assert all(torch.isfinite(gradient) for gradient in gradients)
+    at_join = torch.tensor(0.08, dtype=torch.float64, requires_grad=True)
+    joined = tapered_opening_angle(at_join, *inputs[1:])
+    assert torch.autograd.grad(joined, at_join)[0].item() == pytest.approx(0.0, abs=2e-12)
+
+
+def test_beta_taper_jax_jit_gradients_and_connection():
+    import jax
+    import jax.numpy as jnp
+
+    from jaxwave.approximants.pnr_attachment import tapered_opening_angle
+
+    values = jnp.asarray((0.03, 0.08, 1.1, 0.7), dtype=jnp.float64)
+    function = jax.jit(lambda x: tapered_opening_angle(x[0], x[1], x[2], x[3]))
+    actual = function(values)
+    gradients = jax.jit(jax.grad(lambda x: tapered_opening_angle(x[0], x[1], x[2], x[3])))(values)
+    assert math.isclose(float(actual), _tapered_opening_angle(*map(float, values)), rel_tol=2e-12)
+    assert bool(jnp.all(jnp.isfinite(gradients)))
+    at_join = jnp.asarray((0.08, 0.08, 1.1, 0.7), dtype=jnp.float64)
+    assert float(jax.grad(lambda f: tapered_opening_angle(f, *at_join[1:]))(at_join[0])) == pytest.approx(0.0, abs=2e-12)
+
+
+def test_optimal_emission_direction_scalar_uses_corrected_denominator():
+    expected = _optimal_emission_direction_beta(*EMISSION_ARGS)
+    actual = scalar.optimal_emission_direction_beta(*EMISSION_ARGS)
+    assert math.isclose(actual, expected, rel_tol=2e-12, abs_tol=2e-12)
+    assert actual == pytest.approx(0.7899719998388846, rel=2e-14, abs=2e-14)
+
+
+def test_optimal_emission_direction_torch_value_and_gradients():
+    import torch
+
+    from torchwave.approximants.pnr_attachment import optimal_emission_direction_beta
+
+    inputs = [torch.tensor(value, dtype=torch.float64, requires_grad=True) for value in EMISSION_ARGS]
+    actual = optimal_emission_direction_beta(*inputs)
+    gradients = torch.autograd.grad(actual, inputs)
+    assert math.isclose(actual.item(), _optimal_emission_direction_beta(*EMISSION_ARGS), rel_tol=2e-12)
+    assert all(torch.isfinite(gradient) for gradient in gradients)
+
+
+def test_optimal_emission_direction_jax_jit_value_and_gradients():
+    import jax
+    import jax.numpy as jnp
+
+    from jaxwave.approximants.pnr_attachment import optimal_emission_direction_beta
+
+    values = jnp.asarray(EMISSION_ARGS, dtype=jnp.float64)
+    function = jax.jit(lambda x: optimal_emission_direction_beta(*x))
+    actual = function(values)
+    gradients = jax.jit(jax.grad(lambda x: optimal_emission_direction_beta(*x)))(values)
+    assert math.isclose(float(actual), _optimal_emission_direction_beta(*EMISSION_ARGS), rel_tol=2e-12)
+    assert bool(jnp.all(jnp.isfinite(gradients)))

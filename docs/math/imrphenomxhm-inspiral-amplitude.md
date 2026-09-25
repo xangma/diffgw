@@ -108,16 +108,20 @@ release `122022` from the explicit author-era `122019` control; their amplitude
 outputs are not interchangeable. A 20-row clean-assembly run records result
 SHA-256 `57230acd...1826` and raw-array SHA-256 `a4379774...0f32` in the
 [component receipt](../validation/xhm_carrier_components_20260925.json).
-Existing checksum-pinned author-archive fixtures verify selected paper-era
-amplitude surfaces from the arXiv v2 `AmpFits` supplement. A fresh inventory
-of the complete v2 source archive found 37 amplitude-fit files, 33 phase-fit
-files, eight mixing-coefficient files, both fit notebooks, and the fit README.
-Thus paper-era assets are present; the blocker is narrower: neither the
-archive nor the publication identifies an authoritative mapping to the
-installed default `122022` release. In particular, the `(3,3)` provider
-calibration and the current-default all-new amplitude calibration remain
-unresolved. No complete standalone XHM 122022 calibration asset is registered
-in [external data](../external-data.md).
+The full arXiv v2 source archive was checked before changing production. Its
+SHA-256 is `cc05e7dbff7bf0c42a10b7da1f4840eefc55b252168d6bfb085155a7bdc5318e`;
+it contains the author amplitude/phase notebooks, 37 amplitude `.m` tables
+(`21:10`, `32:9`, `33:9`, `44:9`), and 33 phase `.m` tables
+(`21:7`, `32:12`, `33:7`, `44:7`), eight mixing-coefficient files, and the fit
+README. Its README describes those as the fits for
+the paper implementation, but the archive has no release manifest tying them
+to default release `122022`, its all-new amplitude option, or a complete
+current-release collocation provider. Existing checksum-pinned fixtures verify
+selected paper-era surfaces only. In particular, the mapping of the `(3,3)`
+paper table to the current provider and the current-default all-new amplitude
+calibration remain unresolved. No complete standalone XHM 122022 calibration
+asset is registered in
+[external data](../external-data.md).
 
 Consequently, routing the existing earlier-provider nodes, compatibility sign
 branch, or older transition prescription into production would create an

@@ -4,8 +4,10 @@ This module is independent of Torch, JAX, LALSuite, and the repository's
 inherited calibration arrays. The caller supplies polynomial coefficients or
 already-evaluated calibration polynomials. It implements only relations printed
 in Hamilton et al., arXiv:2507.02604v1, Eqs. (3)--(8), (15)--(24),
-and Thompson et al., arXiv:2312.10025v1, Eqs. (25)--(35), (44), and
-(50)--(52), including the stated fit guards.  The window helper records the
+Hamilton et al., arXiv:2107.08876v1, Eqs. (41)--(45), and Thompson et al.,
+arXiv:2312.10025v1, Eqs. (25)--(35), (44), and (50)--(52), including the
+stated fit guards and the corrected factor of two in the emission-direction
+map.  The window helper records the
 endpoint-completing shifted-cosine interpretation used by both backends; the
 printed Eq. (38) omits the factor of pi needed to reach zero at its endpoint.
 
@@ -23,6 +25,7 @@ from typing import Sequence
 
 SOURCE_XPNR = "https://arxiv.org/html/2507.02604v1"
 SOURCE_XO4A = "https://arxiv.org/html/2312.10025v1"
+SOURCE_FINAL_TWIST = "https://arxiv.org/html/2107.08876v1"
 
 
 @dataclass(frozen=True)
@@ -300,6 +303,76 @@ def beta_connection(
     return h00 * value_start + h10 * width * slope_start + h01 * value_end + h11 * width * slope_end
 
 
+def tapered_opening_angle(
+    mf: float,
+    connection: float,
+    two_spin_angle: float,
+    single_spin_angle: float,
+) -> float:
+    """Evaluate Hamilton et al. (2021), Eqs. (44)--(45).
+
+    The caller supplies the two-spin and mapped single-spin opening angles at
+    ``mf``.  This isolated equation does not choose the connection frequency
+    or construct either input track.
+    """
+    _finite(mf, connection, two_spin_angle, single_spin_angle)
+    if mf < 0.0 or connection <= 0.0:
+        raise ValueError("require mf >= 0 and connection > 0")
+    if mf > connection:
+        return single_spin_angle
+    taper = math.cos(math.pi * mf / (2.0 * connection)) ** 2
+    return single_spin_angle + taper * (two_spin_angle - single_spin_angle)
+
+
+def optimal_emission_direction_beta(
+    v: float,
+    iota: float,
+    eta: float,
+    delta: float,
+    chi: float,
+    cos_theta_ls: float,
+) -> float:
+    """Evaluate Final Twist Eqs. (41)--(43), with the XO4a correction.
+
+    XO4a identifies a missing factor of two in the denominator of the 2021
+    printed map.  ``v`` is the PN velocity and ``iota`` is the opening angle
+    before the optimal-emission-direction rescaling.
+    """
+    _finite(v, iota, eta, delta, chi, cos_theta_ls)
+    if v < 0.0 or not 0.0 < eta <= 0.25:
+        raise ValueError("require v >= 0 and eta in (0, 0.25]")
+    if not 0.0 <= delta <= 1.0 or chi < 0.0:
+        raise ValueError("require delta in [0, 1] and chi >= 0")
+    if not 0.0 <= iota < math.pi or not -1.0 <= cos_theta_ls <= 1.0:
+        raise ValueError("require iota in [0, pi) and cos_theta_ls in [-1, 1]")
+
+    sin_iota = math.sin(iota)
+    cos_iota = math.cos(iota)
+    sin_half_iota = math.sin(0.5 * iota)
+    cos_half_iota = math.cos(0.5 * iota)
+    sin_theta_ls = math.sqrt(max(0.0, 1.0 - cos_theta_ls**2))
+    mass_spin = (6.0 + 6.0 * delta + 5.0 * eta) * chi * sin_theta_ls
+    aligned_spin = (1.0 + delta - eta) * chi * cos_theta_ls
+
+    c0 = 84.0 * sin_iota
+    c2 = (110.0 * eta - 214.0) * sin_iota
+    c3 = (
+        -7.0 * mass_spin * (2.0 * cos_iota - 1.0)
+        + 56.0 * (3.0 * math.pi - aligned_spin) * sin_iota
+    )
+    d0 = 84.0 * cos_half_iota
+    d2 = (110.0 * eta - 214.0) * cos_half_iota
+    d3 = (
+        14.0 * mass_spin * sin_half_iota
+        + 56.0 * cos_half_iota * (3.0 * math.pi - aligned_spin)
+    )
+    denominator = 2.0 * (d0 + d2 * v**2 + d3 * v**3)
+    if denominator == 0.0:
+        raise ValueError("emission-direction denominator must be nonzero")
+    numerator = (c0 + c2 * v**2 + c3 * v**3) / cos_half_iota
+    return 2.0 * math.atan(numerator / denominator)
+
+
 def alpha_exterior_continuation(
     mf: float, start: float, end: float,
     value_start: float, value_end: float, slope_end: float,
@@ -436,6 +509,7 @@ __all__ = [
     "FitCoordinates",
     "SOURCE_XO4A",
     "SOURCE_XPNR",
+    "SOURCE_FINAL_TWIST",
     "SingleSpinMap",
     "alpha_attachment",
     "alpha_exterior_continuation",
@@ -453,6 +527,8 @@ __all__ = [
     "evaluate_calibration_polynomial",
     "freeze_fit_coordinates",
     "higher_mode_frequency_map",
+    "optimal_emission_direction_beta",
     "single_spin_map_at_transition",
     "single_spin_map_from_transition_vectors",
+    "tapered_opening_angle",
 ]
