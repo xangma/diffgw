@@ -432,8 +432,8 @@
       "reference": "orbital_ode.paper_flux_vector_field; flux.factorized_mode_amplitudes",
       "torch": "src/torchwave/approximants/eob/integrator.py:EOBTrajectoryIntegrator.vector_field with SEOBNRv4PublishedFlux",
       "jax": "src/jaxwave/approximants/eob/integrator.py:EOBTrajectoryIntegrator.vector_field with SEOBNRv4PublishedFlux",
-      "test": "dev/native_rom/reference/tests/test_orbital_ode.py:test_full_pre_nqc_flux_vector_field_against_scalar_paper_reference",
-      "condition": "Two supplied nonzero-radial states per frontend compare all four components against an independently differentiated scalar Hamiltonian and 35 independently calculated positive-m pre-NQC mode amplitudes, using tabulated high-mode spin truncation and Taylor-f higher-spin choices. Agreement is 3e-10 relative / 2e-12 absolute. This local paper-derived force composition does not establish historical mode choices, the full flux aggregate over the physical domain, initial conditions, integrated trajectories, numerical convergence, or whole-waveform agreement."
+      "test": "dev/native_rom/reference/tests/test_orbital_ode.py:test_full_pre_nqc_flux_vector_field_against_scalar_paper_reference; dev/native_rom/reference/tests/test_orbital_ode.py:test_scalar_paper_flux_vector_field_precision_stability",
+      "condition": "Two supplied nonzero-radial states per frontend compare all four components against an independently differentiated scalar Hamiltonian and 35 independently calculated positive-m pre-NQC mode amplitudes, using tabulated high-mode spin truncation and Taylor-f higher-spin choices. Agreement is 3e-10 relative / 2e-12 absolute; the scalar oracle is stable below 1e-40 relative when its working precision rises from 50 to 70 digits on these states, which does not bound finite-difference truncation. This local paper-derived force composition does not establish historical mode choices, the full flux aggregate over the physical domain, initial conditions, integrated trajectories, numerical convergence, or whole-waveform agreement."
     },
     {
       "id": "V4-ODE-IC",

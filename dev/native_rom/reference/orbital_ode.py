@@ -3,8 +3,9 @@
 Bohé et al. 1611.03703v3, Sec. II.2 evolves the EOB Hamiltonian with
 radiation reaction. Buonanno--Damour gr-qc/0001013v2, Eqs. (24)--(27),
 give the polar Hamilton equations. Pan et al. 0912.3466v2, Eq. (28),
-supplies the tortoise factor. This scalar check takes both dissipative forces
-as inputs. It is not an initial-data prescription or a time integrator.
+supplies the tortoise factor. This scalar module checks both supplied-force
+and paper-derived pre-NQC flux variants. It is not an initial-data
+prescription or a time integrator.
 """
 
 import mpmath as mp

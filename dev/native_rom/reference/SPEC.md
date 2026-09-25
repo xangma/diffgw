@@ -169,7 +169,10 @@ Hamiltonian with all 35 positive-`m`, pre-NQC mode amplitudes in
 angular torque and the specified radial-force gauge to the polar equations.
 At two supplied nonzero-`p_r*` states, each Torch and JAX vector-field
 component agrees with the scalar composition within `3e-10` relative and
-`2e-12` absolute. This is conditional on the stated mode-spin options and
+`2e-12` absolute. The scalar oracle changes by less than `1e-40` relative
+when its working precision rises from 50 to 70 digits on these states.
+This does not bound finite-difference truncation. The leaf is conditional
+on the stated mode-spin options and
 supplied states; it does not settle historical mode choices, initial-data
 root finding, integrated inspiral, or domain-wide convergence.
 `hamiltonian.nonspinning_effective_hamiltonian` also checks the deformed-metric

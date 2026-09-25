@@ -127,3 +127,18 @@ def test_full_pre_nqc_flux_vector_field_against_scalar_paper_reference(
     for value, reference in zip(actual, expected):
         assert float(value) == pytest.approx(float(reference), rel=3e-10, abs=2e-12)
     assert float(actual[3]) < 0
+
+
+@pytest.mark.parametrize("m1,m2,s1,s2,r,phi,pr,j", [
+    (30., 20., 0., 0., 10., .1, -.02, 3.6),
+    (45., 5., -.8, .3, 8., -.7, -.03, 2.9),
+])
+def test_scalar_paper_flux_vector_field_precision_stability(
+    m1, m2, s1, s2, r, phi, pr, j,
+):
+    """The independent finite-difference oracle is stable under extra precision."""
+    args = (m1, m2, s1, s2, r, phi, pr, j)
+    lower = paper_flux_vector_field(*args, spin_truncation="tabulated", digits=50)
+    higher = paper_flux_vector_field(*args, spin_truncation="tabulated", digits=70)
+    for candidate, reference in zip(lower, higher):
+        assert abs(candidate-reference) < 1e-40*max(abs(reference), 1e-30)
