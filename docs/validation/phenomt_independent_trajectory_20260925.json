@@ -1,11 +1,11 @@
 {
-  "generated_utc": "2026-09-25T11:23:58.669916+00:00",
+  "generated_utc": "2026-09-25T15:08:48.820830+00:00",
   "reproduction": "PYTHONPATH=src python scripts/diagnose_phenomt_independent_trajectory.py --case high_mass_ratio --samples 65 --sample-rate 16384 --output receipt.json",
   "versions": {
     "python": "3.12.7",
-    "numpy": "2.5.2",
-    "scipy": "1.16.3",
-    "torch": "2.13.0",
+    "numpy": "2.4.3",
+    "scipy": "1.18.1",
+    "torch": "2.14.0",
     "lalsimulation": "6.2.1"
   },
   "dtype": "float64 with 50-decimal mpmath scalar RHS",
@@ -29,7 +29,7 @@
     "f_ref_hz": 20.0
   },
   "conventions": {
-    "reference": "Published equations only; public binary used solely as an unmodified initial-rate observation.",
+    "reference": "Published equations only; public binary used as an unmodified initial-rate and relative-trajectory observation.",
     "production": "No production equation or coefficient is modified by this diagnostic.",
     "source_restriction": "No LAL implementation source is inspected or translated; no binary output is fitted."
   },
@@ -64,42 +64,86 @@
         "njev": 0,
         "nlu": 0
       },
-      "convergence_state_max_vector_norm": 2.2472894464227497e-09,
-      "convergence_rotation_max_radians": 1.6423464350948267e-09
+      "convergence_state_max_vector_norm": 2.247321706954181e-09,
+      "convergence_rotation_max_radians": 1.6423491950258856e-09
     },
     "independent_invariants": {
-      "lhat_norm_max_abs": 5.165867733580853e-13,
-      "spin1_norm_max_abs": 6.672440377997191e-14,
-      "spin2_norm_max_abs": 1.0618038566445609e-12,
-      "tangent_norm_max_abs": 1.9939605522267811e-13,
-      "lhat_dot_tangent_max_abs": 1.8346435481930712e-13
+      "lhat_norm_max_abs": 5.188072194073357e-13,
+      "spin1_norm_max_abs": 6.683542608243442e-14,
+      "spin2_norm_max_abs": 1.0618075429319473e-12,
+      "tangent_norm_max_abs": 2.0028423364237824e-13,
+      "lhat_dot_tangent_max_abs": 1.8290924330699454e-13
     },
     "native_minus_independent_states": {
       "lhat": {
-        "max_vector_norm": 4.744644115089863e-09,
-        "relative_l2": 1.2248932107358098e-09
+        "max_vector_norm": 4.744615796489077e-09,
+        "relative_l2": 1.2248905594555693e-09
       },
       "spin1": {
-        "max_vector_norm": 7.79286404233878e-10,
-        "relative_l2": 3.2076117192779594e-10
+        "max_vector_norm": 7.792771790220692e-10,
+        "relative_l2": 3.207595108986365e-10
       },
       "spin2": {
-        "max_vector_norm": 6.748656029282424e-10,
-        "relative_l2": 1.967999878393018e-07
+        "max_vector_norm": 6.748653655374623e-10,
+        "relative_l2": 1.9680006006971771e-07
       },
       "tangent": {
-        "max_vector_norm": 3.2884001037068875e-09,
-        "relative_l2": 8.379037549830301e-10
+        "max_vector_norm": 3.2883760067740738e-09,
+        "relative_l2": 8.379016967087925e-10
       }
     },
     "native_minus_independent_rotation": {
-      "max_radians": 4.807622196714534e-09,
-      "final_radians": 8.473362779949116e-10
+      "max_radians": 4.807593980363193e-09,
+      "final_radians": 8.473330447419201e-10
     },
     "production_angle_reconstruction_minus_independent": {
       "fixed_initial_frame_radians": 0.0030660667931199006,
       "absolute_max_radians": 0.0030660667931199427,
       "relative_evolution_max_radians": 7.887938530811465e-16
+    },
+    "public_binary_minus_independent_trajectory": {
+      "public_model_options": {
+        "precession_version": 300,
+        "final_spin_mod": 4
+      },
+      "alignment": "The first public sample and the independently solved carrier event are both the supplied f_ref event; R(first)^T R(t) removes their fixed initial frames. No fitted time shift, phase, or rotation is used.",
+      "samples": 43087,
+      "public_epoch_seconds": -2.629817046,
+      "independent_reference_time_seconds": -2.6298159284410523,
+      "event_clock_shift_seconds": 1.117558947605346e-06,
+      "initial_triad_error_radians": 7.98094916818969e-17,
+      "max_axis_error_radians": 0.38910794296624446,
+      "rms_axis_error_radians": 0.1761219026425199,
+      "final_axis_error_radians": 0.37034404457308834,
+      "max_triad_error_radians": 0.3927554089951085,
+      "rms_triad_error_radians": 0.17646290845272058,
+      "final_triad_error_radians": 0.3781015620343746,
+      "first_triad_error_crossings": {
+        "0.0001": {
+          "sample_offset": 24,
+          "time_seconds": -2.62835220225,
+          "elapsed_from_reference_seconds": 0.00146484375,
+          "value_radians": 0.0001027549424749243
+        },
+        "0.001": {
+          "sample_offset": 234,
+          "time_seconds": -2.6155348194375,
+          "elapsed_from_reference_seconds": 0.0142822265625,
+          "value_radians": 0.0010040699681890062
+        },
+        "0.01": {
+          "sample_offset": 2283,
+          "time_seconds": -2.49047378428125,
+          "elapsed_from_reference_seconds": 0.13934326171875,
+          "value_radians": 0.010003914863950228
+        },
+        "0.1": {
+          "sample_offset": 19110,
+          "time_seconds": -1.4634352100624999,
+          "elapsed_from_reference_seconds": 1.1663818359375,
+          "value_radians": 0.10000233115790493
+        }
+      }
     },
     "initial_spin_even_rate": {
       "construction": "average of +chi1 and -chi1 with chi2=0; odd-in-spin terms cancel",

@@ -62,6 +62,61 @@ def _relative(rotations):
     return np.swapaxes(rotations[0], -1, -2) @ rotations
 
 
+def _analytical_onset(times, meco_time, native, observed):
+    """Locate raw-angle divergence before any suffix continuation can act."""
+    times = np.asarray(times, dtype=float)
+    native = np.asarray(native, dtype=float)
+    observed = np.asarray(observed, dtype=float)
+    use = times < meco_time
+    if not np.any(use) or not use[0]:
+        raise RuntimeError("public grid does not begin in the analytical inspiral")
+    selected_times = times[use]
+    selected_native = native[:, use]
+    selected_observed = observed[:, use]
+    distance = _rotation_distance(
+        _relative(_rotation_matrix(*selected_native)),
+        _relative(_rotation_matrix(*selected_observed)),
+    )
+    alpha_residual = (
+        np.unwrap(selected_native[0]) - np.unwrap(selected_observed[0])
+    )
+    alpha_residual -= alpha_residual[0]
+    beta_residual = selected_native[1] - selected_observed[1]
+    gamma_residual = (
+        np.unwrap(selected_native[2]) - np.unwrap(selected_observed[2])
+    )
+    gamma_residual -= gamma_residual[0]
+    crossings = {}
+    for threshold in (1e-4, 1e-3, 1e-2):
+        indices = np.flatnonzero(distance >= threshold)
+        if len(indices) == 0:
+            crossings[f"{threshold:g}"] = None
+            continue
+        index = int(indices[0])
+        crossings[f"{threshold:g}"] = dict(
+            sample_index=index,
+            time_seconds=float(selected_times[index]),
+            elapsed_from_first_sample_seconds=float(selected_times[index] - selected_times[0]),
+            relative_rotation_radians=float(distance[index]),
+            alpha_anchored_residual_radians=float(alpha_residual[index]),
+            beta_residual_radians=float(beta_residual[index]),
+            gamma_anchored_residual_radians=float(gamma_residual[index]),
+        )
+    return dict(
+        scope="PV22300 samples strictly before MECO; no MECO, peak, ringdown, or numerical-gamma rule applies",
+        samples=int(np.count_nonzero(use)),
+        first_time_seconds=float(selected_times[0]),
+        last_time_seconds=float(selected_times[-1]),
+        initial_absolute_rotation_radians=float(_rotation_distance(
+            _rotation_matrix(*selected_native[:, :1]),
+            _rotation_matrix(*selected_observed[:, :1]),
+        )[0]),
+        relative_rotation_max_radians=float(np.max(distance)),
+        relative_rotation_final_radians=float(distance[-1]),
+        first_relative_rotation_crossings=crossings,
+    )
+
+
 def _public_angles(version, case, rate):
     m1, m2, spin1, spin2, inclination, phase, fref = CASES[case]
     options = lal.CreateDict()
@@ -190,6 +245,32 @@ def diagnose(case, rate, table_size):
     for version, (times, _angles) in public.items():
         if not np.array_equal(times, base_times):
             raise RuntimeError(f"public grids differ for PV22300 and PV{version}")
+    full_query = torch.as_tensor(base_times, dtype=torch.float64)
+    full_frequency = carrier_frequency_tensor(full_query)
+    full_raw = dispatch.precession_geometry(
+        full_query,
+        full_frequency,
+        tm1,
+        tm2,
+        x1,
+        y1,
+        z1,
+        x2,
+        y2,
+        z2,
+        tinc,
+        tphase,
+        tfref,
+        frequency_peak=frequency_peak,
+        final_spin=final_spin,
+        precession_method="msa",
+        precession_version=22300,
+        frequency_at_time=carrier_frequency_tensor,
+    )[:3]
+    full_raw = np.stack([value.detach().numpy() for value in full_raw])
+    analytical_onset = _analytical_onset(
+        base_times, meco_time, full_raw, public[22300][1]
+    )
     indices = _selected_indices(base_times, reference_time, meco_time)
     times = base_times[indices]
     table_start = min(reference_time, float(np.min(times[times < 0])))
@@ -320,6 +401,7 @@ def diagnose(case, rate, table_size):
             interpolation="shape-preserving piecewise cubic; alpha and gamma unwrapped",
             meco_local_spacing_seconds=derivative_step,
         ),
+        analytical_angle_onset=analytical_onset,
         table_convergence=convergence,
         summaries=summaries,
         scalar_table=table,
