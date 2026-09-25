@@ -1855,6 +1855,18 @@ the strict JIT-gate failure to compiled amplitude-spline/matching arithmetic,
 without establishing that either evaluation is more physically accurate or
 changing the failed whole-waveform gate.
 
+A [macOS CPU replay of that stage probe](evidence/2026-09-25/jax_nqc_jit_stages_local_mac.json)
+uses the same frozen physical case and plan, with the diagnostic's output path
+set explicitly so the earlier Linux evidence remains intact. On JAX `0.11.2`,
+the pre-NQC eager/JIT mode difference remains `1.04e-15` relative L2, while
+the amplitude and phase coefficients differ by up to `1.29e-6` and `1.21e-7`.
+Compiling the NQC fit separately for both paths still leaves a `1.15e-6`
+amplitude-coefficient difference between their nearly identical inputs. Thus
+a common compiled fit does not cure the failed strict gate on this runtime;
+the change from the Linux result also cautions against treating one execution
+environment's roundoff pattern as a model property. Neither run identifies a
+source-faithful replacement for the full-series NQC rule.
+
 A [fixed-input local-polynomial JIT control](evidence/2026-09-25/jax_nqc_local_fit_jit.json)
 uses a [predeclared degree-four, ±2 M plan](evidence/2026-09-25/jax_nqc_local_fit_jit_plan.json)
 on that same mixed-spin fine trajectory. Eager and compiled local fits differ
@@ -1948,6 +1960,18 @@ frequency grid; they are selected-case diagnostics, not a release gate.
 The identical-input result above isolates conditioning/FFT, so this remaining
 selected-case discrepancy belongs to the native-generated waveform and its
 time/phase chart, whose source fidelity and physical accuracy remain open.
+
+The [frozen two-row Hamiltonian intervention](evidence/2026-09-25/hamiltonian_public_fd_intervention.json)
+uses [the pinned plan](evidence/2026-09-25/hamiltonian_public_fd_intervention_plan.json)
+and the same public-FD binary. Changing only the development generator's
+historical logarithmic derivative and shorter source calibration decimals
+reduces the fixed-distance, time/phase-fitted residual from `0.004031` to
+`0.002534` for the strong aligned-spin case and from `0.002650` to `0.000986`
+for strong antialigned spin. The public FD arrays reproduce the frozen baseline
+hashes; neither fitted lag reaches its bound. This source-specific change
+accounts for part of the native/public gap, but both residuals remain and the
+intervention has no domain-wide numerical or independent physical validation.
+It stays off the release path.
 
 1. Qualify the physical generator against the published equations and independent
    references over the intended domain, resolve convention/provenance gaps, and

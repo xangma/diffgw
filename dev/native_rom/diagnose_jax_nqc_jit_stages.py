@@ -6,6 +6,7 @@ import json
 import os
 import platform
 import time
+from pathlib import Path
 
 import jax
 import jax.numpy as jnp
@@ -36,7 +37,8 @@ from jaxwave.approximants.eob.seobnrv4_hamiltonian import SEOBNRv4Hamiltonian
 jax.config.update("jax_enable_x64", True)
 
 PLAN = q.ROOT / "dev/native_rom/evidence/2026-09-25/jax_nqc_jit_stage_plan.json"
-OUTPUT = PLAN.with_name("jax_nqc_jit_stages.json")
+OUTPUT = Path(os.environ.get(
+    "DIFFGW_DIAGNOSTIC_OUTPUT", PLAN.with_name("jax_nqc_jit_stages.json")))
 
 
 def relative_l2(actual, reference):
@@ -147,6 +149,8 @@ def main() -> int:
                 fixed_input_compiled[component], compiled[index]),
             "compiled_input_separate_jit_to_whole_jit_max_abs": max_abs(
                 compiled_input_separate[component], compiled[index]),
+            "fixed_input_jit_to_compiled_input_jit_max_abs": max_abs(
+                fixed_input_compiled[component], compiled_input_separate[component]),
         }
     solves = {}
     for label, matrix_index, rhs_index, coefficient_index in (
@@ -183,6 +187,8 @@ def main() -> int:
         "status": "diagnostic_complete", "release_qualified": False,
         "plan_sha256": q.sha256(PLAN), "script_sha256": q.sha256(__file__),
         "host": platform.node(), "cwd": os.getcwd(), "pid": os.getpid(),
+        "platform": platform.platform(), "jax_version": jax.__version__,
+        "jax_backend": jax.default_backend(),
         "case": case, "fine_samples": len(run.fine_time),
         "match_time_M": float(match), "replay_state_max_abs": replay_error,
         "differences": differences, "controlled": controlled, "solves": solves,

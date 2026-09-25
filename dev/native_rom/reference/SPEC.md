@@ -651,6 +651,12 @@ Hamiltonian-wrapper values agree with the source mode's Hamiltonian to
 `8.88e-16` in `H/nu` on the same matching-window states; the wheel generator's
 private argument was not captured. The residual numerical origin and an
 independent, validated NQC rule remain unresolved.
+The later [two-row conditioned-FD intervention](../evidence/2026-09-25/hamiltonian_public_fd_intervention.json)
+changes only the development generator's source-backed Hamiltonian decimals
+and logarithmic derivative. Its physically time/phase-fitted public residuals
+fall from `0.004031` to `0.002534` for aligned spin and from `0.002650` to
+`0.000986` for antialigned spin. The remaining differences and absent
+domain-wide convergence keep `V4-HAM-1-3` and `V4-TD-FD-CONVENTIONS` pending.
 The later [q8 raw-phase decomposition](../evidence/2026-09-24/source_q8_raw_phase.json)
 finds same-state pre-NQC phase parity to `2.9e-14 rad` when the native mode
 uses the pinned source frequency. At `-25 M` relative to a `-100 M` gauge,
