@@ -202,7 +202,34 @@ def _polynomial_rhs_derivatives(time_grid, base_mode, match_time,
 
 def _jax_polynomial_nqc_controls(time_grid, state, orbital_frequency,
                                  base_mode, match_time, *, half_width_M, degree):
-    """Independent NumPy fit on JAX samples for the dev-only parity control."""
+    """JIT-compatible local NQC fit on JAX samples for a dev-only control."""
+    if half_width_M <= 0 or degree < 2:
+        raise ValueError("invalid diagnostic JAX matching polynomial")
+    time_grid = jnp.asarray(time_grid)
+    match_time = jnp.asarray(match_time)
+    selected = (time_grid >= match_time-half_width_M) & (
+        time_grid <= match_time+half_width_M)
+    q, p = jax_basis(state[:, 0], state[:, 2], orbital_frequency)
+    amplitude = jnp.abs(base_mode)
+    first_phase = -jnp.angle(base_mode[:1])
+    phase_increments = -jnp.angle(base_mode[1:] * jnp.conj(base_mode[:-1]))
+    phase = jnp.concatenate((first_phase, first_phase + jnp.cumsum(phase_increments)))
+    values = jnp.column_stack((amplitude, amplitude[:, None]*q, p, phase))
+    x = jnp.where(selected, (time_grid-match_time)/half_width_M, 0)
+    matrix = jnp.stack(tuple(x**power for power in range(degree+1)), axis=-1)
+    matrix = jnp.where(selected[:, None], matrix, 0)
+    coefficients = jnp.linalg.solve(matrix.T @ matrix, matrix.T @ values)
+    first = coefficients[1]/half_width_M
+    second = 2*coefficients[2]/half_width_M**2
+    return (jnp.stack((first[1:4], second[1:4])),
+            jnp.stack((first[4:6], second[4:6])),
+            jnp.stack((jnp.stack((first[0], second[0])),
+                       jnp.stack((first[6], second[6])))))
+
+
+def _jax_polynomial_nqc_controls_numpy(time_grid, state, orbital_frequency,
+                                       base_mode, match_time, *, half_width_M, degree):
+    """Original eager NumPy fit retained to reproduce the frozen parity run."""
     if half_width_M <= 0 or degree < 2:
         raise ValueError("invalid diagnostic JAX matching polynomial")
     time_grid = _array(time_grid)
@@ -242,6 +269,7 @@ def run(case_id, plan, public_identity, *, variant="published", anchor_control=F
         diagnostic_nqc_rhs_derivatives=None,
         diagnostic_continuous_boundary=False,
         diagnostic_jax_local=False,
+        diagnostic_jax_local_fit="numpy",
         diagnostic_peak_policy=None):
     started = time.monotonic()
     if diagnostic_peak_policy not in (None, "stationary"):
@@ -258,6 +286,8 @@ def run(case_id, plan, public_identity, *, variant="published", anchor_control=F
                                          == diagnostic_nqc_phase_matrix
                                          == diagnostic_nqc_rhs_derivatives)):
         raise ValueError("JAX local-NQC parity requires the matched combined control")
+    if diagnostic_jax_local_fit not in ("numpy", "jax"):
+        raise ValueError("unknown JAX local-NQC fit")
     m1, m2, chi1, chi2, omega_start = CASES[case_id]
     nu = m1 * m2 / (m1 + m2)**2
     delta = (m1 - m2) / (m1 + m2)
@@ -399,7 +429,9 @@ def run(case_id, plan, public_identity, *, variant="published", anchor_control=F
         diagnostic_matching_second=matching_second,
         diagnostic_matching_rhs_derivatives=rhs_derivatives,
         diagnostic_continuous_boundary=diagnostic_continuous_boundary)
-    jax_local_controls = (_jax_polynomial_nqc_controls(
+    jax_fit = (_jax_polynomial_nqc_controls_numpy
+               if diagnostic_jax_local_fit == "numpy" else _jax_polynomial_nqc_controls)
+    jax_local_controls = (jax_fit(
         jrun.fine_time, jrun.fine_state, jax_fine_omega, jax_fine_mode,
         jmatch, **diagnostic_nqc_amplitude_derivatives)
         if diagnostic_jax_local else (None, None, None))
@@ -467,6 +499,7 @@ def run(case_id, plan, public_identity, *, variant="published", anchor_control=F
         "diagnostic_peak_policy": diagnostic_peak_policy,
         "diagnostic_continuous_boundary": diagnostic_continuous_boundary,
         "diagnostic_jax_local": diagnostic_jax_local,
+        "diagnostic_jax_local_fit": diagnostic_jax_local_fit,
         "diagnostic_nqc_second": diagnostic_nqc_second,
         "diagnostic_nqc_second_values": (_array(matching_second).tolist()
                                          if matching_second is not None else None),

@@ -1436,10 +1436,19 @@ and [aligned-spin](evidence/2026-09-25/jax_source_combined_backend_parity_strong
 factor-512 Torch/JAX whole-waveform differences are `9.13e-12` and `7.45e-10`.
 JAX factor-256 to factor-512 drifts are `2.07e-6` and `3.69e-6`, matching
 Torch and passing the predeclared backend and numerical gates on these rows.
-The JAX fit currently uses an eager NumPy least-squares diagnostic; this
-establishes value parity, not JAX differentiability or JIT compatibility.
-Neither backend's counterfactual has been validated against independent NR
-or accepted as a faithful historical-source implementation.
+That replay used an eager NumPy least-squares fit, so it established value
+parity without testing JAX differentiation or compilation. The separately
+frozen [pure-JAX local-fit plan](evidence/2026-09-25/jax_source_jit_local_fit_plan.json)
+replaces only that fit with a masked-moment JAX solve. Its [q4](evidence/2026-09-25/jax_source_jit_local_fit_q4_nonspinning.json)
+and [aligned-spin](evidence/2026-09-25/jax_source_jit_local_fit_strong_aligned.json)
+factor-512 Torch/JAX whole-mode disagreements are `6.37e-12` and `7.27e-10`;
+the independently integrated JAX factor-256 to factor-512 drifts are
+`2.07e-6` and `3.69e-6`. The local fit also compiles under `jax.jit` and
+has finite forward derivatives on a synthetic regression case. This establishes
+fit-level JIT/autodiff and two-case value parity, not a JIT/autodiff contract
+for the complete waveform. Neither backend's counterfactual has been
+validated against independent NR or accepted as a faithful historical-source
+implementation.
 
 The [frozen anchor diagnostic](evidence/2026-09-25/source_spliced_anchor_plan.json)
 replays all four cases and fits each mode's own amplitude peak between output

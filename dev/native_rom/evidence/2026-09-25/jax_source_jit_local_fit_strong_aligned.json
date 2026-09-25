@@ -1,0 +1,76 @@
+{
+  "case_id": "strong_aligned",
+  "checks": {
+    "each_grid_torch_jax_complex_relative_l2_at_most": true,
+    "jax_shared_sample_complex_relative_l2_at_most": true,
+    "shared_time_max_abs_at_most_M": true,
+    "torch_result_reproduced_abs_at_most": true
+  },
+  "comparisons": {
+    "jax": {
+      "complex_relative_l2": 3.694212114387689e-06,
+      "shared_end_M": 584.0,
+      "shared_samples": 1169,
+      "shared_time_max_abs_M": 0.0
+    },
+    "torch": {
+      "complex_relative_l2": 3.6948967053408742e-06,
+      "shared_end_M": 584.0,
+      "shared_samples": 1169,
+      "shared_time_max_abs_M": 0.0
+    }
+  },
+  "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+  "diagnostic_checks_passed": true,
+  "elapsed_s": 151.3325396250002,
+  "host": "RONI2",
+  "levels": {
+    "baseline": {
+      "amplitude_coefficient_max_abs": 1.8934883883048315e-07,
+      "boundary_time_difference_M": -2.864908310584724e-10,
+      "match_time_difference_M": -2.864908310584724e-10,
+      "native_backend_checks_passed": true,
+      "numpy_fit_torch_jax_complex_relative_l2": 1.0469915201912166e-10,
+      "phase_coefficient_max_abs": 2.0603806660801638e-08,
+      "settings": {
+        "atol": 1e-13,
+        "coarse_output_step_M": 0.5,
+        "fine_refinement_factor": 256,
+        "max_step_M": 2.0,
+        "rtol": 1e-12
+      },
+      "torch_jax": {
+        "common_samples": 1169,
+        "complex_relative_l2": 2.491997771637883e-11,
+        "support_sample_difference": 0,
+        "time_max_abs_M": 0.0
+      }
+    },
+    "refined": {
+      "amplitude_coefficient_max_abs": 9.724612937134225e-08,
+      "boundary_time_difference_M": 2.0837660485995002e-09,
+      "match_time_difference_M": 2.0837660485995002e-09,
+      "native_backend_checks_passed": true,
+      "numpy_fit_torch_jax_complex_relative_l2": 7.453617020338136e-10,
+      "phase_coefficient_max_abs": 3.5474772630550433e-07,
+      "settings": {
+        "atol": 1e-13,
+        "coarse_output_step_M": 0.5,
+        "fine_refinement_factor": 512,
+        "max_step_M": 2.0,
+        "rtol": 1e-12
+      },
+      "torch_jax": {
+        "common_samples": 1169,
+        "complex_relative_l2": 7.272235938008256e-10,
+        "support_sample_difference": 0,
+        "time_max_abs_M": 0.0
+      }
+    }
+  },
+  "pid": 82173,
+  "plan_sha256": "7c877087b7bdb7ea15118f31e645e9098c5625550737657c4d85846dbc6e59f3",
+  "release_qualified": false,
+  "schema": "diffgw.seobnrv4.jax-source-jit-local-fit.v1",
+  "status": "diagnostic_complete"
+}
