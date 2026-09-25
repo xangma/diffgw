@@ -1,0 +1,58 @@
+{
+  "hypothesis": "Trajectory and raw mode remain within 1e-10 on matched charts; asymmetric Torch-only matching controls yield a material coefficient and corrected-inspiral gap before ringdown. Preserve failed gates and compare against frozen whole L2.",
+  "inputs": {
+    "capture": {
+      "path": "dev/native_rom/diagnose_source_aligned_ode_chain_boundary_frequency.py",
+      "sha256": "f4c434d1d050ffad7550364292cc202c639e79323e731db797afd6a2b10e21e6"
+    },
+    "driver": {
+      "path": "dev/native_rom/diagnose_jax_spliced_whole_waveform.py",
+      "sha256": "158c243e6909d26529cf5e976521793cd07821cd48662036a3c34182391f9d1c"
+    },
+    "jax_attachment": {
+      "path": "dev/native_rom/eob/jax/numerical_attachment_clean.py",
+      "sha256": "4b74f667792fff4d8a5266bbe198550d014c17f30449c9c2f9e56480c950ccc1"
+    },
+    "source_field": {
+      "path": "dev/native_rom/diagnose_source_aligned_ode_chain_phase_matrix.py",
+      "sha256": "654ce386c98094f17c8b14bfdf2fdb9db2e70d112c1c4524943cd3745d41ad1a"
+    },
+    "torch_attachment": {
+      "path": "src/torchwave/approximants/eob/numerical_attachment.py",
+      "sha256": "8c7a149b76c529a255a4caa4b0ca76317b5306c8967db84047f299ccf51be7fc"
+    },
+    "trajectory_v1": {
+      "path": "dev/native_rom/evidence/2026-09-25/warm_jax_trajectory_divergence.json",
+      "sha256": "8fd151199d61cc6bf4bd6fee92ddace9b7b3645326a546fae76977965ba25883"
+    },
+    "trajectory_v1_plan": {
+      "path": "dev/native_rom/evidence/2026-09-25/warm_jax_trajectory_divergence_plan.json",
+      "sha256": "91b3830c67d43f54070151a078cf7039ef8c46e94607f130dc46a0229acc3123"
+    },
+    "warm_whole_v3": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_native_warm_whole_waveform_v3.json",
+      "sha256": "e0eb35487787588f2bb758de1becab96a1f4025d10a021ca96a72edd09205440"
+    },
+    "warm_whole_v3_plan": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_native_warm_whole_waveform_v3_plan.json",
+      "sha256": "e922fdd47e5675aa2d016a67e3f5d7bbbeb3f6d5c4184887251d0456a423c2dc"
+    }
+  },
+  "purpose": "Prospectively replay refined warm-state v3 whole-mode intervention and capture matched Torch/JAX fine input, NQC coefficients, corrected series, discrete boundary, and pre/post-boundary attached mode.",
+  "release_qualified": false,
+  "row_tuple": [
+    30.0,
+    20.0,
+    0.8,
+    0.6,
+    0.04
+  ],
+  "schema": "diffgw.seobnrv4.warm-jax-attachment-divergence-plan.v1",
+  "script_sha256": "f7a6f327f8b0c7309fad639014f373a739af2e08d8cab7f2ce24177c3f3822a3",
+  "settings": {
+    "atol": 1e-11,
+    "coarse_output_step_M": 0.5,
+    "max_step_M": 2.0,
+    "rtol": 1e-10
+  }
+}

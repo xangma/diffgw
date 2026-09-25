@@ -1,0 +1,115 @@
+{
+  "checks": {
+    "asymmetric_matching_controls": true,
+    "initial_state_parity_replay": true,
+    "input_base_mode_same": true,
+    "warm_state_replay": true,
+    "whole_mode_parity_failure_replay": true
+  },
+  "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+  "elapsed_s": 41.095295874984004,
+  "host": "RONI2",
+  "pid": 33649,
+  "plan_sha256": "7a17758971b3ef249f25f415d987fc987d0d84bebf419aad440a602709b9da04",
+  "release_qualified": false,
+  "row_tuple": [
+    30.0,
+    20.0,
+    0.8,
+    0.6,
+    0.04
+  ],
+  "schema": "diffgw.seobnrv4.warm-jax-attachment-divergence.v1",
+  "script_sha256": "f7a6f327f8b0c7309fad639014f373a739af2e08d8cab7f2ce24177c3f3822a3",
+  "settings": {
+    "atol": 1e-11,
+    "coarse_output_step_M": 0.5,
+    "max_step_M": 2.0,
+    "rtol": 1e-10
+  },
+  "stages": {
+    "amplitude_coefficient_max_abs": 0.02815126649852573,
+    "boundary_amplitude_abs": 9.576228698904288e-12,
+    "boundary_frequency_abs": 9.611053428670857e-07,
+    "boundary_index_abs": 0,
+    "boundary_time_abs_M": 0.0,
+    "corrected_inspiral": {
+      "max_abs": 0.002046673495270939,
+      "relative_l2": 0.0005317505572531455,
+      "samples": 9643
+    },
+    "input_base_frequency": {
+      "max_abs": 4.281242027559529e-12,
+      "relative_l2": 3.549860305987233e-13,
+      "samples": 9643
+    },
+    "input_base_mode": {
+      "max_abs": 3.514799390344057e-11,
+      "relative_l2": 1.886872373793989e-12,
+      "samples": 9643
+    },
+    "input_chart_max_abs_M": 0.0,
+    "input_orbital_frequency": {
+      "max_abs": 8.036404874900427e-12,
+      "relative_l2": 1.2621510817277106e-12,
+      "samples": 9643
+    },
+    "input_state": {
+      "max_abs": 7.401074197943558e-11,
+      "relative_l2": 5.189694265499169e-14,
+      "samples": 9643
+    },
+    "jax_coefficients": {
+      "amplitude": [
+        143.16358921439254,
+        -1229.2818015211492,
+        1378.359848513524
+      ],
+      "phase": [
+        35.47540450258881,
+        -794.3973879262485
+      ]
+    },
+    "jax_diagnostic_control_supplied": {
+      "phase_matrix": false,
+      "rhs_derivatives": false
+    },
+    "jax_match_time_M": 138.55437115467365,
+    "match_time_abs_M": 0.0,
+    "phase_coefficient_max_abs": 0.22509013747446716,
+    "post_boundary_mode": {
+      "max_abs": 0.0002140341901466524,
+      "relative_l2": 0.0003373063072171634,
+      "samples": 6402
+    },
+    "post_boundary_samples": 6402,
+    "pre_boundary_mode": {
+      "max_abs": 0.00021402841153560304,
+      "relative_l2": 0.00034676319808144376,
+      "samples": 8867
+    },
+    "pre_boundary_samples": 8867,
+    "torch_coefficients": {
+      "amplitude": [
+        143.16596247239437,
+        -1229.3051297617176,
+        1378.3879997800225
+      ],
+      "phase": [
+        35.4707392521371,
+        -794.172297788774
+      ]
+    },
+    "torch_diagnostic_control_supplied": {
+      "phase_matrix": true,
+      "rhs_derivatives": true
+    },
+    "torch_match_time_M": 138.55437115467365,
+    "whole_attached_mode": {
+      "max_abs": 0.0002140341901466524,
+      "relative_l2": 0.000345045452848077,
+      "samples": 15269
+    }
+  },
+  "status": "diagnostic_complete"
+}

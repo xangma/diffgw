@@ -1,0 +1,174 @@
+{
+  "checks": {
+    "coarse_100M_hypothesis": true,
+    "fine_mode_formula_same_on_torch_states": true,
+    "first_fixed_step_same": true,
+    "initial_field_same": true,
+    "initial_state_same": true
+  },
+  "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+  "elapsed_s": 30.541546959022526,
+  "host": "RONI2",
+  "pid": 29829,
+  "plan_sha256": "91b3830c67d43f54070151a078cf7039ef8c46e94607f130dc46a0229acc3123",
+  "release_qualified": false,
+  "row_tuple": [
+    30.0,
+    20.0,
+    0.8,
+    0.6,
+    0.04
+  ],
+  "schema": "diffgw.seobnrv4.warm-jax-trajectory-divergence.v1",
+  "script_sha256": "133d93226a350636f8a514090116effa89ef7a3d3a008a433e5e8fd52ff0c4a2",
+  "stages": {
+    "coarse": {
+      "common_output": {
+        "max_abs_by_component": [
+          3.4163782913765317e-12,
+          5.044853423896711e-13,
+          7.1397054934863036e-12,
+          1.0125233984581428e-12
+        ],
+        "relative_l2_by_component": [
+          1.8927066938235986e-14,
+          6.9805167444262905e-15,
+          8.542503731007238e-12,
+          1.2061670586105564e-14
+        ]
+      },
+      "common_output_samples": 986,
+      "first_state_threshold_crossing": {
+        "1e-06": null,
+        "1e-08": null,
+        "1e-10": null,
+        "1e-12": {
+          "index": 985,
+          "state_max_abs": 7.1397054934863036e-12,
+          "time_M": 492.5
+        }
+      },
+      "jax_accepted_steps": 294,
+      "jax_event_time_M": 492.9759364396843,
+      "jax_output_samples": 986,
+      "jax_rejected_steps": 17,
+      "jax_restart_index": 686,
+      "torch_accepted_steps": 294,
+      "torch_event_time_M": 492.9759370341225,
+      "torch_output_samples": 986,
+      "torch_rejected_steps": 17,
+      "torch_restart_index": 686,
+      "windows": {
+        "10.0": {
+          "max_abs_by_component": [
+            0.0,
+            1.3877787807814457e-17,
+            1.5525775109992423e-16,
+            0.0
+          ],
+          "relative_l2_by_component": [
+            0.0,
+            1.854408194151807e-17,
+            1.520814779020309e-14,
+            0.0
+          ]
+        },
+        "100.0": {
+          "max_abs_by_component": [
+            3.375077994860476e-14,
+            1.509903313490213e-14,
+            7.91033905045424e-16,
+            4.440892098500626e-16
+          ],
+          "relative_l2_by_component": [
+            2.466032861263433e-15,
+            2.775793967660146e-15,
+            7.469941792661014e-14,
+            8.330681283706969e-17
+          ]
+        },
+        "200.0": {
+          "max_abs_by_component": [
+            5.1514348342607263e-14,
+            2.930988785010413e-14,
+            2.0452389781766556e-15,
+            4.440892098500626e-16
+          ],
+          "relative_l2_by_component": [
+            3.2919491532073273e-15,
+            3.531878456382155e-15,
+            1.401315134678262e-13,
+            1.0976836911033186e-16
+          ]
+        },
+        "400.0": {
+          "max_abs_by_component": [
+            5.861977570020827e-14,
+            9.237055564881302e-14,
+            2.0747292772682613e-15,
+            9.325873406851315e-15
+          ],
+          "relative_l2_by_component": [
+            4.575645133198783e-15,
+            2.915688807354129e-15,
+            9.918854179865597e-14,
+            8.098795461342413e-16
+          ]
+        },
+        "50.0": {
+          "max_abs_by_component": [
+            1.9539925233402755e-14,
+            3.552713678800501e-15,
+            7.91033905045424e-16,
+            0.0
+          ],
+          "relative_l2_by_component": [
+            1.2290143286401839e-15,
+            1.1173809875580006e-15,
+            8.29249193781687e-14,
+            0.0
+          ]
+        }
+      }
+    },
+    "fine": {
+      "common_output": {
+        "max_abs_by_component": [
+          2.0626611529905858e-11,
+          1.6186163520615082e-11,
+          7.401074197943558e-11,
+          1.488453804654455e-11
+        ],
+        "relative_l2_by_component": [
+          6.424012861870591e-14,
+          1.1905560204916008e-14,
+          2.266207682221143e-11,
+          8.508947582077012e-14
+        ]
+      },
+      "common_output_samples": 9643,
+      "first_64_raw_mode_own_state_complex_l2": 8.148159141068309e-14,
+      "jax_output_samples": 9643,
+      "raw_mode_own_state_complex_l2": 1.8868682638149827e-12,
+      "raw_mode_same_state_complex_l2": 1.5440201083211442e-15,
+      "restart_state_max_abs": 5.3290705182007514e-14,
+      "torch_output_samples": 9643
+    },
+    "fixed_first_trial": {
+      "error_max_abs": 1.939758388771551e-18,
+      "error_ratio_abs": 9.034717313031912e-09,
+      "field_max_abs": 9.628562324618534e-17,
+      "fifth_max_abs": 4.163336342344337e-17,
+      "fourth_max_abs": 4.336808689942018e-17,
+      "jax_error_ratio": 2.4068486921911063e-05,
+      "torch_error_ratio": 2.405945220459803e-05
+    }
+  },
+  "status": "diagnostic_complete",
+  "warm_state": [
+    8.436030723266674,
+    0.0,
+    -0.005525838910381491,
+    3.2934625532049737
+  ]
+}

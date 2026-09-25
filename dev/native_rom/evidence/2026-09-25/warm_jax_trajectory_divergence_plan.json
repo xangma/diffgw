@@ -1,0 +1,44 @@
+{
+  "atol": 1e-11,
+  "coarse_windows_M": [
+    10.0,
+    50.0,
+    100.0,
+    200.0,
+    400.0
+  ],
+  "fixed_step_M": 0.5,
+  "hypothesis": "At the same frozen v3 warm state, phase error on the uniform coarse chart by 100M is <=1e-8; if false, preserve failure and report first threshold crossing. Fixed single trial and same-state mode must pass their separate parity controls.",
+  "inputs": {
+    "warm_whole_v3": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_native_warm_whole_waveform_v3.json",
+      "sha256": "e0eb35487787588f2bb758de1becab96a1f4025d10a021ca96a72edd09205440"
+    }
+  },
+  "purpose": "Prospective fixed warm-state Torch/JAX adaptive trajectory, resampling, and raw-mode localization; no source or physical claim.",
+  "release_qualified": false,
+  "row_tuple": [
+    30.0,
+    20.0,
+    0.8,
+    0.6,
+    0.04
+  ],
+  "rtol": 1e-10,
+  "schema": "diffgw.seobnrv4.warm-jax-trajectory-divergence-plan.v1",
+  "script_sha256": "133d93226a350636f8a514090116effa89ef7a3d3a008a433e5e8fd52ff0c4a2",
+  "settings": {
+    "atol": 1e-11,
+    "coarse_output_step_M": 0.5,
+    "fine_refinement_factor": 32,
+    "max_duration_M": 1000.0,
+    "max_step_M": 2.0,
+    "rtol": 1e-10
+  },
+  "state_thresholds": [
+    1e-12,
+    1e-10,
+    1e-08,
+    1e-06
+  ]
+}
