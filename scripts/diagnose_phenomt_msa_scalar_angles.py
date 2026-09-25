@@ -37,6 +37,13 @@ from torchwave.approximants import _phenomt_dispatch as dispatch
 from torchwave.approximants import _phenomt_msa as msa
 from torchwave.approximants.imrphenom_xas import XASParameterFits
 from torchwave.approximants.imrphenomt import IMRPhenomT
+from torchwave.approximants.precession_msa_angles_clean import (
+    assemble_precession_msa_angles,
+)
+from torchwave.approximants.precession_msa_waveform_clean import (
+    transport_msa_angles_for_phi_ref,
+)
+from torchwave.approximants.precession_source_frame_clean import source_frame_geometry
 
 
 VERSIONS = (22300, 22310, 22311, 22321)
@@ -116,6 +123,38 @@ def _analytical_onset(times, meco_time, native, observed):
         relative_rotation_final_radians=float(distance[-1]),
         first_relative_rotation_crossings=crossings,
     )
+
+
+def _clean_v223_angles(frequency, m1, m2, spin1, spin2, inclination, phase, fref):
+    """Compose the independently audited clean-room v223 compatibility angles."""
+    angles = assemble_precession_msa_angles(
+        frequency, m1, m2, spin1, spin2, f_ref=fref,
+        compatibility="v223",
+    )
+    values = (m1, m2, *spin1, *spin2, inclination, phase, fref)
+    tensors = tuple(torch.as_tensor(value, dtype=torch.float64) for value in values)
+    geometry = source_frame_geometry(*tensors, compatibility="v223")
+    geometry_zero = source_frame_geometry(
+        *tensors[:9], torch.zeros_like(tensors[9]), tensors[10],
+        compatibility="v223",
+    )
+    shifted, anchor, _ = transport_msa_angles_for_phi_ref(
+        {
+            "alpha": angles["alpha"],
+            "gamma": angles["gamma"],
+            "cos_beta": angles["cos_beta"],
+        },
+        geometry_zero,
+        geometry,
+        convention=1,
+        aligned=False,
+    )
+    absolute = torch.stack((
+        shifted["alpha"] + anchor["alpha0"],
+        torch.acos(torch.clamp(shifted["cos_beta"], -1.0, 1.0)),
+        shifted["gamma"] + math.pi - anchor["phi_j"],
+    ))
+    return absolute.detach().numpy()
 
 
 def _public_angles(version, case, rate):
@@ -272,6 +311,15 @@ def diagnose(case, rate, table_size):
     analytical_onset = _analytical_onset(
         base_times, meco_time, full_raw, public[22300][1]
     )
+    analytical_mask = base_times < meco_time
+    clean_v223 = _clean_v223_angles(
+        full_frequency[analytical_mask], m1, m2, spin1, spin2,
+        inclination, phase, fref,
+    )
+    compatibility_onset = _analytical_onset(
+        base_times[analytical_mask], meco_time, clean_v223,
+        public[22300][1][:, analytical_mask],
+    )
     indices = _selected_indices(base_times, reference_time, meco_time)
     times = base_times[indices]
     table_start = min(reference_time, float(np.min(times[times < 0])))
@@ -403,6 +451,7 @@ def diagnose(case, rate, table_size):
             meco_local_spacing_seconds=derivative_step,
         ),
         analytical_angle_onset=analytical_onset,
+        v223_compatibility_vs_public_pre_meco=compatibility_onset,
         table_convergence=convergence,
         summaries=summaries,
         scalar_table=table,

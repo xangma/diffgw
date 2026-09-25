@@ -5,6 +5,10 @@ import torch
 from torchwave.approximants.precession_msa import (
     elliptic_f, jacobi_sn_cn_dn, msa_phase_primitives, msa_oscillatory_angles,
     msa_nutation_phase, msa_opening_angle, solve_spin_roots, evaluate_msa_precession,
+    evaluate_msa_dynamics, compute_l_3pn,
+)
+from torchwave.approximants.precession_msa_angles_clean import (
+    assemble_precession_msa_angles,
 )
 
 
@@ -101,6 +105,58 @@ def test_msa_reference_geometry_gradient_and_grid_independence():
     newtonian=msa_opening_angle(l0,eta,c1,sav,s0q)
     supplied=torch.atan2(t(math.hypot((4*.3-.2)/9,(4*.2+.3)/9)),l0+sz)
     torch.testing.assert_close(newtonian,supplied,rtol=1e-12,atol=1e-13)
+
+
+def test_q10_msa_matches_clean_published_equations_before_compatibility_split():
+    """The failing full-waveform holdout is not a native MSA transcription error."""
+    f = torch.linspace(20., 220., 401, dtype=torch.float64)
+    m1, m2 = t(60.), t(6.)
+    chi1, chi2 = t([.2, .1, .8]), t([.1, 0., .1])
+    total = m1 + m2
+    q = m2 / m1
+    eta = m1 * m2 / total.square()
+    delta = (m1 - m2) / total
+    n1, n2 = m1 / total, m2 / total
+    spin1, spin2 = n1.square() * chi1, n2.square() * chi2
+    v = (math.pi * total * 4.925490947641267e-6 * f).pow(1 / 3)
+    v0 = v[0]
+    s_ell = spin1[2] + spin2[2]
+    sigma_ell = n2 * chi2[2] - n1 * chi1[2]
+    l_pn = compute_l_3pn(v, eta, delta, s_ell, sigma_ell)
+
+    alpha, beta, gamma, valid = evaluate_msa_dynamics(
+        v, v0, eta, delta, q, spin1, spin2, l_pn,
+    )
+    equation = assemble_precession_msa_angles(
+        f, m1, m2, chi1, chi2, f_ref=20., compatibility="equation",
+        beta_pn=True, beta_pn_version=102,
+    )
+    torch.testing.assert_close(alpha, equation["alpha"], rtol=0, atol=3e-10)
+    torch.testing.assert_close(gamma, equation["gamma"], rtol=0, atol=3e-10)
+    torch.testing.assert_close(beta.cos(), equation["cos_beta_pn"], rtol=0, atol=1e-10)
+    assert bool(valid)
+
+    # The separately audited v223 compatibility path first makes a material choice
+    # after the common roots/c1/<S^2>: it uses initial-reference rather than
+    # precession-averaged spin contractions in the published flux polynomial.
+    compatibility = assemble_precession_msa_angles(
+        f, m1, m2, chi1, chi2, f_ref=20., compatibility="v223",
+    )
+    for key in ("roots_reference", "c1", "sav"):
+        torch.testing.assert_close(equation[key], compatibility[key], rtol=0, atol=0)
+    for key in (
+        "mean_s1_l", "mean_s2_l", "mean_s1_l2", "mean_s2_l2",
+        "mean_s1ls2l",
+    ):
+        torch.testing.assert_close(
+            equation[key], compatibility[key], rtol=1e-14, atol=1e-18,
+        )
+    flux_delta = abs(
+        equation["flux_couplings"]["s1l"]
+        - compatibility["flux_couplings"]["s1l"]
+    )
+    assert flux_delta > 5e-4
+    assert abs(equation["psi2"] - compatibility["psi2"]) > 2
 
 
 def test_opening_angle_uses_precession_averaged_j_at_any_nutation_phase():

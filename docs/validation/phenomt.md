@@ -139,10 +139,35 @@ rule applies on this interval. The `22311` and `22321` continuations amplify
 the sampled ringdown residual to `0.14664` and `0.42952` rad. Thus the earliest
 localized q=10 MSA discrepancy is the raw analytical-angle branch, while
 continuation/minimal-rotation gamma explains only additional suffix-dependent
-growth. Raw PV223 values come from the audited native evaluator; an independent
-paper-derived scalar transcription of those raw MSA formulas is not yet
-available, so attribution to a particular raw term remains blocked. The public
-`22300` branch is an unmodified observation, and no binary output is fitted.
+growth. The public `22300` branch is an unmodified observation, and no binary
+output is fitted.
+
+The clean-room equation assembly now closes the source audit of that raw branch.
+For the same q=10 binary on 401 frequencies from 20--220 Hz, production alpha,
+gamma, and PN opening beta agree with the independent published-equation path
+within `2.20e-10`, `1.84e-10`, and `4.29e-11`, respectively. The paths have
+identical reference roots, `c1`, and leading spin average. The first material
+split from the separately audited v223 compatibility path is its use of
+initial-reference spin contractions in the radiation-reaction coefficients,
+instead of the precession-averaged contractions in
+[Chatziioannou et al.](https://arxiv.org/html/1703.03967). At q=10 this changes
+`beta3` by `-0.00201653`. A later compatibility-only transformation changes
+the quadratic nutation coefficient `psi2` from `9.41342` to `7.33672`.
+`tests/test_clean_room_msa.py` fixes the common equation path and the location
+of this split without treating binary behavior as equation provenance.
+
+Composing that clean-room v223 compatibility path through the independent
+source-frame construction reduces the public PV22300 relative-rotation
+residual from `0.0162258` rad to `3.32e-6` rad across all 5,326 samples before
+MECO, with no `1e-4` crossing. This makes the compatibility branch, beginning
+at the flux contractions above, causal for the observed analytical-inspiral
+failure rather than merely a nearby algebraic difference. Its fixed initial
+Euler-gauge offset is removed by the same first-sample relative rotation used
+for both comparisons.
+
+Replacing the production coefficients with those compatibility choices would
+therefore not be a source-backed correction. The published-equation
+implementation is retained, while the external full-waveform gate remains red.
 
 Additional numerical cases at 2048 Hz give the following errors. Both native
 backends are included in the receipt; their reported errors agree to the
@@ -214,7 +239,7 @@ The component localization is therefore:
 
 | Failed q=10 path | Earliest paper-defined component | Evidence excluding later components | Remaining blocker |
 | --- | --- | --- | --- |
-| MSA PV223 | Raw analytical angles | Residual begins before MECO; continuation and ringdown are inactive | No independent clean-room scalar transcription of the raw MSA formulas |
+| MSA PV223 | Public-binary raw analytical angles differ from the source-backed native/clean-room equation path | Production and independent equations agree below `2.20e-10`; the clean v223 compatibility path reduces the full pre-MECO relative residual from `0.0162258` to `3.32e-6` rad | The first compatibility substitution (initial-reference flux contractions, followed later by a `q^2` phase convention) is not stated by the published equations, so no source-backed production correction is authorized |
 | Numerical PV300/FS4 | Pre-merger orientation/rotation path: carrier/time mapping, trajectory, or public angle construction unresolved | Relative-triad error reaches `1e-4` rad after `1.465` ms; projection closes below `8e-16`; ringdown is not sampled | Public Euler angles do not expose the internal trajectory, so the earliest of these three components cannot yet be selected |
 
 The primary sources support the retained Kerr self-quadrupole term and the

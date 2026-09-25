@@ -1,15 +1,15 @@
 {
-  "generated_utc": "2026-09-25T15:36:28.873839+00:00",
-  "reproduction": "PYTHONPATH=src /tmp/diffgw-phenomt-latest-20260925/bin/python scripts/diagnose_phenomt_msa_scalar_angles.py --case high_mass_ratio --sample-rate 2048 --table-nodes 4097 --output docs/validation/phenomt_msa_scalar_angles_20260925.json",
+  "generated_utc": "2026-09-25T19:50:27.383612+00:00",
+  "reproduction": "PYTHONPATH=src /tmp/diffgw-waveform-library-1315f6e/venv-latest/bin/python scripts/diagnose_phenomt_msa_scalar_angles.py --case high_mass_ratio --sample-rate 2048 --table-nodes 4097 --output phenomt_msa_scalar_angles_20260925.json",
   "execution": {
     "host": "len",
-    "working_directory": "/tmp/diffgw-pr44-20260925/repo",
-    "command": "PYTHONPATH=src /tmp/diffgw-phenomt-latest-20260925/bin/python scripts/diagnose_phenomt_msa_scalar_angles.py --case high_mass_ratio --sample-rate 2048 --table-nodes 4097 --output docs/validation/phenomt_msa_scalar_angles_20260925.json"
+    "working_directory": "/tmp/diffgw-phenomt-q10-e29f",
+    "command": "PYTHONPATH=src /tmp/diffgw-waveform-library-1315f6e/venv-latest/bin/python scripts/diagnose_phenomt_msa_scalar_angles.py --case high_mass_ratio --sample-rate 2048 --table-nodes 4097 --output phenomt_msa_scalar_angles_20260925.json"
   },
   "versions": {
     "python": "3.12.3",
-    "numpy": "2.5.3",
-    "scipy": "1.18.1",
+    "numpy": "2.3.5",
+    "scipy": "1.16.3",
     "torch": "2.14.0+cu130",
     "lalsuite": "7.26.15",
     "lal": "7.7.1",
@@ -93,6 +93,20 @@
           "beta_residual_radians": -0.0060733738774496615,
           "gamma_anchored_residual_radians": 0.030453763305895
         }
+      }
+    },
+    "v223_compatibility_vs_public_pre_meco": {
+      "scope": "PV22300 samples strictly before MECO; no MECO, peak, ringdown, or numerical-gamma rule applies",
+      "samples": 5326,
+      "first_time_seconds": -2.629817046,
+      "last_time_seconds": -0.02971938974999988,
+      "initial_absolute_rotation_radians": 1.5418608744276627,
+      "relative_rotation_max_radians": 3.3156792316679897e-06,
+      "relative_rotation_final_radians": 1.0363151036916646e-08,
+      "first_relative_rotation_crossings": {
+        "0.0001": null,
+        "0.001": null,
+        "0.01": null
       }
     },
     "table_convergence": {
