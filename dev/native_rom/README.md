@@ -2397,6 +2397,21 @@ convergence gate. The amplitude matrix condition number is about `5.63e4`.
 This coefficient-level result does not replay a waveform or ringdown, establish
 a converged derivative prescription, or qualify the model for release.
 
+A [frozen captured-input event and derivative attribution](evidence/2026-09-25/captured_nqc_event_derivative_plan.json)
+replays the strong aligned-spin pinned-source and native pre-NQC arrays at
+`0.015625 M` without regenerating either waveform. Its [four-way result](evidence/2026-09-25/captured_nqc_event_derivative.json)
+compares the reported matching event or each orbit's stationary-frequency
+peak at the same prescribed offset, crossed with full-series GSL cubic or
+degree-four local-polynomial derivatives. The historical source/native
+five-coefficient L2 gap replays at `2.7421`; changing only the derivative
+rule gives `1.0866`, changing only the event gives `1.1403`, and changing both
+gives `0.2170`. The corresponding corrected preattachment complex L2 over
+`±2 M` falls from `5.03e-5` to `2.41e-5`. The source and native reported
+peaks lie `0.02212 M` and `0.01703 M` after the independently located
+stationary maxima. This is one fixed-input attribution, not a new matching
+prescription or full-waveform result; the separate `0.02649` coefficient
+stencil difference still fails its frozen `0.01` stability gate.
+
 The [prospective native ROM-input pilot](evidence/2026-09-25/rom_input_stability.json)
 uses a [frozen two-row plan](evidence/2026-09-25/rom_input_stability_plan.json),
 three ODE tolerances, three nested TD sampling rates, and a common positive
