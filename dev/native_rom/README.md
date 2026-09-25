@@ -2125,6 +2125,21 @@ different pre-fit inputs dominate the coefficient gap, especially the
 amplitude matching matrix. This does not yet identify which trajectory or
 raw-mode difference produces those inputs, or certify either fit as converged.
 
+The [aligned q4 NQC field-swap check](evidence/2026-09-25/q4_native_source_nqc_field_swap.json)
+uses a [frozen plan](evidence/2026-09-25/q4_native_source_nqc_field_swap_plan.json)
+and aligns the native and pinned-source fine-grid inputs by their NQC match
+times. Both original GSL fits reproduce exactly on the 9,595 shared samples.
+The native/source five-coefficient gap is `0.1509` in L2. Substituting only
+the source radial momentum in the native pre-fit input moves its coefficients
+by `0.1080` toward the source fit, leaving a `0.0444` gap; substituting only
+raw amplitude moves them by `0.0469`, leaving `0.1051`. Radius, orbital
+frequency, and raw phase each move the coefficients by at most `0.0061`.
+Within `2 M` of matching, the radial momenta differ by at most `5.61e-5`
+and the raw amplitudes by `2.28e-5`. These are one-field counterfactuals on
+the selected q4 row: they identify radial momentum as the largest immediate
+input to the NQC coefficient difference, but do not establish where its
+trajectory discrepancy originates or a physically consistent replacement.
+
 1. Qualify the physical generator against the published equations and independent
    references over the intended domain, resolve convention/provenance gaps, and
    establish gradients and numerical convergence. This runner covers only scalar
