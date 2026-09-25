@@ -664,6 +664,10 @@ The shorter source calibration decimals alone leave residuals of `0.004071`
 and `0.002650`, and have opposite incremental effects when combined with the
 derivative. These observations identify a source-convention effect, not a
 domain-wide or independent-physics validation.
+The [two-row derivative extension](../evidence/2026-09-25/hamiltonian_fd_derivative_extension.json)
+leaves the q=4 nonspinning FD waveform bitwise unchanged and slightly raises
+the mixed-spin fitted residual from `0.000559` to `0.000577`. It rules out a
+uniform improvement claim across the four selected FD cases.
 The later [q8 raw-phase decomposition](../evidence/2026-09-24/source_q8_raw_phase.json)
 finds same-state pre-NQC phase parity to `2.9e-14 rad` when the native mode
 uses the pinned source frequency. At `-25 M` relative to a `-100 M` gauge,

@@ -1986,6 +1986,15 @@ inside its bound. The derivative convention accounts for most of this
 selected-case improvement; calibration rounding is not a general correction.
 Neither choice is promoted to the release generator.
 
+The [derivative-only extension](evidence/2026-09-25/hamiltonian_fd_derivative_extension.json)
+uses [a separate frozen plan](evidence/2026-09-25/hamiltonian_fd_derivative_extension_plan.json)
+on the two remaining selected FD rows. In the mixed-spin case, the same
+fixed-distance fitted residual rises slightly from `0.000559` to `0.000577`;
+in the q=4 nonspinning case, the native FD bytes and `4.43e-5` residual are
+unchanged. Public FD hashes and lag bounds pass on both rows. Across these
+four cases, choosing the historical derivative is source-motivated, but it
+is not an across-the-board fit improvement or a release-accuracy claim.
+
 1. Qualify the physical generator against the published equations and independent
    references over the intended domain, resolve convention/provenance gaps, and
    establish gradients and numerical convergence. This runner covers only scalar
