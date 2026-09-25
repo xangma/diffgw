@@ -2899,14 +2899,50 @@ preserve that failed gate and compare only the 1163 shared samples of the
 replayed and no pairwise fit. Source versus warm complex L2 there is
 `0.0794094` at refined tolerance; baseline-to-refined and refined-to-finest
 warm-mode L2 are `1.77e-6` and `1.47e-7`. The embedded Torch/JAX waveform
-parity gates genuinely fail (`2.65e-4` refined whole-mode L2), although their
-initial states are identical and their vector field and raw mode at that state
-agree to about `1e-16`. Thus the early raw-mode improvement does not transfer
+parity gates fail (`2.65e-4` refined whole-mode L2) under their recorded
+asymmetric NQC controls, although their initial states are identical and their
+vector field and raw mode at that state agree to about `1e-16`. Thus the early
+raw-mode improvement does not transfer
 to this orbital-frequency-cropped whole-waveform candidate. The historical
 full source crop instead selects a discrete sample from the final `h22`
 instantaneous frequency; this distinct convention remains to be tested.
 These are development-only diagnostics (`release_qualified=false`). Reproduce
 v3 with `PYTHONPATH=src:. /Users/xangma/repos/diffgw/.venv/bin/python -m dev.native_rom.diagnose_source_aligned_native_warm_whole_waveform_v3`.
+
+The [cap-start full-mode crop plan](evidence/2026-09-25/source_aligned_native_cap_full_crop_v4_plan.json)
+and [result](evidence/2026-09-25/source_aligned_native_cap_full_crop_v4.json)
+apply the pinned source's discrete final-`h22` frequency crop after native
+NQC and attachment. This covers the original 1169-sample comparison chart;
+the finest source/native complex relative L2 is `0.00216715`, with
+baseline-to-refined and refined-to-finest native changes of `1.77e-5` and
+`9.93e-8`. The frozen run retains `failed_validity` because its cap-frequency
+check compared the *dissipative* initial state's orbital frequency with the
+nominal *circular* target. The separate [cap-frequency audit](evidence/2026-09-25/source_aligned_native_cap_frequency_v4_audit.json)
+shows native and pinned-source dissipative cap frequencies agree within
+`5.2e-12`; it does not retroactively change the frozen result or establish
+whole-waveform source fidelity. Both are development-only.
+
+Three frozen warm-gradient attempts
+([Torch](evidence/2026-09-25/native_warm_start_gradient.json),
+[JAX pathwise](evidence/2026-09-25/native_warm_start_jax_pathwise.json), and
+[one-step JAX](evidence/2026-09-25/native_warm_start_one_step_gradient.json))
+hit their memory or runtime bounds before providing a full warm-start
+derivative. A bounded [local vector-field JVP](evidence/2026-09-25/native_warm_field_jvp.json)
+and [explicit one-step RKF45 tangent](evidence/2026-09-25/native_warm_one_step_tangent.json)
+pass Torch AD, JAX JVP, and two finite-difference comparisons at the cap
+state. They validate a local field tangent and one fixed step on one row, not
+the accepted-mesh continuation or requested-frequency crossing.
+
+The [warm trajectory comparison](evidence/2026-09-25/warm_jax_trajectory_divergence.json)
+finds Torch/JAX raw-mode relative L2 of `1.89e-12` on their separately
+integrated warm trajectories. The earlier attached-mode gap arose under
+different NQC controls: a [same-array default-control check](evidence/2026-09-25/warm_jax_default_attachment_control.json)
+reduces it to `2.43e-10`, and a
+[same-array source-control check](evidence/2026-09-25/warm_jax_source_attachment_control_v2.json)
+reduces it to `2.29e-15` over 15269 attached samples, with identical boundary
+time and index. The latter retains its [failed preflight predecessor](evidence/2026-09-25/warm_jax_source_attachment_control_failure.json)
+for audit. These isolate attachment-backend agreement under matched inputs;
+they do not yet validate independent whole-waveform evolution or gradients.
 
 1. Qualify the physical generator against the published equations and independent
    references over the intended domain, resolve convention/provenance gaps, and

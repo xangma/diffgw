@@ -1,0 +1,14 @@
+{
+  "command": "env PYTHONPATH=src:. /Users/xangma/repos/diffgw/.venv/bin/python -m dev.native_rom.diagnose_warm_jax_source_attachment_control 2>&1 | tee /tmp/diffgw-warm-jax-source-attachment-control.log",
+  "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+  "host": "RONI2",
+  "log_path": "/tmp/diffgw-warm-jax-source-attachment-control.log",
+  "log_sha256": "b7bbf411569c78edcfc9e8e082c281d98ccec2b0831bfdb7c6c020732257702a",
+  "note": "Shell pipeline exited 0 because tee succeeded; Python traceback in captured log establishes failure. No scientific calculation ran.",
+  "plan_sha256": "0d78a1e4146d531c5c2ab3c7217d9cb935937a66fb34273e63339e7cd30285c7",
+  "reason": "ModuleNotFoundError: torchwave.approximants.eob.local_nqc_control; helper resides under dev.native_rom.eob.torch.local_nqc_control",
+  "release_qualified": false,
+  "schema": "diffgw.seobnrv4.warm-jax-source-attachment-failure.v1",
+  "script_sha256": "9582b3d7f603470c03afa0b2a2466531c5321bf701d187abb4d10224883ecfed",
+  "status": "failed_before_physics"
+}

@@ -1,0 +1,70 @@
+{
+  "control": {
+    "degree": 4,
+    "half_width_M": 2.0
+  },
+  "gates": {
+    "corrected_inspiral_relative_l2_at_most": 1e-08,
+    "pre_boundary_mode_relative_l2_at_most": 1e-08,
+    "same_boundary_max_abs_M": 1e-12,
+    "whole_attached_mode_relative_l2_at_most": 1e-08
+  },
+  "inputs": {
+    "attachment_v2": {
+      "path": "dev/native_rom/evidence/2026-09-25/warm_jax_attachment_divergence.json",
+      "sha256": "e767394caf9764b24c034cf2eb41c84bd5469a14e025a0feb424ecb0f92b47e4"
+    },
+    "default_control": {
+      "path": "dev/native_rom/evidence/2026-09-25/warm_jax_default_attachment_control.json",
+      "sha256": "9443a826d9e5dc406018e5edb44d1aa8fd3dd898d6fea469031d7ae8bdbca77e"
+    },
+    "driver": {
+      "path": "dev/native_rom/diagnose_jax_spliced_whole_waveform.py",
+      "sha256": "158c243e6909d26529cf5e976521793cd07821cd48662036a3c34182391f9d1c"
+    },
+    "failed_v1": {
+      "path": "dev/native_rom/evidence/2026-09-25/warm_jax_source_attachment_control_failure.json",
+      "sha256": "4e07196503226dc0d3925a1fbfeca58b3a21d10b870f816296d0c47d0054ff00"
+    },
+    "jax_attachment": {
+      "path": "dev/native_rom/eob/jax/numerical_attachment_clean.py",
+      "sha256": "4b74f667792fff4d8a5266bbe198550d014c17f30449c9c2f9e56480c950ccc1"
+    },
+    "source_local_controls": {
+      "path": "dev/native_rom/eob/torch/local_nqc_control.py",
+      "sha256": "1a613e1cf2e8414cc5ba3cd031aed9f5e5c49d3d2bbfc0c01fbdaf1e7a290b26"
+    },
+    "torch_attachment": {
+      "path": "src/torchwave/approximants/eob/numerical_attachment.py",
+      "sha256": "8c7a149b76c529a255a4caa4b0ca76317b5306c8967db84047f299ccf51be7fc"
+    },
+    "trajectory_v1": {
+      "path": "dev/native_rom/evidence/2026-09-25/warm_jax_trajectory_divergence.json",
+      "sha256": "8fd151199d61cc6bf4bd6fee92ddace9b7b3645326a546fae76977965ba25883"
+    }
+  },
+  "limitations": [
+    "Fixed-trajectory backend parity only; not independently evolved JAX whole-waveform or physical source validation.",
+    "The separate Torch-only ODE boundary-frequency intervention in the prior whole-waveform run is not applied here."
+  ],
+  "output_samples": 15269,
+  "purpose": "Matched source-local NQC controls on the same frozen warm Torch fine trajectory and raw h22 for Torch and JAX; separate NQC/attachment backend parity from the earlier asymmetric warm whole-waveform run. V2 corrects a preflight-only import failure frozen in v1.",
+  "release_qualified": false,
+  "row_tuple": [
+    30.0,
+    20.0,
+    0.8,
+    0.6,
+    0.04
+  ],
+  "schema": "diffgw.seobnrv4.warm-jax-source-attachment-plan.v2",
+  "script_sha256": "66520f83c1ea967aa257a729706ac87f1cd4d860b4be62baa71b95cd42d0320d",
+  "settings": {
+    "atol": 1e-11,
+    "coarse_output_step_M": 0.5,
+    "fine_refinement_factor": 32,
+    "max_duration_M": 1000.0,
+    "max_step_M": 2.0,
+    "rtol": 1e-10
+  }
+}
