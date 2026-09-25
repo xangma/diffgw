@@ -60,10 +60,10 @@ def _relative_l2(actual, expected):
     return np.linalg.norm(np.asarray(actual) - np.asarray(expected)) / np.linalg.norm(np.asarray(expected))
 
 
-def test_published_nnlo_coefficients_match_sympy_checkpoint():
-    # Independently evaluated with 50-digit SymPy arithmetic from
-    # Pratten et al. (2021), Eqs. (120)--(122); no implementation output was
-    # used to construct these checkpoints.
+def test_published_nnlo_coefficients_match_frozen_paper_checkpoint():
+    # Frozen numerical checkpoints evaluated from Pratten et al. (2021),
+    # Eqs. (120)--(122), then stored at float64 precision. No implementation
+    # output was used to construct them; this is not an executable SymPy oracle.
     alpha_expected = np.array(
         [
             -0.15997023809523809523809523809523809523809523809524,

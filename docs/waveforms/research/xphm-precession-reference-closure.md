@@ -116,8 +116,11 @@ shared twist-up helper remains the sole owner of the XHM carrier adapter
 $i^{m'}$; convention 1 contributes only its additional common real minus
 sign. A scalar odd-$m'$ test in `tests/test_xphm_rotation_reference.py`
 rejects a second application of $i^{m'}$. Published coefficient checkpoints,
-Torch/JAX geometry agreement, and full quadrupole composition remain strict
-executable gates in `tests/test_xphm_nnlo_clean_room.py`.
+stored as frozen float64 values, and Torch/JAX geometry agreement remain strict
+gates in `tests/test_xphm_nnlo_clean_room.py`. That module also checks a
+separate Torch-native quadrupole composition path against both production
+frontends. The composition check is not an independent scalar or full-waveform
+oracle, and it covers neither all modes nor all conventions.
 
 The NNLO secular cone is unsupported where a nonaligned sample has
 $L+S_\parallel\leq0$ at the reference or evaluated frequency. Such samples
