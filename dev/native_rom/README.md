@@ -2038,6 +2038,14 @@ source calibration decimals, while spin-row gaps are dominated by the
 historical logarithmic derivative. These are explicit Hamiltonian inputs,
 not physical trajectories or a waveform validation set.
 
+The [prospective optimized-field boundary check](evidence/2026-09-25/optimized_field_boundary.json)
+uses those same 12 states with their predeclared nonzero radial momenta.
+All four source/native evolution-field components agree within `5.48e-11`
+relative, below the frozen `1e-8` gate. The source's regular and optimized
+flux routes differ by at most `4.75e-10` relative. This establishes the
+tested same-state vector field, not initial-condition, integration, NQC,
+whole-waveform, or domain-wide convergence.
+
 1. Qualify the physical generator against the published equations and independent
    references over the intended domain, resolve convention/provenance gaps, and
    establish gradients and numerical convergence. This runner covers only scalar

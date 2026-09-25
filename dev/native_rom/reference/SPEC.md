@@ -191,6 +191,10 @@ are `4.76e-10`, below the frozen `1e-8` gates; native/wheel differs by at most
 evolved or NQC-corrected waveform validation. A [separate 35-mode check](../evidence/2026-09-25/flux_boundary_modes.json)
 finds all 420 source/native mode contributions within `4.43e-10` of source
 total flux, excluding a large cancellation on these states.
+The [optimized evolution-field boundary check](../evidence/2026-09-25/optimized_field_boundary.json)
+uses the corresponding 12 nonzero-radial-momentum states and finds all four
+source/native vector-field components within `5.48e-11` relative. This is
+same-state parity, not numerical trajectory convergence or initial-data parity.
 `flux.factorized_22_amplitude` checks the published pre-NQC dominant-mode
 modulus, including the non-Keplerian Newtonian prefactor, rest-energy tail,
 and Bohé's 2.5PN/3.5PN spin replacements. It agrees with the standalone Torch
