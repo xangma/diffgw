@@ -106,12 +106,21 @@ def one_spin_msa_v223_angles(frequency, mass1, mass2, spin1, spin2, f_ref):
 
     # Pratten et al., Sec. IV D remnant identity.  The split-root mean
     # projections and total-M^2 normalization here are named v223 choices.
-    den = eta * (1.0 - q**2 + 1.0e-16)
+    # Preserve the existing v223 machine-scale regularizer under XLA.  At
+    # q=1, reassociation of ``1-q**2+eps`` can round ``1+eps`` to one before
+    # the subtraction and turn the denominator into zero in compiled code.
+    eps = jnp.asarray(1.0e-16, dtype=eta.dtype)
+    den_factor = jnp.where(q == 1.0, eps, (1.0 - q) * (1.0 + q) + eps)
+    den = eta * den_factor
     mean1 = (c1 * (1.0 + q) - q * eta * xi) / den
     mean2 = -q * (c1 * (1.0 + q) - eta * xi) / den
+    # The two xi terms cancel in the sum entering the remnant identity.
+    # Evaluate that sum directly: at q=1, adding two large opposite
+    # auxiliary-root projections otherwise makes the compiled result fragile.
+    mean_total = c1 * (1.0 - q) * (1.0 + q) / den
     a_parallel = XASParameterFits.fit_final_spin(eta, cs1[..., 2], cs2[..., 2])
     l_fin = a_parallel - spin_l
-    final_sq = sav + l_fin**2 + 2.0 * l_fin * (mean1 + mean2)
+    final_sq = sav + l_fin**2 + 2.0 * l_fin * mean_total
     final_spin = jnp.where(a_parallel < 0.0, -1.0, 1.0) * jnp.sqrt(
         jnp.maximum(final_sq, 0.0)
     )

@@ -158,3 +158,25 @@ def test_longitudinal_spin_gradients_match_torch():
     expected = torch.autograd.grad(torch_loss, z)[0].item()
     actual = float(jax.grad(jax_loss)(.4))
     np.testing.assert_allclose(actual, expected, rtol=2e-7, atol=2e-8)
+
+
+def test_equal_mass_remnant_is_finite_under_jit_and_cond():
+    case = CASES[2]
+    f = jnp.array([25., 40., 80.])
+
+    def evaluate():
+        return one_spin_msa_v223_angles(f, *case)
+
+    eager = evaluate()
+    compiled = jax.jit(evaluate)()
+    conditional = jax.lax.cond(
+        True, lambda _: evaluate(), lambda _: evaluate(), None,
+    )
+    for result in (compiled, conditional):
+        for key in ("mean_s1_l", "mean_s2_l", "final_spin", "alpha", "gamma"):
+            assert np.isfinite(np.asarray(result[key])).all(), key
+        for key in ("final_spin", "alpha", "gamma"):
+            np.testing.assert_allclose(
+                np.asarray(result[key]), np.asarray(eager[key]), rtol=2e-10,
+                atol=1e-12, err_msg=key,
+            )
