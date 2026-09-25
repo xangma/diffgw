@@ -657,6 +657,13 @@ and logarithmic derivative. Its physically time/phase-fitted public residuals
 fall from `0.004031` to `0.002534` for aligned spin and from `0.002650` to
 `0.000986` for antialigned spin. The remaining differences and absent
 domain-wide convergence keep `V4-HAM-1-3` and `V4-TD-FD-CONVENTIONS` pending.
+The [frozen factorial follow-up](../evidence/2026-09-25/hamiltonian_fd_factorial.json)
+isolates the historical logarithmic derivative as the main contributor on
+both selected rows: its standalone residuals are `0.002492` and `0.001190`.
+The shorter source calibration decimals alone leave residuals of `0.004071`
+and `0.002650`, and have opposite incremental effects when combined with the
+derivative. These observations identify a source-convention effect, not a
+domain-wide or independent-physics validation.
 The later [q8 raw-phase decomposition](../evidence/2026-09-24/source_q8_raw_phase.json)
 finds same-state pre-NQC phase parity to `2.9e-14 rad` when the native mode
 uses the pinned source frequency. At `-25 M` relative to a `-100 M` gauge,

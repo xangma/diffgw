@@ -1973,6 +1973,19 @@ accounts for part of the native/public gap, but both residuals remain and the
 intervention has no domain-wide numerical or independent physical validation.
 It stays off the release path.
 
+The [frozen two-factor replay](evidence/2026-09-25/hamiltonian_fd_factorial.json)
+uses [a separate plan](evidence/2026-09-25/hamiltonian_fd_factorial_plan.json)
+to apply each Hamiltonian choice alone on those same two cases. The historical
+logarithmic derivative alone gives `0.002492` aligned and `0.001190`
+antialigned, versus baseline `0.004031` and `0.002650`. The shorter source
+calibration decimals alone give `0.004071` and `0.002650`, respectively.
+Adding those decimals to the historical derivative gives the previously
+measured `0.002534` and `0.000986`: their effect has opposite signs on the two
+rows. Every replay uses the frozen public FD array hashes and a fitted lag
+inside its bound. The derivative convention accounts for most of this
+selected-case improvement; calibration rounding is not a general correction.
+Neither choice is promoted to the release generator.
+
 1. Qualify the physical generator against the published equations and independent
    references over the intended domain, resolve convention/provenance gaps, and
    establish gradients and numerical convergence. This runner covers only scalar

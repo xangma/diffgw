@@ -1,0 +1,22 @@
+{
+  "schema": "diffgw.seobnrv4.hamiltonian-fd-factorial-plan.v1",
+  "release_qualified": false,
+  "baseline_report": "dev/native_rom/evidence/2026-09-25/native_public_fd.json",
+  "baseline_report_sha256": "de4ac93862ec2e21fc7ecce4d5d09331b9db66a238b5dca44742fb7911c830ca",
+  "combined_report": "dev/native_rom/evidence/2026-09-25/hamiltonian_public_fd_intervention.json",
+  "combined_report_sha256": "065cbc0b5d349db9e923cf2ec3865b4c557470d1b568c4c700c5ed77c7a5cf6f",
+  "combined_script_sha256": "ceba4317504d93335939ddbf38bc10349b85225d1b030a8c911e7b5f67040827",
+  "rows": ["safe_frequency_cap", "strong_antialigned"],
+  "arms": {
+    "lal_log_derivative_only": {
+      "diagnostic_hamiltonian_log_derivative": "lal_v4",
+      "diagnostic_hamiltonian_calibration": "published"
+    },
+    "lal_rounded_calibration_only": {
+      "diagnostic_hamiltonian_log_derivative": "analytic",
+      "diagnostic_hamiltonian_calibration": "lal_v4_rounded"
+    }
+  },
+  "fit": "Same fixed-distance common lag and quadrupole polarization rotation as the frozen combined intervention; baseline and combined arms are reused only after hash checks.",
+  "interpretation": "Development-only factorial attribution. A smaller selected-case FD residual is neither a physical model criterion nor a release qualification."
+}
