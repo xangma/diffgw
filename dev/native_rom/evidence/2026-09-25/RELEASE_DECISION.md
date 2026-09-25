@@ -318,6 +318,25 @@ checks. The diagnostic ran on RONI2 in this worktree as PID `62961`, command
 log `/tmp/diffgw-jax-fixed-state-mode.log`, and completed in 23 seconds with
 exit code 1 for the frozen NQC gate. No process or next check remains.
 
+The next [frozen NQC stable-spline control](jax_nqc_stable_spline_plan.json)
+and [failed result](jax_nqc_stable_spline.json) put arithmetic barriers
+through the development-only natural-spline Thomas solve, coefficient
+construction, and matching-row evaluation while retaining the physical
+targets and original equilibrated linear solves. It preserved the eager
+corrected mode to `1.08e-15` relative L2 and eager coefficients to `3.58e-12`
+maximum absolute error. On identical input state, orbital frequency, and
+base mode arrays, however, the eager/JIT amplitude coefficients still differ
+by `2.78e-7` against the frozen `1e-9` gate. Hence this spline-only arithmetic
+barrier is not a source-preserving numerical repair. It ran on RONI2 in this
+worktree as PID `66594`, command
+`PYTHONPATH=src:. /Users/xangma/repos/diffgw/.venv/bin/python -m dev.native_rom.diagnose_jax_nqc_stable_spline`,
+log `/tmp/diffgw-jax-nqc-stable-spline.log`, and completed in 8.8 seconds
+with exit code 1 for the frozen fixed-input gate. No process or next check
+remains. The next narrow attribution is to supply an identical precomputed
+NQC basis/product array directly to both spline executions, then inspect the
+matching rows and solve separately; no whole-path claim follows from this
+negative control.
+
 Two different release claims must stay separate:
 
 - **Historical SEOBNRv4 fidelity:** a port may be described as faithful only

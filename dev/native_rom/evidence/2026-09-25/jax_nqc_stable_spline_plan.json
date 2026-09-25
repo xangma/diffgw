@@ -1,0 +1,21 @@
+{
+  "schema": "diffgw.seobnrv4.jax-nqc-stable-spline-plan.v1",
+  "release_qualified": false,
+  "source_head": "0d36b25",
+  "case": "high_start_mixed_spin",
+  "output_step_M": 0.5,
+  "fine_refinement_factor": 32,
+  "adaptive_atol": 1e-10,
+  "adaptive_rtol": 1e-9,
+  "method": "On the fixed fine state and match chart, replace only development NQC natural-spline matching-row arithmetic with explicit optimization barriers in the Thomas solve, cubic coefficients, and value/first/second derivative evaluation. Keep the original equilibrated NQC solve and physical targets. Compare eager and JIT fits on identical pre-NQC mode inputs, then compare eager corrected modes to the unchanged source method.",
+  "gates": {
+    "max_fixed_input_coefficient_absolute_error": 1e-9,
+    "max_candidate_source_coefficient_absolute_error": 1e-8,
+    "max_candidate_source_corrected_mode_relative_l2": 1e-10
+  },
+  "operational_limits": {
+    "max_wall_time_s": 300,
+    "max_rss_gib": 32
+  },
+  "interpretation": "One fixed-chart NQC control. Passing would justify a frozen whole-waveform candidate, source comparison, multi-case checks, and AD/FD; failing must stay in the feature branch."
+}
