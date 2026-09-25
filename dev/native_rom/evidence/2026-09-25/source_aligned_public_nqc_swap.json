@@ -1,0 +1,213 @@
+{
+  "baseline_native_pre_boundary_mode_sha256": "075efc8d9845a7d154398998f88ad5dea5d696e38ad04509c3e83870db9bc1a2",
+  "checks": {
+    "baseline_chart_samples_replay": true,
+    "baseline_whole_metric_replays": true,
+    "candidate_mode_hash_replays": true,
+    "early_window_samples_replay": true,
+    "native_factor_reconstruction_linf_at_most": true,
+    "native_factor_reconstruction_relative_l2_at_most": true,
+    "public_binary_identity_replays": true,
+    "public_mode_hash_replays": true,
+    "variant_noop_chart_replays": true
+  },
+  "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+  "diagnostic_checks_passed": true,
+  "elapsed_s": 43.010534708038904,
+  "fixed_chart": {
+    "boundary_margin_M": 1.0,
+    "native_peak_sample_index": 969,
+    "public_peak_sample_index": 997,
+    "samples": 1169,
+    "support_M": [
+      -484.5,
+      99.49999999999999
+    ]
+  },
+  "historical_source_coefficient_provenance": {
+    "amplitude_coefficients": [
+      172.36472611312226,
+      -1478.7199108839393,
+      1657.1259916551278
+    ],
+    "basis": "N22=(1+sum(a_j*q_j))*exp(i*sum(b_j*p_j)); same 22 basis order in native and historical capture",
+    "evidence_path": "dev/native_rom/evidence/2026-09-25/captured_nqc_whole_mode.json",
+    "evidence_sha256": "8939165c18c29117a6c4979786126c592739ecc5bd367930b87def2b1054f5f7",
+    "historical_coefficients_are_cross_trajectory": true,
+    "native_amplitude_coefficients": [
+      142.78642256035278,
+      -1225.7847013895869,
+      1374.2554653941365
+    ],
+    "native_phase_coefficients": [
+      35.553427941772235,
+      -797.4835640867354
+    ],
+    "phase_coefficients": [
+      43.04742202075585,
+      -1096.0829923448962
+    ]
+  },
+  "host": "RONI2",
+  "identity": {
+    "binaries": {
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libaec.0.1.7.dylib": "5612e00c7f180b633c9b141844c5c60cf21df6b103b842391ae0274ff260b458",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libbrotlicommon.1.2.0.dylib": "e9cddb32ebba5a8f92b567a323459382fb203bc3d1304c5d00e2757bd2a58ec1",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libbrotlidec.1.2.0.dylib": "db7c5d79757eb9a652c17d859e63f0686b07d7b9a882329df602df2e539c1750",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libcfitsio.4.6.4.dylib": "bd8a9ef313118d3dc541ee438eec460e715e7af5253e4d16824bd3ef2da0b705",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libcrypto.3.dylib": "e2783fcdd6c517ba285a61ff4e1319f9b5388f374677f1bae1a3eeec4e581954",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libcurl.4.dylib": "c31527aa4180f74babd4dc4e5a05b3df3500fe21fe93f2bb62bafa6d2ca13612",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libfftw3.3.dylib": "25d39c1d343cd5c46df9e9db39939245ff08c7c4d9e0bbcdead1750c34d6337b",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libfftw3f.3.dylib": "67a00ffeecb5c8375f80fa17e65f340ce91446e6a8424673c72758c8599d50a7",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libframel.8.48.4.dylib": "67898b482a5065b4e4b1b0f0dd16321c2f1edcf1ac54b7b4eed3dac298486846",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libgsl.28.dylib": "1eefe0dbead9551d47be3c09bbf786c727f84df1331130ee8a03127b7a95abe8",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libgslcblas.0.dylib": "00a30ab2e9eb5cd36caab9ae9a9975a8280b9b4c2940b15e446c34a151818230",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libhdf5.320.1.1.dylib": "8196331cc47e67eb81473a1288ad8dfc607b37f587d5dd6c02bc88a71e1d9e7a",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libhdf5_hl.320.0.2.dylib": "ee95613ef6bde34945829e444fb9aeec0128cbddff7e1ea89a4c4d1e2dece6e6",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libiconv.2.dylib": "52d70b85978160b9b3ea3605b38522626b8642697db2de866d16f4967d67b675",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libidn2.0.dylib": "d6dce44c0ca426d8c403fe2b37bad30b4a46a6a7c920d13e597fdf446a8a946d",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libintl.8.dylib": "bca42b0bdd3709989aab17746a7317c6dc0285bb6d82aab4891dc9bf08b7c6cf",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/liblal.20.dylib": "e4c4ed42baed00d30668588e58444f974e3deeda56ba4e5978624640ddb5bde7",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/liblalburst.8.dylib": "592f4a6d392fd14fa926126c3b7e8c2f1a22891ec732b2b34c12cc9091e36277",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/liblalframe.14.dylib": "64c4684ede0c34f3e911d6d44c59811531b9366f72c12483a694b30cfd0fee78",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/liblalinference.23.dylib": "1c2ec90d081f31bc6e37b1b4f92755940c241b3915fb6a24107a7da31ba901ac",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/liblalinspiral.18.dylib": "900ab09865b3833abf01cead55344faa06167de5b361a1cbcb054e97f844cbfd",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/liblalmetaio.11.dylib": "3506634e0f760b5b1de7867978a7d5756dd38e4e2378e4cb007c0d33b28c61f9",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/liblalpulsar.30.dylib": "84a7e7475b64c72fbf83d2cc07ce40b8bd1dcc9928414fb73dae67a9ee369d92",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/liblalsimulation.37.dylib": "9046c4a673d2ba82b792f7b92d73203ba783b32fc604b5da1139c5c1bc8b3325",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/liblalsupport.14.dylib": "69e8be4f19fdb31cc6b7bf1bc78e996c71b11f90ccc9cb02b67af3462fce55b8",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libmetaio.1.dylib": "32335f399dd3629ed089772faad9cf83fb04c22823883eb513efbd3a8647dd63",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libnghttp2.14.dylib": "25c7f17e6288fbab82afe873a883ee197cb45fd2e9c4c05feaeb5b66e853004b",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libpsl.5.dylib": "971ced1f51baad72d5ef5932112209e78b1ce9aacc40f995a00dffc545de0717",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libssl.3.dylib": "2b7c20e43533e9463251923d7d285b01b1eaf302b420c0fa9516fa6f8466bda6",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libsz.2.0.1.dylib": "603290903eef2da05d00710387b8a62a1a5e66f89d2bd5b906f9bb1e818b000a",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libunistring.5.dylib": "be2d50d95d67ce80c7a8183e8d6b5ed06438f7c805f10efc279b1873be279637",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libz.1.3.2.dylib": "1c6165550fec45d0eb0867b062943e9c926bf9ee94e462faad6d257055d3968b",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/.dylibs/libzstd.1.5.7.dylib": "918575fed77013d472c7f2e235afdac8ff4c26a5c2ab80196e103256ef8401ca",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lal/_lal.cpython-313-darwin.so": "d7220aaf8ba88508569a3a96b7f8b2fedd35bed7f17775ac414bd418701c17c3",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lalburst/_lalburst.cpython-313-darwin.so": "04c3bc36ff28c081896f74c16045ddb7c26582768c12ff88b0d550cfc6c388c4",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lalburst/cs_gamma.cpython-313-darwin.so": "58abb65a5e0da9a497d2db50cb0d5ef1f467a9e4c0f9b97fdeec300c2cdd443e",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lalframe/_lalframe.cpython-313-darwin.so": "fec91798a004bbf9ceff73e9a7a330490a2353cb60c962f3a6309a522eb5a400",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lalinference/_bayespputils.cpython-313-darwin.so": "d3a011d91df8fb10306d8b210c2334f2931b58a0994dfd1974d766712165276c",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lalinference/_lalinference.cpython-313-darwin.so": "42f66bf7bb4971996d3e29a89be274b673ac7fb55e0c35a3e472479dd1dceeb8",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lalinspiral/_lalinspiral.cpython-313-darwin.so": "aebb6b8b570018af89ebf4701fe33a232d965dcac5c026f34c75936d3c48f604",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lalinspiral/_thinca.cpython-313-darwin.so": "755ea8d7b90b68db5b95b800f1ee4550956ae752d441300ed43cd0862d4b2efd",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lalmetaio/_lalmetaio.cpython-313-darwin.so": "4429fb8189a806182661a7e6fbdb7ff9f975a445fde2da46b0e8b498aa4f313b",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lalpulsar/_lalpulsar.cpython-313-darwin.so": "ac2937b767c371c0638a431e645bdba43c21fbb721eb3223abd0900b9a047c8d",
+      "/Users/xangma/repos/diffgw/.venv/lib/python3.13/site-packages/lalsimulation/_lalsimulation.cpython-313-darwin.so": "2de0af808b258bef03a3a13b15fa71038f48579f5f562e92ebd62c6b9769fd37"
+    },
+    "lal_version": "7.7.1",
+    "lalsimulation_version": "6.2.1",
+    "lalsuite_distribution": "7.26.15"
+  },
+  "metrics": {
+    "baseline_native": {
+      "early_pre_match_minus_50M": {
+        "error_squared": 3.9955387464079986e-41,
+        "error_squared_delta_from_baseline": 6.576283409154763e-55,
+        "error_squared_ratio_to_baseline": 1.0000000000000164,
+        "local_complex_relative_l2": 0.04400942034926169,
+        "samples": 869
+      },
+      "full_pre_boundary_with_margin": {
+        "error_squared": 4.457364092030978e-41,
+        "error_squared_delta_from_baseline": 6.67824129146724e-55,
+        "error_squared_ratio_to_baseline": 1.0000000000000149,
+        "local_complex_relative_l2": 0.04066275025837426,
+        "samples": 967
+      },
+      "nqc_local_50M": {
+        "error_squared": 4.618253456229794e-42,
+        "error_squared_delta_from_baseline": 1.2744735289059618e-56,
+        "error_squared_ratio_to_baseline": 1.0000000000000027,
+        "local_complex_relative_l2": 0.027013908108242578,
+        "samples": 98
+      }
+    },
+    "source_amplitude_only": {
+      "early_pre_match_minus_50M": {
+        "error_squared": 4.151052502819689e-41,
+        "error_squared_delta_from_baseline": 1.5551375641175614e-42,
+        "error_squared_ratio_to_baseline": 1.0389218491627858,
+        "local_complex_relative_l2": 0.04485770891121744,
+        "samples": 869
+      },
+      "full_pre_boundary_with_margin": {
+        "error_squared": 4.762543453746371e-41,
+        "error_squared_delta_from_baseline": 3.0517936171546e-42,
+        "error_squared_ratio_to_baseline": 1.0684663301930113,
+        "local_complex_relative_l2": 0.04203172071344654,
+        "samples": 967
+      },
+      "nqc_local_50M": {
+        "error_squared": 6.114909509266829e-42,
+        "error_squared_delta_from_baseline": 1.4966560530370477e-42,
+        "error_squared_ratio_to_baseline": 1.3240740395090567,
+        "local_complex_relative_l2": 0.03108447620016099,
+        "samples": 98
+      }
+    },
+    "source_both": {
+      "early_pre_match_minus_50M": {
+        "error_squared": 1.835354407194696e-39,
+        "error_squared_delta_from_baseline": 1.7953990197306166e-39,
+        "error_squared_ratio_to_baseline": 45.93509220364126,
+        "local_complex_relative_l2": 0.29827574884410984,
+        "samples": 869
+      },
+      "full_pre_boundary_with_margin": {
+        "error_squared": 5.1058507745850325e-39,
+        "error_squared_delta_from_baseline": 5.0612771336647234e-39,
+        "error_squared_ratio_to_baseline": 114.54865856063938,
+        "local_complex_relative_l2": 0.4352028722956951,
+        "samples": 967
+      },
+      "nqc_local_50M": {
+        "error_squared": 3.270496367390336e-39,
+        "error_squared_delta_from_baseline": 3.265878113934106e-39,
+        "error_squared_ratio_to_baseline": 708.1673620529874,
+        "local_complex_relative_l2": 0.7188782959659322,
+        "samples": 98
+      }
+    },
+    "source_phase_only": {
+      "early_pre_match_minus_50M": {
+        "error_squared": 1.8157563481459818e-39,
+        "error_squared_delta_from_baseline": 1.7758009606819024e-39,
+        "error_squared_ratio_to_baseline": 45.44459366783471,
+        "local_complex_relative_l2": 0.296678968787683,
+        "samples": 869
+      },
+      "full_pre_boundary_with_margin": {
+        "error_squared": 5.037204895280224e-39,
+        "error_squared_delta_from_baseline": 4.992631254359915e-39,
+        "error_squared_ratio_to_baseline": 113.00860309540295,
+        "local_complex_relative_l2": 0.43226741848849665,
+        "samples": 967
+      },
+      "nqc_local_50M": {
+        "error_squared": 3.221448547134242e-39,
+        "error_squared_delta_from_baseline": 3.216830293678012e-39,
+        "error_squared_ratio_to_baseline": 697.5469357985706,
+        "local_complex_relative_l2": 0.7134674030921084,
+        "samples": 98
+      }
+    }
+  },
+  "native_factor_reconstruction_linf": 1.2710114229825055e-15,
+  "native_factor_reconstruction_relative_l2": 1.3042346189714751e-15,
+  "pid": 32193,
+  "plan_sha256": "bd2567fd200a3c7aa5a83659d7855d8c87ea8df1f8113b22fa40a876cbb60aaf",
+  "pre_boundary_samples": 969,
+  "reconstructed_native_pre_boundary_mode_sha256": "7be93b41c7e075c45d82783820a52f8de96467273540af2f0562166c08052d9d",
+  "release_qualified": false,
+  "schema": "diffgw.seobnrv4.source-aligned-public-nqc-swap.v1",
+  "script_sha256": "de8bb870d4e71c4564b95ae09556e92fe52070f1ba79953206a399c2934736a8",
+  "settings": {
+    "atol": 1e-11,
+    "coarse_output_step_M": 0.5,
+    "max_step_M": 2.0,
+    "rtol": 1e-10
+  },
+  "status": "diagnostic_complete"
+}

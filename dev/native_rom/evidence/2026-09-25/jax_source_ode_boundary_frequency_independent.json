@@ -1,0 +1,203 @@
+{
+  "case": "strong_aligned",
+  "checks": {
+    "boundary_amplitude_abs": true,
+    "boundary_frequency_abs": true,
+    "boundary_index_equal": true,
+    "boundary_phase_modulo_abs": true,
+    "coefficient_max_abs": true,
+    "each_region_l2": true,
+    "fine_chart_max_abs": true,
+    "fine_state_max_abs": true,
+    "finite": true,
+    "initial_state_max_abs": true,
+    "linear_residual_max_abs": true,
+    "match_state_max_abs": true,
+    "match_time_abs": true,
+    "matching_delta_fine_l2": true,
+    "restart_index_equal": true,
+    "support_equal": true,
+    "trajectory_only_fine_l2": true,
+    "whole_chart_exact": true,
+    "whole_mode_l2": true
+  },
+  "checks_passed": true,
+  "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+  "elapsed_s": 56.663790334016085,
+  "host": "RONI2",
+  "input_sha256": {
+    "boundary_capture": "f4c434d1d050ffad7550364292cc202c639e79323e731db797afd6a2b10e21e6",
+    "boundary_plan": "e85982de0ea04ddbd14c46d0f2752af2eb0e7d288deb1db6f904827dba149c76",
+    "boundary_result": "da62437767c4cfd908344bf06986f388a27aa9c57b53c1481af92d74ba220414",
+    "driver": "158c243e6909d26529cf5e976521793cd07821cd48662036a3c34182391f9d1c",
+    "fixed_input_plan": "b644b16f15aed3183b1f7e03dea6c3316b8ee2373e5de7fe239755b5426dca39",
+    "fixed_input_result": "1086a08338733fef133d06528c4d2831c6be66d2eb2457022938c01ec00847a4",
+    "fixed_input_runner": "f630dd3154ce3a3d44651583cfb9c44237c6cf3928dd07dfcebf623d35c6e262",
+    "jax_adaptive": "41691a243f3b1bf248443f679f8fd405eaeeb3de2d3e8d6800b03ba4b4c64ecf",
+    "jax_attachment": "4b74f667792fff4d8a5266bbe198550d014c17f30449c9c2f9e56480c950ccc1",
+    "jax_mode": "8b0a727caceb432ba501a93712ffa3c9c547566b94ca86b8ac9f97d43b31afee",
+    "jax_nqc": "e6e25920ded887a650e04fcf64380f65f32e45d42be81b95fc26291af7b70757",
+    "jax_ringdown": "dbc14ce4ac5c2fefd4608b706e4cc44844b371fecf178e75a5427abc053b696c",
+    "jax_source_hamiltonian": "8b5584002625479e667337076df59cb6a820e1cffc88a282071843e6d4e4c8a9",
+    "jax_two_stage": "5671c29f62fb4e5f3177afe6b8048a9464884565e2a99a8b26848a1ec66f347e",
+    "ladder_plan": "101f756e6d90e07cb02084c04788bed43c4cdbc2773b948af8ff3262fda7352f",
+    "prior_independent_result": "c9c214b4ea86c9a3c0609a37f1dc5bbb0344d493b2ff3093fb009ee9c63cc6ad",
+    "qualifier": "df9bffb614b87e82b5a8da47212cb01312ad4d0cb9d687d929570df134954174",
+    "source_components": "262b743d6f7cb19554bad43637dae3c94d7ff2f675bff9b887d8cfc0e970697f",
+    "source_plan": "eb79f7db87e23d83a8437334eec90f6872dcf3b76f65b5cbe55882f7d62b9944"
+  },
+  "level": "baseline",
+  "pid": 31953,
+  "plan_sha256": "bf640f044a248050582745aeba58c29d486cefd5e72661bc9f8682399bd48d3f",
+  "release_qualified": false,
+  "result": {
+    "boundary": {
+      "amplitude_abs": 2.1094237467877974e-15,
+      "frequency_abs": 4.218847493575595e-15,
+      "jax_frequency": 0.42959992452942375,
+      "jax_index": 8858,
+      "jax_time_M": 484.40625,
+      "phase_modulo_abs": 1.4459544672718039e-12,
+      "torch_frequency": 0.42959992452941953,
+      "torch_index": 8858,
+      "torch_time_M": 484.40625
+    },
+    "fine_chart": {
+      "jax_samples": 9652,
+      "max_abs_M": 0.0,
+      "torch_samples": 9652
+    },
+    "fine_mode": {
+      "jax_corrected_sha256": "c5852885a39a253903f5cd7fce7a7ef11d2ecf96424a3885e80b21d4a95e011d",
+      "own_corrected_complex_relative_l2": 6.741140149822822e-11,
+      "own_minus_torch_coefficients_complex_relative_l2": 3.149675654962729e-12,
+      "raw_complex_relative_l2": 8.98374500650036e-13,
+      "trajectory_only_torch_coefficients_complex_relative_l2": 6.731604978623794e-11
+    },
+    "fine_state_max_abs": 8.049283461986079e-12,
+    "initial_state_max_abs": 7.105427357601002e-15,
+    "jax_baseline": {
+      "end_M": 584.0,
+      "mode_sha256": "47c9c601eb4377e3b3e9fce645595aeae69aab32271891798ca497202972f025",
+      "samples": 1169,
+      "start_M": 0.0,
+      "time_sha256": "0ac91155dc977bca73e17f8cf1a8295bff77b9e603e39a39a616cc1f185b5a22"
+    },
+    "jax_candidate": {
+      "end_M": 584.0,
+      "mode_sha256": "5d9fb1e4a64c2a8951c789076e70be53a3907caaf8e9213d7521b2dc0886db53",
+      "samples": 1169,
+      "start_M": 0.0,
+      "time_sha256": "0ac91155dc977bca73e17f8cf1a8295bff77b9e603e39a39a616cc1f185b5a22"
+    },
+    "jax_mode_finite": true,
+    "match": {
+      "jax_hermite_bracket": {
+        "fraction": 0.4797538991115289,
+        "index": 8858,
+        "times_M": [
+          138.40625,
+          138.421875
+        ]
+      },
+      "jax_hermite_state": [
+        3.282912798259782,
+        28.634263883706307,
+        -0.08137481254392566,
+        2.290390128054874
+      ],
+      "jax_time_M": 484.4137461546736,
+      "state_max_abs": 6.288303211476887e-13,
+      "time_abs_M": 0.0,
+      "torch_hermite_state": [
+        3.2829127982594732,
+        28.634263883706936,
+        -0.08137481254395267,
+        2.2903901280547876
+      ],
+      "torch_time_M": 484.4137461546736
+    },
+    "nqc": {
+      "amplitude_coefficient_max_abs": 3.5638549888972193e-09,
+      "fixed_input_parity_reference": {
+        "corrected_fine_complex_relative_l2": 9.466583022612094e-13,
+        "ringdown_complex_relative_l2": 2.043681193489525e-13
+      },
+      "jax_amplitude_coefficients": [
+        142.78642008657783,
+        -1225.7846788220734,
+        1374.2554391537844
+      ],
+      "jax_amplitude_condition": 1319.6409486505465,
+      "jax_linear_residual_max_abs": 1.6653345369377348e-16,
+      "jax_phase_coefficients": [
+        35.55342835543005,
+        -797.4835801695491
+      ],
+      "jax_phase_condition": 7.507647712592806,
+      "phase_coefficient_max_abs": 1.0038547770818695e-09,
+      "torch_amplitude_coefficients": [
+        142.7864200868555,
+        -1225.7846788249515,
+        1374.2554391573483
+      ],
+      "torch_phase_coefficients": [
+        35.553428355402005,
+        -797.4835801685452
+      ]
+    },
+    "regions": {
+      "coarse_prefix": {
+        "complex_relative_l2": 5.53865322216279e-13,
+        "samples": 692
+      },
+      "post_restart_pre_boundary": {
+        "complex_relative_l2": 1.1683125540161706e-12,
+        "samples": 277
+      },
+      "ringdown": {
+        "complex_relative_l2": 1.4762107635316431e-12,
+        "samples": 200
+      }
+    },
+    "restart_indices": {
+      "jax": 692,
+      "torch": 692
+    },
+    "support": {
+      "jax_count": 8951,
+      "jax_end_M": 139.859375,
+      "jax_internal_step_M": 0.015625,
+      "ringdown_region_equal": true,
+      "torch_count": 8951,
+      "torch_end_M": 139.859375,
+      "torch_internal_step_M": 0.015625,
+      "zero_pattern_equal": true
+    },
+    "torch_candidate": {
+      "end_M": 584.0,
+      "mode_sha256": "9927fbae7faf8aa239c3ca770e90263181f6cb87854da5f2aedd1ddab9583b30",
+      "samples": 1169,
+      "start_M": 0.0,
+      "time_sha256": "0ac91155dc977bca73e17f8cf1a8295bff77b9e603e39a39a616cc1f185b5a22"
+    },
+    "whole_chart": {
+      "exact_on_shared_support": true,
+      "jax_samples": 1169,
+      "max_abs_M": 0.0,
+      "shared_samples": 1169,
+      "torch_samples": 1169
+    },
+    "whole_complex_relative_l2": 9.763604163468858e-13
+  },
+  "schema": "diffgw.seobnrv4.jax-source-ode-boundary-frequency-independent.v1",
+  "scope": "One-row independent JAX trajectory and dev-only NQC/attachment parity; no physics or release qualification",
+  "script_sha256": "ce17985ca45266f67edd31de89f390fba7208e1420037170d1d0bc09cf046f59",
+  "settings": {
+    "atol": 1e-10,
+    "coarse_output_step_M": 0.5,
+    "max_step_M": 2.0,
+    "rtol": 1e-09
+  },
+  "status": "diagnostic_complete"
+}

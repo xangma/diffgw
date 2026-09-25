@@ -2754,10 +2754,20 @@ matching and discrete-boundary frequency in JAX. Its
 passes all nine prospective checks: corrected fine-mode complex relative L2
 is `9.47e-13`, boundary-frequency difference is `1.22e-15`, and 200-sample
 ringdown relative L2 is `2.04e-13`. This checks backend arithmetic on fixed
-inputs; an independently integrated JAX trajectory, its gradients, and
-whole-domain parity are still unqualified. The original v1 plan stopped at
+inputs; its gradients and whole-domain parity are still unqualified. The original v1 plan stopped at
 an import error before numerical evaluation; v2 records that setup correction
 without changing the case or thresholds.
+
+The [frozen independent-JAX-trajectory check](evidence/2026-09-25/jax_source_ode_boundary_frequency_independent_plan.json)
+integrates the same strong-aligned initial state in JAX, then independently
+solves the ODE NQC system and assembles the discrete-boundary waveform. Its
+[result](evidence/2026-09-25/jax_source_ode_boundary_frequency_independent.json)
+passes all 19 prospective checks. The Torch/JAX whole-mode complex relative
+L2 is `9.76e-13`; the coarse, preboundary, and ringdown regions each remain
+below `1.5e-12`. The fine-state maximum absolute difference is `8.05e-12`,
+and the boundary frequency differs by `4.22e-15`. This is one-row numerical
+parity, not an independent historical-physics validation or a domain-wide
+gradient/release gate.
 
 A [frozen aligned-row public-gap diagnostic](evidence/2026-09-25/source_aligned_public_gap_plan.json)
 exactly replays the refined candidate and original-ringdown control, then
@@ -2782,6 +2792,15 @@ across `Mω₂₂=0.09–0.16`; the whole-mode frequency-anchored L2 varies from
 and `0.00687`. This confirms that a single frequency anchor is not a stable
 whole-waveform fidelity measure here. The unsmoothed crossings and large
 early-chart dephasing do not identify a causal model term.
+
+An attempted [NQC coefficient-swap plan](evidence/2026-09-25/source_aligned_public_nqc_swap_plan.json)
+and [run](evidence/2026-09-25/source_aligned_public_nqc_swap.json) are retained
+only as an invalid-provenance audit record. Their replay/no-op checks pass, but
+the captured historical coefficients belong to `(30, 20, 0.8, 0.8, 0.04)`;
+the strong-aligned comparison is `(30, 20, 0.8, 0.6, 0.04)`. Thus every
+coefficient-swap residual is cross-parameter sensitivity, cannot attribute the
+`0.03916` native/public gap, and must not be used as release evidence. An
+exact-parameter historical coefficient capture remains necessary.
 
 1. Qualify the physical generator against the published equations and independent
    references over the intended domain, resolve convention/provenance gaps, and

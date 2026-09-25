@@ -1,0 +1,82 @@
+{
+  "boundary_margin_M": 1.0,
+  "case": "strong_aligned",
+  "fixed": "One native trajectory, raw coarse/fine mode, baseline native/public peak time and phase anchors, public waveform and support. Only the selected native NQC coefficient vector changes before the native attachment boundary.",
+  "gates": {
+    "baseline_whole_metric_replay_at_most": 1e-12,
+    "candidate_mode_hash_replays": true,
+    "early_window_samples_replay": 869,
+    "native_factor_reconstruction_linf_at_most": 1e-12,
+    "native_factor_reconstruction_relative_l2_at_most": 1e-12,
+    "public_binary_identity_replays": true,
+    "public_mode_hash_replays": true,
+    "variant_noop_chart_replays": true
+  },
+  "historical_coefficient_provenance": "The five active NQC coefficients are captured from the pinned historical source generator; order is a1,a2,a3,b1,b2 in the N22=(1+sum a_j*q_j) exp(i sum b_j*p_j) basis. They were solved on a distinct historical trajectory and are not suitable as a native calibration.",
+  "inputs": {
+    "boundary_capture": {
+      "path": "dev/native_rom/diagnose_source_aligned_ode_chain_boundary_frequency.py",
+      "sha256": "f4c434d1d050ffad7550364292cc202c639e79323e731db797afd6a2b10e21e6"
+    },
+    "boundary_plan": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_ode_chain_boundary_frequency_plan.json",
+      "sha256": "e85982de0ea04ddbd14c46d0f2752af2eb0e7d288deb1db6f904827dba149c76"
+    },
+    "boundary_result": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_ode_chain_boundary_frequency.json",
+      "sha256": "da62437767c4cfd908344bf06986f388a27aa9c57b53c1481af92d74ba220414"
+    },
+    "chart_helper": {
+      "path": "dev/native_rom/diagnose_source_aligned_public_gap.py",
+      "sha256": "43b07a4bf4b86b483fb30bb9610e4fecdce49679f7a8e6da218e9595a3c2b22b"
+    },
+    "historical_coefficient_plan": {
+      "path": "dev/native_rom/evidence/2026-09-25/captured_nqc_whole_mode_plan.json",
+      "sha256": "74d043a568d0217af3ce05ffee76da7bdec2bfa9f150f6aa8ce1cb772661cfc9"
+    },
+    "historical_coefficients": {
+      "path": "dev/native_rom/evidence/2026-09-25/captured_nqc_whole_mode.json",
+      "sha256": "8939165c18c29117a6c4979786126c592739ecc5bd367930b87def2b1054f5f7"
+    },
+    "native_driver": {
+      "path": "dev/native_rom/diagnose_jax_spliced_whole_waveform.py",
+      "sha256": "158c243e6909d26529cf5e976521793cd07821cd48662036a3c34182391f9d1c"
+    },
+    "previous_plan": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_public_gap_plan.json",
+      "sha256": "94671e199916158f9119f3e1c4d909c662e55f9990926f653ba591c765f908ff"
+    },
+    "previous_result": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_public_gap.json",
+      "sha256": "a2d9498c630afe966ca826ebb342ad7f1c28c99211a935493c666f1cd4e1a08a"
+    },
+    "public_helper": {
+      "path": "dev/native_rom/diagnose_peak_anchor.py",
+      "sha256": "02a2974900b77e2e074f9d050006b5a973cd6e621c8d4c4c007e88482ef5ea6a"
+    },
+    "source_field": {
+      "path": "dev/native_rom/diagnose_source_aligned_ode_chain_phase_matrix.py",
+      "sha256": "654ce386c98094f17c8b14bfdf2fdb9db2e70d112c1c4524943cd3745d41ad1a"
+    },
+    "torch_attachment": {
+      "path": "src/torchwave/approximants/eob/numerical_attachment.py",
+      "sha256": "8c7a149b76c529a255a4caa4b0ca76317b5306c8967db84047f299ccf51be7fc"
+    },
+    "torch_nqc": {
+      "path": "src/torchwave/approximants/eob/nqc.py",
+      "sha256": "c8683181f7cf911df1e1b85cd6999cdb03e7c594e867315359040e9eb03ca552"
+    }
+  },
+  "interpretation": "One-factor cross-trajectory coefficient sensitivity only. Error reductions or increases do not establish correct coefficients, a causal origin of the public gap, literature fidelity, or release qualification. Exclude the final 1 M before attachment to avoid interpolation across the ringdown splice.",
+  "interventions": [
+    "source_amplitude_only",
+    "source_phase_only",
+    "source_both"
+  ],
+  "level": "refined",
+  "pre_match_width_M": 50.0,
+  "purpose": "Fixed-trajectory, fixed-baseline-discrete-peak-chart sensitivity of the strong-aligned corrected-v2 native pre-boundary waveform to historical-source NQC amplitude and phase coefficients, one vector at a time.",
+  "release_qualified": false,
+  "schema": "diffgw.seobnrv4.source-aligned-public-nqc-swap-plan.v1",
+  "script_sha256": "de8bb870d4e71c4564b95ae09556e92fe52070f1ba79953206a399c2934736a8"
+}
