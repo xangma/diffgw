@@ -54,6 +54,16 @@ d_\times={i\over2}\bigl(Y_{\ell,-m}-(-1)^\ell Y_{\ell m}^*\bigr),\qquad
 (h_+,h_\times)_{\ell m}=(d_+,d_\times)h_{\ell,-m}.
 $$
 
+This identification is not inferred from frontend agreement.
+[García-Quirós et al., Eqs. (2), (4)–(9)](https://arxiv.org/html/2001.10914)
+use $h=h_+-ih_\times$ and the LAL Fourier sign
+$\tilde h(f)=\int h(t)e^{-i2\pi ft}dt$, show that $m>0$ modes are
+concentrated at negative frequency, and define the positive-frequency object
+$\tilde h_{\ell,-m}=A_{\ell m}e^{-i\Phi_{\ell m}}$ before deriving the two
+projection factors above. The public mode dictionary retains positive
+$(\ell,m)$ labels for these paired polarization contributions; it does not
+expose raw positive-$m$ Fourier modes.
+
 The default native `spin_order=7` selects `SO3, SS4, SO5, SO6, SS6, SO7` in
 the [aligned-spin option map](taylorf2-aligned-spin.md#frontend-option-contract).
 The scalar formulas can also select other named term sets, including the full
@@ -80,6 +90,15 @@ h_{\ell,-m}=\sqrt{16\pi/5}\,A_0(f)R_{\ell m}(v,\delta)
  e^{-i\Psi_{\ell m}}.
 $$
 
+The phase adapter follows [García-Quirós et al., Eqs. (29),
+(34)](https://arxiv.org/html/2001.10914): the low-frequency SPA relation is
+$\Phi_{\ell m}\simeq(m/2)\Phi_{22}(2f/m)$ and its convention-dependent
+constant is $3\pi(1-m/2)/4$. Consequently $t_c$ remains a common
+$e^{-i2\pi f t_c}$ shift while $\phi_c\mapsto\phi_c+\Delta\phi_c$ multiplies
+the native carrier by $e^{im\Delta\phi_c}$. Eqs. (30)–(32) of that paper add
+a frequency-dependent phase for complex higher-PN amplitudes; omitting it is
+justified only for this declared leading real-amplitude slice.
+
 When `f_ref` is supplied, subtract $I((\pi Mq_m f_{\rm ref})^{1/3})$
 inside $\Psi_{22}^{(m)}$ and replace $-\pi/4$ by $+3\pi/4$.
 This is the inherited project phase origin and scales the reference frequency
@@ -101,15 +120,17 @@ printed $\mathcal H_{\ell m}(x)$ of Eq. (21) is evaluated at
 $x_m=(2/m)^{2/3}v^2$ and multiplied by $(m/2)^{2/3}$ after dividing Eq. (30)
 by its $(2,2)$ Newtonian amplitude. A fixed unit-complex factor for each mode
 converts the source's complex coefficient to the declared real-amplitude
-carrier convention. [Mezzasoma and Yunes, Eqs. (20)–(21), (23)–(30)](https://arxiv.org/html/2203.15934)
+carrier convention. [Mezzasoma and Yunes, Eqs. (20)–(21i), (23)–(30)](https://arxiv.org/html/2203.15934)
 provide an all-eight-mode leading-amplitude construction;
 [Mishra et al., Eqs. (9)–(12h)](https://arxiv.org/html/1601.05588) give a
 second all-eight-mode frequency-domain construction. Both use the opposite
 Fourier sign, so their printed complex modes cannot be compared directly with
-the stored negative-$m$ mode. [García-Quirós et al., Eqs. (2)–(9), Appendix E](https://arxiv.org/html/2001.10914)
-fix the native Fourier and mode convention for seven modes; the $(4,2)$ ratio
-uses the first two sources. García-Quirós et al. also report a 2PN amplitude
-disagreement with Mishra, beyond this leading-order slice.
+the stored negative-$m$ mode without the Fourier, tetrad, and per-mode phase
+adapter described above. García-Quirós et al. fix the native convention and
+give seven of the mode amplitudes in Appendix E; the $(4,2)$ ratio uses the
+first two all-eight sources. García-Quirós et al. also report a higher-PN
+amplitude disagreement with the earlier calculation, beyond this leading-order
+slice.
 
 For the optional Schwarzschild hard mask, mode $m$ has
 $f_{\rm cut,m}=m/(2\,6^{3/2}\pi M)$; the native carrier retains
@@ -137,7 +158,18 @@ reference.
 
 ## Evidence and limitations
 
-The maintained test compares all eight complex per-mode polarizations and
+The evidence is intentionally separated:
+
+| Evidence layer | Maintained check | Establishes | Does not establish |
+| --- | --- | --- | --- |
+| Paper fidelity | `test_taylorf2_hm_paper_math_reference.py` | All-eight native $h_{\ell,-m}$ reconstruction, Eqs. (8)–(9), the $2f/m$ map, SPA constant, and $t_c/\phi_c$ signs | An independent executable waveform |
+| Scalar-reference agreement | `test_taylorf2_hm_math_reference.py` | All-eight leading amplitudes, composed aligned-spin phase, complex polarizations, selected derivatives and hard cutoffs | External parity or physical accuracy |
+| Torch/JAX parity | `tests/parity/test_hm_parity.py` | Cross-backend values, individual modes, JIT and autodiff at sampled points | Independence from shared equations |
+| External angular/API boundary | `test_taylorf2_hm_external_api.py` | Public LAL spin-weighted harmonics for every supported $\pm m$; public TaylorF2 does not return resolved higher modes | Any higher-mode TaylorF2 waveform value |
+| External waveform parity | frozen `TaylorF2_HM_diagnostic` | Dominant $(2,2)$ carrier only | The other seven modes |
+| Physical validation | None | — | Accuracy against NR, EOB, or observations |
+
+The scalar-reference test compares all eight complex per-mode polarizations and
 their sum at two frequencies, two mass ratios, both zero and aligned spin, two
 orientations, and both phase origins, in FP64 CPU Torch and JAX against an
 80-digit scalar evaluator. It also checks each mode's azimuth derivative,
@@ -146,21 +178,34 @@ Schwarzschild hard-mask thresholds. The per-mode normalized complex tolerance
 is $4\times10^{-10}$ and the derivative tolerances are stated in the test.
 These are sampled implementation checks, not a uniform error bound.
 
-The strongest available **exact** external mathematical evidence is the
-published all-eight-mode leading-SPA construction above. Existing LAL
-TaylorF2 comparison checks only $(2,2)$, so it cannot verify the higher-mode
-inventory. `gwfast`'s TEOBResumSPA waveform can include all eight modes, but
-its EOB dynamics and amplitude corrections make it a low-frequency physical
-holdout rather than a binwise TaylorF2 oracle; no TEOB comparison is claimed
-here. Source transcription, native agreement, same-model external comparison,
-and physical validation are separate evidence categories. Higher-PN mode
-amplitudes, spin-amplitude corrections, generic tidal matter, merger, Kerr
-cutoffs, taper derivatives, FP32, and full-domain accuracy remain unqualified.
+The strongest available all-eight evidence is the published leading-SPA
+construction plus independent scalar transcription. Exact all-mode external
+parity remains unprovable from the available public sources: public LAL
+TaylorF2 returns one frequency series and its public FD-mode dispatcher has no
+TaylorF2 generator; the papers provide equations rather than author-supplied
+eight-mode numerical data or an independent executable with this exact phase,
+reference-frequency, and cutoff composition. IMRPhenomXHM covers a different
+full-IMR model and not this eight-mode inventory. `gwfast`'s TEOBResumSPA has
+different EOB dynamics and amplitude corrections, so it could only be a
+low-frequency physical holdout, not a binwise TaylorF2 oracle; no TEOB
+comparison is claimed here. Higher-PN mode amplitudes, spin-amplitude
+corrections, generic tidal matter, merger, Kerr cutoffs, taper derivatives,
+FP32, and full-domain accuracy remain unqualified.
+
+The exact next external-parity gate is an author-supplied numerical table or
+an independently maintained executable that exposes all eight complex
+$h_{\ell,-m}(f)$ values for a fully specified binary and option set. Closure
+would require direct, unaligned binwise comparison after applying only the
+published Fourier/tetrad adapter above; a dominant-mode series or angular
+basis alone cannot satisfy that gate.
 
 ## Reproduce the checks
 
 Install `python -m pip install -e '.[reference,torch,jax,dev]'`, then run
-`python -m pytest -q tests/test_taylorf2_hm_math_reference.py` for this slice.
+`python -m pytest -q tests/test_taylorf2_hm_math_reference.py tests/test_taylorf2_hm_paper_math_reference.py`
+for the mathematical slice. With pinned LALSuite 7.26.15 installed, run
+`python -m pytest -q tests/test_taylorf2_hm_external_api.py` for the public
+angular/API boundary.
 The complete CPU gate is `python -m pytest -q --require-math-reference`.
 That gate requires both frontends and reference dependencies and rejects
 skips, expected failures, and deselection. Run

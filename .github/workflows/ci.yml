@@ -76,11 +76,11 @@ jobs:
         with:
           python-version: "3.11"
           cache: pip
-      - name: Install frontends and current binary oracles
+      - name: Install frontends and pinned binary oracles
         run: |
           python -m pip install --upgrade pip
           python -m pip install --index-url https://download.pytorch.org/whl/cpu torch
-          python -m pip install --upgrade -e '.[reference,all,dev]' lalsuite pycbc
+          python -m pip install --upgrade -e '.[reference,all,dev]' lalsuite==7.26.15 pycbc==2.11.0
       - name: Verify oracle dependencies
         run: |
           python -c "import lal, lalsimulation, pycbc, torch, jax, sympy; import importlib.metadata as m; print({name: m.version(name) for name in ('lalsuite', 'pycbc', 'numpy', 'scipy', 'sympy', 'torch', 'jax', 'jaxlib')})"
@@ -100,6 +100,7 @@ jobs:
           tests/test_imrphenomd_lal_gradients.py
           tests/test_taylorf2_lal_quadrupole.py
           tests/test_taylorf2_lal_tidal.py
+          tests/test_taylorf2_hm_external_api.py
           tests/test_oracle_ci.py
           tests/test_parity_harness_controls.py::test_kerr_convergence_failure_is_not_accepted
           tests/parity/test_inference_parity.py::test_whittle_likelihood_parity

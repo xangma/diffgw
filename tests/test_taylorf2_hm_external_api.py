@@ -13,6 +13,8 @@ import pytest
 lal = pytest.importorskip("lal")
 lalsim = pytest.importorskip("lalsimulation")
 
+from diffgw_reference import taylorf2_hm as ref
+
 
 def _taylorf2_series(mode_string=None):
     params = lal.CreateDict()
@@ -67,3 +69,19 @@ def test_public_fd_modes_dispatcher_rejects_taylorf2():
             params,
             approximant,
         )
+
+
+@pytest.mark.parametrize("inclination", (0.2, 0.91, 1.4))
+@pytest.mark.parametrize("phi0", (-0.37, 0.0, 0.51))
+def test_public_lal_harmonics_match_all_eight_mode_pairs(inclination, phi0):
+    """LAL independently checks the angular basis, not a TaylorF2_HM waveform."""
+    values = {ref.IOTA: inclination, ref.PHI0: phi0}
+    for l, m in ref.MODES:
+        for signed_m in (-m, m):
+            expected = complex(
+                ref.evaluate(ref.spin_weighted_harmonic(l, signed_m), values)
+            )
+            actual = lal.SpinWeightedSphericalHarmonic(
+                inclination, phi0, -2, l, signed_m
+            )
+            np.testing.assert_allclose(actual, expected, rtol=2e-14, atol=5e-16)
