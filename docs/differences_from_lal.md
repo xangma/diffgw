@@ -76,17 +76,21 @@ JAX's non-symmetric Kerr angular eigensolver uses a host CPU callback.
 
 `IMRPhenomXPHM-SpinTaylor` (`prec_version=320`) integrates spin-precession
 equations with fixed-grid RK4 in velocity space. `IMRPhenomXPNR`
-(`prec_version=330`, `final_spin_mod=2`) combines NR-tuned PNR angles with
-DiffGW's native XHM coprecessing carrier. The carrier, precession integration,
-angle attachment and minimal-rotation quadrature contribute to differences from
-LAL; comparisons specify the precession and tuned-coprecessing options.
+(`prec_version=330`, `final_spin_mod=2`) is presently a provisional composition
+of partially NR-tuned PNR angles with DiffGW's native symmetric XHM
+coprecessing carrier. It is not the full 2025 XPNR prescription: transition-spin
+mapping, published angle attachment/continuation, XHM-CP coefficient
+deformations, effective ringdown frequencies and dominant-mode asymmetry remain
+open. The exact component evidence and reduction relationships are in the
+[XPNR ledger](waveforms/research/imrphenomxpnr.md).
 
 The [SpinTaylor tests](https://github.com/xangma/diffgw/blob/5226141/tests/test_imrphenom_xphm_spintaylor.py)
 and [PNR tests](https://github.com/xangma/diffgw/blob/5226141/tests/test_imrphenom_xpnr.py)
 use optimized plus-polarization overlaps with model-specific tolerances.
 Their scope differs from the direct, both-polarization gate in the
 [FP64 campaign](package_benchmarks.md#numerical-qualification); these variants
-were not timed in that campaign.
+were not timed in that campaign. The XPNR value `0.99` is an acceptance
+threshold, not an observed lower bound and not a calibration-domain boundary.
 
 ### Native IMRPhenomT family
 

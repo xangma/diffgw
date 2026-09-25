@@ -229,15 +229,15 @@ not validation of the retained official ROM or surviving equation components.
 
 ### 2.14 IMRPhenomXPNR (PhenomPNR Numerical Relativity Precession Angles)
 - **Primary References**:
-  - Hamilton et al. (2021), *The final twist: A model of gravitational waves from precessing black-hole binaries through merger and ringdown*, Phys. Rev. D 104, 124027 ([arXiv:2107.08876](https://arxiv.org/abs/2107.08876))
+  - Hamilton et al. (2025), *PhenomXPNR: An improved gravitational wave model linking precessing inspirals and NR-calibrated merger-ringdown* ([arXiv:2507.02604v1](https://arxiv.org/html/2507.02604v1))
+  - Thompson et al. (2024), *PhenomXO4a: a phenomenological gravitational-wave model for precessing black-hole binaries with higher multipoles and asymmetries*, Phys. Rev. D 109, 063012 ([arXiv:2312.10025v1](https://arxiv.org/html/2312.10025v1))
 - **Mathematical Form & Implementation**:
-  - Evaluates NR-calibrated opening angle $\beta(Mf)$, precession angle $\alpha(Mf)$, and minimal rotation angle $\gamma(f)$.
-  - Maps two-spin binary parameters to effective single-spin parameters $(\chi, \cos\theta, \cos\theta_f, \chi_{\rm eff})$ via SpinTaylor trajectory at $v_{\rm ref}$.
-  - Computes 11 polynomial calibration surfaces ($A_1..A_4, B_0..B_5, B_f$) in $(\eta, \chi, \cos\theta, \cos\theta_f, \chi_{\rm eff})$ via vectorized multi-linear tensor contractions (`src/torchwave/approximants/pnr_coefficients.py`).
-  - Implements $C^1$ continuous quadratic rescaling $(1 + b_1 Mf + b_2 Mf^2)$ at the lower extremum $Mf_{\beta, \rm low}$ with analytical extremum root-finding.
-  - Couples PNR precession angles to clean-room `IMRPhenomXHM` coprecessing carrier modes using Wigner $d$-matrices.
+  - The [dedicated component ledger](waveforms/research/imrphenomxpnr.md) separates the published transition-spin map, fit polynomial and guarded angle transforms, angle attachment/continuation, tuned carrier/effective ringdown/asymmetry, higher-mode map, and twist-up.
+  - A stdlib scalar reference independently encodes the printed map and component equations. Torch and JAX agree on those scoped values and derivatives after correcting the published $B_3=\chi\sin\theta[\exp(\Lambda_{B3})-200]$ transform.
+  - The public waveform still feeds reference-frequency spins into a map specified at the SpinTaylor stopping frequency and omits the published attachment/continuation and XHM-CP carrier modifications. It therefore remains a provisional native XHM composition, not the complete paper model.
+  - The numeric $A_1..A_4$, $B_0..B_5$, $B_f$ tensors are not printed in either paper. Their independent source and redistribution terms remain unresolved; identical Torch/JAX copies are not independent calibration evidence.
 - **Verification Result**:
-  The optional [LAL comparison test](https://github.com/xangma/diffgw/blob/main/tests/test_imrphenom_xpnr.py) defines four configurations against default LAL `IMRPhenomXPNR`, with a minimum PyCBC time/phase-optimized plus-polarization match of $0.99$ over 20–400 Hz. This threshold does not establish a full-domain accuracy bound.
+  The scalar/Torch/JAX component suite passes 46 cases. Full-waveform qualification fails because the components above are missing and the underlying XHM strict reference sets remain 0/1 catalog and 0/1 holdout. The optional [LAL comparison test](https://github.com/xangma/diffgw/blob/main/tests/test_imrphenom_xpnr.py) defines four black-box configurations with a PyCBC time/phase-optimized plus-polarization threshold of $0.99$ over 20–400 Hz. That acceptance threshold is not an observed result, a complex-waveform check, or a domain bound.
 
 ---
 
@@ -283,7 +283,7 @@ catalog counts. Their optional comparison test gates are described in Sections
 |---|---|---|---|---|
 | Independent Kerr QNM Splines | `src/torchwave/approximants/kerr_qnm_generated.py` | `e69d64e615dfd7bf054c2c7a9b721509688a1f126a482c7d9d0047f53b370dd3` | Clean-room solved via `torchwave.qnm.generate`; signed-spin branch autodiff corrected at zero | MIT |
 | Independent London N=61 QNM Fits | `src/torchwave/approximants/imrphenom_hm_qnm_n61.py` | `350c958aef4e1554d5c2d6a6bc22f8b9bf3513c2a000f08dc3cb3de1cde05b06` | Clean-room solved via `torchwave.qnm.london` | MIT |
-| PNR Calibration Coefficients | `src/torchwave/approximants/pnr_coefficients.py` | `e15b3fef15512d48873fa1728ffb446068bb38245ac2378d0eb8cb20d4e27355` | Clean-room derived from Hamilton et al. (2021) | MIT |
+| Inherited PNR Calibration Coefficients | `src/torchwave/approximants/pnr_coefficients.py` | `9d5d77749d187f64447f1ed0501311370b5c97a3e8a471de71ced315ce0394fd`; canonical numeric payload `c7794b653f781bbba45b97170fdac9fb6c89de6cc9c404e4942908ce1f820d68` | Numerical tensors are not printed in the XPNR/XO4a papers; independent origin unresolved | Redistribution terms unresolved; see third-party notices |
 | APS IMRPhenomXAS Fits | Supplemental Material (Pratten et al. 2020) | `94b9334c19f3a7909864891ea278ab9a411e4f33b7b7e17cc01d927056d9ac52` | APS PRD Supplemental Material deposit | Redistribution terms unresolved; see third-party notices |
 | External Official SEOBNRv4ROM HDF5 | Zenodo record 14999310 (`SEOBNRv4ROM_v3.0.hdf5`) | `4ff5317967d757fcad9323a74b75f4f63894ed87f4b1852d46cbe47cde488b9c` | Official public Zenodo release | Redistribution terms unresolved |
 | Native SXS NR Calibrations | `src/torchwave/approximants/xhm_native_fits.py` | Native code module | Calibrated on SXS public BBH catalog | Software: MIT; source simulations: CC-BY-4.0 |

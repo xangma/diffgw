@@ -151,12 +151,14 @@ jobs:
         run: |
           pip install .[torch]
           pytest tests/test_diffgw.py tests/test_waveform_definitions.py
+          pytest --collect-only -q tests/test_xpnr_component_evidence.py
 
       - name: "Step 2: Verify JAX without PyTorch"
         run: |
           pip uninstall -y torch
           pip install .[jax]
           pytest tests/test_diffgw.py tests/test_waveform_definitions.py
+          pytest --collect-only -q tests/test_xpnr_component_evidence.py
 
       - name: "Step 3: Verify core suite with all and dev"
         run: |
