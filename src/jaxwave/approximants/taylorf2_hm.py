@@ -13,12 +13,7 @@ from typing import Dict, Optional, Sequence, Tuple, Union
 import math
 import jax.numpy as jnp
 
-from diffgw_core.constants import (
-    C_SI,
-    MSUN_SEC,
-    MPC_SI,
-    PI,
-)
+from diffgw_core.constants import MSUN_SEC, PI
 from jaxwave.conversions import (
     as_array,
     component_masses_to_eta,
@@ -37,7 +32,8 @@ def _swsh_projection_coefficients(
     """Compute polarization projection coefficients d_plus and d_cross for TaylorF2_HM.
 
     For positive frequencies, the contribution of modes (l, m) and (l, -m)
-    to h_+ and h_x is given by (García-Quirós et al. (2020), Phys. Rev. D 102, 064002, Eq. 3):
+    to h_+ and h_x is given by García-Quirós et al. (2020),
+    Phys. Rev. D 102, 064002, Eqs. (8)--(9):
         d_plus  = 0.5 * (Y_{l,-m} + (-1)^l * conj(Y_{l,m}))
         d_cross = 0.5i * (Y_{l,-m} - (-1)^l * conj(Y_{l,m}))
     where Y_{l,m} = {}_{-2}Y_{lm}(\\iota, \\phi_0).
@@ -257,6 +253,8 @@ class TaylorF2_HM:
                 spin_order=spin_order,
             )
 
+            # García-Quirós et al. (2020), Eqs. (29), (34): 2f/m phase
+            # scaling and the leading-SPA constant 3*pi/4*(1-m/2).
             delta_phi = (3.0 * PI / 4.0) * (1.0 - float(m) / 2.0)
             psi_lm = (float(m) / 2.0) * psi_base + delta_phi
 

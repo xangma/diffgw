@@ -358,6 +358,34 @@ The current PhenomD fundamental Kerr-mode representation uses eigenvalues from t
     pages = "064002",
     year = "2020"
 }
+
+@article{Mezzasoma:2022qvh,
+    author = "Mezzasoma, Stefano and Yunes, Nicol{\'a}s",
+    title = "{Theory-agnostic framework for inspiral tests of general relativity with higher-harmonic gravitational waves}",
+    eprint = "2203.15934",
+    archivePrefix = "arXiv",
+    primaryClass = "gr-qc",
+    doi = "10.1103/PhysRevD.106.024026",
+    journal = "Phys. Rev. D",
+    volume = "106",
+    number = "2",
+    pages = "024026",
+    year = "2022"
+}
+
+@article{Mishra:2016whh,
+    author = "Mishra, Chandra Kant and Kela, Aditya and Arun, K. G. and Faye, Guillaume",
+    title = "{Ready-to-use post-Newtonian gravitational waveforms for binary black holes with nonprecessing spins: An update}",
+    eprint = "1601.05588",
+    archivePrefix = "arXiv",
+    primaryClass = "gr-qc",
+    doi = "10.1103/PhysRevD.93.084054",
+    journal = "Phys. Rev. D",
+    volume = "93",
+    number = "8",
+    pages = "084054",
+    year = "2016"
+}
 ```
 
 ---

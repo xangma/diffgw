@@ -123,6 +123,14 @@ not validation of the retained official ROM or surviving equation components.
   $$\tilde{h}_{\ell m}(f; t_c) = \tilde{h}_{\ell m}(f; 0) \exp(-2\pi i f t_c)$$
   The declared [catalog][frozen-catalog] and [holdout][frozen-holdout] comparisons passed the $L_2 \le 10^{-6}$ and mismatch $\le 10^{-8}$ gates; these finite-tolerance comparisons do not establish exact equality.
 
+### 2.5a TaylorF2_HM leading eight-mode carrier
+
+- **Native convention:** [García-Quirós et al. (2020), Eqs. (2), (4)–(9), (29), (34)](https://arxiv.org/html/2001.10914) fix $h=h_+-ih_\times$, the $e^{-i2\pi ft}$ Fourier sign, positive-frequency negative-$m$ storage, paired polarization projection, $2f/m$ phase scaling, and the leading-SPA phase constant.
+- **Eight leading amplitudes:** [Mezzasoma and Yunes (2022), Eqs. (20)–(21i), (23)–(30)](https://arxiv.org/html/2203.15934) supply all eight modes. [Mishra et al. (2016), Eqs. (9)–(12h)](https://arxiv.org/html/1601.05588) provide a second leading-order derivation. Their opposite Fourier and tetrad conventions require the explicit adapter recorded in the [mathematical specification](math/taylorf2-hm.md).
+- **Paper and scalar checks:** `tests/test_taylorf2_hm_paper_math_reference.py` reconstructs the raw carrier independently from both polarizations and checks the published phase identities for every mode in both frontends. `tests/test_taylorf2_hm_math_reference.py` separately checks the complete declared composition against the versioned SymPy/mpmath kernel.
+- **External boundary:** pinned LALSuite 7.26.15 independently checks all supported $\pm m$ spin-weighted harmonics. Its public TaylorF2 function returns one carrier, mode-array metadata does not resolve modes, and the public FD-mode dispatcher rejects TaylorF2. The frozen external waveform case therefore remains $(2,2)$-only.
+- **Unresolved:** no author-supplied eight-mode numerical asset or independent executable for this exact leading-amplitude plus aligned-spin TaylorF2 composition was found. Exact all-mode external waveform parity and physical validation remain unavailable; paper fidelity, scalar agreement, Torch/JAX parity, external angular agreement, and dominant-mode external parity are not substitutes for those gates.
+
 ### 2.6 IMRPhenomXAS & IMRPhenomXHM (Public Data Deposits & Native Calibration)
 - **Primary References**:
   - Pratten et al. (2020), *Setting the cornerstone for the IMRPhenomX family of models for gravitational waves from compact binaries: The dominant harmonic for non-precessing quasi-circular black holes*, Phys. Rev. D 102, 064001 ([DOI:10.1103/PhysRevD.102.064001](https://doi.org/10.1103/PhysRevD.102.064001))

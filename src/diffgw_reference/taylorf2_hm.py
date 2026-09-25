@@ -40,7 +40,7 @@ COMPONENT_IDS = {
 
 
 def amplitude_ratio(l: int, m: int, *, delta=DELTA, v=None) -> sp.Expr:
-    """Derive the real carrier ratio from Mezzasoma--Yunes Eqs. (21), (30).
+    """Derive the real carrier ratio from Mezzasoma--Yunes Eqs. (20)--(21i), (30).
 
     Eq. (21) gives the source's complex time-domain H_lm(x). Eq. (30)
     supplies sqrt(2/m)*x_m**(-7/4), where x_m=(2/m)**(2/3)*v**2.
