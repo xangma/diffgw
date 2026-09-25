@@ -460,7 +460,12 @@ class IMRPhenomXPHM(nn.Module):
 
             alpha, beta, gamma = angles_by_mp.get(mp, angles_by_mp[2])
 
-            scale_l = math.sqrt((2 * l + 1) / 5.0) / norm_mode
+            # At beta=0 the positive-frequency carrier must project as
+            # (Y_lm + (-1)^l Y_l,-m*)/2.  The sum below selects the -mp
+            # Wigner column first, so its aligned value has an extra
+            # (-1)^l relative to the XHM spherical-harmonic projection.
+            sign_l = 1.0 if (l % 2 == 0) else -1.0
+            scale_l = sign_l * math.sqrt((2 * l + 1) / 5.0) / norm_mode
 
             d_beta_l = wigner_small_d_matrix(l, beta)
             d_jn_l = d_mat_jn[l]
@@ -469,8 +474,6 @@ class IMRPhenomXPHM(nn.Module):
             term_plus_im = torch.zeros_like(f_eval)
             term_cross_re = torch.zeros_like(f_eval)
             term_cross_im = torch.zeros_like(f_eval)
-
-            sign_l = 1.0 if (l % 2 == 0) else -1.0
 
             for m_val in range(-l, l + 1):
                 m_idx = m_val + l
