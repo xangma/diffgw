@@ -1209,6 +1209,23 @@ residual is smaller than this anchor/reference variability, so the sweep
 does not establish a stable whole-waveform source agreement or a release
 gate.
 
+The [direct pinned-source fine-grid control](evidence/2026-09-25/source_q4_fine_mode_control.json)
+compiles the pinned source separately and compares its complete `(2,2)` mode
+with the same native and public q4 runs. At `0.125` and `0.0625 M`, fitted
+native/source complex relative L2 is `0.000815` and `0.000467`; source/public
+is `0.000420` and `0.000765`. The compiled source changes by `0.001594`
+between those grids under independent peak fits. Source/public post-peak
+differences remain only `3.57e-7` and `1.58e-6`, while their inspiral
+differences grow from `0.000472` to `0.000861`. Thus the smaller
+native/public residual on the finer grid does not establish source fidelity:
+the historical source and public references have their own cadence-dependent
+whole-waveform alignment. A follow-up direct installed-wheel `(2,2)` API
+control agrees with the polarization-inversion route to `1.08e-13` at both
+cadences, so that route does not explain the compiled-source/wheel difference.
+The compiled source still links pinned wheel libraries for supporting symbols;
+this control does not isolate an independent source-only binary. It does not
+pass a numerical or release gate.
+
 1. Qualify the physical generator against the published equations and independent
    references over the intended domain, resolve convention/provenance gaps, and
    establish gradients and numerical convergence. This runner covers only scalar

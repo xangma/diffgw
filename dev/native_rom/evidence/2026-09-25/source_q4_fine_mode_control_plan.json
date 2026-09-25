@@ -1,0 +1,15 @@
+{
+  "schema": "diffgw.seobnrv4.source-q4-fine-mode-control-plan.v2",
+  "purpose": "Compare the selected q4 native and pinned public modes directly with a separately compiled pinned source at 0.125 and 0.0625 M. Check source self-variation to distinguish source parity from peak-grid effects. A follow-up direct public mode API control attributes the observed source/public discrepancy.",
+  "peak_grid_refinement_sha256": "1cf1e016a5634a979668b52bbe364fc64e71b34f2f03e65137378a9ecec56a8d",
+  "source_flux_plan_sha256": "1167199c8f954f97a5905a1e3b2f67d1555e984e5f1da0a0fc42a77a925f96ea",
+  "source_adapter_sha256": "59d8d7dd6547e84cc53b2ecb76005195bb54174c481146f88fc257a3abf7fcf4",
+  "output_steps_M": [0.125, 0.0625],
+  "atol": 1e-14,
+  "rtol": 1e-13,
+  "capacity": 20000,
+  "peak_fit": "quadratic_power",
+  "public_api_control": "Compare the installed wheel's direct (2,2) Modes API with the ChooseTDWaveform polarization inversion used by native/public diagnostics. This control was added after the initial source/public result.",
+  "interpretation": "Selected-row development comparison only. A pinned historical source is a compatibility oracle, not an independent published-physics or NR accuracy reference.",
+  "release_qualified": false
+}
