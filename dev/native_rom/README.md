@@ -1341,6 +1341,20 @@ construction. This rules out the tested local derivative prescription as a
 complete numerical fix. No local-polynomial choice has passed historical-source
 or physical validation.
 
+The [fixed-trajectory sampling control](evidence/2026-09-25/jax_source_fixed_trajectory_sampling_plan.json)
+integrates one factor-256 trajectory and reruns the source-compatible NQC
+attachment with all samples or every second sample. The reconstructed
+high-cadence waveform agrees with the original to roundoff. On
+[q4](evidence/2026-09-25/jax_source_fixed_trajectory_sampling_q4_nonspinning.json)
+and [aligned spin](evidence/2026-09-25/jax_source_fixed_trajectory_sampling_strong_aligned.json),
+the fixed-trajectory factor-128 to factor-256 drifts are `2.73e-5` and
+`2.79e-5`, compared with `4.99e-5` and `1.06e-4` when the trajectories are
+integrated separately. Recomputing the stationary peak on the decimated grid
+changes the match time by less than `1e-9 M` and leaves those drifts unchanged.
+Thus attachment sampling alone exceeds the `1e-5` gate on both rows; different
+fine integrations add further error. This is a numerical attribution, not a
+convergence or physical-accuracy pass.
+
 The [frozen anchor diagnostic](evidence/2026-09-25/source_spliced_anchor_plan.json)
 replays all four cases and fits each mode's own amplitude peak between output
 samples without optimizing a relative shift. The [results](evidence/2026-09-25/source_spliced_anchor.json)
