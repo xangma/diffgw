@@ -1,0 +1,17 @@
+{
+  "schema": "diffgw.seobnrv4.jax-traceable-full-series-nqc-plan.v2",
+  "case": "q4_nonspinning",
+  "prior_physical_sha256": "2423f55255b17a7d49211e2502662ea6eef3cb362f39133d129d20c701726cff",
+  "fine_output_step_M": 0.015625,
+  "matching_window_half_width_M": 10.0,
+  "chi_finite_difference_steps": [0.0001, 0.00001],
+  "checks": {
+    "matching_window_min_samples": 500,
+    "eager_compiled_coefficient_relative_error_at_most": 1e-8,
+    "checked_traceable_coefficient_relative_error_at_most": 1e-8,
+    "chi_derivative_finite_difference_relative_error_at_most": 1e-5,
+    "maximum_matching_condition": 10000000000.0
+  },
+  "interpretation": "Fixed physical q4 trajectory, base mode, and orbital peak. Separate checks vary the NQC targets alone and both targets and spin-dependent matching-time offset. No trajectory, mode, peak-event, or attachment-boundary derivative is claimed.",
+  "release_qualified": false
+}

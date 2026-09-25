@@ -59,6 +59,11 @@ def _endpoint_quadratic(nu, test_particle, equal_mass, linear):
 def seobnrv4_nqc_targets(nu, chi):
     """Published peak targets, Eqs. (A1)-(A12); first amplitude derivative is zero."""
     nu, chi = _fit_domain(nu, chi)
+    return _seobnrv4_nqc_targets_unchecked(nu, chi)
+
+
+def _seobnrv4_nqc_targets_unchecked(nu, chi):
+    """Traceable fit arithmetic; callers must enforce the published fit domain."""
     amplitude_tpl = 1.452857 + chi * (0.166134 + chi * (0.027356 - 0.020073 * chi))
     amplitude_eq = 1.577458 + chi * (-0.007695 + chi * (0.021887 + 0.023268 * chi))
     amplitude_linear = -0.034424 + chi * (-1.218066 + chi * (-0.568373 + 0.401114 * chi))
@@ -109,6 +114,11 @@ _NQC_TIME_OFFSET_SIX_SIG = {
 def seobnrv4_nqc_time_offset_numerical_compatibility(nu, chi):
     """Evaluate NQC peak offset with six-significant-digit coefficients."""
     nu, chi = _fit_domain(nu, chi)
+    return _seobnrv4_nqc_time_offset_numerical_compatibility_unchecked(nu, chi)
+
+
+def _seobnrv4_nqc_time_offset_numerical_compatibility_unchecked(nu, chi):
+    """Traceable historical offset arithmetic on a prevalidated fit domain."""
     c = _NQC_TIME_OFFSET_SIX_SIG
     nonspinning = c["nu3"] * (nu**3) + c["nu2"] * (nu**2) + c["nu1"] * nu + c["constant"]
     return (

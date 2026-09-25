@@ -1,0 +1,96 @@
+{
+  "case": "q4_nonspinning",
+  "checked_traceable_coefficient_relative_error": [
+    0.0,
+    0.0
+  ],
+  "checks": {
+    "checked_traceable_coefficient_relative_error_at_most": true,
+    "chi_derivative_finite_difference_relative_error_at_most": true,
+    "eager_compiled_coefficient_relative_error_at_most": true,
+    "finite_derivative": true,
+    "maximum_matching_condition": true,
+    "moving_match_baseline_coefficient_relative_error_at_most": true,
+    "moving_match_chi_derivative_fd_relative_error_at_most": true
+  },
+  "chi_derivative_fd_relative_error": {
+    "0.0001": [
+      1.576094726957708e-09,
+      3.697980431008753e-09
+    ],
+    "1e-05": [
+      1.565324808215094e-10,
+      3.727952765879204e-12
+    ]
+  },
+  "chi_target_and_match_derivative": [
+    [
+      12.667608456057863,
+      -99.50114686257521,
+      106.91380277988075
+    ],
+    [
+      8.426288901773658,
+      -30.925869489846136
+    ]
+  ],
+  "chi_target_and_match_fd_relative_error": {
+    "0.0001": [
+      5.039338700034555e-08,
+      7.292020566809361e-09
+    ],
+    "1e-05": [
+      5.322946008117106e-10,
+      6.103230962466888e-11
+    ]
+  },
+  "chi_target_derivative": [
+    [
+      5.567607636108745,
+      -47.4981210269635,
+      53.72617442879752
+    ],
+    [
+      5.749415685097941,
+      -26.386482813113645
+    ]
+  ],
+  "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+  "diagnostic_checks_passed": true,
+  "eager_compiled_coefficient_relative_error": [
+    6.786504276775166e-09,
+    1.5948913609837114e-15
+  ],
+  "elapsed_s": 9.519875583006069,
+  "host": "RONI2",
+  "input_array_sha256": {
+    "base_mode": "9941b533cb31e0b0be176a30f21e029ec024d25a8ccc38a2733031de4abdd965",
+    "orbital_frequency": "2f9f3a5ecb431a6dc81dd23b3170db9f4b25dec3030a46de3c176aa74a7516a1",
+    "state": "b339261e28ab1e1be3b2fa6a2d42c0707174f2d17a087fb190e03e4f863a1b51",
+    "time": "1bed3a8d9e60c49720b574b6f8c5d7ea020800a4b83e613261b629817c7566b1"
+  },
+  "match_time_M": 142.16384438780858,
+  "matching_condition": [
+    591.2742097360107,
+    6.1252279187046526
+  ],
+  "moving_match_baseline_coefficient_relative_error": [
+    0.0,
+    0.0
+  ],
+  "pid": 63399,
+  "plan_sha256": "31a6fca96b23f38c252f06ea944b03a13499471da2f1b913ffd00b265dd8826f",
+  "release_qualified": false,
+  "schema": "diffgw.seobnrv4.jax-traceable-full-series-nqc.v2",
+  "source_sha256": {
+    "dev/native_rom/diagnose_jax_traceable_full_series_nqc.py": "3a2c637cc75aeab33d3ba5f67e213be4d66bba91a53dd62686d50ec254eced85",
+    "dev/native_rom/eob/jax/numerical_attachment_clean.py": "61da9863771b027aeca117c22175d5dd5ae9bf33b7836796db426720823f3a55",
+    "src/jaxwave/approximants/eob/nqc.py": "e6e25920ded887a650e04fcf64380f65f32e45d42be81b95fc26291af7b70757"
+  },
+  "status": "diagnostic_complete",
+  "window_samples": 1168,
+  "window_time_M": [
+    132.171875,
+    150.40625
+  ]
+}

@@ -1611,6 +1611,23 @@ combined derivative compile reached approximately `22 GB` resident memory,
 so compilation cost is itself an open engineering issue. The result is not a
 release qualification claim.
 
+The [fixed-chart physical q4 NQC derivative check](evidence/2026-09-25/jax_traceable_full_series_nqc.json)
+uses a [frozen plan](evidence/2026-09-25/jax_traceable_full_series_nqc_plan.json),
+1,168 fine-trajectory samples around the matching time, and the same natural
+full-series spline and equilibrated matching solve as the checked eager path.
+The traceable coefficients match the checked path exactly in eager execution;
+compiled values differ by at most `6.79e-9` relative. Differentiating the
+published NQC targets with respect to their spin variable, while holding the
+physical trajectory, base mode, peak, and match time fixed, agrees with centered
+finite differences at `1e-4` and `1e-5` within `3.70e-9` relative. Both
+matching matrices remain below the `1e10` condition limit. This closes a
+selected fixed-chart NQC target-derivative check. Allowing the historical
+spin-dependent matching-time offset to move while freezing the orbital peak
+also passes: the derivative agrees with finite differences within `5.04e-8`
+relative. Neither check differentiates the trajectory, base mode, peak event,
+or attachment boundary, and neither establishes a whole-waveform gradient,
+domain bound, or release qualification.
+
 1. Qualify the physical generator against the published equations and independent
    references over the intended domain, resolve convention/provenance gaps, and
    establish gradients and numerical convergence. This runner covers only scalar

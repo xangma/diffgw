@@ -27,6 +27,10 @@ def unwrap_mode_phase(mode):
     mode = jnp.asarray(mode)
     if mode.ndim != 1 or len(mode) < 1 or not bool(jnp.all(jnp.isfinite(mode))):
         raise ValueError("mode must be a finite, nonempty scalar series")
+    return _unwrap_mode_phase_unchecked(mode)
+
+
+def _unwrap_mode_phase_unchecked(mode):
     first = -jnp.angle(mode[:1])
     increments = -jnp.angle(mode[1:] * jnp.conj(mode[:-1]))
     return jnp.concatenate((first, first + jnp.cumsum(increments)))
@@ -105,6 +109,52 @@ def _solve_checked(matrix, rhs, max_condition, name):
     solution = jnp.linalg.solve(scaled, rhs / row_scale) / column_scale
     residual = matrix @ solution - rhs
     return solution, condition, residual
+
+
+def _solve_traceable(matrix, rhs):
+    """Equilibrated solve with no data-dependent Python branches."""
+    row_scale = jnp.linalg.norm(matrix, axis=-1)
+    scaled = matrix / row_scale[:, None]
+    column_scale = jnp.linalg.norm(scaled, axis=-2)
+    scaled = scaled / column_scale[None, :]
+    singular = jnp.linalg.svd(scaled, compute_uv=False)
+    solution = jnp.linalg.solve(scaled, rhs / row_scale) / column_scale
+    return solution, singular[0] / singular[-1], matrix @ solution - rhs
+
+
+def traceable_nqc_22_full_series_coefficients(
+    time, r, pr_star, orbital_frequency, base_mode, match_time, targets,
+):
+    """Differentiate a fixed-grid full-series NQC solve on validated inputs.
+
+    The caller must validate the grid, physical samples, and matrix condition
+    before treating these coefficients as a waveform. Peak selection and
+    attachment boundary changes are outside this fixed-chart derivative.
+    """
+    time, r, pr_star, orbital_frequency, base_mode, match_time = (
+        jnp.asarray(value) for value in
+        (time, r, pr_star, orbital_frequency, base_mode, match_time))
+    amplitude = jnp.abs(base_mode)
+    phase = _unwrap_mode_phase_unchecked(base_mode)
+    q, p = nqc_22_basis(r, pr_star, orbital_frequency)
+    products = amplitude[:, None] * q
+    combined = jnp.concatenate((amplitude[:, None], products, p), axis=-1)
+    spline = natural_cubic_spline(time, combined, scalar_output=False)
+    value = spline(match_time)
+    first = spline.derivative(match_time)
+    second = spline.derivative(match_time, 2)
+    amplitude_matrix = jnp.stack((value[1:4], first[1:4], second[1:4]))
+    amplitude_rhs = jnp.stack(targets[:3]) - jnp.stack((value[0], first[0], second[0]))
+    phase_matrix = jnp.stack((first[4:6], second[4:6]))
+    phase_spline = natural_cubic_spline(time, phase, scalar_output=True)
+    phase_rhs = jnp.stack((phase_spline.derivative(match_time) - targets.frequency,
+                           phase_spline.derivative(match_time, 2) - targets.frequency_derivative))
+    a, amplitude_condition, amplitude_residual = _solve_traceable(
+        amplitude_matrix, amplitude_rhs)
+    b, phase_condition, phase_residual = _solve_traceable(
+        phase_matrix, phase_rhs)
+    return (a, b, amplitude_matrix, phase_matrix, amplitude_condition,
+            phase_condition, amplitude_residual, phase_residual)
 
 
 def calibrate_nqc_22_full_series(
@@ -360,4 +410,5 @@ def attach_seobnrv4_22_numerical_compatibility(
 
 __all__ = ["FullSeriesNQC", "NumericalAttachedMode22",
            "attach_seobnrv4_22_numerical_compatibility",
-           "calibrate_nqc_22_full_series", "full_orbital_peak", "unwrap_mode_phase"]
+           "calibrate_nqc_22_full_series", "full_orbital_peak",
+           "traceable_nqc_22_full_series_coefficients", "unwrap_mode_phase"]
