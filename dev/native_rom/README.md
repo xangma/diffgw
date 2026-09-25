@@ -1805,6 +1805,24 @@ local fit changes the historical coefficients by L2 `0.213`, `0.365`, and
 `0.703`. The falling cadence trend makes it a numerical candidate, not a
 source-faithful SEOBNRv4 prescription or release qualification.
 
+The [fourth-grid local-NQC control](evidence/2026-09-25/source_q4_very_fine_local_nqc.json)
+uses a [frozen plan](evidence/2026-09-25/source_q4_very_fine_local_nqc_plan.json)
+and capacity-only development adapter variants to extend this corrected-source
+q4 row from `0.00390625` to `0.001953125 M`. The coarser NQC inputs and source,
+local-fit, and wheel modes reproduce their saved hashes; injecting each
+source's own coefficients reproduces its mode bit for bit. The adjacent
+local-fit coefficient difference falls from `0.00354` to `0.00282`, and its
+peak-fitted whole-mode L2 from `0.000331` to `0.000139`. Holding the finest
+local coefficients on both grids gives `0.000131`. The corrected historical
+source's adjacent whole-mode L2 is `0.000859`, but only `0.000229` when its
+finest coefficients are fixed; its coefficient difference from the local fit
+grows from `0.703` to `1.434`. The public wheel's adjacent whole-mode L2 is
+`0.005226`, and the local-fit/wheel difference rises from `0.001058` to
+`0.004301`. Thus this fourth grid strengthens the local fit's numerical
+trend on one row while exposing larger historical-source and public-wheel
+cadence sensitivity. It does not establish source fidelity, a domain-wide
+numerical bound, physical accuracy, or release qualification.
+
 The [prospective q4 local-fit control](evidence/2026-09-25/source_q4_ultrafine_local_nqc_plan.json)
 recomputes those five coefficients with the same degree-four, `±2 M` local
 polynomial used in the earlier combined numerical control, then injects each
