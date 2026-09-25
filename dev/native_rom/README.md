@@ -2722,6 +2722,34 @@ differs from the public model by about `0.03916` complex relative L2. This is
 a Torch-only, one-row counterfactual; it does not validate historical fidelity,
 domain-wide convergence, or release qualification.
 
+A separately [frozen three-row boundary-frequency campaign](evidence/2026-09-25/source_ode_chain_boundary_frequency_domain_plan.json)
+applies the same continuous ODE NQC matching and ringdown-frequency intervention
+to q4 nonspinning, high-start mixed-spin, and strong antialigned-spin binaries.
+Its [result](evidence/2026-09-25/source_ode_chain_boundary_frequency_domain.json)
+passes the predeclared `1e-5` baseline/refined whole-mode drift limit on all
+three rows: `3.27e-6`, `3.84e-7`, and `7.19e-6`, respectively. Reconstructed
+candidate ringdowns are exact, and sampled boundaries and supports agree
+between tolerances. The antialigned control without the frequency replacement
+is slightly more stable (`7.07e-6`); a numerical gate pass does not imply that
+the intervention improves every row. Public-model residuals remain about
+`0.06505`, `0.08036`, and `0.000224` on the three rows. This is a Torch-only,
+two-tolerance, selected-case check; JAX matching, a finer tolerance, domain
+coverage, source fidelity, and release qualification remain open.
+
+A [frozen aligned-row public-gap diagnostic](evidence/2026-09-25/source_aligned_public_gap_plan.json)
+exactly replays the refined candidate and original-ringdown control, then
+partitions the pinned public comparison on a common sampled-amplitude-peak
+chart. Its [result](evidence/2026-09-25/source_aligned_public_gap.json)
+replays `0.0391588` whole-mode complex relative L2 on 1,169 common samples.
+The interval before NQC match minus `50 M` contains `86.64%` of squared
+residual, the later pre-boundary interval `10.01%`, and ringdown `3.35%`.
+Fitting each amplitude peak quadratically lowers whole-mode L2 to `0.0168053`.
+These are locations on one chosen chart, not causal component attributions:
+the solved NQC correction applies across the early interval, and peak anchoring
+affects the whole waveform. The alternate `Mω₂₂=0.1` frequency anchor is
+ill-conditioned on this row and is only a sensitivity control. A substantial
+public-source discrepancy remains; neither diagnostic qualifies the generator.
+
 1. Qualify the physical generator against the published equations and independent
    references over the intended domain, resolve convention/provenance gaps, and
    establish gradients and numerical convergence. This runner covers only scalar

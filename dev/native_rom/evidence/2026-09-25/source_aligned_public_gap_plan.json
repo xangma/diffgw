@@ -1,0 +1,46 @@
+{
+  "anchor_frequency_M": 0.1,
+  "case": "strong_aligned",
+  "controls": [
+    "Quadratic-power amplitude-peak fit on the same untouched candidate/public modes, with no relative optimized shift or phase",
+    "Raw versus corrected native mode over the native fine pre-boundary window, descriptive only"
+  ],
+  "gates": {
+    "partition_energy_replay_at_most": 1e-12,
+    "public_peak_metric_replay_at_most": 1e-12
+  },
+  "inputs": {
+    "boundary_plan": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_ode_chain_boundary_frequency_plan.json",
+      "sha256": "e85982de0ea04ddbd14c46d0f2752af2eb0e7d288deb1db6f904827dba149c76"
+    },
+    "boundary_result": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_ode_chain_boundary_frequency.json",
+      "sha256": "da62437767c4cfd908344bf06986f388a27aa9c57b53c1481af92d74ba220414"
+    },
+    "frequency_anchor_helper": {
+      "path": "dev/native_rom/diagnose_q8_frequency_anchor.py",
+      "sha256": "d4ce654705a6599340b9d5cdfeda303a748e62197c143c4fa6f995e03126526b"
+    },
+    "mode_comparison": {
+      "path": "dev/native_rom/compare_whole_waveforms.py",
+      "sha256": "0dc281178d02d2f708065fba73ca353db4d34a46ff8d8a8d630f5715da7c4361"
+    },
+    "public_helper": {
+      "path": "dev/native_rom/diagnose_peak_anchor.py",
+      "sha256": "02a2974900b77e2e074f9d050006b5a973cd6e621c8d4c4c007e88482ef5ea6a"
+    },
+    "runner": {
+      "path": "dev/native_rom/diagnose_jax_spliced_whole_waveform.py",
+      "sha256": "158c243e6909d26529cf5e976521793cd07821cd48662036a3c34182391f9d1c"
+    }
+  },
+  "interpretation": "Windowed residual energy is descriptive, not a causal model-component swap. Each waveform uses its own amplitude peak or frequency crossing as its coordinate anchor; no fitted relative time or phase. This one-row result does not qualify source fidelity, NR accuracy, broad-domain convergence, or release.",
+  "level": "refined",
+  "no_op": "Candidate whole-mode SHA and reconstructed original-ringdown v2 whole-mode SHA must match frozen results exactly.",
+  "pre_match_width_M": 50.0,
+  "purpose": "Partition the frozen refined continuous-boundary candidate versus the pinned public SEOBNRv4 complex-mode residual on a common independently amplitude-peak anchored chart, with a 0.1/M frequency-anchor control.",
+  "release_qualified": false,
+  "schema": "diffgw.seobnrv4.source-aligned-public-gap-plan.v1",
+  "script_sha256": "43b07a4bf4b86b483fb30bb9610e4fecdce49679f7a8e6da218e9595a3c2b22b"
+}
