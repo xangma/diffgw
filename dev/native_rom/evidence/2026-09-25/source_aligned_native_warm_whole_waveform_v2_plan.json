@@ -1,0 +1,199 @@
+{
+  "cap_Momega": 0.03162277660168379,
+  "capacity": 50000,
+  "chart_rule": "Independently subtract each waveform sampled maximum-amplitude time and phase exactly once. Interpolate candidate and pinned source onto the frozen 1169 public samples from -484.5 M through 99.5 M. Do not pairwise fit or rescale; use the fixed prior direct-candidate match/boundary windows for each tolerance.",
+  "chart_time_sha256": "86febff2628468bce70e291ab313cc3c27c62c42a222024eb6a35ed340812d2a",
+  "control_protocol": "Replay pinned source full h22 twice, pinned wheel/public h22 and polarization inverse, source/public aligned hashes and per-window metrics, and fixed chart/support/window sample counts from frozen three-way evidence. Retain old direct candidate source/native and native/public whole L2 as descriptive controls.",
+  "fine_refinement_factor": 32,
+  "gates": {
+    "control_metric_max_abs": 1e-12,
+    "hypothesis": [
+      "refined-to-finest aligned whole-mode L2 <=1e-5",
+      "refined-to-finest aligned whole-mode L2 no greater than baseline-to-refined; preserve failed result if unmet"
+    ],
+    "initial_state_max_abs": 1e-12,
+    "refined_to_finest_at_most": 1e-05,
+    "validity": [
+      "all input/script SHA gates",
+      "exact row and pinned source/wheel/public identities",
+      "pinned source repeat bitwise and source/public raw and aligned hashes replay",
+      "fixed 1169-sample public peak-aligned chart time hash and all window counts replay",
+      "all three candidate levels cover fixed support and have finite modes",
+      "same wholly native warm initial state in Torch and JAX at all three levels",
+      "native warm orbital-frequency crossing residual and phase-zero checks"
+    ],
+    "warm_frequency_residual_max_abs": 1e-12
+  },
+  "inputs": {
+    "adaptive_driver": {
+      "path": "src/torchwave/approximants/eob/adaptive_driver_clean.py",
+      "sha256": "2f5e1c3b8766b92340a6aafcdfbdc5fe6856a3e4390551abefda1e22b90dda7b"
+    },
+    "attachment": {
+      "path": "src/torchwave/approximants/eob/numerical_attachment.py",
+      "sha256": "8c7a149b76c529a255a4caa4b0ca76317b5306c8967db84047f299ccf51be7fc"
+    },
+    "boundary_plan": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_ode_chain_boundary_frequency_plan.json",
+      "sha256": "e85982de0ea04ddbd14c46d0f2752af2eb0e7d288deb1db6f904827dba149c76"
+    },
+    "boundary_result": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_ode_chain_boundary_frequency.json",
+      "sha256": "da62437767c4cfd908344bf06986f388a27aa9c57b53c1481af92d74ba220414"
+    },
+    "boundary_runner": {
+      "path": "dev/native_rom/diagnose_source_aligned_ode_chain_boundary_frequency.py",
+      "sha256": "f4c434d1d050ffad7550364292cc202c639e79323e731db797afd6a2b10e21e6"
+    },
+    "early_warm_plan": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_early_raw_warm_start_v5_plan.json",
+      "sha256": "2ebffbc522054286e242ea244b3e2380da98c4e57f9307446160383d844c293a"
+    },
+    "early_warm_result": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_early_raw_warm_start_v5.json",
+      "sha256": "71d4ef86cfab87cf85adea3ee3177bb511f0ffad759c3ceb4c3e8618b2953193"
+    },
+    "failed_v1_plan": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_native_warm_whole_waveform_plan.json",
+      "sha256": "fac773ef306cda8d01ce0af3d4b7fbd81898cd5093e178324d9d2836b2049ee6"
+    },
+    "failed_v1_result": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_native_warm_whole_waveform.json",
+      "sha256": "15927c9944db59807481e76034c048c8fe3a2238b016b98632f6d031f9abdb55"
+    },
+    "failed_v1_runner": {
+      "path": "dev/native_rom/diagnose_source_aligned_native_warm_whole_waveform.py",
+      "sha256": "8e5405d12cd2f88849d2fd702e47cf4df6987a4443b736f02c71e43e0088197b"
+    },
+    "initial_conditions": {
+      "path": "src/torchwave/approximants/eob/initial_conditions.py",
+      "sha256": "520641e8c3037ea1aa6e947c7d9dd92c759333396103cb1d1fffc8aa5019137b"
+    },
+    "ladder_plan": {
+      "path": "dev/native_rom/evidence/2026-09-25/jax_source_tolerance_ladder_plan.json",
+      "sha256": "101f756e6d90e07cb02084c04788bed43c4cdbc2773b948af8ff3262fda7352f"
+    },
+    "native_driver": {
+      "path": "dev/native_rom/diagnose_jax_spliced_whole_waveform.py",
+      "sha256": "158c243e6909d26529cf5e976521793cd07821cd48662036a3c34182391f9d1c"
+    },
+    "native_flux": {
+      "path": "src/torchwave/approximants/eob/seobnrv4_flux.py",
+      "sha256": "3136bb016cce21cdd9d636008fee1fa5472757fed4446dc899e0d31e70124c83"
+    },
+    "native_hamiltonian": {
+      "path": "dev/native_rom/eob/torch/source_calibration_hamiltonian.py",
+      "sha256": "2b0ddccf6ba99d0157c0b624cf0c4e926713c96a736e22e1b6fe55bdbde1cdc2"
+    },
+    "native_mode": {
+      "path": "src/torchwave/approximants/eob/seobnrv4_mode22.py",
+      "sha256": "3e2b97c175d2c6d3720f04529b400d455104e963b54f0b885e4a1fda59f90e4b"
+    },
+    "native_public_gap": {
+      "path": "dev/native_rom/diagnose_source_aligned_public_gap.py",
+      "sha256": "43b07a4bf4b86b483fb30bb9610e4fecdce49679f7a8e6da218e9595a3c2b22b"
+    },
+    "peak_anchor": {
+      "path": "dev/native_rom/diagnose_peak_anchor.py",
+      "sha256": "02a2974900b77e2e074f9d050006b5a973cd6e621c8d4c4c007e88482ef5ea6a"
+    },
+    "prior_gap": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_public_gap.json",
+      "sha256": "a2d9498c630afe966ca826ebb342ad7f1c28c99211a935493c666f1cd4e1a08a"
+    },
+    "public_gap_result": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_public_gap.json",
+      "sha256": "a2d9498c630afe966ca826ebb342ad7f1c28c99211a935493c666f1cd4e1a08a"
+    },
+    "qualifier": {
+      "path": "dev/native_rom/qualify_generator.py",
+      "sha256": "df9bffb614b87e82b5a8da47212cb01312ad4d0cb9d687d929570df134954174"
+    },
+    "same_row_nqc_capture": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_nqc_same_row_strong_aligned.json",
+      "sha256": "646b20549d4a687aa3ec334626473de0155271833003089abfad3ce5fd46fae8"
+    },
+    "source_adapter": {
+      "path": "dev/native_rom/reference/full_v4_source_mode_adapter.c",
+      "sha256": "59d8d7dd6547e84cc53b2ecb76005195bb54174c481146f88fc257a3abf7fcf4"
+    },
+    "source_amplitude_runner": {
+      "path": "dev/native_rom/diagnose_source_aligned_ode_chain_amplitude_v2.py",
+      "sha256": "c3460f910c186f3fdf2e2c51084990198d314ba6d6eeacfd3592663b9e1cecef"
+    },
+    "source_attribution_runner": {
+      "path": "dev/native_rom/diagnose_source_aligned_ode_chain_residual_attribution_v2.py",
+      "sha256": "00fd90accfbde484815f2c409d7ec985c4ad27d97e2a434fabb2632885c20513"
+    },
+    "source_compile": {
+      "path": "dev/native_rom/diagnose_source_flux_initial.py",
+      "sha256": "b1d040bedff3eb88ee644ede9098c7807ab8a3e2a9ca6b8bcfe9bd35fec4d7bb"
+    },
+    "source_field": {
+      "path": "dev/native_rom/diagnose_source_aligned_ode_chain_phase_matrix.py",
+      "sha256": "654ce386c98094f17c8b14bfdf2fdb9db2e70d112c1c4524943cd3745d41ad1a"
+    },
+    "source_phase_runner": {
+      "path": "dev/native_rom/diagnose_source_aligned_ode_chain_phase_matrix.py",
+      "sha256": "654ce386c98094f17c8b14bfdf2fdb9db2e70d112c1c4524943cd3745d41ad1a"
+    },
+    "source_plan": {
+      "path": "dev/native_rom/evidence/2026-09-24/source_flux_initial_plan.json",
+      "sha256": "1167199c8f954f97a5905a1e3b2f67d1555e984e5f1da0a0fc42a77a925f96ea"
+    },
+    "source_rhs_runner": {
+      "path": "dev/native_rom/diagnose_source_aligned_ode_chain_phase_rhs.py",
+      "sha256": "b789eedb4eacf29500253999d1d0bb68e8e8591f661b8025592c50ae1d1114ff"
+    },
+    "source_wheel_adapter": {
+      "path": "dev/native_rom/diagnose_source_wheel_mode.py",
+      "sha256": "97fa1d42f7c893fa342d4561bf6092c6a12babc6d4c3a0fadf9bd2e8707b7c99"
+    },
+    "summary": {
+      "path": "dev/native_rom/diagnose_jax_source_tolerance_ladder.py",
+      "sha256": "1d9c70218f8000115d74fef577521289a1bf265d251629678f5065e4420928a9"
+    },
+    "three_way_plan": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_three_way_waveform_plan.json",
+      "sha256": "ed721879ba2a7577e289dc9958eff272e12966e82794093e6cf355ae55c778a3"
+    },
+    "three_way_result": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_three_way_waveform.json",
+      "sha256": "3cbe0ff66ff50a8ee988867176144d2d0bb8aa3b5169a7f858a7513397048381"
+    },
+    "three_way_runner": {
+      "path": "dev/native_rom/diagnose_source_aligned_three_way_waveform.py",
+      "sha256": "a8045a050f44baeb2b8901f7807f4f7a75540c1381b102cb267a09ca1c64c8e6"
+    },
+    "warm_start_helper": {
+      "path": "dev/native_rom/eob/torch/warm_start.py",
+      "sha256": "a9818350b18ed04ca645edbf6af4c22760fc51eae540c12f38d171d99a675a20"
+    }
+  },
+  "intervention": "Compute a wholly native phase-zero cap-to-requested-frequency state with native_frequency_warm_start at finest tolerances. Inject that same state into both Torch and JAX development-only driver initial-condition seams; preserve the source-backed ODE, continuous NQC phase/RHS/amplitude matching, continuous ringdown boundary frequency, cadence, chart, mode, and all subsequent attachment behavior. Run baseline/refined/finest ODE tolerances independently.",
+  "levels": [
+    "baseline",
+    "refined",
+    "finest"
+  ],
+  "preflight_revision": "v1 failed before numerical execution because its direct ladder_plan input was omitted; v2 adds the frozen ladder and preserves v1 plan/runner/failure record.",
+  "release_qualified": false,
+  "row_tuple": [
+    30.0,
+    20.0,
+    0.8,
+    0.6,
+    0.04
+  ],
+  "schema": "diffgw.seobnrv4.source-aligned-native-warm-whole-plan.v2",
+  "script_sha256": "9deab92c5dc714895afd4f8e0a89fbc76372c15d6b0ad4e2d0de744db54507f6",
+  "source_full_mode_limit": "Pinned full source h22 uses its historical instantaneous-h22-frequency crop; native warm state is at orbital M Omega=.04. This is a diagnostic whole-waveform intervention, not a proof of matching crop conventions.",
+  "step_M": 0.5,
+  "warm_start_settings": {
+    "atol": 1e-12,
+    "first_step_M": 0.125,
+    "frequency_tolerance": 1e-12,
+    "max_duration_M": 1000000.0,
+    "rtol": 1e-11
+  }
+}

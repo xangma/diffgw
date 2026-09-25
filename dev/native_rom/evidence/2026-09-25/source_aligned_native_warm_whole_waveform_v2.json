@@ -1,0 +1,274 @@
+{
+  "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+  "failure": {
+    "embedded_driver_checks": {
+      "baseline": {
+        "coarse_prefix_relative_l2_at_most": false,
+        "full_time_max_abs_at_most_M": true,
+        "independent_initial_state_max_abs_at_most": true,
+        "post_restart_relative_l2_at_most": false,
+        "restart_index_equal": true,
+        "whole_mode_relative_l2_at_most": false
+      },
+      "finest": {
+        "coarse_prefix_relative_l2_at_most": false,
+        "full_time_max_abs_at_most_M": true,
+        "independent_initial_state_max_abs_at_most": true,
+        "post_restart_relative_l2_at_most": false,
+        "restart_index_equal": true,
+        "whole_mode_relative_l2_at_most": false
+      },
+      "refined": {
+        "coarse_prefix_relative_l2_at_most": false,
+        "full_time_max_abs_at_most_M": true,
+        "independent_initial_state_max_abs_at_most": true,
+        "post_restart_relative_l2_at_most": false,
+        "restart_index_equal": true,
+        "whole_mode_relative_l2_at_most": false
+      }
+    },
+    "log_sha256": "724bcb5ea665d5b7b4376010c05bee190f38816957cef3191ae8e895f6dad1d5",
+    "message": "warm candidate baseline does not cover fixed chart",
+    "note": "The embedded driver parity checks are real failures on this injected warm-start run; v2 produced no fixed-chart pairwise source/public metrics.",
+    "stage": "candidate anchored support gate before pairwise metrics",
+    "type": "ValueError"
+  },
+  "host": "RONI2",
+  "levels": {
+    "baseline": {
+      "boundary_time_M": 481.546875,
+      "initial_state_max_abs": 0.0,
+      "jax_initial_state": [
+        8.436030723266674,
+        0.0,
+        -0.005525838910381491,
+        3.2934625532049737
+      ],
+      "match_time_M": 481.5543711546736,
+      "ringdown_boundary_controls": {
+        "backward_secant": 0.42951672225171933,
+        "boundary_index": 8835,
+        "boundary_time_local_M": 138.046875,
+        "central_secant_control": 0.42960415651191397,
+        "continuous_frequency": 0.42959992596500496,
+        "direct_raw_phase_first": 0.27238879014447454,
+        "high_step_M": 0.015625,
+        "match_time_local_M": 138.05437115467365,
+        "ode_phase_basis": [
+          -0.17747786675079286,
+          -0.0011738996444787802
+        ],
+        "ode_phase_basis_first": [
+          -0.008095894388334322,
+          -0.00016363725275590258
+        ],
+        "original_frequency": 0.42951672225171933,
+        "phase_coefficients": [
+          35.47073129810143,
+          -794.1722099168883
+        ],
+        "raw_frequency": 0.27238879014447454,
+        "sampled_phase_basis": [
+          -0.17747786675079286,
+          -0.0011738996444787802
+        ],
+        "sampled_raw_frequency": 0.27238879014447454,
+        "spline_derivative_control": 0.42960419915602643
+      },
+      "ringdown_boundary_inputs": {
+        "amplitude": 0.3796645872156187,
+        "amplitude_derivative": 0.0,
+        "dt_high": 0.015625,
+        "elapsed_sha256": "13d12d4af4a2c5d8a3ca7485d7ca3667b68a11949769ff0ad90d04f43135766b",
+        "frequency": 0.42951672225171933,
+        "phase": 28.16991419461757,
+        "sigma": [
+          0.7198959812892501,
+          -0.07149872714356131
+        ],
+        "support_count": 8951
+      },
+      "series": {
+        "end_M": 581.5,
+        "mode_sha256": "75f414ca1eea59f16083ab94a8fc1038802405afb3b6535786c67168b78e7c13",
+        "samples": 1164,
+        "start_M": 0.0,
+        "time_sha256": "ef5576c584b4d44459cfebeaad6fdafd1f615d554700d94ce4bec89273ae9052"
+      },
+      "settings": {
+        "atol": 1e-10,
+        "coarse_output_step_M": 0.5,
+        "max_step_M": 2.0,
+        "rtol": 1e-09
+      },
+      "torch_initial_state": [
+        8.436030723266674,
+        0.0,
+        -0.005525838910381491,
+        3.2934625532049737
+      ],
+      "torch_jax_whole_l2": 0.0004334568200929477
+    },
+    "finest": {
+      "boundary_time_M": 481.546875,
+      "initial_state_max_abs": 0.0,
+      "jax_initial_state": [
+        8.436030723266674,
+        0.0,
+        -0.005525838910381491,
+        3.2934625532049737
+      ],
+      "match_time_M": 481.5543711546736,
+      "ringdown_boundary_controls": {
+        "backward_secant": 0.42951256988158093,
+        "boundary_index": 8867,
+        "boundary_time_local_M": 138.546875,
+        "central_secant_control": 0.42959996877902995,
+        "continuous_frequency": 0.4295999236174831,
+        "direct_raw_phase_first": 0.2723887897216886,
+        "high_step_M": 0.015625,
+        "match_time_local_M": 138.55437115467365,
+        "ode_phase_basis": [
+          -0.17747790477547296,
+          -0.0011739003953086286
+        ],
+        "ode_phase_basis_first": [
+          -0.008095894332892466,
+          -0.0001636373233367421
+        ],
+        "original_frequency": 0.42951256988158093,
+        "phase_coefficients": [
+          35.470740295191355,
+          -794.1723122426927
+        ],
+        "raw_frequency": 0.2723887897216886,
+        "sampled_phase_basis": [
+          -0.17747790477547296,
+          -0.0011739003953086286
+        ],
+        "sampled_raw_frequency": 0.2723887897216886,
+        "spline_derivative_control": 0.42960000524863584
+      },
+      "ringdown_boundary_inputs": {
+        "amplitude": 0.37966458726298496,
+        "amplitude_derivative": 0.0,
+        "dt_high": 0.015625,
+        "elapsed_sha256": "2c87049d77cecbbe561aa20ade255f130727aa1c58896e869ef695e055372502",
+        "frequency": 0.42951256988158093,
+        "phase": 28.169916440301822,
+        "sigma": [
+          0.7198959812892501,
+          -0.07149872714356131
+        ],
+        "support_count": 8951
+      },
+      "series": {
+        "end_M": 581.5,
+        "mode_sha256": "fb163942e57a2f6c57aaf62597ae67b8dc408108b4efd4f5e7a99ac483259f1f",
+        "samples": 1164,
+        "start_M": 0.0,
+        "time_sha256": "ef5576c584b4d44459cfebeaad6fdafd1f615d554700d94ce4bec89273ae9052"
+      },
+      "settings": {
+        "atol": 1e-12,
+        "coarse_output_step_M": 0.5,
+        "max_step_M": 2.0,
+        "rtol": 1e-11
+      },
+      "torch_initial_state": [
+        8.436030723266674,
+        0.0,
+        -0.005525838910381491,
+        3.2934625532049737
+      ],
+      "torch_jax_whole_l2": 0.0002591905971634878
+    },
+    "refined": {
+      "boundary_time_M": 481.546875,
+      "initial_state_max_abs": 0.0,
+      "jax_initial_state": [
+        8.436030723266674,
+        0.0,
+        -0.005525838910381491,
+        3.2934625532049737
+      ],
+      "match_time_M": 481.5543711546736,
+      "ringdown_boundary_controls": {
+        "backward_secant": 0.42951156875187735,
+        "boundary_index": 8867,
+        "boundary_time_local_M": 138.546875,
+        "central_secant_control": 0.429598958982524,
+        "continuous_frequency": 0.42959992304155104,
+        "direct_raw_phase_first": 0.27238878985248555,
+        "high_step_M": 0.015625,
+        "match_time_local_M": 138.55437115467365,
+        "ode_phase_basis": [
+          -0.17747790155800722,
+          -0.0011739003318655225
+        ],
+        "ode_phase_basis_first": [
+          -0.008095894360868881,
+          -0.00016363731782133523
+        ],
+        "original_frequency": 0.42951156875187735,
+        "phase_coefficients": [
+          35.4707392521371,
+          -794.172297788774
+        ],
+        "raw_frequency": 0.2723887898524855,
+        "sampled_phase_basis": [
+          -0.17747790155800722,
+          -0.0011739003318655225
+        ],
+        "sampled_raw_frequency": 0.2723887898524855,
+        "spline_derivative_control": 0.42959899015823916
+      },
+      "ringdown_boundary_inputs": {
+        "amplitude": 0.37966458727380303,
+        "amplitude_derivative": 0.0,
+        "dt_high": 0.015625,
+        "elapsed_sha256": "2c87049d77cecbbe561aa20ade255f130727aa1c58896e869ef695e055372502",
+        "frequency": 0.42951156875187735,
+        "phase": 28.169916210623818,
+        "sigma": [
+          0.7198959812892501,
+          -0.07149872714356131
+        ],
+        "support_count": 8951
+      },
+      "series": {
+        "end_M": 581.5,
+        "mode_sha256": "1ebc63ffef327a82dc48b885e884ab5ed62b5485c8fb263a0fdc75e57ffa084a",
+        "samples": 1164,
+        "start_M": 0.0,
+        "time_sha256": "ef5576c584b4d44459cfebeaad6fdafd1f615d554700d94ce4bec89273ae9052"
+      },
+      "settings": {
+        "atol": 1e-11,
+        "coarse_output_step_M": 0.5,
+        "max_step_M": 2.0,
+        "rtol": 1e-10
+      },
+      "torch_initial_state": [
+        8.436030723266674,
+        0.0,
+        -0.005525838910381491,
+        3.2934625532049737
+      ],
+      "torch_jax_whole_l2": 0.00026465523259764495
+    }
+  },
+  "pid": 14330,
+  "plan_sha256": "2cbf5c65e8c7d9f612e4b4f19ff9390bf63a22331d67c0a0f2fa4a7354a39d41",
+  "release_qualified": false,
+  "row_tuple": [
+    30.0,
+    20.0,
+    0.8,
+    0.6,
+    0.04
+  ],
+  "schema": "diffgw.seobnrv4.source-aligned-native-warm-whole.v2",
+  "script_sha256": "9deab92c5dc714895afd4f8e0a89fbc76372c15d6b0ad4e2d0de744db54507f6",
+  "status": "failed_fixed_chart_coverage"
+}

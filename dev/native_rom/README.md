@@ -2886,6 +2886,28 @@ early raw-mode discrepancy, but the compiled full-mode crop uses a separate
 instantaneous `h22` frequency rule, and no whole-waveform or release claim
 follows. Reproduce with `PYTHONPATH=src:. /Users/xangma/repos/diffgw/.venv/bin/python -m dev.native_rom.diagnose_source_aligned_early_raw_warm_start_v5`.
 
+The first [native warm-start whole-waveform plan](evidence/2026-09-25/source_aligned_native_warm_whole_waveform_plan.json)
+failed preflight because it omitted a directly used tolerance-ladder input;
+its [failure record](evidence/2026-09-25/source_aligned_native_warm_whole_waveform.json)
+is retained. The separately frozen [v2 plan](evidence/2026-09-25/source_aligned_native_warm_whole_waveform_v2_plan.json)
+completed three levels, then [failed](evidence/2026-09-25/source_aligned_native_warm_whole_waveform_v2.json)
+the established 1169-sample chart coverage gate: the warm-started candidate
+begins at `-481.5 M`, versus the fixed chart's `-484.5 M`. A [v3 plan](evidence/2026-09-25/source_aligned_native_warm_whole_waveform_v3_plan.json)
+and [result](evidence/2026-09-25/source_aligned_native_warm_whole_waveform_v3.json)
+preserve that failed gate and compare only the 1163 shared samples of the
+*same* peak-aligned chart, with pinned source/public hashes and window counts
+replayed and no pairwise fit. Source versus warm complex L2 there is
+`0.0794094` at refined tolerance; baseline-to-refined and refined-to-finest
+warm-mode L2 are `1.77e-6` and `1.47e-7`. The embedded Torch/JAX waveform
+parity gates genuinely fail (`2.65e-4` refined whole-mode L2), although their
+initial states are identical and their vector field and raw mode at that state
+agree to about `1e-16`. Thus the early raw-mode improvement does not transfer
+to this orbital-frequency-cropped whole-waveform candidate. The historical
+full source crop instead selects a discrete sample from the final `h22`
+instantaneous frequency; this distinct convention remains to be tested.
+These are development-only diagnostics (`release_qualified=false`). Reproduce
+v3 with `PYTHONPATH=src:. /Users/xangma/repos/diffgw/.venv/bin/python -m dev.native_rom.diagnose_source_aligned_native_warm_whole_waveform_v3`.
+
 1. Qualify the physical generator against the published equations and independent
    references over the intended domain, resolve convention/provenance gaps, and
    establish gradients and numerical convergence. This runner covers only scalar
