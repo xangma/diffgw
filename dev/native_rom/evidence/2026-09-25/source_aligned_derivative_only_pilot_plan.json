@@ -1,0 +1,32 @@
+{
+  "schema": "diffgw.seobnrv4.aligned-derivative-only-pilot-plan.v1",
+  "purpose": "Test a derivative-only NQC matching counterfactual on the already captured strong aligned-spin source trajectory. This does not replay a full waveform.",
+  "release_qualified": false,
+  "row": {
+    "mass1": 30.0,
+    "mass2": 20.0,
+    "chi1": 0.8,
+    "chi2": 0.8,
+    "omega_start": 0.04
+  },
+  "resample_factor": 32,
+  "internal_step_M": 0.00390625,
+  "match_time_M": 137.59240346159578,
+  "fixed_captured_values": true,
+  "fixed_match_event": true,
+  "fixed_targets": true,
+  "series_names": ["amplitude", "A*q1", "A*q2", "A*q3", "mode_phase", "p1", "p1*pr2"],
+  "centered_stencils_M": [0.1, 0.2],
+  "field_tolerances": [[1e-11, 1e-12], [1e-12, 1e-13]],
+  "gates": {
+    "baseline_replay_linf": 0.001,
+    "dense_tolerance_derivative_linf": 1e-7,
+    "dense_stencil_derivative_linf": 1e-6,
+    "coefficient_stencil_l2": 0.01,
+    "linear_residual_linf": 1e-12
+  },
+  "interpretation": "A passing coefficient-level numerical gate does not establish waveform convergence, historical source fidelity, independent physical accuracy, or a production NQC prescription. A failed gate must remain recorded; do not choose a new stencil from this result.",
+  "source_evidence": "dev/native_rom/evidence/2026-09-24/source_nqc_dense_field_strong_aligned_spin.json",
+  "source_evidence_sha256": "c8d642fd8b8f7e17672c1c6c2ec831a3ba4e49d4ebbf7992afaf87a9360eb780",
+  "script_sha256": "32691792627c55fe1990a462cd6669bad5e6f301bc4ca02debdd3f1af0c9e03b"
+}

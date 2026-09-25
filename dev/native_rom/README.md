@@ -2383,6 +2383,20 @@ agreement on this row, but no converged coefficient limit has been shown.
 This short-start probe shares the historical model and does not replace the
 separate NR overlap tests or demonstrate the behavior at their start frequency.
 
+The [strong aligned-spin derivative-only NQC pilot](evidence/2026-09-25/source_aligned_derivative_only_pilot.json)
+uses a [frozen plan](evidence/2026-09-25/source_aligned_derivative_only_pilot_plan.json)
+on the captured source trajectory at a fixed match event. It changes only the
+first and second derivative rows of the NQC matching system, replacing the
+historical GSL spline values with derivatives from an independently integrated
+source vector field. At the `0.1 M` stencil, the coefficient changes are
+`[-2.854, +28.282, -34.269, -0.0619, +3.521]` for
+`[a1,a2,a3,b1,b2]`. The two integration tolerances agree on the derivative
+rows within `4.0e-9`, but the coefficient difference between the preselected
+`0.1` and `0.2 M` stencils is `0.02649`, **failing** the frozen `0.01`
+convergence gate. The amplitude matrix condition number is about `5.63e4`.
+This coefficient-level result does not replay a waveform or ringdown, establish
+a converged derivative prescription, or qualify the model for release.
+
 1. Qualify the physical generator against the published equations and independent
    references over the intended domain, resolve convention/provenance gaps, and
    establish gradients and numerical convergence. This runner covers only scalar
