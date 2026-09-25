@@ -194,5 +194,5 @@ def test_new_modes_batch_float32_device(device):
     assert hp.shape == (2, 6)
     assert hc.shape == (2, 6)
     assert hp.dtype == torch.complex64
-    assert all(value[0].device == device for value in modes.values())
+    assert all(tensor.device == f.device for pair in modes.values() for tensor in pair)
     assert torch.isfinite(hp).all() and torch.isfinite(hc).all()
