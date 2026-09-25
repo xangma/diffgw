@@ -1666,6 +1666,23 @@ matrix has condition number about `9,991`, so small input differences are
 strongly amplified. This is a source-cadence attribution, not proof of a
 converged NQC method or an explanation for the wheel's own coefficient drift.
 
+The [prospective q4 local-fit control](evidence/2026-09-25/source_q4_ultrafine_local_nqc_plan.json)
+recomputes those five coefficients with the same degree-four, `±2 M` local
+polynomial used in the earlier combined numerical control, then injects each
+fit into the pinned full source generator. The [evidence](evidence/2026-09-25/source_q4_ultrafine_local_nqc.json)
+decomposes the original aligned GSL coefficient change: the amplitude-system
+matrix term has L2 `0.1974` versus `0.00988` from its right-hand-side term.
+The local-fit adjacent coefficient difference is `0.000365`, down from
+`0.210974` for GSL. At `0.015625 M`, its source/wheel fitted full-mode L2
+falls from `0.001425` to `0.000495`; at `0.03125 M`, it rises slightly from
+`5.55e-5` to `6.58e-5`. The two locally fitted source modes still differ by
+`0.000505` across output cadences. Holding the fine-grid coefficients fixed
+on both runs gives `0.000508`, with the remaining difference present before
+attachment (`0.000562`). Thus coefficient-fit sensitivity explains much of
+the source/wheel ultrafine discrepancy on one grid, but no longer explains
+the source's full-mode cadence drift after this numerical control. This
+counterfactual is not a historical-source prescription or a release pass.
+
 The [JAX initial-state-to-base-mode gradient check](evidence/2026-09-25/jax_initial_to_base_mode_gradient.json)
 uses a [frozen q4 plan](evidence/2026-09-25/jax_initial_to_base_mode_gradient_plan.json)
 and the development-only traceable quasicircular solve. The solve reproduces
