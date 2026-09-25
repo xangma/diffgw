@@ -63,18 +63,44 @@ adapter explicitly uses Newtonian \(L=\eta/v\). The
 [scalar tests](https://github.com/xangma/diffgw/blob/main/tests/test_xp_msa_regularized_beta_reference.py) and
 [JAX tests](https://github.com/xangma/diffgw/blob/main/tests/test_jax_msa_physical_beta.py) check exact and tiny
 transverse spins, reversed \(J\), zero-\(J\) handling, JIT, batching, and
-selected derivatives. They establish this opening-angle component, not a
-whole-waveform JAX implementation or physical validation.
+selected derivatives. They establish this opening-angle component independently
+of either waveform frontend; they do not establish physical validation.
 
 The [Torch XP adapter](https://github.com/xangma/diffgw/blob/main/src/torchwave/approximants/imrphenom_xp.py)
 uses `boundary="physical"` for its supported v223/convention 0, 1, or 6,
 `final_spin_mod=3` clean route. It passes the Appendix C observer azimuth as
 `phic-phi0`; convention 6 applies its output phase after projection.
 Generic two-spin inputs at nonzero `phi0` still use the inherited rotation:
-their clean angle transport is not yet validated for that azimuth. The public
-JAX XP dispatcher also remains on its inherited route. Opposed-\(J\) rows
-retain the existing guard. Thus the physical limit is a scoped Torch XP
-behavior, not a claim of complete Torch/JAX or LAL parity.
+their clean angle transport is not yet validated for that azimuth. Opposed-\(J\)
+rows retain the existing guard. The physical limit is a scoped XP behavior,
+not a claim of complete precession-domain or LAL parity.
+
+The [public JAX XP adapter](https://github.com/xangma/diffgw/blob/main/src/jaxwave/approximants/imrphenom_xp.py)
+selects the constant-spin MSA limit when either spin has exactly zero
+transverse components, for v223, conventions 0/1/6, and
+`final_spin_mod=3`. Its
+[intrinsic kernel](https://github.com/xangma/diffgw/blob/main/src/jaxwave/approximants/precession_msa_v223_zero_nutation.py)
+uses the constant-spin reduction of [Chatziioannou et al., Eqs. (41), (45),
+(65) and Appendices D/F](https://arxiv.org/abs/1703.03967v3) for secular
+angles and the MSA remnant prescription. The opening uses the unsplit
+Pratten Eq. (17) spin vector above. The
+[projection](https://github.com/xangma/diffgw/blob/main/src/jaxwave/approximants/precession_msa_v223_one_spin_projection.py)
+combines the source geometry from Pratten Appendix C, the quadrupole rotation
+from Eqs. (8)–(13), and the declared v223/Table-IV chart choices. Public
+`phic-phi0` supplies the source azimuth, and convention 6 rotates the
+completed strain by \(e^{2i\,\mathrm{phic}}\). Generic two-spin and
+opposed-\(J\) rows retain inherited JAX behavior. Zero-frequency bins are
+evaluated at a safe positive frequency and then masked to zero.
+
+The [JAX public-route tests](https://github.com/xangma/diffgw/blob/main/tests/test_jax_public_xp_zero_nutation.py)
+compare selected complete complex polarizations with the Torch physical
+route, including exact and tiny transverse spin, mass exchange, equal mass,
+nonzero `phi0`, conventions 0/1/6, zero bins, batching, JIT, and a selected
+gradient. The [intrinsic tests](https://github.com/xangma/diffgw/blob/main/tests/test_jax_clean_v223_zero_nutation.py)
+separately compare secular angles and remnant with Torch and the physical
+opening with the scalar reference. These checks verify the scoped JAX
+implementation against its declared equations and Torch composition; they do
+not qualify generic two-spin dispatch or establish physical accuracy.
 
 The same endpoint must also satisfy the minimal-rotation relation
 \(d\gamma=-\cos\beta\,d\alpha\) in
