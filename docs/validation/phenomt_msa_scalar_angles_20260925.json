@@ -1,11 +1,11 @@
 {
-  "generated_utc": "2026-09-25T11:25:01.878428+00:00",
+  "generated_utc": "2026-09-25T14:58:40.839056+00:00",
   "reproduction": "PYTHONPATH=src python scripts/diagnose_phenomt_msa_scalar_angles.py --case high_mass_ratio --sample-rate 2048 --table-nodes 4097 --output receipt.json",
   "versions": {
     "python": "3.12.7",
-    "numpy": "2.5.2",
-    "scipy": "1.16.3",
-    "torch": "2.13.0",
+    "numpy": "2.4.3",
+    "scipy": "1.18.1",
+    "torch": "2.14.0",
     "lalsimulation": "6.2.1"
   },
   "dtype": "float64",
@@ -49,6 +49,44 @@
       "coarse_nodes": 2065,
       "interpolation": "shape-preserving piecewise cubic; alpha and gamma unwrapped",
       "meco_local_spacing_seconds": 2e-06
+    },
+    "analytical_angle_onset": {
+      "scope": "PV22300 samples strictly before MECO; no MECO, peak, ringdown, or numerical-gamma rule applies",
+      "samples": 5326,
+      "first_time_seconds": -2.629817046,
+      "last_time_seconds": -0.02971938974999988,
+      "initial_absolute_rotation_radians": 1.5422580610181325,
+      "relative_rotation_max_radians": 0.016225773146821276,
+      "relative_rotation_final_radians": 0.016225773146821276,
+      "first_relative_rotation_crossings": {
+        "0.0001": {
+          "sample_index": 65,
+          "time_seconds": -2.59807876475,
+          "elapsed_from_first_sample_seconds": 0.03173828125,
+          "relative_rotation_radians": 0.0001015728756882755,
+          "alpha_anchored_residual_radians": 0.00016981101021684708,
+          "beta_residual_radians": 0.000946704183627578,
+          "gamma_anchored_residual_radians": -0.00015188343031535823
+        },
+        "0.001": {
+          "sample_index": 1494,
+          "time_seconds": -1.9003248584999999,
+          "elapsed_from_first_sample_seconds": 0.7294921875,
+          "relative_rotation_radians": 0.0010021190559491048,
+          "alpha_anchored_residual_radians": -0.00498738256166309,
+          "beta_residual_radians": 0.0006919547325224817,
+          "gamma_anchored_residual_radians": 0.004781242417744913
+        },
+        "0.01": {
+          "sample_index": 5241,
+          "time_seconds": -0.07073501474999988,
+          "elapsed_from_first_sample_seconds": 2.55908203125,
+          "relative_rotation_radians": 0.010041286837382557,
+          "alpha_anchored_residual_radians": -0.03414451601173951,
+          "beta_residual_radians": -0.006073373892626882,
+          "gamma_anchored_residual_radians": 0.03045376330203675
+        }
+      }
     },
     "table_convergence": {
       "22300": {

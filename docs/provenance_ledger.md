@@ -349,8 +349,12 @@ Model-specific formulations, reference configurations and limitations are descri
   tangent transport, and Euler reconstruction without native trajectory
   helpers. `diffgw_reference/phenomt_angle_continuation.py` independently
   implements the minimal-rotation, MECO, and ringdown scalar rules. The q=10
-  receipts retain the failed whole-waveform gates and introduce no production
-  equation change or coefficient fitted to public binary output.
+  receipts retain the failed whole-waveform gates. Full-grid onset checks
+  localize PV223 before MECO to the raw analytical angles and PV300/FS4 after
+  the reference event to trajectory evolution, while excluding continuation,
+  ringdown, event placement, and angle reconstruction as the earliest causes.
+  They introduce no production equation change or coefficient fitted to public
+  binary output.
 - Verification: LALSimulation is used only through its installed binary
   Python bindings as an optional black-box oracle. No coefficients or
   residuals are fitted to those outputs, and no GPL implementation source

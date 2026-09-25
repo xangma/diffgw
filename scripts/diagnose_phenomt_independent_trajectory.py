@@ -3,9 +3,9 @@
 The carrier is the only production input to the reference path.  Its scalar
 ``v(t/M)`` values drive the paper-derived mpmath RHS, a SciPy Brent event root,
 adaptive DOP853 evolution, tangent transport, and independent Euler-angle
-reconstruction.  Public LAL binaries are sampled only for the initial
-spin-parity diagnostic; no implementation source is inspected and no binary
-output is fitted or translated into production equations.
+reconstruction.  Public LAL binaries supply only unmodified initial-rate and
+relative-trajectory observations; no implementation source is inspected and
+no binary output is fitted or translated into production equations.
 """
 
 from __future__ import annotations
@@ -22,6 +22,7 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 sys.path.insert(0, str(ROOT / "src"))
 
+import lal
 import lalsimulation as ls
 import numpy as np
 import scipy
@@ -51,6 +52,111 @@ def _rotation_distance(left, right):
 
 def _relative_rotations(rotations):
     return np.swapaxes(rotations[0], -1, -2) @ rotations
+
+
+def _first_threshold_crossings(times, values, thresholds):
+    times = np.asarray(times, dtype=float)
+    values = np.asarray(values, dtype=float)
+    if times.ndim != 1 or values.shape != times.shape or len(times) == 0:
+        raise ValueError("threshold inputs must be nonempty one-dimensional arrays")
+    result = {}
+    for threshold in thresholds:
+        indices = np.flatnonzero(values >= threshold)
+        if len(indices) == 0:
+            result[f"{threshold:g}"] = None
+            continue
+        index = int(indices[0])
+        result[f"{threshold:g}"] = dict(
+            sample_offset=index,
+            time_seconds=float(times[index]),
+            elapsed_from_reference_seconds=float(times[index] - times[0]),
+            value_radians=float(values[index]),
+        )
+    return result
+
+
+def _public_numerical_rotations(case, rate):
+    m1, m2, spin1, spin2, inclination, phase, fref = CASES[case]
+    options = lal.CreateDict()
+    ls.SimInspiralWaveformParamsInsertPhenomXPrecVersion(options, 300)
+    ls.SimInspiralWaveformParamsInsertPhenomXPFinalSpinMod(options, 4)
+    modes, alpha, cosbeta, gamma, _ = ls.SimIMRPhenomTPHM_CoprecModes(
+        m1 * lal.MSUN_SI,
+        m2 * lal.MSUN_SI,
+        *spin1,
+        *spin2,
+        100e6 * lal.PC_SI,
+        inclination,
+        1 / rate,
+        20.0,
+        fref,
+        phase,
+        options,
+        1,
+    )
+    mode = ls.SphHarmTimeSeriesGetMode(modes, 2, 2)
+    times = float(mode.epoch) + mode.deltaT * np.arange(mode.data.length)
+    for series in (alpha, cosbeta, gamma):
+        if (
+            series.data.length != len(times)
+            or series.deltaT != mode.deltaT
+            or series.epoch != mode.epoch
+        ):
+            raise RuntimeError("public angle grids are inconsistent")
+    rotations = rotation_matrix(
+        alpha.data.data,
+        np.arccos(np.clip(cosbeta.data.data, -1, 1)),
+        gamma.data.data,
+    )
+    return times, rotations
+
+
+def _public_trajectory_comparison(case, rate, trajectory, total_seconds, basis):
+    public_times, public_rotations = _public_numerical_rotations(case, rate)
+    reference_seconds = trajectory.reference_time * total_seconds
+    clock_shift = reference_seconds - public_times[0]
+    independent_times = public_times + clock_shift
+    tolerance = 16 * np.finfo(float).eps * max(1.0, abs(reference_seconds))
+    use = (
+        (public_times < 0)
+        & (independent_times >= reference_seconds - tolerance)
+        & (independent_times <= tolerance)
+    )
+    if not np.any(use) or not use[0]:
+        raise RuntimeError("public inspiral does not cover the independent reference event")
+    query = np.clip(independent_times[use] / total_seconds, trajectory.reference_time, 0.0)
+    independent_states = trajectory.evaluate(query)
+    independent_rotations = rotation_matrix(*euler_angles(independent_states, basis))
+    independent_relative = _relative_rotations(independent_rotations)
+    public_relative = np.swapaxes(public_rotations[0], -1, -2) @ public_rotations[use]
+    triad_error = _rotation_distance(independent_relative, public_relative)
+    axis_chord = np.linalg.norm(
+        independent_relative[..., 2] - public_relative[..., 2], axis=-1
+    ) / 2
+    axis_error = 2 * np.arcsin(np.clip(axis_chord, 0, 1))
+    selected_public_times = public_times[use]
+    return dict(
+        public_model_options=dict(precession_version=300, final_spin_mod=4),
+        alignment=(
+            "The first public sample and the independently solved carrier event are both "
+            "the supplied f_ref event; R(first)^T R(t) removes their fixed initial frames. "
+            "No fitted time shift, phase, or rotation is used."
+        ),
+        samples=int(np.count_nonzero(use)),
+        public_epoch_seconds=float(public_times[0]),
+        independent_reference_time_seconds=float(reference_seconds),
+        event_clock_shift_seconds=float(clock_shift),
+        initial_triad_error_radians=float(triad_error[0]),
+        max_axis_error_radians=float(np.max(axis_error)),
+        rms_axis_error_radians=float(np.sqrt(np.mean(axis_error**2))),
+        final_axis_error_radians=float(axis_error[-1]),
+        max_triad_error_radians=float(np.max(triad_error)),
+        rms_triad_error_radians=float(np.sqrt(np.mean(triad_error**2))),
+        final_triad_error_radians=float(triad_error[-1]),
+        first_triad_error_crossings=_first_threshold_crossings(
+            selected_public_times, triad_error, (1e-4, 1e-3, 1e-2, 1e-1)
+        ),
+    )
 
 
 def _invariants(states):
@@ -230,6 +336,9 @@ def diagnose(case, samples, sample_rate):
                 _relative_rotations(native_rotation_from_reference),
             ))),
         ),
+        public_binary_minus_independent_trajectory=_public_trajectory_comparison(
+            case, sample_rate, tight, total_seconds, basis
+        ),
         initial_spin_even_rate=_initial_even_rate(m1, m2, spin1, fref, sample_rate),
     )
 
@@ -260,7 +369,10 @@ def main():
         dtype="float64 with 50-decimal mpmath scalar RHS",
         parameters=parameters(args.case),
         conventions=dict(
-            reference="Published equations only; public binary used solely as an unmodified initial-rate observation.",
+            reference=(
+                "Published equations only; public binary used as an unmodified initial-rate and "
+                "relative-trajectory observation."
+            ),
             production="No production equation or coefficient is modified by this diagnostic.",
             source_restriction="No LAL implementation source is inspected or translated; no binary output is fitted.",
         ),
