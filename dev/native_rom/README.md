@@ -962,8 +962,16 @@ source fidelity, numerical convergence, or waveform release qualification.
 The [development-only JAX full-series orbital-peak rule](eob/jax/numerical_attachment_clean.py)
 now follows the Torch numerical route's first non-increasing sample and
 derivative-sign-product contraction. Synthetic curved and plateau series
-match Torch in value, curvature, and sample index. The rule is not yet wired
-into a JAX numerical attachment or checked on physical fine trajectories.
+match Torch in value, curvature, and sample index. A
+[frozen physical fine-peak comparison](evidence/2026-09-25/jax_numerical_peak_physical_plan.json)
+also passes on the [mixed-spin pilot](evidence/2026-09-25/jax_numerical_peak_physical_high_start_mixed_spin.json)
+and prospective [q=4](evidence/2026-09-25/jax_numerical_peak_physical_q4_nonspinning.json),
+[aligned](evidence/2026-09-25/jax_numerical_peak_physical_strong_aligned.json),
+and [antialigned](evidence/2026-09-25/jax_numerical_peak_physical_strong_antialigned.json)
+cases. The peak time and sample index agree exactly at the frozen bisection
+tolerance, whether JAX evaluates the Torch fine series or its separately
+integrated fine series; the largest end-to-end peak-frequency difference is
+`2.84e-15`. This rule is not yet wired into JAX numerical NQC or ringdown.
 
 The published construction uses SVD bases and tensor-product cubic splines for
 parameter coefficients, as described by

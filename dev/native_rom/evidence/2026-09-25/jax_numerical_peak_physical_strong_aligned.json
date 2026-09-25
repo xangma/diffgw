@@ -1,0 +1,69 @@
+{
+  "case_id": "strong_aligned",
+  "checks": {
+    "all_sample_indices_equal": true,
+    "end_to_end_curvature_abs_at_most": true,
+    "end_to_end_frequency_abs_at_most": true,
+    "end_to_end_peak_time_abs_M_at_most": true,
+    "fine_frequency_max_abs_at_most": true,
+    "same_input_curvature_abs_at_most": true,
+    "same_input_frequency_abs_at_most": true,
+    "same_input_peak_time_abs_M_at_most": true
+  },
+  "comparison": {
+    "end_to_end_curvature_abs": 2.281500075668186e-12,
+    "end_to_end_frequency_abs": 5.551115123125783e-17,
+    "end_to_end_peak_time_abs_M": 0.0,
+    "fine_frequency_max_abs": 1.734723475976807e-14,
+    "same_input_curvature_abs": 0.0,
+    "same_input_frequency_abs": 0.0,
+    "same_input_peak_time_abs_M": 0.0
+  },
+  "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+  "diagnostic_checks_passed": true,
+  "elapsed_s": 56.0977764580166,
+  "host": "RONI2",
+  "input": {
+    "atol": 1e-10,
+    "case_parameters": [
+      30.0,
+      20.0,
+      0.8,
+      0.6,
+      0.04
+    ],
+    "fine_step_M": 0.015625,
+    "initial_state": [
+      8.438425397982904,
+      0.0,
+      -0.005456017593262802,
+      3.295467752685463
+    ],
+    "max_step_M": 2.0,
+    "output_step_M": 0.5,
+    "rtol": 1e-09
+  },
+  "jax_end_to_end": {
+    "curvature": -0.0028073637958116442,
+    "frequency": 0.16927922992265013,
+    "sample_index": 9569,
+    "time_M": 149.51561737060547
+  },
+  "jax_on_torch_samples": {
+    "curvature": -0.0028073637980931443,
+    "frequency": 0.16927922992265018,
+    "sample_index": 9569,
+    "time_M": 149.51561737060547
+  },
+  "pid": 39818,
+  "release_qualified": false,
+  "schema": "diffgw.seobnrv4.jax-numerical-peak-physical.v1",
+  "scope": "Scalar full-series peak rule on Torch fine samples and separately integrated JAX fine samples; no NQC or ringdown",
+  "status": "diagnostic_complete",
+  "torch": {
+    "curvature": -0.0028073637980931443,
+    "frequency": 0.16927922992265018,
+    "sample_index": 9569,
+    "time_M": 149.51561737060547
+  }
+}
