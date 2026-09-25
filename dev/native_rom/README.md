@@ -2110,6 +2110,21 @@ source fit is not a uniform fidelity fix. The remaining trajectory, raw-mode,
 and ringdown differences still need independent convergence and whole-mode
 validation before release qualification.
 
+The [finer-grid q4 NQC fit attribution](evidence/2026-09-25/q4_native_source_nqc_fit_attribution.json)
+uses [frozen inputs](evidence/2026-09-25/q4_native_source_nqc_fit_attribution_plan.json)
+and replays the native pre-fit samples through the same GSL cubic rule and
+targets used to reconstruct the pinned-source fit. With the fitting rule and
+targets held common, the native/source coefficient difference is `0.151` in
+L2. Crossing the amplitude matching systems changes coefficients by `0.111`
+when the source matrix is substituted first, versus `0.0384` when its
+right-hand side is substituted first; the analogous phase changes are
+`0.0221` and `0.00304`. The largest native/source target difference is
+`5.52e-7`, which moves the same-input GSL solution by `0.00215`; GSL with
+native targets differs from the active native fit by `0.00242`. On this row,
+different pre-fit inputs dominate the coefficient gap, especially the
+amplitude matching matrix. This does not yet identify which trajectory or
+raw-mode difference produces those inputs, or certify either fit as converged.
+
 1. Qualify the physical generator against the published equations and independent
    references over the intended domain, resolve convention/provenance gaps, and
    establish gradients and numerical convergence. This runner covers only scalar
