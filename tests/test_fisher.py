@@ -59,9 +59,11 @@ def test_fisher_symmetric_positive_definite():
         hp, _ = get_fd_waveform("TaylorF2", mass1=m1, mass2=m2, distance=dist, sample_frequencies=f)
         return hp
 
+    # At equal masses, exchanging mass1 and mass2 is an exact local
+    # degeneracy, so their two Fisher columns cannot be independent.
     params = {
-        "mass1": 1.4,
-        "mass2": 1.4,
+        "mass1": 1.6,
+        "mass2": 1.2,
         "distance": 100.0,
     }
 

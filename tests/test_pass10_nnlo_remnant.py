@@ -35,7 +35,7 @@ def test_nnlo_final_spin_matches_equations_and_aligned_limit(symmetric_mass_rati
 
 
 def test_nnlo_final_spin_rejects_undefined_zero_parallel_sign(monkeypatch):
-    def zero_aligned_fit(eta, chi1, chi2):
+    def zero_aligned_fit(eta, chi1, chi2, *, spin_vars=None):
         return torch.zeros_like(eta)
 
     monkeypatch.setattr(XASParameterFits, "fit_final_spin", staticmethod(zero_aligned_fit))
@@ -44,7 +44,7 @@ def test_nnlo_final_spin_rejects_undefined_zero_parallel_sign(monkeypatch):
 
 
 def test_nnlo_signed_negative_and_tiny_magnitude(monkeypatch):
-    def tiny_negative_fit(eta, chi1, chi2):
+    def tiny_negative_fit(eta, chi1, chi2, *, spin_vars=None):
         return torch.full_like(eta, -1.0e-8)
 
     monkeypatch.setattr(XASParameterFits, "fit_final_spin", staticmethod(tiny_negative_fit))
@@ -155,8 +155,11 @@ def test_nnlo_version_dispatch_keeps_msa_explicit_versions_distinct(model):
     method_msa_nnlo = instance(frequency, **kwargs, precession_method="msa", prec_version=102)
     method_msa = instance(frequency, **kwargs, precession_method="msa")
     explicit_msa = instance(frequency, **kwargs, prec_version=223)
-    for expected in (explicit_nnlo, method_nnlo, method_msa_nnlo):
-        for actual, reference in zip(expected, default):
+    for expected in (method_nnlo, method_msa_nnlo):
+        for actual, reference in zip(expected, explicit_nnlo):
             torch.testing.assert_close(actual, reference, atol=0.0, rtol=0.0)
     for actual, reference in zip(method_msa, explicit_msa):
+        torch.testing.assert_close(actual, reference, atol=0.0, rtol=0.0)
+    default_version = explicit_msa if model is IMRPhenomXP else explicit_nnlo
+    for actual, reference in zip(default, default_version):
         torch.testing.assert_close(actual, reference, atol=0.0, rtol=0.0)
