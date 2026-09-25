@@ -20,6 +20,7 @@ from torchwave.conversions import (
 from torchwave.approximants.imrphenom_xas import IMRPhenomXAS, XASParameterFits
 from torchwave.approximants.precession_msa import (
     compute_effective_chip,
+    compute_msa_initialization_validity,
     compute_msa_final_spin,
     compute_l_3pn,
     evaluate_msa_precession,
@@ -86,6 +87,10 @@ class IMRPhenomXP(nn.Module):
         zero-nutation route the Appendix-C observer coordinates use
         ``phic-phi0``; the Table-IV convention-6 carrier retains ``phic``.
         Generic two-spin nonzero-azimuth rows keep the established rotation.
+        Exactly equal-mass generic rows use its NNLO angle-and-remnant
+        fallback because the published generic MSA phase coefficients and
+        averaged remnant are singular there; no regularized MSA continuation
+        is used.
         The physical zero-nutation opening removes the auxiliary MSA root
         split from the aligned boundary; the explicit clean v223 helper
         retains its historical binary-compatibility opening by default.
@@ -168,6 +173,15 @@ class IMRPhenomXP(nn.Module):
             and not force_legacy
         )
         legacy_azimuth_rows = (phi_0 != 0) & ~one_spin_aligned
+        legacy_equal_mass_rows = (m1 == m2) & ~one_spin_aligned
+        legacy_degenerate_rows = torch.zeros_like(exact_aligned, dtype=torch.bool)
+        if legacy_equal_mass_rows.dim() == 0 and bool(legacy_equal_mass_rows):
+            # Pratten et al. identify q=1 as a singular MSA initialization
+            # and prescribe the NNLO fallback.  FinalSpinMod=3 uses the same
+            # singular averages, so the complete fallback also selects the
+            # NNLO remnant instead of evaluating an inactive MSA expression.
+            final_spin_mod = 0
+            clean_candidate = False
         guard_unsupported = torch.zeros_like(exact_aligned, dtype=torch.bool)
         if clean_candidate:
             # The clean MSA helper deliberately surfaces the singular
@@ -179,7 +193,11 @@ class IMRPhenomXP(nn.Module):
             with torch.no_grad():
                 guard_m1 = torch.where(m1 >= m2, m1, m2)
                 guard_m2 = torch.where(m1 >= m2, m2, m1)
+                guard_s1x = torch.where(m1 >= m2, s1x, s2x)
+                guard_s1y = torch.where(m1 >= m2, s1y, s2y)
                 guard_s1z = torch.where(m1 >= m2, s1z, s2z)
+                guard_s2x = torch.where(m1 >= m2, s2x, s1x)
+                guard_s2y = torch.where(m1 >= m2, s2y, s1y)
                 guard_s2z = torch.where(m1 >= m2, s2z, s1z)
                 guard_total = guard_m1 + guard_m2
                 guard_n1 = guard_m1 / guard_total
@@ -199,6 +217,24 @@ class IMRPhenomXP(nn.Module):
                     guard_s_ell, guard_sigma_ell,
                 )
                 guard_unsupported = guard_l0 + guard_s_ell <= 0
+                # The generic clean kernel implements the distinct-root MSA
+                # equations.  Use the same published initialization validity
+                # gate as the inherited evaluator and retain its NNLO fallback
+                # when the roots coalesce (including the aligned-limit
+                # instability).  This is a route selection only; no empirical
+                # threshold or oracle-derived coefficient is introduced.
+                guard_msa_valid = compute_msa_initialization_validity(
+                    guard_v0,
+                    guard_m1,
+                    guard_m2,
+                    guard_s1x,
+                    guard_s1y,
+                    guard_s1z,
+                    guard_s2x,
+                    guard_s2y,
+                    guard_s2z,
+                )
+                legacy_degenerate_rows = ~one_spin_aligned & ~guard_msa_valid
                 if convention == 6:
                     # Convention 6 has no exact-aligned carrier bypass: its
                     # established NNLO fallback rejects L+S_parallel <= 0 at
@@ -235,6 +271,7 @@ class IMRPhenomXP(nn.Module):
             # request when either reference or evaluated frequency is opposed.
             legacy_rows = (
                 guard_unsupported | legacy_azimuth_rows
+                | legacy_equal_mass_rows | legacy_degenerate_rows
                 if clean_candidate else exact_aligned
             )
         else:
@@ -248,6 +285,7 @@ class IMRPhenomXP(nn.Module):
             flat = tuple(value.reshape(-1) for value in (
                 m1, m2, s1x, s1y, s1z, s2x, s2y, s2z,
                 dist, inc, phi_c, t_c, phi_0, fref_eval, legacy_rows,
+                legacy_equal_mass_rows,
             ))
             row_outputs = []
             for index in range(m1.numel()):
@@ -264,7 +302,9 @@ class IMRPhenomXP(nn.Module):
                     phasing_convention=phasing_convention,
                     reference_frame=reference_frame,
                     precession_method=precession_method, prec_version=p_ver,
-                    convention=convention, final_spin_mod=final_spin_mod,
+                    convention=convention,
+                    final_spin_mod=(0 if bool(flat[15][index])
+                                    else final_spin_mod),
                     _force_legacy=bool(flat[14][index]),
                 )
                 row_outputs.append((

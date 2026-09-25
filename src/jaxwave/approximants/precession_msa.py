@@ -604,6 +604,48 @@ def evaluate_msa_dynamics(
     return alpha, beta, -epsilon, valid
 
 
+def compute_msa_initialization_validity(
+    v0: jnp.ndarray,
+    m1: jnp.ndarray,
+    m2: jnp.ndarray,
+    s1x: jnp.ndarray,
+    s1y: jnp.ndarray,
+    s1z: jnp.ndarray,
+    s2x: jnp.ndarray,
+    s2y: jnp.ndarray,
+    s2z: jnp.ndarray,
+) -> jnp.ndarray:
+    """Return the published two-spin MSA initialization-validity mask."""
+    (v0, m1, m2, s1x, s1y, s1z, s2x, s2y, s2z) = jnp.broadcast_arrays(
+        v0, m1, m2, s1x, s1y, s1z, s2x, s2y, s2z
+    )
+    total_mass = m1 + m2
+    m1_norm, m2_norm = m1 / total_mass, m2 / total_mass
+    eta = m1_norm * m2_norm
+    delta = m1_norm - m2_norm
+    q_c = m2_norm / m1_norm
+    s1 = jnp.expand_dims(m1_norm**2, -1) * jnp.stack(
+        (s1x, s1y, s1z), axis=-1
+    )
+    s2 = jnp.expand_dims(m2_norm**2, -1) * jnp.stack(
+        (s2x, s2y, s2z), axis=-1
+    )
+    s1_sq = (s1 * s1).sum(axis=-1)
+    s2_sq = (s2 * s2).sum(axis=-1)
+    s0_sq = ((s1 + s2) ** 2).sum(axis=-1)
+    xi = (1.0 + q_c) * s1[..., 2] + (1.0 + 1.0 / q_c) * s2[..., 2]
+    l0 = eta / v0
+    j0_sq = l0 * l0 + 2.0 * l0 * (s1[..., 2] + s2[..., 2]) + s0_sq
+    _, sm_sq, sp_sq, roots_valid = solve_spin_roots(
+        l0, j0_sq, s1_sq, s2_sq, xi, q_c, eta, delta
+    )
+    sav0_sq = (sp_sq + sm_sq) / 2.0
+    c10 = v0 * (j0_sq - l0 * l0 - sav0_sq) / 2.0
+    cp0 = eta * eta * sp_sq - c10 * c10
+    cm0 = eta * eta * sm_sq - c10 * c10
+    return roots_valid & (s1_sq > 0) & (s2_sq > 0) & (cp0 > 0) & (cm0 > 0)
+
+
 def compute_msa_averaged_couplings(
     v0: jnp.ndarray,
     m1: jnp.ndarray,
@@ -992,6 +1034,7 @@ __all__ = [
     "solve_spin_roots",
     "evaluate_msa_dynamics",
     "compute_msa_averaged_couplings",
+    "compute_msa_initialization_validity",
     "compute_msa_final_spin_squared",
     "compute_msa_final_spin",
     "evaluate_msa_precession",

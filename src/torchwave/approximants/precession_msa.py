@@ -506,6 +506,39 @@ def evaluate_msa_dynamics(v, v0, eta, delta, q_c, s1, s2, l_pn,
     return alpha,beta,-epsilon,valid
 
 
+def compute_msa_initialization_validity(v0, m1, m2, s1x, s1y, s1z,
+                                        s2x, s2y, s2z):
+    """Return the published two-spin MSA initialization-validity mask."""
+    (v0, m1, m2, s1x, s1y, s1z, s2x, s2y, s2z) = torch.broadcast_tensors(
+        v0, m1, m2, s1x, s1y, s1z, s2x, s2y, s2z
+    )
+    total_mass = m1 + m2
+    m1_norm, m2_norm = m1 / total_mass, m2 / total_mass
+    eta = m1_norm * m2_norm
+    delta = m1_norm - m2_norm
+    q_c = m2_norm / m1_norm
+    s1 = m1_norm.square().unsqueeze(-1) * torch.stack(
+        (s1x, s1y, s1z), dim=-1
+    )
+    s2 = m2_norm.square().unsqueeze(-1) * torch.stack(
+        (s2x, s2y, s2z), dim=-1
+    )
+    s1_sq = (s1 * s1).sum(dim=-1)
+    s2_sq = (s2 * s2).sum(dim=-1)
+    s0_sq = ((s1 + s2) ** 2).sum(dim=-1)
+    xi = (1 + q_c) * s1[..., 2] + (1 + 1 / q_c) * s2[..., 2]
+    l0 = eta / v0
+    j0_sq = l0 * l0 + 2 * l0 * (s1[..., 2] + s2[..., 2]) + s0_sq
+    _, sm_sq, sp_sq, roots_valid = solve_spin_roots(
+        l0, j0_sq, s1_sq, s2_sq, xi, q_c, eta, delta
+    )
+    sav0_sq = (sp_sq + sm_sq) / 2
+    c10 = v0 * (j0_sq - l0 * l0 - sav0_sq) / 2
+    cp0 = eta * eta * sp_sq - c10 * c10
+    cm0 = eta * eta * sm_sq - c10 * c10
+    return roots_valid & (s1_sq > 0) & (s2_sq > 0) & (cp0 > 0) & (cm0 > 0)
+
+
 def compute_msa_averaged_couplings(v0, m1, m2, s1x, s1y, s1z,
                                    s2x, s2y, s2z):
     """Return the MSA couplings needed by the precession-averaged remnant.

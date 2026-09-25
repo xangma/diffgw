@@ -24,6 +24,7 @@ from jaxwave.conversions import (
 from jaxwave.approximants.imrphenom_xas import IMRPhenomXAS, XASParameterFits
 from jaxwave.approximants.precession_msa import (
     compute_effective_chip,
+    compute_msa_initialization_validity,
     compute_msa_final_spin,
     compute_l_3pn,
     evaluate_msa_precession,
@@ -246,7 +247,15 @@ class IMRPhenomXP:
             delta = n1 - n2
             v_ref = (PI * total * MSUN_SEC * clean_fref) ** (1.0 / 3.0)
             j_ref = _opening_l_3pn(v_ref, eta, delta, spin_l, sigma_l) + spin_l
-            generic = (~one_spin) & (m1 != m2) & (phi_0 == 0.0)
+            msa_valid = compute_msa_initialization_validity(
+                v_ref, m1, m2, s1x, s1y, s1z, s2x, s2y, s2z
+            )
+            # The clean two-spin kernel requires distinct MSA roots.  Reuse
+            # the inherited initialization validity gate so coalescing-root
+            # rows take the published NNLO fallback.
+            generic = (
+                (~one_spin) & (m1 != m2) & (phi_0 == 0.0) & msa_valid
+            )
             use_clean = (one_spin | generic) & (j_ref > 0.0) & (clean_fref > 0.0)
             if convention == 6:
                 f_guard = jnp.where(
@@ -300,18 +309,35 @@ class IMRPhenomXP:
                             jnp.where(f_source > 0.0, hc, 0.0j))
 
                 def legacy(_):
-                    return IMRPhenomXP.evaluate(
-                        f=f_source, mass1=r_m1, mass2=r_m2,
-                        spin1x=r_s1x, spin1y=r_s1y, spin1z=r_s1z,
-                        spin2x=r_s2x, spin2y=r_s2y, spin2z=r_s2z,
-                        distance=r_dist, inclination=r_inc,
-                        phic=r_phi, tc=r_time,
-                        f_ref=r_fref if fref is not None else None,
-                        phi0=r_phi0, phasing_convention=phasing_convention,
-                        reference_frame=reference_frame,
-                        precession_method=precession_method, prec_version=p_ver,
-                        convention=convention, final_spin_mod=final_spin_mod,
-                        _force_legacy=True,
+                    one_spin_row = (
+                        ((r_s1x == 0.0) & (r_s1y == 0.0))
+                        | ((r_s2x == 0.0) & (r_s2y == 0.0))
+                    )
+                    equal_mass_generic = (r_m1 == r_m2) & ~one_spin_row
+
+                    def established(final_spin):
+                        return IMRPhenomXP.evaluate(
+                            f=f_source, mass1=r_m1, mass2=r_m2,
+                            spin1x=r_s1x, spin1y=r_s1y, spin1z=r_s1z,
+                            spin2x=r_s2x, spin2y=r_s2y, spin2z=r_s2z,
+                            distance=r_dist, inclination=r_inc,
+                            phic=r_phi, tc=r_time,
+                            f_ref=r_fref if fref is not None else None,
+                            phi0=r_phi0, phasing_convention=phasing_convention,
+                            reference_frame=reference_frame,
+                            precession_method=precession_method,
+                            prec_version=p_ver, convention=convention,
+                            final_spin_mod=final_spin, _force_legacy=True,
+                        )
+
+                    # The q=1 MSA phase and averaged-remnant expressions are
+                    # both singular.  The documented NNLO angle fallback must
+                    # therefore carry its NNLO remnant as well.
+                    return jax.lax.cond(
+                        equal_mass_generic,
+                        lambda _: established(0),
+                        lambda _: established(final_spin_mod),
+                        operand=None,
                     )
 
                 return jax.lax.cond(r_clean, clean, legacy, operand=None)

@@ -261,16 +261,34 @@ future work. These results support a separately implemented precession solver;
 they do not provide the missing scalar v223 root/phase/chart continuation or
 the generic nonzero-`phi0` transport.
 
-No production correction is adopted here. The papers specify the cubic,
-elliptic phase and chart, but do not specify a float64 small-misalignment
-expansion that preserves the generic branch through the root reordering.
-Pratten's minimal-rotation Eq. (7) fixes the exact aligned endpoint, while
-Chatziioannou Appendix E explicitly identifies the near-aligned PN expansion
-as ill-conditioned and suggests a dedicated expansion. Substituting Eq. (51),
-clipping the cubic argument, or forcing the aligned chart is not a sourced
-generic continuation. Consequently the merged one-spin/aligned route and the
-generic inherited nonzero-`phi0` dispatch remain unchanged, and both strict
-xfails retain their $10^{-6}$ threshold.
+The papers do not specify a float64 small-misalignment expansion that
+preserves the generic MSA branch through the root reordering. Pratten's
+minimal-rotation Eq. (7) fixes the exact aligned endpoint, while Chatziioannou
+Appendix E identifies the near-aligned PN expansion as ill-conditioned and
+suggests a dedicated expansion. Substituting Eq. (51), clipping the cubic
+argument, or forcing the aligned chart is therefore not a sourced generic
+continuation.
+
+The boundary qualification adopts the narrower behavior that Pratten et al.
+state for failed MSA initialization: use the established NNLO prescription.
+Production now applies the existing MSA root-validity result at the reference
+frequency before selecting the distinct-root clean kernel. Invalid
+coalescing-root rows use the inherited NNLO angle route. Generic equal-mass
+rows also use the NNLO remnant because both the MSA phase coefficients and
+the precession-averaged remnant contain the singular equal-mass
+parameterization. This introduces neither a new numerical threshold nor an
+oracle-fitted coefficient and does not claim an MSA continuation. The generic
+nonzero-`phi0` dispatch remains unchanged pending an independently derived
+source-frame mapping.
+
+For the up-down fixture above, the corrected Torch/JAX waveform residuals are
+below $3.21\times10^{-14}$ relative L2 across both tested bands, while the
+tiny-spin waveform is below $4.35\times10^{-11}$ from exact alignment. The
+former expected-failure continuity cases are therefore strict passing tests
+at the unchanged $10^{-6}$ threshold. These are internal paper-route and
+cross-frontend results, not external release qualification: the installed LAL
+binary follows a different boundary behavior and fails the strict full-complex
+waveform gate, as recorded by `scripts/qualify_xp_xphm_boundaries.py`.
 
 The executable gates are in
 [`test_xp_v223_generic_boundary_math_reference.py`](https://github.com/xangma/diffgw/blob/main/tests/test_xp_v223_generic_boundary_math_reference.py).

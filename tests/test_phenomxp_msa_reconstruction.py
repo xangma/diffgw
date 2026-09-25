@@ -152,9 +152,8 @@ def test_xp_two_spin_aligned_reference_frequency_control():
 @pytest.mark.parametrize(
     "f_max", (55.0, 300.0), ids=("before-instability", "crosses-instability"),
 )
-@pytest.mark.xfail(strict=True, reason="generic two-spin near-aligned continuation is unresolved")
-def test_xp_two_spin_near_aligned_continuity_pending(f_max):
-    """Track pre-band phase error separately from the in-band root crossing."""
+def test_xp_two_spin_near_aligned_nnlo_fallback_continuity(f_max):
+    """Require the invalid-MSA NNLO fallback on both sides of the instability."""
     f = torch.linspace(25.0, f_max, 128, dtype=torch.float64)
     params = dict(f=f, mass1=36.0, mass2=22.0, distance=150.0,
                   inclination=0.65, phic=0.3, f_ref=40.0,

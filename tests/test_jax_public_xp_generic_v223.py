@@ -3,7 +3,8 @@
 Pratten et al. (arXiv:2004.06503v2), Eqs. (8)--(13), Appendix C give the
 rotation and observer projection.  Chatziioannou et al. (arXiv:1703.03967v3)
 give the unequal-mass two-spin nutation equations.  Equal-mass generic rows
-retain the inherited route until a separate limit is derived.
+and coalescing-root initializations use the published NNLO fallback rather
+than an unvalidated MSA continuation.
 """
 
 import numpy as np
@@ -75,7 +76,7 @@ def test_helper_masks_zero_bin_before_intrinsic_phase_and_passes_options(monkeyp
         assert np.all(np.isfinite(np.asarray(state[name])))
 
 
-def test_equal_mass_and_nonzero_azimuth_generic_rows_keep_legacy_route():
+def test_equal_mass_and_nonzero_azimuth_generic_rows_keep_declared_fallback():
     f = jnp.asarray([0., 25., 40., 80.])
     for params in (
         dict(CASES[0], mass1=25., mass2=25., phi0=0.),
@@ -84,12 +85,49 @@ def test_equal_mass_and_nonzero_azimuth_generic_rows_keep_legacy_route():
         params = dict(params, distance=150., inclination=.7, phic=.3,
                       f_ref=20., prec_version=223, convention=1,
                       final_spin_mod=3)
+        equal_mass = params["mass1"] == params["mass2"]
+        fallback = dict(
+            params,
+            final_spin_mod=0 if equal_mass else params["final_spin_mod"],
+            _force_legacy=True,
+        )
         actual = JAXXP.evaluate(f, **params)
-        legacy = JAXXP.evaluate(f, **dict(params, _force_legacy=True))
-        for left, right in zip(actual, legacy):
+        legacy = JAXXP.evaluate(f, **fallback)
+        torch_f = torch.tensor(np.asarray(f), dtype=torch.float64)
+        torch_actual = TorchXP()(torch_f, **params)
+        torch_legacy = TorchXP()(torch_f, **fallback)
+        for left, right, torch_left, torch_right in zip(
+            actual, legacy, torch_actual, torch_legacy,
+        ):
             np.testing.assert_allclose(np.asarray(left), np.asarray(right),
                                        rtol=1e-12, atol=0.)
+            torch.testing.assert_close(torch_left, torch_right, rtol=1e-12, atol=0.)
+            assert _relative_l2(left, torch_left.detach().numpy()) < 2e-10
             assert np.all(np.isfinite(np.asarray(left)))
+
+
+def test_near_aligned_coalescing_roots_use_nnlo_fallback():
+    f = jnp.asarray([25., 40., 55., 80.])
+    params = dict(
+        mass1=36., mass2=22., spin1x=1e-10, spin1y=0., spin1z=.35,
+        spin2x=-5e-11, spin2y=0., spin2z=-.25, distance=150.,
+        inclination=.65, phic=.3, f_ref=40., phi0=0., prec_version=223,
+        convention=1, final_spin_mod=3,
+    )
+    fallback = dict(params, _force_legacy=True)
+    actual = JAXXP.evaluate(f, **params)
+    legacy = JAXXP.evaluate(f, **fallback)
+    torch_f = torch.tensor(np.asarray(f), dtype=torch.float64)
+    torch_actual = TorchXP()(torch_f, **params)
+    torch_legacy = TorchXP()(torch_f, **fallback)
+    for left, right, torch_left, torch_right in zip(
+        actual, legacy, torch_actual, torch_legacy,
+    ):
+        np.testing.assert_allclose(np.asarray(left), np.asarray(right),
+                                   rtol=1e-12, atol=0.)
+        torch.testing.assert_close(torch_left, torch_right, rtol=1e-12, atol=0.)
+        assert _relative_l2(left, torch_left.detach().numpy()) < 2e-10
+        assert np.all(np.isfinite(np.asarray(left)))
 
 
 def test_generic_jit_mixed_batch_and_spin_gradient_match_torch():
@@ -116,7 +154,7 @@ def test_generic_jit_mixed_batch_and_spin_gradient_match_torch():
         hp, hc = JAXXP.evaluate(f, **dict(CASES[0], spin1x=sx), **common)
         return 1e44 * jnp.sum(jnp.abs(hp)**2 + jnp.abs(hc)**2)
     sx = torch.tensor(.2, dtype=torch.float64, requires_grad=True)
-    thp, thc = TorchXP()(torch.as_tensor(np.asarray(f), dtype=torch.float64),
+    thp, thc = TorchXP()(torch.tensor(np.asarray(f), dtype=torch.float64),
                          **dict(CASES[0], spin1x=sx), **common)
     torch_loss = 1e44 * (thp.abs().square() + thc.abs().square()).sum()
     torch_gradient = torch.autograd.grad(torch_loss, sx)[0].detach().numpy()
