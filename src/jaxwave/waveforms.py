@@ -13,6 +13,7 @@ from diffgw_core.constants import (
     MSUN_SEC,
     PI,
 )
+from diffgw_core.catalog import list_approximants as list_approximants
 from jaxwave.conversions import (
     as_array,
     component_masses_to_chirp_mass,

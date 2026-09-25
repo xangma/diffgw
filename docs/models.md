@@ -96,6 +96,14 @@ checks, frontend consistency, external-reference agreement and physical validati
 The [manifest](model_manifest.json) records selected configurations, not a complete
 support matrix; it does not yet include the T family. Treat a missing check as
 unestablished evidence, not as evidence that generation is unavailable.
+`list_approximants()` is likewise an inventory of callable implementations, not a
+list of release-qualified waveforms. In particular, the manifest records failed
+full-waveform catalog and holdout gates for `IMRPhenomXHM` and `IMRPhenomXPHM`;
+their restricted ringdown-component checks do not qualify the complete models.
+`TaylorF2_HM` lacks an independent higher-mode full-waveform reference, and the
+numerical-precession TP/TPHM option has a documented large-error case in the
+[T-family report](validation/phenomt.md#msa-and-numerical-precession). These
+paths remain development work pending the relevant whole-waveform evidence.
 
 The unvalidated native SEOBNR surrogate, `SEOBNR_ODE` / `SEOBNRv4Published`
 assemblies, `TEOBResumS` waveform, `SpinPrecessionODE` and experimental XHM

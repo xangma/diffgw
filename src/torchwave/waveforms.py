@@ -4,13 +4,17 @@ Permissively licensed (MIT), native PyTorch models with documented literature
 and calibration provenance in docs/provenance_ledger.md.
 """
 
-from typing import Any, Dict, List, Optional, Sequence, Tuple, Union
+from typing import Any, Dict, Optional, Sequence, Tuple, Union
 import math
 import torch
 
 from torchwave.constants import (
     MSUN_SEC,
     PI,
+)
+from diffgw_core.catalog import (
+    CANONICAL_APPROXIMANTS as _CANONICAL_APPROXIMANTS,
+    list_approximants,
 )
 from torchwave.conversions import (
     as_tensor,
@@ -92,91 +96,6 @@ _APPROXIMANTS = {
     "seobnrv4rom": OfficialSEOBNRv4ROM,
     "officialseobnrv4rom": OfficialSEOBNRv4ROM,
 }
-
-
-_CANONICAL_APPROXIMANTS: List[str] = [
-    "TaylorF2",
-    "TaylorF2_HM",
-    "TaylorF2_Eccentric",
-    "IMRPhenomD",
-    "IMRPhenomT",
-    "IMRPhenomTHM",
-    "IMRPhenomTP",
-    "IMRPhenomTPHM",
-    "IMRPhenomD_NRTidal",
-    "IMRPhenomD_NRTidalv2",
-    "IMRPhenomHM",
-    "IMRPhenomXAS",
-    "IMRPhenomXHM",
-    "IMRPhenomP",
-    "IMRPhenomXP",
-    "IMRPhenomXPHM",
-    "IMRPhenomNSBH",
-    "KerrRingdown",
-    "SEOBNRv4_ROM",
-
-]
-
-_APPROXIMANT_CATEGORIES: Dict[str, List[str]] = {
-    "aligned_spin": ["IMRPhenomT", "IMRPhenomTHM", "TaylorF2", "IMRPhenomD", "IMRPhenomXAS", "SEOBNRv4_ROM"],
-    "higher_modes": ["IMRPhenomTHM", "IMRPhenomTPHM", "TaylorF2_HM", "IMRPhenomHM", "IMRPhenomXHM", "IMRPhenomXPHM"],
-    "precessing": ["IMRPhenomTP", "IMRPhenomTPHM", "IMRPhenomP", "IMRPhenomXP", "IMRPhenomXPHM"],
-    "tidal": ["IMRPhenomD_NRTidal", "IMRPhenomD_NRTidalv2", "IMRPhenomNSBH"],
-    "eccentric": ["TaylorF2_Eccentric"],
-    "ringdown": ["KerrRingdown"],
-    "eob": ["SEOBNRv4_ROM"],
-    "frequency_domain": [
-        "TaylorF2",
-        "TaylorF2_HM",
-        "TaylorF2_Eccentric",
-        "IMRPhenomD",
-        "IMRPhenomD_NRTidal",
-        "IMRPhenomD_NRTidalv2",
-        "IMRPhenomHM",
-        "IMRPhenomXAS",
-        "IMRPhenomXHM",
-        "IMRPhenomP",
-        "IMRPhenomXP",
-        "IMRPhenomXPHM",
-        "IMRPhenomNSBH",
-        "KerrRingdown",
-        "SEOBNRv4_ROM",
-    ],
-    "time_domain": ["IMRPhenomT", "IMRPhenomTHM", "IMRPhenomTP", "IMRPhenomTPHM"],
-}
-
-
-def list_approximants(
-    category: Optional[str] = None,
-    by_category: bool = False,
-) -> Union[List[str], Dict[str, List[str]]]:
-    """List available gravitational-wave waveform approximants in TorchWave.
-
-    Parameters
-    ----------
-    category : str, optional
-        Filter by model category: 'aligned_spin', 'higher_modes', 'precessing',
-        'tidal', 'eccentric', 'ringdown', 'eob', 'frequency_domain', 'time_domain'.
-        Defaults to None (all models).
-    by_category : bool, optional
-        If True, returns a dictionary mapping category names to lists of approximant names.
-        Defaults to False.
-
-    Returns
-    -------
-    List[str] or Dict[str, List[str]]
-        List of canonical approximant names, or dict of categories if by_category is True.
-    """
-    if by_category:
-        return {k: list(v) for k, v in _APPROXIMANT_CATEGORIES.items()}
-    if category is not None:
-        cat_key = category.lower().replace("-", "_").replace(" ", "_")
-        if cat_key not in _APPROXIMANT_CATEGORIES:
-            raise ValueError(
-                f"Unknown category '{category}'. Available: {sorted(_APPROXIMANT_CATEGORIES.keys())}"
-            )
-        return list(_APPROXIMANT_CATEGORIES[cat_key])
-    return list(_CANONICAL_APPROXIMANTS)
 
 
 _PARAMETER_NAME_MAP: Dict[str, str] = {
@@ -1215,4 +1134,3 @@ __all__ = [
     "list_approximants",
     "normalize_waveform_params",
 ]
-
