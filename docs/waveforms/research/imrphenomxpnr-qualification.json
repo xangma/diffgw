@@ -87,7 +87,8 @@
     "torch": "src/torchwave/approximants/pnr_attachment.py",
     "jax": "src/jaxwave/approximants/pnr_attachment.py",
     "test": "tests/test_xpnr_attachment_math_reference.py",
-    "result": "25 passed in 7.26s on len CUDA with Python 3.12.3, Torch 2.14.0+cu130, JAX/JAXlib 0.11.2, NumPy 2.5.3, SciPy 1.18.1, and pytest 9.1.1; published-form values, Torch/JAX gradients, JAX JIT, and terminal/provenance canaries.",
+    "command": "JAX_ENABLE_X64=1 JAX_PLATFORMS=cpu OMP_NUM_THREADS=1 python -m pytest -q tests/test_xpnr_attachment_math_reference.py tests/test_xpnr_attachment_gate.py tests/test_xpnr_coefficient_provenance.py tests/test_xpnr_component_evidence.py tests/test_phenomt_rotation_math_reference.py",
+    "result": "85 passed in 16.68s on len with Python 3.12.3, Torch 2.14.0+cpu, JAX/JAXlib 0.11.2, NumPy 2.5.3, SciPy 1.18.1, and pytest 9.1.1; the attachment file contributes 23 cases, including the direct-spin-component zero-spin and zero-frequency gradient boundaries.",
     "open": [
       "source-qualified two-spin and mapped-single-spin beta tracks plus connection-frequency selection",
       "paper-specified PN/MR boundary selection and SpinTaylor terminal state",
@@ -98,7 +99,7 @@
   "beta_preprocessing_components": {
     "status": "standalone_equations_pass_not_routed",
     "scope": "Caller-supplied two-spin and mapped-single-spin opening angles, connection frequency, and effective-single-spin variables; no terminal event, fit, or boundary selection is inferred.",
-    "correction": "The optimal-emission-direction map includes the factor of two in the denominator identified by XO4a.",
+    "correction": "The optimal-emission-direction map includes the factor of two in the denominator identified by XO4a. It accepts chi_perpendicular and chi_parallel directly to preserve finite automatic derivatives at zero spin.",
     "reference": "src/diffgw_reference/xpnr_angles.py",
     "torch": "src/torchwave/approximants/pnr_attachment.py",
     "jax": "src/jaxwave/approximants/pnr_attachment.py",

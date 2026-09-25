@@ -329,30 +329,31 @@ def optimal_emission_direction_beta(
     iota: float,
     eta: float,
     delta: float,
-    chi: float,
-    cos_theta_ls: float,
+    chi_perpendicular: float,
+    chi_parallel: float,
 ) -> float:
     """Evaluate Final Twist Eqs. (41)--(43), with the XO4a correction.
 
     XO4a identifies a missing factor of two in the denominator of the 2021
     printed map.  ``v`` is the PN velocity and ``iota`` is the opening angle
-    before the optimal-emission-direction rescaling.
+    before the optimal-emission-direction rescaling. The spin components are
+    those returned by ``single_spin_map_at_transition``; using them directly
+    preserves the zero-spin limit without reconstructing a degenerate angle.
     """
-    _finite(v, iota, eta, delta, chi, cos_theta_ls)
+    _finite(v, iota, eta, delta, chi_perpendicular, chi_parallel)
     if v < 0.0 or not 0.0 < eta <= 0.25:
         raise ValueError("require v >= 0 and eta in (0, 0.25]")
-    if not 0.0 <= delta <= 1.0 or chi < 0.0:
-        raise ValueError("require delta in [0, 1] and chi >= 0")
-    if not 0.0 <= iota < math.pi or not -1.0 <= cos_theta_ls <= 1.0:
-        raise ValueError("require iota in [0, pi) and cos_theta_ls in [-1, 1]")
+    if not 0.0 <= delta <= 1.0 or chi_perpendicular < 0.0:
+        raise ValueError("require delta in [0, 1] and chi_perpendicular >= 0")
+    if not 0.0 <= iota < math.pi:
+        raise ValueError("require iota in [0, pi)")
 
     sin_iota = math.sin(iota)
     cos_iota = math.cos(iota)
     sin_half_iota = math.sin(0.5 * iota)
     cos_half_iota = math.cos(0.5 * iota)
-    sin_theta_ls = math.sqrt(max(0.0, 1.0 - cos_theta_ls**2))
-    mass_spin = (6.0 + 6.0 * delta + 5.0 * eta) * chi * sin_theta_ls
-    aligned_spin = (1.0 + delta - eta) * chi * cos_theta_ls
+    mass_spin = (6.0 + 6.0 * delta + 5.0 * eta) * chi_perpendicular
+    aligned_spin = (1.0 + delta - eta) * chi_parallel
 
     c0 = 84.0 * sin_iota
     c2 = (110.0 * eta - 214.0) * sin_iota

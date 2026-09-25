@@ -159,7 +159,11 @@ using its printed `c_0,c_2,c_3,d_0,d_2,d_3` polynomials. XO4a explicitly
 corrects the 2021 expression by inserting a factor of two in the denominator;
 the scalar/Torch/JAX implementations and a frozen checkpoint exercise that
 corrected form. These kernels accept the already-constructed angle tracks and
-`f_c`; they do not infer those missing model inputs.
+`f_c`; they do not infer those missing model inputs. The emission-direction
+kernel takes caller-supplied effective spin components `chi_perpendicular` and
+`chi_parallel`, as defined by the terminal single-spin map. This is the
+published `chi sin(theta_LS)` and `chi cos(theta_LS)` dependence, while avoiding
+an undefined angle derivative at zero spin.
 
 For Eq. (19), multiply the printed `alpha = a0 f² + a1 f + a2 + a3/f`
 by `f`; the resulting cubic is fixed by `f alpha` and

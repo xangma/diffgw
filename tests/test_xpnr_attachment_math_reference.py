@@ -16,7 +16,10 @@ from diffgw_reference import xpnr_angles as scalar
 
 START, END = 0.04, 0.08
 KAPPA, BETA_RD = 15.0, 0.3
-EMISSION_ARGS = (0.27, 0.8, 0.22, 0.35, 0.67, -0.28)
+EMISSION_ARGS = (
+    0.27, 0.8, 0.22, 0.35,
+    0.67 * math.sqrt(1 - 0.28**2), -0.67 * 0.28,
+)
 
 
 def _alpha_attach(f):
@@ -182,12 +185,11 @@ def _tapered_opening_angle(f, connection, two_spin, single_spin):
     return single_spin + math.cos(math.pi * f / (2 * connection)) ** 2 * (two_spin - single_spin)
 
 
-def _optimal_emission_direction_beta(v, iota, eta, delta, chi, cos_theta_ls):
+def _optimal_emission_direction_beta(v, iota, eta, delta, chi_perpendicular, chi_parallel):
     sin_iota, cos_iota = math.sin(iota), math.cos(iota)
     sin_half_iota, cos_half_iota = math.sin(iota / 2), math.cos(iota / 2)
-    sin_theta_ls = math.sqrt(1 - cos_theta_ls**2)
-    mass_spin = (6 + 6 * delta + 5 * eta) * chi * sin_theta_ls
-    aligned_spin = (1 + delta - eta) * chi * cos_theta_ls
+    mass_spin = (6 + 6 * delta + 5 * eta) * chi_perpendicular
+    aligned_spin = (1 + delta - eta) * chi_parallel
     c0 = 84 * sin_iota
     c2 = (110 * eta - 214) * sin_iota
     c3 = -7 * mass_spin * (2 * cos_iota - 1) + 56 * (3 * math.pi - aligned_spin) * sin_iota
@@ -275,3 +277,30 @@ def test_optimal_emission_direction_jax_jit_value_and_gradients():
     gradients = jax.jit(jax.grad(lambda x: optimal_emission_direction_beta(*x)))(values)
     assert math.isclose(float(actual), _optimal_emission_direction_beta(*EMISSION_ARGS), rel_tol=2e-12)
     assert bool(jnp.all(jnp.isfinite(gradients)))
+
+
+@pytest.mark.parametrize("v,perpendicular,parallel", [(0.27, 0.0, 0.0), (0.0, 0.0, 0.4)])
+def test_optimal_emission_direction_degenerate_spin_and_frequency(
+    v, perpendicular, parallel,
+):
+    import jax
+    import jax.numpy as jnp
+    import torch
+
+    from jaxwave.approximants import pnr_attachment as jax_attachment
+    from torchwave.approximants import pnr_attachment as torch_attachment
+
+    args = (v, 0.8, 0.22, 0.35, perpendicular, parallel)
+    assert scalar.optimal_emission_direction_beta(*args) == pytest.approx(0.8, abs=2e-14)
+
+    torch_args = [torch.tensor(value, dtype=torch.float64, requires_grad=True) for value in args]
+    torch_value = torch_attachment.optimal_emission_direction_beta(*torch_args)
+    torch_grad = torch.autograd.grad(torch_value, torch_args)
+    assert torch_value.item() == pytest.approx(0.8, abs=2e-14)
+    assert all(torch.isfinite(gradient) for gradient in torch_grad)
+
+    jax_args = jnp.asarray(args, dtype=jnp.float64)
+    jax_value = jax.jit(lambda values: jax_attachment.optimal_emission_direction_beta(*values))(jax_args)
+    jax_grad = jax.jit(jax.grad(lambda values: jax_attachment.optimal_emission_direction_beta(*values)))(jax_args)
+    assert float(jax_value) == pytest.approx(0.8, abs=2e-14)
+    assert bool(jnp.all(jnp.isfinite(jax_grad)))

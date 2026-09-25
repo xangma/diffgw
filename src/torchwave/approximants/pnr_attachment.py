@@ -40,15 +40,14 @@ def tapered_opening_angle(mf, connection, two_spin_angle, single_spin_angle):
     )
 
 
-def optimal_emission_direction_beta(v, iota, eta, delta, chi, cos_theta_ls):
+def optimal_emission_direction_beta(v, iota, eta, delta, chi_perpendicular, chi_parallel):
     """Final Twist Eqs. (41)--(43), including XO4a's denominator correction."""
     sin_iota = torch.sin(iota)
     cos_iota = torch.cos(iota)
     sin_half_iota = torch.sin(iota / 2)
     cos_half_iota = torch.cos(iota / 2)
-    sin_theta_ls = torch.sqrt(torch.clamp(1 - cos_theta_ls**2, min=0))
-    mass_spin = (6 + 6 * delta + 5 * eta) * chi * sin_theta_ls
-    aligned_spin = (1 + delta - eta) * chi * cos_theta_ls
+    mass_spin = (6 + 6 * delta + 5 * eta) * chi_perpendicular
+    aligned_spin = (1 + delta - eta) * chi_parallel
     c0 = 84 * sin_iota
     c2 = (110 * eta - 214) * sin_iota
     c3 = -7 * mass_spin * (2 * cos_iota - 1) + 56 * (3 * torch.pi - aligned_spin) * sin_iota
