@@ -1,0 +1,25 @@
+{
+  "schema": "diffgw.seobnrv4.jax-source-extended-tolerance-plan.v1",
+  "purpose": "Test whether the source-backed whole-waveform natural-cubic NQC route converges under two further decades of ODE tolerance refinement, retaining the frozen 0.5 M output chart and independent Torch/JAX initial solves.",
+  "pilot_case": "strong_aligned",
+  "prospective_case": "q4_nonspinning",
+  "source_plan_sha256": "eb79f7db87e23d83a8437334eec90f6872dcf3b76f65b5cbe55882f7d62b9944",
+  "ladder_plan_sha256": "101f756e6d90e07cb02084c04788bed43c4cdbc2773b948af8ff3262fda7352f",
+  "ladder_result_sha256": {
+    "strong_aligned": "033007e807023f7ad519eee91b15248e33c2feb60f66a25fdeadf9d621ebbdd8",
+    "q4_nonspinning": "81ad3af51e798af44594c8d34e3b359048f30b6c69f96821683747146fddf580"
+  },
+  "phase_matrix_control_sha256": "491cd810d954a66701638bb4599e620056f372f50cb7aaa46ae5214ad4c880d1",
+  "levels": [
+    {"name": "finest_replay", "atol": 1e-12, "rtol": 1e-11},
+    {"name": "ultra", "atol": 1e-13, "rtol": 1e-12},
+    {"name": "maximum", "atol": 1e-14, "rtol": 1e-13}
+  ],
+  "checks": {
+    "ultra_to_maximum_complex_relative_l2_at_most": 1e-5,
+    "torch_jax_maximum_complex_relative_l2_at_most": 1e-5,
+    "each_level_backend_checks_passed": true
+  },
+  "interpretation": "An ODE-tolerance self-convergence gate on a fixed output chart. It does not validate output cadence, source or NR fidelity, gradients, parameter-domain coverage, or ROM training. Solver failure or nonconvergence fails this gate.",
+  "release_qualified": false
+}

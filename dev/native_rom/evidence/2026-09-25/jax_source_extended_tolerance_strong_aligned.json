@@ -1,0 +1,132 @@
+{
+  "case_id": "strong_aligned",
+  "checks": {
+    "each_level_backend_checks_passed": true,
+    "torch_jax_maximum_complex_relative_l2_at_most": true,
+    "ultra_to_maximum_complex_relative_l2_at_most": false
+  },
+  "comparisons": {
+    "jax_finest_replay_to_ultra": {
+      "common_samples": 1169,
+      "complex_relative_l2": 0.00042466845944150774,
+      "support_sample_difference": 0,
+      "time_max_abs_M": 0.0
+    },
+    "jax_ultra_to_maximum": {
+      "common_samples": 1169,
+      "complex_relative_l2": 0.00024433631424995033,
+      "support_sample_difference": 0,
+      "time_max_abs_M": 0.0
+    },
+    "torch_finest_replay_to_ultra": {
+      "common_samples": 1169,
+      "complex_relative_l2": 0.00042424587834917233,
+      "support_sample_difference": 0,
+      "time_max_abs_M": 0.0
+    },
+    "torch_ultra_to_maximum": {
+      "common_samples": 1169,
+      "complex_relative_l2": 0.00023963347701867657,
+      "support_sample_difference": 0,
+      "time_max_abs_M": 0.0
+    }
+  },
+  "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+  "diagnostic_checks_passed": false,
+  "elapsed_s": 190.86572679202072,
+  "host": "RONI2",
+  "levels": {
+    "finest_replay": {
+      "diagnostic_checks_passed": true,
+      "jax": {
+        "end_M": 584.0,
+        "mode_sha256": "9a0f733e4df145352fc7d61e2b5542698c54ea5bde5e7ae7d4082eff0a3da577",
+        "samples": 1169,
+        "start_M": 0.0,
+        "time_sha256": "0ac91155dc977bca73e17f8cf1a8295bff77b9e603e39a39a616cc1f185b5a22"
+      },
+      "settings": {
+        "atol": 1e-12,
+        "coarse_output_step_M": 0.5,
+        "max_step_M": 2.0,
+        "rtol": 1e-11
+      },
+      "torch": {
+        "end_M": 584.0,
+        "mode_sha256": "a0f2b983ebf2860a974b34da495f57acdec2c0d059117c0c56a9c4552c8c56c1",
+        "samples": 1169,
+        "start_M": 0.0,
+        "time_sha256": "0ac91155dc977bca73e17f8cf1a8295bff77b9e603e39a39a616cc1f185b5a22"
+      },
+      "torch_jax": {
+        "common_samples": 1169,
+        "complex_relative_l2": 9.380486397858283e-07,
+        "support_sample_difference": 0,
+        "time_max_abs_M": 0.0
+      }
+    },
+    "maximum": {
+      "diagnostic_checks_passed": true,
+      "jax": {
+        "end_M": 584.0,
+        "mode_sha256": "849bce3b86f621fe965552f153e4b6ebbb669e091604c72deed2afcb047a5051",
+        "samples": 1169,
+        "start_M": 0.0,
+        "time_sha256": "0ac91155dc977bca73e17f8cf1a8295bff77b9e603e39a39a616cc1f185b5a22"
+      },
+      "settings": {
+        "atol": 1e-14,
+        "coarse_output_step_M": 0.5,
+        "max_step_M": 2.0,
+        "rtol": 1e-13
+      },
+      "torch": {
+        "end_M": 584.0,
+        "mode_sha256": "3971a32b34f862194cbd5cd60dbc7b776a91262f25fdde9ebb386657e47cf10f",
+        "samples": 1169,
+        "start_M": 0.0,
+        "time_sha256": "0ac91155dc977bca73e17f8cf1a8295bff77b9e603e39a39a616cc1f185b5a22"
+      },
+      "torch_jax": {
+        "common_samples": 1169,
+        "complex_relative_l2": 5.2183023391045414e-06,
+        "support_sample_difference": 0,
+        "time_max_abs_M": 0.0
+      }
+    },
+    "ultra": {
+      "diagnostic_checks_passed": true,
+      "jax": {
+        "end_M": 584.0,
+        "mode_sha256": "b6a2db7a9d3cb9633bc57dc7b58fd27932e4f79a8263805a274d1497931b0ea4",
+        "samples": 1169,
+        "start_M": 0.0,
+        "time_sha256": "0ac91155dc977bca73e17f8cf1a8295bff77b9e603e39a39a616cc1f185b5a22"
+      },
+      "settings": {
+        "atol": 1e-13,
+        "coarse_output_step_M": 0.5,
+        "max_step_M": 2.0,
+        "rtol": 1e-12
+      },
+      "torch": {
+        "end_M": 584.0,
+        "mode_sha256": "3beae28b842b35dfca82a2dcec0f856dd3b302f404afeeba0e06821aa7c06667",
+        "samples": 1169,
+        "start_M": 0.0,
+        "time_sha256": "0ac91155dc977bca73e17f8cf1a8295bff77b9e603e39a39a616cc1f185b5a22"
+      },
+      "torch_jax": {
+        "common_samples": 1169,
+        "complex_relative_l2": 5.154671308451041e-07,
+        "support_sample_difference": 0,
+        "time_max_abs_M": 0.0
+      }
+    }
+  },
+  "pid": 55486,
+  "plan_sha256": "60e94cf1741c6c0822afdca2fd7172104d8dca76cf68810ecc8b603ba86963e4",
+  "release_qualified": false,
+  "schema": "diffgw.seobnrv4.jax-source-extended-tolerance.v1",
+  "status": "diagnostic_complete"
+}

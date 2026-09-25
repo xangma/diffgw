@@ -1222,6 +1222,19 @@ absolute gate. The baseline candidate differs from the unchanged JAX route by
 `3.09e-3`, so this numerical stabilization cannot be treated as a
 source-fidelity or physical-validation pass.
 
+The [extended natural-cubic tolerance ladder](evidence/2026-09-25/jax_source_extended_tolerance_plan.json)
+replays the original finest solve and then tightens ODE absolute/relative
+tolerances to `1e-13/1e-12` and `1e-14/1e-13`, without changing NQC or the
+`0.5 M` output chart. Its [aligned-spin](evidence/2026-09-25/jax_source_extended_tolerance_strong_aligned.json)
+finest-to-ultra and ultra-to-maximum Torch differences are `4.24e-4` and
+`2.40e-4`; the [q4](evidence/2026-09-25/jax_source_extended_tolerance_q4_nonspinning.json)
+differences are `4.19e-5` and `2.45e-5`. JAX agrees closely with Torch at
+each level and shows similar adjacent-level differences. Both rows fail the
+frozen `1e-5` self-convergence gate even at the tightest tested tolerances.
+This rules out a simple tolerance tightening as a release fix on this chart;
+NQC input sampling and derivative construction still need a source-faithful
+convergence study.
+
 The [frozen anchor diagnostic](evidence/2026-09-25/source_spliced_anchor_plan.json)
 replays all four cases and fits each mode's own amplitude peak between output
 samples without optimizing a relative shift. The [results](evidence/2026-09-25/source_spliced_anchor.json)
