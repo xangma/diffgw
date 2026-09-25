@@ -628,14 +628,22 @@
       "domain": "frequency_domain",
       "spins": "precessing",
       "modes": [
-        "(2,2)"
+        "(2,2)",
+        "(2,1)",
+        "(3,3)",
+        "(3,2)",
+        "(4,4) native symmetric coprecessing carrier"
       ],
-      "status": "sovereign_nr_calibrated",
-      "notes": "NR-tuned PhenomPNR opening and precession angles. tests/test_imrphenom_xpnr.py defines four optional comparisons against default LAL IMRPhenomXPNR, requiring time/phase-optimized plus-polarization match >= 0.99 over 20-400 Hz. This is a test threshold, not an observed full-domain bound; this model is outside the frozen catalog.",
+      "status": "provisional_component_evidence",
+      "notes": "The printed transition-spin map, angle-fit polynomial and transforms, merger-ringdown angle ansatzes, and higher-mode frequency map have independent scalar/Torch/JAX component evidence. The public route still maps reference-frequency spins, lacks the published attachment/continuation and XHM-CP carrier deformation/effective-ringdown/asymmetry pieces, and its inherited numeric fit tensors have unresolved independent provenance and terms. The native composition is not a qualified full PhenomXPNR waveform and inherits XHM's failed strict catalog and holdout gates. Four optional black-box LAL comparisons retain a time/phase-optimized plus-polarization match threshold >= 0.99 over 20-400 Hz; a threshold is not an observed result or domain bound. See docs/waveforms/research/imrphenomxpnr.md.",
       "primary_references": [
         {
-          "citation": "Hamilton et al. (2021), Phys. Rev. D 104, 124027",
-          "doi": "10.1103/PhysRevD.104.124027"
+          "citation": "Hamilton et al. (2025), PhenomXPNR: An improved gravitational wave model linking precessing inspirals and NR-calibrated merger-ringdown",
+          "arxiv": "2507.02604v1"
+        },
+        {
+          "citation": "Thompson et al. (2024), Phys. Rev. D 109, 063012",
+          "doi": "10.1103/PhysRevD.109.063012"
         }
       ]
     },

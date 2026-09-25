@@ -431,6 +431,28 @@ The current PhenomD fundamental Kerr-mode representation uses eigenvalues from t
     pages = "024056",
     year = "2020"
 }
+
+@article{Hamilton:2025xpnr,
+    author = "Hamilton, Eleanor and others",
+    title = "{PhenomXPNR: An improved gravitational wave model linking precessing inspirals and NR-calibrated merger-ringdown}",
+    eprint = "2507.02604",
+    archivePrefix = "arXiv",
+    primaryClass = "gr-qc",
+    year = "2025"
+}
+
+@article{Thompson:2024xo4a,
+    author = "Thompson, Jonathan E. and others",
+    title = "{PhenomXO4a: a phenomenological gravitational-wave model for precessing black-hole binaries with higher multipoles and asymmetries}",
+    eprint = "2312.10025",
+    archivePrefix = "arXiv",
+    primaryClass = "gr-qc",
+    doi = "10.1103/PhysRevD.109.063012",
+    journal = "Phys. Rev. D",
+    volume = "109",
+    pages = "063012",
+    year = "2024"
+}
 ```
 
 ---

@@ -1,0 +1,137 @@
+{
+  "schema_version": 1,
+  "model": "IMRPhenomXPNR",
+  "recorded_at": "2026-09-25",
+  "verdict": "provisional_component_evidence_full_waveform_failed",
+  "qualified_full_waveform": false,
+  "paper_fidelity": {
+    "status": "partial_pass",
+    "passed_components": [
+      "XPNR Eqs. 3-6 transition-spin map algebra when supplied transition spins",
+      "XO4a Eq. 35 calibration polynomial",
+      "XO4a Eqs. 25-34 guarded alpha/beta parameter transforms",
+      "XPNR Eqs. 15-16 merger-ringdown angle ansatzes",
+      "XPNR Eqs. 7-8 standalone carrier deformation and effective-ringdown relations",
+      "XO4a Eqs. 50-52 higher-mode frequency map"
+    ],
+    "failed_or_missing_components": [
+      "public route supplies reference-frequency rather than transition-frequency spins",
+      "XPNR Eqs. 17-21 analytic continuation and angle attachment",
+      "published arctangent beta bounding prescription",
+      "XHM-CP carrier deviations and their unprinted u_k assets",
+      "effective-ringdown relation in waveform composition",
+      "XPNR Eqs. 10-13 dominant-mode asymmetry",
+      "independently sourced numeric angle-fit tensors"
+    ],
+    "documented_ambiguity": "XO4a Eq. 38 omits the pi factor required for an endpoint-completing shifted-cosine window; tests cover the explicit Torch/JAX interpretation rather than claiming exact transcription."
+  },
+  "scalar_reference_agreement": {
+    "status": "pass_for_scoped_components",
+    "command": "JAX_ENABLE_X64=1 JAX_PLATFORMS=cpu OMP_NUM_THREADS=1 pytest -q tests/test_xpnr_component_evidence.py",
+    "result": "46 passed",
+    "reference_module": "src/diffgw_reference/xpnr_angles.py",
+    "reference_module_sha256": "1b45da358aa84b226c3ea8d7d9738b5ef686d39a225d646800ae37ba8ada845d"
+  },
+  "torch_jax_parity": {
+    "status": "pass_for_scoped_components",
+    "local_environment": {
+      "host": "RONI2",
+      "python": "3.12.7",
+      "torch": "2.13.0",
+      "jax": "0.11.1",
+      "jaxlib": "0.11.1",
+      "numpy": "2.5.2",
+      "pytest": "9.1.1"
+    },
+    "combined_command": "JAX_ENABLE_X64=1 JAX_PLATFORMS=cpu OMP_NUM_THREADS=1 pytest -q tests/test_xpnr_component_evidence.py tests/test_imrphenom_xpnr.py",
+    "combined_result": "56 passed, 18 warnings",
+    "remote_jax_grid": {
+      "host": "len",
+      "device": "cuda:0 (NVIDIA RTX 4090)",
+      "cwd": "/tmp/diffgw-xpnr-0172",
+      "command": "PYTHONPATH=src .venv/bin/python scripts/validate_xpnr_jax_grid.py --points 262144 --scalar-samples 128 --output len-xpnr-result.json",
+      "log": "/tmp/diffgw-xpnr-0172/len-xpnr.log",
+      "python": "3.12.3",
+      "jax": "0.11.2",
+      "jaxlib": "0.11.2",
+      "numpy": "2.5.3",
+      "points": 262144,
+      "scalar_samples": 128,
+      "all_dense_values_finite": true,
+      "scalar_comparison_failures": 0,
+      "max_scalar_absolute_error": 1.91898834600579e-08,
+      "max_scalar_scaled_error": 7.504357362852957e-12,
+      "max_alpha_derivative_absolute_error": 2.842170943040401e-14,
+      "max_beta_derivative_absolute_error": 1.6653345369377348e-16,
+      "elapsed_seconds": 1.9555840771645308,
+      "install_note": "pip retried an unreachable configured pypi.ngc.nvidia.com index, then resolved the latest requested packages from PyPI; the isolated install and run completed successfully."
+    }
+  },
+  "external_parity": {
+    "status": "four_diagnostic_acceptance_cases_passed_not_full_waveform_qualification",
+    "oracle_policy": "Pinned installed LAL binaries used as black-box comparisons; no LAL source inspected or ingested.",
+    "environment": {
+      "lalsuite_distribution": "7.26.15",
+      "lal": "7.7.1",
+      "lalsimulation": "6.2.1",
+      "lalsimulation_extension_sha256": "7024d54b1d3f2c0c01976c8730f564bece28828ffab4619ccba2bdc92a0ca96c",
+      "pycbc": "0.0a9304"
+    },
+    "command": "OMP_NUM_THREADS=1 pytest -q tests/test_imrphenom_xpnr.py -k lal_parity --junitxml=/tmp/xpnr-lal.xml",
+    "metric": "PyCBC time/phase-optimized plus-polarization match, 20-400 Hz",
+    "cases": [
+      {
+        "id": "q1p5",
+        "masses_msun": [30.0, 20.0],
+        "observed_match": 0.995136069452,
+        "acceptance_threshold": 0.99,
+        "passed": true
+      },
+      {
+        "id": "q1p4",
+        "masses_msun": [35.0, 25.0],
+        "observed_match": 0.991092679051,
+        "acceptance_threshold": 0.99,
+        "passed": true
+      },
+      {
+        "id": "q1p33",
+        "masses_msun": [40.0, 30.0],
+        "observed_match": 0.994351007028,
+        "acceptance_threshold": 0.99,
+        "passed": true
+      },
+      {
+        "id": "q1p67",
+        "masses_msun": [50.0, 30.0],
+        "observed_match": 0.991789177998,
+        "acceptance_threshold": 0.99,
+        "passed": true
+      }
+    ],
+    "limitation": "These selected, optimized, plus-only observations do not establish complex-mode agreement, both-polarization agreement, a full-model proof, a lower bound over parameter space, or a calibration-domain boundary."
+  },
+  "physical_validation": {
+    "status": "not_reproduced",
+    "paper_evidence_only": "The XPNR/XO4a papers report BAM and NRSur validation. DiffGW was not compared with those NR data in this change."
+  },
+  "full_waveform_qualification": {
+    "status": "fail",
+    "strict_thresholds": {
+      "complex_relative_l2_max": 1e-06,
+      "mismatch_max": 1e-08
+    },
+    "inherited_xhm_results": {
+      "catalog": "0/1",
+      "holdout": "0/1"
+    },
+    "thresholds_changed": false,
+    "next_gate": "Implement and source the transition-spin state, exact attachments/continuations, XHM-CP deformation/effective-ringdown/asymmetry, and independently traceable coefficient assets; then pass Torch/JAX complex modes and both polarizations at the unchanged strict catalog/holdout thresholds before NR validation."
+  },
+  "calibration_assets": {
+    "canonical_numeric_payload_sha256": "c7794b653f781bbba45b97170fdac9fb6c89de6cc9c404e4942908ce1f820d68",
+    "torch_source_sha256": "9d5d77749d187f64447f1ed0501311370b5c97a3e8a471de71ced315ce0394fd",
+    "jax_source_sha256": "5801aa497b7ba10d389d8da5ca21dc27dc072c953a71706157211ca5fe2a6ea3",
+    "provenance": "unresolved_independent_source_and_redistribution_terms"
+  }
+}

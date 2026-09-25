@@ -76,6 +76,26 @@ source or wheel distributions. Their URLs and pinned hashes are retained by
 the verification tests and metadata; no MIT grant has been established for
 these supplementary assets, so this notice makes no licensing assurance.
 
+## PhenomXPNR calibration sources and unresolved inherited tensors
+
+The equation text used by the independent XPNR scalar component reference is
+from Hamilton et al., arXiv:2507.02604v1, and Thompson et al.,
+arXiv:2312.10025v1; both arXiv HTML records state CC BY 4.0. The 80 single-spin
+BAM configurations described as the angle calibration set are publicly listed
+by the BAM catalogue. Its minimal and complete Zenodo releases, records
+7673796 and 7677297, state CC BY 4.0. DiffGW does not bundle those waveform
+archives in source or wheel distributions.
+
+The numerical `A1..A4`, `B0..B5`, and `Bf` arrays already present in
+`src/torchwave/approximants/pnr_coefficients.py` and
+`src/jaxwave/approximants/pnr_coefficients.py` are not printed in either paper.
+Their independent origin and redistribution terms have not been established.
+The papers point to files in LALSuite, which is GPL-2.0-or-later, but this audit
+did not inspect, copy, translate, or fit coefficients from LAL source and does
+not infer a licence for the inherited arrays. Pinned LAL binaries are used only
+as black-box comparison oracles. See
+`docs/waveforms/research/imrphenomxpnr.md` for hashes and qualification scope.
+
 ## IMRPhenomT author formulas and calibration expressions — MIT
 
 `src/diffgw_core/phenomt_fits.py` transcribes the aligned dominant- and higher-mode fit branches from
