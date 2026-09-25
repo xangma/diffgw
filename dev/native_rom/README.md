@@ -1834,6 +1834,19 @@ chart; the production fine-grid attachment and downsampling, independent
 physical reference, domain convergence, and full parameter gradients remain
 unqualified.
 
+The [fine-grid splice plan](evidence/2026-09-25/jax_fine_grid_splice_plan.json)
+then evaluates attachment at `0.015625 M`, decimates by 32, and joins each
+backend's own calibrated coarse prefix. The [pilot](evidence/2026-09-25/jax_fine_grid_splice_high_start_mixed_spin.json)
+and prospective [q=4](evidence/2026-09-25/jax_fine_grid_splice_q4_nonspinning.json),
+[aligned](evidence/2026-09-25/jax_fine_grid_splice_strong_aligned.json), and
+[antialigned](evidence/2026-09-25/jax_fine_grid_splice_strong_antialigned.json)
+cases all pass the predeclared diagnostic checks. Their largest fine-grid
+and complete-splice complex relative L2 differences are `2.69e-8` and
+`1.72e-8`, with identical match times and global output grids. This checks
+selected Torch/JAX numerical compatibility on the actual fine-grid path;
+source fidelity, broad parameter coverage, physical NR accuracy, full
+parameter gradients, and both ROMs remain unqualified.
+
 1. Qualify the physical generator against the published equations and independent
    references over the intended domain, resolve convention/provenance gaps, and
    establish gradients and numerical convergence. This runner covers only scalar

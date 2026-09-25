@@ -1,0 +1,21 @@
+{
+  "schema": "diffgw.seobnrv4.jax-fine-grid-splice-plan.v1",
+  "purpose": "Check Torch/JAX whole-waveform numerical parity when attachment is evaluated on the actual fine output grid before power-of-two downsampling and coarse-prefix splicing.",
+  "release_qualified": false,
+  "cases": ["high_start_mixed_spin", "q4_nonspinning", "strong_aligned", "strong_antialigned"],
+  "pilot_case": "high_start_mixed_spin",
+  "prospective_cases": ["q4_nonspinning", "strong_aligned", "strong_antialigned"],
+  "output_step_M": 0.5,
+  "fine_refinement_factor": 32,
+  "ringdown_duration_M": 150.0,
+  "protocol": "Each backend independently integrates the same physical scalar initial state with 1e-10/1e-9 adaptive tolerances, calibrates NQC on its own fine series, evaluates attachment at 0.015625 M, masks after match plus 150 M, decimates by 32, and splices its NQC-corrected coarse prefix. A common output extent includes both match times.",
+  "gates": {
+    "max_global_time_difference_M": 1e-7,
+    "max_prefix_complex_relative_l2": 1e-5,
+    "max_full_complex_relative_l2": 1e-5,
+    "max_fine_complex_relative_l2": 1e-5,
+    "max_match_time_difference_M": 1e-5,
+    "max_restart_continuity_relative": 1e-7
+  },
+  "interpretation": "A pass closes selected cross-backend fine-output and splice parity only. It does not establish a source-faithful release model, domain-wide convergence, full parameter gradients, physical NR accuracy, or ROM training."
+}
