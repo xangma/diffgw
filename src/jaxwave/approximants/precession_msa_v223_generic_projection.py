@@ -1,11 +1,11 @@
-"""Nonpublic generic two-spin v223 source frame and quadrupole diagnostic.
+"""Generic two-spin v223 source frame and quadrupole composition.
 
 Pratten et al., arXiv:2004.06503v2, Eqs. (67)--(85) fix the source,
 inertial-J and observer frames.  Their Eqs. (5)--(13) and Appendix A fix the
 positive-frequency quadrupole rotation and polarization projection.  The
 native-v223 source-frame 259/75 coefficient and Table-IV convention transport
 are separately labelled compatibility prescriptions.  This module composes
-the intrinsic JAX MSA angles with XAS without changing public XP dispatch.
+the intrinsic JAX MSA angles with XAS for the scoped public XP route.
 
 The separate public observer azimuth is fixed to phi0=0 here.  ``phic`` is the
 source-frame reference phase passed to the clean Torch helper and LAL's
@@ -89,7 +89,8 @@ def _principal_delta(current, initial):
 def generic_msa_v223_waveform(
     frequency, mass1, mass2, spin1, spin2, *,
     distance=100.0, inclination=0.0, phic=0.0, tc=0.0, f_ref=20.0,
-    convention=1, return_state=False,
+    convention=1, phasing_convention=None, reference_frame=None,
+    return_state=False,
 ):
     """Compose generic v223 source-frame XP at public observer phi0=0.
 
@@ -99,7 +100,13 @@ def generic_msa_v223_waveform(
     """
     if convention not in (0, 1):
         raise ValueError("convention must be 0 or 1")
-    f = jnp.atleast_1d(jnp.asarray(frequency, dtype=jnp.float64))
+    requested_f = jnp.atleast_1d(jnp.asarray(frequency, dtype=jnp.float64))
+    # The PN phase primitives contain inverse powers of v.  A nonpositive
+    # output bin has zero physical positive-frequency strain, so evaluate its
+    # inactive algebra at a positive bin before masking the completed strain.
+    positive_min = jnp.min(jnp.where(requested_f > 0.0, requested_f, jnp.inf))
+    surrogate = jnp.where(jnp.isfinite(positive_min), positive_min, 20.0)
+    f = jnp.where(requested_f > 0.0, requested_f, surrogate)
     m1, m2, dist, iota, phi, time, fr = jnp.broadcast_arrays(*(
         jnp.asarray(value, dtype=jnp.float64)
         for value in (mass1, mass2, distance, inclination, phic, tc, f_ref)
@@ -127,12 +134,16 @@ def generic_msa_v223_waveform(
         f=f, mass1=m1, mass2=m2, chi1=chi1[..., 2], chi2=chi2[..., 2],
         distance=dist, inclination=jnp.zeros_like(iota),
         phi_c=carrier_phase, t_c=time, f_ref=fr,
+        phasing_convention=phasing_convention,
+        reference_frame=reference_frame,
         _final_spin_override=intrinsic["final_spin"],
     )
     hneg = 2*carrier_plus/jnp.sqrt(5/(4*jnp.pi))
     hp, hc = project_l2_quadrupole(
         hneg, alpha, gamma, intrinsic["cos_beta"], geometry["theta_jn"], zeta,
     )
+    hp = jnp.where(requested_f > 0.0, hp, 0.0j)
+    hc = jnp.where(requested_f > 0.0, hc, 0.0j)
     if return_state:
         return hp, hc, dict(
             alpha=alpha, gamma=gamma, cos_beta=intrinsic["cos_beta"],
