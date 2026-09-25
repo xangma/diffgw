@@ -2706,6 +2706,22 @@ remaining one-row cadence sensitivity to the discrete boundary-frequency
 estimate; it does not establish a converged replacement, historical fidelity,
 or release qualification.
 
+A separately [frozen continuous boundary-frequency test](evidence/2026-09-25/source_aligned_ode_chain_boundary_frequency_plan.json)
+keeps that discrete boundary, the corrected-v2 NQC fit, and every other
+ringdown input fixed. Its [result](evidence/2026-09-25/source_aligned_ode_chain_boundary_frequency.json)
+replaces only the backward phase secant by the ODE Lie derivative of the
+corrected phase. On this strong aligned-spin row, baseline/refined
+whole-waveform drift falls from `1.00805e-5` to `3.94166e-7`, passing the
+predeclared `1e-5` numerical gate; ringdown drift falls from `3.20074e-5` to
+`4.86062e-8`. Both no-op waveforms replay exactly, the direct raw-phase
+derivative agrees with the mode frequency to `5.55e-17`, and all boundary and
+support checks pass. The continuous frequency shifts by only `1.87e-9`
+between tolerances, while the backward secant, central secant, and spline
+derivative controls each shift by roughly `3.7e-6`. The candidate still
+differs from the public model by about `0.03916` complex relative L2. This is
+a Torch-only, one-row counterfactual; it does not validate historical fidelity,
+domain-wide convergence, or release qualification.
+
 1. Qualify the physical generator against the published equations and independent
    references over the intended domain, resolve convention/provenance gaps, and
    establish gradients and numerical convergence. This runner covers only scalar

@@ -1,0 +1,121 @@
+{
+  "case": "strong_aligned",
+  "checks": {
+    "backward_secant_replay_at_most": 1e-12,
+    "candidate_ringdown_reconstruction_max_absolute_at_most": 1e-12,
+    "direct_raw_phase_derivative_at_most": 1e-10,
+    "phase_basis_sample_replay_at_most": 1e-12,
+    "raw_frequency_sample_replay_at_most": 1e-12,
+    "whole_mode_drift_at_most": 1e-05
+  },
+  "controls": [
+    "Reconstruct the original ringdown from captured pre-intervention arguments and splice it into the candidate to recover the frozen v2 whole-mode SHA at both levels.",
+    "Require captured unmodified ringdown inputs, boundary, and support to match the previously frozen input-attribution result exactly.",
+    "Check direct raw-mode phase Lie derivative against the raw-mode frequency returned by the source-backed mode, and check boundary sampled basis, raw frequency and backward phase secant against their independent values.",
+    "Record but do not use natural-cubic corrected-phase derivative and central sampled corrected-phase secant as discretization controls.",
+    "Compare candidate baseline/refined whole and ringdown relative L2 plus public complex relative L2; predeclare the whole-mode <=1e-5 prospective gate."
+  ],
+  "fine_refinement_factor": 32,
+  "fixed": {
+    "JAX_and_public": "unchanged natural-cubic comparison routes",
+    "NQC": "corrected-v2 continuous ODE amplitude and phase matching solve",
+    "boundary": "same discrete floor index, time, corrected sampled amplitude and unwrapped phase",
+    "ringdown": "same zero amplitude derivative, sigma, projected shape, elapsed output chart, discrete support"
+  },
+  "inputs": {
+    "amplitude_v2_plan": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_ode_chain_amplitude_v2_plan.json",
+      "sha256": "69ce431f507dc80f68fa888878521c6f52ca3b10e54e266123ea92522f298ce0"
+    },
+    "amplitude_v2_result": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_ode_chain_amplitude_v2.json",
+      "sha256": "f22689b0993b22f111392a3a0dcda31e2a47ab8a14d8d41ef636af479ec16de1"
+    },
+    "amplitude_v2_script": {
+      "path": "dev/native_rom/diagnose_source_aligned_ode_chain_amplitude_v2.py",
+      "sha256": "c3460f910c186f3fdf2e2c51084990198d314ba6d6eeacfd3592663b9e1cecef"
+    },
+    "attribution_v2_script": {
+      "path": "dev/native_rom/diagnose_source_aligned_ode_chain_residual_attribution_v2.py",
+      "sha256": "00fd90accfbde484815f2c409d7ec985c4ad27d97e2a434fabb2632885c20513"
+    },
+    "jax_attachment": {
+      "path": "src/jaxwave/approximants/eob/numerical_attachment.py",
+      "sha256": "e98d77355f5a5e2538d0c0c91df6a5eb65e8f0d3e13c4e534c047d0938582447"
+    },
+    "jax_nqc": {
+      "path": "src/jaxwave/approximants/eob/nqc.py",
+      "sha256": "e6e25920ded887a650e04fcf64380f65f32e45d42be81b95fc26291af7b70757"
+    },
+    "ladder_plan": {
+      "path": "dev/native_rom/evidence/2026-09-25/jax_source_tolerance_ladder_plan.json",
+      "sha256": "101f756e6d90e07cb02084c04788bed43c4cdbc2773b948af8ff3262fda7352f"
+    },
+    "ladder_script": {
+      "path": "dev/native_rom/diagnose_jax_source_tolerance_ladder.py",
+      "sha256": "1d9c70218f8000115d74fef577521289a1bf265d251629678f5065e4420928a9"
+    },
+    "phase_matrix_script": {
+      "path": "dev/native_rom/diagnose_source_aligned_ode_chain_phase_matrix.py",
+      "sha256": "654ce386c98094f17c8b14bfdf2fdb9db2e70d112c1c4524943cd3745d41ad1a"
+    },
+    "phase_rhs_script": {
+      "path": "dev/native_rom/diagnose_source_aligned_ode_chain_phase_rhs.py",
+      "sha256": "b789eedb4eacf29500253999d1d0bb68e8e8591f661b8025592c50ae1d1114ff"
+    },
+    "qualifier": {
+      "path": "dev/native_rom/qualify_generator.py",
+      "sha256": "df9bffb614b87e82b5a8da47212cb01312ad4d0cb9d687d929570df134954174"
+    },
+    "ringdown_inputs_plan": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_ode_chain_ringdown_inputs_plan.json",
+      "sha256": "5147b57074992cc038992d8ed1f1d3219c92fc95872e349e9c121acc15318318"
+    },
+    "ringdown_inputs_result": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_ode_chain_ringdown_inputs.json",
+      "sha256": "82c0262bb29d7e42a8c24eef5b5bb9317cf7a09f163be2c6f0a51050fc525517"
+    },
+    "ringdown_inputs_script": {
+      "path": "dev/native_rom/diagnose_source_aligned_ode_chain_ringdown_inputs.py",
+      "sha256": "f54f2264fba48986eea2d2048d84ddfeab8405ebb32c0b9f7a755f2520439f7f"
+    },
+    "runner": {
+      "path": "dev/native_rom/diagnose_jax_spliced_whole_waveform.py",
+      "sha256": "158c243e6909d26529cf5e976521793cd07821cd48662036a3c34182391f9d1c"
+    },
+    "source_plan": {
+      "path": "dev/native_rom/evidence/2026-09-25/jax_source_spliced_whole_waveform_plan.json",
+      "sha256": "eb79f7db87e23d83a8437334eec90f6872dcf3b76f65b5cbe55882f7d62b9944"
+    },
+    "torch_merger_ringdown": {
+      "path": "src/torchwave/approximants/eob/merger_ringdown.py",
+      "sha256": "098bb9e6f5328ceb291a5bed02a91d8fa95cc54bbcc7ff45d996e6985d995410"
+    },
+    "torch_mode": {
+      "path": "src/torchwave/approximants/eob/published_waveform.py",
+      "sha256": "7dde2eefb4d99b7fe5fc3570203222dc02c1cb05d59d8f7392e25fc946cb32dc"
+    },
+    "torch_nqc": {
+      "path": "src/torchwave/approximants/eob/nqc.py",
+      "sha256": "c8683181f7cf911df1e1b85cd6999cdb03e7c594e867315359040e9eb03ca552"
+    },
+    "torch_numerical_attachment": {
+      "path": "src/torchwave/approximants/eob/numerical_attachment.py",
+      "sha256": "8c7a149b76c529a255a4caa4b0ca76317b5306c8967db84047f299ccf51be7fc"
+    }
+  },
+  "interpretation": "One-row development counterfactual only; a passing tolerance gate does not establish public/source fidelity, broad-domain stability, physical calibration, or release qualification. Preserve all prior gates and evidence.",
+  "intervention": "At the boundary grid state, compute raw-mode frequency and the ODE Lie derivatives of the two phase bases. Use omega_raw - b\u00b7L_field(p), with the already solved v2 b coefficients, as the sole replacement for the ringdown frequency argument.",
+  "levels": [
+    "baseline",
+    "refined"
+  ],
+  "purpose": "On the frozen strong-aligned corrected-v2 NQC row, replace only the ringdown frequency argument at the same discrete boundary with the ODE Lie derivative of the corrected phase.",
+  "release_qualified": false,
+  "runner_sentinel": {
+    "degree": 0,
+    "half_width_M": 0.0
+  },
+  "schema": "diffgw.seobnrv4.source-aligned-ode-chain-boundary-frequency-plan.v1",
+  "script_sha256": "f4c434d1d050ffad7550364292cc202c639e79323e731db797afd6a2b10e21e6"
+}
