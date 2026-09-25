@@ -1,0 +1,19 @@
+{
+  "schema": "diffgw.seobnrv4.q4-native-source-nqc-intervention-plan.v1",
+  "purpose": "Causal whole-mode control: hold the q4 native trajectory, raw mode, and attachment algorithm fixed while replacing only its five NQC coefficients with the pinned compiled-source values at each output cadence. A native-coefficient no-op must reproduce the baseline mode bitwise.",
+  "prior_chart": "dev/native_rom/evidence/2026-09-25/source_q4_ultrafine_chart.json",
+  "prior_chart_sha256": "fe23cca369855e80fc1c8cbfde2ffccd2a6deafb57ced4aadca1025bbfe6ce3a",
+  "source_coefficients": "dev/native_rom/evidence/2026-09-25/source_q4_ultrafine_nqc_override.json",
+  "source_coefficients_sha256": "c4646838f6baf12b8567c232b58e1f738b5bfc935a23151421fed641a1795fa4",
+  "source_flux_plan": "dev/native_rom/evidence/2026-09-24/source_flux_initial_plan.json",
+  "source_flux_plan_sha256": "1167199c8f954f97a5905a1e3b2f67d1555e984e5f1da0a0fc42a77a925f96ea",
+  "mode_adapter": "dev/native_rom/reference/full_v4_source_mode_adapter.c",
+  "mode_adapter_sha256": "59d8d7dd6547e84cc53b2ecb76005195bb54174c481146f88fc257a3abf7fcf4",
+  "settings": "dev/native_rom/evidence/2026-09-24/combined_domain_numerics.json",
+  "settings_sha256": "3c414c018917f7dad38644ad86ba58781bc53180b931cb8f869c34f5e83b3025",
+  "row_name": "q4_nonspinning",
+  "output_steps_M": [0.03125, 0.015625],
+  "peak_fit": "quadratic_power",
+  "capacity": 50000,
+  "release_qualified": false
+}

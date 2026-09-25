@@ -2095,6 +2095,21 @@ legacy momentum does not close the whole-waveform gap. This counterfactual
 does not establish a source-faithful native initial-condition algorithm or
 explain source/wheel NQC cadence sensitivity.
 
+The [native/source q4 NQC coefficient intervention](evidence/2026-09-25/q4_native_source_nqc_intervention.json)
+uses a [frozen plan](evidence/2026-09-25/q4_native_source_nqc_intervention_plan.json)
+at `0.03125 M` and `0.015625 M`. It leaves the native trajectory, raw mode,
+attachment algorithm, and output times unchanged, replacing only the five
+native NQC coefficients with each cadence's captured pinned-source values. A
+same-native-coefficient replay reproduces the baseline mode bitwise on both
+grids. At `0.03125 M`, the peak-fitted native/source full-mode complex relative
+L2 falls from `3.51e-4` to `1.23e-4`; at `0.015625 M`, it rises from
+`2.59e-4` to `3.86e-4`. The native fit gives the same coefficients on both
+output cadences, whereas the pinned-source coefficients drift between them.
+Thus coefficient choice materially affects the comparison, but copying the
+source fit is not a uniform fidelity fix. The remaining trajectory, raw-mode,
+and ringdown differences still need independent convergence and whole-mode
+validation before release qualification.
+
 1. Qualify the physical generator against the published equations and independent
    references over the intended domain, resolve convention/provenance gaps, and
    establish gradients and numerical convergence. This runner covers only scalar
