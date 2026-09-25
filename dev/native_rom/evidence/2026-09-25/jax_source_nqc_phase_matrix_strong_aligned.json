@@ -1,0 +1,114 @@
+{
+  "case_id": "strong_aligned",
+  "checks": {
+    "candidate_baseline_to_refined_complex_relative_l2_at_most": false,
+    "candidate_drift_at_most_one_tenth_of_natural_cubic": true
+  },
+  "comparisons": {
+    "candidate_to_natural_cubic_drift_ratio": 0.007573266564764657,
+    "candidate_torch_baseline_to_refined": {
+      "common_samples": 1169,
+      "complex_relative_l2": 2.5448512041566548e-05,
+      "support_sample_difference": 0,
+      "time_max_abs_M": 0.0
+    },
+    "natural_cubic_torch_baseline_to_refined": {
+      "common_samples": 1169,
+      "complex_relative_l2": 0.0033603085041226687,
+      "support_sample_difference": 0,
+      "time_max_abs_M": 0.0
+    }
+  },
+  "counterfactual_checks_passed": false,
+  "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+  "elapsed_s": 74.74407250003424,
+  "host": "RONI2",
+  "levels": {
+    "baseline": {
+      "jax_natural_cubic": {
+        "end_M": 584.0,
+        "mode_sha256": "47c9c601eb4377e3b3e9fce645595aeae69aab32271891798ca497202972f025",
+        "samples": 1169,
+        "start_M": 0.0,
+        "time_sha256": "0ac91155dc977bca73e17f8cf1a8295bff77b9e603e39a39a616cc1f185b5a22"
+      },
+      "matching_phase_matrix": [
+        [
+          -0.008097344406662944,
+          -0.00016381187779631015
+        ],
+        [
+          -0.0009757885720057425,
+          -3.44277879058569e-05
+        ]
+      ],
+      "runner_backend_parity_checks_passed": false,
+      "settings": {
+        "atol": 1e-10,
+        "coarse_output_step_M": 0.5,
+        "max_step_M": 2.0,
+        "rtol": 1e-09
+      },
+      "torch": {
+        "end_M": 584.0,
+        "mode_sha256": "69e700b809fdc8c93667f7daf765b2e85f3cf8912df903ab694b04ae5addcf38",
+        "samples": 1169,
+        "start_M": 0.0,
+        "time_sha256": "0ac91155dc977bca73e17f8cf1a8295bff77b9e603e39a39a616cc1f185b5a22"
+      },
+      "torch_public_complex_relative_l2": 0.039053425493678844,
+      "torch_to_jax_natural_cubic": {
+        "common_samples": 1169,
+        "complex_relative_l2": 0.003091891775337675,
+        "support_sample_difference": 0,
+        "time_max_abs_M": 0.0
+      }
+    },
+    "refined": {
+      "jax_natural_cubic": {
+        "end_M": 584.0,
+        "mode_sha256": "c13ac90eedb99055b6aca7801b738a985b36471a4e06eff733e9d325d3c83005",
+        "samples": 1169,
+        "start_M": 0.0,
+        "time_sha256": "0ac91155dc977bca73e17f8cf1a8295bff77b9e603e39a39a616cc1f185b5a22"
+      },
+      "matching_phase_matrix": [
+        [
+          -0.008097338306935334,
+          -0.00016381175356056468
+        ],
+        [
+          -0.0009757430924548124,
+          -3.4426884083092337e-05
+        ]
+      ],
+      "runner_backend_parity_checks_passed": false,
+      "settings": {
+        "atol": 1e-11,
+        "coarse_output_step_M": 0.5,
+        "max_step_M": 2.0,
+        "rtol": 1e-10
+      },
+      "torch": {
+        "end_M": 584.0,
+        "mode_sha256": "8b1d96a8e16ce39f1afa5f927f17913e196f2460b2290f38dd631f28aec9e8bb",
+        "samples": 1169,
+        "start_M": 0.0,
+        "time_sha256": "0ac91155dc977bca73e17f8cf1a8295bff77b9e603e39a39a616cc1f185b5a22"
+      },
+      "torch_public_complex_relative_l2": 0.03907513946348377,
+      "torch_to_jax_natural_cubic": {
+        "common_samples": 1169,
+        "complex_relative_l2": 0.00029886599091703657,
+        "support_sample_difference": 0,
+        "time_max_abs_M": 0.0
+      }
+    }
+  },
+  "pid": 49683,
+  "plan_sha256": "43df1614d9c321dbe76ab131863c2480c06528302eb4363a7857756aec53b67b",
+  "release_qualified": false,
+  "schema": "diffgw.seobnrv4.jax-source-nqc-phase-matrix.v1",
+  "scope": "Torch-only local-polynomial phase-basis matrix; JAX retains natural cubic",
+  "status": "diagnostic_complete"
+}

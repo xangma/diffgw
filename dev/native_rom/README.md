@@ -1212,6 +1212,16 @@ linear-system reconstructions pass. This narrows the tolerance failure to
 sampled matching-matrix derivatives for the tested rows, but does not identify
 a source-faithful stable replacement or qualify a waveform.
 
+The targeted [aligned-spin phase-matrix control](evidence/2026-09-25/jax_source_nqc_phase_matrix_plan.json)
+replaces only the two phase-basis derivative rows with a local degree-four
+`±2 M` polynomial, leaving the phase right-hand side and amplitude fit on
+their natural-cubic route. Its [result](evidence/2026-09-25/jax_source_nqc_phase_matrix_strong_aligned.json)
+reduces baseline-to-refined whole-waveform drift from `3.36e-3` to `2.54e-5`
+(`0.00757` times the natural-cubic drift), but still fails the frozen `1e-5`
+absolute gate. The baseline candidate differs from the unchanged JAX route by
+`3.09e-3`, so this numerical stabilization cannot be treated as a
+source-fidelity or physical-validation pass.
+
 The [frozen anchor diagnostic](evidence/2026-09-25/source_spliced_anchor_plan.json)
 replays all four cases and fits each mode's own amplitude peak between output
 samples without optimizing a relative shift. The [results](evidence/2026-09-25/source_spliced_anchor.json)
