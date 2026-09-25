@@ -1459,6 +1459,13 @@ disagreement at factor 512 is only `7.53e-10`. [Strong antialigned spin](evidenc
 passes with Torch/JAX drifts `1.48536e-6` and `1.48464e-6`, and factor-512
 backend disagreement `4.43e-10`. Thus the combined control passes three of
 four pinned cases at this refinement; domain numerical qualification is open.
+The frozen [mixed-spin finer-grid replay](evidence/2026-09-25/jax_source_jit_mixed_refinement_plan.json)
+reproduces the factor-512 baseline and compares it with an independent
+factor-1024 integration. [Its result](evidence/2026-09-25/jax_source_jit_mixed_refinement_high_start_mixed_spin.json)
+passes the unchanged `1e-5` test: Torch/JAX whole-mode drifts are `6.62472e-6`
+and `6.62446e-6`, with factor-1024 backend difference `1.02e-9`. This supports
+refinement of that local case, but the earlier 256-to-512 failure remains in
+the record and no common four-case factor-512 to factor-1024 sweep exists.
 
 The [frozen anchor diagnostic](evidence/2026-09-25/source_spliced_anchor_plan.json)
 replays all four cases and fits each mode's own amplitude peak between output
