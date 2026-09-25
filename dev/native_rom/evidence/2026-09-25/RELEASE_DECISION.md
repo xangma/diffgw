@@ -34,10 +34,28 @@ generator source-manifest hash
 `8ca6d152b4b07bb89bbbd97734d29814023148b79f0af448fda67079957ca532`,
 whereas the current source snapshot hashes to
 `2062f70072d9953a7f9b968336c80512b8034497eb2e4cb0fea7ad2633b7d2cf`.
-Generator files changed between those snapshots. Replaying the stored arrays
-cannot establish whether today's candidate passes or fails the NR gate.
-The five NR cases have been inspected, so reusing them would be a diagnostic,
-not an untouched release holdout.
+Generator files changed between those snapshots. A fresh
+[current-source execution of the known 2569 case](sxs_2569_current_regression.json)
+now removes the ambiguity for this case: the anchored native array has exactly
+the same SHA-256 as the original, `4180cbd3aaee9eb492d776d291ecd603c1ba19483777f0e326d18d525d7527c7`.
+The minimum detector-weighted overlap is again `0.9891417104357124` at 22
+solar masses, below the frozen 0.99 gate. This is a current-source failure on
+an already inspected case, not an untouched release holdout. The other four
+cases have not been rerun on the current source; this one failure is sufficient
+to keep the candidate unqualified under the selected-case gate.
+The [pinned public SEOBNRv4 control](../2026-09-24/sxs_third_public_parity.json)
+scores `0.9891409499192219` at the same mass, while native and public complex
+waveforms differ by only `0.0001174` relative L2 on their shared chart. Thus
+this miss is already present in the historical public model within the measured
+parity error; adjusting the native port to pass by changing its physics would
+need a distinct successor-model identity and a new validation campaign.
+
+A [fresh five-case SXS reservation](fresh_sxs_metadata_reservation.json) records
+the identifiers, exact archive checksums, and 0.99 gate intent selected from a
+pinned public metadata catalog. None of those five waveforms has been opened.
+The complete source-specific plan and numerical/fixed-chart thresholds must be
+frozen before intake; this reservation does not turn the failing current
+candidate into a qualified one.
 
 The [source specification](../../reference/SPEC.md) remains incomplete: six
 of 42 manifest components are `pending`, including flux, QNM interpolation,
@@ -58,12 +76,31 @@ Two different release claims must stay separate:
   convergence, and applicable gradient checks. If a faithful historical model
   cannot pass the gate, a calibrated successor needs its own model identity.
 
-The shortest useful next step is to finish the missing clean-room component
-provenance and freeze one generator revision and its numerical/gradient
-contract, then predeclare a fixed-chart complex-waveform threshold and a
-detector-weighted overlap gate on new untouched NR rows before running them.
+The next step depends on the release claim. For a faithful historical port,
+finish missing clean-room component provenance and freeze the source-fidelity,
+numerical, and gradient contracts while disclosing the observed NR limitation.
+For a model required to clear the 0.99 NR gate, diagnose the known 2569 miss
+using independent physical evidence, develop a separately named successor,
+and freeze its generator revision and complete numerical/gradient contract.
+Then predeclare a fixed-chart complex-waveform threshold and the full weighted
+gate on the reserved untouched NR rows before running them.
 Only after that generator passes should independent ROM data be trained and
 tested on reserved holdouts. Neither criterion currently permits release.
+
+The current-source 2569 execution ran on host RONI2, cwd
+`/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw`, PID `55820`
+(managed session `6479`), and exited zero in 53 seconds. Its log is
+`/tmp/diffgw-sxs-2569-current-regression.log`; no process remains or next
+check is needed. The command was:
+
+```sh
+env PYTHONPATH=src:. /Users/xangma/repos/diffgw/.venv/bin/python \
+  -m dev.native_rom.diagnose_current_2569_regression \
+  --plan dev/native_rom/evidence/2026-09-25/sxs_2569_current_regression_plan.json \
+  --array-out /tmp/diffgw-sxs-2569-current-anchored.npz \
+  --json-out dev/native_rom/evidence/2026-09-25/sxs_2569_current_regression.json \
+  > /tmp/diffgw-sxs-2569-current-regression.log 2>&1
+```
 
 The completed replay ran on host RONI2, cwd
 `/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw`, shell job/session

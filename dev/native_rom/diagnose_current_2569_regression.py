@@ -82,9 +82,12 @@ def main() -> None:
     )
     current = comparison.anchor(native, dt=method["grid_step_M"])
     with np.load(old["anchored_array"]["path"], allow_pickle=False) as source:
-        previous_native = dict(time=source["native_time"], mode=source["native_mode"])
-        nr_low = dict(time=source["nr_low_time"], mode=source["nr_low_mode"])
-        nr_high = dict(time=source["nr_high_time"], mode=source["nr_high_mode"])
+        previous_native = dict(time=source["native_time"], mode=source["native_mode"],
+                               **old["anchor"]["native"])
+        nr_low = dict(time=source["nr_low_time"], mode=source["nr_low_mode"],
+                      **old["anchor"][f"Lev{min(case['levels'])}"])
+        nr_high = dict(time=source["nr_high_time"], mode=source["nr_high_mode"],
+                       **old["anchor"][f"Lev{max(case['levels'])}"])
     args.array_out.parent.mkdir(parents=True, exist_ok=True)
     np.savez(args.array_out, native_time=current["time"], native_mode=current["mode"],
              nr_low_time=nr_low["time"], nr_low_mode=nr_low["mode"],

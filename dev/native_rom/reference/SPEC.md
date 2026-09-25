@@ -84,6 +84,22 @@ trained basis, parameter interpolation, or holdout definition yet.
 | `V4-TD-FD-CONVENTIONS` / 0.8.11 | Pinned public LAL conditioning/FFT binary | pending | pending | Development Torch adapter | Identical-input conditioning/FFT passed on three rows; native/public full FD retains up to 0.004031 relative L2 after physical time/phase fitting on four rows, and conventions remain open |
 | `V4-ROM-VII` / 0.8.11 | Bohé Sec. VII | pending | pending | pending | Qualified training generator, bases, and holdouts |
 
+The pending entries have public starting points, but the literature does not
+specify the exact historical numerical implementation. In particular:
+
+| Pending block | Public derivation or data | Remaining independent closure |
+| --- | --- | --- |
+| `V4-HAM-1-3` | [Bohé Sec. II.1](https://arxiv.org/html/1611.03703), [Barausse–Buonanno Hamiltonian](https://arxiv.org/abs/1107.2904), and [Steinhoff Appendix A](https://arxiv.org/html/1608.01907) | Printed fits and equations do not provide shortened source decimals or the historical logarithmic derivative convention. |
+| `V4-FLUX-4-9` | [Bohé Eqs. (4)–(6), (9)](https://arxiv.org/html/1611.03703) and [factorized multipoles](https://arxiv.org/abs/1006.0431) | The exact historical higher-mode spin hybrid and truncation choices are not uniquely specified. |
+| `V4-QNM-INTERPOLATION` | [Berti et al. Kerr data and fits](https://arxiv.org/html/gr-qc/0512160) and [Cook author data](https://zenodo.org/records/2650358) | Declare and validate an independent interpolant, including signed spin; the published fit is approximate and does not define historical spline knots. |
+| `V4-ODE-IC` | [Bohé Sec. II.2](https://arxiv.org/html/1611.03703) and [Buonanno–Damour initial-data prescription](https://arxiv.org/html/gr-qc/0001013) | Exact v4 root coordinates, tortoise mapping, numerical tolerances, and event/output interpolation need independent checks. |
+| `V4-TD-FD-CONVENTIONS` | [Pürrer Sec. 4](https://arxiv.org/html/1402.4146) gives a time-domain conditioning template for **SEOBNRv1** | The v4 window, epoch, padding, crop, normalization, and polarization choices are not specified there. |
+| `V4-ROM-VII` | [Bohé Sec. VII](https://arxiv.org/html/1611.03703) gives patch dimensions, frequency counts, SVD, and tensor-spline architecture | No independently generated v4 basis, spline tensors, full frequency knots, qualified training generator, or held-out validation exists. |
+
+An independent QNM interpolant is a bounded native development path. Its
+author-data error bound would validate that physical route, but would not
+turn it into an exact claim about the historical implementation.
+
 ### Canonical equations and derivation
 
 `published.calibration` preserves the printed decimals exactly as SymPy
