@@ -1,0 +1,25 @@
+{
+  "schema": "diffgw.seobnrv4.td-fd-nonzero-reference-plan.v1",
+  "release_qualified": false,
+  "source_head": "73428f3",
+  "binary_evidence": "dev/native_rom/evidence/2026-09-24/public_nqc_mode_boundary.json",
+  "binary_evidence_sha256": "a86784cd6a58ec4a574686d6940953a3d1be836e2d44ac8cdcd25a5ba7d0dffd",
+  "purpose": "Check identical-input native TD conditioning and real FFT against the pinned public binary at nonzero reference frequency and phase, nontrivial inclination and distance, including complex FD samples and epoch.",
+  "sample_rate_hz": 4096,
+  "rows": [
+    {"name": "mixed_spin_nonzero_reference", "kind": "public_seobnrv4", "mass1": 35.0, "mass2": 25.0, "chi1z": 0.4, "chi2z": -0.3, "f_low": 20.0},
+    {"name": "antialigned_nonzero_reference", "kind": "public_seobnrv4", "mass1": 40.0, "mass2": 25.0, "chi1z": -0.6, "chi2z": -0.3, "f_low": 25.0}
+  ],
+  "public_distance_mpc": 173.0,
+  "public_inclination_rad": 1.1,
+  "public_reference_phase_rad": 0.41,
+  "public_reference_frequency_hz": 40.0,
+  "public_fd_fmax_hz": 2048.0,
+  "public_fd_delta_f_hz": 0.25,
+  "full_series_rms_relative_tolerance": 1e-10,
+  "full_series_max_absolute_over_peak_tolerance": 1e-10,
+  "fft_rms_relative_tolerance": 1e-10,
+  "fft_max_absolute_over_peak_tolerance": 1e-10,
+  "public_fd_epoch_tolerance_seconds": 1e-9,
+  "operational_limits": {"max_wall_time_s": 300, "max_rss_gib": 32}
+}

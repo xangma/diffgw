@@ -69,6 +69,19 @@ construction. The
 published model does not supply independently derived ROM bases and spline
 tables, and no qualified generator/training set or independent ROM holdout
 exists. Full-waveform gradients and domain-wide convergence remain open.
+The [frozen nonzero-reference TD/FD plan](td_fd_nonzero_reference_plan.json)
+and [result](td_fd_nonzero_reference.json) extend the identical-input
+public-binary adapter check to two new selected rows at `f_ref=40 Hz`, phase
+`0.41 rad`, inclination `1.1 rad`, and distance `173 Mpc`. Both pass their
+predeclared `1e-10` conditioning/FFT/complex-FD and `1 ns` epoch gates. The
+largest public complex FD relative L2 error is `1.18e-12`, FFT-only error
+is below `3.43e-16`, and epoch error is `0.25 ns`. The public generator
+supplies both TD inputs, so this checks the adapter, not native generator
+fidelity or general TD/FD conventions; the aggregate remains pending. It ran
+on RONI2 in this worktree as PID `85647`, command
+`PYTHONPATH=src:. /Users/xangma/repos/diffgw/.venv/bin/python -m dev.native_rom.diagnose_td_fd_nonzero_reference`,
+log `/tmp/diffgw-td-fd-nonzero-reference.log`, and completed in 1.5 seconds
+with exit code 0. No process or next check remains.
 The new conditional native-QNM spline, zero-radial ODE, and nonzero-radial ODE
 vector-field leaves make their arithmetic and paper-derived equations
 independently executable.
