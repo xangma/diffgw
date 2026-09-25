@@ -1,0 +1,553 @@
+{
+  "amplitude_value_replay": {
+    "jax": [
+      {
+        "coefficient_after_patch": [
+          143.16596247238417,
+          -1229.3051297616214,
+          1378.3879997799088
+        ],
+        "coefficient_before_patch": [
+          143.1659624734948,
+          -1229.3051297709533,
+          1378.3879997903866
+        ],
+        "condition": 1321.8220563281932,
+        "ode_amplitude_matrix": [
+          [
+            0.011802259907801519,
+            0.0035947333061723315,
+            0.0019838892590223994
+          ],
+          [
+            0.0012115327135830405,
+            0.0004233369856839238,
+            0.0002486260424240397
+          ],
+          [
+            0.0002086198681440105,
+            7.832128346894296e-05,
+            4.764281657924926e-05
+          ]
+        ],
+        "ode_amplitude_rhs": [
+          0.005226953175766491,
+          -0.00425692780210744,
+          -0.0007432046756340435
+        ],
+        "residual_linf": 2.220446049250313e-16,
+        "spline_amplitude_matrix": [
+          [
+            0.011802259906213957,
+            0.0035947333056808336,
+            0.0019838892587489393
+          ],
+          [
+            0.0012115327135830405,
+            0.0004233369856839238,
+            0.0002486260424240397
+          ],
+          [
+            0.0002086198681440105,
+            7.832128346894296e-05,
+            4.764281657924926e-05
+          ]
+        ]
+      },
+      {
+        "coefficient_after_patch": [
+          143.16596247238417,
+          -1229.3051297616214,
+          1378.3879997799088
+        ],
+        "coefficient_before_patch": [
+          143.1659624734948,
+          -1229.3051297709533,
+          1378.3879997903866
+        ],
+        "condition": 1321.8220563281932,
+        "ode_amplitude_matrix": [
+          [
+            0.011802259907801519,
+            0.0035947333061723315,
+            0.0019838892590223994
+          ],
+          [
+            0.0012115327135830405,
+            0.0004233369856839238,
+            0.0002486260424240397
+          ],
+          [
+            0.0002086198681440105,
+            7.832128346894296e-05,
+            4.764281657924926e-05
+          ]
+        ],
+        "ode_amplitude_rhs": [
+          0.005226953175766491,
+          -0.00425692780210744,
+          -0.0007432046756340435
+        ],
+        "residual_linf": 2.220446049250313e-16,
+        "spline_amplitude_matrix": [
+          [
+            0.011802259906213957,
+            0.0035947333056808336,
+            0.0019838892587489393
+          ],
+          [
+            0.0012115327135830405,
+            0.0004233369856839238,
+            0.0002486260424240397
+          ],
+          [
+            0.0002086198681440105,
+            7.832128346894296e-05,
+            4.764281657924926e-05
+          ]
+        ]
+      }
+    ],
+    "naturally_computed": "same Torch fine trajectory/raw mode, waveform splines, NQC targets, phase ODE controls and attachment grid",
+    "patched": {
+      "both": "ringdown boundary frequency replaced by historical ODE value",
+      "jax": "calibration amplitude solve matrix and RHS, coefficients and sampled corrected amplitude/phase",
+      "torch": "first three six-column combined-spline queries, amplitude columns 0:4"
+    },
+    "torch": [
+      {
+        "amplitude_coefficients": [
+          143.16596247239437,
+          -1229.3051297617176,
+          1378.3879997800225
+        ],
+        "amplitude_linear_residual_linf": 2.220446049250313e-16,
+        "amplitude_matrix": [
+          [
+            0.011802259907801519,
+            0.0035947333061723315,
+            0.0019838892590223994
+          ],
+          [
+            0.0012115327135830405,
+            0.0004233369856839238,
+            0.0002486260424240397
+          ],
+          [
+            0.0002086198681440105,
+            7.832128346894296e-05,
+            4.764281657924926e-05
+          ]
+        ],
+        "amplitude_matrix_replay_linf": 0.0,
+        "amplitude_rhs": [
+          0.005226953175766491,
+          -0.00425692780210744,
+          -0.0007432046756340435
+        ],
+        "solver_reported_residual_linf": 2.220446049250313e-16,
+        "spline_queries": [
+          {
+            "derivative": 0,
+            "spline_amplitude_columns": [
+              0.3744376501736374,
+              0.011802259906213957,
+              0.003594733305680834,
+              0.0019838892587489393
+            ]
+          },
+          {
+            "derivative": 1,
+            "spline_amplitude_columns": [
+              0.0042569267306316015,
+              0.001211526650213264,
+              0.00042333511093200414,
+              0.0002486250000529574
+            ]
+          },
+          {
+            "derivative": 2,
+            "spline_amplitude_columns": [
+              0.00017035169180842764,
+              0.00020863985504189652,
+              7.832741858475804e-05,
+              4.764621602428213e-05
+            ]
+          }
+        ],
+        "targets": [
+          0.37966460334973473,
+          0.0,
+          -0.0005728569382604015
+        ]
+      },
+      {
+        "amplitude_coefficients": [
+          143.16596247239437,
+          -1229.3051297617176,
+          1378.3879997800225
+        ],
+        "amplitude_linear_residual_linf": 2.220446049250313e-16,
+        "amplitude_matrix": [
+          [
+            0.011802259907801519,
+            0.0035947333061723315,
+            0.0019838892590223994
+          ],
+          [
+            0.0012115327135830405,
+            0.0004233369856839238,
+            0.0002486260424240397
+          ],
+          [
+            0.0002086198681440105,
+            7.832128346894296e-05,
+            4.764281657924926e-05
+          ]
+        ],
+        "amplitude_matrix_replay_linf": 0.0,
+        "amplitude_rhs": [
+          0.005226953175766491,
+          -0.00425692780210744,
+          -0.0007432046756340435
+        ],
+        "solver_reported_residual_linf": 2.220446049250313e-16,
+        "spline_queries": [
+          {
+            "derivative": 0,
+            "spline_amplitude_columns": [
+              0.3744376501736374,
+              0.011802259906213957,
+              0.003594733305680834,
+              0.0019838892587489393
+            ]
+          },
+          {
+            "derivative": 1,
+            "spline_amplitude_columns": [
+              0.0042569267306316015,
+              0.001211526650213264,
+              0.00042333511093200414,
+              0.0002486250000529574
+            ]
+          },
+          {
+            "derivative": 2,
+            "spline_amplitude_columns": [
+              0.00017035169180842764,
+              0.00020863985504189652,
+              7.832741858475804e-05,
+              4.764621602428213e-05
+            ]
+          }
+        ],
+        "targets": [
+          0.37966460334973473,
+          0.0,
+          -0.0005728569382604015
+        ]
+      }
+    ]
+  },
+  "checks": {
+    "amplitude_value_patches_reached_both_backends": true,
+    "corrected_inspiral_parity": true,
+    "historical_amplitude_coefficients_replayed": true,
+    "historical_frequency_replayed": true,
+    "historical_phase_coefficients_replayed": true,
+    "ode_pre_boundary_unchanged": true,
+    "ode_same_boundary": true,
+    "ode_whole_attached_mode_parity": true,
+    "pre_boundary_mode_parity": true,
+    "same_boundary": true,
+    "same_injected_frequency": true,
+    "whole_attached_mode_parity": true
+  },
+  "controls": {
+    "amplitude_derivatives": [
+      [
+        0.0012115327135830405,
+        0.0004233369856839238,
+        0.0002486260424240397
+      ],
+      [
+        0.0002086198681440105,
+        7.832128346894296e-05,
+        4.764281657924926e-05
+      ]
+    ],
+    "amplitude_ode_raw": {
+      "amplitude_columns_value_first_second": [
+        [
+          0.37443765017396824,
+          0.011802259907801519,
+          0.0035947333061723315,
+          0.0019838892590223994
+        ],
+        [
+          0.00425692780210744,
+          0.0012115327135830405,
+          0.0004233369856839238,
+          0.0002486260424240397
+        ],
+        [
+          0.00017034773737364202,
+          0.0002086198681440105,
+          7.832128346894296e-05,
+          4.764281657924926e-05
+        ]
+      ],
+      "direct_amplitude_first_difference": -2.42861286636753e-17,
+      "raw_mode": [
+        -0.25604650556897934,
+        0.2732100672627523
+      ]
+    },
+    "amplitude_ode_rows": [
+      [
+        0.37443765017396824,
+        0.011802259907801519,
+        0.0035947333061723315,
+        0.0019838892590223994
+      ],
+      [
+        0.00425692780210744,
+        0.0012115327135830405,
+        0.0004233369856839238,
+        0.0002486260424240397
+      ],
+      [
+        0.00017034773737364202,
+        0.0002086198681440105,
+        7.832128346894296e-05,
+        4.764281657924926e-05
+      ]
+    ],
+    "continuous_boundary": true,
+    "match_time_M": 138.55437115467365,
+    "matching_rhs_derivatives": [
+      [
+        0.00425692780210744,
+        0.00017034773737364202
+      ],
+      [
+        0.27241836552254056,
+        0.003946094292748159
+      ]
+    ],
+    "phase_matrix": [
+      [
+        -0.00810319516087016,
+        -0.00016389510928568063
+      ],
+      [
+        -0.0009746316792479554,
+        -3.442581533197417e-05
+      ]
+    ],
+    "phase_ode_capture": {
+      "bracket_fraction": 0.47975389911334787,
+      "bracket_index": 8867,
+      "bracket_time_M": [
+        138.546875,
+        138.5625
+      ],
+      "field_at_match": [
+        -0.049620089794449845,
+        0.139574098084525,
+        -0.003816798805736568,
+        -0.01333406689824903
+      ],
+      "first": [
+        -0.00810319516087016,
+        -0.00016389510928568063
+      ],
+      "interpolated_state": [
+        3.2832087675423556,
+        28.520800951173744,
+        -0.08135723132234768,
+        2.2902884123664466
+      ],
+      "match_time_local_M": 138.55437115467365,
+      "orbital_frequency_minus_bracket_linear": 3.6601895125887296e-09,
+      "phase_basis": [
+        -0.17753861665979087,
+        -0.0011751279418336976
+      ],
+      "second": [
+        -0.0009746316792479554,
+        -3.442581533197417e-05
+      ]
+    },
+    "rhs_ode_capture": {
+      "amplitude_natural_cubic_first_second": [
+        0.0042569267306316015,
+        0.00017035169180842764
+      ],
+      "direct_mode_phase_first_minus_frequency": 0.0,
+      "raw_mode": [
+        -0.25604650556897934,
+        0.2732100672627523
+      ],
+      "raw_mode_phase_first": 0.27241836552254056,
+      "raw_mode_phase_second": 0.003946094292748159
+    }
+  },
+  "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+  "elapsed_s": 29.01644433400361,
+  "historical_refined_boundary_controls": {
+    "backward_secant": 0.42951156875187735,
+    "boundary_index": 8867,
+    "boundary_time_local_M": 138.546875,
+    "central_secant_control": 0.429598958982524,
+    "continuous_frequency": 0.42959992304155104,
+    "direct_raw_phase_first": 0.27238878985248555,
+    "high_step_M": 0.015625,
+    "match_time_local_M": 138.55437115467365,
+    "ode_phase_basis": [
+      -0.17747790155800722,
+      -0.0011739003318655225
+    ],
+    "ode_phase_basis_first": [
+      -0.008095894360868881,
+      -0.00016363731782133523
+    ],
+    "original_frequency": 0.42951156875187735,
+    "phase_coefficients": [
+      35.4707392521371,
+      -794.172297788774
+    ],
+    "raw_frequency": 0.2723887898524855,
+    "sampled_phase_basis": [
+      -0.17747790155800722,
+      -0.0011739003318655225
+    ],
+    "sampled_raw_frequency": 0.2723887898524855,
+    "spline_derivative_control": 0.42959899015823916
+  },
+  "host": "RONI2",
+  "ode_boundary_control": {
+    "boundary_index": 8867,
+    "continuous_attachment_boundary_time_M": 138.55437115467365,
+    "injected_frequency": 0.42959992304155104,
+    "input_boundary_time_M": 138.546875,
+    "jax_ringdown_call": {
+      "injected_frequency": 0.42959992304155104,
+      "original_frequency": 0.4296837326451939
+    },
+    "ode_phase_basis_first": [
+      -0.008095894360868881,
+      -0.00016363731782133523
+    ],
+    "phase_basis_at_boundary": [
+      -0.17747790155800722,
+      -0.0011739003318655225
+    ],
+    "phase_coefficients": [
+      35.4707392521371,
+      -794.172297788774
+    ],
+    "raw_frequency_at_boundary": 0.2723887898524855,
+    "torch_ringdown_call": {
+      "injected_frequency": 0.42959992304155104,
+      "original_frequency": 0.4296837326451939
+    }
+  },
+  "pid": 62400,
+  "plan_sha256": "9130fad5cd5790581b534a25e41a9de0639b8031ae496fac2b4e339d0ef03d90",
+  "previous_attempt": {
+    "historical_frequency_abs": 1.795490211442541e-05,
+    "reason": "matched local-polynomial NQC phase controls differed from historical Hermite/ODE controls",
+    "status": "incomplete_historical_replay"
+  },
+  "release_qualified": false,
+  "row_tuple": [
+    30.0,
+    20.0,
+    0.8,
+    0.6,
+    0.04
+  ],
+  "schema": "diffgw.seobnrv4.warm-jax-ode-boundary-control.v3",
+  "script_sha256": "2dca6ce7a619aff165eaa596b60b175f9d12d2934330ecfada219b0b468d3c3d",
+  "settings": {
+    "atol": 1e-11,
+    "coarse_output_step_M": 0.5,
+    "fine_refinement_factor": 32,
+    "max_duration_M": 1000.0,
+    "max_step_M": 2.0,
+    "rtol": 1e-10
+  },
+  "stages": {
+    "boundary_frequency_abs": 0.0,
+    "boundary_index_abs": 0,
+    "boundary_time_abs_M": 0.0,
+    "coefficient_amplitude_max_abs": 1.1368683772161603e-10,
+    "coefficient_phase_max_abs": 2.2737367544323206e-13,
+    "corrected_inspiral": {
+      "max_abs": 7.659384311865253e-14,
+      "relative_l2": 1.658596114869112e-14,
+      "samples": 9643
+    },
+    "jax_boundary_frequency": 0.4296837326451939,
+    "match_time_abs_M": 0.0,
+    "matched_source_vs_asymmetric_v2_ratio": 9.786370351921548e-12,
+    "matched_source_vs_default_control_ratio": 1.3889847516758693e-05,
+    "ode_backend_boundary_amplitude_abs": 3.885780586188048e-16,
+    "ode_backend_boundary_index_abs": 0,
+    "ode_backend_boundary_phase_abs": 0.0,
+    "ode_backend_boundary_time_abs_M": 0.0,
+    "ode_corrected_inspiral": {
+      "max_abs": 7.659384311865253e-14,
+      "relative_l2": 1.658596114869112e-14,
+      "samples": 9643
+    },
+    "ode_post_boundary_mode": {
+      "max_abs": 2.5842512794148288e-15,
+      "relative_l2": 1.2914654984550186e-15,
+      "samples": 6401
+    },
+    "ode_pre_boundary_mode": {
+      "max_abs": 2.0307144547971162e-15,
+      "relative_l2": 3.689995665582501e-15,
+      "samples": 8868
+    },
+    "ode_vs_baseline_torch_post_boundary": {
+      "max_abs": 0.00024577473921104425,
+      "relative_l2": 0.0006847752520439383,
+      "samples": 6401
+    },
+    "ode_vs_baseline_torch_pre_boundary": {
+      "max_abs": 0.0,
+      "relative_l2": 0.0,
+      "samples": 8868
+    },
+    "ode_vs_historical_amplitude_coefficients_max_abs": 0.0,
+    "ode_vs_historical_basis_first_max_abs": 0.0,
+    "ode_vs_historical_frequency_abs": 0.0,
+    "ode_vs_historical_phase_coefficients_max_abs": 0.0,
+    "ode_vs_historical_raw_frequency_abs": 0.0,
+    "ode_whole_attached_mode": {
+      "max_abs": 2.5842512794148288e-15,
+      "relative_l2": 3.379706772374353e-15,
+      "samples": 15269
+    },
+    "post_boundary_mode": {
+      "max_abs": 2.5373211499724772e-15,
+      "relative_l2": 1.2485190788862055e-15,
+      "samples": 6401
+    },
+    "pre_boundary_mode": {
+      "max_abs": 2.0307144547971162e-15,
+      "relative_l2": 3.689995665582501e-15,
+      "samples": 8868
+    },
+    "torch_boundary_frequency": 0.4296837326451939,
+    "whole_attached_mode": {
+      "max_abs": 2.5373211499724772e-15,
+      "relative_l2": 3.3767425898177653e-15,
+      "samples": 15269
+    }
+  },
+  "status": "diagnostic_complete"
+}

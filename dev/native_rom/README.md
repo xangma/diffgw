@@ -2976,6 +2976,13 @@ used different phase controls and did not replay that frequency. V2 still
 has a `1.05e-8` historical amplitude-coefficient gap because the diagnostic
 attachment API lacks the source amplitude-value hook; this is a historical
 replay limitation, not a Torch/JAX parity gap.
+The distinct [v3 amplitude-value replay](evidence/2026-09-25/warm_jax_ode_boundary_control_v3.json)
+uses explicit development-only hooks for the historical ODE amplitude value
+and derivative rows. Historical amplitude and phase coefficients and the
+boundary frequency then replay exactly; Torch/JAX whole attached-mode L2 is
+`3.38e-15` on the same 15269 samples. The hooks are instrumented in the
+result and do not alter production attachment. This validates matched-input
+backend parity, not independently evolved whole waveforms.
 
 1. Qualify the physical generator against the published equations and independent
    references over the intended domain, resolve convention/provenance gaps, and
