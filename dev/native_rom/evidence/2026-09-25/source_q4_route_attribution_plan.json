@@ -1,0 +1,33 @@
+{
+  "schema": "diffgw.seobnrv4.source-q4-route-attribution-plan.v1",
+  "purpose": "Compare the earlier Torch adaptive source-backed route at the exact q4 nonspinning binary and numerical settings of the new Torch/JAX spliced route, then compare each independently to the pinned public binary. Localize the remaining common public difference without fitting.",
+  "case": [40.0, 10.0, 0.0, 0.0, 0.04],
+  "source_choices": {
+    "hamiltonian_calibration": "lal_v4_rounded",
+    "hamiltonian_log_derivative": "lal_v4",
+    "spin_truncation": "tabulated",
+    "mode_21_higher_spin": "rho_hybrid",
+    "mode_31_higher_spin": "lal_v4_rho",
+    "mode_32_spin_square": "lal_v4_zero",
+    "mode_33_higher_spin": "lal_v4_rho",
+    "mode_43_higher_spin": "lal_v4_rho",
+    "qnm_source": "independent_kerr"
+  },
+  "numerical_settings": {
+    "dt_geom_M": 0.5,
+    "atol": 1e-10,
+    "rtol": 1e-9,
+    "coarse_initial_step_M": 0.5,
+    "fine_max_step_M": 2.0,
+    "ringdown_duration_M": 100.0,
+    "restart": "default_150M_before_coarse_event",
+    "local_nqc_derivatives": false,
+    "fine_rkf45_resampling": false
+  },
+  "public_binary": {
+    "lal_version": "7.7.1",
+    "lalsimulation_version": "6.2.1",
+    "identity_source": "dev/native_rom/evidence/2026-09-24/near_extreme_public_polar_plan.json"
+  },
+  "interpretation": "Descriptive comparison only. The two assembly paths may differ in NQC and ringdown interpolation; a difference in public metrics localizes but does not identify the exact stage."
+}
