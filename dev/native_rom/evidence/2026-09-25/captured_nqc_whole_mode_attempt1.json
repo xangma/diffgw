@@ -1,0 +1,125 @@
+{
+  "baselines": {
+    "source": {
+      "captured_active_coefficients": [
+        172.36472611312226,
+        -1478.7199108839393,
+        1657.1259916551278,
+        43.04742202075585,
+        -1096.0829923448962
+      ],
+      "delta_t_s": 3.078431842275792e-05,
+      "epoch_s": -0.12968278800000002,
+      "mode_sha256": "5276262f442d2b41eb280cd3d2c9c6158bfb77ad26db7ae170583b6fb5b7c532",
+      "no_op_mode_sha256": "5276262f442d2b41eb280cd3d2c9c6158bfb77ad26db7ae170583b6fb5b7c532",
+      "samples": 7726
+    }
+  },
+  "comparisons": {},
+  "errors": [
+    {
+      "message": "Intervention changed source epoch or cadence: stationary_frequency_peak_minus_reported_offset__historical_gsl_cubic",
+      "type": "ValueError"
+    }
+  ],
+  "fixed": {
+    "alignment": "baseline-only 0.1/M frequency crossing and phase, reused for all source NQC interventions",
+    "prior_failed_0p01_stability_l2": 0.02649100762901472,
+    "source_capture_array_sha256": "2e833d066734a4b91bec5c71f267011bde5c6ffb2ace5a3b49f2f0b40b1f04d7",
+    "source_match_M": 137.61454396452547,
+    "source_reported_peak_M": 149.70311737060547,
+    "source_stationary_match_M": 137.59242686199096,
+    "trajectory": "same pinned source generator settings and input parameters"
+  },
+  "input_sha256": {
+    "adapter": "40309a9bcd64c0a48d3d63d01694f4d21b74dce53f56dd94ae6f00047e214057",
+    "anchor_impl": "d4ce654705a6599340b9d5cdfeda303a748e62197c143c4fa6f995e03126526b",
+    "capture": "c38df7678cda2ef8c602888eb853938d966ba2cbda6cbb0e49d1564d879fe386",
+    "capture_array": "2e833d066734a4b91bec5c71f267011bde5c6ffb2ace5a3b49f2f0b40b1f04d7",
+    "compiler_impl": "b1d040bedff3eb88ee644ede9098c7807ab8a3e2a9ca6b8bcfe9bd35fec4d7bb",
+    "metric_impl": "df9bffb614b87e82b5a8da47212cb01312ad4d0cb9d687d929570df134954174",
+    "native_driver_impl": "d478f34d96e944ddbafcc308d07b3bd717b141c74bafd12fd1d23bc2a7583954",
+    "native_prior": "8ac37b7cddcc5c15333ef4167af51ce0c37e3327a2f8b7b780510fbb1b044eda",
+    "native_replay_impl": "23c6507a972b192bf50af1df76616f13f2431c419cb6db66d07245bc88f612c0",
+    "native_waveform": "01c2895e1623751c679d2f419aede60f37d2d05390361e389574fee8e132aa54",
+    "override_impl": "ba4bc96d48d4d55f88a62dfd39b99a8166257743d07a100758ced0c7dd0803c3",
+    "prior_stability": "f54fdfbfacdc85ba37d2cae05091b33be297f7fb0e2f3e57018649dd940e10eb",
+    "source_flux_plan": "1167199c8f954f97a5905a1e3b2f67d1555e984e5f1da0a0fc42a77a925f96ea",
+    "source_wheel": "c103f7d884073eb00029a231dd271d49c4a4571455030b11b93c22e298a479da"
+  },
+  "interventions": {
+    "reported_match__historical_gsl_cubic": {
+      "coefficients": [
+        172.36472503531704,
+        -1478.719900204264,
+        1657.125978715701,
+        43.04742202098403,
+        -1096.0829923577248
+      ],
+      "delta_t_s": 3.078431842275792e-05,
+      "epoch_s": -0.12968278800000002,
+      "mode_sha256": "7597ec60b721b3c89defa49997f8830c45fc7a6e2cb577cfcb37d4da8a1d7d51",
+      "samples": 7726,
+      "source_active_difference_l2": 1.681208081319272e-05
+    },
+    "reported_match__local_degree4_pm2M": {
+      "coefficients": [
+        172.1984159608888,
+        -1477.0633220365826,
+        1655.11363014433,
+        43.01346678906922,
+        -1094.3115276067151
+      ],
+      "delta_t_s": 3.078431842275792e-05,
+      "epoch_s": -0.12968278800000002,
+      "mode_sha256": "8137b85c422b75729a5f2558cecea1487a46e4a35677a9f5fd3666a6b347dc00",
+      "samples": 7726,
+      "source_active_difference_l2": 3.156071102247311
+    }
+  },
+  "plan_sha256": "85eb9b93fda8aa4b47b566b2daab0ac7086c12101bcaa985403d2de4e1946ccd",
+  "process": {
+    "argv": [
+      "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw/dev/native_rom/diagnose_captured_nqc_whole_mode.py",
+      "--source-root",
+      "/Users/xangma/repos/lalsuite-git",
+      "--headers",
+      "/tmp/diffgw-lalsuite-pinned-53acc0c/merged-include",
+      "--gsl-include",
+      "/usr/local/include",
+      "--json-out",
+      "dev/native_rom/evidence/2026-09-25/captured_nqc_whole_mode.json"
+    ],
+    "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+    "host": "RONI2",
+    "pid": 79182
+  },
+  "release_qualified": false,
+  "row": {
+    "chi1": 0.8,
+    "chi2": 0.8,
+    "mass1": 30.0,
+    "mass2": 20.0,
+    "omega_start": 0.04
+  },
+  "schema": "diffgw.seobnrv4.captured-nqc-whole-mode.v1",
+  "scope": {
+    "description": "Scalar CPU float64 numerical stability evidence only; no training or promotion.",
+    "development_only": true,
+    "fixed_source_trajectory": true,
+    "known_limitations": [
+      "Convergence cannot establish correctness of the equations or published model fidelity.",
+      "The adaptive prototype uses a diagnostic QNM spline with independently generated values and black-box-inferred knot metadata; this is not wholly literature-specified provenance.",
+      "Changing dt also changes the adaptive initial step and coarse/fine restart sampling; the grid check measures the complete generator's grid sensitivity.",
+      "No time, phase, amplitude, or coefficient fitting is performed.",
+      "No derivatives, batched execution, accelerators, or JAX are qualified here."
+    ],
+    "physics_validated": false,
+    "production_asset": false,
+    "production_promotion_allowed": false,
+    "training_generator_qualified": false
+  },
+  "script_sha256": "651ae5247f9d2f96d6dd6dd5ff52e2bf6c71af0d3b055de5aae2fb7edde8e9d6",
+  "status": "failed",
+  "step_M": 0.125
+}

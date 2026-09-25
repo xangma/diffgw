@@ -2424,6 +2424,24 @@ stationary maxima. This is one fixed-input attribution, not a new matching
 prescription or full-waveform result; the separate `0.02649` coefficient
 stencil difference still fails its frozen `0.01` stability gate.
 
+The [captured-coefficient whole-mode intervention](evidence/2026-09-25/captured_nqc_whole_mode.json)
+uses a [frozen plan](evidence/2026-09-25/captured_nqc_whole_mode_plan.json)
+and dev-only [runner](diagnose_captured_nqc_whole_mode.py) to replay all four
+captured source NQC fits on the strong aligned-spin row. On the 5,174-sample
+source/native/public common window, complex relative L2 versus the public
+mode is `0.002698` for the historical source and reported-event/historical
+fit, `0.004400` for reported/local, `0.004901` for stationary/historical,
+and `0.003911` for stationary/local. Their postpeak values are `0.008406`,
+`0.012317`, `0.006575`, and `0.004653`, respectively. The source no-op
+replays bitwise. Source NQC changes the initial frequency crop: stationary
+fits have `kMin=3279` versus `3280` for the other modes, with the same
+pre-crop length and cadence. Comparisons therefore use shared pre-crop
+indices and the untouched baseline time origin; returned epoch shifts are
+reported separately. The four superseded protocol attempts and their failures
+are documented in plans and results retained beside the final result. This
+single-row diagnostic does not change the generator matching event, pass the
+earlier `0.01` stencil-stability gate, or qualify NQC for release.
+
 The [prospective native ROM-input pilot](evidence/2026-09-25/rom_input_stability.json)
 uses a [frozen two-row plan](evidence/2026-09-25/rom_input_stability_plan.json),
 three ODE tolerances, three nested TD sampling rates, and a common positive
@@ -2474,6 +2492,22 @@ the old failed gates remain failed. This validates only a bounded sampling
 budget on these rows. It does not qualify the native physical generator or
 ROM, set a production conditioning protocol, or consume the two reserved ROM
 holdouts.
+
+A [prospectively frozen shared-epoch diagnostic](evidence/2026-09-25/rom_input_shared_epoch_plan.json)
+on two additional development rows separates FFT pad/crop placement from the
+physical peak-chart epoch, then fits one plus-derived phase gauge for both
+polarizations. Its [result](evidence/2026-09-25/rom_input_shared_epoch.json)
+passes every declared gate: whole-band shared-gauge complex and amplitude L2,
+phase RMS, three subband complex L2 budgets, polarization-ratio consistency,
+fine-cadence nonincrease, and amplitude-support and phase-unwrapping checks.
+Across adjacent cadences, raw ungauged complex L2 is `0.00951`–`0.01994`;
+pad/crop correction reduces it to `6.56e-7`–`7.44e-5`. Full physical-epoch
+correction gives the same pair errors because that epoch is constant across
+cadences on each row. The maximum shared-gauge complex L2 is `3.01e-5`,
+subband complex L2 `9.54e-5`, and polarization-ratio L2 `8.15e-7`.
+The saved spectra and hashes support only this bounded two-row diagnostic;
+the two reserved ROM holdouts remain untouched. This does not qualify domain
+convergence, the native physical generator, or a release ROM.
 
 1. Qualify the physical generator against the published equations and independent
    references over the intended domain, resolve convention/provenance gaps, and

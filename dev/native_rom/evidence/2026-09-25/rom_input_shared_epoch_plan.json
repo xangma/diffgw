@@ -1,0 +1,52 @@
+{
+  "schema": "diffgw.seobnrv4.rom-input-shared-epoch-plan.v1",
+  "purpose": "Prospective development-only test of FFT sample-zero accounting and one phase/time gauge shared by both polarizations after the windowed-gauge pilot.",
+  "release_qualified": false,
+  "prior_windowed_gauge_report_sha256": "1f6215869f4cece790042b4fcfdfca200dcc370d6a86ef198bfc1fbb2425f382",
+  "prior_windowed_gauge_spectra_sha256": "d6b8268c08059bae41c3304d471e001d7b5f584f5f4672253813ec3b0920ac78",
+  "source_snapshot_sha256": "2062f70072d9953a7f9b968336c80512b8034497eb2e4cb0fea7ad2633b7d2cf",
+  "runner_sha256": "b8a6c27150d022a827c90ddf32a72dcc54db2c35c6a5b043cae3d745e9a05042",
+  "conditioner_sha256": "fc0ab96e16e7243ff5b82021cac9c2edcb8535b9fbd34a8a073dd42f6736197a",
+  "fd_adapter_sha256": "45023e71cf23589b14c1e8cc65f0290b15b909eb3fe4be84a60961d361ba9a88",
+  "td_fd_conditioner_sha256": "d8a9ad936a0e6fb8e0c59a35428a7e2c70e372dca0b8d87f6d890d38dcd30a8a",
+  "diagnostic_rows": [
+    {"name": "q1p6_mixed_spin", "mass1": 32.0, "mass2": 20.0, "chi1": 0.4, "chi2": -0.1, "f_low": 30.0},
+    {"name": "q4p5_aligned", "mass1": 45.0, "mass2": 10.0, "chi1": 0.6, "chi2": 0.2, "f_low": 30.0}
+  ],
+  "reserved_holdouts_remain_unevaluated": ["off_grid_mixed_spin", "high_q_antialigned"],
+  "f_max_levels_hz": [8192.0, 16384.0, 32768.0],
+  "atol": 1e-11,
+  "rtol": 1e-10,
+  "delta_f_hz": 0.03125,
+  "comparison_band_hz": [40.0, 300.0],
+  "subbands_hz": [[40.0, 100.0], [100.0, 200.0], [200.0, 300.0]],
+  "reference_frequency_hz": 100.0,
+  "gauge_half_width_hz": 2.0,
+  "distance_mpc": 100.0,
+  "inclination_rad": 0.7,
+  "ringdown_duration_M": 150.0,
+  "per_run_timeout_seconds": 240.0,
+  "fft_epoch_convention": "The physical time of FFT index zero relative to the continuous orbital-frequency peak is physical_epoch + (conditioned_retained_samples - fft_samples) * dt_seconds. Save raw, pad/crop-only after exp(-2 pi i f * (retained - fft_samples) * dt_seconds), and full physical-epoch after the additional exp(-2 pi i f * physical_epoch). These are diagnostic accounting transforms, not production ROM gauges.",
+  "shared_gauge_convention": "Fit the plus-polarization unwrapped phase with the frozen quadratic 100 +/- 2 Hz window after FFT epoch correction. Apply the same removed phase and slope to plus and cross. Never fit cross independently for the primary comparison.",
+  "synthetic_control": {
+    "dt_seconds": 0.00048828125,
+    "retained_samples": 20,
+    "impulse_index": 10,
+    "fft_samples": [16, 64, 128],
+    "extra_leading_zeros": 3,
+    "maximum_normalized_complex_error": 1e-12,
+    "maximum_affine_gauge_error": 1e-10
+  },
+  "gates": {
+    "maximum_adjacent_shared_gauge_complex_relative_l2": 0.0001,
+    "maximum_adjacent_shared_gauge_amplitude_relative_l2": 0.0001,
+    "maximum_adjacent_shared_gauge_phase_rms_rad": 0.001,
+    "maximum_adjacent_polarization_ratio_relative_l2": 0.0001,
+    "maximum_subband_shared_gauge_complex_relative_l2": 0.0001,
+    "fine_to_coarse_shared_gauge_complex_error_ratio": 1.0,
+    "minimum_relative_amplitude_in_band": 1e-8,
+    "maximum_unwrapped_adjacent_phase_step_rad": 1.5707963267948966,
+    "maximum_decimated_phase_unwrap_difference_rad": 1e-6
+  },
+  "interpretation": "Both adjacent cadence pairs, both polarizations, every declared subband, ratio consistency, synthetic controls, support and unwrapping, and nonincreasing complex error at the finer pair must pass. Raw, pad/crop-only, and full physical-epoch ungauged differences distinguish discrete FFT placement from peak-chart changes; these descriptive differences have no release gate. A failure remains visible and does not invite threshold tuning. A pass covers only these two scalar CPU rows and this frequency band; it neither qualifies the physical generator nor ROM training, interpolation, gradients, broader domain, or release. The original local-gauge failures remain failed. Both reserved ROM holdouts remain untouched."
+}
