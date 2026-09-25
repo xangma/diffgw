@@ -29,6 +29,9 @@ from jaxwave.approximants.precession_msa import (
     evaluate_msa_precession,
     resolve_precession_version,
 )
+from jaxwave.approximants.precession_msa_v223_one_spin_projection import (
+    one_spin_msa_v223_waveform,
+)
 
 
 def wigner_small_d_matrix(l: int, beta: jnp.ndarray) -> jnp.ndarray:
@@ -148,6 +151,7 @@ class IMRPhenomXP:
     ) -> Tuple[jnp.ndarray, jnp.ndarray]:
         """Generate precessing dominant-mode polarizations in JAX."""
         p_ver = resolve_precession_version(precession_method, prec_version)
+        force_legacy = kwargs.pop("_force_legacy", False)
         final_spin_version = kwargs.pop("final_spin_version", None)
         if final_spin_version is not None:
             if isinstance(final_spin_version, bool) or final_spin_version not in (0, 3):
@@ -215,6 +219,91 @@ class IMRPhenomXP:
 
         in_plane_sq = s1x * s1x + s1y * s1y + s2x * s2x + s2y * s2y
         is_aligned = (in_plane_sq == 0.0)
+
+        # The published constant-spin/zero-nutation solution has no split-root
+        # singularity.  Route its supported rows through the source-derived
+        # JAX kernel; leave generic two-spin rows on the existing public path.
+        if p_ver == 223 and convention in (0, 1, 6) and final_spin_mod == 3 and not force_legacy:
+            from jaxwave.approximants.precession_msa_v223_endpoint import _opening_l_3pn
+
+            f_source = as_array(freqs, dtype=dtype)
+            f_shape = f_source.shape
+            positive_min = jnp.min(jnp.where(f_source > 0.0, f_source, jnp.inf))
+            positive_min = jnp.where(jnp.isfinite(positive_min), positive_min, 20.0)
+            f_safe = jnp.where(f_source > 0.0, f_source, positive_min)
+            clean_fref = fref_eval
+            one_spin = ((s1x == 0.0) & (s1y == 0.0)) | ((s2x == 0.0) & (s2y == 0.0))
+            total = m1 + m2
+            n1, n2 = m1 / total, m2 / total
+            spin_l = n1**2 * s1z + n2**2 * s2z
+            sigma_l = n2 * s2z - n1 * s1z
+            eta = n1 * n2
+            delta = n1 - n2
+            v_ref = (PI * total * MSUN_SEC * clean_fref) ** (1.0 / 3.0)
+            j_ref = _opening_l_3pn(v_ref, eta, delta, spin_l, sigma_l) + spin_l
+            use_clean = one_spin & (j_ref > 0.0) & (clean_fref > 0.0)
+            if convention == 6:
+                f_guard = jnp.where(
+                    f_source.reshape(-1) > 0.0,
+                    f_source.reshape(-1),
+                    fref_eval[..., None],
+                )
+                v_grid = (PI * total[..., None] * MSUN_SEC * f_guard) ** (1.0 / 3.0)
+                j_grid = _opening_l_3pn(
+                    v_grid, eta[..., None], delta[..., None],
+                    spin_l[..., None], sigma_l[..., None],
+                ) + spin_l[..., None]
+                use_clean = use_clean & jnp.all(j_grid > 0.0, axis=-1)
+
+            def evaluate_row(row):
+                (r_m1, r_m2, r_s1x, r_s1y, r_s1z, r_s2x, r_s2y, r_s2z,
+                 r_dist, r_inc, r_phi, r_time, r_phi0, r_fref, r_clean_fref,
+                 r_clean) = row
+
+                def clean(_):
+                    hp, hc = one_spin_msa_v223_waveform(
+                        f_safe, r_m1, r_m2,
+                        jnp.stack((r_s1x, r_s1y, r_s1z)),
+                        jnp.stack((r_s2x, r_s2y, r_s2z)),
+                        distance=r_dist, inclination=r_inc,
+                        phic=r_phi-r_phi0, tc=r_time, f_ref=r_clean_fref,
+                        convention=1 if convention == 6 else convention,
+                        phasing_convention=phasing_convention,
+                        reference_frame=reference_frame,
+                    )
+                    if convention == 6:
+                        phase = jnp.exp(2.0j * r_phi)
+                        hp, hc = phase * hp, phase * hc
+                    hp, hc = hp.reshape(f_shape), hc.reshape(f_shape)
+                    return (jnp.where(f_source > 0.0, hp, 0.0j),
+                            jnp.where(f_source > 0.0, hc, 0.0j))
+
+                def legacy(_):
+                    return IMRPhenomXP.evaluate(
+                        f=f_source, mass1=r_m1, mass2=r_m2,
+                        spin1x=r_s1x, spin1y=r_s1y, spin1z=r_s1z,
+                        spin2x=r_s2x, spin2y=r_s2y, spin2z=r_s2z,
+                        distance=r_dist, inclination=r_inc,
+                        phic=r_phi, tc=r_time,
+                        f_ref=r_fref if fref is not None else None,
+                        phi0=r_phi0, phasing_convention=phasing_convention,
+                        reference_frame=reference_frame,
+                        precession_method=precession_method, prec_version=p_ver,
+                        convention=convention, final_spin_mod=final_spin_mod,
+                        _force_legacy=True,
+                    )
+
+                return jax.lax.cond(r_clean, clean, legacy, operand=None)
+
+            row_values = (
+                m1, m2, s1x, s1y, s1z, s2x, s2y, s2z,
+                dist, inc, phi_c, t_c, phi_0, fref_eval, clean_fref, use_clean,
+            )
+            if m1.ndim == 0:
+                return evaluate_row(row_values)
+            flat_values = tuple(value.reshape(-1) for value in row_values)
+            hp, hc = jax.vmap(lambda *row: evaluate_row(row))(*flat_values)
+            return hp.reshape(m1.shape + f_shape), hc.reshape(m1.shape + f_shape)
 
         total_mass = m1 + m2
         eta = component_masses_to_eta(m1, m2)
