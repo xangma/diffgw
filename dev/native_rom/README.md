@@ -2455,6 +2455,25 @@ versus `0.000212` from the matrix), especially the raw-mode amplitude
 curvature input. This isolates a derivative-input problem on saved systems;
 it does not validate a new curvature estimator or release NQC.
 
+The [fixed-state raw-amplitude curvature probe](evidence/2026-09-25/source_aligned_raw_amplitude_curvature_plan.json)
+rebuilds the pinned source field and mode evaluators at the captured strong
+aligned-spin matching event. Its [result](evidence/2026-09-25/source_aligned_raw_amplitude_curvature.json)
+replays the historical `0.1` and `0.2 M` curvatures within `1.4e-15`;
+their spread is `5.5482e-9`. Decimal recomputation on the same binary64
+amplitudes changes the five-point result by at most `5.6e-15` at those steps,
+and removing orbital phase changes sampled amplitudes by at most `1.7e-16`.
+Changing tight integration sampling shifts the curvature by `1.1e-9` to
+`9.8e-9`, comparable with the historical stencil spread. A separately
+[frozen fixed-state split](evidence/2026-09-25/source_aligned_raw_amplitude_sensitivity_plan.json)
+and its [result](evidence/2026-09-25/source_aligned_raw_amplitude_sensitivity.json)
+show that the `9.756e-9` bounded-dense to independent-endpoint curvature
+shift comprises `+1.077e-8` from changed states evaluated at fixed orbital
+frequency and `-1.017e-9` from the frequency change. This locates numerical
+sensitivity in the state-to-raw-mode amplitude path, including its internal
+Hamiltonian evaluation; the exact operation, continuum curvature, and a
+validated replacement derivative rule remain unresolved. The failed `0.01`
+NQC coefficient gate is unchanged.
+
 The [prospective native ROM-input pilot](evidence/2026-09-25/rom_input_stability.json)
 uses a [frozen two-row plan](evidence/2026-09-25/rom_input_stability_plan.json),
 three ODE tolerances, three nested TD sampling rates, and a common positive

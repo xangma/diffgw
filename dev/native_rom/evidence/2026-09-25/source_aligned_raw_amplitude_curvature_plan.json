@@ -1,0 +1,32 @@
+{
+  "schema": "diffgw.seobnrv4.source-aligned-raw-amplitude-curvature-plan.v1",
+  "purpose": "Attribute the frozen strong aligned-spin 0.1-to-0.2 M NQC derivative-input discrepancy at one captured state/event, focusing on the pre-NQC raw-mode amplitude second derivative along the pinned source ODE field.",
+  "release_qualified": false,
+  "row": {"mass1": 30.0, "mass2": 20.0, "chi1": 0.8, "chi2": 0.8, "omega_start": 0.04},
+  "event_M": 137.59240346159578,
+  "state_source": "captured_state_at_match",
+  "source_evidence": "dev/native_rom/evidence/2026-09-24/source_nqc_dense_field_strong_aligned_spin.json",
+  "source_evidence_sha256": "c8d642fd8b8f7e17672c1c6c2ec831a3ba4e49d4ebbf7992afaf87a9360eb780",
+  "pilot_evidence": "dev/native_rom/evidence/2026-09-25/source_aligned_derivative_only_pilot.json",
+  "pilot_evidence_sha256": "f54fdfbfacdc85ba37d2cae05091b33be297f7fb0e2f3e57018649dd940e10eb",
+  "solve_evidence": "dev/native_rom/evidence/2026-09-25/source_aligned_nqc_solve_condition.json",
+  "solve_evidence_sha256": "0e19c600f9d6153dbe0da92393a6d2e422fdc2a24e5c310b056152560eab41d4",
+  "source_flux_plan": "dev/native_rom/evidence/2026-09-24/source_flux_initial_plan.json",
+  "source_flux_plan_sha256": "1167199c8f954f97a5905a1e3b2f67d1555e984e5f1da0a0fc42a77a925f96ea",
+  "field_adapter": "dev/native_rom/reference/full_v4_source_field_adapter.c",
+  "field_adapter_sha256": "d674aecdc602024c539ff8a2040a842adceab3ca546c08e307724c2fccdd3113",
+  "mode_adapter": "dev/native_rom/reference/flux_v4_source_wheel_adapter.c",
+  "mode_adapter_sha256": "91833ee4a2a8fae8efa3a2fef9234ed4f222a73198102ceafab361809c9a0660",
+  "offsets_M": [-0.4, -0.3, -0.2, -0.15, -0.1, -0.05, 0.0, 0.05, 0.1, 0.15, 0.2, 0.3, 0.4],
+  "five_point_steps_M": [0.05, 0.1, 0.2],
+  "seven_point_step_M": 0.1,
+  "integrators": [
+    {"name": "adaptive_dense_loose", "rtol": 1e-11, "atol": 1e-12, "max_step_M": null, "sampling": "dense"},
+    {"name": "adaptive_dense_tight", "rtol": 1e-12, "atol": 1e-13, "max_step_M": null, "sampling": "dense"},
+    {"name": "bounded_dense_tight", "rtol": 1e-12, "atol": 1e-13, "max_step_M": 0.025, "sampling": "dense"},
+    {"name": "bounded_endpoint_tight", "rtol": 1e-12, "atol": 1e-13, "max_step_M": 0.025, "sampling": "independent_endpoint"}
+  ],
+  "formula_check": "Compare the five-point float expression with exact Decimal arithmetic on the same binary64 raw-amplitude samples; also report the seven-point curvature from independently weighted nodes.",
+  "mode_check": "At fixed states and field omega, compare raw-mode amplitudes at the evolved orbital phase with the same states evaluated at orbital phase zero; compare center amplitude with the saved explicit-mode and captured amplitudes.",
+  "interpretation": "This measures numerical sensitivity at one fixed source state/event. It does not certify continuum curvature, waveform convergence, a replacement NQC prescription, or release readiness. The prior 0.01 coefficient-stencil gate remains failed."
+}

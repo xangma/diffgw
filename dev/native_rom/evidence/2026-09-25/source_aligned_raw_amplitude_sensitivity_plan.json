@@ -1,0 +1,15 @@
+{
+  "schema": "diffgw.seobnrv4.source-aligned-raw-amplitude-sensitivity-plan.v1",
+  "purpose": "Follow up the frozen raw-amplitude curvature probe by separating tiny source-state changes from source-field orbital-frequency changes in the explicit raw-mode evaluator.",
+  "release_qualified": false,
+  "curvature_evidence": "dev/native_rom/evidence/2026-09-25/source_aligned_raw_amplitude_curvature.json",
+  "curvature_evidence_sha256": "d5029c673d246cd2cf0f852ba171373e12ecd53be4596a9fe7e66c5248273069",
+  "source_flux_plan": "dev/native_rom/evidence/2026-09-24/source_flux_initial_plan.json",
+  "source_flux_plan_sha256": "1167199c8f954f97a5905a1e3b2f67d1555e984e5f1da0a0fc42a77a925f96ea",
+  "mode_adapter": "dev/native_rom/reference/flux_v4_source_wheel_adapter.c",
+  "mode_adapter_sha256": "91833ee4a2a8fae8efa3a2fef9234ed4f222a73198102ceafab361809c9a0660",
+  "integrator_pairs": [["adaptive_dense_tight", "bounded_dense_tight"], ["bounded_dense_tight", "bounded_endpoint_tight"]],
+  "offsets_M": [-0.2, -0.1, 0.0, 0.1, 0.2],
+  "center_perturbations": {"coordinates": ["radius", "radial_momentum", "angular_momentum", "omega"], "absolute_steps": [1e-8, 1e-9, 1e-10, 1e-11]},
+  "interpretation": "This is a local numerical attribution at the saved strong aligned-spin event. It does not certify a continuum derivative, a replacement NQC rule, source accuracy, or release readiness. The prior 0.01 coefficient-stencil gate remains failed."
+}
