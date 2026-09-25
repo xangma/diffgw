@@ -86,11 +86,13 @@ attachment frequency.  None is unambiguously identified as the spin-sampling
 epoch.  Equating one of them with that epoch would be an implementation choice,
 not a paper transcription.
 
-The scalar reference therefore accepts caller-supplied terminal
-`(chi1, chi2, Lhat)` vectors in any common Cartesian frame, performs the
-instantaneous projection, and is tested for rotation invariance and agreement
-with the z-aligned component formula.  It deliberately does not evolve the
-state or choose the stop event.  The current Torch/JAX route instead passes
+The scalar reference therefore accepts caller-supplied terminal dimensionless
+spins `chi_i = S_i/m_i^2` and `Lhat` in any common Cartesian frame, performs
+the instantaneous projection, and is tested for rotation invariance and
+agreement with the z-aligned component formula.  These are algebraic component
+checks, not physical validation of a terminal state.  The reference
+deliberately does not evolve the state or choose the stop event.  The current
+Torch/JAX route instead passes
 reference-frequency spin components into the map; its SpinTaylor helper returns
 only six angle/frame quantities.  Its `0.98 f_MECO` transition, frequency
 clamps, and fixed 200-node RK4 evolution are recorded as project-specific
@@ -262,8 +264,8 @@ Promotion requires all of the following without relaxing existing thresholds:
    or a third-party implementation does not satisfy this gate.
 2. Establish an independently specified and licensed PN evolution and explicit
    terminal sampling rule; return terminal `S1`, `S2`, and `Lhat`, demonstrate
-   integration convergence and stop-event stability, then feed that state into
-   Eqs. (3)–(6).
+   integration convergence and stop-event stability, convert the spins to
+   `chi_i = S_i/m_i^2`, then feed that state into Eqs. (3)–(6).
 3. Implement the exact alpha/beta attachments, beta bound, exterior
    continuations, and minimal-rotation convention with value and derivative
    checks at every join.
