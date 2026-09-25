@@ -1,0 +1,211 @@
+{
+  "case_id": "strong_aligned",
+  "checks": {
+    "each_level_backend_checks_passed": true,
+    "nqc_linear_system_max_abs_residual_at_most": true,
+    "raw_mode_shared_relative_l2_at_most": true,
+    "shared_fine_time_max_abs_at_most_M": true
+  },
+  "comparisons": {
+    "amplitude_system": {
+      "coefficient_l2": 0.003934458591781626,
+      "matrix_first_coefficient_l2": 0.0030833683846781417,
+      "matrix_relative_l2": 1.1996916364519745e-06,
+      "rhs_first_coefficient_l2": 0.007017038713325372,
+      "rhs_relative_l2": 4.997218763399201e-06
+    },
+    "fine_base_mode": {
+      "max_abs": 8.054022875089391e-07,
+      "relative_l2": 3.846075385726185e-08,
+      "samples": 38400,
+      "time_max_abs_M": 0.0
+    },
+    "fine_corrected_inspiral": {
+      "max_abs": 0.000634701824880022,
+      "relative_l2": 0.00017225634008598555,
+      "samples": 38400,
+      "time_max_abs_M": 0.0
+    },
+    "fine_orbital_frequency": {
+      "max_abs": 1.695483551333865e-07,
+      "relative_l2": 2.3864998122637204e-08,
+      "samples": 38400,
+      "time_max_abs_M": 0.0
+    },
+    "fine_state": {
+      "max_abs": 1.9247175729597554e-06,
+      "relative_l2": 1.2100783170857424e-09,
+      "samples": 38400,
+      "time_max_abs_M": 0.0
+    },
+    "jax_fine_base_mode": {
+      "max_abs": 8.043233808751866e-07,
+      "relative_l2": 3.8500599404036367e-08,
+      "samples": 38400,
+      "time_max_abs_M": 0.0
+    },
+    "jax_fine_corrected_inspiral": {
+      "max_abs": 0.0006395122794369461,
+      "relative_l2": 0.00017401215041265233,
+      "samples": 38400,
+      "time_max_abs_M": 0.0
+    },
+    "jax_fine_state": {
+      "max_abs": 1.9221602252372794e-06,
+      "relative_l2": 1.2113417127481902e-09,
+      "samples": 38400,
+      "time_max_abs_M": 0.0
+    },
+    "phase_system": {
+      "coefficient_l2": 0.09292178625564997,
+      "matrix_first_coefficient_l2": 0.09133969355970947,
+      "matrix_relative_l2": 8.997390404273622e-06,
+      "rhs_first_coefficient_l2": 0.0015820737149592277,
+      "rhs_relative_l2": 2.7731933384193123e-07
+    },
+    "whole_waveform_relative_l2": 0.00010559553041631513
+  },
+  "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+  "diagnostic_checks_passed": true,
+  "elapsed_s": 138.99990075000096,
+  "host": "RONI2",
+  "levels": {
+    "baseline": {
+      "amplitude_system": {
+        "coefficients": [
+          142.9575067628412,
+          -1227.0080142391632,
+          1375.4542422843056
+        ],
+        "condition": 49989.22966086611,
+        "matrix": [
+          [
+            0.011781507409514986,
+            0.0035875498823749207,
+            0.0019796868219804416
+          ],
+          [
+            0.0012066688248943964,
+            0.0004216085100100081,
+            0.00024759856498625995
+          ],
+          [
+            0.00020766594840549845,
+            7.79407656475024e-05,
+            4.740517700615353e-05
+          ]
+        ],
+        "max_abs_residual": 4.996003610813204e-16,
+        "rhs": [
+          0.005271105702741308,
+          -0.004254157364504305,
+          -0.0007428860424787472
+        ]
+      },
+      "fine_input_samples": 38406,
+      "jax_fine_input_samples": 38406,
+      "match_time_M": 484.39186535007445,
+      "phase_system": {
+        "coefficients": [
+          35.65253701133637,
+          -800.8908664792965
+        ],
+        "condition": 561.2365281866646,
+        "matrix": [
+          [
+            -0.008076502998991661,
+            -0.00016310425627657233
+          ],
+          [
+            -0.0009718635070769441,
+            -3.423170190309629e-05
+          ]
+        ],
+        "max_abs_residual": 2.7755575615628914e-17,
+        "rhs": [
+          -0.15731911295791418,
+          -0.007233542257796146
+        ]
+      },
+      "settings": {
+        "atol": 1e-13,
+        "coarse_output_step_M": 0.5,
+        "fine_refinement_factor": 128,
+        "max_step_M": 2.0,
+        "rtol": 1e-12
+      },
+      "torch_jax_checks_passed": true
+    },
+    "refined": {
+      "amplitude_system": {
+        "coefficients": [
+          142.95778183809506,
+          -1227.0105640728946,
+          1375.4572260145142
+        ],
+        "condition": 49989.25117007305,
+        "matrix": [
+          [
+            0.011781497789536912,
+            0.003587546520593718,
+            0.001979684847565047
+          ],
+          [
+            0.0012066661459562383,
+            0.00042160757196354055,
+            0.00024759801090808777
+          ],
+          [
+            0.00020765606445568527,
+            7.793766269372181e-05,
+            4.74034377286795e-05
+          ]
+        ],
+        "max_abs_residual": 8.881784197001252e-16,
+        "rhs": [
+          0.005271139665955715,
+          -0.004254155797010646,
+          -0.0007428841426920374
+        ]
+      },
+      "fine_input_samples": 76799,
+      "jax_fine_input_samples": 76799,
+      "match_time_M": 484.391857365795,
+      "phase_system": {
+        "coefficients": [
+          35.65069100729305,
+          -800.7979630314056
+        ],
+        "condition": 561.2354542397535,
+        "matrix": [
+          [
+            -0.008076487597258895,
+            -0.00016310383226087518
+          ],
+          [
+            -0.0009717919552775556,
+            -3.423021350644494e-05
+          ]
+        ],
+        "max_abs_residual": 8.326672684688674e-17,
+        "rhs": [
+          -0.1573191471169867,
+          -0.00723356947088206
+        ]
+      },
+      "settings": {
+        "atol": 1e-13,
+        "coarse_output_step_M": 0.5,
+        "fine_refinement_factor": 256,
+        "max_step_M": 2.0,
+        "rtol": 1e-12
+      },
+      "torch_jax_checks_passed": true
+    }
+  },
+  "pid": 50852,
+  "plan_sha256": "56d4b40f24b064d14988fe8b3d4f4e42d71ee0a48c00410c0e91e118c5a3baa2",
+  "release_qualified": false,
+  "schema": "diffgw.seobnrv4.jax-source-stationary-stage-audit.v1",
+  "status": "diagnostic_complete"
+}

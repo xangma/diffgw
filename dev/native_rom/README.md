@@ -1300,6 +1300,24 @@ The stationary rule is a development-only diagnostic; adopting it would still
 require independent historical-source and physical validation. Residual
 fine-grid trajectory and NQC matching contributions remain to be separated.
 
+The [frozen stationary-stage audit](evidence/2026-09-25/jax_source_stationary_stage_audit_plan.json)
+replays those same factor-128 and factor-256 inputs and compares exactly shared
+fine-grid samples. Both the [q4](evidence/2026-09-25/jax_source_stationary_stage_audit_q4_nonspinning.json)
+and [aligned-spin](evidence/2026-09-25/jax_source_stationary_stage_audit_strong_aligned.json)
+rows pass the time-chart, raw-mode, backend-parity, and NQC linear-system
+residual checks. Their Torch raw-mode relative L2 differences are only
+`3.49e-8` and `3.85e-8`, while the NQC-corrected inspiral differences are
+`4.77e-5` and `1.72e-4`. For q4, changing the sampled amplitude matrix first
+accounts for `0.0147` of the `0.0192` amplitude-coefficient shift, versus
+`0.00448` from the right-hand side first. For aligned spin, the phase matrix
+accounts for `0.0913` of the `0.0929` phase-coefficient shift, versus
+`0.00158` from the right-hand side first. The two substitution orders are
+diagnostic decompositions, not additive error budgets. They localize the
+remaining factor-grid instability to NQC matching derivatives rather than
+the fine trajectory or raw mode. A stable derivative prescription must be
+checked against the pinned historical source before it can replace the
+compatibility rule or support release qualification.
+
 The [frozen anchor diagnostic](evidence/2026-09-25/source_spliced_anchor_plan.json)
 replays all four cases and fits each mode's own amplitude peak between output
 samples without optimizing a relative shift. The [results](evidence/2026-09-25/source_spliced_anchor.json)
