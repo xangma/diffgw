@@ -1654,6 +1654,18 @@ black-box diagnostic controls, not native data or a release prescription;
 the remaining approximately `1e-5` residual and the separate native/source
 error still require validation.
 
+The [private q4 NQC input comparison](evidence/2026-09-25/source_q4_ultrafine_nqc_inputs.json)
+locates the source's coefficient drift more precisely. Both output cadences
+use a `0.015625 M` internal NQC grid. The local high-rate origins differ by
+five samples; aligning those samples makes the match times and targets
+identical. Within `2 M` of matching, the largest aligned raw-amplitude and
+phase differences are only `6.16e-8` and `2.12e-6 rad`. The same GSL fit
+on the aligned arrays produces a five-coefficient change of `0.2109742` in
+L2, within `1.61e-7` of the source's observed change. The amplitude matching
+matrix has condition number about `9,991`, so small input differences are
+strongly amplified. This is a source-cadence attribution, not proof of a
+converged NQC method or an explanation for the wheel's own coefficient drift.
+
 The [JAX initial-state-to-base-mode gradient check](evidence/2026-09-25/jax_initial_to_base_mode_gradient.json)
 uses a [frozen q4 plan](evidence/2026-09-25/jax_initial_to_base_mode_gradient_plan.json)
 and the development-only traceable quasicircular solve. The solve reproduces
