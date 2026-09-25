@@ -1,0 +1,235 @@
+{
+  "chart": {
+    "full_chart_sha256": "86febff2628468bce70e291ab313cc3c27c62c42a222024eb6a35ed340812d2a",
+    "native_anchor": {
+      "index": 997,
+      "phase_rad": -1.2437800481332912,
+      "time_s": 0.22189336719123906
+    },
+    "samples": 968,
+    "source_anchor": {
+      "index": 997,
+      "phase_rad": -1.240345377469338,
+      "time_s": -0.0027221031300414394
+    },
+    "step_M": 0.5,
+    "stored_pre_boundary_sha256": "f73bfdb88566fcee077a72c891ff738e20561deba0936c45ff098489af24a78b",
+    "support_M": [
+      -484.5,
+      -0.9999999999999906
+    ]
+  },
+  "checks": {
+    "early_pre_match_minus_50M_metric_replay": true,
+    "exact_energy_identity": true,
+    "finite_nonzero_modes": true,
+    "finite_phase_and_rate": true,
+    "fixed_full_chart_hash": true,
+    "fixed_native_anchor": true,
+    "fixed_source_anchor": true,
+    "full_pre_boundary_metric_replay": true,
+    "nqc_local_50M_metric_replay": true,
+    "original_window_counts": true,
+    "phase_reconstruction": true,
+    "stored_chart_hash": true,
+    "stored_lengths": true,
+    "stored_native_hash": true,
+    "stored_source_hash": true,
+    "stored_time_support": true,
+    "v2_complete": true,
+    "v4_historical_failure_preserved": true,
+    "v5_diagnostic_replay": true,
+    "window_partition": true
+  },
+  "energy_identity_relative_residual": 6.466102551938548e-16,
+  "interpretation": "Exact algebraic decomposition |h_native-h_source|^2 = (|h_native|-|h_source|)^2 + 4|h_native||h_source| sin^2(delta_phase/2) on the stored v2 pre-attachment chart. Both modes keep their independently frozen peak anchors; phase is unwrapped for descriptive endpoint and centered-secant rate summaries only. No pairwise fit or source-gap causality claim.",
+  "measurements": {
+    "early_pre_match_minus_50M": {
+      "amplitude_fraction_of_error_energy": 0.0002775040543727192,
+      "amplitude_relative_l2": 4.2427551100117715e-05,
+      "complex_relative_l2": 0.002546908242410991,
+      "fraction_of_full_pre_boundary_error_energy": 0.9569933720259298,
+      "phase_fraction_of_error_energy": 0.9997224959456266,
+      "phase_rate_centered_max_abs_rad_per_M": 1.729313289394515e-05,
+      "phase_rate_centered_rms_rad_per_M": 4.736581655346779e-06,
+      "phase_relative_l2": 0.0025465548292091978,
+      "phase_residual_first_rad": 0.002968530658346818,
+      "phase_residual_last_rad": 0.0015842830131460991,
+      "phase_residual_max_abs_rad": 0.002968530658346818,
+      "phase_residual_span_rad": -0.001384247645200719,
+      "samples": 869,
+      "support_M": [
+        -484.5,
+        -50.5
+      ]
+    },
+    "early_quartile_1": {
+      "amplitude_fraction_of_error_energy": 4.2074684740410705e-05,
+      "amplitude_relative_l2": 1.9066803169374074e-05,
+      "complex_relative_l2": 0.002939459277744505,
+      "fraction_of_full_pre_boundary_error_energy": 0.21891137064571725,
+      "phase_fraction_of_error_energy": 0.9999579253152587,
+      "phase_rate_centered_max_abs_rad_per_M": 1.0977165426440463e-06,
+      "phase_rate_centered_rms_rad_per_M": 6.678597120108428e-07,
+      "phase_relative_l2": 0.0029393974386828234,
+      "phase_residual_first_rad": 0.002968530658346818,
+      "phase_residual_last_rad": 0.002900119003376761,
+      "phase_residual_max_abs_rad": 0.002968530658346818,
+      "phase_residual_span_rad": -6.841165497005692e-05,
+      "samples": 217,
+      "support_M": [
+        -484.5,
+        -376.5
+      ]
+    },
+    "early_quartile_2": {
+      "amplitude_fraction_of_error_energy": 7.740904493991175e-05,
+      "amplitude_relative_l2": 2.484910295077857e-05,
+      "complex_relative_l2": 0.0028243262387699385,
+      "fraction_of_full_pre_boundary_error_energy": 0.23530276297084068,
+      "phase_fraction_of_error_energy": 0.9999225909550609,
+      "phase_rate_centered_max_abs_rad_per_M": 1.5386362978713979e-06,
+      "phase_rate_centered_rms_rad_per_M": 1.4095590523292598e-06,
+      "phase_relative_l2": 0.00282421692245601,
+      "phase_residual_first_rad": 0.00289956776544188,
+      "phase_residual_last_rad": 0.002747703212810602,
+      "phase_residual_max_abs_rad": 0.00289956776544188,
+      "phase_residual_span_rad": -0.00015186455263127823,
+      "samples": 217,
+      "support_M": [
+        -376.0,
+        -268.0
+      ]
+    },
+    "early_quartile_3": {
+      "amplitude_fraction_of_error_energy": 0.0001879148916716875,
+      "amplitude_relative_l2": 3.603303266081632e-05,
+      "complex_relative_l2": 0.0026285740515377856,
+      "fraction_of_full_pre_boundary_error_energy": 0.2549445120570039,
+      "phase_fraction_of_error_energy": 0.9998120851083278,
+      "phase_rate_centered_max_abs_rad_per_M": 4.123731730400087e-06,
+      "phase_rate_centered_rms_rad_per_M": 2.6589013785774022e-06,
+      "phase_relative_l2": 0.0026283270658300937,
+      "phase_residual_first_rad": 0.002746930531329055,
+      "phase_residual_last_rad": 0.0024724866878240805,
+      "phase_residual_max_abs_rad": 0.002746930531329055,
+      "phase_residual_span_rad": -0.0002744438435049743,
+      "samples": 217,
+      "support_M": [
+        -267.5,
+        -159.49999999999997
+      ]
+    },
+    "early_quartile_4": {
+      "amplitude_fraction_of_error_energy": 0.0007675941306536355,
+      "amplitude_relative_l2": 5.838966088054491e-05,
+      "complex_relative_l2": 0.002107512359845874,
+      "fraction_of_full_pre_boundary_error_energy": 0.2478347263523679,
+      "phase_fraction_of_error_energy": 0.9992324058693446,
+      "phase_rate_centered_max_abs_rad_per_M": 1.729313289394515e-05,
+      "phase_rate_centered_rms_rad_per_M": 8.937122259298169e-06,
+      "phase_relative_l2": 0.00210670334750894,
+      "phase_residual_first_rad": 0.002470410281525905,
+      "phase_residual_last_rad": 0.0015842830131460991,
+      "phase_residual_max_abs_rad": 0.002470410281525905,
+      "phase_residual_span_rad": -0.000886127268379806,
+      "samples": 218,
+      "support_M": [
+        -158.99999999999997,
+        -50.5
+      ]
+    },
+    "first_50M_early": {
+      "amplitude_fraction_of_error_energy": 3.70431908668213e-05,
+      "amplitude_relative_l2": 1.7996096154687028e-05,
+      "complex_relative_l2": 0.0029568147110740723,
+      "fraction_of_full_pre_boundary_error_energy": 0.09855714980677878,
+      "phase_fraction_of_error_energy": 0.9999629568091319,
+      "phase_rate_centered_max_abs_rad_per_M": 5.689710034302749e-07,
+      "phase_rate_centered_rms_rad_per_M": 4.6652820577176346e-07,
+      "phase_relative_l2": 0.002956759945641044,
+      "phase_residual_first_rad": 0.002968530658346818,
+      "phase_residual_last_rad": 0.0029455138006570384,
+      "phase_residual_max_abs_rad": 0.002968530658346818,
+      "phase_residual_span_rad": -2.301685768977971e-05,
+      "samples": 100,
+      "support_M": [
+        -484.5,
+        -435.0
+      ]
+    },
+    "full_pre_boundary": {
+      "amplitude_fraction_of_error_energy": 0.00039354461115741294,
+      "amplitude_relative_l2": 4.5111906455872055e-05,
+      "complex_relative_l2": 0.0022740195605360845,
+      "fraction_of_full_pre_boundary_error_energy": 1.0,
+      "phase_fraction_of_error_energy": 0.999606455388842,
+      "phase_rate_centered_max_abs_rad_per_M": 4.9997443562427066e-05,
+      "phase_rate_centered_rms_rad_per_M": 1.1452333707209831e-05,
+      "phase_relative_l2": 0.0022735720524312926,
+      "phase_residual_first_rad": 0.002968530658346818,
+      "phase_residual_last_rad": 2.706686583910315e-05,
+      "phase_residual_max_abs_rad": 0.002968530658346818,
+      "phase_residual_span_rad": -0.002941463792507715,
+      "samples": 968,
+      "support_M": [
+        -484.5,
+        -0.9999999999999906
+      ]
+    },
+    "last_50M_early": {
+      "amplitude_fraction_of_error_energy": 0.0011539346961262347,
+      "amplitude_relative_l2": 6.44687050002754e-05,
+      "complex_relative_l2": 0.0018978344710882055,
+      "fraction_of_full_pre_boundary_error_energy": 0.10670144665518261,
+      "phase_fraction_of_error_energy": 0.9988460653038692,
+      "phase_rate_centered_max_abs_rad_per_M": 1.729313289394515e-05,
+      "phase_rate_centered_rms_rad_per_M": 1.174881965185543e-05,
+      "phase_relative_l2": 0.0018967391664976552,
+      "phase_residual_first_rad": 0.002147992438884034,
+      "phase_residual_last_rad": 0.0015842830131460991,
+      "phase_residual_max_abs_rad": 0.002147992438884034,
+      "phase_residual_span_rad": -0.000563709425737935,
+      "samples": 100,
+      "support_M": [
+        -100.00000000000001,
+        -50.5
+      ]
+    },
+    "nqc_local_50M": {
+      "amplitude_fraction_of_error_energy": 0.002975731788015287,
+      "amplitude_relative_l2": 5.317487257865461e-05,
+      "complex_relative_l2": 0.0009747866342209315,
+      "fraction_of_full_pre_boundary_error_energy": 0.043006195840633844,
+      "phase_fraction_of_error_energy": 0.9970242682119831,
+      "phase_rate_centered_max_abs_rad_per_M": 4.9997443562427066e-05,
+      "phase_rate_centered_rms_rad_per_M": 3.307735005867249e-05,
+      "phase_relative_l2": 0.0009733352018611134,
+      "phase_residual_first_rad": 0.0015757370504504641,
+      "phase_residual_last_rad": 3.441911063667221e-05,
+      "phase_residual_max_abs_rad": 0.0015757370504504641,
+      "phase_residual_span_rad": -0.0015413179398137918,
+      "samples": 98,
+      "support_M": [
+        -49.99999999999998,
+        -1.500000000000014
+      ]
+    }
+  },
+  "plan_sha256": "d116995b1603f3b7f0246def3ca1b23f1d1fc1f395f50e57bf1506b4ff5004c2",
+  "release_qualified": false,
+  "row_tuple": [
+    30.0,
+    20.0,
+    0.8,
+    0.6,
+    0.04
+  ],
+  "schema": "diffgw.seobnrv4.cap-phase-amplitude-attribution.v1",
+  "script_sha256": "febe6bafab1f3d10baf543f7ef1cd9cc7a95fba6aa7e35dc575b90be5e88b2a1",
+  "status": "diagnostic_complete",
+  "stored_mode_hashes": {
+    "native_pairs_sha256": "97fbff2e5a874c3c9898b72456988f1c4f4952e68b0e36b3e4004cb3a0341938",
+    "source_pairs_sha256": "0c057a4b18bd3a133c98726a285e8d9bd06f71620535943530c98b3eba2c4e71"
+  }
+}

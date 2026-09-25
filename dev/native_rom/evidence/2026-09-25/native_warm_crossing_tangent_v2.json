@@ -1,0 +1,296 @@
+{
+  "case": {
+    "cap_Momega": 0.03162277660168379,
+    "chi1": 0.8,
+    "chi1_tangent": 1.0,
+    "chi2": 0.6,
+    "device": "cpu",
+    "dtype": "float64",
+    "frozen_state": [
+      9.911372368439267,
+      0.0,
+      -0.003306729129318275,
+      3.513326682456663
+    ],
+    "mass1": 30.0,
+    "mass2": 20.0,
+    "state_tangent_per_chi1": [
+      -0.09172725754528695,
+      0.0,
+      0.0006217988833867728,
+      -0.19013615595890498
+    ],
+    "target_Momega": 0.03182277660168379
+  },
+  "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+  "diagnostic_checks_passed": true,
+  "elapsed_s": 14.63104895799188,
+  "finite_differences": {
+    "chi1:0.0001": {
+      "column": 0,
+      "jax": [
+        -0.09188726978415218,
+        0.0006216287409322764,
+        -0.19106832689574915,
+        2.807772316364421
+      ],
+      "jax_scaled_error": 1.7401743047221716e-08,
+      "max_abs_frequency_residual": 6.938893903907228e-18,
+      "parameter": "chi1",
+      "root_offsets_M": [
+        2.425273445379208,
+        2.4247118909169716,
+        2.4252734453817997,
+        2.424711890918527
+      ],
+      "step": 0.0001,
+      "torch": [
+        -0.09188726978415218,
+        0.0006216287381979185,
+        -0.19106832689130826,
+        2.807772311177459
+      ],
+      "torch_scaled_error": 1.5554408804879862e-08
+    },
+    "chi1:1e-05": {
+      "column": 0,
+      "jax": [
+        -0.09188726979303395,
+        0.0006216287138250537,
+        -0.1910683268269153,
+        2.807772277524378
+      ],
+      "jax_scaled_error": 3.5686974072324813e-09,
+      "max_abs_frequency_residual": 1.3877787807814457e-17,
+      "parameter": "chi1",
+      "root_offsets_M": [
+        2.4250206896433575,
+        2.424964534197289,
+        2.4250206896438757,
+        2.4249645341983257
+      ],
+      "step": 1e-05,
+      "torch": [
+        -0.0918872698818518,
+        0.0006216287190942762,
+        -0.19106832691573314,
+        2.807772303459188
+      ],
+      "torch_scaled_error": 1.2805513966889897e-08
+    },
+    "target_Momega:1e-06": {
+      "column": 1,
+      "jax": [
+        -212.09576373859562,
+        0.013004700333968389,
+        -30.89783911103261,
+        74697.98772223957
+      ],
+      "jax_scaled_error": 1.2717961856908988e-07,
+      "max_abs_frequency_residual": 1.3877787807814457e-17,
+      "parameter": "target_Momega",
+      "root_offsets_M": [
+        2.4996895441507085,
+        2.350293568708311,
+        2.4996895441507117,
+        2.350293568706234
+      ],
+      "step": 1e-06,
+      "torch": [
+        -212.09576373681926,
+        0.013004700287564536,
+        -30.897839110366476,
+        74697.98772119863
+      ],
+      "torch_scaled_error": 1.2722646280417804e-07
+    },
+    "target_Momega:1e-07": {
+      "column": 1,
+      "jax": [
+        -212.09576401837182,
+        0.013004826208973252,
+        -30.897839402577176,
+        74697.98841963637
+      ],
+      "jax_scaled_error": 1.3046137052608042e-09,
+      "max_abs_frequency_residual": 6.938893903907228e-18,
+      "parameter": "target_Momega",
+      "root_offsets_M": [
+        2.432462399644811,
+        2.417522801960884,
+        2.432462399644293,
+        2.417522801960365
+      ],
+      "step": 1e-07,
+      "torch": [
+        -212.0957640361354,
+        0.013004825736261105,
+        -30.89783940701807,
+        74697.98841963637
+      ],
+      "torch_scaled_error": 1.777766234570266e-09
+    }
+  },
+  "gates": {
+    "event_time_torch_jax_abs_at_most_M": true,
+    "finite": true,
+    "finite_difference_roots_in_bracket": true,
+    "frequency_residual_abs_at_most": true,
+    "jacobian_jax_fd_scaled_error_at_most_each": true,
+    "jacobian_torch_fd_scaled_error_at_most_each": true,
+    "jacobian_torch_jax_scaled_error_at_most": true,
+    "left_state_torch_jax_max_abs_at_most": true,
+    "left_tangent_torch_jax_scaled_error_at_most": true,
+    "phase_zero_state_torch_jax_max_abs_at_most": true,
+    "positive_crossing_slope": true,
+    "root_bracket": true
+  },
+  "host": "RONI2",
+  "input_sha256": {
+    "dev/native_rom/diagnose_jax_spliced_whole_waveform.py": "158c243e6909d26529cf5e976521793cd07821cd48662036a3c34182391f9d1c",
+    "dev/native_rom/eob/jax/adaptive_driver_clean.py": "41691a243f3b1bf248443f679f8fd405eaeeb3de2d3e8d6800b03ba4b4c64ecf",
+    "dev/native_rom/eob/jax/source_calibration_hamiltonian.py": "8b5584002625479e667337076df59cb6a820e1cffc88a282071843e6d4e4c8a9",
+    "dev/native_rom/eob/torch/source_calibration_hamiltonian.py": "2b0ddccf6ba99d0157c0b624cf0c4e926713c96a736e22e1b6fe55bdbde1cdc2",
+    "dev/native_rom/eob/torch/warm_start.py": "a9818350b18ed04ca645edbf6af4c22760fc51eae540c12f38d171d99a675a20",
+    "src/jaxwave/approximants/eob/hamiltonian.py": "5bdcb51b0dccb5b91352d7e8697d1533e6f49ae2dba09526731cd9e4747a2118",
+    "src/jaxwave/approximants/eob/integrator.py": "f0e842e518cd05c94361038602a993c0ee9025b218490945fdb4021da9b64e46",
+    "src/jaxwave/approximants/eob/seobnrv4_flux.py": "47f9be36e6494708643afcdeb487a425c3e607a4c2f1ba730cbcf71ccba64287",
+    "src/torchwave/approximants/eob/adaptive_driver_clean.py": "2f5e1c3b8766b92340a6aafcdfbdc5fe6856a3e4390551abefda1e22b90dda7b",
+    "src/torchwave/approximants/eob/hamiltonian.py": "96febd6b3e0722802425f0e7490079d62869f2e63ac92c8db32e9063b5bc4b5b",
+    "src/torchwave/approximants/eob/integrator.py": "4c643493086a06accfe7f8f5ff679e77a1015aeb03659b395b48cac09de91c65",
+    "src/torchwave/approximants/eob/seobnrv4_flux.py": "3136bb016cce21cdd9d636008fee1fa5472757fed4446dc899e0d31e70124c83"
+  },
+  "jax": {
+    "event_time_derivative": [
+      2.8077722675042884,
+      74697.9884174923
+    ],
+    "frequency_residual": 2.0816681711721685e-17,
+    "frequency_time_slope": 1.3387241359311175e-05,
+    "jacobian": [
+      [
+        -0.09188726973009678,
+        -212.09576400762498
+      ],
+      [
+        0.0006216287316376944,
+        0.013004827513586958
+      ],
+      [
+        -0.19106832687672504,
+        -30.89783940520461
+      ],
+      [
+        2.8077722675042884,
+        74697.9884174923
+      ]
+    ],
+    "two_direction_primal_max_abs": 0.0,
+    "value": [
+      9.868752585031046,
+      -0.003302012832657088,
+      3.507168418181664,
+      14.99562359936126
+    ]
+  },
+  "jax_progress": {
+    "completed_pre_crossing_steps": 7
+  },
+  "left_jax": {
+    "spin_tangent": [
+      -0.08517692339288803,
+      -0.00019685006965223088,
+      0.0006211753077725468,
+      -0.18994545193245843
+    ],
+    "state": [
+      9.875638928667364,
+      0.3985691575247263,
+      -0.0033025134545138788,
+      3.5081703171367185
+    ]
+  },
+  "left_torch": {
+    "spin_tangent": [
+      -0.08517692339288802,
+      -0.00019685006965223855,
+      0.0006211753077725315,
+      -0.18994545193245846
+    ],
+    "state": [
+      9.875638928667366,
+      0.3985691575247259,
+      -0.0033025134545140557,
+      3.508170317136718
+    ]
+  },
+  "mesh_source": {
+    "path": "dev/native_rom/evidence/2026-09-25/native_warm_eight_step_tangent_v2.json",
+    "sha256": "14df006937402bf2620893d362b3c80d43fc5dac112850f31414d82eb1df1b87"
+  },
+  "metrics": {
+    "event_time_torch_jax_abs_M": 0.0,
+    "frequency_residual_abs_max": 2.0816681711721685e-17,
+    "jacobian_jax_fd_scaled_error_max": 1.2717961856908988e-07,
+    "jacobian_torch_fd_scaled_error_max": 1.2722646280417804e-07,
+    "jacobian_torch_jax_scaled_error": 4.403821057819002e-13,
+    "left_state_torch_jax_max_abs": 1.7763568394002505e-15,
+    "left_tangent_torch_jax_scaled_error": 2.7755575615628914e-17,
+    "phase_zero_state_torch_jax_max_abs": 1.7763568394002505e-15
+  },
+  "pid": 63540,
+  "plan_sha256": "8aa14b28af569f6062bbc261937f7547ca788261850ca7fe6962bfe6cfbbd083",
+  "prior_crossing_failure": {
+    "path": "dev/native_rom/evidence/2026-09-25/native_warm_crossing_tangent.json",
+    "sha256": "96571a0132762cb627cb631ff8cfb75851ef0cbefb5daac58ad2db65968d3960"
+  },
+  "prior_failed_evidence": {
+    "path": "dev/native_rom/evidence/2026-09-25/native_warm_eight_step_tangent.json",
+    "sha256": "269465e34c6dca1b6eef15f86d90096e61e70f9f9fe0856c10223643fd957d3c"
+  },
+  "release_qualified": false,
+  "root": {
+    "left_frequency": 0.03179032720559838,
+    "offset_M": 2.424992611352243,
+    "right_frequency": 0.03182857133998686,
+    "torch_bisection_residual": 0.0
+  },
+  "schema": "diffgw.seobnrv4.native-warm-crossing-tangent.v2",
+  "script_sha256": "f2ddd5ad5b32196a7981af6d737613c475406decb37a5d7bd94773b92057598a",
+  "status": "diagnostic_complete",
+  "torch": {
+    "event_time_derivative": [
+      2.8077722675042205,
+      74697.98841748893
+    ],
+    "frequency_residual": 0.0,
+    "frequency_time_slope": 1.3387241359311778e-05,
+    "jacobian": [
+      [
+        -0.0918872697300969,
+        -212.09576400762344
+      ],
+      [
+        0.0006216287316376955,
+        0.01300482751402734
+      ],
+      [
+        -0.19106832687672506,
+        -30.89783940520328
+      ],
+      [
+        2.8077722675042205,
+        74697.98841748893
+      ]
+    ],
+    "value": [
+      9.868752585031048,
+      -0.003302012832657251,
+      3.507168418181664,
+      14.99562359936126
+    ]
+  },
+  "torch_progress": {
+    "completed_pre_crossing_steps": 7
+  }
+}

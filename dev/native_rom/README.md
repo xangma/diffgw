@@ -2939,6 +2939,12 @@ corrected mode's fixed peak and phase anchor, so it includes the native NQC
 global phase and cannot attribute the remaining `0.00216723` full-mode gap to
 one physical component. The [first frozen attempt](evidence/2026-09-25/source_aligned_cap_raw_nqc_attribution.json)
 retains its last-bit replay failure; v2 corrects only that arithmetic order.
+The [fixed-anchor phase/amplitude postprocess](evidence/2026-09-25/source_aligned_cap_phase_amplitude_attribution.json)
+finds that phase accounts for `99.96%` of squared complex error on 968
+pre-attachment samples. The early 869 samples contribute `95.7%` of that
+error energy, spread across the window rather than concentrated in its first
+or last 50 M. This algebra does not identify whether the phase difference
+comes from dynamics, raw-mode phasing, NQC, or alignment convention.
 
 Three frozen warm-gradient attempts
 ([Torch](evidence/2026-09-25/native_warm_start_gradient.json),
@@ -2957,6 +2963,16 @@ error is `8.88e-11`. Its [first frozen run](evidence/2026-09-25/native_warm_eigh
 failed because tiny initial-state differences changed the adaptive mesh; v2
 uses one frozen mesh. These checks still exclude event-time sensitivity and
 the requested-frequency crossing.
+The [local crossing tangent](evidence/2026-09-25/native_warm_crossing_tangent_v2.json)
+propagates the cap-state spin tangent through seven fixed accepted steps and
+the final implicit frequency crossing at `MΩ=0.0318228`. Torch/JAX scaled
+Jacobian discrepancy is `4.40e-13` and the worst centered finite-difference
+error is `1.27e-7`; the frequency residual is below `2.1e-17`. Its
+[first attempt](evidence/2026-09-25/native_warm_crossing_tangent.json)
+retains a zero-substep API failure. The passing probe validates one local
+fixed-mesh event derivative and excludes adaptive-controller decisions,
+nonlinear cap-solver perturbations, the full `MΩ=0.04` start, and waveform
+gradients.
 
 The [warm trajectory comparison](evidence/2026-09-25/warm_jax_trajectory_divergence.json)
 finds Torch/JAX raw-mode relative L2 of `1.89e-12` on their separately

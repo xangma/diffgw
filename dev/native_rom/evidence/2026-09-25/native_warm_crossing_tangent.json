@@ -1,0 +1,91 @@
+{
+  "case": {
+    "cap_Momega": 0.03162277660168379,
+    "chi1": 0.8,
+    "chi1_tangent": 1.0,
+    "chi2": 0.6,
+    "device": "cpu",
+    "dtype": "float64",
+    "frozen_state": [
+      9.911372368439267,
+      0.0,
+      -0.003306729129318275,
+      3.513326682456663
+    ],
+    "mass1": 30.0,
+    "mass2": 20.0,
+    "state_tangent_per_chi1": [
+      -0.09172725754528695,
+      0.0,
+      0.0006217988833867728,
+      -0.19013615595890498
+    ],
+    "target_Momega": 0.03182277660168379
+  },
+  "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw",
+  "elapsed_s": 6.427559708012268,
+  "error": "Traceback (most recent call last):\n  File \"/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw/dev/native_rom/diagnose_native_warm_crossing_tangent.py\", line 193, in main\n    left_frequency = torch_frequency_at(0.0)\n  File \"/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw/dev/native_rom/diagnose_native_warm_crossing_tangent.py\", line 189, in torch_frequency_at\n    trial = torch_fixed(field, ttensor(left_time), ttensor(left),\n            ~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n                        ttensor(offset)).fifth\n                        ^^^^^^^^^^^^^^^^\n  File \"/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw/src/torchwave/approximants/eob/adaptive_driver_clean.py\", line 514, in fixed_fehlberg45_step\n    step_t = _as_step(step, dtype=dtype, device=device, name=\"step\")\n  File \"/Users/xangma/.codex/worktrees/native-seobnr-rom/diffgw/src/torchwave/approximants/eob/adaptive_driver_clean.py\", line 328, in _as_step\n    raise ValueError(f\"{name} must be finite and {qualifier}\")\nValueError: step must be finite and positive\n",
+  "host": "RONI2",
+  "input_sha256": {
+    "dev/native_rom/diagnose_jax_spliced_whole_waveform.py": "158c243e6909d26529cf5e976521793cd07821cd48662036a3c34182391f9d1c",
+    "dev/native_rom/eob/jax/adaptive_driver_clean.py": "41691a243f3b1bf248443f679f8fd405eaeeb3de2d3e8d6800b03ba4b4c64ecf",
+    "dev/native_rom/eob/jax/source_calibration_hamiltonian.py": "8b5584002625479e667337076df59cb6a820e1cffc88a282071843e6d4e4c8a9",
+    "dev/native_rom/eob/torch/source_calibration_hamiltonian.py": "2b0ddccf6ba99d0157c0b624cf0c4e926713c96a736e22e1b6fe55bdbde1cdc2",
+    "dev/native_rom/eob/torch/warm_start.py": "a9818350b18ed04ca645edbf6af4c22760fc51eae540c12f38d171d99a675a20",
+    "src/jaxwave/approximants/eob/hamiltonian.py": "5bdcb51b0dccb5b91352d7e8697d1533e6f49ae2dba09526731cd9e4747a2118",
+    "src/jaxwave/approximants/eob/integrator.py": "f0e842e518cd05c94361038602a993c0ee9025b218490945fdb4021da9b64e46",
+    "src/jaxwave/approximants/eob/seobnrv4_flux.py": "47f9be36e6494708643afcdeb487a425c3e607a4c2f1ba730cbcf71ccba64287",
+    "src/torchwave/approximants/eob/adaptive_driver_clean.py": "2f5e1c3b8766b92340a6aafcdfbdc5fe6856a3e4390551abefda1e22b90dda7b",
+    "src/torchwave/approximants/eob/hamiltonian.py": "96febd6b3e0722802425f0e7490079d62869f2e63ac92c8db32e9063b5bc4b5b",
+    "src/torchwave/approximants/eob/integrator.py": "4c643493086a06accfe7f8f5ff679e77a1015aeb03659b395b48cac09de91c65",
+    "src/torchwave/approximants/eob/seobnrv4_flux.py": "3136bb016cce21cdd9d636008fee1fa5472757fed4446dc899e0d31e70124c83"
+  },
+  "jax_progress": {
+    "completed_pre_crossing_steps": 7
+  },
+  "left_jax": {
+    "spin_tangent": [
+      -0.08517692339288803,
+      -0.00019685006965223088,
+      0.0006211753077725468,
+      -0.18994545193245843
+    ],
+    "state": [
+      9.875638928667364,
+      0.3985691575247263,
+      -0.0033025134545138788,
+      3.5081703171367185
+    ]
+  },
+  "left_torch": {
+    "spin_tangent": [
+      -0.08517692339288802,
+      -0.00019685006965223855,
+      0.0006211753077725315,
+      -0.18994545193245846
+    ],
+    "state": [
+      9.875638928667366,
+      0.3985691575247259,
+      -0.0033025134545140557,
+      3.508170317136718
+    ]
+  },
+  "mesh_source": {
+    "path": "dev/native_rom/evidence/2026-09-25/native_warm_eight_step_tangent_v2.json",
+    "sha256": "14df006937402bf2620893d362b3c80d43fc5dac112850f31414d82eb1df1b87"
+  },
+  "pid": 61532,
+  "plan_sha256": "431b9f29f3352aa88799c9181ff06db67d673a1916ee0eadf61155eb6281645c",
+  "prior_failed_evidence": {
+    "path": "dev/native_rom/evidence/2026-09-25/native_warm_eight_step_tangent.json",
+    "sha256": "269465e34c6dca1b6eef15f86d90096e61e70f9f9fe0856c10223643fd957d3c"
+  },
+  "release_qualified": false,
+  "schema": "diffgw.seobnrv4.native-warm-crossing-tangent.v1",
+  "script_sha256": "678be6ba1a574ecb6fcba4d4b887fc46db996f3b983b9520e26672bb66988edb",
+  "status": "diagnostic_failed",
+  "torch_progress": {
+    "completed_pre_crossing_steps": 7
+  }
+}

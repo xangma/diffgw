@@ -1,0 +1,92 @@
+{
+  "case": {
+    "cap_Momega": 0.03162277660168379,
+    "chi1": 0.8,
+    "chi1_tangent": 1.0,
+    "chi2": 0.6,
+    "device": "cpu",
+    "dtype": "float64",
+    "frozen_state": [
+      9.911372368439267,
+      0.0,
+      -0.003306729129318275,
+      3.513326682456663
+    ],
+    "mass1": 30.0,
+    "mass2": 20.0,
+    "state_tangent_per_chi1": [
+      -0.09172725754528695,
+      0.0,
+      0.0006217988833867728,
+      -0.19013615595890498
+    ],
+    "target_Momega": 0.03182277660168379
+  },
+  "checks": {
+    "event_time_torch_jax_abs_at_most_M": 1e-05,
+    "jacobian_jax_fd_scaled_error_at_most_each": 0.0003,
+    "jacobian_torch_fd_scaled_error_at_most_each": 0.0003,
+    "jacobian_torch_jax_scaled_error_at_most": 0.0001,
+    "left_state_torch_jax_max_abs_at_most": 1e-07,
+    "left_tangent_torch_jax_scaled_error_at_most": 0.0001,
+    "phase_zero_state_torch_jax_max_abs_at_most": 1e-06
+  },
+  "finite_difference_steps": {
+    "chi1": [
+      0.0001,
+      1e-05
+    ],
+    "target_Momega": [
+      1e-06,
+      1e-07
+    ]
+  },
+  "inputs_sha256": {
+    "dev/native_rom/diagnose_jax_spliced_whole_waveform.py": "158c243e6909d26529cf5e976521793cd07821cd48662036a3c34182391f9d1c",
+    "dev/native_rom/eob/jax/adaptive_driver_clean.py": "41691a243f3b1bf248443f679f8fd405eaeeb3de2d3e8d6800b03ba4b4c64ecf",
+    "dev/native_rom/eob/jax/source_calibration_hamiltonian.py": "8b5584002625479e667337076df59cb6a820e1cffc88a282071843e6d4e4c8a9",
+    "dev/native_rom/eob/torch/source_calibration_hamiltonian.py": "2b0ddccf6ba99d0157c0b624cf0c4e926713c96a736e22e1b6fe55bdbde1cdc2",
+    "dev/native_rom/eob/torch/warm_start.py": "a9818350b18ed04ca645edbf6af4c22760fc51eae540c12f38d171d99a675a20",
+    "src/jaxwave/approximants/eob/hamiltonian.py": "5bdcb51b0dccb5b91352d7e8697d1533e6f49ae2dba09526731cd9e4747a2118",
+    "src/jaxwave/approximants/eob/integrator.py": "f0e842e518cd05c94361038602a993c0ee9025b218490945fdb4021da9b64e46",
+    "src/jaxwave/approximants/eob/seobnrv4_flux.py": "47f9be36e6494708643afcdeb487a425c3e607a4c2f1ba730cbcf71ccba64287",
+    "src/torchwave/approximants/eob/adaptive_driver_clean.py": "2f5e1c3b8766b92340a6aafcdfbdc5fe6856a3e4390551abefda1e22b90dda7b",
+    "src/torchwave/approximants/eob/hamiltonian.py": "96febd6b3e0722802425f0e7490079d62869f2e63ac92c8db32e9063b5bc4b5b",
+    "src/torchwave/approximants/eob/integrator.py": "4c643493086a06accfe7f8f5ff679e77a1015aeb03659b395b48cac09de91c65",
+    "src/torchwave/approximants/eob/seobnrv4_flux.py": "3136bb016cce21cdd9d636008fee1fa5472757fed4446dc899e0d31e70124c83"
+  },
+  "interpretation": "One high-spin row, one exact frozen accepted mesh, affine initial-state tangent in spin, requested-frequency root inside the last interval, and local implicit event-time derivative. This excludes derivatives of adaptive decisions and the nonlinear cap initial-condition map across finite-difference perturbations, broader parameter coverage, waveform gradients, and release qualification.",
+  "mesh_gate": {
+    "accepted_steps": 8,
+    "expected_left_time_M": 12.570630988009016,
+    "expected_right_time_M": 15.428443334384987,
+    "target_bracket": true,
+    "time_abs_at_most_M": 1e-12
+  },
+  "mesh_source": {
+    "path": "dev/native_rom/evidence/2026-09-25/native_warm_eight_step_tangent_v2.json",
+    "sha256": "14df006937402bf2620893d362b3c80d43fc5dac112850f31414d82eb1df1b87"
+  },
+  "prior_crossing_failure": {
+    "path": "dev/native_rom/evidence/2026-09-25/native_warm_crossing_tangent.json",
+    "sha256": "96571a0132762cb627cb631ff8cfb75851ef0cbefb5daac58ad2db65968d3960"
+  },
+  "prior_failed_evidence": {
+    "path": "dev/native_rom/evidence/2026-09-25/native_warm_eight_step_tangent.json",
+    "sha256": "269465e34c6dca1b6eef15f86d90096e61e70f9f9fe0856c10223643fd957d3c"
+  },
+  "protocol": "Use the exact eight-step baseline accepted times and frozen cap state/tangent from the passing v2 evidence. Replay seven fixed RKF45 intervals to the left knot, then solve the requested-frequency crossing with 40 bisection steps in the last interval. At the frozen root, differentiate the six-stage RKF45 substep separately in spin and step duration; derive event-time and phase-zero-state Jacobians from the implicit frequency equation. For JAX, use separately compiled field JVPs and stagewise tangent recurrences. For Torch, differentiate one fixed step at a time with detach and use local autograd for the substep. Compare both value/Jacobian and centered finite differences through the same fixed mesh and local crossing solver. No derivative of adaptive-controller choices, mesh selection, or bisection branches is claimed. At zero substep length, evaluate the left-knot vector field directly because fixed_fehlberg45_step requires a positive step; this corrects v1 without altering the frozen bracket or gates.",
+  "release_qualified": false,
+  "root": {
+    "bisection_iterations": 40,
+    "finite_difference_newton_iterations": 3,
+    "frequency_residual_abs_at_most": 1e-11
+  },
+  "schema": "diffgw.seobnrv4.native-warm-crossing-tangent-plan.v2",
+  "script_sha256": "f2ddd5ad5b32196a7981af6d737613c475406decb37a5d7bd94773b92057598a",
+  "work_bound": {
+    "rss_kib_strictly_less_than": 4194304,
+    "stop_on_first_bound": true,
+    "wall_seconds_strictly_less_than": 60
+  }
+}

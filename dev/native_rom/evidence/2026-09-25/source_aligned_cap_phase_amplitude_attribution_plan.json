@@ -1,0 +1,91 @@
+{
+  "early_quartile_edges": [
+    0,
+    217,
+    434,
+    651,
+    869
+  ],
+  "early_stop_index": 869,
+  "first_50M_samples": 100,
+  "fixed_full_chart_sha256": "86febff2628468bce70e291ab313cc3c27c62c42a222024eb6a35ed340812d2a",
+  "gates": {
+    "energy_identity_relative_max": 1e-12,
+    "phase_reconstruction_relative_l2": 1e-12,
+    "step_max_abs_M": 1e-10,
+    "stored_metric_max_abs": 1e-12
+  },
+  "inputs": {
+    "full_crop_v4_plan": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_native_cap_full_crop_v4_plan.json",
+      "sha256": "c4c07b9a536fcb49087bd127d605e5645e8637118afaef157e89aee010c83247"
+    },
+    "full_crop_v4_result": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_native_cap_full_crop_v4.json",
+      "sha256": "8ce830aaed62a156d8bbd0b0780a6838d17ea94a74ae6f36dab418b2a147f8aa"
+    },
+    "full_crop_v5_plan": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_native_cap_full_crop_v5_plan.json",
+      "sha256": "10bf7884a18d5ae19b6a2b69863918efdc1f859497162d67c82207cd8047d268"
+    },
+    "full_crop_v5_result": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_native_cap_full_crop_v5.json",
+      "sha256": "2c167f1a06faff7734c3a45896d829447969b99a326c9515852b0b7b4d7c9ef3"
+    },
+    "stored_modes_plan": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_cap_raw_nqc_attribution_v2_plan.json",
+      "sha256": "680e31b8a6f9149a885f7332b43519a561918c3d204ea69b9cda2af587d2548f"
+    },
+    "stored_modes_result": {
+      "path": "dev/native_rom/evidence/2026-09-25/source_aligned_cap_raw_nqc_attribution_v2.json",
+      "sha256": "4d593a24482ff5e470816c120afb656e32347e2f8e8c975527872bfefff75e98"
+    },
+    "stored_modes_runner": {
+      "path": "dev/native_rom/diagnose_source_aligned_cap_raw_nqc_attribution_v2.py",
+      "sha256": "ac7b7e4c5cdaeaf7274197447078d84280c05aadd970c2af789b8e2ecacc057c"
+    }
+  },
+  "last_50M_samples": 100,
+  "limitations": [
+    "Stored pre-attachment support ends at -1 M and does not cover the ringdown; v5 whole-mode 0.002167 remains a separate full-chart metric.",
+    "The original native/source modes were peak anchored independently. This postprocess preserves that gauge and is descriptive, not an intervention.",
+    "Centered phase rate is a grid secant of the phase residual, not an ODE or source-component frequency parity test."
+  ],
+  "native_anchor": {
+    "index": 997,
+    "phase_rad": -1.2437800481332912,
+    "time_s": 0.22189336719123906
+  },
+  "original_window_samples": {
+    "boundary_margin_1M": 1,
+    "early_pre_match_minus_50M": 869,
+    "full_pre_boundary_with_margin": 967,
+    "nqc_local_50M": 98
+  },
+  "protocol": "Use stored source and corrected-native complex h22 arrays under their original independent sampled-peak anchors. No pairwise phase/time fit, shift, or mode rescaling. Principal phase residual arg(h_native conj h_source) is unwrapped for descriptive endpoints and centered two-step derivative; exact per-sample error energy splits into (An-As)^2 and 4AnAs sin^2(delta/2). Use frozen 869-point early window, 98-point NQC-local window, 1-point boundary margin, first/last 100 early samples and four fixed early index quartiles. Report per-window error fractions; do not interpret them as trajectory, NQC, or mode causality.",
+  "purpose": "Read-only numerical accounting of the remaining cap-start corrected-native versus pinned-source pre-attachment residual on stored identical chart. No physical cause assignment or source-fidelity threshold.",
+  "release_qualified": false,
+  "row_tuple": [
+    30.0,
+    20.0,
+    0.8,
+    0.6,
+    0.04
+  ],
+  "schema": "diffgw.seobnrv4.cap-phase-amplitude-plan.v1",
+  "script_sha256": "febe6bafab1f3d10baf543f7ef1cd9cc7a95fba6aa7e35dc575b90be5e88b2a1",
+  "source_anchor": {
+    "index": 997,
+    "phase_rad": -1.240345377469338,
+    "time_s": -0.0027221031300414394
+  },
+  "step_M": 0.5,
+  "stored_chart_sha256": "f73bfdb88566fcee077a72c891ff738e20561deba0936c45ff098489af24a78b",
+  "stored_native_pairs_sha256": "97fbff2e5a874c3c9898b72456988f1c4f4952e68b0e36b3e4004cb3a0341938",
+  "stored_samples": 968,
+  "stored_source_pairs_sha256": "0c057a4b18bd3a133c98726a285e8d9bd06f71620535943530c98b3eba2c4e71",
+  "stored_support_M": [
+    -484.5,
+    -0.9999999999999906
+  ]
+}
