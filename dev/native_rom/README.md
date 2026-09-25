@@ -1734,6 +1734,20 @@ polynomial derivative control reduces successive changes to `0.0925` and
 `0.1225`, still without a decreasing trend. This ladder does not establish a
 converged historical NQC reference or validate the polynomial as a replacement.
 
+The [same-cadence q4 whole-mode ladder](evidence/2026-09-25/source_q4_fine_whole_mode_ladder.json)
+uses a [frozen plan](evidence/2026-09-25/source_q4_fine_whole_mode_ladder_plan.json)
+and a separate [long-series dev probe](reference/full_v4_source_mode_large_adapter.c)
+to compare the pinned compiled source with the pinned installed wheel at all
+three NQC cadences. It replays the prior `0.015625 M` source-mode hash and
+source/wheel whole-mode error exactly. Peak-fitted source/wheel complex
+relative L2 rises from `0.001425` to `0.001710` to `0.002038`; the inspiral
+part grows from `0.001601` to `0.002289`, while the post-peak part remains
+below `6.4e-6`. Adjacent source self-differences are `0.002452` then
+`0.001043`, and public-wheel self-differences are `0.000689` then `0.002712`.
+Neither reference has a stable whole-mode cadence trend here. These
+comparisons do not isolate the NQC fit as the sole cause of the inspiral
+drift or designate a fine grid as the release reference.
+
 The [prospective q4 local-fit control](evidence/2026-09-25/source_q4_ultrafine_local_nqc_plan.json)
 recomputes those five coefficients with the same degree-four, `±2 M` local
 polynomial used in the earlier combined numerical control, then injects each
