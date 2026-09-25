@@ -2913,7 +2913,7 @@ The [cap-start full-mode crop plan](evidence/2026-09-25/source_aligned_native_ca
 and [result](evidence/2026-09-25/source_aligned_native_cap_full_crop_v4.json)
 apply the pinned source's discrete final-`h22` frequency crop after native
 NQC and attachment. This covers the original 1169-sample comparison chart;
-the finest source/native complex relative L2 is `0.00216715`, with
+the finest source/native complex relative L2 is `0.00216723`, with
 baseline-to-refined and refined-to-finest native changes of `1.77e-5` and
 `9.93e-8`. The frozen run retains `failed_validity` because its cap-frequency
 check compared the *dissipative* initial state's orbital frequency with the
@@ -2921,6 +2921,24 @@ nominal *circular* target. The separate [cap-frequency audit](evidence/2026-09-2
 shows native and pinned-source dissipative cap frequencies agree within
 `5.2e-12`; it does not retroactively change the frozen result or establish
 whole-waveform source fidelity. Both are development-only.
+The separate [v5 replay](evidence/2026-09-25/source_aligned_native_cap_full_crop_v5.json)
+retains every v4 waveform, chart, crop, metric, and convergence value while
+replacing only the invalid initialization check: the zero-radial-momentum
+circular cap frequency meets its target, and the dissipative cap frequency
+matches the pinned native/source controls. All 37 validity and three
+hypothesis checks pass; the 1169-sample source/native gap remains `0.00216723`.
+This is a valid convergence diagnostic, not source fidelity or release
+qualification.
+
+The [raw/NQC attribution](evidence/2026-09-25/source_aligned_cap_raw_nqc_attribution_v2.json)
+replays the same cap trajectory and 1169-sample chart, with 968 supported
+pre-boundary raw samples. On the early 869 samples, raw versus corrected
+source complex L2 changes from `1.0925` to `0.002547`; in the local NQC
+window it changes from `1.7672` to `0.000975`. The raw comparison uses the
+corrected mode's fixed peak and phase anchor, so it includes the native NQC
+global phase and cannot attribute the remaining `0.00216723` full-mode gap to
+one physical component. The [first frozen attempt](evidence/2026-09-25/source_aligned_cap_raw_nqc_attribution.json)
+retains its last-bit replay failure; v2 corrects only that arithmetic order.
 
 Three frozen warm-gradient attempts
 ([Torch](evidence/2026-09-25/native_warm_start_gradient.json),
@@ -2932,6 +2950,13 @@ and [explicit one-step RKF45 tangent](evidence/2026-09-25/native_warm_one_step_t
 pass Torch AD, JAX JVP, and two finite-difference comparisons at the cap
 state. They validate a local field tangent and one fixed step on one row, not
 the accepted-mesh continuation or requested-frequency crossing.
+An [eight-step fixed-mesh continuation](evidence/2026-09-25/native_warm_eight_step_tangent_v2.json)
+then passes Torch/JAX and two finite-difference gates: final states differ by
+`1.78e-15`, scaled spin tangents by `5.55e-17`, and the largest tangent/FD
+error is `8.88e-11`. Its [first frozen run](evidence/2026-09-25/native_warm_eight_step_tangent.json)
+failed because tiny initial-state differences changed the adaptive mesh; v2
+uses one frozen mesh. These checks still exclude event-time sensitivity and
+the requested-frequency crossing.
 
 The [warm trajectory comparison](evidence/2026-09-25/warm_jax_trajectory_divergence.json)
 finds Torch/JAX raw-mode relative L2 of `1.89e-12` on their separately
@@ -2943,6 +2968,14 @@ reduces it to `2.29e-15` over 15269 attached samples, with identical boundary
 time and index. The latter retains its [failed preflight predecessor](evidence/2026-09-25/warm_jax_source_attachment_control_failure.json)
 for audit. These isolate attachment-backend agreement under matched inputs;
 they do not yet validate independent whole-waveform evolution or gradients.
+The [historical ODE boundary replay](evidence/2026-09-25/warm_jax_ode_boundary_control_v2.json)
+reproduces the historical phase coefficients and injected ringdown frequency
+exactly on matched warm arrays. Torch/JAX whole attached-mode L2 is
+`2.91e-15` over 15269 samples. Its [first attempt](evidence/2026-09-25/warm_jax_ode_boundary_control_v1_assessment.json)
+used different phase controls and did not replay that frequency. V2 still
+has a `1.05e-8` historical amplitude-coefficient gap because the diagnostic
+attachment API lacks the source amplitude-value hook; this is a historical
+replay limitation, not a Torch/JAX parity gap.
 
 1. Qualify the physical generator against the published equations and independent
    references over the intended domain, resolve convention/provenance gaps, and
