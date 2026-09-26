@@ -28,6 +28,32 @@ def test_jks_ideal_beam_and_2f_projection():
         assert mp.almosteq(ref.jks_2f_strain(2, 1, mp.pi / 2, 0, -1), -2)
 
 
+@pytest.mark.parametrize("ra,dec,psi,gmst", [
+    (0.0, 0.0, 0.0, 0.0),
+    (1.1, -0.3, 0.27, 2.4565038851564722),
+    (2.7, 0.6, -0.4, 4.2),
+])
+def test_jks_arm_tensor_reproduces_closed_beam_formula(ra, dec, psi, gmst):
+    """PDF Eqs. (1)-(6) and (10)-(13) agree under Table 1 bisector angles."""
+    with mp.workdps(60):
+        lat = mp.radians(mp.mpf("46.45"))
+        west_lon = mp.radians(mp.mpf("119.41"))
+        gamma = mp.radians(mp.mpf("171.8"))
+        lst = mp.mpf(str(gmst)) - west_lon
+        lon = -west_lon
+        north = (-mp.sin(lat) * mp.cos(lon), -mp.sin(lat) * mp.sin(lon), mp.cos(lat))
+        east = (-mp.sin(lon), mp.cos(lon), mp.mpf("0"))
+        # Table 1 gamma runs east to the arm bisector; the ordered arms are
+        # gamma +/- zeta/2, with x cross y pointing outward.
+        x_angle, y_angle = gamma - mp.pi / 4, gamma + mp.pi / 4
+        x_arm = tuple(mp.sin(x_angle) * n + mp.cos(x_angle) * e for n, e in zip(north, east))
+        y_arm = tuple(mp.sin(y_angle) * n + mp.cos(y_angle) * e for n, e in zip(north, east))
+        from_arms = ref.jks_arm_tensor_beam_patterns(ra, dec, psi, gmst, x_arm, y_arm)
+        closed = ref.jks_beam_patterns(ra, dec, psi, lat, gamma, mp.pi / 2, lst)
+        for actual, expected in zip(from_arms, closed):
+            assert mp.almosteq(actual, expected, abs_eps=mp.mpf("1e-57"))
+
+
 @pytest.mark.parametrize("dt", [0.0, 1234.0, 86400.0])
 def test_monochromatic_orbit_phase_matches_paper_given_zero_orbit_phase_epoch(dt):
     """The carrier's declared circular orbit has a paper-literal f1=f2=0 limit."""
@@ -82,7 +108,7 @@ def test_spindown_residual_is_known_powers_of_roemer_delay():
     np.testing.assert_allclose([actual_t.item(), float(actual_j[0])], expected_carrier, rtol=0, atol=2e-9)
 
 
-@pytest.mark.xfail(strict=True, reason="carrier retains tau² and tau³ spin-down terms absent from JKS Eq. 14")
+@pytest.mark.xfail(strict=True, reason="JKS PDF Eq. 14/131 truncates tau² and tau³; native uses an untruncated barycentric polynomial")
 def test_spindown_paper_phase_identity_gate():
     t0, dt, ra, dec = 1126259462.0, 43200.0, 1.1, -0.3
     with mp.workdps(60):
@@ -123,13 +149,43 @@ def test_2f_projection_conditional_on_native_detector_pattern(module, detector, 
     np.testing.assert_allclose(np.asarray(actual), expected, rtol=1e-12, atol=5e-37)
 
 
-@pytest.mark.xfail(strict=True, reason="native H1 arms do not match JKS v1 Table 1 at printed precision")
 @pytest.mark.parametrize("module,tensor", [
     (t_cw, lambda t: torch.tensor(t, dtype=torch.float64)),
     (j_cw, lambda t: jnp.asarray(t, dtype=jnp.float64)),
 ])
-def test_h1_beam_against_jks_table_1_geometry_gate(module, tensor):
-    """Condition on native GMST to isolate the paper's H1 site geometry."""
+def test_h1_arms_and_tensor_response_against_published_geometry(module, tensor):
+    """Anderson Appendix B Table I arms; JKS Eqs. (1)-(6) response algebra."""
+    det = module.Detector("H1")
+    # Anderson et al. gr-qc/0008066v1, Appendix B Table I prints four decimals.
+    published_x = np.array([-0.2239, 0.7998, 0.5569])
+    published_y = np.array([-0.9140, 0.0261, -0.4049])
+    np.testing.assert_allclose(np.asarray(det.x_arm), published_x, rtol=0, atol=5e-5)
+    np.testing.assert_allclose(np.asarray(det.y_arm), published_y, rtol=0, atol=5e-5)
+
+    for t, ra, dec, psi in [
+        (1126259462.0, 1.1, -0.3, 0.27),
+        (1126302662.0, 2.7, 0.6, -0.4),
+        (1126345862.0, 0.2, -0.8, 1.2),
+    ]:
+        gmst = float(module.greenwich_mean_sidereal_time(tensor(t)))
+        with mp.workdps(60):
+            expected = ref.jks_arm_tensor_beam_patterns(
+                ra, dec, psi, gmst, np.asarray(det.x_arm), np.asarray(det.y_arm)
+            )
+        actual = det.antenna_patterns(ra, dec, psi, t_gps=tensor(t))
+        np.testing.assert_allclose(
+            np.asarray([float(x) for x in actual]),
+            np.asarray([float(x) for x in expected]), rtol=0, atol=2e-15,
+        )
+
+
+@pytest.mark.xfail(strict=True, reason="JKS Table 1 inherits Allen 1996 LIGO arm angles corrected by Anderson 2001 Appendix B")
+@pytest.mark.parametrize("module,tensor", [
+    (t_cw, lambda t: torch.tensor(t, dtype=torch.float64)),
+    (j_cw, lambda t: jnp.asarray(t, dtype=jnp.float64)),
+])
+def test_h1_beam_against_historical_jks_table_1_geometry_diagnostic(module, tensor):
+    """Freeze the obsolete Allen-1996 site mismatch, conditioned on native GMST."""
     t, ra, dec, psi = 1126259462.0, 1.1, -0.3, 0.27
     gmst = float(module.greenwich_mean_sidereal_time(tensor(t)))
     local_sidereal = gmst - math.radians(119.41)  # west longitude in JKS Table 1
