@@ -1,6 +1,6 @@
 # NRTidalv2 nonspinning tidal phase
 
-## Scope and identity
+## Scope and status
 
 Specification **`nrtidalv2-nonspinning-tidal-phase/v1`** covers only the additive
 frequency-domain NRTidalv2 tidal phase of the dominant (2,2) mode, with zero
@@ -9,7 +9,7 @@ taper. The independent [scalar reference](https://github.com/xangma/diffgw/blob/
 has component IDs `nrtidalv2.phase.lambda_tilde.v1`, `.pade.v1`, `.tidal.v1`
 and `.frequency_derivative.v1`. It imports no Torch, JAX or LAL code.
 
-## Primary sources and transcription
+## Inputs, conventions, and options
 
 [Dietrich et al., *Phys. Rev. D* **100**, 044003 (2019),
 arXiv:1905.06011v2, Eqs. (17)–(21)](https://arxiv.org/pdf/1905.06011v2)
@@ -21,7 +21,7 @@ $d_1=-15.111208$, and $d_2=8.0641096$. They are empirical fit inputs,
 not values derived from PN theory. The reference asserts the published PN
 expansion independently of either native implementation.
 
-## Mathematics and units
+## Mathematics and components
 
 Let $M=m_1+m_2$, $\delta=(m_1-m_2)/M$,
 $\eta=(1-\delta^2)/4$, $M_{\rm sec}=GM/c^3$, and
@@ -55,7 +55,7 @@ $f_{\rm ref}$; with zero spins, the finite-reference point-particle carrier
 cancels in the BNS/BBH quotient. Symbolic differentiation defines
 $d\psi_T/df$ with masses and deformabilities fixed.
 
-## Frontend and binary boundary
+## Implementation mapping
 
 The maintained [math tests](https://github.com/xangma/diffgw/blob/main/tests/test_nrtidalv2_phase_math_reference.py)
 compare the unit complex quotient `IMRPhenomD_NRTidalv2 / IMRPhenomD` from
@@ -67,7 +67,7 @@ tidal amplitude. The same quotient is built from the installed **LALSuite
 phase/time alignment or fitting to that binary. The oracle is used only for
 agreement, never to choose coefficients.
 
-## Predeclared qualification gate
+## Evidence and limitations
 
 The frozen systems $(m_1,m_2;\Lambda_1,\Lambda_2)$, in solar masses,
 are $(1.35,1.35;400,400)$, $(1.6,1.2;200,800)$, its body-exchanged
@@ -85,8 +85,6 @@ Run with `DIFFGW_REQUIRE_LAL_BINARY=1` to fail instead of skip when the pinned
 binary is unavailable. These limits are fixed before the binary run and are
 not adjusted in response to failures.
 
-## Evidence and limits
-
 The [qualification receipt](../validation/nrtidalv2_phase_20260926.md) records
 the exact host, checkout, command, binary versions, metrics and outcome.
 Passing this gate establishes only literature transcription, native
@@ -94,3 +92,9 @@ implementation and named-binary agreement for the declared slice. It does
 not establish physical accuracy, an equation-of-state relation, amplitude
 Eq. (24), merger frequency and taper Eq. (25), self-spin Eqs. (26)–(29),
 spinning binaries, other modes, FP32/GPU behavior or the full family.
+
+## Reproduce the checks
+
+Run `DIFFGW_REQUIRE_LAL_BINARY=1 PYTHONPATH=src:tests python -m pytest -q
+tests/test_nrtidalv2_phase_math_reference.py
+tests/test_nrtidalv2_phase_lal_binary.py` with LALSuite 7.26.15 installed.
