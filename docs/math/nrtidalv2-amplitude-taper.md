@@ -4,7 +4,7 @@ Specification **nrtidalv2-nonspinning-tidal-amplitude-taper/v1** covers
 the signed additive Fourier tidal amplitude, published merger-frequency fit
 and descending Planck taper for the dominant mode, zero component spins,
 CPU FP64, the four frozen binaries below, and 100 Mpc distance. The
-[independent scalar reference](../../src/diffgw_reference/nrtidalv2_amplitude.py)
+independent scalar reference `src/diffgw_reference/nrtidalv2_amplitude.py`
 uses SymPy/mpmath and no native waveform or LAL implementation.
 
 ## Primary mathematics
@@ -55,14 +55,14 @@ Amplitude frequencies are 100, 300, 800 and 1200 Hz. Taper frequencies
 are $f/f_{\rm mrg}=$ 0.9, 1, 1.025, 1.05, 1.1, 1.15, 1.195, 1.2 and
 1.25. The zero-tide case probes the taper independently of Eq. (24).
 
-The [green paper-math tests](../../tests/test_nrtidalv2_amplitude_math_reference.py)
+The green paper-math tests in `tests/test_nrtidalv2_amplitude_math_reference.py`
 require merger-frequency relative error $\le10^{-11}$ and scalar/window
 amplitude error $\le10^{-10}$. The
-[strict amplitude diagnostics](../../tests/test_nrtidalv2_amplitude_diagnostic.py)
+strict amplitude diagnostics in `tests/test_nrtidalv2_amplitude_diagnostic.py`
 retain the frozen native Torch/JAX scalar amplitude relative limit $10^{-11}$
 and untapered plus-polarization amplitude-ratio absolute limit $10^{-10}$.
 The
-[pinned-binary tests](../../tests/test_nrtidalv2_amplitude_lal_binary.py)
+pinned-binary tests in `tests/test_nrtidalv2_amplitude_lal_binary.py`
 compare the *unaligned* modulus ratios
 $|h_+^{\rm BNS}|/|h_+^{\rm BBH}|$ with the paper result using each
 backend's own BBH amplitude, then compare native and LAL ratios. Maximum
