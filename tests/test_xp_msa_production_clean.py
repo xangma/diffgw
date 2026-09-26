@@ -378,7 +378,7 @@ def test_mixed_phi0_rows_match_independent_scalar_routes():
         )
         for actual, expected in zip(batched, scalar):
             # Batched and scalar chart arithmetic can round one ulp apart.
-            torch.testing.assert_close(actual[row], expected, rtol=1e-13, atol=0.0)
+            torch.testing.assert_close(actual[row], expected, rtol=1e-15, atol=0.0)
 
 
 def test_one_spin_physical_row_survives_generic_azimuth_batch():
@@ -403,7 +403,8 @@ def test_one_spin_physical_row_survives_generic_azimuth_batch():
             prec_version=223, convention=1, final_spin_mod=3,
         )
         for actual, expected in zip(batched, scalar):
-            torch.testing.assert_close(actual[row], expected, rtol=0.0, atol=0.0)
+            # The mixed clean branches can differ by one rounding step.
+            torch.testing.assert_close(actual[row], expected, rtol=1e-15, atol=0.0)
 
 
 def test_aligned_nonzero_phi0_has_expected_m2_phase_rotation():
