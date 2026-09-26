@@ -9,11 +9,11 @@ import numpy as np
 import pytest
 import torch
 
+jax.config.update("jax_enable_x64", True)
+
 from diffgw_reference import memory_dominant_22 as ref
 from jaxwave.approximants import memory as jm
 from torchwave.approximants import memory as tm
-
-jax.config.update("jax_enable_x64", True)
 
 TIMES = np.array([0.0, 0.1, 0.4, 1.0], dtype=np.float64)
 DISTANCE_M = 3.085677581491367e24  # 100 Mpc, explicitly in meters.

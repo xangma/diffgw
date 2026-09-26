@@ -71,8 +71,8 @@ The bracket is absent from the legacy `memory_polarizations` projection.
 
 The numerical component differentiates $h_{22}$ on the supplied grid and
 integrates the resulting squared modulus with trapezoids. Its scalar gate uses
-the exact $h_{22}(t)=s(t-t_0)$ case: $h_{20}=R\sqrt{5/(6\pi)}|s|^2
-(t-t_0)/(7c)$, so the value and slope derivative have no time-discretization
+the exact $h_{22}(t)=s(t-t_0)$ case:
+$h_{20}=[R/(7c)]\sqrt{5/(6\pi)}|s|^2(t-t_0)$, so the value and slope derivative have no time-discretization
 error. At fixed complex slope $s=s_R+i s_I$, the reference derivative is
 $\partial h_{20}/\partial s_R=2R\sqrt{5/(6\pi)}s_R(t-t_0)/(7c)$.
 
