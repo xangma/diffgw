@@ -2129,6 +2129,16 @@ setting does not resolve the NQC sensitivity on this case. Source fidelity,
 independent physical comparisons, broader numerical convergence, and native
 ROM training remain open.
 
+The [optimization-barrier control](evidence/2026-09-25/jax_mode_barrier.json)
+uses a [frozen plan](evidence/2026-09-25/jax_mode_barrier_plan.json) and
+[development-only script](diagnose_jax_mode_barrier.py) on `len`.
+Barriers after Hamiltonian-derived quantities, residual phase, or all mode
+stages leave the same-state source mode unchanged. None meets the predeclared
+`1e-16` eager/JIT relative-L2 bound: the control is `7.49e-16` and the three
+barrier variants are `7.47e-16`. All meet the `1e-14` absolute bound. This
+rules out these barriers as a remedy for the strict mode gate on this fixed
+chart; it neither changes production code nor qualifies a waveform.
+
 The [frozen Torch/JAX spliced-waveform diagnostic](evidence/2026-09-25/jax_spliced_waveform_plan.json)
 extends those four selected physical cases through the calibrated coarse
 prefix and complete numerical attachment. The [pilot](evidence/2026-09-25/jax_spliced_waveform_high_start_mixed_spin.json)

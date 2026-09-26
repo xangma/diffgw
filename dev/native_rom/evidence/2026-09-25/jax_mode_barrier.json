@@ -1,0 +1,84 @@
+{
+  "checks": {
+    "all_stages": {
+      "eager_jit_absolute": true,
+      "eager_jit_relative": false,
+      "source": true
+    },
+    "control": {
+      "eager_jit_absolute": true,
+      "eager_jit_relative": false,
+      "source": true
+    },
+    "quantities": {
+      "eager_jit_absolute": true,
+      "eager_jit_relative": false,
+      "source": true
+    },
+    "quantities_residual": {
+      "eager_jit_absolute": true,
+      "eager_jit_relative": false,
+      "source": true
+    }
+  },
+  "cwd": "/home/xangma/tmp/diffgw-seobnr-barrier-20260926-parent",
+  "diagnostic_checks_passed": false,
+  "elapsed_s": 49.65037664864212,
+  "host": "len",
+  "passing_barrier_variants": [],
+  "pid": 911370,
+  "plan_sha256": "1c199b03ff9a71904dbec3e7ff6df7f17fdfd7fc06a33e9d082d99d808856820",
+  "release_qualified": false,
+  "schema": "diffgw.seobnrv4.jax-mode-barrier.v1",
+  "script_sha256": "d02bfee7453ebe9e3f322db01ea5588266fc90b1b7f14f620528e8ed67c1f3b8",
+  "source_head": "532bbe8",
+  "source_sha256": {
+    "src/jaxwave/approximants/eob/published_waveform.py": "8b0a727caceb432ba501a93712ffa3c9c547566b94ca86b8ac9f97d43b31afee",
+    "src/jaxwave/approximants/eob/seobnrv4_amplitude22.py": "af575ddd8efc123527378236b36e96d1a060961a3ddc3242fb7e8d83efba6ecc",
+    "src/jaxwave/approximants/eob/seobnrv4_flux.py": "47f9be36e6494708643afcdeb487a425c3e607a4c2f1ba730cbcf71ccba64287",
+    "src/jaxwave/approximants/eob/seobnrv4_mode22.py": "02861ac3eea27342084469b0d8e941ee28e6f1bfc8c5a335ef617a87d80ea8eb"
+  },
+  "status": "diagnostic_complete",
+  "variants": {
+    "all_stages": {
+      "candidate_eager_jit_mode": {
+        "max_abs": 2.1715079727778364e-15,
+        "relative_l2": 7.47261044314829e-16
+      },
+      "candidate_source_mode": {
+        "max_abs": 0.0,
+        "relative_l2": 0.0
+      }
+    },
+    "control": {
+      "candidate_eager_jit_mode": {
+        "max_abs": 2.1715079727778364e-15,
+        "relative_l2": 7.4917284537103085e-16
+      },
+      "candidate_source_mode": {
+        "max_abs": 0.0,
+        "relative_l2": 0.0
+      }
+    },
+    "quantities": {
+      "candidate_eager_jit_mode": {
+        "max_abs": 2.1715079727778364e-15,
+        "relative_l2": 7.47261044314829e-16
+      },
+      "candidate_source_mode": {
+        "max_abs": 0.0,
+        "relative_l2": 0.0
+      }
+    },
+    "quantities_residual": {
+      "candidate_eager_jit_mode": {
+        "max_abs": 2.1715079727778364e-15,
+        "relative_l2": 7.47261044314829e-16
+      },
+      "candidate_source_mode": {
+        "max_abs": 0.0,
+        "relative_l2": 0.0
+      }
+    }
+  }
+}
