@@ -24,6 +24,15 @@ five dimensionless times. Frequency and amplitude use `rtol=1e-11` and
 `rtol=1e-11` and `atol=1e-10`. This is an implementation check using shared
 author calibration, rather than independent physical validation.
 
+The [THM Eq. (10) scalar collocation check](../waveforms/research/imrphenomt-family.md)
+solves the six inspiral `(2,2)` pseudo-PN coefficients at 80-digit precision.
+It checks the `t0`-shifted first node, the five calibrated frequency nodes,
+and three off-node frequencies against Torch and JAX for three mass/spin
+configurations, including `(60, 6, 0.9, 0.1)`. The test passes on `len` (six
+backend/case combinations). Its TaylorT3 coefficients and calibration fits
+remain shared inputs, so this narrows the independent equation check to the
+collocation reconstruction. It does not change any binary acceptance gate.
+
 ## Aligned-spin and NNLO reference checks
 
 The optional LAL regression tests define the following acceptance criteria:
