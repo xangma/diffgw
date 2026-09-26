@@ -485,6 +485,44 @@ development-only run on `len` used cwd
 and log `jax_polar_control.log` there. It completed in 49.8 seconds with exit
 code 1 for the frozen gate failure; no process or next check remains.
 
+A [CPU replay under the current len package set](../2026-09-26/jax_polar_control_cpu_jax_0_11_2.json)
+confirms that this is not a GPU-only result. With JAX 0.11.2 on CPU, the
+source-preserving control has eager/JIT pre-NQC relative L2
+`1.0500138e-15`, and the three polar/barrier candidates span
+`1.0445866e-15` to `1.0529945e-15`; all remain above the unchanged `1e-16`
+gate. The run used host `len`, cwd
+`/home/xangma/tmp/diffgw-seobnr-polar-cpu-20260926`, PID `623459`, and log
+`jax_polar_control_cpu.log` there. It completed in 29.2 seconds with exit
+code 1 for the frozen gate failure; no process or next check remains.
+
+The [current-source GPU stage replay](../2026-09-26/jax_nqc_jit_stages_gpu_current.json)
+uses the same frozen stage plan and current script hashes under JAX 0.11.2.
+The pre-NQC base mode differs by `7.171173e-16` relative L2, while the NQC
+amplitude coefficients differ by `8.006322e-7` maximum absolute. Its replay,
+base-mode diagnostic, and solve-residual checks pass, but those checks are
+localization checks rather than the frozen whole-waveform or gradient gates;
+`release_qualified` remains false. This independently confirms on the GPU
+backend that distributed pre-NQC roundoff is amplified by NQC matching. It
+does not provide a source-backed correction. The run used host `len`, cwd
+`/home/xangma/tmp/diffgw-seobnr-polar-20260926`, shell job `1369962`
+(Python PID `1369966`), command
+`DIFFGW_DIAGNOSTIC_OUTPUT=jax_nqc_jit_stages_gpu_current.json PYTHONPATH=src:. XLA_PYTHON_CLIENT_PREALLOCATE=false timeout 300s /tmp/diffgw-waveform-library-1315f6e/venv-latest/bin/python -m dev.native_rom.diagnose_jax_nqc_jit_stages`,
+and log `jax_nqc_jit_stages_gpu_current.log` there. It completed in 135.7
+seconds with exit code 0 for those diagnostic checks; no process or next
+check remains.
+
+These CPU and GPU controls close the current small-correction search without
+weakening any frozen gate: no tested source-preserving local arithmetic or
+polar-assembly change repairs the backend contract. The defensible boundary
+is therefore to keep the historical SEOBNRv4 port as an explicitly
+unqualified development model, preserve the `1e-16` pre-NQC and `1e-10`
+whole-waveform failures, and separate historical fidelity from the `0.99` NR
+accuracy claim. A numerical reformulation would need a new prospectively
+frozen source-parity, whole-waveform, AD/FD, and multi-case campaign. A change
+intended to make SXS:BBH:2569 clear `0.99`, which the pinned historical model
+also misses, would instead be a separately named calibrated successor with a
+new untouched holdout.
+
 Two different release claims must stay separate:
 
 - **Historical SEOBNRv4 fidelity:** a port may be described as faithful only

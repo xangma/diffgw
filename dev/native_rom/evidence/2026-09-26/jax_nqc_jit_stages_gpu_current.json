@@ -1,0 +1,136 @@
+{
+  "case": "high_start_mixed_spin",
+  "checks": {
+    "base_mode": true,
+    "matching_residual": true,
+    "replay": true
+  },
+  "controlled": {
+    "amplitude_coefficients": {
+      "compiled_input_separate_jit_to_whole_jit_max_abs": 0.0,
+      "fixed_input_eager_to_whole_eager_max_abs": 0.0,
+      "fixed_input_jit_to_compiled_input_jit_max_abs": 6.790338176188015e-07,
+      "fixed_input_jit_to_whole_eager_max_abs": 1.2159834739122743e-07,
+      "fixed_input_jit_to_whole_jit_max_abs": 6.790338176188015e-07
+    },
+    "amplitude_matrix": {
+      "compiled_input_separate_jit_to_whole_jit_max_abs": 0.0,
+      "fixed_input_eager_to_whole_eager_max_abs": 0.0,
+      "fixed_input_jit_to_compiled_input_jit_max_abs": 7.580255867445373e-13,
+      "fixed_input_jit_to_whole_eager_max_abs": 1.1413721530406651e-14,
+      "fixed_input_jit_to_whole_jit_max_abs": 7.580255867445373e-13
+    },
+    "phase_coefficients": {
+      "compiled_input_separate_jit_to_whole_jit_max_abs": 0.0,
+      "fixed_input_eager_to_whole_eager_max_abs": 0.0,
+      "fixed_input_jit_to_compiled_input_jit_max_abs": 1.2086331935279304e-11,
+      "fixed_input_jit_to_whole_eager_max_abs": 2.1316282072803006e-14,
+      "fixed_input_jit_to_whole_jit_max_abs": 1.2086331935279304e-11
+    },
+    "phase_matrix": {
+      "compiled_input_separate_jit_to_whole_jit_max_abs": 0.0,
+      "fixed_input_eager_to_whole_eager_max_abs": 0.0,
+      "fixed_input_jit_to_compiled_input_jit_max_abs": 6.938893903907228e-18,
+      "fixed_input_jit_to_whole_eager_max_abs": 0.0,
+      "fixed_input_jit_to_whole_jit_max_abs": 6.938893903907228e-18
+    }
+  },
+  "cwd": "/home/xangma/tmp/diffgw-seobnr-polar-20260926",
+  "diagnostic_checks_passed": true,
+  "differences": {
+    "amplitude_coefficients": {
+      "max_abs": 8.00632165010029e-07,
+      "relative_l2": 7.834391551028673e-09
+    },
+    "amplitude_matrix": {
+      "max_abs": 7.580255867445373e-13,
+      "relative_l2": 1.1677338730639097e-11
+    },
+    "amplitude_rhs": {
+      "max_abs": 5.2087022845911934e-12,
+      "relative_l2": 1.3087659321417224e-10
+    },
+    "base_mode": {
+      "max_abs": 2.1715079727778364e-15,
+      "relative_l2": 7.171172917808073e-16
+    },
+    "combined_spline_input": {
+      "max_abs": 8.326672684688674e-16,
+      "relative_l2": 3.8736826985728297e-16
+    },
+    "matching_first": {
+      "max_abs": 2.3245294578089215e-16,
+      "relative_l2": 9.912967312967368e-15
+    },
+    "matching_second": {
+      "max_abs": 5.2087022845911934e-12,
+      "relative_l2": 7.306299378386091e-10
+    },
+    "matching_value": {
+      "max_abs": 1.734723475976807e-18,
+      "relative_l2": 3.010165747449497e-18
+    },
+    "orbital_frequency": {
+      "max_abs": 8.326672684688674e-17,
+      "relative_l2": 1.0525450490760283e-16
+    },
+    "phase_coefficients": {
+      "max_abs": 1.2107648217352107e-11,
+      "relative_l2": 3.3932496241402406e-13
+    },
+    "phase_derivatives": {
+      "max_abs": 3.973384121724877e-15,
+      "relative_l2": 1.4039496849785461e-14
+    },
+    "phase_matrix": {
+      "max_abs": 6.938893903907228e-18,
+      "relative_l2": 2.235769630855913e-16
+    },
+    "phase_rhs": {
+      "max_abs": 3.973384121724877e-15,
+      "relative_l2": 4.9688273881093496e-14
+    },
+    "state": {
+      "max_abs": 1.7763568394002505e-15,
+      "relative_l2": 2.6679736546528985e-18
+    },
+    "unwrapped_phase": {
+      "max_abs": 7.105427357601002e-15,
+      "relative_l2": 1.3217013298838136e-16
+    }
+  },
+  "elapsed_s": 135.67414273228496,
+  "fine_samples": 9637,
+  "host": "len",
+  "jax_backend": "gpu",
+  "jax_version": "0.11.2",
+  "match_time_M": 144.6564486506888,
+  "pid": 1369966,
+  "plan_sha256": "5e96d99acd09bd2492fbe0daea38ae5bfaefff74940b82c2c80c4ee06fbbd306",
+  "platform": "Linux-6.8.0-138-generic-x86_64-with-glibc2.39",
+  "release_qualified": false,
+  "replay_state_max_abs": 2.6645352591003757e-14,
+  "schema": "diffgw.seobnrv4.jax-nqc-jit-stages.v1",
+  "script_sha256": "cc0e490b69f716777e65df9ad24b5796b887f68fd414bb3ff3ddc5911929c231",
+  "solves": {
+    "amplitude": {
+      "compiled_condition": 10545.773166763236,
+      "compiled_residual_relative_l2": 2.6448940521678063e-15,
+      "eager_condition": 10545.77319862399,
+      "eager_residual_relative_l2": 8.072311568430463e-15,
+      "matrix_only_coefficient_change_max_abs": 2.6363957772446156e-07,
+      "numpy_solver_eager_vs_compiled_coefficient_max_abs": 8.006338987343042e-07,
+      "rhs_only_coefficient_change_max_abs": 5.369942925881332e-07
+    },
+    "phase": {
+      "compiled_condition": 97.57797090157858,
+      "compiled_residual_relative_l2": 3.5130259867422487e-16,
+      "eager_condition": 97.57797090157844,
+      "eager_residual_relative_l2": 1.8942772259484506e-16,
+      "matrix_only_coefficient_change_max_abs": 7.105427357601002e-15,
+      "numpy_solver_eager_vs_compiled_coefficient_max_abs": 1.2079226507921703e-11,
+      "rhs_only_coefficient_change_max_abs": 1.2072121080564102e-11
+    }
+  },
+  "status": "diagnostic_complete"
+}
