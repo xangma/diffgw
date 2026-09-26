@@ -54,10 +54,10 @@ all branches reduce exactly to $g(f)=f$.
 ## Implementation mapping
 
 The independent SymPy expressions and mpmath evaluator are in
-[`diffgw_reference.imrphenomhm_frequency_map`](../../src/diffgw_reference/imrphenomhm_frequency_map.py).
+[`diffgw_reference.imrphenomhm_frequency_map`](https://github.com/xangma/diffgw/blob/main/src/diffgw_reference/imrphenomhm_frequency_map.py).
 The Eq. (5) amplitude map binds to
-[`Torch frequency_mapping_amplitude`](../../src/torchwave/approximants/imrphenom_hm.py)
-and [`JAX frequency_mapping_amplitude`](../../src/jaxwave/approximants/imrphenom_hm.py).
+[`Torch frequency_mapping_amplitude`](https://github.com/xangma/diffgw/blob/main/src/torchwave/approximants/imrphenom_hm.py)
+and [`JAX frequency_mapping_amplitude`](https://github.com/xangma/diffgw/blob/main/src/jaxwave/approximants/imrphenom_hm.py).
 The D-carrier phase variant binds to the corresponding
 `frequency_mapping_phase` function in each frontend. The reference passes
 QNM frequencies as independent scalar inputs and imports neither frontend.
@@ -66,7 +66,7 @@ module, checked by the maintained test.
 
 ## Evidence and limitations
 
-The [reference tests](../../tests/test_imrphenomhm_frequency_map_math_reference.py)
+The [reference tests](https://github.com/xangma/diffgw/blob/main/tests/test_imrphenomhm_frequency_map_math_reference.py)
 check the exact symbolic joins and slopes, a hand-reduced rational example,
 Torch/JAX values on both sides of every join, one-sided frequency derivatives,
 and gradients with respect to $f$, $f_0$, $R$, and $Q$. Synthetic QNM inputs

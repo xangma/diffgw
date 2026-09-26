@@ -5,7 +5,7 @@
 Specification **`nrtidalv2-nonspinning-tidal-phase/v1`** covers only the additive
 frequency-domain NRTidalv2 tidal phase of the dominant (2,2) mode, with zero
 component spins, CPU FP64 and the declared 30–800 Hz binaries below the merger
-taper. The independent [scalar reference](../../src/diffgw_reference/nrtidalv2_phase.py)
+taper. The independent [scalar reference](https://github.com/xangma/diffgw/blob/main/src/diffgw_reference/nrtidalv2_phase.py)
 has component IDs `nrtidalv2.phase.lambda_tilde.v1`, `.pade.v1`, `.tidal.v1`
 and `.frequency_derivative.v1`. It imports no Torch, JAX or LAL code.
 
@@ -57,13 +57,13 @@ $d\psi_T/df$ with masses and deformabilities fixed.
 
 ## Frontend and binary boundary
 
-The maintained [math tests](../../tests/test_nrtidalv2_phase_math_reference.py)
+The maintained [math tests](https://github.com/xangma/diffgw/blob/main/tests/test_nrtidalv2_phase_math_reference.py)
 compare the unit complex quotient `IMRPhenomD_NRTidalv2 / IMRPhenomD` from
 Torch and JAX with the independent high-precision phase. The denominator
 removes the inherited point-particle carrier; normalization removes the
 tidal amplitude. The same quotient is built from the installed **LALSuite
 7.26.15 binary** by its public waveform-sequence API in the
-[binary test](../../tests/test_nrtidalv2_phase_lal_binary.py). There is no
+[binary test](https://github.com/xangma/diffgw/blob/main/tests/test_nrtidalv2_phase_lal_binary.py). There is no
 phase/time alignment or fitting to that binary. The oracle is used only for
 agreement, never to choose coefficients.
 
