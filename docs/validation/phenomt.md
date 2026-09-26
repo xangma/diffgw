@@ -145,7 +145,7 @@ output is fitted.
 The clean-room equation assembly now closes the source audit of that raw branch.
 For the same q=10 binary on 401 frequencies from 20--220 Hz, production alpha,
 gamma, and PN opening beta agree with the independent published-equation path
-within `2.20e-10`, `1.84e-10`, and `4.29e-11`, respectively. The paths have
+within `2.95e-10`, `2.51e-10`, and `8.49e-12`, respectively. The paths have
 identical reference roots, `c1`, and leading spin average. The first material
 split from the separately audited v223 compatibility path is its use of
 initial-reference spin contractions in the radiation-reaction coefficients,
@@ -239,7 +239,7 @@ The component localization is therefore:
 
 | Failed q=10 path | Earliest paper-defined component | Evidence excluding later components | Remaining blocker |
 | --- | --- | --- | --- |
-| MSA PV223 | Public-binary raw analytical angles differ from the source-backed native/clean-room equation path | Production and independent equations agree below `2.20e-10`; the clean v223 compatibility path reduces the full pre-MECO relative residual from `0.0162258` to `3.32e-6` rad | The first compatibility substitution (initial-reference flux contractions, followed later by a `q^2` phase convention) is not stated by the published equations, so no source-backed production correction is authorized |
+| MSA PV223 | Public-binary raw analytical angles differ from the source-backed native/clean-room equation path | Production and independent equations agree below `3e-10`; the clean v223 compatibility path reduces the full pre-MECO relative residual from `0.0162258` to `3.32e-6` rad | The first compatibility substitution (initial-reference flux contractions, followed later by a `q^2` phase convention) is not stated by the published equations, so no source-backed production correction is authorized |
 | Numerical PV300/FS4 | Pre-merger orientation/rotation path: carrier/time mapping, trajectory, or public angle construction unresolved | Relative-triad error reaches `1e-4` rad after `1.465` ms; projection closes below `8e-16`; ringdown is not sampled | Public Euler angles do not expose the internal trajectory, so the earliest of these three components cannot yet be selected |
 
 The primary sources support the retained Kerr self-quadrupole term and the
