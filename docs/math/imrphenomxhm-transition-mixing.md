@@ -59,7 +59,7 @@ h_{32}=\frac{\alpha_{322}}{\alpha_{222}}h_{22}
 ## Implementation mapping
 
 The independent scalar implementation is
-[`imrphenomxhm_transition_mixing.py`](../../src/diffgw_reference/imrphenomxhm_transition_mixing.py).
+[`imrphenomxhm_transition_mixing.py`](https://github.com/xangma/diffgw/blob/main/src/diffgw_reference/imrphenomxhm_transition_mixing.py).
 It takes all four complex `α` values as inputs and evaluates the mixed phase
 derivatives by logarithmic differentiation. Both production `imrphenom_xhm.py`
 frontends route their `(3,2)` collocation solve through the named helper.
@@ -67,7 +67,7 @@ The real/imaginary Cartesian Torch mixing path takes a real `h32_s` amplitude.
 
 ## Evidence and limitations
 
-[`test_xhm_transition_mixing_math_reference.py`](../../tests/test_xhm_transition_mixing_math_reference.py)
+[`test_xhm_transition_mixing_math_reference.py`](https://github.com/xangma/diffgw/blob/main/tests/test_xhm_transition_mixing_math_reference.py)
 checks the projection identity, phase derivatives, four intermediate
 collocation values, value/first/second-derivative join, and the same solve
 and projection in Torch and JAX. The production `(3,2)` branch uses named
