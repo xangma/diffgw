@@ -869,7 +869,7 @@
         "(4,4)"
       ],
       "status": "verified_declared_cases",
-      "notes": "The canonical (2,2), n=0 physical-energy waveform passes the frozen catalog and four expanded public TD-to-FD comparisons at the original 1e-6 tolerance. Its independent public reference uses SimBlackHoleRingdown and composite-Simpson Fourier integration. The angular series stopping rule and adaptive integration tolerance are inferred numerical compatibility conventions, not fitted calibration. Other listed modes and overtones do not inherit this full-waveform result.",
+      "notes": "The canonical (2,2), n=0 physical-energy waveform passes the frozen catalog, four expanded public TD-to-FD comparisons, and one off-canonical holdout at the original 1e-6 tolerance. Its independent public reference uses SimBlackHoleRingdown and composite-Simpson Fourier integration. A conditional scalar paper-form reference separately checks energy normalization and the causal time/Fourier carrier on supplied QNM and angular inputs in Torch and JAX. The angular series stopping rule and adaptive integration tolerance are inferred numerical compatibility conventions, not fitted calibration. Other listed modes and overtones do not inherit this full-waveform result.",
       "primary_references": [
         {
           "citation": "Cook and Zalutskiy (2014), Phys. Rev. D 90, 124021",
@@ -900,12 +900,16 @@
           ]
         },
         "holdout": {
-          "case_ids": [],
-          "cases_passed": 0,
-          "cases_total": 0,
-          "max_polarization_complex_relative_l2": null,
-          "max_projection_complex_relative_l2": null,
-          "verification_scopes": []
+          "case_ids": [
+            "KerrRingdown_holdout_off_axis_energy_onset"
+          ],
+          "cases_passed": 1,
+          "cases_total": 1,
+          "max_polarization_complex_relative_l2": 5.852069864247967e-08,
+          "max_projection_complex_relative_l2": 4.249138559216386e-07,
+          "verification_scopes": [
+            "full_polarizations"
+          ]
         }
       },
       "overtones": [

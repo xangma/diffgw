@@ -418,7 +418,7 @@ def test_holdout_inventory_is_distinct_and_frozen():
     import tests.parity_harness as ph
     holdouts = ph.get_canonical_holdout_cases()
     canonical = ph.get_canonical_catalog_cases()
-    assert len(holdouts) == 13
+    assert len(holdouts) == 14
     assert not {c["id"] for c in holdouts} & {c["id"] for c in canonical}
     assert all(c["params"] != base["params"] for c in holdouts for base in canonical)
     assert ph.validate_case_inventory(holdouts, scope="holdout")[0]

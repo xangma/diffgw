@@ -273,7 +273,7 @@ the removed model entries.
 | IMRPhenomD_NRTidal | 1/1 | 1/1 | Declared tidal cases |
 | IMRPhenomD_NRTidalv2 | 1/1 | 1/1 | Declared tidal cases |
 | IMRPhenomNSBH | 1/1 | 1/1 | Declared NSBH cases |
-| KerrRingdown | 1/1 | — | Canonical $(2,2), n=0$ physical-energy waveform |
+| KerrRingdown | 1/1 | 1/1 | Canonical $(2,2), n=0$ physical-energy waveform; one off-canonical holdout |
 | SEOBNR_ROM | 1/1 | — | Official external-data wrapper |
 | IMRPhenomXHM | 0/1 | 0/1 | Full-waveform reference gates not met; native phase tests have separate scope |
 | IMRPhenomXPHM | 0/1 | 0/1 | Full-waveform reference gates not met; native phase tests have separate scope |

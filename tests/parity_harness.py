@@ -818,6 +818,12 @@ def _build_holdout_cases() -> List[Dict[str, Any]]:
                               spin2x=.12, spin2y=.08, spin2z=.2,
                               f_ref=35., inclination=1.1, phic=.71)
         cases.append(case)
+    ringdown = copy.deepcopy(base["KerrRingdown"])
+    ringdown["id"] = "KerrRingdown_holdout_off_axis_energy_onset"
+    ringdown["params"].update(mass1=53., chi1=.35, distance=230.,
+                              energy_fraction=.017, inclination=1.1,
+                              phic=.41, tc=.002)
+    cases.append(ringdown)
     return cases
 
 
