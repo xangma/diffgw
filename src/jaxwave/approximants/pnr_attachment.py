@@ -30,6 +30,39 @@ def beta_connection(mf, start, end, value_start, slope_start, value_end, slope_e
     return h00 * value_start + h10 * width * slope_start + h01 * value_end + h11 * width * slope_end
 
 
+def beta_feature_cutoff_frequency(feature_frequency):
+    """Final Twist Eq. (58), also used by XO4a Eq. (37)."""
+    return jnp.where(feature_frequency >= 0.06, feature_frequency - 0.03, 0.6 * feature_frequency)
+
+
+def beta_turnover_connection_frequency(
+    f_max, beta_second_at_max, beta_third_at_max, beta_slope_at_inflection,
+):
+    """Final Twist Eq. (57) with XO4a's corrected Eq. (56)."""
+    slope_connection = 25e-4 * beta_slope_at_inflection**2
+    discriminant = beta_second_at_max**2 + 2 * beta_third_at_max * slope_connection
+    return f_max + (-beta_second_at_max + jnp.sqrt(discriminant)) / beta_third_at_max
+
+
+def beta_lower_connection_frequency(
+    f_max, f_inflection, f_minimum,
+    beta_second_at_max, beta_third_at_max, beta_slope_at_inflection,
+):
+    """XO4a morphology selection from caller-supplied beta landmarks."""
+    f_low = beta_feature_cutoff_frequency(f_inflection)
+    use_turnover = (f_inflection > f_max) & (f_max > f_low)
+    safe_third = jnp.where(use_turnover, beta_third_at_max, 1)
+    turnover = beta_turnover_connection_frequency(
+        f_max, beta_second_at_max, safe_third, beta_slope_at_inflection,
+    )
+    standard = jnp.where(use_turnover, turnover, f_low)
+    return jnp.where(
+        f_inflection > f_max,
+        standard,
+        beta_feature_cutoff_frequency(f_minimum),
+    )
+
+
 def tapered_opening_angle(mf, connection, two_spin_angle, single_spin_angle):
     """Final Twist Eqs. (44)--(45): taper two-spin opening-angle oscillations."""
     taper = jnp.cos(jnp.pi * mf / (2 * connection)) ** 2

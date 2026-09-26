@@ -303,6 +303,72 @@ def beta_connection(
     return h00 * value_start + h10 * width * slope_start + h01 * value_end + h11 * width * slope_end
 
 
+def beta_feature_cutoff_frequency(feature_frequency: float) -> float:
+    """Evaluate Final Twist Eq. (58), also used by XO4a Eq. (37)."""
+    _finite(feature_frequency)
+    if feature_frequency >= 0.06:
+        return feature_frequency - 0.03
+    return 0.6 * feature_frequency
+
+
+def beta_turnover_connection_frequency(
+    f_max: float,
+    beta_second_at_max: float,
+    beta_third_at_max: float,
+    beta_slope_at_inflection: float,
+) -> float:
+    """Evaluate Final Twist Eq. (57) with XO4a's corrected Eq. (56).
+
+    XO4a corrects the printed ``2.5e-4`` factor to ``25e-4``.  All
+    derivatives are with respect to the dimensionless frequency ``Mf``.
+    """
+    _finite(f_max, beta_second_at_max, beta_third_at_max, beta_slope_at_inflection)
+    if beta_third_at_max == 0.0:
+        raise ValueError("third derivative at beta maximum must be nonzero")
+    slope_connection = 25.0e-4 * beta_slope_at_inflection**2
+    discriminant = beta_second_at_max**2 + 2.0 * beta_third_at_max * slope_connection
+    if discriminant < 0.0:
+        raise ValueError("beta connection-frequency discriminant must be nonnegative")
+    return f_max + (
+        -beta_second_at_max + math.sqrt(discriminant)
+    ) / beta_third_at_max
+
+
+def beta_lower_connection_frequency(
+    f_max: float,
+    f_inflection: float,
+    f_minimum: float,
+    beta_second_at_max: float,
+    beta_third_at_max: float,
+    beta_slope_at_inflection: float,
+) -> float:
+    """Select XO4a's lower beta connection from caller-supplied landmarks.
+
+    This implements the three morphology branches described around XO4a
+    Eqs. (36)--(37).  It does not locate or validate the merger-ringdown
+    ansatz roots, nor apply the later attachment-fallback checks.
+    """
+    _finite(
+        f_max,
+        f_inflection,
+        f_minimum,
+        beta_second_at_max,
+        beta_third_at_max,
+        beta_slope_at_inflection,
+    )
+    if f_inflection <= f_max:
+        return beta_feature_cutoff_frequency(f_minimum)
+    f_low = beta_feature_cutoff_frequency(f_inflection)
+    if f_max <= f_low:
+        return f_low
+    return beta_turnover_connection_frequency(
+        f_max,
+        beta_second_at_max,
+        beta_third_at_max,
+        beta_slope_at_inflection,
+    )
+
+
 def tapered_opening_angle(
     mf: float,
     connection: float,

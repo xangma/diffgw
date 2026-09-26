@@ -12,9 +12,12 @@ the implemented `B3` transform was corrected from `B2 * Lambda_B3` to the
 published `chi sin(theta) [exp(Lambda_B3) - 200]` relation.
 The printed alpha/beta connection, exterior-continuation, final quadratic
 beta-rescaling, two-spin beta taper, and optimal-emission-direction map now
-also have isolated scalar/Torch/JAX kernels. They are not wired into the
-public waveform because their input tracks, connection frequency, and terminal
-state are not independently fixed by the available sources.
+also have isolated scalar/Torch/JAX kernels. The source-published lower beta
+connection selector is implemented for caller-supplied merger-ringdown
+landmarks, including XO4a's correction to the earlier gradient factor. These
+components are not wired into the public waveform because the landmark/root
+construction, input tracks, fallbacks, and terminal state are not yet supplied
+by an independently qualified route.
 
 Full-waveform qualification remains failed.  The public route uses
 reference-frequency rather than transition-frequency spins in the effective
@@ -36,6 +39,26 @@ The 2021 paper supplies a partial generation procedure for the 40-waveform
 predecessor fit.  It is not the specification or output of the later
 80-waveform XO4a retune used by the 2025 XPNR composition.
 
+## 2026-09-26 terminal/boundary/provenance pass
+
+This bounded primary-source pass closed one narrow boundary gap. Final Twist
+Eqs. (56)--(58), as corrected and extended by XO4a Eq. (37), specify the lower
+beta connection once the merger-ringdown maximum, inflection point, minimum,
+and derivatives are available. The standalone scalar/Torch/JAX selector below
+implements that rule without importing third-party code or coefficients.
+
+The terminal-state and calibration gates did not close. XPNR says the mapping
+uses spins immediately before merger at a transition related to the PN
+stopping frequency, with no closed form. The SpinTaylor paper gives the PN
+orders, broad evolution equations, RKF order, and examples of stepping
+conditions, but not the complete coefficients, stop predicates and thresholds,
+integrator pair/controller/tolerances, interpolation, or terminal-sample rule
+needed for an independent reproduction. XO4a describes the 80-waveform retune
+but does not publish its per-waveform fitted targets, complete run
+configuration, tensor manifest, or a licensed coefficient release. Those are
+the exact blockers; neither the public waveform nor the inherited tensors are
+promoted by this pass.
+
 ## Published component scope
 
 The following identifiers separate equation fidelity from complete-model
@@ -46,7 +69,7 @@ composition.
 | `XPNR-MAP` | XPNR Eqs. (3)–(6), evaluated with spins evolved to the SpinTaylor stopping/transition frequency and projected relative to instantaneous `Lhat` | Scalar terminal-state map is rotation-invariant; Torch/JAX component algebra agrees when supplied the same aligned-frame spins | Geometry pass; public caller supplies the wrong epoch and no terminal state |
 | `XPNR-FIT` | XO4a Eq. (35), `Lambda = sum lambda_pqr eta^p chi^q cos(theta)^r`, plus XPNR Eq. (22) freezing | Scalar/Torch/JAX values agree; tensor duplication is not independent provenance | Equation pass; assets unresolved |
 | `XPNR-ANGLES-MR` | XO4a Eqs. (25)–(34), XPNR Eqs. (15)–(16), including stated guards | Scalar values and frequency derivatives agree in Torch/JAX | Component pass after `B3` correction |
-| `XPNR-ATTACH` | Final Twist Eqs. (41)–(45) for the beta taper/emission direction and XPNR Eq. (19) for alpha and Eqs. (20)–(21) for beta, matching inspiral/merger-ringdown values and derivatives | Standalone kernels reproduce the published forms, the XO4a denominator correction, and frontend derivatives; input-track construction and public connection remain absent | Component forms pass; full route fail |
+| `XPNR-ATTACH` | Final Twist Eqs. (41)–(45), (56)–(58), XO4a Eq. (37), and XPNR Eqs. (19)–(21) | Standalone kernels reproduce the joins, XO4a corrections, and landmark-based lower beta connection selection; landmark/root construction, fallbacks, input tracks, and public composition remain absent | Component forms and lower selector pass; full route fail |
 | `XPNR-CONT` | XPNR Eqs. (17)–(18) analytic exterior continuations and Eq. (22) fit-coordinate freeze | Standalone Eq. (17)–(18) kernels reproduce synthetic published-form functions and derivatives; current public route still window-blends the angle tracks | Component pass; public route fail |
 | `XPNR-CARRIER` | XPNR Eqs. (7)–(8): tuned XHM-CP deviations and effective ringdown frequencies | Independent scalar equations exist; neither is wired into the waveform | Fail |
 | `XPNR-ASYM22` | XPNR Eqs. (10)–(13), unequal `m=+2` and `m=-2` coprecessing modes | Native XHM carrier generates negative-m content by symmetry | Fail |
@@ -152,7 +175,7 @@ iota(f) = iota_single(f) + cos^2(pi f / (2 f_c)) iota_osc(f),  f <= f_c
         = iota_single(f),                                      f > f_c .
 ```
 
-The isolated kernel is exactly two-spin at zero frequency, exactly
+The isolated taper kernel is exactly two-spin at zero frequency, exactly
 single-spin at `f_c`, and has zero taper derivative at that join. Final Twist
 Eqs. (41)–(43) then map the opening angle to the optimal emission direction
 using its printed `c_0,c_2,c_3,d_0,d_2,d_3` polynomials. XO4a explicitly
@@ -164,6 +187,17 @@ kernel takes caller-supplied effective spin components `chi_perpendicular` and
 `chi_parallel`, as defined by the terminal single-spin map. This is the
 published `chi sin(theta_LS)` and `chi cos(theta_LS)` dependence, while avoiding
 an undefined angle derivative at zero spin.
+
+For a caller-supplied merger-ringdown maximum `f_max`, inflection point
+`f_inf`, minimum `f_min`, and derivatives, the lower beta selector implements
+Final Twist Eqs. (56)–(58) and the three XO4a morphologies. In the turnover
+branch it uses XO4a's corrected
+`d beta_c = 25e-4 (d beta_inf)^2` in Eq. (57). If the maximum does not exceed
+the Eq. (58) low cutoff, that cutoff is used; the third morphology applies the
+same piecewise transform to `f_min` as XO4a Eq. (37). This is intentionally a
+landmark-to-boundary kernel: it does not select the correct rational-ansatz
+root, construct the landmarks, apply the upper-connection/constant-ringdown
+decisions, or enact XO4a's invalid-attachment fallbacks.
 
 For Eq. (19), multiply the printed `alpha = a0 f² + a1 f + a2 + a3/f`
 by `f`; the resulting cubic is fixed by `f alpha` and
@@ -309,7 +343,7 @@ history from which to establish their origin or terms.
 
 | Evidence class | Result | What it establishes |
 | --- | --- | --- |
-| Paper fidelity | Partial pass | Map, polynomial, guarded transforms, MR ansatzes, standalone Final Twist Eqs. (41)–(45) and XPNR Eqs. (17)–(21), carrier-deformation equation, effective ringdown equation, and HM map have scalar encodings; public angle composition, beta bound, and carrier/asymmetry composition remain open |
+| Paper fidelity | Partial pass | Map, polynomial, guarded transforms, MR ansatzes, standalone Final Twist Eqs. (41)–(45), (56)–(58), XO4a Eq. (37), and XPNR Eqs. (17)–(21), carrier-deformation equation, effective ringdown equation, and HM map have scalar encodings; public angle composition, beta bound, and carrier/asymmetry composition remain open |
 | Scalar-reference agreement | Pass for scoped components | Focused published-form cases cover fit values, transforms, ansatz values/derivatives, terminal-state geometry, beta preprocessing, map, window interpretation, HM joins and reductions |
 | Torch/JAX parity | Pass for scoped components | Both backends agree with scalar values and derivatives; a dense JAX grid is recorded in the qualification JSON |
 | Calibration asset provenance | Provisional gate retained | Published equations, a partial historical procedure, raw CC BY inputs, and an MIT fitting tool are distinguished from the unsupported inherited tensors; a two-case manifest test pins that classification and the unchanged payload |
@@ -334,10 +368,11 @@ Promotion requires all of the following without relaxing existing thresholds:
    terminal sampling rule; return terminal `S1`, `S2`, and `Lhat`, demonstrate
    integration convergence and stop-event stability, convert the spins to
    `chi_i = S_i/m_i^2`, then feed that state into Eqs. (3)–(6).
-3. Source the taper inputs and connection frequency, compose the checked
-   alpha/beta attachments and exterior continuations, then implement the beta
-   bound and minimal-rotation convention with value and derivative checks at
-   every join.
+3. Source the taper inputs and merger-ringdown landmark/root construction;
+   implement the published upper-boundary and invalid-attachment fallbacks;
+   compose the checked alpha/beta attachments and exterior continuations, then
+   implement the beta bound and minimal-rotation convention with value and
+   derivative checks at every join.
 4. Implement and separately test XHM-CP deformation coefficients, effective
    ringdown frequencies, dominant-mode asymmetry, and their nonprecessing and
    exterior reductions.

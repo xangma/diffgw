@@ -43,6 +43,23 @@ def test_qualification_records_paper_only_attachment_boundary():
     assert len(attachment["unresolved"]) >= 5
 
 
+def test_landmark_selector_remains_a_provisional_component():
+    qualification = json.loads(QUALIFICATION_PATH.read_text())
+    joins = qualification["angle_join_components"]
+    bounded_pass = qualification["qualification_pass_2026_09_26"]
+
+    assert qualification["qualified_full_waveform"] is False
+    assert "lower_connection_selection" in joins["status"]
+    assert any("landmarks" in item and "correct-root" in item for item in joins["open"])
+    assert "no LAL source or coefficients inspected or copied" in bounded_pass["scope"]
+    assert "exact terminal-sample rule" in bounded_pass["terminal_state_blocker"]
+    assert "licensed angle-tensor release" in bounded_pass["calibration_blocker"]
+    for directory in BACKEND_PATHS.values():
+        assert "beta_lower_connection_frequency" not in (
+            directory / "precession_pnr.py"
+        ).read_text()
+
+
 def test_backends_still_map_reference_spins_and_do_not_return_terminal_state():
     expected_arguments = ["m1", "m2", "s1x", "s1y", "s1z", "s2x", "s2y", "s2z"]
     expected_return = ["alpha_final", "beta_out", "gamma_final", "theta_jn", "zeta", "carrier_phase"]

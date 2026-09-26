@@ -179,6 +179,77 @@ def test_xpnr_beta_final_rescaling_jax_jit_value_and_join_derivative():
         assert math.isclose(float(compiled_slope(mf)), _rescaled_beta_prime(f), rel_tol=2e-10, abs_tol=2e-10)
 
 
+def _beta_turnover_connection(f_max, beta_second, beta_third, beta_slope_inflection):
+    slope_connection = 25e-4 * beta_slope_inflection**2
+    return f_max + (
+        -beta_second + math.sqrt(beta_second**2 + 2 * beta_third * slope_connection)
+    ) / beta_third
+
+
+def test_beta_lower_connection_scalar_covers_published_morphologies_and_correction():
+    args = (0.1, 0.12, 0.08, -4.0, -100.0, 0.5)
+    expected_turnover = _beta_turnover_connection(args[0], *args[3:])
+    assert scalar.beta_lower_connection_frequency(*args) == pytest.approx(expected_turnover)
+
+    old_factor = args[0] + (
+        -args[3] + math.sqrt(args[3] ** 2 + 2 * args[4] * (2.5e-4 * args[5] ** 2))
+    ) / args[4]
+    assert not math.isclose(expected_turnover, old_factor, rel_tol=1e-8, abs_tol=1e-8)
+
+    assert scalar.beta_lower_connection_frequency(0.08, 0.12, 0.08, *args[3:]) == pytest.approx(0.09)
+    assert scalar.beta_lower_connection_frequency(0.1, 0.08, 0.07, *args[3:]) == pytest.approx(0.04)
+    assert scalar.beta_lower_connection_frequency(0.1, 0.08, 0.05, *args[3:]) == pytest.approx(0.03)
+    with pytest.raises(ValueError, match="third derivative"):
+        scalar.beta_lower_connection_frequency(0.1, 0.12, 0.08, -4.0, 0.0, 0.5)
+
+
+def _beta_connection_grid():
+    return (
+        (0.1, 0.08, 0.1, 0.1),
+        (0.12, 0.12, 0.08, 0.08),
+        (0.08, 0.08, 0.07, 0.05),
+        (-4.0, -4.0, -4.0, -4.0),
+        (-100.0, -100.0, -100.0, -100.0),
+        (0.5, 0.5, 0.5, 0.5),
+    )
+
+
+def _beta_connection_expected():
+    grid = _beta_connection_grid()
+    return (
+        _beta_turnover_connection(grid[0][0], grid[3][0], grid[4][0], grid[5][0]),
+        0.09,
+        0.04,
+        0.03,
+    )
+
+
+def test_beta_lower_connection_torch_branches_and_gradients():
+    import torch
+
+    from torchwave.approximants.pnr_attachment import beta_lower_connection_frequency
+
+    inputs = [torch.tensor(values, dtype=torch.float64, requires_grad=True) for values in _beta_connection_grid()]
+    actual = beta_lower_connection_frequency(*inputs)
+    gradients = torch.autograd.grad(actual.sum(), inputs)
+    assert actual.detach().tolist() == pytest.approx(_beta_connection_expected(), rel=2e-12, abs=2e-12)
+    assert all(torch.all(torch.isfinite(gradient)) for gradient in gradients)
+
+
+def test_beta_lower_connection_jax_jit_branches_and_gradients():
+    import jax
+    import jax.numpy as jnp
+
+    from jaxwave.approximants.pnr_attachment import beta_lower_connection_frequency
+
+    inputs = tuple(jnp.asarray(values, dtype=jnp.float64) for values in _beta_connection_grid())
+    function = jax.jit(lambda *xs: beta_lower_connection_frequency(*xs))
+    actual = function(*inputs)
+    gradients = jax.jit(jax.grad(lambda *xs: jnp.sum(beta_lower_connection_frequency(*xs)), argnums=range(6)))(*inputs)
+    assert tuple(map(float, actual)) == pytest.approx(_beta_connection_expected(), rel=2e-12, abs=2e-12)
+    assert all(bool(jnp.all(jnp.isfinite(gradient))) for gradient in gradients)
+
+
 def _tapered_opening_angle(f, connection, two_spin, single_spin):
     if f > connection:
         return single_spin
