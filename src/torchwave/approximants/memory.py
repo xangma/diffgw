@@ -1,12 +1,8 @@
-"""Non-Linear Gravitational Wave Memory (Christodoulou Memory Effect).
+"""Provisional strain-memory carrier and a published dominant-(2, ±2) slice.
 
-Strict Clean-Room Implementation based exclusively on published peer-reviewed literature:
-- Christodoulou (1991), Phys. Rev. Lett. 67, 1486
-  [Nonlinear nature of gravitation and gravitational-wave experiments]
-- Favata (2010), Class. Quantum Grav. 27, 084036 (arXiv:1003.3486)
-  [The gravitational-wave memory effect]
-- Talbot, Thrane, Biscoveanu, Smith (2018), Phys. Rev. D 98, 084031 (arXiv:1807.00990)
-  [Measuring the gravitational-wave memory effect of binary black hole mergers with second-generation gravitational-wave detectors]
+The legacy ``compute_memory_h20`` is a diagnostic energy-flux proxy. The
+explicit ``*_22`` path follows Favata (2010), arXiv:1003.3486v1, Sec. 6.2,
+and Talbot, Thrane, Lasky & Lin (2018), arXiv:1807.00990v2, Eqs. (1)-(9).
 """
 
 from typing import Dict, Optional, Tuple, Union
@@ -25,6 +21,45 @@ from torchwave.conversions import as_tensor
 
 # Spherical harmonic coefficient for (l=2, m=0): sqrt(15 / (32 * pi))
 Y20_COEFF: float = math.sqrt(15.0 / (32.0 * math.pi))
+
+
+def compute_memory_h20_22(
+    times: torch.Tensor,
+    h22: torch.Tensor,
+    distance_m: Union[float, torch.Tensor],
+) -> torch.Tensor:
+    """Published h20 sourced by a supplied physical-strain h22 and its -m mirror.
+
+    For SI seconds and meters, Favata's Eq. (21) projected onto _{-2}Y20 is
+    h20(t) = R/(7c)*sqrt(5/(6π))*∫[t0,t]|d h22/dt'|² dt'. The first sample
+    sets zero memory; a pre-existing offset cannot be inferred from these data.
+    The supplied complex mode obeys h=h+ - i hx. A nonuniform time grid is
+    supported; at least two strictly increasing samples are required.
+    """
+    if times.ndim != 1 or times.numel() < 2 or h22.shape[-1] != times.numel():
+        raise ValueError("times must be 1D with at least two samples and match h22")
+    if isinstance(distance_m, (float, int)) and distance_m <= 0:
+        raise ValueError("distance_m must be positive")
+    slope = torch.gradient(h22, spacing=(times,), dim=-1)[0]
+    flux = slope.abs().square()
+    integral = torch.cumulative_trapezoid(flux, times, dim=-1)
+    integral = torch.cat((torch.zeros_like(integral[..., :1]), integral), dim=-1)
+    distance = as_tensor(distance_m, device=times.device, dtype=times.dtype)
+    return distance * (math.sqrt(5.0 / (6.0 * math.pi)) / (7.0 * C_SI)) * integral
+
+
+def memory_polarizations_22(
+    h20_mem: torch.Tensor,
+    inclination: Union[float, torch.Tensor] = 0.0,
+) -> Tuple[torch.Tensor, torch.Tensor]:
+    """Full dominant-22 pattern, including the l=4,m=0 memory projection."""
+    inc = as_tensor(inclination, device=h20_mem.device, dtype=h20_mem.dtype)
+    cos_i = torch.cos(inc)
+    pattern = Y20_COEFF * torch.sin(inc).square() * (7.0 / 120.0) * (17.0 + cos_i.square())
+    if h20_mem.ndim > pattern.ndim:
+        pattern = pattern.unsqueeze(-1)
+    hp_mem = h20_mem * pattern
+    return hp_mem, torch.zeros_like(hp_mem)
 
 
 def compute_memory_h20(
@@ -168,7 +203,7 @@ def add_memory_to_waveform(
 
 
 class MemoryWaveform(nn.Module):
-    """PyTorch Module for computing Non-Linear Gravitational Wave Memory."""
+    """Provisional hp/hc carrier with an explicit published dominant-22 path."""
 
     def __init__(self, scale_factor: float = 1.0):
         super().__init__()
@@ -188,3 +223,15 @@ class MemoryWaveform(nn.Module):
             inclination=inclination,
             scale_factor=self.scale_factor,
         )
+
+    def evaluate_22(
+        self,
+        times: torch.Tensor,
+        h22: torch.Tensor,
+        distance_m: Union[float, torch.Tensor],
+        inclination: Union[float, torch.Tensor] = 0.0,
+    ) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
+        """Return (h+_mem, hx_mem, h20) for the published ±22-only scope."""
+        h20 = compute_memory_h20_22(times, h22, distance_m)
+        hp, hc = memory_polarizations_22(h20, inclination)
+        return hp, hc, h20

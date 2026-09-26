@@ -32,6 +32,7 @@ fills the cataloged model pages' identity and option tables.
 | [Kerr 220 energy carrier, `kerr-220-energy-carrier-conditional/v1`](kerr-ringdown.md) | Scalar energy normalization, causal mode/mirror polarizations, and Fourier transform checked against both frontends on declared inputs; separate selected 220 QNM and angular-input checks | Excitation physics, other modes/overtones, and domain-wide validation |
 | [Kerr angular projection, `kerr-angular-projection-scalar/v1`](kerr-angular-projection.md) | Independent scalar spherical and spheroidal angular factors, selected eigenvalues, and angle derivatives checked against Torch/JAX; Torch real-oblateness derivative | JAX oblateness gradient, all supported modes, angular-series stopping rule, and domain-wide validation |
 | [Kerr selected 220 QNM inputs](kerr-qnm-scalar-qualification.md) | Independent radial continued-fraction frequency and angular eigenvalue checks, including selected spin derivatives, against Torch/JAX | Near-extremal spins, other modes and overtones, domain-wide validation |
+| [Dominant-pair nonlinear memory, `memory.dominant_22/v1`](memory-dominant-22.md) | Favata's symmetric ±22 full plus pattern, its $h_{20}$ projection, and selected Torch/JAX values and derivatives with explicit SI distance | General mode-pair coupling, waveform generation, legacy polarization-only carrier, prior-history offset and physical validation |
 | Other waveform families | No executable specification yet | Further family-by-family slices |
 
 The Kerr carrier has separate, bounded input evidence for
