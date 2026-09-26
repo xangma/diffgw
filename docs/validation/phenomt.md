@@ -270,6 +270,8 @@ The primary sources support the retained Kerr self-quadrupole term and the
 implemented evolution equations. They do not support a narrow production
 correction inferred from the public binary, so this slice changes diagnostics
 and receipts only.
+The [q=10 gate decision receipt](phenomt_q10_gate_blocker_20260927.md) names
+the exact independent provenance needed to revisit either frozen failure.
 
 ## Carrier and integration-resolution diagnostics
 

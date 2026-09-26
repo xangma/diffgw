@@ -220,9 +220,14 @@ distinct from whole-family validation.
 For MSA PV22300, the relative rotation crosses `1e-4` rad after `31.738` ms
 and reaches `0.01623` rad on 5,326 samples strictly before MECO. Continuation,
 ringdown, and numerical-gamma rules are inactive there, so the earliest
-component is the raw analytical-angle branch. Identifying a particular raw
-formula remains blocked on an independent clean-room scalar MSA transcription.
-Neither localization supplies paper evidence for a production correction.
+component is the raw analytical-angle branch. The independent clean-room
+scalar MSA transcription now agrees with production below `3e-10`; its first
+material split from the public-compatible path is the radiation-reaction spin
+contractions. The published equations prescribe precession-averaged values,
+so the public-compatible initial-reference values do not support a production
+change. The exact [q=10 gate dependency](../../validation/phenomt_q10_gate_blocker_20260927.md)
+is author provenance for that convention and the later quadratic-nutation
+phase choice.
 
 ## Reproduce the checks
 
@@ -253,11 +258,12 @@ The staged path to the canonical six-section executable reference is:
    `T-MERGER`, `T-RD`, and `T-REMNANT-QNM`; check collocation solves,
    primitives, boundary value/slope, signed amplitude and phase at all mode
    branches before composing T and THM.
-3. Complete scalar `P-ANGLES` NNLO/MSA raw expressions and remnant choices;
-   the independent suffix continuation and `P-ROTATION` are present. Verify
-   angle origins and phase convention before composing TP/TPHM analytical
-   versions. The pre-MECO onset diagnostic makes raw MSA scalar transcription the
-   next required equation-level gate.
+3. Complete scalar `P-ANGLES` NNLO expressions and remnant choices; the
+   published-equation raw MSA scalar path, independent suffix continuation,
+   and `P-ROTATION` are present. Verify angle origins and phase convention
+   before composing TP/TPHM analytical versions. Resolving the observed
+   PV223 convention split requires the independent author provenance named
+   in the q=10 gate decision receipt.
 4. Extend the converged independent `P-NUMERICAL-RHS-v0` event/ODE/angle path
    through ringdown and waveform composition; resolve the pre-merger orientation
    discrepancy with equation-level
