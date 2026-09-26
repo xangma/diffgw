@@ -458,6 +458,18 @@ It ran on RONI2 in this worktree as PID `78894`, command
 log `/tmp/diffgw-jax-mode-stages.log`, and completed in 7.7 seconds with
 exit code 0. No process or next check remains.
 
+The [fixed-state optimization-barrier control](jax_mode_barrier.json) at
+source head `532bbe8` tested barriers at three mode stages on `len`. All
+candidate eager modes exactly reproduced the source mode, but none passed
+the frozen `1e-16` eager/JIT relative-L2 gate: the control gave `7.49e-16`
+and each barrier gave `7.47e-16`. The `1e-14` absolute bound passed.
+These barriers therefore provide no qualifying repair, and the whole-waveform
+JIT and gradient contracts remain open. The run used cwd
+`/home/xangma/tmp/diffgw-seobnr-barrier-20260926-parent`, PID `911370`,
+command `PYTHONPATH=src XLA_PYTHON_CLIENT_PREALLOCATE=false timeout 300s /tmp/diffgw-waveform-library-1315f6e/venv-latest/bin/python -m dev.native_rom.diagnose_jax_mode_barrier`,
+and log `jax_mode_barrier.log` in that cwd. It completed in 49.7 seconds;
+no process or next check remains.
+
 Two different release claims must stay separate:
 
 - **Historical SEOBNRv4 fidelity:** a port may be described as faithful only
