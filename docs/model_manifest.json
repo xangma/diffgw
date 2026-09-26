@@ -143,7 +143,7 @@
         "(4,4)"
       ],
       "status": "scoped_math_reference",
-      "notes": "The versioned independent scalar reference checks the leading-amplitude eight-mode carrier, negative-m polarization projection, inherited aligned-spin phase, and Schwarzschild hard-cutoff thresholds against Torch and JAX. A checksum-pinned author Mathematica supplement independently checks all eight leading amplitude ratios, and paper-level output identities separately check the published native negative-m storage, polarization projection, 2f/m phase map, SPA offset, and phase/time signs. Public LAL spin-weighted harmonics independently check the angular basis only. The supplement is symbolic amplitude input, not a generator for the complete native complex-waveform contract; the historical external TaylorF2 waveform case checks only (2,2). Exact external all-eight-mode same-model complex-waveform parity and physical validation remain unavailable. Higher-PN and spin-amplitude completeness remains unresolved. See docs/math/taylorf2-hm.md.",
+      "notes": "The versioned independent scalar reference checks the leading-amplitude eight-mode carrier, negative-m polarization projection, inherited aligned-spin phase, and Schwarzschild hard-cutoff thresholds against Torch and JAX. A checksum-pinned author Mathematica supplement checks all eight leading amplitude ratios and signed nonspinning complex modes; composition with a separately published polarization map checks per-mode and summed complex polarizations at two orientations in the unwindowed f_ref=None slice. Paper-level output identities separately check the published native negative-m storage, polarization projection, 2f/m phase map, SPA offset, and phase/time signs. Public LAL spin-weighted harmonics independently check the angular basis only. The supplement is symbolic input, not an independently published numerical generator for the complete native complex-waveform contract; the historical external TaylorF2 waveform case checks only (2,2). Exact external all-eight-mode same-model complex-waveform parity and physical validation remain unavailable. Higher-PN and spin-amplitude completeness remains unresolved. See docs/math/taylorf2-hm.md.",
       "primary_references": [
         {
           "citation": "Kidder (2008), Phys. Rev. D 77, 044016",
@@ -176,7 +176,7 @@
       "math_reference": {
         "version": "taylorf2-hm-leading-carrier/v1",
         "scope": "eight leading-amplitude modes; unwindowed complex polarizations and selected derivatives; Schwarzschild hard-cutoff thresholds",
-        "evidence": "tests/test_taylorf2_hm_author_supplement_math_reference.py (all-eight leading amplitude ratios); tests/test_taylorf2_hm_math_reference.py; tests/test_taylorf2_hm_paper_math_reference.py; tests/test_taylorf2_hm_external_api.py (public angular basis and API boundary only)",
+        "evidence": "tests/test_taylorf2_hm_author_supplement_math_reference.py (all-eight leading amplitude ratios, nonspinning complex modes, and composed polarizations); tests/test_taylorf2_hm_math_reference.py; tests/test_taylorf2_hm_paper_math_reference.py; tests/test_taylorf2_hm_external_api.py (public angular basis and API boundary only)",
         "external_eight_mode_oracle": "unavailable"
       },
       "validation": {
