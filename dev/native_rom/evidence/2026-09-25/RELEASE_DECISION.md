@@ -470,6 +470,21 @@ command `PYTHONPATH=src XLA_PYTHON_CLIENT_PREALLOCATE=false timeout 300s /tmp/di
 and log `jax_mode_barrier.log` in that cwd. It completed in 49.7 seconds;
 no process or next check remains.
 
+The [frozen polar-assembly control](../2026-09-26/jax_polar_control_plan.json)
+and [result](../2026-09-26/jax_polar_control.json) test explicit
+real/imaginary trigonometric assembly and intermediate arithmetic barriers on
+the same fixed state. All three candidates reproduce the published eager
+pre-NQC mode exactly, but each has the identical `7.49298e-16` eager/JIT
+relative L2 difference as the original complex exponential, above the
+prospective `1e-16` gate. This rules out local polar assembly as a repair on
+this chart; no candidate reached whole-waveform, source, or AD/FD gates. The
+development-only run on `len` used cwd
+`/home/xangma/tmp/diffgw-seobnr-polar-20260926`, shell job `2990526`
+(Python PID `2990530`), command
+`PYTHONPATH=src:. XLA_PYTHON_CLIENT_PREALLOCATE=false timeout 300s /tmp/diffgw-waveform-library-1315f6e/venv-latest/bin/python -m dev.native_rom.diagnose_jax_polar_control`,
+and log `jax_polar_control.log` there. It completed in 49.8 seconds with exit
+code 1 for the frozen gate failure; no process or next check remains.
+
 Two different release claims must stay separate:
 
 - **Historical SEOBNRv4 fidelity:** a port may be described as faithful only
