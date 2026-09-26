@@ -23,6 +23,22 @@ published Eq. (24) coefficient or a claim that the default implements the
 paper's D composition. The published Eq. (24) component remains separately
 checked by Torch/JAX/SymPy and is used by neither D variant.
 
+The earlier [Kawaguchi et al. (2018), Eq. (2.25)](https://arxiv.org/pdf/1802.06518)
+uses $\sqrt{5\pi\eta/24}M^2/D_{\rm eff}$ for its absolute additive tidal
+amplitude. [Dietrich et al. (2019), Eq. (22)](https://arxiv.org/pdf/1905.06011v2)
+explicitly substitute $D_L$ for $D_{\rm eff}$, and Eqs. (23)–(24) retain the
+same $\eta$ scaling. The independent SymPy reference now proves that the
+Kawaguchi expression equals the numerator of Dietrich Eq. (24), including
+its 7.890-power term. The historical native/published scalar ratio is
+$[2\sqrt{5\pi\eta/24}]^{-1}$, giving 1.236077446 for the equal-mass case
+and 1.248886881 for the unequal-mass case; both Torch and JAX are tested
+against this distinction. With inclination fixed at 0.4 rad, a single
+projection factor cannot explain both ratios. This is a **paper versus
+pinned-binary contract difference**, not evidence that $1/2$ is a published
+coefficient. [The first 2019 preprint, Table II](https://arxiv.org/pdf/1905.06011v1)
+already marks D_NRTidalv2 tidal amplitude absent. The pinned binary version,
+frozen cases, and measured output disagreement appear below.
+
 The manifest's `verified_declared_cases` status and frozen metrics apply to
 the **default binary-compatible contract only**. The explicit paper-D option
 passes its math-composition tests but remains unqualified against the pinned
@@ -41,6 +57,21 @@ maximum projection $L_2=3.0914191861\times10^{-7}$. The log is
 The first attempt with a venv lacking PyCBC could not evaluate the required
 optimized-match metric and marked all ordinary strict cases failed; its
 `nrtidal_dual_oracle_ci.log` is environmental evidence, not a model result.
+
+## 27 September provenance follow-up
+
+The independent Kawaguchi/Dietrich symbolic identity and the two-mass-ratio
+Torch/JAX normalization distinctions added after the initial receipt passed
+on `len` in `/home/xangma/tmp/diffgw-nrtidal-paper-d-20260926`: **67 passed,
+18 strict xfailed** in `nrtidal_provenance_focus.log`. The focused command is
+the four-file command below with the same pinned LALSuite 7.26.15 environment.
+The unchanged `python -m scripts.run_oracle_ci` strict gate, run with PyCBC
+2.11.0 and the verified ROM data in the same cwd, passed **catalog 19/19,
+holdout 14/14**; see `nrtidal_provenance_oracle_ci.log`. No production waveform
+code, frozen oracle inventory, threshold, or expected-failure status changed
+in this follow-up. The scientific release distinction remains: the published
+2019 D composition is source-scoped, while the default is binary-verified
+with unresolved amplitude provenance.
 
 On `len`, the dual-contract focused CPU FP64 run in
 `/home/xangma/tmp/diffgw-nrtidal-paper-d-20260926` returned **62 passed,

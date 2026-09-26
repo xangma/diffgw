@@ -55,10 +55,22 @@ $\sqrt{5\eta/24}\,M_{\rm sec}^{5/6}/(\pi^{2/3}D_{\rm sec}f^{7/6})$
 ([Cutler–Flanagan, Eqs. (62)–(63)](https://arxiv.org/pdf/gr-qc/9402014v1)).
 In the same $x$ variable this is exactly
 $\sqrt{5\pi\eta/24}\,M_{\rm sec}^2 x^{-7/4}/D_{\rm sec}$.
+The earlier [Kawaguchi et al. (2018), Eq. (2.25)](https://arxiv.org/pdf/1802.06518)
+already has this $\sqrt{5\pi\eta/24}$ factor. Its full additive amplitude
+becomes the numerator of Dietrich Eq. (24) after the latter's explicitly stated
+$D_{\rm eff}\to D_L$ substitution and $\kappa_{\rm eff}^T=3\widetilde\Lambda/16$;
+the independent reference checks this identity symbolically. The first
+[Dietrich 2019 preprint, Table II](https://arxiv.org/pdf/1905.06011v1)
+also designates D_NRTidalv2 as phase-only, so the D/Pv2 distinction is not
+a later revision of the paper.
 The published additive correction therefore has the same physical amplitude
 scale as the carrier; the historical binary-compatible native
 $M_{\rm sec}^2/(2D_{\rm sec})$ scale is not Eq. (24) and has unresolved
-paper provenance. Equation (24) specifies the
+paper provenance. Its ratio to the paper scale is
+$[2\sqrt{5\pi\eta/24}]^{-1}$: 1.236077446 at $\eta=1/4$ and
+1.248886881 at $\eta=12/49$. A fixed inclination or polarization
+projection cannot produce this mass-ratio dependence when inclination is
+held fixed. Equation (24) specifies the
 **absolute additive tidal amplitude** $\widetilde A_T$, rather than a
 dimensionless multiplier or the full BNS amplitude. Equation (25) adds it
 once to $\widetilde A_{\rm BBH}$ before tapering in the amplitude-carrying

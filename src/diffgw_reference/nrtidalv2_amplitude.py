@@ -22,6 +22,18 @@ ETA = (1 - DELTA**2) / 4
 X = (sp.pi * M_SEC * F)**sp.Rational(2, 3)
 KAPPA = sp.Rational(3, 16) * lambda_tilde_expr(DELTA, LAMBDA1, LAMBDA2)
 
+# Kawaguchi et al. (2018), Eq. (2.25), with the D_eff -> D_L
+# substitution explicitly made by Dietrich et al. (2019) below Eq. (22).
+# This is an independent, earlier expression for the additive correction.
+KAWAGUCHI_AMPLITUDE = (
+    sp.sqrt(5 * sp.pi * ETA / 24) * M_SEC**2 / D_SEC
+    * lambda_tilde_expr(DELTA, LAMBDA1, LAMBDA2)
+    * X**-sp.Rational(7, 4)
+    * (-sp.Rational(27, 16)*X**5
+       - sp.Rational(449, 64)*X**6
+       - 4251*X**sp.Rational(789, 100))
+)
+
 # Eq. (24), including its physical Newtonian amplitude normalization.
 AMPLITUDE = (
     -sp.sqrt(5 * sp.pi * ETA / 24) * 9 * M_SEC**2 / D_SEC

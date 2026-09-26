@@ -4,6 +4,7 @@ import math
 
 import numpy as np
 import pytest
+import sympy as sp
 
 from diffgw_core.constants import C_SI, MPC_SI, MSUN_SEC
 from diffgw_reference import nrtidalv2_amplitude as ref
@@ -35,6 +36,14 @@ def paper_amplitude(case, f):
 def paper_merger(case):
     m_sec, delta, lam1, lam2 = paper_parameters(case)
     return float(ref.merger_frequency(m_sec, delta, lam1, lam2))
+
+
+def test_earlier_kawaguchi_amplitude_equals_dietrich_untapered_ansatz():
+    """Kawaguchi Eq. (2.25) fixes Eq. (24)'s normalization independently."""
+    dietrich_numerator = ref.AMPLITUDE * (
+        1 + sp.Rational("13477.8") * ref.X**4
+    )
+    assert sp.simplify(dietrich_numerator - ref.KAWAGUCHI_AMPLITUDE) == 0
 
 
 def native(case, frequencies, backend, *, taper, amplitude_variant="binary_compatible"):
