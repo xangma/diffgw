@@ -171,6 +171,7 @@ not validation of the retained official ROM or surviving equation components.
   - Dietrich et al. (2017), *Closed-form tidal approximants for binary neutron star gravitational waveforms constructed from high-resolution numerical relativity simulations*, Phys. Rev. D 96, 121501 ([DOI:10.1103/PhysRevD.96.121501](https://doi.org/10.1103/PhysRevD.96.121501))
   - Dietrich et al. (2019), *Improving the NRTidal model for binary neutron star systems*, Phys. Rev. D 100, 044003 ([DOI:10.1103/PhysRevD.100.044003](https://doi.org/10.1103/PhysRevD.100.044003)) [Eqs. (15)–(21)]
 - **Reference Result**: The declared [catalog][frozen-catalog] and [holdout][frozen-holdout] cases for `IMRPhenomD_NRTidal` and `IMRPhenomD_NRTidalv2` passed $L_2 \le 10^{-6}$ and mismatch $\le 10^{-8}$ gates.
+- **Independent phase slice**: The [NRTidalv2 nonspinning tidal-phase specification](math/nrtidalv2-phase.md) checks Dietrich et al. Eqs. (17)–(21) against a scalar reference, both frontends and a pinned public LALSuite binary on four declared cases. Its [receipt](validation/nrtidalv2_phase_20260926.md) records the fixed gates and measured residuals. Amplitude, self-spin, merger/taper and spinning cases remain separate gates.
 
 ### 2.9 IMRPhenomNSBH (Neutron Star-Black Hole Mergers)
 - **Primary References**:
