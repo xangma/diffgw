@@ -123,7 +123,10 @@ converts the source's complex coefficient to the declared real-amplitude
 carrier convention. [Mezzasoma and Yunes, Eqs. (20)–(21i), (23)–(30)](https://arxiv.org/html/2203.15934)
 provide an all-eight-mode leading-amplitude construction;
 [Mishra et al., Eqs. (9)–(12h)](https://arxiv.org/html/1601.05588) give a
-second all-eight-mode frequency-domain construction. Both use the opposite
+second all-eight-mode frequency-domain construction. Their arXiv v1 source
+bundle also contains the author-published Mathematica supplement
+`supl-mkaf16.m`, whose `H[l,m]` definitions cover every mode in this
+specification through 2PN amplitude order. Both papers use the opposite
 Fourier sign, so their printed complex modes cannot be compared directly with
 the stored negative-$m$ mode without the Fourier, tetrad, and per-mode phase
 adapter described above. García-Quirós et al. fix the native convention and
@@ -162,6 +165,7 @@ The evidence is intentionally separated:
 
 | Evidence layer | Maintained check | Establishes | Does not establish |
 | --- | --- | --- | --- |
+| Author-supplement components | `test_taylorf2_hm_author_supplement_math_reference.py` | Checksum-pinned leading $|h_{\ell m}/h_{22}|$ plus signed, absolutely normalized nonspinning complex raw modes for all eight modes in Torch and JAX | External numerical parity, aligned-spin composition, `f_ref` subtraction, projection, cutoffs, or the complete waveform |
 | Paper fidelity | `test_taylorf2_hm_paper_math_reference.py` | All-eight native $h_{\ell,-m}$ reconstruction, Eqs. (8)–(9), the $2f/m$ map, SPA constant, and $t_c/\phi_c$ signs | An independent executable waveform |
 | Scalar-reference agreement | `test_taylorf2_hm_math_reference.py` | All-eight leading amplitudes, composed aligned-spin phase, complex polarizations, selected derivatives and hard cutoffs | External parity or physical accuracy |
 | Torch/JAX parity | `tests/parity/test_hm_parity.py` | Cross-backend values, individual modes, JIT and autodiff at sampled points | Independence from shared equations |
@@ -178,19 +182,50 @@ Schwarzschild hard-mask thresholds. The per-mode normalized complex tolerance
 is $4\times10^{-10}$ and the derivative tolerances are stated in the test.
 These are sampled implementation checks, not a uniform error bound.
 
-The strongest available all-eight evidence is the published leading-SPA
-construction plus independent scalar transcription. Exact all-mode external
-parity remains unprovable from the available public sources: public LAL
-TaylorF2 returns one frequency series and its public FD-mode dispatcher has no
-TaylorF2 generator; the papers provide equations rather than author-supplied
-eight-mode numerical data or an independent executable with this exact phase,
-reference-frequency, and cutoff composition. IMRPhenomXHM covers a different
-full-IMR model and not this eight-mode inventory. `gwfast`'s TEOBResumSPA has
-different EOB dynamics and amplitude corrections, so it could only be a
-low-frequency physical holdout, not a binwise TaylorF2 oracle; no TEOB
-comparison is claimed here. Higher-PN mode amplitudes, spin-amplitude
-corrections, generic tidal matter, merger, Kerr cutoffs, taper derivatives,
-FP32, and full-domain accuracy remain unqualified.
+The author-supplement fixture is generated without native imports from the
+lowest nonspinning power of each pinned `H[l,m]`. At common observed frequency,
+its explicit adapter is
+$V_m=(2/m)^{1/3}v$ and
+$|h_{\ell m}/h_{22}|=|H_{\ell m}^{\rm LO}(V_m)|(V_m/v)^{-7/2}$.
+The source bundle SHA256 is
+`f0b6c6810da95f45141dbb9f0c5cccec0ba0742f60b836dba7698c90a25d5154`;
+the supplement SHA256 is
+`501ea53c29b77e061585540b9ccfd69a4cd0283e805ea1e9c24c38800e627a70`.
+The project stores only the generated fixture and provenance, not the author
+source asset. The fixture's normalized `TF28Phasing` is nevertheless a
+transformed author-supplement expression, not an independently authored
+numerical result; its downstream redistribution terms remain unresolved.
+
+The same pinned supplement contains `TF28Phasing`. Its nonspinning part is an
+orbital SPA phase with prefactor $3/(256\eta v^5)$; the factor of $m$ in
+Mishra et al. Eq. (11) makes it identical to the native $(m/2)I(V_m)$ phase.
+This also resolves the factor-of-two ambiguity introduced by the
+$3/(128\eta v^5)$ prefactor printed in the paper's Eq. (4): the maintained
+component gate follows the checksum-pinned author expression used in Eq. (11).
+The generator retains the normalized SymPy expression, and the test combines
+it with the signed leading $H_{\ell m}$ term and Eq. (11) normalization. The
+fixed raw-mode convention adapter is
+$h^{\rm native}_{\ell,-m}=e^{i\pi(m-3)/2}h^{\rm Mishra}_{\ell,m}$.
+This gate is restricted to positive-frequency, leading nonspinning,
+unwindowed raw modes with `f_ref=None`. Projection is used only to recover the
+native raw carrier and is not attributed to the supplement.
+
+Exact all-mode external complex parity remains unprovable from the available
+public sources. The supplement is symbolic author input parsed by this
+project, not an independently maintained executable or numerical series. It
+supplies full 2PN amplitudes and a phase expression while the maintained gate
+selects the leading nonspinning amplitudes; it does not emit the native
+negative-$m$ series with aligned-spin composition, `f_ref` subtraction,
+paired polarization projection, and per-mode cutoff. No author-published
+numerical complex arrays fix that complete option set.
+The bounded independent-oracle search and its exact acceptance fields are
+recorded in the [2026-09-26 evidence receipt](../validation/taylorf2-hm-oracle-search-20260926.md).
+Public LAL TaylorF2 returns one frequency series and its public FD-mode
+dispatcher has no TaylorF2 generator. IMRPhenomXHM is a different full-IMR
+model and `gwfast`'s TEOBResumSPA uses different EOB dynamics and amplitude
+corrections, so neither is a binwise same-model oracle. Higher-PN mode
+amplitudes, spin-amplitude corrections, generic tidal matter, merger, Kerr
+cutoffs, taper derivatives, FP32, and full-domain accuracy remain unqualified.
 
 The exact next external-parity gate is an author-supplied numerical table or
 an independently maintained executable that exposes all eight complex
@@ -202,10 +237,15 @@ basis alone cannot satisfy that gate.
 ## Reproduce the checks
 
 Install `python -m pip install -e '.[reference,torch,jax,dev]'`, then run
-`python -m pytest -q tests/test_taylorf2_hm_math_reference.py tests/test_taylorf2_hm_paper_math_reference.py`
+`python -m pytest -q tests/test_taylorf2_hm_author_supplement_math_reference.py tests/test_taylorf2_hm_math_reference.py tests/test_taylorf2_hm_paper_math_reference.py`
 for the mathematical slice. With pinned LALSuite 7.26.15 installed, run
 `python -m pytest -q tests/test_taylorf2_hm_external_api.py` for the public
 angular/API boundary.
+To regenerate the frozen supplement fixture, download
+`https://export.arxiv.org/e-print/1601.05588v1` and run
+`python tests/data/generate_taylorf2_hm_mishra2016_samples.py --archive PATH`;
+the generator rejects either source hash before parsing and imports no native
+waveform code.
 The complete CPU gate is `python -m pytest -q --require-math-reference`.
 That gate requires both frontends and reference dependencies and rejects
 skips, expected failures, and deselection. Run

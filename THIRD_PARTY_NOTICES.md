@@ -76,6 +76,19 @@ source or wheel distributions. Their URLs and pinned hashes are retained by
 the verification tests and metadata; no MIT grant has been established for
 these supplementary assets, so this notice makes no licensing assurance.
 
+This includes Mishra et al.'s `supl-mkaf16.m` from the pinned
+arXiv:1601.05588v1 source bundle. The repository does not redistribute that
+file: the opt-in fixture generator reads a user-supplied archive, verifies its
+bundle and member hashes, and writes generated numerical ratios, a transformed
+normalized nonspinning `TF28Phasing` expression, and provenance metadata. The
+frozen fixture is not a verbatim copy of the Mathematica file, but that
+expression remains third-party-derived verification material. No explicit
+downstream redistribution or MIT grant for it was found in the paper, arXiv
+metadata, or source bundle. The arXiv record instead points to a
+[non-exclusive distribution grant to arXiv](https://arxiv.org/licenses/nonexclusive-distrib/1.0/).
+Its downstream terms therefore remain unresolved and the repository's MIT
+grant does not extend to it.
+
 ## IMRPhenomT author formulas and calibration expressions — MIT
 
 `src/diffgw_core/phenomt_fits.py` transcribes the aligned dominant- and higher-mode fit branches from

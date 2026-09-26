@@ -89,8 +89,13 @@ models and settings; that is a measurement scope, not the full supported catalog
 - **Model-specific reference agreement:** [Differences from LAL](differences_from_lal.md#model-specific-differences)
   records configurations, deliberate differences and unresolved discrepancies,
   including XP's precession, final-spin and reference-phase choices. Independent
-  exact external all-eight waveform parity for `TaylorF2_HM` remains unprovable
-  from the available public sources, and physical validation remains unavailable.
+  all-eight leading amplitudes for `TaylorF2_HM` agree with a checksum-pinned
+  author supplement. Its signed leading terms, nonspinning phase, and Eq. (11)
+  normalization also agree for an all-eight unwindowed complex raw-mode slice
+  with `f_ref=None`. Exact external all-eight complex-waveform parity remains
+  unprovable because that symbolic asset is parsed by this project and does not
+  independently generate the aligned-spin, projection, reference-frequency,
+  and cutoff contract. Physical validation remains unavailable.
   ROM evidence applies to the selected asset. The [T-family report](validation/phenomt.md)
   is a separate record.
 - **Derivatives:** [derivative support and evidence](validation.md#derivative-support-and-evidence)
