@@ -70,9 +70,9 @@ The [Torch XP adapter](https://github.com/xangma/diffgw/blob/main/src/torchwave/
 uses `boundary="physical"` for its supported v223/convention 0, 1, or 6,
 `final_spin_mod=3` clean route. It passes the Appendix C observer azimuth as
 `phic-phi0`; convention 6 applies its output phase after projection.
-Generic two-spin inputs at nonzero `phi0` still use the inherited rotation:
-their clean angle transport is not yet validated for that azimuth. Opposed-\(J\)
-rows retain the existing guard. The physical limit is a scoped XP behavior,
+Valid unequal-mass generic two-spin inputs at nonzero `phi0` now use that
+same clean chart. Opposed-\(J\) rows retain the existing guard. The physical
+limit is a scoped XP behavior,
 not a claim of complete precession-domain or LAL parity.
 
 The [public JAX XP adapter](https://github.com/xangma/diffgw/blob/main/src/jaxwave/approximants/imrphenom_xp.py)
@@ -88,7 +88,8 @@ Pratten Eq. (17) spin vector above. The
 combines the source geometry from Pratten Appendix C, the quadrupole rotation
 from Eqs. (8)–(13), and the declared v223/Table-IV chart choices. Public
 `phic-phi0` supplies the source azimuth, and convention 6 rotates the
-completed strain by \(e^{2i\,\mathrm{phic}}\). Generic two-spin and
+completed strain by \(e^{2i\,\mathrm{phic}}\). Valid unequal-mass generic
+two-spin rows use the distinct-root MSA route at either observer azimuth;
 opposed-\(J\) rows retain inherited JAX behavior. Zero-frequency bins are
 evaluated at a safe positive frequency and then masked to zero.
 
@@ -233,7 +234,9 @@ compatibility choice, not an equation supplied by Appendix C. The generic
 Torch/JAX projection tests now include source phase $-0.1$, corresponding
 to the candidate `phic-phi0` coordinate for `phic=0.3`, `phi0=0.4`. That
 cross-frontend result validates the diagnostic source coordinate; it does not
-by itself validate replacing the public generic nonzero-`phi0` route.
+by itself validate replacing the public generic nonzero-`phi0` route. The
+subsequent full frame-map and public-binary comparison below closes that
+specific azimuth gap.
 
 The published near-alignment literature does not close this gap by supplying
 a limiting form of the generic MSA solution. [Klein, Cornish and Yunes
@@ -258,8 +261,7 @@ largest as spurious, giving a robust root-solving strategy. It also states
 that the relative spin azimuth is ill-defined when either spin is aligned and
 that a formal Taylor expansion of the zero-amplitude resonance limit remains
 future work. These results support a separately implemented precession solver;
-they do not provide the missing scalar v223 root/phase/chart continuation or
-the generic nonzero-`phi0` transport.
+they do not provide the missing scalar v223 root/phase/chart continuation.
 
 The papers do not specify a float64 small-misalignment expansion that
 preserves the generic MSA branch through the root reordering. Pratten's
@@ -278,8 +280,29 @@ rows use that same angle fallback. The final-spin option remains independent:
 explicit mode 3 raises when its nonaligned MSA averaged-remnant root is invalid,
 while explicit mode 0 supplies the continuous NNLO remnant. This introduces
 neither a new numerical threshold nor an oracle-fitted coefficient and does
-not claim an MSA continuation. The generic nonzero-`phi0` dispatch remains
-unchanged pending an independently derived source-frame mapping.
+not claim an MSA continuation. A later frame-map derivation routes valid
+unequal-mass generic nonzero-`phi0` rows through the clean chart.
+
+### Generic nonzero-azimuth frame map (2026-09-26)
+
+[Pratten et al., Appendix C Eqs. (67)--(68), (76)--(85), Appendix B Eq. (63),
+Appendix E Eqs. (110)--(113), and Appendix F Table IV](https://arxiv.org/html/2004.06503v2)
+specify the source observer, J frame, Euler/polarization geometry,
+quadrupole twist-up, and convention phases. We derive, rather than quote,
+the mapping from diffGW's additional observer azimuth to the public binary:
+rotate both in-plane spins by `Rz(-phi0)`, use binary `phiRef=phic`, then
+multiply both completed quadrupole polarizations by `exp(-2i phi0)` for
+conventions 0/1/6. The mpmath scalar Appendix-C chart verifies the rotation;
+Torch and JAX complete polarizations verify covariance, and the installed
+public LAL binary verifies the mapped full waveform. No LAL implementation
+or calibration coefficient enters production.
+
+For the declared 35/25-Msun, two-spin, `phi0=0.4`, v223/mode-3 fixture on
+20--512 Hz at 0.25 Hz, direct unshifted plus/cross complex relative L2
+against LALSuite 7.26.15 is at most `1.145e-13 / 1.125e-13` across
+conventions 0/1/6; flat mismatch is at most `1e-15`. The unchanged strict
+gates pass. This closes the scoped generic-azimuth binary comparison; it
+does not repair the equal-mass MSA-remnant or near-aligned v223 binary gaps.
 
 For the up-down fixture above, the corrected Torch/JAX waveform residuals are
 below $3.21\times10^{-14}$ relative L2 across both tested bands, while the

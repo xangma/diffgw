@@ -7,9 +7,9 @@ native-v223 source-frame 259/75 coefficient and Table-IV convention transport
 are separately labelled compatibility prescriptions.  This module composes
 the intrinsic JAX MSA angles with XAS for the scoped public XP route.
 
-The separate public observer azimuth is fixed to phi0=0 here.  ``phic`` is the
-source-frame reference phase passed to the clean Torch helper and LAL's
-``phiRef`` argument; it is not that observer azimuth.
+The helper takes an Appendix-C source phase.  The public XP adapter supplies
+``phic-phi0`` when its separate observer azimuth is nonzero; the zero-azimuth
+call supplies ``phic`` itself.
 """
 
 from __future__ import annotations
@@ -92,7 +92,7 @@ def generic_msa_v223_waveform(
     convention=1, phasing_convention=None, reference_frame=None,
     return_state=False,
 ):
-    """Compose generic v223 source-frame XP at public observer phi0=0.
+    """Compose generic v223 source-frame XP at the supplied source phase.
 
     ``convention`` is the clean Table-IV convention 0 or 1.  Parameter axes
     precede the frequency axis.  This diagnostic requires JAX x64, unequal

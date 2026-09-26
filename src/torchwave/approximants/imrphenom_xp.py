@@ -86,7 +86,8 @@ class IMRPhenomXP(nn.Module):
         ``phi0`` is an additional source-frame observer azimuth. On the clean
         zero-nutation route the Appendix-C observer coordinates use
         ``phic-phi0``; the Table-IV convention-6 carrier retains ``phic``.
-        Generic two-spin nonzero-azimuth rows keep the established rotation.
+        Regular generic two-spin nonzero-azimuth rows use the same Appendix-C
+        chart as the zero-azimuth MSA route.
         Exactly equal-mass and invalid-root generic rows retain the published
         NNLO angle fallback. An explicitly selected ``final_spin_mod=3``
         remains an MSA remnant request and raises on those unsupported rows;
@@ -160,10 +161,9 @@ class IMRPhenomXP(nn.Module):
         if fref is not None:
             fref = fref_eval
 
-        # Appendix C puts the observer at source azimuth phic-phi0.  For
-        # nonzero phi0 use the clean chart only on its zero-nutation branch;
-        # generic two-spin rows retain the established rotation until its
-        # independent source-frame adapter is validated.
+        # Appendix C puts the observer at source azimuth phic-phi0.  The
+        # generic source-chart transport is independently checked against
+        # Eqs. (67)--(85), so regular two-spin rows use that same chart.
         exact_aligned = (
             (s1x == 0) & (s1y == 0) & (s2x == 0) & (s2y == 0)
         )
@@ -172,7 +172,6 @@ class IMRPhenomXP(nn.Module):
             p_ver == 223 and convention in (0, 1, 6) and final_spin_mod == 3
             and not force_legacy
         )
-        legacy_azimuth_rows = (phi_0 != 0) & ~one_spin_aligned
         legacy_equal_mass_rows = (m1 == m2) & ~one_spin_aligned
         legacy_degenerate_rows = torch.zeros_like(exact_aligned, dtype=torch.bool)
         if legacy_equal_mass_rows.dim() == 0 and bool(legacy_equal_mass_rows):
@@ -269,7 +268,7 @@ class IMRPhenomXP(nn.Module):
             # row-local; convention 6 retains its legacy guard for the whole
             # request when either reference or evaluated frequency is opposed.
             legacy_rows = (
-                guard_unsupported | legacy_azimuth_rows
+                guard_unsupported
                 | legacy_equal_mass_rows | legacy_degenerate_rows
                 if clean_candidate else exact_aligned
             )

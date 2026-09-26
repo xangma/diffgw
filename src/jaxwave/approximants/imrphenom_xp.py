@@ -254,7 +254,7 @@ class IMRPhenomXP:
             # the inherited initialization validity gate so coalescing-root
             # rows take the published NNLO fallback.
             generic = (
-                (~one_spin) & (m1 != m2) & (phi_0 == 0.0) & msa_valid
+                (~one_spin) & (m1 != m2) & msa_valid
             )
             use_clean = (one_spin | generic) & (j_ref > 0.0) & (clean_fref > 0.0)
             if convention == 6:
@@ -283,7 +283,7 @@ class IMRPhenomXP:
                         return generic_msa_v223_waveform(
                             f_safe, r_m1, r_m2, spin1, spin2,
                             distance=r_dist, inclination=r_inc,
-                            phic=r_phi, tc=r_time, f_ref=r_clean_fref,
+                            phic=r_phi-r_phi0, tc=r_time, f_ref=r_clean_fref,
                             convention=1 if convention == 6 else convention,
                             phasing_convention=phasing_convention,
                             reference_frame=reference_frame,

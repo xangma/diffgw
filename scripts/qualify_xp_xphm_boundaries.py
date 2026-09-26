@@ -158,6 +158,60 @@ def oracle_case(case_id, params, flow, fhigh):
     return compact_oracle(run_oracle_comparison(case, strict=True))
 
 
+def mapped_phi0_oracle_case(params, flow=20.0, fhigh=512.0, df=0.25):
+    """Compare XP with the public binary after the Appendix-C frame map.
+
+    The input rotation and quadrupole phase are derived from the source-frame
+    and mode conventions in Pratten et al., Appendix C (67)--(85), Appendix B
+    (63), Appendix E (110)--(113), and Appendix F Table IV; the map is not a quoted paper equation.
+    """
+    import lal
+    import lalsimulation as lalsim
+
+    azimuth = float(params["phi0"])
+    cosine, sine = np.cos(azimuth), np.sin(azimuth)
+    rotated = {}
+    for body in ("spin1", "spin2"):
+        x, y = float(params[f"{body}x"]), float(params[f"{body}y"])
+        rotated[f"{body}x"] = cosine*x + sine*y
+        rotated[f"{body}y"] = -sine*x + cosine*y
+
+    extra = lal.CreateDict()
+    lalsim.SimInspiralWaveformParamsInsertPhenomXPrecVersion(
+        extra, params["prec_version"])
+    lalsim.SimInspiralWaveformParamsInsertPhenomXPConvention(
+        extra, params["convention"])
+    lalsim.SimInspiralWaveformParamsInsertPhenomXPFinalSpinMod(
+        extra, params["final_spin_mod"])
+    hp_lal, hc_lal = lalsim.SimInspiralChooseFDWaveform(
+        params["mass1"]*lal.MSUN_SI, params["mass2"]*lal.MSUN_SI,
+        rotated["spin1x"], rotated["spin1y"], params["spin1z"],
+        rotated["spin2x"], rotated["spin2y"], params["spin2z"],
+        params["distance"]*1e6*lal.PC_SI, params["inclination"],
+        params["phic"], 0.0, 0.0, 0.0,
+        df, flow, fhigh, params["f_ref"], extra,
+        lalsim.GetApproximantFromString("IMRPhenomXP"),
+    )
+    binary = (np.asarray(hp_lal.data.data), np.asarray(hc_lal.data.data))
+    assert binary[0].shape == binary[1].shape
+    frequencies = np.arange(binary[0].size, dtype=np.float64)*df
+    select = (frequencies >= flow) & (frequencies < fhigh)
+    assert np.any(select) and np.all(np.isfinite(binary[0][select]))
+    assert np.all(np.isfinite(binary[1][select]))
+    native = torch_waveform(frequencies[select], params)
+    carrier = np.exp(-2j*azimuth)
+    compared = pair_metrics(native, tuple(carrier*value[select] for value in binary))
+    return {
+        "case": "XP_generic_nonzero_phi0",
+        "status": "PASSED" if all(value["pass"] for value in compared.values()) else "FAILED",
+        "reference_kind": "lal_binary",
+        "gate": GATE,
+        "frame_map": "spins Rz(-phi0), phiRef=phic, polarizations exp(-2i phi0)",
+        "band_hz": [flow, fhigh],
+        **compared,
+    }
+
+
 def xphm_oracles():
     cases = get_canonical_model_cases() + get_canonical_holdout_cases()
     return [
@@ -257,15 +311,7 @@ def main():
         "gate": GATE,
         "native": native,
         "near_aligned": near_aligned,
-        "lal_binary_oracle": oracle + [{
-            "case": "XP_generic_nonzero_phi0",
-            "status": "NOT_EVALUABLE",
-            "reference_kind": "lal_binary",
-            "reason": (
-                "No independently derived mapping from diffGW observer phi0 "
-                "to the public LAL binary parameters is available."
-            ),
-        }],
+        "lal_binary_oracle": oracle + [mapped_phi0_oracle_case(azimuth)],
         "xphm_lal_binary_oracle": xphm_oracles(),
     }, indent=2))
 

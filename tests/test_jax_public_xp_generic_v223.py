@@ -76,7 +76,7 @@ def test_helper_masks_zero_bin_before_intrinsic_phase_and_passes_options(monkeyp
         assert np.all(np.isfinite(np.asarray(state[name])))
 
 
-def test_nonzero_azimuth_generic_rows_keep_declared_fallback():
+def test_nonzero_azimuth_generic_rows_use_clean_source_chart():
     f = jnp.asarray([0., 25., 40., 80.])
     params = dict(CASES[0], phi0=.4, distance=150., inclination=.7, phic=.3,
                   f_ref=20., prec_version=223, convention=1,
@@ -90,9 +90,8 @@ def test_nonzero_azimuth_generic_rows_keep_declared_fallback():
     for left, right, torch_left, torch_right in zip(
         actual, legacy, torch_actual, torch_legacy,
     ):
-        np.testing.assert_allclose(np.asarray(left), np.asarray(right),
-                                   rtol=1e-12, atol=0.)
-        torch.testing.assert_close(torch_left, torch_right, rtol=1e-12, atol=0.)
+        assert _relative_l2(left, right) > 1e-5
+        assert _relative_l2(torch_left.detach().numpy(), torch_right.detach().numpy()) > 1e-5
         assert _relative_l2(left, torch_left.detach().numpy()) < 2e-10
         assert np.all(np.isfinite(np.asarray(left)))
 

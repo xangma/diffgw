@@ -1,5 +1,40 @@
 # XP/XPHM precession boundary qualification (2026-09-25)
 
+## 2026-09-26 generic nonzero-`phi0` full-waveform closure
+
+[Pratten et al., Appendix C Eqs. (67)--(68), (76)--(85), Appendix B Eq. (63),
+Appendix E Eqs. (110)--(113), and Appendix F Table IV](https://arxiv.org/html/2004.06503v2)
+define the source observer azimuth, J-frame Euler and polarization geometry,
+quadrupole twist-up, and convention choices. From those published frames, we
+**derive** the public-binary coordinate map: rotate both in-plane input spins
+by `Rz(-phi0)`, pass `phiRef=phic` to the binary, and multiply its completed
+quadrupole polarizations by `exp(-2i phi0)` for conventions 0/1/6. The rotation
+and completed-strain factor are our frame derivation, not equations quoted
+from the paper or coefficients obtained from LAL source.
+
+The independent mpmath Appendix-C scalar chart and Torch/JAX full waveforms
+now check this covariance. On `len` with Python 3.12.3, NumPy 2.3.5,
+Torch 2.14.0+cpu, JAX 0.11.2, and public LALSuite 7.26.15,
+`IMRPhenomXP`, `prec_version=223`, `convention=1`, `final_spin_mod=3`,
+`(m1,m2)=(35,25) Msun`, spins `(0.2,0.1,0.3)` and `(-0.1,0.05,-0.2)`,
+`phic=0.3`, `phi0=0.4`, and the direct unshifted 20--512 Hz grid at 0.25 Hz,
+the mapped binary comparison gives:
+
+| Convention | Plus/cross complex relative L2 | Largest flat mismatch | Verdict |
+| --- | --- | ---: | --- |
+| 0 | `1.1410970098602045e-13 / 1.1213128890693516e-13` | 0 | pass |
+| 1 | `1.1447907380982857e-13 / 1.1248152247989706e-13` | 0 | pass |
+| 6 | `1.1343201250715765e-13 / 1.1143297006383575e-13` | `9.992007221626409e-16` | pass |
+
+All pass the unchanged `1e-6` and `1e-8` gates. These measurements qualify
+this declared generic nonzero-azimuth fixture; they do not establish a wider
+precession-domain guarantee. The prior `NOT_EVALUABLE` statements below are
+historical and superseded by this derived-map check.
+
+The overall XP/XPHM release verdict remains **fail**: equal-mass mode 3 is an
+unsupported MSA-remnant root, near-aligned v223 binary residuals remain above
+the frozen gate, and the XPHM full-waveform cases remain failing.
+
 ## 2026-09-26 independent source-frame transport gate
 
 [Pratten et al., Appendix C, Eqs. (67)--(83)](https://arxiv.org/html/2004.06503)
@@ -23,11 +58,9 @@ provenance for that compatibility coefficient. On `len`, the new tests plus
 the existing source-frame/composition/generic-boundary reference files passed
 `26/26` with Torch 2.14.0+cpu, JAX 0.11.2, and pytest 9.1.1.
 
-This result checks the internal source chart. The extra public diffGW `phi0`
-parameter still has no independently established mapping to the public LAL
-binary's parameters, so the generic nonzero-`phi0` external gate remains
-**not evaluable**. No production routing, frozen tolerance, or overall
-qualification verdict changes here.
+This result checked the internal source chart only. Its then-unresolved
+public-binary mapping and production-routing statements were superseded by
+the generic nonzero-`phi0` closure above; frozen tolerances did not change.
 
 ## 2026-09-26 frozen angle-version control
 
@@ -63,9 +96,9 @@ or justify changing production waveform equations. The existing
 These two test files passed `27/27` on `len` in 6.50 seconds in the isolated
 PyCBC environment. The shared validation environment was restored to
 NumPy 2.5.3 and SciPy 1.18.1 without PyCBC.
-Generic observer `phi0` remains **not evaluable** against the public binary
-until its parameter mapping is independently derived. Overall release
-qualification remains **fail**.
+At this angle-version control stage, generic observer `phi0` remained
+**not evaluable** against the public binary. The frame-map derivation above
+supersedes that status. Overall release qualification remains **fail**.
 
 ## 2026-09-26 explicit-remnant policy amendment
 
@@ -107,8 +140,8 @@ The overall release verdict remains **fail**.
 
 ### Integrated-head rerun on `len`
 
-The current driver, `scripts/qualify_xp_xphm_boundaries.py`, explicitly evaluates
-both equal-mass remnant choices. At integrated source head `2e654a3` (the later
+The driver at this historical integrated head explicitly evaluated both
+equal-mass remnant choices. At integrated source head `2e654a3` (the later
 `ccc3588` commit changed documentation only), Python 3.12.3, Torch 2.14.0+cpu,
 JAX 0.11.2, NumPy 2.5.3, and the installed LALSuite 7.26.15 produced:
 
@@ -121,8 +154,8 @@ The same integrated run retains the near-aligned external relative L2 values
 `0.023737179603638348` and `0.09654477266816827` for plus, and the XPHM
 diagnostic/holdout plus values `0.22881790727328782` and
 `0.5041125739427325`. Their strict external verdicts remain **fail**. Generic
-nonzero observer `phi0` still lacks an independently derived public-binary
-parameter mapping, so its external comparison is **not evaluable**. The
+nonzero observer `phi0` then lacked an independently derived public-binary
+parameter mapping, so its external comparison was **not evaluable**. The
 integrated-head focused policy suite passed `37/37` in 388.54 seconds.
 
 ## Scope and evidence classes
@@ -197,7 +230,7 @@ Generic nonzero observer `phi0` is not externally evaluable: there is no
 independently derived mapping from this public diffGW parameter to the public
 LAL binary parameters. Native agreement therefore cannot promote it.
 
-## Boundary verdicts
+## Historical boundary verdicts before frame-map closure
 
 | Boundary | Math fidelity | Torch/JAX | External | Release |
 | --- | --- | --- | --- | --- |
@@ -207,6 +240,7 @@ LAL binary parameters. Native agreement therefore cannot promote it.
 | Near aligned across instability | pass as invalid-root NNLO fallback | pass | fail | **fail** |
 | XPHM precession layer | paper/scalar rotation gates pass | pass in focused composition tests | full waveform fails | **fail** |
 
-The declared overall release gate is **fail**. The remaining blockers are the
-unvalidated generic `phi0` source-frame mapping and external full-waveform
-disagreement for the XP fallback boundaries and XPHM's XHM carrier dependency.
+This table records the pre-closure state of the generic `phi0` row. The
+current mapped-binary result above passes for its declared fixture. The
+overall release gate remains **fail** because the XP fallback boundaries and
+XPHM's XHM carrier dependency still disagree with the public binary.
