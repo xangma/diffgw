@@ -224,6 +224,21 @@ projection or ringdown. It does not distinguish public trajectory evolution
 from public Euler-angle construction or carrier/time mapping; the small
 reference-event offset does not exclude subsequent time-mapping drift.
 
+The [frozen PV300 clock/chart receipt](../validation/phenomt_pv300_clock_chart_20260926.json)
+tests the same q=10 case on `len` at 16384 Hz without fitting binary output.
+At the reference event and four predeclared offsets through 2 s, the public
+co-precessing `(2,2)` phase rate matches the native T carrier within
+`6.53e-7` relative error. Yet the public Euler-derived initial orbital-axis
+speed is `0.516152 1/s`, versus `0.446028 1/s` from the independent published
+spin RHS, a ratio of `1.15722`. A common output-clock rescaling would change
+both rates together and cannot account for these observations. The public
+Euler series also satisfies [TPHM Eq. (5)'s minimal-rotation rule](https://arxiv.org/abs/2105.05872v2)
+to `1.70e-11` rad over the first 2 s, below the `5.09e-11` rad two-grid
+quadrature difference. This removes gamma integration as the early cause.
+The black-box API still cannot distinguish a hidden precession-only time map,
+spin/axis evolution, or alpha/beta construction: it exposes neither internal
+spin states nor the orbital axis before Euler-angle construction.
+
 This closes the native-versus-independent event/ODE/transport/angle
 implementation check through the carrier peak, but not the public numerical-
 precession model gate. In particular, the
@@ -240,7 +255,7 @@ The component localization is therefore:
 | Failed q=10 path | Earliest paper-defined component | Evidence excluding later components | Remaining blocker |
 | --- | --- | --- | --- |
 | MSA PV223 | Public-binary raw analytical angles differ from the source-backed native/clean-room equation path | Production and independent equations agree below `3e-10`; the clean v223 compatibility path reduces the full pre-MECO relative residual from `0.0162258` to `3.32e-6` rad | The first compatibility substitution (initial-reference flux contractions, followed later by a `q^2` phase convention) is not stated by the published equations, so no source-backed production correction is authorized |
-| Numerical PV300/FS4 | Pre-merger orientation/rotation path: carrier/time mapping, trajectory, or public angle construction unresolved | Relative-triad error reaches `1e-4` rad after `1.465` ms; projection closes below `8e-16`; ringdown is not sampled | Public Euler angles do not expose the internal trajectory, so the earliest of these three components cannot yet be selected |
+| Numerical PV300/FS4 | Pre-merger orientation/rotation path: hidden precession time map, trajectory, or alpha/beta construction unresolved | Public `(2,2)` carrier rate matches to `6.53e-7` relative and gamma satisfies minimal rotation to `1.70e-11` rad, while the initial orbital-axis speed differs by 15.7%; projection closes below `8e-16` | Public Euler angles do not expose the internal trajectory, so the earliest of these three components cannot yet be selected |
 
 The primary sources support the retained Kerr self-quadrupole term and the
 implemented evolution equations. They do not support a narrow production
