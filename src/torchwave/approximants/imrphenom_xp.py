@@ -87,10 +87,10 @@ class IMRPhenomXP(nn.Module):
         zero-nutation route the Appendix-C observer coordinates use
         ``phic-phi0``; the Table-IV convention-6 carrier retains ``phic``.
         Generic two-spin nonzero-azimuth rows keep the established rotation.
-        Exactly equal-mass generic rows use its NNLO angle-and-remnant
-        fallback because the published generic MSA phase coefficients and
-        averaged remnant are singular there; no regularized MSA continuation
-        is used.
+        Exactly equal-mass and invalid-root generic rows retain the published
+        NNLO angle fallback. An explicitly selected ``final_spin_mod=3``
+        remains an MSA remnant request and raises on those unsupported rows;
+        select ``final_spin_mod=0`` for the continuous NNLO remnant path.
         The physical zero-nutation opening removes the auxiliary MSA root
         split from the aligned boundary; the explicit clean v223 helper
         retains its historical binary-compatibility opening by default.
@@ -177,10 +177,9 @@ class IMRPhenomXP(nn.Module):
         legacy_degenerate_rows = torch.zeros_like(exact_aligned, dtype=torch.bool)
         if legacy_equal_mass_rows.dim() == 0 and bool(legacy_equal_mass_rows):
             # Pratten et al. identify q=1 as a singular MSA initialization
-            # and prescribe the NNLO fallback.  FinalSpinMod=3 uses the same
-            # singular averages, so the complete fallback also selects the
-            # NNLO remnant instead of evaluating an inactive MSA expression.
-            final_spin_mod = 0
+            # and prescribe the NNLO angle fallback.  Keep the explicit MSA
+            # remnant choice intact so its independent domain check can report
+            # the unsupported averaged-remnant root.
             clean_candidate = False
         guard_unsupported = torch.zeros_like(exact_aligned, dtype=torch.bool)
         if clean_candidate:
@@ -303,8 +302,7 @@ class IMRPhenomXP(nn.Module):
                     reference_frame=reference_frame,
                     precession_method=precession_method, prec_version=p_ver,
                     convention=convention,
-                    final_spin_mod=(0 if bool(flat[15][index])
-                                    else final_spin_mod),
+                    final_spin_mod=final_spin_mod,
                     _force_legacy=bool(flat[14][index]),
                 )
                 row_outputs.append((

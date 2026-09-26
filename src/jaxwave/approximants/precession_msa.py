@@ -21,6 +21,31 @@ from jaxwave.conversions import as_array
 from jaxwave.approximants.imrphenomp import IMRPhenomP
 
 
+MSA_FINAL_SPIN_DOMAIN_ERROR = (
+    "MSA final_spin_mod=3 requires a valid nonaligned MSA remnant root; "
+    "use final_spin_mod=0 for equal-mass or coalescing-root rows."
+)
+
+
+def _check_msa_final_spin_domain(unsupported):
+    if bool(unsupported):
+        raise ValueError(MSA_FINAL_SPIN_DOMAIN_ERROR)
+
+
+def _enforce_msa_final_spin_domain(unsupported: jnp.ndarray) -> None:
+    """Raise eagerly, or through a compiled callback when values are traced."""
+    any_unsupported = jnp.any(unsupported)
+    if isinstance(any_unsupported, jax.core.Tracer):
+        # A conditional callback is not vmap-safe: batching lowers lax.cond
+        # to a select and may execute both branches. Keep the condition in the
+        # callback so valid batched/JIT rows cannot run the error branch.
+        jax.debug.callback(
+            _check_msa_final_spin_domain, any_unsupported, ordered=True
+        )
+    elif bool(any_unsupported):
+        raise ValueError(MSA_FINAL_SPIN_DOMAIN_ERROR)
+
+
 def resolve_precession_version(method: str, version: Optional[int]) -> int:
     """An explicit version takes precedence; method chooses an omitted version."""
     method_l = method.lower()
@@ -702,7 +727,12 @@ def compute_msa_final_spin(
     s2y: jnp.ndarray,
     s2z: jnp.ndarray,
 ) -> jnp.ndarray:
-    """Return the signed Kerr parameter from the published MSA remnant path."""
+    """Return the signed Kerr parameter from the published MSA remnant path.
+
+    Nonaligned equal-mass and genuinely invalid-root rows are outside this
+    prescription.  Eager calls raise ``ValueError``; traced/JIT execution
+    reports the same diagnostic through JAX's compiled callback error.
+    """
     from jaxwave.approximants.imrphenom_xas import XASParameterFits
 
     (v0, m1, m2, s1x, s1y, s1z, s2x, s2y, s2z) = jnp.broadcast_arrays(
@@ -724,6 +754,17 @@ def compute_msa_final_spin(
     sav_sq, s1_l_avg, s2_l_avg, valid = compute_msa_averaged_couplings(
         v0, m1, m2, s1x, s1y, s1z, s2x, s2y, s2z
     )
+    inplane_sq = s1x * s1x + s1y * s1y + s2x * s2x + s2y * s2y
+    eps = jnp.finfo(v0.dtype).eps
+    numerical_degeneracy = inplane_sq <= 10.0 * eps * (
+        1.0 + s1z * s1z + s2z * s2z
+    )
+    aligned = (s1x == 0.0) & (s1y == 0.0) & (s2x == 0.0) & (s2y == 0.0)
+    unsupported = ((m1 == m2) & (~aligned)) | (
+        (~valid) & (~numerical_degeneracy)
+    )
+    _enforce_msa_final_spin_domain(unsupported)
+
     a_parallel = a_aligned
     m_final = m_final_fit
     s_parallel = s1_l_avg + s2_l_avg
@@ -732,9 +773,6 @@ def compute_msa_final_spin(
     magnitude = jnp.sqrt(jnp.maximum(s_fin_sq, 0.0)) / (m_final**2)
     signed = jnp.where(a_parallel < 0.0, -magnitude, magnitude)
 
-    inplane_sq = s1x * s1x + s1y * s1y + s2x * s2x + s2y * s2y
-    eps = jnp.finfo(v0.dtype).eps
-    numerical_degeneracy = inplane_sq <= 10.0 * eps * (1.0 + s1z * s1z + s2z * s2z)
     return jnp.where(numerical_degeneracy, a_aligned, signed)
 
 

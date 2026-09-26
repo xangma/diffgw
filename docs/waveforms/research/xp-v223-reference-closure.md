@@ -274,12 +274,12 @@ state for failed MSA initialization: use the established NNLO prescription.
 Production now applies the existing MSA root-validity result at the reference
 frequency before selecting the distinct-root clean kernel. Invalid
 coalescing-root rows use the inherited NNLO angle route. Generic equal-mass
-rows also use the NNLO remnant because both the MSA phase coefficients and
-the precession-averaged remnant contain the singular equal-mass
-parameterization. This introduces neither a new numerical threshold nor an
-oracle-fitted coefficient and does not claim an MSA continuation. The generic
-nonzero-`phi0` dispatch remains unchanged pending an independently derived
-source-frame mapping.
+rows use that same angle fallback. The final-spin option remains independent:
+explicit mode 3 raises when its nonaligned MSA averaged-remnant root is invalid,
+while explicit mode 0 supplies the continuous NNLO remnant. This introduces
+neither a new numerical threshold nor an oracle-fitted coefficient and does
+not claim an MSA continuation. The generic nonzero-`phi0` dispatch remains
+unchanged pending an independently derived source-frame mapping.
 
 For the up-down fixture above, the corrected Torch/JAX waveform residuals are
 below $3.21\times10^{-14}$ relative L2 across both tested bands, while the

@@ -1,5 +1,41 @@
 # XP/XPHM precession boundary qualification (2026-09-25)
 
+## 2026-09-26 explicit-remnant policy amendment
+
+The earlier receipt below combined the paper-prescribed NNLO *angle* fallback
+with an implicit change from `final_spin_mod=3` to mode 0. That remnant
+substitution is superseded. The current public XP/XPHM policy keeps these two
+choices independent:
+
+- MSA v223 still falls back to the paper-sourced NNLO angles when MSA
+  initialization is invalid.
+- Explicit `final_spin_mod=3` remains a request for the MSA averaged remnant.
+  A nonaligned equal-mass row or other genuinely invalid MSA remnant root
+  raises the same clear diagnostic in Torch and JAX; it is never silently
+  evaluated with mode 0.
+- Explicit `final_spin_mod=0` remains finite and continuous across the tested
+  equal/near-equal boundary and retains differentiability in both frontends.
+  Machine-level transverse-spin degeneracies continue to use the analytic
+  aligned remnant limit.
+
+JAX eager calls made directly to the remnant primitive raise `ValueError`.
+Public XP evaluation uses `lax.cond`; consequently, invalid eager public calls
+and invalid JIT executions cross a compiled callback boundary and surface a
+`jax.errors.JaxRuntimeError` from the compiled XLA host callback that contains
+the same diagnostic rather than preserving the Python exception class. Valid
+JIT execution and autodiff remain supported.
+
+On `len`, the focused policy suite
+(`test_xp_msa_remnant_boundary_policy.py`, `test_jax_public_xp_generic_v223.py`,
+and `test_xp_msa_production_clean.py`) passed `37/37` in 385.06 seconds with
+Torch 2.14.0+cpu, JAX/JAXlib 0.11.2, NumPy 2.5.3, SciPy 1.18.1, and pytest
+9.1.1. It includes direct and compiled invalid-root checks, mode-0 boundary
+continuity, gradients, frontend parity, and valid batched JIT coverage.
+
+This is a boundary-policy correction, not new external qualification. The
+strict full-complex-polarization gates and all external residuals recorded
+below are unchanged, so the overall release verdict remains **fail**.
+
 ## Scope and evidence classes
 
 This receipt audits draft PR #42 at
@@ -29,16 +65,17 @@ generic-boundary math reference, promoted near-aligned fallback gates, XPHM
 rotation reference, and clean-room XPHM NNLO composition: `67 passed` in
 496.14 seconds, with zero skips, xfails, or deselections.
 
-## Adopted correction
+## Historical correction at the prior qualification head
 
 The published generic MSA parameterization is singular at equal mass and its
 distinct-root solution is invalid when the initialization roots coalesce.
-The production adapters now reuse the existing MSA initialization-validity
+The production adapters at that head reused the existing MSA initialization-validity
 result before selecting the clean distinct-root kernel. Invalid rows take the
 established NNLO angle fallback. Equal-mass generic rows also select the NNLO
 remnant because the MSA averaged-remnant expression shares the equal-mass
-singularity. No continuation, new threshold, LAL-derived expression, or fitted
-coefficient is introduced.
+singularity. The 2026-09-26 amendment above supersedes only that silent
+remnant-mode substitution. No continuation, new threshold, LAL-derived
+expression, or fitted coefficient is introduced.
 
 ## Exact native residuals
 
@@ -75,7 +112,7 @@ LAL binary parameters. Native agreement therefore cannot promote it.
 
 | Boundary | Math fidelity | Torch/JAX | External | Release |
 | --- | --- | --- | --- | --- |
-| Generic equal mass | pass as explicit NNLO fallback; no MSA continuation claimed | pass | fail | **fail** |
+| Generic equal mass | mode 0 passes as explicit NNLO fallback; explicit mode 3 is an MSA-remnant domain error; no MSA continuation claimed | same policy/diagnostic across frontends | fail | **fail** |
 | Generic nonzero `phi0` | source-frame transport remains unclosed | pass on inherited route | not evaluable | **fail** |
 | Near aligned before instability | pass as invalid-root NNLO fallback | pass | fail | **fail** |
 | Near aligned across instability | pass as invalid-root NNLO fallback | pass | fail | **fail** |

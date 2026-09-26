@@ -309,12 +309,6 @@ class IMRPhenomXP:
                             jnp.where(f_source > 0.0, hc, 0.0j))
 
                 def legacy(_):
-                    one_spin_row = (
-                        ((r_s1x == 0.0) & (r_s1y == 0.0))
-                        | ((r_s2x == 0.0) & (r_s2y == 0.0))
-                    )
-                    equal_mass_generic = (r_m1 == r_m2) & ~one_spin_row
-
                     def established(final_spin):
                         return IMRPhenomXP.evaluate(
                             f=f_source, mass1=r_m1, mass2=r_m2,
@@ -330,15 +324,11 @@ class IMRPhenomXP:
                             final_spin_mod=final_spin, _force_legacy=True,
                         )
 
-                    # The q=1 MSA phase and averaged-remnant expressions are
-                    # both singular.  The documented NNLO angle fallback must
-                    # therefore carry its NNLO remnant as well.
-                    return jax.lax.cond(
-                        equal_mass_generic,
-                        lambda _: established(0),
-                        lambda _: established(final_spin_mod),
-                        operand=None,
-                    )
+                    # The angle evaluator retains its documented NNLO
+                    # fallback.  Preserve the independently selected remnant
+                    # mode so mode 3 reports an unsupported MSA root instead
+                    # of silently becoming mode 0.
+                    return established(final_spin_mod)
 
                 return jax.lax.cond(r_clean, clean, legacy, operand=None)
 

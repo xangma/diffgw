@@ -3,8 +3,8 @@
 Pratten et al. (arXiv:2004.06503v2), Eqs. (8)--(13), Appendix C give the
 rotation and observer projection.  Chatziioannou et al. (arXiv:1703.03967v3)
 give the unequal-mass two-spin nutation equations.  Equal-mass generic rows
-and coalescing-root initializations use the published NNLO fallback rather
-than an unvalidated MSA continuation.
+and coalescing-root initializations use the published NNLO angle fallback;
+an explicitly selected MSA remnant remains independently domain-checked.
 """
 
 import numpy as np
@@ -76,34 +76,25 @@ def test_helper_masks_zero_bin_before_intrinsic_phase_and_passes_options(monkeyp
         assert np.all(np.isfinite(np.asarray(state[name])))
 
 
-def test_equal_mass_and_nonzero_azimuth_generic_rows_keep_declared_fallback():
+def test_nonzero_azimuth_generic_rows_keep_declared_fallback():
     f = jnp.asarray([0., 25., 40., 80.])
-    for params in (
-        dict(CASES[0], mass1=25., mass2=25., phi0=0.),
-        dict(CASES[0], phi0=.4),
+    params = dict(CASES[0], phi0=.4, distance=150., inclination=.7, phic=.3,
+                  f_ref=20., prec_version=223, convention=1,
+                  final_spin_mod=3)
+    fallback = dict(params, _force_legacy=True)
+    actual = JAXXP.evaluate(f, **params)
+    legacy = JAXXP.evaluate(f, **fallback)
+    torch_f = torch.tensor(np.asarray(f), dtype=torch.float64)
+    torch_actual = TorchXP()(torch_f, **params)
+    torch_legacy = TorchXP()(torch_f, **fallback)
+    for left, right, torch_left, torch_right in zip(
+        actual, legacy, torch_actual, torch_legacy,
     ):
-        params = dict(params, distance=150., inclination=.7, phic=.3,
-                      f_ref=20., prec_version=223, convention=1,
-                      final_spin_mod=3)
-        equal_mass = params["mass1"] == params["mass2"]
-        fallback = dict(
-            params,
-            final_spin_mod=0 if equal_mass else params["final_spin_mod"],
-            _force_legacy=True,
-        )
-        actual = JAXXP.evaluate(f, **params)
-        legacy = JAXXP.evaluate(f, **fallback)
-        torch_f = torch.tensor(np.asarray(f), dtype=torch.float64)
-        torch_actual = TorchXP()(torch_f, **params)
-        torch_legacy = TorchXP()(torch_f, **fallback)
-        for left, right, torch_left, torch_right in zip(
-            actual, legacy, torch_actual, torch_legacy,
-        ):
-            np.testing.assert_allclose(np.asarray(left), np.asarray(right),
-                                       rtol=1e-12, atol=0.)
-            torch.testing.assert_close(torch_left, torch_right, rtol=1e-12, atol=0.)
-            assert _relative_l2(left, torch_left.detach().numpy()) < 2e-10
-            assert np.all(np.isfinite(np.asarray(left)))
+        np.testing.assert_allclose(np.asarray(left), np.asarray(right),
+                                   rtol=1e-12, atol=0.)
+        torch.testing.assert_close(torch_left, torch_right, rtol=1e-12, atol=0.)
+        assert _relative_l2(left, torch_left.detach().numpy()) < 2e-10
+        assert np.all(np.isfinite(np.asarray(left)))
 
 
 def test_near_aligned_coalescing_roots_use_nnlo_fallback():
@@ -135,10 +126,10 @@ def test_generic_jit_mixed_batch_and_spin_gradient_match_torch():
     common = dict(distance=150., inclination=.7, phic=.3, f_ref=20.,
                   prec_version=223, convention=1, final_spin_mod=3)
     rows = dict(
-        mass1=jnp.array([35., 25., 35.]), mass2=jnp.array([25., 25., 25.]),
-        spin1x=jnp.array([.2, .2, .2]), spin1y=jnp.array([.1, .1, .1]),
-        spin1z=jnp.array([.3, .3, .3]), spin2x=jnp.array([-.1, -.1, 0.]),
-        spin2y=jnp.array([.05, .05, 0.]), spin2z=jnp.array([-.2, -.2, -.2]),
+        mass1=jnp.array([35., 48., 35.]), mass2=jnp.array([25., 17., 25.]),
+        spin1x=jnp.array([.2, .13, .2]), spin1y=jnp.array([.1, -.2, .1]),
+        spin1z=jnp.array([.3, .26, .3]), spin2x=jnp.array([-.1, .04, 0.]),
+        spin2y=jnp.array([.05, .12, 0.]), spin2z=jnp.array([-.2, -.1, -.2]),
     )
     def evaluate(sx):
         return JAXXP.evaluate(f, **dict(rows, spin1x=sx), **common)
