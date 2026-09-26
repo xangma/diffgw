@@ -200,19 +200,19 @@ The [independent trajectory receipt](../validation/phenomt_independent_trajector
 composes this RHS with a SciPy Brent event solve, adaptive DOP853 evolution,
 minimal-rotation tangent transport, dense output, and independent Euler-angle
 reconstruction. For the `(60, 6)` case, the reference event differs from the
-native event by `1.46e-11 M` (`4.73e-15 s`). Tight/loose solves differ by at
-most `2.25e-9` in state-vector norm and `1.64e-9` rad in rotation; the largest
-constraint drift is `1.06e-12`. Native and independent trajectories differ by
-at most `4.74e-9` in orbital-axis norm and `4.81e-9` rad in rotation. The
+native event by `1.91e-11 M` (`6.21e-15 s`). Tight/loose solves differ by at
+most `2.27e-9` in state-vector norm and `1.66e-9` rad in rotation; the largest
+constraint drift is `1.11e-12`. Native and independent trajectories differ by
+at most `4.72e-9` in orbital-axis norm and `4.78e-9` rad in rotation. The
 production angle reconstruction has a fixed `0.003066` rad J-frame chart
 offset, but its relative evolution agrees with the independent reconstruction
-within `7.89e-16` rad.
+within `7.96e-16` rad.
 
 The same receipt compares the independent relative triad with rotations
 reconstructed from the public PV300/FS4 binary's Euler-angle series for all
 43,087 inspiral samples at 16384 Hz. The public binary does not expose its
 internal orbital-axis or ODE state.
-The initial relative-triad error is `7.98e-17` rad. It then exceeds `1e-4` rad
+The initial relative-triad error is `1.38e-16` rad. It then exceeds `1e-4` rad
 after `1.465` ms, `1e-3` rad after `14.282` ms, `1e-2` rad after `0.13934` s,
 and `1e-1` rad after `1.16638` s, reaching maximum orbital-axis and triad
 errors of `0.38911` and `0.39276` rad. The independent carrier event and public
@@ -229,7 +229,7 @@ implementation check through the carrier peak, but not the public numerical-
 precession model gate. In particular, the
 independent published spin-even initial axis rate is `0.0686446799357 1/s` and
 matches native to `8.33e-17 1/s`; the public angle-derived axis rate is
-`3.27732540646e-8 1/s`. The positive SpinTaylor quadrupole control remains
+`3.27695843871e-8 1/s`. The positive SpinTaylor quadrupole control remains
 present in the receipt. Published math therefore supports retaining the Kerr
 self-quadrupole coefficient, while the black-box orientation discrepancy and
 whole-waveform gate remain unresolved. No LAL source or binary-derived
