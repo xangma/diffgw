@@ -65,5 +65,6 @@ The experiment can be repeated with the existing len environment:
 
 ```sh
 cd /home/xangma/repos/diffgw-worktrees/kerr-angular-qualification
-PYTHONPATH=src /home/xangma/.cache/diffgw-xp-pycbc-venv/bin/python -m pytest -q tests/test_kerr_qnm_math_reference.py
+JAX_ENABLE_X64=1 JAX_PLATFORMS=cpu PYTHONPATH=src \
+  /home/xangma/.cache/diffgw-xp-pycbc-venv/bin/python -m pytest -q tests/test_kerr_qnm_math_reference.py
 ```

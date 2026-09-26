@@ -85,14 +85,18 @@ def test_native_frequency_and_angular_input(backend, spin, reference_device):
         actual_a = complex(angular.item())
     else:
         jax = pytest.importorskip("jax")
-        import jax.numpy as jnp
-        from jaxwave.approximants.kerr_qnm_interp import evaluate_kerr_qnm_220
-        from jaxwave.approximants.kerr_ringdown import spheroidal_coefficients
         previous = jax.config.x64_enabled
         jax.config.update("jax_enable_x64", True)
         try:
+            import jax.numpy as jnp
+            from jaxwave.approximants import kerr_qnm_interp
+            from jaxwave.approximants.kerr_ringdown import spheroidal_coefficients
+            assert kerr_qnm_interp._KNOTS_220.dtype == jnp.float64, (
+                "Kerr QNM spline data were imported before JAX FP64 was enabled"
+            )
             with jax.default_device(jax.devices("cpu")[0]):
-                real, decay = evaluate_kerr_qnm_220(jnp.asarray(spin, dtype=jnp.float64))
+                real, decay = kerr_qnm_interp.evaluate_kerr_qnm_220(
+                    jnp.asarray(spin, dtype=jnp.float64))
                 omega = complex(float(real), -float(decay))
                 angular, _ = spheroidal_coefficients(
                     2, 2, jnp.asarray(spin * omega, dtype=jnp.complex128))
@@ -118,15 +122,18 @@ def test_native_spin_derivative_matches_scalar_root(backend, spin, reference_dev
         actual = complex(float(dre), -float(ddecay))
     else:
         jax = pytest.importorskip("jax")
-        import jax.numpy as jnp
-        from jaxwave.approximants.kerr_qnm_interp import evaluate_kerr_qnm_220
         previous = jax.config.x64_enabled
         jax.config.update("jax_enable_x64", True)
         try:
+            import jax.numpy as jnp
+            from jaxwave.approximants import kerr_qnm_interp
+            assert kerr_qnm_interp._KNOTS_220.dtype == jnp.float64, (
+                "Kerr QNM spline data were imported before JAX FP64 was enabled"
+            )
             with jax.default_device(jax.devices("cpu")[0]):
                 value = jnp.asarray(spin, dtype=jnp.float64)
-                dre = jax.grad(lambda a: evaluate_kerr_qnm_220(a)[0])(value)
-                ddecay = jax.grad(lambda a: evaluate_kerr_qnm_220(a)[1])(value)
+                dre = jax.grad(lambda a: kerr_qnm_interp.evaluate_kerr_qnm_220(a)[0])(value)
+                ddecay = jax.grad(lambda a: kerr_qnm_interp.evaluate_kerr_qnm_220(a)[1])(value)
                 actual = complex(float(dre), -float(ddecay))
         finally:
             jax.config.update("jax_enable_x64", previous)
