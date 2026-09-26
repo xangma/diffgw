@@ -153,6 +153,21 @@ def _spherical_32_from_spheroidal(h22, h32_s, alpha222, alpha232, alpha322, alph
     return ratio * h22 + (alpha332 - ratio * alpha232) * h32_s
 
 
+def _intermediate_32_phase_coefficients(nodes, targets, join, dphi_join, d2phi_join, ring, damp):
+    """Eq. (5.6): four phase-derivative targets and a C2 ringdown join."""
+
+    def row(f):
+        lorentz = damp / (damp**2 + (f - ring)**2)
+        return jnp.stack((lorentz, jnp.ones_like(f), 1 / f, 1 / f**2, 1 / f**3, 1 / f**4), axis=-1)
+
+    dlorentz = -2 * damp * (join - ring) / (damp**2 + (join - ring)**2)**2
+    derivative_row = jnp.stack((dlorentz, jnp.zeros_like(join), -1 / join**2,
+                                -2 / join**3, -3 / join**4, -4 / join**5), axis=-1)
+    matrix = jnp.stack((*[row(nodes[..., i]) for i in range(4)], row(join), derivative_row), axis=-2)
+    rhs = jnp.concatenate((targets, dphi_join[..., None], d2phi_join[..., None]), axis=-1)
+    return _safe_solve(matrix, rhs)
+
+
 def _carrier_h22_ratio(strain, phase, phase_reference, a0):
     """Put the physical carrier in the H_lm normalization of Eq. (4.6)."""
     return jnp.abs(strain / a0) * jnp.exp(-1j * (phase - phase_reference))
@@ -1366,31 +1381,15 @@ class IMRPhenomXHM:
                         ring_u = _unsqueeze_to(f_ring["32"], f_in)
                         return damp_u / ((damp_u**2) + (f_in - ring_u)**2)
 
-                    def dlor_32(f_in: jnp.ndarray) -> jnp.ndarray:
-                        damp_u = _unsqueeze_to(f_damp["32"], f_in)
-                        ring_u = _unsqueeze_to(f_ring["32"], f_in)
-                        return -2.0 * damp_u * (f_in - ring_u) / (((damp_u**2) + (f_in - ring_u)**2)**2)
-
                     dphi_rd_at_join, d2phi_rd_at_join = _value_and_derivative(
                         lambda x: _value_and_derivative(eval_phi_32_rd, x)[1], f_rd_p,
                     )
 
-                    rows_32 = []
-                    for i_pt in range(4):
-                        fn_i = f_nodes_int_32[..., i_pt]
-                        rows_32.append(jnp.stack([
-                            lor_32(fn_i), jnp.ones_like(fn_i), 1.0 / fn_i, 1.0 / (fn_i**2), 1.0 / (fn_i**3), 1.0 / (fn_i**4)
-                        ], axis=-1))
-                    rows_32.append(jnp.stack([
-                        lor_32(f_rd_p), jnp.ones_like(f_rd_p), 1.0 / f_rd_p, 1.0 / (f_rd_p**2), 1.0 / (f_rd_p**3), 1.0 / (f_rd_p**4)
-                    ], axis=-1))
-                    rows_32.append(jnp.stack([
-                        dlor_32(f_rd_p), jnp.zeros_like(f_rd_p), -1.0 / (f_rd_p**2), -2.0 / (f_rd_p**3), -3.0 / (f_rd_p**4), -4.0 / (f_rd_p**5)
-                    ], axis=-1))
-
-                    m_int_32 = jnp.stack(rows_32, axis=-2)
-                    rhs_int_32 = jnp.stack([f_p1_32, f_p2_32, f_p3_32, f_p4_32, dphi_rd_at_join, d2phi_rd_at_join], axis=-1)
-                    sol_int_32 = _safe_solve(m_int_32, rhs_int_32)
+                    targets_int_32 = jnp.stack((f_p1_32, f_p2_32, f_p3_32, f_p4_32), axis=-1)
+                    sol_int_32 = _intermediate_32_phase_coefficients(
+                        f_nodes_int_32, targets_int_32, f_rd_p, dphi_rd_at_join, d2phi_rd_at_join,
+                        f_ring["32"], f_damp["32"],
+                    )
 
                     a_lam_32 = sol_int_32[..., 0]
                     a_0_32 = sol_int_32[..., 1]
