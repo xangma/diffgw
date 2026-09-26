@@ -1,14 +1,8 @@
-"""Relativistic EMRI (Extreme Mass Ratio Inspiral) Kludge Waveform Model for LISA in JAX.
+"""Short-time eccentric harmonic EMRI prototype with a static LISA projection.
 
-Strict Clean-Room Implementation based exclusively on published literature:
-- Barack & Cutler (2004), "LISA capture sources: Approximate waveforms, signal-to-noise ratios,
-  and parameter estimation accuracy", Phys. Rev. D 69, 082005 (arXiv:gr-qc/0310125)
-- Babak, Fang, Gair, Glampedakis, Hughes (2007), "'Kludge' gravitational waveforms for a test-body
-  orbiting a Kerr black hole", Phys. Rev. D 75, 024005 (arXiv:gr-qc/0607007)
-- Chua, Galley, Vallisneri (2021), "Fast and accurate gravitational-wave waveforms for extreme mass-ratio
-  inspirals with deep neural networks", Phys. Rev. Lett. 126, 051102 (arXiv:2008.06071)
-- Peters & Mathews (1963), "Gravitational Radiation from Point Masses in a Keplerian Orbit",
-  Phys. Rev. 131, 435
+Only the leading orbit-averaged Peters (1964) p/e flux has an independent
+mathematical reference. The frequency, harmonic, and detector approximations
+are not a complete analytic or numerical kludge. See docs/math/emri-kludge.md.
 """
 
 from typing import Dict, Optional, Sequence, Tuple, Union
@@ -35,9 +29,9 @@ def kerr_geodesic_frequencies(
     inclination: Union[float, jnp.ndarray] = 0.0,
     in_hz: bool = True,
 ) -> Tuple[jnp.ndarray, jnp.ndarray, jnp.ndarray, jnp.ndarray, jnp.ndarray]:
-    """Compute Kerr orbital geodesic frequencies and precession rates in JAX.
+    """Compute carrier orbital frequency and approximate precession rates.
 
-    Literature: Barack & Cutler (2004) Eqs. 9-11; Babak et al. (2007) Eqs. 16-20.
+    These expressions are not generic Kerr geodesic frequencies: e is unused.
 
     Orbital azimuthal frequency:
         Omega_phi = 1 / (M_sec * (p^(3/2) + a))
@@ -129,12 +123,12 @@ def peters_mathews_radiation_reaction(
     """Compute Peters-Mathews gravitational radiation reaction evolution dp/dt and de/dt in JAX.
 
     Literature:
-    - Peters & Mathews (1963), Phys. Rev. 131, 435 Eqs. 5.6 & 5.7
-    - Barack & Cutler (2004), Phys. Rev. D 69, 082005 Eqs. 12 & 13
+    - Peters (1964), Phys. Rev. 136, B1224 Eqs. (5.6)-(5.7),
+      converted from semimajor axis to semilatus rectum at leading order
 
     Formulas:
         dp/dt = -64/5 * (mu / M^2) * p^(-3) * (1 - e^2)^(3/2) * (1 + 7/8 * e^2)
-        de/dt = -604/48 * (mu / M^2) * e * p^(-4) * (1 - e^2)^(3/2) * (1 + 121/304 * e^2)
+        de/dt = -304/15 * (mu / M^2) * e * p^(-4) * (1 - e^2)^(3/2) * (1 + 121/304 * e^2)
 
     Args:
         total_mass: Central black hole mass M in solar masses.
@@ -168,20 +162,18 @@ def peters_mathews_radiation_reaction(
     # de/dt
     p_fourth = p_cubed * p_safe
     e_term = 1.0 + (121.0 / 304.0) * e_sq
-    de_dt = -(604.0 / 48.0) * mass_factor * e_safe * (1.0 / p_fourth) * e_factor * e_term
+    de_dt = -(304.0 / 15.0) * mass_factor * e_safe * (1.0 / p_fourth) * e_factor * e_term
 
     return dp_dt, de_dt
 
 
 @jax.tree_util.register_pytree_node_class
 class EMRIKludge:
-    """Relativistic Extreme Mass Ratio Inspiral (EMRI) Kludge Model for LISA in JAX.
+    """Short-time harmonic EMRI prototype with a static LISA projection.
 
-    Strict clean-room literature implementation combining:
-    - Kerr relativistic orbital geodesic frequencies (Barack & Cutler 2004)
-    - Peters-Mathews radiation reaction dissipation (Peters & Mathews 1963)
-    - Multipolar orbital harmonic emission summed across harmonics n in [1, N_harmonics]
-    - Direct projection onto LISA TDI channels (A, E, T) via LISANetwork
+    The Peters (1964) leading p/e rates are used only at the initial orbit;
+    the emitted harmonics and A/E/T antenna multiplication are not a full
+    analytic/numerical kludge waveform or a validated TDI response.
     """
 
     def __init__(self, n_harmonics: int = 5):
@@ -228,7 +220,7 @@ class EMRIKludge:
         p_t = jnp.maximum(p_init + dp_dt * t_t, 1.5)
         e_t = jnp.minimum(jnp.maximum(e_init + de_dt * t_t, 0.0), 0.999)
 
-        # Kerr geodesic frequencies
+        # Carrier frequency and approximate precession rates
         omega_phi, omega_r, omega_theta, gamma_dot, alpha_dot = kerr_geodesic_frequencies(
             m, a, p_t, e_t, inc, in_hz=True
         )
@@ -301,6 +293,7 @@ class EMRIKludge:
         h_cross = jnp.zeros_like(t_t)
 
         # Multipolar harmonic sum n in [1, N]
+        # Heuristic eccentric sidebands, not Peters-Mathews Bessel harmonics.
         for n in range(1, self.n_harmonics + 1):
             if n == 2:
                 # Dominant quadrupolar harmonic
@@ -330,14 +323,14 @@ class EMRIKludge:
         channels: Sequence[str] = ("A", "E", "T"),
         **emri_kwargs,
     ) -> Dict[str, jnp.ndarray]:
-        """Generate EMRI signal projected into LISA TDI channels.
+        """Apply static LISA antenna patterns labeled A, E, and T.
 
         Args:
             t: Time array in seconds.
             theta: Source ecliptic co-latitude in radians.
             phi: Source ecliptic longitude in radians.
             psi: Polarization angle in radians.
-            channels: TDI channels to evaluate ('A', 'E', 'T').
+            channels: Static antenna-pattern labels ('A', 'E', 'T').
             **emri_kwargs: Parameters passed to polarizations().
 
         Returns:
