@@ -45,7 +45,9 @@ def test_native_flux_value_and_p_derivative(backend, p, e, reference_device):
             derivative = float(torch.autograd.grad(actual_tensor, parameter)[0])
         else:
             parameter = jnp.asarray(p, dtype=jnp.float64)
-            fn = lambda value: jax_flux(m, mu, value, e)[index]
+            def fn(value):
+                return jax_flux(m, mu, value, e)[index]
+
             actual = float(fn(parameter))
             derivative = float(jax.grad(fn)(parameter))
         assert math.isclose(actual, expected, rel_tol=2e-13, abs_tol=1e-28)

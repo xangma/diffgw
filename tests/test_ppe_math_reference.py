@@ -56,7 +56,9 @@ def test_paper_chirp_mass_phase_and_frontend_gradients(m1, m2, beta, b, f):
     bt = torch.tensor(beta, dtype=torch.float64, requires_grad=True)
     tv = t_ppe.ppe_phase_shift(ft, float(mc), bt, b)
     tf, tb = torch.autograd.grad(tv, (ft, bt))
-    jf = lambda freq, amp: j_ppe.ppe_phase_shift(freq, float(mc), amp, b)
+    def jf(freq, amp):
+        return j_ppe.ppe_phase_shift(freq, float(mc), amp, b)
+
     jv, (jdf, jdb) = jax.jit(jax.value_and_grad(jf, (0, 1)))(
         jnp.asarray(f), jnp.asarray(beta)
     )
@@ -116,7 +118,9 @@ def test_infinite_wavelength_batched_and_phase_derivatives():
     ft = torch.tensor(80.0, dtype=torch.float64, requires_grad=True)
     tv = t_ppe.modified_dispersion_phase_shift(ft, lambda_g=1e17, z=0.5, d_alpha=d0)
     td = torch.autograd.grad(tv, ft)[0]
-    jf = lambda ff: j_ppe.modified_dispersion_phase_shift(ff, lambda_g=1e17, z=0.5, d_alpha=d0)
+    def jf(ff):
+        return j_ppe.modified_dispersion_phase_shift(ff, lambda_g=1e17, z=0.5, d_alpha=d0)
+
     jv, jd = jax.jit(jax.value_and_grad(jf))(jnp.asarray(80.0))
     np.testing.assert_allclose([td.item(), float(jd)], -tv.item() / 80, rtol=2e-14)
     np.testing.assert_allclose(float(jv), tv.item(), rtol=3e-14)
@@ -124,16 +128,18 @@ def test_infinite_wavelength_batched_and_phase_derivatives():
 
 def test_redshift_and_wavelength_derivatives_against_scalar():
     with mp.workdps(70):
-        scalar = lambda zz, ll: ref.paper_dispersion_phase(
-            80, ref.d0_from_luminosity_distance(300, zz), ll, zz
-        )
+        def scalar(zz, ll):
+            return ref.paper_dispersion_phase(80, ref.d0_from_luminosity_distance(300, zz), ll, zz)
+
         z_target = float(mp.diff(lambda zz: scalar(zz, mp.mpf("1e17")), mp.mpf("0.5")))
         l_target = float(mp.diff(lambda ll: scalar(mp.mpf("0.5"), ll), mp.mpf("1e17")))
     zt = torch.tensor(0.5, dtype=torch.float64, requires_grad=True)
     lt = torch.tensor(1e17, dtype=torch.float64, requires_grad=True)
     tv = t_ppe.modified_dispersion_phase_shift(torch.tensor(80.0, dtype=torch.float64), 300.0, lt, zt)
     tz, tl = torch.autograd.grad(tv, (zt, lt))
-    jf = lambda zz, ll: j_ppe.modified_dispersion_phase_shift(jnp.asarray(80.0), 300.0, ll, zz)
+    def jf(zz, ll):
+        return j_ppe.modified_dispersion_phase_shift(jnp.asarray(80.0), 300.0, ll, zz)
+
     _, (jz, jl) = jax.jit(jax.value_and_grad(jf, (0, 1)))(jnp.asarray(0.5), jnp.asarray(1e17))
     np.testing.assert_allclose([tz.item(), float(jz)], z_target, rtol=5e-13, atol=0)
     np.testing.assert_allclose([tl.item(), float(jl)], l_target, rtol=5e-13, atol=0)
