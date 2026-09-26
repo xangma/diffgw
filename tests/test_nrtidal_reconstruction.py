@@ -43,20 +43,15 @@ def test_additive_amplitude_low_frequency_pn():
 
 
 @pytest.mark.parametrize('inclination', [0., .7, math.pi/2, 2.4])
-def test_additive_amplitude_polarization_projection(inclination):
+def test_published_d_omits_tidal_amplitude_at_all_inclinations(inclination):
     f = torch.tensor([40., 200., 700., 1200.], dtype=torch.float64)
     kw = dict(f=f, mass1=1.4, mass2=1.3, distance=80., inclination=inclination)
     hp0, hc0 = IMRPhenomD()(**kw)
-    hp, hc = IMRPhenomD_NRTidalv2()(**kw, lambda1=350., lambda2=420., apply_merger_taper=False)
-    xa, xb = 1.4 / 2.7, 1.3 / 2.7
-    kappa = 3 / 13 * ((xa + 12 * xb) * xa**4 * 350 + (xb + 12 * xa) * xb**4 * 420)
-    x = (PI * 2.7 * MSUN_SEC * f) ** (2 / 3)
-    # Dietrich et al. (2019), arXiv:1905.06011 Eq. 24 prints d=13477.8.
-    c_amp = 13477.8
-    eta = 1.4 * 1.3 / 2.7**2
-    at = math.sqrt(5 * math.pi * eta / 24) * (2.7 * MSUN_SEC)**2 / (80 * MPC_SI / C_SI) * (-9 * kappa * x**(13/4) * (1 + 449/108 * x + 22672/9 * x**2.89) / (1 + c_amp * x**4))
+    hp, hc = IMRPhenomD_NRTidalv2(amplitude_variant="paper_2019")(
+        **kw, lambda1=350., lambda2=420., apply_merger_taper=False)
     plus = .5 * (1 + math.cos(inclination)**2)
-    torch.testing.assert_close((hp.abs() - hp0.abs()) / 1e-23, plus * at / 1e-23, rtol=1e-10, atol=1e-13)
+    torch.testing.assert_close(hp.abs() / 1e-23, hp0.abs() / 1e-23, rtol=1e-12, atol=1e-13)
+    torch.testing.assert_close(hc.abs() / 1e-23, hc0.abs() / 1e-23, rtol=1e-12, atol=1e-13)
     torch.testing.assert_close(hc / 1e-23, hp / 1e-23 * (-1j * math.cos(inclination) / plus), rtol=1e-12, atol=1e-14)
 
 

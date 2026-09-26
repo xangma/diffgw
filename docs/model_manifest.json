@@ -765,7 +765,7 @@
         "(2,2)"
       ],
       "status": "verified_declared_cases",
-      "notes": "The declared frozen catalog and available holdout cases passed the CPU FP64 gates for polarizations and detector projections. Results are historical and configuration-specific; they do not establish full-domain accuracy. See the pinned validation artifacts and docs/provenance_ledger.md.",
+      "notes": "The default binary_compatible variant preserves the historical native M^2/(2D) tidal-amplitude normalization and passes the frozen pinned-LAL catalog/holdout gates. The 1/2 normalization has unresolved paper provenance; binary verification does not qualify it as the published Dietrich et al. (2019) D model. The explicit paper_2019 option omits tidal amplitude as Table II specifies, passes its independent phase-only composition checks, and is unqualified against the pinned LAL D binary at nonzero tide. The separate Eq. (24) amplitude component passes scalar Torch/JAX/SymPy checks and is not part of either D variant. The metrics below apply only to the default binary_compatible variant. See docs/math/nrtidalv2-amplitude-taper.md and docs/validation/nrtidalv2_amplitude_20260926.md.",
       "primary_references": [
         {
           "citation": "Dietrich et al. (2019), Phys. Rev. D 100, 044003",

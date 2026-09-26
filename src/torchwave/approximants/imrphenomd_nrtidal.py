@@ -3,7 +3,7 @@
 Tidal formulas from primary literature; this continuation uses no oracle internals.
 This statement does not claim zero source exposure by all prior contributors.
 - Dietrich, Bernuzzi, Tichy (2017), Phys. Rev. D 96, 121501(R) (arXiv:1706.02969) [NRTidal v1]
-- Dietrich et al. (2019), Phys. Rev. D 100, 044003 (arXiv:1905.06011) [NRTidalv2: Eqs. 17-21, 24-25, 26-29]
+- Dietrich et al. (2019), Phys. Rev. D 100, 044003 (arXiv:1905.06011) [NRTidalv2: Eqs. 17-21, 26-29; Eq. 24 independent Pv2 component]
 - Dietrich et al. (2018), Phys. Rev. D 99, 024029 (arXiv:1804.02235) [BNS merger frequency fit Sec II.2.2 Eq. 11]
 - Yagi & Yunes (2013), Science 341, 365; PRD 88, 023009 [Universal I-Love-Q relations]
 - McKechan, Robinson, Sathyaprakash (2010), Class. Quantum Grav. 27, 084020 [Planck taper]
@@ -16,8 +16,8 @@ import torch.nn as nn
 
 from torchwave.constants import (
     C_SI,
-    MSUN_SEC,
     MPC_SI,
+    MSUN_SEC,
     PI,
 )
 from torchwave.conversions import (
@@ -102,19 +102,35 @@ def _bns_merger_frequency(
     return f_mrg
 
 
-def _nrtidal_amplitude(x, m_sec, d_sec, eta, lambda_tilde):
-    """Face-on additive planar tidal amplitude correction (Dietrich et al. 2019 Eq. 24).
-
-    A_T(f) = -9 * kappa_eff * x^(13/4) * (1 + n1 * x + n289 * x^2.89) / (1 + d * x^4)
-    a_tidal = sqrt(5*pi*eta/24) * (m_sec^2 / d_sec) * A_T(f)
-    """
+def _nrtidal_amplitude_shape(x, lambda_tilde):
+    """Dimensionless rational tidal-amplitude shape of Dietrich et al. Eq. (24)."""
     kappa_eff = (3.0 / 16.0) * lambda_tilde
     c = NRTIDAL_V2_AMP_COEFFS
     num = 1.0 + c["n_1"] * x + c["n_289"] * (x ** 2.89)
     den = 1.0 + c["d"] * (x ** 4.0)
-    a_t = -9.0 * kappa_eff * (x ** 3.25) * (num / den)
+    return -9.0 * kappa_eff * (x ** 3.25) * (num / den)
+
+
+def _nrtidal_amplitude(x, m_sec, d_sec, eta, lambda_tilde):
+    """Independent Pv2 tidal-amplitude component (Dietrich et al. 2019 Eq. 24).
+
+    Table II excludes this component from the published D_NRTidalv2 waveform.
+
+    A_T(f) = -9 * kappa_eff * x^(13/4) * (1 + n1 * x + n289 * x^2.89) / (1 + d * x^4)
+    a_tidal = sqrt(5*pi*eta/24) * (m_sec^2 / d_sec) * A_T(f)
+    """
     eta = torch.as_tensor(eta, dtype=x.dtype, device=x.device)
-    return torch.sqrt(5.0 * PI * eta / 24.0) * (m_sec ** 2.0 / d_sec) * a_t
+    return (torch.sqrt(5.0 * PI * eta / 24.0) * (m_sec ** 2.0 / d_sec)
+            * _nrtidal_amplitude_shape(x, lambda_tilde))
+
+
+def _binary_compatible_nrtidal_amplitude(x, m_sec, d_sec, lambda_tilde):
+    """Historical native normalization, binary-verified but not paper-derived.
+
+    This preserves the pre-Eq24 default's pinned-LAL behavior. The 1/2
+    normalization has unresolved provenance and must not be cited as Eq. (24).
+    """
+    return (m_sec ** 2.0 / (2.0 * d_sec)) * _nrtidal_amplitude_shape(x, lambda_tilde)
 
 
 def _planck_taper_window(
@@ -284,9 +300,12 @@ def _nrtidal_self_spin_correction(
 class IMRPhenomD_NRTidal(nn.Module):
     """IMRPhenomD_NRTidal Aligned-Spin Frequency-Domain BNS Waveform Model (Dietrich et al. 2017)."""
 
-    def __init__(self, version: str = "v1"):
+    def __init__(self, version: str = "v1", amplitude_variant: str = "binary_compatible"):
         super().__init__()
         self.version = version.lower()
+        if amplitude_variant not in ("binary_compatible", "paper_2019"):
+            raise ValueError("amplitude_variant must be 'binary_compatible' or 'paper_2019'")
+        self.amplitude_variant = amplitude_variant
         self.base_model = IMRPhenomD()
 
     def forward(
@@ -306,6 +325,7 @@ class IMRPhenomD_NRTidal(nn.Module):
         phasing_convention: Optional[str] = None,
         reference_frame: Optional[str] = None,
         apply_merger_taper: bool = True,
+        amplitude_variant: Optional[str] = None,
     ) -> Tuple[torch.Tensor, torch.Tensor]:
         """Generate IMRPhenomD_NRTidal frequency-domain polarizations (h_plus, h_cross).
 
@@ -321,7 +341,11 @@ class IMRPhenomD_NRTidal(nn.Module):
             f_ref: Reference frequency in Hz
             phasing_convention: 'coalescence' or 'reference_frequency'
             apply_merger_taper: Whether to apply the Planck taper window at f_merger
+            amplitude_variant: 'binary_compatible' (default) or 'paper_2019'
         """
+        variant = self.amplitude_variant if amplitude_variant is None else amplitude_variant
+        if variant not in ("binary_compatible", "paper_2019"):
+            raise ValueError("amplitude_variant must be 'binary_compatible' or 'paper_2019'")
         device = f.device
         dtype = f.dtype if f.is_floating_point() else torch.float64
 
@@ -469,38 +493,32 @@ class IMRPhenomD_NRTidal(nn.Module):
         # Note: In standard GW convention, h(f) ~ exp(-i * Psi(f))
         exp_factor = torch.complex(torch.cos(total_delta_psi), -torch.sin(total_delta_psi))
 
-        # 3. Tidal amplitude correction (Dietrich et al. 2019 Eq. 24-25)
-        # Eq. 24: A_T = -sqrt(5 * pi * nu / 24) * (9 * M^2 / D) * kappa_eff * x^(13/4) *
-        #               (1 + (449/108) * x + (22672/9) * x^2.89) / (1 + 13477.8 * x^4)
-        # Eq. 25: A_BNS = (A_BBH + A_T) * W_taper
-        if self.version == "v2":
+        amplitude_factor = torch.ones_like(f_eval)
+        if self.version == "v2" and variant == "binary_compatible":
+            # Preserve the historical native default, validated against the
+            # pinned binary. Its 1/2 amplitude normalization is not Eq. (24).
             dist_t = as_tensor(distance, device=device, dtype=dtype)
             d_sec = (dist_t * MPC_SI) / C_SI
             if is_batched and f_eval.dim() > d_sec.dim():
-                d_sec_eval = d_sec.unsqueeze(-1)
-            else:
-                d_sec_eval = d_sec
-
-            a_tidal = _nrtidal_amplitude(x, m_sec_eval, d_sec_eval, eta_eval, lam_tilde_eval)
+                d_sec = d_sec.unsqueeze(-1)
+            a_tidal = _binary_compatible_nrtidal_amplitude(
+                x, m_sec_eval, d_sec, lam_tilde_eval)
             a_tidal = torch.where(f_eval > 0.0, a_tidal, torch.zeros_like(a_tidal))
-
-            # Eq. 24 is the face-on amplitude. Remove the positive plus
-            # projection to obtain the common BBH amplitude, then apply one
-            # factor to both polarizations. This also handles edge-on systems.
             inc = as_tensor(inclination, device=device, dtype=dtype)
             if is_batched and f_eval.dim() > inc.dim():
                 inc = inc.unsqueeze(-1)
             plus_projection = 0.5 * (1.0 + torch.cos(inc)**2)
             base_amplitude = torch.abs(hp_bbh) / plus_projection
             positive = base_amplitude > 0.0
-            safe_amplitude = torch.where(positive, base_amplitude, torch.ones_like(base_amplitude))
-            amplitude_factor = torch.where(positive, 1.0 + a_tidal / safe_amplitude,
+            safe_amplitude = torch.where(positive, base_amplitude,
+                                         torch.ones_like(base_amplitude))
+            amplitude_factor = torch.where(positive,
+                                           1.0 + a_tidal / safe_amplitude,
                                            torch.ones_like(base_amplitude))
-            h_plus = hp_bbh * amplitude_factor * exp_factor * w_taper
-            h_cross = hc_bbh * amplitude_factor * exp_factor * w_taper
-        else:
-            h_plus = hp_bbh * exp_factor * w_taper.to(hp_bbh.dtype)
-            h_cross = hc_bbh * exp_factor * w_taper.to(hc_bbh.dtype)
+        # Dietrich et al. (2019), Table II gives the paper_2019 D option no
+        # tidal-amplitude correction. Eq. (24) is checked independently.
+        h_plus = hp_bbh * amplitude_factor * exp_factor * w_taper
+        h_cross = hc_bbh * amplitude_factor * exp_factor * w_taper
 
         # Enforce exact finite zeros for DC and non-positive frequency bins
         h_plus = torch.where(f_eval > 0.0, h_plus, torch.zeros_like(h_plus))
@@ -517,7 +535,7 @@ class IMRPhenomD_NRTidal(nn.Module):
 
 
 class IMRPhenomD_NRTidalv2(IMRPhenomD_NRTidal):
-    """IMRPhenomD_NRTidalv2 Aligned-Spin Frequency-Domain BNS Waveform Model (Dietrich et al. 2019)."""
+    """NRTidalv2 D model: historical binary-compatible default or paper_2019 D."""
 
-    def __init__(self):
-        super().__init__(version="v2")
+    def __init__(self, amplitude_variant: str = "binary_compatible"):
+        super().__init__(version="v2", amplitude_variant=amplitude_variant)

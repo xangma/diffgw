@@ -1,6 +1,8 @@
 # NRTidalv2 amplitude and merger-taper diagnostic — 26 September 2026
 
-**Result: paper math qualified; pinned-binary agreement not qualified.**
+**Result: Eq. (24) component math qualified; explicit `paper_2019` D
+composition qualified for this amplitude/taper slice; historical default
+binary compatibility retained, with amplitude provenance unresolved.**
 This receipt covers only the nonspinning tidal
 amplitude and merger taper specified in
 [nrtidalv2-amplitude-taper/v1](../math/nrtidalv2-amplitude-taper.md). The
@@ -8,35 +10,105 @@ separate [nonspinning phase receipt](nrtidalv2_phase_20260926.md) remains
 intact. No coefficient was fit to the binary, and no LAL implementation source
 was inspected.
 
-On the Eq. (24) correction branch, Torch and JAX now use the published
-$\sqrt{5\pi\eta/24}\,M^2/D_L$ scale. The prior native $M^2/(2D_L)$ scale
-gave a mass-ratio-dependent relative error of 0.2361–0.2489; it has been
-removed. This choice is supported independently by the physical IMRPhenomD
+[Dietrich et al. (2019), Table II and accompanying text](https://arxiv.org/pdf/1905.06011v2)
+specify that `IMRPhenomD_NRTidalv2` adds only the tidal phase to the BBH
+carrier; the Eq. (24) tidal-amplitude correction belongs to
+`IMRPhenomPv2_NRTidalv2`. [Colleoni et al. (2025), Sec. II A](https://arxiv.org/pdf/2311.15978v2)
+independently confirms this older-model distinction. Both Torch/JAX D frontends
+now expose `amplitude_variant="paper_2019"`, which omits tidal amplitude. Their
+default `binary_compatible` variant preserves the earlier native
+$M_{\rm sec}^2/(2D_{\rm sec})$ correction and the frozen pinned-binary output.
+The origin of its $1/2$ normalization remains unresolved; it is **not** a
+published Eq. (24) coefficient or a claim that the default implements the
+paper's D composition. The published Eq. (24) component remains separately
+checked by Torch/JAX/SymPy and is used by neither D variant.
+
+The manifest's `verified_declared_cases` status and frozen metrics apply to
+the **default binary-compatible contract only**. The explicit paper-D option
+passes its math-composition tests but remains unqualified against the pinned
+LALSuite 7.26.15 D binary at nonzero tide. The strict oracle catalog and
+holdout inventory and limits are unchanged.
+
+The unchanged `scripts.run_oracle_ci` gate passed on `len` in the same cwd
+with the checksum-verified `SEOBNRv4ROM_v3.0.hdf5`, LALSuite distribution
+7.26.15 and PyCBC 2.11.0: **catalog 19/19, holdout 14/14**. The D_NRTidalv2
+catalog row was `PASSED` with plus complex relative $L_2=3.3468418936\times
+10^{-9}$ and maximum projection $L_2=2.9618710589\times10^{-7}$; its
+holdout row was `PASSED` with plus $L_2=5.6726113326\times10^{-9}$ and
+maximum projection $L_2=3.0914191861\times10^{-7}$. The log is
+`nrtidal_dual_oracle_ci_pycbc.log`, with the unmodified reports
+`parity_results.json` and `parity_holdout_results.json`, in the remote cwd.
+The first attempt with a venv lacking PyCBC could not evaluate the required
+optimized-match metric and marked all ordinary strict cases failed; its
+`nrtidal_dual_oracle_ci.log` is environmental evidence, not a model result.
+
+On `len`, the dual-contract focused CPU FP64 run in
+`/home/xangma/tmp/diffgw-nrtidal-paper-d-20260926` returned **62 passed,
+18 strict xfailed**. The exact command and output are in
+`nrtidal_dual_focus.log` there. It covered the scalar paper reference,
+Torch/JAX component and composition checks, both pinned-binary comparisons,
+and Torch reconstruction:
+
+```sh
+PYTHONPATH=src:tests:/home/xangma/diffgw-pr45-318b37f7/.oracle-deps \
+DIFFGW_REQUIRE_LAL_BINARY=1 JAX_ENABLE_X64=1 OMP_NUM_THREADS=1 \
+/home/xangma/.cache/diffgw-taylorf2-hm-venv/bin/python -m pytest -q -s \
+tests/test_nrtidalv2_amplitude_math_reference.py \
+tests/test_nrtidalv2_amplitude_math_reference_native.py \
+tests/test_nrtidalv2_amplitude_lal_binary.py \
+tests/test_nrtidal_reconstruction.py
+```
+
+| Explicit paper-D comparison with pinned D binary | Frozen maximum | Observed maximum | Result |
+|---|---:|---:|---|
+| Equal mass, through merger | absolute $5\times10^{-5}$ | $0.355275595$ | strict xfail |
+| Unequal and exchanged, through merger | absolute $5\times10^{-5}$ | $0.245061191$ | strict xfail |
+| Equal mass, in taper | absolute $5\times10^{-5}$ | $0.378202841$ | strict xfail |
+| Unequal and exchanged, in taper | absolute $5\times10^{-5}$ | $0.261641146$ | strict xfail |
+| Zero tide | absolute $5\times10^{-5}$ | $\le2.3\times10^{-16}$ | pass |
+
+These paper-D versus pinned-binary discrepancies are retained as strict
+expected failures in a diagnostic test. They are not substituted into the
+frozen catalog or holdout cases. The default's pre-taper native/LAL amplitude
+ratio passes the $5\times10^{-5}$ limit, with maximum $1.84458477\times10^{-7}$.
+Inside the taper, the unchanged $5\times10^{-5}$ limit still fails by
+$0.000153757344$ (equal mass) and $0.000189164604$ (unequal/exchanged),
+under the pre-existing strict expected-failure markers. This small boundary
+difference is distinct from the paper-D composition discrepancy above.
+
+## Earlier Eq. (24)-in-D diagnostic
+
+On the earlier Eq. (24)-in-D branch, Torch and JAX used the published
+$\sqrt{5\pi\eta/24}\,M^2/D_L$ scale. The historical native $M^2/(2D_L)$ scale
+gave a mass-ratio-dependent relative error of 0.2361–0.2489 against Eq. (24);
+it now remains only in the binary-compatible default. The Eq. (24) scale is
+supported independently by the physical IMRPhenomD
 Newtonian carrier: $\sqrt{5\eta/24}M^{5/6}/(\pi^{2/3}D_Lf^{7/6})
 =\sqrt{5\pi\eta/24}M^2x^{-7/4}/D_L$. The identity follows from
 [Cutler and Flanagan, Eqs. (62)–(63)](https://arxiv.org/pdf/gr-qc/9402014v1)
 and $x=(\pi Mf)^{2/3}$. We changed both backends and the paper-math tests;
-no LAL-derived normalization was introduced. On `len`, the focused test
+no new LAL-derived normalization was introduced. On `len`, that focused test
 command covering the scalar, native waveform, pinned binary and Torch
 reconstruction returned **54 passed, 18 strict xfailed**. The 18 expected
 failures are the nonzero-tide paper-versus-LAL and corrected-native-versus-LAL
 quotients before/inside the taper. The frozen limits did not change.
 
-This does **not** establish why the pinned LAL binary outputs match the earlier
+That run did **not** establish why the pinned LAL binary outputs matched the earlier
 native normalization, and the approximately 25 ppm effective merger-boundary
-offset reported below remains unresolved. The LAL binary gate is still red.
-The measurements below are the **pre-correction baseline**, retained to show
-what changed and what remains in the binary.
+offset reported below remained unresolved. The LAL binary gate for that
+abandoned Eq. (24)-in-D composition was red.
+The later **pre-correction baseline** table is retained to show how the
+earlier native normalization compared with Eq. (24) and the binary.
 
 Equation (24) is an absolute **additive** tidal amplitude, not the complete
 BNS amplitude and not a relative factor. Equation (25) forms
-$(\widetilde A_{\rm BBH}+\widetilde A_T)W$. The frontends implement this as
+$(\widetilde A_{\rm BBH}+\widetilde A_T)W$. The earlier D frontends implemented this as
 $h_{\rm BBH}(1+\widetilde A_T/\widetilde A_{\rm BBH})W$, using the same
 physical BBH carrier amplitude in the denominator. This division only
 applies the additive correction to the complex waveform; it does not
 multiply by a second carrier normalization.
 
-| Current comparison | Frozen maximum | Observed maximum | Result |
+| Earlier Eq. (24)-in-D comparison | Frozen maximum | Observed maximum | Result |
 |---|---:|---:|---|
 | Torch/JAX scalar signed amplitude / Eq. (24) | relative $10^{-11}$ | at most $10^{-11}$ | pass |
 | Torch/JAX untapered $h_+$ modulus quotient / paper | absolute $10^{-10}$ | at most $10^{-10}$ | pass |
@@ -45,7 +117,7 @@ multiply by a second carrier normalization.
 | LAL versus paper; native versus LAL, after merger, equal mass | absolute $5\times10^{-5}$ | $0.0722370285$ | fail |
 | Same, unequal and exchanged | absolute $5\times10^{-5}$ | $0.0521550463$ | fail |
 
-The current focused run used host `len`, cwd
+The earlier focused run used host `len`, cwd
 `/home/xangma/tmp/diffgw-nrtidalv2-amplitude-eq24-20260926`, and
 `amplitude_eq24_focus_final.log` there. Its command was:
 
@@ -138,7 +210,8 @@ $1.77\times10^{-7}$ (unequal). This strongly localizes the *public-output*
 difference to an effective taper-boundary shift, but does not establish
 whether a merger-frequency convention, an untapered amplitude difference
 inside the window, or another binary detail caused it. No correction was
-fitted to production code, and both frozen acceptance limits remain failed.
+fitted to production code; both taper-specific frozen acceptance limits
+remain failed in that diagnostic.
 
 Execution used host `len`, cwd
 `/home/xangma/tmp/diffgw-nrtidalv2-phase-20260926-e4a2`, CPU FP64,

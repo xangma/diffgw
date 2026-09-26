@@ -37,7 +37,7 @@ def paper_merger(case):
     return float(ref.merger_frequency(m_sec, delta, lam1, lam2))
 
 
-def native(case, frequencies, backend, *, taper):
+def native(case, frequencies, backend, *, taper, amplitude_variant="binary_compatible"):
     _, m1, m2, lam1, lam2 = case
     options = dict(mass1=m1, mass2=m2, chi1=0.0, chi2=0.0,
                    distance=DISTANCE_MPC, inclination=INCLINATION,
@@ -51,7 +51,8 @@ def native(case, frequencies, backend, *, taper):
         bbh, _ = IMRPhenomD()(f=f, **options)
         bns, _ = IMRPhenomD_NRTidalv2()(f=f, lambda1=lam1,
                                          lambda2=lam2,
-                                         apply_merger_taper=taper, **options)
+                                         apply_merger_taper=taper,
+                                         amplitude_variant=amplitude_variant, **options)
     else:
         jax = require_module("jax")
         jax.config.update("jax_enable_x64", True)
@@ -62,7 +63,8 @@ def native(case, frequencies, backend, *, taper):
         bbh, _ = IMRPhenomD.evaluate(f=f, **options)
         bns, _ = IMRPhenomD_NRTidalv2.evaluate(
             f=f, lambda1=lam1, lambda2=lam2,
-            apply_merger_taper=taper, **options)
+            apply_merger_taper=taper,
+            amplitude_variant=amplitude_variant, **options)
     return np.asarray(bbh), np.asarray(bns)
 
 

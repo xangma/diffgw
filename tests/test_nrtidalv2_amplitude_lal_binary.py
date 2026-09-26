@@ -1,7 +1,6 @@
 """Predeclared NRTidalv2 amplitude/taper gate against a pinned LAL binary."""
 
 from functools import lru_cache
-import math
 
 import numpy as np
 import pytest
@@ -10,7 +9,7 @@ from test_nrtidalv2_phase_math_reference import CASES
 from test_nrtidalv2_phase_lal_binary import _lal_modules
 from test_nrtidalv2_amplitude_math_reference import (
     AMP_FREQUENCIES, INCLINATION, TAPER_FRACTIONS, DISTANCE_MPC,
-    native, paper_amplitude, paper_merger,
+    native, paper_merger,
 )
 from diffgw_reference.nrtidalv2_amplitude import taper
 
@@ -20,14 +19,14 @@ BINARY_RATIO_ABS_MAX = 5e-5
 BINARY_TAPER_ABS_MAX = 5e-5
 
 
-PAPER_AMPLITUDE_CASES = [
+PAPER_D_CASES = [
     pytest.param(
         case, id=case[0],
         marks=pytest.mark.xfail(
             strict=True,
-            reason=("Dietrich 2019 Eq. 24 amplitude vs pinned LAL quotient: "
-                    "observed 0.0678536536 through merger and 0.0722370285 "
-                    "after merger at equal mass; "
+            reason=("Dietrich 2019 Table II excludes tidal amplitude from "
+                    "published D_NRTidalv2, while pinned LALSuite 7.26.15 "
+                    "binary has a nonzero-tide amplitude quotient; "
                     "docs/validation/nrtidalv2_amplitude_20260926.md"),
         ),
     ) if case[0] != "zero_tide" else pytest.param(case, id=case[0])
@@ -38,26 +37,15 @@ TAPER_BINARY_CASES = [
         case, id=case[0],
         marks=pytest.mark.xfail(
             strict=True,
-            reason=("Dietrich 2019 Eq. 25 merger taper native/LAL quotient: "
-                    "observed 0.0722370285 equal, 0.0521550463 unequal "
-                    "after applying the Eq. 24 prefactor; "
+            reason=("Historical default and pinned LAL binary retain a "
+                    "~25 ppm effective merger-boundary discrepancy inside "
+                    "the taper; frozen 5e-5 limit unchanged; "
                     "docs/validation/nrtidalv2_amplitude_20260926.md"),
         ),
     ) if case[0] != "zero_tide" else pytest.param(case, id=case[0])
     for case in CASES
 ]
-PRETAPER_BINARY_CASES = [
-    pytest.param(
-        case, id=case[0],
-        marks=pytest.mark.xfail(
-            strict=True,
-            reason=("The Eq. (24) correction has a different absolute "
-                    "normalization from pinned LALSuite 7.26.15; "
-                    "docs/validation/nrtidalv2_amplitude_20260926.md"),
-        ),
-    ) if case[0] != "zero_tide" else pytest.param(case, id=case[0])
-    for case in CASES
-]
+PRETAPER_BINARY_CASES = [pytest.param(case, id=case[0]) for case in CASES]
 
 
 def binary_frequencies(case):
@@ -90,27 +78,36 @@ def lal_amplitudes(case):
     return frequencies, bbh, bns
 
 
-def paper_ratio(case, frequencies, bbh):
-    projection = (1+math.cos(INCLINATION)**2)/2
+def paper_d_ratio(case, frequencies):
     f_merger = paper_merger(case)
-    correction = np.array([paper_amplitude(case, f) for f in frequencies])
     window = np.array([float(taper(f, f_merger)) for f in frequencies])
-    return (1 + projection*correction/bbh)*window
+    return window
 
 
-@pytest.mark.parametrize("case", PAPER_AMPLITUDE_CASES)
-@pytest.mark.parametrize("region", ("amplitude", "taper"))
-def test_lal_amplitude_and_taper_against_paper(case, region):
+@pytest.mark.parametrize("case", PAPER_D_CASES)
+@pytest.mark.parametrize("region", ("pretaper", "taper"))
+def test_lal_d_taper_against_published_paper_d(case, region):
     frequencies, bbh, bns = lal_amplitudes(case)
     actual = bns/bbh
-    expected = paper_ratio(case, frequencies, bbh)
+    expected = paper_d_ratio(case, frequencies)
     error = np.abs(actual-expected)
-    mask = (frequencies <= paper_merger(case) if region == "amplitude"
+    mask = (frequencies <= paper_merger(case) if region == "pretaper"
             else frequencies > paper_merger(case))
     maximum = np.max(error[mask])
     print(f"LAL {case[0]} {region}_max={maximum:.9g}")
-    limit = BINARY_RATIO_ABS_MAX if region == "amplitude" else BINARY_TAPER_ABS_MAX
+    limit = BINARY_RATIO_ABS_MAX if region == "pretaper" else BINARY_TAPER_ABS_MAX
     assert maximum <= limit
+
+
+@pytest.mark.parametrize("backend", ("torch", "jax"))
+@pytest.mark.parametrize("case", PAPER_D_CASES)
+def test_paper_d_option_against_lal_binary(backend, case):
+    frequencies, bbh_lal, bns_lal = lal_amplitudes(case)
+    bbh, bns = native(case, frequencies, backend, taper=True,
+                      amplitude_variant="paper_2019")
+    actual = np.abs(bns)/np.abs(bbh)
+    expected = bns_lal/bbh_lal
+    assert np.max(np.abs(actual-expected)) <= BINARY_RATIO_ABS_MAX
 
 
 @pytest.mark.parametrize("backend", ("torch", "jax"))

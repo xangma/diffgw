@@ -13,7 +13,7 @@ from diffgw_core.constants import C_SI, MPC_SI
 from diffgw_reference.nrtidalv2_phase import lambda_tilde_expr
 from test_nrtidalv2_phase_math_reference import CASES, require_module
 from test_nrtidalv2_amplitude_math_reference import (
-    AMP_FREQUENCIES, DISTANCE_MPC, INCLINATION,
+    AMP_FREQUENCIES, DISTANCE_MPC,
     native, paper_amplitude, paper_parameters,
 )
 
@@ -52,10 +52,8 @@ def test_native_amplitude_against_paper(backend, case):
 
 @pytest.mark.parametrize("backend", ("torch", "jax"))
 @pytest.mark.parametrize("case", CASES, ids=[c[0] for c in CASES])
-def test_native_waveform_amplitude_against_paper(backend, case):
-    bbh, bns = native(case, AMP_FREQUENCIES, backend, taper=False)
-    projection = (1+math.cos(INCLINATION)**2)/2
-    expected = 1 + projection*np.array(
-        [paper_amplitude(case, f) for f in AMP_FREQUENCIES])/np.abs(bbh)
+def test_published_d_waveform_omits_tidal_amplitude(backend, case):
+    bbh, bns = native(case, AMP_FREQUENCIES, backend, taper=False,
+                      amplitude_variant="paper_2019")
     actual = np.abs(bns)/np.abs(bbh)
-    assert np.max(np.abs(actual-expected)) <= RATIO_ABS_MAX
+    assert np.max(np.abs(actual-1)) <= RATIO_ABS_MAX
