@@ -1,13 +1,26 @@
 # NRTidalv2 nonspinning tidal amplitude and merger taper
 
+## Scope and status
+
 Specification **nrtidalv2-nonspinning-tidal-amplitude-taper/v1** covers
 the signed additive Fourier tidal amplitude, published merger-frequency fit
 and descending Planck taper for the dominant mode, zero component spins,
-CPU FP64, the four frozen binaries below, and 100 Mpc distance. The
-independent scalar reference `src/diffgw_reference/nrtidalv2_amplitude.py`
-uses SymPy/mpmath and no native waveform or LAL implementation.
+CPU FP64, the four frozen binaries below, and 100 Mpc distance. Its amplitude
+gate is currently a strict expected-failure diagnostic.
 
-## Primary mathematics
+## Inputs, conventions, and options
+
+With $M_{\rm sec}=GM/c^3$, $D_{\rm sec}=D_L/c$,
+$\eta=m_1m_2/M^2$, $x=(\pi M_{\rm sec}f)^{2/3}$ and
+$\kappa_{\rm eff}^{T}=3\widetilde\Lambda/16$, the frozen systems
+$(m_1,m_2;\Lambda_1,\Lambda_2)$ in solar masses are
+$(1.35,1.35;400,400)$, $(1.6,1.2;200,800)$, the latter with both
+bodies exchanged, and $(1.35,1.35;0,0)$. Inclination is 0.4 rad.
+Amplitude frequencies are 100, 300, 800 and 1200 Hz. Taper frequencies
+are $f/f_{\rm mrg}=$ 0.9, 1, 1.025, 1.05, 1.1, 1.15, 1.195, 1.2 and
+1.25. The zero-tide case probes the taper independently of Eq. (24).
+
+## Mathematics and components
 
 [Dietrich et al. (2019), Eq. (24) and text around Eq. (25)](https://arxiv.org/pdf/1905.06011v2)
 give the amplitude and its multiplication by a Planck taper.
@@ -16,10 +29,7 @@ give the merger-frequency fit, substituting $\kappa_{\rm eff}^{T}$ for
 $\kappa_2^{T}$ as the paper states for its LAL implementation.
 The mass-weighted $\widetilde\Lambda$ follows
 [Wade et al. (2014), Eq. (5)](https://arxiv.org/pdf/1402.5156v1).
-With $M_{\rm sec}=GM/c^3$, $D_{\rm sec}=D_L/c$,
-$\eta=m_1m_2/M^2$, $x=(\pi M_{\rm sec}f)^{2/3}$ and
-$\kappa_{\rm eff}^{T}=3\widetilde\Lambda/16$, the signed face-on
-amplitude is
+The signed face-on amplitude is
 
 \[
 \widetilde A_T=-\sqrt{\frac{5\pi\eta}{24}}\,
@@ -46,23 +56,22 @@ $z=(f-f_{\rm mrg})/(0.2f_{\rm mrg})\in(0,1)$ is
 $W=[1+\exp(-1/z-1/(z-1))]^{-1}$. Inclined $h_+$ applies the positive
 projection $(1+\cos^2\iota)/2$ to $\widetilde A_T$.
 
-## Frozen gate, set before running the binary
+## Implementation mapping
 
-Systems $(m_1,m_2;\Lambda_1,\Lambda_2)$ in solar masses are
-$(1.35,1.35;400,400)$, $(1.6,1.2;200,800)$, the latter with both
-bodies exchanged, and $(1.35,1.35;0,0)$. Inclination is 0.4 rad.
-Amplitude frequencies are 100, 300, 800 and 1200 Hz. Taper frequencies
-are $f/f_{\rm mrg}=$ 0.9, 1, 1.025, 1.05, 1.1, 1.15, 1.195, 1.2 and
-1.25. The zero-tide case probes the taper independently of Eq. (24).
+The independent scalar reference `src/diffgw_reference/nrtidalv2_amplitude.py`
+uses SymPy/mpmath and no native waveform or LAL implementation. The tests
+below compare it separately with the Torch/JAX frontends and the installed
+LALSuite binary.
+
+## Evidence and limitations
 
 The green paper-math tests in `tests/test_nrtidalv2_amplitude_math_reference.py`
 require merger-frequency relative error $\le10^{-11}$ and scalar/window
-amplitude error $\le10^{-10}$. The
-strict amplitude diagnostics in `tests/test_nrtidalv2_amplitude_diagnostic.py`
+amplitude error $\le10^{-10}$. The strict amplitude diagnostics in
+`tests/test_nrtidalv2_amplitude_diagnostic.py`
 retain the frozen native Torch/JAX scalar amplitude relative limit $10^{-11}$
 and untapered plus-polarization amplitude-ratio absolute limit $10^{-10}$.
-The
-pinned-binary tests in `tests/test_nrtidalv2_amplitude_lal_binary.py`
+The pinned-binary tests in `tests/test_nrtidalv2_amplitude_lal_binary.py`
 compare the *unaligned* modulus ratios
 $|h_+^{\rm BNS}|/|h_+^{\rm BBH}|$ with the paper result using each
 backend's own BBH amplitude, then compare native and LAL ratios. Maximum
@@ -76,10 +85,18 @@ normalization; the cause is unresolved. The native merger fit and Planck
 window pass the scalar gate, while the nonzero-tide native/LAL quotient
 exceeds its binary limit inside the taper. Strict expected-failure markers
 retain these diagnostics outside the required green math-reference CI job
-and fail on a future unexpected pass. The exact measurements
-and commands are in the [26 September 2026 receipt](../validation/nrtidalv2_amplitude_20260926.md).
+and fail on a future unexpected pass.
 
 This gate tests only literature transcription and named-binary agreement
 for this slice. It does not validate the NR calibration, self-spin,
 nonzero spins, other modes, other distances/inclinations, FP32/GPU or
 full-family behavior.
+
+## Reproduce the checks
+
+Run `PYTHONPATH=src:tests DIFFGW_REQUIRE_LAL_BINARY=1 JAX_ENABLE_X64=1
+python -m pytest -q tests/test_nrtidalv2_amplitude_math_reference.py
+tests/test_nrtidalv2_amplitude_diagnostic.py
+tests/test_nrtidalv2_amplitude_lal_binary.py` on CPU FP64 with the pinned
+binary installed. Exact measurements and commands are in the
+[26 September 2026 receipt](../validation/nrtidalv2_amplitude_20260926.md).
