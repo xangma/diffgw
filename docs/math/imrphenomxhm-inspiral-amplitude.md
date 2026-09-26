@@ -117,10 +117,10 @@ README. Its README describes those as the fits for
 the paper implementation, but the archive has no release manifest tying them
 to default release `122022`, its all-new amplitude option, or a complete
 current-release collocation provider. Existing checksum-pinned fixtures verify
-selected paper-era surfaces only. In particular, the mapping of the `(3,3)`
-paper table to the current provider and the current-default all-new amplitude
-calibration remain unresolved. No complete standalone XHM 122022 calibration
-asset is registered in
+selected paper-era surfaces only. Paper-era `(3,3)` files are present; their
+mapping to the **recalibrated 122022** provider, together with the other
+modes' current-default amplitude calibration, remains unresolved. No complete
+standalone XHM 122022 calibration asset is registered in
 [external data](../external-data.md).
 
 Consequently, routing the existing earlier-provider nodes, compatibility sign
@@ -129,6 +129,52 @@ unvalidated hybrid. A justified fix requires an author-published, checksum-
 pinned current-release fit asset or an independently reproducible calibration
 dataset and procedure. Neither is available here, so this change makes no
 production waveform modification.
+
+### Paper-era versus release-era boundary
+
+The author-published arXiv v2 archive is a coherent paper-era asset: its
+checksum-pinned 218-member source bundle contains 37 amplitude-fit files, 33
+phase-fit files, 8 complex mixing-coefficient files, 10 QNM files, and the
+author notebooks. Appendix A, Eqs. (55)--(57), publishes the geometric
+spheroidal-to-spherical transform for `(2,2)` and `(3,2)` and states that its
+mixing coefficients depend only on final spin. These sources are sufficient
+to define a clean paper-era mixing reference; they are not evidence that a
+current-release `(3,2)` spheroidal amplitude is the same object.
+
+The official
+[LALSuite 7.26 API documentation](https://lscsoft.docs.ligo.org/lalsuite/7.26/lalsimulation/group___l_a_l_sim_i_m_r_phenom_x__c.html)
+draws the release boundary more sharply. It identifies `122022` as the default
+after a higher-mode **amplitude
+recalibration**, retains `122019` as the old release, separates amplitude
+region/collocation frequencies, fit surfaces, and ansatz versions, and states
+that `122022` did not modify phases. The corresponding author merge request
+[!2128](https://git.ligo.org/lscsoft/lalsuite/-/merge_requests/2128), merged
+2023-04-06 at commit
+[`9eaa3722`](https://git.ligo.org/lscsoft/lalsuite/-/commit/9eaa372236e5a5d51155dad17a4f53d7255285f5),
+says the recalibration propagates to XPHM. Its linked review/calibration wiki
+redirects unauthenticated readers to sign-in and no checksum-pinnable 122022
+calibration deposit was found in this bounded search.
+
+Therefore the exact missing public fields are:
+
+1. release-122022 amplitude fit surfaces or coefficients for inspiral,
+   intermediate, and ringdown collocation values for `(2,1)`, `(3,2)`,
+   `(3,3)`, and `(4,4)`;
+2. their region-cut and collocation-frequency maps, veto/branch rules, and
+   amplitude-ansatz version mapping;
+3. a hashed, licensed manifest tying those assets to release `122022`; and
+4. for the complete current `(3,2)` mode, the recalibrated spheroidal
+   amplitude inputs used before the published basis transform.
+
+The paper-era phase equations, phase assets, and mixing geometry remain the
+best public map because the release notes say phases were unchanged, but no
+public release manifest proves file-for-file identity. During this audit a
+broad web search unexpectedly exposed generated-source search snippets. No
+snippet, LAL source formula, coefficient, or implementation detail was used;
+the mapping above comes only from the papers, author archive, official API
+documentation, public merge metadata, and existing binary-output receipts.
+Any future clean-room implementation of the 122022 delta must start in a
+fresh context with an independently published calibration asset.
 
 ### Intermediate, ringdown, and native calibration boundary
 

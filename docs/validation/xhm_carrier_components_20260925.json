@@ -15,6 +15,49 @@
     "missing_for_production": "a versioned manifest and authoritative mapping to installed default release 122022, its all-new amplitude option, and a complete current-release collocation provider",
     "decision": "no production carrier or coefficient change"
   },
+  "authoritative_release_boundary": {
+    "paper": {
+      "source": "https://arxiv.org/abs/2001.10914v2",
+      "last_revised": "2020-11-03",
+      "source_members": 218,
+      "amplitude_fit_files": 37,
+      "phase_fit_files": 33,
+      "mixing_coefficient_files": 8,
+      "qnm_files": 10
+    },
+    "paper_era_mode_mixing": {
+      "scope": "Appendix A equations 55-57 define the geometric 22/32 spheroidal-to-spherical transform; the eight author files below are paper-era assets, not proof of release-122022 amplitude parity",
+      "member_sha256": {
+        "CoefficientStatsim_alpha222.m": "fb7eaa1f4359e6133f24d990d64e4d76cf58528d0f8070643fd008c328933abd",
+        "CoefficientStatsim_alpha223.m": "8b8f319cd2937f6df383f200c3ecbb00a18e0a046bf7821203796393a7d35308",
+        "CoefficientStatsim_alpha322.m": "f565601155889e553a6be181b3ee2795320e0c478409304235a1e82968ace899",
+        "CoefficientStatsim_alpha333.m": "f2c003359cc22c2ddd351e4e3018fd7b0ca5a5bf0451a059a8c793b2e99b1726",
+        "CoefficientStatsre_alpha222.m": "eb7708484832f2ca3a086b51bcc59f4fd2514c2e52633f26aa676c26a45ab781",
+        "CoefficientStatsre_alpha223.m": "f2ddc9672f00fc09bdf8d163dc278e2566db5af5dad27e73bbd8beff389bca5e",
+        "CoefficientStatsre_alpha322.m": "1162a9205e597481938f29c0a76c857e3b17c0fec02de2a46471c95d3df3ab24",
+        "CoefficientStatsre_alpha333.m": "c16b67ba0b66b5f6f0cf48d035d0a28fac2af211dc554fe1348d13cc3c964334"
+      }
+    },
+    "release_documentation": {
+      "source": "https://lscsoft.docs.ligo.org/lalsuite/7.26/lalsimulation/group___l_a_l_sim_i_m_r_phenom_x__c.html",
+      "current_default": 122022,
+      "old_release": 122019,
+      "change_scope": "higher-mode amplitude recalibration with separate region/collocation-frequency, fit, and ansatz controls",
+      "phases_modified": false,
+      "merge_request": "https://git.ligo.org/lscsoft/lalsuite/-/merge_requests/2128",
+      "merge_commit": "9eaa372236e5a5d51155dad17a4f53d7255285f5",
+      "merged_at": "2023-04-06T06:03:09.968Z",
+      "propagates_to_xphm": true,
+      "review_asset_access": "linked review/calibration wiki redirects unauthenticated readers to sign-in"
+    },
+    "missing_release_122022_public_fields": [
+      "per-mode inspiral/intermediate/ringdown amplitude fit surfaces or coefficients for 21, 32, 33, and 44",
+      "amplitude region-cut and collocation-frequency maps, veto/branch rules, and ansatz-version mapping",
+      "a checksum-pinned licensed manifest tying the assets to release 122022",
+      "the recalibrated spheroidal 32 amplitude inputs required before the published mode-mixing transform"
+    ],
+    "implementation_decision": "no independently sourced current-release correction is available; production and strict thresholds remain unchanged"
+  },
   "assembly_diagnostic": {
     "source_script": "scripts/diagnose_xhm_inspiral_assembly_clean.py",
     "rows": 20,

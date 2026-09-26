@@ -157,7 +157,12 @@ These failures do not invalidate the scalar Wigner algebra; they leave the
 higher-mode carrier and its convention as a declared, unqualified XHM
 dependency. The [regional XHM carrier audit](../../math/imrphenomxhm-inspiral-amplitude.md)
 locates the earliest discrepancy in higher-mode inspiral amplitude and leaves
-the missing current-release calibration data explicit.
+the missing current-release calibration data explicit. Official release
+documentation states that `122022` recalibrated higher-mode amplitudes without
+changing phases, and the author merge request states that this recalibration
+propagates to XPHM. The paper-era Appendix-A `(2,2)`/`(3,2)` mixing transform
+is public, but the recalibrated spheroidal `(3,2)` amplitude inputs are not;
+therefore the current release's complete mode-mixed carrier remains unclosed.
 
 ## 6. Reproduction, status, and remaining gates
 
