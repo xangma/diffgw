@@ -242,11 +242,9 @@ def test_method_selects_default_version_and_explicit_version_takes_precedence(mo
     msa=model(f,**args,precession_method='msa')
     explicit=model(f,**args,prec_version=223)
     for a,b,c,d in zip(default,nnlo,msa,explicit):
-        target_match = c if model_name == 'xp' else b
-        target_diff = b if model_name == 'xp' else c
-        torch.testing.assert_close(a,target_match,rtol=0,atol=0)
+        torch.testing.assert_close(a,c,rtol=0,atol=0)
         torch.testing.assert_close(c,d,rtol=0,atol=0)
-        assert torch.linalg.vector_norm(target_diff-a)/torch.linalg.vector_norm(a) > 1e-3
+        assert torch.linalg.vector_norm(b-a)/torch.linalg.vector_norm(a) > 1e-3
     with pytest.raises(ValueError,match='Unsupported precession version'):
         model(f,**args,prec_version=999)
     with pytest.raises(ValueError,match='precession_method'):
