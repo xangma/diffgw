@@ -1,0 +1,27 @@
+{
+  "schema": "diffgw.seobnrv4.jax-polar-control-plan.v1",
+  "release_qualified": false,
+  "source_revision": "d279647",
+  "source_sha256": {
+    "src/jaxwave/approximants/eob/published_waveform.py": "8b0a727caceb432ba501a93712ffa3c9c547566b94ca86b8ac9f97d43b31afee",
+    "src/jaxwave/approximants/eob/seobnrv4_mode22.py": "02861ac3eea27342084469b0d8e941ee28e6f1bfc8c5a335ef617a87d80ea8eb",
+    "src/jaxwave/approximants/eob/seobnrv4_amplitude22.py": "af575ddd8efc123527378236b36e96d1a060961a3ddc3242fb7e8d83efba6ecc",
+    "src/jaxwave/approximants/eob/seobnrv4_flux.py": "47f9be36e6494708643afcdeb487a425c3e607a4c2f1ba730cbcf71ccba64287"
+  },
+  "case": "high_start_mixed_spin",
+  "output_step_M": 0.5,
+  "fine_refinement_factor": 32,
+  "adaptive_atol": 1e-10,
+  "adaptive_rtol": 1e-9,
+  "variants": ["control", "split_trig", "split_trig_barrier", "complex_exp_barrier"],
+  "gates": {
+    "max_candidate_source_mode_relative_l2": 1e-13,
+    "max_candidate_eager_jit_mode_relative_l2": 1e-16,
+    "max_candidate_eager_jit_mode_absolute_error": 1e-14
+  },
+  "operational_limits": {
+    "max_wall_time_s": 300,
+    "max_rss_gib": 32
+  },
+  "method": "On the unchanged fixed fine-state chart, compare the published complex exponential with equivalent explicit real/imaginary trigonometric assembly and optimization barriers around its arithmetic. Preserve the eager source mode within the frozen bound and require a sub-1e-16 candidate eager/JIT relative L2 before attempting a separate whole-waveform, source, or AD/FD trial. The source files remain unchanged."
+}
