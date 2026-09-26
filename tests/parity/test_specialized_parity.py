@@ -282,8 +282,8 @@ def test_ppe_phase_shift_parity(b, beta):
     f_t = torch.from_numpy(f_arr)
     f_j = jnp.array(f_arr)
 
-    shift_t = t_ppe.ppe_phase_shift(f_t, total_mass=45.0, beta_ppe=beta, b_ppe=b)
-    shift_j = j_ppe.ppe_phase_shift(f_j, total_mass=45.0, beta_ppe=beta, b_ppe=b)
+    shift_t = t_ppe.ppe_phase_shift(f_t, chirp_mass=45.0, beta_ppe=beta, b_ppe=b)
+    shift_j = j_ppe.ppe_phase_shift(f_j, chirp_mass=45.0, beta_ppe=beta, b_ppe=b)
 
     np.testing.assert_allclose(shift_t.numpy(), np.asarray(shift_j), rtol=1e-14, atol=1e-15)
 

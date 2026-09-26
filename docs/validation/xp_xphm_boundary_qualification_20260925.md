@@ -14,7 +14,7 @@ only the observer azimuth changes, its regular-chart `phi_JL0` is fixed and
 `delta_gamma` is zero. At exactly aligned J, `phi_JL0` is undefined; the
 scalar reference rejects Euler transport instead of choosing a gauge.
 
-`tests/test_xp_source_chart_transport_reference.py` compares this scalar
+`tests/test_xp_source_chart_transport_math_reference.py` compares this scalar
 chart and transport with Torch and JAX v223 geometry at four nonzero observer
 azimuths, including `phic-phi0 = -0.1` and a phase-wrap case. The orbital-L
 value is supplied by the separately identified v223 compatibility expression;
