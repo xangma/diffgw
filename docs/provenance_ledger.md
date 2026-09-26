@@ -70,7 +70,7 @@ not validation of the retained official ROM or surviving equation components.
   - Huerta et al. (2014), *Accurate and efficient waveforms for compact binaries on eccentric orbits*, Phys. Rev. D 90, 084016 ([DOI:10.1103/PhysRevD.90.084016](https://doi.org/10.1103/PhysRevD.90.084016))
 - **Mathematical Form**:
   $$\Psi_{\rm ecc}(f) = \Psi_{\rm circ}(f) - \frac{3}{128\eta v^5} e_0^2 \left(\frac{v_0}{v}\right)^{19/3} \sum_{j=0}^{6} \Delta\psi_j v^j$$
-  Equation (6.26) of Moore et al. (2016) gives the eccentric SPA phase. The optional native amplitude factor is a project option whose primary derivation remains pending.
+  Equation (6.26) of Moore et al. (2016) gives the eccentric SPA phase; Eqs. (4.17)–(4.18) concern the preceding eccentricity evolution. The optional native amplitude factor is a project option whose primary derivation remains pending.
 - **Reference Frequency Priority**:
   $f_{0,\rm ecc}$ resolves from an explicit value, then $f_{\rm lower}$, then a positive $f_{\rm ref}$, then the lowest positive frequency-grid sample (20 Hz if none exists). The final grid fallback makes the result dependent on the supplied positive grid.
 - **Verification Result**:
