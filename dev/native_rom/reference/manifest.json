@@ -1,5 +1,5 @@
 {
-  "specification": "seobnrv4-paper-components/0.8.12",
+  "specification": "seobnrv4-paper-components/0.8.13",
   "model": "SEOBNRv4 dominant (2,2) mode, aligned-spin black-hole binaries",
   "source": {
     "id": "bohe-2017-v3",
@@ -404,6 +404,16 @@
       "jax": "src/jaxwave/approximants/eob/initial_conditions.py:find_quasicircular_initial_conditions",
       "test": "dev/native_rom/reference/tests/test_torch.py:test_leading_adiabatic_initial_state_against_scalar_reference; dev/native_rom/reference/tests/test_jax.py:test_leading_adiabatic_initial_state_against_scalar_reference; dev/native_rom/reference/tests/test_initial_conditions.py:test_leading_adiabatic_energy_balance_against_circular_sequence",
       "condition": "Uses a supplied torque. A two-point circular-sequence finite-difference check validates the leading-adiabatic energy-balance and tortoise velocity conversion against Buonanno--Chen--Damour Eqs. (70)--(77); neither the full 35-mode torque nor the historical SEOBNRv4 initial-data procedure is established."
+    },
+    {
+      "id": "V4-IC-PAPER-FLUX",
+      "source": "bohe-2017-v3, Eqs. (4)--(6), (9); Buonanno--Chen--Damour gr-qc/0508067, Eqs. (70)--(77); Pan et al. 1006.0431, factorized modes",
+      "status": "conditional",
+      "reference": "initial_conditions.paper_flux_leading_adiabatic_state with flux.factorized_mode_amplitudes and flux.emitted_flux",
+      "torch": "src/torchwave/approximants/eob/initial_conditions.py:find_quasicircular_initial_conditions with SEOBNRv4PublishedFlux",
+      "jax": "src/jaxwave/approximants/eob/initial_conditions.py:find_quasicircular_initial_conditions with SEOBNRv4PublishedFlux",
+      "test": "dev/native_rom/reference/tests/test_initial_conditions.py:test_paper_flux_initial_state_against_frontend",
+      "condition": "Two circular states per frontend compare radius, leading tortoise radial momentum, angular momentum, and 35-mode pre-NQC flux torque with the high-precision scalar composition at 3e-10 relative / 2e-12 absolute, using tabulated high-mode spin truncation and Taylor-f higher-spin choices. This does not establish the historical v4 flux choices or initial-data root, physical-domain coverage, numerical convergence, integrated trajectories, or full-waveform fidelity. The aggregate V4-ODE-IC and V4-FLUX-4-9 remain pending."
     },
     {
       "id": "V4-ODE-RHS-SUPPLIED-FORCE",

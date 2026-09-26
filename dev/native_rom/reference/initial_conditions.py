@@ -11,6 +11,7 @@ The supplied torque is an explicit input: this does not validate the native
 import mpmath as mp
 
 from .hamiltonian import aligned_effective_hamiltonian, body_parameters, energy_map, radial_potentials
+from .flux import emitted_flux, factorized_mode_amplitudes
 
 
 def leading_adiabatic_state(m1, m2, chi1, chi2, omega, torque, *, digits=50):
@@ -53,3 +54,32 @@ def leading_adiabatic_state(m1, m2, chi1, chi2, omega, torque, *, digits=50):
         xi = radial_potentials(r, n, a, k, digits=mp.mp.dps)["xi"]
         pr_star = torque*total/(j_prime*xi*h_pp)
         return +r, +pr_star, +j
+
+
+def paper_flux_leading_adiabatic_state(
+    m1, m2, chi1, chi2, omega, *, spin_truncation,
+    mode_21_higher_spin="taylor_f", mode_33_higher_spin="taylor_f", digits=50,
+):
+    """Compose circular initial data with all 35 published pre-NQC modes.
+
+    Return ``(r, p_r_star, p_phi, flux, torque)``. The explicit mode options
+    make this a paper-derived conditional reference, not the historical v4
+    initial-data prescription. The leading radial momentum is linear in the
+    supplied torque, so a unit-torque circular solve can be rescaled after
+    evaluating Bohé et al. Eq. (9) on that same circular state.
+    """
+    with mp.workdps(digits):
+        r, unit_pr_star, p_phi = leading_adiabatic_state(
+            m1, m2, chi1, chi2, omega, -1, digits=digits)
+        nu, _, _ = body_parameters(m1, m2, chi1, chi2)
+        h_eff = aligned_effective_hamiltonian(
+            m1, m2, chi1, chi2, r, 0, p_phi, digits=digits)
+        h_real = energy_map(nu, h_eff, digits=digits)[0]
+        modes = factorized_mode_amplitudes(
+            m1, m2, chi1, chi2, omega, omega, p_phi, h_eff, h_real,
+            spin_truncation=spin_truncation,
+            mode_21_higher_spin=mode_21_higher_spin,
+            mode_33_higher_spin=mode_33_higher_spin, digits=digits)
+        flux = emitted_flux(omega, modes, digits=digits)
+        torque = -flux/(nu*mp.mpf(str(omega)))
+        return +r, +(-unit_pr_star*torque), +p_phi, +flux, +torque

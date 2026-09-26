@@ -1,4 +1,4 @@
-# SEOBNRv4 source specification: paper components 0.8.12
+# SEOBNRv4 source specification: paper components 0.8.13
 
 **Status: incomplete research specification.** This version establishes an
 independent executable source of truth for the components marked `executable`
@@ -66,7 +66,7 @@ terms are those of the [author release](https://zenodo.org/records/14999310).
 ## Mathematics and components
 
 The [component manifest](manifest.json) is the authoritative mapping of all
-48 stable component IDs to pinned equations, reference functions, native
+49 stable component IDs to pinned equations, reference functions, native
 frontends, tests, and current implementation status. In composition, the
 initial conditions feed the aligned-spin Hamiltonian and mode-summed flux
 into the orbital ODE; its pre-NQC `(2,2)` mode is corrected at the amplitude
@@ -86,6 +86,7 @@ trained basis, parameter interpolation, or holdout definition yet.
 | `V4-ODE-RHS-PR0` / 0.8.11 | Bohé Sec. II.2; Buonanno--Damour Eqs. (24)--(27); Pan Eq. (28) | conditional | `orbital_ode.zero_radial_vector_field` with supplied torque | Torch/JAX `EOBTrajectoryIntegrator.vector_field` | Four supplied zero-radial states only; full torque, initial conditions, integration, and events remain open |
 | `V4-ODE-RHS-SUPPLIED-FORCE` / 0.8.11 | Bohé Sec. II.2; Buonanno--Damour Eqs. (24)--(27); Pan Eq. (28) | conditional | `orbital_ode.supplied_force_vector_field` with supplied forces | Torch/JAX `EOBTrajectoryIntegrator.vector_field` | Four supplied nonzero-radial states only; physical forces, initial conditions, integration, and events remain open |
 | `V4-ODE-RHS-PAPER-FLUX` / 0.8.12 | Bohé Eqs. (4)–(6), (9); Buonanno--Damour Eqs. (24)--(27); Pan Eq. (28) | conditional | `orbital_ode.paper_flux_vector_field` and 35 scalar modes | Torch/JAX `EOBTrajectoryIntegrator.vector_field` with published flux | Two supplied nonzero-radial states only; historical choices, initial conditions, integration, and convergence remain open |
+| `V4-IC-PAPER-FLUX` / 0.8.13 | Bohé Eqs. (4)–(6), (9); Buonanno–Chen–Damour Eqs. (70)–(77); Pan factorized modes | conditional | `initial_conditions.paper_flux_leading_adiabatic_state` | Torch/JAX `find_quasicircular_initial_conditions` with 35-mode published flux | Two initial states only; historical choices, root solver, trajectories, and convergence remain open |
 | `V4-ODE-IC` / 0.8.11 | Bohé evolution and historical carrier | pending | pending | Development integrators | Domain-wide converged initial conditions and events |
 | `V4-TD-FD-CONVENTIONS` / 0.8.11 | Pinned public LAL conditioning/FFT binary | pending | pending | Development Torch adapter | Identical-input conditioning/FFT passed on three rows; native/public full FD retains up to 0.004031 relative L2 after physical time/phase fitting on four rows, and conventions remain open |
 | `V4-ROM-VII` / 0.8.11 | Bohé Sec. VII | pending | pending | pending | Qualified training generator, bases, and holdouts |
@@ -505,6 +506,18 @@ torque as an input; this establishes neither the 35-mode flux nor the
 historical SEOBNRv4 initial-data prescription. The latter uses a particular
 Cartesian root solve and finite-step radial response in the
 [public LAL source](https://lscsoft.docs.ligo.org/lalsuite/7.26/lalsimulation/_l_a_l_sim_i_m_r_spin_e_o_b_initial_conditions_8c_source.html).
+
+`initial_conditions.paper_flux_leading_adiabatic_state` composes that
+circular root with the 35 positive-`m`, pre-NQC factorized modes and the
+published energy flux, `F = Omega²/(8 pi) sum_{ell,m>0} m² |h_lm|²`
+([Bohé Eq. (9)](https://arxiv.org/html/1611.03703)). It sets
+`dp_phi/dt = -F/(nu Omega)` and obtains the leading inward tortoise
+momentum from the [Buonanno–Chen–Damour energy-balance relation, Eqs.
+(70)–(77)](https://arxiv.org/html/gr-qc/0508067). At two circular points,
+the scalar `r`, `p_r*`, `p_phi`, and torque agree with both Torch and JAX.
+This conditional composition declares the high-mode spin truncation and
+higher-spin mode choices explicitly. It does not reproduce the historical
+v4 initial-data root or establish its full flux over the physical domain.
 
 The pinned [aligned-spin implementation](https://lscsoft.docs.ligo.org/lalsuite/7.26/lalsimulation/_l_a_l_sim_i_m_r_spin_aligned_e_o_b_8c_source.html)
 starts its internal evolution at the smaller of the requested orbital
