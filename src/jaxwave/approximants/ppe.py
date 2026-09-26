@@ -1,14 +1,9 @@
-"""Parameterized Post-Einsteinian (ppE) and Modified Dispersion Gravitational Waveforms in JAX.
+"""JAX ppE inspiral-phase and massive-graviton dispersion FD overlays.
 
-Strict Clean-Room Implementation based exclusively on published literature:
-- Yunes & Pretorius (2009), "Dynamical Systems Approach to Runaway Instabilities in Black Hole-Torus Systems",
-  Phys. Rev. D 80, 122003 (arXiv:0909.3328)
-- Mirshekari, Yunes, Will (2012), "Constraining Generic Post-Einsteinian Extensions of Gravity with Gravitational Waves",
-  Phys. Rev. D 85, 024041 (arXiv:1110.2720)
-- Chatziioannou, Yunes, Cornish (2012), "Model-Independent Test of General Relativity: An Extended Parameterized Post-Einsteinian Framework",
-  Phys. Rev. D 86, 022004 (arXiv:1204.2585)
-- Will (1998), "Bounding the mass of the graviton using gravitational-wave observations of inspiralling compact binaries",
-  Phys. Rev. D 57, 2061 (arXiv:gr-qc/9709011)
+Source equations: Yunes & Pretorius, PRD 80 122003 (2009), arXiv:0909.3328,
+Eq. (1); Mirshekari, Yunes & Will, PRD 85 024041 (2012), arXiv:1110.2720,
+Eqs. (14)-(16), (28)-(31). The adapter follows the carrier's negative Fourier
+phase sign; it does not implement the papers' amplitude or merger branches.
 """
 
 from typing import Any, Callable, Dict, Optional, Tuple, Union
@@ -23,6 +18,9 @@ from diffgw_core.constants import (
     PI,
 )
 from jaxwave.conversions import as_array
+from diffgw_core.ppe_cosmology import (
+    D0_QUADRATURE_NODES, D0_QUADRATURE_WEIGHTS, OMEGA_M, OMEGA_LAMBDA,
+)
 from jaxwave.approximants.taylorf2 import TaylorF2
 from jaxwave.approximants.imrphenomd import IMRPhenomD
 from jaxwave.approximants.imrphenom_xas import IMRPhenomXAS
@@ -45,21 +43,21 @@ PPE_PN_MAPPING: Dict[Union[int, float], int] = {
 
 def ppe_phase_shift(
     f: jnp.ndarray,
-    total_mass: Union[float, jnp.ndarray],
+    chirp_mass: Union[float, jnp.ndarray],
     beta_ppe: Union[float, jnp.ndarray] = 0.0,
     b_ppe: Union[int, float, jnp.ndarray] = -2,
 ) -> jnp.ndarray:
     """Compute ppE frequency-dependent phase deformation delta Psi_ppE(f) in JAX.
 
-    Literature: Yunes & Pretorius (2009) Eq. 1; Mirshekari et al. (2012) Eq. 20.
+    Literature: Yunes & Pretorius (2009) Eq. (1), u = pi * Mc * f.
 
     Formula:
-        delta Psi_ppE(f) = beta_ppE * (pi * M * f)^(b_ppE / 3)
-    where M is total mass in geometric seconds: M_sec = (m1 + m2) * MSUN_SEC.
+        delta Psi_ppE(f) = beta_ppE * (pi * Mc * f)^(b_ppE / 3)
+    Here b_ppE is the project's velocity exponent, three times the paper's b.
 
     Args:
         f: Frequency array in Hz.
-        total_mass: Total binary mass M = m1 + m2 in solar masses.
+        chirp_mass: Chirp mass in solar masses, in the frame of supplied f.
         beta_ppe: ppE phase deformation magnitude (0 recovers pure GR).
         b_ppe: ppE phase exponent (-7 for -1PN dipole, -2 for 1.5PN, 0 for 2.5PN).
 
@@ -67,12 +65,12 @@ def ppe_phase_shift(
         Array of phase shifts in radians matching shape of f.
     """
     f_t = as_array(f, dtype=jnp.float64)
-    m = as_array(total_mass, dtype=f_t.dtype)
+    m = as_array(chirp_mass, dtype=f_t.dtype)
     beta = as_array(beta_ppe, dtype=f_t.dtype)
     b = as_array(b_ppe, dtype=f_t.dtype)
 
     m_sec = m * MSUN_SEC
-    # Dimensionless PN velocity v = (pi * M * f)^(1/3)
+    # Dimensionless velocity formed from the paper's chirp-mass u.
     safe_f = jnp.maximum(f_t, 1e-15)
     v = jnp.power(PI * m_sec * safe_f, 1.0 / 3.0)
 
@@ -90,12 +88,11 @@ def modified_dispersion_phase_shift(
 ) -> jnp.ndarray:
     """Compute frequency phase shift due to modified GW dispersion relation (massive graviton) in JAX.
 
-    Literature: Mirshekari, Yunes, Will (2012) Eq. 24; Will (1998) Eq. 2.11.
+    Literature: Mirshekari, Yunes & Will (2012) Eqs. (14)-(16), (28)-(31).
 
-    Dispersion relation:
-        E^2 = p^2 * c^2 + A_alpha * p^alpha * c^alpha
-    For alpha = 0 (massive graviton with Compton wavelength lambda_g = h / (m_g * c)):
-        delta Psi_disp(f) = - (pi^2 * D_0) / (lambda_g^2 * (1 + z)) * f^(-1)
+    Massive-graviton term, with the paper's separate Lorentz-violating
+    A_alpha contribution set to zero and lambda_g = h / (m_g * c):
+        delta Psi_disp(f) = - pi * D_0 * c / (lambda_g^2 * (1 + z) * f)
 
     Args:
         f: Frequency array in Hz.
@@ -103,7 +100,9 @@ def modified_dispersion_phase_shift(
         lambda_g: Graviton Compton wavelength in meters (inf recovers pure GR).
         z: Cosmological redshift of source (default 0).
         d_alpha: Optional cosmological dispersion distance in meters.
-            If None, computed as D_0 = D_L * MPC_SI / (1 + z).
+            If None, D_0 is derived from supplied D_L via the flat
+            matter/Lambda cosmological integrals of Eqs. (15)-(16), using
+            Omega_m=0.3 and Omega_Lambda=0.7.
 
     Returns:
         Array of dispersion phase shifts in radians.
@@ -113,22 +112,22 @@ def modified_dispersion_phase_shift(
     l_g = as_array(lambda_g, dtype=f_t.dtype)
     redshift = as_array(z, dtype=f_t.dtype)
 
-    if isinstance(lambda_g, (int, float)) and (math.isinf(lambda_g) or lambda_g > 1e40):
-        return jnp.zeros_like(f_t)
-
-    is_gr = jnp.isinf(l_g) | (l_g > 1e40)
+    is_gr = jnp.isinf(l_g)
 
     if d_alpha is None:
-        # Physical cosmological dispersion distance in meters: D0 = D_L / (1 + z)
-        dist_m = dist_mpc * MPC_SI
-        d0 = dist_m / (1.0 + redshift)
+        nodes = jnp.asarray(D0_QUADRATURE_NODES, dtype=f_t.dtype)
+        weights = jnp.asarray(D0_QUADRATURE_WEIGHTS, dtype=f_t.dtype)
+        zp = redshift[..., None] * (nodes + 1.0) / 2.0
+        e = jnp.sqrt(OMEGA_M * (1.0 + zp) ** 3 + OMEGA_LAMBDA)
+        ratio = jnp.sum(weights * (1.0 + zp) ** -2 / e, axis=-1) / jnp.sum(weights / e, axis=-1)
+        d0 = dist_mpc * MPC_SI * ratio
     else:
         d0 = as_array(d_alpha, dtype=f_t.dtype)
 
     safe_f = jnp.maximum(f_t, 1e-15)
-    l_g_safe = jnp.maximum(jnp.where(is_gr, 1e40, l_g), 1e-30)
+    l_g_safe = jnp.where(is_gr, 1.0, l_g)
 
-    coeff = -(PI ** 2.0) * d0 * C_SI / (l_g_safe * l_g_safe * (1.0 + redshift))
+    coeff = -PI * d0 * C_SI / (l_g_safe * l_g_safe * (1.0 + redshift))
     shift = coeff / safe_f
     return jnp.where(is_gr, jnp.zeros_like(shift), shift)
 
@@ -168,6 +167,7 @@ class ParameterizedPostEinstein:
         lambda_g: Union[float, jnp.ndarray] = float("inf"),
         distance: Union[float, jnp.ndarray] = 100.0,
         redshift: Union[float, jnp.ndarray] = 0.0,
+        d_alpha: Optional[Union[float, jnp.ndarray]] = None,
         **waveform_kwargs,
     ) -> Tuple[jnp.ndarray, jnp.ndarray]:
         """Generate ppE-deformed polarizations h_plus and h_cross in JAX.
@@ -181,6 +181,7 @@ class ParameterizedPostEinstein:
             lambda_g: Graviton Compton wavelength in meters (default inf for GR).
             distance: Luminosity distance in Mpc.
             redshift: Cosmological redshift.
+            d_alpha: Optional independently supplied D_0 in meters.
             **waveform_kwargs: Additional parameters passed to the underlying approximant
                 (e.g., chi1, chi2, inclination, phic, tc, f_ref).
 
@@ -199,12 +200,12 @@ class ParameterizedPostEinstein:
         f_t = as_array(f, dtype=jnp.float64)
         m1 = as_array(mass1, dtype=f_t.dtype)
         m2 = as_array(mass2, dtype=f_t.dtype)
-        total_m = m1 + m2
+        chirp_m = (m1 * m2) ** (3.0 / 5.0) / (m1 + m2) ** (1.0 / 5.0)
 
         # 2. Compute non-GR phase shifts
-        delta_psi_ppe = ppe_phase_shift(f_t, total_m, beta_ppe=beta_ppe, b_ppe=b_ppe)
+        delta_psi_ppe = ppe_phase_shift(f_t, chirp_m, beta_ppe=beta_ppe, b_ppe=b_ppe)
         delta_psi_disp = modified_dispersion_phase_shift(
-            f_t, distance=distance, lambda_g=lambda_g, z=redshift
+            f_t, distance=distance, lambda_g=lambda_g, z=redshift, d_alpha=d_alpha
         )
 
         total_shift = delta_psi_ppe + delta_psi_disp

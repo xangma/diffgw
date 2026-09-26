@@ -1,0 +1,31 @@
+# ppE phase and massive-graviton dispersion: scoped qualification
+
+## Scope and status
+
+The component identities ppe.inspiral.phase/v1 and ppe.dispersion.massive_graviton/v1 have independent scalar checks. ppe.wrapper.carrier/v1 checks their project-specific application to a supplied frequency-domain carrier. These checks do not qualify the carrier, a complete ppE inspiral-merger-ringdown waveform, or a gravity theory. Yunes and Pretorius illustrate an equal-mass nonspinning binary; the unequal-mass tests exercise the published chirp-mass algebra as a phenomenological extension. No catalog WaveformDefinition is claimed.
+
+## Inputs, conventions, and options
+
+Frequency $f>0$ is in Hz. Component masses and chirp mass are in solar masses and must be in the frame of the supplied frequency (detector-frame masses for observed $f$ at nonzero redshift). Luminosity distance $D_L$ is in Mpc, $D_0$ and graviton Compton wavelength $\lambda_g$ in meters, and $z\ge0$. The dimensionless beta_ppe multiplies the paper's $u=\pi\mathcal M f$. Native b_ppe is the exponent of $v=u^{1/3}$, so the paper exponent is b_ppe/3. The helper accepts chirp mass; the wrapper forms it from component masses. Infinite $\lambda_g$ gives zero dispersion. An optional d_alpha supplies $D_0$ in meters; otherwise the native distance conversion assumes a flat matter/$\Lambda$ cosmology with $\Omega_m=0.3$ and $\Omega_\Lambda=0.7$. These are the illustrative values in Mirshekari et al., not universal constants. A supplied $(D_L,z)$ pair is taken as given without asserting consistency with a particular $H_0$. The strict gate covers positive frequencies, masses, wavelength and distance; the native frequency clamp outside that domain is unqualified.
+
+## Mathematics and components
+
+[Yunes and Pretorius (2009), arXiv:0909.3328, Eq. (1)](https://arxiv.org/html/0909.3328) give the inspiral branch $\tilde h_I^{\rm GR}(1+\alpha u^a)\exp(i\beta u^b)$ with $u=\pi\mathcal M f$ and $\mathcal M=(m_1m_2)^{3/5}/(m_1+m_2)^{1/5}$. The paper-literal phase increment is $\delta\Psi_{\rm ppE}=\beta(\pi\mathcal M f)^b$. The native exponent $n=\text{b_ppe}$ means $b=n/3$. Total mass in place of chirp mass is inconsistent with Eq. (1).
+
+For the massive-graviton branch, [Mirshekari, Yunes and Will (2012), arXiv:1110.2720, Eqs. (14)–(16), (28)–(31)](https://arxiv.org/html/1110.2720) define $E(z)=\sqrt{\Omega_m(1+z)^3+\Omega_\Lambda}$ and $I_p(z)=\int_0^z(1+z')^p/E(z')\,dz'$. In SI units $D_0=(1+z)cI_{-2}/H_0$ and $D_L=(1+z)cI_0/H_0$, hence a supplied luminosity distance implies $D_0=D_L I_{-2}/I_0$ and the continuous $z\to0$ ratio is one. Their $\delta\Psi=-\beta_g u^{-1}$ with $\beta_g=\pi^2D_0\mathcal M/[\lambda_g^2(1+z)]$ reduces to $\delta\Psi_{\rm disp}=-\pi D_0c/[\lambda_g^2(1+z)f]$. One factor of $\pi$ cancels against $u=\pi\mathcal M f$. The independent scalar integrates $I_p$ with mpmath; native Torch and JAX use a separate 24-point Gauss–Legendre rule.
+
+The carrier adapter applies $\exp[-i(\delta\Psi_{\rm ppE}+\delta\Psi_{\rm disp})]$ to both polarizations. Its minus sign follows the project's TaylorF2 $\exp(-i\Psi)$ convention. Both cited papers write Fourier strain with $\exp(+i\Psi)$, so their waveform-level complex phase has the opposite sign. Tests keep the paper-literal real increments and project complex multiplier separate. The adapter extends its phase functions over every frequency requested of the carrier, while the cited ppE branch is inspiral-only.
+
+## Implementation mapping
+
+The independent reference is [src/diffgw_reference/ppe.py](../../src/diffgw_reference/ppe.py). It contains scalar chirp mass, direct $H_0$-dependent $D_0$, supplied-$D_L$ ratio, dispersion and carrier adapter functions; it imports neither frontend. [Torch ppE](../../src/torchwave/approximants/ppe.py) and [JAX ppE](../../src/jaxwave/approximants/ppe.py) expose corresponding helpers and ParameterizedPostEinstein. [Native quadrature inputs](../../src/diffgw_core/ppe_cosmology.py) supply only nodes and fixed density parameters. The wrapper accepts any callable carrier and defaults to IMRPhenomD. No source fidelity is inferred for that carrier or other ppE branches.
+
+## Evidence and limitations
+
+[The maintained gate](../../tests/test_ppe_math_reference.py) checks the paper chirp variable at equal and unequal masses and three exponent signs; value, frequency and coefficient gradients in both frontends; the direct $H_0=72$ paper cosmology and $D_0$ versus the $D_L$-eliminated form; redshift holdouts and derivatives; explicit $D_0$ override; mixed finite/infinite wavelength batches; and both complex polarizations against a scalar carrier adapter. Negative distinctions exclude the former total-mass and local-distance substitutions. Frozen holdouts cover component masses 8–35 solar masses, frequencies 30–180 Hz, $z=0,0.1,0.2,0.5,0.7,2$, and finite wavelengths $10^{17}$ and $2\times10^{17}$ m; they do not establish error bounds outside this set. Scalar evaluations use 70-digit mpmath, compared to float64 CPU Torch and JAX. On len, the focused reference and legacy ppE tests passed 17/17 with Torch 2.14.0+cpu, JAX 0.11.2, mpmath 1.3.0 and NumPy 2.3.5. The relative value/gradient gates use tolerances at or below $5\times10^{-13}$ except exact zero tests.
+
+The helper omits the ppE amplitude factor $1+\alpha u^a$, published merger/ringdown branches, spin and higher-mode modifications, and calibration of the underlying carrier. The massive-graviton term is a dispersion specialization, not the full modified-dispersion family. There is no measured graviton-mass bound, external LAL agreement, arbitrary-cosmology support, or waveform-level astrophysical accuracy claim. The papers' plus-sign Fourier convention and carrier's minus-sign convention remain explicitly distinct.
+
+## Reproduce the checks
+
+With Torch, JAX x64, mpmath and pytest installed, run: PYTHONPATH=src:tests python -m pytest -q tests/test_ppe_math_reference.py tests/test_ppe.py. The reference file participates in strict math-reference full-suite discovery. Re-run this gate after changing mass variable, exponent mapping, sign, $\pi$ or $c$ factor, redshift or distance integral, quadrature, wrapper forwarding, or either frontend. Broader carrier and source branches require separate references before qualification.
