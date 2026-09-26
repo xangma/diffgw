@@ -7,8 +7,11 @@ Specification ID: `kerr-220-energy-carrier-conditional/v1`.
 This specification covers the causal, physical-energy fundamental 220
 polarizations and their Fourier-minus transform in `kerr220_td`/`kerr220_fd`.
 It conditions on supplied QNM frequency/damping and normalized angular factors.
-It does not verify the Kerr eigenvalue problem, excitation, the inferred
-public-compatible angular-series stopping rule, or other modes and overtones.
+The separate [angular projection specification](kerr-angular-projection.md)
+now checks selected spherical and spheroidal factors independently. This
+carrier check itself does not verify the QNM eigenvalue problem, excitation,
+the inferred public-compatible angular-series stopping rule, or other modes
+and overtones.
 
 ## Inputs, conventions, and options
 
