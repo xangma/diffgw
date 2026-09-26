@@ -1,9 +1,9 @@
-"""ppE inspiral-phase and massive-graviton dispersion overlays for FD carriers.
+"""ppE inspiral amplitude/phase and massive-graviton overlays for FD carriers.
 
 Source equations: Yunes & Pretorius, PRD 80 122003 (2009), arXiv:0909.3328,
 Eq. (1); Mirshekari, Yunes & Will, PRD 85 024041 (2012), arXiv:1110.2720,
 Eqs. (14)-(16), (28)-(31). The adapter follows the carrier's negative Fourier
-phase sign; it does not implement the papers' amplitude or merger branches.
+phase sign; it does not implement the papers' merger/ringdown branches.
 """
 
 from typing import Any, Callable, Dict, Optional, Tuple, Union
@@ -80,6 +80,26 @@ def ppe_phase_shift(
     # delta Psi = beta * v^b
     delta_psi = beta * torch.pow(v, b)
     return delta_psi
+
+
+def ppe_amplitude_factor(
+    f: torch.Tensor,
+    chirp_mass: Union[float, torch.Tensor],
+    alpha_ppe: Union[float, torch.Tensor] = 0.0,
+    a_ppe: Union[int, float, torch.Tensor] = 0.0,
+) -> torch.Tensor:
+    """Eq. (1) inspiral factor ``1 + alpha_ppe*(pi*Mc*f)**a_ppe``.
+
+    ``a_ppe`` is the paper's exponent of ``u=pi*Mc*f`` (unlike the
+    existing phase helper's velocity exponent ``b_ppe``). ``Mc`` is in
+    solar masses in the frame of ``f``. The paper scope is positive Hz.
+    """
+    f_t = as_tensor(f)
+    m = as_tensor(chirp_mass, device=f_t.device, dtype=f_t.dtype)
+    alpha = as_tensor(alpha_ppe, device=f_t.device, dtype=f_t.dtype)
+    a = as_tensor(a_ppe, device=f_t.device, dtype=f_t.dtype)
+    u = PI * m * MSUN_SEC * torch.clamp(f_t, min=1e-15)
+    return 1.0 + alpha * torch.pow(u, a)
 
 
 def modified_dispersion_phase_shift(
@@ -163,6 +183,8 @@ class ParameterizedPostEinstein(nn.Module):
         distance: Union[float, torch.Tensor] = 100.0,
         redshift: Union[float, torch.Tensor] = 0.0,
         d_alpha: Optional[Union[float, torch.Tensor]] = None,
+        alpha_ppe: Union[float, torch.Tensor] = 0.0,
+        a_ppe: Union[int, float, torch.Tensor] = 0.0,
         **waveform_kwargs,
     ) -> Tuple[torch.Tensor, torch.Tensor]:
         """Generate ppE-deformed polarizations h_plus and h_cross.
@@ -177,6 +199,8 @@ class ParameterizedPostEinstein(nn.Module):
             distance: Luminosity distance in Mpc.
             redshift: Cosmological redshift.
             d_alpha: Optional independently supplied D_0 in meters.
+            alpha_ppe: Dimensionless inspiral amplitude coefficient (zero for GR).
+            a_ppe: Paper exponent of u=pi*Mc*f in the inspiral amplitude.
             **waveform_kwargs: Additional parameters passed to the underlying approximant
                 (e.g., chi1, chi2, inclination, phic, tc, f_ref).
 
@@ -203,18 +227,20 @@ class ParameterizedPostEinstein(nn.Module):
         )
 
         total_shift = delta_psi_ppe + delta_psi_disp
+        amplitude_factor = ppe_amplitude_factor(f, chirp_m, alpha_ppe, a_ppe)
 
         # 3. Apply stationary phase deformation: exp(-i * delta_Psi)
         # Match tensor dimensions if hp_gr is batched
         if hp_gr.dim() > total_shift.dim():
             total_shift = total_shift.unsqueeze(0)
+            amplitude_factor = amplitude_factor.unsqueeze(0)
 
         cos_shift = torch.cos(total_shift)
         sin_shift = torch.sin(total_shift)
         exp_factor = torch.complex(cos_shift, -sin_shift)
 
-        hp_ppe = hp_gr * exp_factor
-        hc_ppe = hc_gr * exp_factor
+        hp_ppe = hp_gr * amplitude_factor * exp_factor
+        hc_ppe = hc_gr * amplitude_factor * exp_factor
 
         return hp_ppe, hc_ppe
 

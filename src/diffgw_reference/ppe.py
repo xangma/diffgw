@@ -7,6 +7,7 @@ functions. This module does not import either waveform frontend or LAL.
 import mpmath as mp
 
 SPEC_VERSION = "ppe-phase-dispersion/v1"
+AMPLITUDE_SPEC_VERSION = "ppe-inspiral-amplitude/v1"
 SOURCE_PPE = "Yunes & Pretorius, PRD 80 122003 (2009), arXiv:0909.3328, Eq. (1)"
 SOURCE_DISPERSION = (
     "Mirshekari, Yunes & Will, PRD 85 024041 (2012), "
@@ -35,6 +36,15 @@ def paper_ppe_phase(f_hz, mass1_solar, mass2_solar, beta, paper_b):
     if f <= 0:
         raise ValueError("paper inspiral frequency must be positive")
     return mp.mpf(beta) * (mp.pi * chirp_mass_seconds(mass1_solar, mass2_solar) * f) ** mp.mpf(paper_b)
+
+
+def paper_ppe_amplitude_factor(f_hz, mass1_solar, mass2_solar, alpha, paper_a):
+    """Yunes--Pretorius Eqs. (1), (47): signed inspiral factor 1+alpha*u**a."""
+    f = mp.mpf(f_hz)
+    if f <= 0:
+        raise ValueError("paper inspiral frequency must be positive")
+    u = mp.pi * chirp_mass_seconds(mass1_solar, mass2_solar) * f
+    return 1 + mp.mpf(alpha) * u ** mp.mpf(paper_a)
 
 
 def _cosmology_integral(z, power, omega_m, omega_lambda):
@@ -94,3 +104,11 @@ def carrier_phase_shift(f_hz, mass1_solar, mass2_solar, beta, native_b, d0_m, la
 def carrier_multiplier(f_hz, mass1_solar, mass2_solar, beta, native_b, d0_m, lambda_g_m, z):
     """Project adapter: exp(-i delta-Psi) for native TaylorF2 carrier sign."""
     return mp.exp(-1j * carrier_phase_shift(f_hz, mass1_solar, mass2_solar, beta, native_b, d0_m, lambda_g_m, z))
+
+
+def carrier_amplitude_multiplier(f_hz, mass1_solar, mass2_solar, alpha, paper_a,
+                                 beta, native_b, d0_m, lambda_g_m, z):
+    """Project adapter: paper amplitude times negative-phase carrier multiplier."""
+    return (paper_ppe_amplitude_factor(f_hz, mass1_solar, mass2_solar, alpha, paper_a)
+            * carrier_multiplier(f_hz, mass1_solar, mass2_solar, beta, native_b,
+                                 d0_m, lambda_g_m, z))
