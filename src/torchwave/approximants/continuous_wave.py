@@ -45,7 +45,7 @@ def continuous_wave_h0(
     Formula:
         h_0 = (4 * pi^2 * G / c^4) * (I_zz * epsilon * f_0^2 / d)
     Reference:
-        Jaranowski, Królak, Schutz (1998) Eq. (3)
+        Jaranowski, Królak, Schutz (1998) Eqs. (32)-(33), with f_0=2*f_rot
 
     Args:
         frequency: Continuous GW frequency f_0 in Hz (twice rotation frequency)
@@ -283,6 +283,7 @@ def continuous_wave_strain(
     f2: Union[float, torch.Tensor] = 0.0,
     t0: float = 0.0,
     detector: Optional[Union[str, Detector]] = None,
+    i_zz: float = 1.0e38,
 ) -> torch.Tensor:
     """Compute the full detector strain h(t) for a continuous gravitational-wave signal.
 
@@ -299,7 +300,7 @@ def continuous_wave_strain(
     if h0 is None:
         if ellipticity is None or distance is None:
             raise ValueError("Must provide either h0 or both (ellipticity, distance).")
-        h0_val = continuous_wave_h0(frequency=f0, ellipticity=ellipticity, distance=distance)
+        h0_val = continuous_wave_h0(frequency=f0, ellipticity=ellipticity, distance=distance, i_zz=i_zz)
     else:
         h0_val = as_tensor(h0, device=device, dtype=dtype)
 
@@ -376,4 +377,5 @@ class ContinuousWave(nn.Module):
             f2=f2,
             t0=t0,
             detector=self.detector,
+            i_zz=self.i_zz,
         )

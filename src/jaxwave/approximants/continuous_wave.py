@@ -45,7 +45,7 @@ def continuous_wave_h0(
     Formula:
         h_0 = (4 * pi^2 * G / c^4) * (I_zz * epsilon * f_0^2 / d)
     Reference:
-        Jaranowski, Królak, Schutz (1998) Eq. (3)
+        Jaranowski, Królak, Schutz (1998) Eqs. (32)-(33), with f_0=2*f_rot
 
     Args:
         frequency: Continuous GW frequency f_0 in Hz (twice rotation frequency)
