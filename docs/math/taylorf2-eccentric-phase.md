@@ -5,7 +5,7 @@
 Component specification **`ecc.phase-3pn-e2/v1`** covers the secular,
 dominant-harmonic stationary-phase correction through relative 3PN and order
 \(e_0^2\). A separate **`ecc.phase-fref-gauge/v1`** specifies the native phase
-origin. The scalar [SymPy reference](../../src/diffgw_reference/taylorf2_eccentric.py)
+origin. The scalar [SymPy reference](https://github.com/xangma/diffgw/blob/main/src/diffgw_reference/taylorf2_eccentric.py)
 transcribes [Moore et al. (2016), Eq. (6.26)](https://arxiv.org/pdf/1605.00304v2)
 without importing either frontend or LAL. This is a component-level result,
 not qualification of the complete waveform or the optional amplitude factor.
