@@ -11,7 +11,7 @@ research identifiers, not registered catalog IDs.
 | Native approximant | Implemented mathematical scope | Research status |
 | --- | --- | --- |
 | `TaylorF2_HM` | Frequency-domain, aligned-spin SPA inspiral, leading amplitudes for `(2,2), (2,1), (3,1), (3,2), (3,3), (4,2), (4,3), (4,4)` | [Independent leading-carrier reference](../../math/taylorf2-hm.md) covers all eight modes; exact external eight-mode waveform comparison remains unavailable. |
-| `TaylorF2_Eccentric` | Frequency-domain `(2,2)` quasi-circular TaylorF2 plus an order-`e0²` eccentric phase through relative 3PN; optional project amplitude factor | Paper-literal eccentric phase and full-model independent reference pending. |
+| `TaylorF2_Eccentric` | Frequency-domain `(2,2)` quasi-circular TaylorF2 plus an order-`e0²` eccentric phase through relative 3PN; optional project amplitude factor | [Paper-literal eccentric phase](../../math/taylorf2-eccentric-phase.md) has a scoped scalar and Torch/JAX reference; full-model independent reference remains pending. |
 | `IMRPhenomD_NRTidal` | Frequency-domain aligned-spin `(2,2)` IMRPhenomD plus 2017 NRTidal phase and BNS merger taper | Component-level independent reference pending. |
 | `IMRPhenomD_NRTidalv2` | Same BBH carrier plus 2019 phase, tidal amplitude, EOS-dependent self-spin, and merger taper | Component-level independent reference pending. |
 | `IMRPhenomNSBH` | Frequency-domain aligned-spin `(2,2)` PhenomD-like phase with NRTidalv2 term and a disruption-dependent PhenomC-like amplitude | Source-fidelity and independent reference pending, especially inherited phase/remnant conventions. |
@@ -62,7 +62,7 @@ are:
 * HM: `h_{l,-m}(f) = sqrt(16π/5) A_TF2(f) R_lm(f)
   exp[-i{(m/2) Ψ_TF2(2f/m) + 3π(1-m/2)/4}]`, followed by the implemented
   spin-weighted-harmonic projection and per-mode cutoff.
-* Eccentric: `Ψ = Ψ_TF2 + ΔΨ_ecc(f;f0) - ΔΨ_ecc(f0;f0)`, with
+* Eccentric: `Ψ = Ψ_TF2 + ΔΨ_ecc(f;f0) - ΔΨ_ecc(f_ref;f0)`, with
   `ΔΨ_ecc = -(2355/1462)[3/(128ηv⁵)] e0²(v0/v)^(19/3) P_3PN(v,v0,η)`.
   The optional amplitude multiplier is `1-(743/9216)e0²(f/f0)^(-19/9)`;
   its source attribution is unresolved here.
@@ -87,7 +87,7 @@ work, not native availability or verification.
 | `hm.mode-phase/v0` | [García-Quirós et al. 2020](https://doi.org/10.1103/PhysRevD.102.064002), Eqs. (4.8)–(4.10), inspiral harmonic rescaling; [Mezzasoma & Yunes 2022](https://arxiv.org/abs/2203.15934), Eqs. (2.24)–(2.30), SPA phase and offset | superseded in scope | The [v1 carrier](../../math/taylorf2-hm.md) checks aligned-spin phase and both phase origins for all eight modes. Tidal terms remain outside that HM slice. |
 | `hm.leading-amplitudes/v0` | [Kidder 2008](https://arxiv.org/abs/0710.0614), [García-Quirós 2020](https://arxiv.org/abs/2001.10914), [Mezzasoma & Yunes 2022](https://arxiv.org/abs/2203.15934), Eqs. (2.20)–(2.21i), especially `(4,2)` Eq. (2.21g); leading PN only | superseded in scope | The [v1 carrier](../../math/taylorf2-hm.md) derives all eight leading ratios and compares complex projected modes with Torch/JAX. Higher-PN and spin-amplitude terms remain outside scope. |
 | `hm.projection-cutoff/v0` | García-Quirós Eqs. (2.1)–(2.12) for mode and polarization conventions; project harmonic ISCO adapter | superseded in scope | The [v1 carrier](../../math/taylorf2-hm.md) checks negative-`m` projection, azimuth derivatives, and Schwarzschild hard-cutoff thresholds; Kerr and smooth cutoff options remain unchecked. |
-| `ecc.phase-3pn-e2/v0` | [Moore et al. 2016](https://arxiv.org/pdf/1605.00304v2), **Eq. (6.26)**, TaylorF2 SPA phase at order `e0²` | pending | Torch/JAX `eccentric_phase_correction`; derive scalar polynomial independently and inspect subtraction at `f_ref`. |
+| `ecc.phase-3pn-e2/v1` | [Moore et al. 2016](https://arxiv.org/pdf/1605.00304v2), **Eq. (6.26)**, TaylorF2 SPA phase at order `e0²` | scoped executable | Independent SymPy rational polynomial and 80-digit scalar evaluation check all six native truncations in Torch/JAX CPU float64; distinct `f_ref` subtraction is the separately specified project gauge. See [component specification](../../math/taylorf2-eccentric-phase.md). |
 | `ecc.amplitude-adapter/v0` | Moore et al. Sec. VI.E uses 0PN amplitude at order `e0⁰`; native `743/9216` factor is a project option | pending | Torch/JAX `eccentric_amplitude_factor`; identify a primary derivation or mark explicitly project-only; default is off. |
 | `nrt1.phase-pade/v0` | [Dietrich, Bernuzzi & Tichy 2017](https://arxiv.org/abs/1706.02969), Eq. (7), 2017 rational phase | pending | `diffgw_core.nrtidal_fits.NRTIDAL_V1_PADÉ_COEFFS`; Torch/JAX `imrphenomd_nrtidal` v1 branch. Need independent scalar and paper-decimal precision comparison. |
 | `nrt2.phase-pade/v0` | [Dietrich et al. 2019](https://arxiv.org/abs/1905.06011), Eqs. (17)–(21), frequency-domain phase, constrained coefficients | pending | `NRTIDAL_V2_PHASE_COEFFS` and Torch/JAX v2 branch; NSBH separately uses Torch `nsbh_clean_phase.nrtidalv2_frequency_phase` and JAX `imrphenom_nsbh.nrtidalv2_frequency_phase`. Compare all three paths to one independent scalar. |
@@ -114,7 +114,7 @@ scalar modules.
 | Family | Torch location | JAX location | Carrier/reference reuse and specific divergence to resolve |
 | --- | --- | --- | --- |
 | HM | `src/torchwave/approximants/taylorf2_hm.py` (`_swsh_projection_coefficients`, `TaylorF2_HM.forward`) | `src/jaxwave/approximants/taylorf2_hm.py` (same projection, `evaluate`) | `TaylorF2.evaluate_phase/amplitude`; stored `h_{l,-m}` and harmonic-specific cutoff are project composition choices. `(4,1)` and `(5,5)` remain absent because TD amplitudes alone do not fix native SPA/projection conventions. |
-| Eccentric | `src/torchwave/approximants/taylorf2_eccentric.py` (`eccentric_phase_correction`, `eccentric_amplitude_factor`, `forward`) | `src/jaxwave/approximants/taylorf2_eccentric.py` (same components, `evaluate`) | TaylorF2 carrier and options reused. Native `f0` fallback samples the positive frequency grid and the eccentric correction is re-anchored at `f0`; the provenance ledger records this grid-dependent fallback. |
+| Eccentric | `src/torchwave/approximants/taylorf2_eccentric.py` (`eccentric_phase_correction`, `eccentric_amplitude_factor`, `forward`) | `src/jaxwave/approximants/taylorf2_eccentric.py` (same components, `evaluate`) | TaylorF2 carrier and options reused. The native `f0` fallback samples the positive frequency grid; the phase is anchored at a distinct positive explicit `f_ref`, or at `f0` when no positive `f_ref` is supplied. |
 | NRTidal v1/v2 | `src/torchwave/approximants/imrphenomd_nrtidal.py` | `src/jaxwave/approximants/imrphenomd_nrtidal.py` | IMRPhenomD carrier reused. Shared published coefficient values in `src/diffgw_core/nrtidal_fits.py`; Torch reexports them through `nrtidal_published_fits.py`. V1 has phase only, v2 also amplitude and self-spin. |
 | NSBH | `src/torchwave/approximants/imrphenom_nsbh.py`, `nsbh_clean_phase.py`, `nsbh_clean_amplitude.py`, `nsbh_phase_baseline.py` | `src/jaxwave/approximants/imrphenom_nsbh.py`, `nsbh_phase_baseline.py` | Uses PhenomD phase structure but a distinct PhenomC-like amplitude; do not reuse PhenomD *amplitude*. JAX embeds the NRTidalv2 expression and local amplitude helpers; Torch separates them. Default affine gauge is an inherited compatibility adapter, not a published Thompson equation. |
 
@@ -144,8 +144,8 @@ PhenomD/remnant calibration provenance remains open.
 
 Remaining independent-reference blockers are concrete: (1) HM tidal terms,
 Kerr and smooth cutoff options, and an exact same-model external eight-mode
-waveform comparison; (2) the 3PN eccentric polynomial and reference-frequency
-gauge plus provenance for the optional amplitude factor; (3) v1/v2 tidal
+waveform comparison; (2) a full-model eccentric oracle and provenance for the
+optional amplitude factor beyond the scoped 3PN phase/gauge gate; (3) v1/v2 tidal
 phase, amplitude, self-spin, taper and paper-decimal checks; (4) NSBH
 disruption root, every amplitude branch, supplementary remnant coefficients
 and intrinsic/affine phase split. The published validity regions must be
