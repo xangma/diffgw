@@ -6,7 +6,8 @@ gate is retained.  A second SymPy gate combines the supplement's signed
 leading H[l,m] terms and nonspinning TF28Phasing with the absolute mode
 normalization in the accompanying paper.  The paper's polarization map then
 checks both projected polarizations and their eight-mode sum.  This is a
-symbolic author-source composition gate, not an external numerical series.
+symbolic author-source composition gate, including sampled angular derivatives
+of both summed polarizations, not an external numerical series.
 """
 
 import json
@@ -75,6 +76,20 @@ def _paper_projection(mode, inclination=INCLINATION, phi0=PHI0):
         ref.PHI0: sp.Rational(str(phi0)),
     }
     return tuple(complex(ref.evaluate(expression, values)) for expression in ref.projection(*mode))
+
+
+@lru_cache(maxsize=None)
+def _paper_projection_derivative(mode, angle, inclination, phi0):
+    """Differentiate García-Quirós Eqs. (8)--(9), before numeric evaluation."""
+    symbol = {"inclination": ref.IOTA, "phi0": ref.PHI0}[angle]
+    values = {
+        ref.IOTA: sp.Rational(str(inclination)),
+        ref.PHI0: sp.Rational(str(phi0)),
+    }
+    return tuple(
+        complex(ref.evaluate(sp.diff(expression, symbol), values))
+        for expression in ref.projection(*mode)
+    )
 
 
 def _carrier(mode_data, mode):
@@ -241,3 +256,59 @@ def test_author_modes_compose_to_complex_polarizations(
         ):
             error = np.abs(_to_numpy(native) - expected) / budget
             assert np.max(error) < 8e-10, (sample["name"], label, error)
+
+
+def _native_angular_derivative(backend, sample, angle, inclination, phi0):
+    """Differentiate only the public, eight-mode summed polarizations."""
+    name, _, array = backend
+    value = inclination if angle == "inclination" else phi0
+    if name == "torch":
+        import torch
+
+        variable = array(value).detach().clone().requires_grad_(True)
+        angles = {"inclination": inclination, "phi0": phi0}
+        angles[angle] = variable
+        plus, cross, _ = _native_waveform(backend, sample, f_ref=None, **angles)
+        result = []
+        for polarization in (plus, cross):
+            real = torch.autograd.grad(polarization[1].real, variable, retain_graph=True)[0]
+            imag = torch.autograd.grad(polarization[1].imag, variable, retain_graph=True)[0]
+            result.append(complex(real.item(), imag.item()))
+        return tuple(result)
+
+    import jax
+    import jax.numpy as jnp
+
+    def output(variable):
+        angles = {"inclination": inclination, "phi0": phi0}
+        angles[angle] = variable
+        plus, cross, _ = _native_waveform(backend, sample, f_ref=None, **angles)
+        return jnp.stack((plus[1].real, plus[1].imag, cross[1].real, cross[1].imag))
+
+    real_plus, imag_plus, real_cross, imag_cross = np.asarray(jax.jacfwd(output)(array(value)))
+    return complex(real_plus, imag_plus), complex(real_cross, imag_cross)
+
+
+@pytest.mark.parametrize("inclination,phi0", ((0.91, 0.37), (1.32, -0.44)))
+@pytest.mark.parametrize("angle", ("inclination", "phi0"))
+def test_author_composed_polarization_angular_derivatives(
+    backend, fixture, inclination, phi0, angle
+):
+    """Author Eq. (11) modes times differentiated Eqs. (8)--(9), then summed.
+
+    The middle frequency of each of the three predeclared binaries is sampled.
+    This checks the full complex h+ and hx gradients, not component gradients.
+    """
+    fixture_text = json.dumps(fixture)
+    for sample in fixture["samples"]:
+        author_modes = _author_complex_modes(fixture_text, sample["name"])
+        expected = np.zeros(2, dtype=np.complex128)
+        budget = np.zeros(2, dtype=np.float64)
+        for mode in MODES:
+            carrier = author_modes[mode][1]
+            derivative = _paper_projection_derivative(mode, angle, inclination, phi0)
+            expected += carrier * np.asarray(derivative)
+            budget += np.abs(carrier * np.asarray(derivative))
+        actual = _native_angular_derivative(backend, sample, angle, inclination, phi0)
+        error = np.abs(np.asarray(actual) - expected) / budget
+        assert np.max(error) < 8e-10, (sample["name"], angle, error)

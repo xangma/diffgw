@@ -165,7 +165,7 @@ The evidence is intentionally separated:
 
 | Evidence layer | Maintained check | Establishes | Does not establish |
 | --- | --- | --- | --- |
-| Author-supplement composition | `test_taylorf2_hm_author_supplement_math_reference.py` | Checksum-pinned leading $|h_{\ell m}/h_{22}|$, signed absolute raw modes, and direct complex per-mode and eight-mode-summed polarizations at two orientations in Torch and JAX, for the nonspinning unwindowed `f_ref=None` slice | An independently published numerical series, aligned-spin composition, `f_ref` subtraction, cutoffs, or physical accuracy |
+| Author-supplement composition | `test_taylorf2_hm_author_supplement_math_reference.py` | Checksum-pinned leading $|h_{\ell m}/h_{22}|$, signed absolute raw modes, direct complex per-mode and eight-mode-summed polarizations, and sampled angular derivatives of both sums in Torch and JAX, for the nonspinning unwindowed `f_ref=None` slice | An independently published numerical series, aligned-spin composition, `f_ref` subtraction, cutoffs, or physical accuracy |
 | Paper fidelity | `test_taylorf2_hm_paper_math_reference.py` | All-eight native $h_{\ell,-m}$ reconstruction, Eqs. (8)–(9), the $2f/m$ map, SPA constant, and $t_c/\phi_c$ signs | An independent executable waveform |
 | Scalar-reference agreement | `test_taylorf2_hm_math_reference.py` | All-eight leading amplitudes, composed aligned-spin phase, complex polarizations, selected derivatives and hard cutoffs | External parity or physical accuracy |
 | Torch/JAX parity | `tests/parity/test_hm_parity.py` | Cross-backend values, individual modes, JIT and autodiff at sampled points | Independence from shared equations |
@@ -217,6 +217,15 @@ three binaries, three frequencies each, and two orientations in FP64.
 This is a source-composed symbolic check restricted to positive-frequency,
 leading nonspinning, unwindowed modes with `f_ref=None`. The projection comes
 from García-Quirós et al., not from the author supplement.
+
+For each of the three binaries, at its predeclared middle frequency and both
+orientations, the same source-composed modes are multiplied by analytic
+inclination and azimuth derivatives of García-Quirós et al. Eqs. (8)–(9).
+The eight contributions are summed before comparison with Torch and JAX
+autodiff of the public complex $h_+$ and $h_\times$. Errors divided by the
+sum of the magnitudes of the derivative contributions are below
+$8\times10^{-10}$. These sampled angular derivatives do not qualify intrinsic
+parameter derivatives or the full aligned-spin option set.
 
 Exact all-mode external numerical parity remains unprovable from the available
 public sources. The supplement is symbolic author input parsed by this
