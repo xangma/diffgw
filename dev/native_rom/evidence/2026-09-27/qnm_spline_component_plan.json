@@ -1,0 +1,31 @@
+{
+  "schema": "diffgw.seobnrv4.qnm-spline-component-plan.v1",
+  "component_id": "V4-QNM-NATIVE-220-SPLINE",
+  "purpose": "Finite interstitial value and derivative certificate for the existing independent signed-spin degree-five spline, using Cook author rows as an external numerical reference. Reuse one pinned fixed-boundary whole-mode QNM substitution as a waveform-impact witness.",
+  "signed_spins": [0.5005, -0.5005, 0.9005, -0.9005, 0.9905, -0.9905, 0.99971875, -0.99971875, 0.999859375, -0.999859375, 0.9998875, -0.9998875],
+  "author_derivative_method": "For each signed spin, fit degree-7 and degree-9 polynomials to the 8 and 10 nearest Cook author rows in x=-log(1-|j|), respectively. Differentiate at the declared spin and convert to signed-spin units. The difference between fits is an empirical truncation check, not a rigorous remainder bound.",
+  "author_archive_url": "https://zenodo.org/records/2650358/files/KerrQNM_00.h5?download=1",
+  "author_archive_sha256": "d5853acabc1a07b66b4fae437c02e1435a9d2b3561bd7e4752b9721c9cd48923",
+  "author_datasets": {"positive": "/n00/m+02/{2,2,0}", "negative": "/n00/m-02/{2,-2,0}"},
+  "source_sha256": {
+    "src/diffgw_core/kerr_qnm_220_data.py": "51b13ae3649ec332b45d4c538a669334ec31f4244105e3b4c2b0c24197f4c5e4",
+    "src/jaxwave/approximants/kerr_qnm_interp.py": "1de5fbab1757b90ea0a37927c3432cf72ceafd5faeaef024b2baeb5b445fabe4",
+    "src/torchwave/approximants/kerr_qnm_generated.py": "82da71c19c50defeab4c32b6950141d845214909e9f52342e3f1cf3b46f08326"
+  },
+  "prior_evidence_sha256": {
+    "dev/native_rom/evidence/2026-09-25/qnm_cook_domain.json": "851c78a73e97b4ea7cd25f998a239d68efc781b9a225a2fe7795138d88ff9b40",
+    "dev/native_rom/evidence/2026-09-25/qnm_ringdown_waveform_current.json": "385529a8a18f63bffbf05be422235ead4431608dd0c0d53b11ef32ed7f886b46",
+    "dev/native_rom/evidence/2026-09-25/qnm_ringdown_current_baseline.npz": "b16dd3516f57d39a3963709d9529c0c83d02ad527f4ae9c3382669b57d1b428e"
+  },
+  "waveform_impact_row": "q8_high_aligned",
+  "value_absolute_tolerance": 1e-8,
+  "derivative_scaled_tolerance": 0.0001,
+  "author_stencil_scaled_tolerance": 0.0001,
+  "torch_jax_derivative_absolute_tolerance": 1e-8,
+  "analytic_backend_derivative_absolute_tolerance": 1e-8,
+  "waveform_whole_mode_complex_relative_l2_max": 1e-5,
+  "no_continuous_bound_claim": true,
+  "historical_binary_parity_claim": false,
+  "release_qualified": false,
+  "production_change": false
+}

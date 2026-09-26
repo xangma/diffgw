@@ -1,0 +1,942 @@
+{
+  "author_archive_sha256": "d5853acabc1a07b66b4fae437c02e1435a9d2b3561bd7e4752b9721c9cd48923",
+  "component_id": "V4-QNM-NATIVE-220-SPLINE",
+  "continuous_domain_error_bound_claim": false,
+  "errors": [],
+  "gates": {
+    "analytic_backend_derivative": true,
+    "author_derivative": true,
+    "author_stencil_stability": true,
+    "author_value": true,
+    "pinned_waveform_impact": true,
+    "torch_jax_derivative": true
+  },
+  "historical_binary_parity_claim": false,
+  "plan_sha256": "4ec279578c50029b13d0b680eba21ecb86e8b2ff525f90af72bc5e9812659c88",
+  "prior_evidence_sha256": {
+    "dev/native_rom/evidence/2026-09-25/qnm_cook_domain.json": "851c78a73e97b4ea7cd25f998a239d68efc781b9a225a2fe7795138d88ff9b40",
+    "dev/native_rom/evidence/2026-09-25/qnm_ringdown_current_baseline.npz": "b16dd3516f57d39a3963709d9529c0c83d02ad527f4ae9c3382669b57d1b428e",
+    "dev/native_rom/evidence/2026-09-25/qnm_ringdown_waveform_current.json": "385529a8a18f63bffbf05be422235ead4431608dd0c0d53b11ef32ed7f886b46"
+  },
+  "process": {
+    "cwd": "/home/xangma/tmp/diffgw-qnm-cert-20260927",
+    "host": "len"
+  },
+  "production_change": false,
+  "release_qualified": false,
+  "rows": [
+    {
+      "analytic_backend_derivative_error_abs": [
+        5.662137425588298e-15,
+        7.511352650979575e-16
+      ],
+      "author_stencil_derivative_difference_scaled": [
+        3.9468428525424315e-14,
+        9.802922362744937e-15
+      ],
+      "cook_stencil_10": {
+        "derivative": [
+          0.2677316414394846,
+          -0.015093298123705412
+        ],
+        "value": [
+          0.46425682244512334,
+          0.08563129601663616
+        ]
+      },
+      "cook_stencil_8": {
+        "derivative": [
+          0.26773164143952405,
+          -0.015093298123695609
+        ],
+        "value": [
+          0.46425682244512284,
+          0.08563129601663615
+        ]
+      },
+      "derivative_error_scaled": [
+        1.4555023852835802e-13,
+        9.856178373457425e-14
+      ],
+      "jax": {
+        "derivative": [
+          0.26773164143962447,
+          -0.015093298123803223
+        ],
+        "value": [
+          0.4642568224451228,
+          0.08563129601663612
+        ]
+      },
+      "native_analytic": {
+        "derivative": [
+          0.26773164143963013,
+          -0.015093298123803974
+        ],
+        "value": [
+          0.46425682244512273,
+          0.08563129601663612
+        ]
+      },
+      "signed_spin": 0.5005,
+      "torch": {
+        "derivative": [
+          0.26773164143963163,
+          -0.015093298123803845
+        ],
+        "value": [
+          0.4642568224451228,
+          0.08563129601663612
+        ]
+      },
+      "torch_jax_derivative_error_abs": [
+        7.16093850883226e-15,
+        6.227657278756737e-16
+      ],
+      "value_error_abs": [
+        6.106226635438361e-16,
+        4.163336342344337e-17
+      ]
+    },
+    {
+      "analytic_backend_derivative_error_abs": [
+        1.3655743202889425e-14,
+        9.336498588141673e-15
+      ],
+      "author_stencil_derivative_difference_scaled": [
+        3.93574062229618e-14,
+        1.0753984508449221e-14
+      ],
+      "cook_stencil_10": {
+        "derivative": [
+          0.07819223898031881,
+          0.0012096977110896017
+        ],
+        "value": [
+          0.3242682104102126,
+          0.08903094079890825
+        ]
+      },
+      "cook_stencil_8": {
+        "derivative": [
+          0.07819223898027945,
+          0.0012096977110788477
+        ],
+        "value": [
+          0.32426821041021264,
+          0.08903094079890826
+        ]
+      },
+      "derivative_error_scaled": [
+        3.953781746446339e-14,
+        1.236142264937623e-14
+      ],
+      "jax": {
+        "derivative": [
+          0.07819223898029293,
+          0.0012096977110935825
+        ],
+        "value": [
+          0.32426821041021203,
+          0.08903094079890819
+        ]
+      },
+      "native_analytic": {
+        "derivative": [
+          0.07819223898027927,
+          0.0012096977111019631
+        ],
+        "value": [
+          0.32426821041021203,
+          0.08903094079890818
+        ]
+      },
+      "signed_spin": -0.5005,
+      "torch": {
+        "derivative": [
+          0.07819223898027983,
+          0.0012096977110926267
+        ],
+        "value": [
+          0.32426821041021203,
+          0.08903094079890819
+        ]
+      },
+      "torch_jax_derivative_error_abs": [
+        1.3100631690576847e-14,
+        9.558326352632207e-16
+      ],
+      "value_error_abs": [
+        5.551115123125783e-16,
+        6.938893903907228e-17
+      ]
+    },
+    {
+      "analytic_backend_derivative_error_abs": [
+        3.397282455352979e-14,
+        5.35682609381638e-15
+      ],
+      "author_stencil_derivative_difference_scaled": [
+        1.6340084725800466e-14,
+        2.914335439641036e-15
+      ],
+      "cook_stencil_10": {
+        "derivative": [
+          1.1686497557384745,
+          -0.1672791163998663
+        ],
+        "value": [
+          0.672197425040448,
+          0.06478583002612917
+        ]
+      },
+      "cook_stencil_8": {
+        "derivative": [
+          1.1686497557384554,
+          -0.1672791163998634
+        ],
+        "value": [
+          0.6721974250404474,
+          0.06478583002612907
+        ]
+      },
+      "derivative_error_scaled": [
+        2.656213772868494e-13,
+        3.5879632598323496e-13
+      ],
+      "jax": {
+        "derivative": [
+          1.1686497557381301,
+          -0.16727911639951287
+        ],
+        "value": [
+          0.6721974250404475,
+          0.0647858300261292
+        ]
+      },
+      "native_analytic": {
+        "derivative": [
+          1.168649755738164,
+          -0.16727911639950752
+        ],
+        "value": [
+          0.6721974250404474,
+          0.06478583002612921
+        ]
+      },
+      "signed_spin": 0.9005,
+      "torch": {
+        "derivative": [
+          1.1686497557381579,
+          -0.16727911639950888
+        ],
+        "value": [
+          0.6721974250404475,
+          0.0647858300261292
+        ]
+      },
+      "torch_jax_derivative_error_abs": [
+        2.7755575615628914e-14,
+        3.9968028886505635e-15
+      ],
+      "value_error_abs": [
+        5.551115123125783e-16,
+        4.163336342344337e-17
+      ]
+    },
+    {
+      "analytic_backend_derivative_error_abs": [
+        1.3301859613790157e-14,
+        1.3415484001466638e-14
+      ],
+      "author_stencil_derivative_difference_scaled": [
+        8.743006318923108e-16,
+        3.094746681142624e-15
+      ],
+      "cook_stencil_10": {
+        "derivative": [
+          0.05870877853434253,
+          0.0024385044018592843
+        ],
+        "value": [
+          0.2972148544796802,
+          0.08827944035289403
+        ]
+      },
+      "cook_stencil_8": {
+        "derivative": [
+          0.05870877853434166,
+          0.002438504401862379
+        ],
+        "value": [
+          0.2972148544796798,
+          0.08827944035289398
+        ]
+      },
+      "derivative_error_scaled": [
+        1.3336554083309693e-12,
+        2.2084721204573832e-13
+      ],
+      "jax": {
+        "derivative": [
+          0.058708778533002715,
+          0.002438504401638397
+        ],
+        "value": [
+          0.29721485447968043,
+          0.08827944035289415
+        ]
+      },
+      "native_analytic": {
+        "derivative": [
+          0.058708778533008876,
+          0.002438504401638437
+        ],
+        "value": [
+          0.29721485447968043,
+          0.08827944035289413
+        ]
+      },
+      "signed_spin": -0.9005,
+      "torch": {
+        "derivative": [
+          0.05870877853302218,
+          0.0024385044016518526
+        ],
+        "value": [
+          0.29721485447968043,
+          0.08827944035289415
+        ]
+      },
+      "torch_jax_derivative_error_abs": [
+        1.9463597400459776e-14,
+        1.3455382641414104e-14
+      ],
+      "value_error_abs": [
+        2.220446049250313e-16,
+        9.71445146547012e-17
+      ]
+    },
+    {
+      "analytic_backend_derivative_error_abs": [
+        2.8688162956314045e-13,
+        1.9761969838327786e-14
+      ],
+      "author_stencil_derivative_difference_scaled": [
+        2.1272178621526276e-12,
+        1.2301206286017588e-12
+      ],
+      "cook_stencil_10": {
+        "derivative": [
+          5.925175873245903,
+          -1.2498260810799304
+        ],
+        "value": [
+          0.8738090053510895,
+          0.028776516350941233
+        ]
+      },
+      "cook_stencil_8": {
+        "derivative": [
+          5.925175873233298,
+          -1.249826081078393
+        ],
+        "value": [
+          0.8738090053510759,
+          0.02877651635094328
+        ]
+      },
+      "derivative_error_scaled": [
+        1.6413949397908021e-13,
+        2.1123821886301143e-13
+      ],
+      "jax": {
+        "derivative": [
+          5.925175873244825,
+          -1.2498260810796467
+        ],
+        "value": [
+          0.8738090053510893,
+          0.02877651635094163
+        ]
+      },
+      "native_analytic": {
+        "derivative": [
+          5.92517587324493,
+          -1.2498260810796664
+        ],
+        "value": [
+          0.8738090053510895,
+          0.028776516350941632
+        ]
+      },
+      "signed_spin": 0.9905,
+      "torch": {
+        "derivative": [
+          5.925175873245217,
+          -1.2498260810796495
+        ],
+        "value": [
+          0.8738090053510893,
+          0.02877651635094163
+        ]
+      },
+      "torch_jax_derivative_error_abs": [
+        3.9168668308775523e-13,
+        2.886579864025407e-15
+      ],
+      "value_error_abs": [
+        0.0,
+        3.9898639947466563e-16
+      ]
+    },
+    {
+      "analytic_backend_derivative_error_abs": [
+        3.543207394152148e-13,
+        1.2977900004651488e-13
+      ],
+      "author_stencil_derivative_difference_scaled": [
+        1.5830219080026353e-11,
+        1.1398477647861505e-13
+      ],
+      "cook_stencil_10": {
+        "derivative": [
+          0.05547655321282951,
+          0.0026347246477477506
+        ],
+        "value": [
+          0.29207895605133743,
+          0.08805095905204618
+        ]
+      },
+      "cook_stencil_8": {
+        "derivative": [
+          0.05547655319699929,
+          0.002634724647633766
+        ],
+        "value": [
+          0.29207895605135403,
+          0.08805095905204373
+        ]
+      },
+      "derivative_error_scaled": [
+        1.0050349441570461e-11,
+        2.6416820770799876e-10
+      ],
+      "jax": {
+        "derivative": [
+          0.05547655320242484,
+          0.0026347249117861793
+        ],
+        "value": [
+          0.292078956050595,
+          0.08805095905143354
+        ]
+      },
+      "native_analytic": {
+        "derivative": [
+          0.05547655320277916,
+          0.0026347249119159583
+        ],
+        "value": [
+          0.29207895605059503,
+          0.08805095905143354
+        ]
+      },
+      "signed_spin": -0.9905,
+      "torch": {
+        "derivative": [
+          0.055476553203006776,
+          0.002634724911944584
+        ],
+        "value": [
+          0.292078956050595,
+          0.08805095905143354
+        ]
+      },
+      "torch_jax_derivative_error_abs": [
+        5.819372761450836e-13,
+        1.5840453948534616e-13
+      ],
+      "value_error_abs": [
+        7.424061365668422e-13,
+        6.12648820563777e-13
+      ]
+    },
+    {
+      "analytic_backend_derivative_error_abs": [
+        3.9889869185572024e-11,
+        4.973799150320701e-14
+      ],
+      "author_stencil_derivative_difference_scaled": [
+        2.7343011679191986e-10,
+        7.112421478966364e-10
+      ],
+      "cook_stencil_10": {
+        "derivative": [
+          41.51092678412553,
+          -9.886216150691618
+        ],
+        "value": [
+          0.9761694791515636,
+          0.005743083965810023
+        ]
+      },
+      "cook_stencil_8": {
+        "derivative": [
+          41.51092677277519,
+          -9.886216143660125
+        ],
+        "value": [
+          0.9761694791499106,
+          0.005743083966798598
+        ]
+      },
+      "derivative_error_scaled": [
+        4.7946442330426144e-11,
+        7.20001735079195e-11
+      ],
+      "jax": {
+        "derivative": [
+          41.51092678209534,
+          -9.88621614997976
+        ],
+        "value": [
+          0.9761694791514587,
+          0.005743083965888952
+        ]
+      },
+      "native_analytic": {
+        "derivative": [
+          41.51092678213523,
+          -9.88621614997981
+        ],
+        "value": [
+          0.9761694791514588,
+          0.005743083965888952
+        ]
+      },
+      "signed_spin": 0.99971875,
+      "torch": {
+        "derivative": [
+          41.51092678209742,
+          -9.886216149979765
+        ],
+        "value": [
+          0.9761694791514587,
+          0.005743083965888952
+        ]
+      },
+      "torch_jax_derivative_error_abs": [
+        2.0818902157770935e-12,
+        5.329070518200751e-15
+      ],
+      "value_error_abs": [
+        1.0480505352461478e-13,
+        7.892905079520673e-14
+      ]
+    },
+    {
+      "analytic_backend_derivative_error_abs": [
+        3.81687945139042e-11,
+        4.500364057108408e-12
+      ],
+      "author_stencil_derivative_difference_scaled": [
+        8.734204262617062e-10,
+        4.0314271452374095e-11
+      ],
+      "cook_stencil_10": {
+        "derivative": [
+          0.05516334012827655,
+          0.002653449584751224
+        ],
+        "value": [
+          0.29156897771884466,
+          0.08802658368241748
+        ]
+      },
+      "cook_stencil_8": {
+        "derivative": [
+          0.055163341001696974,
+          0.0026534496250654955
+        ],
+        "value": [
+          0.2915689777187194,
+          0.08802658368241197
+        ]
+      },
+      "derivative_error_scaled": [
+        7.636983406777986e-11,
+        1.4988184651731906e-10
+      ],
+      "jax": {
+        "derivative": [
+          0.05516334009007551,
+          0.0026534497301327065
+        ],
+        "value": [
+          0.29156897771838663,
+          0.08802658368175441
+        ]
+      },
+      "native_analytic": {
+        "derivative": [
+          0.05516334005190671,
+          0.0026534497346330705
+        ],
+        "value": [
+          0.2915689777183866,
+          0.0880265836817544
+        ]
+      },
+      "signed_spin": -0.99971875,
+      "torch": {
+        "derivative": [
+          0.055163340080168,
+          0.0026534497301982855
+        ],
+        "value": [
+          0.29156897771838663,
+          0.08802658368175441
+        ]
+      },
+      "torch_jax_derivative_error_abs": [
+        9.907505371664627e-12,
+        6.557905260495822e-14
+      ],
+      "value_error_abs": [
+        4.580780199603396e-13,
+        6.630807014573747e-13
+      ]
+    },
+    {
+      "analytic_backend_derivative_error_abs": [
+        6.573230848516687e-11,
+        1.8474111129762605e-13
+      ],
+      "author_stencil_derivative_difference_scaled": [
+        1.4484138488729848e-10,
+        4.4192784415168586e-10
+      ],
+      "cook_stencil_10": {
+        "derivative": [
+          59.40475871167924,
+          -14.246609720632149
+        ],
+        "value": [
+          0.9830491414323601,
+          0.004098880119945215
+        ]
+      },
+      "cook_stencil_8": {
+        "derivative": [
+          59.404758703074975,
+          -14.246609714336175
+        ],
+        "value": [
+          0.983049141431724,
+          0.004098880120410246
+        ]
+      },
+      "derivative_error_scaled": [
+        1.1319019864030581e-10,
+        8.965401487590631e-10
+      ],
+      "jax": {
+        "derivative": [
+          59.40475871844683,
+          -14.246609707859307
+        ],
+        "value": [
+          0.9830491414313987,
+          0.004098880120175405
+        ]
+      },
+      "native_analytic": {
+        "derivative": [
+          59.40475871840328,
+          -14.246609707859491
+        ],
+        "value": [
+          0.9830491414313983,
+          0.004098880120175405
+        ]
+      },
+      "signed_spin": 0.999859375,
+      "torch": {
+        "derivative": [
+          59.40475871846901,
+          -14.246609707859335
+        ],
+        "value": [
+          0.9830491414313987,
+          0.004098880120175405
+        ]
+      },
+      "torch_jax_derivative_error_abs": [
+        2.2183144210430328e-11,
+        2.842170943040401e-14
+      ],
+      "value_error_abs": [
+        9.617862062327731e-13,
+        2.301899990064804e-13
+      ]
+    },
+    {
+      "analytic_backend_derivative_error_abs": [
+        1.0165761288316588e-10,
+        2.3385256838620583e-11
+      ],
+      "author_stencil_derivative_difference_scaled": [
+        8.619311306357069e-10,
+        4.862954873854908e-11
+      ],
+      "cook_stencil_10": {
+        "derivative": [
+          0.055158586761290304,
+          0.002653733173661589
+        ],
+        "value": [
+          0.2915612207083688,
+          0.0880262105211184
+        ]
+      },
+      "cook_stencil_8": {
+        "derivative": [
+          0.055158587623221435,
+          0.002653733222291138
+        ],
+        "value": [
+          0.2915612207083072,
+          0.08802621052111552
+        ]
+      },
+      "derivative_error_scaled": [
+        1.8549717317739578e-10,
+        3.0257302783068263e-10
+      ],
+      "jax": {
+        "derivative": [
+          0.05515858647413552,
+          0.0026537334924796596
+        ],
+        "value": [
+          0.2915612207079302,
+          0.0880262105204368
+        ]
+      },
+      "native_analytic": {
+        "derivative": [
+          0.05515858657579313,
+          0.002653733476234617
+        ],
+        "value": [
+          0.29156122070793017,
+          0.08802621052043678
+        ]
+      },
+      "signed_spin": -0.999859375,
+      "torch": {
+        "derivative": [
+          0.05515858651540423,
+          0.002653733499619874
+        ],
+        "value": [
+          0.2915612207079302,
+          0.0880262105204368
+        ]
+      },
+      "torch_jax_derivative_error_abs": [
+        4.126871067100524e-11,
+        7.140214201145634e-12
+      ],
+      "value_error_abs": [
+        4.3864911702939935e-13,
+        6.816214259686149e-13
+      ]
+    },
+    {
+      "analytic_backend_derivative_error_abs": [
+        5.637446065520635e-11,
+        3.197442310920451e-13
+      ],
+      "author_stencil_derivative_difference_scaled": [
+        4.266471950053462e-10,
+        1.1473811873824378e-09
+      ],
+      "cook_stencil_10": {
+        "derivative": [
+          66.61795380927033,
+          -16.00433649983204
+        ],
+        "value": [
+          0.9848156808508722,
+          0.0036748540663617416
+        ]
+      },
+      "cook_stencil_8": {
+        "derivative": [
+          66.61795378084797,
+          -16.004336481468965
+        ],
+        "value": [
+          0.9848156808501694,
+          0.0036748540668278982
+        ]
+      },
+      "derivative_error_scaled": [
+        2.2341634473813066e-10,
+        5.94010605378892e-10
+      ],
+      "jax": {
+        "derivative": [
+          66.61795382411219,
+          -16.004336490325613
+        ],
+        "value": [
+          0.9848156808502821,
+          0.0036748540669745474
+        ]
+      },
+      "native_analytic": {
+        "derivative": [
+          66.61795382415387,
+          -16.004336490325294
+        ],
+        "value": [
+          0.9848156808502825,
+          0.0036748540669745487
+        ]
+      },
+      "signed_spin": 0.9998875,
+      "torch": {
+        "derivative": [
+          66.6179538240975,
+          -16.004336490325468
+        ],
+        "value": [
+          0.9848156808502821,
+          0.0036748540669745474
+        ]
+      },
+      "torch_jax_derivative_error_abs": [
+        1.4694023775518872e-11,
+        1.4566126083082054e-13
+      ],
+      "value_error_abs": [
+        5.897504706808832e-13,
+        6.128071140809599e-13
+      ]
+    },
+    {
+      "analytic_backend_derivative_error_abs": [
+        1.7941335916926704e-11,
+        1.9307441062599295e-11
+      ],
+      "author_stencil_derivative_difference_scaled": [
+        3.026943244666125e-09,
+        1.2806083797556322e-10
+      ],
+      "cook_stencil_10": {
+        "derivative": [
+          0.05515763587377885,
+          0.002653791474434882
+        ],
+        "value": [
+          0.2915596693864874,
+          0.08802613588405543
+        ]
+      },
+      "cook_stencil_8": {
+        "derivative": [
+          0.055157638900722096,
+          0.00265379160249572
+        ],
+        "value": [
+          0.29155966938641287,
+          0.08802613588405193
+        ]
+      },
+      "derivative_error_scaled": [
+        1.4540294662745978e-10,
+        1.2778971032398334e-09
+      ],
+      "jax": {
+        "derivative": [
+          0.05515763600124046,
+          0.00265379021584522
+        ],
+        "value": [
+          0.29155966938605027,
+          0.08802613588338568
+        ]
+      },
+      "native_analytic": {
+        "derivative": [
+          0.0551576360191818,
+          0.0026537901965377787
+        ],
+        "value": [
+          0.29155966938605027,
+          0.08802613588338566
+        ]
+      },
+      "signed_spin": -0.9998875,
+      "torch": {
+        "derivative": [
+          0.0551576360333608,
+          0.0026537902127747315
+        ],
+        "value": [
+          0.29155966938605027,
+          0.08802613588338568
+        ]
+      },
+      "torch_jax_derivative_error_abs": [
+        3.2120341109109773e-11,
+        3.070488308054564e-12
+      ],
+      "value_error_abs": [
+        4.371503159461554e-13,
+        6.697697951807413e-13
+      ]
+    }
+  ],
+  "schema": "diffgw.seobnrv4.qnm-spline-component.v1",
+  "scope": {
+    "description": "Finite independent-author-data value and derivative check for the native QNM spline.",
+    "known_limitations": [
+      "Local author-data polynomial derivatives are numerical estimates; stencil agreement is not a rigorous interpolation remainder bound.",
+      "These 12 interstitial points do not establish a continuous-domain error bound.",
+      "The pinned single-row QNM substitution is a fixed-boundary whole-mode witness, not a domain-wide waveform or historical-binary parity qualification."
+    ],
+    "physics_validated": false,
+    "production_asset": false,
+    "production_promotion_allowed": false,
+    "training_generator_qualified": false
+  },
+  "script_sha256": "f700f88031c67cbc226d13a43bfcf84fd7a1630b1fec1ae2b710f76ab9130720",
+  "source_sha256": {
+    "src/diffgw_core/kerr_qnm_220_data.py": "51b13ae3649ec332b45d4c538a669334ec31f4244105e3b4c2b0c24197f4c5e4",
+    "src/jaxwave/approximants/kerr_qnm_interp.py": "1de5fbab1757b90ea0a37927c3432cf72ceafd5faeaef024b2baeb5b445fabe4",
+    "src/torchwave/approximants/kerr_qnm_generated.py": "82da71c19c50defeab4c32b6950141d845214909e9f52342e3f1cf3b46f08326"
+  },
+  "status": "diagnostic_complete",
+  "summary": {
+    "elapsed_seconds": 4.122404593974352,
+    "maxima": {
+      "analytic_backend_derivative_error_abs": 1.0165761288316588e-10,
+      "author_stencil_derivative_difference_scaled": 3.026943244666125e-09,
+      "derivative_error_scaled": 1.2778971032398334e-09,
+      "torch_jax_derivative_error_abs": 4.126871067100524e-11,
+      "value_error_abs": 9.617862062327731e-13
+    },
+    "row_count": 12
+  },
+  "waveform_impact": {
+    "fixed_boundary_reconstruction_complex_relative_l2": 0.0,
+    "prior_evidence": "dev/native_rom/evidence/2026-09-25/qnm_ringdown_waveform_current.json",
+    "row": "q8_high_aligned",
+    "whole_mode_complex_relative_l2": 2.5494566848309676e-06
+  }
+}
