@@ -6,8 +6,7 @@ Eqs. (14)-(16), (28)-(31). The adapter follows the carrier's negative Fourier
 phase sign; it does not implement the papers' merger/ringdown branches.
 """
 
-from typing import Any, Callable, Dict, Optional, Tuple, Union
-import math
+from typing import Any, Dict, Optional, Tuple, Union
 import jax
 import jax.numpy as jnp
 
@@ -21,9 +20,7 @@ from jaxwave.conversions import as_array
 from diffgw_core.ppe_cosmology import (
     D0_QUADRATURE_NODES, D0_QUADRATURE_WEIGHTS, OMEGA_M, OMEGA_LAMBDA,
 )
-from jaxwave.approximants.taylorf2 import TaylorF2
 from jaxwave.approximants.imrphenomd import IMRPhenomD
-from jaxwave.approximants.imrphenom_xas import IMRPhenomXAS
 
 
 # Standard PN order to ppE exponent mapping: b_ppE = 2 * PN - 5

@@ -33,12 +33,14 @@ def test_native_amplitude_against_paper(backend, case):
     if backend == "torch":
         torch = require_module("torch")
         from torchwave.approximants.imrphenomd_nrtidal import _nrtidal_amplitude
-        array = lambda v: torch.as_tensor(v, dtype=torch.float64)
+        def array(v):
+            return torch.as_tensor(v, dtype=torch.float64)
     else:
         require_module("jax")
         import jax.numpy as jnp
         from jaxwave.approximants.imrphenomd_nrtidal import _nrtidal_amplitude
-        array = lambda v: jnp.asarray(v, dtype=jnp.float64)
+        def array(v):
+            return jnp.asarray(v, dtype=jnp.float64)
     amp = np.asarray(_nrtidal_amplitude(array(x), array(m_sec),
                                          array(d_sec), array(eta), array(lt)))
     expected = np.array([paper_amplitude(case, f) for f in AMP_FREQUENCIES])
