@@ -233,7 +233,18 @@ def main():
             "torch_vs_jax": pair_metrics(torch_tiny, jax_tiny),
             "tiny_vs_exact_aligned": pair_metrics(torch_tiny, torch_aligned),
         })
-        oracle.append(oracle_case(f"XP_near_aligned_{label}", tiny_params, 25.0, fhigh))
+        # Table III separates NNLO v102 from MSA v223, while Table V makes
+        # the remnant choice independent of the angle prescription.  Keep
+        # both controls at identical physical inputs and strict gates.
+        for version in (102, 223):
+            for remnant in (0, 3):
+                variant = dict(tiny_params, prec_version=version,
+                               final_spin_mod=remnant)
+                case_name = (f"XP_near_aligned_{label}" if (version, remnant) == (223, 3)
+                             else f"XP_near_aligned_{label}_v{version}_mode{remnant}")
+                oracle.append(oracle_case(
+                    case_name, variant, 25.0, fhigh,
+                ))
 
     print(json.dumps({
         "environment": {

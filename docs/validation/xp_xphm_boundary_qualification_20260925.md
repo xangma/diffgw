@@ -1,5 +1,43 @@
 # XP/XPHM precession boundary qualification (2026-09-25)
 
+## 2026-09-26 frozen angle-version control
+
+[Pratten et al., Appendix F, Tables III and V](https://arxiv.org/html/2004.06503)
+distinguish NNLO angle version 102 from MSA version 223 (with NNLO fallback
+when MSA initialization fails), and specify the remnant choice separately.
+At integrated PR #42 source head `b4c6e0d`, the qualification driver now
+evaluates both versions and remnant modes 0/3 at identical near-aligned
+physical inputs. It retains the prior v223/mode-3 case IDs. The public
+LALSimulation binary API remains a numerical oracle only;
+no implementation or coefficient is copied or fitted from it.
+
+On `len`, Python 3.12.3, Torch 2.14.0+cpu, JAX 0.11.2, NumPy 2.3.5,
+SciPy 1.16.3, PyCBC 2.11.0, and LALSuite 7.26.15, the full complex
+polarization comparison gave the following. Each L2 cell is `h+ / hx`;
+mode-0 and mode-3 values are shown as ranges because they are nearly equal.
+The unchanged strict gates are complex relative L2 `1e-6` and flat mismatch
+`1e-8` for each polarization.
+
+| Band (Hz) | Angle version | Modes 0/3 complex relative L2, `h+ / hx` | Largest mismatch | Strict verdict |
+| --- | --- | --- | ---: | --- |
+| 25–55 | 102 | `1.87–2.97e-11 / 2.41–3.82e-11` | `2.22e-16` | both pass |
+| 25–55 | 223 | `0.02373718 / 0.02373672` | `2.82e-4` | both fail |
+| 25–300 | 102 | `1.87–3.23e-11 / 2.41–4.16e-11` | `1.11e-16` | both pass |
+| 25–300 | 223 | `0.09654477 / 0.09654736` | `4.66e-3` | both fail |
+
+This control shows that the public-binary disagreement is version-specific
+at these fixed inputs and is not removed by changing remnant mode. It does
+not establish which convention should define the physical aligned endpoint
+or justify changing production waveform equations. The existing
+`test_xp_v223_azimuth_boundary_diagnostic.py` and
+`test_xp_aligned_boundary_clean.py` encode those distinct contracts.
+These two test files passed `27/27` on `len` in 6.50 seconds in the isolated
+PyCBC environment. The shared validation environment was restored to
+NumPy 2.5.3 and SciPy 1.18.1 without PyCBC.
+Generic observer `phi0` remains **not evaluable** against the public binary
+until its parameter mapping is independently derived. Overall release
+qualification remains **fail**.
+
 ## 2026-09-26 explicit-remnant policy amendment
 
 The earlier receipt below combined the paper-prescribed NNLO *angle* fallback
