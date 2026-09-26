@@ -10,8 +10,8 @@ It conditions on supplied QNM frequency/damping and normalized angular factors.
 The separate [angular projection specification](kerr-angular-projection.md)
 now checks selected spherical and spheroidal factors independently. This
 carrier check itself does not verify the QNM eigenvalue problem; a separate
-[scalar 220 QNM input check](kerr-qnm-scalar-qualification.md) covers three
-moderate-spin frequencies and angular eigenvalues. Neither check qualifies
+[scalar 220 QNM input check](kerr-qnm-scalar-qualification.md) covers five
+selected spin values and angular eigenvalues. Neither check qualifies
 excitation, the inferred public-compatible angular-series stopping rule, or
 other modes and overtones.
 
