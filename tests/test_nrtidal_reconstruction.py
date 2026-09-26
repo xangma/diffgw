@@ -33,11 +33,12 @@ def test_additive_amplitude_low_frequency_pn():
     x = torch.tensor([1e-5, 2e-5], dtype=torch.float64)
     m_sec, d_sec, lam = 2.8 * MSUN_SEC, 100 * MPC_SI / C_SI, 400.0
     kappa = (3.0 / 16.0) * lam
-    expected = (m_sec**2 / (2.0 * d_sec)) * (-9.0 * kappa * x**(13.0 / 4.0) * (1.0 + (449.0 / 108.0) * x))
-    actual = _nrtidal_amplitude(x, m_sec, d_sec, lam)
+    prefactor = math.sqrt(5.0 * math.pi * 0.25 / 24.0) * m_sec**2 / d_sec
+    expected = prefactor * (-9.0 * kappa * x**(13.0 / 4.0) * (1.0 + (449.0 / 108.0) * x))
+    actual = _nrtidal_amplitude(x, m_sec, d_sec, 0.25, lam)
     torch.testing.assert_close(actual / expected, torch.ones_like(x), rtol=1e-7, atol=0)
     # Recover the independently specified NLO coefficient, not only the leading power.
-    leading = (m_sec**2 / (2.0 * d_sec)) * (-9.0 * kappa * x**(13.0 / 4.0))
+    leading = prefactor * (-9.0 * kappa * x**(13.0 / 4.0))
     torch.testing.assert_close((actual / leading - 1) / x, torch.full_like(x, 449.0 / 108.0), rtol=1e-4, atol=0)
 
 
@@ -52,7 +53,8 @@ def test_additive_amplitude_polarization_projection(inclination):
     x = (PI * 2.7 * MSUN_SEC * f) ** (2 / 3)
     # Dietrich et al. (2019), arXiv:1905.06011 Eq. 24 prints d=13477.8.
     c_amp = 13477.8
-    at = (2.7 * MSUN_SEC)**2 / (2.0 * 80 * MPC_SI / C_SI) * (-9 * kappa * x**(13/4) * (1 + 449/108 * x + 22672/9 * x**2.89) / (1 + c_amp * x**4))
+    eta = 1.4 * 1.3 / 2.7**2
+    at = math.sqrt(5 * math.pi * eta / 24) * (2.7 * MSUN_SEC)**2 / (80 * MPC_SI / C_SI) * (-9 * kappa * x**(13/4) * (1 + 449/108 * x + 22672/9 * x**2.89) / (1 + c_amp * x**4))
     plus = .5 * (1 + math.cos(inclination)**2)
     torch.testing.assert_close((hp.abs() - hp0.abs()) / 1e-23, plus * at / 1e-23, rtol=1e-10, atol=1e-13)
     torch.testing.assert_close(hc / 1e-23, hp / 1e-23 * (-1j * math.cos(inclination) / plus), rtol=1e-12, atol=1e-14)

@@ -1,11 +1,71 @@
 # NRTidalv2 amplitude and merger-taper diagnostic — 26 September 2026
 
-**Result: not qualified.** This receipt covers only the nonspinning tidal
+**Result: paper math qualified; pinned-binary agreement not qualified.**
+This receipt covers only the nonspinning tidal
 amplitude and merger taper specified in
 [nrtidalv2-amplitude-taper/v1](../math/nrtidalv2-amplitude-taper.md). The
 separate [nonspinning phase receipt](nrtidalv2_phase_20260926.md) remains
-intact. No production waveform was changed, no coefficient was fit to the
-binary, and no LAL implementation source was inspected.
+intact. No coefficient was fit to the binary, and no LAL implementation source
+was inspected.
+
+On the Eq. (24) correction branch, Torch and JAX now use the published
+$\sqrt{5\pi\eta/24}\,M^2/D_L$ scale. The prior native $M^2/(2D_L)$ scale
+gave a mass-ratio-dependent relative error of 0.2361–0.2489; it has been
+removed. This choice is supported independently by the physical IMRPhenomD
+Newtonian carrier: $\sqrt{5\eta/24}M^{5/6}/(\pi^{2/3}D_Lf^{7/6})
+=\sqrt{5\pi\eta/24}M^2x^{-7/4}/D_L$. The identity follows from
+[Cutler and Flanagan, Eqs. (62)–(63)](https://arxiv.org/pdf/gr-qc/9402014v1)
+and $x=(\pi Mf)^{2/3}$. We changed both backends and the paper-math tests;
+no LAL-derived normalization was introduced. On `len`, the focused test
+command covering the scalar, native waveform, pinned binary and Torch
+reconstruction returned **54 passed, 18 strict xfailed**. The 18 expected
+failures are the nonzero-tide paper-versus-LAL and corrected-native-versus-LAL
+quotients before/inside the taper. The frozen limits did not change.
+
+This does **not** establish why the pinned LAL binary outputs match the earlier
+native normalization, and the approximately 25 ppm effective merger-boundary
+offset reported below remains unresolved. The LAL binary gate is still red.
+The measurements below are the **pre-correction baseline**, retained to show
+what changed and what remains in the binary.
+
+Equation (24) is an absolute **additive** tidal amplitude, not the complete
+BNS amplitude and not a relative factor. Equation (25) forms
+$(\widetilde A_{\rm BBH}+\widetilde A_T)W$. The frontends implement this as
+$h_{\rm BBH}(1+\widetilde A_T/\widetilde A_{\rm BBH})W$, using the same
+physical BBH carrier amplitude in the denominator. This division only
+applies the additive correction to the complex waveform; it does not
+multiply by a second carrier normalization.
+
+| Current comparison | Frozen maximum | Observed maximum | Result |
+|---|---:|---:|---|
+| Torch/JAX scalar signed amplitude / Eq. (24) | relative $10^{-11}$ | at most $10^{-11}$ | pass |
+| Torch/JAX untapered $h_+$ modulus quotient / paper | absolute $10^{-10}$ | at most $10^{-10}$ | pass |
+| LAL versus paper; native versus LAL, through merger, equal mass | absolute $5\times10^{-5}$ | $0.0678536536$ | fail |
+| Same, unequal and exchanged | absolute $5\times10^{-5}$ | $0.0488374025$ | fail |
+| LAL versus paper; native versus LAL, after merger, equal mass | absolute $5\times10^{-5}$ | $0.0722370285$ | fail |
+| Same, unequal and exchanged | absolute $5\times10^{-5}$ | $0.0521550463$ | fail |
+
+The current focused run used host `len`, cwd
+`/home/xangma/tmp/diffgw-nrtidalv2-amplitude-eq24-20260926`, and
+`amplitude_eq24_focus_final.log` there. Its command was:
+
+```sh
+PYTHONPATH=src:tests:/home/xangma/diffgw-pr45-318b37f7/.oracle-deps \
+DIFFGW_REQUIRE_LAL_BINARY=1 JAX_ENABLE_X64=1 OMP_NUM_THREADS=1 \
+/home/xangma/.cache/diffgw-taylorf2-hm-venv/bin/python -m pytest -q -s \
+tests/test_nrtidalv2_amplitude_math_reference.py \
+tests/test_nrtidalv2_amplitude_math_reference_native.py \
+tests/test_nrtidalv2_amplitude_lal_binary.py tests/test_nrtidal_reconstruction.py
+```
+
+The broader `len` run in the same cwd used `amplitude_eq24_broad.log` and
+returned **94 passed, 1 skipped** in 114.65 s. It covered
+`tests/test_nrtidal.py`, `tests/test_nrtidal_reference.py`,
+`tests/parity/test_nrtidal_parity.py`,
+`tests/parity/test_waveforms_dispatch_parity.py`, and
+`tests/test_nrtidalv2_phase_math_reference.py` under the same environment.
+
+## Pre-correction baseline
 
 The independent SymPy/mpmath reference transcribes the full absolute
 normalization of [Dietrich et al. (2019), Eq. (24)](https://arxiv.org/pdf/1905.06011v2),

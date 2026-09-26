@@ -100,19 +100,20 @@ def _nrtidal_amplitude(
     x: jnp.ndarray,
     m_sec: jnp.ndarray,
     d_sec: jnp.ndarray,
+    eta: jnp.ndarray,
     lambda_tilde: jnp.ndarray,
 ) -> jnp.ndarray:
     """Face-on additive planar tidal amplitude correction (Dietrich et al. 2019 Eq. 24).
 
     A_T(f) = -9 * kappa_eff * x^(13/4) * (1 + n1 * x + n289 * x^2.89) / (1 + d * x^4)
-    a_tidal = (m_sec^2 / (2 * d_sec)) * A_T(f)
+    a_tidal = sqrt(5*pi*eta/24) * (m_sec^2 / d_sec) * A_T(f)
     """
     kappa_eff = (3.0 / 16.0) * lambda_tilde
     c = NRTIDAL_V2_AMP_COEFFS
     num = 1.0 + c["n_1"] * x + c["n_289"] * (x ** 2.89)
     den = 1.0 + c["d"] * (x ** 4.0)
     a_t = -9.0 * kappa_eff * (x ** 3.25) * (num / den)
-    return (m_sec ** 2.0 / (2.0 * d_sec)) * a_t
+    return jnp.sqrt(5.0 * PI * eta / 24.0) * (m_sec ** 2.0 / d_sec) * a_t
 
 
 def _planck_taper_window(
@@ -474,7 +475,7 @@ class IMRPhenomD_NRTidal:
             else:
                 d_sec_eval = d_sec
 
-            a_tidal = _nrtidal_amplitude(x, m_sec_eval, d_sec_eval, lam_tilde_eval)
+            a_tidal = _nrtidal_amplitude(x, m_sec_eval, d_sec_eval, eta_eval, lam_tilde_eval)
             a_tidal = jnp.where(f_eval > 0.0, a_tidal, 0.0)
 
             inc = as_array(inclination, dtype=dtype)

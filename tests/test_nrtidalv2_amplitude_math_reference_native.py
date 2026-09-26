@@ -1,6 +1,6 @@
-"""Strict expected-failure Eq. (24) amplitude diagnostics, outside green math CI.
+"""Frozen Eq. (24) amplitude checks against the independent scalar reference.
 
-The frozen limits remain the qualification criteria. See the measured failure
+The frozen limits remain the qualification criteria. See the measured
 receipt in docs/validation/nrtidalv2_amplitude_20260926.md.
 """
 
@@ -20,38 +20,13 @@ from test_nrtidalv2_amplitude_math_reference import (
 
 SCALAR_REL_MAX = 1e-11
 RATIO_ABS_MAX = 1e-10
-SCALAR_FAILURE_CASES = [
-    pytest.param(
-        case, id=case[0],
-        marks=pytest.mark.xfail(
-            strict=True,
-            reason=("Dietrich 2019 Eq. 24 (arxiv:1905.06011v2) "
-                    "sqrt(5*pi*eta/24) vs native 1/2; "
-                    "observed relative 0.23607725316 equal, 0.24888677449 unequal; "
-                    "docs/validation/nrtidalv2_amplitude_20260926.md"),
-        ),
-    ) if case[0] != "zero_tide" else pytest.param(case, id=case[0])
-    for case in CASES
-]
-WAVEFORM_FAILURE_CASES = [
-    pytest.param(
-        case, id=case[0],
-        marks=pytest.mark.xfail(
-            strict=True,
-            reason=("Dietrich 2019 Eq. 24 (arxiv:1905.06011v2) "
-                    "plus-polarization quotient; observed absolute "
-                    "0.01553696317 equal, 0.01795564024 unequal; "
-                    "docs/validation/nrtidalv2_amplitude_20260926.md"),
-        ),
-    ) if case[0] != "zero_tide" else pytest.param(case, id=case[0])
-    for case in CASES
-]
 
 
 @pytest.mark.parametrize("backend", ("torch", "jax"))
-@pytest.mark.parametrize("case", SCALAR_FAILURE_CASES)
+@pytest.mark.parametrize("case", CASES, ids=[c[0] for c in CASES])
 def test_native_amplitude_against_paper(backend, case):
     m_sec, delta, _, _ = paper_parameters(case)
+    eta = (1 - delta**2) / 4
     lt = float(lambda_tilde_expr(delta, case[3], case[4]))
     x = (math.pi*m_sec*AMP_FREQUENCIES)**(2/3)
     d_sec = DISTANCE_MPC*MPC_SI/C_SI
@@ -65,7 +40,7 @@ def test_native_amplitude_against_paper(backend, case):
         from jaxwave.approximants.imrphenomd_nrtidal import _nrtidal_amplitude
         array = lambda v: jnp.asarray(v, dtype=jnp.float64)
     amp = np.asarray(_nrtidal_amplitude(array(x), array(m_sec),
-                                         array(d_sec), array(lt)))
+                                         array(d_sec), array(eta), array(lt)))
     expected = np.array([paper_amplitude(case, f) for f in AMP_FREQUENCIES])
     if case[0] == "zero_tide":
         assert np.all(amp == 0)
@@ -74,7 +49,7 @@ def test_native_amplitude_against_paper(backend, case):
 
 
 @pytest.mark.parametrize("backend", ("torch", "jax"))
-@pytest.mark.parametrize("case", WAVEFORM_FAILURE_CASES)
+@pytest.mark.parametrize("case", CASES, ids=[c[0] for c in CASES])
 def test_native_waveform_amplitude_against_paper(backend, case):
     bbh, bns = native(case, AMP_FREQUENCIES, backend, taper=False)
     projection = (1+math.cos(INCLINATION)**2)/2

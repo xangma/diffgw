@@ -5,8 +5,9 @@
 Specification **nrtidalv2-nonspinning-tidal-amplitude-taper/v1** covers
 the signed additive Fourier tidal amplitude, published merger-frequency fit
 and descending Planck taper for the dominant mode, zero component spins,
-CPU FP64, the four frozen binaries below, and 100 Mpc distance. Its amplitude
-gate is currently a strict expected-failure diagnostic.
+CPU FP64, the four frozen binaries below, and 100 Mpc distance. The native
+paper-amplitude gate passes; the pinned-LAL binary gate remains a strict
+expected-failure diagnostic.
 
 ## Inputs, conventions, and options
 
@@ -41,8 +42,21 @@ The square-root normalization is part of Eq. (24). It also follows
 independently from the leading term of Dietrich et al. (2019), Eq. (23):
 $(27/16)\sqrt{160\pi\eta/27}=9\sqrt{5\pi\eta/24}$, while
 $x^{-7/4}x^5=x^{13/4}$. Thus Eqs. (23) and (24) have the same
-low-frequency normalization. The decimal fit inputs are used exactly as
-printed. For $X_A$ the heavier mass fraction,
+low-frequency normalization. The physical Newtonian IMRPhenomD carrier is
+$\sqrt{5\eta/24}\,M_{\rm sec}^{5/6}/(\pi^{2/3}D_{\rm sec}f^{7/6})$
+([Cutler–Flanagan, Eqs. (62)–(63)](https://arxiv.org/pdf/gr-qc/9402014v1)).
+In the same $x$ variable this is exactly
+$\sqrt{5\pi\eta/24}\,M_{\rm sec}^2 x^{-7/4}/D_{\rm sec}$.
+The published additive correction therefore has the same physical amplitude
+scale as the carrier; the earlier native $M_{\rm sec}^2/(2D_{\rm sec})$
+scale was inconsistent with both equations. Equation (24) specifies the
+**absolute additive tidal amplitude** $\widetilde A_T$, rather than a
+dimensionless multiplier or the full BNS amplitude. Equation (25) adds it
+once to $\widetilde A_{\rm BBH}$ before tapering. The frontend's quotient
+$1+\widetilde A_T/\widetilde A_{\rm BBH}$ is only an algebraic way to apply
+that sum to the complex BBH carrier; it introduces no second Newtonian
+normalization. The decimal fit inputs are used
+exactly as printed. For $X_A$ the heavier mass fraction,
 $X_B$ the lighter, the quoted merger fit is
 
 \[
@@ -69,11 +83,11 @@ LALSuite binary.
 
 ## Evidence and limitations
 
-The green paper-math tests in `tests/test_nrtidalv2_amplitude_math_reference.py`
+The paper-math tests in `tests/test_nrtidalv2_amplitude_math_reference.py`
 require merger-frequency relative error $\le10^{-11}$ and scalar/window
-amplitude error $\le10^{-10}$. The strict amplitude diagnostics in
-`tests/test_nrtidalv2_amplitude_diagnostic.py`
-retain the frozen native Torch/JAX scalar amplitude relative limit $10^{-11}$
+amplitude error $\le10^{-10}$. The now-green native amplitude checks in
+`tests/test_nrtidalv2_amplitude_math_reference_native.py`
+retain the frozen Torch/JAX scalar amplitude relative limit $10^{-11}$
 and untapered plus-polarization amplitude-ratio absolute limit $10^{-10}$.
 The pinned-binary tests in `tests/test_nrtidalv2_amplitude_lal_binary.py`
 compare the *unaligned* modulus ratios
@@ -83,13 +97,15 @@ absolute ratio error must be $\le5\times10^{-5}$ before and within the
 taper, including its endpoints. LALSuite 7.26.15 is required under
 DIFFGW_REQUIRE_LAL_BINARY=1. These limits are not retuned on failure.
 
-**Disposition:** the amplitude gate fails. The published Eq. (24) absolute
-correction and the Torch/JAX plus the pinned-LAL carrier quotients differ in
-normalization; the cause is unresolved. The native merger fit and Planck
-window pass the scalar gate, while the nonzero-tide native/LAL quotient
-exceeds its binary limit inside the taper. Strict expected-failure markers
-retain these diagnostics outside the required green math-reference CI job
-and fail on a future unexpected pass.
+**Disposition:** Torch/JAX now agree with the independent Eq. (24) scalar
+reference and composed untapered waveform at the frozen limits. The pinned
+LALSuite 7.26.15 binary outputs match the earlier native amplitude
+normalization at the measured frequencies: its quotient differs from Eq. (24),
+so both paper-versus-LAL and corrected-native-
+versus-LAL binary gates fail before merger. The native merger fit and Planck
+window pass the scalar gate. Nonzero-tide binary quotients also exceed the
+frozen limit inside the taper. Strict expected-failure markers remain on the
+binary comparisons and fail on a future unexpected pass.
 Public binary quotients imply an approximately 25 ppm lower effective
 taper boundary for the nonzero-tide cases if their untapered amplitudes
 continue to agree inside the window. This is a diagnostic inference, not
@@ -104,7 +120,7 @@ full-family behavior.
 
 Run `PYTHONPATH=src:tests DIFFGW_REQUIRE_LAL_BINARY=1 JAX_ENABLE_X64=1
 python -m pytest -q tests/test_nrtidalv2_amplitude_math_reference.py
-tests/test_nrtidalv2_amplitude_diagnostic.py
+tests/test_nrtidalv2_amplitude_math_reference_native.py
 tests/test_nrtidalv2_amplitude_lal_binary.py` on CPU FP64 with the pinned
 binary installed. Exact measurements and commands are in the
 [26 September 2026 receipt](../validation/nrtidalv2_amplitude_20260926.md).
