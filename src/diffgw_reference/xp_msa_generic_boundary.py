@@ -57,6 +57,17 @@ class SourceChart:
     angular_momentum: tuple[Any, Any, Any]
 
 
+@dataclass(frozen=True)
+class SourceChartTransport:
+    """Relative Appendix-C Euler offsets between two regular source charts."""
+
+    delta_alpha: Any
+    delta_gamma: Any
+    theta_jn: Any
+    zeta: Any
+    phi_j: Any
+
+
 def _context(dps: int):
     if dps < 40:
         raise ValueError("dps must be at least 40 for the boundary diagnostic")
@@ -260,9 +271,39 @@ def source_chart(
     )
 
 
+def source_chart_transport(initial: SourceChart, final: SourceChart, *, dps: int = 90) -> SourceChartTransport:
+    """Transport source-frame angles using Pratten et al. Appendix C, Eq. (79).
+
+    The initial/final charts must describe the same intrinsic J and different
+    observer azimuths.  Equation (79) gives alpha0=pi-kappa and
+    gamma0=pi-phi_JL0, hence their relative offsets are delta_alpha and
+    -delta_phi_J.  The destination observer supplies theta_JN and the
+    polarization angle zeta.  An aligned J has no phi_JL0 and therefore no
+    uniquely defined Euler transport in this chart.
+    """
+    if initial.angular_momentum != final.angular_momentum:
+        raise ValueError("source-chart transport requires the same intrinsic J")
+    if not initial.phi_j_defined or not final.phi_j_defined:
+        raise ValueError("source-chart Euler transport requires nonzero transverse J")
+    ctx = _context(dps)
+
+    def principal(value):
+        return ctx.atan2(ctx.sin(value), ctx.cos(value))
+
+    return SourceChartTransport(
+        delta_alpha=principal(final.alpha0 - initial.alpha0),
+        delta_gamma=-principal(final.phi_j - initial.phi_j),
+        theta_jn=final.theta_jn,
+        zeta=final.zeta,
+        phi_j=final.phi_j,
+    )
+
+
 __all__ = [
     "GenericCubicPhase",
     "SourceChart",
+    "SourceChartTransport",
     "generic_cubic_phase",
     "source_chart",
+    "source_chart_transport",
 ]

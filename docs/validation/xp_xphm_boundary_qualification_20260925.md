@@ -1,5 +1,34 @@
 # XP/XPHM precession boundary qualification (2026-09-25)
 
+## 2026-09-26 independent source-frame transport gate
+
+[Pratten et al., Appendix C, Eqs. (67)--(83)](https://arxiv.org/html/2004.06503)
+define the source observer vector, the J frame, and its Euler/polarization
+angles. A new high-precision scalar reference, `source_chart_transport` in
+`src/diffgw_reference/xp_msa_generic_boundary.py`, evaluates the relative
+regular-chart transport at fixed intrinsic J. Equation (79) gives
+`delta_alpha = alpha0(phiRef)-alpha0(0)` and
+`delta_gamma = -(phi_JL0(phiRef)-phi_JL0(0))`, represented modulo `2*pi`.
+The destination chart supplies `theta_JN` and `zeta`. Because J is fixed when
+only the observer azimuth changes, its regular-chart `phi_JL0` is fixed and
+`delta_gamma` is zero. At exactly aligned J, `phi_JL0` is undefined; the
+scalar reference rejects Euler transport instead of choosing a gauge.
+
+`tests/test_xp_source_chart_transport_reference.py` compares this scalar
+chart and transport with Torch and JAX v223 geometry at four nonzero observer
+azimuths, including `phic-phi0 = -0.1` and a phase-wrap case. The orbital-L
+value is supplied by the separately identified v223 compatibility expression;
+the test establishes the **observer-frame transport**, not independent
+provenance for that compatibility coefficient. On `len`, the new tests plus
+the existing source-frame/composition/generic-boundary reference files passed
+`26/26` with Torch 2.14.0+cpu, JAX 0.11.2, and pytest 9.1.1.
+
+This result checks the internal source chart. The extra public diffGW `phi0`
+parameter still has no independently established mapping to the public LAL
+binary's parameters, so the generic nonzero-`phi0` external gate remains
+**not evaluable**. No production routing, frozen tolerance, or overall
+qualification verdict changes here.
+
 ## 2026-09-26 frozen angle-version control
 
 [Pratten et al., Appendix F, Tables III and V](https://arxiv.org/html/2004.06503)
