@@ -1,5 +1,74 @@
 # XP/XPHM precession boundary qualification (2026-09-25)
 
+## 2026-09-27 isolated XP version/remnant blocker control
+
+A direct public-binary control on `len` used Python 3.12.3, NumPy 2.3.5,
+Torch 2.14.0+cpu, JAX 0.11.2, and LALSuite 7.26.15. All waveforms used
+`IMRPhenomXP`, convention 1, `phic=0.3`, `phi0=0`, distance 150 Mpc, an
+unshifted 0.25-Hz grid, and the same physical inputs for versions 102 and
+223 and remnant modes 0 and 3. The equal-mass fixture is the 25/25-Msun
+two-spin case below (`f_ref=20` Hz); the near-aligned fixture is the
+36/22-Msun up-down case below (`f_ref=40` Hz). The public LALSimulation
+binary API supplied only numerical output; no LAL source, coefficient, or
+calibration asset was copied. The frozen gates remain relative complex L2
+`1e-6` and flat mismatch `1e-8` per polarization.
+
+| Case and band | Native 223/0 vs binary 223/0 L2, plus / cross | Binary 223/0 vs binary 102/0 L2, plus / cross | Native 102/0 vs binary 102/0 L2, plus / cross |
+| --- | ---: | ---: | ---: |
+| Equal mass, 20–512 Hz | `0.029705677753180615 / 0.03589736628835022` | `0.031765223962125326 / 0.03869141740536079` | `0.0035442845453761617 / 0.004547643714867289` |
+| Near aligned, 25–55 Hz | `0.023737179573462445 / 0.02373672163766733` | `0.023737302747141316 / 0.023736880404491217` | `2.965042067384981e-11 / 3.821943469355585e-11` |
+| Near aligned, 25–300 Hz | `0.09654477245767022 / 0.09654736105223909` | `0.09654486477183226 / 0.09654748007284461` | `3.2265166254984385e-11 / 4.158838600878678e-11` |
+
+Native version 223/mode 0 and version 102/mode 0 are bit-identical in each
+of these three cases: the native 223 path selected NNLO angles. At the
+near-aligned fixture, native 223/mode 3 is also bit-identical to native
+102/mode 0. Changing the binary remnant from mode 0 to mode 3 changes the
+near-aligned full-waveform L2 by at most `2.16e-10` across the larger band;
+the failure is an angle-route discrepancy. The binary emits a waveform for
+the equal-mass 223/mode-3 request, while both native frontends explicitly
+reject its invalid nonaligned MSA averaged-remnant root. That domain-policy
+gap has no numerical native residual and remains a release failure.
+
+The version-102 equal-mass residual is **not** specific to exact mass
+equality: changing the primary mass to 25.00001 Msun gives native/binary
+102/mode-0 L2 `0.0035434142280056907 / 0.004546745513710817`; changing
+it to 35 Msun gives `0.04924902660620749 / 0.06218936180015843`.
+Aligning only spin 2 at equal mass leaves `0.0036713638518117322 /
+0.004648490188983955`. For the near-aligned inputs, the same v102 route
+passes at approximately `3–4e-11`. Thus this additional residual lies in a
+finite-precession NNLO full-waveform path, not the equal-mass MSA root or
+remnant selection. It has not been localized to a particular published NNLO
+coefficient or projection equation; no speculative correction is made.
+
+[Pratten et al., Sec. IV.1, Eqs. (17)–(22), and Sec. IV.2](https://arxiv.org/html/2004.06503v2)
+distinguish the single-spin NNLO construction from two-spin MSA, identify
+singular equal-mass MSA couplings, and describe the NNLO angle fallback for
+unstable initialization. [Chatziioannou et al., Appendix E](https://arxiv.org/pdf/1703.03967v3)
+notes the near-aligned root/PN conditioning and proposes a dedicated
+small-misalignment expansion as an improvement. The independent scalar cubic
+receipt in `docs/waveforms/research/xp-v223-reference-closure.md` finds the
+reference inverse-cosine endpoint only about `3.30e-37` from its limit for
+the near-aligned `1e-10` perturbation, far below float64 resolution.
+[Gerosa et al., Sec. IV.2](https://arxiv.org/html/2304.04801) give a
+regularized variable for a different precession formulation but leave a
+formal zero-amplitude resonance expansion to future work. These sources do
+not specify a complete v223 float64 root, phase, remnant, and waveform-chart
+continuation that would reproduce the pinned binary at these boundaries.
+The output cannot justify copying a hidden binary fallback or fitting a
+correction. **The XP release verdict remains fail**, with the frozen gates
+unchanged.
+
+The unchanged `scripts/qualify_xp_xphm_boundaries.py` driver was rerun on
+`len` with `PYTHONPATH=src`, `OPENBLAS_NUM_THREADS=1`, and
+`OMP_NUM_THREADS=1`. Its public-binary rows reproduce the equal-mass
+mode-0 L2 above, pass both near-aligned v102 modes at at most `4.16e-11`,
+fail both near-aligned v223 modes at `0.0237` (25–55 Hz) and `0.0965`
+(25–300 Hz), and pass generic nonzero-`phi0` at at most `1.15e-13`.
+The equal-mass mode-3 row records the explicit native domain rejection.
+The XPHM diagnostic and holdout remain `SOVEREIGN_NR_CALIBRATED` rather
+than qualified (`0.226–0.556` per-polarization L2). The focused boundary,
+scalar-reference, and source-chart test modules passed `16/16` on `len`.
+
 ## 2026-09-26 generic nonzero-`phi0` full-waveform closure
 
 [Pratten et al., Appendix C Eqs. (67)--(68), (76)--(85), Appendix B Eq. (63),
