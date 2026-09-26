@@ -173,8 +173,23 @@ broad web search unexpectedly exposed generated-source search snippets. No
 snippet, LAL source formula, coefficient, or implementation detail was used;
 the mapping above comes only from the papers, author archive, official API
 documentation, public merge metadata, and existing binary-output receipts.
+The arXiv page identifies its manuscript/source distribution license, while
+the inspected fit-asset README gives no separate redistribution terms for the
+tables. No accessible `122022` calibration deposit with version and reuse
+terms was found.
 Any future clean-room implementation of the 122022 delta must start in a
 fresh context with an independently published calibration asset.
+
+The separate [release-boundary diagnostic](../validation/xhm_release_boundary_20260927.json)
+checks the public `122019` and `122022` binary interfaces on both frozen
+parameter cases. The `(2,1)`, `(3,3)`, and `(4,4)` spherical phases, and the
+`(3,2)` **spheroidal** phase, are bitwise equal on its grid. The `(3,2)`
+**spherical** phase is not: the recalibrated spheroidal amplitude enters the
+published Appendix-A mixing transform. After removing one reference-phase
+offset, its wrapped phase-shape RMS changes by `0.1771` and `0.03565` radians
+for the catalog and holdout cases. Thus “phases unchanged” identifies the
+underlying phase prescription, not invariance of the observable mixed mode.
+This is a binary-output diagnosis only; it supplies no missing amplitude fit.
 
 ### Intermediate, ringdown, and native calibration boundary
 

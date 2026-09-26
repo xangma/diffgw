@@ -48,6 +48,33 @@ def test_scalar_mixing_eliminates_spheroidal_22_and_has_phase_derivatives():
         np.testing.assert_allclose(float(phase), float(-mp.arg(_mixed(f))), rtol=2e-15)
 
 
+def test_spheroidal_amplitude_change_can_change_spherical_phase():
+    """Appendix-A mixing makes the observable phase depend on mode amplitudes."""
+
+    import jax
+    import jax.numpy as jnp
+    import torch
+    from jaxwave.approximants.imrphenom_xhm import _spherical_32_from_spheroidal as jax_mix
+    from torchwave.approximants.imrphenom_xhm import _spherical_32_from_spheroidal as torch_mix
+
+    jax.config.update("jax_enable_x64", True)
+    h22 = complex(mp.exp(-0.2j))
+    phases = []
+    for amplitude in (0.2, 0.6):
+        h32_s = amplitude * complex(mp.exp(-0.5j))
+        scalar = complex(ref.spherical_32_from_spheroidal(h22, h32_s, *ALPHAS))
+        native_t = complex(torch_mix(
+            torch.tensor(h22, dtype=torch.complex128), torch.tensor(h32_s, dtype=torch.complex128),
+            *(torch.tensor(alpha, dtype=torch.complex128) for alpha in ALPHAS),
+        ))
+        native_j = complex(jax_mix(
+            jnp.asarray(h22), jnp.asarray(h32_s), *(jnp.asarray(alpha) for alpha in ALPHAS),
+        ))
+        np.testing.assert_allclose((native_t, native_j), scalar, rtol=2e-14)
+        phases.append(-np.angle(scalar))
+    assert abs(phases[1] - phases[0]) > 1e-3
+
+
 def test_scalar_intermediate_collocation_and_c2_join():
     targets, dphase, d2phase, coeffs, offset = _transition_data()
     with mp.workdps(70):
