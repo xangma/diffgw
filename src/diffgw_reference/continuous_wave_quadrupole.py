@@ -1,6 +1,6 @@
 """Independent scalar CW quadrupole amplitude for a principal-axis rotator.
 
-Jaranowski, Królak & Schutz (1998), gr-qc/9804014v1, Eqs. (32)-(33):
+Jaranowski, Królak & Schutz (1998), gr-qc/9804014v1 PDF, Eqs. (23)-(24):
     h0 = 16*pi**2*G*Izz*epsilon*f_rot**2/(c**4*d).
 The native API takes the GW frequency f0=2*f_rot, so its prefactor is 4*pi**2.
 This component does not specify detector timing, antenna response, or precession.
@@ -11,8 +11,8 @@ from __future__ import annotations
 import mpmath as mp
 
 SPEC_VERSION = "cw.quadrupole_h0/v1"
-SOURCE = "https://arxiv.org/html/gr-qc/9804014"
-SOURCE_EQUATIONS = ("32", "33")
+SOURCE = "https://arxiv.org/pdf/gr-qc/9804014v1"
+SOURCE_EQUATIONS = ("23", "24")
 # SI: exact defining speed of light and 2018 CODATA gravitational constant.
 C_SI = "299792458"
 G_SI = "6.67430e-11"

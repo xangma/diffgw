@@ -45,7 +45,7 @@ def continuous_wave_h0(
     Formula:
         h_0 = (4 * pi^2 * G / c^4) * (I_zz * epsilon * f_0^2 / d)
     Reference:
-        Jaranowski, Królak, Schutz (1998) Eqs. (32)-(33), with f_0=2*f_rot
+        Jaranowski, Królak, Schutz (1998) v1 PDF Eqs. (23)-(24), with f_0=2*f_rot
 
     Args:
         frequency: Continuous GW frequency f_0 in Hz (twice rotation frequency)
@@ -153,7 +153,8 @@ def continuous_wave_phase(
     Formula:
         phi(t) = phi_0 + 2*pi * sum_{k=0}^s [ f_k / (k+1)! * (t - t_0 + tau(t))^(k+1) ]
     Reference:
-        Jaranowski, Królak, Schutz (1998) Eq. (10)
+        Jaranowski, Królak, Schutz (1998) v1 PDF Eq. (14) is first order
+        in tau; this carrier retains higher powers of tau for f1/f2.
     """
     device = t.device
     dtype = t.dtype if t.is_floating_point() else torch.float64
@@ -185,7 +186,9 @@ def continuous_wave_amplitudes(
         A_4 = -h_0 * [ 0.5 * (1 + cos^2 iota) * sin(2*psi) * sin(phi_0) - cos(iota) * cos(2*psi) * cos(phi_0) ]
 
     Reference:
-        Jaranowski, Królak, Schutz (1998) Eq. (14)-(17); Prix (2011) Eq. (18)
+        Jaranowski, Królak, Schutz (1998) v1 PDF Eqs. (32)-(35), at
+        theta=pi/2 and with sin(zeta) absorbed into the basis patterns;
+        Prix (2011) Eq. (18)
 
     Returns:
         Tensor of shape (..., 4)
@@ -231,7 +234,7 @@ def continuous_wave_basis(
     where a(t) = F_+(t; psi=0), b(t) = F_x(t; psi=0), and Phi(t) = phi(t) - phi_0.
 
     Reference:
-        Jaranowski, Królak, Schutz (1998) Eq. (13); Prix (2011) Eq. (19)
+        Jaranowski, Królak, Schutz (1998) v1 PDF Eq. (36); Prix (2011) Eq. (19)
 
     Returns:
         h_basis: Tensor of shape (..., 4, N_samples)
@@ -285,7 +288,7 @@ def continuous_wave_strain(
     detector: Optional[Union[str, Detector]] = None,
     i_zz: float = 1.0e38,
 ) -> torch.Tensor:
-    """Compute the full detector strain h(t) for a continuous gravitational-wave signal.
+    """Compute detector strain for the principal-axis 2f_rot CW branch.
 
     Can be evaluated directly via:
         h(t) = h_0 * [ 0.5 * (1 + cos^2 iota) * F_+(t) * cos(phi(t)) + cos(iota) * F_x(t) * sin(phi(t)) ]

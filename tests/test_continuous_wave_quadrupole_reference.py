@@ -17,7 +17,7 @@ jax.config.update("jax_enable_x64", True)
 
 
 def test_jks_si_benchmark_and_frequency_convention():
-    # JKS Eq. (34) rounds Eq. (32) to 4.23e-25 at f_rot=100 Hz,
+    # JKS v1 PDF Eq. (25) rounds Eq. (23) to 4.23e-25 at f_rot=100 Hz,
     # epsilon=1e-5, Izz=1e45 g cm², d=1 kpc.
     kpc_m = 3.085677581491367e19
     with mp.workdps(60):
