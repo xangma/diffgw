@@ -189,15 +189,20 @@ def main():
     }
     full_grid = np.arange(20.0, 512.0, 0.25)
     equal = dict(common, **spins, mass1=25.0, mass2=25.0, phi0=0.0)
+    equal_mode0 = dict(equal, final_spin_mod=0)
     azimuth = dict(common, **spins, mass1=35.0, mass2=25.0, phi0=0.4)
 
     native = [
         native_boundary("generic_equal_mass", full_grid, equal),
+        native_boundary("generic_equal_mass_mode0", full_grid, equal_mode0),
         native_boundary("generic_nonzero_phi0", full_grid, azimuth),
     ]
 
     near_aligned = []
-    oracle = [oracle_case("XP_generic_equal_mass", equal, 20.0, 512.0)]
+    oracle = [
+        oracle_case("XP_generic_equal_mass", equal, 20.0, 512.0),
+        oracle_case("XP_generic_equal_mass_mode0", equal_mode0, 20.0, 512.0),
+    ]
     for label, fhigh in (("before_instability", 55.0), ("crosses_instability", 300.0)):
         frequencies = np.linspace(25.0, fhigh, 128)
         base = {

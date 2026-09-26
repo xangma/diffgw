@@ -33,8 +33,30 @@ Torch 2.14.0+cpu, JAX/JAXlib 0.11.2, NumPy 2.5.3, SciPy 1.18.1, and pytest
 continuity, gradients, frontend parity, and valid batched JIT coverage.
 
 This is a boundary-policy correction, not new external qualification. The
-strict full-complex-polarization gates and all external residuals recorded
-below are unchanged, so the overall release verdict remains **fail**.
+strict full-complex-polarization gates are unchanged. The earlier equal-mass
+numerical row below was evaluated under the superseded implicit mode-0
+substitution; it is historical evidence, not a current mode-3 residual.
+The overall release verdict remains **fail**.
+
+### Integrated-head rerun on `len`
+
+The current driver, `scripts/qualify_xp_xphm_boundaries.py`, explicitly evaluates
+both equal-mass remnant choices. At integrated source head `2e654a3` (the later
+`ccc3588` commit changed documentation only), Python 3.12.3, Torch 2.14.0+cpu,
+JAX 0.11.2, NumPy 2.5.3, and the installed LALSuite 7.26.15 produced:
+
+| XP equal-mass choice | Torch/JAX direct complex relative L2, plus / cross | Independent binary-oracle result |
+| --- | ---: | --- |
+| Default `final_spin_mod=3` | Both reject the invalid nonaligned MSA remnant root with the same diagnostic; public JAX surfaces it through `JaxRuntimeError` | Generation error; no numerical residual exists |
+| Explicit `final_spin_mod=0` | `1.9282897530721765e-14 / 1.9297675234635243e-14`; both polarizations pass parity | Plus `0.02970567775318068 / 0.0004410058872005296`; cross `0.035897366288350226 / 0.0006443233349125999` (L2 / mismatch); both fail |
+
+The same integrated run retains the near-aligned external relative L2 values
+`0.023737179603638348` and `0.09654477266816827` for plus, and the XPHM
+diagnostic/holdout plus values `0.22881790727328782` and
+`0.5041125739427325`. Their strict external verdicts remain **fail**. Generic
+nonzero observer `phi0` still lacks an independently derived public-binary
+parameter mapping, so its external comparison is **not evaluable**. The
+integrated-head focused policy suite passed `37/37` in 388.54 seconds.
 
 ## Scope and evidence classes
 
@@ -77,7 +99,7 @@ singularity. The 2026-09-26 amendment above supersedes only that silent
 remnant-mode substitution. No continuation, new threshold, LAL-derived
 expression, or fitted coefficient is introduced.
 
-## Exact native residuals
+## Historical pre-amendment native residuals
 
 Each cell is `relative L2 / mismatch` for `(plus, cross)` respectively.
 
@@ -94,7 +116,7 @@ JAX output was nonfinite, while the Torch tiny-vs-aligned L2 was approximately
 `0.0245` before the instability and `0.13` across it. The correction removes
 those frontend and boundary discontinuities by selecting the declared fallback.
 
-## Exact independent full-waveform residuals
+## Historical pre-amendment independent full-waveform residuals
 
 | Boundary/case | Plus L2 / mismatch | Cross L2 / mismatch | External verdict |
 | --- | ---: | ---: | --- |
