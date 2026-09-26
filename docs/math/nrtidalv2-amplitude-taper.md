@@ -37,8 +37,12 @@ The signed face-on amplitude is
 \frac{1+(449/108)x+(22672/9)x^{2.89}}{1+13477.8x^4}.
 \]
 
-The square-root normalization is part of Eq. (24); the decimal fit
-inputs are used exactly as printed. For $X_A$ the heavier mass fraction,
+The square-root normalization is part of Eq. (24). It also follows
+independently from the leading term of Dietrich et al. (2019), Eq. (23):
+$(27/16)\sqrt{160\pi\eta/27}=9\sqrt{5\pi\eta/24}$, while
+$x^{-7/4}x^5=x^{13/4}$. Thus Eqs. (23) and (24) have the same
+low-frequency normalization. The decimal fit inputs are used exactly as
+printed. For $X_A$ the heavier mass fraction,
 $X_B$ the lighter, the quoted merger fit is
 
 \[
@@ -86,6 +90,10 @@ window pass the scalar gate, while the nonzero-tide native/LAL quotient
 exceeds its binary limit inside the taper. Strict expected-failure markers
 retain these diagnostics outside the required green math-reference CI job
 and fail on a future unexpected pass.
+Public binary quotients imply an approximately 25 ppm lower effective
+taper boundary for the nonzero-tide cases if their untapered amplitudes
+continue to agree inside the window. This is a diagnostic inference, not
+an identification of the pinned binary's internal merger calculation.
 
 This gate tests only literature transcription and named-binary agreement
 for this slice. It does not validate the NR calibration, self-spin,

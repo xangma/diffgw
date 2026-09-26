@@ -10,6 +10,10 @@ binary, and no LAL implementation source was inspected.
 The independent SymPy/mpmath reference transcribes the full absolute
 normalization of [Dietrich et al. (2019), Eq. (24)](https://arxiv.org/pdf/1905.06011v2),
 with its $\sqrt{5\pi\eta/24}$ prefactor, and its Eq. (25) Planck taper.
+This normalization is internally consistent with Eq. (23): its leading
+$-27x^5/16$ term times $\sqrt{160\pi\eta/27}\,x^{-7/4}$ gives
+$-9\sqrt{5\pi\eta/24}\,x^{13/4}$ exactly. The source therefore does
+not support replacing Eq. (24)'s prefactor with the native $1/2$ factor.
 The merger fit follows [Dietrich et al. (2018), Eq. (11)](https://arxiv.org/pdf/1804.02235).
 The frozen systems, frequencies and limits are in the specification and
 tests. They were written before the first pinned-binary run and were not
@@ -42,11 +46,39 @@ unless another convention explains the relation**. The public binary alone
 does not establish why. This diagnostic does not declare either convention
 correct or promote the waveform family.
 
+At 100, 300, 800 and 1200 Hz, public LAL and native *absolute* BBH
+amplitudes agree within $8.6\times10^{-15}$ relative error in the equal-
+and unequal-mass systems. Their untapered BNS amplitudes agree within
+$4.6\times10^{-8}$ relative error at those frequencies. A hidden overall
+normalization of the LAL BBH carrier therefore does not explain the
+Eq. (24) discrepancy.
+
 The scalar merger frequency and Planck window pass for all four systems,
 as do the native tapered/untapered window ratios. Zero tide passes every
 binary check, including taper endpoints. The nonzero-tide native/LAL
 difference within the taper remains unresolved; it is reported separately
 from the larger Eq. (24) normalization discrepancy.
+
+An additional read-only diagnostic isolates the shape of that small taper
+difference. Divide the public LAL BNS/BBH modulus quotient by the native
+*untapered* BNS/BBH modulus quotient. If the untapered corrections keep
+agreeing inside the taper, the result is the LAL effective window. Invert
+the published Planck window at $f=1.1f_{\rm mrg}^{\rm paper}$ to obtain an
+equivalent merger boundary:
+
+| System | Paper/native $f_{\rm mrg}$ (Hz) | Equivalent boundary (Hz) | Relative difference |
+|---|---:|---:|---:|
+| Equal | 2037.930727 | 2037.878683 | $-2.554\times10^{-5}$ |
+| Unequal / exchanged | 1709.953767 | 1709.910782 | $-2.514\times10^{-5}$ |
+| Zero tide | 4291.579158 | 4291.579158 | 0 |
+
+Holding each inferred boundary fixed predicts the other sampled interior
+window points with maximum residual $3.11\times10^{-7}$ (equal) and
+$1.77\times10^{-7}$ (unequal). This strongly localizes the *public-output*
+difference to an effective taper-boundary shift, but does not establish
+whether a merger-frequency convention, an untapered amplitude difference
+inside the window, or another binary detail caused it. No correction was
+fitted to production code, and both frozen acceptance limits remain failed.
 
 Execution used host `len`, cwd
 `/home/xangma/tmp/diffgw-nrtidalv2-phase-20260926-e4a2`, CPU FP64,
