@@ -192,7 +192,9 @@ The source bundle SHA256 is
 the supplement SHA256 is
 `501ea53c29b77e061585540b9ccfd69a4cd0283e805ea1e9c24c38800e627a70`.
 The project stores only the generated fixture and provenance, not the author
-source asset.
+source asset. The fixture's normalized `TF28Phasing` is nevertheless a
+transformed author-supplement expression, not an independently authored
+numerical result; its downstream redistribution terms remain unresolved.
 
 The same pinned supplement contains `TF28Phasing`. Its nonspinning part is an
 orbital SPA phase with prefactor $3/(256\eta v^5)$; the factor of $m$ in
@@ -216,6 +218,8 @@ selects the leading nonspinning amplitudes; it does not emit the native
 negative-$m$ series with aligned-spin composition, `f_ref` subtraction,
 paired polarization projection, and per-mode cutoff. No author-published
 numerical complex arrays fix that complete option set.
+The bounded independent-oracle search and its exact acceptance fields are
+recorded in the [2026-09-26 evidence receipt](../validation/taylorf2-hm-oracle-search-20260926.md).
 Public LAL TaylorF2 returns one frequency series and its public FD-mode
 dispatcher has no TaylorF2 generator. IMRPhenomXHM is a different full-IMR
 model and `gwfast`'s TEOBResumSPA uses different EOB dynamics and amplitude

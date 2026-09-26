@@ -159,6 +159,10 @@ def test_author_fixture_provenance_and_completeness(fixture):
     assert fixture["format"] == "taylorf2-hm-mishra2016-leading-amplitude-v1"
     assert fixture["source"]["bundle_sha256"] == ("f0b6c6810da95f45141dbb9f0c5cccec0ba0742f60b836dba7698c90a25d5154")
     assert fixture["source"]["member_sha256"] == ("501ea53c29b77e061585540b9ccfd69a4cd0283e805ea1e9c24c38800e627a70")
+    assert fixture["source"]["redistribution_status"] == (
+        "terms unresolved: the normalized TF28Phasing is a transformed "
+        "author-supplement expression; no downstream MIT grant was found"
+    )
     assert tuple(fixture["leading_terms"]) == tuple(f"{l}{m}" for l, m in MODES)
     assert len(fixture["samples"]) == 3
     assert fixture["complex_component"]["format"] == ("mishra2016-leading-nonspinning-complex-modes-v1")

@@ -26,10 +26,13 @@ Mishra et al. Its bundle SHA256 is
 `f0b6c6810da95f45141dbb9f0c5cccec0ba0742f60b836dba7698c90a25d5154`
 and the member SHA256 is
 `501ea53c29b77e061585540b9ccfd69a4cd0283e805ea1e9c24c38800e627a70`.
-The repository retains independently generated amplitude-ratio evaluations,
-the normalized nonspinning `TF28Phasing` expression, and provenance. The
+The repository retains generated amplitude-ratio evaluations, a transformed
+normalized nonspinning `TF28Phasing` expression, and provenance. The
 complex component gate combines those records with the paper's Eq. (11)
 absolute normalization; the repository does not retain the author source file.
+The transformed expression remains third-party-derived verification material
+with unresolved redistribution terms; the repository's MIT grant does not
+assert ownership of it.
 
 The [quadrupolar tidal reference](docs/math/taylorf2-tidal.md) uses
 [Wade et al., arXiv:1402.5156v1](https://arxiv.org/abs/1402.5156v1),

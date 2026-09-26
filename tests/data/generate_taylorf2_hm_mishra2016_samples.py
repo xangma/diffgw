@@ -169,8 +169,8 @@ def _build_fixture(source):
         "format": "taylorf2-hm-mishra2016-leading-amplitude-v1",
         "description": (
             "All-eight leading SPA amplitude ratios and normalized nonspinning "
-            "phase metadata independently derived from the author-published "
-            "Mathematica supplement; no native imports."
+            "phase metadata derived from the author-published Mathematica "
+            "supplement without native imports."
         ),
         "source": {
             "paper": "https://arxiv.org/abs/1601.05588v1",
@@ -179,6 +179,10 @@ def _build_fixture(source):
             "member": MEMBER,
             "member_sha256": MEMBER_SHA256,
             "scope": ("lowest nonspinning PN term of each H[l,m] and the nonspinning part of TF28Phasing"),
+            "redistribution_status": (
+                "terms unresolved: the normalized TF28Phasing is a transformed "
+                "author-supplement expression; no downstream MIT grant was found"
+            ),
         },
         "adapter": ("V_m=(2/m)^(1/3)*v22 and |h_lm/h_22|=|H_lm^LO(V_m)|*(V_m/v22)^(-7/2)"),
         "constants": {
