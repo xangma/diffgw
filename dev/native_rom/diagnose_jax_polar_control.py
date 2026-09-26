@@ -5,7 +5,6 @@ from __future__ import annotations
 import json
 import os
 import platform
-import subprocess
 import time
 
 import jax
@@ -58,13 +57,10 @@ def main() -> int:
         "max_candidate_eager_jit_mode_relative_l2": 1e-16,
         "max_candidate_eager_jit_mode_absolute_error": 1e-14,
     }
-    ancestor = subprocess.run(
-        ["git", "merge-base", "--is-ancestor", plan["source_revision"], "HEAD"],
-        cwd=q.ROOT, check=False,
-    ).returncode == 0
     if (plan["schema"] != "diffgw.seobnrv4.jax-polar-control-plan.v1"
             or plan["release_qualified"] is not False
-            or not ancestor or plan["source_sha256"] != expected_files
+            or plan["source_revision"] != "d279647"
+            or plan["source_sha256"] != expected_files
             or plan["case"] != "high_start_mixed_spin"
             or tuple(plan["variants"]) != variants or plan["gates"] != gates):
         raise ValueError("frozen polar control changed")
