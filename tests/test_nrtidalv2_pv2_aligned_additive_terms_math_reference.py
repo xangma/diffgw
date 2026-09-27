@@ -45,7 +45,8 @@ def _native(case, frequencies, backend):
             _nrtidal_self_spin_components, _planck_taper_window,
         )
         from torchwave.conversions import tidal_combinations
-        array = lambda value: torch.as_tensor(value, dtype=torch.float64)
+        def array(value):
+            return torch.as_tensor(value, dtype=torch.float64)
         power = torch.exp
     else:
         jax = require_module("jax")
@@ -56,7 +57,8 @@ def _native(case, frequencies, backend):
             _nrtidal_self_spin_components, _planck_taper_window,
         )
         from jaxwave.conversions import tidal_combinations
-        array = lambda value: jnp.asarray(value, dtype=jnp.float64)
+        def array(value):
+            return jnp.asarray(value, dtype=jnp.float64)
         power = jnp.exp
 
     f = array(frequencies)
