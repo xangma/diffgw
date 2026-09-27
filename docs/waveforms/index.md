@@ -22,6 +22,7 @@ in the current public dispatch inventory.
 | [TaylorF2_HM](../math/taylorf2-hm.md) | `taylorf2-hm-leading-carrier/v1` | Eight leading nonspinning SPA mode amplitudes with inherited aligned-spin TaylorF2 phase and negative-m polarization projection. | `torch`, `jax` |
 | [IMRPhenomD](../math/imrphenomd-intrinsic.md) | `imrphenomd-intrinsic-composition/v1` | Aligned-spin (2,2) IMR composition with declared fit rows and QNM data. | `torch`, `jax` |
 | [IMRPhenomXAS](../math/imrphenomxas.md) | `imrphenomxas-composed-polarizations-carrier/v1` | Aligned-spin (2,2) carrier composition with supplied fit and QNM outputs. | `torch`, `jax` |
+| [KerrRingdown220Direct](../math/kerr-ringdown-direct-class.md) | `kerr-ringdown-220-energy-direct-class/v1` | Direct Torch/JAX KerrRingdown class only: one physical-energy spheroidal (2,2,0) mode with independent QNM; selected FP64 inputs. | `torch`, `jax` |
 
 <!-- END GENERATED WAVEFORM TABLE -->
 

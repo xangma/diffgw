@@ -532,5 +532,87 @@ IMRPHENOMXAS = WaveformDefinition(
     fit_asset_ids=("author_fit_asset",),
 )
 
-WAVEFORMS = (TAYLORF2, TAYLORF2_ECCENTRIC, TAYLORF2_HM, IMRPHENOMD, IMRPHENOMXAS)
+_KERR_DIRECT_VERSION = "kerr-ringdown-220-energy-direct-class/v1"
+_KERR_DIRECT_COMPONENTS = tuple(
+    ComponentDefinition(
+        id=f"kerr.direct220.{name}.v1", name=name.replace("_", " ").title(),
+        spec_version=_KERR_DIRECT_VERSION,
+        scope="Direct KerrRingdown class, one physical-energy spheroidal (2,2,0) mode",
+        variant="independent_qnm_spectral_angular_native_pair",
+        implementation="native_and_reference",
+        evidence=("source_transcription", "independent_scalar_whole_waveform_sample"),
+        source_refs=_source(source, location),
+        reference_module="diffgw_reference.kerr_ringdown",
+    )
+    for name, source, location in (
+        ("qnm", "cook2014", "Eqs. 23–43; independently generated QNM assets"),
+        ("angular", "cook2014", "Eqs. 4, 48–57; spectral projection"),
+        ("energy_amplitude", "ruiz2007", "Eq. 2.8; finite-Q energy integral"),
+        ("causal_td_fd", "project_kerr", "Direct-class carrier, mirror and Fourier-minus convention"),
+    )
+)
+
+KERR_RINGDOWN_220_DIRECT = WaveformDefinition(
+    id="KerrRingdown220Direct", name="KerrRingdown direct-class physical-energy 220",
+    aliases=(), domain="time_frequency", modes=((2, 2),),
+    scope="Direct Torch/JAX KerrRingdown class only: one physical-energy spheroidal (2,2,0) mode with independent QNM; selected FP64 inputs.",
+    reference_version=_KERR_DIRECT_VERSION,
+    reference_module="diffgw_reference.kerr_ringdown",
+    spec_page="math/kerr-ringdown-direct-class.md", components=_KERR_DIRECT_COMPONENTS,
+    sources=(
+        SourceDefinition("cook2014", "Cook and Zalutskiy, Kerr QNM eigenproblem and angular harmonics", "https://arxiv.org/html/1410.7698v2", "1410.7698v2"),
+        SourceDefinition("ruiz2007", "Ruiz et al., mode energy flux", "https://arxiv.org/pdf/0707.4654v3", "0707.4654v3"),
+        SourceDefinition("fh1997", "Flanagan and Hughes, angular norm", "https://arxiv.org/abs/gr-qc/9701039", "gr-qc/9701039v2"),
+        SourceDefinition("torch_qnm_asset", "Project-generated Torch 220 QNM spline", "src/torchwave/approximants/kerr_qnm_generated.py", "8f894d9", kind="project_generated_asset", sha256="e69d64e615dfd7bf054c2c7a9b721509688a1f126a482c7d9d0047f53b370dd3"),
+        SourceDefinition("jax_qnm_asset", "Project-generated JAX 220 QNM spline", "src/diffgw_core/kerr_qnm_220_data.py", "8f894d9", kind="project_generated_asset", sha256="51b13ae3649ec332b45d4c538a669334ec31f4244105e3b4c2b0c24197f4c5e4"),
+        SourceDefinition("project_kerr", "DiffGW direct-class pair and Fourier convention", "docs/math/kerr-ringdown-direct-class.md", _KERR_DIRECT_VERSION, kind="project_convention"),
+    ),
+    parameters=(
+        ParameterDefinition("final_mass", "Remnant mass", "nominal solar mass", "positive"),
+        ParameterDefinition("final_spin", "Dimensionless Kerr spin", "1", "selected 0.35 and 0.7"),
+        ParameterDefinition("distance", "Luminosity distance", "Mpc", "positive"),
+        ParameterDefinition("energy_fraction", "Energy in one mode", "1", "positive"),
+        ParameterDefinition("inclination", "Viewing inclination", "rad", "selected off-axis values"),
+        ParameterDefinition("phi", "Observer azimuth", "rad", "finite"),
+        ParameterDefinition("t0", "Causal onset", "s", "finite"),
+    ),
+    units=(
+        UnitDefinition("remnant mass", "s", "M_s=final_mass*MSUN_SEC"),
+        UnitDefinition("distance", "s", "D_s=distance*MPC_SI/C_SI"),
+        UnitDefinition("frequency", "Hz", "angular frequency is 2*pi*f"),
+    ),
+    conventions=(
+        ConventionDefinition("qnm", "Independent generated 220 spline, spin weight -2, positive real frequency and damping rate."),
+        ConventionDefinition("angular", "Unit-norm spheroidal spectral branch and equatorial mirror at complex c=a*M*omega."),
+        ConventionDefinition("pair_amplitude", "Native pair coefficient is sqrt(2) times the single-mode finite-Q energy coefficient."),
+        ConventionDefinition("fourier", "Causal H(0)=1 waveform; Fourier kernel exp(-2*pi*i*f*t)."),
+    ),
+    options=(
+        OptionDefinition("call_route", ("direct_class",), "direct_class", "Only KerrRingdown.time_domain/frequency_domain class methods are covered."),
+        OptionDefinition("energy_mode", ("(2,2,0)",), "(2,2,0)", "Exactly one fundamental 220 mode; amplitudes is omitted."),
+        OptionDefinition("angular_basis", ("spheroidal",), "spheroidal", "Source-backed spectral projection."),
+        OptionDefinition("qnm_backend", ("independent",), "independent", "Generated project QNM asset, checked against scalar equation solves."),
+    ),
+    carrier_parameters=(), capabilities=("td", "fd", "plus_cross", "torch", "jax", "scalar_reference"),
+    evidence=("independent_scalar_whole_waveform_sample", "selected_extrinsic_gradients"),
+    caveats=(
+        "This does not cover the KerrRingdown dispatcher, other class options or modes, or the opt-in public-clean evaluator.",
+        "The existing LAL binary holdout exercises the dispatcher/public-clean route, not this direct class.",
+        "JAX spin/oblateness derivatives are not qualified because the spectral eigenvector uses pure_callback; no intrinsic-gradient claim is made.",
+        "Sampled scalar-to-native implementation agreement does not establish binary compatibility, a uniform domain, or physical accuracy; the direct-class public-binary diagnostic has a material residual.",
+    ),
+    claims=(VerificationClaim(
+        component_ids=tuple(component.id for component in _KERR_DIRECT_COMPONENTS),
+        scope="Two frozen moderate-spin off-axis inputs; both polarizations before/at/after onset and signed frequencies",
+        variant="independent_qnm_spectral_angular_native_pair", backends=("torch", "jax", "scalar_reference"),
+        options=(("call_route", "direct_class"), ("energy_mode", "(2,2,0)"),
+                 ("angular_basis", "spheroidal"), ("qnm_backend", "independent")),
+        domain="sampled time and signed frequency", precision="float64", device="cpu",
+        category="implementation_verification", status="sampled_pass",
+        evidence_path="tests/test_kerr_ringdown_class_math_reference.py",
+    ),),
+)
+
+WAVEFORMS = (TAYLORF2, TAYLORF2_ECCENTRIC, TAYLORF2_HM,
+             IMRPHENOMD, IMRPHENOMXAS, KERR_RINGDOWN_220_DIRECT)
 validate_catalog(WAVEFORMS)

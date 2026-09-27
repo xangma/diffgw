@@ -8,6 +8,17 @@ Inputs for mass and distance are geometric seconds (GM/c^3 and D/c).
 
 import mpmath as mp
 
+from diffgw_core.constants import C_SI, MPC_SI, MSUN_SEC
+from .kerr_angular import spheroidal_projection
+from .kerr_qnm import ScalarQNM220
+
+
+SPEC_VERSION = "kerr-ringdown-220-energy-direct-class/v1"
+COMPONENT_IDS = {
+    name: f"kerr.direct220.{name}.v1"
+    for name in ("qnm", "angular", "energy_amplitude", "causal_td_fd")
+}
+
 
 def _real(value):
     return mp.mpf(str(value))
@@ -72,3 +83,54 @@ def frequency_by_quadrature(frequency, onset, amplitude, omega, damping_rate,
         return shift * mp.quad(integrand, intervals)
 
     return integral(0), integral(1)
+
+
+def direct_class_220_inputs(final_mass, final_spin, distance, energy_fraction,
+                            inclination, phi, *, ell_max=10, order=32, depth=400):
+    """Independently solve the QNM and angular projection for the direct class.
+
+    Mass is in solar masses, distance in Mpc, angles in radians. The returned
+    amplitude is the native *pair* coefficient, not the single-mode coefficient
+    used by the conditional public-clean reference above.
+    """
+    spin = _real(final_spin)
+    mass = _real(final_mass) * _real(MSUN_SEC)
+    qnm, _ = ScalarQNM220(ell_max=ell_max, order=order, dps=mp.mp.dps).root(
+        spin, depth=depth
+    )
+    omega, decay = mp.re(qnm) / mass, -mp.im(qnm) / mass
+    d_plus, d_cross = spheroidal_projection(
+        2, 2, spin * qnm, _real(inclination), _real(phi),
+        ell_max=ell_max, order=order,
+    )
+    single = energy_amplitude(
+        mass, _real(distance) * _real(MPC_SI) / _real(C_SI),
+        energy_fraction, omega, decay,
+    )
+    return mp.sqrt(2) * single, omega, decay, d_plus, d_cross
+
+
+def direct_class_220_time(time, onset, amplitude, omega, damping_rate,
+                          d_plus, d_cross):
+    """Causal direct-class 220 polarizations from independently supplied factors."""
+    u = _real(time) - _real(onset)
+    if u < 0:
+        return mp.mpf(0), mp.mpf(0)
+    carrier = _real(amplitude) * mp.exp((-_real(damping_rate) + 1j * _real(omega)) * u)
+    return mp.re(carrier * d_plus), mp.re(carrier * d_cross)
+
+
+def direct_class_220_frequency(frequency, onset, amplitude, omega, damping_rate,
+                               d_plus, d_cross):
+    """Fourier-minus transform of the direct-class causal mode and mirror."""
+    w = 2 * mp.pi * _real(frequency)
+    decay, oscillation = _real(damping_rate), _real(omega)
+    shift = mp.exp(-1j * w * _real(onset))
+
+    def one(projection):
+        return _real(amplitude) * shift / 2 * (
+            projection / (decay + 1j * (w - oscillation))
+            + mp.conj(projection) / (decay + 1j * (w + oscillation))
+        )
+
+    return one(d_plus), one(d_cross)

@@ -46,6 +46,7 @@ class routes, as the [Pv2 ledger](research/phenom-precessing.md) explains.
 | [IMRPhenomD_NRTidalv2](research/tidal-eccentric-higher-modes.md) | tidal composition | provisional | `imrphenomdnrtidalv2`, `nrtidalv2` |
 | [IMRPhenomNSBH](research/tidal-eccentric-higher-modes.md) | matter composition | provisional | `imrphenomnsbh`, `nsbh` |
 | [KerrRingdown](../math/standalone-family-research-ledger.md) | ringdown generator | provisional | `kerrringdown`, `ringdown` |
+| [KerrRingdown220Direct](../math/kerr-ringdown-direct-class.md) | direct class 220 variant | [versioned slice](index.md) | direct class only |
 | [OfficialSEOBNRv4ROM](../external-data.md) | external-data wrapper | separate SEOBNR track | `seobnrrom`, `seobnrv4rom`, `officialseobnrv4rom` |
 | [ContinuousWave](../math/standalone-family-research-ledger.md) | direct waveform class | provisional | direct class only |
 | [MemoryWaveform](../math/standalone-family-research-ledger.md) | direct waveform class | provisional | direct class only |

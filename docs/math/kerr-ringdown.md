@@ -88,6 +88,14 @@ full-waveform holdout uses the public `SimBlackHoleRingdown` TD callable,
 converged numerical Fourier integration, and the unchanged strict parity
 gate. It tests one additional point, not a parameter domain.
 
+An [independent opt-in public-clean composition audit](kerr-ringdown-public-clean-gate.md)
+finds angular and complete-waveform discrepancies after matching the QNM and
+angular phase gauge. Thus this specification remains conditional; it does not
+qualify the opt-in public-clean physical-energy 220 path as a whole waveform.
+The direct `KerrRingdown` class takes a separate source-backed spectral
+angular route; its bounded physical-energy 220 composition is
+[versioned separately](kerr-ringdown-direct-class.md).
+
 ## Reproduce the checks
 
 Run `PYTHONPATH=src:tests python -m pytest -q
