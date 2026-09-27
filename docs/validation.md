@@ -5,6 +5,12 @@ below supports a particular implementation, configuration, and numerical check.
 A model name or available API does not establish accuracy throughout its
 parameter space.
 
+The [IMRPhenomXAS whole-polarization binary gate](validation/imrphenomxas_whole_waveform_20260927.md)
+passes for Torch and JAX at three frozen systems on `len`, checking absolute
+complex plus/cross strain over every nonzero pinned-LAL sample up to the
+paper's $Mf=0.3$ public cutoff. The native carrier's uncut high-frequency
+tail is documented separately in that receipt.
+
 The [mathematical-reference CI check](math/taylorf2.md#reproduce-the-checks)
 compares the covered equations and derivatives against each frontend, audits the
 shared unit conversions independently, and fails if required checks are skipped
