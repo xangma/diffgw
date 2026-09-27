@@ -285,6 +285,7 @@ def _production_hhat(
     *,
     hm_21_pn_variant: str = "binary_compatible",
     hm_32_pn_variant: str = "binary_compatible",
+    hm_43_pn_variant: str = "binary_compatible",
 ) -> torch.Tensor:
     if (l, m) == (2, 2):
         return -torch.ones_like(v_m)
@@ -326,13 +327,12 @@ def _production_hhat(
             p = p + 4.0 * eta * chi_s * v_m.pow(3.0)
         return -(1.0 / 3.0) * torch.sqrt(v_m.new_tensor(5.0 / 7.0)) * p
     if (l, m) == (4, 3):
-        # The London production truncation retains the leading antisymmetric
-        # mass term for (4,3).  The public ``h_hat_multipole`` helper above
-        # remains the full restricted-PN expression for callers that need its
-        # displayed higher-order spin correction.
-        return -(3.0 / 4.0) * torch.sqrt(v_m.new_tensor(3.0 / 35.0)) * (
-            delta * (1.0 - 2.0 * eta) * v_m.pow(3.0)
-        )
+        # Preserve the original mass-only carrier unless the printed Mishra
+        # Eq. (12g) spin term is explicitly selected.
+        leading = delta * (1.0 - 2.0 * eta) * v_m.pow(3.0)
+        if hm_43_pn_variant == "mishra_eq12g":
+            leading = leading + 2.5 * eta * (chi_a - delta * chi_s) * v_m.pow(4.0)
+        return -(3.0 / 4.0) * torch.sqrt(v_m.new_tensor(3.0 / 35.0)) * leading
     raise ValueError(f"Mode ({l}, {m}) not supported.")
 
 
@@ -916,6 +916,7 @@ class IMRPhenomHM(nn.Module):
         hm_mapping_transitions: str = "phenomd_runtime",
         hm_21_pn_variant: str = "binary_compatible",
         hm_32_pn_variant: str = "binary_compatible",
+        hm_43_pn_variant: str = "binary_compatible",
     ) -> Union[
         Tuple[torch.Tensor, torch.Tensor],
         Tuple[torch.Tensor, torch.Tensor, Dict[Tuple[int, int], Union[Tuple[torch.Tensor, torch.Tensor], torch.Tensor]]],
@@ -940,12 +941,16 @@ class IMRPhenomHM(nn.Module):
             raise ValueError(f"Unknown HM (2,1) PN variant: {hm_21_pn_variant}")
         if hm_32_pn_variant not in ("binary_compatible", "mishra_eq12d"):
             raise ValueError(f"Unknown HM (3,2) PN variant: {hm_32_pn_variant}")
+        if hm_43_pn_variant not in ("binary_compatible", "mishra_eq12g"):
+            raise ValueError(f"Unknown HM (4,3) PN variant: {hm_43_pn_variant}")
         if hm_mapping_transitions == "london_2018" and not isinstance(self.base_22, IMRPhenomD):
             raise ValueError("london_2018 HM mapping transitions require the D carrier")
         if hm_21_pn_variant == "mishra_eq12b" and not isinstance(self.base_22, IMRPhenomD):
             raise ValueError("mishra_eq12b HM (2,1) PN variant requires the D carrier")
         if hm_32_pn_variant == "mishra_eq12d" and not isinstance(self.base_22, IMRPhenomD):
             raise ValueError("mishra_eq12d HM (3,2) PN variant requires the D carrier")
+        if hm_43_pn_variant == "mishra_eq12g" and not isinstance(self.base_22, IMRPhenomD):
+            raise ValueError("mishra_eq12g HM (4,3) PN variant requires the D carrier")
 
         # Keep custom/XAS carriers on the established opaque-carrier path.
         # The Torch-native London route below relies on the IMRPhenomD
@@ -1212,11 +1217,13 @@ class IMRPhenomHM(nn.Module):
                     l, m, v_ga, delta_eval, eta_eval, chi_s_eval, chi_a_eval,
                     hm_21_pn_variant=hm_21_pn_variant,
                     hm_32_pn_variant=hm_32_pn_variant,
+                    hm_43_pn_variant=hm_43_pn_variant,
                 )
                 hhat_x = _production_hhat(
                     l, m, v_x, delta_eval, eta_eval, chi_s_eval, chi_a_eval,
                     hm_21_pn_variant=hm_21_pn_variant,
                     hm_32_pn_variant=hm_32_pn_variant,
+                    hm_43_pn_variant=hm_43_pn_variant,
                 )
                 hlm_ga = hhat_ga * v_ga.pow(-3.5)
                 hlm_x = hhat_x * v_x.pow(-3.5)
@@ -1227,6 +1234,7 @@ class IMRPhenomHM(nn.Module):
                     l, m, v_22_x, delta_eval, eta_eval, chi_s_eval, chi_a_eval,
                     hm_21_pn_variant=hm_21_pn_variant,
                     hm_32_pn_variant=hm_32_pn_variant,
+                    hm_43_pn_variant=hm_43_pn_variant,
                 ) * v_22_x.pow(-3.5)
                 tiny = torch.finfo(dtype).tiny
                 nonzero = torch.abs(h22_at_x) > tiny
