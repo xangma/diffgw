@@ -260,6 +260,18 @@ PID `47462`, and completed in 17 seconds. Its log is
 is needed. It was invoked with `DIFFGW_DIAGNOSTIC_OUTPUT=/tmp/diffgw-jax-nqc-jit-stages-current.json`
 and `python -m dev.native_rom.diagnose_jax_nqc_jit_stages`.
 
+The later [frozen directional-amplification experiment](../2026-09-27/jax_nqc_directional_amplification_plan.json)
+holds the chart, state, frequency, targets, match time, and coarse prefix fixed
+while applying the measured eager-to-JIT pre-NQC mode perturbation. Its
+[result](../2026-09-27/jax_nqc_directional_amplification.json) shows that a
+`1.0500e-15` relative mode perturbation produces a `4.2876e-10` whole-mode
+change (`4.0834e5` amplification), still above the unchanged `1e-10` gate.
+That endpoint explains only `27.7%` of the frozen `1.547138e-9` pathwise gap,
+and the half-step response is nonlinear. No gate-safe precision/path repair is
+therefore identified: this NQC sensitivity is real but incomplete, and the
+remaining pathwise composition plus exact historical numerical semantics are
+still blockers. Production code and qualification status did not change.
+
 The subsequent [frozen direct-phase experiment](jax_nqc_direct_phase_plan.json)
 replaced the development NQC phase-unwrapping input with the continuous
 published phase computed directly from orbital state. Its

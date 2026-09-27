@@ -1,0 +1,37 @@
+{
+  "schema": "diffgw.seobnrv4.jax-nqc-directional-amplification-plan.v1",
+  "release_qualified": false,
+  "case": "high_start_mixed_spin",
+  "output_step_M": 0.5,
+  "fine_refinement_factor": 32,
+  "adaptive_atol": 1e-10,
+  "adaptive_rtol": 1e-9,
+  "alphas": [-1.0, -0.5, 0.0, 0.5, 1.0],
+  "method": "On one eager-integrated state chart, form delta_mode as the separately JIT-evaluated published pre-NQC mode minus its eager value. Evaluate the unchanged full-series NQC and fixed-chart attachment eagerly at mode_eager + alpha*delta_mode. Hold state, orbital frequency, match time, targets, output chart, and coarse prefix fixed. Record spline inputs, matching rows, coefficients, and whole mode without AD or trajectory replay.",
+  "gates": {
+    "max_pre_nqc_mode_relative_l2": 1e-12,
+    "unchanged_whole_eager_jit_gate": 1e-10,
+    "min_endpoint_whole_relative_l2": 1e-10,
+    "min_whole_to_mode_amplification": 100000.0,
+    "min_fraction_of_frozen_whole_gap": 0.5,
+    "max_fraction_of_frozen_whole_gap": 1.5,
+    "max_half_step_linearity_residual_fraction": 0.05
+  },
+  "pinned_evidence": {
+    "dev/native_rom/evidence/2026-09-25/jax_pathwise_whole_gradient.json": "0975faf12f71682a2c82ec6334f70c6971032b8631c159c6827a40a087814d74",
+    "dev/native_rom/evidence/2026-09-25/jax_fixed_state_mode.json": "fe9d92b8a22af7d1738cfbe82a3e9198020329c50669bdf289057961892762ab",
+    "dev/native_rom/evidence/2026-09-25/jax_nqc_whole_attribution.json": "629db2fa667ef73b72767883bcf2592060ef568a876185b9aa36e9b10f88b6a5"
+  },
+  "source_sha256": {
+    "dev/native_rom/eob/jax/numerical_attachment_clean.py": "fcc74bd7130f76ae9abab2c8e0214a640d7d1bdef3dbefc2dac459da471edc4c",
+    "dev/native_rom/diagnose_jax_two_stage_trajectory.py": "b351c2cf9ff5dbf1660516e2d27f0a6838fcffd577c4908ecbdfdbcdcbf5d92d",
+    "src/jaxwave/approximants/eob/nqc.py": "e6e25920ded887a650e04fcf64380f65f32e45d42be81b95fc26291af7b70757",
+    "src/jaxwave/approximants/eob/numerical_attachment.py": "e98d77355f5a5e2538d0c0c91df6a5eb65e8f0d3e13c4e534c047d0938582447",
+    "src/jaxwave/approximants/eob/published_waveform.py": "8b0a727caceb432ba501a93712ffa3c9c547566b94ca86b8ac9f97d43b31afee"
+  },
+  "interpretation": "A passing diagnostic confirms a fixed-chart FP64 conditioning blocker; it does not pass the unchanged 1e-10 eager/JIT release gate or authorize a new numerical prescription.",
+  "operational_limits": {
+    "max_wall_time_s": 300,
+    "max_rss_gib": 32
+  }
+}

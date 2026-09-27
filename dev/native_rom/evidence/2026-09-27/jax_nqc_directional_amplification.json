@@ -1,0 +1,90 @@
+{
+  "case": "high_start_mixed_spin",
+  "checks": {
+    "amplification": true,
+    "directional_linearity": false,
+    "frozen_gap_fraction": false,
+    "pre_nqc_precision": true,
+    "reproduces_gate_failure": true
+  },
+  "cwd": "/home/xangma/tmp/diffgw-seobnr-jax-amplification-20260927",
+  "diagnostic_checks_passed": false,
+  "elapsed_s": 49.56433133082464,
+  "exact_blocker": "No gate-safe repair is identified: roundoff-scale pre-NQC mode perturbations are amplified above the unchanged 1e-10 whole-waveform gate on the fixed chart, while that isolated path explains only part of the frozen pathwise discrepancy.",
+  "host": "len",
+  "ladder": {
+    "-0.5": {
+      "amplitude_coefficients_max_abs": 3.630597689152637e-07,
+      "combined_input_max_abs": 7.105427357601002e-15,
+      "matching_first_max_abs": 3.3306690738754696e-14,
+      "matching_second_max_abs": 7.710537937299922e-12,
+      "matching_value_max_abs": 0.0,
+      "phase_coefficients_max_abs": 2.3449061359315237e-08,
+      "pre_nqc_mode_relative_l2": 5.283989111975395e-16,
+      "whole_relative_l2": 3.007661651323483e-10
+    },
+    "-1.0": {
+      "amplitude_coefficients_max_abs": 2.4157537836799747e-07,
+      "combined_input_max_abs": 1.0658141036401503e-14,
+      "matching_first_max_abs": 4.7684078907650473e-14,
+      "matching_second_max_abs": 1.0971724397068616e-11,
+      "matching_value_max_abs": 3.552713678800501e-15,
+      "phase_coefficients_max_abs": 3.330752917918289e-08,
+      "pre_nqc_mode_relative_l2": 1.0500138256522227e-15,
+      "whole_relative_l2": 4.233198038163975e-10
+    },
+    "0.0": {
+      "amplitude_coefficients_max_abs": 0.0,
+      "combined_input_max_abs": 0.0,
+      "matching_first_max_abs": 0.0,
+      "matching_second_max_abs": 0.0,
+      "matching_value_max_abs": 0.0,
+      "phase_coefficients_max_abs": 0.0,
+      "pre_nqc_mode_relative_l2": 0.0,
+      "whole_relative_l2": 0.0
+    },
+    "0.5": {
+      "amplitude_coefficients_max_abs": 2.0126002198139759e-07,
+      "combined_input_max_abs": 7.105427357601002e-15,
+      "matching_first_max_abs": 4.757305660518796e-14,
+      "matching_second_max_abs": 1.0573571532224157e-11,
+      "matching_value_max_abs": 3.552713678800501e-15,
+      "phase_coefficients_max_abs": 3.209783017155132e-08,
+      "pre_nqc_mode_relative_l2": 5.283989111975395e-16,
+      "whole_relative_l2": 4.077113676207559e-10
+    },
+    "1.0": {
+      "amplitude_coefficients_max_abs": 6.359660460475425e-07,
+      "combined_input_max_abs": 8.881784197001252e-15,
+      "matching_first_max_abs": 4.773959005888173e-14,
+      "matching_second_max_abs": 1.097172699915383e-11,
+      "matching_value_max_abs": 0.0,
+      "phase_coefficients_max_abs": 3.330750786290082e-08,
+      "pre_nqc_mode_relative_l2": 1.0500138256522227e-15,
+      "whole_relative_l2": 4.287596365027473e-10
+    }
+  },
+  "metrics": {
+    "coarse_accepted_steps": 116,
+    "endpoint_fraction_of_frozen_whole_gap": 0.27713082727039057,
+    "fine_accepted_steps": 106,
+    "frozen_match_time_M": 144.6564486506888,
+    "frozen_pathwise_whole_eager_jit_relative_l2": 1.5471380096030089e-09,
+    "half_step_linearity_residual_fraction": 0.9555999060502048,
+    "odd_symmetry_residual_fraction": 0.10636874515974845,
+    "whole_to_mode_amplification": 408337.13426241843
+  },
+  "next_action": "Preserve the failed 1e-10 release gate. The unresolved pathwise remainder and exact historical numerical semantics must be qualified before any repair; a changed NQC formulation requires separate source qualification.",
+  "pid": 2190365,
+  "pinned_evidence_sha256": {
+    "dev/native_rom/evidence/2026-09-25/jax_fixed_state_mode.json": "fe9d92b8a22af7d1738cfbe82a3e9198020329c50669bdf289057961892762ab",
+    "dev/native_rom/evidence/2026-09-25/jax_nqc_whole_attribution.json": "629db2fa667ef73b72767883bcf2592060ef568a876185b9aa36e9b10f88b6a5",
+    "dev/native_rom/evidence/2026-09-25/jax_pathwise_whole_gradient.json": "0975faf12f71682a2c82ec6334f70c6971032b8631c159c6827a40a087814d74"
+  },
+  "plan_sha256": "6e3a98988afb845b4bdc758e35c6aa869278c033fe56c33b3d5c8fe6965574c3",
+  "release_qualified": false,
+  "schema": "diffgw.seobnrv4.jax-nqc-directional-amplification.v1",
+  "script_sha256": "b4df3b31f077f58e0698a3cc166d04187b54ee647a75f6785ef23871a544ea7b",
+  "source_change": false,
+  "status": "diagnostic_complete"
+}

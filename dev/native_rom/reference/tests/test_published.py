@@ -90,6 +90,48 @@ def test_manifest_is_explicit_and_versioned():
                            for node in ast.parse(test_file.read_text()).body)
 
 
+def test_native_qnm_certificate_does_not_substitute_for_historical_component():
+    root = Path(__file__).resolve().parents[1]
+    repository = root.parents[2]
+    evidence = repository / "dev/native_rom/evidence"
+    manifest = json.loads((root / "manifest.json").read_text())
+    components = {item["id"]: item for item in manifest["components"]}
+    native = components["V4-QNM-NATIVE-220-SPLINE"]
+    historical = components["V4-QNM-INTERPOLATION"]
+
+    assert native["status"] == "conditional"
+    assert native["reference"].startswith("qnm.native_signed_220_spline")
+    assert "not the historical SEOBNRv4 107-knot GSL natural cubic" in native["condition"]
+    assert historical["status"] == "pending"
+
+    certificate = json.loads(
+        (evidence / "2026-09-27/qnm_spline_component.json").read_text()
+    )
+    assert certificate["component_id"] == "V4-QNM-NATIVE-220-SPLINE"
+    assert certificate["historical_binary_parity_claim"] is False
+    assert certificate["continuous_domain_error_bound_claim"] is False
+    assert certificate["release_qualified"] is False
+    assert certificate["production_change"] is False
+
+    audit = json.loads(
+        (evidence / "2026-09-24/qnm_source_interpolation.json").read_text()
+    )
+    assert audit["historical_rule"].startswith("GSL gsl_interp_cspline")
+    assert audit["knot_count"] == 107
+    assert audit["gates"]["source_spline_reproduces_pinned_binary"] is True
+    witness = next(row for row in audit["witnesses"]
+                   if row["spin"] == pytest.approx(0.999540793009))
+    assert witness["native_minus_historical_abs"][0] == pytest.approx(
+        1.7154007615927114e-5
+    )
+
+    release_plan = json.loads(
+        (evidence / "2026-09-27/historical_fidelity_release_plan.json").read_text()
+    )
+    assert "V4-QNM-INTERPOLATION" in release_plan["required_source_components"]
+    assert "V4-QNM-NATIVE-220-SPLINE" not in release_plan["required_source_components"]
+
+
 def test_parameter_mapping():
     n, c = mass_spin(sp.Rational(3), sp.Rational(2), sp.Rational(1, 2), sp.Rational(-1, 4))
     assert n == sp.Rational(6, 25)

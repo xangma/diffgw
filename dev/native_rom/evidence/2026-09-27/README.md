@@ -18,6 +18,28 @@ All six frozen gates passed. The sixth reuses the SHA-pinned [current-source fix
 
 The diagnostic ran on `len` under the pinned native source and prior-receipt hashes in the plan. It completed in 4.12 s with `status=diagnostic_complete`; its JSON preserves the 12 rows and pass/fail gates. This is a **finite-point component certificate**. It establishes neither a continuous signed-spin error bound nor historical natural-cubic/binary parity, and it does not qualify the full SEOBNRv4 generator or authorize production promotion.
 
+## JAX whole-path blocker
+
+The [frozen directional-amplification plan](jax_nqc_directional_amplification_plan.json),
+[diagnostic](../../diagnose_jax_nqc_directional_amplification.py), and
+[result](jax_nqc_directional_amplification.json) test the remaining eager/JIT
+gap without changing production code or the `1e-10` gate. On one identical
+fixed chart, a `1.0500e-15` relative perturbation of the pre-NQC mode produces
+a `4.2876e-10` whole-mode change, an amplification of `4.0834e5`. This
+reproduces a gate failure, but it is only `27.7%` of the frozen
+`1.547138e-9` pathwise gap and the half-step response is nonlinear. The exact
+blocker is therefore narrower than a complete causal claim: no gate-safe
+repair is identified, and both the unresolved pathwise remainder and exact
+historical numerical semantics remain to be qualified. The gradient gate
+stays failed.
+
+The bounded CPU rerun used JAX 0.11.2 on host `len`, cwd
+`/home/xangma/tmp/diffgw-seobnr-jax-amplification-20260927`, Python PID
+`2190365` (launcher PID `2190360`), and log
+`jax_nqc_directional_amplification-rerun.log`. It completed in 49.5 s with
+the expected diagnostic exit status 1 because two predeclared attribution
+checks failed; no process or next check remains.
+
 ## Historical-fidelity release boundary
 
 The [frozen release plan](historical_fidelity_release_plan.json),
