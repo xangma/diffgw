@@ -20,6 +20,18 @@ is widened or removed.
 These dependencies are model-compatibility provenance, not a request to fit
 the public binary. The public outputs expose angles and co-precessing modes,
 but not the intermediate PV300 state. No LAL implementation source or
-constants were used, and no new binary run, waveform equation, coefficient,
-or acceptance threshold is introduced by this decision receipt. The detailed
+constants were used, and no waveform equation, coefficient, or whole-strain
+acceptance threshold is changed by this decision receipt. The detailed
 component checks and limits remain in the [validation report](phenomt.md).
+
+The maintained q=10 scalar gate in
+`tests/test_clean_room_msa.py::test_q10_msa_flux_spin_couplings_obey_published_scalar_averages`
+now evaluates the six contractions in Appendix A (90)–(95) with 50-digit
+`mpmath` arithmetic, taking the separately checked MSA roots and `c1` as
+inputs. The published-equation flux path passes this isolated downstream gate;
+the initial-reference PV223 compatibility path differs already in the first
+spin projection by more than `5e-4`. This establishes which path follows the
+published averaging prescription, but cannot identify an undocumented PV223
+implementation convention. A defensible next experiment needs an author
+specification of that convention (including the quadratic-nutation phase) or,
+for PV300, author-provided intermediate state at the same frozen q=10 input.

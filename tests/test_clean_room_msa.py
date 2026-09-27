@@ -1,5 +1,6 @@
 """Checks of the published MSA defining equations; no waveform oracle."""
 import math
+import mpmath as mp
 import pytest
 import torch
 from torchwave.approximants.precession_msa import (
@@ -157,6 +158,63 @@ def test_q10_msa_matches_clean_published_equations_before_compatibility_split():
     )
     assert flux_delta > 5e-4
     assert abs(equation["psi2"] - compatibility["psi2"]) > 2
+
+
+def test_q10_msa_flux_spin_couplings_obey_published_scalar_averages():
+    """Appendix A (90)--(95) fixes the flux inputs independently of Torch.
+
+    The MSA roots and c1 are upstream inputs to this isolated scalar gate;
+    their separate defining-equation checks live above.  In particular,
+    initial spin projections cannot replace the averaged flux projections.
+    """
+    m1, m2 = 60., 6.
+    chi1, chi2 = (.2, .1, .8), (.1, 0., .1)
+    f_ref = 20.
+    equation = assemble_precession_msa_angles(
+        t([f_ref]), t(m1), t(m2), t(chi1), t(chi2),
+        f_ref=f_ref, compatibility="equation",
+    )
+    compatibility = assemble_precession_msa_angles(
+        t([f_ref]), t(m1), t(m2), t(chi1), t(chi2),
+        f_ref=f_ref, compatibility="v223",
+    )
+
+    with mp.workdps(50):
+        def scalar(value):
+            return mp.mpf(float(value))
+        q = mp.mpf(1) / 10
+        eta = q / (1 + q)**2
+        n1, n2 = 1 / (1 + q), q / (1 + q)
+        s1 = [n1**2 * scalar(component) for component in chi1]
+        s2 = [n2**2 * scalar(component) for component in chi2]
+        s1sq = sum(component**2 for component in s1)
+        s2sq = sum(component**2 for component in s2)
+        xi = (1 + q) * s1[2] + (1 + 1/q) * s2[2]
+        c1 = scalar(equation["c1"])
+        roots = equation["roots_reference"]
+        sminus2, splus2 = scalar(roots[1]), scalar(roots[2])
+        sav = (sminus2 + splus2) / 2
+        v0 = (mp.pi * (m1 + m2) * mp.mpf("4.925490947641267e-6") * f_ref)**(mp.mpf(1)/3)
+
+        mean1 = (c1 * (1 + q) - q * eta * xi) / (eta * (1 - q**2))
+        mean2 = -q * (c1 * (1 + q) - eta * xi) / (eta * (1 - q**2))
+        variance = (splus2 - sminus2)**2 * v0**2 / (32 * eta**2 * (1 - q)**2)
+        published = {
+            "s1l": mean1,
+            "s2l": mean2,
+            "s12": (sav - s1sq - s2sq) / 2,
+            "s1l2": mean1**2 + variance,
+            "s2l2": mean2**2 + q**2 * variance,
+            "s1ls2l": mean1 * mean2 - q * variance,
+        }
+        for key, expected in published.items():
+            assert math.isclose(float(equation["flux_couplings"][key]),
+                                float(expected), rel_tol=2e-12, abs_tol=2e-15), key
+
+        # The initial-reference compatibility recipe makes a materially
+        # different choice at this first flux boundary for the frozen case.
+        assert abs(float(compatibility["flux_couplings"]["s1l"])
+                   - float(published["s1l"])) > 5e-4
 
 
 def test_opening_angle_uses_precession_averaged_j_at_any_nutation_phase():
