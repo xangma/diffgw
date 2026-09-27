@@ -106,10 +106,22 @@ FP32, accelerators, and parameter-domain coverage remain separate.
 The full tapered unaligned $h_+$ comparison also exceeds its frozen
 relative complex $L_2\le10^{-6}$ gate on both holdouts.
 
+The [convention diagnostic](../validation/nrtidalv1_taper_conventions_20260927.md)
+finds the published Planck shape to numerical precision after inferring one
+merger frequency from the binary's central taper sample. The inferred
+frequencies are $2.5\times10^{-5}$ to $4.9\times10^{-5}$ below the printed
+fit for nonzero tides. The paper's printed precision admits this size of
+shift, but does not identify the binary's full-precision coefficients.
+Substituting $\kappa_2^T$ for $\kappa_{\rm eff}^T$ does not account for the
+discrepancy. The inferred frequencies are diagnostic data, not inputs to
+the scalar reference or a passing binary gate.
+
 The standalone
 [`diagnose_nrtidalv1_taper_boundary.py`](https://github.com/xangma/diffgw/blob/main/scripts/diagnose_nrtidalv1_taper_boundary.py)
 reproduces the failed boundary measurements outside the required strict test
 selection. It reports the failed gate without qualifying the mismatch.
+The companion `scripts/diagnose_nrtidalv1_taper_conventions.py` separately
+tests window shape, merger frequency, and the explicit alternative coupling.
 
 ## Reproduce the checks
 
