@@ -6,7 +6,7 @@
 phase ringdown cuts for the `(2,1)`, `(3,3)`, `(3,2)`, and `(4,4)` modes. This
 is a supplied-QNM frequency algebra gate, not a QNM-fit, attachment, or
 whole-waveform qualification. The paper notes exceptional `(3,2)` cut
-adjustments at high mass ratio and high spin; those are outside this default
+adjustments for high-mass, high-spin cases; those are outside this default
 slice.
 
 Before comparison with native code, fix CPU float64 value tolerance to

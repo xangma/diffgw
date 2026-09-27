@@ -141,6 +141,23 @@ def _unsqueeze_to(tensor: Union[float, torch.Tensor], target: torch.Tensor) -> t
     return res
 
 
+def _ringdown_cut_frequencies(f_ring, f_damp):
+    """Default XHM Eq. (36)/Table 2 amplitude and phase cuts from supplied QNMs."""
+    amplitude = {
+        "21": 0.75 * f_ring["21"],
+        "33": 0.95 * f_ring["33"],
+        "32": f_ring["22"],
+        "44": 0.90 * f_ring["44"],
+    }
+    phase = {
+        "21": f_ring["21"] - f_damp["21"],
+        "33": f_ring["33"] - f_damp["33"],
+        "32": f_ring["22"] - 0.5 * f_damp["22"],
+        "44": f_ring["44"] - f_damp["44"],
+    }
+    return amplitude, phase
+
+
 def _ringdown_amplitude_ratio(frequency, ring, damp, sigma, a_lambda, lambda_fit):
     """XHM Eq. (42) for supplied ringdown parameters, with native guards."""
     width = _unsqueeze_to(damp * sigma, frequency)
@@ -810,21 +827,10 @@ class IMRPhenomXHM(nn.Module):
             lm_str: (m_vals[lm_str] / 2.0) * (f_meco_22 * eps_amp[lm_str] + diff_isco_meco * del_amp[lm_str])
             for lm_str in ("21", "32", "33", "44")
         }
-        f_rd_amp = {
-            "21": 0.75 * f_ring["21"],
-            "33": 0.95 * f_ring["33"],
-            "32": f_ring["22"],
-            "44": 0.90 * f_ring["44"],
-        }
+        f_rd_amp, f_rd_phi = _ringdown_cut_frequencies(f_ring, f_damp)
         f_ins_phi = {
             lm_str: (m_vals[lm_str] / 2.0) * f_meco_22
             for lm_str in ("21", "32", "33", "44")
-        }
-        f_rd_phi = {
-            "21": f_ring["21"] - f_damp["21"],
-            "33": f_ring["33"] - f_damp["33"],
-            "32": f_ring["22"] - 0.5 * f_damp["22"],
-            "44": f_ring["44"] - f_damp["44"],
         }
 
         # Amplitude sigma fits

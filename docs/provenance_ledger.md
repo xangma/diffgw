@@ -199,6 +199,7 @@ not validation of the retained official ROM or surviving equation components.
   - $(4, 4)$: $\alpha_2 = 3.6206 x + 63.1662$, $\alpha_\lambda = 5.8946 x - 0.4360$, $t_0 = -16.1609 M$
   - $(3, 2)$: $\alpha_2 = 5.8014 x + 39.0886$, $\alpha_\lambda = -1.4100 x - 1.8403$, $t_0 = -16.8168 M$
 - **Verification Gates**:
+  The [published default ringdown-cut gate](math/imrphenomxhm-ringdown-cuts.md) checks Eq. (36)/Table 2 values and Jacobians for supplied QNM frequencies in both native frontends; its [CPU FP64 receipt](validation/xhm_ringdown_cuts_component_20260927.json) does not qualify QNM fits or exceptional $(3,2)$ cuts. The paper's Eq. (45) gives a non-mixing phase coefficient rescaling but does not specify the mode constants $w_{\ell m}$ there; the native per-mode fits above have separate SXS calibration provenance and are not certified as that rescaling.
   [`tests/test_xhm_native_fits.py`](https://github.com/xangma/diffgw/blob/main/tests/test_xhm_native_fits.py) defines phase-component checks using the **reference amplitude**, restricted ringdown frequency bands and affine phase/time alignment:
   - Seven $(3,3)$ holdouts (`SXS:BBH:2265`, `2483`, `2484`, `2486`, `2489`, `2491`, `0185`, with $3 \le q \le 10$): phase RMS $< 0.020$ rad and fitted time-shift magnitude $< 0.20 M$; tighter phase gates apply at $q \le 3.5$.
   - Two additional holdouts (`SXS:BBH:0030`, `0166`, with $q=3,6$) for the four modes: phase RMS $< 0.15$ rad and affine mismatch $< 0.010$. These tests do not impose the $(3,3)$ arrival-time gate on every mode.
