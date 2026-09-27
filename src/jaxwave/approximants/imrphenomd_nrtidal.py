@@ -51,6 +51,14 @@ D32_V2 = NRTIDAL_V2_PHASE_COEFFS["d_3over2"]
 D2_V2 = NRTIDAL_V2_PHASE_COEFFS["d_2"]
 
 
+def _nrtidalv2_paper_tidal_phase(x, eta, lambda_tilde):
+    """Signed Dietrich et al. (2019) Eqs. (17)–(21) Fourier phase."""
+    num = (1.0 + N1_V2 * x + N32_V2 * x**1.5 + N2_V2 * x**2
+           + N52_V2 * x**2.5 + N3_V2 * x**3)
+    den = 1.0 + D1_V2 * x + D32_V2 * x**1.5 + D2_V2 * x**2
+    return -(117.0 / 256.0) * (lambda_tilde / eta) * x**2.5 * num / den
+
+
 def _bns_merger_frequency(
     mass1: jnp.ndarray,
     mass2: jnp.ndarray,
@@ -272,6 +280,39 @@ def _nrtidal_self_spin_components(
     s23 = prefactor * (p2 * (x ** 2.0) + p3 * (x ** 3.0))
     s35 = prefactor * (p35 * (x ** 3.5))
     return s23, s35
+
+
+def assemble_nrtidalv2_pv2_aligned_carrier(
+    f: jnp.ndarray, bbh_face_on: jnp.ndarray, mass1, mass2, chi1, chi2,
+    lambda1, lambda2, distance_mpc,
+) -> jnp.ndarray:
+    """Compose published Pv2 BNS face-on carrier before precession rotation.
+
+    Dietrich et al. (2019), Eqs. (3)–(4), (17)–(29), Table II, Sec. III.4.
+    The supplied BBH carrier already has its phase/time origin selected.
+    """
+    f = jnp.asarray(f)
+    bbh = jnp.asarray(bbh_face_on)
+    def scalar(value):
+        return jnp.asarray(value, dtype=f.dtype)
+    m1, m2 = scalar(mass1), scalar(mass2)
+    s1, s2 = scalar(chi1), scalar(chi2)
+    lam1, lam2 = scalar(lambda1), scalar(lambda2)
+    d_sec = scalar(distance_mpc) * MPC_SI / C_SI
+    m_sec = (m1 + m2) * MSUN_SEC
+    eta = component_masses_to_eta(m1, m2)
+    lambda_tilde, _ = tidal_combinations(m1, m2, lam1, lam2)
+    x = (PI * m_sec * f) ** (2.0 / 3.0)
+    psi_t = _nrtidalv2_paper_tidal_phase(x, eta, lambda_tilde)
+    s23, s35 = _nrtidal_self_spin_components(
+        x, m1, m2, s1, s2, lam1, lam2, fit="dietrich_2019")
+    a_t = _nrtidal_amplitude(x, m_sec, d_sec, eta, lambda_tilde)
+    merger = _bns_merger_frequency(m1, m2, lam1, lam2)
+    window = _planck_taper_window(f, merger, 1.2 * merger)
+    modulus = jnp.abs(bbh)
+    safe_modulus = jnp.where(modulus > 0, modulus, 1.0)
+    unit = jnp.where(modulus > 0, bbh / safe_modulus, 0.0j)
+    return window * (bbh + a_t * unit) * jnp.exp(-1j * (psi_t + s23 + s35))
 
 
 def _nrtidal_self_spin_correction(

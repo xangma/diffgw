@@ -64,7 +64,10 @@ boundary difference remain open in the linked component receipts.
 The supplied-mode projection operator has a separate
 [positive-22 gate](nrtidalv2-pv2-positive-22-projection.md). A subsequent
 [normalization gate](nrtidalv2-pv2-tidal-mode-normalization.md) resolves the
-Eq. (24) supplied-mode scale; the native carrier assembly remains missing.
+Eq. (24) supplied-mode scale. The subsequent [conditional aligned-carrier
+gate](nrtidalv2-pv2-aligned-carrier.md) composes this correction with a
+supplied BBH carrier; public Pv2 BNS angle and reference conventions remain
+unresolved.
 The historical `binary_compatible` default is unchanged.
 
 ## Reproduce the checks
