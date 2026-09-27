@@ -95,6 +95,9 @@ are $10^{-12}$, $10^{-10}$, and $10^{-10}$ respectively. The quotient is tested
 in coalescence and 30 Hz reference-frequency conventions, without fitting.
 The [execution receipt](../validation/nrtidalv2_self_spin_20260927.md)
 records the actual result.
+The separate [spinning composition gate](nrtidalv2-paper-d-composition.md)
+joins this self-spin phase with the published tidal phase and merger taper
+in one complex quotient through the taper boundary.
 
 At $\Lambda=350$, direct evaluation of the **printed** Eqs. (28)–(29) gives
 $(C_Q,C_{Oc})\simeq(5.29659,10.49832)$; the Fig. 7 description instead
