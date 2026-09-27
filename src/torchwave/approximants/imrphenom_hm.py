@@ -206,7 +206,7 @@ def _d_ringdown_phase_correction(
     f_rd_lm: torch.Tensor,
     f_damp_lm: torch.Tensor,
 ) -> torch.Tensor:
-    """Replace the D ringdown arctangent by London Eq. (9), with C1 matching.
+    """Replace the D ringdown arctangent by London Eq. (14), with C1 matching.
 
     All frequencies are geometric. Subtracting the value and tangent of the
     arctangent difference at D's merger-ringdown join recomputes alpha_0 and
@@ -658,7 +658,7 @@ class IMRPhenomHM(nn.Module):
             f_damp_22_u = f_damp_22_geom
         f_rd_22_phys = f_rd_22_u / m_sec_eval
 
-        # Eq. (9) refines the D ansatz specifically; arbitrary carriers retain
+        # London Eq. (14) refines the D ansatz specifically; arbitrary carriers retain
         # the model-agnostic phase mapping.
         use_d_ringdown = isinstance(self.base_22, IMRPhenomD)
         if use_d_ringdown:

@@ -10,7 +10,7 @@ All frequencies are positive dimensionless $Mf$; $\eta>0$. Supply PhenomD coeffi
 
 ## Mathematics and components
 
-[London et al., arXiv:1708.00404v4, Eq. (9)](https://arxiv.org/pdf/1708.00404v4) modify the last arctangent of [Khan et al., arXiv:1508.07253v2, Eq. (14)](https://arxiv.org/html/1508.07253v2). With $R=f_{22}^{\rm RD,H}/f_{\ell m}^{\rm RD,H}$, the changed term is
+[London et al., arXiv:1708.00404v4, Eq. (14)](https://arxiv.org/pdf/1708.00404v4) modify the last arctangent of [Khan et al., arXiv:1508.07253v2, Eq. (14)](https://arxiv.org/html/1508.07253v2). With $R=f_{22}^{\rm RD,H}/f_{\ell m}^{\rm RD,H}$, the changed term is
 
 $$
 L_{\ell m}(f)=\frac{\alpha_4}{\eta}R\arctan\!\left(\frac{f-\alpha_5 f_{22}^{\rm RD,H}}{R f_{\ell m}^{\rm damp,H}}\right),
@@ -41,7 +41,7 @@ Thus both value and slope join at zero. This affine attachment is a native choic
 
 | Component ID/version | Source | Variant | Status | Scalar reference | Torch | JAX | Maintained check |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| `hm.phase.ringdown.eq9-c1.v1` | London Eq. (9); Khan Eq. (14), Sec. V.A | supplied alpha/QNM, D-carrier C1 | executable, conditional | `carrier_delta_c1` | `_production_eq14_delta_c1` | `_production_eq14_delta_c1` | `test_imrphenomhm_ringdown_phase_math_reference.py` |
+| `hm.phase.ringdown.eq9-c1.v1` | London Eq. (14); Khan Eq. (14), Sec. V.A | supplied alpha/QNM, D-carrier C1 | executable, conditional | `carrier_delta_c1` | `_production_eq14_delta_c1` | `_production_eq14_delta_c1` | `test_imrphenomhm_ringdown_phase_math_reference.py` |
 
 ## Implementation mapping
 

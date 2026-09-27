@@ -53,7 +53,7 @@ imports the scalar reference. The frontend helpers are called by the public HM
 assembly, but this check supplies a polynomial carrier to isolate the offset
 algebra from PhenomD calibration and QNM fits. The separate
 [ringdown phase-shape component](imrphenomhm-ringdown-phase.md) covers the
-London Eq. (9) modification of PhenomD Eq. (14).
+London Eq. (14) modification of PhenomD Eq. (14).
 
 ## Evidence and limitations
 
