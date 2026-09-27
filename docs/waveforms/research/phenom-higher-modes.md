@@ -58,6 +58,19 @@ The [maintained pinned-binary six-mode holdout](../../validation/imrphenomhm_lal
 
 The separate [pinned-binary plus/cross holdout](../../validation/imrphenomhm_lal_polarizations_20260927.md) checks public Torch/JAX HM/D polarizations at three additional aligned-spin systems with generic inclinations, azimuths, nonzero orbital phases, and time shifts. Both frontends pass the frozen complex full-band and strong-bin residual bounds for plus and cross without per-case alignment. This adds sampled projection-plus-carrier binary evidence; it is not a full-domain or NR accuracy claim.
 
+Prospective full-NR physical comparisons now pass one nearly nonspinning
+[SXS:BBH:3144](../../validation/imrphenomhm_sxs_3144_receipt_20260927.md)
+case and one aligned-spin
+[SXS:BBH:2158](../../validation/imrphenomhm_sxs_2158_receipt_20260927.md)
+case at the precommitted two-view resolution, match, and norm gates. The
+earlier [2265](../../validation/imrphenomhm_sxs_2265_receipt_20260927.md),
+[3631](../../validation/imrphenomhm_sxs_3631_receipt_20260927.md),
+[3619](../../validation/imrphenomhm_sxs_3619_projection_receipt_20260927.md),
+and [3630](../../validation/imrphenomhm_sxs_3630_projection_receipt_20260927.md)
+red results remain red. The two green cases add bounded physical evidence;
+they do not qualify the whole aligned-spin domain, every view, or the
+inherited fit/QNM provenance.
+
 The maintained mode/regime diagnostic now localizes those two XHM failures without changing their gates. The 22 mode agrees with the pinned binary to numerical precision after one constant phase convention. Across 21, 32, 33 and 44, affine-aligned inspiral phase residuals are at most 1.33e-4 rad, while intermediate phase residuals span 6.24–28.80 rad. Intermediate amplitude relative L2 spans 0.77–7.04; the largest inspiral-amplitude residual is 0.48 for the catalog 32 mode. Ringdown residuals and the 32 mixing path remain mode-dependent, and the close full-polarization/projection metrics in the manifest only show that projection is not the dominant amplifier in these two cases. This black-box decomposition is diagnostic evidence, not a calibration fit or a complete-waveform verification claim.
 
 Paper/source discrepancies to resolve: HM offers a non-paper XAS carrier, and its public assembly reverses London's printed amplitude and phase transition frequencies; XHM's default and experimental phase joins differ; some XHM absolute amplitude vetoes remain disabled pending normalization; XHM code comments use equation labels that differ from the pinned v2 paper; fit-source labels are not interchangeable. None of these should be hidden behind a single unqualified model name.
