@@ -20,7 +20,7 @@ The phase origin is fixed by the printed low-frequency PN/symmetry offset.
 
 ## Mathematics and components
 
-[London et al., arXiv:1708.00404v4, Methods Eqs. (3), (8)–(9), (13)](https://arxiv.org/html/1708.00404v4)
+[London et al., arXiv:1708.00404v4, Methods Eqs. (3), (5)–(8)](https://arxiv.org/pdf/1708.00404v4)
 give $\phi_{\ell m}=\kappa\phi_{22}[g(f)]+\Delta_{\ell m}$.
 The [frequency-map component](imrphenomhm-frequency-map.md) specifies $g$:
 for the PhenomD phase, its slopes are $2/m$, $s=(f_{22}^{\rm RD}-2f_0^\phi/m)/
@@ -36,13 +36,16 @@ $$
 
 The one-sided phase derivatives agree at both joins because $\kappa_i g_i'=1$
 for all three branches, assuming a differentiable carrier. The high-frequency
-map here is the paper's PhenomD-specific multiplicative Eq. (13), rather than
+map here is the paper's PhenomD-specific multiplicative Eq. (8), rather than
 its earlier additive map. The high offset is the continuity value implied by
-Eqs. (3) and (8)–(9) after that substitution.
+Eqs. (3), (6)–(8) after that substitution.
+
+The component ID retains its historical `eq9` label so existing receipts still
+resolve; the offsets are Eq. (7) in the numbered London PDF.
 
 | Component ID/version | Source | Variant | Status | Scalar reference | Torch | JAX | Maintained check |
 | --- | --- | --- | --- | --- | --- | --- | --- |
-| `hm.phase.offsets.eq9.v1` | London Methods Eqs. (3), (8)–(9), (13) | supplied carrier/QNM | executable, conditional | `mapped_phase` | `_production_mapped_phase_c1` | `_production_mapped_phase_c1` | `test_imrphenomhm_phase_offsets_math_reference.py` |
+| `hm.phase.offsets.eq9.v1` | London Methods Eqs. (3), (5)–(8) | supplied carrier/QNM | executable, conditional | `mapped_phase` | `_production_mapped_phase_c1` | `_production_mapped_phase_c1` | `test_imrphenomhm_phase_offsets_math_reference.py` |
 
 ## Implementation mapping
 
@@ -53,7 +56,7 @@ imports the scalar reference. The frontend helpers are called by the public HM
 assembly, but this check supplies a polynomial carrier to isolate the offset
 algebra from PhenomD calibration and QNM fits. The separate
 [ringdown phase-shape component](imrphenomhm-ringdown-phase.md) covers the
-London Eq. (14) modification of PhenomD Eq. (14).
+London Eq. (9) modification of PhenomD Eq. (14).
 
 ## Evidence and limitations
 
@@ -71,7 +74,7 @@ optimized separate higher-mode mapping transitions. The public assembly uses
 the PhenomD pair. This component gate supplies London's printed phase
 transition and therefore does not qualify the public assembly's transition
 choice. It also does not
-establish amplitude scaling, fitted QNM values, Eq. (14) carrier correction,
+establish amplitude scaling, fitted QNM values, London Eq. (9) carrier correction,
 whole-mode binary agreement, or physical accuracy across the model domain.
 
 ## Reproduce the checks

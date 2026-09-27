@@ -168,7 +168,7 @@ from `0.576375` to `0.121922` after each option's single 22 alignment.
 This compares two existing named model variants, not a fitted correction or
 a new gate result.
 
-London [Eqs. (3), (8)–(9)](https://arxiv.org/html/1708.00404v4)
+London [Eqs. (3), (5)–(7)](https://arxiv.org/pdf/1708.00404v4)
 relate inspiral mode phases at commensurate frequencies. To separate relative
 phase from the single-22 time/orbital alignment, a second Torch-only
 diagnostic formed

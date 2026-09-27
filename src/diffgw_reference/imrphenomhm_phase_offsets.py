@@ -1,7 +1,7 @@
 """Scalar London higher-mode phase offsets at supplied carrier and QNM inputs.
 
-London et al., arXiv:1708.00404v4, Eqs. (3), (5), (8)--(9) and the
-IMRPhenomD-specific high-frequency mapping in Eq. (13).  No frontend,
+London et al., arXiv:1708.00404v4, Eqs. (3), (5)--(8), including the
+PhenomD-specific high-frequency mapping in Eq. (8). No frontend,
 calibration, or QNM implementation is imported.
 """
 
@@ -12,9 +12,11 @@ import mpmath as mp
 from .imrphenomhm_frequency_map import eq8_phase_frequency_map
 
 
-SOURCE = "https://arxiv.org/html/1708.00404v4"
+SOURCE = "https://arxiv.org/pdf/1708.00404v4"
 COMPONENT_SOURCES = {
-    "hm.phase.offsets.eq9.v1": (SOURCE, "Methods, Eqs. (3), (8)--(9), (13)"),
+    # Historical component ID is retained for receipt compatibility; offsets
+    # are Eq. (7) in the numbered PDF, not Eq. (9).
+    "hm.phase.offsets.eq9.v1": (SOURCE, "Methods, Eqs. (3), (5)--(8)"),
 }
 COMPONENT_BINDINGS = {
     "hm.phase.offsets.eq9.v1": {
@@ -36,7 +38,7 @@ def _inputs(f, f0, f_rd_lm, f_rd_22, ell: int, m: int):
 
 
 def low_frequency_offset(ell: int, m: int):
-    """PN/symmetry offset of London's Eq. (9), in radians."""
+    """PN/symmetry offset of London's Eq. (7), in radians."""
     if not isinstance(ell, int) or not isinstance(m, int) or ell < 2 or not 1 <= m <= ell:
         raise ValueError("require ell>=2 and 1<=m<=ell")
     return mp.pi * (3 * ell + (ell + m) % 2 - 2) / 2

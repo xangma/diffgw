@@ -29,9 +29,9 @@ derives those functions or fits.
 
 ## Mathematics and components
 
-[London et al., arXiv:1708.00404v4, Methods Eqs. (3), (8)–(9), (13)–(14)](https://arxiv.org/html/1708.00404v4)
+[London et al., arXiv:1708.00404v4, Methods Eqs. (3), (5)–(9)](https://arxiv.org/pdf/1708.00404v4)
 map the quadrupole phase through a three-branch frequency map, its inverse
-slopes $\kappa_b$, and continuity offsets $\Delta_b$. Their Eq. (14)
+slopes $\kappa_b$, and continuity offsets $\Delta_b$. Their Eq. (9)
 changes the merger-ringdown arctangent of
 [Khan et al., arXiv:1508.07253v2, Eq. (14)](https://arxiv.org/html/1508.07253v2).
 The existing [frequency-map](imrphenomhm-frequency-map.md),
@@ -45,13 +45,14 @@ C_{\ell m}(y)=P_D(y)+\delta_{\ell m}^{C^1}(y),\qquad
                          +\Delta_b[C_{\ell m}].
 $$
 
-Here $g_b$ is London's PhenomD-specific Eq. (13) high branch with the
+Here $g_b$ is London's PhenomD-specific Eq. (8) high branch with the
 Eq. (5) lower branches, and the offsets are evaluated from the **corrected**
 carrier at both joins. The native $\delta^{C^1}$ uses the D-anchored QNM
 adaptation and tangent subtraction documented in the ringdown specification;
 the literal printed London–Khan term is recovered only when their 22 QNM
-pairs coincide. London's Eq. (9) gives phase offsets; its modified
-merger-ringdown arctangent is Eq. (14).
+pairs coincide. London's Eq. (7) gives phase offsets; its modified
+merger-ringdown arctangent is Eq. (9). The stable component ID's `eq3-14`
+suffix records the inherited PhenomD Eq. (14), not a London Eq. (14).
 
 The reciprocal map slopes imply $C^1$ phase across $x=f_0^\phi$ and
 $x=f_{\ell m}^{\rm RD}$ when $C_{\ell m}$ is differentiable. The separate
@@ -60,7 +61,7 @@ mode frequency, to check the full public composition at that third join.
 
 | Component ID/version | Sources | Variant | Status | Scalar reference | Torch/JAX public target | Maintained check |
 | --- | --- | --- | --- | --- | --- | --- |
-| `hm.phase.public-composition.eq3-14.v1` | London Methods Eqs. (3), (8)–(9), (13)–(14); Khan Eq. (14) | D carrier; both named outer-map settings | executable, conditional | `imrphenomhm_phase_composition.composed_phase` | `IMRPhenomHM(..., return_unprojected_modes=True)` | `test_imrphenomhm_phase_composition_math_reference.py` |
+| `hm.phase.public-composition.eq3-14.v1` | London Methods Eqs. (3), (5)–(9); Khan Eq. (14) | D carrier; both named outer-map settings | executable, conditional | `imrphenomhm_phase_composition.composed_phase` | `IMRPhenomHM(..., return_unprojected_modes=True)` | `test_imrphenomhm_phase_composition_math_reference.py` |
 
 ## Implementation mapping
 

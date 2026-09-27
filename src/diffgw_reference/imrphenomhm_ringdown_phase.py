@@ -1,6 +1,6 @@
 """Scalar HM ringdown phase term with supplied QNMs and PhenomD coefficients.
 
-London et al., arXiv:1708.00404v4, Eq. (14), modifying the last term of
+London et al., arXiv:1708.00404v4, Eq. (9), modifying the last term of
 Khan et al., arXiv:1508.07253v2, Eq. (14). No fitted surface, QNM table, or
 frontend is imported here.
 """
@@ -14,7 +14,7 @@ SPEC_VERSION = "imrphenomhm-ringdown-phase/v1"
 COMPONENT_SOURCES = {
     "hm.phase.ringdown.eq9-c1.v1": (
         "https://arxiv.org/pdf/1708.00404v4",
-        "Eq. (14); Khan et al. Eq. (14) and phase join at Mf=0.5 f_RD",
+        "Eq. (9); Khan et al. Eq. (14) and phase join at Mf=0.5 f_RD",
     ),
 }
 COMPONENT_BINDINGS = {
@@ -48,7 +48,7 @@ def _parameters(eta, alpha4, alpha5, hm_fr22, hm_flm, hm_fd22, hm_fdlm,
 
 
 def paper_hm_term(f, eta, alpha4, alpha5, fr22, frlm, fdlm):
-    """The changed arctangent term in London's Eq. (14), literal QNM convention."""
+    """The changed arctangent term in London's Eq. (9), literal QNM convention."""
     f, eta, a4, a5, q22, qlm, damp = map(
         _number, (f, eta, alpha4, alpha5, fr22, frlm, fdlm)
     )

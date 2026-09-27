@@ -1,15 +1,15 @@
 """Scalar, source-composed complex IMRPhenomHM intrinsic modes.
 
-London et al., arXiv:1708.00404v4, Methods Eqs. (2)--(5), (8)--(9),
-(13)--(14), supply the complex assembly and frequency/phase maps.  The
+London et al., arXiv:1708.00404v4, Methods Eqs. (2)--(9), supply the
+complex assembly and frequency/phase maps. The
 restricted SPA factors come from Mishra et al., arXiv:1601.05588v1.  The
 PhenomD amplitude and phase, QNMs, and fitted alpha coefficients are supplied
 by the caller; no frontend or numerical fit is imported here.
 
-``paper_intrinsic_mode`` uses the model-agnostic Eq. (2)--(9)
-``exp(+i phi_lm)`` convention with a supplied carrier phase.
+``paper_intrinsic_mode`` uses the Eq. (2)--(8) ``exp(+i phi_lm)``
+convention with a supplied carrier phase; Eq. (9) is not inserted.
 ``public_intrinsic_mode`` adapts a positive PhenomD phase coordinate to the
-project's D-anchored Eq. (14) correction and ``exp(-i Psi_lm)`` convention,
+project's D-anchored London Eq. (9) correction and ``exp(-i Psi_lm)`` convention,
 including its odd-m sign and orbital-phase/time factors.  A finite-reference
 frequency gauge is an input, not derived by this reference.
 """
@@ -32,8 +32,8 @@ COMPONENT = "hm.intrinsic.complex-assembly.eq3.v1"
 SPEC_VERSION = "imrphenomhm-intrinsic-modes/v1"
 COMPONENT_SOURCES = {
     COMPONENT: (
-        ("https://arxiv.org/html/1708.00404v4",
-         "Methods Eqs. (2)--(5), (8)--(9), (13)--(14)"),
+        ("https://arxiv.org/pdf/1708.00404v4",
+         "Methods Eqs. (2)--(9)"),
         ("https://arxiv.org/html/1601.05588v1",
          "Eqs. (11)--(12): restricted SPA mode factors"),
     ),
@@ -111,10 +111,10 @@ def paper_intrinsic_mode(
     f, ell, m, mass1, mass2, spin1, spin2, amplitude22, carrier_phase,
     *, fr_lm, fr22, transition="london_2018",
 ) -> mp.mpc:
-    """Evaluate model-agnostic London Eqs. (3)--(9), with ``exp(+i phi)``.
+    """Evaluate London Eqs. (3)--(8), with ``exp(+i phi)``.
 
     Frequencies are dimensionless ``Mf``.  The supplied carrier phase must
-    use the paper's phase coordinate.  A D-specific Eq. (14) correction, if
+    use the paper's phase coordinate. A D-specific London Eq. (9) correction, if
     desired, must already be present in that supplied phase; this function
     does not apply the project's D-anchored phase correction.  Eq. (4) is
     undefined for exactly symmetric odd modes and raises accordingly.

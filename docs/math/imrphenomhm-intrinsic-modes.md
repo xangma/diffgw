@@ -30,8 +30,7 @@ the frontend's D peak slope as the explicit HM-relative gauge input.
 
 ## Mathematics and components
 
-[London et al., arXiv:1708.00404v4, Methods Eqs. (2)–(5), (8)–(9),
-(13)–(14)](https://arxiv.org/html/1708.00404v4) write the intrinsic Fourier
+[London et al., arXiv:1708.00404v4, Methods Eqs. (2)–(9)](https://arxiv.org/pdf/1708.00404v4) write the intrinsic Fourier
 mode as $\tilde h_{\ell m}=A_{\ell m}\exp(i\varphi_{\ell m})$ and prescribe
 
 $$
@@ -40,10 +39,10 @@ A_{\ell m}(x)=|\beta_{\ell m}(x)|\,A_{22}(g_A(x)),\qquad
                           +\Delta_b[C_{\ell m}].
 $$
 
-Here $g_A$ is Eq. (5), $g_\varphi$ uses the PhenomD-specific high branch,
-and $\beta$ is Eq. (4) with the retained PN envelopes. In the generic paper
-composer, the supplied carrier phase is the input to Eqs. (8)–(9); the public
-adapter first constructs the Eq. (14)-corrected D phase. The offsets and
+Here $g_A$ is Eq. (5), $g_\varphi$ uses the PhenomD-specific Eq. (8) high branch,
+and $\beta$ is Eq. (4) with the retained PN envelopes. In the paper
+composer, the supplied carrier phase is the input to Eqs. (3), (6)–(8); the public
+adapter first constructs the London Eq. (9)-corrected D phase. The offsets and
 inverse slopes enforce the piecewise phase relation. Their separate
 derivations and gates are recorded
 in the [frequency map](imrphenomhm-frequency-map.md),
@@ -64,7 +63,7 @@ specified in the [six-mode projection](imrphenomhm-projection.md).
 
 | Component ID/version | Source | Scalar reference | Public targets | Maintained check |
 | --- | --- | --- | --- | --- |
-| `hm.intrinsic.complex-assembly.eq3.v1` | London Methods Eqs. (2)–(5), (8)–(9), (13)–(14); Mishra PN inputs | `imrphenomhm_intrinsic_modes` | Torch/JAX `IMRPhenomHM` unprojected modes | `test_imrphenomhm_intrinsic_modes_math_reference.py` |
+| `hm.intrinsic.complex-assembly.eq3.v1` | London Methods Eqs. (2)–(9); Mishra PN inputs | `imrphenomhm_intrinsic_modes` | Torch/JAX `IMRPhenomHM` unprojected modes | `test_imrphenomhm_intrinsic_modes_math_reference.py` |
 
 ## Implementation mapping
 
