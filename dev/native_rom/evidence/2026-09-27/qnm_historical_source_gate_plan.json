@@ -1,0 +1,69 @@
+{
+  "schema": "diffgw.seobnrv4.qnm-historical-source-gate-plan.v1",
+  "component_id": "V4-QNM-INTERPOLATION",
+  "purpose": "Determine whether public primary sources provide a complete clean-room prescription for the historical SEOBNRv4 fundamental-QNM interpolation. This is a source-completeness gate, not a numerical proximity gate.",
+  "frozen_at_commit": "52ed3f2d20780bcee83f79557d03f1997cb77b06",
+  "primary_sources": {
+    "bohe_2017": {
+      "citation": "Bohé et al., Phys. Rev. D 95, 044028 (2017), arXiv:1611.03703v3, Sec. II.C (PDF p. 4) and Appendix B (PDF p. 20; source paper.tex lines 1250-1264)",
+      "source_url": "https://arxiv.org/e-print/1611.03703v3",
+      "source_sha256": "6d9f2e99524c9878ea06d31425939bee4e8dab52948878037d75132bcfeac488",
+      "pdf_url": "https://arxiv.org/pdf/1611.03703v3",
+      "pdf_sha256": "db9dc054368f131bdc152b319e54441c665547668221891723b309b005ac23ba"
+    },
+    "berti_2006": {
+      "citation": "Berti, Cardoso, and Will, Phys. Rev. D 73, 064030 (2006), arXiv:gr-qc/0512160v2, Table II (PDF p. 36), Appendix E Eqs. (E1)-(E2) (PDF p. 37), and Table VIII (PDF p. 41)",
+      "pdf_url": "https://arxiv.org/pdf/gr-qc/0512160v2",
+      "pdf_sha256": "5fe24e98616fee024a1e4e577129ff655480f733f451a7c06cc9c1213352e525"
+    },
+    "berti_author_archive": {
+      "citation": "Berti author numerical l=2 archive, unversioned download pinned by content hash; fundamental file n1l2m2.dat",
+      "url": "https://blackholes.tecnico.ulisboa.pt/Webpagecodes/l2.tar.gz",
+      "sha256": "0569faae28e14366480cf594ea398f3d33ac9d3f82dbbddd43a68d920d807086",
+      "observed_fundamental_rows": 10000,
+      "observed_spin_grid": "j=0.0000 through 0.9999 in steps of 0.0001"
+    }
+  },
+  "context_only_source": {
+    "citation": "Cook, Kerr Quasinormal Modes: s=-2, n=0--7, Zenodo 2650358, Version 1 (24 April 2019)",
+    "url": "https://zenodo.org/records/2650358",
+    "reason_excluded_from_historical_definition": "The data postdate the 2017 SEOBNRv4 publication and can validate Kerr values, but cannot define which data and interpolation choices the historical model used."
+  },
+  "mandatory_requirements": [
+    {
+      "id": "model_selects_interpolated_numerical_qnm",
+      "description": "The model source identifies interpolation of numerical fundamental-QNM results rather than an approximate analytic fit."
+    },
+    {
+      "id": "exact_historical_knots_and_ordinates",
+      "description": "A public primary source or hash-pinned author asset identifies the exact historical spin-knot subset, complex (2,2,0) ordinates, and retained precision."
+    },
+    {
+      "id": "interpolation_family_and_order",
+      "description": "A public primary source specifies the interpolation family and order used by historical SEOBNRv4."
+    },
+    {
+      "id": "interpolation_boundary_conditions",
+      "description": "A public primary source specifies all endpoint boundary conditions needed to reproduce the interpolant."
+    },
+    {
+      "id": "signed_domain_and_branch_mapping",
+      "description": "A public primary source specifies the supported signed-remnant-spin interval and maps signed spin to the required Kerr QNM branch."
+    },
+    {
+      "id": "out_of_domain_policy",
+      "description": "A public primary source specifies clamping, rejection, or extrapolation behavior outside the interpolation interval."
+    }
+  ],
+  "pass_rule": "Every mandatory requirement must be satisfied by the pinned public primary sources. An approximate fit, an independent later dataset, a GPL implementation, or a binary-oracle match cannot fill a missing field.",
+  "audit_path": "dev/native_rom/evidence/2026-09-27/qnm_historical_source_audit.json",
+  "result_path": "dev/native_rom/evidence/2026-09-27/qnm_historical_source_gate.json",
+  "clean_room_exclusions": [
+    "Do not inspect or transcribe LALSimulation source or its QNM tables.",
+    "Do not query or fit to a LALSimulation binary oracle.",
+    "Do not promote the Berti analytic fit or Cook 2019 data to a historical-SEOBNRv4 prescription."
+  ],
+  "production_change": false,
+  "historical_fidelity_claim": false,
+  "release_qualified": false
+}

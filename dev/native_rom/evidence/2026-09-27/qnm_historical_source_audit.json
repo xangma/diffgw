@@ -1,0 +1,78 @@
+{
+  "schema": "diffgw.seobnrv4.qnm-historical-source-audit.v1",
+  "component_id": "V4-QNM-INTERPOLATION",
+  "source_scope": "public_primary_sources_only",
+  "review_method": "Direct review of the SHA-pinned arXiv v3 source/PDF for Bohé et al., arXiv v2 PDF for Berti et al., and public Berti author archive. No implementation source, binary output, or previously extracted historical table was consulted for a missing prescription field.",
+  "source_findings": [
+    {
+      "source": "bohe_2017",
+      "citations": [
+        "Sec. II.C, PDF p. 4: sigma_220 is computed from Berti et al. using remnant mass and spin.",
+        "Appendix B, PDF p. 20; paper.tex lines 1250-1264: the dominant complex QNM is obtained by interpolating results from Berti et al."
+      ],
+      "finding": "The model paper selects interpolation of Berti numerical results, but gives no knot list, interpolation family or order, endpoint conditions, signed-domain mapping, or out-of-domain policy."
+    },
+    {
+      "source": "berti_2006",
+      "citations": [
+        "Table II, PDF p. 36: eleven rounded l=2 numerical rows at j=0.00 through 0.98, including m=2 and m=-2 branches.",
+        "Appendix E, Eqs. (E1)-(E2), PDF p. 37: separate analytic fits for dimensionless frequency and quality factor; stated fit/error range j in [0,0.99].",
+        "Table VIII, PDF p. 41: the fundamental m=2 fit has maximum frequency and quality-factor errors of 1.85% and 0.88%."
+      ],
+      "finding": "The paper provides sparse rounded numerical rows and explicitly approximate fits. It does not identify the exact denser historical SEOBNRv4 knot data or prescribe an interpolation algorithm and boundary behavior."
+    },
+    {
+      "source": "berti_author_archive",
+      "citations": [
+        "Public author URL https://blackholes.tecnico.ulisboa.pt/Webpagecodes/l2.tar.gz, SHA-256 0569faae28e14366480cf594ea398f3d33ac9d3f82dbbddd43a68d920d807086.",
+        "n1l2m2.dat contains 10,000 fundamental corotating rows on j=0.0000 through 0.9999 in steps of 0.0001, with corresponding negative-m files in the archive."
+      ],
+      "finding": "The hash-pinned author archive supplies a dense numerical source, but is unversioned and does not identify which subset, rounding, signed-branch mapping, interpolation algorithm, endpoint conditions, or domain policy historical SEOBNRv4 selected. It is not imported or redistributed by this audit."
+    }
+  ],
+  "requirements": [
+    {
+      "id": "model_selects_interpolated_numerical_qnm",
+      "satisfied": true,
+      "evidence": "Bohé et al., Appendix B, PDF p. 20, explicitly describes obtaining the dominant complex QNM by interpolating Berti et al. results."
+    },
+    {
+      "id": "exact_historical_knots_and_ordinates",
+      "satisfied": false,
+      "evidence": "Berti Table II prints eleven rounded rows. The hash-pinned author archive has a dense 10,000-row grid, but neither it nor Bohé et al. identifies the exact historical subset, retained precision, or resulting ordinates selected by SEOBNRv4."
+    },
+    {
+      "id": "interpolation_family_and_order",
+      "satisfied": false,
+      "evidence": "Bohé et al. use the term interpolation without naming a family or order; Berti et al. provide data and separate approximate analytic fits, not the historical SEOBNRv4 interpolation rule."
+    },
+    {
+      "id": "interpolation_boundary_conditions",
+      "satisfied": false,
+      "evidence": "Neither pinned paper states endpoint derivative conditions or another boundary convention for the SEOBNRv4 QNM interpolation."
+    },
+    {
+      "id": "signed_domain_and_branch_mapping",
+      "satisfied": false,
+      "evidence": "Berti tabulates nonnegative Kerr j with positive- and negative-m modes, but the pinned papers do not define the full signed-remnant-spin interval and branch mapping used by historical SEOBNRv4."
+    },
+    {
+      "id": "out_of_domain_policy",
+      "satisfied": false,
+      "evidence": "Neither pinned paper specifies historical SEOBNRv4 clamping, rejection, or extrapolation outside its QNM interpolation interval."
+    }
+  ],
+  "context_only": {
+    "cook_2019": "Cook's 2019 author data can independently validate Kerr values but postdate the 2017 model and do not identify its historical interpolation choices.",
+    "berti_analytic_fit": "The fit is explicitly approximate and cannot replace a missing exact historical prescription."
+  },
+  "clean_room": {
+    "lal_source_consulted": false,
+    "binary_oracle_queried": false,
+    "historical_table_transcribed": false,
+    "fit_or_threshold_retuned": false
+  },
+  "conclusion": "Public primary sources establish that interpolation is required but do not completely define the historical interpolant. The mandatory source gate must fail and V4-QNM-INTERPOLATION must remain pending.",
+  "historical_fidelity_claim": false,
+  "release_qualified": false
+}

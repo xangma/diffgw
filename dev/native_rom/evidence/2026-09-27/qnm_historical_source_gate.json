@@ -1,0 +1,46 @@
+{
+  "audit_sha256": "d183ee88a0aed638978f8629947b22830a9212a4c43da5ceb2ad1e4452360a39",
+  "blocking_requirements": [
+    "exact_historical_knots_and_ordinates",
+    "interpolation_family_and_order",
+    "interpolation_boundary_conditions",
+    "signed_domain_and_branch_mapping",
+    "out_of_domain_policy"
+  ],
+  "clean_room": {
+    "binary_oracle_queried": false,
+    "fit_or_threshold_retuned": false,
+    "historical_table_transcribed": false,
+    "lal_source_consulted": false
+  },
+  "component_id": "V4-QNM-INTERPOLATION",
+  "conclusion": "Public primary sources establish that interpolation is required but do not completely define the historical interpolant. The mandatory source gate must fail and V4-QNM-INTERPOLATION must remain pending.",
+  "gates": {
+    "exact_historical_knots_and_ordinates": false,
+    "interpolation_boundary_conditions": false,
+    "interpolation_family_and_order": false,
+    "model_selects_interpolated_numerical_qnm": true,
+    "out_of_domain_policy": false,
+    "signed_domain_and_branch_mapping": false
+  },
+  "historical_fidelity_claim": false,
+  "mandatory_requirement_count": 6,
+  "plan_sha256": "c4b8e50418b28c0c2c3dd6496bdc811de02af1bb4da3f2ccb0a10efe3ca3a58d",
+  "process": {
+    "cwd": "/home/xangma/tmp/diffgw-qnm-source-gate-20260927-52ed3f2",
+    "host": "len"
+  },
+  "production_change": false,
+  "release_qualified": false,
+  "satisfied_requirement_count": 1,
+  "schema": "diffgw.seobnrv4.qnm-historical-source-gate.v1",
+  "script_sha256": "c545d6c56e50044f25aae7a4065cd73209b2155730113c2f25c3923d47be030b",
+  "source_gate_passed": false,
+  "source_sha256": {
+    "berti_author_archive": "0569faae28e14366480cf594ea398f3d33ac9d3f82dbbddd43a68d920d807086",
+    "berti_pdf": "5fe24e98616fee024a1e4e577129ff655480f733f451a7c06cc9c1213352e525",
+    "bohe_pdf": "db9dc054368f131bdc152b319e54441c665547668221891723b309b005ac23ba",
+    "bohe_source": "6d9f2e99524c9878ea06d31425939bee4e8dab52948878037d75132bcfeac488"
+  },
+  "status": "diagnostic_complete"
+}

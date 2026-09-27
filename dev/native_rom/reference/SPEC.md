@@ -99,7 +99,7 @@ specify the exact historical numerical implementation. In particular:
 | --- | --- | --- |
 | `V4-HAM-1-3` | [Bohé Sec. II.1](https://arxiv.org/html/1611.03703), [Barausse–Buonanno Hamiltonian](https://arxiv.org/abs/1107.2904), and [Steinhoff Appendix A](https://arxiv.org/html/1608.01907) | Printed fits and equations do not provide shortened source decimals or the historical logarithmic derivative convention. |
 | `V4-FLUX-4-9` | [Bohé Eqs. (4)–(6), (9)](https://arxiv.org/html/1611.03703) and [factorized multipoles](https://arxiv.org/abs/1006.0431) | The 35-mode paper composition has a two-state conditional ODE check, but the full historical torque remains pending: exact higher-mode spin hybrid, high-`ell` truncation, evolved-domain dynamics, and JAX waveform coupling are not independently qualified. Supplied-mode normalization and tail modulus are covered separately by `V4-FLUX-NORM-9` and `V4-FLUX-TAIL-MODULUS`. |
-| `V4-QNM-INTERPOLATION` | [Berti et al. Kerr data and fits](https://arxiv.org/html/gr-qc/0512160) and [Cook author data](https://zenodo.org/records/2650358) | The independent native signed-spin rule has a conditional finite-point scalar/frontend certificate and one fixed-boundary waveform witness. Continuous-domain accuracy, historical natural-cubic compatibility, and domain-wide whole-waveform impact remain open; the published fit is approximate and does not define historical knots. |
+| `V4-QNM-INTERPOLATION` | [Bohé et al. Sec. II.C and Appendix B](https://arxiv.org/abs/1611.03703), [Berti et al. Kerr data and fits](https://arxiv.org/abs/gr-qc/0512160), and [Cook author data](https://zenodo.org/records/2650358) | The [frozen public-source gate](../evidence/2026-09-27/qnm_historical_source_gate.json) finds only 1 of 6 required historical-prescription fields: exact knots/ordinates, interpolation family/order, boundary conditions, signed-domain mapping, and out-of-domain policy are absent. The independent native signed-spin rule has a conditional finite-point certificate and one fixed-boundary waveform witness, but historical compatibility, continuous-domain accuracy, and domain-wide whole-waveform impact remain open. |
 | `V4-ODE-IC` | [Bohé Sec. II.2](https://arxiv.org/html/1611.03703) cites [Buonanno–Chen–Damour, Sec. IV.1](https://arxiv.org/html/gr-qc/0508067) for quasicircular initial data | Exact v4 root coordinates, tortoise mapping, numerical tolerances, and event/output interpolation need independent checks. |
 | `V4-TD-FD-CONVENTIONS` | [Pürrer Sec. 4](https://arxiv.org/html/1402.4146) gives a time-domain conditioning template for **SEOBNRv1** | The v4 window, epoch, padding, crop, normalization, and polarization choices are not specified there. |
 | `V4-ROM-VII` | [Bohé Sec. VII](https://arxiv.org/html/1611.03703) gives patch dimensions, frequency counts, SVD, and tensor-spline architecture | No independently generated v4 basis, spline tensors, full frequency knots, qualified training generator, or held-out validation exists. |
@@ -682,7 +682,13 @@ Bohé et al. Sec. II.C and Appendix B state that SEOBNRv4 obtains the remnant
 mass and spin and then **interpolates numerical QNM results** from
 [Berti, Cardoso and Will (2006), Appendix E](https://arxiv.org/html/gr-qc/0512160).
 The papers do not specify the historical interpolation knots, precision, or
-rule. The hash-pinned LAL source does: its
+rule. The public Berti author archive supplies 10,000 corotating fundamental
+rows on a uniform `j=0.0000` through `0.9999` grid, but does not identify the
+historical subset or interpolation choices. A [SHA-pinned public-source audit](../evidence/2026-09-27/qnm_historical_source_gate.json)
+freezes six required prescription fields and finds only that model-selection
+statement present; exact knots and ordinates, interpolation family and order,
+boundary conditions, signed-domain mapping, and out-of-domain behavior are
+absent. The hash-pinned LAL source does: its
 `XLALSimIMREOBGenerateQNMFreqV2fromFinal` function prints 107 spin knots and
 fundamental `(2,2)` frequency/damping entries, then applies GSL
 `gsl_interp_cspline` on `[-0.9996,0.9996]`. An analytic fit to those results

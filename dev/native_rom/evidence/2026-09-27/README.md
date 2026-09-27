@@ -18,6 +18,12 @@ All six frozen gates passed. The sixth reuses the SHA-pinned [current-source fix
 
 The diagnostic ran on `len` under the pinned native source and prior-receipt hashes in the plan. It completed in 4.12 s with `status=diagnostic_complete`; its JSON preserves the 12 rows and pass/fail gates. This is a **finite-point component certificate**. It establishes neither a continuous signed-spin error bound nor historical natural-cubic/binary parity, and it does not qualify the full SEOBNRv4 generator or authorize production promotion.
 
+## Historical QNM public-source gate
+
+The [frozen plan](qnm_historical_source_gate_plan.json), [public-source audit](qnm_historical_source_audit.json), [evaluator](../../diagnose_qnm_historical_source_gate.py), and [machine-readable result](qnm_historical_source_gate.json) test whether the pinned public sources completely define the historical `V4-QNM-INTERPOLATION` prescription. Bohé et al., Sec. II.C and Appendix B, identify interpolation of Berti et al. numerical results. Berti et al., Table II and Appendix E, provide eleven rounded numerical rows and separate approximate fits. The hash-pinned, unversioned Berti author archive supplies a dense 10,000-row grid, but none of these sources identifies the exact historical subset and retained precision, interpolation family/order, endpoint conditions, signed-domain mapping, or out-of-domain behavior.
+
+The SHA-pinned audit ran on `len` and satisfied only one of six mandatory requirements. The five absent fields are recorded as blockers, so the source gate fails and `V4-QNM-INTERPOLATION` remains pending. Cook's 2019 data remain an independent numerical validation source, not a definition of a 2017 historical implementation. This audit did not inspect LAL source, query a binary oracle, transcribe a historical table, retune a fit or threshold, change production code, or qualify release.
+
 ## JAX whole-path blocker
 
 The [frozen directional-amplification plan](jax_nqc_directional_amplification_plan.json),
