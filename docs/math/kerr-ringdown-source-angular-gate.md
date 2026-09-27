@@ -70,7 +70,7 @@ backends and both factors, the maximum absolute angular error was
 `7.93e-14` and `5.23e-14`. The environment used Python 3.12.3, Torch
 2.14.0+cpu, JAX 0.11.2, NumPy 2.5.3, mpmath 1.3.0 and pytest 9.1.1.
 
-## Reproduce the gate
+## Reproduce the checks
 
 On `len` with Torch/JAX CPU FP64, SymPy, mpmath and pytest:
 

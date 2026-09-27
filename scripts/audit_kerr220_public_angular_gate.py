@@ -62,7 +62,8 @@ def _native(backend, case, angular_convention="public_compat"):
             )
         from torchwave.approximants.kerr_qnm_generated import signed_qnm_220
         from torchwave.approximants.kerr_ringdown_public_clean import kerr220_td, kerr220_fd
-        arr = lambda x: torch.as_tensor(x, dtype=torch.float64)
+        def arr(x):
+            return torch.as_tensor(x, dtype=torch.float64)
         w, decay = signed_qnm_220(arr(spin))
     else:
         import jax
@@ -75,7 +76,8 @@ def _native(backend, case, angular_convention="public_compat"):
         )
         if angular_convention == "source_spectral":
             from jaxwave.approximants.kerr_ringdown import spin_weighted_spheroidal_harmonic as spectral
-        arr = lambda x: jnp.asarray(x, dtype=jnp.float64)
+        def arr(x):
+            return jnp.asarray(x, dtype=jnp.float64)
         w, decay = evaluate_kerr_qnm_220(arr(spin))
     args = dict(final_mass=case["mass"], final_spin=spin,
                 distance=case["distance"], energy_fraction=case["energy"],

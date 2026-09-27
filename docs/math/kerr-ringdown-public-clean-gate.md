@@ -5,7 +5,10 @@ whole-waveform specification. The existing
 [`kerr-220-energy-carrier-conditional/v1`](kerr-ringdown.md) remains valid only
 when QNM frequency, damping, and angular factors are supplied. The opt-in
 `kerr220_td/fd` public-clean `(2,2,0)` path in Torch and JAX does not yet
-meet the independent angular source-of-truth gate. This receipt does not
+meet the independent angular source-of-truth gate. A separate
+[source-spectral direct-call option](kerr-ringdown-source-angular-gate.md)
+passes selected angular and carrier checks without changing this default.
+This receipt does not
 assess the separate direct `KerrRingdown` class, whose spectral-angular
 physical-energy slice is [versioned separately](kerr-ringdown-direct-class.md).
 
