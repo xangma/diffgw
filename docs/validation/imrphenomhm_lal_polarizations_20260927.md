@@ -43,8 +43,40 @@ at least 1% of that polarization's peak. No overlap maximization is used.
 
 ## Result and scope
 
-Pending the first run on `len`. This is a sampled same-model public-binary
-polarization gate, distinct from the existing
+The first held-out run passed **6/6 tests**, with no skips or threshold changes.
+Each cell below is `full-band complex L2 / strongest supported-bin pointwise
+complex residual`. The strongest supported-bin test covers 299–365 bins,
+depending on case and polarization.
+
+| System | Polarization | Torch | JAX |
+| --- | --- | ---: | ---: |
+| Mixed generic | plus | `3.94862954e-8 / 1.06454329e-6` | `3.94863559e-8 / 1.06454248e-6` |
+| Mixed generic | cross | `4.04219292e-8 / 1.07391291e-6` | `4.04219975e-8 / 1.07391214e-6` |
+| Asymmetric generic | plus | `4.26317697e-7 / 8.98561674e-6` | `4.26318119e-7 / 8.98562140e-6` |
+| Asymmetric generic | cross | `3.94396972e-7 / 9.89964493e-6` | `3.94397364e-7 / 9.89964899e-6` |
+| Positive-spin backside | plus | `2.87010133e-6 / 7.82657707e-5` | `2.87010132e-6 / 7.82657697e-5` |
+| Positive-spin backside | cross | `2.76494833e-6 / 5.04790240e-5` | `2.76494832e-6 / 5.04790230e-5` |
+
+The run used host `len`, cwd
+`/home/xangma/tmp/diffgw-hm-polarization-holdout-20260927`, Python `3.12.3`,
+LALSuite `7.26.15`, Torch `2.14.0+cpu`, JAX/JAXlib `0.11.2`, NumPy `2.5.3`,
+and pytest `9.1.1`. Protocol commit `1a83e2c` predates the held-out run. The
+exact command was:
+
+```sh
+cd /home/xangma/tmp/diffgw-hm-polarization-holdout-20260927
+env JAX_ENABLE_X64=1 JAX_PLATFORMS=cpu DIFFGW_REQUIRE_LAL_BINARY=1 \
+  OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 PYTHONPATH=src:tests \
+  /home/xangma/.cache/diffgw-taylorf2-hm-venv/bin/python -m pytest -q -s \
+  tests/test_imrphenomhm_lal_polarizations_binary.py -ra
+```
+
+The complete output is `hm_polarization_binary.log` in that cwd, with
+`6 passed in 17.61s`. The launcher PID was `4081252`, Python PID `4081253`;
+the job is complete, so no next check or stop action remains. During execution,
+`ssh len 'kill 4081253'` was the stop command.
+
+This is a sampled same-model public-binary polarization gate, distinct from the existing
 [six-mode binary holdout](imrphenomhm_lal_six_modes_20260927.md) and
 [source projection gate](imrphenomhm_projection_20260927.md). A pass will not
 establish exact paper fit provenance, derivatives, all parameter/frequency

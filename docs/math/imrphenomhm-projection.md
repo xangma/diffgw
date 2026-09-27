@@ -80,6 +80,11 @@ carrier amplitude, phase, fit inputs, negative-frequency reconstruction,
 detector response, or a complete waveform. No whole-model verification claim
 is implied by passing this gate.
 
+An independent [public-binary polarization holdout](../validation/imrphenomhm_lal_polarizations_20260927.md)
+compares complete plus/cross from both frontends with pinned LALSuite at three
+unseen generic orientations and phase/time settings. That sampled binary gate
+does not promote this source-projection component to a whole-model claim.
+
 ## Reproduce the checks
 
 With SymPy, mpmath, Torch, JAX, and pytest installed, run
