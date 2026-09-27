@@ -193,8 +193,10 @@ def test_public_transition_selection(backend, monkeypatch, variant,
     frequencies = array(grid / ((mass1 + mass2) * float(module.MSUN_SEC)))
     kwargs = dict(mass1=mass1, mass2=mass2, chi1=chi1, chi2=chi2,
                   return_unprojected_modes=True)
+    compare_default = (variant == "phenomd_runtime" or
+                       ((l, m) == (3, 3) and masses_spins == REMNANT_INPUTS[0]))
     baseline = (np.asarray(model(frequencies, **kwargs)[2][(l, m)])
-                if variant == "phenomd_runtime" else None)
+                if compare_default else None)
     seen = {}
     amp_fn = module.frequency_mapping_amplitude
     phase_fn = module._production_mapped_phase_c1
@@ -254,6 +256,8 @@ def test_public_transition_selection(backend, monkeypatch, variant,
 
     if variant == "phenomd_runtime":
         np.testing.assert_allclose(actual, baseline, rtol=1e-13, atol=0)
+    elif baseline is not None:
+        assert np.max(abs(actual - baseline)) > 1e-8 * np.max(abs(baseline))
 
     if (l, m) == (3, 3) and masses_spins == REMNANT_INPUTS[0]:
         with pytest.raises(ValueError, match="Unknown HM mapping transitions"):
