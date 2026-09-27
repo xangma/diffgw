@@ -46,6 +46,18 @@ checkout at `6ad7663`. The command used `JAX_ENABLE_X64=1`,
 `parity/test_nsbh_parity.py`, and
 `test_imrphenomhm_frequency_map_math_reference.py` under `tests/`.
 
+The strict public-binary NSBH remnant-mass regression was then rerun on
+`len` from that same checkout with PyCBC 2.11.0 installed in a separate
+package directory (NumPy 2.3.5, SciPy 1.16.3), without changing the shared
+Torch/JAX environment. All **24/24** tests passed in 6.87 s, including the
+22 cases that could not obtain a match statistic on the Mac without PyCBC.
+The command was `JAX_ENABLE_X64=1 JAX_PLATFORMS=cpu
+PYTHONPATH=/home/xangma/tmp/diffgw-pycbc-2.11.0-full/packages:src:tests
+OMP_NUM_THREADS=1 python -m pytest -q
+tests/test_nsbh_phase_mass_regression.py -ra`, using the existing len venv's
+Python. This resolves the environment limitation above; it does not expand
+the conditional amplitude-window gate into whole-waveform qualification.
+
 This gate verifies only the three-window algebra with supplied inputs. The
 [low/no-torus joining-center discrepancy](../math/nsbh-joining-frequencies.md),
 [Eq. (26)/(29) variant discrepancies](../math/nsbh-amplitude-variant-provenance.md),
