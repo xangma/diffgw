@@ -11,6 +11,7 @@ Strict Clean-Room Implementation based exclusively on published literature:
 
 from typing import Dict, List, Optional, Sequence, Tuple, Union
 import math
+from diffgw_core.phenomd_published_fits import validate_calibration
 import torch
 import torch.nn as nn
 
@@ -444,6 +445,8 @@ class IMRPhenomHM(nn.Module):
     - Berti, Cardoso, Will (2006), Phys. Rev. D 73, 064030 (arXiv:gr-qc/0512160)
     """
 
+    definition_id = "IMRPhenomHM"
+
     SUPPORTED_MODES: Tuple[Tuple[int, int], ...] = (
         (2, 2),
         (2, 1),
@@ -480,6 +483,8 @@ class IMRPhenomHM(nn.Module):
         mass2: torch.Tensor,
         chi1: torch.Tensor,
         chi2: torch.Tensor,
+        *,
+        calibration: str = "inherited",
     ) -> Tuple[torch.Tensor, torch.Tensor]:
         """Compute fundamental QNM frequency f_RD and damping width f_damp for mode (l, m).
 
@@ -492,7 +497,7 @@ class IMRPhenomHM(nn.Module):
         Returns ``(f_rd, f_damp)`` in dimensionless total-mass units ``M*f``.
         """
         total_mass = mass1 + mass2
-        m_final, a_final, _, _ = IMRPhenomD.remnant_properties(mass1, mass2, chi1, chi2)
+        m_final, a_final, _, _ = IMRPhenomD.remnant_properties(mass1, mass2, chi1, chi2, calibration=calibration)
         omega_real_final, omega_imag_final = evaluate_n61_qnm((l, m), a_final)
         m_ratio = total_mass / m_final
         scale = m_ratio / (2.0 * PI)
@@ -917,6 +922,8 @@ class IMRPhenomHM(nn.Module):
         hm_21_pn_variant: str = "binary_compatible",
         hm_32_pn_variant: str = "binary_compatible",
         hm_43_pn_variant: str = "binary_compatible",
+        *,
+        calibration: str = "inherited",
     ) -> Union[
         Tuple[torch.Tensor, torch.Tensor],
         Tuple[torch.Tensor, torch.Tensor, Dict[Tuple[int, int], Union[Tuple[torch.Tensor, torch.Tensor], torch.Tensor]]],
@@ -927,8 +934,13 @@ class IMRPhenomHM(nn.Module):
         its own absolute QNM pair is retained inside the Eq. (14) arctangent;
         the HM pair enters there only as the two London ratios.  All boundary
         evaluations and projections stay in Torch so parameter gradients are
-        retained in scalar and batched calls.
+        retained in scalar and batched calls. ``calibration="published"``
+        selects the paper-precision D fits throughout the carrier and HM
+        remnant/QNM chain; the mapping and PN options remain separate.
         """
+        validate_calibration(calibration)
+        if calibration == "published" and type(self.base_22) is not IMRPhenomD:
+            raise ValueError("published calibration requires the native D carrier")
         if f is None:
             if sample_frequencies is not None:
                 f = sample_frequencies
@@ -1120,6 +1132,8 @@ class IMRPhenomHM(nn.Module):
                 "phasing_convention": phasing_convention,
                 "reference_frame": reference_frame,
             }
+            if type(self.base_22) is IMRPhenomD:
+                kwargs["calibration"] = calibration
             if need_phase:
                 result = self.base_22(return_phase=True, **kwargs)
             else:
@@ -1159,25 +1173,25 @@ class IMRPhenomHM(nn.Module):
 
         # D's remnant call provides the absolute carrier pair in total-mass
         # units.  HM mode_qnm_frequencies supplies the independent N=61 pair.
-        m_final, a_final, base_fr22, base_fd22 = IMRPhenomD.remnant_properties(m1, m2, s1, s2)
+        m_final, a_final, base_fr22, base_fd22 = IMRPhenomD.remnant_properties(m1, m2, s1, s2, calibration=calibration)
         hm_qnm: Dict[Tuple[int, int], Tuple[torch.Tensor, torch.Tensor]] = {
-            lm: self.mode_qnm_frequencies(lm[0], lm[1], m1, m2, s1, s2)
+            lm: self.mode_qnm_frequencies(lm[0], lm[1], m1, m2, s1, s2, calibration=calibration)
             for lm in active_modes
         }
         if (2, 2) not in hm_qnm:
-            hm_qnm[(2, 2)] = self.mode_qnm_frequencies(2, 2, m1, m2, s1, s2)
+            hm_qnm[(2, 2)] = self.mode_qnm_frequencies(2, 2, m1, m2, s1, s2, calibration=calibration)
 
         hm_fr22 = expand_param(hm_qnm[(2, 2)][0])
         hm_fd22 = expand_param(hm_qnm[(2, 2)][1])
         base_fr22_eval = expand_param(base_fr22)
         base_fd22_eval = expand_param(base_fd22)
-        alpha4 = expand_param(IMRPhenomD.eval_table_v("alpha4", eta, chi_pn))
-        alpha5 = expand_param(IMRPhenomD.eval_table_v("alpha5", eta, chi_pn))
+        alpha4 = expand_param(IMRPhenomD.eval_table_v("alpha4", eta, chi_pn, calibration=calibration))
+        alpha5 = expand_param(IMRPhenomD.eval_table_v("alpha5", eta, chi_pn, calibration=calibration))
 
         if f_ref is None:
             reference_gauge_base = torch.zeros_like(f_eval)
         else:
-            slope_peak = expand_param(IMRPhenomD.compute_slope_peak(m1, m2, s1, s2))
+            slope_peak = expand_param(IMRPhenomD.compute_slope_peak(m1, m2, s1, s2, calibration=calibration))
             reference_gauge_base = slope_peak * m_sec_eval * fref_eval
 
         complex_dtype = torch.complex128 if dtype == torch.float64 else torch.complex64

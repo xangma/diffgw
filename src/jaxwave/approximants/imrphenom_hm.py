@@ -10,6 +10,7 @@ Clean-room implementation based exclusively on published literature:
 
 from typing import Dict, List, Optional, Sequence, Tuple, Union
 import math
+from diffgw_core.phenomd_published_fits import validate_calibration
 import jax
 import jax.numpy as jnp
 
@@ -327,6 +328,8 @@ class IMRPhenomHM:
     Supports harmonics (l, m) in {(2, 2), (2, 1), (3, 3), (3, 2), (4, 4), (4, 3)}.
     """
 
+    definition_id = "IMRPhenomHM"
+
     SUPPORTED_MODES: Tuple[Tuple[int, int], ...] = (
         (2, 2),
         (2, 1),
@@ -364,6 +367,8 @@ class IMRPhenomHM:
         mass2: Union[float, jnp.ndarray],
         chi1: Union[float, jnp.ndarray] = 0.0,
         chi2: Union[float, jnp.ndarray] = 0.0,
+        *,
+        calibration: str = "inherited",
     ) -> Tuple[jnp.ndarray, jnp.ndarray]:
         """Compute fundamental QNM frequency f_RD and damping width f_damp for mode (l, m)."""
         dtype = jnp.float64
@@ -373,7 +378,7 @@ class IMRPhenomHM:
         s2 = as_array(chi2, dtype=dtype)
 
         total_mass = m1 + m2
-        m_final, a_final, _, _ = IMRPhenomD.remnant_properties(m1, m2, s1, s2)
+        m_final, a_final, _, _ = IMRPhenomD.remnant_properties(m1, m2, s1, s2, calibration=calibration)
         omega_real_final, omega_imag_final = evaluate_n61_qnm((l, m), a_final)
         m_ratio = total_mass / m_final
         scale = m_ratio / (2.0 * PI)
@@ -405,11 +410,21 @@ class IMRPhenomHM:
         hm_21_pn_variant: str = "binary_compatible",
         hm_32_pn_variant: str = "binary_compatible",
         hm_43_pn_variant: str = "binary_compatible",
+        *,
+        calibration: str = "inherited",
     ) -> Union[
         Tuple[jnp.ndarray, jnp.ndarray],
         Tuple[jnp.ndarray, jnp.ndarray, Dict[Tuple[int, int], Union[Tuple[jnp.ndarray, jnp.ndarray], jnp.ndarray]]],
     ]:
-        """Generate frequency-domain polarizations (h_plus, h_cross) including higher multipoles in JAX."""
+        """Generate frequency-domain polarizations with the selected HM options.
+
+        ``calibration="published"`` selects the paper-precision D fits
+        throughout the carrier and HM remnant/QNM chain. The mapping and
+        PN options remain separate.
+        """
+        validate_calibration(calibration)
+        if calibration == "published" and base_22 not in (None, IMRPhenomD):
+            raise ValueError("published calibration requires the native D carrier")
         if f is None:
             if sample_frequencies is not None:
                 f = sample_frequencies
@@ -544,6 +559,7 @@ class IMRPhenomHM:
                 phasing_convention=phasing_convention,
                 reference_frame=reference_frame,
                 return_phase=need_phase,
+                **({"calibration": calibration} if carrier_cls is IMRPhenomD else {}),
             )
             if need_phase:
                 hp_raw, hc_raw, phase_raw = res
@@ -577,25 +593,25 @@ class IMRPhenomHM:
             )
             return phase_raw
 
-        m_final, a_final, base_fr22, base_fd22 = IMRPhenomD.remnant_properties(m1_batch, m2_batch, s1_batch, s2_batch)
+        m_final, a_final, base_fr22, base_fd22 = IMRPhenomD.remnant_properties(m1_batch, m2_batch, s1_batch, s2_batch, calibration=calibration)
         hm_qnm: Dict[Tuple[int, int], Tuple[jnp.ndarray, jnp.ndarray]] = {
-            lm: cls.mode_qnm_frequencies(lm[0], lm[1], m1_batch, m2_batch, s1_batch, s2_batch)
+            lm: cls.mode_qnm_frequencies(lm[0], lm[1], m1_batch, m2_batch, s1_batch, s2_batch, calibration=calibration)
             for lm in active_modes
         }
         if (2, 2) not in hm_qnm:
-            hm_qnm[(2, 2)] = cls.mode_qnm_frequencies(2, 2, m1_batch, m2_batch, s1_batch, s2_batch)
+            hm_qnm[(2, 2)] = cls.mode_qnm_frequencies(2, 2, m1_batch, m2_batch, s1_batch, s2_batch, calibration=calibration)
 
         hm_fr22 = expand_param(hm_qnm[(2, 2)][0])
         hm_fd22 = expand_param(hm_qnm[(2, 2)][1])
         base_fr22_eval = expand_param(base_fr22)
         base_fd22_eval = expand_param(base_fd22)
-        alpha4 = expand_param(IMRPhenomD.eval_table_v("alpha4", eta, chi_pn))
-        alpha5 = expand_param(IMRPhenomD.eval_table_v("alpha5", eta, chi_pn))
+        alpha4 = expand_param(IMRPhenomD.eval_table_v("alpha4", eta, chi_pn, calibration=calibration))
+        alpha5 = expand_param(IMRPhenomD.eval_table_v("alpha5", eta, chi_pn, calibration=calibration))
 
         if f_ref is None:
             reference_gauge_base = jnp.zeros_like(f_eval)
         else:
-            slope_peak = expand_param(IMRPhenomD.compute_slope_peak(m1_batch, m2_batch, s1_batch, s2_batch))
+            slope_peak = expand_param(IMRPhenomD.compute_slope_peak(m1_batch, m2_batch, s1_batch, s2_batch, calibration=calibration))
             reference_gauge_base = slope_peak * m_sec_eval * fref_eval
 
         h_plus_total = jnp.zeros_like(f_eval, dtype=jnp.complex128)

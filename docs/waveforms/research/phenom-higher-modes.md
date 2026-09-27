@@ -2,7 +2,7 @@
 
 ## Scope and status
 
-This is a research ledger founded at commit 5bc907d, not a WaveformDefinition or a claim that any whole model has a six-section executable specification. It covers aligned-spin IMRPhenomHM and IMRPhenomXHM, their inherited quadrupole carriers, and the higher-mode carrier supplied to XPHM. It excludes precession dynamics, covered in [the companion ledger](phenom-precessing.md), and all SEOBNR models. “Pending” below means that the mathematical rule has a source and a native implementation but has not crossed the independent equation, branch, and reference gates at the end of this file. “Executable” identifies a bounded equation component only.
+This research ledger was founded at commit 5bc907d. The separate [published-calibration HM specification](../../math/imrphenomhm-waveform.md) now defines a bounded independent six-mode composition; its catalog claims, when supported by recorded runs, concern only that explicit option tuple. This ledger retains the broader family evidence and unresolved gates. It covers aligned-spin IMRPhenomHM and IMRPhenomXHM, their inherited quadrupole carriers, and the higher-mode carrier supplied to XPHM. It excludes precession dynamics, covered in [the companion ledger](phenom-precessing.md), and all SEOBNR models. “Pending” below means that the mathematical rule has a source and a native implementation but has not crossed the independent equation, branch, and reference gates at the end of this file. “Executable” identifies a bounded equation component only.
 
 Primary sources: [London et al., arXiv:1708.00404v4](https://arxiv.org/pdf/1708.00404v4) (HM, Eqs. 1–9); [García-Quirós et al., arXiv:2001.10914v2](https://arxiv.org/html/2001.10914v2) (XHM, Secs. II, IV–VI and Apps. A, D, E); [Pratten et al., arXiv:2001.11412](https://arxiv.org/abs/2001.11412) (XAS). Inherited D and XAS mathematics are documented separately in [D carrier specification](../../math/imrphenomd-waveform.md) and [XAS specification](../../math/imrphenomxas.md). The observed reference outcomes below come from the repository's [provenance ledger](../../provenance_ledger.md), not from a new numerical campaign here.
 
@@ -19,7 +19,7 @@ The v2 XHM paper numbers equations consecutively (e.g. inspiral Eqs. 25–33, in
 
 ## Mathematics and components
 
-The ledger IDs are proposed research identifiers, not catalog component records. Dependencies marked “D” or “XAS” are established in their own specifications, and do not certify the new assembly.
+The component IDs below retain their earlier research scopes. The new independent published-calibration composition has separate catalog component IDs on its canonical page. Dependencies marked “D” or “XAS” are established in their own specifications, and do not certify the new assembly.
 
 | Provisional ID / status | Rule and paper equation | Dependency and native mapping | Missing independent evidence |
 |---|---|---|---|
@@ -52,6 +52,16 @@ The [HM reconstruction tests](https://github.com/xangma/diffgw/blob/5bc907d/test
 
 ## Evidence and limitations
 
+The published composition requires `calibration="published"` and the three
+named Mishra PN options, and independently evaluates either transition setting.
+The [reviewed composition run](../../validation/imrphenomhm_published_composition_20260927.md)
+passes its declared values, mapped joins, projection and selected smooth
+derivative checks in both frontends; the catalog records that bounded result.
+Selecting calibration alone leaves `binary_compatible` PN defaults in place.
+Its mathematical implementation checks cannot inherit the default variant's
+binary or NR results. All historical outcomes below, including red gates,
+remain unchanged; no new physical-accuracy claim is made here.
+
 The historical [frozen catalog and holdout](../../provenance_ledger.md#3-reference-evidence-by-model) each contain one passing HM case at declared complex relative L2 ≤ 10^-6 and mismatch ≤ 10^-8. That is case-specific and does not establish a domain bound. XHM has 0/1 passing full-waveform cases in each set at those strict gates. Its separate native phase tests use restricted ringdown windows, reference amplitudes and affine phase alignment, so they cannot be cited as whole-waveform accuracy. The paper's own NR quality control is evidence for the published model, not automatically for either native implementation or the alternate native-fit route.
 
 The [maintained pinned-binary six-mode holdout](../../validation/imrphenomhm_lal_six_modes_20260927.md) compares each native HM/D complex carrier against LALSuite 7.26.15 on three independently selected aligned-spin systems, with a fixed Fourier/orbital-phase adapter and no per-case alignment. Both frontends pass the declared integrated and supported-bin residual gates for all six modes. This is sampled implementation agreement with the same-model binary; it does not replace independent equation/fitted-input provenance or NR accuracy evidence.
@@ -82,10 +92,26 @@ failures, or promote HM to whole-family qualification.
 
 The maintained mode/regime diagnostic now localizes those two XHM failures without changing their gates. The 22 mode agrees with the pinned binary to numerical precision after one constant phase convention. Across 21, 32, 33 and 44, affine-aligned inspiral phase residuals are at most 1.33e-4 rad, while intermediate phase residuals span 6.24–28.80 rad. Intermediate amplitude relative L2 spans 0.77–7.04; the largest inspiral-amplitude residual is 0.48 for the catalog 32 mode. Ringdown residuals and the 32 mixing path remain mode-dependent, and the close full-polarization/projection metrics in the manifest only show that projection is not the dominant amplifier in these two cases. This black-box decomposition is diagnostic evidence, not a calibration fit or a complete-waveform verification claim.
 
-Paper/source discrepancies to resolve: HM offers a non-paper XAS carrier, and its public assembly reverses London's printed amplitude and phase transition frequencies; XHM's default and experimental phase joins differ; some XHM absolute amplitude vetoes remain disabled pending normalization; XHM code comments use equation labels that differ from the pinned v2 paper; fit-source labels are not interchangeable. None of these should be hidden behind a single unqualified model name.
+Paper/source discrepancies to resolve: HM offers a non-paper XAS carrier, and its default `phenomd_runtime` assembly reverses London's printed amplitude and phase transition frequencies, while the explicit `london_2018` option follows them; XHM's default and experimental phase joins differ; some XHM absolute amplitude vetoes remain disabled pending normalization; XHM code comments use equation labels that differ from the pinned v2 paper; fit-source labels are not interchangeable. None of these should be hidden behind a single unqualified model name.
 
 ## Reproduce the checks
 
 Read-only source anchors: the two papers above, the four native HM/XHM modules, [XHM fit source](https://github.com/xangma/diffgw/blob/5bc907d/src/torchwave/approximants/xhm_native_fits.py), [provenance](../../provenance_ledger.md), and frozen [manifest](../../model_manifest.json). Minimal local implementation checks: run the HM reconstruction and XHM fit test files named above with the repository's normal pytest environment; the LAL/NR portions may require optional dependencies or data. Run `tests/test_imrphenomhm_lal_modes_binary.py` and `tests/test_imrphenomhm_lal_polarizations_binary.py` with pinned LALSuite and `DIFFGW_REQUIRE_LAL_BINARY=1` for the maintained six-mode and plus/cross external gates. Run `tests/test_xhm_inspiral_carrier_phase.py` for the independently referenced XHM carrier slice and `scripts/diagnose_xhm_frozen_components.py` for the optional XHM LAL-binary mode/regime decomposition. The diagnostic records exact package versions and does not use oracle output to modify production coefficients.
 
-Promotion to a whole-model executable six-section specification requires, for **each named option tuple and mode**: (1) a pinned paper version and independently evaluable equations/fits with source hashes, including veto and 32-mixing branches; (2) fixed input, units, Fourier, mode and reference-phase conventions; (3) Torch/JAX value and derivative parity, with branch, zero, batch and aligned-spin limits; (4) same-model LAL complex mode and polarization comparisons on declared catalog plus held-out points, with explicit L2/mismatch and attachment tolerances; (5) separate SXS/NR physical validation when physical-accuracy claims are made; and (6) recorded commands, dependency versions, fixture hashes and observed outcomes. HM/D and XHM/XAS dependencies must be pinned by version rather than presumed. The HM executable component IDs remain research-only until those whole-model gates pass.
+Qualification must name its claim category and **each option tuple and mode**.
+A bounded mathematical implementation claim requires pinned source equations
+and fits, declared numerical assets, fixed units and phase/Fourier conventions,
+and independent scalar-to-Torch/JAX comparisons with recorded values,
+derivatives, branches and symmetry scope. The
+[published-calibration HM specification](../../math/imrphenomhm-waveform.md)
+provides that separate executable composition and maintained gates; catalog
+claims require reviewed passing evidence. It does not cover inherited
+calibration or binary-compatible PN defaults.
+
+Same-model binary agreement requires separate declared catalog/holdout mode
+and polarization comparisons with fixed metrics and tolerances. Physical
+accuracy requires separate SXS/NR comparisons and uncertainty control. Neither
+category follows from a passing math reference. XHM's unresolved fit surfaces,
+vetoes and 32 mixing, and all red NR gates above, remain open. Pin HM/D and
+XHM/XAS dependencies and record commands, versions, fixture hashes and observed
+outcomes before extending any claim.

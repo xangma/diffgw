@@ -8,6 +8,12 @@ reference is conditional on supplied PhenomD carrier amplitude and phase,
 ringdown frequencies, and phase-fit inputs. It checks the assembly equation;
 it does not claim independently calibrated inputs or whole-model accuracy.
 
+The separate [published-calibration waveform specification](imrphenomhm-waveform.md)
+now composes D fits, remnant and QNM evaluations independently before this
+assembly. Its explicit published/source-PN option tuple has a separate catalog
+scope. The conditional tests on this page and earlier inherited-default
+evidence keep their original scope.
+
 ## Inputs, conventions, and options
 
 The frequency $x=Mf$ and all QNM frequencies are positive and dimensionless.

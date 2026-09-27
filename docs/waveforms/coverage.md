@@ -29,7 +29,7 @@ class routes, as the [Pv2 ledger](research/phenom-precessing.md) explains.
 | [TaylorF2_HM](../math/taylorf2-hm.md) | higher-mode extension | [versioned slice](index.md) | `taylorf2hm` |
 | [TaylorF2_Eccentric](../math/taylorf2-eccentric.md) | eccentric extension | [versioned slice](index.md) | `taylorf2eccentric`, `eccentrictaylorf2` |
 | [IMRPhenomD](../math/imrphenomd-intrinsic.md) | native FD | [versioned slice](index.md) | `imrphenomd` |
-| [IMRPhenomHM](research/phenom-higher-modes.md) | higher-mode extension | provisional | `imrphenomhm` |
+| [IMRPhenomHM](../math/imrphenomhm-waveform.md) | higher-mode extension | [versioned slice](index.md) | `imrphenomhm` |
 | [IMRPhenomXAS](../math/imrphenomxas.md) | native FD | [versioned slice](index.md) | `imrphenomxas`, `phenomxas`, `xas` |
 | [IMRPhenomXHM](research/phenom-higher-modes.md) | higher-mode extension | provisional | `imrphenomxhm` |
 | [IMRPhenomP](research/phenom-precessing.md) | precessing composition | provisional | `imrphenomp` |

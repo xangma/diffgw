@@ -7,6 +7,7 @@ Waveform equations based on published literature:
 
 from typing import Optional, Tuple, Union
 import math
+from diffgw_core import phenomd_published_fits as _published
 import jax.numpy as jnp
 from diffgw_core.constants import (
     C_SI,
@@ -126,9 +127,10 @@ class IMRPhenomD:
         return jnp.abs(f_rd + f_damp * gamma3 * offset)
 
     @staticmethod
-    def eval_table_v(name: str, eta: jnp.ndarray, chi_pn: jnp.ndarray) -> jnp.ndarray:
+    def eval_table_v(name: str, eta: jnp.ndarray, chi_pn: jnp.ndarray, *, calibration: str = "inherited") -> jnp.ndarray:
         """Evaluate Table V polynomial fit."""
-        coeffs = TABLE_V_COEFFS[name]
+        _published.validate_calibration(calibration)
+        coeffs = (_published.TABLE_V_COEFFS if calibration == "published" else TABLE_V_COEFFS)[name]
         c = [jnp.asarray(val, dtype=eta.dtype) for val in coeffs]
 
         eta2 = eta * eta
@@ -150,8 +152,11 @@ class IMRPhenomD:
         mass2: jnp.ndarray,
         chi1: jnp.ndarray,
         chi2: jnp.ndarray,
+        *,
+        calibration: str = "inherited",
     ) -> Tuple[jnp.ndarray, jnp.ndarray, jnp.ndarray, jnp.ndarray]:
         """Compute final mass, final spin, QNM frequency, and damping width."""
+        _published.validate_calibration(calibration)
         total_mass = mass1 + mass2
         eta = component_masses_to_eta(mass1, mass2)
         eta2 = eta * eta
@@ -163,8 +168,8 @@ class IMRPhenomD:
         s3 = s2 * s
         s4 = s3 * s
 
-        p_eta = FINAL_SPIN_ETA_POLY
-        s_c = FINAL_SPIN_S_COEFFS
+        p_eta = _published.FINAL_SPIN_ETA_POLY if calibration == "published" else FINAL_SPIN_ETA_POLY
+        s_c = _published.FINAL_SPIN_S_COEFFS if calibration == "published" else FINAL_SPIN_S_COEFFS
         a_final = (
             s + p_eta[0] * eta + p_eta[1] * eta2 + p_eta[2] * eta3 + p_eta[3] * eta4
             + (s_c[0][0] * s + s_c[1][0] * s2 + s_c[2][0] * s3 + s_c[3][0] * s4) * eta
@@ -172,11 +177,11 @@ class IMRPhenomD:
         )
         a_final = jnp.clip(a_final, -0.999, 0.999)
 
-        e_eta = ERAD_ETA_NUMERATOR
+        e_eta = _published.ERAD_ETA_NUMERATOR if calibration == "published" else ERAD_ETA_NUMERATOR
         erad_ns = e_eta[0] * eta + e_eta[1] * eta2 + e_eta[2] * eta3 + e_eta[3] * eta4
 
-        e_num = ERAD_S_NUMERATOR
-        e_den = ERAD_S_DENOMINATOR
+        e_num = _published.ERAD_S_NUMERATOR if calibration == "published" else ERAD_S_NUMERATOR
+        e_den = _published.ERAD_S_DENOMINATOR if calibration == "published" else ERAD_S_DENOMINATOR
         num = 1.0 + s_hat * (e_num[0] + e_num[1] * eta + e_num[2] * eta2)
         den = 1.0 + s_hat * (e_den[0] + e_den[1] * eta + e_den[2] * eta2)
         erad_over_m = erad_ns * (num / den)
@@ -258,8 +263,12 @@ class IMRPhenomD:
         chi2: Union[float, jnp.ndarray] = 0.0,
         *,
         remnant_provider=None,
+        calibration: str = "inherited",
     ) -> jnp.ndarray:
         """Paper merger-ringdown phase derivative dPsi/d(Mf) evaluated at f_peak."""
+        _published.validate_calibration(calibration)
+        if calibration == "published" and remnant_provider is not None:
+            raise ValueError("published calibration does not accept a remnant_provider override")
         dtype = jnp.float64
         m1 = as_array(mass1, dtype=dtype)
         m2 = as_array(mass2, dtype=dtype)
@@ -269,16 +278,19 @@ class IMRPhenomD:
         eta = component_masses_to_eta(m1, m2)
         _, _, chi_pn, _ = spin_combinations(m1, m2, s1, s2)
 
-        gamma2 = IMRPhenomD.eval_table_v("gamma2", eta, chi_pn)
-        gamma3 = IMRPhenomD.eval_table_v("gamma3", eta, chi_pn)
-        alpha1_raw = IMRPhenomD.eval_table_v("alpha1", eta, chi_pn)
-        alpha2 = IMRPhenomD.eval_table_v("alpha2", eta, chi_pn)
-        alpha3 = IMRPhenomD.eval_table_v("alpha3", eta, chi_pn)
-        alpha4 = IMRPhenomD.eval_table_v("alpha4", eta, chi_pn)
-        alpha5 = IMRPhenomD.eval_table_v("alpha5", eta, chi_pn)
+        gamma2 = IMRPhenomD.eval_table_v("gamma2", eta, chi_pn, calibration=calibration)
+        gamma3 = IMRPhenomD.eval_table_v("gamma3", eta, chi_pn, calibration=calibration)
+        alpha1_raw = IMRPhenomD.eval_table_v("alpha1", eta, chi_pn, calibration=calibration)
+        alpha2 = IMRPhenomD.eval_table_v("alpha2", eta, chi_pn, calibration=calibration)
+        alpha3 = IMRPhenomD.eval_table_v("alpha3", eta, chi_pn, calibration=calibration)
+        alpha4 = IMRPhenomD.eval_table_v("alpha4", eta, chi_pn, calibration=calibration)
+        alpha5 = IMRPhenomD.eval_table_v("alpha5", eta, chi_pn, calibration=calibration)
 
-        provider = IMRPhenomD.remnant_properties if remnant_provider is None else remnant_provider
-        m_final, a_final, f_rd, f_damp = provider(m1, m2, s1, s2)
+        if remnant_provider is None:
+            m_final, a_final, f_rd, f_damp = IMRPhenomD.remnant_properties(
+                m1, m2, s1, s2, calibration=calibration)
+        else:
+            m_final, a_final, f_rd, f_damp = remnant_provider(m1, m2, s1, s2)
         f_peak = IMRPhenomD.amplitude_peak_frequency(f_rd, f_damp, gamma2, gamma3)
 
         atan_lorentz_peak = (alpha4 * f_damp) / (f_damp * f_damp + (f_peak - alpha5 * f_rd) ** 2)
@@ -306,8 +318,17 @@ class IMRPhenomD:
         reference_frame: Optional[str] = None,
         remnant_provider=None,
         return_phase: bool = False,
+        *,
+        calibration: str = "inherited",
     ) -> Union[Tuple[jnp.ndarray, jnp.ndarray], Tuple[jnp.ndarray, jnp.ndarray, jnp.ndarray]]:
-        """Generate frequency-domain polarizations (h_plus, h_cross) using IMRPhenomD in JAX."""
+        """Generate frequency-domain polarizations with native JAX arithmetic.
+
+        ``calibration="published"`` uses the printed Table V and remnant
+        coefficients. The default ``"inherited"`` retains the existing fits.
+        """
+        _published.validate_calibration(calibration)
+        if calibration == "published" and remnant_provider is not None:
+            raise ValueError("published calibration does not accept a remnant_provider override")
         dtype = jnp.float64
         m1 = as_array(mass1, dtype=dtype)
         m2 = as_array(mass2, dtype=dtype)
@@ -324,27 +345,30 @@ class IMRPhenomD:
         chi_s, chi_a, chi_pn, _ = spin_combinations(m1, m2, s1, s2)
 
         # Table V parameters
-        rho1 = IMRPhenomD.eval_table_v("rho1", eta, chi_pn)
-        rho2 = IMRPhenomD.eval_table_v("rho2", eta, chi_pn)
-        rho3 = IMRPhenomD.eval_table_v("rho3", eta, chi_pn)
-        v2 = IMRPhenomD.eval_table_v("v2", eta, chi_pn)
-        gamma1 = IMRPhenomD.eval_table_v("gamma1", eta, chi_pn)
-        gamma2 = IMRPhenomD.eval_table_v("gamma2", eta, chi_pn)
-        gamma3 = IMRPhenomD.eval_table_v("gamma3", eta, chi_pn)
-        sigma1 = IMRPhenomD.eval_table_v("sigma1", eta, chi_pn)
-        sigma2 = IMRPhenomD.eval_table_v("sigma2", eta, chi_pn)
-        sigma3 = IMRPhenomD.eval_table_v("sigma3", eta, chi_pn)
-        sigma4 = IMRPhenomD.eval_table_v("sigma4", eta, chi_pn)
-        beta2 = IMRPhenomD.eval_table_v("beta2", eta, chi_pn)
-        beta3 = IMRPhenomD.eval_table_v("beta3", eta, chi_pn)
-        alpha1_raw = IMRPhenomD.eval_table_v("alpha1", eta, chi_pn)
-        alpha2 = IMRPhenomD.eval_table_v("alpha2", eta, chi_pn)
-        alpha3 = IMRPhenomD.eval_table_v("alpha3", eta, chi_pn)
-        alpha4 = IMRPhenomD.eval_table_v("alpha4", eta, chi_pn)
-        alpha5 = IMRPhenomD.eval_table_v("alpha5", eta, chi_pn)
+        rho1 = IMRPhenomD.eval_table_v("rho1", eta, chi_pn, calibration=calibration)
+        rho2 = IMRPhenomD.eval_table_v("rho2", eta, chi_pn, calibration=calibration)
+        rho3 = IMRPhenomD.eval_table_v("rho3", eta, chi_pn, calibration=calibration)
+        v2 = IMRPhenomD.eval_table_v("v2", eta, chi_pn, calibration=calibration)
+        gamma1 = IMRPhenomD.eval_table_v("gamma1", eta, chi_pn, calibration=calibration)
+        gamma2 = IMRPhenomD.eval_table_v("gamma2", eta, chi_pn, calibration=calibration)
+        gamma3 = IMRPhenomD.eval_table_v("gamma3", eta, chi_pn, calibration=calibration)
+        sigma1 = IMRPhenomD.eval_table_v("sigma1", eta, chi_pn, calibration=calibration)
+        sigma2 = IMRPhenomD.eval_table_v("sigma2", eta, chi_pn, calibration=calibration)
+        sigma3 = IMRPhenomD.eval_table_v("sigma3", eta, chi_pn, calibration=calibration)
+        sigma4 = IMRPhenomD.eval_table_v("sigma4", eta, chi_pn, calibration=calibration)
+        beta2 = IMRPhenomD.eval_table_v("beta2", eta, chi_pn, calibration=calibration)
+        beta3 = IMRPhenomD.eval_table_v("beta3", eta, chi_pn, calibration=calibration)
+        alpha1_raw = IMRPhenomD.eval_table_v("alpha1", eta, chi_pn, calibration=calibration)
+        alpha2 = IMRPhenomD.eval_table_v("alpha2", eta, chi_pn, calibration=calibration)
+        alpha3 = IMRPhenomD.eval_table_v("alpha3", eta, chi_pn, calibration=calibration)
+        alpha4 = IMRPhenomD.eval_table_v("alpha4", eta, chi_pn, calibration=calibration)
+        alpha5 = IMRPhenomD.eval_table_v("alpha5", eta, chi_pn, calibration=calibration)
 
-        provider = IMRPhenomD.remnant_properties if remnant_provider is None else remnant_provider
-        m_final, a_final, f_rd, f_damp = provider(m1, m2, s1, s2)
+        if remnant_provider is None:
+            m_final, a_final, f_rd, f_damp = IMRPhenomD.remnant_properties(
+                m1, m2, s1, s2, calibration=calibration)
+        else:
+            m_final, a_final, f_rd, f_damp = remnant_provider(m1, m2, s1, s2)
         f_peak = IMRPhenomD.amplitude_peak_frequency(f_rd, f_damp, gamma2, gamma3)
 
         f1_amp = 0.014

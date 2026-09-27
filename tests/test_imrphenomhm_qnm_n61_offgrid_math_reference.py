@@ -126,7 +126,7 @@ def test_public_hm_qnm_total_mass_conversion(frontend, monkeypatch, mode):
         patch.setattr(
             hm.IMRPhenomD,
             "remnant_properties",
-            staticmethod(lambda *_: (array(final_mass), array(spin), None, None)),
+            staticmethod(lambda *_, calibration="inherited": (array(final_mass), array(spin), None, None)),
         )
         fr, fd = hm.IMRPhenomHM.mode_qnm_frequencies(
             mode[0], mode[1], array(36.0), array(24.0), array(0.0), array(0.0)

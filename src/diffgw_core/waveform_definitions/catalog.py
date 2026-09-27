@@ -471,12 +471,115 @@ IMRPHENOMD = WaveformDefinition(
         ConventionDefinition("phase_origin", "Coalescence phase uses -pi/4; finite-reference mode subtracts intrinsic phase at f_ref."),
         ConventionDefinition("time_gauge", "Native carrier uses the raw fitted alpha1 at the amplitude peak."),
     ),
-    options=(OptionDefinition("phasing_convention", ("coalescence", "reference_frequency"), "coalescence",
-                              "Supplying f_ref without an explicit convention selects reference_frequency; finite-reference phase subtraction and amplitude-peak time gauge are project conventions."),),
+    options=(
+        OptionDefinition("calibration", ("inherited", "published"), "inherited",
+                         "Published uses printed Khan Table V and Husa remnant coefficients throughout; inherited preserves historical extra digits. Generated QNM data are shared numerical inputs."),
+        OptionDefinition("phasing_convention", ("coalescence", "reference_frequency"), "coalescence",
+                         "Supplying f_ref without an explicit convention selects reference_frequency; finite-reference phase subtraction and amplitude-peak time gauge are project conventions."),
+    ),
     carrier_parameters=(), capabilities=("fd", "plus_cross", "torch", "jax", "scalar_reference"),
     evidence=("paper_precision_source_transcription", "conditional_sampled_torch_jax_comparison"),
     caveats=("Inherited extra production fit digits have unresolved publication provenance.",
              "Full intrinsic checks require declared numerical QNM knots and fit rows; agreement does not establish physical accuracy."),
+)
+
+_HM_WAVEFORM = "imrphenomhm-independent-waveform/v1"
+_HM_COMPONENTS = tuple(
+    ComponentDefinition(
+        id=component_id, name=name, spec_version=_HM_WAVEFORM,
+        scope="Six-mode D-carrier composition with printed fits, source PN ratios and declared generated QNM data",
+        variant="published_calibration_source_pn",
+        implementation="native_and_reference", evidence=("source_transcription", "independent_scalar_composition"),
+        source_refs=(SourceRef("london2018", "Eqs. 1–9"),
+                     SourceRef("mishra2016", "Eqs. 11–12"),
+                     SourceRef("khan2016", "Appendix C Table V, PDF p. 27; amplitude and phase equations"),
+                     SourceRef("husa2016", "PDF pp. 10–11, Eqs. 3.6–3.8; HTML Eqs. 22–24"),
+                     SourceRef("london2018qnm", "Eqs. 19–21; polynomial form, with independently generated coefficients"),
+                     SourceRef("generated_qnm", "Independent Kerr data and six-mode N61 polynomial coefficients"),
+                     SourceRef("project_hm", "Fourier, phase/time gauge and positive-frequency mode-pair adapter")),
+        reference_module="diffgw_reference.imrphenomhm_waveform",
+        caveats=("Generated numerical QNM data are shared; no production fit helper or carrier evaluator is imported by the reference.",),
+    )
+    for component_id, name in (
+        ("hm.waveform.independent_published.v1", "Independent published-calibration polarizations"),
+        ("hm.waveform.independent_published_derivatives.v1", "Independent published-calibration smooth derivatives"),
+    )
+)
+
+IMRPHENOMHM = WaveformDefinition(
+    id="IMRPhenomHM", name="IMRPhenomHM published-calibration D-carrier composition", aliases=(),
+    domain="frequency", modes=((2, 2), (2, 1), (3, 3), (3, 2), (4, 4), (4, 3)),
+    scope="Bounded independent mathematical composition for published D calibration and named source PN variants; inherited defaults remain separate.",
+    reference_version=_HM_WAVEFORM, reference_module="diffgw_reference.imrphenomhm_waveform",
+    spec_page="math/imrphenomhm-waveform.md", components=_HM_COMPONENTS,
+    sources=(
+        *IMRPHENOMD.sources,
+        SourceDefinition("london2018", "London et al., IMRPhenomHM", "https://arxiv.org/pdf/1708.00404v4", "1708.00404v4"),
+        SourceDefinition("mishra2016", "Mishra et al., spinning post-Newtonian modes", "https://arxiv.org/html/1601.05588v1", "1601.05588v1"),
+        SourceDefinition("london2018qnm", "London and Fauchon-Jones, Kerr QNM representations", "https://arxiv.org/pdf/1810.03550v2", "1810.03550v2"),
+        SourceDefinition("generated_qnm", "Independent Kerr and HM N61 numerical assets", "docs/provenance_ledger.md", "repository-versioned", kind="generated_asset",
+                         caveats=("Generated data, not a transcription of a published numerical table or historical calibration identity.",)),
+        SourceDefinition("project_hm", "DiffGW HM composition conventions", "docs/math/imrphenomhm-waveform.md", _HM_WAVEFORM, kind="project_convention"),
+    ),
+    parameters=(*_COMMON_PARAMETERS, *_SPINS,
+                ParameterDefinition("phi0", "Spin-weighted-harmonic azimuth", "rad", "finite")),
+    units=_COMMON_UNITS,
+    conventions=(
+        ConventionDefinition("fourier", "Positive-frequency complex modes use exp(-i*phase); polarizations sum mode-pair projections."),
+        ConventionDefinition("mode_projection", "Positive-frequency mode-pair adapter for h=h_plus-i*h_cross; orbital phase exp(i*m*phic), time exp(-2*pi*i*f*tc)."),
+        ConventionDefinition("carrier", "Exact native D carrier for published calibration; XAS and custom carriers are excluded."),
+        ConventionDefinition("phase_gauge", "Finite f_ref subtracts D reference phase and peak slope with the HM-relative gauge; the reference uses positive f_ref or no reference."),
+    ),
+    options=(
+        OptionDefinition("calibration", ("inherited", "published"), "inherited",
+                         "Only published is independently composed here. It changes D fit/remnant coefficients consistently, without selecting PN ratios or mapping transitions."),
+        OptionDefinition("hm_mapping_transitions", ("phenomd_runtime", "london_2018"), "phenomd_runtime",
+                         "Runtime uses amplitude/phase constants 0.014/0.018; London uses printed 0.018/0.014, each scaled by the HM-to-22 ringdown-frequency ratio."),
+        OptionDefinition("hm_21_pn_variant", ("binary_compatible", "mishra_eq12b"), "binary_compatible",
+                         "Only the named Mishra source expression is included in the independent composition."),
+        OptionDefinition("hm_32_pn_variant", ("binary_compatible", "mishra_eq12d"), "binary_compatible",
+                         "Only the named Mishra source expression is included in the independent composition."),
+        OptionDefinition("hm_43_pn_variant", ("binary_compatible", "mishra_eq12g"), "binary_compatible",
+                         "Only the named Mishra source expression is included in the independent composition."),
+        OptionDefinition("phasing_convention", ("coalescence", "reference_frequency"), "coalescence",
+                         "No f_ref uses coalescence; positive f_ref selects reference_frequency unless explicitly overridden. The independent composition follows those two routes."),
+    ),
+    carrier_parameters=(), capabilities=("fd", "plus_cross", "torch", "jax", "scalar_reference"),
+    evidence=("paper_precision_source_transcription", "independent_scalar_composition"),
+    caveats=(
+        "Executable reference and catalog entry do not by themselves qualify a model; scoped comparison claims are recorded only after validation.",
+        "Inherited calibration and binary-compatible PN defaults are not qualified by this published-source composition.",
+        "No same-model binary or NR physical-accuracy claim is made for the published variant; previous default-variant outcomes, including red NR cases, remain unchanged.",
+        "Shared generated QNM inputs have separate off-grid evidence, not an exact or full-domain physical-accuracy guarantee.",
+    ),
+    claims=tuple(VerificationClaim(
+        component_ids=(component_id,),
+        scope=scope, variant="published_calibration_source_pn",
+        backends=("torch", "jax", "scalar_reference"),
+        options=(("calibration", "published"),
+                 ("hm_21_pn_variant", "mishra_eq12b"),
+                 ("hm_32_pn_variant", "mishra_eq12d"),
+                 ("hm_43_pn_variant", "mishra_eq12g"),
+                 ("hm_mapping_transitions", transition),
+                 ("phasing_convention", gauge)),
+        domain=domain, precision="float64", device="cpu",
+        category="implementation_verification", status="sampled_pass",
+        evidence_path="docs/validation/imrphenomhm_published_composition_20260927.md",
+    ) for transition in ("london_2018", "phenomd_runtime")
+      for component_id, scope, domain, gauge in (
+          ("hm.waveform.independent_published.v1",
+           "Six individual complex modes, per-mode projection and summed polarizations for two binaries at mapped joins and offsets",
+           "(35,20,0.2,-0.1) and (30,30,0.35,-0.2); d=100 Mpc; declared angles/time; no f_ref",
+           "coalescence"),
+          ("hm.waveform.independent_published.v1",
+           "Six individual complex modes, per-mode projection and summed polarizations for two binaries at mapped joins and offsets",
+           "(35,20,0.2,-0.1) and (30,30,0.35,-0.2); d=100 Mpc; declared angles/time; f_ref=40 Hz",
+           "reference_frequency"),
+          ("hm.waveform.independent_published_derivatives.v1",
+           "Smooth frequency, inclination, azimuth, orbital phase, time and distance derivatives of six modes and summed polarizations",
+           "(35,20,0.2,-0.1); Mf=0.005,0.035,0.12; d=100 Mpc; declared angles/time; f_ref=40 Hz",
+           "reference_frequency"),
+      )),
 )
 
 _XAS_CARRIER_PARAMETERS = (
@@ -799,6 +902,6 @@ MEMORY_22_DIRECT = WaveformDefinition(
 )
 
 WAVEFORMS = (TAYLORF2, TAYLORF2_ECCENTRIC, TAYLORF2_HM,
-             IMRPHENOMD, IMRPHENOMXAS, KERR_RINGDOWN_220_DIRECT,
+             IMRPHENOMD, IMRPHENOMHM, IMRPHENOMXAS, KERR_RINGDOWN_220_DIRECT,
              CONTINUOUS_WAVE_H1_DIRECT, MEMORY_22_DIRECT)
 validate_catalog(WAVEFORMS)

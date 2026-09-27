@@ -13,7 +13,7 @@ import sys
 import pytest
 
 
-MODEL_IDS = {"TaylorF2", "TaylorF2_HM", "TaylorF2_Eccentric", "IMRPhenomD",
+MODEL_IDS = {"TaylorF2", "TaylorF2_HM", "TaylorF2_Eccentric", "IMRPhenomD", "IMRPhenomHM",
              "IMRPhenomXAS", "KerrRingdown220Direct", "ContinuousWaveH1Direct",
              "MemoryWaveform22Direct"}
 
@@ -37,7 +37,7 @@ import diffgw.waveforms as waveforms
 import diffgw.reference as reference
 
 assert {definition.id for definition in waveforms.list_waveforms()} == {
-    "TaylorF2", "TaylorF2_HM", "TaylorF2_Eccentric", "IMRPhenomD",
+    "TaylorF2", "TaylorF2_HM", "TaylorF2_Eccentric", "IMRPhenomD", "IMRPhenomHM",
     "IMRPhenomXAS", "KerrRingdown220Direct", "ContinuousWaveH1Direct",
     "MemoryWaveform22Direct"
 }
@@ -237,7 +237,7 @@ def test_catalog_models_are_bound_to_public_backend_dispatch(backend):
     root = Path(__file__).resolve().parents[1]
     code = f'''
 import diffgw
-model_ids = {{"TaylorF2", "TaylorF2_HM", "TaylorF2_Eccentric", "IMRPhenomD", "IMRPhenomXAS"}}
+model_ids = {{"TaylorF2", "TaylorF2_HM", "TaylorF2_Eccentric", "IMRPhenomD", "IMRPhenomHM", "IMRPhenomXAS"}}
 frontend = getattr(diffgw, {backend!r})
 assert model_ids.issubset(set(diffgw.list_approximants(backend={backend!r})))
 for model_id in model_ids:
@@ -247,3 +247,25 @@ for model_id in model_ids:
     result = subprocess.run([sys.executable, "-c", code], env=env,
                             capture_output=True, text=True, check=False)
     assert result.returncode == 0, result.stderr
+
+
+def test_hm_published_reference_scope_keeps_native_defaults_explicit():
+    from diffgw.waveforms import get_waveform
+
+    model = get_waveform("IMRPhenomHM")
+    options = {option.name: option for option in model.options}
+    assert options["calibration"].default == "inherited"
+    assert options["calibration"].choices == ("inherited", "published")
+    for mode, source in (("21", "mishra_eq12b"), ("32", "mishra_eq12d"), ("43", "mishra_eq12g")):
+        option = options[f"hm_{mode}_pn_variant"]
+        assert option.default == "binary_compatible"
+        assert source in option.choices
+    for claim in model.claims:
+        assert dict(claim.options)["calibration"] == "published"
+        assert claim.category == "implementation_verification"
+        for mode, source in (("21", "mishra_eq12b"), ("32", "mishra_eq12d"), ("43", "mishra_eq12g")):
+            assert dict(claim.options)[f"hm_{mode}_pn_variant"] == source
+    assert set(model.modes) == {(2, 2), (2, 1), (3, 3), (3, 2), (4, 4), (4, 3)}
+    page = Path(__file__).resolve().parents[1] / "docs" / model.spec_page
+    rows = re.findall(r"^\| `(hm\.waveform\.[^`]+\.v\d+)` \|", page.read_text(), re.MULTILINE)
+    assert set(rows) == {component.id for component in model.components}
