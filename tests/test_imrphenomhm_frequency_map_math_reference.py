@@ -16,6 +16,9 @@ from diffgw_reference import imrphenomhm_frequency_map as ref
 CASES = ((2, 2, .050), (2, 1, .035), (3, 3, .072),
          (3, 2, .060), (4, 4, .090), (4, 3, .080))
 F22 = .050
+MODES = tuple((l, m) for l, m, _ in CASES)
+REMNANT_INPUTS = ((35.0, 20.0, 0.2, -0.1),
+                  (50.0, 10.0, 0.7, -0.3))
 
 
 @pytest.fixture(params=("torch", "jax"))
@@ -167,14 +170,18 @@ def test_frontend_parameter_derivatives(backend, phase_d_carrier):
 
 
 @pytest.mark.parametrize("variant", ("phenomd_runtime", "london_2018"))
-def test_public_transition_selection(backend, monkeypatch, variant):
-    """Public (3,3) D mode must use the independently selected Eq. (5)/(8) maps."""
+@pytest.mark.parametrize("masses_spins", REMNANT_INPUTS)
+@pytest.mark.parametrize("l,m", MODES)
+def test_public_transition_selection(backend, monkeypatch, variant,
+                                     masses_spins, l, m):
+    """Six public D modes select Eq. (5)/(8) maps from supplied QNM inputs."""
     name, module, array = backend
-    model = module.IMRPhenomHM(modes=((3, 3),))
+    model = module.IMRPhenomHM(modes=((l, m),))
+    mass1, mass2, chi1, chi2 = masses_spins
     rd_lm = float(module.IMRPhenomHM.mode_qnm_frequencies(
-        3, 3, array(35.0), array(20.0), array(0.2), array(-0.1))[0])
+        l, m, *(array(x) for x in masses_spins))[0])
     rd_22 = float(module.IMRPhenomHM.mode_qnm_frequencies(
-        2, 2, array(35.0), array(20.0), array(0.2), array(-0.1))[0])
+        2, 2, *(array(x) for x in masses_spins))[0])
     f0_amp, f0_phi = (float(x) for x in ref.outer_map_cutoffs(variant, rd_lm, rd_22))
     h = 1e-6
     grid = np.unique(np.array([
@@ -183,10 +190,11 @@ def test_public_transition_selection(backend, monkeypatch, variant):
           for offset in (-h, 0, h)),
         rd_lm * 1.1,
     ]))
-    frequencies = array(grid / (55.0 * float(module.MSUN_SEC)))
-    kwargs = dict(mass1=35.0, mass2=20.0, chi1=0.2, chi2=-0.1,
+    frequencies = array(grid / ((mass1 + mass2) * float(module.MSUN_SEC)))
+    kwargs = dict(mass1=mass1, mass2=mass2, chi1=chi1, chi2=chi2,
                   return_unprojected_modes=True)
-    baseline = np.asarray(model(frequencies, **kwargs)[2][(3, 3)])
+    baseline = (np.asarray(model(frequencies, **kwargs)[2][(l, m)])
+                if variant == "phenomd_runtime" else None)
     seen = {}
     amp_fn = module.frequency_mapping_amplitude
     phase_fn = module._production_mapped_phase_c1
@@ -211,28 +219,29 @@ def test_public_transition_selection(backend, monkeypatch, variant):
         patcher.setattr(module, "frequency_mapping_amplitude", capture_amp)
         patcher.setattr(module, "_production_mapped_phase_c1", capture_phase)
         actual = np.asarray(model(frequencies, hm_mapping_transitions=variant,
-                                  **kwargs)[2][(3, 3)])
+                                  **kwargs)[2][(l, m)])
 
-    dispatch = importlib.import_module(f"{name}wave.waveforms").get_fd_waveform
-    dispatched = dispatch("IMRPhenomHM", sample_frequencies=frequencies,
-                          modes=((3, 3),), hm_mapping_transitions=variant,
-                          **kwargs)[2][(3, 3)]
-    np.testing.assert_allclose(np.asarray(dispatched), actual, rtol=1e-13, atol=0)
+    if (l, m) == (3, 3) and masses_spins == REMNANT_INPUTS[0]:
+        dispatch = importlib.import_module(f"{name}wave.waveforms").get_fd_waveform
+        dispatched = dispatch("IMRPhenomHM", sample_frequencies=frequencies,
+                              modes=((l, m),), hm_mapping_transitions=variant,
+                              **kwargs)[2][(l, m)]
+        np.testing.assert_allclose(np.asarray(dispatched), actual, rtol=1e-13, atol=0)
 
     for key, f0, scalar, phase in (
         ("amp", f0_amp, ref.eq5_frequency_map, False),
         ("phase", f0_phi, ref.eq8_phase_frequency_map, True),
     ):
-        native_f0, r, q, m = seen[f"{key}_inputs"]
+        native_f0, r, q, mapped_m = seen[f"{key}_inputs"]
         np.testing.assert_allclose((native_f0, r, q), (f0, rd_lm, rd_22),
                                    rtol=2e-11, atol=0)
-        assert m == 3
+        assert mapped_m == m
         mapped = seen[f"{key}_map"]
         expected = np.array([float(scalar(str(f), str(f0), str(rd_lm),
-                                          str(rd_22), 3)) for f in grid])
+                                          str(rd_22), m)) for f in grid])
         np.testing.assert_allclose(mapped, expected, rtol=2e-11, atol=2e-13)
         slopes = tuple(float(s) for s in ref.branch_slopes(
-            f0, rd_lm, rd_22, 3, phase_d_carrier=phase))
+            f0, rd_lm, rd_22, m, phase_d_carrier=phase))
         for join, left, right in ((f0, slopes[0], slopes[1]),
                                   (rd_lm, slopes[1], slopes[2])):
             idx = int(np.argmin(abs(grid - join)))
@@ -240,14 +249,15 @@ def test_public_transition_selection(backend, monkeypatch, variant):
                 ((mapped[idx] - mapped[idx - 1]) / h,
                  (mapped[idx + 1] - mapped[idx]) / h),
                 (left, right), rtol=2e-6, atol=2e-6)
+        if (l, m) == (2, 2):
+            np.testing.assert_allclose(mapped, grid, rtol=2e-11, atol=2e-13)
 
     if variant == "phenomd_runtime":
         np.testing.assert_allclose(actual, baseline, rtol=1e-13, atol=0)
-    else:
-        assert np.max(abs(actual - baseline)) > 1e-8 * np.max(abs(baseline))
 
-    with pytest.raises(ValueError, match="Unknown HM mapping transitions"):
-        model(frequencies, hm_mapping_transitions="unknown", **kwargs)
-    non_d = module.IMRPhenomHM(modes=((3, 3),), base_22=object())
-    with pytest.raises(ValueError, match="require the D carrier"):
-        non_d(frequencies, hm_mapping_transitions="london_2018", **kwargs)
+    if (l, m) == (3, 3) and masses_spins == REMNANT_INPUTS[0]:
+        with pytest.raises(ValueError, match="Unknown HM mapping transitions"):
+            model(frequencies, hm_mapping_transitions="unknown", **kwargs)
+        non_d = module.IMRPhenomHM(modes=((l, m),), base_22=object())
+        with pytest.raises(ValueError, match="require the D carrier"):
+            non_d(frequencies, hm_mapping_transitions="london_2018", **kwargs)

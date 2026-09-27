@@ -82,15 +82,22 @@ QNM frequencies as independent scalar inputs and imports neither frontend.
 The component-to-source-to-code map is `COMPONENT_BINDINGS` in the reference
 module, checked by the maintained test.
 
-For the selection gate, the scalar reference computes the two cutoffs from
-supplied QNM frequencies without importing either frontend. A public `(3,3)`
-mode call on CPU FP64 captures each frontend's map inputs and outputs at both
-cutoffs and at ringdown. The frozen checks require relative map-value error
-at most $2\times10^{-11}$, one-sided derivative error at most
-$2\times10^{-6}$ using a $10^{-6}$ geometric-frequency step, and unchanged
-default complex mode values to $10^{-13}$ relative error. The one-sided
-derivative test excludes the join point itself. These thresholds test the
-selection and map algebra, not the full carrier or physical calibration.
+For the public selection gate, the scalar reference computes the two cutoffs
+from supplied QNM frequencies without importing either frontend. CPU FP64
+calls cover all six supported positive-mode labels, `(2,2)`, `(2,1)`, `(3,3)`,
+`(3,2)`, `(4,4)`, and `(4,3)`, at two remnant-producing mass/spin inputs:
+`(m1,m2,chi1,chi2)=(35,20,0.2,-0.1)` and `(50,10,0.7,-0.3)` in solar-mass
+units. Each mode and input uses both `phenomd_runtime` and `london_2018`.
+The public class call captures the two map inputs and output arrays at both
+cutoffs and at ringdown. The native QNM result is supplied to the independent
+scalar map; this gate does not derive or audit the QNM fit. The frozen checks
+require relative map-value error at most $2\times10^{-11}$, one-sided slope
+error at most $2\times10^{-6}$ using a $10^{-6}$ geometric-frequency step,
+and unchanged default complex mode values to $10^{-13}$ relative error when
+`phenomd_runtime` is passed explicitly. The slope test uses points on each
+side of a join, not autodiff at the join itself. `(2,2)` additionally checks
+the identity map for both selections. These thresholds test selection and map
+algebra, not the full carrier or physical calibration.
 
 ## Evidence and limitations
 
@@ -105,12 +112,13 @@ not audit QNM fits, phase-offset attachment, mode amplitude, polarizations,
 LAL agreement, or physical accuracy. The higher-mode ledger retains those
 gates.
 
-The public `(3,3)` D-carrier selection test checks both named choices through
-Torch and JAX class calls and `get_fd_waveform`. It compares captured map
-frequencies and one-sided slopes with the independent scalar evaluator, checks
-that explicit `phenomd_runtime` reproduces the omitted-option complex mode,
-and rejects an unknown choice or non-D London carrier. It does not establish
-independent correctness of the full complex HM mode. The
+The public D-carrier selection test checks both named choices for all six
+modes and both mass/spin inputs through Torch and JAX class calls. It compares
+captured map frequencies and one-sided slopes with the independent scalar
+evaluator and checks that explicit `phenomd_runtime` reproduces omitted-option
+complex modes. A `(3,3)` dispatcher check retains public `get_fd_waveform`
+coverage; unknown choices and non-D London carriers remain rejected. It does
+not establish independent correctness of the full complex HM mode. The
 [len validation receipt](../validation/imrphenomhm_mapping_selection_20260927.md)
 records the integrated CPU FP64 result.
 

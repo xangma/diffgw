@@ -16,6 +16,15 @@ class and dispatcher calls, map values and one-sided slopes at both joins,
 and identical complex mode values when the prior default is selected
 explicitly. The later integrated NSBH/HM focused run passed **142/142**.
 
+The expanded selection gate on `len`, CPU FP64, passed **84/84** map-reference
+tests in 32.89 s. The map and neighboring phase-offset reference files passed
+**111/111** in 34.19 s with the same environment and
+`--reference-device=cpu -ra`. The new public checks sample all six positive
+mode labels, two mass/spin inputs, and both cutoff choices through Torch and
+JAX. They compare captured map values and one-sided slopes to the scalar
+reference supplied with native QNM frequencies and compare omitted-option
+complex modes with explicit `phenomd_runtime`. The default remains unchanged.
+
 This evidence qualifies the named outer-map selection component at the
 sampled points. It does not qualify QNM fits, carrier joins, phase offsets,
 amplitude calibration, projection, or the whole HM waveform.
