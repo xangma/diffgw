@@ -1,13 +1,22 @@
 """Independent scalar check of THM Eqs. (8)--(11) in both T carriers."""
 
 import importlib
+import json
+from pathlib import Path
 
 import numpy as np
 import pytest
 
-from diffgw_core import phenomt_fits as fits
 from diffgw_reference.phenomt_inspiral_collocation import THETA_NODES, frequency, solve
 from diffgw_reference.phenomt_taylor_t3 import coefficients as t3_coefficients
+
+
+FIT_ROWS = {
+    tuple(row["inputs"]): row
+    for row in json.loads(
+        (Path(__file__).parent / "data/phenomt_author_inspiral_fits_4121.json").read_text()
+    )["cases"]
+}
 
 
 @pytest.mark.parametrize("backend", ["torchwave", "jaxwave"])
@@ -23,6 +32,9 @@ def test_thm_frequency_collocation_against_scalar_solve(backend, m1, m2, chi1, c
         def array(value):
             return torch.as_tensor(value, dtype=torch.float64)
     else:
+        import jax
+
+        jax.config.update("jax_enable_x64", True)
         import jax.numpy as jnp
 
         def array(value):
@@ -32,11 +44,9 @@ def test_thm_frequency_collocation_against_scalar_solve(backend, m1, m2, chi1, c
     model = implementation.IMRPhenomT()
     eta = m1 * m2 / (m1 + m2) ** 2
     delta = (m1 - m2) / (m1 + m2)
-    spin = (chi1 * (m1 / (m1 + m2)) ** 2 + chi2 * (m2 / (m1 + m2)) ** 2) / (1 - 2 * eta)
-    dchi = chi1 - chi2
-    t0 = fits._IMRPhenomT_Inspiral_TaylorT3_t0(eta, spin, dchi, delta)
-    fitted = [fits._IMRPhenomT_Inspiral_Freq_CP(eta, spin, dchi, delta, i)
-              for i in range(1, 6)]
+    source_row = FIT_ROWS[(m1, m2, chi1, chi2)]
+    t0 = source_row["t0"]
+    fitted = source_row["frequencies"]
     pn = np.asarray([float(value) for value in t3_coefficients(eta, delta, chi1, chi2)])
     scalar_coefficients, targets = solve(eta, t0, fitted, pn)
     native = model._coeff(*map(array, (m1, m2, chi1, chi2)))

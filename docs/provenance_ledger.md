@@ -335,6 +335,12 @@ Model-specific formulations, reference configurations and limitations are descri
   not a claim that the numerical calibration coefficients were independently
   derived from the paper. The complete MIT notice is retained in
   [THIRD_PARTY_NOTICES.md](../THIRD_PARTY_NOTICES.md).
+- The [inspiral fit-input specification](math/phenomt-inspiral-fit-inputs.md)
+  pins this MIT author asset by revision and SHA-256 and verifies its `t0`
+  and five fitted frequency outputs on a fixed grid against shared fits and
+  both native carriers. The paper does not publish the fitted coefficient
+  tables, so this is source transcription evidence rather than an independent
+  physical recalibration.
 - Runtime: framework-native tensor operations and differentiable matching in
   both frontends, with backend-independent algebraic fits in `diffgw_core`.
   No LALSuite, SciPy or phenomxpy waveform calls are made at runtime.
