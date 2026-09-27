@@ -386,6 +386,13 @@ def london_ringdown_properties(
     return f_rd, q_factor
 
 
+def nsbh_branch_predicates(
+    f_tide: jnp.ndarray, f_rd: jnp.ndarray, torus_ratio: jnp.ndarray
+) -> tuple[jnp.ndarray, jnp.ndarray]:
+    """Table I's closed frequency boundary and strictly positive torus flag."""
+    return f_tide >= f_rd, torus_ratio > 0.0
+
+
 def nsbh_torus_mass_ratio(
     q: jnp.ndarray,
     chi: jnp.ndarray,
@@ -607,7 +614,6 @@ class IMRPhenomNSBH:
         # 3. Step 3: Baryonic Torus Remnant Mass Ratio
         # -------------------------------------------------------------
         torus_ratio = nsbh_torus_mass_ratio(q, s1, c, xi_tide)
-        has_torus = torus_ratio > 0.0
 
         # -------------------------------------------------------------
         # 4. Step 4: Remnant Mass M_f and Remnant Spin chi_f
@@ -618,7 +624,7 @@ class IMRPhenomNSBH:
         # 5. Step 5: Kerr Ringdown Frequency f_RD and Quality Factor Q (London 2018)
         # -------------------------------------------------------------
         f_rd, q_factor = london_ringdown_properties(mf, chi_f)
-        is_ftide_ge_frd = f_tide >= f_rd
+        is_ftide_ge_frd, has_torus = nsbh_branch_predicates(f_tide, f_rd, torus_ratio)
 
         # -------------------------------------------------------------
         # 6. Step 6: Merger Classification and Joining Parameters

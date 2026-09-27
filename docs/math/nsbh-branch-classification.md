@@ -50,10 +50,10 @@ are not accepted as a smooth-gradient claim.
 
 ## Implementation mapping
 
-The independent scalar function will be
+The independent scalar function is
 `diffgw_reference.nsbh_branch.classify_branch`, reusing the already separate
 disruption and torus references only for composition inputs. Both native
-`approximants.imrphenom_nsbh` modules will expose a small predicate helper
+`approximants.imrphenom_nsbh` modules expose a small predicate helper
 used by the production amplitude assembly. Neither native module imports the
 scalar reference.
 
@@ -62,7 +62,7 @@ scalar reference.
 The acceptance criterion is **exact class agreement on every frozen case**;
 there is no floating-point error tolerance for a discrete decision. The
 independent disruption-root and torus/ISCO component gates separately check
-their numerical inputs. This branch gate will not certify the remnant-derived
+their numerical inputs. This branch gate does not certify the remnant-derived
 $f_{\rm RD}$, the fitted amplitude parameters selected by a branch, waveform
 agreement with an external binary, or physical accuracy.
 
@@ -70,5 +70,5 @@ agreement with an external binary, or physical accuracy.
 
 Run `JAX_ENABLE_X64=1 PYTHONPATH=src pytest -q
 tests/test_nsbh_branch_reference.py` with reference, Torch, and JAX extras on
-CPU. The validation receipt will record the exact command, dependency
-versions, counts, skips, and failures.
+CPU. The [validation receipt](../validation/nsbh_branch_classification_20260927.md)
+records the exact command, dependency versions, counts, skips, and failures.

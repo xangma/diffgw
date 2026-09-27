@@ -40,17 +40,6 @@ from torchwave.approximants.taylorf2 import TaylorF2
 from torchwave.approximants.kerr_qnm_interp import evaluate_kerr_qnm_220
 from torchwave.approximants.nsbh_clean_phase import nrtidalv2_frequency_phase
 from torchwave.approximants.nsbh_clean_amplitude import positive_tidal_frequency, delta2_prime_plus, gamma1_prime_small_lambda, outer_pn_center
-from torchwave.approximants.imrphenomd_nrtidal import (
-    N1_V2,
-    N32_V2,
-    N2_V2,
-    N52_V2,
-    N3_V2,
-    D1_V2,
-    D32_V2,
-    D2_V2,
-    _nrtidal_self_spin_components,
-)
 
 
 # Coefficients transcribed from the author-released ``BHNSremnant.py``
@@ -357,6 +346,13 @@ def london_ringdown_properties(
     return f_rd, q_factor
 
 
+def nsbh_branch_predicates(
+    f_tide: torch.Tensor, f_rd: torch.Tensor, torus_ratio: torch.Tensor
+) -> tuple[torch.Tensor, torch.Tensor]:
+    """Table I's closed frequency boundary and strictly positive torus flag."""
+    return f_tide >= f_rd, torus_ratio > 0.0
+
+
 def nsbh_torus_mass_ratio(
     q: torch.Tensor,
     chi: torch.Tensor,
@@ -571,7 +567,6 @@ class IMRPhenomNSBH(nn.Module):
         # 3. Step 3: Baryonic Torus Remnant Mass Ratio
         # -------------------------------------------------------------
         torus_ratio = nsbh_torus_mass_ratio(q, s1, c, xi_tide)
-        has_torus = torus_ratio > 0.0
 
         # -------------------------------------------------------------
         # 4. Step 4: Remnant Mass M_f and Remnant Spin chi_f
@@ -589,7 +584,7 @@ class IMRPhenomNSBH(nn.Module):
         # -------------------------------------------------------------
         f_rd, q_factor = london_ringdown_properties(mf, chi_f)
         # Step 6 applies the table's f_tide >= f_RD (closed) boundary.
-        is_ftide_ge_frd = f_tide >= f_rd
+        is_ftide_ge_frd, has_torus = nsbh_branch_predicates(f_tide, f_rd, torus_ratio)
 
         # -------------------------------------------------------------
         # 6. Step 6: Merger Classification and Joining Parameters
