@@ -125,3 +125,45 @@ The external script and complete output are
 It ran from the same remote cwd with
 `PYTHONPATH=.:src:tests /tmp/diffgw-waveform-library-1315f6e/venv-latest/bin/python
 /tmp/diffgw-hm-sxs-3630-20260927/ablation.py`; it completed in 6.6 s.
+
+## Post-result source-option diagnostic (non-gating)
+
+A second bounded probe used the **same external Lev3 fixture, PSD, two angles,
+and four-seed model optimizer**, without changing the frozen default result.
+It compared the default with the selectable `london_2018` mapping transitions
+and the printed [Mishra et al. Eq. (12b), (12d), and (12g)](https://arxiv.org/html/1601.05588v1)
+PN options, first all together and then one at a time. These source options
+are described in the [frequency-map](../math/imrphenomhm-frequency-map.md)
+and [amplitude-ratio](../math/imrphenomhm-amplitude-ratio-21.md) specifications.
+
+| Source inclination | Default match / norm ratio | All-paper match / norm ratio |
+| --- | ---: | ---: |
+| `0.7` | `0.991887 / 1.010481` | `0.978836 / 1.032740` |
+| `1.2` | `0.980782 / 0.840432` | `0.961810 / 0.953846` |
+
+Torch values appear above; JAX agrees within `2.3e-15` in match and
+`1.2e-9` in norm ratio. The `london_2018` mapping option **alone** exactly
+reproduces the all-paper values. Each PN option alone exactly reproduces the
+default sampled values because its differing terms are spin-dependent and
+this case has zero model spins. The four-seed spreads for the mapping option
+are below `2.3e-11`. The paper mapping cures this case's norm-ratio deficit
+but drops both model/NR matches below the `0.980` floor; therefore it offers
+no qualification under the frozen thresholds. This is a post-result
+diagnostic, not a retest or a new acceptance rule.
+
+Host `len`, cwd `/tmp/diffgw-hm-sxs-3630-20260927/repo`; command:
+
+```sh
+env PYTHONPATH=.:src:tests JAX_PLATFORMS=cpu JAX_ENABLE_X64=1 \
+  OMP_NUM_THREADS=1 OPENBLAS_NUM_THREADS=1 \
+  /tmp/diffgw-waveform-library-1315f6e/venv-latest/bin/python \
+  /tmp/diffgw-hm-sxs-3630-20260927/paper-options.py
+```
+
+Runner PID `1556420` completed; no active job remains. Log:
+`/tmp/diffgw-hm-sxs-3630-20260927/paper-options.log`. During a rerun,
+stop its active PID with `kill <PID>` on `len`. The external script SHA-256 is
+`4d045f73b2e4811896ee00d9f918563b81f78ec0018079e2814d01a6faf47e10`;
+the full external diagnostic JSON is
+`data/hm_sxs_3630_paper_options_diagnostic.json`, SHA-256
+`47fa923c20b17fabbdc7cc27db39ff3352568d8d3fcf6b0ac7036dafbe630eab`.
