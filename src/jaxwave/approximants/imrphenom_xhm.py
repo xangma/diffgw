@@ -195,8 +195,18 @@ def _nonmix_intermediate_phase(frequency, coefficients, ring, damp):
             - a4 / (3.0 * frequency**3))
 
 
+def _intermediate_32_phase_nodes(eta, f_ins, ring22, damp22):
+    """Table 7 first four (3,2) intermediate-phase collocation nodes."""
+    start = (1.0 + 0.001 * (0.25 / eta - 1.0)) * f_ins
+    end = ring22 - 0.5 * damp22
+    return jnp.stack((start,
+                      ((math.sqrt(3.0) + 2.0) * start - (math.sqrt(3.0) - 2.0) * end) / 4.0,
+                      (end + 3.0 * start) / 4.0,
+                      (end + start) / 2.0), axis=-1)
+
+
 def _intermediate_32_phase_coefficients(nodes, targets, join, dphi_join, d2phi_join, ring, damp):
-    """Eq. (5.6): four phase-derivative targets and a C2 ringdown join."""
+    """Eq. (40): four phase-derivative targets and a C2 ringdown join."""
 
     def row(f):
         lorentz = damp / (damp**2 + (f - ring)**2)
@@ -208,6 +218,23 @@ def _intermediate_32_phase_coefficients(nodes, targets, join, dphi_join, d2phi_j
     matrix = jnp.stack((*[row(nodes[..., i]) for i in range(4)], row(join), derivative_row), axis=-2)
     rhs = jnp.concatenate((targets, dphi_join[..., None], d2phi_join[..., None]), axis=-1)
     return _safe_solve(matrix, rhs)
+
+
+def _intermediate_32_phase_derivative(frequency, coefficients, ring, damp):
+    """Eq. (38), including the (3,2) inverse-cubic term."""
+    lam, a0, a1, a2, a3, a4 = (_unsqueeze_to(coefficients[..., i], frequency) for i in range(6))
+    ring, damp = _unsqueeze_to(ring, frequency), _unsqueeze_to(damp, frequency)
+    return (lam * damp / (damp**2 + (frequency - ring)**2) + a0 + a1 / frequency
+            + a2 / frequency**2 + a3 / frequency**3 + a4 / frequency**4)
+
+
+def _intermediate_32_phase(frequency, coefficients, ring, damp):
+    """Antiderivative of Eq. (38), with zero additive constant."""
+    lam, a0, a1, a2, a3, a4 = (_unsqueeze_to(coefficients[..., i], frequency) for i in range(6))
+    ring, damp = _unsqueeze_to(ring, frequency), _unsqueeze_to(damp, frequency)
+    return (lam * jnp.arctan((frequency - ring) / damp) + a0 * frequency
+            + a1 * jnp.log(jnp.maximum(frequency, 1e-12)) - a2 / frequency
+            - a3 / (2.0 * frequency**2) - a4 / (3.0 * frequency**3))
 
 
 def _carrier_h22_ratio(strain, phase, phase_reference, a0):
@@ -1247,19 +1274,6 @@ class IMRPhenomXHM:
                 # -------------------------------------------------------------
                 # 2. Phase Reconstruction
                 # -------------------------------------------------------------
-                beta_eta = 1.0 + 0.001 * (0.25 / jnp.maximum(eta, 1e-6) - 1.0)
-                f_start = beta_eta * f_ins_p
-                f_end = f_ring_lm if (l, m) != (3, 2) else (f_ring["22"] - 0.5 * f_damp["22"])
-
-                c_pts = [
-                    f_start,
-                    0.25 * ((math.sqrt(3.0) + 2.0) * f_start - (math.sqrt(3.0) - 2.0) * f_end),
-                    0.25 * (f_end + 3.0 * f_start),
-                    0.50 * (f_end + f_start),
-                    0.25 * (3.0 * f_end + f_start),
-                    0.125 * (7.0 * f_end + f_start),
-                ]
-
                 if (l, m) != (3, 2):
                     # Modes without mixing: (2,1), (3,3), (4,4)
                     f_p1 = getattr(XHMParameterFits, f"phase_p1_{lm_str}")(eta, s1, s2, S)
@@ -1373,12 +1387,7 @@ class IMRPhenomXHM:
                     f_p3_32 = XHMParameterFits.phase_p3_32(eta, s1, s2, S)
                     f_p4_32 = XHMParameterFits.phase_p4_32(eta, s1, s2, S)
 
-                    f_nodes_int_32 = jnp.stack(c_pts[:4], axis=-1)
-
-                    def lor_32(f_in: jnp.ndarray) -> jnp.ndarray:
-                        damp_u = _unsqueeze_to(f_damp["32"], f_in)
-                        ring_u = _unsqueeze_to(f_ring["32"], f_in)
-                        return damp_u / ((damp_u**2) + (f_in - ring_u)**2)
+                    f_nodes_int_32 = _intermediate_32_phase_nodes(eta, f_ins_p, f_ring["22"], f_damp["22"])
 
                     dphi_rd_at_join, d2phi_rd_at_join = _value_and_derivative(
                         lambda x: _value_and_derivative(eval_phi_32_rd, x)[1], f_rd_p,
@@ -1390,46 +1399,11 @@ class IMRPhenomXHM:
                         f_ring["32"], f_damp["32"],
                     )
 
-                    a_lam_32 = sol_int_32[..., 0]
-                    a_0_32 = sol_int_32[..., 1]
-                    a_1_32 = sol_int_32[..., 2]
-                    a_2_32 = sol_int_32[..., 3]
-                    a_3_32 = sol_int_32[..., 4]
-                    a_4_32 = sol_int_32[..., 5]
-
                     def eval_dphi_int_32(f_in: jnp.ndarray) -> jnp.ndarray:
-                        a_lam_u = _unsqueeze_to(a_lam_32, f_in)
-                        a_0_u = _unsqueeze_to(a_0_32, f_in)
-                        a_1_u = _unsqueeze_to(a_1_32, f_in)
-                        a_2_u = _unsqueeze_to(a_2_32, f_in)
-                        a_3_u = _unsqueeze_to(a_3_32, f_in)
-                        a_4_u = _unsqueeze_to(a_4_32, f_in)
-                        return (
-                            a_lam_u * lor_32(f_in)
-                            + a_0_u
-                            + a_1_u / f_in
-                            + a_2_u / (f_in**2)
-                            + a_3_u / (f_in**3)
-                            + a_4_u / (f_in**4)
-                        )
+                        return _intermediate_32_phase_derivative(f_in, sol_int_32, f_ring["32"], f_damp["32"])
 
                     def eval_phi_int_32(f_in: jnp.ndarray) -> jnp.ndarray:
-                        damp_u = _unsqueeze_to(f_damp["32"], f_in)
-                        ring_u = _unsqueeze_to(f_ring["32"], f_in)
-                        a_lam_u = _unsqueeze_to(a_lam_32, f_in)
-                        a_0_u = _unsqueeze_to(a_0_32, f_in)
-                        a_1_u = _unsqueeze_to(a_1_32, f_in)
-                        a_2_u = _unsqueeze_to(a_2_32, f_in)
-                        a_3_u = _unsqueeze_to(a_3_32, f_in)
-                        a_4_u = _unsqueeze_to(a_4_32, f_in)
-                        return (
-                            a_lam_u * jnp.arctan((f_in - ring_u) / damp_u)
-                            + a_0_u * f_in
-                            + a_1_u * jnp.log(jnp.maximum(f_in, 1e-12))
-                            - a_2_u / f_in
-                            - 0.5 * a_3_u / (f_in**2)
-                            - (1.0 / 3.0) * a_4_u / (f_in**3)
-                        )
+                        return _intermediate_32_phase(f_in, sol_int_32, f_ring["32"], f_damp["32"])
 
                     c_int_32 = eval_phi_32_rd(f_rd_p) - eval_phi_int_32(f_rd_p)
 

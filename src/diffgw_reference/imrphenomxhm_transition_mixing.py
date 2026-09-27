@@ -2,7 +2,7 @@
 """Paper-era XHM (3,2) phase join and spherical/spheroidal mixing.
 
 Only the algebra printed in Garcia-Quiros et al., arXiv:2001.10914v2,
-Eqs. (5.4), (5.6), (6.6)--(6.8), and (A1)--(A3) is implemented.  All
+Eqs. (38), (40), (46)--(48), Table 7, and (A1)--(A3) is implemented. All
 collocation targets, QNM frequencies, amplitudes, and mixing coefficients
 are caller data.  In particular, this is not a release-122022 fit provider.
 """
@@ -55,7 +55,7 @@ def mixed_phase_derivatives(frequency, h22, h32_s, coefficients):
 
 
 def ringdown_spheroidal_phase(frequency, f_ring32, f_damp32, coefficients, *, offset=0):
-    """Integrated Eq. (6.7) for ``(alpha2, alpha4, alpha_lambda, dphi)``."""
+    """Spheroidal ringdown phase of Eqs. (46)-(47), with caller coefficients."""
 
     f, ring, damp = map(mp.mpf, (frequency, f_ring32, f_damp32))
     if min(f, ring, damp) <= 0:
@@ -65,7 +65,7 @@ def ringdown_spheroidal_phase(frequency, f_ring32, f_damp32, coefficients, *, of
 
 
 def ringdown_spheroidal_phase_derivative(frequency, f_ring32, f_damp32, coefficients):
-    """The (3,2) spheroidal ringdown phase derivative, Eq. (6.6)."""
+    """Derivative of the spheroidal ringdown phase in Eqs. (46)-(47)."""
 
     f, ring, damp = map(mp.mpf, (frequency, f_ring32, f_damp32))
     if min(f, ring, damp) <= 0:
@@ -79,10 +79,27 @@ def _intermediate_row(f, ring, damp):
     return [lorentz, mp.mpf(1), *[f**-k for k in range(1, 5)]]
 
 
-def intermediate_phase_coefficients(nodes, targets, f_join, dphi_join, d2phi_join, f_ring32, f_damp32):
-    """Solve the six Eq. (5.6) collocation and ringdown-join conditions.
+def default_intermediate_32_nodes(eta, f_ins32, f_ring22, f_damp22):
+    """First four Table-7 nodes, with the paper's (3,2) end frequency."""
+    eta, f_ins, ring22, damp22 = map(mp.mpf, (eta, f_ins32, f_ring22, f_damp22))
+    if not 0 < eta <= mp.mpf("0.25") or min(f_ins, ring22, damp22) <= 0:
+        raise ValueError("physical eta and positive frequencies required")
+    start = (1 + mp.mpf("0.001") * (mp.mpf("0.25") / eta - 1)) * f_ins
+    end = ring22 - damp22 / 2
+    if end <= start:
+        raise ValueError("the Table-7 interval must have positive width")
+    return (
+        start,
+        ((mp.sqrt(3) + 2) * start - (mp.sqrt(3) - 2) * end) / 4,
+        (end + 3 * start) / 4,
+        (end + start) / 2,
+    )
 
-    Coefficients follow Eq. (5.4): ``(a_lambda, a0, a1, a2, a3, a4)``.
+
+def intermediate_phase_coefficients(nodes, targets, f_join, dphi_join, d2phi_join, f_ring32, f_damp32):
+    """Solve the six Eq. (40) collocation and ringdown-join conditions.
+
+    Coefficients follow Eq. (38): ``(a_lambda, a0, a1, a2, a3, a4)``.
     ``dphi_join`` and ``d2phi_join`` belong to the *spherical* ringdown
     phase, after the Appendix-A basis transform.
     """
@@ -103,7 +120,7 @@ def intermediate_phase_coefficients(nodes, targets, f_join, dphi_join, d2phi_joi
 
 
 def intermediate_phase_derivative(frequency, f_ring32, f_damp32, coefficients):
-    """Evaluate Eq. (5.4), with its terms ordered as above."""
+    """Evaluate Eq. (38), with its terms ordered as above."""
 
     f, ring, damp = map(mp.mpf, (frequency, f_ring32, f_damp32))
     if min(f, ring, damp) <= 0:
@@ -112,8 +129,18 @@ def intermediate_phase_derivative(frequency, f_ring32, f_damp32, coefficients):
     return alam * damp / (damp**2 + (f - ring)**2) + a0 + a1 / f + a2 / f**2 + a3 / f**3 + a4 / f**4
 
 
+def intermediate_phase_second_derivative(frequency, f_ring32, f_damp32, coefficients):
+    """Differentiate Eq. (38) for the sixth Eq. (40) condition."""
+    f, ring, damp = map(mp.mpf, (frequency, f_ring32, f_damp32))
+    if min(f, ring, damp) <= 0:
+        raise ValueError("frequencies must be positive")
+    alam, _, a1, a2, a3, a4 = map(mp.mpf, coefficients)
+    return (-2 * alam * damp * (f - ring) / (damp**2 + (f - ring)**2)**2
+            - a1 / f**2 - 2 * a2 / f**3 - 3 * a3 / f**4 - 4 * a4 / f**5)
+
+
 def intermediate_phase(frequency, f_ring32, f_damp32, coefficients, *, offset=0):
-    """Primitive of Eq. (5.4); choose ``offset`` for value continuity."""
+    """Primitive of Eq. (38); choose ``offset`` for value continuity."""
 
     f, ring, damp = map(mp.mpf, (frequency, f_ring32, f_damp32))
     if min(f, ring, damp) <= 0:
