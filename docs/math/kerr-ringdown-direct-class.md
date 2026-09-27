@@ -166,7 +166,7 @@ choice, the independent spectral angular values differ from the separately
 inferred table shape at the inclination and mirror by `1.87e-4 / 3.70e-4`
 for spin 0.35 and `3.51e-4 / 9.12e-4` for spin 0.7. The table row is a
 different conditional route and cannot qualify the independent direct class.
-An [angular-only ablation](../../scripts/audit_kerr220_angular_cutoff.py)
+An [angular-only ablation](https://github.com/xangma/diffgw/blob/main/scripts/audit_kerr220_angular_cutoff.py)
 identifies the numerical source of this remaining profile difference: the
 table route stops its Frobenius sum after the first term below absolute
 `0.01`, then normalizes that stopped shape. At the inclination, mirror, and

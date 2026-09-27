@@ -66,7 +66,7 @@ public binary outputs rather than specified by the angular paper. This is a
 compatibility convention; the source-backed spectral projection is a
 distinct calculation.
 
-An [angular cutoff ablation](../../scripts/audit_kerr220_angular_cutoff.py)
+An [angular cutoff ablation](https://github.com/xangma/diffgw/blob/main/scripts/audit_kerr220_angular_cutoff.py)
 evaluates the same complex oblateness with a converged Frobenius series and
 the independent scalar Galerkin projection. Cook and Zalutskiy's
 [power series, Eq. (15b), and spectral expansion, Eq. (49)](https://arxiv.org/html/1410.7698v2)
