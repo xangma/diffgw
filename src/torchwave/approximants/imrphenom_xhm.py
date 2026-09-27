@@ -199,6 +199,48 @@ def _spherical_32_from_spheroidal(h22, h32_s, alpha222, alpha232, alpha322, alph
     return ratio * h22 + (alpha332 - ratio * alpha232) * h32_s
 
 
+def _nonmix_intermediate_phase_nodes(eta, f_ins, f_ring):
+    """Default [C1,C2,E2,E3,E5] nodes of XHM Table 7."""
+    start = (1.0 + 0.001 * (0.25 / eta - 1.0)) * f_ins
+    return torch.stack((
+        start,
+        ((math.sqrt(3.0) + 2.0) * start - (math.sqrt(3.0) - 2.0) * f_ring) / 4.0,
+        (f_ring + 3.0 * start) / 4.0,
+        (f_ring + start) / 2.0,
+        (7.0 * f_ring + start) / 8.0,
+    ), dim=-1)
+
+
+def _nonmix_intermediate_phase_coefficients(nodes, targets, ring, damp):
+    """Eq. (39): non-mixing five-point phase-derivative collocation solve."""
+    ring_u = ring.unsqueeze(-1) if ring.dim() > 0 else ring
+    damp_u = damp.unsqueeze(-1) if damp.dim() > 0 else damp
+    matrix = torch.stack((
+        damp_u / (damp_u**2 + (nodes - ring_u)**2),
+        torch.ones_like(nodes),
+        1.0 / nodes,
+        1.0 / nodes**2,
+        1.0 / nodes**4,
+    ), dim=-1)
+    return torch.linalg.solve(matrix, targets)
+
+
+def _nonmix_intermediate_phase_derivative(frequency, coefficients, ring, damp):
+    """Eq. (38), evaluated at positive dimensionless frequency."""
+    lam, a0, a1, a2, a4 = (_unsqueeze_to(coefficients[..., i], frequency) for i in range(5))
+    ring, damp = _unsqueeze_to(ring, frequency), _unsqueeze_to(damp, frequency)
+    return lam * damp / (damp**2 + (frequency - ring)**2) + a0 + a1 / frequency + a2 / frequency**2 + a4 / frequency**4
+
+
+def _nonmix_intermediate_phase(frequency, coefficients, ring, damp):
+    """Antiderivative of Eq. (38), with zero additive constant."""
+    lam, a0, a1, a2, a4 = (_unsqueeze_to(coefficients[..., i], frequency) for i in range(5))
+    ring, damp = _unsqueeze_to(ring, frequency), _unsqueeze_to(damp, frequency)
+    return (lam * torch.atan((frequency - ring) / damp) + a0 * frequency
+            + a1 * torch.log(torch.clamp(frequency, min=1e-12)) - a2 / frequency
+            - a4 / (3.0 * frequency**3))
+
+
 def _intermediate_32_phase_coefficients(nodes, targets, join, dphi_join, d2phi_join, ring, damp):
     """Eq. (5.6): four phase-derivative targets and a C2 ringdown join."""
 
@@ -1315,58 +1357,15 @@ class IMRPhenomXHM(nn.Module):
                     # Table VII / Fig. 8 default subset: [C1,C2,E2,E3,E5]
                     # = [f1,f2,f3,f4,f6].  The fifth table point is reserved
                     # for the paper's sparse-calibration subset.
-                    f_nodes = torch.stack([c_pts[0], c_pts[1], c_pts[2], c_pts[3], c_pts[5]], dim=-1)
-                    f_damp_u_nodes = f_damp_lm.unsqueeze(-1) if f_damp_lm.dim() > 0 else f_damp_lm
-                    f_ring_u_nodes = f_ring_lm.unsqueeze(-1) if f_ring_lm.dim() > 0 else f_ring_lm
-                    lorentz_nodes = f_damp_u_nodes / ((f_damp_u_nodes**2) + (f_nodes - f_ring_u_nodes)**2)
-                    m_phase = torch.stack([
-                        lorentz_nodes,
-                        torch.ones_like(f_nodes),
-                        1.0 / f_nodes,
-                        1.0 / (f_nodes**2),
-                        1.0 / (f_nodes**4),
-                    ], dim=-1)
+                    f_nodes = _nonmix_intermediate_phase_nodes(eta, f_ins_p, f_ring_lm)
                     rhs_phase = torch.stack([f_p1, f_p2, f_p3, f_p4, f_p6], dim=-1)
-                    a_int = torch.linalg.solve(m_phase, rhs_phase)
-
-                    a_lam = a_int[..., 0]
-                    a_0 = a_int[..., 1]
-                    a_1 = a_int[..., 2]
-                    a_2 = a_int[..., 3]
-                    a_4 = a_int[..., 4]
+                    a_int = _nonmix_intermediate_phase_coefficients(f_nodes, rhs_phase, f_ring_lm, f_damp_lm)
 
                     def eval_dphi_int(f_in: torch.Tensor) -> torch.Tensor:
-                        damp_u = _unsqueeze_to(f_damp_lm, f_in)
-                        ring_u = _unsqueeze_to(f_ring_lm, f_in)
-                        a_lam_u = _unsqueeze_to(a_lam, f_in)
-                        a_0_u = _unsqueeze_to(a_0, f_in)
-                        a_1_u = _unsqueeze_to(a_1, f_in)
-                        a_2_u = _unsqueeze_to(a_2, f_in)
-                        a_4_u = _unsqueeze_to(a_4, f_in)
-                        lor = damp_u / ((damp_u**2) + (f_in - ring_u)**2)
-                        return (
-                            a_lam_u * lor
-                            + a_0_u
-                            + a_1_u / f_in
-                            + a_2_u / (f_in**2)
-                            + a_4_u / (f_in**4)
-                        )
+                        return _nonmix_intermediate_phase_derivative(f_in, a_int, f_ring_lm, f_damp_lm)
 
                     def eval_phi_int(f_in: torch.Tensor) -> torch.Tensor:
-                        damp_u = _unsqueeze_to(f_damp_lm, f_in)
-                        ring_u = _unsqueeze_to(f_ring_lm, f_in)
-                        a_lam_u = _unsqueeze_to(a_lam, f_in)
-                        a_0_u = _unsqueeze_to(a_0, f_in)
-                        a_1_u = _unsqueeze_to(a_1, f_in)
-                        a_2_u = _unsqueeze_to(a_2, f_in)
-                        a_4_u = _unsqueeze_to(a_4, f_in)
-                        return (
-                            a_lam_u * torch.atan((f_in - ring_u) / damp_u)
-                            + a_0_u * f_in
-                            + a_1_u * torch.log(torch.clamp(f_in, min=1e-12))
-                            - a_2_u / f_in
-                            - (1.0 / 3.0) * a_4_u / (f_in**3)
-                        )
+                        return _nonmix_intermediate_phase(f_in, a_int, f_ring_lm, f_damp_lm)
 
                     # Ringdown phase connection at f_rd_p (Sovereign SXS NR calibrated)
                     alpha_2_lm, alpha_lambda_lm = eval_native_phase_params(l, m, eta)
