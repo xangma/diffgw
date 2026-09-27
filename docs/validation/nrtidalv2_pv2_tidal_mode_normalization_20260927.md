@@ -50,6 +50,11 @@ SSH jobs completed; PIDs `343874`, `360215`, and `417858` no longer exist.
 Their logs are `pytest.log`, `pytest-pv2-regression.log`, and
 `pytest-final.log` in the scratch cwd.
 
+The test was renamed on integration to
+`tests/test_nrtidalv2_pv2_tidal_mode_normalization_math_reference.py`
+so strict mathematical-reference CI collects it. The historical len
+command above retains the filename used for that run.
+
 The remaining gate is native Pv2 BNS assembly: a source-correct aligned
 BBH carrier with the finite-size phase and amplitude inserted before
 precession, plus the BNS angle and reference-frequency convention. This

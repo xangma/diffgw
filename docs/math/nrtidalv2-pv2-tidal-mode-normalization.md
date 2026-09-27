@@ -54,7 +54,7 @@ closed form `Delta h_plus=T(1+cos(theta)^2)/2` and
 
 | Component ID/version | Source | Variant | Status | Scalar reference | Torch/JAX boundary | Check |
 | --- | --- | --- | --- | --- | --- | --- |
-| `nrtidalv2-pv2-tidal-mode-normalization/v1` | Dietrich (2019), Eqs. (22)–(25); Hotokezaka (2016), Eqs. (15), (17), (24); Pratten (2020), Eqs. (11)–(13) | Published Pv2 finite-size term, supplied angles | Conditional executable | `nrtidalv2_pv2_projection.mode_from_face_on_strain` and `project_positive_22` | Pv2 `face_on_to_positive_22` and positive-22 projectors | `test_nrtidalv2_pv2_tidal_mode_normalization.py` |
+| `nrtidalv2-pv2-tidal-mode-normalization/v1` | Dietrich (2019), Eqs. (22)–(25); Hotokezaka (2016), Eqs. (15), (17), (24); Pratten (2020), Eqs. (11)–(13) | Published Pv2 finite-size term, supplied angles | Conditional executable | `nrtidalv2_pv2_projection.mode_from_face_on_strain` and `project_positive_22` | Pv2 `face_on_to_positive_22` and positive-22 projectors | `test_nrtidalv2_pv2_tidal_mode_normalization_math_reference.py` |
 
 ## Implementation mapping
 
@@ -91,6 +91,6 @@ With mpmath, Torch, JAX, and pytest installed on CPU FP64:
 
 ```sh
 PYTHONPATH=src:tests JAX_ENABLE_X64=1 python -m pytest -q \
-  tests/test_nrtidalv2_pv2_tidal_mode_normalization.py
+  tests/test_nrtidalv2_pv2_tidal_mode_normalization_math_reference.py
 ```
 ```
