@@ -12,6 +12,20 @@ from .kerr_ringdown_energy import ringdown_amplitude_from_energy_fraction
 from .kerr_angular_table_convention import spin_weighted_spheroidal_harmonic_table_compat
 
 
+def _angular_pair(a, wr, damp, inc, pc, angular_convention):
+    if angular_convention == "public_compat":
+        return (spin_weighted_spheroidal_harmonic_table_compat(a, inc, pc),
+                spin_weighted_spheroidal_harmonic_table_compat(a, math.pi-inc, pc))
+    if angular_convention != "source_spectral":
+        raise ValueError("angular_convention must be 'public_compat' or 'source_spectral'")
+    from .kerr_angular import spin_weighted_spheroidal_harmonic as spectral
+    c = a * (wr - 1j*damp)
+    equator = spectral(2, 2, c, torch.full_like(inc, math.pi/2), 0., ell_max=18)
+    gauge = equator.conj() / equator.abs()
+    return (spectral(2, 2, c, inc, pc, ell_max=18) * gauge,
+            spectral(2, 2, c, math.pi-inc, pc, ell_max=18) * gauge)
+
+
 def _params(final_mass, final_spin, distance, energy_fraction, inclination, phic, tc, grid=None):
     vals=[final_mass,final_spin,distance,energy_fraction,inclination,phic,tc]
     ts=[v for v in vals+[grid] if isinstance(v,torch.Tensor)]
@@ -43,14 +57,13 @@ def _grid(g, params):
 
 
 def kerr220_td(t, final_mass, final_spin, distance, energy_fraction=.01,
-               inclination=0., phic=0., tc=0.):
+               inclination=0., phic=0., tc=0., *, angular_convention="public_compat"):
     """Return ``(hp,hc)`` for u=t-tc>=0; zero before onset."""
     M,a,D,e,inc,pc,t0=_params(final_mass,final_spin,distance,energy_fraction,inclination,phic,tc,t)
     t, (M,a,D,e,inc,pc,t0)=_grid(t,[M,a,D,e,inc,pc,t0])
     wr, damp=signed_qnm_220(a); sec=M*MSUN_SEC; omega=wr/sec; lam=damp/sec
     A=ringdown_amplitude_from_energy_fraction(M,D,e,omega,1/lam,convention='single_mode')
-    Sp=spin_weighted_spheroidal_harmonic_table_compat(a,inc,pc)
-    Sm=spin_weighted_spheroidal_harmonic_table_compat(a,math.pi-inc,pc)
+    Sp,Sm=_angular_pair(a,wr,damp,inc,pc,angular_convention)
     u=t-t0; up=torch.clamp(u,min=0); z=torch.exp(-lam*up-1j*omega*up); mask=u>=0
     hp=-A/math.sqrt(2)*torch.real(z*(Sp+Sm))*mask
     hc=A/math.sqrt(2)*torch.imag(z*(Sp-Sm))*mask
@@ -58,14 +71,13 @@ def kerr220_td(t, final_mass, final_spin, distance, energy_fraction=.01,
 
 
 def kerr220_fd(f, final_mass, final_spin, distance, energy_fraction=.01,
-               inclination=0., phic=0., tc=0.):
+               inclination=0., phic=0., tc=0., *, angular_convention="public_compat"):
     """Return Fourier-minus-frequency ``(hp,hc)`` for frequency f in Hz."""
     M,a,D,e,inc,pc,t0=_params(final_mass,final_spin,distance,energy_fraction,inclination,phic,tc,f)
     f, (M,a,D,e,inc,pc,t0)=_grid(f,[M,a,D,e,inc,pc,t0])
     wr,damp=signed_qnm_220(a); sec=M*MSUN_SEC; omega=wr/sec; lam=damp/sec
     A=ringdown_amplitude_from_energy_fraction(M,D,e,omega,1/lam,convention='single_mode')
-    Sp=spin_weighted_spheroidal_harmonic_table_compat(a,inc,pc)
-    Sm=spin_weighted_spheroidal_harmonic_table_compat(a,math.pi-inc,pc)
+    Sp,Sm=_angular_pair(a,wr,damp,inc,pc,angular_convention)
     P=Sp+Sm; C=Sp-Sm
     zp=1/(lam+1j*(2*math.pi*f+omega)); zm=1/(lam+1j*(2*math.pi*f-omega))
     phase=torch.exp(-2j*math.pi*f*t0)

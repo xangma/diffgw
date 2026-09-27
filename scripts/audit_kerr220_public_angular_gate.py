@@ -5,6 +5,7 @@ independent Cook--Zalutskiy scalar QNM and Galerkin angular references, then
 compares both opt-in public-clean frontends after aligning their equator phase gauge.
 """
 
+import argparse
 import hashlib
 import json
 import math
@@ -46,16 +47,19 @@ def _angular_values(spin, frequency, inclination, phase, *, ell_max=10):
             complex(value(mp.pi - inclination, phase) * gauge))
 
 
-def _native(backend, case):
+def _native(backend, case, angular_convention="public_compat"):
     spin, angle, phase = case["spin"], case["inclination"], case["phase"]
     times = np.array([case["onset"] - 0.001, case["onset"],
                       case["onset"] + 0.002, case["onset"] + 0.008])
     frequencies = np.array([-130.0, 0.0, 35.0, 110.0, 270.0])
     if backend == "torch":
         import torch
-        from torchwave.approximants.kerr_angular_table_convention import (
-            spin_weighted_spheroidal_harmonic_table_compat as angular,
-        )
+        if angular_convention == "source_spectral":
+            from torchwave.approximants.kerr_angular import spin_weighted_spheroidal_harmonic as spectral
+        else:
+            from torchwave.approximants.kerr_angular_table_convention import (
+                spin_weighted_spheroidal_harmonic_table_compat as angular,
+            )
         from torchwave.approximants.kerr_qnm_generated import signed_qnm_220
         from torchwave.approximants.kerr_ringdown_public_clean import kerr220_td, kerr220_fd
         arr = lambda x: torch.as_tensor(x, dtype=torch.float64)
@@ -69,15 +73,24 @@ def _native(backend, case):
             spin_weighted_spheroidal_harmonic_table_compat as angular,
             kerr220_td, kerr220_fd,
         )
+        if angular_convention == "source_spectral":
+            from jaxwave.approximants.kerr_ringdown import spin_weighted_spheroidal_harmonic as spectral
         arr = lambda x: jnp.asarray(x, dtype=jnp.float64)
         w, decay = evaluate_kerr_qnm_220(arr(spin))
     args = dict(final_mass=case["mass"], final_spin=spin,
                 distance=case["distance"], energy_fraction=case["energy"],
                 inclination=angle, phic=phase, tc=case["onset"])
-    plus = complex(angular(arr(spin), arr(angle), arr(phase)))
-    mirror = complex(angular(arr(spin), arr(math.pi - angle), arr(phase)))
-    td = tuple(np.asarray(x) for x in kerr220_td(arr(times), **args))
-    fd = tuple(np.asarray(x) for x in kerr220_fd(arr(frequencies), **args))
+    if angular_convention == "source_spectral":
+        c = arr(spin) * (w - 1j * decay)
+        equator = complex(spectral(2, 2, c, arr(math.pi / 2), arr(0.0), ell_max=18))
+        gauge = equator.conjugate() / abs(equator)
+        plus = complex(spectral(2, 2, c, arr(angle), arr(phase), ell_max=18)) * gauge
+        mirror = complex(spectral(2, 2, c, arr(math.pi - angle), arr(phase), ell_max=18)) * gauge
+    else:
+        plus = complex(angular(arr(spin), arr(angle), arr(phase)))
+        mirror = complex(angular(arr(spin), arr(math.pi - angle), arr(phase)))
+    td = tuple(np.asarray(x) for x in kerr220_td(arr(times), **args, angular_convention=angular_convention))
+    fd = tuple(np.asarray(x) for x in kerr220_fd(arr(frequencies), **args, angular_convention=angular_convention))
     return complex(float(w), -float(decay)), (plus, mirror), times, frequencies, td, fd
 
 
@@ -87,13 +100,15 @@ def _relative_l2(native, scalar):
     return float(np.linalg.norm(actual - expected) / np.linalg.norm(expected))
 
 
-def main():
+def main(angular_convention="public_compat"):
     source_hashes = {
         name: _hash(name) for name in (
             "src/diffgw_reference/kerr_angular.py",
             "src/diffgw_reference/kerr_qnm.py",
             "src/torchwave/approximants/kerr_angular_table_convention.py",
+            "src/torchwave/approximants/kerr_angular.py",
             "src/jaxwave/approximants/kerr_ringdown_public_clean.py",
+            "src/jaxwave/approximants/kerr_ringdown.py",
         )
     }
     rows = []
@@ -114,7 +129,7 @@ def main():
                 case["energy"], omega, damping,
             )
             for backend in ("torch", "jax"):
-                native_frequency, native_angular, times, frequencies, td, fd = _native(backend, case)
+                native_frequency, native_angular, times, frequencies, td, fd = _native(backend, case, angular_convention)
                 expected_td = tuple(np.array([
                     float(scalar_waveform.time_polarizations(
                         t, case["onset"], amplitude, omega, damping, *angular
@@ -135,8 +150,12 @@ def main():
                     "fd_polarization_relative_l2": _relative_l2(fd, expected_fd),
                 })
     print(json.dumps({"method": "scalar QNM depth=400, Galerkin ell_max=10/order=32, equator-positive phase gauge, CPU FP64",
+                      "angular_convention": angular_convention,
                       "source_sha256": source_hashes, "rows": rows}, indent=2))
 
 
 if __name__ == "__main__":
-    main()
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--angular-convention", choices=("public_compat", "source_spectral"),
+                        default="public_compat")
+    main(parser.parse_args().angular_convention)
