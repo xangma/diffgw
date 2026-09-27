@@ -11,7 +11,8 @@ The selected release criterion is now frozen as **historical fidelity** in the
 [machine-readable result](../2026-09-27/historical_fidelity_release.json).
 Source fidelity, whole-waveform fidelity, numerical convergence, gradient
 fidelity, and an independently trained ROM with untouched holdouts are all
-mandatory; all five gates currently fail. The evaluator separately preserves
+mandatory. The current-head fixed-mesh gradient gate passes; the other four
+gates fail. The evaluator separately preserves
 the measured `SXS:BBH:2569` native/public overlaps below `0.99` as a physical-
 accuracy disclosure, never as a pass, and confirms that the native generator
 and proposed independent ROM remain absent from the public catalog. The public

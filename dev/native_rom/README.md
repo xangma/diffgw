@@ -2079,6 +2079,16 @@ NQC solve. The check fixes accepted times, orbital peak and match time, and
 does not differentiate physical parameters, event decisions, or the historical
 discrete boundary. It is not a release gradient contract.
 
+The [current-head replay](evidence/2026-09-27/jax_pathwise_whole_gradient_current.json)
+uses a [prospectively frozen plan](evidence/2026-09-27/jax_pathwise_whole_gradient_current_plan.json)
+with the same case, mesh, finite-difference steps, and thresholds on `len`
+under JAX/JAXlib 0.11.2. All four checks pass: eager/JIT whole-mode relative
+L2 is `3.44e-11` against the unchanged `1e-10` gate, the largest AD/FD
+relative L2 is `1.71e-4` against `2e-3`, gradient L2 is `2.29`, and replay
+state error is `5.20e-14`. This closes the frozen gradient gate at the stated
+fixed-mesh scope; it does not expand that scope to adaptive decisions,
+physical parameters, or production waveform registration.
+
 The [follow-up NQC execution-stage probe](evidence/2026-09-25/jax_nqc_jit_stages.json)
 uses a [frozen diagnostic plan](evidence/2026-09-25/jax_nqc_jit_stage_plan.json)
 on the same mixed-spin accepted mesh and match time. Eager and JIT base modes

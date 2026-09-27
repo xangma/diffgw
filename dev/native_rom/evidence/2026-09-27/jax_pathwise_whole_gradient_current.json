@@ -1,0 +1,45 @@
+{
+  "case": "high_start_mixed_spin",
+  "checks": {
+    "derivative": true,
+    "eager_jit": true,
+    "finite_difference": true,
+    "replay": true
+  },
+  "cwd": "/home/xangma/tmp/diffgw-seobnr-gradient-20260927",
+  "diagnostic_checks_passed": true,
+  "elapsed_s": 236.01432414818555,
+  "host": "len",
+  "metrics": {
+    "ad_fd_relative_l2": {
+      "0.0001": 9.0592945508888e-06,
+      "1e-05": 0.0001711951089644063
+    },
+    "coarse_accepted_steps": 116,
+    "coarse_samples": 363,
+    "eager_jit_attachment_relative_l2": 3.595519085843228e-11,
+    "eager_jit_base_mode_relative_l2": 1.074877878142976e-15,
+    "eager_jit_coarse_state_max_abs": 1.7763568394002505e-15,
+    "eager_jit_corrected_coarse_relative_l2": 6.616495212565002e-11,
+    "eager_jit_fine_state_max_abs": 1.7763568394002505e-15,
+    "eager_jit_mode_max_abs": 2.1035542721359146e-11,
+    "eager_jit_nqc_coefficients_max_abs": 2.962984808618785e-07,
+    "eager_jit_orbital_frequency_max_abs": 9.71445146547012e-17,
+    "eager_jit_prefix_relative_l2": 1.1186321669133915e-11,
+    "eager_jit_relative_l2": 3.437010236069393e-11,
+    "fine_accepted_steps": 106,
+    "fine_samples": 9637,
+    "frozen_match_time_M": 144.6564486506888,
+    "frozen_peak_time_M": 149.51561737060547,
+    "gradient_finite": true,
+    "gradient_l2": 2.292175317675213,
+    "output_samples": 654,
+    "replay_state_absolute_error": 5.1958437552457326e-14
+  },
+  "pid": 3316421,
+  "plan_sha256": "c35291235449f25c5ee8bbf3ccf9f6e0eb72bf4caa99f4e6626525e5444ecd0a",
+  "release_qualified": false,
+  "schema": "diffgw.seobnrv4.jax-pathwise-whole-gradient.v1",
+  "script_sha256": "12f8c36962294f497e97b36e4dc66590baa392c1ea6fe266c075b94531344f4a",
+  "status": "diagnostic_complete"
+}

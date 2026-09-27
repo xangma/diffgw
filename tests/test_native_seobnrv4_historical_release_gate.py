@@ -10,9 +10,12 @@ def test_unqualified_candidate_remains_outside_release_catalog():
 
     assert report["status"] == "boundary_enforced"
     assert report["release_qualified"] is False
+    gates = report["historical_fidelity_gates"]
+    assert gates["gradient"]["passed"] is True
     assert all(
         gate["passed"] is False
-        for gate in report["historical_fidelity_gates"].values()
+        for name, gate in gates.items()
+        if name != "gradient"
     )
     assert report["catalog_boundary"] == {
         "enforced": True,

@@ -80,6 +80,16 @@ remains pending.
 
 ## Historical-fidelity release boundary
 
+The [current-head gradient plan](jax_pathwise_whole_gradient_current_plan.json)
+replays the mandatory fixed-mesh whole-mode gradient gate on `len` with JAX
+and JAXlib 0.11.2. Its [result](jax_pathwise_whole_gradient_current.json)
+passes all four unchanged checks: eager/JIT whole-mode relative L2 is
+`3.437010236069393e-11` against `1e-10`, the largest AD/FD relative L2 is
+`1.711951089644063e-4` against `2e-3`, the gradient L2 is
+`2.292175317675213`, and replay state error is `5.195843755245733e-14`.
+This closes the frozen gradient gate only; accepted meshes, event decisions,
+physical parameters, and production registration remain outside its scope.
+
 The [frozen release plan](historical_fidelity_release_plan.json),
 [evaluator](../../diagnose_historical_fidelity_release.py), and
 [machine-readable result](historical_fidelity_release.json) turn the selected
