@@ -9,7 +9,7 @@ change a model formula, fixture, conditioning choice, or acceptance gate.
 
 ## Reproducible scope
 
-The reusable [diagnostic](../../scripts/diagnose_imrphenomhm_sxs_lal_triangle.py)
+The reusable [diagnostic](https://github.com/xangma/diffgw/blob/codex/waveform-evidence-integration/scripts/diagnose_imrphenomhm_sxs_lal_triangle.py)
 requires the already frozen fixture and source directories from the
 [2265](imrphenomhm_sxs_2265_protocol_20260927.md) and
 [3631](imrphenomhm_sxs_3631_protocol_20260927.md) protocols. It verifies the
