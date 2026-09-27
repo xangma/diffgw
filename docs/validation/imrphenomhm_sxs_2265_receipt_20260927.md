@@ -34,6 +34,14 @@ The `sxs 2026.0.6` decoder reports `frame_type='inertial'` and a single
 identity quaternion `[1,0,0,0]` for **both** resolutions (77 stored modes
 each); preparation requires these decoded frame properties. No rotating
 frame conversion or frame alignment is applied.
+The [SXS database guidance](https://data.black-holes.org/waveforms/) also
+notes that extraneous center-of-mass translations and boosts can mix modes
+and recommends `CoM`-suffixed files. These frozen `Strain_N2.h5` identities
+are not `CoM`-suffixed, and their sidecars do not assert a center-of-mass
+correction. An inertial identity quaternion does not establish that such a
+correction was applied. This source-conditioning ambiguity limits causal
+attribution of the subdominant-mode residuals; it does not turn a failed
+fixed-file gate into a pass.
 
 Host `len`; cwd `/tmp/diffgw-hm-sxs-2265-20260927/repo`; external data
 directory `/tmp/diffgw-hm-sxs-2265-20260927/data`. The isolated Python
@@ -131,7 +139,8 @@ targets agree to matches `0.9999997–0.99999995` across the four projections,
 which checks the target-side truncation/projection convention internally.
 
 The next investigation should derive the native-versus-SXS **relative mode
-phase convention** from published equations and test it on a separate case,
-without fitting this holdout or revising its gate. If a convention correction
-is justified, it needs a new predeclared protocol and independent holdout;
-the red result here remains the historical result.
+phase convention** from published equations and verify the source's
+center-of-mass treatment, then test any justified change on a separate case
+without fitting this holdout or revising its gate. A correction needs a new
+predeclared protocol and independent holdout; the red result here remains the
+historical result.
