@@ -1,0 +1,74 @@
+{
+  "schema": "diffgw.seobnrv4.hamiltonian-historical-source-audit.v1",
+  "component_id": "V4-HAM-1-3",
+  "source_scope": "public_primary_sources_only",
+  "review_method": "Direct review of the SHA-pinned arXiv source archives and PDFs for Bohé et al., Barausse and Buonanno, and Steinhoff et al. The audit followed the cited equations and searched their source text for the radial-potential derivative and coefficient-precision prescriptions. No implementation source, binary output, or previously extracted implementation coefficient was used to fill a missing field.",
+  "source_findings": [
+    {
+      "source": "bohe_2017",
+      "citations": [
+        "Sec. II.A, Eq. (2.1), PDF p. 3; paper.tex lines 250-278: the real/effective energy map and normalization are explicit.",
+        "Sec. II.A, Eqs. (2.2)-(2.3), PDF p. 3; paper.tex lines 283-297: the radial-potential form, horizon factors, earlier Delta_i source, and quadratic-in-nu 4PN correction are identified.",
+        "Sec. IV.C, Eqs. (4.12)-(4.14), PDF pp. 9-10; paper.tex lines 751-778: K, d_SO, and d_SS are printed as decimal polynomial fits."
+      ],
+      "finding": "The v4 paper fixes the energy map, radial-potential update, and displayed calibration fits. It does not state that the displayed decimal digits are the exact historical stored coefficients, prescribe another retained precision, or print the historical radial-log derivative formula. Its Eq. (2.2) also prints no nu multiplier on the logarithm, whereas the referenced coefficient source prints one."
+    },
+    {
+      "source": "barausse_buonanno_2011",
+      "citations": [
+        "Eqs. (50)-(52), PDF p. 8; paper.tex lines 824-885: the dynamical-variable-dependent effective spin map is explicit.",
+        "Eqs. (53)-(54), PDF p. 8; paper.tex lines 887-902: the real EOB energy map and effective spinning Hamiltonian structure are explicit."
+      ],
+      "finding": "The Hamiltonian lineage and spin mapping are public. These equations do not define v4 calibration storage precision or an implementation-specific derivative of the later logarithmic radial potential."
+    },
+    {
+      "source": "steinhoff_2016",
+      "citations": [
+        "Appendix A, Eq. (A1), PDF p. 23; dyntide_ham.tex lines 2045-2057: the point-mass potential value includes nu multiplying the logarithm.",
+        "Appendix A, Eqs. (A2a)-(A2h), PDF pp. 23-24; dyntide_ham.tex lines 2059-2085: the horizon factor and Delta_0 through Delta_5 coefficients are explicit."
+      ],
+      "finding": "The paper completes the published radial-potential value prescription used by the v4 paper's reference. It does not print a radial derivative prescription or identify a special historical omission within that derivative."
+    }
+  ],
+  "requirements": [
+    {
+      "id": "real_effective_energy_map",
+      "satisfied": true,
+      "evidence": "Bohé Eq. (2.1), PDF p. 3, and Barausse-Buonanno Eq. (53), PDF p. 8, explicitly give the real/effective energy map and normalization."
+    },
+    {
+      "id": "effective_hamiltonian_and_spin_map",
+      "satisfied": true,
+      "evidence": "Barausse-Buonanno Eqs. (50)-(54), PDF p. 8, specify the dynamical spin map and effective spinning Hamiltonian structure cited by the v4 model."
+    },
+    {
+      "id": "radial_potential_value_prescription",
+      "satisfied": true,
+      "evidence": "Bohé Eqs. (2.2)-(2.3), PDF p. 3, select the radial-potential form and v4 4PN correction; Steinhoff Appendix A, Eqs. (A1)-(A2h), PDF pp. 23-24, supplies the referenced value coefficients with nu multiplying the logarithm."
+    },
+    {
+      "id": "printed_v4_calibration_fits",
+      "satisfied": true,
+      "evidence": "Bohé Eqs. (4.12)-(4.14), PDF pp. 9-10, print the K, d_SO, and d_SS polynomial fits."
+    },
+    {
+      "id": "historical_calibration_retained_precision",
+      "satisfied": false,
+      "evidence": "The pinned public papers print decimal fit coefficients but do not declare those displayed digits to be the exact historical stored representation, identify any shortened representation, or specify a rounding policy."
+    },
+    {
+      "id": "historical_radial_log_derivative_convention",
+      "satisfied": false,
+      "evidence": "The pinned public papers specify the radial-potential value but do not print the historical derivative formula or state whether every logarithmic contribution is retained when differentiating it. Analytically differentiating the printed value would create a paper-derived convention, not identify an unstated historical implementation convention."
+    }
+  ],
+  "clean_room": {
+    "lal_source_consulted": false,
+    "binary_oracle_queried": false,
+    "historical_coefficients_transcribed": false,
+    "fit_or_threshold_retuned": false
+  },
+  "conclusion": "Public primary sources define the Hamiltonian structure, radial-potential value, and displayed v4 fits, but do not completely define the historical coefficient precision or radial-log derivative convention. The mandatory source gate must fail and V4-HAM-1-3 must remain pending.",
+  "historical_fidelity_claim": false,
+  "release_qualified": false
+}

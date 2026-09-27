@@ -1,0 +1,67 @@
+{
+  "schema": "diffgw.seobnrv4.hamiltonian-historical-source-gate-plan.v1",
+  "component_id": "V4-HAM-1-3",
+  "purpose": "Determine whether public primary sources provide a complete clean-room prescription for the historical SEOBNRv4 conservative Hamiltonian through the calibrated radial-potential block. This is a source-completeness gate, not a numerical proximity gate.",
+  "frozen_at_commit": "3b5a2eaf1afb92cce6015bc8a949c613ebfe37c7",
+  "primary_sources": {
+    "bohe_2017": {
+      "citation": "Bohé et al., Phys. Rev. D 95, 044028 (2017), arXiv:1611.03703v3, Sec. II.A, Eqs. (2.1)-(2.3) (PDF p. 3; source paper.tex lines 250-297), and Sec. IV.C, Eqs. (4.12)-(4.14) (PDF pp. 9-10; source paper.tex lines 751-778)",
+      "source_url": "https://arxiv.org/e-print/1611.03703v3",
+      "source_sha256": "6d9f2e99524c9878ea06d31425939bee4e8dab52948878037d75132bcfeac488",
+      "pdf_url": "https://arxiv.org/pdf/1611.03703v3",
+      "pdf_sha256": "db9dc054368f131bdc152b319e54441c665547668221891723b309b005ac23ba"
+    },
+    "barausse_buonanno_2011": {
+      "citation": "Barausse and Buonanno, Phys. Rev. D 84, 104027 (2011), arXiv:1107.2904v2, Eqs. (50)-(54) (PDF p. 8; source paper.tex lines 824-902)",
+      "source_url": "https://arxiv.org/e-print/1107.2904v2",
+      "source_sha256": "391ef4a8b1189ecbb491e7eda20138aa994182c07dd6af9e2da38ae572028668",
+      "pdf_url": "https://arxiv.org/pdf/1107.2904v2",
+      "pdf_sha256": "1e829ba28d7a2371ede558c3b30b2914414aa50df9ef837167afe708c28fc12e"
+    },
+    "steinhoff_2016": {
+      "citation": "Steinhoff et al., Phys. Rev. D 94, 104028 (2016), arXiv:1608.01907v2, Appendix A, Eqs. (A1)-(A2h) (PDF pp. 23-24; source dyntide_ham.tex lines 2045-2085)",
+      "source_url": "https://arxiv.org/e-print/1608.01907v2",
+      "source_sha256": "30d97f53c015562282c96c8610f2400bcb44682243326e1568e9c2c1acd1326b",
+      "pdf_url": "https://arxiv.org/pdf/1608.01907v2",
+      "pdf_sha256": "f338af0f07b455f4e8f02f830a278e9ede36cfa4c8c0208e7df685c7912d07c6"
+    }
+  },
+  "mandatory_requirements": [
+    {
+      "id": "real_effective_energy_map",
+      "description": "A public primary source specifies the real/effective EOB energy map and normalization."
+    },
+    {
+      "id": "effective_hamiltonian_and_spin_map",
+      "description": "A public primary source specifies the effective spinning Hamiltonian structure and the dynamical spin map used by the model lineage."
+    },
+    {
+      "id": "radial_potential_value_prescription",
+      "description": "Public primary sources specify the radial-potential value, Delta_0 through Delta_5 coefficients, and the SEOBNRv4 4PN correction."
+    },
+    {
+      "id": "printed_v4_calibration_fits",
+      "description": "A public primary source prints the SEOBNRv4 K, d_SO, and d_SS calibration fits."
+    },
+    {
+      "id": "historical_calibration_retained_precision",
+      "description": "A public primary source identifies the exact coefficient precision and rounding retained by the historical implementation."
+    },
+    {
+      "id": "historical_radial_log_derivative_convention",
+      "description": "A public primary source explicitly specifies the historical radial derivative of the logarithmic potential, including every logarithmic contribution and any implementation-specific omission."
+    }
+  ],
+  "pass_rule": "Every mandatory requirement must be satisfied by the pinned public primary sources. Analytic completion of an unstated historical derivative convention, GPL implementation source, binary-oracle output, or numerical retuning cannot fill a missing field.",
+  "audit_path": "dev/native_rom/evidence/2026-09-27/hamiltonian_historical_source_audit.json",
+  "result_path": "dev/native_rom/evidence/2026-09-27/hamiltonian_historical_source_gate.json",
+  "clean_room_exclusions": [
+    "Do not inspect or transcribe LALSimulation source to fill a missing prescription field.",
+    "Do not query or fit to a LALSimulation binary oracle.",
+    "Do not infer retained decimals or a derivative convention from numerical proximity.",
+    "Do not retune a coefficient, formula, or threshold."
+  ],
+  "production_change": false,
+  "historical_fidelity_claim": false,
+  "release_qualified": false
+}

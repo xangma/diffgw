@@ -97,7 +97,7 @@ specify the exact historical numerical implementation. In particular:
 
 | Pending block | Public derivation or data | Remaining independent closure |
 | --- | --- | --- |
-| `V4-HAM-1-3` | [Bohé Sec. II.1](https://arxiv.org/html/1611.03703), [Barausse–Buonanno Hamiltonian](https://arxiv.org/abs/1107.2904), and [Steinhoff Appendix A](https://arxiv.org/html/1608.01907) | Printed fits and equations do not provide shortened source decimals or the historical logarithmic derivative convention. |
+| `V4-HAM-1-3` | [Bohé Sec. II.1](https://arxiv.org/html/1611.03703), [Barausse–Buonanno Hamiltonian](https://arxiv.org/abs/1107.2904), and [Steinhoff Appendix A](https://arxiv.org/html/1608.01907) | The [frozen public-source gate](../evidence/2026-09-27/hamiltonian_historical_source_gate.json) finds 4 of 6 requirements: the energy map, effective Hamiltonian/spin map, radial-potential value, and printed fits are present, but exact historical coefficient precision and the radial-log derivative convention are absent. |
 | `V4-FLUX-4-9` | [Bohé Eqs. (4)–(6), (9)](https://arxiv.org/html/1611.03703) and [factorized multipoles](https://arxiv.org/abs/1006.0431) | The 35-mode paper composition has a two-state conditional ODE check, but the full historical torque remains pending: exact higher-mode spin hybrid, high-`ell` truncation, evolved-domain dynamics, and JAX waveform coupling are not independently qualified. Supplied-mode normalization and tail modulus are covered separately by `V4-FLUX-NORM-9` and `V4-FLUX-TAIL-MODULUS`. |
 | `V4-QNM-INTERPOLATION` | [Bohé et al. Sec. II.C and Appendix B](https://arxiv.org/abs/1611.03703), [Berti et al. Kerr data and fits](https://arxiv.org/abs/gr-qc/0512160), and [Cook author data](https://zenodo.org/records/2650358) | The [frozen public-source gate](../evidence/2026-09-27/qnm_historical_source_gate.json) finds only 1 of 6 required historical-prescription fields: exact knots/ordinates, interpolation family/order, boundary conditions, signed-domain mapping, and out-of-domain policy are absent. The independent native signed-spin rule has a conditional finite-point certificate and one fixed-boundary waveform witness, but historical compatibility, continuous-domain accuracy, and domain-wide whole-waveform impact remain open. |
 | `V4-ODE-IC` | [Bohé Sec. II.2](https://arxiv.org/html/1611.03703) cites [Buonanno–Chen–Damour, Sec. IV.1](https://arxiv.org/html/gr-qc/0508067) for quasicircular initial data | Exact v4 root coordinates, tortoise mapping, numerical tolerances, and event/output interpolation need independent checks. |
@@ -114,6 +114,10 @@ turn it into an exact claim about the historical implementation.
 rationals for `K`, `d_SO`, `d_SS`, and `Delta t22_peak/M` (Eqs. 25, 26, 29–32).
 The nonspinning polynomials remain separate so the `chi=0` reduction is
 testable. No six-significant-digit numerical-compatibility rounding is applied.
+This is a paper-derived convention: the
+[historical public-source gate](../evidence/2026-09-27/hamiltonian_historical_source_gate.json)
+does not find a public statement of the exact precision retained by the
+historical implementation.
 
 `hamiltonian.radial_potentials` independently evaluates the deformed-Kerr
 radial-potential block in Bohé Eqs. (2)–(3), using the explicit

@@ -24,6 +24,27 @@ The [frozen plan](qnm_historical_source_gate_plan.json), [public-source audit](q
 
 The SHA-pinned audit ran on `len` and satisfied only one of six mandatory requirements. The five absent fields are recorded as blockers, so the source gate fails and `V4-QNM-INTERPOLATION` remains pending. Cook's 2019 data remain an independent numerical validation source, not a definition of a 2017 historical implementation. This audit did not inspect LAL source, query a binary oracle, transcribe a historical table, retune a fit or threshold, change production code, or qualify release.
 
+## Historical Hamiltonian public-source gate
+
+The [frozen plan](hamiltonian_historical_source_gate_plan.json),
+[public-source audit](hamiltonian_historical_source_audit.json),
+[evaluator](../../diagnose_hamiltonian_historical_source_gate.py), and
+[machine-readable result](hamiltonian_historical_source_gate.json) test whether
+the pinned Bohé, Barausse--Buonanno, and Steinhoff publications completely
+define `V4-HAM-1-3`. Four of six requirements are present: the real/effective
+energy map, effective Hamiltonian and spin map, radial-potential value, and
+printed v4 calibration fits. The papers do not identify the exact coefficient
+precision retained by the historical implementation or its radial-log
+derivative convention.
+
+The SHA-pinned audit ran on `len`; both absent fields are recorded as blockers,
+so the source gate fails and `V4-HAM-1-3` remains pending. Bohé Eq. (2.2) also
+omits the `nu` multiplier on the logarithm printed in the referenced Steinhoff
+Appendix A value formula; the existing paper-derived scalar path continues to
+use the latter and is not promoted to a historical prescription by this audit.
+No implementation source or binary oracle filled a missing field, and no
+coefficient, formula, threshold, production source, or release status changed.
+
 ## JAX whole-path blocker
 
 The [frozen directional-amplification plan](jax_nqc_directional_amplification_plan.json),
