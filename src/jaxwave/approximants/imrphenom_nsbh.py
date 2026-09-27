@@ -11,7 +11,7 @@ Literature-based reconstruction of the following models:
 - Dietrich et al. (2019), Phys. Rev. D 100, 044003 (arXiv:1905.06011)
 """
 
-from typing import Optional, Tuple, Union
+from typing import NamedTuple, Optional, Tuple, Union
 import math
 import jax
 import jax.numpy as jnp
@@ -393,6 +393,64 @@ def nsbh_branch_predicates(
     return f_tide >= f_rd, torus_ratio > 0.0
 
 
+class NSBHBranchAmplitudeFits(NamedTuple):
+    f_rd_tilde: jnp.ndarray
+    x_nd: jnp.ndarray
+    x_prime_nd: jnp.ndarray
+    x_d: jnp.ndarray
+    x_prime_d: jnp.ndarray
+    epsilon_tide: jnp.ndarray
+    epsilon_ins: jnp.ndarray
+    sigma_tide: jnp.ndarray
+
+
+def nsbh_branch_amplitude_fits(
+    chi: jnp.ndarray,
+    eta: jnp.ndarray,
+    compactness: jnp.ndarray,
+    f_tide: jnp.ndarray,
+    f_rd: jnp.ndarray,
+    torus_ratio: jnp.ndarray,
+    lambda_ns: jnp.ndarray,
+    tide_at_or_above_ringdown: jnp.ndarray,
+    has_torus: jnp.ndarray,
+) -> NSBHBranchAmplitudeFits:
+    """Thompson Appendix A Eqs. (20)--(24), (30), and Table I factors."""
+    f_rd_tilde = 0.98 * f_rd * jnp.where(
+        lambda_ns > 1.0,
+        0.99,
+        1.0 - 0.02 * lambda_ns + 0.01 * lambda_ns**2,
+    )
+    u = ((f_tide - f_rd_tilde) / f_rd_tilde) ** 2
+    x_nd = u - 0.571505 * compactness - 0.00508451 * chi
+    x_prime_nd = u - 0.657424 * compactness - 0.0259977 * chi
+    x_d = torus_ratio + 0.424912 * compactness + 0.363604 * jnp.sqrt(eta) - 0.060559 * chi
+    x_prime_d = (
+        torus_ratio
+        - 0.132754 * compactness
+        + 0.576669 * jnp.sqrt(eta)
+        - 0.0603749 * chi
+        - 0.0601185 * chi**2
+        - 0.0729134 * chi**3
+    )
+    high_arg = jnp.clip(4.0 * (x_nd + 0.0796251) / 0.0801192, -50.0, 50.0)
+    sigma_arg = jnp.clip(4.0 * (x_prime_nd + 0.206465) / 0.226844, -50.0, 50.0)
+    epsilon_tide_high = jax.nn.sigmoid(2.0 * high_arg)
+    sigma_tide_high = jax.nn.sigmoid(-2.0 * sigma_arg)
+    epsilon_ins_disrupt = 1.29971 - 1.61724 * x_d
+    sigma_tide_disrupt = 0.137722 - 0.293237 * x_prime_d
+    epsilon_tide = jnp.where(tide_at_or_above_ringdown, epsilon_tide_high, 0.0)
+    epsilon_ins = jnp.where(tide_at_or_above_ringdown & ~has_torus, 1.0, epsilon_ins_disrupt)
+    sigma_tide = jnp.where(
+        tide_at_or_above_ringdown,
+        sigma_tide_high,
+        jnp.where(has_torus, sigma_tide_disrupt, 0.5 * (sigma_tide_high + sigma_tide_disrupt)),
+    )
+    return NSBHBranchAmplitudeFits(
+        f_rd_tilde, x_nd, x_prime_nd, x_d, x_prime_d, epsilon_tide, epsilon_ins, sigma_tide
+    )
+
+
 def nsbh_torus_mass_ratio(
     q: jnp.ndarray,
     chi: jnp.ndarray,
@@ -630,48 +688,13 @@ class IMRPhenomNSBH:
         # 6. Step 6: Merger Classification and Joining Parameters
         # -------------------------------------------------------------
         lam_safe = jnp.maximum(lam2, 0.0)
-        frd_gt1 = 0.99 * 0.98 * f_rd
-        frd_le1 = (1.0 - 0.02 * lam_safe + 0.01 * (lam_safe ** 2.0)) * 0.98 * f_rd
-        f_rd_tilde = jnp.where(lam2 > 1.0, frd_gt1, frd_le1)
-
-        x_nd = ((f_tide - f_rd_tilde) / f_rd_tilde) ** 2.0 - 0.571505 * c - 0.00508451 * s1
-        x_prime_nd = ((f_tide - f_rd_tilde) / f_rd_tilde) ** 2.0 - 0.657424 * c - 0.0259977 * s1
-        x_d = torus_ratio + 0.424912 * c + 0.363604 * jnp.sqrt(eta) - 0.060559 * s1
-        x_prime_d = (
-            torus_ratio
-            - 0.132754 * c
-            + 0.576669 * jnp.sqrt(eta)
-            - 0.0603749 * s1
-            - 0.0601185 * (s1 ** 2.0)
-            - 0.0729134 * (s1 ** 3.0)
+        branch_fits = nsbh_branch_amplitude_fits(
+            s1, eta, c, f_tide, f_rd, torus_ratio, lam2, is_ftide_ge_frd, has_torus
         )
-
-        def omega_plus(val: jnp.ndarray, f0: Union[float, jnp.ndarray], d: Union[float, jnp.ndarray]) -> jnp.ndarray:
-            d_val = as_array(d, dtype=dtype)
-            f0_val = as_array(f0, dtype=dtype)
-            arg = jnp.clip(4.0 * (val - f0_val) / jnp.maximum(jnp.abs(d_val), 1e-8), -50.0, 50.0)
-            return jax.nn.sigmoid(2.0 * arg)
-
-        def omega_minus(val: jnp.ndarray, f0: Union[float, jnp.ndarray], d: Union[float, jnp.ndarray]) -> jnp.ndarray:
-            d_val = as_array(d, dtype=dtype)
-            f0_val = as_array(f0, dtype=dtype)
-            arg = jnp.clip(4.0 * (val - f0_val) / jnp.maximum(jnp.abs(d_val), 1e-8), -50.0, 50.0)
-            return jax.nn.sigmoid(-2.0 * arg)
-
-        eps_tide_high = omega_plus(x_nd, -0.0796251, 0.0801192)
-        eps_tide = jnp.where(is_ftide_ge_frd, eps_tide_high, 0.0)
-
-        eps_ins_disrupt = 1.29971 - 1.61724 * x_d
-        eps_ins = jnp.where(is_ftide_ge_frd & (~has_torus), 1.0, eps_ins_disrupt)
-
-        sig_tide_high = omega_minus(x_prime_nd, -0.206465, 0.226844)
-        sig_tide_disrupt = 0.137722 - 0.293237 * x_prime_d
-        sig_tide_mild_notorus = 0.5 * (sig_tide_high + sig_tide_disrupt)
-        sigma_tide = jnp.where(
-            is_ftide_ge_frd,
-            sig_tide_high,
-            jnp.where(has_torus, sig_tide_disrupt, sig_tide_mild_notorus),
-        )
+        f_rd_tilde = branch_fits.f_rd_tilde
+        eps_tide = branch_fits.epsilon_tide
+        eps_ins = branch_fits.epsilon_ins
+        sigma_tide = branch_fits.sigma_tide
 
         f0_tilde = jnp.where(
             is_ftide_ge_frd,

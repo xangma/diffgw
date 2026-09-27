@@ -67,8 +67,8 @@ torus ratio's nonnegative clip is an existing carrier adapter, not Eq. (23).
 
 ## Implementation mapping
 
-An independent high-precision scalar evaluator will implement the printed
-equations. Torch and JAX `approximants.imrphenom_nsbh` will expose a helper
+An independent high-precision scalar evaluator implements the printed
+equations. Torch and JAX `approximants.imrphenom_nsbh` expose a helper
 used by the production amplitude assembly. It consumes the already gated
 branch predicates and numeric inputs; neither native module imports the
 scalar reference.
@@ -89,4 +89,5 @@ model, joining frequencies, amplitude assembly, or a binary waveform.
 
 Run `JAX_ENABLE_X64=1 PYTHONPATH=src pytest -q
 tests/test_nsbh_branch_amplitude_fits.py` with reference, Torch and JAX extras
-on CPU. A validation receipt will record measured results and versions.
+on CPU. The [validation receipt](../validation/nsbh_branch_amplitude_fits_20260927.md)
+records measured results and versions.

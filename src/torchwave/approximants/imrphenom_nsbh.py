@@ -14,7 +14,7 @@ The bounded equation review in docs/reviews/2026-09-12-clean-room/nsbh.md
 does not certify the origin of every inherited coefficient or phase convention.
 """
 
-from typing import Optional, Tuple, Union
+from typing import NamedTuple, Optional, Tuple, Union
 import math
 import torch
 import torch.nn as nn
@@ -353,6 +353,64 @@ def nsbh_branch_predicates(
     return f_tide >= f_rd, torus_ratio > 0.0
 
 
+class NSBHBranchAmplitudeFits(NamedTuple):
+    f_rd_tilde: torch.Tensor
+    x_nd: torch.Tensor
+    x_prime_nd: torch.Tensor
+    x_d: torch.Tensor
+    x_prime_d: torch.Tensor
+    epsilon_tide: torch.Tensor
+    epsilon_ins: torch.Tensor
+    sigma_tide: torch.Tensor
+
+
+def nsbh_branch_amplitude_fits(
+    chi: torch.Tensor,
+    eta: torch.Tensor,
+    compactness: torch.Tensor,
+    f_tide: torch.Tensor,
+    f_rd: torch.Tensor,
+    torus_ratio: torch.Tensor,
+    lambda_ns: torch.Tensor,
+    tide_at_or_above_ringdown: torch.Tensor,
+    has_torus: torch.Tensor,
+) -> NSBHBranchAmplitudeFits:
+    """Thompson Appendix A Eqs. (20)--(24), (30), and Table I factors."""
+    f_rd_tilde = 0.98 * f_rd * torch.where(
+        lambda_ns > 1.0,
+        0.99,
+        1.0 - 0.02 * lambda_ns + 0.01 * lambda_ns.square(),
+    )
+    u = ((f_tide - f_rd_tilde) / f_rd_tilde).square()
+    x_nd = u - 0.571505 * compactness - 0.00508451 * chi
+    x_prime_nd = u - 0.657424 * compactness - 0.0259977 * chi
+    x_d = torus_ratio + 0.424912 * compactness + 0.363604 * torch.sqrt(eta) - 0.060559 * chi
+    x_prime_d = (
+        torus_ratio
+        - 0.132754 * compactness
+        + 0.576669 * torch.sqrt(eta)
+        - 0.0603749 * chi
+        - 0.0601185 * chi.square()
+        - 0.0729134 * chi.pow(3.0)
+    )
+    high_arg = torch.clamp(4.0 * (x_nd + 0.0796251) / 0.0801192, -50.0, 50.0)
+    sigma_arg = torch.clamp(4.0 * (x_prime_nd + 0.206465) / 0.226844, -50.0, 50.0)
+    epsilon_tide_high = torch.sigmoid(2.0 * high_arg)
+    sigma_tide_high = torch.sigmoid(-2.0 * sigma_arg)
+    epsilon_ins_disrupt = 1.29971 - 1.61724 * x_d
+    sigma_tide_disrupt = 0.137722 - 0.293237 * x_prime_d
+    epsilon_tide = torch.where(tide_at_or_above_ringdown, epsilon_tide_high, 0.0)
+    epsilon_ins = torch.where(tide_at_or_above_ringdown & ~has_torus, 1.0, epsilon_ins_disrupt)
+    sigma_tide = torch.where(
+        tide_at_or_above_ringdown,
+        sigma_tide_high,
+        torch.where(has_torus, sigma_tide_disrupt, 0.5 * (sigma_tide_high + sigma_tide_disrupt)),
+    )
+    return NSBHBranchAmplitudeFits(
+        f_rd_tilde, x_nd, x_prime_nd, x_d, x_prime_d, epsilon_tide, epsilon_ins, sigma_tide
+    )
+
+
 def nsbh_torus_mass_ratio(
     q: torch.Tensor,
     chi: torch.Tensor,
@@ -590,50 +648,15 @@ class IMRPhenomNSBH(nn.Module):
         # 6. Step 6: Merger Classification and Joining Parameters
         # -------------------------------------------------------------
         lam_safe = torch.clamp(lam2, min=0.0)
-        frd_gt1 = 0.99 * 0.98 * f_rd
-        frd_le1 = (1.0 - 0.02 * lam_safe + 0.01 * (lam_safe ** 2.0)) * 0.98 * f_rd
-        f_rd_tilde = torch.where(lam2 > 1.0, frd_gt1, frd_le1)
-
-        # Thompson Sec. II defines chi in Eqs. (21)-(24) as the BH spin,
-        # unlike the effective spin used by the PhenomC BBH amplitude below.
-        x_nd = ((f_tide - f_rd_tilde) / f_rd_tilde) ** 2.0 - 0.571505 * c - 0.00508451 * s1
-        x_prime_nd = ((f_tide - f_rd_tilde) / f_rd_tilde) ** 2.0 - 0.657424 * c - 0.0259977 * s1
-        x_d = torus_ratio + 0.424912 * c + 0.363604 * torch.sqrt(eta) - 0.060559 * s1
-        x_prime_d = (
-            torus_ratio
-            - 0.132754 * c
-            + 0.576669 * torch.sqrt(eta)
-            - 0.0603749 * s1
-            - 0.0601185 * (s1 ** 2.0)
-            - 0.0729134 * (s1 ** 3.0)
+        # Eqs. (21)--(24) use the BH spin, rather than the PhenomC effective
+        # spin used below for the BBH carrier amplitude.
+        branch_fits = nsbh_branch_amplitude_fits(
+            s1, eta, c, f_tide, f_rd, torus_ratio, lam2, is_ftide_ge_frd, has_torus
         )
-
-        def omega_plus(val: torch.Tensor, f0: Union[float, torch.Tensor], d: Union[float, torch.Tensor]) -> torch.Tensor:
-            d_val = as_tensor(d, device=device, dtype=dtype)
-            f0_val = as_tensor(f0, device=device, dtype=dtype)
-            arg = torch.clamp(4.0 * (val - f0_val) / torch.clamp(d_val.abs(), min=1e-8), -50.0, 50.0)
-            return torch.sigmoid(2.0 * arg)
-
-        def omega_minus(val: torch.Tensor, f0: Union[float, torch.Tensor], d: Union[float, torch.Tensor]) -> torch.Tensor:
-            d_val = as_tensor(d, device=device, dtype=dtype)
-            f0_val = as_tensor(f0, device=device, dtype=dtype)
-            arg = torch.clamp(4.0 * (val - f0_val) / torch.clamp(d_val.abs(), min=1e-8), -50.0, 50.0)
-            return torch.sigmoid(-2.0 * arg)
-
-        eps_tide_high = omega_plus(x_nd, -0.0796251, 0.0801192)
-        eps_tide = torch.where(is_ftide_ge_frd, eps_tide_high, torch.zeros_like(eps_tide_high))
-
-        eps_ins_disrupt = 1.29971 - 1.61724 * x_d
-        eps_ins = torch.where(is_ftide_ge_frd & (~has_torus), torch.ones_like(eps_ins_disrupt), eps_ins_disrupt)
-
-        sig_tide_high = omega_minus(x_prime_nd, -0.206465, 0.226844)
-        sig_tide_disrupt = 0.137722 - 0.293237 * x_prime_d
-        sig_tide_mild_notorus = 0.5 * (sig_tide_high + sig_tide_disrupt)
-        sigma_tide = torch.where(
-            is_ftide_ge_frd,
-            sig_tide_high,
-            torch.where(has_torus, sig_tide_disrupt, sig_tide_mild_notorus),
-        )
+        f_rd_tilde = branch_fits.f_rd_tilde
+        eps_tide = branch_fits.epsilon_tide
+        eps_ins = branch_fits.epsilon_ins
+        sigma_tide = branch_fits.sigma_tide
 
         f0_tilde = torch.where(
             is_ftide_ge_frd,
