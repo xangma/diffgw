@@ -5,6 +5,18 @@ on the development branch and outside the release catalog. Selected Torch/JAX
 backend comparisons pass, but they do not establish physical validity or the
 whole-waveform compiled-gradient contract.
 
+The selected release criterion is now frozen as **historical fidelity** in the
+[release-boundary plan](../2026-09-27/historical_fidelity_release_plan.json),
+[evaluator](../../diagnose_historical_fidelity_release.py), and
+[machine-readable result](../2026-09-27/historical_fidelity_release.json).
+Source fidelity, whole-waveform fidelity, numerical convergence, gradient
+fidelity, and an independently trained ROM with untouched holdouts are all
+mandatory; all five gates currently fail. The evaluator separately preserves
+the measured `SXS:BBH:2569` native/public overlaps below `0.99` as a physical-
+accuracy disclosure, never as a pass, and confirms that the native generator
+and proposed independent ROM remain absent from the public catalog. The public
+official external-data `SEOBNRv4_ROM` wrapper is intentionally unaffected.
+
 The smallest existing prospectively fixed physical pass/fail check is the
 [third five-case SXS plan](../2026-09-24/sxs_third_holdout_plan.json) with its
 [weighted gate](../2026-09-24/sxs_third_holdout_weighted_plan.json): a complex
@@ -69,6 +81,11 @@ construction. The
 published model does not supply independently derived ROM bases and spline
 tables, and no qualified generator/training set or independent ROM holdout
 exists. Full-waveform gradients and domain-wide convergence remain open.
+The finite-point [native QNM spline certificate](../2026-09-27/README.md)
+passes its six declared value, derivative, backend, and single-row waveform-
+impact checks. It does not close `V4-QNM-INTERPOLATION`: continuous-domain
+accuracy, historical interpolation parity, and domain waveform impact remain
+unqualified.
 The [frozen nonzero-reference TD/FD plan](td_fd_nonzero_reference_plan.json)
 and [result](td_fd_nonzero_reference.json) extend the identical-input
 public-binary adapter check to two new selected rows at `f_ref=40 Hz`, phase

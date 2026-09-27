@@ -1,0 +1,63 @@
+{
+  "schema": "diffgw.seobnrv4.historical-fidelity-release-plan.v1",
+  "criterion": "historical_fidelity",
+  "purpose": "Freeze the five mandatory historical-fidelity release gates, the separate measured NR limitation, and the public-catalog exclusion boundary for the native generator and proposed independent ROM.",
+  "inputs": {
+    "manifest": "dev/native_rom/reference/manifest.json",
+    "whole_waveform": "dev/native_rom/evidence/2026-09-23/whole_waveform.json",
+    "numerical": "dev/native_rom/evidence/2026-09-23/qualification.json",
+    "gradient": "dev/native_rom/evidence/2026-09-25/jax_pathwise_whole_gradient.json",
+    "current_nr": "dev/native_rom/evidence/2026-09-25/sxs_2569_current_regression.json",
+    "public_nr": "dev/native_rom/evidence/2026-09-24/sxs_third_public_parity.json",
+    "catalog": "src/diffgw_core/catalog.py",
+    "frontend_dispatch": {
+      "torch": "src/torchwave/waveforms.py",
+      "jax": "src/jaxwave/waveforms.py"
+    }
+  },
+  "input_sha256": {
+    "src/diffgw_core/catalog.py": "877eaba08bc9fd14cb39b930d5222a5d22054a5340712bf304f25c4a23e9ce1b",
+    "src/torchwave/waveforms.py": "29dc86a2e3e9dc449b77b4b34eb8a3b3d0a4ae16fb3befa9a7973476caa90d61",
+    "src/jaxwave/waveforms.py": "3d19a8599d7fa59017e4980741dea4f75fb830c4115b52b58e1ebe3a8f7350c9",
+    "dev/native_rom/reference/manifest.json": "bdb4c5622d1c7ca07a2ba166625c8f43cf0ac0d762fb80345a4408fc725b5cd8",
+    "dev/native_rom/evidence/2026-09-23/whole_waveform.json": "c9783cf6006cdd632ff258277951739073898b3555ac5f3c09fa31e2602d1377",
+    "dev/native_rom/evidence/2026-09-23/qualification.json": "7306ff8341e0172644354e3ad0e7847eff6028fc2782fd9fc9416052a6adb4a6",
+    "dev/native_rom/evidence/2026-09-25/jax_pathwise_whole_gradient.json": "0975faf12f71682a2c82ec6334f70c6971032b8631c159c6827a40a087814d74",
+    "dev/native_rom/evidence/2026-09-25/sxs_2569_current_regression.json": "25b878608095324d7e65fdfbb4f0836d55a6b954ec1a0dad0dcb555a543f8fef",
+    "dev/native_rom/evidence/2026-09-24/sxs_third_public_parity.json": "d254e2cf59a644b0ecf47ffe3809fd1ac5c24baf6f623cc89da1385f395fadf6"
+  },
+  "required_source_components": [
+    "V4-HAM-1-3",
+    "V4-FLUX-4-9",
+    "V4-QNM-INTERPOLATION",
+    "V4-ODE-IC",
+    "V4-TD-FD-CONVENTIONS"
+  ],
+  "required_rom_component": "V4-ROM-VII",
+  "rom_holdout_evidence": null,
+  "gradient_eager_jit_relative_l2_max": 1e-10,
+  "nr_disclosure": {
+    "case": "SXS:BBH:2569",
+    "threshold": 0.99,
+    "native_overlap": 0.9891417104357124,
+    "public_historical_overlap": 0.9891409499192219,
+    "absolute_tolerance": 1e-15
+  },
+  "forbidden_native_catalog_names": [
+    "seobnr",
+    "seobnrv4",
+    "seobnrv4native",
+    "seobnrv4published",
+    "seobnrv4publishednonspinning",
+    "seobnrv5rom"
+  ],
+  "official_external_rom_catalog_name": "SEOBNRv4_ROM",
+  "official_external_rom_dispatch_keys": [
+    "seobnrrom",
+    "seobnrv4rom",
+    "officialseobnrv4rom"
+  ],
+  "diagnostic_success_means_release_qualified": false,
+  "release_qualified": false,
+  "production_change": false
+}

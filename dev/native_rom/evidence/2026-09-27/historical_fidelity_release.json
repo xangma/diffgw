@@ -1,0 +1,85 @@
+{
+  "catalog_boundary": {
+    "enforced": true,
+    "native_catalog_names_absent": true,
+    "native_frontend_aliases_absent": true,
+    "official_external_rom_wrapper_preserved": true
+  },
+  "criterion": "historical_fidelity",
+  "historical_fidelity_gates": {
+    "gradient": {
+      "checks": {
+        "derivative": true,
+        "eager_jit": false,
+        "finite_difference": true,
+        "replay": true
+      },
+      "eager_jit_relative_l2": 1.5471380096030089e-09,
+      "eager_jit_relative_l2_max": 1e-10,
+      "passed": false
+    },
+    "numerical": {
+      "passed": false,
+      "status": "failed"
+    },
+    "rom_holdout": {
+      "component_status": "pending",
+      "holdout_evidence": null,
+      "passed": false
+    },
+    "source_fidelity": {
+      "passed": false,
+      "pending_components": [
+        "V4-HAM-1-3",
+        "V4-FLUX-4-9",
+        "V4-QNM-INTERPOLATION",
+        "V4-ODE-IC",
+        "V4-TD-FD-CONVENTIONS"
+      ]
+    },
+    "whole_waveform": {
+      "passed": false,
+      "prerequisite_numerical_checks_passed": false,
+      "whole_waveform_parity_validated": false
+    }
+  },
+  "input_sha256": {
+    "dev/native_rom/evidence/2026-09-23/qualification.json": "7306ff8341e0172644354e3ad0e7847eff6028fc2782fd9fc9416052a6adb4a6",
+    "dev/native_rom/evidence/2026-09-23/whole_waveform.json": "c9783cf6006cdd632ff258277951739073898b3555ac5f3c09fa31e2602d1377",
+    "dev/native_rom/evidence/2026-09-24/sxs_third_public_parity.json": "d254e2cf59a644b0ecf47ffe3809fd1ac5c24baf6f623cc89da1385f395fadf6",
+    "dev/native_rom/evidence/2026-09-25/jax_pathwise_whole_gradient.json": "0975faf12f71682a2c82ec6334f70c6971032b8631c159c6827a40a087814d74",
+    "dev/native_rom/evidence/2026-09-25/sxs_2569_current_regression.json": "25b878608095324d7e65fdfbb4f0836d55a6b954ec1a0dad0dcb555a543f8fef",
+    "dev/native_rom/reference/manifest.json": "bdb4c5622d1c7ca07a2ba166625c8f43cf0ac0d762fb80345a4408fc725b5cd8",
+    "src/diffgw_core/catalog.py": "877eaba08bc9fd14cb39b930d5222a5d22054a5340712bf304f25c4a23e9ce1b",
+    "src/jaxwave/waveforms.py": "3d19a8599d7fa59017e4980741dea4f75fb830c4115b52b58e1ebe3a8f7350c9",
+    "src/torchwave/waveforms.py": "29dc86a2e3e9dc449b77b4b34eb8a3b3d0a4ae16fb3befa9a7973476caa90d61"
+  },
+  "nr_disclosure": {
+    "case": "SXS:BBH:2569",
+    "classification": "physical_accuracy_disclosure_not_historical_fidelity_gate",
+    "native_overlap": 0.9891417104357124,
+    "physical_accuracy_passed": false,
+    "public_historical_overlap": 0.9891409499192219,
+    "release_gate_for_selected_criterion": false,
+    "threshold": 0.99,
+    "total_mass_msun": 22
+  },
+  "nr_disclosure_preserved": true,
+  "pending_manifest_components": [
+    "V4-FLUX-4-9",
+    "V4-HAM-1-3",
+    "V4-ODE-IC",
+    "V4-QNM-INTERPOLATION",
+    "V4-ROM-VII",
+    "V4-TD-FD-CONVENTIONS"
+  ],
+  "plan_sha256": "149ea870dcb451476abdb046f4a7ad9621c863bf6326d7f07a96d49cc44802d5",
+  "process": {
+    "cwd": "/Users/xangma/.codex/worktrees/native-seobnr-rom-0280/diffgw",
+    "host": "RONI2"
+  },
+  "release_qualified": false,
+  "schema": "diffgw.seobnrv4.historical-fidelity-release.v1",
+  "script_sha256": "270c42f1924a5dd08014e54fe0bc03fa9758ac11a0af59a8f460cb68794dbe7e",
+  "status": "boundary_enforced"
+}

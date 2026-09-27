@@ -17,3 +17,16 @@ At each spin, degree-seven and degree-nine local polynomials fitted to the neare
 All six frozen gates passed. The sixth reuses the SHA-pinned [current-source fixed-boundary waveform receipt](../2026-09-25/qnm_ringdown_waveform_current.json): replacing only QNM for its `q8_high_aligned` row changes the whole-mode complex relative L2 by `2.5494566848309676e-6`, below the predeclared `1e-5` gate; baseline reconstruction over that fixed boundary is exactly zero. This is one waveform-impact witness, not a domain-wide waveform result.
 
 The diagnostic ran on `len` under the pinned native source and prior-receipt hashes in the plan. It completed in 4.12 s with `status=diagnostic_complete`; its JSON preserves the 12 rows and pass/fail gates. This is a **finite-point component certificate**. It establishes neither a continuous signed-spin error bound nor historical natural-cubic/binary parity, and it does not qualify the full SEOBNRv4 generator or authorize production promotion.
+
+## Historical-fidelity release boundary
+
+The [frozen release plan](historical_fidelity_release_plan.json),
+[evaluator](../../diagnose_historical_fidelity_release.py), and
+[machine-readable result](historical_fidelity_release.json) turn the selected
+historical-fidelity criterion into one machine-readable boundary. Source,
+whole-waveform, numerical, gradient, and independent-ROM holdout gates are all
+mandatory. The measured `SXS:BBH:2569` native/public overlaps below `0.99` are
+preserved as a physical-accuracy disclosure, not relabeled as a historical-
+fidelity pass or used to tune the historical model. A successful evaluator run
+means the exclusion boundary is enforced while the candidate remains
+unqualified; it does not mean the model passed release qualification.
