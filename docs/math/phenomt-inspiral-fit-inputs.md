@@ -33,7 +33,7 @@ The `fits.py` asset is
 [`phenomxpy/phenomt/fits.py` at `4121fafa0484f3db2a7352f4eea697faaaf29f65`](https://gitlab.com/imrphenom-dev/phenomxpy/-/blob/4121fafa0484f3db2a7352f4eea697faaaf29f65/phenomxpy/phenomt/fits.py),
 SHA-256 `2dfcca659cd50d927b9e164867913a586e9b1372f58ffde424f8bfbd74b56e21`.
 It is author software under the repository's MIT license; the full notice is
-in [THIRD_PARTY_NOTICES.md](../../THIRD_PARTY_NOTICES.md). The fit expressions
+in [THIRD_PARTY_NOTICES.md](https://github.com/xangma/diffgw/blob/main/THIRD_PARTY_NOTICES.md). The fit expressions
 are attributed adaptations already present in `diffgw_core/phenomt_fits.py`.
 The numerical calibration inputs are not redistributed here.
 
