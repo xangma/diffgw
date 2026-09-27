@@ -27,6 +27,14 @@ class FluxSelectorSourceClosureTest(unittest.TestCase):
         self.assertEqual(result["failed_modes"], ["8,2", "8,4", "8,6", "8,8"])
         self.assertEqual(result["refined_selector_complete_mode_count"], 31)
         self.assertFalse(result["complete_final_mode_selector"])
+        self.assertTrue(result["ell8_source_contract"]["verified"])
+        self.assertFalse(
+            result["ell8_source_contract"]["eligible_for_selector_closure"]
+        )
+        self.assertIn(
+            "no stated reuse license",
+            result["ell8_source_contract"]["eligibility_blocker"],
+        )
         self.assertEqual(
             [row["mode"] for row in result["rows"]],
             [

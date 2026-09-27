@@ -2,7 +2,7 @@
   "schema": "diffgw.seobnrv4.flux-selector-source-closure-audit.v1",
   "component_id": "V4-FLUX-4-9",
   "scope": "Only the nine incomplete rows in flux_symbolic_provenance_matrix.json",
-  "method": "Review every public arXiv source revision in the cited Pan, BFH, Taracchini, and Bohe chain, plus the Pan erratum. No implementation or executable behavior was used.",
+  "method": "Review every public arXiv source revision in the cited Pan, BFH, Taracchini, and Bohe chain, the Pan erratum, Fujita arXiv:1412.5689v2, and the author-hosted 11PN analytic archive. No implementation or executable behavior was used.",
   "sources": [
     {
       "id": "pan-v1",
@@ -57,13 +57,34 @@
       "url": "https://pure.mpg.de/rest/items/item_1940500_2/component/file_1940499/content",
       "file": "pan-erratum.pdf",
       "sha256": "77292d0cf0048077ac30d9430b73702b904566735a0835defa48a9598c1ad1c4"
+    },
+    {
+      "id": "fujita-2015-v2",
+      "url": "https://arxiv.org/e-print/1412.5689v2",
+      "file": "1412.5689v2.tar",
+      "sha256": "202d8919738b45b02610c6e46a0e3f6fe7f091bbe6b25aff70d3178103d466fb",
+      "journal_url": "https://academic.oup.com/ptep/article/2015/3/033E01/2949473",
+      "journal_doi": "10.1093/ptep/ptv012",
+      "journal_license": "CC BY 4.0"
+    },
+    {
+      "id": "fujita-11pn-mathematica",
+      "url": "https://www2.yukawa.kyoto-u.ac.jp/~misao.sasaki/BHPC/11PN_mathematica.tbz2",
+      "file": "11PN_mathematica.tbz2",
+      "sha256": "a933c3b58f628226036c4b840086c42d6c954af67bde360b83bf16146b0d9ebf",
+      "member": "11PN_mathematica/rho8_11PN.m",
+      "member_sha256": "185a2e857e45b0f8799a2201253bee32d27b9c15b58dbb54b469424f4804cd9d",
+      "archive_license": "unspecified",
+      "reuse_scope": "The archive is fetched only to verify mathematical facts. No archive bytes or implementation source are redistributed. The associated PTEP article is CC BY 4.0, but that notice is not treated as licensing this separately hosted archive."
     }
   ],
   "revision_findings": [
     "Pan v1 and v2 both explicitly prescribe replacing every test-particle term whose generic-mass-ratio counterpart is known, then adding the remaining test-particle terms.",
     "BFH v1 and v2 both state that their mode equations reduce in the test-mass limit to Pan; v2 corrects the Pan equation cross-reference from (21) to (22).",
     "Pan v2 and its erratum change typographical and nonspinning terms but do not alter the replacement rule or the ell=8 ambiguity.",
-    "Bohe v1-v3 retain Taracchini 2014's expressions and explicitly describe replacement only for the new (2,2) corrections."
+    "Bohe v1-v3 retain Taracchini 2014's expressions and explicitly describe replacement only for the new (2,2) corrections.",
+    "Fujita v2 Eq. (23) uses the Pan factorization h_lm=...*(rho_lm)^ell and identifies rho_lm as the ell-th root of the waveform amplitude; the paper says that its full analytic expressions are publicly available online. The CC BY 4.0 article itself prints neither the four rho_8m coefficients nor a universal ell=8 linear-spin relation.",
+    "The author-hosted 11PN archive member rho8_11PN.m gives rho8[8,m]=SeriesData[v,0,{1,0,c2,-2/3*q,...}] for m=2,4,6,8. The archive and member hashes are pinned, but neither the host page nor the archive states reuse terms."
   ],
   "eligible_source_findings": [
     {
@@ -72,7 +93,11 @@
     },
     {
       "id": "ell8-conflict",
-      "finding": "Pan derives the generic even-parity rule f_lm^spin=-2*l*q*v^3/3 and rho_lm^spin=-2*q*v^3/3, but also calls Appendices B-C the complete expressions for 4<l<=8 while printing f_82,f_84,f_86,f_88 and rho_82,rho_84,rho_86,rho_88 without those terms. The nearby rho cross-reference says 4<l<8. Taracchini 2014 says to include all known Pan spin effects but does not choose between the generic rule and the complete ell=8 lists."
+      "finding": "Pan derives the generic even-parity rule f_lm^spin=-2*l*q*v^3/3 and rho_lm^spin=-2*q*v^3/3, but also calls Appendices B-C the complete expressions for 4<l<=8 while printing f_82,f_84,f_86,f_88 and rho_82,rho_84,rho_86,rho_88 without those terms. Fujita's later 11PN analytic archive chooses inclusion for all four rho_8m residuals in the same Pan factorization."
+    },
+    {
+      "id": "ell8-algebraic-source-contract",
+      "finding": "For each of (8,2), (8,4), (8,6), and (8,8), the pinned archive states the v^3 coefficient of rho_8m as -2*q/3. Since Fujita Eq. (23) places (rho_lm)^ell in h_lm, first-order expansion gives the corresponding f_8m coefficient 8*(-2*q/3)=-16*q/3. Both spin terms vanish at q=0. This resolves the mathematical include/omit question but not the frozen licensing eligibility requirement."
     },
     {
       "id": "erratum-scope",
@@ -80,12 +105,12 @@
     }
   ],
   "author_owned_asset_search": {
-    "result": "No public author-owned equation notebook, supplement, or licensed data asset stating either missing ell=8 decision was located.",
-    "qualification": "This is a bounded public search result, not a claim that no private clarification exists.",
+    "result": "Fujita's public author-hosted 11PN archive states the missing ell=8 algebra exactly, but the archive and host page provide no explicit reuse terms.",
+    "qualification": "The associated PTEP article is CC BY 4.0. That article-level license is not assumed to cover the separately hosted archive, so the archive does not satisfy the frozen licensing-compatible source criterion.",
     "rejected": [
       "Implementation repositories and LAL mirrors: excluded by the frozen criterion.",
       "Executable/model outputs and NR comparisons: excluded as selector evidence.",
-      "Repositories without explicit reuse terms or without the questioned algebra: ineligible or nonresponsive."
+      "The exact author archive: algebraically responsive but ineligible until compatible reuse terms are established."
     ]
   },
   "clean_room": {

@@ -86,11 +86,14 @@ The original [frozen historical-flux public-source gate](../2026-09-27/flux_hist
 found 4 of 6 mandatory prescription fields. The follow-up
 [public-equation provenance matrix](../2026-09-27/flux_symbolic_provenance_matrix.json)
 resolves the published `(4,3)` higher-spin placement from the Taracchini
-cross-reference, refining the count to 5 of 6. It still cannot construct one
-final selector across all 35 modes: five BFH/Pan coexistence decisions and
-four `ell=8` truncation decisions remain absent from the pinned primary
-sources. Conditional component agreement cannot fill those fields, so
-`V4-FLUX-4-9` remains pending and the release verdict is unchanged.
+cross-reference, refining the count to 5 of 6. The later
+[nine-row source closure](../2026-09-27/flux_selector_source_closure.json)
+closes all five BFH/Pan coexistence decisions. Fujita's hashed author archive
+also fixes the four `ell=8` test-particle coefficients algebraically, but it
+has no stated reuse license and the CC BY article does not print those terms.
+The frozen source-eligibility criterion therefore leaves the exact ledger at
+31 of 35. Separately, the historical LAL/runtime selector remains unverified,
+so `V4-FLUX-4-9` remains pending and the release verdict is unchanged.
 The finite-point [native QNM spline certificate](../2026-09-27/README.md)
 passes its six declared value, derivative, backend, and single-row waveform-
 impact checks. It does not close `V4-QNM-INTERPOLATION`: continuous-domain

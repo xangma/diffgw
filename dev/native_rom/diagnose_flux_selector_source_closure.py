@@ -14,6 +14,7 @@ import socket
 import sys
 import tarfile
 import time
+from fractions import Fraction
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]
@@ -21,6 +22,16 @@ EVIDENCE = ROOT / "dev/native_rom/evidence/2026-09-27"
 PLAN = EVIDENCE / "flux_selector_source_closure_plan.json"
 AUDIT = EVIDENCE / "flux_selector_source_closure_audit.json"
 PRIOR = EVIDENCE / "flux_symbolic_provenance_matrix.json"
+FUJITA_RHO_MEMBER = "11PN_mathematica/rho8_11PN.m"
+FUJITA_RHO_MEMBER_SHA256 = (
+    "185a2e857e45b0f8799a2201253bee32d27b9c15b58dbb54b469424f4804cd9d"
+)
+ELL8_V2 = {
+    "8,2": Fraction(-1231, 1368),
+    "8,4": Fraction(-1333, 1368),
+    "8,6": Fraction(-167, 152),
+    "8,8": Fraction(-1741, 1368),
+}
 
 
 def _sha256(path: Path) -> str:
@@ -51,10 +62,57 @@ def _tex(path: Path) -> str:
         return gzip.decompress(data).decode("utf-8", errors="replace")
 
 
+def _archive_member(path: Path, member_name: str) -> bytes:
+    with tarfile.open(path, mode="r:*") as archive:
+        try:
+            member = archive.getmember(member_name)
+        except KeyError as error:
+            raise ValueError(f"{path} lacks {member_name}") from error
+        extracted = archive.extractfile(member)
+        if extracted is None:
+            raise ValueError(f"cannot read {member_name} in {path}")
+        return extracted.read()
+
+
 def _require(text: str, fragments: list[str], source: str) -> None:
     missing = [fragment for fragment in fragments if fragment not in text]
     if missing:
         raise ValueError(f"{source} lacks frozen evidence fragments: {missing}")
+
+
+def _ell8_source_contract(rho_text: str) -> dict:
+    rho_q_v3 = Fraction(-2, 3)
+    f_q_v3 = 8 * rho_q_v3
+    rows = []
+    for mode, rho_v2 in ELL8_V2.items():
+        prefix = (
+            f"rho8[{mode}]=SeriesData[v, 0, {{\n"
+            f"1,\n0,\n{rho_v2},\n-2/3*q,"
+        )
+        _require(rho_text, [prefix], "fujita-11pn-mathematica")
+        rows.append(
+            {
+                "mode": mode,
+                "rho_v2": str(rho_v2),
+                "rho_q_v3": str(rho_q_v3),
+                "f_q_v3": str(f_q_v3),
+                "rho_v3_at_q_zero": "0",
+                "f_v3_at_q_zero": "0",
+            }
+        )
+    return {
+        "verified": True,
+        "eligible_for_selector_closure": False,
+        "eligibility_blocker": (
+            "The author-hosted archive has no stated reuse license; the associated "
+            "article's CC BY 4.0 notice does not establish terms for the separate archive."
+        ),
+        "factorization": "f_lm=(rho_lm)^ell",
+        "source_spin_variable": "q=a/M",
+        "archive_member": FUJITA_RHO_MEMBER,
+        "archive_member_sha256": FUJITA_RHO_MEMBER_SHA256,
+        "rows": rows,
+    }
 
 
 def _rows() -> list[dict]:
@@ -88,7 +146,7 @@ def _rows() -> list[dict]:
                 "missing_contract": None,
             }
         )
-    for mode in ("8,2", "8,4", "8,6", "8,8"):
+    for mode in ELL8_V2:
         rows.append(
             {
                 "mode": mode,
@@ -98,15 +156,14 @@ def _rows() -> list[dict]:
                 "pan_equations": "Pan Appendix B f_lm and Appendix C rho_lm",
                 "selector": None,
                 "evidence": (
-                    "Pan's generic even-parity equation includes "
-                    "rho_lm^spin=-2*q*v^3/3, while its stated complete ell=8 "
-                    "f_lm and rho_lm lists omit that term; Taracchini 2014 does "
-                    "not select between them."
+                    "Fujita Eq. (23) uses the same Pan factorization, and the "
+                    "author-hosted 11PN archive gives this mode's rho_8m v^3 "
+                    "coefficient as -2*q/3. The archive is public but has no "
+                    "stated reuse license."
                 ),
                 "missing_contract": (
-                    "One eligible sentence or equation stating whether this mode's "
-                    "rho_lm includes -2*chi_Kerr*v^3/3 (equivalently whether f_lm "
-                    "includes -16*chi_Kerr*v^3/3) or intentionally truncates it."
+                    "Compatible reuse terms for the author-hosted archive, or an "
+                    "independently eligible source printing the same coefficient."
                 ),
             }
         )
@@ -137,13 +194,21 @@ def main(argv: list[str] | None = None) -> int:
 
     source_hashes = {}
     texts = {}
+    source_member_hashes = {}
     for source in audit["sources"]:
         path = args.source_dir / source["file"]
         actual = _sha256(path)
         if actual != source["sha256"]:
             parser.error(f"{source['id']} SHA-256 mismatch")
         source_hashes[source["id"]] = actual
-        if path.suffix == ".tar":
+        if "member" in source:
+            member = _archive_member(path, source["member"])
+            member_hash = hashlib.sha256(member).hexdigest()
+            if member_hash != source["member_sha256"]:
+                parser.error(f"{source['id']} member SHA-256 mismatch")
+            source_member_hashes[source["id"]] = member_hash
+            texts[source["id"]] = member.decode("utf-8", errors="replace")
+        elif path.suffix == ".tar":
             texts[source["id"]] = _tex(path)
 
     pan_fragments = [
@@ -173,6 +238,18 @@ def main(argv: list[str] | None = None) -> int:
             ["adopt the same expressions", "replace the spinning test-particle-limit terms"],
             version,
         )
+    _require(
+        texts["fujita-2015-v2"],
+        [
+            "The full analytic expressions will be shown online~\\cite{BHPC}.",
+            "(\\rho_{\\ell m})^\\ell",
+            "\\rho_{\\ell m}$ is the $\\ell$th root of the amplitude",
+        ],
+        "fujita-2015-v2",
+    )
+    ell8_source_contract = _ell8_source_contract(
+        texts["fujita-11pn-mathematica"]
+    )
 
     rows = _rows()
     expected = [
@@ -198,7 +275,9 @@ def main(argv: list[str] | None = None) -> int:
             prior["selector_complete_mode_count"] + len(passed)
         ),
         "complete_final_mode_selector": not failed,
+        "ell8_source_contract": ell8_source_contract,
         "source_sha256": source_hashes,
+        "source_member_sha256": source_member_hashes,
         "plan_sha256": _sha256(PLAN),
         "audit_sha256": _sha256(AUDIT),
         "prior_matrix_sha256": _sha256(PRIOR),
@@ -215,8 +294,11 @@ def main(argv: list[str] | None = None) -> int:
         "clean_room": audit["clean_room"],
         "conclusion": (
             "The explicit Pan replacement rule closes the five BFH/Pan overlap "
-            "rows. The four ell=8 rows remain source-underdetermined, so the "
-            "35-mode selector and V4-FLUX-4-9 remain blocked."
+            "rows. Fujita's paper and author-hosted 11PN archive establish the "
+            "four ell=8 algebraic coefficients, but the archive has no stated "
+            "reuse license and therefore does not satisfy the frozen source-"
+            "eligibility criterion. The exact source ledger remains 31/35. "
+            "Historical runtime selection remains separately unverified."
         ),
         "production_change": False,
         "historical_fidelity_claim": False,

@@ -86,20 +86,25 @@ The matrix initially left nine rows open. The subsequent
 [revision audit](flux_selector_source_closure_audit.json),
 [evaluator](../../diagnose_flux_selector_source_closure.py), and
 [exact result](flux_selector_source_closure.json) review every public revision
-of the relevant Pan, BFH, Taracchini, and Bohé sources plus the Pan erratum.
+of the relevant Pan, BFH, Taracchini, and Bohé sources, the Pan erratum,
+[Fujita's CC BY article](https://doi.org/10.1093/ptep/ptv012), and its
+author-hosted 11PN analytic archive.
 Pan's explicit rule to replace every test-particle term having a known
 generic-mass-ratio counterpart, combined with BFH's stated Pan test-mass
 limit, closes the five overlap rows. The selector is therefore complete for
 31 of 35 modes.
 
-The four even-`m`, `ell=8` rows remain blocked. Pan derives a generic
-`rho_lm` spin term but also labels its appendices complete while printing all
-four `ell=8` residuals without that term; Taracchini 2014 does not choose
-between those forms. The smallest missing contract is an eligible include or
-omit statement for `-2*chi_Kerr*v**3/3` in each affected `rho_lm`. The focused
-run on `len` passed its evaluator and regression check, but the aggregate gate
-still fails. No implementation source, binary oracle, production code,
-criterion, or release status changed.
+The four even-`m`, `ell=8` algebraic rows are now independently pinned:
+Fujita Eq. (23) uses `(rho_lm)**ell`, and the hashed archive member gives the
+`v**2` coefficients and `-2*q*v**3/3` for all four `rho_8m`. Exact expansion
+therefore gives `-16*q*v**3/3` in `f_8m`, with both spin terms zero at `q=0`.
+The CC BY article itself does not print those coefficients or a universal
+`ell=8` spin relation, while the separately hosted archive has no stated
+reuse license. It consequently fails the frozen licensing-compatible source
+criterion, and the exact source ledger remains 31 of 35. This source-license
+blocker is distinct from the still-unverified historical LAL/runtime selector.
+No implementation source, binary oracle, production code, criterion, or
+release status changed.
 
 ## JAX whole-path blocker
 
