@@ -364,6 +364,38 @@ class NSBHBranchAmplitudeFits(NamedTuple):
     sigma_tide: torch.Tensor
 
 
+class NSBHJoiningFrequencies(NamedTuple):
+    f0: torch.Tensor
+    f1: torch.Tensor
+    f2: torch.Tensor
+
+
+def nsbh_joining_frequencies(
+    q: torch.Tensor,
+    f_tide: torch.Tensor,
+    f_rd_tilde: torch.Tensor,
+    epsilon_ins: torch.Tensor,
+    tide_at_or_above_ringdown: torch.Tensor,
+    has_torus: torch.Tensor,
+) -> NSBHJoiningFrequencies:
+    """Table I joins with the documented low/no-torus carrier adapter."""
+    f0 = torch.where(
+        tide_at_or_above_ringdown,
+        torch.where(has_torus, epsilon_ins * f_rd_tilde, f_rd_tilde),
+        torch.where(
+            has_torus,
+            epsilon_ins * f_tide,
+            outer_pn_center(((q - 1.0) * f_rd_tilde + epsilon_ins * f_tide) / q, epsilon_ins),
+        ),
+    )
+    f1 = torch.where(
+        tide_at_or_above_ringdown,
+        torch.where(has_torus, epsilon_ins * f_rd_tilde, f_rd_tilde),
+        torch.where(has_torus, f_tide, ((q - 1.0) * f_rd_tilde + f_tide) / q),
+    )
+    return NSBHJoiningFrequencies(f0, f1, f_rd_tilde)
+
+
 def nsbh_branch_amplitude_fits(
     chi: torch.Tensor,
     eta: torch.Tensor,
@@ -658,17 +690,9 @@ class IMRPhenomNSBH(nn.Module):
         eps_ins = branch_fits.epsilon_ins
         sigma_tide = branch_fits.sigma_tide
 
-        f0_tilde = torch.where(
-            is_ftide_ge_frd,
-            torch.where(has_torus, eps_ins * f_rd_tilde, f_rd_tilde),
-            torch.where(has_torus, eps_ins * f_tide, outer_pn_center(((q - 1.0) * f_rd_tilde + eps_ins * f_tide) / q, eps_ins)),
+        f0_tilde, f1_tilde, f2_tilde = nsbh_joining_frequencies(
+            q, f_tide, f_rd_tilde, eps_ins, is_ftide_ge_frd, has_torus
         )
-        f1_tilde = torch.where(
-            is_ftide_ge_frd,
-            torch.where(has_torus, eps_ins * f_rd_tilde, f_rd_tilde),
-            torch.where(has_torus, f_tide, ((q - 1.0) * f_rd_tilde + f_tide) / q),
-        )
-        f2_tilde = f_rd_tilde
         d_win_mf = 0.015 + sigma_tide
 
         # -------------------------------------------------------------
