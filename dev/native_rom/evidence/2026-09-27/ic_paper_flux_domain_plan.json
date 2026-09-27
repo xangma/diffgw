@@ -1,0 +1,33 @@
+{
+  "schema": "diffgw.seobnrv4.ic-paper-flux-domain-plan.v1",
+  "component": "V4-IC-PAPER-FLUX",
+  "aggregate_component": "V4-ODE-IC",
+  "purpose": "Prospectively extend the published-equation scalar circular initial-state and 35-mode pre-NQC flux comparison across a compact mass-ratio, aligned-spin, and start-frequency grid.",
+  "source_scope": "Bohé et al. 1611.03703v3 Eqs. (4)-(6), (9); Buonanno-Chen-Damour gr-qc/0508067v2 Eqs. (70)-(77); published factorized-mode equations enumerated in the reference manifest.",
+  "configuration": {
+    "spin_truncation": "tabulated",
+    "mode_21_higher_spin": "taylor_f",
+    "mode_33_higher_spin": "taylor_f",
+    "reference_digits": 50,
+    "precision_check_digits": 70
+  },
+  "rows": [
+    {"name": "q1_nonspinning_low", "m1": 20, "m2": 20, "chi1": 0.0, "chi2": 0.0, "omega": 0.015},
+    {"name": "q1_unequal_spin", "m1": 20, "m2": 20, "chi1": 0.8, "chi2": -0.4, "omega": 0.035},
+    {"name": "q2_mixed_spin", "m1": 30, "m2": 15, "chi1": 0.6, "chi2": -0.2, "omega": 0.03},
+    {"name": "q4_nonspinning", "m1": 40, "m2": 10, "chi1": 0.0, "chi2": 0.0, "omega": 0.025},
+    {"name": "q4_aligned", "m1": 40, "m2": 10, "chi1": 0.8, "chi2": 0.4, "omega": 0.02},
+    {"name": "q4_antialigned_high_start", "m1": 40, "m2": 10, "chi1": -0.8, "chi2": -0.4, "omega": 0.045},
+    {"name": "q8_mixed_spin", "m1": 40, "m2": 5, "chi1": -0.8, "chi2": 0.3, "omega": 0.025},
+    {"name": "q8_high_aligned", "m1": 40, "m2": 5, "chi1": 0.85, "chi2": 0.85, "omega": 0.025}
+  ],
+  "gates": {
+    "frontend_component_relative_error_at_most": 3e-10,
+    "frontend_component_absolute_error_at_most": 2e-12,
+    "scalar_50_to_70_digit_relative_error_at_most": 1e-35,
+    "positive_flux_negative_torque_negative_radial_momentum": true,
+    "torque_balance_relative_error_at_most": 2e-14
+  },
+  "interpretation": "A pass strengthens only the conditional paper-derived leaf. It does not identify the historical v4 flux switches or Cartesian root procedure, validate integration/convergence, close V4-ODE-IC or V4-FLUX-4-9, qualify the native model for release, or add it to public catalogs.",
+  "release_qualified": false
+}

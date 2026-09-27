@@ -1,5 +1,5 @@
 {
-  "specification": "seobnrv4-paper-components/0.8.13",
+  "specification": "seobnrv4-paper-components/0.8.14",
   "model": "SEOBNRv4 dominant (2,2) mode, aligned-spin black-hole binaries",
   "source": {
     "id": "bohe-2017-v3",
@@ -412,8 +412,8 @@
       "reference": "initial_conditions.paper_flux_leading_adiabatic_state with flux.factorized_mode_amplitudes and flux.emitted_flux",
       "torch": "src/torchwave/approximants/eob/initial_conditions.py:find_quasicircular_initial_conditions with SEOBNRv4PublishedFlux",
       "jax": "src/jaxwave/approximants/eob/initial_conditions.py:find_quasicircular_initial_conditions with SEOBNRv4PublishedFlux",
-      "test": "dev/native_rom/reference/tests/test_initial_conditions.py:test_paper_flux_initial_state_against_frontend",
-      "condition": "Two circular states per frontend compare radius, leading tortoise radial momentum, angular momentum, and 35-mode pre-NQC flux torque with the high-precision scalar composition at 3e-10 relative / 2e-12 absolute, using tabulated high-mode spin truncation and Taylor-f higher-spin choices. This does not establish the historical v4 flux choices or initial-data root, physical-domain coverage, numerical convergence, integrated trajectories, or full-waveform fidelity. The aggregate V4-ODE-IC and V4-FLUX-4-9 remain pending."
+      "test": "dev/native_rom/reference/tests/test_initial_conditions.py:test_paper_flux_initial_state_against_frontend; dev/native_rom/reference/tests/test_initial_conditions.py:test_paper_flux_initial_state_scalar_precision_stability",
+      "condition": "Eight predeclared circular states spanning q=1--8, |chi_i|<=0.85, and M Omega=0.015--0.045 per frontend compare radius, leading tortoise radial momentum, angular momentum, and 35-mode pre-NQC flux torque with the high-precision scalar composition at the unchanged 3e-10 relative / 2e-12 absolute gates, using tabulated high-mode spin truncation and Taylor-f higher-spin choices. The scalar reference is stable from 50 to 70 digits at 1e-35 relative. This finite grid does not establish the historical v4 flux choices or initial-data root, physical-domain coverage, numerical convergence, integrated trajectories, or full-waveform fidelity. The aggregate V4-ODE-IC and V4-FLUX-4-9 remain pending."
     },
     {
       "id": "V4-ODE-RHS-SUPPLIED-FORCE",

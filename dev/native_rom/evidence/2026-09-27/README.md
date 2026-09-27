@@ -40,6 +40,25 @@ The bounded CPU rerun used JAX 0.11.2 on host `len`, cwd
 the expected diagnostic exit status 1 because two predeclared attribution
 checks failed; no process or next check remains.
 
+## Published-flux initial-condition domain gate
+
+The [prospectively frozen plan](ic_paper_flux_domain_plan.json),
+[tests](../../reference/tests/test_initial_conditions.py), and
+[machine-readable result](ic_paper_flux_domain.json) extend the conditional
+`V4-IC-PAPER-FLUX` comparison from two points to eight rows spanning `q=1–8`,
+`|chi_i|≤0.85`, and `M Omega=0.015–0.045`. Both frontends compare `r`,
+`p_r*`, `p_phi`, and the 35-mode pre-NQC torque with the 50-digit scalar
+composition at the unchanged `3e-10` relative / `2e-12` absolute gates. Each
+scalar row is also stable at 70 digits to `1e-35` relative. All 26 tests passed
+on host `len` in 89.75 s; the result records the CPU-only command, environment,
+cwd, and completed log. An earlier environment rejected JAX during import due
+to an old-JAX/SciPy API mismatch and is recorded separately from physics.
+
+No production source, threshold, catalog, or release status changed. The grid
+does not identify the historical flux switches or Cartesian root procedure and
+does not validate integration, events, or convergence. `V4-ODE-IC` and
+`V4-FLUX-4-9` therefore remain pending.
+
 ## Historical-fidelity release boundary
 
 The [frozen release plan](historical_fidelity_release_plan.json),

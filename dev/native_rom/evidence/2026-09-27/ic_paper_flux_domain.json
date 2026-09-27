@@ -1,0 +1,64 @@
+{
+  "schema": "diffgw.seobnrv4.ic-paper-flux-domain.v1",
+  "status": "diagnostic_complete",
+  "component": "V4-IC-PAPER-FLUX",
+  "aggregate_component": "V4-ODE-IC",
+  "plan_sha256": "a3aea2cf2f1d1c10d9a8d0212265d82feaebc90d8d5416ab22010dcef0c22d08",
+  "process": {
+    "host": "len",
+    "cwd": "/home/xangma/tmp/diffgw-seobnr-ic-domain-20260927",
+    "python": "/home/xangma/.cache/diffgw-taylorf2-hm-venv/bin/python",
+    "command": "env CUDA_VISIBLE_DEVICES= JAX_PLATFORMS=cpu PYTHONPATH=src:. /home/xangma/.cache/diffgw-taylorf2-hm-venv/bin/python -m pytest dev/native_rom/reference/tests/test_initial_conditions.py -q",
+    "log": "/home/xangma/tmp/diffgw-seobnr-ic-domain-20260927/ic-domain-test-rerun.log",
+    "duration_seconds": 89.75
+  },
+  "environment": {
+    "jax": "0.11.2",
+    "scipy": "1.18.1",
+    "torch": "2.14.0+cpu"
+  },
+  "coverage": {
+    "frozen_rows": 8,
+    "frontend_comparisons": 16,
+    "scalar_precision_comparisons": 8,
+    "independent_energy_balance_controls": 2,
+    "pytest_tests_passed": 26
+  },
+  "gates": {
+    "frontend_component_relative_error_at_most": {
+      "threshold": 3e-10,
+      "passed": true
+    },
+    "frontend_component_absolute_error_at_most": {
+      "threshold": 2e-12,
+      "passed": true
+    },
+    "scalar_50_to_70_digit_relative_error_at_most": {
+      "threshold": 1e-35,
+      "passed": true
+    },
+    "positive_flux_negative_torque_negative_radial_momentum": {
+      "passed": true
+    },
+    "torque_balance_relative_error_at_most": {
+      "threshold": 2e-14,
+      "passed": true
+    }
+  },
+  "environment_rejection": {
+    "python": "/home/xangma/venvs/pycbc-torch213-cu130/bin/python",
+    "result": "2 failed, 24 passed",
+    "classification": "dependency incompatibility before JAX physics evaluation",
+    "detail": "The older JAX import expected scipy.linalg.tril, which that environment's SciPy did not provide. The same frozen snapshot passed in the compatible environment above."
+  },
+  "source_change": false,
+  "production_change": false,
+  "release_qualified": false,
+  "remaining_blockers": [
+    "historical flux switches and resummation choices",
+    "historical Cartesian root and finite-step radial-response conventions",
+    "domain-wide integration, events, and convergence",
+    "full-waveform historical fidelity"
+  ],
+  "interpretation": "All prospectively frozen finite-grid checks passed without changing their gates. This strengthens only the conditional paper-derived leaf; V4-ODE-IC and V4-FLUX-4-9 remain pending, and catalog exclusion remains required."
+}

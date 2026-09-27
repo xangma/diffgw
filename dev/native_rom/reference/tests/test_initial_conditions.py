@@ -1,5 +1,9 @@
 """Energy-balance check for the published leading-adiabatic initial data."""
 
+import json
+from functools import lru_cache
+from pathlib import Path
+
 import mpmath as mp
 import pytest
 
@@ -9,6 +13,41 @@ from dev.native_rom.reference.hamiltonian import (
 from dev.native_rom.reference.initial_conditions import (
     leading_adiabatic_state, paper_flux_leading_adiabatic_state,
 )
+
+
+_DOMAIN_PLAN = json.loads(
+    (
+        Path(__file__).parents[2]
+        / "evidence/2026-09-27/ic_paper_flux_domain_plan.json"
+    ).read_text()
+)
+_DOMAIN_ROWS = [
+    pytest.param(
+        row["m1"],
+        row["m2"],
+        row["chi1"],
+        row["chi2"],
+        row["omega"],
+        id=row["name"],
+    )
+    for row in _DOMAIN_PLAN["rows"]
+]
+
+
+@lru_cache
+def _paper_flux_state(m1, m2, chi1, chi2, omega, digits):
+    configuration = _DOMAIN_PLAN["configuration"]
+    return paper_flux_leading_adiabatic_state(
+        m1,
+        m2,
+        chi1,
+        chi2,
+        omega,
+        spin_truncation=configuration["spin_truncation"],
+        mode_21_higher_spin=configuration["mode_21_higher_spin"],
+        mode_33_higher_spin=configuration["mode_33_higher_spin"],
+        digits=digits,
+    )
 
 
 @pytest.mark.parametrize("m1,m2,chi1,chi2,omega", [
@@ -59,22 +98,24 @@ def test_leading_adiabatic_energy_balance_against_circular_sequence(
         assert abs((radial_velocity*slope - emitted_energy)/emitted_energy) < mp.mpf("2e-9")
 
 
-@pytest.mark.parametrize("m1,m2,chi1,chi2,omega", [
-    (30, 20, 0, 0, 0.04),
-    (45, 5, -0.8, 0.3, 0.025),
-])
+@pytest.mark.parametrize("m1,m2,chi1,chi2,omega", _DOMAIN_ROWS)
 @pytest.mark.parametrize("frontend", ["torch", "jax"])
 def test_paper_flux_initial_state_against_frontend(
     frontend, m1, m2, chi1, chi2, omega,
 ):
-    """Compose the scalar circular solve and all 35 pre-NQC flux modes."""
-    expected = paper_flux_leading_adiabatic_state(
-        m1, m2, chi1, chi2, omega, spin_truncation="tabulated")
+    """Check the frozen domain grid against the scalar 35-mode composition."""
+    expected = _paper_flux_state(
+        m1, m2, chi1, chi2, omega,
+        _DOMAIN_PLAN["configuration"]["reference_digits"],
+    )
     r, pr_star, p_phi, emitted, torque = map(float, expected)
     nu = m1*m2/(m1+m2)**2
     delta = (m1-m2)/(m1+m2)
     assert emitted > 0 and torque < 0 and pr_star < 0
-    assert torque == pytest.approx(-emitted/(nu*omega), rel=2e-14)
+    gates = _DOMAIN_PLAN["gates"]
+    assert torque == pytest.approx(
+        -emitted/(nu*omega), rel=gates["torque_balance_relative_error_at_most"]
+    )
 
     if frontend == "torch":
         import torch
@@ -110,5 +151,34 @@ def test_paper_flux_initial_state_against_frontend(
             scalar(omega), scalar(0), actual[2], r=actual[0], hamiltonian=ham)
 
     for value, reference in zip(actual, (r, pr_star, p_phi)):
-        assert float(value) == pytest.approx(reference, rel=3e-10, abs=2e-12)
-    assert float(actual_torque) == pytest.approx(torque, rel=3e-10, abs=2e-12)
+        assert float(value) == pytest.approx(
+            reference,
+            rel=gates["frontend_component_relative_error_at_most"],
+            abs=gates["frontend_component_absolute_error_at_most"],
+        )
+    assert float(actual_torque) == pytest.approx(
+        torque,
+        rel=gates["frontend_component_relative_error_at_most"],
+        abs=gates["frontend_component_absolute_error_at_most"],
+    )
+
+
+@pytest.mark.parametrize("m1,m2,chi1,chi2,omega", _DOMAIN_ROWS)
+def test_paper_flux_initial_state_scalar_precision_stability(
+    m1, m2, chi1, chi2, omega,
+):
+    """Require the frozen scalar reference to be stable under +20 digits."""
+    configuration = _DOMAIN_PLAN["configuration"]
+    lower = _paper_flux_state(
+        m1, m2, chi1, chi2, omega, configuration["reference_digits"]
+    )
+    higher = _paper_flux_state(
+        m1, m2, chi1, chi2, omega, configuration["precision_check_digits"]
+    )
+    relative_errors = [
+        abs(value - reference) / max(abs(reference), mp.mpf("1e-100"))
+        for value, reference in zip(lower, higher)
+    ]
+    assert max(relative_errors) <= mp.mpf(
+        str(_DOMAIN_PLAN["gates"]["scalar_50_to_70_digit_relative_error_at_most"])
+    )
