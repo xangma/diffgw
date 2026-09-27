@@ -24,7 +24,7 @@ component does not specify their fit, remnant convention, or numerical value.
 The paper sets $f_0^A=0.018 f^{\rm RD}_{\ell m}/f^{\rm RD}_{22}$ and
 $f_0^\phi=0.014 f^{\rm RD}_{\ell m}/f^{\rm RD}_{22}$. These are London's
 printed higher-mode mapping cutoffs. The public Torch and JAX HM assembly
-currently uses $0.014 f^{\rm RD}_{\ell m}/f^{\rm RD}_{22}$ for amplitude and
+uses by default $0.014 f^{\rm RD}_{\ell m}/f^{\rm RD}_{22}$ for amplitude and
 $0.018 f^{\rm RD}_{\ell m}/f^{\rm RD}_{22}$ for phase, following the distinct
 [PhenomD carrier joins in Khan et al., Eqs. (37)--(38)](https://arxiv.org/html/1508.07253v2).
 The component reference evaluates either map for a supplied $f_0$. Its
